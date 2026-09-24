@@ -38,8 +38,29 @@ FORCE=""
 [ "${1:-}" = "now" ] && FORCE=1
 
 # 동시 실행 방지. 매시간 도는데 앞 회차가 아직 돌고 있을 수 있다.
+#
+# 멈춘 회차는 기다리는 게 아니라 죽인다. 옆의 `daily_audit.sh`가 같은 구조로 7일간
+# 락을 붙들고 죽어 있었고, 원인과 처방은 그 파일의 같은 자리에 적어 뒀다. 요점만:
+# `D` 상태 스레드는 SIGKILL로도 안 죽으므로 보유자를 죽인 뒤 락 파일을 unlink해서
+# 다음 회차가 새 inode를 잡게 한다.
 exec 9>"$LOGDIR/lock"
-flock -n 9 || { log "skip: 이전 회차 실행 중"; exit 0; }
+if ! flock -n 9; then
+  SINCE="$(cat "$LOGDIR/running.since" 2>/dev/null || echo 0)"
+  HELD=$(( $(date +%s) - SINCE ))
+  HOLDER="$(cat "$LOGDIR/running.pid" 2>/dev/null || echo 0)"
+  if [ "$SINCE" -gt 0 ] && [ "$HELD" -gt 10800 ] && [ "$HOLDER" -gt 1 ]; then
+    log "WEDGED: $HOLDER 회차가 락을 ${HELD}초 붙들고 있다 — 프로세스 그룹을 죽이고 락을 새로 만든다"
+    kill -9 -- "-$HOLDER" 2>/dev/null || kill -9 "$HOLDER" 2>/dev/null
+    rm -f "$LOGDIR/lock"
+    exit 1
+  fi
+  log "skip: 이전 회차 실행 중 (${HELD}초)"
+  exit 0
+fi
+
+echo $$ > "$LOGDIR/running.pid"
+date +%s > "$LOGDIR/running.since"
+trap 'rm -f "$LOGDIR/running.pid" "$LOGDIR/running.since"' EXIT
 
 # ISO 주차. 연말연시에 해가 바뀌어도 주가 겹치거나 빠지지 않는다.
 WEEK="$(date +%G-W%V)"
@@ -94,7 +115,9 @@ GitHub 이슈로 올려라. 모든 산출물은 한국어로 쓴다.
 무엇을 봤고 무엇을 올렸는지(또는 왜 안 올렸는지) 짧게 보고해라. 후보를 검토하다 떨어뜨렸다면
 어느 체크리스트 항목에서 떨어졌는지까지 적어라."
 
-timeout 3600 claude -p "$PROMPT" \
+# -k 60: 예산에서 SIGTERM, 1분 뒤 SIGKILL. 이번 사고를 이것만으로는 못 막지만
+# (자식이 이미 죽어 있었다) 흔한 쪽의 멈춤은 이쪽이 먼저 끊는다.
+timeout -k 60 3600 claude -p "$PROMPT" \
   --model claude-sonnet-5 \
   --allowedTools Bash Read Glob Grep WebSearch WebFetch \
   >> "$LOG" 2>&1

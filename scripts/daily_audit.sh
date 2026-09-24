@@ -34,8 +34,39 @@ FORCE=""
 [ "${1:-}" = "now" ] && FORCE=1
 
 # 동시 실행 방지. 매시간 도는데 앞 회차가 아직 돌고 있을 수 있다.
+#
+# **멈춘 회차는 기다리는 게 아니라 죽여야 한다.** 2026-09-24에 이 봇이 1시간 예산
+# 안에서 7일 2시간째 락을 붙들고 있는 것이 발견됐다. `claude`는 이미 defunct였는데
+# `Bun Pool 3` 스레드 하나가 `D`(중단 불가능 대기)에 걸려 프로세스가 종료를 끝내지
+# 못하고, `timeout`이 그걸 영원히 기다렸다. 그 뒤 매시간의 틱은 여기서 "skip"만
+# 적었고, 아무도 그 로그를 안 읽었으므로 봇은 일주일간 죽은 채로 한가한 것처럼
+# 보였다. 마지막으로 완료된 날은 09-16이었다.
+#
+# `timeout -k`로는 안 풀린다. 자식은 이미 죽어 있었다. 실제로 복구하는 것은 (1) 락을
+# 얼마나 오래 붙들고 있었는지 묻는 것과 (2) 락 파일을 unlink하는 것이다 — `D` 스레드는
+# SIGKILL로도 안 죽고 fd를 계속 쥐고 있어서, 죽어 가는 쪽은 unlink된 inode의 락을
+# 그대로 들고 있게 하고 새 회차는 새 inode를 잡는다. 재부팅 없이 이것만으로 풀렸다.
 exec 9>"$LOGDIR/lock"
-flock -n 9 || { log "skip: 이전 회차 실행 중"; exit 0; }
+if ! flock -n 9; then
+  SINCE="$(cat "$LOGDIR/running.since" 2>/dev/null || echo 0)"
+  HELD=$(( $(date +%s) - SINCE ))
+  HOLDER="$(cat "$LOGDIR/running.pid" 2>/dev/null || echo 0)"
+  if [ "$SINCE" -gt 0 ] && [ "$HELD" -gt 10800 ] && [ "$HOLDER" -gt 1 ]; then
+    log "WEDGED: $HOLDER 회차가 락을 ${HELD}초 붙들고 있다 — 프로세스 그룹을 죽이고 락을 새로 만든다"
+    kill -9 -- "-$HOLDER" 2>/dev/null || kill -9 "$HOLDER" 2>/dev/null
+    rm -f "$LOGDIR/lock"
+    # 이번 틱은 오늘 몫으로 치지 않는다. 다음 시각이 깨끗한 락으로 시작한다.
+    exit 1
+  fi
+  log "skip: 이전 회차 실행 중 (${HELD}초)"
+  exit 0
+fi
+
+# 다음 틱이 "얼마나 오래"와 "누구를"을 알 수 있게 남긴다. `set -m`은 쓰지 않는다 —
+# 작업 제어를 켜면 자식이 제 프로세스 그룹을 갖게 되고, 그룹째 죽이는 것이 요점이다.
+echo $$ > "$LOGDIR/running.pid"
+date +%s > "$LOGDIR/running.since"
+trap 'rm -f "$LOGDIR/running.pid" "$LOGDIR/running.since"' EXIT
 
 DAY="$(date +%F)"
 # 대부분의 회차는 여기서 끝난다. git도 안 건드리고 로그도 안 남긴다.
@@ -82,7 +113,9 @@ PROMPT="이 저장소를 로컬에서 직접 돌려 보고, 고칠 값이 있는
 
 무엇을 확인했고 무엇을 올렸는지(또는 왜 안 올렸는지) 짧게 보고해라."
 
-timeout 3600 claude -p "$PROMPT" \
+# -k 60: 예산에서 SIGTERM, 1분 뒤 SIGKILL. 이번 사고를 이것만으로는 못 막지만
+# (자식이 이미 죽어 있었다) 흔한 쪽의 멈춤은 이쪽이 먼저 끊는다.
+timeout -k 60 3600 claude -p "$PROMPT" \
   --model claude-sonnet-5 \
   --allowedTools Bash Read Glob Grep WebFetch \
   >> "$LOG" 2>&1
