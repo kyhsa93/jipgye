@@ -1,0 +1,129 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { judge, leadSentence, priceSeries, run } from "../scripts/indicator-backtest.mjs";
+import { fetchRone, merge } from "../scripts/fetch-indicators.mjs";
+import { shiftMonth } from "../scripts/outlook.mjs";
+
+const root = path.resolve(import.meta.dirname, "..");
+
+function noise(seed) {
+  let state = seed >>> 0;
+  const u = () => {
+    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+    return (state + 0.5) / 2 ** 32;
+  };
+  return () => Math.sqrt(-2 * Math.log(u())) * Math.cos(2 * Math.PI * u());
+}
+
+/** 2006-01부터 240달. 월 변화가 phi만큼 이어지는 가격 계열. */
+function prices(seed = 5) {
+  const next = noise(seed);
+  const rows = [];
+  let level = Math.log(100);
+  let r = 0;
+  let month = "200601";
+  for (let i = 0; i < 240; i += 1) {
+    r = 0.5 * r + 0.01 * next();
+    level += r;
+    rows.push([month, Math.exp(level)]);
+    month = shiftMonth(month, 1);
+  }
+  return rows;
+}
+
+/** 다음 3개월 가격 변화를 그대로 담은 '주담대 금리' - 진짜로 앞서는 지표. 나머지는 잡음. */
+function seriesFor(priceRows, { leading = true } = {}) {
+  const next = noise(99);
+  const lead = priceRows.slice(0, -3).map(([m, v], i) => [m, leading ? Math.log(priceRows[i + 3][1] / v) * 100 + 0.05 * next() : next()]);
+  const junk = priceRows.map(([m]) => [m, 100 + next()]);
+  return {
+    mortgage_rate: lead,
+    kb_sale: junk, kb_jeonse: junk, base_rate: junk, ktb3: junk, unsold_seoul: junk,
+    csi_house_seoul: junk, vol_seoul: junk, jratio_seoul: junk, supply_demand_seoul: junk,
+  };
+}
+
+test("예측은 그 시점 뒤의 가격을 보지 않는다", () => {
+  const rows = prices();
+  const a = priceSeries(rows);
+  // 오리진 바로 다음 달부터 바꾼다. 멀리서 바꾸면 한두 달 새는 누출을 못 본다.
+  const origin = 150;
+  const b = priceSeries(rows.map(([m, v], i) => [m, i > origin ? v * 3 : v]));
+  // 상수 지표는 절편과 겹쳐 회귀가 안 풀리고 행이 통째로 빠진다 - 그러면 이 검사는 아무것도 안 본다.
+  const fn = (t) => [Math.sin(t)];
+  for (const h of [3, 6]) {
+    const pred = (p, out) => {
+      const row = out.find(([o]) => o === p.months[origin]);
+      assert.ok(row, "오리진 행이 없다 - 검사가 아무것도 안 보고 통과한다");
+      const actual = (p.lp[origin + h] - p.lp[origin]) * 100;
+      return [actual - row[1], actual - row[2]].map((v) => Math.round(v * 1e9) / 1e9);
+    };
+    assert.deepEqual(pred(a, run(a, h, fn, 0)), pred(b, run(b, h, fn, 0)), "오리진 뒤 가격이 학습에 섞였다");
+  }
+});
+
+test("진짜로 앞서는 지표는 '앞섬'으로 판정한다", () => {
+  const rows = prices();
+  const p = priceSeries(rows);
+  const all = { 200: p, 210: p, 220: p, 230: p, 240: p, 250: p };
+  const out = judge(all, seriesFor(rows));
+  const mort = out.find((r) => r.id === "mort_lvl" && r.lag === 0);
+  assert.equal(mort.verdict, "leads", "답을 담은 지표를 못 알아봤다 - 자가 너무 엄하다");
+  assert.match(leadSentence(out, "ko"), /꾸준히 예측을 낫게 한 것은/);
+});
+
+test("잡음 지표는 앞서지 않는다고 적는다", () => {
+  const rows = prices();
+  const p = priceSeries(rows);
+  const all = { 200: p, 210: p, 220: p, 230: p, 240: p, 250: p };
+  const out = judge(all, seriesFor(rows, { leading: false }));
+  assert.equal(out.filter((r) => r.verdict === "leads").length, 0, "잡음을 앞섬으로 읽었다");
+  assert.match(leadSentence(out, "ko"), /더 잘 맞힌 것은 없었습니다/);
+});
+
+test("서울에서만 넘고 권역에서 재현되지 않으면 '앞섬'이 아니다", () => {
+  const rows = prices();
+  const seoul = priceSeries(rows);
+  const other = priceSeries(prices(77));
+  const all = { 200: seoul, 210: other, 220: other, 230: other, 240: other, 250: other };
+  const mort = judge(all, seriesFor(rows)).find((r) => r.id === "mort_lvl" && r.lag === 0);
+  assert.equal(mort.verdict, "seoulOnly");
+});
+
+test("먼저 공표된 값은 이겨도 '앞섬'으로 쓰지 않는다", () => {
+  const rows = prices();
+  const p = priceSeries(rows);
+  const all = { 200: p, 210: p, 220: p, 230: p, 240: p, 250: p };
+  // KB 매매를 가격 그 자체로 두면 +2개월 변형이 답을 미리 본다.
+  const series = { ...seriesFor(rows, { leading: false }), kb_sale: rows };
+  const out = judge(all, series);
+  for (const lag of [1, 2]) {
+    const kb = out.find((r) => r.id === "kb1" && r.lag === lag);
+    assert.equal(kb.published, true, `KB 매매 +${lag}개월은 가격지수보다 먼저 공표된 같은 달이다`);
+    assert.equal(kb.verdict, "published", "먼저 공표된 같은 달 값을 앞섬으로 적었다");
+  }
+});
+
+test("R-ONE은 다섯 달씩 잘라 부르고, 받은 꼬리는 저장된 계열 위에 덮는다", async () => {
+  const asked = [];
+  const fetchImpl = async (url) => {
+    const q = new URL(url).searchParams;
+    asked.push([q.get("START_WRTTIME"), q.get("END_WRTTIME")]);
+    return { ok: true, json: async () => ({ SttsApiTblData: [{}, { row: [{ WRTTIME_IDTFR_ID: q.get("START_WRTTIME"), DTA_VAL: 1 }] }] }) };
+  };
+  await fetchRone({ statbl: "x", cls: 1, itm: 1 }, "202601", "202612", { fetchImpl });
+  assert.deepEqual(asked, [["202601", "202605"], ["202606", "202610"], ["202611", "202612"]]);
+  assert.deepEqual(merge([["202601", 1], ["202602", 2]], [["202602", 9]]), [["202601", 1], ["202602", 9]]);
+});
+
+test("정적 HTML이 오늘 판정 표를 싣는다", async () => {
+  const [html, data] = await Promise.all([
+    readFile(path.join(root, "docs/price-outlook.html"), "utf8"),
+    readFile(path.join(root, "docs/data/outlook-indicators.json"), "utf8").then(JSON.parse),
+  ]);
+  const block = html.match(/<!--prerender:indicatorTable-->([\s\S]*?)<!--\/prerender:indicatorTable-->/)?.[1];
+  assert.equal(block, data.table.ko);
+  assert.ok(data.lead.en && data.table.en);
+});

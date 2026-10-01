@@ -55,6 +55,7 @@ jobs:
         run: |
           node scripts/fetch-market.mjs
           node scripts/fetch-price-index.mjs
+          node scripts/fetch-indicators.mjs
         env:
           # 없으면 공개 sample 키로 돈다. 시크릿을 넣으면 열 건 제한이 풀린다.
           ECOS_API_KEY: ${{ secrets.ECOS_API_KEY }}
@@ -70,6 +71,7 @@ jobs:
           node scripts/build-renewal-facts.mjs
           node scripts/build-floor-gap.mjs
           node scripts/build-outlook.mjs
+          node scripts/build-indicators.mjs
           node scripts/build-complex-price.mjs
           node scripts/build-record-high.mjs
           node scripts/build-complex-ratio.mjs
