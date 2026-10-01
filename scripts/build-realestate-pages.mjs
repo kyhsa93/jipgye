@@ -131,6 +131,9 @@ export function buildDistrictPage(baseHtml, district, realestate, deals = null, 
     `<meta name="realestate-district" content="${district.name}">\n<link rel="canonical"`,
     "정규 URL 링크"
   );
+  // 시세 템플릿의 제목은 서울 전체를 말한다. 자치구 장은 그 구의 숫자를 싣는다(UIUX #42).
+  html = replaceOnce(html, '<h2 id="overall-heading">서울 전체 평균</h2>', `<h2 id="overall-heading">${district.name} 평균</h2>`, "평균 제목");
+  html = replaceOnce(html, '<h2 id="district-heading">자치구별 시세</h2>', '<h2 id="district-heading">거래 유형별</h2>', "표 제목");
 
   html = replaceOnce(
     html,

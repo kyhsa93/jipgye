@@ -246,3 +246,10 @@ test("오르내림 색이 놓이는 자리마다 읽힌다", async () => {
     }
   }
 });
+
+test("단지 카드 표 머리글은 접혀 1280px 안에 든다 (#42)", async () => {
+  const css = await (await import("node:fs/promises")).readFile(new URL("../docs/style.css", import.meta.url), "utf8");
+  const rule = css.match(/\.complex-card \.data-table th \{([^}]*)\}/)?.[1] ?? "";
+  assert.match(rule, /white-space:\s*normal/);
+  assert.match(rule, /word-break:\s*keep-all/, "한국어 낱말 중간에서 꺾인다");
+});

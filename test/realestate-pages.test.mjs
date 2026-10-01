@@ -844,3 +844,26 @@ test("월세 페이지(브라우저)도 증감 하나를 월세 칸에 % 로 붙
     assert.equal((html.match(/class="change /g) ?? []).length, 2, `${locale}: 자치구마다 배지가 하나여야 한다`);
   }
 });
+
+test("자치구 페이지 제목은 그 구를 말한다 - '서울 전체 평균' 아래 그 구의 숫자가 나오지 않게 (#42)", async () => {
+  const html = await read("docs/district-songpa.html");
+  assert.match(html, /<h2 id="overall-heading">송파구 평균<\/h2>/);
+  assert.match(html, /<h2 id="district-heading">거래 유형별<\/h2>/);
+  assert.doesNotMatch(html, /<h2 id="overall-heading">서울 전체 평균/);
+  assert.match(await read("docs/realestate.html"), /<h2 id="overall-heading">서울 전체 평균<\/h2>/, "서울 시세 화면은 그대로");
+
+  const realestate = await readJson("realestate");
+  const page = await loadRealestatePage({ realestate, district: "강남구" });
+  assert.equal(page.byId("overall-heading").textContent, "강남구 평균", "자바스크립트가 템플릿 제목으로 되돌렸다");
+  assert.equal(page.byId("district-heading").textContent, "거래 유형별");
+});
+
+test("자치구 요약 절은 제 문단으로만 열린다 - 예산대 문단이 빈 절을 열지 않게 (#42)", async () => {
+  const html = await read("docs/budget-7eok.html");
+  const start = html.indexOf('<section id="district-summary-section"');
+  const section = html.slice(start, html.indexOf("</section>", start));
+  assert.ok(!section.includes("budget-facts"), "예산대 문단이 요약 절 안으로 들어왔다 - 아래 검사의 전제가 바뀌었다");
+  assert.ok(html.includes('class="district-summary budget-facts" data-summary-lang="ko"'), "전제: 예산대 문단도 같은 속성을 단다");
+  const body = html.slice(html.indexOf("function renderDistrictSummary"), html.indexOf("function renderTrend"));
+  assert.match(body, /section\.querySelectorAll\("\[data-summary-lang\]"\)/, "절을 열지 판단할 때 문서 전체 문단을 본다");
+});

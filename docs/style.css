@@ -2421,6 +2421,20 @@ summary:focus-visible,
   background: transparent;
 }
 
+/* 카드 표는 열이 일곱이고 머리글이 "실제 최고 신고 (고치기 전)"처럼 길다. 머리글까지 한 줄로 두면
+ * 1280px에서도 106px 넘쳐 마지막 열이 아무 신호 없이 잘렸다(UIUX #42). 값은 그대로 한 줄, 머리글만 접는다. */
+.complex-card .data-table th {
+  white-space: normal;
+  word-break: keep-all;
+  vertical-align: bottom;
+}
+
+.complex-card .data-table th,
+.complex-card .data-table td {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
 .complex-card .content-notice {
   margin-top: 10px;
 }

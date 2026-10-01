@@ -74,7 +74,7 @@
   </aside>
 
   <section id="overall-section">
-    <h2 id="overall-heading">서울 전체 평균</h2>
+    <h2 id="overall-heading">금천구 평균</h2>
     <div class="overall-cards" id="overall-cards"><!--prerender:realestateOverall--><div class="overall-card"><div class="label">평당가</div><div class="value">3,062만원</div></div><div class="overall-card"><div class="label">84㎡ 환산</div><div class="value">7억 7,805만원</div></div><div class="overall-card"><div class="label">거래건수</div><div class="value">113건</div></div><div class="overall-card"><div class="label">전세가율</div><div class="value">70.3%</div></div><div class="overall-card"><div class="label">단지별 중앙값</div><div class="value">66.0%</div><div class="sub">단지·평형 21칸</div></div><!--/prerender:realestateOverall--></div>
   </section>
 
@@ -137,7 +137,7 @@
   </section>
 
   <section id="district-section">
-    <h2 id="district-heading">자치구별 시세</h2>
+    <h2 id="district-heading">거래 유형별</h2>
     <div class="controls" id="area-controls" hidden>
       <label for="area-select" id="area-label">평형</label>
       <select id="area-select"></select>
@@ -202,6 +202,8 @@ const T = {
     navRates: "금리 비교",
     overallHeading: "서울 전체 평균",
     districtHeading: "자치구별 시세",
+    overallHeadingDistrict: (name) => `${name} 평균`,
+    districtHeadingDistrict: "거래 유형별",
     loading: "불러오는 중...",
     basisContract: "계약 기준",
     basisArrival: "신고 기준",
@@ -293,6 +295,8 @@ const T = {
     navRates: "Rates",
     overallHeading: "Seoul average",
     districtHeading: "By district",
+    overallHeadingDistrict: (name) => `${name} average`,
+    districtHeadingDistrict: "By deal type",
     loading: "Loading...",
     basisContract: "Contracts",
     basisArrival: "Filings",
@@ -1091,9 +1095,11 @@ function trendSeries(trend) {
 
 function renderDistrictSummary() {
   const section = document.getElementById("district-summary-section");
+  // 언어 전환은 모든 요약 문단에 하되, 이 절을 열지는 이 절 안 문단으로만 정한다. 예산대 문단(budget-facts)도
+  // 같은 속성을 달고 있어, 전체를 보면 빈 절이 열려 회색 막대 하나가 남았다(UIUX #42).
   const paragraphs = [...document.querySelectorAll("[data-summary-lang]")];
-  const filled = paragraphs.some((p) => (p.textContent ?? "").trim().length > 0);
-  section.hidden = !filled;
+  const own = [...section.querySelectorAll("[data-summary-lang]")];
+  section.hidden = !own.some((p) => (p.textContent ?? "").trim().length > 0);
   for (const p of paragraphs) p.hidden = p.getAttribute("data-summary-lang") !== locale;
 }
 
@@ -1255,8 +1261,8 @@ function applyLocale() {
   const heading = districtName ? t("districtTitle")(districtName) : t(suffix);
   document.title = heading;
   document.getElementById("page-title").textContent = heading;
-  document.getElementById("overall-heading").textContent = t("overallHeading");
-  document.getElementById("district-heading").textContent = t("districtHeading");
+  document.getElementById("overall-heading").textContent = districtName ? t("overallHeadingDistrict")(districtName) : t("overallHeading");
+  document.getElementById("district-heading").textContent = districtName ? t("districtHeadingDistrict") : t("districtHeading");
   document.getElementById("table-note").textContent = t("note");
   document.getElementById("method-callout-text").textContent = t("methodCalloutText");
   document.getElementById("method-callout-link").textContent = t("methodCalloutLink");
