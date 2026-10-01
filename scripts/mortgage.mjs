@@ -112,3 +112,32 @@ export function loanSentence(spread, { eok, years = YEARS } = {}) {
     `갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.`
   );
 }
+
+const monthLabel = (ym) => `${ym.slice(0, 4)}년 ${Number(ym.slice(4, 6))}월`;
+
+/**
+ * 1년 사이 같은 1억의 매달 상환액이 얼마나 바뀌었나. "지금 사야 하나"는 이 사이트가 답하지 않지만,
+ * "1년 전보다 매달 얼마 더 드나"는 숫자로 답할 수 있다.
+ *
+ * 금리는 위 문단(금감원 공시 상품 최저금리의 중앙값)과 <strong>다른 자</strong>다 - 한국은행이 모은
+ * 예금은행 주택담보대출 신규취급 평균금리(ECOS 121Y006)다. 공시 최저금리는 1년 전 값을 들고 있지
+ * 않아서, 1년 사이 변화는 실제로 나간 대출의 평균으로 잰다. 두 자를 섞지 않게 문장에 적는다.
+ */
+export function yearChangeSentence(mortgageSeries, years = YEARS) {
+  const rows = (mortgageSeries ?? []).filter(([, v]) => Number.isFinite(Number(v)) && Number(v) > 0);
+  if (!rows.length) return null;
+  const [lastMonth, lastRate] = rows.at(-1);
+  const prevMonth = `${Number(lastMonth.slice(0, 4)) - 1}${lastMonth.slice(4, 6)}`;
+  const prev = rows.find(([m]) => m === prevMonth);
+  if (!prev) return null;
+  const now = monthlyPayment(MAN_PER_EOK, Number(lastRate), years);
+  const then = monthlyPayment(MAN_PER_EOK, Number(prev[1]), years);
+  if (!now || !then) return null;
+  const diff = Math.round(now) - Math.round(then);
+  const move = diff === 0 ? "같습니다" : diff > 0 ? `${man(diff)} 늘었습니다` : `${man(-diff)} 줄었습니다`;
+  return (
+    `1년 사이로 보면, 은행이 실제로 내준 주택담보대출의 평균 금리(한국은행 집계)가 ${monthLabel(prevMonth)} 연 ${Number(prev[1])}%에서 ` +
+    `${monthLabel(lastMonth)} 연 ${Number(lastRate)}%가 되어, 같은 1억의 매달 상환액이 ${man(then)}에서 ${man(now)}으로 ${move}. ` +
+    `이 평균 금리는 앞의 상품 최저금리와 다른 자입니다.`
+  );
+}

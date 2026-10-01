@@ -117,16 +117,26 @@ export function priceStanding(items) {
  */
 export const MATURE_SHARE = 0.8;
 
+/**
+ * 등기까지 걸린 날을 가르는 가격대(만원). 비쌀수록 잔금까지 길게 잡는지가 계약 일정을 짜는
+ * 사람의 질문이다.
+ */
+export const GAP_BANDS = [
+  { key: "upTo6", max: 60_000 },
+  { key: "upTo15", max: 150_000 },
+  { key: "upTo25", max: 250_000 },
+  { key: "over25", max: Infinity },
+];
+
+/** 계약에서 등기까지 걸린 날. 1년을 넘는 값은 날짜가 잘못 들어온 것으로 본다. */
+const gapOf = (item) => {
+  const gap = dayGap(dealDate(item), parseShortDate(item.rgstDate));
+  return gap !== null && gap >= 0 && gap < 400 ? gap : null;
+};
+
 export function registrationStats(items, matureShare = MATURE_SHARE) {
   const live = (items ?? []).filter((item) => !isCancelled(item));
   if (!live.length) return null;
-
-  const gaps = [];
-  for (const item of live) {
-    if (!isRegistered(item)) continue;
-    const gap = dayGap(dealDate(item), parseShortDate(item.rgstDate));
-    if (gap !== null && gap >= 0 && gap < 400) gaps.push(gap);
-  }
 
   const months = new Map();
   for (const item of live) {
@@ -144,8 +154,22 @@ export function registrationStats(items, matureShare = MATURE_SHARE) {
   const matured = live.filter((item) => mature.has(monthKey(item)));
   const stale = matured.filter((item) => !isRegistered(item));
 
+  // 걸린 날은 익은 달의 계약에서만 센다. 덜 익은 달에는 빨리 등기된 계약만 들어 있어서, 섞으면
+  // 걸린 날이 짧게 나온다(생존 편향, DIRECTION 체크리스트 7) - 46일이 84일이 된 것이 그 차이다.
+  const gaps = matured.filter(isRegistered).map(gapOf).filter((gap) => gap !== null);
+  const byPrice = {};
+  for (const band of GAP_BANDS) {
+    const lower = GAP_BANDS[GAP_BANDS.indexOf(band) - 1]?.max ?? 0;
+    const inBand = matured
+      .filter((item) => isRegistered(item) && amountOf(item) > lower && amountOf(item) <= band.max)
+      .map(gapOf)
+      .filter((gap) => gap !== null);
+    byPrice[band.key] = inBand.length >= MIN_DEALS ? { days: median(inBand), n: inBand.length } : { days: null, n: inBand.length };
+  }
+
   return {
     medianDays: gaps.length ? median(gaps) : null,
+    byPrice,
     registered: gaps.length,
     matureMonths: [...mature].sort(),
     matured: matured.length,
@@ -175,7 +199,12 @@ export function registrationByMonth(items) {
 /** 자치구별 해제율과 등기 지연율. 표본이 얇은 구는 비율을 말하지 않는다. */
 export const MIN_DEALS = 100;
 
-export function districtStats(itemsByDistrict, matureMonths = null, minDeals = MIN_DEALS) {
+/**
+ * 해제율은 itemsByDistrict(최근 여섯 달)에서, 미등기율은 registrationItems(원본 전체)에서 센다.
+ * 익은 달은 계약 뒤 넉 달은 지나야 생겨서, 여섯 달 창 안에는 없을 수 있다 - 그날 이 표의 미등기율이
+ * 전부 비고 문장이 "0건 가운데 0건(null%)"을 찍었다(#27).
+ */
+export function districtStats(itemsByDistrict, matureMonths = null, minDeals = MIN_DEALS, registrationItems = itemsByDistrict) {
   const rows = [];
   // 익은 달은 서울 전체에서 한 번 정하고 모든 구에 같이 적용한다. 구마다 따로
   // 정하면 어떤 구는 넉 달, 어떤 구는 두 달을 세게 되어 비율끼리 견줄 수 없다.
@@ -184,7 +213,7 @@ export function districtStats(itemsByDistrict, matureMonths = null, minDeals = M
   for (const [district, items] of Object.entries(itemsByDistrict ?? {})) {
     if (!items?.length) continue;
     const cancelled = items.filter(isCancelled).length;
-    const scoped = mature ? items.filter((item) => mature.has(monthKey(item))) : items;
+    const scoped = mature ? (registrationItems?.[district] ?? []).filter((item) => mature.has(monthKey(item))) : items;
     const live = scoped.filter((item) => !isCancelled(item));
     const staleCount = live.filter((item) => !isRegistered(item)).length;
     const registration = mature
@@ -259,4 +288,35 @@ export function leadSentence({ deals, cancelled, timing, standing, months }, loc
     (timing ? ` 절반은 ${timing.medianDays}일 안에 지워졌는데, 신고 기한 30일 안이다.` : "") +
     verdict
   );
+}
+
+const ko = (n) => n.toLocaleString("ko-KR");
+const en = (n) => n.toLocaleString("en-US");
+
+/** 등기 절의 첫 문장. 익은 달이 없으면 그렇다고 적는다 - null을 숫자처럼 찍지 않는다. */
+export function registrationSentence(reg, locale = "ko") {
+  if (!reg) return null;
+  if (!reg.matured || reg.medianDays === null) {
+    return locale === "en"
+      ? "No contract month has matured yet (80% of its deals registered), so neither the time to registration nor the late-registration share can be stated."
+      : "아직 익은 달(그 달 계약의 열에 여덟이 등기를 마친 달)이 없어 등기까지 걸린 날과 늦은 등기 비율을 말할 수 없습니다.";
+  }
+  const band = (key, label) => {
+    const b = reg.byPrice?.[key];
+    return b?.days !== null && b?.days !== undefined ? `${label} ${b.days}${locale === "en" ? " days" : "일"}` : null;
+  };
+  const bands =
+    locale === "en"
+      ? [band("upTo6", "up to ₩600M"), band("upTo15", "₩0.6–1.5B"), band("upTo25", "₩1.5–2.5B"), band("over25", "above ₩2.5B")]
+      : [band("upTo6", "6억 이하"), band("upTo15", "6억~15억"), band("upTo25", "15억~25억"), band("over25", "25억 넘으면")];
+  const listed = bands.filter(Boolean);
+  return locale === "en"
+    ? `Counting only matured months, half of all deals were registered within ${reg.medianDays} days of signing` +
+        (listed.length ? ` (${listed.join(", ")})` : "") +
+        `. Registration follows the final payment, so this is roughly how long the gap between contract and final payment runs. ` +
+        `Of the ${en(reg.matured)} deals in matured months, ${en(reg.stale)} (${reg.staleShare}%) are still unregistered.`
+    : `익은 달의 계약만 놓고 보면 계약에서 등기까지 절반이 ${reg.medianDays}일 안에 끝났습니다` +
+        (listed.length ? `(${listed.join(", ")})` : "") +
+        `. 등기는 잔금을 치른 뒤에 하므로, 대략 계약에서 잔금까지 그만큼 잡는다는 뜻입니다. ` +
+        `익은 달의 계약 ${ko(reg.matured)}건 가운데 ${ko(reg.stale)}건(${reg.staleShare}%)이 아직 등기를 마치지 않았습니다.`;
 }

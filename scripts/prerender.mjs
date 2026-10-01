@@ -7,7 +7,7 @@ import { DISTRICT_PAGES, DISTRICT_SLUGS, districtFile } from "./district-slugs.m
 import { districtSentences } from "./district-summary.mjs";
 import { factSentences } from "./district-facts.mjs";
 import { renewalSentences } from "./renewal-facts.mjs";
-import { apartmentOptions, loanSentence, rateSpread } from "./mortgage.mjs";
+import { apartmentOptions, loanSentence, rateSpread, yearChangeSentence } from "./mortgage.mjs";
 import { costsSentence } from "./purchase-costs.mjs";
 import { rateFacts, factSentences as rateSentences } from "./rate-facts.mjs";
 import {
@@ -240,7 +240,7 @@ function budgetWhereHtml(band) {
   return text ? `<p class="budget-where">${escapeHtml(text)}</p>` : "";
 }
 
-export function budgetBodyHtml(band, periodList, rates = null) {
+export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = null) {
   if (!band) return null;
 
   const periods = (periodList ?? []).map((p) => monthLabel(p)).filter(Boolean).join(", ");
@@ -255,7 +255,7 @@ export function budgetBodyHtml(band, periodList, rates = null) {
     budgetWhereHtml(band) +
     (districts ? `<div class="budget-districts">거래가 많은 지역: ${districts}</div>` : "") +
     `<ul class="budget-deals">${band.deals.map(budgetDealHtml).join("")}</ul>` +
-    budgetLoanHtml(band, rates) +
+    budgetLoanHtml(band, rates, mortgageSeries) +
     budgetCostsHtml(band)
   );
 }
@@ -285,12 +285,13 @@ export function budgetFactsHtml(band, locale = "ko") {
  * "그래서 매달 얼마"를 붙인다. 이 화면은 예산에 답하면서 정작 그 예산이 매달 얼마가
  * 되는지는 말하지 않고 있었다 - 실거래와 금리를 같이 받는 곳이라야 자동으로 물릴 수 있다.
  */
-export function budgetLoanHtml(band, rates) {
+export function budgetLoanHtml(band, rates, mortgageSeries = null) {
   const spread = rateSpread(apartmentOptions(rates));
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = loanSentence(spread, { eok });
   if (!sentence) return "";
-  return `<p class="budget-loan">${sentence}</p>`;
+  const year = yearChangeSentence(mortgageSeries);
+  return `<p class="budget-loan">${sentence}${year ? ` ${escapeHtml(year)}` : ""}</p>`;
 }
 
 export { budgetBandLabel };
@@ -813,13 +814,10 @@ export function cancelLeadHtml(cancellation) {
   return cancellation?.seoul?.leadKo ? escapeHtml(cancellation.seoul.leadKo) : null;
 }
 
+/** 문장은 빌더가 두 언어로 만든다(scripts/cancellation.mjs registrationSentence). 화면과 같은 글자를 꽂는다. */
 export function cancelMonthLeadHtml(cancellation) {
-  const reg = cancellation?.seoul?.registration;
-  if (!reg?.medianDays) return null;
-  return escapeHtml(
-    `등기까지 걸린 날은 중앙값 ${reg.medianDays}일입니다. 익은 달의 계약 ${reg.matured.toLocaleString("ko-KR")}건 가운데` +
-      ` ${reg.stale.toLocaleString("ko-KR")}건(${reg.staleShare}%)이 아직 등기를 마치지 않았습니다.`
-  );
+  const text = cancellation?.seoul?.registrationLead?.ko;
+  return text ? escapeHtml(text) : null;
 }
 
 export function cancelDistrictsHtml(cancellation) {

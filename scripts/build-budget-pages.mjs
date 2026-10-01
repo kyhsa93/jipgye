@@ -30,9 +30,9 @@ function navHtml(page) {
   return links.join("");
 }
 
-export function buildBudgetPage(baseHtml, page, budget, rates = null) {
+export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSeries = null) {
   const band = (budget?.bands ?? []).find((b) => b.min10k === page.min10k) ?? null;
-  const body = budgetBodyHtml(band, budget?.periods, rates);
+  const body = budgetBodyHtml(band, budget?.periods, rates, mortgageSeries);
   if (!body) return null;
 
   let html = baseHtml;
@@ -95,6 +95,8 @@ async function main() {
   const budget = await readJson(path.join(root, "docs/data/budget-deals.json"));
   // 금리가 아직 없는 날에도 예산 페이지는 나와야 한다. 월 상환액 문단만 빠진다.
   const rates = await readJson(path.join(root, "docs/data/rates.json"));
+  // 1년 사이 상환액 변화에 쓰는 한국은행 주담대 평균 금리(지표 수집이 받는 계열). 없으면 그 문장만 빠진다.
+  const mortgageSeries = (await readJson(path.join(root, "raw/indicators/series.json")))?.series?.mortgage_rate ?? null;
   if (!budget?.bands?.length) {
     console.log("  예산 데이터가 없습니다 - 예산 페이지를 만들지 않습니다");
     return;
@@ -108,7 +110,7 @@ async function main() {
   const skipped = [];
 
   for (const page of BUDGET_PAGES) {
-    const html = buildBudgetPage(baseHtml, page, budget, rates);
+    const html = buildBudgetPage(baseHtml, page, budget, rates, mortgageSeries);
     if (!html) {
       skipped.push(`${page.eok}억대`);
       continue;

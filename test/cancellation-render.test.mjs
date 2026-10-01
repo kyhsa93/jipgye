@@ -73,9 +73,11 @@ test("안 익은 달의 미등기는 자치구 미등기율에 들어가지 않�
   assert.match(rows[0], /9\.1%/);
 });
 
-test("등기 문단이 중앙값과 미등기 건수를 말한다", async () => {
+test("등기 문단은 빌더가 만든 문장을 그대로 쓴다", async () => {
+  // 같은 문장을 화면이 다시 짜면 빌드 쪽과 갈라진다(체크리스트 10).
   const page = await open();
-  assert.match(page.monthLeadText(), /중앙값/);
+  assert.equal(page.monthLeadText(), CANCELLATION.seoul.registrationLead.ko);
+  assert.match(page.monthLeadText(), /절반이 \d+일 안에/);
   assert.match(page.monthLeadText(), /아직 등기를 마치지 않았습니다/);
 });
 

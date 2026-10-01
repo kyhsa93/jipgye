@@ -7,11 +7,13 @@ import {
   leadSentence,
   priceStanding,
   registrationByMonth,
+  registrationSentence,
   registrationStats,
 } from "./cancellation.mjs";
 import { DISTRICTS } from "./realestate-districts.mjs";
 import { DISTRICT_SLUGS } from "./district-slugs.mjs";
 import { readSlotFile } from "./realestate-raw.mjs";
+import { RETENTION_MONTHS } from "./realestate-slots.mjs";
 import { recentMonths } from "./realestate-source.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -46,14 +48,16 @@ export async function readRawSales(months, dir) {
   return Object.fromEntries(perDistrict.filter(([, items]) => items.length));
 }
 
-export function buildPayload({ byDistrict, months, now }) {
+export function buildPayload({ byDistrict, months, now, registrationByDistrict = byDistrict }) {
   const all = Object.values(byDistrict ?? {}).flat();
   if (!all.length) return null;
 
   const cancelled = all.filter(isCancelled).length;
   const timing = cancellationTiming(all);
   const standing = priceStanding(all);
-  const registration = registrationStats(all);
+  // 등기는 원본 전체로 센다. 익은 달은 계약 뒤 넉 달은 지나야 생겨 여섯 달 창 안에는 없을 수 있다(#27).
+  const registrationAll = Object.values(registrationByDistrict ?? {}).flat();
+  const registration = registrationStats(registrationAll);
 
   const seoul = {
     deals: all.length,
@@ -71,14 +75,15 @@ export function buildPayload({ byDistrict, months, now }) {
       ...seoul,
       leadKo: leadSentence({ deals: all.length, cancelled, timing, standing, months }, "ko"),
       leadEn: leadSentence({ deals: all.length, cancelled, timing, standing, months }, "en"),
+      registrationLead: { ko: registrationSentence(registration, "ko"), en: registrationSentence(registration, "en") },
     },
     slugs: Object.fromEntries(
       Object.keys(byDistrict)
         .filter((name) => DISTRICT_SLUGS[name])
         .map((name) => [name, DISTRICT_SLUGS[name]])
     ),
-    districts: districtStats(byDistrict, registration?.matureMonths ?? null),
-    registrationByMonth: registrationByMonth(all),
+    districts: districtStats(byDistrict, registration?.matureMonths ?? null, undefined, registrationByDistrict),
+    registrationByMonth: registrationByMonth(registrationAll),
   };
 }
 
@@ -86,8 +91,9 @@ async function main() {
   const now = new Date();
   const months = recentMonths(now, MONTHS);
   const byDistrict = await readRawSales(months);
+  const registrationByDistrict = await readRawSales(recentMonths(now, RETENTION_MONTHS));
 
-  const payload = buildPayload({ byDistrict, months, now });
+  const payload = buildPayload({ byDistrict, months, now, registrationByDistrict });
   if (!payload) {
     console.log("  매매 원본이 없습니다 - 기존 해제 데이터를 그대로 둡니다");
     return;
