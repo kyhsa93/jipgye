@@ -187,10 +187,10 @@ const T = {
     complexThin: (n) => `신고 ${n}건`,
     complexCount: (n) => `${n}건`,
     priceHeading: (month) => `매매가 범위 — 최근 6개월 거래를 ${month} 값으로 고침`,
-    priceMedian: "중앙값",
-    priceRange: "범위",
+    priceMedian: (month) => `중앙값 (${month} 값)`,
+    priceRange: (month) => `범위 (${month} 값)`,
     priceMiddle: "가운데 절반",
-    priceMinMax: "최저~최고",
+    priceMinMax: "고친 최저~최고",
     priceDeals: "거래",
     priceRaw: "고치기 전 중앙값",
     priceThin: (n) => `신고 ${n}건 — 범위를 내지 않습니다`,
@@ -206,11 +206,12 @@ const T = {
       "5건 이상이면 가운데 절반, 3~4건이면 최저~최고를 적고, 2건 이하면 범위를 내지 않습니다.",
     ratioHeading: "최근 두 달 매매·전세와 전세가율",
     priceYearAgo: "1년 전 중앙값",
-    priceTop: "6개월 최고",
+    priceTop: "실제 최고 신고 (고치기 전)",
+    priceTopNote:
+      "'실제 최고 신고'는 창 안에서 가장 비싸게 신고된 한 건을 고치지 않고 적은 것입니다. 중앙값·범위는 지난 거래를 기준 달 값으로 고친 것이라, 그 사이 값이 오른 칸에서는 실제 최고가 고친 범위보다 낮게 나올 수 있습니다 — 그 값에 실제로 팔린 거래가 있었다는 뜻은 아닙니다. 신고가 한 건이 곧 시세도 아니었습니다(신고가 화면).",
     priceFloor: (f) => `${f}층`,
     priceYearAgoNote: (ms) =>
-      `'1년 전'은 ${ms[0].slice(0, 4)}년 ${Number(ms[0].slice(4))}~${Number(ms.at(-1).slice(4))}월 같은 칸 거래의 중앙값입니다(고치기 전, 3건 이상일 때만 — 갈아타기 화면과 같은 구간). ` +
-      "'6개월 최고'는 창 안에서 가장 비싸게 신고된 한 건입니다 — 신고가 한 건이 곧 시세는 아니었습니다(신고가 화면).",
+      `'1년 전'은 ${ms[0].slice(0, 4)}년 ${Number(ms[0].slice(4))}~${Number(ms.at(-1).slice(4))}월 같은 칸 거래의 중앙값입니다(고치기 전, 3건 이상일 때만 — 갈아타기 화면과 같은 구간).`,
     cardFloorLink: "1층이면 얼마나 싸야 정상인가 →",
     cardRecordLink: "신고가 다음 거래는 그 값이었나 →",
     groupLabel: "단지로 묶어 보기",
@@ -326,10 +327,10 @@ const T = {
     complexThin: (n) => `${n} filed`,
     complexCount: (n) => `${n} deals`,
     priceHeading: (month) => `Sale price range — last 6 months, adjusted to ${month}`,
-    priceMedian: "Median",
-    priceRange: "Range",
+    priceMedian: (month) => `Median (${month} terms)`,
+    priceRange: (month) => `Range (${month} terms)`,
     priceMiddle: "middle half",
-    priceMinMax: "low–high",
+    priceMinMax: "adjusted low–high",
     priceDeals: "Deals",
     priceRaw: "Unadjusted median",
     priceThin: (n) => `${n} filed — no range`,
@@ -345,11 +346,12 @@ const T = {
       "Five or more deals give the middle half; three or four give low–high; two or fewer give no range.",
     ratioHeading: "Last two months: sale, jeonse and jeonse ratio",
     priceYearAgo: "Median a year ago",
-    priceTop: "6-month high",
+    priceTop: "Highest filing (as filed)",
+    priceTopNote:
+      "'Highest filing' is the single dearest deal in the window, as filed. Median and range adjust past deals to the reference month, so where prices rose the real high can sit below the adjusted range — that does not mean anything actually sold at those values. A single record sale was not the market price either (see the record-high page).",
     priceFloor: (f) => `floor ${f}`,
     priceYearAgoNote: (ms) =>
-      `'A year ago' is the median of the same unit type in ${ms[0].slice(0, 4)}-${ms[0].slice(4)} to ${ms.at(-1).slice(4)} (unadjusted, only with three or more deals — the same window as the moving-house page). ` +
-      "'6-month high' is the single dearest filing in the window — a single record sale was not the market price (see the record-high page).",
+      `'A year ago' is the median of the same unit type in ${ms[0].slice(0, 4)}-${ms[0].slice(4)} to ${ms.at(-1).slice(4)} (unadjusted, only with three or more deals — the same window as the moving-house page).`,
     cardFloorLink: "How much less should a first floor be? →",
     cardRecordLink: "Did the sale after a record high follow it? →",
     groupLabel: "Group by complex",
@@ -1083,6 +1085,7 @@ function complexPriceHtml(file, apt) {
   const unadjusted = rows.reduce((sum, [, c]) => sum + (c.unadjusted ?? 0), 0);
   const yearAgoMonths = rows.map(([, c]) => c.yearAgo?.months).find(Boolean) ?? null;
 
+  const reference = yearMonthLabel(file.reference);
   const body = rows
     .map(([area, c]) => {
       // 같은 평형의 면적 표기 차이(1㎡ 안쪽)는 한 칸으로 묶었다 - 묶였으면 그 폭을 적는다(#32).
@@ -1094,8 +1097,8 @@ function complexPriceHtml(file, apt) {
       const kind = t(c.quartile ? "priceMiddle" : "priceMinMax");
       return (
         `<tr>${head}` +
-        `<td data-label="${escapeHtml(t("priceMedian"))}">${escapeHtml(formatEok(c.median))}</td>` +
-        `<td data-label="${escapeHtml(t("priceRange"))}">${escapeHtml(`${formatEok(c.low)} ~ ${formatEok(c.high)}`)}` +
+        `<td data-label="${escapeHtml(t("priceMedian")(reference))}">${escapeHtml(formatEok(c.median))}</td>` +
+        `<td data-label="${escapeHtml(t("priceRange")(reference))}">${escapeHtml(`${formatEok(c.low)} ~ ${formatEok(c.high)}`)}` +
         ` <span class="count">${escapeHtml(kind)}</span></td>` +
         `<td data-label="${escapeHtml(t("priceDeals"))}">${escapeHtml(t("complexCount")(c.n))}</td>` +
         `<td data-label="${escapeHtml(t("priceRaw"))}">${escapeHtml(formatEok(c.raw))}</td>` +
@@ -1105,14 +1108,14 @@ function complexPriceHtml(file, apt) {
     })
     .join("");
 
-  const reference = yearMonthLabel(file.reference);
   return (
     `<h3>${escapeHtml(t("priceHeading")(reference))}</h3>` +
     `<div class="table-wrap"><table class="data-table"><thead><tr>` +
-    `<th>${escapeHtml(t("complexArea"))}</th><th>${escapeHtml(t("priceMedian"))}</th>` +
-    `<th>${escapeHtml(t("priceRange"))}</th><th>${escapeHtml(t("priceDeals"))}</th>` +
+    `<th>${escapeHtml(t("complexArea"))}</th><th>${escapeHtml(t("priceMedian")(reference))}</th>` +
+    `<th>${escapeHtml(t("priceRange")(reference))}</th><th>${escapeHtml(t("priceDeals"))}</th>` +
     `<th>${escapeHtml(t("priceRaw"))}</th><th>${escapeHtml(t("priceYearAgo"))}</th><th>${escapeHtml(t("priceTop"))}</th></tr></thead><tbody>${body}</tbody></table></div>` +
     (yearAgoMonths ? `<p class="content-notice">${escapeHtml(t("priceYearAgoNote")(yearAgoMonths))}</p>` : "") +
+    (rows.some(([, c]) => c.top) ? `<p class="content-notice">${escapeHtml(t("priceTopNote"))}</p>` : "") +
     `<p class="content-notice">${escapeHtml(t("priceNote")(reference, file.referenceFilled, file.referenceBias, unadjusted))}</p>` +
     // 카드를 본 사람이 다음에 묻는 것(층 할인, 신고가)으로 가는 길(PO 검토 #33).
     `<p class="card-links"><a href="./floor-gap.html">${escapeHtml(t("cardFloorLink"))}</a> · ` +

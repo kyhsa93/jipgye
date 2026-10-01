@@ -233,3 +233,23 @@ test("카드가 1년 전 중앙값과 6개월 최고(층)를 그린다 (#35)", a
   assert.match(html, /15층/);
   assert.match(html, /2025년 8~10월/);
 });
+
+test("고친 범위와 고치지 않은 실제 최고 신고를 머리글에서 갈라 적는다 (#38)", async () => {
+  // 값이 오른 칸: 실제 최고(36.8억)가 8월 값으로 고친 범위 하단(37.9억)보다 낮다 - 모순이 아니라 서로 다른 값이라는 게 읽혀야 한다.
+  const file = {
+    reference: "202608",
+    cells: {
+      오른단지: {
+        130.06: { n: 3, median: 387821, low: 379390, high: 387841, quartile: false, raw: 365000, unadjusted: 0, top: { amount: 368000, floor: 12, date: "2026-05-01" } },
+      },
+    },
+  };
+  const p = await page("?district=노원구&apt=오른단지", file);
+  const html = p.byId("complex-card").innerHTML;
+  assert.match(html, /<th>중앙값 \(2026년 8월 값\)<\/th>/);
+  assert.match(html, /<th>범위 \(2026년 8월 값\)<\/th>/);
+  assert.match(html, /고친 최저~최고/);
+  assert.match(html, /<th>실제 최고 신고 \(고치기 전\)<\/th>/);
+  assert.match(html, /실제 최고가 고친 범위보다 낮게 나올 수 있습니다/, "1년 전 값이 없어도 실제 최고 설명이 나와야 한다");
+  assert.doesNotMatch(html, /6개월 최고/);
+});
