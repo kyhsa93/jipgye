@@ -9,6 +9,7 @@ import { buildBands, mergeBands } from "../scripts/budget-bands.mjs";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
+const RATES = JSON.parse(await readFile(path.join(root, "docs/data/rates.json"), "utf8"));
 
 const deal = (amount10k, extra = {}) => ({
   district: "노원구",
@@ -99,14 +100,20 @@ test("예산대 목록은 어느 페이지에도 두지 않는다", async () => 
 });
 
 test("프리렌더가 심은 거래 목록을 클라이언트가 그대로 다시 그린다", async () => {
+  // 금리까지 넘긴다. 금리 없이 돌리면 월 상환액 문단이 애초에 없어서, 클라이언트가 그 문단을
+  // 지우는 것(#26)을 이 검사가 볼 수 없었다.
+  const band = BUDGET.bands.find((b) => b.min10k === page8.min10k);
+  const prerendered = budgetBodyHtml(band, BUDGET.periods, RATES);
+  assert.match(prerendered, /budget-loan budget-costs/, "부대비용 문단이 빌드에 없다");
+
   const page = await loadRealestatePage({
     realestate: REALESTATE,
     budget: BUDGET,
     budgetBand: page8.min10k,
+    prerenderedBudget: prerendered,
   });
 
-  const band = BUDGET.bands.find((b) => b.min10k === page8.min10k);
-  assert.equal(page.budgetHtml(), budgetBodyHtml(band, BUDGET.periods));
+  assert.equal(page.budgetHtml(), prerendered, "클라이언트가 빌드가 구운 문단을 지웠다");
 });
 
 test("예산 페이지는 그 구간만 보여주고 주소를 건드리지 않는다", async () => {

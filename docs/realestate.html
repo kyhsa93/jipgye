@@ -1136,6 +1136,18 @@ const budgetBand10k = (() => {
 })();
 const isBudgetPage = budgetBand10k !== null;
 const budgetEnabled = isBudgetPage;
+
+// 빌드가 이 예산대에 구워 둔 문단(월 상환액, 매매가 말고 드는 돈). 아래 renderBudget이 목록을
+// 다시 그리면서 이것들을 지워, 사람은 한 번도 못 보고 있었다(#26). 처음 받은 HTML에서 떼어
+// 두었다가 다시 그릴 때 붙인다 - 이 페이지는 자기 예산대 하나만 그리므로 그대로 맞는다.
+const prerenderedBudgetExtras = (() => {
+  try {
+    const nodes = document.querySelectorAll("#budget-result .budget-loan");
+    return Array.from(nodes ?? [], (node) => node.outerHTML ?? "").join("");
+  } catch {
+    return "";
+  }
+})();
 const budgetEok = isBudgetPage ? Math.max(1, Math.round(budgetBand10k / 10000)) : null;
 
 const EOK = 10000;
@@ -1186,7 +1198,7 @@ function renderBudget() {
     return;
   }
 
-  box.innerHTML = budgetBodyHtml(band, cache.budget.periods);
+  box.innerHTML = budgetBodyHtml(band, cache.budget.periods) + prerenderedBudgetExtras;
 }
 
 function budgetBodyHtml(band, periodList) {

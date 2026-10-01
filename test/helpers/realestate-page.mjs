@@ -71,7 +71,7 @@ function stubElement(attrs = {}, id = "", shared = null) {
   });
 }
 
-export async function loadRealestatePage({ realestate, trend, budget, complexRatio, budgetBand = null, kind = null, district = null, locale = "ko", search = "", analytics } = {}) {
+export async function loadRealestatePage({ realestate, trend, budget, complexRatio, budgetBand = null, prerenderedBudget = "", kind = null, district = null, locale = "ko", search = "", analytics } = {}) {
   const html = await readFile(path.join(root, "docs/realestate.html"), "utf8");
   const script = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
 
@@ -158,7 +158,12 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
         if (!byId.has(sel)) byId.set(sel, stubElement());
         return byId.get(sel);
       },
-      querySelectorAll: () => [],
+      // 예산 페이지는 빌드가 #budget-result에 구워 둔 문단(.budget-loan)을 로드 때 떼어 둔다.
+      // 받은 HTML(prerenderedBudget)에서 그 문단만 꺼내 준다.
+      querySelectorAll: (sel) =>
+        sel === "#budget-result .budget-loan"
+          ? [...String(prerenderedBudget).matchAll(/<p class="budget-loan[^"]*">[\s\S]*?<\/p>/g)].map((m) => ({ outerHTML: m[0] }))
+          : [],
       createElement: () => stubElement(),
       addEventListener() {},
       documentElement: stubElement(),

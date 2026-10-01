@@ -8,6 +8,7 @@ import { districtSentences } from "./district-summary.mjs";
 import { factSentences } from "./district-facts.mjs";
 import { renewalSentences } from "./renewal-facts.mjs";
 import { apartmentOptions, loanSentence, rateSpread } from "./mortgage.mjs";
+import { costsSentence } from "./purchase-costs.mjs";
 import { rateFacts, factSentences as rateSentences } from "./rate-facts.mjs";
 import {
   KIND_FIELDS,
@@ -254,8 +255,19 @@ export function budgetBodyHtml(band, periodList, rates = null) {
     budgetWhereHtml(band) +
     (districts ? `<div class="budget-districts">거래가 많은 지역: ${districts}</div>` : "") +
     `<ul class="budget-deals">${band.deals.map(budgetDealHtml).join("")}</ul>` +
-    budgetLoanHtml(band, rates)
+    budgetLoanHtml(band, rates) +
+    budgetCostsHtml(band)
   );
+}
+
+/**
+ * "매매가 말고 드는 돈". 규칙과 기준일은 scripts/purchase-costs.mjs 한 곳에 있다. 월 상환액과
+ * 같은 상자를 쓴다 - 둘 다 "그래서 실제로 얼마"에 답하는 문단이다.
+ */
+export function budgetCostsHtml(band) {
+  const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
+  const sentence = costsSentence(eok);
+  return sentence ? `<p class="budget-loan budget-costs">${escapeHtml(sentence)}</p>` : "";
 }
 
 /**
