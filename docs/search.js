@@ -155,6 +155,33 @@
       href: `./deal-search.html?${params.toString()}`,
     };
   }
+  /**
+   * 두 단어 질문(UIUX #55). "노원 송파"처럼 자치구 둘이면 갈아타기(두 구를 골라 둔 채), "전세 월세"면
+   * 전세 vs 월세로 보낸다. 각 단어는 찾으면서 둘을 같이 치면 0건이던 것.
+   */
+  function pairQuestion(query) {
+    const words = String(query ?? "").trim().split(/\s+/).filter(Boolean);
+    const q = squash(query);
+    if (q.includes("전세") && q.includes("월세")) {
+      return { rank: -2, text: "전세 vs 월세", sub: "어느 쪽이 싼가", href: "./jeonse-vs-wolse.html" };
+    }
+    if (words.length !== 2) return null;
+    const districts = (index?.entries ?? []).filter((e) => e.kind === "district").map((e) => e.text);
+    const districtOf = (word) => {
+      const w = squash(word);
+      if (w.length < 2) return null;
+      return districts.find((d) => squash(d) === w || squash(d) === `${w}구`) ?? null;
+    };
+    const [from, to] = words.map(districtOf);
+    if (!from || !to || from === to) return null;
+    return {
+      rank: -2,
+      text: `${from} → ${to}`,
+      sub: "갈아타기 — 갈 동네는 얼마나 올랐나",
+      href: `./switch-house.html?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
+    };
+  }
+
   function search(query) {
     if (!index) return [];
     const q = squash(query);
@@ -200,7 +227,8 @@
     // 조건 검색이 아니라 강남구 페이지를 찾는다.
     const exact = sorted.length > 0 && sorted[0].rank < 10;
     const guess = exact ? null : interpret(query);
-    return (guess ? [guess, ...sorted] : sorted).slice(0, MAX);
+    const pair = pairQuestion(query);
+    return [pair, guess, ...sorted].filter(Boolean).slice(0, MAX);
   }
 
   const escapeHtml = (value) =>

@@ -60,6 +60,8 @@ test("색인의 화면 주소가 전부 실재한다", async () => {
 const INDEX = {
   entries: [
     { kind: "district", text: "강남구", href: "./district-gangnam.html", also: ["강남", "gangnam"] },
+    { kind: "district", text: "노원구", href: "./district-nowon.html", also: ["노원"] },
+    { kind: "district", text: "송파구", href: "./district-songpa.html", also: ["송파"] },
     { kind: "budget", text: "10억대 아파트", href: "./budget-10eok.html", also: ["10억", "10"] },
     { kind: "screen", text: "전세 vs 월세", href: "./jeonse-vs-wolse.html", also: ["전환율"] },
   ],
@@ -206,4 +208,13 @@ test("사이트 안에 답이 있는 주제어로도 찾아진다 (PO 검토 #33
   const { entries } = buildPayload({ byDistrict: {}, now: NOW });
   const words = entries.flatMap((e) => [e.text, ...(e.also ?? [])]);
   for (const w of ["취득세", "대출 한도", "잔금", "신혼", "디딤돌"]) assert.ok(words.includes(w), `${w}로는 아무것도 안 찾아진다`);
+});
+
+test("두 단어 질문: 자치구 둘이면 갈아타기, 전세·월세면 전세 vs 월세 (#55)", async () => {
+  const pair = await runSearch("노원 송파");
+  assert.match(pair, /노원구 → 송파구/, "자치구 둘을 못 읽었다");
+  assert.match(pair, /switch-house\.html\?from=%EB%85%B8%EC%9B%90%EA%B5%AC&amp;to=%EC%86%A1%ED%8C%8C%EA%B5%AC|switch-house\.html\?from=%EB%85%B8%EC%9B%90%EA%B5%AC&to=%EC%86%A1%ED%8C%8C%EA%B5%AC/);
+  const rent = await runSearch("전세 월세");
+  assert.match(rent, /jeonse-vs-wolse\.html/);
+  assert.doesNotMatch(await runSearch("노원 노원"), /switch-house/, "같은 구 둘을 갈아타기로 보냈다");
 });
