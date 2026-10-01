@@ -56,6 +56,7 @@ export function marketDeal(item) {
     district: String(item.sggCd),
     apt,
     dong: String(item?.umdNm ?? "").trim(),
+    floor: Number(item?.floor) || null,
     buildYear: Number.isInteger(buildYear) && buildYear > 1900 ? buildYear : null,
     // 화면의 거래 목록(deals-*.json)과 같은 자리수. 다르면 카드가 평형을 못 찾는다.
     area: Math.round(area * 100) / 100,
@@ -138,7 +139,32 @@ export function summarize(deals, levels, reference) {
     raw: won(median(deals.map((deal) => deal.amount))),
     unadjusted: values.filter((v) => !v.adjusted).length,
     from: deals.map((d) => d.date).sort()[0],
+    // 창 안의 가장 비싼 거래(고치기 전 값). 신고가 한 건이 시세는 아니었다는 화면(record-high)과 이어 읽게 둔다.
+    top: (() => {
+      const t = [...deals].sort((a, b) => b.amount - a.amount || (a.date < b.date ? 1 : -1))[0];
+      return { amount: t.amount, floor: t.floor, date: t.date };
+    })(),
   };
+}
+
+/**
+ * 1년 전 같은 칸의 중앙값(고치기 전). 갈아타는 사람이 "이 단지 이 평형이 1년 동안 얼마나 움직였나"를 묻는다(#35).
+ * 1년 전 거래의 면적은 지금 칸 이름 가운데 1㎡ 안쪽의 가장 가까운 것에 붙인다 - 1년 전 거래로 지금의 칸 묶음을
+ * 다시 짜면 지금 범위의 칸 구성과 그 검증 숫자가 바뀐다.
+ */
+export function yearAgoCells(cellNames, deals) {
+  const out = new Map();
+  for (const d of deals) {
+    const names = cellNames.get(d.apt);
+    if (!names) continue;
+    let best = null;
+    for (const name of names) if (Math.abs(name - d.area) < AREA_GROUP && (best === null || Math.abs(name - d.area) < Math.abs(best - d.area))) best = name;
+    if (best === null) continue;
+    const key = `${d.apt}\u0000${best}`;
+    if (!out.has(key)) out.set(key, []);
+    out.get(key).push(d);
+  }
+  return out;
 }
 
 /** 오늘에서 WINDOW_DAYS 안. */
@@ -180,7 +206,7 @@ export function areaGroups(deals) {
 }
 
 /** 자치구 하나의 칸 요약: { 단지명: { 평형(묶음 이름): 요약 } }. 묶인 면적이 여럿이면 areas로 남긴다. */
-export function districtCells(deals, levels, reference) {
+export function districtCells(deals, levels, reference, { yearAgo = [], yearAgoMonths = null } = {}) {
   const byApt = new Map();
   for (const deal of deals) {
     if (!byApt.has(deal.apt)) byApt.set(deal.apt, []);
@@ -200,6 +226,16 @@ export function districtCells(deals, levels, reference) {
     for (const [name, group] of [...cells].sort(([a], [b]) => a - b)) {
       const areas = [...new Set(group.map((d) => d.area))].sort((a, b) => a - b);
       out[apt][name] = { ...summarize(group, levels, reference), ...(areas.length > 1 ? { areas } : {}) };
+    }
+  }
+
+  if (yearAgo.length && yearAgoMonths) {
+    const names = new Map(Object.entries(out).map(([apt, areas]) => [apt, Object.keys(areas).map(Number)]));
+    for (const [key, group] of yearAgoCells(names, yearAgo)) {
+      const [apt, name] = key.split("\u0000");
+      const cell = out[apt]?.[name];
+      if (!cell?.median || group.length < MIN_DEALS) continue;
+      cell.yearAgo = { median: won(median(group.map((d) => d.amount))), n: group.length, months: yearAgoMonths };
     }
   }
   return out;

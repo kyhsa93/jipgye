@@ -191,3 +191,45 @@ test("묶인 칸은 묶인 면적들을 남기고, 거래를 합쳐 범위를 �
   assert.deepEqual(cells["가단지"]["84.95"].areas, [84.95, 84.96, 84.98]);
   assert.equal(cells["가단지"]["84.95"].n, 3, "같은 평형 세 건이 합쳐지지 않았다");
 });
+
+test("칸에 창 안 최고 한 건(층)과 1년 전 같은 칸 중앙값을 남긴다 (#35)", () => {
+  const { levels } = indexLevels(index, null);
+  const deals = [100000, 104000, 98000].map((a, i) => marketDeal(item({ dealAmount: String(a), floor: String(10 + i) })));
+  const old = [90000, 92000, 94000, 70000].map((a) => marketDeal(item({ dealAmount: String(a), dealYear: 2025, excluUseAr: 84.5 })));
+  const cells = districtCells(deals, levels, "202607", { yearAgo: old, yearAgoMonths: ["202506", "202507", "202508"] });
+  const c = cells["가단지"]["84.99"];
+  assert.deepEqual(c.top, { amount: 104000, floor: 11, date: "2026-06-15" });
+  assert.equal(c.yearAgo.median, 91000, "1년 전 중앙값이 고치기 전 값이 아니다");
+  assert.equal(c.yearAgo.n, 4);
+  assert.deepEqual(c.yearAgo.months, ["202506", "202507", "202508"]);
+});
+
+test("1년 전 거래가 3건 미만이면 비교값을 두지 않는다", () => {
+  const { levels } = indexLevels(index, null);
+  const deals = [100000, 104000, 98000].map((a) => marketDeal(item({ dealAmount: String(a) })));
+  const old = [90000, 92000].map((a) => marketDeal(item({ dealAmount: String(a), dealYear: 2025 })));
+  const cells = districtCells(deals, levels, "202607", { yearAgo: old, yearAgoMonths: ["202506"] });
+  assert.equal(cells["가단지"]["84.99"].yearAgo, undefined);
+});
+
+test("카드가 1년 전 중앙값과 6개월 최고(층)를 그린다 (#35)", async () => {
+  const file = {
+    reference: "202608",
+    cells: {
+      비교단지: {
+        84.9: {
+          n: 6, median: 80000, low: 78000, high: 82000, quartile: true, raw: 79000, unadjusted: 0,
+          top: { amount: 85000, floor: 15, date: "2026-08-01" },
+          yearAgo: { median: 72000, n: 5, months: ["202508", "202509", "202510"] },
+        },
+      },
+    },
+  };
+  const p = await page("?district=노원구&apt=비교단지", file);
+  const html = p.byId("complex-card").innerHTML;
+  assert.match(html, /1년 전 중앙값/);
+  assert.match(html, /7억 2,000만원/);
+  assert.match(html, /8억 5,000만원/);
+  assert.match(html, /15층/);
+  assert.match(html, /2025년 8~10월/);
+});

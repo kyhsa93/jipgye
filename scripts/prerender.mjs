@@ -340,8 +340,18 @@ export function budgetCandidatesHtml(band, complexFiles) {
   const byDistrict = new Map();
   for (const row of rows) byDistrict.set(row.district, (byDistrict.get(row.district) ?? 0) + 1);
   const districts = [...byDistrict].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ko"));
-  const list = rows
-    .slice(0, CANDIDATE_LIST)
+  // 평형대로 나눈다 - 상위가 재건축 소형으로만 채워지면 59·84형을 찾는 사람이 다시 걸러야 했다(#35).
+  const BANDS = [
+    ["60㎡ 미만", (r) => r.area < 60],
+    ["60~85㎡", (r) => r.area >= 60 && r.area <= 85],
+    ["85㎡ 초과", (r) => r.area > 85],
+  ];
+  const per = Math.floor(CANDIDATE_LIST / BANDS.length);
+  const first = BANDS.flatMap(([, f]) => rows.filter(f).slice(0, per));
+  // 한 평형대가 모자라면 남은 자리는 다른 평형대의 다음 순번으로 채운다 - 목록 길이는 예산대마다 같다.
+  const picked = [...first, ...rows.filter((r) => !first.includes(r)).slice(0, CANDIDATE_LIST - first.length)];
+  const list = picked
+    .sort((a, b) => a.area - b.area || b.n - a.n)
     .map((row) => {
       const href = `./deal-search.html?district=${encodeURIComponent(row.district)}&apt=${encodeURIComponent(row.apt)}`;
       const facts = [row.district, row.dong, `${row.area}\u33a1`, row.buildYear ? `${row.buildYear}년` : null].filter(Boolean).join(" · ");
@@ -354,17 +364,19 @@ export function budgetCandidatesHtml(band, complexFiles) {
       );
     })
     .join("");
+  const bandCounts = BANDS.map(([label, f]) => `${label} ${rows.filter(f).length}`).join(" · ");
   return (
     `<section class="budget-candidates" data-prerendered><h3>이 예산대의 단지 후보</h3>` +
     `<p>${escapeHtml(
       `${month} 값으로 고친 중앙값이 ${label}인 단지·평형은 서울에 ${rows.length.toLocaleString("ko-KR")}곳입니다. ` +
         `같은 평형이 최근 6개월에 3번 이상 거래돼 범위를 낼 수 있었던 곳만 셉니다 — 거래가 드문 단지는 빠집니다.`
     )}</p>` +
+    `<div class="budget-districts">${escapeHtml(`평형대별: ${bandCounts}`)}</div>` +
     `<div class="budget-districts">${escapeHtml(`자치구별: ${districts.map(([d, n]) => `${d} ${n}`).join(" · ")}`)}</div>` +
     `<ul class="budget-deals">${list}</ul>` +
     `<p class="budget-more"><a href="./deal-search.html?budget=${min / 10_000}&amp;group=1">${escapeHtml(
       rows.length > CANDIDATE_LIST
-        ? `거래가 많은 ${CANDIDATE_LIST}곳만 적었습니다. ${rows.length}곳 전부와 평형·연식 조건은 실거래 검색에서 단지로 묶어 보세요 →`
+        ? `평형대마다 거래가 많은 곳을 고루 ${picked.length}곳만 적었습니다. ${rows.length}곳 전부와 평형·연식 조건은 실거래 검색에서 단지로 묶어 보세요 →`
         : "평형·연식 조건을 더해 실거래 검색에서 단지로 묶어 보기 →"
     )}</a></p></section>`
   );

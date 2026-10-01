@@ -40,6 +40,18 @@ test("예산대 절은 화면이 다시 그려도 남도록 표시하고, 구별
   assert.equal((list.match(/<li /g) ?? []).length, CANDIDATE_LIST, "열여덟 장이 긴 목록을 똑같이 싣는다");
 });
 
+test("후보 목록은 평형대를 고루 싣고, 평형대별 개수를 적는다", () => {
+  const cells = {};
+  for (let i = 0; i < 20; i += 1) cells[`소형${i}`] = { "49.9": cell(65000, 50 - i) };
+  for (let i = 0; i < 3; i += 1) cells[`중형${i}`] = { "84.9": cell(65000, 6) };
+  cells.대형 = { "114.9": cell(65000, 5) };
+  const html = budgetCandidatesHtml({ min10k: 60000, max10k: 70000 }, [{ district: "노원구", reference: "202608", cells }]);
+  assert.match(html, /평형대별: 60㎡ 미만 20 · 60~85㎡ 3 · 85㎡ 초과 1/);
+  assert.equal((html.match(/<li /g) ?? []).length, CANDIDATE_LIST, "모자란 평형대 자리를 채우지 않았다");
+  assert.match(html, /중형0/, "거래 적은 중형이 소형에 밀려 빠졌다");
+  assert.match(html, /대형/, "대형이 빠졌다");
+});
+
 test("후보가 없으면 그렇다고 적는다", () => {
   assert.match(budgetCandidatesHtml({ min10k: 300000, max10k: 310000 }, FILES), /단지·평형이 없습니다/);
 });

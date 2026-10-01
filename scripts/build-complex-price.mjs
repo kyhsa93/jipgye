@@ -6,6 +6,9 @@ import { INDEX_FILE } from "./fetch-price-index.mjs";
 import { DISTRICTS } from "./realestate-districts.mjs";
 import { readSlotFile } from "./realestate-raw.mjs";
 import { recentMonths } from "./realestate-source.mjs";
+import { periods } from "./district-change.mjs";
+import { shiftMonth } from "./outlook.mjs";
+import { RETENTION_MONTHS, yearMonthOf } from "./realestate-slots.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const dataDir = process.env.COMPLEX_PRICE_DIR ? path.resolve(process.env.COMPLEX_PRICE_DIR) : path.join(root, "docs/data");
@@ -24,7 +27,7 @@ async function readJson(file) {
  * 자치구마다 한 파일. 검색 화면은 고른 자치구의 것만 읽는다 - 서울 전체를 한 파일로 두면
  * 단지 하나를 보려고 수백 KB를 받는다.
  */
-export function buildFiles({ itemsByDistrict, index, outlook, now }) {
+export function buildFiles({ itemsByDistrict, yearAgoByDistrict = {}, yearAgoMonths = null, index, outlook, now }) {
   const { levels, filled } = indexLevels(index, outlook);
   const reference = referenceMonth(levels);
   if (!reference) return null;
@@ -46,7 +49,10 @@ export function buildFiles({ itemsByDistrict, index, outlook, now }) {
       referenceFilled: Object.values(filled).some((months) => months.includes(reference)),
       // 메운 달이 공식 지수보다 평균 얼마나 높게 나와 왔나(서울, %p). 화면 각주에 그대로 적는다.
       referenceBias: outlook?.regions?.find((r) => r.code === "200")?.nowcast?.bias ?? null,
-      cells: districtCells(deals, levels, reference),
+      cells: districtCells(deals, levels, reference, {
+        yearAgo: (yearAgoByDistrict[code] ?? []).map(marketDeal).filter(Boolean),
+        yearAgoMonths,
+      }),
       meta: districtMeta(deals),
     };
   }
@@ -71,7 +77,22 @@ async function main() {
     })
   );
 
-  const built = buildFiles({ itemsByDistrict, index, outlook, now });
+  // 1년 전 같은 칸: 갈아타기 화면과 같은 두 시기 규칙(신고 기한이 닫힌 최근 석 달의 1년 전 석 달, 원본이
+  // 아직 거기까지 없으면 가장 이른 석 달)을 쓴다 - 화면마다 "1년 전"이 다르면 숫자가 서로 어긋난다.
+  const allMonths = recentMonths(now, RETENTION_MONTHS);
+  const present = [];
+  for (const m of allMonths) if (await readSlotFile("sale", DISTRICTS[0].code, m)) present.push(m);
+  const p = periods(shiftMonth(yearMonthOf(now), -2), present);
+  const yearAgoByDistrict = {};
+  if (p) {
+    await Promise.all(
+      DISTRICTS.map(async ({ code }) => {
+        const files = await Promise.all(p.base.map((m) => readSlotFile("sale", code, m)));
+        yearAgoByDistrict[code] = files.filter((f) => f?.ok !== false && Array.isArray(f?.items)).flatMap((f) => f.items);
+      })
+    );
+  }
+  const built = buildFiles({ itemsByDistrict, yearAgoByDistrict, yearAgoMonths: p?.base ?? null, index, outlook, now });
   if (!built) {
     console.log("  단지 가격 위치: 기준 달을 정하지 못해 건너뜀");
     return;
