@@ -60,7 +60,7 @@ test("월세 페이지는 보증금 말고 월세 자체의 추이도 그린다"
 
   // 보증금 카드는 그대로 붙박이 값을 그린다. 둘이 같은 값을 그리고 있으면 카드를 하나
   // 더 놓은 뜻이 없다.
-  assert.equal(page.cardCurrent("trend"), "22,000만원");
+  assert.equal(page.cardCurrent("trend"), "2억 2,000만원");
 });
 
 test("월세 카드는 보증금과 거래량 사이에 있다", async () => {

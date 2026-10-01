@@ -33,11 +33,15 @@ export function formatEok(value10k, locale = "ko") {
   return `${eok}억 ${man.toLocaleString("ko-KR")}만원`;
 }
 
+// 1억이 넘는 돈은 늘 "2억 264만원" 꼴로 적는다. "20,264만원"과 섞이면 같은 돈이 화면마다 다른 숫자로
+// 읽힌다(UIUX #46). 1억 아래(평당가 대부분, 월세)는 그대로 만원.
 export const formatMan = (value10k, locale = "ko") =>
   typeof value10k === "number" && Number.isFinite(value10k)
     ? locale === "en"
       ? `₩${(value10k / 100).toLocaleString("en-US", { maximumFractionDigits: 1 })}M`
-      : `${Math.round(value10k).toLocaleString("ko-KR")}만원`
+      : Math.abs(Math.round(value10k)) >= 10000
+        ? formatEok(value10k)
+        : `${Math.round(value10k).toLocaleString("ko-KR")}만원`
     : "-";
 
 export const KIND_FIELDS = {

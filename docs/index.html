@@ -939,6 +939,11 @@
   }
 
   function formatPyeongPrice(value10k) {
+    if (locale === "ko" && value10k >= 10000) {
+      const eok = Math.floor(value10k / 10000);
+      const man = Math.round(value10k % 10000);
+      return man ? `${eok}억 ${man.toLocaleString("ko-KR")}만원` : `${eok}억원`;
+    }
     if (locale === "ko") return `${value10k.toLocaleString("ko-KR")}만원`;
     return `₩${(value10k / 100).toLocaleString("en-US", { maximumFractionDigits: 1 })}M`;
   }

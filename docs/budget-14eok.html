@@ -84,7 +84,7 @@
 
   <section id="overall-section">
     <h2 id="overall-heading">서울 전체 평균</h2>
-    <div class="overall-cards" id="overall-cards"><!--prerender:realestateOverall--><div class="overall-card"><div class="label">매매</div><div class="value">5,162만원</div><div class="sub">84㎡ 환산 13억 1,166만원 · 3,574건</div></div><div class="overall-card"><div class="label">전세</div><div class="value">3,066만원</div><div class="sub">84㎡ 환산 7억 7,907만원 · 2,964건</div></div><div class="overall-card"><div class="label">월세</div><div class="value">20,264만원 / 월 128만원</div><div class="sub">4,601건</div></div><!--/prerender:realestateOverall--></div>
+    <div class="overall-cards" id="overall-cards"><!--prerender:realestateOverall--><div class="overall-card"><div class="label">매매</div><div class="value">5,162만원</div><div class="sub">84㎡ 환산 13억 1,166만원 · 3,574건</div></div><div class="overall-card"><div class="label">전세</div><div class="value">3,066만원</div><div class="sub">84㎡ 환산 7억 7,907만원 · 2,964건</div></div><div class="overall-card"><div class="label">월세</div><div class="value">2억 264만원 / 월 128만원</div><div class="sub">4,601건</div></div><!--/prerender:realestateOverall--></div>
   </section>
 
   <section id="district-summary-section" hidden>
@@ -470,7 +470,9 @@ function formatMan(value10k) {
   if (typeof value10k !== "number" || !Number.isFinite(value10k)) return "-";
   return locale === "en"
     ? `₩${(value10k / 100).toLocaleString("en-US", { maximumFractionDigits: 1 })}M`
-    : `${Math.round(value10k).toLocaleString("ko-KR")}만원`;
+    : Math.abs(Math.round(value10k)) >= 10000
+      ? formatEok(value10k)
+      : `${Math.round(value10k).toLocaleString("ko-KR")}만원`;
 }
 
 function formatEok(value10k) {

@@ -468,7 +468,9 @@ function formatMan(value10k) {
   if (typeof value10k !== "number" || !Number.isFinite(value10k)) return "-";
   return locale === "en"
     ? `₩${(value10k / 100).toLocaleString("en-US", { maximumFractionDigits: 1 })}M`
-    : `${Math.round(value10k).toLocaleString("ko-KR")}만원`;
+    : Math.abs(Math.round(value10k)) >= 10000
+      ? formatEok(value10k)
+      : `${Math.round(value10k).toLocaleString("ko-KR")}만원`;
 }
 
 function formatEok(value10k) {

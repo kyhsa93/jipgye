@@ -79,7 +79,7 @@
   </section>
 
   <section id="district-summary-section" hidden>
-    <p class="district-summary" data-summary-lang="ko"><!--prerender:districtSummaryKo-->성동구 아파트 매매가는 평당 8,164만원입니다. 서울 평균 5,162만원의 1.6배입니다. 신고 건수가 충분한 25개 구 가운데 5번째로 높습니다. 84㎡(약 25평) 기준으로 환산하면 약 20억 7,446만원입니다. 평당가가 가장 가까운 지역은 송파구(8,296만원)입니다. 전세가율은 42.2%입니다. 서울 평균 59.4%보다 낮은 편입니다. 매매와 전세가 함께 신고된 단지·평형 31칸에서 하나씩 내면 절반이 38.6~43.7%에 들어옵니다. 월세는 보증금 24,271만원에 월 200만원 수준입니다. 이 숫자들은 정부에 신고된 매매 50건, 전세 111건, 월세 146건을 집계한 것입니다.<!--/prerender:districtSummaryKo--></p>
+    <p class="district-summary" data-summary-lang="ko"><!--prerender:districtSummaryKo-->성동구 아파트 매매가는 평당 8,164만원입니다. 서울 평균 5,162만원의 1.6배입니다. 신고 건수가 충분한 25개 구 가운데 5번째로 높습니다. 84㎡(약 25평) 기준으로 환산하면 약 20억 7,446만원입니다. 평당가가 가장 가까운 지역은 송파구(8,296만원)입니다. 전세가율은 42.2%입니다. 서울 평균 59.4%보다 낮은 편입니다. 매매와 전세가 함께 신고된 단지·평형 31칸에서 하나씩 내면 절반이 38.6~43.7%에 들어옵니다. 월세는 보증금 2억 4,271만원에 월 200만원 수준입니다. 이 숫자들은 정부에 신고된 매매 50건, 전세 111건, 월세 146건을 집계한 것입니다.<!--/prerender:districtSummaryKo--></p>
     <p class="district-summary" data-summary-lang="en" hidden><!--prerender:districtSummaryEn-->Apartments in 성동구 trade at ₩81.6M per pyeong, 1.6× the Seoul average of ₩51.6M. That is 5th among the 25 districts with enough reported transactions. For an 84m² unit that works out to about ₩2,074M. The closest district by price is 송파구 at ₩83M per pyeong. The jeonse ratio is 42.2%, below the Seoul average of 59.4%. Measured one unit type at a time across the 31 unit types where both a sale and a jeonse were reported, half fall between 38.6% and 43.7%. Monthly rentals average a ₩242.7M deposit with ₩2M per month. These figures are based on 50 sales, 111 jeonse, 146 rentals reported to the government.<!--/prerender:districtSummaryEn--></p>
     <p class="district-summary district-facts" data-summary-lang="ko"><!--prerender:districtFactsKo-->기간 중 가장 비싸게 팔린 것은 성수동1가 갤러리아포레 218㎡로 92억원입니다.<!--/prerender:districtFactsKo--></p>
     <p class="district-summary district-facts" data-summary-lang="en" hidden><!--prerender:districtFactsEn-->The highest price in the period was ₩9200M for a 218㎡ unit at 갤러리아포레 in 성수동1가.<!--/prerender:districtFactsEn--></p>
@@ -145,7 +145,7 @@
     <div class="table-wrap">
       <table class="data-table">
         <thead id="district-head"><!--prerender:realestateHead--><tr><th>구분</th><th>평당가</th><th>84㎡ 환산</th><th>거래건수</th></tr><!--/prerender:realestateHead--></thead>
-        <tbody id="district-grid"><!--prerender:realestateTable--><tr><td>매매</td><td data-label="평당가"><span class="price-strong">8,164만원</span></td><td data-label="84㎡ 환산"><span class="price-strong">20억 7,446만원</span></td><td data-label="거래건수"><span class="count">50건</span></td></tr><tr><td>전세</td><td data-label="평당가"><span class="price-strong">3,447만원</span></td><td data-label="84㎡ 환산"><span class="price-strong">8억 7,588만원</span></td><td data-label="거래건수"><span class="count">111건</span></td></tr><tr><td>월세</td><td data-label="평당가"><span class="price-strong">24,271만원</span> / <span class="price-strong">월 200만원</span></td><td data-label="84㎡ 환산">-</td><td data-label="거래건수"><span class="count">146건</span></td></tr><!--/prerender:realestateTable--></tbody>
+        <tbody id="district-grid"><!--prerender:realestateTable--><tr><td>매매</td><td data-label="평당가"><span class="price-strong">8,164만원</span></td><td data-label="84㎡ 환산"><span class="price-strong">20억 7,446만원</span></td><td data-label="거래건수"><span class="count">50건</span></td></tr><tr><td>전세</td><td data-label="평당가"><span class="price-strong">3,447만원</span></td><td data-label="84㎡ 환산"><span class="price-strong">8억 7,588만원</span></td><td data-label="거래건수"><span class="count">111건</span></td></tr><tr><td>월세</td><td data-label="평당가"><span class="price-strong">2억 4,271만원</span> / <span class="price-strong">월 200만원</span></td><td data-label="84㎡ 환산">-</td><td data-label="거래건수"><span class="count">146건</span></td></tr><!--/prerender:realestateTable--></tbody>
       </table>
     </div>
     <div class="content-notice" id="table-note"></div>
@@ -468,7 +468,9 @@ function formatMan(value10k) {
   if (typeof value10k !== "number" || !Number.isFinite(value10k)) return "-";
   return locale === "en"
     ? `₩${(value10k / 100).toLocaleString("en-US", { maximumFractionDigits: 1 })}M`
-    : `${Math.round(value10k).toLocaleString("ko-KR")}만원`;
+    : Math.abs(Math.round(value10k)) >= 10000
+      ? formatEok(value10k)
+      : `${Math.round(value10k).toLocaleString("ko-KR")}만원`;
 }
 
 function formatEok(value10k) {

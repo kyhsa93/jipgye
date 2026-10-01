@@ -104,12 +104,16 @@ textarea {
   font-size: var(--fs-field);
 }
 
+/* 한국어는 띄어쓰기에서만 줄을 바꾼다. 기본값은 글자 사이 어디서나 끊어, "30 / 억 1,230만원",
+ * "13억 1,166 / 만원"처럼 돈이 한가운데서 갈라졌다(UIUX #46). 띄어쓰기 없는 긴 낱말은 넘치지 않게 끊는다. */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   background: var(--bg);
   color: var(--fg);
   line-height: 1.5;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 /* 껍데기 폭.

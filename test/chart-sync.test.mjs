@@ -93,7 +93,7 @@ test("말풍선이 그 주의 모든 값을 한 번에 보여준다", async () =
   assert.equal(page.tipHidden(), false);
   assert.match(tip, /2026-08-10/);
   assert.match(tip, /월세 보증금\(평당 아님\)/);
-  assert.match(tip, /22,500만원/);
+  assert.match(tip, /2억 2,500만원/);
   assert.match(tip, /월세\(매달 내는 돈\)/);
   assert.match(tip, /월 96만원/);
   assert.match(tip, /월세 거래량/);

@@ -117,7 +117,9 @@ test("거래 유형마다 열 구성이 다르다", () => {
 test("월세 표에는 84㎡ 환산이 들어가지 않는다", () => {
   const html = realestateTableHtml({ districts: [district("강남구")] }, "wolse");
   assert.ok(html.includes("월 90만원"), "월세 금액이 없다");
-  assert.ok(!html.includes("억"), "월세인데 84㎡ 환산가가 붙었다");
+  // 보증금은 1억이 넘으면 "2억원" 꼴이라(#46) "억" 글자로는 못 가른다 - 환산 열이 없는지를 본다.
+  assert.ok(!html.includes("84㎡ 환산"), "월세인데 84㎡ 환산가가 붙었다");
+  assert.equal(cells(html).length, 4, "월세 행은 구·보증금·월세·건수 넷이다");
 });
 
 test("월세 증감은 하나, 보증금과 월세를 묶은 ㎡당 값의 % 로 월세 칸에 붙는다 (#6)", () => {
@@ -866,4 +868,22 @@ test("자치구 요약 절은 제 문단으로만 열린다 - 예산대 문단�
   assert.ok(html.includes('class="district-summary budget-facts" data-summary-lang="ko"'), "전제: 예산대 문단도 같은 속성을 단다");
   const body = html.slice(html.indexOf("function renderDistrictSummary"), html.indexOf("function renderTrend"));
   assert.match(body, /section\.querySelectorAll\("\[data-summary-lang\]"\)/, "절을 열지 판단할 때 문서 전체 문단을 본다");
+});
+
+test("1억이 넘는 돈은 늘 'n억 n만원' 꼴로 적는다 (#46)", async () => {
+  const { formatMan } = await import("../scripts/realestate-format.mjs");
+  assert.equal(formatMan(20264), "2억 264만원");
+  assert.equal(formatMan(20000), "2억원");
+  assert.equal(formatMan(9999), "9,999만원");
+  assert.equal(formatMan(128), "128만원");
+  const html = realestateTableHtml({ districts: [district("강남구", { wolse: { avgDeposit10k: 20264, avgMonthlyRent10k: 128, transactionCount: 30 } })] }, "wolse");
+  assert.match(html, /2억 264만원/);
+  assert.doesNotMatch(html, /20,264만원/);
+});
+
+test("한국어는 띄어쓰기에서만 줄을 바꾼다 - 돈이 '30 / 억'으로 갈라지지 않게 (#46)", async () => {
+  const css = await read("docs/style.css");
+  const body = css.match(/\nbody \{([^}]*)\}/)?.[1] ?? "";
+  assert.match(body, /word-break:\s*keep-all/);
+  assert.match(body, /overflow-wrap:\s*break-word/, "띄어쓰기 없는 긴 낱말이 넘친다");
 });
