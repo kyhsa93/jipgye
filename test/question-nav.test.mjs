@@ -95,3 +95,28 @@ test("묶음 제목도 영어로 바뀐다", async () => {
   assert.equal(en.byId("qg-buy").textContent, "Buying");
   assert.equal(en.byId("qg-move").textContent, "Moving or selling");
 });
+
+test("검색창이 화면 머리에 있는 장은 전부다 - 질문 화면에 들어가면 검색이 사라지지 않게 (#45)", async () => {
+  const files = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html"));
+  const missing = [];
+  for (const f of files) {
+    const html = await readFile(path.join(root, "docs", f), "utf8");
+    if (!html.includes('class="page-nav"')) continue;
+    if (!html.includes('class="site-search"') || !html.includes('src="./search.js"')) missing.push(f);
+  }
+  assert.ok(files.length > 50, "전제: 장이 거의 없다");
+  assert.deepEqual(missing, [], `검색창이 없는 장: ${missing.join(", ")}`);
+});
+
+test("'다른 질문' 목록은 첫 화면 질문 입구와 같다 - 두 벌이 갈라지지 않게 (#45)", async () => {
+  const nav = await readFile(path.join(root, "docs/nav.js"), "utf8");
+  const sandbox = { window: {}, document: { querySelectorAll: () => [], querySelector: () => null, documentElement: { getAttribute: () => "ko" } } };
+  new Function("window", "document", nav)(sandbox.window, sandbox.document);
+  const fromNav = sandbox.window.QUESTION_GROUPS.flatMap((g) => g.items.map(([href, ko]) => `${href} ${ko}`));
+  const fromIndex = (await links()).map((l) => `${l.href} ${l.text}`);
+  assert.deepEqual(fromNav, fromIndex);
+  for (const f of ["floor-gap", "record-high", "switch-house", "price-outlook", "jeonse-vs-wolse", "renewal-vs-new", "cancelled-deals"]) {
+    const html = await readFile(path.join(root, `docs/${f}.html`), "utf8");
+    assert.match(html, /<section id="other-questions"/, `${f}에 다른 질문 자리가 없다`);
+  }
+});

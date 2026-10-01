@@ -58,6 +58,15 @@
     <a href="./cancelled-deals.html" data-re-page="cancelled" aria-current="page">해제·등기</a>
   </nav>
 
+  <form class="site-search" role="search">
+    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
+    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off"
+           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
+    <div class="site-search-results" id="site-search-results" role="listbox"
+         aria-labelledby="site-search-label" hidden></div>
+  </form>
+
   <section id="lead-section">
     <h2 id="lead-heading">해제된 거래</h2>
     <p class="lead" id="correction-lead"><!--prerender:cancelCorrectionLead-->해제 신고 2,840건 가운데 2,161건(76.1%)은 같은 계약이 그대로 다시 신고된 것입니다 — 계약이 깨진 것이 아니라 신고를 고친 것입니다. 등기할 시간이 지난 달만 보면 그 다시 신고된 계약의 97.4%가 등기까지 마쳤습니다. 이 화면의 해제 숫자는 모두 이것을 빼고 셉니다.<!--/prerender:cancelCorrectionLead--></p>
@@ -93,6 +102,7 @@
     <div class="content-notice" id="price-note"></div>
   </section>
 
+  <section id="other-questions" class="other-questions"></section>
   <footer class="site-footer">
     <div id="footer-source">출처: 국토교통부 아파트 매매 실거래가 공개시스템. 신고된 거래만 집계되며 신고 기한(계약 후 30일)이 있어 최근 거래는 나중에 반영됩니다.</div>
     <div style="margin-top:6px;">
@@ -105,6 +115,7 @@
   </footer>
 </main>
 <script src="./nav.js" defer></script>
+<script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
 <script>
 const T = {

@@ -58,6 +58,15 @@
     <a href="./cancelled-deals.html" data-re-page="cancelled">해제·등기</a>
   </nav>
 
+  <form class="site-search" role="search">
+    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
+    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off"
+           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
+    <div class="site-search-results" id="site-search-results" role="listbox"
+         aria-labelledby="site-search-label" hidden></div>
+  </form>
+
   <section id="calc-section">
     <h2 id="calc-heading">가진 돈을 넣고 견줘 보기</h2>
     <p class="lead" id="lead"><!--prerender:conversionLead-->같은 단지에서 전세와 월세가 함께 신고된 3,069개 조합으로 낸 서울의 전월세전환율은 4.8%입니다. 지금 전세자금대출 평균 금리는 4.38%입니다. 전환율이 대출금리보다 0.42%p 높으니, 보증금을 빌려 전세로 가는 쪽이 평균적으로 쌉니다. 2026.05~2026.10 신규 계약 기준입니다.<!--/prerender:conversionLead--></p>
@@ -90,6 +99,7 @@
     <div class="district-links" id="district-links"><!--prerender:conversionDistrictLinks--><a href="./district-gangnam.html">강남구</a><a href="./district-gangdong.html">강동구</a><a href="./district-gangbuk.html">강북구</a><a href="./district-gangseo.html">강서구</a><a href="./district-gwanak.html">관악구</a><a href="./district-gwangjin.html">광진구</a><a href="./district-guro.html">구로구</a><a href="./district-geumcheon.html">금천구</a><a href="./district-nowon.html">노원구</a><a href="./district-dobong.html">도봉구</a><a href="./district-dongdaemun.html">동대문구</a><a href="./district-dongjak.html">동작구</a><a href="./district-mapo.html">마포구</a><a href="./district-seodaemun.html">서대문구</a><a href="./district-seocho.html">서초구</a><a href="./district-seongdong.html">성동구</a><a href="./district-seongbuk.html">성북구</a><a href="./district-songpa.html">송파구</a><a href="./district-yangcheon.html">양천구</a><a href="./district-yeongdeungpo.html">영등포구</a><a href="./district-yongsan.html">용산구</a><a href="./district-eunpyeong.html">은평구</a><a href="./district-jongno.html">종로구</a><a href="./district-jung.html">중구</a><a href="./district-jungnang.html">중랑구</a><!--/prerender:conversionDistrictLinks--></div>
   </section>
 
+  <section id="other-questions" class="other-questions"></section>
   <footer class="site-footer">
     <div id="footer-source">출처: 국토교통부 아파트 전월세 실거래가, 금융감독원 금융상품통합비교공시. 신고된 거래만 집계되며 신고 기한(계약 후 30일)이 있어 최근 계약은 나중에 반영됩니다.</div>
     <div style="margin-top:6px;">
@@ -102,6 +112,7 @@
   </footer>
 </main>
 <script src="./nav.js" defer></script>
+<script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
 <script>
 const T = {

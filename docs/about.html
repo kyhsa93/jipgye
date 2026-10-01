@@ -47,6 +47,15 @@
     <a href="./news.html" id="nav-news">뉴스</a>
   </nav>
 
+  <form class="site-search" role="search">
+    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
+    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off"
+           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
+    <div class="site-search-results" id="site-search-results" role="listbox"
+         aria-labelledby="site-search-label" hidden></div>
+  </form>
+
   <section class="method-body">
   <div data-lang="ko" class="on">
     <p class="lead">계약을 앞둔 사람이 숫자를 확인하는 곳입니다. 서울 아파트 실거래와 예적금·대출 금리를 매일 모아, 전세와 월세 중 어느 쪽이 싼지·지금 갱신하는 것이 나가서 새로 구하는 것보다 싼지까지 계산해 둡니다. 정부가 공개한 원본만 쓰고, 광고비를 받고 무언가를 올리지 않습니다.</p>
@@ -126,6 +135,7 @@
   </footer>
 </main>
 <script src="./nav.js" defer></script>
+<script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
 <script>
 // 이 페이지는 데이터를 읽지 않는다. 글만 있으니 필요한 것은 테마와 언어 두 가지뿐이고,

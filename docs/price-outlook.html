@@ -47,6 +47,15 @@
     <a href="./news.html" id="nav-news">뉴스</a>
   </nav>
 
+  <form class="site-search" role="search">
+    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
+    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off"
+           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
+    <div class="site-search-results" id="site-search-results" role="listbox"
+         aria-labelledby="site-search-label" hidden></div>
+  </form>
+
 
   <aside class="method-callout">
     <p id="method-callout-text">예측보다 오차를 먼저 봐 주세요. 같은 방식의 예측을 2012년부터 매달 다시 해 보고 실제와 벌어진 만큼을 같이 적습니다. "그대로다"나 "늘 오른다"고 찍는 것을 이기지 못하는 칸은 비웁니다.</p>
@@ -95,6 +104,7 @@
   </section>
 
   <p class="card-links" id="next-links"><a id="next-search" href="./deal-search.html">단지를 골라 매매가 범위·1년 전 값 보기 →</a> · <a id="next-budget" href="./budget-10eok.html">예산으로 후보 단지 찾기 →</a></p>
+  <section id="other-questions" class="other-questions"></section>
   <footer class="site-footer">
     <div id="footer-source">출처: 한국부동산원 아파트 매매 실거래가격지수(한국은행 ECOS), 국토교통부 아파트 매매 실거래가 공개시스템. 투자 판단을 대신하지 않습니다.</div>
     <div style="margin-top:6px;">
@@ -107,6 +117,7 @@
   </footer>
 </main>
 <script src="./nav.js" defer></script>
+<script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
 <script>
 const T = {

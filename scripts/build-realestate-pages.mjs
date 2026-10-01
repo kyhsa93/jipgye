@@ -1,6 +1,8 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "./district-slugs.mjs";
+import { BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.mjs";
+import { areaPrice } from "./realestate-format.mjs";
 import { dealFileName } from "./deal-files.mjs";
 import { districtFacts } from "./district-facts.mjs";
 import {
@@ -111,6 +113,24 @@ export function buildRealestatePage(baseHtml, page, realestate, spread = null) {
   });
 }
 
+/**
+ * 자치구 장의 "이 구에서" 길 - 이 구의 단지(실거래 검색), 이 구 84㎡ 환산이 들어가는 예산대, 재계약·갈아타기.
+ * 전에는 이 장의 본문 링크가 다른 자치구 25개와 방법 링크뿐이었다(UIUX #45). 예산대는 3~20억대 장만 있어
+ * 그 밖이면 끝 장으로 보낸다. 환산가가 없으면 그 링크만 뺀다.
+ */
+export function districtHereHtml(name, realestate) {
+  const sale = realestate?.districts?.find((d) => d.name === name)?.sale;
+  const price84 = sale ? areaPrice(sale.avgPricePerPyeong10k) : null;
+  const eok = price84 ? Math.min(BUDGET_PAGE_EOK.at(-1), Math.max(BUDGET_PAGE_EOK[0], Math.floor(price84 / 10_000))) : null;
+  const links = [
+    [`./deal-search.html?district=${encodeURIComponent(name)}`, `${name} 실거래·단지 찾기`],
+    eok ? [`./${budgetPageFile(eok)}`, `${name} 84㎡ 값에 맞는 ${eok}억대 후보`] : null,
+    ["./renewal-vs-new.html", "재계약이 시세보다 싼가(구별 표)"],
+    ["./switch-house.html", `${name}에서 옮기면 — 갈아타기`],
+  ].filter(Boolean);
+  return `<p class="card-links district-here">${links.map(([href, text]) => `<a href="${href}">${text} →</a>`).join(" · ")}</p>`;
+}
+
 export function buildDistrictPage(baseHtml, district, realestate, deals = null, renewal = null, spread = null) {
   const title = `${district.name} 아파트 시세 - 매매·전세·월세 실거래가`;
   const description =
@@ -130,6 +150,12 @@ export function buildDistrictPage(baseHtml, district, realestate, deals = null, 
     '<link rel="canonical"',
     `<meta name="realestate-district" content="${district.name}">\n<link rel="canonical"`,
     "정규 URL 링크"
+  );
+  html = replaceOnce(
+    html,
+    '<!--/prerender:districtRenewalEn--></p>\n  </section>',
+    `<!--/prerender:districtRenewalEn--></p>\n    ${districtHereHtml(district.name, realestate)}\n  </section>`,
+    "자치구 요약 절 끝"
   );
   // 시세 템플릿의 제목은 서울 전체를 말한다. 자치구 장은 그 구의 숫자를 싣는다(UIUX #42).
   html = replaceOnce(html, '<h2 id="overall-heading">서울 전체 평균</h2>', `<h2 id="overall-heading">${district.name} 평균</h2>`, "평균 제목");

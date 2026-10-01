@@ -63,6 +63,15 @@
     <a href="./rate-news.html" data-news-page="rates">금리</a>
   </nav>
 
+  <form class="site-search" role="search">
+    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
+    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off"
+           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
+    <div class="site-search-results" id="site-search-results" role="listbox"
+         aria-labelledby="site-search-label" hidden></div>
+  </form>
+
   <section id="realestate-stats-section" hidden>
     <h2 id="realestate-stats-heading">오늘의 서울 아파트 시세</h2>
     <div class="stat-cards" id="realestate-stats"><!--prerender:realestateStats--><!--/prerender:realestateStats--></div>
@@ -92,6 +101,7 @@
 </main>
 
 <script src="./nav.js" defer></script>
+<script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
 <script>
   const T = {

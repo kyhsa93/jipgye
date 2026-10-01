@@ -55,3 +55,54 @@
     link.textContent = link.getAttribute("data-skip-en");
   }
 })();
+
+// 질문 화면 맨 아래 "다른 질문" — 첫 화면 질문 입구와 같은 세 묶음(UIUX #45). 층·신고가·갈아타기·전망은
+// 2층 메뉴가 없어 형제 화면이 안 보였다. 목록은 여기 한 곳에만 두고(test/question-nav.test.mjs가 첫 화면과
+// 같은지 본다), 자리(#other-questions)가 있는 화면에만 그린다. 지금 화면은 뺀다.
+(function () {
+  const QUESTION_GROUPS = [
+    {
+      ko: "집을 사려는 사람",
+      en: "Buying",
+      items: [
+        ["./budget-10eok.html", "내 예산이면 서울 어디까지", "What does my budget buy?"],
+        ["./realestate.html", "우리 동네는 얼마에 팔렸나", "What did homes near me sell for?"],
+        ["./deal-search.html", "조건을 걸어 실거래 찾기", "Search transactions by condition"],
+        ["./floor-gap.html", "1층은 얼마나 싸야 정상인가", "How much less should a first floor be?"],
+        ["./record-high.html", "신고가, 이제 그 값인가", "A record high. Is that the price now?"],
+        ["./price-outlook.html", "3개월 뒤 값과 그 오차", "Prices in 3 months, with the error"],
+      ],
+    },
+    {
+      ko: "전월세를 구하는 사람",
+      en: "Renting",
+      items: [
+        ["./jeonse-vs-wolse.html", "전세가 쌀까, 월세가 쌀까", "Is jeonse or monthly rent cheaper?"],
+        ["./renewal-vs-new.html", "재계약이 새로 구하는 것보다 싼가", "Is renewing cheaper than moving?"],
+      ],
+    },
+    {
+      ko: "옮기거나 파는 사람",
+      en: "Moving or selling",
+      items: [
+        ["./switch-house.html", "갈 동네는 얼마나 올랐나", "How far has the next district risen?"],
+        ["./cancelled-deals.html", "계약이 취소되는 일이 흔한가", "How often do deals fall through?"],
+      ],
+    },
+  ];
+  if (typeof window !== "undefined") window.QUESTION_GROUPS = QUESTION_GROUPS;
+  if (typeof document.getElementById !== "function") return;
+  const holder = document.getElementById("other-questions");
+  if (!holder) return;
+  const en = document.documentElement.getAttribute("lang") === "en";
+  const here = (String(globalThis.location?.pathname ?? "").split("/").pop() || "index.html").toLowerCase();
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const groups = QUESTION_GROUPS.map((g) => {
+    const links = g.items
+      .filter(([href]) => href.replace("./", "") !== here)
+      .map(([href, ko, enText]) => `<a href="${href}">${esc(en ? enText : ko)}</a>`)
+      .join("");
+    return links ? `<div class="question-group"><h3 class="question-group-title">${esc(en ? g.en : g.ko)}</h3>${links}</div>` : "";
+  }).join("");
+  holder.innerHTML = `<h2>${en ? "Other questions" : "다른 질문"}</h2><nav class="question-nav" aria-label="${en ? "Other questions" : "다른 질문"}">${groups}</nav>`;
+})();

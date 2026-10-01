@@ -63,6 +63,15 @@
     <a href="./cancelled-deals.html" data-re-page="cancelled">해제·등기</a>
   </nav>
 
+  <form class="site-search" role="search">
+    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
+    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off"
+           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
+    <div class="site-search-results" id="site-search-results" role="listbox"
+         aria-labelledby="site-search-label" hidden></div>
+  </form>
+
   <section id="search-section">
     <h2 id="search-heading">지역과 예산으로 찾기</h2>
     <div class="search-controls" id="search-controls">
@@ -128,6 +137,7 @@
   </footer>
 </main>
 <script src="./nav.js" defer></script>
+<script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
 <script>
 const T = {

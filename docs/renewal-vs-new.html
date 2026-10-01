@@ -58,6 +58,15 @@
     <a href="./cancelled-deals.html" data-re-page="cancelled">해제·등기</a>
   </nav>
 
+  <form class="site-search" role="search">
+    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
+    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off"
+           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
+    <div class="site-search-results" id="site-search-results" role="listbox"
+         aria-labelledby="site-search-label" hidden></div>
+  </form>
+
   <aside class="method-callout">
     <p id="method-callout-text">시세표는 신규 계약만 셉니다. 갱신은 이전 조건을 잇는 것이라 지금 시세가 아니어서인데, 그렇게 빠지는 것이 서울 전월세 신고의 절반입니다. 이 화면은 그 빠진 쪽을 봅니다 — 전세는 전세끼리, 월세는 월세끼리 견줍니다.</p>
     <a href="./method.html" id="method-callout-link">숫자를 만드는 방법 →</a>
@@ -93,6 +102,7 @@
     <div class="district-links" id="district-links"><!--prerender:renewalDistrictLinks--><a href="./district-jongno.html">종로구</a><a href="./district-jung.html">중구</a><a href="./district-yongsan.html">용산구</a><a href="./district-seongdong.html">성동구</a><a href="./district-gwangjin.html">광진구</a><a href="./district-dongdaemun.html">동대문구</a><a href="./district-jungnang.html">중랑구</a><a href="./district-seongbuk.html">성북구</a><a href="./district-gangbuk.html">강북구</a><a href="./district-dobong.html">도봉구</a><a href="./district-nowon.html">노원구</a><a href="./district-eunpyeong.html">은평구</a><a href="./district-seodaemun.html">서대문구</a><a href="./district-mapo.html">마포구</a><a href="./district-yangcheon.html">양천구</a><a href="./district-gangseo.html">강서구</a><a href="./district-guro.html">구로구</a><a href="./district-geumcheon.html">금천구</a><a href="./district-yeongdeungpo.html">영등포구</a><a href="./district-dongjak.html">동작구</a><a href="./district-gwanak.html">관악구</a><a href="./district-seocho.html">서초구</a><a href="./district-gangnam.html">강남구</a><a href="./district-songpa.html">송파구</a><a href="./district-gangdong.html">강동구</a><!--/prerender:renewalDistrictLinks--></div>
   </section>
 
+  <section id="other-questions" class="other-questions"></section>
   <footer class="site-footer">
     <div id="footer-source">출처: 국토교통부 아파트 전월세 실거래가 공개시스템. 신고된 계약만 집계되며 신고 기한(계약 후 30일)이 지나 마감된 달만 셉니다.</div>
     <div style="margin-top:6px;">
@@ -105,6 +115,7 @@
   </footer>
 </main>
 <script src="./nav.js" defer></script>
+<script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
 <script>
 const T = {

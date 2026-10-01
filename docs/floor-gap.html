@@ -47,6 +47,15 @@
     <a href="./news.html" id="nav-news">뉴스</a>
   </nav>
 
+  <form class="site-search" role="search">
+    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
+    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off"
+           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
+    <div class="site-search-results" id="site-search-results" role="listbox"
+         aria-labelledby="site-search-label" hidden></div>
+  </form>
+
 
   <aside class="method-callout">
     <p id="method-callout-text">견주는 자리는 같은 단지, 같은 전용면적입니다. 그렇게 묶으면 단지가 낡았는지 역에서 먼지가 통제되고, 남는 차이가 층입니다.</p>
@@ -77,6 +86,7 @@
   </section>
 
   <p class="card-links" id="next-links"><a id="next-search" href="./deal-search.html">단지를 골라 매매가 범위·1년 전 값 보기 →</a> · <a id="next-budget" href="./budget-10eok.html">예산으로 후보 단지 찾기 →</a></p>
+  <section id="other-questions" class="other-questions"></section>
   <footer class="site-footer">
     <div id="footer-source">출처: 국토교통부 아파트 매매·전월세 실거래가 공개시스템. 신고된 거래만 집계되며 해제된 거래는 뺍니다.</div>
     <div style="margin-top:6px;">
@@ -89,6 +99,7 @@
   </footer>
 </main>
 <script src="./nav.js" defer></script>
+<script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
 <script>
 const T = {

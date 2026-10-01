@@ -887,3 +887,14 @@ test("한국어는 띄어쓰기에서만 줄을 바꾼다 - 돈이 '30 / 억'으
   assert.match(body, /word-break:\s*keep-all/);
   assert.match(body, /overflow-wrap:\s*break-word/, "띄어쓰기 없는 긴 낱말이 넘친다");
 });
+
+test("자치구 장에 '이 구에서' 길 - 이 구의 실거래, 84㎡ 값의 예산대, 재계약, 갈아타기 (#45)", async () => {
+  const { districtHereHtml } = await import("../scripts/build-realestate-pages.mjs");
+  const realestate = { districts: [{ name: "가구", sale: { avgPricePerPyeong10k: 3000 } }, { name: "나구", sale: { avgPricePerPyeong10k: 20000 } }] };
+  const html = districtHereHtml("가구", realestate);
+  assert.match(html, /deal-search\.html\?district=%EA%B0%80%EA%B5%AC/);
+  assert.match(html, /budget-7eok\.html">가구 84㎡ 값에 맞는 7억대 후보/, "3,000만원/평 × 84㎡ ≈ 7.6억");
+  assert.match(districtHereHtml("나구", realestate), /budget-20eok\.html/, "20억대 위는 끝 장으로");
+  assert.doesNotMatch(districtHereHtml("다구", realestate), /budget-/, "값이 없는 구에 예산대를 지어냈다");
+  assert.match(await read("docs/district-songpa.html"), /class="card-links district-here"/);
+});

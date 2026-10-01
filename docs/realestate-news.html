@@ -63,6 +63,15 @@
     <a href="./rate-news.html" data-news-page="rates">금리</a>
   </nav>
 
+  <form class="site-search" role="search">
+    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
+    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off"
+           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
+    <div class="site-search-results" id="site-search-results" role="listbox"
+         aria-labelledby="site-search-label" hidden></div>
+  </form>
+
   <section id="realestate-stats-section">
     <h2 id="realestate-stats-heading">오늘의 서울 아파트 시세</h2>
     <div class="stat-cards" id="realestate-stats"><!--prerender:realestateStats--><a class="stat-card" href="./apartment-sale.html"><span class="stat-label">서울 아파트 84㎡ 매매</span><span class="stat-value">13억 1,166만원</span><span class="stat-sub">최근 1주 계약 3,574건</span></a><a class="stat-card" href="./apartment-jeonse.html"><span class="stat-label">서울 아파트 84㎡ 전세</span><span class="stat-value">7억 7,907만원</span><span class="stat-sub">최근 1주 계약 2,964건</span></a><a class="stat-card" href="./apartment-rent.html"><span class="stat-label">서울 아파트 월세</span><span class="stat-value">보증금 20,264만원 / 월 128만원</span><span class="stat-sub">최근 1주 계약 4,601건</span></a><!--/prerender:realestateStats--></div>
@@ -92,6 +101,7 @@
 </main>
 
 <script src="./nav.js" defer></script>
+<script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
 <script>
   const T = {
