@@ -9,7 +9,8 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "후속기사가 이어집니다 ◎공감언론 뉴시스 jeko@newsis.com",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "[Breaking News] NY Stock Market Rises on Tech Stocks... Nasdaq Up 0.52%"
     },
     {
       "title": "[올댓차이나] 대만 증시, 韓美 반도체 호조에 0.86%↑ 상승 마감…1주 만에 사상최고 경신",
@@ -18,7 +19,8 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스]이재준 기자 = 대만 타이베이 증시는 1일 미국 반도체사 마이크론 테크놀로지의 실적 호조와 한국 9월 반도체 수출이 3배나 급증했다는 소식에 주력 반도체 관련주 중심으로 매수 선행하면서 이틀째 상승 마…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "[Taiwan's stock market rises 0.86% on strong South Korea and U.S. semiconductor performance, hitting record high after one week]"
     },
     {
       "title": "美 10년물 국채금리 5.34% \"24년만에 최고\"…전세계 채권 수익률 일제 급등 왜?",
@@ -27,7 +29,8 @@
       "source": "한국경제 경제",
       "category": "rates",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "U.S. 10-Year Treasury Yield Hits 5.34%, \"Highest in 24 Years\"... Why Global Bond Yields Are Surging?"
     },
     {
       "title": "\"청약 당첨돼도 대출 걱정…규제 완화를\"",
@@ -36,7 +39,8 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Even if you win the subscription, worries about loans... Regulatory easing needed"
     },
     {
       "title": "\"식사·돌봄·의료 결합한 맞춤형 서비스 주택 늘려야\"",
@@ -45,7 +49,8 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Increase custom homes combining meal, care, and medical services"
     },
     {
       "title": "보유 주택 수 정확히 아는 게 '절세 1원칙'",
@@ -54,7 +59,8 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Knowing the exact number of owned homes is the 'first principle of tax savings"
     },
     {
       "title": "공공재개발 1주택자도 이주비 대출 연 2%P 지원",
@@ -64,6 +70,7 @@
       "category": "realestate",
       "preview": null,
       "dupes": [],
+      "titleEn": "Public Housing Redevelopment: 1-Household Residents Also Eligible for 2%P Interest Subsidy on Relocation Loan",
       "context": [
         {
           "kind": "rates",
@@ -82,7 +89,8 @@
       "source": "한국경제 경제",
       "category": "rates",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Strange exchange rate... 'US interest rate ↑ = won ↓' formula broken"
     },
     {
       "title": "서울 아파트값 86주 연속 상승…文정부 기록 넘어섰다",
@@ -98,6 +106,7 @@
           "source": "뉴시스 경제"
         }
       ],
+      "titleEn": "Seoul apartment prices rise for 86 consecutive weeks, surpassing Moon Jae-in government record",
       "context": [
         {
           "kind": "realestate",
@@ -118,7 +127,8 @@
       "source": "연합뉴스 경제",
       "category": "other",
       "preview": "(서울=연합뉴스) 한지훈 강수련 기자 = 신한은행 고객 정보 유출 사고는 대출모집인들이 이용하는 신한 모바일 홈페이지 서비스를 통해 이뤄진 것으...",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Loan Collector-Specific Service Breached... Shinhan Bank's Security Flaw Exposed (Comprehensive)"
     },
     {
       "title": "강남 10억씩 빠질때, 강북 굳건…대출 더 나오는 '중저가 아파트' 쏠림",
@@ -128,6 +138,7 @@
       "category": "realestate",
       "preview": "서울 강남권 재건축 단지가 수억 원씩 내린 가격에 거래되고 있지만 강북 집값은 꺾이지 않고 있다. 집값 커플링(동조화) 현상이 이번에는 나타나지 않고 있다. 1일 부동산 업계에 따..",
       "dupes": [],
+      "titleEn": "When Gangnam Loses 1,000,000,000, Gangbuk Stays Solid... Buyers Flock to 'Mid-to-Low Price Apartments' with More Loans Available",
       "context": [
         {
           "kind": "realestate",
@@ -149,6 +160,7 @@
       "category": "other",
       "preview": "서울 아파트 매매 가격이 86주 연속으로 오르며 역대 최장 상승 기록을 갈아치웠다. 과거 최장 상승기보다 누적 상승폭도 2배 이상 컸다. 최근 강남에 이어 용산까지 조정을 받고 있..",
       "dupes": [],
+      "titleEn": "Seoul home prices rise for 86th week in a row... 5 districts with average prices over 1,500,000,000 won in 5 years→13 districts",
       "context": [
         {
           "kind": "realestate",
@@ -169,7 +181,8 @@
       "source": "한국경제 경제",
       "category": "other",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Home Purchase Interest Subsidy for 5 Years\"… Why China's Government Is Spreading Money"
     },
     {
       "title": "\"증시 경보, 단계수 줄이고 불건전거래 감시에 집중해야\"",
@@ -178,7 +191,8 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 김유향 기자 = 국내 증시 내 시장경보 단계를 줄이고, 불건전거래를 정교하게 포착하는 방향으로 제도를 개선해야 한다는 제언이 ...",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Stock market alert: Reduce the number of steps and focus on monitoring unhealthy transactions"
     },
     {
       "title": "국고채, 주요국 금리상승에 장기물 중심 약세(종합)",
@@ -187,7 +201,8 @@
       "source": "연합뉴스 경제",
       "category": "rates",
       "preview": "(서울=연합뉴스) 강수지 기자 = 1일 국고채는 장기물을 중심으로 전반적인 약세 분위기가 이어졌다.",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Korea's long-term government bonds weaken amid rising interest rates in major countries (comprehensive)"
     },
     {
       "title": "“금리만 생각하면 등골이 오싹”…고공행진 주담대에 영끌족 ‘한숨’",
@@ -197,6 +212,7 @@
       "category": "rates",
       "preview": "주택담보대출 금리가 연일 가파른 오름세를 보이면서 내 집 마련에 나선 실수요자부터 이미 빚을 내 집을 산 기존 차주들까지 가중되는 이자 부담에 깊은 시름을 앓고 있다. 한국은행이 ..",
       "dupes": [],
+      "titleEn": "Interest rates alone make the spine shiver\"... Young borrowers hold their breath as mortgage rates soar",
       "context": [
         {
           "kind": "rates",
@@ -215,7 +231,8 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "\"철거 않고 새 아파트처럼\"…삼성물산 '넥스트 리모델링' [집코노미 박람회 2026]"
     },
     {
       "title": "마이크론·수출로 확인한 반도체 수요…증시 상승탄력 촉매될까(종합)",
@@ -224,7 +241,8 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 황철환 기 = 미국 마이크론이 '깜짝 호실적'을 내놓으면서 메모리 공급 부족에 따른 반도체 업황 호조가 시장 일각의 우려와 달...",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Micron's Export Confirms Semiconductor Demand... Could It Spur Market Rally? (Comprehensive)"
     },
     {
       "title": "[인사] 재정경제부",
@@ -239,7 +257,8 @@
           "link": "https://www.newsis.com/view/NISX20261001_0003811275",
           "source": "뉴시스 경제"
         }
-      ]
+      ],
+      "titleEn": "[Personnel] Ministry of Finance and Economy"
     },
     {
       "title": "\"서울 재건축 대신 재개발…325개 지하철역에 주목해야\" [집코노미 콘서트 2026]",
@@ -249,6 +268,7 @@
       "category": "realestate",
       "preview": null,
       "dupes": [],
+      "titleEn": "Seoul's Reconstruction Gives Way to Redevelopment... Focus on 325 Subway Stations [Jikkonomi Concert 2026]",
       "context": [
         {
           "kind": "realestate",
@@ -269,7 +289,8 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 신효령 기자 = 1일 일본 도쿄증시에서 주요 지수가 일제히 상승 마감했다. 미국 메모리 반도체 기업 마이크론테크놀로지의 실적 전망이 시장 예상을 웃돌면서 인공지능(AI)·반도체 관련주에 매수세가 몰렸…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Tokyo Stock Exchange closes higher on Micron earnings expectations... Nikkei rises 3.3%"
     },
     {
       "title": "국고채 금리 혼조세…3년물 연 4.010%",
@@ -278,7 +299,8 @@
       "source": "연합뉴스 경제",
       "category": "rates",
       "preview": "(서울=연합뉴스) 1일 국고채 금리가 혼조세를 보였다.",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Mixed performance in government bond yields... 3-year bonds at 4.010% annually"
     },
     {
       "title": "보증금 반환·수선의무 누가지나...부동산원 분쟁조정 상담 [집코노미 박람회 2026]",
@@ -287,7 +309,8 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Who bears the responsibility for deposit refund and repair obligations... Real Estate Agency Dispute Mediation Consultation [Home Economy Fair 2026]"
     },
     {
       "title": "설악산 울산바위 인근에 대단지 아파트 추진…조망권 침해 우려",
@@ -296,7 +319,8 @@
       "source": "연합뉴스 경제",
       "category": "realestate",
       "preview": "(춘천·강원 고성=연합뉴스) 박영서 류호준 기자 = 설악산국립공원과 인접한 강원 고성군 토성면 원암리 일대에 대단지 아파트 건립이 추진되면서 조...",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Large apartment complex planned near Ul-san-ba-ri in Seoraksan, raising concerns over view obstruction"
     }
   ],
   "realestateStats": [

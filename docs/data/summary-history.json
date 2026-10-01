@@ -2872,21 +2872,63 @@
     "date": "2026-10-01",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 금리·예금·투자상품: 미국 금리 상승으로 원화가 하락하는 일반적인 경향이 깨진 것으로 나타났다. 국고채 금리는 주요국 금리 상승 영향으로 장기물 중심으로 약세를 보였다. 주담대 금리가 고공행진하면서 영끌족은 부담을 느끼고 있다. 국고채 3년물 금리는 연 4.010%를 기록했다. 미국 고금리 장기화 우려로 환율은 1,350원대 후반으로 상승했다.\n- 기타 경제 소식: 서울 집값이 86주째 상승하며 정부 기록을 넘어섰다. 신한은행의 대출모집인 전용 서비스 보안 허점이 드러났다. 서울 집값은 평균 15억 원을 넘는 자치구가 5년 만에 5곳에서 13곳으로 늘었다. 중국 정부는 집을 사면 5년간 대출 이자 지원을 발표했다. 재정경제부에 관련 인사가 임명되었다.\n- 부동산: 강남 지역 아파트 가격이 10억 원씩 하락하는 가운데 강북 지역은 상대적으로 안정적인 모습을 보이고 있다. 중저가 아파트로의 수요가 증가하면서 대출이 늘고 있는 것으로 나타났다. 삼성물산은 철거 없이 새 아파트처럼 개보수하는 '넥스트 리모델링' 기술을 소개했다. 서울 재건축보다 재개발에 주목해야 한다는 주장이 제기되며, 325개 지하철역 주변에 관심이 집중되고 있다. 부동산 분쟁에 대한 상담이 증가하면서 보증금 반환과 수선 의무에 대한 분쟁조정이 활발히 진행되고 있다.\n- 증시·환율: 증시·환율: \"증시 경보, 단계수 줄이고 불건전거래 감시에 집중해야\", 마이크론·수출로 확인한 반도체 수요…증시 상승탄력 촉매될까(종합), 日증시, 마이크론 실적 기대에 상승 마감…닛케이 3.3%↑",
-      "en": "- Rates, Deposits & Investment Products: The general trend of the won falling due to rising U.S. interest rates has been broken. Government bond rates showed weakness, especially in long-term bonds, due to the impact of rising interest rates in major countries. As mortgage rates continue to rise, the \"yanggak\" generation is feeling the burden. The 3-year government bond rate reached 4.010% annually. Due to concerns about the prolonged high interest rates in the U.S., the exchange rate rose to the high 1,350 won range.\n- Other Economic News: Seoul housing prices rose for the 86th consecutive week, surpassing the government's record. A security vulnerability in Shinhan Bank's loan collector-exclusive service was revealed. In Seoul, the number of self-governing districts where the average housing price exceeded 1,500,000,000 won increased from 5 to 13 within five years. The Chinese government announced support for loan interest rates for five years for those who purchase homes. A relevant official was appointed to the Ministry of Finance and Economy.\n- Real Estate: 강남 지역 아파트 가격이 10억 원씩 하락하는 가운데 강북 지역은 상대적으로 안정적인 모습을 보이고 있다. 중저가 아파트로의 수요가 증가하면서 대출이 늘고 있는 것으로 나타났다. 삼성물산은 철거 없이 새 아파트처럼 개보수하는 '넥스트 리모델링' 기술을 소개했다. 서울 재건축보다 재개발에 주목해야 한다는 주장이 제기되며, 325개 지하철역 주변에 관심이 집중되고 있다. 부동산 분쟁에 대한 상담이 증가하면서 보증금 반환과 수선 의무에 대한 분쟁조정이 활발히 진행되고 있다.\n- Stocks & FX: Stocks & FX: \"증시 경보, 단계수 줄이고 불건전거래 감시에 집중해야\", 마이크론·수출로 확인한 반도체 수요…증시 상승탄력 촉매될까(종합), 日증시, 마이크론 실적 기대에 상승 마감…닛케이 3.3%↑"
+      "ko": "- 증시·환율: 뉴욕증시와 대만 증시, 일본 증시가 기술주와 반도체 호조에 따라 상승 마감했으며, 한국에서는 증시 경보 관련 논의가 이어지고 있다.\n- 금리·예금·투자상품: 미 10년물 국채금리가 5.34%로 24년 만에 최고 수준을 기록했다. 미국 금리 상승으로 원화 가치가 예상과 달리 하락하지 않은 것으로 나타났다. 국고채는 주요국 금리 상승 영향으로 장기물 중심으로 약세를 보였다. 주담대 금리가 고공을 이어가면서 영끌족이 부담을 느끼고 있다. 국고채 3년물 금리는 연 4.010%를 기록했다.\n- 부동산: 청약 당첨자도 대출 걱정에 규제 완화 요구가 커지고 있다. 맞춤형 서비스 주택은 식사·돌봄·의료 기능을 결합한 형태로 확대되고 있다. 보유 주택 수를 정확히 파악하는 것이 절세의 핵심 요소로 꼽히고 있다. 공공재개발 사업에 참여하는 1주택자도 이주비 대출에 연 2%P 지원을 받을 수 있다. 서울 아파트값은 86주 연속 상승하며 정부 기록을 넘어섰다.\n- 기타 경제 소식: 신한은행의 대출모집인 전용 서비스에 보안 허점이 발견되며 논란이 일고 있다. 서울의 평균 주택 가격은 86주 연속 상승하며, 평균 15억 원을 넘는 자치구도 5년 만에 5곳에서 13곳으로 늘었다. 중국 정부는 주택 구매자에게 5년간 대출 이자 지원을 제공하는 정책을 발표했다. 재정경제부에서 인사 관련 소식이 전해졌다. 각 기사는 서로 다른 주제로, 별개의 사건으로 분리된다.",
+      "en": "- Stocks & FX: The New York stock market, Taiwan stock market, and Japanese stock market closed higher due to strong performance in technology stocks and semiconductors, while in South Korea, discussions regarding stock market alerts continue.\n- Rates, Deposits & Investment Products: The 10-year U.S. Treasury bond yield reached 5.34%, the highest level in 24 years. The won's value did not decline as expected despite the rise in U.S. interest rates. Government bonds showed weakness, particularly in long-term issues, due to rising interest rates in major countries. As mortgage rates remain high, the \"yanggak\" group is feeling the burden. The 3-year government bond yield stood at 4.010% annually.\n- Real Estate: Homebuyers who have won bids are increasingly demanding deregulation due to concerns over loans. Customized service housing is expanding to combine dining, care, and medical functions. Accurately identifying the number of owned homes is considered a key factor in tax savings. Homeowners with one property participating in public redevelopment projects can receive a 2 percentage point annual support on relocation loan interest rates. Seoul apartment prices have risen for 86 consecutive weeks, surpassing government records.\n- Other Economic News: A security vulnerability has been found in the SH Bank's loan underwriter service, causing controversy. The average housing price in Seoul has risen for 86 consecutive weeks, and the number of districts where the average price exceeds 1,500,000,000 won has increased from five to 13 in five years. The Chinese government announced a policy to support loan interest for homebuyers over a five-year period. News about personnel matters was reported from the Ministry of Finance and Economy. Each article covers a different topic and should be considered as separate events."
     },
     "highlights": [],
     "categories": [
       {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "뉴욕증시와 대만 증시, 일본 증시가 기술주와 반도체 호조에 따라 상승 마감했으며, 한국에서는 증시 경보 관련 논의가 이어지고 있다.",
+        "lineEn": "The New York stock market, Taiwan stock market, and Japanese stock market closed higher due to strong performance in technology stocks and semiconductors, while in South Korea, discussions regarding stock market alerts continue.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "[속보]뉴욕증시, 기술주 중심 상승 출발…나스닥 0.52%↑",
+            "link": "https://www.newsis.com/view/NISX20261001_0003811605",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 대만 증시, 韓美 반도체 호조에 0.86%↑ 상승 마감…1주 만에 사상최고 경신",
+            "link": "https://www.newsis.com/view/NISX20261001_0003811534",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "\"증시 경보, 단계수 줄이고 불건전거래 감시에 집중해야\"",
+            "link": "https://www.yna.co.kr/view/AKR20261001175400008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "마이크론·수출로 확인한 반도체 수요…증시 상승탄력 촉매될까(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261001085451008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "日증시, 마이크론 실적 기대에 상승 마감…닛케이 3.3%↑",
+            "link": "https://www.newsis.com/view/NISX20261001_0003811109",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
         "key": "rates",
         "name": "금리·예금·투자상품",
         "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "미국 금리 상승으로 원화가 하락하는 일반적인 경향이 깨진 것으로 나타났다. 국고채 금리는 주요국 금리 상승 영향으로 장기물 중심으로 약세를 보였다. 주담대 금리가 고공행진하면서 영끌족은 부담을 느끼고 있다. 국고채 3년물 금리는 연 4.010%를 기록했다. 미국 고금리 장기화 우려로 환율은 1,350원대 후반으로 상승했다.",
-        "lineEn": "The general trend of the won falling due to rising U.S. interest rates has been broken. Government bond rates showed weakness, especially in long-term bonds, due to the impact of rising interest rates in major countries. As mortgage rates continue to rise, the \"yanggak\" generation is feeling the burden. The 3-year government bond rate reached 4.010% annually. Due to concerns about the prolonged high interest rates in the U.S., the exchange rate rose to the high 1,350 won range.",
+        "lineKo": "미 10년물 국채금리가 5.34%로 24년 만에 최고 수준을 기록했다. 미국 금리 상승으로 원화 가치가 예상과 달리 하락하지 않은 것으로 나타났다. 국고채는 주요국 금리 상승 영향으로 장기물 중심으로 약세를 보였다. 주담대 금리가 고공을 이어가면서 영끌족이 부담을 느끼고 있다. 국고채 3년물 금리는 연 4.010%를 기록했다.",
+        "lineEn": "The 10-year U.S. Treasury bond yield reached 5.34%, the highest level in 24 years. The won's value did not decline as expected despite the rise in U.S. interest rates. Government bonds showed weakness, particularly in long-term issues, due to rising interest rates in major countries. As mortgage rates remain high, the \"yanggak\" group is feeling the burden. The 3-year government bond yield stood at 4.010% annually.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
+          {
+            "title": "美 10년물 국채금리 5.34% \"24년만에 최고\"…전세계 채권 수익률 일제 급등 왜?",
+            "link": "https://www.hankyung.com/article/202610018739i",
+            "source": "한국경제 경제"
+          },
           {
             "title": "이상한 환율…'美금리 ↑ = 원화 ↓' 공식 깨졌다",
             "link": "https://www.hankyung.com/article/2026100185081",
@@ -2906,11 +2948,43 @@
             "title": "국고채 금리 혼조세…3년물 연 4.010%",
             "link": "https://www.yna.co.kr/view/AKR20261001164800008",
             "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "청약 당첨자도 대출 걱정에 규제 완화 요구가 커지고 있다. 맞춤형 서비스 주택은 식사·돌봄·의료 기능을 결합한 형태로 확대되고 있다. 보유 주택 수를 정확히 파악하는 것이 절세의 핵심 요소로 꼽히고 있다. 공공재개발 사업에 참여하는 1주택자도 이주비 대출에 연 2%P 지원을 받을 수 있다. 서울 아파트값은 86주 연속 상승하며 정부 기록을 넘어섰다.",
+        "lineEn": "Homebuyers who have won bids are increasingly demanding deregulation due to concerns over loans. Customized service housing is expanding to combine dining, care, and medical functions. Accurately identifying the number of owned homes is considered a key factor in tax savings. Homeowners with one property participating in public redevelopment projects can receive a 2 percentage point annual support on relocation loan interest rates. Seoul apartment prices have risen for 86 consecutive weeks, surpassing government records.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "\"청약 당첨돼도 대출 걱정…규제 완화를\"",
+            "link": "https://www.hankyung.com/article/2026100184851",
+            "source": "한국경제 부동산"
           },
           {
-            "title": "미국 고금리 장기화 우려에…환율 1,350원대 후반으로 상승",
-            "link": "https://www.yna.co.kr/view/AKR20261001150700002",
-            "source": "연합뉴스 경제"
+            "title": "\"식사·돌봄·의료 결합한 맞춤형 서비스 주택 늘려야\"",
+            "link": "https://www.hankyung.com/article/2026100184831",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "보유 주택 수 정확히 아는 게 '절세 1원칙'",
+            "link": "https://www.hankyung.com/article/2026100184801",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "공공재개발 1주택자도 이주비 대출 연 2%P 지원",
+            "link": "https://www.hankyung.com/article/2026100184841",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "서울 아파트값 86주 연속 상승…文정부 기록 넘어섰다",
+            "link": "https://www.hankyung.com/article/2026100185711",
+            "source": "한국경제 부동산"
           }
         ]
       },
@@ -2918,17 +2992,12 @@
         "key": "other",
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
-        "lineKo": "서울 집값이 86주째 상승하며 정부 기록을 넘어섰다. 신한은행의 대출모집인 전용 서비스 보안 허점이 드러났다. 서울 집값은 평균 15억 원을 넘는 자치구가 5년 만에 5곳에서 13곳으로 늘었다. 중국 정부는 집을 사면 5년간 대출 이자 지원을 발표했다. 재정경제부에 관련 인사가 임명되었다.",
-        "lineEn": "Seoul housing prices rose for the 86th consecutive week, surpassing the government's record. A security vulnerability in Shinhan Bank's loan collector-exclusive service was revealed. In Seoul, the number of self-governing districts where the average housing price exceeded 1,500,000,000 won increased from 5 to 13 within five years. The Chinese government announced support for loan interest rates for five years for those who purchase homes. A relevant official was appointed to the Ministry of Finance and Economy.",
+        "lineKo": "신한은행의 대출모집인 전용 서비스에 보안 허점이 발견되며 논란이 일고 있다. 서울의 평균 주택 가격은 86주 연속 상승하며, 평균 15억 원을 넘는 자치구도 5년 만에 5곳에서 13곳으로 늘었다. 중국 정부는 주택 구매자에게 5년간 대출 이자 지원을 제공하는 정책을 발표했다. 재정경제부에서 인사 관련 소식이 전해졌다. 각 기사는 서로 다른 주제로, 별개의 사건으로 분리된다.",
+        "lineEn": "A security vulnerability has been found in the SH Bank's loan underwriter service, causing controversy. The average housing price in Seoul has risen for 86 consecutive weeks, and the number of districts where the average price exceeds 1,500,000,000 won has increased from five to 13 in five years. The Chinese government announced a policy to support loan interest for homebuyers over a five-year period. News about personnel matters was reported from the Ministry of Finance and Economy. Each article covers a different topic and should be considered as separate events.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
-          {
-            "title": "86주째 상승…서울 집값, 文정부 기록 넘어",
-            "link": "https://www.hankyung.com/article/2026100185711",
-            "source": "한국경제 부동산"
-          },
           {
             "title": "대출모집인 전용 서비스 뚫렸다…신한은행 보안 허점 노출(종합)",
             "link": "https://www.yna.co.kr/view/AKR20261001145451002",
@@ -2948,70 +3017,6 @@
             "title": "[인사] 재정경제부",
             "link": "https://www.yna.co.kr/view/AKR20261001167900002",
             "source": "연합뉴스 경제"
-          }
-        ]
-      },
-      {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "강남 지역 아파트 가격이 10억 원씩 하락하는 가운데 강북 지역은 상대적으로 안정적인 모습을 보이고 있다. 중저가 아파트로의 수요가 증가하면서 대출이 늘고 있는 것으로 나타났다. 삼성물산은 철거 없이 새 아파트처럼 개보수하는 '넥스트 리모델링' 기술을 소개했다. 서울 재건축보다 재개발에 주목해야 한다는 주장이 제기되며, 325개 지하철역 주변에 관심이 집중되고 있다. 부동산 분쟁에 대한 상담이 증가하면서 보증금 반환과 수선 의무에 대한 분쟁조정이 활발히 진행되고 있다.",
-        "lineEn": "강남 지역 아파트 가격이 10억 원씩 하락하는 가운데 강북 지역은 상대적으로 안정적인 모습을 보이고 있다. 중저가 아파트로의 수요가 증가하면서 대출이 늘고 있는 것으로 나타났다. 삼성물산은 철거 없이 새 아파트처럼 개보수하는 '넥스트 리모델링' 기술을 소개했다. 서울 재건축보다 재개발에 주목해야 한다는 주장이 제기되며, 325개 지하철역 주변에 관심이 집중되고 있다. 부동산 분쟁에 대한 상담이 증가하면서 보증금 반환과 수선 의무에 대한 분쟁조정이 활발히 진행되고 있다.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "강남 10억씩 빠질때, 강북 굳건…대출 더 나오는 '중저가 아파트' 쏠림",
-            "link": "https://www.mk.co.kr/news/realestate/12166391",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "주식·부동산투자부터 절세까지… 머니쇼서 재테크 해법 찾으세요",
-            "link": "https://www.mk.co.kr/news/realestate/12166351",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "\"철거 않고 새 아파트처럼\"…삼성물산 '넥스트 리모델링' [집코노미 박람회 2026]",
-            "link": "https://www.hankyung.com/article/202610018347i",
-            "source": "한국경제 부동산"
-          },
-          {
-            "title": "\"서울 재건축 대신 재개발…325개 지하철역에 주목해야\" [집코노미 콘서트 2026]",
-            "link": "https://www.hankyung.com/article/202610018301i",
-            "source": "한국경제 부동산"
-          },
-          {
-            "title": "보증금 반환·수선의무 누가지나...부동산원 분쟁조정 상담 [집코노미 박람회 2026]",
-            "link": "https://www.hankyung.com/article/202610018281i",
-            "source": "한국경제 부동산"
-          }
-        ]
-      },
-      {
-        "key": "stocks",
-        "name": "증시·환율",
-        "nameEn": "Stocks & FX",
-        "lineKo": "증시·환율: \"증시 경보, 단계수 줄이고 불건전거래 감시에 집중해야\", 마이크론·수출로 확인한 반도체 수요…증시 상승탄력 촉매될까(종합), 日증시, 마이크론 실적 기대에 상승 마감…닛케이 3.3%↑",
-        "lineEn": "Stocks & FX: \"증시 경보, 단계수 줄이고 불건전거래 감시에 집중해야\", 마이크론·수출로 확인한 반도체 수요…증시 상승탄력 촉매될까(종합), 日증시, 마이크론 실적 기대에 상승 마감…닛케이 3.3%↑",
-        "isFallback": true,
-        "fallbackReason": "unverified-entity",
-        "degraded": false,
-        "items": [
-          {
-            "title": "\"증시 경보, 단계수 줄이고 불건전거래 감시에 집중해야\"",
-            "link": "https://www.yna.co.kr/view/AKR20261001175400008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "마이크론·수출로 확인한 반도체 수요…증시 상승탄력 촉매될까(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261001085451008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "日증시, 마이크론 실적 기대에 상승 마감…닛케이 3.3%↑",
-            "link": "https://www.newsis.com/view/NISX20261001_0003811109",
-            "source": "뉴시스 경제"
           }
         ]
       }
