@@ -9,8 +9,11 @@ import {
   registrationByMonth,
   registrationSentence,
   registrationStats,
+  correctionSentence,
+  correctionStats,
+  withoutCorrections,
 } from "./cancellation.mjs";
-import { priceBandSentence, priceBandStats, priceBandTableHtml } from "./cancel-by-price.mjs";
+import { priceBandSentence, priceBandStats, priceBandTableHtml, settledMonths } from "./cancel-by-price.mjs";
 import { DISTRICTS } from "./realestate-districts.mjs";
 import { DISTRICT_SLUGS } from "./district-slugs.mjs";
 import { readSlotFile } from "./realestate-raw.mjs";
@@ -50,33 +53,57 @@ export async function readRawSales(months, dir) {
 }
 
 export function buildPayload({ byDistrict, months, now, registrationByDistrict = byDistrict }) {
-  const all = Object.values(byDistrict ?? {}).flat();
-  if (!all.length) return null;
+  if (!Object.values(byDistrict ?? {}).flat().length) return null;
+
+  // 원본 전체에서 정정 재신고(같은 계약이 해제 없이 다시 신고된 해제 기록)를 먼저 뺀다 - 이 화면의
+  // 해제 숫자는 전부 진짜로 깨진 계약만 센다(#28). 구마다 따로 빼도 같다(키에 구가 들어 있다).
+  const fullByDistrict = {};
+  const corrections = [];
+  for (const [name, items] of Object.entries(registrationByDistrict ?? {})) {
+    const cleaned = withoutCorrections(items);
+    fullByDistrict[name] = cleaned.items;
+    corrections.push(...cleaned.corrections);
+  }
+  const fullAll = Object.values(fullByDistrict).flat();
+  const reportedCancellations = Object.values(registrationByDistrict ?? {}).flat().filter(isCancelled).length;
+
+  // 해제율은 해제가 다 쌓인 계약월에서만 센다 - 최근 달은 아직 덜 쌓여 낮게 나온다(체크리스트 7).
+  const settled = settledMonths(fullAll);
+  const settledSet = new Set(settled.months);
+  const inSettled = (items) => items.filter((item) => settledSet.has(`${item.dealYear}${String(item.dealMonth).padStart(2, "0")}`));
+  // 해제가 다 쌓인 달이 아직 없으면(원본이 짧은 날) 해제 쪽만 비우고 등기 쪽은 그대로 낸다.
+  const all = inSettled(fullAll);
 
   const cancelled = all.filter(isCancelled).length;
-  const timing = cancellationTiming(all);
+  const timing = cancellationTiming(fullAll);
   const standing = priceStanding(all);
   // 등기는 원본 전체로 센다. 익은 달은 계약 뒤 넉 달은 지나야 생겨 여섯 달 창 안에는 없을 수 있다(#27).
-  const registrationAll = Object.values(registrationByDistrict ?? {}).flat();
-  const registration = registrationStats(registrationAll);
-  const priceBands = priceBandStats(registrationAll);
+  const registration = registrationStats(fullAll);
+  const priceBands = priceBandStats(fullAll);
+  const correction = correctionStats(reportedCancellations, corrections, registration?.matureMonths);
+  const span = settled.months;
 
   const seoul = {
     deals: all.length,
     cancelled,
-    cancelledShare: Math.round((cancelled / all.length) * 1000) / 10,
+    cancelledShare: all.length ? Math.round((cancelled / all.length) * 1000) / 10 : null,
+    settleDays: settled.settleDays,
     timing,
     standing,
     registration,
+    correction,
   };
+
+  const settledByDistrict = Object.fromEntries(Object.entries(fullByDistrict).map(([name, items]) => [name, inSettled(items)]));
 
   return {
     updatedAt: now.toISOString(),
-    months,
+    months: span,
     seoul: {
       ...seoul,
-      leadKo: leadSentence({ deals: all.length, cancelled, timing, standing, months }, "ko"),
-      leadEn: leadSentence({ deals: all.length, cancelled, timing, standing, months }, "en"),
+      leadKo: leadSentence({ deals: all.length, cancelled, timing, standing, months: span }, "ko"),
+      leadEn: leadSentence({ deals: all.length, cancelled, timing, standing, months: span }, "en"),
+      correctionLead: { ko: correctionSentence(correction, "ko"), en: correctionSentence(correction, "en") },
       registrationLead: { ko: registrationSentence(registration, "ko"), en: registrationSentence(registration, "en") },
     },
     // 가격대별 해제율은 원본 전체에서 해제가 다 쌓인 달만, 같은 달 안에서 견준다(scripts/cancel-by-price.mjs).
@@ -92,8 +119,8 @@ export function buildPayload({ byDistrict, months, now, registrationByDistrict =
         .filter((name) => DISTRICT_SLUGS[name])
         .map((name) => [name, DISTRICT_SLUGS[name]])
     ),
-    districts: districtStats(byDistrict, registration?.matureMonths ?? null, undefined, registrationByDistrict),
-    registrationByMonth: registrationByMonth(registrationAll),
+    districts: districtStats(settledByDistrict, registration?.matureMonths ?? null, undefined, fullByDistrict),
+    registrationByMonth: registrationByMonth(fullAll),
   };
 }
 

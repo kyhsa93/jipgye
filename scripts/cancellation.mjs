@@ -37,6 +37,31 @@ export const dayGap = (from, to) => (from && to ? Math.round((to - from) / 86400
 export const isCancelled = (item) =>
   String(item?.cdealType ?? "").trim().length > 0 || String(item?.cdealDay ?? "").trim().length > 0;
 
+/**
+ * 정정 재신고. 해제 기록 가운데 같은 계약(구·동·지번·단지·전용면적·층·계약일·금액)이 해제되지 않은
+ * 기록으로 그대로 다시 신고된 것은 계약이 깨진 것이 아니라 신고를 고친 것이다 - 그 다시 신고된 쪽은
+ * 대부분 등기까지 갔다. 2026-10-01에 세어 보니 해제 기록의 76%가 이랬고(해제되지 않은 기록끼리
+ * 완전히 같은 경우는 0.65%뿐이라 우연이 아니다), 이것을 해제로 세던 이 화면은 해제율을 3~4배로
+ * 부풀리고 "비싼 집일수록 더 깨진다"는 틀린 결론을 냈다(#28).
+ */
+export const contractKey = (item) =>
+  [item?.sggCd, item?.umdNm, item?.jibun, item?.aptNm, item?.excluUseAr, item?.floor, item?.dealYear, item?.dealMonth, item?.dealDay, item?.dealAmount].join("|");
+
+/** 정정 기록을 뺀 목록과, 뺀 것들. 정정의 짝(다시 신고된 기록)은 남는다 - 한 계약은 한 번만 센다. */
+export function withoutCorrections(items) {
+  const live = new Map();
+  for (const item of items ?? []) {
+    if (!isCancelled(item)) live.set(contractKey(item), item);
+  }
+  const kept = [];
+  const corrections = [];
+  for (const item of items ?? []) {
+    if (isCancelled(item) && live.has(contractKey(item))) corrections.push({ item, twin: live.get(contractKey(item)) });
+    else kept.push(item);
+  }
+  return { items: kept, corrections };
+}
+
 export const isRegistered = (item) => String(item?.rgstDate ?? "").trim().length > 0;
 
 export const monthKey = (item) => `${item?.dealYear}-${pad(item?.dealMonth)}`;
@@ -210,8 +235,12 @@ export function districtStats(itemsByDistrict, matureMonths = null, minDeals = M
   // 정하면 어떤 구는 넉 달, 어떤 구는 두 달을 세게 되어 비율끼리 견줄 수 없다.
   const mature = matureMonths ? new Set(matureMonths) : null;
 
-  for (const [district, items] of Object.entries(itemsByDistrict ?? {})) {
-    if (!items?.length) continue;
+  // 해제 쪽(itemsByDistrict)이 비어도 등기 쪽에 거래가 있으면 그 구의 줄은 낸다 - 해제가 다 쌓인 달이
+  // 아직 없는 날에도 미등기율은 말할 수 있다.
+  const names = [...new Set([...Object.keys(itemsByDistrict ?? {}), ...Object.keys(registrationItems ?? {})])];
+  for (const district of names) {
+    const items = itemsByDistrict?.[district] ?? [];
+    if (!items.length && !(registrationItems?.[district] ?? []).length) continue;
     const cancelled = items.filter(isCancelled).length;
     const scoped = mature ? (registrationItems?.[district] ?? []).filter((item) => mature.has(monthKey(item))) : items;
     const live = scoped.filter((item) => !isCancelled(item));
@@ -272,7 +301,9 @@ export function leadSentence({ deals, cancelled, timing, standing, months }, loc
         : ` They are not the top prints people assume: ${standing.higherShare}% sat above the median of what remained in the same complex, while ${standing.lowerShare}% sat below.`;
     return (
       `Of ${deals.toLocaleString("en-US")} filed sales${span ? ` in ${span}` : ""}, ${cancelled.toLocaleString("en-US")} were later cancelled — ${share}%.` +
-      (timing ? ` Half of them were undone within ${timing.medianDays} days, inside the 30-day filing window.` : "") +
+      (timing
+        ? ` Half of them were undone within ${timing.medianDays} days${timing.medianDays <= 30 ? ", inside the 30-day filing window" : ", just past the 30-day filing window"}.`
+        : "") +
       verdict
     );
   }
@@ -285,7 +316,9 @@ export function leadSentence({ deals, cancelled, timing, standing, months }, loc
 
   return (
     `${span ? `${span} ` : ""}신고된 매매 ${deals.toLocaleString("ko-KR")}건 가운데 ${cancelled.toLocaleString("ko-KR")}건이 나중에 해제됐다. ${share}%다.` +
-    (timing ? ` 절반은 ${timing.medianDays}일 안에 지워졌는데, 신고 기한 30일 안이다.` : "") +
+    (timing
+        ? ` 절반은 ${timing.medianDays}일 안에 지워졌다${timing.medianDays <= 30 ? " — 신고 기한 30일 안이다" : " — 신고 기한 30일을 조금 넘긴 때다"}.`
+        : "") +
     verdict
   );
 }
@@ -319,4 +352,33 @@ export function registrationSentence(reg, locale = "ko") {
         (listed.length ? `(${listed.join(", ")})` : "") +
         `. 등기는 잔금을 치른 뒤에 하므로, 대략 계약에서 잔금까지 그만큼 잡는다는 뜻입니다. ` +
         `익은 달의 계약 ${ko(reg.matured)}건 가운데 ${ko(reg.stale)}건(${reg.staleShare}%)이 아직 등기를 마치지 않았습니다.`;
+}
+
+/**
+ * 정정 재신고 문장. 해제 신고 가운데 몇이 정정이었고, 그 다시 신고된 거래가 등기까지 갔는지.
+ * 등기 비율은 익은 달(registration.matureMonths)의 계약에서만 센다 - 덜 익은 달은 아직 등기 전이다.
+ */
+export function correctionStats(allCancelled, corrections, matureMonths) {
+  if (!allCancelled) return null;
+  const mature = new Set(matureMonths ?? []);
+  const inMature = corrections.filter((c) => mature.has(monthKey(c.item)));
+  return {
+    reported: allCancelled,
+    corrections: corrections.length,
+    share: Math.round((corrections.length / allCancelled) * 1000) / 10,
+    matured: inMature.length,
+    registeredShare: inMature.length ? Math.round((inMature.filter((c) => isRegistered(c.twin)).length / inMature.length) * 1000) / 10 : null,
+  };
+}
+
+export function correctionSentence(c, locale = "ko") {
+  if (!c?.corrections) return null;
+  const reg = c.registeredShare;
+  return locale === "en"
+    ? `Of ${en(c.reported)} cancellation filings, ${en(c.corrections)} (${c.share}%) were the same contract filed again unchanged — a correction to the filing, not a broken deal.` +
+        (reg !== null ? ` In months old enough to have registered, ${reg}% of those re-filed contracts went on to registration.` : "") +
+        ` They are left out of every cancellation figure on this page.`
+    : `해제 신고 ${ko(c.reported)}건 가운데 ${ko(c.corrections)}건(${c.share}%)은 같은 계약이 그대로 다시 신고된 것입니다 — 계약이 깨진 것이 아니라 신고를 고친 것입니다.` +
+        (reg !== null ? ` 등기할 시간이 지난 달만 보면 그 다시 신고된 계약의 ${reg}%가 등기까지 마쳤습니다.` : "") +
+        ` 이 화면의 해제 숫자는 모두 이것을 빼고 셉니다.`;
 }

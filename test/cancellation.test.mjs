@@ -214,6 +214,8 @@ test("빌드 결과에 서울 요약과 자치구 표와 월별 곡선이 함께
       ...Array.from({ length: 100 }, (_, i) => sale({ dealMonth: 3, dealDay: (i % 28) + 1 })),
       ...Array.from({ length: 20 }, (_, i) => unregistered({ dealMonth: 3, dealDay: (i % 28) + 1, dealAmount: "90,000" })),
       cancelled({ dealAmount: "120,000" }),
+      // 해제율은 해제가 다 쌓인 달만 센다(#28). 나중 달 거래가 있어야 3월이 '다 쌓인 달'이 된다.
+      ...Array.from({ length: 10 }, (_, i) => sale({ dealMonth: 8, dealDay: i + 1 })),
     ],
   };
 

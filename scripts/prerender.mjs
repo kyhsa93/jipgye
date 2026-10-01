@@ -1149,6 +1149,7 @@ async function main() {
       CANCELLATION_PATH,
       {
         cancelLead: cancelLeadHtml(cancellation),
+        cancelCorrectionLead: cancellation?.seoul?.correctionLead?.ko ? escapeHtml(cancellation.seoul.correctionLead.ko) : null,
         cancelDistricts: cancelDistrictsHtml(cancellation),
         cancelMonthLead: cancelMonthLeadHtml(cancellation),
         cancelMonths: cancelMonthsHtml(cancellation),
