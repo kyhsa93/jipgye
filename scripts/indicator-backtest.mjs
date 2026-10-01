@@ -297,3 +297,41 @@ export function tableHtml(rows, locale = "ko") {
     .join("");
   return `${head}<tbody>${body}</tbody>`;
 }
+
+// --- 그림자 예측 ------------------------------------------------------------------
+//
+// 서울에서만 기준을 넘은 지표(주담대 금리 수준, +1개월)는 화면에 넣지 않는다. 대신 지금 모델과 그
+// 지표를 더한 모델이 매달 낸 예측을 나란히 쌓아 두고, 지수가 나오면 둘 다 채점한다(#22). 백테스트는
+// 지금의(고쳐진) 지수로 푼 것이라 실제보다 좋게 나온다 - 그때 그때 낸 예측의 성적이 진짜다.
+
+export const SHADOW = { id: "mort_lvl", lag: 1, h: 3 };
+
+/** 마지막 공식 달에 서서 h달 뒤를 두 모델로 짐작한다(%). 지표 값이 아직 없으면 null. */
+export function shadowForecast(price, series, { id = SHADOW.id, lag = SHADOW.lag, h = SHADOW.h } = {}) {
+  const c = candidates(series).find((x) => x.id === id);
+  const { months, lp } = price;
+  const i = months.length - 1;
+  const xb = baseFeat(price, i);
+  const xa = c?.fn(months[i] + lag);
+  if (!xb || !xa) return null;
+  const Xb = [];
+  const yb = [];
+  const Xa = [];
+  const ya = [];
+  for (let j = 6; j + h <= i; j += 1) {
+    const fb = baseFeat(price, j);
+    const y = lp[j + h] - lp[j];
+    Xb.push(fb);
+    yb.push(y);
+    const fa = c.fn(months[j] + lag);
+    if (fa) {
+      Xa.push([...fb, ...fa]);
+      ya.push(y);
+    }
+  }
+  const bb = leastSquares(Xb, yb);
+  const ba = leastSquares(Xa, ya);
+  if (!bb || !ba) return null;
+  const round2 = (v) => Math.round(v * 10_000) / 100;
+  return { base: round2(dot(xb, bb)), with: round2(dot([...xb, ...xa], ba)) };
+}

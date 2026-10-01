@@ -1,6 +1,8 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { INDEX_FILE } from "./fetch-price-index.mjs";
+import { INDICATOR_FILE } from "./fetch-indicators.mjs";
+import { SHADOW, priceSeries, shadowForecast } from "./indicator-backtest.mjs";
 import {
   HORIZONS,
   REGIONS,
@@ -68,7 +70,33 @@ export function scoreLog(log, seriesByRegion) {
   };
 }
 
-export function buildPayload({ index, deals, months, now, log }) {
+/**
+ * 그림자 예측 한 줄을 쌓는다(공식 달마다 한 번, 고치지 않는다). 화면에는 싣지 않는다.
+ * 같은 오리진에 이미 있으면 그대로 둔다 - 다음 날 다시 낸 값으로 덮으면 그때 낸 예측이 아니게 된다.
+ */
+export function updateShadow(log, origin, forecast, { region = "200", h = SHADOW.h, indicator = `${SHADOW.id}+${SHADOW.lag}` } = {}) {
+  const shadow = [...(log?.shadow ?? [])];
+  if (!forecast || shadow.some((e) => e.origin === origin && e.region === region && e.h === h)) return shadow;
+  shadow.push({ origin, region, h, target: shiftMonth(origin, h), indicator, base: forecast.base, with: forecast.with });
+  return shadow;
+}
+
+/** 지수가 나온 그림자 예측만 채점한다. 두 모델의 평균 오차를 나란히. */
+export function scoreShadow(shadow, seriesByRegion) {
+  const scored = [];
+  for (const e of shadow ?? []) {
+    const s = seriesByRegion[e.region];
+    const a = s?.months.indexOf(e.origin) ?? -1;
+    const b = s?.months.indexOf(e.target) ?? -1;
+    if (a < 0 || b < 0) continue;
+    const actual = (s.logs[b] - s.logs[a]) * 100;
+    scored.push({ base: Math.abs(actual - e.base), with: Math.abs(actual - e.with) });
+  }
+  const mae = (k) => (scored.length ? round2(scored.reduce((sum, x) => sum + x[k], 0) / scored.length) : null);
+  return { made: shadow?.length ?? 0, scored: scored.length, base: mae("base"), with: mae("with") };
+}
+
+export function buildPayload({ index, deals, months, now, log, indicators = null }) {
   const seriesByRegion = {};
   for (const { code } of REGIONS) {
     const rows = index?.series?.[code];
@@ -97,6 +125,11 @@ export function buildPayload({ index, deals, months, now, log }) {
   });
 
   const nextLog = updateLog(log, regions, lastOfficial);
+  nextLog.shadow = updateShadow(
+    log,
+    lastOfficial,
+    indicators?.series ? shadowForecast(priceSeries(index.series["200"]), indicators.series) : null
+  );
   const seoulRegion = regions.find((r) => r.code === "200");
   const record = scoreLog(nextLog, seriesByRegion);
   const both = (fn) => ({ ko: fn("ko"), en: fn("en") });
@@ -109,6 +142,8 @@ export function buildPayload({ index, deals, months, now, log }) {
       regions,
       rows: regionRows(regions),
       record,
+      // 화면에는 싣지 않는다(#22). 12개 넘게 채점되면(2027 하반기) 이긴 쪽을 다시 본다.
+      shadow: scoreShadow(nextLog.shadow, seriesByRegion),
       lead: both((l) => leadSentence(seoulRegion, lastOfficial, l)),
       longLead: both((l) => longSentence(seoulRegion, l)),
       nowcastLead: both((l) => nowcastSentence(seoulRegion, l)),
@@ -168,8 +203,9 @@ async function main() {
   }
   const { deals, months } = await readDeals(now);
   const log = await readJson(path.join(dataDir, "outlook-log.json"));
+  const indicators = await readJson(INDICATOR_FILE);
 
-  const built = buildPayload({ index, deals, months, now, log });
+  const built = buildPayload({ index, deals, months, now, log, indicators });
   if (!built) {
     console.log("  전망: 서울 계열이 없어 건너뜀");
     return;

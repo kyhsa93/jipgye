@@ -36,5 +36,16 @@
       "low": -0.79,
       "high": 8.21
     }
+  ],
+  "shadow": [
+    {
+      "origin": "202607",
+      "region": "200",
+      "h": 3,
+      "target": "202610",
+      "indicator": "mort_lvl+1",
+      "base": 2.58,
+      "with": 2.07
+    }
   ]
 }
