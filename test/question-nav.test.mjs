@@ -74,3 +74,24 @@ test("영어 화면에서는 질문도 영어다", async () => {
     assert.match(en.byId(item.id).textContent, /^[\x20-\x7E₩]+$/, `${item.id} 영어 화면에 한국어가 남았다`);
   }
 });
+
+test("질문 입구는 장면별 세 묶음이고, 사는 사람 묶음의 첫 질문이 예산이다 (#44)", async () => {
+  const html = await indexHtml();
+  const block = /<nav class="question-nav"[\s\S]*?<\/nav>/.exec(html)?.[0] ?? "";
+  const groups = [...block.matchAll(/<div class="question-group">([\s\S]*?)<\/div>/g)].map((m) => m[1]);
+  assert.equal(groups.length, 3, "묶음이 셋이 아니다");
+  assert.match(groups[0], /집을 사려는 사람<\/h3>\s*<a id="q-budget"/, "예산 질문이 맨 앞이 아니다");
+  assert.match(groups[1], /전월세/);
+  assert.match(groups[2], /옮기거나 파는/);
+  assert.ok(!block.includes("deposit-rates"), "예금 질문은 금리 탭에 있다 - 질문 입구에서 뺐다");
+
+  const css = await readFile(path.join(root, "docs/style.css"), "utf8");
+  const group = /\.question-group \{([^}]*)\}/.exec(css)?.[1] ?? "";
+  assert.match(group, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/, "모바일에서 한 줄씩 늘어선다");
+});
+
+test("묶음 제목도 영어로 바뀐다", async () => {
+  const en = await loadIndexPage({ storage: { lang: "en" }, fetch: async () => ({ ok: false, json: async () => ({}) }) });
+  assert.equal(en.byId("qg-buy").textContent, "Buying");
+  assert.equal(en.byId("qg-move").textContent, "Moving or selling");
+});

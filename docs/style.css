@@ -2280,23 +2280,41 @@ summary:focus-visible,
 /* 질문 한 줄에 한 칸. 폰에서 두 칸으로 놓으면 "재계약이 새로 구하는 것보다 싼가"
  * 같은 줄이 반으로 접혀, 여덟 개가 전부 두 줄짜리 누더기가 된다. 여기는 화면으로
  * 가는 입구 목록이라 한 줄에 한 질문이 그대로 읽히는 편이 낫다. */
+/* 질문 입구는 장면별 세 묶음이다(UIUX #44). 한 줄씩 열하나를 세우면 모바일에서 "예산" 질문이
+ * 첫 화면 밖(868px)으로 밀렸고, 사는 사람·세 사는 사람·옮기는 사람의 질문이 섞여 있었다.
+ * 묶음 안에서 모바일은 두 칸, 넓으면 묶음 셋이 나란히 선다. 가로 스크롤은 여전히 쓰지 않는다. */
 .question-nav {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 8px;
+  gap: 14px;
   margin: 0 0 24px;
-}
-
-@media (min-width: 560px) {
-  .question-nav {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 @media (min-width: 1024px) {
   .question-nav {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: 2fr 1fr 1fr;
   }
+}
+
+.question-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  align-content: start;
+}
+
+@media (min-width: 1024px) {
+  .question-group:not(:first-child) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.question-group-title {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--muted);
 }
 
 .question-nav a {

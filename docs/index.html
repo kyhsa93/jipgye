@@ -80,17 +80,25 @@
 
   <h2 class="question-heading" id="question-heading">무엇을 알아보러 오셨나요</h2>
   <nav class="question-nav" id="question-nav" aria-labelledby="question-heading">
-    <a id="q-realestate" href="./realestate.html">우리 동네는 얼마에 팔렸나</a>
-    <a id="q-conversion" href="./jeonse-vs-wolse.html">전세가 쌀까, 월세가 쌀까</a>
-    <a id="q-renewal" href="./renewal-vs-new.html">재계약이 새로 구하는 것보다 싼가</a>
-    <a id="q-floor" href="./floor-gap.html">1층은 얼마나 싸야 정상인가</a>
-    <a id="q-switch" href="./switch-house.html">집을 옮기려는데, 갈 동네는 얼마나 올랐나</a>
-    <a id="q-record" href="./record-high.html">신고가가 나왔다는데, 이제 그 값인가</a>
-    <a id="q-outlook" href="./price-outlook.html">3개월 뒤 아파트값은, 그리고 얼마나 틀리나</a>
-    <a id="q-budget" href="./budget-10eok.html">10억이면 서울 어디까지</a>
-    <a id="q-cancelled" href="./cancelled-deals.html">계약이 취소되는 일이 흔한가</a>
-    <a id="q-rates" href="./deposit-rates.html">예금에 넣으면 세후로 얼마</a>
-    <a id="q-search" href="./deal-search.html">조건을 걸어 실거래 찾기</a>
+    <div class="question-group">
+      <h3 class="question-group-title" id="qg-buy">집을 사려는 사람</h3>
+      <a id="q-budget" href="./budget-10eok.html">내 예산이면 서울 어디까지</a>
+      <a id="q-realestate" href="./realestate.html">우리 동네는 얼마에 팔렸나</a>
+      <a id="q-search" href="./deal-search.html">조건을 걸어 실거래 찾기</a>
+      <a id="q-floor" href="./floor-gap.html">1층은 얼마나 싸야 정상인가</a>
+      <a id="q-record" href="./record-high.html">신고가, 이제 그 값인가</a>
+      <a id="q-outlook" href="./price-outlook.html">3개월 뒤 값과 그 오차</a>
+    </div>
+    <div class="question-group">
+      <h3 class="question-group-title" id="qg-rent">전월세를 구하는 사람</h3>
+      <a id="q-conversion" href="./jeonse-vs-wolse.html">전세가 쌀까, 월세가 쌀까</a>
+      <a id="q-renewal" href="./renewal-vs-new.html">재계약이 새로 구하는 것보다 싼가</a>
+    </div>
+    <div class="question-group">
+      <h3 class="question-group-title" id="qg-move">옮기거나 파는 사람</h3>
+      <a id="q-switch" href="./switch-house.html">갈 동네는 얼마나 올랐나</a>
+      <a id="q-cancelled" href="./cancelled-deals.html">계약이 취소되는 일이 흔한가</a>
+    </div>
   </nav>
 
   <section id="realestate-section">
@@ -304,13 +312,15 @@
       q_conversion: "전세가 쌀까, 월세가 쌀까",
       q_renewal: "재계약이 새로 구하는 것보다 싼가",
       q_floor: "1층은 얼마나 싸야 정상인가",
-      q_switch: "집을 옮기려는데, 갈 동네는 얼마나 올랐나",
-      q_record: "신고가가 나왔다는데, 이제 그 값인가",
-      q_outlook: "3개월 뒤 아파트값은, 그리고 얼마나 틀리나",
-      q_budget: "10억이면 서울 어디까지",
+      q_switch: "갈 동네는 얼마나 올랐나",
+      q_record: "신고가, 이제 그 값인가",
+      q_outlook: "3개월 뒤 값과 그 오차",
+      q_budget: "내 예산이면 서울 어디까지",
       q_cancelled: "계약이 취소되는 일이 흔한가",
-      q_rates: "예금에 넣으면 세후로 얼마",
       q_search: "조건을 걸어 실거래 찾기",
+      qg_buy: "집을 사려는 사람",
+      qg_rent: "전월세를 구하는 사람",
+      qg_move: "옮기거나 파는 사람",
       footerAbout: "소개",
     },
     en: {
@@ -418,13 +428,15 @@
       q_conversion: "Is jeonse or monthly rent cheaper?",
       q_renewal: "Is renewing cheaper than moving?",
       q_floor: "How much less should a first floor be?",
-      q_switch: "Moving house: how much has the next district risen?",
-      q_record: "A record high was set. Is that the price now?",
-      q_outlook: "Prices in three months, and how wrong that is",
-      q_budget: "What does ₩1B buy in Seoul?",
+      q_switch: "How far has the next district risen?",
+      q_record: "A record high. Is that the price now?",
+      q_outlook: "Prices in 3 months, with the error",
+      q_budget: "What does my budget buy?",
       q_cancelled: "How often do deals fall through?",
-      q_rates: "What does a deposit pay after tax?",
       q_search: "Search transactions by condition",
+      qg_buy: "Buying",
+      qg_rent: "Renting",
+      qg_move: "Moving or selling",
       footerAbout: "About",
     },
   };
@@ -1642,7 +1654,9 @@
     document.getElementById("q-outlook").textContent = t("q_outlook");
     document.getElementById("q-budget").textContent = t("q_budget");
     document.getElementById("q-cancelled").textContent = t("q_cancelled");
-    document.getElementById("q-rates").textContent = t("q_rates");
+    document.getElementById("qg-buy").textContent = t("qg_buy");
+    document.getElementById("qg-rent").textContent = t("qg_rent");
+    document.getElementById("qg-move").textContent = t("qg_move");
     document.getElementById("q-search").textContent = t("q_search");
     document.getElementById("footer-about").textContent = t("footerAbout");
     const missing = isArchiveView
