@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#253e81">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<meta name="google-adsense-account" content="ca-pub-1195159445218373">
+<title>갈아타기 - 서울 자치구 아파트값은 1년 동안 얼마나 움직였나</title>
+<meta name="description" content="집을 팔고 다른 동네로 옮기려는 사람을 위해 같은 단지 같은 평형의 실거래를 두 시기에 견줘 서울 25개 자치구의 변화를 셉니다. 두 구의 차이가 표본의 흔들림을 넘는지도 함께 적습니다.">
+<meta name="site-group" content="digest">
+<link rel="canonical" href="https://kyhsa93.github.io/jipgye/switch-house.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="집계">
+<meta property="og:url" content="https://kyhsa93.github.io/jipgye/switch-house.html">
+<meta property="og:title" content="갈아타기 - 서울 자치구 아파트값은 1년 동안 얼마나 움직였나">
+<meta property="og:description" content="같은 단지 같은 평형의 실거래를 두 시기에 견줘 서울 25개 자치구의 변화를 셉니다.">
+<meta property="og:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="갈아타기 - 서울 자치구 아파트값의 변화">
+<meta name="twitter:description" content="같은 단지 같은 평형의 실거래를 두 시기에 견줘 자치구 변화를 셉니다.">
+<meta name="twitter:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<a class="skip-link" href="#main" data-skip-en="Skip to content">본문 바로가기</a>
+<main id="main">
+  <header>
+    <div>
+      <a class="brand" id="site-brand" href="./index.html" data-brand-en="Jipgye">집계</a>
+      <h1 id="page-title">갈아타기 — 내 동네와 갈 동네는 얼마나 움직였나</h1>
+      <div class="updated" id="updated">불러오는 중...</div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-toggle" type="button" id="theme-toggle" aria-label="테마 전환"><span aria-hidden="true">🌓</span></button>
+      <button class="icon-toggle" type="button" id="lang-toggle" aria-label="Switch language"><span aria-hidden="true">🌐</span></button>
+    </div>
+  </header>
+
+  <nav class="page-nav" aria-label="섹션">
+    <a href="./index.html" id="nav-digest">오늘</a>
+    <a href="./realestate.html" id="nav-realestate" class="active">아파트 시세</a>
+    <a href="./rates.html" id="nav-rates">금리 비교</a>
+    <a href="./news.html" id="nav-news">뉴스</a>
+  </nav>
+
+
+  <aside class="method-callout">
+    <p id="method-callout-text">자치구 평균 시세는 그 기간에 어떤 단지가 팔렸느냐에 따라 움직입니다. 그래서 같은 단지 같은 평형을 두 시기에 견주고, 그 변화의 중앙값을 그 구의 변화로 봅니다.</p>
+    <a href="./method.html#switch-house" id="method-callout-link">숫자를 만드는 방법 →</a>
+  </aside>
+
+  <section id="lead-section">
+    <h2 id="lead-heading">자치구별 변화</h2>
+    <p class="lead" id="lead"><!--prerender:switchLead-->같은 단지 같은 평형을 2025년 8~10월과 2026년 6~8월(10개월 간격)에 견주면 성북구는 +21.0%, 서초구는 +2.6% 움직였습니다. 두 구씩 짝지은 300쌍 가운데 156쌍만 차이를 말할 수 있습니다 — 나머지는 그 차이가 표본이 만드는 흔들림 안에 있습니다.<!--/prerender:switchLead--></p>
+  </section>
+
+  <section id="compare-section">
+    <h2 id="compare-heading">두 구 견주기</h2>
+    <div class="controls">
+      <label for="from-select" id="from-label">지금 사는 구</label>
+      <select id="from-select"></select>
+      <label for="to-select" id="to-label">옮겨 갈 구</label>
+      <select id="to-select"></select>
+    </div>
+    <p class="lead" id="compare-result" aria-live="polite"></p>
+  </section>
+
+  <section id="table-section">
+    <h2 id="table-heading">25개 구</h2>
+    <div class="table-scroll">
+      <table class="rate-table outlook-table" id="district-table"><!--prerender:switchTable--><thead><tr><th>자치구</th><th>변화</th><th>90% 구간</th><th>맞물린 칸</th><th>부동산원 조사</th></tr></thead><tbody><tr><td>성북구</td><td>+21.0%</td><td>+20.1% ~ +22.1%</td><td>233</td><td>+11.8%</td></tr><tr><td>동대문구</td><td>+20.6%</td><td>+19.0% ~ +22.0%</td><td>195</td><td>+10.6%</td></tr><tr><td>동작구</td><td>+19.8%</td><td>+18.5% ~ +21.6%</td><td>162</td><td>+10.8%</td></tr><tr><td>영등포구</td><td>+18.1%</td><td>+15.6% ~ +19.7%</td><td>214</td><td>+12.7%</td></tr><tr><td>강서구</td><td>+17.9%</td><td>+15.9% ~ +19.3%</td><td>235</td><td>+11.8%</td></tr><tr><td>광진구</td><td>+17.6%</td><td>+14.0% ~ +22.5%</td><td>72</td><td>+11.5%</td></tr><tr><td>성동구</td><td>+17.6%</td><td>+16.1% ~ +19.5%</td><td>127</td><td>+13.3%</td></tr><tr><td>중구</td><td>+16.9%</td><td>+12.3% ~ +18.2%</td><td>47</td><td>+11.6%</td></tr><tr><td>서대문구</td><td>+16.7%</td><td>+14.9% ~ +18.8%</td><td>166</td><td>+10.1%</td></tr><tr><td>강동구</td><td>+16.4%</td><td>+14.7% ~ +18.6%</td><td>204</td><td>+9.7%</td></tr><tr><td>강북구</td><td>+15.8%</td><td>+12.9% ~ +18.8%</td><td>68</td><td>+6.8%</td></tr><tr><td>송파구</td><td>+15.7%</td><td>+13.5% ~ +18.5%</td><td>218</td><td>+11.0%</td></tr><tr><td>관악구</td><td>+15.0%</td><td>+12.0% ~ +18.6%</td><td>116</td><td>+10.4%</td></tr><tr><td>구로구</td><td>+14.5%</td><td>+13.1% ~ +16.6%</td><td>210</td><td>+10.7%</td></tr><tr><td>양천구</td><td>+14.0%</td><td>+12.0% ~ +15.6%</td><td>158</td><td>+10.3%</td></tr><tr><td>노원구</td><td>+13.1%</td><td>+11.8% ~ +15.0%</td><td>375</td><td>+8.5%</td></tr><tr><td>종로구</td><td>+13.1%</td><td>+7.4% ~ +22.1%</td><td>30</td><td>+8.6%</td></tr><tr><td>마포구</td><td>+12.1%</td><td>+10.5% ~ +13.5%</td><td>154</td><td>+10.6%</td></tr><tr><td>은평구</td><td>+11.2%</td><td>+9.7% ~ +13.2%</td><td>179</td><td>+7.8%</td></tr><tr><td>중랑구</td><td>+10.9%</td><td>+9.1% ~ +12.3%</td><td>141</td><td>+6.6%</td></tr><tr><td>도봉구</td><td>+9.2%</td><td>+7.0% ~ +10.0%</td><td>137</td><td>+6.1%</td></tr><tr><td>용산구</td><td>+8.3%</td><td>+5.4% ~ +10.9%</td><td>48</td><td>+8.0%</td></tr><tr><td>금천구</td><td>+7.0%</td><td>+4.3% ~ +8.6%</td><td>66</td><td>+4.8%</td></tr><tr><td>강남구</td><td>+2.8%</td><td>+1.0% ~ +5.4%</td><td>133</td><td>+4.5%</td></tr><tr><td>서초구</td><td>+2.6%</td><td>+0.7% ~ +4.6%</td><td>83</td><td>+5.9%</td></tr></tbody><!--/prerender:switchTable--></table>
+    </div>
+    <div class="content-notice" id="table-note"></div>
+  </section>
+
+  <section id="check-section">
+    <h2 id="check-heading">다른 자와 견주면</h2>
+    <div class="table-scroll">
+      <table class="rate-table outlook-table" id="region-table"><!--prerender:switchRegions--><thead><tr><th>권역</th><th>같은 칸(우리)</th><th>공식 실거래가격지수</th><th>차이</th></tr></thead><tbody><tr><td>도심권</td><td>+11.7%</td><td>+12.6%</td><td>-0.9%p</td></tr><tr><td>동북권</td><td>+15.8%</td><td>+13.7%</td><td>+2.1%p</td></tr><tr><td>서북권</td><td>+13.4%</td><td>+10.9%</td><td>+2.5%p</td></tr><tr><td>서남권</td><td>+15.9%</td><td>+14.4%</td><td>+1.5%p</td></tr><tr><td>동남권</td><td>+11.8%</td><td>+11.3%</td><td>+0.5%p</td></tr></tbody><!--/prerender:switchRegions--></table>
+    </div>
+    <div class="content-notice" id="check-note"></div>
+    <div class="district-links-heading" id="district-links-heading">자치구별 시세</div>
+    <div class="district-links" id="district-links"></div>
+  </section>
+
+  <footer class="site-footer">
+    <div id="footer-source">출처: 국토교통부 아파트 매매 실거래가 공개시스템(중개거래, 해제 제외), 한국부동산원 실거래가격지수·주택가격동향조사.</div>
+    <div style="margin-top:6px;">
+      <a href="./about.html" id="footer-about">소개</a>
+      <span aria-hidden="true"> · </span>
+      <a href="./method.html" id="footer-method">숫자를 만드는 방법</a>
+      <span aria-hidden="true"> · </span>
+      <a href="https://kyhsa93.github.io/privacy-policy" id="footer-privacy" target="_blank" rel="noopener">개인정보처리방침</a>
+    </div>
+  </footer>
+</main>
+<script src="./nav.js" defer></script>
+<script src="./analytics.js"></script>
+<script>
+/** 10억, 만원 단위. 1억(10,000)과 헷갈려 한 자리 틀린 적이 있다. */
+const TEN_EOK = 100_000;
+const signedPct = (v) => `${v > 0 ? "+" : ""}${v.toFixed(1)}%`;
+/** 만원 → "1억 8,400만원" / "₩184M". */
+function eokText(value10k) {
+  const n = Math.round(value10k);
+  if (locale === "en") return `₩${Math.round(n / 100).toLocaleString("en-US")}M`;
+  const eok = Math.floor(n / 10_000);
+  const man = n % 10_000;
+  if (!eok) return `${man.toLocaleString("ko-KR")}만원`;
+  return man ? `${eok}억 ${man.toLocaleString("ko-KR")}만원` : `${eok}억원`;
+}
+
+const T = {
+  ko: {
+    title: "갈아타기 — 내 동네와 갈 동네는 얼마나 움직였나",
+    navDigest: "오늘",
+    navNews: "뉴스",
+    navRealestatePrices: "아파트 시세",
+    navRates: "금리 비교",
+    methodCallout:
+      "자치구 평균 시세는 그 기간에 어떤 단지가 팔렸느냐에 따라 움직입니다. 그래서 같은 단지 같은 평형을 두 시기에 견주고, 그 변화의 중앙값을 그 구의 변화로 봅니다.",
+    methodCalloutLink: "숫자를 만드는 방법 →",
+    leadHeading: "자치구별 변화",
+    compareHeading: "두 구 견주기",
+    fromLabel: "지금 사는 구",
+    toLabel: "옮겨 갈 구",
+    tableHeading: "25개 구",
+    checkHeading: "다른 자와 견주면",
+    // 숫자는 빌드가 낸 두 구의 변화(%)다. 금액은 그 둘의 차를 10억에 곱한 것뿐이다.
+    compare: (a, ac, b, bc, distinct) => {
+      const head = `${a}는 ${signedPct(ac)}, ${b}는 ${signedPct(bc)} 움직였습니다. `;
+      if (!distinct) return head + "두 구의 90% 구간이 겹쳐 이 차이를 말할 수 없습니다 — 표본이 만드는 흔들림 안입니다.";
+      const gap = (Math.abs(bc - ac) / 100) * TEN_EOK; // %p 차이를 10억(만원 단위)에 곱한다
+      return (
+        head +
+        `두 구의 90% 구간이 겹치지 않아 이 차이는 말할 수 있습니다 — 앞 시기에 같은 10억이던 두 동네 집이라면 지금은 ` +
+        `${b} 쪽이 ${eokText(gap)} ${bc > ac ? "더" : "덜"} 올라, 옮기는 데 드는 돈이 그만큼 ${bc > ac ? "늘었습니다" : "줄었습니다"}.`
+      );
+    },
+    compareThin: (name) => `${name}는 두 시기 모두 거래된 칸이 모자라 값을 내지 않았습니다.`,
+    compareSame: "다른 두 구를 고르세요.",
+    tableNote:
+      "두 시기 모두 거래가 있는 칸(같은 구·단지·전용면적)만 셉니다. 칸마다 두 시기 중앙값의 변화를 재고, 그 중앙값이 구의 변화입니다. 90% 구간은 칸을 400번 다시 뽑아 만든 것이고, 맞물린 칸이 30개 미만이면 값을 내지 않습니다. 중개거래만 세고 해제·직거래는 뺍니다. 표는 순위가 아닙니다 — 이웃한 줄 사이의 차이는 대부분 구간 안에 있습니다.",
+    checkNote:
+      "권역으로 묶은 우리 값을 같은 기간 한국부동산원 실거래가격지수와 견줍니다. 둘 다 실거래에서 나오지만 지수는 반복거래 방식이라 조금 다르고, 우리 값이 대체로 1~2%p 높게 나옵니다. 표의 '부동산원 조사'는 실거래가 아니라 표본 주택의 시세를 조사한 주택가격동향조사(월간)입니다. 조사 지수는 오르는 시기에 완만하게 따라가는 성격이 있어 실거래 쪽 값의 절반쯤으로 나옵니다 — 어느 쪽이 맞다기보다 재는 것이 다릅니다.",
+    districtLinksHeading: "자치구별 시세",
+    updatedPrefix: "기준",
+    footerSource: "출처: 국토교통부 아파트 매매 실거래가 공개시스템(중개거래, 해제 제외), 한국부동산원 실거래가격지수·주택가격동향조사.",
+    footerPrivacy: "개인정보처리방침",
+    footerMethod: "숫자를 만드는 방법",
+    footerAbout: "소개",
+    notReady: "아직 갈아타기 자료가 없습니다.",
+    loadError: "갈아타기 자료를 불러오지 못했습니다.",
+    retry: "다시 시도",
+  },
+  en: {
+    title: "Moving house: how far did your district and the next one move?",
+    navDigest: "Today",
+    navNews: "News",
+    navRealestatePrices: "Apartment Prices",
+    navRates: "Rates",
+    methodCallout:
+      "A district's average price moves with which complexes happened to sell. So the same complex and unit type is compared across two periods, and the median of those changes is the district's change.",
+    methodCalloutLink: "How these numbers are made →",
+    leadHeading: "Change by district",
+    compareHeading: "Compare two districts",
+    fromLabel: "Where you live",
+    toLabel: "Where you're moving",
+    tableHeading: "All 25 districts",
+    checkHeading: "Against other yardsticks",
+    compare: (a, ac, b, bc, distinct) => {
+      const head = `${a} moved ${signedPct(ac)}, ${b} ${signedPct(bc)}. `;
+      if (!distinct) return head + "Their 90% ranges overlap, so the gap cannot be told apart from sampling noise.";
+      const gap = (Math.abs(bc - ac) / 100) * TEN_EOK; // %p 차이를 10억(만원 단위)에 곱한다
+      return (
+        head +
+        `Their 90% ranges do not overlap, so the gap can be stated: two flats both worth ₩1bn in the first period would now differ by ${eokText(gap)}, ` +
+        `${bc > ac ? "making the move costlier" : "making the move cheaper"} by that much.`
+      );
+    },
+    compareThin: (name) => `${name} has too few units traded in both periods to give a figure.`,
+    compareSame: "Pick two different districts.",
+    tableNote:
+      "Only units (same district, complex and exclusive area) traded in both periods count. Each unit's median change is measured and their median is the district's change. The 90% range comes from resampling units 400 times; fewer than 30 matched units and no figure is given. Brokered sales only; cancelled and direct deals are excluded. The table is not a ranking — most gaps between neighbouring rows sit inside the ranges.",
+    checkNote:
+      "Our figures pooled by region are set against the Korea Real Estate Board transaction index over the same months. Both come from filings, but the index uses repeat sales, and ours runs about 1–2pp higher. The 'REB survey' column is not transactions but a monthly survey of sample homes' values; survey indices trail in a rising market and come out at roughly half the transaction figure — they measure different things.",
+    districtLinksHeading: "Prices by district",
+    updatedPrefix: "As of",
+    footerSource: "Source: MOLIT apartment sale filings (brokered, cancelled excluded); Korea Real Estate Board transaction index and price survey.",
+    footerPrivacy: "Privacy policy",
+    footerMethod: "How the numbers are made",
+    footerAbout: "About",
+    notReady: "No data yet.",
+    loadError: "Could not load the data.",
+    retry: "Retry",
+  },
+};
+
+let locale = (() => {
+  const saved = window.localStorage.getItem("lang");
+  return saved === "en" || saved === "ko" ? saved : "ko";
+})();
+const t = (key) => T[locale][key];
+
+const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
+let theme = (() => {
+  const saved = window.localStorage.getItem("theme");
+  return saved === "light" || saved === "dark" ? saved : "auto";
+})();
+
+function applyTheme(next) {
+  theme = next;
+  window.localStorage.setItem("theme", theme);
+  if (theme === "auto") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", theme);
+  document.querySelector("#theme-toggle span").textContent = THEME_ICONS[theme];
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
+
+const localeTag = () => (locale === "en" ? "en-US" : "ko-KR");
+
+const cache = { data: null };
+
+
+function fillSelects() {
+  const rows = cache.data?.rows ?? [];
+  const opts = (selected) =>
+    rows.map((r) => `<option value="${escapeHtml(r.code)}"${r.code === selected ? " selected" : ""}>${escapeHtml(r.name)}</option>`).join("");
+  const from = document.getElementById("from-select");
+  const to = document.getElementById("to-select");
+  const a = from.value || rows[0]?.code;
+  const b = to.value || rows[1]?.code;
+  from.innerHTML = opts(a);
+  to.innerHTML = opts(b);
+}
+
+// 두 구를 갈라 볼 수 있는지는 빌드가 300쌍 모두 정해 둔다(pairs). 여기서는 고르기만 한다.
+function renderCompare() {
+  const rows = cache.data?.rows ?? [];
+  const byCode = new Map(rows.map((r) => [r.code, r]));
+  const a = byCode.get(document.getElementById("from-select").value);
+  const b = byCode.get(document.getElementById("to-select").value);
+  const out = document.getElementById("compare-result");
+  if (!a || !b) return setText("compare-result", "");
+  if (a.code === b.code) return setText("compare-result", t("compareSame"));
+  const thin = [a, b].find((r) => r.change === null);
+  if (thin) return setText("compare-result", t("compareThin")(thin.name));
+  const key = [a.code, b.code].sort().join("-");
+  const distinct = cache.data.pairs?.[key] === true;
+  out.textContent = t("compare")(a.name, a.change, b.name, b.change, distinct);
+}
+
+function renderDistrictLinks() {
+  const slugs = cache.data?.slugs ?? {};
+  document.getElementById("district-links").innerHTML = Object.entries(slugs)
+    .map(([name, slug]) => `<a href="./district-${escapeHtml(slug)}.html">${escapeHtml(name)}</a>`)
+    .join("");
+}
+
+function renderUpdated() {
+  const updatedAt = cache.data?.updatedAt;
+  if (!updatedAt) {
+    setText("updated", "-");
+    return;
+  }
+  setText(
+    "updated",
+    `${t("updatedPrefix")}: ${new Date(updatedAt).toLocaleDateString(localeTag(), { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
+  );
+}
+
+function applyLocale() {
+  document.title = t("title");
+  setText("page-title", t("title"));
+  setText("method-callout-text", t("methodCallout"));
+  setText("method-callout-link", t("methodCalloutLink"));
+  for (const [id, key] of [["lead-heading", "leadHeading"], ["compare-heading", "compareHeading"], ["from-label", "fromLabel"], ["to-label", "toLabel"], ["table-heading", "tableHeading"], ["check-heading", "checkHeading"], ["table-note", "tableNote"], ["check-note", "checkNote"], ["district-links-heading", "districtLinksHeading"]]) {
+    setText(id, t(key));
+  }
+  setText("nav-digest", t("navDigest"));
+  setText("nav-news", t("navNews"));
+  setText("nav-realestate", t("navRealestatePrices"));
+  setText("nav-rates", t("navRates"));
+  setText("footer-source", t("footerSource"));
+  setText("footer-privacy", t("footerPrivacy"));
+  setText("footer-method", t("footerMethod"));
+  setText("footer-about", t("footerAbout"));
+  document.documentElement.setAttribute("lang", locale);
+}
+
+function renderAll() {
+  applyLocale();
+  const data = cache.data;
+  if (data?.lead?.[locale]) setText("lead", data.lead[locale]);
+  if (data?.table?.[locale]) document.getElementById("district-table").innerHTML = data.table[locale];
+  if (data?.regionTable?.[locale]) document.getElementById("region-table").innerHTML = data.regionTable[locale];
+  fillSelects();
+  renderCompare();
+  renderDistrictLinks();
+  renderUpdated();
+}
+
+async function loadJson(name) {
+  const res = await fetch(`./data/${name}.json?_=${Date.now()}`);
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+async function main() {
+  applyTheme(theme);
+  applyLocale();
+
+  try {
+    const data = await loadJson("district-change");
+    if (!data?.rows?.length) {
+      setText("lead", t("notReady"));
+      setText("updated", "-");
+      return;
+    }
+
+    cache.data = data;
+    renderAll();
+  } catch (error) {
+    window.analytics?.event("exception", {
+      description: `load district-change: ${error?.message ?? error}`.slice(0, 100),
+      fatal: true,
+    });
+    document.getElementById("lead").innerHTML =
+      `${escapeHtml(t("loadError"))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button>`;
+    document.getElementById("load-retry")?.addEventListener("click", (e) => {
+      e.currentTarget.disabled = true;
+      main();
+    });
+  }
+}
+
+document.getElementById("theme-toggle").addEventListener("click", () => {
+  const order = ["auto", "light", "dark"];
+  applyTheme(order[(order.indexOf(theme) + 1) % order.length]);
+});
+
+for (const id of ["from-select", "to-select"]) {
+  document.getElementById(id).addEventListener("change", renderCompare);
+}
+
+document.getElementById("lang-toggle").addEventListener("click", () => {
+  locale = locale === "ko" ? "en" : "ko";
+  window.localStorage.setItem("lang", locale);
+  renderAll();
+  window.analytics?.event("language_switch", { site_language: locale });
+});
+
+main();
+</script>
+</body>
+</html>

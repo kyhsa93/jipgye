@@ -36,6 +36,7 @@ const RENEWAL_PATH = path.join(root, "docs/renewal-vs-new.html");
 const FLOOR_PATH = path.join(root, "docs/floor-gap.html");
 const OUTLOOK_PATH = path.join(root, "docs/price-outlook.html");
 const RECORD_PATH = path.join(root, "docs/record-high.html");
+const SWITCH_PATH = path.join(root, "docs/switch-house.html");
 const DATA_DIR = path.join(root, "docs/data");
 
 export const MIN_SAMPLE = 5;
@@ -1043,6 +1044,7 @@ async function main() {
   // 전망의 문장과 표는 빌더가 두 언어로 다 만들어 둔다. 여기서는 한국어를 꽂기만 한다.
   const outlookText = (key) => (outlook?.[key]?.ko ? escapeHtml(outlook[key].ko) : null);
   const record = await readJson("record-high");
+  const change = await readJson("district-change");
   const recordText = (key) => (record?.[key]?.ko ? escapeHtml(record[key].ko) : null);
 
   for (const [file, path_, fileBlocks] of [
@@ -1097,6 +1099,15 @@ async function main() {
         floorDistrictLead: floor?.districtLead?.ko ? escapeHtml(floor.districtLead.ko) : null,
         floorDistricts: floorDistrictsHtml(floor),
         floorDistrictLinks: floorDistrictLinksHtml(floor),
+      },
+    ],
+    [
+      "docs/switch-house.html",
+      SWITCH_PATH,
+      {
+        switchLead: change?.lead?.ko ? escapeHtml(change.lead.ko) : null,
+        switchTable: change?.table?.ko ?? null,
+        switchRegions: change?.regionTable?.ko ?? null,
       },
     ],
     [

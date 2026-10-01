@@ -114,6 +114,10 @@
     <p>이렇게 고친 범위가 맞는지는 이미 지난 거래로 쟀습니다. 2026년 6&middot;7월 계약을 직전 6개월 같은 칸의 고친 중앙값과 견주면 서울 전체로 +0.4%, 자치구별로 &minus;1.9%~+1.8%였습니다. 권역 지수는 같은 권역 안 자치구의 차이까지는 고치지 못합니다 &mdash; 그래서 고치기 전 중앙값을 옆에 같이 둡니다.</p>
     <p>5건 이상이면 가운데 절반(사분위), 3~4건이면 최저~최고를 적습니다. 2건 이하면 범위를 내지 않고 신고 건수만 남깁니다.</p>
 
+    <h2 id="switch-house">자치구의 변화는 같은 단지 같은 평형을 두 시기에 견줘 잽니다</h2>
+    <p>자치구 평균 시세의 변화는 그 기간에 어떤 단지가 팔렸느냐에 따라 움직입니다. 비싼 단지가 많이 팔린 달이면 아무것도 오르지 않아도 평균이 오릅니다. 그래서 갈아타기 화면은 <strong>같은 구·단지·전용면적</strong>이 신고 기한이 닫힌 최근 석 달과 그 1년 전 석 달에 모두 거래된 칸만 놓고, 칸마다 두 시기 중앙값의 변화를 잰 뒤 그 중앙값을 구의 변화로 봅니다. 원본이 아직 1년 전 석 달을 다 갖고 있지 않으면 가장 이른 석 달을 쓰고 실제 간격을 적습니다.</p>
+    <p>칸을 400번 다시 뽑아 90% 구간을 내고, 맞물린 칸이 30개 미만인 구는 값을 내지 않습니다. 두 구의 구간이 겹치면 &ldquo;차이를 말할 수 없다&rdquo;고 적습니다. 권역으로 묶은 값은 한국부동산원 실거래가격지수와, 구별 값은 한국부동산원 주택가격동향조사(시세 조사)와 나란히 둡니다 &mdash; 재는 것이 달라 같을 이유는 없지만 크게 어긋나면 어느 쪽이든 의심할 자리입니다.</p>
+
     <h2 id="record-high">신고가 다음 거래는 아무 거래 뒤와 견줍니다</h2>
     <p>신고가는 같은 단지, 같은 전용면적에서 그 전 거래가 3건 이상 있고 첫 거래로부터 180일 넘게 지난 뒤, 그 전 최고가를 넘은 중개거래입니다. 그 뒤 90일 안에 같은 칸에서 일어난 첫 거래가 신고가 이상이었는지를 셉니다.</p>
     <p>이 비율 하나만으로는 뜻이 없어서 셋과 견줍니다. <strong>아무 거래 뒤의 다음 거래</strong>, <strong>그 전 최고가의 98~100%였던 거래 뒤</strong>(위쪽 끝이라서 다음 거래가 낮게 나오는 몫), 그리고 <strong>다음 거래가 같거나 높은 층일 때만</strong>(신고가가 고층이라서 생긴 차이인지)입니다.</p>
@@ -220,6 +224,10 @@
     <p>The reference month is the last month with an index value. The official index runs two months behind; closed months in that gap use the values the <a href="./price-outlook.html">outlook page</a> fills from our own filings, and the card states how far those have leaned from the official figure. Deals signed after the reference month have no index to adjust with, are included as filed, and are counted.</p>
     <p>The adjustment was checked on deals already done: comparing June&ndash;July 2026 sales with the adjusted median of the same cell's previous six months gave +0.4% across Seoul and &minus;1.9% to +1.8% by district. A regional index cannot correct differences between districts inside a region, so the unadjusted median is shown alongside.</p>
     <p>Five or more deals give the middle half (quartiles), three or four give low&ndash;high, and two or fewer give no range &mdash; only the count.</p>
+
+    <h2 id="switch-house-en">District changes compare the same complex and unit type across two periods</h2>
+    <p>A district's average price moves with which complexes happened to sell; a month heavy in expensive complexes lifts the average with nothing rising. So the moving-house page uses only units (same district, complex, exclusive area) traded both in the latest three closed months and in the same three months a year earlier, measures each unit's change in median price, and takes the median of those as the district's change. While the raw data does not yet reach a year back, the earliest three months are used and the actual gap is stated.</p>
+    <p>Units are resampled 400 times for a 90% range, and districts with fewer than 30 matched units get no figure. Where two districts' ranges overlap, the gap is called indistinguishable. Regional pools are set against the Korea Real Estate Board transaction index, and districts against its price survey &mdash; they measure different things, but a large gap is a reason to doubt one of them.</p>
 
     <h2 id="record-high-en">The sale after a record high is compared with the sale after any sale</h2>
     <p>A record high is a brokered sale above every earlier sale in the same complex and exclusive area, with at least three earlier sales and more than 180 days since the first. The question is whether the first sale in the same cell within the next 90 days matched or beat it.</p>

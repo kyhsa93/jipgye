@@ -17,6 +17,7 @@ async function main() {
   run("node scripts/fetch-market.mjs");
   run("node scripts/fetch-price-index.mjs");
   run("node scripts/fetch-indicators.mjs");
+  run("node scripts/fetch-district-index.mjs");
   run("node scripts/build-realestate.mjs");
   run("node scripts/build-budget-deals.mjs");
   run("node scripts/build-conversion.mjs");
@@ -27,6 +28,7 @@ async function main() {
   run("node scripts/build-indicators.mjs");
   run("node scripts/build-complex-price.mjs");
   run("node scripts/build-record-high.mjs");
+  run("node scripts/build-district-change.mjs");
   run("node scripts/build-complex-ratio.mjs");
   run("node scripts/build-rent-preview.mjs");
   run("node scripts/build-search-index.mjs");

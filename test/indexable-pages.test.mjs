@@ -79,6 +79,7 @@ const INDEXABLE = [
   "renewal-vs-new.html",
   "rent-loan-rates.html",
   "saving-rates.html",
+  "switch-house.html",
 ];
 
 const htmlPages = async () =>
