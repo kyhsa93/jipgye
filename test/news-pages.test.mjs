@@ -11,10 +11,10 @@ const readJson = (name) => read(`docs/data/${name}.json`).then(JSON.parse);
 const titles = (html) => [...html.matchAll(/rel="noopener">([^<]*)</g)].map((m) => m[1].trim());
 
 test("커밋된 카테고리 페이지가 지금 원본·데이터로 찍은 결과와 같다", async () => {
-  const [baseHtml, news, summary] = await Promise.all([read("docs/news.html"), readJson("news"), readJson("summary")]);
+  const [baseHtml, news, summary, market] = await Promise.all([read("docs/news.html"), readJson("news"), readJson("summary"), readJson("market")]);
 
   for (const page of NEWS_PAGES) {
-    const built = buildNewsPage(baseHtml, page, { news, summary });
+    const built = buildNewsPage(baseHtml, page, { news, summary, market });
     assert.equal(
       await read(`docs/${page.file}`),
       built,

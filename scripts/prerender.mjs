@@ -72,12 +72,7 @@ export function marketHtml(market) {
   if (!market) return null;
   const rows = [];
 
-  if (market.kospi?.value) {
-    // 하루 늦은 종가다. 어느 장의 값인지 화면 쪽 renderMarket과 같이 적는다.
-    const asOf = market.kospi.asOf ? ` <span class="count">${escapeHtml(market.kospi.asOf)} 종가</span>` : "";
-    const change = market.kospi.change ? `${escapeHtml(market.kospi.change)}` : "-";
-    rows.push([`코스피${asOf}`, escapeHtml(market.kospi.value), change]);
-  }
+  // 코스피는 첫 화면에서 증시 뉴스 장으로 옮겼다(UIUX #56, newsKospiHtml).
   if (typeof market.usdKrw?.value === "number") {
     const change = market.usdKrw.change
       ? `<span title="전일 수집분 대비">${escapeHtml(market.usdKrw.change)}</span>`
@@ -490,6 +485,22 @@ export function newsRealestateStatsHtml(news) {
         `</a>`
     )
     .join("");
+}
+
+/**
+ * 증시 뉴스 장의 코스피 카드(UIUX #56). 첫 화면 "돈의 값"에서 옮겨 왔다 - 계약을 앞둔 사람의 질문이
+ * 아니라서(DIRECTION 1부 대상). 하루 늦은 종가라 어느 장의 값인지 같이 적는다.
+ */
+export function newsKospiHtml(market) {
+  const k = market?.kospi;
+  if (!k?.value) return null;
+  return (
+    `<div class="stat-card">` +
+    `<span class="stat-label">${escapeHtml(k.asOf ? `코스피 ${k.asOf} 종가` : "코스피")}</span>` +
+    `<span class="stat-value">${escapeHtml(k.value)}</span>` +
+    (k.change ? `<span class="stat-sub">${escapeHtml(`전 거래일 대비 ${k.change}`)}</span>` : "") +
+    `</div>`
+  );
 }
 
 export function newsSummaryHtml(summary, category = null) {

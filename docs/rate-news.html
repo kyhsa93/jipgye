@@ -78,6 +78,11 @@
     <div class="stat-note" id="realestate-stats-note">국토교통부 실거래 신고 자료입니다. 매매·전세는 전용 84㎡ 환산가입니다.</div>
   </section>
 
+  <section id="kospi-section" hidden>
+    <h2 id="kospi-heading">코스피</h2>
+    <div class="stat-cards" id="kospi-stats"><!--prerender:newsKospi--><!--/prerender:newsKospi--></div>
+  </section>
+
   <section id="summary-section">
     <h2 id="summary-heading">오늘의 AI 요약</h2>
     <div class="summary-box" id="summary-box"><!--prerender:newsSummary--><p><strong>금리·예금·투자상품</strong> 뉴욕증시는 국채금리 급등으로 하락 출발했다. 미국 10년물 국채금리가 5.34%로 24년 만에 최고 수준을 기록하며 전세계 채권 수익률이 일제히 상승했다. 원화는 미국 금리 상승에 따라 기대와 달리 하락하지 않아 환율 전망이 혼란스러워졌다. 국고채는 주요국 금리 상승 영향으로 장기물 중심으로 약세를 보였다. 주담대 금리가 고공행진하면서 영끌족은 부담을 느끼며 한숨을 쉬고 있다.</p><!--/prerender:newsSummary--></div>
@@ -118,6 +123,7 @@
       navRateCompare: "금리 비교",
       summaryHeading: "오늘의 AI 요약",
       realestateStatsHeading: "오늘의 서울 아파트 시세",
+      kospiHeading: "코스피",
       realestateStatsNote: "국토교통부 실거래 신고 자료입니다. 매매·전세는 전용 84㎡ 환산가입니다.",
       newsHeading: "기사 목록",
       loading: "불러오는 중...",
@@ -146,6 +152,7 @@
       navRateCompare: "Rates",
       summaryHeading: "Today's AI summary",
       realestateStatsHeading: "Seoul apartment prices today",
+      kospiHeading: "KOSPI",
       realestateStatsNote: "From Ministry of Land transaction filings. Sale and jeonse figures are converted to an 84㎡ unit.",
       newsHeading: "Headlines",
       loading: "Loading...",
@@ -322,6 +329,7 @@
     }
 
     document.getElementById("realestate-stats-heading").textContent = t("realestateStatsHeading");
+    document.getElementById("kospi-heading").textContent = t("kospiHeading");
     document.getElementById("realestate-stats-note").textContent = t("realestateStatsNote");
     document.getElementById("realestate-stats").innerHTML = statCardsHtml(stats);
     section.hidden = false;

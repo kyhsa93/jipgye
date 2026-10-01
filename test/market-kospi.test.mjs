@@ -79,7 +79,21 @@ test("화면이 종가 날짜와 환율 증감을 함께 적는다", async () =>
   });
 
   const html = page.byId("market-grid").innerHTML;
-  assert.match(html, /8\/28 종가/, "어느 장의 종가인지 안 적었다");
+  assert.doesNotMatch(html, /6,788\.88/, "코스피가 첫 화면에 남았다 - 증시 뉴스 장으로 옮겼다(#56)");
   assert.match(html, /-3\.63/, "환율 증감 칸이 비어 있다");
   assert.match(html, /전일 수집분 대비/, "환율 증감의 기준을 안 적었다");
+});
+
+test("코스피는 증시 뉴스 장에 종가 날짜와 함께 실린다 (#56)", async () => {
+  const { newsKospiHtml } = await import("../scripts/prerender.mjs");
+  const html = newsKospiHtml({ kospi: { value: "6,788.88", change: "-123.49", asOf: "8/28" } });
+  assert.match(html, /코스피 8\/28 종가/);
+  assert.match(html, /6,788\.88/);
+  assert.match(html, /전 거래일 대비 -123\.49/);
+  assert.equal(newsKospiHtml({}), null);
+  const { readFile } = await import("node:fs/promises");
+  const stock = await readFile(new URL("../docs/stock-news.html", import.meta.url), "utf8");
+  assert.match(stock, /<section id="kospi-section">/, "증시 뉴스 장에서 코스피 절이 숨어 있다");
+  const realestate = await readFile(new URL("../docs/realestate-news.html", import.meta.url), "utf8");
+  assert.match(realestate, /<section id="kospi-section" hidden>/, "부동산 뉴스 장에 코스피가 떴다");
 });

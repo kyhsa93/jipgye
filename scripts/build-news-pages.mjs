@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { applyPrerender, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "./prerender.mjs";
+import { applyPrerender, newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "./prerender.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const NEWS_PATH = path.join(root, "docs/news.html");
@@ -52,7 +52,7 @@ function replaceOnce(html, needle, replacement, what) {
   return html.replace(needle, replacement);
 }
 
-export function buildNewsPage(baseHtml, page, { news, summary }) {
+export function buildNewsPage(baseHtml, page, { news, summary, market = null }) {
   let html = baseHtml;
 
   html = html.replaceAll(BASE_TITLE, page.title);
@@ -92,10 +92,14 @@ export function buildNewsPage(baseHtml, page, { news, summary }) {
     );
   }
 
+  const kospi = page.category === "stocks" ? newsKospiHtml(market) : null;
+  if (kospi) html = replaceOnce(html, '<section id="kospi-section" hidden>', '<section id="kospi-section">', "코스피 섹션");
+
   return applyPrerender(html, {
     newsSummary: newsSummaryHtml(summary, page.category),
     newsList: newsListHtml(news, page.category),
     ...(stats ? { realestateStats: stats } : {}),
+    newsKospi: kospi ?? "",
   });
 }
 
@@ -105,9 +109,11 @@ async function main() {
     readFile(path.join(root, "docs/data/news.json"), "utf8").then(JSON.parse),
     readFile(path.join(root, "docs/data/summary.json"), "utf8").then(JSON.parse),
   ]);
+  // 시장 지표는 없을 수 있다 - 그러면 코스피 카드만 빠진다.
+  const market = await readFile(path.join(root, "docs/data/market.json"), "utf8").then(JSON.parse).catch(() => null);
 
   for (const page of NEWS_PAGES) {
-    const html = buildNewsPage(baseHtml, page, { news, summary });
+    const html = buildNewsPage(baseHtml, page, { news, summary, market });
     const target = path.join(root, "docs", page.file);
     const before = await readFile(target, "utf8").catch(() => null);
     if (before === html) {

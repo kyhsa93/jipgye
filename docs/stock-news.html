@@ -78,6 +78,11 @@
     <div class="stat-note" id="realestate-stats-note">국토교통부 실거래 신고 자료입니다. 매매·전세는 전용 84㎡ 환산가입니다.</div>
   </section>
 
+  <section id="kospi-section">
+    <h2 id="kospi-heading">코스피</h2>
+    <div class="stat-cards" id="kospi-stats"><!--prerender:newsKospi--><div class="stat-card"><span class="stat-label">코스피 9/30 종가</span><span class="stat-value">6,838.04</span><span class="stat-sub">전 거래일 대비 -32.77</span></div><!--/prerender:newsKospi--></div>
+  </section>
+
   <section id="summary-section">
     <h2 id="summary-heading">오늘의 AI 요약</h2>
     <div class="summary-box" id="summary-box"><!--prerender:newsSummary--><p><strong>증시·환율</strong> 뉴욕증시와 대만 증시, 일본 증시가 기술주와 반도체 호조, 마이크론 실적 기대 등에 따라 상승 마감했으며, 한국에서는 증시 경보 관련 조치에 대한 논의가 진행되고 있다.</p><!--/prerender:newsSummary--></div>
@@ -118,6 +123,7 @@
       navRateCompare: "금리 비교",
       summaryHeading: "오늘의 AI 요약",
       realestateStatsHeading: "오늘의 서울 아파트 시세",
+      kospiHeading: "코스피",
       realestateStatsNote: "국토교통부 실거래 신고 자료입니다. 매매·전세는 전용 84㎡ 환산가입니다.",
       newsHeading: "기사 목록",
       loading: "불러오는 중...",
@@ -146,6 +152,7 @@
       navRateCompare: "Rates",
       summaryHeading: "Today's AI summary",
       realestateStatsHeading: "Seoul apartment prices today",
+      kospiHeading: "KOSPI",
       realestateStatsNote: "From Ministry of Land transaction filings. Sale and jeonse figures are converted to an 84㎡ unit.",
       newsHeading: "Headlines",
       loading: "Loading...",
@@ -322,6 +329,7 @@
     }
 
     document.getElementById("realestate-stats-heading").textContent = t("realestateStatsHeading");
+    document.getElementById("kospi-heading").textContent = t("kospiHeading");
     document.getElementById("realestate-stats-note").textContent = t("realestateStatsNote");
     document.getElementById("realestate-stats").innerHTML = statCardsHtml(stats);
     section.hidden = false;

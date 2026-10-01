@@ -78,6 +78,11 @@
     <div class="stat-note" id="realestate-stats-note">국토교통부 실거래 신고 자료입니다. 매매·전세는 전용 84㎡ 환산가입니다.</div>
   </section>
 
+  <section id="kospi-section" hidden>
+    <h2 id="kospi-heading">코스피</h2>
+    <div class="stat-cards" id="kospi-stats"><!--prerender:newsKospi--><!--/prerender:newsKospi--></div>
+  </section>
+
   <section id="summary-section">
     <h2 id="summary-heading">오늘의 AI 요약</h2>
     <div class="summary-box" id="summary-box"><!--prerender:newsSummary--><p><strong>부동산</strong> 장영호 회장은 청약 당첨자도 대출 걱정이 많다고 밝혔다. 서울 아파트값은 86주 연속 상승하며 정부 기록을 넘어섰다. 보유 주택 수를 정확히 아는 것이 절세의 핵심이라고 강조됐다. 공공재개발 사업에 참여하는 1주택자도 이주비 대출에 연 2%P 지원을 받을 수 있다. 맞춤형 서비스 주택은 식사, 돌봄, 의료를 결합한 형태로 확대해야 한다는 의견이 제기됐다.</p><!--/prerender:newsSummary--></div>
@@ -118,6 +123,7 @@
       navRateCompare: "금리 비교",
       summaryHeading: "오늘의 AI 요약",
       realestateStatsHeading: "오늘의 서울 아파트 시세",
+      kospiHeading: "코스피",
       realestateStatsNote: "국토교통부 실거래 신고 자료입니다. 매매·전세는 전용 84㎡ 환산가입니다.",
       newsHeading: "기사 목록",
       loading: "불러오는 중...",
@@ -146,6 +152,7 @@
       navRateCompare: "Rates",
       summaryHeading: "Today's AI summary",
       realestateStatsHeading: "Seoul apartment prices today",
+      kospiHeading: "KOSPI",
       realestateStatsNote: "From Ministry of Land transaction filings. Sale and jeonse figures are converted to an 84㎡ unit.",
       newsHeading: "Headlines",
       loading: "Loading...",
@@ -322,6 +329,7 @@
     }
 
     document.getElementById("realestate-stats-heading").textContent = t("realestateStatsHeading");
+    document.getElementById("kospi-heading").textContent = t("kospiHeading");
     document.getElementById("realestate-stats-note").textContent = t("realestateStatsNote");
     document.getElementById("realestate-stats").innerHTML = statCardsHtml(stats);
     section.hidden = false;

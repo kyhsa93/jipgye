@@ -73,7 +73,7 @@ test("시장지표는 값이 있는 항목만 줄을 만든다", () => {
   assert.equal(marketHtml(null), null);
   assert.equal(marketHtml({}), null);
   const html = marketHtml({ kospi: { value: "6,977.94", change: "164.60" }, baseRate: { value: "2.75" } });
-  assert.ok(html.includes("코스피") && html.includes("6,977.94"));
+  assert.ok(!html.includes("코스피"), "코스피는 첫 화면에서 뺐다(#56)");
   assert.ok(html.includes("기준금리") && html.includes("2.75%"));
   assert.ok(!html.includes("환율"), "값이 없는 환율까지 줄을 만들었다");
 });
