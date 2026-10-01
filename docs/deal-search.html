@@ -182,6 +182,25 @@ const T = {
     complexRatio: "전세가율",
     complexThin: (n) => `신고 ${n}건`,
     complexCount: (n) => `${n}건`,
+    priceHeading: (month) => `매매가 범위 — 최근 6개월 거래를 ${month} 값으로 고침`,
+    priceMedian: "중앙값",
+    priceRange: "범위",
+    priceMiddle: "가운데 절반",
+    priceMinMax: "최저~최고",
+    priceDeals: "거래",
+    priceRaw: "고치기 전 중앙값",
+    priceThin: (n) => `신고 ${n}건 — 범위를 내지 않습니다`,
+    priceNote: (month, filled, bias, unadjusted) =>
+      "같은 단지 같은 전용면적의 최근 6개월 중개거래(직거래·해제 제외)를 권역 실거래가격지수로 " +
+      `${month} 값으로 고쳤습니다. 6개월 사이 값이 움직였으니 그대로 모으면 반년 전 값이 섞입니다. ` +
+      (filled
+        ? `${month}은 공식 지수가 아직 없어 우리가 받는 신고로 메운 값입니다` +
+          (typeof bias === "number" ? `(지금까지 공식보다 평균 ${bias > 0 ? "+" : ""}${bias.toFixed(2)}%p 기울어 나왔습니다). ` : ". ")
+        : "") +
+      (unadjusted ? `그 뒤에 계약된 ${unadjusted}건은 고칠 지수가 없어 그대로 넣었습니다. ` : "") +
+      "지수는 권역 단위라 같은 권역 안 자치구 차이(±2%p 안팎)는 고쳐지지 않습니다 — 고치기 전 중앙값을 옆에 둡니다. " +
+      "5건 이상이면 가운데 절반, 3~4건이면 최저~최고를 적고, 2건 이하면 범위를 내지 않습니다.",
+    ratioHeading: "최근 두 달 매매·전세와 전세가율",
     complexNote:
       "평형마다 매매와 전세를 따로 모아 중앙값을 낸 값입니다. 한쪽이라도 신고가 3건에 못 미치면 값을 내지 않습니다 - 두 건으로 낸 중앙값은 그냥 두 값의 평균입니다. 전세가율은 양쪽이 다 있을 때만 냅니다. 갱신계약과 반전세는 빼고 셉니다.",
     allBudgets: "예산 전체",
@@ -279,6 +298,25 @@ const T = {
     complexRatio: "Jeonse ratio",
     complexThin: (n) => `${n} filed`,
     complexCount: (n) => `${n} deals`,
+    priceHeading: (month) => `Sale price range — last 6 months, adjusted to ${month}`,
+    priceMedian: "Median",
+    priceRange: "Range",
+    priceMiddle: "middle half",
+    priceMinMax: "low–high",
+    priceDeals: "Deals",
+    priceRaw: "Unadjusted median",
+    priceThin: (n) => `${n} filed — no range`,
+    priceNote: (month, filled, bias, unadjusted) =>
+      "Brokered sales (direct and cancelled deals excluded) in the same complex and exclusive area over the last six months, " +
+      `adjusted to ${month} with the regional sale price index. Prices moved over six months, so pooling them as-is would mix in half-year-old values. ` +
+      (filled
+        ? `The official index does not yet cover ${month}; that month is filled from the filings we collect` +
+          (typeof bias === "number" ? ` (so far it has run ${bias > 0 ? "+" : ""}${bias.toFixed(2)}pp off the official figure on average). ` : ". ")
+        : "") +
+      (unadjusted ? `${unadjusted} deal(s) signed after that have no index to adjust with and are included as filed. ` : "") +
+      "The index is regional, so differences between districts within a region (around ±2pp) are not corrected — the unadjusted median is shown alongside. " +
+      "Five or more deals give the middle half; three or four give low–high; two or fewer give no range.",
+    ratioHeading: "Last two months: sale, jeonse and jeonse ratio",
     complexNote:
       "Each unit type is averaged separately on each side. Nothing is stated where either side has fewer than three filings — a median of two is just the average of two. The ratio appears only when both sides are there. Renewals and deposit-plus-rent contracts are excluded.",
     allBudgets: "Any budget",
@@ -413,6 +451,8 @@ const cache = { budget: null, search: null };
 
 const fullDeals = new Map();
 const fullRents = new Map();
+// 단지·평형별 매매가 범위(scripts/build-complex-price.mjs). 계산은 빌드가 끝냈고 여기서는 그리기만 한다.
+const complexPrices = new Map();
 
 const params = new URLSearchParams(location.search);
 let kind = KINDS.includes(params.get("kind")) ? params.get("kind") : "sale";
@@ -445,6 +485,14 @@ function monthLabel(period) {
   const month = Number(String(period ?? "").slice(4, 6));
   if (!Number.isInteger(month) || month < 1 || month > 12) return "";
   return locale === "en" ? MONTHS_EN[month - 1] : `${month}월`;
+}
+
+/** "202608" → "2026년 8월" / "Aug 2026". 기준 달은 해가 바뀌는 자리에 걸칠 수 있어 해를 같이 적는다. */
+function yearMonthLabel(period) {
+  const text = String(period ?? "");
+  const month = monthLabel(text);
+  if (!month) return "";
+  return locale === "en" ? `${month} ${text.slice(0, 4)}` : `${text.slice(0, 4)}년 ${month}`;
 }
 
 function formatEok(value10k) {
@@ -548,6 +596,18 @@ async function loadDistrictRents(name) {
   try {
     const file = await loadJson(`rents-${slug}`);
     fullRents.set(name, file?.deals ?? null);
+  } catch {
+  }
+}
+
+async function loadComplexPrices(name) {
+  const slug = cache.search?.slugs?.[name];
+  if (!slug) {
+    complexPrices.set(name, null);
+    return;
+  }
+  try {
+    complexPrices.set(name, await loadJson(`complex-price-${slug}`));
   } catch {
   }
 }
@@ -958,37 +1018,87 @@ function resolveComplex(term, sales) {
   return names.size === 1 ? [...names][0] : null;
 }
 
+/**
+ * 이 단지 이 평형의 매매가 범위. 최근 여섯 달 거래를 권역 지수로 기준 달 값으로 고친 것이다.
+ * 범위·중앙값·문턱은 빌드(scripts/complex-price.mjs)가 정했다 - 여기서 다시 세면 두 벌의 규칙이 된다.
+ */
+function complexPriceHtml(file, apt) {
+  const areas = file?.cells?.[apt];
+  if (!areas) return "";
+  const rows = Object.entries(areas).sort(([a], [b]) => Number(b) - Number(a));
+  const unadjusted = rows.reduce((sum, [, c]) => sum + (c.unadjusted ?? 0), 0);
+
+  const body = rows
+    .map(([area, c]) => {
+      const head = `<td>${escapeHtml(`${area}㎡`)}</td>`;
+      if (!c.median) {
+        return `<tr>${head}<td colspan="4"><span class="low-sample">${escapeHtml(t("priceThin")(c.n))}</span></td></tr>`;
+      }
+      const kind = t(c.quartile ? "priceMiddle" : "priceMinMax");
+      return (
+        `<tr>${head}` +
+        `<td data-label="${escapeHtml(t("priceMedian"))}">${escapeHtml(formatEok(c.median))}</td>` +
+        `<td data-label="${escapeHtml(t("priceRange"))}">${escapeHtml(`${formatEok(c.low)} ~ ${formatEok(c.high)}`)}` +
+        ` <span class="count">${escapeHtml(kind)}</span></td>` +
+        `<td data-label="${escapeHtml(t("priceDeals"))}">${escapeHtml(t("complexCount")(c.n))}</td>` +
+        `<td data-label="${escapeHtml(t("priceRaw"))}">${escapeHtml(formatEok(c.raw))}</td></tr>`
+      );
+    })
+    .join("");
+
+  const reference = yearMonthLabel(file.reference);
+  return (
+    `<h3>${escapeHtml(t("priceHeading")(reference))}</h3>` +
+    `<div class="table-wrap"><table class="data-table"><thead><tr>` +
+    `<th>${escapeHtml(t("complexArea"))}</th><th>${escapeHtml(t("priceMedian"))}</th>` +
+    `<th>${escapeHtml(t("priceRange"))}</th><th>${escapeHtml(t("priceDeals"))}</th>` +
+    `<th>${escapeHtml(t("priceRaw"))}</th></tr></thead><tbody>${body}</tbody></table></div>` +
+    `<p class="content-notice">${escapeHtml(t("priceNote")(reference, file.referenceFilled, file.referenceBias, unadjusted))}</p>`
+  );
+}
+
 function complexCardHtml() {
   if (!aptTerm() || district === ALL) return "";
   const sales = fullDeals.get(district);
-  const apt = resolveComplex(aptTerm(), sales);
+  const prices = complexPrices.get(district);
+  // 두 달 목록에 없어도 여섯 달 안에 거래가 있으면 범위는 낼 수 있다. 이름은 양쪽에서 찾는다.
+  const names = [...(sales ?? []), ...Object.keys(prices?.cells ?? {}).map((apt) => ({ apt }))];
+  const apt = resolveComplex(aptTerm(), names);
   if (!apt) return "";
   const rows = complexAreas(apt, sales, fullRents.get(district));
-  if (!rows.length) return "";
+  const priceHtml = complexPriceHtml(prices, apt);
+  if (!rows.length && !priceHtml) return "";
 
   const cell = (value, count) =>
     value === null
       ? `<span class="low-sample">${escapeHtml(t("complexThin")(count))}</span>`
       : `${escapeHtml(formatEok(value))} <span class="count">${escapeHtml(t("complexCount")(count))}</span>`;
 
+  const ratioHtml = rows.length
+    ? `<h3>${escapeHtml(t("ratioHeading"))}</h3>` +
+      `<div class="table-wrap"><table class="data-table"><thead><tr>` +
+      `<th>${escapeHtml(t("complexArea"))}</th><th>${escapeHtml(t("kindSale"))}</th>` +
+      `<th>${escapeHtml(t("kindJeonse"))}</th><th>${escapeHtml(t("complexRatio"))}</th>` +
+      `</tr></thead><tbody>` +
+      rows
+        .map(
+          (row) =>
+            `<tr><td>${escapeHtml(`${row.area}㎡`)}</td>` +
+            `<td data-label="${escapeHtml(t("kindSale"))}">${cell(row.saleMedian, row.sale.length)}</td>` +
+            `<td data-label="${escapeHtml(t("kindJeonse"))}">${cell(row.jeonseMedian, row.jeonse.length)}</td>` +
+            `<td data-label="${escapeHtml(t("complexRatio"))}">${row.ratio === null ? "-" : `${row.ratio.toFixed(1)}%`}</td></tr>`
+        )
+        .join("") +
+      `</tbody></table></div>` +
+      `<p class="content-notice">${escapeHtml(t("complexNote"))}</p>`
+    : "";
+
+  // 범위를 먼저 둔다. 매물을 앞에 둔 사람이 먼저 묻는 것은 "이 값이 어디쯤인가"다.
   return (
     `<section class="complex-card">` +
     `<h2>${escapeHtml(t("complexHeading")(apt))}</h2>` +
-    `<div class="table-wrap"><table class="data-table"><thead><tr>` +
-    `<th>${escapeHtml(t("complexArea"))}</th><th>${escapeHtml(t("kindSale"))}</th>` +
-    `<th>${escapeHtml(t("kindJeonse"))}</th><th>${escapeHtml(t("complexRatio"))}</th>` +
-    `</tr></thead><tbody>` +
-    rows
-      .map(
-        (row) =>
-          `<tr><td>${escapeHtml(`${row.area}\u33a1`)}</td>` +
-          `<td data-label="${escapeHtml(t("kindSale"))}">${cell(row.saleMedian, row.sale.length)}</td>` +
-          `<td data-label="${escapeHtml(t("kindJeonse"))}">${cell(row.jeonseMedian, row.jeonse.length)}</td>` +
-          `<td data-label="${escapeHtml(t("complexRatio"))}">${row.ratio === null ? "-" : `${row.ratio.toFixed(1)}%`}</td></tr>`
-      )
-      .join("") +
-    `</tbody></table></div>` +
-    `<p class="content-notice">${escapeHtml(t("complexNote"))}</p>` +
+    priceHtml +
+    ratioHtml +
     `</section>`
   );
 }
@@ -1127,8 +1237,11 @@ async function refresh() {
 
   // 단지 카드는 매매와 전세를 나란히 놓아야 전세가율이 나온다. 매매 화면에서는
   // 전월세 파일을 안 받으므로, 단지를 고른 때에만 그 구의 것을 하나 더 받는다.
-  if (aptTerm() && district !== ALL && !fullRents.has(district)) {
-    await loadDistrictRents(district);
+  if (aptTerm() && district !== ALL && (!fullRents.has(district) || !complexPrices.has(district))) {
+    await Promise.all([
+      fullRents.has(district) ? null : loadDistrictRents(district),
+      complexPrices.has(district) ? null : loadComplexPrices(district),
+    ]);
     if (token !== refreshToken) return;
   }
 

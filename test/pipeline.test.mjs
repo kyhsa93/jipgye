@@ -34,7 +34,7 @@ test("파생 데이터를 만드는 빌더가 원본 수집과 같은 단계에 
   // 원본(raw)을 읽는 빌더들이다. 수집이 건너뛰어지는 날에는 이들도 같이 쉬어야
   // 어제 원본으로 오늘 값을 다시 만드는 일이 없다.
   const step = workflow.split("- name: 실거래 수집")[1]?.split("- name:")[0] ?? "";
-  for (const name of ["build-conversion.mjs", "build-cancellation.mjs", "build-renewal-facts.mjs", "build-complex-ratio.mjs"]) {
+  for (const name of ["build-conversion.mjs", "build-cancellation.mjs", "build-renewal-facts.mjs", "build-complex-ratio.mjs", "build-complex-price.mjs"]) {
     assert.ok(step.includes(name), `${name}이 실거래 수집 단계 밖에 있다`);
   }
 });

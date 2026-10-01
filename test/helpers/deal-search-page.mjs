@@ -43,6 +43,7 @@ export async function loadDealSearchPage({
   deals,
   rents,
   rentPreview,
+  complexPrices,
   status = 404,
   locale = "ko",
   query = "",
@@ -61,6 +62,10 @@ export async function loadDealSearchPage({
 
   for (const [name, file] of Object.entries(rents ?? {})) {
     data[`rents-${DISTRICT_SLUGS[name] ?? name}`] = file;
+  }
+
+  for (const [name, file] of Object.entries(complexPrices ?? {})) {
+    data[`complex-price-${DISTRICT_SLUGS[name] ?? name}`] = file;
   }
 
   const navLinks = ["all", "sale", "jeonse", "wolse", "search"].map((page) =>
