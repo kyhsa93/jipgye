@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.mjs";
 import { applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml } from "./prerender.mjs";
@@ -30,9 +30,9 @@ function navHtml(page) {
   return links.join("");
 }
 
-export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSeries = null) {
+export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSeries = null, complexFiles = null) {
   const band = (budget?.bands ?? []).find((b) => b.min10k === page.min10k) ?? null;
-  const body = budgetBodyHtml(band, budget?.periods, rates, mortgageSeries);
+  const body = budgetBodyHtml(band, budget?.periods, rates, mortgageSeries, complexFiles);
   if (!body) return null;
 
   let html = baseHtml;
@@ -97,6 +97,13 @@ async function main() {
   const rates = await readJson(path.join(root, "docs/data/rates.json"));
   // 1년 사이 상환액 변화에 쓰는 한국은행 주담대 평균 금리(지표 수집이 받는 계열). 없으면 그 문장만 빠진다.
   const mortgageSeries = (await readJson(path.join(root, "raw/indicators/series.json")))?.series?.mortgage_rate ?? null;
+  // 단지 후보는 단지 가격 범위(build-complex-price)의 자치구 파일들에서 고른다. 없으면 그 절만 빠진다.
+  const dataDir = path.join(root, "docs/data");
+  const complexFiles = (
+    await Promise.all(
+      (await readdir(dataDir)).filter((f) => /^complex-price-[a-z]+\.json$/.test(f)).sort().map((f) => readJson(path.join(dataDir, f)))
+    )
+  ).filter(Boolean);
   if (!budget?.bands?.length) {
     console.log("  예산 데이터가 없습니다 - 예산 페이지를 만들지 않습니다");
     return;
@@ -110,7 +117,7 @@ async function main() {
   const skipped = [];
 
   for (const page of BUDGET_PAGES) {
-    const html = buildBudgetPage(baseHtml, page, budget, rates, mortgageSeries);
+    const html = buildBudgetPage(baseHtml, page, budget, rates, mortgageSeries, complexFiles);
     if (!html) {
       skipped.push(`${page.eok}억대`);
       continue;

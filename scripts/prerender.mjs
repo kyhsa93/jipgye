@@ -9,6 +9,7 @@ import { factSentences } from "./district-facts.mjs";
 import { renewalSentences } from "./renewal-facts.mjs";
 import { apartmentOptions, loanSentence, rateSpread, yearChangeSentence } from "./mortgage.mjs";
 import { costsSentence } from "./purchase-costs.mjs";
+import { candidatesInBand } from "./complex-price.mjs";
 import { rateFacts, factSentences as rateSentences } from "./rate-facts.mjs";
 import {
   KIND_FIELDS,
@@ -240,7 +241,7 @@ function budgetWhereHtml(band) {
   return text ? `<p class="budget-where">${escapeHtml(text)}</p>` : "";
 }
 
-export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = null) {
+export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = null, complexFiles = null) {
   if (!band) return null;
 
   const periods = (periodList ?? []).map((p) => monthLabel(p)).filter(Boolean).join(", ");
@@ -256,7 +257,71 @@ export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = 
     (districts ? `<div class="budget-districts">거래가 많은 지역: ${districts}</div>` : "") +
     `<ul class="budget-deals">${band.deals.map(budgetDealHtml).join("")}</ul>` +
     budgetLoanHtml(band, rates, mortgageSeries) +
-    budgetCostsHtml(band)
+    budgetCostsHtml(band) +
+    budgetCandidatesHtml(band, complexFiles)
+  );
+}
+
+/** 목록에 이름을 올리는 단지 수. 나머지는 검색의 "단지로 묶어 보기"로 보낸다 - 열여덟 장이 같은 긴 목록이 되지 않게. */
+export const CANDIDATE_LIST = 12;
+
+const eokText = (value10k) => {
+  const n = Math.round(value10k);
+  const eok = Math.floor(n / 10_000);
+  const man = n % 10_000;
+  if (!eok) return `${man.toLocaleString("ko-KR")}만원`;
+  return man ? `${eok}억 ${man.toLocaleString("ko-KR")}만원` : `${eok}억원`;
+};
+
+/**
+ * 이 예산대에 드는 단지·평형(단지 후보). 기준 달 값으로 고친 중앙값으로 가른다 - 거래 목록은 "언제
+ * 얼마에 팔렸나"이고, 이것은 "지금 이 예산이면 어느 단지의 어느 평형인가"다(scripts/complex-price.mjs).
+ * 자치구는 거르는 조건이 아니라 묶는 축이다 - 자치구를 먼저 고르게 하면 겹친 조건에서 빈 화면이 잦다.
+ */
+export function budgetCandidatesHtml(band, complexFiles) {
+  if (!band || !complexFiles?.length) return "";
+  const min = band.min10k;
+  const max = band.max10k ?? min + 10_000;
+  const rows = candidatesInBand(complexFiles, min, max);
+  const reference = complexFiles[0]?.reference;
+  const month = reference ? `${reference.slice(0, 4)}년 ${Number(reference.slice(4))}월` : "기준 달";
+  const label = `${min / 10_000}억대`;
+  if (!rows.length) {
+    return (
+      `<section class="budget-candidates" data-prerendered><h3>이 예산대의 단지 후보</h3>` +
+      `<p>${escapeHtml(`${month} 값으로 고친 중앙값이 ${label}인 단지·평형이 없습니다. 같은 평형이 6개월 동안 3번 이상 거래돼야 범위를 낼 수 있습니다.`)}</p></section>`
+    );
+  }
+  const byDistrict = new Map();
+  for (const row of rows) byDistrict.set(row.district, (byDistrict.get(row.district) ?? 0) + 1);
+  const districts = [...byDistrict].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ko"));
+  const list = rows
+    .slice(0, CANDIDATE_LIST)
+    .map((row) => {
+      const href = `./deal-search.html?district=${encodeURIComponent(row.district)}&apt=${encodeURIComponent(row.apt)}`;
+      const facts = [row.district, row.dong, `${row.area}\u33a1`, row.buildYear ? `${row.buildYear}년` : null].filter(Boolean).join(" · ");
+      const range = `${row.quartile ? "가운데 절반" : "최저~최고"} ${eokText(row.low)}~${eokText(row.high)}`;
+      return (
+        `<li class="budget-deal"><a class="apt" href="${escapeHtml(href)}">${escapeHtml(row.apt)}</a>` +
+        `<span class="meta">${escapeHtml(facts)}</span>` +
+        `<span class="amount">${escapeHtml(eokText(row.median))}</span>` +
+        `<span class="meta">${escapeHtml(`${range} · ${row.n}건`)}</span></li>`
+      );
+    })
+    .join("");
+  return (
+    `<section class="budget-candidates" data-prerendered><h3>이 예산대의 단지 후보</h3>` +
+    `<p>${escapeHtml(
+      `${month} 값으로 고친 중앙값이 ${label}인 단지·평형은 서울에 ${rows.length.toLocaleString("ko-KR")}곳입니다. ` +
+        `같은 평형이 최근 6개월에 3번 이상 거래돼 범위를 낼 수 있었던 곳만 셉니다 — 거래가 드문 단지는 빠집니다.`
+    )}</p>` +
+    `<div class="budget-districts">${escapeHtml(`자치구별: ${districts.map(([d, n]) => `${d} ${n}`).join(" · ")}`)}</div>` +
+    `<ul class="budget-deals">${list}</ul>` +
+    `<p class="budget-more"><a href="./deal-search.html?budget=${min / 10_000}&amp;group=1">${escapeHtml(
+      rows.length > CANDIDATE_LIST
+        ? `거래가 많은 ${CANDIDATE_LIST}곳만 적었습니다. ${rows.length}곳 전부와 평형·연식 조건은 실거래 검색에서 단지로 묶어 보세요 →`
+        : "평형·연식 조건을 더해 실거래 검색에서 단지로 묶어 보기 →"
+    )}</a></p></section>`
   );
 }
 
@@ -267,7 +332,7 @@ export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = 
 export function budgetCostsHtml(band) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = costsSentence(eok);
-  return sentence ? `<p class="budget-loan budget-costs">${escapeHtml(sentence)}</p>` : "";
+  return sentence ? `<p class="budget-loan budget-costs" data-prerendered>${escapeHtml(sentence)}</p>` : "";
 }
 
 /**
@@ -291,7 +356,7 @@ export function budgetLoanHtml(band, rates, mortgageSeries = null) {
   const sentence = loanSentence(spread, { eok });
   if (!sentence) return "";
   const year = yearChangeSentence(mortgageSeries);
-  return `<p class="budget-loan">${sentence}${year ? ` ${escapeHtml(year)}` : ""}</p>`;
+  return `<p class="budget-loan" data-prerendered>${sentence}${year ? ` ${escapeHtml(year)}` : ""}</p>`;
 }
 
 export { budgetBandLabel };

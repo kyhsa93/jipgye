@@ -50,9 +50,12 @@ export function marketDeal(item) {
   const date = dealDate(item);
   const apt = String(item?.aptNm ?? "").trim();
   if (!(amount > 0) || !(area > 0) || !date || !apt) return null;
+  const buildYear = Number(item?.buildYear);
   return {
     district: String(item.sggCd),
     apt,
+    dong: String(item?.umdNm ?? "").trim(),
+    buildYear: Number.isInteger(buildYear) && buildYear > 1900 ? buildYear : null,
     // 화면의 거래 목록(deals-*.json)과 같은 자리수. 다르면 카드가 평형을 못 찾는다.
     area: Math.round(area * 100) / 100,
     month: date.slice(0, 4) + date.slice(5, 7),
@@ -158,4 +161,47 @@ export function districtCells(deals, levels, reference) {
     out[apt][area] = summarize(group, levels, reference);
   }
   return out;
+}
+
+/** 가장 흔한 값. 같은 단지명이 여러 동에 걸치는 일은 드물지만, 있으면 거래가 많은 쪽을 쓴다. */
+function mode(values) {
+  const counts = new Map();
+  for (const v of values) if (v !== null && v !== "") counts.set(v, (counts.get(v) ?? 0) + 1);
+  let best = null;
+  for (const [v, c] of [...counts].sort(([a], [b]) => (String(a) < String(b) ? -1 : 1))) if (best === null || c > counts.get(best)) best = v;
+  return best;
+}
+
+/** 단지별 동과 준공연도. 단지 후보를 연식과 동으로 거르고 적는 데 쓴다. */
+export function districtMeta(deals) {
+  const byApt = new Map();
+  for (const deal of deals) {
+    if (!byApt.has(deal.apt)) byApt.set(deal.apt, []);
+    byApt.get(deal.apt).push(deal);
+  }
+  const out = {};
+  for (const [apt, group] of [...byApt].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))) {
+    out[apt] = { dong: mode(group.map((d) => d.dong)), buildYear: mode(group.map((d) => d.buildYear)) };
+  }
+  return out;
+}
+
+// --- 단지 후보 -------------------------------------------------------------------
+//
+// 조건 필터 화면은 만들지 않는다 - 호갱노노가 평형·세대수·금액·입주년차로 이미 거른다(DIRECTION 3부 0번 ③).
+// 우리 자리는 후보마다 "기준 달 값으로 고친 범위"와 "몇 건으로 낸 값인지"를 붙이는 것이다.
+// 그래서 후보는 범위를 낼 수 있었던 칸(같은 평형 6개월 3건 이상)만이다.
+
+/** 자치구 파일들(complex-price-*.json)에서 고친 중앙값이 [min, max) 안인 단지·평형. 거래가 많은 순. */
+export function candidatesInBand(files, min10k, max10k) {
+  const rows = [];
+  for (const file of files) {
+    for (const [apt, areas] of Object.entries(file?.cells ?? {})) {
+      for (const [area, cell] of Object.entries(areas)) {
+        if (!cell.median || cell.median < min10k || cell.median >= max10k) continue;
+        rows.push({ district: file.district, apt, area: Number(area), ...file.meta?.[apt], ...cell });
+      }
+    }
+  }
+  return rows.sort((a, b) => b.n - a.n || a.median - b.median || (a.apt < b.apt ? -1 : 1));
 }

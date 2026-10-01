@@ -158,11 +158,11 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
         if (!byId.has(sel)) byId.set(sel, stubElement());
         return byId.get(sel);
       },
-      // 예산 페이지는 빌드가 #budget-result에 구워 둔 문단(.budget-loan)을 로드 때 떼어 둔다.
-      // 받은 HTML(prerenderedBudget)에서 그 문단만 꺼내 준다.
+      // 예산 페이지는 빌드가 #budget-result에 구워 둔 덩어리(data-prerendered)를 로드 때 떼어 둔다.
+      // 받은 HTML(prerenderedBudget)에서 그 덩어리만 꺼내 준다. 덩어리 안에 같은 태그가 다시 열리지는 않는다.
       querySelectorAll: (sel) =>
-        sel === "#budget-result .budget-loan"
-          ? [...String(prerenderedBudget).matchAll(/<p class="budget-loan[^"]*">[\s\S]*?<\/p>/g)].map((m) => ({ outerHTML: m[0] }))
+        sel === "#budget-result [data-prerendered]"
+          ? [...String(prerenderedBudget).matchAll(/<(p|section)\b[^>]*data-prerendered[^>]*>[\s\S]*?<\/\1>/g)].map((m) => ({ outerHTML: m[0] }))
           : [],
       createElement: () => stubElement(),
       addEventListener() {},

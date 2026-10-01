@@ -105,6 +105,10 @@
         <input type="checkbox" id="direct-check">
         <label for="direct-check" id="direct-label">직거래 제외</label>
       </div>
+      <div class="search-field toggle" id="group-field">
+        <input type="checkbox" id="group-check">
+        <label for="group-check" id="group-label">단지로 묶어 보기</label>
+      </div>
     </div>
     <p class="sr-only" role="status" id="search-status"></p>
     <div id="complex-card"></div>
@@ -201,6 +205,21 @@ const T = {
       "지수는 권역 단위라 같은 권역 안 자치구 차이(±2%p 안팎)는 고쳐지지 않습니다 — 고치기 전 중앙값을 옆에 둡니다. " +
       "5건 이상이면 가운데 절반, 3~4건이면 최저~최고를 적고, 2건 이하면 범위를 내지 않습니다.",
     ratioHeading: "최근 두 달 매매·전세와 전세가율",
+    groupLabel: "단지로 묶어 보기",
+    groupBuilt: (y) => `${y}년`,
+    groupSummary: (n, month) => `조건에 맞는 단지·평형 ${n.toLocaleString("ko-KR")}곳 — 최근 6개월 거래를 ${month} 값으로 고친 중앙값 기준, 거래가 많은 순`,
+    groupByDistrict: "자치구별",
+    groupMore: (n) => `거래가 많은 ${n}곳까지만 적었습니다. 조건을 더 걸어 좁혀 보세요.`,
+    groupEmpty: "이 조건에 맞는 단지·평형이 없습니다.",
+    groupRelax: (cond, n) => `${cond} 조건을 풀면 ${n.toLocaleString("ko-KR")}곳`,
+    groupRelaxDistrict: "자치구를 '서울 전체'로 바꾸면 다른 구까지 봅니다",
+    groupCond_budget: "예산",
+    groupCond_area: "면적",
+    groupCond_age: "연식",
+    groupCond_apt: "단지명",
+    groupCond_dong: "동",
+    groupNote:
+      "같은 평형이 최근 6개월에 3번 이상 거래돼 범위를 낼 수 있었던 단지·평형만 나옵니다 — 거래가 드문 단지는 빠집니다. 예산은 기준 달 값으로 고친 중앙값으로 가릅니다. 실제 매물과 호가는 포털에서 확인하세요. 단지 이름을 누르면 평형별 범위 카드가 열립니다.",
     complexNote:
       "평형마다 매매와 전세를 따로 모아 중앙값을 낸 값입니다. 한쪽이라도 신고가 3건에 못 미치면 값을 내지 않습니다 - 두 건으로 낸 중앙값은 그냥 두 값의 평균입니다. 전세가율은 양쪽이 다 있을 때만 냅니다. 갱신계약과 반전세는 빼고 셉니다.",
     allBudgets: "예산 전체",
@@ -317,6 +336,21 @@ const T = {
       "The index is regional, so differences between districts within a region (around ±2pp) are not corrected — the unadjusted median is shown alongside. " +
       "Five or more deals give the middle half; three or four give low–high; two or fewer give no range.",
     ratioHeading: "Last two months: sale, jeonse and jeonse ratio",
+    groupLabel: "Group by complex",
+    groupBuilt: (y) => `built ${y}`,
+    groupSummary: (n, month) => `${n.toLocaleString("en-US")} complex/unit types match — median of the last six months adjusted to ${month}, most-traded first`,
+    groupByDistrict: "By district",
+    groupMore: (n) => `Only the ${n} most-traded are listed. Add conditions to narrow it down.`,
+    groupEmpty: "No complex or unit type matches these conditions.",
+    groupRelax: (cond, n) => `Drop the ${cond} condition: ${n.toLocaleString("en-US")}`,
+    groupRelaxDistrict: "Switch the district to all of Seoul to see other districts",
+    groupCond_budget: "budget",
+    groupCond_area: "size",
+    groupCond_age: "age",
+    groupCond_apt: "complex name",
+    groupCond_dong: "neighbourhood",
+    groupNote:
+      "Only unit types sold three or more times in the last six months, enough to give a range, are listed — thinly traded complexes drop out. Budget is matched on the median adjusted to the reference month. Check listings and asking prices on a portal. Tap a name to open its range card.",
     complexNote:
       "Each unit type is averaged separately on each side. Nothing is stated where either side has fewer than three filings — a median of two is just the average of two. The ratio appears only when both sides are there. Renewals and deposit-plus-rent contracts are excluded.",
     allBudgets: "Any budget",
@@ -469,6 +503,8 @@ let ageKey = knownKey(AGE_BUCKETS, params.get("age"));
 let aptQuery = params.get("apt") ?? "";
 let dongQuery = params.get("dong") ?? "";
 let excludeDirect = params.get("direct") === "exclude";
+// 거래 목록 대신 단지·평형 후보로 보기. 조건이 아니라 보는 방식이라 "조건 지우기"가 끄지 않는다.
+let groupView = params.get("group") === "1";
 let depositKey = knownKey(DEPOSIT_BUCKETS, params.get("deposit"));
 let rentKey = knownKey(RENT_BUCKETS, params.get("rent"));
 
@@ -676,6 +712,8 @@ function renderControls() {
   showField("deposit-field", isRent());
   showField("rent-field", kind === "wolse");
   showField("direct-field", !isRent());
+  showField("group-field", !isRent());
+  document.getElementById("group-check").checked = groupView;
 
   chips("deposit", [
     { value: ALL, label: t("allDeposits"), on: depositKey === ALL },
@@ -1103,6 +1141,115 @@ function complexCardHtml() {
   );
 }
 
+// --- 단지로 묶어 보기 ----------------------------------------------------------
+//
+// 거래 목록은 "언제 얼마에 팔렸나"다. 매물을 보러 다니기 전에 묻는 것은 "이 조건이면 어느 단지의
+// 어느 평형인가"라서, 같은 조건을 단지·평형 단위(scripts/complex-price.mjs의 6개월 칸 요약)로
+// 묶어 보여준다. 값은 빌드가 기준 달 값으로 고쳐 둔 것이고, 여기서는 거르기만 한다.
+// 조건 필터 자체로 경쟁하지 않는다 - 그건 호갱노노가 더 많이 준다. 우리 몫은 후보마다 붙은
+// 범위와 "몇 건으로 낸 값인가"다.
+
+const GROUP_LIMIT = 100;
+
+/** 칸 하나가 조건에 맞는가. skip에 든 조건은 보지 않는다(빈 결과에서 "이 조건을 풀면"을 셀 때). */
+function groupMatches(row, skip = new Set()) {
+  if (!skip.has("budget") && band10k !== null && !(row.median >= band10k && row.median < band10k + EOK)) return false;
+  if (!skip.has("area") && areaKey !== ALL) {
+    const bucket = bucketOf(AREA_BUCKETS, areaKey);
+    if (!bucket) return false;
+    if (bucket.min !== null && row.area <= bucket.min) return false;
+    if (bucket.max !== null && row.area > bucket.max) return false;
+  }
+  if (!skip.has("age") && ageKey !== ALL) {
+    const bucket = bucketOf(AGE_BUCKETS, ageKey);
+    const year = baseYear();
+    if (!bucket || !year || !Number.isInteger(row.buildYear)) return false;
+    const age = year - row.buildYear;
+    if (bucket.within != null && age > bucket.within) return false;
+    if (bucket.over != null && age < bucket.over) return false;
+  }
+  if (!skip.has("apt") && aptTerm() && !squash(row.apt).includes(squash(aptTerm()))) return false;
+  if (!skip.has("dong") && dongTerm() && !squash(row.dong).includes(squash(dongTerm()))) return false;
+  return true;
+}
+
+/** 범위를 낼 수 있었던 칸만(같은 평형 6개월 3건 이상). 거래가 많은 순 - 많을수록 범위가 단단하다. */
+function groupRows() {
+  const rows = [];
+  for (const name of scopeNames()) {
+    const file = complexPrices.get(name);
+    for (const [apt, areas] of Object.entries(file?.cells ?? {})) {
+      for (const [area, cell] of Object.entries(areas)) {
+        if (!cell.median) continue;
+        rows.push({ district: name, apt, area: Number(area), ...file.meta?.[apt], ...cell, reference: file.reference });
+      }
+    }
+  }
+  return rows.sort((a, b) => b.n - a.n || a.median - b.median || (a.apt < b.apt ? -1 : 1));
+}
+
+function groupItemHtml(row) {
+  const href = `./deal-search.html?district=${encodeURIComponent(row.district)}&apt=${encodeURIComponent(row.apt)}`;
+  const facts = [row.district, row.dong, `${row.area}㎡`, row.buildYear ? t("groupBuilt")(row.buildYear) : null]
+    .filter(Boolean)
+    .join(" · ");
+  return (
+    `<li class="budget-deal"><a class="apt" href="${escapeHtml(href)}">${escapeHtml(row.apt)}</a>` +
+    `<span class="meta">${escapeHtml(facts)}</span>` +
+    `<span class="amount">${escapeHtml(formatEok(row.median))}</span>` +
+    `<span class="meta">${escapeHtml(
+      `${t(row.quartile ? "priceMiddle" : "priceMinMax")} ${formatEok(row.low)} ~ ${formatEok(row.high)} · ${t("complexCount")(row.n)}`
+    )}</span></li>`
+  );
+}
+
+function renderGroups(box) {
+  const missing = scopeNames().filter((name) => !complexPrices.has(name));
+  if (missing.length) {
+    box.innerHTML = `<p class="search-loading">${escapeHtml(t("loading"))}</p>`;
+    return;
+  }
+  const all = groupRows();
+  const rows = all.filter((row) => groupMatches(row));
+  const reference = all[0]?.reference;
+  const month = reference ? yearMonthLabel(reference) : "";
+
+  if (!rows.length) {
+    // 조건 하나씩을 풀면 몇 곳이 되는가. 빈 화면에서 막히지 않게 다음 걸음을 숫자로 준다.
+    const active = [
+      ["budget", band10k !== null],
+      ["area", areaKey !== ALL],
+      ["age", ageKey !== ALL],
+      ["apt", Boolean(aptTerm())],
+      ["dong", Boolean(dongTerm())],
+    ].filter(([, on]) => on);
+    const relax = active
+      .map(([key]) => [key, all.filter((row) => groupMatches(row, new Set([key]))).length])
+      .filter(([, n]) => n > 0)
+      .map(([key, n]) => t("groupRelax")(t(`groupCond_${key}`), n));
+    if (district !== ALL) relax.push(t("groupRelaxDistrict"));
+    box.innerHTML =
+      `<p class="budget-empty">${escapeHtml(t("groupEmpty"))}</p>` +
+      (relax.length ? `<ul class="group-relax">${relax.map((r) => `<li>${escapeHtml(r)}</li>`).join("")}</ul>` : "");
+    return;
+  }
+
+  const counts = new Map();
+  for (const row of rows) counts.set(row.district, (counts.get(row.district) ?? 0) + 1);
+  const byDistrict =
+    district === ALL
+      ? `<div class="budget-districts">${escapeHtml(
+          `${t("groupByDistrict")}: ${[...counts].sort((a, b) => b[1] - a[1]).map(([d, n]) => `${d} ${n}`).join(" · ")}`
+        )}</div>`
+      : "";
+  box.innerHTML =
+    `<p class="budget-summary">${escapeHtml(t("groupSummary")(rows.length, month))}</p>` +
+    byDistrict +
+    `<ul class="budget-deals">${rows.slice(0, GROUP_LIMIT).map(groupItemHtml).join("")}</ul>` +
+    (rows.length > GROUP_LIMIT ? `<p class="budget-empty">${escapeHtml(t("groupMore")(GROUP_LIMIT))}</p>` : "") +
+    `<p class="content-notice">${escapeHtml(t("groupNote"))}</p>`;
+}
+
 function renderResultBody() {
   const box = document.getElementById("search-result");
 
@@ -1116,6 +1263,11 @@ function renderResultBody() {
       return;
     }
     renderRent(box);
+    return;
+  }
+
+  if (groupView) {
+    renderGroups(box);
     return;
   }
 
@@ -1144,6 +1296,7 @@ function syncUrl() {
   put("apt", aptTerm() || null);
   put("dong", dongTerm() || null);
   put("direct", excludeDirect ? "exclude" : null);
+  put("group", groupView ? "1" : null);
   put("kind", kind === "sale" ? null : kind);
   put("deposit", isRent() && depositKey !== ALL ? depositKey : null);
   put("rent", kind === "wolse" && rentKey !== ALL ? rentKey : null);
@@ -1194,6 +1347,7 @@ function applyLocale() {
   setText("age-label", t("ageLabel"));
   setText("apt-label", t("aptLabel"));
   setText("direct-label", t("directLabel"));
+  setText("group-label", t("groupLabel"));
   setText("search-note", isRent() ? t("rentNote") : t("note"));
   setText("nav-digest", t("navDigest"));
   setText("nav-news", t("navNews"));
@@ -1219,6 +1373,18 @@ async function refresh() {
       document.getElementById("search-result").innerHTML =
         `<p class="search-loading">${escapeHtml(t("loading"))}</p>`;
       await loadDistrictRents(district);
+      if (token !== refreshToken) return;
+    }
+    renderResult();
+    return;
+  }
+
+  if (groupView) {
+    const missing = scopeNames().filter((name) => !complexPrices.has(name));
+    if (missing.length) {
+      document.getElementById("search-result").innerHTML =
+        `<p class="search-loading">${escapeHtml(t("loading"))}</p>`;
+      await Promise.all(missing.map(loadComplexPrices));
       if (token !== refreshToken) return;
     }
     renderResult();
@@ -1399,6 +1565,7 @@ function onControlChange(e) {
   else if (id === "age-select") ageKey = e.target.value || ALL;
   else if (id === "apt-input") aptQuery = String(e.target.value ?? "");
   else if (id === "direct-check") excludeDirect = Boolean(e.target.checked);
+  else if (id === "group-check") groupView = Boolean(e.target.checked);
   else return;
 
   afterControlChange();

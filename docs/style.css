@@ -2596,3 +2596,11 @@ summary:focus-visible,
     text-align: left;
   }
 }
+
+/* 단지로 묶어 본 결과가 비었을 때 "이 조건을 풀면 n곳". 빈 화면에서 다음 걸음을 준다. */
+.group-relax {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}

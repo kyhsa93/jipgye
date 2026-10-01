@@ -10,6 +10,15 @@ import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const RATES = JSON.parse(await readFile(path.join(root, "docs/data/rates.json"), "utf8"));
+// 단지 후보 절에 쓰는 6개월 칸 요약. 8억대(page8)에 후보가 생기도록 한 칸을 둔다.
+const COMPLEX_FILES = [
+  {
+    district: "노원구",
+    reference: "202608",
+    cells: { 가단지: { "59.9": { n: 5, median: 85000, low: 84000, high: 86000, quartile: true, raw: 83000, unadjusted: 0 } } },
+    meta: { 가단지: { dong: "상계동", buildYear: 2001 } },
+  },
+];
 
 const deal = (amount10k, extra = {}) => ({
   district: "노원구",
@@ -103,8 +112,9 @@ test("프리렌더가 심은 거래 목록을 클라이언트가 그대로 다�
   // 금리까지 넘긴다. 금리 없이 돌리면 월 상환액 문단이 애초에 없어서, 클라이언트가 그 문단을
   // 지우는 것(#26)을 이 검사가 볼 수 없었다.
   const band = BUDGET.bands.find((b) => b.min10k === page8.min10k);
-  const prerendered = budgetBodyHtml(band, BUDGET.periods, RATES);
+  const prerendered = budgetBodyHtml(band, BUDGET.periods, RATES, null, COMPLEX_FILES);
   assert.match(prerendered, /budget-loan budget-costs/, "부대비용 문단이 빌드에 없다");
+  assert.match(prerendered, /<section class="budget-candidates" data-prerendered>/, "단지 후보 절이 빌드에 없다");
 
   const page = await loadRealestatePage({
     realestate: REALESTATE,

@@ -76,6 +76,6 @@ test("한도는 가정하지 않고 1억당 값으로 말한다", () => {
 
 test("예산 페이지에 월 상환액 문단이 붙어 있다", async () => {
   const html = await readFile(path.join(root, "docs/budget-10eok.html"), "utf8");
-  assert.match(html, /<p class="budget-loan">/, "예산 페이지에 문단이 없다");
+  assert.match(html, /<p class="budget-loan" data-prerendered>/, "예산 페이지에 문단이 없다(또는 화면이 다시 그릴 때 지워지지 않게 하는 표시가 없다)");
   assert.match(html, /1억을 30년 원리금균등으로 빌리면/);
 });

@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { districtCells, indexLevels, marketDeal, referenceMonth, windowStart, WINDOW_DAYS } from "./complex-price.mjs";
+import { districtCells, districtMeta, indexLevels, marketDeal, referenceMonth, windowStart, WINDOW_DAYS } from "./complex-price.mjs";
 import { DISTRICT_SLUGS } from "./district-slugs.mjs";
 import { INDEX_FILE } from "./fetch-price-index.mjs";
 import { DISTRICTS } from "./realestate-districts.mjs";
@@ -47,6 +47,7 @@ export function buildFiles({ itemsByDistrict, index, outlook, now }) {
       // 메운 달이 공식 지수보다 평균 얼마나 높게 나와 왔나(서울, %p). 화면 각주에 그대로 적는다.
       referenceBias: outlook?.regions?.find((r) => r.code === "200")?.nowcast?.bias ?? null,
       cells: districtCells(deals, levels, reference),
+      meta: districtMeta(deals),
     };
   }
   return { reference, files };
