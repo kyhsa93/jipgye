@@ -92,3 +92,26 @@ test("한국어 화면은 한국어로, 영어 화면은 영어로 말한다", a
     "영어 화면에 한국어가 남았다"
   );
 });
+
+test("어느 화면에서든 안내는 120자 안이다 - 질문 화면도 데이터 앞을 막지 않게 (#47)", async () => {
+  const { readdir } = await import("node:fs/promises");
+  const files = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html"));
+  let seen = 0;
+  for (const file of files) {
+    const html = await readFile(path.join(root, "docs", file), "utf8");
+    const text = /<p id="method-callout-text">([^<]*)<\/p>/.exec(html)?.[1];
+    if (text === undefined) continue;
+    seen += 1;
+    assert.ok(text.length <= 120, `docs/${file}: 안내가 ${text.length}자다`);
+  }
+  assert.ok(seen >= 52, `안내를 단 화면이 ${seen}장뿐이다 - 검사가 아무것도 안 본다`);
+});
+
+test("상자 모양은 역할마다 하나다 - 안내는 막대 없이, 카드·근거는 테두리만, 답만 막대 (#47)", async () => {
+  const css = await readFile(path.join(root, "docs/style.css"), "utf8");
+  const rule = (sel) => new RegExp(`\\n${sel.replace(/\./g, "\\.")} \\{([^}]*)\\}`).exec(css)?.[1] ?? "";
+  assert.doesNotMatch(rule(".method-callout"), /border-left|accent-weak/, "안내가 답처럼 보인다");
+  assert.doesNotMatch(rule(".complex-card"), /border-left/);
+  assert.doesNotMatch(rule(".budget-loan"), /border-left|accent-weak/);
+  assert.match(rule(".budget-answers"), /border-left: 3px solid var\(--accent\)/, "답이 답처럼 안 보인다");
+});

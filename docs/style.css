@@ -1324,9 +1324,8 @@ ul.news-list {
   margin: 14px 0 0;
   padding: 12px 14px;
   border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 10px 10px 0;
-  background: var(--accent-weak);
+  border-radius: 10px;
+  background: var(--card);
   color: var(--fg);
   font-size: var(--fs-sm);
   line-height: 1.6;
@@ -1438,8 +1437,9 @@ ul.news-list {
   margin: 14px 0;
   padding: 12px 14px;
   border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--card);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  background: var(--accent-weak);
 }
 
 .budget-answers h3 {
@@ -2324,13 +2324,16 @@ summary:focus-visible,
  * 데이터 앞을 막지 않도록 두 문장으로 묶는다. 왼쪽 액센트 막대는 데이터가
  * 아니라 사이트가 자기 자신에 대해 말하는 자리라는 표시다 - 표 안에는
  * 여전히 액센트를 쓰지 않는다. */
+/* 상자 모양은 역할마다 하나다(UIUX #47). 왼쪽 액센트 막대 + 옅은 파랑 판이 방법 안내·핵심 답·단지 카드에
+ * 다 쓰여, 어느 것이 이 화면의 답인지 모양으로 가려지지 않았다.
+ *   답   — 막대 + 큰 글씨(.budget-answers, 전세 vs 월세 답 카드). 화면당 몇 개뿐.
+ *   안내 — 막대·판 없이 회색 작은 글씨 + "방법 →"(.method-callout). 데이터 앞에 두는 자리는 그대로.
+ *   카드·근거 — 테두리만(.complex-card, .budget-loan). */
 .method-callout {
-  margin: 0 0 24px;
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 10px 10px 0;
-  background: var(--accent-weak);
+  margin: 0 0 20px;
+  padding: 0;
+  border: 0;
+  background: none;
 }
 
 .method-callout p {
@@ -2515,8 +2518,7 @@ summary:focus-visible,
   margin: 0 0 20px;
   padding: 14px 16px;
   border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 10px 10px 0;
+  border-radius: 10px;
   background: var(--card);
 }
 
