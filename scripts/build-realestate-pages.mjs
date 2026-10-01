@@ -95,7 +95,7 @@ export function buildRealestatePage(baseHtml, page, realestate, spread = null) {
       html,
       '<a href="./deal-search.html" data-re-page="search">',
       `<a href="./deal-search.html?kind=${page.kind}" data-re-page="search">`,
-      "거래내역 검색 링크"
+      "실거래 검색 링크"
     );
   }
 

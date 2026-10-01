@@ -534,6 +534,9 @@ const RE_LABELS = {
   sale: "매매",
   jeonse: "전세",
   wolse: "월세",
+  colSale: "매매 평당가",
+  colJeonse: "전세 평당 보증금",
+  colWolse: "월세 보증금 / 월세",
   perPyeong: "평당가",
   perPyeongDeposit: "평당 보증금",
   area: "84㎡ 환산",
@@ -541,7 +544,7 @@ const RE_LABELS = {
   monthly: "평균 월세",
   count: "거래건수",
   ratio: "전세가율",
-  ratioByComplex: "단지별 중앙값",
+  ratioByComplex: "전세가율 단지별 중앙값",
   overall: "서울 전체",
 };
 
@@ -550,7 +553,7 @@ const reMan = (v) => formatMan(v);
 const reEok = (v) => formatEok(v);
 
 function reHeadLabels(kind) {
-  if (!kind) return [RE_LABELS.district, RE_LABELS.sale, RE_LABELS.jeonse, RE_LABELS.wolse];
+  if (!kind) return [RE_LABELS.district, RE_LABELS.colSale, RE_LABELS.colJeonse, RE_LABELS.colWolse];
   if (kind === "wolse") return [RE_LABELS.district, RE_LABELS.deposit, RE_LABELS.monthly, RE_LABELS.count];
   if (kind === "jeonse") {
     return [RE_LABELS.district, RE_LABELS.perPyeongDeposit, RE_LABELS.area, RE_LABELS.ratio, RE_LABELS.count];
@@ -760,7 +763,7 @@ export function realestateOverallHtml(realestate, kind = null, district = null, 
     return ["sale", "jeonse", "wolse"]
       .map((k) => {
         const metric = resolveMetric(overall, k)?.metric;
-        const label = RE_LABELS[k];
+        const label = RE_LABELS[k === "sale" ? "colSale" : k === "jeonse" ? "colJeonse" : "colWolse"];
         if (!metric) return card(label, "-", "");
         if (k === "wolse") {
           return card(

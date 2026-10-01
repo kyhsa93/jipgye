@@ -169,7 +169,7 @@ const T = {
     checkNote:
       "권역으로 묶은 우리 값을 같은 기간 한국부동산원 실거래가격지수와 견줍니다. 둘 다 실거래에서 나오지만 지수는 반복거래 방식이라 조금 다르고, 우리 값이 대체로 1~2%p 높게 나옵니다. 표의 '부동산원 조사'는 실거래가 아니라 표본 주택의 시세를 조사한 주택가격동향조사(월간)입니다. 조사 지수는 오르는 시기에 완만하게 따라가는 성격이 있어 실거래 쪽 값의 절반쯤으로 나옵니다 — 어느 쪽이 맞다기보다 재는 것이 다릅니다.",
     districtLinksHeading: "자치구별 시세",
-    updatedPrefix: "기준",
+    updatedPrefix: "갱신",
     footerSource: "출처: 국토교통부 아파트 매매 실거래가 공개시스템(중개거래, 해제 제외), 한국부동산원 실거래가격지수·주택가격동향조사.",
     footerPrivacy: "개인정보처리방침",
     footerMethod: "숫자를 만드는 방법",
@@ -218,7 +218,7 @@ const T = {
     checkNote:
       "Our figures pooled by region are set against the Korea Real Estate Board transaction index over the same months. Both come from filings, but the index uses repeat sales, and ours runs about 1–2pp higher. The 'REB survey' column is not transactions but a monthly survey of sample homes' values; survey indices trail in a rising market and come out at roughly half the transaction figure — they measure different things.",
     districtLinksHeading: "Prices by district",
-    updatedPrefix: "As of",
+    updatedPrefix: "Updated",
     footerSource: "Source: MOLIT apartment sale filings (brokered, cancelled excluded); Korea Real Estate Board transaction index and price survey.",
     footerPrivacy: "Privacy policy",
     footerMethod: "How the numbers are made",
@@ -351,7 +351,7 @@ function renderUpdated() {
   }
   setText(
     "updated",
-    `${t("updatedPrefix")}: ${new Date(updatedAt).toLocaleDateString(localeTag(), { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
+    `${t("updatedPrefix")} ${new Date(updatedAt).toLocaleDateString(localeTag(), { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
   );
 }
 

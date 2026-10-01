@@ -950,7 +950,7 @@
       : t("notice");
 
     document.getElementById("updated").textContent = cache.rates?.updatedAt
-      ? `${t("updatedPrefix")}: ${fmtUpdated(cache.rates.updatedAt)}`
+      ? `${t("updatedPrefix")} ${fmtUpdated(cache.rates.updatedAt)}`
       : "-";
 
     window.analytics?.pageView({ site_language: locale });

@@ -54,7 +54,7 @@ test("월세 페이지는 보증금 말고 월세 자체의 추이도 그린다"
 
   assert.equal(page.cardHidden("rent-card"), false, "월세 카드가 숨어 있습니다");
   assert.ok(page.byId("rent-chart").innerHTML.length > 0, "월세 그래프가 비어 있습니다");
-  assert.equal(page.cardLabel("rent"), "월세(매달 내는 돈)");
+  assert.match(page.cardLabel("rent"), /^월세\(매달 내는 돈\) · \d+\/\d+ 주$/, "그래프 머리 값이 어느 주의 값인지 안 적었다(#49)");
   assert.equal(page.cardCurrent("rent"), "월 126만원");
   assert.match(page.cardMinMax("rent"), /96/);
 
@@ -85,7 +85,7 @@ test("월세가 아닌 화면에서는 월세 카드가 나오지 않는다", as
 
 test("영어로 보면 월세 카드도 영어로 적힌다", async () => {
   const page = await wolsePage({ locale: "en" });
-  assert.equal(page.cardLabel("rent"), "Monthly rent itself");
+  assert.match(page.cardLabel("rent"), /^Monthly rent itself · week of \d+\/\d+$/);
   assert.doesNotMatch(page.cardCurrent("rent"), /[가-힣]/);
 });
 

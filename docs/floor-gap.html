@@ -135,7 +135,7 @@ const T = {
       "문턱을 넘은 구도 '서울과 다르다'고 적으려면 자기 칸 수에서 우연히 나올 수 있는 구간 바깥이어야 합니다. 그 구간은 서울 표본을 다시 뽑아 만듭니다. " +
       "표는 스물다섯 줄을 다 싣지만 순위가 아닙니다 — 대부분의 줄 사이 간격은 표본이 만든 흔들림 안에 있습니다.",
     districtLinksHeading: "자치구별 시세",
-    updatedPrefix: "기준",
+    updatedPrefix: "갱신",
     footerSource: "출처: 국토교통부 아파트 매매·전월세 실거래가 공개시스템. 신고된 거래만 집계되며 해제된 거래는 뺍니다.",
     footerPrivacy: "개인정보처리방침",
     footerMethod: "숫자를 만드는 방법",
@@ -176,7 +176,7 @@ const T = {
       "Even above the threshold, saying a district differs from Seoul requires its figure to fall outside the range a district identical to Seoul could produce at that sample size, drawn by resampling the Seoul pool. " +
       "All 25 rows are listed, but the table is not a ranking — most of the gaps between rows sit inside the noise.",
     districtLinksHeading: "Prices by district",
-    updatedPrefix: "As of",
+    updatedPrefix: "Updated",
     footerSource: "Source: MOLIT apartment sale and lease filings. Only filed transactions are counted, and cancelled deals are removed.",
     footerPrivacy: "Privacy policy",
     footerMethod: "How the numbers are made",
@@ -269,7 +269,7 @@ function renderUpdated() {
   }
   setText(
     "updated",
-    `${t("updatedPrefix")}: ${new Date(updatedAt).toLocaleDateString(localeTag(), { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
+    `${t("updatedPrefix")} ${new Date(updatedAt).toLocaleDateString(localeTag(), { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
   );
 }
 

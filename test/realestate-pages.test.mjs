@@ -111,7 +111,7 @@ test("거래 유형마다 열 구성이 다르다", () => {
   assert.deepEqual(headCells(realestateHeadHtml("sale")), ["지역", "평당가", "84㎡ 환산", "거래건수"]);
   assert.deepEqual(headCells(realestateHeadHtml("jeonse")), ["지역", "평당 보증금", "84㎡ 환산", "전세가율", "거래건수"]);
   assert.deepEqual(headCells(realestateHeadHtml("wolse")), ["지역", "평균 보증금", "평균 월세", "거래건수"]);
-  assert.deepEqual(headCells(realestateHeadHtml()), ["지역", "매매", "전세", "월세"]);
+  assert.deepEqual(headCells(realestateHeadHtml()), ["지역", "매매 평당가", "전세 평당 보증금", "월세 보증금 / 월세"]);
 });
 
 test("월세 표에는 84㎡ 환산이 들어가지 않는다", () => {

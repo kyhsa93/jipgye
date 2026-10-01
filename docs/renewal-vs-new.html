@@ -52,7 +52,7 @@
     <a href="./apartment-sale.html" data-re-page="sale">매매</a>
     <a href="./apartment-jeonse.html" data-re-page="jeonse">전세</a>
     <a href="./apartment-rent.html" data-re-page="wolse">월세</a>
-    <a href="./deal-search.html" data-re-page="search">거래내역 검색</a>
+    <a href="./deal-search.html" data-re-page="search">실거래 검색</a>
     <a href="./jeonse-vs-wolse.html" data-re-page="conversion">전세 vs 월세</a>
     <a href="./renewal-vs-new.html" data-re-page="renewal" aria-current="page">재계약</a>
     <a href="./cancelled-deals.html" data-re-page="cancelled">해제·등기</a>
@@ -129,7 +129,7 @@ const T = {
     navSale: "매매",
     navJeonse: "전세",
     navWolse: "월세",
-    navDealSearch: "거래내역 검색",
+    navDealSearch: "실거래 검색",
     navConversion: "전세 vs 월세",
     navRenewal: "재계약",
     navCancelled: "해제·등기",
@@ -164,7 +164,7 @@ const T = {
       "계약갱신요구권을 쓰면 인상률 상한이 5%입니다. 그래서 인상률의 평균은 지표가 되지 못합니다 — 요구권을 쓴 계약의 절반 이상이 5% 언저리에 붙어 있고, 상한이 안 걸리는 합의 갱신조차 중앙값이 5.0%에서 움직이지 않습니다. 5%가 법을 떠나 관행의 기준점이 된 것입니다. " +
       "상한까지 못 올린 계약이 많다는 것은 집주인이 부르는 값을 그 동네가 다 받아 주지 않았다는 뜻이고, 이건 상한이 있어서 오히려 읽히는 신호입니다.",
     districtLinksHeading: "자치구별 시세",
-    updatedPrefix: "기준",
+    updatedPrefix: "갱신",
     footerSource: "출처: 국토교통부 아파트 전월세 실거래가 공개시스템. 신고된 계약만 집계되며 신고 기한(계약 후 30일)이 지나 마감된 달만 셉니다.",
     footerPrivacy: "개인정보처리방침",
     footerMethod: "숫자를 만드는 방법",
@@ -218,7 +218,7 @@ const T = {
       "Invoking the statutory renewal right caps the increase at 5%. That is why the average increase is not a measure — over half of those renewals sit at about 5%, and even negotiated renewals with no cap have a median that does not move off 5.0%. The cap has become the customary reference point, law aside. " +
       "A high share of renewals below the cap means landlords in that district did not get what they asked for, and that is a signal readable precisely because the ceiling exists.",
     districtLinksHeading: "Prices by district",
-    updatedPrefix: "As of",
+    updatedPrefix: "Updated",
     footerSource: "Source: MOLIT apartment jeonse and monthly rent filings. Only filed contracts are counted, and only months whose 30-day filing window has closed.",
     footerPrivacy: "Privacy policy",
     footerMethod: "How the numbers are made",
@@ -345,7 +345,7 @@ function renderUpdated() {
   }
   setText(
     "updated",
-    `${t("updatedPrefix")}: ${new Date(updatedAt).toLocaleDateString(localeTag(), { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
+    `${t("updatedPrefix")} ${new Date(updatedAt).toLocaleDateString(localeTag(), { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
   );
 }
 

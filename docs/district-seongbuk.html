@@ -53,7 +53,7 @@
     <a href="./apartment-sale.html" data-re-page="sale">매매</a>
     <a href="./apartment-jeonse.html" data-re-page="jeonse">전세</a>
     <a href="./apartment-rent.html" data-re-page="wolse">월세</a>
-    <a href="./deal-search.html" data-re-page="search">거래내역 검색</a>
+    <a href="./deal-search.html" data-re-page="search">실거래 검색</a>
     <a href="./jeonse-vs-wolse.html" data-re-page="conversion">전세 vs 월세</a>
     <a href="./renewal-vs-new.html" data-re-page="renewal">재계약</a>
     <a href="./cancelled-deals.html" data-re-page="cancelled">해제·등기</a>
@@ -75,7 +75,7 @@
 
   <section id="overall-section">
     <h2 id="overall-heading">성북구 평균</h2>
-    <div class="overall-cards" id="overall-cards"><!--prerender:realestateOverall--><div class="overall-card"><div class="label">평당가</div><div class="value">4,125만원</div></div><div class="overall-card"><div class="label">84㎡ 환산</div><div class="value">10억 4,816만원</div></div><div class="overall-card"><div class="label">거래건수</div><div class="value">175건</div></div><div class="overall-card"><div class="label">전세가율</div><div class="value">63.6%</div></div><div class="overall-card"><div class="label">단지별 중앙값</div><div class="value">57.2%</div><div class="sub">단지·평형 58칸</div></div><!--/prerender:realestateOverall--></div>
+    <div class="overall-cards" id="overall-cards"><!--prerender:realestateOverall--><div class="overall-card"><div class="label">평당가</div><div class="value">4,125만원</div></div><div class="overall-card"><div class="label">84㎡ 환산</div><div class="value">10억 4,816만원</div></div><div class="overall-card"><div class="label">거래건수</div><div class="value">175건</div></div><div class="overall-card"><div class="label">전세가율</div><div class="value">63.6%</div></div><div class="overall-card"><div class="label">전세가율 단지별 중앙값</div><div class="value">57.2%</div><div class="sub">단지·평형 58칸</div></div><!--/prerender:realestateOverall--></div>
   </section>
 
   <section id="district-summary-section" hidden>
@@ -195,7 +195,7 @@ const T = {
     navSale: "매매",
     navJeonse: "전세",
     navWolse: "월세",
-    navDealSearch: "거래내역 검색",
+    navDealSearch: "실거래 검색",
     navConversion: "전세 vs 월세",
     navRenewal: "재계약",
     navCancelled: "해제·등기",
@@ -207,11 +207,16 @@ const T = {
     districtHeadingDistrict: "거래 유형별",
     loading: "불러오는 중...",
     basisContract: "계약 기준",
+    updatedWord: "갱신",
     basisArrival: "신고 기준",
     thDistrict: "지역",
     thSale: "매매",
     thJeonse: "전세",
     thWolse: "월세",
+    // 시세 전체 화면의 머리글·카드는 값이 평당가라 그렇게 적는다 - "매매"라 적고 평당가를 실으면 집값으로 읽힌다(UIUX #49).
+    colSale: "매매 평당가",
+    colJeonse: "전세 평당 보증금",
+    colWolse: "월세 보증금 / 월세",
     thPerPyeong: "평당가",
     thPerPyeongDeposit: "평당 보증금",
     thArea: (m2) => `${m2}㎡ 환산`,
@@ -241,7 +246,8 @@ const T = {
     thMonthly: "평균 월세",
     thCount: "거래건수",
     thRatio: "전세가율",
-    thRatioByComplex: "단지별 중앙값",
+    thRatioByComplex: "전세가율 단지별 중앙값",
+    weekOf: (d) => `${d} 주`,
     ratioCells: (n) => `단지·평형 ${n.toLocaleString("ko-KR")}칸`,
     overall: "서울 전체",
     countUnit: (n) => `${n.toLocaleString("ko-KR")}건`,
@@ -300,11 +306,15 @@ const T = {
     districtHeadingDistrict: "By deal type",
     loading: "Loading...",
     basisContract: "Contracts",
+    updatedWord: "updated",
     basisArrival: "Filings",
     thDistrict: "District",
     thSale: "Sale",
     thJeonse: "Jeonse",
     thWolse: "Monthly rent",
+    colSale: "Sale per pyeong",
+    colJeonse: "Jeonse per pyeong",
+    colWolse: "Rent: deposit / month",
     thPerPyeong: "Per pyeong",
     thPerPyeongDeposit: "Deposit per pyeong",
     thArea: (m2) => `For ${m2}m²`,
@@ -334,7 +344,8 @@ const T = {
     thMonthly: "Avg monthly",
     thCount: "Transactions",
     thRatio: "Jeonse ratio",
-    thRatioByComplex: "Median by unit type",
+    thRatioByComplex: "Jeonse ratio, median by unit type",
+    weekOf: (d) => `week of ${d}`,
     ratioCells: (n) => `${n.toLocaleString("en-US")} unit types`,
     overall: "Seoul total",
     countUnit: (n) => `${n.toLocaleString("en-US")}`,
@@ -561,7 +572,7 @@ function allCells(entry) {
 
 function headLabels() {
   if (districtName) return [t("thType"), t("thPerPyeong"), t("thArea")(areaM2), t("thCount")];
-  if (!kind) return [t("thDistrict"), t("thSale"), t("thJeonse"), t("thWolse")];
+  if (!kind) return [t("thDistrict"), t("colSale"), t("colJeonse"), t("colWolse")];
   if (kind === "wolse") return [t("thDistrict"), t("thDeposit"), t("thMonthly"), t("thCount")];
   if (kind === "jeonse") {
     return [t("thDistrict"), t("thPerPyeongDeposit"), t("thArea")(areaM2), t("thRatio"), t("thCount")];
@@ -701,7 +712,7 @@ function renderOverall(realestate) {
     box.innerHTML = ["sale", "jeonse", "wolse"]
       .map((k) => {
         const metric = resolveMetric(overall, k)?.metric;
-        const label = k === "sale" ? t("thSale") : k === "jeonse" ? t("thJeonse") : t("thWolse");
+        const label = k === "sale" ? t("colSale") : k === "jeonse" ? t("colJeonse") : t("colWolse");
         if (!metric) return card(label, "-", "");
         if (k === "wolse") {
           return card(
@@ -967,8 +978,11 @@ function fillCard(prefix, series, label, format) {
 
   // 값으로 적는 숫자는 신고가 다 들어온 주만 쓴다. 덜 찬 주는 그림에서 점선일 뿐이다.
   const firm = series.filter((p) => !p.pending);
-  const values = (firm.length ? firm : series).map((p) => p.value);
-  labelBox.textContent = label;
+  const shown = firm.length ? firm : series;
+  const values = shown.map((p) => p.value);
+  // 그래프 머리 값은 마지막 확정 주의 값이라, 위 카드(최근 4주 겹침)와 다르다. 어느 주의 값인지 붙인다(UIUX #49).
+  const [, wm, wd] = String(shown[shown.length - 1]?.date ?? "").split("-");
+  labelBox.textContent = wm && wd ? `${label} · ${t("weekOf")(`${Number(wm)}/${Number(wd)}`)}` : label;
   current.textContent = format(values[values.length - 1]);
   minmax.textContent = t("historyMinMax")(format(Math.max(...values)), format(Math.min(...values)));
   drawChart(`${prefix}-chart`, series, format, label);
@@ -1294,7 +1308,7 @@ function renderUpdated(realestate) {
   if (isBudgetPage && cache.budget?.periods?.length) {
     const periods = cache.budget.periods.map((p) => monthLabel(p)).filter(Boolean).join(", ");
     const at = cache.budget.updatedAt
-      ? ` · ${new Date(cache.budget.updatedAt).toLocaleDateString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
+      ? ` · ${t("updatedWord")} ${new Date(cache.budget.updatedAt).toLocaleDateString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
       : "";
     document.getElementById("updated").textContent = `${t("budgetPeriods")(periods)}${at}`;
     return;
@@ -1303,9 +1317,9 @@ function renderUpdated(realestate) {
   const updatedAt = realestate?.updatedAt;
   const basis = window?.basis === "arrival" ? t("basisArrival") : t("basisContract");
   const text = window?.from
-    ? `${basis}: ${window.from} ~ ${window.to}` +
+    ? `${basis} ${window.from} ~ ${window.to}` +
       (updatedAt
-        ? ` · ${new Date(updatedAt).toLocaleDateString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
+        ? ` · ${t("updatedWord")} ${new Date(updatedAt).toLocaleDateString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
         : "")
     : "-";
   document.getElementById("updated").textContent = text;

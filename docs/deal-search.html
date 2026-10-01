@@ -57,7 +57,7 @@
     <a href="./apartment-sale.html" data-re-page="sale">매매</a>
     <a href="./apartment-jeonse.html" data-re-page="jeonse">전세</a>
     <a href="./apartment-rent.html" data-re-page="wolse">월세</a>
-    <a href="./deal-search.html" data-re-page="search" aria-current="page">거래내역 검색</a>
+    <a href="./deal-search.html" data-re-page="search" aria-current="page">실거래 검색</a>
     <a href="./jeonse-vs-wolse.html" data-re-page="conversion">전세 vs 월세</a>
     <a href="./renewal-vs-new.html" data-re-page="renewal">재계약</a>
     <a href="./cancelled-deals.html" data-re-page="cancelled">해제·등기</a>
@@ -151,7 +151,7 @@ const T = {
     navSale: "매매",
     navJeonse: "전세",
     navWolse: "월세",
-    navDealSearch: "거래내역 검색",
+    navDealSearch: "실거래 검색",
     navConversion: "전세 vs 월세",
     navRenewal: "재계약",
     navCancelled: "해제·등기",
@@ -273,7 +273,8 @@ const T = {
     notReady: "아직 검색할 실거래 자료가 없습니다. 국토교통부 신고분을 받는 대로 채워집니다.",
     note:
       "국토교통부에 신고된 아파트 매매 실거래 기록입니다. 지금 살 수 있는 매물이 아니며, 같은 단지라도 층·향·동에 따라 값이 크게 다릅니다. 계약 후 30일인 신고 기한 때문에 최근 거래는 나중에 반영됩니다. 목록은 최근 거래부터 일부만 보여주며, 건수는 조건에 맞는 신고 거래를 전부 셉니다. 연식은 준공연도가 신고된 거래에만, 직거래 표시는 거래 형태가 신고된 거래에만 걸립니다.",
-    updatedPrefix: "기준",
+    dataThrough: (m) => `${m} 신고분까지`,
+    updatedWord: "갱신",
     footerSource: "출처: 국토교통부 아파트 매매 실거래가 공개시스템. 신고된 거래만 집계되며 신고 기한(계약 후 30일)이 있어 최근 거래는 나중에 반영됩니다.",
     footerPrivacy: "개인정보처리방침",
     footerMethod: "숫자를 만드는 방법",
@@ -417,7 +418,8 @@ const T = {
     notReady: "No transaction data to search yet. It fills in as MOLIT filings come through.",
     note:
       "Apartment sale transactions reported to Korea's MOLIT. These are filed deals, not listings for sale, and prices vary widely by floor, aspect and building within the same complex. Filings can lag up to 30 days after contract. The list shows the most recent matches only; the count covers every filing that matches. Age filters apply only where a build year was filed, and the direct-deal tag only where a deal type was filed.",
-    updatedPrefix: "As of",
+    dataThrough: (m) => `Filings through ${m}`,
+    updatedWord: "updated",
     footerSource: "Source: MOLIT real transaction price disclosure. Only reported deals are counted, and reporting can lag up to 30 days after contract.",
     footerPrivacy: "Privacy Policy",
     footerMethod: "How these numbers are made",
@@ -1376,9 +1378,10 @@ function renderUpdated() {
   const last = periods[periods.length - 1];
   setText(
     "updated",
-    `${t("updatedPrefix")}: ${String(last).slice(0, 4)}.${String(last).slice(4, 6)}` +
+    // 머리 날짜 줄은 사이트 어디서나 "<데이터 기준> · 갱신 <날짜>" 한 꼴이다(UIUX #49).
+    t("dataThrough")(`${String(last).slice(0, 4)}.${String(last).slice(4, 6)}`) +
       (updatedAt
-        ? ` · ${new Date(updatedAt).toLocaleDateString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
+        ? ` · ${t("updatedWord")} ${new Date(updatedAt).toLocaleDateString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
         : "")
   );
 }

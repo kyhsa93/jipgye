@@ -30,10 +30,11 @@ export const SCREENS = [
   { text: "월세 시세", href: "./apartment-rent.html", also: ["월세"] },
   { text: "전세 vs 월세", href: "./jeonse-vs-wolse.html", also: ["전환율", "전월세전환율", "월 실부담"] },
   { text: "층별 가격 차이", href: "./floor-gap.html", also: ["층", "1층", "저층", "최상층", "탑층", "로열층"] },
-  { text: "갈아타기 자치구 변화", href: "./switch-house.html", also: ["갈아타기", "이사", "옮기기", "자치구 비교", "얼마나 올랐나"] },
+  { text: "갈아타기", href: "./switch-house.html", also: ["갈아타기 자치구 변화", "이사", "옮기기", "자치구 비교", "얼마나 올랐나"] },
   { text: "신고가 다음 거래", href: "./record-high.html", also: ["신고가", "최고가", "신고가 갱신", "역대 최고"] },
   { text: "3개월 뒤 아파트값", href: "./price-outlook.html", also: ["전망", "예측", "앞으로", "오를까", "내릴까", "집값 전망"] },
-  { text: "재계약 vs 새로 구하기", href: "./renewal-vs-new.html", also: ["재계약", "갱신", "연장", "갱신요구권"] },
+  // 화면 이름은 메뉴·검색·다른 화면의 링크가 같은 짧은 이름을 쓴다(UIUX #49). 질문은 also에.
+  { text: "재계약", href: "./renewal-vs-new.html", also: ["재계약 vs 새로 구하기", "갱신", "연장", "갱신요구권"] },
   { text: "해제·등기", href: "./cancelled-deals.html", also: ["해제", "취소", "등기", "미등기"] },
   { text: "실거래 검색", href: "./deal-search.html", also: ["조건", "검색"] },
   // 사이트 안에 답이 있는데 화면 이름으로는 안 찾아지던 주제어(PO 검토 #33). 답이 있는 예산대 장으로 보낸다.

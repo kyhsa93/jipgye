@@ -160,7 +160,7 @@ const T = {
       "값을 내는 조건: 지난 예측의 오차를 12개월 덩어리째 1,000번 다시 뽑아, 그 90% 이상에서 \"그대로다\"와 \"늘 오른다\"를 둘 다 이겨야 합니다. 겹치는 예측의 오차는 서로 붙어 다녀서 한 달씩 뽑으면 우연을 실력으로 읽습니다. " +
       "방향 적중은 실제로 0.5% 이상 움직인 경우만 셉니다. \"오른다\" 적중은 늘 오른다고 찍었을 때의 적중입니다 — 모델의 적중률은 이것과 견주어 읽어야 합니다. " +
       "모델은 지난달, 그 전달, 그 앞 넉 달 평균의 상승률로 몇 달 뒤를 바로 맞추는 회귀입니다. 기준금리 변화와 전세 상승률을 더해 봤지만 3개월 오차가 거의 줄지 않아 넣지 않았습니다.",
-    updatedPrefix: "기준",
+    updatedPrefix: "갱신",
     footerSource: "출처: 한국부동산원 아파트 매매 실거래가격지수(한국은행 ECOS), 국토교통부 아파트 매매 실거래가 공개시스템. 투자 판단을 대신하지 않습니다.",
     footerPrivacy: "개인정보처리방침",
     footerMethod: "숫자를 만드는 방법",
@@ -204,7 +204,7 @@ const T = {
       "To publish, the model has to beat both \"no change\" and \"up as usual\" in at least 90% of 1,000 resamples of past errors drawn in 12-month blocks. Errors of overlapping forecasts move together, so resampling single months would read luck as skill. " +
       "Direction hits count only months that actually moved 0.5% or more. The \"up\" hit is what always guessing up would have scored — read the model's hit rate against it. " +
       "The model is a regression of the change h months ahead on last month's growth, the month before, and the average of the four before that. Adding base-rate changes and jeonse growth barely moved the three-month error, so they are left out.",
-    updatedPrefix: "As of",
+    updatedPrefix: "Updated",
     footerSource: "Source: Korea Real Estate Board apartment sale price index (Bank of Korea ECOS) and MOLIT apartment sale filings. Not investment advice.",
     footerPrivacy: "Privacy policy",
     footerMethod: "How the numbers are made",
@@ -260,7 +260,7 @@ function renderUpdated() {
   }
   setText(
     "updated",
-    `${t("updatedPrefix")}: ${new Date(updatedAt).toLocaleDateString(localeTag(), { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
+    `${t("updatedPrefix")} ${new Date(updatedAt).toLocaleDateString(localeTag(), { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
   );
 }
 

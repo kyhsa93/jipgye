@@ -126,7 +126,7 @@
       realestateStatsNote: "국토교통부 실거래 신고 자료입니다. 매매·전세는 전용 84㎡ 환산가입니다.",
       newsHeading: "기사 목록",
       loading: "불러오는 중...",
-      updatedPrefix: "마지막 갱신",
+      updatedPrefix: "갱신",
       summaryEmpty: "오늘 요약이 아직 없습니다.",
       newsEmpty: "오늘 이 분야 기사가 아직 없습니다.",
       fallbackNote: "일부 항목은 검증에서 걸러져 헤드라인 요약으로 대체됐습니다.",
@@ -155,7 +155,7 @@
       realestateStatsNote: "From Ministry of Land transaction filings. Sale and jeonse figures are converted to an 84㎡ unit.",
       newsHeading: "Headlines",
       loading: "Loading...",
-      updatedPrefix: "Last updated",
+      updatedPrefix: "Updated",
       summaryEmpty: "No summary yet today.",
       newsEmpty: "No articles in this category yet today.",
       fallbackNote: "Some summaries failed verification and were replaced with headline lists.",
@@ -355,7 +355,7 @@
   function renderUpdated() {
     const updatedAt = cache.news?.updatedAt;
     document.getElementById("updated").textContent = updatedAt
-      ? `${t("updatedPrefix")}: ${new Date(updatedAt).toLocaleString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium", timeStyle: "short" })} KST`
+      ? `${t("updatedPrefix")} ${new Date(updatedAt).toLocaleString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium", timeStyle: "short" })} KST`
       : "-";
   }
 
