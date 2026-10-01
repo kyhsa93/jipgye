@@ -94,6 +94,7 @@
     <div class="content-notice" id="score-note"></div>
   </section>
 
+  <p class="card-links" id="next-links"><a id="next-search" href="./deal-search.html">단지를 골라 매매가 범위·1년 전 값 보기 →</a> · <a id="next-budget" href="./budget-10eok.html">예산으로 후보 단지 찾기 →</a></p>
   <footer class="site-footer">
     <div id="footer-source">출처: 한국부동산원 아파트 매매 실거래가격지수(한국은행 ECOS), 국토교통부 아파트 매매 실거래가 공개시스템. 투자 판단을 대신하지 않습니다.</div>
     <div style="margin-top:6px;">
@@ -111,6 +112,8 @@
 const T = {
   ko: {
     title: "서울 아파트값, 3개월 뒤",
+    nextSearch: "단지를 골라 매매가 범위·1년 전 값 보기 →",
+    nextBudget: "예산으로 후보 단지 찾기 →",
     navDigest: "오늘",
     navNews: "뉴스",
     navRealestatePrices: "아파트 시세",
@@ -152,6 +155,8 @@ const T = {
   },
   en: {
     title: "Seoul apartment prices, three months out",
+    nextSearch: "Pick a complex: price range and a year ago →",
+    nextBudget: "Find candidate complexes by budget →",
     navDigest: "Today",
     navNews: "News",
     navRealestatePrices: "Apartment Prices",
@@ -245,6 +250,8 @@ function renderUpdated() {
 function applyLocale() {
   document.title = t("title");
   setText("page-title", t("title"));
+  setText("next-search", t("nextSearch"));
+  setText("next-budget", t("nextBudget"));
   setText("method-callout-text", t("methodCallout"));
   setText("method-callout-link", t("methodCalloutLink"));
   setText("lead-heading", t("leadHeading"));

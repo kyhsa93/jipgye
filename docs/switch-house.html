@@ -87,6 +87,7 @@
     <div class="district-links" id="district-links"></div>
   </section>
 
+  <p class="card-links" id="next-links"><a id="next-search" href="./deal-search.html">단지를 골라 매매가 범위·1년 전 값 보기 →</a> · <a id="next-budget" href="./budget-10eok.html">예산으로 후보 단지 찾기 →</a></p>
   <footer class="site-footer">
     <div id="footer-source">출처: 국토교통부 아파트 매매 실거래가 공개시스템(중개거래, 해제 제외), 한국부동산원 실거래가격지수·주택가격동향조사.</div>
     <div style="margin-top:6px;">
@@ -117,6 +118,10 @@ function eokText(value10k) {
 const T = {
   ko: {
     title: "갈아타기 — 내 동네와 갈 동네는 얼마나 움직였나",
+    nextSearch: "단지를 골라 매매가 범위·1년 전 값 보기 →",
+    nextBudget: "예산으로 후보 단지 찾기 →",
+    nextSearchTo: (name) => `${name} 단지를 골라 매매가 범위·1년 전 값 보기 →`,
+    nextBudgetTo: (name, eok) => `${name} 84㎡ 값에 맞는 ${eok}억대 후보 →`,
     navDigest: "오늘",
     navNews: "뉴스",
     navRealestatePrices: "아파트 시세",
@@ -159,6 +164,10 @@ const T = {
   },
   en: {
     title: "Moving house: how far did your district and the next one move?",
+    nextSearch: "Pick a complex: price range and a year ago →",
+    nextBudget: "Find candidate complexes by budget →",
+    nextSearchTo: (name) => `Pick a complex in ${name}: price range and a year ago →`,
+    nextBudgetTo: (name, eok) => `Candidates at ${name}'s 84㎡ level (₩${eok}00M band) →`,
     navDigest: "Today",
     navNews: "News",
     navRealestatePrices: "Apartment Prices",
@@ -257,6 +266,7 @@ function renderCompare() {
   const a = byCode.get(document.getElementById("from-select").value);
   const b = byCode.get(document.getElementById("to-select").value);
   const out = document.getElementById("compare-result");
+  nextLinks(a && b && a.code !== b.code ? b : null);
   if (!a || !b) return setText("compare-result", "");
   if (a.code === b.code) return setText("compare-result", t("compareSame"));
   const thin = [a, b].find((r) => r.change === null);
@@ -269,6 +279,28 @@ function renderCompare() {
   const flip = a.code > b.code;
   const m = flip ? { change: -raw.change, low: -raw.high, high: -raw.low } : raw;
   out.textContent = t("compare")(a, b, distinct, m);
+}
+
+/**
+ * 비교 다음 길: 옮겨 갈 구의 단지 카드(1년 전 값)와, 그 구 84㎡ 환산이 들어가는 예산대 장(PO 2차 #40).
+ * 예산대 장은 3억~20억대뿐이라 그 밖이면 끝 장으로 보낸다. 고른 구가 없으면 일반 문구로 둔다.
+ */
+const BUDGET_PAGES = [3, 20];
+function nextLinks(to) {
+  const search = document.getElementById("next-search");
+  const budget = document.getElementById("next-budget");
+  if (!to?.level84) {
+    search.setAttribute("href", "./deal-search.html");
+    search.textContent = t("nextSearch");
+    budget.setAttribute("href", "./budget-10eok.html");
+    budget.textContent = t("nextBudget");
+    return;
+  }
+  const eok = Math.min(BUDGET_PAGES[1], Math.max(BUDGET_PAGES[0], Math.floor(to.level84.recent / 10000)));
+  search.setAttribute("href", `./deal-search.html?district=${encodeURIComponent(to.name)}`);
+  search.textContent = t("nextSearchTo")(to.name);
+  budget.setAttribute("href", `./budget-${eok}eok.html`);
+  budget.textContent = t("nextBudgetTo")(to.name, eok);
 }
 
 function renderDistrictLinks() {
@@ -293,6 +325,8 @@ function renderUpdated() {
 function applyLocale() {
   document.title = t("title");
   setText("page-title", t("title"));
+  setText("next-search", t("nextSearch"));
+  setText("next-budget", t("nextBudget"));
   setText("method-callout-text", t("methodCallout"));
   setText("method-callout-link", t("methodCalloutLink"));
   for (const [id, key] of [["lead-heading", "leadHeading"], ["compare-heading", "compareHeading"], ["from-label", "fromLabel"], ["to-label", "toLabel"], ["table-heading", "tableHeading"], ["check-heading", "checkHeading"], ["table-note", "tableNote"], ["check-note", "checkNote"], ["district-links-heading", "districtLinksHeading"]]) {

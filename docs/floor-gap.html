@@ -76,6 +76,7 @@
     <div class="district-links" id="district-links"><!--prerender:floorDistrictLinks--><a href="./district-jongno.html">종로구</a><a href="./district-jung.html">중구</a><a href="./district-yongsan.html">용산구</a><a href="./district-seongdong.html">성동구</a><a href="./district-gwangjin.html">광진구</a><a href="./district-dongdaemun.html">동대문구</a><a href="./district-jungnang.html">중랑구</a><a href="./district-seongbuk.html">성북구</a><a href="./district-gangbuk.html">강북구</a><a href="./district-dobong.html">도봉구</a><a href="./district-nowon.html">노원구</a><a href="./district-eunpyeong.html">은평구</a><a href="./district-seodaemun.html">서대문구</a><a href="./district-mapo.html">마포구</a><a href="./district-yangcheon.html">양천구</a><a href="./district-gangseo.html">강서구</a><a href="./district-guro.html">구로구</a><a href="./district-geumcheon.html">금천구</a><a href="./district-yeongdeungpo.html">영등포구</a><a href="./district-dongjak.html">동작구</a><a href="./district-gwanak.html">관악구</a><a href="./district-seocho.html">서초구</a><a href="./district-gangnam.html">강남구</a><a href="./district-songpa.html">송파구</a><a href="./district-gangdong.html">강동구</a><!--/prerender:floorDistrictLinks--></div>
   </section>
 
+  <p class="card-links" id="next-links"><a id="next-search" href="./deal-search.html">단지를 골라 매매가 범위·1년 전 값 보기 →</a> · <a id="next-budget" href="./budget-10eok.html">예산으로 후보 단지 찾기 →</a></p>
   <footer class="site-footer">
     <div id="footer-source">출처: 국토교통부 아파트 매매·전월세 실거래가 공개시스템. 신고된 거래만 집계되며 해제된 거래는 뺍니다.</div>
     <div style="margin-top:6px;">
@@ -93,6 +94,8 @@
 const T = {
   ko: {
     title: "1층은 얼마나 싼가",
+    nextSearch: "단지를 골라 매매가 범위·1년 전 값 보기 →",
+    nextBudget: "예산으로 후보 단지 찾기 →",
     navDigest: "오늘",
     navNews: "뉴스",
     navRealestatePrices: "아파트 시세",
@@ -132,6 +135,8 @@ const T = {
   },
   en: {
     title: "How much less is a first floor?",
+    nextSearch: "Pick a complex: price range and a year ago →",
+    nextBudget: "Find candidate complexes by budget →",
     navDigest: "Today",
     navNews: "News",
     navRealestatePrices: "Apartment Prices",
@@ -260,6 +265,8 @@ function renderUpdated() {
 function applyLocale() {
   document.title = t("title");
   setText("page-title", t("title"));
+  setText("next-search", t("nextSearch"));
+  setText("next-budget", t("nextBudget"));
   setText("method-callout-text", t("methodCallout"));
   setText("method-callout-link", t("methodCalloutLink"));
   setText("lead-heading", t("leadHeading"));

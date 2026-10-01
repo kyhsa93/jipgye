@@ -28,7 +28,9 @@ export function stubElement(attrs = {}, id = "") {
     dataset: {},
     classList: { add() {}, remove() {}, toggle() {}, contains: () => false },
     getAttribute: (name) => attrs[name] ?? null,
-    setAttribute() {},
+    setAttribute: (name, value) => {
+      attrs[name] = String(value);
+    },
   };
   return new Proxy(base, {
     get: (t, p) => (p in t ? t[p] : typeof p === "symbol" ? undefined : () => {}),

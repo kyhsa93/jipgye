@@ -151,3 +151,42 @@ test("빌드된 갈아타기 자료에서 금액과 %가 25개 구 모두 맞는
     assert.ok(Math.abs(money - r.change) < 0.15, `${r.name}: 줄은 ${r.change}%, 금액은 ${money.toFixed(2)}%`);
   }
 });
+
+test("갈아타기 비교 아래에 옮겨 갈 구의 단지 카드와 그 값의 예산대 장으로 가는 길이 있다 (#40)", async () => {
+  const { loadPage } = await import("./helpers/digest-page.mjs");
+  const payload = {
+    updatedAt: "2026-10-01T00:00:00Z",
+    rows: [
+      { code: "A", name: "가구", cells: 100, change: 13.1, low: 12, high: 15, level84: { base: 80_000, recent: 90_000 } },
+      { code: "B", name: "나구", cells: 100, change: 15.7, low: 13, high: 18, level84: { base: 170_000, recent: 251_000 } },
+    ],
+    pairs: { "A-B": false },
+    money: { "A-B": { change: 20_000, low: 14_000, high: 32_000 } },
+    lead: { ko: "x", en: "x" }, table: { ko: "", en: "" }, regionTable: { ko: "", en: "" }, slugs: {},
+  };
+  const page = await loadPage({ file: "switch-house.html", data: { "district-change": payload } });
+  const pick = async (from, to) => {
+    page.byId("from-select").value = from;
+    page.byId("to-select").value = to;
+    page.byId("to-select").dispatch("change");
+    await page.settle();
+  };
+  await pick("B", "A");
+  assert.equal(page.byId("next-search").getAttribute("href"), `./deal-search.html?district=${encodeURIComponent("가구")}`);
+  assert.equal(page.byId("next-budget").getAttribute("href"), "./budget-9eok.html");
+  assert.match(page.text("next-budget"), /가구 84㎡ 값에 맞는 9억대 후보/);
+  await pick("A", "B");
+  assert.equal(page.byId("next-budget").getAttribute("href"), "./budget-20eok.html", "20억대 넘는 값은 끝 장으로");
+  await pick("A", "A");
+  assert.equal(page.byId("next-search").getAttribute("href"), "./deal-search.html");
+  assert.equal(page.text("next-budget"), "예산으로 후보 단지 찾기 →");
+});
+
+test("전망·신고가·층 격차·갈아타기 화면에 단지 카드와 예산대로 가는 길이 있다 (#40)", async () => {
+  for (const f of ["switch-house", "price-outlook", "record-high", "floor-gap"]) {
+    const html = await readFile(path.join(root, `docs/${f}.html`), "utf8");
+    assert.match(html, /id="next-search" href="\.\/deal-search\.html"/, f);
+    assert.match(html, /id="next-budget" href="\.\/budget-10eok\.html"/, f);
+    assert.match(html, /nextSearch: "Pick a complex/, `${f}: 영어 문구가 없다`);
+  }
+});
