@@ -10,13 +10,14 @@ test("디딤돌은 가격과 면적을 둘 다, 보금자리론은 가격만 본
     { amount: 60_000, area: 59 }, // 신혼 디딤돌·보금자리 안, 일반 디딤돌 밖
     { amount: 60_001, area: 59 }, // 모두 밖
   ]);
-  assert.deepEqual(c, { n: 4, didim: 1, family: 2, bogeum: 3 });
+  assert.deepEqual(c, { n: 4, didim: 1, family: 2, bogeum: 3, newborn: 3 });
 });
 
 test("가격선에 걸친 예산대(4·5·6억대)에만 쓰고, 소득 요건은 적지 않는다고 말한다", () => {
   const counts = { n: 100, didim: 15, family: 23, bogeum: 24 };
   assert.equal(policySentence(3, counts), null);
-  assert.equal(policySentence(7, counts), null);
+  assert.equal(policySentence(10, counts), null);
+  assert.match(policySentence(8, counts), /신생아 특례 선\(9억\) 안/);
   const s5 = policySentence(5, counts);
   assert.match(s5, /5억을 넘는 집은 디딤돌 일반 선 밖/);
   assert.match(s5, /15건\(15%\)/);

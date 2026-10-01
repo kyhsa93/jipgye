@@ -12,6 +12,7 @@ import { costsSentence } from "./purchase-costs.mjs";
 import { candidatesInBand } from "./complex-price.mjs";
 import { capSentence } from "./loan-cap.mjs";
 import { policySentence } from "./policy-loan.mjs";
+import { minCashSentence } from "./min-cash.mjs";
 import { rateFacts, factSentences as rateSentences } from "./rate-facts.mjs";
 import {
   KIND_FIELDS,
@@ -261,13 +262,21 @@ export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = 
     `<ul class="budget-deals">${band.deals.map(budgetDealHtml).join("")}</ul>` +
     budgetLoanHtml(band, rates, mortgageSeries) +
     budgetCostsHtml(band) +
+    budgetMinCashHtml(band) +
     budgetCapHtml(band, capStats) +
     budgetPolicyHtml(band, policyCounts) +
     budgetCandidatesHtml(band, complexFiles)
   );
 }
 
-/** 정책대출 가격선에 걸친 예산대(4·5·6억대)에만 붙는 한 줄(scripts/policy-loan.mjs). */
+/** 최소 필요 현금(scripts/min-cash.mjs) - 소득과 무관한 대출 천장(LTV·구간 상한)으로 계산한다(#31). */
+export function budgetMinCashHtml(band) {
+  const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
+  const sentence = minCashSentence(eok);
+  return sentence ? `<p class="budget-loan budget-mincash" data-prerendered>${escapeHtml(sentence)}</p>` : "";
+}
+
+/** 정책대출 가격선에 걸친 예산대(4~9억대)에만 붙는 한 줄(scripts/policy-loan.mjs). */
 export function budgetPolicyHtml(band, policyCounts) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = policySentence(eok, policyCounts);
