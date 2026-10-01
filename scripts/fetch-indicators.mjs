@@ -46,8 +46,10 @@ export const RONE_SERIES = {
 export const RONE_BASE = "https://www.reb.or.kr/r-one/openapi/SttsApiTblData.do";
 const RONE_PAGE = 5;
 
-export function roneUrl({ statbl, cls, itm }, from, to) {
+export function roneUrl({ statbl, cls, itm, grp }, from, to) {
   const q = new URLSearchParams({
+    // 지역이 GRP_ID에 있는 표(매입자거주지별 등)는 지역을 GRP로, 분류를 CLS로 건다.
+    ...(grp ? { GRP_ID: String(grp) } : {}),
     Type: "json",
     pIndex: "1",
     pSize: String(RONE_PAGE),
