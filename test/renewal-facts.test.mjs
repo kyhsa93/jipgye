@@ -298,3 +298,64 @@ test("문턱을 넘은 구만 격차를 말한다", async () => {
   const narrow = renewalFacts({ ...base, gapMatched: 95, gapMedian: 0 }, seoul);
   assert.ok(narrow?.renewGapNarrow, "차이 없는 구가 말을 안 했다");
 });
+
+// --- 월세 재계약 (#7) ---------------------------------------------------------------
+
+import { MIN_WOLSE_GAP_SAMPLE, WOLSE_RATE_RANGE, districtRow, wolseGap, wolseLead, wolseRenewalGaps } from "../scripts/renewal-facts.mjs";
+
+const W_NOW = new Date("2026-08-26T00:00:00Z");
+const wl = (extra = {}) => ({
+  sggCd: 11350, aptNm: "월세단지", excluUseAr: 59.9, dealYear: 2026, dealMonth: 3,
+  contractType: "신규", deposit: "10,000", monthlyRent: "100", preDeposit: "", preMonthlyRent: "", ...extra,
+});
+const NEW3 = [wl(), wl(), wl()];
+const renewW = (deposit, rent, extra = {}) =>
+  wl({ contractType: "갱신", deposit: String(deposit), monthlyRent: String(rent), preDeposit: "9,000", preMonthlyRent: "95", ...extra });
+
+test("월세 재계약은 같은 칸 신규 월세와 보증금+월세×12÷전환율로 견준다", () => {
+  // 신규: 1억 + 100만×12÷5% = 1억 + 2.4억 = 3.4억. 갱신: 1억 + 85만×12÷5% = 3.04억 -> -10.6%.
+  const gaps = wolseRenewalGaps([...NEW3, renewW(10000, 85)], W_NOW, 5);
+  assert.equal(gaps.length, 1);
+  assert.ok(Math.abs(gaps[0] - ((30400 - 34000) / 34000) * 100) < 1e-9, String(gaps[0]));
+});
+
+test("전세였다가 월세로 바꾼 갱신, 전세 갱신, 신규가 둘뿐인 칸은 월세 격차에 넣지 않는다", () => {
+  const switched = renewW(10000, 85, { preMonthlyRent: "0" });
+  const jeonse = wl({ contractType: "갱신", monthlyRent: "0", deposit: "30,000", preDeposit: "29,000", preMonthlyRent: "0" });
+  assert.equal(wolseRenewalGaps([...NEW3, switched, jeonse], W_NOW, 5).length, 0);
+  assert.equal(wolseRenewalGaps([wl(), wl(), renewW(10000, 85)], W_NOW, 5).length, 0, "신규 두 건으로 시세를 냈다");
+  assert.equal(wolseRenewalGaps([...NEW3, renewW(10000, 85, { dealMonth: 8 })], W_NOW, 5).length, 0, "마감 안 된 달을 셌다");
+});
+
+test("격차는 전환율에 달린다 - 양 끝 전환율로 다시 낸 값을 같이 낸다", () => {
+  // 보증금을 올리고 월세를 내린 갱신: 낮은 전환율(월세가 비싸게 셈)에서는 싸고, 높은 전환율에서는 비싸다.
+  const items = [...NEW3, renewW(25000, 60)];
+  const g = wolseGap(items, W_NOW, 5);
+  assert.deepEqual(g.range.map((r) => r.rate), WOLSE_RATE_RANGE);
+  const [low, high] = g.range;
+  assert.ok(low.median < 0 && high.median > 0, `부호가 뒤집혀야 한다: ${JSON.stringify(g.range)}`);
+  assert.equal(wolseGap(items, W_NOW, null), null, "전환율 없이 값을 냈다");
+});
+
+test("자치구 월세 격차는 맞물린 100건부터 값을 내고, 못 넘으면 건수만 남긴다", () => {
+  const short = tally([...NEW3, ...Array.from({ length: MIN_WOLSE_GAP_SAMPLE - 1 }, () => renewW(10000, 85))], W_NOW, { wolseRate: 5 });
+  const row = districtRow("노원구", short);
+  assert.equal(row.wolse.matched, MIN_WOLSE_GAP_SAMPLE - 1);
+  assert.equal(row.wolse.median, null);
+  assert.deepEqual(row.wolse.range, []);
+
+  const enough = tally([...NEW3, ...Array.from({ length: MIN_WOLSE_GAP_SAMPLE }, () => renewW(10000, 85))], W_NOW, { wolseRate: 5 });
+  assert.equal(districtRow("노원구", enough).wolse.median, -10.6);
+});
+
+test("월세 문단은 어느 몫을 세는지, 전환율에 따라 얼마나 달라지는지를 적는다", () => {
+  const items = [...NEW3, renewW(10000, 85), renewW(10000, 85), wl({ contractType: "갱신", monthlyRent: "0", deposit: "30,000", preDeposit: "29,000", preMonthlyRent: "0" })];
+  const seoul = tally(items, W_NOW, { wolseRate: 4.8 });
+  assert.equal(seoul.wolseKept, 2);
+  const ko = wolseLead(seoul, "ko");
+  assert.match(ko, /재계약 3건 가운데 전세에서 전세로 간 것이 33\.3%, 월세에서 월세로 간 것이 66\.7%, 유형이 바뀐 것이 0%/);
+  assert.match(ko, /전월세전환율 4\.8%로 묶어/);
+  assert.match(ko, /3%로 보면 [\d.]+% 적고, 10%로 보면 [\d.]+% 적습니다\./);
+  assert.doesNotMatch(wolseLead(seoul, "en"), /[가-힣]/);
+  assert.equal(wolseLead(tally(items, W_NOW), "ko"), null, "전환율이 없는데 월세 문단을 냈다");
+});

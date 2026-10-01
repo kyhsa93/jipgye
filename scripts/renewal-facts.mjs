@@ -52,6 +52,26 @@ export const MIN_MARKET_DEALS = 3;
 export const MIN_GAP_SAMPLE = 60;
 
 /**
+ * 월세 재계약 격차를 자치구가 말하려면 맞물린 표본이 얼마나 있어야 하는가(#7).
+ *
+ * 전세 문턱(60건)과 같은 방법으로 정했다 - 서울 월세 격차(실측 전환율 4.8%, 2,029건)에서 n건씩
+ * 400번 다시 뽑아 중앙값의 95% 구간을 쟀다(research/wolse-renewal/check.mjs, 2026-10-01):
+ *
+ *   n= 40  -10.5% ~ -1.3% (9.2%p)   n=100  -9.4% ~ -1.9% (7.5%p)
+ *   n= 60   -9.8% ~ -1.5% (8.3%p)   n=150  -9.0% ~ -2.7% (6.3%p)
+ *
+ * 전세 문턱이 받아들인 폭은 7.5%p(n=60)다. 월세는 칸 안 값이 더 흩어져 같은 폭에 100건이 든다.
+ */
+export const MIN_WOLSE_GAP_SAMPLE = 100;
+
+/**
+ * 월세 격차를 다시 내 볼 전환율의 양 끝(%). 서울 실측(4.8%)을 사이에 두고 넉넉히 아래와 위를 잡아,
+ * 어느 가정에서나 같은 방향인지, 크기는 얼마나 달라지는지를 같이 보인다. 화면에 이 두 값을 그대로 적는다.
+ * 법정 전환율 같은 시행령 수치는 바뀌므로 가정하지 않는다.
+ */
+export const WOLSE_RATE_RANGE = [3, 10];
+
+/**
  * 한쪽이 90%를 넘게 벗어난 것은 견줄 값이 잘못 붙은 것으로 본다. 같은 단지명에
  * 다른 단지가 섞였거나 신고가 잘못 들어온 경우다.
  */
@@ -186,9 +206,69 @@ export function renewalGap(items, now) {
   };
 }
 
+const pureWolse = (item) => number(item?.monthlyRent) > 0;
+
+/**
+ * 월세를 내던 세입자가 월세로 재계약한 것이 같은 칸 신규 월세보다 얼마나 싼가(#7).
+ *
+ * 순수 전세만 견주면 갱신의 열에 넷인 월세→월세를 버린다. 반전세는 보증금과 월세를 한 값으로
+ * 묶어야 하고 그 배수가 곧 전월세전환율이라, 하나로 정하면 답을 먼저 가정하게 된다. 그래서
+ * 배수를 하나로 정하지 않는다: 실측 전환율(rate)로 낸 값을 대표로 두고, rates 전부로 다시 낸
+ * 값의 폭을 같이 돌려준다. 그 폭이 곧 "전환율 가정에 얼마나 달렸나"이고 화면이 그대로 적는다.
+ *
+ * 견주는 칸·문턱·이상치는 전세 격차(renewalGap)와 같다. 같은 계약이 갱신과 신규 양쪽 칸에
+ * 들어가지 않도록 신규는 월세 신규만, 갱신은 전에도 월세였던 것만 센다.
+ */
+export function wolseRenewalGaps(items, now, rate) {
+  const value = (deposit, rent) => deposit + (rent * 12) / (rate / 100);
+  const rows = (items ?? []).filter((item) => {
+    const year = Number(item?.dealYear);
+    const month = Number(item?.dealMonth);
+    if (!Number.isInteger(year) || !Number.isInteger(month)) return false;
+    if (!isClosedMonth(year, month, now)) return false;
+    return Boolean(String(item?.aptNm ?? "").trim()) && pureWolse(item);
+  });
+
+  const market = new Map();
+  for (const item of rows) {
+    if (String(item?.contractType ?? "").trim() !== "신규") continue;
+    const key = marketKey(item);
+    if (!market.has(key)) market.set(key, []);
+    market.get(key).push(value(number(item.deposit), number(item.monthlyRent)));
+  }
+
+  const gaps = [];
+  for (const item of rows) {
+    if (!isRenewal(item) || number(item?.preMonthlyRent) <= 0) continue;
+    const pool = market.get(marketKey(item));
+    if (!pool || pool.length < MIN_MARKET_DEALS) continue;
+    const asking = median(pool);
+    if (asking <= 0) continue;
+    const gap = ((value(number(item.deposit), number(item.monthlyRent)) - asking) / asking) * 100;
+    if (!Number.isFinite(gap) || Math.abs(gap) > GAP_OUTLIER) continue;
+    gaps.push(gap);
+  }
+  return gaps;
+}
+
+const round1 = (value) => Math.round(value * 10) / 10;
+const cheaperShareOf = (gaps) => round1((gaps.filter((g) => g < 0).length / gaps.length) * 100);
+
+/** 실측 전환율로 낸 대표값과, 양 끝 전환율로 다시 낸 값. rate가 없으면 내지 않는다. */
+export function wolseGap(items, now, rate) {
+  if (!(rate > 0)) return null;
+  const at = (r) => {
+    const gaps = wolseRenewalGaps(items, now, r);
+    return gaps.length ? { rate: r, matched: gaps.length, median: round1(median(gaps)), cheaperShare: cheaperShareOf(gaps) } : null;
+  };
+  const main = at(rate);
+  if (!main) return { rate, matched: 0, median: null, cheaperShare: null, range: [] };
+  return { ...main, range: WOLSE_RATE_RANGE.map(at).filter(Boolean) };
+}
+
 /** 자치구 하나의 갱신 신고들을 세어 정리한다. */
-export function tally(items, now) {
-  const counts = { renewals: 0, rightUsed: 0, capMissed: 0, fromJeonse: 0, toWolse: 0 };
+export function tally(items, now, { wolseRate = null } = {}) {
+  const counts = { renewals: 0, rightUsed: 0, capMissed: 0, fromJeonse: 0, toWolse: 0, wolseKept: 0 };
 
   for (const item of items ?? []) {
     const year = Number(item?.dealYear);
@@ -203,6 +283,8 @@ export function tally(items, now) {
     if (row.wasJeonse) {
       counts.fromJeonse += 1;
       if (row.switched === "toWolse") counts.toWolse += 1;
+    } else if (!row.switched) {
+      counts.wolseKept += 1;
     }
 
     if (row.right && Number.isFinite(row.changePct)) {
@@ -216,12 +298,13 @@ export function tally(items, now) {
     capMissShare: counts.rightUsed ? Math.round((counts.capMissed / counts.rightUsed) * 1000) / 10 : null,
     toWolseShare: counts.fromJeonse ? Math.round((counts.toWolse / counts.fromJeonse) * 1000) / 10 : null,
     ...renewalGap(items, now),
+    ...(wolseRate ? { wolse: wolseGap(items, now, wolseRate) } : {}),
   };
 }
 
-export function seoulTally(byDistrict, now) {
+export function seoulTally(byDistrict, now, options) {
   const all = Object.values(byDistrict ?? {}).flat();
-  return tally(all, now);
+  return tally(all, now, options);
 }
 
 /**
@@ -289,7 +372,31 @@ export function districtRow(district, districtTally) {
     gapCheaperShare: gapEnough ? districtTally.gapCheaperShare : null,
     rightUsed: districtTally.rightUsed,
     capMissShare: capEnough ? districtTally.capMissShare : null,
+    ...(districtTally.wolse ? { wolse: wolseRow(districtTally.wolse) } : {}),
   };
+}
+
+/** 월세 격차 한 줄. 문턱을 못 넘으면 값은 비우고 맞물린 건수만 남긴다 - 전세 줄과 같은 규칙. */
+function wolseRow(wolse) {
+  const enough = wolse.matched >= MIN_WOLSE_GAP_SAMPLE;
+  return {
+    matched: wolse.matched,
+    median: enough ? wolse.median : null,
+    cheaperShare: enough ? wolse.cheaperShare : null,
+    range: enough ? wolse.range.map(({ rate, median: m }) => ({ rate, median: m })) : [],
+  };
+}
+
+/** 월세 격차가 있는 구를 재계약이 유리한 순으로. 같은 값이면 들어온 순서를 지킨다(sortRows와 같은 이유). */
+export function sortWolseRows(rows) {
+  return rows
+    .filter((row) => row.wolse)
+    .map((row) => ({ district: row.district, ...row.wolse }))
+    .sort((a, b) => {
+      if ((a.median === null) !== (b.median === null)) return a.median === null ? 1 : -1;
+      if (a.median === null) return b.matched - a.matched;
+      return a.median - b.median;
+    });
 }
 
 /**
@@ -420,4 +527,43 @@ export function renewalSentences(facts, locale = "ko") {
   }
 
   return out;
+}
+
+/** 격차 하나를 말로. 0 근처는 "차이 없음"이고, 갱신이 비쌀 수도 있다. */
+function gapWords(value, locale) {
+  const size = Math.abs(value).toFixed(1);
+  if (Math.abs(value) < 0.05) return locale === "en" ? "no different" : "차이가 없습니다";
+  if (value < 0) return locale === "en" ? `${size}% less` : `${size}% 적습니다`;
+  return locale === "en" ? `${size}% more` : `${size}% 많습니다`;
+}
+
+/**
+ * 월세 재계약 문단(#7). 재계약 가운데 어느 몫을 세는지부터 적고, 격차는 전환율 가정에 따라 범위로 적는다.
+ * 전세 문단과 같은 크기로 읽히면 틀린 기대가 되므로 그 비교도 문단 안에 넣는다.
+ */
+export function wolseLead(seoul, locale = "ko") {
+  const wolse = seoul?.wolse;
+  if (!wolse?.matched || wolse.median === null || !seoul.renewals) return null;
+  const en = locale === "en";
+  const tag = en ? "en-US" : "ko-KR";
+  const share = (n) => round1((n / seoul.renewals) * 100);
+  const jeonseKept = seoul.fromJeonse - seoul.toWolse;
+  const switched = seoul.renewals - jeonseKept - seoul.wolseKept;
+  const rateText = (r) => `${r}%`;
+  const range = wolse.range.map((r) => (en ? `${gapWords(r.median, "en")} at ${rateText(r.rate)}` : `${rateText(r.rate)}로 보면 ${gapWords(r.median, "ko").replace(/습니다$/, "고")}`));
+  const matched = wolse.matched.toLocaleString(tag);
+  const jeonseSize = typeof seoul.gapMedian === "number" ? Math.abs(seoul.gapMedian).toFixed(1) : null;
+
+  const shares = en
+    ? `Of ${seoul.renewals.toLocaleString(tag)} renewals, ${share(jeonseKept)}% stayed on pure jeonse, ${share(seoul.wolseKept)}% stayed on monthly rent and ${share(switched)}% switched type; the comparison above counts only the first group.`
+    : `재계약 ${seoul.renewals.toLocaleString(tag)}건 가운데 전세에서 전세로 간 것이 ${share(jeonseKept)}%, 월세에서 월세로 간 것이 ${share(seoul.wolseKept)}%, 유형이 바뀐 것이 ${share(switched)}%입니다. 위의 비교는 첫째 몫만 셉니다.`;
+  const head = en
+    ? `Tenants renewing on monthly rent pay ${gapWords(wolse.median, "en")} than the median new monthly lease for the same unit type in the same complex that month, counting deposit and rent together at Seoul's measured conversion rate of ${rateText(wolse.rate)} (${matched} matched leases; ${wolse.cheaperShare}% came in under the market).`
+    : `월세로 재계약한 세입자가 내는 값은 같은 단지 같은 평형에 그달 새로 맺어진 월세의 중앙값보다 ${gapWords(wolse.median, "ko")}. 보증금과 월세를 서울 실측 전월세전환율 ${rateText(wolse.rate)}로 묶어 견준 값이고, 맞물린 계약 ${matched}건 가운데 ${wolse.cheaperShare}%가 시세보다 싸게 맺어졌습니다.`;
+  const depends = range.length
+    ? en
+      ? ` The size depends on that rate — ${range.join(", ")}${jeonseSize ? `; do not read it as large as jeonse's ${jeonseSize}%` : ""}.`
+      : ` 이 크기는 묶는 배수에 달려 있습니다 — ${range.join(", ").replace(/고$/, "습니다")}.${jeonseSize ? ` 전세(${jeonseSize}%)만큼 크다고 읽으면 안 됩니다.` : ""}`
+    : "";
+  return `${shares} ${head}${depends}`;
 }

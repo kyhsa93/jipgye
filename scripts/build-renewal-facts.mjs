@@ -1,6 +1,6 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { capLead, districtRow, renewalFacts, seoulLead, seoulTally, sortRows, tally } from "./renewal-facts.mjs";
+import { capLead, districtRow, renewalFacts, seoulLead, seoulTally, sortRows, sortWolseRows, tally, wolseLead } from "./renewal-facts.mjs";
 import { DISTRICT_SLUGS } from "./district-slugs.mjs";
 import { DISTRICTS } from "./realestate-districts.mjs";
 import { readSlotFile } from "./realestate-raw.mjs";
@@ -33,8 +33,19 @@ export async function readRawRents(months, dir) {
   return Object.fromEntries(perDistrict.filter(([, items]) => items.length));
 }
 
-export function buildPayload({ byDistrict, now }) {
-  const seoul = seoulTally(byDistrict, now);
+/** 월세 재계약을 묶을 배수 - 전세 vs 월세 화면이 실측한 서울 전환율. 없으면 월세 쪽은 내지 않는다. */
+export async function readWolseRate(file = path.join(root, "docs/data/conversion.json")) {
+  try {
+    const rate = JSON.parse(await readFile(file, "utf8"))?.seoul?.rate;
+    return rate > 0 ? rate : null;
+  } catch {
+    return null;
+  }
+}
+
+export function buildPayload({ byDistrict, now, wolseRate = null }) {
+  const options = { wolseRate };
+  const seoul = seoulTally(byDistrict, now, options);
   if (!seoul.renewals) return null;
 
   // 자치구 페이지가 쓰는 쪽(문턱을 넘은 관찰만)과 재계약 화면이 쓰는 쪽(스물다섯 구
@@ -44,7 +55,7 @@ export function buildPayload({ byDistrict, now }) {
   const table = [];
 
   for (const [name, items] of Object.entries(byDistrict ?? {})) {
-    const districtTally = tally(items, now);
+    const districtTally = tally(items, now, options);
     const facts = renewalFacts(districtTally, seoul);
     if (facts) districts[name] = facts;
     table.push(districtRow(name, districtTally));
@@ -60,6 +71,7 @@ export function buildPayload({ byDistrict, now }) {
     seoul,
     districts,
     table: sortRows(table),
+    ...(seoul.wolse ? { wolseTable: sortWolseRows(table), wolseLead: { ko: wolseLead(seoul, "ko"), en: wolseLead(seoul, "en") } } : {}),
     slugs,
     lead: { ko: seoulLead(seoul, "ko"), en: seoulLead(seoul, "en") },
     capLead: { ko: capLead(seoul, "ko"), en: capLead(seoul, "en") },
@@ -69,7 +81,7 @@ export function buildPayload({ byDistrict, now }) {
 async function main() {
   const now = new Date();
   const byDistrict = await readRawRents(recentMonths(now, MONTHS));
-  const payload = buildPayload({ byDistrict, now });
+  const payload = buildPayload({ byDistrict, now, wolseRate: await readWolseRate() });
 
   if (!payload) {
     console.log("  갱신 신고가 없습니다 - 기존 재계약 관찰을 그대로 둡니다");
@@ -88,6 +100,12 @@ async function main() {
     console.log(
       `  갱신 vs 신규 전세: 맞물린 ${seoul.gapMatched.toLocaleString("ko-KR")}건 중앙값 ${seoul.gapMedian}% ·` +
         ` 시세보다 싸게 맺어진 재계약 ${seoul.gapCheaperShare}%`
+    );
+  }
+  if (seoul.wolse?.matched) {
+    console.log(
+      `  월세 갱신 vs 신규(전환율 ${seoul.wolse.rate}%): 맞물린 ${seoul.wolse.matched.toLocaleString("ko-KR")}건 중앙값 ${seoul.wolse.median}%` +
+        ` · ${seoul.wolse.range.map((r) => `${r.rate}%에서 ${r.median}%`).join(" · ")}`
     );
   }
   console.log(`  문턱을 넘은 자치구 ${Object.keys(districts).length}곳: ${Object.keys(districts).join(", ") || "없음"}`);

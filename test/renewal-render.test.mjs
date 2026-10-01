@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildPayload } from "../scripts/build-renewal-facts.mjs";
-import { renewalDistrictsHtml } from "../scripts/prerender.mjs";
+import { renewalDistrictsHtml, renewalWolseDistrictsHtml } from "../scripts/prerender.mjs";
 import { loadRenewalPage } from "./helpers/renewal-page.mjs";
 
 // 3월 계약은 신고 기한(30일)이 지나 마감됐다. 마감된 달만 세므로 이 날짜라야 잡힌다.
@@ -91,4 +91,49 @@ test("영어 화면에 우리가 쓴 한국어가 남지 않는다", async () =>
 test("자료가 없으면 없다고 말한다", async () => {
   const page = await loadRenewalPage({});
   assert.match(page.leadText(), /아직 재계약 자료가 없습니다/);
+});
+
+// --- 월세 재계약 (#7) ---------------------------------------------------------------
+
+const wolseLease = (extra = {}) =>
+  lease({ excluUseAr: 59.9, monthlyRent: "100", preMonthlyRent: "95", deposit: "10,000", preDeposit: "9,000", ...extra });
+const wolseDistrict = (name, renewals) => [
+  ...Array.from({ length: renewals }, () => wolseLease({ aptNm: `${name}월세` })),
+  ...Array.from({ length: 3 }, () => wolseLease({ aptNm: `${name}월세`, contractType: "신규", monthlyRent: "110", preDeposit: "", preMonthlyRent: "" })),
+];
+const WOLSE_PAYLOAD = buildPayload({
+  byDistrict: {
+    노원구: [...district("노원", 250), ...wolseDistrict("노원", 120)],
+    강남구: [...district("강남", 20), ...wolseDistrict("강남", 30)],
+  },
+  now: NOW,
+  wolseRate: 4.8,
+});
+
+test("월세 재계약 절은 빌드가 만든 문단과 표를 그대로 그린다", async () => {
+  const page = await loadRenewalPage({ renewal: WOLSE_PAYLOAD });
+  assert.equal(page.wolseHidden(), false);
+  assert.equal(page.wolseLeadText(), WOLSE_PAYLOAD.wolseLead.ko);
+  assert.equal(page.wolseTable(), renewalWolseDistrictsHtml(WOLSE_PAYLOAD), "빌드와 화면의 표가 갈라졌다");
+  const table = page.wolseTable();
+  assert.match(table, /갱신 − 신규 \(4\.8%\)/);
+  assert.match(table, /3% \/ 10%로 보면/);
+  assert.match(table, /<td>노원구<\/td><td>-[\d.]+%<\/td><td>-[\d.]+% \/ -[\d.]+%<\/td>/);
+  assert.match(table, /<td>강남구<\/td><td><span class="low-sample">표본 부족<\/span><\/td><td>-<\/td><td>-<\/td><td>30<\/td>/);
+  assert.match(page.wolseNote(), /100건/);
+});
+
+test("월세 재계약 절도 영어로 바뀐다", async () => {
+  const page = await loadRenewalPage({ renewal: WOLSE_PAYLOAD });
+  page.toggleLang();
+  const withoutNames = page.wolseTable().replace(/<td>[가-힣]+구<\/td>/g, "<td></td>");
+  assert.doesNotMatch(withoutNames, /[가-힣]/);
+  assert.doesNotMatch(page.wolseLeadText(), /[가-힣]/);
+  assert.doesNotMatch(page.wolseNote(), /[가-힣]/);
+});
+
+test("월세 자료가 없으면 월세 절을 숨긴다", async () => {
+  const page = await open();
+  assert.equal(page.wolseHidden(), true);
+  assert.equal(renewalWolseDistrictsHtml(PAYLOAD), null);
 });

@@ -1033,6 +1033,33 @@ export function renewalDistrictsHtml(renewal) {
   );
 }
 
+export function renewalWolseLeadHtml(renewal) {
+  return renewal?.wolseLead?.ko ? escapeHtml(renewal.wolseLead.ko) : null;
+}
+
+/** 월세 재계약 표. 화면 쪽 renderWolse와 같은 모양이다. */
+export function renewalWolseDistrictsHtml(renewal) {
+  const rows = renewal?.wolseTable ?? [];
+  const wolse = renewal?.seoul?.wolse;
+  if (!rows.length || !wolse) return null;
+  const signed = (value) => (value === null || value === undefined ? "-" : `${value > 0 ? "+" : ""}${value}%`);
+  const ends = wolse.range.map((r) => r.rate);
+  const body = rows
+    .map((row) => {
+      const gap = row.median === null ? '<span class="low-sample">표본 부족</span>' : escapeHtml(signed(row.median));
+      const range = row.range.length ? row.range.map((r) => signed(r.median)).join(" / ") : "-";
+      return (
+        `<tr><td>${escapeHtml(row.district)}</td><td>${gap}</td><td>${escapeHtml(range)}</td>` +
+        `<td>${escapeHtml(row.cheaperShare === null ? "-" : `${row.cheaperShare}%`)}</td><td>${row.matched.toLocaleString("ko-KR")}</td></tr>`
+      );
+    })
+    .join("");
+  return (
+    `<thead><tr><th>자치구</th><th>${escapeHtml(`갱신 − 신규 (${wolse.rate}%)`)}</th><th>${escapeHtml(`${ends[0]}% / ${ends.at(-1)}%로 보면`)}</th>` +
+    `<th>시세보다 싼 비율</th><th>맞물린 계약</th></tr></thead><tbody>${body}</tbody>`
+  );
+}
+
 export function renewalDistrictLinksHtml(renewal) {
   const slugs = renewal?.slugs ?? {};
   const links = Object.entries(slugs)
@@ -1146,6 +1173,8 @@ async function main() {
         renewalLead: renewalLeadHtml(renewal),
         renewalCapLead: renewalCapLeadHtml(renewal),
         renewalDistricts: renewalDistrictsHtml(renewal),
+        renewalWolseLead: renewalWolseLeadHtml(renewal),
+        renewalWolseDistricts: renewalWolseDistrictsHtml(renewal),
         renewalDistrictLinks: renewalDistrictLinksHtml(renewal),
       },
     ],

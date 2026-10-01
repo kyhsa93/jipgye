@@ -19,6 +19,10 @@ export async function loadRenewalPage({ renewal, ...rest } = {}) {
     districtTable: () => page.html("district-table"),
     districtLinks: () => page.html("district-links"),
     districtNote: () => page.text("district-note"),
+    wolseLeadText: () => page.text("wolse-lead"),
+    wolseTable: () => page.html("wolse-table"),
+    wolseNote: () => page.text("wolse-note"),
+    wolseHidden: () => page.byId("wolse-section").hidden,
     toggleLang: () => page.click("lang-toggle"),
   };
 }
