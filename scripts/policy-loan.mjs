@@ -43,6 +43,19 @@ export function lineCounts(deals) {
 const pct = (part, n) => `${Math.round((part / n) * 1000) / 10}%`;
 const num = (v) => v.toLocaleString("ko-KR");
 
+/**
+ * 예산대 장 맨 위 "한눈에" 줄에 쓰는 짧은 판정. 문단(policySentence)과 같은 가격선에서 나온다.
+ * 3억대 아래로는 예산대 장이 없고, 10억대 위로는 세 선을 모두 넘는다.
+ */
+export function policyShort(bandEok) {
+  if (!Number.isFinite(bandEok)) return null;
+  if (bandEok <= 4) return "디딤돌·보금자리론·신생아 특례 모두 가격선 안(전용 85㎡ 이하)";
+  if (bandEok === 5) return "디딤돌 일반 선 밖, 신혼·2자녀 디딤돌과 보금자리론 선 안";
+  if (bandEok < 9) return "신생아 특례 선(9억) 안(전용 85㎡ 이하), 다른 상품 선 밖";
+  if (bandEok === 9) return "딱 9억 말고는 신생아 특례 선도 밖";
+  return "정책대출 가격선을 모두 넘음";
+}
+
 export function policySentence(bandEok, counts, months = 6) {
   if (!PAGES.includes(bandEok) || !counts?.n) return null;
   const lines =

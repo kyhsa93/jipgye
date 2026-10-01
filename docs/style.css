@@ -1400,6 +1400,97 @@ ul.news-list {
   margin-top: 10px;
 }
 
+/* 예산 칩 줄(UIUX #43). 열여덟 개를 모바일 여섯 칸 세 줄, 넓으면 아홉 칸 두 줄. */
+.budget-chips {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0 0 14px;
+}
+
+@media (min-width: 720px) {
+  .budget-chips {
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+  }
+}
+
+.budget-chips a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: var(--fs-sm);
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.budget-chips a[aria-current="page"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-on);
+  font-weight: 700;
+}
+
+/* 예산대의 "한눈에" — 이 장이 내놓는 답이라 답 크기(--fs-xl)를 쓴다. 문장의 주어(무엇의 값인가)를 값 앞에 둔다. */
+.budget-answers {
+  margin: 14px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+.budget-answers h3 {
+  margin: 0 0 8px;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.budget-answers ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.budget-answers li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 8px;
+}
+
+.budget-answers .answer-label {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.budget-answers .answer-value {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+}
+
+.budget-answers .answer-text {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+}
+
+.budget-answers .answer-note {
+  flex-basis: 100%;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.budget-answers .answer-more {
+  margin: 10px 0 0;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
 /* 표가 보여주는 것 옆에 붙는 문단. 시세 페이지의 관찰 카드와 같은 모양으로 둔다 — 둘 다 "표만 봐서는 놓치는 것"을 적는 자리라 생김새가 같아야 읽는 쪽이 헷갈리지 않는다. */ .rates-facts {
   background: var(--card);
   border: 1px solid var(--border);

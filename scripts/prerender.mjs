@@ -7,12 +7,12 @@ import { DISTRICT_PAGES, DISTRICT_SLUGS, districtFile } from "./district-slugs.m
 import { districtSentences } from "./district-summary.mjs";
 import { factSentences } from "./district-facts.mjs";
 import { renewalSentences } from "./renewal-facts.mjs";
-import { apartmentOptions, loanSentence, rateSpread, yearChangeSentence } from "./mortgage.mjs";
-import { costsSentence } from "./purchase-costs.mjs";
+import { apartmentOptions, loanSentence, monthlyPayment, rateSpread, yearChangeSentence } from "./mortgage.mjs";
+import { costsSentence, purchaseCosts } from "./purchase-costs.mjs";
 import { candidatesInBand } from "./complex-price.mjs";
 import { capSentence } from "./loan-cap.mjs";
-import { policySentence } from "./policy-loan.mjs";
-import { minCashSentence } from "./min-cash.mjs";
+import { policyShort, policySentence } from "./policy-loan.mjs";
+import { minCash, minCashSentence } from "./min-cash.mjs";
 import { WOLSE_CONVERSION_RATE } from "./realestate-metrics.mjs";
 import { rateFacts, factSentences as rateSentences } from "./rate-facts.mjs";
 import {
@@ -243,7 +243,8 @@ function budgetWhereHtml(band) {
         ? `${label} 거래는 ${districts.length}개 구에 흩어져 있고 상위 세 곳(${names})을 합쳐도 ${Math.round(share * 100)}%입니다. 이 예산에서는 지역이 아니라 단지가 선택을 가릅니다.`
         : "";
 
-  return text ? `<p class="budget-where">${escapeHtml(text)}</p>` : "";
+  // data-prerendered: 화면이 요약을 다시 그릴 때 이 문단이 지워지지 않게(#43에서 발견 - 전에는 지워졌다).
+  return text ? `<p class="budget-where" data-prerendered>${escapeHtml(text)}</p>` : "";
 }
 
 export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null) {
@@ -254,20 +255,56 @@ export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = 
     .map((d) => `${escapeHtml(d.name)} ${d.count.toLocaleString("ko-KR")}`)
     .join(" · ");
 
+  // 순서: 거래 요약 → 한눈에(돈 네 줄) → 후보 단지 → 돈 문단(근거) → 다음 질문 → 거래 12줄(예시).
+  // 후보가 "이 돈이면 어디"의 답이고 거래 12줄은 예시라 맨 뒤다(UIUX #43). 화면(realestate.html)은
+  // 요약을 다시 그리고 data-prerendered 덩어리를 이 순서 그대로 붙인 뒤 거래 목록을 붙인다 - 둘이 같아야 한다.
   return (
     `<p class="budget-summary">${escapeHtml(`${budgetBandLabel(band)}에서 ${band.count.toLocaleString("ko-KR")}건이 거래됐습니다${band.direct ? `(직거래 ${band.direct.toLocaleString("ko-KR")}건 포함)` : ""}.`)}` +
     (periods ? ` <span class="when">${escapeHtml(`${periods} 신고분 기준`)}</span>` : "") +
     `</p>` +
-    budgetWhereHtml(band) +
     (districts ? `<div class="budget-districts">거래가 많은 지역: ${districts}</div>` : "") +
-    `<ul class="budget-deals">${band.deals.map(budgetDealHtml).join("")}</ul>` +
+    budgetWhereHtml(band) +
+    budgetAnswersHtml(band, rates) +
+    budgetCandidatesHtml(band, complexFiles) +
     budgetLoanHtml(band, rates, mortgageSeries) +
     budgetCostsHtml(band) +
     budgetMinCashHtml(band) +
     budgetCapHtml(band, capStats) +
     budgetPolicyHtml(band, policyCounts) +
-    budgetCandidatesHtml(band, complexFiles) +
-    budgetMoreHtml()
+    budgetMoreHtml() +
+    `<ul class="budget-deals">${band.deals.map(budgetDealHtml).join("")}</ul>`
+  );
+}
+
+/**
+ * 예산대 장 맨 위의 "한눈에" — 아래 문단 넷의 답만 한 줄씩(UIUX #43). 숫자는 문단과 같은 함수에서 나온다
+ * (min-cash·purchase-costs·mortgage·policy-loan). 숫자 하나만 덩그러니 두지 않고 무엇의 값인지 앞에 적는다.
+ */
+export function budgetAnswersHtml(band, rates = null) {
+  const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
+  if (eok === null) return "";
+  const price = (eok + 0.5) * 10_000;
+  const g = minCash(price);
+  const f = minCash(price, { firstTime: true });
+  const costs = purchaseCosts(price);
+  const spread = rateSpread(apartmentOptions(rates));
+  const perEok = spread ? monthlyPayment(10_000, spread.mid) : null;
+  const policy = policyShort(eok);
+  const line = (label, value, note = "", text = false) =>
+    `<li><span class="answer-label">${escapeHtml(label)}</span>` +
+    `<strong class="answer-value${text ? " answer-text" : ""}">${escapeHtml(value)}</strong>` +
+    (note ? `<span class="answer-note">${escapeHtml(note)}</span>` : "") +
+    `</li>`;
+  const lines = [
+    line("자기 돈이 적어도", eokText(g.cash), f.cash < g.cash ? `생애최초면 ${eokText(f.cash)}` : ""),
+    perEok ? line("1억을 빌리면 매달", eokText(Math.round(perEok)), `30년 원리금균등, 연 ${spread.mid}%`) : "",
+    line("매매가 위에 더 드는 돈", eokText(costs.total), "취득세·지방교육세·중개보수 상한"),
+    policy ? line("정책대출 가격선", policy, "", true) : "",
+  ].join("");
+  return (
+    `<section class="budget-answers" data-prerendered>` +
+    `<h3>${escapeHtml(`${eokText(price)}짜리를 산다면 — 한눈에`)}</h3><ul>${lines}</ul>` +
+    `<p class="answer-more">근거와 예외는 아래 문단에 있습니다.</p></section>`
   );
 }
 

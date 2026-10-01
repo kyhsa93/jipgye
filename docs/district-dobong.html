@@ -1226,10 +1226,15 @@ function renderBudget() {
   // 부대비용·최소 현금·대출·정책대출·후보 문단은 빌드가 한국 법령 원문을 인용해 한국어로만 굽는다.
   // 영어 화면에서 말없이 한국어가 튀어나오지 않게, 그렇다고 먼저 알린다(PO 2차 #41).
   const koOnly = locale === "en" && prerenderedBudgetExtras ? `<p class="content-notice">${escapeHtml(t("budgetKoOnly"))}</p>` : "";
-  box.innerHTML = budgetBodyHtml(band, cache.budget.periods) + koOnly + prerenderedBudgetExtras;
+  // 빌드(scripts/prerender.mjs budgetBodyHtml)와 같은 순서: 요약 → 구운 덩어리들 → 거래 목록.
+  box.innerHTML = budgetHeadHtml(band, cache.budget.periods) + koOnly + prerenderedBudgetExtras + budgetDealsHtml(band);
 }
 
-function budgetBodyHtml(band, periodList) {
+function budgetDealsHtml(band) {
+  return `<ul class="budget-deals">${band.deals.map(budgetDealHtml).join("")}</ul>`;
+}
+
+function budgetHeadHtml(band, periodList) {
   const periods = (periodList ?? [])
     .map((p) => monthLabel(p))
     .filter(Boolean)
@@ -1242,8 +1247,7 @@ function budgetBodyHtml(band, periodList) {
     `<p class="budget-summary">${escapeHtml(t("budgetSummary")(bandLabel(band), band.count, band.direct))}` +
     (periods ? ` <span class="when">${escapeHtml(t("budgetPeriods")(periods))}</span>` : "") +
     `</p>` +
-    (districts ? `<div class="budget-districts">${escapeHtml(t("budgetDistricts"))}: ${districts}</div>` : "") +
-    `<ul class="budget-deals">${band.deals.map(budgetDealHtml).join("")}</ul>`
+    (districts ? `<div class="budget-districts">${escapeHtml(t("budgetDistricts"))}: ${districts}</div>` : "")
   );
 }
 

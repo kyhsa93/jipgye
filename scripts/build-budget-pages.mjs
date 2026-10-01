@@ -20,6 +20,22 @@ function replaceOnce(html, needle, replacement, what) {
   return html.replace(needle, replacement);
 }
 
+/**
+ * 예산 칩 줄 - 열여덟 장 어디서든 다른 예산대로 한 번에 간다(UIUX #43). 전에는 맨 아래 이웃 두 링크뿐이라
+ * 10억 → 7억이 세 장을 거쳤다. 가로 스크롤 없이 격자로 둔다(질문 입구와 같은 원칙).
+ */
+export function chipsHtml(page) {
+  return (
+    `<nav class="budget-chips" aria-label="예산대">` +
+    BUDGET_PAGE_EOK.map((eok) =>
+      eok === page.eok
+        ? `<a href="./${budgetPageFile(eok)}" aria-current="page">${eok}억</a>`
+        : `<a href="./${budgetPageFile(eok)}">${eok}억</a>`
+    ).join("") +
+    `</nav>`
+  );
+}
+
 function navHtml(page) {
   const links = [];
   if (BUDGET_PAGE_EOK.includes(page.eok - 1)) {
@@ -70,6 +86,13 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
     html = html.slice(0, start) + html.slice(end);
     html = html.slice(0, anchor) + block + "\n\n  " + html.slice(anchor);
   }
+
+  html = replaceOnce(
+    html,
+    '<h2 id="budget-heading">예산으로 찾기</h2>',
+    `<h2 id="budget-heading">예산으로 찾기</h2>\n    ${chipsHtml(page)}`,
+    "예산 섹션 제목"
+  );
 
   // 스물다섯 줄짜리 자치구 시세표는 여기 있을 것이 아니다.
   //

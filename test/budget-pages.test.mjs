@@ -270,3 +270,41 @@ test("영어 화면의 예산대 장은 한국어로만 굽는 문단이 있다�
   const ko = await loadRealestatePage({ realestate: REALESTATE, budget: BUDGET, budgetBand: page8.min10k, prerenderedBudget: prerendered });
   assert.doesNotMatch(ko.budgetHtml(), /Korean only/);
 });
+
+test("예산대 장 맨 위 '한눈에'는 아래 문단과 같은 함수에서 나온 값을 한 줄씩 적는다 (#43)", async () => {
+  const { budgetAnswersHtml } = await import("../scripts/prerender.mjs");
+  const html = budgetAnswersHtml({ min10k: 70_000 }, RATES);
+  assert.match(html, /7억 5,000만원짜리를 산다면/);
+  assert.match(html, /자기 돈이 적어도<\/span><strong class="answer-value">4억 6,950만원<\/strong><span class="answer-note">생애최초면 2억 4,250만원/);
+  assert.match(html, /매매가 위에 더 드는 돈<\/span><strong class="answer-value">1,950만원/);
+  assert.match(html, /1억을 빌리면 매달<\/span><strong class="answer-value">\d+만원/);
+  assert.match(html, /신생아 특례 선\(9억\) 안/);
+  assert.match(html, /data-prerendered/, "화면이 다시 그릴 때 지워진다");
+  assert.doesNotMatch(budgetAnswersHtml({ min10k: 70_000 }, null), /1억을 빌리면/, "금리가 없는 날 상환액 줄을 지어냈다");
+});
+
+test("예산대 본문 순서: 요약 → 한눈에 → 후보 → 돈 문단 → 거래 목록, 화면이 다시 그려도 같다 (#43)", async () => {
+  const many = ["노원구", "도봉구", "강북구", "중랑구"].flatMap((district, i) =>
+    Array.from({ length: 3 }, (_, k) => deal(80_000 + i * 1000 + k, { district, apt: `${district}단지${k}` }))
+  );
+  const budget = { ...BUDGET, bands: mergeBands({ "202608": buildBands(many) }) };
+  const band = budget.bands.find((b) => b.min10k === page8.min10k);
+  const prerendered = budgetBodyHtml(band, budget.periods, RATES, null, COMPLEX_FILES);
+  const at = (needle) => prerendered.indexOf(needle);
+  assert.ok(at('class="budget-where"') > 0, "전제: 지역 문단이 있어야 한다");
+  assert.ok(at("budget-answers") < at("budget-candidates"), "한눈에가 후보보다 뒤다");
+  assert.ok(at("budget-candidates") < at("budget-costs"), "후보가 돈 문단보다 뒤다");
+  assert.ok(at("budget-costs") < prerendered.lastIndexOf('<ul class="budget-deals">'), "거래 목록이 돈 문단보다 앞이다");
+  const page = await loadRealestatePage({ realestate: REALESTATE, budget, budgetBand: page8.min10k, prerenderedBudget: prerendered });
+  assert.equal(page.budgetHtml(), prerendered, "화면이 다시 그리며 순서가 바뀌거나 지역 문단을 지웠다");
+});
+
+test("예산대 열여덟 장 모두 위에 예산 칩 줄이 있고 제 칩이 켜져 있다 (#43)", async () => {
+  for (const page of BUDGET_PAGES) {
+    const html = await readFile(path.join(root, "docs", page.file), "utf8");
+    const nav = html.match(/<nav class="budget-chips"[\s\S]*?<\/nav>/)?.[0] ?? "";
+    assert.equal((nav.match(/<a /g) ?? []).length, 18, `${page.file}: 칩이 열여덟이 아니다`);
+    assert.match(nav, new RegExp(`href="\\./${page.file}" aria-current="page">${page.eok}억<`), `${page.file}: 제 칩이 안 켜졌다`);
+    assert.ok(html.indexOf("budget-chips") < html.indexOf('id="budget-result"'), `${page.file}: 칩이 본문 아래다`);
+  }
+});
