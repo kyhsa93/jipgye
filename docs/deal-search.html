@@ -197,11 +197,8 @@ const T = {
     complexThin: (n) => `신고 ${n}건`,
     complexCount: (n) => `${n}건`,
     priceHeading: (month) => `매매가 범위 — 최근 6개월 거래를 ${month} 값으로 고침`,
-    priceMedian: (month) => `중앙값 (${month} 값)`,
-    priceRange: (month) => `범위 (${month} 값)`,
     priceMiddle: "가운데 절반",
     priceMinMax: "고친 최저~최고",
-    priceDeals: "거래",
     priceRaw: "고치기 전 중앙값",
     priceThin: (n) => `신고 ${n}건 — 범위를 내지 않습니다`,
     priceNote: (month, filled, bias, unadjusted) =>
@@ -216,7 +213,10 @@ const T = {
       "5건 이상이면 가운데 절반, 3~4건이면 최저~최고를 적고, 2건 이하면 범위를 내지 않습니다.",
     ratioHeading: "최근 두 달 매매·전세와 전세가율",
     priceYearAgo: "1년 전 중앙값",
-    priceTop: "실제 최고 신고 (고치기 전)",
+    priceTopShort: "실제 최고 신고",
+    priceNow: (month) => `지금 시세 (${month} 값)`,
+    priceAsFiled: "신고된 그대로 (고치기 전)",
+    priceReadHow: "이 숫자 읽는 법",
     priceTopNote:
       "'실제 최고 신고'는 창 안에서 가장 비싸게 신고된 한 건을 고치지 않고 적은 것입니다. 중앙값·범위는 지난 거래를 기준 달 값으로 고친 것이라, 그 사이 값이 오른 칸에서는 실제 최고가 고친 범위보다 낮게 나올 수 있습니다 — 그 값에 실제로 팔린 거래가 있었다는 뜻은 아닙니다. 신고가 한 건이 곧 시세도 아니었습니다(신고가 화면).",
     priceFloor: (f) => `${f}층`,
@@ -338,11 +338,8 @@ const T = {
     complexThin: (n) => `${n} filed`,
     complexCount: (n) => `${n} deals`,
     priceHeading: (month) => `Sale price range — last 6 months, adjusted to ${month}`,
-    priceMedian: (month) => `Median (${month} terms)`,
-    priceRange: (month) => `Range (${month} terms)`,
     priceMiddle: "middle half",
     priceMinMax: "adjusted low–high",
-    priceDeals: "Deals",
     priceRaw: "Unadjusted median",
     priceThin: (n) => `${n} filed — no range`,
     priceNote: (month, filled, bias, unadjusted) =>
@@ -357,7 +354,10 @@ const T = {
       "Five or more deals give the middle half; three or four give low–high; two or fewer give no range.",
     ratioHeading: "Last two months: sale, jeonse and jeonse ratio",
     priceYearAgo: "Median a year ago",
-    priceTop: "Highest filing (as filed)",
+    priceTopShort: "Highest filing",
+    priceNow: (month) => `Now (${month} terms)`,
+    priceAsFiled: "As filed (unadjusted)",
+    priceReadHow: "How to read these numbers",
     priceTopNote:
       "'Highest filing' is the single dearest deal in the window, as filed. Median and range adjust past deals to the reference month, so where prices rose the real high can sit below the adjusted range — that does not mean anything actually sold at those values. A single record sale was not the market price either (see the record-high page).",
     priceFloor: (f) => `floor ${f}`,
@@ -1116,37 +1116,44 @@ function complexPriceHtml(file, apt) {
   const yearAgoMonths = rows.map(([, c]) => c.yearAgo?.months).find(Boolean) ?? null;
 
   const reference = yearMonthLabel(file.reference);
+  // 평형마다 "지금 시세"(고친 중앙값 + 범위 + 건수) 한 칸과, 신고된 그대로의 값(고치기 전·1년 전·실제 최고)
+  // 한 칸. 일곱 열이 같은 무게로 놓여 지금 시세가 안 가려지고 폰에서 한 평형이 일곱 줄이었다(UIUX #51).
+  // 고친 값과 고치지 않은 값을 머리글로 가르는 것(#38)은 그대로 - 칸으로 가른다.
   const body = rows
     .map(([area, c]) => {
       // 같은 평형의 면적 표기 차이(1㎡ 안쪽)는 한 칸으로 묶었다 - 묶였으면 그 폭을 적는다(#32).
       const span = c.areas?.length > 1 ? ` <span class="count">${escapeHtml(`${c.areas[0]}~${c.areas.at(-1)}`)}</span>` : "";
       const head = `<td>${escapeHtml(`${area}㎡`)}${span}</td>`;
       if (!c.median) {
-        return `<tr>${head}<td colspan="6"><span class="low-sample">${escapeHtml(t("priceThin")(c.n))}</span></td></tr>`;
+        return `<tr>${head}<td colspan="2"><span class="low-sample">${escapeHtml(t("priceThin")(c.n))}</span></td></tr>`;
       }
       const kind = t(c.quartile ? "priceMiddle" : "priceMinMax");
+      const asFiled = [
+        `${t("priceRaw")} ${formatEok(c.raw)}`,
+        c.yearAgo ? `${t("priceYearAgo")} ${formatEok(c.yearAgo.median)}(${t("complexCount")(c.yearAgo.n)})` : null,
+        c.top ? `${t("priceTopShort")} ${formatEok(c.top.amount)}${c.top.floor ? ` ${t("priceFloor")(c.top.floor)}` : ""}` : null,
+      ].filter(Boolean);
       return (
         `<tr>${head}` +
-        `<td data-label="${escapeHtml(t("priceMedian")(reference))}">${escapeHtml(formatEok(c.median))}</td>` +
-        `<td data-label="${escapeHtml(t("priceRange")(reference))}">${escapeHtml(`${formatEok(c.low)} ~ ${formatEok(c.high)}`)}` +
-        ` <span class="count">${escapeHtml(kind)}</span></td>` +
-        `<td data-label="${escapeHtml(t("priceDeals"))}">${escapeHtml(t("complexCount")(c.n))}</td>` +
-        `<td data-label="${escapeHtml(t("priceRaw"))}">${escapeHtml(formatEok(c.raw))}</td>` +
-        `<td data-label="${escapeHtml(t("priceYearAgo"))}">${c.yearAgo ? `${escapeHtml(formatEok(c.yearAgo.median))} <span class="count">${escapeHtml(t("complexCount")(c.yearAgo.n))}</span>` : "-"}</td>` +
-        `<td data-label="${escapeHtml(t("priceTop"))}">${c.top ? `${escapeHtml(formatEok(c.top.amount))}${c.top.floor ? ` <span class="count">${escapeHtml(t("priceFloor")(c.top.floor))}</span>` : ""}` : "-"}</td></tr>`
+        `<td data-label="${escapeHtml(t("priceNow")(reference))}"><strong class="price-strong">${escapeHtml(formatEok(c.median))}</strong>` +
+        `<div class="sub">${escapeHtml(`${kind} ${formatEok(c.low)} ~ ${formatEok(c.high)} · ${t("complexCount")(c.n)}`)}</div></td>` +
+        `<td data-label="${escapeHtml(t("priceAsFiled"))}" class="as-filed">${asFiled.map((x) => `<div class="sub">${escapeHtml(x)}</div>`).join("")}</td></tr>`
       );
     })
     .join("");
 
-  return (
-    `<h3>${escapeHtml(t("priceHeading")(reference))}</h3>` +
-    `<div class="table-wrap"><table class="data-table"><thead><tr>` +
-    `<th>${escapeHtml(t("complexArea"))}</th><th>${escapeHtml(t("priceMedian")(reference))}</th>` +
-    `<th>${escapeHtml(t("priceRange")(reference))}</th><th>${escapeHtml(t("priceDeals"))}</th>` +
-    `<th>${escapeHtml(t("priceRaw"))}</th><th>${escapeHtml(t("priceYearAgo"))}</th><th>${escapeHtml(t("priceTop"))}</th></tr></thead><tbody>${body}</tbody></table></div>` +
+  const notes =
     (yearAgoMonths ? `<p class="content-notice">${escapeHtml(t("priceYearAgoNote")(yearAgoMonths))}</p>` : "") +
     (rows.some(([, c]) => c.top) ? `<p class="content-notice">${escapeHtml(t("priceTopNote"))}</p>` : "") +
-    `<p class="content-notice">${escapeHtml(t("priceNote")(reference, file.referenceFilled, file.referenceBias, unadjusted))}</p>` +
+    `<p class="content-notice">${escapeHtml(t("priceNote")(reference, file.referenceFilled, file.referenceBias, unadjusted))}</p>`;
+
+  return (
+    `<h3>${escapeHtml(t("priceHeading")(reference))}</h3>` +
+    `<div class="table-wrap"><table class="data-table complex-price-table"><thead><tr>` +
+    `<th>${escapeHtml(t("complexArea"))}</th><th>${escapeHtml(t("priceNow")(reference))}</th>` +
+    `<th>${escapeHtml(t("priceAsFiled"))}</th></tr></thead><tbody>${body}</tbody></table></div>` +
+    // 설명 셋(약 900자)은 접는다 - 지우지 않는다. 고치기 전 값을 옆에 두는 이유가 여기 있다.
+    `<details class="fold"><summary>${escapeHtml(t("priceReadHow"))}</summary>${notes}</details>` +
     // 카드를 본 사람이 다음에 묻는 것(층 할인, 신고가)으로 가는 길(PO 검토 #33).
     `<p class="card-links"><a href="./floor-gap.html">${escapeHtml(t("cardFloorLink"))}</a> · ` +
     `<a href="./record-high.html">${escapeHtml(t("cardRecordLink"))}</a></p>`

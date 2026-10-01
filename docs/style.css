@@ -2845,3 +2845,38 @@ details.fold > summary {
 .switch-answer:empty {
   display: none;
 }
+
+/* 단지 카드: 칸마다 큰 값 하나 + 회색 보조 줄(UIUX #51). */
+.complex-price-table .sub {
+  margin-top: 2px;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  white-space: normal;
+}
+
+.complex-price-table .as-filed .sub {
+  margin-top: 0;
+}
+
+/* 폰에서 표가 카드로 바뀌면 칸마다 "라벨 — 값" 한 줄인데, 단지 카드 칸은 큰 값 + 보조 줄이 여럿이라
+ * 옆으로 늘어서면 글자가 세로로 꺾였다. 이 표만 라벨을 위에, 값과 보조 줄을 아래로 쌓는다(UIUX #51). */
+@media (max-width: 560px) {
+  .complex-price-table td[data-label] {
+    display: block;
+    text-align: left;
+    padding: 4px 0;
+  }
+
+  .complex-price-table td[data-label]::before {
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .complex-price-table .as-filed .sub {
+    display: inline;
+  }
+
+  .complex-price-table .as-filed .sub + .sub::before {
+    content: " · ";
+  }
+}
