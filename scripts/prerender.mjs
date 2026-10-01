@@ -13,6 +13,7 @@ import { candidatesInBand } from "./complex-price.mjs";
 import { capSentence } from "./loan-cap.mjs";
 import { policySentence } from "./policy-loan.mjs";
 import { minCashSentence } from "./min-cash.mjs";
+import { WOLSE_CONVERSION_RATE } from "./realestate-metrics.mjs";
 import { rateFacts, factSentences as rateSentences } from "./rate-facts.mjs";
 import {
   KIND_FIELDS,
@@ -511,6 +512,17 @@ function reChange(change, baselineDate) {
   return ` <span class="change ${dir}"${title}>${arrow}${reMan(Math.abs(change.value10k))}</span>`;
 }
 
+function reWolseChange(change, baselineDate) {
+  if (!change || typeof change.percent !== "number" || change.value10k === 0) return "";
+  const dir = change.value10k > 0 ? "up" : "down";
+  const arrow = change.value10k > 0 ? "▲" : "▼";
+  const rate = `${(WOLSE_CONVERSION_RATE * 100).toFixed(1)}%`;
+  const title = baselineDate
+    ? ` title="${escapeHtml(`${baselineDate} 대비 · 보증금과 월세를 묶은 ㎡당 값(보증금 + 월세×12÷${rate})의 증감 — 그 주에 신고된 방 크기가 달라서 생기는 흔들림을 덜어 낸 값입니다`)}"`
+    : "";
+  return ` <span class="change ${dir}"${title}>${arrow}${Math.abs(change.percent).toFixed(1)}%</span>`;
+}
+
 const reCountSpan = (metric) =>
   typeof metric?.transactionCount === "number"
     ? ` <span class="count">${escapeHtml(reCount(metric.transactionCount))}</span>`
@@ -533,8 +545,8 @@ function reCells(entry, kind) {
 
   if (kind === "wolse") {
     return [
-      `<span class="price-strong">${reMan(metric.avgDeposit10k)}</span>${change(metric.depositChange, metric.baselineDate)}`,
-      `<span class="price-strong">월 ${reMan(metric.avgMonthlyRent10k)}</span>${change(metric.monthlyRentChange, metric.baselineDate)}`,
+      `<span class="price-strong">${reMan(metric.avgDeposit10k)}</span>`,
+      `<span class="price-strong">월 ${reMan(metric.avgMonthlyRent10k)}</span>${reWolseChange(metric.change, metric.baselineDate)}`,
       `<span class="count">${escapeHtml(reCount(metric.transactionCount))}</span>`,
     ];
   }

@@ -1,4 +1,17 @@
 const PYEONG_M2 = 3.3058;
+
+/**
+ * 월세 증감은 보증금과 월세를 이 전환율로 한 값(환산보증금 = 보증금 + 월세×12÷전환율)으로 묶어 ㎡당으로 잰다(#6).
+ * 보증금 단순평균은 그 주에 신고된 방 크기와 보증금·월세 배합이 바뀌기만 해도 흔들렸다 — 4주 창을 이레씩 밀어
+ * 자치구 1,200주를 다시 재 보니 이레 사이 10% 넘게 움직인 주가 보증금 단순평균 17.6%, 월세 단순평균 13.6%,
+ * ㎡당 보증금 10.4%, ㎡당 월세 6.7%, ㎡당 환산값 4.3%였다(같은 방법으로 전세 ㎡당 0.8%; 2025-10~2026-08 계약분).
+ * 전환율을 3%에서 10%까지 바꿔도 4.3~4.7%라 결론이 이 값에 달려 있지 않다. 값은 서울 실측(conversion.json,
+ * 2026-10 기준 4.8%)에 맞췄고, 견주는 두 날이 같은 배수를 써야 하므로 날마다 따라가지 않고 고정한다.
+ */
+export const WOLSE_CONVERSION_RATE = 0.048;
+
+/** 증감의 기준은 이레 전 값이다. 수집이 멈춰 그보다 훨씬 낡은 값밖에 없으면 '전주 대비'라 부를 수 없어 붙이지 않는다. */
+export const BASELINE_MAX_DAYS = 14;
 const NATIONAL_PYEONG_MIN_M2 = 82;
 const NATIONAL_PYEONG_MAX_M2 = 86;
 
@@ -164,7 +177,7 @@ export function summarizeRent(items) {
     if (deposit10k == null || deposit10k <= 0 || !Number.isFinite(area) || area <= 0) continue;
 
     if (monthlyRent10k && monthlyRent10k > 0) {
-      wolseRows.push({ deposit10k, monthlyRent10k });
+      wolseRows.push({ deposit10k, monthlyRent10k, area });
     } else {
       jeonseRows.push({ deposit10k, area });
     }
@@ -184,7 +197,10 @@ export function summarizeRent(items) {
 
   let wolse = null;
   if (wolseRows.length > 0) {
+    const converted10k = wolseRows.reduce((sum, r) => sum + r.deposit10k + (r.monthlyRent10k * 12) / WOLSE_CONVERSION_RATE, 0);
+    const totalArea = wolseRows.reduce((sum, r) => sum + r.area, 0);
     wolse = {
+      avgConvertedPerPyeong10k: Math.round((converted10k / totalArea) * PYEONG_M2),
       avgDeposit10k: Math.round(wolseRows.reduce((sum, r) => sum + r.deposit10k, 0) / wolseRows.length),
       avgMonthlyRent10k: Math.round(wolseRows.reduce((sum, r) => sum + r.monthlyRent10k, 0) / wolseRows.length),
       transactionCount: wolseRows.length,
@@ -251,6 +267,13 @@ export function computeOverall(districts) {
     wolseDistricts.length === 0
       ? null
       : {
+          ...(wolseDistricts.every((d) => d.wolse.avgConvertedPerPyeong10k != null)
+            ? {
+                avgConvertedPerPyeong10k: Math.round(
+                  weightedAverage(wolseDistricts, (d) => d.wolse.avgConvertedPerPyeong10k, (d) => d.wolse.transactionCount)
+                ),
+              }
+            : {}),
           avgDeposit10k: Math.round(
             weightedAverage(wolseDistricts, (d) => d.wolse.avgDeposit10k, (d) => d.wolse.transactionCount)
           ),
@@ -272,7 +295,10 @@ export function findBaseline(history, now) {
   if (!older.length) return null;
 
   const baseline = older[older.length - 1];
-  return baseline.date === kstDateString(now) ? null : baseline;
+  if (baseline.date === kstDateString(now)) return null;
+  const oldest = new Date(now);
+  oldest.setDate(oldest.getDate() - BASELINE_MAX_DAYS);
+  return baseline.date < kstDateString(oldest) ? null : baseline;
 }
 
 function computeChange(currentValue, baselineValue) {
@@ -296,10 +322,8 @@ function withJeonseChange(jeonse, baselineJeonse, baselineDate) {
 
 function withWolseChange(wolse, baselineWolse, baselineDate) {
   if (!wolse) return wolse;
-  const depositChange = computeChange(wolse.avgDeposit10k, baselineWolse?.avgDeposit10k);
-  const monthlyRentChange = computeChange(wolse.avgMonthlyRent10k, baselineWolse?.avgMonthlyRent10k);
-  if (!depositChange && !monthlyRentChange) return wolse;
-  return { ...wolse, depositChange, monthlyRentChange, baselineDate };
+  const change = computeChange(wolse.avgConvertedPerPyeong10k, baselineWolse?.avgConvertedPerPyeong10k);
+  return change ? { ...wolse, change, baselineDate } : wolse;
 }
 
 export function attachChanges(overall, districts, baseline) {

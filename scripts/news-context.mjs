@@ -164,8 +164,8 @@ export function metricEntry(entry, kind, { name, nameEn, slug = null, window } =
       labelEn: `${nameEn} apartment rent`,
       value: `보증금 ${deposit}만원 / 월 ${rent}만원`,
       valueEn: `₩${((metric.avgDeposit10k ?? 0) / 100).toLocaleString("en-US", { maximumFractionDigits: 1 })}M + ₩${(metric.avgMonthlyRent10k / 100).toLocaleString("en-US", { maximumFractionDigits: 2 })}M/mo`,
-      note: noteOf(metric, metric.depositChange, window, "ko"),
-      noteEn: noteOf(metric, metric.depositChange, window, "en"),
+      note: noteOf(metric, metric.change, window, "ko"),
+      noteEn: noteOf(metric, metric.change, window, "en"),
     };
   }
   return null;

@@ -120,6 +120,15 @@ test("월세 표에는 84㎡ 환산이 들어가지 않는다", () => {
   assert.ok(!html.includes("억"), "월세인데 84㎡ 환산가가 붙었다");
 });
 
+test("월세 증감은 하나, 보증금과 월세를 묶은 ㎡당 값의 % 로 월세 칸에 붙는다 (#6)", () => {
+  const wolse = { avgDeposit10k: 20000, avgMonthlyRent10k: 90, transactionCount: 30, change: { value10k: 60, percent: 2.04 }, baselineDate: "2026-09-24" };
+  const html = realestateTableHtml({ districts: [district("강남구", { wolse })] }, "wolse");
+  const [, deposit, monthly] = cells(html);
+  assert.doesNotMatch(deposit, /change/, "보증금 칸에 증감이 붙었다");
+  assert.match(monthly, /class="change up"[^>]*>▲2\.0%</);
+  assert.match(monthly, /2026-09-24 대비 · 보증금과 월세를 묶은 ㎡당 값/);
+});
+
 test("비싼 지역이 위로 오고, 값을 못 내는 지역은 맨 아래로 간다", () => {
   const data = {
     districts: [
@@ -820,4 +829,18 @@ test("그래프에 마우스를 올릴 자리를 마련해 둔다", async () => 
   assert.match(html, /<div class="chart-tip" id="chart-tip" hidden>/, "말풍선이 처음부터 떠 있다");
   assert.match(html, /trendSection\.addEventListener\("mousemove"/, "마우스를 따라가지 않는다");
   assert.match(html, /trendSection\.addEventListener\("touchstart"/, "손가락으로는 볼 수 없다");
+});
+
+test("월세 페이지(브라우저)도 증감 하나를 월세 칸에 % 로 붙인다 (#6)", async () => {
+  const realestate = trendRealestate();
+  for (const d of realestate.districts) {
+    d.wolse = { ...d.wolse, change: { value10k: -45, percent: -1.53 }, baselineDate: "2026-08-08" };
+  }
+  for (const [locale, vs] of [["ko", /2026-08-08 대비 · 보증금과 월세를 묶은/], ["en", /vs 2026-08-08 · change in deposit and rent combined/]]) {
+    const page = await loadRealestatePage({ realestate, trend: trendData(), kind: "wolse", locale });
+    const html = page.tableHtml();
+    assert.match(html, /class="change down"[^>]*>▼1\.5%</, `${locale}: 월세 증감 배지가 없다`);
+    assert.match(html, vs);
+    assert.equal((html.match(/class="change /g) ?? []).length, 2, `${locale}: 자치구마다 배지가 하나여야 한다`);
+  }
 });

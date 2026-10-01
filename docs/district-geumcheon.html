@@ -145,7 +145,7 @@
     <div class="table-wrap">
       <table class="data-table">
         <thead id="district-head"><!--prerender:realestateHead--><tr><th>구분</th><th>평당가</th><th>84㎡ 환산</th><th>거래건수</th></tr><!--/prerender:realestateHead--></thead>
-        <tbody id="district-grid"><!--prerender:realestateTable--><tr><td>매매</td><td data-label="평당가"><span class="price-strong">3,062만원</span> <span class="change up" title="2026-09-02 대비">▲26만원</span></td><td data-label="84㎡ 환산"><span class="price-strong">7억 7,805만원</span></td><td data-label="거래건수"><span class="count">113건</span></td></tr><tr><td>전세</td><td data-label="평당가"><span class="price-strong">2,154만원</span> <span class="change down" title="2026-09-02 대비">▼137만원</span></td><td data-label="84㎡ 환산"><span class="price-strong">5억 4,733만원</span></td><td data-label="거래건수"><span class="count">28건</span></td></tr><tr><td>월세</td><td data-label="평당가"><span class="price-strong">10,914만원</span> / <span class="price-strong">월 62만원</span></td><td data-label="84㎡ 환산">-</td><td data-label="거래건수"><span class="count">157건</span></td></tr><!--/prerender:realestateTable--></tbody>
+        <tbody id="district-grid"><!--prerender:realestateTable--><tr><td>매매</td><td data-label="평당가"><span class="price-strong">3,062만원</span></td><td data-label="84㎡ 환산"><span class="price-strong">7억 7,805만원</span></td><td data-label="거래건수"><span class="count">113건</span></td></tr><tr><td>전세</td><td data-label="평당가"><span class="price-strong">2,154만원</span></td><td data-label="84㎡ 환산"><span class="price-strong">5억 4,733만원</span></td><td data-label="거래건수"><span class="count">28건</span></td></tr><tr><td>월세</td><td data-label="평당가"><span class="price-strong">10,914만원</span> / <span class="price-strong">월 62만원</span></td><td data-label="84㎡ 환산">-</td><td data-label="거래건수"><span class="count">157건</span></td></tr><!--/prerender:realestateTable--></tbody>
       </table>
     </div>
     <div class="content-notice" id="table-note"></div>
@@ -243,6 +243,7 @@ const T = {
     lowSample: (n) => `신고 ${n}건`,
     lowSampleTitle: (n) => `이번 달 신고가 ${n}건뿐이라 평균을 내지 않았습니다.`,
     changeVs: (d) => `${d} 대비`,
+    wolseChangeVs: (d) => `${d} 대비 · 보증금과 월세를 묶은 ㎡당 값(보증금 + 월세×12÷4.8%)의 증감 — 그 주에 신고된 방 크기가 달라서 생기는 흔들림을 덜어 낸 값입니다`,
     prevTagTitle: "이번 달 신고가 아직 적어 지난달 기준으로 보여줍니다.",
     staleTagTitle: "이 지역은 오늘 실거래 조회에 실패해 지난번에 받은 값을 그대로 보여줍니다.",
     monthlyPrefix: "월 ",
@@ -330,6 +331,7 @@ const T = {
     lowSample: (n) => `${n} reported`,
     lowSampleTitle: (n) => `Only ${n} transactions reported this month, so no average is shown.`,
     changeVs: (d) => `vs ${d}`,
+    wolseChangeVs: (d) => `vs ${d} · change in deposit and rent combined per ㎡ (deposit + rent×12÷4.8%), which strips out the swing from the mix of flat sizes filed that week`,
     prevTagTitle: "Too few filings this month, so last month\u2019s figure is shown.",
     staleTagTitle: "Today\u2019s filing lookup failed for this district, so the previous figures are shown.",
     monthlyPrefix: "",
@@ -479,6 +481,14 @@ function changeHtml(change, baselineDate) {
   return ` <span class="change ${dir}"${title}>${arrow}${formatMan(Math.abs(change.value10k))}</span>`;
 }
 
+function wolseChangeHtml(change, baselineDate) {
+  if (!change || typeof change.percent !== "number" || change.value10k === 0) return "";
+  const dir = change.value10k > 0 ? "up" : "down";
+  const arrow = change.value10k > 0 ? "▲" : "▼";
+  const title = baselineDate ? ` title="${escapeHtml(t("wolseChangeVs")(baselineDate))}"` : "";
+  return ` <span class="change ${dir}"${title}>${arrow}${Math.abs(change.percent).toFixed(1)}%</span>`;
+}
+
 const countHtml = (metric) =>
   typeof metric?.transactionCount === "number"
     ? ` <span class="count">${escapeHtml(t("countUnit")(metric.transactionCount))}</span>`
@@ -498,11 +508,12 @@ function cellsFor(entry, k) {
   const { metric, isPrevious } = resolved;
   const tag = prevTagHtml(isPrevious);
   const change = (c, d) => (isPrevious ? "" : changeHtml(c, d));
+  const wolseChange = isPrevious ? "" : wolseChangeHtml(metric.change, metric.baselineDate);
 
   if (k === "wolse") {
     return [
-      `<span class="price-strong">${formatMan(metric.avgDeposit10k)}</span>${change(metric.depositChange, metric.baselineDate)}${tag}`,
-      `<span class="price-strong">${escapeHtml(t("monthlyPrefix"))}${formatMan(metric.avgMonthlyRent10k)}</span>${change(metric.monthlyRentChange, metric.baselineDate)}`,
+      `<span class="price-strong">${formatMan(metric.avgDeposit10k)}</span>${tag}`,
+      `<span class="price-strong">${escapeHtml(t("monthlyPrefix"))}${formatMan(metric.avgMonthlyRent10k)}</span>${wolseChange}`,
       `<span class="count">${escapeHtml(t("countUnit")(metric.transactionCount))}</span>`,
     ];
   }
