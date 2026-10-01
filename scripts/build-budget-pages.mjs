@@ -59,6 +59,18 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
     "예산 섹션"
   );
 
+  // 예산 장의 본문(그 예산대 거래·후보·자금)을 서울 평균 카드와 추이 그래프보다 앞에 둔다. 모바일에서
+  // 예산 본문이 1,702px 아래에서 시작했다(PO 검토 #33) - 이 장을 연 사람이 찾는 것은 서울 평균이 아니다.
+  {
+    const start = html.indexOf('<section id="budget-section">');
+    const end = html.indexOf("</section>", start) + "</section>".length;
+    const anchor = html.indexOf('<section id="overall-section">');
+    if (start < 0 || anchor < 0 || anchor > start) throw new Error("예산 섹션을 앞으로 옮길 자리를 찾지 못했습니다");
+    const block = html.slice(start, end);
+    html = html.slice(0, start) + html.slice(end);
+    html = html.slice(0, anchor) + block + "\n\n  " + html.slice(anchor);
+  }
+
   // 스물다섯 줄짜리 자치구 시세표는 여기 있을 것이 아니다.
   //
   // 이 표는 realestate.html이 원본인데 예산 페이지 열여덟 장에 그대로 복사돼 나갔다.

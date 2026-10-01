@@ -205,6 +205,8 @@ const T = {
       "지수는 권역 단위라 같은 권역 안 자치구 차이(±2%p 안팎)는 고쳐지지 않습니다 — 고치기 전 중앙값을 옆에 둡니다. " +
       "5건 이상이면 가운데 절반, 3~4건이면 최저~최고를 적고, 2건 이하면 범위를 내지 않습니다.",
     ratioHeading: "최근 두 달 매매·전세와 전세가율",
+    cardFloorLink: "1층이면 얼마나 싸야 정상인가 →",
+    cardRecordLink: "신고가 다음 거래는 그 값이었나 →",
     groupLabel: "단지로 묶어 보기",
     groupBuilt: (y) => `${y}년`,
     groupSummary: (n, month) => `조건에 맞는 단지·평형 ${n.toLocaleString("ko-KR")}곳 — 최근 6개월 거래를 ${month} 값으로 고친 중앙값 기준, 거래가 많은 순`,
@@ -336,6 +338,8 @@ const T = {
       "The index is regional, so differences between districts within a region (around ±2pp) are not corrected — the unadjusted median is shown alongside. " +
       "Five or more deals give the middle half; three or four give low–high; two or fewer give no range.",
     ratioHeading: "Last two months: sale, jeonse and jeonse ratio",
+    cardFloorLink: "How much less should a first floor be? →",
+    cardRecordLink: "Did the sale after a record high follow it? →",
     groupLabel: "Group by complex",
     groupBuilt: (y) => `built ${y}`,
     groupSummary: (n, month) => `${n.toLocaleString("en-US")} complex/unit types match — median of the last six months adjusted to ${month}, most-traded first`,
@@ -1093,7 +1097,10 @@ function complexPriceHtml(file, apt) {
     `<th>${escapeHtml(t("complexArea"))}</th><th>${escapeHtml(t("priceMedian"))}</th>` +
     `<th>${escapeHtml(t("priceRange"))}</th><th>${escapeHtml(t("priceDeals"))}</th>` +
     `<th>${escapeHtml(t("priceRaw"))}</th></tr></thead><tbody>${body}</tbody></table></div>` +
-    `<p class="content-notice">${escapeHtml(t("priceNote")(reference, file.referenceFilled, file.referenceBias, unadjusted))}</p>`
+    `<p class="content-notice">${escapeHtml(t("priceNote")(reference, file.referenceFilled, file.referenceBias, unadjusted))}</p>` +
+    // 카드를 본 사람이 다음에 묻는 것(층 할인, 신고가)으로 가는 길(PO 검토 #33).
+    `<p class="card-links"><a href="./floor-gap.html">${escapeHtml(t("cardFloorLink"))}</a> · ` +
+    `<a href="./record-high.html">${escapeHtml(t("cardRecordLink"))}</a></p>`
   );
 }
 

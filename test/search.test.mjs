@@ -50,7 +50,7 @@ test("색인의 화면 주소가 전부 실재한다", async () => {
   const files = new Set((await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html")));
   const { entries } = buildPayload({ byDistrict: {}, now: NOW });
   for (const entry of entries) {
-    const file = entry.href.replace("./", "").split("?")[0];
+    const file = entry.href.replace("./", "").split(/[?#]/)[0];
     assert.ok(files.has(file), `${entry.text} → 없는 페이지 ${file}`);
   }
 });
@@ -198,4 +198,10 @@ test("색인의 동이 실제 자치구에 붙어 있다", async () => {
     assert.ok(districts.has(district), `${district}는 자치구가 아니다`);
     assert.ok(names.length > 0);
   }
+});
+
+test("사이트 안에 답이 있는 주제어로도 찾아진다 (PO 검토 #33)", () => {
+  const { entries } = buildPayload({ byDistrict: {}, now: NOW });
+  const words = entries.flatMap((e) => [e.text, ...(e.also ?? [])]);
+  for (const w of ["취득세", "대출 한도", "잔금", "신혼", "디딤돌"]) assert.ok(words.includes(w), `${w}로는 아무것도 안 찾아진다`);
 });

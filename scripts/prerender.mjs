@@ -265,7 +265,24 @@ export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = 
     budgetMinCashHtml(band) +
     budgetCapHtml(band, capStats) +
     budgetPolicyHtml(band, policyCounts) +
-    budgetCandidatesHtml(band, complexFiles)
+    budgetCandidatesHtml(band, complexFiles) +
+    budgetMoreHtml()
+  );
+}
+
+/** 예산을 정한 사람이 다음에 묻는 것들로 가는 길(PO 검토 #33 - 예산대에서 이 화면들로 가는 링크가 0개였다). */
+export function budgetMoreHtml() {
+  const links = [
+    ["./floor-gap.html", "1층·최상층은 얼마나 싸야 정상인가"],
+    ["./record-high.html", "신고가가 나왔다는데 그 값인가"],
+    ["./switch-house.html", "갈아타기 — 갈 동네는 얼마나 올랐나"],
+    ["./price-outlook.html", "3개월 뒤 아파트값과 그 오차"],
+    ["./cancelled-deals.html#month-section", "계약에서 등기(잔금)까지 걸리는 날"],
+  ];
+  return (
+    `<section class="budget-more-links" data-prerendered><h3>매물을 보러 가기 전에</h3><ul>` +
+    links.map(([href, text]) => `<li><a href="${href}">${escapeHtml(text)}</a></li>`).join("") +
+    `</ul></section>`
   );
 }
 

@@ -36,6 +36,11 @@ export const SCREENS = [
   { text: "재계약 vs 새로 구하기", href: "./renewal-vs-new.html", also: ["재계약", "갱신", "연장", "갱신요구권"] },
   { text: "해제·등기", href: "./cancelled-deals.html", also: ["해제", "취소", "등기", "미등기"] },
   { text: "실거래 검색", href: "./deal-search.html", also: ["조건", "검색"] },
+  // 사이트 안에 답이 있는데 화면 이름으로는 안 찾아지던 주제어(PO 검토 #33). 답이 있는 예산대 장으로 보낸다.
+  { text: "취득세·중개보수(매매가 말고 드는 돈)", href: "./budget-10eok.html", also: ["취득세", "중개보수", "중개수수료", "복비", "부대비용", "세금"] },
+  { text: "대출 천장·최소 필요 현금", href: "./budget-10eok.html", also: ["대출 한도", "대출한도", "LTV", "DSR", "필요 현금", "자기 돈", "자기자본", "생애최초"] },
+  { text: "정책대출 가격선(디딤돌·보금자리론·신생아 특례)", href: "./budget-6eok.html", also: ["신혼", "디딤돌", "보금자리론", "신생아", "신생아 특례", "정책대출"] },
+  { text: "계약에서 등기·잔금까지 걸리는 날", href: "./cancelled-deals.html#month-section", also: ["잔금", "입주", "등기 기간"] },
   { text: "정기예금 금리", href: "./deposit-rates.html", also: ["예금", "금리", "이자"] },
   { text: "적금 금리", href: "./saving-rates.html", also: ["적금"] },
   { text: "주택담보대출 금리", href: "./mortgage-rates.html", also: ["주담대", "담보대출", "대출"] },
