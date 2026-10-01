@@ -46,3 +46,9 @@ test("문단은 무주택 한 채 기준이라는 것과 기준일을 적는다"
   assert.match(text, /중과/, "다주택 중과로 계산이 안 맞는다는 말이 없다");
   assert.ok(text.includes(BASIS_DATE), "원문을 대조한 날이 문장에 없다");
 });
+
+test("유주택 중과를 적되, 갈아타기의 일시적 2주택 예외를 같이 적는다 (#37)", () => {
+  const text = costsSentence(11);
+  assert.match(text, /2주택 8%/);
+  assert.match(text, /2년 안에\(두 집이 모두 조정대상지역일 때\) 지금 집을 팔면 일시적 2주택이라 중과되지 않고/);
+});

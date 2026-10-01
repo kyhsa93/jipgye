@@ -18,11 +18,13 @@ test("최소 필요 현금 = 집값 − 대출 천장 + 부대비용, 생애최�
   assert.equal(minCash(125_000, { firstTime: true }).relief, 0, "12억 넘는 집에 생애최초 감면을 줬다");
 });
 
-test("문장은 DSR로 더 적게 빌릴 수 있다는 것과 유주택 LTV 0%, 기준일을 적는다", () => {
+test("문장은 DSR로 더 적게 빌릴 수 있다는 것과 유주택자 원칙·처분조건부 예외, 기준일을 적는다", () => {
   const s = minCashSentence(7);
   assert.match(s, /자기 돈이 적어도 4억 6,950만원/);
   assert.match(s, /소득\(DSR\)에 따라 이보다 적을 수/);
-  assert.match(s, /LTV 0%/);
+  assert.match(s, /이미 집이 있으면 규제지역 주택구입 대출은 원칙적으로 막힙니다/);
+  assert.match(s, /6개월 안에 팔기로 약정하면\(처분조건부\) 받을 수 있어/, "갈아타는 1주택자 예외가 없다 (#37)");
+  assert.doesNotMatch(s, /LTV 0%/, "예외 없는 단정이 남았다");
   assert.ok(s.includes(BASIS_DATE));
   assert.match(minCashSentence(15), /생애최초여도 이 가격대는 천장이 같아/, "생애최초 천장이 같은데 '올라'라고 썼다");
 });
