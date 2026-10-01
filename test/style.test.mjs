@@ -89,6 +89,14 @@ test("누르는 것은 손가락이 닿는 크기다", async () => {
     assert.match(rule.body, /(min-height|height): var\(--tap\)/, `${sel}이 --tap을 안 쓴다`);
   };
   for (const sel of [".page-nav a", ".sub-nav a", ".news-chip", ".lang-toggle", ".icon-toggle"]) uses(sel);
+  // 줄 단위 링크 목록도(#50) - 한 규칙에 묶여 있다.
+  const lists = rules(text).find((r) => r.sel.includes(".district-links a") && r.sel.includes(".card-links a"));
+  assert.ok(lists, "줄 단위 링크 목록 규칙이 없다");
+  assert.match(lists.body, /min-height: var\(--tap\)/);
+  for (const sel of [".section-links a", ".back-link", ".method-callout a"]) assert.ok(lists.sel.includes(sel), `${sel}이 빠졌다`);
+  const tableLink = rules(text).find((r) => parts(r.sel) === parts(".data-table td a"));
+  assert.match(tableLink.body, /text-decoration-color: var\(--muted\)/, "표 안 링크 밑줄이 안 보인다");
+  assert.doesNotMatch(tableLink.body, /var\(--border\)/, "밑줄이 1.29:1 테두리색이다");
 });
 
 test("키보드로 훑을 때 지금 어디인지 보인다", async () => {

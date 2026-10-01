@@ -254,7 +254,6 @@ h1 {
 }
 
 .back-link {
-  display: inline-block;
   margin-top: 4px;
   color: var(--muted);
   font-size: var(--fs-sm);
@@ -1236,6 +1235,20 @@ ul.news-list {
   font-size: var(--fs-sm);
 }
 
+/* 줄 단위 링크 목록은 손가락 크기(--tap)로(UIUX #50). 글 속 링크 높이가 20~25px이었다. */
+.district-links a,
+.section-links a,
+.card-links a,
+.back-link,
+.method-callout a,
+.budget-nav a,
+.archive-link,
+.site-footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+}
+
 .district-links a {
   color: var(--muted);
   text-decoration: none;
@@ -1299,14 +1312,20 @@ ul.news-list {
   background-image: repeating-linear-gradient(-45deg, var(--border) 0 1px, transparent 1px 4px);
 }
 
+/* 표 안 링크(자치구 이름 등). 전에는 밑줄이 --border 점선(흰 바탕 대비 1.29:1)이라 링크로 안 보였고, 누르는
+ * 자리도 글자 높이(25px)뿐이었다(UIUX #50). 표 안의 파랑은 이미 '하락'이라 액센트색은 쓰지 않고(아래 검사),
+ * --muted 실선 밑줄로 보이게 한다. 인라인 위아래 여백으로 누르는 자리만 넓힌다 - 줄 높이는 그대로. */
 .data-table td a {
   color: inherit;
-  text-decoration: none;
-  border-bottom: 1px dotted var(--border);
+  text-decoration: underline;
+  text-decoration-color: var(--muted);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  padding: 10px 0;
 }
 
 .data-table td a:hover {
-  border-bottom-color: var(--muted);
+  text-decoration-thickness: 2px;
 }
 
 .prev-tag {
@@ -2349,8 +2368,7 @@ summary:focus-visible,
 }
 
 .method-callout a {
-  display: inline-block;
-  margin-top: 6px;
+  margin-top: 2px;
   color: var(--accent);
   font-size: var(--fs-sm);
   font-weight: 600;
