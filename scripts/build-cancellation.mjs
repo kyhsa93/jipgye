@@ -10,6 +10,7 @@ import {
   registrationSentence,
   registrationStats,
 } from "./cancellation.mjs";
+import { priceBandSentence, priceBandStats, priceBandTableHtml } from "./cancel-by-price.mjs";
 import { DISTRICTS } from "./realestate-districts.mjs";
 import { DISTRICT_SLUGS } from "./district-slugs.mjs";
 import { readSlotFile } from "./realestate-raw.mjs";
@@ -58,6 +59,7 @@ export function buildPayload({ byDistrict, months, now, registrationByDistrict =
   // 등기는 원본 전체로 센다. 익은 달은 계약 뒤 넉 달은 지나야 생겨 여섯 달 창 안에는 없을 수 있다(#27).
   const registrationAll = Object.values(registrationByDistrict ?? {}).flat();
   const registration = registrationStats(registrationAll);
+  const priceBands = priceBandStats(registrationAll);
 
   const seoul = {
     deals: all.length,
@@ -77,6 +79,14 @@ export function buildPayload({ byDistrict, months, now, registrationByDistrict =
       leadEn: leadSentence({ deals: all.length, cancelled, timing, standing, months }, "en"),
       registrationLead: { ko: registrationSentence(registration, "ko"), en: registrationSentence(registration, "en") },
     },
+    // 가격대별 해제율은 원본 전체에서 해제가 다 쌓인 달만, 같은 달 안에서 견준다(scripts/cancel-by-price.mjs).
+    priceBands: priceBands
+      ? {
+          ...priceBands,
+          lead: { ko: priceBandSentence(priceBands, "ko"), en: priceBandSentence(priceBands, "en") },
+          table: { ko: priceBandTableHtml(priceBands, "ko"), en: priceBandTableHtml(priceBands, "en") },
+        }
+      : null,
     slugs: Object.fromEntries(
       Object.keys(byDistrict)
         .filter((name) => DISTRICT_SLUGS[name])

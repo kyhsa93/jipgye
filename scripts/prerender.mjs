@@ -1143,6 +1143,8 @@ async function main() {
         cancelDistricts: cancelDistrictsHtml(cancellation),
         cancelMonthLead: cancelMonthLeadHtml(cancellation),
         cancelMonths: cancelMonthsHtml(cancellation),
+        cancelPriceLead: cancellation?.priceBands?.lead?.ko ? escapeHtml(cancellation.priceBands.lead.ko) : null,
+        cancelPriceTable: cancellation?.priceBands?.table?.ko ?? null,
         cancelDistrictLinks: cancelDistrictLinksHtml(cancellation),
       },
     ],

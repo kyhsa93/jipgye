@@ -83,6 +83,15 @@
     <div class="district-links" id="district-links"><!--prerender:cancelDistrictLinks--><a href="./district-jongno.html">종로구</a><a href="./district-jung.html">중구</a><a href="./district-yongsan.html">용산구</a><a href="./district-seongdong.html">성동구</a><a href="./district-gwangjin.html">광진구</a><a href="./district-dongdaemun.html">동대문구</a><a href="./district-jungnang.html">중랑구</a><a href="./district-seongbuk.html">성북구</a><a href="./district-gangbuk.html">강북구</a><a href="./district-dobong.html">도봉구</a><a href="./district-nowon.html">노원구</a><a href="./district-eunpyeong.html">은평구</a><a href="./district-seodaemun.html">서대문구</a><a href="./district-mapo.html">마포구</a><a href="./district-yangcheon.html">양천구</a><a href="./district-gangseo.html">강서구</a><a href="./district-guro.html">구로구</a><a href="./district-geumcheon.html">금천구</a><a href="./district-yeongdeungpo.html">영등포구</a><a href="./district-dongjak.html">동작구</a><a href="./district-gwanak.html">관악구</a><a href="./district-seocho.html">서초구</a><a href="./district-gangnam.html">강남구</a><a href="./district-songpa.html">송파구</a><a href="./district-gangdong.html">강동구</a><!--/prerender:cancelDistrictLinks--></div>
   </section>
 
+  <section id="price-section">
+    <h2 id="price-heading">비싼 집일수록 계약이 더 깨지나</h2>
+    <p class="lead" id="price-lead"><!--prerender:cancelPriceLead-->해제가 다 쌓인 계약월(해제의 95%가 계약 뒤 104일 안에 일어난다 — 2025년 8월~2026년 5월)만 놓고 보면, 6억 이하 계약은 2.9%, 25억 초과는 4.5%가 해제됐습니다. 해제가 많던 달에 비싼 거래가 몰려서 생긴 차이일 수 있어 같은 달 안에서만 견줘도, 가장 비싼 대가 1.8%p(90% 1.21~2.4%p) 높습니다 — 비싼 집일수록 계약이 깨지는 일이 조금 더 잦습니다.<!--/prerender:cancelPriceLead--></p>
+    <div class="table-scroll">
+      <table class="rate-table outlook-table" id="price-table"><!--prerender:cancelPriceTable--><thead><tr><th>가격대</th><th>계약</th><th>해제율</th><th>같은 달 대비</th></tr></thead><tbody><tr><td>6억 이하</td><td>13,708</td><td>2.9%</td><td>-0.84%p</td></tr><tr><td>6억~9억</td><td>16,736</td><td>3.8%</td><td>+0.09%p</td></tr><tr><td>9억~15억</td><td>20,746</td><td>3.9%</td><td>+0.02%p</td></tr><tr><td>15억~25억</td><td>10,819</td><td>4.3%</td><td>+0.5%p</td></tr><tr><td>25억 초과</td><td>4,417</td><td>4.5%</td><td>+0.96%p</td></tr></tbody><!--/prerender:cancelPriceTable--></table>
+    </div>
+    <div class="content-notice" id="price-note"></div>
+  </section>
+
   <footer class="site-footer">
     <div id="footer-source">출처: 국토교통부 아파트 매매 실거래가 공개시스템. 신고된 거래만 집계되며 신고 기한(계약 후 30일)이 있어 최근 거래는 나중에 반영됩니다.</div>
     <div style="margin-top:6px;">
@@ -115,6 +124,11 @@ const T = {
     leadHeading: "해제된 거래",
     districtHeading: "자치구별 해제율과 미등기율",
     monthHeading: "등기는 시간이 지나야 끝난다",
+    priceHeading: "비싼 집일수록 계약이 더 깨지나",
+    priceNote:
+      "그냥 세면 최근 계약일수록 해제율이 낮습니다 — 해제는 계약 뒤 시간이 지나며 쌓이기 때문입니다. 그래서 해제까지 걸린 날의 95%가 지난 계약월만 셉니다. " +
+      "그 달들 사이에도 해제율이 크게 다르고 가격대 구성도 달라서, '같은 달 대비'는 같은 계약월 안에서 그 가격대 해제율이 그 달 전체보다 얼마나 높은지를 계약 수로 가중 평균한 것입니다. " +
+      "가장 싼 대와 가장 비싼 대의 차이는 달 안에서 계약을 400번 다시 뽑아 90% 구간을 내고, 그 구간이 0을 품으면 '갈리지 않는다'고 적습니다. 직거래도 포함해 셉니다.",
     thDistrict: "자치구",
     thDeals: "신고",
     thCancelled: "해제",
@@ -162,6 +176,11 @@ const T = {
     leadHeading: "Cancelled deals",
     districtHeading: "Cancellation and unregistered rates by district",
     monthHeading: "Registration takes time",
+    priceHeading: "Are dearer homes cancelled more often?",
+    priceNote:
+      "Counted naively, recent contracts look less often cancelled — cancellations pile up over time. So only contract months past the 95th percentile of time-to-cancellation are used. " +
+      "Those months still differ in cancellation rate and in price mix, so 'vs same month' is how far each band's rate sits above its own month's overall rate, weighted by deals. " +
+      "The gap between the cheapest and dearest bands gets a 90% range from 400 within-month resamples; if it includes zero, the page says price does not separate them. Direct deals are included.",
     thDistrict: "District",
     thDeals: "Filed",
     thCancelled: "Cancelled",
@@ -282,6 +301,14 @@ function renderMonthTable() {
   table.innerHTML = `${head}<tbody>${body}</tbody>`;
 }
 
+// 문장과 표는 빌더가 두 언어로 만든다(scripts/cancel-by-price.mjs). 여기서는 고르기만 한다.
+function renderPriceBands() {
+  const bands = cache.data?.priceBands;
+  if (!bands) return;
+  if (bands.lead?.[locale]) setText("price-lead", bands.lead[locale]);
+  if (bands.table?.[locale]) document.getElementById("price-table").innerHTML = bands.table[locale];
+}
+
 function renderMonthLead() {
   const reg = cache.data?.seoul?.registration;
   if (!reg) return;
@@ -326,6 +353,8 @@ function applyLocale() {
   setText("lead-heading", t("leadHeading"));
   setText("district-heading", t("districtHeading"));
   setText("month-heading", t("monthHeading"));
+  setText("price-heading", t("priceHeading"));
+  setText("price-note", t("priceNote"));
   setText("lead-note", t("leadNote"));
   setText("district-note", t("districtNote"));
   setText("month-note", t("monthNote"));
@@ -349,6 +378,7 @@ function renderAll() {
   const seoul = cache.data?.seoul;
   if (seoul) setText("lead", locale === "en" ? seoul.leadEn : seoul.leadKo);
   renderMonthLead();
+  renderPriceBands();
   renderDistrictTable();
   renderMonthTable();
   renderDistrictLinks();
