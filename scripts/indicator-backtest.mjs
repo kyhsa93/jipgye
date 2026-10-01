@@ -19,6 +19,7 @@
  */
 
 import { leastSquares } from "./outlook.mjs";
+import { candidates3 } from "./indicator-candidates-3.mjs";
 
 export const HORIZONS = [3, 6];
 export const START = "201201";
@@ -97,6 +98,8 @@ export function candidates(series) {
     { id: "kb1", ko: "KB 매매 1개월 상승률", en: "KB sale index, 1-month change", lags: [0, 1, 2], published: [1, 2], fn: (t) => diff(kbs, t, 1) },
     { id: "month", ko: "계절(달)", en: "Season (calendar month)", lags: [0],
       fn: (t) => Array.from({ length: 11 }, (_, k) => ((t % 12) === k + 1 ? 1 : 0)) },
+    // 3차(#57): 외지인 매입 비중, 주택관련대출 잔액, 서울 주택 인허가. 미리 정한 것 그대로.
+    ...candidates3(series),
   ];
 }
 

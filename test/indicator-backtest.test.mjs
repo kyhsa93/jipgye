@@ -127,3 +127,36 @@ test("정적 HTML이 오늘 판정 표를 싣는다", async () => {
   assert.equal(block, data.table.ko);
   assert.ok(data.lead.en && data.table.en);
 });
+
+test("3차 후보(#57): 인허가는 연중 누계를 달 값으로 풀고, 외지인 비중은 3개월 합으로 낸다", async () => {
+  const { monthlyFromYtd, candidates3 } = await import("../scripts/indicator-candidates-3.mjs");
+  const m = monthlyFromYtd([["202401", 100], ["202402", 250], ["202403", 300], ["202501", 50]]);
+  const ymi = (ym) => Number(ym.slice(0, 4)) * 12 + Number(ym.slice(4, 6)) - 1;
+  assert.equal(m.get(ymi("202401")), 100, "1월은 누계 그대로");
+  assert.equal(m.get(ymi("202402")), 150);
+  assert.equal(m.get(ymi("202403")), 50);
+  assert.equal(m.get(ymi("202501")), 50, "해가 바뀌면 다시 1월부터");
+
+  const months = ["202601", "202602", "202603"];
+  const series = {
+    buyer_total_seoul: months.map((x) => [x, 100]),
+    buyer_outside_seoul: [["202601", 10], ["202602", 20], ["202603", 30]],
+  };
+  const share = candidates3(series).find((c) => c.id === "out_share");
+  assert.deepEqual(share.fn(ymi("202603")), [0.2], "60/300");
+  assert.equal(share.fn(ymi("202602")), null, "석 달이 다 없으면 내지 않는다");
+});
+
+test("R-ONE 지역이 GRP에 있는 표는 GRP_ID로 건다", async () => {
+  const { roneUrl } = await import("../scripts/fetch-indicators.mjs");
+  const url = new URL(roneUrl({ statbl: "A_2024_00609", grp: 900002, cls: 500005, itm: 100001 }, "202601", "202605"));
+  assert.equal(url.searchParams.get("GRP_ID"), "900002");
+  assert.equal(url.searchParams.get("CLS_ID"), "500005");
+  assert.equal(new URL(roneUrl({ statbl: "A", cls: 1, itm: 2 }, "202601", "202605")).searchParams.has("GRP_ID"), false);
+});
+
+test("매일 판정에 3차 후보가 들어간다", async () => {
+  const { candidates } = await import("../scripts/indicator-backtest.mjs");
+  const ids = candidates({}).map((c) => c.id);
+  for (const id of ["out_share", "out_share12", "mort_bal12", "mort_bal_seoul12", "permits12", "permits_lag36"]) assert.ok(ids.includes(id), id);
+});

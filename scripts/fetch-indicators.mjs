@@ -31,6 +31,10 @@ export const ECOS_SERIES = {
   ktb3: { stat: "721Y001", item: "5020000" },
   unsold_seoul: { stat: "901Y074", item: "I410B" },
   csi_house_seoul: { stat: "511Y002", item: "FMFB/F0001" },
+  // 3차(#57)
+  mort_bal: { stat: "151Y005", item: "11110A0" },
+  mort_bal_seoul: { stat: "151Y003", item: "11110A0/A00" },
+  permits_seoul: { stat: "901Y105", item: "SEO" },
 };
 
 /**
@@ -41,6 +45,9 @@ export const RONE_SERIES = {
   vol_seoul: { statbl: "A_2024_00554", cls: 500002, itm: 100001 },
   jratio_seoul: { statbl: "A_2024_00072", cls: 500008, itm: 100001 },
   supply_demand_seoul: { statbl: "A_2024_00076", cls: 500008, itm: 100001 },
+  // 3차(#57): 서울 아파트 매매의 매입자 거주지 - 지역이 GRP(서울 900002), 분류가 CLS(합계 500001, 서울 밖 500005).
+  buyer_total_seoul: { statbl: "A_2024_00609", grp: 900002, cls: 500001, itm: 100001 },
+  buyer_outside_seoul: { statbl: "A_2024_00609", grp: 900002, cls: 500005, itm: 100001 },
 };
 
 export const RONE_BASE = "https://www.reb.or.kr/r-one/openapi/SttsApiTblData.do";

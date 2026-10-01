@@ -1,5 +1,6 @@
 /**
- * 3차 후보(#57). 결과를 보기 전에 정해 커밋한다 - 이 파일의 첫 커밋이 결과 파일보다 먼저다.
+ * 3차 후보(#57). 결과를 보기 전에 정해 커밋했다(research/indicators-3/candidates.mjs로 처음 커밋, 13bc8bf) -
+ * 결과(research/indicators-3/)를 보고 고치지 않는다. 매일 판정(scripts/indicator-backtest.mjs)에 같이 들어간다.
  *
  * 지표 하나에 변환은 둘까지, 거리는 3·6·12개월. 판정 기준은 1·2차와 같다
  * (scripts/indicator-backtest.mjs: 서울 부트스트랩 0.9 이상 + 5권역 중 4곳 이상).

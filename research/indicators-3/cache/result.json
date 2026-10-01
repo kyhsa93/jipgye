@@ -1,0 +1,261 @@
+{
+  "shots": 24,
+  "rows": [
+    {
+      "id": "out_share",
+      "ko": "서울 아파트 외지인 매입 비중",
+      "lag": 0,
+      "h": {
+        "3": {
+          "origins": 172,
+          "base": 2.43,
+          "with": 2.41,
+          "gain": 0.02,
+          "win": 0.56,
+          "passes": false
+        },
+        "6": {
+          "origins": 169,
+          "base": 4.71,
+          "with": 4.57,
+          "gain": 0.14,
+          "win": 0.6,
+          "passes": false
+        },
+        "12": {
+          "origins": 163,
+          "base": 8.18,
+          "with": 8.7,
+          "gain": -0.52,
+          "win": 0.27,
+          "passes": false
+        }
+      },
+      "leads": []
+    },
+    {
+      "id": "out_share",
+      "ko": "서울 아파트 외지인 매입 비중",
+      "lag": 1,
+      "h": {
+        "3": {
+          "origins": 172,
+          "base": 2.43,
+          "with": 2.39,
+          "gain": 0.04,
+          "win": 0.6,
+          "passes": false
+        },
+        "6": {
+          "origins": 169,
+          "base": 4.71,
+          "with": 4.61,
+          "gain": 0.1,
+          "win": 0.57,
+          "passes": false
+        },
+        "12": {
+          "origins": 163,
+          "base": 8.18,
+          "with": 8.63,
+          "gain": -0.45,
+          "win": 0.3,
+          "passes": false
+        }
+      },
+      "leads": []
+    },
+    {
+      "id": "out_share12",
+      "ko": "외지인 매입 비중 12개월 변화",
+      "lag": 0,
+      "h": {
+        "3": {
+          "origins": 172,
+          "base": 2.43,
+          "with": 2.53,
+          "gain": -0.1,
+          "win": 0.03,
+          "passes": false
+        },
+        "6": {
+          "origins": 169,
+          "base": 4.71,
+          "with": 5.19,
+          "gain": -0.48,
+          "win": 0.02,
+          "passes": false
+        },
+        "12": {
+          "origins": 163,
+          "base": 8.18,
+          "with": 9.05,
+          "gain": -0.87,
+          "win": 0.13,
+          "passes": false
+        }
+      },
+      "leads": []
+    },
+    {
+      "id": "out_share12",
+      "ko": "외지인 매입 비중 12개월 변화",
+      "lag": 1,
+      "h": {
+        "3": {
+          "origins": 172,
+          "base": 2.43,
+          "with": 2.51,
+          "gain": -0.08,
+          "win": 0.01,
+          "passes": false
+        },
+        "6": {
+          "origins": 169,
+          "base": 4.71,
+          "with": 5.12,
+          "gain": -0.41,
+          "win": 0.04,
+          "passes": false
+        },
+        "12": {
+          "origins": 163,
+          "base": 8.18,
+          "with": 8.92,
+          "gain": -0.74,
+          "win": 0.15,
+          "passes": false
+        }
+      },
+      "leads": []
+    },
+    {
+      "id": "mort_bal12",
+      "ko": "주택관련대출 잔액(전국 은행) 12개월 증가율",
+      "lag": 0,
+      "h": {
+        "3": {
+          "origins": 172,
+          "base": 2.43,
+          "with": 2.46,
+          "gain": -0.03,
+          "win": 0.22,
+          "passes": false
+        },
+        "6": {
+          "origins": 169,
+          "base": 4.71,
+          "with": 4.83,
+          "gain": -0.12,
+          "win": 0.3,
+          "passes": false
+        },
+        "12": {
+          "origins": 163,
+          "base": 8.18,
+          "with": 8.56,
+          "gain": -0.38,
+          "win": 0.2,
+          "passes": false
+        }
+      },
+      "leads": []
+    },
+    {
+      "id": "mort_bal_seoul12",
+      "ko": "주택관련대출 잔액(서울 은행) 12개월 증가율",
+      "lag": 0,
+      "h": {
+        "3": {
+          "origins": 172,
+          "base": 2.43,
+          "with": 2.5,
+          "gain": -0.07,
+          "win": 0.16,
+          "passes": false
+        },
+        "6": {
+          "origins": 169,
+          "base": 4.71,
+          "with": 5.04,
+          "gain": -0.33,
+          "win": 0.12,
+          "passes": false
+        },
+        "12": {
+          "origins": 163,
+          "base": 8.18,
+          "with": 9.53,
+          "gain": -1.35,
+          "win": 0.01,
+          "passes": false
+        }
+      },
+      "leads": []
+    },
+    {
+      "id": "permits12",
+      "ko": "서울 주택 인허가 12개월 합 전년 대비",
+      "lag": 0,
+      "h": {
+        "3": {
+          "origins": 172,
+          "base": 2.43,
+          "with": 2.65,
+          "gain": -0.22,
+          "win": 0,
+          "passes": false
+        },
+        "6": {
+          "origins": 169,
+          "base": 4.71,
+          "with": 5.19,
+          "gain": -0.48,
+          "win": 0,
+          "passes": false
+        },
+        "12": {
+          "origins": 163,
+          "base": 8.18,
+          "with": 9.4,
+          "gain": -1.22,
+          "win": 0,
+          "passes": false
+        }
+      },
+      "leads": []
+    },
+    {
+      "id": "permits_lag36",
+      "ko": "3년 전 서울 주택 인허가(지금 들어오는 공급) 전년 대비",
+      "lag": 0,
+      "h": {
+        "3": {
+          "origins": 147,
+          "base": 2.54,
+          "with": 2.78,
+          "gain": -0.24,
+          "win": 0.02,
+          "passes": false
+        },
+        "6": {
+          "origins": 141,
+          "base": 5.12,
+          "with": 5.21,
+          "gain": -0.09,
+          "win": 0.06,
+          "passes": false
+        },
+        "12": {
+          "origins": 129,
+          "base": 9.16,
+          "with": 7.79,
+          "gain": 1.37,
+          "win": 0.29,
+          "passes": false
+        }
+      },
+      "leads": []
+    }
+  ]
+}
