@@ -32,6 +32,7 @@ const CANCELLATION_PATH = path.join(root, "docs/cancelled-deals.html");
 const RENEWAL_PATH = path.join(root, "docs/renewal-vs-new.html");
 const FLOOR_PATH = path.join(root, "docs/floor-gap.html");
 const OUTLOOK_PATH = path.join(root, "docs/price-outlook.html");
+const RECORD_PATH = path.join(root, "docs/record-high.html");
 const DATA_DIR = path.join(root, "docs/data");
 
 export const MIN_SAMPLE = 5;
@@ -956,6 +957,8 @@ async function main() {
   const outlook = await readJson("outlook");
   // 전망의 문장과 표는 빌더가 두 언어로 다 만들어 둔다. 여기서는 한국어를 꽂기만 한다.
   const outlookText = (key) => (outlook?.[key]?.ko ? escapeHtml(outlook[key].ko) : null);
+  const record = await readJson("record-high");
+  const recordText = (key) => (record?.[key]?.ko ? escapeHtml(record[key].ko) : null);
 
   for (const [file, path_, fileBlocks] of [
     ["docs/index.html", INDEX_PATH, blocks],
@@ -1009,6 +1012,16 @@ async function main() {
         floorDistrictLead: floor?.districtLead?.ko ? escapeHtml(floor.districtLead.ko) : null,
         floorDistricts: floorDistrictsHtml(floor),
         floorDistrictLinks: floorDistrictLinksHtml(floor),
+      },
+    ],
+    [
+      "docs/record-high.html",
+      RECORD_PATH,
+      {
+        recordLead: recordText("lead"),
+        recordControl: recordText("control"),
+        recordSurvival: recordText("survival"),
+        recordRobust: record?.tables?.robust?.ko ?? null,
       },
     ],
     [

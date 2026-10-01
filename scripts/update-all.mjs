@@ -24,6 +24,7 @@ async function main() {
   run("node scripts/build-floor-gap.mjs");
   run("node scripts/build-outlook.mjs");
   run("node scripts/build-complex-price.mjs");
+  run("node scripts/build-record-high.mjs");
   run("node scripts/build-complex-ratio.mjs");
   run("node scripts/build-rent-preview.mjs");
   run("node scripts/build-search-index.mjs");

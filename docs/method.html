@@ -114,6 +114,12 @@
     <p>이렇게 고친 범위가 맞는지는 이미 지난 거래로 쟀습니다. 2026년 6&middot;7월 계약을 직전 6개월 같은 칸의 고친 중앙값과 견주면 서울 전체로 +0.4%, 자치구별로 &minus;1.9%~+1.8%였습니다. 권역 지수는 같은 권역 안 자치구의 차이까지는 고치지 못합니다 &mdash; 그래서 고치기 전 중앙값을 옆에 같이 둡니다.</p>
     <p>5건 이상이면 가운데 절반(사분위), 3~4건이면 최저~최고를 적습니다. 2건 이하면 범위를 내지 않고 신고 건수만 남깁니다.</p>
 
+    <h2 id="record-high">신고가 다음 거래는 아무 거래 뒤와 견줍니다</h2>
+    <p>신고가는 같은 단지, 같은 전용면적에서 그 전 거래가 3건 이상 있고 첫 거래로부터 180일 넘게 지난 뒤, 그 전 최고가를 넘은 중개거래입니다. 그 뒤 90일 안에 같은 칸에서 일어난 첫 거래가 신고가 이상이었는지를 셉니다.</p>
+    <p>이 비율 하나만으로는 뜻이 없어서 셋과 견줍니다. <strong>아무 거래 뒤의 다음 거래</strong>, <strong>그 전 최고가의 98~100%였던 거래 뒤</strong>(위쪽 끝이라서 다음 거래가 낮게 나오는 몫), 그리고 <strong>다음 거래가 같거나 높은 층일 때만</strong>(신고가가 고층이라서 생긴 차이인지)입니다.</p>
+    <p>다음 거래가 있는 신고가만 세면 빨리 다시 팔리는 단지만 남습니다. 그래서 90일 넘게 지난 신고가만 놓고, 그 안에 다음 거래가 없었던 것도 &ldquo;다음 거래 없음&rdquo;으로 같이 셉니다.</p>
+    <p>선행 거래 수(2&middot;3&middot;5건), 비교 기간(90&middot;180일), 기다린 날(90&middot;180일)을 바꿔 매일 다시 세고, 모든 조합에서 결론이 유지될 때만 화면의 첫 문장을 씁니다. 1년 비교는 원본이 아직 2년이 안 돼 셀 수 없습니다.</p>
+
     <h2>층은 같은 칸 안에서만 견줍니다</h2>
     <p>1층이 얼마나 싼지는 자치구 평균으로는 나오지 않습니다. 그 평균에는 낡은 단지와 새 단지가, 역세권과 아닌 곳이 함께 들어 있어서 층 말고 다른 것이 먼저 값을 가릅니다. 그래서 견주는 자리를 <strong>같은 자치구, 같은 단지, 같은 전용면적</strong>으로 좁힙니다. 한 칸 안에서는 층 말고 거의 모든 것이 같습니다.</p>
     <p>1층만 셉니다. 2층도 저층으로 값이 깎이는 자리라, 대조군(3층 이상)에 넣으면 1층 할인이 실제보다 작아 보입니다. 한 칸에 3층 이상 거래가 세 건은 있어야 견줍니다 &mdash; 둘로 낸 중앙값은 그냥 두 값의 평균입니다. 한쪽이 50%를 넘게 벗어난 칸은 같은 이름의 다른 단지가 섞였거나 신고가 잘못 들어온 것으로 보고 버립니다.</p>
@@ -214,6 +220,12 @@
     <p>The reference month is the last month with an index value. The official index runs two months behind; closed months in that gap use the values the <a href="./price-outlook.html">outlook page</a> fills from our own filings, and the card states how far those have leaned from the official figure. Deals signed after the reference month have no index to adjust with, are included as filed, and are counted.</p>
     <p>The adjustment was checked on deals already done: comparing June&ndash;July 2026 sales with the adjusted median of the same cell's previous six months gave +0.4% across Seoul and &minus;1.9% to +1.8% by district. A regional index cannot correct differences between districts inside a region, so the unadjusted median is shown alongside.</p>
     <p>Five or more deals give the middle half (quartiles), three or four give low&ndash;high, and two or fewer give no range &mdash; only the count.</p>
+
+    <h2 id="record-high-en">The sale after a record high is compared with the sale after any sale</h2>
+    <p>A record high is a brokered sale above every earlier sale in the same complex and exclusive area, with at least three earlier sales and more than 180 days since the first. The question is whether the first sale in the same cell within the next 90 days matched or beat it.</p>
+    <p>That share means little alone, so it is set against three others: the sale after <strong>any sale</strong>, the sale after <strong>one within 2% below the previous high</strong> (the part due simply to being at the top), and only <strong>next sales on the same or a higher floor</strong> (whether record highs were just high floors).</p>
+    <p>Counting only record highs that were followed by a sale would keep only fast-trading complexes. So only record highs at least 90 days old are used, and those with no following sale are counted as such.</p>
+    <p>The number of earlier sales (2, 3, 5), the history (90, 180 days) and the wait (90, 180 days) are varied and re-counted every day; the page's headline is used only if every combination agrees. A one-year history cannot be tested yet.</p>
 
     <h2>Floors are compared only inside the same cell</h2>
     <p>A district average cannot say what a first floor costs. That average mixes old buildings with new ones and stations with none, and those decide the price before the floor does. So the comparison narrows to <strong>one district, one complex, one exclusive floor area</strong>. Inside such a cell almost nothing differs but the floor.</p>

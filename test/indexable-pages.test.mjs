@@ -75,6 +75,7 @@ const INDEXABLE = [
   "mortgage-rates.html",
   "price-outlook.html",
   "realestate.html",
+  "record-high.html",
   "renewal-vs-new.html",
   "rent-loan-rates.html",
   "saving-rates.html",
