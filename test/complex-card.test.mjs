@@ -136,3 +136,41 @@ test("여러 단지에 걸리는 글자에는 카드를 그리지 않는다", as
   // 목록은 그대로 걸러진다 - 카드만 없다.
   assert.match(p.resultHtml(), /상계주공/);
 });
+
+test("최근 두 달 표도 빌드가 묶은 평형으로 묶는다 - 소수점 면적끼리 쪼개져 전세가율이 비지 않게 (#39)", async () => {
+  const p = await page("?district=노원구&apt=상계주공7(고층)");
+  // 헬리오시티 84형처럼 84.95/84.98/84.99로 신고됐다. 따로 두면 어느 칸도 세 건이 안 된다.
+  const sales = [84.95, 84.98, 84.99].map((area) => ({ apt: "가상", area, amount10k: 300000 }));
+  const rents = [84.95, 84.96, 84.99, 84.98].map((area) => ({ apt: "가상", area, deposit10k: 150000 }));
+  rents.push({ apt: "가상", area: 59.9, deposit10k: 100000 });
+  const cells = { "84.98": { areas: [84.95, 84.96, 84.98, 84.99] } };
+
+  const rows = p.sandbox.complexAreas("가상", sales, rents, cells);
+  const big = rows.find((r) => r.area === 84.98);
+  assert.equal(big.sale.length, 3);
+  assert.equal(big.jeonse.length, 4);
+  assert.equal(big.ratio, 50, "묶었으면 전세가율이 나와야 한다");
+  assert.ok(rows.some((r) => r.area === 59.9), "빌드가 못 본 면적은 제 면적 그대로 남는다");
+  assert.equal(p.sandbox.complexAreas("가상", sales, rents).filter((r) => r.ratio !== null).length, 0, "전제: 묶지 않으면 비어야 한다");
+});
+
+test("카드의 최근 두 달 표가 묶인 면적 폭을 적는다", async () => {
+  const [deals, rents] = await Promise.all([readJson("deals-nowon"), readJson("rents-nowon")]);
+  const target = deals.deals[0];
+  const twin = Math.round((target.area + 0.03) * 100) / 100;
+  deals.deals.push({ ...target, area: twin });
+  const complexPrice = { reference: "202608", cells: { [target.apt]: { [String(target.area)]: { n: 2, areas: [target.area, twin] } } } };
+  const p = await loadDealSearchPage({
+    budget: await readJson("budget-deals"),
+    search: await readJson("deal-search"),
+    deals: { 노원구: deals },
+    rents: { 노원구: rents },
+    complexPrices: { 노원구: complexPrice },
+    query: `?district=노원구&apt=${encodeURIComponent(target.apt)}`,
+  });
+  await settle();
+  const html = p.byId("complex-card").innerHTML;
+  const ratioTable = html.slice(html.indexOf("최근 두 달"));
+  assert.ok(ratioTable.includes(`${target.area}~${twin}`), "묶인 면적 폭이 없다");
+  assert.ok(!ratioTable.includes(`<td>${twin}㎡`), "묶인 면적이 따로 줄을 차지했다");
+});

@@ -1018,13 +1018,30 @@ function medianOf(values) {
 }
 
 /** 고른 단지의 평형별 매매·전세 중앙값과 전세가율. 넓은 평형부터. */
-function complexAreas(apt, sales, rents) {
+/**
+ * 빌드가 묶은 평형(1㎡ 안쪽 표기 차이)을 면적 → 묶음 이름으로. 묶는 규칙은 빌드(scripts/complex-price.mjs의
+ * areaGroups) 한 곳에만 있다 - 여기서 다시 묶으면 두 벌의 규칙이 된다(#39). 빌드가 못 본 면적(여섯 달 안 매매가
+ * 없는 전세 평형 등)은 제 면적 그대로 둔다.
+ */
+function areaLabels(cells) {
+  const out = new Map();
+  for (const [label, c] of Object.entries(cells ?? {})) {
+    for (const area of c?.areas ?? [Number(label)]) out.set(Number(area), Number(label));
+  }
+  return out;
+}
+
+function complexAreas(apt, sales, rents, cells) {
   const term = squash(apt);
   if (!term) return [];
+  const labels = areaLabels(cells);
   const byArea = new Map();
-  const slot = (area) => {
-    if (!byArea.has(area)) byArea.set(area, { area, sale: [], jeonse: [] });
-    return byArea.get(area);
+  const slot = (raw) => {
+    const area = labels.get(Number(raw)) ?? raw;
+    if (!byArea.has(area)) byArea.set(area, { area, members: new Set(), sale: [], jeonse: [] });
+    const row = byArea.get(area);
+    row.members.add(Number(raw));
+    return row;
   };
 
   for (const deal of sales ?? []) {
@@ -1131,7 +1148,7 @@ function complexCardHtml() {
   const names = [...(sales ?? []), ...Object.keys(prices?.cells ?? {}).map((apt) => ({ apt }))];
   const apt = resolveComplex(aptTerm(), names);
   if (!apt) return "";
-  const rows = complexAreas(apt, sales, fullRents.get(district));
+  const rows = complexAreas(apt, sales, fullRents.get(district), prices?.cells?.[apt]);
   const priceHtml = complexPriceHtml(prices, apt);
   if (!rows.length && !priceHtml) return "";
 
@@ -1149,7 +1166,11 @@ function complexCardHtml() {
       rows
         .map(
           (row) =>
-            `<tr><td>${escapeHtml(`${row.area}㎡`)}</td>` +
+            `<tr><td>${escapeHtml(`${row.area}㎡`)}${
+              row.members.size > 1
+                ? ` <span class="count">${escapeHtml(`${Math.min(...row.members)}~${Math.max(...row.members)}`)}</span>`
+                : ""
+            }</td>` +
             `<td data-label="${escapeHtml(t("kindSale"))}">${cell(row.saleMedian, row.sale.length)}</td>` +
             `<td data-label="${escapeHtml(t("kindJeonse"))}">${cell(row.jeonseMedian, row.jeonse.length)}</td>` +
             `<td data-label="${escapeHtml(t("complexRatio"))}">${row.ratio === null ? "-" : `${row.ratio.toFixed(1)}%`}</td></tr>`
