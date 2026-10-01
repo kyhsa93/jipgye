@@ -1,9 +1,9 @@
-// #10 완료 조건 1: 2026-06·07 계약을 직전 183일 같은 칸(scripts/complex-price.mjs 규칙)으로 견준 치우침.
+// #10 완료 조건 1(#32 뒤로 면적 묶음 반영): 2026-06·07 계약을 직전 183일 같은 칸(scripts/complex-price.mjs 규칙)으로 견준 치우침.
 // 서울 ±1%p, 자치구 잔여 ±2.5%p 안이어야 한다. 데이터에 따라 갈리므로 테스트가 아니라 이 스크립트로 잰다(#8).
 // 저장소 루트에서: node research/complex-price/check.mjs
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
-import { adjust, indexLevels, marketDeal, MIN_DEALS, WINDOW_DAYS } from "../../scripts/complex-price.mjs";
+import { adjust, areaGroups, indexLevels, marketDeal, MIN_DEALS, WINDOW_DAYS } from "../../scripts/complex-price.mjs";
 
 const root = path.resolve(import.meta.dirname, "../..");
 const index = JSON.parse(await readFile(path.join(root, "raw/ecos/apt-price-index.json"), "utf8"));
@@ -15,6 +15,17 @@ for (const f of await readdir(path.join(root, "raw/sale"))) {
     const d = marketDeal(item);
     if (d) deals.push(d);
   }
+}
+// 화면과 같이 같은 단지 안 1㎡ 안쪽 면적은 한 칸으로 묶는다(#32).
+const byApt = new Map();
+for (const d of deals) {
+  const k = `${d.district}|${d.apt}`;
+  if (!byApt.has(k)) byApt.set(k, []);
+  byApt.get(k).push(d);
+}
+for (const group of byApt.values()) {
+  const label = areaGroups(group);
+  for (const d of group) d.area = label.get(d.area);
 }
 const byCell = new Map();
 for (const d of deals) {

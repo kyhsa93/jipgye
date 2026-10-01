@@ -8,7 +8,8 @@
  * 12개월로 넓혀 보니 같은 칸 중앙값이 대상 거래보다 8.8% 낮게 나왔다 - 1년 사이 서울이
  * 13~15% 올랐다(DIRECTION 체크리스트 12). 그래서 여섯 달만 보고, 그 안의 거래를 권역
  * 실거래가격지수로 <strong>기준 달 값으로 고친다.</strong> 2026-06·07 계약을 직전 여섯 달
- * 같은 칸으로 견주면 치우침 +0.4%, 자치구 잔여 -2.0~+1.8%였다(research/buyer-planning-2026-10/).
+ * 같은 칸으로 견주면 치우침 +0.4%, 자치구 잔여 -2.0~+1.8%였다(research/buyer-planning-2026-10/). 1㎡ 안쪽 면적을
+ * 한 칸으로 묶은 뒤(#32)엔 +0.3%, -2.2~+1.9%, 범위를 낼 수 있는 거래 73.2%(research/complex-price/).
  *
  * 지수는 권역(서울 생활권 다섯)까지만 있다. 같은 권역 안에서도 자치구가 다르게 움직이므로
  * 고친 값에도 그만큼의 오차가 남는다(체크리스트 13) - 보정 전 중앙값을 옆에 같이 싣는다.
@@ -146,19 +147,60 @@ export function windowStart(now) {
 }
 
 /** 자치구 하나의 칸 요약: { 단지명: { 평형: 요약 } }. */
+/**
+ * 같은 평형의 면적 표기 차이를 한 칸으로 묶는 폭(㎡). 헬리오시티 84형이 84.99/84.98/84.96/84.95 네 칸으로
+ * 쪼개져 한 줄은 "신고 2건 — 범위 없음"이 됐다(#32). 매수자는 평형(59·84형)으로 생각하고, 한 단지 안에서
+ * 1㎡ 안쪽 차이는 사실상 같은 타입이다. 면적 차이의 분포는 매끄럽게 이어져 데이터로 문턱을 고를 수 없어서
+ * (0.2㎡ 미만 23%, 0.2~1㎡ 12%, 1~2㎡ 4% — 2026-10-01) 이 폭을 결과를 보기 전에 정해 둔다(체크리스트 4).
+ */
+export const AREA_GROUP = 1;
+
+/**
+ * 한 단지의 면적들을 묶음으로. 작은 것부터 훑어 묶음의 첫 면적에서 AREA_GROUP 안이면 같은 묶음이다 - 이웃끼리만
+ * 보면 84.0 → 84.9 → 85.8처럼 사슬로 번진다. 묶음의 이름은 거래가 가장 많은 면적(같으면 작은 쪽).
+ */
+export function areaGroups(deals) {
+  const counts = new Map();
+  for (const d of deals) counts.set(d.area, (counts.get(d.area) ?? 0) + 1);
+  const sorted = [...counts.keys()].sort((a, b) => a - b);
+  const label = new Map();
+  let group = [];
+  const close = () => {
+    if (!group.length) return;
+    const name = [...group].sort((a, b) => counts.get(b) - counts.get(a) || a - b)[0];
+    for (const a of group) label.set(a, name);
+    group = [];
+  };
+  for (const area of sorted) {
+    if (group.length && area - group[0] >= AREA_GROUP) close();
+    group.push(area);
+  }
+  close();
+  return label;
+}
+
+/** 자치구 하나의 칸 요약: { 단지명: { 평형(묶음 이름): 요약 } }. 묶인 면적이 여럿이면 areas로 남긴다. */
 export function districtCells(deals, levels, reference) {
-  const cells = new Map();
+  const byApt = new Map();
   for (const deal of deals) {
-    const key = `${deal.apt}\u0000${deal.area}`;
-    if (!cells.has(key)) cells.set(key, []);
-    cells.get(key).push(deal);
+    if (!byApt.has(deal.apt)) byApt.set(deal.apt, []);
+    byApt.get(deal.apt).push(deal);
   }
 
   const out = {};
-  for (const [key, group] of [...cells].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))) {
-    const [apt, area] = key.split("\u0000");
-    out[apt] ??= {};
-    out[apt][area] = summarize(group, levels, reference);
+  for (const [apt, aptDeals] of [...byApt].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))) {
+    const label = areaGroups(aptDeals);
+    const cells = new Map();
+    for (const deal of aptDeals) {
+      const name = label.get(deal.area);
+      if (!cells.has(name)) cells.set(name, []);
+      cells.get(name).push(deal);
+    }
+    out[apt] = {};
+    for (const [name, group] of [...cells].sort(([a], [b]) => a - b)) {
+      const areas = [...new Set(group.map((d) => d.area))].sort((a, b) => a - b);
+      out[apt][name] = { ...summarize(group, levels, reference), ...(areas.length > 1 ? { areas } : {}) };
+    }
   }
   return out;
 }

@@ -195,7 +195,7 @@ const T = {
     priceRaw: "고치기 전 중앙값",
     priceThin: (n) => `신고 ${n}건 — 범위를 내지 않습니다`,
     priceNote: (month, filled, bias, unadjusted) =>
-      "같은 단지 같은 전용면적의 최근 6개월 중개거래(직거래·해제 제외)를 권역 실거래가격지수로 " +
+      "같은 단지 같은 전용면적(1㎡ 안쪽 표기 차이는 한 칸으로 묶음)의 최근 6개월 중개거래(직거래·해제 제외)를 권역 실거래가격지수로 " +
       `${month} 값으로 고쳤습니다. 6개월 사이 값이 움직였으니 그대로 모으면 반년 전 값이 섞입니다. ` +
       (filled
         ? `${month}은 공식 지수가 아직 없어 우리가 받는 신고로 메운 값입니다` +
@@ -326,7 +326,7 @@ const T = {
     priceRaw: "Unadjusted median",
     priceThin: (n) => `${n} filed — no range`,
     priceNote: (month, filled, bias, unadjusted) =>
-      "Brokered sales (direct and cancelled deals excluded) in the same complex and exclusive area over the last six months, " +
+      "Brokered sales (direct and cancelled deals excluded) in the same complex and exclusive area (sizes within 1m² merged as one type) over the last six months, " +
       `adjusted to ${month} with the regional sale price index. Prices moved over six months, so pooling them as-is would mix in half-year-old values. ` +
       (filled
         ? `The official index does not yet cover ${month}; that month is filled from the filings we collect` +
@@ -1068,7 +1068,9 @@ function complexPriceHtml(file, apt) {
 
   const body = rows
     .map(([area, c]) => {
-      const head = `<td>${escapeHtml(`${area}㎡`)}</td>`;
+      // 같은 평형의 면적 표기 차이(1㎡ 안쪽)는 한 칸으로 묶었다 - 묶였으면 그 폭을 적는다(#32).
+      const span = c.areas?.length > 1 ? ` <span class="count">${escapeHtml(`${c.areas[0]}~${c.areas.at(-1)}`)}</span>` : "";
+      const head = `<td>${escapeHtml(`${area}㎡`)}${span}</td>`;
       if (!c.median) {
         return `<tr>${head}<td colspan="4"><span class="low-sample">${escapeHtml(t("priceThin")(c.n))}</span></td></tr>`;
       }

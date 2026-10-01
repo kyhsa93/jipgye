@@ -171,3 +171,23 @@ test("두 달 목록에 없는 단지도 여섯 달 안에 거래가 있으면 �
   assert.match(html, /2026년 8월/);
   assert.match(html, /\+0\.35%p/, "메운 달의 치우침을 적지 않았다");
 });
+
+test("한 단지 안 1㎡ 안쪽 면적은 한 칸으로 묶되, 사슬로 번지지 않는다 (#32)", async () => {
+  const { areaGroups } = await import("../scripts/complex-price.mjs");
+  const deals = [84.95, 84.96, 84.98, 84.98, 84.99, 59.9, 84.0, 84.9, 85.8].map((area) => ({ area }));
+  const label = areaGroups(deals);
+  // 84.0부터 1㎡ 안(84.0~84.99)은 한 묶음, 85.8은 84.0에서 1㎡를 넘어 따로 - 84.9를 거쳐 사슬로 붙지 않는다.
+  assert.equal(label.get(84.95), label.get(84.0));
+  assert.equal(label.get(84.95), 84.98, "묶음 이름은 거래가 가장 많은 면적");
+  assert.equal(label.get(85.8), 85.8);
+  assert.equal(label.get(59.9), 59.9);
+});
+
+test("묶인 칸은 묶인 면적들을 남기고, 거래를 합쳐 범위를 낸다", () => {
+  const { levels } = indexLevels(index, null);
+  const deals = [84.95, 84.96, 84.98].map((a) => marketDeal(item({ excluUseAr: a })));
+  const cells = districtCells(deals, levels, "202607");
+  assert.deepEqual(Object.keys(cells["가단지"]), ["84.95"]);
+  assert.deepEqual(cells["가단지"]["84.95"].areas, [84.95, 84.96, 84.98]);
+  assert.equal(cells["가단지"]["84.95"].n, 3, "같은 평형 세 건이 합쳐지지 않았다");
+});
