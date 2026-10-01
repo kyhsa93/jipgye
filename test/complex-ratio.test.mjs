@@ -11,6 +11,7 @@ import {
   spreadSentence,
 } from "../scripts/complex-ratio.mjs";
 import { buildPayload } from "../scripts/build-complex-ratio.mjs";
+import { formatPercent } from "../scripts/realestate-format.mjs";
 
 const NOW = new Date("2026-08-29T00:00:00Z");
 const sale = (amount, extra = {}) => ({ aptNm: "가상아파트", excluUseAr: 59.94, dealAmount: amount, ...extra });
@@ -126,9 +127,12 @@ test("정적 HTML과 자바스크립트가 같은 카드를 그린다", async ()
   const spread = complexRatio.districts[district];
   assert.ok(spread, `${district}에 분포가 없다 - 다른 구로 검사를 바꿔야 한다`);
 
+  // 56.0처럼 정수로 떨어지는 날에도 화면은 "56.0%"를 적는다. 숫자를 그대로 붙이면 "56%"를 찾는다.
+  const shown = formatPercent(spread.median).replace(".", "\\.");
+
   // 정적 HTML에 들어 있는 값
   const html = await readFile(path.join(root, "docs/district-nowon.html"), "utf8");
-  assert.match(html, new RegExp(`단지별 중앙값</div><div class="value">${spread.median}%`));
+  assert.match(html, new RegExp(`단지별 중앙값</div><div class="value">${shown}`));
 
   // 자바스크립트가 붙은 뒤의 값. 다르면 화면이 한 번 튄다.
   const page = await loadRealestatePage({ realestate, complexRatio, district });
@@ -136,7 +140,7 @@ test("정적 HTML과 자바스크립트가 같은 카드를 그린다", async ()
     await new Promise((r) => setTimeout(r, 5));
   }
   const rendered = String(page.byId("overall-cards").innerHTML);
-  assert.match(rendered, new RegExp(`단지별 중앙값</div><div class="value">${spread.median}%`));
+  assert.match(rendered, new RegExp(`단지별 중앙값</div><div class="value">${shown}`));
   assert.match(rendered, new RegExp(`단지·평형 ${spread.cells.toLocaleString("ko-KR")}칸`));
 });
 
