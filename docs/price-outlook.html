@@ -126,7 +126,9 @@ const T = {
     indicatorNote:
       "거래량·전세가율·금리·미분양·소비자심리·매매수급지수·계절을 위 모델(지난 가격 변화만 쓰는 것)에 하나씩 더 넣고, 2012년부터 매달 그 시점에 서서 다시 예측해 봤습니다. 칸의 큰 숫자는 그 지표를 넣었을 때의 평균 오차, 작은 글씨는 넣지 않은 기준 모델의 오차와 '넣은 쪽이 이긴' 비율(12개월 덩어리 1,000번 재추출)입니다. " +
       "'앞섬'은 그 비율이 90% 이상이고 5개 권역 중 4곳 이상에서도 그럴 때만 씁니다. 지표 17개를 여러 방식으로 재면 하나쯤은 우연히 넘습니다 — 서울에서만 넘은 주담대 금리는 화면에 넣지 않고 따로 쌓아 채점합니다. " +
-      "'(+n개월)'은 가격지수보다 빨리 나오는 지표를 그 시점에 이미 볼 수 있는 만큼 뒤 값까지 쓴 것입니다. KB 지수의 두 달 뒤 값은 같은 달을 먼저 공표한 것이라 앞섬이 아니라 답을 일찍 본 것입니다. 매일 다시 셉니다.",
+      "'(+n개월)'은 가격지수보다 빨리 나오는 지표를 그 시점에 이미 볼 수 있는 만큼 뒤 값까지 쓴 것입니다. KB 지수의 두 달 뒤 값은 같은 달을 먼저 공표한 것이라 앞섬이 아니라 답을 일찍 본 것입니다. " +
+      "그 '일찍 본 답'을 예측에 넣을지도 따로 재 봤습니다(2026-10-01). 공표일대로 — 공식 지수는 매월 15일께 두 달 전 달을, KB는 그 달 말에 낸다 — 매달 5일·20일에 서서 그날 볼 수 있던 것만 쓰면 3개월 오차가 2.41%p에서 2.23%p로 줄지만 그 이득은 KB가 두 달 앞서는 매달 1~14일에만 있고, " +
+      "공식 지수가 없는 달 하나를 메우는 데는 우리 원본(공식과 평균 0.44%p 차)이 KB(0.79%p)보다 정확해 넣지 않았습니다(research/kb-vintage/). 매일 다시 셉니다.",
     regionNote:
       "권역은 서울시 생활권 다섯 곳입니다 — 도심(종로·중·용산), 동북(성동·광진·동대문·중랑·성북·강북·도봉·노원), 서북(은평·서대문·마포), 서남(양천·강서·구로·금천·영등포·동작·관악), 동남(서초·강남·송파·강동). 자치구 단위의 공식 지수는 이 계열에 없어 자치구 값은 내지 않습니다. " +
       "범위는 같은 방식의 지난 예측이 실제와 벌어진 정도의 가운데 80%입니다. 앞으로도 열에 여덟이 그 안에 든다는 약속이 아닙니다. " +
@@ -165,7 +167,9 @@ const T = {
     indicatorNote:
       "Volume, jeonse ratio, rates, unsold homes, consumer sentiment, the buyer-seller index and the calendar month were each added to the model above (which uses past prices only), and the forecast re-run for every month since 2012. The large figure is the average error with the indicator; the small text is the error without it and the share of 1,000 twelve-month block resamples in which adding it won. " +
       "'Leads' requires 90% or more in Seoul and in at least four of the five regions. Testing 17 indicators several ways will pass one by chance — the mortgage rate passed in Seoul only, so it is not used and is scored separately instead. " +
-      "'(+n m)' uses values that are published sooner than the price index, up to what would already be visible. KB's value two months ahead is the same month published earlier, which is seeing the answer early rather than leading. Re-counted daily.",
+      "'(+n m)' uses values that are published sooner than the price index, up to what would already be visible. KB's value two months ahead is the same month published earlier, which is seeing the answer early rather than leading. " +
+      "Whether to use that early answer anyway was tested separately (2026-10-01): following the release calendar — the official index lands around the 15th for two months earlier, KB at month-end — and standing on the 5th and 20th of each month with only what was visible then, the three-month error falls from 2.41pp to 2.23pp, but the gain sits entirely in days 1–14 when KB is two months ahead, " +
+      "and for filling the one month the official index has not reached, our own filings (0.44pp from the official figure) beat KB (0.79pp), so it is not used. Re-counted daily.",
     regionNote:
       "Regions are Seoul's five planning areas — Central (Jongno, Jung, Yongsan), Northeast (Seongdong, Gwangjin, Dongdaemun, Jungnang, Seongbuk, Gangbuk, Dobong, Nowon), Northwest (Eunpyeong, Seodaemun, Mapo), Southwest (Yangcheon, Gangseo, Guro, Geumcheon, Yeongdeungpo, Dongjak, Gwanak), Southeast (Seocho, Gangnam, Songpa, Gangdong). The official series has no district level, so no district figures are given. " +
       "The range is the middle 80% of how far the same forecast missed in the past. It is not a promise that eight in ten will land inside it from now on. " +
