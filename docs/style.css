@@ -2789,3 +2789,41 @@ details.fold > summary {
   font-size: var(--fs-sm);
   font-weight: 600;
 }
+
+/* 갈아타기: 두 구를 한 줄에 "[구] → [구]", 답 한 줄은 그 바로 밑 큰 글씨(UIUX #52). */
+.switch-pick {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: end;
+  gap: 8px;
+  max-width: 32rem;
+}
+
+.switch-pick label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.switch-pick select {
+  width: 100%;
+  min-height: var(--tap);
+}
+
+.switch-arrow {
+  padding-bottom: 10px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.switch-answer {
+  margin: 14px 0 6px;
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.switch-answer:empty {
+  display: none;
+}

@@ -126,7 +126,7 @@ export function districtHereHtml(name, realestate) {
     [`./deal-search.html?district=${encodeURIComponent(name)}`, `${name} 실거래·단지 찾기`],
     eok ? [`./${budgetPageFile(eok)}`, `${name} 84㎡ 값에 맞는 ${eok}억대 후보`] : null,
     ["./renewal-vs-new.html", "재계약이 시세보다 싼가(구별 표)"],
-    ["./switch-house.html", `${name}에서 옮기면 — 갈아타기`],
+    [`./switch-house.html?from=${encodeURIComponent(name)}`, `${name}에서 옮기면 — 갈아타기`],
   ].filter(Boolean);
   return `<p class="card-links district-here">${links.map(([href, text]) => `<a href="${href}">${text} →</a>`).join(" · ")}</p>`;
 }

@@ -897,4 +897,5 @@ test("자치구 장에 '이 구에서' 길 - 이 구의 실거래, 84㎡ 값의 
   assert.match(districtHereHtml("나구", realestate), /budget-20eok\.html/, "20억대 위는 끝 장으로");
   assert.doesNotMatch(districtHereHtml("다구", realestate), /budget-/, "값이 없는 구에 예산대를 지어냈다");
   assert.match(await read("docs/district-songpa.html"), /class="card-links district-here"/);
+  assert.match(html, /switch-house\.html\?from=%EA%B0%80%EA%B5%AC/, "갈아타기로 갈 때 이 구를 골라 두지 않는다 (#52)");
 });

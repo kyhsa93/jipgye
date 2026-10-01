@@ -191,3 +191,29 @@ test("전망·신고가·층 격차·갈아타기 화면에 단지 카드와 예
     assert.match(html, /nextSearch: "Pick a complex/, `${f}: 영어 문구가 없다`);
   }
 });
+
+test("갈아타기: 주소의 두 구로 열리고, 답 한 줄이 문단 위에 있고, 고른 구가 주소에 남는다 (#52)", async () => {
+  const { loadPage } = await import("./helpers/digest-page.mjs");
+  const payload = {
+    updatedAt: "2026-10-01T00:00:00Z",
+    rows: [
+      { code: "A", name: "가구", cells: 100, change: 13.1, low: 12, high: 15, level84: { base: 80_000, recent: 90_000 } },
+      { code: "B", name: "나구", cells: 100, change: 15.7, low: 13, high: 18, level84: { base: 170_000, recent: 200_000 } },
+      { code: "C", name: "다구", cells: 100, change: 13.0, low: 12, high: 14, level84: { base: 81_000, recent: 91_000 } },
+    ],
+    pairs: { "A-B": false, "A-C": false, "B-C": false },
+    money: { "A-B": { change: 20_000, low: 14_000, high: 32_000 }, "A-C": { change: 0, low: -3_000, high: 3_000 }, "B-C": { change: -20_000, low: -32_000, high: -14_000 } },
+    lead: { ko: "x", en: "x" }, table: { ko: "", en: "" }, regionTable: { ko: "", en: "" }, slugs: {},
+  };
+  const page = await loadPage({ file: "switch-house.html", data: { "district-change": payload }, query: `?from=${encodeURIComponent("다구")}&to=${encodeURIComponent("나구")}` });
+  await page.settle();
+  assert.equal(page.byId("from-select").value, "C", "주소의 from을 안 읽었다");
+  assert.equal(page.text("compare-answer"), "다구 → 나구: 옮기는 데 드는 돈이 2억원 늘었습니다");
+
+  page.byId("from-select").value = "A";
+  page.byId("to-select").value = "C";
+  page.byId("to-select").dispatch("change");
+  await page.settle();
+  assert.equal(page.text("compare-answer"), "가구 → 다구: 옮기는 데 드는 돈이 늘었는지 줄었는지 말할 수 없습니다");
+  assert.match(decodeURIComponent(page.sandbox.location.search), /from=가구&to=다구/, "고른 구가 주소에 안 남았다");
+});

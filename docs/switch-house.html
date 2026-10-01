@@ -69,13 +69,13 @@
 
   <section id="compare-section">
     <h2 id="compare-heading">두 구 견주기</h2>
-    <div class="controls">
-      <label for="from-select" id="from-label">지금 사는 구</label>
-      <select id="from-select"></select>
-      <label for="to-select" id="to-label">옮겨 갈 구</label>
-      <select id="to-select"></select>
+    <div class="switch-pick">
+      <div><label for="from-select" id="from-label">지금 사는 구</label><select id="from-select"></select></div>
+      <span class="switch-arrow" aria-hidden="true">→</span>
+      <div><label for="to-select" id="to-label">옮겨 갈 구</label><select id="to-select"></select></div>
     </div>
-    <p class="lead" id="compare-result" aria-live="polite"></p>
+    <p class="switch-answer" id="compare-answer" aria-live="polite"></p>
+    <p class="lead" id="compare-result"></p>
   </section>
 
   <section id="table-section">
@@ -158,6 +158,11 @@ const T = {
       return pct + lv + gap;
     },
     compareThin: (name) => `${name}는 두 시기 모두 거래된 칸이 모자라 값을 내지 않았습니다.`,
+    // 답 한 줄. 숫자는 아래 문단과 같은 money 값이다(빌드가 낸 것).
+    answer: (a, b, m) =>
+      m.low > 0 || m.high < 0
+        ? `${a.name} → ${b.name}: 옮기는 데 드는 돈이 ${eokText(Math.abs(m.change))} ${m.change > 0 ? "늘었습니다" : "줄었습니다"}`
+        : `${a.name} → ${b.name}: 옮기는 데 드는 돈이 늘었는지 줄었는지 말할 수 없습니다`,
     compareSame: "다른 두 구를 고르세요.",
     tableNote:
       "두 시기 모두 거래가 있는 칸(같은 구·단지·전용면적)만 셉니다. 칸마다 두 시기 중앙값의 변화를 재고, 그 중앙값이 구의 변화입니다. 90% 구간은 칸을 400번 다시 뽑아 만든 것이고, 맞물린 칸이 30개 미만이면 값을 내지 않습니다. 중개거래만 세고 해제·직거래는 뺍니다. 표는 순위가 아닙니다 — 이웃한 줄 사이의 차이는 대부분 구간 안에 있습니다.",
@@ -203,6 +208,10 @@ const T = {
       return pct + lv + gap;
     },
     compareThin: (name) => `${name} has too few units traded in both periods to give a figure.`,
+    answer: (a, b, m) =>
+      m.low > 0 || m.high < 0
+        ? `${a.name} → ${b.name}: the cost of moving ${m.change > 0 ? "rose" : "fell"} by ${eokText(Math.abs(m.change))}`
+        : `${a.name} → ${b.name}: whether the cost of moving rose or fell cannot be told`,
     compareSame: "Pick two different districts.",
     tableNote:
       "Only units (same district, complex and exclusive area) traded in both periods count. Each unit's median change is measured and their median is the district's change. The 90% range comes from resampling units 400 times; fewer than 30 matched units and no figure is given. Brokered sales only; cancelled and direct deals are excluded. The table is not a ranking — most gaps between neighbouring rows sit inside the ranges.",
@@ -264,10 +273,15 @@ function fillSelects() {
     rows.map((r) => `<option value="${escapeHtml(r.code)}"${r.code === selected ? " selected" : ""}>${escapeHtml(r.name)}</option>`).join("");
   const from = document.getElementById("from-select");
   const to = document.getElementById("to-select");
-  const a = from.value || rows[0]?.code;
-  const b = to.value || rows[1]?.code;
+  // 고른 두 구는 주소에 남는다(?from=노원구&to=송파구) - 그대로 보내면 같은 비교가 열린다(UIUX #52).
+  const params = new URLSearchParams(location.search);
+  const byName = (name) => rows.find((r) => r.name === name)?.code;
+  const a = from.value || byName(params.get("from")) || rows[0]?.code;
+  const b = to.value || byName(params.get("to")) || rows[1]?.code;
   from.innerHTML = opts(a);
   to.innerHTML = opts(b);
+  from.value = a ?? "";
+  to.value = b ?? "";
 }
 
 // 두 구를 갈라 볼 수 있는지는 빌드가 300쌍 모두 정해 둔다(pairs). 여기서는 고르기만 한다.
@@ -278,6 +292,13 @@ function renderCompare() {
   const b = byCode.get(document.getElementById("to-select").value);
   const out = document.getElementById("compare-result");
   nextLinks(a && b && a.code !== b.code ? b : null);
+  setText("compare-answer", "");
+  if (a && b && history.replaceState) {
+    const url = new URL(location.href);
+    url.searchParams.set("from", a.name);
+    url.searchParams.set("to", b.name);
+    history.replaceState(null, "", url);
+  }
   if (!a || !b) return setText("compare-result", "");
   if (a.code === b.code) return setText("compare-result", t("compareSame"));
   const thin = [a, b].find((r) => r.change === null);
@@ -290,6 +311,7 @@ function renderCompare() {
   const flip = a.code > b.code;
   const m = flip ? { change: -raw.change, low: -raw.high, high: -raw.low } : raw;
   out.textContent = t("compare")(a, b, distinct, m);
+  setText("compare-answer", t("answer")(a, b, m));
 }
 
 /**
