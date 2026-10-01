@@ -31,6 +31,7 @@ const CONVERSION_PATH = path.join(root, "docs/jeonse-vs-wolse.html");
 const CANCELLATION_PATH = path.join(root, "docs/cancelled-deals.html");
 const RENEWAL_PATH = path.join(root, "docs/renewal-vs-new.html");
 const FLOOR_PATH = path.join(root, "docs/floor-gap.html");
+const OUTLOOK_PATH = path.join(root, "docs/price-outlook.html");
 const DATA_DIR = path.join(root, "docs/data");
 
 export const MIN_SAMPLE = 5;
@@ -952,6 +953,9 @@ async function main() {
   const cancellation = await readJson("cancellation");
   const renewal = await readJson("renewal-facts");
   const floor = await readJson("floor-gap");
+  const outlook = await readJson("outlook");
+  // 전망의 문장과 표는 빌더가 두 언어로 다 만들어 둔다. 여기서는 한국어를 꽂기만 한다.
+  const outlookText = (key) => (outlook?.[key]?.ko ? escapeHtml(outlook[key].ko) : null);
 
   for (const [file, path_, fileBlocks] of [
     ["docs/index.html", INDEX_PATH, blocks],
@@ -1005,6 +1009,19 @@ async function main() {
         floorDistrictLead: floor?.districtLead?.ko ? escapeHtml(floor.districtLead.ko) : null,
         floorDistricts: floorDistrictsHtml(floor),
         floorDistrictLinks: floorDistrictLinksHtml(floor),
+      },
+    ],
+    [
+      "docs/price-outlook.html",
+      OUTLOOK_PATH,
+      {
+        outlookLead: outlookText("lead"),
+        outlookRegions: outlook?.tables?.regions?.ko ?? null,
+        outlookLongLead: outlookText("longLead"),
+        outlookNowcastLead: outlookText("nowcastLead"),
+        outlookNowcast: outlook?.tables?.nowcast?.ko ?? null,
+        outlookScore: outlook?.tables?.score?.ko ?? null,
+        outlookRecordLead: outlookText("recordLead"),
       },
     ],
     [

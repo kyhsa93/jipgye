@@ -119,16 +119,25 @@
     <p>대표 금리는 상품별 최저금리의 <strong>중앙값</strong>입니다. 가장 낮은 하나를 쓰면 우대조건을 다 채운 사람의 값이 모두의 값처럼 보입니다. 대신 상품들이 얼마나 벌어져 있는지를 같이 적습니다 &mdash; 그 폭이 이 숫자의 오차입니다.</p>
     <p>얼마를 빌릴 수 있는지는 <strong>정하지 않습니다.</strong> LTV와 DSR은 규제지역인지와 소득에 따라 갈리고 해마다 바뀌는데, 그것을 하나로 정해 적으면 이 화면은 매년 조용히 틀린 숫자를 자신 있게 적는 화면이 됩니다. 그래서 1억당 매달 얼마인지를 내고, 얼마를 빌릴지는 읽는 분이 곱하시게 두었습니다. 예산의 절반을 빌리는 경우를 하나 붙여 두었지만 그것은 규제가 정한 값이 아니라 곱셈을 시작할 자리이고, 화면에도 조건으로 적었습니다.</p>
 
+    <h2 id="outlook">몇 달 뒤를 짐작할 때는 오차를 먼저 적습니다</h2>
+    <p>이 사이트는 오래 집값 전망을 하지 않았습니다. 전망을 내는 순간 &ldquo;표본이 모자라면 모자란다고 적는&rdquo; 곳이 그냥 또 하나의 전망 매체가 되기 때문입니다. 그래서 전망 화면은 <strong>예측보다 오차를 먼저</strong> 싣습니다. 같은 방식의 예측을 2012년 1월부터 매달 그 시점에 서서 다시 해 보고(그 시점 뒤의 값은 학습에 쓰지 않습니다), 실제와 얼마나 벌어졌는지를 예측 옆에 적습니다.</p>
+    <p>대상은 한국부동산원 <strong>아파트 매매 실거래가격지수</strong>입니다. 우리가 받는 것과 같은 국토부 신고로 만든 반복거래 지수라, 어떤 단지가 그달에 팔렸는지가 바뀌어도 흔들리지 않습니다. 2006년부터 서울과 5개 권역이 있고 자치구는 없습니다 &mdash; 그래서 자치구 전망은 내지 않습니다.</p>
+    <p>모델은 일부러 작습니다. 지난달, 그 전달, 그 앞 넉 달 평균의 상승률로 몇 달 뒤를 바로 맞추는 회귀가 전부입니다. 기준금리 변화와 전세 상승률을 더해 봤지만 3개월 오차가 거의 줄지 않았습니다.</p>
+    <p>이 모델이 아무 생각 없이 찍는 두 방법 &mdash; <strong>&ldquo;그대로다&rdquo;</strong>와 <strong>&ldquo;지금까지처럼 오른다&rdquo;</strong> &mdash; 을 둘 다 이기지 못하는 칸은 비웁니다. 이겼는지는 지난 오차를 12개월 덩어리째 1,000번 다시 뽑아 그 90% 이상에서 이겼는지로 봅니다. 겹치는 예측의 오차는 서로 붙어 다녀서 한 달씩 뽑으면 우연을 실력으로 읽습니다. 지금은 3개월 뒤만, 그것도 다섯 권역 가운데 셋과 서울에서만 이깁니다. 6개월과 1년은 모든 권역에서 &ldquo;지금까지처럼 오른다&rdquo;를 못 이깁니다 &mdash; 2012년 이후 서울이 거의 내내 올랐기 때문이고, 그건 모델보다 그 시기에 대한 이야기입니다.</p>
+    <p>범위는 지난 예측 오차의 가운데 80%를 오늘 예측에 얹은 것입니다. <strong>백테스트는 실제보다 좋게 나옵니다</strong> &mdash; 지금의 지수는 늦게 들어온 신고로 고쳐진 값인데, 그때 예측하던 사람에게는 고쳐지기 전 값밖에 없었습니다. 그래서 화면이 실제로 낸 예측은 고치지 않고 쌓아 두었다가, 지수가 나오면 채점해 따로 적습니다.</p>
+    <p>공식 지수는 두 달 늦게 나옵니다. 그 사이 가운데 <strong>신고 기한이 닫힌 달</strong>은 우리가 매일 받는 신고로 메웁니다. 같은 동·지번·단지·전용면적을 한 칸으로 보고, 이웃한 두 달 모두 거래가 있는 칸에서 ㎡당 중앙값이 변한 비율의 중앙값을 그 달의 변화로 봅니다. 공식 지수와 겹치는 달에서 이 값이 얼마나 맞았는지를 같이 적고, 모델의 1개월 예측보다 못한 권역은 메우지 않습니다. 메운 값은 예측에 넣지 않습니다.</p>
+
     <h2>출처와 갱신</h2>
     <ul>
       <li><strong>아파트 실거래</strong> — 국토교통부 아파트 매매·전월세 실거래가 공개시스템. 하루 1회 갱신. 국토부 응답 원본을 스물네 달치 그대로 보관하고, 실거래 관련 파일은 전부 그 원본에서 다시 만듭니다. 화면이 세는 것은 그 가운데 최근 여섯 달입니다.</li>
       <li><strong>예적금·대출 금리</strong> — 금융감독원 금융상품통합비교공시. 하루 1회.</li>
       <li><strong>시장 지표</strong> — 코스피, 원/달러 환율, 그리고 한국은행 기준금리(경제통계시스템 ECOS Open API). 하루 1회.</li>
+      <li><strong>아파트 매매 실거래가격지수</strong> — 한국부동산원, ECOS Open API로 받습니다. 월별, 두 달 늦게 나오며 최근 열네 달은 매일 다시 받아 고쳐진 값을 반영합니다.</li>
       <li><strong>뉴스</strong> — 경제지 RSS. 하루 4회. 제목과 링크만 싣고 본문은 원문으로 보냅니다.</li>
     </ul>
 
     <h2>하지 않는 것</h2>
-    <p>집값 전망을 하지 않고, 특정 단지나 지역을 권하지 않고, 광고비를 받고 매물을 올리지 않습니다. 여기 있는 것은 이미 일어난 거래를 어떻게 세었는지까지입니다. 그 숫자로 무엇을 할지는 읽는 분의 몫입니다.</p>
+    <p>특정 단지나 지역을 권하지 않고, 광고비를 받고 매물을 올리지 않습니다. 몇 달 뒤를 짐작하는 화면이 하나 있지만 <a href="#outlook">그 짐작이 지난 14년 동안 얼마나 틀렸는지</a>와 같이 싣고, 기준선을 못 이기는 칸은 비웁니다. 사고팔 때를 정해 드리지 않습니다. 그 숫자로 무엇을 할지는 읽는 분의 몫입니다.</p>
 
     <h2>틀린 것을 찾으셨다면</h2>
     <p>계산이 어긋나 보이는 곳이 있으면 알려 주세요. 원본을 보관하고 있어서 특정 시점의 숫자를 다시 만들어 확인할 수 있습니다.</p>
@@ -204,16 +213,25 @@
     <p>The headline rate is the <strong>median</strong> of each product's lowest rate. Using the single lowest would present the figure of someone who cleared every preferential condition as everyone's figure. The spread across products is stated alongside it; that spread is the error bar.</p>
     <p>How much can be borrowed is <strong>not assumed.</strong> LTV and DSR turn on whether the area is regulated and on income, and they change from year to year; fixing one number would make this screen quietly wrong every year with full confidence. So the figure is per ₩100M and the reader multiplies. One worked case at half the budget is shown, but that is a place to start multiplying rather than a regulatory limit, and the screen says so.</p>
 
+    <h2 id="outlook-en">Forecasts come with their error first</h2>
+    <p>For a long time this site did not forecast prices: the moment it does, a place whose point is saying &ldquo;the sample is too thin&rdquo; becomes one more forecaster. So the outlook page puts <strong>the error before the forecast</strong>. The same forecast is re-run for every month since January 2012, standing at that month (nothing after it is used for fitting), and the gap to what actually happened is printed beside today's figure.</p>
+    <p>The target is the Korea Real Estate Board <strong>apartment sale price index</strong>. It is a repeat-sales index built from the same ministry filings we collect, so it does not lurch when a different mix of complexes sells in a month. It covers Seoul and five regions from 2006, with no district level &mdash; so no district forecasts.</p>
+    <p>The model is deliberately small: a regression of the change some months ahead on last month's growth, the month before, and the average of the four before that. Adding base-rate changes and jeonse growth barely moved the three-month error.</p>
+    <p>Cells where it cannot beat two thoughtless guesses &mdash; <strong>&ldquo;no change&rdquo;</strong> and <strong>&ldquo;up as usual&rdquo;</strong> &mdash; are left blank. Beating means winning in at least 90% of 1,000 resamples of past errors drawn in 12-month blocks; overlapping forecasts have errors that move together, so single-month resampling would read luck as skill. At present only three months ahead passes, and only for Seoul and three of the five regions. Six and twelve months lose to &ldquo;up as usual&rdquo; everywhere &mdash; Seoul rose almost throughout since 2012, which says more about the period than the model.</p>
+    <p>The range adds the middle 80% of past errors to today's figure. <strong>The backtest flatters itself</strong>: today's index has been revised by late filings, and a forecaster at the time only had the unrevised figures. So every forecast the page publishes is kept unchanged and scored separately once the index arrives.</p>
+    <p>The official index runs two months behind. Of those months, the ones <strong>closed past the filing deadline</strong> are filled from the filings collected here: one neighbourhood, lot, complex and exclusive area per cell, and the median change in price per m² across cells with deals in both adjacent months. How close this came to the official figure in overlapping months is shown, and regions where it does worse than the model's one-month forecast are not filled. Filled months are not fed into the forecast.</p>
+
     <h2>Sources and update cadence</h2>
     <ul>
       <li><strong>Apartment transactions</strong> — Ministry of Land, Infrastructure and Transport open data. Daily. The ministry's raw responses are kept for twenty-four months exactly as received, and every transaction-derived file is rebuilt from them; the screens count the most recent six.</li>
       <li><strong>Deposit and loan rates</strong> — Financial Supervisory Service comparison disclosure. Daily.</li>
       <li><strong>Market indicators</strong> — KOSPI, KRW/USD, and the Bank of Korea base rate (ECOS Open API). Daily.</li>
+      <li><strong>Apartment sale price index</strong> — Korea Real Estate Board, via the ECOS Open API. Monthly, two months behind; the last fourteen months are re-fetched daily so revisions come through.</li>
       <li><strong>News</strong> — newspaper RSS, four times a day. Headlines and links only; the article itself stays at the source.</li>
     </ul>
 
     <h2>What this site does not do</h2>
-    <p>It does not forecast prices, does not recommend a particular complex or district, and does not take money to list anything. What is here stops at how transactions that already happened were counted. What to do with the numbers is yours.</p>
+    <p>It does not recommend a particular complex or district, and does not take money to list anything. One page does guess a few months ahead, but always next to <a href="#outlook-en">how wrong that guess has been over fourteen years</a>, and cells that cannot beat a naive baseline stay blank. It does not tell anyone when to buy or sell. What to do with the numbers is yours.</p>
 
     <h2>If something looks wrong</h2>
     <p>Please say so. The raw responses are kept, so any figure can be rebuilt from a given point in time and checked.</p>

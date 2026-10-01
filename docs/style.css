@@ -1912,6 +1912,22 @@ ul.news-list {
   white-space: nowrap;
 }
 
+/* 전망 표의 첫 열은 "도심권", "3개월 뒤"처럼 짧다. 좁은 화면에서 한 글자씩 꺾이면
+ * 행 높이가 두 배가 되어 숫자를 가로로 따라가기 어렵다. */
+.outlook-table td:first-child {
+  white-space: nowrap;
+}
+
+/* 전망 표처럼 한 칸에 값과 그 값의 범위(또는 표본 수)를 같이 싣는 자리. 범위를 옆에
+ * 붙이면 좁은 화면에서 값보다 범위가 먼저 눈에 들어온다. */
+.rate-table td .sub {
+  display: block;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
 .rate-table td {
   font-variant-numeric: tabular-nums;
 }

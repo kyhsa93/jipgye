@@ -15,12 +15,14 @@ function trackedPaths() {
 async function main() {
   run("node scripts/fetch-news.mjs");
   run("node scripts/fetch-market.mjs");
+  run("node scripts/fetch-price-index.mjs");
   run("node scripts/build-realestate.mjs");
   run("node scripts/build-budget-deals.mjs");
   run("node scripts/build-conversion.mjs");
   run("node scripts/build-cancellation.mjs");
   run("node scripts/build-renewal-facts.mjs");
   run("node scripts/build-floor-gap.mjs");
+  run("node scripts/build-outlook.mjs");
   run("node scripts/build-complex-ratio.mjs");
   run("node scripts/build-rent-preview.mjs");
   run("node scripts/build-search-index.mjs");

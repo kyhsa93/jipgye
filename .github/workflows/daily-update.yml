@@ -52,7 +52,9 @@ jobs:
 
       - name: 시장 지표 수집
         if: env.MODE == 'full'
-        run: node scripts/fetch-market.mjs
+        run: |
+          node scripts/fetch-market.mjs
+          node scripts/fetch-price-index.mjs
         env:
           # 없으면 공개 sample 키로 돈다. 시크릿을 넣으면 열 건 제한이 풀린다.
           ECOS_API_KEY: ${{ secrets.ECOS_API_KEY }}
@@ -67,6 +69,7 @@ jobs:
           node scripts/build-cancellation.mjs
           node scripts/build-renewal-facts.mjs
           node scripts/build-floor-gap.mjs
+          node scripts/build-outlook.mjs
           node scripts/build-complex-ratio.mjs
           node scripts/build-rent-preview.mjs
           node scripts/build-search-index.mjs

@@ -1,0 +1,702 @@
+{
+  "updatedAt": "2026-10-01T04:15:24.390Z",
+  "lastOfficial": "202607",
+  "horizons": [
+    3,
+    6,
+    12
+  ],
+  "regions": [
+    {
+      "code": "200",
+      "name": {
+        "ko": "서울",
+        "en": "Seoul"
+      },
+      "last": "202607",
+      "cards": [
+        {
+          "h": 3,
+          "origins": 172,
+          "from": "201201",
+          "mae": {
+            "model": 2.43,
+            "naive": 3.13,
+            "drift": 2.7
+          },
+          "hit": 78.29,
+          "alwaysUp": 75.66,
+          "winShare": 1,
+          "beats": true,
+          "forecast": {
+            "target": "202610",
+            "change": 2.58,
+            "low": -0.31,
+            "high": 6.33
+          }
+        },
+        {
+          "h": 6,
+          "origins": 169,
+          "from": "201201",
+          "mae": {
+            "model": 4.71,
+            "naive": 5.61,
+            "drift": 4.55
+          },
+          "hit": 78.88,
+          "alwaysUp": 81.99,
+          "winShare": 0.14,
+          "beats": false,
+          "forecast": null
+        },
+        {
+          "h": 12,
+          "origins": 163,
+          "from": "201201",
+          "mae": {
+            "model": 8.18,
+            "naive": 10.08,
+            "drift": 7.2
+          },
+          "hit": 85.8,
+          "alwaysUp": 86.42,
+          "winShare": 0,
+          "beats": false,
+          "forecast": null
+        }
+      ],
+      "nowcast": {
+        "overlap": 11,
+        "mae": 0.44,
+        "bias": 0.35,
+        "oneMonthMae": 0.7,
+        "usable": true,
+        "months": [
+          {
+            "month": "202608",
+            "pairs": 1204,
+            "change": 1.48
+          }
+        ]
+      }
+    },
+    {
+      "code": "210",
+      "name": {
+        "ko": "도심권",
+        "en": "Central"
+      },
+      "last": "202607",
+      "cards": [
+        {
+          "h": 3,
+          "origins": 172,
+          "from": "201201",
+          "mae": {
+            "model": 2.35,
+            "naive": 2.8,
+            "drift": 2.39
+          },
+          "hit": 66.67,
+          "alwaysUp": 74.21,
+          "winShare": 0.62,
+          "beats": false,
+          "forecast": null
+        },
+        {
+          "h": 6,
+          "origins": 169,
+          "from": "201201",
+          "mae": {
+            "model": 4.04,
+            "naive": 4.91,
+            "drift": 3.94
+          },
+          "hit": 80.25,
+          "alwaysUp": 80.89,
+          "winShare": 0.14,
+          "beats": false,
+          "forecast": null
+        },
+        {
+          "h": 12,
+          "origins": 163,
+          "from": "201201",
+          "mae": {
+            "model": 6.89,
+            "naive": 9.08,
+            "drift": 6.46
+          },
+          "hit": 85.71,
+          "alwaysUp": 86.34,
+          "winShare": 0.05,
+          "beats": false,
+          "forecast": null
+        }
+      ],
+      "nowcast": {
+        "overlap": 11,
+        "mae": 0.99,
+        "bias": 0.23,
+        "oneMonthMae": 1.13,
+        "usable": true,
+        "months": [
+          {
+            "month": "202608",
+            "pairs": 27,
+            "change": 3.59
+          }
+        ]
+      }
+    },
+    {
+      "code": "220",
+      "name": {
+        "ko": "동북권",
+        "en": "Northeast"
+      },
+      "last": "202607",
+      "cards": [
+        {
+          "h": 3,
+          "origins": 172,
+          "from": "201201",
+          "mae": {
+            "model": 2.49,
+            "naive": 3.11,
+            "drift": 2.66
+          },
+          "hit": 78.81,
+          "alwaysUp": 77.48,
+          "winShare": 0.88,
+          "beats": false,
+          "forecast": null
+        },
+        {
+          "h": 6,
+          "origins": 169,
+          "from": "201201",
+          "mae": {
+            "model": 4.62,
+            "naive": 5.56,
+            "drift": 4.66
+          },
+          "hit": 77.99,
+          "alwaysUp": 79.87,
+          "winShare": 0.55,
+          "beats": false,
+          "forecast": null
+        },
+        {
+          "h": 12,
+          "origins": 163,
+          "from": "201201",
+          "mae": {
+            "model": 7.8,
+            "naive": 10.01,
+            "drift": 7.48
+          },
+          "hit": 85.19,
+          "alwaysUp": 86.42,
+          "winShare": 0.09,
+          "beats": false,
+          "forecast": null
+        }
+      ],
+      "nowcast": {
+        "overlap": 11,
+        "mae": 0.43,
+        "bias": 0.34,
+        "oneMonthMae": 0.83,
+        "usable": true,
+        "months": [
+          {
+            "month": "202608",
+            "pairs": 473,
+            "change": 2.08
+          }
+        ]
+      }
+    },
+    {
+      "code": "240",
+      "name": {
+        "ko": "서북권",
+        "en": "Northwest"
+      },
+      "last": "202607",
+      "cards": [
+        {
+          "h": 3,
+          "origins": 172,
+          "from": "201201",
+          "mae": {
+            "model": 2.27,
+            "naive": 2.91,
+            "drift": 2.41
+          },
+          "hit": 83.77,
+          "alwaysUp": 79.87,
+          "winShare": 0.95,
+          "beats": true,
+          "forecast": {
+            "target": "202610",
+            "change": 2.73,
+            "low": -0.37,
+            "high": 6.05
+          }
+        },
+        {
+          "h": 6,
+          "origins": 169,
+          "from": "201201",
+          "mae": {
+            "model": 4.17,
+            "naive": 5.18,
+            "drift": 4.12
+          },
+          "hit": 81.6,
+          "alwaysUp": 81.6,
+          "winShare": 0.24,
+          "beats": false,
+          "forecast": null
+        },
+        {
+          "h": 12,
+          "origins": 163,
+          "from": "201201",
+          "mae": {
+            "model": 6.82,
+            "naive": 9.28,
+            "drift": 6.38
+          },
+          "hit": 84.57,
+          "alwaysUp": 85.8,
+          "winShare": 0.03,
+          "beats": false,
+          "forecast": null
+        }
+      ],
+      "nowcast": {
+        "overlap": 11,
+        "mae": 0.6,
+        "bias": 0.33,
+        "oneMonthMae": 0.86,
+        "usable": true,
+        "months": [
+          {
+            "month": "202608",
+            "pairs": 160,
+            "change": 1.06
+          }
+        ]
+      }
+    },
+    {
+      "code": "250",
+      "name": {
+        "ko": "서남권",
+        "en": "Southwest"
+      },
+      "last": "202607",
+      "cards": [
+        {
+          "h": 3,
+          "origins": 172,
+          "from": "201201",
+          "mae": {
+            "model": 2.31,
+            "naive": 3.02,
+            "drift": 2.58
+          },
+          "hit": 75.47,
+          "alwaysUp": 75.47,
+          "winShare": 1,
+          "beats": true,
+          "forecast": {
+            "target": "202610",
+            "change": 2.45,
+            "low": -0.15,
+            "high": 6.15
+          }
+        },
+        {
+          "h": 6,
+          "origins": 169,
+          "from": "201201",
+          "mae": {
+            "model": 4.47,
+            "naive": 5.36,
+            "drift": 4.43
+          },
+          "hit": 76.1,
+          "alwaysUp": 81.13,
+          "winShare": 0.27,
+          "beats": false,
+          "forecast": null
+        },
+        {
+          "h": 12,
+          "origins": 163,
+          "from": "201201",
+          "mae": {
+            "model": 7.82,
+            "naive": 9.72,
+            "drift": 7
+          },
+          "hit": 81.6,
+          "alwaysUp": 85.89,
+          "winShare": 0.01,
+          "beats": false,
+          "forecast": null
+        }
+      ],
+      "nowcast": {
+        "overlap": 11,
+        "mae": 0.44,
+        "bias": 0.3,
+        "oneMonthMae": 0.71,
+        "usable": true,
+        "months": [
+          {
+            "month": "202608",
+            "pairs": 417,
+            "change": 1.08
+          }
+        ]
+      }
+    },
+    {
+      "code": "230",
+      "name": {
+        "ko": "동남권",
+        "en": "Southeast"
+      },
+      "last": "202607",
+      "cards": [
+        {
+          "h": 3,
+          "origins": 172,
+          "from": "201201",
+          "mae": {
+            "model": 3.18,
+            "naive": 3.72,
+            "drift": 3.34
+          },
+          "hit": 71.52,
+          "alwaysUp": 74.68,
+          "winShare": 1,
+          "beats": true,
+          "forecast": {
+            "target": "202610",
+            "change": 2.99,
+            "low": -0.79,
+            "high": 8.21
+          }
+        },
+        {
+          "h": 6,
+          "origins": 169,
+          "from": "201201",
+          "mae": {
+            "model": 5.84,
+            "naive": 6.4,
+            "drift": 5.44
+          },
+          "hit": 65.24,
+          "alwaysUp": 81.1,
+          "winShare": 0,
+          "beats": false,
+          "forecast": null
+        },
+        {
+          "h": 12,
+          "origins": 163,
+          "from": "201201",
+          "mae": {
+            "model": 9.99,
+            "naive": 11.14,
+            "drift": 8.58
+          },
+          "hit": 59.51,
+          "alwaysUp": 86.5,
+          "winShare": 0,
+          "beats": false,
+          "forecast": null
+        }
+      ],
+      "nowcast": {
+        "overlap": 11,
+        "mae": 0.69,
+        "bias": 0.51,
+        "oneMonthMae": 1.07,
+        "usable": true,
+        "months": [
+          {
+            "month": "202608",
+            "pairs": 127,
+            "change": 0.05
+          }
+        ]
+      }
+    }
+  ],
+  "rows": [
+    {
+      "code": "200",
+      "name": {
+        "ko": "서울",
+        "en": "Seoul"
+      },
+      "cells": [
+        {
+          "h": 3,
+          "change": 2.58,
+          "low": -0.31,
+          "high": 6.33,
+          "mae": 2.43
+        },
+        {
+          "h": 6,
+          "change": null,
+          "mae": 4.71,
+          "drift": 4.55,
+          "naive": 5.61
+        },
+        {
+          "h": 12,
+          "change": null,
+          "mae": 8.18,
+          "drift": 7.2,
+          "naive": 10.08
+        }
+      ]
+    },
+    {
+      "code": "210",
+      "name": {
+        "ko": "도심권",
+        "en": "Central"
+      },
+      "cells": [
+        {
+          "h": 3,
+          "change": null,
+          "mae": 2.35,
+          "drift": 2.39,
+          "naive": 2.8
+        },
+        {
+          "h": 6,
+          "change": null,
+          "mae": 4.04,
+          "drift": 3.94,
+          "naive": 4.91
+        },
+        {
+          "h": 12,
+          "change": null,
+          "mae": 6.89,
+          "drift": 6.46,
+          "naive": 9.08
+        }
+      ]
+    },
+    {
+      "code": "220",
+      "name": {
+        "ko": "동북권",
+        "en": "Northeast"
+      },
+      "cells": [
+        {
+          "h": 3,
+          "change": null,
+          "mae": 2.49,
+          "drift": 2.66,
+          "naive": 3.11
+        },
+        {
+          "h": 6,
+          "change": null,
+          "mae": 4.62,
+          "drift": 4.66,
+          "naive": 5.56
+        },
+        {
+          "h": 12,
+          "change": null,
+          "mae": 7.8,
+          "drift": 7.48,
+          "naive": 10.01
+        }
+      ]
+    },
+    {
+      "code": "240",
+      "name": {
+        "ko": "서북권",
+        "en": "Northwest"
+      },
+      "cells": [
+        {
+          "h": 3,
+          "change": 2.73,
+          "low": -0.37,
+          "high": 6.05,
+          "mae": 2.27
+        },
+        {
+          "h": 6,
+          "change": null,
+          "mae": 4.17,
+          "drift": 4.12,
+          "naive": 5.18
+        },
+        {
+          "h": 12,
+          "change": null,
+          "mae": 6.82,
+          "drift": 6.38,
+          "naive": 9.28
+        }
+      ]
+    },
+    {
+      "code": "250",
+      "name": {
+        "ko": "서남권",
+        "en": "Southwest"
+      },
+      "cells": [
+        {
+          "h": 3,
+          "change": 2.45,
+          "low": -0.15,
+          "high": 6.15,
+          "mae": 2.31
+        },
+        {
+          "h": 6,
+          "change": null,
+          "mae": 4.47,
+          "drift": 4.43,
+          "naive": 5.36
+        },
+        {
+          "h": 12,
+          "change": null,
+          "mae": 7.82,
+          "drift": 7,
+          "naive": 9.72
+        }
+      ]
+    },
+    {
+      "code": "230",
+      "name": {
+        "ko": "동남권",
+        "en": "Southeast"
+      },
+      "cells": [
+        {
+          "h": 3,
+          "change": 2.99,
+          "low": -0.79,
+          "high": 8.21,
+          "mae": 3.18
+        },
+        {
+          "h": 6,
+          "change": null,
+          "mae": 5.84,
+          "drift": 5.44,
+          "naive": 6.4
+        },
+        {
+          "h": 12,
+          "change": null,
+          "mae": 9.99,
+          "drift": 8.58,
+          "naive": 11.14
+        }
+      ]
+    }
+  ],
+  "record": {
+    "made": 4,
+    "scored": 0,
+    "mae": null,
+    "inside": null,
+    "recent": [],
+    "pending": [
+      {
+        "origin": "202607",
+        "region": "200",
+        "h": 3,
+        "target": "202610",
+        "change": 2.58,
+        "low": -0.31,
+        "high": 6.33
+      },
+      {
+        "origin": "202607",
+        "region": "240",
+        "h": 3,
+        "target": "202610",
+        "change": 2.73,
+        "low": -0.37,
+        "high": 6.05
+      },
+      {
+        "origin": "202607",
+        "region": "250",
+        "h": 3,
+        "target": "202610",
+        "change": 2.45,
+        "low": -0.15,
+        "high": 6.15
+      },
+      {
+        "origin": "202607",
+        "region": "230",
+        "h": 3,
+        "target": "202610",
+        "change": 2.99,
+        "low": -0.79,
+        "high": 8.21
+      }
+    ]
+  },
+  "lead": {
+    "ko": "공식 지수 2026년 7월까지로 짐작하면 2026년 10월 서울 아파트값은 +2.6%입니다. 지난 예측 오차의 가운데 80%를 얹으면 -0.3%에서 +6.3% 사이입니다 — 10억짜리 집이면 9.97억~10.63억입니다. 2012년 1월부터 매달 같은 방식으로 예측해 보면 평균 2.43%p 빗나갔고, \"그대로다\"라고 찍으면 3.13%p 빗나갔습니다.",
+    "en": "Using the official index up to Jul 2026, Seoul apartments in Oct 2026 come out at +2.6%, with the middle 80% of past errors putting it between -0.3% and +6.3%. On a ₩1bn flat that is ₩997M to ₩1,063M. The same forecast made every month since Jan 2012 missed by 2.43pp on average; guessing \"no change\" missed by 3.13pp."
+  },
+  "longLead": {
+    "ko": "1년 뒤는 값을 내지 않습니다. \"늘 오르던 대로 오른다\"고만 해도 평균 7.2%p 빗나갔는데 모델은 8.18%p 빗나갔습니다. 움직인 달의 86%가 올랐습니다 — 거의 내내 오른 시기에는 추세에 거는 것을 이기기 어렵고, 그건 모델이 아니라 그 시기에 대한 이야기입니다.",
+    "en": "A year out there is no figure. Saying \"up as usual\" missed by 7.2pp, the model by 8.18pp. Of the months that moved, 86% went up — in a period that rose almost throughout, betting on the trend is hard to beat, and that says more about the period than about any model."
+  },
+  "nowcastLead": {
+    "ko": "공식 지수는 두 달 늦게 나옵니다. 그 사이 가운데 신고 기한(계약 후 30일)이 닫힌 달을 매일 받는 신고에서 같은 집끼리 이어 재면 2026년 8월 +1.5%입니다. 공식 지수와 겹치는 11개월에서 이 값은 평균 0.44%p 차이가 났고, 평균 +0.3%p만큼 높게 나왔습니다 — 그만큼 기울어 있다고 읽어야 합니다.",
+    "en": "The official index stops two months short, and the most recent month is still open for filing, so only closed months are filled. Matching the same flats month to month in the filings we collect daily gives Aug 2026 +1.5%. Across the 11 months where both exist, this ran 0.44pp from the official figure on average and ran +0.3pp high — read it with that lean in mind."
+  },
+  "recordLead": {
+    "ko": "이 화면이 지금까지 낸 예측은 4개이고 아직 채점할 수 있는 것이 없습니다. 첫 채점은 2026년 10월 지수가 나오는 두 달 뒤입니다. 위 표는 지금의 지수로 과거를 다시 푼 것이라 실제보다 좋게 나옵니다 — 그때는 지수가 고쳐지기 전이었습니다.",
+    "en": "This page has made 4 forecast(s) so far and none can be scored yet. The first is scored when the official index for Oct 2026 is published, about two months later. The table above is a re-run on today's index, which flatters it: back then the index had not yet been revised."
+  },
+  "tables": {
+    "regions": {
+      "ko": "<thead><tr><th>권역</th><th>3개월 뒤</th><th>6개월 뒤</th><th>12개월 뒤</th></tr></thead><tbody><tr><td>서울</td><td><strong>+2.6%</strong><div class=\"sub\">-0.3% ~ +6.3%</div></td><td><span class=\"low-sample\">비움</span></td><td><span class=\"low-sample\">비움</span></td></tr><tr><td>도심권</td><td><span class=\"low-sample\">비움</span></td><td><span class=\"low-sample\">비움</span></td><td><span class=\"low-sample\">비움</span></td></tr><tr><td>동북권</td><td><span class=\"low-sample\">비움</span></td><td><span class=\"low-sample\">비움</span></td><td><span class=\"low-sample\">비움</span></td></tr><tr><td>서북권</td><td><strong>+2.7%</strong><div class=\"sub\">-0.4% ~ +6.0%</div></td><td><span class=\"low-sample\">비움</span></td><td><span class=\"low-sample\">비움</span></td></tr><tr><td>서남권</td><td><strong>+2.5%</strong><div class=\"sub\">-0.1% ~ +6.2%</div></td><td><span class=\"low-sample\">비움</span></td><td><span class=\"low-sample\">비움</span></td></tr><tr><td>동남권</td><td><strong>+3.0%</strong><div class=\"sub\">-0.8% ~ +8.2%</div></td><td><span class=\"low-sample\">비움</span></td><td><span class=\"low-sample\">비움</span></td></tr></tbody>",
+      "en": "<thead><tr><th>Region</th><th>3 months</th><th>6 months</th><th>12 months</th></tr></thead><tbody><tr><td>Seoul</td><td><strong>+2.6%</strong><div class=\"sub\">-0.3% to +6.3%</div></td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td></tr><tr><td>Central</td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td></tr><tr><td>Northeast</td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td></tr><tr><td>Northwest</td><td><strong>+2.7%</strong><div class=\"sub\">-0.4% to +6.0%</div></td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td></tr><tr><td>Southwest</td><td><strong>+2.5%</strong><div class=\"sub\">-0.1% to +6.2%</div></td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td></tr><tr><td>Southeast</td><td><strong>+3.0%</strong><div class=\"sub\">-0.8% to +8.2%</div></td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td></tr></tbody>"
+    },
+    "nowcast": {
+      "ko": "<thead><tr><th>권역</th><th>2026년 8월</th><th>공식과 평균 차이</th></tr></thead><tbody><tr><td>서울</td><td>+1.5%<div class=\"sub\">맞물린 칸 1,204</div></td><td>0.44%p (11)</td></tr><tr><td>도심권</td><td>+3.6%<div class=\"sub\">맞물린 칸 27</div></td><td>0.99%p (11)</td></tr><tr><td>동북권</td><td>+2.1%<div class=\"sub\">맞물린 칸 473</div></td><td>0.43%p (11)</td></tr><tr><td>서북권</td><td>+1.1%<div class=\"sub\">맞물린 칸 160</div></td><td>0.6%p (11)</td></tr><tr><td>서남권</td><td>+1.1%<div class=\"sub\">맞물린 칸 417</div></td><td>0.44%p (11)</td></tr><tr><td>동남권</td><td>+0.1%<div class=\"sub\">맞물린 칸 127</div></td><td>0.69%p (11)</td></tr></tbody>",
+      "en": "<thead><tr><th>Region</th><th>Aug 2026</th><th>Avg gap to official</th></tr></thead><tbody><tr><td>Seoul</td><td>+1.5%<div class=\"sub\">Matched 1,204</div></td><td>0.44pp (11)</td></tr><tr><td>Central</td><td>+3.6%<div class=\"sub\">Matched 27</div></td><td>0.99pp (11)</td></tr><tr><td>Northeast</td><td>+2.1%<div class=\"sub\">Matched 473</div></td><td>0.43pp (11)</td></tr><tr><td>Northwest</td><td>+1.1%<div class=\"sub\">Matched 160</div></td><td>0.6pp (11)</td></tr><tr><td>Southwest</td><td>+1.1%<div class=\"sub\">Matched 417</div></td><td>0.44pp (11)</td></tr><tr><td>Southeast</td><td>+0.1%<div class=\"sub\">Matched 127</div></td><td>0.69pp (11)</td></tr></tbody>"
+    },
+    "score": {
+      "ko": "<thead><tr><th>거리</th><th>모델</th><th>\"그대로다\"</th><th>\"늘 오른다\"</th><th>방향 적중</th><th>\"오른다\" 적중</th><th>값을 내나</th></tr></thead><tbody><tr><td>3개월 뒤</td><td>2.43%p</td><td>3.13%p</td><td>2.7%p</td><td>78%</td><td>76%</td><td>낸다</td></tr><tr><td>6개월 뒤</td><td>4.71%p</td><td>5.61%p</td><td>4.55%p</td><td>79%</td><td>82%</td><td><span class=\"low-sample\">안 낸다</span></td></tr><tr><td>12개월 뒤</td><td>8.18%p</td><td>10.08%p</td><td>7.2%p</td><td>86%</td><td>86%</td><td><span class=\"low-sample\">안 낸다</span></td></tr></tbody>",
+      "en": "<thead><tr><th>Horizon</th><th>Model</th><th>\"No change\"</th><th>\"Up as usual\"</th><th>Direction hit</th><th>\"Up\" hit</th><th>Published?</th></tr></thead><tbody><tr><td>3 months</td><td>2.43pp</td><td>3.13pp</td><td>2.7pp</td><td>78%</td><td>76%</td><td>yes</td></tr><tr><td>6 months</td><td>4.71pp</td><td>5.61pp</td><td>4.55pp</td><td>79%</td><td>82%</td><td><span class=\"low-sample\">no</span></td></tr><tr><td>12 months</td><td>8.18pp</td><td>10.08pp</td><td>7.2pp</td><td>86%</td><td>86%</td><td><span class=\"low-sample\">no</span></td></tr></tbody>"
+    }
+  }
+}

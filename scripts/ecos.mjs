@@ -30,6 +30,25 @@ export const BASE_RATE = { stat: "722Y001", item: "0101000", cycle: "D" };
  */
 export const KOSPI = { stat: "802Y001", item: "0001000", cycle: "D" };
 
+/**
+ * 4.4.4. 아파트 매매 실거래가격지수(한국부동산원), 월별. 서울(200)과 5개 권역.
+ * 국토부 신고로 만든 반복거래 지수라 우리가 받는 실거래와 뿌리가 같다. 두 달 늦게 나온다.
+ */
+export const APT_PRICE_INDEX = { stat: "901Y089", cycle: "M" };
+
+/**
+ * 끝까지 넘겨 가며 읽는다. 한 번에 받는 줄 수가 키마다 다르므로(sample 10, 그 외 1,000)
+ * 총 건수를 보고 멈춘다. 빈 응답이 오면 거기서 멈춘다 - 같은 줄을 다시 달라고 도는 일이 없다.
+ */
+export async function searchAll(options, { fetchImpl = fetch } = {}) {
+  const rows = [];
+  for (;;) {
+    const page = await statisticSearch({ ...options, start: rows.length + 1 }, { fetchImpl });
+    rows.push(...page);
+    if (page.length < options.rows) return rows;
+  }
+}
+
 export function ecosKey(env = process.env) {
   const key = String(env?.ECOS_API_KEY ?? "").trim();
   return key || SAMPLE_KEY;
@@ -40,8 +59,9 @@ export const maxRows = (key) => (key === SAMPLE_KEY ? SAMPLE_MAX_ROWS : KEYED_MA
 /** sample 키로 열 건을 넘겨 부르면 조회 자체가 오류가 된다. 부르기 전에 자른다. */
 export const clampRows = (key, want) => Math.min(want, maxRows(key));
 
-export function searchUrl({ key, stat, cycle, from, to, item, rows }) {
-  return [ECOS_BASE, "StatisticSearch", key, "json", "kr", 1, rows, stat, cycle, from, to, item].join("/");
+/** start는 몇 번째 줄부터인가(1부터). sample 키도 열 건씩 넘겨 가며 읽으면 긴 계열을 받는다. */
+export function searchUrl({ key, stat, cycle, from, to, item, rows, start = 1 }) {
+  return [ECOS_BASE, "StatisticSearch", key, "json", "kr", start, start + rows - 1, stat, cycle, from, to, item].join("/");
 }
 
 /**
