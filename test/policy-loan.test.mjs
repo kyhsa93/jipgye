@@ -13,9 +13,11 @@ test("디딤돌은 가격과 면적을 둘 다, 보금자리론은 가격만 본
   assert.deepEqual(c, { n: 4, didim: 1, family: 2, bogeum: 3, newborn: 3 });
 });
 
-test("가격선에 걸친 예산대(4·5·6억대)에만 쓰고, 소득 요건은 적지 않는다고 말한다", () => {
+test("가격선 아래·걸친 예산대(3~9억대)에만 쓰고, 소득 요건은 적지 않는다고 말한다", () => {
   const counts = { n: 100, didim: 15, family: 23, bogeum: 24 };
-  assert.equal(policySentence(3, counts), null);
+  // 3억대는 전부 세 선 아래라 쓸 것이 있다 - 3억대 매수자가 가장 많이 묻는 것이 정책대출이다(PO 2차 #41).
+  assert.match(policySentence(3, counts), /3억대\)는 전용 85㎡ 이하라면 디딤돌·보금자리론·신생아 특례 세 상품 모두 가격선 안/);
+  assert.doesNotMatch(policySentence(4, counts), /두 상품 모두/, "세 상품을 늘어놓고 '두 상품'이라 했다");
   assert.equal(policySentence(10, counts), null);
   assert.match(policySentence(8, counts), /신생아 특례 선\(9억\) 안/);
   const s5 = policySentence(5, counts);

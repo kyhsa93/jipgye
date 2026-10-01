@@ -137,7 +137,7 @@ const T = {
     checkHeading: "다른 자와 견주면",
     // 숫자는 빌드가 낸 것이다 - 두 구의 변화(%), 84㎡ 환산 두 시기 값, 금액 간격 변화와 90% 구간(money).
     compare: (a, b, distinct, m) => {
-      const pct = `${a.name}는 ${signedPct(a.change)}, ${b.name}는 ${signedPct(b.change)} 움직였고(` +
+      const pct = `${a.name}는 ${signedPct(a.change)}, ${b.name}는 ${signedPct(b.change)} 움직였습니다(` +
         (distinct ? "이 % 차이는 말할 수 있습니다" : "이 % 차이는 표본의 흔들림 안입니다") + "). ";
       const lv = `84㎡로 환산하면 ${a.name} ${eokText(a.level84.base)} → ${eokText(a.level84.recent)}, ${b.name} ${eokText(b.level84.base)} → ${eokText(b.level84.recent)}입니다. `;
       const sure = m.low > 0 || m.high < 0;

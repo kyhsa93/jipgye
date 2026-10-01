@@ -253,3 +253,12 @@ test("고친 범위와 고치지 않은 실제 최고 신고를 머리글에서 
   assert.match(html, /실제 최고가 고친 범위보다 낮게 나올 수 있습니다/, "1년 전 값이 없어도 실제 최고 설명이 나와야 한다");
   assert.doesNotMatch(html, /6개월 최고/);
 });
+
+test("단지 카드는 거래가 많은 평형부터 늘어놓는다 (#41)", async () => {
+  const c = (n) => ({ n, median: 100000, low: 99000, high: 101000, quartile: n >= 5, raw: 100000, unadjusted: 0 });
+  const file = { reference: "202608", cells: { 순서단지: { 130.06: c(3), 84.98: c(54), 59.96: c(11) } } };
+  const p = await page("?district=노원구&apt=순서단지", file);
+  const html = p.byId("complex-card").innerHTML;
+  const order = [...html.matchAll(/<tr><td>([\d.]+)㎡/g)].map((m) => m[1]).slice(0, 3);
+  assert.deepEqual(order, ["84.98", "59.96", "130.06"]);
+});

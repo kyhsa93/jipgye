@@ -108,7 +108,7 @@ async function readCapDeals() {
       const amount = Number(String(item?.dealAmount ?? "").replace(/,/g, ""));
       if (!(amount > 0) || !item.dealYear) continue;
       const date = `${item.dealYear}-${String(item.dealMonth).padStart(2, "0")}-${String(item.dealDay).padStart(2, "0")}`;
-      deals.push({ date, amount, area: Number(item.excluUseAr) });
+      deals.push({ date, amount, area: Number(item.excluUseAr), direct: String(item?.dealingGbn ?? "").trim() === "직거래" });
     }
   }
   return deals;
@@ -138,9 +138,10 @@ async function main() {
   // 15억 경계 몰림은 원본 전체(해제 제외, 직거래 포함)에서 매일 다시 센다.
   const capDeals = await readCapDeals();
   const capStats = clustering(capDeals);
-  // 정책대출 가격선 아래 거래 수: 최근 6개월, 해제 제외.
+  // 정책대출 가격선 아래 거래 수: 최근 6개월, 해제·직거래 제외. 가격선은 시세에 긋는 선이라, 가족 간 거래처럼
+  // 시세가 아닐 수 있는 직거래는 뺀다(단지 카드·후보와 같은 규칙, PO 2차 #41).
   const since = new Date(Date.now() - 183 * 86400000).toISOString().slice(0, 10);
-  const policyCounts = lineCounts(capDeals.filter((d) => d.date >= since));
+  const policyCounts = lineCounts(capDeals.filter((d) => d.date >= since && !d.direct));
   if (!budget?.bands?.length) {
     console.log("  예산 데이터가 없습니다 - 예산 페이지를 만들지 않습니다");
     return;

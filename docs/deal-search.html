@@ -1068,7 +1068,7 @@ function complexAreas(apt, sales, rents, cells) {
       }
       return { ...row, saleMedian: sale, jeonseMedian: jeonse, ratio };
     })
-    .sort((a, b) => b.area - a.area);
+    .sort((a, b) => b.sale.length + b.jeonse.length - (a.sale.length + a.jeonse.length) || b.area - a.area);
 }
 
 /**
@@ -1098,7 +1098,8 @@ function resolveComplex(term, sales) {
 function complexPriceHtml(file, apt) {
   const areas = file?.cells?.[apt];
   if (!areas) return "";
-  const rows = Object.entries(areas).sort(([a], [b]) => Number(b) - Number(a));
+  // 거래가 많은 평형부터 - 큰 평형부터 늘어놓으면 헬리오시티 84형이 넷째 블록이라 폰에서 한참 내려가야 했다(PO 2차 #41).
+  const rows = Object.entries(areas).sort(([a, x], [b, y]) => (y.n ?? 0) - (x.n ?? 0) || Number(b) - Number(a));
   const unadjusted = rows.reduce((sum, [, c]) => sum + (c.unadjusted ?? 0), 0);
   const yearAgoMonths = rows.map(([, c]) => c.yearAgo?.months).find(Boolean) ?? null;
 

@@ -255,7 +255,7 @@ export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = 
     .join(" · ");
 
   return (
-    `<p class="budget-summary">${escapeHtml(`${budgetBandLabel(band)}에서 ${band.count.toLocaleString("ko-KR")}건이 거래됐습니다.`)}` +
+    `<p class="budget-summary">${escapeHtml(`${budgetBandLabel(band)}에서 ${band.count.toLocaleString("ko-KR")}건이 거래됐습니다${band.direct ? `(직거래 ${band.direct.toLocaleString("ko-KR")}건 포함)` : ""}.`)}` +
     (periods ? ` <span class="when">${escapeHtml(`${periods} 신고분 기준`)}</span>` : "") +
     `</p>` +
     budgetWhereHtml(band) +

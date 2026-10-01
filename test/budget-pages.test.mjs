@@ -248,3 +248,25 @@ test("접은 표는 HTML에서도 빠진다", async () => {
     );
   }
 });
+
+test("예산대 장 머리는 본문과 같은 기간을, 건수는 직거래가 몇 건 섞였는지를 적는다 (#41)", async () => {
+  const realestate = { ...REALESTATE, window: { basis: "arrival", from: "2026-09-28", to: "2026-10-01" } };
+  const band = BUDGET.bands.find((b) => b.min10k === page8.min10k);
+  const budget = { ...BUDGET, bands: BUDGET.bands.map((b) => (b === band ? { ...b, direct: 1 } : b)) };
+  const page = await loadRealestatePage({ realestate, budget, budgetBand: page8.min10k });
+  const head = page.byId("updated").textContent;
+  assert.match(head, /8월 신고분 기준/, `머리: ${head}`);
+  assert.doesNotMatch(head, /2026-09-28/, "맨 아래 서울 평균 카드의 창을 머리에 적었다");
+  assert.match(page.budgetHtml(), /건이 거래됐습니다\(직거래 1건 포함\)/);
+  const { budgetBodyHtml: prerender } = await import("../scripts/prerender.mjs");
+  assert.match(prerender({ ...band, direct: 1 }, BUDGET.periods, RATES, null, COMPLEX_FILES), /\(직거래 1건 포함\)/, "빌드와 화면이 갈렸다");
+});
+
+test("영어 화면의 예산대 장은 한국어로만 굽는 문단이 있다고 먼저 말한다 (#41)", async () => {
+  const band = BUDGET.bands.find((b) => b.min10k === page8.min10k);
+  const prerendered = budgetBodyHtml(band, BUDGET.periods, RATES, null, COMPLEX_FILES);
+  const en = await loadRealestatePage({ realestate: REALESTATE, budget: BUDGET, budgetBand: page8.min10k, prerenderedBudget: prerendered, locale: "en" });
+  assert.match(en.budgetHtml(), /are in Korean only/);
+  const ko = await loadRealestatePage({ realestate: REALESTATE, budget: BUDGET, budgetBand: page8.min10k, prerenderedBudget: prerendered });
+  assert.doesNotMatch(ko.budgetHtml(), /Korean only/);
+});

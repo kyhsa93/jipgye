@@ -89,7 +89,10 @@ function withFacts(bands, deals, now) {
         (band.max10k === null || deal.amount10k < band.max10k)
     );
     const facts = budgetFacts(inBand, { year });
-    return facts ? { ...band, facts } : band;
+    // 건수에는 직거래가 섞여 있다(가족 간 거래 등 시세가 아닐 수 있는 것). 빼면 검색 결과와 건수가 갈리므로
+    // 빼지 않고 몇 건인지 같이 적는다(PO 2차 #41).
+    const direct = inBand.filter((deal) => deal.direct === true).length;
+    return { ...band, ...(facts ? { facts } : {}), direct };
   });
 }
 

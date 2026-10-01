@@ -179,7 +179,9 @@ const T = {
       "국토교통부에 신고된 실거래 기록입니다. 지금 살 수 있는 매물이 아니며, 같은 단지라도 층·향·동에 따라 값이 크게 다릅니다. 계약 후 30일인 신고 기한 때문에 최근 거래는 나중에 반영됩니다.",
     budgetBandLabel: (from, to) =>
       to === null ? `${from}억 이상` : from === 0 ? `${to}억 미만` : `${from}억대`,
-    budgetSummary: (band, count) => `${band}에서 ${count.toLocaleString("ko-KR")}건이 거래됐습니다.`,
+    budgetKoOnly: "",
+    budgetSummary: (band, count, direct) =>
+      `${band}에서 ${count.toLocaleString("ko-KR")}건이 거래됐습니다${direct ? `(직거래 ${direct.toLocaleString("ko-KR")}건 포함)` : ""}.`,
     budgetPeriods: (periods) => `${periods} 신고분 기준`,
     budgetDistricts: "거래가 많은 지역",
     budgetEmpty: "이 예산대에는 신고된 거래가 없습니다.",
@@ -267,7 +269,10 @@ const T = {
       "These are transactions filed with Korea's Ministry of Land, not listings for sale. Prices vary widely by floor and building even within the same complex, and filings are due within 30 days of contract, so the most recent deals show up later.",
     budgetBandLabel: (from, to) =>
       to === null ? `\u20a9${from / 10}B and up` : from === 0 ? `under \u20a9${to / 10}B` : `\u20a9${from / 10}B\u2013${to / 10}B`,
-    budgetSummary: (band, count) => `${count.toLocaleString("en-US")} deals filed in the ${band} range.`,
+    budgetKoOnly:
+      "The paragraphs below — purchase costs, minimum cash, loan caps, policy-loan price lines and candidate complexes — are in Korean only: they quote Korean statutes and agency rules, and are written once from those sources.",
+    budgetSummary: (band, count, direct) =>
+      `${count.toLocaleString("en-US")} deals filed in the ${band} range${direct ? ` (including ${direct.toLocaleString("en-US")} direct deals)` : ""}.`,
     budgetPeriods: (periods) => `Filed in ${periods}`,
     budgetDistricts: "Most active districts",
     budgetEmpty: "No filed deals in this range.",
@@ -1212,7 +1217,10 @@ function renderBudget() {
     return;
   }
 
-  box.innerHTML = budgetBodyHtml(band, cache.budget.periods) + prerenderedBudgetExtras;
+  // 부대비용·최소 현금·대출·정책대출·후보 문단은 빌드가 한국 법령 원문을 인용해 한국어로만 굽는다.
+  // 영어 화면에서 말없이 한국어가 튀어나오지 않게, 그렇다고 먼저 알린다(PO 2차 #41).
+  const koOnly = locale === "en" && prerenderedBudgetExtras ? `<p class="content-notice">${escapeHtml(t("budgetKoOnly"))}</p>` : "";
+  box.innerHTML = budgetBodyHtml(band, cache.budget.periods) + koOnly + prerenderedBudgetExtras;
 }
 
 function budgetBodyHtml(band, periodList) {
@@ -1225,7 +1233,7 @@ function budgetBodyHtml(band, periodList) {
     .join(" · ");
 
   return (
-    `<p class="budget-summary">${escapeHtml(t("budgetSummary")(bandLabel(band), band.count))}` +
+    `<p class="budget-summary">${escapeHtml(t("budgetSummary")(bandLabel(band), band.count, band.direct))}` +
     (periods ? ` <span class="when">${escapeHtml(t("budgetPeriods")(periods))}</span>` : "") +
     `</p>` +
     (districts ? `<div class="budget-districts">${escapeHtml(t("budgetDistricts"))}: ${districts}</div>` : "") +
@@ -1270,6 +1278,16 @@ function applyLocale() {
 }
 
 function renderUpdated(realestate) {
+  // 예산대 장은 본문(예산대 거래)이 주인공이다. 머리에 맨 아래 서울 평균 카드의 이번 주 창을 적으면 본문의
+  // "8월, 9월 신고분"과 다른 말을 한다(PO 2차 #41) - 본문과 같은 기간을 적는다.
+  if (isBudgetPage && cache.budget?.periods?.length) {
+    const periods = cache.budget.periods.map((p) => monthLabel(p)).filter(Boolean).join(", ");
+    const at = cache.budget.updatedAt
+      ? ` · ${new Date(cache.budget.updatedAt).toLocaleDateString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
+      : "";
+    document.getElementById("updated").textContent = `${t("budgetPeriods")(periods)}${at}`;
+    return;
+  }
   const window = realestate?.window;
   const updatedAt = realestate?.updatedAt;
   const basis = window?.basis === "arrival" ? t("basisArrival") : t("basisContract");
@@ -1340,6 +1358,7 @@ async function main() {
         if (budgetRes.ok) {
           cache.budget = await budgetRes.json();
           renderBudget();
+          renderUpdated(cache.realestate);
         }
       } catch {
       }

@@ -28,7 +28,7 @@ export const LINES = {
 };
 
 /** 가격선에 걸친 예산대(4억대·5억대·6억대)에만 쓴다. */
-export const PAGES = [4, 5, 6, 7, 8, 9];
+export const PAGES = [3, 4, 5, 6, 7, 8, 9];
 
 /** 최근 거래 가운데 각 선 아래에 든 수. deals: [{ amount, area }]. */
 export function lineCounts(deals) {
@@ -49,12 +49,12 @@ export function policySentence(bandEok, counts, months = 6) {
     "정책대출에는 주택가격 선이 있습니다. 디딤돌대출(주택도시기금)은 5억 이하(신혼·2자녀 이상 가구는 6억 이하)이면서 전용 85㎡ 이하, " +
     "보금자리론(한국주택금융공사)은 6억 이하, 신생아 특례 디딤돌(2년 내 출산 가구)은 9억 이하이면서 전용 85㎡ 이하입니다. ";
   const share =
-    `최근 ${months}개월 서울 아파트 거래 ${num(counts.n)}건 가운데 디딤돌 일반 선 아래는 ${num(counts.didim)}건(${pct(counts.didim, counts.n)}), ` +
+    `최근 ${months}개월 서울 아파트 중개거래 ${num(counts.n)}건(직거래 제외) 가운데 디딤돌 일반 선 아래는 ${num(counts.didim)}건(${pct(counts.didim, counts.n)}), ` +
     `신혼·2자녀 선 아래는 ${num(counts.family)}건(${pct(counts.family, counts.n)}), 보금자리론 선 아래는 ${num(counts.bogeum)}건(${pct(counts.bogeum, counts.n)}), ` +
     `신생아 특례 선 아래는 ${num(counts.newborn ?? 0)}건(${pct(counts.newborn ?? 0, counts.n)})입니다. `;
   const here =
-    bandEok === 4
-      ? "이 예산대(4억대)는 전용 85㎡ 이하라면 두 상품 모두 가격선 안입니다. "
+    bandEok <= 4
+      ? `이 예산대(${bandEok}억대)는 전용 85㎡ 이하라면 디딤돌·보금자리론·신생아 특례 세 상품 모두 가격선 안입니다. `
       : bandEok === 5
         ? "이 예산대(5억대)에서 5억을 넘는 집은 디딤돌 일반 선 밖이고, 신혼·2자녀 가구 디딤돌과 보금자리론 선(6억) 안입니다. "
         : bandEok === 6

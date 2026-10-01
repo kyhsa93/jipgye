@@ -360,7 +360,8 @@ const ym = (month, locale) =>
     : `${month.slice(0, 4)}년 ${Number(month.slice(4))}월`;
 
 const signed = (value) => `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
-const signedPp = (value, locale = "ko") => `${value > 0 ? "+" : ""}${value.toFixed(1)}${locale === "en" ? "pp" : "%p"}`;
+// 단지 카드도 같은 치우침을 소수 둘째 자리로 적는다 - 한 값이 화면마다 +0.3과 +0.35로 갈리지 않게(#41).
+const signedPp = (value, locale = "ko") => `${value > 0 ? "+" : ""}${value.toFixed(2)}${locale === "en" ? "pp" : "%p"}`;
 const whole = (value) => Math.round(value);
 
 /** 10억짜리 집이 어디서 어디까지 움직이나. 퍼센트만으로는 감이 안 온다. */
