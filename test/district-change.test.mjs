@@ -121,3 +121,33 @@ test("금액 간격: 같은 %라도 비싼 구가 더 많이 오른다", async (
   );
   assert.deepEqual(districtLevel(levels.get("A")), { base: 84_000, recent: 92_400 }, "한 시기에만 있는 칸이 대표 가격에 섞였다");
 });
+
+test("84㎡ 환산 두 시기 값은 같은 줄의 %와 같은 통계다 (#36)", async () => {
+  const { cellLevels, districtLevel, districtRows, cellChanges } = await import("../scripts/district-change.mjs");
+  const p = { base: ["202508", "202509", "202510"], recent: ["202606", "202607", "202608"] };
+  const deals = [];
+  const add = (cell, b, r) => {
+    deals.push({ district: "A", cell, month: "202509", amount: b * 84, perM2: b });
+    deals.push({ district: "A", cell, month: "202607", amount: r * 84, perM2: r });
+  };
+  // 칸별 변화: 0% 10칸, +5% 10칸, +50% 11칸 → 중앙값 +5%. 두 시기 중앙값을 따로 내면 1000 → 1200(+20%).
+  for (let i = 0; i < 11; i += 1) add(`A|싼${i}|84`, 800, 1200);
+  for (let i = 0; i < 10; i += 1) add(`A|중간${i}|84`, 1000, 1000);
+  for (let i = 0; i < 10; i += 1) add(`A|비싼${i}|84`, 1200, 1260);
+  const [row] = districtRows(cellChanges(deals, p), [{ code: "A", name: "가구" }]);
+  const lv = districtLevel(cellLevels(deals, p).get("A"));
+  assert.equal(row.change, 5);
+  assert.ok(Math.abs((lv.recent / lv.base - 1) * 100 - row.change) < 0.1, `금액 ${((lv.recent / lv.base - 1) * 100).toFixed(1)}% 대 줄의 ${row.change}%`);
+  assert.equal(lv.recent, Math.round(1200 * 84), "지금 값은 최근 ㎡당 중앙값 × 84");
+});
+
+test("빌드된 갈아타기 자료에서 금액과 %가 25개 구 모두 맞는다", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const d = JSON.parse(await readFile(new URL("../docs/data/district-change.json", import.meta.url), "utf8"));
+  const rows = d.rows.filter((r) => r.change !== null && r.level84);
+  assert.ok(rows.length >= 20, "값을 낸 구가 거의 없다 - 검사가 아무것도 안 본다");
+  for (const r of rows) {
+    const money = (r.level84.recent / r.level84.base - 1) * 100;
+    assert.ok(Math.abs(money - r.change) < 0.15, `${r.name}: 줄은 ${r.change}%, 금액은 ${money.toFixed(2)}%`);
+  }
+});

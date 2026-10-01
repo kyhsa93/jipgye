@@ -178,7 +178,10 @@ export function leadSentence(rows, pairs, p, locale = "ko") {
 // 비싼 쪽은 더 많이 오른다 - 노원 8억이 13% 오르는 동안 송파 29억이 16% 오르면 두 집의 차이는 3억쯤
 // 벌어진다. % 구간이 겹친다는 말은 이 금액 간격에 대해서는 아무것도 말하지 않는다(#30).
 //
-// 대표 가격은 두 시기 모두 거래된 칸의 ㎡당 중앙값의 중앙값에 84를 곱한 "84㎡ 환산"이다(시세 화면과 같은 환산).
+// 지금 값은 두 시기 모두 거래된 칸의 최근 ㎡당 중앙값의 중앙값에 84를 곱한 "84㎡ 환산"이다(시세 화면과 같은
+// 환산). 기준 시기 값은 따로 내지 않고 지금 값을 그 구의 변화율(칸별 변화의 중앙값 - 같은 줄에 적힌 %)로
+// 되돌려 낸다. 두 시기 값을 각자 중앙값으로 내면 금액이 %와 다른 통계가 된다 - 도봉이 +9.2%라고 적힌 줄에서
+// 금액은 +0.7%만 움직였고, 25개 구 중 12곳이 2%p 넘게 어긋났다(#36).
 
 export const AREA = 84;
 export const MONEY_ROUNDS = 200;
@@ -204,12 +207,17 @@ export function cellLevels(deals, { base, recent }) {
   return byDistrict;
 }
 
-const level = (cells, side) => median(cells.map((c) => c[side])) * AREA;
+/** 84㎡ 환산 두 시기 값. 기준 시기 값 = 지금 값 ÷ (1 + 그 구의 변화율). */
+const levels = (cells) => {
+  const recent = median(cells.map((c) => c.r)) * AREA;
+  return { recent, base: recent / Math.exp(median(cells.map((c) => Math.log(c.r / c.b)))) };
+};
 
 /** 한 구의 84㎡ 환산 두 시기 값(만원). */
 export function districtLevel(cells) {
   if (!cells?.length) return null;
-  return { base: Math.round(level(cells, "b")), recent: Math.round(level(cells, "r")) };
+  const { base, recent } = levels(cells);
+  return { base: Math.round(base), recent: Math.round(recent) };
 }
 
 /**
@@ -217,7 +225,10 @@ export function districtLevel(cells) {
  * 두 구의 칸을 각자 다시 뽑는다 - 둘은 서로 다른 표본이다.
  */
 export function moneyGap(cellsA, cellsB, { rounds = MONEY_ROUNDS, seed = 20261001 } = {}) {
-  const gap = (a, b) => level(b, "r") - level(a, "r") - (level(b, "b") - level(a, "b"));
+  const gap = (a, b) => {
+    const [la, lb] = [levels(a), levels(b)];
+    return lb.recent - la.recent - (lb.base - la.base);
+  };
   let state = seed >>> 0;
   const next = () => {
     state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
