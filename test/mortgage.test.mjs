@@ -70,8 +70,9 @@ test("한도는 가정하지 않고 1억당 값으로 말한다", () => {
   const sentence = loanSentence(rateSpread(apartmentOptions(RATES)), { eok: 10 });
   assert.match(sentence, /1억을 30년 원리금균등으로/);
   assert.match(sentence, /1억당 값을 곱하시면/);
-  // LTV·DSR을 하나로 정해 적으면 해마다 조용히 틀린 화면이 된다.
-  assert.doesNotMatch(sentence, /LTV|DSR/);
+  // 소득에 갈리는 한도(DSR)를 하나로 정해 적으면 해마다 조용히 틀린 화면이 된다 - 갈린다고만 적는다.
+  assert.match(sentence, /소득\(DSR\)에 따라 갈리므로 여기서는 정하지 않고/);
+  assert.doesNotMatch(sentence, /LTV/);
 });
 
 test("예산 페이지에 월 상환액 문단이 붙어 있다", async () => {

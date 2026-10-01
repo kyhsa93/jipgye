@@ -58,6 +58,12 @@ const eok = (v) => `${v / 10_000}억`;
 
 /** 15억 경계에 걸친 예산대(14억대·15억대) 한 줄. 다른 예산대에는 쓰지 않는다. */
 export function capSentence(bandEok, stats) {
+  if (bandEok >= 16 && bandEok <= 24) {
+    return (
+      `이 예산대 집의 주택담보대출 상한은 ${eok(capFor((bandEok + 0.5) * 10_000))}입니다(시가 15억 초과 25억 이하 — 15억 이하는 6억, 25억을 넘으면 2억). ` +
+      `서울 전역이 규제지역이라 누구에게나 같은 천장이고, 실제로 빌릴 수 있는 돈은 소득(DSR)에 따라 이보다 적을 수 있습니다. (금융위원회 원문 기준, ${BASIS_DATE} 확인)`
+    );
+  }
   if (bandEok !== 14 && bandEok !== 15) return null;
   const head =
     bandEok === 14
@@ -69,6 +75,6 @@ export function capSentence(bandEok, stats) {
   return (
     head +
     cluster +
-    ` 실제로 빌릴 수 있는 돈은 LTV·DSR(소득)로 이보다 낮을 수 있고, 여기서는 계산하지 않습니다. (금융위원회 원문 기준, ${BASIS_DATE} 확인)`
+    ` 실제로 빌릴 수 있는 돈은 LTV와 소득(DSR)에 따라 이보다 적을 수 있습니다. (금융위원회 원문 기준, ${BASIS_DATE} 확인)`
   );
 }

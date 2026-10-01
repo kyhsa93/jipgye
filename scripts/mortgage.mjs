@@ -1,3 +1,4 @@
+import { capFor } from "./loan-cap.mjs";
 /**
  * 예산을 월 상환액으로 옮긴다.
  *
@@ -5,7 +6,7 @@
  * 그 답을 내려면 실거래와 대출 금리가 같이 있어야 하는데, 이 저장소는 둘 다 매일 받는다.
  * 부동산계산기 류가 금리를 사용자에게 직접 입력하라고 하는 자리가 정확히 여기다.
  *
- * <strong>대출 한도는 가정하지 않는다.</strong> LTV·DSR은 규제지역과 소득에 따라 갈리고
+ * <strong>소득에 갈리는 대출 한도는 가정하지 않는다.</strong> DSR은 소득에 따라 갈리고
  * 해마다 바뀌는데, 그것을 하나로 정해 적으면 이 화면은 매년 조용히 틀린 숫자를 자신 있게
  * 적는 화면이 된다. 그래서 <strong>1억당 매달 얼마</strong>로 낸다 - 얼마를 빌릴지는
  * 읽는 사람이 알고, 그 사람이 곱하면 된다.
@@ -103,13 +104,22 @@ export function loanSentence(spread, { eok, years = YEARS } = {}) {
 
   if (!Number.isFinite(eok)) return head;
 
-  const half = monthlyPayment((eok * MAN_PER_EOK) / 2, spread.mid, years);
-  if (!half) return head;
+  // 예시 대출액은 예산의 절반이되, 그 예산대 집값의 주담대 구간 상한(소득과 무관한 천장)을 넘지 않는다.
+  // 16억 장에 "8억을 빌린다면"을 적던 때가 있었다 - 16억대 상한은 4억이다(#29).
+  const halfMan = (eok * MAN_PER_EOK) / 2;
+  const cap = capFor((eok + 0.5) * MAN_PER_EOK);
+  const capped = halfMan > cap;
+  const borrow = capped ? cap : halfMan;
+  const pay = monthlyPayment(borrow, spread.mid, years);
+  if (!pay) return head;
+  const amount = `${(borrow / MAN_PER_EOK).toLocaleString("ko-KR")}억`;
 
   return (
-    `${head} 이 예산에서 절반인 ${(eok / 2).toLocaleString("ko-KR")}억을 빌린다면 ` +
-    `매달 ${man(half)}입니다 — 얼마를 빌릴 수 있는지는 규제지역인지와 소득에 따라 ` +
-    `갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.`
+    `${head} ` +
+    (capped
+      ? `이 예산의 절반(${(eok / 2).toLocaleString("ko-KR")}억)은 이 가격대 주담대 상한 ${amount}을 넘어, 상한인 ${amount}을 빌린다면 매달 ${man(pay)}입니다`
+      : `이 예산에서 절반인 ${amount}을 빌린다면 매달 ${man(pay)}입니다`) +
+    ` — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.`
   );
 }
 
