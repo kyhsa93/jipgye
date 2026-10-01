@@ -1442,6 +1442,11 @@ ul.news-list {
   background: var(--accent-weak);
 }
 
+/* 따로 크기를 주지 않은 h3는 브라우저 기본(1.17em = 18.72px)이라 축척 밖이었다(UIUX #54). */
+main h3 {
+  font-size: var(--fs-lg);
+}
+
 .budget-answers h3 {
   margin: 0 0 8px;
   font-size: var(--fs-sm);

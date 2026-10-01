@@ -253,3 +253,20 @@ test("단지 카드 표 머리글은 접혀 1280px 안에 든다 (#42)", async (
   assert.match(rule, /white-space:\s*normal/);
   assert.match(rule, /word-break:\s*keep-all/, "한국어 낱말 중간에서 꺾인다");
 });
+
+test("h3도 축척 안이다 (#54)", async () => {
+  const css = await (await import("node:fs/promises")).readFile(new URL("../docs/style.css", import.meta.url), "utf8");
+  assert.match(css, /\nmain h3 \{\s*font-size: var\(--fs-lg\);/);
+});
+
+test("머리 버튼은 어느 장이든 공유를 갖는다 - 없는 장은 nav.js가 붙인다 (#54)", async () => {
+  const { readFile: rf, readdir } = await import("node:fs/promises");
+  const nav = await rf(new URL("../docs/nav.js", import.meta.url), "utf8");
+  assert.match(nav, /document\.getElementById\("share-button"\)\) return;/, "이미 있는 장에 두 번 붙인다");
+  const docs = new URL("../docs/", import.meta.url);
+  for (const f of (await readdir(docs)).filter((x) => x.endsWith(".html"))) {
+    const html = await rf(new URL(f, docs), "utf8");
+    if (!html.includes('class="header-actions"')) continue;
+    assert.ok(html.includes('id="share-button"') || html.includes('src="./nav.js"'), `${f}: 공유 버튼이 붙을 길이 없다`);
+  }
+});

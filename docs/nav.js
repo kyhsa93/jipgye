@@ -106,3 +106,39 @@
   }).join("");
   holder.innerHTML = `<h2>${en ? "Other questions" : "다른 질문"}</h2><nav class="question-nav" aria-label="${en ? "Other questions" : "다른 질문"}">${groups}</nav>`;
 })();
+
+// 머리 버튼은 어느 장이든 셋(공유·테마·언어) - 첫 화면·금리에만 공유가 있어 장마다 버튼 수가 달랐다
+// (UIUX #54). 이미 있는 장(index·rates)은 그 장 것을 쓰고, 없는 장에만 같은 동작의 버튼을 붙인다.
+(function () {
+  if (typeof document.getElementById !== "function" || typeof document.createElement !== "function") return;
+  const actions = document.querySelector(".header-actions");
+  if (!actions || document.getElementById("share-button")) return;
+  const first = actions.querySelector("button");
+  const button = document.createElement("button");
+  button.type = "button";
+  button.id = "share-button";
+  button.className = first?.className || "icon-toggle";
+  button.setAttribute("aria-label", "Share");
+  button.innerHTML = '<span aria-hidden="true">📤</span>';
+  actions.insertBefore(button, actions.firstChild);
+  button.addEventListener("click", async () => {
+    const data = { title: document.title, url: location.href };
+    if (navigator.share) {
+      try {
+        await navigator.share(data);
+        window.analytics?.event("share", { method: "web_share" });
+        return;
+      } catch (err) {
+        if (err && err.name === "AbortError") return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(location.href);
+      button.firstChild.textContent = "✅";
+      setTimeout(() => (button.firstChild.textContent = "📤"), 1500);
+      window.analytics?.event("share", { method: "clipboard" });
+    } catch {
+      window.prompt("Copy this link:", location.href);
+    }
+  });
+})();
