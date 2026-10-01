@@ -10,6 +10,7 @@ import { renewalSentences } from "./renewal-facts.mjs";
 import { apartmentOptions, loanSentence, rateSpread, yearChangeSentence } from "./mortgage.mjs";
 import { costsSentence } from "./purchase-costs.mjs";
 import { candidatesInBand } from "./complex-price.mjs";
+import { capSentence } from "./loan-cap.mjs";
 import { rateFacts, factSentences as rateSentences } from "./rate-facts.mjs";
 import {
   KIND_FIELDS,
@@ -241,7 +242,7 @@ function budgetWhereHtml(band) {
   return text ? `<p class="budget-where">${escapeHtml(text)}</p>` : "";
 }
 
-export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = null, complexFiles = null) {
+export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null) {
   if (!band) return null;
 
   const periods = (periodList ?? []).map((p) => monthLabel(p)).filter(Boolean).join(", ");
@@ -258,8 +259,16 @@ export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = 
     `<ul class="budget-deals">${band.deals.map(budgetDealHtml).join("")}</ul>` +
     budgetLoanHtml(band, rates, mortgageSeries) +
     budgetCostsHtml(band) +
+    budgetCapHtml(band, capStats) +
     budgetCandidatesHtml(band, complexFiles)
   );
+}
+
+/** 15억 경계에 걸친 예산대에만 붙는 주담대 상한 한 줄(scripts/loan-cap.mjs). */
+export function budgetCapHtml(band, capStats) {
+  const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
+  const sentence = capSentence(eok, capStats);
+  return sentence ? `<p class="budget-loan budget-cap" data-prerendered>${escapeHtml(sentence)}</p>` : "";
 }
 
 /** 목록에 이름을 올리는 단지 수. 나머지는 검색의 "단지로 묶어 보기"로 보낸다 - 열여덟 장이 같은 긴 목록이 되지 않게. */

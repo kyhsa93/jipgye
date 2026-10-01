@@ -2,6 +2,7 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.mjs";
 import { applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml } from "./prerender.mjs";
+import { clustering } from "./loan-cap.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const REALESTATE_PATH = path.join(root, "docs/realestate.html");
@@ -30,9 +31,9 @@ function navHtml(page) {
   return links.join("");
 }
 
-export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSeries = null, complexFiles = null) {
+export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSeries = null, complexFiles = null, capStats = null) {
   const band = (budget?.bands ?? []).find((b) => b.min10k === page.min10k) ?? null;
-  const body = budgetBodyHtml(band, budget?.periods, rates, mortgageSeries, complexFiles);
+  const body = budgetBodyHtml(band, budget?.periods, rates, mortgageSeries, complexFiles, capStats);
   if (!body) return null;
 
   let html = baseHtml;
@@ -83,6 +84,23 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
   });
 }
 
+async function readCapDeals() {
+  const dir = path.join(root, "raw/sale");
+  const names = (await readdir(dir).catch(() => [])).filter((f) => f.endsWith(".json"));
+  const deals = [];
+  for (const name of names) {
+    const file = await readJson(path.join(dir, name));
+    for (const item of file?.items ?? []) {
+      if (String(item?.cdealType ?? "").trim()) continue;
+      const amount = Number(String(item?.dealAmount ?? "").replace(/,/g, ""));
+      if (!(amount > 0) || !item.dealYear) continue;
+      const date = `${item.dealYear}-${String(item.dealMonth).padStart(2, "0")}-${String(item.dealDay).padStart(2, "0")}`;
+      deals.push({ date, amount });
+    }
+  }
+  return deals;
+}
+
 async function readJson(file) {
   try {
     return JSON.parse(await readFile(file, "utf-8"));
@@ -104,6 +122,8 @@ async function main() {
       (await readdir(dataDir)).filter((f) => /^complex-price-[a-z]+\.json$/.test(f)).sort().map((f) => readJson(path.join(dataDir, f)))
     )
   ).filter(Boolean);
+  // 15억 경계 몰림은 원본 전체(해제 제외, 직거래 포함)에서 매일 다시 센다.
+  const capStats = clustering(await readCapDeals());
   if (!budget?.bands?.length) {
     console.log("  예산 데이터가 없습니다 - 예산 페이지를 만들지 않습니다");
     return;
@@ -117,7 +137,7 @@ async function main() {
   const skipped = [];
 
   for (const page of BUDGET_PAGES) {
-    const html = buildBudgetPage(baseHtml, page, budget, rates, mortgageSeries, complexFiles);
+    const html = buildBudgetPage(baseHtml, page, budget, rates, mortgageSeries, complexFiles, capStats);
     if (!html) {
       skipped.push(`${page.eok}억대`);
       continue;
