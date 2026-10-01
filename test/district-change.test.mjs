@@ -72,16 +72,19 @@ test("정적 HTML이 오늘 데이터의 문장과 표를 싣는다", async () =
   assert.ok(data.lead.en && Object.keys(data.pairs).length > 0);
 });
 
-test("두 구 비교의 금액은 %p 차이를 10억에 곱한 것이다", async () => {
+test("두 구 견주기는 금액 간격의 변화를 옮겨 갈 구 기준 부호로 적는다", async () => {
   const { loadPage } = await import("./helpers/digest-page.mjs");
+  const lv = (base, recent) => ({ base, recent });
   const payload = {
     updatedAt: "2026-10-01T00:00:00Z",
     rows: [
-      { code: "A", name: "가구", cells: 100, change: 21.0, low: 20, high: 22 },
-      { code: "B", name: "나구", cells: 100, change: 2.6, low: 1, high: 4 },
-      { code: "C", name: "다구", cells: 100, change: 20.6, low: 19, high: 22 },
+      { code: "A", name: "가구", cells: 100, change: 13.1, low: 12, high: 15, level84: lv(80_000, 90_000) },
+      { code: "B", name: "나구", cells: 100, change: 15.7, low: 13, high: 18, level84: lv(170_000, 200_000) },
+      { code: "C", name: "다구", cells: 100, change: 13.0, low: 12, high: 14, level84: lv(81_000, 91_000) },
     ],
-    pairs: { "A-B": true, "A-C": false, "B-C": true },
+    pairs: { "A-B": false, "A-C": false, "B-C": false },
+    // 키는 작은코드-큰코드, 값은 큰코드 - 작은코드
+    money: { "A-B": { change: 20_000, low: 14_000, high: 32_000 }, "A-C": { change: 0, low: -3_000, high: 3_000 }, "B-C": { change: -20_000, low: -32_000, high: -14_000 } },
     lead: { ko: "x", en: "x" },
     table: { ko: "", en: "" },
     regionTable: { ko: "", en: "" },
@@ -95,8 +98,26 @@ test("두 구 비교의 금액은 %p 차이를 10억에 곱한 것이다", async
     await page.settle();
     return page.text("compare-result");
   };
-  // 18.4%p × 10억 = 1억 8,400만원. 1억에 곱하면 1,840만원이 된다 - 그렇게 한 번 틀렸다.
-  assert.match(await pick("A", "B"), /나구 쪽이 1억 8,400만원 덜 올라/);
-  assert.match(await pick("A", "C"), /말할 수 없습니다/);
+  const ab = await pick("A", "B");
+  assert.match(ab, /표본의 흔들림 안입니다/, "% 구간은 겹친다");
+  assert.match(ab, /나구로 옮기는 데 드는 돈\(두 값의 차이\)은 그 사이 2억원 늘었습니다/, "% 구간이 겹쳐도 금액 간격은 벌어질 수 있다");
+  assert.match(ab, /가구 8억원 → 9억원/);
+  assert.match(await pick("B", "A"), /가구로 옮기는 데 드는 돈\(두 값의 차이\)은 그 사이 2억원 줄었습니다/, "옮기는 방향을 바꿨는데 부호가 그대로다");
+  assert.match(await pick("A", "C"), /0을 품어 늘었는지 줄었는지 말할 수 없습니다/);
   assert.match(await pick("B", "B"), /다른 두 구를 고르세요/);
+});
+
+test("금액 간격: 같은 %라도 비싼 구가 더 많이 오른다", async () => {
+  const { moneyGap, cellLevels, districtLevel } = await import("../scripts/district-change.mjs");
+  const cheap = Array.from({ length: 40 }, (_, i) => ({ b: 1000 + i, r: (1000 + i) * 1.1 })); // 만원/㎡
+  const dear = Array.from({ length: 40 }, (_, i) => ({ b: 3000 + i, r: (3000 + i) * 1.1 }));
+  const g = moneyGap(cheap, dear);
+  // 84㎡: 싼 구 약 8.6억 → 9.5억, 비싼 구 약 25.3억 → 27.8억 - 같은 10%인데 차이는 약 1.7억 벌어진다
+  assert.ok(g.change > 15_000 && g.change < 18_000, `${g.change}`);
+  assert.ok(g.low > 0, "같은 %인데 금액 간격이 안 벌어졌다고 했다");
+  const levels = cellLevels(
+    [{ district: "A", cell: "A|x|84", month: "202509", perM2: 1000 }, { district: "A", cell: "A|x|84", month: "202607", perM2: 1100 }, { district: "A", cell: "A|y|84", month: "202607", perM2: 9999 }],
+    { base: ["202508", "202509", "202510"], recent: ["202606", "202607", "202608"] }
+  );
+  assert.deepEqual(districtLevel(levels.get("A")), { base: 84_000, recent: 92_400 }, "한 시기에만 있는 칸이 대표 가격에 섞였다");
 });

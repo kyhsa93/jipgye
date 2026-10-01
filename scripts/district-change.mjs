@@ -33,11 +33,13 @@ export function toDeal(item) {
   if (String(item?.dealingGbn ?? "").trim() === "직거래") return null;
   const amount = Number(String(item?.dealAmount ?? "").replace(/,/g, ""));
   if (!(amount > 0) || !item.dealYear || !item.dealMonth) return null;
+  const area = Number(item.excluUseAr);
   return {
     district: String(item.sggCd),
     cell: `${item.sggCd}|${item.aptNm}|${item.excluUseAr}`,
     month: `${item.dealYear}${String(item.dealMonth).padStart(2, "0")}`,
     amount,
+    perM2: area > 0 ? amount / area : null,
   };
 }
 
@@ -168,4 +170,78 @@ export function leadSentence(rows, pairs, p, locale = "ko") {
     : `같은 단지 같은 평형을 ${span(p.base)}과 ${span(p.recent)}(${p.months}개월 간격)에 견주면 ` +
         `${top.name}는 ${signed(top.change)}, ${bottom.name}는 ${signed(bottom.change)} 움직였습니다. ` +
         `두 구씩 짝지은 ${total}쌍 가운데 ${distinct}쌍만 차이를 말할 수 있습니다 — 나머지는 그 차이가 표본이 만드는 흔들림 안에 있습니다.`;
+}
+
+// --- 금액으로 ----------------------------------------------------------------------
+//
+// 갈아타는 사람이 묻는 것은 "옮기는 데 드는 돈이 얼마나 늘었나"다(장면 4). 두 구가 같은 %로 올라도
+// 비싼 쪽은 더 많이 오른다 - 노원 8억이 13% 오르는 동안 송파 29억이 16% 오르면 두 집의 차이는 3억쯤
+// 벌어진다. % 구간이 겹친다는 말은 이 금액 간격에 대해서는 아무것도 말하지 않는다(#30).
+//
+// 대표 가격은 두 시기 모두 거래된 칸의 ㎡당 중앙값의 중앙값에 84를 곱한 "84㎡ 환산"이다(시세 화면과 같은 환산).
+
+export const AREA = 84;
+export const MONEY_ROUNDS = 200;
+
+/** 칸마다 두 시기의 ㎡당 중앙값. 자치구별로 모은다. */
+export function cellLevels(deals, { base, recent }) {
+  const b = new Set(base);
+  const r = new Set(recent);
+  const cells = new Map();
+  for (const d of deals) {
+    if (!(d.perM2 > 0)) continue;
+    const side = b.has(d.month) ? "base" : r.has(d.month) ? "recent" : null;
+    if (!side) continue;
+    if (!cells.has(d.cell)) cells.set(d.cell, { district: d.district, base: [], recent: [] });
+    cells.get(d.cell)[side].push(d.perM2);
+  }
+  const byDistrict = new Map();
+  for (const c of [...cells.values()].sort((x, y) => (x.district < y.district ? -1 : 1))) {
+    if (!c.base.length || !c.recent.length) continue;
+    if (!byDistrict.has(c.district)) byDistrict.set(c.district, []);
+    byDistrict.get(c.district).push({ b: median(c.base), r: median(c.recent) });
+  }
+  return byDistrict;
+}
+
+const level = (cells, side) => median(cells.map((c) => c[side])) * AREA;
+
+/** 한 구의 84㎡ 환산 두 시기 값(만원). */
+export function districtLevel(cells) {
+  if (!cells?.length) return null;
+  return { base: Math.round(level(cells, "b")), recent: Math.round(level(cells, "r")) };
+}
+
+/**
+ * 두 구 사이 금액 간격이 두 시기 사이에 얼마나 변했나(b - a 기준, 만원)와 90% 구간.
+ * 두 구의 칸을 각자 다시 뽑는다 - 둘은 서로 다른 표본이다.
+ */
+export function moneyGap(cellsA, cellsB, { rounds = MONEY_ROUNDS, seed = 20261001 } = {}) {
+  const gap = (a, b) => level(b, "r") - level(a, "r") - (level(b, "b") - level(a, "b"));
+  let state = seed >>> 0;
+  const next = () => {
+    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+    return state / 2 ** 32;
+  };
+  const draw = (cells) => Array.from({ length: cells.length }, () => cells[Math.floor(next() * cells.length)]);
+  const sims = [];
+  for (let i = 0; i < rounds; i += 1) sims.push(gap(draw(cellsA), draw(cellsB)));
+  sims.sort((x, y) => x - y);
+  return {
+    change: Math.round(gap(cellsA, cellsB)),
+    low: Math.round(sims[Math.floor(rounds * 0.05)]),
+    high: Math.round(sims[Math.floor(rounds * 0.95)]),
+  };
+}
+
+/** 값을 낸 구(칸이 충분한 구)끼리 300쌍의 금액 간격 변화. 키는 "작은코드-큰코드", 값은 큰코드 - 작은코드. */
+export function moneyPairs(levelsByDistrict, rows) {
+  const ok = rows.filter((r) => r.change !== null).map((r) => r.code).sort();
+  const out = {};
+  for (let i = 0; i < ok.length; i += 1) {
+    for (let j = i + 1; j < ok.length; j += 1) {
+      out[`${ok[i]}-${ok[j]}`] = moneyGap(levelsByDistrict.get(ok[i]), levelsByDistrict.get(ok[j]));
+    }
+  }
+  return out;
 }

@@ -2,6 +2,9 @@ import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
   cellChanges,
+  cellLevels,
+  districtLevel,
+  moneyPairs,
   districtRows,
   leadSentence,
   pairVerdicts,
@@ -69,8 +72,14 @@ export function buildPayload({ items, now, official, survey }) {
   const p = periods(shiftMonth(yearMonthOf(now), -2), available);
   if (!p) return null;
   const byDistrict = cellChanges(deals, p);
-  const rows = districtRows(byDistrict, DISTRICTS).map((r) => ({ ...r, survey: surveyChange(survey?.series?.[r.code], p) }));
+  const levels = cellLevels(deals, p);
+  const rows = districtRows(byDistrict, DISTRICTS).map((r) => ({
+    ...r,
+    survey: surveyChange(survey?.series?.[r.code], p),
+    level84: r.change === null ? null : districtLevel(levels.get(r.code)),
+  }));
   const pairs = pairVerdicts(rows);
+  const money = moneyPairs(levels, rows);
   const regions = regionCheck(byDistrict, official?.series, p);
   const both = (fn) => ({ ko: fn("ko"), en: fn("en") });
   return {
@@ -78,6 +87,7 @@ export function buildPayload({ items, now, official, survey }) {
     periods: p,
     rows,
     pairs,
+    money,
     regions,
     slugs: Object.fromEntries(DISTRICTS.filter((d) => DISTRICT_SLUGS[d.name]).map((d) => [d.name, DISTRICT_SLUGS[d.name]])),
     lead: both((l) => leadSentence(rows, pairs, p, l)),

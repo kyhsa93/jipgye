@@ -101,9 +101,9 @@
 <script src="./nav.js" defer></script>
 <script src="./analytics.js"></script>
 <script>
-/** 10억, 만원 단위. 1억(10,000)과 헷갈려 한 자리 틀린 적이 있다. */
-const TEN_EOK = 100_000;
 const signedPct = (v) => `${v > 0 ? "+" : ""}${v.toFixed(1)}%`;
+/** 부호를 붙인 금액. */
+const signedEok = (v) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${eokText(Math.abs(v))}`;
 /** 만원 → "1억 8,400만원" / "₩184M". */
 function eokText(value10k) {
   const n = Math.round(value10k);
@@ -130,16 +130,16 @@ const T = {
     toLabel: "옮겨 갈 구",
     tableHeading: "25개 구",
     checkHeading: "다른 자와 견주면",
-    // 숫자는 빌드가 낸 두 구의 변화(%)다. 금액은 그 둘의 차를 10억에 곱한 것뿐이다.
-    compare: (a, ac, b, bc, distinct) => {
-      const head = `${a}는 ${signedPct(ac)}, ${b}는 ${signedPct(bc)} 움직였습니다. `;
-      if (!distinct) return head + "두 구의 90% 구간이 겹쳐 이 차이를 말할 수 없습니다 — 표본이 만드는 흔들림 안입니다.";
-      const gap = (Math.abs(bc - ac) / 100) * TEN_EOK; // %p 차이를 10억(만원 단위)에 곱한다
-      return (
-        head +
-        `두 구의 90% 구간이 겹치지 않아 이 차이는 말할 수 있습니다 — 앞 시기에 같은 10억이던 두 동네 집이라면 지금은 ` +
-        `${b} 쪽이 ${eokText(gap)} ${bc > ac ? "더" : "덜"} 올라, 옮기는 데 드는 돈이 그만큼 ${bc > ac ? "늘었습니다" : "줄었습니다"}.`
-      );
+    // 숫자는 빌드가 낸 것이다 - 두 구의 변화(%), 84㎡ 환산 두 시기 값, 금액 간격 변화와 90% 구간(money).
+    compare: (a, b, distinct, m) => {
+      const pct = `${a.name}는 ${signedPct(a.change)}, ${b.name}는 ${signedPct(b.change)} 움직였고(` +
+        (distinct ? "이 % 차이는 말할 수 있습니다" : "이 % 차이는 표본의 흔들림 안입니다") + "). ";
+      const lv = `84㎡로 환산하면 ${a.name} ${eokText(a.level84.base)} → ${eokText(a.level84.recent)}, ${b.name} ${eokText(b.level84.base)} → ${eokText(b.level84.recent)}입니다. `;
+      const sure = m.low > 0 || m.high < 0;
+      const gap = sure
+        ? `${b.name}로 옮기는 데 드는 돈(두 값의 차이)은 그 사이 ${eokText(Math.abs(m.change))} ${m.change > 0 ? "늘었습니다" : "줄었습니다"}(90% ${signedEok(m.low)}~${signedEok(m.high)}).`
+        : `${b.name}로 옮기는 데 드는 돈(두 값의 차이)의 변화는 ${signedEok(m.change)}지만 구간(90% ${signedEok(m.low)}~${signedEok(m.high)})이 0을 품어 늘었는지 줄었는지 말할 수 없습니다.`;
+      return pct + lv + gap;
     },
     compareThin: (name) => `${name}는 두 시기 모두 거래된 칸이 모자라 값을 내지 않았습니다.`,
     compareSame: "다른 두 구를 고르세요.",
@@ -172,15 +172,15 @@ const T = {
     toLabel: "Where you're moving",
     tableHeading: "All 25 districts",
     checkHeading: "Against other yardsticks",
-    compare: (a, ac, b, bc, distinct) => {
-      const head = `${a} moved ${signedPct(ac)}, ${b} ${signedPct(bc)}. `;
-      if (!distinct) return head + "Their 90% ranges overlap, so the gap cannot be told apart from sampling noise.";
-      const gap = (Math.abs(bc - ac) / 100) * TEN_EOK; // %p 차이를 10억(만원 단위)에 곱한다
-      return (
-        head +
-        `Their 90% ranges do not overlap, so the gap can be stated: two flats both worth ₩1bn in the first period would now differ by ${eokText(gap)}, ` +
-        `${bc > ac ? "making the move costlier" : "making the move cheaper"} by that much.`
-      );
+    compare: (a, b, distinct, m) => {
+      const pct = `${a.name} moved ${signedPct(a.change)}, ${b.name} ${signedPct(b.change)} (` +
+        (distinct ? "a gap that can be stated" : "a gap inside the sampling noise") + "). ";
+      const lv = `As an 84m² equivalent, ${a.name} went ${eokText(a.level84.base)} → ${eokText(a.level84.recent)} and ${b.name} ${eokText(b.level84.base)} → ${eokText(b.level84.recent)}. `;
+      const sure = m.low > 0 || m.high < 0;
+      const gap = sure
+        ? `The cost of moving to ${b.name} (the difference between the two) ${m.change > 0 ? "grew" : "shrank"} by ${eokText(Math.abs(m.change))} (90% ${signedEok(m.low)} to ${signedEok(m.high)}).`
+        : `The cost of moving to ${b.name} changed by ${signedEok(m.change)}, but its range (90% ${signedEok(m.low)} to ${signedEok(m.high)}) includes zero.`;
+      return pct + lv + gap;
     },
     compareThin: (name) => `${name} has too few units traded in both periods to give a figure.`,
     compareSame: "Pick two different districts.",
@@ -263,7 +263,12 @@ function renderCompare() {
   if (thin) return setText("compare-result", t("compareThin")(thin.name));
   const key = [a.code, b.code].sort().join("-");
   const distinct = cache.data.pairs?.[key] === true;
-  out.textContent = t("compare")(a.name, a.change, b.name, b.change, distinct);
+  // money는 "작은코드-큰코드" 키에 (큰코드 - 작은코드) 기준이다. 옮겨 갈 구(b) 기준으로 부호를 맞춘다.
+  const raw = cache.data.money?.[key];
+  if (!raw || !a.level84 || !b.level84) return setText("compare-result", t("compareThin")(a.name));
+  const flip = a.code > b.code;
+  const m = flip ? { change: -raw.change, low: -raw.high, high: -raw.low } : raw;
+  out.textContent = t("compare")(a, b, distinct, m);
 }
 
 function renderDistrictLinks() {
