@@ -89,26 +89,36 @@ test("한쪽이 세 건에 못 미치면 값을 내지 않는다", async () => {
 test("화면이 낸 전세가율이 빌드 쪽 계산과 같다", async () => {
   // 같은 규칙이 scripts/complex-ratio.mjs와 이 화면 양쪽에 있다. 갈라지면
   // 자치구 페이지의 '단지별 중앙값'과 이 카드가 서로 다른 말을 하게 된다.
-  const [deals, rents] = await Promise.all([readJson("deals-nowon"), readJson("rents-nowon")]);
+  //
+  // 한 구만 보면 그날 신고가 얇을 때 견줄 칸이 모자라 검사가 빨개진다 - 노원구가
+  // 19칸으로 떨어진 날 배포가 멈췄다. 25개 구를 전부 대조해 표본을 데이터에 맡기지 않는다.
   const p = await page("?district=노원구&apt=상계주공7(고층)");
+  const { DISTRICT_SLUGS } = await import("../scripts/district-slugs.mjs");
 
   const fromScreen = [];
-  for (const apt of new Set(deals.deals.map((d) => d.apt))) {
-    for (const row of p.sandbox.complexAreas(apt, deals.deals, rents.deals)) {
-      if (row.ratio !== null) fromScreen.push(Math.round(row.ratio * 100) / 100);
-    }
-  }
+  const fromBuild = [];
+  for (const slug of Object.values(DISTRICT_SLUGS)) {
+    const [deals, rents] = await Promise.all([readJson(`deals-${slug}`), readJson(`rents-${slug}`)]);
 
-  const fromBuild = cellRatios(
-    deals.deals.map((d) => ({ aptNm: d.apt, excluUseAr: d.area, dealAmount: String(d.amount10k) })),
-    rents.deals.map((d) => ({
-      aptNm: d.apt,
-      excluUseAr: d.area,
-      deposit: String(d.deposit10k),
-      monthlyRent: d.monthlyRent10k ?? 0,
-      contractType: d.renewal ? "갱신" : "신규",
-    }))
-  ).map((r) => Math.round(r * 100) / 100);
+    for (const apt of new Set(deals.deals.map((d) => d.apt))) {
+      for (const row of p.sandbox.complexAreas(apt, deals.deals, rents.deals)) {
+        if (row.ratio !== null) fromScreen.push(Math.round(row.ratio * 100) / 100);
+      }
+    }
+
+    fromBuild.push(
+      ...cellRatios(
+        deals.deals.map((d) => ({ aptNm: d.apt, excluUseAr: d.area, dealAmount: String(d.amount10k) })),
+        rents.deals.map((d) => ({
+          aptNm: d.apt,
+          excluUseAr: d.area,
+          deposit: String(d.deposit10k),
+          monthlyRent: d.monthlyRent10k ?? 0,
+          contractType: d.renewal ? "갱신" : "신규",
+        }))
+      ).map((r) => Math.round(r * 100) / 100)
+    );
+  }
 
   assert.ok(fromBuild.length > 20, `견줄 칸이 ${fromBuild.length}개뿐이다`);
   assert.deepEqual(fromScreen.sort((a, b) => a - b), fromBuild.sort((a, b) => a - b));
