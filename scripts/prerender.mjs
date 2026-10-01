@@ -11,6 +11,7 @@ import { apartmentOptions, loanSentence, rateSpread, yearChangeSentence } from "
 import { costsSentence } from "./purchase-costs.mjs";
 import { candidatesInBand } from "./complex-price.mjs";
 import { capSentence } from "./loan-cap.mjs";
+import { policySentence } from "./policy-loan.mjs";
 import { rateFacts, factSentences as rateSentences } from "./rate-facts.mjs";
 import {
   KIND_FIELDS,
@@ -243,7 +244,7 @@ function budgetWhereHtml(band) {
   return text ? `<p class="budget-where">${escapeHtml(text)}</p>` : "";
 }
 
-export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null) {
+export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null) {
   if (!band) return null;
 
   const periods = (periodList ?? []).map((p) => monthLabel(p)).filter(Boolean).join(", ");
@@ -261,8 +262,16 @@ export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = 
     budgetLoanHtml(band, rates, mortgageSeries) +
     budgetCostsHtml(band) +
     budgetCapHtml(band, capStats) +
+    budgetPolicyHtml(band, policyCounts) +
     budgetCandidatesHtml(band, complexFiles)
   );
+}
+
+/** 정책대출 가격선에 걸친 예산대(4·5·6억대)에만 붙는 한 줄(scripts/policy-loan.mjs). */
+export function budgetPolicyHtml(band, policyCounts) {
+  const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
+  const sentence = policySentence(eok, policyCounts);
+  return sentence ? `<p class="budget-loan budget-policy" data-prerendered>${escapeHtml(sentence)}</p>` : "";
 }
 
 /** 15억 경계에 걸친 예산대에만 붙는 주담대 상한 한 줄(scripts/loan-cap.mjs). */

@@ -3,6 +3,7 @@ import path from "node:path";
 import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.mjs";
 import { applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml } from "./prerender.mjs";
 import { clustering } from "./loan-cap.mjs";
+import { lineCounts } from "./policy-loan.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const REALESTATE_PATH = path.join(root, "docs/realestate.html");
@@ -31,9 +32,9 @@ function navHtml(page) {
   return links.join("");
 }
 
-export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSeries = null, complexFiles = null, capStats = null) {
+export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null) {
   const band = (budget?.bands ?? []).find((b) => b.min10k === page.min10k) ?? null;
-  const body = budgetBodyHtml(band, budget?.periods, rates, mortgageSeries, complexFiles, capStats);
+  const body = budgetBodyHtml(band, budget?.periods, rates, mortgageSeries, complexFiles, capStats, policyCounts);
   if (!body) return null;
 
   let html = baseHtml;
@@ -95,7 +96,7 @@ async function readCapDeals() {
       const amount = Number(String(item?.dealAmount ?? "").replace(/,/g, ""));
       if (!(amount > 0) || !item.dealYear) continue;
       const date = `${item.dealYear}-${String(item.dealMonth).padStart(2, "0")}-${String(item.dealDay).padStart(2, "0")}`;
-      deals.push({ date, amount });
+      deals.push({ date, amount, area: Number(item.excluUseAr) });
     }
   }
   return deals;
@@ -123,7 +124,11 @@ async function main() {
     )
   ).filter(Boolean);
   // 15억 경계 몰림은 원본 전체(해제 제외, 직거래 포함)에서 매일 다시 센다.
-  const capStats = clustering(await readCapDeals());
+  const capDeals = await readCapDeals();
+  const capStats = clustering(capDeals);
+  // 정책대출 가격선 아래 거래 수: 최근 6개월, 해제 제외.
+  const since = new Date(Date.now() - 183 * 86400000).toISOString().slice(0, 10);
+  const policyCounts = lineCounts(capDeals.filter((d) => d.date >= since));
   if (!budget?.bands?.length) {
     console.log("  예산 데이터가 없습니다 - 예산 페이지를 만들지 않습니다");
     return;
@@ -137,7 +142,7 @@ async function main() {
   const skipped = [];
 
   for (const page of BUDGET_PAGES) {
-    const html = buildBudgetPage(baseHtml, page, budget, rates, mortgageSeries, complexFiles, capStats);
+    const html = buildBudgetPage(baseHtml, page, budget, rates, mortgageSeries, complexFiles, capStats, policyCounts);
     if (!html) {
       skipped.push(`${page.eok}억대`);
       continue;
