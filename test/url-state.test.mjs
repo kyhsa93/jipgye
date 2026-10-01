@@ -263,3 +263,21 @@ test("부동산 기록은 아카이브 날짜 목록에 넣지 않는다", async
   );
   assert.ok(!html.includes('realestateHistory: "realestate-history"'), "쓰지 않는 기록을 계속 받는다");
 });
+
+test("오늘 첫 화면 뉴스는 다섯 건 + 뉴스 전체 링크, 지난 기록은 그날 기사 전부 (#48)", async () => {
+  const fetchData = async (url) => {
+    const name = String(url).split("/data/")[1].split(".json")[0];
+    try {
+      return { ok: true, json: async () => JSON.parse(await readFile(path.join(root, `docs/data/${name}.json`), "utf8")) };
+    } catch {
+      return { ok: false, json: async () => ({}) };
+    }
+  };
+  const today = await loadIndexPage({ fetch: fetchData });
+  await until(() => String(today.byId("news-list").innerHTML).includes("news-more"));
+  const html = String(today.byId("news-list").innerHTML);
+  assert.equal((html.match(/class="news-item"/g) ?? []).length, 5);
+  assert.match(html, /href="\.\/news\.html">뉴스 전체 \d+건 보기 →/);
+  assert.equal(today.byId("news-controls").hidden, true, "오늘 화면에 거르기·검색이 남았다");
+  assert.doesNotMatch(String(today.byId("summary-box").innerHTML), /summary-links/, "AI 요약에 주제별 헤드라인이 다시 실렸다");
+});

@@ -174,9 +174,22 @@ export function newsContextHtml(context) {
   );
 }
 
+/**
+ * 첫 화면 뉴스는 다섯 건만 - 부동산 먼저. 전에는 스물네 건이 다 실려 AI 요약의 주제별 헤드라인과 같은 기사를
+ * 두 번 싣고 모바일 첫 화면의 58%를 차지했다(UIUX #48). 나머지는 뉴스 화면으로 보낸다. 화면(index.html
+ * renderNews)도 같은 규칙이다.
+ */
+export const INDEX_NEWS = 5;
+export function indexNewsItems(items) {
+  const list = items ?? [];
+  return [...list.filter((i) => i.category === "realestate"), ...list.filter((i) => i.category !== "realestate")].slice(0, INDEX_NEWS);
+}
+
 export function newsHtml(news) {
-  const items = news?.items ?? [];
-  if (!items.length) return null;
+  const all = news?.items ?? [];
+  if (!all.length) return null;
+  const items = indexNewsItems(all);
+  const more = all.length > items.length ? `<li class="news-more"><a href="./news.html">뉴스 전체 ${all.length}건 보기 →</a></li>` : "";
   return items
     .map(
       (item) =>
@@ -187,7 +200,7 @@ export function newsHtml(news) {
         newsContextHtml(item.context) +
         `</li>`
     )
-    .join("");
+    .join("") + more;
 }
 
 const budgetBandLabel = (band) => {

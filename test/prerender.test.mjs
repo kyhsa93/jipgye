@@ -150,7 +150,9 @@ test("커밋된 rates.html이 지금 데이터로 다시 그린 결과와 같다
 
 test("크롤러가 받는 HTML에 오늘 기사 제목이 실제로 들어 있다", async () => {
   const [html, news] = await Promise.all([readIndex(), readData("news")]);
-  const first = news.items[0];
+  // 첫 화면은 다섯 건만, 부동산 먼저 싣는다(#48) - 그 첫 건이 실려 있어야 한다.
+  const { indexNewsItems } = await import("../scripts/prerender.mjs");
+  const first = indexNewsItems(news.items)[0];
   assert.ok(first, "기사가 한 건도 없다 - 수집이 통째로 실패했다");
   assert.ok(html.includes(escapeHtml(first.title)), "첫 기사 제목이 정적 HTML에 없다");
   assert.ok(html.includes(escapeHtml(first.link)), "첫 기사 링크가 정적 HTML에 없다");
@@ -191,4 +193,17 @@ test("정적 마크업이 클라이언트가 그리는 구조와 같은 뼈대�
   });
   assert.ok(realestate.includes('<span class="change">'), "증감이 빠져 있다");
   assert.ok(realestate.includes('<span class="count">'), "거래 건수가 빠져 있다");
+});
+
+test("첫 화면 뉴스는 다섯 건, 부동산 먼저, 나머지는 뉴스 화면으로 (#48)", async () => {
+  const { indexNewsItems, INDEX_NEWS } = await import("../scripts/prerender.mjs");
+  const items = [
+    ...Array.from({ length: 4 }, (_, i) => ({ title: `금리${i}`, link: `https://x/r${i}`, category: "rates" })),
+    ...Array.from({ length: 3 }, (_, i) => ({ title: `부동산${i}`, link: `https://x/e${i}`, category: "realestate" })),
+  ];
+  assert.equal(INDEX_NEWS, 5);
+  assert.deepEqual(indexNewsItems(items).map((i) => i.title), ["부동산0", "부동산1", "부동산2", "금리0", "금리1"]);
+  const html = newsHtml({ items });
+  assert.equal((html.match(/class="news-item"/g) ?? []).length, 5);
+  assert.match(html, /<li class="news-more"><a href="\.\/news\.html">뉴스 전체 7건 보기 →<\/a><\/li>$/);
 });
