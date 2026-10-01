@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-01T09:00:50.684Z",
+  "updatedAt": "2026-10-01T11:06:50.069Z",
   "lastOfficial": "202607",
   "horizons": [
     3,
@@ -676,8 +676,8 @@
     "with": null
   },
   "lead": {
-    "ko": "공식 지수 2026년 7월까지로 짐작하면 2026년 10월 서울 아파트값은 +2.6%입니다. 지난 예측 오차의 가운데 80%를 얹으면 -0.3%에서 +6.3% 사이입니다 — 10억짜리 집이면 9.97억~10.63억입니다. 2012년 1월부터 매달 같은 방식으로 예측해 보면 평균 2.43%p 빗나갔고, \"그대로다\"라고 찍으면 3.13%p 빗나갔습니다.",
-    "en": "Using the official index up to Jul 2026, Seoul apartments in Oct 2026 come out at +2.6%, with the middle 80% of past errors putting it between -0.3% and +6.3%. On a ₩1bn flat that is ₩997M to ₩1,063M. The same forecast made every month since Jan 2012 missed by 2.43pp on average; guessing \"no change\" missed by 3.13pp."
+    "ko": "공식 지수 2026년 7월까지로 짐작하면 2026년 10월 서울 아파트값은 +2.6%입니다. 지난 예측 오차의 가운데 80%를 얹으면 -0.3%에서 +6.3% 사이입니다 — 2026년 7월에 10억이던 집이면 9.97억~10.63억입니다(오늘 값이 아니라 2026년 7월 값에서 잰 것입니다). 2012년 1월부터 매달 같은 방식으로 예측해 보면 평균 2.43%p 빗나갔고, \"그대로다\"라고 찍으면 3.13%p 빗나갔습니다.",
+    "en": "Using the official index up to Jul 2026, Seoul apartments in Oct 2026 come out at +2.6%, with the middle 80% of past errors putting it between -0.3% and +6.3%. A flat worth ₩1bn in Jul 2026 would be ₩997M to ₩1,063M — measured from Jul 2026, not from today's price. The same forecast made every month since Jan 2012 missed by 2.43pp on average; guessing \"no change\" missed by 3.13pp."
   },
   "longLead": {
     "ko": "1년 뒤는 값을 내지 않습니다. \"늘 오르던 대로 오른다\"고만 해도 평균 7.2%p 빗나갔는데 모델은 8.18%p 빗나갔습니다. 움직인 달의 86%가 올랐습니다 — 거의 내내 오른 시기에는 추세에 거는 것을 이기기 어렵고, 그건 모델이 아니라 그 시기에 대한 이야기입니다.",

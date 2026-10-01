@@ -98,7 +98,7 @@ export function loanSentence(spread, { eok, years = YEARS } = {}) {
 
   const head =
     `1억을 ${years}년 원리금균등으로 빌리면 매달 ${man(perEok)}입니다. ` +
-    `아파트 담보대출 최저금리의 중앙값 연 ${spread.mid}% 기준이고, 상품 ${spread.count}개가 ` +
+    `아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 ${spread.mid}% 기준이고, 상품 ${spread.count}개가 ` +
     `연 ${spread.low}%에서 ${spread.high}%까지 벌어져 있어 같은 1억이 ` +
     `매달 ${man(lowPay)}에서 ${man(highPay)} 사이가 됩니다.`;
 

@@ -71,3 +71,17 @@ test("1억당 상환액의 1년 변화는 같은 달 1년 전과 견주고, 다�
   assert.match(text, /다른 자/);
   assert.equal(yearChangeSentence([["202607", 4.6], ["202608", 4.66]]), null, "1년 전 값이 없는데 문장을 만들었다");
 });
+
+test("미등기가 막 익은 한 달에 몰렸으면 그 달을 뺀 비율을 같이 적는다 (#34)", () => {
+  // 3월: 다 등기(익음). 4월: 82%만 등기(막 익음) - 미등기 대부분이 4월에서 나온다.
+  const items = [
+    ...many(200, () => deal(3, 80)),
+    ...many(2, () => deal(3, null)),
+    ...many(82, () => deal(4, 80)),
+    ...many(18, () => deal(4, null)),
+  ];
+  const reg = registrationStats(items);
+  assert.equal(reg.latestMature.month, "2026-04");
+  assert.equal(reg.latestMature.staleShareWithout, 1);
+  assert.match(registrationSentence(reg, "ko"), /막 익은 2026년 4월 한 달에서 나옵니다 — 그 달을 빼면 1%입니다/);
+});

@@ -381,10 +381,10 @@ export function leadSentence(seoul, last, locale = "ko") {
   return locale === "en"
     ? `Using the official index up to ${ym(last, "en")}, Seoul apartments in ${ym(f.target, "en")} come out at ${signed(f.change)}, ` +
         `with the middle 80% of past errors putting it between ${signed(f.low)} and ${signed(f.high)}. ` +
-        `On a ₩1bn flat that is ${onTenEok(f.low, "en")} to ${onTenEok(f.high, "en")}. ` +
+        `A flat worth ₩1bn in ${ym(last, "en")} would be ${onTenEok(f.low, "en")} to ${onTenEok(f.high, "en")} — measured from ${ym(last, "en")}, not from today's price. ` +
         `The same forecast made every month since ${ym(card.from, "en")} missed by ${card.mae.model}pp on average; guessing "no change" missed by ${card.mae.naive}pp.`
     : `공식 지수 ${ym(last, "ko")}까지로 짐작하면 ${ym(f.target, "ko")} 서울 아파트값은 ${signed(f.change)}입니다. ` +
-        `지난 예측 오차의 가운데 80%를 얹으면 ${signed(f.low)}에서 ${signed(f.high)} 사이입니다 — 10억짜리 집이면 ${onTenEok(f.low, "ko")}~${onTenEok(f.high, "ko")}입니다. ` +
+        `지난 예측 오차의 가운데 80%를 얹으면 ${signed(f.low)}에서 ${signed(f.high)} 사이입니다 — ${ym(last, "ko")}에 10억이던 집이면 ${onTenEok(f.low, "ko")}~${onTenEok(f.high, "ko")}입니다(오늘 값이 아니라 ${ym(last, "ko")} 값에서 잰 것입니다). ` +
         `${ym(card.from, "ko")}부터 매달 같은 방식으로 예측해 보면 평균 ${card.mae.model}%p 빗나갔고, "그대로다"라고 찍으면 ${card.mae.naive}%p 빗나갔습니다.`;
 }
 

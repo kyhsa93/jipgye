@@ -150,8 +150,8 @@
       "context": [
         {
           "kind": "rates",
-          "label": "주택담보대출 최저금리",
-          "labelEn": "Lowest mortgage rate",
+          "label": "주택담보대출 최저금리(상환방식 무관)",
+          "labelEn": "Lowest mortgage rate (any repayment type)",
           "value": "연 3.70%",
           "valueEn": "3.70% p.a.",
           "href": "./mortgage-rates.html"

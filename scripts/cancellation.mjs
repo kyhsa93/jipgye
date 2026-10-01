@@ -192,8 +192,23 @@ export function registrationStats(items, matureShare = MATURE_SHARE) {
     byPrice[band.key] = inBand.length >= MIN_DEALS ? { days: median(inBand), n: inBand.length } : { days: null, n: inBand.length };
   }
 
+  // 미등기는 막 익은 달에 몰린다 - 80%를 겨우 넘긴 달에는 아직 20% 가까이가 등기 전이다. 그 한 달이 미등기의
+  // 절반을 넘게 차지하면, 그 달을 뺀 비율을 같이 적는다(문턱을 바꾸면 결과에 맞추는 것이라 바꾸지 않는다, #34).
+  const latest = [...mature].sort().at(-1);
+  const staleLatest = latest ? stale.filter((item) => monthKey(item) === latest).length : 0;
+  const maturedRest = matured.filter((item) => monthKey(item) !== latest);
+  const staleRest = stale.length - staleLatest;
+  const dominated = stale.length > 0 && staleLatest / stale.length > 0.5 && maturedRest.length > 0;
+
   return {
     medianDays: gaps.length ? median(gaps) : null,
+    latestMature: dominated
+      ? {
+          month: latest,
+          staleShareOfStale: Math.round((staleLatest / stale.length) * 1000) / 10,
+          staleShareWithout: Math.round((staleRest / maturedRest.length) * 1000) / 10,
+        }
+      : null,
     byPrice,
     registered: gaps.length,
     matureMonths: [...mature].sort(),
@@ -347,11 +362,17 @@ export function registrationSentence(reg, locale = "ko") {
     ? `Counting only matured months, half of all deals were registered within ${reg.medianDays} days of signing` +
         (listed.length ? ` (${listed.join(", ")})` : "") +
         `. Registration follows the final payment, so this is roughly how long the gap between contract and final payment runs. ` +
-        `Of the ${en(reg.matured)} deals in matured months, ${en(reg.stale)} (${reg.staleShare}%) are still unregistered.`
+        `Of the ${en(reg.matured)} deals in matured months, ${en(reg.stale)} (${reg.staleShare}%) are still unregistered.` +
+        (reg.latestMature
+          ? ` Most of those (${reg.latestMature.staleShareOfStale}%) come from ${reg.latestMature.month}, a month that has only just matured; without it the share is ${reg.latestMature.staleShareWithout}%.`
+          : "")
     : `익은 달의 계약만 놓고 보면 계약에서 등기까지 절반이 ${reg.medianDays}일 안에 끝났습니다` +
         (listed.length ? `(${listed.join(", ")})` : "") +
         `. 등기는 잔금을 치른 뒤에 하므로, 대략 계약에서 잔금까지 그만큼 잡는다는 뜻입니다. ` +
-        `익은 달의 계약 ${ko(reg.matured)}건 가운데 ${ko(reg.stale)}건(${reg.staleShare}%)이 아직 등기를 마치지 않았습니다.`;
+        `익은 달의 계약 ${ko(reg.matured)}건 가운데 ${ko(reg.stale)}건(${reg.staleShare}%)이 아직 등기를 마치지 않았습니다.` +
+        (reg.latestMature
+          ? ` 다만 그 미등기의 ${reg.latestMature.staleShareOfStale}%가 막 익은 ${reg.latestMature.month.replace("-", "년 ").replace(/년 0?/, "년 ")}월 한 달에서 나옵니다 — 그 달을 빼면 ${reg.latestMature.staleShareWithout}%입니다.`
+          : "");
 }
 
 /**
