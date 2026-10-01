@@ -2778,3 +2778,14 @@ summary:focus-visible,
 .indicator-table .low-sample {
   white-space: normal;
 }
+
+/* 근거 표를 접어 두는 자리(UIUX #53). 결론은 접힌 것 위에 한 줄로 이미 있다. */
+details.fold > summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap);
+  cursor: pointer;
+  color: var(--accent);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
