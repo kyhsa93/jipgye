@@ -2867,5 +2867,144 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-10-01",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: LH 사장은 15억 이하 주택 중 6억 주택대출 한도규제 강화를 제안했으며, HUG는 집코노미 박람회에서 '전월세 안심신탁'을 소개하고, LH임대주택 1만가구가 수년째 공실 상태인 것으로 나타났고, 마령면 행복주택 입주자 모집이 진행되고 있다.\n- 증시·환율: 한국은행은 환율 급등 경험에 따라 소비 위축이 제한적일 수 있다고 밝혔다. 코스피는 보합권에서 등락했고, 코스닥은 2%대 상승했다. 소부장 업종은 강세를 보였다. 대만 증시는 미국 반도체 시장 반등에 따라 0.12% 상승했다. 각 기사는 별개의 내용을 다루고 있다.\n- 기타 경제 소식: 이성훈 LH 사장은 공급 시차가 불가피하다고 밝히며 현재 대출 규제가 필요하다고 강조했다. 강남 지역 주택 시장은 주춤하는 반면 외곽 지역은 상승세를 보이고 있다. SKI E&S는 LNG 수요 감소에도 불구하고 경제적 유연성을 갖추고 있다고 설명했다. 청주 지역에서는 집값이 남쪽으로 이동하는 현상이 나타나고 있다. 신분평 지역의 부상이 지역 경제 활황을 이끌고 있다.\n- 금리·예금·투자상품: 하나은행이 정기예금 금리를 추가 인상하며 1년 만기 기준 연 3.6%를 기록했다. 국고채 금리가 일제히 상승했으며, 3년물은 장중 연 4.028%를 기록했다. 금리 급등으로 단기채에 대한 관심이 높아졌고, 우리운용의 '전단채 액티브'는 1년 수익률에서 1위를 차지했다. 일본은행은 9월 금리회의에서 물가 경계감을 보였으며, 10월에도 금리 인상 가능성을 내비쳤다. 각 기관은 금리 동향에 따라 다양한 금융상품의 수익률과 전망을 발표했다.",
+      "en": "- Real Estate: The LH president proposed strengthening the loan limit regulations for housing priced at 1,500,000,000 or less, with a limit of 600,000,000. HUG introduced \"Monthly Rent and Deposit Assurance Trust\" at the Housing Economy Fair, and it was revealed that 10,000 units of LH rental housing have remained vacant for several years. Recruitment for residents of the Happy Housing in Marryeong-myeon is currently underway.\n- Stocks & FX: The Bank of Korea stated that due to its experience with rapid exchange rate increases, consumer spending contraction may be limited. The KOSPI fluctuated around the flat line, while the KOSDAQ rose by more than 2%. The steel, petrochemical, and machinery sectors showed strong performance. The Taiwan stock market rose 0.12% following a rebound in the U.S. semiconductor market. Each article covers separate content.\n- Other Economic News: Lee Sung-hoon, CEO of LH, stated that a supply gap is inevitable and emphasized the need for current loan restrictions. While the housing market in Gangnam is slowing down, the outer areas are showing an upward trend. SKI E&S explained that it maintains economic flexibility despite the decrease in LNG demand. In Cheongju, a phenomenon is occurring where house prices are shifting toward the south. The rise of Shinbundong is driving regional economic prosperity.\n- Rates, Deposits & Investment Products: Hana Bank raised its regular deposit interest rate further, reaching 3.6% annually based on a one-year maturity. Government bond rates rose across the board, with the three-year bond reaching 4.028% during the day. Due to the sharp rise in interest rates, interest in short-term bonds has increased, and \"Jeonjeoncha Active\" by Woory Asset Management ranked first in one-year returns. The Bank of Japan showed caution regarding inflation at its September interest rate meeting and hinted at the possibility of raising interest rates again in October. Each institution announced the returns and outlooks of various financial products according to interest rate trends."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "LH 사장은 15억 이하 주택 중 6억 주택대출 한도규제 강화를 제안했으며, HUG는 집코노미 박람회에서 '전월세 안심신탁'을 소개하고, LH임대주택 1만가구가 수년째 공실 상태인 것으로 나타났고, 마령면 행복주택 입주자 모집이 진행되고 있다.",
+        "lineEn": "The LH president proposed strengthening the loan limit regulations for housing priced at 1,500,000,000 or less, with a limit of 600,000,000. HUG introduced \"Monthly Rent and Deposit Assurance Trust\" at the Housing Economy Fair, and it was revealed that 10,000 units of LH rental housing have remained vacant for several years. Recruitment for residents of the Happy Housing in Marryeong-myeon is currently underway.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "LH 사장 \"15억 이하 주택 6억 주택대출 한도규제 강화해야\"",
+            "link": "https://www.yna.co.kr/view/AKR20261001038200003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "이성훈 LH 사장, 대출 규제 강화 필요성 제기… “주택 공급엔 시차”",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/01/ZJFWF4XUCRCMJPREHXMGUA4KTQ/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "HUG, 집코노미 박람회서 '전월세 안심신탁' 알려…공실 나도 월세 2개월 보장 [집코노미 박람회 2026]",
+            "link": "https://www.hankyung.com/article/202610017385i",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "[진안소식] 마령면 행복주택 입주자 16일까지 모집",
+            "link": "https://www.yna.co.kr/view/AKR20261001092000055",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "“집 없어 난리인데, 여긴 빈집이 썩어나네요”…수년째 공실 LH임대주택 1만가구",
+            "link": "https://www.mk.co.kr/news/realestate/12165864",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "한국은행은 환율 급등 경험에 따라 소비 위축이 제한적일 수 있다고 밝혔다. 코스피는 보합권에서 등락했고, 코스닥은 2%대 상승했다. 소부장 업종은 강세를 보였다. 대만 증시는 미국 반도체 시장 반등에 따라 0.12% 상승했다. 각 기사는 별개의 내용을 다루고 있다.",
+        "lineEn": "The Bank of Korea stated that due to its experience with rapid exchange rate increases, consumer spending contraction may be limited. The KOSPI fluctuated around the flat line, while the KOSDAQ rose by more than 2%. The steel, petrochemical, and machinery sectors showed strong performance. The Taiwan stock market rose 0.12% following a rebound in the U.S. semiconductor market. Each article covers separate content.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "한은 \"환율 급등 경험 많을수록 소비 위축 제한적\"",
+            "link": "https://www.yna.co.kr/view/AKR20261001085500002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 보합권 등락…'소부장 강세' 코스닥 2%대 상승",
+            "link": "https://www.yna.co.kr/view/AKR20261001088600008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 대만 증시, 美 반도체 반등에 상승 개장…0.12%↑",
+            "link": "https://www.newsis.com/view/NISX20261001_0003810438",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "이성훈 LH 사장은 공급 시차가 불가피하다고 밝히며 현재 대출 규제가 필요하다고 강조했다. 강남 지역 주택 시장은 주춤하는 반면 외곽 지역은 상승세를 보이고 있다. SKI E&S는 LNG 수요 감소에도 불구하고 경제적 유연성을 갖추고 있다고 설명했다. 청주 지역에서는 집값이 남쪽으로 이동하는 현상이 나타나고 있다. 신분평 지역의 부상이 지역 경제 활황을 이끌고 있다.",
+        "lineEn": "Lee Sung-hoon, CEO of LH, stated that a supply gap is inevitable and emphasized the need for current loan restrictions. While the housing market in Gangnam is slowing down, the outer areas are showing an upward trend. SKI E&S explained that it maintains economic flexibility despite the decrease in LNG demand. In Cheongju, a phenomenon is occurring where house prices are shifting toward the south. The rise of Shinbundong is driving regional economic prosperity.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "이성훈 LH 사장 \"공급 시차 불가피…지금은 대출 규제 필요\"",
+            "link": "https://www.newsis.com/view/NISX20261001_0003810240",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "강남 주춤, 외곽 뜬다…“대출 가능한 집 찾아야” [집코노미 박람회 2026]",
+            "link": "https://www.hankyung.com/article/202610017308i",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "\"LNG는 '옵션의 경제'\"…SKI E&S, LNG 수요 꺾여도 끄떡없는 이유는",
+            "link": "https://www.hankyung.com/article/202610017139i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "“청주 집값, 남쪽으로 이동”…활황 이끄는 ‘신분평’의 부상",
+            "link": "https://www.mk.co.kr/news/realestate/12165778",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "하나은행이 정기예금 금리를 추가 인상하며 1년 만기 기준 연 3.6%를 기록했다. 국고채 금리가 일제히 상승했으며, 3년물은 장중 연 4.028%를 기록했다. 금리 급등으로 단기채에 대한 관심이 높아졌고, 우리운용의 '전단채 액티브'는 1년 수익률에서 1위를 차지했다. 일본은행은 9월 금리회의에서 물가 경계감을 보였으며, 10월에도 금리 인상 가능성을 내비쳤다. 각 기관은 금리 동향에 따라 다양한 금융상품의 수익률과 전망을 발표했다.",
+        "lineEn": "Hana Bank raised its regular deposit interest rate further, reaching 3.6% annually based on a one-year maturity. Government bond rates rose across the board, with the three-year bond reaching 4.028% during the day. Due to the sharp rise in interest rates, interest in short-term bonds has increased, and \"Jeonjeoncha Active\" by Woory Asset Management ranked first in one-year returns. The Bank of Japan showed caution regarding inflation at its September interest rate meeting and hinted at the possibility of raising interest rates again in October. Each institution announced the returns and outlooks of various financial products according to interest rate trends.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "하나은행, 정기예금 금리 추가 인상…1년 만기 연 3.6%",
+            "link": "https://www.yna.co.kr/view/AKR20261001095700002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "국고채 금리 일제히 상승…3년물 장중 연 4.028%",
+            "link": "https://www.yna.co.kr/view/AKR20261001096100008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "금리급등에 단기채로…우리운용 \"전단채 액티브 1년 수익률 1위\"",
+            "link": "https://www.yna.co.kr/view/AKR20261001089100008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "일본은행 9월 금리회의서 물가 경계감…\"10월도 인상 가능성\"",
+            "link": "https://www.yna.co.kr/view/AKR20261001084600073",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
