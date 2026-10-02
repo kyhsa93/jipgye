@@ -1,0 +1,194 @@
+{
+  "updatedAt": "2026-10-02T00:04:17.981Z",
+  "basis": "2026-06-30",
+  "source": "한국부동산원_주택공급정보_입주예정물량정보_20260630",
+  "seoul": {
+    "complexes": 108,
+    "units": 49668,
+    "from": "2026-07",
+    "to": "2028-06",
+    "types": [
+      {
+        "type": "분양",
+        "complexes": 26,
+        "units": 7754
+      },
+      {
+        "type": "분양임대",
+        "complexes": 40,
+        "units": 27291
+      },
+      {
+        "type": "임대",
+        "complexes": 42,
+        "units": 14623
+      }
+    ],
+    "halves": [
+      {
+        "half": "2026H2",
+        "complexes": 36,
+        "units": 18994,
+        "rentalUnits": 5517
+      },
+      {
+        "half": "2027H1",
+        "complexes": 23,
+        "units": 8998,
+        "rentalUnits": 2868
+      },
+      {
+        "half": "2027H2",
+        "complexes": 26,
+        "units": 13128,
+        "rentalUnits": 3289
+      },
+      {
+        "half": "2027?",
+        "complexes": 1,
+        "units": 302,
+        "rentalUnits": 0
+      },
+      {
+        "half": "2028H1",
+        "complexes": 22,
+        "units": 8246,
+        "rentalUnits": 2949
+      }
+    ],
+    "districts": [
+      {
+        "name": "서초구",
+        "complexes": 11,
+        "units": 12747
+      },
+      {
+        "name": "동작구",
+        "complexes": 8,
+        "units": 5041
+      },
+      {
+        "name": "성동구",
+        "complexes": 8,
+        "units": 4412
+      },
+      {
+        "name": "성북구",
+        "complexes": 6,
+        "units": 3970
+      },
+      {
+        "name": "은평구",
+        "complexes": 5,
+        "units": 3349
+      },
+      {
+        "name": "마포구",
+        "complexes": 8,
+        "units": 3045
+      },
+      {
+        "name": "강서구",
+        "complexes": 9,
+        "units": 2459
+      },
+      {
+        "name": "강동구",
+        "complexes": 5,
+        "units": 2421
+      },
+      {
+        "name": "중랑구",
+        "complexes": 4,
+        "units": 2169
+      },
+      {
+        "name": "용산구",
+        "complexes": 2,
+        "units": 1738
+      },
+      {
+        "name": "서대문구",
+        "complexes": 6,
+        "units": 1236
+      },
+      {
+        "name": "송파구",
+        "complexes": 3,
+        "units": 1104
+      },
+      {
+        "name": "금천구",
+        "complexes": 4,
+        "units": 1073
+      },
+      {
+        "name": "영등포구",
+        "complexes": 4,
+        "units": 1058
+      },
+      {
+        "name": "구로구",
+        "complexes": 3,
+        "units": 729
+      },
+      {
+        "name": "강북구",
+        "complexes": 3,
+        "units": 686
+      },
+      {
+        "name": "강남구",
+        "complexes": 4,
+        "units": 525
+      },
+      {
+        "name": "동대문구",
+        "complexes": 4,
+        "units": 511
+      },
+      {
+        "name": "광진구",
+        "complexes": 3,
+        "units": 429
+      },
+      {
+        "name": "노원구",
+        "complexes": 2,
+        "units": 375
+      },
+      {
+        "name": "관악구",
+        "complexes": 2,
+        "units": 245
+      },
+      {
+        "name": "양천구",
+        "complexes": 2,
+        "units": 123
+      },
+      {
+        "name": "도봉구",
+        "complexes": 1,
+        "units": 121
+      },
+      {
+        "name": "중구",
+        "complexes": 1,
+        "units": 102
+      }
+    ]
+  },
+  "lead": {
+    "ko": "한국부동산원·부동산114 추정(2026년 6월 30일 기준)으로 2026년 7월부터 2028년 6월까지 서울에 30세대 이상 공동주택 108개 단지 49,668세대가 입주할 예정입니다. 이 가운데 순수 임대(청년안심주택 등)가 42개 단지 14,623세대이고, 나머지 66개 단지 35,045세대는 분양 단지입니다(재건축·재개발로 임대분이 섞인 단지 포함). 입주 물량이 값에 어떻게 작용하는지는 여기서 검증하지 않았습니다 — 인허가로 재 본 공급 지표는 12개월 뒤 값을 더 잘 맞히지 못했습니다.",
+    "en": "The Korea Real Estate Board and R114 estimate (as of Jun 30, 2026) that 49,668 homes in 108 apartment complexes of 30+ units will be completed in Seoul from Jul 2026 to Jun 2028. 14,623 homes in 42 complexes are pure rental (youth housing and the like); the other 35,045 homes in 66 complexes are for sale, including redevelopment complexes with some rental units. How move-ins move prices has not been verified here — supply measured by building permits did not improve the 12-month forecast."
+  },
+  "table": {
+    "ko": "<thead><tr><th>기간</th><th>단지</th><th>세대</th><th>그중 순수 임대</th></tr></thead><tbody><tr><td>2026년 하반기</td><td data-label=\"단지\">36</td><td data-label=\"세대\">18,994</td><td data-label=\"그중 순수 임대\">5,517</td></tr><tr><td>2027년 상반기</td><td data-label=\"단지\">23</td><td data-label=\"세대\">8,998</td><td data-label=\"그중 순수 임대\">2,868</td></tr><tr><td>2027년 하반기</td><td data-label=\"단지\">26</td><td data-label=\"세대\">13,128</td><td data-label=\"그중 순수 임대\">3,289</td></tr><tr><td>2027년 (달 미정)</td><td data-label=\"단지\">1</td><td data-label=\"세대\">302</td><td data-label=\"그중 순수 임대\">0</td></tr><tr><td>2028년 상반기</td><td data-label=\"단지\">22</td><td data-label=\"세대\">8,246</td><td data-label=\"그중 순수 임대\">2,949</td></tr></tbody>",
+    "en": "<thead><tr><th>Period</th><th>Complexes</th><th>Homes</th><th>Of which pure rental</th></tr></thead><tbody><tr><td>Jul–Dec 2026</td><td data-label=\"Complexes\">36</td><td data-label=\"Homes\">18,994</td><td data-label=\"Of which pure rental\">5,517</td></tr><tr><td>Jan–Jun 2027</td><td data-label=\"Complexes\">23</td><td data-label=\"Homes\">8,998</td><td data-label=\"Of which pure rental\">2,868</td></tr><tr><td>Jul–Dec 2027</td><td data-label=\"Complexes\">26</td><td data-label=\"Homes\">13,128</td><td data-label=\"Of which pure rental\">3,289</td></tr><tr><td>2027, month not set</td><td data-label=\"Complexes\">1</td><td data-label=\"Homes\">302</td><td data-label=\"Of which pure rental\">0</td></tr><tr><td>Jan–Jun 2028</td><td data-label=\"Complexes\">22</td><td data-label=\"Homes\">8,246</td><td data-label=\"Of which pure rental\">2,949</td></tr></tbody>"
+  },
+  "districts": {
+    "ko": "자치구별: 서초구 12,747세대(11곳) · 동작구 5,041세대(8곳) · 성동구 4,412세대(8곳) · 성북구 3,970세대(6곳) · 은평구 3,349세대(5곳) · 마포구 3,045세대(8곳) · 강서구 2,459세대(9곳) · 강동구 2,421세대(5곳) · 중랑구 2,169세대(4곳) · 용산구 1,738세대(2곳) · 서대문구 1,236세대(6곳) · 송파구 1,104세대(3곳) · 금천구 1,073세대(4곳) · 영등포구 1,058세대(4곳) · 구로구 729세대(3곳) · 강북구 686세대(3곳) · 강남구 525세대(4곳) · 동대문구 511세대(4곳) · 광진구 429세대(3곳) · 노원구 375세대(2곳) · 관악구 245세대(2곳) · 양천구 123세대(2곳) · 도봉구 121세대(1곳) · 중구 102세대(1곳)",
+    "en": "By district: 서초구 12,747 (11) · 동작구 5,041 (8) · 성동구 4,412 (8) · 성북구 3,970 (6) · 은평구 3,349 (5) · 마포구 3,045 (8) · 강서구 2,459 (9) · 강동구 2,421 (5) · 중랑구 2,169 (4) · 용산구 1,738 (2) · 서대문구 1,236 (6) · 송파구 1,104 (3) · 금천구 1,073 (4) · 영등포구 1,058 (4) · 구로구 729 (3) · 강북구 686 (3) · 강남구 525 (4) · 동대문구 511 (4) · 광진구 429 (3) · 노원구 375 (2) · 관악구 245 (2) · 양천구 123 (2) · 도봉구 121 (1) · 중구 102 (1)"
+  }
+}

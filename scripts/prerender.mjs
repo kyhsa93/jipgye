@@ -1189,6 +1189,7 @@ async function main() {
   const cancellation = await readJson("cancellation");
   const renewal = await readJson("renewal-facts");
   const floor = await readJson("floor-gap");
+  const moveIn = await readJson("move-in");
   const outlook = await readJson("outlook");
   const indicators = await readJson("outlook-indicators");
   // 전망의 문장과 표는 빌더가 두 언어로 다 만들어 둔다. 여기서는 한국어를 꽂기만 한다.
@@ -1284,6 +1285,9 @@ async function main() {
         outlookScore: outlook?.tables?.score?.ko ?? null,
         outlookRecordLead: outlookText("recordLead"),
         indicatorLead: indicators?.lead?.ko ? escapeHtml(indicators.lead.ko) : null,
+        moveInLead: moveIn?.lead?.ko ? escapeHtml(moveIn.lead.ko) : null,
+        moveInTable: moveIn?.table?.ko ?? null,
+        moveInDistricts: moveIn?.districts?.ko ? escapeHtml(moveIn.districts.ko) : null,
         indicatorTable: indicators?.table?.ko ?? null,
       },
     ],

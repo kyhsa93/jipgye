@@ -85,6 +85,15 @@
     <div class="content-notice" id="nowcast-note"></div>
   </section>
 
+  <section id="move-in-section">
+    <h2 id="move-in-heading">앞으로 2년 서울 입주 예정</h2>
+    <p class="lead" id="move-in-lead"><!--prerender:moveInLead-->한국부동산원·부동산114 추정(2026년 6월 30일 기준)으로 2026년 7월부터 2028년 6월까지 서울에 30세대 이상 공동주택 108개 단지 49,668세대가 입주할 예정입니다. 이 가운데 순수 임대(청년안심주택 등)가 42개 단지 14,623세대이고, 나머지 66개 단지 35,045세대는 분양 단지입니다(재건축·재개발로 임대분이 섞인 단지 포함). 입주 물량이 값에 어떻게 작용하는지는 여기서 검증하지 않았습니다 — 인허가로 재 본 공급 지표는 12개월 뒤 값을 더 잘 맞히지 못했습니다.<!--/prerender:moveInLead--></p>
+    <div class="table-scroll">
+      <table class="rate-table" id="move-in-table"><!--prerender:moveInTable--><thead><tr><th>기간</th><th>단지</th><th>세대</th><th>그중 순수 임대</th></tr></thead><tbody><tr><td>2026년 하반기</td><td data-label="단지">36</td><td data-label="세대">18,994</td><td data-label="그중 순수 임대">5,517</td></tr><tr><td>2027년 상반기</td><td data-label="단지">23</td><td data-label="세대">8,998</td><td data-label="그중 순수 임대">2,868</td></tr><tr><td>2027년 하반기</td><td data-label="단지">26</td><td data-label="세대">13,128</td><td data-label="그중 순수 임대">3,289</td></tr><tr><td>2027년 (달 미정)</td><td data-label="단지">1</td><td data-label="세대">302</td><td data-label="그중 순수 임대">0</td></tr><tr><td>2028년 상반기</td><td data-label="단지">22</td><td data-label="세대">8,246</td><td data-label="그중 순수 임대">2,949</td></tr></tbody><!--/prerender:moveInTable--></table>
+    </div>
+    <div class="content-notice" id="move-in-districts"><!--prerender:moveInDistricts-->자치구별: 서초구 12,747세대(11곳) · 동작구 5,041세대(8곳) · 성동구 4,412세대(8곳) · 성북구 3,970세대(6곳) · 은평구 3,349세대(5곳) · 마포구 3,045세대(8곳) · 강서구 2,459세대(9곳) · 강동구 2,421세대(5곳) · 중랑구 2,169세대(4곳) · 용산구 1,738세대(2곳) · 서대문구 1,236세대(6곳) · 송파구 1,104세대(3곳) · 금천구 1,073세대(4곳) · 영등포구 1,058세대(4곳) · 구로구 729세대(3곳) · 강북구 686세대(3곳) · 강남구 525세대(4곳) · 동대문구 511세대(4곳) · 광진구 429세대(3곳) · 노원구 375세대(2곳) · 관악구 245세대(2곳) · 양천구 123세대(2곳) · 도봉구 121세대(1곳) · 중구 102세대(1곳)<!--/prerender:moveInDistricts--></div>
+  </section>
+
   <section id="score-section">
     <h2 id="score-heading">성적표</h2>
     <div class="table-scroll">
@@ -140,6 +149,7 @@ const T = {
     regionHeading: "권역별, 거리별",
     nowcastHeading: "공식 지수가 아직 없는 달",
     scoreHeading: "성적표",
+    moveInHeading: "앞으로 2년 서울 입주 예정",
     indicatorHeading: "넣어 봤지만 앞서지 않은 것",
     indicatorToggle: "지표별 오차 표 보기",
     indicatorNote:
@@ -184,6 +194,7 @@ const T = {
     regionHeading: "By region and horizon",
     nowcastHeading: "Months the official index has not reached",
     scoreHeading: "Track record",
+    moveInHeading: "Seoul move-ins over the next two years",
     indicatorHeading: "Tried, and did not lead",
     indicatorToggle: "Show the error table by indicator",
     indicatorNote:
@@ -279,6 +290,7 @@ function applyLocale() {
   setText("nowcast-note", t("nowcastNote"));
   setText("score-note", t("scoreNote"));
   setText("indicator-heading", t("indicatorHeading"));
+  setText("move-in-heading", t("moveInHeading"));
   setText("indicator-toggle", t("indicatorToggle"));
   setText("indicator-note", t("indicatorNote"));
   setText("nav-digest", t("navDigest"));
@@ -298,6 +310,14 @@ function renderAll() {
   applyLocale();
   const data = cache.data;
   const ind = cache.indicators;
+  // 입주 예정은 사실 문장과 표만 - 빌드가 두 언어로 굽고 화면은 고르기만 한다(#60).
+  const mi = cache.moveIn;
+  document.getElementById("move-in-section").hidden = !mi?.lead;
+  if (mi?.lead) {
+    setText("move-in-lead", mi.lead[locale] ?? "");
+    document.getElementById("move-in-table").innerHTML = mi.table?.[locale] ?? "";
+    setText("move-in-districts", mi.districts?.[locale] ?? "");
+  }
   if (ind?.lead) setText("indicator-lead", ind.lead[locale] ?? "");
   if (ind?.table?.[locale]) document.getElementById("indicator-table").innerHTML = ind.table[locale];
   for (const [id, key] of [
@@ -332,8 +352,13 @@ async function main() {
   applyLocale();
 
   try {
-    const [data, indicators] = await Promise.all([loadJson("outlook"), loadJson("outlook-indicators").catch(() => null)]);
+    const [data, indicators, moveIn] = await Promise.all([
+      loadJson("outlook"),
+      loadJson("outlook-indicators").catch(() => null),
+      loadJson("move-in").catch(() => null),
+    ]);
     cache.indicators = indicators;
+    cache.moveIn = moveIn;
     if (!data?.regions?.length) {
       setText("lead", t("notReady"));
       setText("updated", "-");
