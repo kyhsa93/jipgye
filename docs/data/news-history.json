@@ -7662,7 +7662,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 이도흔 기자 = 카카오뱅크[323410]는 개인사업자 대출 잔액이 4조원을 넘겼다고 2일 밝혔다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KakaoBank's individual business loan balance reaches 4,000,000,000,000 won four years after launch"
       },
       {
         "title": "[올댓차이나] 대만 증시, 상승 개장 후 매도 유입에 '출렁'…0.18%↓",
@@ -7671,7 +7672,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 대만 타이베이 증시는 2일 전날 뉴욕 증시 강세에 상승 출발했지만 대형 기술주에 매도 출회하면서 등락하고 있다. 자취안(加權) 지수는 이날 전일 대비 37.16 포인트, 0.08% 오른…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Taiwan Exchange] Taiwan Stock Market Drops 0.18% After Opening Higher Amid Selling Pressure"
       },
       {
         "title": "대방건설, 인천계양 테크노밸리 공공주택지구 조경공사 수주",
@@ -7680,7 +7682,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 임기창 기자 = 대방건설은 한국토지주택공사(LH)가 발주한 인천계양 테크노밸리 공공주택지구 조경공사(1-2공구)를 수주했다고 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Daebang Construction Wins Landscape Construction Contract for Public Housing Area in Incheon GyeYang Techno Valley"
       },
       {
         "title": "[프로필]김자봉 공정위 상임위원…경제·법학 아우른 금융정책 전문가",
@@ -7689,7 +7692,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[세종=뉴시스]임하은 기자 = 김자봉 한국금융연구원 선임연구위원이 공정거래위원회 상임위원으로 임명됐다. 김 신임 상임위원은 1996년 한국금융연구원에 입사해 연구원과 부연구위원, 연구위원을 거쳐 2017년부터 선임연…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Profile] Kim Jae-bong, Fair Trade Commission Standing Committee Member... Financial Policy Expert Bridging Economics and Law"
       },
       {
         "title": "발행축소, 금리상승 막을 방패? 하락 동력?…국고채 수급 전망은",
@@ -7698,7 +7702,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 강수지 기자 = 정부가 예상보다 크게 늘어난 세수를 활용해 국고채 발행을 줄이기로 하면서 연말 채권시장 수급 여건이 개선될 전...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Shield against shrinking issuance and rising interest rates? Downward momentum?... Outlook for government bond supply and demand"
       },
       {
         "title": "엔화, 美 조기 금리인상 관측 후퇴에 1달러=157엔대 후반 상승 출발",
@@ -7707,7 +7712,8 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스]이재준 기자 = 엔화 환율은 2일 미국 조기 금리인상 관측 후퇴에 미일 금리차 미일 정책금리 차이가 바로 확대하지 않는다는 분위기 전망 속에서 엔 매수, 달러 매도로 1달러=157엔대 후반으로 올라 시…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Yen rises to 157 yen per dollar as outlook on early U.S. rate hikes retreats"
       },
       {
         "title": "5일 새벽 대출·카드론 등 일부 금융서비스 중단…\"서비스 개편\"",
@@ -7716,7 +7722,18 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 이도흔 기자 = 한국신용정보원은 오는 5일 오전 0시부터 8시까지 대출·카드론 신규 이용과 인터넷·모바일을 통한 예금계좌 개설...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "rates",
+            "label": "정기예금 최고금리(12개월)",
+            "labelEn": "Top 12-month deposit rate",
+            "value": "연 4.10%",
+            "valueEn": "4.10% p.a.",
+            "href": "./deposit-rates.html"
+          }
+        ],
+        "titleEn": "Early Friday, some financial services including loans and card loans were suspended...\"Service Restructuring"
       },
       {
         "title": "카카오뱅크, 개인사업자 대출 4조원 돌파",
@@ -7725,7 +7742,8 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KakaoBank personal business loan exceeds 4,000,000,000,000 won"
       },
       {
         "title": "동복댐 뒤편에 15m 신설…'가스관 없는 아파트' 내년 도입",
@@ -7734,7 +7752,8 @@
         "source": "한국경제 경제",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "New 15m dam to be built behind Dongbok Dam... 'Apartment without gas pipes' to be introduced next year"
       },
       {
         "title": "日증시, 차익실현·중동 불안에 하락 출발…닛케이 0.93%↓",
@@ -7743,7 +7762,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 신효령 기자 = 일본 도쿄증시의 닛케이225지수(닛케이평균주가)가 2일 하락 출발했다. 최근 급등에 따른 차익실현 매물과 중동 정세 불안이 투자심리를 위축시켰다. 니혼게이자이신문에 따르면 이날 닛케이…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Tokyo Stock Exchange Falls on Profit-Taking and Middle East Uncertainty... Nikkei Down 0.93%"
       },
       {
         "title": "목동12단지 재건축, GS건설 우협 선정…'리플리제 자이' 짓는다",
@@ -7752,7 +7772,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]이연희 기자 = GS건설이 서울 양천구 목동 신시가지아파트 12단지 시공사 우선협상대상자로 선정됐다고 2일 밝혔다. 목동 12단지의 새로운 단지명은 '리플리제 자이'가 될 전망이다. 앞서 목동 12단지…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yangcheon.html",
+            "label": "양천구 아파트 84㎡ 매매",
+            "labelEn": "양천구 apartment 84㎡ sale",
+            "value": "13억 4,825만원",
+            "valueEn": "₩1,348M",
+            "note": "최근 1주 계약 97건",
+            "noteEn": "97 deals in the last 1 weeks"
+          }
+        ],
+        "titleEn": "Mokdong 12th Complex Reconstruction, GS Construction Selected as Preferred Contractor… to Build 'Replicate Jae"
       },
       {
         "title": "코스피, 하락 출발해 보합권 등락…코스닥, 장중 900선 회복(종합)",
@@ -7761,7 +7794,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 2일 코스피가 하락 출발해 상승 전환하는 등 보합권에서 등락하고 있다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KOSPI opens lower, fluctuating around flat line... KOSDAQ recovers to 900 level during trading (comprehensive)"
       },
       {
         "title": "한국부동산원·한국어촌어항공단, 공정하고 투명한 설계공모 운영을 위한 업무협약",
@@ -7770,7 +7804,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "한국부동산원은 지난 1일 한국어촌어항공단과 ‘설계공모 위탁운영을 위한 업무협약’을 체결했다고 2일 밝혔다. 이번 업무협약은 한국어촌어항공단이 추진하는 공공건축 설계공모를 한국부동산..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Korea Real Estate Agency and Korea Rural and Fisheries Village Corporation Sign MOU to Operate Fair and Transparent Design Competition"
       },
       {
         "title": "성북구 월곡래미안루나밸리 59.98㎡ 11억 3천만원… 최근 3년 신고가 [MAI부동산]",
@@ -7779,7 +7814,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 1일 국토부 실거래가 시스템에 신규 등록된 서울 성북구 하월곡동 월곡래미안루나밸리 전용 59.98㎡가 11억 3천만원에 거래되며 해당 단지·면적 기..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seongbuk.html",
+            "label": "성북구 아파트 84㎡ 매매",
+            "labelEn": "성북구 apartment 84㎡ sale",
+            "value": "10억 4,816만원",
+            "valueEn": "₩1,048M",
+            "note": "최근 1주 계약 175건",
+            "noteEn": "175 deals in the last 1 weeks"
+          }
+        ],
+        "titleEn": "Seongbuk-gu Wolgok Remian Luna Valley 59.98㎡ 1,130,000,000 won... Recent 3-Year High Price [MAI Real Estate]"
       },
       {
         "title": "노원구 상계주공14단지 59.39㎡ 6억 9천만원… 최근 3년 신고가 [MAI부동산]",
@@ -7788,7 +7836,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 1일 국토부 실거래가 시스템에 신규 등록된 서울 노원구 상계동 상계주공14(고층) 전용 59.39㎡ 거래가 6억 9천만원에 체결되며 해당 단지·면적..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-nowon.html",
+            "label": "노원구 아파트 84㎡ 매매",
+            "labelEn": "노원구 apartment 84㎡ sale",
+            "value": "9억 3,203만원",
+            "valueEn": "₩932M",
+            "note": "최근 1주 계약 426건",
+            "noteEn": "426 deals in the last 1 weeks"
+          }
+        ],
+        "titleEn": "Nowon-gu Sanggye Joongong 14-danji 59.39㎡ 690,000,000won... Recent 3-year new high [MAI Real Estate]"
       },
       {
         "title": "노원구 월계주공2단지 58.65㎡, 6억 5천만원 `최근 3년 신고가` [MAI부동산]",
@@ -7797,7 +7858,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 서울 노원구 월계동 주공2단지에서 전용 58.65㎡ 아파트가 6억 5,000만 원에 거래되며 최근 3년 내 신고가를 기록했다. 항목 내용 항목 내용 준공 1992년 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-nowon.html",
+            "label": "노원구 아파트 84㎡ 매매",
+            "labelEn": "노원구 apartment 84㎡ sale",
+            "value": "9억 3,203만원",
+            "valueEn": "₩932M",
+            "note": "최근 1주 계약 426건",
+            "noteEn": "426 deals in the last 1 weeks"
+          }
+        ],
+        "titleEn": "Nowon-gu Wolgyejuongong 2-danji 58.65㎡, 650,000,000 won \"recent 3-year new high\" [MAI Real Estate]"
       },
       {
         "title": "노원구 하계동 벽산 70.56㎡, 8억 5천만원 `최근 3년 신고가` [MAI부동산]",
@@ -7806,7 +7880,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 서울 노원구 하계동 벽산에서 전용 70.56㎡ 아파트가 8억 5천만원에 거래되며 최근 3년 내 신고가를 기록했다. 항목 내용 항목 내용 준공 1988년 6월 세대수 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-nowon.html",
+            "label": "노원구 아파트 84㎡ 매매",
+            "labelEn": "노원구 apartment 84㎡ sale",
+            "value": "9억 3,203만원",
+            "valueEn": "₩932M",
+            "note": "최근 1주 계약 426건",
+            "noteEn": "426 deals in the last 1 weeks"
+          }
+        ],
+        "titleEn": "Nowon-gu Haegyedong Wallasan 70.56㎡, 850,000,000 won \"Recent 3-Year High Price\" [MAI Real Estate]"
       },
       {
         "title": "은평구 응암동 백련산해모로 59.97㎡ 10억 2천만원 거래… 최근 3년 신고가 [MAI부동산]",
@@ -7815,7 +7902,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 1일 국토부 실거래가 시스템에 신규 등록된 서울 은평구 응암동 백련산해모로 전용 59.97㎡가 10억 2천만원에 거래되며 동일 단지·동일 전용면적 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-eunpyeong.html",
+            "label": "은평구 아파트 84㎡ 매매",
+            "labelEn": "은평구 apartment 84㎡ sale",
+            "value": "9억 4,017만원",
+            "valueEn": "₩940M",
+            "note": "최근 1주 계약 202건",
+            "noteEn": "202 deals in the last 1 weeks"
+          }
+        ],
+        "titleEn": "Eunpyeong-gu, Eungam-dong, Baekryeonsanhaemoro, 59.97㎡, 1,020,000,000 won transaction... highest price in 3 years [MAI Real Estate]"
       },
       {
         "title": "은평구 백련산힐스테이트4차 84.98㎡ 12억원 거래… 최근 3년 신고가 [MAI부동산]",
@@ -7824,7 +7924,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 1일 국토부 실거래가 시스템에 신규 등록된 서울 은평구 응암동 백련산힐스테이트4차 전용 84.98㎡가 12억원에 거래되며 동일 단지·동일 전용면적 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-eunpyeong.html",
+            "label": "은평구 아파트 84㎡ 매매",
+            "labelEn": "은평구 apartment 84㎡ sale",
+            "value": "9억 4,017만원",
+            "valueEn": "₩940M",
+            "note": "최근 1주 계약 202건",
+            "noteEn": "202 deals in the last 1 weeks"
+          }
+        ],
+        "titleEn": "Eunpyeong-gu Baekryeonsan Hillsate 4th 84.98㎡ 1,200,000,000 won transaction... highest price in 3 years [MAI Real Estate]"
       },
       {
         "title": "서대문구 천연뜨란채 57.78㎡ 12억 4300만원… 최근 3년 신고가 [MAI부동산]",
@@ -7833,7 +7946,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 1일 국토부 실거래가 시스템에 신규 등록된 서울 서대문구 천연동 천연뜨란채 전용 57.78㎡ 거래가 12억 4,300만 원으로 최근 3년 신고가를 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seodaemun.html",
+            "label": "서대문구 아파트 84㎡ 매매",
+            "labelEn": "서대문구 apartment 84㎡ sale",
+            "value": "11억 7,292만원",
+            "valueEn": "₩1,173M",
+            "note": "최근 1주 계약 110건",
+            "noteEn": "110 deals in the last 1 weeks"
+          }
+        ],
+        "titleEn": "Seodaemun-gu Natural Tteokrancha 57.78㎡ 1,243,000,000won... 3-Year High Price Reported [MAI Real Estate]"
       },
       {
         "title": "'주택공급 속도 사활' 국토부, 공공택지 조사·발굴 전담과 신설",
@@ -7842,7 +7968,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 변해정 기자 = 국토교통부가 공공주택 신규 부지의 조사·발굴 업무를 전담하는 과(科) 단위 조직을 신설해 운영에 들어갔다. 이는 홍지선 장관 취임 이후 첫 조직 개편이다. 2일 당국에 따르면 국토부는…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Ministry of Land, Transport and Housing to establish dedicated unit for survey and excavation of public land amid 'housing supply speed is crucial"
       },
       {
         "title": "'아산탕정2 도시개발사업' 착공…주택 2만1천35가구 공급",
@@ -7851,7 +7978,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(아산=연합뉴스) 유의주 기자 = 충남 아산시는 중부권 최대 규모 신도시 개발사업인 '아산탕정2 도시개발사업' 조성 공사가 지난달 착공했다고 2...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Asan Tangjeong 2 Urban Development Project Begins Construction... Supply of 20,0001 Thousand 35 Households"
       },
       {
         "title": "연준 고위인사 잇단 '신중론'…10월 금리 인상 확률 26%로 뚝",
@@ -7860,7 +7988,8 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스]박미선 기자 = 미국 연방준비제도(Fed·연준) 고위 인사들이 잇따라 추가 금리 인상에 신중한 입장을 내놓으면서 이달 기준금리 동결 가능성이 커지고 있다. 최근 미 국채금리가 급등해 이미 상당한 긴축…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Fed officials continue to voice caution... probability of October rate hike drops to 26%"
       },
       {
         "title": "미 국채 덮친 '매도 악순환'…10년물 금리 5.3%",
@@ -7869,7 +7998,8 @@
         "source": "한국경제 경제",
         "category": "rates",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "U.S. Treasuries hit by 'sell-off spiral'... 10-year yield hits 5.3%"
       }
     ]
   }

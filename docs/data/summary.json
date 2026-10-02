@@ -1,46 +1,41 @@
 {
-  "updatedAt": "2026-10-01T17:24:21.159Z",
+  "updatedAt": "2026-10-02T02:17:04.264Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 금리·예금·투자상품: 뉴욕증시는 국채금리 급등으로 하락 출발했다. 미국 10년물 국채금리가 5.34%로 24년 만에 최고 수준을 기록하며 전세계 채권 수익률이 일제히 상승했다. 원화는 미국 금리 상승에 따라 기대와 달리 하락하지 않아 환율 전망이 혼란스러워졌다. 국고채는 주요국 금리 상승 영향으로 장기물 중심으로 약세를 보였다. 주담대 금리가 고공행진하면서 영끌족은 부담을 느끼며 한숨을 쉬고 있다.\n- 증시·환율: 뉴욕증시와 대만 증시, 일본 증시가 기술주와 반도체 호조, 마이크론 실적 기대 등에 따라 상승 마감했으며, 한국에서는 증시 경보 관련 조치에 대한 논의가 진행되고 있다.\n- 부동산: 장영호 회장은 청약 당첨자도 대출 걱정이 많다고 밝혔다. 서울 아파트값은 86주 연속 상승하며 정부 기록을 넘어섰다. 보유 주택 수를 정확히 아는 것이 절세의 핵심이라고 강조됐다. 공공재개발 사업에 참여하는 1주택자도 이주비 대출에 연 2%P 지원을 받을 수 있다. 맞춤형 서비스 주택은 식사, 돌봄, 의료를 결합한 형태로 확대해야 한다는 의견이 제기됐다.\n- 기타 경제 소식: 신한은행의 대출모집인 전용 서비스에 보안 허점이 발견되며 논란이 일고 있다. 서울의 평균 주택 가격은 86주 연속 상승하며, 평균 15억 원을 넘는 자치구는 5년 만에 5곳에서 13곳으로 늘었다. 중국 정부는 주택 구매자에게 5년간 대출 이자 지원을 제공하는 정책을 발표했다. 재정경제부에서 인사 관련 소식이 전해졌다. 각 기사는 서로 다른 주제로, 별도의 사건으로 분리된다.",
-    "en": "- Rates, Deposits & Investment Products: The New York stock market opened lower due to a sharp rise in bond yields. The U.S. 10-year Treasury bond yield reached 5.34%, the highest level in 24 years, causing bond yields worldwide to rise uniformly. The won did not fall as expected despite the rise in U.S. interest rates, causing confusion in the foreign exchange outlook. Long-term government bonds showed weakness, influenced by rising interest rates in major countries. As mortgage rates continue to soar, the \"engagement loan\" crowd is feeling the burden and sighing.\n- Stocks & FX: The New York stock market, Taiwan stock market, and Japanese stock market closed higher due to strong performance in technology stocks and semiconductors, as well as expectations of Micron's earnings, while in South Korea, discussions are ongoing regarding measures related to the stock market alert.\n- Real Estate: Chairman Jang Young-ho stated that lottery winners also have many concerns about loans. Apartment prices in Seoul have risen for 86 consecutive weeks, surpassing government records. It was emphasized that knowing the exact number of owned homes is key to tax savings. Homeowners with one property participating in public redevelopment projects can receive annual support of 2 percentage points for relocation loan. Opinions were raised that customized service housing should be expanded to combine meals, care, and medical services.\n- Other Economic News: A security vulnerability has been found in the SH Bank's loan underwriter service, causing controversy. The average housing price in Seoul has risen for 86 consecutive weeks, and the number of districts where the average price exceeds 1,500,000,000 won has increased from five to 13 in five years. The Chinese government announced a policy to support loan interest for homebuyers for five years. News about personnel matters was reported from the Ministry of Economy and Finance. Each article covers a different topic and should be considered as separate events."
+    "ko": "- 기타 경제 소식: 카카오뱅크의 개인사업자 대출 잔액이 출시 약 4년 만에 4조원을 기록했다. 김자봉 공정위 상임위원은 경제와 법학 분야를 아우르는 금융정책 전문가로 주목받고 있다. 5일 새벽 일부 금융서비스가 중단되며 서비스 개편을 진행 중이다. 카카오뱅크는 개인사업자 대출 잔액이 4조원을 돌파했다고 발표했다. 각 기사는 서로 다른 주제로, 별개의 사실을 담고 있다.\n- 증시·환율: 대만 증시는 상승 개장 후 매도 유입으로 0.18% 하락했다. 일본 닛케이 증시는 차익실현과 중동 불안으로 0.93% 하락 출발했다. 코스피는 하락 출발 후 보합권에서 등락했다. 코스닥은 장중 900선을 회복하며 반등했다. 각 증시는 서로 다른 요인에 따라 움직였다.\n- 부동산: 대방건설은 인천 계양 테크노밸리 공공주택지구 조경공사 수주에 성공했다. 동복댐 뒤편에 15m 규모의 신설이 이루어져, '가스관 없는 아파트'가 내년에 도입될 예정이다. 목동12단지 재건축 사업에서 GS건설이 우협으로 선정되어 '리플리제 자이'를 건설한다. 한국부동산원과 한국어촌어항공단은 공정하고 투명한 설계공모 운영을 위한 업무협약을 체결했다. 성북구 월곡래미안루나밸리의 59.98㎡ 주택은 11억 3천만원에 거래되며, 최근 3년간 신고가를 기록했다.\n- 금리·예금·투자상품: 국고채 수급 전망, 엔화 환율, 연준 금리 인상 확률, 미 국채 금리 등 다양한 금리·예금·투자상품 관련 동향이 보도되었다.",
+    "en": "- Other Economic News: KakaoBank's individual business loan balance reached 4,000,000,000,000 won about four years after its launch. Kim Jae-bong, a Fair Trade Commission standing committee member, is gaining attention as a financial policy expert covering both economics and law. On the 5th early in the morning, some financial services were suspended as the service overhaul is underway. KakaoBank announced that its individual business loan balance exceeded 4,000,000,000,000 won. Each article covers different topics and presents separate facts.\n- Stocks & FX: Taiwan's stock market fell 0.18% after opening higher due to selling pressure. Japan's Nikkei stock market opened 0.93% lower due to profit-taking and Middle East tensions. The KOSPI fluctuated around the flat line after opening lower. The KOSDAQ rebounded after recovering to the 900 level during the session. Each stock market moved due to different factors.\n- Real Estate: Daebang Construction has successfully secured the landscape construction project for the public housing area in Incheon Gye Yang Techno Valley. A new facility of 15m scale will be established behind Dongbok Dam, and \"apartment without gas pipes\" is expected to be introduced next year. GS Construction has been selected as the co-lead contractor for the Mokdong 12th Site reconstruction project to build \"Replifye Jai.\" The Korea Real Estate Institute and the Korea Rural and Fishery Port Corporation have signed a memorandum of agreement to ensure fair and transparent design competition operations. The 59.98㎡ housing unit in Seongbuk-gu's Wolgok Rameian Luna Valley was traded for 1,130,000,000 won and has recorded a new high price in the past three years.\n- Rates, Deposits & Investment Products: Outlook on government bond supply, yen exchange rate, probability of Fed rate hikes, U.S. Treasury bond yields, and other trends related to interest rates, deposits, and investment products were reported."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "뉴욕증시는 국채금리 급등으로 하락 출발했다. 미국 10년물 국채금리가 5.34%로 24년 만에 최고 수준을 기록하며 전세계 채권 수익률이 일제히 상승했다. 원화는 미국 금리 상승에 따라 기대와 달리 하락하지 않아 환율 전망이 혼란스러워졌다. 국고채는 주요국 금리 상승 영향으로 장기물 중심으로 약세를 보였다. 주담대 금리가 고공행진하면서 영끌족은 부담을 느끼며 한숨을 쉬고 있다.",
-      "lineEn": "The New York stock market opened lower due to a sharp rise in bond yields. The U.S. 10-year Treasury bond yield reached 5.34%, the highest level in 24 years, causing bond yields worldwide to rise uniformly. The won did not fall as expected despite the rise in U.S. interest rates, causing confusion in the foreign exchange outlook. Long-term government bonds showed weakness, influenced by rising interest rates in major countries. As mortgage rates continue to soar, the \"engagement loan\" crowd is feeling the burden and sighing.",
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "카카오뱅크의 개인사업자 대출 잔액이 출시 약 4년 만에 4조원을 기록했다. 김자봉 공정위 상임위원은 경제와 법학 분야를 아우르는 금융정책 전문가로 주목받고 있다. 5일 새벽 일부 금융서비스가 중단되며 서비스 개편을 진행 중이다. 카카오뱅크는 개인사업자 대출 잔액이 4조원을 돌파했다고 발표했다. 각 기사는 서로 다른 주제로, 별개의 사실을 담고 있다.",
+      "lineEn": "KakaoBank's individual business loan balance reached 4,000,000,000,000 won about four years after its launch. Kim Jae-bong, a Fair Trade Commission standing committee member, is gaining attention as a financial policy expert covering both economics and law. On the 5th early in the morning, some financial services were suspended as the service overhaul is underway. KakaoBank announced that its individual business loan balance exceeded 4,000,000,000,000 won. Each article covers different topics and presents separate facts.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "뉴욕증시, 국채금리 급등에 하락 출발…브렌트유 3% 상승세",
-          "link": "https://www.newsis.com/view/NISX20261002_0003811618",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "美 10년물 국채금리 5.34% \"24년만에 최고\"…전세계 채권 수익률 일제 급등 왜?",
-          "link": "https://www.hankyung.com/article/202610018739i",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "이상한 환율…'美금리 ↑ = 원화 ↓' 공식 깨졌다",
-          "link": "https://www.hankyung.com/article/2026100185081",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "국고채, 주요국 금리상승에 장기물 중심 약세(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261001164851008",
+          "title": "카카오뱅크 개인사업자 대출, 출시 약 4년만에 잔액 4조원",
+          "link": "https://www.yna.co.kr/view/AKR20261002070700002",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "“금리만 생각하면 등골이 오싹”…고공행진 주담대에 영끌족 ‘한숨’",
-          "link": "https://www.mk.co.kr/news/realestate/12166246",
-          "source": "매일경제 부동산"
+          "title": "[프로필]김자봉 공정위 상임위원…경제·법학 아우른 금융정책 전문가",
+          "link": "https://www.newsis.com/view/NISX20261002_0003812149",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "5일 새벽 대출·카드론 등 일부 금융서비스 중단…\"서비스 개편\"",
+          "link": "https://www.yna.co.kr/view/AKR20261002043900002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "카카오뱅크, 개인사업자 대출 4조원 돌파",
+          "link": "https://www.hankyung.com/article/202610029660i",
+          "source": "한국경제 경제"
         }
       ]
     },
@@ -48,36 +43,26 @@
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
-      "lineKo": "뉴욕증시와 대만 증시, 일본 증시가 기술주와 반도체 호조, 마이크론 실적 기대 등에 따라 상승 마감했으며, 한국에서는 증시 경보 관련 조치에 대한 논의가 진행되고 있다.",
-      "lineEn": "The New York stock market, Taiwan stock market, and Japanese stock market closed higher due to strong performance in technology stocks and semiconductors, as well as expectations of Micron's earnings, while in South Korea, discussions are ongoing regarding measures related to the stock market alert.",
+      "lineKo": "대만 증시는 상승 개장 후 매도 유입으로 0.18% 하락했다. 일본 닛케이 증시는 차익실현과 중동 불안으로 0.93% 하락 출발했다. 코스피는 하락 출발 후 보합권에서 등락했다. 코스닥은 장중 900선을 회복하며 반등했다. 각 증시는 서로 다른 요인에 따라 움직였다.",
+      "lineEn": "Taiwan's stock market fell 0.18% after opening higher due to selling pressure. Japan's Nikkei stock market opened 0.93% lower due to profit-taking and Middle East tensions. The KOSPI fluctuated around the flat line after opening lower. The KOSDAQ rebounded after recovering to the 900 level during the session. Each stock market moved due to different factors.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": true,
+      "degraded": false,
       "items": [
         {
-          "title": "[속보]뉴욕증시, 기술주 중심 상승 출발…나스닥 0.52%↑",
-          "link": "https://www.newsis.com/view/NISX20261001_0003811605",
+          "title": "[올댓차이나] 대만 증시, 상승 개장 후 매도 유입에 '출렁'…0.18%↓",
+          "link": "https://www.newsis.com/view/NISX20261002_0003812223",
           "source": "뉴시스 경제"
         },
         {
-          "title": "[올댓차이나] 대만 증시, 韓美 반도체 호조에 0.86%↑ 상승 마감…1주 만에 사상최고 경신",
-          "link": "https://www.newsis.com/view/NISX20261001_0003811534",
+          "title": "日증시, 차익실현·중동 불안에 하락 출발…닛케이 0.93%↓",
+          "link": "https://www.newsis.com/view/NISX20261002_0003811993",
           "source": "뉴시스 경제"
         },
         {
-          "title": "\"증시 경보, 단계수 줄이고 불건전거래 감시에 집중해야\"",
-          "link": "https://www.yna.co.kr/view/AKR20261001175400008",
+          "title": "코스피, 하락 출발해 보합권 등락…코스닥, 장중 900선 회복(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261002044300008",
           "source": "연합뉴스 경제"
-        },
-        {
-          "title": "마이크론·수출로 확인한 반도체 수요…증시 상승탄력 촉매될까(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261001085451008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "日증시, 마이크론 실적 기대에 상승 마감…닛케이 3.3%↑",
-          "link": "https://www.newsis.com/view/NISX20261001_0003811109",
-          "source": "뉴시스 경제"
         }
       ]
     },
@@ -85,68 +70,68 @@
       "key": "realestate",
       "name": "부동산",
       "nameEn": "Real Estate",
-      "lineKo": "장영호 회장은 청약 당첨자도 대출 걱정이 많다고 밝혔다. 서울 아파트값은 86주 연속 상승하며 정부 기록을 넘어섰다. 보유 주택 수를 정확히 아는 것이 절세의 핵심이라고 강조됐다. 공공재개발 사업에 참여하는 1주택자도 이주비 대출에 연 2%P 지원을 받을 수 있다. 맞춤형 서비스 주택은 식사, 돌봄, 의료를 결합한 형태로 확대해야 한다는 의견이 제기됐다.",
-      "lineEn": "Chairman Jang Young-ho stated that lottery winners also have many concerns about loans. Apartment prices in Seoul have risen for 86 consecutive weeks, surpassing government records. It was emphasized that knowing the exact number of owned homes is key to tax savings. Homeowners with one property participating in public redevelopment projects can receive annual support of 2 percentage points for relocation loan. Opinions were raised that customized service housing should be expanded to combine meals, care, and medical services.",
+      "lineKo": "대방건설은 인천 계양 테크노밸리 공공주택지구 조경공사 수주에 성공했다. 동복댐 뒤편에 15m 규모의 신설이 이루어져, '가스관 없는 아파트'가 내년에 도입될 예정이다. 목동12단지 재건축 사업에서 GS건설이 우협으로 선정되어 '리플리제 자이'를 건설한다. 한국부동산원과 한국어촌어항공단은 공정하고 투명한 설계공모 운영을 위한 업무협약을 체결했다. 성북구 월곡래미안루나밸리의 59.98㎡ 주택은 11억 3천만원에 거래되며, 최근 3년간 신고가를 기록했다.",
+      "lineEn": "Daebang Construction has successfully secured the landscape construction project for the public housing area in Incheon Gye Yang Techno Valley. A new facility of 15m scale will be established behind Dongbok Dam, and \"apartment without gas pipes\" is expected to be introduced next year. GS Construction has been selected as the co-lead contractor for the Mokdong 12th Site reconstruction project to build \"Replifye Jai.\" The Korea Real Estate Institute and the Korea Rural and Fishery Port Corporation have signed a memorandum of agreement to ensure fair and transparent design competition operations. The 59.98㎡ housing unit in Seongbuk-gu's Wolgok Rameian Luna Valley was traded for 1,130,000,000 won and has recorded a new high price in the past three years.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "장영호 회장 \"청약 당첨돼도 대출 걱정…규제 완화를\"",
-          "link": "https://www.hankyung.com/article/2026100184851",
-          "source": "한국경제 부동산"
+          "title": "대방건설, 인천계양 테크노밸리 공공주택지구 조경공사 수주",
+          "link": "https://www.yna.co.kr/view/AKR20261002066200003",
+          "source": "연합뉴스 경제"
         },
         {
-          "title": "\"식사·돌봄·의료 결합한 맞춤형 서비스 주택 늘려야\"",
-          "link": "https://www.hankyung.com/article/2026100184831",
-          "source": "한국경제 부동산"
+          "title": "동복댐 뒤편에 15m 신설…'가스관 없는 아파트' 내년 도입",
+          "link": "https://www.hankyung.com/article/202610029486i",
+          "source": "한국경제 경제"
         },
         {
-          "title": "보유 주택 수 정확히 아는 게 '절세 1원칙'",
-          "link": "https://www.hankyung.com/article/2026100184801",
-          "source": "한국경제 부동산"
+          "title": "목동12단지 재건축, GS건설 우협 선정…'리플리제 자이' 짓는다",
+          "link": "https://www.newsis.com/view/NISX20261002_0003812055",
+          "source": "뉴시스 경제"
         },
         {
-          "title": "공공재개발 1주택자도 이주비 대출 연 2%P 지원",
-          "link": "https://www.hankyung.com/article/2026100184841",
-          "source": "한국경제 부동산"
+          "title": "한국부동산원·한국어촌어항공단, 공정하고 투명한 설계공모 운영을 위한 업무협약",
+          "link": "https://www.mk.co.kr/news/realestate/12166863",
+          "source": "매일경제 부동산"
         },
         {
-          "title": "서울 아파트값 86주 연속 상승…文정부 기록 넘어섰다",
-          "link": "https://www.hankyung.com/article/2026100185711",
-          "source": "한국경제 부동산"
+          "title": "성북구 월곡래미안루나밸리 59.98㎡ 11억 3천만원… 최근 3년 신고가 [MAI부동산]",
+          "link": "https://www.mk.co.kr/news/realestate/12166816",
+          "source": "매일경제 부동산"
         }
       ]
     },
     {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "신한은행의 대출모집인 전용 서비스에 보안 허점이 발견되며 논란이 일고 있다. 서울의 평균 주택 가격은 86주 연속 상승하며, 평균 15억 원을 넘는 자치구는 5년 만에 5곳에서 13곳으로 늘었다. 중국 정부는 주택 구매자에게 5년간 대출 이자 지원을 제공하는 정책을 발표했다. 재정경제부에서 인사 관련 소식이 전해졌다. 각 기사는 서로 다른 주제로, 별도의 사건으로 분리된다.",
-      "lineEn": "A security vulnerability has been found in the SH Bank's loan underwriter service, causing controversy. The average housing price in Seoul has risen for 86 consecutive weeks, and the number of districts where the average price exceeds 1,500,000,000 won has increased from five to 13 in five years. The Chinese government announced a policy to support loan interest for homebuyers for five years. News about personnel matters was reported from the Ministry of Economy and Finance. Each article covers a different topic and should be considered as separate events.",
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "국고채 수급 전망, 엔화 환율, 연준 금리 인상 확률, 미 국채 금리 등 다양한 금리·예금·투자상품 관련 동향이 보도되었다.",
+      "lineEn": "Outlook on government bond supply, yen exchange rate, probability of Fed rate hikes, U.S. Treasury bond yields, and other trends related to interest rates, deposits, and investment products were reported.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": false,
+      "degraded": true,
       "items": [
         {
-          "title": "대출모집인 전용 서비스 뚫렸다…신한은행 보안 허점 노출(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261001145451002",
+          "title": "발행축소, 금리상승 막을 방패? 하락 동력?…국고채 수급 전망은",
+          "link": "https://www.yna.co.kr/view/AKR20261002053700008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "서울 집값 86주째 쑥…평균 15억 넘는 자치구 5년새 5곳→13곳",
-          "link": "https://www.mk.co.kr/news/realestate/12166392",
-          "source": "매일경제 부동산"
+          "title": "엔화, 美 조기 금리인상 관측 후퇴에 1달러=157엔대 후반 상승 출발",
+          "link": "https://www.newsis.com/view/NISX20261002_0003812129",
+          "source": "뉴시스 경제"
         },
         {
-          "title": "\"집 사면 5년간 대출 이자 지원\"…中 정부가 돈 뿌리는 이유",
-          "link": "https://www.hankyung.com/article/2026100185431",
+          "title": "연준 고위인사 잇단 '신중론'…10월 금리 인상 확률 26%로 뚝",
+          "link": "https://www.newsis.com/view/NISX20261002_0003811712",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "미 국채 덮친 '매도 악순환'…10년물 금리 5.3%",
+          "link": "https://www.hankyung.com/article/202610029156i",
           "source": "한국경제 경제"
-        },
-        {
-          "title": "[인사] 재정경제부",
-          "link": "https://www.yna.co.kr/view/AKR20261001167900002",
-          "source": "연합뉴스 경제"
         }
       ]
     }
