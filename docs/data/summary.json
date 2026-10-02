@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-10-02T13:49:21.082Z",
+  "updatedAt": "2026-10-02T16:38:50.025Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 금리·예금·투자상품: 금리·예금·투자상품: [속보] 뉴욕증시, 연준 10월 금리 동결 가능성에 상승 출발, 日증시, 美금리 상승 우려에 하락 마감…닛케이 0.94%↓, '상대적 안전자산' 인식에…치솟던 美국채금리 주춤 +2\n- 부동산: 부동산: [올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”, 수도권 공공주택, 4분기에 4만5000가구 몰린다, 고양·의왕에 공공주택 2만3400가구 +5\n- 증시·환율: 홍콩 증시는 중동발 에너지 공급 우려로 인해 하락 마감했다. 홍콩 증시의 H주는 2.31% 하락했다. 대만 증시는 이틀째 사상 최고치를 기록했다. 대만 증시의 상승폭은 반도체 차익실현으로 제한됐다. 두 지역 증시는 서로 다른 요인에 따라 움직였다.\n- 기타 경제 소식: 오늘 한국경제 최고의 리더들이 한자리에 모여 활동을 공유했다. 은행권 대출사기로 인한 추가 피해액이 577억 원으로 드러났다. 중국 선전에서 국내외 경제인들이 모여 수출 방안을 모색하는 자리가 열렸다. 강원 고성군은 평화경제특구 지정을 위해 화진포와 대진을 관광 거점으로 조성할 계획이다. 부산시의회는 신용보증 이사장과 경제진흥원장 후보자에 대해 적정하다는 의견을 밝혔다.",
-    "en": "- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: [속보] 뉴욕증시, 연준 10월 금리 동결 가능성에 상승 출발, 日증시, 美금리 상승 우려에 하락 마감…닛케이 0.94%↓, '상대적 안전자산' 인식에…치솟던 美국채금리 주춤 +2\n- Real Estate: Real Estate: [올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”, 수도권 공공주택, 4분기에 4만5000가구 몰린다, 고양·의왕에 공공주택 2만3400가구 +5\n- Stocks & FX: The Hong Kong stock market closed lower due to concerns over energy supply from the Middle East. The Hang Seng index in Hong Kong fell 2.31%. The Taiwan stock market recorded its all-time high for the second consecutive day. The rise in the Taiwan stock market was limited by profit-taking in semiconductors. The two regional stock markets moved due to different factors.\n- Other Economic News: Today, Korea's top economic leaders gathered in one place to share their activities. Additional damages caused by loan fraud in the banking sector have been revealed as 57,700,000,000 won. A gathering was held in Shenzhen, China, where domestic and foreign economic figures came together to explore export strategies. Gangwon's Goesung County plans to develop Hwajinpo and Daejin as tourism hubs in order to designate the area as a Peace Economic Special Zone. Busan City Council expressed the opinion that the candidates for the chairman of the Credit Guarantee Corporation and the head of the Economic Promotion Institute are appropriate."
+    "ko": "- 금리·예금·투자상품: 미 9월 비농업 고용 쇼크로 추가 금리인상 제동이 걸리나 하는 우려가 나오고 있으며, 뉴욕증시는 연준 10월 금리 동결 가능성에 상승 출발했고, 일본 증시는 미국 금리 상승 우려로 하락 마감했으며, 미국 국채금리는 상대적 안전자산 인식으로 주춤했고, 국고채는 당국의지와 미국 금리 하락에 강세를 보였다.\n- 부동산: 부동산: [올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”, 수도권 공공주택, 4분기에 4만5000가구 몰린다, 고양·의왕에 공공주택 2만3400가구 +5\n- 증시·환율: 홍콩 증시는 중동발 에너지 공급 우려로 인해 하락 마감했다. 홍콩 증시의 H주는 2.31% 하락했다. 대만 증시는 이틀째 사상 최고치를 기록했다. 대만 증시의 상승폭은 반도체 차익실현으로 제한됐다. 두 지역 증시는 서로 다른 요인에 따라 움직였다.\n- 기타 경제 소식: 오늘 한국경제 최고의 리더들이 한자리에 모여 활동을 공유했다. 은행권 대출사기로 인한 추가 피해액이 577억 원으로 드러났다. 중국 선전에서 국내외 경제인들이 모여 수출 방안을 모색하는 자리가 열렸다. 강원 고성군은 평화경제특구 지정을 위해 화진포와 대진을 관광 거점으로 조성할 계획이다. 부산시의회는 신용보증 이사장과 경제진흥원장 후보자에 대해 적정하다는 의견을 밝혔다.",
+    "en": "- Rates, Deposits & Investment Products: Concerns are rising that the U.S. September nonfarm employment shock may halt further interest rate hikes. The New York stock market opened higher amid the possibility of the Fed holding rates steady in October, while the Japanese stock market closed lower due to fears of rising U.S. interest rates. U.S. Treasury bond yields retreated due to the perception of relative safe-haven assets, while government bonds showed strength amid authorities' stance and the decline in U.S. interest rates.\n- Real Estate: Real Estate: [올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”, 수도권 공공주택, 4분기에 4만5000가구 몰린다, 고양·의왕에 공공주택 2만3400가구 +5\n- Stocks & FX: The Hong Kong stock market closed lower due to concerns over energy supply from the Middle East. The Hang Seng index in Hong Kong fell 2.31%. The Taiwan stock market recorded its all-time high for the second consecutive day. The rise in the Taiwan stock market was limited by profit-taking in semiconductors. The two regional stock markets moved due to different factors.\n- Other Economic News: Today, Korea's top economic leaders gathered in one place to share their activities. Additional damages caused by loan fraud in the banking sector have been revealed as 57,700,000,000 won. A forum was held in Shenzhen, China, where domestic and foreign economic figures gathered to explore export strategies. Gangwon's Goesung County plans to develop Hwajinpo and Daejin as tourist hubs in order to designate the area as a peace economy special zone. Busan City Council expressed the opinion that the candidates for the chairman of the Credit Guarantee Corporation and the head of the Economic Promotion Institute are appropriate."
   },
   "highlights": [],
   "categories": [
@@ -11,15 +11,20 @@
       "key": "rates",
       "name": "금리·예금·투자상품",
       "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "금리·예금·투자상품: [속보] 뉴욕증시, 연준 10월 금리 동결 가능성에 상승 출발, 日증시, 美금리 상승 우려에 하락 마감…닛케이 0.94%↓, '상대적 안전자산' 인식에…치솟던 美국채금리 주춤 +2",
-      "lineEn": "Rates, Deposits & Investment Products: [속보] 뉴욕증시, 연준 10월 금리 동결 가능성에 상승 출발, 日증시, 美금리 상승 우려에 하락 마감…닛케이 0.94%↓, '상대적 안전자산' 인식에…치솟던 美국채금리 주춤 +2",
-      "isFallback": true,
-      "fallbackReason": "unverified-entity",
-      "degraded": false,
+      "lineKo": "미 9월 비농업 고용 쇼크로 추가 금리인상 제동이 걸리나 하는 우려가 나오고 있으며, 뉴욕증시는 연준 10월 금리 동결 가능성에 상승 출발했고, 일본 증시는 미국 금리 상승 우려로 하락 마감했으며, 미국 국채금리는 상대적 안전자산 인식으로 주춤했고, 국고채는 당국의지와 미국 금리 하락에 강세를 보였다.",
+      "lineEn": "Concerns are rising that the U.S. September nonfarm employment shock may halt further interest rate hikes. The New York stock market opened higher amid the possibility of the Fed holding rates steady in October, while the Japanese stock market closed lower due to fears of rising U.S. interest rates. U.S. Treasury bond yields retreated due to the perception of relative safe-haven assets, while government bonds showed strength amid authorities' stance and the decline in U.S. interest rates.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
       "items": [
         {
-          "title": "[속보] 뉴욕증시, 연준 10월 금리 동결 가능성에 상승 출발",
-          "link": "https://www.newsis.com/view/NISX20261002_0003813305",
+          "title": "美 9월 '비농업 고용 쇼크'…추가 금리인상 제동 걸리나",
+          "link": "https://www.hankyung.com/article/2026100213271",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "뉴욕증시, 연준 10월 금리 동결 가능성에 상승 출발…다우 0.68%↑",
+          "link": "https://www.newsis.com/view/NISX20261002_0003813307",
           "source": "뉴시스 경제"
         },
         {
@@ -35,11 +40,6 @@
         {
           "title": "국고채, 당국의지·美금리 하락에 강세…3년물 3%대로(종합)",
           "link": "https://www.yna.co.kr/view/AKR20261002144200008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "국고채 금리 일제히 하락…3년물 연 3.937%",
-          "link": "https://www.yna.co.kr/view/AKR20261002143000008",
           "source": "연합뉴스 경제"
         }
       ]
@@ -108,7 +108,7 @@
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
       "lineKo": "오늘 한국경제 최고의 리더들이 한자리에 모여 활동을 공유했다. 은행권 대출사기로 인한 추가 피해액이 577억 원으로 드러났다. 중국 선전에서 국내외 경제인들이 모여 수출 방안을 모색하는 자리가 열렸다. 강원 고성군은 평화경제특구 지정을 위해 화진포와 대진을 관광 거점으로 조성할 계획이다. 부산시의회는 신용보증 이사장과 경제진흥원장 후보자에 대해 적정하다는 의견을 밝혔다.",
-      "lineEn": "Today, Korea's top economic leaders gathered in one place to share their activities. Additional damages caused by loan fraud in the banking sector have been revealed as 57,700,000,000 won. A gathering was held in Shenzhen, China, where domestic and foreign economic figures came together to explore export strategies. Gangwon's Goesung County plans to develop Hwajinpo and Daejin as tourism hubs in order to designate the area as a Peace Economic Special Zone. Busan City Council expressed the opinion that the candidates for the chairman of the Credit Guarantee Corporation and the head of the Economic Promotion Institute are appropriate.",
+      "lineEn": "Today, Korea's top economic leaders gathered in one place to share their activities. Additional damages caused by loan fraud in the banking sector have been revealed as 57,700,000,000 won. A forum was held in Shenzhen, China, where domestic and foreign economic figures gathered to explore export strategies. Gangwon's Goesung County plans to develop Hwajinpo and Daejin as tourist hubs in order to designate the area as a peace economy special zone. Busan City Council expressed the opinion that the candidates for the chairman of the Credit Guarantee Corporation and the head of the Economic Promotion Institute are appropriate.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
