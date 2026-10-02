@@ -7656,324 +7656,220 @@
     "date": "2026-10-02",
     "items": [
       {
-        "title": "뉴욕증시, 국채금리 급등에 하락 출발…브렌트유 3% 상승세",
-        "link": "https://www.newsis.com/view/NISX20261002_0003811618",
-        "publishedAt": "2026-10-01T15:37:48.000Z",
-        "source": "뉴시스 경제",
-        "category": "rates",
-        "preview": "[서울=뉴시스]고재은 기자 = 1일(현지 시간) 미국 뉴욕증시가 마이크로소프트(MS)의 호실적에도 국제 유가와 국채 금리가 오르면서 하락 출발했다. CNBC 등에 따르면 스탠더드앤드푸어스(S&P) 500 지수는 한국…",
-        "dupes": [],
-        "titleEn": "New York Stock Market Falls at Open Amid Sharp Rise in Bond Yields... Brent Crude Rises 3%"
-      },
-      {
-        "title": "[속보]뉴욕증시, 기술주 중심 상승 출발…나스닥 0.52%↑",
-        "link": "https://www.newsis.com/view/NISX20261001_0003811605",
-        "publishedAt": "2026-10-01T13:34:28.000Z",
-        "source": "뉴시스 경제",
-        "category": "stocks",
-        "preview": "후속기사가 이어집니다 ◎공감언론 뉴시스 jeko@newsis.com",
-        "dupes": [],
-        "titleEn": "[Breaking News] NY Stock Market Rises on Tech Stocks... Nasdaq Up 0.52%"
-      },
-      {
-        "title": "[올댓차이나] 대만 증시, 韓美 반도체 호조에 0.86%↑ 상승 마감…1주 만에 사상최고 경신",
-        "link": "https://www.newsis.com/view/NISX20261001_0003811534",
-        "publishedAt": "2026-10-01T10:48:42.000Z",
-        "source": "뉴시스 경제",
-        "category": "stocks",
-        "preview": "[서울=뉴시스]이재준 기자 = 대만 타이베이 증시는 1일 미국 반도체사 마이크론 테크놀로지의 실적 호조와 한국 9월 반도체 수출이 3배나 급증했다는 소식에 주력 반도체 관련주 중심으로 매수 선행하면서 이틀째 상승 마…",
-        "dupes": [],
-        "titleEn": "[Taiwan Exchange] Taiwan Stock Market Rises 0.86% on Strong Korea-US Semiconductor Performance, Sets New Record High in One Week"
-      },
-      {
-        "title": "美 10년물 국채금리 5.34% \"24년만에 최고\"…전세계 채권 수익률 일제 급등 왜?",
-        "link": "https://www.hankyung.com/article/202610018739i",
-        "publishedAt": "2026-10-01T10:33:29.000Z",
-        "source": "한국경제 경제",
-        "category": "rates",
-        "preview": null,
-        "dupes": [],
-        "titleEn": "U.S. 10-Year Treasury Yield Hits 5.34%, \"Highest in 24 Years\"... Why Global Bond Yields Are Surging?"
-      },
-      {
-        "title": "장영호 회장 \"청약 당첨돼도 대출 걱정…규제 완화를\"",
-        "link": "https://www.hankyung.com/article/2026100184851",
-        "publishedAt": "2026-10-01T09:52:02.000Z",
-        "source": "한국경제 부동산",
-        "category": "realestate",
-        "preview": null,
-        "dupes": [],
-        "titleEn": "Chairman Jang Young-ho \"Even if Winning Subscription, Worried About Loans... Call for Easing Regulations"
-      },
-      {
-        "title": "\"식사·돌봄·의료 결합한 맞춤형 서비스 주택 늘려야\"",
-        "link": "https://www.hankyung.com/article/2026100184831",
-        "publishedAt": "2026-10-01T09:50:13.000Z",
-        "source": "한국경제 부동산",
-        "category": "realestate",
-        "preview": null,
-        "dupes": [],
-        "titleEn": "Increase custom homes combining meal, care, and medical services"
-      },
-      {
-        "title": "보유 주택 수 정확히 아는 게 '절세 1원칙'",
-        "link": "https://www.hankyung.com/article/2026100184801",
-        "publishedAt": "2026-10-01T09:47:28.000Z",
-        "source": "한국경제 부동산",
-        "category": "realestate",
-        "preview": null,
-        "dupes": [],
-        "titleEn": "Knowing the exact number of owned homes is 'one principle of tax saving"
-      },
-      {
-        "title": "공공재개발 1주택자도 이주비 대출 연 2%P 지원",
-        "link": "https://www.hankyung.com/article/2026100184841",
-        "publishedAt": "2026-10-01T09:45:06.000Z",
-        "source": "한국경제 부동산",
-        "category": "realestate",
-        "preview": null,
-        "dupes": [],
-        "context": [
-          {
-            "kind": "rates",
-            "label": "주택담보대출 최저금리(상환방식 무관)",
-            "labelEn": "Lowest mortgage rate (any repayment type)",
-            "value": "연 3.70%",
-            "valueEn": "3.70% p.a.",
-            "href": "./mortgage-rates.html"
-          }
-        ],
-        "titleEn": "Public Housing Redevelopment: 2% Interest Rate Subsidy on Relocation Loan for Homeowners"
-      },
-      {
-        "title": "이상한 환율…'美금리 ↑ = 원화 ↓' 공식 깨졌다",
-        "link": "https://www.hankyung.com/article/2026100185081",
-        "publishedAt": "2026-10-01T09:08:57.000Z",
-        "source": "한국경제 경제",
-        "category": "rates",
-        "preview": null,
-        "dupes": [],
-        "titleEn": "Strange exchange rate... 'US interest rate ↑ = won ↓' formula broken"
-      },
-      {
-        "title": "서울 아파트값 86주 연속 상승…文정부 기록 넘어섰다",
-        "link": "https://www.hankyung.com/article/2026100185711",
-        "publishedAt": "2026-10-01T08:54:31.000Z",
-        "source": "한국경제 부동산",
-        "category": "realestate",
-        "preview": null,
-        "dupes": [
-          {
-            "title": "서울 아파트값, 文정부 기록 넘었다…86주 연속 상승",
-            "link": "https://www.newsis.com/view/NISX20261001_0003809772",
-            "source": "뉴시스 경제"
-          }
-        ],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "13억 1,166만원",
-            "valueEn": "₩1,312M",
-            "note": "최근 1주 계약 3,574건",
-            "noteEn": "3,574 deals in the last 1 weeks"
-          }
-        ],
-        "titleEn": "Seoul apartment prices rise for 86 consecutive weeks, surpassing Moon government record"
-      },
-      {
-        "title": "대출모집인 전용 서비스 뚫렸다…신한은행 보안 허점 노출(종합)",
-        "link": "https://www.yna.co.kr/view/AKR20261001145451002",
-        "publishedAt": "2026-10-01T08:53:03.000Z",
+        "title": "카카오뱅크 개인사업자 대출, 출시 약 4년만에 잔액 4조원",
+        "link": "https://www.yna.co.kr/view/AKR20261002070700002",
+        "publishedAt": "2026-10-02T01:58:28.000Z",
         "source": "연합뉴스 경제",
         "category": "other",
-        "preview": "(서울=연합뉴스) 한지훈 강수련 기자 = 신한은행 고객 정보 유출 사고는 대출모집인들이 이용하는 신한 모바일 홈페이지 서비스를 통해 이뤄진 것으...",
-        "dupes": [],
-        "titleEn": "Loan Collector-Specific Service Breached... Shinhan Bank's Security Flaw Exposed (Comprehensive)"
+        "preview": "(서울=연합뉴스) 이도흔 기자 = 카카오뱅크[323410]는 개인사업자 대출 잔액이 4조원을 넘겼다고 2일 밝혔다.",
+        "dupes": []
       },
       {
-        "title": "강남 10억씩 빠질때, 강북 굳건…대출 더 나오는 '중저가 아파트' 쏠림",
-        "link": "https://www.mk.co.kr/news/realestate/12166391",
-        "publishedAt": "2026-10-01T08:40:46.000Z",
-        "source": "매일경제 부동산",
+        "title": "[올댓차이나] 대만 증시, 상승 개장 후 매도 유입에 '출렁'…0.18%↓",
+        "link": "https://www.newsis.com/view/NISX20261002_0003812223",
+        "publishedAt": "2026-10-02T01:45:48.000Z",
+        "source": "뉴시스 경제",
+        "category": "stocks",
+        "preview": "[서울=뉴시스]이재준 기자 = 대만 타이베이 증시는 2일 전날 뉴욕 증시 강세에 상승 출발했지만 대형 기술주에 매도 출회하면서 등락하고 있다. 자취안(加權) 지수는 이날 전일 대비 37.16 포인트, 0.08% 오른…",
+        "dupes": []
+      },
+      {
+        "title": "대방건설, 인천계양 테크노밸리 공공주택지구 조경공사 수주",
+        "link": "https://www.yna.co.kr/view/AKR20261002066200003",
+        "publishedAt": "2026-10-02T01:32:56.000Z",
+        "source": "연합뉴스 경제",
         "category": "realestate",
-        "preview": "서울 강남권 재건축 단지가 수억 원씩 내린 가격에 거래되고 있지만 강북 집값은 꺾이지 않고 있다. 집값 커플링(동조화) 현상이 이번에는 나타나지 않고 있다. 1일 부동산 업계에 따..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-gangbuk.html",
-            "label": "강북구 아파트 84㎡ 매매",
-            "labelEn": "강북구 apartment 84㎡ sale",
-            "value": "8억 5,835만원",
-            "valueEn": "₩858M",
-            "note": "최근 1주 계약 80건",
-            "noteEn": "80 deals in the last 1 weeks"
-          }
-        ],
-        "titleEn": "When Gangnam Loses 1,000,000,000, Gangbuk Stays Strong... Buyers Flock to 'Mid-to-Low Price Apartments' with More Loans Available"
+        "preview": "(서울=연합뉴스) 임기창 기자 = 대방건설은 한국토지주택공사(LH)가 발주한 인천계양 테크노밸리 공공주택지구 조경공사(1-2공구)를 수주했다고 ...",
+        "dupes": []
       },
       {
-        "title": "서울 집값 86주째 쑥…평균 15억 넘는 자치구 5년새 5곳→13곳",
-        "link": "https://www.mk.co.kr/news/realestate/12166392",
-        "publishedAt": "2026-10-01T08:40:46.000Z",
-        "source": "매일경제 부동산",
+        "title": "[프로필]김자봉 공정위 상임위원…경제·법학 아우른 금융정책 전문가",
+        "link": "https://www.newsis.com/view/NISX20261002_0003812149",
+        "publishedAt": "2026-10-02T01:27:52.000Z",
+        "source": "뉴시스 경제",
         "category": "other",
-        "preview": "서울 아파트 매매 가격이 86주 연속으로 오르며 역대 최장 상승 기록을 갈아치웠다. 과거 최장 상승기보다 누적 상승폭도 2배 이상 컸다. 최근 강남에 이어 용산까지 조정을 받고 있..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-yongsan.html",
-            "label": "용산구 아파트 84㎡ 매매",
-            "labelEn": "용산구 apartment 84㎡ sale",
-            "value": "29억 1,477만원",
-            "valueEn": "₩2,915M",
-            "note": "최근 1주 계약 41건",
-            "noteEn": "41 deals in the last 1 weeks"
-          }
-        ],
-        "titleEn": "Seoul home prices rise for 86th straight week... 5 districts with average prices over 1,500,000,000 won in 5 years→13 districts"
+        "preview": "[세종=뉴시스]임하은 기자 = 김자봉 한국금융연구원 선임연구위원이 공정거래위원회 상임위원으로 임명됐다. 김 신임 상임위원은 1996년 한국금융연구원에 입사해 연구원과 부연구위원, 연구위원을 거쳐 2017년부터 선임연…",
+        "dupes": []
       },
       {
-        "title": "\"집 사면 5년간 대출 이자 지원\"…中 정부가 돈 뿌리는 이유",
-        "link": "https://www.hankyung.com/article/2026100185431",
-        "publishedAt": "2026-10-01T08:37:45.000Z",
+        "title": "발행축소, 금리상승 막을 방패? 하락 동력?…국고채 수급 전망은",
+        "link": "https://www.yna.co.kr/view/AKR20261002053700008",
+        "publishedAt": "2026-10-02T01:20:17.000Z",
+        "source": "연합뉴스 경제",
+        "category": "rates",
+        "preview": "(서울=연합뉴스) 강수지 기자 = 정부가 예상보다 크게 늘어난 세수를 활용해 국고채 발행을 줄이기로 하면서 연말 채권시장 수급 여건이 개선될 전...",
+        "dupes": []
+      },
+      {
+        "title": "엔화, 美 조기 금리인상 관측 후퇴에 1달러=157엔대 후반 상승 출발",
+        "link": "https://www.newsis.com/view/NISX20261002_0003812129",
+        "publishedAt": "2026-10-02T01:16:33.000Z",
+        "source": "뉴시스 경제",
+        "category": "rates",
+        "preview": "[서울=뉴시스]이재준 기자 = 엔화 환율은 2일 미국 조기 금리인상 관측 후퇴에 미일 금리차 미일 정책금리 차이가 바로 확대하지 않는다는 분위기 전망 속에서 엔 매수, 달러 매도로 1달러=157엔대 후반으로 올라 시…",
+        "dupes": []
+      },
+      {
+        "title": "5일 새벽 대출·카드론 등 일부 금융서비스 중단…\"서비스 개편\"",
+        "link": "https://www.yna.co.kr/view/AKR20261002043900002",
+        "publishedAt": "2026-10-02T01:10:21.000Z",
+        "source": "연합뉴스 경제",
+        "category": "other",
+        "preview": "(서울=연합뉴스) 이도흔 기자 = 한국신용정보원은 오는 5일 오전 0시부터 8시까지 대출·카드론 신규 이용과 인터넷·모바일을 통한 예금계좌 개설...",
+        "dupes": []
+      },
+      {
+        "title": "카카오뱅크, 개인사업자 대출 4조원 돌파",
+        "link": "https://www.hankyung.com/article/202610029660i",
+        "publishedAt": "2026-10-02T01:09:09.000Z",
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": [],
-        "titleEn": "Home Purchase Interest Support for 5 Years\"… Why China's Government Is Spreading Money"
+        "dupes": []
       },
       {
-        "title": "\"증시 경보, 단계수 줄이고 불건전거래 감시에 집중해야\"",
-        "link": "https://www.yna.co.kr/view/AKR20261001175400008",
-        "publishedAt": "2026-10-01T08:32:04.000Z",
-        "source": "연합뉴스 경제",
-        "category": "stocks",
-        "preview": "(서울=연합뉴스) 김유향 기자 = 국내 증시 내 시장경보 단계를 줄이고, 불건전거래를 정교하게 포착하는 방향으로 제도를 개선해야 한다는 제언이 ...",
-        "dupes": [],
-        "titleEn": "Stock market alert: Reduce the number of stages and focus on monitoring unhealthy trading"
-      },
-      {
-        "title": "국고채, 주요국 금리상승에 장기물 중심 약세(종합)",
-        "link": "https://www.yna.co.kr/view/AKR20261001164851008",
-        "publishedAt": "2026-10-01T08:29:18.000Z",
-        "source": "연합뉴스 경제",
-        "category": "rates",
-        "preview": "(서울=연합뉴스) 강수지 기자 = 1일 국고채는 장기물을 중심으로 전반적인 약세 분위기가 이어졌다.",
-        "dupes": [],
-        "titleEn": "Korea's long-term government bonds weaken amid rising interest rates in major countries (comprehensive)"
-      },
-      {
-        "title": "“금리만 생각하면 등골이 오싹”…고공행진 주담대에 영끌족 ‘한숨’",
-        "link": "https://www.mk.co.kr/news/realestate/12166246",
-        "publishedAt": "2026-10-01T07:58:20.000Z",
-        "source": "매일경제 부동산",
-        "category": "rates",
-        "preview": "주택담보대출 금리가 연일 가파른 오름세를 보이면서 내 집 마련에 나선 실수요자부터 이미 빚을 내 집을 산 기존 차주들까지 가중되는 이자 부담에 깊은 시름을 앓고 있다. 한국은행이 ..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "rates",
-            "label": "주택담보대출 최저금리(상환방식 무관)",
-            "labelEn": "Lowest mortgage rate (any repayment type)",
-            "value": "연 3.70%",
-            "valueEn": "3.70% p.a.",
-            "href": "./mortgage-rates.html"
-          }
-        ],
-        "titleEn": "Interest rates alone make the spine shiver\"... Young borrowers hold their breath as mortgage rates soar"
-      },
-      {
-        "title": "\"철거 않고 새 아파트처럼\"…삼성물산 '넥스트 리모델링' [집코노미 박람회 2026]",
-        "link": "https://www.hankyung.com/article/202610018347i",
-        "publishedAt": "2026-10-01T07:57:23.000Z",
-        "source": "한국경제 부동산",
+        "title": "동복댐 뒤편에 15m 신설…'가스관 없는 아파트' 내년 도입",
+        "link": "https://www.hankyung.com/article/202610029486i",
+        "publishedAt": "2026-10-02T00:59:50.000Z",
+        "source": "한국경제 경제",
         "category": "realestate",
         "preview": null,
-        "dupes": [],
-        "titleEn": "\"철거 않고 새 아파트처럼\"…삼성물산 '넥스트 리모델링' [집코노미 박람회 2026]"
+        "dupes": []
       },
       {
-        "title": "마이크론·수출로 확인한 반도체 수요…증시 상승탄력 촉매될까(종합)",
-        "link": "https://www.yna.co.kr/view/AKR20261001085451008",
-        "publishedAt": "2026-10-01T07:54:08.000Z",
-        "source": "연합뉴스 경제",
-        "category": "stocks",
-        "preview": "(서울=연합뉴스) 황철환 기 = 미국 마이크론이 '깜짝 호실적'을 내놓으면서 메모리 공급 부족에 따른 반도체 업황 호조가 시장 일각의 우려와 달...",
-        "dupes": [],
-        "titleEn": "Micron's Export Confirmed Semiconductor Demand... Could It Spur Market Rally? (Comprehensive)"
-      },
-      {
-        "title": "[인사] 재정경제부",
-        "link": "https://www.yna.co.kr/view/AKR20261001167900002",
-        "publishedAt": "2026-10-01T07:52:51.000Z",
-        "source": "연합뉴스 경제",
-        "category": "other",
-        "preview": null,
-        "dupes": [
-          {
-            "title": "[인사]재정경제부",
-            "link": "https://www.newsis.com/view/NISX20261001_0003811275",
-            "source": "뉴시스 경제"
-          }
-        ],
-        "titleEn": "[Personnel] Ministry of Finance and Economy"
-      },
-      {
-        "title": "\"서울 재건축 대신 재개발…325개 지하철역에 주목해야\" [집코노미 콘서트 2026]",
-        "link": "https://www.hankyung.com/article/202610018301i",
-        "publishedAt": "2026-10-01T07:47:29.000Z",
-        "source": "한국경제 부동산",
-        "category": "realestate",
-        "preview": null,
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "13억 1,166만원",
-            "valueEn": "₩1,312M",
-            "note": "최근 1주 계약 3,574건",
-            "noteEn": "3,574 deals in the last 1 weeks"
-          }
-        ],
-        "titleEn": "Seoul's Reconstruction Gives Way to Redevelopment... Focus on 325 Subway Stations [Jikkonomi Concert 2026]"
-      },
-      {
-        "title": "日증시, 마이크론 실적 기대에 상승 마감…닛케이 3.3%↑",
-        "link": "https://www.newsis.com/view/NISX20261001_0003811109",
-        "publishedAt": "2026-10-01T07:44:22.000Z",
+        "title": "日증시, 차익실현·중동 불안에 하락 출발…닛케이 0.93%↓",
+        "link": "https://www.newsis.com/view/NISX20261002_0003811993",
+        "publishedAt": "2026-10-02T00:58:26.000Z",
         "source": "뉴시스 경제",
         "category": "stocks",
-        "preview": "[서울=뉴시스] 신효령 기자 = 1일 일본 도쿄증시에서 주요 지수가 일제히 상승 마감했다. 미국 메모리 반도체 기업 마이크론테크놀로지의 실적 전망이 시장 예상을 웃돌면서 인공지능(AI)·반도체 관련주에 매수세가 몰렸…",
-        "dupes": [],
-        "titleEn": "Tokyo Stock Exchange closes higher on Micron earnings expectations... Nikkei rises 3.3%"
+        "preview": "[서울=뉴시스] 신효령 기자 = 일본 도쿄증시의 닛케이225지수(닛케이평균주가)가 2일 하락 출발했다. 최근 급등에 따른 차익실현 매물과 중동 정세 불안이 투자심리를 위축시켰다. 니혼게이자이신문에 따르면 이날 닛케이…",
+        "dupes": []
       },
       {
-        "title": "국고채 금리 혼조세…3년물 연 4.010%",
-        "link": "https://www.yna.co.kr/view/AKR20261001164800008",
-        "publishedAt": "2026-10-01T07:43:02.000Z",
-        "source": "연합뉴스 경제",
-        "category": "rates",
-        "preview": "(서울=연합뉴스) 1일 국고채 금리가 혼조세를 보였다.",
-        "dupes": [],
-        "titleEn": "Mixed performance in government bond rates... 3-year bonds at 4.010% annually"
-      },
-      {
-        "title": "보증금 반환·수선의무 누가지나...부동산원 분쟁조정 상담 [집코노미 박람회 2026]",
-        "link": "https://www.hankyung.com/article/202610018281i",
-        "publishedAt": "2026-10-01T07:33:21.000Z",
-        "source": "한국경제 부동산",
+        "title": "목동12단지 재건축, GS건설 우협 선정…'리플리제 자이' 짓는다",
+        "link": "https://www.newsis.com/view/NISX20261002_0003812055",
+        "publishedAt": "2026-10-02T00:53:04.000Z",
+        "source": "뉴시스 경제",
         "category": "realestate",
+        "preview": "[서울=뉴시스]이연희 기자 = GS건설이 서울 양천구 목동 신시가지아파트 12단지 시공사 우선협상대상자로 선정됐다고 2일 밝혔다. 목동 12단지의 새로운 단지명은 '리플리제 자이'가 될 전망이다. 앞서 목동 12단지…",
+        "dupes": []
+      },
+      {
+        "title": "코스피, 하락 출발해 보합권 등락…코스닥, 장중 900선 회복(종합)",
+        "link": "https://www.yna.co.kr/view/AKR20261002044300008",
+        "publishedAt": "2026-10-02T00:37:04.000Z",
+        "source": "연합뉴스 경제",
+        "category": "stocks",
+        "preview": "(서울=연합뉴스) 김유아 기자 = 2일 코스피가 하락 출발해 상승 전환하는 등 보합권에서 등락하고 있다.",
+        "dupes": []
+      },
+      {
+        "title": "한국부동산원·한국어촌어항공단, 공정하고 투명한 설계공모 운영을 위한 업무협약",
+        "link": "https://www.mk.co.kr/news/realestate/12166863",
+        "publishedAt": "2026-10-02T00:28:19.000Z",
+        "source": "매일경제 부동산",
+        "category": "realestate",
+        "preview": "한국부동산원은 지난 1일 한국어촌어항공단과 ‘설계공모 위탁운영을 위한 업무협약’을 체결했다고 2일 밝혔다. 이번 업무협약은 한국어촌어항공단이 추진하는 공공건축 설계공모를 한국부동산..",
+        "dupes": []
+      },
+      {
+        "title": "성북구 월곡래미안루나밸리 59.98㎡ 11억 3천만원… 최근 3년 신고가 [MAI부동산]",
+        "link": "https://www.mk.co.kr/news/realestate/12166816",
+        "publishedAt": "2026-10-02T00:14:19.000Z",
+        "source": "매일경제 부동산",
+        "category": "realestate",
+        "preview": "MAI 부동산 2026년 10월 1일 국토부 실거래가 시스템에 신규 등록된 서울 성북구 하월곡동 월곡래미안루나밸리 전용 59.98㎡가 11억 3천만원에 거래되며 해당 단지·면적 기..",
+        "dupes": []
+      },
+      {
+        "title": "노원구 상계주공14단지 59.39㎡ 6억 9천만원… 최근 3년 신고가 [MAI부동산]",
+        "link": "https://www.mk.co.kr/news/realestate/12166817",
+        "publishedAt": "2026-10-02T00:14:19.000Z",
+        "source": "매일경제 부동산",
+        "category": "realestate",
+        "preview": "MAI 부동산 2026년 10월 1일 국토부 실거래가 시스템에 신규 등록된 서울 노원구 상계동 상계주공14(고층) 전용 59.39㎡ 거래가 6억 9천만원에 체결되며 해당 단지·면적..",
+        "dupes": []
+      },
+      {
+        "title": "노원구 월계주공2단지 58.65㎡, 6억 5천만원 `최근 3년 신고가` [MAI부동산]",
+        "link": "https://www.mk.co.kr/news/realestate/12166818",
+        "publishedAt": "2026-10-02T00:14:19.000Z",
+        "source": "매일경제 부동산",
+        "category": "realestate",
+        "preview": "MAI 부동산 서울 노원구 월계동 주공2단지에서 전용 58.65㎡ 아파트가 6억 5,000만 원에 거래되며 최근 3년 내 신고가를 기록했다. 항목 내용 항목 내용 준공 1992년 ..",
+        "dupes": []
+      },
+      {
+        "title": "노원구 하계동 벽산 70.56㎡, 8억 5천만원 `최근 3년 신고가` [MAI부동산]",
+        "link": "https://www.mk.co.kr/news/realestate/12166819",
+        "publishedAt": "2026-10-02T00:14:19.000Z",
+        "source": "매일경제 부동산",
+        "category": "realestate",
+        "preview": "MAI 부동산 서울 노원구 하계동 벽산에서 전용 70.56㎡ 아파트가 8억 5천만원에 거래되며 최근 3년 내 신고가를 기록했다. 항목 내용 항목 내용 준공 1988년 6월 세대수 ..",
+        "dupes": []
+      },
+      {
+        "title": "은평구 응암동 백련산해모로 59.97㎡ 10억 2천만원 거래… 최근 3년 신고가 [MAI부동산]",
+        "link": "https://www.mk.co.kr/news/realestate/12166820",
+        "publishedAt": "2026-10-02T00:14:19.000Z",
+        "source": "매일경제 부동산",
+        "category": "realestate",
+        "preview": "MAI 부동산 2026년 10월 1일 국토부 실거래가 시스템에 신규 등록된 서울 은평구 응암동 백련산해모로 전용 59.97㎡가 10억 2천만원에 거래되며 동일 단지·동일 전용면적 ..",
+        "dupes": []
+      },
+      {
+        "title": "은평구 백련산힐스테이트4차 84.98㎡ 12억원 거래… 최근 3년 신고가 [MAI부동산]",
+        "link": "https://www.mk.co.kr/news/realestate/12166821",
+        "publishedAt": "2026-10-02T00:14:19.000Z",
+        "source": "매일경제 부동산",
+        "category": "realestate",
+        "preview": "MAI 부동산 2026년 10월 1일 국토부 실거래가 시스템에 신규 등록된 서울 은평구 응암동 백련산힐스테이트4차 전용 84.98㎡가 12억원에 거래되며 동일 단지·동일 전용면적 ..",
+        "dupes": []
+      },
+      {
+        "title": "서대문구 천연뜨란채 57.78㎡ 12억 4300만원… 최근 3년 신고가 [MAI부동산]",
+        "link": "https://www.mk.co.kr/news/realestate/12166822",
+        "publishedAt": "2026-10-02T00:14:19.000Z",
+        "source": "매일경제 부동산",
+        "category": "realestate",
+        "preview": "MAI 부동산 2026년 10월 1일 국토부 실거래가 시스템에 신규 등록된 서울 서대문구 천연동 천연뜨란채 전용 57.78㎡ 거래가 12억 4,300만 원으로 최근 3년 신고가를 ..",
+        "dupes": []
+      },
+      {
+        "title": "'주택공급 속도 사활' 국토부, 공공택지 조사·발굴 전담과 신설",
+        "link": "https://www.newsis.com/view/NISX20261002_0003811836",
+        "publishedAt": "2026-10-02T00:01:00.000Z",
+        "source": "뉴시스 경제",
+        "category": "realestate",
+        "preview": "[서울=뉴시스] 변해정 기자 = 국토교통부가 공공주택 신규 부지의 조사·발굴 업무를 전담하는 과(科) 단위 조직을 신설해 운영에 들어갔다. 이는 홍지선 장관 취임 이후 첫 조직 개편이다. 2일 당국에 따르면 국토부는…",
+        "dupes": []
+      },
+      {
+        "title": "'아산탕정2 도시개발사업' 착공…주택 2만1천35가구 공급",
+        "link": "https://www.yna.co.kr/view/AKR20261002029900063",
+        "publishedAt": "2026-10-01T23:45:58.000Z",
+        "source": "연합뉴스 경제",
+        "category": "realestate",
+        "preview": "(아산=연합뉴스) 유의주 기자 = 충남 아산시는 중부권 최대 규모 신도시 개발사업인 '아산탕정2 도시개발사업' 조성 공사가 지난달 착공했다고 2...",
+        "dupes": []
+      },
+      {
+        "title": "연준 고위인사 잇단 '신중론'…10월 금리 인상 확률 26%로 뚝",
+        "link": "https://www.newsis.com/view/NISX20261002_0003811712",
+        "publishedAt": "2026-10-01T23:41:43.000Z",
+        "source": "뉴시스 경제",
+        "category": "rates",
+        "preview": "[서울=뉴시스]박미선 기자 = 미국 연방준비제도(Fed·연준) 고위 인사들이 잇따라 추가 금리 인상에 신중한 입장을 내놓으면서 이달 기준금리 동결 가능성이 커지고 있다. 최근 미 국채금리가 급등해 이미 상당한 긴축…",
+        "dupes": []
+      },
+      {
+        "title": "미 국채 덮친 '매도 악순환'…10년물 금리 5.3%",
+        "link": "https://www.hankyung.com/article/202610029156i",
+        "publishedAt": "2026-10-01T23:15:08.000Z",
+        "source": "한국경제 경제",
+        "category": "rates",
         "preview": null,
-        "dupes": [],
-        "titleEn": "Who bears the responsibility for security deposit refund and repair obligations... Real Estate Korea Dispute Mediation Consultation [Home Economy Fair 2026]"
+        "dupes": []
       }
     ]
   }
