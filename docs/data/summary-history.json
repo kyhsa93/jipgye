@@ -3026,21 +3026,100 @@
     "date": "2026-10-02",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 증시·환율: 대만 증시가 이틀째 사상 최고치를 기록했다. 반도체 업종에서 차익실현 움직임이 나타났다. 상승폭은 일정 수준으로 제한됐다. 이는 반도체 업종의 투자자들이 이익을 실현한 때문이었다. 증시는 전일 대비 상승했으나, 과열 우려로 상승 폭이 억제됐다.\n- 기타 경제 소식: 오늘 한국경제 최고의 리더들이 한자리에 모여 활동을 공유했다. 은행권 대출사기로 인한 추가 피해액이 577억 원으로 드러났다. 중국 선전에서 국내외 경제인들이 모여 수출 방안을 모색하는 자리가 열렸다. 강원 고성군은 평화경제특구 지정을 위해 화진포와 대진을 관광 거점으로 조성할 계획이다. 부산시의회는 신용보증 이사장과 경제진흥원장 후보자에 대해 적정하다는 의견을 밝혔다.\n- 금리·예금·투자상품: 일본 증시가 미국 금리 상승 우려로 하락 마감했고, 미국 국채금리가 상대적 안전자산 인식으로 주춤했으며, 국고채 금리가 당국의지와 미국 금리 하락으로 강세를 보였고, 국고채 금리가 일제히 하락했으며, 호르무즈 원유 수송 회복에도 유가와 미국 금리가 고공행진했다.\n- 부동산: 고양·의왕에 2만3400가구의 공공주택이 공급되고, 아산시는 방축동 민간건설 임대 아파트 임차인 보호 방안을 모색 중이며, 수도권 공공주택은 3분기까지 1.7만가구가 착공되고 4분기에 4.5만가구가 착공될 예정이며, 국토부는 4대 공사와 주택점검 회의를 진행하고 1차관은 연말까지 착공 목표 달성을 선언했으며, LH는 보상 직무 기간제 인력 250명을 채용해 수도권 주택공급 속도를 높이고 있다.",
-      "en": "- Stocks & FX: Taiwan's stock market hit a record high for the second consecutive day. Profit-taking movements appeared in the semiconductor sector. The rise was limited to a certain extent, as investors in the semiconductor sector realized profits. The stock market rose compared to the previous day, but the increase was restrained due to concerns over overheating.\n- Other Economic News: Today, Korea's top economic leaders gathered in one place to share their activities. The additional damage caused by loan fraud in the banking sector has been revealed as 57,700,000,000 won. A meeting was held in Shenzhen, China, where domestic and foreign businesspeople gathered to explore export strategies. Gangwon's Goesung County plans to develop Hwajinpo and Daejin as tourist hubs in order to designate the area as a Peace Economic Special Zone. Busan City Council expressed the opinion that the candidates for the chairman of the Credit Guarantee Corporation and the head of the Economic Promotion Institute are appropriate.\n- Rates, Deposits & Investment Products: The Japanese stock market closed lower due to concerns over rising U.S. interest rates, U.S. government bond rates retreated due to perceptions of relative safe-haven assets, government bond rates showed strength due to authorities' efforts and a decline in U.S. interest rates, government bond rates fell universally, and oil prices and U.S. interest rates continued to rise despite the recovery in Hormuz oil transportation.\n- Real Estate: Public housing units for 20,0003400 households will be supplied in Goyang and Uiwang, and Asan City is exploring measures to protect tenants of privately constructed rental apartments in Bangchukdong. In the Seoul metropolitan area, 17,000 housing units will be started in the third quarter and 45,000 units in the fourth quarter. The Ministry of Land, Infrastructure and Transport is holding meetings on four major construction projects and housing inspections, and the First Deputy Minister has declared the goal of achieving construction targets by year-end. LH is hiring 250 temporary staff for compensation-related duties to accelerate housing supply in the Seoul metropolitan area."
+      "ko": "- 금리·예금·투자상품: 금리·예금·투자상품: [속보] 뉴욕증시, 연준 10월 금리 동결 가능성에 상승 출발, 日증시, 美금리 상승 우려에 하락 마감…닛케이 0.94%↓, '상대적 안전자산' 인식에…치솟던 美국채금리 주춤 +2\n- 부동산: 부동산: [올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”, 수도권 공공주택, 4분기에 4만5000가구 몰린다, 고양·의왕에 공공주택 2만3400가구 +5\n- 증시·환율: 홍콩 증시는 중동발 에너지 공급 우려로 인해 하락 마감했다. 홍콩 증시의 H주는 2.31% 하락했다. 대만 증시는 이틀째 사상 최고치를 기록했다. 대만 증시의 상승폭은 반도체 차익실현으로 제한됐다. 두 지역 증시는 서로 다른 요인에 따라 움직였다.\n- 기타 경제 소식: 오늘 한국경제 최고의 리더들이 한자리에 모여 활동을 공유했다. 은행권 대출사기로 인한 추가 피해액이 577억 원으로 드러났다. 중국 선전에서 국내외 경제인들이 모여 수출 방안을 모색하는 자리가 열렸다. 강원 고성군은 평화경제특구 지정을 위해 화진포와 대진을 관광 거점으로 조성할 계획이다. 부산시의회는 신용보증 이사장과 경제진흥원장 후보자에 대해 적정하다는 의견을 밝혔다.",
+      "en": "- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: [속보] 뉴욕증시, 연준 10월 금리 동결 가능성에 상승 출발, 日증시, 美금리 상승 우려에 하락 마감…닛케이 0.94%↓, '상대적 안전자산' 인식에…치솟던 美국채금리 주춤 +2\n- Real Estate: Real Estate: [올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”, 수도권 공공주택, 4분기에 4만5000가구 몰린다, 고양·의왕에 공공주택 2만3400가구 +5\n- Stocks & FX: The Hong Kong stock market closed lower due to concerns over energy supply from the Middle East. The Hang Seng index in Hong Kong fell 2.31%. The Taiwan stock market recorded its all-time high for the second consecutive day. The rise in the Taiwan stock market was limited by profit-taking in semiconductors. The two regional stock markets moved due to different factors.\n- Other Economic News: Today, Korea's top economic leaders gathered in one place to share their activities. Additional damages caused by loan fraud in the banking sector have been revealed as 57,700,000,000 won. A gathering was held in Shenzhen, China, where domestic and foreign economic figures came together to explore export strategies. Gangwon's Goesung County plans to develop Hwajinpo and Daejin as tourism hubs in order to designate the area as a Peace Economic Special Zone. Busan City Council expressed the opinion that the candidates for the chairman of the Credit Guarantee Corporation and the head of the Economic Promotion Institute are appropriate."
     },
     "highlights": [],
     "categories": [
       {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "금리·예금·투자상품: [속보] 뉴욕증시, 연준 10월 금리 동결 가능성에 상승 출발, 日증시, 美금리 상승 우려에 하락 마감…닛케이 0.94%↓, '상대적 안전자산' 인식에…치솟던 美국채금리 주춤 +2",
+        "lineEn": "Rates, Deposits & Investment Products: [속보] 뉴욕증시, 연준 10월 금리 동결 가능성에 상승 출발, 日증시, 美금리 상승 우려에 하락 마감…닛케이 0.94%↓, '상대적 안전자산' 인식에…치솟던 美국채금리 주춤 +2",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
+        "degraded": false,
+        "items": [
+          {
+            "title": "[속보] 뉴욕증시, 연준 10월 금리 동결 가능성에 상승 출발",
+            "link": "https://www.newsis.com/view/NISX20261002_0003813305",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "日증시, 美금리 상승 우려에 하락 마감…닛케이 0.94%↓",
+            "link": "https://www.newsis.com/view/NISX20261002_0003812976",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "'상대적 안전자산' 인식에…치솟던 美국채금리 주춤",
+            "link": "https://www.hankyung.com/article/2026100209821",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "국고채, 당국의지·美금리 하락에 강세…3년물 3%대로(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261002144200008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "국고채 금리 일제히 하락…3년물 연 3.937%",
+            "link": "https://www.yna.co.kr/view/AKR20261002143000008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "부동산: [올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”, 수도권 공공주택, 4분기에 4만5000가구 몰린다, 고양·의왕에 공공주택 2만3400가구 +5",
+        "lineEn": "Real Estate: [올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”, 수도권 공공주택, 4분기에 4만5000가구 몰린다, 고양·의왕에 공공주택 2만3400가구 +5",
+        "isFallback": true,
+        "fallbackReason": "unverified-number",
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”",
+            "link": "https://www.newsis.com/view/NISX20261002_0003813247",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "수도권 공공주택, 4분기에 4만5000가구 몰린다",
+            "link": "https://www.hankyung.com/article/2026100208737",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "고양·의왕에 공공주택 2만3400가구",
+            "link": "https://www.hankyung.com/article/2026100208131",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "아산시, 방축동 민간건설 임대 아파트 임차인 보호 해법 모색",
+            "link": "https://www.yna.co.kr/view/AKR20261002148000063",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "수도권 공공주택 3분기까지 1.7만가구 착공…4분기에 4.5만가구",
+            "link": "https://www.yna.co.kr/view/AKR20261002145000003",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "대만 증시가 이틀째 사상 최고치를 기록했다. 반도체 업종에서 차익실현 움직임이 나타났다. 상승폭은 일정 수준으로 제한됐다. 이는 반도체 업종의 투자자들이 이익을 실현한 때문이었다. 증시는 전일 대비 상승했으나, 과열 우려로 상승 폭이 억제됐다.",
-        "lineEn": "Taiwan's stock market hit a record high for the second consecutive day. Profit-taking movements appeared in the semiconductor sector. The rise was limited to a certain extent, as investors in the semiconductor sector realized profits. The stock market rose compared to the previous day, but the increase was restrained due to concerns over overheating.",
+        "lineKo": "홍콩 증시는 중동발 에너지 공급 우려로 인해 하락 마감했다. 홍콩 증시의 H주는 2.31% 하락했다. 대만 증시는 이틀째 사상 최고치를 기록했다. 대만 증시의 상승폭은 반도체 차익실현으로 제한됐다. 두 지역 증시는 서로 다른 요인에 따라 움직였다.",
+        "lineEn": "The Hong Kong stock market closed lower due to concerns over energy supply from the Middle East. The Hang Seng index in Hong Kong fell 2.31%. The Taiwan stock market recorded its all-time high for the second consecutive day. The rise in the Taiwan stock market was limited by profit-taking in semiconductors. The two regional stock markets moved due to different factors.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
+          {
+            "title": "[올댓차이나] 홍콩 증시, 중동발 에너지 공급 우려에 반락 마감… H주 2.31%↓",
+            "link": "https://www.newsis.com/view/NISX20261002_0003813216",
+            "source": "뉴시스 경제"
+          },
           {
             "title": "[올댓차이나] 대만 증시 이틀째 사상 최고치…반도체 차익실현에 상승폭 제한",
             "link": "https://www.newsis.com/view/NISX20261002_0003813168",
@@ -3053,7 +3132,7 @@
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
         "lineKo": "오늘 한국경제 최고의 리더들이 한자리에 모여 활동을 공유했다. 은행권 대출사기로 인한 추가 피해액이 577억 원으로 드러났다. 중국 선전에서 국내외 경제인들이 모여 수출 방안을 모색하는 자리가 열렸다. 강원 고성군은 평화경제특구 지정을 위해 화진포와 대진을 관광 거점으로 조성할 계획이다. 부산시의회는 신용보증 이사장과 경제진흥원장 후보자에 대해 적정하다는 의견을 밝혔다.",
-        "lineEn": "Today, Korea's top economic leaders gathered in one place to share their activities. The additional damage caused by loan fraud in the banking sector has been revealed as 57,700,000,000 won. A meeting was held in Shenzhen, China, where domestic and foreign businesspeople gathered to explore export strategies. Gangwon's Goesung County plans to develop Hwajinpo and Daejin as tourist hubs in order to designate the area as a Peace Economic Special Zone. Busan City Council expressed the opinion that the candidates for the chairman of the Credit Guarantee Corporation and the head of the Economic Promotion Institute are appropriate.",
+        "lineEn": "Today, Korea's top economic leaders gathered in one place to share their activities. Additional damages caused by loan fraud in the banking sector have been revealed as 57,700,000,000 won. A gathering was held in Shenzhen, China, where domestic and foreign economic figures came together to explore export strategies. Gangwon's Goesung County plans to develop Hwajinpo and Daejin as tourism hubs in order to designate the area as a Peace Economic Special Zone. Busan City Council expressed the opinion that the candidates for the chairman of the Credit Guarantee Corporation and the head of the Economic Promotion Institute are appropriate.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
@@ -3082,80 +3161,6 @@
             "title": "부산시의회, 신용보증 이사장·경제진흥원장 후보자 '적정' 의견",
             "link": "https://www.yna.co.kr/view/AKR20261002146300051",
             "source": "연합뉴스 경제"
-          }
-        ]
-      },
-      {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "일본 증시가 미국 금리 상승 우려로 하락 마감했고, 미국 국채금리가 상대적 안전자산 인식으로 주춤했으며, 국고채 금리가 당국의지와 미국 금리 하락으로 강세를 보였고, 국고채 금리가 일제히 하락했으며, 호르무즈 원유 수송 회복에도 유가와 미국 금리가 고공행진했다.",
-        "lineEn": "The Japanese stock market closed lower due to concerns over rising U.S. interest rates, U.S. government bond rates retreated due to perceptions of relative safe-haven assets, government bond rates showed strength due to authorities' efforts and a decline in U.S. interest rates, government bond rates fell universally, and oil prices and U.S. interest rates continued to rise despite the recovery in Hormuz oil transportation.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": true,
-        "items": [
-          {
-            "title": "日증시, 美금리 상승 우려에 하락 마감…닛케이 0.94%↓",
-            "link": "https://www.newsis.com/view/NISX20261002_0003812976",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "'상대적 안전자산' 인식에…치솟던 美국채금리 주춤",
-            "link": "https://www.hankyung.com/article/2026100209821",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "국고채, 당국의지·美금리 하락에 강세…3년물 3%대로(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261002144200008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "국고채 금리 일제히 하락…3년물 연 3.937%",
-            "link": "https://www.yna.co.kr/view/AKR20261002143000008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "호르무즈 원유 수송 회복에도…유가 100달러·美금리 고공행진",
-            "link": "https://www.newsis.com/view/NISX20261002_0003812443",
-            "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "고양·의왕에 2만3400가구의 공공주택이 공급되고, 아산시는 방축동 민간건설 임대 아파트 임차인 보호 방안을 모색 중이며, 수도권 공공주택은 3분기까지 1.7만가구가 착공되고 4분기에 4.5만가구가 착공될 예정이며, 국토부는 4대 공사와 주택점검 회의를 진행하고 1차관은 연말까지 착공 목표 달성을 선언했으며, LH는 보상 직무 기간제 인력 250명을 채용해 수도권 주택공급 속도를 높이고 있다.",
-        "lineEn": "Public housing units for 20,0003400 households will be supplied in Goyang and Uiwang, and Asan City is exploring measures to protect tenants of privately constructed rental apartments in Bangchukdong. In the Seoul metropolitan area, 17,000 housing units will be started in the third quarter and 45,000 units in the fourth quarter. The Ministry of Land, Infrastructure and Transport is holding meetings on four major construction projects and housing inspections, and the First Deputy Minister has declared the goal of achieving construction targets by year-end. LH is hiring 250 temporary staff for compensation-related duties to accelerate housing supply in the Seoul metropolitan area.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": true,
-        "items": [
-          {
-            "title": "고양·의왕에 공공주택 2만3400가구",
-            "link": "https://www.hankyung.com/article/2026100208131",
-            "source": "한국경제 부동산"
-          },
-          {
-            "title": "아산시, 방축동 민간건설 임대 아파트 임차인 보호 해법 모색",
-            "link": "https://www.yna.co.kr/view/AKR20261002148000063",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "수도권 공공주택 3분기까지 1.7만가구 착공…4분기에 4.5만가구",
-            "link": "https://www.yna.co.kr/view/AKR20261002145000003",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "국토부, 4대 공사와 주택점검 회의… 1차관 “연말까지 착공 목표 달성할 것”",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/02/LZFKX4NM2JGNDNFMSG2YV3JA4U/",
-            "source": "조선비즈 부동산"
-          },
-          {
-            "title": "LH, 보상 직무 기간제 인력 250명 채용…\"수도권 주택공급 속도\"",
-            "link": "https://www.newsis.com/view/NISX20261002_0003812735",
-            "source": "뉴시스 경제"
           }
         ]
       }
