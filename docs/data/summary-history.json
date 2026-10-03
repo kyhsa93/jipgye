@@ -3170,82 +3170,119 @@
     "date": "2026-10-03",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 금리·예금·투자상품: 미 9월 비농업 고용 쇼크로 추가 금리인상 제동이 걸리나 하는 우려가 나오고 있으며, 뉴욕증시는 연준 10월 금리 동결 가능성에 상승 출발했고, 일본 증시는 미국 금리 상승 우려로 하락 마감했으며, 미국 국채금리는 상대적 안전자산 인식으로 주춤했고, 국고채는 당국의지와 미국 금리 하락에 강세를 보였다.\n- 부동산: 부동산: [올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”, 수도권 공공주택, 4분기에 4만5000가구 몰린다, 고양·의왕에 공공주택 2만3400가구 +5\n- 증시·환율: 홍콩 증시는 중동발 에너지 공급 우려로 인해 하락 마감했다. 홍콩 증시의 H주는 2.31% 하락했다. 대만 증시는 이틀째 사상 최고치를 기록했다. 대만 증시의 상승폭은 반도체 차익실현으로 제한됐다. 두 지역 증시는 서로 다른 요인에 따라 움직였다.\n- 기타 경제 소식: 오늘 한국경제 최고의 리더들이 한자리에 모여 활동을 공유했다. 은행권 대출사기로 인한 추가 피해액이 577억 원으로 드러났다. 중국 선전에서 국내외 경제인들이 모여 수출 방안을 모색하는 자리가 열렸다. 강원 고성군은 평화경제특구 지정을 위해 화진포와 대진을 관광 거점으로 조성할 계획이다. 부산시의회는 신용보증 이사장과 경제진흥원장 후보자에 대해 적정하다는 의견을 밝혔다.",
-      "en": "- Rates, Deposits & Investment Products: Concerns are rising that the U.S. September nonfarm employment shock may halt further interest rate hikes. The New York stock market opened higher amid the possibility of the Fed holding rates steady in October, while the Japanese stock market closed lower due to fears of rising U.S. interest rates. U.S. Treasury bond yields retreated due to the perception of relative safe-haven assets, while government bonds showed strength amid authorities' stance and the decline in U.S. interest rates.\n- Real Estate: Real Estate: [올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”, 수도권 공공주택, 4분기에 4만5000가구 몰린다, 고양·의왕에 공공주택 2만3400가구 +5\n- Stocks & FX: The Hong Kong stock market closed lower due to concerns over energy supply from the Middle East. The Hang Seng index in Hong Kong fell 2.31%. The Taiwan stock market recorded its all-time high for the second consecutive day. The rise in the Taiwan stock market was limited by profit-taking in semiconductors. The two regional stock markets moved due to different factors.\n- Other Economic News: Today, Korea's top economic leaders gathered in one place to share their activities. Additional damages caused by loan fraud in the banking sector have been revealed as 57,700,000,000 won. A forum was held in Shenzhen, China, where domestic and foreign economic figures gathered to explore export strategies. Gangwon's Goesung County plans to develop Hwajinpo and Daejin as tourist hubs in order to designate the area as a peace economy special zone. Busan City Council expressed the opinion that the candidates for the chairman of the Credit Guarantee Corporation and the head of the Economic Promotion Institute are appropriate."
+      "ko": "- 부동산: 부동산: 현대캐피탈도 해킹 확인…주택대출 모집인 정보 일부 유출(종합), 부동산 전문가들 \"文정부 때와 다르다\"…이유 알고 보니 [시장톡], “여행·취미 다 포기”…소득 절반 대출 갚아야 서울 국평 아파트 마련 +5\n- 기타 경제 소식: AI 붐과 한국경제의 관계에 대한 논의가 이어지고 있다. 서울에서 34평 아파트를 사려면 소득의 절반을 대출로 충당해야 하는 것으로 나타났다. 집값은 86주 만에 상승세를 이어가며 최장 랠리를 기록하고 있다. 2026 한국경제 최고의 리더들이 한자리에 모여 주목받았다. 은행권 대출사기로 인한 추가 피해액은 577억 원으로 드러났다.\n- 금리·예금·투자상품: 전문가들은 수도권 집값 안정을 위해 금리 대폭 인상이 어렵다고 분석했다. 금리 고공행진으로 인해 CD와 채권 관련 ETF가 인기를 끌고 있다. 뉴욕증시는 연준 금리인상 우려 완화로 인해 상승 마감했으며, 나스닥은 1.2% 상승했다. 뉴욕증시는 연준 금리 동결 가능성에 따라 나스닥이 1.19% 상승 마감했다. 미국 9월 비농업 고용 데이터는 예상보다 부진해 추가 금리인상에 제동이 걸릴 가능성이 있다.\n- 증시·환율: 홍콩 증시는 중동발 에너지 공급 우려로 인해 하락 마감했다. 홍콩 증시의 H주는 2.31% 하락했다. 대만 증시는 이틀째 사상 최고치를 기록했다. 대만 증시 상승폭은 반도체 차익실현으로 제한됐다. 두 지역 증시는 서로 다른 요인에 따라 움직였다.",
+      "en": "- Real Estate: Real Estate: 현대캐피탈도 해킹 확인…주택대출 모집인 정보 일부 유출(종합), 부동산 전문가들 \"文정부 때와 다르다\"…이유 알고 보니 [시장톡], “여행·취미 다 포기”…소득 절반 대출 갚아야 서울 국평 아파트 마련 +5\n- Other Economic News: Discussions about the relationship between the AI boom and the South Korean economy continue. It has been revealed that in Seoul, buying a 34-ping apartment requires borrowing half of one's income. Housing prices have continued to rise for 86 weeks, recording the longest rally. The top leaders of the 2026 South Korean economy gathered in one place, drawing attention. The additional damages caused by loan fraud in the banking sector were revealed to be 57,700,000,000 won.\n- Rates, Deposits & Investment Products: Experts analyzed that significantly raising interest rates would be difficult to stabilize housing prices in the capital area. Due to the high interest rates, CD and bond-related ETFs are gaining popularity. The New York stock market closed higher due to eased concerns over Fed rate hikes, with the Nasdaq rising 1.2%. The New York stock market closed higher by 1.19% due to the possibility of the Fed holding rates steady. The U.S. September nonfarm payrolls data was weaker than expected, possibly slowing further rate hikes.\n- Stocks & FX: The Hong Kong stock market closed lower due to concerns over energy supply from the Middle East. The Hang Seng index in Hong Kong fell 2.31%. The Taiwan stock market recorded its all-time high for the second consecutive day. The rise in the Taiwan stock market was limited by profit-taking in semiconductors. The two regional stock markets moved due to different factors."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "미 9월 비농업 고용 쇼크로 추가 금리인상 제동이 걸리나 하는 우려가 나오고 있으며, 뉴욕증시는 연준 10월 금리 동결 가능성에 상승 출발했고, 일본 증시는 미국 금리 상승 우려로 하락 마감했으며, 미국 국채금리는 상대적 안전자산 인식으로 주춤했고, 국고채는 당국의지와 미국 금리 하락에 강세를 보였다.",
-        "lineEn": "Concerns are rising that the U.S. September nonfarm employment shock may halt further interest rate hikes. The New York stock market opened higher amid the possibility of the Fed holding rates steady in October, while the Japanese stock market closed lower due to fears of rising U.S. interest rates. U.S. Treasury bond yields retreated due to the perception of relative safe-haven assets, while government bonds showed strength amid authorities' stance and the decline in U.S. interest rates.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": true,
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "부동산: 현대캐피탈도 해킹 확인…주택대출 모집인 정보 일부 유출(종합), 부동산 전문가들 \"文정부 때와 다르다\"…이유 알고 보니 [시장톡], “여행·취미 다 포기”…소득 절반 대출 갚아야 서울 국평 아파트 마련 +5",
+        "lineEn": "Real Estate: 현대캐피탈도 해킹 확인…주택대출 모집인 정보 일부 유출(종합), 부동산 전문가들 \"文정부 때와 다르다\"…이유 알고 보니 [시장톡], “여행·취미 다 포기”…소득 절반 대출 갚아야 서울 국평 아파트 마련 +5",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
+        "degraded": false,
         "items": [
           {
-            "title": "美 9월 '비농업 고용 쇼크'…추가 금리인상 제동 걸리나",
-            "link": "https://www.hankyung.com/article/2026100213271",
-            "source": "한국경제 경제"
+            "title": "현대캐피탈도 해킹 확인…주택대출 모집인 정보 일부 유출(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261003038151002",
+            "source": "연합뉴스 경제"
           },
           {
-            "title": "뉴욕증시, 연준 10월 금리 동결 가능성에 상승 출발…다우 0.68%↑",
-            "link": "https://www.newsis.com/view/NISX20261002_0003813307",
-            "source": "뉴시스 경제"
+            "title": "부동산 전문가들 \"文정부 때와 다르다\"…이유 알고 보니 [시장톡]",
+            "link": "https://www.hankyung.com/article/2026100299776",
+            "source": "한국경제 부동산"
           },
           {
-            "title": "日증시, 美금리 상승 우려에 하락 마감…닛케이 0.94%↓",
-            "link": "https://www.newsis.com/view/NISX20261002_0003812976",
-            "source": "뉴시스 경제"
+            "title": "“여행·취미 다 포기”…소득 절반 대출 갚아야 서울 국평 아파트 마련",
+            "link": "https://www.mk.co.kr/news/economy/12167726",
+            "source": "매일경제 부동산"
           },
           {
-            "title": "'상대적 안전자산' 인식에…치솟던 美국채금리 주춤",
-            "link": "https://www.hankyung.com/article/2026100209821",
-            "source": "한국경제 경제"
+            "title": "'아파트' 소형은 옛말, '거거익선' 열풍…거래 비중 5년래 최고",
+            "link": "https://www.hankyung.com/article/202610031562i",
+            "source": "한국경제 부동산"
           },
           {
-            "title": "국고채, 당국의지·美금리 하락에 강세…3년물 3%대로(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261002144200008",
+            "title": "[다음주 경제] 경제부처 국정감사 개막…은행권 해킹·세제 개편 등 쟁점",
+            "link": "https://www.yna.co.kr/view/AKR20261003015700002",
             "source": "연합뉴스 경제"
           }
         ]
       },
       {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "부동산: [올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”, 수도권 공공주택, 4분기에 4만5000가구 몰린다, 고양·의왕에 공공주택 2만3400가구 +5",
-        "lineEn": "Real Estate: [올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”, 수도권 공공주택, 4분기에 4만5000가구 몰린다, 고양·의왕에 공공주택 2만3400가구 +5",
-        "isFallback": true,
-        "fallbackReason": "unverified-number",
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "AI 붐과 한국경제의 관계에 대한 논의가 이어지고 있다. 서울에서 34평 아파트를 사려면 소득의 절반을 대출로 충당해야 하는 것으로 나타났다. 집값은 86주 만에 상승세를 이어가며 최장 랠리를 기록하고 있다. 2026 한국경제 최고의 리더들이 한자리에 모여 주목받았다. 은행권 대출사기로 인한 추가 피해액은 577억 원으로 드러났다.",
+        "lineEn": "Discussions about the relationship between the AI boom and the South Korean economy continue. It has been revealed that in Seoul, buying a 34-ping apartment requires borrowing half of one's income. Housing prices have continued to rise for 86 weeks, recording the longest rally. The top leaders of the 2026 South Korean economy gathered in one place, drawing attention. The additional damages caused by loan fraud in the banking sector were revealed to be 57,700,000,000 won.",
+        "isFallback": false,
+        "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "[올댓차이나] 9월 中 주택 가격 0.17%↑…신축 상승·중고 낙폭 확대 “양극화”",
-            "link": "https://www.newsis.com/view/NISX20261002_0003813247",
+            "title": "AI 붐과 한국경제, 이번에는 다를까?",
+            "link": "https://www.hankyung.com/article/202609220337i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "\"서울 34평 사려면 소득 절반 대출로\"…3년6개월 만에 최고",
+            "link": "https://www.hankyung.com/article/2026100314797",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "86주 쉬지 않고 올랐다…文 정부 넘어선 상승, 왜[집값, 최장 랠리①]",
+            "link": "https://www.newsis.com/view/NISX20261001_0003811566",
             "source": "뉴시스 경제"
           },
           {
-            "title": "수도권 공공주택, 4분기에 4만5000가구 몰린다",
-            "link": "https://www.hankyung.com/article/2026100208737",
-            "source": "한국경제 부동산"
+            "title": "[포토] 한자리 모인 '2026 한국경제 최고의 리더'",
+            "link": "https://www.hankyung.com/article/2026100210091",
+            "source": "한국경제 경제"
           },
           {
-            "title": "고양·의왕에 공공주택 2만3400가구",
-            "link": "https://www.hankyung.com/article/2026100208131",
-            "source": "한국경제 부동산"
+            "title": "은행권 대출사기 추가 피해액 또 드러나…사고액 577억",
+            "link": "https://www.yna.co.kr/view/AKR20261002156900002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "전문가들은 수도권 집값 안정을 위해 금리 대폭 인상이 어렵다고 분석했다. 금리 고공행진으로 인해 CD와 채권 관련 ETF가 인기를 끌고 있다. 뉴욕증시는 연준 금리인상 우려 완화로 인해 상승 마감했으며, 나스닥은 1.2% 상승했다. 뉴욕증시는 연준 금리 동결 가능성에 따라 나스닥이 1.19% 상승 마감했다. 미국 9월 비농업 고용 데이터는 예상보다 부진해 추가 금리인상에 제동이 걸릴 가능성이 있다.",
+        "lineEn": "Experts analyzed that significantly raising interest rates would be difficult to stabilize housing prices in the capital area. Due to the high interest rates, CD and bond-related ETFs are gaining popularity. The New York stock market closed higher due to eased concerns over Fed rate hikes, with the Nasdaq rising 1.2%. The New York stock market closed higher by 1.19% due to the possibility of the Fed holding rates steady. The U.S. September nonfarm payrolls data was weaker than expected, possibly slowing further rate hikes.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "\"금리 대폭 올리기 힘들어\"…전문가가 본 수도권 집값 안정의 조건",
+            "link": "https://www.newsis.com/view/NISX20261002_0003812024",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "아산시, 방축동 민간건설 임대 아파트 임차인 보호 해법 모색",
-            "link": "https://www.yna.co.kr/view/AKR20261002148000063",
+            "title": "[머니플로우] 금리 고공행진에 CD·채권 관련 ETF 인기 '쑥'",
+            "link": "https://www.yna.co.kr/view/AKR20261002136000008",
             "source": "연합뉴스 경제"
           },
           {
-            "title": "수도권 공공주택 3분기까지 1.7만가구 착공…4분기에 4.5만가구",
-            "link": "https://www.yna.co.kr/view/AKR20261002145000003",
-            "source": "연합뉴스 경제"
+            "title": "뉴욕증시, 연준 금리인상 우려 완화에 상승 마감…나스닥 1.2%↑",
+            "link": "https://www.newsis.com/view/NISX20261003_0003813350",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[속보] 뉴욕증시 연준 금리 동결 가능성에 상승 마감…나스닥 1.19%↑",
+            "link": "https://www.newsis.com/view/NISX20261003_0003813344",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "美 9월 '비농업 고용 쇼크'…추가 금리인상 제동 걸리나",
+            "link": "https://www.hankyung.com/article/2026100213271",
+            "source": "한국경제 경제"
           }
         ]
       },
@@ -3253,7 +3290,7 @@
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "홍콩 증시는 중동발 에너지 공급 우려로 인해 하락 마감했다. 홍콩 증시의 H주는 2.31% 하락했다. 대만 증시는 이틀째 사상 최고치를 기록했다. 대만 증시의 상승폭은 반도체 차익실현으로 제한됐다. 두 지역 증시는 서로 다른 요인에 따라 움직였다.",
+        "lineKo": "홍콩 증시는 중동발 에너지 공급 우려로 인해 하락 마감했다. 홍콩 증시의 H주는 2.31% 하락했다. 대만 증시는 이틀째 사상 최고치를 기록했다. 대만 증시 상승폭은 반도체 차익실현으로 제한됐다. 두 지역 증시는 서로 다른 요인에 따라 움직였다.",
         "lineEn": "The Hong Kong stock market closed lower due to concerns over energy supply from the Middle East. The Hang Seng index in Hong Kong fell 2.31%. The Taiwan stock market recorded its all-time high for the second consecutive day. The rise in the Taiwan stock market was limited by profit-taking in semiconductors. The two regional stock markets moved due to different factors.",
         "isFallback": false,
         "fallbackReason": null,
@@ -3268,43 +3305,6 @@
             "title": "[올댓차이나] 대만 증시 이틀째 사상 최고치…반도체 차익실현에 상승폭 제한",
             "link": "https://www.newsis.com/view/NISX20261002_0003813168",
             "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
-        "key": "other",
-        "name": "기타 경제 소식",
-        "nameEn": "Other Economic News",
-        "lineKo": "오늘 한국경제 최고의 리더들이 한자리에 모여 활동을 공유했다. 은행권 대출사기로 인한 추가 피해액이 577억 원으로 드러났다. 중국 선전에서 국내외 경제인들이 모여 수출 방안을 모색하는 자리가 열렸다. 강원 고성군은 평화경제특구 지정을 위해 화진포와 대진을 관광 거점으로 조성할 계획이다. 부산시의회는 신용보증 이사장과 경제진흥원장 후보자에 대해 적정하다는 의견을 밝혔다.",
-        "lineEn": "Today, Korea's top economic leaders gathered in one place to share their activities. Additional damages caused by loan fraud in the banking sector have been revealed as 57,700,000,000 won. A forum was held in Shenzhen, China, where domestic and foreign economic figures gathered to explore export strategies. Gangwon's Goesung County plans to develop Hwajinpo and Daejin as tourist hubs in order to designate the area as a peace economy special zone. Busan City Council expressed the opinion that the candidates for the chairman of the Credit Guarantee Corporation and the head of the Economic Promotion Institute are appropriate.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "[포토] 한자리 모인 '2026 한국경제 최고의 리더'",
-            "link": "https://www.hankyung.com/article/2026100210091",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "은행권 대출사기 추가 피해액 또 드러나…사고액 577억",
-            "link": "https://www.yna.co.kr/view/AKR20261002156900002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "[동포의 창] 中 선전서 국내외 경제인 모여 수출 모색",
-            "link": "https://www.yna.co.kr/view/AKR20261002155300371",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "강원 고성군, 평화경제특구 도전…화진포·대진 관광 거점 조성",
-            "link": "https://www.yna.co.kr/view/AKR20261002155100062",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "부산시의회, 신용보증 이사장·경제진흥원장 후보자 '적정' 의견",
-            "link": "https://www.yna.co.kr/view/AKR20261002146300051",
-            "source": "연합뉴스 경제"
           }
         ]
       }
