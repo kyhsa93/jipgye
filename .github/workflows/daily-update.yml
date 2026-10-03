@@ -66,6 +66,9 @@ jobs:
         if: env.MODE == 'full'
         run: |
           node scripts/fetch-realestate.mjs
+          # 받은 원본은 바로 커밋한다. 뒤의 빌더나 다른 수집이 실패해도 그날 원본이
+          # 사라지지 않게 - 2026-10-03에 금리 단계 하나가 175슬롯을 버렸다(#62).
+          ./scripts/push-docs.sh "chore: 실거래 원본 $(TZ=Asia/Seoul date +%Y-%m-%d)" raw
           node scripts/build-realestate.mjs
           node scripts/build-budget-deals.mjs
           node scripts/build-conversion.mjs

@@ -102,13 +102,14 @@ function loanResponse({ products }) {
   };
 }
 
-async function run(base, outDir, { key = "TESTKEY", force = false } = {}) {
+async function run(base, outDir, { key = "TESTKEY", force = false, retryDelays = "1,1" } = {}) {
   return execFileAsync("node", [scriptPath], {
     env: {
       ...process.env,
       FSS_API_BASE: base,
       RATES_OUT_DIR: outDir,
       FSS_FINLIFE_API_KEY: key,
+      RATES_RETRY_DELAYS_MS: retryDelays,
       ...(force ? { RATES_FORCE: "1" } : {}),
     },
   });
@@ -349,7 +350,9 @@ test("상품이 0건으로 와도 직전 목록을 지우지 않는다", async (
   }
 });
 
-test("모든 상품군이 실패하면 0이 아닌 코드로 종료하고 기존 파일을 덮어쓰지 않는다", async () => {
+test("모든 상품군이 실패해도 0으로 끝내고, 기존 파일을 그대로 두고, 경고와 원인을 남긴다", async () => {
+  // 0이 아닌 코드로 끝나면 워크플로의 커밋 단계가 돌지 않아 같은 실행에서 받은
+  // 실거래 원본까지 버려진다(#62).
   const stub = await startStub(() => ({
     status: 500,
     json: { message: "server error" },
@@ -358,12 +361,64 @@ test("모든 상품군이 실패하면 0이 아닌 코드로 종료하고 기존
   await mkdir(outDir, { recursive: true });
   const original = JSON.stringify({ updatedAt: "2026-08-01T00:00:00.000Z", deposit: [] });
   await writeFile(path.join(outDir, "rates.json"), original);
+  await writeFile(
+    path.join(outDir, "rates-meta.json"),
+    JSON.stringify({ lastFetchedDate: "2026-10-02", lastFetchedAt: "2026-10-02T02:00:00.000Z" })
+  );
 
   try {
-    await assert.rejects(() => run(stub.base, outDir));
+    const { stdout } = await run(stub.base, outDir);
     assert.equal(await readFile(path.join(outDir, "rates.json"), "utf-8"), original);
+    assert.match(stdout, /::warning::금리 수집 실패.*HTTP_500.*마지막 성공 2026-10-02/);
+    const meta = await readJson(outDir, "rates-meta.json");
+    assert.equal(meta.failCause, "HTTP_500");
+    assert.equal(meta.lastFetchedDate, "2026-10-02", "실패한 날을 받은 날로 적으면 같은 날 다시 시도하지 않는다");
+    assert.ok(meta.lastFailedAt);
   } finally {
     await stub.close();
+  }
+});
+
+test("연결이 안 되면 원인 코드를 남기고 0으로 끝낸다", async () => {
+  const stub = await startStub(() => ({ json: savingResponse({ products: [] }) }));
+  const base = stub.base;
+  await stub.close();
+  const outDir = await tempDir();
+
+  const { stdout, stderr } = await run(base, outDir);
+  assert.match(stderr, /연결 실패 ECONNREFUSED/);
+  assert.match(stdout, /::warning::.*ECONNREFUSED/);
+  assert.equal((await readJson(outDir, "rates-meta.json")).failCause, "ECONNREFUSED");
+});
+
+test("5xx는 다시 불러 회복하고, 첫 상품군이 끝내 연결에 실패하면 나머지는 부르지 않는다", async () => {
+  let calls = 0;
+  const flaky = await startStub(({ endpoint }) => {
+    calls += 1;
+    if (calls <= 2) return { status: 503, json: {} };
+    return endpoint.includes("Loan")
+      ? { json: loanResponse({ products: [] }) }
+      : { json: savingResponse({ products: [] }) };
+  });
+  const outDir = await tempDir();
+  try {
+    const { stderr } = await run(flaky.base, outDir, { force: true });
+    assert.match(stderr, /http 503 - 0\.001초 뒤 다시 \(1\/2\)/);
+    assert.ok(!/::warning::/.test(stderr));
+  } finally {
+    await flaky.close();
+  }
+
+  let down = 0;
+  const dead = await startStub(() => {
+    down += 1;
+    return { status: 503, json: {} };
+  });
+  try {
+    await run(dead.base, await tempDir());
+    assert.equal(down, 3, "첫 페이지 한 번 + 재시도 두 번 뒤 멈춰야 한다");
+  } finally {
+    await dead.close();
   }
 });
 

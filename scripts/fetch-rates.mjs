@@ -45,9 +45,48 @@ function clean(v) {
   return s === "" ? null : s;
 }
 
+// 연결이 안 되거나 서버가 5xx를 주는 것은 잠깐 뒤에 다시 부르면 풀리는 일이 있다.
+// 2026-10-03에는 네 상품군이 전부 연결 단계에서 ~10초 만에 끊겼다(#62). 인증키·응답
+// 형식 오류는 다시 불러도 같으므로 재시도하지 않는다.
+const RETRY_DELAYS_MS = (process.env.RATES_RETRY_DELAYS_MS ?? "30000,120000")
+  .split(",")
+  .filter((v) => v !== "")
+  .map(Number);
+
+function connectionError(message, cause) {
+  const err = new Error(message);
+  err.connection = true;
+  err.code = cause;
+  return err;
+}
+
+async function withRetry(label, fn) {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (!err.connection || attempt >= RETRY_DELAYS_MS.length) throw err;
+      const wait = RETRY_DELAYS_MS[attempt];
+      console.warn(`[fetch-rates] ${label}: ${err.message} - ${wait / 1000}초 뒤 다시 (${attempt + 1}/${RETRY_DELAYS_MS.length})`);
+      await new Promise((done) => setTimeout(done, wait));
+    }
+  }
+}
+
 async function fetchPage(endpoint, topFinGrpNo, pageNo) {
+  return withRetry(`${endpoint}/${topFinGrpNo} p${pageNo}`, () => fetchPageOnce(endpoint, topFinGrpNo, pageNo));
+}
+
+async function fetchPageOnce(endpoint, topFinGrpNo, pageNo) {
   const url = `${API_BASE}/${endpoint}.json?auth=${API_KEY}&topFinGrpNo=${topFinGrpNo}&pageNo=${pageNo}`;
-  const res = await fetch(url, { headers: { "User-Agent": USER_AGENT } });
+  let res;
+  try {
+    res = await fetch(url, { headers: { "User-Agent": USER_AGENT } });
+  } catch (err) {
+    const code = err.cause?.code ?? err.cause?.name ?? "FETCH_FAILED";
+    throw connectionError(`연결 실패 ${code}`, code);
+  }
+  if (res.status >= 500) throw connectionError(`http ${res.status}`, `HTTP_${res.status}`);
   if (!res.ok) throw new Error(`http ${res.status}`);
   const json = await res.json();
   const result = json?.result;
@@ -237,14 +276,26 @@ async function main() {
   const result = {};
   let disclosureMonth = null;
   let failed = 0;
+  let succeeded = 0;
+  let hostDown = null;
+  let failCause = null;
 
   for (const category of CATEGORIES) {
+    // 첫 상품군이 재시도까지 다 연결에 실패했으면 같은 호스트다 - 나머지를 같은
+    // 시간만큼 더 기다려 봐야 같은 답이 온다.
+    if (hostDown) {
+      failed += 1;
+      console.warn(`[fetch-rates] ${category.key}: 호스트 연결 실패(${hostDown})로 건너뜀`);
+      result[category.key] = previous[category.key] ?? [];
+      continue;
+    }
     try {
       const { products, disclosureMonth: month } = await fetchCategory(category);
 
       const kept = previous[category.key] ?? [];
       if (products.length === 0 && kept.length > 0) {
         failed += 1;
+        failCause ??= "EMPTY";
         console.warn(
           `[fetch-rates] ${category.key}: 0건으로 왔다 - 지난번 ${kept.length}건을 그대로 둔다`
         );
@@ -253,17 +304,30 @@ async function main() {
       }
 
       result[category.key] = products;
+      succeeded += 1;
       disclosureMonth ??= month;
       console.log(`[fetch-rates] ${category.key}: 상품 ${products.length}건`);
     } catch (err) {
       failed += 1;
+      failCause ??= err.code ?? err.message;
       console.error(`[fetch-rates] ${category.key} 실패: ${err.message}`);
       result[category.key] = previous[category.key] ?? [];
+      if (err.connection && succeeded === 0) hostDown = err.code;
     }
   }
 
+  // 전부 실패해도 0으로 끝낸다. 이 단계가 실패로 끝나면 뒤의 커밋 단계가 돌지 않아
+  // 같은 실행에서 받은 실거래 원본까지 버려진다(2026-10-03, 175슬롯·1,724건 - #62).
+  // 어제 값을 그대로 두고, 실패는 경고와 메타 파일로 남긴다. 며칠째 어제 값인지는
+  // 점검 봇이 본다 - 날짜에 따라 갈리는 검사를 여기 두면 배포가 멈춘다(#8).
   if (failed === CATEGORIES.length) {
-    throw new Error("모든 상품군 수집 실패 - 기존 데이터를 덮어쓰지 않고 중단합니다");
+    const cause = failCause ?? "알 수 없음";
+    await mkdir(dataDir, { recursive: true });
+    await writeFile(metaFile, JSON.stringify({ ...meta, lastFailedAt: now.toISOString(), failCause: cause }));
+    console.log(
+      `::warning::금리 수집 실패(금감원 finlife) - 원인 ${cause}, 마지막 성공 ${meta.lastFetchedDate ?? "없음"}. 기존 금리를 그대로 둔다`
+    );
+    return;
   }
 
   const payload = {

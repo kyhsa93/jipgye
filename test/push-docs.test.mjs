@@ -74,3 +74,40 @@ test("실거래는 날마다 받는다", async () => {
   assert.match(step, /fetch-realestate\.mjs/);
   assert.ok(!yml.includes("weekly"), "주 1회 모드가 남아 있다");
 });
+
+test("경로를 주면 그 경로만 커밋한다", async () => {
+  const { execFile } = await import("node:child_process");
+  const { mkdtemp, mkdir, writeFile } = await import("node:fs/promises");
+  const { tmpdir } = await import("node:os");
+  const { promisify } = await import("node:util");
+  const run = promisify(execFile);
+
+  const base = await mkdtemp(path.join(tmpdir(), "push-docs-"));
+  const remote = path.join(base, "remote.git");
+  const work = path.join(base, "work");
+
+  await run("git", ["init", "-q", "--bare", remote]);
+  await run("git", ["clone", "-q", remote, work]);
+  await mkdir(path.join(work, "docs"), { recursive: true });
+  await mkdir(path.join(work, "raw/sale"), { recursive: true });
+  await writeFile(path.join(work, "docs/data.json"), "{}");
+  await writeFile(path.join(work, "raw/sale/11110-202610.json"), "[]");
+
+  await run(path.join(root, "scripts/push-docs.sh"), ["원본만", "raw"], { cwd: work });
+
+  const { stdout: files } = await run("git", ["show", "--name-only", "--format=", "HEAD"], { cwd: work });
+  assert.match(files, /raw\/sale\/11110-202610\.json/);
+  assert.ok(!files.includes("docs/"), `docs까지 커밋했다: ${files}`);
+  const { stdout: remoteLog } = await run("git", ["--git-dir", remote, "log", "--oneline", "-1"]);
+  assert.match(remoteLog, /원본만/, "푸시되지 않았다");
+});
+
+test("데일리 워크플로가 실거래 원본을 받자마자 먼저 커밋한다", async () => {
+  const yml = await read(".github/workflows/daily-update.yml");
+  const step = yml.split("- name: 실거래 수집")[1]?.split("- name:")[0] ?? "";
+  const fetchAt = step.indexOf("fetch-realestate.mjs");
+  const commitAt = step.search(/push-docs\.sh "[^"]*" raw\b/);
+  const buildAt = step.indexOf("build-realestate.mjs");
+  assert.ok(fetchAt >= 0 && commitAt > fetchAt, "원본 수집 뒤에 원본 커밋이 없다");
+  assert.ok(commitAt < buildAt, "원본 커밋이 빌더보다 뒤에 있다");
+});
