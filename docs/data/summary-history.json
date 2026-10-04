@@ -3314,8 +3314,8 @@
     "date": "2026-10-04",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 부동산: 한국 부동산 시장에서 지역별로 엇갈린 부동산 대출 의존도가 나타나고 있으며, 강남은 9%이고 노원은 38%이며, 성동구 상왕십리동 텐즈힐(2단지) 84.9㎡는 23억 2천만원, 동작구 상도동 현대(관악) 58.59㎡는 10억 6500만원, 동작구 상도동 대림아파트 84.89㎡는 10억 9천만원, 영등포구 당산삼성래미안4차 84.94㎡는 22억 1천만원으로 최근 3년간 신고가를 기록했다.\n- 기타 경제 소식: 대출 규제 강화로 노도강 매입자금의 30%대가 대출에 의존하는 것으로 나타났다. NH농협은행은 5년여간 횡령과 부당대출 등으로 인해 426명을 징계했다. 9월 전 금융권 가계대출이 올해 처음으로 감소했다. 은행의 대출여력 확대 가능성에 주목이 모아지고 있다. 각 기사는 서로 다른 주제로, 별개의 경제 현상들을 보여준다.\n- 증시·환율: 삼전의 실적발표를 앞둔 한국 증시가 '7천피'를 지킬 수 있을지 주목받고 있다.",
-      "en": "- Real Estate: In the Korean real estate market, the dependence on real estate loans varies by region, with Gangnam at 9% and Nowon at 38%. In Seongdong-gu, Sangwangsimni-dong, Tens Hill (Phase 2), 84.9㎡ is priced at 2,320,000,000 won, in Dongjak-gu, Sangdo-dong, Hyundai (Gwanak), 58.59㎡ is priced at 1,065,000,000 won, in Dongjak-gu, Sangdo-dong, Daehan Apartment, 84.89㎡ is priced at 1,090,000,000 won, and in Yeongdeungpo-gu, Dangsan Samsung Ramean 4th phase, 84.94㎡ is priced at 2,210,000,000 won, all of which have set new price records over the past three years.\n- Other Economic News: Strengthened loan regulations have revealed that more than 30% of the funds used by Nodokang to purchase assets come from loans. NH Rural Credit Bank has disciplined 426 people over five years due to embezzlement and unfair lending. Household loan growth across the financial sector decreased for the first time this year in September. Attention is now focused on the possibility of expanding banks' lending capacity. Each article covers a different topic, illustrating separate economic phenomena.\n- Stocks & FX: Attention is focused on whether the Korean stock market can maintain the '7,000-point' level ahead of Samcheon's earnings announcement."
+      "ko": "- 부동산: 청년특례 전세대출보증이 가계대출 총량에서 100% 제외되며, 인천 청라에 '아크원푸르지오'가 분양되고 분당 어르신 재건축 전자동의가 절반을 넘는 등 부동산 관련 다양한 소식이 전해졌다.\n- 기타 경제 소식: 대출 규제 강화로 노도강 매입자금의 30% 이상이 대출에 의존하는 것으로 나타났다. NH농협은행은 5년간 횡령과 부당대출 등으로 인해 426명을 징계했다. 9월 전 금융권 가계대출이 올해 처음으로 감소했다. 은행의 대출 여력 확대 가능성에 주목이 쏠리고 있다. 각 기사는 서로 다른 주제로, 별개의 경제 현상들을 보여준다.\n- 증시·환율: 삼전의 실적발표를 앞둔 한국 증시가 '7천피'를 지킬 수 있을지 주목받고 있다.",
+      "en": "- Real Estate: The special youth rent guarantee loan is fully excluded from the total household loan amount, and 'Arcwon Purigeo' is being sold in Incheon Cheongna, while more than half of the elderly residents in Bundang have agreed to the reconstruction of the automatic building, among other real estate-related news.\n- Other Economic News: Strengthened loan regulations have revealed that more than 30% of the funds used by Nodokang to purchase assets depend on loans. NH Rural Credit Bank disciplined 426 people over five years due to embezzlement and unfair lending. In September, household loan growth across the financial sector decreased for the first time this year. Attention is now turning to the possibility of banks expanding their lending capacity. Each article covers a different topic, illustrating separate economic phenomena.\n- Stocks & FX: Attention is focused on whether the Korean stock market can maintain the '7,000-point' level ahead of Samcheon's earnings announcement."
     },
     "highlights": [],
     "categories": [
@@ -3323,35 +3323,35 @@
         "key": "realestate",
         "name": "부동산",
         "nameEn": "Real Estate",
-        "lineKo": "한국 부동산 시장에서 지역별로 엇갈린 부동산 대출 의존도가 나타나고 있으며, 강남은 9%이고 노원은 38%이며, 성동구 상왕십리동 텐즈힐(2단지) 84.9㎡는 23억 2천만원, 동작구 상도동 현대(관악) 58.59㎡는 10억 6500만원, 동작구 상도동 대림아파트 84.89㎡는 10억 9천만원, 영등포구 당산삼성래미안4차 84.94㎡는 22억 1천만원으로 최근 3년간 신고가를 기록했다.",
-        "lineEn": "In the Korean real estate market, the dependence on real estate loans varies by region, with Gangnam at 9% and Nowon at 38%. In Seongdong-gu, Sangwangsimni-dong, Tens Hill (Phase 2), 84.9㎡ is priced at 2,320,000,000 won, in Dongjak-gu, Sangdo-dong, Hyundai (Gwanak), 58.59㎡ is priced at 1,065,000,000 won, in Dongjak-gu, Sangdo-dong, Daehan Apartment, 84.89㎡ is priced at 1,090,000,000 won, and in Yeongdeungpo-gu, Dangsan Samsung Ramean 4th phase, 84.94㎡ is priced at 2,210,000,000 won, all of which have set new price records over the past three years.",
+        "lineKo": "청년특례 전세대출보증이 가계대출 총량에서 100% 제외되며, 인천 청라에 '아크원푸르지오'가 분양되고 분당 어르신 재건축 전자동의가 절반을 넘는 등 부동산 관련 다양한 소식이 전해졌다.",
+        "lineEn": "The special youth rent guarantee loan is fully excluded from the total household loan amount, and 'Arcwon Purigeo' is being sold in Incheon Cheongna, while more than half of the elderly residents in Bundang have agreed to the reconstruction of the automatic building, among other real estate-related news.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": true,
         "items": [
           {
-            "title": "지역별로 엇갈린 부동산 대출 의존도…강남 9%·노원38%",
-            "link": "https://www.mk.co.kr/news/realestate/12167967",
+            "title": "[단독] 청년특례 전세대출보증…가계대출 총량서 100% 제외",
+            "link": "https://www.mk.co.kr/news/economy/12168185",
             "source": "매일경제 부동산"
           },
           {
-            "title": "성동구 상왕십리동 텐즈힐(2단지) 84.9㎡ 23억 2천만원… 최근 3년 신고가 [MAI부동산]",
-            "link": "https://www.mk.co.kr/news/realestate/12167953",
+            "title": "인천 청라에 '아크원푸르지오'…아파트 868가구·오피스텔 987실",
+            "link": "https://www.hankyung.com/article/2026100425621",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "분당 어르신도 앱에서 '클릭'…재건축 전자동의 절반 넘어",
+            "link": "https://www.mk.co.kr/news/realestate/12168079",
             "source": "매일경제 부동산"
           },
           {
-            "title": "동작구 상도동 현대(관악) 58.59㎡ 10억 6500만원… 최근 3년 신고가 [MAI부동산]",
-            "link": "https://www.mk.co.kr/news/realestate/12167964",
+            "title": "재건축 철거도 왜 '6월 1일'전에 해야할까",
+            "link": "https://www.mk.co.kr/news/realestate/12168081",
             "source": "매일경제 부동산"
           },
           {
-            "title": "동작구 상도동 대림아파트 84.89㎡ 10억 9천만원… 최근 3년 신고가 [MAI부동산]",
-            "link": "https://www.mk.co.kr/news/realestate/12167963",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "영등포구 당산삼성래미안4차 84.94㎡ 22억 1천만원… 최근 3년 신고가 [MAI부동산]",
-            "link": "https://www.mk.co.kr/news/realestate/12167962",
+            "title": "“16층 아파트 들어서면 ‘울산바위’ 못 보는 거 아냐?”…인근 대단지 아파트 추진 논란",
+            "link": "https://www.mk.co.kr/news/realestate/12168041",
             "source": "매일경제 부동산"
           }
         ]
@@ -3360,8 +3360,8 @@
         "key": "other",
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
-        "lineKo": "대출 규제 강화로 노도강 매입자금의 30%대가 대출에 의존하는 것으로 나타났다. NH농협은행은 5년여간 횡령과 부당대출 등으로 인해 426명을 징계했다. 9월 전 금융권 가계대출이 올해 처음으로 감소했다. 은행의 대출여력 확대 가능성에 주목이 모아지고 있다. 각 기사는 서로 다른 주제로, 별개의 경제 현상들을 보여준다.",
-        "lineEn": "Strengthened loan regulations have revealed that more than 30% of the funds used by Nodokang to purchase assets come from loans. NH Rural Credit Bank has disciplined 426 people over five years due to embezzlement and unfair lending. Household loan growth across the financial sector decreased for the first time this year in September. Attention is now focused on the possibility of expanding banks' lending capacity. Each article covers a different topic, illustrating separate economic phenomena.",
+        "lineKo": "대출 규제 강화로 노도강 매입자금의 30% 이상이 대출에 의존하는 것으로 나타났다. NH농협은행은 5년간 횡령과 부당대출 등으로 인해 426명을 징계했다. 9월 전 금융권 가계대출이 올해 처음으로 감소했다. 은행의 대출 여력 확대 가능성에 주목이 쏠리고 있다. 각 기사는 서로 다른 주제로, 별개의 경제 현상들을 보여준다.",
+        "lineEn": "Strengthened loan regulations have revealed that more than 30% of the funds used by Nodokang to purchase assets depend on loans. NH Rural Credit Bank disciplined 426 people over five years due to embezzlement and unfair lending. In September, household loan growth across the financial sector decreased for the first time this year. Attention is now turning to the possibility of banks expanding their lending capacity. Each article covers a different topic, illustrating separate economic phenomena.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
