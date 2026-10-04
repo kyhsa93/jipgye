@@ -1,1 +1,4 @@
-{"kind":"sale","district":"11620","yearMonth":"202610","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-10-01T04:00:48.880Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11620","yearMonth":"202610","ok":true,"resultCode":0,"count":2,"totalCount":2,"observedAt":"2026-10-04T02:33:07.764Z","previousObservedAt":"2026-10-01T04:00:48.880Z","arrivals":{"05b1582517cc":"2026-10-04","faad20f34e55":"2026-10-04"},"items":[
+{"aptDong":"","aptNm":"건영2","buildYear":1988,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"35,000","dealDay":1,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 관악구","excluUseAr":43.92,"floor":7,"jibun":"721-2","landLeaseholdGbn":"N","rgstDate":"","sggCd":11620,"slerGbn":"개인","umdNm":"신림동"},
+{"aptDong":"","aptNm":"서울대입구한양아이클래스","buildYear":2018,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"18,300","dealDay":1,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 관악구","excluUseAr":15.96,"floor":12,"jibun":"1568-1","landLeaseholdGbn":"N","rgstDate":"","sggCd":11620,"slerGbn":"개인","umdNm":"봉천동"}
+]}

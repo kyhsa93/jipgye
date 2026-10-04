@@ -1,1 +1,4 @@
-{"kind":"sale","district":"11440","yearMonth":"202610","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-10-01T04:00:48.880Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11440","yearMonth":"202610","ok":true,"resultCode":0,"count":2,"totalCount":2,"observedAt":"2026-10-04T02:33:07.764Z","previousObservedAt":"2026-10-01T04:00:48.880Z","arrivals":{"6edffccd8c4d":"2026-10-04","0d7ad650d380":"2026-10-04"},"items":[
+{"aptDong":"","aptNm":"빌리브디에이블","buildYear":2025,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"61,500","dealDay":2,"dealMonth":10,"dealYear":2026,"dealingGbn":"직거래","estateAgentSggNm":"","excluUseAr":38.39,"floor":20,"jibun":129,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11440,"slerGbn":"개인","umdNm":"노고산동"},
+{"aptDong":"","aptNm":"상암월드컵파크10단지","buildYear":2010,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"100,000","dealDay":1,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 마포구","excluUseAr":59.73,"floor":1,"jibun":1736,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11440,"slerGbn":"개인","umdNm":"상암동"}
+]}

@@ -1,1 +1,4 @@
-{"kind":"sale","district":"11680","yearMonth":"202610","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-10-01T04:00:48.880Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11680","yearMonth":"202610","ok":true,"resultCode":0,"count":2,"totalCount":2,"observedAt":"2026-10-04T02:33:07.764Z","previousObservedAt":"2026-10-01T04:00:48.880Z","arrivals":{"b3106b389c96":"2026-10-04","ee86a32cb168":"2026-10-04"},"items":[
+{"aptDong":"","aptNm":"개포주공6단지","buildYear":1983,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"302,000","dealDay":1,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 강남구","excluUseAr":60.13,"floor":3,"jibun":185,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11680,"slerGbn":"개인","umdNm":"개포동"},
+{"aptDong":"","aptNm":"대치현대","buildYear":1999,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"240,000","dealDay":2,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 강남구","excluUseAr":59.82,"floor":3,"jibun":974,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11680,"slerGbn":"개인","umdNm":"대치동"}
+]}

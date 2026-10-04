@@ -1,1 +1,4 @@
-{"kind":"sale","district":"11350","yearMonth":"202610","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-10-01T04:00:48.880Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11350","yearMonth":"202610","ok":true,"resultCode":0,"count":2,"totalCount":2,"observedAt":"2026-10-04T02:33:07.764Z","previousObservedAt":"2026-10-01T04:00:48.880Z","arrivals":{"8fed86f2e215":"2026-10-04","3bca5e9f0f07":"2026-10-04"},"items":[
+{"aptDong":"","aptNm":"삼성","buildYear":1999,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"90,000","dealDay":1,"dealMonth":10,"dealYear":2026,"dealingGbn":"직거래","estateAgentSggNm":"","excluUseAr":114.67,"floor":18,"jibun":593,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11350,"slerGbn":"개인","umdNm":"중계동"},
+{"aptDong":"","aptNm":"청백3","buildYear":1998,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"31,800","dealDay":1,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 노원구","excluUseAr":39.84,"floor":7,"jibun":780,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11350,"slerGbn":"개인","umdNm":"월계동"}
+]}

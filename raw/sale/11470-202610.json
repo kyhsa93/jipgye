@@ -1,1 +1,3 @@
-{"kind":"sale","district":"11470","yearMonth":"202610","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-10-01T04:00:48.880Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11470","yearMonth":"202610","ok":true,"resultCode":0,"count":1,"totalCount":1,"observedAt":"2026-10-04T02:33:07.764Z","previousObservedAt":"2026-10-01T04:00:48.880Z","arrivals":{"f2b45424c480":"2026-10-04"},"items":[
+{"aptDong":"","aptNm":"목동신시가지11","buildYear":1988,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"181,000","dealDay":1,"dealMonth":10,"dealYear":2026,"dealingGbn":"직거래","estateAgentSggNm":"","excluUseAr":66.24,"floor":4,"jibun":325,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11470,"slerGbn":"개인","umdNm":"신정동"}
+]}

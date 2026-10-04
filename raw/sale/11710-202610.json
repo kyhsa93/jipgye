@@ -1,1 +1,4 @@
-{"kind":"sale","district":"11710","yearMonth":"202610","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-10-01T04:00:48.880Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11710","yearMonth":"202610","ok":true,"resultCode":0,"count":2,"totalCount":2,"observedAt":"2026-10-04T02:33:07.764Z","previousObservedAt":"2026-10-01T04:00:48.880Z","arrivals":{"5560eb3e52bc":"2026-10-04","dca3022d652e":"2026-10-04"},"items":[
+{"aptDong":"","aptNm":"e편한세상송파파크센트럴","buildYear":2021,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"229,000","dealDay":1,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 송파구","excluUseAr":113.18,"floor":27,"jibun":696,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11710,"slerGbn":"개인","umdNm":"거여동"},
+{"aptDong":"","aptNm":"석촌호수효성해링턴타워","buildYear":2015,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"20,500","dealDay":1,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 송파구","excluUseAr":15.8307,"floor":11,"jibun":"24-3","landLeaseholdGbn":"N","rgstDate":"","sggCd":11710,"slerGbn":"개인","umdNm":"석촌동"}
+]}
