@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-10-04T13:10:46.562Z",
+  "updatedAt": "2026-10-04T15:49:17.437Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 부동산: 청년특례 전세대출보증이 가계대출 총량에서 100% 제외되며, 인천 청라에 '아크원푸르지오'가 분양되고 분당 어르신 재건축 전자동의가 절반을 넘는 등 부동산 관련 다양한 소식이 전해졌다.\n- 기타 경제 소식: 대출 증가에 따른 영향을 분석하는 보도가 나왔다. NH농협은행은 5년여간 횡령과 부당대출 등으로 인해 426명을 징계했다. 9월 전금융권 가계대출이 올해 처음으로 감소했다. 노도강 매입자금의 30%대는 대출로 충당되고 있다. 각 기관은 서로 다른 문제를 다루고 있는 것으로 나타났다.\n- 증시·환율: 삼전의 실적발표를 앞둔 한국 증시가 '7천피'를 지킬 수 있을지 주목받고 있다.",
-    "en": "- Real Estate: The special youth rent guarantee loan is fully excluded from the total household loan amount, and 'Arcwon Purgeo' is being sold in Incheon Cheongna, while the reconstruction of the elderly housing in Bundang has received more than half of the required approvals, among other real estate-related news.\n- Other Economic News: A report analyzing the impact of increased loans was released. NH Nonghyup Bank disciplined 426 people over five years due to embezzlement and unfair loans. Household loans across all financial institutions decreased for the first time this year in September. More than 30% of the purchase funds for Nodokang are covered by loans. Each institution is dealing with different issues.\n- Stocks & FX: Attention is focused on whether the Korean stock market can maintain the '7,000 won' level ahead of Samcheon's earnings announcement."
+    "ko": "- 부동산: 청년특례 전세대출보증이 가계대출 총량에서 100% 제외되며, 인천 청라에 '아크원푸르지오'가 분양되고 분당 어르신 재건축 전자동의가 절반을 넘는 등 부동산 관련 다양한 소식이 전해졌다.\n- 기타 경제 소식: 대출 증가에 따른 영향을 받을 수 있는 대상에 대한 논의가 이어졌다. NH농협은행은 5년여간 횡령과 부당대출 등으로 인해 426명을 징계했다. 9월 전 금융권 가계대출이 올해 처음으로 감소했다. 노도강 매입자금의 30%대는 대출을 통해 조성됐다. 각 기관은 서로 다른 상황을 보이고 있다.\n- 증시·환율: 삼전의 실적발표를 앞둔 한국 증시가 '7천피'를 지킬 수 있을지 주목받고 있다.",
+    "en": "- Real Estate: The special rent guarantee loan for youth is fully excluded from the total household loan amount, and 'Arcwon Purjio' is being sold in Incheon Cheongna, while the reconstruction of the elderly housing in Bundang has received more than half of the required approvals, among other real estate-related news.\n- Other Economic News: Discussions continued regarding the potential impact on those affected by the increase in loans. NH Nonghyup Bank disciplined 426 people over five years due to embezzlement and unfair lending. Household loan amounts in the financial sector decreased for the first time this year in September. More than 30% of the purchase funds for Nodokang were raised through loans. Each institution is showing different situations.\n- Stocks & FX: The Korean stock market is under scrutiny to see if it can maintain the '7,000-point' level ahead of Samsung Electronics' earnings announcement."
   },
   "highlights": [],
   "categories": [
@@ -12,7 +12,7 @@
       "name": "부동산",
       "nameEn": "Real Estate",
       "lineKo": "청년특례 전세대출보증이 가계대출 총량에서 100% 제외되며, 인천 청라에 '아크원푸르지오'가 분양되고 분당 어르신 재건축 전자동의가 절반을 넘는 등 부동산 관련 다양한 소식이 전해졌다.",
-      "lineEn": "The special youth rent guarantee loan is fully excluded from the total household loan amount, and 'Arcwon Purgeo' is being sold in Incheon Cheongna, while the reconstruction of the elderly housing in Bundang has received more than half of the required approvals, among other real estate-related news.",
+      "lineEn": "The special rent guarantee loan for youth is fully excluded from the total household loan amount, and 'Arcwon Purjio' is being sold in Incheon Cheongna, while the reconstruction of the elderly housing in Bundang has received more than half of the required approvals, among other real estate-related news.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": true,
@@ -48,8 +48,8 @@
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "대출 증가에 따른 영향을 분석하는 보도가 나왔다. NH농협은행은 5년여간 횡령과 부당대출 등으로 인해 426명을 징계했다. 9월 전금융권 가계대출이 올해 처음으로 감소했다. 노도강 매입자금의 30%대는 대출로 충당되고 있다. 각 기관은 서로 다른 문제를 다루고 있는 것으로 나타났다.",
-      "lineEn": "A report analyzing the impact of increased loans was released. NH Nonghyup Bank disciplined 426 people over five years due to embezzlement and unfair loans. Household loans across all financial institutions decreased for the first time this year in September. More than 30% of the purchase funds for Nodokang are covered by loans. Each institution is dealing with different issues.",
+      "lineKo": "대출 증가에 따른 영향을 받을 수 있는 대상에 대한 논의가 이어졌다. NH농협은행은 5년여간 횡령과 부당대출 등으로 인해 426명을 징계했다. 9월 전 금융권 가계대출이 올해 처음으로 감소했다. 노도강 매입자금의 30%대는 대출을 통해 조성됐다. 각 기관은 서로 다른 상황을 보이고 있다.",
+      "lineEn": "Discussions continued regarding the potential impact on those affected by the increase in loans. NH Nonghyup Bank disciplined 426 people over five years due to embezzlement and unfair lending. Household loan amounts in the financial sector decreased for the first time this year in September. More than 30% of the purchase funds for Nodokang were raised through loans. Each institution is showing different situations.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
@@ -76,7 +76,7 @@
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
       "lineKo": "삼전의 실적발표를 앞둔 한국 증시가 '7천피'를 지킬 수 있을지 주목받고 있다.",
-      "lineEn": "Attention is focused on whether the Korean stock market can maintain the '7,000 won' level ahead of Samcheon's earnings announcement.",
+      "lineEn": "The Korean stock market is under scrutiny to see if it can maintain the '7,000-point' level ahead of Samsung Electronics' earnings announcement.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": true,
