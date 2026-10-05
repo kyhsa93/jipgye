@@ -8589,7 +8589,28 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "정부의 8·3 세제개편안 발표 후 매매 거래된 서울 아파트 10건 중 8건이 15억원 이하인 것으로 나타났다. 고가 아파트는 세 부담 강화 부담에 거래가 저조한 반면, 전월세난과 대출 규제로 인해 저가 아파트에만 상…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-rent.html",
+            "label": "서울 전체 아파트 월세",
+            "labelEn": "Seoul apartment rent",
+            "value": "보증금 20,095만원 / 월 130만원",
+            "valueEn": "₩201M + ₩1.3M/mo",
+            "note": "최근 4주 계약 4,212건",
+            "noteEn": "4,212 deals in the last 4 weeks"
+          },
+          {
+            "kind": "rates",
+            "label": "주택담보대출 최저금리(상환방식 무관)",
+            "labelEn": "Lowest mortgage rate (any repayment type)",
+            "value": "연 3.70%",
+            "valueEn": "3.70% p.a.",
+            "href": "./mortgage-rates.html"
+          }
+        ],
+        "titleEn": "In Seoul, 8 out of 10 apartment transactions are priced at 1,500,000,000 won or less, showing a clear trend toward mid-to-low priced units."
       },
       {
         "title": "분당 재건축 어르신들 ‘클라쓰’가 다르네…종이 대신 전자동의서 ‘클릭’",
@@ -8598,7 +8619,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "분당 2차 특별정비 4곳 분석 60대 73% 전자동의로 제출 70대도 절반 가량 온라인 선택 집집마다 돌던 동의서 풍경 변화지난달 29일 성남시가 분당 재건축 선도지구 2차 대상지..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Residents of Bundang Rebuilding Area Show Different 'Class'... Instead of Paper, E-Signature with a 'Click"
       },
       {
         "title": "우리은행, '우다페' 연계 '다함께 적금'…최고 연 9.0% 금리",
@@ -8607,7 +8629,18 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 이도흔 기자 = 우리은행은 우리금융그룹의 대표 금융축제 '2026 우리금융 다함께 페스타(우다페)'에 맞춰 최고 연 9.0% ...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "rates",
+            "label": "적금 최고금리(12개월)",
+            "labelEn": "Top 12-month savings rate",
+            "value": "연 14.00%",
+            "valueEn": "14.00% p.a.",
+            "href": "./saving-rates.html"
+          }
+        ],
+        "titleEn": "OurBank Links with 'Udafe' for 'Da Hamkke Savings' Offering Up to 9.0% Annual Interest Rate"
       },
       {
         "title": "세제개편안 후 서울 아파트 15억원 이하 거래 비중 80% 육박",
@@ -8616,7 +8649,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 서미숙 기자 = 정부의 8·3 세제개편안 발표 후 팔린 서울 아파트 중 10건 중 8건이 15억원 이하 거래로 나타났다.",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "12억 6,363만원",
+            "valueEn": "₩1,264M",
+            "note": "최근 4주 계약 3,210건",
+            "noteEn": "3,210 deals in the last 4 weeks"
+          }
+        ],
+        "titleEn": "After tax reform proposal, Seoul apartment transactions under 1,500,000,000 won approach 80%"
       },
       {
         "title": "코스닥 지난달 최악 수익률은 제약…금리·반도체 쏠림에 직격탄",
@@ -8625,7 +8671,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 김유아 기자 = 지난달 코스닥 제약 업종지수가 10% 넘게 하락하며 주요 업종 가운데 가장 큰 낙폭을 기록했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kosdaq's worst performance last month was in pharmaceuticals... direct hit from interest rates and semiconductor focus"
       },
       {
         "title": "보유 부동산 가치 한눈에…'알짜배기 부동산' 저PBR주 훈풍부나",
@@ -8634,7 +8681,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 황철환 기자 = 특정기업이 보유한 토지의 가치를 올해 기말결산부터 투명하게 확인할 수 있게 되면서 '숨은 땅부자' 상장사들에 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "A glance at the value of owned real estate... 'Prime real estate' stocks with low PBR see strong winds"
       },
       {
         "title": "면허 없이 상가주택 공사 계약한 인테리어 업체 대표 실형",
@@ -8643,7 +8691,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(울산=연합뉴스) 김근주 기자 = 종합건설면허도 없이 상가주택을 짓고, 리모델링 공사비를 가로챈 인테리어 업체 대표에게 실형이 선고됐다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Interior Company Owner Gets Real Sentence for Signing Construction Contract Without License for Shop House"
       },
       {
         "title": "부동산 교란행위, 지자체 넘어가면 66%가 무혐의 종결",
@@ -8652,7 +8701,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 임기창 기자 = 전문기관이 집값 담합 등 부동산 거래질서 교란행위로 판단한 사건 10건 중 7건가량은 관할 지방자치단체로 넘겨...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Real estate disturbance acts, 66% result in no charges if they go beyond local governments"
       },
       {
         "title": "“홈플러스 있었으면 노른자 입지 확실”…49층 아파트 짓는 3곳 어디",
@@ -8661,7 +8711,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "안산·부천·동대문 점포 용지에 아파트·오피스텔 3630가구 공급 역세권에 상권·생활인프라 갖춰 엠디엠, 가양·시흥점도 개발검토기업회생절차를 밟고 있는 홈플러스가 폐점하는 점포 용지..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-dongdaemun.html",
+            "label": "동대문구 아파트 84㎡ 매매",
+            "labelEn": "동대문구 apartment 84㎡ sale",
+            "value": "11억 3,862만원",
+            "valueEn": "₩1,139M",
+            "note": "최근 4주 계약 110건",
+            "noteEn": "110 deals in the last 4 weeks"
+          }
+        ],
+        "titleEn": "If Homeplus were here, the golden egg would be certain\"… Where are the 3 places building a 49-story apartment?"
       },
       {
         "title": "[인터뷰] 앱토스 CEO \"미래 금융은 '온체인 경제'…韓서 기관 협업 기대\"",
@@ -8670,7 +8733,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 박수현 기자 = \"지금은 은행에 돈을 예치한 뒤 거래와 투자를 하지만, 나중에는 언제 어디서나 돈과 정보가 적은 비용으로도 곧...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Interview] AppTos CEO: \"Future Finance is 'On-Chain Economy'... Expect Collaboration with Korean Institutions"
       },
       {
         "title": "서울 집값 \"더 간다\" 무게…'금리 인상'은 변수[집값, 최장 랠리③]",
@@ -8679,7 +8743,20 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스]정유선 기자 = 서울 아파트값이 86주 연속 오르며 최장 상승 기록을 고쳐 썼다. 강남권 하락의 여파로 전체 상승폭이 다소 둔화되긴 했으나, 부동산 전문가들은 신규 공급 가뭄과 전세난 등 구조적 요인으…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 전세",
+            "labelEn": "강남구 apartment 84㎡ jeonse",
+            "value": "10억 5,858만원",
+            "valueEn": "₩1,059M",
+            "note": "최근 4주 계약 221건",
+            "noteEn": "221 deals in the last 4 weeks"
+          }
+        ],
+        "titleEn": "Seoul home prices \"keep rising\" amid weight of 'interest rate hikes'[Home prices, longest rally③]"
       },
       {
         "title": "\"집값 상승세 지속시 2030년 서울 주요단지 재산세 54%↑\"",
@@ -8688,7 +8765,20 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 한지훈 기자 = 서울 집값 상승세가 지속될 경우 주요 아파트 재산세 부담이 2030년까지 올해보다 평균 50% 이상 늘어날 수...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "12억 6,363만원",
+            "valueEn": "₩1,264M",
+            "note": "최근 4주 계약 3,210건",
+            "noteEn": "3,210 deals in the last 4 weeks"
+          }
+        ],
+        "titleEn": "If Housing Prices Continue to Rise, Property Tax in Major Seoul Areas to Increase 54% by 2030"
       },
       {
         "title": "[단독] 청년특례 전세대출보증…가계대출 총량서 100% 제외",
@@ -8697,7 +8787,18 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "8.13금융종합대책 후속조치 청년 주거안정 강화 차원 19일부터 취급은행서 신청가능금융당국이 이달부터 확대 개편해 시행하는 ‘청년특례 전세대출보증’에 따른 은행권 전세대출을 각 은..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "rates",
+            "label": "전세자금대출 최저금리",
+            "labelEn": "Lowest jeonse loan rate",
+            "value": "연 3.69%",
+            "valueEn": "3.69% p.a.",
+            "href": "./rent-loan-rates.html"
+          }
+        ],
+        "titleEn": "[Yonhap] Youth special rent guarantee loan excluded 100% from total household loan amount"
       },
       {
         "title": "인천 청라에 '아크원푸르지오'…아파트 868가구·오피스텔 987실",
@@ -8706,7 +8807,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Incheon Cheongra to get 'Arcwon Purjio'... 868 apartment units, 987 office hotel units"
       },
       {
         "title": "분당 어르신도 앱에서 '클릭'…재건축 전자동의 절반 넘어",
@@ -8715,7 +8817,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "지난달 29일 경기 성남시가 분당 노후계획도시 2차 특별정비구역 대상지 5곳을 발표한 가운데 해당되는 대부분 단지가 주민 동의서를 얻는 과정에서 전자동의 방식을 사용한 것으로 나타..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Residents in Bundang also click on app for reconstruction - over half approve of automatic reconstruction"
       },
       {
         "title": "재건축 철거도 왜 '6월 1일'전에 해야할까",
@@ -8724,7 +8827,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "이번 주 매부리TV의 '매부리현장탐방'에서는 재건축을 추진 중인 서울 강남구 압구정동 아파트들의 속사정을 들여다봤습니다. 재건축은 늘 속도가 생명이지만 유독 고가 지역일수록 속도전..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 1,084만원",
+            "valueEn": "₩2,811M",
+            "note": "최근 4주 계약 80건",
+            "noteEn": "80 deals in the last 4 weeks"
+          }
+        ],
+        "titleEn": "Why must demolition for reconstruction be done before June 1?"
       },
       {
         "title": "“16층 아파트 들어서면 ‘울산바위’ 못 보는 거 아냐?”…인근 대단지 아파트 추진 논란",
@@ -8733,7 +8849,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "재심의 과정에서 17층→16층 최고층수 낮췄지만 우려 여전 광역적 경관 관리 요구 나오자 “심의 거쳐 인허가 여부 결정”설악산국립공원의 명물 중 하나인 울산바위 조망권 침해 논란이..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Wouldn't it be impossible to see 'Ul-san Rock' if a 16-story apartment is built?\"...Controversy over proposed large-scale apartment complex nearby"
       },
       {
         "title": "지역별로 엇갈린 부동산 대출 의존도…강남 9%·노원38%",
@@ -8742,7 +8859,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "서울에서 집을 살 때 금융기관 대출에 의존하는 정도가 지역별로 크게 엇갈린 것으로 나타났다. 강남3구(강남·서초·송파구)와 용산구에서는 주택 구매자금 중 금융기관 대출 비중이 크게..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yongsan.html",
+            "label": "용산구 아파트 84㎡ 매매",
+            "labelEn": "용산구 apartment 84㎡ sale",
+            "value": "28억 5,150만원",
+            "valueEn": "₩2,852M",
+            "note": "최근 4주 계약 38건",
+            "noteEn": "38 deals in the last 4 weeks"
+          }
+        ],
+        "titleEn": "Regional disparities in real estate loan dependency... Gangnam 9%·Nowon 38%"
       },
       {
         "title": "동작구 상도동 현대(관악) 58.59㎡ 10억 6500만원… 최근 3년 신고가 [MAI부동산]",
@@ -8751,7 +8881,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 3일 국토부 실거래가 시스템에 신규 등록된 서울 동작구 상도동 현대(관악) 전용 58.59㎡ 거래가 10억 6,500만 원에 체결돼 최근 3년 신고..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-dongjak.html",
+            "label": "동작구 아파트 84㎡ 매매",
+            "labelEn": "동작구 apartment 84㎡ sale",
+            "value": "15억 9,574만원",
+            "valueEn": "₩1,596M",
+            "note": "최근 4주 계약 111건",
+            "noteEn": "111 deals in the last 4 weeks"
+          }
+        ],
+        "titleEn": "Dongjak-gu Sangdo-dong Hyundai (Gwanak) 58.59㎡ 1,065,000,000won... Recent 3-Year High Price [MAI Real Estate]"
       },
       {
         "title": "2.2m였던 아파트 천장, 2.9m까지…고급 아파트 천장고 경쟁",
@@ -8760,7 +8903,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 강세훈 기자, 이효령 인턴기자 = 최근 고급 아파트를 중심으로 '천장 높이'가 새로운 설계 경쟁 요소로 떠오르고 있다. 과거 2.2~2.3m 수준이 일반적이었던 아파트 천장고가 2.5m 안팎으로 높아…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Apartment ceiling height rises from 2.2m to 2.9m... competition for premium apartments intensifies"
       },
       {
         "title": "민간 아파트 부정청약 5년간 1699건… 위장전입이 83%",
@@ -8769,7 +8913,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "최근 5년 동안 전국 민간 아파트 분양에서 적발된 부정 청약 중 80% 이상은 위장 전입이었던 것으로 나타났다. 4일 국회 국토교통위원회 소속 유상범 국민의힘 의원이 국토교통부에서 받은 민간 분양 사업장 현장 점검…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Private apartment fraud applications 1699 cases over 5 years... 83% were fake registrations"
       },
       {
         "title": "17억 주고 샀는데…하석진 청담 아파트, 40억 넘었다",
@@ -8778,7 +8923,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Paid 1,700,000,000 won for it... Ha Seok-jin's Cheongdam apartment now exceeds 4,000,000,000 won"
       },
       {
         "title": "2.5억 넣은 아파트 10억 됐다…'김구라 아들' 그리 '잭팟'",
@@ -8787,7 +8933,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "250,000,000 invested apartment became 1,000,000,000... 'Kim Gura's son' Grie 'Jackpot"
       },
       {
         "title": "전·월세난에 불붙은 집값…비강남으로 번졌다[집값, 최장 랠리②]",
@@ -8796,7 +8943,28 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]이연희 기자 = 서울 아파트 매매가격이 86주 오르며 역대 최장기간 상승 기록을 경신했다. 전월세난과 대출규제가 겹치면서 최근에는 강남3구(강남·서초·송파)나 '한강벨트'가 주도하는 상승이 아니라 '비…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 월세",
+            "labelEn": "서초구 apartment rent",
+            "value": "보증금 35,484만원 / 월 269만원",
+            "valueEn": "₩354.8M + ₩2.69M/mo",
+            "note": "최근 4주 계약 215건",
+            "noteEn": "215 deals in the last 4 weeks"
+          },
+          {
+            "kind": "rates",
+            "label": "주택담보대출 최저금리(상환방식 무관)",
+            "labelEn": "Lowest mortgage rate (any repayment type)",
+            "value": "연 3.70%",
+            "valueEn": "3.70% p.a.",
+            "href": "./mortgage-rates.html"
+          }
+        ],
+        "titleEn": "Rising Prices Amid Rent Crisis Spread to Non-Gangnam Areas[Price Rally, Longest Stretch②]"
       }
     ]
   }

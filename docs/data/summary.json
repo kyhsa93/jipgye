@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-10-04T15:49:17.437Z",
+  "updatedAt": "2026-10-05T01:58:18.720Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 부동산: 청년특례 전세대출보증이 가계대출 총량에서 100% 제외되며, 인천 청라에 '아크원푸르지오'가 분양되고 분당 어르신 재건축 전자동의가 절반을 넘는 등 부동산 관련 다양한 소식이 전해졌다.\n- 기타 경제 소식: 대출 증가에 따른 영향을 받을 수 있는 대상에 대한 논의가 이어졌다. NH농협은행은 5년여간 횡령과 부당대출 등으로 인해 426명을 징계했다. 9월 전 금융권 가계대출이 올해 처음으로 감소했다. 노도강 매입자금의 30%대는 대출을 통해 조성됐다. 각 기관은 서로 다른 상황을 보이고 있다.\n- 증시·환율: 삼전의 실적발표를 앞둔 한국 증시가 '7천피'를 지킬 수 있을지 주목받고 있다.",
-    "en": "- Real Estate: The special rent guarantee loan for youth is fully excluded from the total household loan amount, and 'Arcwon Purjio' is being sold in Incheon Cheongna, while the reconstruction of the elderly housing in Bundang has received more than half of the required approvals, among other real estate-related news.\n- Other Economic News: Discussions continued regarding the potential impact on those affected by the increase in loans. NH Nonghyup Bank disciplined 426 people over five years due to embezzlement and unfair lending. Household loan amounts in the financial sector decreased for the first time this year in September. More than 30% of the purchase funds for Nodokang were raised through loans. Each institution is showing different situations.\n- Stocks & FX: The Korean stock market is under scrutiny to see if it can maintain the '7,000-point' level ahead of Samsung Electronics' earnings announcement."
+    "ko": "- 부동산: 서울 아파트 거래 중 10건 중 8건이 15억 원 이하인 것으로 나타났다. 분당 재건축 단지에서는 어르신들이 전자동의서를 클릭해 계약을 진행하는 등 디지털 전환이 활발히 이뤄지고 있다. 세제개편안 발표 이후 서울 아파트 15억 원 이하 거래 비중이 80%에 근접한 것으로 나타났다. 보유 부동산 가치를 한눈에 확인할 수 있는 ‘알짜배기 부동산’ 저PBR주에 투자 열기가 높아지고 있다. 면허 없이 상가주택 공사 계약을 맺은 인테리어 업체 대표가 실형을 선고받았다.\n- 금리·예금·투자상품: 우리은행이 '우다페'와 연계한 '다함께 적금' 상품을 출시해 최고 연 9.0% 금리를 제공했으며, 코스닥은 지난달 최악의 수익률을 기록했고, 서울 집값은 '금리 인상'이라는 변수가 작용하며 더 오를 가능성이 있다.\n- 기타 경제 소식: 앱토스 CEO는 미래 금융이 '온체인 경제'로 나아갈 것이라고 밝혔다. 기관과의 협업을 통해 한국 시장에서의 활동을 기대하고 있다. 서울 주요 단지의 재산세는 집값 상승세가 지속될 경우 2030년에 54% 증가할 것으로 예상된다. 이는 재산세 부담이 가중될 수 있음을 시사한다. 두 소식은 각각 금융과 부동산 분야에서의 변화를 보여준다.",
+    "en": "- Real Estate: Of 10 apartment transactions in Seoul, 8 were found to be under 1,500,000,000 won. In the Bundang reconstruction complex, elderly people are clicking on electronic contracts to proceed with agreements, showing active digital transformation. After the announcement of the tax reform plan, it was found that the proportion of apartment transactions in Seoul under 1,500,000,000 won approached 80%. Investment interest is rising in 'Aljagbaegi Real Estate' stocks with low PBR, where the value of owned real estate can be easily checked at a glance. The head of an interior design company that made a contract for shop-house construction without a license was sentenced to actual imprisonment.\n- Rates, Deposits & Investment Products: OurBank launched a savings product called \"Dahamkkei\" linked with \"Udafe,\" offering a maximum annual interest rate of 9.0%, while KOSDAQ recorded its worst performance last month, and Seoul housing prices may rise further due to the variable of \"interest rate hikes.\n- Other Economic News: Appotos CEO stated that Future Finance will move toward an \"on-chain economy.\" He expects activities in the Korean market through collaboration with institutions. Property taxes in major districts of Seoul are expected to increase by 54% by 2030 if rising home prices continue, indicating that property tax burdens could become heavier. The two pieces of news show changes in the financial and real estate sectors, respectively."
   },
   "highlights": [],
   "categories": [
@@ -11,36 +11,63 @@
       "key": "realestate",
       "name": "부동산",
       "nameEn": "Real Estate",
-      "lineKo": "청년특례 전세대출보증이 가계대출 총량에서 100% 제외되며, 인천 청라에 '아크원푸르지오'가 분양되고 분당 어르신 재건축 전자동의가 절반을 넘는 등 부동산 관련 다양한 소식이 전해졌다.",
-      "lineEn": "The special rent guarantee loan for youth is fully excluded from the total household loan amount, and 'Arcwon Purjio' is being sold in Incheon Cheongna, while the reconstruction of the elderly housing in Bundang has received more than half of the required approvals, among other real estate-related news.",
+      "lineKo": "서울 아파트 거래 중 10건 중 8건이 15억 원 이하인 것으로 나타났다. 분당 재건축 단지에서는 어르신들이 전자동의서를 클릭해 계약을 진행하는 등 디지털 전환이 활발히 이뤄지고 있다. 세제개편안 발표 이후 서울 아파트 15억 원 이하 거래 비중이 80%에 근접한 것으로 나타났다. 보유 부동산 가치를 한눈에 확인할 수 있는 ‘알짜배기 부동산’ 저PBR주에 투자 열기가 높아지고 있다. 면허 없이 상가주택 공사 계약을 맺은 인테리어 업체 대표가 실형을 선고받았다.",
+      "lineEn": "Of 10 apartment transactions in Seoul, 8 were found to be under 1,500,000,000 won. In the Bundang reconstruction complex, elderly people are clicking on electronic contracts to proceed with agreements, showing active digital transformation. After the announcement of the tax reform plan, it was found that the proportion of apartment transactions in Seoul under 1,500,000,000 won approached 80%. Investment interest is rising in 'Aljagbaegi Real Estate' stocks with low PBR, where the value of owned real estate can be easily checked at a glance. The head of an interior design company that made a contract for shop-house construction without a license was sentenced to actual imprisonment.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "서울 아파트 거래 10건 중 8건이 15억 이하… ‘중저가 쏠림’ 뚜렷",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/05/WPPOS7TIYJEODASBAIYPXE4XQY/",
+          "source": "조선비즈 부동산"
+        },
+        {
+          "title": "분당 재건축 어르신들 ‘클라쓰’가 다르네…종이 대신 전자동의서 ‘클릭’",
+          "link": "https://www.mk.co.kr/news/realestate/12168302",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "세제개편안 후 서울 아파트 15억원 이하 거래 비중 80% 육박",
+          "link": "https://www.yna.co.kr/view/AKR20261005011500003",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "보유 부동산 가치 한눈에…'알짜배기 부동산' 저PBR주 훈풍부나",
+          "link": "https://www.yna.co.kr/view/AKR20261002078000008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "면허 없이 상가주택 공사 계약한 인테리어 업체 대표 실형",
+          "link": "https://www.yna.co.kr/view/AKR20261002048900057",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "우리은행이 '우다페'와 연계한 '다함께 적금' 상품을 출시해 최고 연 9.0% 금리를 제공했으며, 코스닥은 지난달 최악의 수익률을 기록했고, 서울 집값은 '금리 인상'이라는 변수가 작용하며 더 오를 가능성이 있다.",
+      "lineEn": "OurBank launched a savings product called \"Dahamkkei\" linked with \"Udafe,\" offering a maximum annual interest rate of 9.0%, while KOSDAQ recorded its worst performance last month, and Seoul housing prices may rise further due to the variable of \"interest rate hikes.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": true,
       "items": [
         {
-          "title": "[단독] 청년특례 전세대출보증…가계대출 총량서 100% 제외",
-          "link": "https://www.mk.co.kr/news/economy/12168185",
-          "source": "매일경제 부동산"
+          "title": "우리은행, '우다페' 연계 '다함께 적금'…최고 연 9.0% 금리",
+          "link": "https://www.yna.co.kr/view/AKR20261004020300002",
+          "source": "연합뉴스 경제"
         },
         {
-          "title": "인천 청라에 '아크원푸르지오'…아파트 868가구·오피스텔 987실",
-          "link": "https://www.hankyung.com/article/2026100425621",
-          "source": "한국경제 부동산"
+          "title": "코스닥 지난달 최악 수익률은 제약…금리·반도체 쏠림에 직격탄",
+          "link": "https://www.yna.co.kr/view/AKR20261003033300008",
+          "source": "연합뉴스 경제"
         },
         {
-          "title": "분당 어르신도 앱에서 '클릭'…재건축 전자동의 절반 넘어",
-          "link": "https://www.mk.co.kr/news/realestate/12168079",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "재건축 철거도 왜 '6월 1일'전에 해야할까",
-          "link": "https://www.mk.co.kr/news/realestate/12168081",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "“16층 아파트 들어서면 ‘울산바위’ 못 보는 거 아냐?”…인근 대단지 아파트 추진 논란",
-          "link": "https://www.mk.co.kr/news/realestate/12168041",
-          "source": "매일경제 부동산"
+          "title": "서울 집값 \"더 간다\" 무게…'금리 인상'은 변수[집값, 최장 랠리③]",
+          "link": "https://www.newsis.com/view/NISX20261002_0003812975",
+          "source": "뉴시스 경제"
         }
       ]
     },
@@ -48,42 +75,20 @@
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "대출 증가에 따른 영향을 받을 수 있는 대상에 대한 논의가 이어졌다. NH농협은행은 5년여간 횡령과 부당대출 등으로 인해 426명을 징계했다. 9월 전 금융권 가계대출이 올해 처음으로 감소했다. 노도강 매입자금의 30%대는 대출을 통해 조성됐다. 각 기관은 서로 다른 상황을 보이고 있다.",
-      "lineEn": "Discussions continued regarding the potential impact on those affected by the increase in loans. NH Nonghyup Bank disciplined 426 people over five years due to embezzlement and unfair lending. Household loan amounts in the financial sector decreased for the first time this year in September. More than 30% of the purchase funds for Nodokang were raised through loans. Each institution is showing different situations.",
+      "lineKo": "앱토스 CEO는 미래 금융이 '온체인 경제'로 나아갈 것이라고 밝혔다. 기관과의 협업을 통해 한국 시장에서의 활동을 기대하고 있다. 서울 주요 단지의 재산세는 집값 상승세가 지속될 경우 2030년에 54% 증가할 것으로 예상된다. 이는 재산세 부담이 가중될 수 있음을 시사한다. 두 소식은 각각 금융과 부동산 분야에서의 변화를 보여준다.",
+      "lineEn": "Appotos CEO stated that Future Finance will move toward an \"on-chain economy.\" He expects activities in the Korean market through collaboration with institutions. Property taxes in major districts of Seoul are expected to increase by 54% by 2030 if rising home prices continue, indicating that property tax burdens could become heavier. The two pieces of news show changes in the financial and real estate sectors, respectively.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "대출 더 조이면 누가 영향받나…노도강 매입자금 30%대가 대출",
-          "link": "https://www.yna.co.kr/view/AKR20261003043500003",
+          "title": "[인터뷰] 앱토스 CEO \"미래 금융은 '온체인 경제'…韓서 기관 협업 기대\"",
+          "link": "https://www.yna.co.kr/view/AKR20261003000500002",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "횡령·부당대출 등…NH농협은행 5년여간 426명 징계",
-          "link": "https://www.yna.co.kr/view/AKR20261002180700002",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "9월 全금융권 가계대출 올해 첫 감소…은행 대출여력 확대되나",
-          "link": "https://www.yna.co.kr/view/AKR20261003050300002",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "삼전의 실적발표를 앞둔 한국 증시가 '7천피'를 지킬 수 있을지 주목받고 있다.",
-      "lineEn": "The Korean stock market is under scrutiny to see if it can maintain the '7,000-point' level ahead of Samsung Electronics' earnings announcement.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": true,
-      "items": [
-        {
-          "title": "[마켓인사이트] 삼전 실적발표 앞둔 韓증시…'7천피' 지켜낼까",
-          "link": "https://www.yna.co.kr/view/AKR20261003023000008",
+          "title": "\"집값 상승세 지속시 2030년 서울 주요단지 재산세 54%↑\"",
+          "link": "https://www.yna.co.kr/view/AKR20261004022900002",
           "source": "연합뉴스 경제"
         }
       ]
