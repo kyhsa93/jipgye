@@ -58,7 +58,7 @@
 
   <section class="method-body">
   <div data-lang="ko" class="on">
-    <p class="lead">계약을 앞둔 사람이 숫자를 확인하는 곳입니다. 서울 아파트 실거래와 예적금·대출 금리를 매일 모아, 전세와 월세 중 어느 쪽이 싼지·지금 갱신하는 것이 나가서 새로 구하는 것보다 싼지까지 계산해 둡니다. 정부가 공개한 원본만 쓰고, 광고비를 받고 무언가를 올리지 않습니다.</p>
+    <p class="lead">계약을 앞둔 사람이 숫자를 확인하는 곳입니다. 서울 아파트 실거래와 예적금·대출 금리를 매일 모아, 전세와 월세 중 어느 쪽이 싼지·지금 갱신하는 것이 나가서 새로 구하는 것보다 싼지, 중개사가 부르는 매매가와 견줄 같은 단지 같은 평형의 최근 거래 범위까지 계산해 둡니다. 정부가 공개한 원본만 쓰고, 광고비를 받고 무언가를 올리지 않습니다.</p>
 
     <h2>왜 만들었나</h2>
     <p>부동산 시세를 확인하려면 국토교통부 사이트에서 지역과 월을 골라 조회하고, 금리는 금융감독원 비교공시에서 따로 찾아야 합니다. 매주 같은 일을 반복하다가, 그 과정을 자동으로 돌려 한 페이지에 놓으면 될 일이라고 생각해서 만들었습니다.</p>
@@ -69,9 +69,13 @@
     <ul>
       <li><strong>전세 vs 월세</strong> — 자치구·면적대별 전월세전환율에 실제 대출·예금 금리를 물려, 가진 돈으로 양쪽 월 실부담을 잰다.</li>
       <li><strong>아파트 시세</strong> — 서울 25개 자치구의 매매·전세·월세 평당가와 84㎡ 환산가, 전주 대비 증감과 여섯 달 추이. 갱신 계약이 시세보다 싼지도 함께.</li>
-      <li><strong>실거래 검색</strong> — 신고된 거래를 지역·금액·면적·연식·단지명으로 찾고, 단지를 고르면 평형별 전세가율까지.</li>
+      <li><strong>실거래 검색</strong> — 신고된 거래를 지역·금액·면적·연식·단지명으로 찾고, 단지를 고르면 평형별 매매가 범위(최근 6개월 거래를 권역 실거래가격지수로 오늘 값으로 고친 것)와 전세가율까지. 부르는 값이 그 범위의 어디쯤인지는 이 범위에 대 보면 된다.</li>
       <li><strong>해제·등기</strong> — 신고한 뒤 해제된 거래와 등기가 끝나지 않은 거래. 계약 상대를 재는 자료다.</li>
-      <li><strong>예산대별 목록</strong> — 3억대부터 20억대까지, 그 예산으로 실제 거래된 아파트.</li>
+      <li><strong>예산대별 목록</strong> — 3억대부터 20억대까지, 그 예산으로 실제 거래된 아파트와 단지 후보.</li>
+      <li><strong>재계약 vs 새로 구하기</strong> — 같은 단지 같은 평형에 그달 새로 맺어진 전세와 견줘 재계약 보증금이 얼마나 싼지, 갱신요구권 계약이 5% 상한에 닿았는지.</li>
+      <li><strong>갈아타기</strong> — 집을 팔고 옮길 때, 내 동네와 갈 동네가 1년 동안 얼마나 움직였는지와 그 차이가 표본의 흔들림을 넘는지.</li>
+      <li><strong>1층은 얼마나 싼가</strong> — 같은 단지 같은 평형에서 1층이 3층 이상보다 얼마나 싸게 거래되는지, 매매와 전세를 따로.</li>
+      <li><strong>신고가 다음 거래</strong> — 신고가 바로 다음 거래가 그 값 이상이었던 비율을 아무 거래 뒤와 견줘 센 것.</li>
       <li><strong>금리 비교</strong> — 정기예금·적금·주택담보대출·전세자금대출 금리와 세후 이자.</li>
       <li><strong>오늘</strong> — 그날 신고된 시세와 기준금리·환율, 그리고 경제·부동산 뉴스.</li>
     </ul>
@@ -90,7 +94,7 @@
     <p>여기 있는 것은 이미 신고된 거래를 집계한 자료입니다. 이름이 '집계'인 것도 그래서입니다 — 세는 데까지가 이 사이트가 하는 일입니다. 투자 권유가 아닙니다. <a href="price-outlook.html">전망 화면</a>도 숫자 하나로 된 전망이 아니라, 지난 예측이 얼마나 틀렸는지를 먼저 적고 아무 생각 없이 찍는 방법보다 낫지 않은 칸은 비워 둔 것입니다. 실제 계약 전에는 반드시 원 출처와 현장을 확인하시기 바랍니다.</p>
   </div>
   <div data-lang="en">
-    <p class="lead">A place to check the numbers before you sign. It collects Seoul apartment transactions and Korean deposit and loan rates every day, and works out the parts a price table cannot answer on its own — whether jeonse or monthly rent costs less, and whether renewing beats moving out and signing anew. It uses only data the government publishes, and takes no money to list anything.</p>
+    <p class="lead">A place to check the numbers before you sign. It collects Seoul apartment transactions and Korean deposit and loan rates every day, and works out the parts a price table cannot answer on its own — whether jeonse or monthly rent costs less, whether renewing beats moving out and signing anew, and the recent price range for the same unit type in the same complex to hold an asking price against. It uses only data the government publishes, and takes no money to list anything.</p>
 
     <h2>Why it exists</h2>
     <p>Checking apartment prices means picking a district and a month on the ministry's site; checking rates means a separate trip to the Financial Supervisory Service comparison service. After repeating that every week it seemed clear the whole thing could run itself and land on one page.</p>
@@ -101,9 +105,13 @@
     <ul>
       <li><strong>Jeonse vs monthly rent</strong> — the measured conversion rate for your district and unit size, joined to real loan and deposit rates, so both options are priced as one monthly figure.</li>
       <li><strong>Apartment prices</strong> — sale, jeonse and monthly rent per pyeong for all 25 Seoul districts, with the 84m² equivalent, week-on-week change and a six-month trend — plus whether renewals are signing below the going rate.</li>
-      <li><strong>Transaction search</strong> — reported transactions by area, price, size, building age or complex name, with per-unit-type jeonse ratios once you pick a complex.</li>
+      <li><strong>Transaction search</strong> — reported transactions by area, price, size, building age or complex name, with a per-unit-type sale price range (the last six months of sales brought to today's level with the regional transaction price index) and jeonse ratio once you pick a complex. Where an asking price sits is read off that range.</li>
       <li><strong>Cancellations and registration</strong> — deals reported and then withdrawn, and deals still not registered. This is what the other side of a contract looks like.</li>
-      <li><strong>By budget</strong> — what actually traded, from ₩300M up to ₩2B.</li>
+      <li><strong>By budget</strong> — what actually traded, from ₩300M up to ₩2B, and the candidate complexes.</li>
+      <li><strong>Renew or move</strong> — how much cheaper a renewed jeonse is than a new one signed that month in the same complex and unit type, and whether renewals under the right-to-renew reached the 5% cap.</li>
+      <li><strong>Moving house</strong> — how far your district and the one you are moving to went in a year, and whether the gap is larger than sampling noise.</li>
+      <li><strong>First-floor discount</strong> — how much less a first-floor unit trades for than floors three and up in the same complex and unit type, sale and jeonse separately.</li>
+      <li><strong>After a record high</strong> — how often the very next sale matched or beat a record high, against the next sale after any sale.</li>
       <li><strong>Rates</strong> — term deposits, instalment savings, mortgages and jeonse loans, with after-tax interest.</li>
       <li><strong>Today</strong> — prices reported that day, the policy rate and FX, and the day's economic and property news.</li>
     </ul>
@@ -124,7 +132,7 @@
   </section>
 
   <footer>
-    <div id="footer-source">출처: 국토교통부 아파트 매매·전월세 실거래가 공개시스템, 금융감독원 금융상품통합비교공시, 한국은행.</div>
+    <div id="footer-source">출처: 국토교통부 아파트 매매·전월세 실거래가 공개시스템, 금융감독원 금융상품통합비교공시, 한국은행, 한국부동산원.</div>
     <div style="margin-top:6px;">
       <a href="./about.html" id="footer-about">소개</a>
       <span aria-hidden="true"> · </span>
@@ -167,7 +175,7 @@
       about: "소개",
       method: "숫자를 만드는 방법",
       privacy: "개인정보처리방침",
-      source: "출처: 국토교통부 아파트 매매·전월세 실거래가 공개시스템, 금융감독원 금융상품통합비교공시, 한국은행.",
+      source: "출처: 국토교통부 아파트 매매·전월세 실거래가 공개시스템, 금융감독원 금융상품통합비교공시, 한국은행, 한국부동산원.",
     },
     en: {
       digest: "Today",
@@ -179,7 +187,7 @@
       about: "About",
       method: "How these numbers are made",
       privacy: "Privacy policy",
-      source: "Sources: Ministry of Land, Infrastructure and Transport; Financial Supervisory Service; Bank of Korea.",
+      source: "Sources: Ministry of Land, Infrastructure and Transport; Financial Supervisory Service; Bank of Korea; Korea Real Estate Board.",
     },
   };
 
