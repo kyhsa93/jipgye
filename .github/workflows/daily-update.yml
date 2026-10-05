@@ -1,4 +1,4 @@
-name: Digest update
+name: Daily update
 
 on:
   schedule:

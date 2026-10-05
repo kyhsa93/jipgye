@@ -12,6 +12,10 @@ function trackedPaths() {
   return ["docs", "raw"].filter((dir) => existsSync(path.join(repoRoot, dir)));
 }
 
+// 실거래(fetch-realestate)·금리(fetch-rates) 수집은 일부러 부르지 않는다. 둘 다 인증키가
+// 있어야 하고 fetch-rates는 키가 없으면 예외로 끝나서, 키 없이 도는 이 로컬 갱신 전체를
+// 멈춘다. 그 둘은 daily-update.yml의 full 실행이 시크릿을 넣어 부른다. 빌더는
+// 커밋돼 있는 실거래 원본(raw/)으로 다시 계산하므로 여기서도 그대로 돈다.
 async function main() {
   run("node scripts/fetch-news.mjs");
   run("node scripts/fetch-market.mjs");

@@ -6,10 +6,10 @@ import { mkdtemp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import { normalizeKoreanAmounts, pickHighlights } from "../scripts/summarize-digest.mjs";
+import { normalizeKoreanAmounts, pickHighlights } from "../scripts/summarize-news.mjs";
 
 const execFileAsync = promisify(execFile);
-const scriptPath = path.resolve(import.meta.dirname, "../scripts/summarize-digest.mjs");
+const scriptPath = path.resolve(import.meta.dirname, "../scripts/summarize-news.mjs");
 
 function startOllamaStub(reply) {
   const calls = [];

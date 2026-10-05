@@ -1,8 +1,8 @@
-name: Digest summarize
+name: Summarize
 
 on:
   workflow_run:
-    workflows: ["Digest update"]
+    workflows: ["Daily update"]
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -84,7 +84,7 @@ jobs:
           ollama pull "$OLLAMA_MODEL"
 
       - name: AI 요약 생성
-        run: node scripts/summarize-digest.mjs
+        run: node scripts/summarize-news.mjs
 
       - name: 뉴스 제목 영어 번역
         run: node scripts/translate-news.mjs

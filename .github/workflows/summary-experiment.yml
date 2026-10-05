@@ -59,7 +59,7 @@ jobs:
           OLLAMA_THINK: ${{ inputs.disable_thinking && 'false' || '' }}
         run: |
           start=$(date +%s)
-          node scripts/summarize-digest.mjs
+          node scripts/summarize-news.mjs
           echo "소요 시간: $(( $(date +%s) - start ))초"
 
       - name: 결과 출력

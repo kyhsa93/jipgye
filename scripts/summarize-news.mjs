@@ -321,7 +321,7 @@ async function unverifiedEntities(sentence, sourceText) {
   try {
     entities = await extractProperNouns(sentence);
   } catch (err) {
-    console.error(`[summarize-digest] 고유명사 추출 실패, 통과 처리: ${describeError(err)}`);
+    console.error(`[summarize-news] 고유명사 추출 실패, 통과 처리: ${describeError(err)}`);
     return [];
   }
 
@@ -358,14 +358,14 @@ function sourceTextFor(items, bodies) {
 
 async function verifyKoText(label, text, sourceText) {
   if (containsUnverifiedNumber(text, sourceText)) {
-    console.error(`[summarize-digest] "${label}" 요약에 원문에 없는 숫자 포함: ${text}`);
+    console.error(`[summarize-news] "${label}" 요약에 원문에 없는 숫자 포함: ${text}`);
     return FALLBACK_REASONS.UNVERIFIED_NUMBER;
   }
 
   const unverified = await unverifiedEntities(text, sourceText);
   if (unverified.length > 0) {
     console.error(
-      `[summarize-digest] "${label}" 요약에 원문에 없는 고유명사(${unverified.join(", ")}) 포함: ${text}`
+      `[summarize-news] "${label}" 요약에 원문에 없는 고유명사(${unverified.join(", ")}) 포함: ${text}`
     );
     return FALLBACK_REASONS.UNVERIFIED_ENTITY;
   }
@@ -381,12 +381,12 @@ async function generateVerified({ label, prompt, sourceText, maxSentences, numPr
     try {
       text = await generateKoText(prompt, { maxSentences, numPredict, temperature });
     } catch (err) {
-      console.error(`[summarize-digest] "${label}" 생성 실패: ${describeError(err)}`);
+      console.error(`[summarize-news] "${label}" 생성 실패: ${describeError(err)}`);
       return { text: null, reason: FALLBACK_REASONS.GENERATION_FAILED };
     }
 
     if (!text) {
-      console.error(`[summarize-digest] "${label}" 완결된 문장을 못 얻음`);
+      console.error(`[summarize-news] "${label}" 완결된 문장을 못 얻음`);
       lastReason = FALLBACK_REASONS.GENERATION_FAILED;
       continue;
     }
@@ -414,7 +414,7 @@ async function summarizeCategory(bucket, bodies) {
   });
   if (paragraph.text) return { line: paragraph.text, fallbackReason: null, degraded: false };
 
-  console.error(`[summarize-digest] "${label}" 문단 요약 실패(${paragraph.reason}), 한 문장으로 재시도`);
+  console.error(`[summarize-news] "${label}" 문단 요약 실패(${paragraph.reason}), 한 문장으로 재시도`);
   const single = await generateVerified({
     label,
     prompt: buildSingleSentencePrompt(label, items, bodies),
@@ -440,7 +440,7 @@ async function summarizeHighlight(item, body) {
   });
 
   if (!result.text) {
-    console.error(`[summarize-digest] 핵심 기사 요약 실패(${result.reason}): ${item.title}`);
+    console.error(`[summarize-news] 핵심 기사 요약 실패(${result.reason}): ${item.title}`);
     return null;
   }
 
@@ -521,7 +521,7 @@ async function translateKoText(text, numPredict) {
       const joined = raw.trim().replace(/\s*\n+\s*/g, " ").replace(/^["'“‘]+|["'”’]+$/g, "").trim();
       translated = completeSentences(joined, 12) ?? joined;
     } catch (err) {
-      console.error(`[summarize-digest] 번역 실패, 한국어 유지: ${describeError(err)}`);
+      console.error(`[summarize-news] 번역 실패, 한국어 유지: ${describeError(err)}`);
       return { text, translated: false };
     }
 
@@ -531,11 +531,11 @@ async function translateKoText(text, numPredict) {
 
   const withoutHanzi = (lastRejected ?? "").replace(/[一-鿿]+/g, " ").replace(/\s+/g, " ").trim();
   if (withoutHanzi && !isBadTranslation(withoutHanzi, text, requiredNumbers)) {
-    console.error(`[summarize-digest] 한자를 걷어내고 번역 채택: ${withoutHanzi}`);
+    console.error(`[summarize-news] 한자를 걷어내고 번역 채택: ${withoutHanzi}`);
     return { text: withoutHanzi, translated: true };
   }
 
-  console.error(`[summarize-digest] 번역 검증 실패, 한국어 유지: ${lastRejected}`);
+  console.error(`[summarize-news] 번역 검증 실패, 한국어 유지: ${lastRejected}`);
   return { text, translated: false };
 }
 
@@ -543,7 +543,7 @@ async function readBodies(newsDate) {
   try {
     const cached = JSON.parse(await readFile(bodiesFile, "utf-8"));
     if (newsDate && cached.date && cached.date !== newsDate) {
-      console.error(`[summarize-digest] 본문 캐시 날짜(${cached.date})가 news(${newsDate})와 다름, 무시`);
+      console.error(`[summarize-news] 본문 캐시 날짜(${cached.date})가 news(${newsDate})와 다름, 무시`);
       return null;
     }
     return cached.bodies ?? null;
@@ -589,7 +589,7 @@ async function main() {
   const news = await readJson("news");
 
   if (!news?.items?.length) {
-    console.error("[summarize-digest] news 데이터 없음, 요약 생략");
+    console.error("[summarize-news] news 데이터 없음, 요약 생략");
     return;
   }
 
@@ -597,13 +597,13 @@ async function main() {
   const today = kstDateString(now);
   const newsDate = news.date ?? kstDateString(new Date(news.updatedAt ?? now));
   if (newsDate !== today) {
-    console.error(`[summarize-digest] news.json이 오늘(${today}) 것이 아님(${newsDate}), 요약 생략`);
+    console.error(`[summarize-news] news.json이 오늘(${today}) 것이 아님(${newsDate}), 요약 생략`);
     return;
   }
 
   const bodies = (await readBodies(news.date)) ?? {};
   if (Object.keys(bodies).length === 0) {
-    console.error("[summarize-digest] 기사 본문 없음, 제목만으로 요약한다");
+    console.error("[summarize-news] 기사 본문 없음, 제목만으로 요약한다");
   }
 
   const highlightEntries = [];
@@ -633,7 +633,7 @@ async function main() {
   }
 
   if (categoryEntries.length === 0) {
-    console.error("[summarize-digest] 요약할 카테고리 없음");
+    console.error("[summarize-news] 요약할 카테고리 없음");
     return;
   }
 
@@ -671,7 +671,7 @@ async function main() {
     .map((r) => `${r} x${fallen.filter((c) => c.fallbackReason === r).length}`)
     .join(", ");
   console.log(
-    `[summarize-digest] 저장 완료 ` +
+    `[summarize-news] 저장 완료 ` +
       `(핵심 ${highlightEntries.length}/${HIGHLIGHT_COUNT}건, ` +
       `카테고리 ${categoryEntries.length}개 중 폴백 ${fallen.length}${breakdown ? `: ${breakdown}` : ""}, ` +
       `한 문장으로 축소 ${categoryEntries.filter((c) => c.degraded).length}, ` +
