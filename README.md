@@ -52,8 +52,8 @@ Pages로 배포한다.
 
 ## 임원 에이전트
 
-개발과 운영을 역할별로 나눠 맡기는 Claude Code 서브에이전트가 `.claude/agents/`에 있다.
-최종 권한은 저장소 소유자에게 있고, 임원은 각자 **소유하는 파일**이 겹치지 않게 나뉜다.
+개발과 운영을 역할별로 나눠 맡기는 Claude Code 서브에이전트가 `.claude/agents/`에 있다. 원본은 비공개 저장소 `kyhsa93/agents`의 `teams/jipgye/`이고 여기는 배포 사본이다 — 정의 변경은 `group-chro`(협의: `ceo`).
+최종 권한은 저장소 소유자에게 있고, 임원은 그룹 임원 아래에서 일한다(CEO·CSO는 group-ceo, CTO·CIO는 group-cto, COO는 group-coo, CMO는 group-cmo, CLO는 group-clo에 보고 — 기능 기준은 그룹 임원이 정하고 덮어쓸 수 있되, `ceo`가 이의를 남기면 group-ceo 판정까지 팀 결정이 유지된다). 또 임원은 각자 **소유하는 파일**이 겹치지 않게 나뉜다.
 남의 파일을 고쳐야 한다고 보면 그 주인 앞으로 넘긴다.
 
 | 에이전트 | 맡는 것 | 소유하는 곳 |
