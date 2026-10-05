@@ -1773,7 +1773,7 @@
     renderNews(effectiveNews());
     syncUrl();
     const term = newsQuery.trim();
-    if (term.length >= 2) window.analytics?.debouncedEvent("search", { search_term: term });
+    if (term.length >= 2) window.analytics?.debouncedEvent("search", window.analytics.termShape?.(term));
   });
 
   document.getElementById("news-list").addEventListener("click", (e) => {

@@ -256,8 +256,9 @@
     input.setAttribute("aria-expanded", "true");
     input.removeAttribute("aria-activedescendant");
 
-    // 못 찾은 말을 모아 두면 동의어를 추측이 아니라 실제로 들어온 글자로 채울 수 있다.
-    window.analytics?.debouncedEvent?.("search_miss", { search_term: query.slice(0, 60) });
+    // 못 찾은 말의 원문은 보내지 않는다 - 자유 입력에는 주소·이름이 섞일 수 있다(GA 약관 7조).
+    // 길이와 숫자 여부만으로도 "예산·면적을 쳤는데 못 찾았다"는 갈래는 셀 수 있다.
+    window.analytics?.debouncedEvent?.("search_miss", window.analytics.termShape?.(query));
   }
 
   function render() {

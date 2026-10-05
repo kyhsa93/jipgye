@@ -724,7 +724,7 @@
         renderProducts();
         syncUrl();
         const term = state.query.trim();
-        if (term.length >= 2) window.analytics?.debouncedEvent("search", { search_term: term });
+        if (term.length >= 2) window.analytics?.debouncedEvent("search", window.analytics.termShape?.(term));
       });
     }
   }

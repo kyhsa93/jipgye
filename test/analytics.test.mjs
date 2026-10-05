@@ -42,6 +42,7 @@ async function loadAnalytics({
     },
     location: { href, search },
     URLSearchParams,
+    URL,
     setTimeout(fn, ms) {
       timers.push({ fn, ms, cancelled: false });
       return timers.length;
@@ -125,17 +126,38 @@ test("렌더가 실패해 아무도 안 부르면 타이머가 대신 보낸다"
   assert.equal(pageViews.length, 1);
 });
 
+test("사용자가 친 글자는 주소에서도 이벤트에서도 GA로 나가지 않는다", async () => {
+  const a = await loadAnalytics({
+    href: "https://example.test/deal-search.html?district=gangnam&apt=%ED%99%8D%EA%B8%B8%EB%8F%99&dong=x&q=010-1234-5678",
+  });
+
+  a.analytics.pageView();
+  a.analytics.event("deal_search", { search_kind: "sale" });
+  a.analytics.debouncedEvent("search", a.analytics.termShape(" 강남구 84 "));
+  a.runTimers();
+
+  const config = a.calls().find(([kind]) => kind === "config");
+  const sent = [config[2], ...a.events().map(([, , params]) => params)];
+  for (const params of sent) {
+    assert.equal(params.page_location, "https://example.test/deal-search.html?district=gangnam");
+  }
+  const search = a.events().find(([, name]) => name === "search")[2];
+  assert.equal(search.search_term, undefined);
+  assert.equal(search.search_term_length, "6");
+  assert.equal(search.search_term_has_digit, "yes");
+});
+
 test("검색 이벤트는 마지막 입력 한 번으로 합쳐진다", async () => {
   const a = await loadAnalytics();
 
-  a.analytics.debouncedEvent("search", { search_term: "금" });
-  a.analytics.debouncedEvent("search", { search_term: "금리" });
-  a.analytics.debouncedEvent("search", { search_term: "금리인하" });
+  a.analytics.debouncedEvent("search", a.analytics.termShape("금"));
+  a.analytics.debouncedEvent("search", a.analytics.termShape("금리"));
+  a.analytics.debouncedEvent("search", a.analytics.termShape("금리인하"));
   a.runTimers();
 
   const searches = a.events().filter(([, name]) => name === "search");
   assert.equal(searches.length, 1);
-  assert.equal(searches[0][2].search_term, "금리인하");
+  assert.equal(searches[0][2].search_term_length, "4");
 });
 
 test("DebugView는 ?ga_debug=1을 붙였을 때만 켜진다", async () => {

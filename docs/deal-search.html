@@ -1617,7 +1617,7 @@ function afterControlChange() {
     search_budget_eok: band10k === null ? ALL : String(Math.round(band10k / EOK)),
     search_area: areaKey,
     search_age: ageKey,
-    search_apt: aptTerm(),
+    search_apt_length: String(aptTerm().length),
     search_exclude_direct: excludeDirect,
   });
 }

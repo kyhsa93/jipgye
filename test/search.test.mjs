@@ -94,7 +94,12 @@ async function runSearch(query) {
     fetch: async () => ({ ok: true, json: async () => INDEX }),
     location: { href: "" },
     URLSearchParams,
-    window: { analytics: { debouncedEvent: (name, params) => events.push({ name, params }) } },
+    window: {
+      analytics: {
+        debouncedEvent: (name, params) => events.push({ name, params }),
+        termShape: (term) => ({ search_term_length: String(term.trim().length) }),
+      },
+    },
   });
 
   for (const fn of listeners.input ?? []) await fn({});
@@ -180,11 +185,12 @@ test("못 찾으면 무엇을 찾을 수 있는지 말한다", async () => {
   assert.match(html, /취득세·중개보수는 예산대 화면/);
 });
 
-test("못 찾은 말을 모은다", async () => {
+test("못 찾은 검색은 세되 친 글자는 보내지 않는다", async () => {
   await runSearch("학군");
   const miss = runSearch.events.find((e) => e.name === "search_miss");
-  assert.ok(miss, "못 찾은 검색어를 기록하지 않는다");
-  assert.equal(miss.params.search_term, "학군");
+  assert.ok(miss, "못 찾은 검색을 기록하지 않는다");
+  assert.equal(miss.params.search_term, undefined);
+  assert.equal(miss.params.search_term_length, "2");
 });
 
 test("빈 검색어에는 안내도 띄우지 않는다", async () => {
