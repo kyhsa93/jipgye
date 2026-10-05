@@ -3535,5 +3535,134 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-10-06",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 금리·예금·투자상품: 뉴욕증시는 오늘 국채금리과 유가를 주시하며 혼조세로 출발했다. 정부는 기업의 에너지효율 투자 부담을 줄이기 위해 정책융자 금리를 2%로 인하했다. 우리은행은 '우다페'와 연계한 '다함께 적금' 상품을 출시하며 최고 연 9.0%의 금리를 제공한다. 코스닥은 지난달 최악의 수익률을 기록하며 금리와 반도체 업황 쏠림으로 직격탄을 받았다. 각 기사는 별개의 주제로, 서로 다른 경제 현상과 관련된 내용을 담고 있다.\n- 부동산: 오늘 부동산 관련 뉴스에서 예비 청약자 주목할 만한 신규 분양 물량이 4만5691가구에 달했다. 서울 아파트 거래의 80%가 15억 원 이상인 곳에서 집중되고 있다. 풀옵션 임대 물건의 월세는 6년간 5만 원 상승했다. 이 대통령은 부동산 시장에 대해 실망스럽더라도 여유를 갖고 기다려달라고 말했다. 서울 아파트 가격이 연간 10%씩 오르면 2030년 재산세가 54% 증가할 것으로 전망된다.\n- 기타 경제 소식: 금융권이 대출 규제를 완화하며 주담대 문턱을 낮추는 움직임을 보이고 있다. 그러나 가계대출 규제 완화에도 불구하고 은행권의 신용대출 기준은 여전히 엄격한 것으로 나타났다. 반도체 업계의 성과급 지급 영향으로 동탄구의 집값 상승률이 1위를 차지했다. 투자에 관심 있는 사람들을 위한 경제 관련 정보가 제공되고 있다. 각 기사는 서로 다른 주제로, 별도의 상황을 반영하고 있다.\n- 증시·환율: 일본 증시에서 AI주 상승으로 닛케이가 2.4% 상승하며 장중 7만선을 회복했다.",
+      "en": "- Rates, Deposits & Investment Products: The New York stock market opened in a mixed manner today, keeping an eye on bond yields and oil prices. The government lowered the policy loan rate to 2% to reduce the burden of energy efficiency investments for companies. Woori Bank launched a savings product called 'Da Hamkke' linked with 'Uda Peh,' offering a maximum annual interest rate of 9.0%. The KOSDAQ suffered a direct hit due to a focus on interest rates and the semiconductor industry's performance, recording its worst returns last month. Each article covers a separate topic and discusses different economic phenomena.\n- Real Estate: Today, the number of new housing units available for pre-reservation in real estate news reached 40,0005691 units, attracting attention from potential applicants. 80% of apartment transactions in Seoul are concentrated in areas where prices exceed 1,500,000,000 won. The monthly rent for fully optioned rental properties has increased by 50,000 won over six years. President Lee said that even though he is disappointed with the real estate market, he hopes people will wait patiently. It is forecasted that if Seoul apartment prices rise by 10% annually, property taxes will increase by 54% in 2030.\n- Other Economic News: Financial institutions are showing a move to ease loan regulations and lower the threshold for housing loans. However, despite the relaxation of household loan regulations, banks' credit loan criteria remain strict. Due to the impact of performance-based pay distribution in the semiconductor industry, Dongtan-gu's housing price growth rate ranked first. Economic information relevant to investors is being provided. Each article covers different topics and reflects separate situations.\n- Stocks & FX: On the Japanese stock market, the Nikkei rose 2.4% as AI stocks climbed, recovering to the 70,000 level during the session."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "뉴욕증시는 오늘 국채금리과 유가를 주시하며 혼조세로 출발했다. 정부는 기업의 에너지효율 투자 부담을 줄이기 위해 정책융자 금리를 2%로 인하했다. 우리은행은 '우다페'와 연계한 '다함께 적금' 상품을 출시하며 최고 연 9.0%의 금리를 제공한다. 코스닥은 지난달 최악의 수익률을 기록하며 금리와 반도체 업황 쏠림으로 직격탄을 받았다. 각 기사는 별개의 주제로, 서로 다른 경제 현상과 관련된 내용을 담고 있다.",
+        "lineEn": "The New York stock market opened in a mixed manner today, keeping an eye on bond yields and oil prices. The government lowered the policy loan rate to 2% to reduce the burden of energy efficiency investments for companies. Woori Bank launched a savings product called 'Da Hamkke' linked with 'Uda Peh,' offering a maximum annual interest rate of 9.0%. The KOSDAQ suffered a direct hit due to a focus on interest rates and the semiconductor industry's performance, recording its worst returns last month. Each article covers a separate topic and discusses different economic phenomena.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[속보]뉴욕증시, 국채금리·유가 주시하며 혼조 출발",
+            "link": "https://www.newsis.com/view/NISX20261005_0003814653",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "기업 에너지효율 투자 부담↓…정책융자 금리 2%로 인하",
+            "link": "https://www.newsis.com/view/NISX20261005_0003814141",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "우리은행, '우다페' 연계 '다함께 적금'…최고 연 9.0% 금리",
+            "link": "https://www.yna.co.kr/view/AKR20261004020300002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스닥 지난달 최악 수익률은 제약…금리·반도체 쏠림에 직격탄",
+            "link": "https://www.yna.co.kr/view/AKR20261003033300008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "오늘 부동산 관련 뉴스에서 예비 청약자 주목할 만한 신규 분양 물량이 4만5691가구에 달했다. 서울 아파트 거래의 80%가 15억 원 이상인 곳에서 집중되고 있다. 풀옵션 임대 물건의 월세는 6년간 5만 원 상승했다. 이 대통령은 부동산 시장에 대해 실망스럽더라도 여유를 갖고 기다려달라고 말했다. 서울 아파트 가격이 연간 10%씩 오르면 2030년 재산세가 54% 증가할 것으로 전망된다.",
+        "lineEn": "Today, the number of new housing units available for pre-reservation in real estate news reached 40,0005691 units, attracting attention from potential applicants. 80% of apartment transactions in Seoul are concentrated in areas where prices exceed 1,500,000,000 won. The monthly rent for fully optioned rental properties has increased by 50,000 won over six years. President Lee said that even though he is disappointed with the real estate market, he hopes people will wait patiently. It is forecasted that if Seoul apartment prices rise by 10% annually, property taxes will increase by 54% in 2030.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "\"4만5691가구 쏟아진다\"…예비 청약자 주목할 곳은 [이송렬의 부동산한입]",
+            "link": "https://www.hankyung.com/article/2026100181996",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "서울 아파트 거래 80%, 15억 이하였다…'이곳'만 북적",
+            "link": "https://www.hankyung.com/article/2026100538247",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "풀옵션 착한 임대 … 6년간 월세 5만원 올라",
+            "link": "https://www.mk.co.kr/news/realestate/12168487",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "이 대통령 \"부동산 실망스럽더라도 여유 갖고 기다려달라\"(종합)",
+            "link": "https://www.newsis.com/view/NISX20261005_0003814498",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "“집값 연간 10%씩 계속 오르면 2030년 서울 아파트 재산세 54%↑”",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/05/574CVVHKIZD2DDWKDDS2LNPNUM/",
+            "source": "조선비즈 부동산"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "금융권이 대출 규제를 완화하며 주담대 문턱을 낮추는 움직임을 보이고 있다. 그러나 가계대출 규제 완화에도 불구하고 은행권의 신용대출 기준은 여전히 엄격한 것으로 나타났다. 반도체 업계의 성과급 지급 영향으로 동탄구의 집값 상승률이 1위를 차지했다. 투자에 관심 있는 사람들을 위한 경제 관련 정보가 제공되고 있다. 각 기사는 서로 다른 주제로, 별도의 상황을 반영하고 있다.",
+        "lineEn": "Financial institutions are showing a move to ease loan regulations and lower the threshold for housing loans. However, despite the relaxation of household loan regulations, banks' credit loan criteria remain strict. Due to the impact of performance-based pay distribution in the semiconductor industry, Dongtan-gu's housing price growth rate ranked first. Economic information relevant to investors is being provided. Each article covers different topics and reflects separate situations.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "대출 빗장 푸는 금융권…'주담대 문턱' 낮아진 곳 찾아라",
+            "link": "https://www.hankyung.com/article/2026100537041",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "가계대출 규제 풀렸다지만…은행권 신용대출은 그대로",
+            "link": "https://www.hankyung.com/article/2026100537031",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "반도체 성과급 영향…동탄구 집값 상승률 1위",
+            "link": "https://www.hankyung.com/article/2026100536551",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "매일 매일 투자고민 중인 당신에게 … 경제를 읽고 富 늘리는 비법 풉니다",
+            "link": "https://www.mk.co.kr/news/realestate/12168499",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "일본 증시에서 AI주 상승으로 닛케이가 2.4% 상승하며 장중 7만선을 회복했다.",
+        "lineEn": "On the Japanese stock market, the Nikkei rose 2.4% as AI stocks climbed, recovering to the 70,000 level during the session.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "日증시, AI주 상승에 닛케이 2.4%↑…장중 7만선 회복",
+            "link": "https://www.newsis.com/view/NISX20261005_0003814472",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
