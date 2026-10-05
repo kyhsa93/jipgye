@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-04T02:33:37.442Z",
+  "updatedAt": "2026-10-05T01:54:25.234Z",
   "periods": [
     "202608",
     "202609",
@@ -9,11 +9,11 @@
     {
       "min10k": 0,
       "max10k": 30000,
-      "count": 226,
+      "count": 225,
       "districts": [
         {
           "name": "구로구",
-          "count": 42
+          "count": 40
         },
         {
           "name": "중랑구",
@@ -76,17 +76,6 @@
           "date": "2026-10-01",
           "buildYear": 2015,
           "direct": false
-        },
-        {
-          "district": "구로구",
-          "dong": "구로동",
-          "apt": "해담채3",
-          "area": 13.39,
-          "floor": 15,
-          "amount10k": 10000,
-          "date": "2026-09-30",
-          "buildYear": 2014,
-          "direct": true
         },
         {
           "district": "노원구",
@@ -164,10 +153,21 @@
           "date": "2026-09-23",
           "buildYear": 1975,
           "direct": false
+        },
+        {
+          "district": "중랑구",
+          "dong": "망우동",
+          "apt": "EGSoulLeader",
+          "area": 13.55,
+          "floor": 9,
+          "amount10k": 9900,
+          "date": "2026-09-23",
+          "buildYear": 2012,
+          "direct": true
         }
       ],
       "facts": {
-        "total": 226,
+        "total": 225,
         "span": {
           "min": {
             "district": "영등포구",
@@ -190,13 +190,13 @@
           "max": 90
         },
         "smallHeavy": {
-          "share": 0.995575221238938
+          "share": 0.9955555555555555
         },
         "directHeavy": {
-          "share": 0.22566371681415928
+          "share": 0.2222222222222222
         }
       },
-      "direct": 51
+      "direct": 50
     },
     {
       "min10k": 30000,
