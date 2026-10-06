@@ -246,10 +246,100 @@ export function forecastCell(series, h) {
   card.forecast = {
     target: shiftMonth(series.months[last], h),
     change: round2(point),
+    // 두 기준선 가운데 "늘 오른다"의 값. "그대로다"는 늘 0이라 적지 않는다. 채점 때 모델이
+    // 기준선을 이겼는지 보려면 그날 낸 값이 남아 있어야 한다 - 나중에 다시 계산하면 고쳐진 지수가 섞인다(#64).
+    drift: round2(guess.drift * 100),
     low: round2(point + quantile(errors, BAND[0])),
     high: round2(point + quantile(errors, BAND[1])),
   };
   return card;
+}
+
+/**
+ * 범위가 실시간으로 얼마나 들었나. 매달 그 시점에 서서, 그때까지 결과가 나와 있던 오차
+ * (j + h <= i)만으로 범위를 만들었다면 그 달의 오차가 범위 안이었나를 센다.
+ *
+ * 화면에 싣는 범위는 14년치 오차 전체의 가운데 80%라 그 14년에는 80%가 든다(순환). 실제로는
+ * 앞선 오차만 볼 수 있었으므로 이쪽이 "그때 냈다면"에 가깝다. 시작은 2014-01 - 2012-01부터
+ * 쌓은 오차가 한 해 가까이는 있어야 분위가 흔들리지 않는다.
+ */
+export const COVERAGE_FROM = "201401";
+
+export function realtimeCoverage(series, h, from = COVERAGE_FROM) {
+  const rows = backtest(series, h);
+  const at = new Map(series.months.map((month, i) => [month, i]));
+  const out = [];
+  for (const row of rows) {
+    if (row.origin < from) continue;
+    const i = at.get(row.origin);
+    const past = rows
+      .filter((p) => at.get(p.origin) + h <= i)
+      .map((p) => p.model)
+      .sort((a, b) => a - b);
+    if (!past.length) continue;
+    out.push({
+      origin: row.origin,
+      error: row.model,
+      inside: row.model >= quantile(past, BAND[0]) && row.model <= quantile(past, BAND[1]),
+    });
+  }
+  return out;
+}
+
+const pearson = (a, b) => {
+  const [ma, mb] = [mean(a), mean(b)];
+  let ab = 0;
+  let aa = 0;
+  let bb = 0;
+  a.forEach((v, i) => {
+    ab += (v - ma) * (b[i] - mb);
+    aa += (v - ma) ** 2;
+    bb += (b[i] - mb) ** 2;
+  });
+  return ab / Math.sqrt(aa * bb);
+};
+
+/**
+ * 값을 내는 권역들의 실시간 범위 적중을 한 묶음으로. method.html의 사전 등록 문단이 인용하는
+ * 숫자(64%, 2022년 이후 71~75%, 범위 안 개수 분포, 권역 간 오차 상관)가 전부 여기서 나온다.
+ * 문서의 숫자는 이 값을 옮겨 적은 것이라 날짜가 붙어 있고, 이 값이 바뀌어도 판정표는 바뀌지 않는다.
+ */
+export function coverageSummary(entries, h = 3, since = "202201") {
+  const rowsBy = entries.map(({ code, series }) => ({ code, rows: realtimeCoverage(series, h) }));
+  if (!rowsBy.length) return null;
+  const all = rowsBy.flatMap(({ rows }) => rows);
+  const byOrigin = new Map();
+  for (const { rows } of rowsBy) for (const row of rows) byOrigin.set(row.origin, [...(byOrigin.get(row.origin) ?? []), row]);
+  const full = [...byOrigin.values()].filter((rows) => rows.length === rowsBy.length);
+  const countDist = new Array(rowsBy.length + 1).fill(0);
+  for (const rows of full) countDist[rows.filter((r) => r.inside).length] += 1;
+
+  const corr = [];
+  for (let i = 0; i < rowsBy.length; i += 1) {
+    for (let j = i + 1; j < rowsBy.length; j += 1) {
+      const shared = rowsBy[i].rows.filter((r) => rowsBy[j].rows.some((x) => x.origin === r.origin));
+      const other = new Map(rowsBy[j].rows.map((r) => [r.origin, r.error]));
+      corr.push(pearson(shared.map((r) => r.error), shared.map((r) => other.get(r.origin))));
+    }
+  }
+  return {
+    h,
+    from: all.map((r) => r.origin).sort()[0],
+    to: all.map((r) => r.origin).sort().at(-1),
+    regions: rowsBy.map(({ code }) => code),
+    origins: all.length,
+    inside: all.filter((r) => r.inside).length,
+    since,
+    sinceByRegion: Object.fromEntries(
+      rowsBy.map(({ code, rows }) => {
+        const part = rows.filter((r) => r.origin >= since);
+        return [code, { n: part.length, inside: part.filter((r) => r.inside).length }];
+      })
+    ),
+    countDist,
+    countOrigins: full.length,
+    errorCorr: { min: round2(Math.min(...corr)), max: round2(Math.max(...corr)) },
+  };
 }
 
 // --- 공식 지수가 아직 안 나온 달 ------------------------------------------------
@@ -562,7 +652,13 @@ export function scoreTableHtml(region, locale = "ko") {
   return `${head}<tbody>${body}</tbody>`;
 }
 
-/** 실제로 낸 예측의 채점. 처음 몇 달은 채점할 것이 없다 - 없다고 적는다. */
+/**
+ * 실제로 낸 예측의 채점. 처음 몇 달은 채점할 것이 없다 - 없다고 적는다.
+ *
+ * 채점이 쌓여도 %로 적지 않는다(#64). 같은 판의 네 권역은 오차가 0.84~0.95로 붙어 다녀서
+ * 4개가 들어도 사실상 한 건이고, 한 건으로 낸 "100%"는 숫자의 모양을 한 거짓말이다.
+ * 개수와 두 기준선과의 비교만 적고, 한 번으로는 판정하지 못한다고 밝힌다.
+ */
 export function recordSentence(record, locale = "ko") {
   if (!record) return null;
   if (!record.scored) {
@@ -572,7 +668,12 @@ export function recordSentence(record, locale = "ko") {
       ? `This page has made ${record.made} forecast(s) so far and none can be scored yet. The first is scored when the official index for ${ym(first.target, "en")} is published, about two months later. The table above is a re-run on today's index, which flatters it: back then the index had not yet been revised.`
       : `이 화면이 지금까지 낸 예측은 ${record.made}개이고 아직 채점할 수 있는 것이 없습니다. 첫 채점은 ${ym(first.target, "ko")} 지수가 나오는 두 달 뒤입니다. 위 표는 지금의 지수로 과거를 다시 푼 것이라 실제보다 좋게 나옵니다 — 그때는 지수가 고쳐지기 전이었습니다.`;
   }
+  const beat = record.beatBoth === null ? null : record.beatBoth;
   return locale === "en"
-    ? `Of the ${record.made} forecasts this page has published, ${record.scored} can now be scored: they missed by ${record.mae}pp on average, and ${whole(record.inside)}% landed inside the stated range (it is built to hold about 80%).`
-    : `이 화면이 실제로 낸 예측 ${record.made}개 가운데 ${record.scored}개를 채점할 수 있게 됐습니다. 평균 ${record.mae}%p 빗나갔고, ${whole(record.inside)}%가 적어 둔 범위 안에 들었습니다(80% 안팎이 들도록 만든 범위입니다).`;
+    ? `Of the ${record.made} forecasts this page has published, ${record.scored} can now be scored. ${record.insideCount} of the ${record.scored} landed inside the stated range, and the average miss was ${record.mae}pp. ` +
+        (beat === null ? "" : `The model beat both baselines (“no change” and “up as usual”) in ${beat.won} of ${beat.of}. `) +
+        `Forecasts for the four regions made from the same index miss together (their errors are strongly correlated), so they count as roughly one observation: a single scoring cannot say whether the model is right or wrong. Each score is frozen the first time it is computed and is not changed when the index is later revised.`
+    : `이 화면이 실제로 낸 예측 ${record.made}개 가운데 ${record.scored}개를 채점할 수 있게 됐습니다. ${record.scored}개 중 ${record.insideCount}개가 적어 둔 범위 안에 들었고 평균 ${record.mae}%p 빗나갔습니다. ` +
+        (beat === null ? "" : `두 기준선("그대로다"·"늘 오른다")을 모두 이긴 것은 ${beat.of}개 중 ${beat.won}개입니다. `) +
+        `같은 지수에서 낸 네 권역의 예측은 오차가 서로 붙어 다녀 사실상 한 건이므로, 한 번의 채점으로는 모델이 맞는지 틀린지 판정하지 못합니다. 채점값은 처음 계산한 날 얼려 두고, 뒤에 지수가 고쳐져도 바꾸지 않습니다.`;
 }

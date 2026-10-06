@@ -14,7 +14,8 @@ import {
   toDeal,
   toSeries,
 } from "../scripts/outlook.mjs";
-import { buildPayload, closedBefore, scoreLog, updateLog } from "../scripts/build-outlook.mjs";
+import { backfillDrift, buildPayload, closedBefore, freezeScores, scoreLog, updateLog } from "../scripts/build-outlook.mjs";
+import { coverageSummary, realtimeCoverage, recordSentence } from "../scripts/outlook.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -168,14 +169,103 @@ test("값을 비운 칸은 예측으로 쌓지 않는다", () => {
 
 test("지수가 나온 예측만 채점한다", () => {
   const log = updateLog(null, [region("200", 2.5)], "202607");
-  const pending = scoreLog(log, { 200: toSeries([["202607", 100]]) });
+  const early = { 200: toSeries([["202607", 100]]) };
+  const pending = scoreLog(freezeScores(log, early, "2026-10-07"));
   assert.equal(pending.scored, 0);
   assert.equal(pending.pending.length, 1);
 
   const rows = [["202607", 100], ["202608", 101], ["202609", 102], ["202610", 110]];
-  const scored = scoreLog(log, { 200: toSeries(rows) });
+  const scored = scoreLog(freezeScores(log, { 200: toSeries(rows) }, "2026-12-15"));
   assert.equal(scored.scored, 1);
   assert.equal(scored.recent[0].inside, false, "+9.5%를 -0.5~+5.5% 안이라고 했다");
+});
+
+// --- 채점값 얼리기 (#64) ------------------------------------------------------------
+// 고정 입력: 첫 판 202610 = 110, 고친 두 번째 판 202610 = 104. 입력이 날짜·데이터에 안 흔들린다.
+
+const FIRST = { 200: toSeries([["202607", 100], ["202608", 101], ["202609", 102], ["202610", 110]]) };
+const REVISED = { 200: toSeries([["202607", 100], ["202608", 101], ["202609", 102], ["202610", 104]]) };
+const withDrift = () => {
+  const log = updateLog(null, [{ code: "200", cards: [{ h: 3, forecast: { target: "202610", change: 2.5, drift: 1.5, low: -0.5, high: 5.5 } }] }], "202607");
+  return log;
+};
+
+test("고친 두 번째 판을 넣어도 actual은 첫 판 값이다", () => {
+  const first = freezeScores(withDrift(), FIRST, "2026-12-15");
+  const [entry] = first.entries;
+  assert.equal(entry.actual, 9.53, "첫 판의 +9.53%(ln 1.10)가 아니다");
+  assert.equal(entry.scoredOn, "2026-12-15");
+
+  const second = freezeScores(first, REVISED, "2027-01-20");
+  assert.equal(second.entries[0].actual, 9.53, "고쳐진 지수가 얼린 채점값을 덮어썼다");
+  assert.equal(second.entries[0].scoredOn, "2026-12-15", "채점일이 바뀌었다");
+  assert.equal(scoreLog(second).recent[0].actual, 9.53);
+});
+
+test("채점은 개수로 낸다: 범위 안 개수와 두 기준선을 모두 이긴 개수", () => {
+  const record = scoreLog(freezeScores(withDrift(), FIRST, "2026-12-15"));
+  // 실제 +9.53, 범위 -0.5~5.5 밖. 모델 오차 7.03 < |실제| 9.53, < |9.53-1.5|=8.03 -> 이긴다.
+  assert.equal(record.insideCount, 0);
+  assert.deepEqual(record.beatBoth, { won: 1, of: 1 });
+  const text = recordSentence(record, "ko");
+  assert.match(text, /1개 중 0개가 적어 둔 범위 안/);
+  assert.match(text, /한 번의 채점으로는 모델이 맞는지 틀린지 판정하지 못합니다/);
+  assert.doesNotMatch(text, /%가 적어 둔 범위|80% 안팎/, "채점 문장에 %로 적은 적중률이 남아 있다");
+  assert.doesNotMatch(recordSentence(record, "en"), /about 80%|\d%\s+landed/);
+});
+
+test("drift가 없던 옛 항목은 그날까지의 지수로 채우고 넣은 날짜를 남긴다", () => {
+  const legacy = { entries: [{ origin: "202607", region: "200", h: 3, target: "202610", change: 2.5, low: -0.5, high: 5.5 }] };
+  const series = toSeries(synthetic({ phi: 0.6, months: 200 }));
+  const origin = series.months.at(-4);
+  const log = { entries: [{ ...legacy.entries[0], origin, target: series.months.at(-1) }] };
+  const filled = backfillDrift(log, { 200: series }, "2026-10-07");
+  assert.equal(filled.entries[0].driftAddedOn, "2026-10-07");
+  const i = series.months.indexOf(origin);
+  assert.equal(filled.entries[0].drift, Math.round(predict(series.logs, i, 3).drift * 100 * 100) / 100);
+  // 두 번째 부름은 아무것도 바꾸지 않는다.
+  assert.deepEqual(backfillDrift(filled, { 200: series }, "2026-11-01"), filled);
+});
+
+test("얼리기를 뺀 사본은 위 검사에서 빨갛게 된다 (낙제 시험)", async () => {
+  const { readFile: read, rm, writeFile } = await import("node:fs/promises");
+  const scripts = path.join(root, "scripts");
+  const source = await read(path.join(scripts, "build-outlook.mjs"), "utf8");
+  const guard = "if (entry.actual !== undefined) return entry; // 얼리기";
+  assert.ok(source.includes(guard), "얼리기 줄을 못 찾았다 - 이 낙제 시험도 같이 고쳐야 한다");
+  // 사본은 scripts/ 안에 둬야 상대 import가 풀린다. 끝나면 지운다.
+  const copy = path.join(scripts, `.mutant-build-outlook-${process.pid}.mjs`);
+  await writeFile(copy, source.replace(guard, ""));
+  try {
+    const mutant = await import(copy);
+    const first = mutant.freezeScores(withDrift(), FIRST, "2026-12-15");
+    const second = mutant.freezeScores(first, REVISED, "2027-01-20");
+    assert.notEqual(second.entries[0].actual, 9.53, "얼리기를 빼도 통과한다 - 이 검사가 얼리기를 지키지 못한다");
+  } finally {
+    await rm(copy, { force: true });
+  }
+});
+
+// --- 범위가 실시간으로 든 횟수 -------------------------------------------------------
+
+test("실시간 범위는 그 시점 뒤의 오차를 보지 않는다", () => {
+  const series = toSeries(synthetic({ phi: 0.6, months: 220 }));
+  const before = realtimeCoverage(series, 3, "201801");
+  // 마지막 달들의 값을 크게 흔들어도 그보다 앞 시점의 적중 여부는 같아야 한다.
+  const tampered = { months: series.months, logs: series.logs.map((v, i) => (i >= series.logs.length - 2 ? v + 3 : v)) };
+  const after = realtimeCoverage(tampered, 3, "201801");
+  const cut = series.months.at(-1 - 3 - 3); // 흔든 값이 오차로 들어오는 시점의 앞
+  const early = (rows) => rows.filter((r) => r.origin < cut);
+  assert.ok(early(before).length > 10);
+  assert.deepEqual(early(after), early(before), "미래 오차로 범위를 만들었다");
+});
+
+test("범위 안 개수 분포의 합은 시점 수와 같다", () => {
+  const entries = ["a", "b", "c"].map((code, k) => ({ code, series: toSeries(synthetic({ phi: 0.5, months: 200, seed: 5 + k })) }));
+  const summary = coverageSummary(entries, 3);
+  assert.equal(summary.countDist.reduce((a, b) => a + b, 0), summary.countOrigins);
+  assert.equal(summary.countDist.length, 4);
+  assert.ok(summary.errorCorr.min <= summary.errorCorr.max);
 });
 
 // --- 빌드에서 화면까지 -------------------------------------------------------------
