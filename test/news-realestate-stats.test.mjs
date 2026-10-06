@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { attachContext, buildRealestateStats } from "../scripts/news-context.mjs";
 import { newsRealestateStatsHtml } from "../scripts/prerender.mjs";
+import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.mjs";
 import { loadNewsPage } from "./helpers/news-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -95,14 +96,44 @@ test("영어 화면은 카드도 영어로 그린다", async () => {
   assert.ok(!html.includes("11억 3,049만원"), "영어 화면에 한국어 표기가 남아 있다");
 });
 
-test("커밋된 페이지에서 부동산 페이지만 지표 줄을 펴고 있다", async () => {
-  const open = async (file) => readFile(path.join(root, "docs", file), "utf8");
+// 빌더 규칙: 지표 줄은 부동산 장에서만, 그리고 뉴스 데이터에 지표가 있을 때만 편다.
+// 이 검사는 커밋된 데이터 값에 기대지 않는다 - 서울 전체 표본이 MIN_SAMPLE 아래면(신고 기준 첫 주처럼)
+// 지표가 정당하게 비어 부동산 장도 접혀 나오는데, 예전 검사는 그날 데이터가 지표를 낼 거라 가정해
+// 데일리 갱신(2026-10-06)이 바뀐 날부터 main과 데일리 수집 전 테스트를 막았다.
+test("빌더는 부동산 장에서만, 지표가 있을 때만 지표 줄을 편다", async () => {
+  const base = await readFile(path.join(root, "docs", "news.html"), "utf8");
+  const summary = { categories: [] };
+  const open = '<section id="realestate-stats-section">';
+  const closed = '<section id="realestate-stats-section" hidden>';
 
-  const realestate = await open("realestate-news.html");
-  assert.match(realestate, /<section id="realestate-stats-section">/);
-  assert.match(realestate, /<a class="stat-card" href="\.\/apartment-sale\.html">/);
+  const withStats = newsWith(REALESTATE);
+  const without = newsWith({ ...REALESTATE, overall: {} });
+  assert.ok(withStats.realestateStats && !without.realestateStats, "검사 입력이 지표 유무를 못 가른다");
 
-  for (const file of ["news.html", "stock-news.html", "rate-news.html"]) {
-    assert.match(await open(file), /<section id="realestate-stats-section" hidden>/, `${file}에 지표가 펴져 있다`);
+  for (const page of NEWS_PAGES) {
+    const html = buildNewsPage(base, page, { news: withStats, summary });
+    if (page.category === "realestate") {
+      assert.ok(html.includes(open), "부동산 장에 지표가 안 펴졌다");
+      assert.match(html, /<a class="stat-card" href="\.\/apartment-sale\.html">/);
+    } else {
+      assert.ok(html.includes(closed), `${page.file}에 지표가 펴져 있다`);
+    }
+    assert.ok(buildNewsPage(base, page, { news: without, summary }).includes(closed), `${page.file}: 지표가 없는데 펴졌다`);
+  }
+});
+
+// 커밋된 페이지가 커밋된 뉴스 데이터와 맞는지(값이 아니라 일치만 본다) - 생성물이 낡았는지 잡는다.
+test("커밋된 뉴스 페이지의 지표 줄이 커밋된 뉴스 데이터와 맞다", async () => {
+  const news = JSON.parse(await readFile(path.join(root, "docs/data/news.json"), "utf8"));
+  const stats = newsRealestateStatsHtml(news);
+
+  for (const page of NEWS_PAGES) {
+    const html = await readFile(path.join(root, "docs", page.file), "utf8");
+    const shouldOpen = page.category === "realestate" && Boolean(stats);
+    assert.equal(
+      html.includes('<section id="realestate-stats-section">'),
+      shouldOpen,
+      `${page.file}의 지표 줄이 news.json과 어긋난다 - node scripts/build-news-pages.mjs`
+    );
   }
 });
