@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T02:56:04.498Z",
+  "updatedAt": "2026-10-06T22:48:00.387Z",
   "lastOfficial": "202607",
   "horizons": [
     3,
@@ -31,6 +31,7 @@
           "forecast": {
             "target": "202610",
             "change": 2.58,
+            "drift": 1.54,
             "low": -0.31,
             "high": 6.33
           }
@@ -243,6 +244,7 @@
           "forecast": {
             "target": "202610",
             "change": 2.73,
+            "drift": 1.53,
             "low": -0.37,
             "high": 6.05
           }
@@ -317,6 +319,7 @@
           "forecast": {
             "target": "202610",
             "change": 2.45,
+            "drift": 1.54,
             "low": -0.15,
             "high": 6.15
           }
@@ -391,6 +394,7 @@
           "forecast": {
             "target": "202610",
             "change": 2.99,
+            "drift": 1.57,
             "low": -0.79,
             "high": 8.21
           }
@@ -628,7 +632,8 @@
     "made": 4,
     "scored": 0,
     "mae": null,
-    "inside": null,
+    "insideCount": 0,
+    "beatBoth": null,
     "recent": [],
     "pending": [
       {
@@ -638,7 +643,9 @@
         "target": "202610",
         "change": 2.58,
         "low": -0.31,
-        "high": 6.33
+        "high": 6.33,
+        "drift": 1.54,
+        "driftAddedOn": "2026-10-07"
       },
       {
         "origin": "202607",
@@ -647,7 +654,9 @@
         "target": "202610",
         "change": 2.73,
         "low": -0.37,
-        "high": 6.05
+        "high": 6.05,
+        "drift": 1.53,
+        "driftAddedOn": "2026-10-07"
       },
       {
         "origin": "202607",
@@ -656,7 +665,9 @@
         "target": "202610",
         "change": 2.45,
         "low": -0.15,
-        "high": 6.15
+        "high": 6.15,
+        "drift": 1.54,
+        "driftAddedOn": "2026-10-07"
       },
       {
         "origin": "202607",
@@ -665,9 +676,55 @@
         "target": "202610",
         "change": 2.99,
         "low": -0.79,
-        "high": 8.21
+        "high": 8.21,
+        "drift": 1.57,
+        "driftAddedOn": "2026-10-07"
       }
     ]
+  },
+  "rangeCoverage": {
+    "h": 3,
+    "from": "201401",
+    "to": "202604",
+    "regions": [
+      "200",
+      "240",
+      "250",
+      "230"
+    ],
+    "origins": 592,
+    "inside": 380,
+    "since": "202201",
+    "sinceByRegion": {
+      "200": {
+        "n": 52,
+        "inside": 38
+      },
+      "230": {
+        "n": 52,
+        "inside": 38
+      },
+      "240": {
+        "n": 52,
+        "inside": 39
+      },
+      "250": {
+        "n": 52,
+        "inside": 37
+      }
+    },
+    "countDist": [
+      28,
+      12,
+      20,
+      24,
+      64
+    ],
+    "countOrigins": 148,
+    "errorCorr": {
+      "min": 0.84,
+      "max": 0.95
+    }
   },
   "shadow": {
     "made": 1,

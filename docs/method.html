@@ -159,7 +159,38 @@
     <p>모델은 일부러 작습니다. 지난달, 그 전달, 그 앞 넉 달 평균의 상승률로 몇 달 뒤를 바로 맞추는 회귀가 전부입니다. 기준금리 변화와 전세 상승률을 더해 봤지만 3개월 오차가 거의 줄지 않았습니다.</p>
     <p>이 모델이 아무 생각 없이 찍는 두 방법 &mdash; <strong>&ldquo;그대로다&rdquo;</strong>와 <strong>&ldquo;지금까지처럼 오른다&rdquo;</strong> &mdash; 을 둘 다 이기지 못하는 칸은 비웁니다. 이겼는지는 지난 오차를 12개월 덩어리째 1,000번 다시 뽑아 그 90% 이상에서 이겼는지로 봅니다. 겹치는 예측의 오차는 서로 붙어 다녀서 한 달씩 뽑으면 우연을 실력으로 읽습니다. 지금은 3개월 뒤만, 그것도 다섯 권역 가운데 셋과 서울에서만 이깁니다. 6개월과 1년은 모든 권역에서 &ldquo;지금까지처럼 오른다&rdquo;를 못 이깁니다 &mdash; 2012년 이후 서울이 거의 내내 올랐기 때문이고, 그건 모델보다 그 시기에 대한 이야기입니다.</p>
     <p>범위는 지난 예측 오차의 가운데 80%를 오늘 예측에 얹은 것입니다. <strong>백테스트는 실제보다 좋게 나옵니다</strong> &mdash; 지금의 지수는 늦게 들어온 신고로 고쳐진 값인데, 그때 예측하던 사람에게는 고쳐지기 전 값밖에 없었습니다. 그래서 화면이 실제로 낸 예측은 고치지 않고 쌓아 두었다가, 지수가 나오면 채점해 따로 적습니다.</p>
+    <p>범위가 실제로 얼마나 들었는지도 같은 방식으로 쟀습니다(2026-10-07, 공식 지수 2026년 7월까지). 값을 내는 네 권역의 3개월 앞 예측을, 2014년 이후 매달 <strong>그때까지 결과가 나와 있던 오차만으로</strong> 범위를 만들었다면 592번 중 380번(64%)이 범위 안이었고, 2022년 이후로 자르면 권역별 71~75%였습니다. 그러니 이 범위를 &ldquo;열에 여덟이 드는 범위&rdquo;로 읽으면 안 되고, 열에 예닐곱쯤 든 범위로 읽어야 합니다. 14년치 오차 전체로 만든 범위가 그 14년에는 80% 든다는 것은 과거를 다시 맞춘 것이라 약속이 못 됩니다.</p>
     <p>공식 지수는 두 달 늦게 나옵니다. 그 사이 가운데 <strong>신고 기한이 닫힌 달</strong>은 우리가 매일 받는 신고로 메웁니다. 같은 동·지번·단지·전용면적을 한 칸으로 보고, 이웃한 두 달 모두 거래가 있는 칸에서 ㎡당 중앙값이 변한 비율의 중앙값을 그 달의 변화로 봅니다. 공식 지수와 겹치는 달에서 이 값이 얼마나 맞았는지를 같이 적고, 모델의 1개월 예측보다 못한 권역은 메우지 않습니다. 메운 값은 예측에 넣지 않습니다.</p>
+
+    <h2 id="outlook-prereg">첫 채점 규칙은 결과를 보기 전에 적어 둡니다</h2>
+    <p>2026-10-07에 적습니다. 이 화면이 낸 첫 예측(2026년 7월 지수 기준, 목표 2026년 10월)은 2026년 12월에 2026년 10월 지수가 처음 실릴 때 채점됩니다. 결과가 나온 뒤에 규칙을 고르면 어느 결과도 맞는 말로 읽을 수 있으므로, <strong>아래 표와 판정은 그 채점 전에 고정</strong>하고 12월 결과가 어느 칸에 떨어지든 이 문단과 표를 한 줄도 바꾸지 않습니다. 바뀌면 바뀐 줄을 바뀐 날짜와 함께 이 문단에 남깁니다.</p>
+    <p><strong>채점값은 처음 계산한 날 얼립니다.</strong> 목표 달 지수가 처음 실린 빌드가 실제 변화(<code>actual</code>)와 그 날짜(<code>scoredOn</code>)를 기록하고, 뒤에 지수가 고쳐져도 그 값은 바꾸지 않습니다. 예측과 함께 &ldquo;늘 오른다&rdquo; 기준선의 값(<code>drift</code>)도 적어 둡니다. &ldquo;그대로다&rdquo;는 늘 0입니다. 이 값이 없던 첫 네 건에는 2026년 7월 지수까지만으로 다시 계산해 넣고, 넣은 날짜(<code>driftAddedOn</code>)를 같이 적었습니다.</p>
+    <div class="table-scroll">
+      <table class="rate-table">
+        <thead><tr><th>권역(3개월 뒤, 2026년 10월)</th><th>모델</th><th>범위</th><th>&ldquo;늘 오른다&rdquo;</th></tr></thead>
+        <tbody>
+          <tr><td>서울</td><td>+2.58%</td><td>&minus;0.31 ~ +6.33%</td><td>+1.54%</td></tr>
+          <tr><td>서북권</td><td>+2.73%</td><td>&minus;0.37 ~ +6.05%</td><td>+1.53%</td></tr>
+          <tr><td>서남권</td><td>+2.45%</td><td>&minus;0.15 ~ +6.15%</td><td>+1.54%</td></tr>
+          <tr><td>동남권</td><td>+2.99%</td><td>&minus;0.79 ~ +8.21%</td><td>+1.57%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>판정표는 이렇습니다. 실제 변화는 같은 권역의 2026년 10월 지수와 2026년 7월 지수로 잽니다.</p>
+    <div class="table-scroll">
+      <table class="rate-table">
+        <thead><tr><th>항목</th><th>기준</th><th>화면에 적는 문장</th></tr></thead>
+        <tbody>
+          <tr><td>범위</td><td>실제 변화가 범위의 양 끝을 포함해 그 안이면 &ldquo;안&rdquo;, 아니면 &ldquo;밖&rdquo;</td><td>&ldquo;네 권역 중 n개가 범위 안&rdquo;. %로 적지 않고 개수로 적는다</td></tr>
+          <tr><td>모델 오차</td><td>|실제 &minus; 모델|, 권역 평균</td><td>&ldquo;평균 x%p 빗나갔다&rdquo;</td></tr>
+          <tr><td>기준선</td><td>모델 오차가 |실제|(&ldquo;그대로다&rdquo;)와 |실제 &minus; 늘 오른다 값|보다 모두 작으면 &ldquo;이김&rdquo;, 하나라도 같거나 크면 &ldquo;못 이김&rdquo;</td><td>&ldquo;두 기준선을 모두 이긴 것은 네 권역 중 n개&rdquo;</td></tr>
+          <tr><td>판정</td><td>한 번의 채점은 판정 근거가 아니다 &mdash; 어떤 결과여도 같다</td><td>&ldquo;한 번의 채점으로는 모델이 맞는지 틀린지 판정하지 못합니다&rdquo;</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>한 번으로 판정하지 않는 이유는 숫자에 있습니다(2026-10-07, 같은 계산). ① 네 권역의 3개월 앞 예측 오차는 서로 0.84~0.95의 상관으로 붙어 다닙니다. 같은 지수에서 낸 네 건은 사실상 한 건입니다. ② 2014년 이후 148개 시점에서 &ldquo;네 권역 중 범위 안에 든 개수&rdquo;가 0·1·2·3·4개였던 것은 각각 28·12·20·24·64번(18.9%·8.1%·13.5%·16.2%·43.2%)입니다. 네 개가 다 드는 것이 가장 흔하지만 56%는 그 밖이고, 0개도 다섯 번에 한 번가량 있었습니다. 어느 개수가 나와도 이미 흔한 일이라, 그것으로 모델이나 범위를 평가하지 않습니다.</p>
+    <p>그래서 적중률(%)은 서로 겹치지 않는 시점이 열두 개 쌓일 때까지 싣지 않습니다. 3개월 앞이면 빨라야 2029년이고, 실을 때는 이항 구간을 함께 싣습니다.</p>
+    <p><strong>범위 방식에 대한 사전 기준.</strong> 위의 실시간 적중(2014년 이후, 네 권역, 3개월 앞)이 70% 미만이면 범위를 실시간 80%가 되는 분위로 넓힙니다. 지금 64%라 넓히게 될 공산이 큽니다. 판정은 2026년 11월 9~15일 주에 하고, 넓힌 범위는 <strong>새 시점부터</strong> 적용합니다. 2026년 7~9월 시점의 예측은 낸 범위 그대로 채점합니다. 12월 채점 결과는 이 판정의 입력이 아닙니다. 판정한 날짜와 결과는 이 문단에 덧붙입니다.</p>
 
     <h2>출처와 갱신</h2>
     <ul>
@@ -277,7 +308,38 @@
     <p>The model is deliberately small: a regression of the change some months ahead on last month's growth, the month before, and the average of the four before that. Adding base-rate changes and jeonse growth barely moved the three-month error.</p>
     <p>Cells where it cannot beat two thoughtless guesses &mdash; <strong>&ldquo;no change&rdquo;</strong> and <strong>&ldquo;up as usual&rdquo;</strong> &mdash; are left blank. Beating means winning in at least 90% of 1,000 resamples of past errors drawn in 12-month blocks; overlapping forecasts have errors that move together, so single-month resampling would read luck as skill. At present only three months ahead passes, and only for Seoul and three of the five regions. Six and twelve months lose to &ldquo;up as usual&rdquo; everywhere &mdash; Seoul rose almost throughout since 2012, which says more about the period than the model.</p>
     <p>The range adds the middle 80% of past errors to today's figure. <strong>The backtest flatters itself</strong>: today's index has been revised by late filings, and a forecaster at the time only had the unrevised figures. So every forecast the page publishes is kept unchanged and scored separately once the index arrives.</p>
+    <p>How often the range actually held was measured the same way (2026-10-07, official index through July 2026). For the four regions that publish a three-month forecast, building the range for every month since 2014 from <strong>only the errors that were already known then</strong> would have put the actual change inside it 380 times out of 592 (64%); cut to 2022 onward, 71&ndash;75% per region. So the range should be read as holding about six or seven in ten, not eight. A range built from fourteen years of errors holding 80% over those same fourteen years is a refit of the past, not a promise.</p>
     <p>The official index runs two months behind. Of those months, the ones <strong>closed past the filing deadline</strong> are filled from the filings collected here: one neighbourhood, lot, complex and exclusive area per cell, and the median change in price per m² across cells with deals in both adjacent months. How close this came to the official figure in overlapping months is shown, and regions where it does worse than the model's one-month forecast are not filled. Filled months are not fed into the forecast.</p>
+
+    <h2 id="outlook-prereg-en">The first scoring rule is written down before the result</h2>
+    <p>Written on 2026-10-07. The first forecast this page made (from the July 2026 index, targeting October 2026) is scored in December 2026, when the October 2026 index first appears. If the rule were chosen after the result, any outcome could be read as a success, so <strong>the table and verdicts below are fixed before that scoring</strong>, and wherever the December result lands, this section is not changed by a single line. If it is ever changed, the changed line is kept here with its date.</p>
+    <p><strong>The score is frozen the day it is first computed.</strong> The build that first sees the target month's index records the actual change (<code>actual</code>) and the date (<code>scoredOn</code>), and later revisions of the index do not alter it. Each forecast also stores the &ldquo;up as usual&rdquo; baseline value (<code>drift</code>); &ldquo;no change&rdquo; is always 0. The first four entries predate this field, so it was recomputed from the index through July 2026 only and stamped with the date it was added (<code>driftAddedOn</code>).</p>
+    <div class="table-scroll">
+      <table class="rate-table">
+        <thead><tr><th>Region (three months ahead, October 2026)</th><th>Model</th><th>Range</th><th>&ldquo;Up as usual&rdquo;</th></tr></thead>
+        <tbody>
+          <tr><td>Seoul</td><td>+2.58%</td><td>&minus;0.31 to +6.33%</td><td>+1.54%</td></tr>
+          <tr><td>Northwest</td><td>+2.73%</td><td>&minus;0.37 to +6.05%</td><td>+1.53%</td></tr>
+          <tr><td>Southwest</td><td>+2.45%</td><td>&minus;0.15 to +6.15%</td><td>+1.54%</td></tr>
+          <tr><td>Southeast</td><td>+2.99%</td><td>&minus;0.79 to +8.21%</td><td>+1.57%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The verdict table. The actual change is measured on the same region's October 2026 and July 2026 index values.</p>
+    <div class="table-scroll">
+      <table class="rate-table">
+        <thead><tr><th>Item</th><th>Rule</th><th>Sentence shown</th></tr></thead>
+        <tbody>
+          <tr><td>Range</td><td>&ldquo;Inside&rdquo; if the actual change lies within the range, endpoints included; otherwise &ldquo;outside&rdquo;</td><td>&ldquo;n of the four regions landed inside the range&rdquo; &mdash; a count, never a percentage</td></tr>
+          <tr><td>Model error</td><td>|actual &minus; model|, averaged over regions</td><td>&ldquo;missed by x pp on average&rdquo;</td></tr>
+          <tr><td>Baselines</td><td>&ldquo;Beat&rdquo; if the model error is smaller than both |actual| (&ldquo;no change&rdquo;) and |actual &minus; up-as-usual value|; otherwise &ldquo;did not beat&rdquo;</td><td>&ldquo;beat both baselines in n of four regions&rdquo;</td></tr>
+          <tr><td>Verdict</td><td>One scoring is not grounds for a verdict &mdash; whatever the result</td><td>&ldquo;a single scoring cannot say whether the model is right or wrong&rdquo;</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The reason one scoring cannot decide is in the numbers (2026-10-07, same computation). First, the four regions' three-month errors move together, with pairwise correlations of 0.84 to 0.95: four forecasts from the same index are roughly one observation. Second, over the 148 months since 2014, the number of the four regions inside their range was 0, 1, 2, 3 or 4 on 28, 12, 20, 24 and 64 occasions (18.9%, 8.1%, 13.5%, 16.2%, 43.2%). All four inside is the most common, yet 56% fall elsewhere and zero inside happened about one time in five. Whatever count appears is already ordinary, so it is not used to judge the model or the range.</p>
+    <p>So no hit rate (%) is published until twelve non-overlapping origins have been scored &mdash; for three months ahead, 2029 at the earliest &mdash; and then only with a binomial interval.</p>
+    <p><strong>A prior criterion for the range method.</strong> If the real-time coverage above (since 2014, four regions, three months ahead) is below 70%, the range is widened to the quantiles that would have given 80% in real time. It is 64% now, so widening is likely. The decision is made in the week of 9&ndash;15 November 2026 and the wider range applies <strong>from new origins only</strong>; forecasts from July to September 2026 are scored with the range as published. The December result is not an input. The date and outcome of the decision will be appended here.</p>
 
     <h2>Sources and update cadence</h2>
     <ul>

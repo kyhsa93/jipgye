@@ -13,6 +13,8 @@ import {
   nowcast,
   nowcastSentence,
   nowcastTableHtml,
+  predict,
+  coverageSummary,
   recordSentence,
   regionRows,
   regionTableHtml,
@@ -49,24 +51,61 @@ export function updateLog(log, regions, lastOfficial) {
   return { entries };
 }
 
-/** 지수가 나온 예측만 채점한다. 실제 변화는 지금 지수로 잰다(고쳐진 값이 정답이다). */
-export function scoreLog(log, seriesByRegion) {
-  const scored = [];
-  for (const entry of log.entries) {
+/**
+ * 이미 쌓인 예측에 빠진 "늘 오른다" 값을 채운다. #64 전에 쌓은 항목에는 이 값이 없다.
+ * origin 시점까지의 지수만으로 다시 계산하므로 그날 낼 수 있던 값과 같고(origin 달이
+ * 공식 마지막 달이었다면 고쳐진 값의 영향도 거의 없다), 언제 넣었는지를 `driftAddedOn`에
+ * 남겨 "그날 낸 값"이 아니라 "나중에 같은 식으로 채운 값"임을 밝힌다. 있는 값은 건드리지 않는다.
+ */
+export function backfillDrift(log, seriesByRegion, today) {
+  const entries = (log?.entries ?? []).map((entry) => {
+    if (entry.drift !== undefined) return entry;
+    const series = seriesByRegion[entry.region];
+    const origin = series?.months.indexOf(entry.origin) ?? -1;
+    const guess = origin >= 0 ? predict(series.logs, origin, entry.h) : null;
+    if (!guess) return entry;
+    return { ...entry, drift: round2(guess.drift * 100), driftAddedOn: today };
+  });
+  return { ...log, entries };
+}
+
+/**
+ * 지수가 처음 나온 날 채점값을 얼린다(#64). `actual`은 목표 달 지수가 처음 실린 빌드의 값이고
+ * `scoredOn`은 그 날짜다. 이후 지수가 고쳐져도 바꾸지 않는다 - 12월 첫 채점을 결과를 본 뒤
+ * 다시 계산한 값으로 갈아 끼우면 사전 등록이 무의미해진다. 얼리지 않으면 매 빌드가 그때그때의
+ * 지수로 다시 재서 채점값이 흔들린다.
+ */
+export function freezeScores(log, seriesByRegion, today) {
+  const entries = log.entries.map((entry) => {
+    if (entry.actual !== undefined) return entry; // 얼리기
     const series = seriesByRegion[entry.region];
     const a = series?.months.indexOf(entry.origin) ?? -1;
     const b = series?.months.indexOf(entry.target) ?? -1;
-    if (a < 0 || b < 0) continue;
-    const actual = round2((series.logs[b] - series.logs[a]) * 100);
-    scored.push({ ...entry, actual, inside: actual >= entry.low && actual <= entry.high });
-  }
+    if (a < 0 || b < 0) return entry;
+    return { ...entry, actual: round2((series.logs[b] - series.logs[a]) * 100), scoredOn: today };
+  });
+  return { ...log, entries };
+}
+
+/** 채점. 얼린 `actual`이 있는 항목만 센다 - 안 얼린 항목은 `freezeScores`를 먼저 거쳐야 한다. */
+export function scoreLog(log) {
+  const scored = log.entries
+    .filter((entry) => entry.actual !== undefined)
+    .map((entry) => ({ ...entry, inside: entry.actual >= entry.low && entry.actual <= entry.high }));
+  // "그대로다"는 변화 0이라 오차가 |actual|이다. 두 기준선 값이 다 있는 항목만 비교한다.
+  const comparable = scored.filter((entry) => entry.drift !== undefined);
+  const won = comparable.filter((entry) => {
+    const model = Math.abs(entry.actual - entry.change);
+    return model < Math.abs(entry.actual) && model < Math.abs(entry.actual - entry.drift);
+  }).length;
   return {
     made: log.entries.length,
     scored: scored.length,
     mae: scored.length ? round2(scored.reduce((s, e) => s + Math.abs(e.actual - e.change), 0) / scored.length) : null,
-    inside: scored.length ? round2((scored.filter((e) => e.inside).length / scored.length) * 100) : null,
+    insideCount: scored.filter((e) => e.inside).length,
+    beatBoth: comparable.length ? { won, of: comparable.length } : null,
     recent: scored.slice(-12),
-    pending: log.entries.filter((e) => !scored.some((s) => s.origin === e.origin && s.region === e.region && s.h === e.h)),
+    pending: log.entries.filter((e) => e.actual === undefined),
   };
 }
 
@@ -124,14 +163,19 @@ export function buildPayload({ index, deals, months, now, log, indicators = null
     };
   });
 
-  const nextLog = updateLog(log, regions, lastOfficial);
+  // 한국 날짜로 적는다 - UTC로 끊으면 아침 빌드가 전날로 찍힌다.
+  const today = now.toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
+  const nextLog = freezeScores(backfillDrift(updateLog(log, regions, lastOfficial), seriesByRegion, today), seriesByRegion, today);
   nextLog.shadow = updateShadow(
     log,
     lastOfficial,
     indicators?.series ? shadowForecast(priceSeries(index.series["200"]), indicators.series) : null
   );
   const seoulRegion = regions.find((r) => r.code === "200");
-  const record = scoreLog(nextLog, seriesByRegion);
+  const record = scoreLog(nextLog);
+  // 범위가 실시간으로 든 횟수(3개월 뒤, 값을 내는 권역). 문서의 64%가 이 계산이다.
+  const covered = regions.filter((r) => r.cards.find((c) => c.h === 3)?.beats);
+  const rangeCoverage = coverageSummary(covered.map((r) => ({ code: r.code, series: seriesByRegion[r.code] })), 3);
   const both = (fn) => ({ ko: fn("ko"), en: fn("en") });
 
   return {
@@ -142,6 +186,7 @@ export function buildPayload({ index, deals, months, now, log, indicators = null
       regions,
       rows: regionRows(regions),
       record,
+      rangeCoverage,
       // 화면에는 싣지 않는다(#22). 12개 넘게 채점되면(2027 하반기) 이긴 쪽을 다시 본다.
       shadow: scoreShadow(nextLog.shadow, seriesByRegion),
       lead: both((l) => leadSentence(seoulRegion, lastOfficial, l)),
@@ -219,7 +264,7 @@ async function main() {
   const three = seoul.cards.find((c) => c.h === 3);
   console.log(
     `  전망: 공식 ${built.payload.lastOfficial}, 서울 3개월 ${three?.forecast ? `${three.forecast.change}% (${three.forecast.low}~${three.forecast.high})` : "값 없음"}, ` +
-      `값을 낸 칸 ${built.payload.regions.flatMap((r) => r.cards).filter((c) => c.forecast).length}/${built.payload.regions.length * HORIZONS.length}, ` +
+      `범위 실시간 적중 ${built.payload.rangeCoverage?.inside}/${built.payload.rangeCoverage?.origins}, 값을 낸 칸 ${built.payload.regions.flatMap((r) => r.cards).filter((c) => c.forecast).length}/${built.payload.regions.length * HORIZONS.length}, ` +
       `메운 달 ${seoul.nowcast.months.map((m) => `${m.month}:${m.change ?? "-"}`).join(" ")} (${months[0]}~${shiftMonth(months.at(-1), 0)})`
   );
 }
