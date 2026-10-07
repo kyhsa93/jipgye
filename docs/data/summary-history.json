@@ -3669,21 +3669,85 @@
     "date": "2026-10-07",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 부동산: GS건설은 서울에너지공사와 협력해 ‘제로에너지’ 공동주택 확대에 나섰다. 서울 아파트 경매 낙찰가율은 고가 아파트 약세로 인해 1년 7개월 만에 최저 수준을 기록했다. 국토부 홍지선 장관은 재개발·재건축 사업 속도 저해 요인을 적극 해소하겠다고 밝혔다. 신동아건설은 남양주 진접에 590가구 규모의 공동주택을 추진하며 회생 후 첫 자체사업을 진행한다. 홍지선 장관은 수도권에 필요한 주택을 충분히 공급하겠다고 강조했다.\n- 기타 경제 소식: 이형일이 경제6단체 간담회에서 소통과 청년정책을 강조했다. 미래경제포럼은 11월3일 한일 협력 주제로 개최될 예정이다. 한달에 1억씩 올랐다는 사내 대출 5억에 '삼성맨'이 몰린 동네가 주목받고 있다. 오늘 10월7일은 경제 관련 주요일정이 있는 날이다. 사내 대출 5억에 '삼성맨'이 몰린 동네 관련 보도가 다시 언급됐다.\n- 증시·환율: 증시·환율: 日증시, 차익실현에 하락 출발…닛케이 0.14%↓, [마켓뷰] 연일 최고치 경신 美증시…코스피, 반등 탄력 삼나, 뉴욕증시, 기술주 상승에 강세…S&amp;P500·나스닥 장중 사상 최고치 +1\n- 금리·예금·투자상품: 미국에서 금리 인상 소식이 전해지자 은행 주가가 9% 급락하는 등 금융 시장에 충격이 일어났다. 미 국채금리 급등으로 인해 CCC급 기업의 조달 비용이 17% 증가했다. 이는 기업들의 자금 조달에 큰 부담을 주는 상황이다. SVB 사태와 유사한 위기 상황이 재현될 가능성에 대한 우려가 커지고 있다. 미국 은행 주가 하락과 국채금리 상승은 글로벌 금융 시장에 영향을 미치고 있다.",
-      "en": "- Real Estate: GS Construction has joined forces with Seoul Energy Corporation to expand 'zero energy' co-housing projects. The auction winning rate for Seoul apartment units has reached its lowest level in 1 year and 7 months due to the weakness in high-priced apartments. Hong Jisun, Minister of Land, Infrastructure and Transport, stated that she will actively address factors hindering redevelopment and reconstruction projects. Shin Donga Construction is pushing forward with a co-housing project consisting of 590 units in Jinjeop, Nanyangju, marking its first independent project after recovery. Minister Hong Jisun emphasized that sufficient housing will be supplied to the Seoul metropolitan area.\n- Other Economic News: Lee Hyung-il emphasized communication and youth policy at a meeting with six economic groups. The Future Economy Forum is scheduled to be held on November 3 with the theme of Japan-Korea cooperation. A neighborhood where \"Samsung men\" are flocking to a 500,000,000 won internal loan that increased by 100,000,000 won each month is receiving attention. Today, October 7, is a day with major economic schedules. Reports about the neighborhood where \"Samsung men\" are flocking to a 500,000,000 won internal loan were mentioned again.\n- Stocks & FX: Stocks & FX: 日증시, 차익실현에 하락 출발…닛케이 0.14%↓, [마켓뷰] 연일 최고치 경신 美증시…코스피, 반등 탄력 삼나, 뉴욕증시, 기술주 상승에 강세…S&amp;P500·나스닥 장중 사상 최고치 +1\n- Rates, Deposits & Investment Products: News of interest rate hikes in the U.S. caused a 9% sharp drop in bank stock prices, leading to shocks in the financial market. Due to a rapid rise in U.S. Treasury bond yields, the cost of raising funds for CCC-rated companies increased by 17%. This situation imposes a significant burden on companies' fundraising efforts. Concerns are growing that a crisis similar to the SVB situation may reoccur. The decline in U.S. bank stock prices and the rise in Treasury bond yields are affecting the global financial market."
+      "ko": "- 기타 경제 소식: 추경호는 경제 회복과 대구 발전에 집중하겠다고 밝혔다. 홍지선 국토부 장관은 연말까지 서울 집값 상승폭이 줄어들 것이라고 전망했다. 이형일은 경제6단체와 간담회를 열며 소통과 청년정책을 강조했다. 한달에 1억씩 오른 사내 대출로 인해 삼성맨들이 몰린 동네가 주목받고 있다. 각 기사는 서로 다른 주제로, 별개의 경제 관련 소식을 담고 있다.\n- 금리·예금·투자상품: 국고채 금리가 대체로 상승하며 3년물이 장중 연 3.950%를 기록했고, 미국에서 금리 상승에 따라 은행 주가가 9% 급락했으며, 미국 국채금리 급등으로 CCC급 기업의 조달비용이 17% 증가했다.\n- 부동산: 홍지선 국토장관은 강남 3구 집값 하락세와 연말 주택시장 안정 전망을 언급했으며, GS건설은 서울에너지공사와 협력해 ‘제로에너지’ 공동주택 확대에 나서고 있고, 고가 아파트 약세로 서울 아파트 경매 낙찰가율이 1년7개월만에 최저 수준을 기록했으며, 국토장관은 재개발·재건축 사업 속도 저해요인을 적극 해소하겠다고 밝혔고, 신동아건설은 남양주 진접에서 590가구 공동주택을 추진하며 회생 후 첫 자체사업을 진행하고 있다.\n- 증시·환율: 대만 증시는 오늘 상승 개장 후 5만선을 놓고 공방전을 벌였다. 대만 증시는 0.23% 하락한 것으로 나타났다. 일본 증시는 차익실현에 따른 하락 출발을 기록했다. 닛케이 지수는 0.14% 하락했다. 두 국가의 증시 모두 하락세를 보이며 투자자들의 관심을 끌고 있다.",
+      "en": "- Other Economic News: Choo Kyung-ho stated that he will focus on economic recovery and Daegu's development. Hong Ji-seon, the Minister of Land, Infrastructure and Transport, predicted that the rate of increase in Seoul's housing prices will decrease by year-end. Lee Hyung-ill emphasized communication and youth policies by holding a meeting with the six economic organizations. A neighborhood where Samsung employees are flocking is receiving attention due to internal loans that have risen by 100,000,000 won each month. Each article covers different topics and contains separate economic-related news.\n- Rates, Deposits & Investment Products: The government bond rate rose generally, with the 3-year bond reaching 3.950% annually during the day, and bank stock prices fell sharply by 9% in the U.S. due to rising interest rates, and the borrowing costs for CCC-rated companies increased by 17% due to a sharp rise in U.S. Treasury bond rates.\n- Real Estate: Hong Jisun, the Minister of Land, mentioned the declining prices in the Gangnam 3 districts and the outlook for a stable housing market by year-end. GS Construction is expanding 'zero energy' co-housing in cooperation with Seoul Energy Corporation. The low price of high-end apartments has led to the lowest auction success rate for Seoul apartments in 1 year and 7 months. The Minister of Land announced that he will actively resolve factors hindering redevelopment and reconstruction projects. Shin Donga Construction is promoting a co-housing project with 590 units in Jinjeop, Nanyangju, marking its first independent project after recovery.\n- Stocks & FX: Taiwan's stock market engaged in a tug-of-war around the 50,000 level after opening with a rise today. Taiwan's stock market was found to have declined by 0.23%. Japan's stock market recorded a downward start due to profit-taking. The Nikkei index fell by 0.14%. Both countries' stock markets are showing a downward trend, drawing investors' attention."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "GS건설은 서울에너지공사와 협력해 ‘제로에너지’ 공동주택 확대에 나섰다. 서울 아파트 경매 낙찰가율은 고가 아파트 약세로 인해 1년 7개월 만에 최저 수준을 기록했다. 국토부 홍지선 장관은 재개발·재건축 사업 속도 저해 요인을 적극 해소하겠다고 밝혔다. 신동아건설은 남양주 진접에 590가구 규모의 공동주택을 추진하며 회생 후 첫 자체사업을 진행한다. 홍지선 장관은 수도권에 필요한 주택을 충분히 공급하겠다고 강조했다.",
-        "lineEn": "GS Construction has joined forces with Seoul Energy Corporation to expand 'zero energy' co-housing projects. The auction winning rate for Seoul apartment units has reached its lowest level in 1 year and 7 months due to the weakness in high-priced apartments. Hong Jisun, Minister of Land, Infrastructure and Transport, stated that she will actively address factors hindering redevelopment and reconstruction projects. Shin Donga Construction is pushing forward with a co-housing project consisting of 590 units in Jinjeop, Nanyangju, marking its first independent project after recovery. Minister Hong Jisun emphasized that sufficient housing will be supplied to the Seoul metropolitan area.",
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "추경호는 경제 회복과 대구 발전에 집중하겠다고 밝혔다. 홍지선 국토부 장관은 연말까지 서울 집값 상승폭이 줄어들 것이라고 전망했다. 이형일은 경제6단체와 간담회를 열며 소통과 청년정책을 강조했다. 한달에 1억씩 오른 사내 대출로 인해 삼성맨들이 몰린 동네가 주목받고 있다. 각 기사는 서로 다른 주제로, 별개의 경제 관련 소식을 담고 있다.",
+        "lineEn": "Choo Kyung-ho stated that he will focus on economic recovery and Daegu's development. Hong Ji-seon, the Minister of Land, Infrastructure and Transport, predicted that the rate of increase in Seoul's housing prices will decrease by year-end. Lee Hyung-ill emphasized communication and youth policies by holding a meeting with the six economic organizations. A neighborhood where Samsung employees are flocking is receiving attention due to internal loans that have risen by 100,000,000 won each month. Each article covers different topics and contains separate economic-related news.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
+          {
+            "title": "추경호 \"경제 살리고 더 나은 대구 만드는 데 집중\"(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261007081051053",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "홍지선 국토부 장관 \"연말까지 서울 집값 상승폭 줄어들 것\"",
+            "link": "https://www.newsis.com/view/NISX20261007_0003817178",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "이형일, 상의 등 경제6단체 간담회…소통과 청년정책 강조",
+            "link": "https://www.yna.co.kr/view/AKR20261007066800002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "\"한달에 1억씩 올랐다\"…사내 대출 5억에 '삼성맨' 몰린 동네 [주간이집]",
+            "link": "https://www.hankyung.com/article/2026100651906",
+            "source": "한국경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 대체로 상승하며 3년물이 장중 연 3.950%를 기록했고, 미국에서 금리 상승에 따라 은행 주가가 9% 급락했으며, 미국 국채금리 급등으로 CCC급 기업의 조달비용이 17% 증가했다.",
+        "lineEn": "The government bond rate rose generally, with the 3-year bond reaching 3.950% annually during the day, and bank stock prices fell sharply by 9% in the U.S. due to rising interest rates, and the borrowing costs for CCC-rated companies increased by 17% due to a sharp rise in U.S. Treasury bond rates.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "국고채 금리 대체로 상승…3년물 장중 연 3.950%",
+            "link": "https://www.yna.co.kr/view/AKR20261007088400008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "“SVB 사태 재현?”…금리 오르자 美 은행 주가 9% 급락",
+            "link": "https://www.hankyung.com/article/202610077058i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "미 국채금리 급등 기업 덮쳤다…CCC급 조달비용 17%",
+            "link": "https://www.hankyung.com/article/202610077037i",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "홍지선 국토장관은 강남 3구 집값 하락세와 연말 주택시장 안정 전망을 언급했으며, GS건설은 서울에너지공사와 협력해 ‘제로에너지’ 공동주택 확대에 나서고 있고, 고가 아파트 약세로 서울 아파트 경매 낙찰가율이 1년7개월만에 최저 수준을 기록했으며, 국토장관은 재개발·재건축 사업 속도 저해요인을 적극 해소하겠다고 밝혔고, 신동아건설은 남양주 진접에서 590가구 공동주택을 추진하며 회생 후 첫 자체사업을 진행하고 있다.",
+        "lineEn": "Hong Jisun, the Minister of Land, mentioned the declining prices in the Gangnam 3 districts and the outlook for a stable housing market by year-end. GS Construction is expanding 'zero energy' co-housing in cooperation with Seoul Energy Corporation. The low price of high-end apartments has led to the lowest auction success rate for Seoul apartments in 1 year and 7 months. The Minister of Land announced that he will actively resolve factors hindering redevelopment and reconstruction projects. Shin Donga Construction is promoting a co-housing project with 590 units in Jinjeop, Nanyangju, marking its first independent project after recovery.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "홍지선 국토장관 “강남 3구 집값 하락세…연말 주택시장 안정 전망”",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/07/LIG7TKEM3VBTBLM7GHXVRTGX5Q/",
+            "source": "조선비즈 부동산"
+          },
           {
             "title": "GS건설, 서울에너지공사와 협력…‘제로에너지’ 공동주택 확대 나선다",
             "link": "https://www.mk.co.kr/news/realestate/12170202",
@@ -3703,48 +3767,6 @@
             "title": "신동아건설, 남양주 진접 590가구 공동주택 추진...회생후 첫 자체사업",
             "link": "https://www.mk.co.kr/news/realestate/12170125",
             "source": "매일경제 부동산"
-          },
-          {
-            "title": "홍지선 국토부 장관 \"수도권에 필요한 주택 충분히 공급할 것\"",
-            "link": "https://www.newsis.com/view/NISX20261007_0003816948",
-            "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
-        "key": "other",
-        "name": "기타 경제 소식",
-        "nameEn": "Other Economic News",
-        "lineKo": "이형일이 경제6단체 간담회에서 소통과 청년정책을 강조했다. 미래경제포럼은 11월3일 한일 협력 주제로 개최될 예정이다. 한달에 1억씩 올랐다는 사내 대출 5억에 '삼성맨'이 몰린 동네가 주목받고 있다. 오늘 10월7일은 경제 관련 주요일정이 있는 날이다. 사내 대출 5억에 '삼성맨'이 몰린 동네 관련 보도가 다시 언급됐다.",
-        "lineEn": "Lee Hyung-il emphasized communication and youth policy at a meeting with six economic groups. The Future Economy Forum is scheduled to be held on November 3 with the theme of Japan-Korea cooperation. A neighborhood where \"Samsung men\" are flocking to a 500,000,000 won internal loan that increased by 100,000,000 won each month is receiving attention. Today, October 7, is a day with major economic schedules. Reports about the neighborhood where \"Samsung men\" are flocking to a 500,000,000 won internal loan were mentioned again.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "이형일, 상의 등 경제6단체 간담회…소통과 청년정책 강조",
-            "link": "https://www.yna.co.kr/view/AKR20261007066800002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "세계 경제 분절화 속 한일 협력은…미래경제포럼 11월3일 개최",
-            "link": "https://www.yna.co.kr/view/AKR20261006125800898",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "\"한달에 1억씩 올랐다\"…사내 대출 5억에 '삼성맨' 몰린 동네 [주간이집]",
-            "link": "https://www.hankyung.com/article/2026100651906",
-            "source": "한국경제 부동산"
-          },
-          {
-            "title": "[오늘의 주요일정]경제(10월7일수요일)",
-            "link": "https://www.newsis.com/view/NISX20261006_0003814754",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "\"한달에 1억씩 올랐다\"…사내 대출 5억에 '삼성맨' 몰린 동네 [주간이집]",
-            "link": "https://www.hankyung.com/article/2026100651906",
-            "source": "한국경제 부동산"
           }
         ]
       },
@@ -3752,53 +3774,21 @@
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "증시·환율: 日증시, 차익실현에 하락 출발…닛케이 0.14%↓, [마켓뷰] 연일 최고치 경신 美증시…코스피, 반등 탄력 삼나, 뉴욕증시, 기술주 상승에 강세…S&amp;P500·나스닥 장중 사상 최고치 +1",
-        "lineEn": "Stocks & FX: 日증시, 차익실현에 하락 출발…닛케이 0.14%↓, [마켓뷰] 연일 최고치 경신 美증시…코스피, 반등 탄력 삼나, 뉴욕증시, 기술주 상승에 강세…S&amp;P500·나스닥 장중 사상 최고치 +1",
-        "isFallback": true,
-        "fallbackReason": "unverified-number",
-        "degraded": false,
-        "items": [
-          {
-            "title": "日증시, 차익실현에 하락 출발…닛케이 0.14%↓",
-            "link": "https://www.newsis.com/view/NISX20261007_0003816701",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "[마켓뷰] 연일 최고치 경신 美증시…코스피, 반등 탄력 삼나",
-            "link": "https://www.yna.co.kr/view/AKR20261007019300008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "뉴욕증시, 기술주 상승에 강세…S&amp;P500·나스닥 장중 사상 최고치",
-            "link": "https://www.newsis.com/view/NISX20261007_0003816462",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "뉴욕증시, 기술주 상승에 강세…S&amp;P500·나스닥 장중 사상 최고치",
-            "link": "https://www.newsis.com/view/NISX20261007_0003816462",
-            "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "미국에서 금리 인상 소식이 전해지자 은행 주가가 9% 급락하는 등 금융 시장에 충격이 일어났다. 미 국채금리 급등으로 인해 CCC급 기업의 조달 비용이 17% 증가했다. 이는 기업들의 자금 조달에 큰 부담을 주는 상황이다. SVB 사태와 유사한 위기 상황이 재현될 가능성에 대한 우려가 커지고 있다. 미국 은행 주가 하락과 국채금리 상승은 글로벌 금융 시장에 영향을 미치고 있다.",
-        "lineEn": "News of interest rate hikes in the U.S. caused a 9% sharp drop in bank stock prices, leading to shocks in the financial market. Due to a rapid rise in U.S. Treasury bond yields, the cost of raising funds for CCC-rated companies increased by 17%. This situation imposes a significant burden on companies' fundraising efforts. Concerns are growing that a crisis similar to the SVB situation may reoccur. The decline in U.S. bank stock prices and the rise in Treasury bond yields are affecting the global financial market.",
+        "lineKo": "대만 증시는 오늘 상승 개장 후 5만선을 놓고 공방전을 벌였다. 대만 증시는 0.23% 하락한 것으로 나타났다. 일본 증시는 차익실현에 따른 하락 출발을 기록했다. 닛케이 지수는 0.14% 하락했다. 두 국가의 증시 모두 하락세를 보이며 투자자들의 관심을 끌고 있다.",
+        "lineEn": "Taiwan's stock market engaged in a tug-of-war around the 50,000 level after opening with a rise today. Taiwan's stock market was found to have declined by 0.23%. Japan's stock market recorded a downward start due to profit-taking. The Nikkei index fell by 0.14%. Both countries' stock markets are showing a downward trend, drawing investors' attention.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "“SVB 사태 재현?”…금리 오르자 美 은행 주가 9% 급락",
-            "link": "https://www.hankyung.com/article/202610077058i",
-            "source": "한국경제 경제"
+            "title": "[올댓차이나] 대만 증시, 상승 개장 후 5만선 놓고 '공방전' …0.23%↓",
+            "link": "https://www.newsis.com/view/NISX20261007_0003817147",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "미 국채금리 급등 기업 덮쳤다…CCC급 조달비용 17%",
-            "link": "https://www.hankyung.com/article/202610077037i",
-            "source": "한국경제 경제"
+            "title": "日증시, 차익실현에 하락 출발…닛케이 0.14%↓",
+            "link": "https://www.newsis.com/view/NISX20261007_0003816701",
+            "source": "뉴시스 경제"
           }
         ]
       }
