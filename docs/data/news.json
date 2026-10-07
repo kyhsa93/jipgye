@@ -1,7 +1,25 @@
 {
-  "updatedAt": "2026-10-07T03:00:01.292Z",
+  "updatedAt": "2026-10-07T03:35:45.952Z",
   "date": "2026-10-07",
   "items": [
+    {
+      "title": "한은 국제 담당 부총재보에 최영주…경제연구원장에 윤경수",
+      "link": "https://www.yna.co.kr/view/AKR20261007093300002",
+      "publishedAt": "2026-10-07T03:06:47.000Z",
+      "source": "연합뉴스 경제",
+      "category": "other",
+      "preview": "(서울=연합뉴스) 채새롬 기자 = 한국은행 국제금융·협력 담당 부총재보에 최영주 금융시장국장이 임명됐다고 한은이 7일 밝혔다.",
+      "dupes": []
+    },
+    {
+      "title": "[올댓차이나] 홍콩 증시, 지분조정 매도에 반락 개장… H주 0.78%↓",
+      "link": "https://www.newsis.com/view/NISX20261007_0003817217",
+      "publishedAt": "2026-10-07T03:00:16.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 7일 중국 증시가 국경절 연휴를 끝내고거래 재개를 하루 앞둔 가운데 지분조정 매물이 선행, 반락 개장했다. 항셍지수는 이날 전일 대비 108.27 포인트, 0.44% 하락한…",
+      "dupes": []
+    },
     {
       "title": "추경호 \"경제 살리고 더 나은 대구 만드는 데 집중\"(종합)",
       "link": "https://www.yna.co.kr/view/AKR20261007081051053",
@@ -9,8 +27,7 @@
       "source": "연합뉴스 경제",
       "category": "other",
       "preview": "(대구=연합뉴스) 이강일 기자 = 추경호 대구시장은 7일 \"시민 기대를 절대 저버리지 않고, 반드시 경제를 다시 살리고 삶의 질을 높여 더 나은...",
-      "dupes": [],
-      "titleEn": "Chu Gyeong-ho focuses on saving the economy and creating a better Daegu (Comprehensive)"
+      "dupes": []
     },
     {
       "title": "국고채 금리 대체로 상승…3년물 장중 연 3.950%",
@@ -19,8 +36,7 @@
       "source": "연합뉴스 경제",
       "category": "rates",
       "preview": "(서울=연합뉴스) 7일 국고채 금리가 대체로 상승하고 있다.",
-      "dupes": [],
-      "titleEn": "Government bond rates rise overall...3-year bond hits 3.950% annually during trading"
+      "dupes": []
     },
     {
       "title": "홍지선 국토부 장관 \"연말까지 서울 집값 상승폭 줄어들 것\"",
@@ -30,7 +46,6 @@
       "category": "other",
       "preview": "[서울=뉴시스]정유선 기자 = 홍지선 국토교통부 장관이 서울 강남3구와 용산구 등 핵심 지역의 주택 가격이 하락세로 돌아섰다며, 올 연말에는 서울 집값 상승폭이 줄어들며 안정화 흐름에 접어들 것이라 전망했다. 홍 장…",
       "dupes": [],
-      "titleEn": "Hong Jisun, Minister of Land, Infrastructure and Transport, says Seoul housing prices will slow their rise by year-end.",
       "context": [
         {
           "kind": "realestate",
@@ -52,7 +67,6 @@
       "category": "realestate",
       "preview": "홍지선 국토교통부 장관이 7일 “서울 강남 3구(강남·서초·송파)와 용산구는 주택가격이 마이너스로 돌아섰고, 다른 지역도 상승 폭이 줄어드는 상황”이라며 “연말까지 가면 주택시장이 안정화되고 상승률 폭도 줄어들 것으…",
       "dupes": [],
-      "titleEn": "Hong Jisun, Minister of Land, \"Prices in the Gangnam 3 Districts are Declining...Expect Stable Housing Market by Year-End",
       "context": [
         {
           "kind": "realestate",
@@ -73,8 +87,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스]이재준 기자 = 대만 타이베이 증시는 7일 전날 뉴욕 증시에서 나스닥 강세로 대형 기술주에 매수 선행하면서 6거래일 째 상승 개장했다가 주춤하고서 5만선을 놓고 치열한 공방전을 벌이고 있다. 자취안(加…",
-      "dupes": [],
-      "titleEn": "[Taiwan's stock market] Taiwan stock market falls 0.23% after opening above 50,000 line in a tug-of-war"
+      "dupes": []
     },
     {
       "title": "GS건설, 서울에너지공사와 협력…‘제로에너지’ 공동주택 확대 나선다",
@@ -84,7 +97,6 @@
       "category": "realestate",
       "preview": "GS건설이 서울에너지공사와 ‘민간 공동주택 제로에너지 건축물 보급 확대’를 위한 업무협약을 체결했다고 7일 밝혔다. 이번 협약을 통해 양사는 서울시 내 정비사업지를 대상으로 지역난..",
       "dupes": [],
-      "titleEn": "GS Construction to Expand 'Zero Energy' Co-Operated Housing with Seoul Energy Corporation",
       "context": [
         {
           "kind": "realestate",
@@ -106,7 +118,6 @@
       "category": "realestate",
       "preview": "(세종=연합뉴스) 오진송 기자 = 지난달 서울 아파트 경매 낙찰가율(감정가 대비 낙찰가 비율)이 초고가 아파트가 감정가를 크게 밑도는 가격에 낙...",
       "dupes": [],
-      "titleEn": "High-end apartment prices decline, Seoul apartment auction success rate hits lowest in 1 year 7 months",
       "context": [
         {
           "kind": "realestate",
@@ -127,8 +138,7 @@
       "source": "연합뉴스 경제",
       "category": "other",
       "preview": "(세종=연합뉴스) 송정은 기자 = 이형일 부총리 겸 재정경제부 장관은 7일 경제6단체 대표와 만나 경제 동향과 정책 방향을 설명하고 경제계와의 ...",
-      "dupes": [],
-      "titleEn": "Lee Hyung-il holds a meeting with six economic groups, emphasizing communication and youth policies"
+      "dupes": []
     },
     {
       "title": "국토장관 \"재개발·재건축 사업 속도 저해요인 적극 해소\"",
@@ -137,8 +147,7 @@
       "source": "연합뉴스 경제",
       "category": "realestate",
       "preview": "(세종=연합뉴스) 오진송 기자 = 홍지선 국토교통부 장관이 \"재개발·재건축 등 도심 공급도 사업 속도를 가로막는 요인을 적극 해소하겠다\"고 7일...",
-      "dupes": [],
-      "titleEn": "Land Minister Says Actively Addressing Factors Hindering Redevelopment and Reconstruction Projects"
+      "dupes": []
     },
     {
       "title": "신동아건설, 남양주 진접 590가구 공동주택 추진...회생후 첫 자체사업",
@@ -147,8 +156,7 @@
       "source": "매일경제 부동산",
       "category": "realestate",
       "preview": "2만8043㎡ 규모 용지...내년 10월 착공·분양 목표신동아건설이 경기도 남양주시 공동주택 개발 사업을 추진하며 회생절차 종결 후 첫 자체 사업에 나선다. 신동아건설은 경기도 남..",
-      "dupes": [],
-      "titleEn": "Shin Dong-A Construction to Develop 590-Unit Apartment Complex in Jinjeop, Namyangju...First Self-Project After Bankruptcy Recovery"
+      "dupes": []
     },
     {
       "title": "홍지선 국토부 장관 \"수도권에 필요한 주택 충분히 공급할 것\"",
@@ -157,8 +165,7 @@
       "source": "뉴시스 경제",
       "category": "realestate",
       "preview": "[서울=뉴시스]정유선 기자 = 홍지선 국토교통부 장관은 \"수도권에 필요한 주택이 충분히, 그리고 신속하게 공급될 수 있도록 공급기반을 확실히 다지겠다\"고 말했다. 홍 장관은 7일 국회 국토교통위원회 국정감사 업무현황…",
-      "dupes": [],
-      "titleEn": "Hong Jisun, Minister of Land, Infrastructure and Transport, \"Will Fully Supply Housing Needed in the Seoul Area"
+      "dupes": []
     },
     {
       "title": "“대출 받아 집 사려면 별 수 없네”…서울 아파트 거래 4건 중 1건 ‘6억 이하’",
@@ -168,7 +175,6 @@
       "category": "realestate",
       "preview": "올해 6억 이하 매매거래 서울에서만 1년 새 15% 증가 정책대출 가능 중저가 시장 수요 쏠림 9억 이상 아파트 거래 비율은 감소올해 서울에서 6억원 이하 아파트 매매 거래가 ..",
       "dupes": [],
-      "titleEn": "Can't help but take a loan to buy a house\"… 1 out of 4 Seoul apartment transactions priced at 600,000,000 won or less",
       "context": [
         {
           "kind": "realestate",
@@ -189,8 +195,7 @@
       "source": "조선비즈 부동산",
       "category": "realestate",
       "preview": "홍지선 국토교통부 장관이 7일 “수도권에 필요한 주택이 충분히, 그리고 신속하게 공급될 수 있도록 공급기반을 확실히 다지겠다”고 말했다. 홍 장관은 이날 열린 국회 국토교통위원회 국정감사에서 “주택시장의 안정을 확고…",
-      "dupes": [],
-      "titleEn": "Hong Jisun, Minister of Land, \"Adequate Housing Supply in the Capital Area... Alleviating Public Housing Anxiety"
+      "dupes": []
     },
     {
       "title": "신동아건설, 남양주 진접 공동주택부지 매입…자체사업 확대",
@@ -199,8 +204,7 @@
       "source": "연합뉴스 경제",
       "category": "realestate",
       "preview": "(서울=연합뉴스) 임기창 기자 = 신동아건설은 경기 남양주시 진접읍 연평리 76-3번지 일대 약 2만8천434㎡의 공동주택 사업부지를 매입하고 ...",
-      "dupes": [],
-      "titleEn": "Shin Donga Construction buys Jinyeojeong residential land in Namyangju…expanding its own projects"
+      "dupes": []
     },
     {
       "title": "\"잔금 앞두고 8억이나 깎아달라니\"…부동산 시장에 무슨 일이",
@@ -209,8 +213,7 @@
       "source": "한국경제 경제",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Ask to cut 800,000,000 won before the down payment\"… What's happening in the real estate market"
+      "dupes": []
     },
     {
       "title": "日증시, 차익실현에 하락 출발…닛케이 0.14%↓",
@@ -219,8 +222,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 신효령 기자 = 7일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)가 하락 출발했다. 니혼게이자이신문에 따르면 이날 닛케이지수는 전 거래일보다 101.87포인트(0.14%) 내린 7만582.11에…",
-      "dupes": [],
-      "titleEn": "Tokyo Stock Exchange Falls on Profit-Taking… Nikkei Down 0.14%"
+      "dupes": []
     },
     {
       "title": "충남도, 청년 전세대출 이자 최대 50% 지원…330명 모집",
@@ -230,7 +232,6 @@
       "category": "realestate",
       "preview": "(홍성=연합뉴스) 김준범 기자 = 충남도는 청년들의 주거비 부담을 덜기 위해 전세자금 대출 이자를 최대 절반까지 지원한다고 7일 밝혔다.",
       "dupes": [],
-      "titleEn": "Chungcheongnam-do to subsidize up to 50% interest on rental loans for youth… recruit 330 people",
       "context": [
         {
           "kind": "rates",
@@ -249,8 +250,7 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Jumping on the 'Rapidly Rising Housing Prices' Train Was a Good Move... The Unexpected Turnaround for Apartments with 'Low Demand"
+      "dupes": []
     },
     {
       "title": "“SVB 사태 재현?”…금리 오르자 美 은행 주가 9% 급락",
@@ -259,8 +259,7 @@
       "source": "한국경제 경제",
       "category": "rates",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Replay of the SVB crisis?\" U.S. bank shares plunge 9% as rates rise"
+      "dupes": []
     },
     {
       "title": "미 국채금리 급등 기업 덮쳤다…CCC급 조달비용 17%",
@@ -269,30 +268,7 @@
       "source": "한국경제 경제",
       "category": "rates",
       "preview": null,
-      "dupes": [],
-      "titleEn": "U.S. Treasury yields surge, hitting companies... CCC-rated borrowing costs rise 17%"
-    },
-    {
-      "title": "서초구 민선9기 100일…재건축·청년정책 등 '쾌속 시동'",
-      "link": "https://www.yna.co.kr/view/AKR20261007026800004",
-      "publishedAt": "2026-10-06T23:19:38.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(서울=연합뉴스) 정준영 기자 = 서울 서초구(구청장 전성수)는 지난 7월 민선 9기 출범과 함께 시작한 '서초 전성시대 2 쾌속 시동 100일...",
-      "dupes": [],
-      "titleEn": "Seocho District's 100 Days of the 9th Term: Fast Start on Reconstruction and Youth Policies",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-seocho.html",
-          "label": "서초구 아파트 84㎡ 매매",
-          "labelEn": "서초구 apartment 84㎡ sale",
-          "value": "26억 4,822만원",
-          "valueEn": "₩2,648M",
-          "note": "최근 1주 계약 114건",
-          "noteEn": "114 deals in the last 1 weeks"
-        }
-      ]
+      "dupes": []
     },
     {
       "title": "[10/07, 매경부동산 추천매물] 서초동 트리플역 대로변 코너 상업용지 등",
@@ -302,7 +278,6 @@
       "category": "realestate",
       "preview": "[사진]◇원주시 다용도 토지·주택 일괄 ‘경매’ ‘원주·충주·제천 등 인접 생활권 접근성이 우수한 계획관리지역 임야 등 1만3625㎡와 단독주택 77㎡.’ 감정가 7억7551만원에..",
       "dupes": [],
-      "titleEn": "[10/07, Maeil Economic & Real Estate Recommended Property] Seocho-dong Triple Station Main Road Corner Commercial Land, etc.",
       "context": [
         {
           "kind": "realestate",
@@ -323,30 +298,7 @@
       "source": "한국경제 부동산",
       "category": "other",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Rising 100,000,000 won a month\"… Neighborhood flooded with \"Samsung men\" as internal loans hit 500,000,000 won [Weekly Ezip]"
-    },
-    {
-      "title": "서울 아파트값 86주째 상승… 국토부 국감, 공급 대책 실효성 따진다",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/07/X3KVLI5GYZHJBGRCAF5BYVWD7Q/",
-      "publishedAt": "2026-10-06T21:00:01.000Z",
-      "source": "조선비즈 부동산",
-      "category": "realestate",
-      "preview": "7일 열리는 국회 국토교통위원회의 국토교통부 국정감사에서는 주택 공급 대책의 실효성이 핵심 쟁점이 될 전망이다. 서울 아파트값이 86주 연속 오른 데다 전셋값도 상승하면서, 정부가 발표한 공급 계획을 얼마나 빠르게…",
-      "dupes": [],
-      "titleEn": "Seoul Apartment Prices Rise for 86th Consecutive Week... Land, Infrastructure and Transport Ministry Hearing to Scrutinize Effectiveness of Supply Measures",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./apartment-jeonse.html",
-          "label": "서울 전체 아파트 84㎡ 전세",
-          "labelEn": "Seoul apartment 84㎡ jeonse",
-          "value": "7억 6,916만원",
-          "valueEn": "₩769M",
-          "note": "최근 1주 계약 233건",
-          "noteEn": "233 deals in the last 1 weeks"
-        }
-      ]
+      "dupes": []
     }
   ],
   "realestateStats": [
