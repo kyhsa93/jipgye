@@ -37,10 +37,10 @@
           "href": "./apartment-sale.html",
           "label": "서울 전체 아파트 84㎡ 매매",
           "labelEn": "Seoul apartment 84㎡ sale",
-          "value": "27억 6,561만원",
-          "valueEn": "₩2,766M",
-          "note": "최근 1주 계약 19건",
-          "noteEn": "19 deals in the last 1 weeks"
+          "value": "13억 6,604만원",
+          "valueEn": "₩1,366M",
+          "note": "최근 1주 계약 250건",
+          "noteEn": "250 deals in the last 1 weeks"
         }
       ]
     },
@@ -94,10 +94,10 @@
           "href": "./apartment-sale.html",
           "label": "서울 전체 아파트 84㎡ 매매",
           "labelEn": "Seoul apartment 84㎡ sale",
-          "value": "27억 6,561만원",
-          "valueEn": "₩2,766M",
-          "note": "최근 1주 계약 19건",
-          "noteEn": "19 deals in the last 1 weeks"
+          "value": "13억 6,604만원",
+          "valueEn": "₩1,366M",
+          "note": "최근 1주 계약 250건",
+          "noteEn": "250 deals in the last 1 weeks"
         }
       ]
     },
@@ -197,10 +197,10 @@
           "href": "./district-seocho.html",
           "label": "서초구 아파트 84㎡ 매매",
           "labelEn": "서초구 apartment 84㎡ sale",
-          "value": "26억 2,332만원",
-          "valueEn": "₩2,623M",
-          "note": "최근 1주 계약 111건",
-          "noteEn": "111 deals in the last 1 weeks"
+          "value": "26억 4,822만원",
+          "valueEn": "₩2,648M",
+          "note": "최근 1주 계약 114건",
+          "noteEn": "114 deals in the last 1 weeks"
         }
       ]
     },
@@ -227,10 +227,10 @@
           "href": "./district-seocho.html",
           "label": "서초구 아파트 84㎡ 매매",
           "labelEn": "서초구 apartment 84㎡ sale",
-          "value": "26억 2,332만원",
-          "valueEn": "₩2,623M",
-          "note": "최근 1주 계약 111건",
-          "noteEn": "111 deals in the last 1 weeks"
+          "value": "26억 4,822만원",
+          "valueEn": "₩2,648M",
+          "note": "최근 1주 계약 114건",
+          "noteEn": "114 deals in the last 1 weeks"
         }
       ]
     },
@@ -263,13 +263,13 @@
       "context": [
         {
           "kind": "realestate",
-          "href": "./apartment-sale.html",
-          "label": "서울 전체 아파트 84㎡ 매매",
-          "labelEn": "Seoul apartment 84㎡ sale",
-          "value": "27억 6,561만원",
-          "valueEn": "₩2,766M",
-          "note": "최근 1주 계약 19건",
-          "noteEn": "19 deals in the last 1 weeks"
+          "href": "./apartment-jeonse.html",
+          "label": "서울 전체 아파트 84㎡ 전세",
+          "labelEn": "Seoul apartment 84㎡ jeonse",
+          "value": "7억 6,916만원",
+          "valueEn": "₩769M",
+          "note": "최근 1주 계약 233건",
+          "noteEn": "233 deals in the last 1 weeks"
         }
       ]
     },
@@ -296,10 +296,10 @@
           "href": "./district-eunpyeong.html",
           "label": "은평구 아파트 84㎡ 전세",
           "labelEn": "은평구 apartment 84㎡ jeonse",
-          "value": "6억 4,922만원",
+          "value": "6억 4,897만원",
           "valueEn": "₩649M",
-          "note": "최근 1주 계약 131건",
-          "noteEn": "131 deals in the last 1 weeks"
+          "note": "최근 1주 계약 138건",
+          "noteEn": "138 deals in the last 1 weeks"
         }
       ]
     },
