@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-06T22:48:00.387Z",
+  "updatedAt": "2026-10-07T02:20:16.120Z",
   "lastOfficial": "202607",
   "horizons": [
     3,
@@ -68,9 +68,9 @@
         }
       ],
       "nowcast": {
-        "overlap": 14,
+        "overlap": 15,
         "mae": 0.46,
-        "bias": 0.38,
+        "bias": 0.39,
         "oneMonthMae": 0.7,
         "usable": true,
         "months": [
@@ -137,8 +137,8 @@
         }
       ],
       "nowcast": {
-        "overlap": 14,
-        "mae": 1.02,
+        "overlap": 15,
+        "mae": 0.97,
         "bias": 0.34,
         "oneMonthMae": 1.13,
         "usable": true,
@@ -206,9 +206,9 @@
         }
       ],
       "nowcast": {
-        "overlap": 14,
-        "mae": 0.41,
-        "bias": 0.34,
+        "overlap": 15,
+        "mae": 0.4,
+        "bias": 0.33,
         "oneMonthMae": 0.83,
         "usable": true,
         "months": [
@@ -281,9 +281,9 @@
         }
       ],
       "nowcast": {
-        "overlap": 14,
+        "overlap": 15,
         "mae": 0.56,
-        "bias": 0.3,
+        "bias": 0.31,
         "oneMonthMae": 0.86,
         "usable": true,
         "months": [
@@ -356,9 +356,9 @@
         }
       ],
       "nowcast": {
-        "overlap": 14,
-        "mae": 0.47,
-        "bias": 0.36,
+        "overlap": 15,
+        "mae": 0.49,
+        "bias": 0.39,
         "oneMonthMae": 0.71,
         "usable": true,
         "months": [
@@ -431,9 +431,9 @@
         }
       ],
       "nowcast": {
-        "overlap": 14,
-        "mae": 0.8,
-        "bias": 0.66,
+        "overlap": 15,
+        "mae": 0.81,
+        "bias": 0.68,
         "oneMonthMae": 1.07,
         "usable": true,
         "months": [
@@ -741,8 +741,8 @@
     "en": "A year out there is no figure. Saying \"up as usual\" missed by 7.2pp, the model by 8.18pp. Of the months that moved, 86% went up — in a period that rose almost throughout, betting on the trend is hard to beat, and that says more about the period than about any model."
   },
   "nowcastLead": {
-    "ko": "공식 지수는 두 달 늦게 나옵니다. 그 사이 가운데 신고 기한(계약 후 30일)이 닫힌 달을 매일 받는 신고에서 같은 집끼리 이어 재면 2026년 8월 +1.5%입니다. 공식 지수와 겹치는 14개월에서 이 값은 평균 0.46%p 차이가 났고, 평균 +0.38%p만큼 높게 나왔습니다 — 그만큼 기울어 있다고 읽어야 합니다.",
-    "en": "The official index stops two months short, and the most recent month is still open for filing, so only closed months are filled. Matching the same flats month to month in the filings we collect daily gives Aug 2026 +1.5%. Across the 14 months where both exist, this ran 0.46pp from the official figure on average and ran +0.38pp high — read it with that lean in mind."
+    "ko": "공식 지수는 두 달 늦게 나옵니다. 그 사이 가운데 신고 기한(계약 후 30일)이 닫힌 달을 매일 받는 신고에서 같은 집끼리 이어 재면 2026년 8월 +1.5%입니다. 공식 지수와 겹치는 15개월에서 이 값은 평균 0.46%p 차이가 났고, 평균 +0.39%p만큼 높게 나왔습니다 — 그만큼 기울어 있다고 읽어야 합니다.",
+    "en": "The official index stops two months short, and the most recent month is still open for filing, so only closed months are filled. Matching the same flats month to month in the filings we collect daily gives Aug 2026 +1.5%. Across the 15 months where both exist, this ran 0.46pp from the official figure on average and ran +0.39pp high — read it with that lean in mind."
   },
   "recordLead": {
     "ko": "이 화면이 지금까지 낸 예측은 4개이고 아직 채점할 수 있는 것이 없습니다. 첫 채점은 2026년 10월 지수가 나오는 두 달 뒤입니다. 위 표는 지금의 지수로 과거를 다시 푼 것이라 실제보다 좋게 나옵니다 — 그때는 지수가 고쳐지기 전이었습니다.",
@@ -754,8 +754,8 @@
       "en": "<thead><tr><th>Region</th><th>3 months</th><th>6 months</th><th>12 months</th></tr></thead><tbody><tr><td>Seoul</td><td><strong>+2.6%</strong><div class=\"sub\">-0.3% to +6.3%</div></td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td></tr><tr><td>Central</td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td></tr><tr><td>Northeast</td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td></tr><tr><td>Northwest</td><td><strong>+2.7%</strong><div class=\"sub\">-0.4% to +6.0%</div></td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td></tr><tr><td>Southwest</td><td><strong>+2.5%</strong><div class=\"sub\">-0.1% to +6.2%</div></td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td></tr><tr><td>Southeast</td><td><strong>+3.0%</strong><div class=\"sub\">-0.8% to +8.2%</div></td><td><span class=\"low-sample\">blank</span></td><td><span class=\"low-sample\">blank</span></td></tr></tbody>"
     },
     "nowcast": {
-      "ko": "<thead><tr><th>권역</th><th>2026년 8월</th><th>공식과 평균 차이</th></tr></thead><tbody><tr><td>서울</td><td>+1.5%<div class=\"sub\">맞물린 칸 1,204</div></td><td>0.46%p (14)</td></tr><tr><td>도심권</td><td>+3.6%<div class=\"sub\">맞물린 칸 27</div></td><td>1.02%p (14)</td></tr><tr><td>동북권</td><td>+2.1%<div class=\"sub\">맞물린 칸 473</div></td><td>0.41%p (14)</td></tr><tr><td>서북권</td><td>+1.1%<div class=\"sub\">맞물린 칸 160</div></td><td>0.56%p (14)</td></tr><tr><td>서남권</td><td>+1.1%<div class=\"sub\">맞물린 칸 417</div></td><td>0.47%p (14)</td></tr><tr><td>동남권</td><td>+0.1%<div class=\"sub\">맞물린 칸 127</div></td><td>0.8%p (14)</td></tr></tbody>",
-      "en": "<thead><tr><th>Region</th><th>Aug 2026</th><th>Avg gap to official</th></tr></thead><tbody><tr><td>Seoul</td><td>+1.5%<div class=\"sub\">Matched 1,204</div></td><td>0.46pp (14)</td></tr><tr><td>Central</td><td>+3.6%<div class=\"sub\">Matched 27</div></td><td>1.02pp (14)</td></tr><tr><td>Northeast</td><td>+2.1%<div class=\"sub\">Matched 473</div></td><td>0.41pp (14)</td></tr><tr><td>Northwest</td><td>+1.1%<div class=\"sub\">Matched 160</div></td><td>0.56pp (14)</td></tr><tr><td>Southwest</td><td>+1.1%<div class=\"sub\">Matched 417</div></td><td>0.47pp (14)</td></tr><tr><td>Southeast</td><td>+0.1%<div class=\"sub\">Matched 127</div></td><td>0.8pp (14)</td></tr></tbody>"
+      "ko": "<thead><tr><th>권역</th><th>2026년 8월</th><th>공식과 평균 차이</th></tr></thead><tbody><tr><td>서울</td><td>+1.5%<div class=\"sub\">맞물린 칸 1,204</div></td><td>0.46%p (15)</td></tr><tr><td>도심권</td><td>+3.6%<div class=\"sub\">맞물린 칸 27</div></td><td>0.97%p (15)</td></tr><tr><td>동북권</td><td>+2.1%<div class=\"sub\">맞물린 칸 473</div></td><td>0.4%p (15)</td></tr><tr><td>서북권</td><td>+1.1%<div class=\"sub\">맞물린 칸 160</div></td><td>0.56%p (15)</td></tr><tr><td>서남권</td><td>+1.1%<div class=\"sub\">맞물린 칸 417</div></td><td>0.49%p (15)</td></tr><tr><td>동남권</td><td>+0.1%<div class=\"sub\">맞물린 칸 127</div></td><td>0.81%p (15)</td></tr></tbody>",
+      "en": "<thead><tr><th>Region</th><th>Aug 2026</th><th>Avg gap to official</th></tr></thead><tbody><tr><td>Seoul</td><td>+1.5%<div class=\"sub\">Matched 1,204</div></td><td>0.46pp (15)</td></tr><tr><td>Central</td><td>+3.6%<div class=\"sub\">Matched 27</div></td><td>0.97pp (15)</td></tr><tr><td>Northeast</td><td>+2.1%<div class=\"sub\">Matched 473</div></td><td>0.4pp (15)</td></tr><tr><td>Northwest</td><td>+1.1%<div class=\"sub\">Matched 160</div></td><td>0.56pp (15)</td></tr><tr><td>Southwest</td><td>+1.1%<div class=\"sub\">Matched 417</div></td><td>0.49pp (15)</td></tr><tr><td>Southeast</td><td>+0.1%<div class=\"sub\">Matched 127</div></td><td>0.81pp (15)</td></tr></tbody>"
     },
     "score": {
       "ko": "<thead><tr><th>거리</th><th>모델</th><th>\"그대로다\"</th><th>\"늘 오른다\"</th><th>방향 적중</th><th>\"오른다\" 적중</th><th>값을 내나</th></tr></thead><tbody><tr><td>3개월 뒤</td><td>2.43%p</td><td>3.13%p</td><td>2.7%p</td><td>78%</td><td>76%</td><td>낸다</td></tr><tr><td>6개월 뒤</td><td>4.71%p</td><td>5.61%p</td><td>4.55%p</td><td>79%</td><td>82%</td><td><span class=\"low-sample\">안 낸다</span></td></tr><tr><td>12개월 뒤</td><td>8.18%p</td><td>10.08%p</td><td>7.2%p</td><td>86%</td><td>86%</td><td><span class=\"low-sample\">안 낸다</span></td></tr></tbody>",
