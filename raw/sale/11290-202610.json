@@ -1,1 +1,4 @@
-{"kind":"sale","district":"11290","yearMonth":"202610","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-10-01T04:00:48.880Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11290","yearMonth":"202610","ok":true,"resultCode":0,"count":2,"totalCount":2,"observedAt":"2026-10-07T02:19:21.012Z","previousObservedAt":"2026-10-01T04:00:48.880Z","arrivals":{"20503fceff53":"2026-10-07","004120b97f50":"2026-10-07"},"items":[
+{"aptDong":"","aptNm":"삼선현대힐스테이트","buildYear":2009,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"100,000","dealDay":3,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 성북구","excluUseAr":84.83,"floor":1,"jibun":420,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11290,"slerGbn":"개인","umdNm":"삼선동2가"},
+{"aptDong":"","aptNm":"정릉풍림아이원","buildYear":2005,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"75,000","dealDay":3,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 성북구","excluUseAr":84.09,"floor":5,"jibun":239,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11290,"slerGbn":"개인","umdNm":"정릉동"}
+]}

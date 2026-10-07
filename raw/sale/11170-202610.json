@@ -1,1 +1,3 @@
-{"kind":"sale","district":"11170","yearMonth":"202610","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-10-01T04:00:48.880Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11170","yearMonth":"202610","ok":true,"resultCode":0,"count":1,"totalCount":1,"observedAt":"2026-10-07T02:19:21.012Z","previousObservedAt":"2026-10-01T04:00:48.880Z","arrivals":{"061f4eafa8e9":"2026-10-07"},"items":[
+{"aptDong":"","aptNm":"동아그린","buildYear":1999,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"190,000","dealDay":2,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 용산구","excluUseAr":114.96,"floor":17,"jibun":411,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11170,"slerGbn":"개인","umdNm":"이촌동"}
+]}

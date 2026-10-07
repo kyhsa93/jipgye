@@ -1,1 +1,4 @@
-{"kind":"sale","district":"11545","yearMonth":"202610","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-10-01T04:00:48.880Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11545","yearMonth":"202610","ok":true,"resultCode":0,"count":2,"totalCount":2,"observedAt":"2026-10-07T02:19:21.012Z","previousObservedAt":"2026-10-01T04:00:48.880Z","arrivals":{"e817cf34d7f2":"2026-10-07","e3ef0144d7bb":"2026-10-07"},"items":[
+{"aptDong":"","aptNm":"금천롯데캐슬골드파크3차","buildYear":2018,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"110,000","dealDay":6,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 금천구","excluUseAr":59.9662,"floor":8,"jibun":1155,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11545,"slerGbn":"개인","umdNm":"독산동"},
+{"aptDong":"","aptNm":"금천롯데캐슬골드파크3차","buildYear":2018,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"133,000","dealDay":2,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 금천구","excluUseAr":84.408,"floor":21,"jibun":1155,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11545,"slerGbn":"개인","umdNm":"독산동"}
+]}
