@@ -63,7 +63,9 @@ test("원본 디렉터리가 없는 날에도 커밋이 된다", async () => {
 test("재시도는 rebase를 반드시 되돌리고 다음으로 넘어간다", async () => {
   const script = await read("scripts/push-docs.sh");
   assert.match(script, /git rebase --abort/, "충돌로 멈춘 rebase를 정리하지 않는다");
-  assert.match(script, /git pull --rebase -X theirs/, "충돌을 우리 산출물로 풀지 않는다");
+  // #94: 충돌을 우리(낡은) 산출물로 풀면 최신 main을 덮는다. 주석 말고 코드에 -X가 없어야 한다.
+  const code = script.split("\n").filter((l) => !l.trim().startsWith("#")).join("\n");
+  assert.ok(!/-X\s*theirs|--strategy-option/.test(code), "충돌을 우리 산출물로 푼다(-X theirs)");
 });
 
 test("실거래는 날마다 받는다", async () => {
