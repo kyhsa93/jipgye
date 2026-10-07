@@ -1,45 +1,82 @@
 {
-  "updatedAt": "2026-10-07T03:38:32.842Z",
+  "updatedAt": "2026-10-07T14:26:39.026Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 기타 경제 소식: 한국은행은 국제 담당 부총재보에 최영주를 임명하고 경제연구원장에 윤경수를 선임했다. 추경호는 경제 회복과 대구 발전에 집중하겠다고 밝혔다. 홍지선 국토부 장관은 연말까지 서울 집값 상승폭이 줄어들 것이라고 전망했다. 이형일은 경제6단체와 간담회를 열어 소통과 청년정책을 강조했다. 한 주간 사내 대출 5억 원을 받은 '삼성맨'이 몰린 동네에서 한 달에 1억 원씩 집값이 오르는 것으로 나타났다.\n- 증시·환율: 홍콩 증시는 지분조정 매도로 인해 0.78% 하락한 채 개장했다. 대만 증시는 상승 개장 후 5만선을 놓고 공방전을 벌이면서 0.23% 하락했다. 일본 닛케이 증시는 차익실현에 따라 0.14% 하락 출발했다. 각 지역 증시는 모두 하락세를 보이며 개장했다. 이들 시장의 하락은 각각 다른 요인에 따라 발생했다.\n- 금리·예금·투자상품: 국고채 금리가 상승하며 3년물이 장중 연 3.950%를 기록했고, 미국 은행 주가가 금리 상승에 따라 9% 급락했으며, 미 국채금리 급등으로 CCC급 조달비용이 17% 증가했다.\n- 부동산: 홍지선 국토장관은 강남 3구 집값 하락세와 연말 주택시장 안정 전망을 언급했고, GS건설은 서울에너지공사와 협력해 ‘제로에너지’ 공동주택 확대에 나서며, 고가 아파트 약세로 서울 아파트 경매 낙찰가율이 1년7개월만에 최저 수준을 기록했으며, 국토장관은 재개발·재건축 사업 속도 저해요인을 적극 해소하겠다고 밝혔고, 신동아건설은 남양주 진접에서 590가구 공동주택을 추진하며 회생 후 첫 자체사업을 진행한다.",
-    "en": "- Other Economic News: The Bank of Korea appointed Choi Young-joo as deputy governor for international affairs and appointed Yun Kyung-su as director of the Economic Research Institute. Choo Kyung-ho stated that he will focus on economic recovery and Daegu's development. Hong Ji-seon, the Minister of Land, Infrastructure and Transport, predicted that the rate of increase in Seoul's housing prices would decrease by year-end. Lee Hyung-il held a meeting with the six economic organizations to emphasize communication and youth policies. It was found that in the neighborhood where \"Samsung men\" have gathered, housing prices have risen by 100,000,000 won per month, following a 500,000,000 won internal loan received by Samsung employees over one week.\n- Stocks & FX: The Hong Kong stock market opened 0.78% lower due to share adjustment selling. The Taiwan stock market fell 0.23% after a tug-of-war around the 50,000 level following an upward opening. The Japanese Nikkei stock market opened 0.14% lower due to profit-taking. All regional stock markets opened in a downward trend. The declines in these markets occurred due to different factors in each case.\n- Rates, Deposits & Investment Products: The government bond rate rose, with the 3-year bond reaching 3.950% annually during trading, U.S. bank stocks fell sharply by 9% due to rising interest rates, and borrowing costs for CCC-rated bonds increased by 17% due to a sharp rise in U.S. Treasury bond rates.\n- Real Estate: Minister of Land, Hong Jisun, mentioned the declining prices in the Gangnam 3 districts and the outlook for a stable housing market by year-end, GS Construction will expand 'zero energy' co-housing in cooperation with Seoul Energy Corporation, the auction success rate for Seoul apartments hit a record low level not seen in 1 year and 7 months due to the weakness in high-end apartments, Minister of Land announced that he will actively eliminate factors hindering redevelopment and reconstruction projects, and Shin Donga Construction will proceed with a co-housing project for 590 units in Jinjeop, Nanyangju, marking its first self-initiated project after recovery."
+    "ko": "- 금리·예금·투자상품: 미국 10년물 국채 금리가 장중 2002년 4월 이후 최고 수준으로 올랐다. 인도 중앙은행은 3년 8개월 만에 처음으로 기준금리를 인상했다. 이소영 장관은 홈플러스 협력업체에 대한 정책자금 금리 인하를 적극 검토하고 있다. 저축은행과 새마을금고의 가계대출 증가세가 전환됐다. 5060 집 구매 시 변동금리 대출이 역주행하고 있다.\n- 부동산: 부동산: 文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\", [올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓, 성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판] +4\n- 증시·환율: 홍콩 증시는 지분조정 매도로 사흘 만에 반락 마감했고, 일본 증시는 AI·반도체주 차익 실현으로 하락 마감했다.\n- 기타 경제 소식: 시중은행의 대출 오픈런, 홍지선 장관의 서울 집값 진정 전망, 국토장관의 서울 집값 상승폭 감소 예측과 토허제 확대 검토, 재정경제부 인사, AI기반 사이버 공격 대응 방안 논의 등이 오늘의 경제 소식이다.",
+    "en": "- Rates, Deposits & Investment Products: The 10-year U.S. Treasury bond yield rose to its highest level since April 2002 during trading. India's central bank raised its benchmark interest rate for the first time in 3 years and 8 months. Minister Lee So-young is actively considering lowering the policy interest rate for Homeplus affiliated companies. The growth in household loans by savings banks and New Village Financial Cooperation has reversed. For purchases of 5060 housing units, adjustable-rate mortgages are experiencing a reversal in trend.\n- Real Estate: Real Estate: 文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\", [올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓, 성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판] +4\n- Stocks & FX: The Hong Kong stock market closed lower after three days due to share adjustment selling, and the Japanese stock market closed lower as AI and semiconductor stocks took profits.\n- Other Economic News: Today's economic news includes open runs of loans by commercial banks, Minister Hong Ji-seon's outlook on the stabilization of Seoul housing prices, the Land Minister's prediction of a decrease in the rate of increase of Seoul housing prices and the review of expanding the tohakje system, personnel changes at the Ministry of Finance and Economy, and discussions on countermeasures against cyberattacks based on AI."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "한국은행은 국제 담당 부총재보에 최영주를 임명하고 경제연구원장에 윤경수를 선임했다. 추경호는 경제 회복과 대구 발전에 집중하겠다고 밝혔다. 홍지선 국토부 장관은 연말까지 서울 집값 상승폭이 줄어들 것이라고 전망했다. 이형일은 경제6단체와 간담회를 열어 소통과 청년정책을 강조했다. 한 주간 사내 대출 5억 원을 받은 '삼성맨'이 몰린 동네에서 한 달에 1억 원씩 집값이 오르는 것으로 나타났다.",
-      "lineEn": "The Bank of Korea appointed Choi Young-joo as deputy governor for international affairs and appointed Yun Kyung-su as director of the Economic Research Institute. Choo Kyung-ho stated that he will focus on economic recovery and Daegu's development. Hong Ji-seon, the Minister of Land, Infrastructure and Transport, predicted that the rate of increase in Seoul's housing prices would decrease by year-end. Lee Hyung-il held a meeting with the six economic organizations to emphasize communication and youth policies. It was found that in the neighborhood where \"Samsung men\" have gathered, housing prices have risen by 100,000,000 won per month, following a 500,000,000 won internal loan received by Samsung employees over one week.",
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "미국 10년물 국채 금리가 장중 2002년 4월 이후 최고 수준으로 올랐다. 인도 중앙은행은 3년 8개월 만에 처음으로 기준금리를 인상했다. 이소영 장관은 홈플러스 협력업체에 대한 정책자금 금리 인하를 적극 검토하고 있다. 저축은행과 새마을금고의 가계대출 증가세가 전환됐다. 5060 집 구매 시 변동금리 대출이 역주행하고 있다.",
+      "lineEn": "The 10-year U.S. Treasury bond yield rose to its highest level since April 2002 during trading. India's central bank raised its benchmark interest rate for the first time in 3 years and 8 months. Minister Lee So-young is actively considering lowering the policy interest rate for Homeplus affiliated companies. The growth in household loans by savings banks and New Village Financial Cooperation has reversed. For purchases of 5060 housing units, adjustable-rate mortgages are experiencing a reversal in trend.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "한은 국제 담당 부총재보에 최영주…경제연구원장에 윤경수",
-          "link": "https://www.yna.co.kr/view/AKR20261007093300002",
+          "title": "美국채 매도세 재개…장중 10년물 금리 2002년 4월 이후 최고",
+          "link": "https://www.yna.co.kr/view/AKR20261007207300072",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "추경호 \"경제 살리고 더 나은 대구 만드는 데 집중\"(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261007081051053",
+          "title": "인도중앙은행, 3년8개월만 첫 기준금리 인상…\"인플레 대응\"",
+          "link": "https://www.yna.co.kr/view/AKR20261007203000084",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "홍지선 국토부 장관 \"연말까지 서울 집값 상승폭 줄어들 것\"",
-          "link": "https://www.newsis.com/view/NISX20261007_0003817178",
+          "title": "이소영 장관 \"홈플러스 협력업체 정책자금 금리인하 적극 검토\"",
+          "link": "https://www.yna.co.kr/view/AKR20261007188500030",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "저축銀·새마을금고도 가계대출 증가세 전환",
+          "link": "https://www.hankyung.com/article/2026100791961",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "5060 집 살 때 변동금리 대출 '역주행'",
+          "link": "https://www.mk.co.kr/news/realestate/12170647",
+          "source": "매일경제 부동산"
+        }
+      ]
+    },
+    {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "부동산: 文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\", [올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓, 성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판] +4",
+      "lineEn": "Real Estate: 文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\", [올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓, 성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판] +4",
+      "isFallback": true,
+      "fallbackReason": "unverified-entity",
+      "degraded": false,
+      "items": [
+        {
+          "title": "文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\"",
+          "link": "https://www.newsis.com/view/NISX20261007_0003818189",
           "source": "뉴시스 경제"
         },
         {
-          "title": "이형일, 상의 등 경제6단체 간담회…소통과 청년정책 강조",
-          "link": "https://www.yna.co.kr/view/AKR20261007066800002",
+          "title": "[올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓",
+          "link": "https://www.newsis.com/view/NISX20261007_0003818099",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판]",
+          "link": "https://www.mk.co.kr/news/realestate/12170805",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "울산바위 인근 아파트 건립 두고 지역사회 '엇갈린 시선'(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261007129351062",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "\"한달에 1억씩 올랐다\"…사내 대출 5억에 '삼성맨' 몰린 동네 [주간이집]",
-          "link": "https://www.hankyung.com/article/2026100651906",
+          "title": "화성 향남서 5년 만의 새 아파트…'교육·돌봄' 특화단지",
+          "link": "https://www.hankyung.com/article/2026100790221",
           "source": "한국경제 부동산"
         }
       ]
@@ -48,90 +85,58 @@
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
-      "lineKo": "홍콩 증시는 지분조정 매도로 인해 0.78% 하락한 채 개장했다. 대만 증시는 상승 개장 후 5만선을 놓고 공방전을 벌이면서 0.23% 하락했다. 일본 닛케이 증시는 차익실현에 따라 0.14% 하락 출발했다. 각 지역 증시는 모두 하락세를 보이며 개장했다. 이들 시장의 하락은 각각 다른 요인에 따라 발생했다.",
-      "lineEn": "The Hong Kong stock market opened 0.78% lower due to share adjustment selling. The Taiwan stock market fell 0.23% after a tug-of-war around the 50,000 level following an upward opening. The Japanese Nikkei stock market opened 0.14% lower due to profit-taking. All regional stock markets opened in a downward trend. The declines in these markets occurred due to different factors in each case.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "[올댓차이나] 홍콩 증시, 지분조정 매도에 반락 개장… H주 0.78%↓",
-          "link": "https://www.newsis.com/view/NISX20261007_0003817217",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "[올댓차이나] 대만 증시, 상승 개장 후 5만선 놓고 '공방전' …0.23%↓",
-          "link": "https://www.newsis.com/view/NISX20261007_0003817147",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "日증시, 차익실현에 하락 출발…닛케이 0.14%↓",
-          "link": "https://www.newsis.com/view/NISX20261007_0003816701",
-          "source": "뉴시스 경제"
-        }
-      ]
-    },
-    {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "국고채 금리가 상승하며 3년물이 장중 연 3.950%를 기록했고, 미국 은행 주가가 금리 상승에 따라 9% 급락했으며, 미 국채금리 급등으로 CCC급 조달비용이 17% 증가했다.",
-      "lineEn": "The government bond rate rose, with the 3-year bond reaching 3.950% annually during trading, U.S. bank stocks fell sharply by 9% due to rising interest rates, and borrowing costs for CCC-rated bonds increased by 17% due to a sharp rise in U.S. Treasury bond rates.",
+      "lineKo": "홍콩 증시는 지분조정 매도로 사흘 만에 반락 마감했고, 일본 증시는 AI·반도체주 차익 실현으로 하락 마감했다.",
+      "lineEn": "The Hong Kong stock market closed lower after three days due to share adjustment selling, and the Japanese stock market closed lower as AI and semiconductor stocks took profits.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": true,
       "items": [
         {
-          "title": "국고채 금리 대체로 상승…3년물 장중 연 3.950%",
-          "link": "https://www.yna.co.kr/view/AKR20261007088400008",
-          "source": "연합뉴스 경제"
+          "title": "[올댓차이나] 홍콩 증시, 지분조정 매도로 사흘 만에 반락 마감… H주 0.57%↓",
+          "link": "https://www.newsis.com/view/NISX20261007_0003818144",
+          "source": "뉴시스 경제"
         },
         {
-          "title": "“SVB 사태 재현?”…금리 오르자 美 은행 주가 9% 급락",
-          "link": "https://www.hankyung.com/article/202610077058i",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "미 국채금리 급등 기업 덮쳤다…CCC급 조달비용 17%",
-          "link": "https://www.hankyung.com/article/202610077037i",
-          "source": "한국경제 경제"
+          "title": "日증시, AI·반도체주 차익 실현에 하락 마감…닛케이 0.92%↓",
+          "link": "https://www.newsis.com/view/NISX20261007_0003817681",
+          "source": "뉴시스 경제"
         }
       ]
     },
     {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "홍지선 국토장관은 강남 3구 집값 하락세와 연말 주택시장 안정 전망을 언급했고, GS건설은 서울에너지공사와 협력해 ‘제로에너지’ 공동주택 확대에 나서며, 고가 아파트 약세로 서울 아파트 경매 낙찰가율이 1년7개월만에 최저 수준을 기록했으며, 국토장관은 재개발·재건축 사업 속도 저해요인을 적극 해소하겠다고 밝혔고, 신동아건설은 남양주 진접에서 590가구 공동주택을 추진하며 회생 후 첫 자체사업을 진행한다.",
-      "lineEn": "Minister of Land, Hong Jisun, mentioned the declining prices in the Gangnam 3 districts and the outlook for a stable housing market by year-end, GS Construction will expand 'zero energy' co-housing in cooperation with Seoul Energy Corporation, the auction success rate for Seoul apartments hit a record low level not seen in 1 year and 7 months due to the weakness in high-end apartments, Minister of Land announced that he will actively eliminate factors hindering redevelopment and reconstruction projects, and Shin Donga Construction will proceed with a co-housing project for 590 units in Jinjeop, Nanyangju, marking its first self-initiated project after recovery.",
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "시중은행의 대출 오픈런, 홍지선 장관의 서울 집값 진정 전망, 국토장관의 서울 집값 상승폭 감소 예측과 토허제 확대 검토, 재정경제부 인사, AI기반 사이버 공격 대응 방안 논의 등이 오늘의 경제 소식이다.",
+      "lineEn": "Today's economic news includes open runs of loans by commercial banks, Minister Hong Ji-seon's outlook on the stabilization of Seoul housing prices, the Land Minister's prediction of a decrease in the rate of increase of Seoul housing prices and the review of expanding the tohakje system, personnel changes at the Ministry of Finance and Economy, and discussions on countermeasures against cyberattacks based on AI.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": true,
       "items": [
         {
-          "title": "홍지선 국토장관 “강남 3구 집값 하락세…연말 주택시장 안정 전망”",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/07/LIG7TKEM3VBTBLM7GHXVRTGX5Q/",
-          "source": "조선비즈 부동산"
+          "title": "시중銀 옥죄자…지방은행 대출 오픈런",
+          "link": "https://www.hankyung.com/article/2026100791821",
+          "source": "한국경제 경제"
         },
         {
-          "title": "GS건설, 서울에너지공사와 협력…‘제로에너지’ 공동주택 확대 나선다",
-          "link": "https://www.mk.co.kr/news/realestate/12170202",
+          "title": "홍지선 장관 \"연말가면 서울 집값 진정될 것\"",
+          "link": "https://www.mk.co.kr/news/realestate/12170649",
           "source": "매일경제 부동산"
         },
         {
-          "title": "고가 아파트 약세에 서울 아파트 경매 낙찰가율 1년7개월만 최저",
-          "link": "https://www.yna.co.kr/view/AKR20261007075100003",
+          "title": "국토장관 \"연말 서울 집값 상승폭 줄 것…토허제 확대는 검토 필요\"(종합)",
+          "link": "https://www.newsis.com/view/NISX20261007_0003817888",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "[인사] 재정경제부",
+          "link": "https://www.yna.co.kr/view/AKR20261007167200002",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "국토장관 \"재개발·재건축 사업 속도 저해요인 적극 해소\"",
-          "link": "https://www.yna.co.kr/view/AKR20261007064800003",
+          "title": "AI기반 사이버 공격에 맞설 보안 방안은…전략경제자문단 회의",
+          "link": "https://www.yna.co.kr/view/AKR20261007134100002",
           "source": "연합뉴스 경제"
-        },
-        {
-          "title": "신동아건설, 남양주 진접 590가구 공동주택 추진...회생후 첫 자체사업",
-          "link": "https://www.mk.co.kr/news/realestate/12170125",
-          "source": "매일경제 부동산"
         }
       ]
     }
