@@ -3808,5 +3808,154 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-10-08",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 증시·환율: \"블랙스완\"탈레브가 미국 증시에 경고를 내리며 폭락 예측보다 대비를 강조했고, 홍콩 증시는 지분조정 매도로 사흘 만에 반락 마감하며 H주가 0.57% 하락했으며, 일본 증시는 AI·반도체주 차익 실현으로 인해 닛케이가 0.92% 하락 마감했다.\n- 금리·예금·투자상품: 미국 10년물 국채 금리가 장중 2002년 4월 이후 최고 수준으로 올랐다. 인도중앙은행은 3년 8개월 만에 처음으로 기준금리를 인상했다. 이소영 장관은 홈플러스 협력업체에 대한 정책자금 금리 인하를 적극 검토하고 있다. 저축은행과 새마을금고도 가계대출 증가세로 전환했다. 메타는 '골든크로스'에 따라 마이크론의 목표가를 3000달러로 제시했다.\n- 부동산: 부동산: 文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\", [올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓, 성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판] +3\n- 기타 경제 소식: 시중은행의 대출 오픈런, 홍지선 장관의 서울 집값 진정 전망, 국토장관의 서울 집값 상승폭 감소 및 토허제 확대 검토, 재정경제부 인사, AI기반 사이버 공격 대응 방안 논의 등 다양한 경제 관련 소식이 전해졌다.",
+      "en": "- Stocks & FX: Taleb of \"Black Swan\" warned the U.S. stock market, emphasizing preparedness over predicting a crash, while the Hong Kong stock market closed lower after three days of trading, with H-shares falling 0.57%, and the Japanese stock market closed down 0.92% as the Nikkei experienced profit-taking in AI and semiconductor stocks.\n- Rates, Deposits & Investment Products: The 10-year U.S. Treasury bond yield rose to its highest level since April 2002 during trading. The Reserve Bank of India raised its benchmark interest rate for the first time in 3 years and 8 months. Minister Lee So-young is actively considering lowering the policy interest rate for Homeplus suppliers. Savings banks and the New Village Financial Cooperation also shifted to an increasing trend in household loan growth. Meta proposed a target price of $3,000 for Micron based on the 'golden cross'.\n- Real Estate: Real Estate: 文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\", [올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓, 성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판] +3\n- Other Economic News: Open banking loans by commercial banks, Minister Hong Ji-seon's outlook on the stabilization of Seoul housing prices, the Minister of Land, Infrastructure and Transport's consideration of expanding the purchase restriction system in response to a decrease in the rate of increase of Seoul housing prices, personnel changes at the Ministry of Economy and Finance, and discussions on cyber attack response strategies based on AI were reported."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "\"블랙스완\"탈레브가 미국 증시에 경고를 내리며 폭락 예측보다 대비를 강조했고, 홍콩 증시는 지분조정 매도로 사흘 만에 반락 마감하며 H주가 0.57% 하락했으며, 일본 증시는 AI·반도체주 차익 실현으로 인해 닛케이가 0.92% 하락 마감했다.",
+        "lineEn": "Taleb of \"Black Swan\" warned the U.S. stock market, emphasizing preparedness over predicting a crash, while the Hong Kong stock market closed lower after three days of trading, with H-shares falling 0.57%, and the Japanese stock market closed down 0.92% as the Nikkei experienced profit-taking in AI and semiconductor stocks.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "\"폭락 예측말고 대비하라\"…'블랙스완'탈레브 美증시 경고",
+            "link": "https://www.hankyung.com/article/202610089559i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "[올댓차이나] 홍콩 증시, 지분조정 매도로 사흘 만에 반락 마감… H주 0.57%↓",
+            "link": "https://www.newsis.com/view/NISX20261007_0003818144",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "日증시, AI·반도체주 차익 실현에 하락 마감…닛케이 0.92%↓",
+            "link": "https://www.newsis.com/view/NISX20261007_0003817681",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "미국 10년물 국채 금리가 장중 2002년 4월 이후 최고 수준으로 올랐다. 인도중앙은행은 3년 8개월 만에 처음으로 기준금리를 인상했다. 이소영 장관은 홈플러스 협력업체에 대한 정책자금 금리 인하를 적극 검토하고 있다. 저축은행과 새마을금고도 가계대출 증가세로 전환했다. 메타는 '골든크로스'에 따라 마이크론의 목표가를 3000달러로 제시했다.",
+        "lineEn": "The 10-year U.S. Treasury bond yield rose to its highest level since April 2002 during trading. The Reserve Bank of India raised its benchmark interest rate for the first time in 3 years and 8 months. Minister Lee So-young is actively considering lowering the policy interest rate for Homeplus suppliers. Savings banks and the New Village Financial Cooperation also shifted to an increasing trend in household loan growth. Meta proposed a target price of $3,000 for Micron based on the 'golden cross'.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "고금리 누가 이길까…메타 '골든크로스'에 마이크론 목표가 3000달러 [박신영의 개장전 요것만]",
+            "link": "https://www.hankyung.com/article/202610079548i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "美국채 매도세 재개…장중 10년물 금리 2002년 4월 이후 최고",
+            "link": "https://www.yna.co.kr/view/AKR20261007207300072",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "인도중앙은행, 3년8개월만 첫 기준금리 인상…\"인플레 대응\"",
+            "link": "https://www.yna.co.kr/view/AKR20261007203000084",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "이소영 장관 \"홈플러스 협력업체 정책자금 금리인하 적극 검토\"",
+            "link": "https://www.yna.co.kr/view/AKR20261007188500030",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "저축銀·새마을금고도 가계대출 증가세 전환",
+            "link": "https://www.hankyung.com/article/2026100791961",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "부동산: 文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\", [올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓, 성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판] +3",
+        "lineEn": "Real Estate: 文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\", [올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓, 성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판] +3",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
+        "degraded": false,
+        "items": [
+          {
+            "title": "文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\"",
+            "link": "https://www.newsis.com/view/NISX20261007_0003818189",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓",
+            "link": "https://www.newsis.com/view/NISX20261007_0003818099",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판]",
+            "link": "https://www.mk.co.kr/news/realestate/12170805",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "울산바위 인근 아파트 건립 두고 지역사회 '엇갈린 시선'(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261007129351062",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "화성 향남서 5년 만의 새 아파트…'교육·돌봄' 특화단지",
+            "link": "https://www.hankyung.com/article/2026100790221",
+            "source": "한국경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "시중은행의 대출 오픈런, 홍지선 장관의 서울 집값 진정 전망, 국토장관의 서울 집값 상승폭 감소 및 토허제 확대 검토, 재정경제부 인사, AI기반 사이버 공격 대응 방안 논의 등 다양한 경제 관련 소식이 전해졌다.",
+        "lineEn": "Open banking loans by commercial banks, Minister Hong Ji-seon's outlook on the stabilization of Seoul housing prices, the Minister of Land, Infrastructure and Transport's consideration of expanding the purchase restriction system in response to a decrease in the rate of increase of Seoul housing prices, personnel changes at the Ministry of Economy and Finance, and discussions on cyber attack response strategies based on AI were reported.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "시중銀 옥죄자…지방은행 대출 오픈런",
+            "link": "https://www.hankyung.com/article/2026100791821",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "홍지선 장관 \"연말가면 서울 집값 진정될 것\"",
+            "link": "https://www.mk.co.kr/news/realestate/12170649",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "국토장관 \"연말 서울 집값 상승폭 줄 것…토허제 확대는 검토 필요\"(종합)",
+            "link": "https://www.newsis.com/view/NISX20261007_0003817888",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[인사] 재정경제부",
+            "link": "https://www.yna.co.kr/view/AKR20261007167200002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "AI기반 사이버 공격에 맞설 보안 방안은…전략경제자문단 회의",
+            "link": "https://www.yna.co.kr/view/AKR20261007134100002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
