@@ -3957,5 +3957,154 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-10-09",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 금리·예금·투자상품: 뉴욕 증시는 미국 국채 금리 상승으로 인해 하락 출발했다. 나스닥은 0.62% 하락했고, 이후 0.55% 추가로 내렸다. 일본 증시도 금리 상승 우려로 닛케이가 1.42% 하락하며 마감했다. 국내 4대 금융사의 순이익은 금리 상승과 기업대출 증가로 5.7조 원으로 최대 수준을 기록했다. 국고채 금리는 중단기 금리가 상승했으나 초장기 금리는 하락하는 혼조세를 보였다.\n- 부동산: 국토부는 '아시안게임 논란' 우수선수 주택 특공 제도 개선을 검토하고 있다. 부동산보다 주식 투자로 부유층의 자산 축적이 변화하고 있는 것으로 나타났다. 일부 집주인은 세금 부담과 재건축 일정으로 인해 급매를 내놓고 있는 것으로 보인다. 국토장관은 민간 주택공급 회복을 위해 HUG PF보증 신속 지원이 필요하다고 강조했다. 관련 기사에서는 구체적인 수치나 금액은 언급되지 않았다.\n- 증시·환율: 대만 증시는 뉴욕 증시 약세로 인해 0.99% 하락하며 속락 마감했다. 홍콩 증시 역시 뉴욕 증시 약세로 인해 H주가 0.89% 하락하며 속락 마감했다. 중국 증시는 연휴 후 반도체주 매도로 인해 창업판이 3.15% 하락하며 하락 마감했다. 삼성전자 역대 최대 실적에도 불구하고 코스피는 2.6% 하락했다. 코스피는 삼성전자의 영업익 107조에도 불구하고 6,600대까지 하락했다.\n- 기타 경제 소식: 재정경제부에서 인사 관련 소식이 전해졌다. 삼전의 사내대출 문제가 해결되며 반세권 지역에서 주가 상승세가 나타났다. 영통과 동탄 지역에서는 신고가 기록이 이어지고 있다. 서울 집값은 87주째 상승세를 이어가고 있다. 다만 강남3구는 상승세가 지속되지 않고 약세를 보이고 있다.",
+      "en": "- Rates, Deposits & Investment Products: The New York stock market opened lower due to rising U.S. Treasury bond yields. The Nasdaq fell 0.62%, and then dropped an additional 0.55%. The Japanese stock market also closed with the Nikkei down 1.42% due to concerns over rising interest rates. The operating profits of the four major domestic financial institutions reached a record high of 5,700,000,000,000 won due to rising interest rates and increased corporate loans. Government bond yields showed a mixed trend, with short- and medium-term rates rising, while long-term rates fell.\n- Real Estate: The Ministry of Land, Infrastructure and Transport is considering improvements to the special housing program for outstanding athletes involved in the Asian Games controversy. It has been observed that the accumulation of assets among the wealthy is shifting from real estate to stock investments. Some property owners appear to be listing their properties for sale quickly due to tax burdens and reconstruction schedules. The Minister of Land, Infrastructure and Transport emphasized the need for swift support from HUG PF guarantees to restore private housing supply. The related article did not mention specific figures or amounts.\n- Stocks & FX: Taiwan's stock market closed 0.99% lower at the close due to weakness in the New York stock market. Hong Kong's stock market also closed 0.89% lower at the close due to weakness in the New York stock market. China's stock market closed lower after a 3.15% decline in the Star Market due to semiconductor stock selling following the holiday. The Kospi fell 2.6% despite Samsung Electronics' record performance. The Kospi fell to 6,600 despite Samsung Electronics' operating profit of 107,000,000,000,000.\n- Other Economic News: The Ministry of Finance and Economy reported news related to personnel matters. With the resolution of the internal loan issue at Samsung Electronics, stock prices in the Hanseok region have started to rise. New high prices have continued to be recorded in the Yeongtong and Dongtan areas. Seoul housing prices have continued to rise for 87 consecutive weeks. However, the three districts of Gangnam are showing a weak performance and the upward trend has not continued."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "뉴욕 증시는 미국 국채 금리 상승으로 인해 하락 출발했다. 나스닥은 0.62% 하락했고, 이후 0.55% 추가로 내렸다. 일본 증시도 금리 상승 우려로 닛케이가 1.42% 하락하며 마감했다. 국내 4대 금융사의 순이익은 금리 상승과 기업대출 증가로 5.7조 원으로 최대 수준을 기록했다. 국고채 금리는 중단기 금리가 상승했으나 초장기 금리는 하락하는 혼조세를 보였다.",
+        "lineEn": "The New York stock market opened lower due to rising U.S. Treasury bond yields. The Nasdaq fell 0.62%, and then dropped an additional 0.55%. The Japanese stock market also closed with the Nikkei down 1.42% due to concerns over rising interest rates. The operating profits of the four major domestic financial institutions reached a record high of 5,700,000,000,000 won due to rising interest rates and increased corporate loans. Government bond yields showed a mixed trend, with short- and medium-term rates rising, while long-term rates fell.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "뉴욕 증시, 美 국채 금리·유가 상승에 하락 출발…나스닥, 0.62% ↓",
+            "link": "https://www.newsis.com/view/NISX20261008_0003819980",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[속보]뉴욕증시, 美 국채 금리 상승에 하락세…나스닥, 0.55% ↓",
+            "link": "https://www.newsis.com/view/NISX20261008_0003819969",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "금리 오르고 기업대출도 늘고 4대 금융 순이익 5.7조 '최대'",
+            "link": "https://www.hankyung.com/article/2026100817571",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "국고채 금리 혼조세…중단기 금리 상승하고 초장기 하락(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261008167551008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "日증시, 금리 상승 우려에 하락 마감…닛케이 1.42%↓",
+            "link": "https://www.newsis.com/view/NISX20261008_0003819511",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "국토부는 '아시안게임 논란' 우수선수 주택 특공 제도 개선을 검토하고 있다. 부동산보다 주식 투자로 부유층의 자산 축적이 변화하고 있는 것으로 나타났다. 일부 집주인은 세금 부담과 재건축 일정으로 인해 급매를 내놓고 있는 것으로 보인다. 국토장관은 민간 주택공급 회복을 위해 HUG PF보증 신속 지원이 필요하다고 강조했다. 관련 기사에서는 구체적인 수치나 금액은 언급되지 않았다.",
+        "lineEn": "The Ministry of Land, Infrastructure and Transport is considering improvements to the special housing program for outstanding athletes involved in the Asian Games controversy. It has been observed that the accumulation of assets among the wealthy is shifting from real estate to stock investments. Some property owners appear to be listing their properties for sale quickly due to tax burdens and reconstruction schedules. The Minister of Land, Infrastructure and Transport emphasized the need for swift support from HUG PF guarantees to restore private housing supply. The related article did not mention specific figures or amounts.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "국토부, '아시안게임 논란' 우수선수 주택 특공 제도 개선 검토",
+            "link": "https://www.yna.co.kr/view/AKR20261008210100003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "부동산 대신 주식으로…'富의 축적 공식' 바뀐다",
+            "link": "https://www.hankyung.com/article/2026100820461",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "'부동산으로 돈 번다고? 꿈 깼어요'…집 대신 주식 산다",
+            "link": "https://www.hankyung.com/article/2026100817951",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "稅부담·재건축 일정에 쫓겨 … 마음 급해진 집주인 '시한부 급매'",
+            "link": "https://www.mk.co.kr/news/realestate/12171832",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "국토장관 \"민간 주택공급 회복 중요…HUG PF보증 신속 지원해야\"(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261008115051003",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "대만 증시는 뉴욕 증시 약세로 인해 0.99% 하락하며 속락 마감했다. 홍콩 증시 역시 뉴욕 증시 약세로 인해 H주가 0.89% 하락하며 속락 마감했다. 중국 증시는 연휴 후 반도체주 매도로 인해 창업판이 3.15% 하락하며 하락 마감했다. 삼성전자 역대 최대 실적에도 불구하고 코스피는 2.6% 하락했다. 코스피는 삼성전자의 영업익 107조에도 불구하고 6,600대까지 하락했다.",
+        "lineEn": "Taiwan's stock market closed 0.99% lower at the close due to weakness in the New York stock market. Hong Kong's stock market also closed 0.89% lower at the close due to weakness in the New York stock market. China's stock market closed lower after a 3.15% decline in the Star Market due to semiconductor stock selling following the holiday. The Kospi fell 2.6% despite Samsung Electronics' record performance. The Kospi fell to 6,600 despite Samsung Electronics' operating profit of 107,000,000,000,000.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 대만 증시, 뉴욕 증시 약세에 속락 마감…0.99%↓",
+            "link": "https://www.newsis.com/view/NISX20261008_0003819878",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 홍콩 증시, 뉴욕 증시 약세에 속락 마감… H주 0.89%↓",
+            "link": "https://www.newsis.com/view/NISX20261008_0003819852",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 中 증시, 연휴 후 반도체주 매도에 하락 마감…창업판 3.15%↓",
+            "link": "https://www.newsis.com/view/NISX20261008_0003819771",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "셀온? 리밸런싱?…삼성전자 역대 최대 실적에도 코스피 2.6% 하락(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261008093451008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 삼전 영업익 107조에도 2.6% 급락해 6,600대로 털썩(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261008143151008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "재정경제부에서 인사 관련 소식이 전해졌다. 삼전의 사내대출 문제가 해결되며 반세권 지역에서 주가 상승세가 나타났다. 영통과 동탄 지역에서는 신고가 기록이 이어지고 있다. 서울 집값은 87주째 상승세를 이어가고 있다. 다만 강남3구는 상승세가 지속되지 않고 약세를 보이고 있다.",
+        "lineEn": "The Ministry of Finance and Economy reported news related to personnel matters. With the resolution of the internal loan issue at Samsung Electronics, stock prices in the Hanseok region have started to rise. New high prices have continued to be recorded in the Yeongtong and Dongtan areas. Seoul housing prices have continued to rise for 87 consecutive weeks. However, the three districts of Gangnam are showing a weak performance and the upward trend has not continued.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[인사] 재정경제부",
+            "link": "https://www.yna.co.kr/view/AKR20261008185900002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "삼전 사내대출 풀리자 '반세권' 들썩 … 영통·동탄 줄줄이 신고가",
+            "link": "https://www.mk.co.kr/news/realestate/12171833",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "서울 집값 87주째 상승 랠리…강남3구는 약세 지속",
+            "link": "https://www.hankyung.com/article/2026100816751",
+            "source": "한국경제 부동산"
+          }
+        ]
+      }
+    ]
   }
 ]
