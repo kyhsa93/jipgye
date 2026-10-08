@@ -1,110 +1,46 @@
 {
-  "updatedAt": "2026-10-07T17:49:47.747Z",
+  "updatedAt": "2026-10-08T02:44:57.852Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 증시·환율: \"블랙스완\"탈레브가 미국 증시에 경고를 내리며 폭락 예측보다 대비를 강조했고, 홍콩 증시는 지분조정 매도로 사흘 만에 반락 마감하며 H주가 0.57% 하락했으며, 일본 증시는 AI·반도체주 차익 실현으로 인해 닛케이가 0.92% 하락 마감했다.\n- 금리·예금·투자상품: 미국 10년물 국채 금리가 장중 2002년 4월 이후 최고 수준으로 올랐다. 인도중앙은행은 3년 8개월 만에 처음으로 기준금리를 인상했다. 이소영 장관은 홈플러스 협력업체에 대한 정책자금 금리 인하를 적극 검토하고 있다. 저축은행과 새마을금고도 가계대출 증가세로 전환했다. 메타는 '골든크로스'에 따라 마이크론의 목표가를 3000달러로 제시했다.\n- 부동산: 부동산: 文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\", [올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓, 성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판] +3\n- 기타 경제 소식: 시중은행의 대출 오픈런, 홍지선 장관의 서울 집값 진정 전망, 국토장관의 서울 집값 상승폭 감소 및 토허제 확대 검토, 재정경제부 인사, AI기반 사이버 공격 대응 방안 논의 등 다양한 경제 관련 소식이 전해졌다.",
-    "en": "- Stocks & FX: Taleb of \"Black Swan\" warned the U.S. stock market, emphasizing preparedness over predicting a crash, while the Hong Kong stock market closed lower after three days of trading, with H-shares falling 0.57%, and the Japanese stock market closed down 0.92% as the Nikkei experienced profit-taking in AI and semiconductor stocks.\n- Rates, Deposits & Investment Products: The 10-year U.S. Treasury bond yield rose to its highest level since April 2002 during trading. The Reserve Bank of India raised its benchmark interest rate for the first time in 3 years and 8 months. Minister Lee So-young is actively considering lowering the policy interest rate for Homeplus suppliers. Savings banks and the New Village Financial Cooperation also shifted to an increasing trend in household loan growth. Meta proposed a target price of $3,000 for Micron based on the 'golden cross'.\n- Real Estate: Real Estate: 文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\", [올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓, 성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판] +3\n- Other Economic News: Open banking loans by commercial banks, Minister Hong Ji-seon's outlook on the stabilization of Seoul housing prices, the Minister of Land, Infrastructure and Transport's consideration of expanding the purchase restriction system in response to a decrease in the rate of increase of Seoul housing prices, personnel changes at the Ministry of Economy and Finance, and discussions on cyber attack response strategies based on AI were reported."
+    "ko": "- 부동산: 한국토지주택공사 인사가 발표되었고, 서울 모든 도로가 토허구역으로 지정되어 기획부동산을 막는 조치가 이루어졌으며, 외신은 AI가 서울 집값을 끌어올렸다고 보도했고, 구로구 고척파크푸르지오 59.89㎡는 11억 6500만원, 강동구 길동 라인 59.94㎡는 6억 9천만원에 최근 3년 신고가를 기록했다.\n- 기타 경제 소식: 우리은행이 '수출선도기업대출'을 출시하며 시설자금에 대해 최대 15% 추가한도를 제공했다. 강남 지역을 제외한 일부 지역에서 대출 옥죄기로 인해 매입자금 의존도가 더 커지는 것으로 나타났다. 우리은행의 이번 대출 상품은 수출 기업 지원을 위한 것으로 보인다. 매입자금 의존도가 높아진 지역은 대출 접근성이 낮아진 것으로 해석된다. 두 소식은 서로 다른 경제 현상에 대한 보도로, 직접적인 연관은 없다.\n- 금리·예금·투자상품: 미국 금리가 계속 높은 수준을 유지하면서 한국 증시는 실적 중심의 선별적 장세를 보일 것으로 전망된다. 이억원은 금리 인상 기간 동안 정책서민금융 금리를 낮추고 공급을 확대할 계획이라고 밝혔다. 엔화는 미국 장기금리 상승이 주춤하면서 1달러=158엔으로 소폭 상승 출발했다. 키움증권은 한글날을 기념해 연 5.8% 금리를 제공하는 발행어음 특판을 출시했다. 각 기사는 서로 다른 주제를 다루고 있으며, 구체적인 수치와 내용만을 기반으로 작성되었다.\n- 증시·환율: 일본 증시는 미국 증시의 약세로 인해 하락 출발했고, 한투증권은 원/달러 환율이 1,330원대 복귀해도 추가 하락 압력이 있을 수 있다고 밝혔다.",
+    "en": "- Real Estate: An official from the Korea Land & Housing Corporation was announced, all roads in Seoul were designated as temporary construction zones to block speculative real estate activities, foreign media reported that AI has driven up Seoul's housing prices, and the 59.89㎡ unit at Gocheok Park Purio in Guro District was recently reported as having a new high price of 1,165,000,000 won, while the 59.94㎡ unit at Gil-dong Line in Gangdong District was reported as having a new high price of 690,000,000 won.\n- Other Economic News: OurBank introduced the \"Export Leading Company Loan\" product, offering an additional 15% limit on facility funds. It was found that in some areas outside of Gangnam, the reliance on purchase funds has increased further due to tighter lending conditions. This loan product from OurBank appears to be aimed at supporting export companies. Areas with increased reliance on purchase funds are interpreted as having lower access to loans. The two pieces of news are reports on different economic phenomena and are not directly related.\n- Rates, Deposits & Investment Products: With U.S. interest rates remaining high, the Korean stock market is expected to show a selective performance focused on earnings. Lee Eok-won stated that during the period of interest rate hikes, the policy-based financial services for the general public will lower interest rates and expand supply. The yen rose slightly to 1 dollar = 158 yen as the rise in U.S. long-term interest rates slowed. Kiwoom Securities launched a special issue of notes offering an annual interest rate of 5.8% to commemorate Hangul Day. Each article covers different topics and is based only on specific figures and content.\n- Stocks & FX: Japan's stock market opened lower due to weakness in U.S. markets, and Hanjin Securities stated that even if the won/dollar exchange rate returns to the 1,330 won level, there could be additional downward pressure."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "\"블랙스완\"탈레브가 미국 증시에 경고를 내리며 폭락 예측보다 대비를 강조했고, 홍콩 증시는 지분조정 매도로 사흘 만에 반락 마감하며 H주가 0.57% 하락했으며, 일본 증시는 AI·반도체주 차익 실현으로 인해 닛케이가 0.92% 하락 마감했다.",
-      "lineEn": "Taleb of \"Black Swan\" warned the U.S. stock market, emphasizing preparedness over predicting a crash, while the Hong Kong stock market closed lower after three days of trading, with H-shares falling 0.57%, and the Japanese stock market closed down 0.92% as the Nikkei experienced profit-taking in AI and semiconductor stocks.",
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "한국토지주택공사 인사가 발표되었고, 서울 모든 도로가 토허구역으로 지정되어 기획부동산을 막는 조치가 이루어졌으며, 외신은 AI가 서울 집값을 끌어올렸다고 보도했고, 구로구 고척파크푸르지오 59.89㎡는 11억 6500만원, 강동구 길동 라인 59.94㎡는 6억 9천만원에 최근 3년 신고가를 기록했다.",
+      "lineEn": "An official from the Korea Land & Housing Corporation was announced, all roads in Seoul were designated as temporary construction zones to block speculative real estate activities, foreign media reported that AI has driven up Seoul's housing prices, and the 59.89㎡ unit at Gocheok Park Purio in Guro District was recently reported as having a new high price of 1,165,000,000 won, while the 59.94㎡ unit at Gil-dong Line in Gangdong District was reported as having a new high price of 690,000,000 won.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": true,
       "items": [
         {
-          "title": "\"폭락 예측말고 대비하라\"…'블랙스완'탈레브 美증시 경고",
-          "link": "https://www.hankyung.com/article/202610089559i",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "[올댓차이나] 홍콩 증시, 지분조정 매도로 사흘 만에 반락 마감… H주 0.57%↓",
-          "link": "https://www.newsis.com/view/NISX20261007_0003818144",
+          "title": "[인사]한국토지주택공사",
+          "link": "https://www.newsis.com/view/NISX20261008_0003818938",
           "source": "뉴시스 경제"
         },
         {
-          "title": "日증시, AI·반도체주 차익 실현에 하락 마감…닛케이 0.92%↓",
-          "link": "https://www.newsis.com/view/NISX20261007_0003817681",
-          "source": "뉴시스 경제"
-        }
-      ]
-    },
-    {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "미국 10년물 국채 금리가 장중 2002년 4월 이후 최고 수준으로 올랐다. 인도중앙은행은 3년 8개월 만에 처음으로 기준금리를 인상했다. 이소영 장관은 홈플러스 협력업체에 대한 정책자금 금리 인하를 적극 검토하고 있다. 저축은행과 새마을금고도 가계대출 증가세로 전환했다. 메타는 '골든크로스'에 따라 마이크론의 목표가를 3000달러로 제시했다.",
-      "lineEn": "The 10-year U.S. Treasury bond yield rose to its highest level since April 2002 during trading. The Reserve Bank of India raised its benchmark interest rate for the first time in 3 years and 8 months. Minister Lee So-young is actively considering lowering the policy interest rate for Homeplus suppliers. Savings banks and the New Village Financial Cooperation also shifted to an increasing trend in household loan growth. Meta proposed a target price of $3,000 for Micron based on the 'golden cross'.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "고금리 누가 이길까…메타 '골든크로스'에 마이크론 목표가 3000달러 [박신영의 개장전 요것만]",
-          "link": "https://www.hankyung.com/article/202610079548i",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "美국채 매도세 재개…장중 10년물 금리 2002년 4월 이후 최고",
-          "link": "https://www.yna.co.kr/view/AKR20261007207300072",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "인도중앙은행, 3년8개월만 첫 기준금리 인상…\"인플레 대응\"",
-          "link": "https://www.yna.co.kr/view/AKR20261007203000084",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "이소영 장관 \"홈플러스 협력업체 정책자금 금리인하 적극 검토\"",
-          "link": "https://www.yna.co.kr/view/AKR20261007188500030",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "저축銀·새마을금고도 가계대출 증가세 전환",
-          "link": "https://www.hankyung.com/article/2026100791961",
-          "source": "한국경제 경제"
-        }
-      ]
-    },
-    {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "부동산: 文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\", [올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓, 성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판] +3",
-      "lineEn": "Real Estate: 文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\", [올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓, 성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판] +3",
-      "isFallback": true,
-      "fallbackReason": "unverified-entity",
-      "degraded": false,
-      "items": [
-        {
-          "title": "文정부 부동산 전문가 불법사찰 의혹에 증인들 \"그런 적 없어\"",
-          "link": "https://www.newsis.com/view/NISX20261007_0003818189",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "[올댓차이나] 대만 증시, 차익매물로 엿새 만에 소폭 반락…0.03%↓",
-          "link": "https://www.newsis.com/view/NISX20261007_0003818099",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "성동 못잖은 직주근접 입지에 6만가구…영등포에 주목할 이유 [박합수의 부동산 끝판]",
-          "link": "https://www.mk.co.kr/news/realestate/12170805",
+          "title": "서울 모든 도로, 토허구역 지정…‘도로 쪼개팔기’ 기획부동산 막는다",
+          "link": "https://www.mk.co.kr/news/realestate/12171303",
           "source": "매일경제 부동산"
         },
         {
-          "title": "울산바위 인근 아파트 건립 두고 지역사회 '엇갈린 시선'(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261007129351062",
-          "source": "연합뉴스 경제"
+          "title": "외신 “AI가 서울 집값도 끌어올렸다…李정부 직면한 부동산 딜레마”",
+          "link": "https://www.mk.co.kr/news/economy/12171264",
+          "source": "매일경제 부동산"
         },
         {
-          "title": "화성 향남서 5년 만의 새 아파트…'교육·돌봄' 특화단지",
-          "link": "https://www.hankyung.com/article/2026100790221",
-          "source": "한국경제 부동산"
+          "title": "구로구 고척파크푸르지오 59.89㎡ 11억 6500만원… 최근 3년 신고가 [MAI부동산]",
+          "link": "https://www.mk.co.kr/news/realestate/12171232",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "강동구 길동 라인 59.94㎡ 6억 9천만원… 최근 3년 신고가 [MAI부동산]",
+          "link": "https://www.mk.co.kr/news/realestate/12171235",
+          "source": "매일경제 부동산"
         }
       ]
     },
@@ -112,35 +48,74 @@
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "시중은행의 대출 오픈런, 홍지선 장관의 서울 집값 진정 전망, 국토장관의 서울 집값 상승폭 감소 및 토허제 확대 검토, 재정경제부 인사, AI기반 사이버 공격 대응 방안 논의 등 다양한 경제 관련 소식이 전해졌다.",
-      "lineEn": "Open banking loans by commercial banks, Minister Hong Ji-seon's outlook on the stabilization of Seoul housing prices, the Minister of Land, Infrastructure and Transport's consideration of expanding the purchase restriction system in response to a decrease in the rate of increase of Seoul housing prices, personnel changes at the Ministry of Economy and Finance, and discussions on cyber attack response strategies based on AI were reported.",
+      "lineKo": "우리은행이 '수출선도기업대출'을 출시하며 시설자금에 대해 최대 15% 추가한도를 제공했다. 강남 지역을 제외한 일부 지역에서 대출 옥죄기로 인해 매입자금 의존도가 더 커지는 것으로 나타났다. 우리은행의 이번 대출 상품은 수출 기업 지원을 위한 것으로 보인다. 매입자금 의존도가 높아진 지역은 대출 접근성이 낮아진 것으로 해석된다. 두 소식은 서로 다른 경제 현상에 대한 보도로, 직접적인 연관은 없다.",
+      "lineEn": "OurBank introduced the \"Export Leading Company Loan\" product, offering an additional 15% limit on facility funds. It was found that in some areas outside of Gangnam, the reliance on purchase funds has increased further due to tighter lending conditions. This loan product from OurBank appears to be aimed at supporting export companies. Areas with increased reliance on purchase funds are interpreted as having lower access to loans. The two pieces of news are reports on different economic phenomena and are not directly related.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "우리銀, '수출선도기업대출' 출시…시설자금 최대 15% 추가한도",
+          "link": "https://www.yna.co.kr/view/AKR20261008074700002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "“어, 강남 아니었네?”…대출 옥죄자 매입자금 의존 더 커진 지역은",
+          "link": "https://www.mk.co.kr/news/economy/12171263",
+          "source": "매일경제 부동산"
+        }
+      ]
+    },
+    {
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "미국 금리가 계속 높은 수준을 유지하면서 한국 증시는 실적 중심의 선별적 장세를 보일 것으로 전망된다. 이억원은 금리 인상 기간 동안 정책서민금융 금리를 낮추고 공급을 확대할 계획이라고 밝혔다. 엔화는 미국 장기금리 상승이 주춤하면서 1달러=158엔으로 소폭 상승 출발했다. 키움증권은 한글날을 기념해 연 5.8% 금리를 제공하는 발행어음 특판을 출시했다. 각 기사는 서로 다른 주제를 다루고 있으며, 구체적인 수치와 내용만을 기반으로 작성되었다.",
+      "lineEn": "With U.S. interest rates remaining high, the Korean stock market is expected to show a selective performance focused on earnings. Lee Eok-won stated that during the period of interest rate hikes, the policy-based financial services for the general public will lower interest rates and expand supply. The yen rose slightly to 1 dollar = 158 yen as the rise in U.S. long-term interest rates slowed. Kiwoom Securities launched a special issue of notes offering an annual interest rate of 5.8% to commemorate Hangul Day. Each article covers different topics and is based only on specific figures and content.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "꺾이지 않는 美금리 고공행진…\"韓증시, 실적중심 선별 장세 전망\"",
+          "link": "https://www.yna.co.kr/view/AKR20261008061300008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "이억원 \"금리인상기, 정책서민금융 금리 낮추고 공급 확대\"",
+          "link": "https://www.yna.co.kr/view/AKR20261007202800002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "엔화, 美 장기금리 상승 주춤에 1달러=158엔 소폭 상승 출발",
+          "link": "https://www.newsis.com/view/NISX20261008_0003818653",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "키움증권, 한글날 기념 '연 5.8% 금리' 발행어음 특판 출시",
+          "link": "https://www.yna.co.kr/view/AKR20261008034200008",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "일본 증시는 미국 증시의 약세로 인해 하락 출발했고, 한투증권은 원/달러 환율이 1,330원대 복귀해도 추가 하락 압력이 있을 수 있다고 밝혔다.",
+      "lineEn": "Japan's stock market opened lower due to weakness in U.S. markets, and Hanjin Securities stated that even if the won/dollar exchange rate returns to the 1,330 won level, there could be additional downward pressure.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": true,
       "items": [
         {
-          "title": "시중銀 옥죄자…지방은행 대출 오픈런",
-          "link": "https://www.hankyung.com/article/2026100791821",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "홍지선 장관 \"연말가면 서울 집값 진정될 것\"",
-          "link": "https://www.mk.co.kr/news/realestate/12170649",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "국토장관 \"연말 서울 집값 상승폭 줄 것…토허제 확대는 검토 필요\"(종합)",
-          "link": "https://www.newsis.com/view/NISX20261007_0003817888",
+          "title": "日증시, 美증시 약세에 하락 출발…닛케이 0.28%↓",
+          "link": "https://www.newsis.com/view/NISX20261008_0003818496",
           "source": "뉴시스 경제"
         },
         {
-          "title": "[인사] 재정경제부",
-          "link": "https://www.yna.co.kr/view/AKR20261007167200002",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "AI기반 사이버 공격에 맞설 보안 방안은…전략경제자문단 회의",
-          "link": "https://www.yna.co.kr/view/AKR20261007134100002",
+          "title": "한투증권 \"원/달러 환율, 1,330원대 복귀해도 추가 하락 압력\"",
+          "link": "https://www.yna.co.kr/view/AKR20261008030700008",
           "source": "연합뉴스 경제"
         }
       ]
