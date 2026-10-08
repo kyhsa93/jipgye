@@ -1,52 +1,87 @@
 {
-  "updatedAt": "2026-10-08T02:39:55.417Z",
+  "updatedAt": "2026-10-08T10:28:23.674Z",
   "date": "2026-10-08",
   "items": [
     {
-      "title": "[인사]한국토지주택공사",
-      "link": "https://www.newsis.com/view/NISX20261008_0003818938",
-      "publishedAt": "2026-10-08T02:37:44.000Z",
+      "title": "[올댓차이나] 홍콩 증시, 뉴욕 증시 약세에 속락 마감… H주 0.89%↓",
+      "link": "https://www.newsis.com/view/NISX20261008_0003819852",
+      "publishedAt": "2026-10-08T10:06:47.000Z",
       "source": "뉴시스 경제",
-      "category": "realestate",
-      "preview": "[서울=뉴시스] ◇상임이사 임명 ▲주거복지본부장 유병용 ▲공공주택본부장 박현근",
-      "dupes": [
-        {
-          "title": "[인사] 한국토지주택공사(LH)",
-          "link": "https://www.yna.co.kr/view/AKR20261008063000003",
-          "source": "연합뉴스 경제"
-        }
-      ],
-      "titleEn": "[Appointment] Korea Land & Housing Corporation"
+      "category": "stocks",
+      "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 8일 전날 뉴욕 증시 약세에 더해 아시아 증시도 부진하면서 매도 출회로 속락 마감했다. 국경절 연휴를 마친 중국에서 자금이 유입해 일시 혼조세를 보였지만 끝내 밀렸다. 항셍…",
+      "dupes": []
     },
     {
-      "title": "서울 모든 도로, 토허구역 지정…‘도로 쪼개팔기’ 기획부동산 막는다",
-      "link": "https://www.mk.co.kr/news/realestate/12171303",
-      "publishedAt": "2026-10-08T01:59:52.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "모아타운 등 개발 기대감 편승해 개인소유 도로 0.5평씩 쪼개팔기서울시가 개발 기대감을 이용한 도로의 소규모 지분 쪼개기 거래를 막기 위해 서울 전역의 지목상 ‘도로’를 토지거래허..",
-      "dupes": [],
-      "titleEn": "Seoul to designate all roads as traffic restriction zones to prevent real estate speculation through road division sales"
-    },
-    {
-      "title": "우리銀, '수출선도기업대출' 출시…시설자금 최대 15% 추가한도",
-      "link": "https://www.yna.co.kr/view/AKR20261008074700002",
-      "publishedAt": "2026-10-08T01:50:32.000Z",
+      "title": "[인사] 재정경제부",
+      "link": "https://www.yna.co.kr/view/AKR20261008185900002",
+      "publishedAt": "2026-10-08T09:05:58.000Z",
       "source": "연합뉴스 경제",
       "category": "other",
-      "preview": "(서울=연합뉴스) 이도흔 기자 = 우리은행은 수출기업의 글로벌 성장을 지원하는 맞춤형 금융상품 '우리 수출선도기업대출'을 출시한다고 8일 밝혔다...",
-      "dupes": [],
-      "titleEn": "OurBank Launches 'Export Leading Company Loan'… Additional 15% Facility Funding Limit"
+      "preview": null,
+      "dupes": [
+        {
+          "title": "[인사]재정경제부",
+          "link": "https://www.newsis.com/view/NISX20261008_0003819756",
+          "source": "뉴시스 경제"
+        }
+      ]
     },
     {
-      "title": "외신 “AI가 서울 집값도 끌어올렸다…李정부 직면한 부동산 딜레마”",
-      "link": "https://www.mk.co.kr/news/economy/12171264",
-      "publishedAt": "2026-10-08T01:44:40.000Z",
+      "title": "[올댓차이나] 中 증시, 연휴 후 반도체주 매도에 하락 마감…창업판 3.15%↓",
+      "link": "https://www.newsis.com/view/NISX20261008_0003819771",
+      "publishedAt": "2026-10-08T08:52:50.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "[서울=뉴시스]이재준 기자 = 중국 증시는 국경절 연휴를 마치고 거래를 재개한 8일 뚜렷한 재료 부족으로 관망 분위기가 확산하다가 그간 전 세계적인 조정을 받은 반도체 관련주와 인공지능(AI) 관련주에 매도 유입하면…",
+      "dupes": []
+    },
+    {
+      "title": "삼전 사내대출 풀리자 '반세권' 들썩 … 영통·동탄 줄줄이 신고가",
+      "link": "https://www.mk.co.kr/news/realestate/12171833",
+      "publishedAt": "2026-10-08T08:37:58.000Z",
+      "source": "매일경제 부동산",
+      "category": "other",
+      "preview": "삼성전자 사내 주택자금대출이 시행된 지난달 이후 수원 영통구과 화성 동탄구 등 경기 남부 '반세권' 아파트값이 강세를 보이고 있다. 두 지역 모두 토지거래허가구역으로 묶여 있지만,..",
+      "dupes": []
+    },
+    {
+      "title": "稅부담·재건축 일정에 쫓겨 … 마음 급해진 집주인 '시한부 급매'",
+      "link": "https://www.mk.co.kr/news/realestate/12171832",
+      "publishedAt": "2026-10-08T08:37:57.000Z",
       "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": "FT “李 취임 1년새 서울 집값 14%↑ 삼전닉스 호황에 주변부동산도 들썩” 대출 규제에 무주택 청년층은 박탈감 유주택자는 세금·정책변화에 불안감인공지능(AI) 산업 호황으로 국..",
+      "preview": "세제개편안이 발표된 이후 서울 강남권에 급매물이 쌓이면서 같은 단지·면적 아파트라도 호가가 극명하게 갈리고 있다. 세금 부담과 재건축 사업 일정에 쫓기는 집주인들이 매도를 서두르는..",
       "dupes": [],
-      "titleEn": "Foreign media: \"AI has also driven up Seoul's housing prices... Lee government faces real estate dilemma",
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-gangnam.html",
+          "label": "강남구 아파트 84㎡ 매매",
+          "labelEn": "강남구 apartment 84㎡ sale",
+          "value": "28억 7,970만원",
+          "valueEn": "₩2,880M",
+          "note": "최근 1주 계약 135건 · 10/1 대비 -3.3%",
+          "noteEn": "135 deals in the last 1 weeks · -3.3% vs Oct 1"
+        }
+      ]
+    },
+    {
+      "title": "금리 오르고 기업대출 늘고…4대 금융 3분기 순익 5.7조 '최대'",
+      "link": "https://www.hankyung.com/article/2026100817571",
+      "publishedAt": "2026-10-08T08:26:33.000Z",
+      "source": "한국경제 경제",
+      "category": "rates",
+      "preview": null,
+      "dupes": []
+    },
+    {
+      "title": "국토장관 \"민간 주택공급 회복 중요…HUG PF보증 신속 지원해야\"(종합)",
+      "link": "https://www.yna.co.kr/view/AKR20261008115051003",
+      "publishedAt": "2026-10-08T08:17:34.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(세종=연합뉴스) 임기창 오진송 기자 = 홍지선 국토교통부 장관이 8일 서울 고덕강일지구의 민간 주택건설 사업장을 찾아 주택 공급에 차질이 없도...",
+      "dupes": [],
       "context": [
         {
           "kind": "realestate",
@@ -57,216 +92,164 @@
           "valueEn": "₩1,420M",
           "note": "최근 1주 계약 478건 · 10/1 대비 +8.2%",
           "noteEn": "478 deals in the last 1 weeks · +8.2% vs Oct 1"
-        },
-        {
-          "kind": "rates",
-          "label": "주택담보대출 최저금리(상환방식 무관)",
-          "labelEn": "Lowest mortgage rate (any repayment type)",
-          "value": "연 3.70%",
-          "valueEn": "3.70% p.a.",
-          "href": "./mortgage-rates.html"
         }
       ]
     },
     {
-      "title": "“어, 강남 아니었네?”…대출 옥죄자 매입자금 의존 더 커진 지역은",
-      "link": "https://www.mk.co.kr/news/economy/12171263",
-      "publishedAt": "2026-10-08T01:44:29.000Z",
-      "source": "매일경제 부동산",
+      "title": "서울 집값 87주째 상승 랠리…강남3구는 약세 지속",
+      "link": "https://www.hankyung.com/article/2026100816751",
+      "publishedAt": "2026-10-08T08:07:28.000Z",
+      "source": "한국경제 부동산",
       "category": "other",
-      "preview": "강남3구·용산 대출 비율 일제히 하락 노·도·강 매입자금 30%대가 대출 15억 이하 대출한도 추가 축소 주장에 “실수요자들 부담 더 커져” 지적서울에서 강남3구(강남·서초·송파..",
+      "preview": null,
       "dupes": [],
-      "titleEn": "Ah, it's not Gangnam?\"...Regions More Dependent on Purchase Funds as Loan Restrictions Tighten"
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-gangnam.html",
+          "label": "강남구 아파트 84㎡ 매매",
+          "labelEn": "강남구 apartment 84㎡ sale",
+          "value": "28억 7,970만원",
+          "valueEn": "₩2,880M",
+          "note": "최근 1주 계약 135건 · 10/1 대비 -3.3%",
+          "noteEn": "135 deals in the last 1 weeks · -3.3% vs Oct 1"
+        }
+      ]
     },
     {
-      "title": "꺾이지 않는 美금리 고공행진…\"韓증시, 실적중심 선별 장세 전망\"",
-      "link": "https://www.yna.co.kr/view/AKR20261008061300008",
-      "publishedAt": "2026-10-08T01:37:49.000Z",
+      "title": "국고채 금리 혼조세…중단기 금리 상승하고 초장기 하락(종합)",
+      "link": "https://www.yna.co.kr/view/AKR20261008167551008",
+      "publishedAt": "2026-10-08T08:02:55.000Z",
       "source": "연합뉴스 경제",
       "category": "rates",
-      "preview": "(서울=연합뉴스) 강수지 기자 = 미국 장기 국채금리의 고공행진이 국내 증시의 최대 부담 요인으로 부상하면서 4분기 국내 증시가 실적에 기반한 ...",
-      "dupes": [],
-      "titleEn": "Unbending US Interest Rates Soar...\"Korea's Stock Market Expected to Focus on Earnings in Selective Trading"
+      "preview": "(서울=연합뉴스) 강수지 기자 = 8일 국고채 금리는 만기별로 혼조세를 나타냈다.",
+      "dupes": []
     },
     {
-      "title": "구로구 고척파크푸르지오 59.89㎡ 11억 6500만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12171232",
-      "publishedAt": "2026-10-08T01:26:18.000Z",
-      "source": "매일경제 부동산",
+      "title": "주건협, 6개 지역은행·보증기관과 지방 주택건설산업 활성화 ‘맞손’",
+      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/08/SFR66OISYRBBJKUICO4R3MHZUU/",
+      "publishedAt": "2026-10-08T07:57:13.000Z",
+      "source": "조선비즈 부동산",
       "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 7일 국토부 실거래가 시스템에 신규 등록된 서울 구로구 고척동 고척파크푸르지오 전용 59.89㎡ 거래가 11억 6,500만 원으로 확인됐다. 항목 ..",
-      "dupes": [],
-      "titleEn": "Guro-gu Gocheok Park Purio 59.89㎡ 1,165,000,000 won... 3-year high price recently [MAI Real Estate]",
-      "context": [
+      "preview": "대한주택건설협회가 지역 균형 발전과 지방 소멸 위기 극복을 위해 금융권 및 공적 보증기관과 협력한다. 주건협은 8일 경남 창원 경남은행 본점에서 경남·전북·광주·제주·iM뱅크·부산은행 등 6개 지역은행과 주택도시보증…",
+      "dupes": [
         {
-          "kind": "realestate",
-          "href": "./district-guro.html",
-          "label": "구로구 아파트 84㎡ 매매",
-          "labelEn": "구로구 apartment 84㎡ sale",
-          "value": "9억 1,323만원",
-          "valueEn": "₩913M",
-          "note": "최근 1주 계약 248건 · 10/1 대비 +3.3%",
-          "noteEn": "248 deals in the last 1 weeks · +3.3% vs Oct 1"
+          "title": "주건협, 지역은행·보증기관과 지방 주택건설산업 활성화 업무협약",
+          "link": "https://www.newsis.com/view/NISX20261008_0003819371",
+          "source": "뉴시스 경제"
         }
       ]
     },
     {
-      "title": "강동구 길동 라인 59.94㎡ 6억 9천만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12171235",
-      "publishedAt": "2026-10-08T01:26:18.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 7일 국토교통부 실거래가 시스템에 신규 등록된 서울 강동구 길동 라인 전용 59.94㎡ 거래가 6억 9,000만 원으로 확인됐다. 항목 내용 항목 ..",
-      "dupes": [],
-      "titleEn": "Gangdong-gu Gil-dong Line 59.94㎡ 690,000,000won... New High Price in 3 Years [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-gangdong.html",
-          "label": "강동구 아파트 84㎡ 매매",
-          "labelEn": "강동구 apartment 84㎡ sale",
-          "value": "14억 5,319만원",
-          "valueEn": "₩1,453M",
-          "note": "최근 1주 계약 208건 · 10/1 대비 -0.3%",
-          "noteEn": "208 deals in the last 1 weeks · -0.3% vs Oct 1"
-        }
-      ]
+      "title": "日증시, 금리 상승 우려에 하락 마감…닛케이 1.42%↓",
+      "link": "https://www.newsis.com/view/NISX20261008_0003819511",
+      "publishedAt": "2026-10-08T07:42:35.000Z",
+      "source": "뉴시스 경제",
+      "category": "rates",
+      "preview": "[서울=뉴시스] 신효령 기자 = 8일 일본 도쿄증시에서 주요 지수가 일제히 하락 마감했다. 미국 기술주 약세와 세계적인 금리 상승 우려가 투자심리를 위축시켰다. 토픽스(TOPIX)지수 개편도 개별 종목의 주가에 영향…",
+      "dupes": []
     },
     {
-      "title": "영등포구 대림동 우성2 79.91㎡ 7억 9600만원…최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12171234",
-      "publishedAt": "2026-10-08T01:26:18.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 7일 국토부 실거래가 시스템에 신규 등록된 서울 영등포구 대림동 우성2 전용 79.91㎡가 7억 9600만원에 거래되며 최근 3년 내 신고가를 기록..",
-      "dupes": [],
-      "titleEn": "Yongdingpo-gu Daelim-dong Uisung 2 79.91㎡ 796,000,000won... Recent 3-Year High Price [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-yeongdeungpo.html",
-          "label": "영등포구 아파트 84㎡ 매매",
-          "labelEn": "영등포구 apartment 84㎡ sale",
-          "value": "15억 2,688만원",
-          "valueEn": "₩1,527M",
-          "note": "최근 1주 계약 172건 · 10/1 대비 +0.5%",
-          "noteEn": "172 deals in the last 1 weeks · +0.5% vs Oct 1"
-        }
-      ]
-    },
-    {
-      "title": "영등포구 당산반도유보라팰리스 84.99㎡ 17억 4천만원 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12171233",
-      "publishedAt": "2026-10-08T01:26:18.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 7일 국토부 실거래가 시스템에 신규 등록된 서울 영등포구 당산반도유보라팰리스 전용 84.99㎡ 거래가 17억 4,000만 원에 체결되며 동일 면적 ..",
-      "dupes": [],
-      "titleEn": "Yeongdeungpo-gu Dangsan Bandohoeura Palace 84.99㎡ 1,740,000,000 won recent 3-year new high [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-yeongdeungpo.html",
-          "label": "영등포구 아파트 84㎡ 매매",
-          "labelEn": "영등포구 apartment 84㎡ sale",
-          "value": "15억 2,688만원",
-          "valueEn": "₩1,527M",
-          "note": "최근 1주 계약 172건 · 10/1 대비 +0.5%",
-          "noteEn": "172 deals in the last 1 weeks · +0.5% vs Oct 1"
-        }
-      ]
-    },
-    {
-      "title": "강서구 등촌동 태진아름 59.94㎡ 8억 3200만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12171231",
-      "publishedAt": "2026-10-08T01:26:18.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 7일 국토교통부 실거래가 시스템에 신규 등록된 서울 강서구 등촌동 태진아름 전용 59.94㎡가 8억 3200만원에 거래되며 최근 3년 신고가를 기록..",
-      "dupes": [],
-      "titleEn": "Gangseo-gu Dongsun-dong Taejin-Areum 59.94㎡ 832,000,000won... Recent 3-Year High Price [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-gangseo.html",
-          "label": "강서구 아파트 84㎡ 매매",
-          "labelEn": "강서구 apartment 84㎡ sale",
-          "value": "11억 5,488만원",
-          "valueEn": "₩1,155M",
-          "note": "최근 1주 계약 321건 · 10/1 대비 +0.8%",
-          "noteEn": "321 deals in the last 1 weeks · +0.8% vs Oct 1"
-        }
-      ]
-    },
-    {
-      "title": "청년 특례전세보증 만 39세까지 확대…신혼·자녀가구 한도↑",
-      "link": "https://www.yna.co.kr/view/AKR20261008067200002",
-      "publishedAt": "2026-10-08T01:23:05.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(서울=연합뉴스) 채새롬 기자 = 한국주택금융공사는 무주택 청년 특례전세보증 지원 대상을 만 39세까지로 확대하고, 신혼가구·자녀 양육 가구에 ...",
-      "dupes": [],
-      "titleEn": "Youth Special Lease Guarantee Expanded to Age 39... Limits for Newlywed and Families with Children Increased"
-    },
-    {
-      "title": "이억원 \"금리인상기, 정책서민금융 금리 낮추고 공급 확대\"",
-      "link": "https://www.yna.co.kr/view/AKR20261007202800002",
-      "publishedAt": "2026-10-08T01:18:40.000Z",
+      "title": "국고채 금리 혼조세…3년물 연 3.983%",
+      "link": "https://www.yna.co.kr/view/AKR20261008167500008",
+      "publishedAt": "2026-10-08T07:41:37.000Z",
       "source": "연합뉴스 경제",
       "category": "rates",
-      "preview": "(서울=연합뉴스) 강수련 기자 = 이억원 금융위원장은 8일 서민·취약계층을 위해 \"정책서민금융의 금리수준을 낮추고 신상품 출시 등 공급을 지속적...",
-      "dupes": [],
-      "titleEn": "200 million won \"During interest rate hike period, lower policy-based financial services rates and expand supply"
+      "preview": "(서울=연합뉴스) 8일 국고채 금리가 혼조세를 보였다.",
+      "dupes": []
     },
     {
-      "title": "\"분양가 27억에도 줄 섰다\"…3000명 몰린 아파트 어디길래",
-      "link": "https://www.hankyung.com/article/2026100803387",
-      "publishedAt": "2026-10-08T01:06:22.000Z",
+      "title": "셀온? 리밸런싱?…삼성전자 역대 최대 실적에도 코스피 2.6% 하락(종합)",
+      "link": "https://www.yna.co.kr/view/AKR20261008093451008",
+      "publishedAt": "2026-10-08T07:27:41.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": "(서울=연합뉴스) 황철환 기자 = 삼성전자가 국내 기업 최초로 분기 영업이익 100조원 선을 넘어서는 쾌거를 올렸지만 8일 한국 주식시장은 비교...",
+      "dupes": []
+    },
+    {
+      "title": "코스피, 삼전 영업익 107조에도 2.6% 급락해 6,600대로 털썩(종합)",
+      "link": "https://www.yna.co.kr/view/AKR20261008143151008",
+      "publishedAt": "2026-10-08T07:09:55.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": "(서울=연합뉴스) 임은진 기자 = 코스피가 8일 '대장주' 삼성전자[005930]의 사상 최대 실적에도 2% 넘게 하락해 6,600대까지 밀렸다...",
+      "dupes": []
+    },
+    {
+      "title": "원/달러 환율 1.9원 내린 1,338.5원…박스권 등락",
+      "link": "https://www.yna.co.kr/view/AKR20261008151700002",
+      "publishedAt": "2026-10-08T07:01:05.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": "(서울=연합뉴스) 김지연 기자 = 원/달러 환율은 8일 1,330원대 후반에서 횡보했다.",
+      "dupes": []
+    },
+    {
+      "title": "우리자산신탁, 해운대2구역 통합재건축 주민대표단과 업무협약",
+      "link": "https://www.yna.co.kr/view/AKR20261008143200002",
+      "publishedAt": "2026-10-08T06:48:04.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(서울=연합뉴스) 이도흔 기자 = 우리자산신탁은 해운대2구역 통합재건축 주민대표단과 정비사업 추진을 위한 업무협약을 체결했다고 8일 밝혔다.",
+      "dupes": []
+    },
+    {
+      "title": "故정주영 회장 가회동 주택 203억에 팔렸다…3번 유찰 끝 낙찰",
+      "link": "https://www.hankyung.com/article/202610081368i",
+      "publishedAt": "2026-10-08T06:38:29.000Z",
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Even at 2,700,000,000 won, lines formed\"… Where is the apartment that drew 3000 people?"
+      "dupes": []
     },
     {
-      "title": "엔화, 美 장기금리 상승 주춤에 1달러=158엔 소폭 상승 출발",
-      "link": "https://www.newsis.com/view/NISX20261008_0003818653",
-      "publishedAt": "2026-10-08T00:57:41.000Z",
-      "source": "뉴시스 경제",
-      "category": "rates",
-      "preview": "[서울=뉴시스]이재준 기자 = 엔화 환율은 8일 그간 상승세를 보인 미국 장기금리가 주춤하면서 엔 매수, 달러 매도 선행으로 1달러=158엔으로 소폭 올라 시작했다. 도쿄 외환시장에서 엔화 환율은 이날 오전 8시30…",
-      "dupes": [],
-      "titleEn": "Yen rises slightly to 1 dollar = 158 yen as U.S. long-term interest rate increase pauses"
-    },
-    {
-      "title": "GS건설, '연제 갤러리 자이' 견본주택 오픈…84㎡ 499가구 규모",
-      "link": "https://www.yna.co.kr/view/AKR20261008054000051",
-      "publishedAt": "2026-10-08T00:51:48.000Z",
-      "source": "연합뉴스 경제",
+      "title": "주건협, 지역은행·보증기관과 지방 주택건설산업 활성화를 위한 업무협약 체결",
+      "link": "https://www.mk.co.kr/news/realestate/12171508",
+      "publishedAt": "2026-10-08T05:55:54.000Z",
+      "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": "(부산=연합뉴스) 오수희 기자 = GS건설은 8일 부산시 연제구 연산동 1123-1번지 일원에 들어서는 '연제 갤러리 자이' 견본주택을 열고 분...",
-      "dupes": [],
-      "titleEn": "GS Construction opens model house for 'Yeondeok Gallery Jae'…84㎡ 499 units scale"
+      "preview": "대한주택건설협회는 경남 창원시의 경남은행 본점에서 전국 6개 지역은행(경남은행·전북은행·광주은행·제주은행·iM뱅크·부산은행) 및 보증기관(주택도시보증공사·한국주택금융공사)과 함께 ..",
+      "dupes": []
     },
     {
-      "title": "日증시, 美증시 약세에 하락 출발…닛케이 0.28%↓",
-      "link": "https://www.newsis.com/view/NISX20261008_0003818496",
-      "publishedAt": "2026-10-08T00:45:36.000Z",
-      "source": "뉴시스 경제",
-      "category": "stocks",
-      "preview": "[서울=뉴시스] 신효령 기자 = 8일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)가 하락 출발했다. 미국 증시 약세에 외국인 매도가 이어지면서 장 초반 낙폭이 확대됐다. 니혼게이자이신문에 따르면 이날 닛케이지수…",
-      "dupes": [],
-      "titleEn": "Tokyo Stock Exchange opens lower amid weak U.S. markets… Nikkei down 0.28%"
-    },
-    {
-      "title": "서울 민간아파트 국평 분양가 20억원 다시 넘어…전년비 23%↑",
-      "link": "https://www.yna.co.kr/view/AKR20261008050100003",
-      "publishedAt": "2026-10-08T00:39:35.000Z",
-      "source": "연합뉴스 경제",
+      "title": "“서울 도봉 부동산 1년새 무슨 일이?”…가압류 등기신청 폭증",
+      "link": "https://www.mk.co.kr/news/realestate/12171502",
+      "publishedAt": "2026-10-08T05:50:49.000Z",
+      "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": "(서울=연합뉴스) 오예진 기자 = 공사비 상승이 이어지면서 지난달 서울 민간 아파트의 '국민평형' 평균 분양가가 다시 20억원을 넘었다.",
+      "preview": "송파·서초는 줄어들어 ‘양극화’올해 3분기 서울 집합건물 가압류등기 신청 부동산 수가 전년 동기보다 늘어난 것으로 나타났다. 도봉·동작·은평구에서 증가한 반면 송파·서초·강동구에서..",
+      "dupes": []
+    },
+    {
+      "title": "\"강남보다 더 뜨겁네\"…서울 집값 끌어올린 동네 어디",
+      "link": "https://www.hankyung.com/article/202610081161i",
+      "publishedAt": "2026-10-08T05:40:15.000Z",
+      "source": "한국경제 부동산",
+      "category": "other",
+      "preview": null,
       "dupes": [],
-      "titleEn": "Seoul private apartment average selling price rises above 2,000,000,000 won again... up 23% year-on-year",
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-gangnam.html",
+          "label": "강남구 아파트 84㎡ 매매",
+          "labelEn": "강남구 apartment 84㎡ sale",
+          "value": "28억 7,970만원",
+          "valueEn": "₩2,880M",
+          "note": "최근 1주 계약 135건 · 10/1 대비 -3.3%",
+          "noteEn": "135 deals in the last 1 weeks · -3.3% vs Oct 1"
+        }
+      ]
+    },
+    {
+      "title": "홍지선 국토장관 “주택공급, 민간 역할 중요… 생태계 정상화 지원”",
+      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/08/OBTTJAOC2JAU5DEI4G74EOLTB4/",
+      "publishedAt": "2026-10-08T05:37:59.000Z",
+      "source": "조선비즈 부동산",
+      "category": "realestate",
+      "preview": "홍지선 국토교통부 장관이 8일 “5년간 수도권 ‘150만호+α’ 착공 목표를 달성하기 위해서는 그간 수도권 주택공급의 80% 이상을 담당해 온 민간 부문의 역할이 무엇보다 중요하다”고 밝혔다. 홍 장관은 이날 서울…",
+      "dupes": [],
       "context": [
         {
           "kind": "realestate",
@@ -281,64 +264,55 @@
       ]
     },
     {
-      "title": "지난달 전국 민간 아파트 분양가, 두 달 만에 다시 최고치 경신했다",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/08/VQWLU2PD75CRNBXZKC3E6CG724/",
-      "publishedAt": "2026-10-08T00:11:53.000Z",
+      "title": "강남권 하락에도 서울 아파트값, 87주째 상승… ‘역대 최장’ 또 경신",
+      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/08/C3MELH4ZCZDCDBRIJKJ6JWLGGA/",
+      "publishedAt": "2026-10-08T05:22:20.000Z",
       "source": "조선비즈 부동산",
       "category": "realestate",
-      "preview": "지난달 전국 민간 아파트 분양가가 ㎡당 870만원을 넘어서며 최고치를 경신했다. 지난 7월 최고치를 기록했는데 2개월 만에 다시 분양가 최고치를 다시 썼다. 8일 분양평가 전문회사 리얼하우스가 청약홈 자료를 분석한…",
+      "preview": "서울 아파트 매매 가격이 87주째 상승세를 지속하며 역대 최장 상승 기록을 또 새로 썼다. 강남권을 중심으로 한 가격 상승세 둔화 흐름도 멈춰 서며 오름폭이 다시 커지는 양상이다. 8일 한국부동산원이 발표한 10월…",
       "dupes": [],
-      "titleEn": "Last month's nationwide private apartment selling prices hit a new high again for the first time in two months"
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-gangnam.html",
+          "label": "강남구 아파트 84㎡ 매매",
+          "labelEn": "강남구 apartment 84㎡ sale",
+          "value": "28억 7,970만원",
+          "valueEn": "₩2,880M",
+          "note": "최근 1주 계약 135건 · 10/1 대비 -3.3%",
+          "noteEn": "135 deals in the last 1 weeks · -3.3% vs Oct 1"
+        }
+      ]
     },
     {
-      "title": "\"LH 주택전시관으로 소풍 가자\"…동탄·인천·남양주·세종서 문화행사",
-      "link": "https://www.newsis.com/view/NISX20261008_0003818436",
-      "publishedAt": "2026-10-08T00:04:40.000Z",
-      "source": "뉴시스 경제",
-      "category": "realestate",
-      "preview": "[서울=뉴시스]정유선 기자 = 한국토지주택공사(LH)는 오는 17일부터 수도권과 세종 주택전시관 4곳에서 '우리동네 문화아지트' 가을 행사를 개최한다고 8일 밝혔다. LH는 청약이 진행되지 않는 기간 주택전시관 공간…",
-      "dupes": [],
-      "titleEn": "LH Housing Exhibition Hall for a Picnic\"… Cultural Events in Dongtan, Incheon, Namyangju, and Sejong"
+      "title": "삼성 '5억 대출' 풀리자마자…국평 20억 돌파한 '이 동네'",
+      "link": "https://www.hankyung.com/article/2026100808386",
+      "publishedAt": "2026-10-08T05:00:27.000Z",
+      "source": "한국경제 부동산",
+      "category": "other",
+      "preview": null,
+      "dupes": []
     },
     {
-      "title": "키움증권, 한글날 기념 '연 5.8% 금리' 발행어음 특판 출시",
-      "link": "https://www.yna.co.kr/view/AKR20261008034200008",
-      "publishedAt": "2026-10-07T23:51:02.000Z",
-      "source": "연합뉴스 경제",
-      "category": "rates",
-      "preview": "(서울=연합뉴스) 김유향 기자 = 키움증권[039490]은 한글날을 기념해 발행어음 특별판매 상품을 출시한다고 8일 밝혔다.",
+      "title": "[속보] 서울 집값 87주 연속상승…강남 주춤한 사이 ‘셔세권’ 뛰었다",
+      "link": "https://www.mk.co.kr/news/realestate/12171332",
+      "publishedAt": "2026-10-08T05:00:00.000Z",
+      "source": "매일경제 부동산",
+      "category": "other",
+      "preview": "강남·서초구는 6주째 하락세 강북 14개구는 0.24% 상승 영통 0.62%·분당 0.56% 껑충 경기 남부선 올해 최고가 속출서울 아파트값이 87주 연속 상승하며 신기록을 이어갔..",
       "dupes": [],
-      "titleEn": "Kiwoom Securities Launches Special Edition Notes with Annual Interest Rate of 5.8% to Commemorate Hangul Day"
-    },
-    {
-      "title": "한국토지주택공사, 건설 현장 인식 개선 우수 사례 공모전 개최",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/08/DDGMBSDL2JHD7OBO726HXHXFMM/",
-      "publishedAt": "2026-10-07T23:41:48.000Z",
-      "source": "조선비즈 부동산",
-      "category": "realestate",
-      "preview": "한국토지주택공사(LH)가 건설 문화 혁신 우수 사례 발굴을 위한 공모전을 연다. 건설 현장에 대한 인식을 개선하고 근로자들의 사기를 높이기 위한 행사다. LH는 ‘건설현장 내 건설문화 혁신 우수사례 공모전’을 개최한…",
-      "dupes": [],
-      "titleEn": "Korea Land & Housing Corporation Holds Competition for Outstanding Examples of Improving Awareness at Construction Sites"
-    },
-    {
-      "title": "한투증권 \"원/달러 환율, 1,330원대 복귀해도 추가 하락 압력\"",
-      "link": "https://www.yna.co.kr/view/AKR20261008030700008",
-      "publishedAt": "2026-10-07T23:39:51.000Z",
-      "source": "연합뉴스 경제",
-      "category": "stocks",
-      "preview": "(서울=연합뉴스) 정회인 기자 = 한국투자증권은 최근 원/달러 환율이 1,330원대로 내려온 가운데 앞으로도 원화 강세 흐름이 이어질 가능성이 ...",
-      "dupes": [],
-      "titleEn": "Hanjin Securities: Won/Dollar Exchange Rate, Even if Returning to 1,330 Won Range, Additional Downward Pressure"
-    },
-    {
-      "title": "3분기 서울 자치구 가압류 부동산 5000건 육박… 도봉구가 가장 많이 늘어",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/08/4DP4RI55EBEJ5FLLOCFEUMK34U/",
-      "publishedAt": "2026-10-07T23:18:21.000Z",
-      "source": "조선비즈 부동산",
-      "category": "realestate",
-      "preview": "올해 3분기(7~9월) 서울 25개 자치구 가운데 도봉구가 집합건물의 가압류 등기 신청이 가장 많이 늘어난 것으로 나타났다. 도봉구와 은평구의 증가 폭도 컸다. 3분기 중 서울 전체 집합건물 가압류 등기 신청 건수는…",
-      "dupes": [],
-      "titleEn": "Third-quarter Seoul autonomous district forced execution real estate nears 5,000 cases... Dobong-gu sees the largest increase"
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-gangbuk.html",
+          "label": "강북구 아파트 84㎡ 매매",
+          "labelEn": "강북구 apartment 84㎡ sale",
+          "value": "8억 6,724만원",
+          "valueEn": "₩867M",
+          "note": "최근 1주 계약 99건 · 10/1 대비 +1.0%",
+          "noteEn": "99 deals in the last 1 weeks · +1.0% vs Oct 1"
+        }
+      ]
     }
   ],
   "realestateStats": [
