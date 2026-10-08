@@ -9550,14 +9550,67 @@
     "date": "2026-10-08",
     "items": [
       {
+        "title": "뉴욕 증시, 美 국채 금리·유가 상승에 하락 출발…나스닥, 0.62% ↓",
+        "link": "https://www.newsis.com/view/NISX20261008_0003819980",
+        "publishedAt": "2026-10-08T14:05:39.000Z",
+        "source": "뉴시스 경제",
+        "category": "rates",
+        "preview": "[서울=뉴시스] 이재우 기자 = 뉴욕 증시가 8일(현지시간) 미국 국채 금리 상승과 고유가 여파로 하락세로 출발했다. CNBC에 따르면 이날 오전 9시57분 기준 다우존스30산업평균지수(DJIA)는 전장 대비 15.…",
+        "dupes": []
+      },
+      {
+        "title": "[속보]뉴욕증시, 美 국채 금리 상승에 하락세…나스닥, 0.55% ↓",
+        "link": "https://www.newsis.com/view/NISX20261008_0003819969",
+        "publishedAt": "2026-10-08T13:41:59.000Z",
+        "source": "뉴시스 경제",
+        "category": "rates",
+        "preview": "후속기사가 이어집니다 ◎공감언론 뉴시스 ironn108@newsis.com",
+        "dupes": []
+      },
+      {
+        "title": "국토부, '아시안게임 논란' 우수선수 주택 특공 제도 개선 검토",
+        "link": "https://www.yna.co.kr/view/AKR20261008210100003",
+        "publishedAt": "2026-10-08T12:55:27.000Z",
+        "source": "연합뉴스 경제",
+        "category": "realestate",
+        "preview": "(세종=연합뉴스) 오진송 기자 = 국토교통부가 최근 2026 아이치·나고야 아시안게임을 계기로 논란이 된 우수선수 주택 특별공급 제도의 개선 여...",
+        "dupes": []
+      },
+      {
+        "title": "부동산 대신 주식으로…'富의 축적 공식' 바뀐다",
+        "link": "https://www.hankyung.com/article/2026100820461",
+        "publishedAt": "2026-10-08T11:00:03.000Z",
+        "source": "한국경제 경제",
+        "category": "realestate",
+        "preview": null,
+        "dupes": []
+      },
+      {
+        "title": "'부동산으로 돈 번다고? 꿈 깼어요'…집 대신 주식 산다",
+        "link": "https://www.hankyung.com/article/2026100817951",
+        "publishedAt": "2026-10-08T11:00:01.000Z",
+        "source": "한국경제 경제",
+        "category": "realestate",
+        "preview": null,
+        "dupes": []
+      },
+      {
+        "title": "[올댓차이나] 대만 증시, 뉴욕 증시 약세에 속락 마감…0.99%↓",
+        "link": "https://www.newsis.com/view/NISX20261008_0003819878",
+        "publishedAt": "2026-10-08T10:59:01.000Z",
+        "source": "뉴시스 경제",
+        "category": "stocks",
+        "preview": "[서울=뉴시스]이재준 기자 = 대만 타이베이 증시는 8일 전날 뉴욕 증시 약세로 대형 기술주에 매도 선행하면서 이틀째 하락한 채 마감했다. 자취안(加權) 지수는 이날 전일 대비 492.93 포인트, 0.99% 내려간…",
+        "dupes": []
+      },
+      {
         "title": "[올댓차이나] 홍콩 증시, 뉴욕 증시 약세에 속락 마감… H주 0.89%↓",
         "link": "https://www.newsis.com/view/NISX20261008_0003819852",
         "publishedAt": "2026-10-08T10:06:47.000Z",
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 8일 전날 뉴욕 증시 약세에 더해 아시아 증시도 부진하면서 매도 출회로 속락 마감했다. 국경절 연휴를 마친 중국에서 자금이 유입해 일시 혼조세를 보였지만 끝내 밀렸다. 항셍…",
-        "dupes": [],
-        "titleEn": "[AllChina] Hong Kong Market Closes Lower Amid Weakness in New York Market... H-Share Down 0.89%"
+        "dupes": []
       },
       {
         "title": "[인사] 재정경제부",
@@ -9572,8 +9625,7 @@
             "link": "https://www.newsis.com/view/NISX20261008_0003819756",
             "source": "뉴시스 경제"
           }
-        ],
-        "titleEn": "[Personnel] Ministry of Finance and Economy"
+        ]
       },
       {
         "title": "[올댓차이나] 中 증시, 연휴 후 반도체주 매도에 하락 마감…창업판 3.15%↓",
@@ -9582,8 +9634,7 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 중국 증시는 국경절 연휴를 마치고 거래를 재개한 8일 뚜렷한 재료 부족으로 관망 분위기가 확산하다가 그간 전 세계적인 조정을 받은 반도체 관련주와 인공지능(AI) 관련주에 매도 유입하면…",
-        "dupes": [],
-        "titleEn": "[AllChina] China's stock market closes lower after holiday as semiconductor shares sell off... Start-up board down 3.15%"
+        "dupes": []
       },
       {
         "title": "삼전 사내대출 풀리자 '반세권' 들썩 … 영통·동탄 줄줄이 신고가",
@@ -9592,8 +9643,7 @@
         "source": "매일경제 부동산",
         "category": "other",
         "preview": "삼성전자 사내 주택자금대출이 시행된 지난달 이후 수원 영통구과 화성 동탄구 등 경기 남부 '반세권' 아파트값이 강세를 보이고 있다. 두 지역 모두 토지거래허가구역으로 묶여 있지만,..",
-        "dupes": [],
-        "titleEn": "Samsung Electronics' Internal Loan Release Sparks 'Half-Region' Excitement ... Yeongtong, Dongtan Keep Setting New Highs"
+        "dupes": []
       },
       {
         "title": "稅부담·재건축 일정에 쫓겨 … 마음 급해진 집주인 '시한부 급매'",
@@ -9602,20 +9652,7 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "세제개편안이 발표된 이후 서울 강남권에 급매물이 쌓이면서 같은 단지·면적 아파트라도 호가가 극명하게 갈리고 있다. 세금 부담과 재건축 사업 일정에 쫓기는 집주인들이 매도를 서두르는..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-gangnam.html",
-            "label": "강남구 아파트 84㎡ 매매",
-            "labelEn": "강남구 apartment 84㎡ sale",
-            "value": "28억 7,970만원",
-            "valueEn": "₩2,880M",
-            "note": "최근 1주 계약 135건 · 10/1 대비 -3.3%",
-            "noteEn": "135 deals in the last 1 weeks · -3.3% vs Oct 1"
-          }
-        ],
-        "titleEn": "Homeowners in a race against time due to tax burden and reconstruction schedule push for urgent sales"
+        "dupes": []
       },
       {
         "title": "금리 오르고 기업대출 늘고…4대 금융 3분기 순익 5.7조 '최대'",
@@ -9624,8 +9661,7 @@
         "source": "한국경제 경제",
         "category": "rates",
         "preview": null,
-        "dupes": [],
-        "titleEn": "Interest rates rise and corporate loans increase... Four major financial institutions' third-quarter net profit hits 5,700,000,000,000 won, the highest ever."
+        "dupes": []
       },
       {
         "title": "국토장관 \"민간 주택공급 회복 중요…HUG PF보증 신속 지원해야\"(종합)",
@@ -9634,20 +9670,7 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(세종=연합뉴스) 임기창 오진송 기자 = 홍지선 국토교통부 장관이 8일 서울 고덕강일지구의 민간 주택건설 사업장을 찾아 주택 공급에 차질이 없도...",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "14억 1,965만원",
-            "valueEn": "₩1,420M",
-            "note": "최근 1주 계약 478건 · 10/1 대비 +8.2%",
-            "noteEn": "478 deals in the last 1 weeks · +8.2% vs Oct 1"
-          }
-        ],
-        "titleEn": "Land Minister Says Reviving Private Housing Supply Is Important... Urges HUG to Quickly Provide PF Guarantee Support (Comprehensive)"
+        "dupes": []
       },
       {
         "title": "서울 집값 87주째 상승 랠리…강남3구는 약세 지속",
@@ -9656,20 +9679,7 @@
         "source": "한국경제 부동산",
         "category": "other",
         "preview": null,
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-gangnam.html",
-            "label": "강남구 아파트 84㎡ 매매",
-            "labelEn": "강남구 apartment 84㎡ sale",
-            "value": "28억 7,970만원",
-            "valueEn": "₩2,880M",
-            "note": "최근 1주 계약 135건 · 10/1 대비 -3.3%",
-            "noteEn": "135 deals in the last 1 weeks · -3.3% vs Oct 1"
-          }
-        ],
-        "titleEn": "Seoul home prices rise for 87th consecutive week... Gangnam 3 districts remain weak"
+        "dupes": []
       },
       {
         "title": "국고채 금리 혼조세…중단기 금리 상승하고 초장기 하락(종합)",
@@ -9678,8 +9688,7 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 강수지 기자 = 8일 국고채 금리는 만기별로 혼조세를 나타냈다.",
-        "dupes": [],
-        "titleEn": "Mixed trends in government bond rates... short- and medium-term rates rise, long-term rates fall (comprehensive)"
+        "dupes": []
       },
       {
         "title": "주건협, 6개 지역은행·보증기관과 지방 주택건설산업 활성화 ‘맞손’",
@@ -9694,8 +9703,7 @@
             "link": "https://www.newsis.com/view/NISX20261008_0003819371",
             "source": "뉴시스 경제"
           }
-        ],
-        "titleEn": "Main Housing Association, 6 regional banks and guarantee institutions join hands to boost local housing construction industry"
+        ]
       },
       {
         "title": "日증시, 금리 상승 우려에 하락 마감…닛케이 1.42%↓",
@@ -9704,8 +9712,7 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스] 신효령 기자 = 8일 일본 도쿄증시에서 주요 지수가 일제히 하락 마감했다. 미국 기술주 약세와 세계적인 금리 상승 우려가 투자심리를 위축시켰다. 토픽스(TOPIX)지수 개편도 개별 종목의 주가에 영향…",
-        "dupes": [],
-        "titleEn": "Tokyo Stock Exchange closes lower amid fears of rising interest rates... Nikkei down 1.42%"
+        "dupes": []
       },
       {
         "title": "국고채 금리 혼조세…3년물 연 3.983%",
@@ -9714,8 +9721,7 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 8일 국고채 금리가 혼조세를 보였다.",
-        "dupes": [],
-        "titleEn": "Mixed performance in government bond yields... 3-year bonds at 3.983% annually"
+        "dupes": []
       },
       {
         "title": "셀온? 리밸런싱?…삼성전자 역대 최대 실적에도 코스피 2.6% 하락(종합)",
@@ -9724,8 +9730,7 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 황철환 기자 = 삼성전자가 국내 기업 최초로 분기 영업이익 100조원 선을 넘어서는 쾌거를 올렸지만 8일 한국 주식시장은 비교...",
-        "dupes": [],
-        "titleEn": "Celon? Rebalancing?... Despite Samsung Electronics' record highest performance, KOSPI falls 2.6% (Comprehensive)"
+        "dupes": []
       },
       {
         "title": "코스피, 삼전 영업익 107조에도 2.6% 급락해 6,600대로 털썩(종합)",
@@ -9734,8 +9739,7 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 임은진 기자 = 코스피가 8일 '대장주' 삼성전자[005930]의 사상 최대 실적에도 2% 넘게 하락해 6,600대까지 밀렸다...",
-        "dupes": [],
-        "titleEn": "Kospi Plummets 2.6% to 6,600s Despite Samsung Electronics' Operating Profit of 107,000,000,000,000"
+        "dupes": []
       },
       {
         "title": "원/달러 환율 1.9원 내린 1,338.5원…박스권 등락",
@@ -9744,18 +9748,7 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김지연 기자 = 원/달러 환율은 8일 1,330원대 후반에서 횡보했다.",
-        "dupes": [],
-        "titleEn": "Won/dollar exchange rate falls 1.9 won to 1,338.5 won... trading within a box range"
-      },
-      {
-        "title": "우리자산신탁, 해운대2구역 통합재건축 주민대표단과 업무협약",
-        "link": "https://www.yna.co.kr/view/AKR20261008143200002",
-        "publishedAt": "2026-10-08T06:48:04.000Z",
-        "source": "연합뉴스 경제",
-        "category": "realestate",
-        "preview": "(서울=연합뉴스) 이도흔 기자 = 우리자산신탁은 해운대2구역 통합재건축 주민대표단과 정비사업 추진을 위한 업무협약을 체결했다고 8일 밝혔다.",
-        "dupes": [],
-        "titleEn": "Ourasset Trust Signs MOU with Residents' Representative Council for Integrated Redevelopment of Haeundae 2nd District"
+        "dupes": []
       },
       {
         "title": "故정주영 회장 가회동 주택 203억에 팔렸다…3번 유찰 끝 낙찰",
@@ -9764,8 +9757,7 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": [],
-        "titleEn": "Late Chairman Jeong Juyoung's Gahweidong House Sold for 20,300,000,000 Won After Three Bid Rejections"
+        "dupes": []
       },
       {
         "title": "주건협, 지역은행·보증기관과 지방 주택건설산업 활성화를 위한 업무협약 체결",
@@ -9774,8 +9766,7 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "대한주택건설협회는 경남 창원시의 경남은행 본점에서 전국 6개 지역은행(경남은행·전북은행·광주은행·제주은행·iM뱅크·부산은행) 및 보증기관(주택도시보증공사·한국주택금융공사)과 함께 ..",
-        "dupes": [],
-        "titleEn": "Main Housing Association Signs Memorandum of Understanding with Local Banks and Guarantee Institutions to Promote Regional Housing Construction Industry"
+        "dupes": []
       },
       {
         "title": "“서울 도봉 부동산 1년새 무슨 일이?”…가압류 등기신청 폭증",
@@ -9784,106 +9775,7 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "송파·서초는 줄어들어 ‘양극화’올해 3분기 서울 집합건물 가압류등기 신청 부동산 수가 전년 동기보다 늘어난 것으로 나타났다. 도봉·동작·은평구에서 증가한 반면 송파·서초·강동구에서..",
-        "dupes": [],
-        "titleEn": "What's Happening with Real Estate in Seoul Dobong? Surging Applications for Enforcement Registration"
-      },
-      {
-        "title": "\"강남보다 더 뜨겁네\"…서울 집값 끌어올린 동네 어디",
-        "link": "https://www.hankyung.com/article/202610081161i",
-        "publishedAt": "2026-10-08T05:40:15.000Z",
-        "source": "한국경제 부동산",
-        "category": "other",
-        "preview": null,
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-gangnam.html",
-            "label": "강남구 아파트 84㎡ 매매",
-            "labelEn": "강남구 apartment 84㎡ sale",
-            "value": "28억 7,970만원",
-            "valueEn": "₩2,880M",
-            "note": "최근 1주 계약 135건 · 10/1 대비 -3.3%",
-            "noteEn": "135 deals in the last 1 weeks · -3.3% vs Oct 1"
-          }
-        ],
-        "titleEn": "Hotter than Gangnam\"… Which Neighborhood in Seoul is Driving Up Home Prices?"
-      },
-      {
-        "title": "홍지선 국토장관 “주택공급, 민간 역할 중요… 생태계 정상화 지원”",
-        "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/08/OBTTJAOC2JAU5DEI4G74EOLTB4/",
-        "publishedAt": "2026-10-08T05:37:59.000Z",
-        "source": "조선비즈 부동산",
-        "category": "realestate",
-        "preview": "홍지선 국토교통부 장관이 8일 “5년간 수도권 ‘150만호+α’ 착공 목표를 달성하기 위해서는 그간 수도권 주택공급의 80% 이상을 담당해 온 민간 부문의 역할이 무엇보다 중요하다”고 밝혔다. 홍 장관은 이날 서울…",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "14억 1,965만원",
-            "valueEn": "₩1,420M",
-            "note": "최근 1주 계약 478건 · 10/1 대비 +8.2%",
-            "noteEn": "478 deals in the last 1 weeks · +8.2% vs Oct 1"
-          }
-        ],
-        "titleEn": "Hong Jisun, Minister of Land, \"Housing Supply: Private Sector's Role Important... Support for Ecosystem Restoration"
-      },
-      {
-        "title": "강남권 하락에도 서울 아파트값, 87주째 상승… ‘역대 최장’ 또 경신",
-        "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/08/C3MELH4ZCZDCDBRIJKJ6JWLGGA/",
-        "publishedAt": "2026-10-08T05:22:20.000Z",
-        "source": "조선비즈 부동산",
-        "category": "realestate",
-        "preview": "서울 아파트 매매 가격이 87주째 상승세를 지속하며 역대 최장 상승 기록을 또 새로 썼다. 강남권을 중심으로 한 가격 상승세 둔화 흐름도 멈춰 서며 오름폭이 다시 커지는 양상이다. 8일 한국부동산원이 발표한 10월…",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-gangnam.html",
-            "label": "강남구 아파트 84㎡ 매매",
-            "labelEn": "강남구 apartment 84㎡ sale",
-            "value": "28억 7,970만원",
-            "valueEn": "₩2,880M",
-            "note": "최근 1주 계약 135건 · 10/1 대비 -3.3%",
-            "noteEn": "135 deals in the last 1 weeks · -3.3% vs Oct 1"
-          }
-        ],
-        "titleEn": "Seoul apartment prices rise for 87th consecutive week, breaking record again despite Gangnam decline"
-      },
-      {
-        "title": "삼성 '5억 대출' 풀리자마자…국평 20억 돌파한 '이 동네'",
-        "link": "https://www.hankyung.com/article/2026100808386",
-        "publishedAt": "2026-10-08T05:00:27.000Z",
-        "source": "한국경제 부동산",
-        "category": "other",
-        "preview": null,
-        "dupes": [],
-        "titleEn": "Samsung's 500,000,000 Loan Unlocks, Neighborhood's National Average Price Surpasses 2,000,000,000"
-      },
-      {
-        "title": "[속보] 서울 집값 87주 연속상승…강남 주춤한 사이 ‘셔세권’ 뛰었다",
-        "link": "https://www.mk.co.kr/news/realestate/12171332",
-        "publishedAt": "2026-10-08T05:00:00.000Z",
-        "source": "매일경제 부동산",
-        "category": "other",
-        "preview": "강남·서초구는 6주째 하락세 강북 14개구는 0.24% 상승 영통 0.62%·분당 0.56% 껑충 경기 남부선 올해 최고가 속출서울 아파트값이 87주 연속 상승하며 신기록을 이어갔..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-gangbuk.html",
-            "label": "강북구 아파트 84㎡ 매매",
-            "labelEn": "강북구 apartment 84㎡ sale",
-            "value": "8억 6,724만원",
-            "valueEn": "₩867M",
-            "note": "최근 1주 계약 99건 · 10/1 대비 +1.0%",
-            "noteEn": "99 deals in the last 1 weeks · +1.0% vs Oct 1"
-          }
-        ],
-        "titleEn": "[Breaking News] Seoul home prices rise for 87th consecutive week... while Gangnam slows, 'Cheeseon' area jumps"
+        "dupes": []
       }
     ]
   }
