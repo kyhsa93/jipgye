@@ -22,7 +22,8 @@ export function buildPayload({ items, now }) {
   if (!deals.length) return null;
   const cells = byCell(deals);
   // 끝은 원본에 있는 마지막 계약일이다. 오늘로 잡으면 아직 신고가 덜 들어온 며칠이 "다음 거래 없음"으로 읽힌다.
-  const end = Math.max(...deals.map((d) => d.time));
+  // 스프레드 금지: 원본 전체를 받아 호출 스택이 건수에 비례해 터진다(#97).
+  const end = deals.reduce((m, d) => Math.max(m, d.time), -Infinity);
   const main = measure(cells, end);
   const robust = grid(cells, end);
   const both = (fn) => ({ ko: fn("ko"), en: fn("en") });

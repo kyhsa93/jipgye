@@ -43,7 +43,8 @@ export function settledMonths(items) {
     .sort((a, b) => a - b);
   if (!gaps.length) return { settleDays: null, months: [] };
   const settleDays = gaps[Math.floor(gaps.length * SETTLE_QUANTILE)];
-  const end = Math.max(...items.map(dealTime));
+  // 스프레드는 인자 수만큼 호출 스택을 쓴다. 원본 전체(13만 건 넘음)를 받는 자리라 reduce로 센다(#97).
+  const end = items.reduce((m, item) => Math.max(m, dealTime(item)), -Infinity);
   const months = [...new Set(items.map(monthOf))].filter((m) => {
     const last = Date.UTC(Number(m.slice(0, 4)), Number(m.slice(4)), 0);
     return (end - last) / DAY >= settleDays;
