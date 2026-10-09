@@ -93,7 +93,7 @@
    `node scripts/build-realestate-pages.mjs && node scripts/build-budget-pages.mjs && node scripts/build-news-pages.mjs && node scripts/build-rate-pages.mjs`
    실행 뒤 `git status --porcelain docs`가 비어야 한다
 5. 데이터 상태:
-   - `docs/data/*.json`의 `updatedAt`이 얼마나 묵었나 (전부 하루 1회 갱신이다)
+   - `docs/data/*.json`의 `updatedAt`이 얼마나 묵었나 (전부 하루 1회 갱신이다): `node scripts/source-age.mjs` (아래 「수집 신선도」)
    - `docs/data/realestate.json`에서 표본이 얇아 값을 비운 자치구가 몇이나 되나
    - `docs/data/realestate-trend.json`에서 주간 변동이 비정상적으로 큰 자치구
    - 예산대별 거래 건수(`docs/data/budget-deals.json`)가 0에 가까운 밴드
@@ -142,3 +142,31 @@ $ 실제로 실행한 명령
   이슈뿐이다. 고치는 것은 사람이 한다.
 - `npm test`가 깨졌다고 코드를 고치지 마라. 깨진 사실을 이슈로 올리고 끝낸다.
 - 올릴 것이 없으면 아무것도 하지 마라. 억지로 채우지 마라.
+
+## 수집 신선도 (`scripts/source-age.mjs`, #72)
+
+읽기 전용이다. 게이트가 아니고 `npm test`가 오늘 날짜를 읽지도 않는다(#8).
+
+- **경과** = 오늘(KST 날짜) - 그 소스가 사이트에 실은 마지막 갱신일(KST 날짜), 일 단위 버림.
+  `full` 실행이 하루 한 번(KST 08:07)이라 **1일 경과는 정상**이다.
+- 갱신일: `docs/data/*.json`의 `updatedAt`(`-<구>` 접미사 묶음은 한 소스, 가장 오래된 값),
+  실거래 원본은 `raw/sale`·`raw/rent`의 가장 최근 달 슬롯 파일 `observedAt` 중 최신.
+  `updatedAt`이 없는 파일(히스토리·메타)은 소스가 아니라 건너뛴다.
+- 읽는 법: `node scripts/source-age.mjs`는 경과일 큰 순으로 소스·파일·`updatedAt`을 찍고 끝에
+  `경과 최대 2일: cancellation.json` 꼴 한 줄을 붙인다. #97(해제 통계 `updatedAt` 정지)이 이 모양이다.
+- 문턱: **경과 >= 2일** 소유자 상태줄(`--statusline`, 이상 없으면 아무것도 안 찍는다),
+  **경과 >= 3일** 열린 이슈에 댓글(없을 때만 새 이슈 1건).
+- 재현·시험: `--today=YYYY-MM-DD --data=<dir> --raw=<dir>`. 시험은 `test/source-age.test.mjs`(고정 입력).
+
+## 법 시행일 달력 (고정점 넷)
+
+`BASIS_DATE`가 6개월을 넘었을 때만 올리는 규칙은 시행 당일을 못 잡는다(2027-01-01 시행 당일에는
+`BASIS_DATE`가 3개월째라 아무것도 안 뜬다). 아래 날짜는 기준일과 무관하게 확인한다. 날짜 의존이라
+테스트에 넣지 않고 사이클 보고로만 챙긴다(#8).
+
+| # | 날짜 | 무엇 | 확인 주체 |
+|---|---|---|---|
+| 1 | 2026-10-31까지(확인은 11-01까지) | 지방세법 개정안 국회 제출 여부 | `legal` - #72에 "제출됨(의안번호·날짜)" 또는 "안 됨(확인 URL·확인일)" 댓글 |
+| 2 | 2026-12 초 | 정기국회 세법 처리(재산세 1주택 특례 2026-12-28 일몰, 종부세 가액 기준 개편안 포함) | `legal` |
+| 3 | 2027-01-01 시행 당일 | 시행되는 개정의 반영. 2027-01-02에 네 모듈(`purchase-costs`·`loan-cap`·`policy-loan`·`min-cash`)의 `SOURCES`를 원문과 대조했거나 "변경 없음"을 근거와 함께 적는다 | `legal`·`ops` |
+| 4 | 2027 상반기 | 재산세 공정시장가액비율 시행령 | `legal` |
