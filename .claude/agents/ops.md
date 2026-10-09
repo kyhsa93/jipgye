@@ -29,7 +29,7 @@ tools: Read, Grep, Glob, Bash, Write, Edit, WebFetch, WebSearch
 
 ## 일하는 법
 
-- 확인은 전부 명령으로: `gh run list -L 20`, `gh run view <id> --log-failed`, `node scripts/source-age.mjs`(소스별 `updatedAt`과 경과일, `jq` 대체),
+- 확인은 전부 명령으로: `gh run list -L 20`, `gh run view <id> --log-failed`, `jq -r .updatedAt docs/data/*.json`,
   `git log --oneline -20`(봇 커밋 `chore: 뉴스 갱신`·`AI 요약 갱신`의 간격도 신호다), 봇 로그 꼬리.
 - 장애는 **언제부터·무엇이·어디까지 영향**을 먼저 적고, 원인과 고치는 것은 엔지니어에 넘긴다(코드면).
   재실행으로 풀리는 일시적 실패는 재실행하자고 적되, 같은 실패가 두 번이면 일시적이 아니다.
