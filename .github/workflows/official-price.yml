@@ -1,0 +1,92 @@
+# 공시가격 접기 (#68). 연 1회 사람이 지켜보며 돌린다 - 일일 파이프라인과 따로이고
+# daily-update.yml은 건드리지 않는다. 시크릿 없음.
+# 첫 실제 dispatch는 #70 완료 커밋 해시가 #70에 올라오고 clo 원문 대조 기록(#68 댓글)이
+# 올라온 뒤에만 한다.
+name: Official price fold
+
+on:
+  workflow_dispatch:
+    inputs:
+      download_url:
+        description: "공시가격 zip 내려받기 URL (https://www.data.go.kr/ 아래, 사람이 캡차를 통과해 얻은 것)"
+        type: string
+        required: true
+      sha256:
+        description: "상세 페이지에 적힌 파일 SHA-256"
+        type: string
+        required: true
+      rows:
+        description: "헤더 제외 행수 (페이지 자료건수)"
+        type: string
+        required: true
+      base_year:
+        description: "기준연도 (예: 2025)"
+        type: string
+        required: true
+      license:
+        description: "상세 페이지의 이용허락범위 문자열 (제한 없음이 아니면 멈춤)"
+        type: string
+        required: true
+      page_modified:
+        description: "상세 페이지 수정일 (메타에 기록)"
+        type: string
+        required: true
+      raw_commit:
+        description: "대상 지번을 정한 raw/ 커밋 해시 (#70 완료 커밋, 40자리)"
+        type: string
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: digest-pipeline
+  cancel-in-progress: false
+
+jobs:
+  fold:
+    runs-on: ubuntu-latest
+    env:
+      DOWNLOAD_URL: ${{ inputs.download_url }}
+      EXPECT_SHA256: ${{ inputs.sha256 }}
+      EXPECT_ROWS: ${{ inputs.rows }}
+      BASE_YEAR: ${{ inputs.base_year }}
+      LICENSE_TEXT: ${{ inputs.license }}
+      PAGE_MODIFIED: ${{ inputs.page_modified }}
+      RAW_COMMIT: ${{ inputs.raw_commit }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ inputs.raw_commit }}
+          path: raw-at-commit
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "20"
+
+      - run: npm ci
+
+      - name: 테스트
+        run: npm test
+
+      - name: 입력 확인
+        run: |
+          case "$DOWNLOAD_URL" in https://www.data.go.kr/*) ;; *) echo "download_url이 data.go.kr가 아니다" >&2; exit 1;; esac
+          test "$(git -C raw-at-commit rev-parse HEAD)" = "$RAW_COMMIT" || { echo "raw_commit이 40자리 전체 해시와 다르다" >&2; exit 1; }
+
+      - name: 내려받기 (저장소 밖)
+        run: curl -fsSL -o "$RUNNER_TEMP/official-price.zip" "$DOWNLOAD_URL"
+
+      - name: 접기
+        run: |
+          export ZIP_SHA256="$(sha256sum "$RUNNER_TEMP/official-price.zip" | cut -d' ' -f1)"
+          unzip -p "$RUNNER_TEMP/official-price.zip" '*.csv' \
+            | node scripts/fetch-official-price.mjs \
+                --sha256 "$EXPECT_SHA256" --rows "$EXPECT_ROWS" --base-year "$BASE_YEAR" \
+                --license "$LICENSE_TEXT" --page-modified "$PAGE_MODIFIED" \
+                --raw-commit "$RAW_COMMIT" --raw-dir raw-at-commit/raw
+
+      - name: 커밋
+        run: ./scripts/push-docs.sh "chore: 공시가격 접기 ${BASE_YEAR}" raw/official-price
