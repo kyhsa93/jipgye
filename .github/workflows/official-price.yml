@@ -89,4 +89,5 @@ jobs:
                 --raw-commit "$RAW_COMMIT" --raw-dir raw-at-commit/raw
 
       - name: 커밋
-        run: ./scripts/push-docs.sh "chore: 공시가격 접기 ${BASE_YEAR}" raw/official-price
+        run: |
+          ./scripts/push-docs.sh "chore: 공시가격 접기 ${BASE_YEAR}" raw/official-price
