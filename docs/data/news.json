@@ -1,7 +1,58 @@
 {
-  "updatedAt": "2026-10-10T02:16:54.172Z",
+  "updatedAt": "2026-10-10T09:45:30.021Z",
   "date": "2026-10-10",
   "items": [
+    {
+      "title": "풀어서 올랐나, 조여서 올랐나…서울 집값 뒤흔든 ‘토허제 딜레마’, 향방은",
+      "link": "https://www.mk.co.kr/news/realestate/12172734",
+      "publishedAt": "2026-10-10T08:45:55.000Z",
+      "source": "매일경제 부동산",
+      "category": "other",
+      "preview": "규제에도 이어진 가격상승에 해석 엇갈려서울 주택 시장을 둘러싼 집값 상승 원인을 두고 규제 완화와 규제 강화의 팽팽한 공방이 이어지고 있다. 토지거래허가구역(토허제) 지정을 조인 ..",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./apartment-sale.html",
+          "label": "서울 전체 아파트 84㎡ 매매",
+          "labelEn": "Seoul apartment 84㎡ sale",
+          "value": "14억 517만원",
+          "valueEn": "₩1,405M",
+          "note": "최근 1주 계약 684건 · 10/2 대비 +7.1%",
+          "noteEn": "684 deals in the last 1 weeks · +7.1% vs Oct 2"
+        }
+      ]
+    },
+    {
+      "title": "\"미국 국채금리 사상 최고치\"…미국 국채금리 급등이 바꿀 경제 흐름",
+      "link": "https://www.newsis.com/view/NISX20261010_0003820478",
+      "publishedAt": "2026-10-10T07:47:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "rates",
+      "preview": "[서울=뉴시스]전민영 인턴 기자 = 미국 장기 국채금리가 24년 만에 최고 수준으로 치솟으면서 고금리가 장기화할 수 있다는 전망이 나왔다. 국채 수요는 줄고 발행은 늘어 부동산·주식·가상화폐 시장도 금리 부담에 대비…",
+      "dupes": []
+    },
+    {
+      "title": "배우 김유정, 한남 유엔빌리지 떠나 성동 월세살이 왜?",
+      "link": "https://www.newsis.com/view/NISX20261010_0003820546",
+      "publishedAt": "2026-10-10T04:03:59.000Z",
+      "source": "뉴시스 경제",
+      "category": "realestate",
+      "preview": "[서울=뉴시스] 김종민 기자 = 배우 김유정이 과거 거주하던 한남동 유엔빌리지를 떠나 서울 성동구의 한 아파트에 월세로 거주하는 사연이 공개돼 시선을 모으고 있다. 10일 유튜브 채널 원더 플래닛에 따르면, 김유정은…",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-seongdong.html",
+          "label": "성동구 아파트 월세",
+          "labelEn": "성동구 apartment rent",
+          "value": "보증금 23,166만원 / 월 198만원",
+          "valueEn": "₩231.7M + ₩1.98M/mo",
+          "note": "최근 1주 계약 206건 · 10/2 대비 +0.9%",
+          "noteEn": "206 deals in the last 1 weeks · +0.9% vs Oct 2"
+        }
+      ]
+    },
     {
       "title": "[다음주 경제] 취업자 얼마나 늘었나…IMF, 韓성장률 전망 수정치 발표",
       "link": "https://www.yna.co.kr/view/AKR20261010018000002",
@@ -164,27 +215,6 @@
       "dupes": []
     },
     {
-      "title": "세종 국평 3억원대 아파트 1가구 줍줍…시세보다 4억 저렴",
-      "link": "https://www.newsis.com/view/NISX20261008_0003818792",
-      "publishedAt": "2026-10-09T05:00:00.000Z",
-      "source": "뉴시스 경제",
-      "category": "realestate",
-      "preview": "[서울=뉴시스] 강세훈 기자, 이효령 인턴기자 = 세종시 나성동에서 시세보다 4억원 가량 저렴한 아파트 1가구가 다자녀가구 특공 물량으로 다시 시장에 풀린다. 9일 한국부동산원 청약홈에 따르면 오는 12일 세종시 나…",
-      "dupes": [],
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-seongdong.html",
-          "label": "성동구 아파트 84㎡ 매매",
-          "labelEn": "성동구 apartment 84㎡ sale",
-          "value": "20억 9,276만원",
-          "valueEn": "₩2,093M",
-          "note": "최근 1주 계약 69건 · 10/2 대비 +0.9%",
-          "noteEn": "69 deals in the last 1 weeks · +0.9% vs Oct 2"
-        }
-      ]
-    },
-    {
       "title": "서울역 역세권에 35층 아파트…준주거지 모아타운 483가구 공급",
       "link": "https://www.mk.co.kr/news/realestate/12172265",
       "publishedAt": "2026-10-09T04:44:50.000Z",
@@ -225,15 +255,6 @@
           "noteEn": "288 deals in the last 1 weeks · +2.0% vs Oct 2"
         }
       ]
-    },
-    {
-      "title": "영통 집값 올해만 4억 뛰었다…삼전 대출이 불쏘시개",
-      "link": "https://www.newsis.com/view/NISX20261008_0003819243",
-      "publishedAt": "2026-10-09T02:00:00.000Z",
-      "source": "뉴시스 경제",
-      "category": "other",
-      "preview": "[서울=뉴시스] 강세훈 기자, 남훈 인턴기자 = 삼성전자 사내대출로 주택 구매 자금 조달 여력이 커지면서 경기 남부 아파트 시장의 가격 상승세가 확산하고 있다. 최대 수혜지로 꼽히는 수원 영통구에서는 광교 주요 단지…",
-      "dupes": []
     },
     {
       "title": "“안 팔리면 LH가 사준다”… 수도권 미분양 주택 매입확약 시행",
@@ -346,27 +367,6 @@
           "valueEn": "₩1,529M",
           "note": "최근 1주 계약 178건 · 10/2 대비 +0.7%",
           "noteEn": "178 deals in the last 1 weeks · +0.7% vs Oct 2"
-        }
-      ]
-    },
-    {
-      "title": "구로구 신도림동 동아3 전용 60㎡ 14억 9천만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12172175",
-      "publishedAt": "2026-10-08T23:36:15.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 서울 구로구 신도림동 동아3차 아파트 전용 60㎡가 14억 9천만원에 거래되며 동일 면적 기준 최근 3년 내 최고가를 경신했다. 항목 내용 항목 내용 준공 2000년..",
-      "dupes": [],
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-guro.html",
-          "label": "구로구 아파트 84㎡ 매매",
-          "labelEn": "구로구 apartment 84㎡ sale",
-          "value": "9억 2,085만원",
-          "valueEn": "₩921M",
-          "note": "최근 1주 계약 257건 · 10/2 대비 +4.2%",
-          "noteEn": "257 deals in the last 1 weeks · +4.2% vs Oct 2"
         }
       ]
     }
