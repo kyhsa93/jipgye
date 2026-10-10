@@ -64,6 +64,7 @@ jobs:
 
       - name: 결과 출력
         run: |
+          # shellcheck disable=SC2016 # 작은따옴표 안은 셸이 아니라 node가 읽는 JS다. `${...}`는 JS 템플릿 리터럴이라 셸이 풀면 안 된다.
           node -e '
             const s = require("./docs/data/summary.json");
             console.log("모델:", s.model);

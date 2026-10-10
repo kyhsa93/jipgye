@@ -22,8 +22,7 @@ jobs:
       # 외부 바이너리이므로 버전과 SHA-256을 고정하고 `sha256sum -c`로 대조한다(불일치면 이 스텝이 실패).
       # 해시 출처: https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_checksums.txt
       # (linux_amd64 줄, 2026-10-10 확인). 버전을 올리면 해시도 같은 파일에서 다시 가져온다.
-      # -shellcheck=: run 블록의 셸 린트는 끈다. 이슈 범위는 표현식·컨텍스트이고, 켜면 기존 워크플로
-      # 4곳(official-price 89, summarize 70, summary-experiment 38·66)이 새로 걸린다 - 별도 이슈로 분리.
+      # 셸 린트(shellcheck)도 켠다(#162): run 블록의 SC 지적은 고치거나, 의도면 `# shellcheck disable=` 사유 주석으로 남겼다.
       - name: actionlint v1.7.7
         env:
           ACTIONLINT_VERSION: "1.7.7"
@@ -36,6 +35,6 @@ jobs:
           echo "${ACTIONLINT_SHA256}  $RUNNER_TEMP/$archive" | sha256sum -c -
           tar -xzf "$RUNNER_TEMP/$archive" -C "$RUNNER_TEMP" actionlint
           "$RUNNER_TEMP/actionlint" -version
-          "$RUNNER_TEMP/actionlint" -shellcheck=
+          "$RUNNER_TEMP/actionlint"
       - run: npm ci
       - run: npm test
