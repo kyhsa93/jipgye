@@ -76,7 +76,7 @@ test("우연히 나올 수 있는 폭은 같은 입력이면 같은 답이다", 
   assert.deepEqual(noiseBand(pool, 20), noiseBand(pool, 20));
 });
 
-test("칸이 모자란 구는 값을 내되 서울과 다르다고 말하지 않는다", () => {
+test("칸이 모자란 구는 값을 비우고 서울과 다르다고 말하지 않는다", () => {
   const byDistrict = new Map([
     ["노원구", Array.from({ length: 40 }, () => -20)],
     ["광진구", [-20, -20, -20]],
@@ -89,7 +89,8 @@ test("칸이 모자란 구는 값을 내되 서울과 다르다고 말하지 않
   assert.equal(nowon.distinct, true, "칸이 넉넉하고 한참 벗어났는데 말하지 못했다");
   assert.equal(gwangjin.band, null, "칸이 모자란데 구간을 만들었다");
   assert.equal(gwangjin.distinct, false, "칸 셋으로 서울과 다르다고 말했다");
-  assert.equal(gwangjin.median, -20, "말은 못 해도 값은 남긴다");
+  assert.equal(gwangjin.median, null, "표본이 모자란데 값을 냈다 (#171)");
+  assert.equal(gwangjin.cells, 3, "칸 수는 남긴다");
 });
 
 // --- 화면 -------------------------------------------------------------------
@@ -122,6 +123,25 @@ test("갈라 볼 수 없는 구도 표에서 빼지 않는다", async () => {
   const table = page.districtTable();
   assert.match(table, /광진구/, "말할 수 없는 구가 표에서 사라졌다");
   assert.match(table, /칸이 모자람|갈라 볼 수 없음/);
+});
+
+test("칸이 문턱에 못 미친 구는 값을 비우고 칸 수만 남긴다 (#171)", async () => {
+  // renewal-vs-new·switch-house와 같은 규칙 - 표본이 모자란 칸에 값을 내지 않는다.
+  const thin = PAYLOAD.districts.find((row) => row.district === "광진구");
+  assert.equal(thin.cells, 4);
+  assert.equal(thin.median, null, "칸이 모자란 구가 값을 냈다");
+  const wide = PAYLOAD.districts.find((row) => row.district === "노원구");
+  assert.equal(typeof wide.median, "number");
+  assert.equal(PAYLOAD.districts.at(-1).district, "광진구", "값 없는 구는 맨 뒤다");
+
+  for (const lang of ["ko", "en"]) {
+    const page = await loadFloorPage({ floor: PAYLOAD });
+    if (lang === "en") page.toggleLang();
+    const row = page.districtTable().match(/<tr><td>광진구<\/td>.*?<\/tr>/)[0];
+    assert.match(row, /<td>-<\/td><td>4<\/td>/, `${lang}: 값 칸이 비지 않았다`);
+    assert.doesNotMatch(row, /%/, `${lang}: 칸이 모자란 줄에 %가 남았다`);
+  }
+  assert.doesNotMatch(floorDistrictsHtml(PAYLOAD).match(/<tr><td>광진구<\/td>.*?<\/tr>/)[0], /%/);
 });
 
 test("빌드가 그린 표와 화면이 그린 표가 같다", async () => {

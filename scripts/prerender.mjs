@@ -1164,7 +1164,7 @@ export function floorDistrictsHtml(floor) {
         ? "다르다"
         : `<span class="low-sample">${row.band ? "갈라 볼 수 없음" : "칸이 모자람"}</span>`;
       return (
-        `<tr><td>${escapeHtml(row.district)}</td><td>${row.median}%</td>` +
+        `<tr><td>${escapeHtml(row.district)}</td><td>${row.median === null ? "-" : `${row.median}%`}</td>` +
         `<td>${row.cells.toLocaleString("ko-KR")}</td><td>${verdict}</td></tr>`
       );
     })
