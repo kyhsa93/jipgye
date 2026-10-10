@@ -172,7 +172,7 @@ async function setup() {
   return { dir, bjdong, out: path.join(dir, "out") };
 }
 
-const COLLECTED_AT = "2026-10-10T00:00:00Z";
+const COLLECTED_AT = "2026-10-10T00:00:00.000Z";
 async function run(env, args) {
   const clean = { PATH: process.env.PATH, BUILDINGHUB_RETRY_MS: "0", BUILDINGHUB_PAGE_SIZE: "2", ...env };
   // 이용허락·수집 시각은 기본값을 채운다. 시험이 직접 주면(--license가 args에 있으면) 그대로 둔다.

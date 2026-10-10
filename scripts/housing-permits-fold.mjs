@@ -10,12 +10,24 @@
  *  - 호수를 읽을 수 없거나 핵심 필드가 없으면 던진다 - 가정한 필드 이름이 틀린 것을 조용히 0으로 접지 않는다.
  *  - 호수 0인 달·구는 만들지 않는다. 0과 결측의 구분은 수집 쪽의 전수 순회 성공 기록이 맡는다.
  */
-import { FIELDS, SERIES } from "./housing-permits-spec.mjs";
+import { FIELDS, PROJECTED_FIELDS, SERIES } from "./housing-permits-spec.mjs";
 
 export class ShapeError extends Error {}
 
 const CORE = [FIELDS.id, FIELDS.sigungu, FIELDS.units];
 const NULLABLE = [FIELDS.cancel, FIELDS.version, ...Object.values(FIELDS.dates)];
+
+/**
+ * 필요한 필드만 남긴 사본(없는 필드는 만들지 않는다 - 아래 "한 건도 없으면 실패" 검사가 그대로 작동해야 한다).
+ * extra는 입력 시점 필드(B4) 이름 하나.
+ */
+export function projectItem(item, extra = null) {
+  const out = {};
+  for (const key of extra ? [...PROJECTED_FIELDS, extra] : PROJECTED_FIELDS) {
+    if (item && key in item) out[key] = item[key];
+  }
+  return out;
+}
 
 /** 매 항목에 있어야 하는 핵심 필드. 수집기는 쪽마다, 접기는 전체에 대해 부른다. */
 export function assertCoreFields(items) {
@@ -66,7 +78,10 @@ function sortedObject(obj) {
   return Object.fromEntries(Object.keys(obj).sort().map((k) => [k, obj[k]]));
 }
 
-export function foldProjects(items) {
+const monthIndex = (ym) => Number(ym.slice(0, 4)) * 12 + Number(ym.slice(5, 7));
+
+/** options.inputTimeField: 입력 시점 필드 이름. 주면 meta 옆에 (입력월 - 사업승인월) 분포를 센다(B4, 사업 단위 값은 남기지 않는다). */
+export function foldProjects(items, { inputTimeField = null } = {}) {
   assertCoreFields(items);
   assertNullableFields(items);
 
@@ -82,14 +97,29 @@ export function foldProjects(items) {
 
   const series = Object.fromEntries(SERIES.map((s) => [s, {}]));
   const unknown = Object.fromEntries(SERIES.map((s) => [s, {}]));
+  const cancelledPermit = {}; // 서울 전체, 달별. B2의 "취소 포함" 값 - 구별 칸은 만들지 않는다
+  const lag = inputTimeField ? { field: inputTimeField, histogram: {}, unparsed: 0 } : null;
   let cancelled = 0;
   let projects = 0;
 
   for (const [id, { item }] of latest) {
-    if (isCancelled(item)) { cancelled += 1; continue; }
+    if (isCancelled(item)) {
+      cancelled += 1;
+      const month = parseDay(item[FIELDS.dates.permit]);
+      if (month) add((cancelledPermit[month] ??= { projects: 0, units: 0 }), parseUnits(item[FIELDS.units], id));
+      continue;
+    }
     const sgg = String(item[FIELDS.sigungu]).trim();
     const units = parseUnits(item[FIELDS.units], id);
     projects += 1;
+    if (lag) {
+      const input = parseDay(item[inputTimeField]);
+      const permit = parseDay(item[FIELDS.dates.permit]);
+      if (input && permit) {
+        const d = monthIndex(input) - monthIndex(permit);
+        lag.histogram[d] = (lag.histogram[d] ?? 0) + 1;
+      } else lag.unparsed += 1;
+    }
     for (const s of SERIES) {
       const month = parseDay(item[FIELDS.dates[s]]);
       if (month) add(((series[s][sgg] ??= {})[month] ??= { projects: 0, units: 0 }), units);
@@ -102,9 +132,12 @@ export function foldProjects(items) {
     series[s] = sortedObject(series[s]);
     unknown[s] = sortedObject(unknown[s]);
   }
+  if (lag) lag.histogram = Object.fromEntries(Object.keys(lag.histogram).map(Number).sort((a, b) => a - b).map((k) => [k, lag.histogram[k]]));
   return {
     meta: { input: items.length, projects, duplicates: items.length - latest.size, cancelled },
     series,
     unknown,
+    cancelledPermit: sortedObject(cancelledPermit),
+    ...(lag ? { inputLag: lag } : {}),
   };
 }

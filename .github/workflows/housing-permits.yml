@@ -1,0 +1,86 @@
+# 건축HUB 주택인허가 수집·접기 (#133, #58 단계 B). 사람이 지켜보며 dispatch로만 돈다 - 일일 파이프라인
+# (daily-update.yml)에는 넣지 않는다. 월 갱신 자료라 매일 불필요하고 첫 실측은 호출량이 크다(일 한도 5000 이하).
+# 안정되면 월 1회 스케줄과 update-all.mjs 양쪽 등록(체크리스트 11)은 별도 이슈에서 한다.
+#
+# 첫 실제 dispatch 전제(#133): PREREG(PR #137)가 먼저임을 아래 "사전 등록 순서 확인" 스텝이 git 이력으로 확인한다.
+# 이용허락범위(license)는 포털 상세 페이지에서 사람이 읽어 넣는다 - 응답에는 없다. "제한 없음"이 아니면 호출 전에 멈춘다.
+#
+# concurrency: official-price.yml 선례대로 daily-update와 같은 digest-pipeline 그룹을 쓴다. 이유: 둘 다 main에
+# push하고, 일일 쪽 push-docs.sh는 원격이 앞서 있으면 낡은 산출물을 덮지 않으려 실패한다(#92) - 같은 그룹이면
+# 줄을 서서 그 실패가 생기지 않는다. 대기 중 run은 그룹당 하나만 남으므로(새 대기가 옛 대기를 대체) 사람이 지켜보며
+# 한 번에 하나만 dispatch한다.
+name: Housing permits fold
+
+on:
+  workflow_dispatch:
+    inputs:
+      license:
+        description: "상세 페이지의 이용허락범위 문자열 (제한 없음이 아니면 멈춤)"
+        type: string
+        required: true
+      page_modified:
+        description: "포털 상세 페이지 수정일 (메타에 기록)"
+        type: string
+        required: true
+      input_time_field:
+        description: "응답에서 최초 입력 시점으로 확인된 필드 이름 (B4 규칙 3, 모르면 비움 - 규칙 2로 n 3)"
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: digest-pipeline
+  cancel-in-progress: false
+
+jobs:
+  fold:
+    runs-on: ubuntu-latest
+    env:
+      LICENSE_TEXT: ${{ inputs.license }}
+      PAGE_MODIFIED: ${{ inputs.page_modified }}
+      INPUT_TIME_FIELD: ${{ inputs.input_time_field }}
+      # 원본 쪽 본문은 러너 임시 폴더(저장소 밖)에만 두고 잡이 끝나면 지운다. 수집기도 저장소 안이면 멈춘다.
+      BUILDINGHUB_RAW_DIR: ${{ runner.temp }}/housing-raw
+      # 사전 등록(PR #137 머지 SHA). ④ 분모 등 PREREG를 고치는 PR이 있어도 이 커밋이 조상이면 된다.
+      PREREG_COMMIT: dac5e98db7d00aca37dfa57dda1da9f4d39314ca
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "20"
+
+      - run: npm ci
+
+      - name: 테스트
+        run: npm test
+
+      - name: 사전 등록 순서 확인
+        run: node scripts/check-prereg-order.mjs --prereg "$PREREG_COMMIT"
+
+      - name: 수집 (시크릿은 이 스텝에서만)
+        env:
+          BUILDINGHUB_API_KEY: ${{ secrets.BUILDINGHUB_API_KEY }}
+        run: |
+          node scripts/fetch-housing-permits.mjs \
+            --license "$LICENSE_TEXT" --page-modified "$PAGE_MODIFIED" \
+            --collected-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            ${INPUT_TIME_FIELD:+--input-time-field "$INPUT_TIME_FIELD"}
+
+      - name: 원본 쪽 본문 지우기
+        if: always()
+        run: rm -rf "$BUILDINGHUB_RAW_DIR"
+
+      - name: B1~B4 측정
+        run: |
+          node scripts/housing-permits-measure.mjs
+          { echo '### 건축HUB B1~B4'; echo '```json'; cat research/housing-permits/measure.json; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 커밋 (접힌 결과와 측정 메타만)
+        run: |
+          ./scripts/push-docs.sh "chore: 건축HUB 주택인허가 접기" research/housing-permits/folded.json research/housing-permits/measure.json

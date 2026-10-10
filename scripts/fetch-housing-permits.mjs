@@ -7,22 +7,27 @@
  * - 키(BUILDINGHUB_API_KEY)가 없으면 "생략" 로그만 남기고 종료 코드 0, 네트워크는 쓰지 않는다.
  * - 서울 25개 구 x 법정동을 순서대로(결정성) 돌고 쪽을 끝까지 받는다. 전수 순회가 끝나야만
  *   <out-dir>/folded.json을 쓴다. 한 곳이라도 실패하면 아무것도 쓰지 않고 실패 목록을 남긴다(종료 3).
- * - 일 호출 한도(DAILY_LIMIT, 재시도 포함)에 닿으면 그 자리에서 중단한다(종료 3, 쓰지 않음).
+ * - 일 호출 한도(DAILY_LIMIT 5000 이하, 재시도 포함)에 닿거나 서버가 429·한도 초과 코드(22)를 주면 재시도 없이
+ *   그 자리에서 중단한다(종료 3, 쓰지 않음).
+ * - --license(포털 페이지의 이용허락범위 문자열)가 "제한 없음"이 아니면 호출 없이 종료 1(소유자 조건 4). 메타에 남긴다.
+ * - 접은 결과는 합침 단계(housing-permits-merge.mjs: 셀 사업 수 n<3 -> 기타 구)를 거친 것만 folded.json에 쓴다.
  * - 응답 필드가 가정(housing-permits-spec.mjs)과 다르면 쓰지 않고 종료 1.
  * - 원본은 저장소에 두지 않는다. 쪽 본문의 sha256을 이어 붙인 해시만 folded.json meta에 남기고,
- *   BUILDINGHUB_RAW_DIR(저장소 밖)을 주면 쪽 본문을 거기에 쓴다(원본 크기는 cto가 잰다).
+ *   BUILDINGHUB_RAW_DIR(저장소 밖이어야 한다. 안이면 호출 전에 종료 1)을 주면 쪽 본문을 거기에 쓴다.
+ *   응답 항목은 받자마자 필요한 필드만 남긴다(projectItem).
  * - 법정동 코드 목록(bjdongCd)은 저장소에 없다. --bjdong-file이 없으면 호출 없이 종료 1.
  *   형태: {"11110": ["10100", ...], ... 25구 전부}. 출처 결정은 미정(PR 본문 참조).
  * - 실제 호출은 이 이슈 범위 밖이다. 시험은 스텁 서버(BUILDINGHUB_API_ENDPOINT)로만 돈다.
  */
 import { XMLParser } from "fast-xml-parser";
 import { createHash } from "node:crypto";
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { mkdir, readFile, realpath, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import { DISTRICTS } from "./realestate-districts.mjs";
-import { assertCoreFields, foldProjects, ShapeError } from "./housing-permits-fold.mjs";
-import { DAILY_LIMIT, DEFAULT_ENDPOINT, FIELDS, OPERATION, PAGE_SIZE } from "./housing-permits-spec.mjs";
+import { assertCoreFields, foldProjects, projectItem, ShapeError } from "./housing-permits-fold.mjs";
+import { mergeSmallCells } from "./housing-permits-merge.mjs";
+import { DAILY_LIMIT, DEFAULT_ENDPOINT, FIELDS, LICENSE, OPERATION, PAGE_SIZE } from "./housing-permits-spec.mjs";
 
 const EXIT_SHAPE = 1;
 const EXIT_INCOMPLETE = 3;
@@ -31,8 +36,8 @@ const ABORT_AFTER = 20; // 연속 실패가 이만큼이면 더 두드리지 않
 const MAX_PAGES = 1000;
 const BODY_PREVIEW_CHARS = 200;
 
-function numberEnv(name, fallback) {
-  const raw = String(process.env[name] ?? "").trim();
+function numberEnv(name, fallback, env = process.env) {
+  const raw = String(env[name] ?? "").trim();
   if (!raw) return fallback;
   const value = Number(raw);
   return Number.isFinite(value) && value >= 0 ? value : fallback;
@@ -43,6 +48,11 @@ function numberEnv(name, fallback) {
  * 같은 디코딩 값으로 맞추고, 요청에서 한 번만 encodeURIComponent 한다(이중 인코딩 방지).
  * 앞뒤 공백·개행·따옴표는 지운다. 빈 값이면 "".
  */
+/** 일 호출 한도. 기본 DAILY_LIMIT(5000)이고 환경변수로는 그보다 낮게만 줄일 수 있다(소유자 조건 5). */
+export function dailyLimit(env = process.env) {
+  return Math.min(numberEnv("BUILDINGHUB_DAILY_LIMIT", DAILY_LIMIT, env), DAILY_LIMIT);
+}
+
 export function normalizeServiceKey(raw) {
   let key = String(raw ?? "").trim().replace(/^["']|["']$/g, "").trim();
   if (/%[0-9a-f]{2}/i.test(key)) {
@@ -68,10 +78,42 @@ const say = (msg) => console.log(`[fetch-housing-permits] ${mask(msg)}`);
 const warn = (msg) => console.error(`[fetch-housing-permits] ${mask(msg)}`);
 
 class LimitError extends Error {}
+
+/**
+ * data.go.kr 공통 오류 22 = LIMITED_NUMBER_OF_SERVICE_REQUESTS_EXCEEDS_ERROR(서비스 요청제한횟수 초과).
+ * 코드 자리가 JSON 헤더(resultCode)와 XML 공통 헤더(returnReasonCode)에서 다르고, 앞자리 0이 붙기도 해서
+ * 숫자로 견주고, 메시지에 이름이 있으면 코드와 무관하게 한도 신호로 본다.
+ */
+function isLimitCode(code, message) {
+  return Number(code) === 22 || /LIMITED_NUMBER_OF_SERVICE_REQUESTS|REQUESTS_EXCEEDS/i.test(String(message ?? ""));
+}
 class IncompleteError extends Error {}
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * RAW_DIR은 저장소 밖이어야 한다(소유자 조건 1·원본은 저장소 밖). 아직 없는 폴더도 가장 가까운 기존 조상을
+ * realpath로 풀어 견주므로 심볼릭 링크로 저장소 안을 가리켜도 막힌다. 저장소 루트 자신도 안으로 본다.
+ */
+async function assertOutsideRepo(dir) {
+  const repoRoot = await realpath(path.resolve(import.meta.dirname, ".."));
+  let probe = path.resolve(dir);
+  const rest = [];
+  for (;;) {
+    try { probe = await realpath(probe); break; } catch {
+      const parent = path.dirname(probe);
+      if (parent === probe) break;
+      rest.unshift(path.basename(probe));
+      probe = parent;
+    }
+  }
+  const resolved = path.join(probe, ...rest);
+  const rel = path.relative(repoRoot, resolved);
+  if (rel === "" || (!rel.startsWith("..") && !path.isAbsolute(rel))) {
+    throw new ShapeError(`BUILDINGHUB_RAW_DIR가 저장소 안이다: 원본은 저장소 밖에 둔다(${resolved})`);
+  }
 }
 
 function endpointFromEnv() {
@@ -107,11 +149,14 @@ async function requestPage(ctx, sigungu, bjdong, pageNo) {
     sigunguCd: sigungu, bjdongCd: bjdong, pageNo: String(pageNo), numOfRows: String(ctx.pageSize), _type: "json",
   });
   const url = `${ctx.endpoint}/${OPERATION}?serviceKey=${encodeURIComponent(API_KEY)}&${query}`;
-  const res = await fetch(url, { signal: AbortSignal.timeout(ctx.timeoutMs) });
+  // redirect: "error" - 다른 주소로 따라가지 않는다(쿼리의 serviceKey가 새지 않게). 리다이렉트는 일반 실패로 센다.
+  const res = await fetch(url, { signal: AbortSignal.timeout(ctx.timeoutMs), redirect: "error" });
   const text = await res.text();
   const diagnostic = () =>
     `http ${res.status} · content-type ${res.headers.get("content-type")} · 본문 앞 ${BODY_PREVIEW_CHARS}자: ` +
     mask(text).slice(0, BODY_PREVIEW_CHARS).replace(/\s+/g, " ");
+  // 429는 재시도하지 않고 바로 멈춘다(소유자 조건 5). 다시 두드리면 한도 초과를 키운다.
+  if (res.status === 429) throw new LimitError(`HTTP 429 - 호출 제한 응답, 즉시 중단 — ${diagnostic()}`);
   if (!res.ok) throw new Error(`HTTP 오류 — ${diagnostic()}`);
   let parsed;
   try { parsed = parseBody(text); } catch { parsed = null; }
@@ -119,9 +164,12 @@ async function requestPage(ctx, sigungu, bjdong, pageNo) {
 
   const header = parsed?.response?.header;
   if (!header) {
-    const msg = parsed?.OpenAPI_ServiceResponse?.cmmMsgHeader?.errMsg ?? "알 수 없는 응답 형식";
+    const common = parsed?.OpenAPI_ServiceResponse?.cmmMsgHeader;
+    const msg = common?.errMsg ?? "알 수 없는 응답 형식";
+    if (isLimitCode(common?.returnReasonCode, msg)) throw new LimitError(`한도 초과 응답(${common?.returnReasonCode}), 즉시 중단 — ${diagnostic()}`);
     throw new Error(`${msg} — ${diagnostic()}`);
   }
+  if (isLimitCode(header.resultCode, header.resultMsg)) throw new LimitError(`한도 초과 응답(${header.resultCode}), 즉시 중단 — ${diagnostic()}`);
   if (Number(header.resultCode) !== 0) throw new Error(header.resultMsg ?? `resultCode ${header.resultCode}`);
 
   const body = parsed.response.body ?? {};
@@ -153,6 +201,8 @@ async function collectDong(ctx, sigungu, bjdong) {
     if (pageNo > MAX_PAGES) throw new Error(`쪽이 ${MAX_PAGES}을 넘음`);
     const page = await requestPageWithRetry(ctx, sigungu, bjdong, pageNo);
     ctx.pages += 1;
+    if (page.items.length > 0) ctx.districtsWithData.add(sigungu);
+    for (const item of page.items) for (const key of Object.keys(item ?? {})) ctx.responseFields.add(key); // 이름만(B4)
     assertCoreFields(page.items);
     for (const item of page.items) {
       if (String(item[FIELDS.sigungu]).trim() !== sigungu) {
@@ -166,7 +216,8 @@ async function collectDong(ctx, sigungu, bjdong) {
     }
     total = page.totalCount;
     if (page.items.length === 0 && items.length < total) throw new Error(`쪽 ${pageNo}이 비었는데 totalCount ${total}에 못 미침(${items.length})`);
-    items.push(...page.items);
+    // push(...배열)은 인자가 13만 개를 넘으면 스택이 터진다(재현됨) - 하나씩 넣는다. 필요한 필드만 남긴다.
+    for (const item of page.items) items.push(projectItem(item, ctx.inputTimeField));
   }
   return items;
 }
@@ -196,19 +247,35 @@ async function main() {
     options: {
       "bjdong-file": { type: "string", default: "research/housing-permits/bjdong-seoul.json" },
       "out-dir": { type: "string", default: "research/housing-permits" },
+      license: { type: "string", default: "" },
+      "page-modified": { type: "string", default: "" },
+      "collected-at": { type: "string", default: "" },
+      "input-time-field": { type: "string", default: "" },
     },
   });
+  // 이용허락범위는 응답에 없고 포털 페이지 속성이라, 사람이 읽은 문자열을 입력으로 받아 견준다(소유자 조건 4).
+  // 호출 전에 멈춘다 - 제한이 있으면 한 건도 부르지 않는다.
+  if (v.license.trim() !== LICENSE.text) {
+    throw new ShapeError(`이용허락범위가 "${LICENSE.text}"이 아니다(받은 값 ${JSON.stringify(v.license)}): 호출하지 않는다. 소유자 결정 요청 대상`);
+  }
+  if (v["input-time-field"] && !/^[A-Za-z][A-Za-z0-9_]*$/.test(v["input-time-field"])) throw new ShapeError("--input-time-field는 영문·숫자 필드 이름이어야 한다");
+  const collectedAt = v["collected-at"] || new Date().toISOString();
+  if (Number.isNaN(Date.parse(collectedAt))) throw new ShapeError(`--collected-at이 시각이 아니다: ${collectedAt}`);
   const bjdong = await loadBjdong(v["bjdong-file"]);
   const rawDir = String(process.env.BUILDINGHUB_RAW_DIR ?? "").trim() || null;
-  if (rawDir) await mkdir(rawDir, { recursive: true });
+  if (rawDir) {
+    await assertOutsideRepo(rawDir);
+    await mkdir(rawDir, { recursive: true });
+  }
 
   const ctx = {
     endpoint: endpointFromEnv(),
-    limit: numberEnv("BUILDINGHUB_DAILY_LIMIT", DAILY_LIMIT),
+    limit: dailyLimit(),
     pageSize: numberEnv("BUILDINGHUB_PAGE_SIZE", PAGE_SIZE) || PAGE_SIZE,
     timeoutMs: numberEnv("BUILDINGHUB_TIMEOUT_MS", 15_000),
     retryMs: numberEnv("BUILDINGHUB_RETRY_MS", 3000),
     calls: 0, pages: 0, rawDir, rawHash: createHash("sha256"),
+    inputTimeField: v["input-time-field"] || null, responseFields: new Set(), districtsWithData: new Set(),
   };
 
   const all = [];
@@ -220,7 +287,7 @@ async function main() {
     for (const dong of [...bjdong[code]].map(String).sort()) {
       dongCount += 1;
       try {
-        all.push(...(await collectDong(ctx, code, dong)));
+        for (const item of await collectDong(ctx, code, dong)) all.push(item); // spread 금지(스택)
         failedInARow = 0;
       } catch (err) {
         if (err instanceof LimitError || err instanceof ShapeError) throw err;
@@ -238,11 +305,21 @@ async function main() {
     throw new IncompleteError("전수 순회 실패");
   }
 
-  const folded = foldProjects(all);
+  // 접기 -> 합침 -> 쓰기. 합침 전 결과(구·달별 n<3 칸이 있는 것)는 변수로만 있고 어디에도 쓰지 않는다.
+  const merged = mergeSmallCells(foldProjects(all, { inputTimeField: ctx.inputTimeField }));
   const out = {
-    meta: { ...folded.meta, operation: OPERATION, districts: DISTRICTS.length, dongs: dongCount, pages: ctx.pages, calls: ctx.calls, rawSha256: ctx.rawHash.digest("hex") },
-    series: folded.series,
-    unknown: folded.unknown,
+    meta: {
+      ...merged.meta, operation: OPERATION, districts: DISTRICTS.length, dongs: dongCount, pages: ctx.pages, calls: ctx.calls,
+      updatedAt: new Date(collectedAt).toISOString(),
+      license: { text: v.license.trim(), expected: LICENSE.text, checkedOn: LICENSE.checkedOn, pageModified: v["page-modified"] },
+      districtsWithData: [...ctx.districtsWithData].sort(),
+      responseFields: [...ctx.responseFields].sort(),
+      rawSha256: ctx.rawHash.digest("hex"),
+      ...(merged.inputLag ? { inputLag: merged.inputLag } : {}),
+    },
+    series: merged.series,
+    unknown: merged.unknown,
+    cancelledPermit: merged.cancelledPermit,
   };
   await mkdir(v["out-dir"], { recursive: true });
   const file = path.join(v["out-dir"], "folded.json");
