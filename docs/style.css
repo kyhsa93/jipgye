@@ -2219,25 +2219,35 @@ main h3 {
   scrollbar-width: none;
 }
 
+/* 표 스크롤 칸(.table-scroll)은 같은 페이드를 쓰되 스크롤바는 남긴다 - 표는 손가락·휠 말고도
+ * 막대를 끌어 읽는 사람이 있다. 아래 mask 규칙이 이 칸에도 걸린다(#178). 초점 테두리는 mask에
+ * 잘리지 않게 안쪽으로 그린다. */
+.table-scroll:focus-visible {
+  outline-offset: -2px;
+}
+
 .page-nav::-webkit-scrollbar,
 .sub-nav::-webkit-scrollbar {
   display: none;
 }
 
 .page-nav.scroll-end:not(.scroll-start),
-.sub-nav.scroll-end:not(.scroll-start) {
+.sub-nav.scroll-end:not(.scroll-start),
+.table-scroll.scroll-end:not(.scroll-start) {
   -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
   mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
 }
 
 .page-nav.scroll-start:not(.scroll-end),
-.sub-nav.scroll-start:not(.scroll-end) {
+.sub-nav.scroll-start:not(.scroll-end),
+.table-scroll.scroll-start:not(.scroll-end) {
   -webkit-mask-image: linear-gradient(to right, transparent, #000 36px);
   mask-image: linear-gradient(to right, transparent, #000 36px);
 }
 
 .page-nav.scroll-start.scroll-end,
-.sub-nav.scroll-start.scroll-end {
+.sub-nav.scroll-start.scroll-end,
+.table-scroll.scroll-start.scroll-end {
   -webkit-mask-image: linear-gradient(to right, transparent, #000 36px, #000 calc(100% - 36px), transparent);
   mask-image: linear-gradient(to right, transparent, #000 36px, #000 calc(100% - 36px), transparent);
 }

@@ -1,4 +1,4 @@
-const CACHE_NAME = "jipgye-v14";
+const CACHE_NAME = "jipgye-v15";
 const SHELL_ASSETS = [
   "./",
   "./index.html",

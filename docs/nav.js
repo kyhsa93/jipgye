@@ -4,10 +4,14 @@
 // 없으면 사용자는 보이는 데까지가 전부인 줄 안다 - 2층 오른쪽 끝에 있는
 // '거래내역 검색'과 '전세 vs 월세'가 그래서 아무도 안 누르는 자리에 있었다.
 //
+// 가로로 넘치는 표(.table-scroll)도 같은 장치를 쓴다 (#178). 폰(358px 가용 폭)에서 신고가 표(9열)·
+// 재계약 표·전망 성적표는 오른쪽이 화면 밖인데, 잘렸다는 단서가 없어 "옆에 더 있는 표인가"를 알 수 없었다.
+// 표마다 새로 만들지 않고 이 한 곳에서 .table-scroll 전부를 다룬다.
+//
 // 이 파일이 없어도 페이지는 그대로 돈다. 페이드가 안 보이고 현재 항목이
 // 스크롤 밖에 남을 뿐이다.
 (function () {
-  const navs = document.querySelectorAll(".page-nav, .sub-nav");
+  const navs = document.querySelectorAll(".page-nav, .sub-nav, .table-scroll");
   if (!navs.length) return;
 
   // 양 끝 페이드는 넘칠 때만, 그리고 그 방향에 남은 것이 있을 때만 켠다.
@@ -16,6 +20,26 @@
     const max = nav.scrollWidth - nav.clientWidth;
     nav.classList.toggle("scroll-start", max > 1 && nav.scrollLeft > 1);
     nav.classList.toggle("scroll-end", max > 1 && nav.scrollLeft < max - 1);
+    // 표는 넘칠 때만 키보드 초점을 받는다. 마우스·터치가 아닌 사람이 화살표로 가로 스크롤하려면
+    // 스크롤 영역이 초점을 받아야 한다. 안 넘치는 표까지 탭 순서에 넣으면 소음이다. 역할·이름은
+    // 붙이지 않는다 - 스크린리더에는 표 그대로 읽히고 "영역" 안내가 더 얹히지 않는다.
+    if (typeof nav.matches === "function" && nav.matches(".table-scroll")) {
+      if (max > 1) nav.setAttribute("tabindex", "0");
+      else nav.removeAttribute("tabindex");
+    }
+  }
+
+  // 표 칸은 페이지 스크립트가 나중에 다시 채우고(prerender 뒤 innerHTML 교체) 글꼴·언어 전환으로도
+  // 폭이 바뀐다. 스크롤 이벤트만으로는 이걸 못 따라가므로 크기·내용이 바뀔 때 다시 센다.
+  function watchTable(el) {
+    if (typeof ResizeObserver === "function") {
+      const ro = new ResizeObserver(() => markEdges(el));
+      ro.observe(el);
+      if (el.firstElementChild) ro.observe(el.firstElementChild);
+    }
+    if (typeof MutationObserver === "function") {
+      new MutationObserver(() => markEdges(el)).observe(el, { childList: true, subtree: true, characterData: true });
+    }
   }
 
   // scrollIntoView는 세로로도 움직여 페이지를 끌어내린다. 가로만 직접 옮긴다.
@@ -27,12 +51,19 @@
   }
 
   for (const nav of navs) {
-    revealCurrent(nav);
+    const isTable = typeof nav.matches === "function" && nav.matches(".table-scroll");
+    // 표는 처음 위치(첫 열=이름이 보이는 자리)에서 시작해야 한다 - 현재 항목 맞추기는 내비 전용.
+    if (!isTable) revealCurrent(nav);
     markEdges(nav);
     nav.addEventListener("scroll", () => markEdges(nav), { passive: true });
+    if (isTable) watchTable(nav);
   }
 
   window.addEventListener("resize", () => {
+    for (const nav of navs) markEdges(nav);
+  });
+  // 글꼴이 늦게 들어와 표 폭이 달라지는 경우까지 한 번 더 센다.
+  window.addEventListener("load", () => {
     for (const nav of navs) markEdges(nav);
   });
 })();
