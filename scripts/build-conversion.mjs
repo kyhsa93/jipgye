@@ -19,8 +19,16 @@ const ratesFile = process.env.RATES_FILE
   ? path.resolve(process.env.RATES_FILE)
   : path.join(root, "docs/data/rates.json");
 
-/** 전세자금대출 금리. 표에 있는 그대로 구간이라 대표값과 함께 폭도 같이 낸다. */
+/**
+ * 전세자금대출 금리. 표에 있는 그대로 구간이라 대표값과 함께 폭도 같이 낸다.
+ * rate는 평균이 아니라 옵션별 avg(금융감독원 표의 평균금리)를 모아 낸 중앙값이다(#183).
+ * products는 rentLoan 상품 수 전체, options는 중앙값을 낸 입력(avg가 있는 옵션) 개수로
+ * 단위가 다르다 - 상품 중에는 avg 있는 옵션이 하나도 없어 입력에 못 든 것도 있다.
+ * productsWithAvg는 그 입력 옵션을 1개 이상 가진 상품 수라, 문장이 "전체 중 몇 개의 상품에서
+ * 나온 옵션인가"를 밝힐 수 있다.
+ */
 export function loanRateOf(rates) {
+  const hasAvg = (o) => Number.isFinite(o?.avg);
   const options = (rates?.rentLoan ?? []).flatMap((product) => product?.options ?? []);
   const avgs = options.map((o) => o?.avg).filter((v) => Number.isFinite(v));
   if (!avgs.length) return null;
@@ -33,6 +41,8 @@ export function loanRateOf(rates) {
     min: mins.length ? Math.min(...mins) : null,
     max: maxes.length ? Math.max(...maxes) : null,
     products: (rates?.rentLoan ?? []).length,
+    productsWithAvg: (rates?.rentLoan ?? []).filter((product) => (product?.options ?? []).some(hasAvg)).length,
+    options: avgs.length,
   };
 }
 
@@ -80,8 +90,8 @@ export function buildPayload({ deals, rates, months, now }) {
       rate: seoulRate,
       pairs: pairs.length,
       verdict: verdictOf(seoulRate, loan.rate),
-      leadKo: leadSentence({ rate: seoulRate, loanRate: loan.rate, loanProducts: loan.products, pairs: pairs.length, months }, "ko"),
-      leadEn: leadSentence({ rate: seoulRate, loanRate: loan.rate, loanProducts: loan.products, pairs: pairs.length, months }, "en"),
+      leadKo: leadSentence({ rate: seoulRate, loanRate: loan.rate, loanProducts: loan.products, loanProductsWithAvg: loan.productsWithAvg, loanOptions: loan.options, pairs: pairs.length, months }, "ko"),
+      leadEn: leadSentence({ rate: seoulRate, loanRate: loan.rate, loanProducts: loan.products, loanProductsWithAvg: loan.productsWithAvg, loanOptions: loan.options, pairs: pairs.length, months }, "en"),
     },
     loan,
     deposit,

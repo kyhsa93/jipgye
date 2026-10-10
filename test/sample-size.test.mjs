@@ -131,23 +131,46 @@ test("서울 전체 전세가율 카드: 값이 있으면 % 옆에 건수, 값�
 
 // --- 2. jeonse-vs-wolse 대출 금리 ---------------------------------------------------
 
-test("jeonse-vs-wolse: 대출 금리 문장의 상품 수가 conversion.json의 loan.products와 같다", async () => {
-  const [html, data] = await Promise.all([read("docs/jeonse-vs-wolse.html"), json("docs/data/conversion.json")]);
+test("jeonse-vs-wolse: 대출 금리 문장의 상품·옵션 수가 conversion.json·rates.json과 같고 '평균'이라 쓰지 않는다", async () => {
+  const [html, data, rates] = await Promise.all([
+    read("docs/jeonse-vs-wolse.html"),
+    json("docs/data/conversion.json"),
+    json("docs/data/rates.json"),
+  ]);
   const lead = textOf(block(html, "conversionLead"));
-  const sentence = sentencesOf(lead).find((s) => s.includes("전세자금대출 평균 금리는"));
-  assert.ok(sentence, "대출 금리 문장이 없다");
-  const rate = sentence.match(/평균 금리는 (\d+(\.\d+)?)%/);
+  assert.ok(!lead.includes("평균 금리는"), "중앙값을 '평균 금리는'이라고 쓴다(#183)");
+  const sentence = sentencesOf(lead).find((s) => s.includes("전세자금대출의 옵션별 평균 금리의 중앙값은"));
+  assert.ok(sentence, "대출 금리(중앙값) 문장이 없다");
+  const rate = sentence.match(/중앙값은 (\d+(\.\d+)?)%/);
   assert.equal(Number(rate?.[1]), data.loan.rate);
-  const n = sentence.match(/([0-9,]+)개 상품/);
-  assert.ok(n, `같은 문장에 상품 수가 없다: ${sentence}`);
-  assert.equal(Number(n[1].replaceAll(",", "")), data.loan.products);
+  const n = sentence.match(/\(([0-9,]+)개 상품 중 평균 금리가 있는 ([0-9,]+)개 상품의 ([0-9,]+)개 옵션 기준\)/);
+  assert.ok(n, `같은 문장에 상품·옵션 수가 없다: ${sentence}`);
+  const num = (t) => Number(t.replaceAll(",", ""));
+  assert.equal(num(n[1]), data.loan.products);
+  assert.equal(num(n[2]), data.loan.productsWithAvg);
+  assert.equal(num(n[3]), data.loan.options);
+  // 옵션 수는 JSON 필드만 믿지 않고 원자료에서 다시 센다: 중앙값을 낸 입력 = avg가 숫자인 옵션.
+  const avgOptions = rates.rentLoan.flatMap((p) => p.options ?? []).filter((o) => Number.isFinite(o?.avg)).length;
+  assert.equal(data.loan.options, avgOptions);
+  assert.equal(data.loan.products, rates.rentLoan.length);
+  const withAvg = rates.rentLoan.filter((p) => (p.options ?? []).some((o) => Number.isFinite(o?.avg))).length;
+  assert.equal(data.loan.productsWithAvg, withAvg);
+  assert.ok(withAvg <= rates.rentLoan.length && avgOptions >= withAvg, "상품·옵션 수의 포함 관계가 맞지 않는다");
   assert.equal(lead, data.seoul.leadKo, "화면 문장이 JSON의 문장과 다르다");
 });
 
-test("conversion 문장: 상품 수를 받으면 영어도 같은 문장에 적는다", () => {
-  const input = { rate: 4.8, loanRate: 4.5, loanProducts: 41, pairs: 3166, months: ["202605", "202610"] };
-  assert.match(conversionLead(input, "ko"), /평균 금리는 4\.5%\(41개 상품 기준\)입니다/);
-  assert.match(conversionLead(input, "en"), /loan rate is 4\.5% \(across 41 loan products\)\./);
+test("conversion 문장: 상품·옵션 수를 받으면 영어도 같은 문장에 적는다", () => {
+  const input = { rate: 4.8, loanRate: 4.5, loanProducts: 41, loanProductsWithAvg: 34, loanOptions: 49, pairs: 3166, months: ["202605", "202610"] };
+  assert.match(conversionLead(input, "ko"), /평균 금리의 중앙값은 4\.5%\(41개 상품 중 평균 금리가 있는 34개 상품의 49개 옵션 기준\)입니다/);
+  assert.match(conversionLead(input, "en"), /median of the per-option average jeonse loan rates is 4\.5% \(49 options from 34 of 41 loan products\)\./);
+  assert.doesNotMatch(conversionLead(input, "ko"), /평균 금리는/);
+  assert.doesNotMatch(conversionLead(input, "en"), /The average jeonse loan rate/);
+  // avg 있는 상품 수를 모르면 상품 수를 입력처럼 쓰지 않고 옵션 수만, 옵션 수도 모르면 아는 상품 수만 적는다.
+  const noWithAvg = conversionLead({ ...input, loanProductsWithAvg: undefined }, "ko");
+  assert.match(noWithAvg, /\(49개 옵션 기준\)/);
+  assert.doesNotMatch(noWithAvg, /41개 상품/);
+  assert.match(conversionLead({ ...input, loanProductsWithAvg: undefined }, "en"), /\(49 options\)/);
+  assert.match(conversionLead({ ...input, loanOptions: undefined }, "ko"), /\(41개 상품 기준\)/);
 });
 
 // --- 3. switch-house 권역표 ---------------------------------------------------------
