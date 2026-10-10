@@ -175,3 +175,50 @@ test("단지로 묶어 보기: 파일이 아직 없는 날(404)은 실패가 아
   assert.ok(!html.includes("load-retry"), "404를 실패로 보였다");
   assert.ok(!html.includes("찾는 중"));
 });
+
+// --- ?apt= 단지 카드의 가격 블록 (#187) ---
+const APT_QUERY = "?district=노원구&apt=상계주공7(고층)";
+const slotHtml = (page) => page.byId("complex-price-status").innerHTML;
+
+test("단지 카드: 단지 가격 fetch가 거부되면 가격 블록 자리에 실패 문구(한·영) + 재시도 단추가 보이고 거래 비율은 그대로다", async () => {
+  for (const [locale, error, retry] of [
+    ["ko", "단지 가격을 불러오지 못했습니다.", "다시 시도"],
+    ["en", "Could not load complex prices.", "Retry"],
+  ]) {
+    const page = await dealSearch(APT_QUERY, { locale, network: { failComplexPrice: true } });
+    await page.settle();
+    const label = `${APT_QUERY} ${locale}`;
+    assert.ok(slotHtml(page).includes(error), `${label}: 가격 블록 자리에 실패 문구가 없다`);
+    assert.match(slotHtml(page), new RegExp(`<button type="button" id="load-retry-price">${retry}</button>`), `${label}: 재시도 단추가 없다`);
+    assert.ok(page.byId("complex-card").innerHTML.includes('id="complex-price-status"'), `${label}: 실패 자리가 카드 안에 없다`);
+    assert.match(page.byId("complex-card").innerHTML, /전세가율|Jeonse ratio|\d+\.\d%/, `${label}: 거래 목록 쪽 표가 같이 사라졌다`);
+  }
+});
+
+test("단지 카드: 재시도가 성공하면 가격 블록이 그려지고 실패 문구가 사라진다", async () => {
+  const net = { failComplexPrice: true };
+  const price = await readJson("complex-price-nowon");
+  const page = await dealSearch(APT_QUERY, { network: net, complexPrices: { 노원구: price } });
+  await page.settle();
+  assert.ok(slotHtml(page).includes("load-retry-price"));
+
+  net.failComplexPrice = false;
+  page.byId("load-retry-price").dispatch("click");
+  await page.settle();
+
+  const card = page.byId("complex-card").innerHTML;
+  assert.ok(!card.includes("complex-price-status"), "재시도가 성공했는데 실패 자리가 남았다");
+  assert.ok(card.includes("complex-price-table"), "재시도 뒤 가격 블록이 없다");
+});
+
+test("단지 카드: 가격 파일이 아직 없는 날(404)은 실패로 보이지 않는다", async () => {
+  const page = await dealSearch(APT_QUERY);
+  await page.settle();
+  assert.ok(!page.byId("complex-card").innerHTML.includes("complex-price-status"), "404를 실패 자리로 그렸다");
+  assert.ok(!page.byId("complex-card").innerHTML.includes("load-retry"), "404에 재시도 단추를 보였다");
+});
+
+test("단지 카드: 실패 표시는 공용 규칙으로만 만든다 - 페이지에 재시도 단추 마크업을 직접 쓰지 않는다", async () => {
+  const html = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
+  assert.ok(!html.includes('id="load-retry-price"'), "load-retry-price 마크업을 직접 썼다");
+});
