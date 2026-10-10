@@ -99,7 +99,7 @@ test("금리 5장: 표와 추이 구역의 재시도 단추를 연달아 눌러�
 
     down = false;
     const press = (button) => {
-      if (!button.disabled) button.dispatch("click");
+      if (button.disabled !== true) button.dispatch("click");
     };
     press(trend);
     press(table);
@@ -268,4 +268,94 @@ test("단지 카드(이름 미해결): 없는 단지는 실패로 보이지 않�
     assert.ok(!card.includes("complex-price-status"), `${label}: 없는 단지를 실패 자리로 그렸다`);
     assert.ok(!card.includes("load-retry"), `${label}: 없는 단지에 재시도 단추를 보였다`);
   }
+});
+
+// --- 최근 두 달 거래(deals-*)·전월세(rents-*) 목록 (#196) ---
+// 이 목록이 거부되면 이전에는 빈 catch가 삼켜 결과·단지 카드가 조용히 빠졌다(전월세는 "준비 중"으로 보였다).
+// 가짜 DOM은 없는 id도 빈 요소로 돌려주므로 먼저 실제 HTML에 결과 자리(#search-result)가 있는지 단언한다.
+const LIST_CASES = [
+  { name: "deals", query: "?district=노원구", retryId: "load-retry-deals", fail: "failDeals", slow: "rents" },
+  { name: "rents", query: "?kind=jeonse&district=노원구", retryId: "load-retry-rents", fail: "failRents", slow: "deals" },
+];
+
+test("거래 목록: 결과 자리와 카드 자리는 실제 HTML에 있다 (가짜 DOM 함정 방지)", async () => {
+  const html = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
+  assert.ok(html.includes('<div id="search-result"></div>'), "#search-result 자리가 HTML에 없다");
+  assert.ok(html.includes('<div id="complex-card"></div>'), "#complex-card 자리가 HTML에 없다");
+  assert.ok(!html.includes('id="load-retry-deals"') && !html.includes('id="load-retry-rents"'), "재시도 단추 마크업을 직접 썼다");
+});
+
+test("거래 목록: deals-*/rents-* fetch가 거부되면 결과 자리에 실패 문구(한·영) + 재시도 단추가 나온다", async () => {
+  for (const c of LIST_CASES) {
+    for (const [locale, error, retry] of [
+      ["ko", "실거래를 불러오지 못했습니다.", "다시 시도"],
+      ["en", "Could not load transaction data.", "Retry"],
+    ]) {
+      const page = await dealSearch(c.query, { locale, network: { [c.fail]: true } });
+      await page.settle();
+      const html = page.resultHtml();
+      const label = `${c.name} ${locale}`;
+      assert.ok(html.includes(error), `${label}: 실패 문구가 없다`);
+      assert.match(html, new RegExp(`<button type="button" id="${c.retryId}">${retry}</button>`), `${label}: 재시도 단추가 없다`);
+      assert.ok(!/불러오는 중|Loading|준비 중|not ready/i.test(html), `${label}: 로드 중/준비 중 문구가 남았다`);
+      assert.ok((page.byId(c.retryId).listeners.click ?? []).length > 0, `${label}: 단추에 누름 처리가 없다`);
+    }
+  }
+});
+
+test("거래 목록: 재시도가 성공하면 실패 표시가 사라지고 정상 결과가 그려진다", async () => {
+  for (const c of LIST_CASES) {
+    const net = { [c.fail]: true };
+    const page = await dealSearch(c.query, { network: net });
+    await page.settle();
+    assert.ok(page.resultHtml().includes(c.retryId), `${c.name}: 실패 표시가 처음부터 없다`);
+
+    net[c.fail] = false;
+    page.byId(c.retryId).dispatch("click");
+    await page.settle();
+
+    const html = page.resultHtml();
+    assert.ok(!html.includes("load-retry"), `${c.name}: 재시도가 성공했는데 실패 표시가 남았다`);
+    assert.ok(!html.includes("실거래를 불러오지 못했습니다."), `${c.name}: 실패 문구가 남았다`);
+    assert.ok(html.includes("budget-summary") || html.includes("budget-deals"), `${c.name}: 재시도 뒤 정상 결과가 없다`);
+  }
+});
+
+test("거래 목록: 파일이 없는 구(404)는 실패로 보이지 않는다 - 실패와 없음이 갈린다", async () => {
+  for (const c of LIST_CASES) {
+    const page = await loadDealSearchPage({
+      budget: await readJson("budget-deals"),
+      search: await readJson("deal-search"),
+      query: c.query,
+    });
+    await page.settle();
+    const html = page.resultHtml();
+    assert.ok(!html.includes("load-retry"), `${c.name}: 404에 재시도 단추를 보였다`);
+    assert.ok(!html.includes("실거래를 불러오지 못했습니다."), `${c.name}: 404를 실패 문구로 보였다`);
+  }
+});
+
+test("거래 목록: 재시도 단추를 연달아 눌러도 다시 받기는 한 번뿐이다", async () => {
+  for (const c of LIST_CASES) {
+    const net = { [c.fail]: true };
+    const page = await dealSearch(c.query, { network: net });
+    await page.settle();
+    let fetches = 0;
+    const real = page.sandbox.fetch;
+    page.sandbox.fetch = async (url) => {
+      if (new RegExp(`/${c.name}-[a-z]+\\.json`).test(String(url))) fetches += 1;
+      return real(url);
+    };
+    net[c.fail] = false;
+    const button = page.byId(c.retryId);
+    for (let i = 0; i < 3; i += 1) if (button.disabled !== true) button.dispatch("click");
+    await page.settle();
+    assert.equal(fetches, 1, `${c.name}: 연타에 목록을 ${fetches}번 받았다`);
+  }
+});
+
+test("거래 목록: deals 실패는 구 하나만 실패해도 빠진 구 없는 목록을 내놓지 않는다 (전체 구 + 상세 조건)", async () => {
+  const page = await dealSearch("?apt=상계", { network: { failDeals: true } });
+  await page.settle();
+  assert.ok(page.resultHtml().includes("load-retry-deals"), "전체 구 + 단지명 조건에서 실패 표시가 없다");
 });
