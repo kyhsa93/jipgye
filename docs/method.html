@@ -72,7 +72,7 @@
       <dt>계약 기준</dt>
       <dd>신고 기한 30일이 이미 지나 <em>마감된</em> 최근 네 주의 계약분을 셉니다. 계약 시점이 정확한 대신, 최근 한 달은 아직 마감되지 않아 쓸 수 없습니다.</dd>
     </dl>
-    <p>어느 쪽으로 냈는지는 화면에 적히고, 데이터 파일에도 <code>window.basis</code>로 남습니다. 기본은 신고 기준이고, 신고 기록이 모자랄 때만 계약 기준으로 물러납니다.</p>
+    <p>어느 쪽으로 냈는지는 화면에 적히고, 데이터 파일에도 <code>window.basis</code>로 남습니다. 기본은 신고 기준이고, 신고 기록이 모자랄 때만 계약 기준으로 물러납니다. 화면 위쪽의 기준일은 자료를 집계한 날이지 거래가 신고된 날이 아닙니다.</p>
 
     <h2>자치구는 네 주를 겹쳐 셉니다</h2>
     <p>서울 전체는 한 주 표본이 충분하지만 자치구 하나는 그렇지 않습니다. 어떤 구는 석 달 신고가 백 건에 못 미치는데, 그 위에서 주간 평균을 내면 큰 거래 한 건에 평당가가 출렁입니다. 그래서 자치구 시세는 네 주를 겹쳐 셉니다. 반응이 한 주 느려지는 대신 한 건에 흔들리지 않습니다.</p>
@@ -238,7 +238,7 @@
       <dt>Contract basis</dt>
       <dd>Counts contracts from the last four <em>closed</em> weeks — those whose 30-day window has already passed. The contract date is exact, but the most recent month cannot be used.</dd>
     </dl>
-    <p>Which one is in use is printed on the page and recorded as <code>window.basis</code> in the data file. Reported basis is the default; contract basis is the fallback when there are not enough reports.</p>
+    <p>Which one is in use is printed on the page and recorded as <code>window.basis</code> in the data file. Reported basis is the default; contract basis is the fallback when there are not enough reports. The date shown at the top of the page is the day the data was compiled, not the day a deal was reported.</p>
 
     <h2>Districts are counted over four overlapping weeks</h2>
     <p>Seoul as a whole has enough transactions in any given week. A single district does not. Some districts have fewer than a hundred reports in three months, and a weekly average on that base swings on one large sale. So district prices are counted over four overlapping weeks: a week slower to react, but not moved by a single transaction.</p>
