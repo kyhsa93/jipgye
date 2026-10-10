@@ -993,7 +993,10 @@ function announceResult() {
 function renderResult() {
   renderResultBody();
   const card = document.getElementById("complex-card");
-  if (card) card.innerHTML = complexCardHtml();
+  if (card) {
+    card.innerHTML = complexCardHtml();
+    renderComplexPriceFailure();
+  }
   announceResult();
 }
 
@@ -1178,6 +1181,24 @@ function complexPriceHtml(file, apt) {
   );
 }
 
+// 단지 가격 파일을 못 받았을 때 카드 안 가격 블록 자리에 실패를 말한다(#187). 가격 블록만 조용히
+// 빠지면 "가격이 없는 단지"와 "받지 못한 것"이 같아 보인다. 404(null)는 실패가 아니라 이 자리를 비운다.
+// 마크업은 공용 규칙(window.loadState)이 만들고, 카드 HTML에는 자리(#complex-price-status)만 둔다.
+function renderComplexPriceFailure() {
+  const slot = document.getElementById("complex-price-status");
+  if (!slot) return;
+  window.loadState.showFailure(slot, {
+    message: t("groupLoadError"),
+    retryLabel: t("retry"),
+    retryId: "load-retry-price",
+    wrap: (inner) => `<p class="empty">${inner}</p>`,
+    onRetry: () => {
+      window.analytics?.event("load_retry", { view: "complex_card" });
+      refresh();
+    },
+  });
+}
+
 function complexCardHtml() {
   if (!aptTerm() || district === ALL) return "";
   const sales = fullDeals.get(district);
@@ -1187,7 +1208,8 @@ function complexCardHtml() {
   const apt = resolveComplex(aptTerm(), names);
   if (!apt) return "";
   const rows = complexAreas(apt, sales, fullRents.get(district), prices?.cells?.[apt]);
-  const priceHtml = complexPriceHtml(prices, apt);
+  const priceFailed = complexFailed(district);
+  const priceHtml = priceFailed ? `<div id="complex-price-status"></div>` : complexPriceHtml(prices, apt);
   if (!rows.length && !priceHtml) return "";
 
   const cell = (value, count) =>

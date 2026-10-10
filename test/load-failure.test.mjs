@@ -76,6 +76,41 @@ test("금리 5장: 추이 구역의 재시도 단추를 누르면 다시 받아 
   assert.ok(events.some(([name]) => name === "load_retry"), "재시도를 세지 않았다");
 });
 
+test("금리 5장: 표와 추이 구역의 재시도 단추를 연달아 눌러도 다시 받기는 한 번뿐이다 (#187)", async () => {
+  // 한 번의 실패에 단추가 둘이다. 하나를 누르면 다른 하나도 잠겨야 main()이 한 번만 돈다.
+  // 진짜 브라우저는 잠긴(disabled) 단추의 클릭을 흘려보내지 않는다 - 시험도 그대로 흉내 낸다.
+  const rates = await readJson("rates");
+  const history = await readJson("rates-history");
+  for (const name of RATE_PAGES) {
+    let down = true;
+    let ratesFetches = 0;
+    const page = await loadRatesPage({
+      file: `docs/${name}.html`,
+      fetch: async (url) => {
+        const isRates = !String(url).includes("rates-history");
+        if (isRates) ratesFetches += 1;
+        if (down) throw new TypeError("network down");
+        return { ok: true, json: async () => (isRates ? rates : history) };
+      },
+    });
+    assert.equal(ratesFetches, 1, `${name}: 첫 로드의 rates.json 요청이 한 번이 아니다`);
+    const table = page.byId.get("load-retry");
+    const trend = page.byId.get("load-retry-history");
+
+    down = false;
+    const press = (button) => {
+      if (!button.disabled) button.dispatch("click");
+    };
+    press(trend);
+    press(table);
+    press(trend);
+    await settle();
+
+    assert.equal(table.disabled, true, `${name}: 표의 단추가 잠기지 않았다`);
+    assert.equal(ratesFetches, 2, `${name}: 두 단추를 연달아 누르자 main()이 ${ratesFetches - 1}번 돌았다`);
+  }
+});
+
 test("금리 5장: rates.json만 받고 rates-history가 거부되면 전과 같이 추이 없음 문구로 떨어진다", async () => {
   const rates = await readJson("rates");
   const page = await loadRatesPage({
@@ -139,4 +174,51 @@ test("단지로 묶어 보기: 파일이 아직 없는 날(404)은 실패가 아
   const html = page.resultHtml();
   assert.ok(!html.includes("load-retry"), "404를 실패로 보였다");
   assert.ok(!html.includes("찾는 중"));
+});
+
+// --- ?apt= 단지 카드의 가격 블록 (#187) ---
+const APT_QUERY = "?district=노원구&apt=상계주공7(고층)";
+const slotHtml = (page) => page.byId("complex-price-status").innerHTML;
+
+test("단지 카드: 단지 가격 fetch가 거부되면 가격 블록 자리에 실패 문구(한·영) + 재시도 단추가 보이고 거래 비율은 그대로다", async () => {
+  for (const [locale, error, retry] of [
+    ["ko", "단지 가격을 불러오지 못했습니다.", "다시 시도"],
+    ["en", "Could not load complex prices.", "Retry"],
+  ]) {
+    const page = await dealSearch(APT_QUERY, { locale, network: { failComplexPrice: true } });
+    await page.settle();
+    const label = `${APT_QUERY} ${locale}`;
+    assert.ok(slotHtml(page).includes(error), `${label}: 가격 블록 자리에 실패 문구가 없다`);
+    assert.match(slotHtml(page), new RegExp(`<button type="button" id="load-retry-price">${retry}</button>`), `${label}: 재시도 단추가 없다`);
+    assert.ok(page.byId("complex-card").innerHTML.includes('id="complex-price-status"'), `${label}: 실패 자리가 카드 안에 없다`);
+    assert.match(page.byId("complex-card").innerHTML, /전세가율|Jeonse ratio|\d+\.\d%/, `${label}: 거래 목록 쪽 표가 같이 사라졌다`);
+  }
+});
+
+test("단지 카드: 재시도가 성공하면 가격 블록이 그려지고 실패 문구가 사라진다", async () => {
+  const net = { failComplexPrice: true };
+  const price = await readJson("complex-price-nowon");
+  const page = await dealSearch(APT_QUERY, { network: net, complexPrices: { 노원구: price } });
+  await page.settle();
+  assert.ok(slotHtml(page).includes("load-retry-price"));
+
+  net.failComplexPrice = false;
+  page.byId("load-retry-price").dispatch("click");
+  await page.settle();
+
+  const card = page.byId("complex-card").innerHTML;
+  assert.ok(!card.includes("complex-price-status"), "재시도가 성공했는데 실패 자리가 남았다");
+  assert.ok(card.includes("complex-price-table"), "재시도 뒤 가격 블록이 없다");
+});
+
+test("단지 카드: 가격 파일이 아직 없는 날(404)은 실패로 보이지 않는다", async () => {
+  const page = await dealSearch(APT_QUERY);
+  await page.settle();
+  assert.ok(!page.byId("complex-card").innerHTML.includes("complex-price-status"), "404를 실패 자리로 그렸다");
+  assert.ok(!page.byId("complex-card").innerHTML.includes("load-retry"), "404에 재시도 단추를 보였다");
+});
+
+test("단지 카드: 실패 표시는 공용 규칙으로만 만든다 - 페이지에 재시도 단추 마크업을 직접 쓰지 않는다", async () => {
+  const html = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
+  assert.ok(!html.includes('id="load-retry-price"'), "load-retry-price 마크업을 직접 썼다");
 });
