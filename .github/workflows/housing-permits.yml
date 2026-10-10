@@ -23,7 +23,7 @@ on:
         type: string
         required: true
       input_time_field:
-        description: "응답에서 최초 입력 시점으로 확인된 필드 이름 (B4 규칙 3, 모르면 비움 - 규칙 2로 n 3)"
+        description: "응답에서 입력 시점 성격의 필드(규칙 3) 이름 (B4 규칙 3, 모르면 비움 - 규칙 2로 n 3)"
         type: string
         required: false
         default: ""
@@ -42,8 +42,6 @@ jobs:
       LICENSE_TEXT: ${{ inputs.license }}
       PAGE_MODIFIED: ${{ inputs.page_modified }}
       INPUT_TIME_FIELD: ${{ inputs.input_time_field }}
-      # 원본 쪽 본문은 러너 임시 폴더(저장소 밖)에만 두고 잡이 끝나면 지운다. 수집기도 저장소 안이면 멈춘다.
-      BUILDINGHUB_RAW_DIR: ${{ runner.temp }}/housing-raw
       # 사전 등록(PR #137 머지 SHA). ④ 분모 등 PREREG를 고치는 PR이 있어도 이 커밋이 조상이면 된다.
       PREREG_COMMIT: dac5e98db7d00aca37dfa57dda1da9f4d39314ca
     steps:
@@ -66,6 +64,9 @@ jobs:
       - name: 수집 (시크릿은 이 스텝에서만)
         env:
           BUILDINGHUB_API_KEY: ${{ secrets.BUILDINGHUB_API_KEY }}
+          # 원본 쪽 본문은 러너 임시 폴더(저장소 밖)에만 두고 지운다. 수집기도 저장소 안이면 멈춘다.
+          # runner 컨텍스트는 잡 수준 env에서 못 쓰므로 스텝 env에 둔다.
+          BUILDINGHUB_RAW_DIR: ${{ runner.temp }}/housing-raw
         run: |
           node scripts/fetch-housing-permits.mjs \
             --license "$LICENSE_TEXT" --page-modified "$PAGE_MODIFIED" \
@@ -74,7 +75,7 @@ jobs:
 
       - name: 원본 쪽 본문 지우기
         if: always()
-        run: rm -rf "$BUILDINGHUB_RAW_DIR"
+        run: rm -rf "$RUNNER_TEMP/housing-raw"
 
       - name: B1~B4 측정
         run: |
