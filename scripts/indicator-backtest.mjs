@@ -278,6 +278,26 @@ const VERDICT = {
   en: { no: "does not lead", seoulOnly: "Seoul only, not in regions", published: "earlier publication, not leading", leads: "leads" },
 };
 
+/**
+ * 백테스트에 못 들어간 지표 - 매일 판정하는 행이 아니라 정적 행이다(#153).
+ * 건축HUB 주택인허가(#58): 집계 호수를 ECOS 901Y105와 대조하는 B2에서 불합격해(177개 창 중앙 괴리 40.8%,
+ * 합격선 10%; 호수 totHhldCnt 0이 124,721/130,181건 = 95.8%) 입력으로 쓸 수 없었다. 수치 출처는
+ * https://github.com/kyhsa93/jipgye/issues/133#issuecomment-6094495314 (2026-10-10, research/housing-permits/measure.json의 B2).
+ * "앞서지 못했다"가 아니라 "시험할 만한 입력이 못 됐다" - 오차 칸은 비우고 판정 칸에 사실을 적는다.
+ * 사업명·사업주체명·지번 같은 원본 값은 여기에도 화면에도 두지 않는다(test/indicator-backtest.test.mjs가 대조).
+ */
+export const NOT_TESTED = [
+  {
+    ko: "건축HUB 주택인허가",
+    en: "Building HUB housing permits",
+    verdict: {
+      ko: "백테스트에 못 들어감: 집계 호수 대조 불합격(괴리 40.8%, 호수 0이 95.8%) - 사업 단위 목록에 호수가 거의 채워지지 않음",
+      en: "Not backtested: failed the household count check (gap 40.8%, 95.8% of entries have 0 households) - the project-level list leaves household counts almost empty",
+    },
+    checked: "2026-10-10",
+  },
+];
+
 export function tableHtml(rows, locale = "ko") {
   if (!rows?.length) return null;
   const en = locale === "en";
@@ -298,7 +318,12 @@ export function tableHtml(rows, locale = "ko") {
       return `<tr><td>${en ? r.en : r.ko}${lagText(r.lag)}</td>${cell(r.h[3])}${cell(r.h[6])}<td>${v}</td></tr>`;
     })
     .join("");
-  return `${head}<tbody>${body}</tbody>`;
+  const notTested = NOT_TESTED.map(
+    (r) =>
+      `<tr><td>${en ? r.en : r.ko}</td><td>-</td><td>-</td>` +
+      `<td><span class="low-sample">${r.verdict[locale]}</span><div class="sub">${en ? "checked" : "확인일"} ${r.checked}</div></td></tr>`
+  ).join("");
+  return `${head}<tbody>${body}${notTested}</tbody>`;
 }
 
 // --- 그림자 예측 ------------------------------------------------------------------
