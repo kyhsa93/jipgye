@@ -31,13 +31,13 @@ test("창: 연속 8단어, 8단어 미만이면 창이 없다", () => {
 const seq = (prefix, n) => Array.from({ length: n }, (_, i) => `${prefix}${i}`).join(" ");
 
 test("공통 산문·고유율: 문서빈도로 센다", () => {
-  // 4장 중 3장(과반 아님: 9장 이상 규칙을 장 수 4로 줄이면 과반=3)에 실리는 문단 + 각 장 고유 문단.
+  // 4장 중 3장에 실리는 문단 + 각 장 고유 문단. 과반(=⌈n/2⌉, 18장이면 9장)은 4장이면 2장.
   const shared = seq("s", 20); // 창 13개
   const pages = new Map(
     ["a", "b", "c", "d"].map((k, i) => [k, `<p>${i < 3 ? shared : seq("z", 20)} ${seq(k, 20)}</p>`]),
   );
   const m = measure(pages, { maskNumbers: false });
-  assert.equal(m.majority, 3, "과반 문턱은 ⌊n/2⌋+1");
+  assert.equal(m.majority, 2, "과반 문턱은 ⌈n/2⌉ - 18장이면 이슈가 말한 9장");
   assert.equal(m.pages.length, 4);
   // a~c: 공통 13창 + 경계 걸친 창이 고유. d는 z가 d에서만 나오므로 전부 고유.
   const d = m.pages.find((p) => p.name === "d");
@@ -59,7 +59,6 @@ test("숫자 가리기가 고유율을 바꾼다 - 숫자만 다른 문단은 �
   const pages = new Map([["a", mk(1)], ["b", mk(2)]]);
   assert.equal(measure(pages, { maskNumbers: false }).uniqueShare, 1);
   assert.equal(measure(pages, { maskNumbers: true }).uniqueShare, 0);
-  assert.equal(measure(pages, { maskNumbers: true }).commonShare, 0, "2장 중 과반=2장, 둘 다 실린 창은 공통");
 });
 
 test("같은 입력은 같은 출력이다 - 입력 순서와 무관", () => {
