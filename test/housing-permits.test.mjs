@@ -2,12 +2,14 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { execFile } from "node:child_process";
-import { mkdtemp, readFile, writeFile, access } from "node:fs/promises";
+import { mkdtemp, readFile, readdir, writeFile, access, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import { FIELDS, OPERATION, SERIES } from "../scripts/housing-permits-spec.mjs";
-import { foldProjects, parseDay } from "../scripts/housing-permits-fold.mjs";
+import { DAILY_LIMIT, FIELDS, LICENSE, OPERATION, PROJECTED_FIELDS, SERIES } from "../scripts/housing-permits-spec.mjs";
+import { foldProjects, parseDay, projectItem } from "../scripts/housing-permits-fold.mjs";
+import { OTHER_KEY } from "../scripts/housing-permits-merge.mjs";
+import { dailyLimit } from "../scripts/fetch-housing-permits.mjs";
 import { DISTRICTS } from "../scripts/realestate-districts.mjs";
 import { flawedFold } from "./helpers/housing-permits-mutants.mjs";
 
@@ -170,10 +172,14 @@ async function setup() {
   return { dir, bjdong, out: path.join(dir, "out") };
 }
 
+const COLLECTED_AT = "2026-10-10T00:00:00Z";
 async function run(env, args) {
   const clean = { PATH: process.env.PATH, BUILDINGHUB_RETRY_MS: "0", BUILDINGHUB_PAGE_SIZE: "2", ...env };
+  // 이용허락·수집 시각은 기본값을 채운다. 시험이 직접 주면(--license가 args에 있으면) 그대로 둔다.
+  const full = args.includes("--license") ? args : [...args, "--license", LICENSE.text, "--page-modified", "2026-09-01"];
+  if (!full.includes("--collected-at")) full.push("--collected-at", COLLECTED_AT);
   try {
-    const r = await execFileAsync(process.execPath, [script, ...args], { env: clean });
+    const r = await execFileAsync(process.execPath, [script, ...full], { env: clean, maxBuffer: 64 * 1024 * 1024 });
     return { code: 0, stdout: r.stdout, stderr: r.stderr };
   } catch (e) {
     return { code: e.code, stdout: e.stdout ?? "", stderr: e.stderr ?? "" };
@@ -210,8 +216,10 @@ for (const [label, key] of [["인코딩", KEY_ENCODED], ["디코딩", KEY_DECODE
       assert.equal(stub.hits.length, 25 * 2, "구마다 4건을 2건씩 2쪽");
       assert.ok(stub.hits.every((h) => h.q.bjdongCd === "10100"));
       const file = JSON.parse(await readFile(path.join(s.out, "folded.json"), "utf8"));
-      assert.deepEqual(file.series.permit["11110"]["2024-03"], { projects: 1, units: 120 });
-      assert.deepEqual(file.unknown.permit["11680"], { projects: 1, units: 30 });
+      // 구마다 사업 1건(n<3)이라 25구가 "기타 구" 한 칸으로 합쳐진다(PREREG 5절). 구 이름이 남지 않는다.
+      assert.deepEqual(Object.keys(file.series.permit), [OTHER_KEY]);
+      assert.deepEqual(file.series.permit[OTHER_KEY]["2024-03"], { projects: 25, units: 25 * 120 });
+      assert.deepEqual(file.unknown.permit[OTHER_KEY], { projects: 25, units: 25 * 30 });
       assert.equal(file.meta.calls, 50);
       assert.match(file.meta.rawSha256, /^[0-9a-f]{64}$/);
       assert.ok(!JSON.stringify(file).includes(KEY_DECODED));
@@ -313,4 +321,209 @@ test("법정동 목록: 서울 25구 모두 비어 있지 않은 5자리 코드 
     assert.ok(dongs.every((d) => /^\d{5}$/.test(d) && d !== "00000"), `${name} 코드 형식`);
     assert.equal(new Set(dongs).size, dongs.length, `${name} 중복`);
   }
+});
+
+// ---- #133: cto 항목 8개 + 이용허락 + 합침 단계 ----
+
+
+test("일 한도: 기본 5000, 환경변수로도 5000을 넘기지 못한다(소유자 조건 5 - 일 한도의 절반 이하)", () => {
+  assert.equal(DAILY_LIMIT, 5000);
+  assert.equal(dailyLimit({}), 5000);
+  assert.equal(dailyLimit({ BUILDINGHUB_DAILY_LIMIT: "999999" }), 5000);
+  assert.equal(dailyLimit({ BUILDINGHUB_DAILY_LIMIT: "100" }), 100);
+  assert.equal(dailyLimit({ BUILDINGHUB_DAILY_LIMIT: "abc" }), 5000);
+});
+
+test("한도 신호: HTTP 429는 재시도 없이 바로 멈춘다(종료 3, 쓰지 않음)", async () => {
+  const s = await setup();
+  const stub = await startStub(() => ({ status: 429, raw: "Too Many Requests" }));
+  try {
+    const r = await run({ BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: stub.base }, ["--bjdong-file", s.bjdong, "--out-dir", s.out]);
+    assert.equal(r.code, 3);
+    assert.equal(stub.hits.length, 1, "재시도하지 않는다");
+    assert.match(r.stderr, /한도|제한|429/);
+    assert.equal(await exists(path.join(s.out, "folded.json")), false);
+  } finally { await stub.close(); }
+});
+
+test("한도 신호: 200 응답 안의 한도 초과 코드(JSON resultCode 22, XML returnReasonCode 22)도 바로 멈춘다", async () => {
+  for (const body of [
+    { json: { response: { header: { resultCode: "22", resultMsg: "LIMITED_NUMBER_OF_SERVICE_REQUESTS_EXCEEDS_ERROR." } } } },
+    { contentType: "application/xml", raw: "<OpenAPI_ServiceResponse><cmmMsgHeader><errMsg>SERVICE ERROR</errMsg><returnReasonCode>22</returnReasonCode></cmmMsgHeader></OpenAPI_ServiceResponse>" },
+  ]) {
+    const s = await setup();
+    const stub = await startStub(() => body);
+    try {
+      const r = await run({ BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: stub.base }, ["--bjdong-file", s.bjdong, "--out-dir", s.out]);
+      assert.equal(r.code, 3);
+      assert.equal(stub.hits.length, 1);
+      assert.equal(await exists(path.join(s.out, "folded.json")), false);
+    } finally { await stub.close(); }
+  }
+});
+
+test("이용허락범위: 입력이 '제한 없음'이 아니거나 없으면 호출 없이 멈춘다(소유자 조건 4)", async () => {
+  const s = await setup();
+  const stub = await startStub(goodHandler);
+  try {
+    const env = { BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: stub.base };
+    const bad = await run(env, ["--bjdong-file", s.bjdong, "--out-dir", s.out, "--license", "저작자 표시", "--page-modified", "2026-09-01"]);
+    assert.equal(bad.code, 1);
+    assert.match(bad.stderr, /이용허락/);
+    const none = await run(env, ["--bjdong-file", s.bjdong, "--out-dir", s.out, "--license", "", "--page-modified", "2026-09-01"]);
+    assert.equal(none.code, 1);
+    assert.equal(stub.hits.length, 0);
+    assert.equal(await exists(path.join(s.out, "folded.json")), false);
+  } finally { await stub.close(); }
+});
+
+test("이용허락범위: 메타에 기대 문자열·받은 문자열·확인일·페이지 수정일이 남는다", async () => {
+  const s = await setup();
+  const stub = await startStub(goodHandler);
+  try {
+    const r = await run({ BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: stub.base }, ["--bjdong-file", s.bjdong, "--out-dir", s.out]);
+    assert.equal(r.code, 0, r.stderr);
+    const { meta } = JSON.parse(await readFile(path.join(s.out, "folded.json"), "utf8"));
+    assert.deepEqual(meta.license, { text: "제한 없음", expected: LICENSE.text, checkedOn: LICENSE.checkedOn, pageModified: "2026-09-01" });
+    assert.match(LICENSE.checkedOn, /^\d{4}-\d{2}-\d{2}$/);
+    assert.equal(meta.updatedAt, COLLECTED_AT);
+    assert.equal(meta.districtsWithData.length, 25);
+    assert.ok(Array.isArray(meta.responseFields) && meta.responseFields.includes(FIELDS.units));
+  } finally { await stub.close(); }
+});
+
+test("합침 단계: folded.json에는 합친 뒤 결과만 올라가고 n<3 칸이 없다. 다른 파일은 만들지 않는다", async () => {
+  const s = await setup();
+  // 11110만 한 달에 사업 3건(공개 구), 나머지는 1건(합쳐진다)
+  const stub = await startStub((c) => {
+    const sgg = c.q.sigunguCd;
+    const n = sgg === "11110" ? 3 : 1;
+    const items = Array.from({ length: n }, (_, i) => project({ id: `${sgg}-${i}`, sgg, units: 10, permit: "20240315" }));
+    return { json: envelope(items, items.length) };
+  });
+  try {
+    const r = await run({ BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: stub.base, BUILDINGHUB_PAGE_SIZE: "100" }, ["--bjdong-file", s.bjdong, "--out-dir", s.out]);
+    assert.equal(r.code, 0, r.stderr);
+    assert.deepEqual(await readdir(s.out), ["folded.json"], "접기 직후 결과는 저장소 쪽에 쓰지 않는다");
+    const file = JSON.parse(await readFile(path.join(s.out, "folded.json"), "utf8"));
+    assert.deepEqual(file.series.permit["11110"]["2024-03"], { projects: 3, units: 30 });
+    assert.deepEqual(file.series.permit[OTHER_KEY]["2024-03"], { projects: 24, units: 240 });
+    for (const byKey of [...Object.values(file.series), ...Object.values(file.unknown)]) {
+      for (const cells of Object.values(byKey)) for (const c of "projects" in cells ? [cells] : Object.values(cells)) assert.ok(c.projects >= 3, JSON.stringify(c));
+    }
+  } finally { await stub.close(); }
+});
+
+test("필드 투영: 필요한 필드만 남기고 나머지(사업주체명·지번 등)는 버린다", () => {
+  const raw = { ...project({ id: "P", units: 5, permit: "20240101" }), bldNm: "사업명", platPlc: "서울 어딘가 1-1", mainPurpsCdNm: "x" };
+  const out = projectItem(raw);
+  assert.deepEqual(Object.keys(out).sort(), [...PROJECTED_FIELDS].sort());
+  assert.ok(!("bldNm" in out) && !("platPlc" in out));
+  // 응답에 없는 필드는 만들지 않는다 - 접기의 "필드가 한 건도 없으면 실패"가 여전히 작동해야 한다
+  assert.deepEqual(Object.keys(projectItem({ [FIELDS.id]: "P" })), [FIELDS.id]);
+  assert.deepEqual(Object.keys(projectItem({ [FIELDS.id]: "P", zz: 1 }, "zz")).sort(), [FIELDS.id, "zz"].sort());
+});
+
+test("큰 쪽: 20만 건이 한 번에 와도 spread 때문에 터지지 않는다(13만 인자 초과 재현)", async () => {
+  const s = await setup();
+  const N = 200_000;
+  const stub = await startStub((c) => {
+    if (c.q.sigunguCd !== "11110") return { json: envelope([], 0) };
+    const items = Array.from({ length: N }, (_, i) => ({ [FIELDS.id]: `P${i}`, [FIELDS.sigungu]: "11110", [FIELDS.units]: "1", [D.permit]: "20240315", [D.start]: "", [D.complete]: "", [FIELDS.cancel]: "", [FIELDS.version]: "20240101" }));
+    return { json: envelope(items, N) };
+  });
+  try {
+    const r = await run({ BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: stub.base, BUILDINGHUB_PAGE_SIZE: String(N) }, ["--bjdong-file", s.bjdong, "--out-dir", s.out]);
+    assert.equal(r.code, 0, r.stderr.slice(0, 500));
+    const file = JSON.parse(await readFile(path.join(s.out, "folded.json"), "utf8"));
+    assert.equal(file.series.permit["11110"]["2024-03"].projects, N);
+  } finally { await stub.close(); }
+});
+
+test("RAW_DIR: 저장소 안(또는 저장소를 가리키는 경로)이면 호출 없이 멈춘다", async () => {
+  const s = await setup();
+  const stub = await startStub(goodHandler);
+  const repoRoot = path.resolve(import.meta.dirname, "..");
+  const inside = path.join(repoRoot, "housing-raw-test-do-not-keep");
+  try {
+    const env = { BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: stub.base };
+    for (const dir of [inside, path.join(repoRoot, "raw"), repoRoot, path.join(repoRoot, "scripts", "..", "docs")]) {
+      const r = await run({ ...env, BUILDINGHUB_RAW_DIR: dir }, ["--bjdong-file", s.bjdong, "--out-dir", s.out]);
+      assert.equal(r.code, 1, dir);
+      assert.match(r.stderr, /저장소/);
+    }
+    assert.equal(stub.hits.length, 0);
+    assert.equal(await exists(inside), false, "저장소 안에 폴더를 만들지 않았다");
+  } finally { await rm(inside, { recursive: true, force: true }); await stub.close(); }
+});
+
+test("RAW_DIR: 저장소 밖이면 쪽 본문을 쓰고, 서버가 에코한 키는 파일에도 남지 않는다(쓰기 경로 마스킹)", async () => {
+  const s = await setup();
+  const rawDir = path.join(s.dir, "raw-pages");
+  const stub = await startStub((c) => {
+    const r = goodHandler(c);
+    // 서버가 본문 안에 키를 되돌려 주는 경우(원문·인코딩 꼴 둘 다)
+    for (const it of r.json.response.body.items.item) it.echo = `${c.q.serviceKey} ${encodeURIComponent(c.q.serviceKey)}`;
+    return r;
+  });
+  try {
+    const r = await run({ BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: stub.base, BUILDINGHUB_RAW_DIR: rawDir }, ["--bjdong-file", s.bjdong, "--out-dir", s.out]);
+    assert.equal(r.code, 0, r.stderr);
+    const files = await readdir(rawDir);
+    assert.ok(files.length >= 25, "쪽 파일이 있다");
+    for (const f of files) {
+      const body = await readFile(path.join(rawDir, f), "utf8");
+      assert.ok(body.includes("***"), "에코된 자리가 마스킹돼 있다");
+      assert.ok(!body.includes(KEY_DECODED) && !body.includes(KEY_ENCODED), `${f}에 키가 남음`);
+    }
+  } finally { await stub.close(); }
+});
+
+test("redirect: 리다이렉트는 따라가지 않고 실패로 센다(키가 다른 주소로 새지 않는다)", async () => {
+  const s = await setup();
+  const hits = [];
+  const server = createServer((req, res) => {
+    hits.push(req.url);
+    if (req.url.startsWith("/elsewhere")) { res.writeHead(200); res.end("{}"); return; }
+    res.writeHead(302, { Location: `http://127.0.0.1:${server.address().port}/elsewhere?k=1` });
+    res.end();
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  try {
+    const r = await run({ BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: `http://127.0.0.1:${server.address().port}/stub` }, ["--bjdong-file", s.bjdong, "--out-dir", s.out]);
+    assert.equal(r.code, 3);
+    assert.ok(hits.length > 0 && hits.every((u) => !u.startsWith("/elsewhere")), `따라간 요청: ${hits.filter((u) => u.startsWith("/elsewhere")).length}`);
+    assert.equal(await exists(path.join(s.out, "folded.json")), false);
+  } finally { await new Promise((d) => server.close(d)); }
+});
+
+test("입력 시점 필드: 지정하면 (입력월 - 사업승인월) 분포가 메타에 남고, 사업 단위 값은 남지 않는다(B4)", async () => {
+  const s = await setup();
+  const stub = await startStub((c) => {
+    const sgg = c.q.sigunguCd;
+    const items = [3, 3, 3, 6].map((lag, i) => ({ ...project({ id: `${sgg}-${i}`, sgg, units: 10, permit: "20240115" }), regDt: `2024${String(1 + lag).padStart(2, "0")}20` }));
+    return { json: envelope(items, items.length) };
+  });
+  try {
+    const r = await run({ BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: stub.base, BUILDINGHUB_PAGE_SIZE: "100" },
+      ["--bjdong-file", s.bjdong, "--out-dir", s.out, "--input-time-field", "regDt"]);
+    assert.equal(r.code, 0, r.stderr);
+    const { meta } = JSON.parse(await readFile(path.join(s.out, "folded.json"), "utf8"));
+    assert.deepEqual(meta.inputLag, { field: "regDt", histogram: { 3: 75, 6: 25 }, unparsed: 0 });
+    const bad = await run({ BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: stub.base }, ["--bjdong-file", s.bjdong, "--out-dir", s.out, "--input-time-field", "a b;"]);
+    assert.equal(bad.code, 1, "필드 이름 꼴이 아니면 받지 않는다");
+  } finally { await stub.close(); }
+});
+
+test("접기: 취소 사업의 사업승인 호수를 서울 전체 달별로 따로 센다(B2의 취소 포함 값). 구별 칸은 만들지 않는다", () => {
+  const r = foldProjects(FIXTURE);
+  assert.deepEqual(r.cancelledPermit, { "2024-03": { projects: 1, units: 50 } });
+  assert.deepEqual(Object.keys(r.series.permit).sort(), ["11110", "11140"], "취소는 구별 계열에 섞이지 않는다");
+});
+
+test("접기: 입력 시점 필드를 주면 (입력월 - 사업승인월) 분포를 센다. 읽을 수 없는 것은 unparsed", () => {
+  const withReg = (id, reg, permit = "20240115") => ({ ...project({ id, units: 1, permit }), regDt: reg });
+  const r = foldProjects([withReg("a", "20240420"), withReg("b", "20240420"), withReg("c", "20240701"), withReg("d", "bad"), withReg("e", "20240420", "")], { inputTimeField: "regDt" });
+  assert.deepEqual(r.inputLag, { field: "regDt", histogram: { 3: 2, 6: 1 }, unparsed: 2 });
+  assert.equal(foldProjects(FIXTURE).inputLag, undefined);
 });
