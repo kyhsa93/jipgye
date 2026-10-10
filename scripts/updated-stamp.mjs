@@ -120,7 +120,8 @@ const CROSS_ANCHORS = [
   { re: /([ \t]*)<p class="lead" id="lead">[\s\S]*?<\/p>/, before: false },
 ];
 
-/** 기준일 줄 HTML. 글자는 "실거래 MM-DD x 금리 MM-DD" 한 줄이고, 틀은 모든 장이 같다(숫자만 다르다, #66). */
+/** 기준일 줄 HTML. 글자는 "실거래 MM-DD x 금리 MM-DD" 한 줄이고, 틀은 모든 장이 같다(숫자만 다르다, #66).
+ * 줄의 "실거래" 날짜는 소스 json의 updatedAt, 곧 수집·집계 시각이지 거래 신고일이 아니다(#200). */
 export function crossLineHtml(dealsYmd, ratesYmd, indent = "") {
   return (
     `<p class="updated cross-basis" id="cross-basis" data-deals="${dealsYmd}" data-rates="${ratesYmd}">실거래 ${dealsYmd.slice(5)} x 금리 ${ratesYmd.slice(5)}</p>\n` +
