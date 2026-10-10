@@ -284,6 +284,7 @@ const T = {
     footerAbout: "소개",
     loadError: "실거래를 불러오지 못했습니다.",
     retry: "다시 시도",
+    rentsNotLoaded: "불러오지 못함",
   },
   en: {
     title: "Seoul Apartment Deal Search",
@@ -430,6 +431,7 @@ const T = {
     footerAbout: "About",
     loadError: "Could not load transaction data.",
     retry: "Retry",
+    rentsNotLoaded: "Not loaded",
   },
 };
 
@@ -1013,6 +1015,7 @@ function renderResult() {
   if (card) {
     card.innerHTML = complexCardHtml();
     renderComplexPriceFailure();
+    renderComplexRentsFailure();
   }
   announceResult();
 }
@@ -1216,6 +1219,23 @@ function renderComplexPriceFailure() {
   });
 }
 
+// 카드가 전세가율을 위해 받는 rents-*가 실패했을 때, 매매 결과는 정상이므로 카드 안 전세가율 구역에서만 말한다(#199).
+// 가격 블록 쪽(#187)과 같은 공용 규칙이고, 문구는 거래 목록 실패(#196)의 loadError를 다시 쓴다. 404(null)는 실패가 아니다.
+function renderComplexRentsFailure() {
+  const slot = document.getElementById("complex-rents-status");
+  if (!slot) return;
+  window.loadState.showFailure(slot, {
+    message: t("loadError"),
+    retryLabel: t("retry"),
+    retryId: "load-retry-rents-card",
+    wrap: (inner) => `<p class="empty">${inner}</p>`,
+    onRetry: () => {
+      window.analytics?.event("load_retry", { view: "complex_card_rents" });
+      refresh();
+    },
+  });
+}
+
 function complexCardHtml() {
   if (!aptTerm() || district === ALL) return "";
   const sales = fullDeals.get(district);
@@ -1230,16 +1250,21 @@ function complexCardHtml() {
   const rows = complexAreas(apt, sales, fullRents.get(district), prices?.cells?.[apt]);
   const priceFailed = complexFailed(district);
   const priceHtml = priceFailed ? `<div id="complex-price-status"></div>` : complexPriceHtml(prices, apt);
-  if (!rows.length && !priceHtml) return "";
+  // 전세 쪽을 받지 못한 것을 빈 칸으로 두면 "표본 부족"으로 읽힌다 - 칸마다 불러오지 못함이라 적고 자리 하나에 실패를 말한다.
+  const rentsDown = rentsFailed.has(district);
+  if (!rows.length && !priceHtml && !rentsDown) return "";
 
   const cell = (value, count) =>
     value === null
       ? `<span class="low-sample">${escapeHtml(t("complexThin")(count))}</span>`
       : `${escapeHtml(formatEok(value))} <span class="count">${escapeHtml(t("complexCount")(count))}</span>`;
 
-  const ratioHtml = rows.length
+  const unloaded = `<span class="low-sample">${escapeHtml(t("rentsNotLoaded"))}</span>`;
+  const ratioHtml = rows.length || rentsDown
     ? `<h3>${escapeHtml(t("ratioHeading"))}</h3>` +
-      `<div class="table-wrap"><table class="data-table">` +
+      (rentsDown ? `<div id="complex-rents-status"></div>` : "") +
+      (rows.length
+        ? `<div class="table-wrap"><table class="data-table">` +
       `<caption class="sr-only">${escapeHtml(`${apt} - ${t("ratioHeading")} (${rows.length})`)}</caption><thead><tr>` +
       `<th scope="col">${escapeHtml(t("complexArea"))}</th><th scope="col">${escapeHtml(t("kindSale"))}</th>` +
       `<th scope="col">${escapeHtml(t("kindJeonse"))}</th><th scope="col">${escapeHtml(t("complexRatio"))}</th>` +
@@ -1253,12 +1278,13 @@ function complexCardHtml() {
                 : ""
             }</td>` +
             `<td data-label="${escapeHtml(t("kindSale"))}">${cell(row.saleMedian, row.sale.length)}</td>` +
-            `<td data-label="${escapeHtml(t("kindJeonse"))}">${cell(row.jeonseMedian, row.jeonse.length)}</td>` +
-            `<td data-label="${escapeHtml(t("complexRatio"))}">${row.ratio === null ? "-" : `${row.ratio.toFixed(1)}%`}</td></tr>`
+            `<td data-label="${escapeHtml(t("kindJeonse"))}">${rentsDown ? unloaded : cell(row.jeonseMedian, row.jeonse.length)}</td>` +
+            `<td data-label="${escapeHtml(t("complexRatio"))}">${rentsDown ? unloaded : row.ratio === null ? "-" : `${row.ratio.toFixed(1)}%`}</td></tr>`
         )
         .join("") +
       `</tbody></table></div>` +
       `<p class="content-notice">${escapeHtml(t("complexNote"))}</p>`
+        : "")
     : "";
 
   // 범위를 먼저 둔다. 매물을 앞에 둔 사람이 먼저 묻는 것은 "이 값이 어디쯤인가"다.
