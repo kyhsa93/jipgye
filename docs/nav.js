@@ -81,32 +81,70 @@
 // 며칠 지났는지는 페이지를 여는 순간 여기서 KST 오늘로 센다. 빌드가 멈춰도 HTML이 얼어붙은 채 경고가
 // 사라지지 않게 하려는 분리다. 기준일을 못 읽으면 경고하지 않는다(없는 날짜로 겁주지 않는다).
 // 문턱은 scripts/source-age.mjs의 STALE_DAYS와 같아야 하고 test/updated-stamp.test.mjs가 묶는다.
+// 교차값(실거래 x 금리) 화면은 입력별 기준일 줄(#cross-basis)도 같은 방식으로 센다 (#154) - 입력 하나라도
+// 낡으면 어느 입력이 며칠인지 글로 밝힌다. 화면 기준일은 가장 오래된 날짜 하나만 말하므로 따로 둔 줄이다.
 (function () {
   const STALE_DAYS = 2;
   if (typeof document.getElementById !== "function") return;
+  const DAY = 86400000;
+  const YMD = /^\d{4}-\d{2}-\d{2}$/;
+  const isEn = () => document.documentElement.getAttribute("lang") === "en";
+  // 기준일(YYYY-MM-DD)이 오늘(KST 날짜)보다 며칠 전인가. 일 단위 버림, 기준일이 미래면 0. 못 읽으면 null.
+  function daysSince(ymd) {
+    if (!YMD.test(ymd || "")) return null;
+    const ms = Date.parse(`${ymd}T00:00:00Z`);
+    if (Number.isNaN(ms)) return null;
+    const today = Math.floor((new Date().getTime() + 9 * 3600 * 1000) / DAY);
+    return Math.max(0, today - Math.floor(ms / DAY));
+  }
+  function watchLang(render) {
+    render();
+    // 화면 언어를 바꾸면 lang 속성이 바뀐다 - 경고 문구도 따라간다.
+    if (typeof MutationObserver === "function") {
+      new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+    }
+  }
+
   const stamp = document.getElementById("updated");
   const base = stamp?.getAttribute("data-updated");
   const warn = document.getElementById("updated-warn");
-  if (!warn || !/^\d{4}-\d{2}-\d{2}$/.test(base || "")) return;
-  const baseMs = Date.parse(`${base}T00:00:00Z`);
-  if (Number.isNaN(baseMs)) return;
-  const DAY = 86400000;
-  function render() {
-    const en = document.documentElement.getAttribute("lang") === "en";
-    // 정적 라벨("기준일 YYYY-MM-DD", #123)을 화면 언어로 맞춘다. 정적 라벨 모양일 때만 바꾼다 - 페이지
-    // 스크립트가 #updated를 자기 문장(기간·보관본 안내)으로 바꾼 장은 그 장의 사전이 언어를 따르므로 건드리지 않는다.
-    if (/^(기준일|As of) \d{4}-\d{2}-\d{2}$/.test(stamp.textContent || "")) stamp.textContent = `${en ? "As of" : "기준일"} ${base}`;
-    // 오늘(KST 날짜) - 기준일, 일 단위 버림. 기준일이 미래면 0.
-    const today = Math.floor((new Date().getTime() + 9 * 3600 * 1000) / DAY);
-    const days = Math.max(0, today - Math.floor(baseMs / DAY));
-    const stale = days >= STALE_DAYS;
-    warn.hidden = !stale;
-    warn.textContent = stale ? (en ? `Data from ${days} days ago` : `${days}일 전 자료`) : "";
+  if (warn && daysSince(base) !== null) {
+    watchLang(function () {
+      const en = isEn();
+      // 정적 라벨("기준일 YYYY-MM-DD", #123)을 화면 언어로 맞춘다. 정적 라벨 모양일 때만 바꾼다 - 페이지
+      // 스크립트가 #updated를 자기 문장(기간·보관본 안내)으로 바꾼 장은 그 장의 사전이 언어를 따르므로 건드리지 않는다.
+      if (/^(기준일|As of) \d{4}-\d{2}-\d{2}$/.test(stamp.textContent || "")) stamp.textContent = `${en ? "As of" : "기준일"} ${base}`;
+      const days = daysSince(base);
+      const stale = days >= STALE_DAYS;
+      warn.hidden = !stale;
+      warn.textContent = stale ? (en ? `Data from ${days} days ago` : `${days}일 전 자료`) : "";
+    });
   }
-  render();
-  // 화면 언어를 바꾸면 lang 속성이 바뀐다 - 경고 문구도 따라간다.
-  if (typeof MutationObserver === "function") {
-    new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+
+  const basis = document.getElementById("cross-basis");
+  const crossWarn = document.getElementById("cross-warn");
+  if (basis && crossWarn) {
+    const inputs = [
+      { attr: "data-deals", ko: "실거래", en: "Deals" },
+      { attr: "data-rates", ko: "금리", en: "Rates" },
+    ];
+    watchLang(function () {
+      const en = isEn();
+      const dates = inputs.map((i) => basis.getAttribute(i.attr));
+      // 줄 글자는 빌드가 한국어로 박아 둔다. 정적 모양일 때만, 두 날짜를 다 읽었을 때만 화면 언어로 바꾼다.
+      if (dates.every((d) => YMD.test(d || "")) && /^(실거래|Deals) \d{2}-\d{2} x (금리|Rates) \d{2}-\d{2}$/.test(basis.textContent || "")) {
+        const [d, r] = dates.map((x) => x.slice(5));
+        basis.textContent = en ? `Deals ${d} x Rates ${r}` : `실거래 ${d} x 금리 ${r}`;
+      }
+      // 낡은 입력만 이름 붙여 말한다. 못 읽은 입력은 건너뛴다(없는 날짜로 겁주지 않는다).
+      const parts = [];
+      inputs.forEach((i, k) => {
+        const days = daysSince(dates[k]);
+        if (days !== null && days >= STALE_DAYS) parts.push(en ? `${i.en} data from ${days} days ago` : `${i.ko} ${days}일 전 자료`);
+      });
+      crossWarn.hidden = parts.length === 0;
+      crossWarn.textContent = parts.join(" \u00b7 ");
+    });
   }
 })();
 
