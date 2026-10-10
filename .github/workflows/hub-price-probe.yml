@@ -1,0 +1,49 @@
+# 임시 시험용 - 시험 후 이 파일과 scripts/hub-price-probe*.mjs, research/hub-price-probe/를 삭제한다.
+# 건축HUB 건축물대장 주택가격(data.go.kr 15134735, getBrHsprcInfo)이 공시가격 대체 공급원이 되는지 표본 지번으로 재 본다.
+# 사람이 dispatch로만 돈다. 일일 파이프라인·스케줄에 넣지 않는다. 저장소에 아무것도 쓰지 않는다(contents: read, 커밋·아티팩트 없음).
+#
+# 시크릿 취급(소유자 규칙: 키·URL의 serviceKey 쿼리·응답 원문을 로그에 내지 않는다)
+# - 시크릿 PUBLIC_DATA_PORTAL_API_KEY는 "시험 호출" 스텝 env에만 둔다. 다른 스텝·job env·입력에는 없다.
+# - set +x 로 셸 추적을 끈다. 호출은 curl이 아니라 node fetch이고 URL을 어디에도 출력하지 않는다.
+# - 오류 출력은 오류 이름·HTTP 상태·결과코드(숫자)뿐이다. err.message·응답 본문은 쓰지 않는다.
+# - 출력은 집계(채움률·연도 분포·구분 분포·지연·호출 수)뿐이다. 호 단위 값·지번별 줄·응답 원문은 로그·아티팩트에 없다(#68 C1).
+# - 외부 의존 없음(npm ci 안 함): node 내장 모듈만 쓴다. 액션은 SHA 고정.
+name: Hub price probe (temporary)
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_calls:
+        description: "호출할 표본 지번 수 상한 (1~40, 비우면 40). 호출은 초당 1회 이하, 재시도 없음"
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hub-price-probe
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "22"
+
+      - name: 시험 호출 (시크릿은 이 스텝에서만, 집계만 출력)
+        env:
+          PUBLIC_DATA_PORTAL_API_KEY: ${{ secrets.PUBLIC_DATA_PORTAL_API_KEY }}
+          MAX_CALLS: ${{ inputs.max_calls }}
+        run: |
+          set +x
+          set -eu
+          node scripts/hub-price-probe.mjs
