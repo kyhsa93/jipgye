@@ -12,6 +12,7 @@
  * - --license(포털 페이지의 이용허락범위 문자열)가 "제한 없음"이 아니면 호출 없이 종료 1(소유자 조건 4). 메타에 남긴다.
  * - 접은 결과는 합침 단계(housing-permits-merge.mjs: 셀 사업 수 n<3 -> 기타 구)를 거친 것만 folded.json에 쓴다.
  * - 응답 필드가 가정(housing-permits-spec.mjs)과 다르면 쓰지 않고 종료 1.
+ *   이때 stderr에 응답 구조 키·첫 항목 키(타입 이름)·항목 수만 남긴다. 값은 안 남기고 비정형 키는 <비정형 키>로 센다.
  * - 원본은 저장소에 두지 않는다. 쪽 본문의 sha256을 이어 붙인 해시만 folded.json meta에 남기고,
  *   BUILDINGHUB_RAW_DIR(저장소 밖이어야 한다. 안이면 호출 전에 종료 1)을 주면 쪽 본문을 거기에 쓴다.
  *   응답 항목은 받자마자 필요한 필드만 남긴다(projectItem).
@@ -25,7 +26,7 @@ import { mkdir, readFile, realpath, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import { DISTRICTS } from "./realestate-districts.mjs";
-import { assertCoreFields, foldProjects, projectItem, readUnits, ShapeError } from "./housing-permits-fold.mjs";
+import { assertCoreFields, describeShape, foldProjects, listKeys, projectItem, readUnits, ShapeError } from "./housing-permits-fold.mjs";
 import { mergeSmallCells } from "./housing-permits-merge.mjs";
 import { DAILY_LIMIT, DEFAULT_ENDPOINT, FIELDS, LICENSE, OPERATION, PAGE_SIZE } from "./housing-permits-spec.mjs";
 
@@ -76,6 +77,14 @@ function mask(text) {
 }
 const say = (msg) => console.log(`[fetch-housing-permits] ${mask(msg)}`);
 const warn = (msg) => console.error(`[fetch-housing-permits] ${mask(msg)}`);
+
+/** 응답 모양 진단 줄(필드 이름·개수·타입만). ShapeError 경로와 시험 호출 요약이 같은 줄을 쓴다. */
+function shapeLines(ctx) {
+  return [...(ctx.shape?.lines ?? []), `응답 필드 이름: ${listKeys([...ctx.responseFields], mask)}`];
+}
+const reportShape = (ctx, err) => {
+  if (err instanceof ShapeError) for (const line of shapeLines(ctx)) warn(line);
+};
 
 class LimitError extends Error {}
 /** 시험 호출 모드의 호출 수 상한(--max-calls)에 닿음. 일 한도(LimitError)와 달리 의도한 끝이라 정상 종료다. */
@@ -193,6 +202,8 @@ async function requestPage(ctx, sigungu, bjdong, pageNo) {
   if (!Number.isInteger(totalCount) || totalCount < 0) throw new ShapeError("알 수 없는 응답 필드: totalCount");
   const rawItems = body.items?.item;
   const items = rawItems ? (Array.isArray(rawItems) ? rawItems : [rawItems]) : [];
+  // 응답 모양 진단용: 이름·개수·타입만 든 문자열로 바로 줄인다(값은 들고 있지 않는다). 항목이 있는 쪽을 우선 남긴다.
+  if (items.length > 0 || !ctx.shape || ctx.shape.empty) ctx.shape = { lines: describeShape(parsed, mask), empty: items.length === 0 };
   return { items, totalCount, text };
 }
 
@@ -229,7 +240,8 @@ async function collectDong(ctx, sigungu, bjdong) {
     });
     for (const item of page.items) {
       if (String(item[FIELDS.sigungu]).trim() !== sigungu) {
-        throw new ShapeError(`알 수 없는 응답 필드: ${FIELDS.sigungu}=${item[FIELDS.sigungu]} (요청 ${sigungu})`);
+        // 응답의 시군구 값은 적지 않는다(값 비노출). 요청한 구만 적는다.
+        throw new ShapeError(`알 수 없는 응답 필드: ${FIELDS.sigungu} 값이 요청한 구 ${sigungu}와 다름`);
       }
     }
     ctx.rawHash.update(createHash("sha256").update(page.text).digest("hex") + "\n");
@@ -341,6 +353,7 @@ async function main() {
   } catch (err) {
     // 일 한도·429·응답 모양 오류로 멈춘 자리에서 얼마나 왔는지 남긴다(#141, 값 없이 개수만).
     warn(progressLine(ctx));
+    reportShape(ctx, err);
     throw err;
   }
 
@@ -362,26 +375,33 @@ async function main() {
         fold = `접기 검사 통과(메모리만): 입력 ${m.input} · 사업 ${m.projects} · 중복 ${m.duplicates} · 취소 ${m.cancelled}`;
       } catch (err) {
         warn(progressLine(ctx));
+        reportShape(ctx, err);
         throw err;
       }
     }
     say(`시험 호출 요약(저장 없음): 구 ${districts.length}개(${districts.map((d) => d.code).join(",")}) · 상태 ${capped ? "완료 아님(호출 상한 도달)" : "완료"}`);
     say(progressLine(ctx));
     say(`요청 쪽 크기 ${ctx.pageSize} · 한 쪽 최대 수신 항목 ${ctx.maxPageItems} · 동별 totalCount 합 ${ctx.totalCountSum}`);
-    say(`응답 필드 이름: ${[...ctx.responseFields].sort().join(", ")}`);
+    for (const line of shapeLines(ctx)) say(line);
     say(fold);
     return;
   }
 
   // 접기 -> 합침 -> 쓰기. 합침 전 결과(구·달별 n<3 칸이 있는 것)는 변수로만 있고 어디에도 쓰지 않는다.
-  const merged = mergeSmallCells(foldProjects(all, { inputTimeField: ctx.inputTimeField }));
+  let merged;
+  try {
+    merged = mergeSmallCells(foldProjects(all, { inputTimeField: ctx.inputTimeField }));
+  } catch (err) {
+    reportShape(ctx, err);
+    throw err;
+  }
   const out = {
     meta: {
       ...merged.meta, operation: OPERATION, districts: DISTRICTS.length, dongs: dongCount, pages: ctx.pages, calls: ctx.calls,
       updatedAt: new Date(collectedAt).toISOString(),
       license: { text: v.license.trim(), expected: LICENSE.text, checkedOn: LICENSE.checkedOn, pageModified: v["page-modified"] },
       districtsWithData: [...ctx.districtsWithData].sort(),
-      responseFields: [...ctx.responseFields].sort(),
+      responseFields: [...ctx.responseFields].sort().filter((k) => /^[A-Za-z][A-Za-z0-9_]{0,39}$/.test(k)),
       rawSha256: ctx.rawHash.digest("hex"),
       ...(merged.inputLag ? { inputLag: merged.inputLag } : {}),
     },

@@ -14,6 +14,74 @@ import { FIELDS, PROJECTED_FIELDS, SERIES } from "./housing-permits-spec.mjs";
 
 export class ShapeError extends Error {}
 
+// ---- 응답 모양 진단 (#133 남은 항목) ----
+// 응답 모양 오류 때 공개 Actions 로그에 남기는 것은 **필드 이름(키)·개수·타입 이름뿐**이다. 사업 관리번호·사업명·주소·
+// 사업주체명 같은 값은 어떤 경우에도 찍지 않는다. 키 자리에 값이 들어와 있을 수 있으니(XML 속성, 잘못된 파서 결과 등)
+// 키는 영문으로 시작하는 짧은 영문숫자_ 이름일 때만 그대로 내고, 아니면 "<비정형 키>"로 센다.
+// 순서는 마스킹 -> 판정 -> 자르기다(자르기를 먼저 하면 경계에 걸친 인증키 앞부분이 남는다, PR #109와 같은 원칙).
+
+/** 한 줄에 이름으로 내는 키의 최대 개수. 넘는 것은 개수로만 적는다. */
+export const MAX_KEYS = 50;
+const KEY_NAME = /^[A-Za-z][A-Za-z0-9_]{0,39}$/;
+
+/** 값의 종류 이름. 값 자체는 담지 않는다. */
+function typeName(value) {
+  if (value === null) return "null";
+  if (Array.isArray(value)) return "배열";
+  switch (typeof value) {
+    case "string": return "문자열";
+    case "number": return "숫자";
+    case "boolean": return "불리언";
+    case "object": return "객체";
+    default: return "기타";
+  }
+}
+
+const isObject = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
+
+/**
+ * 키 목록 -> 한 줄. 정렬 -> (키마다) mask -> 이름 패턴 판정 -> 상한 자르기 순서다.
+ * types를 주면 이름 뒤에 (타입 이름)을 붙인다(키 -> 값의 타입 이름 객체).
+ */
+export function listKeys(keys, mask, types = null) {
+  const good = [];
+  let odd = 0;
+  for (const key of [...keys].map(String).sort()) {
+    const shown = String(mask(key));
+    if (KEY_NAME.test(shown)) good.push(types ? `${shown}(${types[key] ?? "?"})` : shown);
+    else odd += 1;
+  }
+  const head = good.slice(0, MAX_KEYS).join(", ");
+  const more = good.length > MAX_KEYS ? ` … 외 ${good.length - MAX_KEYS}개` : "";
+  const oddText = odd > 0 ? `${head || more ? " · " : ""}<비정형 키> ${odd}개` : "";
+  return (head + more + oddText) || "(없음)";
+}
+
+function keysOf(value, mask) {
+  return isObject(value) ? listKeys(Object.keys(value), mask) : `(객체 아님: ${typeName(value)})`;
+}
+
+/**
+ * 파싱된 응답 하나 -> 진단 줄 셋(문자열 배열). 값은 이 안에서 이미 버려져 있어 호출한 쪽이 들고 있어도 새지 않는다.
+ *  1) 응답 구조 키: 최상위·response·header·body·items 컨테이너의 키 이름
+ *  2) 항목 개수와 items·item 컨테이너의 타입 이름
+ *  3) 첫 항목의 키 개수와 이름(타입 이름 포함)
+ */
+export function describeShape(parsed, mask) {
+  const response = isObject(parsed) ? parsed.response : undefined;
+  const body = isObject(response) ? response.body : undefined;
+  const items = isObject(body) ? body.items : undefined;
+  const rawItem = isObject(items) ? items.item : undefined;
+  const list = rawItem === undefined || rawItem === null || rawItem === "" ? [] : Array.isArray(rawItem) ? rawItem : [rawItem];
+  const first = list.find(isObject);
+  const firstTypes = first ? Object.fromEntries(Object.entries(first).map(([k, v]) => [k, typeName(v)])) : null;
+  return [
+    `응답 구조 키: 최상위 [${keysOf(parsed, mask)}] · response [${keysOf(response, mask)}] · header [${keysOf(isObject(response) ? response.header : undefined, mask)}] · body [${keysOf(body, mask)}] · items [${keysOf(items, mask)}]`,
+    `항목 ${list.length}개 · items ${typeName(items)} · item ${typeName(rawItem)}`,
+    first ? `첫 항목 키 ${Object.keys(first).length}개: ${listKeys(Object.keys(first), mask, firstTypes)}` : "첫 항목 키 0개: (객체인 항목 없음)",
+  ];
+}
+
 const CORE = [FIELDS.id, FIELDS.sigungu, FIELDS.units];
 const NULLABLE = [FIELDS.cancel, FIELDS.version, ...Object.values(FIELDS.dates)];
 
