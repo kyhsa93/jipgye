@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { BASIS_DATE, lineCounts, policySentence } from "../scripts/policy-loan.mjs";
+import { BASIS_DATE, POLICY_LINES, POLICY_TAIL, lineCounts, policySentence, policyShareSentence } from "../scripts/policy-loan.mjs";
 
 // 선은 마이홈포털(디딤돌)과 한국주택금융공사(보금자리론) 원문에서 손으로 옮긴 것이다.
 test("디딤돌은 가격과 면적을 둘 다, 보금자리론은 가격만 본다 — 경계값은 안에 든다", () => {
@@ -22,8 +22,12 @@ test("가격선 아래·걸친 예산대(3~9억대)에만 쓰고, 소득 요건�
   assert.match(policySentence(8, counts), /신생아 특례 선\(9억\) 안/);
   const s5 = policySentence(5, counts);
   assert.match(s5, /5억을 넘는 집은 디딤돌 일반 선 밖/);
-  assert.match(s5, /15건\(15%\)/);
-  assert.match(s5, /소득·자산 요건과 한도는 따로/);
-  assert.ok(s5.includes(BASIS_DATE));
+  // 가격선 정의·거래 수·소득 단서는 3~9억대 일곱 장 공통이라 method.html 한 자리로 옮겼다(#66). 글자는 그대로다.
+  assert.match(policyShareSentence(counts), /15건\(15%\)/);
+  assert.match(POLICY_LINES, /디딤돌대출\(주택도시기금\)은 5억 이하/);
+  assert.match(POLICY_TAIL, /소득·자산 요건과 한도는 따로/);
+  assert.ok(POLICY_TAIL.includes(BASIS_DATE));
+  assert.match(s5, /가격선만 본 것이며 소득·자산 요건은 따로 있습니다\.$/, "자격처럼 읽히지 않게 하는 한 줄이 장에 없다");
+  assert.doesNotMatch(s5, /한도는 따로|정책대출에는 주택가격 선이 있습니다|\d건/, "옮긴 문단이 장에 또 실렸다");
   assert.match(policySentence(6, counts), /딱 6억인 집 말고는/);
 });

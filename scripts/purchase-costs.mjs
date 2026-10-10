@@ -91,7 +91,18 @@ const man = (value10k) => {
 
 const pct = (value) => `${Number(value.toFixed(2))}%`;
 
-/** 예산대 한 문단. 그 예산대의 가운데 값(예: 11억대면 11.5억)으로 계산한다. */
+/**
+ * 예산대 열여덟 장에 똑같이 실리던 규칙 문단(#66). 장마다 반복하지 않고 method.html 한 자리
+ * (scripts/budget-rules.mjs가 굽는다)에 두며, 장의 문단은 숫자만 남기고 거기로 링크한다. 장 안에서만 뜻이 통하던
+ * 지시어("이 계산"·"위 세율")만 "장에 적은 …"으로 고쳤고 나머지 글자는 그대로다.
+ */
+export const COSTS_RULES =
+  `이미 집이 있는 사람이 한 채를 더 사면 서울은 취득세가 중과돼(2주택 8%) 장에 적은 무주택 기준 계산이 맞지 않습니다. ` +
+  `다만 지금 집을 팔고 옮기는 경우라면, 새 집을 산 뒤 2년 안에(두 집이 모두 조정대상지역일 때) 지금 집을 팔면 일시적 2주택이라 중과되지 않고 장에 적은 세율 그대로입니다. ` +
+  `법무사·등기 비용과 국민주택채권 할인은 넣지 않았습니다. ` +
+  `중개보수는 상한이라 협의로 낮출 수 있습니다. (지방세법·공인중개사법 시행규칙 원문 기준, ${BASIS_DATE} 확인)`;
+
+/** 예산대 한 문단(숫자만). 그 예산대의 가운데 값(예: 11억대면 11.5억)으로 계산한다. 규칙·예외는 COSTS_RULES. */
 export function costsSentence(eok) {
   if (!Number.isFinite(eok)) return null;
   const price = (eok + 0.5) * EOK;
@@ -101,10 +112,6 @@ export function costsSentence(eok) {
     `집이 없던 사람이 ${man(price)}짜리를 사면 매매가 위에 ` +
     `취득세 ${pct(c.acqRate)}와 지방교육세 ${pct(educationRate(price))}로 ${man(c.acquisition + c.education)}, ` +
     `중개보수 상한 ${pct(c.brokerRate)}로 ${man(c.broker)}, 합쳐 ${man(c.total)}이 더 듭니다. ` +
-    `전용 85㎡를 넘으면 농어촌특별세 ${pct(RURAL_RATE)}(${man(withRural.rural)})가 붙어 ${man(withRural.total)}입니다. ` +
-    `이미 집이 있는 사람이 한 채를 더 사면 서울은 취득세가 중과돼(2주택 8%) 이 계산이 맞지 않습니다. ` +
-    `다만 지금 집을 팔고 옮기는 경우라면, 새 집을 산 뒤 2년 안에(두 집이 모두 조정대상지역일 때) 지금 집을 팔면 일시적 2주택이라 중과되지 않고 위 세율 그대로입니다. ` +
-    `법무사·등기 비용과 국민주택채권 할인은 넣지 않았습니다. ` +
-    `중개보수는 상한이라 협의로 낮출 수 있습니다. (지방세법·공인중개사법 시행규칙 원문 기준, ${BASIS_DATE} 확인)`
+    `전용 85㎡를 넘으면 농어촌특별세 ${pct(RURAL_RATE)}(${man(withRural.rural)})가 붙어 ${man(withRural.total)}입니다.`
   );
 }

@@ -93,3 +93,56 @@ test("CLI: 폴더를 받아 budget-{3..20}eok.html만 읽고 --both로 두 정�
     await rm(dir, { recursive: true, force: true });
   }
 });
+
+// ---- 경계 보강(#66 후속): 변조해 보면 아래가 먼저 깨져야 한다 ----
+
+test("과반 경계: 18장 중 정확히 9장에 실린 창은 공통, 8장이면 공통이 아니다", () => {
+  const mk = (sharedCount) =>
+    new Map(
+      Array.from({ length: 18 }, (_, i) => [
+        `p${String(i).padStart(2, "0")}`,
+        `<p>${i < sharedCount ? seq("s", 8) : seq(`o${i}_`, 8)} ${seq(`u${i}_`, 8)}</p>`,
+      ]),
+    );
+  const at9 = measure(mk(9), { maskNumbers: false });
+  assert.equal(at9.majority, 9);
+  // 공유 창 1개가 9장에 실림 -> 9장 모두 common 1. (n >= majority를 > 로 바꾸면 0이 된다)
+  assert.equal(at9.pages.filter((p) => p.common === 1).length, 9);
+  const at8 = measure(mk(8), { maskNumbers: false });
+  assert.equal(at8.pages.reduce((a, p) => a + p.common, 0), 0, "8장은 과반 미만");
+});
+
+test("0만 든 토큰도 숫자로 가린다 - [1-9]가 아니라 [0-9]", () => {
+  assert.deepEqual(words("<p>0 00 0원 a</p>", { maskNumbers: true }), ["#", "#", "#", "a"]);
+});
+
+test("대상 범위: budget-3eok ~ budget-20eok 18장 전부 필요하고 그 밖의 장은 읽지 않는다", async () => {
+  const script = path.resolve(import.meta.dirname, "../scripts/prose-share.mjs");
+  const run = (dir) => {
+    try {
+      return { ok: true, out: execFileSync("node", [script, dir], { encoding: "utf8", stdio: "pipe" }) };
+    } catch {
+      return { ok: false };
+    }
+  };
+  const dir = await mkdtemp(path.join(tmpdir(), "prose-range-"));
+  try {
+    for (let n = 3; n <= 20; n += 1) {
+      await writeFile(path.join(dir, `budget-${n}eok.html`), `<p>${seq("c", 12)} ${seq(`u${n}_`, 12)}</p>`);
+    }
+    const base = run(dir);
+    assert.ok(base.ok);
+    // 범위 밖 장이 있어도 값이 같다(2..20·3..21로 넓히면 값이 바뀐다).
+    await writeFile(path.join(dir, "budget-2eok.html"), `<p>${seq("x", 40)}</p>`);
+    await writeFile(path.join(dir, "budget-21eok.html"), `<p>${seq("y", 40)}</p>`);
+    assert.equal(run(dir).out, base.out);
+    // 끝 장(20)이 빠지면 실패한다(3..19로 줄이면 통과해 버린다).
+    await rm(path.join(dir, "budget-20eok.html"));
+    assert.equal(run(dir).ok, false);
+    await writeFile(path.join(dir, "budget-20eok.html"), "<p>x</p>");
+    await rm(path.join(dir, "budget-3eok.html"));
+    assert.equal(run(dir).ok, false, "첫 장(3)이 빠져도 실패");
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
