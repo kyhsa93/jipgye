@@ -45,6 +45,85 @@ function nearestDistrict(entry, districts) {
   return best;
 }
 
+/** 전세가율을 낸 구들을 높은 쪽부터 세운 목록. 같은 값이면 이름순으로 가려 순서가 늘 같다. */
+function ratioOrder(districts) {
+  return districts
+    .map((d) => ({ name: d.name, ratio: jeonseRatio(d)?.ratio }))
+    .filter((d) => typeof d.ratio === "number")
+    .sort((a, b) => b.ratio - a.ratio || a.name.localeCompare(b.name, "ko"));
+}
+
+/**
+ * 전세가율 값이 든 한 문장 (#172). 값 바로 옆, 같은 문장 안에 그 값을 낸 신고 건수를 적는다 -
+ * 이 구의 매매·전세 건수와 비교한 서울 평균의 건수. 이 값은 구 전체 평균 둘의 비이므로 건수가 곧 표본이다.
+ *
+ * 25장이 숫자만 바꾼 같은 틀이 되지 않도록, 서울 평균과의 방향에 더해 이 구가 전세가율 순서에서
+ * 어느 두 구 사이에 있는지를 이름으로 적는다. 순서는 전체가 하나의 줄이라 위아래 이웃의 짝이
+ * 구마다 다르고, 숫자와 이 구 이름을 지워도 문장이 겹치지 않는다(test/ratio-sample.test.mjs).
+ */
+function ratioSentence({ entry, ratio, overall, overallRatio, districts, locale }) {
+  const en = locale === "en";
+  const fmt = (n) => n.toLocaleString(en ? "en-US" : "ko-KR");
+  const counts = (e) => ({
+    sale: resolveMetric(e, "sale")?.metric?.transactionCount,
+    jeonse: resolveMetric(e, "jeonse")?.metric?.transactionCount,
+  });
+  const own = counts(entry);
+  const city = overall ? counts(overall) : null;
+
+  const order = ratioOrder(districts);
+  const at = order.findIndex((d) => d.name === entry.name);
+  const upper = at > 0 ? order[at - 1].name : null;
+  const lower = at >= 0 && at < order.length - 1 ? order[at + 1].name : null;
+  const total = order.length;
+
+  const withSeoul = Boolean(overallRatio);
+  const diff = withSeoul ? ratio.ratio - overallRatio.ratio : 0;
+  const close = withSeoul && Math.abs(diff) < 1;
+
+  const basisKo = withSeoul && city
+    ? `이 구 매매 ${fmt(own.sale)}건·전세 ${fmt(own.jeonse)}건, 서울 전체 매매 ${fmt(city.sale)}건·전세 ${fmt(city.jeonse)}건 기준`
+    : `이 구 매매 ${fmt(own.sale)}건·전세 ${fmt(own.jeonse)}건 기준`;
+  const basisEn = withSeoul && city
+    ? `based on ${fmt(own.sale)} sales and ${fmt(own.jeonse)} jeonse here, ${fmt(city.sale)} and ${fmt(city.jeonse)} citywide`
+    : `based on ${fmt(own.sale)} sales and ${fmt(own.jeonse)} jeonse`;
+
+  if (en) {
+    const seoul = withSeoul
+      ? close
+        ? `, close to the Seoul average of ${formatPercent(overallRatio.ratio)}`
+        : `, ${diff > 0 ? "above" : "below"} the Seoul average of ${formatPercent(overallRatio.ratio)}`
+      : "";
+    const place =
+      total > 1 && at >= 0
+        ? !upper
+          ? `, the highest of ${total} districts with the next one down being ${lower}`
+          : !lower
+            ? `, the lowest of ${total} districts with the next one up being ${upper}`
+            : `, ranking between ${upper} and ${lower} among ${total} districts`
+        : "";
+    return `The jeonse ratio is ${formatPercent(ratio.ratio)}${seoul}${place} (${basisEn}).`;
+  }
+
+  const joinKo = (name) => `${name}${hasFinalConsonant(name) ? "과" : "와"}`;
+  const seoulKo = withSeoul
+    ? close
+      ? `서울 평균 ${formatPercent(overallRatio.ratio)}에 가까운 수준`
+      : `서울 평균 ${formatPercent(overallRatio.ratio)}보다 ${diff > 0 ? "높은" : "낮은"} 편`
+    : null;
+  const placeKo =
+    total > 1 && at >= 0
+      ? !upper
+        ? `${total}개 구를 전세가율 순으로 세우면 가장 높고 바로 아래는 ${lower}`
+        : !lower
+          ? `${total}개 구를 전세가율 순으로 세우면 가장 낮고 바로 위는 ${upper}`
+          : `${total}개 구를 전세가율 순으로 세우면 ${joinKo(upper)} ${lower} 사이`
+      : null;
+  const head = `전세가율은 ${formatPercent(ratio.ratio)}`;
+  const tail = seoulKo && placeKo ? `로 ${seoulKo}이고, ${placeKo}입니다` : seoulKo ? `로 ${seoulKo}입니다` : placeKo ? `로, ${placeKo}입니다` : "입니다";
+  return `${head}${tail}(${basisKo}).`;
+}
+
 export function districtSentences(entry, realestate, locale = "ko", spread = null) {
   if (!entry) return [];
 
@@ -131,22 +210,7 @@ export function districtSentences(entry, realestate, locale = "ko", spread = nul
   const ratio = jeonseRatio(entry);
   const overallRatio = overall ? jeonseRatio(overall) : null;
   if (ratio) {
-    let sentence = en
-      ? `The jeonse ratio is ${formatPercent(ratio.ratio)}`
-      : `전세가율은 ${formatPercent(ratio.ratio)}입니다`;
-
-    if (overallRatio) {
-      const diff = ratio.ratio - overallRatio.ratio;
-      const side = en
-        ? Math.abs(diff) < 1
-          ? `, close to the Seoul average of ${formatPercent(overallRatio.ratio)}`
-          : `, ${diff > 0 ? "above" : "below"} the Seoul average of ${formatPercent(overallRatio.ratio)}`
-        : Math.abs(diff) < 1
-          ? `. 서울 평균 ${formatPercent(overallRatio.ratio)}과 비슷합니다`
-          : `. 서울 평균 ${formatPercent(overallRatio.ratio)}보다 ${diff > 0 ? "높은" : "낮은"} 편입니다`;
-      sentence += side;
-    }
-    out.push(`${sentence}.`);
+    out.push(ratioSentence({ entry, ratio, overall, overallRatio, districts, locale }));
 
     // 자치구 값은 구 전체 평균 둘을 나눈 것이라 어느 단지의 전세가율도 아닐 수 있다.
     // 칸 하나하나에서 낸 값의 분포를 바로 뒤에 붙여, 그 하나를 얼마나 믿을지 알린다.

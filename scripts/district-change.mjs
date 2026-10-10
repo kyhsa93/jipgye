@@ -128,7 +128,8 @@ export function regionCheck(byDistrict, official, { base, recent }) {
     const from = at(base[1]);
     const to = at(recent[1]) ?? at(recent[0]);
     const theirs = from && to ? pct(Math.log(to / from)) : null;
-    return { code: r.code, name: r.name, ours, official: theirs, gap: ours !== null && theirs !== null ? Math.round((ours - theirs) * 10) / 10 : null };
+    // cells는 위에서 이미 모은 칸 수 그대로다(#172). ours가 null이어도 몇 칸이었는지는 남긴다.
+    return { code: r.code, name: r.name, cells: values.length, ours, official: theirs, gap: ours !== null && theirs !== null ? Math.round((ours - theirs) * 10) / 10 : null };
   });
 }
 

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T02:18:12.435Z",
+  "updatedAt": "2026-10-10T09:20:57.124Z",
   "end": "2026-10-08",
   "deals": 129066,
   "main": {
@@ -18,7 +18,8 @@
     "aboveOld": 65.2,
     "recordSameFloor": 56,
     "recordSameFloorCount": 7236,
-    "allSameFloor": 72.4
+    "allSameFloor": 72.4,
+    "allSameFloorCount": 27646
   },
   "robust": [
     {
@@ -38,6 +39,7 @@
       "recordSameFloor": 55.7,
       "recordSameFloorCount": 9601,
       "allSameFloor": 72.8,
+      "allSameFloorCount": 36748,
       "counted": true,
       "holds": true
     },
@@ -58,6 +60,7 @@
       "recordSameFloor": 58.5,
       "recordSameFloorCount": 8914,
       "allSameFloor": 73.7,
+      "allSameFloorCount": 31704,
       "counted": true,
       "holds": true
     },
@@ -78,6 +81,7 @@
       "recordSameFloor": 56.3,
       "recordSameFloorCount": 7584,
       "allSameFloor": 72.5,
+      "allSameFloorCount": 28351,
       "counted": true,
       "holds": true
     },
@@ -98,6 +102,7 @@
       "recordSameFloor": 59.3,
       "recordSameFloorCount": 6677,
       "allSameFloor": 73.3,
+      "allSameFloorCount": 22715,
       "counted": true,
       "holds": true
     },
@@ -118,6 +123,7 @@
       "recordSameFloor": 55.3,
       "recordSameFloorCount": 8884,
       "allSameFloor": 72.7,
+      "allSameFloorCount": 35081,
       "counted": true,
       "holds": true
     },
@@ -138,6 +144,7 @@
       "recordSameFloor": 57.8,
       "recordSameFloorCount": 8054,
       "allSameFloor": 73.6,
+      "allSameFloorCount": 29771,
       "counted": true,
       "holds": true
     },
@@ -158,6 +165,7 @@
       "recordSameFloor": 56,
       "recordSameFloorCount": 7236,
       "allSameFloor": 72.4,
+      "allSameFloorCount": 27646,
       "counted": true,
       "holds": true
     },
@@ -178,6 +186,7 @@
       "recordSameFloor": 58.9,
       "recordSameFloorCount": 6273,
       "allSameFloor": 73.3,
+      "allSameFloorCount": 21929,
       "counted": true,
       "holds": true
     },
@@ -198,6 +207,7 @@
       "recordSameFloor": 54.5,
       "recordSameFloorCount": 7601,
       "allSameFloor": 72.5,
+      "allSameFloorCount": 31257,
       "counted": true,
       "holds": true
     },
@@ -218,6 +228,7 @@
       "recordSameFloor": 56.7,
       "recordSameFloorCount": 6645,
       "allSameFloor": 73.2,
+      "allSameFloorCount": 25680,
       "counted": true,
       "holds": true
     },
@@ -238,6 +249,7 @@
       "recordSameFloor": 55.3,
       "recordSameFloorCount": 6492,
       "allSameFloor": 72.3,
+      "allSameFloorCount": 25716,
       "counted": true,
       "holds": true
     },
@@ -258,21 +270,22 @@
       "recordSameFloor": 57.8,
       "recordSameFloorCount": 5482,
       "allSameFloor": 73,
+      "allSameFloorCount": 19962,
       "counted": true,
       "holds": true
     }
   ],
   "lead": {
-    "ko": "신고가 다음에 같은 단지 같은 평형에서 거래된 값이 그 신고가 이상이었던 것은 44.3%입니다. 아무 거래 뒤의 다음 거래는 60.2%입니다. 그래도 그 다음 거래의 65.2%는 그 전 최고가는 넘었습니다 — 바닥은 올랐지만, 신고가 한 건이 곧 새 시세는 아니었습니다.",
-    "en": "After a record high, the next sale in the same complex and unit type matched or beat it only 44.3% of the time — after any sale it is 60.2%. Yet 65.2% of those next sales still cleared the previous high. The floor moved up; the single record sale was not the new price."
+    "ko": "신고가 다음에 같은 단지 같은 평형에서 거래된 값이 그 신고가 이상이었던 것은 다음 거래가 있는 신고가 16,486건 중 44.3%입니다. 아무 거래 뒤의 다음 거래는 52,779건 중 60.2%입니다. 그래도 그 다음 거래 16,486건 중 65.2%는 그 전 최고가는 넘었습니다 — 바닥은 올랐지만, 신고가 한 건이 곧 새 시세는 아니었습니다.",
+    "en": "After a record high, the next sale in the same complex and unit type matched or beat it only 44.3% of the time (16,486 record highs with a next sale) — after any sale it is 60.2% (52,779 sales). Yet 65.2% of those 16,486 next sales still cleared the previous high. The floor moved up; the single record sale was not the new price."
   },
   "control": {
-    "ko": "위쪽 끝이라서 생기는 몫도 있습니다. 그 전 최고가의 98~100%였던 거래(거의 최고가) 뒤에는 다음 거래가 그 값 이상인 것이 54.2%였습니다 — 신고가(44.3%)는 그보다도 낮습니다. 층 때문만도 아닙니다. 다음 거래가 같거나 높은 층일 때만 세면 신고가 뒤는 56%, 아무 거래 뒤는 72.4%입니다.",
-    "en": "Part of this is just being at the top: sales within 2% below the previous high were followed by an equal or higher sale 54.2% of the time — a record high (44.3%) still falls short of that. It is not just floors either: counting only next sales on the same or a higher floor, record highs are followed 56% of the time and any sale 72.4%."
+    "ko": "위쪽 끝이라서 생기는 몫도 있습니다. 그 전 최고가의 98~100%였던 거래(거의 최고가) 뒤에는 다음 거래가 그 값 이상인 것이 10,038건 중 54.2%였습니다 — 신고가(16,486건 중 44.3%)는 그보다도 낮습니다. 층 때문만도 아닙니다. 다음 거래가 같거나 높은 층일 때만 세면 신고가 뒤는 7,236건 중 56%, 아무 거래 뒤는 27,646건 중 72.4%입니다.",
+    "en": "Part of this is just being at the top: sales within 2% below the previous high were followed by an equal or higher sale 54.2% of the time (10,038 sales) — a record high (44.3%, 16,486 record highs) still falls short of that. It is not just floors either: counting only next sales on the same or a higher floor, record highs are followed 56% of the time (7,236 record highs) and any sale 72.4% (27,646 sales)."
   },
   "survival": {
-    "ko": "90일 넘게 지난 신고가만 셉니다. 그 가운데 19.6%는 90일 안에 다음 거래가 없었습니다 — 빼지 않고 그렇게 셉니다. 다음 거래가 있는 것만 세면 빨리 다시 팔리는 단지만 남습니다.",
-    "en": "Only record highs at least 90 days old are counted, and 19.6% of them had no following sale within 90 days — they are counted as such rather than dropped, so fast-trading complexes are not over-represented."
+    "ko": "90일 넘게 지난 신고가만 셉니다. 그 20,496건 가운데 19.6%는 90일 안에 다음 거래가 없었습니다 — 빼지 않고 그렇게 셉니다. 다음 거래가 있는 것만 세면 빨리 다시 팔리는 단지만 남습니다.",
+    "en": "Only record highs at least 90 days old are counted, and 19.6% of those 20,496 had no following sale within 90 days — they are counted as such rather than dropped, so fast-trading complexes are not over-represented."
   },
   "tables": {
     "robust": {

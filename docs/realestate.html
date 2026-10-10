@@ -706,7 +706,17 @@ function renderOverall(realestate) {
           card(t("thArea")(areaM2), formatEok(areaPrice(valueOf(sale, "sale"))), "") +
           card(t("thCount"), escapeHtml(t("countUnit")(sale.transactionCount)), "")
         : card(t("thSale"), "-", "")) +
-      (ratio ? card(t("thRatio"), formatPercent(ratio.ratio), "") : "") +
+      (ratio
+        ? card(
+            t("thRatio"),
+            formatPercent(ratio.ratio),
+            // 값을 낸 매매·전세 신고 건수(#172). scripts/prerender.mjs의 ratioBasis와 같은 문자열이다.
+            escapeHtml(
+              `${t("thSale")} ${t("countUnit")(resolveMetric(overall, "sale").metric.transactionCount)} · ` +
+                `${t("thJeonse")} ${t("countUnit")(resolveMetric(overall, "jeonse").metric.transactionCount)}`
+            )
+          )
+        : "") +
       complexCard();
     return;
   }

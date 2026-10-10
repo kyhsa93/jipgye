@@ -123,6 +123,7 @@ export function measure(cells, end, { prior = MIN_PRIOR, span = MIN_SPAN_DAYS, w
     recordSameFloor: out.recordSameFloor.length ? round1(share(out.recordSameFloor)) : null,
     recordSameFloorCount: out.recordSameFloor.length,
     allSameFloor: out.allSameFloor.length ? round1(share(out.allSameFloor)) : null,
+    allSameFloorCount: out.allSameFloor.length,
   };
 }
 
@@ -144,6 +145,10 @@ export function grid(cells, end) {
 
 // --- 문장 ------------------------------------------------------------------------
 
+// 문장 속 비율마다 그 분모(건수)를 같은 문장 안에 붙인다(#172). 분모는 measure()가 이미 센 값이다:
+// record·aboveOld는 withNext, all은 allCount, near는 nearCount, 같은 층 이상은 *SameFloorCount, none은 records.
+const num = (n, locale) => n.toLocaleString(locale === "en" ? "en-US" : "ko-KR");
+
 export function leadSentence(main, robust, locale = "ko") {
   if (!main || main.withNext < MIN_RECORDS) {
     return locale === "en"
@@ -154,30 +159,30 @@ export function leadSentence(main, robust, locale = "ko") {
   const stable = counted.length > 0 && counted.every((r) => r.holds);
   if (holds(main) && stable) {
     return locale === "en"
-      ? `After a record high, the next sale in the same complex and unit type matched or beat it only ${main.record}% of the time — after any sale it is ${main.all}%. ` +
-          `Yet ${main.aboveOld}% of those next sales still cleared the previous high. The floor moved up; the single record sale was not the new price.`
-      : `신고가 다음에 같은 단지 같은 평형에서 거래된 값이 그 신고가 이상이었던 것은 ${main.record}%입니다. 아무 거래 뒤의 다음 거래는 ${main.all}%입니다. ` +
-          `그래도 그 다음 거래의 ${main.aboveOld}%는 그 전 최고가는 넘었습니다 — 바닥은 올랐지만, 신고가 한 건이 곧 새 시세는 아니었습니다.`;
+      ? `After a record high, the next sale in the same complex and unit type matched or beat it only ${main.record}% of the time (${num(main.withNext, locale)} record highs with a next sale) — after any sale it is ${main.all}% (${num(main.allCount, locale)} sales). ` +
+          `Yet ${main.aboveOld}% of those ${num(main.withNext, locale)} next sales still cleared the previous high. The floor moved up; the single record sale was not the new price.`
+      : `신고가 다음에 같은 단지 같은 평형에서 거래된 값이 그 신고가 이상이었던 것은 다음 거래가 있는 신고가 ${num(main.withNext, locale)}건 중 ${main.record}%입니다. 아무 거래 뒤의 다음 거래는 ${num(main.allCount, locale)}건 중 ${main.all}%입니다. ` +
+          `그래도 그 다음 거래 ${num(main.withNext, locale)}건 중 ${main.aboveOld}%는 그 전 최고가는 넘었습니다 — 바닥은 올랐지만, 신고가 한 건이 곧 새 시세는 아니었습니다.`;
   }
   return locale === "en"
-    ? `After a record high the next sale matched or beat it ${main.record}% of the time, against ${main.all}% after any sale. Across the threshold settings below the gap does not hold up, so this page does not claim record highs overshoot.`
-    : `신고가 다음 거래가 그 값 이상이었던 것은 ${main.record}%, 아무 거래 뒤는 ${main.all}%입니다. 아래 문턱을 바꿔 세면 이 차이가 유지되지 않아, 이 화면은 "신고가가 시세를 앞질렀다"고 말하지 않습니다.`;
+    ? `After a record high the next sale matched or beat it ${main.record}% of the time (${num(main.withNext, locale)} record highs with a next sale), against ${main.all}% after any sale (${num(main.allCount, locale)} sales). Across the threshold settings below the gap does not hold up, so this page does not claim record highs overshoot.`
+    : `신고가 다음 거래가 그 값 이상이었던 것은 다음 거래가 있는 신고가 ${num(main.withNext, locale)}건 중 ${main.record}%, 아무 거래 뒤는 ${num(main.allCount, locale)}건 중 ${main.all}%입니다. 아래 문턱을 바꿔 세면 이 차이가 유지되지 않아, 이 화면은 "신고가가 시세를 앞질렀다"고 말하지 않습니다.`;
 }
 
 export function controlSentence(main, locale = "ko") {
   if (!main || main.withNext < MIN_RECORDS) return null;
   return locale === "en"
-    ? `Part of this is just being at the top: sales within 2% below the previous high were followed by an equal or higher sale ${main.near}% of the time — a record high (${main.record}%) still falls short of that. ` +
-        `It is not just floors either: counting only next sales on the same or a higher floor, record highs are followed ${main.recordSameFloor}% of the time and any sale ${main.allSameFloor}%.`
-    : `위쪽 끝이라서 생기는 몫도 있습니다. 그 전 최고가의 98~100%였던 거래(거의 최고가) 뒤에는 다음 거래가 그 값 이상인 것이 ${main.near}%였습니다 — 신고가(${main.record}%)는 그보다도 낮습니다. ` +
-        `층 때문만도 아닙니다. 다음 거래가 같거나 높은 층일 때만 세면 신고가 뒤는 ${main.recordSameFloor}%, 아무 거래 뒤는 ${main.allSameFloor}%입니다.`;
+    ? `Part of this is just being at the top: sales within 2% below the previous high were followed by an equal or higher sale ${main.near}% of the time (${num(main.nearCount, locale)} sales) — a record high (${main.record}%, ${num(main.withNext, locale)} record highs) still falls short of that. ` +
+        `It is not just floors either: counting only next sales on the same or a higher floor, record highs are followed ${main.recordSameFloor}% of the time (${num(main.recordSameFloorCount, locale)} record highs) and any sale ${main.allSameFloor}% (${num(main.allSameFloorCount, locale)} sales).`
+    : `위쪽 끝이라서 생기는 몫도 있습니다. 그 전 최고가의 98~100%였던 거래(거의 최고가) 뒤에는 다음 거래가 그 값 이상인 것이 ${num(main.nearCount, locale)}건 중 ${main.near}%였습니다 — 신고가(${num(main.withNext, locale)}건 중 ${main.record}%)는 그보다도 낮습니다. ` +
+        `층 때문만도 아닙니다. 다음 거래가 같거나 높은 층일 때만 세면 신고가 뒤는 ${num(main.recordSameFloorCount, locale)}건 중 ${main.recordSameFloor}%, 아무 거래 뒤는 ${num(main.allSameFloorCount, locale)}건 중 ${main.allSameFloor}%입니다.`;
 }
 
 export function survivalSentence(main, locale = "ko") {
   if (!main || !main.records) return null;
   return locale === "en"
-    ? `Only record highs at least ${main.wait} days old are counted, and ${main.none}% of them had no following sale within ${main.wait} days — they are counted as such rather than dropped, so fast-trading complexes are not over-represented.`
-    : `${main.wait}일 넘게 지난 신고가만 셉니다. 그 가운데 ${main.none}%는 ${main.wait}일 안에 다음 거래가 없었습니다 — 빼지 않고 그렇게 셉니다. 다음 거래가 있는 것만 세면 빨리 다시 팔리는 단지만 남습니다.`;
+    ? `Only record highs at least ${main.wait} days old are counted, and ${main.none}% of those ${num(main.records, locale)} had no following sale within ${main.wait} days — they are counted as such rather than dropped, so fast-trading complexes are not over-represented.`
+    : `${main.wait}일 넘게 지난 신고가만 셉니다. 그 ${num(main.records, locale)}건 가운데 ${main.none}%는 ${main.wait}일 안에 다음 거래가 없었습니다 — 빼지 않고 그렇게 셉니다. 다음 거래가 있는 것만 세면 빨리 다시 팔리는 단지만 남습니다.`;
 }
 
 const TABLE = {

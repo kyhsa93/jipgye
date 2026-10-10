@@ -740,6 +740,14 @@ export function realestateTableHtml(realestate, kind = null, district = null) {
   );
 }
 
+// 전세가율 카드 밑에 그 값을 낸 매매·전세 신고 건수를 적는다(#172). 값은 이 두 평균의 비다.
+// 브라우저의 renderOverall(docs/realestate.html)이 같은 문자열을 만든다.
+const ratioBasis = (entry) =>
+  escapeHtml(
+    `${RE_LABELS.sale} ${reCount(resolveMetric(entry, "sale").metric.transactionCount)} · ` +
+      `${RE_LABELS.jeonse} ${reCount(resolveMetric(entry, "jeonse").metric.transactionCount)}`
+  );
+
 export function realestateOverallHtml(realestate, kind = null, district = null, spread = null) {
   const overall = district
     ? (realestate?.districts ?? []).find((d) => d.name === district)
@@ -773,7 +781,7 @@ export function realestateOverallHtml(realestate, kind = null, district = null, 
           card(RE_LABELS.area, reEok(areaPrice(valueOf(sale, "sale"))), "") +
           card(RE_LABELS.count, escapeHtml(reCount(sale.transactionCount)), "")
         : card(RE_LABELS.sale, "-", "")) +
-      (ratio ? card(RE_LABELS.ratio, formatPercent(ratio.ratio), "") : "") +
+      (ratio ? card(RE_LABELS.ratio, formatPercent(ratio.ratio), ratioBasis(overall)) : "") +
       complexCard()
     );
   }
