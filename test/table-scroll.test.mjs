@@ -100,6 +100,33 @@ test("CSS: .table-scroll에도 양끝 페이드 mask 규칙이 있다", async ()
   for (const sel of [".table-scroll.scroll-end:not(.scroll-start)", ".table-scroll.scroll-start:not(.scroll-end)", ".table-scroll.scroll-start.scroll-end"]) {
     assert.ok(css.includes(sel), `${sel} 규칙이 없다`);
   }
-  assert.match(css, /\.table-scroll:focus-visible\s*\{[^}]*outline-offset:\s*-2px/, "초점 테두리가 mask에 잘린다");
   assert.match(css, /\[tabindex\]:focus-visible\s*\{[^}]*outline:/, "tabindex 초점 표시 규칙이 없다");
+});
+
+// 규칙이 있는지가 아니라 캐스케이드를 거친 최종 값을 본다: 초점 받은 <div class="table-scroll" tabindex="0">에
+// 걸리는 :focus-visible 규칙 중 명시도가 가장 높은(같으면 소스에서 뒤인) 것의 outline-offset.
+function finalFocusOffset(css) {
+  const body = css.replace(/\/\*[\s\S]*?\*\//g, "");
+  const allowed = new Set([".table-scroll", "[tabindex]", ":focus-visible"]);
+  let best = null;
+  let order = 0;
+  for (const m of body.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    order++;
+    const off = m[2].match(/outline-offset:\s*(-?\d+(?:\.\d+)?)px/);
+    if (!off) continue;
+    for (const sel of m[1].split(",").map((s) => s.trim())) {
+      const parts = sel.match(/\.[\w-]+|\[[^\]]+\]|:[\w-]+/g) ?? [];
+      // 이 요소에 걸릴 수 있는 선택자만: 태그 없이 위 세 조각으로만 이뤄진 것.
+      if (parts.join("") !== sel || !parts.includes(":focus-visible") || !parts.every((p) => allowed.has(p))) continue;
+      const spec = parts.length; // 클래스·속성·의사 클래스는 모두 (0,1,0)씩
+      if (!best || spec > best.spec || (spec === best.spec && order > best.order)) best = { spec, order, value: Number(off[1]) };
+    }
+  }
+  return best?.value;
+}
+
+test("CSS: 초점 받은 .table-scroll의 최종 outline-offset이 음수다(뒤 규칙이 덮지 않는다)", async () => {
+  const css = await readFile(path.join(docs, "style.css"), "utf8");
+  const v = finalFocusOffset(css);
+  assert.ok(v !== undefined && v < 0, `최종 outline-offset=${v}px - mask(border-box)에 테두리가 잘린다`);
 });
