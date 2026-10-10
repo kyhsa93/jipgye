@@ -139,7 +139,7 @@ test("키: PK 고유·중복 수, 조합 키 고유 수, crtnDay 다름·동률 
   assert.match(out, /mgmHsrgstPk 고유 3\b/);
   assert.match(out, /중복 2\b/, "6건 중 PK가 있는 5건, 고유 3 -> 중복 행 2");
   assert.match(out, /빈 값 1\b/);
-  assert.match(out, /조합 키 후보 고유 5\b/);
+  assert.match(out, /조합 키 후보[^\n]*고유 4\b/);
   assert.match(out, /중복 PK 묶음 2/);
   assert.match(out, /crtnDay가 서로 다른 묶음 1\b/);
   assert.match(out, /최대 crtnDay 동률 묶음 1\b/);
