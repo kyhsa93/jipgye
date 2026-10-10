@@ -180,7 +180,9 @@ export function districtRows(byDistrict, pool) {
   const rows = [];
   for (const [district, ratios] of byDistrict) {
     const band = ratios.length >= MIN_CELLS ? noiseBand(pool, ratios.length) : null;
-    const value = round1(median(ratios));
+    // 칸이 문턱(MIN_CELLS)에 못 미치면 값을 비우고 칸 수만 남긴다. 이 사이트의 다른 화면
+    // (renewal-vs-new·switch-house)이 표본이 모자란 칸을 비우는 것과 같은 규칙이다(#171).
+    const value = band ? round1(median(ratios)) : null;
     rows.push({
       district,
       cells: ratios.length,
@@ -189,7 +191,13 @@ export function districtRows(byDistrict, pool) {
       distinct: Boolean(band && (value < band.low || value > band.high)),
     });
   }
-  return rows.sort((a, b) => a.median - b.median || a.district.localeCompare(b.district, "ko"));
+  // 값이 빈 구는 맨 뒤로 보낸다. null을 숫자로 빼면 0으로 읽혀 순서가 뒤섞인다.
+  return rows.sort(
+    (a, b) =>
+      (a.median === null) - (b.median === null) ||
+      (a.median ?? 0) - (b.median ?? 0) ||
+      a.district.localeCompare(b.district, "ko")
+  );
 }
 
 const size = (value) => Math.abs(value).toFixed(1);
