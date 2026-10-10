@@ -222,3 +222,50 @@ test("단지 카드: 실패 표시는 공용 규칙으로만 만든다 - 페이�
   const html = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
   assert.ok(!html.includes('id="load-retry-price"'), "load-retry-price 마크업을 직접 썼다");
 });
+
+// --- ?apt= 이름을 풀 수 없는 경로 (#191) ---
+// 최근 두 달 목록에도 6개월 가격 파일에도 이름이 없고 가격 파일마저 실패하면, 이전에는 카드가 아예
+// 안 그려져 "그 단지가 없다"와 구분되지 않았다. 없는 단지는 그대로 조용해야 하고(404·받았는데 이름 없음),
+// 실패일 때만 실패 문구 + 재시도가 나와야 한다.
+const UNKNOWN_QUERY = "?district=노원구&apt=없는단지가나다라마바사";
+
+test("단지 카드(이름 미해결): 가격 파일이 거부되면 카드 자리에 실패 문구(한·영) + 재시도 단추가 나온다", async () => {
+  for (const [locale, error, retry] of [
+    ["ko", "단지 가격을 불러오지 못했습니다.", "다시 시도"],
+    ["en", "Could not load complex prices.", "Retry"],
+  ]) {
+    const page = await dealSearch(UNKNOWN_QUERY, { locale, network: { failComplexPrice: true } });
+    await page.settle();
+    // 가짜 DOM은 없는 id도 빈 요소로 돌려주므로 카드 HTML에 자리가 실제로 있는지를 따로 본다.
+    assert.ok(page.byId("complex-card").innerHTML.includes('id="complex-price-status"'), `${locale}: 카드가 안 그려져 실패 자리가 없다`);
+    assert.ok(slotHtml(page).includes(error), `${locale}: 이름 미해결 경로에 실패 문구가 없다`);
+    assert.match(slotHtml(page), new RegExp(`<button type="button" id="load-retry-price">${retry}</button>`), `${locale}: 재시도 단추가 없다`);
+  }
+});
+
+test("단지 카드(이름 미해결): 재시도가 성공하면 실패 문구가 사라지고 없는 단지로 끝난다", async () => {
+  const net = { failComplexPrice: true };
+  const price = await readJson("complex-price-nowon");
+  const page = await dealSearch(UNKNOWN_QUERY, { network: net, complexPrices: { 노원구: price } });
+  await page.settle();
+  assert.ok(page.byId("complex-card").innerHTML.includes('id="complex-price-status"'), "카드가 안 그려져 실패 자리가 없다");
+  assert.ok(slotHtml(page).includes("load-retry-price"));
+
+  net.failComplexPrice = false;
+  page.byId("load-retry-price").dispatch("click");
+  await page.settle();
+
+  const card = page.byId("complex-card").innerHTML;
+  assert.ok(!card.includes("complex-price-status") && !card.includes("load-retry"), "재시도가 성공했는데 실패 자리가 남았다");
+});
+
+test("단지 카드(이름 미해결): 없는 단지는 실패로 보이지 않는다 - 가격 파일 404, 받았는데 이름 없음 모두", async () => {
+  const price = await readJson("complex-price-nowon");
+  for (const [label, extra] of [["404", {}], ["받았는데 이름 없음", { complexPrices: { 노원구: price } }]]) {
+    const page = await dealSearch(UNKNOWN_QUERY, extra);
+    await page.settle();
+    const card = page.byId("complex-card").innerHTML;
+    assert.ok(!card.includes("complex-price-status"), `${label}: 없는 단지를 실패 자리로 그렸다`);
+    assert.ok(!card.includes("load-retry"), `${label}: 없는 단지에 재시도 단추를 보였다`);
+  }
+});
