@@ -519,6 +519,11 @@ const cache = { budget: null, search: null };
 
 const fullDeals = new Map();
 const fullRents = new Map();
+// 최근 두 달 거래(deals-*)·전월세(rents-*) 목록을 받다가 실패한 구. 키를 fullDeals/fullRents에 남기지 않는 것은
+// 그대로다(키가 없어야 다음 refresh가 다시 받는다). 다만 그러면 "받는 중"·"파일 없음"과 실패가 구분되지 않아
+// 단지 카드와 결과가 조용히 빠졌다(#196). 404(null)는 실패가 아니라 fullDeals/fullRents의 null이 그대로 말한다.
+const dealsFailed = new Set();
+const rentsFailed = new Set();
 // 단지·평형별 매매가 범위(scripts/build-complex-price.mjs). 계산은 빌드가 끝냈고 여기서는 그리기만 한다.
 // 구 이름 -> 단지 가격 파일. 값이 셋 중 하나다: 파일 객체(받음), null(파일이 아직 없음 - 404),
 // COMPLEX_FAILED(받다가 실패). 키가 없으면 아직 받는 중이다. 실패를 "받는 중"과 같은 상태(키 없음)로
@@ -660,7 +665,13 @@ async function loadDistrictDeals(name) {
   try {
     const file = await loadJson(`deals-${slug}`);
     fullDeals.set(name, file?.deals ?? null);
-  } catch {
+    dealsFailed.delete(name);
+  } catch (error) {
+    dealsFailed.add(name);
+    window.analytics?.event("exception", {
+      description: `load deals-${slug}: ${error?.message ?? error}`.slice(0, 100),
+      fatal: false,
+    });
   }
 }
 
@@ -673,7 +684,13 @@ async function loadDistrictRents(name) {
   try {
     const file = await loadJson(`rents-${slug}`);
     fullRents.set(name, file?.deals ?? null);
-  } catch {
+    rentsFailed.delete(name);
+  } catch (error) {
+    rentsFailed.add(name);
+    window.analytics?.event("exception", {
+      description: `load rents-${slug}: ${error?.message ?? error}`.slice(0, 100),
+      fatal: false,
+    });
   }
 }
 
@@ -1377,6 +1394,21 @@ function renderGroups(box) {
     `<p class="content-notice">${escapeHtml(t("groupNote"))}</p>`;
 }
 
+// 거래 목록(deals-*/rents-*)을 못 받았을 때 결과 자리에서 말한다(#196). 마크업은 공용 규칙이 만든다.
+// 실패한 구를 뺀 결과를 내놓지 않는다 - 빠진 구가 있는 목록은 완전한 것처럼 읽힌다(renderGroups와 같은 선).
+function renderListFailure(box, view, retryId) {
+  window.loadState.showFailure(box, {
+    message: t("loadError"),
+    retryLabel: t("retry"),
+    retryId,
+    wrap: (inner) => `<p class="empty">${inner}</p>`,
+    onRetry: () => {
+      window.analytics?.event("load_retry", { view });
+      refresh();
+    },
+  });
+}
+
 function renderResultBody() {
   const box = document.getElementById("search-result");
 
@@ -1389,12 +1421,21 @@ function renderResultBody() {
       box.innerHTML = `<p class="budget-empty">${escapeHtml(t("pickDistrict"))}</p>`;
       return;
     }
+    if (rentsFailed.has(district)) {
+      renderListFailure(box, "rents", "load-retry-rents");
+      return;
+    }
     renderRent(box);
     return;
   }
 
   if (groupView) {
     renderGroups(box);
+    return;
+  }
+
+  if (needFull() && scopeNames().some((name) => dealsFailed.has(name))) {
+    renderListFailure(box, "deals", "load-retry-deals");
     return;
   }
 

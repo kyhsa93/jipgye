@@ -45,8 +45,9 @@ export async function loadDealSearchPage({
   rentPreview,
   complexPrices,
   status = 404,
-  // 실패 주입 손잡이: network.failComplexPrice를 켜면 단지 가격 fetch가 거부된다. 시험이 도중에 끌 수 있다.
-  network = { failComplexPrice: false },
+  // 실패 주입 손잡이: network.failComplexPrice를 켜면 단지 가격 fetch가 거부된다. failDeals/failRents는
+  // 최근 두 달 거래(deals-*)·전월세(rents-*) 목록을 거부한다(#196). 시험이 도중에 끌 수 있다.
+  network = { failComplexPrice: false, failDeals: false, failRents: false },
   locale = "ko",
   query = "",
   analytics,
@@ -89,6 +90,8 @@ export async function loadDealSearchPage({
       const name = String(url).match(/\/([a-z-]+)\.json/)?.[1];
       // 단지 가격 파일만 네트워크 오류로 거부한다(#174 실패 주입). 나머지는 그대로.
       if (network.failComplexPrice && String(name).startsWith("complex-price-")) throw new TypeError("network down");
+      if (network.failDeals && String(name).startsWith("deals-")) throw new TypeError("network down");
+      if (network.failRents && String(name).startsWith("rents-")) throw new TypeError("network down");
       const body = data[name];
       if (!body) return { ok: false, status, json: async () => ({}) };
       return { ok: true, status: 200, json: async () => body };
