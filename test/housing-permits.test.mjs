@@ -303,3 +303,14 @@ test("수집기: 법정동 코드 목록이 없거나 25구를 다 담지 않으
     assert.equal(stub.hits.length, 0);
   } finally { await stub.close(); }
 });
+
+test("법정동 목록: 서울 25구 모두 비어 있지 않은 5자리 코드 배열이고 중복이 없다(loadBjdong 검증과 같은 조건 + 중복)", async () => {
+  const table = JSON.parse(await readFile(new URL("../research/housing-permits/bjdong-seoul.json", import.meta.url), "utf8"));
+  assert.deepEqual(Object.keys(table).sort(), DISTRICTS.map((d) => d.code).sort());
+  for (const { code, name } of DISTRICTS) {
+    const dongs = table[code];
+    assert.ok(Array.isArray(dongs) && dongs.length > 0, `${name} 비어 있음`);
+    assert.ok(dongs.every((d) => /^\d{5}$/.test(d) && d !== "00000"), `${name} 코드 형식`);
+    assert.equal(new Set(dongs).size, dongs.length, `${name} 중복`);
+  }
+});
