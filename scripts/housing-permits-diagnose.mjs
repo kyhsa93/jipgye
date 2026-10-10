@@ -14,7 +14,7 @@
  *  - complete 해소 지표(PREREG 5절 「complete 필드 해소 규칙」)는 지표만 낸다. 어느 필드를 고른다는 판정은 하지 않는다.
  *    분모가 100 미만이면 비율 대신 "판정 불가(분모 부족)"를 낸다. 날짜로 읽지 못한 값은 분자·분모에서 뺀다.
  *
- * 필드 이름은 spec의 FIELDS 가정과 따로, 응답 명세(30개 키)의 실제 이름을 쓴다. FIELDS 매핑은 별도 변경이다.
+ * 필드 이름은 응답 명세(30개 키)의 실제 이름을 직접 쓴다. spec의 FIELDS 매핑은 PREREG 5절과 같은 이름으로 맞춰져 있다(#133).
  */
 import { createHash } from "node:crypto";
 import { MAX_KEYS, parseDay } from "./housing-permits-fold.mjs";
