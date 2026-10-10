@@ -3,7 +3,8 @@
  *
  *   unzip -p 공시가격.zip '*.csv' | node scripts/fetch-official-price.mjs \
  *     --sha256 <페이지 기재값> --rows <헤더 제외 행수> --base-year 2025 \
- *     --license "제한 없음" --page-modified "<상세 페이지 수정일>" --raw-commit <40자리> [--raw-dir raw]
+ *     --license "제한 없음" --page-modified "<상세 페이지 수정일>" \
+ *     --source-page https://www.data.go.kr/data/<번호>/fileData.do --raw-commit <40자리> [--raw-dir raw]
  *
  * 해시·행수·기준연도·이용허락 문자열은 코드에 없고 입력으로만 받는다(페이지 값을 사람이 옮긴다).
  * 어긋나면 아무것도 쓰지 않고 종료 코드 1. 원본 zip·CSV는 저장소 밖에 둔다(C1).
@@ -38,7 +39,7 @@ async function main() {
   const { values: v } = parseArgs({
     options: {
       sha256: { type: "string" }, rows: { type: "string" }, "base-year": { type: "string" },
-      license: { type: "string" }, "page-modified": { type: "string", default: "" },
+      license: { type: "string" }, "page-modified": { type: "string", default: "" }, "source-page": { type: "string", default: "" },
       "raw-commit": { type: "string" }, "raw-dir": { type: "string", default: "raw" },
       "out-dir": { type: "string", default: "raw/official-price" },
     },
@@ -46,7 +47,7 @@ async function main() {
   const input = {
     sha256: v.sha256, zipSha256: process.env.ZIP_SHA256 || undefined,
     rows: Number(v.rows), baseYear: Number(v["base-year"]), license: v.license,
-    pageModified: v["page-modified"], rawCommit: v["raw-commit"],
+    pageModified: v["page-modified"], sourcePage: v["source-page"], rawCommit: v["raw-commit"],
     targets: await targetParcels(v["raw-dir"]),
   };
   const out = await foldStream(process.stdin, input);
