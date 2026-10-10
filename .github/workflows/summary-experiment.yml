@@ -45,7 +45,7 @@ jobs:
           rm -f ollama.tar.zst ollama.tar
 
           ollama serve &
-          for i in $(seq 1 30); do
+          for _ in $(seq 1 30); do
             curl -sf http://127.0.0.1:11434/api/version > /dev/null && break
             sleep 1
           done
