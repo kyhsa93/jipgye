@@ -113,6 +113,7 @@ jobs:
           node scripts/build-news-pages.mjs
           node scripts/build-budget-pages.mjs
           node scripts/build-realestate-pages.mjs
+          node scripts/build-updated-stamp.mjs
 
       # 커밋이 테스트보다 먼저다.
       #
