@@ -21,7 +21,7 @@ const sha = (text) => createHash("sha256").update(text).digest("hex");
 
 const TARGET = parcelKey("11110", "가상동", "12-3");
 const BASE = {
-  license: "제한 없음", baseYear: 2025, pageModified: "2026-10-07",
+  license: "제한 없음", baseYear: 2025, pageModified: "2026-10-07", sourcePage: "https://www.data.go.kr/data/3073746/fileData.do",
   rawCommit: "a".repeat(40), targets: new Set([TARGET]),
 };
 // 호 3개(층 1·1·2) + 호 2개 칸 + 서울 밖 + 대상 아닌 지번
@@ -92,6 +92,14 @@ test("낙제: 해시·행수·기준연도·이용허락 문자열이 어긋나�
   await assert.rejects(run(GOOD, { license: "공공누리 1유형" }), /이용허락범위/);
   await assert.rejects(run(GOOD, { license: "" }), /이용허락범위/);
   await assert.rejects(run(GOOD, { rawCommit: "main" }), /rawCommit/);
+  // C3 보강: 수정일·상세 페이지는 비면 멈춘다, 메타 source는 입력 페이지 번호를 따른다(번호를 코드가 정하지 않는다)
+  await assert.rejects(run(GOOD, { pageModified: "" }), /수정일/);
+  await assert.rejects(run(GOOD, { pageModified: "  " }), /수정일/);
+  await assert.rejects(run(GOOD, { sourcePage: "" }), /상세 페이지 주소/);
+  await assert.rejects(run(GOOD, { sourcePage: "http://www.data.go.kr/data/1/fileData.do" }), /상세 페이지 주소/);
+  await assert.rejects(run(GOOD, { sourcePage: "https://example.com/data/1/fileData.do" }), /상세 페이지 주소/);
+  const other = await run(GOOD, { sourcePage: "https://www.data.go.kr/data/999/fileData.do" });
+  assert.equal(other.meta.source, "data.go.kr/data/999");
   await assert.rejects(run(GOOD, { targets: new Set() }), /대상 지번/);
   const mixed = csv([row("1111010100", "가상동", "12-3", "84.97", "1", "101", "1", "2024")]);
   await assert.rejects(foldStream(Readable.from([Buffer.from(mixed)]), { ...BASE, sha256: sha(mixed), rows: 1 }), /기준연도/);
@@ -196,7 +204,7 @@ test("CLI: 입력이 어긋나면 종료 코드 1이고 아무 파일도 만들�
   await writeFile(path.join(work, "raw", "sale", "11110-202501.json"), JSON.stringify({ items: [{ sggCd: 11110, umdNm: "가상동", jibun: "12-3" }] }));
   const out = path.join(work, "out");
   const args = (extra = {}) => {
-    const a = { "--sha256": sha(GOOD), "--rows": "7", "--base-year": "2025", "--license": "제한 없음", "--raw-commit": "b".repeat(40), "--raw-dir": path.join(work, "raw"), "--out-dir": out, ...extra };
+    const a = { "--sha256": sha(GOOD), "--rows": "7", "--base-year": "2025", "--license": "제한 없음", "--page-modified": "2026-10-07", "--source-page": "https://www.data.go.kr/data/3073746/fileData.do", "--raw-commit": "b".repeat(40), "--raw-dir": path.join(work, "raw"), "--out-dir": out, ...extra };
     return ["scripts/fetch-official-price.mjs", ...Object.entries(a).flat()];
   };
   const spawn = (a) => new Promise((resolve) => {

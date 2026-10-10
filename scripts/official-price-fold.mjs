@@ -13,6 +13,8 @@ import { parcelKey, cellKey, sigunguOf, joinJibun, normalizeJibun, areaKey } fro
 export const MIN_HOUSEHOLDS = 3;
 /** 이용허락범위 문자열 (C3). 이게 아니면 멈춘다. */
 export const REQUIRED_LICENSE = "제한 없음";
+/** 상세 페이지 주소 형식. 연도마다 상세 페이지가 다를 수 있어(2025 쪽 페이지는 미확인) 번호를 코드에 박지 않고 입력으로 받는다. */
+export const SOURCE_PAGE_RE = /^https:\/\/www\.data\.go\.kr\/data\/(\d+)\/fileData\.do$/;
 /** 접힌 파일이 이를 넘으면 닫지 않고 pm에 올린다 (#68 완료 조건 4). */
 export const MAX_OUTPUT_BYTES = 20 * 1024 * 1024;
 
@@ -167,6 +169,9 @@ export function checkInputs(input) {
   if ((input.license ?? "").trim() !== REQUIRED_LICENSE) {
     throw new Error(`이용허락범위가 "${REQUIRED_LICENSE}"이 아니다: "${input.license ?? ""}"`);
   }
+  // 수정일·상세 페이지는 연도마다(2025 파일 포함) 메타에 남는 값이라 비면 멈춘다 (clo C3 권고). 형식은 정하지 않는다 - 페이지 표기 그대로.
+  if (!(input.pageModified ?? "").trim()) throw new Error("상세 페이지 수정일 입력이 비었다");
+  if (!SOURCE_PAGE_RE.test((input.sourcePage ?? "").trim())) throw new Error("상세 페이지 주소가 https://www.data.go.kr/data/<번호>/fileData.do 형식이 아니다");
   if (!/^[0-9a-f]{64}$/i.test(input.sha256 ?? "")) throw new Error("sha256 입력이 64자리 16진수가 아니다");
   if (!Number.isInteger(input.baseYear) || input.baseYear < 2000) throw new Error("기준연도 입력이 올바르지 않다");
   if (!Number.isInteger(input.rows) || input.rows <= 0) throw new Error("행수 입력이 올바르지 않다");
@@ -176,7 +181,7 @@ export function checkInputs(input) {
 
 /**
  * 스트림(Buffer 조각의 async iterable)을 읽어 접는다.
- * input: { sha256, zipSha256?, rows, baseYear, license, pageModified, rawCommit, targets:Set<parcelKey> }
+ * input: { sha256, zipSha256?, rows, baseYear, license, pageModified, sourcePage, rawCommit, targets:Set<parcelKey> }
  * 반환: 쓸 객체(assertDerived 통과 후). 해시·행수·기준연도·열 구성이 어긋나면 던진다.
  */
 export async function foldStream(stream, input) {
@@ -276,10 +281,10 @@ export async function foldStream(stream, input) {
 
   const out = {
     meta: {
-      source: "data.go.kr/data/3073746",
+      source: `data.go.kr/data/${input.sourcePage.trim().match(SOURCE_PAGE_RE)[1]}`,
       baseYear: input.baseYear,
       license: input.license.trim(),
-      pageModified: input.pageModified ?? "",
+      pageModified: input.pageModified.trim(),
       rawCommit: input.rawCommit,
       sourceSha256: want,
       sha256Of,
