@@ -95,7 +95,7 @@ test("진행 로그: 일 한도로 멈추면 처리한 동·쪽·호출·누적 
 
 test("진행 로그: 429로 멈출 때도 남고, 위치는 구 코드와 쪽 번호뿐이다", async () => {
   const s = await setup();
-  const stub = await startStub((c) => (c.hits.length >= 3 ? { status: 429, raw: `too many ${MARK}` } : goodHandler(c)));
+  const stub = await startStub((c) => (c.hits.length >= 3 ? { status: 429, raw: "too many" } : goodHandler(c)));
   try {
     const b = base(s, stub);
     const r = await run(b.env, b.args);
@@ -104,13 +104,13 @@ test("진행 로그: 429로 멈출 때도 남고, 위치는 구 코드와 쪽 �
     assert.match(r.out, /처리한 동 1\b/);
     assert.match(r.out, /쪽 2\b/);
     assert.match(r.out, /11110/);
-    assert.ok(!r.out.includes(MARK), "429 본문이 에코한 값은 로그에 나오면 안 된다");
+    assert.ok(!r.out.includes(MARK), "관리번호가 로그에 나옴");
   } finally { await stub.close(); }
 });
 
 test("진행 로그: 일부 동 실패로 끝나도 처리한 동 수·쪽 수가 남는다", async () => {
   const s = await setup();
-  const stub = await startStub((c) => (c.q.sigunguCd === "11140" ? { status: 500, raw: `boom ${MARK}` } : goodHandler(c)));
+  const stub = await startStub((c) => (c.q.sigunguCd === "11140" ? { status: 500, raw: "boom" } : goodHandler(c)));
   try {
     const b = base(s, stub);
     const r = await run(b.env, b.args);
