@@ -45,6 +45,8 @@ export async function loadDealSearchPage({
   rentPreview,
   complexPrices,
   status = 404,
+  // 실패 주입 손잡이: network.failComplexPrice를 켜면 단지 가격 fetch가 거부된다. 시험이 도중에 끌 수 있다.
+  network = { failComplexPrice: false },
   locale = "ko",
   query = "",
   analytics,
@@ -85,6 +87,8 @@ export async function loadDealSearchPage({
     setTimeout, clearTimeout,
     fetch: async (url) => {
       const name = String(url).match(/\/([a-z-]+)\.json/)?.[1];
+      // 단지 가격 파일만 네트워크 오류로 거부한다(#174 실패 주입). 나머지는 그대로.
+      if (network.failComplexPrice && String(name).startsWith("complex-price-")) throw new TypeError("network down");
       const body = data[name];
       if (!body) return { ok: false, status, json: async () => ({}) };
       return { ok: true, status: 200, json: async () => body };
@@ -130,6 +134,8 @@ export async function loadDealSearchPage({
   sandbox.self = sandbox;
   sandbox.globalThis = sandbox;
   vm.createContext(sandbox);
+  const loadState = await readFile(path.join(root, "docs/load-state.js"), "utf8");
+  new vm.Script(loadState, { filename: "docs/load-state.js" }).runInContext(sandbox);
   new vm.Script(script, { filename: "docs/deal-search.html:inline" }).runInContext(sandbox);
 
   await settle();

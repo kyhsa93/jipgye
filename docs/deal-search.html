@@ -140,6 +140,7 @@
 <script src="./nav.js" defer></script>
 <script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
+<script src="./load-state.js"></script>
 <script>
 const T = {
   ko: {
@@ -261,6 +262,7 @@ const T = {
     summary: (scope, count) => `${scope}에서 ${count.toLocaleString("ko-KR")}건이 거래됐습니다.`,
     scopeOf: (parts) => parts.join(" "),
     loading: "찾는 중...",
+    groupLoadError: "단지 가격을 불러오지 못했습니다.",
     detailNotReady:
       "면적·연식·단지명 조건은 지역별 실거래 자료가 있어야 걸 수 있는데, 아직 받지 못했습니다. 지역과 예산으로 먼저 찾아보세요.",
     periods: (periods) => `${periods} 신고분 기준`,
@@ -406,6 +408,7 @@ const T = {
     summary: (scope, count) => `${count.toLocaleString("en-US")} deals filed in ${scope}.`,
     scopeOf: (parts) => parts.join(", "),
     loading: "Searching...",
+    groupLoadError: "Could not load complex prices.",
     detailNotReady:
       "Size, age and complex-name conditions need the per-district transaction files, which have not arrived yet. Try district and budget first.",
     periods: (periods) => `Filings for ${periods}`,
@@ -517,7 +520,14 @@ const cache = { budget: null, search: null };
 const fullDeals = new Map();
 const fullRents = new Map();
 // 단지·평형별 매매가 범위(scripts/build-complex-price.mjs). 계산은 빌드가 끝냈고 여기서는 그리기만 한다.
+// 구 이름 -> 단지 가격 파일. 값이 셋 중 하나다: 파일 객체(받음), null(파일이 아직 없음 - 404),
+// COMPLEX_FAILED(받다가 실패). 키가 없으면 아직 받는 중이다. 실패를 "받는 중"과 같은 상태(키 없음)로
+// 두면 "찾는 중..."이 영구히 남는다(#174).
 const complexPrices = new Map();
+const COMPLEX_FAILED = Object.freeze({ failed: true });
+const complexFailed = (name) => complexPrices.get(name) === COMPLEX_FAILED;
+// 이미 받았고 쓸 수 있는가. 실패는 받은 것이 아니라서 다음 refresh가 다시 받는다.
+const complexLoaded = (name) => complexPrices.has(name) && !complexFailed(name);
 
 const params = new URLSearchParams(location.search);
 let kind = KINDS.includes(params.get("kind")) ? params.get("kind") : "sale";
@@ -675,7 +685,12 @@ async function loadComplexPrices(name) {
   }
   try {
     complexPrices.set(name, await loadJson(`complex-price-${slug}`));
-  } catch {
+  } catch (error) {
+    complexPrices.set(name, COMPLEX_FAILED);
+    window.analytics?.event("exception", {
+      description: `load complex-price-${slug}: ${error?.message ?? error}`.slice(0, 100),
+      fatal: false,
+    });
   }
 }
 
@@ -1166,7 +1181,7 @@ function complexPriceHtml(file, apt) {
 function complexCardHtml() {
   if (!aptTerm() || district === ALL) return "";
   const sales = fullDeals.get(district);
-  const prices = complexPrices.get(district);
+  const prices = complexFailed(district) ? null : complexPrices.get(district);
   // 두 달 목록에 없어도 여섯 달 안에 거래가 있으면 범위는 낼 수 있다. 이름은 양쪽에서 찾는다.
   const names = [...(sales ?? []), ...Object.keys(prices?.cells ?? {}).map((apt) => ({ apt }))];
   const apt = resolveComplex(aptTerm(), names);
@@ -1250,7 +1265,7 @@ function groupMatches(row, skip = new Set()) {
 function groupRows() {
   const rows = [];
   for (const name of scopeNames()) {
-    const file = complexPrices.get(name);
+    const file = complexFailed(name) ? null : complexPrices.get(name);
     for (const [apt, areas] of Object.entries(file?.cells ?? {})) {
       for (const [area, cell] of Object.entries(areas)) {
         if (!cell.median) continue;
@@ -1277,6 +1292,20 @@ function groupItemHtml(row) {
 }
 
 function renderGroups(box) {
+  // 실패가 로드 중보다 먼저다. 실패한 구가 하나라도 있으면 그 구를 뺀 순위를 내놓지 않는다 -
+  // 빠진 구가 있는 "단지 순위"는 완전한 것처럼 읽힌다.
+  if (scopeNames().some(complexFailed)) {
+    window.loadState.showFailure(box, {
+      message: t("groupLoadError"),
+      retryLabel: t("retry"),
+      wrap: (inner) => `<p class="empty">${inner}</p>`,
+      onRetry: () => {
+        window.analytics?.event("load_retry", { view: "group" });
+        refresh();
+      },
+    });
+    return;
+  }
   const missing = scopeNames().filter((name) => !complexPrices.has(name));
   if (missing.length) {
     box.innerHTML = `<p class="search-loading">${escapeHtml(t("loading"))}</p>`;
@@ -1454,7 +1483,7 @@ async function refresh() {
   }
 
   if (groupView) {
-    const missing = scopeNames().filter((name) => !complexPrices.has(name));
+    const missing = scopeNames().filter((name) => !complexLoaded(name));
     if (missing.length) {
       document.getElementById("search-result").innerHTML =
         `<p class="search-loading">${escapeHtml(t("loading"))}</p>`;
@@ -1477,10 +1506,10 @@ async function refresh() {
 
   // 단지 카드는 매매와 전세를 나란히 놓아야 전세가율이 나온다. 매매 화면에서는
   // 전월세 파일을 안 받으므로, 단지를 고른 때에만 그 구의 것을 하나 더 받는다.
-  if (aptTerm() && district !== ALL && (!fullRents.has(district) || !complexPrices.has(district))) {
+  if (aptTerm() && district !== ALL && (!fullRents.has(district) || !complexLoaded(district))) {
     await Promise.all([
       fullRents.has(district) ? null : loadDistrictRents(district),
-      complexPrices.has(district) ? null : loadComplexPrices(district),
+      complexLoaded(district) ? null : loadComplexPrices(district),
     ]);
     if (token !== refreshToken) return;
   }

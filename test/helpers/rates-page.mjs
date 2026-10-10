@@ -105,6 +105,7 @@ export async function loadRatesPage({
   file = "docs/rates.html",
   search = "",
   rates: ratesOverride,
+  locale = "ko",
 } = {}) {
   const html = await readFile(path.join(root, file), "utf8");
   const script = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
@@ -114,7 +115,7 @@ export async function loadRatesPage({
     ratesOverride ?? JSON.parse(await readFile(path.join(root, "docs/data/rates.json"), "utf8"));
   const history = JSON.parse(await readFile(path.join(root, "docs/data/rates-history.json"), "utf8"));
   const { document, byId } = makeDom(html);
-  const store = {};
+  const store = { lang: locale };
 
   const pushed = [];
   const replaced = [];
@@ -140,7 +141,7 @@ export async function loadRatesPage({
       setItem: (k, v) => (store[k] = String(v)),
       removeItem: (k) => delete store[k],
     },
-    navigator: { language: "ko" },
+    navigator: { language: locale },
     location: { search, origin: "https://x", pathname: "/", href: `https://x/${search}` },
     matchMedia: () => ({ matches: false, addEventListener() {} }),
     addEventListener() {},
@@ -162,6 +163,9 @@ export async function loadRatesPage({
   sandbox.self = sandbox;
   sandbox.globalThis = sandbox;
   vm.createContext(sandbox);
+  // 페이지가 <script src="./load-state.js">로 먼저 받는 공용 로드 실패 규칙.
+  const loadState = await readFile(path.join(root, "docs/load-state.js"), "utf8");
+  new vm.Script(loadState, { filename: "docs/load-state.js" }).runInContext(sandbox);
   new vm.Script(script + "\nglobalThis.__state = state;", { filename: "docs/rates.html:inline" }).runInContext(sandbox);
 
   await new Promise((resolve) => setTimeout(resolve, 0));

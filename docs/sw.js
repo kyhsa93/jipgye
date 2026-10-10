@@ -1,4 +1,4 @@
-const CACHE_NAME = "jipgye-v13";
+const CACHE_NAME = "jipgye-v14";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
@@ -8,6 +8,7 @@ const SHELL_ASSETS = [
   "./nav.js",
   "./search.js",
   "./analytics.js",
+  "./load-state.js",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
