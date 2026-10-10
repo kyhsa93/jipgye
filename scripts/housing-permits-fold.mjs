@@ -1,16 +1,23 @@
 /**
  * 사업 단위 목록 -> (시군구, 달) 호수 접기 (#130, #58 단계 A). 순수 함수 - 네트워크도 파일도 안 쓴다.
  *
- * 정의 (ceo 계획 4절, 이슈 #130 본문):
- *  - 같은 사업(FIELDS.id)이 여러 판으로 오면 **최신 판 1건**만 센다(판 날짜 같으면 입력에서 뒤에 온 것).
- *  - 최신 판이 취소(FIELDS.cancel 값 있음)면 그 사업은 어디에도 세지 않는다. meta.cancelled로만 센다.
- *  - 값은 호수 합. 날짜 계열(사업승인·착공·사용승인)마다 그 날짜의 달에 귀속한다.
+ * 정의 (PREREG 5절 명확화 2, 이슈 #133·#146):
+ *  - 접기 키는 FIELDS.id(mgmHsrgstPk) 단독이다. 같은 키가 여러 행이면 **crtnDay가 큰 행 1건**만 센다('최신 생성 행' -
+ *    crtnDay는 판 날짜가 아니라 그 행의 생성일이다). 같으면 totHhldCnt가 큰 쪽, 그래도 같으면 apprvDay가 큰 쪽(PREREG 4항).
+ *    그래도 같은 행끼리는 수집 순서에 기대지 않게 내용(JSON)이 큰 쪽을 쓴다. 동률 건수는 meta.ties로 보고한다.
+ *  - 취소는 이 응답에서 관측할 수 없다(PREREG 「취소 판정」 4항, A안). 취소를 구분하지 않고 접은 사업 전부를 센다.
+ *    meta.cancellation = "관측 불가"이며 0건이 아니다. 취소 계열(cancelledPermit)은 만들지 않는다.
+ *  - 값은 totHhldCnt(호수) 합. 0이거나 숫자가 아닌 사업은 호수 합에 0으로 기여하고 n(사업 수)에는 센다(PREREG 「호수」).
+ *    그 건수를 meta.unitsZero·meta.unitsInvalid로 보고한다.
+ *  - 날짜 계열(permit·start·complete)마다 그 날짜의 달에 귀속한다. complete 필드는 해소 규칙이 정하기 전(FIELDS.dates.complete가
+ *    null)에는 계열을 만들지 않고 meta.completeField = null로 남긴다.
  *  - 그 날짜가 없거나 읽을 수 없는 사업은 버리지 않고 계열별 "미상" 칸(unknown)에 센다.
  *  - 입력 순서가 바뀌어도 같은 결과(키를 정렬해 내보낸다).
- *  - 호수를 읽을 수 없거나 핵심 필드가 없으면 던진다 - 가정한 필드 이름이 틀린 것을 조용히 0으로 접지 않는다.
- *  - 호수 0인 달·구는 만들지 않는다. 0과 결측의 구분은 수집 쪽의 전수 순회 성공 기록이 맡는다.
+ *  - 핵심 필드가 없으면 던진다 - 필드 이름이 틀린 것을 조용히 0으로 접지 않는다.
+ *  - 사업이 있으면 호수가 0이어도 그 칸의 n으로 센다(칸이 생긴다). 사업이 0건인 달·구는 만들지 않고, 0과 결측의 구분은
+ *    수집 쪽의 전수 순회 성공 기록이 맡는다.
  */
-import { FIELDS, PROJECTED_FIELDS, SERIES } from "./housing-permits-spec.mjs";
+import { CANCELLATION, COMPLETE_CANDIDATES, FIELDS, PROJECTED_FIELDS, SERIES } from "./housing-permits-spec.mjs";
 
 export class ShapeError extends Error {}
 
@@ -83,7 +90,7 @@ export function describeShape(parsed, mask) {
 }
 
 const CORE = [FIELDS.id, FIELDS.sigungu, FIELDS.units];
-const NULLABLE = [FIELDS.cancel, FIELDS.version, ...Object.values(FIELDS.dates)];
+const NULLABLE = [FIELDS.version, FIELDS.tieBreak, ...Object.values(FIELDS.dates).filter(Boolean)];
 
 /**
  * 필요한 필드만 남긴 사본(없는 필드는 만들지 않는다 - 아래 "한 건도 없으면 실패" 검사가 그대로 작동해야 한다).
@@ -107,7 +114,17 @@ export function assertCoreFields(items) {
 }
 
 /**
- * 날짜·취소·판 필드는 API가 빈 값을 생략할 수 있어 항목마다 요구하지 않는다. 대신 전체에서
+ * 항목이 객체가 아니면 값 없이 거절한다 - 문자열이 들어와 있으면 그 값(공개 로그에 나갈 수 있는)을 메시지에 넣지 않고
+ * 타입 이름만 적는다. 수집기는 쪽마다, 응답 모양 진단이 먼저 쌓인 뒤에 부른다.
+ */
+export function assertItemObjects(items) {
+  items.forEach((item, index) => {
+    if (!isObject(item)) throw new ShapeError(`응답 항목이 객체가 아님: ${index + 1}번째 항목 (${typeName(item)})`);
+  });
+}
+
+/**
+ * 날짜·생성일 필드는 API가 빈 값을 생략할 수 있어 항목마다 요구하지 않는다. 대신 전체에서
  * 한 건도 없으면 필드 이름이 틀린 것으로 보고 던진다.
  */
 function assertNullableFields(items) {
@@ -134,15 +151,27 @@ export function readUnits(value) {
   return text === "" || !Number.isFinite(n) || n < 0 ? null : n;
 }
 
-// 공개 Actions 로그에 나가는 메시지다 - 사업 관리번호·읽지 못한 원래 값은 적지 않는다(#141). 위치는 수집기가 붙인다.
-function parseUnits(value) {
-  const n = readUnits(value);
-  if (n === null) throw new ShapeError(`호수를 읽을 수 없음 (${FIELDS.units} 필드 값이 숫자가 아니거나 음수)`);
-  return n;
-}
+// 호수는 0·비숫자·음수도 던지지 않는다(PREREG 「호수」): 호수 합에 0으로 기여하고 n에는 센다.
+const unitsOf = (item) => readUnits(item[FIELDS.units]) ?? 0;
 
-const isCancelled = (item) => String(item[FIELDS.cancel] ?? "").trim() !== "";
-const versionOf = (item) => String(item[FIELDS.version] ?? "").trim();
+const digits = (v) => String(v ?? "").trim().replace(/\D/g, "");
+const keyOf = (item) => String(item[FIELDS.id] ?? "").trim();
+
+/**
+ * 같은 키의 두 행 중 이길 쪽. crtnDay -> totHhldCnt -> apprvDay 순(PREREG 4항), 그래도 같으면 내용 비교로 순서와 무관하게 정한다.
+ * tally가 있으면 어디까지 동률이었는지 센다(sameCrtn: crtnDay가 같아 다음 기준으로 넘어간 쌍 비교 횟수, full: 세 기준이 모두 같은 쌍 비교 횟수).
+ */
+function wins(a, b, tally) {
+  const byDay = digits(a[FIELDS.version]).localeCompare(digits(b[FIELDS.version]), "en");
+  if (byDay !== 0) return byDay > 0;
+  tally.sameCrtn += 1;
+  const byUnits = unitsOf(a) - unitsOf(b);
+  if (byUnits !== 0) return byUnits > 0;
+  const byPermit = digits(a[FIELDS.tieBreak]).localeCompare(digits(b[FIELDS.tieBreak]), "en");
+  if (byPermit !== 0) return byPermit > 0;
+  tally.full += 1;
+  return JSON.stringify(a) > JSON.stringify(b);
+}
 
 function add(cell, units) {
   cell.projects += 1;
@@ -155,48 +184,51 @@ function sortedObject(obj) {
 
 const monthIndex = (ym) => Number(ym.slice(0, 4)) * 12 + Number(ym.slice(5, 7));
 
-/** options.inputTimeField: 입력 시점 필드 이름. 주면 meta 옆에 (입력월 - 사업승인월) 분포를 센다(B4, 사업 단위 값은 남기지 않는다). */
-export function foldProjects(items, { inputTimeField = null } = {}) {
+/**
+ * options.inputTimeField: 입력 시점 필드 이름. 주면 meta 옆에 (입력월 - 건축허가월) 분포를 센다(B4, 사업 단위 값은 남기지 않는다).
+ * options.completeField: complete 계열 필드. 기본은 FIELDS.dates.complete(해소 전에는 null)이고, null이면 complete 계열을 만들지 않는다.
+ */
+export function foldProjects(items, { inputTimeField = null, completeField = FIELDS.dates.complete } = {}) {
   assertCoreFields(items);
   assertNullableFields(items);
+  const dateField = { ...FIELDS.dates, complete: completeField };
 
   const latest = new Map();
+  const tally = { sameCrtn: 0, full: 0 };
+  let blankKey = 0;
   items.forEach((item, index) => {
-    const id = String(item[FIELDS.id]).trim();
+    let id = keyOf(item);
+    // 키가 비면 서로 다른 사업을 한 키로 뭉치지 않는다 - 그 행은 각각 한 사업으로 세고 건수를 보고한다.
+    if (id === "") { id = `\u0000blank-${index}`; blankKey += 1; }
     const prev = latest.get(id);
-    // 판 날짜는 문자열 비교(YYYYMMDD·YYYY-MM-DD 같은 꼴끼리). 같으면 뒤에 온 입력이 이긴다.
-    if (!prev || versionOf(item) > versionOf(prev.item) || (versionOf(item) === versionOf(prev.item) && index > prev.index)) {
-      latest.set(id, { item, index });
-    }
+    if (!prev || wins(item, prev, tally)) latest.set(id, item);
   });
 
   const series = Object.fromEntries(SERIES.map((s) => [s, {}]));
   const unknown = Object.fromEntries(SERIES.map((s) => [s, {}]));
-  const cancelledPermit = {}; // 서울 전체, 달별. B2의 "취소 포함" 값 - 구별 칸은 만들지 않는다
   const lag = inputTimeField ? { field: inputTimeField, histogram: {}, unparsed: 0 } : null;
-  let cancelled = 0;
   let projects = 0;
+  let unitsZero = 0;
+  let unitsInvalid = 0;
 
-  for (const { item } of latest.values()) {
-    if (isCancelled(item)) {
-      cancelled += 1;
-      const month = parseDay(item[FIELDS.dates.permit]);
-      if (month) add((cancelledPermit[month] ??= { projects: 0, units: 0 }), parseUnits(item[FIELDS.units]));
-      continue;
-    }
+  for (const item of latest.values()) {
     const sgg = String(item[FIELDS.sigungu]).trim();
-    const units = parseUnits(item[FIELDS.units]);
+    const raw = readUnits(item[FIELDS.units]);
+    if (raw === null) unitsInvalid += 1;
+    else if (raw === 0) unitsZero += 1;
+    const units = raw ?? 0;
     projects += 1;
     if (lag) {
       const input = parseDay(item[inputTimeField]);
-      const permit = parseDay(item[FIELDS.dates.permit]);
+      const permit = parseDay(item[dateField.permit]);
       if (input && permit) {
         const d = monthIndex(input) - monthIndex(permit);
         lag.histogram[d] = (lag.histogram[d] ?? 0) + 1;
       } else lag.unparsed += 1;
     }
     for (const s of SERIES) {
-      const month = parseDay(item[FIELDS.dates[s]]);
+      if (!dateField[s]) continue; // 해소 전 complete: 계열을 만들지 않는다
+      const month = parseDay(item[dateField[s]]);
       if (month) add(((series[s][sgg] ??= {})[month] ??= { projects: 0, units: 0 }), units);
       else add((unknown[s][sgg] ??= { projects: 0, units: 0 }), units);
     }
@@ -209,10 +241,13 @@ export function foldProjects(items, { inputTimeField = null } = {}) {
   }
   if (lag) lag.histogram = Object.fromEntries(Object.keys(lag.histogram).map(Number).sort((a, b) => a - b).map((k) => [k, lag.histogram[k]]));
   return {
-    meta: { input: items.length, projects, duplicates: items.length - latest.size, cancelled },
+    meta: {
+      input: items.length, projects, duplicates: items.length - latest.size,
+      ties: { sameCrtnDay: tally.sameCrtn, full: tally.full }, blankKey, unitsZero, unitsInvalid,
+      cancellation: CANCELLATION, completeField: completeField ?? null, completeCandidates: COMPLETE_CANDIDATES,
+    },
     series,
     unknown,
-    cancelledPermit: sortedObject(cancelledPermit),
     ...(lag ? { inputLag: lag } : {}),
   };
 }

@@ -6,120 +6,212 @@ import { mkdtemp, readFile, readdir, writeFile, access, rm } from "node:fs/promi
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import { DAILY_LIMIT, FIELDS, LICENSE, OPERATION, PROJECTED_FIELDS, SERIES } from "../scripts/housing-permits-spec.mjs";
-import { foldProjects, parseDay, projectItem } from "../scripts/housing-permits-fold.mjs";
+import { COMPLETE_CANDIDATES, DAILY_LIMIT, FIELDS, LICENSE, OPERATION, PROJECTED_FIELDS, SERIES } from "../scripts/housing-permits-spec.mjs";
+import { assertCoreFields, foldProjects, parseDay, projectItem } from "../scripts/housing-permits-fold.mjs";
 import { OTHER_KEY } from "../scripts/housing-permits-merge.mjs";
 import { dailyLimit } from "../scripts/fetch-housing-permits.mjs";
 import { DISTRICTS } from "../scripts/realestate-districts.mjs";
 import { flawedFold } from "./helpers/housing-permits-mutants.mjs";
+import { REAL_KEYS, realItem } from "./helpers/housing-permits-items.mjs";
 
-// 건축HUB 주택인허가 수집기 (#130, #58 단계 A). 전부 합성 입력이다 - 실제 API는 부르지 않는다.
-// 필드·오퍼레이션 이름은 명세를 못 읽은 가정이라(housing-permits-spec.mjs) 시험도 FIELDS를 거쳐 쓴다.
+// 건축HUB 주택인허가 수집기 (#130, #58 단계 A; #133 PREREG 5절 매핑). 전부 합성 입력이다 - 실제 API는 부르지 않는다.
+// 합성 응답은 실제 응답 item의 필드 이름·타입(helpers/housing-permits-items.mjs)으로 만든다.
 
 const D = FIELDS.dates;
-const project = ({ id, sgg = "11110", units = 0, permit = "", start = "", complete = "", cancel = "", version = "20240101" }) => ({
-  [FIELDS.id]: id, [FIELDS.sigungu]: sgg, [FIELDS.units]: String(units),
-  [D.permit]: permit, [D.start]: start, [D.complete]: complete,
-  [FIELDS.cancel]: cancel, [FIELDS.version]: version,
-});
+const project = ({ id, sgg = "11110", units = 0, permit = "", start = "", version = "20240101", ...extra }) =>
+  realItem({ bldNm: `합성${id}`, rnum: 1, mgmHsrgstPk: id, sigunguCd: sgg, totHhldCnt: units, apprvDay: permit, stcnsDay: start, crtnDay: version, ...extra });
 
-// P1: 허가 2024-03, 착공 2024-06. 같은 사업이 변경 신고로 한 번 더 온다(최신 판이 120호).
-// P2: 취소. P3: 허가일 없음(착공일은 있음). P4: 다른 구, 대시 날짜 꼴.
+// 1001: 허가 2024-03, 착공 2024-06. 같은 PK가 두 행 - 입력에서는 crtnDay가 더 이른 행이 뒤에 온다. 늦은 행(100호)이 이겨야 하고,
+//       이른 행(120호)이 호수가 커도 crtnDay가 먼저라 진다(수집 순서도 호수도 아니다).
+// 1002: 호수 0(첫 쪽 8건 중 7건이 0이었다). 사업 수 n에는 세고 호수 합에는 0으로 기여한다. 착공일 없음.
+// 1003: 허가일 없음(착공일은 있음). 1004: 다른 구, 대시 날짜 꼴.
+// 1005: 같은 PK, crtnDay 같음 -> totHhldCnt가 큰 80호가 입력에서 먼저 와도 이긴다.
 const FIXTURE = [
-  project({ id: "P1", units: 100, permit: "20240315", start: "20240601", version: "20240315" }),
-  project({ id: "P1", units: 120, permit: "20240315", start: "20240601", version: "20240420" }),
-  project({ id: "P2", units: 50, permit: "20240320", cancel: "20240501" }),
-  project({ id: "P3", units: 30, start: "20240710" }),
-  project({ id: "P4", sgg: "11140", units: 10, permit: "2024-03-02" }),
+  project({ id: 1001, units: 120, permit: "20240315", start: "20240601", version: "20240315" }),
+  project({ id: 1001, units: 100, permit: "20240315", start: "20240601", version: "20240420" }),
+  project({ id: 1002, units: 0, permit: "20240320" }),
+  project({ id: 1003, units: 30, start: "20240710" }),
+  project({ id: 1004, sgg: "11140", units: 10, permit: "2024-03-02" }),
+  project({ id: 1005, units: 80, permit: "20240410", version: "20240501" }),
+  project({ id: 1005, units: 20, permit: "20240410", version: "20240501" }),
 ];
 
 /** 접기 정의 검사. 진짜는 통과하고, 낙제 사본은 던져야 한다. */
 function checkFold(result) {
   const permit = result.series.permit;
-  assert.deepEqual(permit["11110"]["2024-03"], { projects: 1, units: 120 }, "중복 사업은 최신 판 1건으로 센다");
+  assert.deepEqual(permit["11110"]["2024-03"], { projects: 2, units: 100 }, "중복 PK는 crtnDay가 큰 행 1건(1001)이고, 호수 0 사업(1002)도 n에 센다");
+  assert.deepEqual(permit["11110"]["2024-04"], { projects: 1, units: 80 }, "crtnDay가 같으면 totHhldCnt가 큰 행(1005)");
   assert.deepEqual(permit["11140"]["2024-03"], { projects: 1, units: 10 });
-  assert.equal(result.series.start["11110"]["2024-06"].units, 120);
+  assert.deepEqual(result.series.start["11110"]["2024-06"], { projects: 1, units: 100 });
   assert.deepEqual(result.series.start["11110"]["2024-07"], { projects: 1, units: 30 });
-  assert.deepEqual(permit["11110"], { "2024-03": { projects: 1, units: 120 } }, "취소 사업은 어느 달에도 안 센다");
   assert.deepEqual(result.unknown.permit["11110"], { projects: 1, units: 30 }, "날짜 없는 사업은 미상 칸에 센다");
+  assert.deepEqual(result.unknown.start["11110"], { projects: 2, units: 80 }, "착공일 없는 1002(호수 0)·1005도 미상 칸 n에 센다");
 }
 
-test("접기: 중복은 1건, 취소 제외, 호수 합, 월 귀속, 날짜 없음은 미상 칸", () => {
+test("접기: 중복 PK는 1건, 호수 0도 n에 셈, 호수 합, 월 귀속, 날짜 없음은 미상 칸", () => {
   const result = foldProjects(FIXTURE);
   checkFold(result);
-  assert.equal(result.meta.input, 5);
-  assert.equal(result.meta.projects, 3, "중복 제거·취소 제외 뒤 사업 수(P1·P3·P4)");
-  assert.equal(result.meta.duplicates, 1);
-  assert.equal(result.meta.cancelled, 1);
+  assert.equal(result.meta.input, 7);
+  assert.equal(result.meta.projects, 5, "PK 중복을 접은 사업 수(1001·1002·1003·1004·1005)");
+  assert.equal(result.meta.duplicates, 2);
+  assert.equal(result.meta.unitsZero, 1);
+  assert.equal(result.meta.unitsInvalid, 0);
+  assert.deepEqual(result.meta.ties, { sameCrtnDay: 1, full: 0 }, "1005만 crtnDay 동률");
+});
+
+test("접기: 취소는 관측할 수 없다 - 취소 구분 없이 센다. 0건이 아니라 '관측 불가'로 적고 취소 집계는 만들지 않는다", () => {
+  const r = foldProjects([
+    project({ id: 1, units: 5, permit: "20240101" }),
+    // 멸실·철거 필드가 채워져 있어도 취소 대용으로 빼지 않는다(PREREG demol* 취급)
+    project({ id: 2, units: 7, permit: "20240102", demolExtngGbCd: "01", demolExtngGbCdNm: "멸실", demolEndDay: "20240301", demolExtngDay: "20240301" }),
+  ]);
+  assert.deepEqual(r.series.permit["11110"]["2024-01"], { projects: 2, units: 12 });
+  assert.equal(r.meta.cancellation, "관측 불가");
+  assert.ok(!("cancelled" in r.meta), "취소 건수를 0으로 내지 않는다");
+  assert.ok(!("cancelledPermit" in r));
+  assert.ok(!Object.keys(FIELDS).some((k) => /cancel/i.test(k)), "취소 필드를 추측해 FIELDS에 두지 않는다");
 });
 
 test("접기: 입력 순서가 바뀌어도 결과가 같다(결정성)", () => {
   assert.deepEqual(foldProjects([...FIXTURE].reverse()), foldProjects(FIXTURE));
 });
 
-test("접기: 변경 신고의 판 날짜가 같으면 입력에서 뒤에 온 것이 이긴다", () => {
-  const a = project({ id: "X", units: 10, permit: "20240101", version: "20240201" });
-  const b = project({ id: "X", units: 12, permit: "20240101", version: "20240201" });
-  assert.equal(foldProjects([a, b]).series.permit["11110"]["2024-01"].units, 12);
+test("접기: 같은 PK에서 crtnDay가 크면 호수가 작아도 그 행, crtnDay가 같으면 totHhldCnt가 큰 행, 그것도 같으면 apprvDay가 큰 행 (PREREG 4항)", () => {
+  const units = (rows) => foldProjects(rows).series.start["11110"]["2024-06"].units;
+  const mk = (extra) => project({ id: 9, permit: "20240101", start: "20240601", ...extra });
+  assert.equal(units([mk({ units: 500, version: "20240201" }), mk({ units: 5, version: "20240301" })]), 5, "crtnDay가 늦은 쪽(호수 작음)");
+  assert.equal(units([mk({ units: 5, version: "20240301" }), mk({ units: 500, version: "20240201" })]), 5, "입력 순서와 무관");
+  assert.equal(units([mk({ units: 500, version: "20240301" }), mk({ units: 5, version: "20240301" })]), 500, "crtnDay 동률이면 호수가 큰 쪽");
+  assert.equal(units([mk({ units: 5, version: "20240301" }), mk({ units: 500, version: "20240301" })]), 500);
+  // 둘째 기준까지 같으면 apprvDay가 큰 쪽. 허가 달이 다르므로 어느 쪽이 이겼는지 월 귀속으로 드러난다.
+  const early = mk({ units: 7, version: "20240301", permit: "20240105" });
+  const late = mk({ units: 7, version: "20240301", permit: "20240205" });
+  for (const rows of [[early, late], [late, early]]) assert.deepEqual(Object.keys(foldProjects(rows).series.permit["11110"]), ["2024-02"]);
 });
 
-test("접기: 최신 판이 취소면 그 사업은 빠진다(이전 판이 살아 있어도)", () => {
-  const live = project({ id: "X", units: 10, permit: "20240101", version: "20240201" });
-  const gone = project({ id: "X", units: 10, permit: "20240101", cancel: "20240301", version: "20240301" });
-  const r = foldProjects([live, gone]);
-  assert.deepEqual(r.series.permit, {});
-  assert.equal(r.meta.cancelled, 1);
+test("접기: 세 기준이 모두 같은 행끼리도 수집 순서에 기대지 않는다 - 동률은 meta.ties.full로 센다", () => {
+  const a = project({ id: 9, units: 7, permit: "20240105", start: "20240601", version: "20240301" });
+  const b = project({ id: 9, units: 7, permit: "20240105", start: "20240701", version: "20240301" });
+  const ab = foldProjects([a, b]);
+  assert.deepEqual(ab, foldProjects([b, a]));
+  assert.equal(ab.meta.ties.full, 1);
+});
+
+test("접기: 호수가 0·빈 값·비숫자·음수여도 던지지 않는다 - 호수 합에 0으로 기여하고 n에는 센다, 건수를 보고한다 (PREREG 호수)", () => {
+  const r = foldProjects([
+    project({ id: 1, units: 0, permit: "20240101" }),
+    project({ id: 2, units: "많음", permit: "20240101" }),
+    project({ id: 3, units: "", permit: "20240101" }),
+    project({ id: 4, units: -3, permit: "20240101" }),
+    project({ id: 5, units: 6, permit: "20240101" }),
+  ]);
+  assert.deepEqual(r.series.permit["11110"]["2024-01"], { projects: 5, units: 6 });
+  assert.equal(r.meta.unitsZero, 1);
+  assert.equal(r.meta.unitsInvalid, 3);
+});
+
+test("접기: 키(mgmHsrgstPk)가 빈 행은 서로 다른 사업으로 센다 - 한 키로 뭉치지 않고 건수를 보고한다", () => {
+  const r = foldProjects([project({ id: "", units: 1, permit: "20240101" }), project({ id: "", units: 2, permit: "20240101" })]);
+  assert.deepEqual(r.series.permit["11110"]["2024-01"], { projects: 2, units: 3 });
+  assert.equal(r.meta.blankKey, 2);
 });
 
 test("접기: 읽을 수 없는 날짜는 미상 칸(버리지 않는다), 달력에 없는 날짜도", () => {
   const r = foldProjects([
-    project({ id: "A", units: 5, permit: "abc" }),
-    project({ id: "B", units: 7, permit: "20241341" }),
+    project({ id: 1, units: 5, permit: "abc" }),
+    project({ id: 2, units: 7, permit: "20241341" }),
   ]);
   assert.deepEqual(r.unknown.permit["11110"], { projects: 2, units: 12 });
   assert.equal(parseDay("2024-02-30"), null);
   assert.equal(parseDay("20240229"), "2024-02");
 });
 
-test("접기: 호수를 못 읽으면 쓰지 않고 실패한다", () => {
-  assert.throws(() => foldProjects([project({ id: "A", units: "많음", permit: "20240101" })]), /호수/);
-});
-
-test("접기: 알 수 없는 필드(핵심 키 없음)면 실패한다 - 첫 실호출에서 가정이 틀린 경우", () => {
-  const bad = { ...project({ id: "A", units: 1, permit: "20240101" }) };
+test("접기: 알 수 없는 필드(핵심 키 없음)면 실패한다 - 옛 가정 이름(mgmPmsrgstPk 등)만 있는 응답", () => {
+  const bad = project({ id: 1, units: 1, permit: "20240101" });
   delete bad[FIELDS.units];
   assert.throws(() => foldProjects([bad]), new RegExp(`필드.*${FIELDS.units}`));
-  const noSgg = { ...project({ id: "A", units: 1 }) };
+  const noSgg = project({ id: 1, units: 1 });
   delete noSgg[FIELDS.sigungu];
   assert.throws(() => foldProjects([noSgg]), /필드/);
+  const oldNames = { mgmPmsrgstPk: "1", sigunguCd: "11110", hhldCnt: "5", cnclDay: "", crtnDay: "20240101", archPmsDay: "20240101", stcnsDay: "", useAprDay: "" };
+  assert.throws(() => foldProjects([oldNames]), /mgmHsrgstPk 없음/);
 });
 
-test("접기: 날짜·취소·판 필드는 전체에서 한 건도 없으면 실패(가정이 틀렸다는 뜻), 일부 비어 있는 건 정상", () => {
-  const items = [project({ id: "A", units: 1, permit: "20240101" }), project({ id: "B", units: 1, permit: "20240201" })];
+test("접기: 날짜·생성일 필드는 전체에서 한 건도 없으면 실패(가정이 틀렸다는 뜻), 일부 비어 있는 건 정상", () => {
+  const items = [project({ id: 1, units: 1, permit: "20240101" }), project({ id: 2, units: 1, permit: "20240201" })];
   const strip = (key) => items.map((it) => { const c = { ...it }; delete c[key]; return c; });
-  for (const key of [D.permit, D.start, D.complete, FIELDS.cancel, FIELDS.version]) {
+  for (const key of [D.permit, D.start, FIELDS.version]) {
     assert.throws(() => foldProjects(strip(key)), /필드/, key);
   }
   // 한 건에서만 빠진 것은 API가 빈 값을 생략한 것으로 본다
   const partial = [...items];
   partial[1] = { ...items[1] }; delete partial[1][D.start];
   assert.doesNotThrow(() => foldProjects(partial));
+  // complete 후보는 해소 전이라 응답에 없어도 접기가 요구하지 않는다
+  for (const key of COMPLETE_CANDIDATES) assert.doesNotThrow(() => foldProjects(strip(key)), key);
 });
 
-test("낙제 시험 ①: 중복 사업을 두 번 센 사본은 빨강이다", () => {
+test("complete 필드 미정: 계열을 만들지 않고 둘 다 '미정'으로 남긴다(임의 고정 금지). 후보 둘은 보관만 한다", () => {
+  assert.equal(D.complete, null);
+  assert.deepEqual(COMPLETE_CANDIDATES, ["useInsptDay", "useInsptSchedDay"]);
+  const r = foldProjects([project({ id: 1, units: 5, permit: "20240101", useInsptDay: "20250101", useInsptSchedDay: "20250202" })]);
+  assert.deepEqual(r.series.complete, {}, "useInsptDay 쪽으로도 useInsptSchedDay 쪽으로도 접지 않는다");
+  assert.deepEqual(r.unknown.complete, {});
+  assert.equal(r.meta.completeField, null);
+  assert.deepEqual(r.meta.completeCandidates, COMPLETE_CANDIDATES);
+});
+
+test("complete 필드가 해소 규칙으로 정해진 뒤(옵션으로 주면) 그 필드로만 계열을 접는다", () => {
+  const items = [
+    project({ id: 1, units: 5, permit: "20240101", useInsptDay: "20250105", useInsptSchedDay: "20260305" }),
+    project({ id: 2, units: 7, permit: "20240101", useInsptDay: "", useInsptSchedDay: "20260305" }),
+  ];
+  const r = foldProjects(items, { completeField: "useInsptDay" });
+  assert.deepEqual(r.series.complete["11110"], { "2025-01": { projects: 1, units: 5 } });
+  assert.deepEqual(r.unknown.complete["11110"], { projects: 1, units: 7 });
+  assert.equal(r.meta.completeField, "useInsptDay");
+});
+
+test("실제 필드 이름 모양(30개 키)의 합성 응답이 assertCoreFields를 통과하고 접기 검사를 통과한다", () => {
+  const item = realItem();
+  assert.deepEqual(Object.keys(item).sort(), [...REAL_KEYS].sort());
+  assert.equal(REAL_KEYS.length, 30);
+  assert.equal(typeof item.mgmHsrgstPk, "number");
+  assert.equal(typeof item.totHhldCnt, "number");
+  assert.doesNotThrow(() => assertCoreFields([item]));
+  assert.doesNotThrow(() => foldProjects([item]));
+});
+
+test("spec 매핑: PREREG 5절과 같은 이름이다(id=mgmHsrgstPk, units=totHhldCnt, permit=apprvDay, start=stcnsDay), 취소·판 필드는 없다", () => {
+  assert.equal(FIELDS.id, "mgmHsrgstPk");
+  assert.equal(FIELDS.units, "totHhldCnt");
+  assert.equal(FIELDS.sigungu, "sigunguCd");
+  assert.equal(FIELDS.version, "crtnDay");
+  assert.equal(FIELDS.dates.permit, "apprvDay");
+  assert.equal(FIELDS.dates.start, "stcnsDay");
+  const used = [FIELDS.id, FIELDS.sigungu, FIELDS.units, FIELDS.version, FIELDS.tieBreak, ...Object.values(FIELDS.dates).filter(Boolean), ...COMPLETE_CANDIDATES];
+  for (const key of used) assert.ok(REAL_KEYS.includes(key), `${key}는 실제 응답 키가 아니다`);
+  for (const key of PROJECTED_FIELDS) assert.ok(REAL_KEYS.includes(key), `${key}는 실제 응답 키가 아니다`);
+});
+
+test("낙제 시험 ①: 중복 PK를 두 번 센 사본은 빨강이다", () => {
   checkFold(flawedFold(FIXTURE)); // 기준선: 사본의 기본 옵션은 올바르다 - 옵션 하나가 실수 하나를 만든다
   assert.throws(() => checkFold(flawedFold(FIXTURE, { dedupe: false })));
 });
 
-test("낙제 시험 ②: 취소 사업을 포함한 사본은 빨강이다", () => {
-  assert.throws(() => checkFold(flawedFold(FIXTURE, { dropCancelled: false })));
+test("낙제 시험 ②: 호수 0 사업을 n에서 빠뜨린 사본은 빨강이다", () => {
+  assert.throws(() => checkFold(flawedFold(FIXTURE, { zeroInN: false })));
 });
 
-test("낙제 시험 ③: 날짜 없는 사업을 조용히 버린 사본은 빨강이다", () => {
+test("낙제 시험 ③: 동률 규칙(crtnDay -> totHhldCnt)을 무시하고 입력 순서로 고른 사본은 빨강이다", () => {
+  assert.throws(() => checkFold(flawedFold(FIXTURE, { tieRule: false })));
+});
+
+test("낙제 시험 ④: 날짜 없는 사업을 조용히 버린 사본은 빨강이다", () => {
   assert.throws(() => checkFold(flawedFold(FIXTURE, { keepUndated: false })));
 });
 
-test("SERIES는 사업승인·착공·사용승인 셋이고 FIELDS.dates와 같은 이름이다", () => {
+test("SERIES는 permit·start·complete 셋이고 FIELDS.dates와 같은 이름이다", () => {
   assert.deepEqual([...SERIES].sort(), Object.keys(D).sort());
   assert.equal(SERIES.length, 3);
 });
@@ -151,14 +243,15 @@ const envelope = (items, totalCount, pageNo = 1) => ({
     body: { items: { item: items }, totalCount, pageNo, numOfRows: 2 } },
 });
 
-/** 구마다 같은 4건(중복 포함)을 내는 정상 스텁. */
+/** 구마다 같은 4건(중복 PK 포함)을 내는 정상 스텁. 실제 응답처럼 mgmHsrgstPk·totHhldCnt는 숫자다. */
 function goodHandler({ q }) {
   const sgg = q.sigunguCd;
+  const pk = Number(sgg) * 10;
   const items = [
-    project({ id: `${sgg}-1`, sgg, units: 100, permit: "20240315", start: "20240601", version: "20240315" }),
-    project({ id: `${sgg}-1`, sgg, units: 120, permit: "20240315", start: "20240601", version: "20240420" }),
-    project({ id: `${sgg}-2`, sgg, units: 50, permit: "20240320", cancel: "20240501" }),
-    project({ id: `${sgg}-3`, sgg, units: 30, start: "20240710" }),
+    project({ id: pk + 1, sgg, units: 100, permit: "20240315", start: "20240601", version: "20240315" }),
+    project({ id: pk + 1, sgg, units: 120, permit: "20240315", start: "20240601", version: "20240420" }),
+    project({ id: pk + 2, sgg, units: 0, permit: "20240320" }),
+    project({ id: pk + 3, sgg, units: 30, start: "20240710" }),
   ];
   const page = Number(q.pageNo);
   const size = Number(q.numOfRows);
@@ -216,10 +309,15 @@ for (const [label, key] of [["인코딩", KEY_ENCODED], ["디코딩", KEY_DECODE
       assert.equal(stub.hits.length, 25 * 2, "구마다 4건을 2건씩 2쪽");
       assert.ok(stub.hits.every((h) => h.q.bjdongCd === "10100"));
       const file = JSON.parse(await readFile(path.join(s.out, "folded.json"), "utf8"));
-      // 구마다 사업 1건(n<3)이라 25구가 "기타 구" 한 칸으로 합쳐진다(PREREG 5절). 구 이름이 남지 않는다.
+      // 구마다 허가 2024-03 사업 2건(호수 120과 0, n<3)이라 25구가 "기타 구" 한 칸으로 합쳐진다(PREREG 5절). 구 이름이 남지 않는다.
       assert.deepEqual(Object.keys(file.series.permit), [OTHER_KEY]);
-      assert.deepEqual(file.series.permit[OTHER_KEY]["2024-03"], { projects: 25, units: 25 * 120 });
+      assert.deepEqual(file.series.permit[OTHER_KEY]["2024-03"], { projects: 25 * 2, units: 25 * 120 }, "호수 0 사업도 n에 센다");
       assert.deepEqual(file.unknown.permit[OTHER_KEY], { projects: 25, units: 25 * 30 });
+      assert.deepEqual(file.series.complete, {}, "complete 필드 미정 - 계열이 없다");
+      assert.equal(file.meta.completeField, null);
+      assert.equal(file.meta.cancellation, "관측 불가");
+      assert.ok(!("cancelledPermit" in file) && !("cancelled" in file.meta));
+      assert.equal(file.meta.unitsZero, 25);
       assert.equal(file.meta.calls, 50);
       assert.match(file.meta.rawSha256, /^[0-9a-f]{64}$/);
       assert.ok(!JSON.stringify(file).includes(KEY_DECODED));
@@ -283,9 +381,10 @@ test("수집기: 일 한도에 닿으면 중단하고 아무것도 쓰지 않는
 
 test("수집기: 서버가 키를 본문에 에코해도 로그에 키가 남지 않는다(치환 먼저, 자르기는 그 뒤)", async () => {
   const s = await setup();
-  // 200자 미리보기 경계에 키가 걸치게 한다. 자르기를 먼저 하면 키 앞부분이 남는다.
-  const pad = "x".repeat(200 - 6);
-  const stub = await startStub((c) => ({ status: 200, contentType: "text/html", raw: `${pad}${c.q.serviceKey} ${encodeURIComponent(c.q.serviceKey)}` }));
+  // 200자 미리보기 경계에 키가 걸치게 한다. 자르기를 먼저 하면 키 앞부분이 남는다. 미리보기는 '<'로 시작하는 HTTP 오류 본문에만 나간다.
+  const lead = "<html>";
+  const pad = "x".repeat(200 - lead.length - 6);
+  const stub = await startStub((c) => ({ status: 502, contentType: "text/html", raw: `${lead}${pad}${c.q.serviceKey} ${encodeURIComponent(c.q.serviceKey)}` }));
   try {
     const r = await run({ BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: stub.base }, ["--bjdong-file", s.bjdong, "--out-dir", s.out]);
     assert.equal(r.code, 3);
@@ -398,7 +497,7 @@ test("합침 단계: folded.json에는 합친 뒤 결과만 올라가고 n<3 칸
   const stub = await startStub((c) => {
     const sgg = c.q.sigunguCd;
     const n = sgg === "11110" ? 3 : 1;
-    const items = Array.from({ length: n }, (_, i) => project({ id: `${sgg}-${i}`, sgg, units: 10, permit: "20240315" }));
+    const items = Array.from({ length: n }, (_, i) => project({ id: Number(sgg) * 100 + i, sgg, units: 10, permit: "20240315" }));
     return { json: envelope(items, items.length) };
   });
   try {
@@ -415,13 +514,14 @@ test("합침 단계: folded.json에는 합친 뒤 결과만 올라가고 n<3 칸
 });
 
 test("필드 투영: 필요한 필드만 남기고 나머지(사업주체명·지번 등)는 버린다", () => {
-  const raw = { ...project({ id: "P", units: 5, permit: "20240101" }), bldNm: "사업명", platPlc: "서울 어딘가 1-1", mainPurpsCdNm: "x" };
+  const raw = project({ id: 1, units: 5, permit: "20240101", bldNm: "사업명", platPlc: "서울 어딘가 1-1" });
   const out = projectItem(raw);
   assert.deepEqual(Object.keys(out).sort(), [...PROJECTED_FIELDS].sort());
-  assert.ok(!("bldNm" in out) && !("platPlc" in out));
+  assert.deepEqual(Object.keys(out).sort(), ["apprvDay", "crtnDay", "mgmHsrgstPk", "sigunguCd", "stcnsDay", "totHhldCnt", "useInsptDay", "useInsptSchedDay"]);
+  assert.ok(!("bldNm" in out) && !("platPlc" in out) && !("mainBldCnt" in out) && !("demolEndDay" in out));
   // 응답에 없는 필드는 만들지 않는다 - 접기의 "필드가 한 건도 없으면 실패"가 여전히 작동해야 한다
-  assert.deepEqual(Object.keys(projectItem({ [FIELDS.id]: "P" })), [FIELDS.id]);
-  assert.deepEqual(Object.keys(projectItem({ [FIELDS.id]: "P", zz: 1 }, "zz")).sort(), [FIELDS.id, "zz"].sort());
+  assert.deepEqual(Object.keys(projectItem({ [FIELDS.id]: 1 })), [FIELDS.id]);
+  assert.deepEqual(Object.keys(projectItem({ [FIELDS.id]: 1, zz: 1 }, "zz")).sort(), [FIELDS.id, "zz"].sort());
 });
 
 test("큰 쪽: 20만 건이 한 번에 와도 spread 때문에 터지지 않는다(13만 인자 초과 재현)", async () => {
@@ -429,7 +529,7 @@ test("큰 쪽: 20만 건이 한 번에 와도 spread 때문에 터지지 않는�
   const N = 200_000;
   const stub = await startStub((c) => {
     if (c.q.sigunguCd !== "11110") return { json: envelope([], 0) };
-    const items = Array.from({ length: N }, (_, i) => ({ [FIELDS.id]: `P${i}`, [FIELDS.sigungu]: "11110", [FIELDS.units]: "1", [D.permit]: "20240315", [D.start]: "", [D.complete]: "", [FIELDS.cancel]: "", [FIELDS.version]: "20240101" }));
+    const items = Array.from({ length: N }, (_, i) => ({ mgmHsrgstPk: i + 1, sigunguCd: "11110", totHhldCnt: 1, apprvDay: "20240315", stcnsDay: "", crtnDay: "20240101", useInsptDay: "", useInsptSchedDay: "" }));
     return { json: envelope(items, N) };
   });
   try {
@@ -497,11 +597,11 @@ test("redirect: 리다이렉트는 따라가지 않고 실패로 센다(키가 �
   } finally { await new Promise((d) => server.close(d)); }
 });
 
-test("입력 시점 필드: 지정하면 (입력월 - 사업승인월) 분포가 메타에 남고, 사업 단위 값은 남지 않는다(B4)", async () => {
+test("입력 시점 필드: 지정하면 (입력월 - 건축허가월) 분포가 메타에 남고, 사업 단위 값은 남지 않는다(B4)", async () => {
   const s = await setup();
   const stub = await startStub((c) => {
     const sgg = c.q.sigunguCd;
-    const items = [3, 3, 3, 6].map((lag, i) => ({ ...project({ id: `${sgg}-${i}`, sgg, units: 10, permit: "20240115" }), regDt: `2024${String(1 + lag).padStart(2, "0")}20` }));
+    const items = [3, 3, 3, 6].map((lag, i) => ({ ...project({ id: Number(sgg) * 100 + i, sgg, units: 10, permit: "20240115" }), regDt: `2024${String(1 + lag).padStart(2, "0")}20` }));
     return { json: envelope(items, items.length) };
   });
   try {
@@ -515,15 +615,61 @@ test("입력 시점 필드: 지정하면 (입력월 - 사업승인월) 분포가
   } finally { await stub.close(); }
 });
 
-test("접기: 취소 사업의 사업승인 호수를 서울 전체 달별로 따로 센다(B2의 취소 포함 값). 구별 칸은 만들지 않는다", () => {
-  const r = foldProjects(FIXTURE);
-  assert.deepEqual(r.cancelledPermit, { "2024-03": { projects: 1, units: 50 } });
-  assert.deepEqual(Object.keys(r.series.permit).sort(), ["11110", "11140"], "취소는 구별 계열에 섞이지 않는다");
-});
-
 test("접기: 입력 시점 필드를 주면 (입력월 - 사업승인월) 분포를 센다. 읽을 수 없는 것은 unparsed", () => {
   const withReg = (id, reg, permit = "20240115") => ({ ...project({ id, units: 1, permit }), regDt: reg });
-  const r = foldProjects([withReg("a", "20240420"), withReg("b", "20240420"), withReg("c", "20240701"), withReg("d", "bad"), withReg("e", "20240420", "")], { inputTimeField: "regDt" });
+  const r = foldProjects([withReg(1, "20240420"), withReg(2, "20240420"), withReg(3, "20240701"), withReg(4, "bad"), withReg(5, "20240420", "")], { inputTimeField: "regDt" });
   assert.deepEqual(r.inputLag, { field: "regDt", histogram: { 3: 2, 6: 1 }, unparsed: 2 });
   assert.equal(foldProjects(FIXTURE).inputLag, undefined);
+});
+
+// ---- 오류 응답 진단 (#133 cto 후속 권고): 본문 앞부분은 '<'로 시작하는 오류 본문에만 ----
+
+async function failLog(handler) {
+  const s = await setup();
+  const stub = await startStub(handler);
+  try {
+    const r = await run({ BUILDINGHUB_API_KEY: KEY_ENCODED, BUILDINGHUB_API_ENDPOINT: stub.base }, ["--bjdong-file", s.bjdong, "--out-dir", s.out]);
+    return { ...r, all: r.stdout + r.stderr, wrote: await exists(path.join(s.out, "folded.json")) };
+  } finally { await stub.close(); }
+}
+
+test("진단: HTTP 오류의 HTML 본문은 앞 200자 미리보기가 로그에 남는다", async () => {
+  const r = await failLog(() => ({ status: 502, contentType: "text/html", raw: "<html><body>Bad Gateway upstream</body></html>" }));
+  assert.equal(r.code, 3);
+  assert.match(r.all, /본문 앞 200자: <html><body>Bad Gateway upstream/);
+});
+
+test("진단: HTTP 오류라도 '<'로 시작하지 않는 본문(JSON·평문)은 미리보기를 싣지 않는다 - 값이 새지 않는다", async () => {
+  for (const raw of ['{"mgmHsrgstPk":900001,"bldNm":"JSON-SECRET-VALUE"}', "PLAIN-SECRET-VALUE oops", '[{"bldNm":"ARRAY-SECRET-VALUE"}]']) {
+    const r = await failLog(() => ({ status: 500, raw }));
+    assert.equal(r.code, 3);
+    assert.ok(!/SECRET-VALUE/.test(r.all), `값이 로그에 남음: ${raw.slice(0, 20)}`);
+    assert.match(r.all, /미리보기 생략|데이터 응답으로 보여 생략/);
+  }
+});
+
+test("진단: 사업 관리번호 필드(mgmHsrgstPk)가 보이는 본문은 '<'로 시작해도 데이터 응답으로 보고 생략한다(옛 이름 mgmPmsrgstPk가 아니라 새 이름 기준)", async () => {
+  const r = await failLog(() => ({ status: 500, contentType: "text/xml", raw: "<item><mgmHsrgstPk>900001</mgmHsrgstPk><bldNm>XML-SECRET-VALUE</bldNm></item>" }));
+  assert.equal(r.code, 3);
+  assert.match(r.all, /데이터 응답으로 보여 생략/);
+  assert.ok(!/SECRET-VALUE/.test(r.all));
+  // 옛 이름은 더 이상 판정 기준이 아니다: 옛 이름만 든 '<' 본문은 일반 오류 본문으로 취급해 미리보기가 나간다
+  const old = await failLog(() => ({ status: 500, contentType: "text/xml", raw: "<error>mgmPmsrgstPk 없음 안내</error>" }));
+  assert.match(old.all, /본문 앞 200자: <error>mgmPmsrgstPk/);
+});
+
+test("진단: 파싱에 성공한 본문은 모양 진단만 - 값은 로그에 없다", async () => {
+  const r = await failLog(() => ({ json: { unexpected: { bldNm: "PARSED-SECRET-VALUE" } } }));
+  assert.ok(!/SECRET-VALUE/.test(r.all));
+  assert.match(r.all, /파싱됨, 모양 진단만/);
+});
+
+test("진단: 항목이 객체가 아니면 값 없이 거절한다(종료 1, 쓰지 않음)", async () => {
+  for (const items of [["STRING-SECRET-VALUE"], [123456789], [["ARR-SECRET-VALUE"]]]) {
+    const r = await failLog(({ q }) => ({ json: envelope(items, items.length) }));
+    assert.equal(r.code, 1);
+    assert.match(r.all, /객체가 아님/);
+    assert.ok(!/SECRET-VALUE|123456789/.test(r.all), "항목 값이 로그에 남음");
+    assert.equal(r.wrote, false);
+  }
 });

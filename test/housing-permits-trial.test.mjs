@@ -6,6 +6,7 @@ import { mkdtemp, readdir, writeFile, access, readFile } from "node:fs/promises"
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
+import { realItem } from "./helpers/housing-permits-items.mjs";
 import { DAILY_LIMIT, FIELDS, LICENSE, PAGE_SIZE } from "../scripts/housing-permits-spec.mjs";
 import { foldProjects } from "../scripts/housing-permits-fold.mjs";
 import { DISTRICTS } from "../scripts/realestate-districts.mjs";
@@ -20,10 +21,8 @@ const execFileAsync = promisify(execFile);
 const D = FIELDS.dates;
 
 function item(sgg, n, extra = {}) {
-  return {
-    [FIELDS.id]: `${MARK}-${sgg}-${n}`, [FIELDS.sigungu]: sgg, [FIELDS.units]: "10",
-    [D.permit]: "20240315", [D.start]: "20240601", [D.complete]: "", [FIELDS.cancel]: "", [FIELDS.version]: "20240315", ...extra,
-  };
+  // 실제 응답 모양(30개 키). 관리번호 자리에 표지를 넣는다.
+  return realItem({ mgmHsrgstPk: `${MARK}-${sgg}-${n}`, sigunguCd: sgg, totHhldCnt: 10, apprvDay: "20240315", stcnsDay: "20240601", crtnDay: "20240315", ...extra });
 }
 const envelope = (items, totalCount) => ({
   response: { header: { resultCode: "00", resultMsg: "OK" }, body: { items: { item: items }, totalCount } },
@@ -123,7 +122,25 @@ test("진행 로그: 일부 동 실패로 끝나도 처리한 동 수·쪽 수�
 
 // ---- (5) 오류 메시지에서 사업 관리번호 제거 ----
 
-test("오류 메시지: 호수를 못 읽으면 구·쪽 위치만 남기고 관리번호·원래 값은 없다", async () => {
+test("오류 메시지: 응답의 시군구가 요청한 구와 다르면 구·요청 위치만 남기고 관리번호·응답 값은 없다", async () => {
+  const s = await setup();
+  const stub = await startStub((c) => {
+    const r = goodHandler(c);
+    if (c.q.sigunguCd === "11140" && c.q.pageNo === "2") r.json.response.body.items.item[0][FIELDS.sigungu] = "99999-VALUE";
+    return r;
+  });
+  try {
+    const b = base(s, stub);
+    const r = await run(b.env, b.args);
+    assert.equal(r.code, 1);
+    assert.match(r.out, /11140/);
+    assert.ok(!r.out.includes(MARK), "사업 관리번호가 오류 메시지에 나옴");
+    assert.ok(!r.out.includes("99999-VALUE"), "응답의 시군구 값이 나옴");
+    assert.equal(await exists(path.join(s.out, "folded.json")), false);
+  } finally { await stub.close(); }
+});
+
+test("호수 비숫자는 더 이상 오류가 아니다 - 호수 합에 0으로 기여하고 n에 센다, 수집은 계속된다(PREREG 호수)", async () => {
   const s = await setup();
   const stub = await startStub((c) => {
     const r = goodHandler(c);
@@ -133,19 +150,16 @@ test("오류 메시지: 호수를 못 읽으면 구·쪽 위치만 남기고 관
   try {
     const b = base(s, stub);
     const r = await run(b.env, b.args);
-    assert.equal(r.code, 1);
-    assert.match(r.out, /호수/);
-    assert.match(r.out, /11140/);
-    assert.match(r.out, /쪽 2\b/);
-    assert.ok(!r.out.includes(MARK), "사업 관리번호가 오류 메시지에 나옴");
+    assert.equal(r.code, 0, r.out);
     assert.ok(!r.out.includes("많음-VALUE"), "읽지 못한 원래 값이 나옴");
-    assert.equal(await exists(path.join(s.out, "folded.json")), false);
+    assert.ok(!r.out.includes(MARK));
   } finally { await stub.close(); }
 });
 
-test("오류 메시지: 접기 단계(foldProjects) 호수 오류에도 관리번호가 없다", () => {
-  const bad = item("11110", 1, { [FIELDS.units]: "많음" });
-  assert.throws(() => foldProjects([bad]), (e) => /호수/.test(e.message) && !e.message.includes(MARK));
+test("오류 메시지: 접기 단계(foldProjects)의 필드 오류에도 관리번호가 없다", () => {
+  const bad = item("11110", 1);
+  delete bad[FIELDS.units];
+  assert.throws(() => foldProjects([bad]), (e) => /totHhldCnt/.test(e.message) && !e.message.includes(MARK));
 });
 
 test("오류 메시지: 항목이 든 본문이 한도·오류 진단에 미리보기로 실리지 않는다", async () => {

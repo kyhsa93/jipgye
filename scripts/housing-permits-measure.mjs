@@ -27,7 +27,6 @@ export const B4_FLOOR_MONTHS = 3;
 export const B4_QUANTILE = 0.9;
 
 const monthIndex = (ym) => Number(ym.slice(0, 4)) * 12 + Number(ym.slice(5, 7)) - 1;
-const indexToMonth = (i) => `${Math.floor(i / 12)}-${String((i % 12) + 1).padStart(2, "0")}`;
 
 /** 한 계열의 서울 달별 호수(공개 구 + 기타 구 모두 합). Map("YYYY-MM" -> 호수). */
 export function seoulMonthly(seriesOne) {
@@ -44,8 +43,12 @@ export function measureB1(folded) {
   const missing = expected.filter((c) => !got.has(c));
   const reasons = [];
   if (missing.length) reasons.push(`응답이 없는 구 ${missing.length}곳`);
+  // complete 필드가 아직 정해지지 않았으면(meta.completeField 없음) 그 계열은 길이를 따지지 않고 '대기'로 보고한다 -
+  // 해소 규칙(PREREG 「complete 필드 해소 규칙」)이 전수 진단에서 정하기 전이라 시험 불가로도 통과로도 쓰지 않는다.
+  const pending = folded.meta?.completeField ? [] : ["complete"];
   const series = {};
   for (const name of SERIES) {
+    if (pending.includes(name)) { series[name] = { start: null, end: null, months: 0, gaps: 0, pending: true }; continue; }
     const months = [...seoulMonthly(folded.series?.[name]).keys()].sort();
     if (months.length === 0) { series[name] = { start: null, end: null, months: 0, gaps: 0 }; reasons.push(`${name} 계열이 비었다`); continue; }
     const span = monthIndex(months.at(-1)) - monthIndex(months[0]) + 1;
@@ -53,7 +56,14 @@ export function measureB1(folded) {
     if (months[0] > B1_START_MAX) reasons.push(`${name} 시작 ${months[0]}이 ${B1_START_MAX}보다 늦다`);
     if (span < B1_MIN_MONTHS) reasons.push(`${name} 길이 ${span}개월이 ${B1_MIN_MONTHS}개월 미만`);
   }
-  return { verdict: reasons.length ? "unable" : "pass", districts: { expected: expected.length, withData: expected.length - missing.length, missing }, series, reasons };
+  if (pending.length) reasons.push(`${pending.join("·")} 필드 미정 - 해소 규칙이 정하기 전이라 시험 불가 대기(후보 ② 포함)`);
+  // 확정된 시험 불가 사유가 있으면 unable, 사유가 대기뿐이면 pending, 없으면 pass.
+  const blocked = reasons.length > pending.length;
+  return {
+    verdict: blocked ? "unable" : pending.length ? "pending" : "pass",
+    districts: { expected: expected.length, withData: expected.length - missing.length, missing },
+    series, pending, reasons,
+  };
 }
 
 function median(values) {
@@ -78,25 +88,24 @@ function windowDiffs(hub, eco) {
 
 /**
  * B2. permit 계열 하나만 ECOS 901Y105와 대응한다 - 착공·준공 집계는 B2로 검증되지 않는다.
- * 판정은 취소를 제외한 값으로 하고, 포함한 값은 같이 적기만 한다. 서울 취소 칸이 사업 수 3 미만이라 빠진 달은
- * 포함 값에 더해지지 않는다(suppressed) - 포함 값이 약간 작게 나올 수 있다.
+ * 응답에서 취소를 구분할 수 없어(PREREG 4절 B2·5절 「취소 판정」) 값은 하나뿐이다: 취소 미반영 permit 계열 서울 합계의
+ * 12개월 합. 판정은 그 값으로 하고 취소를 뺀 값과 나란히 적는 일은 하지 않는다.
  */
 export function measureB2(folded, ecosRows) {
-  const excl = new Map([...seoulMonthly(folded.series?.permit)].map(([m, v]) => [monthIndex(m), v]));
-  const incl = new Map([...excl].map(([i, v]) => [i, v + (folded.cancelledPermit?.[indexToMonth(i)]?.units ?? 0)]));
+  const hub = new Map([...seoulMonthly(folded.series?.permit)].map(([m, v]) => [monthIndex(m), v]));
   const eco = monthlyFromYtd(ecosRows);
-  const dExcl = windowDiffs(excl, eco);
-  const dIncl = windowDiffs(incl, eco);
-  const windows = dExcl.length;
+  const diffs = windowDiffs(hub, eco);
+  const windows = diffs.length;
   let verdict = "hold";
-  if (windows >= B2_MIN_WINDOWS) verdict = median(dExcl) <= B2_MAX_MEDIAN ? "pass" : "fail";
+  if (windows >= B2_MIN_WINDOWS) verdict = median(diffs) <= B2_MAX_MEDIAN ? "pass" : "fail";
   return {
     verdict,
     windows,
-    medianExcl: windows ? median(dExcl) : null,
-    medianIncl: dIncl.length ? median(dIncl) : null,
+    median: windows ? median(diffs) : null,
     threshold: B2_MAX_MEDIAN,
-    note: "permit(사업승인) 계열만 대조. 착공·준공 집계는 B2로 검증되지 않는다. 판정은 취소 제외 값.",
+    // 10%를 넘으면 선을 올려 통과시키지 않고 중단해 원인을 적는다(PREREG 4절 B2). 원인 후보만 미리 박아 둔다.
+    ...(verdict === "fail" ? { causeCandidates: ["정의 차이", "누락", "취소 미반영"] } : {}),
+    note: "permit(건축허가일 기준 인허가) 계열만 대조. 착공·준공 집계는 B2로 검증되지 않는다. 취소 미반영 단일 값으로 판정(응답에서 취소를 구분할 수 없음).",
   };
 }
 

@@ -11,8 +11,9 @@
  *   그 자리에서 중단한다(종료 3, 쓰지 않음).
  * - --license(포털 페이지의 이용허락범위 문자열)가 "제한 없음"이 아니면 호출 없이 종료 1(소유자 조건 4). 메타에 남긴다.
  * - 접은 결과는 합침 단계(housing-permits-merge.mjs: 셀 사업 수 n<3 -> 기타 구)를 거친 것만 folded.json에 쓴다.
- * - 응답 필드가 가정(housing-permits-spec.mjs)과 다르면 쓰지 않고 종료 1.
+ * - 응답 필드가 spec(housing-permits-spec.mjs, PREREG 5절 매핑)과 다르면 쓰지 않고 종료 1. 항목이 객체가 아니어도 값 없이 거절한다.
  *   이때 stderr에 응답 구조 키·첫 항목 키(타입 이름)·항목 수만 남긴다. 값은 안 남기고 비정형 키는 <비정형 키>로 센다.
+ *   HTTP 오류·비정형 본문 앞부분(200자)은 '<'로 시작하는 본문(HTML·XML 오류 페이지)에만 싣는다. 파싱된 본문은 모양 진단만 낸다.
  * - 원본은 저장소에 두지 않는다. 쪽 본문의 sha256을 이어 붙인 해시만 folded.json meta에 남기고,
  *   BUILDINGHUB_RAW_DIR(저장소 밖이어야 한다. 안이면 호출 전에 종료 1)을 주면 쪽 본문을 거기에 쓴다.
  *   응답 항목은 받자마자 필요한 필드만 남긴다(projectItem).
@@ -29,7 +30,7 @@ import { mkdir, readFile, realpath, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import { DISTRICTS } from "./realestate-districts.mjs";
-import { assertCoreFields, describeShape, foldProjects, listKeys, projectItem, readUnits, ShapeError } from "./housing-permits-fold.mjs";
+import { assertCoreFields, assertItemObjects, describeShape, foldProjects, listKeys, projectItem, ShapeError } from "./housing-permits-fold.mjs";
 import { createDiagnostics } from "./housing-permits-diagnose.mjs";
 import { mergeSmallCells } from "./housing-permits-merge.mjs";
 import { DAILY_LIMIT, DEFAULT_ENDPOINT, FIELDS, LICENSE, OPERATION, PAGE_SIZE } from "./housing-permits-spec.mjs";
@@ -181,16 +182,19 @@ async function requestPage(ctx, sigungu, bjdong, pageNo) {
   // redirect: "error" - 다른 주소로 따라가지 않는다(쿼리의 serviceKey가 새지 않게). 리다이렉트는 일반 실패로 센다.
   const res = await fetch(url, { signal: AbortSignal.timeout(ctx.timeoutMs), redirect: "error" });
   const text = await res.text();
-  // 사업 관리번호 필드가 보이는 본문은 데이터 응답이라 공개 로그에 미리보기를 싣지 않는다(#141).
-  const diagnostic = () =>
-    `http ${res.status} · content-type ${res.headers.get("content-type")} · ` +
-    (text.includes(FIELDS.id)
-      ? "본문은 데이터 응답으로 보여 생략"
-      : `본문 앞 ${BODY_PREVIEW_CHARS}자: ${mask(text).slice(0, BODY_PREVIEW_CHARS).replace(/\s+/g, " ")}`);
+  // 공개 로그에 본문 앞부분을 싣는 것은 '<'로 시작하는 본문(HTML 오류 페이지·게이트웨이 XML)뿐이다. JSON 등 그 밖의 본문과,
+  // 파싱에 성공한 본문(모양 진단이 따로 나간다), 사업 관리번호 필드(FIELDS.id)가 보이는 데이터 응답은 미리보기를 생략한다(#141).
+  let parsed = null;
+  const diagnostic = () => {
+    const head = `http ${res.status} · content-type ${res.headers.get("content-type")} · `;
+    if (text.includes(FIELDS.id)) return `${head}본문은 데이터 응답으로 보여 생략`;
+    if (parsed) return `${head}본문은 파싱됨, 모양 진단만(미리보기 생략)`;
+    if (!text.trimStart().startsWith("<")) return `${head}본문 미리보기 생략(HTML·XML이 아님, ${text.length}자)`;
+    return `${head}본문 앞 ${BODY_PREVIEW_CHARS}자: ${mask(text).slice(0, BODY_PREVIEW_CHARS).replace(/\s+/g, " ")}`;
+  };
   // 429는 재시도하지 않고 바로 멈춘다(소유자 조건 5). 다시 두드리면 한도 초과를 키운다.
   if (res.status === 429) throw new LimitError(`HTTP 429 - 호출 제한 응답, 즉시 중단 — ${diagnostic()}`);
   if (!res.ok) throw new Error(`HTTP 오류 — ${diagnostic()}`);
-  let parsed;
   try { parsed = parseBody(text); } catch { parsed = null; }
   if (!parsed) throw new Error(`JSON·XML이 아닌 응답 — ${diagnostic()}`);
 
@@ -211,6 +215,7 @@ async function requestPage(ctx, sigungu, bjdong, pageNo) {
   const items = rawItems ? (Array.isArray(rawItems) ? rawItems : [rawItems]) : [];
   // 응답 모양 진단용: 이름·개수·타입만 든 문자열로 바로 줄인다(값은 들고 있지 않는다). 항목이 있는 쪽을 우선 남긴다.
   if (items.length > 0 || !ctx.shape || ctx.shape.empty) ctx.shape = { lines: describeShape(parsed, mask), empty: items.length === 0 };
+  assertItemObjects(items); // 객체가 아닌 항목은 값 없이 거절한다(타입 이름만)
   return { items, totalCount, text };
 }
 
@@ -246,10 +251,6 @@ async function collectDong(ctx, sigungu, bjdong) {
     // 진단은 필드 가정 검사 앞에서 쌓는다(가정이 틀려 던져도 분포는 남도록). 값은 add 안에서 바로 개수로 줄어든다.
     for (const item of page.items) ctx.diag.add(item);
     assertCoreFields(page.items);
-    // 위치(구·쪽 번호)만 적는다. 사업 관리번호·읽지 못한 값은 공개 로그에 남기지 않는다(#141).
-    page.items.forEach((item, index) => {
-      if (readUnits(item[FIELDS.units]) === null) throw new ShapeError(`호수를 읽을 수 없음: 구 ${sigungu} 쪽 ${pageNo} ${index + 1}번째 항목 (${FIELDS.units} 값이 숫자가 아니거나 음수)`);
-    });
     for (const item of page.items) {
       if (String(item[FIELDS.sigungu]).trim() !== sigungu) {
         // 응답의 시군구 값은 적지 않는다(값 비노출). 요청한 구만 적는다.
@@ -384,7 +385,7 @@ async function main() {
     if (!capped) {
       try {
         const m = foldProjects(all, { inputTimeField: ctx.inputTimeField }).meta;
-        fold = `접기 검사 통과(메모리만): 입력 ${m.input} · 사업 ${m.projects} · 중복 ${m.duplicates} · 취소 ${m.cancelled}`;
+        fold = `접기 검사 통과(메모리만): 입력 ${m.input} · 사업 ${m.projects} · 중복 ${m.duplicates} · 취소 ${m.cancellation} · 호수 0 ${m.unitsZero}·비숫자 ${m.unitsInvalid} · complete 필드 ${m.completeField ?? "미정"}`;
       } catch (err) {
         warn(progressLine(ctx));
         reportShape(ctx, err);
@@ -420,14 +421,13 @@ async function main() {
     },
     series: merged.series,
     unknown: merged.unknown,
-    cancelledPermit: merged.cancelledPermit,
   };
   await mkdir(v["out-dir"], { recursive: true });
   const file = path.join(v["out-dir"], "folded.json");
   await writeFile(`${file}.tmp`, JSON.stringify(out) + "\n");
   await rename(`${file}.tmp`, file);
   for (const line of ctx.diag.lines(mask)) say(line); // 로그에만 - meta에는 넣지 않는다
-  say(`${file}: 사업 ${out.meta.projects}건(중복 ${out.meta.duplicates}, 취소 ${out.meta.cancelled}) · 호출 ${ctx.calls}/${ctx.limit}`);
+  say(`${file}: 사업 ${out.meta.projects}건(중복 ${out.meta.duplicates}, 취소 ${out.meta.cancellation}) · 호출 ${ctx.calls}/${ctx.limit}`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
