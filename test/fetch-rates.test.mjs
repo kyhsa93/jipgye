@@ -428,10 +428,10 @@ test("진단 로그 본문은 앞 200자까지만 남긴다", async () => {
 
 test("응답 본문이 인증키를 에코해도 로그·failCause·메타 어디에도 키가 남지 않는다 (#107)", async () => {
   // 키가 안 보이게 하는 치환(mask)을 빼면 이 시험이 빨개진다.
-  const key = "SECRETKEY-abc123XYZ";
-  const stub = await startStub(({ auth }) => ({
+  const key = "SECRETKEY-a+b/c=XYZ";
+  const stub = await startStub(() => ({
     contentType: "text/html",
-    raw: `<html>잘못된 요청: auth=${auth} / 인코딩 ${encodeURIComponent(auth)}</html>`,
+    raw: `<html>잘못된 요청: auth=${key} / 인코딩 ${encodeURIComponent(key)}</html>`,
   }));
   const outDir = await tempDir();
   try {
@@ -442,6 +442,22 @@ test("응답 본문이 인증키를 에코해도 로그·failCause·메타 어�
       assert.ok(!text.includes(encodeURIComponent(key)), `${where}에 인코딩된 인증키가 남았다`);
     }
     assert.match(failed.stderr, /auth=\*\*\*/, "키가 치환 표식으로 바뀌어야 한다(본문이 실제로 에코됐는지 확인)");
+  } finally {
+    await stub.close();
+  }
+});
+
+test("키가 본문 195자 근처에서 잘려도 키의 일부가 남지 않는다 (#107)", async () => {
+  // 자른 뒤에 치환하면 200자 경계에 걸린 키의 앞부분이 그대로 로그에 남는다. 치환이 먼저여야 한다.
+  const key = "SECRETKEY-a+b/c=XYZ";
+  const stub = await startStub(() => ({ contentType: "text/html", raw: `<html>${"가".repeat(188)}${key}</html>` }));
+  const outDir = await tempDir();
+  try {
+    const failed = await runAllFailed(stub.base, outDir, { key });
+    const meta = await readFile(path.join(outDir, "rates-meta.json"), "utf-8");
+    for (const [where, text] of [["stdout", failed.stdout], ["stderr", failed.stderr], ["rates-meta.json", meta]]) {
+      assert.ok(!text.includes(key.slice(0, 5)), `${where}에 키 앞부분이 남았다`);
+    }
   } finally {
     await stub.close();
   }

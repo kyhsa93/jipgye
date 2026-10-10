@@ -109,7 +109,7 @@ async function fetchPageOnce(endpoint, topFinGrpNo, pageNo) {
   // 상태 코드·content-type·본문 앞부분을 남겨 키 문제/차단/엔드포인트 변경을 가릴 수 있게 한다.
   const diagnose = (what) => {
     const err = new Error(`${what} (http ${res.status}, ${contentType})`);
-    err.diagnostic = `http ${res.status} · content-type ${contentType} · 본문 앞 ${BODY_PREVIEW_CHARS}자: ${text.slice(0, BODY_PREVIEW_CHARS).replace(/\s+/g, " ")}`;
+    err.diagnostic = `http ${res.status} · content-type ${contentType} · 본문 앞 ${BODY_PREVIEW_CHARS}자: ${mask(text).slice(0, BODY_PREVIEW_CHARS).replace(/\s+/g, " ")}`;
     return err;
   };
   if (!res.ok) throw diagnose("http 오류 응답");
@@ -362,7 +362,7 @@ async function main() {
       `::warning::금리 수집 실패(금감원 finlife) - 원인 ${cause}, 마지막 성공 ${meta.lastFetchedDate ?? "없음"}. 기존 금리를 그대로 둔다`
     );
     process.exitCode = EXIT_ALL_FAILED;
-    
+
     return;
   }
 
