@@ -93,7 +93,8 @@ jobs:
 
       - name: 접기
         run: |
-          export ZIP_SHA256="$(sha256sum "$RUNNER_TEMP/official-price.zip" | cut -d' ' -f1)"
+          ZIP_SHA256="$(sha256sum "$RUNNER_TEMP/official-price.zip" | cut -d' ' -f1)"
+          export ZIP_SHA256
           unzip -p "$RUNNER_TEMP/official-price.zip" '*.csv' \
             | node scripts/fetch-official-price.mjs \
                 --sha256 "$EXPECT_SHA256" --rows "$EXPECT_ROWS" --base-year "$BASE_YEAR" \
