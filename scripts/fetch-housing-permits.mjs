@@ -18,6 +18,9 @@
  *   응답 항목은 받자마자 필요한 필드만 남긴다(projectItem).
  * - 법정동 코드 목록(bjdongCd)은 저장소에 없다. --bjdong-file이 없으면 호출 없이 종료 1.
  *   형태: {"11110": ["10100", ...], ... 25구 전부}. 출처 결정은 미정(PR 본문 참조).
+ * - 진단(#147): 받은 응답에서 개수·비율·연도 히스토그램·코드성 범주만 계산해 로그 줄로 남긴다(housing-permits-diagnose.mjs).
+ *   추가 호출 없음, 저장 없음(folded.json meta에도 넣지 않는다), 값(관리번호·사업명·주소·날짜 원문)은 어떤 형태로도 안 낸다.
+ *   FIELDS 가정이 틀려 멈추는 경우에도 그때까지 쌓은 진단 줄은 남긴다.
  * - 실제 호출은 이 이슈 범위 밖이다. 시험은 스텁 서버(BUILDINGHUB_API_ENDPOINT)로만 돈다.
  */
 import { XMLParser } from "fast-xml-parser";
@@ -27,6 +30,7 @@ import path from "node:path";
 import { parseArgs } from "node:util";
 import { DISTRICTS } from "./realestate-districts.mjs";
 import { assertCoreFields, describeShape, foldProjects, listKeys, projectItem, readUnits, ShapeError } from "./housing-permits-fold.mjs";
+import { createDiagnostics } from "./housing-permits-diagnose.mjs";
 import { mergeSmallCells } from "./housing-permits-merge.mjs";
 import { DAILY_LIMIT, DEFAULT_ENDPOINT, FIELDS, LICENSE, OPERATION, PAGE_SIZE } from "./housing-permits-spec.mjs";
 
@@ -83,7 +87,10 @@ function shapeLines(ctx) {
   return [...(ctx.shape?.lines ?? []), `응답 필드 이름: ${listKeys([...ctx.responseFields], mask)}`];
 }
 const reportShape = (ctx, err) => {
-  if (err instanceof ShapeError) for (const line of shapeLines(ctx)) warn(line);
+  if (err instanceof ShapeError) {
+    for (const line of shapeLines(ctx)) warn(line);
+    for (const line of ctx.diag.lines(mask)) warn(line); // 필드 가정이 틀린 첫 시험에서도 채움률·분포는 건진다
+  }
 };
 
 class LimitError extends Error {}
@@ -230,9 +237,14 @@ async function collectDong(ctx, sigungu, bjdong) {
     ctx.pages += 1;
     ctx.items += page.items.length;
     ctx.maxPageItems = Math.max(ctx.maxPageItems, page.items.length);
-    if (pageNo === 1) ctx.totalCountSum += page.totalCount;
+    if (pageNo === 1) {
+      ctx.totalCountSum += page.totalCount;
+      if (page.totalCount === 0) ctx.diag.noteEmptyDong();
+    }
     if (page.items.length > 0) ctx.districtsWithData.add(sigungu);
     for (const item of page.items) for (const key of Object.keys(item ?? {})) ctx.responseFields.add(key); // 이름만(B4)
+    // 진단은 필드 가정 검사 앞에서 쌓는다(가정이 틀려 던져도 분포는 남도록). 값은 add 안에서 바로 개수로 줄어든다.
+    for (const item of page.items) ctx.diag.add(item);
     assertCoreFields(page.items);
     // 위치(구·쪽 번호)만 적는다. 사업 관리번호·읽지 못한 값은 공개 로그에 남기지 않는다(#141).
     page.items.forEach((item, index) => {
@@ -324,7 +336,7 @@ async function main() {
     timeoutMs: numberEnv("BUILDINGHUB_TIMEOUT_MS", 15_000),
     retryMs: numberEnv("BUILDINGHUB_RETRY_MS", 3000),
     calls: 0, pages: 0, items: 0, maxPageItems: 0, totalCountSum: 0, dongsDone: 0, dongsTotal: districts.reduce((n, d) => n + bjdong[d.code].length, 0), where: null, rawDir, rawHash: createHash("sha256"),
-    inputTimeField: v["input-time-field"] || null, responseFields: new Set(), districtsWithData: new Set(),
+    inputTimeField: v["input-time-field"] || null, responseFields: new Set(), districtsWithData: new Set(), diag: createDiagnostics(),
   };
 
   const all = [];
@@ -384,6 +396,7 @@ async function main() {
     say(`요청 쪽 크기 ${ctx.pageSize} · 한 쪽 최대 수신 항목 ${ctx.maxPageItems} · 동별 totalCount 합 ${ctx.totalCountSum}`);
     for (const line of shapeLines(ctx)) say(line);
     say(fold);
+    for (const line of ctx.diag.lines(mask)) say(line);
     return;
   }
 
@@ -413,6 +426,7 @@ async function main() {
   const file = path.join(v["out-dir"], "folded.json");
   await writeFile(`${file}.tmp`, JSON.stringify(out) + "\n");
   await rename(`${file}.tmp`, file);
+  for (const line of ctx.diag.lines(mask)) say(line); // 로그에만 - meta에는 넣지 않는다
   say(`${file}: 사업 ${out.meta.projects}건(중복 ${out.meta.duplicates}, 취소 ${out.meta.cancelled}) · 호출 ${ctx.calls}/${ctx.limit}`);
 }
 
