@@ -21,9 +21,23 @@ const SHELL = (inner) => `<header><div class="updated" id="updated">불러오는
 
 /** nav.js를 가짜 문서에서 돌린다. now는 주입하는 '지금' 시각(ISO). 경고 칸의 최종 상태를 돌려준다. */
 async function runNav(html, nowIso, lang = "ko") {
+  return (await runNavFull(html, nowIso, lang)).warn;
+}
+
+/** runNav + #updated 글자 + 언어 전환(MutationObserver 콜백 호출). setLang(l)은 lang을 바꾸고 관찰자를 깨운다. */
+async function runNavFull(html, nowIso, lang = "ko") {
   const source = await readFile(path.join(DOCS, "nav.js"), "utf8");
   const date = html.match(/id="updated"[^>]*data-updated="([^"]*)"/)?.[1] ?? null;
-  const updated = { getAttribute: (n) => (n === "data-updated" ? date : null) };
+  const text = html.match(/id="updated"[^>]*>([^<]*)</)?.[1] ?? "";
+  const updated = { textContent: text, getAttribute: (n) => (n === "data-updated" ? date : null) };
+  let current = lang;
+  const observers = [];
+  class FakeObserver {
+    constructor(cb) {
+      observers.push(cb);
+    }
+    observe() {}
+  }
   const warn = { hidden: true, textContent: "" };
   const els = { updated, "updated-warn": warn };
   const RealDate = Date;
@@ -42,11 +56,16 @@ async function runNav(html, nowIso, lang = "ko") {
       querySelectorAll: () => [],
       querySelector: () => null,
       getElementById: (id) => els[id] ?? null,
-      documentElement: { getAttribute: () => lang },
+      documentElement: { getAttribute: () => current },
     },
+    MutationObserver: FakeObserver,
     window: { addEventListener() {} },
   });
-  return warn;
+  const setLang = (l) => {
+    current = l;
+    for (const cb of observers) cb([]);
+  };
+  return { warn, updated, setLang };
 }
 
 const stamped = (ymd) => stampHtml(SHELL("<main>본문</main>"), ymd);
@@ -104,6 +123,39 @@ test("같은 HTML에 다른 오늘을 넣어도 HTML은 그대로고 경고만 �
 test("영어 화면에서는 영어로 경고한다", async () => {
   const warn = await runNav(stamped("2026-10-08"), "2026-10-15T03:00:00Z", "en");
   assert.equal(warn.textContent, "Data from 7 days ago");
+});
+
+test("영어 화면에서는 기준일 라벨이 'As of'이고, 한국어 화면에서는 '기준일'이다 (#123)", async () => {
+  const html = stamped("2026-10-08");
+  const en = await runNavFull(html, "2026-10-09T03:00:00Z", "en");
+  assert.equal(en.updated.textContent, "As of 2026-10-08");
+  const ko = await runNavFull(html, "2026-10-09T03:00:00Z", "ko");
+  assert.equal(ko.updated.textContent, "기준일 2026-10-08");
+});
+
+test("화면 언어를 바꾸면 기준일 라벨이 따라간다 (ko -> en -> ko)", async () => {
+  const r = await runNavFull(stamped("2026-10-08"), "2026-10-09T03:00:00Z", "ko");
+  r.setLang("en");
+  assert.equal(r.updated.textContent, "As of 2026-10-08");
+  r.setLang("ko");
+  assert.equal(r.updated.textContent, "기준일 2026-10-08");
+});
+
+test("페이지 스크립트가 #updated를 자기 문장으로 바꾼 장은 건드리지 않는다", async () => {
+  const html = stamped("2026-10-08").replace(">기준일 2026-10-08<", ">Viewing archive 2026-10-01<");
+  const r = await runNavFull(html, "2026-10-09T03:00:00Z", "en");
+  assert.equal(r.updated.textContent, "Viewing archive 2026-10-01");
+});
+
+test("저장소 docs: 영어 화면에서 기준일을 찍은 모든 장의 라벨에 한국어가 0장이다 (#123)", async () => {
+  let n = 0;
+  for (const file of Object.keys(PAGE_SOURCES)) {
+    const html = await readFile(path.join(DOCS, file), "utf8");
+    const r = await runNavFull(html, "2026-10-09T03:00:00Z", "en");
+    n += 1;
+    assert.match(r.updated.textContent, /^As of \d{4}-\d{2}-\d{2}$/, `docs/${file}: 영어 화면에 '${r.updated.textContent}'`);
+  }
+  assert.equal(n, Object.keys(PAGE_SOURCES).length);
 });
 
 test("기준일이 없거나 깨졌으면 경고하지 않는다 (없는 날짜로 겁주지 않는다)", async () => {
