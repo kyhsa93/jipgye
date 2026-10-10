@@ -1,0 +1,5 @@
+name: X
+jobs:
+  a:
+    steps:
+      - run: ./p.sh "chore: x"

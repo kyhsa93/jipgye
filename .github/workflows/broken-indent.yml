@@ -1,0 +1,7 @@
+name: X
+on: push
+jobs:
+  a:
+    runs-on: u
+   steps:
+    - run: echo
