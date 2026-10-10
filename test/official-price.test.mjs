@@ -241,3 +241,24 @@ test("워크플로: dispatch 전용, 시크릿 없음, 최소 권한, 액션 SHA
   assert.doesNotMatch(code.join("\n"), /BBDFE3E1|15851336|15,851,336/i);
   assert.match(text, /download_url[\s\S]*sha256[\s\S]*rows[\s\S]*base_year[\s\S]*license/);
 });
+
+test("연결: foldStream이 돌려주기 전에 assertDerived를 부른다 (#68 cto 후속)", async () => {
+  // assertDerived 단독 시험은 있지만 foldStream 끝 호출이 빠져도 통과한다. ESM 함수를 가로챌 수 없어
+  // 소스에서 foldStream 본문의 마지막 return 직전에 호출이 있는지 본다.
+  const src = await readFile(path.join(root, "scripts", "official-price-fold.mjs"), "utf8");
+  const body = src.slice(src.indexOf("export async function foldStream"));
+  const call = body.indexOf("assertDerived(out);");
+  assert.ok(call > 0, "foldStream 안에 assertDerived(out) 호출이 없다");
+  assert.ok(call < body.lastIndexOf("return out;"), "assertDerived가 return보다 뒤에 있다");
+  assert.ok(body.indexOf("MAX_OUTPUT_BYTES") > call, "assertDerived는 크기 검사보다 앞이어야 한다");
+});
+
+test("워크플로: curl은 https만 허용하고 리다이렉트도 https로 고정한다 (#68 cto 후속)", async () => {
+  const text = await readFile(path.join(root, ".github/workflows/official-price.yml"), "utf8");
+  const curls = text.split("\n").filter((l) => /\bcurl\b/.test(l) && !l.trim().startsWith("#"));
+  assert.ok(curls.length >= 1);
+  for (const l of curls) {
+    assert.match(l, /--proto '=https'/, l);
+    assert.match(l, /--proto-redir '=https'/, l);
+  }
+});
