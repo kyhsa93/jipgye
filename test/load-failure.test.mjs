@@ -359,3 +359,91 @@ test("거래 목록: deals 실패는 구 하나만 실패해도 빠진 구 없�
   await page.settle();
   assert.ok(page.resultHtml().includes("load-retry-deals"), "전체 구 + 단지명 조건에서 실패 표시가 없다");
 });
+
+// --- 단지 카드 안 전세 쪽(rents-*) 로드 실패 (#199) ---
+// 매매 결과는 정상인데 카드가 전세가율을 위해 받는 rents-*만 실패한 경우. 이전에는 rentsFailed에 기록만 되고
+// 카드의 전세·전세가율 칸이 값 없이 빠져 "표본 부족"과 구분되지 않았다.
+// 가짜 DOM은 없는 id도 빈 요소를 돌려주므로(page.byId), 자리·단추의 존재는 카드 innerHTML 문자열로 먼저 확인한다.
+// 카드 HTML에는 자리(#complex-rents-status)만 있고, 문구·단추는 공용 규칙이 그 자리 요소에 써 넣는다.
+const cardHtml = (page) => page.byId("complex-card").innerHTML;
+const rentsSlot = (page) => page.byId("complex-rents-status").innerHTML;
+
+test("단지 카드(전세 쪽): rents-* fetch가 거부되면 카드 안에 실패 문구(한·영) + 재시도 단추, 전세·전세가율 칸은 불러오지 못함", async () => {
+  for (const [locale, error, retry, unloaded] of [
+    ["ko", "실거래를 불러오지 못했습니다.", "다시 시도", "불러오지 못함"],
+    ["en", "Could not load transaction data.", "Retry", "Not loaded"],
+  ]) {
+    const page = await dealSearch(APT_QUERY, { locale, network: { failRents: true } });
+    await page.settle();
+    const card = cardHtml(page);
+    const label = `${APT_QUERY} ${locale}`;
+    assert.ok(card.includes('id="complex-rents-status"'), `${label}: 실패 자리가 카드 안에 없다`);
+    assert.ok(rentsSlot(page).includes(error), `${label}: 카드 안에 실패 문구가 없다`);
+    assert.match(rentsSlot(page), new RegExp(`<button type="button" id="load-retry-rents-card">${retry}</button>`), `${label}: 카드 안에 재시도 단추가 없다`);
+    // 전세·전세가율 두 칸이 모두 불러오지 못함이어야 한다 - 행마다 2칸.
+    const rowCount = (card.match(/<tr><td>/g) ?? []).length;
+    assert.ok(rowCount > 0, `${label}: 매매 쪽 행이 사라졌다`);
+    assert.equal(card.split(`<span class="low-sample">${unloaded}</span>`).length - 1, rowCount * 2, `${label}: 전세·전세가율 칸이 불러오지 못함이 아니다`);
+    assert.ok(!/\d+\.\d%/.test(card), `${label}: 실패인데 전세가율 값이 보인다`);
+    assert.ok((page.byId("load-retry-rents-card").listeners.click ?? []).length > 0, `${label}: 단추에 누름 처리가 없다`);
+    // 결과 자리(매매)는 정상이어야 한다 - 실패가 결과 전체로 번지지 않는다.
+    assert.ok(!page.resultHtml().includes("load-retry"), `${label}: 매매 결과 자리까지 실패로 바뀌었다`);
+  }
+});
+
+test("단지 카드(전세 쪽): 재시도가 성공하면 실패 문구가 사라지고 전세가율이 채워진다", async () => {
+  const net = { failRents: true };
+  const page = await dealSearch(APT_QUERY, { network: net });
+  await page.settle();
+  assert.ok(cardHtml(page).includes('id="complex-rents-status"'), "처음부터 실패 자리가 없다");
+  assert.ok(rentsSlot(page).includes("load-retry-rents-card"), "처음부터 실패 표시가 없다");
+
+  net.failRents = false;
+  page.byId("load-retry-rents-card").dispatch("click");
+  await page.settle();
+
+  const card = cardHtml(page);
+  assert.ok(!card.includes("complex-rents-status"), "재시도가 성공했는데 실패 자리가 남았다");
+  assert.ok(!card.includes("load-retry"), "재시도가 성공했는데 재시도 단추가 남았다");
+  assert.ok(!card.includes("불러오지 못함"), "재시도가 성공했는데 불러오지 못함이 남았다");
+  assert.match(card, /\d+\.\d%/, "재시도 뒤 전세가율 값이 채워지지 않았다");
+});
+
+test("단지 카드(전세 쪽): rents-* 파일이 없는 날(404)은 실패로 보이지 않는다", async () => {
+  const [budget, search, deals] = await Promise.all([readJson("budget-deals"), readJson("deal-search"), readJson("deals-nowon")]);
+  const page = await loadDealSearchPage({ budget, search, deals: { 노원구: deals }, query: APT_QUERY });
+  await page.settle();
+  const card = cardHtml(page);
+  assert.ok(/전세가율/.test(card) && card.includes("<table"), "카드가 그려지지 않았다 - 404 시험이 비어 있다");
+  assert.ok(!card.includes("complex-rents-status"), "404를 실패 자리로 그렸다");
+  // 자리 요소 자체는 시험 DOM이 없는 id에도 빈 요소를 주고 showFailure가 거기에 쓰므로, 404 판정은 카드 HTML의 자리 유무로만 한다.
+  assert.ok(!card.includes("load-retry"), "404에 재시도 단추를 보였다");
+  assert.ok(!card.includes("불러오지 못함"), "404를 불러오지 못함으로 적었다");
+});
+
+test("단지 카드(전세 쪽): 재시도 단추를 연달아 눌러도 rents-* 요청은 한 번뿐이다", async () => {
+  const net = { failRents: true };
+  const page = await dealSearch(APT_QUERY, { network: net });
+  await page.settle();
+  let fetches = 0;
+  const real = page.sandbox.fetch;
+  page.sandbox.fetch = async (url) => {
+    if (/\/rents-[a-z]+\.json/.test(String(url))) fetches += 1;
+    return real(url);
+  };
+  net.failRents = false;
+  assert.ok(cardHtml(page).includes('id="complex-rents-status"'), "실패 자리가 카드에 없다");
+  assert.ok(rentsSlot(page).includes("load-retry-rents-card"), "재시도 단추가 없다");
+  const button = page.byId("load-retry-rents-card");
+  for (let i = 0; i < 3; i += 1) if (button.disabled !== true) button.dispatch("click");
+  assert.strictEqual(button.disabled, true, "첫 클릭 뒤 단추가 잠기지 않았다");
+  await page.settle();
+  assert.equal(fetches, 1, `연타에 rents를 ${fetches}번 받았다`);
+});
+
+test("단지 카드(전세 쪽): 실패 표시는 공용 규칙으로만 만든다 - 재시도 단추 마크업을 직접 쓰지 않는다", async () => {
+  const html = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
+  assert.ok(html.includes('<div id="complex-card"></div>'), "#complex-card 자리가 HTML에 없다");
+  assert.ok(!html.includes('id="load-retry-rents-card"'), "load-retry-rents-card 마크업을 직접 썼다");
+  assert.ok(!/<button[^>]*load-retry-rents-card/.test(html), "재시도 단추를 직접 만들었다");
+});
