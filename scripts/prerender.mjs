@@ -16,6 +16,7 @@ import { BASIS_DATE as POLICY_DATE_BASIS, policyShort, policySentence } from "./
 import { BASIS_DATE as MIN_CASH_DATE, minCash, minCashSentence } from "./min-cash.mjs";
 import { WOLSE_CONVERSION_RATE } from "./realestate-metrics.mjs";
 import { rateFacts, factSentences as rateSentences } from "./rate-facts.mjs";
+import { rateBridgeHtml } from "./rate-bridge.mjs";
 import {
   KIND_FIELDS,
   areaPrice,
@@ -1228,7 +1229,7 @@ async function main() {
 
   for (const [file, path_, fileBlocks] of [
     ["docs/index.html", INDEX_PATH, blocks],
-    ["docs/rates.html", RATES_PATH, { rates: ratesHtml(rates), ratesHead: ratesHeadHtml(), rateFactsKo: rateFactsHtml(rates, "deposit", "ko"), rateFactsEn: rateFactsHtml(rates, "deposit", "en"), rateFactsData: jsonForScript(rateFactsData(rates)) }],
+    ["docs/rates.html", RATES_PATH, { rates: ratesHtml(rates), ratesHead: ratesHeadHtml(), rateFactsKo: rateFactsHtml(rates, "deposit", "ko"), rateFactsEn: rateFactsHtml(rates, "deposit", "en"), rateFactsData: jsonForScript(rateFactsData(rates)), rateBridgeKo: rateBridgeHtml("rates", "ko"), rateBridgeEn: rateBridgeHtml("rates", "en") }],
     [
       "docs/news.html",
       NEWS_PATH,

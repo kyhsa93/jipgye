@@ -1663,6 +1663,21 @@ main h3 {
   font-weight: 600;
 }
 
+/* 금리 다음에 볼 곳(실거래·전환율) 문단. 표 옆 문단(.rates-facts)과 같은 카드 모양이되 상품군 링크 아래에 붙는다. */
+.rates-bridge {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 14px 0 0;
+  font-size: var(--fs-md);
+  line-height: 1.65;
+}
+
+.rates-bridge[hidden] {
+  display: none;
+}
+
 .data-table th.sortable {
   padding: 0;
 }

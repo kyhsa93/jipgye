@@ -1,6 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { applyPrerender, jsonForScript, rateFactsData, rateFactsHtml, ratesHeadHtml, ratesHtml } from "./prerender.mjs";
+import { rateBridgeHtml } from "./rate-bridge.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const RATES_PATH = path.join(root, "docs/rates.html");
@@ -92,6 +93,9 @@ export function buildRatePage(baseHtml, page, rates) {
     rateFactsKo: rateFactsHtml(rates, page.category, "ko"),
     rateFactsEn: rateFactsHtml(rates, page.category, "en"),
     rateFactsData: jsonForScript(rateFactsData(rates)),
+    // 금리 다음에 볼 곳 문단은 상품군마다 다른 말을 한다(scripts/rate-bridge.mjs).
+    rateBridgeKo: rateBridgeHtml(page.category, "ko"),
+    rateBridgeEn: rateBridgeHtml(page.category, "en"),
   });
 }
 

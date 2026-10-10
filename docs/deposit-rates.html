@@ -108,6 +108,9 @@
       <a href="./mortgage-rates.html" data-rate-page="mortgage">주택담보대출 금리 비교</a>
       <a href="./rent-loan-rates.html" data-rate-page="rentLoan">전세자금대출 금리 비교</a>
     </nav>
+
+    <p class="rates-bridge" id="rates-bridge" data-lang="ko"><!--prerender:rateBridgeKo-->정기예금 금리는 계약 날까지 묶어 둘 목돈에 이자가 얼마 붙는지를 알려 줄 뿐, 그 목돈으로 닿을 수 있는 곳까지는 알려 주지 않습니다. 같은 목돈이 10억 원 예산대의 서울 실거래에서 어디쯤인지는 <a href="./budget-10eok.html">10억대 실거래</a>에 있고, 그 목돈을 전세 보증금으로 묶을지 월세로 낼지의 월 비용 차이는 <a href="./jeonse-vs-wolse.html">전월세전환율</a>의 자치구 표가 보여 줍니다.<!--/prerender:rateBridgeKo--></p>
+    <p class="rates-bridge" id="rates-bridge-en" data-lang="en" hidden><!--prerender:rateBridgeEn-->A deposit rate tells you how much interest a lump sum earns while it waits for a contract date; it does not tell you what that sum can reach. Where the same sum sits among Seoul deals at a KRW 1 billion (10억) budget is on <a href="./budget-10eok.html">the 10억 listings</a>, and the monthly cost gap between tying it up as a jeonse deposit and paying it as monthly rent is shown by the district table in <a href="./jeonse-vs-wolse.html">the conversion rate</a>.<!--/prerender:rateBridgeEn--></p>
   </section>
 
   <footer class="site-footer">
@@ -948,6 +951,12 @@
     for (const link of document.querySelectorAll("#rate-links a[data-rate-page]")) {
       link.textContent = T[locale].ratePageLink(T[locale].tabs[link.dataset.ratePage]);
     }
+
+    // 금리 다음에 볼 곳 문단은 빌드가 두 언어로 다 구워 두었다. 여기서는 지금 언어 것만 보인다.
+    const bridgeKo = document.getElementById("rates-bridge");
+    const bridgeEn = document.getElementById("rates-bridge-en");
+    if (bridgeKo) bridgeKo.hidden = locale === "en";
+    if (bridgeEn) bridgeEn.hidden = locale !== "en";
 
     const month = fmtDisclosureMonth(cache.rates?.disclosureMonth);
     document.getElementById("content-notice").textContent = month
