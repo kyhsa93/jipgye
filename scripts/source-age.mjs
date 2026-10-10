@@ -9,6 +9,8 @@
  *   (KST 08:07)이라 1일 경과는 정상이다. 그래서 상태줄 문턱은 2일(--statusline), 이슈 댓글 문턱은 3일.
  * - 갱신일은 docs/data/*.json 의 `updatedAt`. `updatedAt`이 없는 파일(히스토리·메타)은 소스가 아니다.
  * - 이름에 `-<구>` 접미사가 붙은 묶음(deals-mapo 등)은 한 소스로 보고 가장 오래된 값을 쓴다.
+ * - 주택 인허가 접기(research/housing-permits/folded.json, #133)는 월 1회 수집이라 meta.updatedAt을 읽고
+ *   문턱을 40일로 따로 둔다(하루 단위 문턱 2일을 쓰면 항상 낡아 보인다). 파일이 없으면(첫 수집 전) 소스가 아니다.
  * - 실거래 원본은 raw/sale·raw/rent 에서 가장 최근 달(yearMonth) 슬롯 파일들의 `observedAt` 중 최신.
  *
  * 사용:
@@ -26,6 +28,9 @@ const DAY_MS = 86400000;
 
 /** 낡았다고 말하는 문턱(일). docs/nav.js의 STALE_DAYS와 같아야 하고, test/updated-stamp.test.mjs가 묶는다 (#111). */
 export const STALE_DAYS = 2;
+
+/** 월 단위로 수집하는 소스의 낡음 문턱(일). 월 1회 + 한 번 건너뛴 뒤 확인할 여유. */
+export const MONTHLY_STALE_DAYS = 40;
 
 /** ISO 시각(UTC) -> KST 달력 날짜 YYYY-MM-DD. 파싱 못 하면 null. */
 export function kstDateOf(iso) {
@@ -116,6 +121,17 @@ export function readRawSources(rawDir) {
   return out;
 }
 
+/** 주택 인허가 접기(#133). 월 1회 수집이라 staleDays를 따로 단다. */
+export function readHousingSources(dir) {
+  try {
+    const updatedAt = JSON.parse(readFileSync(join(dir, "folded.json"), "utf8"))?.meta?.updatedAt;
+    if (typeof updatedAt !== "string" || kstDayNumber(updatedAt) === null) return [];
+    return [{ name: "housing-permits", file: "research/housing-permits/folded.json", updatedAt, members: 1, staleDays: MONTHLY_STALE_DAYS }];
+  } catch {
+    return [];
+  }
+}
+
 /** 경과일을 붙여 큰 순(같으면 이름 순)으로. */
 export function computeAges(sources, today) {
   const t = dayOfDate(today);
@@ -124,17 +140,26 @@ export function computeAges(sources, today) {
     .sort((a, b) => b.ageDays - a.ageDays || a.name.localeCompare(b.name));
 }
 
+/** 낡았다고 볼 문턱을 넘은 소스. 소스가 staleDays를 달고 있으면(월 단위 수집) 그 값, 아니면 minDays. */
+export function staleOnes(ages, minDays = STALE_DAYS) {
+  return ages.filter((a) => a.ageDays >= (a.staleDays ?? minDays));
+}
+
 /** 한 줄 요약. 예: `경과 최대 2일: cancellation.json`. 경과 0~1일이면 정상이라고 적는다. */
 export function summarize(ages, minDays = STALE_DAYS) {
   if (!ages.length) return "소스 없음";
-  const max = ages[0].ageDays;
-  if (max < minDays) return `경과 최대 ${max}일 - 이상 없음`;
-  const stale = ages.filter((a) => a.ageDays === max).map((a) => a.file);
-  return `경과 최대 ${max}일: ${stale.join(", ")}`;
+  const stale = staleOnes(ages, minDays);
+  if (!stale.length) {
+    // 이상 없음일 때 보이는 최대 경과는 하루 단위 소스만 본다(월 단위 소스의 20일은 정상이다)
+    const daily = ages.filter((a) => a.staleDays === undefined);
+    return `경과 최대 ${(daily[0] ?? ages[0]).ageDays}일 - 이상 없음`;
+  }
+  const max = stale[0].ageDays;
+  return `경과 최대 ${max}일: ${stale.filter((a) => a.ageDays === max).map((a) => a.file).join(", ")}`;
 }
 
-export function collect({ today = todayKst(), dataDir, rawDir } = {}) {
-  const sources = [...readDataSources(dataDir), ...(rawDir ? readRawSources(rawDir) : [])];
+export function collect({ today = todayKst(), dataDir, rawDir, housingDir } = {}) {
+  const sources = [...readDataSources(dataDir), ...(rawDir ? readRawSources(rawDir) : []), ...(housingDir ? readHousingSources(housingDir) : [])];
   return computeAges(sources, today);
 }
 
@@ -142,10 +167,10 @@ function main(argv) {
   const arg = (k) => argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3);
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
   const today = arg("today") ?? todayKst();
-  const ages = collect({ today, dataDir: arg("data") ?? join(root, "docs/data"), rawDir: arg("raw") ?? join(root, "raw") });
+  const ages = collect({ today, dataDir: arg("data") ?? join(root, "docs/data"), rawDir: arg("raw") ?? join(root, "raw"), housingDir: arg("housing") ?? join(root, "research/housing-permits") });
   if (argv.includes("--statusline")) {
     // 이상이 없으면 아무것도 찍지 않는다(상태줄이 비어 보이게).
-    if (ages.length && ages[0].ageDays >= STALE_DAYS) console.log(`집계 ${summarize(ages)}`);
+    if (staleOnes(ages).length) console.log(`집계 ${summarize(ages)}`);
     return;
   }
   console.log(`오늘(KST) ${today}`);

@@ -66,3 +66,26 @@ test("구 묶음은 한 소스, 가장 오래된 값; updatedAt 없는 파일은
 test("경과 1일은 정상, 상태줄 문턱(2일) 미만이면 이상 없음", () => {
   assert.equal(summarize([{ ageDays: 1, file: "a.json" }]), "경과 최대 1일 - 이상 없음");
 });
+
+test("#133: 주택 인허가 접기(월 1회 수집)가 소스로 잡히고, 월 단위 문턱 전에는 상태줄에 안 나온다", () => {
+  const { root, data, raw } = fixture();
+  const housing = join(root, "housing");
+  mkdirSync(housing);
+  try {
+    writeFileSync(join(housing, "folded.json"), JSON.stringify({ meta: { updatedAt: "2026-09-20T03:00:00Z" } }));
+    const ages = collect({ today: "2026-10-10", dataDir: data, rawDir: raw, housingDir: housing });
+    const h = ages.find((a) => a.name === "housing-permits");
+    assert.equal(h.ageDays, 20);
+    assert.equal(h.file, "research/housing-permits/folded.json");
+    // 20일 묵은 월 단위 소스는 이상이 아니다. 하루 단위 소스 기준으로 보면 최대 경과가 되지만 요약은 이를 세지 않는다.
+    assert.doesNotMatch(summarize(ages), /housing-permits/);
+    writeFileSync(join(housing, "folded.json"), JSON.stringify({ meta: { updatedAt: "2026-08-01T03:00:00Z" } }));
+    const old = collect({ today: "2026-10-10", dataDir: data, rawDir: raw, housingDir: housing });
+    assert.match(summarize(old), /housing-permits|research\/housing-permits\/folded\.json/);
+    // 파일이 없거나 updatedAt이 없으면 소스가 아니다(첫 수집 전)
+    rmSync(join(housing, "folded.json"));
+    assert.equal(collect({ today: "2026-10-10", dataDir: data, rawDir: raw, housingDir: housing }).some((a) => a.name === "housing-permits"), false);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
