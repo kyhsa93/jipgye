@@ -21,8 +21,8 @@ function startStub(handler) {
       auth: url.searchParams.get("auth"),
       userAgent: req.headers["user-agent"],
     });
-    res.writeHead(body.status ?? 200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(body.json));
+    res.writeHead(body.status ?? 200, { "Content-Type": body.contentType ?? "application/json" });
+    res.end(body.raw ?? JSON.stringify(body.json));
   });
   return new Promise((resolve) => {
     server.listen(0, "127.0.0.1", () => {
@@ -113,6 +113,17 @@ async function run(base, outDir, { key = "TESTKEY", force = false, retryDelays =
       ...(force ? { RATES_FORCE: "1" } : {}),
     },
   });
+}
+
+// 네 상품군이 전부 실패하면 스크립트는 코드 3으로 끝난다(#107) - 거부된 실행에서 출력을 꺼낸다.
+async function runAllFailed(...args) {
+  try {
+    await run(...args);
+  } catch (err) {
+    assert.equal(err.code, 3, `전부 실패인데 종료 코드가 3이 아니다: ${err.code}`);
+    return err;
+  }
+  assert.fail("네 상품군이 전부 실패했는데 0으로 끝났다 - full이 success로 가려진다(#107)");
 }
 
 async function readJson(dir, name) {
@@ -350,9 +361,9 @@ test("상품이 0건으로 와도 직전 목록을 지우지 않는다", async (
   }
 });
 
-test("모든 상품군이 실패해도 0으로 끝내고, 기존 파일을 그대로 두고, 경고와 원인을 남긴다", async () => {
-  // 0이 아닌 코드로 끝나면 워크플로의 커밋 단계가 돌지 않아 같은 실행에서 받은
-  // 실거래 원본까지 버려진다(#62).
+test("모든 상품군이 실패하면 코드 3으로 끝내고, 기존 파일을 그대로 두고, 경고와 원인을 남긴다", async () => {
+  // 이 단계의 실패가 뒤를 막지 않게 워크플로가 continue-on-error로 돌리고 끝에서 job을
+  // 실패시킨다(#62 순서 유지, #107).
   const stub = await startStub(() => ({
     status: 500,
     json: { message: "server error" },
@@ -367,7 +378,7 @@ test("모든 상품군이 실패해도 0으로 끝내고, 기존 파일을 그�
   );
 
   try {
-    const { stdout } = await run(stub.base, outDir);
+    const { stdout } = await runAllFailed(stub.base, outDir);
     assert.equal(await readFile(path.join(outDir, "rates.json"), "utf-8"), original);
     assert.match(stdout, /::warning::금리 수집 실패.*HTTP_500.*마지막 성공 2026-10-02/);
     const meta = await readJson(outDir, "rates-meta.json");
@@ -379,13 +390,100 @@ test("모든 상품군이 실패해도 0으로 끝내고, 기존 파일을 그�
   }
 });
 
-test("연결이 안 되면 원인 코드를 남기고 0으로 끝낸다", async () => {
+test("200 text/html이 오면 진단을 남기고, 기존 rates.json을 두고, 코드 3으로 끝낸다 (#107)", async () => {
+  // 2026-10-09 금감원이 JSON 대신 HTML을 200으로 돌려줬는데 SyntaxError 한 줄만 남고 exit 0이라
+  // full이 success로 끝났다. 종료 코드 검사(마지막 단언)는 실패 노출을 되돌리면 빨개진다.
+  const stub = await startStub(() => ({
+    contentType: "text/html; charset=utf-8",
+    raw: "<!DOCTYPE html><html><body>서비스 점검 중입니다</body></html>",
+  }));
+  const outDir = await tempDir();
+  const original = JSON.stringify({ updatedAt: "2026-10-08T02:41:35.997Z", deposit: [] });
+  await writeFile(path.join(outDir, "rates.json"), original);
+
+  try {
+    const failed = await runAllFailed(stub.base, outDir);
+    assert.equal(await readFile(path.join(outDir, "rates.json"), "utf-8"), original, "기존 rates.json이 바뀌었다");
+    const meta = await readJson(outDir, "rates-meta.json");
+    assert.match(meta.failCause, /HTML 응답/);
+    assert.match(failed.stdout, /::warning::금리 수집 실패.*HTML 응답/);
+    assert.match(failed.stderr, /진단: http 200 · content-type text\/html; charset=utf-8 · 본문 앞 200자: <!DOCTYPE html>/);
+    assert.equal(failed.code, 3);
+  } finally {
+    await stub.close();
+  }
+});
+
+test("진단 로그 본문은 앞 200자까지만 남긴다", async () => {
+  const stub = await startStub(() => ({ contentType: "text/html", raw: `<html>${"가".repeat(500)}</html>` }));
+  try {
+    const { stderr } = await runAllFailed(stub.base, await tempDir());
+    const line = stderr.split("\n").find((l) => l.includes("진단:"));
+    assert.ok(line.includes("가".repeat(100)));
+    assert.ok(!line.includes("가".repeat(200)), "본문 200자를 넘겨 남겼다");
+  } finally {
+    await stub.close();
+  }
+});
+
+test("응답 본문이 인증키를 에코해도 로그·failCause·메타 어디에도 키가 남지 않는다 (#107)", async () => {
+  // 키가 안 보이게 하는 치환(mask)을 빼면 이 시험이 빨개진다.
+  const key = "SECRETKEY-a+b/c=XYZ";
+  const stub = await startStub(() => ({
+    contentType: "text/html",
+    raw: `<html>잘못된 요청: auth=${key} / 인코딩 ${encodeURIComponent(key)}</html>`,
+  }));
+  const outDir = await tempDir();
+  try {
+    const failed = await runAllFailed(stub.base, outDir, { key });
+    const meta = await readFile(path.join(outDir, "rates-meta.json"), "utf-8");
+    for (const [where, text] of [["stdout", failed.stdout], ["stderr", failed.stderr], ["rates-meta.json", meta]]) {
+      assert.ok(!text.includes(key), `${where}에 인증키가 그대로 남았다`);
+      assert.ok(!text.includes(encodeURIComponent(key)), `${where}에 인코딩된 인증키가 남았다`);
+    }
+    assert.match(failed.stderr, /auth=\*\*\*/, "키가 치환 표식으로 바뀌어야 한다(본문이 실제로 에코됐는지 확인)");
+  } finally {
+    await stub.close();
+  }
+});
+
+test("키가 본문 195자 근처에서 잘려도 키의 일부가 남지 않는다 (#107)", async () => {
+  // 자른 뒤에 치환하면 200자 경계에 걸린 키의 앞부분이 그대로 로그에 남는다. 치환이 먼저여야 한다.
+  const key = "SECRETKEY-a+b/c=XYZ";
+  const stub = await startStub(() => ({ contentType: "text/html", raw: `<html>${"가".repeat(188)}${key}</html>` }));
+  const outDir = await tempDir();
+  try {
+    const failed = await runAllFailed(stub.base, outDir, { key });
+    const meta = await readFile(path.join(outDir, "rates-meta.json"), "utf-8");
+    for (const [where, text] of [["stdout", failed.stdout], ["stderr", failed.stderr], ["rates-meta.json", meta]]) {
+      assert.ok(!text.includes(key.slice(0, 5)), `${where}에 키 앞부분이 남았다`);
+    }
+  } finally {
+    await stub.close();
+  }
+});
+
+test("워크플로는 금리 단계를 막지 않고 끝에서 실패로 반영한다 (#62 순서 + #107)", async () => {
+  const yml = await readFile(path.resolve(import.meta.dirname, "../.github/workflows/daily-update.yml"), "utf-8");
+  const ratesStep = yml.split("- name: 예·적금·대출 금리 수집")[1]?.split("- name:")[0] ?? "";
+  assert.match(ratesStep, /id: rates/);
+  assert.match(ratesStep, /continue-on-error: true/);
+  const commitAt = yml.indexOf("- name: 변경사항 커밋 및 푸시");
+  const deployAt = yml.indexOf("- name: Pages에 배포");
+  const failAt = yml.indexOf("- name: 금리 수집 실패 반영");
+  assert.ok(commitAt > 0 && deployAt > commitAt && failAt > deployAt, "실패 반영 단계가 커밋·배포 뒤에 있어야 한다");
+  const failStep = yml.slice(failAt);
+  assert.match(failStep, /steps\.rates\.outcome == 'failure'/);
+  assert.match(failStep, /exit 1/);
+});
+
+test("연결이 안 되면 원인 코드를 남기고 코드 3으로 끝낸다", async () => {
   const stub = await startStub(() => ({ json: savingResponse({ products: [] }) }));
   const base = stub.base;
   await stub.close();
   const outDir = await tempDir();
 
-  const { stdout, stderr } = await run(base, outDir);
+  const { stdout, stderr } = await runAllFailed(base, outDir);
   assert.match(stderr, /연결 실패 ECONNREFUSED/);
   assert.match(stdout, /::warning::.*ECONNREFUSED/);
   assert.equal((await readJson(outDir, "rates-meta.json")).failCause, "ECONNREFUSED");
@@ -415,7 +513,7 @@ test("5xx는 다시 불러 회복하고, 첫 상품군이 끝내 연결에 실�
     return { status: 503, json: {} };
   });
   try {
-    await run(dead.base, await tempDir());
+    await runAllFailed(dead.base, await tempDir());
     assert.equal(down, 3, "첫 페이지 한 번 + 재시도 두 번 뒤 멈춰야 한다");
   } finally {
     await dead.close();
