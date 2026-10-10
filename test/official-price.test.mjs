@@ -247,7 +247,10 @@ test("워크플로: dispatch 전용, 시크릿 없음, 최소 권한, 액션 SHA
   // 해시·기준연도·이용허락 문자열은 코드가 아니라 입력으로만 받는다
   const code = await Promise.all(["official-price-fold", "official-price-key", "fetch-official-price"].map((n) => readFile(path.join(root, "scripts", `${n}.mjs`), "utf8")));
   assert.doesNotMatch(code.join("\n"), /BBDFE3E1|15851336|15,851,336/i);
-  assert.match(text, /download_url[\s\S]*sha256[\s\S]*rows[\s\S]*base_year[\s\S]*license/);
+  assert.match(text, /download_url[\s\S]*sha256[\s\S]*rows[\s\S]*base_year[\s\S]*license[\s\S]*page_modified[\s\S]*source_page/);
+  assert.match(text, /--source-page "\$SOURCE_PAGE"/);
+  // 수정일·상세 페이지는 비워 둘 수 없다(C3 보강)
+  for (const name of ["page_modified", "source_page"]) assert.match(text, new RegExp(`${name}:\\n(?:        .*\\n)*?        required: true`));
 });
 
 test("연결: foldStream이 돌려주기 전에 assertDerived를 부른다 (#68 cto 후속)", async () => {

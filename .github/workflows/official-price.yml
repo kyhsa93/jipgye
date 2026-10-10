@@ -5,6 +5,7 @@
 # 입력 sha256·rows·license·page_modified는 사람이 상세 페이지(data.go.kr 3073746)를 직접 보고
 # 옮겨 적는 값이다 - 스크립트가 페이지에서 읽어 오지 않는다. 그래서 대조가 되는 것이다: 페이지가 적은 값과
 # 내려받은 파일이 다르면(해시·행수) 접기가 쓰기 없이 실패하고, license가 "제한 없음"이 아니어도 멈춘다.
+# 2025·2026 어느 파일이든 같은 입력을 받아 파생본 meta에 license·pageModified·source(상세 페이지)·sourceSha256이 남는다(#68 clo C3 권고).
 # 값을 이전 dispatch나 댓글에서 복사하지 말고, dispatch하는 날 페이지에서 다시 옮길 것(수정일이 바뀌면 해시도 바뀔 수 있다).
 # concurrency 그룹 digest-pipeline을 daily-update.yml과 공유한다 - 일일 수집이 도는 중이면 이 실행이 줄을
 # 서서 기다리고, 그 사이 download_url(캡차 뒤 URL)이 만료될 수 있으니 일일 수집이 끝난 시각에 dispatch한다.
@@ -37,6 +38,10 @@ on:
         description: "상세 페이지 수정일 (메타에 기록)"
         type: string
         required: true
+      source_page:
+        description: "해당 기준연도 파일의 상세 페이지 주소 (https://www.data.go.kr/data/<번호>/fileData.do) - 연도마다 달라질 수 있어 입력으로 받고 메타 source에 남는다"
+        type: string
+        required: true
       raw_commit:
         description: "대상 지번을 정한 raw/ 커밋 해시 (#70 완료 커밋, 40자리)"
         type: string
@@ -59,6 +64,7 @@ jobs:
       BASE_YEAR: ${{ inputs.base_year }}
       LICENSE_TEXT: ${{ inputs.license }}
       PAGE_MODIFIED: ${{ inputs.page_modified }}
+      SOURCE_PAGE: ${{ inputs.source_page }}
       RAW_COMMIT: ${{ inputs.raw_commit }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -91,7 +97,7 @@ jobs:
           unzip -p "$RUNNER_TEMP/official-price.zip" '*.csv' \
             | node scripts/fetch-official-price.mjs \
                 --sha256 "$EXPECT_SHA256" --rows "$EXPECT_ROWS" --base-year "$BASE_YEAR" \
-                --license "$LICENSE_TEXT" --page-modified "$PAGE_MODIFIED" \
+                --license "$LICENSE_TEXT" --page-modified "$PAGE_MODIFIED" --source-page "$SOURCE_PAGE" \
                 --raw-commit "$RAW_COMMIT" --raw-dir raw-at-commit/raw
 
       - name: 커밋
