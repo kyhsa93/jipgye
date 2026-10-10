@@ -109,13 +109,13 @@
     </div>
     <p class="sr-only" role="status" id="realestate-status"></p>
     <div class="table-wrap">
-      <table class="data-table realestate-table">
+      <table class="data-table realestate-table"><caption class="sr-only" data-auto>집계 — 계약 전에 확인하는 서울 아파트 실거래·금리 - 서울 아파트, 이번 주 신고된 값: 5행 4열(지역·매매·전세·월세)</caption>
         <thead>
           <tr>
-            <th class="sortable"><button type="button" data-re-sort="name" id="re-th-district">지역</button></th>
-            <th class="sortable"><button type="button" data-re-sort="sale" id="re-th-sale">매매</button></th>
-            <th class="sortable"><button type="button" data-re-sort="jeonse" id="re-th-jeonse">전세</button></th>
-            <th class="sortable"><button type="button" data-re-sort="wolse" id="re-th-wolse">월세</button></th>
+            <th scope="col" class="sortable"><button type="button" data-re-sort="name" id="re-th-district">지역</button></th>
+            <th scope="col" class="sortable"><button type="button" data-re-sort="sale" id="re-th-sale">매매</button></th>
+            <th scope="col" class="sortable"><button type="button" data-re-sort="jeonse" id="re-th-jeonse">전세</button></th>
+            <th scope="col" class="sortable"><button type="button" data-re-sort="wolse" id="re-th-wolse">월세</button></th>
           </tr>
         </thead>
         <tbody id="realestate-grid"><!--prerender:realestate--><tr><td>서울 전체</td><td data-label="매매">5,530만원 <span class="change">+368만</span> <span class="count">684건</span></td><td data-label="전세">3,031만원 <span class="change">-35만</span> <span class="count">547건</span></td><td data-label="월세">19,312만원 / 월 113만원 <span class="count">966건</span></td></tr><tr><td>강남구</td><td data-label="매매">11,276만원 <span class="change">-446만</span> <span class="count">141건</span></td><td data-label="전세">4,333만원 <span class="change">+37만</span> <span class="count">290건</span></td><td data-label="월세">36,312만원 / 월 205만원 <span class="count">462건</span></td></tr><tr><td>용산구</td><td data-label="매매">10,801만원 <span class="change">-670만</span> <span class="count">48건</span></td><td data-label="전세">3,187만원 <span class="change">-37만</span> <span class="count">110건</span></td><td data-label="월세">27,317만원 / 월 255만원 <span class="count">166건</span></td></tr><tr><td>서초구</td><td data-label="매매">10,415만원 <span class="change">+275만</span> <span class="count">144건</span></td><td data-label="전세">4,455만원 <span class="change">-69만</span> <span class="count">220건</span></td><td data-label="월세">38,967만원 / 월 251만원 <span class="count">283건</span></td></tr><tr><td>송파구</td><td data-label="매매">8,440만원 <span class="change">+144만</span> <span class="count">375건</span></td><td data-label="전세">3,529만원 <span class="change">-33만</span> <span class="count">302건</span></td><td data-label="월세">36,405만원 / 월 188만원 <span class="count">360건</span></td></tr><!--/prerender:realestate--></tbody>
@@ -139,12 +139,12 @@
   <section id="market-section">
     <h2 id="market-heading">돈의 값 — 기준금리·환율</h2>
     <div class="table-wrap">
-      <table class="data-table">
+      <table class="data-table"><caption class="sr-only" data-auto>집계 — 계약 전에 확인하는 서울 아파트 실거래·금리 - 돈의 값 — 기준금리·환율: 2행 3열(지표·값·증감)</caption>
         <thead>
           <tr>
-            <th id="market-th-indicator">지표</th>
-            <th id="market-th-value">값</th>
-            <th id="market-th-change">증감</th>
+            <th scope="col" id="market-th-indicator">지표</th>
+            <th scope="col" id="market-th-value">값</th>
+            <th scope="col" id="market-th-change">증감</th>
           </tr>
         </thead>
         <tbody id="market-grid"><!--prerender:market--><tr><td>원/달러 환율</td><td data-label="값">1342.34원</td><td data-label="증감"><span title="전일 수집분 대비">3.25</span></td></tr><tr><td>기준금리</td><td data-label="값">3.00%</td><td data-label="증감">2026년 08월 27일</td></tr><!--/prerender:market--></tbody>
@@ -246,6 +246,8 @@
       historyUsdKrwLabel: "원/달러 환율 (최근 추이)",
       historyBaseRateLabel: "기준금리 (최근 추이)",
       historyMinMax: (max, min) => `최고 ${max} · 최저 ${min}`,
+      chartAlt: (label, n, from, to, first, last, max, min) =>
+        `${label} 추이, ${n}주(${from}~${to}): ${first}에서 ${last}로, 최고 ${max} · 최저 ${min}`,
       historyPendingNote: "점선은 신고 기한(계약 후 30일)이 남아 아직 덜 찬 주입니다. 실선까지가 확정치입니다",
       historyPendingTag: "(잠정)",
       historyMoreToggle: (n) => `그 외 지표 ${n}개 더보기`,
@@ -362,6 +364,8 @@
       historyUsdKrwLabel: "USD/KRW (recent trend)",
       historyBaseRateLabel: "BOK Base Rate (recent trend)",
       historyMinMax: (max, min) => `High ${max} · Low ${min}`,
+      chartAlt: (label, n, from, to, first, last, max, min) =>
+        `${label} trend over ${n} weeks (${from} to ${to}): from ${first} to ${last}, high ${max}, low ${min}`,
       historyPendingNote: "Dashed: weeks still inside the 30-day filing window",
       historyPendingTag: "(provisional)",
       historyMoreToggle: (n) => `Show ${n} more indicator${n === 1 ? "" : "s"}`,
@@ -713,7 +717,26 @@
     return [max, (max + min) / 2, min];
   }
 
-  function sparklineSvg(series, format, box) {
+  // 그래프 이름. 눈으로는 선의 모양을 보지만 스크린리더는 SVG 안의 숫자 글자를 눈금 따로 읽을 뿐 추이를
+  // 말해 주지 않는다. 몇 주인지, 처음과 끝, 최고·최저를 한 문장으로 준다 - 계열마다 값이 달라
+  // 그래프마다 다른 문장이 된다(#110).
+  function chartAlt(series, format, label) {
+    const firm = series.filter((p) => !p.pending);
+    const shown = firm.length ? firm : series;
+    const values = shown.map((p) => p.value);
+    return t("chartAlt")(
+      label ?? "",
+      shown.length,
+      shown[0].date,
+      shown[shown.length - 1].date,
+      format(values[0]),
+      format(values[values.length - 1]),
+      format(Math.max(...values)),
+      format(Math.min(...values))
+    );
+  }
+
+  function sparklineSvg(series, format, box, label) {
     const values = series.map((p) => p.value);
     const scale = chartScale(values, box);
     const points = series.map((p, i) => `${scale.x(i).toFixed(1)},${scale.y(p.value).toFixed(1)}`);
@@ -743,7 +766,7 @@
       )
       .join("");
 
-    return `<svg viewBox="0 0 ${box.w} ${box.h}" role="img">
+    return `<svg viewBox="0 0 ${box.w} ${box.h}" role="img" aria-label="${escapeHtml(chartAlt(series, format, label))}">
         ${yTicks}${xTicks}
         ${firmCount > 1 ? `<polyline points="${firm}" fill="none" stroke="${color}" stroke-width="2" />` : ""}
         ${pending ? `<polyline class="pending" points="${pending}" fill="none" stroke="${color}" stroke-width="2" stroke-dasharray="4 4" opacity="0.55" />` : ""}
@@ -779,7 +802,7 @@
           <span class="history-current">${format(shown[shown.length - 1])}</span>
           <span class="history-minmax">${t("historyMinMax")(format(Math.max(...shown)), format(Math.min(...shown)))}</span>
         </div>
-        <div class="history-chart" id="${id}">${sparklineSvg(series, format, box)}</div>
+        <div class="history-chart" id="${id}">${sparklineSvg(series, format, box, label)}</div>
       </div>`;
   }
 
@@ -821,7 +844,7 @@
       const width = holder?.clientWidth;
       if (!holder || typeof width !== "number" || width <= 0 || width === entry.box.w) continue;
       entry.box = chartBox(width, yTickValues(entry.series.map((p) => p.value)).map(entry.format));
-      holder.innerHTML = sparklineSvg(entry.series, entry.format, entry.box);
+      holder.innerHTML = sparklineSvg(entry.series, entry.format, entry.box, entry.label);
     }
   }
 

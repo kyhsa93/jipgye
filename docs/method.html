@@ -166,8 +166,8 @@
     <p>2026-10-07에 적습니다. 이 화면이 낸 첫 예측(2026년 7월 지수 기준, 목표 2026년 10월)은 2026년 12월에 2026년 10월 지수가 처음 실릴 때 채점됩니다. 결과가 나온 뒤에 규칙을 고르면 어느 결과도 맞는 말로 읽을 수 있으므로, <strong>아래 표와 판정은 그 채점 전에 고정</strong>하고 12월 결과가 어느 칸에 떨어지든 이 문단과 표를 한 줄도 바꾸지 않습니다. 바뀌면 바뀐 줄을 바뀐 날짜와 함께 이 문단에 남깁니다.</p>
     <p><strong>채점값은 처음 계산한 날 얼립니다.</strong> 목표 달 지수가 처음 실린 빌드가 실제 변화(<code>actual</code>)와 그 날짜(<code>scoredOn</code>)를 기록하고, 뒤에 지수가 고쳐져도 그 값은 바꾸지 않습니다. 예측과 함께 &ldquo;늘 오른다&rdquo; 기준선의 값(<code>drift</code>)도 적어 둡니다. &ldquo;그대로다&rdquo;는 늘 0입니다. 이 값이 없던 첫 네 건에는 2026년 7월 지수까지만으로 다시 계산해 넣고, 넣은 날짜(<code>driftAddedOn</code>)를 같이 적었습니다.</p>
     <div class="table-scroll">
-      <table class="rate-table">
-        <thead><tr><th>권역(3개월 뒤, 2026년 10월)</th><th>모델</th><th>범위</th><th>&ldquo;늘 오른다&rdquo;</th></tr></thead>
+      <table class="rate-table"><caption class="sr-only" data-auto>숫자를 만드는 방법 - 실거래 집계 기준과 출처 - 첫 채점 규칙은 결과를 보기 전에 적어 둡니다: 4행 4열(권역(3개월 뒤, 2026년 10월)·모델·범위·"늘 오른다")</caption>
+        <thead><tr><th scope="col">권역(3개월 뒤, 2026년 10월)</th><th scope="col">모델</th><th scope="col">범위</th><th scope="col">&ldquo;늘 오른다&rdquo;</th></tr></thead>
         <tbody>
           <tr><td>서울</td><td>+2.58%</td><td>&minus;0.31 ~ +6.33%</td><td>+1.54%</td></tr>
           <tr><td>서북권</td><td>+2.73%</td><td>&minus;0.37 ~ +6.05%</td><td>+1.53%</td></tr>
@@ -178,8 +178,8 @@
     </div>
     <p>판정표는 이렇습니다. 실제 변화는 같은 권역의 2026년 10월 지수와 2026년 7월 지수로 잽니다.</p>
     <div class="table-scroll">
-      <table class="rate-table">
-        <thead><tr><th>항목</th><th>기준</th><th>화면에 적는 문장</th></tr></thead>
+      <table class="rate-table"><caption class="sr-only" data-auto>숫자를 만드는 방법 - 실거래 집계 기준과 출처 - 첫 채점 규칙은 결과를 보기 전에 적어 둡니다: 4행 3열(항목·기준·화면에 적는 문장)</caption>
+        <thead><tr><th scope="col">항목</th><th scope="col">기준</th><th scope="col">화면에 적는 문장</th></tr></thead>
         <tbody>
           <tr><td>범위</td><td>실제 변화가 범위의 양 끝을 포함해 그 안이면 &ldquo;안&rdquo;, 아니면 &ldquo;밖&rdquo;</td><td>&ldquo;네 권역 중 n개가 범위 안&rdquo;. %로 적지 않고 개수로 적는다</td></tr>
           <tr><td>모델 오차</td><td>|실제 &minus; 모델|, 권역 평균</td><td>&ldquo;평균 x%p 빗나갔다&rdquo;</td></tr>
@@ -315,8 +315,8 @@
     <p>Written on 2026-10-07. The first forecast this page made (from the July 2026 index, targeting October 2026) is scored in December 2026, when the October 2026 index first appears. If the rule were chosen after the result, any outcome could be read as a success, so <strong>the table and verdicts below are fixed before that scoring</strong>, and wherever the December result lands, this section is not changed by a single line. If it is ever changed, the changed line is kept here with its date.</p>
     <p><strong>The score is frozen the day it is first computed.</strong> The build that first sees the target month's index records the actual change (<code>actual</code>) and the date (<code>scoredOn</code>), and later revisions of the index do not alter it. Each forecast also stores the &ldquo;up as usual&rdquo; baseline value (<code>drift</code>); &ldquo;no change&rdquo; is always 0. The first four entries predate this field, so it was recomputed from the index through July 2026 only and stamped with the date it was added (<code>driftAddedOn</code>).</p>
     <div class="table-scroll">
-      <table class="rate-table">
-        <thead><tr><th>Region (three months ahead, October 2026)</th><th>Model</th><th>Range</th><th>&ldquo;Up as usual&rdquo;</th></tr></thead>
+      <table class="rate-table"><caption class="sr-only" data-auto>숫자를 만드는 방법 - 실거래 집계 기준과 출처 - The first scoring rule is written down before the result: 4행 4열(Region (three months ahead, October 2026)·Model·Range·"Up as usual")</caption>
+        <thead><tr><th scope="col">Region (three months ahead, October 2026)</th><th scope="col">Model</th><th scope="col">Range</th><th scope="col">&ldquo;Up as usual&rdquo;</th></tr></thead>
         <tbody>
           <tr><td>Seoul</td><td>+2.58%</td><td>&minus;0.31 to +6.33%</td><td>+1.54%</td></tr>
           <tr><td>Northwest</td><td>+2.73%</td><td>&minus;0.37 to +6.05%</td><td>+1.53%</td></tr>
@@ -327,8 +327,8 @@
     </div>
     <p>The verdict table. The actual change is measured on the same region's October 2026 and July 2026 index values.</p>
     <div class="table-scroll">
-      <table class="rate-table">
-        <thead><tr><th>Item</th><th>Rule</th><th>Sentence shown</th></tr></thead>
+      <table class="rate-table"><caption class="sr-only" data-auto>숫자를 만드는 방법 - 실거래 집계 기준과 출처 - The first scoring rule is written down before the result: 4행 3열(Item·Rule·Sentence shown)</caption>
+        <thead><tr><th scope="col">Item</th><th scope="col">Rule</th><th scope="col">Sentence shown</th></tr></thead>
         <tbody>
           <tr><td>Range</td><td>&ldquo;Inside&rdquo; if the actual change lies within the range, endpoints included; otherwise &ldquo;outside&rdquo;</td><td>&ldquo;n of the four regions landed inside the range&rdquo; &mdash; a count, never a percentage</td></tr>
           <tr><td>Model error</td><td>|actual &minus; model|, averaged over regions</td><td>&ldquo;missed by x pp on average&rdquo;</td></tr>

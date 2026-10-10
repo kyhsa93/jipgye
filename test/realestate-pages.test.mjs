@@ -30,7 +30,7 @@ const readJson = (name) => read(`docs/data/${name}.json`).then(JSON.parse);
 
 const cells = (html) => [...html.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((m) => m[1].trim());
 const names = (html) => [...html.matchAll(/<tr[^>]*><td>([^<]*)</g)].map((m) => m[1]);
-const headCells = (html) => [...html.matchAll(/<th>([^<]*)<\/th>/g)].map((m) => m[1]);
+const headCells = (html) => [...html.matchAll(/<th[^>]*>([^<]*)<\/th>/g)].map((m) => m[1]);
 
 const district = (name, extra = {}) => ({
   name,

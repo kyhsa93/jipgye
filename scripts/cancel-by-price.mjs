@@ -145,5 +145,5 @@ export function priceBandTableHtml(stats, locale = "ko") {
   const body = stats.rows
     .map((r) => `<tr><td>${en ? r.en : r.ko}</td><td>${r.n.toLocaleString(tag)}</td><td>${r.rate === null ? "-" : `${r.rate}%`}</td><td>${r.withinMonth === null ? "-" : `${r.withinMonth > 0 ? "+" : ""}${r.withinMonth}${pp}`}</td></tr>`)
     .join("");
-  return `<thead><tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${body}</tbody>`;
+  return `<thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${body}</tbody>`;
 }

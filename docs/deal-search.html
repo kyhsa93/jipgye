@@ -1149,9 +1149,11 @@ function complexPriceHtml(file, apt) {
 
   return (
     `<h3>${escapeHtml(t("priceHeading")(reference))}</h3>` +
-    `<div class="table-wrap"><table class="data-table complex-price-table"><thead><tr>` +
-    `<th>${escapeHtml(t("complexArea"))}</th><th>${escapeHtml(t("priceNow")(reference))}</th>` +
-    `<th>${escapeHtml(t("priceAsFiled"))}</th></tr></thead><tbody>${body}</tbody></table></div>` +
+    `<div class="table-wrap"><table class="data-table complex-price-table">` +
+    // 이름에 단지·기준월·평형 수를 넣어 단지마다 다른 문장이 된다(#110).
+    `<caption class="sr-only">${escapeHtml(`${apt} - ${t("priceHeading")(reference)} (${rows.length})`)}</caption><thead><tr>` +
+    `<th scope="col">${escapeHtml(t("complexArea"))}</th><th scope="col">${escapeHtml(t("priceNow")(reference))}</th>` +
+    `<th scope="col">${escapeHtml(t("priceAsFiled"))}</th></tr></thead><tbody>${body}</tbody></table></div>` +
     // 설명 셋(약 900자)은 접는다 - 지우지 않는다. 고치기 전 값을 옆에 두는 이유가 여기 있다.
     `<details class="fold"><summary>${escapeHtml(t("priceReadHow"))}</summary>${notes}</details>` +
     // 카드를 본 사람이 다음에 묻는 것(층 할인, 신고가)으로 가는 길(PO 검토 #33).
@@ -1179,9 +1181,10 @@ function complexCardHtml() {
 
   const ratioHtml = rows.length
     ? `<h3>${escapeHtml(t("ratioHeading"))}</h3>` +
-      `<div class="table-wrap"><table class="data-table"><thead><tr>` +
-      `<th>${escapeHtml(t("complexArea"))}</th><th>${escapeHtml(t("kindSale"))}</th>` +
-      `<th>${escapeHtml(t("kindJeonse"))}</th><th>${escapeHtml(t("complexRatio"))}</th>` +
+      `<div class="table-wrap"><table class="data-table">` +
+      `<caption class="sr-only">${escapeHtml(`${apt} - ${t("ratioHeading")} (${rows.length})`)}</caption><thead><tr>` +
+      `<th scope="col">${escapeHtml(t("complexArea"))}</th><th scope="col">${escapeHtml(t("kindSale"))}</th>` +
+      `<th scope="col">${escapeHtml(t("kindJeonse"))}</th><th scope="col">${escapeHtml(t("complexRatio"))}</th>` +
       `</tr></thead><tbody>` +
       rows
         .map(

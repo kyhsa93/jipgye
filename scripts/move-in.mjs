@@ -124,7 +124,7 @@ export function moveInTableHtml(s, locale = "ko") {
   const rows = s.halves.map(
     (h) => `<tr><td>${halfText(h.half, en)}</td><td data-label="${head[1]}">${num(h.complexes, en)}</td><td data-label="${head[2]}">${num(h.units, en)}</td><td data-label="${head[3]}">${num(h.rentalUnits, en)}</td></tr>`
   );
-  return `<thead><tr>${head.map((x) => `<th>${x}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody>`;
+  return `<thead><tr>${head.map((x) => `<th scope="col">${x}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody>`;
 }
 
 /** 자치구별 한 줄 - 많은 곳부터, 세대수만. 단지 수가 적은 구는 한 단지가 다 정한다는 것을 숫자로 보인다. */

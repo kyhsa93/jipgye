@@ -16,6 +16,6 @@ test("전망 화면에 앞으로 2년 서울 입주 예정이 빌드가 구운 �
   const section = html.slice(html.indexOf('<section id="move-in-section">'), html.indexOf("</section>", html.indexOf('<section id="move-in-section">')));
   assert.ok(section, "입주 예정 절이 없다");
   assert.match(section, /<!--prerender:moveInLead-->한국부동산원·부동산114 추정/);
-  assert.match(section, /<th>그중 순수 임대<\/th>/);
+  assert.match(section, /<th scope="col">그중 순수 임대<\/th>/);
   assert.ok(html.indexOf('id="move-in-section"') < html.indexOf('id="indicator-section"'), "검증 안 된 지표 표보다 아래다");
 });
