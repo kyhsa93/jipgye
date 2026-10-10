@@ -160,3 +160,41 @@ test("매일 판정에 3차 후보가 들어간다", async () => {
   const ids = candidates({}).map((c) => c.id);
   for (const id of ["out_share", "out_share12", "mort_bal12", "mort_bal_seoul12", "permits12", "permits_lag36"]) assert.ok(ids.includes(id), id);
 });
+
+test("표 끝에 백테스트에 못 들어간 건축HUB 주택인허가 한 행이 정적으로 붙고, 매일 판정 행 수는 그대로다 (#153)", async () => {
+  const { NOT_TESTED, tableHtml } = await import("../scripts/indicator-backtest.mjs");
+  const [html, payload] = await Promise.all([
+    readFile(path.join(root, "docs/price-outlook.html"), "utf8"),
+    readFile(path.join(root, "docs/data/outlook-indicators.json"), "utf8").then(JSON.parse),
+  ]);
+  assert.equal(NOT_TESTED.length, 1);
+  // 판정 행(payload.rows)에는 정적 행이 섞이지 않는다 - 판정식·합격선은 건드리지 않았다.
+  assert.ok(payload.rows.every((r) => r.id && r.verdict), "정적 행이 판정 행에 섞였다");
+  const bodyRows = (h) => (h.match(/<tr>/g) ?? []).length - 1; // 머리 한 줄 제외
+  assert.equal(bodyRows(payload.table.ko), payload.rows.length + NOT_TESTED.length);
+  assert.equal(bodyRows(payload.table.en), payload.rows.length + NOT_TESTED.length);
+  // 정적 HTML(ko)은 JSON 표 그대로이고, 접근성 caption 행 수도 맞다.
+  assert.ok(html.includes(payload.table.ko), "정적 HTML 표가 JSON과 다르다");
+  assert.ok(html.includes(`${bodyRows(payload.table.ko)}행 4열`), "caption 행 수가 표와 다르다");
+  assert.equal(html.split("건축HUB 주택인허가</td>").length - 1, 1);
+  assert.equal(payload.table.en.split("Building HUB housing permits</td>").length - 1, 1);
+});
+
+test("건축HUB 정적 행의 수치는 #133 기록(measure.json B2)과 같고, 사업명·사업주체명·지번·관리번호를 담지 않는다 (#153)", async () => {
+  const { NOT_TESTED } = await import("../scripts/indicator-backtest.mjs");
+  const measure = JSON.parse(await readFile(path.join(root, "research/housing-permits/measure.json"), "utf8"));
+  assert.equal(measure.B2.verdict, "fail");
+  const gap = (measure.B2.median * 100).toFixed(1);
+  assert.equal(gap, "40.8");
+  assert.equal(Math.round(measure.B2.threshold * 100), 10);
+  // 호수 0 비율: #133 댓글의 124,721/130,181건.
+  assert.equal(((124721 / 130181) * 100).toFixed(1), "95.8");
+  const [row] = NOT_TESTED;
+  for (const locale of ["ko", "en"]) {
+    const text = [row[locale], row.verdict[locale], row.checked].join(" ");
+    assert.ok(text.includes(`${gap}%`) && text.includes("95.8%"), locale);
+    // 문구 속 숫자는 이 넷(괴리, "호수 0"의 0, 0 비율, 확인일)뿐이다 - 원본 값이 끼어들 틈이 없다.
+    assert.deepEqual(text.match(/\d{4}-\d{2}-\d{2}|\d+(?:[.,]\d+)*/g).sort(), ["0", "2026-10-10", "40.8", "95.8"], locale);
+    assert.ok(!/[A-Za-z0-9_-]{15,}|\d+[동호번지]|지번|관리번호|사업주체|mgmHsrgstPk|bldNm|platPlc/.test(text), locale);
+  }
+});
