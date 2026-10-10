@@ -1,0 +1,96 @@
+{
+  "measuredFrom": {
+    "rawSha256": "38bda1f40a416f779645ef3be9d091742f988cc06eced2b210a15ed1ec30055f",
+    "updatedAt": "2026-10-10T06:00:15.000Z"
+  },
+  "B1": {
+    "verdict": "pending",
+    "districts": {
+      "expected": 25,
+      "withData": 25,
+      "missing": []
+    },
+    "series": {
+      "permit": {
+        "start": "1991-04",
+        "end": "2022-08",
+        "months": 377,
+        "gaps": 33
+      },
+      "start": {
+        "start": "1994-08",
+        "end": "2023-03",
+        "months": 344,
+        "gaps": 32
+      },
+      "complete": {
+        "start": null,
+        "end": null,
+        "months": 0,
+        "gaps": 0,
+        "pending": true
+      }
+    },
+    "pending": [
+      "complete"
+    ],
+    "reasons": [
+      "complete 필드 미정 - 해소 규칙이 정하기 전이라 시험 불가 대기(후보 ② 포함)"
+    ]
+  },
+  "B2": {
+    "verdict": "fail",
+    "windows": 177,
+    "median": 0.40811622104289896,
+    "threshold": 0.1,
+    "causeCandidates": [
+      "정의 차이",
+      "누락",
+      "취소 미반영"
+    ],
+    "note": "permit(건축허가일 기준 인허가) 계열만 대조. 착공·준공 집계는 B2로 검증되지 않는다. 취소 미반영 단일 값으로 판정(응답에서 취소를 구분할 수 없음)."
+  },
+  "B3": {
+    "calls": 1648,
+    "pages": 1648,
+    "dongs": 467,
+    "limit": 5000,
+    "pctOfLimit": 33
+  },
+  "B4": {
+    "responseFields": [
+      "apprvDay",
+      "bjdongCd",
+      "bldNm",
+      "block",
+      "bun",
+      "crtnDay",
+      "demolEndDay",
+      "demolExtngDay",
+      "demolExtngGbCd",
+      "demolExtngGbCdNm",
+      "demolStrtDay",
+      "ji",
+      "lot",
+      "mainBldCnt",
+      "mgmHsrgstPk",
+      "platGbCd",
+      "platPlc",
+      "purpsCd",
+      "purpsCdNm",
+      "rnum",
+      "sigunguCd",
+      "splotNm",
+      "stcnsDay",
+      "stcnsSchedDay",
+      "strctCd",
+      "strctCdNm",
+      "totArea",
+      "totHhldCnt",
+      "useInsptDay",
+      "useInsptSchedDay"
+    ],
+    "rule": 2,
+    "n": 3
+  }
+}
