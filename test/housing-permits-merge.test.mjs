@@ -17,7 +17,7 @@ function folded(permit, unknown = {}) {
     for (const [gu, c] of Object.entries(cells)) (series.permit[gu] ??= {})[month] = c;
   }
   unk.permit = unknown;
-  return { meta: { input: 0, projects: 0, duplicates: 0, cancelled: 0 }, series, unknown: unk, cancelledPermit: {} };
+  return { meta: { input: 0, projects: 0, duplicates: 0, cancellation: "관측 불가" }, series, unknown: unk };
 }
 
 const INPUT = {
@@ -89,8 +89,8 @@ test("합침: 입력을 바꾸지 않고, 입력 순서가 달라도 같은 결�
   assert.equal(JSON.stringify(mergeSmallCells(shuffled)), JSON.stringify(a));
 });
 
-test("합침: 서울 취소 호수 칸도 사업 수 3 미만이면 내지 않는다", () => {
-  const input = folded({});
-  input.cancelledPermit = { "2024-01": cell(2, 20), "2024-02": cell(5, 50) };
-  assert.deepEqual(mergeSmallCells(input).cancelledPermit, { "2024-02": cell(5, 50) });
+test("합침: 취소 계열은 만들지 않는다 - 취소를 관측할 수 없어 cancelledPermit이 출력에 없다 (PREREG 「취소 판정」)", () => {
+  const out = mergeSmallCells(folded(INPUT));
+  assert.ok(!("cancelledPermit" in out));
+  assert.equal(out.meta.cancellation, "관측 불가");
 });

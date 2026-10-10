@@ -15,10 +15,10 @@ const months = (from, count) => {
   for (let i = 0; i < count; i += 1) { out.push(`${y}-${String(m).padStart(2, "0")}`); m += 1; if (m > 12) { y += 1; m = 1; } }
   return out;
 };
-/** 모든 계열이 같은 달 목록을 갖는 접기 결과. 칸은 기타 구 한 곳에 둔다. */
-function foldedOf(list, { units = 1000, withData = ALL, cancelled = {}, meta = {} } = {}) {
+/** 모든 계열이 같은 달 목록을 갖는 접기 결과. 칸은 기타 구 한 곳에 둔다. complete 필드는 정해진 것으로 둔다(미정 시험만 지운다). */
+function foldedOf(list, { units = 1000, withData = ALL, meta = {} } = {}) {
   const series = Object.fromEntries(SERIES.map((s) => [s, { [OTHER_KEY]: Object.fromEntries(list.map((mo) => [mo, { projects: 5, units }])) }]));
-  return { meta: { calls: 100, pages: 90, dongs: 20, districtsWithData: [...withData], ...meta }, series, unknown: {}, cancelledPermit: cancelled };
+  return { meta: { calls: 100, pages: 90, dongs: 20, districtsWithData: [...withData], completeField: "useInsptDay", ...meta }, series, unknown: {} };
 }
 
 test("seoulMonthly: 공개 구와 기타 구를 모두 더한다", () => {
@@ -60,6 +60,27 @@ test("B1: 세 계열 중 하나라도 짧으면 불가(후보 ①②와 B2가 �
   assert.equal(r.series.complete.months, 100);
 });
 
+test("B1: complete 필드가 미정이면 그 계열은 길이를 따지지 않고 '대기'로 보고한다 - 통과로도 시험 불가로도 쓰지 않는다 (PREREG 「complete 필드 해소 규칙」)", () => {
+  const f = foldedOf(months("2011-01", 168), { meta: { completeField: null } });
+  f.series.complete = {};
+  const r = measureB1(f);
+  assert.equal(r.verdict, "pending");
+  assert.deepEqual(r.pending, ["complete"]);
+  assert.equal(r.series.complete.pending, true);
+  assert.equal(r.series.permit.months, 168, "나머지 계열은 평소대로 잰다");
+  assert.match(r.reasons.join(" "), /complete 필드 미정/);
+  // 필드가 안 정해진 채로도 다른 확정 사유(짧은 계열·빠진 구)가 있으면 시험 불가가 우선한다
+  const short = foldedOf(months("2016-01", 100), { meta: { completeField: null } });
+  short.series.complete = {};
+  assert.equal(measureB1(short).verdict, "unable");
+  const missing = foldedOf(months("2011-01", 168), { withData: ALL.slice(1), meta: { completeField: null } });
+  assert.equal(measureB1(missing).verdict, "unable");
+  // meta.completeField가 아예 없는 옛 모양도 미정으로 본다
+  const bare = foldedOf(months("2011-01", 168));
+  delete bare.meta.completeField;
+  assert.equal(measureB1(bare).verdict, "pending");
+});
+
 // ---- B2 ----
 const toMap = (list, f) => new Map(list.map((m, i) => [Number(m.slice(0, 4)) * 12 + Number(m.slice(5)) - 1, f(i)]));
 /** 매달 e를 내는 ECOS 누계 행. 해마다 1월부터 쌓는다. */
@@ -69,7 +90,7 @@ function ecosRows(list, e) {
 }
 const list36 = months("2020-01", 36);
 
-test("B2: 차이 5%면 통과, 20%면 불통과 - 판정은 취소 제외 값", () => {
+test("B2: 차이 5%면 통과, 20%면 불통과", () => {
   assert.equal(measureB2(foldedOf(list36, { units: 1050 }), ecosRows(list36, 1000)).verdict, "pass");
   assert.equal(measureB2(foldedOf(list36, { units: 1200 }), ecosRows(list36, 1000)).verdict, "fail");
 });
@@ -90,12 +111,25 @@ test("B2: 창이 정확히 12개면 판정한다", () => {
   assert.equal(r.verdict, "pass");
 });
 
-test("B2: 취소를 포함한 값도 적지만 판정에는 쓰지 않는다", () => {
-  const cancelled = Object.fromEntries(list36.map((m) => [m, { projects: 5, units: 300 }]));
-  const r = measureB2(foldedOf(list36, { units: 1000, cancelled }), ecosRows(list36, 1000));
+test("B2: 값은 하나뿐이다 - 취소 미반영 단일 값으로 판정하고, 취소 포함·제외 두 값을 나란히 내지 않는다 (PREREG 4절 B2)", () => {
+  const r = measureB2(foldedOf(list36, { units: 1000 }), ecosRows(list36, 1000));
   assert.equal(r.verdict, "pass");
-  assert.ok(Math.abs(r.medianExcl) < 1e-9);
-  assert.ok(Math.abs(r.medianIncl - 0.3) < 1e-9, `포함 값 ${r.medianIncl}`);
+  assert.ok(Math.abs(r.median) < 1e-9);
+  assert.ok(!("medianIncl" in r) && !("medianExcl" in r), "두 값을 내지 않는다");
+  assert.ok(!/취소 제외/.test(r.note), "'취소 제외 값'이라 적지 않는다");
+  assert.match(r.note, /취소 미반영 단일 값/);
+  assert.match(r.note, /착공·준공 집계는 B2로 검증되지 않는다/);
+  // folded에 옛 취소 칸이 남아 있어도 판정에 쓰지 않는다
+  const legacy = foldedOf(list36, { units: 1000 });
+  legacy.cancelledPermit = Object.fromEntries(list36.map((m) => [m, { projects: 5, units: 300 }]));
+  assert.equal(measureB2(legacy, ecosRows(list36, 1000)).median, r.median);
+});
+
+test("B2: 10%를 넘으면 선을 올려 통과시키지 않고 원인 후보(정의 차이·누락·취소 미반영)를 적는다", () => {
+  const r = measureB2(foldedOf(list36, { units: 1200 }), ecosRows(list36, 1000));
+  assert.equal(r.verdict, "fail");
+  assert.deepEqual(r.causeCandidates, ["정의 차이", "누락", "취소 미반영"]);
+  assert.equal(measureB2(foldedOf(list36, { units: 1000 }), ecosRows(list36, 1000)).causeCandidates, undefined);
 });
 
 test("B2: 12개월 창 합의 상대 차이 중앙값을 쓴다 - 한 달 어긋남은 합에서 상쇄되지 않고 창마다 센다", () => {
@@ -104,20 +138,18 @@ test("B2: 12개월 창 합의 상대 차이 중앙값을 쓴다 - 한 달 어긋
   hub.series.permit[OTHER_KEY] = Object.fromEntries(list36.map((m, i) => [m, { projects: 5, units: i === 10 ? 1500 : i === 11 ? 500 : 1000 }]));
   const r = measureB2(hub, ecosRows(list36, 1000));
   assert.equal(r.verdict, "pass");
-  assert.equal(r.medianExcl, 0);
+  assert.equal(r.median, 0);
 });
 
-test("낙제 시험 ⑥: 취소 포함 값으로 판정하거나 창 부족을 통과시키는 사본은 빨강이다", () => {
+test("낙제 시험 ⑥: 창 부족을 통과시키는 사본은 빨강이다", () => {
   const e = toMap(list36, () => 1000);
-  const excl = toMap(list36, () => 1050); // 5% 차이
-  const incl = toMap(list36, () => 1350); // 35% 차이
-  assert.equal(flawedB2Verdict(excl, incl, e), "pass");
-  assert.equal(measureB2(foldedOf(list36, { units: 1050, cancelled: Object.fromEntries(list36.map((m) => [m, { projects: 5, units: 300 }])) }), ecosRows(list36, 1000)).verdict, "pass");
-  assert.notEqual(flawedB2Verdict(excl, incl, e, { useInclusive: true }), "pass", "사본이 정말 다른 답을 내는지");
+  const hub = toMap(list36, () => 1050); // 5% 차이
+  assert.equal(flawedB2Verdict(hub, e), "pass");
+  assert.equal(measureB2(foldedOf(list36, { units: 1050 }), ecosRows(list36, 1000)).verdict, "pass");
   const short = list36.slice(0, 20);
   const shortE = toMap(short, () => 1000);
-  assert.equal(flawedB2Verdict(shortE, shortE, shortE), "hold");
-  assert.notEqual(flawedB2Verdict(shortE, shortE, shortE, { holdShort: false }), "hold");
+  assert.equal(flawedB2Verdict(shortE, shortE), "hold");
+  assert.notEqual(flawedB2Verdict(shortE, shortE, { holdShort: false }), "hold");
   assert.equal(measureB2(foldedOf(short, { units: 1000 }), ecosRows(short, 1000)).verdict, "hold", "진짜는 보류");
 });
 
@@ -147,9 +179,9 @@ test("B4: 입력 시점 필드의 지연 분포가 있으면 n = max(3, ceil(P90
 test("B2 경계: 문턱은 0.1이고, 중앙값 정확히 0.10은 통과, 0.10을 넘으면 불통과", () => {
   assert.equal(B2_MAX_MEDIAN, 0.1);
   const at = measureB2(foldedOf(list36, { units: 1100 }), ecosRows(list36, 1000));
-  assert.equal(at.medianExcl, 0.1);
+  assert.equal(at.median, 0.1);
   assert.equal(at.verdict, "pass");
   const over = measureB2(foldedOf(list36, { units: 1101 }), ecosRows(list36, 1000));
-  assert.ok(over.medianExcl > 0.1);
+  assert.ok(over.median > 0.1);
   assert.equal(over.verdict, "fail");
 });

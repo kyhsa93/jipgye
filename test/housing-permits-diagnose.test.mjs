@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { createDiagnostics } from "../scripts/housing-permits-diagnose.mjs";
-import { FIELDS, LICENSE } from "../scripts/housing-permits-spec.mjs";
+import { LICENSE } from "../scripts/housing-permits-spec.mjs";
 import { DISTRICTS } from "../scripts/realestate-districts.mjs";
 
 // 수집기 진단 출력 (#147). 규칙: 출력은 개수·비율·연도 히스토그램·코드성 범주뿐이고, 개별 값
@@ -216,12 +216,9 @@ const execFileAsync = promisify(execFile);
 
 function e2eItem(sgg, n, extra = {}) {
   return {
-    // 수집기의 기존 필드 가정(FIELDS)도 채워 접기 검사를 통과시킨다 - FIELDS 매핑은 이 PR에서 바꾸지 않는다.
-    [FIELDS.id]: `${MARK}-pk-${n}`, [FIELDS.sigungu]: sgg, [FIELDS.units]: "10",
-    [FIELDS.dates.permit]: "20240315", [FIELDS.dates.start]: "20240601", [FIELDS.dates.complete]: "", [FIELDS.cancel]: "", [FIELDS.version]: "20240315",
     ...row({
       mgmHsrgstPk: `${MARK}-${n}`, sigunguCd: sgg, bldNm: `${MARK}-nm`, platPlc: `${MARK}-addr`, bun: `${MARK}-b`, ji: `${MARK}-j`,
-      apprvDay: "20240315", stcnsDay: "20240601", useInsptDay: `${MARK}-date`, purpsCd: n % 2 ? "01000" : "ZQ9", totHhldCnt: "10",
+      apprvDay: "20240315", stcnsDay: "20240601", crtnDay: "20240315", useInsptDay: `${MARK}-date`, purpsCd: n % 2 ? "01000" : "ZQ9", totHhldCnt: "10",
     }), ...extra,
   };
 }
@@ -277,8 +274,8 @@ test("시험 호출 요약에 진단이 들어가고, 호출 수는 진단이 �
 });
 
 test("필드 가정이 틀려 접기 전에 멈추는 경로에도 진단 줄이 나오고 값은 없다", async () => {
-  // FIELDS가 아는 필드 없이 실제 이름만 있는 응답: assertCoreFields가 던진다. 그 전에 쌓은 진단이 남아야 시험이 쓸모 있다.
-  const bare = (sgg, n) => row({ mgmHsrgstPk: `${MARK}-${n}`, sigunguCd: sgg, bldNm: `${MARK}-nm`, apprvDay: "20240315" });
+  // 핵심 필드(호수 totHhldCnt) 하나가 빠진 응답: assertCoreFields가 던진다. 그 전에 쌓은 진단이 남아야 시험이 쓸모 있다.
+  const bare = (sgg, n) => { const it = row({ mgmHsrgstPk: `${MARK}-${n}`, sigunguCd: sgg, bldNm: `${MARK}-nm`, apprvDay: "20240315" }); delete it.totHhldCnt; return it; };
   const stub = await startStub(goodHandler(bare));
   try {
     const r = await run(stub, ["--only-district", "11140"]);

@@ -8,10 +8,11 @@ import path from "node:path";
 import { promisify } from "node:util";
 import { FIELDS, LICENSE } from "../scripts/housing-permits-spec.mjs";
 import * as fold from "../scripts/housing-permits-fold.mjs";
+import { realItem } from "./helpers/housing-permits-items.mjs";
 import { DISTRICTS } from "../scripts/realestate-districts.mjs";
 
 // 응답 모양 오류(ShapeError) 때의 진단 출력 (#133 남은 항목, #141). 첫 시험 호출(run 38025773084)이
-// "mgmPmsrgstPk 없음"으로 멈췄는데 실제 필드 이름이 로그에 없어 무엇이 맞는지 알 수 없었다.
+// "mgmPmsrgstPk 없음"(옛 가정 이름)으로 멈췄는데 실제 필드 이름이 로그에 없어 무엇이 맞는지 알 수 없었다.
 // 규칙: 필드 이름(키)·개수·타입 이름만 남기고 값은 한 글자도 안 된다. 전부 합성 응답과 로컬 스텁이다.
 // 값 자리에는 VAL_ 로 시작하는 표지를 넣는다 - 출력 어디에 나와도 낙제다.
 
@@ -29,7 +30,8 @@ const envelope = (items, extra = {}) => ({
   response: { header: { resultCode: "00", resultMsg: `${VAL}-msg` }, body: { items: { item: items }, totalCount: items.length, pageNo: 1, ...extra } },
 });
 function goodItem(sgg, n, extra = {}) {
-  return { [FIELDS.id]: `${VAL}-${sgg}-${n}`, [FIELDS.sigungu]: sgg, [FIELDS.units]: "10", [D.permit]: "20240315", [D.start]: "20240601", [D.complete]: "", [FIELDS.cancel]: "", [FIELDS.version]: "20240315", ...extra };
+  // 실제 응답 모양(30개 키)이고, 값이 있는 자리(관리번호·사업명·주소)에는 표지를 넣는다.
+  return realItem({ mgmHsrgstPk: `${VAL}-${sgg}-${n}`, bldNm: `${VAL}-bld`, platPlc: `${VAL}-addr`, sigunguCd: sgg, totHhldCnt: 10, ...extra });
 }
 
 function startStub(handler) {
@@ -77,7 +79,7 @@ test("필드 이름 불일치: stderr에 envelope 키·첫 항목 키(정렬)·�
   try {
     const r = await run(stub, s, ["--only-district", "11110", "--max-calls", "3"]);
     assert.equal(r.code, 1, r.all);
-    assert.match(r.stderr, /mgmPmsrgstPk 없음/, "기존 메시지는 유지");
+    assert.match(r.stderr, /mgmHsrgstPk 없음/, "기존 메시지 꼴은 유지(새 id 이름)");
     // 첫 항목 키: 정렬돼 있고 타입 이름이 붙는다
     const keys = ["addr", "bizName", "empty", "hhld", "list", "nested", "owner", "realPk"];
     let at = -1;
@@ -224,13 +226,25 @@ test("다른 ShapeError 경로(시군구 불일치)도 같은 필드 이름 진�
   } finally { await stub.close(); }
 });
 
-test("다른 ShapeError 경로(호수 읽기 실패)도 같은 진단을 내고 값은 없다", async () => {
+test("호수(totHhldCnt)가 비숫자여도 멈추지 않는다 - 0으로 기여하고 n에 센다(PREREG). 건수만 나가고 값은 없다", async () => {
   const s = await setup();
   const stub = await startStub(({ q }) => envelope([goodItem(q.sigunguCd, 1, { [FIELDS.units]: `${VAL}-많음` })]));
   try {
     const r = await run(stub, s, ["--only-district", "11110"]);
+    assert.equal(r.code, 0, r.all);
+    assert.match(r.stdout, /호수 0 0·비숫자 1/);
+    assertNoValues(r.all);
+  } finally { await stub.close(); }
+});
+
+test("항목이 객체가 아닌 응답(문자열 항목)은 값 없이 거절하고 첫 항목 키 줄은 '객체인 항목 없음'이다", async () => {
+  const s = await setup();
+  const stub = await startStub(() => envelope([`${VAL}-문자열항목`]));
+  try {
+    const r = await run(stub, s, ["--only-district", "11110"]);
     assert.equal(r.code, 1, r.all);
-    assert.match(r.stderr, /첫 항목 키/);
+    assert.match(r.stderr, /객체가 아님/);
+    assert.match(r.stderr, /객체인 항목 없음/);
     assertNoValues(r.all);
   } finally { await stub.close(); }
 });
@@ -239,7 +253,7 @@ test("전수 순회 뒤 접기 단계의 ShapeError(날짜 필드가 어느 항�
   const s = await setup();
   const stub = await startStub(({ q }) => {
     const it = goodItem(q.sigunguCd, 1);
-    delete it[FIELDS.cancel];
+    delete it[D.start];
     return envelope([it]);
   });
   try {

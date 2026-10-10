@@ -1,36 +1,44 @@
 /**
- * 낙제 사본 (#130). 접기(scripts/housing-permits-fold.mjs)가 어떤 실수를 하면 시험이 빨개져야 하는지를
+ * 낙제 사본 (#130, #133). 접기(scripts/housing-permits-fold.mjs)가 어떤 실수를 하면 시험이 빨개져야 하는지를
  * 코드로 박아 둔다. 진짜 접기와 코드를 나누지 않는 독립 구현이다 - 진짜를 고쳐서 같이 틀리면 안 되기 때문.
- * 옵션 하나만 꺼서 실수 하나만 만든다:
- *   dedupe: false        -> 같은 사업을 신고·변경 건수만큼 센다
- *   dropCancelled: false -> 취소 사업을 포함한다
- *   keepUndated: false   -> 날짜 없는 사업을 조용히 버린다("미상" 칸에 세지 않는다)
+ * 필드 이름은 일부러 실제 응답 이름을 그대로 쓴다(spec 상수를 거치지 않는다). 옵션 하나만 꺼서 실수 하나만 만든다:
+ *   dedupe: false     -> 같은 mgmHsrgstPk를 행 수만큼 센다(중복 PK를 두 번 센다)
+ *   tieRule: false    -> 같은 키에서 crtnDay·totHhldCnt 규칙을 무시하고 입력에서 뒤에 온 행을 쓴다(수집 순서 의존)
+ *   zeroInN: false    -> 호수 0·비숫자 사업을 n(사업 수)에서 빠뜨린다
+ *   keepUndated: false -> 날짜 없는 사업을 조용히 버린다("미상" 칸에 세지 않는다)
+ * 날짜 계열은 permit=apprvDay, start=stcnsDay 둘만 접는다(complete는 해소 전이라 계열이 없다).
  */
-import { FIELDS, SERIES } from "../../scripts/housing-permits-spec.mjs";
+const DATES = { permit: "apprvDay", start: "stcnsDay" };
 
 const month = (v) => {
   const m = /^(\d{4})-?(\d{2})-?(\d{2})$/.exec(String(v ?? "").trim());
   return m ? `${m[1]}-${m[2]}` : null;
 };
+const num = (v) => { const n = Number(String(v ?? "").trim()); return Number.isFinite(n) && n >= 0 ? n : 0; };
 
-export function flawedFold(items, { dedupe = true, dropCancelled = true, keepUndated = true } = {}) {
+export function flawedFold(items, { dedupe = true, tieRule = true, zeroInN = true, keepUndated = true } = {}) {
   let list = items;
   if (dedupe) {
     const latest = new Map();
     for (const it of items) {
-      const prev = latest.get(it[FIELDS.id]);
-      if (!prev || String(it[FIELDS.version] ?? "") >= String(prev[FIELDS.version] ?? "")) latest.set(it[FIELDS.id], it);
+      const prev = latest.get(String(it.mgmHsrgstPk));
+      let wins = true;
+      if (prev && tieRule) {
+        const day = String(it.crtnDay ?? "").localeCompare(String(prev.crtnDay ?? ""));
+        wins = day !== 0 ? day > 0 : num(it.totHhldCnt) !== num(prev.totHhldCnt) ? num(it.totHhldCnt) > num(prev.totHhldCnt) : String(it.apprvDay ?? "") >= String(prev.apprvDay ?? "");
+      }
+      if (wins) latest.set(String(it.mgmHsrgstPk), it);
     }
     list = [...latest.values()];
   }
   const out = { series: {}, unknown: {} };
-  for (const s of SERIES) { out.series[s] = {}; out.unknown[s] = {}; }
+  for (const s of Object.keys(DATES)) { out.series[s] = {}; out.unknown[s] = {}; }
   for (const it of list) {
-    if (dropCancelled && String(it[FIELDS.cancel] ?? "").trim()) continue;
-    const sgg = String(it[FIELDS.sigungu]);
-    const units = Number(it[FIELDS.units]);
-    for (const s of SERIES) {
-      const m = month(it[FIELDS.dates[s]]);
+    const sgg = String(it.sigunguCd);
+    const units = num(it.totHhldCnt);
+    if (!zeroInN && units === 0) continue;
+    for (const s of Object.keys(DATES)) {
+      const m = month(it[DATES[s]]);
       if (m) {
         const cell = ((out.series[s][sgg] ??= {})[m] ??= { projects: 0, units: 0 });
         cell.projects += 1; cell.units += units;
@@ -68,12 +76,11 @@ export function flawedMergeMonth(cells, { merge = true, guard = true } = {}) {
 
 /**
  * B2 낙제 사본 (#133). 대조 정의(PREREG 4절 B2)에서 하나만 틀린 판정:
- *   useInclusive: true -> 취소를 포함한 값으로 판정한다(판정은 제외한 값이어야 한다)
- *   holdShort: false   -> 창이 12개 미만이어도 통과/불통과를 낸다(보류여야 한다)
+ *   holdShort: false -> 창이 12개 미만이어도 통과/불통과를 낸다(보류여야 한다)
+ * 취소를 관측할 수 없어 값은 하나뿐이다(취소 포함·제외 두 값 구분 없음).
  * hub·eco는 Map(월 색인 -> 값). 반환은 "pass"|"fail"|"hold".
  */
-export function flawedB2Verdict(hubExcl, hubIncl, eco, { useInclusive = false, holdShort = true } = {}) {
-  const hub = useInclusive ? hubIncl : hubExcl;
+export function flawedB2Verdict(hub, eco, { holdShort = true } = {}) {
   const diffs = [];
   for (const [end] of hub) {
     let h = 0; let e = 0; let ok = true;
