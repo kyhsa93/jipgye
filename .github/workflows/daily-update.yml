@@ -93,8 +93,12 @@ jobs:
           MOLIT_RENT_API_ENDPOINT: ${{ secrets.MOLIT_RENT_API_ENDPOINT }}
           MOLIT_BACKFILL_LIMIT: ${{ inputs.backfill }}
 
+      # 실패해도 여기서 job을 멈추지 않는다 - 뒤의 원본 커밋·배포가 먼저다(#62).
+      # 네 상품군이 전부 실패했거나 키가 없으면 맨 끝 "금리 수집 실패 반영" 단계가 job을 실패로 끝낸다(#107).
       - name: 예·적금·대출 금리 수집
+        id: rates
         if: env.MODE == 'full'
+        continue-on-error: true
         run: node scripts/fetch-rates.mjs
         env:
           FSS_FINLIFE_API_KEY: ${{ secrets.FSS_FINLIFE_API_KEY }}
@@ -138,3 +142,11 @@ jobs:
       - name: Pages에 배포
         id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
+
+      # 원본 커밋·테스트·배포가 모두 끝난 뒤에야 실패로 끝낸다. 앞 단계가 실패했으면
+      # 이 단계는 돌지 않고 job은 이미 실패다.
+      - name: 금리 수집 실패 반영
+        if: steps.rates.outcome == 'failure'
+        run: |
+          echo "::error::금리 수집(금감원 finlife)이 실패했다 - 위 '예·적금·대출 금리 수집' 단계의 진단 로그와 docs/data/rates-meta.json의 failCause를 본다. 원본 커밋·배포는 끝났다"
+          exit 1

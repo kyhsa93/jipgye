@@ -29,6 +29,22 @@ const CATEGORIES = [
 
 const MAX_PAGES = 20;
 
+// 네 상품군이 전부 실패했을 때 스크립트가 끝나는 코드. 1(키 없음 등 그 밖의 오류)과 구분한다.
+// 워크플로는 이 단계를 continue-on-error로 돌리고, 원본 커밋·배포가 끝난 뒤에 job을 실패로 끝낸다(#107).
+const EXIT_ALL_FAILED = 3;
+
+// 진단 로그에 응답 본문·URL·오류 메시지가 들어가므로 인증키 값은 찍기 전에 치환한다.
+// 서버가 요청 URL(auth=키)을 본문에 에코할 수 있고, 인코딩된 꼴로 오는 경우도 있다.
+// GitHub 시크릿 마스킹에만 기대지 않는다 - rates-meta.json은 커밋돼 공개된다.
+function mask(text) {
+  let out = String(text ?? "");
+  if (!API_KEY) return out;
+  for (const k of new Set([API_KEY, encodeURIComponent(API_KEY)])) out = out.split(k).join("***");
+  return out;
+}
+
+const BODY_PREVIEW_CHARS = 200;
+
 function kstDateString(date) {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(date);
 }
@@ -87,8 +103,23 @@ async function fetchPageOnce(endpoint, topFinGrpNo, pageNo) {
     throw connectionError(`연결 실패 ${code}`, code);
   }
   if (res.status >= 500) throw connectionError(`http ${res.status}`, `HTTP_${res.status}`);
-  if (!res.ok) throw new Error(`http ${res.status}`);
-  const json = await res.json();
+  const contentType = res.headers.get("content-type") ?? "없음";
+  const text = await res.text();
+  // 200인데 JSON이 아닌 응답(2026-10-09, HTML)이 원인 규명 없이 SyntaxError로만 남았다(#107).
+  // 상태 코드·content-type·본문 앞부분을 남겨 키 문제/차단/엔드포인트 변경을 가릴 수 있게 한다.
+  const diagnose = (what) => {
+    const err = new Error(`${what} (http ${res.status}, ${contentType})`);
+    err.diagnostic = `http ${res.status} · content-type ${contentType} · 본문 앞 ${BODY_PREVIEW_CHARS}자: ${text.slice(0, BODY_PREVIEW_CHARS).replace(/\s+/g, " ")}`;
+    return err;
+  };
+  if (!res.ok) throw diagnose("http 오류 응답");
+  let json;
+  try {
+    json = JSON.parse(text);
+  } catch {
+    const html = /html/i.test(contentType) || /^\s*</.test(text);
+    throw diagnose(html ? "JSON이 아닌 HTML 응답" : "JSON이 아닌 응답");
+  }
   const result = json?.result;
   if (!result) throw new Error("result 필드 없음");
   if (result.err_cd && result.err_cd !== "000") {
@@ -309,16 +340,19 @@ async function main() {
       console.log(`[fetch-rates] ${category.key}: 상품 ${products.length}건`);
     } catch (err) {
       failed += 1;
-      failCause ??= err.code ?? err.message;
-      console.error(`[fetch-rates] ${category.key} 실패: ${err.message}`);
+      failCause ??= mask(err.code ?? err.message);
+      console.error(`[fetch-rates] ${category.key} 실패: ${mask(err.message)}`);
+      if (err.diagnostic) console.error(`[fetch-rates] ${category.key} 진단: ${mask(err.diagnostic)}`);
       result[category.key] = previous[category.key] ?? [];
       if (err.connection && succeeded === 0) hostDown = err.code;
     }
   }
 
-  // 전부 실패해도 0으로 끝낸다. 이 단계가 실패로 끝나면 뒤의 커밋 단계가 돌지 않아
-  // 같은 실행에서 받은 실거래 원본까지 버려진다(2026-10-03, 175슬롯·1,724건 - #62).
-  // 어제 값을 그대로 두고, 실패는 경고와 메타 파일로 남긴다. 며칠째 어제 값인지는
+  // 전부 실패하면 어제 값을 그대로 두고 실패를 경고와 메타 파일로 남긴 뒤, 코드 3으로
+  // 끝낸다(#107). 이전에는 0으로 끝내 full이 success로 보였고 낡은 금리가 이틀째 실렸다.
+  // 이 단계의 실패가 뒤 단계를 막으면 같은 실행에서 받은 실거래 원본까지 버려지므로
+  // (2026-10-03, 175슬롯·1,724건 - #62) 워크플로가 이 단계를 continue-on-error로 돌리고,
+  // 원본 커밋·배포가 끝난 뒤 마지막 단계에서 job을 실패로 만든다. 며칠째 어제 값인지는
   // 점검 봇이 본다 - 날짜에 따라 갈리는 검사를 여기 두면 배포가 멈춘다(#8).
   if (failed === CATEGORIES.length) {
     const cause = failCause ?? "알 수 없음";
@@ -327,6 +361,8 @@ async function main() {
     console.log(
       `::warning::금리 수집 실패(금감원 finlife) - 원인 ${cause}, 마지막 성공 ${meta.lastFetchedDate ?? "없음"}. 기존 금리를 그대로 둔다`
     );
+    process.exitCode = EXIT_ALL_FAILED;
+    
     return;
   }
 
@@ -411,6 +447,6 @@ async function appendHistory(now, result) {
 }
 
 main().catch((err) => {
-  console.error(`[fetch-rates] ${err.message}`);
+  console.error(`[fetch-rates] ${mask(err.message)}`);
   process.exit(1);
 });
