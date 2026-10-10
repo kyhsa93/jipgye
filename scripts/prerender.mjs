@@ -822,7 +822,7 @@ export function realestateOverallHtml(realestate, kind = null, district = null, 
   return (
     card(kind === "jeonse" ? RE_LABELS.perPyeongDeposit : RE_LABELS.perPyeong, reMan(perPyeong), "") +
     card(RE_LABELS.area, reEok(areaPrice(perPyeong)), "") +
-    (ratio ? card(RE_LABELS.ratio, formatPercent(ratio.ratio), "") : "") +
+    (ratio ? card(RE_LABELS.ratio, formatPercent(ratio.ratio), ratioBasis(overall)) : "") +
     (kind === "jeonse" ? complexCard() : "") +
     card(RE_LABELS.count, escapeHtml(reCount(metric.transactionCount)), "")
   );
