@@ -15,5 +15,7 @@ jobs:
         with:
           node-version: "20"
           cache: npm
+      # 워크플로 YAML을 실제 파서로 읽는다(문법 오류·중복 키). #118처럼 문법이 깨지면 main push마다 0초 실패 run이 생긴다.
+      - run: ruby scripts/check-workflow-yaml.rb
       - run: npm ci
       - run: npm test
