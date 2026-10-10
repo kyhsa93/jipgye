@@ -108,6 +108,9 @@
       <a href="./mortgage-rates.html" data-rate-page="mortgage">주택담보대출 금리 비교</a>
       <a href="./rent-loan-rates.html" data-rate-page="rentLoan">전세자금대출 금리 비교</a>
     </nav>
+
+    <p class="rates-bridge" id="rates-bridge" data-lang="ko"><!--prerender:rateBridgeKo-->적금은 매달 붓는 돈이라, 우대조건을 다 채워야 받는 최고금리와 조건 없이 받는 기본금리 중 어느 쪽이 내 몫인지가 먼저입니다. <a href="./jeonse-vs-wolse.html">전월세전환율</a>에는 월세로 나가는 돈이 자치구별로 나와 있어 월 납입액과 나란히 놓기 좋고, 목돈을 다 모았을 때 닿을 수 있는 서울 동네는 <a href="./budget-10eok.html">10억대 실거래</a>의 10억 원 예산 기준으로 가늠할 수 있습니다.<!--/prerender:rateBridgeKo--></p>
+    <p class="rates-bridge" id="rates-bridge-en" data-lang="en" hidden><!--prerender:rateBridgeEn-->Because an installment savings plan is paid in monthly, the first question is whether you will get the headline rate that needs every bonus condition met or the base rate paid with none. <a href="./jeonse-vs-wolse.html">The conversion rate</a> lists the monthly rent by district, which makes it easy to set beside your monthly deposit; and which Seoul neighborhoods a finished pot could reach can be gauged on <a href="./budget-10eok.html">the 10억 listings</a>, at a KRW 1 billion budget.<!--/prerender:rateBridgeEn--></p>
   </section>
 
   <footer class="site-footer">
@@ -948,6 +951,12 @@
     for (const link of document.querySelectorAll("#rate-links a[data-rate-page]")) {
       link.textContent = T[locale].ratePageLink(T[locale].tabs[link.dataset.ratePage]);
     }
+
+    // 금리 다음에 볼 곳 문단은 빌드가 두 언어로 다 구워 두었다. 여기서는 지금 언어 것만 보인다.
+    const bridgeKo = document.getElementById("rates-bridge");
+    const bridgeEn = document.getElementById("rates-bridge-en");
+    if (bridgeKo) bridgeKo.hidden = locale === "en";
+    if (bridgeEn) bridgeEn.hidden = locale !== "en";
 
     const month = fmtDisclosureMonth(cache.rates?.disclosureMonth);
     document.getElementById("content-notice").textContent = month

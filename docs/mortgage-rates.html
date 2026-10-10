@@ -108,6 +108,9 @@
       <a href="./mortgage-rates.html" data-rate-page="mortgage" aria-current="page">주택담보대출 금리 비교</a>
       <a href="./rent-loan-rates.html" data-rate-page="rentLoan">전세자금대출 금리 비교</a>
     </nav>
+
+    <p class="rates-bridge" id="rates-bridge" data-lang="ko"><!--prerender:rateBridgeKo-->주택담보대출 금리는 집값에서 자기 돈을 뺀 나머지를 빌릴 때 매달 내는 이자를 정합니다. 빌릴 금액을 아직 못 정했다면 먼저 <a href="./budget-10eok.html">10억대 실거래</a>를 열어 10억 원 예산 기준으로 실제 거래가 어디서 있었는지 보세요. 산다면 매달 나가는 돈이 전월세로 머물 때와 얼마나 다른지는 <a href="./jeonse-vs-wolse.html">전월세전환율</a>이 비교의 한쪽을 채워 줍니다.<!--/prerender:rateBridgeKo--></p>
+    <p class="rates-bridge" id="rates-bridge-en" data-lang="en" hidden><!--prerender:rateBridgeEn-->The mortgage rate sets the monthly interest on whatever remains after your own money comes off the price. If you have not settled on a loan size, open <a href="./budget-10eok.html">the 10억 listings</a> first and see where deals actually happened at a KRW 1 billion budget. How the monthly outlay of buying differs from staying on jeonse or rent is covered, on the renting side, by <a href="./jeonse-vs-wolse.html">the conversion rate</a>.<!--/prerender:rateBridgeEn--></p>
   </section>
 
   <footer class="site-footer">
@@ -948,6 +951,12 @@
     for (const link of document.querySelectorAll("#rate-links a[data-rate-page]")) {
       link.textContent = T[locale].ratePageLink(T[locale].tabs[link.dataset.ratePage]);
     }
+
+    // 금리 다음에 볼 곳 문단은 빌드가 두 언어로 다 구워 두었다. 여기서는 지금 언어 것만 보인다.
+    const bridgeKo = document.getElementById("rates-bridge");
+    const bridgeEn = document.getElementById("rates-bridge-en");
+    if (bridgeKo) bridgeKo.hidden = locale === "en";
+    if (bridgeEn) bridgeEn.hidden = locale !== "en";
 
     const month = fmtDisclosureMonth(cache.rates?.disclosureMonth);
     document.getElementById("content-notice").textContent = month
