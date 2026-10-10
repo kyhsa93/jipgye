@@ -247,6 +247,11 @@ h1 {
   font-size: var(--fs-sm);
 }
 
+/* "n일 전 자료" - 색이 아니라 글로 말한다. 굵게만 해서 같은 줄 계열로 읽힌다. */
+.updated-warn {
+  font-weight: 700;
+}
+
 .update-schedule {
   color: var(--muted);
   font-size: var(--fs-xs);

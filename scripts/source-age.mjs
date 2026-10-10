@@ -24,6 +24,15 @@ import { fileURLToPath } from "node:url";
 const KST_MS = 9 * 3600 * 1000;
 const DAY_MS = 86400000;
 
+/** 낡았다고 말하는 문턱(일). docs/nav.js의 STALE_DAYS와 같아야 하고, test/updated-stamp.test.mjs가 묶는다 (#111). */
+export const STALE_DAYS = 2;
+
+/** ISO 시각(UTC) -> KST 달력 날짜 YYYY-MM-DD. 파싱 못 하면 null. */
+export function kstDateOf(iso) {
+  const t = Date.parse(iso);
+  return Number.isNaN(t) ? null : new Date(t + KST_MS).toISOString().slice(0, 10);
+}
+
 /** ISO 시각(UTC) -> KST 달력 날짜의 일 번호. 파싱 못 하면 null. */
 export function kstDayNumber(iso) {
   const t = Date.parse(iso);
@@ -116,7 +125,7 @@ export function computeAges(sources, today) {
 }
 
 /** 한 줄 요약. 예: `경과 최대 2일: cancellation.json`. 경과 0~1일이면 정상이라고 적는다. */
-export function summarize(ages, minDays = 2) {
+export function summarize(ages, minDays = STALE_DAYS) {
   if (!ages.length) return "소스 없음";
   const max = ages[0].ageDays;
   if (max < minDays) return `경과 최대 ${max}일 - 이상 없음`;
@@ -136,7 +145,7 @@ function main(argv) {
   const ages = collect({ today, dataDir: arg("data") ?? join(root, "docs/data"), rawDir: arg("raw") ?? join(root, "raw") });
   if (argv.includes("--statusline")) {
     // 이상이 없으면 아무것도 찍지 않는다(상태줄이 비어 보이게).
-    if (ages.length && ages[0].ageDays >= 2) console.log(`집계 ${summarize(ages)}`);
+    if (ages.length && ages[0].ageDays >= STALE_DAYS) console.log(`집계 ${summarize(ages)}`);
     return;
   }
   console.log(`오늘(KST) ${today}`);

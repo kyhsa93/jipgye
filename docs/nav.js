@@ -46,6 +46,34 @@
   }
 })();
 
+// 데이터 기준일 옆 "n일 전 자료" (#111). 기준일(#updated의 data-updated, YYYY-MM-DD)은 빌드가 HTML에 박고,
+// 며칠 지났는지는 페이지를 여는 순간 여기서 KST 오늘로 센다. 빌드가 멈춰도 HTML이 얼어붙은 채 경고가
+// 사라지지 않게 하려는 분리다. 기준일을 못 읽으면 경고하지 않는다(없는 날짜로 겁주지 않는다).
+// 문턱은 scripts/source-age.mjs의 STALE_DAYS와 같아야 하고 test/updated-stamp.test.mjs가 묶는다.
+(function () {
+  const STALE_DAYS = 2;
+  if (typeof document.getElementById !== "function") return;
+  const base = document.getElementById("updated")?.getAttribute("data-updated");
+  const warn = document.getElementById("updated-warn");
+  if (!warn || !/^\d{4}-\d{2}-\d{2}$/.test(base || "")) return;
+  const baseMs = Date.parse(`${base}T00:00:00Z`);
+  if (Number.isNaN(baseMs)) return;
+  const DAY = 86400000;
+  function render() {
+    // 오늘(KST 날짜) - 기준일, 일 단위 버림. 기준일이 미래면 0.
+    const today = Math.floor((new Date().getTime() + 9 * 3600 * 1000) / DAY);
+    const days = Math.max(0, today - Math.floor(baseMs / DAY));
+    const stale = days >= STALE_DAYS;
+    warn.hidden = !stale;
+    warn.textContent = stale ? (document.documentElement.getAttribute("lang") === "en" ? `Data from ${days} days ago` : `${days}일 전 자료`) : "";
+  }
+  render();
+  // 화면 언어를 바꾸면 lang 속성이 바뀐다 - 경고 문구도 따라간다.
+  if (typeof MutationObserver === "function") {
+    new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+  }
+})();
+
 // 건너뛰기 링크는 스크립트 없이도 있어야 하므로 HTML에 한국어로 박아 두었다.
 // 화면 언어가 영어면 여기서 바꾼다 - 이 파일이 페이지 스크립트보다 뒤에 돌아
 // documentElement.lang은 이미 정해져 있다.
