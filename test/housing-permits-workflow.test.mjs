@@ -29,7 +29,12 @@ test("워크플로: 시크릿은 이름만 참조하고 수집 스텝 env에만 
   const stepStart = text.lastIndexOf("\n      - ", idx);
   const before = text.slice(0, stepStart);
   assert.doesNotMatch(before, /secrets\./, "잡 env나 앞선 스텝에 시크릿을 두지 않는다");
-  assert.match(text, /BUILDINGHUB_RAW_DIR: \$\{\{ runner\.temp \}\}/);
+  // 잡 수준 env에서는 runner 컨텍스트를 못 쓴다(actionlint). 수집 스텝 env에서 받고 정리는 $RUNNER_TEMP로 한다.
+  const jobEnv = text.slice(text.indexOf("    env:"), text.indexOf("    steps:"));
+  assert.doesNotMatch(jobEnv, /runner\./);
+  assert.match(text, /BUILDINGHUB_RAW_DIR: \$\{\{ runner\.temp \}\}\/housing-raw/);
+  assert.match(text, /rm -rf "\$RUNNER_TEMP\/housing-raw"/);
+  assert.doesNotMatch(text, /최초 입력 시점으로 확인된/);
   assert.doesNotMatch(text, /echo[^\n]*BUILDINGHUB_API_KEY|set -x/);
 });
 

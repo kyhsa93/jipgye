@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { DISTRICTS } from "../scripts/realestate-districts.mjs";
 import { OTHER_KEY } from "../scripts/housing-permits-merge.mjs";
 import { SERIES } from "../scripts/housing-permits-spec.mjs";
-import { seoulMonthly, measureB1, measureB2, measureB3, measureB4 } from "../scripts/housing-permits-measure.mjs";
+import { B2_MAX_MEDIAN, seoulMonthly, measureB1, measureB2, measureB3, measureB4 } from "../scripts/housing-permits-measure.mjs";
 import { flawedB2Verdict } from "./helpers/housing-permits-mutants.mjs";
 
 // B1~B4 측정 (#133, PREREG 4절). 정의는 PREREG에서 그대로 옮겼다. 전부 합성 입력.
@@ -142,4 +142,14 @@ test("B4: 입력 시점 필드의 지연 분포가 있으면 n = max(3, ceil(P90
   assert.equal(measureB4(f({ 2: 10, 3: 80, 5: 10 })).n, 3, "P90은 누적 90번째 = 3");
   assert.equal(measureB4(f({ 2: 10, 3: 79, 7: 11 })).n, 7, "누적 90번째가 7");
   assert.equal(measureB4(f({ [-1]: 5, 6: 95 })).n, 6, "음수 지연도 분포에 센다");
+});
+
+test("B2 경계: 문턱은 0.1이고, 중앙값 정확히 0.10은 통과, 0.10을 넘으면 불통과", () => {
+  assert.equal(B2_MAX_MEDIAN, 0.1);
+  const at = measureB2(foldedOf(list36, { units: 1100 }), ecosRows(list36, 1000));
+  assert.equal(at.medianExcl, 0.1);
+  assert.equal(at.verdict, "pass");
+  const over = measureB2(foldedOf(list36, { units: 1101 }), ecosRows(list36, 1000));
+  assert.ok(over.medianExcl > 0.1);
+  assert.equal(over.verdict, "fail");
 });
