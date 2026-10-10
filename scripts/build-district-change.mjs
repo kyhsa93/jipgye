@@ -59,8 +59,16 @@ export function regionTableHtml(regions, locale = "ko") {
   const en = locale === "en";
   const head = en ? ["Region", "Same units (ours)", "Official transaction index", "Gap"] : ["권역", "같은 칸(우리)", "공식 실거래가격지수", "차이"];
   const pp = en ? "pp" : "%p";
+  const tag = en ? "en-US" : "ko-KR";
+  // 우리 값 옆에 그 값을 낸 칸 수를 같은 셀에 적는다(#172). 값을 내지 않은 권역은 값 없이 칸 수만 남긴다(#171과 같은 규칙).
+  const cellsOf = (r) => (Number.isFinite(r.cells) ? (en ? `${r.cells.toLocaleString(tag)} cells` : `${r.cells.toLocaleString(tag)}칸`) : null);
+  const ours = (r) => {
+    const n = cellsOf(r);
+    if (r.ours === null) return n ? `<span class="low-sample">${TABLE[locale].thin}</span> (${n})` : "-";
+    return n ? `${signed(r.ours)} (${n})` : signed(r.ours);
+  };
   const body = regions
-    .map((r) => `<tr><td>${en ? r.name.en : r.name.ko}</td><td>${signed(r.ours)}</td><td>${signed(r.official)}</td><td>${r.gap === null ? "-" : `${r.gap > 0 ? "+" : ""}${r.gap}${pp}`}</td></tr>`)
+    .map((r) => `<tr><td>${en ? r.name.en : r.name.ko}</td><td>${ours(r)}</td><td>${signed(r.official)}</td><td>${r.gap === null ? "-" : `${r.gap > 0 ? "+" : ""}${r.gap}${pp}`}</td></tr>`)
     .join("");
   return `<thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${body}</tbody>`;
 }
