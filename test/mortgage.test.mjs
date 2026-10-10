@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { apartmentOptions, loanSentence, monthlyPayment, rateSpread } from "../scripts/mortgage.mjs";
+import { apartmentOptions, loanHeadSentence, loanSentence, monthlyPayment, rateSpread } from "../scripts/mortgage.mjs";
 import { budgetLoanHtml } from "../scripts/prerender.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -68,7 +68,7 @@ test("금리가 없으면 문단을 만들지 않는다", () => {
 
 test("한도는 가정하지 않고 1억당 값으로 말한다", () => {
   const sentence = loanSentence(rateSpread(apartmentOptions(RATES)), { eok: 10 });
-  assert.match(sentence, /1억을 30년 원리금균등으로/);
+  assert.match(loanHeadSentence(rateSpread(apartmentOptions(RATES))), /^1억을 30년 원리금균등으로/);
   assert.match(sentence, /1억당 값을 곱하시면/);
   // 소득에 갈리는 한도(DSR)를 하나로 정해 적으면 해마다 조용히 틀린 화면이 된다 - 갈린다고만 적는다.
   assert.match(sentence, /소득\(DSR\)에 따라 갈리므로 여기서는 정하지 않고/);
@@ -78,5 +78,10 @@ test("한도는 가정하지 않고 1억당 값으로 말한다", () => {
 test("예산 페이지에 월 상환액 문단이 붙어 있다", async () => {
   const html = await readFile(path.join(root, "docs/budget-10eok.html"), "utf8");
   assert.match(html, /<p class="budget-loan" data-prerendered>/, "예산 페이지에 문단이 없다(또는 화면이 다시 그릴 때 지워지지 않게 하는 표시가 없다)");
-  assert.match(html, /1억을 30년 원리금균등으로 빌리면/);
+  // 1억당 값·금리 범위는 열여덟 장 공통이라 method.html 한 자리로 옮겼다(#66). 장에는 한눈에 줄과 링크가 남는다.
+  assert.doesNotMatch(html, /1억을 30년 원리금균등으로 빌리면 매달/, "옮긴 문단이 장에 또 실렸다");
+  assert.match(html, /href="\.\/method\.html#budget-rules-loan"/);
+  assert.match(html, /answer-label">1억을 빌리면 매달/);
+  const method = await readFile(path.join(root, "docs/method.html"), "utf8");
+  assert.match(method, /id="budget-rules-loan"[\s\S]*1억을 30년 원리금균등으로 빌리면 매달/, "옮겨 간 자리에 문단이 없다");
 });

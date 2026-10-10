@@ -56,15 +56,28 @@ export function policyShort(bandEok) {
   return "정책대출 가격선을 모두 넘음";
 }
 
-export function policySentence(bandEok, counts, months = 6) {
-  if (!PAGES.includes(bandEok) || !counts?.n) return null;
-  const lines =
-    "정책대출에는 주택가격 선이 있습니다. 디딤돌대출(주택도시기금)은 5억 이하(신혼·2자녀 이상 가구는 6억 이하)이면서 전용 85㎡ 이하, " +
-    "보금자리론(한국주택금융공사)은 6억 이하, 신생아 특례 디딤돌(2년 내 출산 가구)은 9억 이하이면서 전용 85㎡ 이하입니다. ";
-  const share =
+/**
+ * 3~9억대 일곱 장에 똑같이 실리던 가격선 정의·소득 단서(#66) - method.html 한 자리로 옮겼다. 글자는 그대로다.
+ * 거래 수 문장(policyShareSentence)도 모든 장에서 같은 값이라 같은 자리로 간다.
+ */
+export const POLICY_LINES =
+  "정책대출에는 주택가격 선이 있습니다. 디딤돌대출(주택도시기금)은 5억 이하(신혼·2자녀 이상 가구는 6억 이하)이면서 전용 85㎡ 이하, " +
+  "보금자리론(한국주택금융공사)은 6억 이하, 신생아 특례 디딤돌(2년 내 출산 가구)은 9억 이하이면서 전용 85㎡ 이하입니다.";
+export const POLICY_TAIL =
+  `소득·자산 요건과 한도는 따로 있어 여기서는 가격선만 적습니다(신생아 특례도 수도권·규제지역은 LTV 70%). (마이홈포털·한국주택금융공사 기준, ${BASIS_DATE} 확인)`;
+
+export function policyShareSentence(counts, months = 6) {
+  if (!counts?.n) return null;
+  return (
     `최근 ${months}개월 서울 아파트 중개거래 ${num(counts.n)}건(직거래 제외) 가운데 디딤돌 일반 선 아래는 ${num(counts.didim)}건(${pct(counts.didim, counts.n)}), ` +
     `신혼·2자녀 선 아래는 ${num(counts.family)}건(${pct(counts.family, counts.n)}), 보금자리론 선 아래는 ${num(counts.bogeum)}건(${pct(counts.bogeum, counts.n)}), ` +
-    `신생아 특례 선 아래는 ${num(counts.newborn ?? 0)}건(${pct(counts.newborn ?? 0, counts.n)})입니다. `;
+    `신생아 특례 선 아래는 ${num(counts.newborn ?? 0)}건(${pct(counts.newborn ?? 0, counts.n)})입니다.`
+  );
+}
+
+/** 예산대 한 문단(그 예산대가 선 어디에 걸리는지만). 가격선 정의·거래 수·소득 단서는 POLICY_LINES·policyShareSentence·POLICY_TAIL. */
+export function policySentence(bandEok, counts) {
+  if (!PAGES.includes(bandEok) || !counts?.n) return null;
   const here =
     bandEok <= 4
       ? `이 예산대(${bandEok}억대)는 전용 85㎡ 이하라면 디딤돌·보금자리론·신생아 특례 세 상품 모두 가격선 안입니다. `
@@ -75,8 +88,5 @@ export function policySentence(bandEok, counts, months = 6) {
           : bandEok < 9
             ? `이 예산대(${bandEok}억대)는 전용 85㎡ 이하라면 신생아 특례 선(9억) 안이고, 다른 두 상품의 선은 넘습니다. `
             : "이 예산대(9억대)는 딱 9억인 집 말고는 신생아 특례 선도 넘습니다. ";
-  return (
-    lines + here + share +
-    `소득·자산 요건과 한도는 따로 있어 여기서는 가격선만 적습니다(신생아 특례도 수도권·규제지역은 LTV 70%). (마이홈포털·한국주택금융공사 기준, ${BASIS_DATE} 확인)`
-  );
+  return here.trim();
 }

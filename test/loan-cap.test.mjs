@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { BASIS_DATE, capFor, capSentence, clustering } from "../scripts/loan-cap.mjs";
+import { BASIS_DATE, CAP_RULES_HIGH, capFor, capSentence, clustering } from "../scripts/loan-cap.mjs";
 
 // 상한은 금융위원회 원문(10·15 대책, '26년도 가계부채 관리방안)에서 손으로 옮긴 것이다.
 test("15억 '이하'는 6억, 25억 이하는 4억, 그 위는 2억", () => {
@@ -55,5 +55,9 @@ test("예산대 '절반을 빌린다면' 예시는 그 가격대 상한을 넘�
 
 test("16~20억대에도 4억 천장 한 줄", () => {
   assert.match(capSentence(18, null), /상한은 4억입니다/);
-  assert.match(capSentence(20, null), /소득\(DSR\)/);
+  // 구간표·소득 단서는 열여덟 장에서 반복하지 않고 method.html 한 자리로 옮겼다(#66) - 문구는 상수에 그대로 있다.
+  assert.match(CAP_RULES_HIGH, /소득\(DSR\)/);
+  assert.match(CAP_RULES_HIGH, /15억 이하는 6억, 25억을 넘으면 2억/);
+  assert.ok(CAP_RULES_HIGH.includes(BASIS_DATE));
+  assert.doesNotMatch(capSentence(20, null), /15억 이하는 6억/, "옮긴 구간표가 장에 또 실렸다");
 });

@@ -4,6 +4,7 @@ import {
   BASIS_DATE,
   acquisitionRate,
   brokerFee,
+  COSTS_RULES,
   costsSentence,
   educationRate,
   purchaseCosts,
@@ -43,12 +44,14 @@ test("문단은 무주택 한 채 기준이라는 것과 기준일을 적는다"
   const text = costsSentence(11);
   assert.match(text, /집이 없던 사람이 11억 5,000만원짜리를/);
   assert.match(text, /4,370만원/, "11.5억: 취득세·교육세 3,795 + 중개보수 575");
-  assert.match(text, /중과/, "다주택 중과로 계산이 안 맞는다는 말이 없다");
-  assert.ok(text.includes(BASIS_DATE), "원문을 대조한 날이 문장에 없다");
+  // 중과 단서와 원문 대조일은 열여덟 장에서 반복하지 않고 method.html 한 자리로 옮겼다(#66). 글자는 COSTS_RULES에 그대로다.
+  assert.match(COSTS_RULES, /중과/, "다주택 중과로 계산이 안 맞는다는 말이 없다");
+  assert.ok(COSTS_RULES.includes(BASIS_DATE), "원문을 대조한 날이 문구에 없다");
+  assert.doesNotMatch(text, /중과|확인\)/, "옮긴 단서가 장 문장에 또 실렸다");
 });
 
 test("유주택 중과를 적되, 갈아타기의 일시적 2주택 예외를 같이 적는다 (#37)", () => {
-  const text = costsSentence(11);
+  const text = COSTS_RULES;
   assert.match(text, /2주택 8%/);
   assert.match(text, /2년 안에\(두 집이 모두 조정대상지역일 때\) 지금 집을 팔면 일시적 2주택이라 중과되지 않고/);
 });

@@ -8,7 +8,7 @@ import { DISTRICT_PAGES, DISTRICT_SLUGS, districtFile } from "./district-slugs.m
 import { districtSentences } from "./district-summary.mjs";
 import { factSentences } from "./district-facts.mjs";
 import { renewalSentences } from "./renewal-facts.mjs";
-import { apartmentOptions, loanSentence, monthlyPayment, rateSpread, yearChangeSentence } from "./mortgage.mjs";
+import { apartmentOptions, loanSentence, monthlyPayment, rateSpread } from "./mortgage.mjs";
 import { costsSentence, purchaseCosts } from "./purchase-costs.mjs";
 import { candidatesInBand } from "./complex-price.mjs";
 import { capSentence } from "./loan-cap.mjs";
@@ -318,6 +318,12 @@ export function budgetAnswersHtml(band, rates = null) {
   );
 }
 
+/**
+ * 장마다 똑같던 규칙 문단을 옮겨 간 자리(method.html의 #budget-rules-*)로 가는 링크(#66).
+ * 문단 끝에 붙어, 숫자만 남은 문단에서도 예외·원문 기준일이 한 번 눌러 닿는 거리에 있게 한다.
+ */
+export const budgetRuleLink = (id, text) => ` <a class="budget-rule-link" href="./method.html#budget-rules-${id}">${escapeHtml(text)}</a>`;
+
 /** 예산을 정한 사람이 다음에 묻는 것들로 가는 길(PO 검토 #33 - 예산대에서 이 화면들로 가는 링크가 0개였다). */
 export function budgetMoreHtml() {
   const links = [
@@ -338,21 +344,29 @@ export function budgetMoreHtml() {
 export function budgetMinCashHtml(band) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = minCashSentence(eok);
-  return sentence ? `<p class="budget-loan budget-mincash" data-prerendered>${escapeHtml(sentence)}</p>` : "";
+  return sentence
+    ? `<p class="budget-loan budget-mincash" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("mincash", "소득·기존 주택 예외와 원문 →")}</p>`
+    : "";
 }
 
 /** 정책대출 가격선에 걸친 예산대(4~9억대)에만 붙는 한 줄(scripts/policy-loan.mjs). */
 export function budgetPolicyHtml(band, policyCounts) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = policySentence(eok, policyCounts);
-  return sentence ? `<p class="budget-loan budget-policy" data-prerendered>${escapeHtml(sentence)}</p>` : "";
+  return sentence
+    ? `<p class="budget-loan budget-policy" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("policy", "가격선 정의와 거래 수 →")}</p>`
+    : "";
 }
 
 /** 15억 경계에 걸친 예산대에만 붙는 주담대 상한 한 줄(scripts/loan-cap.mjs). */
 export function budgetCapHtml(band, capStats) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = capSentence(eok, capStats);
-  return sentence ? `<p class="budget-loan budget-cap" data-prerendered>${escapeHtml(sentence)}</p>` : "";
+  // 16억대 이상은 구간표·소득 단서가 method.html로 갔다. 14·15억대 문장은 그대로 장에 있다.
+  const moved = Number.isFinite(eok) && eok >= 16 && eok <= 24;
+  return sentence
+    ? `<p class="budget-loan budget-cap" data-prerendered>${escapeHtml(sentence)}${moved ? budgetRuleLink("cap", "구간표와 원문 →") : ""}</p>`
+    : "";
 }
 
 /** 목록에 이름을 올리는 단지 수. 나머지는 검색의 "단지로 묶어 보기"로 보낸다 - 열여덟 장이 같은 긴 목록이 되지 않게. */
@@ -437,7 +451,9 @@ export function budgetCandidatesHtml(band, complexFiles) {
 export function budgetCostsHtml(band) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = costsSentence(eok);
-  return sentence ? `<p class="budget-loan budget-costs" data-prerendered>${escapeHtml(sentence)}</p>` : "";
+  return sentence
+    ? `<p class="budget-loan budget-costs" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("costs", "중과·예외와 원문 →")}</p>`
+    : "";
 }
 
 /**
@@ -460,8 +476,9 @@ export function budgetLoanHtml(band, rates, mortgageSeries = null) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = loanSentence(spread, { eok });
   if (!sentence) return "";
-  const year = yearChangeSentence(mortgageSeries);
-  return `<p class="budget-loan" data-prerendered>${sentence}${year ? ` ${escapeHtml(year)}` : ""}</p>`;
+  // 1억당 값·금리 범위와 1년 사이 변화(mortgageSeries로 만든 문장)는 열여덟 장에서 같은 값이라
+  // method.html로 갔다(scripts/budget-rules.mjs, #66). mortgageSeries 인자는 호출부 호환으로 남긴다.
+  return `<p class="budget-loan" data-prerendered>${sentence}${budgetRuleLink("loan", "1억당 값과 금리 근거 →")}</p>`;
 }
 
 export { budgetBandLabel };

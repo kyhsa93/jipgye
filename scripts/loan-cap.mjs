@@ -56,13 +56,18 @@ export function clustering(deals, { boundary = 150_000, since = POLICY_DATE, min
 
 const eok = (v) => `${v / 10_000}억`;
 
+/**
+ * 16~20억대 다섯 장에 똑같이 실리던 구간표·규제지역 단서(#66) - method.html 한 자리로 옮겼다. 글자는 그대로다.
+ * 장의 문장은 "이 예산대 집의 주택담보대출 상한은 N억입니다"까지만 남는다(상한 숫자는 장마다 다르다).
+ */
+export const CAP_RULES_HIGH =
+  `(시가 15억 초과 25억 이하 — 15억 이하는 6억, 25억을 넘으면 2억). ` +
+  `서울 전역이 규제지역이라 누구에게나 같은 천장이고, 실제로 빌릴 수 있는 돈은 소득(DSR)에 따라 이보다 적을 수 있습니다. (금융위원회 원문 기준, ${BASIS_DATE} 확인)`;
+
 /** 15억 경계에 걸친 예산대(14억대·15억대) 한 줄. 다른 예산대에는 쓰지 않는다. */
 export function capSentence(bandEok, stats) {
   if (bandEok >= 16 && bandEok <= 24) {
-    return (
-      `이 예산대 집의 주택담보대출 상한은 ${eok(capFor((bandEok + 0.5) * 10_000))}입니다(시가 15억 초과 25억 이하 — 15억 이하는 6억, 25억을 넘으면 2억). ` +
-      `서울 전역이 규제지역이라 누구에게나 같은 천장이고, 실제로 빌릴 수 있는 돈은 소득(DSR)에 따라 이보다 적을 수 있습니다. (금융위원회 원문 기준, ${BASIS_DATE} 확인)`
-    );
+    return `이 예산대 집의 주택담보대출 상한은 ${eok(capFor((bandEok + 0.5) * 10_000))}입니다.`;
   }
   if (bandEok !== 14 && bandEok !== 15) return null;
   const head =

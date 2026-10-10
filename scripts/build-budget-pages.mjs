@@ -4,9 +4,11 @@ import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.mj
 import { applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml } from "./prerender.mjs";
 import { clustering } from "./loan-cap.mjs";
 import { lineCounts } from "./policy-loan.mjs";
+import { budgetRulesHtml } from "./budget-rules.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const REALESTATE_PATH = path.join(root, "docs/realestate.html");
+const METHOD_PATH = path.join(root, "docs/method.html");
 const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 
 const BASE_TITLE = "서울 아파트 시세 - 25개 자치구 실거래가";
@@ -191,6 +193,13 @@ async function main() {
     if (before === null) created += 1;
     else updated += 1;
   }
+
+  // 장마다 똑같던 규칙 문단이 옮겨 간 자리(#66). 장과 같은 입력(금리·정책대출 거래 수)에서 같은 빌드에 굽는다.
+  const method = await readFile(METHOD_PATH, "utf8");
+  const methodNext = applyPrerender(method, {
+    budgetRules: budgetRulesHtml({ rates, mortgageSeries, policyCounts }),
+  });
+  if (methodNext !== method) await writeFile(METHOD_PATH, methodNext);
 
   console.log(`  예산 페이지 (생성 ${created} · 갱신 ${updated})${skipped.length ? ` · 거래 없어 건너뜀: ${skipped.join(", ")}` : ""}`);
 }

@@ -87,7 +87,7 @@ const man = (value) => `${Math.round(value).toLocaleString("ko-KR")}만원`;
  * 절반은 규제가 정한 값이 아니라 읽는 사람이 곱셈을 시작할 자리다. 그래서 "절반을
  * 빌린다면"이라고 조건으로 적는다.
  */
-export function loanSentence(spread, { eok, years = YEARS } = {}) {
+export function loanHeadSentence(spread, years = YEARS) {
   if (!spread) return null;
 
   const perEok = monthlyPayment(MAN_PER_EOK, spread.mid, years);
@@ -96,13 +96,22 @@ export function loanSentence(spread, { eok, years = YEARS } = {}) {
   const lowPay = monthlyPayment(MAN_PER_EOK, spread.low, years);
   const highPay = monthlyPayment(MAN_PER_EOK, spread.high, years);
 
-  const head =
+  return (
     `1억을 ${years}년 원리금균등으로 빌리면 매달 ${man(perEok)}입니다. ` +
     `아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 ${spread.mid}% 기준이고, 상품 ${spread.count}개가 ` +
     `연 ${spread.low}%에서 ${spread.high}%까지 벌어져 있어 같은 1억이 ` +
-    `매달 ${man(lowPay)}에서 ${man(highPay)} 사이가 됩니다.`;
+    `매달 ${man(lowPay)}에서 ${man(highPay)} 사이가 됩니다.`
+  );
+}
 
-  if (!Number.isFinite(eok)) return head;
+/**
+ * 예산대 한 문단(그 예산에서 절반을 빌리는 경우만). 1억당 값·금리 범위(loanHeadSentence)와 1년 사이 변화
+ * (yearChangeSentence)는 열여덟 장에서 똑같은 값이라 method.html 한 자리로 옮겼다(#66). 1억당 값은 장 맨 위
+ * "한눈에"에도 있다. "한도는 가정하지 않는다"는 단서(소득·DSR)는 이 화면의 원칙이라 장에 남긴다.
+ */
+export function loanSentence(spread, { eok, years = YEARS } = {}) {
+  const head = loanHeadSentence(spread, years);
+  if (!head || !Number.isFinite(eok)) return head;
 
   // 예시 대출액은 예산의 절반이되, 그 예산대 집값의 주담대 구간 상한(소득과 무관한 천장)을 넘지 않는다.
   // 16억 장에 "8억을 빌린다면"을 적던 때가 있었다 - 16억대 상한은 4억이다(#29).
@@ -115,7 +124,6 @@ export function loanSentence(spread, { eok, years = YEARS } = {}) {
   const amount = `${(borrow / MAN_PER_EOK).toLocaleString("ko-KR")}억`;
 
   return (
-    `${head} ` +
     (capped
       ? `이 예산의 절반(${(eok / 2).toLocaleString("ko-KR")}억)은 이 가격대 주담대 상한 ${amount}을 넘어, 상한인 ${amount}을 빌린다면 매달 ${man(pay)}입니다`
       : `이 예산에서 절반인 ${amount}을 빌린다면 매달 ${man(pay)}입니다`) +
