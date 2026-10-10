@@ -208,6 +208,7 @@ test("전세자금대출은 대표값과 함께 구간의 폭도 같이 낸다",
   assert.equal(loan.max, 6.5);
   assert.equal(loan.products, 2);
   assert.equal(loan.options, 2);
+  assert.equal(loan.productsWithAvg, 2);
 });
 
 test("금리가 없으면 화면을 만들지 않는다", () => {
