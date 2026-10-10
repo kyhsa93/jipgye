@@ -52,7 +52,7 @@ export function tableHtml(rows, locale = "ko") {
           `<td>${r.cells.toLocaleString(tag)}</td><td>${signed(r.survey)}</td></tr>`
     )
     .join("");
-  return `<thead><tr>${t.head.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${body}</tbody>`;
+  return `<thead><tr>${t.head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${body}</tbody>`;
 }
 
 export function regionTableHtml(regions, locale = "ko") {
@@ -62,7 +62,7 @@ export function regionTableHtml(regions, locale = "ko") {
   const body = regions
     .map((r) => `<tr><td>${en ? r.name.en : r.name.ko}</td><td>${signed(r.ours)}</td><td>${signed(r.official)}</td><td>${r.gap === null ? "-" : `${r.gap > 0 ? "+" : ""}${r.gap}${pp}`}</td></tr>`)
     .join("");
-  return `<thead><tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${body}</tbody>`;
+  return `<thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${body}</tbody>`;
 }
 
 export function buildPayload({ items, now, official, survey }) {

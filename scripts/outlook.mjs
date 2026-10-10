@@ -587,7 +587,7 @@ const TABLE_TEXT = {
 export function regionTableHtml(regions, locale = "ko") {
   if (!regions?.length) return null;
   const t = TABLE_TEXT[locale];
-  const head = `<thead><tr><th>${t.region}</th>${HORIZONS.map((h) => `<th>${t.after(h)}</th>`).join("")}</tr></thead>`;
+  const head = `<thead><tr><th scope="col">${t.region}</th>${HORIZONS.map((h) => `<th scope="col">${t.after(h)}</th>`).join("")}</tr></thead>`;
   const body = regionRows(regions)
     .map((row) => {
       const cells = row.cells
@@ -609,9 +609,9 @@ export function nowcastTableHtml(regions, locale = "ko") {
   if (!months.length) return null;
   const t = TABLE_TEXT[locale];
   const head =
-    `<thead><tr><th>${t.region}</th>` +
-    months.map((m) => `<th>${esc(ym(m, locale))}</th>`).join("") +
-    `<th>${t.officialGap}</th></tr></thead>`;
+    `<thead><tr><th scope="col">${t.region}</th>` +
+    months.map((m) => `<th scope="col">${esc(ym(m, locale))}</th>`).join("") +
+    `<th scope="col">${t.officialGap}</th></tr></thead>`;
   const body = regions
     .map((region) => {
       const now = region.nowcast;
@@ -639,8 +639,8 @@ export function scoreTableHtml(region, locale = "ko") {
   const t = TABLE_TEXT[locale];
   const pp = locale === "en" ? "pp" : "%p";
   const head =
-    `<thead><tr><th>${t.horizon}</th><th>${t.model}</th><th>${t.naive}</th><th>${t.drift}</th>` +
-    `<th>${t.hit}</th><th>${t.upHit}</th><th>${t.verdict}</th></tr></thead>`;
+    `<thead><tr><th scope="col">${t.horizon}</th><th scope="col">${t.model}</th><th scope="col">${t.naive}</th><th scope="col">${t.drift}</th>` +
+    `<th scope="col">${t.hit}</th><th scope="col">${t.upHit}</th><th scope="col">${t.verdict}</th></tr></thead>`;
   const body = region.cards
     .map(
       (card) =>

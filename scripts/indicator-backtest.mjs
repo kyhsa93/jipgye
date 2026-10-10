@@ -288,9 +288,9 @@ export function tableHtml(rows, locale = "ko") {
       ? `<td>-</td>`
       : `<td>${s.with}${pp}<div class="sub">${en ? "base" : "기준"} ${s.base}${pp} · ${Math.round(s.win * 100)}%</div></td>`;
   const head =
-    `<thead><tr><th>${en ? "Indicator added" : "넣은 지표"}</th>` +
-    `<th>${en ? "3 months" : "3개월 뒤 오차"}</th><th>${en ? "6 months" : "6개월 뒤 오차"}</th>` +
-    `<th>${en ? "Verdict" : "판정"}</th></tr></thead>`;
+    `<thead><tr><th scope="col">${en ? "Indicator added" : "넣은 지표"}</th>` +
+    `<th scope="col">${en ? "3 months" : "3개월 뒤 오차"}</th><th scope="col">${en ? "6 months" : "6개월 뒤 오차"}</th>` +
+    `<th scope="col">${en ? "Verdict" : "판정"}</th></tr></thead>`;
   const body = rows
     .map((r) => {
       const verdict = VERDICT[locale][r.verdict];

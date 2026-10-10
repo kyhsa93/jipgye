@@ -1,5 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { accessibleTables } from "./table-a11y.mjs";
 import { DEFAULT_AMOUNT, formatWon, netInterestOf } from "./interest.mjs";
 import { BUDGET_PAGES } from "./budget-pages.mjs";
 import { budgetFactSentences } from "./budget-facts.mjs";
@@ -40,6 +41,7 @@ const FLOOR_PATH = path.join(root, "docs/floor-gap.html");
 const OUTLOOK_PATH = path.join(root, "docs/price-outlook.html");
 const RECORD_PATH = path.join(root, "docs/record-high.html");
 const SWITCH_PATH = path.join(root, "docs/switch-house.html");
+const METHOD_PATH = path.join(root, "docs/method.html");
 const DATA_DIR = path.join(root, "docs/data");
 
 export const MIN_SAMPLE = 5;
@@ -565,7 +567,7 @@ export function realestateHeadHtml(kind = null, district = null) {
   const labels = district
     ? ["구분", RE_LABELS.perPyeong, RE_LABELS.area, RE_LABELS.count]
     : reHeadLabels(kind);
-  return `<tr>${labels.map((label) => `<th>${escapeHtml(label)}</th>`).join("")}</tr>`;
+  return `<tr>${labels.map((label) => `<th scope="col">${escapeHtml(label)}</th>`).join("")}</tr>`;
 }
 
 function reChange(change, baselineDate) {
@@ -884,8 +886,8 @@ export function rateFactsHtml(rates, category = "deposit", locale = "ko") {
 
 export function ratesHeadHtml(category = "deposit") {
   return SAVING_CATEGORIES.has(category)
-    ? "<tr><th>상품</th><th>기본금리</th><th>최고금리</th><th>세후 이자</th></tr>"
-    : "<tr><th>상품</th><th>금리 유형</th><th>금리(최저~최고)</th><th>평균</th></tr>";
+    ? "<tr><th scope=\"col\">상품</th><th scope=\"col\">기본금리</th><th scope=\"col\">최고금리</th><th scope=\"col\">세후 이자</th></tr>"
+    : "<tr><th scope=\"col\">상품</th><th scope=\"col\">금리 유형</th><th scope=\"col\">금리(최저~최고)</th><th scope=\"col\">평균</th></tr>";
 }
 
 export function ratesHtml(rates, { category = "deposit", limit = RATES_ROWS } = {}) {
@@ -959,7 +961,8 @@ export function applyPrerender(html, blocks) {
     if (content == null) continue;
     out = `${out.slice(0, start + open.length)}${content}${out.slice(end)}`;
   }
-  return out;
+  // 틀에 손으로 쓴 표와 빌더가 채운 표가 모두 이 길을 지나므로 머리글 방향·표 이름은 여기서 한 번에 단다.
+  return accessibleTables(out);
 }
 
 /**
@@ -994,7 +997,7 @@ export function conversionTableHtml(conversion, band = CONVERSION_BAND) {
 
   return (
     `<caption class="cost-label" style="caption-side:top;text-align:left;padding-bottom:8px;">${escapeHtml(`${label} 기준`)}</caption>` +
-    `<thead><tr><th>자치구</th><th>전환율</th><th>전세</th><th>월세</th><th>단지</th></tr></thead>` +
+    `<thead><tr><th scope="col">자치구</th><th scope="col">전환율</th><th scope="col">전세</th><th scope="col">월세</th><th scope="col">단지</th></tr></thead>` +
     `<tbody>${body}</tbody>`
   );
 }
@@ -1033,7 +1036,7 @@ export function cancelDistrictsHtml(cancellation) {
     .join("");
 
   return (
-    `<thead><tr><th>자치구</th><th>신고</th><th>해제</th><th>해제율</th><th>미등기</th><th>미등기율</th></tr></thead>` +
+    `<thead><tr><th scope="col">자치구</th><th scope="col">신고</th><th scope="col">해제</th><th scope="col">해제율</th><th scope="col">미등기</th><th scope="col">미등기율</th></tr></thead>` +
     `<tbody>${body}</tbody>`
   );
 }
@@ -1051,7 +1054,7 @@ export function cancelMonthsHtml(cancellation) {
     )
     .join("");
 
-  return `<thead><tr><th>계약월</th><th>계약</th><th>등기 완료</th><th>완료율</th></tr></thead><tbody>${body}</tbody>`;
+  return `<thead><tr><th scope="col">계약월</th><th scope="col">계약</th><th scope="col">등기 완료</th><th scope="col">완료율</th></tr></thead><tbody>${body}</tbody>`;
 }
 
 export function cancelDistrictLinksHtml(cancellation) {
@@ -1092,8 +1095,8 @@ export function renewalDistrictsHtml(renewal) {
     .join("");
 
   return (
-    `<thead><tr><th>자치구</th><th>갱신 − 신규</th><th>시세보다 싼 비율</th>` +
-    `<th>맞물린 계약</th><th>상한 미달</th><th>요구권 행사</th></tr></thead><tbody>${body}</tbody>`
+    `<thead><tr><th scope="col">자치구</th><th scope="col">갱신 − 신규</th><th scope="col">시세보다 싼 비율</th>` +
+    `<th scope="col">맞물린 계약</th><th scope="col">상한 미달</th><th scope="col">요구권 행사</th></tr></thead><tbody>${body}</tbody>`
   );
 }
 
@@ -1119,8 +1122,8 @@ export function renewalWolseDistrictsHtml(renewal) {
     })
     .join("");
   return (
-    `<thead><tr><th>자치구</th><th>${escapeHtml(`갱신 − 신규 (${wolse.rate}%)`)}</th><th>${escapeHtml(`${ends[0]}% / ${ends.at(-1)}%로 보면`)}</th>` +
-    `<th>시세보다 싼 비율</th><th>맞물린 계약</th></tr></thead><tbody>${body}</tbody>`
+    `<thead><tr><th scope="col">자치구</th><th scope="col">${escapeHtml(`갱신 − 신규 (${wolse.rate}%)`)}</th><th scope="col">${escapeHtml(`${ends[0]}% / ${ends.at(-1)}%로 보면`)}</th>` +
+    `<th scope="col">시세보다 싼 비율</th><th scope="col">맞물린 계약</th></tr></thead><tbody>${body}</tbody>`
   );
 }
 
@@ -1151,8 +1154,8 @@ export function floorDistrictsHtml(floor) {
     .join("");
 
   return (
-    `<thead><tr><th>자치구</th><th>1층 − 3층 이상</th><th>맞물린 칸</th>` +
-    `<th>서울과 다른가</th></tr></thead><tbody>${body}</tbody>`
+    `<thead><tr><th scope="col">자치구</th><th scope="col">1층 − 3층 이상</th><th scope="col">맞물린 칸</th>` +
+    `<th scope="col">서울과 다른가</th></tr></thead><tbody>${body}</tbody>`
   );
 }
 
@@ -1291,6 +1294,8 @@ async function main() {
         indicatorTable: indicators?.table?.ko ?? null,
       },
     ],
+    // 손으로 쓴 장이라 채울 자리는 없다. 표의 머리글 방향·이름만 같은 길로 단다.
+    ["docs/method.html", METHOD_PATH, {}],
     [
       "docs/cancelled-deals.html",
       CANCELLATION_PATH,

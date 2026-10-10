@@ -202,7 +202,7 @@ const TABLE = {
 export function gridTableHtml(rows, locale = "ko") {
   if (!rows?.length) return null;
   const t = TABLE[locale];
-  const head = `<thead><tr>${t.head.map((h) => `<th>${h}</th>`).join("")}</tr></thead>`;
+  const head = `<thead><tr>${t.head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead>`;
   const tag = locale === "en" ? "en-US" : "ko-KR";
   const body = rows
     .map((r) => {

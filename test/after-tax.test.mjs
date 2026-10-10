@@ -66,7 +66,7 @@ test("정적 HTML의 세후 이자가 실제 첫 화면과 같다", async () => 
 
 test("대출 표에는 세후 이자 열이 없다", () => {
   assert.ok(!ratesHeadHtml("mortgage").includes("세후 이자"));
-  assert.equal(ratesHeadHtml("mortgage").match(/<th>/g).length, 4);
+  assert.equal(ratesHeadHtml("mortgage").match(/<th scope="col">/g).length, 4);
 });
 
 test("금액을 바꾸면 표의 세후 이자가 따라 바뀐다", async () => {
