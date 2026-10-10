@@ -53,19 +53,24 @@
 (function () {
   const STALE_DAYS = 2;
   if (typeof document.getElementById !== "function") return;
-  const base = document.getElementById("updated")?.getAttribute("data-updated");
+  const stamp = document.getElementById("updated");
+  const base = stamp?.getAttribute("data-updated");
   const warn = document.getElementById("updated-warn");
   if (!warn || !/^\d{4}-\d{2}-\d{2}$/.test(base || "")) return;
   const baseMs = Date.parse(`${base}T00:00:00Z`);
   if (Number.isNaN(baseMs)) return;
   const DAY = 86400000;
   function render() {
+    const en = document.documentElement.getAttribute("lang") === "en";
+    // 정적 라벨("기준일 YYYY-MM-DD", #123)을 화면 언어로 맞춘다. 정적 라벨 모양일 때만 바꾼다 - 페이지
+    // 스크립트가 #updated를 자기 문장(기간·보관본 안내)으로 바꾼 장은 그 장의 사전이 언어를 따르므로 건드리지 않는다.
+    if (/^(기준일|As of) \d{4}-\d{2}-\d{2}$/.test(stamp.textContent || "")) stamp.textContent = `${en ? "As of" : "기준일"} ${base}`;
     // 오늘(KST 날짜) - 기준일, 일 단위 버림. 기준일이 미래면 0.
     const today = Math.floor((new Date().getTime() + 9 * 3600 * 1000) / DAY);
     const days = Math.max(0, today - Math.floor(baseMs / DAY));
     const stale = days >= STALE_DAYS;
     warn.hidden = !stale;
-    warn.textContent = stale ? (document.documentElement.getAttribute("lang") === "en" ? `Data from ${days} days ago` : `${days}일 전 자료`) : "";
+    warn.textContent = stale ? (en ? `Data from ${days} days ago` : `${days}일 전 자료`) : "";
   }
   render();
   // 화면 언어를 바꾸면 lang 속성이 바뀐다 - 경고 문구도 따라간다.
