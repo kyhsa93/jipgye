@@ -761,7 +761,17 @@ function renderOverall(realestate) {
   box.innerHTML =
     card(kind === "jeonse" ? t("thPerPyeongDeposit") : t("thPerPyeong"), formatMan(perPyeong), "") +
     card(t("thArea")(areaM2), formatEok(areaPrice(perPyeong)), "") +
-    (ratio ? card(t("thRatio"), formatPercent(ratio.ratio), "") : "") +
+    (ratio
+      ? card(
+          t("thRatio"),
+          formatPercent(ratio.ratio),
+          // 서울 전체 카드도 구 카드와 같은 표기로 값을 낸 건수를 적는다(#182). 위 구 분기와 같은 문자열이다.
+          escapeHtml(
+            `${t("thSale")} ${t("countUnit")(resolveMetric(overall, "sale").metric.transactionCount)} · ` +
+              `${t("thJeonse")} ${t("countUnit")(resolveMetric(overall, "jeonse").metric.transactionCount)}`
+          )
+        )
+      : "") +
     (kind === "jeonse" ? complexCard() : "") +
     card(t("thCount"), escapeHtml(t("countUnit")(metric.transactionCount)), "");
 }

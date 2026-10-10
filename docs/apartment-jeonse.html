@@ -76,7 +76,7 @@
 
   <section id="overall-section">
     <h2 id="overall-heading">서울 전체 평균</h2>
-    <div class="overall-cards" id="overall-cards"><!--prerender:realestateOverall--><div class="overall-card"><div class="label">평당 보증금</div><div class="value">3,031만원</div></div><div class="overall-card"><div class="label">84㎡ 환산</div><div class="value">7억 7,017만원</div></div><div class="overall-card"><div class="label">전세가율</div><div class="value">54.8%</div></div><div class="overall-card"><div class="label">전세가율 단지별 중앙값</div><div class="value">49.3%</div><div class="sub">단지·평형 1,173칸</div></div><div class="overall-card"><div class="label">거래건수</div><div class="value">547건</div></div><!--/prerender:realestateOverall--></div>
+    <div class="overall-cards" id="overall-cards"><!--prerender:realestateOverall--><div class="overall-card"><div class="label">평당 보증금</div><div class="value">3,031만원</div></div><div class="overall-card"><div class="label">84㎡ 환산</div><div class="value">7억 7,017만원</div></div><div class="overall-card"><div class="label">전세가율</div><div class="value">54.8%</div><div class="sub">매매 684건 · 전세 547건</div></div><div class="overall-card"><div class="label">전세가율 단지별 중앙값</div><div class="value">49.3%</div><div class="sub">단지·평형 1,173칸</div></div><div class="overall-card"><div class="label">거래건수</div><div class="value">547건</div></div><!--/prerender:realestateOverall--></div>
   </section>
 
   <section id="district-summary-section" hidden>
@@ -762,7 +762,17 @@ function renderOverall(realestate) {
   box.innerHTML =
     card(kind === "jeonse" ? t("thPerPyeongDeposit") : t("thPerPyeong"), formatMan(perPyeong), "") +
     card(t("thArea")(areaM2), formatEok(areaPrice(perPyeong)), "") +
-    (ratio ? card(t("thRatio"), formatPercent(ratio.ratio), "") : "") +
+    (ratio
+      ? card(
+          t("thRatio"),
+          formatPercent(ratio.ratio),
+          // 서울 전체 카드도 구 카드와 같은 표기로 값을 낸 건수를 적는다(#182). 위 구 분기와 같은 문자열이다.
+          escapeHtml(
+            `${t("thSale")} ${t("countUnit")(resolveMetric(overall, "sale").metric.transactionCount)} · ` +
+              `${t("thJeonse")} ${t("countUnit")(resolveMetric(overall, "jeonse").metric.transactionCount)}`
+          )
+        )
+      : "") +
     (kind === "jeonse" ? complexCard() : "") +
     card(t("thCount"), escapeHtml(t("countUnit")(metric.transactionCount)), "");
 }

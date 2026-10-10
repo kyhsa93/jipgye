@@ -1,8 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { DISTRICT_SLUGS } from "../scripts/district-slugs.mjs";
+import { realestateOverallHtml } from "../scripts/prerender.mjs";
 import { districtSentences } from "../scripts/district-summary.mjs";
 import { regionTableHtml } from "../scripts/build-district-change.mjs";
 import { leadSentence as conversionLead } from "../scripts/conversion.mjs";
@@ -18,6 +19,9 @@ const json = async (file) => JSON.parse(await read(file));
 
 const PERCENT = /\d+(\.\d+)?%/;
 const COUNT = /[0-9,]+\s?(건|개|단지|칸)/;
+// 전세가율 값 옆 표본 수는 신고 건수라 단위가 '건'이어야 한다. 위 COUNT를 쓰면 문장 안의 "25개 구"에도 맞아
+// 건수가 빠져도 시험이 통과한다(#182).
+const COUNT_GEON = /[0-9,]+건/;
 const sentencesOf = (text) => text.split(/(?<=[다요)])\.\s+/).map((s) => s.trim()).filter(Boolean);
 const textOf = (html) => html.replace(/<[^>]+>/g, "");
 const block = (html, name) => html.match(new RegExp(`<!--prerender:${name}-->([\\s\\S]*?)<!--/prerender:${name}-->`))?.[1] ?? "";
@@ -42,9 +46,9 @@ test("district 25장: 전세가율 값(카드·문장)이 있으면 같은 칸·
     if (!ratio && !card) continue; // 값이 비워진 구: 아래 시험이 따로 본다
     withValue += 1;
     assert.ok(ratio, `${page.name}: 카드에 값이 있는데 전세가율 문장이 없다`);
-    assert.ok(PERCENT.test(ratio) && COUNT.test(ratio), `${page.name}: 전세가율 문장에 값 옆 건수가 없다: ${ratio}`);
+    assert.ok(PERCENT.test(ratio) && COUNT_GEON.test(ratio), `${page.name}: 전세가율 문장에 값 옆 건수가 없다: ${ratio}`);
     assert.ok(card, `${page.name}: 전세가율 카드가 없다`);
-    assert.ok(COUNT.test(card[3] ?? ""), `${page.name}: 전세가율 카드 밑에 건수가 없다: ${card[0]}`);
+    assert.ok(COUNT_GEON.test(card[3] ?? ""), `${page.name}: 전세가율 카드 밑에 건수가 없다: ${card[0]}`);
     // 서울 평균 값도 같은 문장에 있으므로, 그 건수도 같은 문장에 있다.
     if (/서울 평균/.test(ratio)) assert.match(ratio, /서울 전체 매매 [0-9,]+건·전세 [0-9,]+건/, `${page.name}: 서울 평균 옆 건수가 없다`);
   }
@@ -76,7 +80,53 @@ test("district: 값이 없는 구는 전세가율 문장이 없고, 값이 있�
 
   // 값 있음: 문장 안에 % 값과 건수가 함께 있다.
   const filled = districtSentences(realestate.districts[0], realestate, "ko", null).find((s) => s.startsWith("전세가율은"));
-  assert.ok(filled && PERCENT.test(filled) && COUNT.test(filled), `값이 있는 칸에 건수가 없다: ${filled}`);
+  assert.ok(filled && PERCENT.test(filled) && COUNT_GEON.test(filled), `값이 있는 칸에 건수가 없다: ${filled}`);
+});
+
+test("district 전세가율 시험: 건수 없이 '개'만 있는 합성 문장('25개 구')은 실패한다 (#182 음성)", () => {
+  const synthetic = "전세가율은 54.8%로 서울 평균 55.0%보다 낮고, 25개 구를 전세가율 순으로 세우면 가장 높습니다.";
+  assert.ok(PERCENT.test(synthetic) && COUNT.test(synthetic), "전제: 옛 정규식은 이 문장에 맞는다");
+  assert.ok(!COUNT_GEON.test(synthetic), "'25개 구'가 건수로 읽혔다");
+  assert.ok(COUNT_GEON.test("서울 전체 매매 684건·전세 547건"));
+});
+
+// --- 1-2. 구가 아닌 화면의 서울 전체 전세가율 카드 (#182) -------------------------------
+
+const RATIO_CARD = /<div class="label">전세가율<\/div><div class="value">([^<]*)<\/div>(?:<div class="sub">([^<]*)<\/div>)?/g;
+
+test("서울 전체 전세가율 카드: 정적 HTML의 % 카드마다 같은 카드 안에 건수가 있다", async () => {
+  const files = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html") && !f.startsWith("district-"));
+  let cards = 0;
+  for (const f of files) {
+    for (const m of (await read(`docs/${f}`)).matchAll(RATIO_CARD)) {
+      cards += 1;
+      assert.ok(PERCENT.test(m[1]) ? COUNT_GEON.test(m[2] ?? "") : true, `${f}: 전세가율 값 옆에 건수가 없다: ${m[0]}`);
+    }
+  }
+  assert.ok(cards >= 1, "전세가율 카드가 하나도 없다 - 이 시험이 아무것도 보지 않았다");
+});
+
+test("서울 전체 전세가율 카드: 빌드와 브라우저 템플릿이 같은 표기를 만든다 (드리프트)", async () => {
+  const [template, ...copies] = await Promise.all(
+    ["realestate.html", "apartment-jeonse.html", "budget-3eok.html", "budget-20eok.html"].map((f) => read(`docs/${f}`))
+  );
+  assert.match(template, /t\("thSale"\)\} \$\{t\("countUnit"\)\(resolveMetric\(overall, "sale"\)\.metric\.transactionCount\)\} · /);
+  for (const c of copies) assert.equal(c.includes('card(\n          t("thRatio")'), true, "복제 화면의 템플릿이 원본과 다르다");
+});
+
+test("서울 전체 전세가율 카드: 값이 있으면 % 옆에 건수, 값이 비면 % 없이 카드가 없다 (#171 두 갈래)", () => {
+  const entry = (jeonse) => ({
+    name: "서울",
+    sale: { avgPricePerPyeong10k: 5000, transactionCount: 684 },
+    ...(jeonse ? { jeonse: { avgDepositPerPyeong10k: 2500, transactionCount: 547 } } : {}),
+  });
+  const filled = realestateOverallHtml({ overall: entry(true), districts: [] }, "jeonse");
+  const card = filled.match(/<div class="label">전세가율<\/div><div class="value">([^<]*)<\/div><div class="sub">([^<]*)<\/div>/);
+  assert.ok(card && PERCENT.test(card[1]), `값이 있는데 전세가율 카드가 없다: ${filled}`);
+  assert.equal(card[2], "매매 684건 · 전세 547건");
+
+  const blank = realestateOverallHtml({ overall: entry(false), districts: [] }, "jeonse");
+  assert.ok(blank === null || !/전세가율<\/div>/.test(blank), "전세 표본이 없는데 전세가율 카드가 남았다");
 });
 
 // --- 2. jeonse-vs-wolse 대출 금리 ---------------------------------------------------
