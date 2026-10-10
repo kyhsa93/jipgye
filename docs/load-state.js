@@ -12,19 +12,34 @@
     return String(text).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   }
 
+  // 지금 화면에 떠 있는 재시도 단추 id들. 한 화면에 실패 자리가 둘이면(금리 5장의 표와 추이 구역)
+  // 두 단추가 같은 main()을 부른다 - 한쪽을 누르고 다른 쪽도 누르면 main()이 두 번 돌았다(#187).
+  // 하나를 누르면 떠 있는 단추를 모두 잠가 한 번의 실패에 재시도가 한 번만 나가게 한다.
+  const live = new Set();
+
+  function lockAll() {
+    for (const id of live) {
+      const button = document.getElementById(id);
+      if (button) button.disabled = true;
+    }
+    live.clear();
+  }
+
   /**
    * target을 실패 문구 + 재시도 단추로 바꾼다.
    * - message / retryLabel: 이미 현재 언어로 옮긴 문구.
    * - retryId: 단추 id. 한 화면에 실패 자리가 둘이면 서로 달라야 한다.
    * - wrap(inner): 자리의 모양(<tr><td>…, <p>…)을 입히는 함수. 없으면 그대로 둔다.
-   * - onRetry: 단추를 누르면 부를 함수. 누른 단추는 다시 눌리지 않게 잠근다.
+   * - onRetry: 단추를 누르면 부를 함수. 누른 단추와 같은 화면에 떠 있는 다른 재시도 단추도 잠근다.
    */
   function showFailure(target, { message, retryLabel, retryId = "load-retry", wrap = (inner) => inner, onRetry }) {
     if (!target) return;
     const inner = `${escapeHtml(message)} <button type="button" id="${escapeHtml(retryId)}">${escapeHtml(retryLabel)}</button>`;
     target.innerHTML = wrap(inner);
+    live.add(retryId);
     document.getElementById(retryId)?.addEventListener("click", (event) => {
       if (event.currentTarget) event.currentTarget.disabled = true;
+      lockAll();
       onRetry?.();
     });
   }

@@ -76,6 +76,41 @@ test("금리 5장: 추이 구역의 재시도 단추를 누르면 다시 받아 
   assert.ok(events.some(([name]) => name === "load_retry"), "재시도를 세지 않았다");
 });
 
+test("금리 5장: 표와 추이 구역의 재시도 단추를 연달아 눌러도 다시 받기는 한 번뿐이다 (#187)", async () => {
+  // 한 번의 실패에 단추가 둘이다. 하나를 누르면 다른 하나도 잠겨야 main()이 한 번만 돈다.
+  // 진짜 브라우저는 잠긴(disabled) 단추의 클릭을 흘려보내지 않는다 - 시험도 그대로 흉내 낸다.
+  const rates = await readJson("rates");
+  const history = await readJson("rates-history");
+  for (const name of RATE_PAGES) {
+    let down = true;
+    let ratesFetches = 0;
+    const page = await loadRatesPage({
+      file: `docs/${name}.html`,
+      fetch: async (url) => {
+        const isRates = !String(url).includes("rates-history");
+        if (isRates) ratesFetches += 1;
+        if (down) throw new TypeError("network down");
+        return { ok: true, json: async () => (isRates ? rates : history) };
+      },
+    });
+    assert.equal(ratesFetches, 1, `${name}: 첫 로드의 rates.json 요청이 한 번이 아니다`);
+    const table = page.byId.get("load-retry");
+    const trend = page.byId.get("load-retry-history");
+
+    down = false;
+    const press = (button) => {
+      if (!button.disabled) button.dispatch("click");
+    };
+    press(trend);
+    press(table);
+    press(trend);
+    await settle();
+
+    assert.equal(table.disabled, true, `${name}: 표의 단추가 잠기지 않았다`);
+    assert.equal(ratesFetches, 2, `${name}: 두 단추를 연달아 누르자 main()이 ${ratesFetches - 1}번 돌았다`);
+  }
+});
+
 test("금리 5장: rates.json만 받고 rates-history가 거부되면 전과 같이 추이 없음 문구로 떨어진다", async () => {
   const rates = await readJson("rates");
   const page = await loadRatesPage({
