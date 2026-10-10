@@ -56,3 +56,11 @@ test("모든 워크플로에 따옴표 없는 스칼라 속 ': '가 없다", asy
     assert.deepEqual(bad, [], `${f}: YAML 문법 오류(따옴표 없는 스칼라 속 ": ") - run은 'run: |' 블록으로 쓴다`);
   }
 });
+
+test("test.yml의 actionlint 스텝은 버전·SHA-256을 고정하고 sha256sum -c로 대조한다 (#142)", async () => {
+  const text = await readFile(path.join(dir, "test.yml"), "utf8");
+  assert.match(text, /ACTIONLINT_VERSION:\s*"1\.7\.7"/, "버전 고정");
+  assert.match(text, /ACTIONLINT_SHA256:\s*"[0-9a-f]{64}"/, "SHA-256 64자리 고정");
+  assert.match(text, /sha256sum -c/, "다운로드 후 해시 대조");
+  assert.doesNotMatch(text, /\|\s*(ba)?sh\b/, "curl | bash 금지");
+});
