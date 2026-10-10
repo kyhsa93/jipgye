@@ -125,6 +125,7 @@
 <script src="./nav.js" defer></script>
 <script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
+<script src="./load-state.js"></script>
 <script>
   const T = {
     ko: {
@@ -184,6 +185,7 @@
       emptyRow: "조건에 맞는 상품이 없습니다.",
       retry: "다시 시도",
       loadError: "금리 데이터를 불러오지 못했습니다.",
+      historyLoadError: "금리 추이를 불러오지 못했습니다.",
       historyDeposit: "정기예금 12개월 최고",
       historySaving: "적금 12개월 최고",
       historyMortgage: "주택담보대출 최저",
@@ -256,6 +258,7 @@
       emptyRow: "No products match these filters.",
       retry: "Retry",
       loadError: "Could not load the rate data.",
+      historyLoadError: "Could not load the rate trend.",
       historyDeposit: "Best 12-month deposit",
       historySaving: "Best 12-month savings",
       historyMortgage: "Lowest mortgage rate",
@@ -1092,13 +1095,25 @@
     } catch (err) {
       console.error("[rates] 로드 실패:", err.message);
       reportLoadFailure("rates", err, true);
-      document.getElementById("products-body").innerHTML = `<tr class="empty-row"><td>${escapeHtml(
-        t("loadError")
-      )} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button></td></tr>`;
-      document.getElementById("load-retry")?.addEventListener("click", (e) => {
-        e.currentTarget.disabled = true;
+      // 표와 추이 구역이 같은 규칙(window.loadState)으로 실패를 말한다. 추이 자리를 빼먹으면
+      // 프리렌더가 박아 둔 "불러오는 중..."이 영구히 남는다(#173).
+      const retry = () => {
         window.analytics?.event("load_retry", { rate_category: state.category });
         main();
+      };
+      window.loadState.showFailure(document.getElementById("products-body"), {
+        message: t("loadError"),
+        retryLabel: t("retry"),
+        retryId: "load-retry",
+        wrap: (inner) => `<tr class="empty-row"><td>${inner}</td></tr>`,
+        onRetry: retry,
+      });
+      window.loadState.showFailure(document.getElementById("history-grid"), {
+        message: t("historyLoadError"),
+        retryLabel: t("retry"),
+        retryId: "load-retry-history",
+        wrap: (inner) => `<div class="placeholder" id="history-placeholder">${inner}</div>`,
+        onRetry: retry,
       });
       renderMeta();
       return;
