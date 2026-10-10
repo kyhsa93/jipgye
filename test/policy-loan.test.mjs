@@ -27,6 +27,7 @@ test("가격선 아래·걸친 예산대(3~9억대)에만 쓰고, 소득 요건�
   assert.match(POLICY_LINES, /디딤돌대출\(주택도시기금\)은 5억 이하/);
   assert.match(POLICY_TAIL, /소득·자산 요건과 한도는 따로/);
   assert.ok(POLICY_TAIL.includes(BASIS_DATE));
-  assert.doesNotMatch(s5, /소득·자산 요건|정책대출에는 주택가격 선이 있습니다|\d건/, "옮긴 문단이 장에 또 실렸다");
+  assert.match(s5, /가격선만 본 것이며 소득·자산 요건은 따로 있습니다\.$/, "자격처럼 읽히지 않게 하는 한 줄이 장에 없다");
+  assert.doesNotMatch(s5, /한도는 따로|정책대출에는 주택가격 선이 있습니다|\d건/, "옮긴 문단이 장에 또 실렸다");
   assert.match(policySentence(6, counts), /딱 6억인 집 말고는/);
 });

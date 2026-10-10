@@ -23,7 +23,9 @@ test("문장은 DSR로 더 적게 빌릴 수 있다는 것과 유주택자 원�
   assert.match(s, /자기 돈이 적어도 4억 6,950만원/);
   assert.doesNotMatch(s, /처분조건부/, "옮긴 예외 문단이 장에 또 실렸다(#66)");
   // 소득·기존 주택 단서와 기준일은 method.html 한 자리로 갔다. 글자는 상수에 그대로 있다.
-  assert.match(MIN_CASH_RULES, /소득\(DSR\)에 따라 이보다 적을 수/);
+  assert.match(MIN_CASH_RULES, /소득\(DSR\)에 따라 장에 적은 천장보다 적을 수/);
+  // 숫자 바로 옆 한 줄은 장에 남는다(clo): 부족한 돈을 낮게 읽지 않게.
+  assert.match(s, /소득\(DSR\)에 따라 더 필요할 수 있고, 이미 집이 있으면 이 계산이 맞지 않습니다\.$/);
   assert.match(MIN_CASH_RULES, /이미 집이 있으면 규제지역 주택구입 대출은 원칙적으로 막힙니다/);
   assert.match(MIN_CASH_RULES, /6개월 안에 팔기로 약정하면\(처분조건부\) 받을 수 있어/, "갈아타는 1주택자 예외가 없다 (#37)");
   assert.doesNotMatch(s, /LTV 0%/, "예외 없는 단정이 남았다");

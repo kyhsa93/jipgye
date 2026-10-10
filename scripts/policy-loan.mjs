@@ -88,5 +88,6 @@ export function policySentence(bandEok, counts) {
           : bandEok < 9
             ? `이 예산대(${bandEok}억대)는 전용 85㎡ 이하라면 신생아 특례 선(9억) 안이고, 다른 두 상품의 선은 넘습니다. `
             : "이 예산대(9억대)는 딱 9억인 집 말고는 신생아 특례 선도 넘습니다. ";
-  return here.trim();
+  // 자격이 되는 것처럼 읽히지 않게 숫자 옆에 두는 단서(clo, #66). 나머지는 POLICY_TAIL(method.html).
+  return `${here}가격선만 본 것이며 소득·자산 요건은 따로 있습니다.`;
 }

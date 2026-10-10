@@ -9,11 +9,11 @@ import { districtSentences } from "./district-summary.mjs";
 import { factSentences } from "./district-facts.mjs";
 import { renewalSentences } from "./renewal-facts.mjs";
 import { apartmentOptions, loanSentence, monthlyPayment, rateSpread } from "./mortgage.mjs";
-import { costsSentence, purchaseCosts } from "./purchase-costs.mjs";
+import { BASIS_DATE as COSTS_DATE, costsSentence, purchaseCosts } from "./purchase-costs.mjs";
 import { candidatesInBand } from "./complex-price.mjs";
-import { capSentence } from "./loan-cap.mjs";
-import { policyShort, policySentence } from "./policy-loan.mjs";
-import { minCash, minCashSentence } from "./min-cash.mjs";
+import { BASIS_DATE as CAP_DATE, capSentence } from "./loan-cap.mjs";
+import { BASIS_DATE as POLICY_DATE_BASIS, policyShort, policySentence } from "./policy-loan.mjs";
+import { BASIS_DATE as MIN_CASH_DATE, minCash, minCashSentence } from "./min-cash.mjs";
 import { WOLSE_CONVERSION_RATE } from "./realestate-metrics.mjs";
 import { rateFacts, factSentences as rateSentences } from "./rate-facts.mjs";
 import {
@@ -314,7 +314,7 @@ export function budgetAnswersHtml(band, rates = null) {
   return (
     `<section class="budget-answers" data-prerendered>` +
     `<h3>${escapeHtml(`${eokText(price)}짜리를 산다면 — 한눈에`)}</h3><ul>${lines}</ul>` +
-    `<p class="answer-more">근거와 예외는 아래 문단에 있습니다.</p></section>`
+    `<p class="answer-more">근거와 예외는 아래 문단의 링크(→)에 있습니다.</p></section>`
   );
 }
 
@@ -345,7 +345,7 @@ export function budgetMinCashHtml(band) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = minCashSentence(eok);
   return sentence
-    ? `<p class="budget-loan budget-mincash" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("mincash", "소득·기존 주택 예외와 원문 →")}</p>`
+    ? `<p class="budget-loan budget-mincash" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("mincash", `소득·기존 주택 예외와 원문(${MIN_CASH_DATE} 확인) →`)}</p>`
     : "";
 }
 
@@ -354,7 +354,7 @@ export function budgetPolicyHtml(band, policyCounts) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = policySentence(eok, policyCounts);
   return sentence
-    ? `<p class="budget-loan budget-policy" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("policy", "가격선 정의와 거래 수 →")}</p>`
+    ? `<p class="budget-loan budget-policy" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("policy", `가격선 정의와 거래 수(${POLICY_DATE_BASIS} 확인) →`)}</p>`
     : "";
 }
 
@@ -365,7 +365,7 @@ export function budgetCapHtml(band, capStats) {
   // 16억대 이상은 구간표·소득 단서가 method.html로 갔다. 14·15억대 문장은 그대로 장에 있다.
   const moved = Number.isFinite(eok) && eok >= 16 && eok <= 24;
   return sentence
-    ? `<p class="budget-loan budget-cap" data-prerendered>${escapeHtml(sentence)}${moved ? budgetRuleLink("cap", "구간표와 원문 →") : ""}</p>`
+    ? `<p class="budget-loan budget-cap" data-prerendered>${escapeHtml(sentence)}${moved ? budgetRuleLink("cap", `구간표와 원문(${CAP_DATE} 확인) →`) : ""}</p>`
     : "";
 }
 
@@ -452,7 +452,7 @@ export function budgetCostsHtml(band) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = costsSentence(eok);
   return sentence
-    ? `<p class="budget-loan budget-costs" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("costs", "중과·예외와 원문 →")}</p>`
+    ? `<p class="budget-loan budget-costs" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("costs", `중과·예외와 원문(${COSTS_DATE} 확인) →`)}</p>`
     : "";
 }
 

@@ -23,7 +23,7 @@ export function budgetRulesHtml({ rates = null, mortgageSeries = null, policyCou
   const year = yearChangeSentence(mortgageSeries);
   const share = policyShareSentence(policyCounts);
   return [
-    `<p>예산대 장(3억대~20억대)에 똑같이 실리던 규칙 문단을 이 한 자리로 옮겼습니다. 각 장에는 그 예산대의 숫자만 남기고 이리로 링크합니다. 글자는 그대로입니다.</p>`,
+    `<p>예산대 장(3억대~20억대)이 공통으로 링크하는 근거와 예외입니다. 각 장에는 그 예산대의 숫자와 짧은 단서만 있고, 세율·대출 규제의 예외와 원문 확인일은 여기에 한 번만 적습니다.</p>`,
     `<h3 id="budget-rules-loan">월 상환액: 1억당 값과 금리 근거</h3>`,
     head ? para(head) : "",
     year ? para(year) : "",
@@ -32,7 +32,7 @@ export function budgetRulesHtml({ rates = null, mortgageSeries = null, policyCou
     `<h3 id="budget-rules-mincash">자기 돈이 적어도: 소득·기존 주택 예외와 원문</h3>`,
     para(MIN_CASH_RULES),
     `<h3 id="budget-rules-cap">16억대~20억대: 주택담보대출 상한 구간표</h3>`,
-    para(`이 예산대 집의 주택담보대출 상한은 장마다 적힌 값입니다. ${CAP_RULES_HIGH}`),
+    para(`16억대~20억대 장에 적힌 "이 예산대 집의 주택담보대출 상한은 N억입니다"는 시가 구간에 따라 정해지는 값입니다. ${CAP_RULES_HIGH}`),
     `<h3 id="budget-rules-policy">3억대~9억대: 정책대출 가격선 정의와 거래 수</h3>`,
     para(POLICY_LINES),
     share ? para(share) : "",

@@ -60,4 +60,6 @@ test("16~20억대에도 4억 천장 한 줄", () => {
   assert.match(CAP_RULES_HIGH, /15억 이하는 6억, 25억을 넘으면 2억/);
   assert.ok(CAP_RULES_HIGH.includes(BASIS_DATE));
   assert.doesNotMatch(capSentence(20, null), /15억 이하는 6억/, "옮긴 구간표가 장에 또 실렸다");
+  assert.match(capSentence(20, null), /소득\(DSR\)에 따라 이보다 적을 수 있습니다\.$/, "상한이 빌릴 수 있는 돈처럼 읽힌다");
+  assert.match(CAP_RULES_HIGH, /15억 초과 25억 이하는 4억/, "구간표 가운데 칸이 빠졌다");
 });
