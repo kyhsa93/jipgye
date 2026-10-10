@@ -17,5 +17,25 @@ jobs:
           cache: npm
       # 워크플로 YAML을 실제 파서로 읽는다(문법 오류·중복 키). #118처럼 문법이 깨지면 main push마다 0초 실패 run이 생긴다.
       - run: ruby scripts/check-workflow-yaml.rb
+      # 표현식·컨텍스트 오류(#142): 위 검사는 YAML 문법만 보므로 잡 env의 `${{ runner.temp }}`
+      # (PR #139, `context "runner" is not allowed here`)를 통과시켰다. actionlint가 잡는다.
+      # 외부 바이너리이므로 버전과 SHA-256을 고정하고 `sha256sum -c`로 대조한다(불일치면 이 스텝이 실패).
+      # 해시 출처: https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_checksums.txt
+      # (linux_amd64 줄, 2026-10-10 확인). 버전을 올리면 해시도 같은 파일에서 다시 가져온다.
+      # -shellcheck=: run 블록의 셸 린트는 끈다. 이슈 범위는 표현식·컨텍스트이고, 켜면 기존 워크플로
+      # 4곳(official-price 89, summarize 70, summary-experiment 38·66)이 새로 걸린다 - 별도 이슈로 분리.
+      - name: actionlint v1.7.7
+        env:
+          ACTIONLINT_VERSION: "1.7.7"
+          ACTIONLINT_SHA256: "023070a287cd8cccd71515fedc843f1985bf96c436b7effaecce67290e7e0757"
+        run: |
+          set -euo pipefail
+          archive="actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          curl --proto '=https' --tlsv1.2 -fsSL -o "$RUNNER_TEMP/$archive" \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/${archive}"
+          echo "${ACTIONLINT_SHA256}  $RUNNER_TEMP/$archive" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/$archive" -C "$RUNNER_TEMP" actionlint
+          "$RUNNER_TEMP/actionlint" -version
+          "$RUNNER_TEMP/actionlint" -shellcheck=
       - run: npm ci
       - run: npm test
