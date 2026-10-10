@@ -146,7 +146,6 @@
   button.type = "button";
   button.id = "share-button";
   button.className = first?.className || "icon-toggle";
-  button.setAttribute("aria-label", "Share");
   button.innerHTML = '<span aria-hidden="true">📤</span>';
   actions.insertBefore(button, actions.firstChild);
   button.addEventListener("click", async () => {
@@ -169,4 +168,23 @@
       window.prompt("Copy this link:", location.href);
     }
   });
+})();
+
+// 머리 버튼 셋의 aria-label이 페이지 언어를 따른다 (#112). 정적 HTML은 ko로 박혀 있고, 언어 전환
+// 핸들러는 장마다 인라인(예순일곱 곳)이라 라벨을 따로 갱신하지 않는다 - 전환 때 모두 html lang을
+// 바꾸므로 그 속성을 지켜보다가 세 버튼을 한 곳에서 다시 맞춘다. 공유 버튼은 위에서 만든 뒤에 여기서 채운다.
+(function () {
+  if (typeof document.getElementById !== "function" || !document.documentElement) return;
+  const LABELS = {
+    ko: { "share-button": "공유", "theme-toggle": "테마 전환", "lang-toggle": "언어 전환" },
+    en: { "share-button": "Share", "theme-toggle": "Toggle theme", "lang-toggle": "Switch language" },
+  };
+  function apply() {
+    const labels = LABELS[document.documentElement.getAttribute("lang") === "en" ? "en" : "ko"];
+    for (const id of Object.keys(labels)) document.getElementById(id)?.setAttribute("aria-label", labels[id]);
+  }
+  apply();
+  if (typeof MutationObserver === "function") {
+    new MutationObserver(apply).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+  }
 })();
