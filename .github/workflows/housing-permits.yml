@@ -27,6 +27,16 @@ on:
         type: string
         required: false
         default: ""
+      district:
+        description: "시험 호출: 이 구 하나만 수집 (서울 시군구 코드 5자리, 예 11110). 비우면 전체. 주면 아무것도 저장·커밋하지 않고 개수 요약만 남김"
+        type: string
+        required: false
+        default: ""
+      max_calls:
+        description: "시험 호출: 호출 수 상한 (1 이상 정수). 일 한도 5000을 올리지 못하고 낮추기만 함. 주면 저장·커밋 없음"
+        type: string
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -42,6 +52,8 @@ jobs:
       LICENSE_TEXT: ${{ inputs.license }}
       PAGE_MODIFIED: ${{ inputs.page_modified }}
       INPUT_TIME_FIELD: ${{ inputs.input_time_field }}
+      DISTRICT_CODE: ${{ inputs.district }}
+      MAX_CALLS: ${{ inputs.max_calls }}
       # 사전 등록(PR #137 머지 SHA). ④ 분모 등 PREREG를 고치는 PR이 있어도 이 커밋이 조상이면 된다.
       PREREG_COMMIT: dac5e98db7d00aca37dfa57dda1da9f4d39314ca
     steps:
@@ -71,17 +83,22 @@ jobs:
           node scripts/fetch-housing-permits.mjs \
             --license "$LICENSE_TEXT" --page-modified "$PAGE_MODIFIED" \
             --collected-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-            ${INPUT_TIME_FIELD:+--input-time-field "$INPUT_TIME_FIELD"}
+            ${INPUT_TIME_FIELD:+--input-time-field "$INPUT_TIME_FIELD"} \
+            ${DISTRICT_CODE:+--only-district "$DISTRICT_CODE"} \
+            ${MAX_CALLS:+--max-calls "$MAX_CALLS"}
 
       - name: 원본 쪽 본문 지우기
         if: always()
         run: rm -rf "$RUNNER_TEMP/housing-raw"
 
+      # 시험 호출(district·max_calls 중 하나라도 줌)은 folded.json이 없으므로 측정·커밋을 건너뛴다.
       - name: B1~B4 측정
+        if: ${{ inputs.district == '' && inputs.max_calls == '' }}
         run: |
           node scripts/housing-permits-measure.mjs
           { echo '### 건축HUB B1~B4'; echo '```json'; cat research/housing-permits/measure.json; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
       - name: 커밋 (접힌 결과와 측정 메타만)
+        if: ${{ inputs.district == '' && inputs.max_calls == '' }}
         run: |
           ./scripts/push-docs.sh "chore: 건축HUB 주택인허가 접기" research/housing-permits/folded.json research/housing-permits/measure.json

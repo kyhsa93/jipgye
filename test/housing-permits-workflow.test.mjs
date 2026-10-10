@@ -55,3 +55,27 @@ test("워크플로: 커밋은 접힌 결과와 측정 메타만(원본·raw 폴�
 test("워크플로: concurrency는 official-price 선례대로 digest-pipeline을 공유한다(같은 main에 push하므로)", () => {
   assert.match(text, /concurrency:\n  group: digest-pipeline\n  cancel-in-progress: false/);
 });
+
+// ---- 시험 호출 입력 (#141) ----
+
+test("워크플로: 시험 호출 입력(district·max_calls)은 잡 env로 받고 run에 보간하지 않는다", () => {
+  assert.match(text, /^      district:/m);
+  assert.match(text, /^      max_calls:/m);
+  assert.match(text, /^      DISTRICT_CODE: \$\{\{ inputs\.district \}\}$/m);
+  assert.match(text, /^      MAX_CALLS: \$\{\{ inputs\.max_calls \}\}$/m);
+  assert.match(text, /\$\{DISTRICT_CODE:\+--only-district "\$DISTRICT_CODE"\}/);
+  assert.match(text, /\$\{MAX_CALLS:\+--max-calls "\$MAX_CALLS"\}/);
+});
+
+test("워크플로: 시험 호출이면 측정·커밋 스텝을 건너뛴다(folded.json·measure.json을 올리지 않는다)", () => {
+  for (const name of ["B1~B4 측정", "커밋 (접힌 결과와 측정 메타만)"]) {
+    const start = text.indexOf(`- name: ${name}`);
+    assert.ok(start > 0, name);
+    const step = text.slice(start, text.indexOf("\n      - ", start + 1) > 0 ? text.indexOf("\n      - ", start + 1) : undefined);
+    assert.match(step, /if: \$\{\{ inputs\.district == '' && inputs\.max_calls == '' \}\}/, name);
+  }
+});
+
+test("워크플로: 일 한도 환경변수·상수는 건드리지 않는다(올리는 것은 소유자 조건 5 변경)", () => {
+  assert.doesNotMatch(text, /BUILDINGHUB_DAILY_LIMIT/);
+});

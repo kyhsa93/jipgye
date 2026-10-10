@@ -59,10 +59,17 @@ export function parseDay(value) {
   return `${y}-${mo}`;
 }
 
-function parseUnits(value, id) {
+/** 호수를 읽을 수 있으면 수, 아니면 null. 수집기가 쪽마다 불러 오류에 구·쪽 위치를 붙이게 한다. */
+export function readUnits(value) {
   const text = String(value ?? "").trim().replace(/,/g, "");
   const n = Number(text);
-  if (text === "" || !Number.isFinite(n) || n < 0) throw new ShapeError(`호수를 읽을 수 없음 (${FIELDS.units}=${JSON.stringify(String(value))}, 사업 ${id})`);
+  return text === "" || !Number.isFinite(n) || n < 0 ? null : n;
+}
+
+// 공개 Actions 로그에 나가는 메시지다 - 사업 관리번호·읽지 못한 원래 값은 적지 않는다(#141). 위치는 수집기가 붙인다.
+function parseUnits(value) {
+  const n = readUnits(value);
+  if (n === null) throw new ShapeError(`호수를 읽을 수 없음 (${FIELDS.units} 필드 값이 숫자가 아니거나 음수)`);
   return n;
 }
 
@@ -102,15 +109,15 @@ export function foldProjects(items, { inputTimeField = null } = {}) {
   let cancelled = 0;
   let projects = 0;
 
-  for (const [id, { item }] of latest) {
+  for (const { item } of latest.values()) {
     if (isCancelled(item)) {
       cancelled += 1;
       const month = parseDay(item[FIELDS.dates.permit]);
-      if (month) add((cancelledPermit[month] ??= { projects: 0, units: 0 }), parseUnits(item[FIELDS.units], id));
+      if (month) add((cancelledPermit[month] ??= { projects: 0, units: 0 }), parseUnits(item[FIELDS.units]));
       continue;
     }
     const sgg = String(item[FIELDS.sigungu]).trim();
-    const units = parseUnits(item[FIELDS.units], id);
+    const units = parseUnits(item[FIELDS.units]);
     projects += 1;
     if (lag) {
       const input = parseDay(item[inputTimeField]);
