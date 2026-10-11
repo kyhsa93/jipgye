@@ -220,6 +220,16 @@
     <h2>하지 않는 것</h2>
     <p>특정 단지나 지역을 권하지 않고, 광고비를 받고 매물을 올리지 않습니다. 몇 달 뒤를 짐작하는 화면이 하나 있지만 <a href="#outlook">그 짐작이 지난 14년 동안 얼마나 틀렸는지</a>와 같이 싣고, 기준선을 못 이기는 칸은 비웁니다. 사고팔 때를 정해 드리지 않습니다. 그 숫자로 무엇을 할지는 읽는 분의 몫입니다.</p>
 
+    <h2 id="corrections">고친 오류</h2>
+    <p>이 사이트는 정부 원본을 가공해 보여 주며, 집계 방식이나 문장에서 틀린 곳을 알게 되면 고쳐 적습니다. 모든 오류를 여기에 적는 것은 아닙니다. 숫자를 판단의 근거로 쓰기 전에 원본을 확인해 주세요. 아래는 고친 것 가운데 다섯 건을 날짜 순으로 적은 것입니다.</p>
+    <ul class="corrections-list">
+      <li><strong>2026-10-10</strong> &mdash; <a href="./jeonse-vs-wolse.html">전세 대 월세 화면</a>이 전세자금대출 &lsquo;평균 금리&rsquo;라고 적은 값은 평균이 아니라 옵션별 평균 금리의 중앙값이었고, 기준 개수도 상품 수만 적혀 있었습니다. 이 사이트의 집계 방식에 맞게 문장을 &lsquo;중앙값&rsquo;으로 고치고 상품 수와 옵션 수를 함께 밝혔으며, 4.5%라는 값은 그대로입니다. (<a href="https://github.com/kyhsa93/jipgye/issues/183" target="_blank" rel="noopener">#183</a>, <a href="https://github.com/kyhsa93/jipgye/pull/189" target="_blank" rel="noopener">PR #189</a>)</li>
+      <li><strong>2026-10-04</strong> &mdash; <a href="./about.html">소개 화면</a>에 &lsquo;앞으로의 가격을 예측하지 않는다&rsquo;와 원본을 &lsquo;여섯 달치&rsquo; 보관한다는 문장이 남아 있었는데, 전망 화면이 열린 뒤였고 보관 기간은 최대 스물네 달이었습니다. 두 문장만 실제에 맞췄고 숫자 계산은 건드리지 않았습니다. (<a href="https://github.com/kyhsa93/jipgye/issues/65" target="_blank" rel="noopener">#65</a>)</li>
+      <li><strong>2026-10-01</strong> &mdash; 해제 기록에는 같은 계약을 해제 표시 없이 다시 신고한 정정 재신고가 섞여 있는데 이 사이트의 집계 방식은 그것까지 해제로 세었고, 이를 빼고 다시 세어 당시 표본(2025년 8월~2026년 5월 신고분)의 해제율이 2.1%에서 0.9%가 되었습니다. 영향은 <a href="./cancelled-deals.html">해제 거래 화면</a>의 해제율과 가격대 비교에 한정되고 시세 화면은 그대로였으며, 표본이 그 뒤 늘었으니 지금 값은 그 화면에서 확인해 주세요. (<a href="https://github.com/kyhsa93/jipgye/issues/28" target="_blank" rel="noopener">#28</a>)</li>
+      <li><strong>2026-10-01</strong> &mdash; 월세 시세표의 &lsquo;전주 대비&rsquo; 증감이 신고된 방 크기 구성에 따라 크게 흔들리는 단순 평균으로 계산되던 것을 보증금과 월세를 묶은 ㎡당 값으로 바꿨습니다. 달라진 것은 월세 칸의 증감 표시 하나이고, 재어 본 결과는 <a href="#wolse-change">위 월세 증감 절</a>에 있습니다. (<a href="https://github.com/kyhsa93/jipgye/issues/6" target="_blank" rel="noopener">#6</a>)</li>
+      <li><strong>2026-10-01</strong> &mdash; 예산대 장의 &lsquo;절반을 빌린다면&rsquo; 월 상환액 예시가 그 가격대의 주택담보대출 상한보다 큰 금액으로 계산돼 있었고(예: 16억대 장은 상한 4억인데 8억), 상한 안으로 줄이면서 상한에 걸렸다는 말을 붙였습니다. 13억대부터 20억대까지의 장이 영향 범위입니다. (<a href="https://github.com/kyhsa93/jipgye/issues/29" target="_blank" rel="noopener">#29</a>)</li>
+    </ul>
+
     <h2>틀린 것을 찾으셨다면</h2>
     <p>계산이 어긋나 보이는 곳이 있으면 알려 주세요. 원본을 보관하고 있어서 특정 시점의 숫자를 다시 만들어 확인할 수 있습니다.</p>
   </div>
@@ -368,6 +378,16 @@
 
     <h2>What this site does not do</h2>
     <p>It does not recommend a particular complex or district, and does not take money to list anything. One page does guess a few months ahead, but always next to <a href="#outlook-en">how wrong that guess has been over fourteen years</a>, and cells that cannot beat a naive baseline stay blank. It does not tell anyone when to buy or sell. What to do with the numbers is yours.</p>
+
+    <h2 id="corrections-en">Corrections</h2>
+    <p>This site reshapes government source data for display, and when we learn that a method or a sentence here is wrong, we correct it in the open. This list does not cover every mistake. Please check the original source before relying on a figure for a decision. Below are five corrections, newest first.</p>
+    <ul class="corrections-list">
+      <li><strong>2026-10-10</strong> &mdash; The &ldquo;average rate&rdquo; on the <a href="./jeonse-vs-wolse.html">jeonse vs monthly rent page</a> was in fact the median of per-option average rates, and only a product count was given as the base. The sentence now says &ldquo;median&rdquo; and names both product and option counts, while the 4.5% itself is unchanged. (<a href="https://github.com/kyhsa93/jipgye/issues/183" target="_blank" rel="noopener">#183</a>, <a href="https://github.com/kyhsa93/jipgye/pull/189" target="_blank" rel="noopener">PR #189</a>)</li>
+      <li><strong>2026-10-04</strong> &mdash; The <a href="./about.html">About page</a> still said the site does not forecast prices and keeps six months of raw responses, though the outlook page had opened and retention is up to twenty-four months. Only those two sentences were changed; no calculation was touched. (<a href="https://github.com/kyhsa93/jipgye/issues/65" target="_blank" rel="noopener">#65</a>)</li>
+      <li><strong>2026-10-01</strong> &mdash; Cancellation records include corrected re-filings, the same contract reported again without a cancellation mark, and this site's counting method had treated them as cancellations, and removing them moved the rate in the sample of that time (filings from August 2025 to May 2026) from 2.1% to 0.9%. Only the rate and price-band comparison on the <a href="./cancelled-deals.html">cancelled deals page</a> were affected, and since the sample has grown, check that page for the current figure. (<a href="https://github.com/kyhsa93/jipgye/issues/28" target="_blank" rel="noopener">#28</a>)</li>
+      <li><strong>2026-10-01</strong> &mdash; The week-over-week change in the monthly-rent table had been computed from plain averages that swing with the mix of room sizes reported; it now uses deposit and rent combined per ㎡. Only the change badge on the monthly-rent cell differs, and the measurement is in the <a href="#wolse-change-en">monthly-rent section above</a>. (<a href="https://github.com/kyhsa93/jipgye/issues/6" target="_blank" rel="noopener">#6</a>)</li>
+      <li><strong>2026-10-01</strong> &mdash; The &ldquo;if you borrowed half&rdquo; monthly-payment example on budget pages used a loan above the mortgage cap for that price band (the 1.6 billion won page used 800 million against a 400 million cap); it is now held to the cap and says when the cap applies. The pages from 1.3 billion to 2 billion won are the ones affected. (<a href="https://github.com/kyhsa93/jipgye/issues/29" target="_blank" rel="noopener">#29</a>)</li>
+    </ul>
 
     <h2>If something looks wrong</h2>
     <p>Please say so. The raw responses are kept, so any figure can be rebuilt from a given point in time and checked.</p>
