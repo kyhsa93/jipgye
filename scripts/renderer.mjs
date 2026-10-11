@@ -2,7 +2,7 @@
 //
 // - 기본값은 legacy다(미설정·빈 문자열). 이 경우 로더·esbuild·react를 import하지 않는다 - 아래 동적 import가 react일 때만 돈다.
 // - react 모드는 이식된 조각(`render/entry.jsx`의 `fragments`)만 React로 그리고, 나머지는 legacy에 맡긴다.
-//   이 PR 시점에는 이식된 조각이 없어서 두 모드의 출력이 같다.
+//   이식된 조각은 legacy와 같은 바이트를 내야 한다(허용 변환은 react.mjs의 `'` 한 가지) - 조각마다 분기별 parity 시험이 지킨다.
 // - 로더·진입 모듈·조각 렌더의 오류는 예외로 올라간다. react가 실패했다고 조용히 legacy로 넘기지 않는다(폴백은 #238, 워크플로 쪽).
 // - 읽을 수 없는 값은 legacy로 넘기지 않고 멈춘다(`buildNowMs`와 같은 원칙: 틀린 값이 조용히 기본 동작이 되면 비교가 거짓이 된다).
 //
