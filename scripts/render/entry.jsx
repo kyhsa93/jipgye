@@ -1,5 +1,5 @@
 // 이식된 조각의 목록 (#237). 이름은 prerender.mjs의 `*Html()` 함수 이름 그대로, 값은 같은 인자를 받아 React 요소를 돌려주는 함수다.
-// 데이터가 없을 때는 legacy처럼 null을 돌려준다(그러면 자리표시가 legacy와 같은 방식으로 비게 된다).
+// 데이터가 없을 때는 legacy처럼 null을 돌려준다(그러면 자리표시가 legacy와 같은 방식으로 비게 된다). legacy가 null이 아니라 빈 문자열("")을 내는 조각(자치구 문장 묶음·예산대 잎 8개)은 빈 조각으로 ""를 낸다 - 둘은 자리표시 치환에서 다르다.
 // 여기서 `scripts/renderer.mjs`·`scripts/prerender.mjs`를 불러오면 안 된다(로더가 막는다). 계산은 순수 모듈에서 가져온다.
 //
 // 이식된 것: ratesHtml·ratesHeadHtml (#240, 금리 4개 상품군), summaryHtml·marketHtml·newsContextHtml·newsHtml·newsSummaryHtml·
@@ -8,8 +8,11 @@
 // floorDistrictLinksHtml (#241 PR 2, 리드·링크 10개), realestateHtml (#241 PR 3, 첫 화면 실거래 요약),
 // districtSummaryHtml·districtRenewalHtml·districtFactsHtml·districtLinksHtml·conversionTableHtml·cancelDistrictsHtml·cancelMonthsHtml·
 // renewalDistrictsHtml·renewalWolseDistrictsHtml·floorDistrictsHtml (#242 PR 1, 자치구 문장·링크 4개와 표 6개), realestateHeadHtml·realestateTableHtml (#242 PR 2, 시세표 머리글·표),
-// realestateOverallHtml (#242 PR 3, 시세 요약 카드). #243이 이어서 채운다.
+// realestateOverallHtml (#242 PR 3, 시세 요약 카드), budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml
+// (#243 PR A, 예산대 잎 조각 8개). #243 PR B가 이어서 채운다(후보 단지·합성).
 import { DISTRICT_PAGES } from "../district-slugs.mjs";
+import { BUDGET_MORE_LINKS, budgetAnswers, budgetRuleHref, capNote, costsNote, loanNote, minCashNote, policyNote } from "../budget-fragments.mjs";
+import { budgetFactSentences } from "../budget-facts.mjs";
 import { districtSentences } from "../district-summary.mjs";
 import { factSentences } from "../district-facts.mjs";
 import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-links.mjs";
@@ -651,6 +654,73 @@ function realestateOverallJsx(realestate, kind = null, district = null, spread =
   );
 }
 
+// ---- 예산대 잎 조각 8개 (#243 PR A) ----
+
+// 이 조각들은 빈 결과를 null이 아니라 빈 문자열("")로 낸다(budgetBodyHtml만 null이다, PR B). 자리표시 치환에서 null은 틀의 내용을 그대로 두고 ""는 비운다(applyPrerender) - 둘은 다르다.
+// 빈 결과는 빈 조각 하나(<>{""}</>)로 그려 react.mjs가 ""로 낸다(sentenceBlock([])과 같다).
+const blank = <>{""}</>;
+
+// 문단 끝의 규칙 링크(#66). 앞 공백은 legacy의 budgetRuleLink가 글자로 들고 있다 - JSX는 {" "}로 낸다. 주소는 모듈(budgetRuleHref)이 정한 `./method.html#budget-rules-<id>`이고
+// id는 코드가 정한 상수 다섯이라 `javascript:`가 될 수 없다(React 19 차단 차이의 대상이 아니다, #244).
+const RuleLink = ({ link }) => (
+  <>
+    {" "}
+    <a className="budget-rule-link" href={budgetRuleHref(link.id)}>
+      {link.text}
+    </a>
+  </>
+);
+
+// 문장 + 규칙 링크 한 문단. 문장·링크 글자는 전부 모듈이 만든 문자열이라 str()이 필요 없다. 속성은 JSX 순서대로 나가므로 className 다음에 data-prerendered=""(맨 속성은 React가 못 낸다, #259).
+// 문단이 없으면(note가 null) legacy처럼 빈 문자열이다.
+const budgetNote = (className, note) =>
+  note ? (
+    <p className={className} data-prerendered="">
+      {note.sentence}
+      {note.link ? <RuleLink link={note.link} /> : null}
+    </p>
+  ) : (
+    blank
+  );
+
+// "한눈에": 줄마다 라벨·값(글자 값이면 answer-text)·부가 글자(비면 줄 없음). 예산대가 없으면 legacy처럼 빈 문자열이다.
+function budgetAnswersJsx(band, rates = null) {
+  const answers = budgetAnswers(band, rates);
+  if (!answers) return blank;
+  return (
+    <section className="budget-answers" data-prerendered="">
+      <h3>{answers.heading}</h3>
+      <ul>
+        {answers.lines.map((line, i) => (
+          <li key={i}>
+            <span className="answer-label">{line.label}</span>
+            <strong className={line.text ? "answer-value answer-text" : "answer-value"}>{line.value}</strong>
+            {line.note ? <span className="answer-note">{line.note}</span> : null}
+          </li>
+        ))}
+      </ul>
+      <p className="answer-more">근거와 예외는 아래 문단의 링크(→)에 있습니다.</p>
+    </section>
+  );
+}
+
+// 다음 질문으로 가는 길. 인자를 읽지 않는다(legacy도 읽지 않는다). 주소는 모듈의 상대 경로 상수 다섯이다.
+const budgetMoreJsx = () => (
+  <section className="budget-more-links" data-prerendered="">
+    <h3>매물을 보러 가기 전에</h3>
+    <ul>
+      {BUDGET_MORE_LINKS.map(([href, text]) => (
+        <li key={href}>
+          <a href={href}>{text}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+);
+
+// 예산대 페이지가 자기 이야기를 하는 문단(ko·en 두 벌을 빌드가 굽는다). 문장 묶음 한 덩어리 - 문장이 없으면 빈 문자열(sentenceBlock).
+const budgetFacts = (band, locale = "ko") => sentenceBlock(budgetFactSentences(band?.facts, locale));
+
 export const fragments = {
   ratesHeadHtml: ratesHead,
   ratesHtml: ratesRows,
@@ -660,6 +730,14 @@ export const fragments = {
   realestateHeadHtml: realestateHead,
   realestateTableHtml: realestateTableJsx,
   realestateOverallHtml: realestateOverallJsx,
+  budgetAnswersHtml: budgetAnswersJsx,
+  budgetMoreHtml: budgetMoreJsx,
+  budgetMinCashHtml: (band) => budgetNote("budget-loan budget-mincash", minCashNote(band)),
+  budgetPolicyHtml: (band, policyCounts) => budgetNote("budget-loan budget-policy", policyNote(band, policyCounts)),
+  budgetCapHtml: (band, capStats) => budgetNote("budget-loan budget-cap", capNote(band, capStats)),
+  budgetCostsHtml: (band) => budgetNote("budget-loan budget-costs", costsNote(band)),
+  budgetFactsHtml: budgetFacts,
+  budgetLoanHtml: (band, rates) => budgetNote("budget-loan", loanNote(band, rates)),
   newsContextHtml: (context) => <NewsContext context={context} />,
   newsHtml: newsIndex,
   newsSummaryHtml: newsSummary,

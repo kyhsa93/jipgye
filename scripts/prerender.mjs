@@ -22,12 +22,8 @@ import { DISTRICT_PAGES } from "./district-slugs.mjs";
 import { districtSentences } from "./district-summary.mjs";
 import { factSentences } from "./district-facts.mjs";
 import { renewalSentences } from "./renewal-facts.mjs";
-import { apartmentOptions, loanSentence, monthlyPayment, rateSpread } from "./mortgage.mjs";
-import { BASIS_DATE as COSTS_DATE, costsSentence, purchaseCosts } from "./purchase-costs.mjs";
 import { candidatesInBand } from "./complex-price.mjs";
-import { BASIS_DATE as CAP_DATE, capSentence } from "./loan-cap.mjs";
-import { BASIS_DATE as POLICY_DATE_BASIS, policyShort, policySentence } from "./policy-loan.mjs";
-import { BASIS_DATE as MIN_CASH_DATE, minCash, minCashSentence } from "./min-cash.mjs";
+import { BUDGET_MORE_LINKS, budgetAnswers, budgetBandLabel, budgetRuleHref, capNote, costsNote, eokText, loanNote, minCashNote, policyNote } from "./budget-fragments.mjs";
 import { rateBridgeHtml } from "./rate-bridge.mjs";
 import { metricCell, topDistricts } from "./realestate-rows.mjs";
 import { headLabels, realestateTable } from "./realestate-table.mjs";
@@ -162,13 +158,7 @@ function newsHtmlLegacy(news) {
 }
 export const newsHtml = fragment("newsHtml", newsHtmlLegacy);
 
-const budgetBandLabel = (band) => {
-  const from = Math.round(band.min10k / 10_000);
-  const to = band.max10k === null ? null : Math.round(band.max10k / 10_000);
-  if (to === null) return `${from}억 이상`;
-  if (from === 0) return `${to}억 미만`;
-  return `${from}억대`;
-};
+// budgetBandLabel·eokText는 순수 모듈 budget-fragments.mjs로 옮겼다(JSX 쪽 조각과 같이 쓴다, #243 PR A). budgetBandLabel은 아래 파일 끝에서 같은 이름으로 다시 내보낸다.
 
 const budgetWhen = (date) => {
   const [, month, day] = String(date ?? "").split("-");
@@ -255,29 +245,20 @@ export const budgetBodyHtml = fragment("budgetBodyHtml", budgetBodyHtmlLegacy);
  * (min-cash·purchase-costs·mortgage·policy-loan). 숫자 하나만 덩그러니 두지 않고 무엇의 값인지 앞에 적는다.
  */
 function budgetAnswersHtmlLegacy(band, rates = null) {
-  const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
-  if (eok === null) return "";
-  const price = (eok + 0.5) * 10_000;
-  const g = minCash(price);
-  const f = minCash(price, { firstTime: true });
-  const costs = purchaseCosts(price);
-  const spread = rateSpread(apartmentOptions(rates));
-  const perEok = spread ? monthlyPayment(10_000, spread.mid) : null;
-  const policy = policyShort(eok);
-  const line = (label, value, note = "", text = false) =>
-    `<li><span class="answer-label">${escapeHtml(label)}</span>` +
-    `<strong class="answer-value${text ? " answer-text" : ""}">${escapeHtml(value)}</strong>` +
-    (note ? `<span class="answer-note">${escapeHtml(note)}</span>` : "") +
-    `</li>`;
-  const lines = [
-    line("자기 돈이 적어도", eokText(g.cash), f.cash < g.cash ? `생애최초면 ${eokText(f.cash)}` : ""),
-    perEok ? line("1억을 빌리면 매달", eokText(Math.round(perEok)), `30년 원리금균등, 연 ${spread.mid}%`) : "",
-    line("매매가 위에 더 드는 돈", eokText(costs.total), "취득세·지방교육세·중개보수 상한"),
-    policy ? line("정책대출 가격선", policy, "", true) : "",
-  ].join("");
+  const answers = budgetAnswers(band, rates);
+  if (!answers) return "";
+  const lines = answers.lines
+    .map(
+      ({ label, value, note, text }) =>
+        `<li><span class="answer-label">${escapeHtml(label)}</span>` +
+        `<strong class="answer-value${text ? " answer-text" : ""}">${escapeHtml(value)}</strong>` +
+        (note ? `<span class="answer-note">${escapeHtml(note)}</span>` : "") +
+        `</li>`
+    )
+    .join("");
   return (
     `<section class="budget-answers" data-prerendered="">` +
-    `<h3>${escapeHtml(`${eokText(price)}짜리를 산다면 — 한눈에`)}</h3><ul>${lines}</ul>` +
+    `<h3>${escapeHtml(answers.heading)}</h3><ul>${lines}</ul>` +
     `<p class="answer-more">근거와 예외는 아래 문단의 링크(→)에 있습니다.</p></section>`
   );
 }
@@ -286,21 +267,15 @@ export const budgetAnswersHtml = fragment("budgetAnswersHtml", budgetAnswersHtml
 /**
  * 장마다 똑같던 규칙 문단을 옮겨 간 자리(method.html의 #budget-rules-*)로 가는 링크(#66).
  * 문단 끝에 붙어, 숫자만 남은 문단에서도 예외·원문 기준일이 한 번 눌러 닿는 거리에 있게 한다.
+ * 주소(`./method.html#budget-rules-<id>`)는 순수 모듈의 budgetRuleHref가 정한다(JSX 쪽 링크와 같이 쓴다). 클래스·공백·이스케이프는 이 마크업의 몫이다.
  */
-export const budgetRuleLink = (id, text) => ` <a class="budget-rule-link" href="./method.html#budget-rules-${id}">${escapeHtml(text)}</a>`;
+export const budgetRuleLink = (id, text) => ` <a class="budget-rule-link" href="${budgetRuleHref(id)}">${escapeHtml(text)}</a>`;
 
 /** 예산을 정한 사람이 다음에 묻는 것들로 가는 길(PO 검토 #33 - 예산대에서 이 화면들로 가는 링크가 0개였다). */
 function budgetMoreHtmlLegacy() {
-  const links = [
-    ["./floor-gap.html", "1층·최상층은 얼마나 싸야 정상인가"],
-    ["./record-high.html", "신고가가 나왔다는데 그 값인가"],
-    ["./switch-house.html", "갈아타기 — 갈 동네는 얼마나 올랐나"],
-    ["./price-outlook.html", "3개월 뒤 아파트값과 그 오차"],
-    ["./cancelled-deals.html#month-section", "계약에서 등기(잔금)까지 걸리는 날"],
-  ];
   return (
     `<section class="budget-more-links" data-prerendered=""><h3>매물을 보러 가기 전에</h3><ul>` +
-    links.map(([href, text]) => `<li><a href="${href}">${escapeHtml(text)}</a></li>`).join("") +
+    BUDGET_MORE_LINKS.map(([href, text]) => `<li><a href="${href}">${escapeHtml(text)}</a></li>`).join("") +
     `</ul></section>`
   );
 }
@@ -308,46 +283,33 @@ export const budgetMoreHtml = fragment("budgetMoreHtml", budgetMoreHtmlLegacy);
 
 /** 최소 필요 현금(scripts/min-cash.mjs) - 소득과 무관한 대출 천장(LTV·구간 상한)으로 계산한다(#31). */
 function budgetMinCashHtmlLegacy(band) {
-  const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
-  const sentence = minCashSentence(eok);
-  return sentence
-    ? `<p class="budget-loan budget-mincash" data-prerendered="">${escapeHtml(sentence)}${budgetRuleLink("mincash", `소득·기존 주택 예외와 원문(${MIN_CASH_DATE} 확인) →`)}</p>`
+  const note = minCashNote(band);
+  return note
+    ? `<p class="budget-loan budget-mincash" data-prerendered="">${escapeHtml(note.sentence)}${budgetRuleLink(note.link.id, note.link.text)}</p>`
     : "";
 }
 export const budgetMinCashHtml = fragment("budgetMinCashHtml", budgetMinCashHtmlLegacy);
 
 /** 정책대출 가격선에 걸친 예산대(4~9억대)에만 붙는 한 줄(scripts/policy-loan.mjs). */
 function budgetPolicyHtmlLegacy(band, policyCounts) {
-  const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
-  const sentence = policySentence(eok, policyCounts);
-  return sentence
-    ? `<p class="budget-loan budget-policy" data-prerendered="">${escapeHtml(sentence)}${budgetRuleLink("policy", `가격선 정의와 거래 수(${POLICY_DATE_BASIS} 확인) →`)}</p>`
+  const note = policyNote(band, policyCounts);
+  return note
+    ? `<p class="budget-loan budget-policy" data-prerendered="">${escapeHtml(note.sentence)}${budgetRuleLink(note.link.id, note.link.text)}</p>`
     : "";
 }
 export const budgetPolicyHtml = fragment("budgetPolicyHtml", budgetPolicyHtmlLegacy);
 
 /** 15억 경계에 걸친 예산대에만 붙는 주담대 상한 한 줄(scripts/loan-cap.mjs). */
 function budgetCapHtmlLegacy(band, capStats) {
-  const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
-  const sentence = capSentence(eok, capStats);
-  // 16억대 이상은 구간표·소득 단서가 method.html로 갔다. 14·15억대 문장은 그대로 장에 있다.
-  const moved = Number.isFinite(eok) && eok >= 16 && eok <= 24;
-  return sentence
-    ? `<p class="budget-loan budget-cap" data-prerendered="">${escapeHtml(sentence)}${moved ? budgetRuleLink("cap", `구간표와 원문(${CAP_DATE} 확인) →`) : ""}</p>`
+  const note = capNote(band, capStats);
+  return note
+    ? `<p class="budget-loan budget-cap" data-prerendered="">${escapeHtml(note.sentence)}${note.link ? budgetRuleLink(note.link.id, note.link.text) : ""}</p>`
     : "";
 }
 export const budgetCapHtml = fragment("budgetCapHtml", budgetCapHtmlLegacy);
 
 /** 목록에 이름을 올리는 단지 수. 나머지는 검색의 "단지로 묶어 보기"로 보낸다 - 열여덟 장이 같은 긴 목록이 되지 않게. */
 export const CANDIDATE_LIST = 12;
-
-const eokText = (value10k) => {
-  const n = Math.round(value10k);
-  const eok = Math.floor(n / 10_000);
-  const man = n % 10_000;
-  if (!eok) return `${man.toLocaleString("ko-KR")}만원`;
-  return man ? `${eok}억 ${man.toLocaleString("ko-KR")}만원` : `${eok}억원`;
-};
 
 /**
  * 이 예산대에 드는 단지·평형(단지 후보). 기준 달 값으로 고친 중앙값으로 가른다 - 거래 목록은 "언제
@@ -419,10 +381,9 @@ export const budgetCandidatesHtml = fragment("budgetCandidatesHtml", budgetCandi
  * 같은 상자를 쓴다 - 둘 다 "그래서 실제로 얼마"에 답하는 문단이다.
  */
 function budgetCostsHtmlLegacy(band) {
-  const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
-  const sentence = costsSentence(eok);
-  return sentence
-    ? `<p class="budget-loan budget-costs" data-prerendered="">${escapeHtml(sentence)}${budgetRuleLink("costs", `중과·예외와 원문(${COSTS_DATE} 확인) →`)}</p>`
+  const note = costsNote(band);
+  return note
+    ? `<p class="budget-loan budget-costs" data-prerendered="">${escapeHtml(note.sentence)}${budgetRuleLink(note.link.id, note.link.text)}</p>`
     : "";
 }
 export const budgetCostsHtml = fragment("budgetCostsHtml", budgetCostsHtmlLegacy);
@@ -444,16 +405,16 @@ export const budgetFactsHtml = fragment("budgetFactsHtml", budgetFactsHtmlLegacy
  * 되는지는 말하지 않고 있었다 - 실거래와 금리를 같이 받는 곳이라야 자동으로 물릴 수 있다.
  */
 function budgetLoanHtmlLegacy(band, rates, mortgageSeries = null) {
-  const spread = rateSpread(apartmentOptions(rates));
-  const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
-  const sentence = loanSentence(spread, { eok });
-  if (!sentence) return "";
+  const note = loanNote(band, rates);
+  if (!note) return "";
   // 1억당 값·금리 범위와 1년 사이 변화(mortgageSeries로 만든 문장)는 열여덟 장에서 같은 값이라
   // method.html로 갔다(scripts/budget-rules.mjs, #66). mortgageSeries 인자는 호출부 호환으로 남긴다.
-  return `<p class="budget-loan" data-prerendered="">${sentence}${budgetRuleLink("loan", "1억당 값과 금리 근거 →")}</p>`;
+  // 문장은 이스케이프하지 않고 끼운다 - 글자가 숫자 서식과 코드 상수뿐이다(mortgage.mjs, PR 본문의 raw 보간 전수표).
+  return `<p class="budget-loan" data-prerendered="">${note.sentence}${budgetRuleLink(note.link.id, note.link.text)}</p>`;
 }
 export const budgetLoanHtml = fragment("budgetLoanHtml", budgetLoanHtmlLegacy);
 
+// budgetBandLabel은 공개 export다 - 순수 모듈로 옮긴 뒤에도 이 이름으로 다시 내보낸다(MIN_SAMPLE·escapeHtml과 같은 방식, #243 PR A).
 export { budgetBandLabel };
 
 function newsRealestateStatsHtmlLegacy(news) {
