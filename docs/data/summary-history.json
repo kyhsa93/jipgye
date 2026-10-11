@@ -4347,21 +4347,63 @@
     "date": "2026-10-12",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 기타 경제 소식: 이형일 부총리가 경제현안간담회를 개최해 온누리상품권 환급과 민생물가 문제를 논의했다. 같은 회의에서 온누리상품권과 민생물가 관련 논의가 이어졌다. 북한 경제 연구에 있어 정량데이터 구축을 통해 과학적 접근을 강조하는 의견이 제기됐다. 북한 경제 이해를 위한 필독서 저술이 발표되며 통일과 외교 현안 해결에 기여할 수 있다는 분석이 나왔다. 수원 영통구의 집값 상승률이 1위를 기록했으며 분당구도 강세를 보였다.\n- 증시·환율: 중국 증감회가 증시 안정 대책을 논의하고 중장기 자금 유입 확대를 위한 방안을 모색하고 있다.\n- 금리·예금·투자상품: 비트코인은 금리 불안으로 인해 1억1000만원대를 유지하며 움직임이 주춤했다. 증권사들은 답답한 증시 상황 속에서 4∼5% 수익률을 제공하는 발행어음 상품을 잇달아 출시했다. 국채금리 급등으로 매력도가 줄어든 리츠 ETF는 개인 투자자가 순매수한 것으로 나타났다. 비트코인은 1억1000만원대를 유지하며 변동성이 제한적인 모습을 보였다. 증권사가 출시한 발행어음 상품은 4∼5%의 수익률을 기록하고 있다.\n- 부동산: 한국 경제 뉴스에서 부동산 관련 주요 이슈가 다뤄졌다. 전세와 가계부채 등 경제 현상이 국제적 연구 주제로 발전될 것이라고 보도되었다. 한강 주변 아파트 가격은 뷰에 따라 10억원 차이가 나는 것으로 나타났다. 서울 핵심지역 공공 재개발 '도공복' 투자 관련 100가지 사실이 소개되었다. 내년 집값 불안 요소가 여전히 존재하며, 1주택자 갈아타기 기회가 주목받고 있다.",
-      "en": "- Other Economic News: Deputy Prime Minister Lee Hyung-il held an economic policy discussion meeting where the refund of Onnuri Gift Certificates and issues related to the cost of living were discussed. The discussion on Onnuri Gift Certificates and the cost of living continued at the same meeting. Opinions were raised emphasizing a scientific approach through the establishment of quantitative data in North Korean economic research. Analysis suggested that the publication of essential reading for understanding the North Korean economy could contribute to resolving unification and diplomatic issues. The housing price increase rate in Yongsan-gu, Suwon was the highest, and Bundang-gu also showed strong performance.\n- Stocks & FX: China's CSRC is discussing measures to stabilize the stock market and exploring ways to increase long-term capital inflows.\n- Rates, Deposits & Investment Products: Bitcoin movement slowed as it maintained a range in the 110,000,000 won area due to interest rate uncertainty. Securities companies continued to launch issued notes products offering 4-5% returns amid a stagnant stock market. REITs ETFs, which have lost appeal due to a sharp rise in government bond yields, showed net buying by individual investors. Bitcoin maintained a range in the 110,000,000 won area, showing limited volatility. The issued notes products launched by securities companies are recording returns of 4-5%.\n- Real Estate: Real estate-related key issues were covered in Korean economic news. Economic phenomena such as deposits and household debt are expected to develop into international research topics. The price difference of apartments around the Han River was found to be 1,000,000,000 won depending on the view. 100 facts related to the investment of the public redevelopment project 'Dokongbok' in Seoul's key areas were introduced. Factors causing uncertainty in housing prices next year still exist, and opportunities for single-homeowners to switch properties are receiving attention."
+      "ko": "- 부동산: 10월 12일 매경부동산은 테헤란로 역 출구 앞 상업용 신축 부지를 추천매물로 소개했다. 서울 아파트 계약 해제율은 5년 만에 2배로 증가하며 교란행위 검증 필요성이 제기되고 있다. 올 상반기 지방 아파트 거래량은 5년 만에 최대 수준을 기록하며 분양시장이 시험대에 오르고 있다. 9월 기준 전세사기 피해자 수는 623건 추가 인정되어 누적 4만1천559건에 달했다. 미분양 아파트 임대 시도에도 불구하고 일부 CR리츠의 임대율은 20%대에 머물고 있다.\n- 기타 경제 소식: 오늘 10월 12일은 경제 관련 주요일정이 있었으며, 이형일 부총리가 경제현안간담회를 개최했다. 간담회에서는 온누리상품권 환급과 민생물가 문제를 논의했다. 한편, 북한 경제 연구에 대해 정량데이터를 구축해 과학적 접근을 강조하는 의견이 제기됐다. 또한, 북한 경제 이해를 위한 필독서 저술이 통일과 외교 현안 해결에 기여할 수 있다는 분석이 나왔다.\n- 금리·예금·투자상품: 주택연금 구상채권 5년반에 10배로 증가했으나 회수율은 절반으로 감소했고, 금리 불안으로 인해 비트코인은 1억1000만원대를 유지하고 있다.\n- 증시·환율: 중국 증감회가 증시 안정 대책을 논의하고 중장기 자금 유입 확대를 위한 방안을 모색하고 있다.",
+      "en": "- Real Estate: On October 12, Maeil Economic Net recommended a commercial land for development near the exit of Teheran-ro Station. The apartment contract cancellation rate in Seoul has doubled over five years, raising the need to verify disruptive activities. The volume of apartment transactions in local areas during the first half of this year reached the highest level in five years, putting the sales market under scrutiny. As of September, 623 additional cases were recognized, bringing the total number of victims of rental fraud to 40,0001 thousand 559 cases. Despite attempts to lease unsold apartments, the occupancy rate of some CR REITs remains in the 20% range.\n- Other Economic News: Today, October 12, had major economic events, and Vice Premier Lee Young-il held an economic policy discussion meeting. The meeting discussed the refund of the Onnuri gift certificates and issues related to the cost of living. Meanwhile, opinions were raised emphasizing the need to establish quantitative data for North Korean economic research to enable a scientific approach. Additionally, analysis suggested that writing essential books for understanding the North Korean economy could contribute to resolving unification and diplomatic issues.\n- Rates, Deposits & Investment Products: The housing pension mortgage-backed securities have increased tenfold in five and a half years, but the recovery rate has halved, and due to interest rate uncertainty, bitcoin has remained in the 110,000,000 won range.\n- Stocks & FX: China's CSRC is discussing measures to stabilize the stock market and exploring ways to increase long-term capital inflows."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "other",
-        "name": "기타 경제 소식",
-        "nameEn": "Other Economic News",
-        "lineKo": "이형일 부총리가 경제현안간담회를 개최해 온누리상품권 환급과 민생물가 문제를 논의했다. 같은 회의에서 온누리상품권과 민생물가 관련 논의가 이어졌다. 북한 경제 연구에 있어 정량데이터 구축을 통해 과학적 접근을 강조하는 의견이 제기됐다. 북한 경제 이해를 위한 필독서 저술이 발표되며 통일과 외교 현안 해결에 기여할 수 있다는 분석이 나왔다. 수원 영통구의 집값 상승률이 1위를 기록했으며 분당구도 강세를 보였다.",
-        "lineEn": "Deputy Prime Minister Lee Hyung-il held an economic policy discussion meeting where the refund of Onnuri Gift Certificates and issues related to the cost of living were discussed. The discussion on Onnuri Gift Certificates and the cost of living continued at the same meeting. Opinions were raised emphasizing a scientific approach through the establishment of quantitative data in North Korean economic research. Analysis suggested that the publication of essential reading for understanding the North Korean economy could contribute to resolving unification and diplomatic issues. The housing price increase rate in Yongsan-gu, Suwon was the highest, and Bundang-gu also showed strong performance.",
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "10월 12일 매경부동산은 테헤란로 역 출구 앞 상업용 신축 부지를 추천매물로 소개했다. 서울 아파트 계약 해제율은 5년 만에 2배로 증가하며 교란행위 검증 필요성이 제기되고 있다. 올 상반기 지방 아파트 거래량은 5년 만에 최대 수준을 기록하며 분양시장이 시험대에 오르고 있다. 9월 기준 전세사기 피해자 수는 623건 추가 인정되어 누적 4만1천559건에 달했다. 미분양 아파트 임대 시도에도 불구하고 일부 CR리츠의 임대율은 20%대에 머물고 있다.",
+        "lineEn": "On October 12, Maeil Economic Net recommended a commercial land for development near the exit of Teheran-ro Station. The apartment contract cancellation rate in Seoul has doubled over five years, raising the need to verify disruptive activities. The volume of apartment transactions in local areas during the first half of this year reached the highest level in five years, putting the sales market under scrutiny. As of September, 623 additional cases were recognized, bringing the total number of victims of rental fraud to 40,0001 thousand 559 cases. Despite attempts to lease unsold apartments, the occupancy rate of some CR REITs remains in the 20% range.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
+          {
+            "title": "[10/12, 매경부동산 추천매물] 테헤란로 역 출구 앞 상업용 신축 부지 등",
+            "link": "https://www.mk.co.kr/news/realestate/12173240",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "서울 아파트 계약 해제율 5년 새 2배…\"교란행위 검증해야\"",
+            "link": "https://www.yna.co.kr/view/AKR20261009048700003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "올 상반기 지방 아파트 거래 5년만에 최대…분양시장 시험대",
+            "link": "https://www.newsis.com/view/NISX20261011_0003821014",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "9월 전세사기 피해자 623건 추가 인정…누적 4만1천559건",
+            "link": "https://www.yna.co.kr/view/AKR20261011029300003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[단독] 미분양 아파트, 임대로 돌려도 빈집… 일부 CR리츠 임대율 20%대",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/12/OU6MQT2WD5H2JI4XXPXI4L63ZA/",
+            "source": "조선비즈 부동산"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "오늘 10월 12일은 경제 관련 주요일정이 있었으며, 이형일 부총리가 경제현안간담회를 개최했다. 간담회에서는 온누리상품권 환급과 민생물가 문제를 논의했다. 한편, 북한 경제 연구에 대해 정량데이터를 구축해 과학적 접근을 강조하는 의견이 제기됐다. 또한, 북한 경제 이해를 위한 필독서 저술이 통일과 외교 현안 해결에 기여할 수 있다는 분석이 나왔다.",
+        "lineEn": "Today, October 12, had major economic events, and Vice Premier Lee Young-il held an economic policy discussion meeting. The meeting discussed the refund of the Onnuri gift certificates and issues related to the cost of living. Meanwhile, opinions were raised emphasizing the need to establish quantitative data for North Korean economic research to enable a scientific approach. Additionally, analysis suggested that writing essential books for understanding the North Korean economy could contribute to resolving unification and diplomatic issues.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[오늘의 주요일정]경제(10월12일월요일)",
+            "link": "https://www.newsis.com/view/NISX20261008_0003818284",
+            "source": "뉴시스 경제"
+          },
           {
             "title": "이형일 부총리, 경제현안간담회 개최…온누리상품권 환급·민생물가 논의",
             "link": "https://www.newsis.com/view/NISX20261011_0003821177",
@@ -4381,11 +4423,28 @@
             "title": "\"北경제 이해 필독서 저술…통일·외교현안 해결 공헌\"",
             "link": "https://www.hankyung.com/article/2026101144461",
             "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "주택연금 구상채권 5년반에 10배로 증가했으나 회수율은 절반으로 감소했고, 금리 불안으로 인해 비트코인은 1억1000만원대를 유지하고 있다.",
+        "lineEn": "The housing pension mortgage-backed securities have increased tenfold in five and a half years, but the recovery rate has halved, and due to interest rate uncertainty, bitcoin has remained in the 110,000,000 won range.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "주택연금 구상채권 5년반에 10배로…회수율은 절반으로 뚝",
+            "link": "https://www.yna.co.kr/view/AKR20261010029500002",
+            "source": "연합뉴스 경제"
           },
           {
-            "title": "수원 영통구, 집값 상승률 1위…분당구도 강세",
-            "link": "https://www.hankyung.com/article/2026101145381",
-            "source": "한국경제 부동산"
+            "title": "금리 불안에 주춤한 비트코인... 1억1000만원대 횡보",
+            "link": "https://www.hankyung.com/article/202610093056i",
+            "source": "한국경제 경제"
           }
         ]
       },
@@ -4403,70 +4462,6 @@
             "title": "[올댓차이나] 中 증감회, 증시 안정 대책 논의…중장기 자금 유입 확대",
             "link": "https://www.newsis.com/view/NISX20261011_0003821217",
             "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "비트코인은 금리 불안으로 인해 1억1000만원대를 유지하며 움직임이 주춤했다. 증권사들은 답답한 증시 상황 속에서 4∼5% 수익률을 제공하는 발행어음 상품을 잇달아 출시했다. 국채금리 급등으로 매력도가 줄어든 리츠 ETF는 개인 투자자가 순매수한 것으로 나타났다. 비트코인은 1억1000만원대를 유지하며 변동성이 제한적인 모습을 보였다. 증권사가 출시한 발행어음 상품은 4∼5%의 수익률을 기록하고 있다.",
-        "lineEn": "Bitcoin movement slowed as it maintained a range in the 110,000,000 won area due to interest rate uncertainty. Securities companies continued to launch issued notes products offering 4-5% returns amid a stagnant stock market. REITs ETFs, which have lost appeal due to a sharp rise in government bond yields, showed net buying by individual investors. Bitcoin maintained a range in the 110,000,000 won area, showing limited volatility. The issued notes products launched by securities companies are recording returns of 4-5%.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "금리 불안에 주춤한 비트코인... 1억1000만원대 횡보",
-            "link": "https://www.hankyung.com/article/202610093056i",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "답답한 증시 대신 발행어음?…증권사, 4∼5% 상품 잇달아 출시",
-            "link": "https://www.yna.co.kr/view/AKR20261009024400008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "국채금리 급등에 줄어든 매력에도…개인, 리츠 ETF 순매수액↑",
-            "link": "https://www.yna.co.kr/view/AKR20261008168900008",
-            "source": "연합뉴스 경제"
-          }
-        ]
-      },
-      {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "한국 경제 뉴스에서 부동산 관련 주요 이슈가 다뤄졌다. 전세와 가계부채 등 경제 현상이 국제적 연구 주제로 발전될 것이라고 보도되었다. 한강 주변 아파트 가격은 뷰에 따라 10억원 차이가 나는 것으로 나타났다. 서울 핵심지역 공공 재개발 '도공복' 투자 관련 100가지 사실이 소개되었다. 내년 집값 불안 요소가 여전히 존재하며, 1주택자 갈아타기 기회가 주목받고 있다.",
-        "lineEn": "Real estate-related key issues were covered in Korean economic news. Economic phenomena such as deposits and household debt are expected to develop into international research topics. The price difference of apartments around the Han River was found to be 1,000,000,000 won depending on the view. 100 facts related to the investment of the public redevelopment project 'Dokongbok' in Seoul's key areas were introduced. Factors causing uncertainty in housing prices next year still exist, and opportunities for single-homeowners to switch properties are receiving attention.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "\"전세·가계부채 등 韓 경제현상, 국제적 연구의제로 발전시킬 것\"",
-            "link": "https://www.hankyung.com/article/2026101144451",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "뷰에 따라 10억원 차이…한강은 언제부터 ‘부자의 트로피’가 됐나 [슈퍼리치의 아파트]",
-            "link": "https://www.mk.co.kr/news/realestate/12173164",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "[부동산 손품노트] 서울 핵심지역 공공 재개발 '도공복' 투자 100가지 사실",
-            "link": "https://www.mk.co.kr/news/realestate/12173027",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "\"내년 집값 불안 요소 여전… 1주택자 갈아타기 기회 노려야\"",
-            "link": "https://www.mk.co.kr/news/realestate/12173026",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "\"그냥 청약 안 할래요\" 포기 속출…분양시장에 무슨 일이 [이송렬의 부동산한입]",
-            "link": "https://www.hankyung.com/article/2026100800956",
-            "source": "한국경제 부동산"
           }
         ]
       }
