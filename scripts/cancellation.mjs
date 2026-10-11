@@ -38,16 +38,16 @@ export const isCancelled = (item) =>
   String(item?.cdealType ?? "").trim().length > 0 || String(item?.cdealDay ?? "").trim().length > 0;
 
 /**
- * 정정 재신고. 해제 기록 가운데 같은 계약(구·동·지번·단지·전용면적·층·계약일·금액)이 해제되지 않은
- * 기록으로 그대로 다시 신고된 것은 계약이 깨진 것이 아니라 신고를 고친 것이다 - 그 다시 신고된 쪽은
- * 대부분 등기까지 갔다. 2026-10-01에 세어 보니 해제 기록의 76%가 이랬고(해제되지 않은 기록끼리
- * 완전히 같은 경우는 0.65%뿐이라 우연이 아니다), 이것을 해제로 세던 이 화면은 해제율을 3~4배로
- * 부풀리고 "비싼 집일수록 더 깨진다"는 틀린 결론을 냈다(#28).
+ * 짝이 있는 해제 기록('정정'이라 부르는 것). 해제 기록 가운데 같은 계약 키(구·동·지번·단지·전용면적·층·계약일·금액)가
+ * 해제되지 않은 기록으로 그대로 다시 있는 것은, 같은 거래가 해제 표시 없이 다시 있다는 것까지만 센 것이다 - 신고 사유는 이
+ * 원천 자료에 없다. 그 다시 있는 쪽은 대부분 등기일을 가졌다. 2026-10-01에 세어 보니 해제 기록의 76%가 이랬고(해제되지
+ * 않은 기록끼리 같은 키가 겹치는 경우는 0.65%뿐이라 우연으로 보기 어렵다), 이것을 해제로 세던 이 화면은 해제율을
+ * 3~4배로 크게 잡았고 "비싼 집일수록 더 해제된다"는 결론을 냈다(#28).
  */
 export const contractKey = (item) =>
   [item?.sggCd, item?.umdNm, item?.jibun, item?.aptNm, item?.excluUseAr, item?.floor, item?.dealYear, item?.dealMonth, item?.dealDay, item?.dealAmount].join("|");
 
-/** 정정 기록을 뺀 목록과, 뺀 것들. 정정의 짝(다시 신고된 기록)은 남는다 - 한 계약은 한 번만 센다. */
+/** 짝이 있는 해제 기록('정정')을 뺀 목록과, 뺀 것들. 짝(해제 표시 없이 다시 있는 기록)은 남는다 - 한 계약은 한 번만 센다. */
 export function withoutCorrections(items) {
   const live = new Map();
   for (const item of items ?? []) {
@@ -60,6 +60,28 @@ export function withoutCorrections(items) {
     else kept.push(item);
   }
   return { items: kept, corrections };
+}
+
+/**
+ * 비교군: 해제되지 않은 기록끼리 계약 키가 같은 것. 같은 키가 해제 기록에만 우연히 겹치는 것이 아니라는 것을 보이는
+ * 기준선이다(research/correction-twins/check.py의 dup_live와 같은 정의). 셈 단위가 둘이다 - repeated는 정상 기록이 둘
+ * 이상 겹친 키의 개수(계약 기록 개수), overlapping은 그 키들에 속한 정상 기록의 건수(겹친 기록 자체)이고, 분모
+ * liveRecords는 정상 기록 건수다. share는 repeated/liveRecords라 분자와 분모의 단위가 다르다(Release 본문이 그렇게 밝힌다).
+ * Release 산출(scripts/build-correction-release.mjs)이 쓴다.
+ */
+export function repeatedLiveStats(items) {
+  const counts = new Map();
+  let liveRecords = 0;
+  for (const item of items ?? []) {
+    if (isCancelled(item)) continue;
+    liveRecords += 1;
+    const key = contractKey(item);
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  const overlapped = [...counts.values()].filter((n) => n >= 2);
+  const repeated = overlapped.length;
+  const overlapping = overlapped.reduce((sum, n) => sum + n, 0);
+  return { liveRecords, repeated, overlapping, share: liveRecords ? Math.round((repeated / liveRecords) * 10000) / 100 : null };
 }
 
 export const isRegistered = (item) => String(item?.rgstDate ?? "").trim().length > 0;
@@ -376,7 +398,7 @@ export function registrationSentence(reg, locale = "ko") {
 }
 
 /**
- * 정정 재신고 문장. 해제 신고 가운데 몇이 정정이었고, 그 다시 신고된 거래가 등기까지 갔는지.
+ * 짝이 있는 해제 기록 문장. 해제 신고 가운데 몇이 그랬고, 그 짝에 등기일이 있는지.
  * 등기 비율은 익은 달(registration.matureMonths)의 계약에서만 센다 - 덜 익은 달은 아직 등기 전이다.
  */
 export function correctionStats(allCancelled, corrections, matureMonths) {

@@ -1,11 +1,13 @@
-"""#28: 해제 기록 가운데 정정 재신고(같은 계약이 해제 없이 다시 신고된 것)가 얼마인가, 그리고 우연이 아닌가.
-저장소 루트에서: python3 research/correction-twins/check.py
-등기율 정의: 여기 셋째 줄은 2026년 3월까지의 계약만 센 일회성 값이다. 사이트(해제·등기 화면)는 익은 달(registration.matureMonths) 기준이라 값이 다르다 - 같은 지표가 아니다.
+"""#28: 같은 계약 기록이 해제되지 않은 채 다시 있는 해제 기록이 얼마인가, 그리고 우연이 아닌가.
+저장소 루트에서: python3 research/correction-twins/check.py  (입력 폴더를 바꾸려면 REALESTATE_RAW_DIR=<경로>, 그 아래 sale/*.json)
+등기율 정의: 여기 마지막 줄은 2026년 3월까지의 계약만 센 일회성 값이다. 사이트(해제·등기 화면)는 익은 달(registration.matureMonths) 기준이라 값이 다르다 - 같은 지표가 아니다.
 """
 import os, json, glob, collections as C
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+# 입력 폴더: 환경변수 REALESTATE_RAW_DIR(노드 쪽 scripts/realestate-raw.mjs와 같은 이름), 없으면 저장소의 raw/.
+RAW = os.path.abspath(os.environ.get('REALESTATE_RAW_DIR') or os.path.join(REPO, 'raw'))
 rows = []
-for f in sorted(glob.glob(f'{REPO}/raw/sale/*.json')): rows += json.load(open(f))['items']
+for f in sorted(glob.glob(f'{RAW}/sale/*.json')): rows += json.load(open(f))['items']
 canc = lambda it: bool(str(it.get('cdealType') or '').strip() or str(it.get('cdealDay') or '').strip())
 key = lambda it: (it['sggCd'], it['umdNm'], str(it['jibun']), it['aptNm'], it['excluUseAr'], it.get('floor'), it['dealYear'], it['dealMonth'], it['dealDay'], it['dealAmount'])
 groups = C.defaultdict(list)
@@ -14,9 +16,9 @@ cancelled = [it for it in rows if canc(it)]
 twins = [it for it in cancelled if any(not canc(x) for x in groups[key(it)])]
 live = [it for it in rows if not canc(it)]
 dup_live = sum(1 for g in groups.values() if sum(1 for x in g if not canc(x)) >= 2)
-print(f'입력 raw/sale {len(glob.glob(f"{REPO}/raw/sale/*.json"))}개 파일, 최신 {os.path.basename(sorted(glob.glob(f"{REPO}/raw/sale/*.json"))[-1])}, {len(rows)}건')
-print(f'해제 기록 {len(cancelled)}건 중 같은 계약의 정상 기록을 가진 것 {len(twins)}건 ({len(twins)/len(cancelled):.1%})')
-print(f'비교: 정상 기록끼리 완전히 같은 계약 {dup_live}건 ({dup_live/len(live):.2%})')
+print(f'입력 raw/sale {len(glob.glob(f"{RAW}/sale/*.json"))}개 파일, 최신 {os.path.basename(sorted(glob.glob(f"{RAW}/sale/*.json"))[-1])}, {len(rows)}건')
+print(f'해제 기록 {len(cancelled)}건 중 같은 계약 기록이 해제되지 않은 채 다시 있는 것 {len(twins)}건 ({len(twins)/len(cancelled):.1%})')
+print(f'비교: 해제되지 않은 기록끼리 같은 계약 기록이 둘 이상인 경우 {dup_live}건 ({dup_live/len(live):.2%})')
 old = [it for it in twins if (it['dealYear'], it['dealMonth']) <= (2026, 3)]
 reg = sum(1 for it in old if any(not canc(x) and str(x.get('rgstDate') or '').strip() for x in groups[key(it)]))
-print(f'2026년 3월까지 계약의 정정 {len(old)}건 중 짝이 등기까지 간 것 {reg}건 ({reg/len(old):.1%})')
+print(f'2026년 3월까지 계약 중 짝이 있는 해제 기록 {len(old)}건 가운데 짝에 등기일이 있는 것 {reg}건 ({reg/len(old):.1%}, 본문 정의와 기준이 다른 일회성 값)' if old else '2026년 3월까지 계약 중 짝이 있는 해제 기록 0건')
