@@ -296,7 +296,7 @@ test("요약이 폴백된 날은 메인에도 그 사실을 표시한다", async
 });
 
 test("로드가 실패하면 다시 시도할 수단을 준다", async () => {
-  for (const file of ["docs/index.html", "docs/rates.html", "docs/news.html"]) {
+  for (const file of ["docs/index.html", "docs/deposit-rates.html", "docs/news.html"]) {
     const html = await readFile(path.join(root, file), "utf8");
     // 금리 페이지는 단추를 공용 docs/load-state.js가 만든다(#173) - 페이지에는 id만 남는다.
     assert.ok(/id="load-(error-)?retry"|retryId: "load-retry"/.test(html), `${file}에 재시도 버튼이 없다`);

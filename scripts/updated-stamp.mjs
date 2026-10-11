@@ -28,7 +28,6 @@ const BUDGETS = Array.from({ length: 18 }, (_, i) => `budget-${i + 3}eok`);
 /** 장 -> 그 장이 읽는 소스 이름. 시험이 장의 loadJson/fetch 목록과 대조한다(빠뜨리면 빨강). */
 export const PAGE_SOURCES = {
   "index.html": ["market", "news", "summary", "realestate", "realestate-trend"],
-  "rates.html": ["rates"],
   "deposit-rates.html": ["rates"],
   "saving-rates.html": ["rates"],
   "mortgage-rates.html": ["rates"],
@@ -65,7 +64,7 @@ export const CROSS_PAGES = {
 };
 
 /** 데이터를 읽지 않는 장. #updated가 장 제목 줄이라 기준일이 없다. */
-export const NO_DATA_PAGES = ["about.html", "method.html"];
+export const NO_DATA_PAGES = ["about.html", "method.html", "rates.html"]; // rates.html은 상품군 네 장으로 가는 허브라 수치가 없다(#193)
 
 /** 소스들 중 가장 오래된 updatedAt의 KST 날짜. 소스를 못 찾으면 던진다 - 조용히 자리표시자를 남기지 않는다. */
 export function baselineFor(names, sources) {

@@ -12,7 +12,7 @@ import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readJson = (name) => readFile(path.join(root, `docs/data/${name}.json`), "utf8").then(JSON.parse);
-const RATE_PAGES = ["rates", "deposit-rates", "saving-rates", "mortgage-rates", "rent-loan-rates"];
+const RATE_PAGES = ["deposit-rates", "saving-rates", "mortgage-rates", "rent-loan-rates"];
 const settle = async (n = 20) => {
   for (let i = 0; i < n; i += 1) await new Promise((r) => setTimeout(r, 0));
 };

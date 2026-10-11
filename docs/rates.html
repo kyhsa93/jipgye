@@ -8,27 +8,23 @@
 <link rel="icon" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <meta name="google-adsense-account" content="ca-pub-1195159445218373">
-<title>예금·적금·대출 금리 비교</title>
-<meta name="description" content="금융감독원 금융상품통합비교공시 데이터를 매일 갱신해 은행·저축은행 정기예금과 적금 금리, 주택담보대출·전세자금대출 금리를 한 표에서 비교합니다.">
+<title>금리 비교 · 집계</title>
+<meta name="description" content="예금·적금·주택담보대출·전세자금대출 금리 비교 화면 네 장으로 가는 길목입니다. 상품군마다 무엇을 보는 화면인지만 적고, 표와 수치는 각 화면에 있습니다.">
 <meta name="site-group" content="digest">
-<!-- 이 페이지는 deposit-rates.html과 본문이 글자까지 같다. 상품군 탭 넷 가운데
-     예금을 먼저 그리는 것이 이 파일이고, 예금 착지 페이지가 같은 것을 다시 그린다.
-     둘 다 색인에 두면 검색엔진에는 완전히 같은 페이지 두 장이다. 여기는 내비게이션이
-     닿는 자리로 남기고 색인은 상품군 페이지 넷에만 맡긴다.
-     follow는 남긴다 — 이 페이지에서 상품군 페이지로 흘러가는 링크는 살아 있어야 한다. -->
+<!-- 상품군 네 장으로 가는 요약 허브다. 표와 상품군 문단은 각 장이 그리고 여기는 그리지 않으므로
+     예금 페이지와 본문이 겹치지 않는다(#193). 색인은 상품군 네 장에 맡기고 follow는 남긴다. -->
 <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="https://kyhsa93.github.io/jipgye/rates.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="집계">
 <meta property="og:url" content="https://kyhsa93.github.io/jipgye/rates.html">
-<meta property="og:title" content="예금·적금·대출 금리 비교">
-<meta property="og:description" content="금융감독원 금융상품통합비교공시 데이터를 매일 갱신해 은행·저축은행 정기예금과 적금 금리, 주택담보대출·전세자금대출 금리를 한 표에서 비교합니다.">
+<meta property="og:title" content="금리 비교 · 집계">
+<meta property="og:description" content="예금·적금·주택담보대출·전세자금대출 금리 비교 화면 네 장으로 가는 길목입니다. 상품군마다 무엇을 보는 화면인지만 적고, 표와 수치는 각 화면에 있습니다.">
 <meta property="og:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:locale:alternate" content="en_US">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="예금·적금·대출 금리 비교">
-<meta name="twitter:description" content="금융감독원 금융상품통합비교공시 데이터를 매일 갱신해 은행·저축은행 정기예금과 적금 금리, 주택담보대출·전세자금대출 금리를 한 표에서 비교합니다.">
+<meta name="twitter:title" content="금리 비교 · 집계">
+<meta name="twitter:description" content="예금·적금·주택담보대출·전세자금대출 금리 비교 화면 네 장으로 가는 길목입니다. 상품군마다 무엇을 보는 화면인지만 적고, 표와 수치는 각 화면에 있습니다.">
 <meta name="twitter:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <link rel="stylesheet" href="./style.css">
 </head>
@@ -38,29 +34,20 @@
   <header>
     <div>
       <a class="brand" id="site-brand" href="./index.html" data-brand-en="Jipgye">집계</a>
-      <h1 id="page-title">예금·적금·대출 금리 비교</h1>
-      <div class="updated" id="updated" data-updated="2026-10-11">기준일 2026-10-11</div>
-      <div class="updated updated-warn" id="updated-warn" role="status" hidden></div>
-      <div class="update-schedule" id="update-schedule"></div>
+      <h1 id="page-title">금리 비교</h1>
+      <div class="updated" id="updated">상품군 네 장</div>
     </div>
     <div class="header-actions">
-      <button class="lang-toggle" type="button" id="share-button" aria-label="공유">
-        <span aria-hidden="true">📤</span>
-      </button>
-      <button class="lang-toggle" type="button" id="theme-toggle" aria-label="테마 전환">
-        <span aria-hidden="true">🌓</span>
-      </button>
-      <button class="lang-toggle" type="button" id="lang-toggle" aria-label="언어 전환">
-        <span aria-hidden="true">🌐</span>
-      </button>
+      <button class="icon-toggle" type="button" id="theme-toggle" aria-label="테마 전환"><span aria-hidden="true">🌓</span></button>
+      <button class="icon-toggle" type="button" id="lang-toggle" aria-label="언어 전환"><span aria-hidden="true">🌐</span></button>
     </div>
   </header>
 
-  <nav class="page-nav">
-    <a id="nav-digest" href="./index.html">오늘</a>
-    <a id="nav-realestate" href="./realestate.html">아파트 시세</a>
-    <a id="nav-rates" href="./rates.html" class="active" aria-current="page">금리 비교</a>
-    <a id="nav-news" href="./news.html">뉴스</a>
+  <nav class="page-nav" aria-label="섹션">
+    <a href="./index.html" id="nav-digest">오늘</a>
+    <a href="./realestate.html" id="nav-realestate">아파트 시세</a>
+    <a href="./rates.html" id="nav-rates" class="active" aria-current="page">금리 비교</a>
+    <a href="./news.html" id="nav-news">뉴스</a>
   </nav>
 
   <form class="site-search" role="search">
@@ -72,1073 +59,139 @@
          aria-labelledby="site-search-label" hidden></div>
   </form>
 
-  <div class="content-notice page-notice" id="content-notice"></div>
+  <section class="method-body">
+  <div data-lang="ko" class="on">
+    <p class="lead">금리 화면은 모을 때 받는 금리와 빌릴 때 내는 금리로 나뉘어 네 장입니다. 지금 풀려는 질문에 맞는 쪽을 열어 보세요.</p>
 
-  <section id="history-section">
-    <h2 id="history-heading">금리 추이</h2>
-    <div class="history-grid" id="history-grid">
-      <div class="placeholder" id="history-placeholder">불러오는 중...</div>
-    </div>
-  </section>
+    <h2>모을 때</h2>
+    <ul class="rate-hub">
+      <li><strong><a href="./deposit-rates.html">정기예금 금리 비교</a></strong> — 목돈을 정해 둔 기간 동안 묶어 두고 받는 이자를 은행과 저축은행에서 견줍니다.</li>
+      <li><strong><a href="./saving-rates.html">적금 금리 비교</a></strong> — 매달 붓는 돈에 붙는 이자를 보고, 조건을 다 채워야 받는 금리와 조건 없이 받는 금리의 차이를 봅니다.</li>
+    </ul>
 
-  <section id="products-section">
-    <h2 id="products-heading">상품별 금리</h2>
+    <h2>빌릴 때</h2>
+    <ul class="rate-hub">
+      <li><strong><a href="./mortgage-rates.html">주택담보대출 금리 비교</a></strong> — 집을 사며 빌리는 돈의 은행별 최저금리와 금리 범위를 봅니다.</li>
+      <li><strong><a href="./rent-loan-rates.html">전세자금대출 금리 비교</a></strong> — 전세 보증금을 빌릴 때 내는 은행별 금리와 금리 범위를 봅니다.</li>
+    </ul>
+  </div>
+  <div data-lang="en">
+    <p class="lead">The rate screens split into four: what you earn when you save and what you pay when you borrow. Open the one that fits the question in front of you.</p>
 
-    <div class="tabs" id="tabs" role="tablist"></div>
+    <h2>When you save</h2>
+    <ul class="rate-hub">
+      <li><strong><a href="./deposit-rates.html">Term deposit rates</a></strong> — the interest on a lump sum left untouched for a fixed period, compared across banks and savings banks.</li>
+      <li><strong><a href="./saving-rates.html">Installment savings rates</a></strong> — the interest on what you pay in each month, and how far the rate with every condition met sits from the rate with none.</li>
+    </ul>
 
-    <p class="rates-facts" id="rates-facts" data-lang="ko"><!--prerender:rateFactsKo-->표에 보이는 것은 360개 가운데 상위 20개입니다. 정렬과 검색은 전체를 대상으로 다시 줄을 세웁니다. 이 가운데 45개(13%)는 조건 없이 받는 금리보다 높은 숫자를 내걸고 있습니다. 격차가 가장 큰 것은 제주은행 J정기예금 (만기지급식)으로 2.00%와 3.99%, 1.99%p 차이입니다. 상위 20개 중 18개가 은행이 아니라 저축은행입니다. 금리가 높은 대신 예금자보호는 금융회사별 한도까지라, 금액이 크면 나눠 넣을지 먼저 확인할 부분입니다. 208개(58%)는 영업점에서는 아예 가입되지 않습니다. 인터넷이나 스마트폰 전용입니다.<!--/prerender:rateFactsKo--></p>
-    <p class="rates-facts" id="rates-facts-en" data-lang="en" hidden><!--prerender:rateFactsEn-->The table shows the top 20 of 360 products; sorting or searching re-ranks all of them. 45 of these (13%) advertise a higher rate than they pay without conditions. The widest gap is 제주은행 J정기예금 (만기지급식) at 2.00% against 3.99% — 1.99 points. 18 of the top 20 are savings banks rather than commercial banks. Rates there run higher, and deposit insurance is per institution up to a statutory ceiling — worth checking before splitting a large amount. 208 (58%) cannot be opened at a branch at all — internet or mobile only.<!--/prerender:rateFactsEn--></p>
-    <script type="application/json" id="rate-facts-data"><!--prerender:rateFactsData-->{"deposit":{"ko":["표에 보이는 것은 360개 가운데 상위 20개입니다. 정렬과 검색은 전체를 대상으로 다시 줄을 세웁니다.","이 가운데 45개(13%)는 조건 없이 받는 금리보다 높은 숫자를 내걸고 있습니다. 격차가 가장 큰 것은 제주은행 J정기예금 (만기지급식)으로 2.00%와 3.99%, 1.99%p 차이입니다.","상위 20개 중 18개가 은행이 아니라 저축은행입니다. 금리가 높은 대신 예금자보호는 금융회사별 한도까지라, 금액이 크면 나눠 넣을지 먼저 확인할 부분입니다.","208개(58%)는 영업점에서는 아예 가입되지 않습니다. 인터넷이나 스마트폰 전용입니다."],"en":["The table shows the top 20 of 360 products; sorting or searching re-ranks all of them.","45 of these (13%) advertise a higher rate than they pay without conditions. The widest gap is 제주은행 J정기예금 (만기지급식) at 2.00% against 3.99% — 1.99 points.","18 of the top 20 are savings banks rather than commercial banks. Rates there run higher, and deposit insurance is per institution up to a statutory ceiling — worth checking before splitting a large amount.","208 (58%) cannot be opened at a branch at all — internet or mobile only."]},"saving":{"ko":["표에 보이는 것은 326개 가운데 상위 20개입니다. 정렬과 검색은 전체를 대상으로 다시 줄을 세웁니다.","표 맨 위에 있는 웰컴저축은행 웰뱅 라이킷(LIKIT) 적금은 14.00%로 적혀 있지만, 그건 우대조건을 전부 채웠을 때입니다. 조건 없이 받는 금리는 2.00%로 12%p 차이입니다. 표에 두 숫자가 나란히 있어도, 실제로 어느 쪽을 받을지는 표에 없는 조건이 정합니다.","이 가운데 96개(29%)는 조건 없이 받는 금리보다 높은 숫자를 내걸고 있습니다.","상위 20개 중 16개가 은행이 아니라 저축은행입니다. 금리가 높은 대신 예금자보호는 금융회사별 한도까지라, 금액이 크면 나눠 넣을지 먼저 확인할 부분입니다.","150개(46%)는 영업점에서는 아예 가입되지 않습니다. 인터넷이나 스마트폰 전용입니다."],"en":["The table shows the top 20 of 326 products; sorting or searching re-ranks all of them.","The product at the top of the table, 웰뱅 라이킷(LIKIT) 적금 from 웰컴저축은행, is listed at 14.00% — but that is with every bonus condition met. Without them it pays 2.00%, a gap of 12 points. The table shows both numbers side by side; which one you actually get depends on conditions that are not in the table.","96 of these (29%) advertise a higher rate than they pay without conditions.","16 of the top 20 are savings banks rather than commercial banks. Rates there run higher, and deposit insurance is per institution up to a statutory ceiling — worth checking before splitting a large amount.","150 (46%) cannot be opened at a branch at all — internet or mobile only."]},"mortgage":{"ko":["표에 보이는 것은 34개 가운데 상위 20개입니다. 정렬과 검색은 전체를 대상으로 다시 줄을 세웁니다.","34개 전부 중도상환수수료가 붙고, 부대비용 항목도 전부 따로 적혀 있습니다. 표에 나온 금리만 견주면 이 둘이 빠집니다.","대출 금리는 하나의 숫자가 아니라 구간입니다. 경남은행 BNK모바일주택담보대출은 4.68%에서 7.05%까지 2.37%p 폭입니다. 그 안에서 어디에 걸릴지는 상품이 아니라 신용과 담보가 정합니다."],"en":["The table shows the top 20 of 34 products; sorting or searching re-ranks all of them.","All 34 carry an early-repayment fee, and every one of them also lists incidental costs. Comparing on the headline rate alone leaves both out.","The rate on a loan is a range, not a number: BNK모바일주택담보대출 from 경남은행 runs 4.68% to 7.05%, 2.37 points apart. Where you land inside that range is set by your credit and collateral, not by the product."]},"rentLoan":{"ko":["표에 보이는 것은 41개 가운데 상위 20개입니다. 정렬과 검색은 전체를 대상으로 다시 줄을 세웁니다.","41개 전부 중도상환수수료가 붙고, 부대비용 항목도 전부 따로 적혀 있습니다. 표에 나온 금리만 견주면 이 둘이 빠집니다.","대출 금리는 하나의 숫자가 아니라 구간입니다. 농협은행주식회사 NH전세대출(서울보증보험)은 3.69%에서 6.39%까지 2.7%p 폭입니다. 그 안에서 어디에 걸릴지는 상품이 아니라 신용과 담보가 정합니다."],"en":["The table shows the top 20 of 41 products; sorting or searching re-ranks all of them.","All 41 carry an early-repayment fee, and every one of them also lists incidental costs. Comparing on the headline rate alone leaves both out.","The rate on a loan is a range, not a number: NH전세대출(서울보증보험) from 농협은행주식회사 runs 3.69% to 6.39%, 2.7 points apart. Where you land inside that range is set by your credit and collateral, not by the product."]}}<!--/prerender:rateFactsData--></script>
+    <h2>When you borrow</h2>
+    <ul class="rate-hub">
+      <li><strong><a href="./mortgage-rates.html">Mortgage rates</a></strong> — each bank's lowest rate and rate range on the money you borrow to buy a home.</li>
+      <li><strong><a href="./rent-loan-rates.html">Jeonse loan rates</a></strong> — each bank's rate and rate range on the deposit you borrow to rent on jeonse.</li>
+    </ul>
+  </div>
 
-    <div class="controls" id="controls"></div>
+  <p class="rates-bridge" id="rates-bridge" data-lang="ko"><!--prerender:rateBridgeKo-->이 화면의 금리는 예금·적금처럼 모을 때 받는 금리와 주택담보대출·전세자금대출처럼 빌릴 때 내는 금리가 함께 있습니다. 모은 돈에 대출을 더하면 10억 원 예산 기준으로 서울 어떤 실거래가 보일까요? <a href="./budget-10eok.html">10억대 실거래</a>에서 확인하고, 전세와 월세 중 매달 덜 드는 쪽은 <a href="./jeonse-vs-wolse.html">전월세전환율</a>의 자치구 표에서 따져 봅니다.<!--/prerender:rateBridgeKo--></p>
+  <p class="rates-bridge" id="rates-bridge-en" data-lang="en" hidden><!--prerender:rateBridgeEn-->The rates on this page mix what you earn by saving (deposits, installment savings) with what you pay when you borrow (home-purchase and jeonse loans). Add a loan to your savings, and which Seoul deals come into view at a KRW 1 billion (10억) budget? Check <a href="./budget-10eok.html">the 10억 listings</a>; and for which of jeonse or monthly rent costs less each month, work through the district table in <a href="./jeonse-vs-wolse.html">the jeonse-to-monthly conversion rate</a>.<!--/prerender:rateBridgeEn--></p>
+</section>
 
-    <div class="table-wrap">
-      <table class="data-table"><caption class="sr-only" data-auto>예금·적금·대출 금리 비교 - 상품별 금리: 20행 4열(상품·기본금리·최고금리·세후 이자)</caption>
-        <thead id="products-head"><!--prerender:ratesHead--><tr><th scope="col">상품</th><th scope="col">기본금리</th><th scope="col">최고금리</th><th scope="col">세후 이자</th></tr><!--/prerender:ratesHead--></thead>
-        <tbody id="products-body"><!--prerender:rates--><tr><td><div class="product-name">정기예금(서울본점)</div><div class="product-company">조은저축은행</div></td><td data-label="기본금리">4.10%</td><td class="rate-strong" data-label="최고금리">4.10%</td><td class="net-interest" data-label="세후 이자">346,860원</td></tr><tr><td><div class="product-name">(특판한도)SB톡톡 정기예금</div><div class="product-company">조은저축은행</div></td><td data-label="기본금리">4.10%</td><td class="rate-strong" data-label="최고금리">4.10%</td><td class="net-interest" data-label="세후 이자">346,860원</td></tr><tr><td><div class="product-name">OK e-안심앱플러스정기예금6 (변동금리)</div><div class="product-company">OK저축은행</div></td><td data-label="기본금리">4.10%</td><td class="rate-strong" data-label="최고금리">4.10%</td><td class="net-interest" data-label="세후 이자">346,860원</td></tr><tr><td><div class="product-name">정기예금(비대면,인터넷뱅킹,스마트폰뱅킹)</div><div class="product-company">동양저축은행</div></td><td data-label="기본금리">4.06%</td><td class="rate-strong" data-label="최고금리">4.06%</td><td class="net-interest" data-label="세후 이자">343,476원</td></tr><tr><td><div class="product-name">e-그린세이브예금</div><div class="product-company">한국스탠다드차타드은행</div></td><td data-label="기본금리">3.85%</td><td class="rate-strong" data-label="최고금리">4.05%</td><td class="net-interest" data-label="세후 이자">342,630원</td></tr><tr><td><div class="product-name">더(The) 특판 정기예금</div><div class="product-company">부산은행</div></td><td data-label="기본금리">2.10%</td><td class="rate-strong" data-label="최고금리">4.05%</td><td class="net-interest" data-label="세후 이자">342,630원</td></tr><tr><td><div class="product-name">정기예금 비대면</div><div class="product-company">라온저축은행</div></td><td data-label="기본금리">4.05%</td><td class="rate-strong" data-label="최고금리">4.05%</td><td class="net-interest" data-label="세후 이자">342,630원</td></tr><tr><td><div class="product-name">회전정기예금</div><div class="product-company">상상인플러스저축은행</div></td><td data-label="기본금리">4.03%</td><td class="rate-strong" data-label="최고금리">4.03%</td><td class="net-interest" data-label="세후 이자">340,938원</td></tr><tr><td><div class="product-name">회전E-정기예금</div><div class="product-company">상상인플러스저축은행</div></td><td data-label="기본금리">4.03%</td><td class="rate-strong" data-label="최고금리">4.03%</td><td class="net-interest" data-label="세후 이자">340,938원</td></tr><tr><td><div class="product-name">회전정기예금(비대면)</div><div class="product-company">상상인플러스저축은행</div></td><td data-label="기본금리">4.03%</td><td class="rate-strong" data-label="최고금리">4.03%</td><td class="net-interest" data-label="세후 이자">340,938원</td></tr><tr><td><div class="product-name">크크크 회전정기예금</div><div class="product-company">상상인플러스저축은행</div></td><td data-label="기본금리">4.03%</td><td class="rate-strong" data-label="최고금리">4.03%</td><td class="net-interest" data-label="세후 이자">340,938원</td></tr><tr><td><div class="product-name">정기예금</div><div class="product-company">상상인플러스저축은행</div></td><td data-label="기본금리">4.03%</td><td class="rate-strong" data-label="최고금리">4.03%</td><td class="net-interest" data-label="세후 이자">340,938원</td></tr><tr><td><div class="product-name">e-정기예금</div><div class="product-company">상상인플러스저축은행</div></td><td data-label="기본금리">4.03%</td><td class="rate-strong" data-label="최고금리">4.03%</td><td class="net-interest" data-label="세후 이자">340,938원</td></tr><tr><td><div class="product-name">비대면 정기예금</div><div class="product-company">상상인플러스저축은행</div></td><td data-label="기본금리">4.03%</td><td class="rate-strong" data-label="최고금리">4.03%</td><td class="net-interest" data-label="세후 이자">340,938원</td></tr><tr><td><div class="product-name">크크크 정기예금</div><div class="product-company">상상인플러스저축은행</div></td><td data-label="기본금리">4.03%</td><td class="rate-strong" data-label="최고금리">4.03%</td><td class="net-interest" data-label="세후 이자">340,938원</td></tr><tr><td><div class="product-name">정기예금(인터넷뱅킹)</div><div class="product-company">대한저축은행</div></td><td data-label="기본금리">4.03%</td><td class="rate-strong" data-label="최고금리">4.03%</td><td class="net-interest" data-label="세후 이자">340,938원</td></tr><tr><td><div class="product-name">정기예금(인터넷뱅킹,스마트뱅킹)</div><div class="product-company">라인저축은행</div></td><td data-label="기본금리">4.03%</td><td class="rate-strong" data-label="최고금리">4.03%</td><td class="net-interest" data-label="세후 이자">340,938원</td></tr><tr><td><div class="product-name">e-회전yes정기예금(1년단위 변동금리상품) (인터넷뱅킹, 스마트뱅킹)</div><div class="product-company">키움예스저축은행</div></td><td data-label="기본금리">4.02%</td><td class="rate-strong" data-label="최고금리">4.02%</td><td class="net-interest" data-label="세후 이자">340,092원</td></tr><tr><td><div class="product-name">SB톡톡 회전yes정기예금(1년단위 변동금리상품) (비대면)</div><div class="product-company">키움예스저축은행</div></td><td data-label="기본금리">4.02%</td><td class="rate-strong" data-label="최고금리">4.02%</td><td class="net-interest" data-label="세후 이자">340,092원</td></tr><tr><td><div class="product-name">e- 회전정기예금</div><div class="product-company">참저축은행</div></td><td data-label="기본금리">4.02%</td><td class="rate-strong" data-label="최고금리">4.02%</td><td class="net-interest" data-label="세후 이자">340,092원</td></tr><!--/prerender:rates--></tbody>
-      </table>
-    </div>
-    <div class="show-more" id="show-more" role="status" hidden></div>
-    <div class="content-notice" id="products-note" style="margin-top: 10px;"></div>
-
-    <nav class="rate-links" id="rate-links" aria-label="상품군별 페이지">
-      <a href="./deposit-rates.html" data-rate-page="deposit">정기예금 금리 비교</a>
-      <a href="./saving-rates.html" data-rate-page="saving">적금 금리 비교</a>
-      <a href="./mortgage-rates.html" data-rate-page="mortgage">주택담보대출 금리 비교</a>
-      <a href="./rent-loan-rates.html" data-rate-page="rentLoan">전세자금대출 금리 비교</a>
-    </nav>
-
-    <p class="rates-bridge" id="rates-bridge" data-lang="ko"><!--prerender:rateBridgeKo-->이 화면의 금리는 예금·적금처럼 모을 때 받는 금리와 주택담보대출·전세자금대출처럼 빌릴 때 내는 금리가 함께 있습니다. 모은 돈에 대출을 더하면 10억 원 예산 기준으로 서울 어떤 실거래가 보일까요? <a href="./budget-10eok.html">10억대 실거래</a>에서 확인하고, 전세와 월세 중 매달 덜 드는 쪽은 <a href="./jeonse-vs-wolse.html">전월세전환율</a>의 자치구 표에서 따져 봅니다.<!--/prerender:rateBridgeKo--></p>
-    <p class="rates-bridge" id="rates-bridge-en" data-lang="en" hidden><!--prerender:rateBridgeEn-->The rates on this page mix what you earn by saving (deposits, installment savings) with what you pay when you borrow (home-purchase and jeonse loans). Add a loan to your savings, and which Seoul deals come into view at a KRW 1 billion (10억) budget? Check <a href="./budget-10eok.html">the 10억 listings</a>; and for which of jeonse or monthly rent costs less each month, work through the district table in <a href="./jeonse-vs-wolse.html">the jeonse-to-monthly conversion rate</a>.<!--/prerender:rateBridgeEn--></p>
-  </section>
-
-  <footer class="site-footer">
-    <div id="footer-source"></div>
-    <div style="margin-top: 6px;">
-      <a href="./index.html" id="footer-home">오늘</a>
+  <footer>
+    <div id="footer-source">출처: 금융감독원 금융상품통합비교공시.</div>
+    <div style="margin-top:6px;">
       <a href="./about.html" id="footer-about">소개</a>
       <span aria-hidden="true"> · </span>
       <a href="./method.html" id="footer-method">숫자를 만드는 방법</a>
       <span aria-hidden="true"> · </span>
-      <a href="https://kyhsa93.github.io/privacy-policy" id="footer-privacy-link" target="_blank" rel="noopener" style="margin-left: 10px;">개인정보처리방침</a>
+      <a href="https://kyhsa93.github.io/privacy-policy" id="footer-privacy" target="_blank" rel="noopener">개인정보처리방침</a>
     </div>
   </footer>
 </main>
-
 <script src="./nav.js" defer></script>
 <script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
-<script src="./load-state.js"></script>
 <script>
-  const T = {
-    ko: {
-      title: "예금·적금·대출 금리 비교",
-      description: "금융감독원 금융상품통합비교공시 데이터를 매일 갱신해 은행·저축은행 정기예금과 적금 금리, 주택담보대출·전세자금대출 금리를 한 표에서 비교합니다.",
-      navDigest: "오늘",
-      navNews: "뉴스",
-      navRealestate: "아파트 시세",
-      navRates: "금리 비교",
-      historyHeading: "금리 추이",
-      productsHeading: "상품별 금리",
-      updatedPrefix: "갱신",
-      updateSchedule: "매일 오전 8시(KST) 갱신",
-      disclosure: (month) => `${month} 공시 기준`,
-      notice: "금융감독원 '금융상품 한눈에' 공시 데이터입니다. 실제 적용 금리와 가입 가능 여부는 각 금융회사에서 확인하세요.",
-      tabs: {
-        deposit: "정기예금",
-        saving: "적금",
-        mortgage: "주택담보대출",
-        rentLoan: "전세자금대출",
-      },
-      ratePageLink: (name) => `${name} 금리 비교`,
-      termLabel: "저축 기간",
-      termMonths: (n) => `${n}개월`,
-      sectorLabel: "금융권",
-      sectorBank: "은행",
-      sectorSavingsBank: "저축은행",
-      searchPlaceholder: "은행·상품명 검색",
-      rateTypeLabel: "금리 유형",
-      allOption: "전체",
-      thProduct: "상품",
-      thBaseRate: "기본금리",
-      thMaxRate: "최고금리",
-      thAfterTax: "세후 이자",
-      thRateRange: "금리(최저~최고)",
-      thAvgRate: "평균",
-      sortHint: "이 금리 기준으로 정렬",
-      amountLabelDeposit: "예치금액",
-      amountLabelSaving: "월 납입액",
-      amountUnit: "원",
-      amountHint: (won) => `${won} 기준`,
-      historyBase: "기본",
-      thRateType: "금리 유형",
-      thJoinWay: "가입 방법",
-      detailToggle: "상세",
-      detailSpclCnd: "우대조건",
-      detailMtrtInt: "만기 후 금리",
-      detailJoinMember: "가입 대상",
-      detailMaxLimit: "최고 한도",
-      detailLoanLmt: "대출 한도",
-      detailErlyRpayFee: "중도상환수수료",
-      detailDlyRate: "연체 이자율",
-      detailLoanInciExpn: "부대비용",
-      detailJoinWay: "가입 방법",
-      showMore: (remaining) => `더 보기 (${remaining.toLocaleString("ko-KR")}개 남음)`,
-      shownCount: (shown, total) => `${total.toLocaleString("ko-KR")}개 중 ${shown.toLocaleString("ko-KR")}개`,
-      emptyRow: "조건에 맞는 상품이 없습니다.",
-      retry: "다시 시도",
-      loadError: "금리 데이터를 불러오지 못했습니다.",
-      historyLoadError: "금리 추이를 불러오지 못했습니다.",
-      historyDeposit: "정기예금 12개월 최고",
-      historySaving: "적금 12개월 최고",
-      historyMortgage: "주택담보대출 최저",
-      historyRentLoan: "전세자금대출 최저",
-      historyEmpty: "추이는 데이터가 하루 이상 쌓이면 표시됩니다.",
-      savingNote: "최고금리는 우대조건을 모두 충족했을 때의 금리입니다. 조건 없이 받는 금리는 기본금리 쪽을 보세요. 저축은행은 예금자보호 한도(1인당 5천만원)를 감안해 비교하세요.",
-      afterTaxNote: "세후 이자는 최고금리로 만기까지 넣었을 때 이자소득세 15.4%(소득세 14% + 지방소득세 1.4%)를 뗀 금액입니다. 적금은 매달 같은 금액을 넣는 정액적립식으로 계산했습니다. 비과세종합저축·세금우대 대상이면 실제로 받는 금액은 이보다 큽니다.",
-      loanNote: "금리(최저~최고)는 지금 제시되는 범위이고, 평균은 지난달에 실제로 나간 대출의 평균이라 서로 다른 수치입니다. 그래서 평균이 최저보다 낮게 나오기도 합니다. 기본 정렬은 모든 상품에 값이 있는 최저금리 기준이며, 금리 열 머리글을 누르면 기준을 바꿀 수 있습니다. 실제 승인 금리는 신용점수·담보·상환방식에 따라 달라집니다.",
-      source: "출처: 금융감독원 금융상품통합비교공시(금융상품 한눈에)",
-      footerHome: "오늘",
-      footerPrivacyLink: "개인정보처리방침",
-      footerMethod: "숫자를 만드는 방법",
-      footerAbout: "소개",
-      shareTitle: "예금·적금·대출 금리 비교",
-    },
-    en: {
-      title: "Deposit, Savings & Loan Rates",
-      description: "Daily-updated Korean bank and savings bank deposit, installment savings, mortgage and jeonse loan rates, from the FSS financial product disclosure data.",
-      navDigest: "Today",
-      navNews: "News",
-      navRealestate: "Apartment prices",
-      navRates: "Rates",
-      historyHeading: "Rate trend",
-      productsHeading: "Rates by product",
-      updatedPrefix: "Updated",
-      updateSchedule: "Updated daily at 8 AM KST",
-      disclosure: (month) => `As disclosed for ${month}`,
-      notice: "Sourced from the FSS financial product comparison disclosure. Confirm the actual rate and eligibility with each institution.",
-      tabs: {
-        deposit: "Term deposit",
-        saving: "Installment savings",
-        mortgage: "Mortgage loan",
-        rentLoan: "Jeonse loan",
-      },
-      ratePageLink: (name) => `${name} rates`,
-      termLabel: "Term",
-      termMonths: (n) => `${n} months`,
-      sectorLabel: "Sector",
-      sectorBank: "Banks",
-      sectorSavingsBank: "Savings banks",
-      searchPlaceholder: "Search bank or product",
-      rateTypeLabel: "Rate type",
-      allOption: "All",
-      thProduct: "Product",
-      thBaseRate: "Base",
-      thMaxRate: "Max",
-      thAfterTax: "After-tax interest",
-      thRateRange: "Rate (min–max)",
-      thAvgRate: "Avg",
-      sortHint: "Sort by this rate",
-      amountLabelDeposit: "Deposit amount",
-      amountLabelSaving: "Monthly payment",
-      amountUnit: "KRW",
-      amountHint: (won) => `for ${won}`,
-      historyBase: "Base",
-      thRateType: "Rate type",
-      thJoinWay: "How to apply",
-      detailToggle: "Details",
-      detailSpclCnd: "Preferential terms",
-      detailMtrtInt: "Post-maturity rate",
-      detailJoinMember: "Eligibility",
-      detailMaxLimit: "Maximum amount",
-      detailLoanLmt: "Loan limit",
-      detailErlyRpayFee: "Early repayment fee",
-      detailDlyRate: "Late payment rate",
-      detailLoanInciExpn: "Incidental costs",
-      detailJoinWay: "How to apply",
-      showMore: (remaining) => `Show more (${remaining.toLocaleString("en-US")} left)`,
-      shownCount: (shown, total) => `${shown.toLocaleString("en-US")} of ${total.toLocaleString("en-US")}`,
-      emptyRow: "No products match these filters.",
-      retry: "Retry",
-      loadError: "Could not load the rate data.",
-      historyLoadError: "Could not load the rate trend.",
-      historyDeposit: "Best 12-month deposit",
-      historySaving: "Best 12-month savings",
-      historyMortgage: "Lowest mortgage rate",
-      historyRentLoan: "Lowest jeonse loan rate",
-      historyEmpty: "The trend appears once more than one day of data is collected.",
-      savingNote: "The max rate assumes every preferential condition is met; the base rate is what you get without them. For savings banks, keep the KRW 50M per-person deposit protection limit in mind.",
-      afterTaxNote: "After-tax interest is what is left once 15.4% interest income tax (14% income + 1.4% local) is withheld, assuming the max rate and holding to maturity. Savings plans are calculated as fixed monthly contributions. If you qualify for a tax-exempt account, you receive more than shown.",
-      loanNote: "The min\u2013max column is the range currently on offer, while the average is over loans actually made last month \u2014 two different measures, which is why an average can fall below the minimum. Sorting defaults to the minimum rate, the one value every product has; click a rate column header to sort by another. Your approved rate still depends on credit score, collateral and repayment type.",
-      source: "Source: FSS Financial Product Comparison Disclosure",
-      footerHome: "Daily digest",
-      footerPrivacyLink: "Privacy Policy",
-      footerMethod: "How these numbers are made",
-      footerAbout: "About",
-      shareTitle: "Deposit, Savings & Loan Rates",
-    },
-  };
-
-  let locale = getInitialLocale();
-
-  function t(key) {
-    return T[locale][key];
-  }
-
-  function getInitialLocale() {
-    const saved = window.localStorage.getItem("lang");
-    return saved === "en" || saved === "ko" ? saved : "ko";
-  }
-
+// 이 페이지는 데이터를 읽지 않는다. 글과 링크뿐이라 필요한 것은 테마와 언어 두 가지고, 저장하는
+// 열쇠는 다른 페이지와 같다(about.html과 같은 방식).
+(function () {
   const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
-  let theme = "auto";
-
-  function getInitialTheme() {
+  let theme = (function () {
     const saved = window.localStorage.getItem("theme");
     return saved === "light" || saved === "dark" ? saved : "auto";
-  }
+  })();
 
   function applyTheme(next) {
     theme = next;
     window.localStorage.setItem("theme", theme);
-    if (theme === "auto") {
-      document.documentElement.removeAttribute("data-theme");
-    } else {
-      document.documentElement.setAttribute("data-theme", theme);
-    }
-    const icon = document.querySelector("#theme-toggle span");
-    if (icon) icon.textContent = THEME_ICONS[theme];
+    if (theme === "auto") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", theme);
+    document.querySelector("#theme-toggle span").textContent = THEME_ICONS[theme];
   }
 
-  applyTheme(getInitialTheme());
-
-  const cache = { rates: null, history: null };
-
-  const CATEGORY_KEYS = ["deposit", "saving", "mortgage", "rentLoan"];
-  const SAVING_CATEGORIES = new Set(["deposit", "saving"]);
-
-  const SORT_COLUMNS = {
-    saving: [
-      { key: "rate", label: "thBaseRate", defaultDir: "desc" },
-      { key: "maxRate", label: "thMaxRate", defaultDir: "desc" },
-      { key: "netInterest", label: "thAfterTax", defaultDir: "desc" },
-    ],
-    loan: [
-      { key: "min", label: "thRateRange", defaultDir: "asc" },
-      { key: "avg", label: "thAvgRate", defaultDir: "asc" },
-    ],
-  };
-
-  function initialCategory() {
-    const value = document.querySelector('meta[name="rates-category"]')?.getAttribute("content");
-    return CATEGORY_KEYS.includes(value) ? value : "deposit";
-  }
-
-  const urlParams = new URLSearchParams(location.search);
-
-  const DEFAULT_CATEGORY = initialCategory();
-
-  const PAGE_SIZE = 20;
-
-  const DEFAULT_AMOUNT = { deposit: 10000000, saving: 300000 };
-  const TAX_RATE = 0.154;
-
-  const state = {
-    category: CATEGORY_KEYS.includes(urlParams.get("tab")) ? urlParams.get("tab") : DEFAULT_CATEGORY,
-    term: Number(urlParams.get("term")) || 12,
-    amounts: { ...DEFAULT_AMOUNT },
-    sectors: { bank: true, savingsBank: true },
-    rateType: urlParams.get("type") ?? "",
-    query: urlParams.get("q") ?? "",
-    expanded: new Set(),
-    limit: PAGE_SIZE,
-    sort: {
-      saving: { key: "maxRate", dir: "desc" },
-      loan: { key: "min", dir: "asc" },
+  const NAV = {
+    ko: {
+      digest: "오늘",
+      news: "뉴스",
+      realestate: "아파트 시세",
+      rates: "금리 비교",
+      title: "금리 비교",
+      updated: "상품군 네 장",
+      about: "소개",
+      method: "숫자를 만드는 방법",
+      privacy: "개인정보처리방침",
+      source: "출처: 금융감독원 금융상품통합비교공시.",
+    },
+    en: {
+      digest: "Today",
+      news: "News",
+      realestate: "Apartment prices",
+      rates: "Rates",
+      title: "Rates",
+      updated: "Four rate screens",
+      about: "About",
+      method: "How these numbers are made",
+      privacy: "Privacy policy",
+      source: "Source: Financial Supervisory Service, financial product comparison disclosure.",
     },
   };
 
-  function isSavingCategory(key) {
-    return SAVING_CATEGORIES.has(key);
-  }
+  let locale = window.localStorage.getItem("lang") === "en" ? "en" : "ko";
 
-  function amountKey() {
-    return state.category === "saving" ? "saving" : "deposit";
-  }
-
-  function currentAmount() {
-    return state.amounts[amountKey()];
-  }
-
-  function readAmountParam(params) {
-    const raw = Number(params.get("amt"));
-    return Number.isFinite(raw) && raw > 0 ? Math.round(raw) : null;
-  }
-
-  const initialAmount = readAmountParam(urlParams);
-  if (initialAmount !== null) state.amounts[amountKey()] = initialAmount;
-
-  function netInterestOf(option, { amount, saving }) {
-    const rate = option?.maxRate ?? option?.rate;
-    const term = option?.term;
-    if (typeof rate !== "number" || !Number.isFinite(rate)) return null;
-    if (typeof term !== "number" || !Number.isFinite(term) || term <= 0) return null;
-    if (typeof amount !== "number" || !Number.isFinite(amount) || amount <= 0) return null;
-
-    const monthlyRate = rate / 100 / 12;
-    const compound = (option.rateTypeName ?? "").includes("복리");
-
-    let gross;
-    if (saving) {
-      if (compound) {
-        gross = 0;
-        for (let n = term; n >= 1; n -= 1) gross += amount * ((1 + monthlyRate) ** n - 1);
-      } else {
-        gross = amount * monthlyRate * ((term * (term + 1)) / 2);
-      }
-    } else {
-      gross = compound
-        ? amount * ((1 + monthlyRate) ** term - 1)
-        : amount * monthlyRate * term;
+  function applyLocale(next) {
+    locale = next;
+    window.localStorage.setItem("lang", locale);
+    document.documentElement.setAttribute("lang", locale);
+    for (const block of document.querySelectorAll("[data-lang]")) {
+      block.classList.toggle("on", block.getAttribute("data-lang") === locale);
     }
-    return Math.round(gross - gross * TAX_RATE);
-  }
-
-  function fmtWon(value) {
-    if (typeof value !== "number" || !Number.isFinite(value)) return "-";
-    const n = Math.round(value);
-    return locale === "en" ? `₩${n.toLocaleString("en-US")}` : `${n.toLocaleString("ko-KR")}원`;
-  }
-
-  function sortFamily() {
-    return isSavingCategory(state.category) ? "saving" : "loan";
-  }
-
-  function activeSort() {
-    return state.sort[sortFamily()];
-  }
-
-  function toggleSort(key) {
-    const family = sortFamily();
-    const column = SORT_COLUMNS[family].find((c) => c.key === key);
-    if (!column) return;
-    const current = state.sort[family];
-    state.sort[family] =
-      current.key === key
-        ? { key, dir: current.dir === "asc" ? "desc" : "asc" }
-        : { key, dir: column.defaultDir };
-  }
-
-  function products(category = state.category) {
-    const list = cache.rates?.[category];
-    return Array.isArray(list) ? list : [];
-  }
-
-  function escapeHtml(s) {
-    return String(s ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function fmtRate(v) {
-    return typeof v === "number" && Number.isFinite(v) ? `${v.toFixed(2)}%` : "-";
-  }
-
-  function fmtRateRange(min, max) {
-    const hasMin = typeof min === "number" && Number.isFinite(min);
-    const hasMax = typeof max === "number" && Number.isFinite(max);
-    if (hasMin && hasMax && min !== max) return `${min.toFixed(2)}~${max.toFixed(2)}%`;
-    if (hasMin) return fmtRate(min);
-    if (hasMax) return fmtRate(max);
-    return "-";
-  }
-
-  function fmtUpdated(iso) {
-    if (!iso) return "-";
-    const d = new Date(iso);
-    return d.toLocaleString(locale === "ko" ? "ko-KR" : "en-US", {
-      timeZone: "Asia/Seoul",
-      dateStyle: "medium",
-      timeStyle: "short",
-    }) + " KST";
-  }
-
-  function fmtDisclosureMonth(month) {
-    if (!month || month.length !== 6) return null;
-    const year = month.slice(0, 4);
-    const mon = month.slice(4, 6);
-    return locale === "ko" ? `${year}년 ${Number(mon)}월` : `${mon}/${year}`;
-  }
-
-  function fmtAmount(won) {
-    if (typeof won !== "number" || !Number.isFinite(won)) return null;
-    if (locale !== "ko") return won.toLocaleString("en-US") + " KRW";
-    if (won >= 100000000) {
-      const eok = won / 100000000;
-      return `${Number.isInteger(eok) ? eok : eok.toFixed(1)}억원`;
-    }
-    if (won >= 10000) {
-      const man = won / 10000;
-      return `${Number.isInteger(man) ? man.toLocaleString("ko-KR") : man.toFixed(1)}만원`;
-    }
-    return `${won.toLocaleString("ko-KR")}원`;
-  }
-
-  async function loadJson(name) {
-    const res = await fetch(`./data/${name}.json?_=${Date.now()}`);
-    if (!res.ok) throw new Error(`${name} load failed`);
-    return res.json();
-  }
-
-  function reportLoadFailure(name, error, fatal) {
-    window.analytics?.event("exception", {
-      description: `load ${name}: ${error?.message ?? error}`.slice(0, 100),
-      fatal,
-    });
-  }
-
-  function sparklineSvg(values) {
-    const points = values.filter((v) => typeof v === "number" && Number.isFinite(v));
-    if (points.length < 2) return "";
-    const width = 200;
-    const height = 36;
-    // 위아래를 조금 비워 둔다. 안 비우면 선이 카드 테두리에 닿아 그래프가 아니라
-    // 밑줄처럼 보인다 - 값이 내내 같은 상품(적금 1위처럼)은 특히 그랬다.
-    const pad = 4;
-    const min = Math.min(...points);
-    const max = Math.max(...points);
-    const span = max - min;
-    // 한 번도 안 움직인 계열은 min에 붙어 바닥에 그려졌다. 움직임이 없다는 것은
-    // 바닥에 있다는 뜻이 아니므로 가운데에 눕힌다.
-    const y = (v) => (span === 0 ? height / 2 : pad + (height - pad * 2) * (1 - (v - min) / span));
-    const step = width / (points.length - 1);
-    const path = points
-      .map((v, i) => `${i === 0 ? "M" : "L"}${(i * step).toFixed(1)},${y(v).toFixed(1)}`)
-      .join(" ");
-    // 색은 스타일시트가 칠한다(팔레트가 테마마다 다른 값을 갖고 있다). 한 번도 안
-    // 움직인 계열까지 "올랐다"로 칠하지 않도록 제자리는 따로 둔다.
-    const last = points[points.length - 1];
-    const dir = last === points[0] ? "flat" : last > points[0] ? "up" : "down";
-    return `<svg viewBox="0 0 ${width} ${height}" width="100%" height="${height}" preserveAspectRatio="none" aria-hidden="true">
-      <path class="spark ${dir}" d="${path}" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>`;
-  }
-
-  function historyEntryRate(entry, key) {
-    const value = entry?.[key];
-    if (!value) return null;
-    if (key === "deposit12" || key === "saving12") {
-      return value.savingsBank?.rate ?? value.bank?.rate ?? null;
-    }
-    return value.rate ?? null;
-  }
-
-  function historyEntryTop(entry, key) {
-    const value = entry?.[key];
-    if (!value) return null;
-    if (key === "deposit12" || key === "saving12") {
-      return value.savingsBank ?? value.bank ?? null;
-    }
-    return value;
-  }
-
-  function historyCardHtml({ label, key }) {
-    const history = Array.isArray(cache.history) ? cache.history : [];
-    const values = history.map((h) => historyEntryRate(h, key));
-    const latestEntry = [...history].reverse().find((h) => historyEntryRate(h, key) !== null);
-    const latest = latestEntry ? historyEntryRate(latestEntry, key) : null;
-    const top = latestEntry ? historyEntryTop(latestEntry, key) : null;
-    if (latest === null) return "";
-    const parts = [];
-    if (typeof top?.baseRate === "number" && top.baseRate !== top.rate) {
-      parts.push(`${t("historyBase")} ${fmtRate(top.baseRate)}`);
-    }
-    const productLabel = `${top?.company ?? ""} ${top?.name ?? ""}`.trim();
-    if (productLabel) parts.push(productLabel);
-    const sub = parts.map(escapeHtml).join(" · ");
-    return `<div class="history-card">
-      <div class="label">${escapeHtml(label)}</div>
-      <div class="value">${fmtRate(latest)}</div>
-      ${sub ? `<div class="sub">${sub}</div>` : ""}
-      ${sparklineSvg(values)}
-    </div>`;
-  }
-
-  function renderHistory() {
-    const grid = document.getElementById("history-grid");
-    const cards = [
-      { label: t("historyDeposit"), key: "deposit12" },
-      { label: t("historySaving"), key: "saving12" },
-      { label: t("historyMortgage"), key: "mortgage" },
-      { label: t("historyRentLoan"), key: "rentLoan" },
-    ]
-      .map(historyCardHtml)
-      .filter(Boolean)
-      .join("");
-    grid.innerHTML = cards || `<div class="placeholder">${escapeHtml(t("historyEmpty"))}</div>`;
-  }
-
-  function renderTabs() {
-    const tabs = document.getElementById("tabs");
-    tabs.innerHTML = CATEGORY_KEYS.map(
-      (key) =>
-        `<button class="tab" type="button" role="tab" data-category="${key}" aria-selected="${
-          key === state.category
-        }">${escapeHtml(T[locale].tabs[key])}</button>`
-    ).join("");
-  }
-
-  function availableTerms() {
-    const terms = new Set();
-    for (const product of products()) {
-      for (const opt of product.options ?? []) {
-        if (typeof opt.term === "number") terms.add(opt.term);
-      }
-    }
-    return [...terms].sort((a, b) => a - b);
-  }
-
-  function availableRateTypes() {
-    const types = new Set();
-    for (const product of products()) {
-      for (const opt of product.options ?? []) {
-        if (opt.rateType) types.add(opt.rateType);
-      }
-    }
-    return [...types].sort((a, b) => a.localeCompare(b, "ko"));
-  }
-
-  function renderControls() {
-    const controls = document.getElementById("controls");
-    const searchHtml = `<input type="search" id="search-input" placeholder="${escapeHtml(
-      t("searchPlaceholder")
-    )}" value="${escapeHtml(state.query)}">`;
-
-    if (isSavingCategory(state.category)) {
-      const terms = availableTerms();
-      if (terms.length && !terms.includes(state.term)) {
-        state.term = terms.reduce((a, b) => (Math.abs(b - 12) < Math.abs(a - 12) ? b : a), terms[0]);
-      }
-      controls.innerHTML = `
-        <label for="term-select">${escapeHtml(t("termLabel"))}</label>
-        <select id="term-select">
-          ${terms
-            .map(
-              (term) =>
-                `<option value="${term}" ${term === state.term ? "selected" : ""}>${escapeHtml(
-                  T[locale].termMonths(term)
-                )}</option>`
-            )
-            .join("")}
-        </select>
-        <span class="sector-filter">
-          <label><input type="checkbox" data-sector="bank" ${
-            state.sectors.bank ? "checked" : ""
-          }> ${escapeHtml(t("sectorBank"))}</label>
-          <label><input type="checkbox" data-sector="savingsBank" ${
-            state.sectors.savingsBank ? "checked" : ""
-          }> ${escapeHtml(t("sectorSavingsBank"))}</label>
-        </span>
-        <label for="amount-input">${escapeHtml(
-          t(state.category === "saving" ? "amountLabelSaving" : "amountLabelDeposit")
-        )}</label>
-        <span class="amount-field">
-          <input type="number" id="amount-input" min="1" step="100000" inputmode="numeric"
-            value="${currentAmount()}">
-          <span class="amount-unit">${escapeHtml(t("amountUnit"))}</span>
-        </span>
-        ${searchHtml}`;
-    } else {
-      const types = availableRateTypes();
-      if (state.rateType && !types.includes(state.rateType)) state.rateType = "";
-      controls.innerHTML = `
-        <label for="rate-type-select">${escapeHtml(t("rateTypeLabel"))}</label>
-        <select id="rate-type-select">
-          <option value="">${escapeHtml(t("allOption"))}</option>
-          ${types
-            .map(
-              (type) =>
-                `<option value="${escapeHtml(type)}" ${
-                  type === state.rateType ? "selected" : ""
-                }>${escapeHtml(type)}</option>`
-            )
-            .join("")}
-        </select>
-        ${searchHtml}`;
-    }
-
-    bindControlEvents();
-  }
-
-  function bindControlEvents() {
-    const termSelect = document.getElementById("term-select");
-    if (termSelect) {
-      termSelect.addEventListener("change", (e) => {
-        state.term = Number(e.target.value);
-        resetLimit();
-        renderProducts();
-        syncUrl({ push: true });
-        window.analytics?.event("rate_filter", { filter: "term", filter_value: String(state.term) });
-      });
-    }
-
-    const amountInput = document.getElementById("amount-input");
-    if (amountInput) {
-      amountInput.addEventListener("input", (e) => {
-        const next = Number(e.target.value);
-        if (!Number.isFinite(next) || next <= 0) return;
-        state.amounts[amountKey()] = Math.round(next);
-        renderProducts();
-        syncUrl();
-        window.analytics?.debouncedEvent?.("rate_amount", {
-          rate_category: state.category,
-          amount: String(state.amounts[amountKey()]),
-        });
-      });
-    }
-
-    const rateTypeSelect = document.getElementById("rate-type-select");
-    if (rateTypeSelect) {
-      rateTypeSelect.addEventListener("change", (e) => {
-        state.rateType = e.target.value;
-        resetLimit();
-        renderProducts();
-        syncUrl({ push: true });
-        window.analytics?.event("rate_filter", { filter: "rate_type", filter_value: state.rateType || "all" });
-      });
-    }
-
-    for (const box of document.querySelectorAll("[data-sector]")) {
-      box.addEventListener("change", (e) => {
-        state.sectors[e.target.dataset.sector] = e.target.checked;
-        resetLimit();
-        renderProducts();
-        window.analytics?.event("rate_filter", {
-          filter: "sector",
-          filter_value: `${e.target.dataset.sector}:${e.target.checked ? "on" : "off"}`,
-        });
-      });
-    }
-
-    const search = document.getElementById("search-input");
-    if (search) {
-      search.addEventListener("input", (e) => {
-        state.query = e.target.value;
-        resetLimit();
-        renderProducts();
-        syncUrl();
-        const term = state.query.trim();
-        if (term.length >= 2) window.analytics?.debouncedEvent("search", window.analytics.termShape?.(term));
-      });
-    }
-  }
-
-  function matchesQuery(product) {
-    const q = state.query.trim().toLowerCase();
-    if (!q) return true;
-    return `${product.company ?? ""} ${product.name ?? ""}`.toLowerCase().includes(q);
-  }
-
-  function visibleRows() {
-    const { key, dir } = activeSort();
-    const rows = [];
-    for (const product of products()) {
-      if (!matchesQuery(product)) continue;
-      if (isSavingCategory(state.category) && !state.sectors[product.sector ?? "bank"]) continue;
-
-      let best = null;
-      let bestValue = null;
-      let fallback = null;
-      for (const raw of product.options ?? []) {
-        if (isSavingCategory(state.category)) {
-          if (raw.term !== state.term) continue;
-        } else if (state.rateType && raw.rateType !== state.rateType) {
-          continue;
-        }
-        const opt = isSavingCategory(state.category)
-          ? {
-              ...raw,
-              netInterest: netInterestOf(raw, {
-                amount: currentAmount(),
-                saving: state.category === "saving",
-              }),
-            }
-          : raw;
-        fallback ??= opt;
-        const value = opt[key];
-        if (value === null || value === undefined) continue;
-        if (best === null || (dir === "asc" ? value < bestValue : value > bestValue)) {
-          best = opt;
-          bestValue = value;
-        }
-      }
-      if (best) rows.push({ product, option: best, sort: bestValue });
-      else if (fallback) rows.push({ product, option: fallback, sort: null });
-    }
-
-    rows.sort((a, b) => {
-      if (a.sort === null || b.sort === null) return (a.sort === null) - (b.sort === null);
-      return dir === "asc" ? a.sort - b.sort : b.sort - a.sort;
-    });
-    return rows;
-  }
-
-  function sectorTagHtml(product) {
-    if (!isSavingCategory(state.category)) return "";
-    if (product.sector !== "savingsBank") return "";
-    return `<span class="sector-tag">${escapeHtml(t("sectorSavingsBank"))}</span>`;
-  }
-
-  function productCellHtml(product) {
-    return `<td>
-      <div class="product-name">${escapeHtml(product.name ?? "-")}${sectorTagHtml(product)}</div>
-      <div class="product-company">${escapeHtml(product.company ?? "")}</div>
-      <button class="detail-toggle" type="button" data-detail="${escapeHtml(product.id)}">${escapeHtml(
-      t("detailToggle")
-    )}</button>
-    </td>`;
-  }
-
-  function detailRowHtml(product, columnCount) {
-    if (!state.expanded.has(product.id)) return "";
-    const items = isSavingCategory(state.category)
-      ? [
-          [t("detailSpclCnd"), product.spclCnd],
-          [t("detailJoinMember"), product.joinMember],
-          [t("detailMaxLimit"), fmtAmount(product.maxLimit)],
-          [t("detailMtrtInt"), product.mtrtInt],
-          [t("detailJoinWay"), product.joinWay],
-        ]
-      : [
-          [t("detailLoanLmt"), product.loanLmt],
-          [t("detailErlyRpayFee"), product.erlyRpayFee],
-          [t("detailDlyRate"), product.dlyRate],
-          [t("detailLoanInciExpn"), product.loanInciExpn],
-          [t("detailJoinWay"), product.joinWay],
-        ];
-    const body = items
-      .filter(([, value]) => value)
-      .map(([label, value]) => `<dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd>`)
-      .join("");
-    if (!body) return "";
-    return `<tr class="detail-row"><td colspan="${columnCount}"><dl>${body}</dl></td></tr>`;
-  }
-
-  function savingRowHtml({ product, option }) {
-    return `<tr>
-      ${productCellHtml(product)}
-      <td data-label="${escapeHtml(t("thBaseRate"))}">${fmtRate(option.rate)}</td>
-      <td class="rate-strong" data-label="${escapeHtml(t("thMaxRate"))}">${fmtRate(option.maxRate ?? option.rate)}</td>
-      <td class="net-interest" data-label="${escapeHtml(t("thAfterTax"))}">${fmtWon(option.netInterest)}</td>
-    </tr>${detailRowHtml(product, 4)}`;
-  }
-
-  function loanRowHtml({ product, option }) {
-    return `<tr>
-      ${productCellHtml(product)}
-      <td data-label="${escapeHtml(t("thRateType"))}">${escapeHtml(option.rateType ?? "-")}</td>
-      <td data-label="${escapeHtml(t("thRateRange"))}">${fmtRateRange(option.min, option.max)}</td>
-      <td class="rate-low" data-label="${escapeHtml(t("thAvgRate"))}">${fmtRate(option.avg)}</td>
-    </tr>${detailRowHtml(product, 4)}`;
-  }
-
-  function sortableThHtml(key) {
-    const column = SORT_COLUMNS[sortFamily()].find((c) => c.key === key);
-    const { key: activeKey, dir } = activeSort();
-    const isActive = activeKey === key;
-    const arrow = isActive ? (dir === "asc" ? " \u25b2" : " \u25bc") : "";
-    const ariaSort = isActive ? (dir === "asc" ? "ascending" : "descending") : "none";
-    return `<th scope="col" class="sortable${isActive ? " sorted" : ""}" aria-sort="${ariaSort}">
-      <button type="button" data-sort="${key}" title="${escapeHtml(t("sortHint"))}">${escapeHtml(
-      t(column.label)
-    )}${arrow}</button>
-    </th>`;
-  }
-
-  function renderProductsHead() {
-    const head = document.getElementById("products-head");
-    head.innerHTML = isSavingCategory(state.category)
-      ? `<tr>
-          <th scope="col">${escapeHtml(t("thProduct"))}</th>
-          ${sortableThHtml("rate")}
-          ${sortableThHtml("maxRate")}
-          ${sortableThHtml("netInterest")}
-        </tr>`
-      : `<tr>
-          <th scope="col">${escapeHtml(t("thProduct"))}</th>
-          <th scope="col">${escapeHtml(t("thRateType"))}</th>
-          ${sortableThHtml("min")}
-          ${sortableThHtml("avg")}
-        </tr>`;
-  }
-
-  function renderShowMore(total) {
-    const box = document.getElementById("show-more");
-    const shown = Math.min(state.limit, total);
-    const remaining = total - shown;
-
-    box.innerHTML = remaining
-      ? `<button type="button" id="show-more-button">${escapeHtml(t("showMore")(remaining))}</button>` +
-        `<span class="shown-count">${escapeHtml(t("shownCount")(shown, total))}</span>`
-      : total
-        ? `<span class="shown-count">${escapeHtml(t("shownCount")(shown, total))}</span>`
-        : "";
-    box.hidden = !total;
-  }
-
-  function resetLimit() {
-    state.limit = PAGE_SIZE;
-  }
-
-  function renderProducts() {
-    renderProductsHead();
-    const body = document.getElementById("products-body");
-    const columnCount = 4;
-    const rows = visibleRows();
-
-    if (!rows.length) {
-      body.innerHTML = `<tr class="empty-row"><td colspan="${columnCount}">${escapeHtml(
-        t("emptyRow")
-      )}</td></tr>`;
-    } else {
-      body.innerHTML = rows
-        .slice(0, state.limit)
-        .map(isSavingCategory(state.category) ? savingRowHtml : loanRowHtml)
-        .join("");
-    }
-
-    renderShowMore(rows.length);
-
-    document.getElementById("products-note").textContent = isSavingCategory(state.category)
-      ? `${t("savingNote")} ${t("afterTaxNote")}`
-      : t("loanNote");
-
-    for (const button of body.querySelectorAll("[data-detail]")) {
-      button.addEventListener("click", () => {
-        const id = button.dataset.detail;
-        const expanding = !state.expanded.has(id);
-        if (expanding) state.expanded.add(id);
-        else state.expanded.delete(id);
-        renderProducts();
-        if (expanding) {
-          window.analytics?.event("product_expand", { rate_category: state.category, product_id: id });
-        }
-      });
-    }
-  }
-
-  function renderMeta() {
-    document.documentElement.lang = locale;
-    document.title = t("title");
-    document.querySelector('meta[name="description"]').setAttribute("content", t("description"));
-    document.getElementById("page-title").textContent = t("title");
-    document.getElementById("nav-digest").textContent = t("navDigest");
-    document.getElementById("nav-news").textContent = t("navNews");
-    document.getElementById("nav-realestate").textContent = t("navRealestate");
-    document.getElementById("nav-rates").textContent = t("navRates");
-    document.getElementById("history-heading").textContent = t("historyHeading");
-    document.getElementById("products-heading").textContent = t("productsHeading");
-    document.getElementById("update-schedule").textContent = t("updateSchedule");
-    document.getElementById("footer-source").textContent = t("source");
-    document.getElementById("footer-home").textContent = t("footerHome");
-    document.getElementById("footer-privacy-link").textContent = t("footerPrivacyLink");
-    document.getElementById("footer-method").textContent = t("footerMethod");
-    document.getElementById("footer-about").textContent = t("footerAbout");
-
-    for (const link of document.querySelectorAll("#rate-links a[data-rate-page]")) {
-      link.textContent = T[locale].ratePageLink(T[locale].tabs[link.dataset.ratePage]);
-    }
-
-    // 금리 다음에 볼 곳 문단은 빌드가 두 언어로 다 구워 두었다. 여기서는 지금 언어 것만 보인다.
+    // 금리 다음에 볼 곳 문단은 빌드가 두 언어로 구워 두었다. 지금 언어 것만 보인다.
     const bridgeKo = document.getElementById("rates-bridge");
     const bridgeEn = document.getElementById("rates-bridge-en");
     if (bridgeKo) bridgeKo.hidden = locale === "en";
     if (bridgeEn) bridgeEn.hidden = locale !== "en";
-
-    const month = fmtDisclosureMonth(cache.rates?.disclosureMonth);
-    document.getElementById("content-notice").textContent = month
-      ? `${T[locale].disclosure(month)} · ${t("notice")}`
-      : t("notice");
-
-    document.getElementById("updated").textContent = cache.rates?.updatedAt
-      ? `${t("updatedPrefix")} ${fmtUpdated(cache.rates.updatedAt)}`
-      : "-";
-
+    const words = NAV[locale];
+    document.getElementById("nav-digest").textContent = words.digest;
+    document.getElementById("nav-news").textContent = words.news;
+    document.getElementById("nav-realestate").textContent = words.realestate;
+    document.getElementById("nav-rates").textContent = words.rates;
+    document.getElementById("page-title").textContent = words.title;
+    document.getElementById("updated").textContent = words.updated;
+    document.getElementById("footer-about").textContent = words.about;
+    document.getElementById("footer-method").textContent = words.method;
+    document.getElementById("footer-privacy").textContent = words.privacy;
+    document.getElementById("footer-source").textContent = words.source;
     window.analytics?.pageView({ site_language: locale });
   }
 
-  /**
-   * 표 위 문단. 상품군마다 다른 것을 말하고, 말할 것이 없으면 통째로 비운다.
-   *
-   * 문장은 빌드가 네 상품군 것을 미리 계산해 페이지에 심어 둔 것이다. 여기서 다시
-   * 계산하지 않는 이유는, 같은 계산을 두 곳에 두면 고칠 때 두 곳을 같이 고쳐야 하고
-   * 한쪽을 잊으면 표와 문단이 서로 다른 말을 하기 때문이다.
-   */
-  const RATE_FACTS = (() => {
-    try {
-      return JSON.parse(document.getElementById("rate-facts-data")?.textContent || "{}");
-    } catch {
-      return {};
-    }
-  })();
-
-  function renderRateFacts() {
-    const said = RATE_FACTS[state.category]?.[locale] ?? [];
-    const ko = document.getElementById("rates-facts");
-    const en = document.getElementById("rates-facts-en");
-    // 문단은 언어마다 하나씩이고, 지금 언어 것만 보인다. 안 보이는 쪽은 비워 둔다 —
-    // 남겨 두면 언어를 바꿨을 때 지난 상품군의 문장이 잠깐 스친다.
-    const here = locale === "en" ? en : ko;
-    const other = locale === "en" ? ko : en;
-    if (other) {
-      other.textContent = "";
-      other.hidden = true;
-    }
-    if (!here) return;
-    here.textContent = said.join(" ");
-    here.hidden = said.length === 0;
-  }
-
-  function renderAll() {
-    renderMeta();
-    renderTabs();
-    renderControls();
-    renderProducts();
-    renderRateFacts();
-    renderHistory();
-  }
-
-  document.getElementById("show-more").addEventListener("click", (event) => {
-    if (event.target?.id !== "show-more-button") return;
-    state.limit += PAGE_SIZE;
-    renderProducts();
-    window.analytics?.event("rate_show_more", { rate_category: state.category, shown: String(state.limit) });
+  document.getElementById("theme-toggle").addEventListener("click", function () {
+    applyTheme(theme === "auto" ? "light" : theme === "light" ? "dark" : "auto");
+  });
+  document.getElementById("lang-toggle").addEventListener("click", function () {
+    applyLocale(locale === "ko" ? "en" : "ko");
   });
 
-  document.getElementById("products-head").addEventListener("click", (event) => {
-    const button = event.target.closest("[data-sort]");
-    if (!button) return;
-    toggleSort(button.dataset.sort);
-    resetLimit();
-    state.expanded.clear();
-    renderProducts();
-    const { key, dir } = activeSort();
-    window.analytics?.event("rate_sort", { sort_key: key, sort_dir: dir, rate_category: state.category });
-  });
-
-  document.getElementById("tabs").addEventListener("click", (event) => {
-    const tab = event.target.closest("[data-category]");
-    if (!tab) return;
-    state.category = tab.dataset.category;
-    resetLimit();
-    state.expanded.clear();
-    state.rateType = "";
-    renderTabs();
-    renderControls();
-    renderProducts();
-    renderRateFacts();
-    syncUrl({ push: true });
-    window.analytics?.event("rate_tab", { rate_category: state.category });
-  });
-
-  function syncUrl({ push = false } = {}) {
-    const next = new URLSearchParams(location.search);
-    for (const [key, value, empty] of [
-      ["tab", state.category, DEFAULT_CATEGORY],
-      ["term", String(state.term), "12"],
-      ["type", state.rateType, ""],
-      ["q", state.query.trim(), ""],
-      ["amt", String(currentAmount()), String(DEFAULT_AMOUNT[amountKey()])],
-    ]) {
-      if (value === empty) next.delete(key);
-      else next.set(key, value);
-    }
-    const query = next.toString();
-    const url = `${location.pathname}${query ? `?${query}` : ""}`;
-    if (url === `${location.pathname}${location.search}`) return;
-    history[push ? "pushState" : "replaceState"](null, "", url);
-  }
-
-  window.addEventListener("popstate", () => {
-    const current = new URLSearchParams(location.search);
-    state.category = CATEGORY_KEYS.includes(current.get("tab")) ? current.get("tab") : DEFAULT_CATEGORY;
-    state.term = Number(current.get("term")) || 12;
-    state.rateType = current.get("type") ?? "";
-    state.query = current.get("q") ?? "";
-    state.amounts[amountKey()] = readAmountParam(current) ?? DEFAULT_AMOUNT[amountKey()];
-    state.expanded.clear();
-    renderAll();
-  });
-
-  document.getElementById("lang-toggle").addEventListener("click", () => {
-    locale = locale === "ko" ? "en" : "ko";
-    window.localStorage.setItem("lang", locale);
-    renderAll();
-    window.analytics?.event("language_switch", { site_language: locale });
-  });
-
-  document.getElementById("theme-toggle").addEventListener("click", () => {
-    const order = ["auto", "light", "dark"];
-    applyTheme(order[(order.indexOf(theme) + 1) % order.length]);
-  });
-
-  document.getElementById("share-button").addEventListener("click", async () => {
-    const shareData = { title: t("shareTitle"), text: t("description"), url: location.href };
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-        window.analytics?.event("share", { method: "web_share" });
-      } else {
-        await navigator.clipboard.writeText(location.href);
-        window.analytics?.event("share", { method: "clipboard" });
-      }
-    } catch {
-    }
-  });
-
-  async function main() {
-    try {
-      cache.rates = await loadJson("rates");
-    } catch (err) {
-      console.error("[rates] 로드 실패:", err.message);
-      reportLoadFailure("rates", err, true);
-      // 표와 추이 구역이 같은 규칙(window.loadState)으로 실패를 말한다. 추이 자리를 빼먹으면
-      // 프리렌더가 박아 둔 "불러오는 중..."이 영구히 남는다(#173).
-      const retry = () => {
-        window.analytics?.event("load_retry", { rate_category: state.category });
-        main();
-      };
-      window.loadState.showFailure(document.getElementById("products-body"), {
-        message: t("loadError"),
-        retryLabel: t("retry"),
-        retryId: "load-retry",
-        wrap: (inner) => `<tr class="empty-row"><td>${inner}</td></tr>`,
-        onRetry: retry,
-      });
-      window.loadState.showFailure(document.getElementById("history-grid"), {
-        message: t("historyLoadError"),
-        retryLabel: t("retry"),
-        retryId: "load-retry-history",
-        wrap: (inner) => `<div class="placeholder" id="history-placeholder">${inner}</div>`,
-        onRetry: retry,
-      });
-      renderMeta();
-      return;
-    }
-
-    try {
-      cache.history = await loadJson("rates-history");
-    } catch (err) {
-      cache.history = [];
-      reportLoadFailure("rates-history", err, false);
-    }
-
-    renderAll();
-  }
-
-  main();
+  applyTheme(theme);
+  applyLocale(locale);
+})();
 </script>
 </body>
 </html>

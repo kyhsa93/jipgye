@@ -1229,7 +1229,7 @@ async function main() {
 
   for (const [file, path_, fileBlocks] of [
     ["docs/index.html", INDEX_PATH, blocks],
-    ["docs/rates.html", RATES_PATH, { rates: ratesHtml(rates), ratesHead: ratesHeadHtml(), rateFactsKo: rateFactsHtml(rates, "deposit", "ko"), rateFactsEn: rateFactsHtml(rates, "deposit", "en"), rateFactsData: jsonForScript(rateFactsData(rates)), rateBridgeKo: rateBridgeHtml("rates", "ko"), rateBridgeEn: rateBridgeHtml("rates", "en") }],
+    ["docs/rates.html", RATES_PATH, { rateBridgeKo: rateBridgeHtml("rates", "ko"), rateBridgeEn: rateBridgeHtml("rates", "en") }], // 허브: 표·상품군 문단은 상품군 페이지 넷이 그린다(#193)
     [
       "docs/news.html",
       NEWS_PATH,

@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.mjs";
 import { ratesHtml } from "../scripts/prerender.mjs";
+import { stampHtml } from "../scripts/updated-stamp.mjs";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -12,14 +13,17 @@ const readRates = () => read("docs/data/rates.json").then(JSON.parse);
 const productNames = (html) => [...html.matchAll(/class="product-name">([^<]*)/g)].map((m) => m[1].trim());
 
 test("커밋된 상품군별 페이지가 지금 원본·데이터로 찍은 결과와 같다", async () => {
-  const [baseHtml, rates] = await Promise.all([read("docs/rates.html"), readRates()]);
+  const [baseHtml, rates] = await Promise.all([read("scripts/rates-template.html"), readRates()]);
 
   for (const page of RATE_PAGES) {
     const built = buildRatePage(baseHtml, page, rates);
     const committed = await read(`docs/${page.file}`);
+    // 틀에는 기준일이 비어 있고 날짜는 build-updated-stamp가 나중에 찍는다. 커밋본의 날짜를 같이 찍어 견준다.
+    const ymd = /data-updated="(\d{4}-\d{2}-\d{2})"/.exec(committed)?.[1];
+    assert.ok(ymd, `docs/${page.file}에 기준일이 없다`);
     assert.equal(
       committed,
-      built,
+      stampHtml(built, ymd),
       `docs/${page.file}이 원본과 어긋납니다. node scripts/build-rate-pages.mjs를 실행하세요.`
     );
   }
@@ -70,10 +74,10 @@ test("모든 금리 페이지가 서로를 진짜 링크로 가리킨다", async
   }
 });
 
-test("원본 금리 페이지는 색인에서 빠지고, 상품군 페이지 넷만 남는다", async () => {
-  // docs/rates.html은 예금 탭을 먼저 그리는 파일이라 deposit-rates.html과 본문이
-  // 글자까지 같다. 둘 다 색인에 두면 검색엔진에는 완전히 같은 페이지 두 장이 된다.
-  // 내비게이션이 닿는 자리로는 남기되 색인은 상품군 페이지 넷에만 맡긴다.
+test("허브(rates.html)는 색인에서 빠지고, 상품군 페이지 넷만 남는다", async () => {
+  // 예전에는 rates.html이 예금 페이지와 본문이 글자까지 같아 둘 다 색인에 두면 같은 페이지 두 장이
+  // 됐다. 지금 rates.html은 링크만 있는 허브(#193)라 그 이유는 없어졌지만 noindex는 그대로 둔다.
+  // 여기서는 상품군 장이 허브의 noindex를 물려받지 않는지 본다(허브 쪽 단언은 test/rate-hub.test.mjs와 겹친다).
   const base = await read("docs/rates.html");
   assert.match(base, /<meta name="robots" content="noindex, follow">/);
 
@@ -82,18 +86,7 @@ test("원본 금리 페이지는 색인에서 빠지고, 상품군 페이지 넷
     assert.match(
       html,
       /<meta name="robots" content="index, follow">/,
-      `docs/${page.file}이 원본의 noindex를 그대로 물려받았습니다`
+      `docs/${page.file}이 허브의 noindex를 그대로 물려받았습니다`
     );
   }
-});
-
-test("원본과 예금 페이지가 같은 표를 그린다는 것을 잊지 않는다", async () => {
-  // 이 단언이 깨졌다면 rates.html이 예금 페이지와 다른 것을 그리기 시작했다는 뜻이고,
-  // 그러면 색인에서 빼 둔 이유가 사라진다. 위 검사와 함께 다시 판단할 것.
-  const rates = await readRates();
-  assert.equal(
-    ratesHtml(rates, { category: "deposit" }),
-    ratesHtml(rates),
-    "rates.html이 이제 예금 페이지와 다른 표를 그립니다 — noindex를 유지할 이유를 다시 보세요"
-  );
 });
