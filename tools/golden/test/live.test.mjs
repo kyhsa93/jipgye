@@ -1,4 +1,4 @@
-import test from "node:test";
+import test, { after } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
@@ -26,10 +26,16 @@ const say = (...a) => console.log("GOLDEN-LIVE", ...a);
 const git = (...a) => spawnSync("git", ["-C", REPO, ...a], { encoding: "utf8" }).stdout.trim();
 
 let pristine;
+let basePristine;
 async function getPristine() {
   pristine ??= await preparePristine({ repo: REPO, sha: SHA });
   return pristine;
 }
+// 정리는 모든 시험이 같은 방식으로 한다(#263): pristine.dispose(). SHA 캐시는 남고(개수 상한이 정리) --src 스냅숏이면 지워진다.
+after(async () => {
+  await pristine?.dispose();
+  await basePristine?.dispose();
+});
 const dayAfter = (iso, n = 1) => new Date(Date.parse(iso) + n * 86400000).toISOString();
 
 async function pair(env, { a = {}, b = {} } = {}) {
@@ -125,7 +131,7 @@ test("시각 의존 확인: BUILD_NOW를 하루 다르게 준 두 렌더는 정�
 
 test("BUILD_NOW 미설정이면 현행 코드와 바이트 동일 (Date.now를 같은 값으로 모킹한 변경 전·후 비교)", { ...opts, skip: LIVE && BASE_SHA ? false : opts.skip || "GOLDEN_BASE_SHA가 없다" }, async () => {
   const mock = NOW;
-  const base = await preparePristine({ repo: REPO, sha: BASE_SHA });
+  const base = (basePristine = await preparePristine({ repo: REPO, sha: BASE_SHA }));
   const head = await getPristine();
   say("변경 전", base.label, "변경 후", head.label, "Date.now 모킹", mock);
   const a = await renderIsolated(base, { mockNow: mock });
