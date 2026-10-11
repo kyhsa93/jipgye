@@ -21,8 +21,10 @@ import { BASIS_DATE as POLICY_DATE_BASIS, policyShort, policySentence } from "./
 import { BASIS_DATE as MIN_CASH_DATE, minCash, minCashSentence } from "./min-cash.mjs";
 import { WOLSE_CONVERSION_RATE } from "./realestate-metrics.mjs";
 import { rateBridgeHtml } from "./rate-bridge.mjs";
+import { metricCell, topDistricts } from "./realestate-rows.mjs";
 import {
   KIND_FIELDS,
+  MIN_SAMPLE,
   areaPrice,
   formatEok,
   formatMan,
@@ -49,12 +51,9 @@ const SWITCH_PATH = path.join(root, "docs/switch-house.html");
 const METHOD_PATH = path.join(root, "docs/method.html");
 const DATA_DIR = path.join(root, "docs/data");
 
-export const MIN_SAMPLE = 5;
-// 첫 화면에 그리는 자치구 수. 모바일에서 표는 행마다 카드로 펼쳐지므로
-// 열한 행이면 요약까지 1,500px을 내려야 한다. 나머지는 표 밑 '더 보기'로 편다.
-// index.html의 MAX_VISIBLE_DISTRICTS와 같아야 한다 - 다르면 자바스크립트가
-// 붙는 순간 표 길이가 튀고, 그걸 index-realestate-rows 검사가 잡는다.
-const MAX_DISTRICTS = 4;
+// 표본 문턱은 realestate-format.mjs의 것 하나다(예전엔 여기에도 하나 더 있었다). 이 모듈에서 import하던 쪽을 위해 다시 내보낸다.
+export { MIN_SAMPLE };
+// MAX_DISTRICTS(첫 화면에 그리는 자치구 수)는 칸·정렬 규칙과 함께 realestate-rows.mjs로 옮겼다(JSX 쪽 조각과 같이 쓴다, #241 PR 3).
 
 // escapeHtml과 linksBlockHtml은 순수 모듈로 옮겼다(JSX 쪽 조각과 같이 쓴다, #241 PR 2). 다른 모듈이 여기서 import하던 이름은 그대로 둔다.
 export { escapeHtml };
@@ -96,63 +95,31 @@ function marketHtmlLegacy(market) {
 }
 export const marketHtml = fragment("marketHtml", marketHtmlLegacy);
 
-const man = (value) => `${Number(value).toLocaleString("ko-KR")}만원`;
+// 칸이 어떤 모양인지(없음·표본 부족·값)와 값의 글자는 realestate-rows.mjs가 정하고, 여기서는 마크업만 입힌다.
+// 표본 건수(count)는 숫자가 아니어도 그대로 적는다 - 이스케이프하지 않는 것도 예전 그대로다(건수는 숫자로만 들어온다).
+const lowSampleText = (count) =>
+  `<span class="low-sample" title="신고 ${count}건이라 평균을 내기엔 표본이 부족합니다">` +
+  `표본 ${count}건</span>`;
 
-const lowSampleText = (metric) =>
-  `<span class="low-sample" title="신고 ${metric.transactionCount}건이라 평균을 내기엔 표본이 부족합니다">` +
-  `표본 ${metric.transactionCount}건</span>`;
-
-const changeText = (change) => {
-  if (!change || typeof change.value10k !== "number") return "";
-  const sign = change.value10k > 0 ? "+" : change.value10k < 0 ? "-" : "";
-  return ` <span class="change">${sign}${Math.abs(change.value10k).toLocaleString("ko-KR")}만</span>`;
+const cellHtml = (kind, metric) => {
+  const cell = metricCell(kind, metric);
+  if (cell.type === "none") return "-";
+  if (cell.type === "low") return lowSampleText(cell.count);
+  const change = cell.change ? ` <span class="change">${cell.change.sign}${cell.change.text}</span>` : "";
+  const count = cell.count ? ` <span class="count">${cell.count}</span>` : "";
+  return `${cell.text}${change}${count}`;
 };
-const countText = (metric) =>
-  typeof metric?.transactionCount === "number"
-    ? ` <span class="count">${metric.transactionCount.toLocaleString("ko-KR")}건</span>`
-    : "";
-const enough = (metric) => Boolean(metric) && (metric.transactionCount ?? 0) >= MIN_SAMPLE;
-
-const metricCell = (metric, valueText) => {
-  if (!metric) return "-";
-  if (!enough(metric)) return lowSampleText(metric);
-  return valueText(metric) ?? "-";
-};
-
-const saleCell = (sale) =>
-  metricCell(sale, (m) =>
-    m.avgPricePerPyeong10k ? `${man(m.avgPricePerPyeong10k)}${changeText(m.change)}${countText(m)}` : null
-  );
-const jeonseCell = (jeonse) =>
-  metricCell(jeonse, (m) =>
-    m.avgDepositPerPyeong10k ? `${man(m.avgDepositPerPyeong10k)}${changeText(m.change)}${countText(m)}` : null
-  );
-const wolseCell = (wolse) =>
-  metricCell(wolse, (m) =>
-    m.avgDeposit10k ? `${man(m.avgDeposit10k)} / 월 ${man(m.avgMonthlyRent10k)}${countText(m)}` : null
-  );
 
 function realestateHtmlLegacy(realestate) {
   if (!realestate?.overall) return null;
 
-  const priceOf = (d) => ((d.sale?.transactionCount ?? 0) >= MIN_SAMPLE ? d.sale?.avgPricePerPyeong10k ?? null : null);
-  const districts = [...(realestate.districts ?? [])]
-    .sort((a, b) => {
-      const [x, y] = [priceOf(a), priceOf(b)];
-      if (x === y) return 0;
-      if (x === null) return 1;
-      if (y === null) return -1;
-      return y - x;
-    })
-    .slice(0, MAX_DISTRICTS);
-
   const row = (name, data) =>
     `<tr><td>${escapeHtml(name)}</td>` +
-    `<td data-label="매매">${saleCell(data.sale)}</td>` +
-    `<td data-label="전세">${jeonseCell(data.jeonse)}</td>` +
-    `<td data-label="월세">${wolseCell(data.wolse)}</td></tr>`;
+    `<td data-label="매매">${cellHtml("sale", data.sale)}</td>` +
+    `<td data-label="전세">${cellHtml("jeonse", data.jeonse)}</td>` +
+    `<td data-label="월세">${cellHtml("wolse", data.wolse)}</td></tr>`;
 
-  return [row("서울 전체", realestate.overall), ...districts.map((d) => row(d.name, d))].join("");
+  return [row("서울 전체", realestate.overall), ...topDistricts(realestate).map((d) => row(d.name, d))].join("");
 }
 export const realestateHtml = fragment("realestateHtml", realestateHtmlLegacy);
 

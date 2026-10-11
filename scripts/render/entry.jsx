@@ -5,9 +5,10 @@
 // 이식된 것: ratesHtml·ratesHeadHtml (#240, 금리 4개 상품군), summaryHtml·marketHtml·newsContextHtml·newsHtml·newsSummaryHtml·
 // newsListHtml·newsKospiHtml·newsRealestateStatsHtml (#241 PR 1, 문장·목록 8개), conversionLeadHtml·cancelLeadHtml·cancelMonthLeadHtml·
 // renewalLeadHtml·renewalCapLeadHtml·renewalWolseLeadHtml·conversionDistrictLinksHtml·cancelDistrictLinksHtml·renewalDistrictLinksHtml·
-// floorDistrictLinksHtml (#241 PR 2, 리드·링크 10개). #241 나머지와 #242~#243이 이어서 채운다.
+// floorDistrictLinksHtml (#241 PR 2, 리드·링크 10개), realestateHtml (#241 PR 3, 첫 화면 실거래 요약). #242~#243이 이어서 채운다.
 import { slugLinkEntries, slugLinkHref } from "../district-links.mjs";
 import { indexNewsItems } from "../news-items.mjs";
+import { metricCell, topDistricts } from "../realestate-rows.mjs";
 import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "../rates-table.mjs";
 
 // legacy `escapeHtml(value)`의 값 변환(`String(value ?? "")`). React는 문자열·숫자만 글자로 내고 false·null·객체·배열은 비우거나 다르게 내거나 던지므로,
@@ -245,11 +246,75 @@ function slugLinks(data) {
   );
 }
 
+// ---- 첫 화면 실거래 요약 (#241 PR 3) ----
+
+// 표 한 칸. 칸의 모양(없음·표본 부족·값)과 글자는 realestate-rows.mjs가 정하고(legacy와 같은 함수), 여기서는 마크업만 입힌다.
+// 표본 부족은 값을 내지 않고 "표본 N건"이라 적는다(DIRECTION 해자 2). 건수는 legacy가 문자열에 그대로 끼우던 것이라 템플릿으로 끼운다
+// (undefined·null·false도 "undefined"·"null"·"false"로 나온다 - React가 비워 버리지 않게).
+// 공백은 {" "}로 낸다 - JSX는 줄 끝 공백을 지운다.
+const MetricCell = ({ kind, metric }) => {
+  const cell = metricCell(kind, metric);
+  if (cell.type === "none") return "-";
+  if (cell.type === "low") {
+    return (
+      <span className="low-sample" title={`신고 ${cell.count}건이라 평균을 내기엔 표본이 부족합니다`}>
+        {`표본 ${cell.count}건`}
+      </span>
+    );
+  }
+  return (
+    <>
+      {cell.text}
+      {cell.change ? (
+        <>
+          {" "}
+          <span className="change">{`${cell.change.sign}${cell.change.text}`}</span>
+        </>
+      ) : null}
+      {cell.count ? (
+        <>
+          {" "}
+          <span className="count">{cell.count}</span>
+        </>
+      ) : null}
+    </>
+  );
+};
+
+const RealestateRow = ({ name, data }) => (
+  <tr>
+    <td>{str(name)}</td>
+    <td data-label="매매">
+      <MetricCell kind="sale" metric={data.sale} />
+    </td>
+    <td data-label="전세">
+      <MetricCell kind="jeonse" metric={data.jeonse} />
+    </td>
+    <td data-label="월세">
+      <MetricCell kind="wolse" metric={data.wolse} />
+    </td>
+  </tr>
+);
+
+// 서울 전체 한 줄 + 매매 평당가 상위 자치구(정렬·자름은 topDistricts, legacy와 같은 함수).
+function realestate(data) {
+  if (!data?.overall) return null;
+  return (
+    <>
+      <RealestateRow name="서울 전체" data={data.overall} />
+      {topDistricts(data).map((d, i) => (
+        <RealestateRow key={i} name={d.name} data={d} />
+      ))}
+    </>
+  );
+}
+
 export const fragments = {
   ratesHeadHtml: ratesHead,
   ratesHtml: ratesRows,
   summaryHtml: summary,
   marketHtml: market,
+  realestateHtml: realestate,
   newsContextHtml: (context) => <NewsContext context={context} />,
   newsHtml: newsIndex,
   newsSummaryHtml: newsSummary,
