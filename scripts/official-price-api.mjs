@@ -27,8 +27,13 @@ export const OP_PRICE = "getBrHsprcInfo";
 export const OP_AREA = "getBrExposPubuseAreaInfo";
 /** 서버 쪽당 100건 상한(시험: numOfRows=999도 100). */
 export const PAGE_SIZE = 100;
-/** 지번당 쪽 상한. 시험의 최대는 약 308쪽(30,734행)이었다. 걸리면 그 지번은 값을 쓰지 않고 지번 수만 센다. */
-export const MAX_PAGES_PER_PARCEL = 400;
+/**
+ * 지번당 쪽 상한. 탐색(E3)에서 큰 단지의 면적 응답이 최대 1,070쪽, hsprc가 최대 286쪽이었다(관측 최대 1.4배 여유로 1,500).
+ * 걸리면 그 지번은 값을 쓰지 않고 지번 수만 센다. 면적 pageNo는 활용가이드에 3자리로 적혀 있어 서버가 999 초과를 거절할 수 있다 -
+ * 탐색 모드의 pageNo 1,000 시험(official-price-explore.mjs (g))이 거절하면 후속(PR-A2)으로 면적을 dongNm(요청 파라미터)별로
+ * 나눠 받는다. 이 상수를 올리는 것으로는 해결되지 않는다.
+ */
+export const MAX_PAGES_PER_PARCEL = 1500;
 export const DEFAULT_START_DATE = "20250101";
 export const DEFAULT_END_DATE = "20261231";
 export const DEFAULT_DAILY_BUDGET = 9000;
@@ -127,7 +132,8 @@ export function makeClient({ baseUrl = DEFAULT_BASE, key, budget, gapMs = MIN_GA
   const st = { calls: 0, last: 0, consecutiveFail: 0, errCodes: {}, firstLimitAt: null, perOp: {} };
   return {
     st,
-    async page(op, t, pageNo, extra = {}) {
+    /** 쪽 하나를 요청하되 결과코드는 해석하지 않는다. 반환 {res, text}. 연결 실패는 ParcelFailed. 탐색의 pageNo 시험과 page()가 같이 쓴다. */
+    async send(op, t, pageNo, extra = {}) {
       if (st.calls >= budget) throw new StopRun("호출 예산 소진");
       if (now() >= deadlineMs) throw new StopRun("실행 시간 상한");
       const gap = st.last + gapMs - now();
@@ -147,6 +153,11 @@ export function makeClient({ baseUrl = DEFAULT_BASE, key, budget, gapMs = MIN_GA
         bump(st.errCodes, `${e?.name ?? "Error"}/${e?.cause?.code ?? "-"}`); // 메시지·URL은 쓰지 않는다
         throw new ParcelFailed("호출 실패");
       }
+      return { res, text };
+    },
+    async page(op, t, pageNo, extra = {}) {
+      const { res, text: body } = await this.send(op, t, pageNo, extra);
+      let text = body;
       if (res.status === 401 || res.status === 403) { bump(st.errCodes, `HTTP ${res.status}`); throw new ApiFatalError(`HTTP ${res.status} 권한 오류 - 키·활용신청을 확인할 것`); }
       if (res.status === 429) { bump(st.errCodes, "HTTP 429"); st.firstLimitAt ??= { calls: st.calls, perOp: { ...st.perOp }, op, code: "429" }; throw new StopRun("HTTP 429"); }
       const r = extract(text);
@@ -164,25 +175,33 @@ export function makeClient({ baseUrl = DEFAULT_BASE, key, budget, gapMs = MIN_GA
   };
 }
 
+/** 첫 쪽 응답 {total, items}로 본 필요한 쪽 수. totalCount를 못 읽으면 1(검증은 fetchParcelOp가 던진다). */
+export function planPages(first) {
+  const total = first.total;
+  if (!Number.isInteger(total) || total < 0) return 1;
+  return Math.max(1, Math.ceil(total / Math.max(1, Math.min(PAGE_SIZE, first.items.length || PAGE_SIZE))));
+}
+
 /**
  * 한 지번의 한 오퍼레이션을 모든 쪽 받는다. 첫 쪽의 totalCount로 필요한 쪽 수를 알고,
  * 쪽 상한을 넘으면 {capped:true}로 첫 쪽 뒤에 멈춘다(값 없음). 쪽 합이 totalCount와 다르면 던진다.
+ * first가 주어지면 그 응답을 1쪽으로 쓴다(호출 안 함) - 호출한 쪽이 상한·예산을 먼저 보려고 1쪽을 미리 받은 경우.
  * 반환: {total, pages, items(허용 필드만), capped}
  */
-export async function fetchParcelOp(client, op, kind, t, extra, { issues, onPlan, onRaw } = {}) {
+export async function fetchParcelOp(client, op, kind, t, extra, { issues, onPlan, onRaw, first, maxPages = MAX_PAGES_PER_PARCEL } = {}) {
   const items = [];
   let total = 0;
   let pageSize = PAGE_SIZE;
   let pages = 1;
   for (let p = 1; p <= pages; p += 1) {
-    const r = await client.page(op, t, p, extra);
+    const r = p === 1 && first ? first : await client.page(op, t, p, extra);
     if (p === 1) {
       total = r.total;
       if (!Number.isInteger(total) || total < 0) { const m = "totalCount를 읽을 수 없다"; if (issues) bump(issues, "total-unreadable"); else throw new ApiValidationError(m, "total"); }
       if (total > 0 && r.items.length === 0) { if (issues) bump(issues, "first-page-empty"); else throw new ApiValidationError("첫 쪽이 비었는데 totalCount가 0이 아니다", "pages-sum"); }
       pageSize = Math.max(1, Math.min(PAGE_SIZE, r.items.length || PAGE_SIZE));
       pages = Math.max(1, Math.ceil(total / pageSize));
-      if (pages > MAX_PAGES_PER_PARCEL) return { total, pages, items: [], capped: true };
+      if (pages > maxPages) return { total, pages, items: [], capped: true };
       onPlan?.(pages);
     } else if (r.total !== total) {
       if (issues) bump(issues, "total-changed"); else throw new ApiValidationError("쪽마다 totalCount가 다르다", "total-changed");
@@ -392,14 +411,21 @@ export async function runCollector(opts) {
   const {
     key, targets, outDir, rawCommit, startDate = DEFAULT_START_DATE, endDate = DEFAULT_END_DATE, budget = DEFAULT_DAILY_BUDGET,
     gapMs = MIN_GAP_MS, deadlineMs = Infinity, softDeadlineMs = Infinity, license, licenseChecked, now = new Date(), fetchImpl, baseUrl, log = () => {},
+    maxPages = MAX_PAGES_PER_PARCEL, // 시험용으로만 줄인다
   } = opts;
   const y0 = Number(startDate.slice(0, 4));
   const y1 = Number(endDate.slice(0, 4));
   const years = [];
   for (let y = y0; y <= y1; y += 1) years.push(y);
-  const summary = { status: "", years, calls: 0, finishedNow: 0, cappedParcels: 0, abandoned: 0, stopReason: null, wrote: [], merged: false };
+  const summary = { status: "", years, maxPages, calls: 0, finishedNow: 0, cappedParcels: 0, abandoned: 0, stopReason: null, wrote: [], merged: false };
 
-  if (await isComplete(outDir, years)) { summary.status = "complete"; log("공시가격 API 수집은 이미 끝났다(병합 파일 있음). 호출 없이 종료한다."); return summary; }
+  if (await isComplete(outDir, years)) {
+    summary.status = "complete";
+    // 병합 뒤에는 상한을 올려도 빠진 지번을 받을 길이 없다 - 몇 개가 빠진 채 병합됐는지만 알린다(지번 수, 키 아님).
+    try { summary.cappedInMerged = JSON.parse(await readFile(path.join(outDir, `${years[0]}.json`), "utf8")).meta?.cappedParcels ?? null; } catch { summary.cappedInMerged = null; }
+    log("공시가격 API 수집은 이미 끝났다(병합 파일 있음). 호출 없이 종료한다.");
+    return summary;
+  }
   const lic = checkLicense({ license, checked: licenseChecked, now });
   if (!/^[0-9a-f]{40}$/.test(rawCommit ?? "")) throw new ApiValidationError("rawCommit이 40자리 커밋 해시가 아니다", "input");
   if (!key) throw new ApiValidationError("PUBLIC_DATA_PORTAL_API_KEY가 비었다", "input");
@@ -414,15 +440,24 @@ export async function runCollector(opts) {
   for (const [k, t] of pending) {
     if (Date.now() >= softDeadlineMs) { stopped = "실행 시간 상한(새 지번 시작 안 함)"; break; }
     try {
-      // 첫 쪽의 totalCount로 필요한 쪽 수를 알면 남은 예산으로 이 지번을 끝낼 수 있는지 본다 - 못 끝내면 시작한 일을 버리지 않고 여기서 멈춘다.
+      // 순서: hsprc 1쪽 -> (주택가격이 있으면) 면적 1쪽 -> 두 쪽 수로 상한·예산을 본 뒤에야 나머지 쪽을 받는다.
+      // 상한 지번은 쪽 상한 판정(면적 첫 쪽의 totalCount)까지 호출이 2회뿐이라 매 실행 hsprc 전체를 다시 받는 낭비가 없다.
+      // 못 끝낼 예산이면 시작한 일을 버리지 않고 여기서 멈춘다(받은 쪽은 버려지고 다음 실행에 처음부터).
       const afford = (more) => { if (client.st.calls + more > budget) throw new StopRun("호출 예산 소진(이 지번을 끝낼 예산이 모자라 다음 실행으로)"); };
-      const price = await fetchParcelOp(client, OP_PRICE, "price", t, { startDate, endDate }, { onPlan: (p) => afford(p - 1 + 1) });
-      if (price.capped) { summary.cappedParcels += 1; continue; }
+      const priceFirst = await client.page(OP_PRICE, t, 1, { startDate, endDate });
+      const pricePages = planPages(priceFirst);
+      if (pricePages > maxPages) { summary.cappedParcels += 1; continue; }
+      let price;
       let areaItems = [];
-      if (price.items.length > 0) { // 2025·2026 주택가격이 없는 지번은 면적을 받지 않는다
-        const area = await fetchParcelOp(client, OP_AREA, "area", t, {}, { onPlan: (p) => afford(p - 1) });
-        if (area.capped) { summary.cappedParcels += 1; continue; }
-        areaItems = area.items;
+      if (priceFirst.items.length === 0) { // 2025·2026 주택가격이 없는 지번은 면적을 받지 않는다(1쪽 검증만)
+        price = await fetchParcelOp(client, OP_PRICE, "price", t, { startDate, endDate }, { first: priceFirst, maxPages });
+      } else {
+        const areaFirst = await client.page(OP_AREA, t, 1, {});
+        const areaPages = planPages(areaFirst);
+        if (areaPages > maxPages) { summary.cappedParcels += 1; continue; }
+        afford(pricePages - 1 + areaPages - 1);
+        price = await fetchParcelOp(client, OP_PRICE, "price", t, { startDate, endDate }, { first: priceFirst, maxPages });
+        areaItems = (await fetchParcelOp(client, OP_AREA, "area", t, {}, { first: areaFirst, maxPages })).items;
       }
       finished.push({ k, t, byYear: foldParcel(price.items, areaItems, years) }); // 호 단위 값은 여기서 버려진다
     } catch (e) {
@@ -477,9 +512,13 @@ export async function runCollector(opts) {
 export function summaryLines(s, budget) {
   const L = [];
   L.push("## 공시가격 API 수집(#68) - 집계만");
-  if (s.status === "complete") { L.push("- 이미 끝남: 병합 파일이 있어 호출하지 않았다."); return L; }
+  if (s.status === "complete") {
+    L.push("- 이미 끝남: 병합 파일이 있어 호출하지 않았다.");
+    if (s.cappedInMerged > 0) L.push(`- 주의: 쪽 상한 때문에 값이 빠진 채 병합된 지번이 ${s.cappedInMerged}개 있다(상한을 올려도 병합 뒤에는 받지 않는다 - pm에 올릴 것).`);
+    return L;
+  }
   L.push(`- 대상 지번 ${s.targetParcels}, 끝난 지번 ${s.doneNow}(이번 ${s.finishedNow}, 이전 ${s.doneBefore}), 남은 지번 ${s.targetParcels - s.doneNow}`);
-  L.push(`- 이번 호출 ${s.calls}회(예산 ${budget}), 지금까지 ${s.callsSoFar}회. 버린 지번(일시 오류) ${s.abandoned}, 쪽 상한(${MAX_PAGES_PER_PARCEL}쪽) 지번 ${s.cappedParcels}`);
+  L.push(`- 이번 호출 ${s.calls}회(예산 ${budget}), 지금까지 ${s.callsSoFar}회. 버린 지번(일시 오류) ${s.abandoned}, 쪽 상한(${s.maxPages ?? MAX_PAGES_PER_PARCEL}쪽) 지번 ${s.cappedParcels}(지번 수만 적는다)`);
   if (s.errCodes && Object.keys(s.errCodes).length) L.push(`- 오류 분류: ${JSON.stringify(s.errCodes)}`);
   L.push(`- 중단: ${s.stopReason ?? "없음(남은 지번을 끝까지 돌았다)"}`);
   if (s.projection) L.push(`- 투영: 지번당 평균 ${s.projection.perParcel.toFixed(1)}회 -> 총 ${s.projection.total}회, 남은 ${s.projection.left}회 = 약 ${s.projection.days}일(하루 ${budget}회 기준)`);

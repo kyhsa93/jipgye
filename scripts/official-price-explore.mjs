@@ -9,12 +9,15 @@
  *  (d) 면적 응답의 쪽별 전유 행 분포, hsprc로 알게 된 호가 전유 행에 다 나오는 쪽(조기 종료 가능성)
  *  (e) 일 한도가 서비스 단위인지 오퍼레이션 단위인지의 단서(한도 코드가 나온 시점의 오퍼레이션별 호출 수, 다른 오퍼레이션 한 번 더 호출)
  *  (f) 이 표본으로 본 서울 전체 투영 호출 수
+ *  (g) 면적 pageNo 3자리 가정 시험: 큰 단지 중 면적 쪽 수가 가장 큰 지번에 pageNo=999·1000을 한 번씩 요청해 HTTP 상태·결과코드·항목 수만 센다.
+ *      1,000이 거절되면 후속(PR-A2)으로 면적을 dongNm(요청 파라미터)별로 나눠 받는다 - 동명은 메모리에서만 쓰고 출력·저장하지 않으며,
+ *      나눈 요청의 쪽 합이 totalCount 합과 같아야 완료로 친다. 이 파일은 시험만 하고 분할은 구현하지 않는다.
  *
  * 출력은 집계뿐이다(C1): 호 단위 값·PK·지번 키·응답 원문이 없다. 검증이 어긋나도(범위 밖 stdDay, 쪽 합 불일치, 필수 필드 누락,
  * 소유자 계열 키) 던지지 않고 건수로 센다 - 탐색의 목적이 그 분포를 보는 것이다. 키 이름(스키마)은 출력하되 값은 아니다.
  */
 import { orderTargets } from "./official-price-targets.mjs";
-import { ApiFatalError, OP_AREA, OP_PRICE, OWNER_KEY_RE, PAGE_SIZE, ParcelFailed, StopRun, AREA_FIELDS, PRICE_FIELDS, bump, fetchParcelOp, makeClient } from "./official-price-api.mjs";
+import { ApiFatalError, MAX_PAGES_PER_PARCEL, OP_AREA, OP_PRICE, OWNER_KEY_RE, PAGE_SIZE, ParcelFailed, StopRun, AREA_FIELDS, PRICE_FIELDS, bump, fetchParcelOp, makeClient, extract } from "./official-price-api.mjs";
 
 const quant = (arr, q) => { if (!arr.length) return null; const s = [...arr].sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.floor(q * s.length))]; };
 const mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);
@@ -51,11 +54,14 @@ export async function runExplore(opts) {
   let doneSample = 0;
   let doneBig = 0;
   let limitProbe = null;
+  let bigBest = null; // 큰 단지 중 면적 쪽 수가 가장 큰 지번(pageNo 시험 대상). 키는 출력하지 않는다.
+  let pageProbe = null;
 
   const one = async (t, group) => {
     const price = await fetchParcelOp(client, OP_PRICE, "price", t, { startDate, endDate }, { issues: issues.price, onRaw: (r) => { for (const k of Object.keys(r)) keysSeen.price.add(k); } });
     const area = await fetchParcelOp(client, OP_AREA, "area", t, {}, { issues: issues.area, onRaw: (r) => { for (const k of Object.keys(r)) keysSeen.area.add(k); } });
     const g = group === "big" ? C.big : C.sample;
+    if (group === "big" && (!bigBest || area.pages > bigBest.pages)) bigBest = { t, pages: area.pages };
     g.price.push(price.total); g.area.push(area.total); g.pricePages.push(price.pages); g.areaPages.push(area.pages);
     if (price.capped || area.capped) { if (group !== "big") C.sample.truncated += 1; return; }
 
@@ -128,6 +134,18 @@ export async function runExplore(opts) {
   };
   if (await run(sample, "sample")) await run(big, "big");
 
+  // (g) pageNo 999·1000 시험. 결과코드는 해석하지 않고(던지지 않고) 상태·코드·항목 수만 센다. 응답 원문·항목 값은 보관하지 않는다.
+  if (bigBest && !stopped && !fatal) {
+    pageProbe = { pages: bigBest.pages, results: [] };
+    for (const pageNo of [999, 1000]) {
+      try {
+        const { res, text } = await client.send(OP_AREA, bigBest.t, pageNo, {});
+        const r = extract(text);
+        pageProbe.results.push({ pageNo, http: res.status, code: r.code, items: r.items.length, total: r.total, nonJson: Boolean(r.nonJson) });
+      } catch (e) { pageProbe.results.push({ pageNo, error: e instanceof StopRun ? e.reason : "연결 실패" }); break; }
+    }
+  }
+
   // ---- 출력(집계뿐) ----
   const L = [];
   const calls = client.st.calls;
@@ -150,7 +168,7 @@ export async function runExplore(opts) {
   L.push(`- 호 집합: 2025 기준 호 ${A.pk25}, 2026 기준 호 ${A.pk26}, 둘 다에 있는 호 ${A.both} (2026 호 중 ${pct(A.both, A.pk26)}가 2025에도 있음, 2025 호 중 ${pct(A.both, A.pk25)}가 2026에도 있음)`);
   L.push("### (c) 큰 단지의 실제 totalCount (지번 키 없이 값만)");
   L.push(`- 큰 단지 hsprc totalCount: ${dist(C.big.price)}; 면적 totalCount: ${dist(C.big.area)}`);
-  L.push(`- 큰 단지 쪽 수 hsprc ${dist(C.big.pricePages)}; 면적 ${dist(C.big.areaPages)}; 쪽 상한 초과 여부는 쪽 수 최대가 400을 넘는지로 본다`);
+  L.push(`- 큰 단지 쪽 수 hsprc ${dist(C.big.pricePages)}; 면적 ${dist(C.big.areaPages)}; 쪽 상한(${MAX_PAGES_PER_PARCEL}쪽) 초과 여부는 쪽 수 최대가 그 값을 넘는지로 본다`);
   L.push(`- 일반 표본 hsprc totalCount ${dist(C.sample.price)}; 면적 totalCount ${dist(C.sample.area)}; 쪽 상한 초과 ${C.sample.truncated}지번`);
   L.push("### (d) 면적 응답의 쪽별 전유 행 분포");
   L.push(`- 쪽 구간별 [전체 행, 전유 행, 전유 비율]: ${JSON.stringify(Object.fromEntries(Object.entries(D.pages).map(([b, v]) => [b, [v.rows, v.expos, pct(v.expos, v.rows)]])))}`);
@@ -170,5 +188,16 @@ export async function runExplore(opts) {
     L.push(`- 면적 조기 종료를 쓰면(위 (d) 비율 적용) 지번당 약 ${(m - areaMean * saveRatio).toFixed(1)}회 -> 총 ${Math.round((m - areaMean * saveRatio) * n)}회. 본 수집에는 아직 조기 종료가 없다.`);
     L.push(`- 이 표본이 지번 ${per.length}개라 이틀치(약 ${Math.round(2 * dailyBudget / m)}지번) 표본보다 작으면 오차가 크다. 표본이 모자라면 본 수집의 일일 요약(투영)이 같은 수치를 매일 갱신한다.`);
   } else L.push("- 표본이 부족해 계산하지 못했다.");
+  L.push("### (g) 면적 pageNo 3자리 시험 (큰 단지 중 면적 쪽 수 최대 지번, 지번 키 없이 숫자만)");
+  if (!pageProbe) L.push("- 시험하지 못했다(큰 단지를 받지 못했거나 중단됨).");
+  else {
+    L.push(`- 시험 지번의 면적 쪽 수 ${pageProbe.pages}${pageProbe.pages >= 1000 ? "" : " (1,000쪽 미만이라 빈 응답과 거절을 쪽 번호로는 구분하지 못한다 - 결과코드·HTTP로만 본다)"}`);
+    for (const x of pageProbe.results) {
+      if (x.error) { L.push(`- pageNo=${x.pageNo}: 요청하지 못함(${x.error})`); continue; }
+      const verdict = x.http !== 200 || x.code !== "00" ? "거절 의심(HTTP 200·결과코드 00이 아님)" : x.items > 0 ? "정상(항목 있음)" : pageProbe.pages >= x.pageNo ? "빈 응답인데 그 쪽이 있어야 한다(거절로 본다)" : "빈 응답(그 쪽이 없는 지번이라 정상 범위 밖)";
+      L.push(`- pageNo=${x.pageNo}: HTTP ${x.http}, 결과코드 ${x.code}${x.nonJson ? "(JSON 아님)" : ""}, 항목 ${x.items}건, totalCount ${x.total} -> ${verdict}`);
+    }
+    L.push("- 1,000쪽이 거절이면 상한을 올려도 999쪽 넘는 지번은 받지 못한다 -> 후속: 면적을 dongNm별로 나눠 받는다(PR-A2).");
+  }
   return { lines: L, calls, fatal: Boolean(fatal) };
 }

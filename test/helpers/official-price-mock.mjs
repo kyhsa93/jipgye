@@ -32,6 +32,7 @@ const envelope = (items, total, code = "00") => JSON.stringify({ response: { hea
 /**
  * 서버를 연다. universe: Map<지번키, {hsprc, area}>. 옵션:
  *  limitAfter: 이 호출 수 뒤부터 XML 한도 코드 22, status401: 401, mutate(op, items, ctx)->items (응답을 일부러 망가뜨림),
+ *  failKeys: Set<지번키> (그 지번은 결과코드 99), rejectPageAbove: 이 쪽 번호 초과는 결과코드 10,
  *  totalOf(op, key)->number (큰 단지 totalCount 흉내: 첫 쪽만 의미 있음)
  * 반환: { base, calls, close, log: [{op, key, page, hasRange}] }
  */
@@ -46,6 +47,8 @@ export async function startMock(universe, opts = {}) {
     log.push({ op, key, page, hasRange: q.has("startDate") && q.has("endDate"), start: q.get("startDate"), end: q.get("endDate"), serviceKey: q.get("serviceKey") });
     if (opts.status401) { res.statusCode = 401; res.end("denied"); return; }
     if (opts.limitAfter !== undefined && log.length > opts.limitAfter) { res.setHeader("content-type", "application/xml"); res.end("<OpenAPI_ServiceResponse><cmmMsgHeader><returnReasonCode>22</returnReasonCode></cmmMsgHeader></OpenAPI_ServiceResponse>"); return; }
+    if (opts.failKeys?.has(key)) { res.setHeader("content-type", "application/json"); res.end(envelope([], 0, "99")); return; } // 그 지번만 일시 오류(결과코드 99)
+    if (opts.rejectPageAbove !== undefined && page > opts.rejectPageAbove) { res.setHeader("content-type", "application/json"); res.end(envelope([], 0, "10")); return; } // pageNo 자릿수 거절 흉내
     const parcel = universe.get(key);
     let list = parcel ? (op === "getBrHsprcInfo" ? parcel.hsprc : parcel.area) : [];
     if (op === "getBrHsprcInfo" && q.has("startDate") === false) list = list; // 무필터는 그대로
