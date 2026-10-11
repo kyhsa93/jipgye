@@ -148,3 +148,13 @@ test("절의 문장은 docs/*.html 어디에도 같은 8단어 창으로 없다"
     assert.equal(hit.length, 0, `${name}와 같은 문장: ${hit[0]?.split("\u0001").join(" ")}`);
   }
 });
+
+// #217: 해제 문단(정정 재신고)에는 날마다 바뀌는 비율을 손으로 박지 않는다 - 그날 값은 cancelled-deals 첫 문단(correctionStats)이 싣는다.
+// 값에 따라 갈리는 검사가 아니라 '숫자가 없다'는 구조 검사다(#8).
+test("method 해제 문단은 정정 재신고 비율 숫자를 박지 않는다", async () => {
+  const html = await method();
+  const ko = html.match(/<p>해제를 세기 전에[\s\S]*?<\/p>/)?.[0];
+  const en = html.match(/<p>Before cancellations are counted[\s\S]*?<\/p>/)?.[0];
+  assert.ok(ko && en, "해제 문단 한·영이 있다");
+  for (const p of [ko, en]) assert.ok(!/\d+(?:\.\d+)?%|넷에 셋|Three in four/.test(p), p.slice(0, 80));
+});
