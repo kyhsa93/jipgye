@@ -396,10 +396,10 @@ export function correctionSentence(c, locale = "ko") {
   if (!c?.corrections) return null;
   const reg = c.registeredShare;
   return locale === "en"
-    ? `Of ${en(c.reported)} cancellation filings, ${en(c.corrections)} (${c.share}%) were the same contract filed again unchanged — a correction to the filing, not a broken deal.` +
+    ? `Of ${en(c.reported)} cancellation filings, ${en(c.corrections)} (${c.share}%) have the same contract record appearing again without a cancelled mark, so they are treated as corrected filings and left out of the cancellation count. The reason for a filing is not published; only that the records match is verified.` +
         (reg !== null ? ` In months old enough to have registered, ${reg}% of those re-filed contracts went on to registration.` : "") +
-        ` They are left out of every cancellation figure on this page.`
-    : `해제 신고 ${ko(c.reported)}건 가운데 ${ko(c.corrections)}건(${c.share}%)은 같은 계약이 그대로 다시 신고된 것입니다 — 계약이 깨진 것이 아니라 신고를 고친 것입니다.` +
+        ` Every cancellation figure on this page is counted without them.`
+    : `해제 신고 ${ko(c.reported)}건 가운데 ${ko(c.corrections)}건(${c.share}%)은 같은 계약 기록이 해제 표시 없이 다시 있어, 신고를 고쳐 쓴 것으로 보고 해제에서 뺍니다. 신고 사유는 공개되지 않아 기록이 같다는 것까지만 확인한 것입니다.` +
         (reg !== null ? ` 등기할 시간이 지난 달만 보면 그 다시 신고된 계약의 ${reg}%가 등기까지 마쳤습니다.` : "") +
         ` 이 화면의 해제 숫자는 모두 이것을 빼고 셉니다.`;
 }

@@ -158,3 +158,16 @@ test("method 해제 문단은 정정 재신고 비율 숫자를 박지 않는다
   assert.ok(ko && en, "해제 문단 한·영이 있다");
   for (const p of [ko, en]) assert.ok(!/\d+(?:\.\d+)?%|넷에 셋|Three in four/.test(p), p.slice(0, 80));
 });
+
+// #223: method 해제 문단도 같은 단정을 하지 않는다(#76 clo 조건 5).
+test("method 해제 문단은 '정정이다' 단정을 하지 않는다 — 한·영", async () => {
+  const html = await method();
+  const ko = html.match(/<p>해제를 세기 전에[\s\S]*?<\/p>/)?.[0];
+  const en = html.match(/<p>Before cancellations are counted[\s\S]*?<\/p>/)?.[0];
+  assert.ok(ko && en, "해제 문단 한·영이 있다");
+  for (const re of [/깨진 계약이 아니라/, /신고를 고친 것입니다/, /not a broken deal/i, /a correction to the filing/i]) {
+    assert.ok(!re.test(ko) && !re.test(en), `단정 문구: ${re}`);
+  }
+  assert.match(ko, /공개되지 않아/);
+  assert.match(en, /Reasons are not published/);
+});
