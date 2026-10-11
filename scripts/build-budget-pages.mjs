@@ -122,6 +122,19 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
   });
 }
 
+/**
+ * 렌더 시각. BUILD_NOW(ISO 8601)가 있으면 그 시각, 없으면 Date.now() — 미설정이면 전과 똑같이 돈다.
+ * 이 파일이 렌더 단계 여섯 중 Date.now()를 부르는 유일한 곳이라(정책대출 `since`), 같은 입력으로 두 번 렌더해
+ * 견주는 도구(tools/golden, #236)가 시각을 고정할 자리가 여기 하나다. 읽을 수 없는 값은 조용히 현재 시각으로
+ * 넘기지 않고 멈춘다 — 고정했다고 믿은 렌더가 오늘 값으로 나가는 것이 더 나쁘다.
+ */
+export function buildNowMs(env = process.env) {
+  if (!env.BUILD_NOW) return Date.now();
+  const t = Date.parse(env.BUILD_NOW);
+  if (Number.isNaN(t)) throw new Error(`BUILD_NOW를 읽을 수 없습니다: ${env.BUILD_NOW}`);
+  return t;
+}
+
 async function readCapDeals() {
   const dir = path.join(root, "raw/sale");
   const names = (await readdir(dir).catch(() => [])).filter((f) => f.endsWith(".json"));
@@ -165,7 +178,7 @@ async function main() {
   const capStats = clustering(capDeals);
   // 정책대출 가격선 아래 거래 수: 최근 6개월, 해제·직거래 제외. 가격선은 시세에 긋는 선이라, 가족 간 거래처럼
   // 시세가 아닐 수 있는 직거래는 뺀다(단지 카드·후보와 같은 규칙, PO 2차 #41).
-  const since = new Date(Date.now() - 183 * 86400000).toISOString().slice(0, 10);
+  const since = new Date(buildNowMs() - 183 * 86400000).toISOString().slice(0, 10);
   const policyCounts = lineCounts(capDeals.filter((d) => d.date >= since && !d.direct));
   if (!budget?.bands?.length) {
     console.log("  예산 데이터가 없습니다 - 예산 페이지를 만들지 않습니다");
