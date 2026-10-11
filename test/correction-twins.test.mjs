@@ -31,7 +31,12 @@ test("정정 비율과, 익은 달의 정정 짝이 등기까지 갔는지를 �
   assert.equal(c.share, 50);
   assert.equal(c.matured, 1, "덜 익은 9월 정정을 등기 비율에 넣었다");
   assert.equal(c.registeredShare, 100);
-  assert.match(correctionSentence(c, "ko"), /신고를 고친 것입니다/);
+  const ko = correctionSentence(c, "ko");
+  const en = correctionSentence(c, "en");
+  assert.match(ko, /신고를 고쳐 쓴 것으로 보고/);
+  assert.match(ko, /신고 사유는 공개되지 않아/);
+  assert.match(en, /treated as corrected filings/);
+  assert.match(en, /only that the records match is verified/);
 });
 
 test("빌드: 정정은 해제율에서 빠지고 따로 센다", () => {
@@ -42,4 +47,13 @@ test("빌드: 정정은 해제율에서 빠지고 따로 센다", () => {
   assert.equal(payload.seoul.correction.corrections, 1);
   assert.equal(payload.seoul.cancelled, 1, "정정을 해제로 셌다");
   assert.equal(payload.seoul.deals, 52, "정정 기록과 그 짝을 두 번 셌다");
+});
+
+// #223: 정정이라고 사실로 단정하지 않는다(#76 clo 조건 5) - 사유는 공개되지 않아 '기록이 같다'까지만 확인한 것이다.
+const ASSERTIVE = [/깨진 계약이 아니라/, /신고를 고친 것입니다/, /not a broken deal/i, /a correction to the filing/i];
+test("해제 화면 lead 문장은 '정정이다' 단정을 하지 않는다 — 한·영", () => {
+  const c = correctionStats(4, [{ item: cancelledOf(base), twin: { ...base, rgstDate: "26.07.30" } }], ["2026-04"]);
+  for (const loc of ["ko", "en"]) for (const re of ASSERTIVE) assert.ok(!re.test(correctionSentence(c, loc)), `${loc}: ${re}`);
+  assert.match(correctionSentence(c, "ko"), /신고 사유는 공개되지 않아/);
+  assert.match(correctionSentence(c, "en"), /reason for a filing is not published/);
 });
