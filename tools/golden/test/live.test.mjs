@@ -80,10 +80,13 @@ test("TZ가 달라도(UTC vs Asia/Seoul) 출력이 같다 — 시각 의존 지�
 });
 
 test("시각 의존 확인: BUILD_NOW를 하루 다르게 준 두 렌더는 정책대출 문장을 가진 장에서 1장 이상 낙제, 같은 값이면 0장", opts, async () => {
+  // 정책대출 거래 수 문장(`policyShareSentence`, "…중개거래 N건(직거래 제외) 가운데 디딤돌 일반 선 아래는…")을 가진 장.
+  // 2026-10-10 #66 이후 이 문장은 예산대 18장이 아니라 method.html 한 자리에만 있다(그 전에는 budget-3~9eok 7장에 있었다).
+  const isPolicyLine = (l) => l.includes("중개거래") && l.includes("선 아래는");
   const policyPages = async (dir) => {
     const out = [];
     for (const f of await listFiles(dir, (n) => n.endsWith(".html"))) {
-      if (canonLines(await readFile(path.join(dir, f), "utf8")).some((l) => l.includes('class="budget-loan budget-policy"'))) out.push(f);
+      if (canonLines(await readFile(path.join(dir, f), "utf8")).some(isPolicyLine)) out.push(f);
     }
     return out;
   };
@@ -105,7 +108,7 @@ test("시각 의존 확인: BUILD_NOW를 하루 다르게 준 두 렌더는 정�
       const cmp = await compareDirs(one.docsDir, two.docsDir);
       const policy = await policyPages(one.docsDir);
       tried.push({ d1, d2, failing: cmp.failing.length });
-      say(`쌍 ${d1} vs ${d2}: 낙제 ${cmp.failing.length}장 (정책대출 문장을 가진 장 ${policy.length}장)`);
+      say(`쌍 ${d1} vs ${d2}: 낙제 ${cmp.failing.length}장 (정책대출 거래 수 문장을 가진 장 ${policy.length}장: ${policy.join(", ")})`);
       if (cmp.failing.length) found = { d1, d2, cmp, policy };
     } finally {
       await Promise.all([one.dispose(), two.dispose()]);
@@ -116,6 +119,8 @@ test("시각 의존 확인: BUILD_NOW를 하루 다르게 준 두 렌더는 정�
   say(`낙제 ${failNames.length}장: ${failNames.join(", ")}`);
   say(formatReport(found.cmp, { maxHunks: 1, maxLines: 2 }).split("\n").slice(0, 8).join("\n"));
   assert.ok(failNames.every((f) => found.policy.includes(f)), "낙제한 장은 모두 정책대출 문장을 가진 장이다");
+  const changed = found.cmp.failing.flatMap((f) => f.hunks.flatMap((h) => [...h.removed, ...h.added]));
+  assert.ok(changed.length > 0 && changed.every(isPolicyLine), "달라진 줄은 전부 그 정책대출 거래 수 문장이다(다른 시각 의존이 없다)");
 });
 
 test("BUILD_NOW 미설정이면 현행 코드와 바이트 동일 (Date.now를 같은 값으로 모킹한 변경 전·후 비교)", { ...opts, skip: LIVE && BASE_SHA ? false : opts.skip || "GOLDEN_BASE_SHA가 없다" }, async () => {
