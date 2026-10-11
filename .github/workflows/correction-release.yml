@@ -1,0 +1,92 @@
+# 정정 재신고 집계 Release (#218, 판정 #76). 해제 기록 가운데 같은 계약 기록이 해제되지 않은 채 다시 있는 것의 집계(서울 전체·25개 구·
+# 서울 계약월별)를 GitHub Release 한 건(correction-twins-<기준일>)으로 올린다. 새 수집은 없고 저장소의 raw/sale을 읽는다.
+# 집계만 낸다 - 행 단위 필드는 출력하지 않고(scripts/build-correction-release.mjs의 허용 목록·구조 시험), kyhsa93.github.io에는 아무것도 만들지 않는다.
+#
+# 올리기 전 문구는 legal 승인이 먼저다(Release 본문 템플릿, #218). 첫 Release는 PR 병합·승인 뒤 dispatch로 올린다.
+# 갱신: 월 1회 + 수동. 숫자(figuresDigest)가 직전 Release와 같으면 새로 올리지 않는다. 다르면 새 Release를 올리고, 이전 Release 본문
+# 맨 위에 "정정됨 (SUPERSEDED)" 표시를 남긴다(#28 전례, clo 조건 6). 표시는 새 Release 뒤에 하고 이미 붙었으면 건너뛰므로, 중간에 실패해도 다음 실행이 채운다.
+#
+# 권한은 contents: write 하나뿐이고 GITHUB_TOKEN만 쓴다(시크릿 없음). 입력 경로·출력 경로는 env로 받아 run에 직접 박지 않는다.
+# 입력 경로는 REALESTATE_RAW_DIR이다 - #175(raw/sale 재배포 범위) 결론에 따라 사본이 옮겨지거나 필드가 줄면 이 경로만 맞춘다.
+# 일일 파이프라인에 넣지 않으므로 concurrency 그룹을 digest-pipeline과 공유하지 않는다(커밋·푸시가 없다).
+# 일일 수집(UTC 23:07·03:07·07:07·11:07)·공시가격 API(14:17)와 겹치지 않게 매월 12일 17:43 UTC에 돈다.
+name: Correction release
+
+on:
+  schedule:
+    - cron: "43 17 12 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: correction-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # raw/rent(154M)는 필요 없다 - 스크립트·check.py·raw/sale만 받는다.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          sparse-checkout: |
+            scripts
+            research/correction-twins
+            raw/sale
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "20"
+
+      - name: 집계 산출 (임시 폴더, 커밋하지 않음)
+        env:
+          REALESTATE_RAW_DIR: raw
+          CORRECTION_OUT_DIR: ${{ runner.temp }}/correction-release
+        run: node scripts/build-correction-release.mjs
+
+      - name: Release 올리기 (숫자가 같으면 건너뜀)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          CORRECTION_OUT_DIR: ${{ runner.temp }}/correction-release
+        run: |
+          set -euo pipefail
+          out="$CORRECTION_OUT_DIR"
+          tag="$(cat "$out/tag.txt")"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "$tag 가 이미 있다 - 새로 올리지 않는다"
+            exit 0
+          fi
+          prev="$(gh release list --limit 100 --json tagName --jq '.[].tagName | select(startswith("correction-twins-"))' | sort | tail -n1 || true)"
+          if [ -n "$prev" ]; then
+            mkdir -p "$RUNNER_TEMP/prev"
+            gh release download "$prev" --pattern 'correction-twins-*.json' --dir "$RUNNER_TEMP/prev"
+            if node scripts/build-correction-release.mjs --same "$RUNNER_TEMP/prev/$prev.json" "$out/$tag.json"; then
+              echo "숫자가 $prev 와 같다 - 새로 올리지 않는다"
+              exit 0
+            fi
+          fi
+          gh release create "$tag" --title "$tag" --notes-file "$out/README.md" \
+            "$out/$tag.json" "$out/$tag.csv" "$out/check.py" "$out/check.out" "$out/README.md"
+
+      - name: 이전 Release에 정정됨 표시
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          tags="$(gh release list --limit 100 --json tagName --jq '.[].tagName | select(startswith("correction-twins-"))' | sort)"
+          newest="$(printf '%s\n' "$tags" | tail -n1)"
+          printf '%s\n' "$tags" | while IFS= read -r old; do
+            [ -n "$old" ] || continue
+            [ "$old" != "$newest" ] || continue
+            gh release view "$old" --json body --jq .body > "$RUNNER_TEMP/old.md"
+            node scripts/build-correction-release.mjs --supersede "$RUNNER_TEMP/old.md" "$newest" > "$RUNNER_TEMP/marked.md"
+            if cmp -s "$RUNNER_TEMP/old.md" "$RUNNER_TEMP/marked.md"; then continue; fi
+            gh release edit "$old" --notes-file "$RUNNER_TEMP/marked.md"
+            echo "$old 에 정정됨 표시를 남겼다 ($newest)"
+          done

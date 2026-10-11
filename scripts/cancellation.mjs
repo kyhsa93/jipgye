@@ -62,6 +62,24 @@ export function withoutCorrections(items) {
   return { items: kept, corrections };
 }
 
+/**
+ * 비교군: 해제되지 않은 기록끼리 계약 키가 같은 것. 같은 키가 해제 기록에만 우연히 겹치는 것이 아니라는 것을 보이는
+ * 기준선이다(research/correction-twins/check.py의 dup_live와 같은 정의 - 분자는 정상 기록이 둘 이상 겹친 키의 수,
+ * 분모는 정상 기록 건수). Release 산출(scripts/build-correction-release.mjs)이 쓴다.
+ */
+export function repeatedLiveStats(items) {
+  const counts = new Map();
+  let liveRecords = 0;
+  for (const item of items ?? []) {
+    if (isCancelled(item)) continue;
+    liveRecords += 1;
+    const key = contractKey(item);
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  const repeated = [...counts.values()].filter((n) => n >= 2).length;
+  return { liveRecords, repeated, share: liveRecords ? Math.round((repeated / liveRecords) * 10000) / 100 : null };
+}
+
 export const isRegistered = (item) => String(item?.rgstDate ?? "").trim().length > 0;
 
 export const monthKey = (item) => `${item?.dealYear}-${pad(item?.dealMonth)}`;
