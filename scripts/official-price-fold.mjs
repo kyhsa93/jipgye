@@ -123,6 +123,9 @@ export const ALLOWED_KEYS = {
   meta: [
     "source", "baseYear", "license", "pageModified", "rawCommit", "sourceSha256", "sha256Of",
     "totalRows", "seoulRows", "targetParcels", "targetParcelsFound", "cells", "cellsBelowMin", "parcels", "minHouseholds",
+    // API 수집 경로(official-price-api.mjs, #68 E1). 값이 아니라 집계·범위·이용허락 문자열뿐이다.
+    "licenseChecked", "rawCommit", "requestStartDate", "requestEndDate", "apiCalls", "households", "householdsMismatch",
+    "householdsUnjoined", "householdsInvalid", "cappedParcels", "merged",
   ],
   cell: ["s", "d", "j", "a", "n", "m", "f"],
   floor: ["l", "n", "m"],
@@ -139,7 +142,7 @@ const exactKeys = (obj, allowed, where) => {
  * 접힌 결과가 약속을 지키는지 본다 - 쓰기 직전에 부르고, 낙제 시험과 커밋된 파일 검사도 같은 함수를 쓴다.
  * 허용 외 필드(호·동·단지 식별 값 유입), 호 n<MIN 칸·층, 문자열이 아닌 좌표, 호 단위 행을 막는다.
  */
-export function assertDerived(out) {
+export function assertDerived(out, { allowEmptyParcels = false } = {}) {
   if (!out || typeof out !== "object" || Array.isArray(out)) throw new Error("접힌 결과가 객체가 아니다");
   exactKeys(out, ALLOWED_KEYS.top, "top");
   exactKeys(out.meta ?? {}, ALLOWED_KEYS.meta, "meta");
@@ -160,7 +163,8 @@ export function assertDerived(out) {
   }
   for (const p of out.parcels) {
     exactKeys(p, ALLOWED_KEYS.parcel, "parcels[]");
-    if (!isInt(p.n) || p.n < 1) throw new Error("지번 호수가 양의 정수가 아니다");
+    // API 경로는 "끝난 지번" 목록이 상태라서 2025·2026 호가 0인 지번도 줄이 남는다(allowEmptyParcels).
+    if (!isInt(p.n) || p.n < (allowEmptyParcels ? 0 : 1)) throw new Error(`지번 호수가 ${allowEmptyParcels ? "0 이상의" : "양의"} 정수가 아니다`);
   }
 }
 

@@ -1,0 +1,104 @@
+# 공시가격 API 수집 (#68 E2). 건축HUB 건축물대장 API(data.go.kr 15134735)에서 서울 매매 지번의 주택가격·전유공용면적을
+# 지번별로 받아 칸으로 접고 raw/official-price/<연도>/part-NNN.json 으로 이어 쌓는다. 모든 지번이 끝나면 <연도>.json 으로 병합한다.
+# 하루 호출 예산(기본 9,000회, 개발계정 일 10,000건 안)·초당 1회 이하·한도 코드(22)에서 "끝난 지번까지 저장하고 정상 종료".
+# 끝난 상태면 아무것도 하지 않고 초록으로 끝난다. 호 단위 값·응답 원문은 로그·파일·아티팩트·캐시 어디에도 쓰지 않는다(소유자 조건 C1).
+# 시험(탐색) 실행: dispatch의 mode=explore - 파일을 쓰지 않고 집계만 낸다.
+#
+# 시크릿 PUBLIC_DATA_PORTAL_API_KEY는 "수집" 스텝 env에만 둔다(다른 스텝·job env·입력에는 없다). 입력·변수는 env로만 받고 run에 직접 박지 않는다.
+# 이용허락 문자열·확인일은 사람이 data.go.kr/data/15134735 페이지를 보고 저장소 변수(vars) OFFICIAL_PRICE_LICENSE·
+# OFFICIAL_PRICE_LICENSE_CHECKED(YYYY-MM-DD)로 넣는다 - "제한 없음"이 아니거나 확인일이 365일을 넘으면 쓰기 없이 멈춘다(C3).
+# 본 수집의 첫 dispatch는 clo 기록(#68)·소유자 결정 A 뒤에만 한다. daily-update.yml과 concurrency 그룹을 공유하지 않는다
+# (digest-pipeline을 3시간 넘게 잡으면 일일 수집이 막힌다) - 대신 푸시 경합은 scripts/push-docs.sh의 rebase 재시도가 받는다.
+# 일일 수집(UTC 23:07·03:07·07:07·11:07) 뒤인 14:17 UTC(한국 23:17)에 돈다.
+name: Official price API
+
+on:
+  schedule:
+    - cron: "17 14 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "collect=수집(기본), explore=탐색(쓰기 없음, 집계만)"
+        type: choice
+        options: [collect, explore]
+        default: collect
+      budget:
+        description: "이번 실행 호출 예산 (비우면 수집 9000·탐색 6000, 개발계정 일 10,000건 안. 탐색에서 일 한도 단서를 보려면 10000 이상)"
+        type: string
+        required: false
+        default: ""
+      explore_jibun:
+        description: "탐색 표본 지번 수 (비우면 40)"
+        type: string
+        required: false
+        default: ""
+      explore_big:
+        description: "탐색에서 따로 보는 큰 단지 수 (비우면 8)"
+        type: string
+        required: false
+        default: ""
+      raw_commit:
+        description: "대상 지번을 정한 raw/ 커밋 (40자리, 비우면 3a92151의 전체 해시)"
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: official-price-api
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ inputs.raw_commit || '3a921516fac7ad3a275a9e64e1865b594b650a43' }}
+          path: raw-at-commit
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "20"
+
+      - name: 입력 확인
+        env:
+          RAW_COMMIT: ${{ inputs.raw_commit || '3a921516fac7ad3a275a9e64e1865b594b650a43' }}
+        run: |
+          set +x
+          case "$RAW_COMMIT" in *[!0-9a-f]*|"") echo "raw_commit이 40자리 16진수가 아니다" >&2; exit 1;; esac
+          test "${#RAW_COMMIT}" = 40 || { echo "raw_commit이 40자리가 아니다" >&2; exit 1; }
+          test "$(git -C raw-at-commit rev-parse HEAD)" = "$RAW_COMMIT" || { echo "raw-at-commit이 입력 커밋과 다르다" >&2; exit 1; }
+
+      - name: 수집 (시크릿은 이 스텝에서만, 집계만 출력)
+        env:
+          PUBLIC_DATA_PORTAL_API_KEY: ${{ secrets.PUBLIC_DATA_PORTAL_API_KEY }}
+          OFFICIAL_PRICE_LICENSE: ${{ vars.OFFICIAL_PRICE_LICENSE }}
+          OFFICIAL_PRICE_LICENSE_CHECKED: ${{ vars.OFFICIAL_PRICE_LICENSE_CHECKED }}
+          RAW_COMMIT: ${{ inputs.raw_commit || '3a921516fac7ad3a275a9e64e1865b594b650a43' }}
+          MODE: ${{ inputs.mode || 'collect' }}
+          DAILY_CALL_BUDGET: ${{ inputs.budget }}
+          EXPLORE_JIBUN: ${{ inputs.explore_jibun }}
+          EXPLORE_BIG: ${{ inputs.explore_big }}
+          MAX_RUNTIME_MIN: "270"
+        run: |
+          set +x
+          set -eu
+          if [ "$MODE" = "explore" ]; then
+            node scripts/fetch-official-price-api.mjs --explore --raw-commit "$RAW_COMMIT" --raw-dir raw-at-commit/raw
+          else
+            node scripts/fetch-official-price-api.mjs --raw-commit "$RAW_COMMIT" --raw-dir raw-at-commit/raw
+          fi
+
+      - name: 커밋 (탐색 모드는 쓰지 않는다)
+        env:
+          MODE: ${{ inputs.mode || 'collect' }}
+        run: |
+          if [ "$MODE" = "explore" ]; then echo "탐색 모드: 커밋하지 않음"; exit 0; fi
+          ./scripts/push-docs.sh "chore: 공시가격 API 수집" raw/official-price
