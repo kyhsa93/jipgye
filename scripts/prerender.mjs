@@ -22,13 +22,12 @@ import { DISTRICT_PAGES } from "./district-slugs.mjs";
 import { districtSentences } from "./district-summary.mjs";
 import { factSentences } from "./district-facts.mjs";
 import { renewalSentences } from "./renewal-facts.mjs";
-import { candidatesInBand } from "./complex-price.mjs";
-import { BUDGET_MORE_LINKS, budgetAnswers, budgetBandLabel, budgetRuleHref, capNote, costsNote, eokText, loanNote, minCashNote, policyNote } from "./budget-fragments.mjs";
+import { BUDGET_MORE_LINKS, CANDIDATE_LIST, bodyShape, budgetAnswers, budgetBandLabel, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "./budget-fragments.mjs";
 import { rateBridgeHtml } from "./rate-bridge.mjs";
 import { metricCell, topDistricts } from "./realestate-rows.mjs";
 import { headLabels, realestateTable } from "./realestate-table.mjs";
 import { overallCards } from "./realestate-overall.mjs";
-import { MIN_SAMPLE, formatEok, monthLabel } from "./realestate-format.mjs";
+import { MIN_SAMPLE } from "./realestate-format.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const INDEX_PATH = path.join(root, "docs/index.html");
@@ -159,71 +158,42 @@ function newsHtmlLegacy(news) {
 export const newsHtml = fragment("newsHtml", newsHtmlLegacy);
 
 // budgetBandLabel·eokText는 순수 모듈 budget-fragments.mjs로 옮겼다(JSX 쪽 조각과 같이 쓴다, #243 PR A). budgetBandLabel은 아래 파일 끝에서 같은 이름으로 다시 내보낸다.
-
-const budgetWhen = (date) => {
-  const [, month, day] = String(date ?? "").split("-");
-  return month && day ? `${Number(month)}/${Number(day)}` : "";
-};
+// PR B: 거래 한 줄(dealShape)·"어디로 가는가" 문장(whereText)·후보 단지 모양(candidatesShape)·본문 앞부분(bodyShape)·budgetWhen·CANDIDATE_LIST도 같은 모듈로 옮겼다.
+// 여기에는 클래스·태그·data-prerendered·이스케이프(마크업)만 남는다.
 
 function budgetDealHtml(deal) {
-  const place = [deal.district, deal.dong, deal.apt].filter(Boolean).join(" ");
-  const spec = [`${deal.area}㎡`, deal.floor ? `${deal.floor}층` : null].filter(Boolean).join(" · ");
+  const { place, spec, when, price } = dealShape(deal);
   return (
     `<li class="budget-deal">` +
     `<span class="place">${escapeHtml(place)}</span>` +
     `<span class="spec">${escapeHtml(spec)}</span>` +
-    `<span class="when">${escapeHtml(budgetWhen(deal.date))}</span>` +
-    `<span class="price">${escapeHtml(formatEok(deal.amount10k))}</span>` +
+    `<span class="when">${escapeHtml(when)}</span>` +
+    `<span class="price">${escapeHtml(price)}</span>` +
     `</li>`
   );
 }
 
-/**
- * 이 예산이 서울에서 어디로 가는가.
- *
- * 지역 순위는 이미 아래 줄에 숫자로 있지만, 숫자를 세 개 읽고 나서야 알게 되는 것과
- * 한 문장으로 읽는 것은 다르다. 그리고 예산대마다 답이 실제로 다르다 — 4억대는 노원·
- * 도봉·중랑이고 18억대는 강동·송파·성동이라, 이 한 줄이 열여덟 장에서 열여덟 번
- * 다른 말을 한다.
- *
- * 상위 세 구가 절반을 넘을 때만 쓴다. 고르게 흩어진 예산대에서 "여기에 몰려 있다"고
- * 하면 사실이 아니고, 그럴 때는 흩어졌다는 것이 답이다.
- */
+/** 이 예산이 서울에서 어디로 가는가(문장은 budget-fragments.mjs의 whereText). 말할 것이 없으면 빈 문자열이다. */
 function budgetWhereHtml(band) {
-  const districts = band.districts ?? [];
-  if (districts.length < 3 || !band.count) return "";
-
-  const top3 = districts.slice(0, 3);
-  const share = top3.reduce((sum, d) => sum + d.count, 0) / band.count;
-  const names = top3.map((d) => d.name).join("·");
-  const label = budgetBandLabel(band);
-
-  const text =
-    share >= 0.5
-      ? `${label} 거래의 ${Math.round(share * 100)}%가 ${names} 세 곳에서 나왔습니다. 이 예산으로 서울에서 고를 수 있는 곳은 사실상 여기입니다.`
-      : districts.length >= 10
-        ? `${label} 거래는 ${districts.length}개 구에 흩어져 있고 상위 세 곳(${names})을 합쳐도 ${Math.round(share * 100)}%입니다. 이 예산에서는 지역이 아니라 단지가 선택을 가릅니다.`
-        : "";
-
+  const text = whereText(band);
   // data-prerendered: 화면이 요약을 다시 그릴 때 이 문단이 지워지지 않게(#43에서 발견 - 전에는 지워졌다).
   // 속성은 값 있는 꼴(="")로 쓴다 - React는 맨 속성을 못 내서 JSX 쌍둥이와 바이트가 같으려면 이 꼴이어야 한다(#259, DOM은 같다).
   return text ? `<p class="budget-where" data-prerendered="">${escapeHtml(text)}</p>` : "";
 }
 
 function budgetBodyHtmlLegacy(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null) {
-  if (!band) return null;
+  const shape = bodyShape(band, periodList);
+  if (!shape) return null;
 
-  const periods = (periodList ?? []).map((p) => monthLabel(p)).filter(Boolean).join(", ");
-  const districts = (band.districts ?? [])
-    .map((d) => `${escapeHtml(d.name)} ${d.count.toLocaleString("ko-KR")}`)
-    .join(" · ");
+  // districts: 이름은 이스케이프하고 건수는 숫자 서식 글자다(이 줄은 이스케이프 없이 아래 템플릿에 끼운다).
+  const districts = shape.districts.map((d) => `${escapeHtml(d.name)} ${d.count}`).join(" · ");
 
   // 순서: 거래 요약 → 한눈에(돈 네 줄) → 후보 단지 → 돈 문단(근거) → 다음 질문 → 거래 12줄(예시).
   // 후보가 "이 돈이면 어디"의 답이고 거래 12줄은 예시라 맨 뒤다(UIUX #43). 화면(realestate.html)은
   // 요약을 다시 그리고 data-prerendered 덩어리를 이 순서 그대로 붙인 뒤 거래 목록을 붙인다 - 둘이 같아야 한다.
   return (
-    `<p class="budget-summary">${escapeHtml(`${budgetBandLabel(band)}에서 ${band.count.toLocaleString("ko-KR")}건이 거래됐습니다${band.direct ? `(직거래 ${band.direct.toLocaleString("ko-KR")}건 포함)` : ""}.`)}` +
-    (periods ? ` <span class="when">${escapeHtml(`${periods} 신고분 기준`)}</span>` : "") +
+    `<p class="budget-summary">${escapeHtml(shape.summary)}` +
+    (shape.periods ? ` <span class="when">${escapeHtml(shape.periods)}</span>` : "") +
     `</p>` +
     (districts ? `<div class="budget-districts">거래가 많은 지역: ${districts}</div>` : "") +
     budgetWhereHtml(band) +
@@ -308,70 +278,34 @@ function budgetCapHtmlLegacy(band, capStats) {
 }
 export const budgetCapHtml = fragment("budgetCapHtml", budgetCapHtmlLegacy);
 
-/** 목록에 이름을 올리는 단지 수. 나머지는 검색의 "단지로 묶어 보기"로 보낸다 - 열여덟 장이 같은 긴 목록이 되지 않게. */
-export const CANDIDATE_LIST = 12;
+// CANDIDATE_LIST(목록에 이름을 올리는 단지 수)는 순수 모듈로 옮겼다(#243 PR B). test/complex-candidates.test.mjs가 여기서 import하므로 같은 이름으로 다시 내보낸다.
+export { CANDIDATE_LIST };
 
 /**
- * 이 예산대에 드는 단지·평형(단지 후보). 기준 달 값으로 고친 중앙값으로 가른다 - 거래 목록은 "언제
- * 얼마에 팔렸나"이고, 이것은 "지금 이 예산이면 어느 단지의 어느 평형인가"다(scripts/complex-price.mjs).
- * 자치구는 거르는 조건이 아니라 묶는 축이다 - 자치구를 먼저 고르게 하면 겹친 조건에서 빈 화면이 잦다.
+ * 이 예산대에 드는 단지·평형(단지 후보). 고르는 규칙과 글자는 budget-fragments.mjs의 candidatesShape(JSX 쪽 조각과 같이 쓴다)이고, 여기에는 마크업만 남는다.
  */
 function budgetCandidatesHtmlLegacy(band, complexFiles) {
-  if (!band || !complexFiles?.length) return "";
-  const min = band.min10k;
-  const max = band.max10k ?? min + 10_000;
-  const rows = candidatesInBand(complexFiles, min, max);
-  const reference = complexFiles[0]?.reference;
-  const month = reference ? `${reference.slice(0, 4)}년 ${Number(reference.slice(4))}월` : "기준 달";
-  const label = `${min / 10_000}억대`;
-  if (!rows.length) {
-    return (
-      `<section class="budget-candidates" data-prerendered=""><h3>이 예산대의 단지 후보</h3>` +
-      `<p>${escapeHtml(`${month} 값으로 고친 중앙값이 ${label}인 단지·평형이 없습니다. 같은 평형이 6개월 동안 3번 이상 거래돼야 범위를 낼 수 있습니다.`)}</p></section>`
-    );
+  const shape = candidatesShape(band, complexFiles);
+  if (!shape) return "";
+  if (shape.empty !== undefined) {
+    return `<section class="budget-candidates" data-prerendered=""><h3>이 예산대의 단지 후보</h3><p>${escapeHtml(shape.empty)}</p></section>`;
   }
-  const byDistrict = new Map();
-  for (const row of rows) byDistrict.set(row.district, (byDistrict.get(row.district) ?? 0) + 1);
-  const districts = [...byDistrict].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ko"));
-  // 평형대로 나눈다 - 상위가 재건축 소형으로만 채워지면 59·84형을 찾는 사람이 다시 걸러야 했다(#35).
-  const BANDS = [
-    ["60㎡ 미만", (r) => r.area < 60],
-    ["60~85㎡", (r) => r.area >= 60 && r.area <= 85],
-    ["85㎡ 초과", (r) => r.area > 85],
-  ];
-  const per = Math.floor(CANDIDATE_LIST / BANDS.length);
-  const first = BANDS.flatMap(([, f]) => rows.filter(f).slice(0, per));
-  // 한 평형대가 모자라면 남은 자리는 다른 평형대의 다음 순번으로 채운다 - 목록 길이는 예산대마다 같다.
-  const picked = [...first, ...rows.filter((r) => !first.includes(r)).slice(0, CANDIDATE_LIST - first.length)];
-  const list = picked
-    .sort((a, b) => a.area - b.area || b.n - a.n)
-    .map((row) => {
-      const href = `./deal-search.html?district=${encodeURIComponent(row.district)}&apt=${encodeURIComponent(row.apt)}`;
-      const facts = [row.district, row.dong, `${row.area}\u33a1`, row.buildYear ? `${row.buildYear}년` : null].filter(Boolean).join(" · ");
-      const range = `${row.quartile ? "가운데 절반" : "최저~최고"} ${eokText(row.low)}~${eokText(row.high)}`;
-      return (
-        `<li class="budget-deal"><a class="apt" href="${escapeHtml(href)}">${escapeHtml(row.apt)}</a>` +
-        `<span class="meta">${escapeHtml(facts)}</span>` +
-        `<span class="amount">${escapeHtml(eokText(row.median))}</span>` +
-        `<span class="meta">${escapeHtml(`${range} · ${row.n}건`)}</span></li>`
-      );
-    })
+  const list = shape.rows
+    .map(
+      (row) =>
+        `<li class="budget-deal"><a class="apt" href="${escapeHtml(row.href)}">${escapeHtml(row.apt)}</a>` +
+        `<span class="meta">${escapeHtml(row.facts)}</span>` +
+        `<span class="amount">${escapeHtml(row.amount)}</span>` +
+        `<span class="meta">${escapeHtml(row.meta)}</span></li>`
+    )
     .join("");
-  const bandCounts = BANDS.map(([label, f]) => `${label} ${rows.filter(f).length}`).join(" · ");
   return (
     `<section class="budget-candidates" data-prerendered=""><h3>이 예산대의 단지 후보</h3>` +
-    `<p>${escapeHtml(
-      `${month} 값으로 고친 중앙값이 ${label}인 단지·평형은 서울에 ${rows.length.toLocaleString("ko-KR")}곳입니다. ` +
-        `같은 평형이 최근 6개월에 3번 이상 거래돼 범위를 낼 수 있었던 곳만 셉니다 — 거래가 드문 단지는 빠집니다.`
-    )}</p>` +
-    `<div class="budget-districts">${escapeHtml(`평형대별: ${bandCounts}`)}</div>` +
-    `<div class="budget-districts">${escapeHtml(`자치구별: ${districts.map(([d, n]) => `${d} ${n}`).join(" · ")}`)}</div>` +
+    `<p>${escapeHtml(shape.intro)}</p>` +
+    `<div class="budget-districts">${escapeHtml(shape.bandCounts)}</div>` +
+    `<div class="budget-districts">${escapeHtml(shape.districts)}</div>` +
     `<ul class="budget-deals">${list}</ul>` +
-    `<p class="budget-more"><a href="./deal-search.html?budget=${min / 10_000}&amp;group=1">${escapeHtml(
-      rows.length > CANDIDATE_LIST
-        ? `평형대마다 거래가 많은 곳을 고루 ${picked.length}곳만 적었습니다. ${rows.length}곳 전부와 평형·연식 조건은 실거래 검색에서 단지로 묶어 보세요 →`
-        : "평형·연식 조건을 더해 실거래 검색에서 단지로 묶어 보기 →"
-    )}</a></p></section>`
+    `<p class="budget-more"><a href="${escapeHtml(shape.moreHref)}">${escapeHtml(shape.moreText)}</a></p></section>`
   );
 }
 export const budgetCandidatesHtml = fragment("budgetCandidatesHtml", budgetCandidatesHtmlLegacy);

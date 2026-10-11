@@ -15,7 +15,7 @@ import { MAX_DISTRICTS, changeOf, countOf, man, metricCell, topDistricts } from 
 import { MIN_SAMPLE, hasEnoughSample } from "../scripts/realestate-format.mjs";
 import { RE_LABELS, headLabels, reAllCells, reCells, reChange, reCount, reCountSpan, reDistrictLink, reDistrictRows, reEok, reHeadLabels, reLowSample, reMan, reRow, reSorted, reStaleTag, reWolseChange, realestateTable } from "../scripts/realestate-table.mjs";
 import { overallCards, ratioBasis } from "../scripts/realestate-overall.mjs";
-import { BUDGET_MORE_LINKS, budgetAnswers, budgetBandLabel, budgetRuleHref, capNote, costsNote, eokOf, eokText, loanNote, minCashNote, policyNote } from "../scripts/budget-fragments.mjs";
+import { BUDGET_MORE_LINKS, CANDIDATE_LIST, bodyShape, budgetAnswers, budgetBandLabel, budgetRuleHref, budgetWhen, candidatesShape, capNote, costsNote, dealShape, eokOf, eokText, loanNote, minCashNote, policyNote, whereText } from "../scripts/budget-fragments.mjs";
 import { makeFragment, rendererMode } from "../scripts/renderer.mjs";
 import { createReactRenderer } from "../scripts/render/react.mjs";
 import { RATES_BRANCHES } from "./fixtures/render/rates-branches.mjs";
@@ -26,11 +26,13 @@ import { DISTRICT_TABLES_BRANCHES, DISTRICT_TABLES_FNS, DISTRICT_TABLES_THROWS, 
 import { REALESTATE_TABLE_BRANCHES, REALESTATE_TABLE_FNS, REALESTATE_TABLE_THROWS } from "./fixtures/render/realestate-table-branches.mjs";
 import { REALESTATE_OVERALL_BRANCHES, REALESTATE_OVERALL_FNS, REALESTATE_OVERALL_THROWS } from "./fixtures/render/realestate-overall-branches.mjs";
 import { BUDGET_LEAVES_BRANCHES, BUDGET_LEAVES_FNS, BUDGET_LEAVES_THROWS } from "./fixtures/render/budget-leaves-branches.mjs";
+import { BUDGET_BODY_KNOWN_DIFFS, BUDGET_CB_BRANCHES, BUDGET_CB_FNS, BUDGET_CB_THROWS } from "./fixtures/render/budget-candidates-body-branches.mjs";
 
 // #237: 렌더러 스위치와 legacy↔react parity 시험의 골격. #240이 금리 조각(ratesHtml·ratesHeadHtml)의 분기별 케이스를 더했고
 // #241 PR 1이 문장·목록 8개(summaryHtml·marketHtml·뉴스 6개)를, PR 2가 리드·링크 10개(*LeadHtml 6·*DistrictLinksHtml 4)를,
 // PR 3이 첫 화면 실거래 요약(realestateHtml)을, #242 PR 1이 자치구 문장·링크 4개와 표 6개를, PR 2가 시세표 머리글·표(realestateHeadHtml·realestateTableHtml)를, PR 3이 시세 요약 카드(realestateOverallHtml)를,
-// #243 PR A가 예산대 잎 조각 8개(budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml)를 더했다. #243 PR B가 이어서 더한다.
+// #243 PR A가 예산대 잎 조각 8개(budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml)를, PR B가 후보 단지와 합성(budgetCandidatesHtml·budgetBodyHtml)을
+// 더해 prerender.mjs의 조각 44개가 모두 이식됐다(서브프로세스 시험이 "이식 완료 상태"를 검증한다).
 // 입력은 이 파일 안의 값과 test/fixtures/render/의 고정 파일뿐이다(R3): 저장소의 docs/·docs/data는 읽지 않는다.
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -143,6 +145,8 @@ test("기본값 legacy는 esbuild·react 없이도 import되고, react 모드는
 // 이름 순(renderer.names()가 정렬해 준다).
 const PORTED = [
   "budgetAnswersHtml",
+  "budgetBodyHtml",
+  "budgetCandidatesHtml",
   "budgetCapHtml",
   "budgetCostsHtml",
   "budgetFactsHtml",
@@ -235,7 +239,7 @@ test("금리 조각: 이식된 이름이라 legacy가 조각 안에서 불리지
   assert.equal(called, 0);
 });
 
-test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위임되어 같고, 이식된 조각은 분기 표 전부에서 legacy와 같다", async () => {
+test("react 모드(진입 목록 PORTED): 이식 완료 상태(.legacy를 가진 조각 44개 전부 React)이고, 모든 분기 표에서 prerender.mjs 조각 출력이 legacy 모드와 같다", async () => {
   const ratesUrl = pathToFileURL(fixture("rates-branches.mjs")).href;
   const newsUrl = pathToFileURL(fixture("news-market-branches.mjs")).href;
   const leadUrl = pathToFileURL(fixture("lead-links-branches.mjs")).href;
@@ -244,6 +248,7 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
   const tableUrl = pathToFileURL(fixture("realestate-table-branches.mjs")).href;
   const overallUrl = pathToFileURL(fixture("realestate-overall-branches.mjs")).href;
   const budgetLeavesUrl = pathToFileURL(fixture("budget-leaves-branches.mjs")).href;
+  const budgetCbUrl = pathToFileURL(fixture("budget-candidates-body-branches.mjs")).href;
   const run = (env) =>
     spawnSync(
       process.execPath,
@@ -259,14 +264,14 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
          const { REALESTATE_TABLE_BRANCHES } = await import(${JSON.stringify(tableUrl)});
          const { REALESTATE_OVERALL_BRANCHES } = await import(${JSON.stringify(overallUrl)});
          const { BUDGET_LEAVES_BRANCHES } = await import(${JSON.stringify(budgetLeavesUrl)});
+         const { BUDGET_CB_BRANCHES } = await import(${JSON.stringify(budgetCbUrl)});
          const run = (rows) => rows.map((b) => [b.id, p[b.fn](...b.args)]);
-         // 이식 안 된 조각(아직 legacy): 예산 단지 후보·예산대 본문 합성(둘 다 #243 PR B가 이식한다 - 마지막까지 미이식으로 남는 budget* 조각).
-         // 본문 합성은 하위 조각(이식된 잎 8개)의 래퍼를 부르므로 react 모드 프로세스에서는 하위가 React로 그려진다 - 그래도 바이트가 legacy 모드와 같아야 한다.
-         // PR B에서는 이 확인을 "이식 완료 상태 검증"(portedFragments()가 .legacy를 가진 조각 44개와 같고 legacy 모드는 [])으로 바꾼다(미이식 조각이 더는 없다).
-         const legacyOnly = [p.budgetCandidatesHtml({ min10k: 50000 }, [{ reference: "202609" }]), p.budgetBodyHtml({ min10k: 50000, max10k: 60000, count: 3, deals: [] }, ["202609"])];
-         console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), legacyOnly, rates: run(RATES_BRANCHES), news: run(NEWS_MARKET_BRANCHES), leadLinks: run(LEAD_LINKS_BRANCHES), realestate: run(REALESTATE_BRANCHES), districtTables: run(DISTRICT_TABLES_BRANCHES), realestateTable: run(REALESTATE_TABLE_BRANCHES), realestateOverall: run(REALESTATE_OVERALL_BRANCHES), budgetLeaves: run(BUDGET_LEAVES_BRANCHES) }));`,
+         // 이식 완료 상태(#243 PR B): prerender.mjs에서 .legacy를 가진 조각 이름 전부를 함께 내보낸다 - react 모드의 portedFragments()가 이것과 같아야 하고 legacy 모드는 []다.
+         // 합성 조각 budgetBodyHtml은 하위 조각의 래퍼를 부르므로(legacy 원본 안에서) react 모드 프로세스의 .legacy는 이식된 하위 조각을 쓴다 - 순수 legacy가 아니다. 그래서 parity는 이 프로세스의 래퍼 출력을 legacy 모드 프로세스의 출력과 맞댄다.
+         const legacyNames = Object.keys(p).filter((k) => typeof p[k]?.legacy === "function").sort();
+         console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), legacyNames, rates: run(RATES_BRANCHES), news: run(NEWS_MARKET_BRANCHES), leadLinks: run(LEAD_LINKS_BRANCHES), realestate: run(REALESTATE_BRANCHES), districtTables: run(DISTRICT_TABLES_BRANCHES), realestateTable: run(REALESTATE_TABLE_BRANCHES), realestateOverall: run(REALESTATE_OVERALL_BRANCHES), budgetLeaves: run(BUDGET_LEAVES_BRANCHES), budgetCb: run(BUDGET_CB_BRANCHES) }));`,
       ],
-      { cwd: root, encoding: "utf8", env: { ...process.env, JIPGYE_RENDERER: "", ...env } }
+      { cwd: root, encoding: "utf8", maxBuffer: 256 * 1024 * 1024, env: { ...process.env, JIPGYE_RENDERER: "", ...env } }
     );
   const legacy = run({});
   const react = run({ JIPGYE_RENDERER: "react" });
@@ -276,10 +281,13 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
   const [a, b] = [JSON.parse(legacy.stdout), JSON.parse(react.stdout)];
   assert.equal(a.mode, "legacy");
   assert.equal(b.mode, "react");
+  // 이식 완료 상태 검증: legacy 모드는 이식된 조각이 없고([]), react 모드는 .legacy를 가진 조각 이름 전부(44개)를 React로 낸다(남는 조각이 없다).
+  // 위임 동작 자체(이식 안 된 조각은 legacy로 간다)는 makeFragment와 가짜 렌더러(fixtures/fragments.jsx)를 쓰는 시험이 계속 지킨다 - #248이 legacy를 지울 때 이 상태 검증이 사라지는 것은 그대로다.
   assert.deepEqual(a.ported, []);
+  assert.equal(a.legacyNames.length, 44, "prerender.mjs의 조각이 44개가 아니다");
+  assert.deepEqual(b.ported, a.legacyNames, "react 모드가 이식하지 않은 조각이 남았다(또는 entry.jsx에 prerender.mjs에 없는 이름이 있다)");
   assert.deepEqual(b.ported, PORTED);
-  assert.ok(a.legacyOnly.every((html) => html.length > 0), "이식 안 된 조각 입력이 빈 출력이면 이 확인이 아무것도 안 본다");
-  assert.deepEqual(b.legacyOnly, a.legacyOnly, "이식 안 된 조각은 legacy 그대로");
+  assert.equal(PORTED.length, 44);
   assert.equal(b.rates.length, RATES_BRANCHES.length);
   assert.equal(b.news.length, NEWS_MARKET_BRANCHES.length);
   assert.deepEqual(b.rates, a.rates, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(금리)");
@@ -296,6 +304,8 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
   assert.deepEqual(b.realestateOverall, a.realestateOverall, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(시세 요약 카드)");
   assert.equal(b.budgetLeaves.length, BUDGET_LEAVES_BRANCHES.length);
   assert.deepEqual(b.budgetLeaves, a.budgetLeaves, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(예산대 잎 조각)");
+  assert.equal(b.budgetCb.length, BUDGET_CB_BRANCHES.length);
+  assert.deepEqual(b.budgetCb, a.budgetCb, "react 모드의 prerender.mjs 조각 출력이 순수 legacy(legacy 모드 프로세스)와 다르다(후보 단지·본문 합성)");
 });
 
 // ---- 문장·목록 8개 조각(#241 PR 1): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
@@ -1377,6 +1387,197 @@ test("예산대 잎 조각: 이식된 이름이라 legacy가 조각 안에서 �
   assert.equal(called, 0);
 });
 
+// ---- 예산대 후보 단지·본문 합성(#243 PR B): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
+
+const CB_ROWS = BUDGET_CB_BRANCHES;
+const CB_FNS = ["budgetBodyHtml", "budgetCandidatesHtml"];
+
+test("후보 단지·본문 분기 표: id가 겹치지 않고, 두 조각을 모두 덮고, 모든 행에 기대값이 있다", () => {
+  const ids = CB_ROWS.map((b) => b.id);
+  assert.equal(new Set(ids).size, ids.length, "분기 id가 겹친다");
+  assert.deepEqual(BUDGET_CB_FNS, CB_FNS);
+  assert.deepEqual([...new Set(CB_ROWS.map((b) => b.fn))].sort(), CB_FNS);
+  for (const b of CB_ROWS) {
+    assert.ok(b.expect === null ? b.fn === "budgetBodyHtml" && b.nullOut === true : typeof b.expect === "string", `${b.id}: 기대값이 문자열도 (본문의) null도 아니다`);
+    assert.ok(PORTED.includes(b.fn), `${b.id}: 이식 목록에 없는 조각(${b.fn})`);
+  }
+  const toIds = BUDGET_CB_THROWS.map((b) => b.id);
+  assert.equal(new Set(toIds).size, toIds.length, "던지는 입력 id가 겹친다");
+  assert.ok(CB_ROWS.length >= 180, `분기 표가 ${CB_ROWS.length}행뿐이다`);
+  assert.equal(BUDGET_CB_THROWS.length, 34);
+});
+
+test("후보 단지·본문 분기 표: 빈 결과 계약 - 후보 단지는 \"\"(null 아님), 본문은 예산대가 없을 때만 null(\"\" 아님)이고 엄격 비교로 고정한다", () => {
+  // 본문이 하위 조각의 반환값을 이어 붙이는 자리(legacy `+`)에 null이 들어가면 글자 "null"이 박힌다 - 그래서 잎(후보 단지 포함)은 null을 내지 않는다.
+  const cands = CB_ROWS.filter((b) => b.fn === "budgetCandidatesHtml");
+  assert.ok(cands.filter((b) => b.expect === "").length >= 18, "후보 단지의 빈 문자열 행이 모자란다");
+  for (const b of cands) assert.ok(b.expect !== null, `${b.id}: 후보 단지 조각은 null을 내지 않는다`);
+  const nulls = CB_ROWS.filter((b) => b.expect === null);
+  assert.ok(nulls.length >= 7 && nulls.every((b) => b.fn === "budgetBodyHtml"), "본문의 null 행이 모자라거나 다른 조각에 null이 있다");
+  for (const b of CB_ROWS.filter((r) => r.fn === "budgetBodyHtml" && r.expect !== null)) assert.ok(b.expect.length > 500, `${b.id}: 본문이 비어 있다`);
+  for (const b of CB_ROWS.filter((r) => r.expect === "")) {
+    assert.strictEqual(prerender[b.fn].legacy(...b.args), "", `${b.id} legacy ${b.cond}`);
+    assert.notStrictEqual(prerender[b.fn].legacy(...b.args), null, b.id);
+  }
+  for (const b of nulls) {
+    assert.strictEqual(prerender[b.fn].legacy(...b.args), null, `${b.id} legacy ${b.cond}`);
+    assert.notStrictEqual(prerender[b.fn].legacy(...b.args), "", b.id);
+  }
+});
+
+test("후보 단지·본문 분기 표: 값 종류별 행이 있다 - 비문자열·null·undefined·특수문자·작은따옴표·이미 이스케이프된 글자·빈 값·경계", () => {
+  const kinds = (v, out = new Set(), depth = 0) => {
+    if (depth > 8) return out;
+    if (v === null) out.add("null");
+    else if (v === undefined) out.add("undefined");
+    else if (typeof v === "boolean") out.add(String(v));
+    else if (typeof v === "number") out.add(Number.isNaN(v) ? "NaN" : v === Infinity ? "Infinity" : v === 0 ? "0" : "number");
+    else if (typeof v === "string") out.add(v === "" ? "빈 문자열" : v === "&amp;" ? "이미 이스케이프" : v.includes("&") && v.includes("<") && v.includes('"') ? "특수문자" : "문자열");
+    else if (Array.isArray(v)) {
+      out.add(v.length ? "배열" : "빈 배열");
+      for (const x of v.slice(0, 40)) kinds(x, out, depth + 1);
+    } else if (typeof v === "object") {
+      out.add(Object.keys(v).length ? "객체" : "빈 객체");
+      for (const x of Object.values(v).slice(0, 40)) kinds(x, out, depth + 1);
+    }
+    return out;
+  };
+  const NEED = ["null", "undefined", "true", "false", "0", "NaN", "number", "빈 문자열", "이미 이스케이프", "특수문자", "문자열", "빈 배열", "배열", "빈 객체", "객체"];
+  for (const fn of CB_FNS) {
+    const seen = new Set();
+    for (const b of CB_ROWS.filter((r) => r.fn === fn)) kinds(b.args, seen);
+    for (const k of NEED) assert.ok(seen.has(k), `${fn}: 입력 값 종류 '${k}' 행이 없다`);
+  }
+  const outs = (fn) => CB_ROWS.filter((b) => b.fn === fn && typeof b.expect === "string").map((b) => b.expect);
+  // 작은따옴표 단지(역삼I'PARK): 글자·주소 모두 그대로(legacy), React는 &#x27;로 내고 래퍼가 되돌린다 - 후보 줄과 거래 줄 둘 다
+  assert.ok(outs("budgetCandidatesHtml").some((o) => o.includes(">역삼I'PARK</a>") && o.includes("apt=%EC%97%AD%EC%82%BCI'PARK")), "후보: 작은따옴표 단지 행이 없다");
+  assert.ok(outs("budgetBodyHtml").some((o) => o.includes("역삼I'PARK</span>")), "본문 거래 줄: 작은따옴표 단지 행이 없다");
+  assert.ok(outs("budgetCandidatesHtml").some((o) => /A&amp;B &lt;i&gt; &quot;q&quot; it's<\/a>/.test(o) && o.includes("apt=A%26B%20%3Ci%3E%20%22q%22%20it's")), "후보: 특수문자 단지 행이 없다");
+  assert.ok(outs("budgetCandidatesHtml").some((o) => o.includes("&amp;amp;</a>")), "후보: 이미 이스케이프된 단지 행이 없다");
+  assert.ok(outs("budgetBodyHtml").some((o) => o.includes("A&amp;B &lt;i&gt; &quot;q&quot; it's &amp;amp; &amp;#x27;")), "본문 거래 줄: 특수문자 행이 없다");
+  assert.ok(outs("budgetBodyHtml").some((o) => o.includes("false 300 ·  200 · [object Object] 100")), "본문: 비문자열 구 이름 행이 없다");
+  // 경계: 어디로 가는가 0.5·10개 구, 후보 12·13곳, 평형 경계 59.99·60·85·85.01, 예산대 하한 포함·상한 제외
+  for (const id of ["BO-G02", "BO-G03", "BO-G04", "BO-G05", "BO-G12", "CA-F12", "CA-F13", "CA-F-AREA", "CA-N16", "CA-F-BIG", "CA-F14", "CA-F85"]) assert.ok(CB_ROWS.some((b) => b.id === id), `경계 행 ${id}이 없다`);
+});
+
+test("후보 단지·본문 분기 표: 해자 2 - 표본 문턱·low-sample 스팬이 이 조각들에는 없다(문턱은 빌더가 데이터 칸에 이미 반영, 어디로 가는가의 0.5·10개 구는 문장 선택 문턱)", () => {
+  for (const b of CB_ROWS.filter((r) => typeof r.expect === "string")) assert.ok(!b.expect.includes("low-sample") && !b.expect.includes("표본 부족"), `${b.id}: 이 조각에는 low-sample 스팬이 없다`);
+  // 렌더 때 n(같은 평형 거래 수)을 거르지 않는다: n이 1이어도 중앙값이 범위에 들면 후보다(빌더가 이미 3 미만 칸을 만들지 않는다)
+  assert.ok(CB_ROWS.find((b) => b.id === "CA-W12").expect.includes("· 1건"));
+  // 어디로 가는가: 정확히 0.5는 몰렸다, 0.49는 구 10개 이상일 때만 흩어졌다
+  assert.ok(CB_ROWS.find((b) => b.id === "BO-G02").expect.includes("거래의 50%가"));
+  assert.ok(CB_ROWS.find((b) => b.id === "BO-G03").expect.includes("10개 구에 흩어져"));
+  assert.ok(!CB_ROWS.find((b) => b.id === "BO-G04").expect.includes("budget-where"));
+});
+
+test("후보 단지·본문 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다, 엄격 비교)", () => {
+  for (const b of CB_ROWS) assert.strictEqual(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
+});
+
+test("후보 단지·본문 분기 표: React 조각이 legacy와 바이트까지 같다(분기마다, 허용 변환은 래퍼의 &#x27; 되돌림 하나) - 후보 단지의 빈 결과는 \"\", 본문은 null", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  for (const b of CB_ROWS) {
+    const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
+    assert.strictEqual(react, b.expect, `${b.id} ${b.cond}`);
+    assert.strictEqual(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+  }
+});
+
+test("후보 단지·본문 분기 표: 같은 입력을 두 번 넣어도 같고 입력을 바꾸지 않는다", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  const snap = (args) => JSON.stringify(args, (_, v) => (v === undefined ? "(undefined)" : typeof v === "number" && !Number.isFinite(v) ? String(v) : typeof v === "function" ? "(fn)" : v));
+  for (const b of CB_ROWS) {
+    const before = snap(b.args);
+    const react = fragment(b.fn, prerender[b.fn].legacy);
+    assert.equal(react(...b.args), react(...b.args), b.id);
+    prerender[b.fn].legacy(...b.args);
+    assert.equal(snap(b.args), before, `${b.id}: 입력이 바뀌었다`);
+  }
+});
+
+test("후보 단지·본문 조각: 예전 코드가 던지는 입력은 legacy도 React 조각도 같은 오류로 던진다(조용히 빈 본문을 내지 않는다)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  for (const b of BUDGET_CB_THROWS) {
+    const ErrorClass = globalThis[b.error];
+    assert.throws(() => prerender[b.fn].legacy(...b.args), ErrorClass, `${b.id} legacy ${b.cond}`);
+    assert.throws(() => fragment(b.fn, prerender[b.fn].legacy)(...b.args), ErrorClass, `${b.id} react ${b.cond}`);
+  }
+});
+
+test("후보 단지·본문 조각: 이식된 이름이라 legacy가 조각 안에서 불리지 않는다(후보 단지의 빈 결과는 빈 문자열, 본문은 null)", async () => {
+  let called = 0;
+  const fragment = makeFragment(await createReactRenderer());
+  const spy = () => (called++, "legacy");
+  assert.strictEqual(fragment("budgetCandidatesHtml", spy)(null, null), "");
+  assert.strictEqual(fragment("budgetCandidatesHtml", spy)(), "");
+  assert.strictEqual(fragment("budgetBodyHtml", spy)(null), null);
+  assert.strictEqual(fragment("budgetBodyHtml", spy)(), null);
+  assert.ok(fragment("budgetBodyHtml", spy)({ min10k: 30_000, max10k: 40_000, count: 5, deals: [] }).startsWith('<p class="budget-summary">3억대에서 5건이 거래됐습니다.</p>'));
+  assert.equal(called, 0);
+});
+
+test("후보 단지·본문: 알려진 차이(허용 변환 아님) - 구 건수가 & < > \" 가 든 문자열일 때만 legacy는 raw로, React는 이스케이프해서 낸다(실데이터는 전부 숫자라 닿지 않는다)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  for (const d of BUDGET_BODY_KNOWN_DIFFS) {
+    const legacy = prerender[d.fn].legacy(...d.args);
+    const react = fragment(d.fn, prerender[d.fn].legacy)(...d.args);
+    assert.ok(legacy.includes(d.legacy), `${d.id} legacy 글자 ${d.cond}`);
+    assert.ok(react.includes(d.react), `${d.id} react 글자 ${d.cond}`);
+    assert.notEqual(legacy, react, `${d.id}: 차이가 사라졌다 - 표를 고친다`);
+    // 이 한 자리(지역 줄의 건수) 말고는 같다: 서로의 차이 글자를 바꿔 끼우면 같은 출력이 된다
+    assert.equal(legacy.replace(d.legacy, d.react), react, `${d.id}: 다른 자리도 다르다`);
+  }
+});
+
+test("budget-fragments.mjs: 후보 단지·본문 모양 - 거래 한 줄·월/일·어디로 가는가·후보 단지·본문 앞부분(순수 모듈)", () => {
+  assert.equal(CANDIDATE_LIST, 12);
+  // budgetWhen
+  assert.equal(budgetWhen("2026-09-05"), "9/5");
+  assert.equal(budgetWhen("2026-12-31"), "12/31");
+  for (const bad of [null, undefined, "", "2026", "2026-09", "2026-09-", 20260905, true, {}, []]) assert.equal(budgetWhen(bad), "", JSON.stringify(bad));
+  assert.equal(budgetWhen("2026-ab-cd"), "NaN/NaN");
+  // dealShape: 네 칸이 모두 문자열이다(legacy가 escapeHtml에 넘기던 값)
+  assert.deepEqual(dealShape({ district: "노원구", dong: "상계동", apt: "A", area: 84.97, floor: 12, date: "2026-09-05", amount10k: 75_000 }), { place: "노원구 상계동 A", spec: "84.97㎡ · 12층", when: "9/5", price: "7억 5,000만원" });
+  assert.deepEqual(dealShape({}), { place: "", spec: "undefined㎡", when: "", price: "-" });
+  for (const v of Object.values(dealShape({ district: {}, area: [1, 2], floor: true, date: 5, amount10k: "1" }))) assert.equal(typeof v, "string");
+  assert.throws(() => dealShape(null), TypeError);
+  assert.throws(() => dealShape(undefined), TypeError);
+  // whereText: 경계 0.5·10개 구(문장 선택 문턱, 표본 문턱이 아니다)
+  const d = (...counts) => counts.map((count, i) => ({ name: `구${i + 1}`, count }));
+  assert.equal(whereText({ count: 100, districts: d(20, 15, 15) }), "NaN억대 거래의 50%가 구1·구2·구3 세 곳에서 나왔습니다. 이 예산으로 서울에서 고를 수 있는 곳은 사실상 여기입니다.".replace("NaN억 대", "").replace("NaN억대", "NaN억대"), "예산대 이름이 NaN이어도 문장은 낸다");
+  assert.equal(whereText({ min10k: 30_000, max10k: 40_000, count: 100, districts: d(20, 15, 15) }), "3억대 거래의 50%가 구1·구2·구3 세 곳에서 나왔습니다. 이 예산으로 서울에서 고를 수 있는 곳은 사실상 여기입니다.");
+  assert.equal(whereText({ min10k: 30_000, max10k: 40_000, count: 100, districts: d(20, 15, 14, 7, 7, 7, 7, 7, 7, 7) }), "3억대 거래는 10개 구에 흩어져 있고 상위 세 곳(구1·구2·구3)을 합쳐도 49%입니다. 이 예산에서는 지역이 아니라 단지가 선택을 가릅니다.");
+  assert.equal(whereText({ min10k: 30_000, max10k: 40_000, count: 100, districts: d(20, 15, 14, 7, 7, 7, 7, 7, 7) }), "", "구 9개·몫 0.49는 문장 없음");
+  for (const bad of [{ count: 100 }, { count: 100, districts: [] }, { count: 100, districts: d(60, 40) }, { count: 0, districts: d(60, 20, 10) }, { count: undefined, districts: d(60, 20, 10) }, { count: "", districts: d(60, 20, 10) }, { count: null, districts: d(60, 20, 10) }]) assert.equal(whereText(bad), "", JSON.stringify(bad));
+  assert.throws(() => whereText(null), TypeError);
+  assert.throws(() => whereText({ count: 100, districts: "abc" }), TypeError);
+  // candidatesShape: 없으면 null, 후보 없음 { empty }, 있으면 줄·문구·주소
+  const cell = (median, n = 5) => ({ median, low: median - 1000, high: median + 1000, n, quartile: true });
+  assert.equal(candidatesShape(null, [{}]), null);
+  assert.equal(candidatesShape({ min10k: 70_000 }, null), null);
+  assert.equal(candidatesShape({ min10k: 70_000 }, []), null);
+  assert.deepEqual(Object.keys(candidatesShape({ min10k: 70_000 }, [{ reference: "202609" }])), ["empty"]);
+  const one = candidatesShape({ min10k: 70_000, max10k: 80_000 }, [{ district: "노원구", reference: "202609", cells: { 가: { 84: cell(72_000) } } }]);
+  assert.deepEqual(Object.keys(one), ["intro", "bandCounts", "districts", "rows", "moreHref", "moreText"]);
+  assert.equal(one.moreHref, "./deal-search.html?budget=7&group=1", "& 는 그대로(legacy는 &amp;로 적고 React는 속성값에서 &amp;로 낸다)");
+  assert.deepEqual(one.rows, [{ href: "./deal-search.html?district=%EB%85%B8%EC%9B%90%EA%B5%AC&apt=%EA%B0%80", apt: "가", facts: "노원구 · 84㎡", amount: "7억 2,000만원", meta: "가운데 절반 7억 1,000만원~7억 3,000만원 · 5건" }]);
+  for (const row of one.rows) for (const key of ["href", "facts", "amount", "meta"]) assert.equal(typeof row[key], "string");
+  assert.ok(one.rows[0].href.startsWith("./deal-search.html?"), "주소는 코드가 정한 상대 경로다(javascript: 불가)");
+  // 12곳 상한: 13곳이어도 12곳만
+  const many = (k) => [{ district: "노원구", reference: "202609", cells: Object.fromEntries(Array.from({ length: k }, (_, i) => [`단지${i}`, { 84: cell(72_000 + i, 30 - i) }])) }];
+  assert.equal(candidatesShape({ min10k: 70_000, max10k: 80_000 }, many(12)).rows.length, 12);
+  assert.equal(candidatesShape({ min10k: 70_000, max10k: 80_000 }, many(12)).moreText, "평형·연식 조건을 더해 실거래 검색에서 단지로 묶어 보기 →");
+  assert.equal(candidatesShape({ min10k: 70_000, max10k: 80_000 }, many(13)).rows.length, 12);
+  assert.match(candidatesShape({ min10k: 70_000, max10k: 80_000 }, many(13)).moreText, /^평형대마다 거래가 많은 곳을 고루 12곳만 적었습니다\. 13곳 전부와/);
+  // bodyShape: 예산대 없으면 null, 신고분·지역·요약 글자
+  assert.equal(bodyShape(null, ["202609"]), null);
+  assert.equal(bodyShape(0), null);
+  assert.deepEqual(bodyShape({ min10k: 30_000, max10k: 40_000, count: 1234, direct: 5, districts: [{ name: "가구", count: 1200 }] }, ["202609", "abc", "202608"]), { summary: "3억대에서 1,234건이 거래됐습니다(직거래 5건 포함).", periods: "9월, 8월 신고분 기준", districts: [{ name: "가구", count: "1,200" }] });
+  assert.deepEqual(bodyShape({ min10k: 30_000, max10k: 40_000, count: 5 }, undefined), { summary: "3억대에서 5건이 거래됐습니다.", periods: "", districts: [] });
+  assert.throws(() => bodyShape({ min10k: 30_000 }, []), TypeError, "건수가 없으면 던진다");
+  assert.throws(() => bodyShape({ min10k: 30_000, count: 1 }, "x"), TypeError, "신고분이 배열이 아니면 던진다");
+});
+
 test("budget-fragments.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - 예산대 이름·억 글자·예산대 하한·규칙 주소·다음 질문 링크", () => {
   // budgetBandLabel: 억 단위 반올림, 위가 비면 이상, 아래가 0이면 미만
   assert.equal(budgetBandLabel({ min10k: 50_000, max10k: 60_000 }), "5억대");
@@ -1470,15 +1671,16 @@ test("budget-fragments.mjs: 표본 문턱을 정의하거나 부르지 않고, �
   assert.doesNotMatch(code, /MIN_SAMPLE|hasEnoughSample|metricOf|low-sample/, "표본 문턱이 이 모듈에 있다");
   assert.doesNotMatch(code, /prerender\.mjs|renderer\.mjs|escapeHtml|html-escape/, "순수 모듈이 렌더러 스위치·이스케이프를 부른다");
   assert.doesNotMatch(code, /class=|className|data-prerendered|<[a-z]|<\/|answer-|budget-loan|budget-rule-link|budget-answers/, "순수 모듈이 마크업·클래스를 들고 있다 - 한 곳의 오타를 같은 실행 비교가 못 잡는다");
-  // import는 순수 모듈 다섯뿐이다(렌더러·prerender·JSX 없음)
+  // import는 순수 모듈뿐이다(렌더러·prerender·JSX 없음): 후보 고르기(complex-price)·억 글자·월 이름(realestate-format)과 문장 모듈 다섯
   const imports = [...code.matchAll(/from "(\.\/[^"]+)"/g)].map((m) => m[1]).sort();
-  assert.deepEqual(imports, ["./loan-cap.mjs", "./min-cash.mjs", "./mortgage.mjs", "./policy-loan.mjs", "./purchase-costs.mjs"]);
+  assert.deepEqual(imports, ["./complex-price.mjs", "./loan-cap.mjs", "./min-cash.mjs", "./mortgage.mjs", "./policy-loan.mjs", "./purchase-costs.mjs", "./realestate-format.mjs"]);
 });
 
-test("prerender.mjs의 공개 export는 추출 뒤에도 같은 이름이다 - budgetRuleLink·budgetBandLabel·CANDIDATE_LIST(PR B가 옮긴다)·MIN_SAMPLE·escapeHtml", () => {
+test("prerender.mjs의 공개 export는 추출 뒤에도 같은 이름이다 - budgetRuleLink·budgetBandLabel·CANDIDATE_LIST(PR B에서 옮겼다)·MIN_SAMPLE·escapeHtml", () => {
   assert.equal(typeof prerender.budgetRuleLink, "function");
   assert.equal(prerender.budgetBandLabel, budgetBandLabel);
   assert.equal(prerender.CANDIDATE_LIST, 12);
+  assert.equal(prerender.CANDIDATE_LIST, CANDIDATE_LIST, "순수 모듈로 옮긴 CANDIDATE_LIST를 prerender.mjs가 같은 이름으로 다시 내보낸다(test/complex-candidates.test.mjs가 === 12를 확인한다)");
   assert.equal(prerender.MIN_SAMPLE, MIN_SAMPLE);
   assert.equal(prerender.escapeHtml, escapeHtml);
   assert.equal(prerender.budgetRuleLink("costs", "x"), prerender.budgetRuleLink("costs", "x"));

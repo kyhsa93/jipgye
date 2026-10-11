@@ -9,9 +9,9 @@
 // districtSummaryHtml·districtRenewalHtml·districtFactsHtml·districtLinksHtml·conversionTableHtml·cancelDistrictsHtml·cancelMonthsHtml·
 // renewalDistrictsHtml·renewalWolseDistrictsHtml·floorDistrictsHtml (#242 PR 1, 자치구 문장·링크 4개와 표 6개), realestateHeadHtml·realestateTableHtml (#242 PR 2, 시세표 머리글·표),
 // realestateOverallHtml (#242 PR 3, 시세 요약 카드), budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml
-// (#243 PR A, 예산대 잎 조각 8개). #243 PR B가 이어서 채운다(후보 단지·합성).
+// (#243 PR A, 예산대 잎 조각 8개), budgetCandidatesHtml·budgetBodyHtml (#243 PR B, 후보 단지와 합성 - 이것으로 prerender.mjs의 조각 44개가 모두 이식됐다).
 import { DISTRICT_PAGES } from "../district-slugs.mjs";
-import { BUDGET_MORE_LINKS, budgetAnswers, budgetRuleHref, capNote, costsNote, loanNote, minCashNote, policyNote } from "../budget-fragments.mjs";
+import { BUDGET_MORE_LINKS, bodyShape, budgetAnswers, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "../budget-fragments.mjs";
 import { budgetFactSentences } from "../budget-facts.mjs";
 import { districtSentences } from "../district-summary.mjs";
 import { factSentences } from "../district-facts.mjs";
@@ -656,7 +656,7 @@ function realestateOverallJsx(realestate, kind = null, district = null, spread =
 
 // ---- 예산대 잎 조각 8개 (#243 PR A) ----
 
-// 이 조각들은 빈 결과를 null이 아니라 빈 문자열("")로 낸다(budgetBodyHtml만 null이다, PR B). 자리표시 치환에서 null은 틀의 내용을 그대로 두고 ""는 비운다(applyPrerender) - 둘은 다르다.
+// 이 조각들은 빈 결과를 null이 아니라 빈 문자열("")로 낸다(합성 조각 budgetBodyHtml만 null이다 - 아래 PR B). 자리표시 치환에서 null은 틀의 내용을 그대로 두고 ""는 비운다(applyPrerender) - 둘은 다르다.
 // 빈 결과는 빈 조각 하나(<>{""}</>)로 그려 react.mjs가 ""로 낸다(sentenceBlock([])과 같다).
 const blank = <>{""}</>;
 
@@ -718,8 +718,121 @@ const budgetMoreJsx = () => (
   </section>
 );
 
+// 돈 문단 다섯: 문장 + 규칙 링크. 합성 조각(budgetBodyJsx)도 이 함수들을 그대로 부른다.
+const budgetMinCashJsx = (band) => budgetNote("budget-loan budget-mincash", minCashNote(band));
+const budgetPolicyJsx = (band, policyCounts) => budgetNote("budget-loan budget-policy", policyNote(band, policyCounts));
+const budgetCapJsx = (band, capStats) => budgetNote("budget-loan budget-cap", capNote(band, capStats));
+const budgetCostsJsx = (band) => budgetNote("budget-loan budget-costs", costsNote(band));
+const budgetLoanJsx = (band, rates) => budgetNote("budget-loan", loanNote(band, rates));
+
 // 예산대 페이지가 자기 이야기를 하는 문단(ko·en 두 벌을 빌드가 굽는다). 문장 묶음 한 덩어리 - 문장이 없으면 빈 문자열(sentenceBlock).
 const budgetFacts = (band, locale = "ko") => sentenceBlock(budgetFactSentences(band?.facts, locale));
+
+// ---- 후보 단지·합성 (#243 PR B) ----
+
+// "어디로 가는가" 한 문장. 문장이 없으면 legacy처럼 빈 문자열이다(말할 것이 없는 예산대). 글자는 모듈(whereText)이 만든 문자열이라 str()이 필요 없다.
+const budgetWhereJsx = (band) => {
+  const text = whereText(band);
+  return text ? (
+    <p className="budget-where" data-prerendered="">
+      {text}
+    </p>
+  ) : (
+    blank
+  );
+};
+
+// 단지 후보 절. 예산대나 단지 파일이 없으면 빈 문자열, 후보가 없으면 안내 한 문장. 단지 이름(row.apt)은 legacy가 escapeHtml(값 ?? "")하던 입력 그대로의 자리라 str()이다.
+// 나머지 글자(주소 포함)는 모듈(candidatesShape)이 만든 문자열이다. 주소는 코드가 정한 `./deal-search.html?…`라 `javascript:`가 될 수 없다(React 19 차단 차이의 대상이 아니다, #244) -
+// 단지·구 이름은 encodeURIComponent를 거쳐 쿼리에만 들어간다. `&`는 React가 속성값에서 `&amp;`로 내 legacy의 `&amp;`와 같다.
+function budgetCandidatesJsx(band, complexFiles) {
+  const shape = candidatesShape(band, complexFiles);
+  if (!shape) return blank;
+  if (shape.empty !== undefined) {
+    return (
+      <section className="budget-candidates" data-prerendered="">
+        <h3>이 예산대의 단지 후보</h3>
+        <p>{shape.empty}</p>
+      </section>
+    );
+  }
+  return (
+    <section className="budget-candidates" data-prerendered="">
+      <h3>이 예산대의 단지 후보</h3>
+      <p>{shape.intro}</p>
+      <div className="budget-districts">{shape.bandCounts}</div>
+      <div className="budget-districts">{shape.districts}</div>
+      <ul className="budget-deals">
+        {shape.rows.map((row, i) => (
+          <li key={i} className="budget-deal">
+            <a className="apt" href={row.href}>
+              {str(row.apt)}
+            </a>
+            <span className="meta">{row.facts}</span>
+            <span className="amount">{row.amount}</span>
+            <span className="meta">{row.meta}</span>
+          </li>
+        ))}
+      </ul>
+      <p className="budget-more">
+        <a href={shape.moreHref}>{shape.moreText}</a>
+      </p>
+    </section>
+  );
+}
+
+// 거래 한 줄. 네 칸의 글자는 모두 모듈(dealShape)이 만든 문자열이다.
+const BudgetDeal = ({ deal }) => {
+  const { place, spec, when, price } = dealShape(deal);
+  return (
+    <li className="budget-deal">
+      <span className="place">{place}</span>
+      <span className="spec">{spec}</span>
+      <span className="when">{when}</span>
+      <span className="price">{price}</span>
+    </li>
+  );
+};
+
+// 예산대 본문 합성: 거래 요약 → 한눈에 → 후보 단지 → 돈 문단(근거) → 다음 질문 → 거래 목록. JSX는 prerender.mjs의 래퍼를 부를 수 없으므로 하위 조각을 JSX 함수로 직접 잇는다
+// (그래서 후보 단지가 JSX로 있어야 이 조각을 옮길 수 있었다). 예산대가 없으면 null이다 - 합성 조각만 null이고 잎은 ""다(잎의 반환값이 이어 붙는 자리에 "null" 글자가 박히지 않게).
+// 하위 조각의 호출 순서는 legacy와 같다(입력이 이상할 때 던지는 자리가 같아야 한다). 거래 목록은 맨 뒤라 이상한 거래(null 등)는 하위 조각을 다 부른 뒤에 던진다.
+function budgetBodyJsx(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null) {
+  const shape = bodyShape(band, periodList);
+  if (!shape) return null;
+  return (
+    <>
+      <p className="budget-summary">
+        {shape.summary}
+        {shape.periods ? (
+          <>
+            {" "}
+            <span className="when">{shape.periods}</span>
+          </>
+        ) : null}
+      </p>
+      {shape.districts.length ? (
+        <div className="budget-districts">
+          거래가 많은 지역: {shape.districts.flatMap((d, i) => [i ? " · " : "", str(d.name), " ", d.count])}
+        </div>
+      ) : null}
+      {budgetWhereJsx(band)}
+      {budgetAnswersJsx(band, rates)}
+      {budgetCandidatesJsx(band, complexFiles)}
+      {budgetLoanJsx(band, rates)}
+      {budgetCostsJsx(band)}
+      {budgetMinCashJsx(band)}
+      {budgetCapJsx(band, capStats)}
+      {budgetPolicyJsx(band, policyCounts)}
+      {budgetMoreJsx()}
+      <ul className="budget-deals">
+        {band.deals.map((deal, i) => (
+          <BudgetDeal key={i} deal={deal} />
+        ))}
+      </ul>
+    </>
+  );
+}
 
 export const fragments = {
   ratesHeadHtml: ratesHead,
@@ -732,12 +845,14 @@ export const fragments = {
   realestateOverallHtml: realestateOverallJsx,
   budgetAnswersHtml: budgetAnswersJsx,
   budgetMoreHtml: budgetMoreJsx,
-  budgetMinCashHtml: (band) => budgetNote("budget-loan budget-mincash", minCashNote(band)),
-  budgetPolicyHtml: (band, policyCounts) => budgetNote("budget-loan budget-policy", policyNote(band, policyCounts)),
-  budgetCapHtml: (band, capStats) => budgetNote("budget-loan budget-cap", capNote(band, capStats)),
-  budgetCostsHtml: (band) => budgetNote("budget-loan budget-costs", costsNote(band)),
+  budgetMinCashHtml: budgetMinCashJsx,
+  budgetPolicyHtml: budgetPolicyJsx,
+  budgetCapHtml: budgetCapJsx,
+  budgetCostsHtml: budgetCostsJsx,
   budgetFactsHtml: budgetFacts,
-  budgetLoanHtml: (band, rates) => budgetNote("budget-loan", loanNote(band, rates)),
+  budgetCandidatesHtml: budgetCandidatesJsx,
+  budgetBodyHtml: budgetBodyJsx,
+  budgetLoanHtml: budgetLoanJsx,
   newsContextHtml: (context) => <NewsContext context={context} />,
   newsHtml: newsIndex,
   newsSummaryHtml: newsSummary,
