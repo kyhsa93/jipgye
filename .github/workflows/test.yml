@@ -10,10 +10,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: "20"
+          node-version: "24"
           cache: npm
       # 워크플로 YAML을 실제 파서로 읽는다(문법 오류·중복 키). #118처럼 문법이 깨지면 main push마다 0초 실패 run이 생긴다.
       - run: ruby scripts/check-workflow-yaml.rb
