@@ -2,11 +2,11 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { execFile } from "node:child_process";
-import { mkdtemp, mkdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdtemp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import { normalizeKoreanAmounts, pickHighlights } from "../scripts/summarize-news.mjs";
+import { normalizeKoreanAmounts, pickHighlights, summaryNow } from "../scripts/summarize-news.mjs";
 
 const execFileAsync = promisify(execFile);
 const scriptPath = path.resolve(import.meta.dirname, "../scripts/summarize-news.mjs");
@@ -54,7 +54,11 @@ function startOllamaStub(reply) {
   });
 }
 
-const TODAY = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
+// 시험은 실제 시계를 읽지 않는다(#258). 스크립트의 "오늘"은 SUMMARY_NOW로 고정한 이 시각이고(KST 2026-10-11 14:00 —
+// 자정 경계에서 멀다), news.json·본문 캐시의 날짜도 같은 값에서 만든다. 전에는 시험 파일이 읽힐 때 한 번 정한 KST 오늘을
+// 박았기 때문에, 스크립트가 도는 순간이 KST 자정(UTC 15:00)을 넘으면 둘이 갈려 요약이 생략되고 summary.json이 없었다.
+const NOW = "2026-10-11T05:00:00Z";
+const NEWS_DATE = "2026-10-11";
 
 const NEWS_ITEMS = [
   {
@@ -80,7 +84,8 @@ const BODIES = {
     "코스피가 전 거래일보다 12.5포인트 내린 채 거래를 마쳤다. 미국 7월 물가지수 둔화가 영향을 줬다. 외국인이 순매도를 이어갔다. ".repeat(5),
 };
 
-async function runSummarize(reply) {
+// `now`는 자식 프로세스에만 env(SUMMARY_NOW)로 넘긴다. `expectSkip`이면 summary.json이 없는 것이 기대(요약 생략)다.
+async function runSummarize(reply, { now = NOW, newsDate = NEWS_DATE, expectSkip = false } = {}) {
   const stub = await startOllamaStub(reply);
   const dir = await mkdtemp(path.join(tmpdir(), "digest-"));
   const dataDir = path.join(dir, "data");
@@ -89,9 +94,9 @@ async function runSummarize(reply) {
   await mkdir(dataDir, { recursive: true });
   await writeFile(
     path.join(dataDir, "news.json"),
-    JSON.stringify({ updatedAt: new Date().toISOString(), date: TODAY, items: NEWS_ITEMS })
+    JSON.stringify({ updatedAt: new Date(now).toISOString(), date: newsDate, items: NEWS_ITEMS })
   );
-  await writeFile(bodiesFile, JSON.stringify({ date: TODAY, bodies: BODIES }));
+  await writeFile(bodiesFile, JSON.stringify({ date: newsDate, bodies: BODIES }));
 
   try {
     const { stdout, stderr } = await execFileAsync(process.execPath, [scriptPath], {
@@ -101,10 +106,11 @@ async function runSummarize(reply) {
         NEWS_BODIES_FILE: bodiesFile,
         OLLAMA_URL: stub.url,
         OLLAMA_MODEL: "stub",
+        SUMMARY_NOW: now,
       },
     });
-    const summary = JSON.parse(await readFile(path.join(dataDir, "summary.json"), "utf8"));
-    return { summary, stdout, stderr, calls: stub.calls };
+    const summary = expectSkip ? null : JSON.parse(await readFile(path.join(dataDir, "summary.json"), "utf8"));
+    return { summary, stdout, stderr, calls: stub.calls, dataDir };
   } finally {
     await stub.close();
   }
@@ -335,4 +341,100 @@ test("한자를 걷어내도 안 되는 번역은 한국어를 유지한다", as
 
   assert.match(stderr, /번역 검증 실패/);
   assert.ok(summary.categories.every((c) => c.lineEn === c.lineKo));
+});
+
+// ---- #258: 스크립트의 시계는 SUMMARY_NOW 하나이고, "오늘 것인가"는 시각이 아니라 KST 날짜끼리의 비교다 ----
+
+const okReply = ({ kind, prompt }) => {
+  if (kind === "entities") return /코스피/.test(prompt) ? "코스피" : "국토교통부";
+  if (kind === "translate") return EN_OK;
+  return goodKo(prompt);
+};
+const exists = (file) => access(file).then(() => true, () => false);
+
+test("KST 자정 1초 전(UTC 14:59:59)에는 그날 news.date의 요약이 나오고, 저장 시각·기록 날짜가 같은 시계를 쓴다", async () => {
+  const now = "2026-10-11T14:59:59Z";
+  const { summary, stderr, dataDir } = await runSummarize(okReply, { now, newsDate: "2026-10-11" });
+
+  assert.equal(stderr, "", `요약이 생략됐다:\n${stderr}`);
+  assert.ok(summary.categories.length > 0);
+  assert.equal(summary.updatedAt, "2026-10-11T14:59:59.000Z", "저장 시각이 주입한 시각이 아니다");
+  const source = JSON.parse(await readFile(path.join(dataDir, "summary-source.json"), "utf8"));
+  assert.equal(source.updatedAt, "2026-10-11T14:59:59.000Z");
+  const history = JSON.parse(await readFile(path.join(dataDir, "summary-history.json"), "utf8"));
+  assert.deepEqual(history.map((h) => h.date), ["2026-10-11"], "기록 날짜가 비교에 쓴 오늘과 다르다");
+});
+
+test("KST 자정 1초 뒤(UTC 15:00:01)에는 같은 news.date가 어제 것이라 요약을 생략하고 summary.json을 만들지 않는다", async () => {
+  const now = "2026-10-11T15:00:01Z";
+  const { summary, stderr, stdout, dataDir } = await runSummarize(okReply, { now, newsDate: "2026-10-11", expectSkip: true });
+
+  assert.equal(summary, null);
+  assert.match(stderr, /news\.json이 오늘\(2026-10-12\) 것이 아님\(2026-10-11\), 요약 생략/);
+  assert.equal(stdout, "");
+  for (const name of ["summary.json", "summary-source.json", "summary-history.json"]) {
+    assert.equal(await exists(path.join(dataDir, name)), false, `${name}이 만들어졌다`);
+  }
+});
+
+test("대조: news.date가 하루 뒤(2026-10-12)면 판정이 뒤집힌다 — 비교는 시각이 아니라 날짜다", async () => {
+  // 15:00:01Z는 KST 10-12라 news.date 10-12가 "오늘"이고, 14:59:59Z는 KST 10-11이라 10-12가 "내일"이다.
+  const after = await runSummarize(okReply, { now: "2026-10-11T15:00:01Z", newsDate: "2026-10-12" });
+  assert.equal(after.stderr, "");
+  assert.equal(after.summary.updatedAt, "2026-10-11T15:00:01.000Z");
+  const history = JSON.parse(await readFile(path.join(after.dataDir, "summary-history.json"), "utf8"));
+  assert.deepEqual(history.map((h) => h.date), ["2026-10-12"]);
+
+  const before = await runSummarize(okReply, { now: "2026-10-11T14:59:59Z", newsDate: "2026-10-12", expectSkip: true });
+  assert.equal(before.summary, null);
+  assert.match(before.stderr, /news\.json이 오늘\(2026-10-11\) 것이 아님\(2026-10-12\), 요약 생략/);
+});
+
+test("summaryNow: 미설정이거나 빈 문자열이면 지금 시각 그대로다", () => {
+  // 실제 시계를 읽되 결과는 시각에 달리지 않는다 — 호출 앞뒤로 잰 구간 안이면 통과.
+  for (const env of [{}, { SUMMARY_NOW: "" }]) {
+    const before = Date.now();
+    const got = summaryNow(env).getTime();
+    assert.ok(got >= before && got <= Date.now(), `지금이 아닌 값이다: ${got}`);
+  }
+});
+
+test("summaryNow: 시간대를 가진 ISO는 지금과 무관하게 그 시각이다", () => {
+  assert.equal(summaryNow({ SUMMARY_NOW: "2026-10-11T14:59:59Z" }).toISOString(), "2026-10-11T14:59:59.000Z");
+  assert.equal(summaryNow({ SUMMARY_NOW: "2026-10-11T15:00:01.250Z" }).toISOString(), "2026-10-11T15:00:01.250Z");
+  assert.equal(summaryNow({ SUMMARY_NOW: "2026-10-12T00:00:01+09:00" }).toISOString(), "2026-10-11T15:00:01.000Z");
+  assert.equal(summaryNow({ SUMMARY_NOW: "2026-10-11T14:59Z" }).toISOString(), "2026-10-11T14:59:00.000Z");
+});
+
+test("summaryNow: 읽을 수 없는 값은 지금으로 넘기지 않고 멈춘다(시간대 없음·날짜만·달력에 없는 날 포함)", () => {
+  for (const bad of [
+    "어제",
+    "2026-10-11",
+    "2026-10-11T14:59:59", // 시간대가 없으면 실행하는 쪽 TZ에 따라 뜻이 갈린다
+    "2026-10-11 14:59:59Z",
+    "1791730799000",
+    "2026-02-30T00:00:00Z", // Date.parse는 3월 2일로 굴린다
+    "2026-10-11T24:00:00Z",
+    "2026-13-01T00:00:00Z",
+    " 2026-10-11T14:59:59Z",
+  ]) {
+    assert.throws(() => summaryNow({ SUMMARY_NOW: bad }), /SUMMARY_NOW를 읽을 수 없습니다/, bad);
+  }
+});
+
+test("읽을 수 없는 SUMMARY_NOW로 스크립트를 돌리면 요약을 쓰지 않고 실패로 끝난다", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "digest-"));
+  const dataDir = path.join(dir, "data");
+  await mkdir(dataDir, { recursive: true });
+  await writeFile(
+    path.join(dataDir, "news.json"),
+    JSON.stringify({ updatedAt: "2026-10-11T05:00:00.000Z", date: NEWS_DATE, items: NEWS_ITEMS })
+  );
+  await assert.rejects(
+    execFileAsync(process.execPath, [scriptPath], {
+      env: { ...process.env, SUMMARY_DATA_DIR: dataDir, NEWS_BODIES_FILE: path.join(dir, "none.json"), SUMMARY_NOW: "2026-10-11T14:59:59" },
+    }),
+    (err) => err.code === 1 && /요약 생성 실패: SUMMARY_NOW를 읽을 수 없습니다/.test(err.stderr)
+  );
+  assert.equal(await exists(path.join(dataDir, "summary.json")), false);
 });
