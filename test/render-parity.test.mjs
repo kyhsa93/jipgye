@@ -7,13 +7,18 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import * as prerender from "../scripts/prerender.mjs";
 import { INDEX_NEWS, indexNewsItems } from "../scripts/news-items.mjs";
+import { escapeHtml } from "../scripts/html-escape.mjs";
+import { linksBlockHtml, slugLinkEntries, slugLinkHref, slugLinksHtml } from "../scripts/district-links.mjs";
+import { DISTRICT_PAGES } from "../scripts/district-slugs.mjs";
 import { makeFragment, rendererMode } from "../scripts/renderer.mjs";
 import { createReactRenderer } from "../scripts/render/react.mjs";
 import { RATES_BRANCHES } from "./fixtures/render/rates-branches.mjs";
 import { JAVASCRIPT_URL_DIFF, NEWS_MARKET_BRANCHES } from "./fixtures/render/news-market-branches.mjs";
+import { LEAD_LINKS_BRANCHES, LEAD_LINKS_FNS } from "./fixtures/render/lead-links-branches.mjs";
 
 // #237: 렌더러 스위치와 legacy↔react parity 시험의 골격. #240이 금리 조각(ratesHtml·ratesHeadHtml)의 분기별 케이스를 더했고
-// #241 PR 1이 문장·목록 8개(summaryHtml·marketHtml·뉴스 6개)를 더했다. #241 나머지와 #242~#243이 이어서 더한다.
+// #241 PR 1이 문장·목록 8개(summaryHtml·marketHtml·뉴스 6개)를, PR 2가 리드·링크 10개(*LeadHtml 6·*DistrictLinksHtml 4)를 더했다.
+// #241 PR 3과 #242~#243이 이어서 더한다.
 // 입력은 이 파일 안의 값과 test/fixtures/render/의 고정 파일뿐이다(R3): 저장소의 docs/·docs/data는 읽지 않는다.
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -125,6 +130,12 @@ test("기본값 legacy는 esbuild·react 없이도 import되고, react 모드는
 // 저장소의 진입 파일(scripts/render/entry.jsx)에 이식된 조각. 조각을 이식할 때마다 이 목록과 분기 표(아래)를 같이 늘린다.
 // 이름 순(renderer.names()가 정렬해 준다).
 const PORTED = [
+  "cancelDistrictLinksHtml",
+  "cancelLeadHtml",
+  "cancelMonthLeadHtml",
+  "conversionDistrictLinksHtml",
+  "conversionLeadHtml",
+  "floorDistrictLinksHtml",
   "marketHtml",
   "newsContextHtml",
   "newsHtml",
@@ -134,6 +145,10 @@ const PORTED = [
   "newsSummaryHtml",
   "ratesHeadHtml",
   "ratesHtml",
+  "renewalCapLeadHtml",
+  "renewalDistrictLinksHtml",
+  "renewalLeadHtml",
+  "renewalWolseLeadHtml",
   "summaryHtml",
 ];
 const NEWS_MARKET_FNS = ["marketHtml", "newsContextHtml", "newsHtml", "newsKospiHtml", "newsListHtml", "newsRealestateStatsHtml", "newsSummaryHtml", "summaryHtml"];
@@ -189,6 +204,7 @@ test("금리 조각: 이식된 이름이라 legacy가 조각 안에서 불리지
 test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위임되어 같고, 이식된 조각은 분기 표 전부에서 legacy와 같다", async () => {
   const ratesUrl = pathToFileURL(fixture("rates-branches.mjs")).href;
   const newsUrl = pathToFileURL(fixture("news-market-branches.mjs")).href;
+  const leadUrl = pathToFileURL(fixture("lead-links-branches.mjs")).href;
   const run = (env) =>
     spawnSync(
       process.execPath,
@@ -198,10 +214,12 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
         `const r = await import("./scripts/renderer.mjs"); const p = await import("./scripts/prerender.mjs");
          const { RATES_BRANCHES } = await import(${JSON.stringify(ratesUrl)});
          const { NEWS_MARKET_BRANCHES } = await import(${JSON.stringify(newsUrl)});
+         const { LEAD_LINKS_BRANCHES } = await import(${JSON.stringify(leadUrl)});
          const run = (rows) => rows.map((b) => [b.id, p[b.fn](...b.args)]);
-         // 이식 안 된 조각(아직 legacy): 예산 최소 현금 문장·자치구 링크. 이식되면 이 줄의 조각을 다른 미이식 조각으로 바꾼다.
+         // 이식 안 된 조각(아직 legacy): 예산 최소 현금 문장·자치구 링크(districtLinksHtml은 이 PR이 추출한 linksBlockHtml을 쓴다).
+         // 이식되면 이 줄의 조각을 다른 미이식 조각으로 바꾼다(budgetMinCashHtml은 #243, districtLinksHtml은 #242).
          const legacyOnly = [p.budgetMinCashHtml({ min10k: 50000 }), p.districtLinksHtml("종로구")];
-         console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), legacyOnly, rates: run(RATES_BRANCHES), news: run(NEWS_MARKET_BRANCHES) }));`,
+         console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), legacyOnly, rates: run(RATES_BRANCHES), news: run(NEWS_MARKET_BRANCHES), leadLinks: run(LEAD_LINKS_BRANCHES) }));`,
       ],
       { cwd: root, encoding: "utf8", env: { ...process.env, JIPGYE_RENDERER: "", ...env } }
     );
@@ -221,6 +239,8 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
   assert.equal(b.news.length, NEWS_MARKET_BRANCHES.length);
   assert.deepEqual(b.rates, a.rates, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(금리)");
   assert.deepEqual(b.news, a.news, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(문장·목록)");
+  assert.equal(b.leadLinks.length, LEAD_LINKS_BRANCHES.length);
+  assert.deepEqual(b.leadLinks, a.leadLinks, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(리드·링크)");
 });
 
 // ---- 문장·목록 8개 조각(#241 PR 1): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
@@ -296,4 +316,99 @@ test("news-items.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, prerende
   assert.deepEqual(indexNewsItems(null), []);
   const items = ["e0", "e1", "r0", "e2", "r1", "e3", "e4"].map((title) => ({ title, category: title[0] === "r" ? "realestate" : "economy" }));
   assert.deepEqual(indexNewsItems(items).map((i) => i.title), ["r0", "r1", "e0", "e1", "e2"]);
+});
+
+// ---- 리드·링크 10개 조각(#241 PR 2): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
+
+test("리드·링크 분기 표: id가 겹치지 않고, 열 조각을 모두 덮고, 모든 행에 기대값이 있고, 조각마다 값 종류별 행이 있다", () => {
+  const ids = LEAD_LINKS_BRANCHES.map((b) => b.id);
+  assert.equal(new Set(ids).size, ids.length, "분기 id가 겹친다");
+  assert.deepEqual([...new Set(LEAD_LINKS_BRANCHES.map((b) => b.fn))].sort(), LEAD_LINKS_FNS);
+  assert.equal(LEAD_LINKS_FNS.length, 10);
+  for (const b of LEAD_LINKS_BRANCHES) {
+    assert.ok("expect" in b, `${b.id}: 기대값(expect)이 없다`);
+    assert.ok(PORTED.includes(b.fn), `${b.id}: 이식 목록에 없는 조각(${b.fn})`);
+  }
+  // 조각마다: 데이터 없음(null 출력)·특수문자(&amp; &lt; &quot;)·비문자열(false·[object Object])·빈 값 행이 있다.
+  for (const fn of LEAD_LINKS_FNS) {
+    const rows = LEAD_LINKS_BRANCHES.filter((b) => b.fn === fn);
+    const outs = rows.map((b) => b.expect);
+    assert.ok(outs.includes(null), `${fn}: 데이터 없음(null) 행이 없다`);
+    assert.ok(outs.some((o) => typeof o === "string" && o.includes("&amp;") && o.includes("&lt;") && o.includes("&quot;")), `${fn}: 특수문자 행이 없다`);
+    assert.ok(outs.some((o) => typeof o === "string" && /\[object Object\]/.test(o)), `${fn}: 비문자열({}) 행이 없다`);
+    assert.ok(outs.some((o) => o === "true" || (typeof o === "string" && o.includes("false"))), `${fn}: 비문자열(false·true) 행이 없다`);
+    assert.ok(rows.some((b) => b.args[0] === null), `${fn}: null 입력 행이 없다`);
+  }
+  // 리드는 빈 배열(truthy)이 null이 아니라 빈 문자열을 내는 행이 있다(null과 ""는 자리표시 치환에서 다르다).
+  for (const fn of LEAD_LINKS_FNS.filter((f) => f.endsWith("LeadHtml"))) {
+    assert.ok(LEAD_LINKS_BRANCHES.some((b) => b.fn === fn && b.expect === ""), `${fn}: 빈 문자열을 내는 행이 없다`);
+  }
+});
+
+test("리드·링크 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다)", () => {
+  for (const b of LEAD_LINKS_BRANCHES) {
+    assert.equal(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
+  }
+});
+
+test("리드·링크 분기 표: React 조각이 legacy와 바이트까지 같다(분기마다, 허용 변환은 래퍼의 &#x27; 되돌림 하나)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  for (const b of LEAD_LINKS_BRANCHES) {
+    const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
+    assert.equal(react, b.expect, `${b.id} ${b.cond}`);
+    assert.equal(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+  }
+});
+
+test("리드·링크 조각: 이식된 이름이라 legacy가 조각 안에서 불리지 않는다(데이터 없음은 null, 빈 배열 글은 빈 문자열 그대로)", async () => {
+  let called = 0;
+  const fragment = makeFragment(await createReactRenderer());
+  const spy = () => (called++, "legacy");
+  for (const fn of LEAD_LINKS_FNS) {
+    assert.equal(fragment(fn, spy)(null), null, fn);
+    assert.equal(fragment(fn, spy)({}), null, fn);
+  }
+  assert.equal(fragment("renewalLeadHtml", spy)({ lead: { ko: [] } }), "");
+  assert.equal(fragment("conversionLeadHtml", spy)({ seoul: { leadKo: [] } }), "");
+  assert.equal(called, 0);
+});
+
+test("district-links.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, linksBlockHtml 추출 뒤에도 districtLinksHtml(legacy)의 글자가 그대로다", () => {
+  // linksBlockHtml: 링크가 없으면 머리글도 없다(빈 문자열), 머리글은 이스케이프하고 id는 그대로.
+  for (const none of ["", null, undefined, 0, false]) assert.equal(linksBlockHtml("x", "머리", none), "", String(none));
+  assert.equal(
+    linksBlockHtml("district-links", "다른 지역", "<a>1</a>"),
+    '<h3 class="district-links-heading" id="district-links-heading">다른 지역</h3><div class="district-links" id="district-links"><a>1</a></div>'
+  );
+  assert.equal(linksBlockHtml("i", `a&<"'`, "L"), `<h3 class="district-links-heading" id="i-heading">a&amp;&lt;&quot;'</h3><div class="district-links" id="i">L</div>`);
+  assert.equal(linksBlockHtml("i", false, "L"), '<h3 class="district-links-heading" id="i-heading">false</h3><div class="district-links" id="i">L</div>');
+  assert.equal(linksBlockHtml("i", null, "L"), '<h3 class="district-links-heading" id="i-heading"></h3><div class="district-links" id="i">L</div>');
+  assert.equal(linksBlockHtml("i", undefined, "L"), '<h3 class="district-links-heading" id="i-heading"></h3><div class="district-links" id="i">L</div>');
+  // slug 항목·경로·묶음
+  assert.deepEqual(slugLinkEntries(null), []);
+  assert.deepEqual(slugLinkEntries(undefined), []);
+  assert.deepEqual(slugLinkEntries({}), []);
+  assert.deepEqual(slugLinkEntries({ slugs: null }), []);
+  assert.deepEqual(slugLinkEntries({ slugs: { 종로구: "jongno" } }), [["종로구", "jongno"]]);
+  assert.equal(slugLinkHref("jongno"), "./district-jongno.html");
+  assert.equal(slugLinkHref(null), "./district-.html");
+  assert.equal(slugLinkHref(undefined), "./district-.html");
+  assert.equal(slugLinkHref(false), "./district-false.html");
+  assert.equal(slugLinksHtml({}), null);
+  assert.equal(slugLinksHtml({ slugs: { 종로구: "jongno" } }), '<a href="./district-jongno.html">종로구</a>');
+  // districtLinksHtml(이식 안 된 조각, E2가 이어 이식한다): 이 PR이 helper를 뽑았어도 글자가 같다.
+  const all = prerender.districtLinksHtml.legacy();
+  assert.ok(all.startsWith('<h3 class="district-links-heading" id="district-links-heading">다른 지역</h3><div class="district-links" id="district-links"><a href="./district-jongno.html">종로구</a><a href="./district-jung.html">중구</a>'));
+  assert.ok(all.endsWith("</a></div>"));
+  assert.equal(all.match(/<a /g).length, DISTRICT_PAGES.length);
+  assert.ok(!all.includes("aria-current"));
+  const here = prerender.districtLinksHtml.legacy("중구", "자치구별 시세 보기");
+  assert.ok(here.startsWith('<h3 class="district-links-heading" id="district-links-heading">자치구별 시세 보기</h3>'));
+  assert.ok(here.includes('<a href="./district-jung.html" aria-current="page">중구</a>'));
+  assert.equal(here.match(/aria-current/g).length, 1);
+  // escapeHtml: prerender.mjs가 같은 함수를 다시 내보내고(다른 모듈의 import 호환), 래퍼 밖의 순수 도구다.
+  assert.equal(prerender.escapeHtml, escapeHtml);
+  assert.equal(escapeHtml(`a&<>"'`), "a&amp;&lt;&gt;&quot;'");
+  assert.equal(escapeHtml(null), "");
+  assert.equal(escapeHtml(false), "false");
 });

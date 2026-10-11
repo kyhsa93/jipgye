@@ -69,6 +69,17 @@ export const RATES_BRANCHES = [
     args: [{ deposit: [{ options: [sv(1, 2)] }, { name: "", company: null, options: [sv(1, 1)] }] }],
     expect: tr("-", "", savingTds("1.00%", "2.00%", "169,200원")) + tr("", "", savingTds("1.00%", "1.00%", "84,600원")),
   },
+  {
+    id: "R20c", fn: "ratesHtml", cond: "비문자열 name·company(false·0·{}·[1,2]·true): legacy는 String()으로 'false'·'0'·'[object Object]'·'1,2'·'true'(전수 변이 #241 PR 2가 찾은 자리 - String()을 빼면 React는 false·{}를 비운다)",
+    args: [{ deposit: [{ name: false, company: 0, options: [sv(1, 2)] }, { name: 0, company: false, options: [sv(1, 2)] }, { name: {}, company: [1, 2], options: [sv(1, 2)] }, { name: [1, 2], company: {}, options: [sv(1, 2)] }, { name: true, company: true, options: [sv(1, 2)] }] }],
+    expect: tr("false", "0", savingTds("1.00%", "2.00%", "169,200원")) + tr("0", "false", savingTds("1.00%", "2.00%", "169,200원")) + tr("[object Object]", "1,2", savingTds("1.00%", "2.00%", "169,200원")) +
+      tr("1,2", "[object Object]", savingTds("1.00%", "2.00%", "169,200원")) + tr("true", "true", savingTds("1.00%", "2.00%", "169,200원")),
+  },
+  {
+    id: "R20d", fn: "ratesHtml", cond: "비문자열 rateType(false·0·{}·[1,2]·true): 대출 칸에 'false'·'0'·'[object Object]'·'1,2'·'true'(null만 '-')",
+    args: [{ mortgage: ["a", "b", "c", "d", "e"].map((name, i) => product(name, [loan([false, 0, {}, [1, 2], true][i], 3, 4, 3.5)])) }, M],
+    expect: [["a", "false"], ["b", "0"], ["c", "[object Object]"], ["d", "1,2"], ["e", "true"]].map(([name, type]) => tr(name, "은행", loanTds(type, "3.00~4.00%", "3.50%"))).join(""),
+  },
   { id: "R20b", fn: "ratesHtml", cond: "대출 rateType이 null이면 '-'", args: [{ mortgage: [product("a", [loan(null, 3, 4, 3.5)])] }, M], expect: tr("a", "은행", loanTds("-", "3.00~4.00%", "3.50%")) },
   { id: "R21a", fn: "ratesHtml", cond: "특수문자 & < > \" '(저축 name·company): 앞 넷은 양쪽이 같은 엔티티, '는 래퍼가 되돌려 그대로", args: [{ deposit: [{ name: `A&B <i> "q" it's`, company: `C'D & <E>`, options: [sv(1, 2)] }] }], expect: tr("A&amp;B &lt;i&gt; &quot;q&quot; it's", "C'D &amp; &lt;E&gt;", savingTds("1.00%", "2.00%", "169,200원")) },
   { id: "R21b", fn: "ratesHtml", cond: "특수문자(대출 name·rateType)", args: [{ mortgage: [{ name: `m"<>&'`, company: "c", options: [loan(`T&<>"'`, 3, 4, 3.5)] }] }, M], expect: tr("m&quot;&lt;&gt;&amp;'", "c", loanTds("T&amp;&lt;&gt;&quot;'", "3.00~4.00%", "3.50%")) },

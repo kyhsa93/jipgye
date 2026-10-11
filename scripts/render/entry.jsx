@@ -3,7 +3,10 @@
 // 여기서 `scripts/renderer.mjs`·`scripts/prerender.mjs`를 불러오면 안 된다(로더가 막는다). 계산은 순수 모듈에서 가져온다.
 //
 // 이식된 것: ratesHtml·ratesHeadHtml (#240, 금리 4개 상품군), summaryHtml·marketHtml·newsContextHtml·newsHtml·newsSummaryHtml·
-// newsListHtml·newsKospiHtml·newsRealestateStatsHtml (#241 PR 1, 문장·목록 8개). #241 나머지와 #242~#243이 이어서 채운다.
+// newsListHtml·newsKospiHtml·newsRealestateStatsHtml (#241 PR 1, 문장·목록 8개), conversionLeadHtml·cancelLeadHtml·cancelMonthLeadHtml·
+// renewalLeadHtml·renewalCapLeadHtml·renewalWolseLeadHtml·conversionDistrictLinksHtml·cancelDistrictLinksHtml·renewalDistrictLinksHtml·
+// floorDistrictLinksHtml (#241 PR 2, 리드·링크 10개). #241 나머지와 #242~#243이 이어서 채운다.
+import { slugLinkEntries, slugLinkHref } from "../district-links.mjs";
 import { indexNewsItems } from "../news-items.mjs";
 import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "../rates-table.mjs";
 
@@ -220,6 +223,28 @@ function newsRealestateStats(news) {
   );
 }
 
+// ---- 리드·링크 조각 (#241 PR 2) ----
+
+// 빌더가 만든 한 문단(leadKo 등). 글이 비면(falsy) legacy처럼 null이다. 글이 truthy인 비문자열(true·{}·[1,2]·[])은 legacy가 String()으로 내므로 str()을 거친다
+// (빈 배열은 ""를 내는데 null이 아니라 빈 문자열이다 - legacy도 escapeHtml("")이라 같다).
+const lead = (text) => (text ? <>{str(text)}</> : null);
+
+// 전환·해제·재계약·층 네 화면의 자치구 링크. 항목 이름은 객체 키라 항상 문자열이므로 str()이 필요 없고, 경로는 legacy와 같은 모듈(district-links.mjs)이 만든다.
+// 경로가 `./district-…`로 시작하므로 `javascript:` href가 될 수 없다(React 19 차단 차이의 대상이 아니다, #244).
+function slugLinks(data) {
+  const entries = slugLinkEntries(data);
+  if (!entries.length) return null;
+  return (
+    <>
+      {entries.map(([name, slug]) => (
+        <a key={name} href={slugLinkHref(slug)}>
+          {name}
+        </a>
+      ))}
+    </>
+  );
+}
+
 export const fragments = {
   ratesHeadHtml: ratesHead,
   ratesHtml: ratesRows,
@@ -231,4 +256,14 @@ export const fragments = {
   newsListHtml: newsList,
   newsKospiHtml: newsKospi,
   newsRealestateStatsHtml: newsRealestateStats,
+  conversionLeadHtml: (conversion) => lead(conversion?.seoul?.leadKo),
+  cancelLeadHtml: (cancellation) => lead(cancellation?.seoul?.leadKo),
+  cancelMonthLeadHtml: (cancellation) => lead(cancellation?.seoul?.registrationLead?.ko),
+  renewalLeadHtml: (renewal) => lead(renewal?.lead?.ko),
+  renewalCapLeadHtml: (renewal) => lead(renewal?.capLead?.ko),
+  renewalWolseLeadHtml: (renewal) => lead(renewal?.wolseLead?.ko),
+  conversionDistrictLinksHtml: slugLinks,
+  cancelDistrictLinksHtml: slugLinks,
+  renewalDistrictLinksHtml: slugLinks,
+  floorDistrictLinksHtml: slugLinks,
 };

@@ -4,6 +4,8 @@ import { accessibleTables } from "./table-a11y.mjs";
 import { fragment } from "./renderer.mjs";
 import { createWriteSet } from "./render-writes.mjs";
 import { INDEX_NEWS, indexNewsItems } from "./news-items.mjs";
+import { escapeHtml } from "./html-escape.mjs";
+import { linksBlockHtml, slugLinksHtml } from "./district-links.mjs";
 import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "./rates-table.mjs";
 import { BUDGET_PAGES } from "./budget-pages.mjs";
 import { budgetFactSentences } from "./budget-facts.mjs";
@@ -54,13 +56,8 @@ export const MIN_SAMPLE = 5;
 // 붙는 순간 표 길이가 튀고, 그걸 index-realestate-rows 검사가 잡는다.
 const MAX_DISTRICTS = 4;
 
-export function escapeHtml(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
-}
+// escapeHtml과 linksBlockHtml은 순수 모듈로 옮겼다(JSX 쪽 조각과 같이 쓴다, #241 PR 2). 다른 모듈이 여기서 import하던 이름은 그대로 둔다.
+export { escapeHtml };
 
 function summaryHtmlLegacy(summary) {
   const highlights = (summary?.highlights ?? []).filter((h) => h.textKo);
@@ -492,14 +489,6 @@ function budgetLoanHtmlLegacy(band, rates, mortgageSeries = null) {
 export const budgetLoanHtml = fragment("budgetLoanHtml", budgetLoanHtmlLegacy);
 
 export { budgetBandLabel };
-
-function linksBlockHtml(id, heading, links) {
-  if (!links) return "";
-  return (
-    `<h3 class="district-links-heading" id="${id}-heading">${escapeHtml(heading)}</h3>` +
-    `<div class="district-links" id="${id}">${links}</div>`
-  );
-}
 
 function newsRealestateStatsHtmlLegacy(news) {
   const stats = news?.realestateStats ?? [];
@@ -975,11 +964,7 @@ function conversionTableHtmlLegacy(conversion, band = CONVERSION_BAND) {
 export const conversionTableHtml = fragment("conversionTableHtml", conversionTableHtmlLegacy);
 
 function conversionDistrictLinksHtmlLegacy(conversion) {
-  const slugs = conversion?.slugs ?? {};
-  const links = Object.entries(slugs)
-    .map(([name, slug]) => `<a href="./district-${escapeHtml(slug)}.html">${escapeHtml(name)}</a>`)
-    .join("");
-  return links || null;
+  return slugLinksHtml(conversion);
 }
 export const conversionDistrictLinksHtml = fragment("conversionDistrictLinksHtml", conversionDistrictLinksHtmlLegacy);
 
@@ -1035,11 +1020,7 @@ function cancelMonthsHtmlLegacy(cancellation) {
 export const cancelMonthsHtml = fragment("cancelMonthsHtml", cancelMonthsHtmlLegacy);
 
 function cancelDistrictLinksHtmlLegacy(cancellation) {
-  const slugs = cancellation?.slugs ?? {};
-  const links = Object.entries(slugs)
-    .map(([name, slug]) => `<a href="./district-${escapeHtml(slug)}.html">${escapeHtml(name)}</a>`)
-    .join("");
-  return links || null;
+  return slugLinksHtml(cancellation);
 }
 export const cancelDistrictLinksHtml = fragment("cancelDistrictLinksHtml", cancelDistrictLinksHtmlLegacy);
 
@@ -1111,11 +1092,7 @@ function renewalWolseDistrictsHtmlLegacy(renewal) {
 export const renewalWolseDistrictsHtml = fragment("renewalWolseDistrictsHtml", renewalWolseDistrictsHtmlLegacy);
 
 function renewalDistrictLinksHtmlLegacy(renewal) {
-  const slugs = renewal?.slugs ?? {};
-  const links = Object.entries(slugs)
-    .map(([name, slug]) => `<a href="./district-${escapeHtml(slug)}.html">${escapeHtml(name)}</a>`)
-    .join("");
-  return links || null;
+  return slugLinksHtml(renewal);
 }
 export const renewalDistrictLinksHtml = fragment("renewalDistrictLinksHtml", renewalDistrictLinksHtmlLegacy);
 
@@ -1145,11 +1122,7 @@ function floorDistrictsHtmlLegacy(floor) {
 export const floorDistrictsHtml = fragment("floorDistrictsHtml", floorDistrictsHtmlLegacy);
 
 function floorDistrictLinksHtmlLegacy(floor) {
-  const slugs = floor?.slugs ?? {};
-  const links = Object.entries(slugs)
-    .map(([name, slug]) => `<a href="./district-${escapeHtml(slug)}.html">${escapeHtml(name)}</a>`)
-    .join("");
-  return links || null;
+  return slugLinksHtml(floor);
 }
 export const floorDistrictLinksHtml = fragment("floorDistrictLinksHtml", floorDistrictLinksHtmlLegacy);
 
