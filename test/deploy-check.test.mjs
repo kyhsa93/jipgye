@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { checkDeploy, render, canonicalOf, locsOf, linksOf, urlOf } from "../scripts/deploy-check.mjs";
+import { checkDeploy, render, canonicalOf, locsOf, linksOf, urlOf, resolveSitemap, isNoindex } from "../scripts/deploy-check.mjs";
 
 const BASE = "https://example.test/site/";
 
@@ -68,7 +68,8 @@ test("전부 같으면 이상 0 - 요청은 GET 이고 base 밖으로 나가지 
     for (const q of requests) {
       assert.equal(q.method, "GET");
       assert.equal(q.redirect, "manual");
-      assert.ok(q.url.startsWith(BASE), `base 밖 요청: ${q.url}`);
+      // sitemap 만 출처 루트(같은 출처)에서 받는다. 나머지는 base 아래.
+      assert.ok(q.url.startsWith(BASE) || q.url === "https://example.test/sitemap.xml", `base 밖 요청: ${q.url}`);
     }
     assert.equal(new Set(requests.map((q) => q.url)).size, requests.length, "같은 URL을 두 번 받았다");
   } finally {
@@ -161,6 +162,61 @@ test("시간 한도를 넘기면 남은 요청을 시작하지 않고 미확인�
     const r = await checkDeploy({ base: BASE, docsDir: docs, fetchImpl: slow, concurrency: 1, budgetMs: 250, gapMs: 0, now });
     assert.ok(r.unchecked > 0);
     assert.match(render(r, { base: BASE, today: "2026-10-10", seconds: 0 }).join("\n"), /미확인 [1-9]/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+const ROOT_SITEMAP = "https://example.test/sitemap.xml";
+const urlset = (...locs) => `<urlset>${locs.map((l) => `<url><loc>${l}</loc></url>`).join("")}</urlset>`;
+
+test("sitemap 은 출처 루트에 있다 - base 아래 loc 만 대조하고 다른 프로젝트 loc 은 받지 않는다", async () => {
+  const { root, docs, files } = fixture({ "a.html": PAGE_A.replace('<a href="missing.html">없음</a>', "") });
+  try {
+    const requests = [];
+    const site = deployedFrom(files, { [`${BASE}sitemap.xml`]: undefined, [ROOT_SITEMAP]: urlset("https://example.test/", "https://example.test/other/x.html", BASE, `${BASE}a.html`) });
+    const r = await run(docs, site, requests);
+    assert.equal(r.counts.sitemapStatus, 200);
+    assert.equal(r.counts.locs, 2); // base, a.html (루트·other 는 제외)
+    assert.deepEqual(r.counts.htmlNotInSitemapList, ["b.html"]);
+    assert.deepEqual(r.problems, []);
+    assert.ok(!requests.some((q) => q.url.includes("/other/")));
+    assert.match(render(r, { base: BASE, today: "2026-10-11", seconds: 0 }).join("\n"), /sitemap\(https:\/\/example\.test\/sitemap\.xml\) loc 2 대 html 파일 3.*\n.*loc 에 없음 1: b\.html/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("sitemap index 는 같은 출처 하위 sitemap 을 따라가고 제3자 하위는 받지 않는다", async () => {
+  const requests = [];
+  const site = {
+    [ROOT_SITEMAP]: `<sitemapindex><sitemap><loc>https://example.test/s1.xml</loc></sitemap><sitemap><loc>https://evil.test/s2.xml</loc></sitemap></sitemapindex>`,
+    "https://example.test/s1.xml": urlset(`${BASE}a.html`, `${BASE}a.html`, "https://example.test/else/"),
+  };
+  const r = await resolveSitemap(fakeFetch(site, requests), BASE, 1000);
+  assert.deepEqual(r, { status: 200, url: ROOT_SITEMAP, locs: [`${BASE}a.html`] });
+  assert.ok(!requests.some((q) => q.url.includes("evil.test")));
+});
+
+test("루트에 없으면 base 아래 sitemap 으로 되돌아가고, 둘 다 없으면 루트의 404 를 적는다", async () => {
+  assert.equal((await resolveSitemap(fakeFetch({ [`${BASE}sitemap.xml`]: urlset(`${BASE}a.html`) }), BASE, 1000)).url, `${BASE}sitemap.xml`);
+  const none = await resolveSitemap(fakeFetch({}), BASE, 1000);
+  assert.deepEqual(none, { status: 404, error: undefined, url: ROOT_SITEMAP, locs: [] });
+});
+
+test("noindex 페이지는 sitemap 에 없어도 이상이 아니고, sitemap 에 있으면 이상이다", async () => {
+  const noidx = `<meta name="robots" content="noindex,follow"><link rel="canonical" href="${BASE}n.html">`;
+  assert.ok(isNoindex(noidx));
+  assert.ok(!isNoindex("<p>noindex 라는 글자만</p>"));
+  const { root, docs, files } = fixture({ "a.html": PAGE_A.replace('<a href="missing.html">없음</a>', ""), "n.html": noidx });
+  try {
+    const ok = deployedFrom(files, { [`${BASE}n.html`]: noidx });
+    const r1 = await run(docs, ok);
+    assert.deepEqual(r1.counts.htmlNotInSitemapList, []);
+    assert.equal(r1.counts.noindexNotInSitemap, 1);
+    const bad = deployedFrom(files, { [`${BASE}n.html`]: noidx, [`${BASE}sitemap.xml`]: urlset(BASE, `${BASE}a.html`, `${BASE}b.html`, `${BASE}n.html`) });
+    const r2 = await run(docs, bad);
+    assert.deepEqual(r2.problems.map((p) => [p.kind, p.target, p.detail]), [["sitemap", `${BASE}n.html`, "noindex 페이지가 sitemap 에 있음"]]);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
