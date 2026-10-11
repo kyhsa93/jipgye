@@ -7,11 +7,12 @@
  *
  * 하는 일 (모두 GET):
  * - docs/ 전 파일을 배포본에서 받아 상태 코드(200)와 SHA-256을 대조한다. index.html 은 루트 URL로 받는다.
- * - 배포본 sitemap.xml 의 <loc> 전수: 200인가, 그 페이지의 canonical 이 loc 과 같은가, 대응 파일이 docs/ 에 있는가.
+ * - 배포본 sitemap.xml(출처 루트 먼저, 없으면 base 아래; index 면 하위까지)의 base 아래 <loc> 전수: 200인가, 그 페이지의 canonical 이 loc 과 같은가, 대응 파일이 docs/ 에 있는가.
  *   sitemap 이 없으면(404 등) 없다고 적고 loc 0으로 센다. 있는 척하지 않는다.
  * - docs/*.html 의 내부 링크(href·src) 대상이 배포본에서 200인가. 파일 대조에서 이미 받은 URL은 다시 받지 않는다.
  *
- * 요청 대상은 --base 와 같은 출처이고 그 경로 아래인 URL뿐이다(소유자 사이트 외 제3자 요청 금지).
+ * 요청 대상은 --base 와 같은 출처이고 그 경로 아래인 URL뿐이다(소유자 사이트 외 제3자 요청 금지). 예외는 sitemap 뿐으로,
+ * 같은 출처의 루트(/sitemap.xml)와 그 index 가 가리키는 같은 출처 하위 sitemap 도 받는다.
  * 리다이렉트는 따라가지 않는다(3xx 는 상태 이상으로 적힌다) - 따라가면 다른 출처로 나갈 수 있다.
  *
  * 2회 재현: 첫 대조에서 이상이 나온 URL만 --gap 초 뒤 한 번 더 받아 다시 판정한다. 출력의 "재현"은 두 번 다
@@ -63,6 +64,9 @@ export function canonicalOf(html) {
   }
   return null;
 }
+
+/** robots 메타에 noindex 가 있는 HTML 인가. */
+export const isNoindex = (html) => (html.match(/<meta\b[^>]*>/gi) ?? []).some((t) => /\bname=["']?robots["']?/i.test(t) && /noindex/i.test(t));
 
 /** sitemap.xml 의 <loc> 목록. */
 export function locsOf(xml) {
@@ -140,9 +144,8 @@ export async function checkDeploy({ base = DEFAULT_BASE, docsDir, fetchImpl = fe
   }
 
   const cache = new Map();
-  const sitemapUrl = base + "sitemap.xml";
-  const sitemapRes = await fetchWithBody(fetchImpl, sitemapUrl, timeoutMs);
-  const locs = sitemapRes.status === 200 ? locsOf(sitemapRes.text) : [];
+  const sitemapRes = await resolveSitemap(fetchImpl, base, timeoutMs);
+  const locs = sitemapRes.locs;
   // 파일 대조 + 파일 대조에 없는 링크 대상 + 파일이 아닌 loc. HTML 과 loc 은 canonical 도 같이 뽑는다.
   const locUrls = locs.filter((l) => l.startsWith(base) && !local.has(l));
   const wantCanonical = new Set([...htmlFiles.map((f) => urlOf(base, f)), ...locUrls]);
@@ -167,6 +170,8 @@ export async function checkDeploy({ base = DEFAULT_BASE, docsDir, fetchImpl = fe
         if (!r) continue;
         if (r.error || r.status !== 200) note("sitemap", loc, r.error ? `요청 실패: ${r.error}` : `상태 ${r.status}`, loc);
         else if (r.canonical !== undefined && r.canonical !== loc) note("canonical", loc, `canonical ${r.canonical ?? "없음"}`, loc);
+        const f = local.get(loc) ?? (loc === base ? local.get(base) : undefined);
+        if (f && f.rel.endsWith(".html") && isNoindex(f.buf.toString("utf8"))) note("sitemap", loc, "noindex 페이지가 sitemap 에 있음", loc);
         const path = loc.slice(base.length);
         if (!local.has(loc) && !(path === "" && local.has(base))) note("sitemap", loc, "docs/ 에 대응 파일 없음", loc);
       }
@@ -193,9 +198,12 @@ export async function checkDeploy({ base = DEFAULT_BASE, docsDir, fetchImpl = fe
 
   const htmlLocal = htmlFiles.length;
   const locCount = locs.length;
-  const locNoFile = locs.filter((l) => l.startsWith(base) && !local.has(l) && !(l === base && local.has(base))).length;
+  const locNoFile = locs.filter((l) => !local.has(l)).length;
   const locSet = new Set(locs);
-  const htmlNotInSitemap = htmlFiles.filter((f) => !locSet.has(urlOf(base, f))).length;
+  // noindex 페이지는 sitemap 에 없는 것이 맞다(검색 제외). 없어도 이상이 아니라 따로 센다.
+  const noindexHtml = new Set(htmlFiles.filter((f) => isNoindex(local.get(urlOf(base, f)).buf.toString("utf8"))));
+  const htmlNotInSitemapList = htmlFiles.filter((f) => !locSet.has(urlOf(base, f)) && !noindexHtml.has(f));
+  const locNoFileList = locs.filter((l) => !local.has(l));
   return {
     problems,
     unchecked: all.filter((u) => !cache.has(u)).length,
@@ -207,7 +215,11 @@ export async function checkDeploy({ base = DEFAULT_BASE, docsDir, fetchImpl = fe
       sitemapStatus: sitemapRes.error ? `요청 실패: ${sitemapRes.error}` : sitemapRes.status,
       locs: locCount,
       locNoFile,
-      htmlNotInSitemap,
+      htmlNotInSitemap: htmlNotInSitemapList.length,
+      htmlNotInSitemapList,
+      noindexNotInSitemap: htmlFiles.filter((f) => noindexHtml.has(f) && !locSet.has(urlOf(base, f))).length,
+      locNoFileList,
+      sitemapUrl: sitemapRes.url,
     },
   };
 }
@@ -221,6 +233,38 @@ async function fetchWithBody(fetchImpl, url, timeoutMs) {
   }
 }
 
+/** sitemap index(<sitemapindex>)면 true. */
+export const isSitemapIndex = (xml) => /<sitemapindex[\s>]/i.test(xml);
+
+/**
+ * sitemap 을 찾아 base(/jipgye/) 아래 loc 만 돌려준다. 이 사이트의 sitemap 은 프로젝트 경로가 아니라 소유자 사이트
+ * 루트(https://kyhsa93.github.io/sitemap.xml)에 있고 다른 프로젝트 URL도 섞여 있다(2026-10-11 GET 200 확인).
+ * 후보는 출처 루트 -> base 아래 순이고 처음 200인 것을 쓴다. index 면 같은 출처의 하위 sitemap 을 한 단계 따라간다
+ * (제3자 출처는 받지 않는다). 못 찾으면 첫 후보의 상태를 돌려준다. locs 는 중복 제거.
+ */
+export async function resolveSitemap(fetchImpl, base, timeoutMs) {
+  const origin = new URL(base).origin;
+  const candidates = [...new Set([`${origin}/sitemap.xml`, `${base}sitemap.xml`])];
+  let firstFail = null;
+  for (const url of candidates) {
+    const res = await fetchWithBody(fetchImpl, url, timeoutMs);
+    if (res.status !== 200) {
+      firstFail ??= { ...res, url };
+      continue;
+    }
+    let all = [];
+    if (isSitemapIndex(res.text)) {
+      for (const child of locsOf(res.text)) {
+        if (!child.startsWith(`${origin}/`)) continue;
+        const c = await fetchWithBody(fetchImpl, child, timeoutMs);
+        if (c.status === 200) all.push(...locsOf(c.text));
+      }
+    } else all = locsOf(res.text);
+    return { status: 200, url, locs: [...new Set(all.filter((l) => l.startsWith(base)))] };
+  }
+  return { status: firstFail?.status, error: firstFail?.error, url: firstFail?.url ?? candidates[0], locs: [] };
+}
+
 const KIND_LABEL = { hash: "해시 불일치", status: "상태 이상", sitemap: "sitemap 이상", canonical: "canonical 불일치", link: "깨진 링크" };
 
 /** 결과 -> 출력 줄들 (source-age 와 같은 모양: 머리, 항목, 요약). */
@@ -229,11 +273,15 @@ export function render({ problems, counts, unchecked }, { base, today, seconds }
   for (const p of problems) lines.push(`${KIND_LABEL[p.kind].padEnd(10)}  ${p.target}  ${p.detail}  (${p.persisted === null ? "재확인 못 함" : p.persisted ? "재현" : "1회만"})`);
   const n = (k) => problems.filter((p) => p.kind === k && p.persisted !== false).length;
   const once = problems.filter((p) => p.persisted === false).length;
-  const sitemap = counts.sitemapStatus === 200 ? `sitemap loc ${counts.locs} 대 html 파일 ${counts.html} (파일 없는 loc ${counts.locNoFile}, loc에 없는 html ${counts.htmlNotInSitemap})` : `sitemap 없음(${counts.sitemapStatus}) - loc 0 대 html 파일 ${counts.html}`;
+  const sitemap = counts.sitemapStatus === 200 ? `sitemap(${counts.sitemapUrl}) loc ${counts.locs} 대 html 파일 ${counts.html} (파일 없는 loc ${counts.locNoFile}, loc에 없는 html ${counts.htmlNotInSitemap}, noindex 라 빠진 html ${counts.noindexNotInSitemap})` : `sitemap 없음(${counts.sitemapStatus}) - loc 0 대 html 파일 ${counts.html}`;
   lines.push(
     `파일 ${counts.files}개 대조: 해시 불일치 ${n("hash")} · 상태 이상 ${n("status")} · 깨진 링크 ${n("link")}(대상 ${counts.linkTargets}개, 범위 밖 ${counts.externalSkipped}건 건너뜀) · canonical 불일치 ${n("canonical")} · sitemap 이상 ${n("sitemap")} · 1회만 ${once} · 미확인 ${unchecked} · ${sitemap} · ${seconds.toFixed(1)}초`,
   );
   const bad = problems.filter((p) => p.persisted !== false).length;
+  if (counts.sitemapStatus === 200) {
+    if (counts.locNoFileList.length) lines.push(`sitemap 에만 있음(docs/ 에 파일 없음) ${counts.locNoFileList.length}: ${counts.locNoFileList.join(", ")}`);
+    if (counts.htmlNotInSitemapList.length) lines.push(`docs/ html 인데 sitemap loc 에 없음 ${counts.htmlNotInSitemapList.length}: ${counts.htmlNotInSitemapList.join(", ")}`);
+  }
   lines.push(bad || unchecked ? `재현된 이상 ${bad}건, 미확인 ${unchecked}건` : "이상 없음");
   return lines;
 }
