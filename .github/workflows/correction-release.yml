@@ -1,10 +1,17 @@
-# 정정 재신고 집계 Release (#218, 판정 #76). 해제 기록 가운데 같은 계약 기록이 해제되지 않은 채 다시 있는 것의 집계(서울 전체·25개 구·
-# 서울 계약월별)를 GitHub Release 한 건(correction-twins-<기준일>)으로 올린다. 새 수집은 없고 저장소의 raw/sale을 읽는다.
+# 해제 기록 가운데 같은 계약 기록이 해제되지 않은 채 다시 있는 것의 집계 Release (#218, 판정 #76). 서울 전체·25개 구·서울 계약월별
+# 집계를 GitHub Release 한 건(correction-twins-<기준일>)으로 올린다. 새 수집은 없고 저장소의 raw/sale을 읽는다.
 # 집계만 낸다 - 행 단위 필드는 출력하지 않고(scripts/build-correction-release.mjs의 허용 목록·구조 시험), kyhsa93.github.io에는 아무것도 만들지 않는다.
 #
-# 올리기 전 문구는 legal 승인이 먼저다(Release 본문 템플릿, #218). 첫 Release는 PR 병합·승인 뒤 dispatch로 올린다.
+# 올리기 전 문구는 legal 승인이 먼저다(Release 본문 템플릿, #218) - 승인 전에는 병합하지 않는다.
+# 첫 Release: 워크플로가 dispatch로만 올라가도록 강제된 것은 없다. 병합 뒤 처음 오는 매월 12일 17:43 UTC cron(병합이 2026-10-12 17:43 UTC 뒤면
+# 2026-11-12)이 직전 Release가 없으므로 사람 손 없이 첫 Release를 올린다. 그 전에 `contents: write`·자산·본문 렌더링을 보고 싶으면 병합 직후
+# Actions에서 Correction release를 dispatch로 먼저 돌린다(같은 기준일 Release가 이미 있으면 cron은 새로 올리지 않는다).
 # 갱신: 월 1회 + 수동. 숫자(figuresDigest)가 직전 Release와 같으면 새로 올리지 않는다. 다르면 새 Release를 올리고, 이전 Release 본문
 # 맨 위에 "정정됨 (SUPERSEDED)" 표시를 남긴다(#28 전례, clo 조건 6). 표시는 새 Release 뒤에 하고 이미 붙었으면 건너뛰므로, 중간에 실패해도 다음 실행이 채운다.
+# 표시 문구는 새 데이터·원천 수정의 반영이지 셈의 오류 인정이 아니다(legal M5, scripts/build-correction-release.mjs의 supersede).
+#
+# 실패는 크게 실패한다: 직전 Release를 못 읽으면(gh 일시 실패 포함) 새 Release를 올리지 않고 단계를 실패시킨다. 직전 Release가 "없다"와 "못 읽었다"를
+# 구분하지 않으면, 숫자가 같은데도 새 Release가 생기고 이전 것에 표시가 붙는다.
 #
 # 권한은 contents: write 하나뿐이고 GITHUB_TOKEN만 쓴다(시크릿 없음). 입력 경로·출력 경로는 env로 받아 run에 직접 박지 않는다.
 # 입력 경로는 REALESTATE_RAW_DIR이다 - #175(raw/sale 재배포 범위) 결론에 따라 사본이 옮겨지거나 필드가 줄면 이 경로만 맞춘다.
@@ -61,16 +68,22 @@ jobs:
             echo "$tag 가 이미 있다 - 새로 올리지 않는다"
             exit 0
           fi
-          prev="$(gh release list --limit 100 --json tagName --jq '.[].tagName | select(startswith("correction-twins-"))' | sort | tail -n1 || true)"
+          # || true를 두지 않는다: set -e·pipefail로 gh release list 실패가 이 단계를 실패시킨다(Release가 0건이면 jq select가 아무것도 안 내고 exit 0이라 prev만 빈다).
+          prev="$(gh release list --limit 100 --json tagName --jq '.[].tagName | select(startswith("correction-twins-"))' | sort | tail -n1)"
           if [ -n "$prev" ]; then
             mkdir -p "$RUNNER_TEMP/prev"
             gh release download "$prev" --pattern 'correction-twins-*.json' --dir "$RUNNER_TEMP/prev"
-            if node scripts/build-correction-release.mjs --same "$RUNNER_TEMP/prev/$prev.json" "$out/$tag.json"; then
-              echo "숫자가 $prev 와 같다 - 새로 올리지 않는다"
-              exit 0
-            fi
+            # --same 종료 코드: 0 같다, 1 다르다, 2 비교 실패. 1일 때만 새 Release로 넘어가고 2는 단계를 실패시킨다.
+            rc=0
+            node scripts/build-correction-release.mjs --same "$RUNNER_TEMP/prev/$prev.json" "$out/$tag.json" || rc=$?
+            case "$rc" in
+              0) echo "숫자가 $prev 와 같다 - 새로 올리지 않는다"; exit 0 ;;
+              1) echo "숫자가 $prev 와 다르다 - 새 Release를 올린다" ;;
+              *) echo "$prev 와 숫자를 비교하지 못했다(종료 코드 $rc) - 새 Release를 올리지 않는다" >&2; exit 1 ;;
+            esac
           fi
-          gh release create "$tag" --title "$tag" --notes-file "$out/README.md" \
+          # --target: 태그가 이 실행이 받은 커밋을 정확히 가리키게 한다(기본값은 그 시점의 기본 브랜치 끝이다).
+          gh release create "$tag" --target "$GITHUB_SHA" --title "$(cat "$out/title.txt")" --notes-file "$out/README.md" \
             "$out/$tag.json" "$out/$tag.csv" "$out/check.py" "$out/check.out" "$out/README.md"
 
       - name: 이전 Release에 정정됨 표시
