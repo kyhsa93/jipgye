@@ -18,7 +18,7 @@ import {
 import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "./rates-table.mjs";
 import { BUDGET_PAGES } from "./budget-pages.mjs";
 import { budgetFactSentences } from "./budget-facts.mjs";
-import { DISTRICT_PAGES, DISTRICT_SLUGS, districtFile } from "./district-slugs.mjs";
+import { DISTRICT_PAGES } from "./district-slugs.mjs";
 import { districtSentences } from "./district-summary.mjs";
 import { factSentences } from "./district-facts.mjs";
 import { renewalSentences } from "./renewal-facts.mjs";
@@ -28,15 +28,13 @@ import { candidatesInBand } from "./complex-price.mjs";
 import { BASIS_DATE as CAP_DATE, capSentence } from "./loan-cap.mjs";
 import { BASIS_DATE as POLICY_DATE_BASIS, policyShort, policySentence } from "./policy-loan.mjs";
 import { BASIS_DATE as MIN_CASH_DATE, minCash, minCashSentence } from "./min-cash.mjs";
-import { WOLSE_CONVERSION_RATE } from "./realestate-metrics.mjs";
 import { rateBridgeHtml } from "./rate-bridge.mjs";
 import { metricCell, topDistricts } from "./realestate-rows.mjs";
+import { RE_LABELS, headLabels, reCount, reEok, reMan, realestateTable } from "./realestate-table.mjs";
 import {
-  KIND_FIELDS,
   MIN_SAMPLE,
   areaPrice,
   formatEok,
-  formatMan,
   formatPercent,
   jeonseRatio,
   metricOf,
@@ -527,197 +525,38 @@ function newsListHtmlLegacy(news, category = null) {
 }
 export const newsListHtml = fragment("newsListHtml", newsListHtmlLegacy);
 
-const RE_LABELS = {
-  district: "지역",
-  sale: "매매",
-  jeonse: "전세",
-  wolse: "월세",
-  colSale: "매매 평당가",
-  colJeonse: "전세 평당 보증금",
-  colWolse: "월세 보증금 / 월세",
-  perPyeong: "평당가",
-  perPyeongDeposit: "평당 보증금",
-  area: "84㎡ 환산",
-  deposit: "평균 보증금",
-  monthly: "평균 월세",
-  count: "거래건수",
-  ratio: "전세가율",
-  ratioByComplex: "전세가율 단지별 중앙값",
-  overall: "서울 전체",
+// 시세표의 칸 규칙·정렬(`RE_LABELS`~`reDistrictRows` 열여섯 보조 함수)은 realestate-table.mjs로 옮겼다(JSX 쪽 조각과 같이 쓴다, #242 PR 2).
+// 거기서는 마크업 없이 칸의 모양과 글자만 정하고, 여기서는 마크업만 입힌다. 어느 글자를 이스케이프하고 어느 글자를 그대로 끼우는지는 조각(part)의 esc가 정한다 - 예전 그대로다.
+const RE_PART_CLASS = { strong: "price-strong", count: "count", ratio: "ratio", low: "low-sample", stale: "prev-tag" };
+const rePartHtml = ({ type, text, title, dir, esc }) => {
+  const body = esc ? escapeHtml(text) : text;
+  if (type === "text") return body;
+  const cls = type === "change" ? `change ${dir}` : RE_PART_CLASS[type];
+  return `<span class="${cls}"${title === null ? "" : ` title="${escapeHtml(title)}"`}>${body}</span>`;
 };
-
-const reCount = (n) => `${n.toLocaleString("ko-KR")}건`;
-const reMan = (v) => formatMan(v);
-const reEok = (v) => formatEok(v);
-
-function reHeadLabels(kind) {
-  if (!kind) return [RE_LABELS.district, RE_LABELS.colSale, RE_LABELS.colJeonse, RE_LABELS.colWolse];
-  if (kind === "wolse") return [RE_LABELS.district, RE_LABELS.deposit, RE_LABELS.monthly, RE_LABELS.count];
-  if (kind === "jeonse") {
-    return [RE_LABELS.district, RE_LABELS.perPyeongDeposit, RE_LABELS.area, RE_LABELS.ratio, RE_LABELS.count];
-  }
-  return [RE_LABELS.district, RE_LABELS.perPyeong, RE_LABELS.area, RE_LABELS.count];
-}
+const reCellHtml = (parts) => parts.map(rePartHtml).join("");
 
 function realestateHeadHtmlLegacy(kind = null, district = null) {
-  const labels = district
-    ? ["구분", RE_LABELS.perPyeong, RE_LABELS.area, RE_LABELS.count]
-    : reHeadLabels(kind);
+  const labels = headLabels(kind, district);
   return `<tr>${labels.map((label) => `<th scope="col">${escapeHtml(label)}</th>`).join("")}</tr>`;
 }
 export const realestateHeadHtml = fragment("realestateHeadHtml", realestateHeadHtmlLegacy);
 
-function reChange(change, baselineDate) {
-  if (!change || typeof change.value10k !== "number" || change.value10k === 0) return "";
-  const dir = change.value10k > 0 ? "up" : "down";
-  const arrow = change.value10k > 0 ? "▲" : "▼";
-  const title = baselineDate ? ` title="${escapeHtml(`${baselineDate} 대비`)}"` : "";
-  return ` <span class="change ${dir}"${title}>${arrow}${reMan(Math.abs(change.value10k))}</span>`;
+function reRowHtml(row) {
+  const body = row.cells.map((cell) => `<td data-label="${escapeHtml(cell.label)}">${reCellHtml(cell.parts)}</td>`).join("");
+  const name = row.name.href ? `<a href="${row.name.href}">${escapeHtml(row.name.text)}</a>` : escapeHtml(row.name.text);
+  return `<tr class="${row.overall ? "overall-row" : ""}"><td>${name}${reCellHtml(row.stale)}</td>${body}</tr>`;
 }
 
-function reWolseChange(change, baselineDate) {
-  if (!change || typeof change.percent !== "number" || change.value10k === 0) return "";
-  const dir = change.value10k > 0 ? "up" : "down";
-  const arrow = change.value10k > 0 ? "▲" : "▼";
-  const rate = `${(WOLSE_CONVERSION_RATE * 100).toFixed(1)}%`;
-  const title = baselineDate
-    ? ` title="${escapeHtml(`${baselineDate} 대비 · 보증금과 월세를 묶은 ㎡당 값(보증금 + 월세×12÷${rate})의 증감 — 그 주에 신고된 방 크기가 달라서 생기는 흔들림을 덜어 낸 값입니다`)}"`
-    : "";
-  return ` <span class="change ${dir}"${title}>${arrow}${Math.abs(change.percent).toFixed(1)}%</span>`;
-}
-
-const reCountSpan = (metric) =>
-  typeof metric?.transactionCount === "number"
-    ? ` <span class="count">${escapeHtml(reCount(metric.transactionCount))}</span>`
-    : "";
-
-
-function reLowSample(metric) {
-  const n = metric?.transactionCount ?? 0;
-  return `<span class="low-sample" title="${escapeHtml(`이번 달 신고가 ${n}건뿐이라 평균을 내지 않았습니다.`)}">${escapeHtml(`신고 ${n}건`)}</span>`;
-}
-
-function reCells(entry, kind) {
-  const resolved = resolveMetric(entry, kind);
-  if (!resolved) {
-    const raw = entry?.[KIND_FIELDS[kind].metric];
-    return [raw ? reLowSample(raw) : "-", "-", "-"];
-  }
-  const { metric } = resolved;
-  const change = (c, d) => reChange(c, d);
-
-  if (kind === "wolse") {
-    return [
-      `<span class="price-strong">${reMan(metric.avgDeposit10k)}</span>`,
-      `<span class="price-strong">월 ${reMan(metric.avgMonthlyRent10k)}</span>${reWolseChange(metric.change, metric.baselineDate)}`,
-      `<span class="count">${escapeHtml(reCount(metric.transactionCount))}</span>`,
-    ];
-  }
-  const perPyeong = valueOf(metric, kind);
-  const cells = [
-    `<span class="price-strong">${reMan(perPyeong)}</span>${change(metric.change, metric.baselineDate)}`,
-    `<span class="price-strong">${reEok(areaPrice(perPyeong))}</span>`,
-  ];
-  if (kind === "jeonse") {
-    const ratio = jeonseRatio(entry);
-    cells.push(ratio ? `<span class="ratio">${formatPercent(ratio.ratio)}</span>` : "-");
-  }
-  cells.push(`<span class="count">${escapeHtml(reCount(metric.transactionCount))}</span>`);
-  return cells;
-}
-
-function reAllCells(entry) {
-  return ["sale", "jeonse", "wolse"].map((kind) => {
-    const resolved = resolveMetric(entry, kind);
-    if (!resolved) {
-      const raw = entry?.[KIND_FIELDS[kind].metric];
-      return raw ? reLowSample(raw) : "-";
-    }
-    const { metric } = resolved;
-    if (kind === "wolse") {
-      return `${reMan(metric.avgDeposit10k)} / 월 ${reMan(metric.avgMonthlyRent10k)}${reCountSpan(metric)}`;
-    }
-    const change = reChange(metric.change, metric.baselineDate);
-    return `${reMan(valueOf(metric, kind))}${change}${reCountSpan(metric)}`;
-  });
-}
-
-function reStaleTag(entry) {
-  const at = entry?.staleAt;
-  if (!at) return "";
-  const date = new Date(at);
-  if (Number.isNaN(date.getTime())) return "";
-  const label = date.toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul", month: "numeric", day: "numeric" });
-  return ` <span class="prev-tag" title="${escapeHtml("이 지역은 오늘 실거래 조회에 실패해 지난번에 받은 값을 그대로 보여줍니다.")}">${escapeHtml(label)}</span>`;
-}
-
-function reDistrictLink(label) {
-  const slug = DISTRICT_SLUGS[label];
-  return slug ? `<a href="./${districtFile(slug)}">${escapeHtml(label)}</a>` : escapeHtml(label);
-}
-
-function reRow(entry, label, isOverall, kind) {
-  const labels = reHeadLabels(kind);
-  const cells = kind ? reCells(entry, kind) : reAllCells(entry);
-  const body = cells
-    .map((cell, i) => `<td data-label="${escapeHtml(labels[i + 1])}">${cell}</td>`)
-    .join("");
-  const name = isOverall ? escapeHtml(label) : reDistrictLink(label);
-  return `<tr class="${isOverall ? "overall-row" : ""}"><td>${name}${reStaleTag(entry)}</td>${body}</tr>`;
-}
-
-function reSorted(districts, kind) {
-  const key = kind ?? "sale";
-  return [...districts].sort((a, b) => {
-    const av = valueOf(resolveMetric(a, key)?.metric, key);
-    const bv = valueOf(resolveMetric(b, key)?.metric, key);
-    if (av === null && bv === null) return (a.name ?? "").localeCompare(b.name ?? "");
-    if (av === null) return 1;
-    if (bv === null) return -1;
-    return bv - av;
-  });
-}
-
-function reDistrictRows(entry) {
-  const labels = [RE_LABELS.sale, RE_LABELS.jeonse, RE_LABELS.wolse];
-  return ["sale", "jeonse", "wolse"]
-    .map((kind, i) => {
-      const cell = (price, area, count) =>
-        `<tr><td>${escapeHtml(labels[i])}</td>` +
-        `<td data-label="${escapeHtml(RE_LABELS.perPyeong)}">${price}</td>` +
-        `<td data-label="${escapeHtml(RE_LABELS.area)}">${area}</td>` +
-        `<td data-label="${escapeHtml(RE_LABELS.count)}">${count}</td></tr>`;
-
-      const resolved = resolveMetric(entry, kind);
-      if (!resolved) {
-        const raw = entry?.[KIND_FIELDS[kind].metric];
-        return cell(raw ? reLowSample(raw) : "-", "-", "-");
-      }
-      const { metric } = resolved;
-        const change = reChange(metric.change, metric.baselineDate);
-      const price =
-        kind === "wolse"
-          ? `<span class="price-strong">${reMan(metric.avgDeposit10k)}</span> / <span class="price-strong">월 ${reMan(metric.avgMonthlyRent10k)}</span>`
-          : `<span class="price-strong">${reMan(valueOf(metric, kind))}</span>${change}`;
-      const area = kind === "wolse" ? "-" : `<span class="price-strong">${reEok(areaPrice(valueOf(metric, kind)))}</span>`;
-      return cell(price, area, `<span class="count">${escapeHtml(reCount(metric.transactionCount))}</span>`);
-    })
-    .join("");
-}
+const reDistrictRowHtml = (row) =>
+  `<tr><td>${escapeHtml(row.label)}</td>` +
+  row.cells.map((cell) => `<td data-label="${escapeHtml(cell.label)}">${reCellHtml(cell.parts)}</td>`).join("") +
+  `</tr>`;
 
 function realestateTableHtmlLegacy(realestate, kind = null, district = null) {
-  const districts = realestate?.districts ?? [];
-  if (district) {
-    const entry = districts.find((d) => d.name === district);
-    return entry ? reDistrictRows(entry) : null;
-  }
-  if (!realestate?.overall && !districts.length) return null;
-  return (
-    (realestate.overall ? reRow(realestate.overall, RE_LABELS.overall, true, kind) : "") +
-    reSorted(districts, kind)
-      .map((d) => reRow(d, d.name ?? "-", false, kind))
-      .join("")
-  );
+  const table = realestateTable(realestate, kind, district);
+  if (!table) return null;
+  return table.rows.map(table.byDistrict ? reDistrictRowHtml : reRowHtml).join("");
 }
 export const realestateTableHtml = fragment("realestateTableHtml", realestateTableHtmlLegacy);
 

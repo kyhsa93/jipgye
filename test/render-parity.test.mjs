@@ -13,6 +13,7 @@ import { DISTRICT_PAGES } from "../scripts/district-slugs.mjs";
 import { CONVERSION_BAND, cancelDistricts, cancelMonths, conversionTable, count, floorDistricts, pct, renewalDistricts, renewalWolseDistricts, signed } from "../scripts/district-tables.mjs";
 import { MAX_DISTRICTS, changeOf, countOf, man, metricCell, topDistricts } from "../scripts/realestate-rows.mjs";
 import { MIN_SAMPLE, hasEnoughSample } from "../scripts/realestate-format.mjs";
+import { RE_LABELS, headLabels, reAllCells, reCells, reChange, reCount, reCountSpan, reDistrictLink, reDistrictRows, reEok, reHeadLabels, reLowSample, reMan, reRow, reSorted, reStaleTag, reWolseChange, realestateTable } from "../scripts/realestate-table.mjs";
 import { makeFragment, rendererMode } from "../scripts/renderer.mjs";
 import { createReactRenderer } from "../scripts/render/react.mjs";
 import { RATES_BRANCHES } from "./fixtures/render/rates-branches.mjs";
@@ -20,10 +21,11 @@ import { JAVASCRIPT_URL_DIFF, NEWS_MARKET_BRANCHES } from "./fixtures/render/new
 import { LEAD_LINKS_BRANCHES, LEAD_LINKS_FNS } from "./fixtures/render/lead-links-branches.mjs";
 import { RAW_COUNT_DIFF, REALESTATE_BRANCHES } from "./fixtures/render/realestate-branches.mjs";
 import { DISTRICT_TABLES_BRANCHES, DISTRICT_TABLES_FNS, DISTRICT_TABLES_THROWS, RAW_TEXT_DIFF } from "./fixtures/render/district-tables-branches.mjs";
+import { REALESTATE_TABLE_BRANCHES, REALESTATE_TABLE_FNS, REALESTATE_TABLE_THROWS } from "./fixtures/render/realestate-table-branches.mjs";
 
 // #237: 렌더러 스위치와 legacy↔react parity 시험의 골격. #240이 금리 조각(ratesHtml·ratesHeadHtml)의 분기별 케이스를 더했고
 // #241 PR 1이 문장·목록 8개(summaryHtml·marketHtml·뉴스 6개)를, PR 2가 리드·링크 10개(*LeadHtml 6·*DistrictLinksHtml 4)를,
-// PR 3이 첫 화면 실거래 요약(realestateHtml)을, #242 PR 1이 자치구 문장·링크 4개와 표 6개를 더했다. #242 PR 2·3과 #243이 이어서 더한다.
+// PR 3이 첫 화면 실거래 요약(realestateHtml)을, #242 PR 1이 자치구 문장·링크 4개와 표 6개를, PR 2가 시세표 머리글·표(realestateHeadHtml·realestateTableHtml)를 더했다. #242 PR 3과 #243이 이어서 더한다.
 // 입력은 이 파일 안의 값과 test/fixtures/render/의 고정 파일뿐이다(R3): 저장소의 docs/·docs/data는 읽지 않는다.
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -158,7 +160,9 @@ const PORTED = [
   "newsSummaryHtml",
   "ratesHeadHtml",
   "ratesHtml",
+  "realestateHeadHtml",
   "realestateHtml",
+  "realestateTableHtml",
   "renewalCapLeadHtml",
   "renewalDistrictLinksHtml",
   "renewalDistrictsHtml",
@@ -223,6 +227,7 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
   const leadUrl = pathToFileURL(fixture("lead-links-branches.mjs")).href;
   const realestateUrl = pathToFileURL(fixture("realestate-branches.mjs")).href;
   const districtUrl = pathToFileURL(fixture("district-tables-branches.mjs")).href;
+  const tableUrl = pathToFileURL(fixture("realestate-table-branches.mjs")).href;
   const run = (env) =>
     spawnSync(
       process.execPath,
@@ -235,11 +240,12 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
          const { LEAD_LINKS_BRANCHES } = await import(${JSON.stringify(leadUrl)});
          const { REALESTATE_BRANCHES } = await import(${JSON.stringify(realestateUrl)});
          const { DISTRICT_TABLES_BRANCHES } = await import(${JSON.stringify(districtUrl)});
+         const { REALESTATE_TABLE_BRANCHES } = await import(${JSON.stringify(tableUrl)});
          const run = (rows) => rows.map((b) => [b.id, p[b.fn](...b.args)]);
          // 이식 안 된 조각(아직 legacy): 예산 최소 현금 문장·예산 단지 후보(둘 다 #243이 이식한다 - 오래 미이식으로 남는 budget* 조각).
          // 이식되면 이 줄의 조각을 다른 미이식 조각으로 바꾼다(districtLinksHtml은 #242 PR 1이 이식해 budgetCandidatesHtml로 바꿨다).
          const legacyOnly = [p.budgetMinCashHtml({ min10k: 50000 }), p.budgetCandidatesHtml({ min10k: 50000 }, [{ reference: "202609" }])];
-         console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), legacyOnly, rates: run(RATES_BRANCHES), news: run(NEWS_MARKET_BRANCHES), leadLinks: run(LEAD_LINKS_BRANCHES), realestate: run(REALESTATE_BRANCHES), districtTables: run(DISTRICT_TABLES_BRANCHES) }));`,
+         console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), legacyOnly, rates: run(RATES_BRANCHES), news: run(NEWS_MARKET_BRANCHES), leadLinks: run(LEAD_LINKS_BRANCHES), realestate: run(REALESTATE_BRANCHES), districtTables: run(DISTRICT_TABLES_BRANCHES), realestateTable: run(REALESTATE_TABLE_BRANCHES) }));`,
       ],
       { cwd: root, encoding: "utf8", env: { ...process.env, JIPGYE_RENDERER: "", ...env } }
     );
@@ -265,6 +271,8 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
   assert.deepEqual(b.realestate, a.realestate, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(실거래 요약)");
   assert.equal(b.districtTables.length, DISTRICT_TABLES_BRANCHES.length);
   assert.deepEqual(b.districtTables, a.districtTables, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(자치구 문장·링크·표)");
+  assert.equal(b.realestateTable.length, REALESTATE_TABLE_BRANCHES.length);
+  assert.deepEqual(b.realestateTable, a.realestateTable, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(시세표 머리글·표)");
 });
 
 // ---- 문장·목록 8개 조각(#241 PR 1): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
@@ -712,4 +720,263 @@ test("district-links.mjs: linksBlockShape는 JSX가 쓰는 분기이고 linksBlo
   // JSX가 쓰는 경로 규칙은 코드가 정한 `./district-<slug>.html` 하나다: legacy의 `./${file}`과 25곳 모두 같다
   for (const { slug, file } of DISTRICT_PAGES) assert.equal(slugLinkHref(slug), `./${file}`);
   for (const { slug } of DISTRICT_PAGES) assert.match(slugLinkHref(slug), /^\.\/district-[a-z]+\.html$/, "javascript: 등 다른 스킴이 들어갈 자리가 없다");
+});
+
+// ---- 시세표 머리글·표(#242 PR 2): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
+
+const TABLE_NAMES = (html) => [...html.matchAll(/<tr class="[^"]*"><td>(?:<a[^>]*>)?([^<]*)/g)].map((m) => m[1]);
+const hasExpect = (b) => "expect" in b;
+
+test("시세표 분기 표: id가 겹치지 않고, 두 조각을 모두 덮고, 모든 행에 기대값(expect 또는 정렬 순서 order)이 있다", () => {
+  const ids = REALESTATE_TABLE_BRANCHES.map((b) => b.id);
+  assert.equal(new Set(ids).size, ids.length, "분기 id가 겹친다");
+  assert.deepEqual([...new Set(REALESTATE_TABLE_BRANCHES.map((b) => b.fn))].sort(), REALESTATE_TABLE_FNS);
+  for (const b of REALESTATE_TABLE_BRANCHES) {
+    assert.ok(hasExpect(b) || Array.isArray(b.order), `${b.id}: 기대값(expect 또는 order)이 없다`);
+    assert.ok(PORTED.includes(b.fn), `${b.id}: 이식 목록에 없는 조각(${b.fn})`);
+  }
+  const toIds = new Set(REALESTATE_TABLE_THROWS.map((b) => b.id));
+  assert.equal(toIds.size, REALESTATE_TABLE_THROWS.length, "던지는 입력 id가 겹친다");
+  assert.ok(REALESTATE_TABLE_BRANCHES.length >= 700, `분기 표가 ${REALESTATE_TABLE_BRANCHES.length}행뿐이다`);
+});
+
+test("시세표 분기 표: 값 종류별 행이 있다 - 데이터 없음(null)·비문자열·null·undefined·특수문자·빈 값·낡음 태그·월세·정렬", () => {
+  const table = REALESTATE_TABLE_BRANCHES.filter((b) => b.fn === "realestateTableHtml");
+  const outs = table.filter(hasExpect).map((b) => b.expect);
+  const strings = outs.filter((o) => typeof o === "string");
+  const has = (re) => strings.some((o) => re.test(o));
+  assert.ok(outs.includes(null), "데이터 없음(null) 행이 없다");
+  assert.ok(table.some((b) => b.args[0] === null), "null 입력 행이 없다");
+  assert.ok(table.some((b) => b.args[0] === undefined), "undefined 입력 행이 없다");
+  assert.ok(has(/A&amp;B &lt;i&gt; &quot;q&quot; it's/), "특수문자 행이 없다");
+  assert.ok(has(/a&amp;amp;b&amp;#x27;/), "이미 이스케이프된 글자 행이 없다");
+  assert.ok(has(/<td>false<\/td>/) && has(/<td>true<\/td>/) && has(/<td>NaN<\/td>/) && has(/\[object Object\]/) && has(/<td>1,2<\/td>/), "비문자열(false·true·NaN·{}·[1,2]) 이름 행이 없다");
+  assert.ok(has(/<td><\/td>/), "빈 값(빈 이름) 행이 없다");
+  assert.ok(has(/<td>-<\/td>/), "이름 없음(null·undefined → \"-\") 행이 없다");
+  assert.ok(has(/신고 NaN건/) && has(/신고 false건/) && has(/신고 \[object Object\]건/) && has(/신고 건/) && has(/신고 0건/), "건수 비숫자 표본 부족 행이 없다");
+  assert.ok(has(/class="prev-tag"/), "낡음 태그 행이 없다");
+  assert.ok(has(/class="overall-row"/) && has(/<tr class="">/), "서울 전체 줄·자치구 줄 행이 없다");
+  assert.ok(has(/월 -<\/span>/) && has(/class="change (up|down)" title="[^"]*보증금 \+ 월세/), "월세 칸(월 -·월세 증감) 행이 없다");
+  assert.ok(has(/class="ratio"/), "전세가율 행이 없다");
+  assert.equal(table.filter((b) => Array.isArray(b.order) && !hasExpect(b)).length, 18, "정렬 행이 열여덟 개가 아니다");
+  // 낡음 태그가 붙지 않는 행도 있다(키 없음·null·날짜 아님)
+  assert.ok(table.filter((b) => b.id.startsWith("ST-")).some((b) => typeof b.expect === "string" && !b.expect.includes("prev-tag")));
+});
+
+test("시세표 분기 표: 해자 2(표본 부족)가 세 보기(한 줄 표·종류 표·자치구 페이지 표)마다 행으로 있고, 표본 부족이 값 없음보다 먼저 판정되는 순서 행이 있다", () => {
+  const table = REALESTATE_TABLE_BRANCHES.filter((b) => b.fn === "realestateTableHtml" && hasExpect(b));
+  const views = {
+    "한 줄 표(reAllCells)": (b) => b.id.startsWith("TA-"),
+    "종류 표(reCells)": (b) => /^T[SJW]-/.test(b.id) || b.id.startsWith("TO-1") || b.id.startsWith("TR-") || b.id.startsWith("TJ-M"),
+    "자치구 페이지 표(reDistrictRows)": (b) => b.id.startsWith("DR-"),
+  };
+  for (const [name, pick] of Object.entries(views)) {
+    const moat = table.filter((b) => b.moat && pick(b));
+    assert.ok(moat.some((b) => /<span class="low-sample" title="이번 달 신고가 \d+건뿐이라 평균을 내지 않았습니다\.">신고 \d+건<\/span>/.test(b.expect)), `${name}: 표본 부족 스팬 행이 없다`);
+    assert.ok(moat.some((b) => b.order), `${name}: 순서 행(표본 부족이 값 없음보다 먼저)이 없다`);
+    assert.ok(table.some((b) => pick(b) && !b.moat && !b.expect.includes("low-sample") && /6,000만원/.test(b.expect)), `${name}: 표본 부족이 아닌 값 행이 없다`);
+    assert.ok(table.some((b) => pick(b) && !b.expect.includes("low-sample") && !/만원|억/.test(b.expect.replace(/만원 ?\//g, ""))), `${name}: 값 없음("-") 행이 없다`);
+  }
+  // 순서: 지표가 있으면(값이 없어도) "-"가 아니라 표본 부족이다. 지표 자체가 없을 때만 "-"다.
+  const get = (id) => REALESTATE_TABLE_BRANCHES.find((b) => b.id === id).expect;
+  assert.match(get("TA-S-o01"), /<td data-label="매매 평당가"><span class="low-sample"[^>]*>신고 4건<\/span><\/td>/);
+  assert.match(get("TA-S-o02"), /<td data-label="매매 평당가"><span class="low-sample"[^>]*>신고 40건<\/span><\/td>/);
+  assert.match(get("TA-S-z01"), /<td data-label="매매 평당가">-<\/td>/);
+  assert.match(get("TA-S-z03"), /<td data-label="매매 평당가">-<\/td>/);
+  // 문턱: 5건부터 값이다(4건은 값이 있어도 내지 않는다). 이 표는 건수 문턱을 따로 정하지 않고 resolveMetric이 정한 것을 따른다.
+  assert.match(get("TA-S-n01"), /6,000만원/);
+  assert.doesNotMatch(get("TA-S-n02"), /6,000만원/);
+  assert.equal(MIN_SAMPLE, 5);
+});
+
+test("시세표 분기 표: legacy 출력이 손으로 적은 기대값(또는 정렬 순서)과 같다(분기마다)", () => {
+  for (const b of REALESTATE_TABLE_BRANCHES) {
+    const out = prerender[b.fn].legacy(...b.args);
+    if (hasExpect(b)) assert.equal(out, b.expect, `${b.id} ${b.cond}`);
+    else assert.deepEqual(TABLE_NAMES(out), b.order, `${b.id} ${b.cond}`);
+  }
+});
+
+test("시세표 분기 표: React 조각이 legacy와 바이트까지 같다(분기마다, 허용 변환은 래퍼의 &#x27; 되돌림 하나)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  for (const b of REALESTATE_TABLE_BRANCHES) {
+    const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
+    if (hasExpect(b)) assert.equal(react, b.expect, `${b.id} ${b.cond}`);
+    else assert.deepEqual(TABLE_NAMES(react), b.order, `${b.id} ${b.cond}`);
+    assert.equal(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+  }
+});
+
+test("시세표 분기 표: 같은 입력을 두 번 넣어도 같고 입력을 바꾸지 않는다(정렬은 사본에)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  const snap = (args) => JSON.stringify(args, (_, v) => (v === undefined ? "(undefined)" : typeof v === "number" && !Number.isFinite(v) ? String(v) : v));
+  for (const b of REALESTATE_TABLE_BRANCHES) {
+    const before = snap(b.args);
+    const react = fragment(b.fn, prerender[b.fn].legacy);
+    assert.equal(react(...b.args), react(...b.args), b.id);
+    prerender[b.fn].legacy(...b.args);
+    assert.equal(snap(b.args), before, `${b.id}: 입력이 바뀌었다`);
+  }
+});
+
+test("시세표 조각: 예전 코드가 던지는 입력은 legacy도 React 조각도 같이 던진다(조용히 빈 표를 내지 않는다)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  assert.equal(REALESTATE_TABLE_THROWS.length, 10);
+  for (const b of REALESTATE_TABLE_THROWS) {
+    assert.throws(() => prerender[b.fn].legacy(...b.args), TypeError, `${b.id} legacy ${b.cond}`);
+    assert.throws(() => fragment(b.fn, prerender[b.fn].legacy)(...b.args), TypeError, `${b.id} react ${b.cond}`);
+  }
+});
+
+test("시세표 조각: 이식된 이름이라 legacy가 조각 안에서 불리지 않는다(데이터 없음은 null, 머리글은 언제나 한 줄)", async () => {
+  let called = 0;
+  const fragment = makeFragment(await createReactRenderer());
+  const spy = () => (called++, "legacy");
+  for (const none of [null, undefined, {}, { districts: [] }]) assert.equal(fragment("realestateTableHtml", spy)(none), null);
+  assert.equal(fragment("realestateTableHtml", spy)({ districts: [{ name: "중구" }] }, null, "종로구"), null);
+  assert.ok(fragment("realestateHeadHtml", spy)().startsWith('<tr><th scope="col">지역</th>'));
+  assert.ok(fragment("realestateHeadHtml", spy)(null, "종로구").startsWith('<tr><th scope="col">구분</th>'));
+  assert.equal(called, 0);
+});
+
+test("realestate-table.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - 라벨·글자 규칙·칸 모양·정렬", () => {
+  // 라벨(손으로 적은 값)
+  assert.deepEqual(RE_LABELS, {
+    district: "지역", sale: "매매", jeonse: "전세", wolse: "월세", colSale: "매매 평당가", colJeonse: "전세 평당 보증금", colWolse: "월세 보증금 / 월세",
+    perPyeong: "평당가", perPyeongDeposit: "평당 보증금", area: "84㎡ 환산", deposit: "평균 보증금", monthly: "평균 월세", count: "거래건수", ratio: "전세가율",
+    ratioByComplex: "전세가율 단지별 중앙값", overall: "서울 전체",
+  });
+  assert.deepEqual(reHeadLabels(null), ["지역", "매매 평당가", "전세 평당 보증금", "월세 보증금 / 월세"]);
+  assert.deepEqual(reHeadLabels("wolse"), ["지역", "평균 보증금", "평균 월세", "거래건수"]);
+  assert.deepEqual(reHeadLabels("jeonse"), ["지역", "평당 보증금", "84㎡ 환산", "전세가율", "거래건수"]);
+  assert.deepEqual(reHeadLabels("sale"), ["지역", "평당가", "84㎡ 환산", "거래건수"]);
+  assert.deepEqual(reHeadLabels("x"), reHeadLabels("sale"));
+  assert.deepEqual(headLabels(), reHeadLabels(null));
+  assert.deepEqual(headLabels("jeonse", "종로구"), ["구분", "평당가", "84㎡ 환산", "거래건수"]);
+  // 글자
+  assert.equal(reCount(1234), "1,234건");
+  assert.equal(reCount("9"), "9건");
+  assert.equal(reCount([7]), "7건");
+  assert.throws(() => reCount(null), TypeError);
+  assert.throws(() => reCount(undefined), TypeError);
+  assert.equal(reMan(5530), "5,530만원");
+  assert.equal(reMan(20264), "2억 264만원");
+  assert.equal(reMan("5"), "-");
+  assert.equal(reEok(152459), "15억 2,459만원");
+  assert.equal(reEok(null), "-");
+  // 증감: 매매·전세는 value10k, 월세는 percent(방향은 value10k)
+  const sp = (type, text, { title = null, dir = null, esc = false } = {}) => ({ type, text, title, dir, esc });
+  const SPACE = sp("text", " ");
+  assert.deepEqual(reChange({ value10k: 5 }, "2026-10-04"), [SPACE, sp("change", "▲5만원", { title: "2026-10-04 대비", dir: "up" })]);
+  assert.deepEqual(reChange({ value10k: -5 }, null), [SPACE, sp("change", "▼5만원", { dir: "down" })]);
+  for (const none of [undefined, null, {}, { value10k: 0 }, { value10k: -0 }, { value10k: "5" }, 5, "x"]) assert.deepEqual(reChange(none, "d"), [], String(none));
+  assert.deepEqual(reWolseChange({ value10k: 1, percent: 2.34 }, null), [SPACE, sp("change", "▲2.3%", { dir: "up" })]);
+  assert.match(reWolseChange({ value10k: -1, percent: 2 }, "d")[1].title, /^d 대비 · 보증금과 월세를 묶은 ㎡당 값\(보증금 \+ 월세×12÷4\.8%\)의 증감/);
+  for (const none of [undefined, {}, { value10k: 1 }, { value10k: 1, percent: "2" }, { value10k: 0, percent: 2 }]) assert.deepEqual(reWolseChange(none, "d"), [], JSON.stringify(none));
+  assert.deepEqual(reCountSpan({ transactionCount: 1234 }), [SPACE, sp("count", "1,234건", { esc: true })]);
+  for (const none of [{ transactionCount: "5" }, { transactionCount: null }, {}, undefined]) assert.deepEqual(reCountSpan(none), [], String(none));
+  // 표본 부족: n은 transactionCount 그대로, 없으면(null·undefined) 0 - 0은 0이다. 문턱은 여기서 정하지 않는다(100건이어도 이 함수는 표본 부족 글자를 낸다).
+  const low = (n, txt = n) => sp("low", `신고 ${txt}건`, { title: `이번 달 신고가 ${txt}건뿐이라 평균을 내지 않았습니다.`, esc: true });
+  assert.deepEqual(reLowSample({ transactionCount: 4 }), low(4));
+  assert.deepEqual(reLowSample({ transactionCount: 100 }), low(100));
+  assert.deepEqual(reLowSample({ transactionCount: 0 }), low(0));
+  assert.deepEqual(reLowSample({}), low(0));
+  assert.deepEqual(reLowSample(undefined), low(0));
+  assert.deepEqual(reLowSample({ transactionCount: null }), low(0));
+  assert.deepEqual(reLowSample(5), low(0));
+  assert.deepEqual(reLowSample({ transactionCount: NaN }), low("NaN"));
+  // 칸 모양: 지표 없음 → "-", 지표 있는데 못 낸 값 → 표본 부족, 값 → 값
+  const none = [sp("text", "-")];
+  assert.deepEqual(reCells({}, "sale"), [none, none, none]);
+  assert.deepEqual(reCells({ sale: { transactionCount: 4 } }, "sale"), [[low(4)], none, none]);
+  assert.deepEqual(reCells({ sale: { transactionCount: 40 } }, "sale"), [[low(40)], none, none]);
+  assert.equal(reCells({ sale: { avgPricePerPyeong10k: 6000, transactionCount: 40 } }, "sale").length, 3);
+  assert.equal(reCells({ sale: { avgPricePerPyeong10k: 6000, transactionCount: 40 }, jeonse: { avgDepositPerPyeong10k: 3000, transactionCount: 30 } }, "jeonse").length, 4);
+  assert.equal(reCells({ jeonse: { transactionCount: 2 } }, "jeonse").length, 3);
+  assert.throws(() => reCells({}, "foo"), TypeError);
+  assert.deepEqual(reAllCells({}), [none, none, none]);
+  assert.deepEqual(reAllCells({ wolse: { transactionCount: 3 } }), [none, none, [low(3)]]);
+  assert.equal(reDistrictRows({}).length, 3);
+  assert.deepEqual(reDistrictRows({}).map((r) => r.label), ["매매", "전세", "월세"]);
+  assert.deepEqual(reDistrictRows({}).map((r) => r.cells.map((c) => c.label)), Array(3).fill(["평당가", "84㎡ 환산", "거래건수"]));
+  // 낡음 태그
+  assert.deepEqual(reStaleTag({}), []);
+  assert.deepEqual(reStaleTag({ staleAt: "그날쯤" }), []);
+  assert.deepEqual(reStaleTag({ staleAt: "2026-10-04T15:30:00Z" }).map((p) => p.text), [" ", "10. 5."]);
+  assert.equal(reStaleTag({ staleAt: "2026-10-04T15:30:00Z" })[1].title, "이 지역은 오늘 실거래 조회에 실패해 지난번에 받은 값을 그대로 보여줍니다.");
+  // 이름: 자치구 25곳은 링크(상대 경로), 나머지는 글자만
+  assert.deepEqual(reDistrictLink("종로구"), { text: "종로구", href: "./district-jongno.html" });
+  assert.deepEqual(reDistrictLink("없는구"), { text: "없는구", href: null });
+  assert.deepEqual(reRow({}, "서울 전체", true, null).name, { text: "서울 전체", href: null });
+  assert.equal(reRow({}, "서울 전체", true, null).overall, true);
+  assert.equal(reRow({}, "종로구", false, null).overall, false);
+  assert.deepEqual(reRow({}, "종로구", false, "wolse").cells.map((c) => c.label), ["평균 보증금", "평균 월세", "거래건수"]);
+  // 정렬: 값이 높은 순·값 없는 곳은 뒤·둘 다 없으면 이름순, 입력은 그대로
+  const mk = (name, price) => ({ name, ...(price === undefined ? {} : { sale: { avgPricePerPyeong10k: price, transactionCount: 10 } }) });
+  const input = [mk("다"), mk("나", 1), mk("가"), mk("라", 2)];
+  assert.deepEqual(reSorted(input, null).map((d) => d.name), ["라", "나", "가", "다"]);
+  assert.deepEqual(reSorted(input, "sale").map((d) => d.name), ["라", "나", "가", "다"]);
+  assert.deepEqual(input.map((d) => d.name), ["다", "나", "가", "라"]);
+  // 표: 없으면 null, 자치구 페이지는 byDistrict
+  assert.equal(realestateTable(null), null);
+  assert.equal(realestateTable({ districts: [mk("가", 1)] }, null, "나"), null);
+  assert.equal(realestateTable({ districts: [mk("가", 1)] }, null, "가").byDistrict, true);
+  assert.equal(realestateTable({ districts: [mk("가", 1)] }).byDistrict, false);
+  assert.equal(realestateTable({ overall: mk("x", 1), districts: [mk("가", 1)] }).rows.length, 2);
+});
+
+test("realestate-table.mjs: 표본 문턱을 정의하거나 다시 적용하지 않는다 - resolveMetric(realestate-format.mjs)이 한 곳에서 정한다", async () => {
+  const source = await readFile(path.join(root, "scripts/realestate-table.mjs"), "utf8");
+  const code = source.replace(/^\s*\/\/.*$/gm, "");
+  assert.doesNotMatch(code, /MIN_SAMPLE|hasEnoughSample|metricOf/, "문턱을 이 모듈이 다시 부른다");
+  assert.match(code, /resolveMetric\(entry, kind\)/);
+  assert.doesNotMatch(code, /prerender\.mjs|renderer\.mjs/, "순수 모듈이 렌더러 스위치를 부른다");
+  // 문턱은 realestate-format.mjs의 5건 하나다(위 realestate-rows 시험이 정의가 하나뿐임을 지킨다)
+  assert.equal(hasEnoughSample({ transactionCount: 5 }), true);
+  assert.equal(hasEnoughSample({ transactionCount: 4 }), false);
+});
+
+test("realestate-table.mjs: 이스케이프 없이 문자열에 끼우는 조각(esc=false)의 글자에는 & < > \"가 들 수 없다 - 난수 입력 3만 건(고정 시드)", () => {
+  // 입력 값 자리마다 특수문자·비문자열·null·undefined를 섞는다. 입력 글자는 건수·이름·날짜·기준일뿐이고 전부 esc=true 자리다(이스케이프 한다). esc=false는 숫자 서식 글자다.
+  let seed = 20261011;
+  const rnd = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 2 ** 32);
+  const pick = (a) => a[Math.floor(rnd() * a.length)];
+  const STR = ["", "a", "종로구", `A&B <i> "q" it's`, "&amp;", "&#x27;", "5", "9", "x", "</td><td>", "\ud800", "1,2"];
+  const ODD = [false, true, 0, 1, -1, 7, 4, 5, 6, 4.5, 1380.5, NaN, Infinity, -Infinity, {}, [], [1, 2], [7], null, undefined];
+  const NUM = [0, 1, 3, 4, 5, 6, 40, 684, 1234567, -3];
+  const v = () => (rnd() < 0.4 ? pick(NUM) : rnd() < 0.5 ? pick(STR) : pick(ODD));
+  const metric = (f) => {
+    const r = rnd();
+    if (r < 0.1) return pick([undefined, null, 0, "", false, 5, "x", true, [], {}]);
+    const m = {};
+    if (rnd() < 0.9) m.transactionCount = v();
+    if (rnd() < 0.9) m[f] = v();
+    if (f === "avgDeposit10k" && rnd() < 0.9) m.avgMonthlyRent10k = v();
+    if (rnd() < 0.7) m.change = pick([undefined, null, {}, { value10k: v() }, { value10k: v(), percent: v() }, 5, "x"]);
+    if (rnd() < 0.5) m.baselineDate = v();
+    return m;
+  };
+  const entry = () => ({ name: v(), sale: metric("avgPricePerPyeong10k"), jeonse: metric("avgDepositPerPyeong10k"), wolse: metric("avgDeposit10k"), ...(rnd() < 0.3 ? { staleAt: v() } : {}) });
+  let rawParts = 0;
+  let total = 0;
+  for (let i = 0; i < 30000; i++) {
+    const e = entry();
+    const kind = pick([null, "sale", "jeonse", "wolse"]);
+    const label = rnd() < 0.5 ? pick(["종로구", "constructor", "__proto__", "toString", "없는구"]) : v();
+    const parts = [];
+    for (const cells of [kind ? reCells(e, kind) : reAllCells(e), reDistrictRows(e).flatMap((r) => r.cells.map((c) => c.parts)), reRow(e, label, false, kind).cells.map((c) => c.parts), [reRow(e, label, false, kind).stale]]) {
+      for (const cell of cells) parts.push(...cell);
+    }
+    for (const p of parts) {
+      total++;
+      assert.equal(typeof p.text, "string");
+      if (!p.esc) {
+        rawParts++;
+        assert.doesNotMatch(p.text, /[&<>"]/, `raw 조각 글자에 특수문자가 있다: ${JSON.stringify(p)}`);
+      }
+      if (p.type === "text") assert.equal(p.title, null);
+    }
+    assert.match(reDistrictLink(label).href ?? "./", /^\.\//, "링크 경로가 ./로 시작하지 않는다(javascript: 불가)");
+  }
+  assert.ok(rawParts > 30000 && total > rawParts, `raw ${rawParts}개·전체 ${total}개 - 입력이 raw 자리를 거의 밟지 않았다`);
 });
