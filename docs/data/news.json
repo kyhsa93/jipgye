@@ -1,7 +1,106 @@
 {
-  "updatedAt": "2026-10-11T20:47:58.723Z",
+  "updatedAt": "2026-10-11T22:17:47.520Z",
   "date": "2026-10-12",
   "items": [
+    {
+      "title": "[10/12, 매경부동산 추천매물] 테헤란로 역 출구 앞 상업용 신축 부지 등",
+      "link": "https://www.mk.co.kr/news/realestate/12173240",
+      "publishedAt": "2026-10-11T22:12:47.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "[사진]◇영종국제도시 10%대 다중주택 9억 ‘인천공항신도시 운서역(공항철도) 역세권에 인접한 대지 269㎡, 연면적 329㎡인 주택.’ 9억원 ◇테헤란로 역 출구 앞 대로변 상업..",
+      "dupes": []
+    },
+    {
+      "title": "서울 아파트 계약 해제율 5년 새 2배…\"교란행위 검증해야\"",
+      "link": "https://www.yna.co.kr/view/AKR20261009048700003",
+      "publishedAt": "2026-10-11T21:31:00.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(서울=연합뉴스) 오예진 기자 = 서울 아파트 매매 실거래 계약을 등록한 후 해제하는 비율이 최근 5년 새 2배 이상 상승한 것으로 나타났다.",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./apartment-sale.html",
+          "label": "서울 전체 아파트 84㎡ 매매",
+          "labelEn": "Seoul apartment 84㎡ sale",
+          "value": "14억 517만원",
+          "valueEn": "₩1,405M",
+          "note": "최근 1주 계약 684건 · 10/4 대비 +7.0%",
+          "noteEn": "684 deals in the last 1 weeks · +7.0% vs Oct 4"
+        }
+      ]
+    },
+    {
+      "title": "올 상반기 지방 아파트 거래 5년만에 최대…분양시장 시험대",
+      "link": "https://www.newsis.com/view/NISX20261011_0003821014",
+      "publishedAt": "2026-10-11T21:30:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "realestate",
+      "preview": "[서울=뉴시스] 박성환 기자 = 지방 아파트 시장에서 매매 거래가 늘어나면서 침체됐던 주택시장이 회복의 발판을 마련할 수 있을지 관심이 쏠린다. 올해 상반기 지방 아파트 거래량은 최근 5년간 같은 기간 기준으로 가장…",
+      "dupes": []
+    },
+    {
+      "title": "9월 전세사기 피해자 623건 추가 인정…누적 4만1천559건",
+      "link": "https://www.yna.co.kr/view/AKR20261011029300003",
+      "publishedAt": "2026-10-11T21:00:03.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(세종=연합뉴스) 오진송 기자 = 지난달 전세사기 피해자 623건이 추가 인정되면서 누적 피해자 결정 건수가 4만1천559건으로 늘었다.",
+      "dupes": [
+        {
+          "title": "국토부, 9월 전세사기 피해자 623명 추가 인정…누적 4만1559건",
+          "link": "https://www.newsis.com/view/NISX20261011_0003820857",
+          "source": "뉴시스 경제"
+        }
+      ]
+    },
+    {
+      "title": "[단독] 미분양 아파트, 임대로 돌려도 빈집… 일부 CR리츠 임대율 20%대",
+      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/12/OU6MQT2WD5H2JI4XXPXI4L63ZA/",
+      "publishedAt": "2026-10-11T21:00:00.000Z",
+      "source": "조선비즈 부동산",
+      "category": "realestate",
+      "preview": "지방의 준공 후 미분양 주택을 사들여 임대로 운영하는 기업구조조정 부동산투자회사(CR리츠)의 일부 사업장 임대율이 20%대에 그치는 것으로 나타났다. 전남 광양에서는 매입 주택 10채 중 약 8채가 임차인을 구하지…",
+      "dupes": []
+    },
+    {
+      "title": "국토부, 전세사기 피해자 623건 추가 인정…LH 피해주택 매입 1.1만호 넘어",
+      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/08/C6L22ZBD4REZFECBEUASLRQZAM/",
+      "publishedAt": "2026-10-11T21:00:00.000Z",
+      "source": "조선비즈 부동산",
+      "category": "realestate",
+      "preview": "전세보증금을 돌려받지 못해 피해를 입은 임차인 600여명이 정부 조사를 통해 전세사기 피해자로 새롭게 인정받았다. 이로써 관련 특별법 시행 이후 인정된 누적 피해 사례는 4만1000건을 넘어섰다. 국토교통부는 지난…",
+      "dupes": []
+    },
+    {
+      "title": "[오늘의 주요일정]경제(10월12일월요일)",
+      "link": "https://www.newsis.com/view/NISX20261008_0003818284",
+      "publishedAt": "2026-10-11T21:00:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "other",
+      "preview": "[세종=뉴시스] ▲김정관 산업통상부 장관, 5극 3특 현장행보(전남광주·목포) ▲08:00 이형일 경제부총리 겸 재정경제부 장관, 대외경제장관회의(서울청사) ▲08:00 조용범 기획예산처 차관, 대외경제장관회의(서울…",
+      "dupes": []
+    },
+    {
+      "title": "\"국세청 부동산 자금출처조사 증가율, 서울청 4%·나머지 51%\"",
+      "link": "https://www.yna.co.kr/view/AKR20261010029700002",
+      "publishedAt": "2026-10-11T20:59:00.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(세종=연합뉴스) 이대희 기자 = 지난해 국세청의 부동산 취득 자금출처조사가 서울지방국세청이 아닌 지방국세청에서 크게 늘어났던 것으로 집계됐다.",
+      "dupes": []
+    },
+    {
+      "title": "주택연금 구상채권 5년반에 10배로…회수율은 절반으로 뚝",
+      "link": "https://www.yna.co.kr/view/AKR20261010029500002",
+      "publishedAt": "2026-10-11T20:56:00.000Z",
+      "source": "연합뉴스 경제",
+      "category": "rates",
+      "preview": "(서울=연합뉴스) 채새롬 기자 = 주택연금 보증사고 이후 한국주택금융공사(HF)가 회수하지 못한 구상채권이 5년여 만에 10배 가까이로 증가한 ...",
+      "dupes": []
+    },
     {
       "title": "이형일 부총리, 경제현안간담회 개최…온누리상품권 환급·민생물가 논의",
       "link": "https://www.newsis.com/view/NISX20261011_0003821177",
@@ -9,8 +108,7 @@
       "source": "뉴시스 경제",
       "category": "other",
       "preview": "[세종=뉴시스]임하은 기자 = 이형일 경제부총리 겸 재정경제부 장관이 관계부처 장관들과 만나 전통시장 온누리상품권 환급 개선방안과 민생물가 관리방안을 논의했다. 재정경제부는 이형일 부총리가 11일 오후 6시 경제현안…",
-      "dupes": [],
-      "titleEn": "이형일 부총리, 경제현안간담회 개최…온누리상품권 환급·민생물가 논의"
+      "dupes": []
     },
     {
       "title": "[올댓차이나] 中 증감회, 증시 안정 대책 논의…중장기 자금 유입 확대",
@@ -19,8 +117,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스]이재준 기자 = 중국 증권감독관리위원회(증감회)가 증시 안정을 위한 제도 개선과 중장기 투자자금 유입 확대 방안을 논의했다. 11일 공상시보와 홍콩01, 동망에 따르면 우칭(吳清) 증감회 주석은 전날…",
-      "dupes": [],
-      "titleEn": "[AllChina] China's CSRC to Discuss Measures for Market Stability... Expand Long-Term Fund Inflows"
+      "dupes": []
     },
     {
       "title": "금리 불안에 주춤한 비트코인... 1억1000만원대 횡보",
@@ -29,8 +126,7 @@
       "source": "한국경제 경제",
       "category": "rates",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Bitcoin Hesitates Amid Interest Rate Concerns... Stuck in the 110,000,000won Range"
+      "dupes": []
     },
     {
       "title": "이형일, 경제현안간담회서 온누리상품권·민생물가 논의",
@@ -39,8 +135,7 @@
       "source": "연합뉴스 경제",
       "category": "other",
       "preview": "(세종=연합뉴스) 이대희 기자 = 이형일 부총리 겸 재정경제부 장관은 11일 경제현안간담회를 열고 전통시장 온누리상품권 환급 개선방안, 민생물가...",
-      "dupes": [],
-      "titleEn": "이형일, 경제현안간담회서 온누리상품권·민생물가 논의"
+      "dupes": []
     },
     {
       "title": "\"北경제 연구, 정량데이터 구축해 이념 아닌 과학의 영역으로\"",
@@ -49,8 +144,7 @@
       "source": "한국경제 경제",
       "category": "other",
       "preview": null,
-      "dupes": [],
-      "titleEn": "North Korea Economic Research Builds Quantitative Data to Move from Ideology to Science Realm"
+      "dupes": []
     },
     {
       "title": "\"北경제 이해 필독서 저술…통일·외교현안 해결 공헌\"",
@@ -59,8 +153,7 @@
       "source": "한국경제 경제",
       "category": "other",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Essential Reading for Understanding North Korea's Economy Contributes to Resolving Unification and Foreign Policy Issues"
+      "dupes": []
     },
     {
       "title": "\"전세·가계부채 등 韓 경제현상, 국제적 연구의제로 발전시킬 것\"",
@@ -70,7 +163,6 @@
       "category": "realestate",
       "preview": null,
       "dupes": [],
-      "titleEn": "Developing South Korea's Economic Phenomena Such as Rent and Household Debt into an International Research Agenda",
       "context": [
         {
           "kind": "rates",
@@ -89,8 +181,7 @@
       "source": "한국경제 부동산",
       "category": "other",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Suwon Youngtong-gu Leads in Housing Price Increase Rate... Bundang-gu Also Strong"
+      "dupes": []
     },
     {
       "title": "뷰에 따라 10억원 차이…한강은 언제부터 ‘부자의 트로피’가 됐나 [슈퍼리치의 아파트]",
@@ -100,29 +191,6 @@
       "category": "realestate",
       "preview": "①한강 뷰(view)의 가격‘슈퍼리치의 아파트’의 연재를 시작합니다. 내 집 마련에 성공한 이들도 저마다 ‘꿈의 아파트’가 하나씩 마음속에 있을 겁니다. 1962년 서울의 첫 단지..",
       "dupes": [],
-      "titleEn": "Depending on the view, a difference of 1,000,000,000won... When did the Han River become the 'rich's trophy'? [Super Rich's Apartment]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./apartment-sale.html",
-          "label": "서울 전체 아파트 84㎡ 매매",
-          "labelEn": "Seoul apartment 84㎡ sale",
-          "value": "14억 517만원",
-          "valueEn": "₩1,405M",
-          "note": "최근 1주 계약 684건 · 10/4 대비 +7.0%",
-          "noteEn": "684 deals in the last 1 weeks · +7.0% vs Oct 4"
-        }
-      ]
-    },
-    {
-      "title": "[부동산 손품노트] 서울 핵심지역 공공 재개발 '도공복' 투자 100가지 사실",
-      "link": "https://www.mk.co.kr/news/realestate/12173027",
-      "publishedAt": "2026-10-11T07:36:08.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "요즘 서울 부동산에서 돈이 가장 빠르게 움직이는 곳은 낡은 빌라촌이다. 부동산플래닛에 따르면 지난 2분기(4~6월) 서울 연립·다세대주택 매매거래량은 1만1536건으로 직전 분기(..",
-      "dupes": [],
-      "titleEn": "Real Estate Investment Notebook: 100 Facts About Public Redevelopment in Seoul's Core Areas, 'Dokongbok",
       "context": [
         {
           "kind": "realestate",
@@ -144,7 +212,27 @@
       "category": "realestate",
       "preview": "\"규제로 수도권 집값이 극도로 왜곡되고 있다. 갈아타기로 똘똘한 한 채를 잡을 기회다.\" 서울 아파트값이 87주 연속 올라 역대 최장 상승 기록을 새로 쓰면서 부동산 시장이 혼돈의..",
       "dupes": [],
-      "titleEn": "Uncertainty in Housing Prices Persists Next Year... Homeowners Should Seize Opportunity to Upgrade",
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./apartment-sale.html",
+          "label": "서울 전체 아파트 84㎡ 매매",
+          "labelEn": "Seoul apartment 84㎡ sale",
+          "value": "14억 517만원",
+          "valueEn": "₩1,405M",
+          "note": "최근 1주 계약 684건 · 10/4 대비 +7.0%",
+          "noteEn": "684 deals in the last 1 weeks · +7.0% vs Oct 4"
+        }
+      ]
+    },
+    {
+      "title": "[부동산 손품노트] 서울 핵심지역 공공 재개발 '도공복' 투자 100가지 사실",
+      "link": "https://www.mk.co.kr/news/realestate/12173027",
+      "publishedAt": "2026-10-11T07:36:08.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "요즘 서울 부동산에서 돈이 가장 빠르게 움직이는 곳은 낡은 빌라촌이다. 부동산플래닛에 따르면 지난 2분기(4~6월) 서울 연립·다세대주택 매매거래량은 1만1536건으로 직전 분기(..",
+      "dupes": [],
       "context": [
         {
           "kind": "realestate",
@@ -165,8 +253,7 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Just won't apply for housing\" gives up on applications... What's happening in the real estate market [Lee Song-ryeol's Real Estate Bite]"
+      "dupes": []
     },
     {
       "title": "[집코노미2026 다시보기 영상] \"정부, 공급 확대에 최우선…집값 잡을 것\"",
@@ -175,8 +262,7 @@
       "source": "한국경제 부동산",
       "category": "other",
       "preview": null,
-      "dupes": [],
-      "titleEn": "[Homeconomics2026 Replay Video] \"Government Prioritizes Supply Expansion to Stabilize Housing Prices"
+      "dupes": []
     },
     {
       "title": "LH, ‘분양가상한제’ 공공분양주택에 가산비 신설 검토… 최대 9.5%",
@@ -191,8 +277,7 @@
           "link": "https://www.yna.co.kr/view/AKR20261011019800003",
           "source": "연합뉴스 경제"
         }
-      ],
-      "titleEn": "LH Considers Adding Surcharge on Public Housing Under Price Cap Policy… Up to 9.5%"
+      ]
     },
     {
       "title": "LH 임대주택 ‘장기 공실’ 4만3000호…대구 공실률 서울 7배",
@@ -202,7 +287,6 @@
       "category": "realestate",
       "preview": "건설임대 3만5717호·매입임대 7609호 대구·경북 공가율 5.6%… 서울 7배 수준 “소득·자산 요건 완화해 수요 확대해야”한국토지주택공사(LH)가 공급한 임대주택 가운데 6..",
       "dupes": [],
-      "titleEn": "LH Rental Housing 'Long-Term Vacant' 40,0003000 Units... Daegu Vacancy Rate 7 Times That of Seoul",
       "context": [
         {
           "kind": "realestate",
@@ -215,156 +299,6 @@
           "noteEn": "684 deals in the last 1 weeks · +7.0% vs Oct 4"
         }
       ]
-    },
-    {
-      "title": "李대통령 \"2022년 대선 이후 차질 빚은 주택공급 조만간 정상화\"",
-      "link": "https://www.yna.co.kr/view/AKR20261011026100001",
-      "publishedAt": "2026-10-11T04:57:43.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(서울=연합뉴스) 고동욱 기자 = 이재명 대통령은 11일 \"지난 3년간의 서울·수도권 인허가 공백 때문에 주택 공급에 일부 차질이 발생했지만, ...",
-      "dupes": [],
-      "titleEn": "President Says Housing Supply Will Be Normalized Soon After Delays Caused by the 2022 Presidential Election",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./apartment-sale.html",
-          "label": "서울 전체 아파트 84㎡ 매매",
-          "labelEn": "Seoul apartment 84㎡ sale",
-          "value": "14억 517만원",
-          "valueEn": "₩1,405M",
-          "note": "최근 1주 계약 684건 · 10/4 대비 +7.0%",
-          "noteEn": "684 deals in the last 1 weeks · +7.0% vs Oct 4"
-        }
-      ]
-    },
-    {
-      "title": "규제로 왜곡된 수도권 집값 … 갈아타기로 똘똘한 한채 잡아라 [서울머니쇼+]",
-      "link": "https://www.mk.co.kr/news/realestate/12172905",
-      "publishedAt": "2026-10-11T03:01:48.000Z",
-      "source": "매일경제 부동산",
-      "category": "other",
-      "preview": "부동산 일타강사 7인의 투자 조언“규제로 수도권 집값이 극도로 왜곡되고 있다. 기회를 잡아 갈아타기로 똘똘한 한 채를 잡을 기회다.” 서울 아파트값이 86주 연속 올라 역대 최장 ..",
-      "dupes": [],
-      "titleEn": "Regulated Distortions in Seoul's Housing Prices ... Focus on a Single Outstanding Property Instead of Moving [Seoul Money Show+]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./apartment-sale.html",
-          "label": "서울 전체 아파트 84㎡ 매매",
-          "labelEn": "Seoul apartment 84㎡ sale",
-          "value": "14억 517만원",
-          "valueEn": "₩1,405M",
-          "note": "최근 1주 계약 684건 · 10/4 대비 +7.0%",
-          "noteEn": "684 deals in the last 1 weeks · +7.0% vs Oct 4"
-        }
-      ]
-    },
-    {
-      "title": "“이름 바꾸면 팔자 바뀔까”…수도권 덮친 아파트 개명 바람",
-      "link": "https://www.mk.co.kr/news/realestate/12172898",
-      "publishedAt": "2026-10-11T02:29:58.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "인근 랜드마크 및 교통 호재 담으려 이름 쟁탈전, 행정구역 넘어서기도인근 랜드마크와 교통 호재를 단지명에 담으려는 움직임이 수도권 아파트에서 나타나고 있다. 서울 서대문구 ‘돈의문..",
-      "dupes": [],
-      "titleEn": "Will Changing the Name Change Your Fortune?\"... Apartment Renaming Trend Sweeps Capital Region",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-seodaemun.html",
-          "label": "서대문구 아파트 84㎡ 매매",
-          "labelEn": "서대문구 apartment 84㎡ sale",
-          "value": "11억 7,927만원",
-          "valueEn": "₩1,179M",
-          "note": "최근 1주 계약 140건 · 10/4 대비 +0.9%",
-          "noteEn": "140 deals in the last 1 weeks · +0.9% vs Oct 4"
-        }
-      ]
-    },
-    {
-      "title": "재개발·재건축이 궁금하다면…서울시, 2차 정비사업 아카데미",
-      "link": "https://www.yna.co.kr/view/AKR20261011014400004",
-      "publishedAt": "2026-10-11T02:15:01.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(서울=연합뉴스) 김준태 기자 = 서울시가 오는 15일부터 12월 16일까지 '2026 대시민 정비사업 아카데미 2차'를 운영한다고 11일 밝혔...",
-      "dupes": [],
-      "titleEn": "Seoul to Hold Second Round of Urban Redevelopment Academy for Those Interested in Redevelopment and Reconstruction",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./apartment-sale.html",
-          "label": "서울 전체 아파트 84㎡ 매매",
-          "labelEn": "Seoul apartment 84㎡ sale",
-          "value": "14억 517만원",
-          "valueEn": "₩1,405M",
-          "note": "최근 1주 계약 684건 · 10/4 대비 +7.0%",
-          "noteEn": "684 deals in the last 1 weeks · +7.0% vs Oct 4"
-        }
-      ]
-    },
-    {
-      "title": "아시안게임 병역 특례논란 후폭풍… 국토부, 우수 선수 ‘아파트 특공’ 손본다",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/11/U5YQWRYSOBGJ5NYBRGG4DHP2IA/",
-      "publishedAt": "2026-10-11T01:46:10.000Z",
-      "source": "조선비즈 부동산",
-      "category": "realestate",
-      "preview": "국제 스포츠 대회에서 우수한 성적을 거둔 선수들에게 주어지는 ‘주택 특별공급(특공)’ 혜택을 둘러싸고 공정성 논란이 일자 국토교통부가 관련 제도 개편을 검토하기로 한 것으로 알려졌다. 11일 국토부 관계자는 연합뉴스…",
-      "dupes": [],
-      "titleEn": "Aftermath of the Asian Games military service exemption controversy... Ministry of Land, Infrastructure and Transport to revise apartment special measures for top athletes"
-    },
-    {
-      "title": "대구시, '지방 주택시장 맞춤형 처방' 정부에 건의",
-      "link": "https://www.yna.co.kr/view/AKR20261011013200053",
-      "publishedAt": "2026-10-11T00:10:35.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(대구=연합뉴스) 김용민 기자 = 대구시는 지방 주택시장 정상화를 위한 주택정책을 정부에 건의했다고 11일 밝혔다.",
-      "dupes": [],
-      "titleEn": "Daegu proposes customized prescription for local housing market to government"
-    },
-    {
-      "title": "“70억 트리마제도 안 통했다”…초고가 아파트도 경매시장서 굴욕",
-      "link": "https://www.mk.co.kr/news/realestate/12172814",
-      "publishedAt": "2026-10-10T21:21:41.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "1년 7개월 만에 최저 수준으로 떨어진 서울 아파트 낙찰가율…94.7% 기록 성수·여의도 초고가 아파트 약세 영향 강북∙노원 등 중저가 지역은 강세 지속지난달 서울 아파트 경매 낙..",
-      "dupes": [],
-      "titleEn": "7,000,000,000 won trimejo didn't work either\"... high-end apartments suffer humiliation in auction market",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-gangbuk.html",
-          "label": "강북구 아파트 84㎡ 매매",
-          "labelEn": "강북구 apartment 84㎡ sale",
-          "value": "8억 7,613만원",
-          "valueEn": "₩876M",
-          "note": "최근 1주 계약 105건 · 10/4 대비 +2.5%",
-          "noteEn": "105 deals in the last 1 weeks · +2.5% vs Oct 4"
-        }
-      ]
-    },
-    {
-      "title": "답답한 증시 대신 발행어음?…증권사, 4∼5% 상품 잇달아 출시",
-      "link": "https://www.yna.co.kr/view/AKR20261009024400008",
-      "publishedAt": "2026-10-10T21:20:00.000Z",
-      "source": "연합뉴스 경제",
-      "category": "rates",
-      "preview": "(서울=연합뉴스) 임은진 기자 = 최근 답답한 흐름을 보이는 코스피에 지친 투자자를 잡기 위해 증권사들이 잇달아 금리 4∼5% 수준의 발행어음 ...",
-      "dupes": [],
-      "titleEn": "Stifling Market Prompting Securities Firms to Launch 4-5% Products One After Another"
-    },
-    {
-      "title": "국채금리 급등에 줄어든 매력에도…개인, 리츠 ETF 순매수액↑",
-      "link": "https://www.yna.co.kr/view/AKR20261008168900008",
-      "publishedAt": "2026-10-10T21:10:01.000Z",
-      "source": "연합뉴스 경제",
-      "category": "rates",
-      "preview": "(서울=연합뉴스) 고은지 기자 = 최근 국채 금리가 고공행진하면서 리츠(REITs·부동산투자회사) 상장지수펀드(ETF)의 매력이 상대적으로 줄었...",
-      "dupes": [],
-      "titleEn": "Rising government bond rates reduce appeal, yet individuals increase net purchases of REITs ETFs"
     }
   ],
   "realestateStats": [
