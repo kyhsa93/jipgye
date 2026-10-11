@@ -220,7 +220,9 @@ test("Release 링크는 독립된 한 문장 문단이고 정정 재신고 해�
     const { para, from } = releasePara(block);
     const prose = para.replace(/<[^>]+>/g, "").replace(/&[a-z]+;/g, " ");
     assert.equal((prose.match(/[.。](?=\s|$)/g) || []).length, 1, `${lang}: 링크 문단은 한 문장이다: ${prose}`);
-    assert.ok(prose.length < 100, `${lang}: 링크 한 줄이 길다(${prose.length}자)`);
+    // 상한은 언어별이다: 영어는 같은 뜻이 글자 수로 더 길다(Release와 같은 구조의 영어 문장이 약 130자). 한 문장·독립 문단 조건은 그대로다.
+    const maxLen = lang === "ko" ? 100 : 140;
+    assert.ok(prose.length < maxLen, `${lang}: 링크 한 줄이 길다(${prose.length}자, 상한 ${maxLen})`);
     // 바로 앞 문단이 정정 재신고 해제 문단이다(그 문단 안에 링크가 들어간 것이 아니다).
     const prev = block.slice(0, from).trimEnd();
     assert.ok(prev.endsWith("</p>"), `${lang}: 앞이 문단이 아니다`);
@@ -233,6 +235,18 @@ test("Release 링크는 독립된 한 문장 문단이고 정정 재신고 해�
     for (const re of [/정정이다/, /정정입니다/, /고쳤/, /고친 것/, /고쳐 쓴/, /깨진 계약이 아니라/, /신고를 고/, /not a broken deal/i, /a correction to the filing/i, /is a correction/i, /are corrections/i]) {
       assert.ok(!re.test(prose), `${lang}: 단정 ${re}`);
     }
+  }
+});
+
+// legal(#226): 링크 대상 Release는 "정정 재신고" 라벨을 일부러 쓰지 않는다(제목: "해제되지 않은 채 다시 있는 기록").
+// 사이트와 Release의 어휘 갈림은 #228의 주제이므로 이 줄에서 하나 더 늘리지 않는다. 라벨은 해제 문단 쪽에 이미 있다.
+test("Release 링크 줄에는 '정정 재신고'·'corrected re-filings' 라벨이 없다 - 한·영", async () => {
+  const html = await method();
+  const labels = { ko: [/정정\s*재신고/], en: [/corrected\s+re-?filings?/i, /correction twins?/i] };
+  for (const lang of ["ko", "en"]) {
+    const { para } = releasePara(langBlock(html, lang));
+    const prose = para.replace(/<[^>]+>/g, " ");
+    for (const re of labels[lang]) assert.ok(!re.test(prose), `${lang}: 링크 줄에 라벨 ${re}`);
   }
 });
 
