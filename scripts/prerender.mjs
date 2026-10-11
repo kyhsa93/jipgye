@@ -3,7 +3,7 @@ import path from "node:path";
 import { accessibleTables } from "./table-a11y.mjs";
 import { fragment } from "./renderer.mjs";
 import { createWriteSet } from "./render-writes.mjs";
-import { DEFAULT_AMOUNT, formatWon, netInterestOf } from "./interest.mjs";
+import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "./rates-table.mjs";
 import { BUDGET_PAGES } from "./budget-pages.mjs";
 import { budgetFactSentences } from "./budget-facts.mjs";
 import { DISTRICT_PAGES, DISTRICT_SLUGS, districtFile } from "./district-slugs.mjs";
@@ -894,72 +894,29 @@ function districtLinksHtmlLegacy(current = null, heading = "다른 지역") {
 }
 export const districtLinksHtml = fragment("districtLinksHtml", districtLinksHtmlLegacy);
 
-const RATES_TERM = 12;
-const RATES_ROWS = 20;
-const SAVING_CATEGORIES = new Set(["deposit", "saving"]);
-
-const rate = (value) => (typeof value === "number" ? `${value.toFixed(2)}%` : "-");
-const rateRange = (min, max) =>
-  typeof min === "number" && typeof max === "number" ? `${min.toFixed(2)}~${max.toFixed(2)}%` : rate(min ?? max);
-
+// 상수·값 모양·행 선택·정렬·세후 이자 칸은 rates-table.mjs에 있다 - JSX 쪽(render/entry.jsx)이 같은 계산을 가져다 쓴다(#240).
 function ratesHeadHtmlLegacy(category = "deposit") {
-  return SAVING_CATEGORIES.has(category)
+  return isSavingCategory(category)
     ? "<tr><th scope=\"col\">상품</th><th scope=\"col\">기본금리</th><th scope=\"col\">최고금리</th><th scope=\"col\">세후 이자</th></tr>"
     : "<tr><th scope=\"col\">상품</th><th scope=\"col\">금리 유형</th><th scope=\"col\">금리(최저~최고)</th><th scope=\"col\">평균</th></tr>";
 }
 export const ratesHeadHtml = fragment("ratesHeadHtml", ratesHeadHtmlLegacy);
 
 function ratesHtmlLegacy(rates, { category = "deposit", limit = RATES_ROWS } = {}) {
-  const products = rates?.[category] ?? [];
-  if (!products.length) return null;
+  const rows = selectRateRows(rates, category, limit);
+  if (!rows) return null;
 
-  const saving = SAVING_CATEGORIES.has(category);
-  const key = saving ? "maxRate" : "min";
-  const asc = !saving;
-
-  const rows = [];
-  for (const product of products) {
-    let best = null;
-    let bestValue = null;
-    let fallback = null;
-    for (const option of product.options ?? []) {
-      if (saving && option.term !== RATES_TERM) continue;
-      fallback ??= option;
-      const value = option[key];
-      if (value === null || value === undefined) continue;
-      if (best === null || (asc ? value < bestValue : value > bestValue)) {
-        best = option;
-        bestValue = value;
-      }
-    }
-    if (best) rows.push({ product, option: best, sort: bestValue });
-    else if (fallback) rows.push({ product, option: fallback, sort: null });
-  }
-
-  rows.sort((a, b) => {
-    if (a.sort === null || b.sort === null) return (a.sort === null) - (b.sort === null);
-    return asc ? a.sort - b.sort : b.sort - a.sort;
-  });
-
-  if (!rows.length) return null;
-
+  const saving = isSavingCategory(category);
   const productCell = (product) =>
     `<td><div class="product-name">${escapeHtml(product.name ?? "-")}</div>` +
     `<div class="product-company">${escapeHtml(product.company ?? "")}</div></td>`;
 
-  const amount = DEFAULT_AMOUNT[saving && category === "saving" ? "saving" : "deposit"];
-  const netCell = (option) => {
-    const net = netInterestOf(option, { amount, saving: category === "saving" });
-    return net === null ? "-" : formatWon(net);
-  };
-
   return rows
-    .slice(0, limit)
     .map(({ product, option }) =>
       saving
         ? `<tr>${productCell(product)}<td data-label="기본금리">${rate(option.rate)}</td>` +
           `<td class="rate-strong" data-label="최고금리">${rate(option.maxRate ?? option.rate)}</td>` +
-          `<td class="net-interest" data-label="세후 이자">${netCell(option)}</td></tr>`
+          `<td class="net-interest" data-label="세후 이자">${netInterestText(option, category)}</td></tr>`
         : `<tr>${productCell(product)}<td data-label="금리 유형">${escapeHtml(option.rateType ?? "-")}</td>` +
           `<td data-label="금리(최저~최고)">${rateRange(option.min, option.max)}</td>` +
           `<td class="rate-low" data-label="평균">${rate(option.avg)}</td></tr>`
