@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { access, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { RATE_PAGES } from "../scripts/build-rate-pages.mjs";
 import { countShared } from "../scripts/rate-dup.mjs";
@@ -46,4 +46,20 @@ test("허브는 표·금리 수치·데이터 읽기를 갖지 않는다", async
 test("상품군 장의 틀은 docs 밖(scripts/rates-template.html)에 있다", async () => {
   await access(path.join(root, "scripts/rates-template.html"));
   await assert.rejects(access(path.join(root, "docs/rates-template.html")));
+});
+
+test("같은 <script src>가 한 장에 두 번 나오지 않는다 (docs/*.html 전체, 허브·상품군 장 포함)", async () => {
+  // analytics.js가 두 번 돌면 GA 로더와 gtag('config')가 두 번 실행돼 page_view가 이중 집계될 수 있다.
+  // 허브를 손으로 고치다 nav·search·analytics 세 줄이 두 번 들어간 적이 있다(#193 수정요청).
+  // 이 저장소에 이런 일반 시험이 없어 여기 둔다 — 위 둘이 아니라 모든 장을 본다.
+  const files = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html"));
+  assert.ok(files.length > 50, `docs/*.html이 ${files.length}장뿐이다`);
+  for (const f of files) {
+    const seen = new Map();
+    for (const m of (await read(`docs/${f}`)).matchAll(/<script\b[^>]*\bsrc="([^"]+)"/g)) {
+      seen.set(m[1], (seen.get(m[1]) ?? 0) + 1);
+    }
+    const dup = [...seen].filter(([, n]) => n > 1).map(([src, n]) => `${src} x${n}`);
+    assert.deepEqual(dup, [], `docs/${f}에 같은 스크립트가 여러 번: ${dup.join(", ")}`);
+  }
 });
