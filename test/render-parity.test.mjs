@@ -14,6 +14,7 @@ import { CONVERSION_BAND, cancelDistricts, cancelMonths, conversionTable, count,
 import { MAX_DISTRICTS, changeOf, countOf, man, metricCell, topDistricts } from "../scripts/realestate-rows.mjs";
 import { MIN_SAMPLE, hasEnoughSample } from "../scripts/realestate-format.mjs";
 import { RE_LABELS, headLabels, reAllCells, reCells, reChange, reCount, reCountSpan, reDistrictLink, reDistrictRows, reEok, reHeadLabels, reLowSample, reMan, reRow, reSorted, reStaleTag, reWolseChange, realestateTable } from "../scripts/realestate-table.mjs";
+import { overallCards, ratioBasis } from "../scripts/realestate-overall.mjs";
 import { makeFragment, rendererMode } from "../scripts/renderer.mjs";
 import { createReactRenderer } from "../scripts/render/react.mjs";
 import { RATES_BRANCHES } from "./fixtures/render/rates-branches.mjs";
@@ -22,10 +23,11 @@ import { LEAD_LINKS_BRANCHES, LEAD_LINKS_FNS } from "./fixtures/render/lead-link
 import { RAW_COUNT_DIFF, REALESTATE_BRANCHES } from "./fixtures/render/realestate-branches.mjs";
 import { DISTRICT_TABLES_BRANCHES, DISTRICT_TABLES_FNS, DISTRICT_TABLES_THROWS, RAW_TEXT_DIFF } from "./fixtures/render/district-tables-branches.mjs";
 import { REALESTATE_TABLE_BRANCHES, REALESTATE_TABLE_FNS, REALESTATE_TABLE_THROWS } from "./fixtures/render/realestate-table-branches.mjs";
+import { REALESTATE_OVERALL_BRANCHES, REALESTATE_OVERALL_FNS, REALESTATE_OVERALL_THROWS } from "./fixtures/render/realestate-overall-branches.mjs";
 
 // #237: 렌더러 스위치와 legacy↔react parity 시험의 골격. #240이 금리 조각(ratesHtml·ratesHeadHtml)의 분기별 케이스를 더했고
 // #241 PR 1이 문장·목록 8개(summaryHtml·marketHtml·뉴스 6개)를, PR 2가 리드·링크 10개(*LeadHtml 6·*DistrictLinksHtml 4)를,
-// PR 3이 첫 화면 실거래 요약(realestateHtml)을, #242 PR 1이 자치구 문장·링크 4개와 표 6개를, PR 2가 시세표 머리글·표(realestateHeadHtml·realestateTableHtml)를 더했다. #242 PR 3과 #243이 이어서 더한다.
+// PR 3이 첫 화면 실거래 요약(realestateHtml)을, #242 PR 1이 자치구 문장·링크 4개와 표 6개를, PR 2가 시세표 머리글·표(realestateHeadHtml·realestateTableHtml)를, PR 3이 시세 요약 카드(realestateOverallHtml)를 더했다. #243이 이어서 더한다.
 // 입력은 이 파일 안의 값과 test/fixtures/render/의 고정 파일뿐이다(R3): 저장소의 docs/·docs/data는 읽지 않는다.
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -162,6 +164,7 @@ const PORTED = [
   "ratesHtml",
   "realestateHeadHtml",
   "realestateHtml",
+  "realestateOverallHtml",
   "realestateTableHtml",
   "renewalCapLeadHtml",
   "renewalDistrictLinksHtml",
@@ -228,6 +231,7 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
   const realestateUrl = pathToFileURL(fixture("realestate-branches.mjs")).href;
   const districtUrl = pathToFileURL(fixture("district-tables-branches.mjs")).href;
   const tableUrl = pathToFileURL(fixture("realestate-table-branches.mjs")).href;
+  const overallUrl = pathToFileURL(fixture("realestate-overall-branches.mjs")).href;
   const run = (env) =>
     spawnSync(
       process.execPath,
@@ -241,11 +245,12 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
          const { REALESTATE_BRANCHES } = await import(${JSON.stringify(realestateUrl)});
          const { DISTRICT_TABLES_BRANCHES } = await import(${JSON.stringify(districtUrl)});
          const { REALESTATE_TABLE_BRANCHES } = await import(${JSON.stringify(tableUrl)});
+         const { REALESTATE_OVERALL_BRANCHES } = await import(${JSON.stringify(overallUrl)});
          const run = (rows) => rows.map((b) => [b.id, p[b.fn](...b.args)]);
          // 이식 안 된 조각(아직 legacy): 예산 최소 현금 문장·예산 단지 후보(둘 다 #243이 이식한다 - 오래 미이식으로 남는 budget* 조각).
          // 이식되면 이 줄의 조각을 다른 미이식 조각으로 바꾼다(districtLinksHtml은 #242 PR 1이 이식해 budgetCandidatesHtml로 바꿨다).
          const legacyOnly = [p.budgetMinCashHtml({ min10k: 50000 }), p.budgetCandidatesHtml({ min10k: 50000 }, [{ reference: "202609" }])];
-         console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), legacyOnly, rates: run(RATES_BRANCHES), news: run(NEWS_MARKET_BRANCHES), leadLinks: run(LEAD_LINKS_BRANCHES), realestate: run(REALESTATE_BRANCHES), districtTables: run(DISTRICT_TABLES_BRANCHES), realestateTable: run(REALESTATE_TABLE_BRANCHES) }));`,
+         console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), legacyOnly, rates: run(RATES_BRANCHES), news: run(NEWS_MARKET_BRANCHES), leadLinks: run(LEAD_LINKS_BRANCHES), realestate: run(REALESTATE_BRANCHES), districtTables: run(DISTRICT_TABLES_BRANCHES), realestateTable: run(REALESTATE_TABLE_BRANCHES), realestateOverall: run(REALESTATE_OVERALL_BRANCHES) }));`,
       ],
       { cwd: root, encoding: "utf8", env: { ...process.env, JIPGYE_RENDERER: "", ...env } }
     );
@@ -273,6 +278,8 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
   assert.deepEqual(b.districtTables, a.districtTables, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(자치구 문장·링크·표)");
   assert.equal(b.realestateTable.length, REALESTATE_TABLE_BRANCHES.length);
   assert.deepEqual(b.realestateTable, a.realestateTable, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(시세표 머리글·표)");
+  assert.equal(b.realestateOverall.length, REALESTATE_OVERALL_BRANCHES.length);
+  assert.deepEqual(b.realestateOverall, a.realestateOverall, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(시세 요약 카드)");
 });
 
 // ---- 문장·목록 8개 조각(#241 PR 1): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
@@ -979,4 +986,234 @@ test("realestate-table.mjs: 이스케이프 없이 문자열에 끼우는 조각
     assert.match(reDistrictLink(label).href ?? "./", /^\.\//, "링크 경로가 ./로 시작하지 않는다(javascript: 불가)");
   }
   assert.ok(rawParts > 30000 && total > rawParts, `raw ${rawParts}개·전체 ${total}개 - 입력이 raw 자리를 거의 밟지 않았다`);
+});
+
+// ---- 시세 요약 카드(#242 PR 3): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
+
+const OVERALL_ROWS = REALESTATE_OVERALL_BRANCHES;
+
+test("시세 요약 분기 표: id가 겹치지 않고, 조각을 덮고, 모든 행에 기대값이 있다", () => {
+  const ids = OVERALL_ROWS.map((b) => b.id);
+  assert.equal(new Set(ids).size, ids.length, "분기 id가 겹친다");
+  assert.deepEqual([...new Set(OVERALL_ROWS.map((b) => b.fn))].sort(), REALESTATE_OVERALL_FNS);
+  for (const b of OVERALL_ROWS) {
+    assert.ok("expect" in b, `${b.id}: 기대값이 없다`);
+    assert.ok(PORTED.includes(b.fn), `${b.id}: 이식 목록에 없는 조각(${b.fn})`);
+  }
+  const toIds = new Set(REALESTATE_OVERALL_THROWS.map((b) => b.id));
+  assert.equal(toIds.size, REALESTATE_OVERALL_THROWS.length, "던지는 입력 id가 겹친다");
+  assert.ok(OVERALL_ROWS.length >= 500, `분기 표가 ${OVERALL_ROWS.length}행뿐이다`);
+});
+
+test("시세 요약 분기 표: 값 종류별 행이 있다 - 데이터 없음(null)·비문자열·null·undefined·특수문자·빈 값·세 보기(세 카드·종류·자치구)", () => {
+  const outs = OVERALL_ROWS.map((b) => b.expect);
+  const strings = outs.filter((o) => typeof o === "string");
+  const has = (re) => strings.some((o) => re.test(o));
+  assert.ok(outs.includes(null), "데이터 없음(null) 행이 없다");
+  assert.ok(OVERALL_ROWS.some((b) => b.args[0] === null), "null 입력 행이 없다");
+  assert.ok(OVERALL_ROWS.some((b) => b.args[0] === undefined), "undefined 입력 행이 없다");
+  // 특수문자: 건수 글자(값은 9)와 단지·평형 칸 수 글자 자리가 이스케이프된다
+  assert.ok(has(/A&amp;B &lt;i&gt; &quot;q&quot; it's건/), "건수 글자 자리의 특수문자 행이 없다");
+  assert.ok(has(/단지·평형 A&amp;B &lt;i&gt; &quot;q&quot; it's칸/), "칸 수 글자 자리의 특수문자 행이 없다");
+  assert.ok(has(/&amp;amp;건/) && has(/단지·평형 &amp;amp;칸/), "이미 이스케이프된 글자 행이 없다");
+  assert.ok(has(/<div class="sub">건<\/div>/) || has(/ · 건<\/div>/) || has(/>건<\/div>/), "빈 글자(건수 글자가 빈 값) 행이 없다");
+  assert.ok(has(/단지·평형 칸/), "칸 수 빈 문자열 행이 없다");
+  assert.ok(has(/단지·평형 false칸/) && has(/단지·평형 true칸/) && has(/단지·평형 NaN칸/) && has(/단지·평형 \[object Object\]칸/) && has(/단지·평형 7칸/), "칸 수 비문자열(false·true·NaN·{}·[7]) 행이 없다");
+  assert.ok(has(/>7건<\/div>/) && has(/>∞건</) && has(/>9건</), "건수 비숫자 값 행(\"9\"·[7]·Infinity)이 없다");
+  // 세 보기: 세 카드(kind 없음)·종류 카드·자치구 페이지 카드가 같은 상태 표를 돈다
+  for (const prefix of ["OA-S-", "OK-S-", "OD-S-", "OA-J-", "OK-J-", "OD-J-", "OA-W-", "OK-W-", "OD-W-"]) {
+    assert.ok(OVERALL_ROWS.filter((b) => b.id.startsWith(prefix)).length >= 5, `${prefix} 보기 행이 모자란다`);
+  }
+  // 값 종류: 0·음수·소수·1억 경계·1억 이상·월세 "월 -"
+  assert.ok(has(/>0만원</) && has(/>-5만원</) && has(/>124만원</) && has(/>1억원</) && has(/>2억 264만원</) && has(/월 -</), "값 종류(0·음수·소수·1억 경계·월 -) 행이 없다");
+  // 서울 전체 줄·district 우선·같은 이름 첫째
+  assert.ok(OVERALL_ROWS.some((b) => b.id === "OM-21") && OVERALL_ROWS.some((b) => b.id === "OM-22"));
+});
+
+test("시세 요약 분기 표: 해자 2(표본이 모자라면 값을 내지 않는다) - 건수 4건은 값이 있어도 \"-\", 5건부터 값, 전세가율은 두 쪽이 다 5건 이상일 때만; 이 조각에는 low-sample 스팬이 없다", () => {
+  const byId = (id) => OVERALL_ROWS.find((b) => b.id === id);
+  const held = (kind) => OVERALL_ROWS.filter((b) => b.held === kind);
+  assert.ok(held("sample").length >= 60 && held("value").length >= 40 && held("absent").length >= 30, `held 행이 모자란다: ${held("sample").length}·${held("value").length}·${held("absent").length}`);
+  // 표본 부족(값 6000은 있다): 세 보기마다 그 값 글자가 나오지 않는다. 자치구 페이지의 전세 상태는 매매 6000을 함께 둔 행이라 제외한다.
+  const sampleRows = held("sample").filter((b) => /^(OA-[SJW]|OK-[SJW]|OD-S)-/.test(b.id) && /-n\d\d$/.test(b.id));
+  assert.ok(sampleRows.length >= 60, `표본 부족 행 ${sampleRows.length}`);
+  for (const b of sampleRows) {
+    assert.ok(!b.expect.includes("6,000만원") && !b.expect.includes("2억 264만원"), `${b.id}: 표본 부족인데 값이 나왔다 ${b.cond}`);
+    assert.ok(b.expect.includes(">-</div>"), `${b.id}: "-" 카드가 없다`);
+  }
+  // 문턱: 5건이 경계(n01은 값, n02는 값 없이 "-"), "5" 문자열도 같다
+  assert.match(byId("OK-S-n01").expect, /6,000만원/);
+  assert.doesNotMatch(byId("OK-S-n02").expect, /6,000만원/);
+  assert.match(byId("OK-S-n08").expect, /6,000만원/);
+  assert.doesNotMatch(byId("OK-S-n09").expect, /6,000만원/);
+  assert.match(byId("OD-S-n01").expect, /6,000만원/);
+  assert.doesNotMatch(byId("OD-S-n02").expect, /6,000만원/);
+  assert.match(byId("OA-W-n01").expect, /2억 264만원/);
+  assert.doesNotMatch(byId("OA-W-n02").expect, /2억 264만원/);
+  assert.equal(MIN_SAMPLE, 5);
+  // 순서: 표본 부족이든 값 없음이든 지표가 아예 없든 같은 "-"다(이유를 적지 않는다 - 예전 그대로). 순서가 갈리는 곳은 이 조각에 없다.
+  assert.equal(byId("OK-S-o01").expect, byId("OK-S-n02").expect);
+  assert.equal(byId("OK-S-o02").expect, byId("OK-S-z01").expect);
+  assert.equal(byId("OK-S-z01").expect, '<div class="overall-card"><div class="label">서울 전체</div><div class="value">-</div></div>');
+  // 전세가율 카드는 매매·전세가 모두 값을 낼 때만, 그 밑에 두 건수가 붙는다
+  assert.match(byId("OR-05").expect, /<div class="sub">매매 5건 · 전세 5건<\/div>/);
+  assert.doesNotMatch(byId("OR-06").expect, /전세가율/);
+  assert.doesNotMatch(byId("OR-07").expect, /전세가율/);
+  assert.doesNotMatch(byId("OR-08").expect, /전세가율/);
+  assert.doesNotMatch(byId("OR-17").expect, /전세가율/);
+  for (const b of OVERALL_ROWS) assert.ok(typeof b.expect !== "string" || !b.expect.includes("low-sample"), `${b.id}: 이 조각에는 low-sample 스팬이 없다`);
+});
+
+test("시세 요약 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다)", () => {
+  for (const b of OVERALL_ROWS) assert.equal(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
+});
+
+test("시세 요약 분기 표: React 조각이 legacy와 바이트까지 같다(분기마다, 허용 변환은 래퍼의 &#x27; 되돌림 하나)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  for (const b of OVERALL_ROWS) {
+    const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
+    assert.equal(react, b.expect, `${b.id} ${b.cond}`);
+    assert.equal(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+  }
+});
+
+test("시세 요약 분기 표: 같은 입력을 두 번 넣어도 같고 입력을 바꾸지 않는다", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  const snap = (args) => JSON.stringify(args, (_, v) => (v === undefined ? "(undefined)" : typeof v === "number" && !Number.isFinite(v) ? String(v) : v));
+  for (const b of OVERALL_ROWS) {
+    const before = snap(b.args);
+    const react = fragment(b.fn, prerender[b.fn].legacy);
+    assert.equal(react(...b.args), react(...b.args), b.id);
+    prerender[b.fn].legacy(...b.args);
+    assert.equal(snap(b.args), before, `${b.id}: 입력이 바뀌었다`);
+  }
+});
+
+test("시세 요약 조각: 예전 코드가 던지는 입력은 legacy도 React 조각도 같이 던진다(조용히 빈 카드를 내지 않는다)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  assert.equal(REALESTATE_OVERALL_THROWS.length, 20);
+  for (const b of REALESTATE_OVERALL_THROWS) {
+    assert.throws(() => prerender[b.fn].legacy(...b.args), TypeError, `${b.id} legacy ${b.cond}`);
+    assert.throws(() => fragment(b.fn, prerender[b.fn].legacy)(...b.args), TypeError, `${b.id} react ${b.cond}`);
+  }
+});
+
+test("시세 요약 조각: 이식된 이름이라 legacy가 조각 안에서 불리지 않는다(데이터 없음은 null)", async () => {
+  let called = 0;
+  const fragment = makeFragment(await createReactRenderer());
+  const spy = () => (called++, "legacy");
+  for (const none of [null, undefined, {}, { districts: [] }, { overall: null }]) assert.equal(fragment("realestateOverallHtml", spy)(none), null);
+  assert.equal(fragment("realestateOverallHtml", spy)({ districts: [{ name: "중구" }] }, null, "종로구"), null);
+  assert.ok(fragment("realestateOverallHtml", spy)({ overall: {} }).startsWith('<div class="overall-card">'));
+  assert.equal(called, 0);
+});
+
+test("realestate-overall.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - 카드 모양·글자 규칙·ratioBasis", () => {
+  const sale = { avgPricePerPyeong10k: 6000, transactionCount: 40 };
+  const jeonse = { avgDepositPerPyeong10k: 3000, transactionCount: 30 };
+  const seg = (text, esc) => ({ text, esc });
+  // 데이터 없음
+  assert.equal(overallCards(null), null);
+  assert.equal(overallCards({ districts: [{ name: "가" }] }), null);
+  assert.equal(overallCards({ overall: {} }, null, "가"), null);
+  // 카드 모양: 라벨(상수)·값 조각·부가 조각(없으면 null)
+  assert.deepEqual(overallCards({ overall: { sale } }, "sale"), [
+    { label: "평당가", value: [seg("6,000만원", false)], sub: null },
+    { label: "84㎡ 환산", value: [seg("15억 2,459만원", false)], sub: null },
+    { label: "거래건수", value: [seg("40건", true)], sub: null },
+  ]);
+  assert.deepEqual(overallCards({ overall: { sale, jeonse } }, null)[0], {
+    label: "매매 평당가",
+    value: [seg("6,000만원", false)],
+    sub: [seg("84㎡ 환산", true), seg(" 15억 2,459만원 · ", false), seg("40건", true)],
+  });
+  assert.deepEqual(overallCards({ overall: {} }), [
+    { label: "매매 평당가", value: [seg("-", false)], sub: null },
+    { label: "전세 평당 보증금", value: [seg("-", false)], sub: null },
+    { label: "월세 보증금 / 월세", value: [seg("-", false)], sub: null },
+  ]);
+  assert.deepEqual(overallCards({ overall: { sale, jeonse } }, "jeonse", null, { median: 46.7, cells: 13 }).map((c) => c.label), ["평당 보증금", "84㎡ 환산", "전세가율", "전세가율 단지별 중앙값", "거래건수"]);
+  assert.deepEqual(overallCards({ overall: { sale, jeonse } }, "jeonse")[2], { label: "전세가율", value: [seg("50.0%", false)], sub: [seg("매매 40건 · 전세 30건", true)] });
+  assert.deepEqual(overallCards({ districts: [{ name: "가", sale }] }, null, "가", { median: 46.7, cells: 1234 }).at(-1), {
+    label: "전세가율 단지별 중앙값",
+    value: [seg("46.7%", false)],
+    sub: [seg("단지·평형 1,234칸", true)],
+  });
+  // 마크업은 만들지 않는다: 클래스·태그는 쓰는 쪽(legacy·JSX)이 각자 입힌다
+  const json = JSON.stringify(overallCards({ overall: { sale, jeonse } }, "jeonse", null, { median: 46.7, cells: 13 }));
+  assert.doesNotMatch(json, /overall-card|class|<div|<span/);
+  // ratioBasis: 두 지표가 값을 낼 때 두 건수를 한 줄로(이스케이프하지 않은 글자)
+  assert.equal(ratioBasis({ sale, jeonse }), "매매 40건 · 전세 30건");
+  assert.equal(ratioBasis({ sale: { ...sale, transactionCount: 1234567 }, jeonse: { ...jeonse, transactionCount: "9" } }), "매매 1,234,567건 · 전세 9건");
+  assert.throws(() => ratioBasis({ sale }), TypeError, "전세 지표가 없으면 던진다(예전 그대로 - jeonseRatio가 null일 때는 부르지 않는다)");
+  assert.throws(() => ratioBasis({}), TypeError);
+});
+
+test("realestate-overall.mjs: 표본 문턱을 정의하거나 다시 적용하지 않고, 클래스·마크업을 들고 있지 않다 - resolveMetric(realestate-format.mjs)이 한 곳에서 정한다", async () => {
+  const source = await readFile(path.join(root, "scripts/realestate-overall.mjs"), "utf8");
+  const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+  assert.doesNotMatch(code, /MIN_SAMPLE|hasEnoughSample|metricOf/, "문턱을 이 모듈이 다시 부른다");
+  assert.match(code, /resolveMetric\(overall, "sale"\)/);
+  assert.match(code, /jeonseRatio\(overall\)/);
+  assert.doesNotMatch(code, /prerender\.mjs|renderer\.mjs/, "순수 모듈이 렌더러 스위치를 부른다");
+  assert.doesNotMatch(code, /overall-card|"label"|"value"|"sub"|<div|escapeHtml/, "순수 모듈이 마크업·클래스를 들고 있다 - 한 곳의 오타를 같은 실행 비교가 못 잡는다");
+  // 문턱 정의는 realestate-format.mjs 하나다
+  assert.equal(hasEnoughSample({ transactionCount: 5 }), true);
+  assert.equal(hasEnoughSample({ transactionCount: 4 }), false);
+  // 단지별 중앙값의 칸 수 문턱은 빌더(complex-ratio.mjs spreadOf)가 이미 적용한다 - 이 모듈은 다시 적용하지 않는다(10칸 미만도 spread가 오면 그대로 낸다)
+  assert.equal(overallCards({ overall: {} }, "jeonse")[0].label, "서울 전체");
+  assert.equal(overallCards({ districts: [{ name: "가" }] }, null, "가", { median: 1, cells: 3 }).at(-1).sub[0].text, "단지·평형 3칸");
+});
+
+test("realestate-overall.mjs: 이스케이프 없이 문자열에 끼우는 조각(esc=false)의 글자에는 & < > \"가 들 수 없다 - 난수 입력 3만 건(고정 시드)", () => {
+  // 입력 값 자리마다 특수문자·비문자열·null·undefined를 섞는다. 입력 글자는 건수·칸 수뿐이고 전부 esc=true 자리다(이스케이프 한다). esc=false는 숫자 서식 글자와 코드 상수 구분자다.
+  let seed = 20261012;
+  const rnd = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 2 ** 32);
+  const pick = (a) => a[Math.floor(rnd() * a.length)];
+  const STR = ["", "a", "종로구", `A&B <i> "q" it's`, "&amp;", "&#x27;", "5", "9", "x", "</td><td>", "\ud800", "1,2"];
+  const ODD = [false, true, 0, 1, -1, 7, 4, 5, 6, 4.5, 1380.5, NaN, Infinity, -Infinity, {}, [], [1, 2], [7], null, undefined, { valueOf: () => 9, toLocaleString: () => `A&B <i> "q" it's` }];
+  const NUM = [0, 1, 3, 4, 5, 6, 40, 684, 1234567, -3, 6000, 3000, 20264, 123.5];
+  const v = () => (rnd() < 0.5 ? pick(NUM) : rnd() < 0.5 ? pick(STR) : pick(ODD));
+  const metric = (f) => {
+    const r = rnd();
+    if (r < 0.1) return pick([undefined, null, 0, "", false, 5, "x", true, [], {}]);
+    const m = {};
+    if (rnd() < 0.9) m.transactionCount = rnd() < 0.6 ? pick([4, 5, 6, 30, 40, 684]) : v();
+    if (rnd() < 0.9) m[f] = rnd() < 0.6 ? pick(NUM) : v();
+    if (f === "avgDeposit10k" && rnd() < 0.9) m.avgMonthlyRent10k = v();
+    return m;
+  };
+  const entry = () => ({ name: v(), sale: metric("avgPricePerPyeong10k"), jeonse: metric("avgDepositPerPyeong10k"), wolse: metric("avgDeposit10k") });
+  const spreadOf = () => pick([null, undefined, 0, { median: v(), cells: v() }, { median: v(), cells: pick([13, 1173, 20]) }, { median: 46.7, cells: v() }]);
+  const LABELS = new Set(Object.values(RE_LABELS));
+  let rawSegs = 0;
+  let escSegs = 0;
+  let cardsTotal = 0;
+  for (let i = 0; i < 30000; i++) {
+    const e = entry();
+    const kind = pick([null, "sale", "jeonse", "wolse", "foo"]);
+    const district = rnd() < 0.3 ? "가" : null;
+    const spread = spreadOf();
+    let cards;
+    try {
+      cards = overallCards({ overall: e, districts: [{ ...e, name: "가" }] }, kind, district, spread);
+    } catch (err) {
+      assert.ok(err instanceof TypeError); // spread.cells가 null·undefined면 예전 코드도 던진다
+      continue;
+    }
+    for (const card of cards) {
+      cardsTotal++;
+      assert.ok(LABELS.has(card.label), `라벨이 상수가 아니다: ${card.label}`);
+      for (const s of [...card.value, ...(card.sub ?? [])]) {
+        assert.equal(typeof s.text, "string");
+        if (s.esc) escSegs++;
+        else {
+          rawSegs++;
+          assert.doesNotMatch(s.text, /[&<>"]/, `raw 조각 글자에 특수문자가 있다: ${JSON.stringify(s)}`);
+        }
+      }
+      if (card.sub) assert.ok(card.sub.length > 0 && card.sub.some((s) => s.text !== ""), "sub는 비어 있지 않다(legacy의 `sub ? … : \"\"` 판정과 같다)");
+    }
+  }
+  assert.ok(rawSegs > 30000 && escSegs > 10000 && cardsTotal > 60000, `raw ${rawSegs}·esc ${escSegs}·카드 ${cardsTotal} - 입력이 조각 자리를 거의 밟지 않았다`);
 });

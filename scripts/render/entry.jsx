@@ -7,8 +7,8 @@
 // renewalLeadHtml·renewalCapLeadHtml·renewalWolseLeadHtml·conversionDistrictLinksHtml·cancelDistrictLinksHtml·renewalDistrictLinksHtml·
 // floorDistrictLinksHtml (#241 PR 2, 리드·링크 10개), realestateHtml (#241 PR 3, 첫 화면 실거래 요약),
 // districtSummaryHtml·districtRenewalHtml·districtFactsHtml·districtLinksHtml·conversionTableHtml·cancelDistrictsHtml·cancelMonthsHtml·
-// renewalDistrictsHtml·renewalWolseDistrictsHtml·floorDistrictsHtml (#242 PR 1, 자치구 문장·링크 4개와 표 6개), realestateHeadHtml·realestateTableHtml (#242 PR 2, 시세표 머리글·표).
-// #242 PR 3과 #243이 이어서 채운다.
+// renewalDistrictsHtml·renewalWolseDistrictsHtml·floorDistrictsHtml (#242 PR 1, 자치구 문장·링크 4개와 표 6개), realestateHeadHtml·realestateTableHtml (#242 PR 2, 시세표 머리글·표),
+// realestateOverallHtml (#242 PR 3, 시세 요약 카드). #243이 이어서 채운다.
 import { DISTRICT_PAGES } from "../district-slugs.mjs";
 import { districtSentences } from "../district-summary.mjs";
 import { factSentences } from "../district-facts.mjs";
@@ -16,6 +16,7 @@ import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-link
 import { cancelDistricts, cancelMonths, conversionTable, floorDistricts, renewalDistricts, renewalWolseDistricts } from "../district-tables.mjs";
 import { indexNewsItems } from "../news-items.mjs";
 import { metricCell, topDistricts } from "../realestate-rows.mjs";
+import { overallCards } from "../realestate-overall.mjs";
 import { headLabels, realestateTable } from "../realestate-table.mjs";
 import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "../rates-table.mjs";
 import { renewalSentences } from "../renewal-facts.mjs";
@@ -623,6 +624,33 @@ function realestateTableJsx(realestate, kind = null, district = null) {
   );
 }
 
+// ---- 시세 요약 카드 (#242 PR 3) ----
+
+// 카드의 라벨·값·부가 글자는 realestate-overall.mjs가 정하고(legacy와 같은 함수), 여기서는 요소(클래스 포함)만 입힌다. 글자는 전부 모듈이 만든 문자열이라 str()이 필요 없다 -
+// 조각(seg)마다 legacy가 이스케이프하던 자리(esc)와 그대로 끼우던 자리가 있지만, React는 어느 쪽이든 텍스트로 낸다(raw 자리에는 `& < > "`가 들 수 없다 - 숫자 서식 글자뿐이다).
+// 값·부가 글자는 조각을 한 문자열로 이어서 내 텍스트 노드 하나로 둔다(legacy가 한 덩어리로 이어 붙이는 것과 같다).
+const segsText = (segs) => segs.map((seg) => seg.text).join("");
+const OverallCard = ({ card }) => (
+  <div className="overall-card">
+    <div className="label">{card.label}</div>
+    <div className="value">{segsText(card.value)}</div>
+    {card.sub ? <div className="sub">{segsText(card.sub)}</div> : null}
+  </div>
+);
+
+// 시세 요약: 서울 전체도(자치구면 그 자치구도) 없으면 legacy처럼 null이다(자리표시를 비운다).
+function realestateOverallJsx(realestate, kind = null, district = null, spread = null) {
+  const cards = overallCards(realestate, kind, district, spread);
+  if (!cards) return null;
+  return (
+    <>
+      {cards.map((card, i) => (
+        <OverallCard key={i} card={card} />
+      ))}
+    </>
+  );
+}
+
 export const fragments = {
   ratesHeadHtml: ratesHead,
   ratesHtml: ratesRows,
@@ -631,6 +659,7 @@ export const fragments = {
   realestateHtml: realestate,
   realestateHeadHtml: realestateHead,
   realestateTableHtml: realestateTableJsx,
+  realestateOverallHtml: realestateOverallJsx,
   newsContextHtml: (context) => <NewsContext context={context} />,
   newsHtml: newsIndex,
   newsSummaryHtml: newsSummary,
