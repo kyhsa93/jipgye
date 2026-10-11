@@ -6,6 +6,15 @@ import { createWriteSet } from "./render-writes.mjs";
 import { INDEX_NEWS, indexNewsItems } from "./news-items.mjs";
 import { escapeHtml } from "./html-escape.mjs";
 import { linksBlockHtml, slugLinksHtml } from "./district-links.mjs";
+import {
+  CONVERSION_BAND,
+  cancelDistricts,
+  cancelMonths,
+  conversionTable,
+  floorDistricts,
+  renewalDistricts,
+  renewalWolseDistricts,
+} from "./district-tables.mjs";
 import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "./rates-table.mjs";
 import { BUDGET_PAGES } from "./budget-pages.mjs";
 import { budgetFactSentences } from "./budget-facts.mjs";
@@ -896,7 +905,8 @@ export function applyPrerender(html, blocks) {
  * 고르기만 한다. 표는 화면이 고른 자치구를 굵게 하려고 다시 그리지만, 조건을
  * 넣기 전에 보이는 첫 벌은 여기서 구워 나가야 검색에 걸린다.
  */
-export const CONVERSION_BAND = "60to85";
+// 표 여섯(전환율·해제·미등기·재계약 둘·층 격차)의 행 선택·정렬·칸 글자는 district-tables.mjs에 있다 - JSX 쪽(render/entry.jsx)이 같은 계산을 가져다 쓴다(#242 PR 1). 여기는 마크업만 입힌다.
+export { CONVERSION_BAND };
 
 function conversionLeadHtmlLegacy(conversion) {
   return conversion?.seoul?.leadKo ? escapeHtml(conversion.seoul.leadKo) : null;
@@ -904,26 +914,21 @@ function conversionLeadHtmlLegacy(conversion) {
 export const conversionLeadHtml = fragment("conversionLeadHtml", conversionLeadHtmlLegacy);
 
 function conversionTableHtmlLegacy(conversion, band = CONVERSION_BAND) {
-  const rows = (conversion?.cells ?? []).filter((cell) => cell.band === band);
-  if (!rows.length) return null;
+  const table = conversionTable(conversion, band);
+  if (!table) return null;
 
-  const label = conversion.bands?.find((b) => b.key === band)?.label ?? band;
-  const eok = (value10k) => `${(Math.round((value10k / 10000) * 100) / 100).toLocaleString("ko-KR", { maximumFractionDigits: 2 })}억`;
-  const man = (value10k) => `${Math.round(value10k).toLocaleString("ko-KR")}만원`;
-
-  const body = [...rows]
-    .sort((a, b) => b.rate - a.rate)
+  const body = table.rows
     .map(
-      (cell) =>
-        `<tr><td>${escapeHtml(cell.district)}</td><td>${cell.rate}%</td>` +
-        `<td>${escapeHtml(eok(cell.jeonse10k))}</td>` +
-        `<td>${escapeHtml(`${eok(cell.deposit10k)} / ${man(cell.monthly10k)}`)}</td>` +
-        `<td>${cell.pairs.toLocaleString("ko-KR")}</td></tr>`
+      (row) =>
+        `<tr><td>${escapeHtml(row.district)}</td><td>${row.rate}</td>` +
+        `<td>${escapeHtml(row.jeonse)}</td>` +
+        `<td>${escapeHtml(row.rent)}</td>` +
+        `<td>${row.pairs}</td></tr>`
     )
     .join("");
 
   return (
-    `<caption class="cost-label" style="caption-side:top;text-align:left;padding-bottom:8px;">${escapeHtml(`${label} 기준`)}</caption>` +
+    `<caption class="cost-label" style="caption-side:top;text-align:left;padding-bottom:8px;">${escapeHtml(table.caption)}</caption>` +
     `<thead><tr><th scope="col">자치구</th><th scope="col">전환율</th><th scope="col">전세</th><th scope="col">월세</th><th scope="col">단지</th></tr></thead>` +
     `<tbody>${body}</tbody>`
   );
@@ -949,16 +954,15 @@ function cancelMonthLeadHtmlLegacy(cancellation) {
 export const cancelMonthLeadHtml = fragment("cancelMonthLeadHtml", cancelMonthLeadHtmlLegacy);
 
 function cancelDistrictsHtmlLegacy(cancellation) {
-  const rows = cancellation?.districts ?? [];
-  if (!rows.length) return null;
+  const rows = cancelDistricts(cancellation);
+  if (!rows) return null;
 
-  const pct = (value) => (value === null || value === undefined ? "-" : `${value}%`);
   const body = rows
     .map(
       (row) =>
-        `<tr><td>${escapeHtml(row.district)}</td><td>${row.deals.toLocaleString("ko-KR")}</td>` +
-        `<td>${row.cancelled.toLocaleString("ko-KR")}</td><td>${escapeHtml(pct(row.cancelledShare))}</td>` +
-        `<td>${row.stale.toLocaleString("ko-KR")}</td><td>${escapeHtml(pct(row.staleShare))}</td></tr>`
+        `<tr><td>${escapeHtml(row.district)}</td><td>${row.deals}</td>` +
+        `<td>${row.cancelled}</td><td>${escapeHtml(row.cancelledShare)}</td>` +
+        `<td>${row.stale}</td><td>${escapeHtml(row.staleShare)}</td></tr>`
     )
     .join("");
 
@@ -970,15 +974,14 @@ function cancelDistrictsHtmlLegacy(cancellation) {
 export const cancelDistrictsHtml = fragment("cancelDistrictsHtml", cancelDistrictsHtmlLegacy);
 
 function cancelMonthsHtmlLegacy(cancellation) {
-  const rows = cancellation?.registrationByMonth ?? [];
-  if (!rows.length) return null;
+  const rows = cancelMonths(cancellation);
+  if (!rows) return null;
 
-  const mature = new Set(cancellation?.seoul?.registration?.matureMonths ?? []);
   const body = rows
     .map(
       (row) =>
-        `<tr${mature.has(row.month) ? ' class="spot"' : ""}><td>${escapeHtml(row.month)}</td>` +
-        `<td>${row.filed.toLocaleString("ko-KR")}</td><td>${row.registered.toLocaleString("ko-KR")}</td><td>${row.share}%</td></tr>`
+        `<tr${row.spot ? ' class="spot"' : ""}><td>${escapeHtml(row.month)}</td>` +
+        `<td>${row.filed}</td><td>${row.registered}</td><td>${row.share}</td></tr>`
     )
     .join("");
 
@@ -1003,21 +1006,17 @@ function renewalCapLeadHtmlLegacy(renewal) {
 export const renewalCapLeadHtml = fragment("renewalCapLeadHtml", renewalCapLeadHtmlLegacy);
 
 function renewalDistrictsHtmlLegacy(renewal) {
-  const rows = renewal?.table ?? [];
-  if (!rows.length) return null;
+  const rows = renewalDistricts(renewal);
+  if (!rows) return null;
 
-  const pct = (value) => (value === null || value === undefined ? "-" : `${value}%`);
   const body = rows
     .map((row) => {
       // 문턱을 못 넘은 칸은 비우지 않는다. 화면 쪽 renderDistrictTable과 같은 규칙이다.
-      const gap =
-        row.gapMedian === null
-          ? '<span class="low-sample">표본 부족</span>'
-          : escapeHtml(pct(row.gapMedian));
+      const gap = row.gap.low ? '<span class="low-sample">표본 부족</span>' : escapeHtml(row.gap.text);
       return (
         `<tr><td>${escapeHtml(row.district)}</td><td>${gap}</td>` +
-        `<td>${escapeHtml(pct(row.gapCheaperShare))}</td><td>${row.gapMatched.toLocaleString("ko-KR")}</td>` +
-        `<td>${escapeHtml(pct(row.capMissShare))}</td><td>${row.rightUsed.toLocaleString("ko-KR")}</td></tr>`
+        `<td>${escapeHtml(row.cheaper)}</td><td>${row.matched}</td>` +
+        `<td>${escapeHtml(row.capMiss)}</td><td>${row.rightUsed}</td></tr>`
       );
     })
     .join("");
@@ -1036,23 +1035,19 @@ export const renewalWolseLeadHtml = fragment("renewalWolseLeadHtml", renewalWols
 
 /** 월세 재계약 표. 화면 쪽 renderWolse와 같은 모양이다. */
 function renewalWolseDistrictsHtmlLegacy(renewal) {
-  const rows = renewal?.wolseTable ?? [];
-  const wolse = renewal?.seoul?.wolse;
-  if (!rows.length || !wolse) return null;
-  const signed = (value) => (value === null || value === undefined ? "-" : `${value > 0 ? "+" : ""}${value}%`);
-  const ends = wolse.range.map((r) => r.rate);
-  const body = rows
+  const table = renewalWolseDistricts(renewal);
+  if (!table) return null;
+  const body = table.rows
     .map((row) => {
-      const gap = row.median === null ? '<span class="low-sample">표본 부족</span>' : escapeHtml(signed(row.median));
-      const range = row.range.length ? row.range.map((r) => signed(r.median)).join(" / ") : "-";
+      const gap = row.gap.low ? '<span class="low-sample">표본 부족</span>' : escapeHtml(row.gap.text);
       return (
-        `<tr><td>${escapeHtml(row.district)}</td><td>${gap}</td><td>${escapeHtml(range)}</td>` +
-        `<td>${escapeHtml(row.cheaperShare === null ? "-" : `${row.cheaperShare}%`)}</td><td>${row.matched.toLocaleString("ko-KR")}</td></tr>`
+        `<tr><td>${escapeHtml(row.district)}</td><td>${gap}</td><td>${escapeHtml(row.range)}</td>` +
+        `<td>${escapeHtml(row.cheaper)}</td><td>${row.matched}</td></tr>`
       );
     })
     .join("");
   return (
-    `<thead><tr><th scope="col">자치구</th><th scope="col">${escapeHtml(`갱신 − 신규 (${wolse.rate}%)`)}</th><th scope="col">${escapeHtml(`${ends[0]}% / ${ends.at(-1)}%로 보면`)}</th>` +
+    `<thead><tr><th scope="col">자치구</th><th scope="col">${escapeHtml(table.rateHeading)}</th><th scope="col">${escapeHtml(table.endsHeading)}</th>` +
     `<th scope="col">시세보다 싼 비율</th><th scope="col">맞물린 계약</th></tr></thead><tbody>${body}</tbody>`
   );
 }
@@ -1065,18 +1060,16 @@ export const renewalDistrictLinksHtml = fragment("renewalDistrictLinksHtml", ren
 
 /** 층 격차 화면. 문턱과 문장은 빌더가 이미 정했으므로 여기서는 표만 만든다. */
 function floorDistrictsHtmlLegacy(floor) {
-  const rows = floor?.districts ?? [];
-  if (!rows.length) return null;
+  const rows = floorDistricts(floor);
+  if (!rows) return null;
 
   // 갈라 볼 수 없는 구도 빼지 않는다 - 화면 쪽 renderDistrictTable과 같은 규칙이다.
   const body = rows
     .map((row) => {
-      const verdict = row.distinct
-        ? "다르다"
-        : `<span class="low-sample">${row.band ? "갈라 볼 수 없음" : "칸이 모자람"}</span>`;
+      const verdict = row.lowText === null ? "다르다" : `<span class="low-sample">${row.lowText}</span>`;
       return (
-        `<tr><td>${escapeHtml(row.district)}</td><td>${row.median === null ? "-" : `${row.median}%`}</td>` +
-        `<td>${row.cells.toLocaleString("ko-KR")}</td><td>${verdict}</td></tr>`
+        `<tr><td>${escapeHtml(row.district)}</td><td>${row.median}</td>` +
+        `<td>${row.cells}</td><td>${verdict}</td></tr>`
       );
     })
     .join("");

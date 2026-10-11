@@ -5,11 +5,18 @@
 // 이식된 것: ratesHtml·ratesHeadHtml (#240, 금리 4개 상품군), summaryHtml·marketHtml·newsContextHtml·newsHtml·newsSummaryHtml·
 // newsListHtml·newsKospiHtml·newsRealestateStatsHtml (#241 PR 1, 문장·목록 8개), conversionLeadHtml·cancelLeadHtml·cancelMonthLeadHtml·
 // renewalLeadHtml·renewalCapLeadHtml·renewalWolseLeadHtml·conversionDistrictLinksHtml·cancelDistrictLinksHtml·renewalDistrictLinksHtml·
-// floorDistrictLinksHtml (#241 PR 2, 리드·링크 10개), realestateHtml (#241 PR 3, 첫 화면 실거래 요약). #242~#243이 이어서 채운다.
-import { slugLinkEntries, slugLinkHref } from "../district-links.mjs";
+// floorDistrictLinksHtml (#241 PR 2, 리드·링크 10개), realestateHtml (#241 PR 3, 첫 화면 실거래 요약),
+// districtSummaryHtml·districtRenewalHtml·districtFactsHtml·districtLinksHtml·conversionTableHtml·cancelDistrictsHtml·cancelMonthsHtml·
+// renewalDistrictsHtml·renewalWolseDistrictsHtml·floorDistrictsHtml (#242 PR 1, 자치구 문장·링크 4개와 표 6개). #242 PR 2·3과 #243이 이어서 채운다.
+import { DISTRICT_PAGES } from "../district-slugs.mjs";
+import { districtSentences } from "../district-summary.mjs";
+import { factSentences } from "../district-facts.mjs";
+import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-links.mjs";
+import { cancelDistricts, cancelMonths, conversionTable, floorDistricts, renewalDistricts, renewalWolseDistricts } from "../district-tables.mjs";
 import { indexNewsItems } from "../news-items.mjs";
 import { metricCell, topDistricts } from "../realestate-rows.mjs";
 import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "../rates-table.mjs";
+import { renewalSentences } from "../renewal-facts.mjs";
 
 // legacy `escapeHtml(value)`의 값 변환(`String(value ?? "")`). React는 문자열·숫자만 글자로 내고 false·null·객체·배열은 비우거나 다르게 내거나 던지므로,
 // legacy가 `escapeHtml`을 거치던 자리는 전부 이 함수를 거친다(비문자열 값이 "[object Object]"·"false"로 나오는 것까지 같게 맞춘다).
@@ -309,6 +316,240 @@ function realestate(data) {
   );
 }
 
+// ---- 자치구 문장·링크 4개와 표 6개 (#242 PR 1) ----
+
+// 자치구 페이지의 문장 묶음. 문장은 모듈이 한국어·영어로 만들어 주고(legacy와 같은 함수), 여기서는 공백으로 이어 한 덩어리로 낸다.
+// 문장이 하나도 없으면 legacy는 null이 아니라 빈 문자열을 낸다(자리표시가 빈다 - null과 ""는 자리표시 치환에서 다르다). 이어 붙인 글자는 항상 문자열이라 str()이 필요 없다.
+const sentenceBlock = (sentences) => <>{sentences.length ? sentences.join(" ") : ""}</>;
+
+function districtSummary(realestate, district, locale = "ko", spread = null) {
+  if (!district) return sentenceBlock([]);
+  const entry = (realestate?.districts ?? []).find((d) => d.name === district);
+  return sentenceBlock(districtSentences(entry, realestate, locale, spread));
+}
+
+const districtRenewal = (facts, locale = "ko") => sentenceBlock(renewalSentences(facts, locale));
+const districtFacts = (facts, locale = "ko") => sentenceBlock(factSentences(facts, locale));
+
+// 다른 자치구 링크 묶음. 머리글·상자의 분기와 id는 linksBlockShape(legacy의 linksBlockHtml과 같은 규칙), 경로는 slugLinkHref다.
+// 경로는 DISTRICT_PAGES(코드가 정한 slug)로 만든 `./district-<slug>.html`이라 `javascript:`로 시작할 수 없다(React 19 차단 차이의 대상이 아니다).
+// 링크가 하나도 없는 분기(block이 null)는 DISTRICT_PAGES가 상수라 지금은 닿지 않는 방어 코드다.
+function districtLinks(current = null, heading = "다른 지역") {
+  const block = linksBlockShape("district-links", heading, DISTRICT_PAGES.length);
+  if (!block) return sentenceBlock([]);
+  return (
+    <>
+      <h3 className="district-links-heading" id={block.headingId}>
+        {str(block.heading)}
+      </h3>
+      <div className="district-links" id={block.boxId}>
+        {DISTRICT_PAGES.map(({ name, slug }) =>
+          name === current ? (
+            <a key={name} href={slugLinkHref(slug)} aria-current="page">
+              {name}
+            </a>
+          ) : (
+            <a key={name} href={slugLinkHref(slug)}>
+              {name}
+            </a>
+          )
+        )}
+      </div>
+    </>
+  );
+}
+
+// 표 한 칸의 "표본 부족" 스팬. 값이 아니라 모자란다고 적는다(DIRECTION 해자 2). 표본 부족인지는 district-tables.mjs가 정한다.
+const LowSample = ({ children }) => <span className="low-sample">{children}</span>;
+const GapCell = ({ gap }) => (gap.low ? <LowSample>표본 부족</LowSample> : gap.text);
+
+// legacy의 caption은 `style="caption-side:top;text-align:left;padding-bottom:8px;"`로 끝에 `;`가 있다(틀의 화면 스크립트가 만드는 글자와 같다). React는 style 객체를 `;`로 이어 쓰기만 하고
+// 끝에 `;`를 달지 못하며, 값 문자열에 `;`를 달면 개발 빌드가 stderr로 경고한다(`/;\s*$/` 검사, react-dom 19.3.0). 경고 검사는 값을 문자열로 읽고(hint "string") 출력은 `"" + 값`(hint "default")으로
+// 이어 붙이므로, 두 읽기를 달리 돌려주는 값으로 경고 없이 같은 글자를 낸다. React를 올려 이 동작이 바뀌면 caption 바이트나 stderr가 달라져 parity 시험이 바로 실패한다.
+const withTrailingSemicolon = (text) => ({ [Symbol.toPrimitive]: (hint) => (hint === "string" ? text : `${text};`) });
+
+// 전환율 표.
+function conversionTableJsx(conversion, band) {
+  const table = conversionTable(conversion, band);
+  if (!table) return null;
+  return (
+    <>
+      <caption className="cost-label" style={{ captionSide: "top", textAlign: "left", paddingBottom: withTrailingSemicolon("8px") }}>
+        {table.caption}
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">자치구</th>
+          <th scope="col">전환율</th>
+          <th scope="col">전세</th>
+          <th scope="col">월세</th>
+          <th scope="col">단지</th>
+        </tr>
+      </thead>
+      <tbody>
+        {table.rows.map((row, i) => (
+          <tr key={i}>
+            <td>{str(row.district)}</td>
+            <td>{row.rate}</td>
+            <td>{row.jeonse}</td>
+            <td>{row.rent}</td>
+            <td>{row.pairs}</td>
+          </tr>
+        ))}
+      </tbody>
+    </>
+  );
+}
+
+function cancelDistrictsJsx(cancellation) {
+  const rows = cancelDistricts(cancellation);
+  if (!rows) return null;
+  return (
+    <>
+      <thead>
+        <tr>
+          <th scope="col">자치구</th>
+          <th scope="col">신고</th>
+          <th scope="col">해제</th>
+          <th scope="col">해제율</th>
+          <th scope="col">미등기</th>
+          <th scope="col">미등기율</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, i) => (
+          <tr key={i}>
+            <td>{str(row.district)}</td>
+            <td>{row.deals}</td>
+            <td>{row.cancelled}</td>
+            <td>{row.cancelledShare}</td>
+            <td>{row.stale}</td>
+            <td>{row.staleShare}</td>
+          </tr>
+        ))}
+      </tbody>
+    </>
+  );
+}
+
+function cancelMonthsJsx(cancellation) {
+  const rows = cancelMonths(cancellation);
+  if (!rows) return null;
+  return (
+    <>
+      <thead>
+        <tr>
+          <th scope="col">계약월</th>
+          <th scope="col">계약</th>
+          <th scope="col">등기 완료</th>
+          <th scope="col">완료율</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, i) => (
+          <tr key={i} className={row.spot ? "spot" : undefined}>
+            <td>{str(row.month)}</td>
+            <td>{row.filed}</td>
+            <td>{row.registered}</td>
+            <td>{row.share}</td>
+          </tr>
+        ))}
+      </tbody>
+    </>
+  );
+}
+
+function renewalDistrictsJsx(renewal) {
+  const rows = renewalDistricts(renewal);
+  if (!rows) return null;
+  return (
+    <>
+      <thead>
+        <tr>
+          <th scope="col">자치구</th>
+          <th scope="col">갱신 − 신규</th>
+          <th scope="col">시세보다 싼 비율</th>
+          <th scope="col">맞물린 계약</th>
+          <th scope="col">상한 미달</th>
+          <th scope="col">요구권 행사</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, i) => (
+          <tr key={i}>
+            <td>{str(row.district)}</td>
+            <td>
+              <GapCell gap={row.gap} />
+            </td>
+            <td>{row.cheaper}</td>
+            <td>{row.matched}</td>
+            <td>{row.capMiss}</td>
+            <td>{row.rightUsed}</td>
+          </tr>
+        ))}
+      </tbody>
+    </>
+  );
+}
+
+function renewalWolseDistrictsJsx(renewal) {
+  const table = renewalWolseDistricts(renewal);
+  if (!table) return null;
+  return (
+    <>
+      <thead>
+        <tr>
+          <th scope="col">자치구</th>
+          <th scope="col">{table.rateHeading}</th>
+          <th scope="col">{table.endsHeading}</th>
+          <th scope="col">시세보다 싼 비율</th>
+          <th scope="col">맞물린 계약</th>
+        </tr>
+      </thead>
+      <tbody>
+        {table.rows.map((row, i) => (
+          <tr key={i}>
+            <td>{str(row.district)}</td>
+            <td>
+              <GapCell gap={row.gap} />
+            </td>
+            <td>{row.range}</td>
+            <td>{row.cheaper}</td>
+            <td>{row.matched}</td>
+          </tr>
+        ))}
+      </tbody>
+    </>
+  );
+}
+
+function floorDistrictsJsx(floor) {
+  const rows = floorDistricts(floor);
+  if (!rows) return null;
+  return (
+    <>
+      <thead>
+        <tr>
+          <th scope="col">자치구</th>
+          <th scope="col">1층 − 3층 이상</th>
+          <th scope="col">맞물린 칸</th>
+          <th scope="col">서울과 다른가</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row, i) => (
+          <tr key={i}>
+            <td>{str(row.district)}</td>
+            <td>{row.median}</td>
+            <td>{row.cells}</td>
+            <td>{row.lowText === null ? "다르다" : <LowSample>{row.lowText}</LowSample>}</td>
+          </tr>
+        ))}
+      </tbody>
+    </>
+  );
+}
+
 export const fragments = {
   ratesHeadHtml: ratesHead,
   ratesHtml: ratesRows,
@@ -331,4 +572,14 @@ export const fragments = {
   cancelDistrictLinksHtml: slugLinks,
   renewalDistrictLinksHtml: slugLinks,
   floorDistrictLinksHtml: slugLinks,
+  districtSummaryHtml: districtSummary,
+  districtRenewalHtml: districtRenewal,
+  districtFactsHtml: districtFacts,
+  districtLinksHtml: districtLinks,
+  conversionTableHtml: conversionTableJsx,
+  cancelDistrictsHtml: cancelDistrictsJsx,
+  cancelMonthsHtml: cancelMonthsJsx,
+  renewalDistrictsHtml: renewalDistrictsJsx,
+  renewalWolseDistrictsHtml: renewalWolseDistrictsJsx,
+  floorDistrictsHtml: floorDistrictsJsx,
 };
