@@ -320,24 +320,102 @@ test("HTTP 401·403은 실패(쓰기 없음), 오류 문구에 키가 없다", a
   } finally { await mock.close(); await rm(out, { recursive: true, force: true }); }
 });
 
-test("쪽 상한: 400쪽 넘는 지번은 값을 쓰지 않고 지번 수만 센다(첫 쪽만 호출), 나머지가 끝나면 병합한다", async () => {
+test("쪽 상한: 상한 쪽 수를 넘는 지번은 값을 쓰지 않고 지번 수만 센다(hsprc·면적 첫 쪽만 호출), 나머지가 끝나면 병합한다", async () => {
   const ts = [target(1), target(2)];
   const uni = new Map([[pkey(ts[0]), buildParcel(hogs(4, "K"))], [pkey(ts[1]), buildParcel(hogs(4, "Z"))]]);
   const big = pkey(ts[1]);
-  const mock = await startMock(uni, { totalOf: (op, key) => (key === big && op === "getBrHsprcInfo" ? MAX_PAGES_PER_PARCEL * 100 + 1 : undefined), mutate: (op, list, { key }) => (key === big ? list.concat(Array.from({ length: 100 }, (_, i) => ({ ...list[0], mgmBldrgstPk: `FAKEPK-pad-${i}` }))) : list) });
+  // 면적 totalCount만 상한을 넘게 흉내 낸다(hsprc는 정상). 면적 첫 쪽으로 상한을 알면 hsprc는 첫 쪽만 받고 버린다.
+  const mock = await startMock(uni, { totalOf: (op, key) => (key === big && op === "getBrExposPubuseAreaInfo" ? MAX_PAGES_PER_PARCEL * 100 + 1 : undefined), mutate: (op, list, { key }) => (key === big ? list.concat(Array.from({ length: 100 }, (_, i) => ({ ...list[0], mgmBldrgstPk: `FAKEPK-pad-${i}` }))) : list) });
   const out = await tmp();
   try {
     const r = await runCollector(base({ targets: targetsOf(ts), outDir: out, baseUrl: mock.base }));
     assert.equal(r.cappedParcels, 1);
     assert.equal(r.finishedNow, 1);
-    assert.equal(mock.log.filter((l) => l.key === big).length, 1, "상한 지번은 첫 쪽만 부른다");
+    assert.deepEqual(mock.log.filter((l) => l.key === big).map((l) => `${l.op}#${l.page}`), ["getBrHsprcInfo#1", "getBrExposPubuseAreaInfo#1"], "상한 지번은 두 오퍼레이션의 첫 쪽만 부른다(hsprc 전체 재수신 없음)");
     assert.equal(r.merged, true);
     const d = JSON.parse(await readFile(path.join(out, "2026.json"), "utf8"));
     assert.equal(d.meta.cappedParcels, 1);
     assert.equal(d.parcels.length, 1);
     assert.equal(d.meta.targetParcels, 2);
-    assert.ok(summaryLines(r, 9000).some((l) => /쪽 상한\(400쪽\) 지번 1/.test(l)));
+    assert.ok(summaryLines(r, 9000).some((l) => /쪽 상한\(1500쪽\) 지번 1\(지번 수만/.test(l)));
+    assert.equal(MAX_PAGES_PER_PARCEL, 1500);
   } finally { await mock.close(); await rm(out, { recursive: true, force: true }); }
+});
+
+test("쪽 상한 1,500: 1,070쪽(면적)·1,070쪽(hsprc) 큰 지번은 끝까지 받아 접히고 쪽 합이 맞다", async () => {
+  const t = target(1);
+  const uni = new Map([[pkey(t), buildParcel(hogs(53500, "BIG"))]]); // hsprc 107,000건 = 1,070쪽, 면적 107,000행 = 1,070쪽
+  const mock = await startMock(uni);
+  const out = await tmp();
+  try {
+    const r = await runCollector(base({ targets: targetsOf([t]), outDir: out, baseUrl: mock.base, budget: 5000 }));
+    assert.equal(r.cappedParcels, 0);
+    assert.equal(r.finishedNow, 1);
+    assert.equal(r.calls, 2140);
+    assert.equal(r.merged, true);
+    const d = JSON.parse(await readFile(path.join(out, "2026.json"), "utf8"));
+    assert.equal(d.parcels[0].n, 53500);
+    assert.equal(d.cells[0].n, 53500);
+  } finally { await mock.close(); await rm(out, { recursive: true, force: true }); }
+});
+
+test("쪽 상한 초과 지번: 같은 실행에서도 다음 실행에서도 hsprc를 다시 받지 않고, 상한을 올린 뒤 다음 실행은 그 지번을 받는다(병합 전)", async () => {
+  const ts = [target(1), target(2), target(3)];
+  const uni = new Map([[pkey(ts[0]), buildParcel(hogs(4, "S"))], [pkey(ts[1]), buildParcel(hogs(250, "P").map((h) => ({ ...h, p2025: 0 })))], [pkey(ts[2]), buildParcel(hogs(3, "F"))]]); // 250호: hsprc 3쪽(2026만)·면적 5쪽
+  const capped = pkey(ts[1]);
+  const out = await tmp();
+  try {
+    // 1회: 상한 3쪽 -> 250호 지번은 상한 지번, F 지번은 일시 오류라 병합 안 됨(부분 파일만 남음)
+    const m1 = await startMock(uni, { failKeys: new Set([pkey(ts[2])]) });
+    const r1 = await runCollector(base({ targets: targetsOf(ts), outDir: out, baseUrl: m1.base, maxPages: 3 }));
+    await m1.close();
+    assert.equal(r1.cappedParcels, 1);
+    assert.equal(r1.abandoned, 1);
+    assert.equal(r1.merged, false);
+    assert.deepEqual(m1.log.filter((l) => l.key === capped).map((l) => `${l.op}#${l.page}`), ["getBrHsprcInfo#1", "getBrExposPubuseAreaInfo#1"]);
+    // 2회: 같은 상한 -> 상한 지번은 또 첫 쪽 둘만(hsprc 2~5쪽 없음)
+    const m2 = await startMock(uni);
+    const r2 = await runCollector(base({ targets: targetsOf(ts), outDir: out, baseUrl: m2.base, maxPages: 3 }));
+    await m2.close();
+    assert.equal(r2.cappedParcels, 1);
+    assert.deepEqual(m2.log.filter((l) => l.key === capped).map((l) => `${l.op}#${l.page}`), ["getBrHsprcInfo#1", "getBrExposPubuseAreaInfo#1"]);
+    assert.equal(r2.merged, true, "남은 것이 상한 지번뿐이면 병합");
+  } finally { await rm(out, { recursive: true, force: true }); }
+  // 상한을 올리면(병합 파일이 없는 상태) 이전에 상한 지번으로만 분류돼 끝나지 않은 지번을 다시 받는다
+  const out2 = await tmp();
+  try {
+    const m1 = await startMock(uni, { failKeys: new Set([pkey(ts[2])]) });
+    await runCollector(base({ targets: targetsOf(ts), outDir: out2, baseUrl: m1.base, maxPages: 3 }));
+    await m1.close();
+    const m3 = await startMock(uni);
+    const r3 = await runCollector(base({ targets: targetsOf(ts), outDir: out2, baseUrl: m3.base }));
+    await m3.close();
+    assert.equal(r3.cappedParcels, 0);
+    assert.equal(r3.finishedNow, 2, "상한 지번이던 지번과 일시 오류였던 지번이 이번에 끝난다");
+    assert.equal(m3.log.filter((l) => l.key === capped).length, 8, "hsprc 3쪽 + 면적 5쪽");
+    assert.equal(r3.merged, true);
+    assert.equal(JSON.parse(await readFile(path.join(out2, "2026.json"), "utf8")).meta.cappedParcels, 0);
+  } finally { await rm(out2, { recursive: true, force: true }); }
+});
+
+test("병합 파일이 상한 지번을 뺀 채 있으면 호출 없이 끝나고 요약이 빠진 지번 수를 알린다", async () => {
+  const ts = [target(1), target(2)];
+  const uni = new Map([[pkey(ts[0]), buildParcel(hogs(4, "S"))], [pkey(ts[1]), buildParcel(hogs(250, "P").map((h) => ({ ...h, p2025: 0 })))]]);
+  const out = await tmp();
+  try {
+    const m1 = await startMock(uni);
+    const r1 = await runCollector(base({ targets: targetsOf(ts), outDir: out, baseUrl: m1.base, maxPages: 3 }));
+    await m1.close();
+    assert.equal(r1.merged, true);
+    const m2 = await startMock(uni);
+    const r2 = await runCollector(base({ targets: targetsOf(ts), outDir: out, baseUrl: m2.base }));
+    await m2.close();
+    assert.equal(r2.status, "complete");
+    assert.equal(m2.log.length, 0);
+    const lines = summaryLines(r2, 9000).join("\n");
+    assert.match(lines, /쪽 상한 때문에 값이 빠진 채 병합된 지번이 1개/);
+    assert.ok(!lines.includes("FAKEPK"));
+  } finally { await rm(out, { recursive: true, force: true }); }
 });
 
 test("요약: 투영 총 호출 수·남은 일수를 낸다", async () => {
@@ -517,6 +595,35 @@ test("탐색: 호당 2건 일치율·stdDay 분포·호 집합 일치율·면적
     assert.match(text, /조기 종료 가능성: 2026 기준 호가 전유 행에 전부 나온 지번 2\/2/);
     assert.match(text, /대상 2지번 투영 총 \d+회/);
     assert.ok(!text.includes("FAKEPK"));
+  } finally { await mock.close(); }
+});
+
+test("탐색 (g): 큰 단지 면적에 pageNo 999·1000을 요청해 HTTP·결과코드·항목 수만 낸다(1,070쪽 지번은 정상 수신)", async () => {
+  const ts = [target(1), target(2, { saleDeals: 9 })];
+  const uni = new Map([[pkey(ts[0]), buildParcel(hogs(3, "G"))], [pkey(ts[1]), buildParcel(hogs(53500, "BIG"))]]);
+  const mock = await startMock(uni);
+  try {
+    const r = await runExplore({ key: FAKE_KEY, baseUrl: mock.base, targets: targetsOf(ts), startDate: "20250101", endDate: "20261231", sampleN: 1, bigN: 1, budget: 6000, gapMs: 0 });
+    const text = r.lines.join("\n");
+    assert.match(text, /### \(g\)/);
+    assert.match(text, /시험 지번의 면적 쪽 수 1070\n/);
+    assert.match(text, /pageNo=999: HTTP 200, 결과코드 00, 항목 100건, totalCount 107000 -> 정상/);
+    assert.match(text, /pageNo=1000: HTTP 200, 결과코드 00, 항목 100건, totalCount 107000 -> 정상/);
+    for (const needle of ["FAKEPK", "가짜", FAKE_KEY, "3200000"]) assert.ok(!text.includes(needle), needle);
+    assert.deepEqual(mock.log.slice(-2).map((l) => `${l.op}#${l.page}`), ["getBrExposPubuseAreaInfo#999", "getBrExposPubuseAreaInfo#1000"], "마지막 두 호출이 pageNo 시험");
+  } finally { await mock.close(); }
+});
+
+test("탐색 (g): 서버가 큰 쪽 번호를 거절하면(결과코드 10) 거절 의심으로 집계하고 후속(dongNm 분할)을 안내한다", async () => {
+  const ts = [target(1), target(2, { saleDeals: 9 })];
+  const uni = new Map([[pkey(ts[0]), buildParcel(hogs(3, "G"))], [pkey(ts[1]), buildParcel(hogs(250, "B"))]]);
+  const mock = await startMock(uni, { rejectPageAbove: 100 });
+  try {
+    const r = await runExplore({ key: FAKE_KEY, baseUrl: mock.base, targets: targetsOf(ts), startDate: "20250101", endDate: "20261231", sampleN: 1, bigN: 1, budget: 500, gapMs: 0 });
+    const text = r.lines.join("\n");
+    assert.match(text, /pageNo=1000: HTTP 200, 결과코드 10, 항목 0건, totalCount 0 -> 거절 의심/);
+    assert.match(text, /dongNm별로 나눠 받는다\(PR-A2\)/);
+    assert.ok(!text.includes("FAKEPK") && !text.includes(FAKE_KEY));
   } finally { await mock.close(); }
 });
 
