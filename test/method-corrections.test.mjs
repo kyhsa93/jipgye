@@ -171,3 +171,90 @@ test("method 해제 문단은 '정정이다' 단정을 하지 않는다 — 한�
   assert.match(ko, /공개되지 않아/);
   assert.match(en, /Reasons are not published/);
 });
+
+// #226: 해제 문단 곁에 정정 재신고 집계 Release로 가는 링크 한 줄(한·영). 값에 따라 갈리는 검사가 아니라 형태 검사다(#8).
+// 일부러 두지 않는 것: 해제 문단의 나머지 문장이 변경 전과 같은지 고정하는 시험 - 문장 갈림을 다루는 별건(#228)이
+// 같은 문단 문장을 고칠 수 있어 그 이슈를 막게 된다. 한 줄이 독립 문단이라 문단 안 문장이 늘지 않는다는 것은
+// "링크 문단이 한 문장이고 해제 문단 바로 뒤에 있다"로 본다. 대상 존재는 네트워크 없이 못 보므로 시험하지 않는다(첫 Release 게시로 확인, #218).
+const RELEASE_URL = "https://github.com/kyhsa93/jipgye/releases/latest";
+const langBlock = (html, lang) => {
+  const start = html.indexOf(`<div data-lang="${lang}"`);
+  assert.notEqual(start, -1, `data-lang=${lang} 블록이 없다`);
+  const next = html.indexOf('<div data-lang="', start + 10);
+  return html.slice(start, next === -1 ? undefined : next);
+};
+const releasePara = (block) => {
+  const links = [...block.matchAll(/<a [^>]*href="https:\/\/github\.com\/kyhsa93\/jipgye\/releases[^"]*"[^>]*>/g)];
+  assert.equal(links.length, 1, `Release 링크가 ${links.length}개다`);
+  const at = links[0].index;
+  const from = block.lastIndexOf("<p>", at);
+  const to = block.indexOf("</p>", at) + 4;
+  return { tag: links[0][0], para: block.slice(from, to), from };
+};
+
+test("해제 문단 곁에 한·영 Release 링크가 정확히 /releases/latest 하나씩 있다", async () => {
+  const html = await method();
+  for (const lang of ["ko", "en"]) {
+    const { tag } = releasePara(langBlock(html, lang));
+    assert.equal(tag.match(/href="([^"]*)"/)[1], RELEASE_URL, `${lang}: 링크 대상`);
+    // 사이트 외부 링크 관례(고친 오류 절과 같다).
+    assert.match(tag, /target="_blank"/, `${lang}: target`);
+    assert.match(tag, /rel="noopener"/, `${lang}: rel`);
+  }
+});
+
+test("method.html 전체에 utm 파라미터와 날짜 태그가 없다(고친 오류 절 포함)", async () => {
+  const html = await method();
+  assert.doesNotMatch(html, /utm_/i);
+  assert.ok(!html.includes("correction-twins-"), "날짜가 박힌 태그(correction-twins-)를 가리키면 다음 갱신부터 대체된 Release를 가리킨다");
+  // 링크 대상은 Release 하나뿐이다: /releases/latest 밖의 releases 링크가 없다.
+  const all = [...html.matchAll(/https:\/\/github\.com\/kyhsa93\/jipgye\/releases[^"'\s<)]*/g)].map((m) => m[0]);
+  assert.deepEqual(all, [RELEASE_URL, RELEASE_URL], "한·영 한 번씩만");
+});
+
+test("Release 링크는 독립된 한 문장 문단이고 정정 재신고 해제 문단 바로 뒤에 있다 - 한·영", async () => {
+  const html = await method();
+  const heads = { ko: "<p>해제를 세기 전에", en: "<p>Before cancellations are counted" };
+  for (const lang of ["ko", "en"]) {
+    const block = langBlock(html, lang);
+    const { para, from } = releasePara(block);
+    const prose = para.replace(/<[^>]+>/g, "").replace(/&[a-z]+;/g, " ");
+    assert.equal((prose.match(/[.。](?=\s|$)/g) || []).length, 1, `${lang}: 링크 문단은 한 문장이다: ${prose}`);
+    assert.ok(prose.length < 100, `${lang}: 링크 한 줄이 길다(${prose.length}자)`);
+    // 바로 앞 문단이 정정 재신고 해제 문단이다(그 문단 안에 링크가 들어간 것이 아니다).
+    const prev = block.slice(0, from).trimEnd();
+    assert.ok(prev.endsWith("</p>"), `${lang}: 앞이 문단이 아니다`);
+    assert.ok(prev.slice(prev.lastIndexOf("<p>")).startsWith(heads[lang]), `${lang}: 해제 문단 바로 뒤가 아니다`);
+    assert.ok(!prev.slice(prev.lastIndexOf("<p>")).includes("releases/latest"), `${lang}: 링크가 해제 문단 안에 있다`);
+    // 금지어·단정 문구(#221 목록과 같다).
+    const banned = lang === "ko" ? KO_BANNED : EN_BANNED;
+    const text = lang === "ko" ? prose : prose.toLowerCase();
+    for (const w of banned) assert.ok(!text.includes(w), `${lang}: 금지어 ${w}`);
+    for (const re of [/정정이다/, /정정입니다/, /고쳤/, /고친 것/, /고쳐 쓴/, /깨진 계약이 아니라/, /신고를 고/, /not a broken deal/i, /a correction to the filing/i, /is a correction/i, /are corrections/i]) {
+      assert.ok(!re.test(prose), `${lang}: 단정 ${re}`);
+    }
+  }
+});
+
+test("Release 링크 문장은 docs/*.html 어디에도 같은 8단어 창으로 없다", async () => {
+  const html = await method();
+  const own = new Set();
+  const paras = [];
+  for (const lang of ["ko", "en"]) {
+    const { para } = releasePara(langBlock(html, lang));
+    paras.push(para);
+    for (const w of windows(words(para, { maskNumbers: true }))) own.add(w);
+  }
+  assert.ok(own.size >= 1, "창이 없다(영어 문장이 8단어 이상이어야 한다)");
+  let rest = html;
+  for (const para of paras) rest = rest.replace(para, "");
+  const others = [["method.html(링크 문단 밖)", rest]];
+  for (const f of (await readdir(path.join(root, "docs"))).filter((n) => n.endsWith(".html") && n !== "method.html")) {
+    others.push([f, await readFile(path.join(root, "docs", f), "utf8")]);
+  }
+  for (const [name, text] of others) {
+    const w = windows(words(text, { maskNumbers: true }));
+    const hit = [...own].filter((x) => w.has(x));
+    assert.equal(hit.length, 0, `${name}와 같은 문장: ${hit[0]?.split("\u0001").join(" ")}`);
+  }
+});
