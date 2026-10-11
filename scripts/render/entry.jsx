@@ -7,7 +7,8 @@
 // renewalLeadHtml·renewalCapLeadHtml·renewalWolseLeadHtml·conversionDistrictLinksHtml·cancelDistrictLinksHtml·renewalDistrictLinksHtml·
 // floorDistrictLinksHtml (#241 PR 2, 리드·링크 10개), realestateHtml (#241 PR 3, 첫 화면 실거래 요약),
 // districtSummaryHtml·districtRenewalHtml·districtFactsHtml·districtLinksHtml·conversionTableHtml·cancelDistrictsHtml·cancelMonthsHtml·
-// renewalDistrictsHtml·renewalWolseDistrictsHtml·floorDistrictsHtml (#242 PR 1, 자치구 문장·링크 4개와 표 6개). #242 PR 2·3과 #243이 이어서 채운다.
+// renewalDistrictsHtml·renewalWolseDistrictsHtml·floorDistrictsHtml (#242 PR 1, 자치구 문장·링크 4개와 표 6개), realestateHeadHtml·realestateTableHtml (#242 PR 2, 시세표 머리글·표).
+// #242 PR 3과 #243이 이어서 채운다.
 import { DISTRICT_PAGES } from "../district-slugs.mjs";
 import { districtSentences } from "../district-summary.mjs";
 import { factSentences } from "../district-facts.mjs";
@@ -15,6 +16,7 @@ import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-link
 import { cancelDistricts, cancelMonths, conversionTable, floorDistricts, renewalDistricts, renewalWolseDistricts } from "../district-tables.mjs";
 import { indexNewsItems } from "../news-items.mjs";
 import { metricCell, topDistricts } from "../realestate-rows.mjs";
+import { headLabels, realestateTable } from "../realestate-table.mjs";
 import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "../rates-table.mjs";
 import { renewalSentences } from "../renewal-facts.mjs";
 
@@ -550,12 +552,85 @@ function floorDistrictsJsx(floor) {
   );
 }
 
+// ---- 시세표 머리글·표 (#242 PR 2) ----
+
+// 칸(조각 배열)의 마크업. 조각의 종류와 글자는 realestate-table.mjs가 정하고(legacy와 같은 함수), 여기서는 요소만 입힌다: 종류마다 span의 class가 있고, title이 있으면 그 span의 title이다.
+// 표본 부족은 값을 내지 않고 모자란다고 적는다(`low` 조각 → `low-sample`, DIRECTION 해자 2). 글자는 전부 모듈이 만든 문자열이라 str()이 필요 없다(이름 칸만 받은 값 그대로다).
+const RE_PART_CLASS = { strong: "price-strong", count: "count", ratio: "ratio", low: "low-sample", stale: "prev-tag" };
+const ReCell = ({ parts }) => (
+  <>
+    {parts.map((p, i) =>
+      p.type === "text" ? (
+        p.text
+      ) : (
+        <span key={i} className={p.type === "change" ? `change ${p.dir}` : RE_PART_CLASS[p.type]} title={p.title ?? undefined}>
+          {p.text}
+        </span>
+      )
+    )}
+  </>
+);
+
+// 이름 칸: 자치구면 그 자치구 페이지로 가는 링크(경로는 모듈의 상수 `./district-…`라 `javascript:`가 될 수 없다, #244), 서울 전체는 글자만. 이름은 legacy가 escapeHtml(값 ?? "")하던 자리라 str()이다.
+const ReName = ({ name }) => (name.href ? <a href={name.href}>{str(name.text)}</a> : str(name.text));
+
+// 낡음 태그(row.stale)는 이름 칸 안에 이름 바로 뒤에 붙는다(앞 공백을 조각이 들고 있다).
+const ReRow = ({ row }) => (
+  <tr className={row.overall ? "overall-row" : ""}>
+    <td>
+      <ReName name={row.name} />
+      <ReCell parts={row.stale} />
+    </td>
+    {row.cells.map((cell, i) => (
+      <td key={i} data-label={cell.label}>
+        <ReCell parts={cell.parts} />
+      </td>
+    ))}
+  </tr>
+);
+
+const ReDistrictRow = ({ row }) => (
+  <tr>
+    <td>{row.label}</td>
+    {row.cells.map((cell, i) => (
+      <td key={i} data-label={cell.label}>
+        <ReCell parts={cell.parts} />
+      </td>
+    ))}
+  </tr>
+);
+
+function realestateHead(kind = null, district = null) {
+  return (
+    <tr>
+      {headLabels(kind, district).map((label, i) => (
+        <th key={i} scope="col">
+          {label}
+        </th>
+      ))}
+    </tr>
+  );
+}
+
+// 시세표: 데이터가 없으면 legacy처럼 null이다(자리표시를 비운다).
+function realestateTableJsx(realestate, kind = null, district = null) {
+  const table = realestateTable(realestate, kind, district);
+  if (!table) return null;
+  return (
+    <>
+      {table.rows.map((row, i) => (table.byDistrict ? <ReDistrictRow key={i} row={row} /> : <ReRow key={i} row={row} />))}
+    </>
+  );
+}
+
 export const fragments = {
   ratesHeadHtml: ratesHead,
   ratesHtml: ratesRows,
   summaryHtml: summary,
   marketHtml: market,
   realestateHtml: realestate,
+  realestateHeadHtml: realestateHead,
+  realestateTableHtml: realestateTableJsx,
   newsContextHtml: (context) => <NewsContext context={context} />,
   newsHtml: newsIndex,
   newsSummaryHtml: newsSummary,
