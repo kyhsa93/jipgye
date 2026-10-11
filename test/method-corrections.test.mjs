@@ -46,6 +46,11 @@ test("절 머리는 면책 문단 하나이고 목록 앞에 있다", async () =
   assert.match(ko, /정부 원본을 가공해/);
   assert.match(ko, /모든 오류를 여기에 적는 것은 아닙니다/);
   assert.match(ko, /원본을 확인해/);
+  assert.match(ko, /최근 것부터/);
+  assert.doesNotMatch(ko, /날짜 순/);
+  const en = sectionOf(html, "corrections-en").text;
+  assert.match(en, /this site's counting method/);
+  assert.doesNotMatch(en, /\bwe\b|mistake/i, "영어 면책 주어는 사이트이고 we·mistake를 쓰지 않는다");
 });
 
 test("항목마다 날짜·근거 링크가 있고 두 문장 이하이며 날짜는 내림차순이다", async () => {
@@ -97,7 +102,9 @@ test("해제율 옛 값은 '당시 표본'으로 표시되고 지금 값과 섞�
   const ko = items(sectionOf(html, "corrections").text).find((li) => li.includes("2.1%"));
   const en = items(sectionOf(html, "corrections-en").text).find((li) => li.includes("2.1%"));
   assert.match(ko, /당시 표본/);
-  assert.match(en, /sample of that time/);
+  assert.match(ko, /전체 거래 대비 해제 비율/);
+  assert.match(en, /share of all transactions/);
+  assert.match(en, /sample at that time/);
   for (const li of [ko, en]) assert.doesNotMatch(li, /78\.9|5,668|4,472/, "지금 값을 이 절에 옮겨 적지 않는다");
 });
 
