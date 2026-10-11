@@ -4,14 +4,12 @@
 # 끝난 상태면 아무것도 하지 않고 초록으로 끝난다. 호 단위 값·응답 원문은 로그·파일·아티팩트·캐시 어디에도 쓰지 않는다(소유자 조건 C1).
 # 시험(탐색) 실행: dispatch의 mode=explore - 파일을 쓰지 않고 집계만 낸다.
 #
-# 시크릿 PUBLIC_DATA_PORTAL_API_KEY는 "수집" 스텝 env에만 둔다(다른 스텝·job env·입력에는 없다). 입력·변수는 env로만 받고 run에 직접 박지 않는다.
-# 이용허락 문자열·확인일은 사람이 data.go.kr/data/15134735 페이지를 보고 저장소 변수(vars) OFFICIAL_PRICE_LICENSE·
-# OFFICIAL_PRICE_LICENSE_CHECKED(YYYY-MM-DD)로 넣는다 - "제한 없음"이 아니거나 확인일이 365일을 넘으면 쓰기 없이 멈춘다(C3).
+# 시크릿 PUBLIC_DATA_PORTAL_API_KEY는 "수집" 스텝 env에만 둔다(다른 스텝·job env·입력에는 없다). 입력은 env로만 받고 run에 직접 박지 않는다.
+# 이용허락 문자열("제한 없음")·확인일은 저장소 변수가 아니라 코드 상수다(scripts/official-price-license.mjs, 근거는 #68 clo 기록 댓글).
+# 문자열이 "제한 없음"이 아니거나 확인일이 형식 밖·미래·365일 초과면 쓰기 없이 멈춘다(C3). 갱신: 확인일에서 1년이 지나기 전에 상세 페이지
+# data.go.kr/data/15134735를 다시 보고, 그대로면 그 파일의 확인일을 고쳐 PR로 올린다(시험의 "기본 이용허락 상수"가 만료 때 실패해 알린다).
 # 본 수집의 첫 dispatch는 clo 기록(#68)·소유자 결정 A 뒤에만 한다. daily-update.yml과 concurrency 그룹을 공유하지 않는다
 # (digest-pipeline을 3시간 넘게 잡으면 일일 수집이 막힌다) - 대신 푸시 경합은 scripts/push-docs.sh의 rebase 재시도가 받는다.
-# schedule로 돌 때 저장소 변수 OFFICIAL_PRICE_LICENSE·OFFICIAL_PRICE_LICENSE_CHECKED가 둘 다 비어 있으면(소유자가 아직 입력 전) 첫 스텝이
-# ::notice::만 내고 나머지(체크아웃·시크릿 스텝·커밋)를 건너뛴다 - 호출 0회·쓰기 0회로 초록 종료. workflow_dispatch이거나 변수가 한쪽만 있으면
-# 건너뛰지 않고 수집 스텝의 라이선스 검사(C3)가 실패시킨다. 이 판정은 시크릿에 닿기 전이고 변수는 env로만 받는다.
 # collect 모드의 호출 예산 입력은 9,000으로 자른다(scripts/fetch-official-price-api.mjs, explore는 기존대로).
 # 일일 수집(UTC 23:07·03:07·07:07·11:07) 뒤인 14:17 UTC(한국 23:17)에 돈다.
 name: Official price API
@@ -59,40 +57,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 300
     steps:
-      - name: 건너뛰기 판단 (schedule + 이용허락 변수 둘 다 비면 건너뜀, 시크릿 없음)
-        id: gate
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          OFFICIAL_PRICE_LICENSE: ${{ vars.OFFICIAL_PRICE_LICENSE }}
-          OFFICIAL_PRICE_LICENSE_CHECKED: ${{ vars.OFFICIAL_PRICE_LICENSE_CHECKED }}
-        run: |
-          set +x
-          lic="${OFFICIAL_PRICE_LICENSE//[[:space:]]/}"
-          chk="${OFFICIAL_PRICE_LICENSE_CHECKED//[[:space:]]/}"
-          if [ "$EVENT_NAME" = "schedule" ] && [ -z "$lic" ] && [ -z "$chk" ]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "::notice::공시가격 수집 건너뜀: 이용허락 변수(OFFICIAL_PRICE_LICENSE, OFFICIAL_PRICE_LICENSE_CHECKED)가 아직 비어 있다. 호출 0회, 쓰기 0회."
-          else
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-          fi
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
 
-      - if: steps.gate.outputs.skip != 'true'
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-
-      - if: steps.gate.outputs.skip != 'true'
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ inputs.raw_commit || '3a921516fac7ad3a275a9e64e1865b594b650a43' }}
           path: raw-at-commit
           persist-credentials: false
 
-      - if: steps.gate.outputs.skip != 'true'
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: "20"
 
       - name: 입력 확인
-        if: steps.gate.outputs.skip != 'true'
         env:
           RAW_COMMIT: ${{ inputs.raw_commit || '3a921516fac7ad3a275a9e64e1865b594b650a43' }}
         run: |
@@ -102,11 +79,8 @@ jobs:
           test "$(git -C raw-at-commit rev-parse HEAD)" = "$RAW_COMMIT" || { echo "raw-at-commit이 입력 커밋과 다르다" >&2; exit 1; }
 
       - name: 수집 (시크릿은 이 스텝에서만, 집계만 출력)
-        if: steps.gate.outputs.skip != 'true'
         env:
           PUBLIC_DATA_PORTAL_API_KEY: ${{ secrets.PUBLIC_DATA_PORTAL_API_KEY }}
-          OFFICIAL_PRICE_LICENSE: ${{ vars.OFFICIAL_PRICE_LICENSE }}
-          OFFICIAL_PRICE_LICENSE_CHECKED: ${{ vars.OFFICIAL_PRICE_LICENSE_CHECKED }}
           RAW_COMMIT: ${{ inputs.raw_commit || '3a921516fac7ad3a275a9e64e1865b594b650a43' }}
           MODE: ${{ inputs.mode || 'collect' }}
           DAILY_CALL_BUDGET: ${{ inputs.budget }}
@@ -123,7 +97,6 @@ jobs:
           fi
 
       - name: 커밋 (탐색 모드는 쓰지 않는다)
-        if: steps.gate.outputs.skip != 'true'
         env:
           MODE: ${{ inputs.mode || 'collect' }}
         run: |

@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { OFFICIAL_PRICE_LICENSE, OFFICIAL_PRICE_LICENSE_CHECKED } from "../scripts/official-price-license.mjs";
 import {
   ApiFatalError, ApiValidationError, MAX_PAGES_PER_PARCEL, OWNER_KEY_RE, buildPart, checkLicense, foldParcel, loadState, mergeParts, projectItem, runCollector, summaryLines,
 } from "../scripts/official-price-api.mjs";
@@ -174,12 +175,12 @@ test("낙제: 소유자 계열 키가 응답에 있으면 쓰기 없이 멈추�
   for (const k of ["hsprc", "stdDay", "crtnDay", "mgmBldrgstPk", "exposPubuseGbCd", "mainAtchGbCd", "area", "flrNo", "flrGbCd", "hoNm", "dongNm", "bldNm", "platPlc"]) assert.doesNotMatch(k, OWNER_KEY_RE, k);
 });
 
-test("낙제: 이용허락 변수가 없거나 틀리거나 확인일이 365일을 넘으면 호출도 쓰기도 없이 실패 (C3)", async () => {
+test("낙제: 이용허락 값(주입한 상수)이 비었거나 틀리거나 확인일이 365일을 넘으면 호출도 쓰기도 없이 실패 (C3)", async () => {
   const { targets, uni } = world();
   const mock = await startMock(uni);
   try {
     for (const [license, licenseChecked, rx] of [
-      [undefined, "2026-10-01", /이용허락범위/], ["제한있음", "2026-10-01", /이용허락범위/], ["제한 없음", "", /확인일/], ["제한 없음", "2025-10-10", /365일/], ["제한 없음", "2026-12-01", /미래/], ["제한 없음", "20261001", /형식/],
+      ["", "2026-10-01", /이용허락범위/], ["제한있음", "2026-10-01", /이용허락범위/], ["제한 없음", "", /확인일/], ["제한 없음", "2025-10-10", /365일/], ["제한 없음", "2026-12-01", /미래/], ["제한 없음", "20261001", /형식/],
     ]) {
       const out = await tmp();
       await assert.rejects(() => runCollector(base({ targets, outDir: out, baseUrl: mock.base, license, licenseChecked })), rx, `${license}/${licenseChecked}`);
@@ -482,7 +483,7 @@ async function cliWorld({ ownerField = false } = {}) {
 const runCli = async (dir, base, args = [], env = {}) => {
   const summary = path.join(dir, "summary.md");
   const r = await exec(process.execPath, [path.join(root, "scripts/fetch-official-price-api.mjs"), "--raw-dir", path.join(dir, "raw"), "--names-file", path.join(dir, "names.json"), "--out-dir", path.join(dir, "out"), "--raw-commit", COMMIT, ...args], {
-    env: { PATH: process.env.PATH, PUBLIC_DATA_PORTAL_API_KEY: FAKE_KEY, OFFICIAL_PRICE_LICENSE: "제한 없음", OFFICIAL_PRICE_LICENSE_CHECKED: "2026-10-01", OFFICIAL_PRICE_API_BASE: base, CALL_GAP_MS: "0", GITHUB_STEP_SUMMARY: summary, ...env },
+    env: { PATH: process.env.PATH, PUBLIC_DATA_PORTAL_API_KEY: FAKE_KEY, OFFICIAL_PRICE_API_BASE: base, CALL_GAP_MS: "0", GITHUB_STEP_SUMMARY: summary, ...env },
   }).catch((e) => e);
   const sum = await readFile(summary, "utf8").catch(() => "");
   return { code: r.code ?? 0, stdout: r.stdout ?? "", stderr: r.stderr ?? "", summary: sum };
@@ -534,16 +535,14 @@ test("CLI: 한도 코드 22는 종료 코드 0(초록)이고 끝난 지번만 �
   } finally { await mock.close(); await rm(dir, { recursive: true, force: true }); }
 });
 
-test("CLI: 이용허락 변수가 틀리면 종료 코드 1이고 호출·파일이 없다", async () => {
+test("CLI: 이용허락 환경변수는 읽지 않는다(코드 상수만) - 변수를 틀리게 줘도 수집되고, 기본 밖 주소는 키 없이 거부", async () => {
   const { dir, uni } = await cliWorld();
   const mock = await startMock(uni);
   try {
-    for (const env of [{ OFFICIAL_PRICE_LICENSE: "비영리만" }, { OFFICIAL_PRICE_LICENSE_CHECKED: "2025-01-01" }, { OFFICIAL_PRICE_LICENSE: "" }]) {
-      const r = await runCli(dir, mock.base, [], env);
-      assert.equal(r.code, 1, JSON.stringify(env));
-    }
-    assert.equal(mock.log.length, 0);
-    assert.deepEqual(await listFiles(path.join(dir, "out")), []);
+    const r = await runCli(dir, mock.base, [], { OFFICIAL_PRICE_LICENSE: "비영리만", OFFICIAL_PRICE_LICENSE_CHECKED: "2020-01-01" });
+    assert.equal(r.code, 0, r.stderr);
+    assert.ok(mock.log.length > 0);
+    await rm(path.join(dir, "out"), { recursive: true, force: true });
     // 실서버 주소가 아닌 기본 밖 주소는 키를 보내지 않고 거부한다
     const bad = await runCli(dir, "https://example.com");
     assert.equal(bad.code, 1);
@@ -551,59 +550,25 @@ test("CLI: 이용허락 변수가 틀리면 종료 코드 1이고 호출·파일
   } finally { await mock.close(); await rm(dir, { recursive: true, force: true }); }
 });
 
-/** 워크플로의 "건너뛰기 판단" 스텝 run 블록을 꺼내 실제 bash로 돌린다. 반환 {skip, stdout, code} (skip은 GITHUB_OUTPUT의 값). */
-async function runGate(env) {
-  const text = await readFile(path.join(root, ".github/workflows/official-price-api.yml"), "utf8");
-  const block = /- name: 건너뛰기 판단[^\n]*\n(?:        .*\n)*?        run: \|\n((?:          .*\n)+)/.exec(text)?.[1];
-  assert.ok(block, "gate run 블록");
-  const dir = await tmp();
-  const outFile = path.join(dir, "output");
-  await writeFile(outFile, "");
-  try {
-    const r = await exec("bash", ["-c", block.replace(/^ {10}/gm, "")], { env: { PATH: process.env.PATH, GITHUB_OUTPUT: outFile, ...env } }).catch((e) => e);
-    return { skip: (await readFile(outFile, "utf8")).trim(), stdout: r.stdout ?? "", code: r.code ?? 0 };
-  } finally { await rm(dir, { recursive: true, force: true }); }
-}
-
-test("schedule + 이용허락 변수 둘 다 비면 notice만 내고 건너뛴다(호출 0·쓰기 0), dispatch나 한쪽만 있으면 건너뛰지 않는다", async () => {
-  const none = { OFFICIAL_PRICE_LICENSE: "", OFFICIAL_PRICE_LICENSE_CHECKED: "" };
-  const a = await runGate({ EVENT_NAME: "schedule", ...none });
-  assert.equal(a.code, 0);
-  assert.equal(a.skip, "skip=true");
-  assert.match(a.stdout, /^::notice::공시가격 수집 건너뜀/m);
-  assert.equal((await runGate({ EVENT_NAME: "schedule", OFFICIAL_PRICE_LICENSE: "  ", OFFICIAL_PRICE_LICENSE_CHECKED: " " })).skip, "skip=true", "공백만 있는 변수도 빈 것");
-  assert.equal((await runGate({ EVENT_NAME: "workflow_dispatch", ...none })).skip, "skip=false");
-  assert.equal((await runGate({ EVENT_NAME: "schedule", OFFICIAL_PRICE_LICENSE: "제한 없음", OFFICIAL_PRICE_LICENSE_CHECKED: "" })).skip, "skip=false");
-  assert.equal((await runGate({ EVENT_NAME: "schedule", OFFICIAL_PRICE_LICENSE: "", OFFICIAL_PRICE_LICENSE_CHECKED: "2026-10-11" })).skip, "skip=false");
-  assert.equal((await runGate({ EVENT_NAME: "schedule", OFFICIAL_PRICE_LICENSE: "제한 없음", OFFICIAL_PRICE_LICENSE_CHECKED: "2026-10-11" })).skip, "skip=false");
+test("기본 이용허락 상수(코드): 문자열이 제한 없음이고 확인일이 형식·미래·365일 안이다 - 만료되면 이 시험이 실패해 상수 갱신을 알린다 (C3)", () => {
+  assert.equal(OFFICIAL_PRICE_LICENSE, "제한 없음");
+  assert.match(OFFICIAL_PRICE_LICENSE_CHECKED, /^\d{4}-\d{2}-\d{2}$/);
+  // 시험 시점(실제 오늘) 기준. 실패하면: 상세 페이지(data.go.kr/data/15134735)를 다시 보고 scripts/official-price-license.mjs의 확인일을 고쳐 PR.
+  assert.doesNotThrow(() => checkLicense({}), "기본 상수가 유효하지 않다(확인일 만료·형식·미래) - scripts/official-price-license.mjs 갱신 필요");
+  assert.deepEqual(checkLicense({}), { license: OFFICIAL_PRICE_LICENSE, checked: OFFICIAL_PRICE_LICENSE_CHECKED });
+  // 만료 경계: 확인일 + 365일은 통과, + 366일은 365일 초과로 멈춘다
+  const at = new Date(`${OFFICIAL_PRICE_LICENSE_CHECKED}T00:00:00Z`);
+  assert.doesNotThrow(() => checkLicense({ now: new Date(at.getTime() + 365 * 86400000) }));
+  assert.throws(() => checkLicense({ now: new Date(at.getTime() + 366 * 86400000) }), /365일/);
 });
 
-test("워크플로: 건너뛰기 판단이 첫 스텝이고 시크릿 없이 env로만 변수를 받으며 다른 모든 스텝이 그 결과를 따른다", async () => {
+test("워크플로: 건너뛰기 스텝과 이용허락 저장소 변수가 없다(상수로 옮김) - schedule은 바로 수집한다, 스텝은 6개", async () => {
   const text = await readFile(path.join(root, ".github/workflows/official-price-api.yml"), "utf8");
   const steps = text.split(/\n    steps:\n/)[1].split(/\n      - /);
-  assert.match(steps[0], /id: gate/);
-  assert.doesNotMatch(steps[0], /secrets\./);
-  assert.match(steps[0], /EVENT_NAME: \$\{\{ github\.event_name \}\}/);
-  assert.match(steps[0], /OFFICIAL_PRICE_LICENSE: \$\{\{ vars\.OFFICIAL_PRICE_LICENSE \}\}/);
-  assert.match(steps[0], /OFFICIAL_PRICE_LICENSE_CHECKED: \$\{\{ vars\.OFFICIAL_PRICE_LICENSE_CHECKED \}\}/);
-  assert.equal(steps.length, 7);
-  for (const st of steps.slice(1)) assert.match(st, /if: steps\.gate\.outputs\.skip != 'true'/, st.split("\n")[0]);
-  // 수집(시크릿) 스텝이 건너뛰기 뒤에 있다
+  assert.equal(steps.length, 6);
+  assert.doesNotMatch(text, /id: gate|steps\.gate|github\.event_name|vars\./);
+  assert.doesNotMatch(text, /OFFICIAL_PRICE_LICENSE[A-Z_]*:/, "이용허락 값을 env로 받지 않는다");
   assert.ok(steps.findIndex((x) => /secrets\./.test(x)) > 0);
-});
-
-test("CLI: 변수가 둘 다 비거나 한쪽만 있으면(dispatch) 호출·쓰기 없이 실패한다", async () => {
-  const { dir, uni } = await cliWorld();
-  const mock = await startMock(uni);
-  try {
-    for (const env of [{ OFFICIAL_PRICE_LICENSE: "", OFFICIAL_PRICE_LICENSE_CHECKED: "" }, { OFFICIAL_PRICE_LICENSE_CHECKED: "" }, { OFFICIAL_PRICE_LICENSE: "" }]) {
-      const r = await runCli(dir, mock.base, [], env);
-      assert.equal(r.code, 1, JSON.stringify(env));
-      assert.match(r.stderr, /이용허락/);
-    }
-    assert.equal(mock.log.length, 0);
-    assert.deepEqual(await listFiles(path.join(dir, "out")), []);
-  } finally { await mock.close(); await rm(dir, { recursive: true, force: true }); }
 });
 
 test("CLI: collect 예산 입력은 9,000으로 자르고 notice를 낸다(9,000 이하는 그대로), explore는 기존대로 9,001도 받는다", async () => {
@@ -727,8 +692,6 @@ test("워크플로: official-price-api.yml은 dispatch+schedule, 별도 concurre
   assert.match(holders[0], /fetch-official-price-api\.mjs/);
   assert.match(holders[0], /\n        env:\n(?:          .*\n)*?          PUBLIC_DATA_PORTAL_API_KEY: \$\{\{ secrets\.PUBLIC_DATA_PORTAL_API_KEY \}\}/);
   for (const block of text.split(/\n\s+run: /).slice(1)) assert.doesNotMatch(block.split("\n      - ")[0], /\$\{\{\s*(inputs|vars)\./, "run에 입력·변수를 직접 보간하지 않는다");
-  assert.match(text, /vars\.OFFICIAL_PRICE_LICENSE\b/);
-  assert.match(text, /vars\.OFFICIAL_PRICE_LICENSE_CHECKED\b/);
   assert.doesNotMatch(text, /actions\/cache|upload-artifact/);
   assert.doesNotMatch(text, /set -x|ACTIONS_STEP_DEBUG/);
   // daily-update는 건드리지 않았다: 이 워크플로의 이름이 거기 없다

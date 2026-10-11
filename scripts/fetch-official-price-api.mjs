@@ -1,7 +1,7 @@
 /**
  * 공시가격 API 수집 실행기 (#68 E1·E3). 건축HUB 건축물대장 API에서 지번별로 받아 칸으로 접는다.
  *
- *   PUBLIC_DATA_PORTAL_API_KEY=... OFFICIAL_PRICE_LICENSE="제한 없음" OFFICIAL_PRICE_LICENSE_CHECKED=2026-10-11 \
+ *   PUBLIC_DATA_PORTAL_API_KEY=... \
  *     node scripts/fetch-official-price-api.mjs --raw-commit <40자리> [--raw-dir raw-at-commit/raw] [--out-dir raw/official-price]
  *   ... --explore   # 쓰기 없음, 집계만(E3)
  *
@@ -72,7 +72,7 @@ async function main() {
 
   const summary = await runCollector({
     key, baseUrl: base, targets, outDir: v["out-dir"], rawCommit: v["raw-commit"], startDate: v["start-date"], endDate: v["end-date"],
-    budget, gapMs, license: env.OFFICIAL_PRICE_LICENSE, licenseChecked: env.OFFICIAL_PRICE_LICENSE_CHECKED,
+    budget, gapMs,
     softDeadlineMs: startedAt + runtimeMin * 60000, deadlineMs: startedAt + (runtimeMin + 15) * 60000,
   });
   const lines = summaryLines(summary, budget);
