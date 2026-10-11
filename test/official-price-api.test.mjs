@@ -551,6 +551,85 @@ test("CLI: 이용허락 변수가 틀리면 종료 코드 1이고 호출·파일
   } finally { await mock.close(); await rm(dir, { recursive: true, force: true }); }
 });
 
+/** 워크플로의 "건너뛰기 판단" 스텝 run 블록을 꺼내 실제 bash로 돌린다. 반환 {skip, stdout, code} (skip은 GITHUB_OUTPUT의 값). */
+async function runGate(env) {
+  const text = await readFile(path.join(root, ".github/workflows/official-price-api.yml"), "utf8");
+  const block = /- name: 건너뛰기 판단[^\n]*\n(?:        .*\n)*?        run: \|\n((?:          .*\n)+)/.exec(text)?.[1];
+  assert.ok(block, "gate run 블록");
+  const dir = await tmp();
+  const outFile = path.join(dir, "output");
+  await writeFile(outFile, "");
+  try {
+    const r = await exec("bash", ["-c", block.replace(/^ {10}/gm, "")], { env: { PATH: process.env.PATH, GITHUB_OUTPUT: outFile, ...env } }).catch((e) => e);
+    return { skip: (await readFile(outFile, "utf8")).trim(), stdout: r.stdout ?? "", code: r.code ?? 0 };
+  } finally { await rm(dir, { recursive: true, force: true }); }
+}
+
+test("schedule + 이용허락 변수 둘 다 비면 notice만 내고 건너뛴다(호출 0·쓰기 0), dispatch나 한쪽만 있으면 건너뛰지 않는다", async () => {
+  const none = { OFFICIAL_PRICE_LICENSE: "", OFFICIAL_PRICE_LICENSE_CHECKED: "" };
+  const a = await runGate({ EVENT_NAME: "schedule", ...none });
+  assert.equal(a.code, 0);
+  assert.equal(a.skip, "skip=true");
+  assert.match(a.stdout, /^::notice::공시가격 수집 건너뜀/m);
+  assert.equal((await runGate({ EVENT_NAME: "schedule", OFFICIAL_PRICE_LICENSE: "  ", OFFICIAL_PRICE_LICENSE_CHECKED: " " })).skip, "skip=true", "공백만 있는 변수도 빈 것");
+  assert.equal((await runGate({ EVENT_NAME: "workflow_dispatch", ...none })).skip, "skip=false");
+  assert.equal((await runGate({ EVENT_NAME: "schedule", OFFICIAL_PRICE_LICENSE: "제한 없음", OFFICIAL_PRICE_LICENSE_CHECKED: "" })).skip, "skip=false");
+  assert.equal((await runGate({ EVENT_NAME: "schedule", OFFICIAL_PRICE_LICENSE: "", OFFICIAL_PRICE_LICENSE_CHECKED: "2026-10-11" })).skip, "skip=false");
+  assert.equal((await runGate({ EVENT_NAME: "schedule", OFFICIAL_PRICE_LICENSE: "제한 없음", OFFICIAL_PRICE_LICENSE_CHECKED: "2026-10-11" })).skip, "skip=false");
+});
+
+test("워크플로: 건너뛰기 판단이 첫 스텝이고 시크릿 없이 env로만 변수를 받으며 다른 모든 스텝이 그 결과를 따른다", async () => {
+  const text = await readFile(path.join(root, ".github/workflows/official-price-api.yml"), "utf8");
+  const steps = text.split(/\n    steps:\n/)[1].split(/\n      - /);
+  assert.match(steps[0], /id: gate/);
+  assert.doesNotMatch(steps[0], /secrets\./);
+  assert.match(steps[0], /EVENT_NAME: \$\{\{ github\.event_name \}\}/);
+  assert.match(steps[0], /OFFICIAL_PRICE_LICENSE: \$\{\{ vars\.OFFICIAL_PRICE_LICENSE \}\}/);
+  assert.match(steps[0], /OFFICIAL_PRICE_LICENSE_CHECKED: \$\{\{ vars\.OFFICIAL_PRICE_LICENSE_CHECKED \}\}/);
+  assert.equal(steps.length, 7);
+  for (const st of steps.slice(1)) assert.match(st, /if: steps\.gate\.outputs\.skip != 'true'/, st.split("\n")[0]);
+  // 수집(시크릿) 스텝이 건너뛰기 뒤에 있다
+  assert.ok(steps.findIndex((x) => /secrets\./.test(x)) > 0);
+});
+
+test("CLI: 변수가 둘 다 비거나 한쪽만 있으면(dispatch) 호출·쓰기 없이 실패한다", async () => {
+  const { dir, uni } = await cliWorld();
+  const mock = await startMock(uni);
+  try {
+    for (const env of [{ OFFICIAL_PRICE_LICENSE: "", OFFICIAL_PRICE_LICENSE_CHECKED: "" }, { OFFICIAL_PRICE_LICENSE_CHECKED: "" }, { OFFICIAL_PRICE_LICENSE: "" }]) {
+      const r = await runCli(dir, mock.base, [], env);
+      assert.equal(r.code, 1, JSON.stringify(env));
+      assert.match(r.stderr, /이용허락/);
+    }
+    assert.equal(mock.log.length, 0);
+    assert.deepEqual(await listFiles(path.join(dir, "out")), []);
+  } finally { await mock.close(); await rm(dir, { recursive: true, force: true }); }
+});
+
+test("CLI: collect 예산 입력은 9,000으로 자르고 notice를 낸다(9,000 이하는 그대로), explore는 기존대로 9,001도 받는다", async () => {
+  const { dir, uni } = await cliWorld();
+  const mock = await startMock(uni);
+  try {
+    const big = await runCli(dir, mock.base, [], { DAILY_CALL_BUDGET: "9001" });
+    assert.equal(big.code, 0, big.stderr);
+    assert.match(big.stdout, /::notice::호출 예산 입력 9001회가 상한 9000회를 넘어 9000회로 잘랐다/);
+    assert.match(big.stdout, /\(예산 9000\)/);
+    await rm(path.join(dir, "out"), { recursive: true, force: true });
+    const flag = await runCli(dir, mock.base, ["--budget", "50000"]);
+    assert.match(flag.stdout, /\(예산 9000\)/);
+    await rm(path.join(dir, "out"), { recursive: true, force: true });
+    const ok = await runCli(dir, mock.base, [], { DAILY_CALL_BUDGET: "9000" });
+    assert.doesNotMatch(ok.stdout, /::notice::호출 예산 입력/);
+    assert.match(ok.stdout, /\(예산 9000\)/);
+    await rm(path.join(dir, "out"), { recursive: true, force: true });
+    const small = await runCli(dir, mock.base, [], { DAILY_CALL_BUDGET: "123" });
+    assert.match(small.stdout, /\(예산 123\)/);
+    const ex = await runCli(dir, mock.base, ["--explore"], { DAILY_CALL_BUDGET: "9001", EXPLORE_JIBUN: "1", EXPLORE_BIG: "0" });
+    assert.doesNotMatch(ex.stdout, /::notice::호출 예산 입력/);
+    assert.match(ex.stdout, /\(예산 9001\)/);
+  } finally { await mock.close(); await rm(dir, { recursive: true, force: true }); }
+});
+
 test("탐색 모드(--explore): 파일을 쓰지 않고 집계만 낸다, 호·PK·가격 비출력", async () => {
   const { dir } = await cliWorld();
   const uni = new Map();
