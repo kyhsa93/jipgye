@@ -1,10 +1,11 @@
-import { readdir, readFile, writeFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.mjs";
 import { applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml } from "./prerender.mjs";
 import { clustering } from "./loan-cap.mjs";
 import { lineCounts } from "./policy-loan.mjs";
 import { budgetRulesHtml } from "./budget-rules.mjs";
+import { createWriteSet } from "./render-writes.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const REALESTATE_PATH = path.join(root, "docs/realestate.html");
@@ -188,6 +189,8 @@ async function main() {
   const baseHtml = await readFile(REALESTATE_PATH, "utf8");
 
 
+  // 예산대 장과 method.html이 전부 렌더에 성공한 뒤에 쓴다(#237) - 중간에서 던지면 어느 파일도 바뀌지 않는다.
+  const writes = createWriteSet();
   let created = 0;
   let updated = 0;
   const skipped = [];
@@ -202,7 +205,7 @@ async function main() {
     const target = path.join(root, "docs", page.file);
     const before = await readFile(target, "utf8").catch(() => null);
     if (before === html) continue;
-    await writeFile(target, html);
+    writes.stage(target, html);
     if (before === null) created += 1;
     else updated += 1;
   }
@@ -212,7 +215,8 @@ async function main() {
   const methodNext = applyPrerender(method, {
     budgetRules: budgetRulesHtml({ rates, mortgageSeries, policyCounts }),
   });
-  if (methodNext !== method) await writeFile(METHOD_PATH, methodNext);
+  if (methodNext !== method) writes.stage(METHOD_PATH, methodNext);
+  writes.commit();
 
   console.log(`  예산 페이지 (생성 ${created} · 갱신 ${updated})${skipped.length ? ` · 거래 없어 건너뜀: ${skipped.join(", ")}` : ""}`);
 }

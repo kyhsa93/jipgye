@@ -91,17 +91,20 @@ export function stampHtml(html, ymd) {
   );
 }
 
+// 장 하나를 읽고 쓰는 길. 기본은 디스크이고, 빌드 스크립트는 쓰기를 모아 뒀다가 한꺼번에 내려 쓴다(#237, render-writes.mjs).
+const diskIo = { read: (file) => readFileSync(file, "utf8"), write: (file, text) => writeFileSync(file, text) };
+
 /** docsDir의 장들에 기준일을 찍는다. 바뀐 파일만 쓰고, 찍은 장 목록을 돌려준다. */
-export function stampAll({ docsDir, dataDir, pages = PAGE_SOURCES } = {}) {
+export function stampAll({ docsDir, dataDir, pages = PAGE_SOURCES, io = diskIo } = {}) {
   const sources = readDataSources(dataDir);
   const done = [];
   for (const file of readdirSync(docsDir).filter((f) => f.endsWith(".html")).sort()) {
     const names = pages[file];
     if (!names) continue;
     const full = path.join(docsDir, file);
-    const before = readFileSync(full, "utf8");
+    const before = io.read(full);
     const after = stampHtml(before, baselineFor(names, sources));
-    if (after !== before) writeFileSync(full, after);
+    if (after !== before) io.write(full, after);
     done.push(file);
   }
   for (const file of Object.keys(pages)) {
@@ -143,14 +146,14 @@ export function crossStampHtml(html, file, dealsYmd, ratesYmd) {
 }
 
 /** docsDir의 교차값 화면들에 입력별 기준일 줄을 찍는다. 바뀐 파일만 쓰고 찍은 장 목록을 돌려준다. */
-export function crossStampAll({ docsDir, dataDir, pages = CROSS_PAGES } = {}) {
+export function crossStampAll({ docsDir, dataDir, pages = CROSS_PAGES, io = diskIo } = {}) {
   const sources = readDataSources(dataDir);
   const done = [];
   for (const [file, inputs] of Object.entries(pages)) {
     const full = path.join(docsDir, file);
-    const before = readFileSync(full, "utf8");
+    const before = io.read(full);
     const after = crossStampHtml(before, file, baselineFor(inputs.deals, sources), baselineFor(inputs.rates, sources));
-    if (after !== before) writeFileSync(full, after);
+    if (after !== before) io.write(full, after);
     done.push(file);
   }
   return done;

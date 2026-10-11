@@ -1,6 +1,8 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { accessibleTables } from "./table-a11y.mjs";
+import { fragment } from "./renderer.mjs";
+import { createWriteSet } from "./render-writes.mjs";
 import { DEFAULT_AMOUNT, formatWon, netInterestOf } from "./interest.mjs";
 import { BUDGET_PAGES } from "./budget-pages.mjs";
 import { budgetFactSentences } from "./budget-facts.mjs";
@@ -59,7 +61,7 @@ export function escapeHtml(value) {
     .replaceAll('"', "&quot;");
 }
 
-export function summaryHtml(summary) {
+function summaryHtmlLegacy(summary) {
   const highlights = (summary?.highlights ?? []).filter((h) => h.textKo);
   const categories = (summary?.categories ?? []).filter((c) => c.lineKo);
   if (!highlights.length && !categories.length) return null;
@@ -69,8 +71,9 @@ export function summaryHtml(summary) {
     ...categories.map((c) => `<p><strong>${escapeHtml(c.name)}</strong> ${escapeHtml(c.lineKo)}</p>`),
   ].join("");
 }
+export const summaryHtml = fragment("summaryHtml", summaryHtmlLegacy);
 
-export function marketHtml(market) {
+function marketHtmlLegacy(market) {
   if (!market) return null;
   const rows = [];
 
@@ -93,6 +96,7 @@ export function marketHtml(market) {
     )
     .join("");
 }
+export const marketHtml = fragment("marketHtml", marketHtmlLegacy);
 
 const man = (value) => `${Number(value).toLocaleString("ko-KR")}만원`;
 
@@ -130,7 +134,7 @@ const wolseCell = (wolse) =>
     m.avgDeposit10k ? `${man(m.avgDeposit10k)} / 월 ${man(m.avgMonthlyRent10k)}${countText(m)}` : null
   );
 
-export function realestateHtml(realestate) {
+function realestateHtmlLegacy(realestate) {
   if (!realestate?.overall) return null;
 
   const priceOf = (d) => ((d.sale?.transactionCount ?? 0) >= MIN_SAMPLE ? d.sale?.avgPricePerPyeong10k ?? null : null);
@@ -152,8 +156,9 @@ export function realestateHtml(realestate) {
 
   return [row("서울 전체", realestate.overall), ...districts.map((d) => row(d.name, d))].join("");
 }
+export const realestateHtml = fragment("realestateHtml", realestateHtmlLegacy);
 
-export function newsContextHtml(context) {
+function newsContextHtmlLegacy(context) {
   if (!context?.length) return "";
   return (
     `<div class="news-context">` +
@@ -170,6 +175,7 @@ export function newsContextHtml(context) {
     `</div>`
   );
 }
+export const newsContextHtml = fragment("newsContextHtml", newsContextHtmlLegacy);
 
 /**
  * 첫 화면 뉴스는 다섯 건만 - 부동산 먼저. 전에는 스물네 건이 다 실려 AI 요약의 주제별 헤드라인과 같은 기사를
@@ -182,7 +188,7 @@ export function indexNewsItems(items) {
   return [...list.filter((i) => i.category === "realestate"), ...list.filter((i) => i.category !== "realestate")].slice(0, INDEX_NEWS);
 }
 
-export function newsHtml(news) {
+function newsHtmlLegacy(news) {
   const all = news?.items ?? [];
   if (!all.length) return null;
   const items = indexNewsItems(all);
@@ -199,6 +205,7 @@ export function newsHtml(news) {
     )
     .join("") + more;
 }
+export const newsHtml = fragment("newsHtml", newsHtmlLegacy);
 
 const budgetBandLabel = (band) => {
   const from = Math.round(band.min10k / 10_000);
@@ -257,7 +264,7 @@ function budgetWhereHtml(band) {
   return text ? `<p class="budget-where" data-prerendered>${escapeHtml(text)}</p>` : "";
 }
 
-export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null) {
+function budgetBodyHtmlLegacy(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null) {
   if (!band) return null;
 
   const periods = (periodList ?? []).map((p) => monthLabel(p)).filter(Boolean).join(", ");
@@ -285,12 +292,13 @@ export function budgetBodyHtml(band, periodList, rates = null, mortgageSeries = 
     `<ul class="budget-deals">${band.deals.map(budgetDealHtml).join("")}</ul>`
   );
 }
+export const budgetBodyHtml = fragment("budgetBodyHtml", budgetBodyHtmlLegacy);
 
 /**
  * 예산대 장 맨 위의 "한눈에" — 아래 문단 넷의 답만 한 줄씩(UIUX #43). 숫자는 문단과 같은 함수에서 나온다
  * (min-cash·purchase-costs·mortgage·policy-loan). 숫자 하나만 덩그러니 두지 않고 무엇의 값인지 앞에 적는다.
  */
-export function budgetAnswersHtml(band, rates = null) {
+function budgetAnswersHtmlLegacy(band, rates = null) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   if (eok === null) return "";
   const price = (eok + 0.5) * 10_000;
@@ -317,6 +325,7 @@ export function budgetAnswersHtml(band, rates = null) {
     `<p class="answer-more">근거와 예외는 아래 문단의 링크(→)에 있습니다.</p></section>`
   );
 }
+export const budgetAnswersHtml = fragment("budgetAnswersHtml", budgetAnswersHtmlLegacy);
 
 /**
  * 장마다 똑같던 규칙 문단을 옮겨 간 자리(method.html의 #budget-rules-*)로 가는 링크(#66).
@@ -325,7 +334,7 @@ export function budgetAnswersHtml(band, rates = null) {
 export const budgetRuleLink = (id, text) => ` <a class="budget-rule-link" href="./method.html#budget-rules-${id}">${escapeHtml(text)}</a>`;
 
 /** 예산을 정한 사람이 다음에 묻는 것들로 가는 길(PO 검토 #33 - 예산대에서 이 화면들로 가는 링크가 0개였다). */
-export function budgetMoreHtml() {
+function budgetMoreHtmlLegacy() {
   const links = [
     ["./floor-gap.html", "1층·최상층은 얼마나 싸야 정상인가"],
     ["./record-high.html", "신고가가 나왔다는데 그 값인가"],
@@ -339,27 +348,30 @@ export function budgetMoreHtml() {
     `</ul></section>`
   );
 }
+export const budgetMoreHtml = fragment("budgetMoreHtml", budgetMoreHtmlLegacy);
 
 /** 최소 필요 현금(scripts/min-cash.mjs) - 소득과 무관한 대출 천장(LTV·구간 상한)으로 계산한다(#31). */
-export function budgetMinCashHtml(band) {
+function budgetMinCashHtmlLegacy(band) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = minCashSentence(eok);
   return sentence
     ? `<p class="budget-loan budget-mincash" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("mincash", `소득·기존 주택 예외와 원문(${MIN_CASH_DATE} 확인) →`)}</p>`
     : "";
 }
+export const budgetMinCashHtml = fragment("budgetMinCashHtml", budgetMinCashHtmlLegacy);
 
 /** 정책대출 가격선에 걸친 예산대(4~9억대)에만 붙는 한 줄(scripts/policy-loan.mjs). */
-export function budgetPolicyHtml(band, policyCounts) {
+function budgetPolicyHtmlLegacy(band, policyCounts) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = policySentence(eok, policyCounts);
   return sentence
     ? `<p class="budget-loan budget-policy" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("policy", `가격선 정의와 거래 수(${POLICY_DATE_BASIS} 확인) →`)}</p>`
     : "";
 }
+export const budgetPolicyHtml = fragment("budgetPolicyHtml", budgetPolicyHtmlLegacy);
 
 /** 15억 경계에 걸친 예산대에만 붙는 주담대 상한 한 줄(scripts/loan-cap.mjs). */
-export function budgetCapHtml(band, capStats) {
+function budgetCapHtmlLegacy(band, capStats) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = capSentence(eok, capStats);
   // 16억대 이상은 구간표·소득 단서가 method.html로 갔다. 14·15억대 문장은 그대로 장에 있다.
@@ -368,6 +380,7 @@ export function budgetCapHtml(band, capStats) {
     ? `<p class="budget-loan budget-cap" data-prerendered>${escapeHtml(sentence)}${moved ? budgetRuleLink("cap", `구간표와 원문(${CAP_DATE} 확인) →`) : ""}</p>`
     : "";
 }
+export const budgetCapHtml = fragment("budgetCapHtml", budgetCapHtmlLegacy);
 
 /** 목록에 이름을 올리는 단지 수. 나머지는 검색의 "단지로 묶어 보기"로 보낸다 - 열여덟 장이 같은 긴 목록이 되지 않게. */
 export const CANDIDATE_LIST = 12;
@@ -385,7 +398,7 @@ const eokText = (value10k) => {
  * 얼마에 팔렸나"이고, 이것은 "지금 이 예산이면 어느 단지의 어느 평형인가"다(scripts/complex-price.mjs).
  * 자치구는 거르는 조건이 아니라 묶는 축이다 - 자치구를 먼저 고르게 하면 겹친 조건에서 빈 화면이 잦다.
  */
-export function budgetCandidatesHtml(band, complexFiles) {
+function budgetCandidatesHtmlLegacy(band, complexFiles) {
   if (!band || !complexFiles?.length) return "";
   const min = band.min10k;
   const max = band.max10k ?? min + 10_000;
@@ -443,18 +456,20 @@ export function budgetCandidatesHtml(band, complexFiles) {
     )}</a></p></section>`
   );
 }
+export const budgetCandidatesHtml = fragment("budgetCandidatesHtml", budgetCandidatesHtmlLegacy);
 
 /**
  * "매매가 말고 드는 돈". 규칙과 기준일은 scripts/purchase-costs.mjs 한 곳에 있다. 월 상환액과
  * 같은 상자를 쓴다 - 둘 다 "그래서 실제로 얼마"에 답하는 문단이다.
  */
-export function budgetCostsHtml(band) {
+function budgetCostsHtmlLegacy(band) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = costsSentence(eok);
   return sentence
     ? `<p class="budget-loan budget-costs" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("costs", `중과·예외와 원문(${COSTS_DATE} 확인) →`)}</p>`
     : "";
 }
+export const budgetCostsHtml = fragment("budgetCostsHtml", budgetCostsHtmlLegacy);
 
 /**
  * 예산대 페이지가 자기 이야기를 하는 문단.
@@ -462,16 +477,17 @@ export function budgetCostsHtml(band) {
  * 자치구 페이지의 `districtFactsHtml`과 같은 자리에 같은 방식으로 들어간다 — 두 언어를
  * 빌드에서 미리 만들어 두 벌 다 굽고, 화면은 `data-summary-lang`으로 고르기만 한다.
  */
-export function budgetFactsHtml(band, locale = "ko") {
+function budgetFactsHtmlLegacy(band, locale = "ko") {
   const sentences = budgetFactSentences(band?.facts, locale);
   return sentences.length ? escapeHtml(sentences.join(" ")) : "";
 }
+export const budgetFactsHtml = fragment("budgetFactsHtml", budgetFactsHtmlLegacy);
 
 /**
  * "그래서 매달 얼마"를 붙인다. 이 화면은 예산에 답하면서 정작 그 예산이 매달 얼마가
  * 되는지는 말하지 않고 있었다 - 실거래와 금리를 같이 받는 곳이라야 자동으로 물릴 수 있다.
  */
-export function budgetLoanHtml(band, rates, mortgageSeries = null) {
+function budgetLoanHtmlLegacy(band, rates, mortgageSeries = null) {
   const spread = rateSpread(apartmentOptions(rates));
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = loanSentence(spread, { eok });
@@ -480,6 +496,7 @@ export function budgetLoanHtml(band, rates, mortgageSeries = null) {
   // method.html로 갔다(scripts/budget-rules.mjs, #66). mortgageSeries 인자는 호출부 호환으로 남긴다.
   return `<p class="budget-loan" data-prerendered>${sentence}${budgetRuleLink("loan", "1억당 값과 금리 근거 →")}</p>`;
 }
+export const budgetLoanHtml = fragment("budgetLoanHtml", budgetLoanHtmlLegacy);
 
 export { budgetBandLabel };
 
@@ -491,7 +508,7 @@ function linksBlockHtml(id, heading, links) {
   );
 }
 
-export function newsRealestateStatsHtml(news) {
+function newsRealestateStatsHtmlLegacy(news) {
   const stats = news?.realestateStats ?? [];
   if (!stats.length) return null;
   return stats
@@ -505,12 +522,13 @@ export function newsRealestateStatsHtml(news) {
     )
     .join("");
 }
+export const newsRealestateStatsHtml = fragment("newsRealestateStatsHtml", newsRealestateStatsHtmlLegacy);
 
 /**
  * 증시 뉴스 장의 코스피 카드(UIUX #56). 첫 화면 "돈의 값"에서 옮겨 왔다 - 계약을 앞둔 사람의 질문이
  * 아니라서(DIRECTION 1부 대상). 하루 늦은 종가라 어느 장의 값인지 같이 적는다.
  */
-export function newsKospiHtml(market) {
+function newsKospiHtmlLegacy(market) {
   const k = market?.kospi;
   if (!k?.value) return null;
   return (
@@ -521,8 +539,9 @@ export function newsKospiHtml(market) {
     `</div>`
   );
 }
+export const newsKospiHtml = fragment("newsKospiHtml", newsKospiHtmlLegacy);
 
-export function newsSummaryHtml(summary, category = null) {
+function newsSummaryHtmlLegacy(summary, category = null) {
   const all = (summary?.categories ?? []).filter((c) => c.lineKo);
   const shown = category ? all.filter((c) => c.key === category) : all;
   if (!shown.length) return null;
@@ -530,8 +549,9 @@ export function newsSummaryHtml(summary, category = null) {
     .map((c) => `<p><strong>${escapeHtml(c.name)}</strong> ${escapeHtml(c.lineKo)}</p>`)
     .join("");
 }
+export const newsSummaryHtml = fragment("newsSummaryHtml", newsSummaryHtmlLegacy);
 
-export function newsListHtml(news, category = null) {
+function newsListHtmlLegacy(news, category = null) {
   const all = news?.items ?? [];
   const items = category ? all.filter((item) => item.category === category) : all;
   if (!items.length) return null;
@@ -547,6 +567,7 @@ export function newsListHtml(news, category = null) {
     )
     .join("");
 }
+export const newsListHtml = fragment("newsListHtml", newsListHtmlLegacy);
 
 const RE_LABELS = {
   district: "지역",
@@ -580,12 +601,13 @@ function reHeadLabels(kind) {
   return [RE_LABELS.district, RE_LABELS.perPyeong, RE_LABELS.area, RE_LABELS.count];
 }
 
-export function realestateHeadHtml(kind = null, district = null) {
+function realestateHeadHtmlLegacy(kind = null, district = null) {
   const labels = district
     ? ["구분", RE_LABELS.perPyeong, RE_LABELS.area, RE_LABELS.count]
     : reHeadLabels(kind);
   return `<tr>${labels.map((label) => `<th scope="col">${escapeHtml(label)}</th>`).join("")}</tr>`;
 }
+export const realestateHeadHtml = fragment("realestateHeadHtml", realestateHeadHtmlLegacy);
 
 function reChange(change, baselineDate) {
   if (!change || typeof change.value10k !== "number" || change.value10k === 0) return "";
@@ -725,7 +747,7 @@ function reDistrictRows(entry) {
     .join("");
 }
 
-export function realestateTableHtml(realestate, kind = null, district = null) {
+function realestateTableHtmlLegacy(realestate, kind = null, district = null) {
   const districts = realestate?.districts ?? [];
   if (district) {
     const entry = districts.find((d) => d.name === district);
@@ -739,6 +761,7 @@ export function realestateTableHtml(realestate, kind = null, district = null) {
       .join("")
   );
 }
+export const realestateTableHtml = fragment("realestateTableHtml", realestateTableHtmlLegacy);
 
 // 전세가율 카드 밑에 그 값을 낸 매매·전세 신고 건수를 적는다(#172). 값은 이 두 평균의 비다.
 // 브라우저의 renderOverall(docs/realestate.html)이 같은 문자열을 만든다.
@@ -748,7 +771,7 @@ const ratioBasis = (entry) =>
       `${RE_LABELS.jeonse} ${reCount(resolveMetric(entry, "jeonse").metric.transactionCount)}`
   );
 
-export function realestateOverallHtml(realestate, kind = null, district = null, spread = null) {
+function realestateOverallHtmlLegacy(realestate, kind = null, district = null, spread = null) {
   const overall = district
     ? (realestate?.districts ?? []).find((d) => d.name === district)
     : realestate?.overall;
@@ -827,13 +850,15 @@ export function realestateOverallHtml(realestate, kind = null, district = null, 
     card(RE_LABELS.count, escapeHtml(reCount(metric.transactionCount)), "")
   );
 }
+export const realestateOverallHtml = fragment("realestateOverallHtml", realestateOverallHtmlLegacy);
 
-export function districtSummaryHtml(realestate, district, locale = "ko", spread = null) {
+function districtSummaryHtmlLegacy(realestate, district, locale = "ko", spread = null) {
   if (!district) return "";
   const entry = (realestate?.districts ?? []).find((d) => d.name === district);
   const sentences = districtSentences(entry, realestate, locale, spread);
   return sentences.length ? escapeHtml(sentences.join(" ")) : "";
 }
+export const districtSummaryHtml = fragment("districtSummaryHtml", districtSummaryHtmlLegacy);
 
 /**
  * 시세 문장 아래에 붙는 두 번째 문단.
@@ -847,17 +872,19 @@ export function districtSummaryHtml(realestate, district, locale = "ko", spread 
  * 신고분 이야기이고 이쪽은 전월세 갱신 이야기라, 한 문단에 이어 붙이면 같은 표본을
  * 두고 하는 말처럼 읽힌다.
  */
-export function districtRenewalHtml(facts, locale = "ko") {
+function districtRenewalHtmlLegacy(facts, locale = "ko") {
   const sentences = renewalSentences(facts, locale);
   return sentences.length ? escapeHtml(sentences.join(" ")) : "";
 }
+export const districtRenewalHtml = fragment("districtRenewalHtml", districtRenewalHtmlLegacy);
 
-export function districtFactsHtml(facts, locale = "ko") {
+function districtFactsHtmlLegacy(facts, locale = "ko") {
   const sentences = factSentences(facts, locale);
   return sentences.length ? escapeHtml(sentences.join(" ")) : "";
 }
+export const districtFactsHtml = fragment("districtFactsHtml", districtFactsHtmlLegacy);
 
-export function districtLinksHtml(current = null, heading = "다른 지역") {
+function districtLinksHtmlLegacy(current = null, heading = "다른 지역") {
   const links = DISTRICT_PAGES.map(({ name, file }) =>
     name === current
       ? `<a href="./${file}" aria-current="page">${escapeHtml(name)}</a>`
@@ -865,6 +892,7 @@ export function districtLinksHtml(current = null, heading = "다른 지역") {
   ).join("");
   return linksBlockHtml("district-links", heading, links);
 }
+export const districtLinksHtml = fragment("districtLinksHtml", districtLinksHtmlLegacy);
 
 const RATES_TERM = 12;
 const RATES_ROWS = 20;
@@ -874,13 +902,14 @@ const rate = (value) => (typeof value === "number" ? `${value.toFixed(2)}%` : "-
 const rateRange = (min, max) =>
   typeof min === "number" && typeof max === "number" ? `${min.toFixed(2)}~${max.toFixed(2)}%` : rate(min ?? max);
 
-export function ratesHeadHtml(category = "deposit") {
+function ratesHeadHtmlLegacy(category = "deposit") {
   return SAVING_CATEGORIES.has(category)
     ? "<tr><th scope=\"col\">상품</th><th scope=\"col\">기본금리</th><th scope=\"col\">최고금리</th><th scope=\"col\">세후 이자</th></tr>"
     : "<tr><th scope=\"col\">상품</th><th scope=\"col\">금리 유형</th><th scope=\"col\">금리(최저~최고)</th><th scope=\"col\">평균</th></tr>";
 }
+export const ratesHeadHtml = fragment("ratesHeadHtml", ratesHeadHtmlLegacy);
 
-export function ratesHtml(rates, { category = "deposit", limit = RATES_ROWS } = {}) {
+function ratesHtmlLegacy(rates, { category = "deposit", limit = RATES_ROWS } = {}) {
   const products = rates?.[category] ?? [];
   if (!products.length) return null;
 
@@ -937,6 +966,7 @@ export function ratesHtml(rates, { category = "deposit", limit = RATES_ROWS } = 
     )
     .join("");
 }
+export const ratesHtml = fragment("ratesHtml", ratesHtmlLegacy);
 
 export function applyPrerender(html, blocks) {
   let out = html;
@@ -962,11 +992,12 @@ export function applyPrerender(html, blocks) {
  */
 export const CONVERSION_BAND = "60to85";
 
-export function conversionLeadHtml(conversion) {
+function conversionLeadHtmlLegacy(conversion) {
   return conversion?.seoul?.leadKo ? escapeHtml(conversion.seoul.leadKo) : null;
 }
+export const conversionLeadHtml = fragment("conversionLeadHtml", conversionLeadHtmlLegacy);
 
-export function conversionTableHtml(conversion, band = CONVERSION_BAND) {
+function conversionTableHtmlLegacy(conversion, band = CONVERSION_BAND) {
   const rows = (conversion?.cells ?? []).filter((cell) => cell.band === band);
   if (!rows.length) return null;
 
@@ -991,27 +1022,31 @@ export function conversionTableHtml(conversion, band = CONVERSION_BAND) {
     `<tbody>${body}</tbody>`
   );
 }
+export const conversionTableHtml = fragment("conversionTableHtml", conversionTableHtmlLegacy);
 
-export function conversionDistrictLinksHtml(conversion) {
+function conversionDistrictLinksHtmlLegacy(conversion) {
   const slugs = conversion?.slugs ?? {};
   const links = Object.entries(slugs)
     .map(([name, slug]) => `<a href="./district-${escapeHtml(slug)}.html">${escapeHtml(name)}</a>`)
     .join("");
   return links || null;
 }
+export const conversionDistrictLinksHtml = fragment("conversionDistrictLinksHtml", conversionDistrictLinksHtmlLegacy);
 
 /** 해제·등기 화면. 조건을 넣을 것이 없는 읽는 화면이라 첫 벌이 곧 본문이다. */
-export function cancelLeadHtml(cancellation) {
+function cancelLeadHtmlLegacy(cancellation) {
   return cancellation?.seoul?.leadKo ? escapeHtml(cancellation.seoul.leadKo) : null;
 }
+export const cancelLeadHtml = fragment("cancelLeadHtml", cancelLeadHtmlLegacy);
 
 /** 문장은 빌더가 두 언어로 만든다(scripts/cancellation.mjs registrationSentence). 화면과 같은 글자를 꽂는다. */
-export function cancelMonthLeadHtml(cancellation) {
+function cancelMonthLeadHtmlLegacy(cancellation) {
   const text = cancellation?.seoul?.registrationLead?.ko;
   return text ? escapeHtml(text) : null;
 }
+export const cancelMonthLeadHtml = fragment("cancelMonthLeadHtml", cancelMonthLeadHtmlLegacy);
 
-export function cancelDistrictsHtml(cancellation) {
+function cancelDistrictsHtmlLegacy(cancellation) {
   const rows = cancellation?.districts ?? [];
   if (!rows.length) return null;
 
@@ -1030,8 +1065,9 @@ export function cancelDistrictsHtml(cancellation) {
     `<tbody>${body}</tbody>`
   );
 }
+export const cancelDistrictsHtml = fragment("cancelDistrictsHtml", cancelDistrictsHtmlLegacy);
 
-export function cancelMonthsHtml(cancellation) {
+function cancelMonthsHtmlLegacy(cancellation) {
   const rows = cancellation?.registrationByMonth ?? [];
   if (!rows.length) return null;
 
@@ -1046,25 +1082,29 @@ export function cancelMonthsHtml(cancellation) {
 
   return `<thead><tr><th scope="col">계약월</th><th scope="col">계약</th><th scope="col">등기 완료</th><th scope="col">완료율</th></tr></thead><tbody>${body}</tbody>`;
 }
+export const cancelMonthsHtml = fragment("cancelMonthsHtml", cancelMonthsHtmlLegacy);
 
-export function cancelDistrictLinksHtml(cancellation) {
+function cancelDistrictLinksHtmlLegacy(cancellation) {
   const slugs = cancellation?.slugs ?? {};
   const links = Object.entries(slugs)
     .map(([name, slug]) => `<a href="./district-${escapeHtml(slug)}.html">${escapeHtml(name)}</a>`)
     .join("");
   return links || null;
 }
+export const cancelDistrictLinksHtml = fragment("cancelDistrictLinksHtml", cancelDistrictLinksHtmlLegacy);
 
 /** 재계약 화면. 문턱은 빌더가 이미 적용했으므로 여기서는 형식만 입힌다. */
-export function renewalLeadHtml(renewal) {
+function renewalLeadHtmlLegacy(renewal) {
   return renewal?.lead?.ko ? escapeHtml(renewal.lead.ko) : null;
 }
+export const renewalLeadHtml = fragment("renewalLeadHtml", renewalLeadHtmlLegacy);
 
-export function renewalCapLeadHtml(renewal) {
+function renewalCapLeadHtmlLegacy(renewal) {
   return renewal?.capLead?.ko ? escapeHtml(renewal.capLead.ko) : null;
 }
+export const renewalCapLeadHtml = fragment("renewalCapLeadHtml", renewalCapLeadHtmlLegacy);
 
-export function renewalDistrictsHtml(renewal) {
+function renewalDistrictsHtmlLegacy(renewal) {
   const rows = renewal?.table ?? [];
   if (!rows.length) return null;
 
@@ -1089,13 +1129,15 @@ export function renewalDistrictsHtml(renewal) {
     `<th scope="col">맞물린 계약</th><th scope="col">상한 미달</th><th scope="col">요구권 행사</th></tr></thead><tbody>${body}</tbody>`
   );
 }
+export const renewalDistrictsHtml = fragment("renewalDistrictsHtml", renewalDistrictsHtmlLegacy);
 
-export function renewalWolseLeadHtml(renewal) {
+function renewalWolseLeadHtmlLegacy(renewal) {
   return renewal?.wolseLead?.ko ? escapeHtml(renewal.wolseLead.ko) : null;
 }
+export const renewalWolseLeadHtml = fragment("renewalWolseLeadHtml", renewalWolseLeadHtmlLegacy);
 
 /** 월세 재계약 표. 화면 쪽 renderWolse와 같은 모양이다. */
-export function renewalWolseDistrictsHtml(renewal) {
+function renewalWolseDistrictsHtmlLegacy(renewal) {
   const rows = renewal?.wolseTable ?? [];
   const wolse = renewal?.seoul?.wolse;
   if (!rows.length || !wolse) return null;
@@ -1116,17 +1158,19 @@ export function renewalWolseDistrictsHtml(renewal) {
     `<th scope="col">시세보다 싼 비율</th><th scope="col">맞물린 계약</th></tr></thead><tbody>${body}</tbody>`
   );
 }
+export const renewalWolseDistrictsHtml = fragment("renewalWolseDistrictsHtml", renewalWolseDistrictsHtmlLegacy);
 
-export function renewalDistrictLinksHtml(renewal) {
+function renewalDistrictLinksHtmlLegacy(renewal) {
   const slugs = renewal?.slugs ?? {};
   const links = Object.entries(slugs)
     .map(([name, slug]) => `<a href="./district-${escapeHtml(slug)}.html">${escapeHtml(name)}</a>`)
     .join("");
   return links || null;
 }
+export const renewalDistrictLinksHtml = fragment("renewalDistrictLinksHtml", renewalDistrictLinksHtmlLegacy);
 
 /** 층 격차 화면. 문턱과 문장은 빌더가 이미 정했으므로 여기서는 표만 만든다. */
-export function floorDistrictsHtml(floor) {
+function floorDistrictsHtmlLegacy(floor) {
   const rows = floor?.districts ?? [];
   if (!rows.length) return null;
 
@@ -1148,14 +1192,16 @@ export function floorDistrictsHtml(floor) {
     `<th scope="col">서울과 다른가</th></tr></thead><tbody>${body}</tbody>`
   );
 }
+export const floorDistrictsHtml = fragment("floorDistrictsHtml", floorDistrictsHtmlLegacy);
 
-export function floorDistrictLinksHtml(floor) {
+function floorDistrictLinksHtmlLegacy(floor) {
   const slugs = floor?.slugs ?? {};
   const links = Object.entries(slugs)
     .map(([name, slug]) => `<a href="./district-${escapeHtml(slug)}.html">${escapeHtml(name)}</a>`)
     .join("");
   return links || null;
 }
+export const floorDistrictLinksHtml = fragment("floorDistrictLinksHtml", floorDistrictLinksHtmlLegacy);
 
 async function readJson(name) {
   try {
@@ -1191,6 +1237,7 @@ async function main() {
   const change = await readJson("district-change");
   const recordText = (key) => (record?.[key]?.ko ? escapeHtml(record[key].ko) : null);
 
+  const writes = createWriteSet();
   for (const [file, path_, fileBlocks] of [
     ["docs/index.html", INDEX_PATH, blocks],
     ["docs/rates.html", RATES_PATH, { rateBridgeKo: rateBridgeHtml("rates", "ko"), rateBridgeEn: rateBridgeHtml("rates", "en") }], // 허브: 표·상품군 문단은 상품군 페이지 넷이 그린다(#193)
@@ -1312,9 +1359,10 @@ async function main() {
       console.log(`  ${file} 변경 없음`);
       continue;
     }
-    await writeFile(path_, next);
-    console.log(`  ${file} 갱신`);
+    writes.stage(path_, next, `  ${file} 갱신`);
   }
+  // 열한 장이 전부 렌더에 성공한 뒤에야 쓴다(#237) - 중간 장에서 던지면 어느 파일도 바뀌지 않는다.
+  writes.commit();
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
