@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { applyPrerender, jsonForScript, rateFactsData, rateFactsHtml, ratesHeadHtml, ratesHtml } from "./prerender.mjs";
+import { applyPrerender, ratesHeadHtml, ratesHtml } from "./prerender.mjs";
 import { rateBridgeHtml } from "./rate-bridge.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -90,11 +90,6 @@ export function buildRatePage(baseHtml, page, rates) {
   return applyPrerender(html, {
     rates: ratesHtml(rates, { category: page.category }),
     ratesHead: ratesHeadHtml(page.category),
-    // 이 페이지가 처음 그리는 상품군의 문단은 HTML에 구워 넣고, 나머지 세 개는 탭을
-    // 눌렀을 때 쓰라고 한 덩이로 같이 넘긴다.
-    rateFactsKo: rateFactsHtml(rates, page.category, "ko"),
-    rateFactsEn: rateFactsHtml(rates, page.category, "en"),
-    rateFactsData: jsonForScript(rateFactsData(rates)),
     // 금리 다음에 볼 곳 문단은 상품군마다 다른 말을 한다(scripts/rate-bridge.mjs).
     rateBridgeKo: rateBridgeHtml(page.category, "ko"),
     rateBridgeEn: rateBridgeHtml(page.category, "en"),

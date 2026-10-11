@@ -109,3 +109,16 @@ test("savingNote가 예금자보호 한도를 금융회사별 1억원으로 적�
     for (const w of ["KRW 50M", "per-person"]) assert.ok(!en.includes(w), `${file}: 영어 savingNote에 옛 문구 ${w}`);
   }
 });
+
+// 표 위 `.rates-facts` 한·영 문단은 방문자에게 한 번도 보인 적이 없고(`[data-lang]{display:none}`이
+// `.on`이 있어야 풀리는데 이 문단은 `hidden`으로만 언어를 갈랐다) 크롤러에는 읽혔기에 소스에서 지웠다(#214 Z안).
+// 데이터 값에 기대지 않고 날마다 안전한 검사다. 노출을 되살리는 #232의 PR은 문단을 소스에 다시 굽는
+// 같은 PR에서 이 시험을 지운다 — 그 PR이 이 시험을 지우는 것이 재도입의 신호다.
+test("금리 4장과 틀에 표 위 .rates-facts 문단·데이터 블록·렌더 함수가 없다 (#214, 재개는 #232)", async () => {
+  const gone = /rates-facts|rate-facts-data|RATE_FACTS|renderRateFacts|prerender:rateFacts/;
+  const sources = ["scripts/rates-template.html", ...RATE_PAGES.map((p) => `docs/${p.file}`)];
+  for (const file of sources) {
+    const hit = gone.exec(await read(file));
+    assert.equal(hit, null, `${file}: 지운 .rates-facts 문단 흔적(${hit?.[0]})이 다시 들어왔다`);
+  }
+});
