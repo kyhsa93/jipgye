@@ -8,8 +8,9 @@ import { pathToFileURL } from "node:url";
 import * as prerender from "../scripts/prerender.mjs";
 import { INDEX_NEWS, indexNewsItems } from "../scripts/news-items.mjs";
 import { escapeHtml } from "../scripts/html-escape.mjs";
-import { linksBlockHtml, slugLinkEntries, slugLinkHref, slugLinksHtml } from "../scripts/district-links.mjs";
+import { linksBlockHtml, linksBlockShape, slugLinkEntries, slugLinkHref, slugLinksHtml } from "../scripts/district-links.mjs";
 import { DISTRICT_PAGES } from "../scripts/district-slugs.mjs";
+import { CONVERSION_BAND, cancelDistricts, cancelMonths, conversionTable, count, floorDistricts, pct, renewalDistricts, renewalWolseDistricts, signed } from "../scripts/district-tables.mjs";
 import { MAX_DISTRICTS, changeOf, countOf, man, metricCell, topDistricts } from "../scripts/realestate-rows.mjs";
 import { MIN_SAMPLE, hasEnoughSample } from "../scripts/realestate-format.mjs";
 import { makeFragment, rendererMode } from "../scripts/renderer.mjs";
@@ -18,10 +19,11 @@ import { RATES_BRANCHES } from "./fixtures/render/rates-branches.mjs";
 import { JAVASCRIPT_URL_DIFF, NEWS_MARKET_BRANCHES } from "./fixtures/render/news-market-branches.mjs";
 import { LEAD_LINKS_BRANCHES, LEAD_LINKS_FNS } from "./fixtures/render/lead-links-branches.mjs";
 import { RAW_COUNT_DIFF, REALESTATE_BRANCHES } from "./fixtures/render/realestate-branches.mjs";
+import { DISTRICT_TABLES_BRANCHES, DISTRICT_TABLES_FNS, DISTRICT_TABLES_THROWS, RAW_TEXT_DIFF } from "./fixtures/render/district-tables-branches.mjs";
 
 // #237: 렌더러 스위치와 legacy↔react parity 시험의 골격. #240이 금리 조각(ratesHtml·ratesHeadHtml)의 분기별 케이스를 더했고
 // #241 PR 1이 문장·목록 8개(summaryHtml·marketHtml·뉴스 6개)를, PR 2가 리드·링크 10개(*LeadHtml 6·*DistrictLinksHtml 4)를,
-// PR 3이 첫 화면 실거래 요약(realestateHtml)을 더했다. #242~#243이 이어서 더한다.
+// PR 3이 첫 화면 실거래 요약(realestateHtml)을, #242 PR 1이 자치구 문장·링크 4개와 표 6개를 더했다. #242 PR 2·3과 #243이 이어서 더한다.
 // 입력은 이 파일 안의 값과 test/fixtures/render/의 고정 파일뿐이다(R3): 저장소의 docs/·docs/data는 읽지 않는다.
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -134,11 +136,19 @@ test("기본값 legacy는 esbuild·react 없이도 import되고, react 모드는
 // 이름 순(renderer.names()가 정렬해 준다).
 const PORTED = [
   "cancelDistrictLinksHtml",
+  "cancelDistrictsHtml",
   "cancelLeadHtml",
   "cancelMonthLeadHtml",
+  "cancelMonthsHtml",
   "conversionDistrictLinksHtml",
   "conversionLeadHtml",
+  "conversionTableHtml",
+  "districtFactsHtml",
+  "districtLinksHtml",
+  "districtRenewalHtml",
+  "districtSummaryHtml",
   "floorDistrictLinksHtml",
+  "floorDistrictsHtml",
   "marketHtml",
   "newsContextHtml",
   "newsHtml",
@@ -151,7 +161,9 @@ const PORTED = [
   "realestateHtml",
   "renewalCapLeadHtml",
   "renewalDistrictLinksHtml",
+  "renewalDistrictsHtml",
   "renewalLeadHtml",
+  "renewalWolseDistrictsHtml",
   "renewalWolseLeadHtml",
   "summaryHtml",
 ];
@@ -210,6 +222,7 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
   const newsUrl = pathToFileURL(fixture("news-market-branches.mjs")).href;
   const leadUrl = pathToFileURL(fixture("lead-links-branches.mjs")).href;
   const realestateUrl = pathToFileURL(fixture("realestate-branches.mjs")).href;
+  const districtUrl = pathToFileURL(fixture("district-tables-branches.mjs")).href;
   const run = (env) =>
     spawnSync(
       process.execPath,
@@ -221,11 +234,12 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
          const { NEWS_MARKET_BRANCHES } = await import(${JSON.stringify(newsUrl)});
          const { LEAD_LINKS_BRANCHES } = await import(${JSON.stringify(leadUrl)});
          const { REALESTATE_BRANCHES } = await import(${JSON.stringify(realestateUrl)});
+         const { DISTRICT_TABLES_BRANCHES } = await import(${JSON.stringify(districtUrl)});
          const run = (rows) => rows.map((b) => [b.id, p[b.fn](...b.args)]);
-         // 이식 안 된 조각(아직 legacy): 예산 최소 현금 문장·자치구 링크(districtLinksHtml은 이 PR이 추출한 linksBlockHtml을 쓴다).
-         // 이식되면 이 줄의 조각을 다른 미이식 조각으로 바꾼다(budgetMinCashHtml은 #243, districtLinksHtml은 #242).
-         const legacyOnly = [p.budgetMinCashHtml({ min10k: 50000 }), p.districtLinksHtml("종로구")];
-         console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), legacyOnly, rates: run(RATES_BRANCHES), news: run(NEWS_MARKET_BRANCHES), leadLinks: run(LEAD_LINKS_BRANCHES), realestate: run(REALESTATE_BRANCHES) }));`,
+         // 이식 안 된 조각(아직 legacy): 예산 최소 현금 문장·예산 단지 후보(둘 다 #243이 이식한다 - 오래 미이식으로 남는 budget* 조각).
+         // 이식되면 이 줄의 조각을 다른 미이식 조각으로 바꾼다(districtLinksHtml은 #242 PR 1이 이식해 budgetCandidatesHtml로 바꿨다).
+         const legacyOnly = [p.budgetMinCashHtml({ min10k: 50000 }), p.budgetCandidatesHtml({ min10k: 50000 }, [{ reference: "202609" }])];
+         console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), legacyOnly, rates: run(RATES_BRANCHES), news: run(NEWS_MARKET_BRANCHES), leadLinks: run(LEAD_LINKS_BRANCHES), realestate: run(REALESTATE_BRANCHES), districtTables: run(DISTRICT_TABLES_BRANCHES) }));`,
       ],
       { cwd: root, encoding: "utf8", env: { ...process.env, JIPGYE_RENDERER: "", ...env } }
     );
@@ -249,6 +263,8 @@ test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위
   assert.deepEqual(b.leadLinks, a.leadLinks, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(리드·링크)");
   assert.equal(b.realestate.length, REALESTATE_BRANCHES.length);
   assert.deepEqual(b.realestate, a.realestate, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(실거래 요약)");
+  assert.equal(b.districtTables.length, DISTRICT_TABLES_BRANCHES.length);
+  assert.deepEqual(b.districtTables, a.districtTables, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(자치구 문장·링크·표)");
 });
 
 // ---- 문장·목록 8개 조각(#241 PR 1): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
@@ -404,7 +420,7 @@ test("district-links.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, link
   assert.equal(slugLinkHref(false), "./district-false.html");
   assert.equal(slugLinksHtml({}), null);
   assert.equal(slugLinksHtml({ slugs: { 종로구: "jongno" } }), '<a href="./district-jongno.html">종로구</a>');
-  // districtLinksHtml(이식 안 된 조각, E2가 이어 이식한다): 이 PR이 helper를 뽑았어도 글자가 같다.
+  // districtLinksHtml(legacy): helper를 뽑은 뒤에도 글자가 같다(#242 PR 1이 JSX 쪽도 이 모듈로 이식했다).
   const all = prerender.districtLinksHtml.legacy();
   assert.ok(all.startsWith('<h3 class="district-links-heading" id="district-links-heading">다른 지역</h3><div class="district-links" id="district-links"><a href="./district-jongno.html">종로구</a><a href="./district-jung.html">중구</a>'));
   assert.ok(all.endsWith("</a></div>"));
@@ -524,4 +540,176 @@ test("realestate-rows.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, 표
   const input = [mk("a", 1), mk("b", 5)];
   topDistricts({ districts: input });
   assert.deepEqual(input.map((d) => d.name), ["a", "b"]);
+});
+
+// ---- 자치구 문장·링크 4개와 표 6개(#242 PR 1): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
+
+const TABLE_FNS = ["cancelDistrictsHtml", "cancelMonthsHtml", "conversionTableHtml", "floorDistrictsHtml", "renewalDistrictsHtml", "renewalWolseDistrictsHtml"];
+
+test("자치구 분기 표: id가 겹치지 않고, 열 조각을 모두 덮고, 모든 행에 기대값이 있다", () => {
+  const ids = DISTRICT_TABLES_BRANCHES.map((b) => b.id);
+  assert.equal(new Set(ids).size, ids.length, "분기 id가 겹친다");
+  assert.deepEqual([...new Set(DISTRICT_TABLES_BRANCHES.map((b) => b.fn))].sort(), DISTRICT_TABLES_FNS);
+  assert.equal(DISTRICT_TABLES_FNS.length, 10);
+  for (const b of DISTRICT_TABLES_BRANCHES) {
+    assert.ok("expect" in b, `${b.id}: 기대값(expect)이 없다`);
+    assert.ok(PORTED.includes(b.fn), `${b.id}: 이식 목록에 없는 조각(${b.fn})`);
+  }
+  const toIds = new Set(DISTRICT_TABLES_THROWS.map((b) => b.id));
+  assert.equal(toIds.size, DISTRICT_TABLES_THROWS.length, "던지는 입력 id가 겹친다");
+  for (const b of DISTRICT_TABLES_THROWS) assert.ok(DISTRICT_TABLES_FNS.includes(b.fn), `${b.id}: 모르는 조각(${b.fn})`);
+});
+
+test("자치구 분기 표: 조각마다 데이터 없음(null 출력)·특수문자·비문자열·null·undefined·빈 값 행이 있다", () => {
+  for (const fn of DISTRICT_TABLES_FNS) {
+    const rows = DISTRICT_TABLES_BRANCHES.filter((b) => b.fn === fn);
+    const outs = rows.map((b) => b.expect);
+    const strings = outs.filter((o) => typeof o === "string");
+    if (TABLE_FNS.includes(fn)) assert.ok(outs.includes(null), `${fn}: 데이터 없음(null) 행이 없다`);
+    // 자치구 링크는 스물다섯 곳이 상수라 빈 출력이 없다(링크가 없는 분기는 linksBlockShape 시험이 닫는다)
+    else if (fn !== "districtLinksHtml") assert.ok(strings.includes(""), `${fn}: 빈 문자열 행이 없다`);
+    assert.ok(strings.some((o) => o.includes("&amp;") && o.includes("&lt;") && o.includes("&quot;")), `${fn}: 특수문자 행이 없다`);
+    assert.ok(strings.some((o) => /false|true/.test(o)), `${fn}: 비문자열(false·true) 행이 없다`);
+    assert.ok(strings.some((o) => /\[object Object\]/.test(o)), `${fn}: 비문자열({}) 행이 없다`);
+    assert.ok(rows.some((b) => b.args[0] === null || b.args.length === 0), `${fn}: null 입력 행이 없다`);
+    assert.ok(rows.some((b) => b.args[0] === undefined), `${fn}: undefined 입력 행이 없다`);
+  }
+});
+
+test("자치구 분기 표: 해자 2(표본 부족) 행이 세 표에 있고, 표본 부족이 값 없음보다 먼저 판정되는 순서 행이 있다", () => {
+  for (const fn of ["renewalDistrictsHtml", "renewalWolseDistrictsHtml", "floorDistrictsHtml"]) {
+    const moat = DISTRICT_TABLES_BRANCHES.filter((b) => b.fn === fn && b.moat);
+    assert.ok(moat.some((b) => b.expect.includes('<span class="low-sample">')), `${fn}: 표본 부족 스팬 행이 없다`);
+    assert.ok(moat.some((b) => !b.expect.includes("low-sample") && !b.order), `${fn}: 표본 부족이 아닌 값 행이 없다`);
+    assert.ok(DISTRICT_TABLES_BRANCHES.some((b) => b.fn === fn && b.order), `${fn}: 순서 행이 없다`);
+  }
+  // 순서 행의 모양: 같은 줄에 표본 부족 스팬과 값 없음 칸("-")이 함께 있다
+  for (const id of ["RD-L02", "RW-L02", "FD-L03"]) {
+    const row = DISTRICT_TABLES_BRANCHES.find((b) => b.id === id);
+    assert.match(row.expect, /<span class="low-sample">[^<]+<\/span>/, id);
+    assert.match(row.expect, /<td>-<\/td>/, id);
+  }
+  // 문장 쪽 표본 부족(이번 달 매매 신고가 N건뿐이라 평균을 내지 않았다)
+  assert.ok(DISTRICT_TABLES_BRANCHES.some((b) => b.fn === "districtSummaryHtml" && /신고가 4건뿐이라 평균을 내지 않았습니다/.test(b.expect)));
+});
+
+test("자치구 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다)", () => {
+  for (const b of DISTRICT_TABLES_BRANCHES) {
+    assert.equal(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
+  }
+});
+
+test("자치구 분기 표: React 조각이 legacy와 바이트까지 같다(분기마다, 허용 변환은 래퍼의 &#x27; 되돌림 하나)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  for (const b of DISTRICT_TABLES_BRANCHES) {
+    const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
+    assert.equal(react, b.expect, `${b.id} ${b.cond}`);
+    assert.equal(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+  }
+});
+
+test("자치구 분기 표: 같은 입력을 두 번 넣어도 같고 입력을 바꾸지 않는다(정렬은 사본에)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  for (const b of DISTRICT_TABLES_BRANCHES) {
+    const before = JSON.stringify(b.args, (_, v) => (v === undefined ? "(undefined)" : typeof v === "number" && !Number.isFinite(v) ? String(v) : v));
+    const react = fragment(b.fn, prerender[b.fn].legacy);
+    assert.equal(react(...b.args), react(...b.args), b.id);
+    prerender[b.fn].legacy(...b.args);
+    assert.equal(JSON.stringify(b.args, (_, v) => (v === undefined ? "(undefined)" : typeof v === "number" && !Number.isFinite(v) ? String(v) : v)), before, `${b.id}: 입력이 바뀌었다`);
+  }
+});
+
+test("자치구 조각: 숫자 칸에 null·undefined가 오면 legacy도 React 조각도 던진다(조용히 빈 칸을 내지 않는다)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  for (const b of DISTRICT_TABLES_THROWS) {
+    assert.throws(() => prerender[b.fn].legacy(...b.args), TypeError, `${b.id} legacy ${b.cond}`);
+    assert.throws(() => fragment(b.fn, prerender[b.fn].legacy)(...b.args), TypeError, `${b.id} react ${b.cond}`);
+  }
+});
+
+test("자치구 조각: 이식된 이름이라 legacy가 조각 안에서 불리지 않는다(데이터 없음은 null, 문장·링크는 빈 문자열 그대로)", async () => {
+  let called = 0;
+  const fragment = makeFragment(await createReactRenderer());
+  const spy = () => (called++, "legacy");
+  for (const fn of TABLE_FNS) {
+    assert.equal(fragment(fn, spy)(null), null, fn);
+    assert.equal(fragment(fn, spy)({}), null, fn);
+  }
+  // 문장은 말할 것이 없어도 null이 아니라 빈 문자열이다(자리표시 치환은 null과 ""를 다르게 다룬다)
+  assert.equal(fragment("districtSummaryHtml", spy)(null, "종로구"), "");
+  assert.equal(fragment("districtSummaryHtml", spy)({}, null), "");
+  assert.equal(fragment("districtRenewalHtml", spy)(null), "");
+  assert.equal(fragment("districtFactsHtml", spy)(undefined), "");
+  assert.ok(fragment("districtLinksHtml", spy)().startsWith('<h3 class="district-links-heading"'));
+  assert.equal(called, 0);
+});
+
+test("자치구 표: 이스케이프 없이 문자열에 끼우던 칸에 `& < > \"`가 든 문자열이 오면 legacy는 그대로, React는 이스케이프해서 낸다(알려진 차이 — 실제 입력에는 나오지 않는다)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  assert.equal(RAW_TEXT_DIFF.length, 13);
+  assert.equal(new Set(RAW_TEXT_DIFF.map((d) => d.id)).size, RAW_TEXT_DIFF.length);
+  for (const { id, fn, args, legacy, react } of RAW_TEXT_DIFF) {
+    assert.notEqual(legacy, react, `${id}: 두 글자가 같으면 알려진 차이가 아니다`);
+    assert.equal(prerender[fn].legacy(...args), legacy, `${id} legacy`);
+    assert.equal(fragment(fn, prerender[fn].legacy)(...args), react, `${id} react`);
+  }
+});
+
+test("district-tables.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - 글자 규칙·행 선택·표본 부족 판정", () => {
+  assert.equal(CONVERSION_BAND, "60to85");
+  assert.equal(prerender.CONVERSION_BAND, CONVERSION_BAND);
+  // pct·signed: null·undefined만 "-"
+  assert.equal(pct(null), "-");
+  assert.equal(pct(undefined), "-");
+  assert.equal(pct(0), "0%");
+  assert.equal(pct(false), "false%");
+  assert.equal(signed(null), "-");
+  assert.equal(signed(undefined), "-");
+  assert.equal(signed(0), "0%");
+  assert.equal(signed(3), "+3%");
+  assert.equal(signed(-3), "-3%");
+  assert.equal(count(1234567), "1,234,567");
+  assert.throws(() => count(null), TypeError);
+  // 데이터 없음은 null(표 조각이 null을 돌려 자리표시를 비운다)
+  for (const fn of [conversionTable, cancelDistricts, cancelMonths, renewalDistricts, renewalWolseDistricts, floorDistricts]) {
+    assert.equal(fn(null), null, fn.name);
+    assert.equal(fn(undefined), null, fn.name);
+    assert.equal(fn({}), null, fn.name);
+  }
+  // 해자 2: 표본 부족 판정은 null만(엄격 비교), undefined·0·""·false는 값이다. 건수 문턱은 여기서 다시 적용하지 않는다.
+  const rd = (gapMedian) => renewalDistricts({ table: [{ district: "가", gapMedian, gapMatched: 0, rightUsed: 0 }] })[0].gap;
+  assert.deepEqual(rd(null), { low: true });
+  assert.deepEqual(rd(undefined), { text: "-" });
+  assert.deepEqual(rd(0), { text: "0%" });
+  assert.deepEqual(rd(""), { text: "%" });
+  assert.deepEqual(rd(false), { text: "false%" });
+  const rw = (median) => renewalWolseDistricts({ wolseTable: [{ district: "가", median, range: [], matched: 0 }], seoul: { wolse: { rate: 4, range: [{ rate: 3 }] } } }).rows[0].gap;
+  assert.deepEqual(rw(null), { low: true });
+  assert.deepEqual(rw(undefined), { text: "-" });
+  assert.deepEqual(rw(0), { text: "0%" });
+  assert.deepEqual(rw(2), { text: "+2%" });
+  const fl = (distinct, band) => floorDistricts({ districts: [{ district: "가", median: null, cells: 0, distinct, band }] })[0].lowText;
+  assert.equal(fl(true, null), null);
+  assert.equal(fl(true, {}), null);
+  assert.equal(fl(false, {}), "갈라 볼 수 없음");
+  assert.equal(fl(false, null), "칸이 모자람");
+  assert.equal(fl(undefined, undefined), "칸이 모자람");
+  assert.equal(fl("0", null), null);
+  // 정렬은 사본에서(입력 순서를 바꾸지 않는다), 같은 전환율은 들어온 순서
+  const cells = [{ district: "가", band: "60to85", rate: 1, pairs: 1 }, { district: "나", band: "60to85", rate: 2, pairs: 1 }, { district: "다", band: "60to85", rate: 2, pairs: 1 }];
+  assert.deepEqual(conversionTable({ cells }).rows.map((r) => r.district), ["나", "다", "가"]);
+  assert.deepEqual(cells.map((c) => c.district), ["가", "나", "다"]);
+  // 같은 모듈을 쓰므로 prerender.mjs가 이 이름을 다시 내보내는 것은 CONVERSION_BAND 하나뿐이다(다른 이름은 밖에서 쓰지 않는다)
+});
+
+test("district-links.mjs: linksBlockShape는 JSX가 쓰는 분기이고 linksBlockHtml(legacy)이 같은 분기를 쓴다", () => {
+  for (const none of ["", null, undefined, 0, false, NaN]) assert.equal(linksBlockShape("x", "머리", none), null, String(none));
+  assert.deepEqual(linksBlockShape("district-links", "다른 지역", "<a>1</a>"), { headingId: "district-links-heading", boxId: "district-links", heading: "다른 지역" });
+  assert.deepEqual(linksBlockShape("i", false, 25), { headingId: "i-heading", boxId: "i", heading: false });
+  // 링크가 있으면 어떤 값이든 같은 모양(개수 0은 없음)
+  assert.equal(linksBlockShape("i", "h", 0), null);
+  assert.notEqual(linksBlockShape("i", "h", 1), null);
+  // JSX가 쓰는 경로 규칙은 코드가 정한 `./district-<slug>.html` 하나다: legacy의 `./${file}`과 25곳 모두 같다
+  for (const { slug, file } of DISTRICT_PAGES) assert.equal(slugLinkHref(slug), `./${file}`);
+  for (const { slug } of DISTRICT_PAGES) assert.match(slugLinkHref(slug), /^\.\/district-[a-z]+\.html$/, "javascript: 등 다른 스킴이 들어갈 자리가 없다");
 });

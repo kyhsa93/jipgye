@@ -3,15 +3,26 @@
 import { escapeHtml } from "./html-escape.mjs";
 
 /**
+ * 링크 묶음의 모양(마크업 없이): 머리글과 상자의 id, 머리글 글자. 링크가 하나도 없으면 null이다(머리글도 내지 않는다).
+ * legacy(`linksBlockHtml`)와 JSX(`render/entry.jsx`의 districtLinksHtml)가 같은 분기·같은 id 규칙을 쓴다(#242 PR 1이 JSX 소비자를 처음 더했다).
+ * `hasLinks`는 링크가 있는지(legacy는 만들어 둔 `<a>` 글자 묶음의 참/거짓, JSX는 요소 개수).
+ */
+export function linksBlockShape(id, heading, hasLinks) {
+  if (!hasLinks) return null;
+  return { headingId: `${id}-heading`, boxId: id, heading };
+}
+
+/**
  * 링크 묶음의 머리글과 상자. 링크가 하나도 없으면 머리글도 내지 않는다(빈 문자열).
- * 지금 부르는 쪽은 districtLinksHtml(prerender.mjs)이고, JSX 쪽은 #242(E2)가 이 모듈로 이어 쓴다.
+ * 부르는 쪽은 districtLinksHtml(prerender.mjs)이고, JSX 쪽은 같은 분기를 `linksBlockShape`로 쓴다(문자열을 요소에 끼우지 않으려고 모양과 마크업을 나눴다).
  * `links`는 이미 만든 `<a>` 글자 묶음이다.
  */
 export function linksBlockHtml(id, heading, links) {
-  if (!links) return "";
+  const block = linksBlockShape(id, heading, links);
+  if (!block) return "";
   return (
-    `<h3 class="district-links-heading" id="${id}-heading">${escapeHtml(heading)}</h3>` +
-    `<div class="district-links" id="${id}">${links}</div>`
+    `<h3 class="district-links-heading" id="${block.headingId}">${escapeHtml(block.heading)}</h3>` +
+    `<div class="district-links" id="${block.boxId}">${links}</div>`
   );
 }
 
