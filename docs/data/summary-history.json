@@ -4218,17 +4218,81 @@
     "date": "2026-10-11",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 기타 경제 소식: 이형일은 경제현안간담회에서 온누리상품권과 민생물가 문제를 논의했다. 북한은 경제 정량데이터 구축을 통해 연구의 과학적 영역으로 발전시키고 있다. 북한 경제를 이해하는 필독서가 출간돼 통일과 외교 현안 해결에 기여할 것으로 보인다. 수원 영통구의 집값 상승률이 1위를 차지했으며, 분당구도 강세를 보이고 있다. 정부는 공급 확대를 최우선 과제로 삼아 집값을 잡겠다는 방침을 밝혔다.\n- 부동산: 부동산 가격과 세제가 가계 부채 및 소비에 미치는 영향에 대한 분석이 발표되었다. 한강 인근 아파트의 뷰 차이로 인해 가격에 10억원 차이가 나는 것으로 나타났다. 내년 집값 불안 요소가 여전히 존재하며, 1주택자들이 갈아타기 기회를 노리고 있는 것으로 보인다. 서울 핵심지역 공공 재개발 '도공복' 투자와 관련된 100가지 사실이 정리되었다. 분양시장에서는 청약 포기자가 늘어나며 시장에 변화가 나타나고 있다.\n- 금리·예금·투자상품: 증권사가 4∼5% 수익률을 제공하는 발행어음 상품을 잇달아 출시했다. 국채금리 급등으로 매력도가 줄어든 상황에서도 개인 투자자가 리츠 ETF를 순매수했다. 리츠 ETF의 순매수액은 증가하는 것으로 나타났다. 증시가 답답한 상황에서 증권사가 고수익 상품을 출시한 것으로 보인다. 개인 투자자는 리츠 ETF에 대한 관심을 계속 유지하고 있는 것으로 나타났다.\n- 증시·환율: 삼성전자의 역대급 실적에도 불구하고 코스피는 짓눌린 상태이며, 반등 가능성에 대한 논의가 이어지고 있다.",
-      "en": "- Other Economic News: Lee Hyung-il discussed the Onnuri Gift Card and issues at the economic policy discussion meeting. North Korea is advancing research into a scientific field through the establishment of quantitative economic data. A must-read for understanding the North Korean economy is being published, which is expected to contribute to resolving unification and diplomatic issues. The housing price increase rate in Yongsung-gu, Suwon, ranked first, and Bundang-gu is also showing strong performance. The government has announced that expanding supply is its top priority in order to control housing prices.\n- Real Estate: An analysis on the impact of real estate prices and tax policies on household debt and consumption was released. It was found that the view difference in apartments near the Han River can result in a 1,000,000,000won price difference. Factors causing uncertainty in housing prices next year still exist, and it seems that single-homeowners are looking for opportunities to move. 100 facts related to the investment in the public redevelopment project 'Dokongbok' in key areas of Seoul have been compiled. In the sales market, the number of applicants giving up on applications is increasing, and changes are appearing in the market.\n- Rates, Deposits & Investment Products: Securities companies have consecutively launched income note products offering returns of 4 to 5 percent. Despite the declining appeal due to a sharp rise in government bond rates, individual investors have been buying REITs ETFs. The net purchase amount of REITs ETFs has been increasing. It appears that securities companies have launched high-yield products amid a stagnant stock market. Individual investors have been maintaining their interest in REITs ETFs.\n- Stocks & FX: Despite Samsung Electronics' record-breaking performance, the Kospi remains under pressure, with ongoing discussions about the possibility of a rebound."
+      "ko": "- 부동산: LH가 운영하는 청년주택 1000곳 중 일부가 기준에 미달한 것으로 드러났다. 부동산 가격과 세제가 가계 부채와 소비에 미치는 영향에 대한 분석이 진행되고 있다. 한강 인근 아파트의 가격 차이는 뷰에 따라 최대 10억원에 달한다. 내년 집값 불안 요소가 여전히 남아 있는 것으로 보인다. 서울 핵심지역 공공 재개발 '도공복' 투자 관련 100가지 사실이 정리됐다.\n- 금리·예금·투자상품: 비트코인은 금리 불안으로 인해 1억1000만원대를 유지하며 움직임이 제한되고 있다. 증권사들은 답답한 증시 상황 속에서 4∼5% 수익률을 제공하는 발행어음 상품을 잇달아 출시하고 있다. 국채금리 급등으로 인해 매력도 떨어진 리츠 ETF는 개인 투자자가 순매수한 금액이 증가하고 있다. 비트코인은 1억1000만원대를 지속하며 변동성이 크지 않다. 증권사의 발행어음 상품은 4∼5%의 수익률을 목표로 하고 있다.\n- 기타 경제 소식: 이형일은 경제현안간담회에서 온누리상품권과 민생물가 문제를 논의했다. 북한은 경제 정량데이터 구축을 통해 연구의 과학적 영역으로 발전시키고 있다. 북한 경제를 이해하는 필독서가 출간돼 통일과 외교 현안 해결에 기여할 것으로 보인다. 수원 영통구의 집값 상승률이 1위를 차지했고, 분당구도 강세를 보이고 있다. 정부는 공급 확대를 최우선 과제로 삼아 집값을 잡겠다는 방침을 밝혔다.\n- 증시·환율: 삼성전자의 역대급 실적에도 불구하고 코스피는 짓눌린 상태이며, 반등 가능성에 대한 논의가 이어지고 있다.",
+      "en": "- Real Estate: Some of the 1,000 youth housing units operated by LH have been found to fall short of the standards. An analysis is underway regarding the impact of real estate prices and tax policies on household debt and consumption. The price difference for apartments near the Han River can reach up to 1,000,000,000 won depending on the view. It appears that factors causing anxiety over housing prices next year still remain. 100 facts related to investments in the public redevelopment project 'Dokongbok' in key areas of Seoul have been compiled.\n- Rates, Deposits & Investment Products: Bitcoin is moving within the 110,000,000 won range, with its movement restricted due to interest rate uncertainty. Securities companies are continuously launching issued notes products offering 4 to 5% returns amid a stagnant stock market. REITs ETFs, which have lost appeal due to a sharp rise in government bond rates, are seeing an increase in the amount of money being purchased by individual investors. Bitcoin continues to stay within the 110,000,000 won range with relatively low volatility. Securities companies' issued notes products aim for a 4 to 5% return.\n- Other Economic News: Lee Hyung-Il discussed the Onnuri Gift Card and issues at the economic policy discussion meeting. North Korea is advancing research by building quantitative economic data. A must-read for understanding the North Korean economy is expected to contribute to resolving unification and diplomatic issues. The housing price increase rate in Yongsan-gu, Suwon, ranked first, and Bundang-gu also showed strong performance. The government stated that expanding supply is the top priority to control housing prices.\n- Stocks & FX: Despite Samsung Electronics' record-breaking performance, the Kospi remains under pressure, with ongoing discussions about the possibility of a rebound."
     },
     "highlights": [],
     "categories": [
       {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "LH가 운영하는 청년주택 1000곳 중 일부가 기준에 미달한 것으로 드러났다. 부동산 가격과 세제가 가계 부채와 소비에 미치는 영향에 대한 분석이 진행되고 있다. 한강 인근 아파트의 가격 차이는 뷰에 따라 최대 10억원에 달한다. 내년 집값 불안 요소가 여전히 남아 있는 것으로 보인다. 서울 핵심지역 공공 재개발 '도공복' 투자 관련 100가지 사실이 정리됐다.",
+        "lineEn": "Some of the 1,000 youth housing units operated by LH have been found to fall short of the standards. An analysis is underway regarding the impact of real estate prices and tax policies on household debt and consumption. The price difference for apartments near the Han River can reach up to 1,000,000,000 won depending on the view. It appears that factors causing anxiety over housing prices next year still remain. 100 facts related to investments in the public redevelopment project 'Dokongbok' in key areas of Seoul have been compiled.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[단독] \"청년이 마리모냐\"…LH 청년주택 1000곳 '기준 미달'",
+            "link": "https://www.hankyung.com/article/202610114275H",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "세제·부동산 가격이 가계 부채·소비에 미치는 영향 분석",
+            "link": "https://www.hankyung.com/article/2026101144451",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "뷰에 따라 10억원 차이…한강은 언제부터 ‘부자의 트로피’가 됐나 [슈퍼리치의 아파트]",
+            "link": "https://www.mk.co.kr/news/realestate/12173164",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "\"내년 집값 불안 요소 여전… 1주택자 갈아타기 기회 노려야\"",
+            "link": "https://www.mk.co.kr/news/realestate/12173026",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "[부동산 손품노트] 서울 핵심지역 공공 재개발 '도공복' 투자 100가지 사실",
+            "link": "https://www.mk.co.kr/news/realestate/12173027",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "비트코인은 금리 불안으로 인해 1억1000만원대를 유지하며 움직임이 제한되고 있다. 증권사들은 답답한 증시 상황 속에서 4∼5% 수익률을 제공하는 발행어음 상품을 잇달아 출시하고 있다. 국채금리 급등으로 인해 매력도 떨어진 리츠 ETF는 개인 투자자가 순매수한 금액이 증가하고 있다. 비트코인은 1억1000만원대를 지속하며 변동성이 크지 않다. 증권사의 발행어음 상품은 4∼5%의 수익률을 목표로 하고 있다.",
+        "lineEn": "Bitcoin is moving within the 110,000,000 won range, with its movement restricted due to interest rate uncertainty. Securities companies are continuously launching issued notes products offering 4 to 5% returns amid a stagnant stock market. REITs ETFs, which have lost appeal due to a sharp rise in government bond rates, are seeing an increase in the amount of money being purchased by individual investors. Bitcoin continues to stay within the 110,000,000 won range with relatively low volatility. Securities companies' issued notes products aim for a 4 to 5% return.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "금리 불안에 주춤한 비트코인... 1억1000만원대 횡보",
+            "link": "https://www.hankyung.com/article/202610093056i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "답답한 증시 대신 발행어음?…증권사, 4∼5% 상품 잇달아 출시",
+            "link": "https://www.yna.co.kr/view/AKR20261009024400008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "국채금리 급등에 줄어든 매력에도…개인, 리츠 ETF 순매수액↑",
+            "link": "https://www.yna.co.kr/view/AKR20261008168900008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
         "key": "other",
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
-        "lineKo": "이형일은 경제현안간담회에서 온누리상품권과 민생물가 문제를 논의했다. 북한은 경제 정량데이터 구축을 통해 연구의 과학적 영역으로 발전시키고 있다. 북한 경제를 이해하는 필독서가 출간돼 통일과 외교 현안 해결에 기여할 것으로 보인다. 수원 영통구의 집값 상승률이 1위를 차지했으며, 분당구도 강세를 보이고 있다. 정부는 공급 확대를 최우선 과제로 삼아 집값을 잡겠다는 방침을 밝혔다.",
-        "lineEn": "Lee Hyung-il discussed the Onnuri Gift Card and issues at the economic policy discussion meeting. North Korea is advancing research into a scientific field through the establishment of quantitative economic data. A must-read for understanding the North Korean economy is being published, which is expected to contribute to resolving unification and diplomatic issues. The housing price increase rate in Yongsung-gu, Suwon, ranked first, and Bundang-gu is also showing strong performance. The government has announced that expanding supply is its top priority in order to control housing prices.",
+        "lineKo": "이형일은 경제현안간담회에서 온누리상품권과 민생물가 문제를 논의했다. 북한은 경제 정량데이터 구축을 통해 연구의 과학적 영역으로 발전시키고 있다. 북한 경제를 이해하는 필독서가 출간돼 통일과 외교 현안 해결에 기여할 것으로 보인다. 수원 영통구의 집값 상승률이 1위를 차지했고, 분당구도 강세를 보이고 있다. 정부는 공급 확대를 최우선 과제로 삼아 집값을 잡겠다는 방침을 밝혔다.",
+        "lineEn": "Lee Hyung-Il discussed the Onnuri Gift Card and issues at the economic policy discussion meeting. North Korea is advancing research by building quantitative economic data. A must-read for understanding the North Korean economy is expected to contribute to resolving unification and diplomatic issues. The housing price increase rate in Yongsan-gu, Suwon, ranked first, and Bundang-gu also showed strong performance. The government stated that expanding supply is the top priority to control housing prices.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
@@ -4257,65 +4321,6 @@
             "title": "[집코노미2026 다시보기 영상] \"정부, 공급 확대에 최우선…집값 잡을 것\"",
             "link": "https://www.hankyung.com/article/202610114186i",
             "source": "한국경제 부동산"
-          }
-        ]
-      },
-      {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "부동산 가격과 세제가 가계 부채 및 소비에 미치는 영향에 대한 분석이 발표되었다. 한강 인근 아파트의 뷰 차이로 인해 가격에 10억원 차이가 나는 것으로 나타났다. 내년 집값 불안 요소가 여전히 존재하며, 1주택자들이 갈아타기 기회를 노리고 있는 것으로 보인다. 서울 핵심지역 공공 재개발 '도공복' 투자와 관련된 100가지 사실이 정리되었다. 분양시장에서는 청약 포기자가 늘어나며 시장에 변화가 나타나고 있다.",
-        "lineEn": "An analysis on the impact of real estate prices and tax policies on household debt and consumption was released. It was found that the view difference in apartments near the Han River can result in a 1,000,000,000won price difference. Factors causing uncertainty in housing prices next year still exist, and it seems that single-homeowners are looking for opportunities to move. 100 facts related to the investment in the public redevelopment project 'Dokongbok' in key areas of Seoul have been compiled. In the sales market, the number of applicants giving up on applications is increasing, and changes are appearing in the market.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "세제·부동산 가격이 가계 부채·소비에 미치는 영향 분석",
-            "link": "https://www.hankyung.com/article/2026101144451",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "뷰에 따라 10억원 차이…한강은 언제부터 ‘부자의 트로피’가 됐나 [슈퍼리치의 아파트]",
-            "link": "https://www.mk.co.kr/news/realestate/12173164",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "\"내년 집값 불안 요소 여전… 1주택자 갈아타기 기회 노려야\"",
-            "link": "https://www.mk.co.kr/news/realestate/12173026",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "[부동산 손품노트] 서울 핵심지역 공공 재개발 '도공복' 투자 100가지 사실",
-            "link": "https://www.mk.co.kr/news/realestate/12173027",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "\"그냥 청약 안 할래요\" 포기 속출…분양시장에 무슨 일이 [이송렬의 부동산한입]",
-            "link": "https://www.hankyung.com/article/2026100800956",
-            "source": "한국경제 부동산"
-          }
-        ]
-      },
-      {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "증권사가 4∼5% 수익률을 제공하는 발행어음 상품을 잇달아 출시했다. 국채금리 급등으로 매력도가 줄어든 상황에서도 개인 투자자가 리츠 ETF를 순매수했다. 리츠 ETF의 순매수액은 증가하는 것으로 나타났다. 증시가 답답한 상황에서 증권사가 고수익 상품을 출시한 것으로 보인다. 개인 투자자는 리츠 ETF에 대한 관심을 계속 유지하고 있는 것으로 나타났다.",
-        "lineEn": "Securities companies have consecutively launched income note products offering returns of 4 to 5 percent. Despite the declining appeal due to a sharp rise in government bond rates, individual investors have been buying REITs ETFs. The net purchase amount of REITs ETFs has been increasing. It appears that securities companies have launched high-yield products amid a stagnant stock market. Individual investors have been maintaining their interest in REITs ETFs.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "답답한 증시 대신 발행어음?…증권사, 4∼5% 상품 잇달아 출시",
-            "link": "https://www.yna.co.kr/view/AKR20261009024400008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "국채금리 급등에 줄어든 매력에도…개인, 리츠 ETF 순매수액↑",
-            "link": "https://www.yna.co.kr/view/AKR20261008168900008",
-            "source": "연합뉴스 경제"
           }
         ]
       },
