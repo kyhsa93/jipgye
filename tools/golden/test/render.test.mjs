@@ -147,3 +147,25 @@ test("readWorkflowStages: 워크플로의 렌더 단계 줄을 순서대로 읽�
     await rm(dir, { recursive: true });
   }
 });
+
+test("상대경로 --repo로 줘도 node_modules 링크가 절대경로로 걸려 렌더 사본에서 풀린다", async () => {
+  const repo = await fakeRepo();
+  const cache = await mkdtemp(path.join(os.tmpdir(), "golden-cache-"));
+  try {
+    await mkdir(path.join(repo, "node_modules/marker"), { recursive: true });
+    await writeFile(path.join(repo, "node_modules/marker/index.js"), "");
+    const rel = path.relative(process.cwd(), repo);
+    assert.ok(!path.isAbsolute(rel));
+    const pristine = await preparePristine({ repo: rel, sha: "HEAD", cacheDir: cache });
+    assert.equal(pristine.nodeModules, path.join(repo, "node_modules"));
+    const r = await renderIsolated(pristine, { stages: ["scripts/step1.mjs"] });
+    try {
+      const { existsSync } = await import("node:fs");
+      assert.ok(existsSync(path.join(r.workDir, "node_modules/marker/index.js")), "작업 사본의 node_modules 링크가 끊겼다");
+    } finally {
+      await r.dispose();
+    }
+  } finally {
+    await Promise.all([rm(repo, { recursive: true }), rm(cache, { recursive: true })]);
+  }
+});
