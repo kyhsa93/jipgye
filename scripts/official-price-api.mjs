@@ -18,6 +18,7 @@
 import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { areaKey, cellKey } from "./official-price-key.mjs";
+import { OFFICIAL_PRICE_LICENSE, OFFICIAL_PRICE_LICENSE_CHECKED } from "./official-price-license.mjs";
 import { ALLOWED_KEYS, MAX_OUTPUT_BYTES, MIN_HOUSEHOLDS, REQUIRED_LICENSE, assertDerived, median } from "./official-price-fold.mjs";
 import { orderTargets } from "./official-price-targets.mjs";
 
@@ -109,8 +110,8 @@ export function projectItem(kind, item, issues) {
   return out;
 }
 
-/** 이용허락 문자열·확인일 검사 (C3). 틀리면 던진다. */
-export function checkLicense({ license, checked, now = new Date() }) {
+/** 이용허락 문자열·확인일 검사 (C3). 틀리면 던진다. 값은 official-price-license.mjs의 상수가 기본이고, 시험은 인자로 주입한다(빠뜨리면 기본 상수). */
+export function checkLicense({ license = OFFICIAL_PRICE_LICENSE, checked = OFFICIAL_PRICE_LICENSE_CHECKED, now = new Date() } = {}) {
   if ((license ?? "").trim() !== REQUIRED_LICENSE) throw new ApiValidationError(`이용허락범위가 "${REQUIRED_LICENSE}"이 아니거나 비었다`, "license");
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec((checked ?? "").trim());
   if (!m) throw new ApiValidationError("이용허락 확인일이 YYYY-MM-DD 형식이 아니거나 비었다", "license-date");
@@ -404,13 +405,13 @@ export function project({ callsSoFar, doneParcels, totalParcels, dailyBudget }) 
 /**
  * 실행 한 번. 쓰기는 맨 끝이다. opts:
  *  baseUrl, key, rawDir(대상 지번을 정한 raw/ 체크아웃), names, loadTargets 결과 대신 targets(Map) 주입 가능, outDir, rawCommit,
- *  startDate, endDate, budget, gapMs, deadlineMs, softDeadlineMs, license, licenseChecked, now(Date), fetchImpl, log(line)
+ *  startDate, endDate, budget, gapMs, deadlineMs, softDeadlineMs, license·licenseChecked(비우면 official-price-license.mjs 상수), now(Date), fetchImpl, log(line)
  * 반환: 요약 객체(값 없음). 던지면 아무것도 쓰지 않은 것이다.
  */
 export async function runCollector(opts) {
   const {
     key, targets, outDir, rawCommit, startDate = DEFAULT_START_DATE, endDate = DEFAULT_END_DATE, budget = DEFAULT_DAILY_BUDGET,
-    gapMs = MIN_GAP_MS, deadlineMs = Infinity, softDeadlineMs = Infinity, license, licenseChecked, now = new Date(), fetchImpl, baseUrl, log = () => {},
+    gapMs = MIN_GAP_MS, deadlineMs = Infinity, softDeadlineMs = Infinity, license = OFFICIAL_PRICE_LICENSE, licenseChecked = OFFICIAL_PRICE_LICENSE_CHECKED, now = new Date(), fetchImpl, baseUrl, log = () => {},
     maxPages = MAX_PAGES_PER_PARCEL, // 시험용으로만 줄인다
   } = opts;
   const y0 = Number(startDate.slice(0, 4));
