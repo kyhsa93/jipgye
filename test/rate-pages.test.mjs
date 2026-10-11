@@ -90,3 +90,22 @@ test("허브(rates.html)는 색인에서 빠지고, 상품군 페이지 넷만 �
     );
   }
 });
+
+// #229: savingNote가 예금자보호 한도를 낡은 값(1인당 5천만원)으로 적었다. 2025-09-01부터 금융회사별 1억원이다.
+// 4장 모두(대출 2장은 화면에 안 쓰이지만 같은 스크립트 사본이다)와 틀의 한·영 문장에 새 값이 있고 옛 값이 없는지 본다.
+// 문자열 존재 검사일 뿐이고 날짜·데이터 값에 따라 갈리지 않는다(#8). 법무가 확정한 문장은 이슈 #229 댓글.
+test("savingNote가 예금자보호 한도를 금융회사별 1억원으로 적고 옛 값(5천만원·KRW 50M)이 없다 — 틀과 4장, 한·영", async () => {
+  const sources = ["scripts/rates-template.html", ...RATE_PAGES.map((p) => `docs/${p.file}`)];
+  for (const file of sources) {
+    const notes = [...(await read(file)).matchAll(/savingNote: "([^"]*)"/g)].map((m) => m[1]);
+    assert.equal(notes.length, 2, `${file}: savingNote가 한·영 두 줄이 아니다`);
+    const [ko, en] = notes;
+    assert.match(ko, /[가-힣]/, `${file}: 첫 savingNote가 한국어가 아니다`);
+    for (const w of ["금융회사별", "1억원"]) assert.ok(ko.includes(w), `${file}: 한국어 savingNote에 ${w}가 없다`);
+    for (const w of ["per financial institution", "KRW 100 million"]) {
+      assert.ok(en.includes(w), `${file}: 영어 savingNote에 ${w}가 없다`);
+    }
+    for (const w of ["5천만원", "1인당"]) assert.ok(!ko.includes(w), `${file}: 한국어 savingNote에 옛 문구 ${w}`);
+    for (const w of ["KRW 50M", "per-person"]) assert.ok(!en.includes(w), `${file}: 영어 savingNote에 옛 문구 ${w}`);
+  }
+});

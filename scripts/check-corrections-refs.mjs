@@ -7,7 +7,7 @@
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
-export const CLOSED_ISSUES = [6, 28, 29, 65, 183];
+export const CLOSED_ISSUES = [6, 28, 29, 65, 183, 229];
 export const MERGED_PRS = [189];
 // 싣지 않기로 한 것: #80(개인정보 건, 소유자 확인 선행), 이용허락·출처 건(공시가격·건축HUB)은 정정이 아니다.
 export const EXCLUDED = [80];

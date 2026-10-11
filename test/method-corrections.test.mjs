@@ -32,7 +32,26 @@ test("한·영 두 절이 있고 항목 수가 같으며 10건 이하다", async
   const en = items(sectionOf(html, "corrections-en").text);
   assert.ok(ko.length >= 1 && ko.length <= 10, `한국어 ${ko.length}건`);
   assert.equal(en.length, ko.length);
-  assert.equal(ko.length, 5, "초기 다섯 건(#28·#183·#65·#6·#29)");
+  assert.equal(ko.length, 6, "여섯 건(#28·#183·#65·#6·#29·#229)");
+});
+
+// #229: 예금자보호 한도 정정 항목. 항목 수·날짜 형식·근거 링크·문장 수·금지어는 위의 일반 시험이 모든 항목에 건다.
+// 여기서는 이 항목이 있고 맨 앞(최근 것)이며 정정된 값을 말하는지, 서두의 건수 표기가 항목 수와 맞는지만 본다.
+// 날짜 값 자체는 머지일에 따라 달라지므로 검사하지 않는다(#8).
+test("예금자보호 한도 정정 항목(#229)이 한·영 맨 앞에 있고 서두 건수가 항목 수와 맞다", async () => {
+  const html = await method();
+  const ko = sectionOf(html, "corrections").text;
+  const en = sectionOf(html, "corrections-en").text;
+  const koFirst = items(ko)[0];
+  const enFirst = items(en)[0];
+  assert.match(koFirst, /jipgye\/issues\/229"/);
+  assert.match(enFirst, /jipgye\/issues\/229"/);
+  for (const w of ["예금자보호", "금융회사별 1억원", "금리 수치와 집계는 그대로"]) assert.ok(koFirst.includes(w), `한국어 항목에 ${w}`);
+  for (const w of ["deposit-protection", "KRW 100 million per financial institution", "rate figures and counts are unchanged"]) {
+    assert.ok(enFirst.includes(w), `영어 항목에 ${w}`);
+  }
+  assert.match(ko.slice(0, ko.indexOf("<ul")), /여섯 건/);
+  assert.match(en.slice(0, en.indexOf("<ul")), /six corrections/);
 });
 
 test("절 머리는 면책 문단 하나이고 목록 앞에 있다", async () => {
