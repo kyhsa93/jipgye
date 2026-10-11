@@ -3,6 +3,7 @@ import path from "node:path";
 import { accessibleTables } from "./table-a11y.mjs";
 import { fragment } from "./renderer.mjs";
 import { createWriteSet } from "./render-writes.mjs";
+import { INDEX_NEWS, indexNewsItems } from "./news-items.mjs";
 import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "./rates-table.mjs";
 import { BUDGET_PAGES } from "./budget-pages.mjs";
 import { budgetFactSentences } from "./budget-facts.mjs";
@@ -177,16 +178,8 @@ function newsContextHtmlLegacy(context) {
 }
 export const newsContextHtml = fragment("newsContextHtml", newsContextHtmlLegacy);
 
-/**
- * 첫 화면 뉴스는 다섯 건만 - 부동산 먼저. 전에는 스물네 건이 다 실려 AI 요약의 주제별 헤드라인과 같은 기사를
- * 두 번 싣고 모바일 첫 화면의 58%를 차지했다(UIUX #48). 나머지는 뉴스 화면으로 보낸다. 화면(index.html
- * renderNews)도 같은 규칙이다.
- */
-export const INDEX_NEWS = 5;
-export function indexNewsItems(items) {
-  const list = items ?? [];
-  return [...list.filter((i) => i.category === "realestate"), ...list.filter((i) => i.category !== "realestate")].slice(0, INDEX_NEWS);
-}
+// 첫 화면 뉴스 선택 규칙은 news-items.mjs에 있다 - JSX 쪽(render/entry.jsx)이 같은 함수를 가져다 쓴다(#241). 호출자 호환으로 다시 내보낸다.
+export { INDEX_NEWS, indexNewsItems };
 
 function newsHtmlLegacy(news) {
   const all = news?.items ?? [];

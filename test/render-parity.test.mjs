@@ -6,12 +6,14 @@ import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import * as prerender from "../scripts/prerender.mjs";
+import { INDEX_NEWS, indexNewsItems } from "../scripts/news-items.mjs";
 import { makeFragment, rendererMode } from "../scripts/renderer.mjs";
 import { createReactRenderer } from "../scripts/render/react.mjs";
 import { RATES_BRANCHES } from "./fixtures/render/rates-branches.mjs";
+import { JAVASCRIPT_URL_DIFF, NEWS_MARKET_BRANCHES } from "./fixtures/render/news-market-branches.mjs";
 
 // #237: 렌더러 스위치와 legacy↔react parity 시험의 골격. #240이 금리 조각(ratesHtml·ratesHeadHtml)의 분기별 케이스를 더했고
-// #241~#243이 이어서 더한다.
+// #241 PR 1이 문장·목록 8개(summaryHtml·marketHtml·뉴스 6개)를 더했다. #241 나머지와 #242~#243이 이어서 더한다.
 // 입력은 이 파일 안의 값과 test/fixtures/render/의 고정 파일뿐이다(R3): 저장소의 docs/·docs/data는 읽지 않는다.
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -121,7 +123,20 @@ test("기본값 legacy는 esbuild·react 없이도 import되고, react 모드는
 });
 
 // 저장소의 진입 파일(scripts/render/entry.jsx)에 이식된 조각. 조각을 이식할 때마다 이 목록과 분기 표(아래)를 같이 늘린다.
-const PORTED = ["ratesHeadHtml", "ratesHtml"];
+// 이름 순(renderer.names()가 정렬해 준다).
+const PORTED = [
+  "marketHtml",
+  "newsContextHtml",
+  "newsHtml",
+  "newsKospiHtml",
+  "newsListHtml",
+  "newsRealestateStatsHtml",
+  "newsSummaryHtml",
+  "ratesHeadHtml",
+  "ratesHtml",
+  "summaryHtml",
+];
+const NEWS_MARKET_FNS = ["marketHtml", "newsContextHtml", "newsHtml", "newsKospiHtml", "newsListHtml", "newsRealestateStatsHtml", "newsSummaryHtml", "summaryHtml"];
 
 test("react 모드: 이식된 조각 목록이 PORTED와 같고, 그 이름은 전부 .legacy를 가진 prerender.mjs 조각이다(오타·없는 조각을 막는다)", async () => {
   const renderer = await createReactRenderer();
@@ -171,8 +186,9 @@ test("금리 조각: 이식된 이름이라 legacy가 조각 안에서 불리지
   assert.equal(called, 0);
 });
 
-test("react 모드(진입 목록: ratesHeadHtml·ratesHtml): 이식 안 된 조각은 legacy에 위임되어 같고, 이식된 조각은 분기 표 전부에서 legacy와 같다", async () => {
-  const fixtureUrl = pathToFileURL(fixture("rates-branches.mjs")).href;
+test("react 모드(진입 목록 PORTED): 이식 안 된 조각은 legacy에 위임되어 같고, 이식된 조각은 분기 표 전부에서 legacy와 같다", async () => {
+  const ratesUrl = pathToFileURL(fixture("rates-branches.mjs")).href;
+  const newsUrl = pathToFileURL(fixture("news-market-branches.mjs")).href;
   const run = (env) =>
     spawnSync(
       process.execPath,
@@ -180,9 +196,12 @@ test("react 모드(진입 목록: ratesHeadHtml·ratesHtml): 이식 안 된 조�
         "--input-type=module",
         "-e",
         `const r = await import("./scripts/renderer.mjs"); const p = await import("./scripts/prerender.mjs");
-         const { RATES_BRANCHES } = await import(${JSON.stringify(fixtureUrl)});
-         const rates = RATES_BRANCHES.map((b) => [b.id, p[b.fn](...b.args)]);
-         console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), out: p.summaryHtml({ highlights: [{ title: "it's", textKo: "x" }] }), rates }));`,
+         const { RATES_BRANCHES } = await import(${JSON.stringify(ratesUrl)});
+         const { NEWS_MARKET_BRANCHES } = await import(${JSON.stringify(newsUrl)});
+         const run = (rows) => rows.map((b) => [b.id, p[b.fn](...b.args)]);
+         // 이식 안 된 조각(아직 legacy): 예산 최소 현금 문장·자치구 링크. 이식되면 이 줄의 조각을 다른 미이식 조각으로 바꾼다.
+         const legacyOnly = [p.budgetMinCashHtml({ min10k: 50000 }), p.districtLinksHtml("종로구")];
+         console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), legacyOnly, rates: run(RATES_BRANCHES), news: run(NEWS_MARKET_BRANCHES) }));`,
       ],
       { cwd: root, encoding: "utf8", env: { ...process.env, JIPGYE_RENDERER: "", ...env } }
     );
@@ -196,7 +215,85 @@ test("react 모드(진입 목록: ratesHeadHtml·ratesHtml): 이식 안 된 조�
   assert.equal(b.mode, "react");
   assert.deepEqual(a.ported, []);
   assert.deepEqual(b.ported, PORTED);
-  assert.equal(b.out, a.out, "이식 안 된 조각(summaryHtml)은 legacy 그대로");
+  assert.ok(a.legacyOnly.every((html) => html.length > 0), "이식 안 된 조각 입력이 빈 출력이면 이 확인이 아무것도 안 본다");
+  assert.deepEqual(b.legacyOnly, a.legacyOnly, "이식 안 된 조각은 legacy 그대로");
   assert.equal(b.rates.length, RATES_BRANCHES.length);
-  assert.deepEqual(b.rates, a.rates, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다");
+  assert.equal(b.news.length, NEWS_MARKET_BRANCHES.length);
+  assert.deepEqual(b.rates, a.rates, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(금리)");
+  assert.deepEqual(b.news, a.news, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(문장·목록)");
+});
+
+// ---- 문장·목록 8개 조각(#241 PR 1): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
+
+const newsTitles = (html) => [...html.matchAll(/target="_blank" rel="noopener">([^<]*)</g)].map((m) => m[1]);
+
+test("문장·목록 분기 표: id가 겹치지 않고, 여덟 조각을 모두 덮고, 모든 행에 기대값이 있다", () => {
+  const ids = NEWS_MARKET_BRANCHES.map((b) => b.id);
+  assert.equal(new Set(ids).size, ids.length, "분기 id가 겹친다");
+  assert.deepEqual([...new Set(NEWS_MARKET_BRANCHES.map((b) => b.fn))].sort(), NEWS_MARKET_FNS);
+  for (const b of NEWS_MARKET_BRANCHES) {
+    assert.ok("expect" in b || b.order, `${b.id}: 기대값(expect 또는 order)이 없다`);
+    assert.ok(PORTED.includes(b.fn), `${b.id}: 이식 목록에 없는 조각(${b.fn})`);
+  }
+  // 값 종류별 행이 조각마다 있다: 비문자열(false·{})·null·특수문자(&amp;)·빈 값(데이터 없음 null 또는 빈 문자열).
+  for (const fn of NEWS_MARKET_FNS) {
+    const outs = NEWS_MARKET_BRANCHES.filter((b) => b.fn === fn).map((b) => (typeof b.expect === "string" ? b.expect : ""));
+    assert.ok(outs.some((o) => o.includes("&amp;") && o.includes("&lt;") && o.includes("&quot;")), `${fn}: 특수문자 행이 없다`);
+    if (fn !== "marketHtml") assert.ok(outs.some((o) => /false|\[object Object\]/.test(o)), `${fn}: 비문자열(false·{}) 행이 없다`);
+  }
+});
+
+test("문장·목록 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다)", () => {
+  for (const b of NEWS_MARKET_BRANCHES) {
+    const out = prerender[b.fn].legacy(...b.args);
+    if ("expect" in b) assert.equal(out, b.expect, `${b.id} ${b.cond}`);
+    else assert.deepEqual(newsTitles(out), b.order, `${b.id} ${b.cond}`);
+    if (b.noMore) assert.ok(!out.includes("news-more"), `${b.id}: '더 보기' 줄이 있다`);
+    if (b.more) assert.ok(out.includes(`뉴스 전체 ${b.more}건 보기 →`), `${b.id}: '뉴스 전체 ${b.more}건' 줄이 없다`);
+    if (b.noPreview) assert.ok(!out.includes("news-preview"), `${b.id}: 미리보기가 있다`);
+  }
+});
+
+test("문장·목록 분기 표: React 조각이 legacy와 바이트까지 같다(분기마다, 허용 변환은 래퍼의 &#x27; 되돌림 하나)", async () => {
+  const fragment = makeFragment(await createReactRenderer());
+  for (const b of NEWS_MARKET_BRANCHES) {
+    const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
+    assert.equal(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+  }
+});
+
+test("문장·목록 조각: 이식된 이름이라 legacy가 조각 안에서 불리지 않는다(null은 null, 빈 문자열은 빈 문자열 그대로)", async () => {
+  let called = 0;
+  const renderer = await createReactRenderer();
+  const fragment = makeFragment(renderer);
+  const spy = () => (called++, "legacy");
+  assert.equal(fragment("summaryHtml", spy)(null), null);
+  assert.equal(fragment("marketHtml", spy)({}), null);
+  assert.equal(fragment("newsHtml", spy)({ items: [] }), null);
+  assert.equal(fragment("newsListHtml", spy)(null), null);
+  assert.equal(fragment("newsKospiHtml", spy)({}), null);
+  assert.equal(fragment("newsRealestateStatsHtml", spy)({}), null);
+  assert.equal(fragment("newsSummaryHtml", spy)({}), null);
+  // 맥락 칩이 없으면 legacy는 null이 아니라 ""를 낸다 - 자리표시 치환이 null과 ""를 다르게 다루므로 그대로 지켜야 한다.
+  assert.equal(fragment("newsContextHtml", spy)(undefined), "");
+  assert.equal(fragment("newsContextHtml", spy)([]), "");
+  assert.equal(called, 0);
+});
+
+test("문장·목록 조각: React 19는 javascript: URL을 막아 legacy와 달라진다(알려진 차이 — 실제 입력에는 나오지 않는다)", async () => {
+  const { fn, args, legacy, react } = JAVASCRIPT_URL_DIFF;
+  const fragment = makeFragment(await createReactRenderer());
+  assert.equal(prerender[fn].legacy(...args), legacy);
+  assert.equal(fragment(fn, prerender[fn].legacy)(...args), react);
+});
+
+test("news-items.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, prerender.mjs가 같은 함수를 다시 내보낸다", () => {
+  assert.equal(INDEX_NEWS, 5);
+  assert.equal(prerender.INDEX_NEWS, INDEX_NEWS);
+  assert.equal(prerender.indexNewsItems, indexNewsItems);
+  // 입력이 없으면 빈 목록(방어: 조각이 먼저 거르므로 조각 경로로는 닿지 않는다).
+  assert.deepEqual(indexNewsItems(undefined), []);
+  assert.deepEqual(indexNewsItems(null), []);
+  const items = ["e0", "e1", "r0", "e2", "r1", "e3", "e4"].map((title) => ({ title, category: title[0] === "r" ? "realestate" : "economy" }));
+  assert.deepEqual(indexNewsItems(items).map((i) => i.title), ["r0", "r1", "e0", "e1", "e2"]);
 });
