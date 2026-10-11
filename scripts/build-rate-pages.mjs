@@ -1,6 +1,7 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { applyPrerender, ratesHeadHtml, ratesHtml } from "./prerender.mjs";
+import { createWriteSet } from "./render-writes.mjs";
 import { rateBridgeHtml } from "./rate-bridge.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -102,6 +103,8 @@ async function main() {
     readFile(path.join(root, "docs/data/rates.json"), "utf8").then(JSON.parse),
   ]);
 
+  // 전 장이 렌더에 성공한 뒤에 쓴다(#237) - 중간 장에서 던지면 어느 파일도 바뀌지 않는다.
+  const writes = createWriteSet();
   for (const page of RATE_PAGES) {
     const html = buildRatePage(baseHtml, page, rates);
     const target = path.join(root, "docs", page.file);
@@ -110,9 +113,9 @@ async function main() {
       console.log(`  docs/${page.file} 변경 없음`);
       continue;
     }
-    await writeFile(target, html);
-    console.log(`  docs/${page.file} ${before === null ? "생성" : "갱신"}`);
+    writes.stage(target, html, `  docs/${page.file} ${before === null ? "생성" : "갱신"}`);
   }
+  writes.commit();
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {

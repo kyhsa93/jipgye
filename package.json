@@ -12,7 +12,11 @@
     "test": "node --test test/*.test.mjs"
   },
   "dependencies": {
+    "esbuild": "0.28.2",
     "fast-xml-parser": "^5.0.0",
-    "rss-parser": "^3.13.0"
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "rss-parser": "^3.13.0",
+    "scheduler": "0.28.0"
   }
 }

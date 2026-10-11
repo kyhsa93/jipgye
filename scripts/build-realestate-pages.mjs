@@ -1,9 +1,10 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "./district-slugs.mjs";
 import { BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.mjs";
 import { areaPrice } from "./realestate-format.mjs";
 import { dealFileName } from "./deal-files.mjs";
+import { createWriteSet } from "./render-writes.mjs";
 import { districtFacts } from "./district-facts.mjs";
 import {
   applyPrerender,
@@ -198,6 +199,8 @@ async function main() {
       .catch(() => null),
   ]);
 
+  // 자치구 장까지 전부 렌더에 성공한 뒤에 쓴다(#237) - 중간에서 던지면 어느 파일도 바뀌지 않는다.
+  const writes = createWriteSet();
   for (const page of REALESTATE_PAGES) {
     await write(page.file, buildRealestatePage(baseHtml, page, realestate, complexRatio?.seoul ?? null));
   }
@@ -228,6 +231,7 @@ async function main() {
     if (result === "생성") created += 1;
     if (result === "갱신") updated += 1;
   }
+  writes.commit();
   console.log(`  자치구 페이지 ${DISTRICT_PAGES.length}개 (생성 ${created} · 갱신 ${updated})`);
 
   async function write(file, html, quiet = false) {
@@ -237,9 +241,8 @@ async function main() {
       if (!quiet) console.log(`  docs/${file} 변경 없음`);
       return "변경 없음";
     }
-    await writeFile(target, html);
     const what = before === null ? "생성" : "갱신";
-    if (!quiet) console.log(`  docs/${file} ${what}`);
+    writes.stage(target, html, quiet ? null : `  docs/${file} ${what}`);
     return what;
   }
 }

@@ -1,6 +1,7 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { applyPrerender, newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "./prerender.mjs";
+import { createWriteSet } from "./render-writes.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const NEWS_PATH = path.join(root, "docs/news.html");
@@ -112,6 +113,8 @@ async function main() {
   // 시장 지표는 없을 수 있다 - 그러면 코스피 카드만 빠진다.
   const market = await readFile(path.join(root, "docs/data/market.json"), "utf8").then(JSON.parse).catch(() => null);
 
+  // 전 장이 렌더에 성공한 뒤에 쓴다(#237) - 중간 장에서 던지면 어느 파일도 바뀌지 않는다.
+  const writes = createWriteSet();
   for (const page of NEWS_PAGES) {
     const html = buildNewsPage(baseHtml, page, { news, summary, market });
     const target = path.join(root, "docs", page.file);
@@ -120,9 +123,9 @@ async function main() {
       console.log(`  docs/${page.file} 변경 없음`);
       continue;
     }
-    await writeFile(target, html);
-    console.log(`  docs/${page.file} ${before === null ? "생성" : "갱신"}`);
+    writes.stage(target, html, `  docs/${page.file} ${before === null ? "생성" : "갱신"}`);
   }
+  writes.commit();
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {

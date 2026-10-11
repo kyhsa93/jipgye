@@ -56,6 +56,9 @@ function run(cmd, args, opts = {}) {
  * 반환: { dir, label, nodeModules } — label은 보고에 적는 출처(SHA 또는 srcDir).
  */
 export async function preparePristine({ repo, sha, srcDir, cacheDir = path.join(os.tmpdir(), "jipgye-golden") }) {
+  // 상대경로(README 예: --repo ../..)로 받아도 node_modules 링크가 렌더 사본 안에서 끊기지 않게 절대경로로 바꾼다(#237: react 모드가 처음 읽었다).
+  if (repo) repo = path.resolve(repo);
+  if (srcDir) srcDir = path.resolve(srcDir);
   await mkdir(cacheDir, { recursive: true });
   if (srcDir) {
     const dir = await mkdtemp(path.join(cacheDir, "snap-"));
