@@ -57,12 +57,12 @@ const ROWS = [
   { id: "S11", fn: "summaryHtml", cond: "categories가 null이고 highlights만 있다", args: [{ highlights: [{ title: "a", textKo: "b" }], categories: null }], expect: p("a", "b") },
   { id: "S12", fn: "summaryHtml", cond: `특수문자 & < > " '(제목·본문·분야·한 줄)`, args: [{ highlights: [{ title: SP, textKo: SP }], categories: [{ name: SP, lineKo: SP }] }], expect: p(SP_OUT, SP_OUT) + p(SP_OUT, SP_OUT) },
   {
-    id: "S13", fn: "summaryHtml", cond: "비문자열: 제목 false·{}·[1,2], 글 숫자 7·true·{}, 분야 이름 0, 한 줄 [1,2]",
+    id: "S13", fn: "summaryHtml", cond: "비문자열: 제목 false·{}·[1,2], 글 숫자 7·true·{}, 분야 이름 0·false·{}·[1,2], 한 줄 [1,2]·\"x\"·\"y\"·\"z\"",
     args: [{
       highlights: [{ title: false, textKo: 7 }, { title: {}, textKo: true }, { title: [1, 2], textKo: {} }],
-      categories: [{ name: 0, lineKo: [1, 2] }],
+      categories: [{ name: 0, lineKo: [1, 2] }, { name: false, lineKo: "x" }, { name: {}, lineKo: "y" }, { name: [1, 2], lineKo: "z" }],
     }],
-    expect: p("false", "7") + p("[object Object]", "true") + p("1,2", "[object Object]") + p("0", "1,2"),
+    expect: p("false", "7") + p("[object Object]", "true") + p("1,2", "[object Object]") + p("0", "1,2") + p("false", "x") + p("[object Object]", "y") + p("1,2", "z"),
   },
   { id: "S14", fn: "summaryHtml", cond: "제목·이름이 null·undefined·\"\"이면 빈 글자(글은 있다)", args: [{ highlights: [{ title: null, textKo: "a" }, { textKo: "b" }, { title: "", textKo: "c" }], categories: [{ lineKo: "d" }] }], expect: p("", "a") + p("", "b") + p("", "c") + p("", "d") },
   { id: "S15", fn: "summaryHtml", cond: "문자열 \"0\"은 truthy라 남는다(숫자 0과 다르다)", args: [{ highlights: [{ title: "t", textKo: "0" }] }], expect: p("t", "0") },
