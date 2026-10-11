@@ -30,18 +30,9 @@ import { BASIS_DATE as POLICY_DATE_BASIS, policyShort, policySentence } from "./
 import { BASIS_DATE as MIN_CASH_DATE, minCash, minCashSentence } from "./min-cash.mjs";
 import { rateBridgeHtml } from "./rate-bridge.mjs";
 import { metricCell, topDistricts } from "./realestate-rows.mjs";
-import { RE_LABELS, headLabels, reCount, reEok, reMan, realestateTable } from "./realestate-table.mjs";
-import {
-  MIN_SAMPLE,
-  areaPrice,
-  formatEok,
-  formatPercent,
-  jeonseRatio,
-  metricOf,
-  monthLabel,
-  resolveMetric,
-  valueOf,
-} from "./realestate-format.mjs";
+import { headLabels, realestateTable } from "./realestate-table.mjs";
+import { overallCards } from "./realestate-overall.mjs";
+import { MIN_SAMPLE, formatEok, monthLabel } from "./realestate-format.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const INDEX_PATH = path.join(root, "docs/index.html");
@@ -560,92 +551,21 @@ function realestateTableHtmlLegacy(realestate, kind = null, district = null) {
 }
 export const realestateTableHtml = fragment("realestateTableHtml", realestateTableHtmlLegacy);
 
-// 전세가율 카드 밑에 그 값을 낸 매매·전세 신고 건수를 적는다(#172). 값은 이 두 평균의 비다.
-// 브라우저의 renderOverall(docs/realestate.html)이 같은 문자열을 만든다.
-const ratioBasis = (entry) =>
-  escapeHtml(
-    `${RE_LABELS.sale} ${reCount(resolveMetric(entry, "sale").metric.transactionCount)} · ` +
-      `${RE_LABELS.jeonse} ${reCount(resolveMetric(entry, "jeonse").metric.transactionCount)}`
-  );
+// 시세 요약 카드의 규칙(몇 장을 어떤 글자로)과 `ratioBasis`(전세가율 카드 밑 신고 건수)는 realestate-overall.mjs로 옮겼다(JSX 쪽 조각과 같이 쓴다, #242 PR 3).
+// 거기서는 마크업 없이 카드의 라벨·값·부가 글자만 정하고, 여기서는 마크업(`overall-card`·`label`·`value`·`sub` 클래스)만 입힌다.
+// 어느 글자를 이스케이프하고 어느 글자를 그대로 끼우는지는 조각(seg)의 esc가 정한다 - 예전 그대로다.
+const reSegHtml = ({ text, esc }) => (esc ? escapeHtml(text) : text);
+const reSegsHtml = (segs) => segs.map(reSegHtml).join("");
+const overallCardHtml = ({ label, value, sub }) =>
+  `<div class="overall-card"><div class="label">${escapeHtml(label)}</div>` +
+  `<div class="value">${reSegsHtml(value)}</div>` +
+  (sub ? `<div class="sub">${reSegsHtml(sub)}</div>` : "") +
+  `</div>`;
 
 function realestateOverallHtmlLegacy(realestate, kind = null, district = null, spread = null) {
-  const overall = district
-    ? (realestate?.districts ?? []).find((d) => d.name === district)
-    : realestate?.overall;
-  if (!overall) return null;
-
-  const card = (label, value, sub) =>
-    `<div class="overall-card"><div class="label">${escapeHtml(label)}</div>` +
-    `<div class="value">${value}</div>` +
-    (sub ? `<div class="sub">${sub}</div>` : "") +
-    `</div>`;
-
-  // 전세가율 카드 옆에 칸 하나하나에서 낸 값의 중앙값을 나란히 둔다.
-  // 표의 값은 이 표의 두 열을 나눈 것이라 표와는 맞고, 이 값은 실제 단지와 맞는다.
-  // 하나를 다른 하나로 갈아 끼우면 같은 행의 숫자들과 어긋나므로 둘을 같이 둔다.
-  const complexCard = () =>
-    spread
-      ? card(
-          RE_LABELS.ratioByComplex,
-          formatPercent(spread.median),
-          escapeHtml(`단지·평형 ${spread.cells.toLocaleString("ko-KR")}칸`)
-        )
-      : "";
-
-  if (district) {
-    const sale = resolveMetric(overall, "sale")?.metric;
-    const ratio = jeonseRatio(overall);
-    return (
-      (sale
-        ? card(RE_LABELS.perPyeong, reMan(valueOf(sale, "sale")), "") +
-          card(RE_LABELS.area, reEok(areaPrice(valueOf(sale, "sale"))), "") +
-          card(RE_LABELS.count, escapeHtml(reCount(sale.transactionCount)), "")
-        : card(RE_LABELS.sale, "-", "")) +
-      (ratio ? card(RE_LABELS.ratio, formatPercent(ratio.ratio), ratioBasis(overall)) : "") +
-      complexCard()
-    );
-  }
-
-  if (!kind) {
-    return ["sale", "jeonse", "wolse"]
-      .map((k) => {
-        const metric = resolveMetric(overall, k)?.metric;
-        const label = RE_LABELS[k === "sale" ? "colSale" : k === "jeonse" ? "colJeonse" : "colWolse"];
-        if (!metric) return card(label, "-", "");
-        if (k === "wolse") {
-          return card(
-            label,
-            `${reMan(metric.avgDeposit10k)} / 월 ${reMan(metric.avgMonthlyRent10k)}`,
-            escapeHtml(reCount(metric.transactionCount))
-          );
-        }
-        return card(
-          label,
-          reMan(valueOf(metric, k)),
-          `${escapeHtml(RE_LABELS.area)} ${reEok(areaPrice(valueOf(metric, k)))} · ${escapeHtml(reCount(metric.transactionCount))}`
-        );
-      })
-      .join("");
-  }
-
-  const metric = resolveMetric(overall, kind)?.metric;
-  if (!metric) return card(RE_LABELS.overall, "-", "");
-  if (kind === "wolse") {
-    return (
-      card(RE_LABELS.deposit, reMan(metric.avgDeposit10k), "") +
-      card(RE_LABELS.monthly, `월 ${reMan(metric.avgMonthlyRent10k)}`, "") +
-      card(RE_LABELS.count, escapeHtml(reCount(metric.transactionCount)), "")
-    );
-  }
-  const perPyeong = valueOf(metric, kind);
-  const ratio = kind === "jeonse" ? jeonseRatio(overall) : null;
-  return (
-    card(kind === "jeonse" ? RE_LABELS.perPyeongDeposit : RE_LABELS.perPyeong, reMan(perPyeong), "") +
-    card(RE_LABELS.area, reEok(areaPrice(perPyeong)), "") +
-    (ratio ? card(RE_LABELS.ratio, formatPercent(ratio.ratio), ratioBasis(overall)) : "") +
-    (kind === "jeonse" ? complexCard() : "") +
-    card(RE_LABELS.count, escapeHtml(reCount(metric.transactionCount)), "")
-  );
+  const cards = overallCards(realestate, kind, district, spread);
+  if (!cards) return null;
+  return cards.map(overallCardHtml).join("");
 }
 export const realestateOverallHtml = fragment("realestateOverallHtml", realestateOverallHtmlLegacy);
 
