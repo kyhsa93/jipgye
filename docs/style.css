@@ -1520,20 +1520,6 @@ main h3 {
   color: var(--muted);
 }
 
-/* 표가 보여주는 것 옆에 붙는 문단. 시세 페이지의 관찰 카드와 같은 모양으로 둔다 — 둘 다 "표만 봐서는 놓치는 것"을 적는 자리라 생김새가 같아야 읽는 쪽이 헷갈리지 않는다. */ .rates-facts {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px;
-  margin: 0 0 12px;
-  font-size: var(--fs-md);
-  line-height: 1.65;
-}
-
-.rates-facts:empty {
-  display: none;
-}
-
 .tabs {
   display: flex;
   gap: 6px;
@@ -1663,7 +1649,7 @@ main h3 {
   font-weight: 600;
 }
 
-/* 금리 다음에 볼 곳(실거래·전환율) 문단. 표 옆 문단(.rates-facts)과 같은 카드 모양이되 상품군 링크 아래에 붙는다. */
+/* 금리 다음에 볼 곳(실거래·전환율) 문단. 카드 모양이고 상품군 링크 아래에 붙는다. */
 .rates-bridge {
   background: var(--card);
   border: 1px solid var(--border);
