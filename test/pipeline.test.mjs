@@ -38,3 +38,30 @@ test("파생 데이터를 만드는 빌더가 원본 수집과 같은 단계에 
     assert.ok(step.includes(name), `${name}이 실거래 수집 단계 밖에 있다`);
   }
 });
+
+/**
+ * summarize.yml도 정적 HTML을 틀에서 다시 쓴다(prerender·build-*-pages). 기준일 찍기
+ * (build-updated-stamp)는 그 뒤에 돌아야 하는데, 이게 빠져 Summarize가 4회 연속
+ * 실패했다(#212: 시험 228·231 - 기준일 줄이 틀 상태로 돌아감). 이 시험은 두 워크플로의
+ * "정적 HTML에 오늘 내용 심기" 단계가 같은 순서를 지키는지 본다. summarize는 금리를
+ * 수집하지 않아 build-rate-pages를 안 부르므로(없어도 통과함을 재현으로 확인) 부분 순서만 본다.
+ */
+test("summarize.yml의 페이지 빌드 순서가 daily-update.yml과 어긋나지 않고 기준일 찍기로 끝난다", async () => {
+  const [daily, summarize] = await Promise.all([
+    read(".github/workflows/daily-update.yml"),
+    read(".github/workflows/summarize.yml"),
+  ]);
+  const stepOf = (text) => scriptsIn(text.split("- name: 정적 HTML에 오늘 내용 심기")[1]?.split("\n      - name:")[0] ?? "");
+  // daily는 news-context를 앞 단계(기사에 수치 붙이기)에서 부르므로, 순서는 daily 전체에서 대조한다.
+  const d = scriptsIn(daily);
+  const s = stepOf(summarize);
+  assert.ok(d.length >= 20 && s.length >= 5, `단계를 못 읽었다: daily ${d.length}개, summarize ${s.length}개`);
+  assert.equal(s.at(-1), "build-updated-stamp.mjs", "summarize.yml 페이지 빌드 단계가 build-updated-stamp로 끝나지 않는다");
+
+  let from = 0;
+  for (const name of s) {
+    const at = d.indexOf(name, from);
+    assert.ok(at >= 0, `summarize.yml의 ${name}이 daily-update.yml에 없거나 순서가 다르다`);
+    from = at + 1;
+  }
+});

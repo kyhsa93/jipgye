@@ -96,6 +96,7 @@ jobs:
           node scripts/build-news-pages.mjs
           node scripts/build-budget-pages.mjs
           node scripts/build-realestate-pages.mjs
+          node scripts/build-updated-stamp.mjs
 
       - name: 테스트
         run: npm test
