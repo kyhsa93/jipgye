@@ -114,7 +114,7 @@ test("프리렌더가 심은 거래 목록을 클라이언트가 그대로 다�
   const band = BUDGET.bands.find((b) => b.min10k === page8.min10k);
   const prerendered = budgetBodyHtml(band, BUDGET.periods, RATES, null, COMPLEX_FILES);
   assert.match(prerendered, /budget-loan budget-costs/, "부대비용 문단이 빌드에 없다");
-  assert.match(prerendered, /<section class="budget-candidates" data-prerendered>/, "단지 후보 절이 빌드에 없다");
+  assert.match(prerendered, /<section class="budget-candidates" data-prerendered(="")?>/, "단지 후보 절이 빌드에 없다");
 
   const page = await loadRealestatePage({
     realestate: REALESTATE,

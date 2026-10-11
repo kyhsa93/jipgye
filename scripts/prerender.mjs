@@ -216,7 +216,8 @@ function budgetWhereHtml(band) {
         : "";
 
   // data-prerendered: 화면이 요약을 다시 그릴 때 이 문단이 지워지지 않게(#43에서 발견 - 전에는 지워졌다).
-  return text ? `<p class="budget-where" data-prerendered>${escapeHtml(text)}</p>` : "";
+  // 속성은 값 있는 꼴(="")로 쓴다 - React는 맨 속성을 못 내서 JSX 쌍둥이와 바이트가 같으려면 이 꼴이어야 한다(#259, DOM은 같다).
+  return text ? `<p class="budget-where" data-prerendered="">${escapeHtml(text)}</p>` : "";
 }
 
 function budgetBodyHtmlLegacy(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null) {
@@ -275,7 +276,7 @@ function budgetAnswersHtmlLegacy(band, rates = null) {
     policy ? line("정책대출 가격선", policy, "", true) : "",
   ].join("");
   return (
-    `<section class="budget-answers" data-prerendered>` +
+    `<section class="budget-answers" data-prerendered="">` +
     `<h3>${escapeHtml(`${eokText(price)}짜리를 산다면 — 한눈에`)}</h3><ul>${lines}</ul>` +
     `<p class="answer-more">근거와 예외는 아래 문단의 링크(→)에 있습니다.</p></section>`
   );
@@ -298,7 +299,7 @@ function budgetMoreHtmlLegacy() {
     ["./cancelled-deals.html#month-section", "계약에서 등기(잔금)까지 걸리는 날"],
   ];
   return (
-    `<section class="budget-more-links" data-prerendered><h3>매물을 보러 가기 전에</h3><ul>` +
+    `<section class="budget-more-links" data-prerendered=""><h3>매물을 보러 가기 전에</h3><ul>` +
     links.map(([href, text]) => `<li><a href="${href}">${escapeHtml(text)}</a></li>`).join("") +
     `</ul></section>`
   );
@@ -310,7 +311,7 @@ function budgetMinCashHtmlLegacy(band) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = minCashSentence(eok);
   return sentence
-    ? `<p class="budget-loan budget-mincash" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("mincash", `소득·기존 주택 예외와 원문(${MIN_CASH_DATE} 확인) →`)}</p>`
+    ? `<p class="budget-loan budget-mincash" data-prerendered="">${escapeHtml(sentence)}${budgetRuleLink("mincash", `소득·기존 주택 예외와 원문(${MIN_CASH_DATE} 확인) →`)}</p>`
     : "";
 }
 export const budgetMinCashHtml = fragment("budgetMinCashHtml", budgetMinCashHtmlLegacy);
@@ -320,7 +321,7 @@ function budgetPolicyHtmlLegacy(band, policyCounts) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = policySentence(eok, policyCounts);
   return sentence
-    ? `<p class="budget-loan budget-policy" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("policy", `가격선 정의와 거래 수(${POLICY_DATE_BASIS} 확인) →`)}</p>`
+    ? `<p class="budget-loan budget-policy" data-prerendered="">${escapeHtml(sentence)}${budgetRuleLink("policy", `가격선 정의와 거래 수(${POLICY_DATE_BASIS} 확인) →`)}</p>`
     : "";
 }
 export const budgetPolicyHtml = fragment("budgetPolicyHtml", budgetPolicyHtmlLegacy);
@@ -332,7 +333,7 @@ function budgetCapHtmlLegacy(band, capStats) {
   // 16억대 이상은 구간표·소득 단서가 method.html로 갔다. 14·15억대 문장은 그대로 장에 있다.
   const moved = Number.isFinite(eok) && eok >= 16 && eok <= 24;
   return sentence
-    ? `<p class="budget-loan budget-cap" data-prerendered>${escapeHtml(sentence)}${moved ? budgetRuleLink("cap", `구간표와 원문(${CAP_DATE} 확인) →`) : ""}</p>`
+    ? `<p class="budget-loan budget-cap" data-prerendered="">${escapeHtml(sentence)}${moved ? budgetRuleLink("cap", `구간표와 원문(${CAP_DATE} 확인) →`) : ""}</p>`
     : "";
 }
 export const budgetCapHtml = fragment("budgetCapHtml", budgetCapHtmlLegacy);
@@ -363,7 +364,7 @@ function budgetCandidatesHtmlLegacy(band, complexFiles) {
   const label = `${min / 10_000}억대`;
   if (!rows.length) {
     return (
-      `<section class="budget-candidates" data-prerendered><h3>이 예산대의 단지 후보</h3>` +
+      `<section class="budget-candidates" data-prerendered=""><h3>이 예산대의 단지 후보</h3>` +
       `<p>${escapeHtml(`${month} 값으로 고친 중앙값이 ${label}인 단지·평형이 없습니다. 같은 평형이 6개월 동안 3번 이상 거래돼야 범위를 낼 수 있습니다.`)}</p></section>`
     );
   }
@@ -396,7 +397,7 @@ function budgetCandidatesHtmlLegacy(band, complexFiles) {
     .join("");
   const bandCounts = BANDS.map(([label, f]) => `${label} ${rows.filter(f).length}`).join(" · ");
   return (
-    `<section class="budget-candidates" data-prerendered><h3>이 예산대의 단지 후보</h3>` +
+    `<section class="budget-candidates" data-prerendered=""><h3>이 예산대의 단지 후보</h3>` +
     `<p>${escapeHtml(
       `${month} 값으로 고친 중앙값이 ${label}인 단지·평형은 서울에 ${rows.length.toLocaleString("ko-KR")}곳입니다. ` +
         `같은 평형이 최근 6개월에 3번 이상 거래돼 범위를 낼 수 있었던 곳만 셉니다 — 거래가 드문 단지는 빠집니다.`
@@ -421,7 +422,7 @@ function budgetCostsHtmlLegacy(band) {
   const eok = Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null;
   const sentence = costsSentence(eok);
   return sentence
-    ? `<p class="budget-loan budget-costs" data-prerendered>${escapeHtml(sentence)}${budgetRuleLink("costs", `중과·예외와 원문(${COSTS_DATE} 확인) →`)}</p>`
+    ? `<p class="budget-loan budget-costs" data-prerendered="">${escapeHtml(sentence)}${budgetRuleLink("costs", `중과·예외와 원문(${COSTS_DATE} 확인) →`)}</p>`
     : "";
 }
 export const budgetCostsHtml = fragment("budgetCostsHtml", budgetCostsHtmlLegacy);
@@ -449,7 +450,7 @@ function budgetLoanHtmlLegacy(band, rates, mortgageSeries = null) {
   if (!sentence) return "";
   // 1억당 값·금리 범위와 1년 사이 변화(mortgageSeries로 만든 문장)는 열여덟 장에서 같은 값이라
   // method.html로 갔다(scripts/budget-rules.mjs, #66). mortgageSeries 인자는 호출부 호환으로 남긴다.
-  return `<p class="budget-loan" data-prerendered>${sentence}${budgetRuleLink("loan", "1억당 값과 금리 근거 →")}</p>`;
+  return `<p class="budget-loan" data-prerendered="">${sentence}${budgetRuleLink("loan", "1억당 값과 금리 근거 →")}</p>`;
 }
 export const budgetLoanHtml = fragment("budgetLoanHtml", budgetLoanHtmlLegacy);
 

@@ -29,7 +29,7 @@ test("고친 중앙값이 예산대 안인 칸만, 거래가 많은 순으로", 
 
 test("예산대 절은 화면이 다시 그려도 남도록 표시하고, 구별로 묶고, 나머지는 검색으로 보낸다", () => {
   const html = budgetCandidatesHtml({ min10k: 60000, max10k: 70000 }, FILES);
-  assert.match(html, /^<section class="budget-candidates" data-prerendered>/);
+  assert.match(html, /^<section class="budget-candidates" data-prerendered(="")?>/);
   assert.match(html, /서울에 3곳/);
   assert.match(html, /자치구별: 노원구 2 · 강서구 1/);
   assert.match(html, /deal-search\.html\?budget=6&amp;group=1/);
