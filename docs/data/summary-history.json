@@ -4218,45 +4218,82 @@
     "date": "2026-10-11",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 부동산: 대구시는 지방 주택시장에 맞춤형 정책을 제안하며 정부에 의견을 제시했다. 초고가 아파트도 경매시장에서 70억 원 규모의 트리마켓이 실패하며 부동산 시장의 어려움을 보여주었다. 성동구 성수우방2차아파트에서는 59.82㎡가 13억 5천만 원에 거래되며 최근 3년간 최고가를 기록했다. 전세보증 사고율은 2년 연속 증가했고, 악성임대인 미반환금은 2천억 원을 넘어서고 있다. 지자체 간 유치전과 맞물려 돔구장 인근에 호텔과 쇼핑몰 등이 개발되며 부동산 시장에 영향을 미치고 있다.\n- 금리·예금·투자상품: 증권사가 4∼5% 금리의 발행어음 상품을 잇달아 출시하며 증시 대안으로 주목받고 있다. 국채금리 급등으로 매력도 떨어진 리츠 ETF는 개인 투자자가 순매수한 것으로 나타났다. 은행의 가계대출 중 57.3%가 변동금리로, 지난해보다 4.3%p 증가한 것으로 집계됐다. 미국 국채금리가 사상 최고치를 기록하며 경제 흐름에 영향을 미치고 있다. 각 기사는 별개의 사실을 다루고 있으며, 수치와 내용은 기사 본문에서 직접 인용한 것이다.\n- 증시·환율: 삼성전자의 역대급 실적 발표에도 불구하고 코스피는 하락세를 보였다. 뉴욕증시는 오픈AI의 매출 우려 완화로 인해 상승 마감했으며, 나스닥은 0.64% 상승했다. 이란 관련 우려가 완화되면서 뉴욕증시는 다시 상승 마감했고, 나스닥은 같은 수치인 0.64% 상승했다. 삼성전자의 실적 발표는 코스피에 긍정적인 영향을 주었지만, 지수는 반등하지 못했다. 각 기사는 서로 다른 시장과 상황을 다루고 있으며, 구체적인 인과관계는 명시되지 않았다.\n- 기타 경제 소식: 다음주 경제 관련 소식으로 취업자 증가 상황에 대한 발표가 예상된다. IMF가 한국 성장률 전망 수정치를 발표할 예정이다. 도쿄와 서울의 주택 공급 차이에 대한 언급이 나왔다. 매년 도쿄는 10만채, 서울은 3만채의 주택을 짓는 것으로 나타났다. 이 시스템이 유지된다면 서울의 집값 상승은 피하기 어려울 것으로 보인다.",
-      "en": "- Real Estate: Daegu proposed customized policies for the local housing market and expressed its opinions to the government. The high-end apartment market showed difficulties in the real estate market as a tri-market worth 7,000,000,000 won failed in the auction market. In the Seongshu Uibang 2nd Apartment in Seongdong-gu, a unit of 59.82㎡ was traded for 1,350,000,000 won, setting a record high price over the past three years. The rate of deposit guarantee incidents has increased for two consecutive years, and the amount of unpaid rent by malicious landlords has exceeded 200,000,000,000 won. Alongside competition among local governments to attract investment, hotels and shopping malls are being developed near the Dome Stadium, affecting the real estate market.\n- Rates, Deposits & Investment Products: Securities companies are drawing attention as an alternative to the stock market by continuously launching commercial paper products with interest rates of 4 to 5 percent. REITs ETFs, which have lost appeal due to a sharp rise in government bond rates, have shown net buying by individual investors. According to statistics, 57.3% of household loans from banks are variable rate loans, an increase of 4.3 percentage points compared to last year. The U.S. government bond rate has reached a record high, affecting economic trends. Each article covers separate facts, and the figures and content are directly quoted from the article itself.\n- Stocks & FX: Despite Samsung Electronics' record-breaking performance announcement, the Kospi remained in a downward trend. The New York stock market closed higher due to eased concerns over OpenAI's revenue, with the Nasdaq rising 0.64%. As concerns related to Iran were alleviated, the New York stock market closed higher again, with the Nasdaq rising by the same figure of 0.64%. Although Samsung Electronics' performance announcement had a positive impact on the Kospi, the index failed to rebound. Each article covers different markets and situations, and specific causal relationships were not explicitly stated.\n- Other Economic News: Next week, it is expected that an announcement regarding the employment increase situation will be made. The IMF is scheduled to announce its revised growth rate forecast for South Korea. Mentions have been made about the difference in housing supply between Tokyo and Seoul. It was found that Tokyo builds 100,000 housing units annually, while Seoul builds 30,000. If this system continues, it seems difficult to avoid rising housing prices in Seoul."
+      "ko": "- 기타 경제 소식: 북한의 경제 정량데이터 구축 연구가 이념에서 과학의 영역으로 확장되고 있다. 관련 저술이 북한 경제 이해에 기여하고 통일 및 외교 현안 해결에 도움을 줄 것으로 기대된다. 수원 영통구의 집값 상승률이 1위를 차지하며 분당구도 강세를 보이고 있다. 정부는 공급 확대를 최우선 과제로 삼아 집값 안정을 위해 노력하고 있다. 수도권 집값은 규제로 왜곡된 상황이며, 갈아타기 전략이 주목받고 있다.\n- 부동산: 부동산 가격과 세제가 가계 부채 및 소비에 미치는 영향에 대한 분석이 발표되었다. 한강 인근 아파트의 뷰 차이로 인해 가격에 10억원 차이가 나는 것으로 나타났다. 내년 집값 불안 요소가 여전히 존재하며, 1주택자들이 갈아타기 기회를 노리고 있는 것으로 보인다. 서울 핵심지역 공공 재개발 '도공복' 투자와 관련된 100가지 사실이 정리되었다. 분양시장에서는 청약 포기자가 늘어나며 시장에 변화가 나타나고 있다.\n- 금리·예금·투자상품: 증권사가 4∼5% 금리의 발행어음 상품을 잇달아 출시하며 증시 대안으로 주목받고 있다. 국채금리 급등으로 매력도 떨어진 리츠 ETF는 개인 투자자가 순매수한 금액이 증가했다. 은행의 가계대출 중 57.3%가 변동금리로 구성되어 있으며, 이는 1년 전보다 4.3%p 증가한 수준이다. 증권사의 상품 출시는 현재 증시의 답답한 분위기를 반영한 것으로 보인다. 리츠 ETF의 순매수 증가와 변동금리 대출 비중 확대는 서로 다른 경제 현상으로 분리될 수 있다.\n- 증시·환율: 삼성전자의 역대급 실적에도 불구하고 코스피는 짓눌린 상태이며, 반등 가능성에 대한 논의가 이어지고 있다.",
+      "en": "- Other Economic News: North Korea's research on building quantitative economic data is expanding from an ideological to a scientific field. Related writings are expected to contribute to understanding North Korea's economy and help resolve issues related to unification and foreign affairs. The housing price increase rate in Yongsan-gu, Suwon is the highest, and Bundang-gu is also showing strong performance. The government has prioritized expanding supply as its top task in an effort to stabilize housing prices. Housing prices in the capital area are distorted due to regulations, and the \"galatagi\" strategy is receiving attention.\n- Real Estate: An analysis on the impact of real estate prices and tax policies on household debt and consumption was released. It was found that the price difference due to view differences in apartments near the Han River can be as high as 1,000,000,000 won. Factors causing uncertainty about housing prices next year still exist, and it seems that single-homeowners are looking for opportunities to move. 100 facts related to the investment in the public redevelopment project 'Dokongbok' in key areas of Seoul have been compiled. In the sales market, the number of applicants giving up on applications is increasing, and changes are appearing in the market.\n- Rates, Deposits & Investment Products: Securities companies are drawing attention as an alternative to the stock market by continuously launching debt instrument products with interest rates of 4 to 5 percent. REITs ETFs, which have lost appeal due to a sharp rise in government bond rates, have seen an increase in the amount of net purchases by individual investors. 57.3% of household loans from banks are composed of variable interest rates, an increase of 4.3 percentage points compared to one year ago. The launch of securities companies' products appears to reflect the current stagnant atmosphere in the stock market. The increase in net purchases of REITs ETFs and the expansion of variable interest rate loan ratios can be considered as separate economic phenomena.\n- Stocks & FX: Despite Samsung Electronics' record-breaking performance, the Kospi remains under pressure, with ongoing discussions about the possibility of a rebound."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "대구시는 지방 주택시장에 맞춤형 정책을 제안하며 정부에 의견을 제시했다. 초고가 아파트도 경매시장에서 70억 원 규모의 트리마켓이 실패하며 부동산 시장의 어려움을 보여주었다. 성동구 성수우방2차아파트에서는 59.82㎡가 13억 5천만 원에 거래되며 최근 3년간 최고가를 기록했다. 전세보증 사고율은 2년 연속 증가했고, 악성임대인 미반환금은 2천억 원을 넘어서고 있다. 지자체 간 유치전과 맞물려 돔구장 인근에 호텔과 쇼핑몰 등이 개발되며 부동산 시장에 영향을 미치고 있다.",
-        "lineEn": "Daegu proposed customized policies for the local housing market and expressed its opinions to the government. The high-end apartment market showed difficulties in the real estate market as a tri-market worth 7,000,000,000 won failed in the auction market. In the Seongshu Uibang 2nd Apartment in Seongdong-gu, a unit of 59.82㎡ was traded for 1,350,000,000 won, setting a record high price over the past three years. The rate of deposit guarantee incidents has increased for two consecutive years, and the amount of unpaid rent by malicious landlords has exceeded 200,000,000,000 won. Alongside competition among local governments to attract investment, hotels and shopping malls are being developed near the Dome Stadium, affecting the real estate market.",
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "북한의 경제 정량데이터 구축 연구가 이념에서 과학의 영역으로 확장되고 있다. 관련 저술이 북한 경제 이해에 기여하고 통일 및 외교 현안 해결에 도움을 줄 것으로 기대된다. 수원 영통구의 집값 상승률이 1위를 차지하며 분당구도 강세를 보이고 있다. 정부는 공급 확대를 최우선 과제로 삼아 집값 안정을 위해 노력하고 있다. 수도권 집값은 규제로 왜곡된 상황이며, 갈아타기 전략이 주목받고 있다.",
+        "lineEn": "North Korea's research on building quantitative economic data is expanding from an ideological to a scientific field. Related writings are expected to contribute to understanding North Korea's economy and help resolve issues related to unification and foreign affairs. The housing price increase rate in Yongsan-gu, Suwon is the highest, and Bundang-gu is also showing strong performance. The government has prioritized expanding supply as its top task in an effort to stabilize housing prices. Housing prices in the capital area are distorted due to regulations, and the \"galatagi\" strategy is receiving attention.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "대구시, '지방 주택시장 맞춤형 처방' 정부에 건의",
-            "link": "https://www.yna.co.kr/view/AKR20261011013200053",
-            "source": "연합뉴스 경제"
+            "title": "北 경제 정량데이터 구축…이념서 과학의 영역으로 연구 정립",
+            "link": "https://www.hankyung.com/article/2026101144441",
+            "source": "한국경제 경제"
           },
           {
-            "title": "“70억 트리마제도 안 통했다”…초고가 아파트도 경매시장서 굴욕",
-            "link": "https://www.mk.co.kr/news/realestate/12172814",
+            "title": "\"北경제 이해 필독서 저술…통일·외교현안 해결 공헌\"",
+            "link": "https://www.hankyung.com/article/2026101144461",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "수원 영통구, 집값 상승률 1위…분당구도 강세",
+            "link": "https://www.hankyung.com/article/2026101145381",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "[집코노미2026 다시보기 영상] \"정부, 공급 확대에 최우선…집값 잡을 것\"",
+            "link": "https://www.hankyung.com/article/202610114186i",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "규제로 왜곡된 수도권 집값 … 갈아타기로 똘똘한 한채 잡아라 [서울머니쇼+]",
+            "link": "https://www.mk.co.kr/news/realestate/12172905",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "부동산 가격과 세제가 가계 부채 및 소비에 미치는 영향에 대한 분석이 발표되었다. 한강 인근 아파트의 뷰 차이로 인해 가격에 10억원 차이가 나는 것으로 나타났다. 내년 집값 불안 요소가 여전히 존재하며, 1주택자들이 갈아타기 기회를 노리고 있는 것으로 보인다. 서울 핵심지역 공공 재개발 '도공복' 투자와 관련된 100가지 사실이 정리되었다. 분양시장에서는 청약 포기자가 늘어나며 시장에 변화가 나타나고 있다.",
+        "lineEn": "An analysis on the impact of real estate prices and tax policies on household debt and consumption was released. It was found that the price difference due to view differences in apartments near the Han River can be as high as 1,000,000,000 won. Factors causing uncertainty about housing prices next year still exist, and it seems that single-homeowners are looking for opportunities to move. 100 facts related to the investment in the public redevelopment project 'Dokongbok' in key areas of Seoul have been compiled. In the sales market, the number of applicants giving up on applications is increasing, and changes are appearing in the market.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "세제·부동산 가격이 가계 부채·소비에 미치는 영향 분석",
+            "link": "https://www.hankyung.com/article/2026101144451",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "뷰에 따라 10억원 차이…한강은 언제부터 ‘부자의 트로피’가 됐나 [슈퍼리치의 아파트]",
+            "link": "https://www.mk.co.kr/news/realestate/12173164",
             "source": "매일경제 부동산"
           },
           {
-            "title": "돔구장 옆에 호텔·쇼핑몰·오피스… 지자체 유치전과 맞물린 부동산 개발",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/11/QAVBPFUSQRAH5NKC5NFZGLTXTM/",
-            "source": "조선비즈 부동산"
-          },
-          {
-            "title": "전세보증 사고율 2년연속 상승…악성임대인 미반환금 2천억 넘어",
-            "link": "https://www.yna.co.kr/view/AKR20261010029300002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "성동구 성수우방2차아파트 59.82㎡ 13억 5천만원… 최근 3년 신고가 [MAI부동산]",
-            "link": "https://www.mk.co.kr/news/realestate/12172779",
+            "title": "\"내년 집값 불안 요소 여전… 1주택자 갈아타기 기회 노려야\"",
+            "link": "https://www.mk.co.kr/news/realestate/12173026",
             "source": "매일경제 부동산"
+          },
+          {
+            "title": "[부동산 손품노트] 서울 핵심지역 공공 재개발 '도공복' 투자 100가지 사실",
+            "link": "https://www.mk.co.kr/news/realestate/12173027",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "\"그냥 청약 안 할래요\" 포기 속출…분양시장에 무슨 일이 [이송렬의 부동산한입]",
+            "link": "https://www.hankyung.com/article/2026100800956",
+            "source": "한국경제 부동산"
           }
         ]
       },
@@ -4264,8 +4301,8 @@
         "key": "rates",
         "name": "금리·예금·투자상품",
         "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "증권사가 4∼5% 금리의 발행어음 상품을 잇달아 출시하며 증시 대안으로 주목받고 있다. 국채금리 급등으로 매력도 떨어진 리츠 ETF는 개인 투자자가 순매수한 것으로 나타났다. 은행의 가계대출 중 57.3%가 변동금리로, 지난해보다 4.3%p 증가한 것으로 집계됐다. 미국 국채금리가 사상 최고치를 기록하며 경제 흐름에 영향을 미치고 있다. 각 기사는 별개의 사실을 다루고 있으며, 수치와 내용은 기사 본문에서 직접 인용한 것이다.",
-        "lineEn": "Securities companies are drawing attention as an alternative to the stock market by continuously launching commercial paper products with interest rates of 4 to 5 percent. REITs ETFs, which have lost appeal due to a sharp rise in government bond rates, have shown net buying by individual investors. According to statistics, 57.3% of household loans from banks are variable rate loans, an increase of 4.3 percentage points compared to last year. The U.S. government bond rate has reached a record high, affecting economic trends. Each article covers separate facts, and the figures and content are directly quoted from the article itself.",
+        "lineKo": "증권사가 4∼5% 금리의 발행어음 상품을 잇달아 출시하며 증시 대안으로 주목받고 있다. 국채금리 급등으로 매력도 떨어진 리츠 ETF는 개인 투자자가 순매수한 금액이 증가했다. 은행의 가계대출 중 57.3%가 변동금리로 구성되어 있으며, 이는 1년 전보다 4.3%p 증가한 수준이다. 증권사의 상품 출시는 현재 증시의 답답한 분위기를 반영한 것으로 보인다. 리츠 ETF의 순매수 증가와 변동금리 대출 비중 확대는 서로 다른 경제 현상으로 분리될 수 있다.",
+        "lineEn": "Securities companies are drawing attention as an alternative to the stock market by continuously launching debt instrument products with interest rates of 4 to 5 percent. REITs ETFs, which have lost appeal due to a sharp rise in government bond rates, have seen an increase in the amount of net purchases by individual investors. 57.3% of household loans from banks are composed of variable interest rates, an increase of 4.3 percentage points compared to one year ago. The launch of securities companies' products appears to reflect the current stagnant atmosphere in the stock market. The increase in net purchases of REITs ETFs and the expansion of variable interest rate loan ratios can be considered as separate economic phenomena.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
@@ -4284,11 +4321,6 @@
             "title": "은행 가계대출 57.3%가 변동금리…1년 새 4.3%p 확대",
             "link": "https://www.yna.co.kr/view/AKR20261010042400002",
             "source": "연합뉴스 경제"
-          },
-          {
-            "title": "\"미국 국채금리 사상 최고치\"…미국 국채금리 급등이 바꿀 경제 흐름",
-            "link": "https://www.newsis.com/view/NISX20261010_0003820478",
-            "source": "뉴시스 경제"
           }
         ]
       },
@@ -4296,48 +4328,16 @@
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "삼성전자의 역대급 실적 발표에도 불구하고 코스피는 하락세를 보였다. 뉴욕증시는 오픈AI의 매출 우려 완화로 인해 상승 마감했으며, 나스닥은 0.64% 상승했다. 이란 관련 우려가 완화되면서 뉴욕증시는 다시 상승 마감했고, 나스닥은 같은 수치인 0.64% 상승했다. 삼성전자의 실적 발표는 코스피에 긍정적인 영향을 주었지만, 지수는 반등하지 못했다. 각 기사는 서로 다른 시장과 상황을 다루고 있으며, 구체적인 인과관계는 명시되지 않았다.",
-        "lineEn": "Despite Samsung Electronics' record-breaking performance announcement, the Kospi remained in a downward trend. The New York stock market closed higher due to eased concerns over OpenAI's revenue, with the Nasdaq rising 0.64%. As concerns related to Iran were alleviated, the New York stock market closed higher again, with the Nasdaq rising by the same figure of 0.64%. Although Samsung Electronics' performance announcement had a positive impact on the Kospi, the index failed to rebound. Each article covers different markets and situations, and specific causal relationships were not explicitly stated.",
+        "lineKo": "삼성전자의 역대급 실적에도 불구하고 코스피는 짓눌린 상태이며, 반등 가능성에 대한 논의가 이어지고 있다.",
+        "lineEn": "Despite Samsung Electronics' record-breaking performance, the Kospi remains under pressure, with ongoing discussions about the possibility of a rebound.",
         "isFallback": false,
         "fallbackReason": null,
-        "degraded": false,
+        "degraded": true,
         "items": [
           {
             "title": "[마켓인사이트] 삼성전자 역대급 실적에도 짓눌린 코스피, 반등 가능성은",
             "link": "https://www.yna.co.kr/view/AKR20261010015700008",
             "source": "연합뉴스 경제"
-          },
-          {
-            "title": "뉴욕증시, 오픈AI 매출 우려 완화에 상승 마감…나스닥 0.64%↑",
-            "link": "https://www.newsis.com/view/NISX20261010_0003820399",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "[속보]뉴욕증시, 이란 확전 우려 완화에 상승 마감…나스닥 0.64%↑",
-            "link": "https://www.newsis.com/view/NISX20261010_0003820397",
-            "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
-        "key": "other",
-        "name": "기타 경제 소식",
-        "nameEn": "Other Economic News",
-        "lineKo": "다음주 경제 관련 소식으로 취업자 증가 상황에 대한 발표가 예상된다. IMF가 한국 성장률 전망 수정치를 발표할 예정이다. 도쿄와 서울의 주택 공급 차이에 대한 언급이 나왔다. 매년 도쿄는 10만채, 서울은 3만채의 주택을 짓는 것으로 나타났다. 이 시스템이 유지된다면 서울의 집값 상승은 피하기 어려울 것으로 보인다.",
-        "lineEn": "Next week, it is expected that an announcement regarding the employment increase situation will be made. The IMF is scheduled to announce its revised growth rate forecast for South Korea. Mentions have been made about the difference in housing supply between Tokyo and Seoul. It was found that Tokyo builds 100,000 housing units annually, while Seoul builds 30,000. If this system continues, it seems difficult to avoid rising housing prices in Seoul.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "[다음주 경제] 취업자 얼마나 늘었나…IMF, 韓성장률 전망 수정치 발표",
-            "link": "https://www.yna.co.kr/view/AKR20261010018000002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "\"도쿄는 매년 10만채 짓는데 서울은 3만채…이 시스템 못 깨면 집값 상승 불가피\"",
-            "link": "https://www.newsis.com/view/NISX20261008_0003818396",
-            "source": "뉴시스 경제"
           }
         ]
       }
