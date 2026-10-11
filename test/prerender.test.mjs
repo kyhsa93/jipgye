@@ -12,10 +12,13 @@ import {
   summaryHtml,
 } from "../scripts/prerender.mjs";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
+import { rateBridgeHtml } from "../scripts/rate-bridge.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readIndex = () => readFile(path.join(root, "docs/index.html"), "utf8");
-const readRates = () => readFile(path.join(root, "docs/rates.html"), "utf8");
+// docs/rates.html은 허브(#193)라 표가 없다. 표 자리표시는 예금 페이지(틀에서 찍은 것)에서 본다.
+const readRates = () => readFile(path.join(root, "docs/deposit-rates.html"), "utf8");
+const readHub = () => readFile(path.join(root, "docs/rates.html"), "utf8");
 
 const productNames = (html) => [...html.matchAll(/class="product-name">([^<]*)/g)].map((m) => m[1].trim());
 const readData = async (name) =>
@@ -132,19 +135,16 @@ test("금리 표는 첫 화면에 없는 탭까지 심지 않는다", async () =
   for (const product of rates.mortgage ?? []) {
     assert.ok(!staticNames.has(product.name), `대출 상품이 실렸다: ${product.name}`);
   }
-  assert.ok(html.includes("<!--prerender:rates-->"), "rates.html에 자리표시 주석이 없다");
+  assert.ok(html.includes("<!--prerender:rates-->"), "deposit-rates.html에 자리표시 주석이 없다");
 });
 
-test("커밋된 rates.html이 지금 데이터로 다시 그린 결과와 같다", async () => {
-  const [html, rates] = await Promise.all([
-    readRates(),
-    readFile(path.join(root, "docs/data/rates.json"), "utf8").then(JSON.parse),
-  ]);
+test("커밋된 rates.html(허브)이 지금 문구 원본으로 다시 그린 결과와 같다", async () => {
+  const html = await readHub();
 
   assert.equal(
     html,
-    applyPrerender(html, { rates: ratesHtml(rates) }),
-    "docs/rates.html이 데이터와 어긋납니다. node scripts/prerender.mjs를 실행하세요."
+    applyPrerender(html, { rateBridgeKo: rateBridgeHtml("rates", "ko"), rateBridgeEn: rateBridgeHtml("rates", "en") }),
+    "docs/rates.html이 문구 원본과 어긋납니다. node scripts/prerender.mjs를 실행하세요."
   );
 });
 

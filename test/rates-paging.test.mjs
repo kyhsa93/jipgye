@@ -95,7 +95,7 @@ test("정적 HTML과 초기 화면의 행 수가 같다", async () => {
   const { readFile } = await import("node:fs/promises");
   const path = await import("node:path");
   const root = path.resolve(import.meta.dirname, "..");
-  const html = await readFile(path.join(root, "docs/rates.html"), "utf8");
+  const html = await readFile(path.join(root, "docs/deposit-rates.html"), "utf8");
   const prerendered = html.split("<!--prerender:rates-->")[1].split("<!--/prerender")[0];
 
   const page = await loadRatesPage();

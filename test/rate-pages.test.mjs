@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.mjs";
 import { ratesHtml } from "../scripts/prerender.mjs";
+import { stampHtml } from "../scripts/updated-stamp.mjs";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -12,14 +13,17 @@ const readRates = () => read("docs/data/rates.json").then(JSON.parse);
 const productNames = (html) => [...html.matchAll(/class="product-name">([^<]*)/g)].map((m) => m[1].trim());
 
 test("커밋된 상품군별 페이지가 지금 원본·데이터로 찍은 결과와 같다", async () => {
-  const [baseHtml, rates] = await Promise.all([read("docs/rates.html"), readRates()]);
+  const [baseHtml, rates] = await Promise.all([read("scripts/rates-template.html"), readRates()]);
 
   for (const page of RATE_PAGES) {
     const built = buildRatePage(baseHtml, page, rates);
     const committed = await read(`docs/${page.file}`);
+    // 틀에는 기준일이 비어 있고 날짜는 build-updated-stamp가 나중에 찍는다. 커밋본의 날짜를 같이 찍어 견준다.
+    const ymd = /data-updated="(\d{4}-\d{2}-\d{2})"/.exec(committed)?.[1];
+    assert.ok(ymd, `docs/${page.file}에 기준일이 없다`);
     assert.equal(
       committed,
-      built,
+      stampHtml(built, ymd),
       `docs/${page.file}이 원본과 어긋납니다. node scripts/build-rate-pages.mjs를 실행하세요.`
     );
   }

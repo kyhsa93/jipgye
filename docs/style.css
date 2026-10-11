@@ -1678,6 +1678,11 @@ main h3 {
   display: none;
 }
 
+/* [data-lang]은 .on이 있어야 보이는 규칙(아래)인데, 이 문단은 .on 대신 hidden으로 언어를 가른다. 그대로 두면 한국어 문단도 안 보인다. */
+.rates-bridge[data-lang]:not([hidden]) {
+  display: block;
+}
+
 .data-table th.sortable {
   padding: 0;
 }

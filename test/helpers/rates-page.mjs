@@ -102,7 +102,7 @@ function makeDom(html = "") {
 export async function loadRatesPage({
   analytics,
   fetch: fetchImpl,
-  file = "docs/rates.html",
+  file = "docs/deposit-rates.html",
   search = "",
   rates: ratesOverride,
   locale = "ko",

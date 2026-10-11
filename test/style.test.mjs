@@ -128,7 +128,7 @@ test("걸러낸 결과를 소리로도 알린다", async () => {
   await has("index.html", "realestate-status");
   await has("index.html", "news-status");
   await has("deal-search.html", "search-status");
-  await has("rates.html", "show-more");
+  await has("deposit-rates.html", "show-more");
 });
 
 test("데스크톱에서 넓어지는 규칙이 있다", async () => {

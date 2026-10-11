@@ -4,7 +4,9 @@ import { applyPrerender, jsonForScript, rateFactsData, rateFactsHtml, ratesHeadH
 import { rateBridgeHtml } from "./rate-bridge.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
-const RATES_PATH = path.join(root, "docs/rates.html");
+// 상품군 페이지 넷의 틀. 예전에는 docs/rates.html이 이 틀을 겸했고 예금 페이지와 본문이 글자까지
+// 같았다(#193). 지금 docs/rates.html은 네 장으로 가는 요약 허브(scripts/prerender.mjs가 채운다)다.
+export const RATES_TEMPLATE_PATH = path.join(root, "scripts/rates-template.html");
 const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 
 const BASE_TITLE = "예금·적금·대출 금리 비교";
@@ -101,7 +103,7 @@ export function buildRatePage(baseHtml, page, rates) {
 
 async function main() {
   const [baseHtml, rates] = await Promise.all([
-    readFile(RATES_PATH, "utf8"),
+    readFile(RATES_TEMPLATE_PATH, "utf8"),
     readFile(path.join(root, "docs/data/rates.json"), "utf8").then(JSON.parse),
   ]);
 

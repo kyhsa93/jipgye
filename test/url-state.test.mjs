@@ -47,7 +47,7 @@ test("상품군별 페이지는 주소가 없어도 자기 탭으로 시작한�
 });
 
 test("검색은 기록을 쌓지 않고 탭·필터는 쌓는다", async () => {
-  for (const file of ["docs/index.html", "docs/rates.html"]) {
+  for (const file of ["docs/index.html", "docs/deposit-rates.html"]) {
     const html = await read(file);
     assert.ok(
       /history\[push \? "pushState" : "replaceState"\]/.test(html),
@@ -59,7 +59,7 @@ test("검색은 기록을 쌓지 않고 탭·필터는 쌓는다", async () => {
 });
 
 test("기본값은 주소에 남기지 않는다", async () => {
-  const html = await read("docs/rates.html");
+  const html = await read("docs/deposit-rates.html");
   assert.ok(html.includes('["tab", state.category, DEFAULT_CATEGORY]'), "기본 탭 기준이 페이지에 맞지 않는다");
   assert.ok(html.includes('if (value === empty) next.delete(key);'), "기본값을 지우지 않는다");
 });
