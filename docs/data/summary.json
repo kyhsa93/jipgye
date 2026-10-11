@@ -1,18 +1,72 @@
 {
-  "updatedAt": "2026-10-11T13:58:46.777Z",
+  "updatedAt": "2026-10-11T16:40:54.339Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 금리·예금·투자상품: 비트코인은 금리 불안으로 인해 1억1000만원대를 유지하며 움직임이 제한되고 있다. 증권사들은 답답한 증시 상황 속에서 4∼5% 수익률을 제공하는 발행어음 상품을 잇달아 출시하고 있다. 국채금리 급등으로 인해 매력도 줄어든 리츠 ETF는 개인 투자자가 순매수한 금액이 증가하고 있다. 비트코인은 1억1000만원대를 지속하며 변동성이 크지 않다. 증권사의 발행어음 상품은 4∼5%의 수익률을 목표로 하고 있다.\n- 기타 경제 소식: 이형일이 경제현안간담회에서 온누리상품권과 민생물가 문제를 논의했다. 북한이 경제 정량데이터 구축을 통해 연구 정립에 나섰다. 북한 경제를 이해하는 필독서가 출간돼 통일과 외교 현안 해결에 기여할 것으로 보인다. 수원 영통구의 집값 상승률이 1위를 차지했고, 분당구도 강세를 보였다. 정부는 공급 확대를 최우선 과제로 삼아 집값을 잡겠다는 방침을 밝혔다.\n- 부동산: 부동산 가격과 세제가 가계 부채 및 소비에 미치는 영향에 대한 분석이 발표되었다. 한강 인근 아파트의 뷰에 따라 가격 차이가 10억원에 달하는 것으로 나타났다. 내년 집값 불안 요소가 여전하다는 전망 속에서 1주택자들이 갈아타기 기회를 노리고 있다. 서울 핵심지역 공공 재개발 '도공복' 투자와 관련된 100가지 사실이 정리되었다. 분양시장에서는 청약 포기자가 늘어나는 등 관심이 줄어드는 현상이 나타나고 있다.\n- 증시·환율: 삼성전자의 역대급 실적에도 불구하고 코스피는 짓눌린 상태이며, 반등 가능성에 대한 논의가 이어지고 있다.",
-    "en": "- Rates, Deposits & Investment Products: Bitcoin is maintaining movement within the 110,000,000 won range due to interest rate uncertainty. Securities companies are continuously launching issued notes products offering 4 to 5% returns amid a stagnant stock market. REITs ETFs, which have become less attractive due to a sharp rise in government bond rates, are seeing an increase in the amount of money purchased by individual investors. Bitcoin continues to stay within the 110,000,000 won range with relatively low volatility. Securities companies' issued notes products aim for a 4 to 5% return.\n- Other Economic News: Lee Hyung-il discussed the issues of the Onnuri Gift Certificate and the at the economic policy discussion meeting. North Korea has started to establish research through the construction of quantitative economic data. A must-read for understanding the North Korean economy is expected to contribute to resolving unification and diplomatic issues. The housing price increase rate in Yongsong-gu, Suwon, ranked first, and Bundang-gu also showed strong performance. The government announced that expanding supply is the top priority to control housing prices.\n- Real Estate: An analysis on the impact of real estate prices and tax policies on household debt and consumption was released. It was found that the price difference according to the view of apartments near the Han River can reach 1,000,000,000 won. Amid forecasts that factors causing uncertainty in housing prices next year remain, single-homeowners are looking for opportunities to move. 100 facts related to the investment in the public redevelopment project 'Dokongbok' in key areas of Seoul have been compiled. In the sales market, there is a phenomenon of declining interest, as the number of applicants giving up on applications is increasing.\n- Stocks & FX: Despite Samsung Electronics' record-breaking performance, the Kospi remains under pressure, with ongoing discussions about the possibility of a rebound."
+    "ko": "- 기타 경제 소식: 이형일 부총리가 경제현안간담회를 개최해 온누리상품권 환급과 민생물가 문제를 논의했다. 같은 회의에서 온누리상품권과 민생물가 관련 논의가 이어졌다. 북한이 경제 정량데이터 구축을 통해 연구를 정립하고 있는 것으로 나타났다. 북한 경제를 이해하는 필독서가 출간돼 통일과 외교 현안 해결에 기여할 것으로 기대된다. 수원 영통구의 집값 상승률이 1위를 기록했으며, 분당구도 강세를 보이고 있다.\n- 증시·환율: 중국 증감회가 증시 안정 대책을 논의하고 중장기 자금 유입 확대를 위한 방안을 모색하고 있다.\n- 금리·예금·투자상품: 비트코인은 금리 불안으로 인해 1억1000만원대를 유지하며 움직임이 주춤했다. 증권사들은 답답한 증시 상황 속에서 4∼5% 수익률을 기록하는 발행어음 상품을 잇달아 출시했다. 국채금리 급등으로 매력도가 줄어든 리츠 ETF에도 불구하고 개인 투자자가 순매수액을 늘리고 있다. 비트코인은 1억1000만원대를 횡보하며 변동성이 제한적인 모습을 보였다. 증권사가 출시한 발행어음 상품은 4∼5%의 수익률을 기록하고 있다.\n- 부동산: 부동산 가격과 세제가 가계 부채 및 소비에 미치는 영향에 대한 분석이 발표되었다. 한강 인근 아파트의 뷰 차이로 인해 가격에 10억원 차이가 나는 것으로 나타났다. 내년 집값 불안 요소가 여전히 존재하며, 1주택자들이 갈아타기 기회를 노리고 있는 것으로 보인다. 서울 핵심지역 공공 재개발 '도공복' 투자와 관련된 100가지 사실이 정리되었다. 분양시장에서는 청약 포기자가 늘어나며 시장에 변화가 나타나고 있다.",
+    "en": "- Other Economic News: Deputy Prime Minister Lee Hyung-il held an economic policy discussion meeting where the refund of the Onnuri Gift Certificate and issues related to the cost of living were discussed. The discussion on the Onnuri Gift Certificate and the cost of living continued at the same meeting. It has been revealed that North Korea is establishing research through the construction of quantitative economic data. A must-read book for understanding the North Korean economy is being published, and it is expected to contribute to resolving unification and diplomatic issues. The housing price increase rate in Yongsung-gu, Suwon, ranked first, and Bundang-gu is also showing strong performance.\n- Stocks & FX: China's CSRC is discussing measures to stabilize the stock market and exploring ways to increase long-term capital inflows.\n- Rates, Deposits & Investment Products: Bitcoin movement slowed as it remained in the 110,000,000 won range due to interest rate uncertainty. Securities companies continued to launch issued notes products recording 4 to 5% returns amid a stagnant stock market situation. Despite the reduced appeal of REITs ETFs due to a sharp rise in government bond yields, individual investors are increasing their net purchase amounts. Bitcoin remained in the 110,000,000 won range, showing limited volatility. The issued notes products launched by securities companies are recording returns of 4 to 5%.\n- Real Estate: An analysis on the impact of real estate prices and tax policies on household debt and consumption was released. It was found that the view difference in apartments near the Han River can result in a 1,000,000,000won price difference. Factors causing uncertainty in housing prices next year still exist, and it seems that single-homeowners are looking for opportunities to move. 100 facts related to the investment in the public redevelopment project 'Dokongbok' in key areas of Seoul have been compiled. In the sales market, the number of applicants giving up on applications is increasing, and changes are appearing in the market."
   },
   "highlights": [],
   "categories": [
     {
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "이형일 부총리가 경제현안간담회를 개최해 온누리상품권 환급과 민생물가 문제를 논의했다. 같은 회의에서 온누리상품권과 민생물가 관련 논의가 이어졌다. 북한이 경제 정량데이터 구축을 통해 연구를 정립하고 있는 것으로 나타났다. 북한 경제를 이해하는 필독서가 출간돼 통일과 외교 현안 해결에 기여할 것으로 기대된다. 수원 영통구의 집값 상승률이 1위를 기록했으며, 분당구도 강세를 보이고 있다.",
+      "lineEn": "Deputy Prime Minister Lee Hyung-il held an economic policy discussion meeting where the refund of the Onnuri Gift Certificate and issues related to the cost of living were discussed. The discussion on the Onnuri Gift Certificate and the cost of living continued at the same meeting. It has been revealed that North Korea is establishing research through the construction of quantitative economic data. A must-read book for understanding the North Korean economy is being published, and it is expected to contribute to resolving unification and diplomatic issues. The housing price increase rate in Yongsung-gu, Suwon, ranked first, and Bundang-gu is also showing strong performance.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "이형일 부총리, 경제현안간담회 개최…온누리상품권 환급·민생물가 논의",
+          "link": "https://www.newsis.com/view/NISX20261011_0003821177",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "이형일, 경제현안간담회서 온누리상품권·민생물가 논의",
+          "link": "https://www.yna.co.kr/view/AKR20261011050200002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "北 경제 정량데이터 구축…이념서 과학의 영역으로 연구 정립",
+          "link": "https://www.hankyung.com/article/2026101144441",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "\"北경제 이해 필독서 저술…통일·외교현안 해결 공헌\"",
+          "link": "https://www.hankyung.com/article/2026101144461",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "수원 영통구, 집값 상승률 1위…분당구도 강세",
+          "link": "https://www.hankyung.com/article/2026101145381",
+          "source": "한국경제 부동산"
+        }
+      ]
+    },
+    {
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "중국 증감회가 증시 안정 대책을 논의하고 중장기 자금 유입 확대를 위한 방안을 모색하고 있다.",
+      "lineEn": "China's CSRC is discussing measures to stabilize the stock market and exploring ways to increase long-term capital inflows.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
+      "items": [
+        {
+          "title": "[올댓차이나] 中 증감회, 증시 안정 대책 논의…중장기 자금 유입 확대",
+          "link": "https://www.newsis.com/view/NISX20261011_0003821217",
+          "source": "뉴시스 경제"
+        }
+      ]
+    },
+    {
       "key": "rates",
       "name": "금리·예금·투자상품",
       "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "비트코인은 금리 불안으로 인해 1억1000만원대를 유지하며 움직임이 제한되고 있다. 증권사들은 답답한 증시 상황 속에서 4∼5% 수익률을 제공하는 발행어음 상품을 잇달아 출시하고 있다. 국채금리 급등으로 인해 매력도 줄어든 리츠 ETF는 개인 투자자가 순매수한 금액이 증가하고 있다. 비트코인은 1억1000만원대를 지속하며 변동성이 크지 않다. 증권사의 발행어음 상품은 4∼5%의 수익률을 목표로 하고 있다.",
-      "lineEn": "Bitcoin is maintaining movement within the 110,000,000 won range due to interest rate uncertainty. Securities companies are continuously launching issued notes products offering 4 to 5% returns amid a stagnant stock market. REITs ETFs, which have become less attractive due to a sharp rise in government bond rates, are seeing an increase in the amount of money purchased by individual investors. Bitcoin continues to stay within the 110,000,000 won range with relatively low volatility. Securities companies' issued notes products aim for a 4 to 5% return.",
+      "lineKo": "비트코인은 금리 불안으로 인해 1억1000만원대를 유지하며 움직임이 주춤했다. 증권사들은 답답한 증시 상황 속에서 4∼5% 수익률을 기록하는 발행어음 상품을 잇달아 출시했다. 국채금리 급등으로 매력도가 줄어든 리츠 ETF에도 불구하고 개인 투자자가 순매수액을 늘리고 있다. 비트코인은 1억1000만원대를 횡보하며 변동성이 제한적인 모습을 보였다. 증권사가 출시한 발행어음 상품은 4∼5%의 수익률을 기록하고 있다.",
+      "lineEn": "Bitcoin movement slowed as it remained in the 110,000,000 won range due to interest rate uncertainty. Securities companies continued to launch issued notes products recording 4 to 5% returns amid a stagnant stock market situation. Despite the reduced appeal of REITs ETFs due to a sharp rise in government bond yields, individual investors are increasing their net purchase amounts. Bitcoin remained in the 110,000,000 won range, showing limited volatility. The issued notes products launched by securities companies are recording returns of 4 to 5%.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
@@ -35,48 +89,11 @@
       ]
     },
     {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "이형일이 경제현안간담회에서 온누리상품권과 민생물가 문제를 논의했다. 북한이 경제 정량데이터 구축을 통해 연구 정립에 나섰다. 북한 경제를 이해하는 필독서가 출간돼 통일과 외교 현안 해결에 기여할 것으로 보인다. 수원 영통구의 집값 상승률이 1위를 차지했고, 분당구도 강세를 보였다. 정부는 공급 확대를 최우선 과제로 삼아 집값을 잡겠다는 방침을 밝혔다.",
-      "lineEn": "Lee Hyung-il discussed the issues of the Onnuri Gift Certificate and the at the economic policy discussion meeting. North Korea has started to establish research through the construction of quantitative economic data. A must-read for understanding the North Korean economy is expected to contribute to resolving unification and diplomatic issues. The housing price increase rate in Yongsong-gu, Suwon, ranked first, and Bundang-gu also showed strong performance. The government announced that expanding supply is the top priority to control housing prices.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "이형일, 경제현안간담회서 온누리상품권·민생물가 논의",
-          "link": "https://www.yna.co.kr/view/AKR20261011050200002",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "北 경제 정량데이터 구축…이념서 과학의 영역으로 연구 정립",
-          "link": "https://www.hankyung.com/article/2026101144441",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "\"北경제 이해 필독서 저술…통일·외교현안 해결 공헌\"",
-          "link": "https://www.hankyung.com/article/2026101144461",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "수원 영통구, 집값 상승률 1위…분당구도 강세",
-          "link": "https://www.hankyung.com/article/2026101145381",
-          "source": "한국경제 부동산"
-        },
-        {
-          "title": "[집코노미2026 다시보기 영상] \"정부, 공급 확대에 최우선…집값 잡을 것\"",
-          "link": "https://www.hankyung.com/article/202610114186i",
-          "source": "한국경제 부동산"
-        }
-      ]
-    },
-    {
       "key": "realestate",
       "name": "부동산",
       "nameEn": "Real Estate",
-      "lineKo": "부동산 가격과 세제가 가계 부채 및 소비에 미치는 영향에 대한 분석이 발표되었다. 한강 인근 아파트의 뷰에 따라 가격 차이가 10억원에 달하는 것으로 나타났다. 내년 집값 불안 요소가 여전하다는 전망 속에서 1주택자들이 갈아타기 기회를 노리고 있다. 서울 핵심지역 공공 재개발 '도공복' 투자와 관련된 100가지 사실이 정리되었다. 분양시장에서는 청약 포기자가 늘어나는 등 관심이 줄어드는 현상이 나타나고 있다.",
-      "lineEn": "An analysis on the impact of real estate prices and tax policies on household debt and consumption was released. It was found that the price difference according to the view of apartments near the Han River can reach 1,000,000,000 won. Amid forecasts that factors causing uncertainty in housing prices next year remain, single-homeowners are looking for opportunities to move. 100 facts related to the investment in the public redevelopment project 'Dokongbok' in key areas of Seoul have been compiled. In the sales market, there is a phenomenon of declining interest, as the number of applicants giving up on applications is increasing.",
+      "lineKo": "부동산 가격과 세제가 가계 부채 및 소비에 미치는 영향에 대한 분석이 발표되었다. 한강 인근 아파트의 뷰 차이로 인해 가격에 10억원 차이가 나는 것으로 나타났다. 내년 집값 불안 요소가 여전히 존재하며, 1주택자들이 갈아타기 기회를 노리고 있는 것으로 보인다. 서울 핵심지역 공공 재개발 '도공복' 투자와 관련된 100가지 사실이 정리되었다. 분양시장에서는 청약 포기자가 늘어나며 시장에 변화가 나타나고 있다.",
+      "lineEn": "An analysis on the impact of real estate prices and tax policies on household debt and consumption was released. It was found that the view difference in apartments near the Han River can result in a 1,000,000,000won price difference. Factors causing uncertainty in housing prices next year still exist, and it seems that single-homeowners are looking for opportunities to move. 100 facts related to the investment in the public redevelopment project 'Dokongbok' in key areas of Seoul have been compiled. In the sales market, the number of applicants giving up on applications is increasing, and changes are appearing in the market.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
@@ -105,23 +122,6 @@
           "title": "\"그냥 청약 안 할래요\" 포기 속출…분양시장에 무슨 일이 [이송렬의 부동산한입]",
           "link": "https://www.hankyung.com/article/2026100800956",
           "source": "한국경제 부동산"
-        }
-      ]
-    },
-    {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "삼성전자의 역대급 실적에도 불구하고 코스피는 짓눌린 상태이며, 반등 가능성에 대한 논의가 이어지고 있다.",
-      "lineEn": "Despite Samsung Electronics' record-breaking performance, the Kospi remains under pressure, with ongoing discussions about the possibility of a rebound.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": true,
-      "items": [
-        {
-          "title": "[마켓인사이트] 삼성전자 역대급 실적에도 짓눌린 코스피, 반등 가능성은",
-          "link": "https://www.yna.co.kr/view/AKR20261010015700008",
-          "source": "연합뉴스 경제"
         }
       ]
     }
