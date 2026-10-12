@@ -36,8 +36,8 @@ function childrenOf(node) {
   return node.tagName === "template" && node.content ? node.content.childNodes : node.childNodes ?? [];
 }
 
-/** 주석을 빼고 이웃한 텍스트 노드를 이어 붙인다(주석이 사이에 있던 `a<!--c-->b`는 "ab"다). */
-function cleanChildren(node) {
+/** 주석을 빼고 이웃한 텍스트 노드를 이어 붙인다(주석이 사이에 있던 `a<!--c-->b`는 "ab"다). invariants.mjs도 같은 걸음으로 걷는다. */
+export function cleanChildren(node) {
   const out = [];
   for (const child of childrenOf(node)) {
     if (child.nodeName === "#comment") continue;
