@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-10-11T01:53:32.952Z",
+  "updatedAt": "2026-10-12T00:34:32.206Z",
   "months": 6,
   "sale": {
     "low": {
       "cells": 523,
       "median": -7.5,
-      "cheaperShare": 89.7,
+      "cheaperShare": 89.9,
       "deals": 700
     },
     "top": {
@@ -17,10 +17,10 @@
   },
   "jeonse": {
     "low": {
-      "cells": 906,
+      "cells": 907,
       "median": -5,
       "cheaperShare": 65.5,
-      "deals": 1346
+      "deals": 1347
     },
     "top": {
       "cells": 2596,
@@ -261,8 +261,8 @@
     "강동구": "gangdong"
   },
   "lead": {
-    "ko": "같은 단지 같은 평형에서 1층은 3층 이상보다 7.5% 싸게 팔립니다. 맞물린 523칸의 중앙값이고, 그 가운데 89.7%에서 1층이 더 쌌습니다. 전세는 같은 1층을 5.0%만 깎습니다 — 1층의 불리함은 사는 것보다 되파는 데 더 크게 얹힙니다.",
-    "en": "In the same complex and the same unit type, a first-floor apartment sells for 7.5% less than the third floor and up — the median across 523 matched unit types, and it comes out cheaper in 89.7% of them. Jeonse discounts the same floor by only 5.0% — the disadvantage of a first floor shows up more in reselling than in living there."
+    "ko": "같은 단지 같은 평형에서 1층은 3층 이상보다 7.5% 싸게 팔립니다. 맞물린 523칸의 중앙값이고, 그 가운데 89.9%에서 1층이 더 쌌습니다. 전세는 같은 1층을 5.0%만 깎습니다 — 1층의 불리함은 사는 것보다 되파는 데 더 크게 얹힙니다.",
+    "en": "In the same complex and the same unit type, a first-floor apartment sells for 7.5% less than the third floor and up — the median across 523 matched unit types, and it comes out cheaper in 89.9% of them. Jeonse discounts the same floor by only 5.0% — the disadvantage of a first floor shows up more in reselling than in living there."
   },
   "topLead": {
     "ko": "최상층에는 웃돈이 붙지 않습니다. 같은 평형의 아래층들과 견주면 최상층은 중앙값 +0.6% 차이입니다. 맞물린 1,631칸이고, 그 가운데 42.4%는 오히려 더 쌌습니다. 최상층에 값어치가 있든 없든 신고된 가격에는 그것이 더 비싼 값으로 나타나지 않습니다 — 1층은 나타나는데 말입니다.",
