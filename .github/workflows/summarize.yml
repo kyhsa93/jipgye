@@ -89,14 +89,19 @@ jobs:
       - name: 뉴스 제목 영어 번역
         run: node scripts/translate-news.mjs
 
+      # news-context는 렌더러와 무관한 데이터 가공이라 폴백 밖에 둔다. 렌더 스크립트는 daily-update.yml과 같은
+      # scripts/render-pipeline.mjs가 돌리고, 실패하면 JIPGYE_RENDERER=legacy로 처음부터 다시 렌더한다(#238).
+      # 단계 목록은 일부러 다섯이다: 금리를 수집하지 않는 이 워크플로는 전에도 build-rate-pages를 안 불렀다(기본 여섯과 다르다).
       - name: 정적 HTML에 오늘 내용 심기
+        id: render
         run: |
           node scripts/news-context.mjs
-          node scripts/prerender.mjs
-          node scripts/build-news-pages.mjs
-          node scripts/build-budget-pages.mjs
-          node scripts/build-realestate-pages.mjs
-          node scripts/build-updated-stamp.mjs
+          node scripts/render-pipeline.mjs \
+            scripts/prerender.mjs \
+            scripts/build-news-pages.mjs \
+            scripts/build-budget-pages.mjs \
+            scripts/build-realestate-pages.mjs \
+            scripts/build-updated-stamp.mjs
 
       - name: 테스트
         run: npm test
@@ -116,3 +121,10 @@ jobs:
       - name: Pages에 배포
         id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
+
+      # 렌더 폴백이 발동한 날의 표시다(daily-update.yml과 같은 단계). 커밋·테스트·배포가 모두 끝난 뒤에야 실패로 끝낸다.
+      - name: 렌더 폴백 반영
+        if: steps.render.outputs.fallback == 'true'
+        run: |
+          echo "::error::React 렌더 실패 → legacy로 폴백했음. 사이트는 정상 배포됨, 원인 조사 필요 - 위 '정적 HTML에 오늘 내용 심기' 단계의 1차 시도 로그를 본다"
+          exit 1

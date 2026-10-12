@@ -7,6 +7,7 @@ import { buildBudgetPage } from "../scripts/build-budget-pages.mjs";
 import { budgetBodyHtml } from "../scripts/prerender.mjs";
 import { buildBands, mergeBands } from "../scripts/budget-bands.mjs";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
+import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const RATES = JSON.parse(await readFile(path.join(root, "docs/data/rates.json"), "utf8"));
@@ -141,7 +142,7 @@ test("예산 페이지는 그 구간만 보여주고 주소를 건드리지 않�
 
 test("예산 페이지는 시세 페이지에서 찍어내는 것들보다 먼저 돈다", async () => {
   for (const file of ["scripts/update-all.mjs", ".github/workflows/daily-update.yml"]) {
-    const text = await readFile(path.join(root, file), "utf8");
+    const text = expandRenderPipeline(await readFile(path.join(root, file), "utf8"));
     const budget = text.indexOf("build-budget-pages");
     const realestate = text.indexOf("build-realestate-pages");
 

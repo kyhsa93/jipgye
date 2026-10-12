@@ -106,14 +106,12 @@ jobs:
       - name: 기사에 실거래가·금리 수치 붙이기
         run: node scripts/news-context.mjs
 
+      # 여섯 렌더 스크립트(prerender·build-rate-pages·build-news-pages·build-budget-pages·build-realestate-pages·build-updated-stamp)는
+      # scripts/render-pipeline.mjs가 순서대로 돌린다. 하나라도 실패하면 JIPGYE_RENDERER=legacy로 처음부터 다시 렌더해
+      # 뒤의 커밋이 돌게 한다(그날 받은 수집분이 사라지지 않게). 폴백이 발동하면 맨 끝 "렌더 폴백 반영" 단계가 job을 실패로 끝낸다(#238).
       - name: 정적 HTML에 오늘 내용 심기
-        run: |
-          node scripts/prerender.mjs
-          node scripts/build-rate-pages.mjs
-          node scripts/build-news-pages.mjs
-          node scripts/build-budget-pages.mjs
-          node scripts/build-realestate-pages.mjs
-          node scripts/build-updated-stamp.mjs
+        id: render
+        run: node scripts/render-pipeline.mjs
 
       # 커밋이 테스트보다 먼저다.
       #
@@ -150,4 +148,12 @@ jobs:
         if: steps.rates.outcome == 'failure'
         run: |
           echo "::error::금리 수집(금감원 finlife)이 실패했다 - 위 '예·적금·대출 금리 수집' 단계의 진단 로그와 docs/data/rates-meta.json의 failCause를 본다. 원본 커밋·배포는 끝났다"
+          exit 1
+
+      # 렌더 폴백이 발동한 날의 표시다. 커밋·테스트·배포가 모두 끝난 뒤에야 실패로 끝낸다 -
+      # 사이트는 legacy 출력으로 정상 배포됐고, 빨간 job과 실패 메일이 원인 조사를 알린다.
+      - name: 렌더 폴백 반영
+        if: steps.render.outputs.fallback == 'true'
+        run: |
+          echo "::error::React 렌더 실패 → legacy로 폴백했음. 사이트는 정상 배포됨, 원인 조사 필요 - 위 '정적 HTML에 오늘 내용 심기' 단계의 1차 시도 로그를 본다"
           exit 1

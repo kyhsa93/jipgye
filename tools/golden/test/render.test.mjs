@@ -148,6 +148,34 @@ test("readWorkflowStages: 워크플로의 렌더 단계 줄을 순서대로 읽�
   }
 });
 
+test("readWorkflowStages: render-pipeline 한 줄이면 그 저장소의 기본 단계(RENDER_STEPS)로 펼친다", async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), "golden-wf-"));
+  try {
+    await mkdir(path.join(dir, ".github/workflows"), { recursive: true });
+    await mkdir(path.join(dir, "scripts"), { recursive: true });
+    await writeFile(path.join(dir, "scripts/render-pipeline.mjs"), 'export const RENDER_STEPS = ["scripts/a.mjs", "scripts/b.mjs"];\n');
+    const file = path.join(dir, ".github/workflows/wf.yml");
+    await writeFile(
+      file,
+      `jobs:
+  x:
+    steps:
+      - name: 정적 HTML에 오늘 내용 심기
+        id: render
+        run: node scripts/render-pipeline.mjs
+
+      # 커밋이 테스트보다 먼저다.
+      - name: 변경사항 커밋 및 푸시
+        run: |
+          node scripts/not-a-stage.mjs
+`
+    );
+    assert.deepEqual(await readWorkflowStages(file), ["scripts/a.mjs", "scripts/b.mjs"]);
+  } finally {
+    await rm(dir, { recursive: true });
+  }
+});
+
 test("상대경로 --repo로 줘도 node_modules 링크가 절대경로로 걸려 렌더 사본에서 풀린다", async () => {
   const repo = await fakeRepo();
   const cache = await mkdtemp(path.join(os.tmpdir(), "golden-cache-"));

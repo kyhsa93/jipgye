@@ -46,7 +46,11 @@ const MOCK_NOW = pathToFileURL(path.join(import.meta.dirname, "mock-date-now.mjs
 // 렌더 결과를 흔드는 환경변수는 호출자가 명시한 것만 들어가게 상속에서 뺀다.
 const SCRUB = ["BUILD_NOW", "JIPGYE_RENDERER", "GOLDEN_MOCK_NOW", "NODE_OPTIONS"];
 
-/** 워크플로의 렌더 단계 줄(`node scripts/x.mjs`)을 읽는다. RENDER_STAGES와 어긋났는지 시험이 본다. */
+/**
+ * 워크플로의 렌더 단계 줄(`node scripts/x.mjs`)을 읽는다. RENDER_STAGES와 어긋났는지 시험이 본다.
+ * 워크플로가 `node scripts/render-pipeline.mjs`(렌더 폴백, #238 F1 최소판) 한 줄로 부르면 그 저장소의 기본 단계(`RENDER_STEPS`)로 펼친다
+ * (워크플로 파일 기준 `../../scripts/render-pipeline.mjs`). 인자를 넘기는 호출은 이 시험의 대상이 아니다(daily-update는 기본 단계를 쓴다).
+ */
 export async function readWorkflowStages(workflowFile) {
   const text = await readFile(workflowFile, "utf8");
   const lines = text.split("\n");
@@ -54,8 +58,11 @@ export async function readWorkflowStages(workflowFile) {
   if (at < 0) throw new Error("워크플로에서 렌더 단계를 찾지 못했습니다");
   const out = [];
   for (const line of lines.slice(at + 1)) {
-    const m = line.match(/^\s+node (scripts\/[\w.-]+\.mjs)\s*$/);
-    if (m) out.push(m[1]);
+    const m = line.match(/^\s+(?:run: )?node (scripts\/[\w.-]+\.mjs)\s*$/);
+    if (m?.[1] === "scripts/render-pipeline.mjs") {
+      const pipeline = path.resolve(path.dirname(workflowFile), "../../scripts/render-pipeline.mjs");
+      out.push(...(await import(pathToFileURL(pipeline).href)).RENDER_STEPS);
+    } else if (m) out.push(m[1]);
     else if (/^\s+(run:|-)/.test(line) && out.length) break;
     else if (/^\s*$/.test(line) && out.length) break;
   }
