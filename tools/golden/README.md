@@ -9,7 +9,7 @@
 ```
 cd tools/golden && npm ci
 npm test                       # 고정 fixture만 읽는 시험(정준 덤프·변이 시험·비교기·렌더 격리·invariants) — 오늘의 docs/ 데이터를 읽지 않는다
-npm run test:live              # 실제 저장소로: 자기 비교(TZ=UTC·Asia/Seoul), BUILD_NOW 시각 의존, invariants 자기 비교·실제 67장 변이(#274 셋, #289 다섯), (GOLDEN_BASE_SHA가 있으면) 미설정 바이트 동일
+npm run test:live              # 실제 저장소로: 자기 비교(TZ=UTC·Asia/Seoul), BUILD_NOW 시각 의존, invariants 자기 비교·실제 67장 변이(#274 셋, #289 여섯), (GOLDEN_BASE_SHA가 있으면) 미설정 바이트 동일
 
 node bin/render.mjs  --repo ../.. --sha HEAD --out /tmp/a  --env TZ=UTC --env BUILD_NOW=2026-10-11T00:00:00Z
 node bin/render.mjs  --repo ../.. --sha HEAD --out /tmp/b  --env JIPGYE_RENDERER=react --env BUILD_NOW=2026-10-11T00:00:00Z
@@ -80,10 +80,11 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
 | 블록(`TEXT_BLOCK`) | `address` `article` `aside` `blockquote` `details` `dialog` `dd` `div` `dl` `dt` `fieldset` `figcaption` `figure` `footer` `form` `h1`~`h6` `header` `hgroup` `hr` `li` `main` `menu` `nav` `ol` `p` `pre` `section` `summary` `table` `caption` `colgroup` `col` `thead` `tbody` `tfoot` `tr` `td` `th` `ul` `option` `optgroup` `select` `datalist` `button` `input` `textarea` `label` `legend`, 그리고 `html` `head` `body` `title` `meta` `link` `base` `style` `script` `template` `noscript` | 흐름을 끊는다. SVG·MathML **안의** 요소와 숨김 표시가 바뀌는 요소도 흐름을 끊는다 |
 | 중립 인라인(`NEUTRAL_INLINE`) | `span` `strong` `em` `b` `i` `small` `mark` `abbr` | 아무것도 보태지 않는다 — 감싸도 풀어도 흐름이 같다(`text-wrap` 소프트) |
 | 줄바꿈 | `br` | 공백 한 칸으로 센다 |
-| 그 밖의 인라인 | `a` `code` `sup` `sub` `del` `ins` `s` `u` `q` `cite` `time` … 과 모르는 태그 | 뜻이 실리므로 흐름에 `‹a›…‹/a›`처럼 남는다 |
+| 그 밖의 인라인 | `a` `code` `sup` `sub` `del` `ins` `s` `u` `q` `cite` `time` … 과 모르는 태그 | 뜻이 실리므로 흐름에 `‹a›…‹/a›`처럼 남는다. 블록을 **바깥에서** 감싸면(`<del><p>…</p></del>`, 블록 링크 `<a href><div>…</div></a>`) 안쪽 블록의 항목에 `[in:del]`·`[in:a]` 표시로 남는다 |
 
 `img`·`wbr`·`picture`·`source`와 SVG·MathML 덩어리 자체는 흐름을 끊지도 보태지도 않는다(문장 안에 아이콘을 넣는 것은 글자 변화가 아니다. SVG 안의 글자는 요소마다 한 항목이다).
-블록 목록은 `canon.mjs`의 공백 규칙이 쓰는 목록에서 `br`을 빼고 폼 컨트롤 다섯을 더한 것이다. 중립 인라인 목록의 확정은 cto다.
+블록 목록은 `canon.mjs`의 공백 규칙이 쓰는 목록에서 `br`을 빼고 폼 컨트롤 다섯을 더한 것이다. 중립 인라인 목록은 위 여덟 개로 **확정**이다(cto, PR #292 —
+`br`은 공백 한 칸으로 두고 `code`·`kbd`·`time`·`u`는 넣지 않는다).
 
 - **통과하는 것(소프트 `text-wrap`)**: 블록 안 글자의 일부를 중립 인라인으로 감싸거나 푸는 것, 낱말 사이 공백 자리에 `<br>`을 넣는 것(공백을 남기든 br로 바꾸든).
   보고서 머리에 `인라인 경계만 다른 블록(text-wrap, 통과): n장 m개`가 나오고, 장마다 감싸기 전·후 블록 모양(`"7억대에서 ‹strong›575‹/strong›건이 …"`)과 수가 나온다 — po가 무엇이 감싸졌는지 읽는다.
@@ -96,12 +97,21 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
     인라인 형제를 블록으로 바꾸는 것(`<span>가</span> <span>나</span>` → `<div>가</div> <div>나</div>`)과 붙어 있던 인라인 형제 사이에 블록 래퍼를 끼우는 것도 블록 나눔이다.
     블록을 통째로 옮기는 것(순서)은 `text-order` 소프트다.
   - 중립 목록 밖의 태그로 감싸거나 푸는 것(`del`·`s`·`ins`·`sub`·`sup`·`a`·`code` …, 노드 전체를 감싸도 같다)과 `template`·`script`·`style`·`noscript`로 감싸는 것.
+    블록을 바깥에서 감싸도 같다 — `<del><p>…</p></del>`·`<s><div>…</div></s>`·`<ins><ul>…</ul></ins>`·`<sub><p>…</p></sub>`·href 없는 `<a><p>…</p></a>`는 안쪽 블록의 항목마다
+    `[in:태그]`가 붙어 달라지고, 기준에 있던 바깥 감싸기를 벗기는 것도 달라진다. 블록 링크(`<a href><div>…</div></a>`)는 기준·후보가 같으면 표시도 같아 통과한다.
   - `hidden`·`aria-hidden="true"`·`inert`가 붙은 요소 아래의 글자(래퍼든 블록이든). 표시(`[hidden]`·`[aria-hidden]`·`[inert]`)가 항목에 붙으므로 붙이거나 떼면 달라진다.
 - **숨김 표시.** `hidden` 속성은 `[hidden]`, 브라우저 기본 스타일이 그리지 않는 요소(`template`·`noscript`·`noembed`·`noframes`·`datalist`·`canvas`·`object`·`video`·`audio`·`iframe`·body 안 `title`)와
   `open`이 없는 `dialog`는 `[hidden:태그]`, `aria-hidden="true"`는 `[aria-hidden]`, `inert`는 `[inert]`다. 겹치면 이어 적는다. 속성 글자와 제목 줄에도 같은 표시가 붙는다.
+  본문 텍스트 항목에는 그 뒤에 바깥에서 감싼 뜻 있는 인라인의 `[in:태그]`가 이어진다(`"숨김" [hidden] [in:ins]`).
   `details`의 `open`은 표시가 아니라 `details-open` 소프트로 본다(접힌 글자는 사용자가 펼 수 있다).
 - **제목·링크 글자·속성 글자는 이 완화와 무관하다.** `headings`·`links`·`attr-text`는 전과 같이 자기 문자열을 글자 그대로 견준다(제목·링크 안의 br은 아무것도 보태지 않는다 —
   낱말 사이 공백을 남기고 넣으면 같고, 공백을 br로 바꾸면 `headings`·`links`가 건다).
+- **블록 나눔이 하드인 동안 통과하는 길 둘.** 붙어 있는 인라인 형제(`<span>자기 돈이 적어도</span><strong>4억 6,950만원</strong><span>…</span>`)를 블록처럼 쌓고 싶을 때:
+  ① **인라인 태그를 유지하고 class로 블록처럼 그린다**(`<span class="tw:block">` — class는 보지 않는다), ② **붙어 있는 형제를 함께 감싸는 블록 래퍼**를 둔다
+  (`<li><div class="tw:flex tw:flex-col">…형제 전부…</div></li>` — 블록 하나의 글자 흐름이 그대로다). 형제의 **일부만** 블록으로 감싸거나 `span`을 `div`로 바꾸면 한 블록이 둘로 갈려 하드다
+  (시험 "#279가 쓸 수 있는 통과하는 길 둘"). 블록 나눔을 소프트로 푸는 것은 이 도구에 아직 없다 — 조건부 후속이고(cto 판정, PR #292), 착수 신호는 #279 초안의 `--render` 결과에
+  블록 나눔 하드가 실제로 나올 때다. 넣게 되면 뜻 없는 블록(`div`·`section`·`article`·`aside`·`header`·`footer`·`main`·`nav`·`figure`·`form`·`fieldset`)이 기준의 요소 경계 자리에 만든 나눔만
+  소프트로 하고, `p`·`li`·`td`·`th`·`dt`·`dd`·`caption`·제목·`summary`·`label`·`button`·`option`이 만든 경계와 합침은 계속 하드로 둔다.
 - **전보다 엄격해진 자리**(#285 판에서는 통과하던 것): 인라인 요소 사이 공백의 추가·삭제, 텍스트 노드는 그대로 두고 블록만 나누거나 합친 것, 중립 목록 밖 인라인 태그의 추가·삭제·교체,
   글자 위에 새로 거는 `aria-hidden="true"`(전에는 `hooks-added` 소프트뿐이었다), `a`를 `span`으로 바꾸는 것(`links`에 더해 `text`도 건다). flex·grid 안처럼 화면에서 안 보이는 공백 변화도 하드다.
 
@@ -133,10 +143,18 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
   ```
 - **못 보는 것.** parse5는 CSS를 모른다. 유틸리티 class(`tw:hidden`·`tw:sr-only`·`tw:invisible`·`tw:opacity-0`)나 `style`로 본문을 숨겨도
   통과한다(`test/invariants.test.mjs`가 이 구멍을 시험으로 적어 둔다). 가로 넘침, 대화형 요소 크기, 대비, 초점 순서, `::before`가 그리는
-  `attr(data-label)`도 못 본다. 이쪽은 #278 PR A의 렌더 검사 도구가 맡는다. 그 밖에 보지 않는 것(시험 "#289 8번 못 잡는 것"이 적어 둔다):
+  `attr(data-label)`도 못 본다. 이쪽은 #278 PR A의 렌더 검사 도구가 맡는다. 그 밖에 보지 않는 것(시험 "#289 8번 못 잡는 것"과 "못 잡는 것(적어 둔다, PR #292 cto)"이 적어 둔다):
   - **글자 없는 요소의 추가**: `alt` 없는 `img`, `iframe`, body 안의 `link`(stylesheet 포함), 빈 `div`. 글자도 훅도 없으면 어느 check에도 걸리지 않는다
     (가리키는 내부 파일이 없을 때만 `resource-target`이 건다. `alt`가 있으면 `attr-text`가 건다).
-  - **폼·상호작용 속성의 변경**: `form`의 `action`·`method`, `disabled`, `tabindex`, `formaction`, `javascript:`를 담은 `action`·`src`. (`inert`는 글자 위에 붙으면 `text`가 건다. `a[href]`의 `javascript:`는 `links`가 건다.)
+    거꾸로 **거짓 실패 쪽**: 문장 안에 `<img alt="">` 아이콘을 넣으면 빈 `alt`가 하나 늘어 `attr-text` 하드다(지금 `docs/`에 `img`는 0곳).
+  - **폼·상호작용 속성의 변경**: `form`의 `action`·`method`, `disabled`, `tabindex`. (`inert`는 글자 위에 붙으면 `text`가 건다.)
+  - **`on*` 밖의 스크립트 자리**: `form action="javascript:…"`, `button formaction`, `iframe srcdoc`, `javascript:`를 담은 `src`는 `on*` 속성이 아니라 `s6-handlers`에 안 걸린다
+    (`a[href]`의 `javascript:`는 `links`가 건다).
+  - **글자를 그려지지 않거나 다르게 그려지는 자리로 옮긴 것**: `<select><option>`·`<textarea>`·SVG `<title>`·`<desc>` 안으로 옮기면 블록 하나의 글자 흐름이 같아 통과한다.
+  - **블록의 글자 전체를 빈 블록으로 옮긴 것**: `<td>7억</td><td></td>` → `<td></td><td>7억</td>`는 다중집합도 순서도 같아 보고가 없다(빈 블록은 항목이 아니다).
+    글자가 있는 칸(`-`)과 맞바꾸면 `text-order` 소프트로 나온다. 지금 `docs/`에 빈 `td`·`th`는 0곳이다.
+  - **참조 파일의 내용**: `resource-target`은 있는지만 본다. `style.css`를 0바이트로 비워도 통과한다(화면 동일 증빙은 #276이 따로 정한 방법이 맡는다).
+  - **인라인 `style` 속성으로 숨긴 글자**(`style="display:none"`): `style`은 비교하지 않으므로 class로 숨긴 것과 같이 통과한다(#278 PR A의 렌더 검사 몫).
   - 값이 같은 속성을 다른 요소로 옮긴 것(예: `aria-hidden="true"`를 글자 없는 요소끼리, `onclick`을 다른 요소로) — 다중집합만 본다.
   - 블록 가장자리의 공백, SVG 안에서 `<text>` 밖에 놓여 그려지지 않는 글자, `manifest.webmanifest`·CSS·JS **안에서** 가리키는 파일(HTML 속성이 가리키는 것만 대상 확인을 한다).
   - `details`를 닫아 본문을 접는 것은 하드가 아니다(`details-open` 소프트).

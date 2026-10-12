@@ -207,7 +207,7 @@ test("invariants(#274): 훅 클래스 목록이 렌더할 SHA의 소스와 맞�
   assert.deepEqual(hookListFindings({ list: await readHookList(), base: collected, head: collected }), []);
 });
 
-test("invariants(#289): 실제 67장에 변이를 넣는다 — 숫자를 strong으로 감싸면 통과(소프트), 감싸며 한 자리 바꾸면·on* 속성·style.css 삭제는 장마다 잡힌다", opts, async () => {
+test("invariants(#289): 실제 67장에 변이를 넣는다 — 숫자를 strong으로 감싸면 통과(소프트), 감싸며 한 자리 바꾸면·main을 del로 감싸면·on* 속성·style.css 삭제는 장마다 잡힌다", opts, async () => {
   const { cp, mkdtemp, readFile: read, rm, writeFile } = await import("node:fs/promises");
   const os = await import("node:os");
   const p = await getPristine();
@@ -227,6 +227,8 @@ test("invariants(#289): 실제 67장에 변이를 넣는다 — 숫자를 strong
     wrapDigit: { fn: (html) => outsideScripts(html, (h) => h.replace(FIRST_DIGIT, (m, pre, d) => `${pre}<strong>${(Number(d) + 1) % 10}</strong>`)), expect: "hard", id: "text" },
     // 감싸면서 래퍼 뒤에 공백 한 칸을 넣는다(67장 모두 그 숫자 뒤가 공백이 아닌 자리다 — 공백인 장이 생기면 줄어서 같아지고 아래 단언이 알린다).
     wrapSpace: { fn: (html) => outsideScripts(html, (h) => h.replace(FIRST_DIGIT, (m, pre, d) => `${pre}<strong>${d}</strong> `)), expect: "hard", id: "text" },
+    // main을 바깥에서 <del>로 감싼다(뜻 있는 인라인이 블록을 감싼다 — 안쪽 블록 항목마다 [in:del]이 붙는다, PR #292 cto 보완).
+    delOutside: { fn: (html) => outsideScripts(html, (h) => h.replace(/<main(?=[\s>])/, "<del><main").replace("</main>", "</main></del>")), expect: "hard", id: "text" },
     // body의 첫 id 달린 요소에 인라인 이벤트 핸들러를 건다.
     handler: { fn: (html) => outsideScripts(html, (h) => h.replace(/(<body[\s\S]*?) id="/, '$1 onclick="x()" id="')), expect: "hard", id: "s6-handlers" },
     // HTML은 그대로 두고 style.css만 지운다.

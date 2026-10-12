@@ -819,3 +819,93 @@ test("#289 그 밖: 형식이 틀린 예외 목록은 사용법 오류(종료 2,
     await rm(expect, { force: true });
   }
 });
+
+// ───────────────────────── PR #292 cto 검증의 보완 ─────────────────────────
+
+test("#289 4번 검출(d) 보완: 뜻 있는 인라인이 블록을 바깥에서 감싸도 하드 — 안쪽 블록의 항목에 [in:태그] 표시가 붙는다", () => {
+  const base = doc('<p>▲ 상승</p><div class="answer">답</div><ul><li>가</li><li>나</li></ul>');
+  // cto가 넣어 통과를 확인한 다섯 가지(391f6901). 여는 표시(`‹del›`)가 든 통에 글자가 없어 통째로 버려지던 자리다.
+  const outside = {
+    del: [base.replace("<p>▲ 상승</p>", "<del><p>▲ 상승</p></del>"), ['"▲ 상승" [in:del]']],
+    s: [base.replace('<div class="answer">답</div>', '<s><div class="answer">답</div></s>'), ['"답" [in:s]']],
+    ins: [base.replace("<ul><li>가</li><li>나</li></ul>", "<ins><ul><li>가</li><li>나</li></ul></ins>"), ['"가" [in:ins]', '"나" [in:ins]']],
+    sub: [base.replace("<p>▲ 상승</p>", "<sub><p>▲ 상승</p></sub>"), ['"▲ 상승" [in:sub]']],
+    "href 없는 a": [base.replace("<p>▲ 상승</p>", "<a><p>▲ 상승</p></a>"), ['"▲ 상승" [in:a]']],
+  };
+  for (const [why, [wrapped, items]] of Object.entries(outside)) {
+    assert.notEqual(wrapped, base, why);
+    const r = caught(base, wrapped, ["text"], `${why}: 블록을 바깥에서 감쌈`);
+    assert.deepEqual(finding(r, "text").added, items, why);
+    assert.deepEqual(finding(r, "text").missing, items.map((x) => x.replace(/ \[in:[a-z]+\]$/, "")), why);
+    // 반대 방향: 기준에 있던 바깥 감싸기를 벗긴다.
+    const back = caught(wrapped, base, ["text"], `${why}: 바깥 감싸기를 벗김`);
+    assert.deepEqual(finding(back, "text").missing, items, why);
+  }
+  // 고정 사본의 문단, 블록을 더 깊이 둔 것, 블록 여럿을 한꺼번에, 모르는 태그.
+  const callout = '<p id="method-callout-text">매물 호가가 아니라 국토교통부에 신고된 실거래입니다. 자치구는 한 주 표본이 얇아 최근 4주를 겹쳐 세고, 신고가 5건 미만인 구는 평균을 내지 않고 비워 둡니다.</p>';
+  caught(BUDGET, mutate(BUDGET, callout, `<del>${callout}</del>`), ["text"], "고정 사본의 문단을 del로");
+  // aside째 감싸면 안의 문단과 링크 글자가 모두 달라진다(링크의 href·글자는 그대로라 links는 조용하다).
+  const aside = caught(BUDGET, mutate(BUDGET, '<aside class="method-callout">', '<del><aside class="method-callout">').replace("</aside>", "</aside></del>"), ["text"], "aside 전체를 del로");
+  assert.equal(finding(aside, "text").added.length, 2);
+  assert.ok(finding(aside, "text").added.every((x) => x.endsWith(" [in:del]")));
+  assert.deepEqual(extractPage(doc("<del><div><section><p>깊이</p></section></div></del><x-note><p>모르는 태그</p></x-note>")).texts, ['"깊이" [in:del]', '"모르는 태그" [in:x-note]']);
+  // 안쪽에서 감싼 것과 바깥에서 감싼 것은 항목 모양이 다르다(둘 다 기준의 맨 문단과는 다르다).
+  caught(doc("<p><del>가</del></p>"), doc("<del><p>가</p></del>"), ["text"], "del을 블록 밖으로 옮김");
+  // 여는 표시가 든 통에 글자가 있으면 그 통에는 표시(`‹del›`)가 남고, 뒤따르는 블록과 이어지는 통에 [in:del]이 붙는다. 숨김 표시와 겹쳐 적는다.
+  assert.deepEqual(extractPage(doc("<div><del>앞<p>문단</p>뒤</del></div><div><ins><p hidden>숨김</p></ins></div>")).texts, ['"‹del›앞"', '"문단" [in:del]', '"뒤‹/del›" [in:del]', '"숨김" [hidden] [in:ins]']);
+  // 블록 링크(a가 블록을 감싼다)는 기준·후보가 같으면 통과한다. class·블록 태그만 바꿔도 같다.
+  const card = doc('<a href="./a.html" class="card"><div class="card-title">제목</div><p class="card-note">설명</p></a>');
+  assert.deepEqual(extractPage(card).texts, ['"제목" [in:a]', '"설명" [in:a]']);
+  passes(card, card, "블록 링크 그대로");
+  passes(card, doc('<a href="./a.html" class="tw:block tw:p-4"><h3 class="tw:font-bold">제목</h3><div class="tw:text-sm">설명</div></a>').replace("<h3", "<div").replace("</h3>", "</div>"), "블록 링크: class·블록 태그만");
+  // 블록 링크를 벗기거나 새로 씌우면 links와 text가 함께 건다.
+  caught(card, doc('<div class="card"><div class="card-title">제목</div><p class="card-note">설명</p></div>'), ["links", "text"], "블록 링크를 벗김");
+  caught(base, base.replace("<p>▲ 상승</p>", '<a href="./a.html"><p>▲ 상승</p></a>'), ["links", "text"], "블록을 링크로 감쌈");
+  // 중립 인라인이 블록을 감싸는 것은 뜻을 바꾸지 않는다(전과 같이 보고 없음).
+  passes(base, base.replace("<p>▲ 상승</p>", "<strong><p>▲ 상승</p></strong>"), "strong이 블록을 감쌈");
+});
+
+test("#289 4번: 블록 나눔이 하드인 동안 #279가 쓸 수 있는 통과하는 길 둘 — 인라인 태그를 유지하고 class로 블록처럼, 붙어 있는 형제를 함께 감싸는 블록 래퍼", () => {
+  const li = '<li><span class="answer-label">자기 돈이 적어도</span><strong class="answer-value">4억 6,950만원</strong><span class="answer-note">생애최초면 2억 4,250만원</span></li>';
+  const inner = li.slice("<li>".length, -"</li>".length);
+  // 길 1: 태그는 span·strong 그대로 두고 class로 블록처럼 그린다.
+  passes(BUDGET, mutate(BUDGET, li, li.replace('class="answer-label"', 'class="answer-label tw:block tw:text-sm"').replace('class="answer-value"', 'class="answer-value tw:block tw:text-2xl"').replace('class="answer-note"', 'class="answer-note tw:block"')), "class로 블록처럼");
+  // 길 2: 붙어 있는 형제 셋을 **함께** 감싸는 블록 래퍼(블록 하나의 글자 흐름이 그대로다).
+  passes(BUDGET, mutate(BUDGET, li, `<li><div class="tw:flex tw:flex-col tw:gap-1">${inner}</div></li>`), "함께 감싸는 블록 래퍼");
+  passes(BUDGET, mutate(BUDGET, li, `<li><div class="tw:p-2"><div class="tw:flex">${inner}</div></div></li>`), "블록 래퍼 겹침");
+  // 길이 아닌 것: 형제의 일부만 블록으로 감싸거나 인라인을 블록 태그로 바꾸면 한 블록이 둘로 갈린다(하드, 보고서가 사유를 적는다).
+  const partial = caught(BUDGET, mutate(BUDGET, li, li.replace('<span class="answer-label">자기 돈이 적어도</span><strong class="answer-value">4억 6,950만원</strong>', '<div class="tw:flex"><span class="answer-label">자기 돈이 적어도</span><strong class="answer-value">4억 6,950만원</strong></div>')), ["text"], "형제의 일부만 감싸는 블록 래퍼");
+  assert.match(finding(partial, "text").note, /글자는 같고 블록 안 공백이나 블록 경계가 달라졌다/);
+  assert.deepEqual([finding(partial, "text").missing, finding(partial, "text").added], [['"자기 돈이 적어도4억 6,950만원생애최초면 2억 4,250만원"'], ['"자기 돈이 적어도4억 6,950만원"', '"생애최초면 2억 4,250만원"']]);
+  caught(BUDGET, mutate(BUDGET, li, li.replace('<span class="answer-note">생애최초면 2억 4,250만원</span>', '<div class="answer-note">생애최초면 2억 4,250만원</div>')), ["text"], "span → div");
+});
+
+test("못 잡는 것(적어 둔다, PR #292 cto): 글자를 option·textarea·SVG title/desc로 옮김, javascript: action·formaction·srcdoc, 0바이트 style.css, 빈 블록으로 통째 옮김 — README '못 잡는 것'", async () => {
+  const a = doc('<p>표본이 부족합니다</p><form action="./deal-search.html"><button type="submit">찾기</button></form><table><tbody><tr><td>7억</td><td></td><td>-</td></tr></tbody></table>');
+  // 글자를 그려지지 않거나 다르게 그려지는 자리로 옮겨도 블록 하나의 글자 흐름은 같다.
+  passes(a, a.replace("<p>표본이 부족합니다</p>", "<select><option>표본이 부족합니다</option></select>"), "option으로");
+  passes(a, a.replace("<p>표본이 부족합니다</p>", "<textarea>표본이 부족합니다</textarea>"), "textarea로");
+  passes(a, a.replace("<p>표본이 부족합니다</p>", "<svg><title>표본이 부족합니다</title></svg>"), "SVG title로");
+  passes(a, a.replace("<p>표본이 부족합니다</p>", "<svg><desc>표본이 부족합니다</desc></svg>"), "SVG desc로");
+  // on*이 아닌 자리의 스크립트.
+  passes(a, a.replace('action="./deal-search.html"', 'action="javascript:steal()"'), 'form action="javascript:"');
+  passes(a, a.replace('<button type="submit">', '<button type="submit" formaction="javascript:steal()">'), "button formaction");
+  passes(a, a.replace("<p>표본이 부족합니다</p>", '<p>표본이 부족합니다</p><iframe srcdoc="&lt;script&gt;x()&lt;/script&gt;"></iframe>'), "iframe srcdoc");
+  // 블록의 글자 전체를 **빈** 블록으로 옮기면 다중집합도 순서도 같아 보고가 없다. 글자가 있는 칸과 맞바꾸면 순서 소프트로 나온다.
+  passes(a, a.replace("<td>7억</td><td></td>", "<td></td><td>7억</td>"), "빈 칸으로 통째 옮김");
+  softOnly(a, a.replace("<td>7억</td><td></td><td>-</td>", "<td>-</td><td></td><td>7억</td>"), ["text-order"], "글자 있는 칸과 맞바꿈");
+  // 인라인 style로 숨기는 것은 CSS다(#278 PR A의 렌더 검사 몫).
+  passes(a, a.replace("<p>표본이 부족합니다</p>", '<p style="display:none">표본이 부족합니다</p>'), 'style="display:none"');
+  // 거짓 실패 쪽: 문장 안에 빈 alt의 아이콘을 넣으면 속성 글자(alt="")가 하나 늘어 하드다.
+  const icon = caught(a, a.replace("<p>표본이 부족합니다</p>", '<p><img src="./icons/warn.png" alt="">표본이 부족합니다</p>'), ["attr-text"], '문장 안 <img alt="">');
+  assert.deepEqual(finding(icon, "attr-text").added, ['alt=""']);
+  // 참조 자원은 있는지만 본다 — style.css를 0바이트로 비워도 통과한다.
+  const base = { "index.html": mini("가", '<link rel="stylesheet" href="./style.css">'), "nav.js": "// nav\n", "style.css": ".a{color:red}" };
+  const [full, empty] = [await dirWith(base), await dirWith({ ...base, "style.css": "" })];
+  try {
+    const r = await compareInvariants(full, empty, { hookList: [] });
+    assert.deepEqual([r.ok, r.pass, r.site], [true, 1, []]);
+  } finally {
+    await Promise.all([full, empty].map((d) => rm(d, { recursive: true })));
+  }
+});

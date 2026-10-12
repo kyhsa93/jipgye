@@ -39,6 +39,7 @@
 //   중립 인라인(NEUTRAL_INLINE)  span·strong·em·b·i·small·mark·abbr — 흐름에 아무것도 보태지 않는다(감싸도 풀어도 흐름이 같다).
 //   br                      공백 한 칸으로 센다(낱말 사이 공백 자리에 넣으면 흐름이 같고, 낱말 한가운데 넣으면 공백이 생긴 것이라 하드).
 //   그 밖의 인라인          a·code·sup·sub·del·ins·s·u·q·time … 과 모르는 태그 — 뜻이 실리므로 흐름에 `‹태그›…‹/태그›`로 남는다.
+//                           블록을 바깥에서 감싸면(`<del><p>…</p></del>`) 안쪽 블록의 항목에 `[in:del]` 표시로 남는다.
 //                           (img·wbr·picture·source와 SVG·MathML 덩어리는 흐름을 끊지도 보태지도 않는다 — 아이콘 추가는 글자 변화가 아니다.)
 // 그래서 블록 안의 글자 한 자·공백 한 칸(추가·삭제, 래퍼 경계 포함)·뜻 있는 태그·블록 나눔과 합침·블록 사이 이동은 전부 하드이고,
 // 중립 인라인으로 감싸거나 푸는 것만 통과한다. 통과시킨 블록은 text-wrap(소프트)에 무엇이 감싸졌는지와 수를 적는다.
@@ -94,7 +95,7 @@ export const SEMANTIC_ATTRS = new Set("role hidden name for scope colspan rowspa
  * 이 목록의 태그끼리 바꾸는 것(div → section, p → li)은 흐름을 바꾸지 않는다. 블록을 나누거나 합치면 흐름이 달라진다.
  */
 export const TEXT_BLOCK = new Set([...BLOCK, "button", "input", "textarea", "label", "legend"].filter((t) => t !== "br"));
-/** 뜻을 바꾸지 않는 인라인. 이 태그로 글자를 감싸거나 푸는 것은 흐름을 바꾸지 않는다(text-wrap 소프트로 보고). 확정은 cto. */
+/** 뜻을 바꾸지 않는 인라인. 이 태그로 글자를 감싸거나 푸는 것은 흐름을 바꾸지 않는다(text-wrap 소프트로 보고). 여덟 개로 확정(cto, PR #292) — code·kbd·time·u는 넣지 않는다. */
 export const NEUTRAL_INLINE = new Set("span strong em b i small mark abbr".split(" "));
 /** 흐름을 끊지도 보태지도 않는 빈 요소(아이콘·줄바꿈 기회). 글자가 든 속성(alt)은 attr-text가 본다. */
 const TRANSPARENT = new Set("img wbr picture source".split(" "));
@@ -236,6 +237,7 @@ export function extractPage(html) {
   let bodyLinks = 0;
 
   // 블록 하나의 글자 흐름을 모으는 통. flow는 비교 항목(하드), shape는 같은 흐름에 중립 인라인·br의 자리를 적은 것(text-wrap 소프트)이다.
+  // mark는 숨김 표시에 "바깥에서 감싼 뜻 있는 인라인" 표시(` [in:del]`)를 이은 것이다 — 통이 그 태그의 여는 표시(`‹del›`)를 갖지 못할 때 붙는다.
   const openRun = (mark, verbatim) => ({ flow: [], shape: [], text: false, shaped: false, mark, verbatim });
   const flush = (run) => {
     if (!run.text) return; // 글자가 없는 블록(태그 표시뿐인 것 포함)은 항목이 아니다
@@ -304,22 +306,25 @@ export function extractPage(html) {
     }
 
     // 글자 흐름에서 이 요소의 자리: 덩어리(SVG·MathML — 바깥 흐름은 그대로 두고 안쪽을 따로 모은다) / 블록 / br / 중립 인라인 / 투명 / 뜻 있는 인라인.
+    // 뜻 있는 인라인이 블록을 **바깥에서** 감싸면(`<del><p>…</p></del>`) 여는 표시가 든 통에는 글자가 없어 버려지고 안쪽 블록의 통은 새로 열린다.
+    // 그래서 뜻 있는 인라인 조상을 ctx.inl로 내려보내 새로 여는 통(블록·블록이 닫힌 뒤 이어지는 통·덩어리)의 표시에 `[in:태그]`로 붙인다.
     const foreign = node.namespaceURI !== NS_HTML;
     const verbatim = ctx.verbatim || VERBATIM.has(tag);
+    let inl = ctx.inl;
     let leave = () => {};
     if (foreign && !ctx.foreign) {
       const outer = cur;
-      cur = openRun(mark, false);
+      cur = openRun(mark + ctx.inl, false);
       leave = () => {
         flush(cur);
         cur = outer;
       };
     } else if (!ctx.inBody || ctx.foreign || TEXT_BLOCK.has(tag) || VERBATIM.has(tag) || mark !== ctx.mark) {
       flush(cur);
-      cur = openRun(mark, verbatim);
+      cur = openRun(mark + ctx.inl, verbatim);
       leave = () => {
         flush(cur);
-        cur = openRun(ctx.mark, ctx.verbatim);
+        cur = openRun(ctx.mark + ctx.inl, ctx.verbatim);
       };
     } else if (tag === "br") {
       cur.flow.push(" ");
@@ -333,6 +338,7 @@ export function extractPage(html) {
       cur.flow.push(`‹${tag}›`);
       cur.shape.push(`‹${tag}›`);
       if (!VOID.has(tag)) {
+        inl = `${ctx.inl} [in:${tag}]`;
         leave = () => {
           cur.flow.push(`‹/${tag}›`);
           cur.shape.push(`‹/${tag}›`);
@@ -369,7 +375,7 @@ export function extractPage(html) {
       page.links.push(`href=${JSON.stringify(a.href)} rel=${JSON.stringify(a.rel ?? null)} target=${JSON.stringify(a.target ?? null)} 글자=${JSON.stringify(textOf(node))}`);
     }
     if (isSkip) skips.push({ tag, href: a.href ?? null, nth: isLink && ctx.inBody ? bodyLinks : null });
-    const next = { mark, verbatim, foreign, inHead: ctx.inHead || tag === "head", inBody: ctx.inBody || tag === "body" };
+    const next = { mark, inl, verbatim, foreign, inHead: ctx.inHead || tag === "head", inBody: ctx.inBody || tag === "body" };
     for (const kid of cleanChildren(node)) {
       if (kid.nodeName === "#text") {
         if (!next.inBody) continue;
@@ -382,7 +388,7 @@ export function extractPage(html) {
   };
 
   for (const child of parse(html).childNodes) {
-    if (child.tagName) visit(child, { mark: "", verbatim: false, foreign: false, inHead: false, inBody: false });
+    if (child.tagName) visit(child, { mark: "", inl: "", verbatim: false, foreign: false, inHead: false, inBody: false });
   }
   flush(cur);
   page.jsRefs = [...refs].sort();
@@ -580,7 +586,7 @@ const newlyDangling = (file, urlsA, urlsB, snapA, snapB, siteBase) => {
   return [...new Set(dangling(file, urlsB, snapB, siteBase).filter((h) => !was.has(h)))];
 };
 
-const TEXT_ITEM = /^(".*")((?: \[[a-z:-]+\])*)$/s;
+const TEXT_ITEM = /^(".*")((?: \[[^\] ]+\])*)$/s;
 /** texts 항목(`"글자 흐름" [표시]`)에서 글자 흐름만. */
 const flowOf = (item) => JSON.parse(TEXT_ITEM.exec(item)[1]);
 const NEUTRAL_MARK = new RegExp(`‹/?(?:${[...NEUTRAL_INLINE].join("|")})›`, "g");
