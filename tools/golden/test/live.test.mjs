@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { canonLines } from "../lib/canon.mjs";
 import { compareBytes, compareDirs, formatReport, listFiles, treeHash } from "../lib/compare.mjs";
+import { collectHookClasses, compareInvariants, formatInvariantsReport, hookListDrift, readHookList, snapshotDir, snapshotHash } from "../lib/invariants.mjs";
 import { RENDER_STAGES, preparePristine, readWorkflowStages, renderIsolated } from "../lib/render.mjs";
 
 // 실제 저장소로 돌리는 측정(#236 완료 조건 1·2와 변이 시험의 시각 의존 확인). `npm run test:live`(GOLDEN_LIVE=1)에서만 돈다.
@@ -115,7 +116,7 @@ test("시각 의존 확인: BUILD_NOW를 하루 다르게 준 두 렌더는 정�
       const policy = await policyPages(one.docsDir);
       tried.push({ d1, d2, failing: cmp.failing.length });
       say(`쌍 ${d1} vs ${d2}: 낙제 ${cmp.failing.length}장 (정책대출 거래 수 문장을 가진 장 ${policy.length}장: ${policy.join(", ")})`);
-      if (cmp.failing.length) found = { d1, d2, cmp, policy };
+      if (cmp.failing.length) found = { d1, d2, cmp, policy, inv: await compareInvariants(one.docsDir, two.docsDir) };
     } finally {
       await Promise.all([one.dispose(), two.dispose()]);
     }
@@ -127,6 +128,80 @@ test("시각 의존 확인: BUILD_NOW를 하루 다르게 준 두 렌더는 정�
   assert.ok(failNames.every((f) => found.policy.includes(f)), "낙제한 장은 모두 정책대출 문장을 가진 장이다");
   const changed = found.cmp.failing.flatMap((f) => f.hunks.flatMap((h) => [...h.removed, ...h.added]));
   assert.ok(changed.length > 0 && changed.every(isPolicyLine), "달라진 줄은 전부 그 정책대출 거래 수 문장이다(다른 시각 의존이 없다)");
+  // invariants(#274)도 같은 장을 본문 텍스트로 낙제시킨다 — BUILD_NOW가 다른 두 렌더는 디자인이 같아도 "다르다".
+  // 그래서 기준과 후보는 같은 입력·같은 BUILD_NOW로 렌더해 견준다(bin/invariants.mjs --render).
+  const invHard = found.inv.pages.filter((p) => p.status === "hard");
+  say(`invariants: BUILD_NOW가 하루 다른 쌍에서 하드 ${invHard.length}장(${invHard.map((p) => p.file).join(", ")}), check ${[...new Set(invHard.flatMap((p) => p.findings.map((f) => f.id)))].join("·")}`);
+  assert.deepEqual(invHard.map((p) => p.file), failNames, "정준 비교가 낙제시킨 장과 같다");
+  assert.ok(invHard.every((p) => p.findings.every((f) => f.id === "text")), "달라진 것은 본문 텍스트뿐이다");
+});
+
+test("invariants(#274): 같은 SHA를 같은 BUILD_NOW로 두 번 렌더하면 diff 0, 커밋된 docs/는 자기 자신과 diff 0", opts, async () => {
+  const p = await getPristine();
+  const [one, two] = [await renderIsolated(p, { env: { BUILD_NOW: NOW } }), await renderIsolated(p, { env: { BUILD_NOW: NOW } })];
+  try {
+    const r = await compareInvariants(one.docsDir, two.docsDir);
+    say(formatInvariantsReport(r).split("\n").slice(0, 7).join("\nGOLDEN-LIVE "));
+    assert.equal(r.ok, true, formatInvariantsReport(r));
+    assert.deepEqual([r.total, r.pass, r.soft, r.hard, r.site.length], [67, 67, 0, 0, 0], "하드도 소프트도 없다");
+    assert.equal(r.noindexA.length, 6, "noindex 6장(이슈 본문)");
+  } finally {
+    await Promise.all([one.dispose(), two.dispose()]);
+  }
+  const committed = path.join(p.dir, "docs");
+  const self = await compareInvariants(committed, committed);
+  assert.deepEqual([self.ok, self.total, self.pass], [true, 67, 67]);
+  say(`invariants 스냅숏(커밋된 docs/, ${p.label}) sha256`, snapshotHash(await snapshotDir(committed)));
+});
+
+test("invariants(#274): 실제 67장에 변이를 넣는다 — class만 바꾸면 통과, 숫자 한 자리·id 제거는 장마다 잡힌다", opts, async () => {
+  const { cp, mkdtemp, readFile: read, rm, writeFile } = await import("node:fs/promises");
+  const os = await import("node:os");
+  const p = await getPristine();
+  const base = path.join(p.dir, "docs");
+  const files = await listFiles(base, (f) => f.endsWith(".html"));
+  const hooks = new Set((await readHookList()).all);
+  const tmp = await mkdtemp(path.join(os.tmpdir(), "golden-inv-live-"));
+  // 인라인 script는 건드리지 않고(그 안의 class 문자열은 JS다) 태그의 속성만 바꾼다.
+  const outsideScripts = (html, fn) => {
+    const stash = [];
+    return fn(html.replace(/<script(\s[^>]*)?>[\s\S]*?<\/script>/g, (m) => `\u0000${stash.push(m) - 1}\u0000`)).replace(/\u0000(\d+)\u0000/g, (_, i) => stash[Number(i)]);
+  };
+  const variants = {
+    // 훅 class는 남기고 나머지 class를 갈아 끼운다 + style 값을 바꾼다.
+    classOnly: (html) => outsideScripts(html, (h) => h.replace(/ class="([^"]*)"/g, (m, v) => ` class="${[...v.split(/\s+/).filter((c) => hooks.has(c)), "tw:flex", "tw:p-4"].join(" ")}"`).replace(/ style="[^"]*"/g, ' style="margin:0"')),
+    // body의 첫 숫자 한 자리를 바꾼다(태그 밖 텍스트).
+    digit: (html) => outsideScripts(html, (h) => h.replace(/(<body[\s\S]*?>[^<>]*?)(\d)(?=[^<>]*<)/, (m, pre, d) => `${pre}${(Number(d) + 1) % 10}`)),
+    // body의 첫 id를 지운다.
+    noId: (html) => outsideScripts(html, (h) => h.replace(/(<body[\s\S]*?) id="[^"]*"/, "$1")),
+  };
+  try {
+    for (const [name, fn] of Object.entries(variants)) {
+      const dir = path.join(tmp, name);
+      await cp(base, dir, { recursive: true });
+      let changed = 0;
+      for (const f of files) {
+        const html = await read(path.join(base, f), "utf8");
+        const out = fn(html);
+        if (out !== html) changed++;
+        await writeFile(path.join(dir, f), out);
+      }
+      const r = await compareInvariants(base, dir);
+      say(`변이 ${name}: 바뀐 장 ${changed}/67, 통과 ${r.pass}, 소프트 ${r.soft}, 하드 ${r.hard}`);
+      assert.equal(changed, 67, `${name}: 67장 모두 변이가 들어갔다`);
+      if (name === "classOnly") assert.deepEqual([r.ok, r.pass], [true, 67], formatInvariantsReport(r));
+      else assert.equal(r.hard, 67, `${name}: 67장 모두 잡힌다\n${formatInvariantsReport(r, { maxItems: 2 }).split("\n").slice(0, 30).join("\n")}`);
+    }
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
+});
+
+test("invariants(#274): 훅 클래스 목록이 렌더할 SHA의 소스와 맞는다", opts, async () => {
+  const p = await getPristine();
+  const drift = hookListDrift(await readHookList(), await collectHookClasses(p.dir));
+  say(`훅 클래스 목록 대 ${p.label}: 소스에만 ${drift.missing.length}, 목록에만 ${drift.stale.length}`);
+  assert.deepEqual([drift.missing, drift.stale], [[], []]);
 });
 
 test("BUILD_NOW 미설정이면 현행 코드와 바이트 동일 (Date.now를 같은 값으로 모킹한 변경 전·후 비교)", { ...opts, skip: LIVE && BASE_SHA ? false : opts.skip || "GOLDEN_BASE_SHA가 없다" }, async () => {
