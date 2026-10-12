@@ -9,7 +9,8 @@
       "source": "뉴시스 경제",
       "category": "rates",
       "preview": "[서울=뉴시스]고재은 기자 = 미국 연방준비제도(Fed·연준) 내 대표적 매파로 꼽히는 베스 해맥 클리블랜드 연방준비은행(연은) 총재가 기업의 가격 결정력과 견조한 경제 성장세를 고려할 때 현재 금리 수준은 인플레이…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Fed Hawkish Policy \"Corporate Pricing Power Rising...Current Rates Insufficient to Curb Inflation"
     },
     {
       "title": "서울 아파트 매매가, 절반이 전고점 넘었다",
@@ -25,6 +26,7 @@
           "source": "조선비즈 부동산"
         }
       ],
+      "titleEn": "Half of Seoul apartment sales prices exceed previous highs",
       "context": [
         {
           "kind": "realestate",
@@ -46,6 +48,7 @@
       "category": "realestate",
       "preview": "8월 서울 아파트 3분위 평균 매매가 작년 12월 대비 12% 가까이 급등 시장 옥죄는 세제개편·대출 규제에 중간 가격대로 주택수요 몰린 영향세제개편안 이후 서울 강남권 고가 ..",
       "dupes": [],
+      "titleEn": "If you buy now, it jumps 14,000,000 won a month\"... Seoul's mid-price apartment sales price hits 1,080,000,000",
       "context": [
         {
           "kind": "realestate",
@@ -74,7 +77,8 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 김유향 기자 = 한글날 연휴에서 돌아온 코스피는 12일 장중 낙폭을 키워 2∼3%대의 급락세를 보이고 있다. 이날까지 4거래일...",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Kospi, Kosdaq drop 2-3% amid Samsung Electronics weakness as foreigners sell"
     },
     {
       "title": "[주간뉴욕증시] 美 3분기 실적시즌 시작…9월 CPI 주목",
@@ -83,7 +87,8 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스]고재은 기자 = 이번 주 뉴욕증시 투자자들은 대형 은행을 시작으로 본격화하는 3분기 기업 실적 발표와 9월 물가 지표에 주목할 전망이다. 11일(현지 시간) 야후파이낸스 등에 따르면 오는 13일부터 미…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Weekly New York Stock Market: U.S. Third-Quarter Earnings Season Begins... Watch September CPI"
     },
     {
       "title": "이성훈 LH 사장 “올해 수도권 8.6만가구 착공… 공공주택 품질 혁신”",
@@ -93,6 +98,7 @@
       "category": "realestate",
       "preview": "이성훈 한국토지주택공사(LH) 사장이 12일 “올해 수도권 8만6000가구, 전국 9만6000가구의 주택을 착공하겠다”고 밝혔다. 서울 서리풀·태릉 등 공공택지에서는 인허가와 보상, 철거 등을 병행해 주택 착공 시기…",
       "dupes": [],
+      "titleEn": "Lee Sung-hoon, LH CEO: \"86,000 housing units to be started in Seoul area this year... Innovation in public housing quality",
       "context": [
         {
           "kind": "realestate",
@@ -113,7 +119,8 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Affordable Half-Price Apartments\" Spark Huge Interest as Young People's Housing Prices Drop… Park Geun-hye Also Applied"
     },
     {
       "title": "수억원 오른 아파트 ‘영끌’해 샀더니…“직전 신고가 계약 취소됐어요”",
@@ -123,6 +130,7 @@
       "category": "realestate",
       "preview": "작년 서울 계약 해제 6419건 5년 만에 2배 이상으로 치솟아 구로·성동·중구 10%대 기록 의심거래 8건은 경찰 수사의뢰서울 아파트 매매 계약 해제율이 5년 새 2배 이상으로..",
       "dupes": [],
+      "titleEn": "Apartments priced in the tens of millions bought on a 'yingkeul' basis... \"The previous highest bid contract was canceled",
       "context": [
         {
           "kind": "realestate",
@@ -143,7 +151,8 @@
       "source": "연합뉴스 경제",
       "category": "other",
       "preview": "(세종=연합뉴스) 김수현 기자 = 주병기 공정거래위원장은 12일 \"조사의 실효성과 절차적 공정성을 확보하기 위해 조사 불응에 경제적 제재를 강화...",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Chu Byung-gi \"Strengthen Economic Sanctions for Non-Cooperation in Investigations... Enhance Procedural Transparency"
     },
     {
       "title": "[인사] 재정경제부",
@@ -152,7 +161,8 @@
       "source": "연합뉴스 경제",
       "category": "other",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "[Personnel] Ministry of Finance and Economy"
     },
     {
       "title": "전남광주 경제자유구역 확대 추진…함평·장성 452만㎡ 추가",
@@ -161,7 +171,8 @@
       "source": "연합뉴스 경제",
       "category": "other",
       "preview": "(전남광주=연합뉴스) 박철홍 기자 = 반도체 협력기업과 외국인 투자기업 유치를 위해 전남광주 함평·장성 지역 산업단지 452만㎡를 경제자유구역에...",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Gwangju, Jeonnam Economic Free Zone Expansion Pushed Forward... Hampyeong, Jangseong Add 4,520,000㎡"
     },
     {
       "title": "입장권 20초 만에 동났다…코스프레 축제의 경제학 [차이나 워치]",
@@ -170,7 +181,8 @@
       "source": "한국경제 경제",
       "category": "other",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Tickets sold out in 20 seconds... The economics of a cosplay festival [China Watch]"
     },
     {
       "title": "증시 조정에…3분기 증권결제대금, 전 분기보다 17% 줄었다",
@@ -179,7 +191,8 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 강수지 기자 = 한국예탁결제원은 지난 3분기 증권 결제대금이 일평균 35조4천억원으로 집계됐다고 12일 밝혔다.",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Market adjustment... securities settlement funds in the third quarter down 17% from the previous quarter"
     },
     {
       "title": "한은 총재 \"수도권 집값·가계부채에 금융 불균형 우려\"",
@@ -189,6 +202,7 @@
       "category": "other",
       "preview": "(서울=연합뉴스) 한지훈 기자 = 신현송 한국은행 총재는 12일 \"수도권 주택가격의 오름세와 가계부채 증가세에 따른 금융 불균형 우려가 여전히 ...",
       "dupes": [],
+      "titleEn": "BOK Governor Expresses Concerns Over Imbalance in Financial System Due to Housing Prices and Household Debt in the Capital Area",
       "context": [
         {
           "kind": "rates",
@@ -207,7 +221,8 @@
       "source": "뉴시스 경제",
       "category": "rates",
       "preview": "[세종=뉴시스]박광온 기자 = 정부가 반도체·재생에너지·우주항공 등 첨단산업 핵심품목 13개를 경제안보품목으로 추가 지정해 관리 대상을 기존 327개에서 340개로 늘린다. 이 가운데 해외 수출통제 등에 선제적으로…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Expanded to 340 economic security items... 100 key items get maximum 2.3%p interest rate preference"
     },
     {
       "title": "한은 \"집값 상승 기대 자극 않도록 일관된 정책 필요\"",
@@ -217,6 +232,7 @@
       "category": "other",
       "preview": "(서울=연합뉴스) 한지훈 기자 = 한국은행은 12일 \"주택가격 상승 기대와 가계대출 증가세를 자극하지 않도록 일관된 정책 기조를 유지해나갈 필요...",
       "dupes": [],
+      "titleEn": "BOK says consistent policy needed to avoid stimulating expectations of rising home prices",
       "context": [
         {
           "kind": "rates",
@@ -235,7 +251,8 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Same size but 200,000,000 difference... 'Apartment next door' office building sees soaring prices"
     },
     {
       "title": "LH 임대주택 150만호 돌파…\"가구당 年 392만원 절감\"",
@@ -244,7 +261,8 @@
       "source": "뉴시스 경제",
       "category": "realestate",
       "preview": "[서울=뉴시스]정유선 기자 = 한국토지주택공사(LH)는 올해 8월 기준 운영 중인 건설·매입·전세 임대주택 재고량이 150만호를 넘어섰으며, 가구당 연간 약 392만원의 주거비 절감 효과를 제공하고 있다고 12일 밝…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "LH Rental Housing Surpasses 1,500,000 Units...\"Household Savings Reach 3,920,000 Won"
     },
     {
       "title": "코스피, 장초반 1% 내외 내리며 6,500대…4거래일 연속 하락세(종합)",
@@ -253,7 +271,8 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 김유향 기자 = 한글날 연휴에서 돌아온 코스피는 12일 장 초반 1% 내외 하락세를 보이고 있다. 이날까지 4거래일 연속 약세...",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "KOSPI falls 1% to 6,500 in early trading, marking four consecutive days of decline"
     },
     {
       "title": "일본 증시, '스포츠의 날' 공휴일로 휴장",
@@ -262,7 +281,8 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 신효령 기자 = 12일 일본 도쿄증시는 '스포츠의 날' 공휴일을 맞아 휴장한다. 이에 따라 이날 도쿄증권거래소에서 주식과 상장지수펀드(ETF) 등 현물 매매는 이뤄지지 않는다. 일본 증시는 다음 거래…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Japanese stock market closes for \"Sports Day\" holiday"
     },
     {
       "title": "은평구 백련산파크자이 84.901㎡ 11억 4500만원… 최근 3년 신고가 [MAI부동산]",
@@ -272,6 +292,7 @@
       "category": "realestate",
       "preview": "MAI 부동산 2026년 10월 11일 국토교통부 실거래가 시스템에 신규 등록된 서울 은평구 응암동 백련산파크자이 전용 84.901㎡ 거래가 11억 4,500만 원에 체결되며 최근..",
       "dupes": [],
+      "titleEn": "Eunpyeong-gu Baekryeonsan Park Jae 84.901㎡ 1,145,000,000won… Recent 3-Year High Price [MAI Real Estate]",
       "context": [
         {
           "kind": "realestate",
@@ -293,6 +314,7 @@
       "category": "realestate",
       "preview": "MAI 부동산 2026년 10월 11일 국토부 실거래가 시스템에 신규 등록된 서울 은평구 응암동 응암푸르지오 전용 84.2㎡가 8억 7,800만 원에 거래되며 최근 3년 내 신고가..",
       "dupes": [],
+      "titleEn": "Eunpyeong-gu Eungam Purijio 84.2㎡ 878,000,000won transaction... highest price in 3 years [MAI Real Estate]",
       "context": [
         {
           "kind": "realestate",
@@ -313,7 +335,8 @@
       "source": "매일경제 부동산",
       "category": "realestate",
       "preview": "아산·천안·청주·원주 등 첨단 산단 신규 입주지 중심으로 인구 순유입 지속 일자리·주거 인프라 선순환 효과지방 도시의 인구 감소 우려 속에서도 첨단 산업 기반과 신규 주택 공급이..",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Upward-Trending Cities Amid the Population Cliff in Local Areas Share Common Factors: Jobs and New Housing Attract People"
     },
     {
       "title": "LH, 임대주택 150만호 넘었다… 거주 인구는 266만명",
@@ -322,7 +345,8 @@
       "source": "조선비즈 부동산",
       "category": "realestate",
       "preview": "한국토지주택공사(LH)가 운영 중인 임대주택(건설임대·매입임대·전세임대)이 150만 호를 넘었다. 거주인구는 대구광역시 인구보다 많은 266만명에 달한다. LH는 내년부터 2030년까지 매년 14만호 이상 임대주택을…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "LH exceeds 1,500,000 rental housing units... residents reach 2,660,000 people"
     }
   ],
   "realestateStats": [
