@@ -1,22 +1,74 @@
 {
-  "updatedAt": "2026-10-12T16:43:35.391Z",
+  "updatedAt": "2026-10-12T20:18:14.641Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 부동산: 30대 직장인은 빌라를 팔고 아파트로 갈아타기를 고려하고 있지만 현실적인 어려움을 겪고 있다. 김구라 채널에서는 판교·분당 지역이 S급 부동산으로 평가받는 등 신도시 부동산 등급표를 공개했다. 안산·과천 등 일부 지역에서는 신규주택 분양이 시작되며 미분양 물량이 없는 상태를 유지하고 있다. LH 사장은 직원의 3주택 중 2주택을 처분할 것을 권고하며 사내대출 문제를 개선하겠다고 밝혔다. 서울 핵심지역에서는 조합 없이 LH가 직접 재개발을 진행하는 사례가 등장하며 정부에 대한 신뢰가 반영되고 있다.\n- 금리·예금·투자상품: 금리·예금·투자상품: AI로 '돈의 역류' 시작됐다…국채금리 24년 만에 최고인데 나스닥은 상승\n- 증시·환율: 뉴욕증시는 혼조 출발했으며, 나스닥은 0.12% 하락했고 다우는 0.3% 상승했다. 홍콩 증시는 유가 급등 우려 완화에 따라 H주가 0.25% 상승하며 마감했다. 중국 증시는 주요 지표 발표 전 관망세로 창업판이 2.16% 하락했다. 중국 세계한인경제인대회에서는 4억8천600만달러 규모의 수출 상담이 진행됐다. 한은 총재는 환율이 아직 예년보다 높아 추가 하락 여지가 있다고 밝혔다.\n- 기타 경제 소식: 오늘 노벨경제학상 수상자들의 연구가 경기 안정 해법으로 주목받고 있다. 수상자들의 연구는 '기대'가 경제에 미치는 영향을 분석하는 데 초점을 맞췄다. 학계는 거시정책의 과학화를 강조하며 한국의 통화와 재정 정책의 엇박자를 점검해야 한다는 의견을 제시했다. 이번 수상은 케인스의 이론이 현대 경제학에서 다시 주목받고 있음을 보여준다. 수상자들의 연구는 경기변동 완화에 기여한 것으로 평가받고 있다.",
-    "en": "- Real Estate: Workers in their 30s are considering selling their villas and moving to apartments, but they are facing practical difficulties. The Kim Gu-ra channel disclosed a new city real estate rating table, in which the Pungan and Bundang areas are rated as S-grade real estate. In some areas, such as Ansan and Gwacheon, new housing sales have started, and they have maintained a state with no unsold units. The president of LH recommended that employees dispose of two out of their three homes, stating that they will improve the internal loan issue. In Seoul's key areas, cases are emerging where LH is directly conducting redevelopment without a housing cooperative, reflecting trust in the government.\n- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: AI로 '돈의 역류' 시작됐다…국채금리 24년 만에 최고인데 나스닥은 상승\n- Stocks & FX: The New York stock market opened mixed, with the Nasdaq falling 0.12% and the Dow rising 0.3%. The Hong Kong stock market closed with H-shares rising 0.25% as concerns over a sharp rise in oil prices eased. The Chinese stock market remained cautious ahead of major indicator releases, with the Star Market falling 2.16%. At the World Korean Business Leaders Conference in China, export consultations worth 486,000,000 dollars were conducted. The Governor of the Bank of Korea stated that the exchange rate is still higher than usual, indicating potential for further declines.\n- Other Economic News: Today, the research of Nobel Economics Prize winners is receiving attention as a solution for economic stability. The winners' research focused on analyzing the impact of \"expectations\" on the economy. Academia emphasized the need for scientific macroeconomic policies and suggested that Korea should examine the misalignment between its monetary and fiscal policies. This award demonstrates that Keynes' theory is once again receiving attention in modern economics. The winners' research is evaluated as having contributed to mitigating business cycle fluctuations."
+    "ko": "- 증시·환율: 뉴욕증시는 혼조 마감했으며, 나스닥은 0.4% 하락했고 다우는 0.4% 상승했다. 뉴욕증시는 혼조 출발했고, 나스닥은 0.12% 하락했으며 다우는 0.3% 상승했다. 홍콩 증시는 유가 급등 우려 완화에 따라 H주가 0.25% 상승하며 상승 마감했다. 중국에서는 세계한인경제인대회에서 4억8천600만달러 규모의 수출 상담이 진행됐다. 한은 총재는 환율이 아직 예년보다 높아 추가 하락 여지가 있다고 밝혔다.\n- 부동산: 강남 지역에서는 급매 물량이 쌓이고 있지만 서울 아파트값은 상승세를 유지하고 있다. AI 기술 발전에 따라 주택 가치 평가 기준이 변화하고 있으며, 로봇이 잘 다니는 지역의 집값이 높아지는 경향이 나타나고 있다. 부동산 시장에서는 거래량 감소와 매물 증가에도 불구하고 집값 하락을 단정하기 어렵다고 전문가들이 분석하고 있다. 30대 직장인들은 빌라를 팔고 아파트로 갈아타기를 원하지만, 이에 대한 가능성은 여전히 불확실하다. 김구라 채널에서는 판교와 분당 지역을 S급으로 평가하며 신도시 부동산 등급표를 공개했다.\n- 금리·예금·투자상품: 금리·예금·투자상품: AI로 '돈의 역류' 시작됐다…국채금리 24년 만에 최고인데 나스닥은 상승\n- 기타 경제 소식: 오늘 노벨경제학상 수상자들이 미래 기대에 기반한 경기안정 해법을 제시했다. 경제학자들은 '기대'가 경기변동 완화에 기여하는 영향을 분석했다. 수상자들의 연구는 케인스 경제학의 현대적 부활을 의미한다. 이들은 경제 정책 수립에 있어 기대의 중요성을 강조했다. 수상자들의 성과는 경제 이론 발전에 기여한 것으로 평가받고 있다.",
+    "en": "- Stocks & FX: The New York stock market closed mixed, with the Nasdaq falling 0.4% and the Dow rising 0.4%. The New York stock market opened mixed, with the Nasdaq falling 0.12% and the Dow rising 0.3%. The Hong Kong stock market closed higher as H shares rose 0.25% amid eased concerns over a sharp rise in oil prices. In China, export consultations worth 486,000,000 dollars were conducted at the World Korean Business Leaders Conference. The head of the Bank of Korea stated that the exchange rate is still higher than usual and there is still room for further decline.\n- Real Estate: In the Gangnam area, although there is an accumulation of properties for immediate sale, apartment prices in Seoul continue to rise. With the development of AI technology, the criteria for evaluating housing value are changing, and there is a trend of rising house prices in areas where robots are frequently used. Experts in the real estate market analyze that it is difficult to conclude that house prices will definitely fall, despite a decrease in transaction volume and an increase in available properties. Thirty-something office workers want to sell their villas and move to apartments, but the possibility of this remains uncertain. The Kim Gu-ra channel evaluated the Pajang and Bundang areas as S-grade and disclosed a new town real estate grade table.\n- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: AI로 '돈의 역류' 시작됐다…국채금리 24년 만에 최고인데 나스닥은 상승\n- Other Economic News: Today, Nobel Economics Prize winners proposed solutions for economic stability based on future expectations. Economists analyzed the impact of \"expectations\" in mitigating business cycle fluctuations. The winners' research signifies a modern revival of Keynesian economics. They emphasized the importance of expectations in establishing economic policy. Their achievements are recognized as contributing to the development of economic theory."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "30대 직장인은 빌라를 팔고 아파트로 갈아타기를 고려하고 있지만 현실적인 어려움을 겪고 있다. 김구라 채널에서는 판교·분당 지역이 S급 부동산으로 평가받는 등 신도시 부동산 등급표를 공개했다. 안산·과천 등 일부 지역에서는 신규주택 분양이 시작되며 미분양 물량이 없는 상태를 유지하고 있다. LH 사장은 직원의 3주택 중 2주택을 처분할 것을 권고하며 사내대출 문제를 개선하겠다고 밝혔다. 서울 핵심지역에서는 조합 없이 LH가 직접 재개발을 진행하는 사례가 등장하며 정부에 대한 신뢰가 반영되고 있다.",
-      "lineEn": "Workers in their 30s are considering selling their villas and moving to apartments, but they are facing practical difficulties. The Kim Gu-ra channel disclosed a new city real estate rating table, in which the Pungan and Bundang areas are rated as S-grade real estate. In some areas, such as Ansan and Gwacheon, new housing sales have started, and they have maintained a state with no unsold units. The president of LH recommended that employees dispose of two out of their three homes, stating that they will improve the internal loan issue. In Seoul's key areas, cases are emerging where LH is directly conducting redevelopment without a housing cooperative, reflecting trust in the government.",
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "뉴욕증시는 혼조 마감했으며, 나스닥은 0.4% 하락했고 다우는 0.4% 상승했다. 뉴욕증시는 혼조 출발했고, 나스닥은 0.12% 하락했으며 다우는 0.3% 상승했다. 홍콩 증시는 유가 급등 우려 완화에 따라 H주가 0.25% 상승하며 상승 마감했다. 중국에서는 세계한인경제인대회에서 4억8천600만달러 규모의 수출 상담이 진행됐다. 한은 총재는 환율이 아직 예년보다 높아 추가 하락 여지가 있다고 밝혔다.",
+      "lineEn": "The New York stock market closed mixed, with the Nasdaq falling 0.4% and the Dow rising 0.4%. The New York stock market opened mixed, with the Nasdaq falling 0.12% and the Dow rising 0.3%. The Hong Kong stock market closed higher as H shares rose 0.25% amid eased concerns over a sharp rise in oil prices. In China, export consultations worth 486,000,000 dollars were conducted at the World Korean Business Leaders Conference. The head of the Bank of Korea stated that the exchange rate is still higher than usual and there is still room for further decline.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
+        {
+          "title": "[속보] 뉴욕증시, 혼조 마감…나스닥 0.4%↓· 다우 0.4%↑",
+          "link": "https://www.newsis.com/view/NISX20261013_0003823006",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "[속보] 뉴욕증시, 혼조 출발…나스닥 0.12%↓· 다우 0.3%↑",
+          "link": "https://www.newsis.com/view/NISX20261012_0003822968",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "[올댓차이나] 홍콩 증시, 유가 급등 우려 완화에 상승 마감… H주 0.25%↑",
+          "link": "https://www.newsis.com/view/NISX20261012_0003822943",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "[동포의 창] 中 세계한인경제인대회서 4억8천600만달러 수출 상담",
+          "link": "https://www.yna.co.kr/view/AKR20261012175000371",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "한은 총재 \"환율, 아직 예년보다 높아…추가 하락 여지 있다\"",
+          "link": "https://www.yna.co.kr/view/AKR20261012161000002",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "강남 지역에서는 급매 물량이 쌓이고 있지만 서울 아파트값은 상승세를 유지하고 있다. AI 기술 발전에 따라 주택 가치 평가 기준이 변화하고 있으며, 로봇이 잘 다니는 지역의 집값이 높아지는 경향이 나타나고 있다. 부동산 시장에서는 거래량 감소와 매물 증가에도 불구하고 집값 하락을 단정하기 어렵다고 전문가들이 분석하고 있다. 30대 직장인들은 빌라를 팔고 아파트로 갈아타기를 원하지만, 이에 대한 가능성은 여전히 불확실하다. 김구라 채널에서는 판교와 분당 지역을 S급으로 평가하며 신도시 부동산 등급표를 공개했다.",
+      "lineEn": "In the Gangnam area, although there is an accumulation of properties for immediate sale, apartment prices in Seoul continue to rise. With the development of AI technology, the criteria for evaluating housing value are changing, and there is a trend of rising house prices in areas where robots are frequently used. Experts in the real estate market analyze that it is difficult to conclude that house prices will definitely fall, despite a decrease in transaction volume and an increase in available properties. Thirty-something office workers want to sell their villas and move to apartments, but the possibility of this remains uncertain. The Kim Gu-ra channel evaluated the Pajang and Bundang areas as S-grade and disclosed a new town real estate grade table.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "강남에 급매 쌓여도 서울은 상승세 … 아파트값 ‘평탄화’가 매수 기회?",
+          "link": "https://www.mk.co.kr/news/realestate/12173801",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "\"로봇이 잘 다니는 집이 비싸진다\"…AI 시대, 주택 가치 평가 기준 변화",
+          "link": "https://www.newsis.com/view/NISX20261012_0003821406",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "\"거래 줄고 매물 늘어도 집값 하락 단정 못해\"…전문가가 짚은 부동산 시장의 변수",
+          "link": "https://www.newsis.com/view/NISX20261012_0003822363",
+          "source": "뉴시스 경제"
+        },
         {
           "title": "\"빌라 팔고 아파트 가고 싶은데\"…30대 직장인, 갈아타기 가능할까",
           "link": "https://www.newsis.com/view/NISX20261012_0003822342",
@@ -26,21 +78,6 @@
           "title": "\"판교·분당은 역시 S급\"…김구라 채널에서 매긴 '신도시 부동산 등급표'",
           "link": "https://www.newsis.com/view/NISX20261012_0003821375",
           "source": "뉴시스 경제"
-        },
-        {
-          "title": "안산·과천 등 '미분양 제로' 지역서 신규주택 분양",
-          "link": "https://www.hankyung.com/article/202610127220i",
-          "source": "한국경제 부동산"
-        },
-        {
-          "title": "LH 사장 \"3주택 중 2주택 처분…직원 사내대출 문제 개선할 것\"",
-          "link": "https://www.newsis.com/view/NISX20261012_0003822833",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "서울 핵심지에 조합없이 LH가 직접 재개발…정부 믿고 들어가볼까 [부동산 손품노트]",
-          "link": "https://www.mk.co.kr/news/realestate/12173983",
-          "source": "매일경제 부동산"
         }
       ]
     },
@@ -62,48 +99,11 @@
       ]
     },
     {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "뉴욕증시는 혼조 출발했으며, 나스닥은 0.12% 하락했고 다우는 0.3% 상승했다. 홍콩 증시는 유가 급등 우려 완화에 따라 H주가 0.25% 상승하며 마감했다. 중국 증시는 주요 지표 발표 전 관망세로 창업판이 2.16% 하락했다. 중국 세계한인경제인대회에서는 4억8천600만달러 규모의 수출 상담이 진행됐다. 한은 총재는 환율이 아직 예년보다 높아 추가 하락 여지가 있다고 밝혔다.",
-      "lineEn": "The New York stock market opened mixed, with the Nasdaq falling 0.12% and the Dow rising 0.3%. The Hong Kong stock market closed with H-shares rising 0.25% as concerns over a sharp rise in oil prices eased. The Chinese stock market remained cautious ahead of major indicator releases, with the Star Market falling 2.16%. At the World Korean Business Leaders Conference in China, export consultations worth 486,000,000 dollars were conducted. The Governor of the Bank of Korea stated that the exchange rate is still higher than usual, indicating potential for further declines.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "[속보] 뉴욕증시, 혼조 출발…나스닥 0.12%↓· 다우 0.3%↑",
-          "link": "https://www.newsis.com/view/NISX20261012_0003822968",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "[올댓차이나] 홍콩 증시, 유가 급등 우려 완화에 상승 마감… H주 0.25%↑",
-          "link": "https://www.newsis.com/view/NISX20261012_0003822943",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "[올댓차이나] 中 증시, 주요 지표 발표 전 관망세로 하락 마감…창업판 2.16%↓",
-          "link": "https://www.newsis.com/view/NISX20261012_0003822921",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "[동포의 창] 中 세계한인경제인대회서 4억8천600만달러 수출 상담",
-          "link": "https://www.yna.co.kr/view/AKR20261012175000371",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "한은 총재 \"환율, 아직 예년보다 높아…추가 하락 여지 있다\"",
-          "link": "https://www.yna.co.kr/view/AKR20261012161000002",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "오늘 노벨경제학상 수상자들의 연구가 경기 안정 해법으로 주목받고 있다. 수상자들의 연구는 '기대'가 경제에 미치는 영향을 분석하는 데 초점을 맞췄다. 학계는 거시정책의 과학화를 강조하며 한국의 통화와 재정 정책의 엇박자를 점검해야 한다는 의견을 제시했다. 이번 수상은 케인스의 이론이 현대 경제학에서 다시 주목받고 있음을 보여준다. 수상자들의 연구는 경기변동 완화에 기여한 것으로 평가받고 있다.",
-      "lineEn": "Today, the research of Nobel Economics Prize winners is receiving attention as a solution for economic stability. The winners' research focused on analyzing the impact of \"expectations\" on the economy. Academia emphasized the need for scientific macroeconomic policies and suggested that Korea should examine the misalignment between its monetary and fiscal policies. This award demonstrates that Keynes' theory is once again receiving attention in modern economics. The winners' research is evaluated as having contributed to mitigating business cycle fluctuations.",
+      "lineKo": "오늘 노벨경제학상 수상자들이 미래 기대에 기반한 경기안정 해법을 제시했다. 경제학자들은 '기대'가 경기변동 완화에 기여하는 영향을 분석했다. 수상자들의 연구는 케인스 경제학의 현대적 부활을 의미한다. 이들은 경제 정책 수립에 있어 기대의 중요성을 강조했다. 수상자들의 성과는 경제 이론 발전에 기여한 것으로 평가받고 있다.",
+      "lineEn": "Today, Nobel Economics Prize winners proposed solutions for economic stability based on future expectations. Economists analyzed the impact of \"expectations\" in mitigating business cycle fluctuations. The winners' research signifies a modern revival of Keynesian economics. They emphasized the importance of expectations in establishing economic policy. Their achievements are recognized as contributing to the development of economic theory.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
@@ -112,11 +112,6 @@
           "title": "미래 '기대'에 경기안정 해법 찾은 노벨경제학상 수상자들",
           "link": "https://www.yna.co.kr/view/AKR20261012175100002",
           "source": "연합뉴스 경제"
-        },
-        {
-          "title": "노벨경제학상에 학계 \"거시정책 과학으로…韓, 통화·재정 엇박자 점검해야\"",
-          "link": "https://www.newsis.com/view/NISX20261012_0003822927",
-          "source": "뉴시스 경제"
         },
         {
           "title": "'기대'가 경제에 미치는 영향 분석…경기변동 완화 기여",

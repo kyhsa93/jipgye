@@ -11155,7 +11155,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "후속기사가 이어집니다 ◎공감언론 뉴시스 only@newsis.com",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Breaking News] NY Stock Market Closes Mixed… Nasdaq Down 0.4%· Dow Up 0.4%"
       },
       {
         "title": "강남에 급매 쌓여도 서울은 상승세 … 아파트값 ‘평탄화’가 매수 기회?",
@@ -11164,7 +11165,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "부동산 이슈와 실거래가 브리핑서울 아파트값이 87주 연속 오르며 역대 최장 상승 기록을 한 주 더 늘렸다. 한국부동산원 10월 첫째 주 아파트 가격 동향에서 서울 매매가는 0.12..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 6,522만원",
+            "valueEn": "₩2,865M",
+            "note": "최근 1주 계약 141건 · 10/5 대비 +1.9%",
+            "noteEn": "141 deals in the last 1 weeks · +1.9% vs Oct 5"
+          }
+        ],
+        "titleEn": "Despite surge in listings in Gangnam, Seoul apartment prices continue to rise… Is the 'flattening' of prices a buying opportunity?"
       },
       {
         "title": "\"로봇이 잘 다니는 집이 비싸진다\"…AI 시대, 주택 가치 평가 기준 변화",
@@ -11173,7 +11187,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]장인혜 인턴 기자 = 인공지능(AI) 로봇의 확산으로 로봇이 이동하기 편한 구조가 미래 아파트 설계의 새로운 기준이 될 수 있다는 전망이 나왔다. 구독자 125만명의 유튜브 채널 '책과삶'에 따르면,…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Robots Make Homes More Expensive\"…AI Era Brings Changes in Housing Value Evaluation Criteria"
       },
       {
         "title": "\"거래 줄고 매물 늘어도 집값 하락 단정 못해\"…전문가가 짚은 부동산 시장의 변수",
@@ -11182,7 +11197,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]김혜경 기자, 김하은 인턴기자 = 최근 서울 아파트 거래량이 급감하고 매물이 늘어나는 가운데 부동산 시장의 단기적인 조정만으로 집값 하락을 단정해서는 안 된다는 전문가의 분석이 나왔다. 지난 10일 구…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "16억 4,554만원",
+            "valueEn": "₩1,646M",
+            "note": "최근 1주 계약 23건 · 10/5 대비 +30.2%",
+            "noteEn": "23 deals in the last 1 weeks · +30.2% vs Oct 5"
+          }
+        ],
+        "titleEn": "Even as transaction volumes drop and inventory rises, cannot conclude housing prices will fall\"…Experts highlight variables in the real estate market"
       },
       {
         "title": "\"빌라 팔고 아파트 가고 싶은데\"…30대 직장인, 갈아타기 가능할까",
@@ -11191,7 +11219,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]김혜경 기자, 박지우 인턴기자 = 빌라를 팔고 아파트로 갈아타고 싶지만 치솟은 집값과 대출 부담에 막막하다는 30대 직장인의 사연이 소개됐다. 전문가는 당장 아파트를 매수하기보다 현재 주거 환경에 대한…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Want to sell villa and move to apartment\"…30-something worker, is it possible to switch?"
       },
       {
         "title": "\"판교·분당은 역시 S급\"…김구라 채널에서 매긴 '신도시 부동산 등급표'",
@@ -11200,7 +11229,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]이지우 인턴 기자 = 방송인 김구라가 부동산 전문가들과 함께 수도권 1·2기 신도시 15곳의 입지와 주거환경, 미래 가치 등을 비교해 등급을 매겼다. 지난 9일 김구라는 김종효 알파경제 이사, 김인만…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Panjeong and Bundang are still S-grade\"… Kim Gu-ra's channel's 'New Town Real Estate Grade Chart"
       },
       {
         "title": "AI로 '돈의 역류' 시작됐다…국채금리 24년 만에 최고인데 나스닥은 상승",
@@ -11209,7 +11239,8 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스]강주연 인턴 기자 = 미국 국채금리가 24년 만에 최고 수준을 기록했음에도 나스닥 지수가 상승하는 현상은 높은 이자 비용을 감당할 수 있는 특정 성장 분야인 인공지능(AI)으로 자금이 집중되고 있기 때…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "AI sparks 'reverse flow of money'... government bond rates hit 24-year high but Nasdaq rises"
       },
       {
         "title": "[속보] 뉴욕증시, 혼조 출발…나스닥 0.12%↓· 다우 0.3%↑",
@@ -11218,7 +11249,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "후속기사가 이어집니다 ◎공감언론 뉴시스 only@newsis.com",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Breaking News] NY Stock Market Opens Mixed... Nasdaq Down 0.12%, Dow Up 0.3%"
       },
       {
         "title": "미래 '기대'에 경기안정 해법 찾은 노벨경제학상 수상자들",
@@ -11227,7 +11259,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(세종·서울=연합뉴스) 정책·은행·디지털자산팀 = 올해 노벨경제학상을 함께 거머쥔 미국 로버트 홀(83) 스탠퍼드대 교수·마이클 우드퍼드(71)...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Nobel Economics Laureates Find Solutions for Economic Stability Amid Future Expectations"
       },
       {
         "title": "[올댓차이나] 홍콩 증시, 유가 급등 우려 완화에 상승 마감… H주 0.25%↑",
@@ -11236,7 +11269,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 12일 미국과 러시아 간 디젤 공급 합의로 국제 유가 급등에 대한 우려가 완화하면서 상승 마감했다. 다만 중국 주요 경제지표 발표를 앞두고 관망 분위기가 퍼지고 중국 증시…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Ollin China] Hong Kong Stock Market Rises on Eased Concerns Over Sharp Oil Price Increase... H-Shares Up 0.25%"
       },
       {
         "title": "안산·과천 등 '미분양 제로' 지역서 신규주택 분양",
@@ -11245,7 +11279,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Areas such as Ansahn and Gwacheon Achieve 'Zero Unsold Units' as New Housing Units Are Launched"
       },
       {
         "title": "[동포의 창] 中 세계한인경제인대회서 4억8천600만달러 수출 상담",
@@ -11254,7 +11289,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "（서울＝연합뉴스）강성철 기자 = 세계한인경제무역협회(월드옥타·회장 박종범)는 중국 선전에서 개최한 '제30차 세계한인경제인대회 및 2026 코...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[동포의 창] 中 세계한인경제인대회서 4억8천600만달러 수출 상담"
       },
       {
         "title": "'기대'가 경제에 미치는 영향 분석…경기변동 완화 기여",
@@ -11263,7 +11299,8 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Analysis of the impact of expectations on the economy... contributes to easing business cycle fluctuations"
       },
       {
         "title": "케인스의 현대적 부활…올해의 노벨경제학상",
@@ -11272,7 +11309,8 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Keynes's Modern Resurgence... This Year's Nobel Economics Prize"
       },
       {
         "title": "서울 핵심지에 조합없이 LH가 직접 재개발…정부 믿고 들어가볼까 [부동산 손품노트]",
@@ -11281,7 +11319,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "도심 공공주택 복합사업 100가지 사실 (1~33)최근 정부가 직접 나선 주택 공급 사업이 있어 수요자들의 관심이 모인다. 국토교통부는 지난 9월 30일 도심 공공주택 복합사업(도..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "16억 4,554만원",
+            "valueEn": "₩1,646M",
+            "note": "최근 1주 계약 23건 · 10/5 대비 +30.2%",
+            "noteEn": "23 deals in the last 1 weeks · +30.2% vs Oct 5"
+          }
+        ],
+        "titleEn": "LH to directly redevelop key Seoul areas without a consortium—will the government's approach be trusted? [Real Estate Spotlight]"
       },
       {
         "title": "부산 삼익비치도 8.5억…지방 재건축 '막막'",
@@ -11290,7 +11341,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Busan Samik Beach Also 850,000,000... Local Reconstruction 'Unclear"
       },
       {
         "title": "서울 3분기 아파트 매매…절반 이상 '전고점' 넘어",
@@ -11299,7 +11351,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "16억 4,554만원",
+            "valueEn": "₩1,646M",
+            "note": "최근 1주 계약 23건 · 10/5 대비 +30.2%",
+            "noteEn": "23 deals in the last 1 weeks · +30.2% vs Oct 5"
+          }
+        ],
+        "titleEn": "Seoul apartment sales in the third quarter... more than half exceed previous highs"
       },
       {
         "title": "\"벽식 아파트도 평면 구조 바꾼다\"",
@@ -11308,7 +11373,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Even wall-type apartments will change to flat structures."
       },
       {
         "title": "LH 부채 2030년까지 200조 증가…\"공공주택 차질 우려\"",
@@ -11317,7 +11383,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "LH debt to increase by 200,000,000,000,000 by 2030...\"Concerns over delays in public housing"
       },
       {
         "title": "주택계약 취소 5년간 14만건…서울 해제율은 7.6%로 '껑충'",
@@ -11326,7 +11393,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "16억 4,554만원",
+            "valueEn": "₩1,646M",
+            "note": "최근 1주 계약 23건 · 10/5 대비 +30.2%",
+            "noteEn": "23 deals in the last 1 weeks · +30.2% vs Oct 5"
+          }
+        ],
+        "titleEn": "140,000 housing contract cancellations in 5 years... Seoul's cancellation rate at 7.6% 'soars"
       },
       {
         "title": "한은 총재 \"환율, 아직 예년보다 높아…추가 하락 여지 있다\"",
@@ -11335,7 +11415,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 채새롬 이도흔 기자 = 신현송 한국은행 총재는 12일 원/달러 환율이 아직 예년보다 높고, 추가 하락 여지가 있다고 밝혔다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "BOK Governor: Exchange rate still higher than usual... possibility of further decline remains"
       },
       {
         "title": "\"새 아파트 받으려다 7억 나갈 판\"…서울 집주인들 '날벼락'",
@@ -11344,7 +11425,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "16억 4,554만원",
+            "valueEn": "₩1,646M",
+            "note": "최근 1주 계약 23건 · 10/5 대비 +30.2%",
+            "noteEn": "23 deals in the last 1 weeks · +30.2% vs Oct 5"
+          }
+        ],
+        "titleEn": "Trying to Get a New Apartment Could Cost 700,000,000 Won\"… Seoul Homeowners Face a Blow"
       },
       {
         "title": "아파트 지을 땅 사놨다가 … 종부세 폭탄에 공급 좌초",
@@ -11353,7 +11447,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "정부가 프로젝트파이낸싱(PF) 보증 확대와 초기 사업비 지원 등 민간 주택 공급 활성화 대책을 쏟아내고 있지만, 정작 주택을 지으려고 땅을 사둔 사업자들은 수년 치 종합부동산세를 ..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Bought land to build apartments ... supply stalled by sudden property tax bomb"
       },
       {
         "title": "재건축 없이도 신축처럼 … 래미안식 리모델링",
@@ -11362,7 +11457,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "삼성물산이 기존 골조를 유지하면서 내부 구조와 설비, 외관을 새 아파트 수준으로 바꾸는 '넥스트 리모델링' 사업을 본격화한다. 첫 사업지는 서울 서초구 반포푸르지오 아파트다. 벽식..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 84㎡ 매매",
+            "labelEn": "서초구 apartment 84㎡ sale",
+            "value": "26억 4,720만원",
+            "valueEn": "₩2,647M",
+            "note": "최근 1주 계약 146건 · 10/5 대비 +4.0%",
+            "noteEn": "146 deals in the last 1 weeks · +4.0% vs Oct 5"
+          }
+        ],
+        "titleEn": "Without reconstruction, like new construction... Laimian-style remodeling"
       }
     ]
   }
