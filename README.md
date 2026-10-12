@@ -279,9 +279,11 @@ AI 요약은 로컬에 Ollama가 있어야 한다(`OLLAMA_THINK=false` 필요).
 esbuild의 플랫폼 바이너리 `@esbuild/*`는 esbuild의 `optionalDependencies`라 OS에 맞는 것이 `npm ci`로 자동으로 깔린다). 브라우저로 나가는
 것은 없다 - 빌드 때 HTML 문자열을 만드는 데만 쓰고, 틀에 구워 넣은 결과는 전과 같은 바이트다.
 
-`JIPGYE_RENDERER=legacy|react`가 `scripts/prerender.mjs`의 `*Html()` 조각 함수를 어느 쪽이 그릴지 고른다. **기본값은 legacy**이고,
-이 경우 esbuild·react를 불러오지 않는다. react 모드는 이식된 조각(`scripts/render/entry.jsx`의 `fragments`)만 React로 그리고 나머지는
-legacy에 맡기는데, 아직 이식된 조각이 없어 두 모드의 출력이 같다. react 쪽 오류는 삼키지 않고 예외로 올라온다(폴백은 워크플로의 일이다).
+`JIPGYE_RENDERER=legacy|react`가 `scripts/prerender.mjs`의 `*Html()` 조각 함수를 어느 쪽이 그릴지 고른다. **기본값은 react**이고(#246 컷오버,
+2026-10-12 소유자 지시), 그래서 `prerender.mjs`·`build-*-pages.mjs`는 `npm ci`로 `node_modules`가 깔린 곳에서만 돈다. `JIPGYE_RENDERER=legacy`를
+명시하면 esbuild·react를 불러오지 않고 legacy가 돈다(롤백·시험용; 기본값을 되돌리는 것은 `scripts/renderer.mjs`의 `rendererMode` 한 줄이다).
+react 모드는 이식된 조각(`scripts/render/entry.jsx`의 `fragments`; 지금은 조각 44개 전부)을 React로 그리고, 두 모드의 출력은 같은 바이트다.
+react 쪽 오류는 삼키지 않고 예외로 올라온다(폴백은 워크플로의 일이다).
 진입점은 `scripts/render/react.mjs` 한 곳이고, JSX를 읽는 로더는 esbuild로 진입 파일을 묶어 import하는 `scripts/render/load-jsx.mjs`다
 (Node의 `--loader` 플래그는 쓰지 않는다). 렌더 스크립트는 전 장을 메모리에서 그린 뒤에 한꺼번에 쓴다(`scripts/render-writes.mjs`) -
 도중에 던져도 일부 장만 새 출력이 되지 않는다. legacy와 react가 같은 바이트를 내는지는 `tools/golden/README.md`의 같은-실행 비교로 본다.
