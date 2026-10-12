@@ -1,0 +1,321 @@
+
+/* ===== 시안 A 「정돈」(1층, CSS만) — 지금 모습에서 어긋난 것만 바로잡는다. 브랜드색 #253e81 유지. =====
+ * 색: 현행 팔레트에서 --muted만 진하게, --link·--border-strong 신설.
+ * 글자: 아홉 단 → 여섯 단 13 / 15 / 16 / 20 / 24 / 28px. 13px은 표 머리글·차트 축·꼬리표에만.
+ * 간격: 4px 배수. 반경: 8px와 999px 둘. */
+
+:root {
+  --muted: #595959;
+  --link: #253e81;
+  --border-strong: #8a8a8f;
+
+  --fs-label: 0.8125rem; /* 13px — 표 머리글·차트 축·꼬리표 */
+  --fs-xs: 0.9375rem; /* 15px — 건수·기준일·설명(전에는 12.5px) */
+  --fs-sm: 0.9375rem; /* 15px — 표 칸·설명 문단(전에는 13.6px) */
+  --fs-md: 0.9375rem;
+  --fs-lg: 1rem; /* 16px — 본문 */
+  --fs-h2: 1.25rem; /* 20px */
+  --fs-xl: 1.25rem; /* 20px — 답으로 내놓는 값 */
+  --fs-2xl: 1.5rem; /* 24px */
+  --fs-h1: 1.5rem; /* 24px */
+  --fs-3xl: 1.75rem; /* 28px — 워드마크·가장 큰 답 */
+  --fs-code: 0.8125rem;
+
+  --radius: 8px;
+  --radius-sm: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --muted: #a6a6a6;
+    --link: #8aa9f0;
+    --border-strong: #6b7080;
+  }
+}
+
+:root[data-theme="light"] {
+  --muted: #595959;
+  --link: #253e81;
+  --border-strong: #8a8a8f;
+}
+
+:root[data-theme="dark"] {
+  --muted: #a6a6a6;
+  --link: #8aa9f0;
+  --border-strong: #6b7080;
+}
+
+/* 글자 스택: 현행 뒤에 Noto Sans KR·system-ui만 덧붙인다(웹폰트 없음 — 기기에 있으면 쓴다). */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+}
+
+/* ----- 13px을 쓰는 자리: 표 머리글, 차트 축, 꼬리표 ----- */
+.data-table th,
+.rate-table thead th,
+.history-card .axis,
+.live-badge,
+.sector-tag,
+.prev-tag,
+.budget-deal .tag,
+.brand {
+  font-size: var(--fs-label);
+}
+
+/* 아이콘 단추의 이모지는 제목 크기를 따라 커지지 않게 둔다. */
+.lang-toggle,
+.icon-toggle {
+  font-size: 1.1rem;
+}
+
+/* ----- 간격(4px 배수) ----- */
+main {
+  padding: 24px 16px 64px;
+}
+
+header {
+  margin-bottom: 12px;
+}
+
+h1 {
+  line-height: 1.3;
+}
+
+.page-nav {
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.sub-nav {
+  gap: 8px;
+  margin: -4px 0 16px;
+}
+
+.site-search {
+  margin-bottom: 12px;
+}
+
+.method-callout {
+  margin-bottom: 12px;
+}
+
+.method-callout a {
+  margin-top: 0;
+}
+
+h2 {
+  line-height: 1.3;
+  padding-bottom: 8px;
+}
+
+.question-nav {
+  gap: 16px;
+}
+
+.question-nav a {
+  padding: 8px 12px;
+  border-radius: var(--radius);
+}
+
+.history-grid,
+.overall-cards,
+.stat-cards {
+  gap: 12px;
+}
+
+.budget-deals {
+  gap: 8px;
+}
+
+.budget-chips,
+.news-filters,
+.chip-group,
+.budget-nav {
+  gap: 8px;
+}
+
+/* ----- 반경: 8px와 999px 둘 ----- */
+.placeholder,
+.load-error,
+.history-card,
+.summary-box,
+.overall-card,
+.district-summary,
+.budget-loan,
+.budget-deal,
+.rates-bridge,
+.stat-card,
+.option,
+.method-body .lead,
+.site-search input,
+.site-search-results,
+.complex-card,
+.chart-tip {
+  border-radius: var(--radius);
+}
+
+.budget-answers,
+.verdict {
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.live-badge,
+.sector-tag,
+.prev-tag,
+.method-body code {
+  border-radius: 999px;
+  padding: 0 8px;
+}
+
+/* ----- 카드: 회색 바탕 + 테두리 이중 → 테두리 하나 ----- */
+.history-card,
+.overall-card,
+.district-summary,
+.budget-loan,
+.budget-deal,
+.rates-bridge,
+.stat-card,
+.option,
+.complex-card,
+.summary-box,
+.method-body .lead {
+  background: var(--bg);
+}
+
+.history-card,
+.overall-card,
+.stat-card,
+.budget-loan,
+.rates-bridge,
+.district-summary {
+  padding: 12px 16px;
+}
+
+/* 카드 안에서 답인 값(중앙값)이 주소·연식과 같은 굵기였다(진단 1-1). */
+.budget-deal .amount {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-deal .meta {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-deal {
+  padding: 12px 16px;
+}
+
+/* 돈이 값 한가운데서 갈라지지 않게: 요약 카드의 값은 " / "에서만 줄을 바꾸도록 균형을 잡고 크기를 한 단 내린다(375폭). */
+@media (max-width: 480px) {
+  .overall-card .value {
+    font-size: var(--fs-xl);
+  }
+}
+
+/* ----- 표: 머리글은 본문색 600, 넓은 화면에서 표를 내용 폭으로 줄여 왼쪽에 붙인다(최대 56rem) ----- */
+.data-table th,
+.rate-table thead th {
+  color: var(--fg);
+  font-weight: 600;
+  border-bottom-color: var(--border-strong);
+}
+
+.data-table .tx-count,
+.count {
+  color: var(--muted);
+}
+
+@media (min-width: 1024px) {
+  .table-wrap,
+  .table-scroll {
+    max-width: 56rem;
+  }
+
+  .data-table,
+  .rate-table {
+    width: auto;
+    min-width: min(100%, 32rem);
+  }
+
+  .data-table th,
+  .data-table td,
+  .rate-table th,
+  .rate-table td {
+    padding: 12px 12px;
+  }
+
+  .data-table th:first-child,
+  .data-table td:first-child,
+  .rate-table th:first-child,
+  .rate-table td:first-child {
+    padding-left: 8px;
+    padding-right: 24px;
+  }
+
+  .data-table th.sortable,
+  .realestate-table th.sortable {
+    padding: 0;
+  }
+
+  .data-table th.sortable button,
+  .realestate-table th.sortable button {
+    padding: 12px 12px;
+  }
+
+  .data-table th.sortable:first-child button,
+  .realestate-table th.sortable:first-child button {
+    padding-left: 8px;
+  }
+}
+
+/* ----- 표본 부족: 옆의 보조 글씨보다 작지 않게(15px), 빗금 칸은 --border-strong ----- */
+.low-sample,
+.data-table .low-sample {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.low-sample::before {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+}
+
+/* ----- 안내·단서: 회색을 한 단 진하게 한 것이 --muted다. 방법 링크는 링크색. ----- */
+.method-callout a {
+  color: var(--link);
+}
+
+.section-links a,
+.district-links a,
+.rate-links a,
+.archive-link,
+.back-link {
+  color: var(--link);
+}
+
+.district-links a[aria-current="page"],
+.rate-links a[aria-current="page"] {
+  color: var(--fg);
+}
+
+.site-footer a,
+main > footer a {
+  color: var(--muted);
+}
+
+@media (min-width: 1024px) {
+  .data-table th.sortable button,
+  .realestate-table th.sortable button {
+    min-height: var(--tap);
+  }
+}
+
+/* 넓은 화면에서 표를 내용 폭으로 줄이면 시세표 칸(값 + 증감 + 건수)이 접힌다 — 한 줄로 둔다. */
+@media (min-width: 1024px) {
+  .realestate-table td {
+    white-space: nowrap;
+  }
+}
