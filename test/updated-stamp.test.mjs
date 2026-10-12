@@ -6,6 +6,7 @@ import path from "node:path";
 import vm from "node:vm";
 import { STALE_DAYS, computeAges, kstDayNumber, readDataSources } from "../scripts/source-age.mjs";
 import { NO_DATA_PAGES, PAGE_SOURCES, baselineFor, stampAll, stampHtml } from "../scripts/updated-stamp.mjs";
+import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
 
 /**
  * 데이터 기준일(정적)과 "n일 전 자료"(보는 순간 계산)를 나눈 것을 묶는다 (#111).
@@ -246,7 +247,7 @@ test("소스 표가 장이 실제로 읽는 파일을 빠뜨리지 않는다", a
 
 test("스탬프 빌더가 update-all과 워크플로 양쪽에, 모든 페이지 빌더 뒤에 있다", async () => {
   const [all, wf] = await Promise.all([readFile(path.join(root, "scripts/update-all.mjs"), "utf8"), readFile(path.join(root, ".github/workflows/daily-update.yml"), "utf8")]);
-  for (const [name, text] of [["update-all.mjs", all], ["daily-update.yml", wf]]) {
+  for (const [name, text] of [["update-all.mjs", all], ["daily-update.yml", expandRenderPipeline(wf)]]) {
     const order = [...text.matchAll(/node scripts\/([a-z-]+\.mjs)/g)].map((m) => m[1]);
     const stamp = order.indexOf("build-updated-stamp.mjs");
     assert.ok(stamp >= 0, `${name}이 build-updated-stamp.mjs를 부르지 않는다`);

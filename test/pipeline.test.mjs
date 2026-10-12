@@ -2,9 +2,12 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
+// 워크플로는 렌더 여섯을 render-pipeline.mjs 한 줄로 부른다(#238) - 순서·포함을 읽는 시험은 그 줄을 펼쳐서 본다.
+const readWorkflow = async (rel) => expandRenderPipeline(await read(rel));
 
 const scriptsIn = (text) =>
   [...text.matchAll(/node scripts\/([a-z-]+\.mjs)/g)].map((m) => m[1]);
@@ -17,7 +20,7 @@ const scriptsIn = (text) =>
  */
 test("워크플로가 update-all이 부르는 빌더를 다 부른다", async () => {
   const [workflow, updateAll] = await Promise.all([
-    read(".github/workflows/daily-update.yml"),
+    readWorkflow(".github/workflows/daily-update.yml"),
     read("scripts/update-all.mjs"),
   ]);
 
@@ -48,8 +51,8 @@ test("파생 데이터를 만드는 빌더가 원본 수집과 같은 단계에 
  */
 test("summarize.yml의 페이지 빌드 순서가 daily-update.yml과 어긋나지 않고 기준일 찍기로 끝난다", async () => {
   const [daily, summarize] = await Promise.all([
-    read(".github/workflows/daily-update.yml"),
-    read(".github/workflows/summarize.yml"),
+    readWorkflow(".github/workflows/daily-update.yml"),
+    readWorkflow(".github/workflows/summarize.yml"),
   ]);
   const stepOf = (text) => scriptsIn(text.split("- name: 정적 HTML에 오늘 내용 심기")[1]?.split("\n      - name:")[0] ?? "");
   // daily는 news-context를 앞 단계(기사에 수치 붙이기)에서 부르므로, 순서는 daily 전체에서 대조한다.
