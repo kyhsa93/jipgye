@@ -1,0 +1,647 @@
+
+/* ===== 시안 C 「보고서」(1층, CSS만) — 문장이 답이고 표는 근거인 읽는 화면. 브랜드색 #253e81 유지. =====
+ * 색: 라이트만 종이색(바탕 #fcfbf8). 다크는 현행 팔레트 그대로 + 링크색·진한 테두리.
+ * 글자: 13 / 15 / 17(본문) / 22(h2) / 30(h1)px, 답 문장(리드) 20px(480px 이하에서는 18px). 산문 줄 간격 1.75.
+ *       표본·기준·단서 설명은 회색 13.6px → 본문색 15px.
+ * 간격: 8·16·24·40·64. 반경: 4px. 상자를 줄인다 — 카드는 위아래 괘선과 여백, 단서 문단만 왼쪽 굵은 선.
+ * 폭: 넓은 화면에서 읽는 단 44rem을 가운데에, 표와 차트 격자만 60rem까지. */
+
+:root {
+  --bg: #fcfbf8;
+  --card: #f3f1ea;
+  --fg: #1c1b19;
+  --muted: #5c5a55;
+  --border: #dedbd2;
+  --border-strong: #85817a;
+  --accent: #253e81;
+  --accent-on: #ffffff;
+  --accent-weak: #e9edf6;
+  --up: #b3261e;
+  --down: #1d4ed8;
+  --link: #253e81;
+
+  --fs-label: 0.8125rem; /* 13px — 표 머리글·차트 축·꼬리표 */
+  --fs-xs: 0.9375rem; /* 15px — 표본·기준·단서(전에는 12.5px 회색) */
+  --fs-sm: 0.9375rem; /* 15px — 표 칸·설명 */
+  --fs-md: 1.0625rem; /* 17px */
+  --fs-lg: 1.0625rem; /* 17px — 본문 */
+  --fs-lead: 1.25rem; /* 20px — 답 문장 */
+  --fs-xl: 1.25rem; /* 20px — 답으로 내놓는 값 */
+  --fs-h2: 1.375rem; /* 22px */
+  --fs-2xl: 1.375rem;
+  --fs-h1: 1.875rem; /* 30px */
+  --fs-3xl: 1.875rem;
+  --fs-code: 0.8125rem;
+
+  --prose: 44rem;
+  --wide: 60rem;
+  --radius: 4px;
+  --radius-sm: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1115;
+    --card: #1a1d24;
+    --fg: #eaeaea;
+    --muted: #9a9a9a;
+    --border: #2a2d35;
+    --border-strong: #6b7080;
+    --accent: #8aa9f0;
+    --accent-on: #0f1115;
+    --accent-weak: #191f2c;
+    --up: #f98b84;
+    --down: #62b8ff;
+    --link: #8aa9f0;
+  }
+}
+
+:root[data-theme="light"] {
+  --bg: #fcfbf8;
+  --card: #f3f1ea;
+  --fg: #1c1b19;
+  --muted: #5c5a55;
+  --border: #dedbd2;
+  --border-strong: #85817a;
+  --accent: #253e81;
+  --accent-on: #ffffff;
+  --accent-weak: #e9edf6;
+  --up: #b3261e;
+  --down: #1d4ed8;
+  --link: #253e81;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f1115;
+  --card: #1a1d24;
+  --fg: #eaeaea;
+  --muted: #9a9a9a;
+  --border: #2a2d35;
+  --border-strong: #6b7080;
+  --accent: #8aa9f0;
+  --accent-on: #0f1115;
+  --accent-weak: #191f2c;
+  --up: #f98b84;
+  --down: #62b8ff;
+  --link: #8aa9f0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+  font-size: var(--fs-lg);
+  line-height: 1.6;
+}
+
+/* 13px을 쓰는 자리: 표 머리글, 차트 축, 꼬리표. */
+.data-table th,
+.rate-table thead th,
+.history-card .axis,
+.live-badge,
+.sector-tag,
+.prev-tag,
+.budget-deal .tag,
+.brand,
+.update-schedule {
+  font-size: var(--fs-label);
+}
+
+.lang-toggle,
+.icon-toggle {
+  font-size: 1.1rem;
+  background: none;
+  border-radius: var(--radius);
+}
+
+/* ----- 폰: 머리를 낮춰 커진 글자가 답을 아래로 밀지 않게 한다(8·16·24) ----- */
+main {
+  padding: 16px 16px 64px;
+}
+
+header {
+  margin-bottom: 8px;
+}
+
+h1 {
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 560px) {
+  h1 {
+    font-size: 1.625rem; /* 26px — 375폭에서 30px이면 예산대 제목이 석 줄이 된다 */
+  }
+
+  .wordmark {
+    font-size: var(--fs-h1);
+  }
+}
+
+.wordmark {
+  margin-bottom: 0;
+}
+
+.brand {
+  margin-bottom: 0;
+}
+
+.tagline {
+  margin-bottom: 0;
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+.updated,
+.update-schedule {
+  line-height: 1.5;
+}
+
+.update-schedule {
+  margin-top: 0;
+}
+
+.page-nav {
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.page-nav a,
+.sub-nav a {
+  border-radius: var(--radius);
+  background: none;
+  padding: 8px 16px;
+}
+
+.sub-nav {
+  gap: 8px;
+  margin: 0 0 8px;
+  padding-bottom: 0;
+}
+
+.sub-nav a[aria-current="page"] {
+  background: var(--accent-weak);
+}
+
+.site-search {
+  margin-bottom: 8px;
+}
+
+.site-search input {
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+/* ----- 구획: 사이를 넓게(40px), 제목은 22px ----- */
+section {
+  margin-bottom: 40px;
+}
+
+h2 {
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 0;
+}
+
+h2::after {
+  width: 40px;
+  height: 3px;
+  bottom: 0;
+}
+
+main h3 {
+  font-size: var(--fs-lg);
+}
+
+/* ----- 산문: 본문 17px·줄 간격 1.75, 답 문장은 20px ----- */
+.lead,
+.district-summary,
+.rates-bridge,
+.summary-category-line,
+.summary-highlight-text,
+#summary-box,
+.budget-candidates > p,
+.method-body p,
+.method-body ul,
+.method-body dd {
+  font-size: var(--fs-lg);
+  line-height: 1.75;
+}
+
+.budget-summary,
+.budget-where,
+section:first-of-type > .lead:first-of-type,
+.method-body .lead,
+.switch-answer {
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+  letter-spacing: -0.005em;
+}
+
+@media (max-width: 480px) {
+  .budget-summary,
+  .budget-where,
+  section:first-of-type > .lead:first-of-type,
+  .method-body .lead,
+  .switch-answer {
+    font-size: 1.125rem; /* 18px */
+  }
+}
+
+.budget-summary {
+  margin-top: 0;
+}
+
+.budget-summary .when {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+.table-scroll + .lead,
+.table-wrap + .lead {
+  margin-top: 16px;
+}
+
+/* ----- 표본·기준·단서: 회색 작은 글씨 → 본문색 15px, 왼쪽 굵은 선의 인용 상자 ----- */
+.method-callout p,
+.content-notice,
+.budget-loan,
+.budget-districts,
+.trend-meta,
+.summary-meta,
+.summary-note,
+.stat-note,
+.summary-fallback-note,
+.news-preview {
+  color: var(--fg);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
+.method-callout,
+.content-notice:not(:empty),
+.budget-loan {
+  margin: 0 0 16px;
+  padding: 0 0 0 16px;
+  border: 0;
+  border-left: 3px solid var(--border-strong);
+  border-radius: 0;
+  background: none;
+}
+
+.content-notice:not(:empty),
+.budget-loan {
+  margin-top: 16px;
+}
+
+.method-callout a {
+  margin-top: -4px;
+  margin-bottom: -4px;
+  font-size: var(--fs-sm);
+}
+
+.content-notice.page-notice {
+  margin: 0 0 16px;
+}
+
+.updated,
+.news-meta,
+.count,
+.data-table .tx-count,
+.history-minmax,
+.overall-card .sub,
+.stat-sub,
+.history-card .sub,
+.rate-table td .sub,
+.budget-answers .answer-note,
+.budget-answers .answer-more,
+.summary-link-source {
+  font-size: var(--fs-sm);
+}
+
+/* ----- 카드 대신 위아래 괘선과 여백 ----- */
+.history-card,
+.overall-card,
+.stat-card,
+.budget-deal,
+.option,
+.district-summary,
+.rates-bridge,
+.summary-box,
+.placeholder,
+.method-body .lead {
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  padding: 12px 0;
+}
+
+.district-summary,
+.rates-bridge,
+.method-body .lead,
+#summary-box {
+  border-top: 0;
+  padding: 0;
+}
+
+.rates-bridge {
+  margin-top: 24px;
+}
+
+.method-body .lead {
+  margin-bottom: 24px;
+}
+
+.history-grid,
+.overall-cards,
+.stat-cards {
+  gap: 0 24px;
+}
+
+.history-card {
+  padding: 16px 0;
+}
+
+.history-stats {
+  flex-wrap: wrap;
+}
+
+.history-card .label,
+.overall-card .label,
+.stat-label {
+  color: var(--fg);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.overall-card .value {
+  font-size: var(--fs-2xl);
+}
+
+.budget-deals {
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (min-width: 1024px) {
+  .budget-deals {
+    column-gap: 24px;
+  }
+}
+
+.budget-deal .amount {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-deal .meta,
+.budget-deal .spec,
+.budget-deal .when {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.rate-hub li {
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  padding: 4px 0 12px;
+  line-height: 1.75;
+}
+
+/* 답 상자는 하나만 남긴다: 예산대 "한눈에". */
+.budget-answers {
+  margin: 16px 0 24px;
+  padding: 16px;
+  border: 0;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.budget-answers h3,
+.budget-answers .answer-label {
+  color: var(--fg);
+  font-size: var(--fs-sm);
+}
+
+.budget-answers .answer-note,
+.budget-answers .answer-more {
+  color: var(--muted);
+}
+
+.verdict {
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+/* ----- 표: 가로 괘선만, 머리글은 본문색 ----- */
+.data-table,
+.rate-table {
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+
+.data-table th,
+.rate-table thead th {
+  color: var(--fg);
+  font-weight: 600;
+  border-bottom: 1px solid var(--fg);
+}
+
+.table-wrap,
+.table-scroll {
+  border-top: 2px solid var(--fg);
+}
+
+.data-table .overall-row {
+  background: none;
+}
+
+.data-table tbody tr:hover {
+  background: var(--card);
+}
+
+@media (max-width: 480px) {
+  .data-table td[data-label]::before {
+    color: var(--muted);
+    font-size: var(--fs-label);
+  }
+
+  .data-table td:first-child {
+    font-size: var(--fs-lg);
+  }
+}
+
+/* ----- 표본 부족: 진한 빗금 칸 + 15px 글자 ----- */
+.low-sample,
+.data-table .low-sample {
+  gap: 8px;
+  color: var(--fg);
+  font-size: var(--fs-sm);
+}
+
+.low-sample::before {
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  background-image: repeating-linear-gradient(-45deg, var(--border-strong) 0 1.5px, transparent 1.5px 4.5px);
+}
+
+/* ----- 나머지 반경 4px ----- */
+.question-nav a,
+.budget-chips a,
+.chip,
+.news-chip,
+.tab,
+.site-search-results,
+.chart-tip,
+.complex-card,
+.load-error,
+.realestate-search input,
+.news-search input,
+.archive-date-jump input,
+.archive-date-jump button,
+.show-more button,
+.realestate-history-controls select,
+.controls select,
+.news-item .context-chip {
+  border-radius: var(--radius);
+}
+
+.question-nav {
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.question-group-title {
+  color: var(--fg);
+  font-size: var(--fs-sm);
+}
+
+.question-nav a {
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+}
+
+.news-item {
+  padding: 16px 0;
+}
+
+.news-item a {
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.summary-category-label {
+  font-size: var(--fs-sm);
+  margin-bottom: 4px;
+}
+
+.summary-category {
+  margin-bottom: 24px;
+}
+
+.section-links a,
+.district-links a,
+.rate-links a,
+.archive-link,
+.back-link {
+  color: var(--link);
+}
+
+.district-links a[aria-current="page"],
+.rate-links a[aria-current="page"] {
+  color: var(--fg);
+}
+
+.site-footer,
+main > footer {
+  margin-top: 64px;
+  color: var(--fg);
+}
+
+.site-footer a,
+main > footer a {
+  color: var(--link);
+}
+
+/* ----- 넓은 화면: 읽는 단 44rem을 가운데에, 표와 차트 격자만 60rem까지(양쪽 여백 대칭) -----
+ * 여백(margin)이 아니라 격자 칸으로 놓는다 — 기존 규칙들이 margin을 축약형으로 주고 있어 auto가 덮인다. */
+@media (min-width: 1024px) {
+  main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--prose)) minmax(0, 1fr);
+    max-width: calc(var(--wide) + 48px);
+    padding: 40px 24px 96px;
+    align-content: start;
+  }
+
+  main > * {
+    grid-column: 2;
+    min-width: 0;
+  }
+
+  main > section {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--prose)) minmax(0, 1fr);
+    margin-bottom: 64px;
+  }
+
+  main > section > * {
+    grid-column: 2;
+    min-width: 0;
+  }
+
+  /* 넓히는 것은 띠(60rem)를 가득 채우는 블록뿐이다 — 한 구획 안의 왼쪽 정렬선은 하나(44rem 단), 넓히는 블록은 좌우 대칭
+   * (po 검토 #275 댓글 6120035484의 결함 1). 처음에는 표·차트 격자·카드 묶음을 전부 넓혔는데, 추이 카드 두 장은 띠의 왼쪽
+   * 632px만 차지했고(격자의 "더보기" 줄이 빈 칸을 접지 못하게 한다) 정렬선이 288px·160px 둘로 번갈아 나왔다.
+   *   열이 넷 이상인 표      — 표는 width:100%라 띠를 채운다. 세 열 이하(금리·환율 표)는 단 안에 둔다.
+   *   보이는 카드가 정확히 석 장인 차트 격자 — 세 칸으로 띠를 채운다. 두 장·넉 장은 단 안에서 두 칸으로 채워진다.
+   * 나머지(추이 카드 두 장, "그 외 지표 더보기", 요약 카드, 단추·링크·단서)는 전부 단의 정렬선에 둔다. */
+  main > section > .table-wrap:has(th:nth-child(4)) {
+    grid-column: 1 / -1;
+  }
+
+  main > section > .history-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  main > section > .history-grid:has(> .history-card:not([hidden]) ~ .history-card:not([hidden]) ~ .history-card:not([hidden])):not(:has(> .history-card:not([hidden]) ~ .history-card:not([hidden]) ~ .history-card:not([hidden]) ~ .history-card:not([hidden]))) {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  /* 카드마다 "최고·최저"가 값 옆에 붙기도 아래로 떨어지기도 했다(같은 결함 목록의 2). 늘 값 아래 줄에 둔다. */
+  main > section > .history-grid .history-minmax {
+    flex-basis: 100%;
+  }
+
+  main > section.method-body {
+    display: block;
+    grid-column: 2;
+    max-width: none;
+  }
+
+  #district-summary-section > * {
+    grid-column: auto;
+  }
+
+  header {
+    margin-bottom: 24px;
+  }
+
+  .page-nav,
+  .sub-nav,
+  .site-search {
+    margin-bottom: 16px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 12px 16px;
+  }
+}

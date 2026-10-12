@@ -1,0 +1,62 @@
+
+/* ===== 시안 C 2층 — index 레이아웃 방향. 질문 입구는 한 줄에 질문 하나씩의 목록, 안내 문단은 본문 크기의 "읽는 법" 리드. =====
+ * (읽는 단 44rem 가운데 + 표·차트 60rem은 DOM을 바꾸지 않고 되므로 1층에서 전 장에 적용했다.) */
+
+/* 안내 문단 → 리드. 사이트가 자기 자신을 말하는 자리라 왼쪽 선은 액센트. */
+.method-callout {
+  border-left-color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.method-callout p {
+  font-size: var(--fs-lg);
+  line-height: 1.7;
+}
+
+.method-callout a {
+  font-size: var(--fs-lg);
+}
+
+/* 질문 입구: 2열 카드 → 목록. 묶음 제목은 소제목. */
+.question-nav {
+  gap: 24px;
+}
+
+.question-group {
+  display: block;
+}
+
+.question-group-title {
+  margin: 0 0 4px;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+
+.question-nav a {
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: none;
+  font-size: var(--fs-lg);
+}
+
+.question-nav a:hover {
+  border-color: var(--accent);
+}
+
+@media (min-width: 1024px) {
+  .question-nav {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px 40px;
+  }
+
+  .question-group:first-child {
+    grid-row: span 2;
+  }
+}
+
+.site-footer .update-schedule {
+  margin: 0 0 8px;
+  color: var(--muted);
+}
