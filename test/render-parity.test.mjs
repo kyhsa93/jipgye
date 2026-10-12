@@ -40,9 +40,9 @@ const fixture = (name) => path.join(root, "test/fixtures/render", name);
 const tmpDirs = [];
 after(() => Promise.all(tmpDirs.map((d) => rm(d, { recursive: true, force: true }))));
 
-test("JIPGYE_RENDERER: 미설정·빈 문자열은 legacy, legacy·react만 받고 나머지는 멈춘다", () => {
-  assert.equal(rendererMode({}), "legacy");
-  assert.equal(rendererMode({ JIPGYE_RENDERER: "" }), "legacy");
+test("JIPGYE_RENDERER: 미설정·빈 문자열은 react(#246 컷오버), legacy·react만 받고 나머지는 멈춘다", () => {
+  assert.equal(rendererMode({}), "react");
+  assert.equal(rendererMode({ JIPGYE_RENDERER: "" }), "react");
   assert.equal(rendererMode({ JIPGYE_RENDERER: "legacy" }), "legacy");
   assert.equal(rendererMode({ JIPGYE_RENDERER: "react" }), "react");
   for (const bad of ["React", "jsx", " react", "1"]) {
@@ -61,7 +61,7 @@ test("prerender.mjs의 *Html() 조각은 전부 래퍼를 거치고 이름이 �
   assert.equal(prerender.escapeHtml.legacy, undefined);
 });
 
-test("기본값(legacy): 래퍼의 출력이 legacy 원본과 같다", () => {
+test("기본값(react): 래퍼의 출력이 legacy 원본과 같다", () => {
   const summary = { highlights: [{ title: "제목", textKo: "본문" }], categories: [{ name: "분야", lineKo: "한 줄" }] };
   assert.equal(prerender.summaryHtml(summary), prerender.summaryHtml.legacy(summary));
   assert.equal(prerender.summaryHtml(null), null);
@@ -110,8 +110,9 @@ test("parity 골격: 같은 입력에서 legacy와 React 쌍둥이의 출력이 
   }
 });
 
-// 기본값 legacy가 로더를 만지지 않는다는 것, react 모드의 실패가 삼켜지지 않는다는 것을 한 번에 본다:
+// 명시한 legacy(롤백·시험용)가 로더를 만지지 않는다는 것, react 모드(기본값 포함)의 실패가 삼켜지지 않는다는 것을 한 번에 본다:
 // node_modules가 없는 scripts/ 복사본에서는 esbuild·react를 읽을 수 없다. legacy는 그래도 import가 되고, react는 import에서 던진다.
+// 컷오버(#246) 전에는 기본값이 legacy라 이 복사본에서 통과했다. 이제 기본값이 react라서 `npm ci` 없이 prerender.mjs·renderer.mjs를 부르는 길은 던진다.
 async function importIn(dir, env) {
   return spawnSync(
     process.execPath,
@@ -120,17 +121,19 @@ async function importIn(dir, env) {
   );
 }
 
-test("기본값 legacy는 esbuild·react 없이도 import되고, react 모드는 로더가 못 뜨면 import에서 던진다", async () => {
+test("명시한 legacy는 esbuild·react 없이도 import되고, 기본값(react)·react 모드는 로더가 못 뜨면 import에서 던진다", async () => {
   const dir = await realpath(await mkdtemp(path.join(os.tmpdir(), "jipgye-nomods-")));
   tmpDirs.push(dir);
   await cp(path.join(root, "scripts"), path.join(dir, "scripts"), { recursive: true });
   await writeFile(path.join(dir, "package.json"), '{"type":"module"}');
 
-  const legacy = await importIn(dir, {});
+  const legacy = await importIn(dir, { JIPGYE_RENDERER: "legacy" });
   assert.equal(legacy.status, 0, legacy.stderr);
   assert.deepEqual(JSON.parse(legacy.stdout), { mode: "legacy", ported: [] });
-  const explicit = await importIn(dir, { JIPGYE_RENDERER: "legacy" });
-  assert.equal(explicit.status, 0, explicit.stderr);
+
+  const byDefault = await importIn(dir, {});
+  assert.notEqual(byDefault.status, 0, "기본값이 react인데 로더를 못 띄우고 조용히 지나갔다");
+  assert.match(byDefault.stderr, /Cannot find (package|module) '(react-dom|esbuild|react)/);
 
   const react = await importIn(dir, { JIPGYE_RENDERER: "react" });
   assert.notEqual(react.status, 0, "로더를 못 띄웠는데 react 모드가 조용히 지나갔다");
@@ -273,8 +276,8 @@ test("react 모드(진입 목록 PORTED): 이식 완료 상태(.legacy를 가진
       ],
       { cwd: root, encoding: "utf8", maxBuffer: 256 * 1024 * 1024, env: { ...process.env, JIPGYE_RENDERER: "", ...env } }
     );
-  const legacy = run({});
-  const react = run({ JIPGYE_RENDERER: "react" });
+  const legacy = run({ JIPGYE_RENDERER: "legacy" });
+  const react = run({}); // 기본값 = react(#246 컷오버)
   assert.equal(legacy.status, 0, legacy.stderr);
   assert.equal(react.status, 0, react.stderr);
   assert.equal(react.stderr, "", "react 모드 렌더가 경고를 냈다(DOM 중첩·key 등)");
