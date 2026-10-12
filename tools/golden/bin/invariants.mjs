@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 // 불변 조건 비교(#274): 디자인이 바뀌어도 변하면 안 되는 것만 견준다. 하드 실패가 없으면 종료 0, 있으면 1(소프트는 목록만 낸다).
-// 쓰는 법이 틀렸거나 렌더가 실패하면 2, 디스크 여유가 모자라면 3.
+// 쓰는 법이 틀렸거나(예외 목록의 형식이 틀린 것 포함) 렌더가 실패하면 2, 디스크 여유가 모자라면 3.
 //
 //   node bin/invariants.mjs --render --repo <저장소> [--base <SHA>] [--head <SHA>|--src <디렉터리>] [--build-now <ISO>]
 //        기준(merge-base)과 후보를 **같은 BUILD_NOW로 렌더해** 견준다. PR 증빙은 이 모양으로 낸다.
 //          --base       기본: `git merge-base origin/main HEAD`
 //          --head/--src 기본: --src <저장소>(미커밋 변경을 포함한 작업 트리 스냅숏)
 //          --build-now  기본: 기준 커밋의 커밋 시각
+//        훅 클래스는 목록 파일에 **후보 소스에서 다시 뽑은 것**을 더해 쓰고(목록이 낡아도 판정이 새지 않게), 목록이 후보 소스와
+//        어긋난 것(hook-list)과 기준 소스에서는 훅이었는데 후보에서 빠진 이름(hook-list-dropped)을 보고에 소프트로 같이 낸다.
 //   node bin/invariants.mjs <기준> <후보>
 //        이미 구운 폴더(또는 --snapshot이 낸 JSON) 둘을 견준다. 둘이 같은 입력·같은 BUILD_NOW로 구운 것인지는 부르는 쪽 책임이다 —
 //        다른 날 데이터로 구운 폴더끼리 견주면 데이터 때문에 텍스트가 갈린다(#8 부류).
@@ -33,10 +35,12 @@ import {
   formatSnapshotTable,
   HOOK_LIST_FILE,
   hookListDrift,
+  hookListFindings,
   loadSnapshot,
   readHookList,
   snapshotDir,
   snapshotHash,
+  withSiteFindings,
 } from "../lib/invariants.mjs";
 import { preparePristine, renderIsolated } from "../lib/render.mjs";
 
@@ -62,11 +66,23 @@ const usage = () => {
   process.exit(2);
 };
 
-async function report(snapA, snapB) {
-  let result = compareSnapshots(snapA, snapB, { hookList: (await readHookList()).all, extraHooks: opt.hooks ? opt.hooks.split(",").filter(Boolean) : [] });
+/** 쓰는 법이 틀린 것(종료 2, 스택 없이 한 줄). */
+class UsageError extends Error {}
+
+/** site는 폴더 단위로 보탤 항목(훅 목록 상태), hooks는 목록 파일 밖에서 보탤 훅 클래스다. */
+async function report(snapA, snapB, { site = [], hooks = [] } = {}) {
+  let result = compareSnapshots(snapA, snapB, { hookList: (await readHookList()).all, extraHooks: [...hooks, ...(opt.hooks ? opt.hooks.split(",").filter(Boolean) : [])] });
+  if (site.length) result = withSiteFindings(result, site);
   if (opt.expect) {
-    const list = JSON.parse(await readFile(opt.expect, "utf8"));
-    result = applyExceptions(result, list.exceptions ?? list);
+    // 형식이 틀린 예외 목록(JSON이 아니다, reason·confirmedBy가 없다, check를 통째로 면제한다)은 사용법 오류다.
+    try {
+      const list = JSON.parse(await readFile(opt.expect, "utf8"));
+      const exceptions = list.exceptions ?? list;
+      if (!Array.isArray(exceptions)) throw new Error("exceptions가 배열이 아닙니다");
+      result = applyExceptions(result, exceptions);
+    } catch (e) {
+      throw new UsageError(`예외 목록(--expect ${opt.expect})을 받을 수 없습니다: ${e.message}`);
+    }
   }
   console.log(formatInvariantsReport(result, { maxItems: Number(opt["max-items"] ?? 8) }));
   if (opt.json) await writeFile(opt.json, `${JSON.stringify(result, null, 1)}\n`);
@@ -113,10 +129,14 @@ if (opt["hooks-check"] || opt["hooks-write"]) {
     const b = await renderIsolated(headPristine, { env });
     made.push(b);
     console.log(`같은 입력으로 렌더: 기준 ${basePristine.label} / 후보 ${headPristine.label} / BUILD_NOW=${buildNow}`);
-    await report(await snapshotDir(a.docsDir, { label: `기준 ${basePristine.label}` }), await snapshotDir(b.docsDir, { label: `후보 ${headPristine.label}` }));
+    // 훅 목록: 후보 소스에서 다시 뽑아 판정에 더하고, 목록 파일과의 어긋남·기준 대비 빠진 이름을 보고에 같이 낸다(#289 5번).
+    const [baseHooks, headHooks] = [await collectHookClasses(basePristine.dir), await collectHookClasses(headPristine.dir)];
+    const site = hookListFindings({ list: await readHookList(), base: baseHooks, head: headHooks });
+    console.log(`훅 클래스 목록 대 후보 소스: ${site.some((f) => f.id === "hook-list") ? "어긋남(아래 hook-list)" : "맞음"} / 기준 소스에서 빠진 훅: ${site.find((f) => f.id === "hook-list-dropped")?.missing.length ?? 0}개`);
+    await report(await snapshotDir(a.docsDir, { label: `기준 ${basePristine.label}` }), await snapshotDir(b.docsDir, { label: `후보 ${headPristine.label}` }), { site, hooks: [...headHooks.js, ...headHooks.markup] });
   } catch (e) {
     if (!isTerminating()) {
-      console.error(e instanceof DiskSpaceError ? e.message : e.stack ?? e.message);
+      console.error(e instanceof DiskSpaceError || e instanceof UsageError ? e.message : e.stack ?? e.message);
       process.exitCode = e instanceof DiskSpaceError ? 3 : 2;
     }
   } finally {
@@ -126,5 +146,11 @@ if (opt["hooks-check"] || opt["hooks-write"]) {
 } else {
   const [a, b] = rest;
   if (!a || !b) usage();
-  await report(await loadSnapshot(a), await loadSnapshot(b));
+  try {
+    await report(await loadSnapshot(a), await loadSnapshot(b));
+  } catch (e) {
+    if (!(e instanceof UsageError)) throw e;
+    console.error(e.message);
+    process.exitCode = 2;
+  }
 }

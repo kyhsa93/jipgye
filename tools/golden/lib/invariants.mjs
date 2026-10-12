@@ -6,26 +6,43 @@
 //
 //   하드(하나라도 남으면 종료 1)
 //     URL 집합(url-set)        .html 파일 이름 집합이 같다.
-//     noindex 집합(noindex)    장마다 meta[name=robots]의 content(없음 포함)가 같다.
-//     head(head)               head의 title·meta·link·base 줄의 다중집합이 같다(robots는 위에서 따로).
-//                              허용 예외는 HEAD_EXCEPTIONS 목록뿐이고, 예외 값이 다르면 소프트로 보고한다.
+//     noindex 집합(noindex)    장마다 head의 meta[name=robots] **전부**의 content 다중집합(없음 포함)이 같다.
+//     body 안 메타(body-meta)  body 안의 meta·base 줄의 다중집합이 같다(robots·refresh를 body에 넣어 head 검사를 비켜 가는 길).
+//     head(head)               head의 title·meta·link·base 줄과 head 안 noscript 본문의 다중집합이 같다(robots는 위에서 따로).
+//                              허용 예외는 HEAD_EXCEPTIONS 목록뿐이고, 예외 값이 다르면(여럿이면 전부) 소프트로 보고한다.
 //     구조화 데이터(ld-json)   script[type="application/ld+json"] 개수가 같다(지금 0 — 새로 생기지 않는다).
-//     본문 텍스트(text)        body의 텍스트 노드(script·style 제외, 공백 줄이고 양끝 뗀 것, hidden 아래는 표시)의 다중집합이 같다.
+//     본문 텍스트(text)        body의 **블록 단위 글자 흐름**의 다중집합이 같다. 블록 하나 안의 텍스트 노드를 공백까지 이어 붙인 것이
+//                              한 항목이다(아래 "블록 단위 글자 흐름"). 숨김 표시([hidden]·[hidden:template]·[aria-hidden]·[inert] …)도 항목의 일부다.
 //     속성 글자(attr-text)     title·alt·placeholder·label·lang·dir·aria-label·data-label·data-*-en(isTextAttr) 값의
 //                              다중집합이 같다. 텍스트 노드만 보면 빠지는 글자다(좁은 화면 표 머리글은 data-label을 CSS가 그린다).
 //     링크(links·link-target)  a[href]의 (href 원문·rel·target·링크 글자) 다중집합이 같고, 후보의 내부 링크 대상 파일이 있다.
+//     참조 자원(resource-target)  link[href]·[src]·poster·srcset이 가리키는 내부 파일이 후보에 있다(style.css·manifest·아이콘을 지우는 길).
 //     제목 계층(headings)      h1~h6의 (레벨·글자) 순서가 같다.
 //     랜드마크(landmarks)      main·nav 개수, .skip-link의 href와 그 대상(있는지·어떤 요소인지), 본문 링크 중 몇 번째인지가 같다.
 //     JS 훅(hooks)             기준의 id·data-*·aria-* (이름=값)과 훅 클래스가 후보에 그 수만큼 있다. 늘어난 것은 소프트(hooks-added).
 //     인라인 script(inline-script)  본문과 순서가 같다(한·영 문자열표가 여기 있어 바이트 합만으로는 문구 변경이 지나간다).
 //     S6(s6-*)                 script 줄 목록이 늘거나 바뀌지 않고(줄어드는 것만 허용), 인라인 script 바이트 합과
 //                              외부 JS 바이트 합이 기준 이하다. 폴더 안 .js 전체 바이트 합도 기준 이하다.
+//                              인라인 이벤트 핸들러 속성(on*)이 새로 생기거나 값이 바뀌지 않는다(s6-handlers — 속성 안의 JS다).
 //     tw:dark:(tw-dark)        후보의 class·JS·CSS에 `tw:dark:` 변형이 없다(네 갈래 테마는 CSS 변수에서 갈린다).
 //   소프트(종료 코드를 바꾸지 않고 목록만 낸다 — PR에 붙여 사람이 본다)
-//     텍스트 순서(text-order), head 허용 예외의 값(head-exception), 훅·script가 늘거나 준 것, 의미 속성(semantic).
-//   보지 않는 것: class·style 속성, 태그 이름과 트리 모양, 주석, 속성 순서, 텍스트 노드 사이의 공백.
+//     텍스트 순서(text-order), 텍스트 노드 경계(text-wrap — 글자·공백은 같고 인라인 래퍼·br만 다른 블록과 그 수),
+//     details 접힘·펼침(details-open — 본문을 접는 일이라 po가 반드시 읽는다), head 허용 예외의 값(head-exception),
+//     훅·script·on* 속성이 늘거나 준 것, 의미 속성(semantic), 폴더에서 사라진 파일(files-removed), 훅 목록 어긋남(hook-list*).
+//   보지 않는 것: class·style 속성, 블록·중립 인라인 태그의 이름과 트리 모양, 주석, 속성 순서, 블록 가장자리의 공백.
 //   **못 보는 것**: CSS가 하는 일 전부 — class로 숨긴 글자(display:none·sr-only·opacity 0), 가로 넘침, 요소 크기, 대비, 초점 순서.
 //                   parse5는 CSS를 모른다. 렌더 기반 검사는 #278 PR A가 맡는다(test/invariants.test.mjs가 이 구멍을 시험으로 적어 둔다).
+//
+// 블록 단위 글자 흐름(#289 4번). 텍스트 노드 하나가 아니라 **블록 하나**가 비교 단위다 — 숫자를 <strong>으로 감싸 노드가 셋으로
+// 잘려도 블록의 글자 흐름은 같다. 요소는 넷으로 나뉜다.
+//   블록(TEXT_BLOCK)        흐름을 끊는다. 블록 양끝의 공백은 뗀다. SVG·MathML 안의 요소, 숨김 표시가 바뀌는 요소도 흐름을 끊는다.
+//   중립 인라인(NEUTRAL_INLINE)  span·strong·em·b·i·small·mark·abbr — 흐름에 아무것도 보태지 않는다(감싸도 풀어도 흐름이 같다).
+//   br                      공백 한 칸으로 센다(낱말 사이 공백 자리에 넣으면 흐름이 같고, 낱말 한가운데 넣으면 공백이 생긴 것이라 하드).
+//   그 밖의 인라인          a·code·sup·sub·del·ins·s·u·q·time … 과 모르는 태그 — 뜻이 실리므로 흐름에 `‹태그›…‹/태그›`로 남는다.
+//                           블록을 바깥에서 감싸면(`<del><p>…</p></del>`) 안쪽 블록의 항목에 `[in:del]` 표시로 남는다.
+//                           (img·wbr·picture·source와 SVG·MathML 덩어리는 흐름을 끊지도 보태지도 않는다 — 아이콘 추가는 글자 변화가 아니다.)
+// 그래서 블록 안의 글자 한 자·공백 한 칸(추가·삭제, 래퍼 경계 포함)·뜻 있는 태그·블록 나눔과 합침·블록 사이 이동은 전부 하드이고,
+// 중립 인라인으로 감싸거나 푸는 것만 통과한다. 통과시킨 블록은 text-wrap(소프트)에 무엇이 감싸졌는지와 수를 적는다.
 //
 // 비교 조건(#8 부류): 기준은 PR의 merge-base, 후보는 PR 머리이고 **같은 입력·같은 BUILD_NOW로 렌더한 둘**만 견준다
 // (bin/invariants.mjs --render). 다른 날 데이터로 구운 폴더끼리 견주면 데이터 때문에 텍스트가 갈린다.
@@ -42,10 +59,11 @@ import { createHash } from "node:crypto";
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { parse } from "parse5";
-import { cleanChildren } from "./canon.mjs";
+import { BLOCK, cleanChildren } from "./canon.mjs";
 import { diffLines, listFiles } from "./compare.mjs";
 
-export const SNAPSHOT_VERSION = 1;
+// 2: #289 — texts가 텍스트 노드가 아니라 블록 흐름이고(shapes가 짝), robots·exceptions가 목록이며 handlers·bodyMeta·details·resources가 늘었다.
+export const SNAPSHOT_VERSION = 2;
 
 /** 내부 링크로 치는 절대 주소의 머리(canonical·og:url이 쓰는 값). */
 export const SITE_BASE = "https://kyhsa93.github.io/jipgye/";
@@ -70,6 +88,23 @@ export const isTextAttr = (name) => TEXT_ATTR_NAMES.has(name) || /^data-.+-en$/.
 
 /** 소프트로만 보는 의미 속성. 디자인 개편이 건드릴 이유가 없지만 본문의 하드 목록에는 없는 것. */
 export const SEMANTIC_ATTRS = new Set("role hidden name for scope colspan rowspan headers type value".split(" "));
+
+/**
+ * 글자 흐름을 끊는 태그(#289 4번 "블록으로 치는 태그 목록"). canon.mjs의 BLOCK(공백이 접히는 자리)에서 br을 빼고,
+ * 글자를 따로 담는 폼 컨트롤(button·input·textarea·label·legend)을 더했다 — 버튼 글자와 옆 문장은 한 문장이 아니다.
+ * 이 목록의 태그끼리 바꾸는 것(div → section, p → li)은 흐름을 바꾸지 않는다. 블록을 나누거나 합치면 흐름이 달라진다.
+ */
+export const TEXT_BLOCK = new Set([...BLOCK, "button", "input", "textarea", "label", "legend"].filter((t) => t !== "br"));
+/** 뜻을 바꾸지 않는 인라인. 이 태그로 글자를 감싸거나 푸는 것은 흐름을 바꾸지 않는다(text-wrap 소프트로 보고). 여덟 개로 확정(cto, PR #292) — code·kbd·time·u는 넣지 않는다. */
+export const NEUTRAL_INLINE = new Set("span strong em b i small mark abbr".split(" "));
+/** 흐름을 끊지도 보태지도 않는 빈 요소(아이콘·줄바꿈 기회). 글자가 든 속성(alt)은 attr-text가 본다. */
+const TRANSPARENT = new Set("img wbr picture source".split(" "));
+/** 브라우저 기본 스타일이 그리지 않는 요소(HTML 이름공간). 그 아래 글자에는 `[hidden:태그]` 표시가 붙는다. dialog는 open이 없을 때만. */
+export const UA_HIDDEN = new Set("template noscript noembed noframes datalist canvas object video audio iframe title".split(" "));
+const VOID = new Set("area base br col embed hr img input link meta source track wbr".split(" "));
+const NS_HTML = "http://www.w3.org/1999/xhtml";
+const BR_SHAPE = "⏎";
+const CUT = "┊";
 
 const LANDMARK_TAGS = new Set(["main", "nav"]);
 const SKIP_LINK_CLASS = "skip-link";
@@ -150,24 +185,44 @@ export function markupClassRefs(source) {
   return [...out].sort();
 }
 
+/** 조상에게서 받은 숨김 표시(base)에 이 요소의 것을 더한다. 표시는 ` [hidden]`·` [hidden:template]`·` [aria-hidden]`·` [inert]`를 이어 붙인 문자열이다. */
+function withMarks(base, node, a, inBody) {
+  const own = [];
+  if ("hidden" in a) own.push("[hidden]");
+  if (inBody && node.namespaceURI === NS_HTML && (UA_HIDDEN.has(node.tagName) || (node.tagName === "dialog" && !("open" in a)))) own.push(`[hidden:${node.tagName}]`);
+  if ((a["aria-hidden"] ?? "").trim().toLowerCase() === "true") own.push("[aria-hidden]");
+  if ("inert" in a) own.push("[inert]");
+  let out = base;
+  for (const m of own) if (!out.includes(` ${m}`)) out += ` ${m}`;
+  return out;
+}
+
+/** srcset·imagesrcset에서 주소만 뽑는다. data: 주소가 섞이면(쉼표가 주소 안에 있다) 읽지 않는다. */
+const srcsetUrls = (value) => (value.includes("data:") ? [] : value.split(",").map((c) => c.trim().split(WS)[0]).filter(Boolean));
+
 /** HTML 한 장에서 불변 사실을 뽑는다. 배열은 문서 순서다(다중집합 비교는 compare 쪽에서 센다). */
 export function extractPage(html) {
   const page = {
-    robots: null,
+    robots: [],
     head: [],
-    exceptions: {},
+    bodyMeta: [],
+    exceptions: [],
     ldJson: 0,
     texts: [],
+    shapes: [],
     textAttrs: [],
     links: [],
     hrefs: [],
+    resources: [],
     headings: [],
     landmarks: [],
     skip: [],
+    details: [],
     ids: [],
     data: [],
     aria: [],
     semantic: [],
+    handlers: [],
     classes: {},
     scripts: [],
     srcs: [],
@@ -181,13 +236,29 @@ export function extractPage(html) {
   const skips = [];
   let bodyLinks = 0;
 
+  // 블록 하나의 글자 흐름을 모으는 통. flow는 비교 항목(하드), shape는 같은 흐름에 중립 인라인·br의 자리를 적은 것(text-wrap 소프트)이다.
+  // mark는 숨김 표시에 "바깥에서 감싼 뜻 있는 인라인" 표시(` [in:del]`)를 이은 것이다 — 통이 그 태그의 여는 표시(`‹del›`)를 갖지 못할 때 붙는다.
+  const openRun = (mark, verbatim) => ({ flow: [], shape: [], text: false, shaped: false, mark, verbatim });
+  const flush = (run) => {
+    if (!run.text) return; // 글자가 없는 블록(태그 표시뿐인 것 포함)은 항목이 아니다
+    const fin = run.verbatim ? (s) => s : norm;
+    page.texts.push(`${JSON.stringify(fin(run.flow.join("")))}${run.mark}`);
+    page.shapes.push(run.shaped ? fin(run.shape.join("")) : 0);
+  };
+  let cur = openRun("", false);
+
   const headLine = (node, a) => {
-    if (node.tagName === "meta" && a.name === "robots") {
-      page.robots = a.content ?? "";
+    // robots는 하나도 빠짐없이 모은다(둘 이상이면 가장 좁은 지시가 이긴다 — 마지막 값만 보면 앞에 끼운 `none`이 지나간다). 이름은 대소문자를 가리지 않는다.
+    if (node.tagName === "meta" && (a.name ?? "").trim().toLowerCase() === "robots") {
+      page.robots.push(a.content ?? "");
       return;
     }
     const ex = HEAD_EXCEPTIONS.find((e) => e.tag === node.tagName && a[e.attr] === e.value);
-    if (ex) page.exceptions[`${ex.tag}[${ex.attr}=${ex.value}] ${ex.mask}`] = a[ex.mask] ?? null;
+    if (ex) {
+      // 같은 이름의 메타가 여럿이면(media별 theme-color) 나머지 속성으로 가른다 — 전부 보고한다.
+      const rest = (node.attrs ?? []).filter((x) => x.name !== ex.attr && x.name !== ex.mask && !IGNORED_ATTRS.has(x.name)).sort((x, y) => (x.name < y.name ? -1 : 1));
+      page.exceptions.push(`${ex.tag}[${ex.attr}=${ex.value}]${rest.map((x) => `[${x.name}=${JSON.stringify(x.value)}]`).join("")} ${ex.mask}=${a[ex.mask] ?? null}`);
+    }
     const body = node.tagName === "title" ? ` ${JSON.stringify(textOf(node))}` : "";
     page.head.push(`<${node.tagName}${attrsText(node, ex?.mask)}>${body}`);
   };
@@ -195,10 +266,12 @@ export function extractPage(html) {
   const visit = (node, ctx) => {
     const tag = node.tagName;
     const a = attrsOf(node);
-    const hidden = ctx.hidden || "hidden" in a;
+    const mark = withMarks(ctx.mark, node, a, ctx.inBody);
     const inHeadLine = ctx.inHead && HEAD_TAGS.has(tag);
     let isSkip = false;
     for (const { name, value } of node.attrs ?? []) {
+      // 인라인 이벤트 핸들러(onclick·onload …): 속성 안의 JS다. head 줄에 있어도 따로 센다.
+      if (name.length > 2 && name.startsWith("on")) page.handlers.push(`${name}=${JSON.stringify(value)}`);
       if (name === "id") {
         page.ids.push(value);
         idTag[value] ??= tag;
@@ -210,13 +283,69 @@ export function extractPage(html) {
         }
       } else if (inHeadLine) {
         /* head의 title·meta·link는 headLine이 통째로 본다 */
-      } else if (isTextAttr(name)) page.textAttrs.push(`${name}=${JSON.stringify(value)}${hidden ? " [hidden]" : ""}`); // 태그 이름은 적지 않는다(div → section은 디자인이다)
+      } else if (isTextAttr(name)) page.textAttrs.push(`${name}=${JSON.stringify(value)}${mark}`); // 태그 이름은 적지 않는다(div → section은 디자인이다)
       else if (name.startsWith("data-")) page.data.push(`${name}=${JSON.stringify(value)}`);
       else if (name.startsWith("aria-")) page.aria.push(`${name}=${JSON.stringify(value)}`);
-      else if (SEMANTIC_ATTRS.has(name) && tag !== "script") page.semantic.push(`${name}=${JSON.stringify(value)}`);
+      else if (SEMANTIC_ATTRS.has(name) && tag !== "script" && !(ctx.inBody && tag === "meta")) page.semantic.push(`${name}=${JSON.stringify(value)}`);
     }
     if (ctx.inBody && LANDMARK_TAGS.has(tag)) page.landmarks.push(tag);
     if (inHeadLine) headLine(node, a);
+    // head 안 noscript의 본문은 파서에게 글자다(<meta http-equiv=refresh>·robots를 여기 넣으면 head 줄에 안 잡힌다).
+    if (ctx.inHead && tag === "noscript") page.head.push(`<noscript> ${JSON.stringify(norm(cleanChildren(node).map((k) => k.value ?? "").join("")))}`);
+    // body 안의 meta·base: 크롤러와 브라우저는 body에 놓인 robots·refresh·base도 읽는다.
+    if (ctx.inBody && (tag === "meta" || tag === "base")) page.bodyMeta.push(`<${tag}${attrsText(node)}>`);
+    // 참조 자원: 대상 파일이 있는지는 폴더 비교에서 본다(a[href]는 hrefs, script[src]는 srcs).
+    if (tag === "link" && "href" in a) page.resources.push(a.href);
+    if (tag !== "script" && "src" in a) page.resources.push(a.src);
+    if ("poster" in a) page.resources.push(a.poster);
+    if (tag === "object" && "data" in a) page.resources.push(a.data);
+    for (const name of ["srcset", "imagesrcset"]) if (name in a) page.resources.push(...srcsetUrls(a[name]));
+    if (ctx.inBody && tag === "details") {
+      const summary = cleanChildren(node).find((k) => k.tagName === "summary");
+      page.details.push(`details[${"open" in a ? "open" : "닫힘"}] 요약=${JSON.stringify(summary ? textOf(summary) : null)}`);
+    }
+
+    // 글자 흐름에서 이 요소의 자리: 덩어리(SVG·MathML — 바깥 흐름은 그대로 두고 안쪽을 따로 모은다) / 블록 / br / 중립 인라인 / 투명 / 뜻 있는 인라인.
+    // 뜻 있는 인라인이 블록을 **바깥에서** 감싸면(`<del><p>…</p></del>`) 여는 표시가 든 통에는 글자가 없어 버려지고 안쪽 블록의 통은 새로 열린다.
+    // 그래서 뜻 있는 인라인 조상을 ctx.inl로 내려보내 새로 여는 통(블록·블록이 닫힌 뒤 이어지는 통·덩어리)의 표시에 `[in:태그]`로 붙인다.
+    const foreign = node.namespaceURI !== NS_HTML;
+    const verbatim = ctx.verbatim || VERBATIM.has(tag);
+    let inl = ctx.inl;
+    let leave = () => {};
+    if (foreign && !ctx.foreign) {
+      const outer = cur;
+      cur = openRun(mark + ctx.inl, false);
+      leave = () => {
+        flush(cur);
+        cur = outer;
+      };
+    } else if (!ctx.inBody || ctx.foreign || TEXT_BLOCK.has(tag) || VERBATIM.has(tag) || mark !== ctx.mark) {
+      flush(cur);
+      cur = openRun(mark + ctx.inl, verbatim);
+      leave = () => {
+        flush(cur);
+        cur = openRun(ctx.mark + ctx.inl, ctx.verbatim);
+      };
+    } else if (tag === "br") {
+      cur.flow.push(" ");
+      cur.shape.push(BR_SHAPE);
+      cur.shaped = true;
+    } else if (NEUTRAL_INLINE.has(tag)) {
+      cur.shape.push(`‹${tag}›`);
+      cur.shaped = true;
+      leave = () => cur.shape.push(`‹/${tag}›`);
+    } else if (!TRANSPARENT.has(tag)) {
+      cur.flow.push(`‹${tag}›`);
+      cur.shape.push(`‹${tag}›`);
+      if (!VOID.has(tag)) {
+        inl = `${ctx.inl} [in:${tag}]`;
+        leave = () => {
+          cur.flow.push(`‹/${tag}›`);
+          cur.shape.push(`‹/${tag}›`);
+        };
+      }
+    }
+
     if (tag === "script") {
       if ("src" in a) {
         page.scripts.push(`<script${attrsText(node)}>`);
@@ -231,10 +360,14 @@ export function extractPage(html) {
         for (const m of body.match(TW_DARK_TEXT) ?? []) page.twDark.push(`script ${m}`);
       }
       if ((a.type ?? "").trim().toLowerCase() === "application/ld+json") page.ldJson++;
+      leave();
       return;
     }
-    if (tag === "style") return;
-    if (ctx.inBody && HEADINGS.has(tag)) page.headings.push(`${tag} ${JSON.stringify(textOf(node))}${hidden ? " [hidden]" : ""}`);
+    if (tag === "style") {
+      leave();
+      return;
+    }
+    if (ctx.inBody && HEADINGS.has(tag)) page.headings.push(`${tag} ${JSON.stringify(textOf(node))}${mark}`);
     const isLink = tag === "a" && "href" in a;
     if (isLink) {
       if (ctx.inBody) bodyLinks++;
@@ -242,19 +375,22 @@ export function extractPage(html) {
       page.links.push(`href=${JSON.stringify(a.href)} rel=${JSON.stringify(a.rel ?? null)} target=${JSON.stringify(a.target ?? null)} 글자=${JSON.stringify(textOf(node))}`);
     }
     if (isSkip) skips.push({ tag, href: a.href ?? null, nth: isLink && ctx.inBody ? bodyLinks : null });
-    const next = { hidden, verbatim: ctx.verbatim || VERBATIM.has(tag), inHead: ctx.inHead || tag === "head", inBody: ctx.inBody || tag === "body" };
+    const next = { mark, inl, verbatim, foreign, inHead: ctx.inHead || tag === "head", inBody: ctx.inBody || tag === "body" };
     for (const kid of cleanChildren(node)) {
       if (kid.nodeName === "#text") {
         if (!next.inBody) continue;
-        const text = next.verbatim ? kid.value : norm(kid.value);
-        if (text !== "") page.texts.push(`${JSON.stringify(text)}${hidden ? " [hidden]" : ""}`);
+        cur.flow.push(kid.value);
+        cur.shape.push(kid.value);
+        if (verbatim ? kid.value !== "" : norm(kid.value) !== "") cur.text = true;
       } else if (kid.tagName) visit(kid, next);
     }
+    leave();
   };
 
   for (const child of parse(html).childNodes) {
-    if (child.tagName) visit(child, { hidden: false, verbatim: false, inHead: false, inBody: false });
+    if (child.tagName) visit(child, { mark: "", inl: "", verbatim: false, foreign: false, inHead: false, inBody: false });
   }
+  flush(cur);
   page.jsRefs = [...refs].sort();
   // 건너뛰기 링크: href, 그 대상(#main이 가리키는 요소가 있는지·무엇인지), 본문 링크 중 몇 번째인지.
   page.skip = skips.map((s) => {
@@ -436,13 +572,69 @@ function pageScriptBytes(file, page, snap, siteBase) {
   return { bytes, missing };
 }
 
-const dangling = (file, page, snap, siteBase) => {
+/** 주소 목록(urls) 가운데 폴더 안을 가리키는데 그 파일이 없는 것. */
+const dangling = (file, urls, snap, siteBase) => {
   const files = new Set(snap.files);
-  return page.hrefs.filter((h) => {
+  return urls.filter((h) => {
     const rel = resolveInternal(file, h, siteBase);
     return rel !== null && !files.has(rel);
   });
 };
+/** 기준에서도 없던 것은 빼고, 후보에서 새로 대상이 사라진 주소만. */
+const newlyDangling = (file, urlsA, urlsB, snapA, snapB, siteBase) => {
+  const was = new Set(dangling(file, urlsA, snapA, siteBase));
+  return [...new Set(dangling(file, urlsB, snapB, siteBase).filter((h) => !was.has(h)))];
+};
+
+const TEXT_ITEM = /^(".*")((?: \[[^\] ]+\])*)$/s;
+/** texts 항목(`"글자 흐름" [표시]`)에서 글자 흐름만. */
+const flowOf = (item) => JSON.parse(TEXT_ITEM.exec(item)[1]);
+const NEUTRAL_MARK = new RegExp(`‹/?(?:${[...NEUTRAL_INLINE].join("|")})›`, "g");
+/**
+ * 블록 모양(shape)에서 텍스트 노드가 잘린 자리만 남긴다: 중립 인라인의 여닫는 자리를 `┊`로 바꾸고 겹친 것·양끝의 것을 지운다.
+ * 노드 전체를 감싼 것(`‹span›글자‹/span›`)이나 strong → span은 잘린 자리가 같으므로 같은 키다(보고하지 않는다).
+ */
+function cutKey(shape) {
+  return shape
+    .replace(NEUTRAL_MARK, CUT)
+    .replace(new RegExp(`[ ${CUT}]*${CUT}[ ${CUT}]*`, "g"), (m) => (m.includes(" ") ? ` ${CUT}` : CUT))
+    .replace(new RegExp(` *${BR_SHAPE} *`, "g"), BR_SHAPE)
+    .replace(new RegExp(`^[ ${CUT}]+|[ ${CUT}]+$`, "g"), "");
+}
+
+/**
+ * 글자 흐름이 같은 블록끼리 모양을 견준다(#289 4번의 소프트 쪽). 반환: 인라인 경계만 다른 블록 쌍 [{ a, b }] — a·b는 보고에 적을 모양 문자열이다.
+ * 같은 흐름이 여럿이면(표의 같은 숫자) 모양이 같은 것끼리 먼저 지우고 남은 것을 문서 순서로 짝짓는다.
+ */
+function wrapDiffs(a, b) {
+  if (!a.shapes.some(Boolean) && !b.shapes.some(Boolean)) return [];
+  const group = (page) => {
+    const by = new Map();
+    page.texts.forEach((item, i) => {
+      if (!by.has(item)) by.set(item, []);
+      by.get(item).push(page.shapes[i] || flowOf(item));
+    });
+    return by;
+  };
+  const [ga, gb] = [group(a), group(b)];
+  const out = [];
+  for (const [item, shapesA] of ga) {
+    const shapesB = gb.get(item);
+    if (!shapesB) continue; // 흐름이 다른 블록은 text(하드)가 적는다
+    const mark = TEXT_ITEM.exec(item)[2];
+    const restB = shapesB.map((s) => ({ s, key: cutKey(s), used: false }));
+    const restA = [];
+    for (const s of shapesA) {
+      const key = cutKey(s);
+      const same = restB.find((x) => !x.used && x.key === key);
+      if (same) same.used = true;
+      else restA.push(s);
+    }
+    const left = restB.filter((x) => !x.used);
+    for (let i = 0; i < Math.min(restA.length, left.length); i++) out.push({ a: `${JSON.stringify(restA[i])}${mark}`, b: `${JSON.stringify(left[i].s)}${mark}` });
+  }
+  return out;
+}
 
 /** 한 장의 기준(a)·후보(b)를 견준다. 반환: findings [{ id, check, level: "hard"|"soft", missing, added, note? }]. */
 export function comparePage(file, a, b, { snapA, snapB, hooks, siteBase = SITE_BASE }) {
@@ -455,27 +647,42 @@ export function comparePage(file, a, b, { snapA, snapB, hooks, siteBase = SITE_B
     push(id, check, level, d.missing, d.added);
   };
 
-  if (a.robots !== b.robots) push("noindex", "noindex(meta robots)", "hard", [a.robots ?? "(robots 없음)"], [b.robots ?? "(robots 없음)"]);
+  // robots 메타 전부를 다중집합으로 견준다. 한쪽에 하나도 없으면 "(robots 없음)"으로 적는다.
+  const robots = bagDiff(a.robots, b.robots);
+  if (robots.missing.length || robots.added.length) {
+    const side = (list, all) => (list.length ? list : all.length ? [] : ["(robots 없음)"]);
+    push("noindex", "noindex(meta robots)", "hard", side(robots.missing, a.robots), side(robots.added, b.robots));
+  }
+  bag("body-meta", "body 안의 meta·base", "hard", a.bodyMeta, b.bodyMeta);
   bag("head", "head(title·meta·link)", "hard", a.head, b.head);
-  const exKeys = [...new Set([...Object.keys(a.exceptions), ...Object.keys(b.exceptions)])].filter((k) => a.exceptions[k] !== b.exceptions[k]);
-  push("head-exception", "head 허용 예외(값이 다르다)", "soft", exKeys.map((k) => `${k}=${a.exceptions[k]}`), exKeys.map((k) => `${k}=${b.exceptions[k]}`));
+  bag("head-exception", "head 허용 예외(값이 다르다)", "soft", a.exceptions, b.exceptions);
   if (a.ldJson !== b.ldJson) push("ld-json", "구조화 데이터(ld+json 개수)", "hard", [`${a.ldJson}개`], [`${b.ldJson}개`]);
 
+  // 본문 텍스트: 블록 단위 글자 흐름의 다중집합. 글자·공백·뜻 있는 인라인 태그·블록 경계·숨김 표시가 전부 항목 안에 있다.
   const text = bagDiff(a.texts, b.texts);
   if (text.missing.length || text.added.length) {
-    // 글자 흐름(공백 뺀 이어붙임)이 같으면 노드가 다르게 잘렸을 뿐이다 — 판정은 그대로 하드, 읽는 사람에게만 알린다.
-    const flow = (t) => t.map((x) => JSON.parse(x.replace(/ \[hidden\]$/, ""))).join("").replace(/\s+/g, "");
-    push("text", "본문 텍스트(다중집합)", "hard", text.missing, text.added, flow(a.texts) === flow(b.texts) ? "글자 흐름은 같고 텍스트 노드가 다르게 잘렸다(인라인 래퍼)" : undefined);
+    // 공백을 뺀 글자가 같으면 공백이나 블록 경계가 달라진 것이다 — 판정은 그대로 하드, 읽는 사람에게만 알린다.
+    const chars = (t) => t.map(flowOf).join("").replace(/\s+/g, "");
+    push("text", "본문 텍스트(다중집합)", "hard", text.missing, text.added, chars(a.texts) === chars(b.texts) ? "글자는 같고 블록 안 공백이나 블록 경계가 달라졌다(공백 추가·삭제, 블록 나눔·합침)" : undefined);
   } else if (a.texts.join("\n") !== b.texts.join("\n")) {
     const hunks = diffLines(a.texts, b.texts);
     push("text-order", "텍스트 순서", "soft", hunks.flatMap((h) => h.removed.map((t, i) => `A ${h.aStart + i + 1}번째: ${t}`)), hunks.flatMap((h) => h.added.map((t, i) => `B ${h.bStart + i + 1}번째: ${t}`)));
   }
+  // 글자 흐름은 같고 텍스트 노드가 다르게 잘린 블록(중립 인라인으로 일부를 감싸거나 풀었다, br을 넣었다): 통과시키되 무엇이 감싸졌는지와 수를 낸다.
+  const wraps = wrapDiffs(a, b);
+  if (wraps.length) {
+    const count = (list, re) => list.reduce((n, s) => n + (s.match(re) ?? []).length, 0);
+    const opens = new RegExp(`‹(?:${[...NEUTRAL_INLINE].join("|")})›`, "g");
+    const brs = new RegExp(BR_SHAPE, "g");
+    const [wa, wb] = [wraps.map((w) => w.a), wraps.map((w) => w.b)];
+    push("text-wrap", "텍스트 노드 경계(글자·공백은 같고 중립 인라인 래퍼·br만 다르다)", "soft", wa, wb, `블록 ${wraps.length}개 — 래퍼 ${count(wa, opens)}→${count(wb, opens)}개, br ${count(wa, brs)}→${count(wb, brs)}개`);
+  }
+  bag("details-open", "details 접힘·펼침(open) — 본문을 접거나 펴는 변화, po가 반드시 읽는다", "soft", a.details, b.details);
 
   bag("attr-text", "속성 글자(title·alt·placeholder·lang·aria-label·data-label …)", "hard", a.textAttrs, b.textAttrs);
   bag("links", "링크(a[href]·rel·target·글자)", "hard", a.links, b.links);
-  const wasDangling = new Set(dangling(file, a, snapA, siteBase));
-  const nowDangling = dangling(file, b, snapB, siteBase).filter((h) => !wasDangling.has(h));
-  push("link-target", "내부 링크 대상 없음", "hard", [], [...new Set(nowDangling)]);
+  push("link-target", "내부 링크 대상 없음", "hard", [], newlyDangling(file, a.hrefs, b.hrefs, snapA, snapB, siteBase));
+  push("resource-target", "참조 자원 대상 없음(link[href]·[src]·poster·srcset)", "hard", [], newlyDangling(file, a.resources, b.resources, snapA, snapB, siteBase));
 
   if (a.headings.join("\n") !== b.headings.join("\n")) {
     const hunks = diffLines(a.headings, b.headings);
@@ -521,6 +728,10 @@ export function comparePage(file, a, b, { snapA, snapB, hooks, siteBase = SITE_B
   const extB = pageScriptBytes(file, b, snapB, siteBase);
   if (extB.bytes > extA.bytes) push("s6-external-bytes", "S6 외부 JS 바이트", "hard", [`${extA.bytes}B`], [`${extB.bytes}B (+${extB.bytes - extA.bytes})`]);
   push("s6-src-missing", "S6 script src 대상 없음", "hard", [], extB.missing.filter((s) => !extA.missing.includes(s)));
+  // 인라인 이벤트 핸들러: 새로 생기거나 값이 바뀌면(= 후보에만 있는 것이 있으면) 하드, 줄기만 하면 소프트.
+  const handlers = bagDiff(a.handlers, b.handlers);
+  if (handlers.added.length) push("s6-handlers", "S6 인라인 이벤트 핸들러 속성(on*)이 생기거나 바뀜", "hard", handlers.missing, handlers.added);
+  else push("handlers-removed", "인라인 이벤트 핸들러 속성(on*)이 줄었다", "soft", handlers.missing, []);
 
   push("tw-dark", "tw:dark: 변형", "hard", [], [...new Set(b.twDark)]);
   bag("semantic", "의미 속성(role·hidden·name·for·scope …)", "soft", a.semantic, b.semantic);
@@ -564,8 +775,14 @@ export function compareSnapshots(snapA, snapB, { hookList = [], extraHooks = [],
     site.push({ id: "s6-js-total", check: "S6 폴더 안 JS 바이트 합", level: "hard", missing: [`${jsTotalA}B`], added: [`${jsTotalB}B (+${jsTotalB - jsTotalA})`, ...names.map((f) => `${f}: ${snapA.jsBytes[f] ?? "없음"} → ${snapB.jsBytes[f] ?? "없음"}`)] });
   }
   if (snapB.twDarkFiles.length) site.push({ id: "tw-dark", check: "tw:dark: 변형(.js·.css)", level: "hard", missing: [], added: snapB.twDarkFiles });
+  // 폴더에서 사라진 파일(.html은 url-set이 본다). HTML이 속성으로 가리키는 것은 resource-target·link-target·s6-src-missing이 하드로 잡고,
+  // JS가 fetch로 읽는 data/ 따위는 이 도구가 참조를 못 읽으므로 목록만 낸다.
+  const filesB = new Set(snapB.files);
+  const gone = snapA.files.filter((f) => !isHtml(f) && !filesB.has(f));
+  if (gone.length) site.push({ id: "files-removed", check: "폴더에서 사라진 파일(.html 밖)", level: "soft", missing: gone, added: [] });
 
-  const noindex = (snap) => Object.entries(snap.pages).filter(([, p]) => /\bnoindex\b/i.test(p.robots ?? "")).map(([f]) => f).sort();
+  // 메타가 여럿이면 하나라도 noindex(또는 같은 뜻의 none)면 그 장은 색인되지 않는다.
+  const noindex = (snap) => Object.entries(snap.pages).filter(([, p]) => p.robots.some((r) => /\b(?:noindex|none)\b/i.test(r))).map(([f]) => f).sort();
   return {
     labelA: snapA.label,
     labelB: snapB.label,
@@ -587,6 +804,31 @@ export function compareSnapshots(snapA, snapB, { hookList = [], extraHooks = [],
 
 /** 폴더 장 이름 대신 쓰는 이름: 폴더 단위 항목(url-set·s6-js-total·tw-dark)의 예외는 page에 이것을 적는다. */
 export const SITE_PAGE = "(폴더)";
+
+/**
+ * 훅 클래스 목록의 상태를 폴더 단위 소프트 항목으로 만든다(#289 5번 — `--render` 보고에 같이 낸다).
+ *   hook-list          목록 파일(list)이 후보 소스에서 뽑은 것(head)과 어긋난다. missing은 목록에만, added는 소스에만 있는 이름.
+ *   hook-list-dropped  기준 소스(base)에서는 훅이었는데 후보 소스에서는 아닌 이름. 후보가 선택자·시험 문자열을 지우면 그 class는
+ *                      더는 훅으로 보지 않으므로(HTML에서 빠져도 hooks가 안 건다) 사람이 목록으로 읽어야 한다.
+ * list·base·head는 { js, markup }이다. base를 안 주면 hook-list만 본다.
+ */
+export function hookListFindings({ list, head, base = null }) {
+  const out = [];
+  const drift = hookListDrift(list, head);
+  if (!drift.ok) out.push({ id: "hook-list", check: "훅 클래스 목록(hook-classes.json)이 후보 소스와 어긋났다(- 목록에만, + 소스에만) — --hooks-write로 다시 만든다", level: "soft", missing: drift.stale, added: drift.missing });
+  if (base) {
+    const now = new Set([...head.js, ...head.markup]);
+    const dropped = [...new Set([...base.js, ...base.markup])].filter((c) => !now.has(c)).sort();
+    if (dropped.length) out.push({ id: "hook-list-dropped", check: "기준 소스에서는 훅이었고 후보 소스에서는 아닌 class(더는 훅으로 보지 않는다)", level: "soft", missing: dropped, added: [] });
+  }
+  return out;
+}
+
+/** 폴더 단위 항목을 결과에 보탠다(예외 목록을 적용하기 전에 부른다). */
+export function withSiteFindings(result, findings) {
+  const site = [...result.site, ...findings];
+  return { ...result, ...summarize(result.pages, site), site };
+}
 
 /**
  * 의도한 차이(예외 목록)를 결과에 적용한다. 목록 한 줄은
@@ -635,7 +877,7 @@ export async function compareInvariants(inputA, inputB, opts = {}) {
 
 /**
  * HTML 문자열 둘을 한 장으로 견준다(변이 시험용). jsA·jsB는 { "nav.js": "…" }처럼 그 장이 싣는 외부 JS의 내용이다.
- * 고정 사본 한 장만 견주므로 내부 링크 대상은 전부 "있는 파일"로 친다(대상 확인은 폴더 비교에서 한다).
+ * 고정 사본 한 장만 견주므로 내부 링크·참조 자원의 대상은 전부 "있는 파일"로 친다(대상 확인은 폴더 비교에서 한다).
  */
 export function compareHtmlInvariants(htmlA, htmlB, { file = "page.html", jsA = {}, jsB = jsA, hookList = [], extraHooks = [] } = {}) {
   const snap = (html, js, label) => {
@@ -647,10 +889,13 @@ export function compareHtmlInvariants(htmlA, htmlB, { file = "page.html", jsA = 
       for (const c of jsClassRefs(text)) hooks.add(c);
       for (const m of new Set(text.match(TW_DARK_TEXT) ?? [])) twDarkFiles.push(`${name}: ${m}`);
     }
-    const files = [file, ...Object.keys(js), ...page.hrefs.map((h) => resolveInternal(file, h)).filter(Boolean)];
+    const files = [file, ...Object.keys(js), ...[...page.hrefs, ...page.resources].map((h) => resolveInternal(file, h)).filter(Boolean)];
     return { version: SNAPSHOT_VERSION, label, files, jsBytes: Object.fromEntries(Object.entries(js).map(([k, v]) => [k, Buffer.byteLength(v)])), jsHooks: [...hooks].sort(), twDarkFiles, pages: { [file]: page } };
   };
-  return compareSnapshots(snap(htmlA, jsA, "A"), snap(htmlB, jsB, "B"), { hookList, extraHooks });
+  const [a, b] = [snap(htmlA, jsA, "A"), snap(htmlB, jsB, "B")];
+  // 한 장만 견주므로 "어느 쪽에든 이름이 나온 파일"은 양쪽에 다 있는 것으로 친다(대상 확인·사라진 파일은 폴더 비교의 일이다).
+  a.files = b.files = [...new Set([...a.files, ...b.files])].sort();
+  return compareSnapshots(a, b, { hookList, extraHooks });
 }
 
 const clip = (s, n = 200) => (s.length > n ? `${s.slice(0, n)}…(${s.length}자)` : s);
@@ -675,8 +920,10 @@ export function formatInvariantsReport(r, { maxItems = 8 } = {}) {
     `  URL 집합: A ${r.countA}장 / B ${r.countB}장`,
     `  noindex 집합: A ${r.noindexA.length}장 / B ${r.noindexB.length}장 (${same(r.noindexA, r.noindexB)}) ${r.noindexB.join(", ")}`,
     `  폴더 안 JS 바이트 합: A ${num(r.jsTotalA)} / B ${num(r.jsTotalB)}`,
-    `  훅 클래스 ${r.hooks.length}개(목록 파일 ${r.hooksFromList}개에 후보 JS가 읽는 것을 더했다)`,
+    `  훅 클래스 ${r.hooks.length}개(목록 파일 ${r.hooksFromList}개에 후보 JS가 읽는 것과 따로 보탠 것을 더했다)`,
   ];
+  const wrapped = r.pages.map((p) => p.findings.find((f) => f.id === "text-wrap")).filter(Boolean);
+  if (wrapped.length) lines.push(`  인라인 경계만 다른 블록(text-wrap, 통과): ${wrapped.length}장 ${num(wrapped.reduce((n, f) => n + f.added.length, 0))}개 — 장별 수와 무엇이 감싸졌는지는 아래 소프트 목록`);
   for (const f of r.site) lines.push(...findingLines(f, maxItems, ""));
   const order = { onlyA: 0, onlyB: 0, hard: 1, soft: 2 };
   for (const p of [...r.failing].sort((x, y) => order[x.status] - order[y.status])) {
@@ -698,13 +945,13 @@ export function formatInvariantsReport(r, { maxItems = 8 } = {}) {
 
 /** 스냅숏을 장별 표(마크다운)로 편다 — 기준선 기록용(#274 범위 3: 장별 JS 바이트·canonical·noindex). */
 export function formatSnapshotTable(snap, { siteBase = SITE_BASE } = {}) {
-  const rows = ["| 장 | robots | canonical | 텍스트 노드 | 속성 글자 | a[href] | 제목 | id | script src | 인라인 JS(B) | 외부 JS(B) |", "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"];
+  const rows = ["| 장 | robots | canonical | 텍스트 블록 | 속성 글자 | a[href] | 제목 | id | script src | 인라인 JS(B) | 외부 JS(B) |", "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"];
   const total = { texts: 0, attrs: 0, links: 0, headings: 0, ids: 0, scripts: 0, inline: 0, ext: 0 };
   for (const [file, p] of Object.entries(snap.pages)) {
     const canonical = p.head.find((l) => l.startsWith("<link") && l.includes('rel="canonical"'))?.match(/href="([^"]*)"/)?.[1] ?? "(없음)";
     const ext = pageScriptBytes(file, p, snap, siteBase).bytes;
     const self = canonical === siteBase + file ? "자기 주소" : canonical;
-    rows.push(`| ${file} | ${p.robots ?? "(없음)"} | ${self} | ${p.texts.length} | ${p.textAttrs.length} | ${p.links.length} | ${p.headings.length} | ${p.ids.length} | ${p.scripts.length} | ${num(p.inlineBytes)} | ${num(ext)} |`);
+    rows.push(`| ${file} | ${p.robots.length ? p.robots.join(" / ") : "(없음)"} | ${self} | ${p.texts.length} | ${p.textAttrs.length} | ${p.links.length} | ${p.headings.length} | ${p.ids.length} | ${p.scripts.length} | ${num(p.inlineBytes)} | ${num(ext)} |`);
     total.texts += p.texts.length;
     total.attrs += p.textAttrs.length;
     total.links += p.links.length;
