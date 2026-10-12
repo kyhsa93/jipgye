@@ -36,5 +36,14 @@ jobs:
           tar -xzf "$RUNNER_TEMP/$archive" -C "$RUNNER_TEMP" actionlint
           "$RUNNER_TEMP/actionlint" -version
           "$RUNNER_TEMP/actionlint"
+      # 스타일시트 신선도(#276): docs/style.css는 src/css/를 Tailwind 단독 실행 파일로 빌드해 커밋한 산출물이다.
+      # 스크립트가 고정 버전(v4.3.3)을 내려받아 SHA-256 표와 대조한 뒤에만 실행하고, 다시 빌드한 것을 커밋된 파일과 바이트로 견준다.
+      # 내려받기 실패·해시 불일치·산출물 불일치는 모두 이 스텝의 실패다. 바이너리는 작업 폴더 밖($RUNNER_TEMP)에 받는다.
+      # 버전·해시는 scripts/build-css.mjs의 표 한 곳에만 적는다 - 여기에 다시 적으면 한쪽만 고쳐진다(test/css-build.test.mjs가 본다).
+      # 해시 출처는 그 스크립트 머리 주석에 있다(릴리스의 sha256sums.txt와 GitHub API digest, 2026-10-12 확인).
+      - name: 스타일시트 신선도 - Tailwind 고정 바이너리로 다시 빌드해 대조
+        env:
+          TAILWIND_CACHE_DIR: ${{ runner.temp }}/tailwindcss
+        run: node scripts/build-css.mjs --check
       - run: npm ci
       - run: npm test

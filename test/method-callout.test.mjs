@@ -108,7 +108,7 @@ test("어느 화면에서든 안내는 120자 안이다 - 질문 화면도 데�
 });
 
 test("상자 모양은 역할마다 하나다 - 안내는 막대 없이, 카드·근거는 테두리만, 답만 막대 (#47)", async () => {
-  const css = await readFile(path.join(root, "docs/style.css"), "utf8");
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
   const rule = (sel) => new RegExp(`\\n${sel.replace(/\./g, "\\.")} \\{([^}]*)\\}`).exec(css)?.[1] ?? "";
   assert.doesNotMatch(rule(".method-callout"), /border-left|accent-weak/, "안내가 답처럼 보인다");
   assert.doesNotMatch(rule(".complex-card"), /border-left/);

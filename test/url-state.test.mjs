@@ -82,7 +82,7 @@ test("뉴스 페이지도 읽은 기사를 표시한다", async () => {
   const html = await read("docs/news.html");
   assert.ok(html.includes('const READ_NEWS_KEY = "readNews"'), "읽음 저장소가 메인과 다르다");
   assert.ok(html.includes("markNewsRead(link.getAttribute"), "클릭을 읽음으로 기록하지 않는다");
-  assert.ok((await read("docs/style.css")).includes(".news-item.read"), "읽은 기사 스타일이 없다");
+  assert.ok((await read("src/css/legacy.css")).includes(".news-item.read"), "읽은 기사 스타일이 없다");
 });
 
 test("기록이 없는 날짜는 오류가 아니라 기록 없음으로 알린다", async () => {
@@ -208,7 +208,7 @@ test("데이터가 다 있으면 어떤 경우에도 오류 배너가 뜨지 않
 });
 
 test("감춰야 할 요소가 CSS 때문에 계속 보이지 않는다", async () => {
-  const css = await read("docs/style.css");
+  const css = await read("src/css/legacy.css");
   assert.match(css, /\[hidden\] \{\s*display: none !important;\s*\}/, "감춤 보호 규칙이 없다");
 
   const files = [

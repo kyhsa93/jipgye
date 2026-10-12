@@ -21,7 +21,7 @@ test("앱 아이콘은 스크립트가 그린 것과 같다", async () => {
 // 마크와 워드마크는 같은 모양이어야 한다. 한쪽만 고치는 것을 막을 방법은
 // 렌더링 없이는 없으므로, 최소한 획 수가 같은지는 본다.
 test("워드마크도 같은 획으로 그린다", async () => {
-  const css = await readFile(path.join(root, "docs/style.css"), "utf8");
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
   const block = /\.wordmark::before,\n\.brand::before \{([\s\S]*?)\n\}/.exec(css)?.[1] ?? "";
   const bars = [...block.matchAll(/no-repeat/g)].length;
   assert.equal(bars, 4, `워드마크의 세로 획이 ${bars}대다`);

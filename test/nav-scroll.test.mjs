@@ -84,7 +84,7 @@ test("모든 페이지가 nav.js를 부른다", async () => {
 });
 
 test("2층이 누를 수 있는 것으로 보인다", async () => {
-  const css = await readFile(path.join(root, "docs/style.css"), "utf8");
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
   const rule = css.match(/\n\.sub-nav a \{([^}]*)\}/)?.[1];
 
   assert.ok(rule, ".sub-nav a 규칙이 없다");
