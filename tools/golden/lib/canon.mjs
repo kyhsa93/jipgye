@@ -18,7 +18,7 @@
 import { parse } from "parse5";
 
 // 블록 수준(또는 화면에 안 그려지는) 요소. 이 요소의 시작·끝·이웃에서는 공백이 접힌다.
-const BLOCK = new Set(
+export const BLOCK = new Set(
   (
     "html head body title meta link base style script template noscript address article aside blockquote details dialog " +
     "dd div dl dt fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 header hgroup hr li main menu nav ol p pre " +

@@ -5,7 +5,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { canonLines } from "../lib/canon.mjs";
 import { compareBytes, compareDirs, formatReport, listFiles, treeHash } from "../lib/compare.mjs";
-import { collectHookClasses, compareInvariants, formatInvariantsReport, hookListDrift, readHookList, snapshotDir, snapshotHash } from "../lib/invariants.mjs";
+import { collectHookClasses, compareInvariants, formatInvariantsReport, hookListDrift, hookListFindings, readHookList, snapshotDir, snapshotHash } from "../lib/invariants.mjs";
 import { RENDER_STAGES, preparePristine, readWorkflowStages, renderIsolated } from "../lib/render.mjs";
 
 // 실제 저장소로 돌리는 측정(#236 완료 조건 1·2와 변이 시험의 시각 의존 확인). `npm run test:live`(GOLDEN_LIVE=1)에서만 돈다.
@@ -199,9 +199,62 @@ test("invariants(#274): 실제 67장에 변이를 넣는다 — class만 바꾸�
 
 test("invariants(#274): 훅 클래스 목록이 렌더할 SHA의 소스와 맞는다", opts, async () => {
   const p = await getPristine();
-  const drift = hookListDrift(await readHookList(), await collectHookClasses(p.dir));
+  const collected = await collectHookClasses(p.dir);
+  const drift = hookListDrift(await readHookList(), collected);
   say(`훅 클래스 목록 대 ${p.label}: 소스에만 ${drift.missing.length}, 목록에만 ${drift.stale.length}`);
   assert.deepEqual([drift.missing, drift.stale], [[], []]);
+  // --render가 보고에 같이 내는 항목(#289 5번): 같은 소스끼리는 어긋남도 빠진 이름도 없다.
+  assert.deepEqual(hookListFindings({ list: await readHookList(), base: collected, head: collected }), []);
+});
+
+test("invariants(#289): 실제 67장에 변이를 넣는다 — 숫자를 strong으로 감싸면 통과(소프트), 감싸며 한 자리 바꾸면·on* 속성·style.css 삭제는 장마다 잡힌다", opts, async () => {
+  const { cp, mkdtemp, readFile: read, rm, writeFile } = await import("node:fs/promises");
+  const os = await import("node:os");
+  const p = await getPristine();
+  const base = path.join(p.dir, "docs");
+  const files = await listFiles(base, (f) => f.endsWith(".html"));
+  const tmp = await mkdtemp(path.join(os.tmpdir(), "golden-inv-live-"));
+  const outsideScripts = (html, fn) => {
+    const stash = [];
+    return fn(html.replace(/<script(\s[^>]*)?>[\s\S]*?<\/script>/g, (m) => `\u0000${stash.push(m) - 1}\u0000`)).replace(/\u0000(\d+)\u0000/g, (_, i) => stash[Number(i)]);
+  };
+  // body의 첫 숫자 한 자리(태그 밖 텍스트)를 고른다 — 위 digit 변이와 같은 자리다.
+  const FIRST_DIGIT = /(<body[\s\S]*?>[^<>]*?)(\d)(?=[^<>]*<)/;
+  const variants = {
+    // 그 숫자를 <strong>으로 감싼다(텍스트 노드가 셋으로 잘린다) — 글자 흐름은 같다.
+    wrap: { fn: (html) => outsideScripts(html, (h) => h.replace(FIRST_DIGIT, (m, pre, d) => `${pre}<strong class="tw:font-bold">${d}</strong>`)), expect: "soft", id: "text-wrap" },
+    // 감싸면서 한 자리를 바꾼다.
+    wrapDigit: { fn: (html) => outsideScripts(html, (h) => h.replace(FIRST_DIGIT, (m, pre, d) => `${pre}<strong>${(Number(d) + 1) % 10}</strong>`)), expect: "hard", id: "text" },
+    // 감싸면서 래퍼 뒤에 공백 한 칸을 넣는다(67장 모두 그 숫자 뒤가 공백이 아닌 자리다 — 공백인 장이 생기면 줄어서 같아지고 아래 단언이 알린다).
+    wrapSpace: { fn: (html) => outsideScripts(html, (h) => h.replace(FIRST_DIGIT, (m, pre, d) => `${pre}<strong>${d}</strong> `)), expect: "hard", id: "text" },
+    // body의 첫 id 달린 요소에 인라인 이벤트 핸들러를 건다.
+    handler: { fn: (html) => outsideScripts(html, (h) => h.replace(/(<body[\s\S]*?) id="/, '$1 onclick="x()" id="')), expect: "hard", id: "s6-handlers" },
+    // HTML은 그대로 두고 style.css만 지운다.
+    noCss: { fn: (html) => html, remove: "style.css", expect: "hard", id: "resource-target", unchanged: true },
+  };
+  try {
+    for (const [name, v] of Object.entries(variants)) {
+      const dir = path.join(tmp, name);
+      await cp(base, dir, { recursive: true });
+      let changed = 0;
+      for (const f of files) {
+        const html = await read(path.join(base, f), "utf8");
+        const out = v.fn(html);
+        if (out !== html) changed++;
+        await writeFile(path.join(dir, f), out);
+      }
+      if (v.remove) await rm(path.join(dir, v.remove));
+      const r = await compareInvariants(base, dir);
+      const withId = r.pages.filter((pg) => pg.findings.some((f) => f.id === v.id && f.level === v.expect)).length;
+      say(`변이 ${name}: 바뀐 장 ${changed}/67, 통과 ${r.pass}, 소프트 ${r.soft}, 하드 ${r.hard}, <${v.id}> ${withId}장`);
+      assert.equal(changed, v.unchanged ? 0 : 67, `${name}: 67장 모두 변이가 들어갔다`);
+      const report = formatInvariantsReport(r, { maxItems: 2 }).split("\n").slice(0, 30).join("\n");
+      if (v.expect === "soft") assert.deepEqual([r.ok, r.hard, r.soft, withId], [true, 0, 67, 67], `${name}: 67장 모두 하드 없이 소프트로 보고된다\n${report}`);
+      else assert.deepEqual([r.hard, withId], [67, 67], `${name}: 67장 모두 <${v.id}>로 잡힌다\n${report}`);
+    }
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
 });
 
 test("BUILD_NOW 미설정이면 현행 코드와 바이트 동일 (Date.now를 같은 값으로 모킹한 변경 전·후 비교)", { ...opts, skip: LIVE && BASE_SHA ? false : opts.skip || "GOLDEN_BASE_SHA가 없다" }, async () => {

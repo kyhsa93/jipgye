@@ -9,7 +9,7 @@
 ```
 cd tools/golden && npm ci
 npm test                       # 고정 fixture만 읽는 시험(정준 덤프·변이 시험·비교기·렌더 격리·invariants) — 오늘의 docs/ 데이터를 읽지 않는다
-npm run test:live              # 실제 저장소로: 자기 비교(TZ=UTC·Asia/Seoul), BUILD_NOW 시각 의존, invariants 자기 비교·실제 67장 변이, (GOLDEN_BASE_SHA가 있으면) 미설정 바이트 동일
+npm run test:live              # 실제 저장소로: 자기 비교(TZ=UTC·Asia/Seoul), BUILD_NOW 시각 의존, invariants 자기 비교·실제 67장 변이(#274 셋, #289 다섯), (GOLDEN_BASE_SHA가 있으면) 미설정 바이트 동일
 
 node bin/render.mjs  --repo ../.. --sha HEAD --out /tmp/a  --env TZ=UTC --env BUILD_NOW=2026-10-11T00:00:00Z
 node bin/render.mjs  --repo ../.. --sha HEAD --out /tmp/b  --env JIPGYE_RENDERER=react --env BUILD_NOW=2026-10-11T00:00:00Z
@@ -43,25 +43,67 @@ node bin/invariants.mjs --hooks-check --repo ../..      # 훅 클래스 목록�
 ## 불변 조건(invariants) (#274)
 
 Tailwind 도입과 디자인 개편은 구운 HTML의 class와 껍데기 구조를 바꾸므로 정준 비교(S1)는 합격 조건으로 못 쓴다.
-invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 안 되는 것**만 견준다. class·style 속성, 태그 이름과 트리 모양은 보지 않는다.
+invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 안 되는 것**만 견준다. class·style 속성, 블록·중립 인라인 태그의 이름과 트리 모양은 보지 않는다.
 
 | check | 무엇을 | 판정 |
 |---|---|---|
 | `url-set` | `.html` 파일 이름 집합 | 하드 |
-| `noindex` | 장마다 `meta[name=robots]`의 값(없음 포함) | 하드 |
-| `head` | head의 `title`·`meta`·`link`·`base` 줄의 다중집합. 허용 예외는 `HEAD_EXCEPTIONS`(지금 `theme-color`의 값 하나) | 하드, 예외 값이 다르면 소프트 `head-exception` |
+| `noindex` | 장마다 head의 `meta[name=robots]` **전부**의 값 다중집합(없음 포함, 이름은 대소문자 무시). 앞에 `none`을 하나 더 끼워도 잡힌다 | 하드 |
+| `body-meta` | body 안의 `meta`·`base` 줄의 다중집합(body에 놓은 robots·`http-equiv=refresh`·base) | 하드 |
+| `head` | head의 `title`·`meta`·`link`·`base` 줄과 head 안 `noscript` 본문의 다중집합. 허용 예외는 `HEAD_EXCEPTIONS`(지금 `theme-color`의 값 하나) | 하드, 예외 값이 다르면 소프트 `head-exception`(media별로 여럿이면 전부 적는다) |
 | `ld-json` | `script[type="application/ld+json"]` 개수(지금 0) | 하드 |
-| `text` | body의 텍스트 노드(script·style 제외, 공백 줄이고 양끝 뗌, `hidden` 속성 아래는 `[hidden]` 표시)의 다중집합 | 하드 |
+| `text` | body의 **블록 단위 글자 흐름**의 다중집합(아래 "블록 단위 글자 흐름"). 블록 안의 글자·공백·뜻 있는 인라인 태그와 숨김 표시가 한 항목이다 | 하드 |
+| `text-wrap` | 글자 흐름은 같고 텍스트 노드가 잘린 자리만 다른 블록(중립 인라인으로 일부를 감싸거나 풀었다, 공백 자리에 br). 블록 모양과 장별 수(`블록 n개 — 래퍼 a→b개, br c→d개`)를 낸다 | 소프트 |
 | `text-order` | 다중집합은 같은데 문서 순서가 다르다 | 소프트 |
+| `details-open` | `details`의 `open` 유무와 요약 글자. `open`이 빠지면 본문이 접힌다 | 소프트 — **po가 PR의 소프트 목록에서 반드시 읽는다**(`aria-hidden`·`role`과 같은 줄) |
 | `attr-text` | 속성에 든 글자: `title`·`alt`·`placeholder`·`label`·`lang`·`dir`·`aria-label`·`data-label`·`data-*-en`의 다중집합 | 하드 |
 | `links`·`link-target` | `a[href]`의 (href 원문·rel·target·링크 글자) 다중집합, 후보의 내부 링크 대상 파일이 있는지 | 하드 |
+| `resource-target` | `link[href]`(stylesheet·manifest·icon·canonical)·`[src]`(script 밖)·`poster`·`object[data]`·`srcset`이 가리키는 내부 파일이 후보에 있는지(기준에서도 없던 것은 뺀다) | 하드 |
+| `files-removed` | 기준 폴더에 있던 파일(.html 밖)이 후보에 없다. HTML이 속성으로 가리키지 않는 것(JS가 `fetch`로 읽는 `data/`)은 이 목록으로만 보인다 | 소프트(폴더 단위) |
 | `headings` | `h1`~`h6`의 (레벨·글자) 순서 | 하드 |
 | `landmarks` | `main`·`nav` 개수, `.skip-link`의 href·그 대상 요소·본문 링크 중 몇 번째인지 | 하드 |
 | `hooks` | 기준의 `id`·`data-*`·`aria-*`(이름=값)과 훅 클래스가 후보에 그 수만큼 있다 | 사라지면 하드, 늘면 소프트 `hooks-added`(PR에 목록) |
 | `inline-script` | 인라인 script의 본문과 순서(한·영 문자열표가 여기 있다) | 하드 |
 | `s6-scripts`·`s6-inline-bytes`·`s6-external-bytes`·`s6-src-missing`·`s6-js-total` | script 줄 목록이 늘거나 바뀌지 않는다, 인라인·외부 JS 바이트 합이 기준 이하, 폴더 안 `.js` 합이 기준 이하 | 늘면 하드, 줄면 통과(`scripts-removed`는 소프트) |
+| `s6-handlers` | 인라인 이벤트 핸들러 속성(`onclick`·`onload` … 이름이 `on`으로 시작하는 것)의 (이름=값) 다중집합. 속성 안의 JS라 위 바이트 합이 못 본다 | 새로 생기거나 값이 바뀌면 하드, 줄기만 하면 소프트 `handlers-removed` |
 | `tw-dark` | 후보의 class·JS·CSS에 `tw:dark:` 변형이 없다(네 갈래 테마는 CSS 변수에서 갈린다) | 하드 |
 | `semantic` | `role`·`hidden`·`name`·`for`·`scope`·`colspan` 따위 | 소프트 |
+| `hook-list`·`hook-list-dropped` | (`--render`만) 훅 클래스 목록 파일이 후보 소스와 어긋났다 / 기준 소스에서는 훅이었는데 후보 소스에서는 아닌 class | 소프트(폴더 단위) |
+
+### 블록 단위 글자 흐름 (#289)
+
+`text`의 비교 단위는 텍스트 노드가 아니라 **블록 하나**다. 블록 안의 텍스트 노드를 공백까지 이어 붙이고(연속 공백은 한 칸, 블록 양끝의 공백은 뗀다)
+그 문자열의 다중집합을 견준다. 숫자를 `<strong>`으로 감싸 텍스트 노드가 셋으로 잘려도 블록의 글자 흐름은 같다. 요소는 넷으로 나뉜다.
+
+| 갈래 | 태그 | 글자 흐름에서 |
+|---|---|---|
+| 블록(`TEXT_BLOCK`) | `address` `article` `aside` `blockquote` `details` `dialog` `dd` `div` `dl` `dt` `fieldset` `figcaption` `figure` `footer` `form` `h1`~`h6` `header` `hgroup` `hr` `li` `main` `menu` `nav` `ol` `p` `pre` `section` `summary` `table` `caption` `colgroup` `col` `thead` `tbody` `tfoot` `tr` `td` `th` `ul` `option` `optgroup` `select` `datalist` `button` `input` `textarea` `label` `legend`, 그리고 `html` `head` `body` `title` `meta` `link` `base` `style` `script` `template` `noscript` | 흐름을 끊는다. SVG·MathML **안의** 요소와 숨김 표시가 바뀌는 요소도 흐름을 끊는다 |
+| 중립 인라인(`NEUTRAL_INLINE`) | `span` `strong` `em` `b` `i` `small` `mark` `abbr` | 아무것도 보태지 않는다 — 감싸도 풀어도 흐름이 같다(`text-wrap` 소프트) |
+| 줄바꿈 | `br` | 공백 한 칸으로 센다 |
+| 그 밖의 인라인 | `a` `code` `sup` `sub` `del` `ins` `s` `u` `q` `cite` `time` … 과 모르는 태그 | 뜻이 실리므로 흐름에 `‹a›…‹/a›`처럼 남는다 |
+
+`img`·`wbr`·`picture`·`source`와 SVG·MathML 덩어리 자체는 흐름을 끊지도 보태지도 않는다(문장 안에 아이콘을 넣는 것은 글자 변화가 아니다. SVG 안의 글자는 요소마다 한 항목이다).
+블록 목록은 `canon.mjs`의 공백 규칙이 쓰는 목록에서 `br`을 빼고 폼 컨트롤 다섯을 더한 것이다. 중립 인라인 목록의 확정은 cto다.
+
+- **통과하는 것(소프트 `text-wrap`)**: 블록 안 글자의 일부를 중립 인라인으로 감싸거나 푸는 것, 낱말 사이 공백 자리에 `<br>`을 넣는 것(공백을 남기든 br로 바꾸든).
+  보고서 머리에 `인라인 경계만 다른 블록(text-wrap, 통과): n장 m개`가 나오고, 장마다 감싸기 전·후 블록 모양(`"7억대에서 ‹strong›575‹/strong›건이 …"`)과 수가 나온다 — po가 무엇이 감싸졌는지 읽는다.
+  노드 전체를 감싼 것(`<p><span>…</span></p>`)과 중립 태그끼리 바꾼 것(`strong` → `span`), 블록 태그끼리 바꾼 것(`p` → `div`), 블록을 블록으로 감싼 것은 보고도 하지 않는다.
+- **계속 하드인 것**(전부 `text`, 변이 시험이 하나씩 있다)
+  - 래퍼 안팎의 글자 한 글자·숫자 한 자리(`575건` → `<strong>576</strong>건`).
+  - 블록 안 공백의 추가·삭제, 래퍼 경계에서도(`575건` ↔ `<strong>575</strong> 건`, `</strong> 입니다` ↔ `</strong>입니다`). 낱말 한가운데의 `<br>`도 공백이 생긴 것이다.
+    #285 판이 못 잡던 "인라인 요소 사이의 공백을 없애 낱말이 붙는 것"이 여기서 잡힌다. 보고서는 `글자는 같고 블록 안 공백이나 블록 경계가 달라졌다`고 주를 단다.
+  - 블록 경계를 넘는 이동·합침·나눔: 글자가 다른 `p`·`li`·`td`·`th`·제목·`dt`·`dd`·`caption`으로 옮겨 가거나, 두 블록이 하나가 되거나, 한 블록이 둘로 갈린다.
+    인라인 형제를 블록으로 바꾸는 것(`<span>가</span> <span>나</span>` → `<div>가</div> <div>나</div>`)과 붙어 있던 인라인 형제 사이에 블록 래퍼를 끼우는 것도 블록 나눔이다.
+    블록을 통째로 옮기는 것(순서)은 `text-order` 소프트다.
+  - 중립 목록 밖의 태그로 감싸거나 푸는 것(`del`·`s`·`ins`·`sub`·`sup`·`a`·`code` …, 노드 전체를 감싸도 같다)과 `template`·`script`·`style`·`noscript`로 감싸는 것.
+  - `hidden`·`aria-hidden="true"`·`inert`가 붙은 요소 아래의 글자(래퍼든 블록이든). 표시(`[hidden]`·`[aria-hidden]`·`[inert]`)가 항목에 붙으므로 붙이거나 떼면 달라진다.
+- **숨김 표시.** `hidden` 속성은 `[hidden]`, 브라우저 기본 스타일이 그리지 않는 요소(`template`·`noscript`·`noembed`·`noframes`·`datalist`·`canvas`·`object`·`video`·`audio`·`iframe`·body 안 `title`)와
+  `open`이 없는 `dialog`는 `[hidden:태그]`, `aria-hidden="true"`는 `[aria-hidden]`, `inert`는 `[inert]`다. 겹치면 이어 적는다. 속성 글자와 제목 줄에도 같은 표시가 붙는다.
+  `details`의 `open`은 표시가 아니라 `details-open` 소프트로 본다(접힌 글자는 사용자가 펼 수 있다).
+- **제목·링크 글자·속성 글자는 이 완화와 무관하다.** `headings`·`links`·`attr-text`는 전과 같이 자기 문자열을 글자 그대로 견준다(제목·링크 안의 br은 아무것도 보태지 않는다 —
+  낱말 사이 공백을 남기고 넣으면 같고, 공백을 br로 바꾸면 `headings`·`links`가 건다).
+- **전보다 엄격해진 자리**(#285 판에서는 통과하던 것): 인라인 요소 사이 공백의 추가·삭제, 텍스트 노드는 그대로 두고 블록만 나누거나 합친 것, 중립 목록 밖 인라인 태그의 추가·삭제·교체,
+  글자 위에 새로 거는 `aria-hidden="true"`(전에는 `hooks-added` 소프트뿐이었다), `a`를 `span`으로 바꾸는 것(`links`에 더해 `text`도 건다). flex·grid 안처럼 화면에서 안 보이는 공백 변화도 하드다.
 
 - **비교 조건.** 기준은 PR의 merge-base, 후보는 PR 머리(또는 작업 트리)이고 **같은 입력·같은 `BUILD_NOW`로 렌더한 둘**만 견준다.
   다른 날 데이터나 다른 `BUILD_NOW`로 구운 폴더끼리 견주면 디자인이 같아도 텍스트가 갈린다(#8 부류 — `test:live`가 하루 다른 쌍으로 보인다).
@@ -71,11 +113,15 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
   `querySelector(All)`·`closest`·`matches`·`getElementsByClassName`·`classList`·`className`에서, `markup`은 루트 `test/*.mjs`와
   `scripts/build-*-pages.mjs`가 문자열로 쓰는 `class="…"`에서 뽑은 이름이다(`collectHookClasses`). 목록이 소스와 어긋나면
   `test/invariants.test.mjs`가 실패하고, `--hooks-write`로 다시 만든다. 비교 때는 목록에 **후보 폴더의 JS가 읽는 class**를 더한다.
+  `--render`는 소스를 갖고 있으므로 한 걸음 더 간다: **후보 소스에서 다시 뽑은 이름**을 목록에 더해 판정하고(목록이 낡아도 새지 않는다), 목록이 후보 소스와
+  어긋난 것(`hook-list`)과 기준 소스에서는 훅이었는데 후보 소스에서는 빠진 이름(`hook-list-dropped`)을 보고에 소프트로 같이 낸다. 빠진 이름은 더는 훅으로 보지 않으므로
+  (HTML에서 그 class가 사라져도 `hooks`가 안 건다) PR에서 사람이 읽는다.
   정규식 어림이라 변수로 조립한 선택자는 못 읽는다(`--hooks a,b`로 보탠다). 구운 HTML의 class 속성은 읽지 않는다 — `low-sample`처럼
   그날 데이터에 따라 나오는 class가 목록을 흔들지 않게 하려는 것이다.
 - **의도한 차이.** 하드 항목을 일부러 바꾸는 PR은 차이를 PR 본문에 목록으로 적고 po·cmo가 확인한 것만 예외다(#274 범위 1).
   도구에는 `--expect <파일>`로 준다. 항목 문자열은 `--json`이 낸 결과에서 **글자 그대로** 옮겨 적는다 — 맞은 항목만 하드에서 빠지고,
   목록에 없는 차이는 그대로 실패한다. check를 통째로 면제하는 줄과 `reason`·`confirmedBy`가 빈 줄은 받지 않는다. 쓰이지 않은 줄은 보고서에 적힌다.
+  형식이 틀린 목록(JSON이 아니다, 배열이 아니다, 위 조건을 어긴 줄)은 사용법 오류라 종료 2다(하드 실패 1과 가른다).
   폴더 단위 항목(`url-set`·`s6-js-total`·`tw-dark`)은 `page`에 `(폴더)`를 적는다. 이 모양은 engineer 제안이고 cto 확인 대상이다.
 
   ```json
@@ -87,10 +133,15 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
   ```
 - **못 보는 것.** parse5는 CSS를 모른다. 유틸리티 class(`tw:hidden`·`tw:sr-only`·`tw:invisible`·`tw:opacity-0`)나 `style`로 본문을 숨겨도
   통과한다(`test/invariants.test.mjs`가 이 구멍을 시험으로 적어 둔다). 가로 넘침, 대화형 요소 크기, 대비, 초점 순서, `::before`가 그리는
-  `attr(data-label)`도 못 본다. 이쪽은 #278 PR A의 렌더 검사 도구가 맡는다. 값이 같은 속성을 다른 요소로 옮긴 것(예: `aria-hidden="true"`)과
-  텍스트 노드 사이의 공백도 보지 않는다(정준 비교는 본다).
+  `attr(data-label)`도 못 본다. 이쪽은 #278 PR A의 렌더 검사 도구가 맡는다. 그 밖에 보지 않는 것(시험 "#289 8번 못 잡는 것"이 적어 둔다):
+  - **글자 없는 요소의 추가**: `alt` 없는 `img`, `iframe`, body 안의 `link`(stylesheet 포함), 빈 `div`. 글자도 훅도 없으면 어느 check에도 걸리지 않는다
+    (가리키는 내부 파일이 없을 때만 `resource-target`이 건다. `alt`가 있으면 `attr-text`가 건다).
+  - **폼·상호작용 속성의 변경**: `form`의 `action`·`method`, `disabled`, `tabindex`, `formaction`, `javascript:`를 담은 `action`·`src`. (`inert`는 글자 위에 붙으면 `text`가 건다. `a[href]`의 `javascript:`는 `links`가 건다.)
+  - 값이 같은 속성을 다른 요소로 옮긴 것(예: `aria-hidden="true"`를 글자 없는 요소끼리, `onclick`을 다른 요소로) — 다중집합만 본다.
+  - 블록 가장자리의 공백, SVG 안에서 `<text>` 밖에 놓여 그려지지 않는 글자, `manifest.webmanifest`·CSS·JS **안에서** 가리키는 파일(HTML 속성이 가리키는 것만 대상 확인을 한다).
+  - `details`를 닫아 본문을 접는 것은 하드가 아니다(`details-open` 소프트).
 - 스냅숏(`--snapshot`)은 기준선 기록용이다(#274 범위 3). 저장소에 커밋하지 않고 기준 SHA에서 다시 만든다: `git archive <SHA> docs | tar -x -C <폴더>` 뒤
-  `node bin/invariants.mjs --snapshot <폴더>/docs`.
+  `node bin/invariants.mjs --snapshot <폴더>/docs`. 추출 항목이 바뀌면 스냅숏 `version`이 오르고 지문도 달라진다(#289에서 2 — 예전 JSON은 읽지 않고 다시 뜨라고 알린다).
 
 ## 임시 사본과 정리 (#263)
 

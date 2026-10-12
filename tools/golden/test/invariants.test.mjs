@@ -15,6 +15,7 @@ import {
   formatInvariantsReport,
   formatSnapshotTable,
   hookListDrift,
+  hookListFindings,
   isTextAttr,
   jsClassRefs,
   markupClassRefs,
@@ -23,6 +24,9 @@ import {
   SITE_PAGE,
   snapshotDir,
   snapshotHash,
+  TEXT_BLOCK,
+  NEUTRAL_INLINE,
+  withSiteFindings,
 } from "../lib/invariants.mjs";
 
 // invariants 비교기의 변이 시험(#274 범위 2). mutation.test.mjs와 같은 방식이다: 입력은 test/fixtures/의 고정 HTML 사본과
@@ -33,6 +37,9 @@ import {
 //                   .skip-link 제거·main 추가·훅 목록과 소스의 어긋남.
 //   통과해야 하는 것: class·style만 바꾼 것.
 //   못 잡는 것(시험으로 적어 둔다): 유틸리티 class로 본문을 숨긴 변이 — #278 PR A의 렌더 검사가 맡는다.
+// #289(cto 후속 여덟 개)의 변이 시험은 이름에 "#289 n번"을 적었다. 4번(블록 단위 글자 흐름)은 통과해야 하는 것(중립 인라인으로
+// 일부를 감싸기·풀기, 공백 자리의 br)과 계속 하드여야 하는 것(래퍼 안의 글자·숫자, 블록 안 공백 추가·삭제, 블록 나눔·합침·이동,
+// 뜻 있는 태그, 숨김이 붙은 래퍼)을 각각 둔다.
 const fx = (name) => readFile(path.join(import.meta.dirname, "fixtures", name), "utf8");
 const [BUDGET, RATES, ABOUT] = await Promise.all([fx("budget-7eok.html"), fx("rates.html"), fx("about.html")]);
 const PAGES = { "budget-7eok": BUDGET, rates: RATES, about: ABOUT };
@@ -57,6 +64,14 @@ function caught(a, b, ids, why, opts) {
   const r = cmp(a, b, opts);
   assert.equal(r.ok, false, `${why}: 잡혀야 한다`);
   assert.deepEqual(hardIds(r), [...ids].sort(), why);
+  return r;
+}
+/** 변이가 하드 없이 소프트만 남기고, 남긴 소프트 check가 정확히 ids다. */
+function softOnly(a, b, ids, why, opts) {
+  const r = cmp(a, b, opts);
+  assert.equal(r.ok, true, `${why}: 하드가 없어야 한다\n${formatInvariantsReport(r)}`);
+  assert.deepEqual(hardIds(r), [], why);
+  assert.deepEqual(softIds(r), [...ids].sort(), why);
   return r;
 }
 /** 변이가 하드도 소프트도 남기지 않는다. */
@@ -114,7 +129,8 @@ test("검출: canonical·og·title 변경은 head, theme-color는 허용 예외(
 });
 
 test("검출: 링크 제거·href 변경·rel 추가·링크 글자 바꿔치기", () => {
-  caught(BUDGET, mutate(BUDGET, '<a href="./index.html" id="nav-digest">오늘</a>', '<span id="nav-digest">오늘</span>'), ["links"], "링크 제거(글자는 남김)");
+  // a는 뜻 있는 인라인이라 글자 흐름에 `‹a›…‹/a›`로 남는다 — 링크가 글자만 남기고 사라지면 본문 텍스트도 건다(#289 4번).
+  caught(BUDGET, mutate(BUDGET, '<a href="./index.html" id="nav-digest">오늘</a>', '<span id="nav-digest">오늘</span>'), ["links", "text"], "링크 제거(글자는 남김)");
   caught(BUDGET, mutate(BUDGET, '<a href="./index.html" id="nav-digest">', '<a href="./index" id="nav-digest">'), ["links"], "href 원문");
   caught(BUDGET, mutate(BUDGET, '<a href="./index.html" id="nav-digest">', '<a href="./index.html" rel="nofollow" id="nav-digest">'), ["links"], "rel");
   // 두 링크의 href만 맞바꾼다 — href 집합도 글자 집합도 그대로지만 짝이 달라졌다.
@@ -155,7 +171,8 @@ test("검출: id 제거·data-* 제거·aria-* 변경, 늘어난 훅은 소프�
   assert.deepEqual(finding(data, "hooks").missing, ['data-updated="2026-10-11"']);
   const changed = caught(BUDGET, mutate(BUDGET, ' data-re-page="wolse"', ' data-re-page="rent"'), ["hooks"], "data-* 값 변경(값까지 본다)");
   assert.deepEqual(softIds(changed), ["hooks-added"], "새 값은 '늘어난 훅' 목록에 적힌다");
-  const lost = caught(BUDGET, mutate(BUDGET, '<span aria-hidden="true">🌓</span>', "<span>🌓</span>"), ["hooks"], "aria-hidden 제거");
+  // aria-hidden="true" 아래 글자에는 숨김 표시가 붙는다(#289 4번) — 떼면 훅과 본문 텍스트가 함께 건다.
+  const lost = caught(BUDGET, mutate(BUDGET, '<span aria-hidden="true">🌓</span>', "<span>🌓</span>"), ["hooks", "text"], "aria-hidden 제거");
   assert.deepEqual(finding(lost, "hooks").missing, ['aria-hidden="true"']);
   const added = cmp(BUDGET, mutate(BUDGET, '<h2 id="budget-heading">', '<h2 id="budget-heading" data-new="1" aria-level="2">'));
   assert.equal(added.ok, true, "훅이 느는 것은 하드가 아니다");
@@ -230,7 +247,8 @@ test("검출: 랜드마크 — .skip-link 제거·class만 제거·순서 밀림
   caught(BUDGET, mutate(BUDGET, '<a class="skip-link" href="#main"', '<a class="tw:sr-only" href="#main"'), ["hooks", "landmarks"], "skip-link class 제거");
   // 본문 첫 링크 자리를 내줌: 글자·링크 다중집합은 같고 순서만 바뀐다.
   const moved = mutate(mutate(BUDGET, skip, ""), '<nav class="page-nav" aria-label="섹션">', `<nav class="page-nav" aria-label="섹션">${skip}`);
-  const r = caught(BUDGET, moved, ["landmarks"], "건너뛰기 링크가 첫 링크가 아니다");
+  // 링크가 다른 블록(nav) 안으로 옮겨 갔으므로 본문 텍스트도 건다(블록을 넘는 이동, #289 4번).
+  const r = caught(BUDGET, moved, ["landmarks", "text"], "건너뛰기 링크가 첫 링크가 아니다");
   assert.match(finding(r, "landmarks").missing[0], /href="#main" → <main id=main>, 본문 링크 중 1번째$/);
   assert.match(finding(r, "landmarks").added[0], /본문 링크 중 2번째$/);
   // 대상: #main이 main이 아니게 되거나 사라진다.
@@ -290,10 +308,14 @@ test("소프트: 텍스트 순서만 바뀜(다중집합은 같다) — 종료 �
   assert.deepEqual([r.pass, r.soft, r.hard], [0, 1, 0]);
   assert.deepEqual(softIds(r), ["text-order"]);
   assert.match(formatInvariantsReport(r), /\[소프트\] 텍스트 순서 <text-order>/);
-  // 인라인 래퍼로 텍스트 노드가 잘리면 하드다(본문 기준). 글자 흐름이 같다는 것은 읽는 사람에게 알린다.
+  // 인라인 래퍼로 텍스트 노드가 잘려도 블록의 글자 흐름이 같으면 통과하고 소프트로 적는다(#289 4번 — 그 전에는 하드였다).
   const split = cmp(page("<p>가격은 7억입니다</p>"), page('<p>가격은 <span class="tw:font-bold">7억</span>입니다</p>'));
-  assert.equal(split.ok, false);
-  assert.match(finding(split, "text").note, /글자 흐름은 같고/);
+  assert.equal(split.ok, true);
+  assert.deepEqual(softIds(split), ["text-wrap"]);
+  // 공백을 뺀 글자가 같고 공백만 다르면 하드이고, 그 사실을 읽는 사람에게 알린다.
+  const glued = cmp(page("<p>가격은 7억입니다</p>"), page('<p>가격은<span class="tw:font-bold">7억</span>입니다</p>'));
+  assert.equal(glued.ok, false);
+  assert.match(finding(glued, "text").note, /글자는 같고 블록 안 공백이나 블록 경계가 달라졌다/);
 });
 
 test("못 잡는 것(적어 둔다): 유틸리티 class로 본문을 숨긴 변이는 통과한다 — parse5는 CSS를 모른다, #278 PR A의 렌더 검사가 맡는다", () => {
@@ -431,7 +453,7 @@ test("폴더 비교: URL 집합·noindex 집합·내부 링크 대상·폴더 JS
     assert.equal(run(a).status, 2);
     const snapOut = run("--snapshot", a);
     assert.equal(snapOut.status, 0);
-    assert.equal(JSON.parse(snapOut.stdout).version, 1);
+    assert.equal(JSON.parse(snapOut.stdout).version, 2, "#289에서 추출 항목이 바뀌어 스냅숏 판이 올랐다");
     assert.match(snapOut.stderr, /스냅숏 2장, sha256 [0-9a-f]{64}/);
   } finally {
     await Promise.all([a, same, removed, dangling, fatter].map((d) => rm(d, { recursive: true })));
@@ -449,4 +471,351 @@ test("resolveInternal·bagDiff", () => {
   for (const out of ["#main", "", "https://example.com/a.html", "//cdn.example/x.js", "mailto:a@b.c", "javascript:void(0)", "/other/x.html", "../up.html"]) assert.equal(resolveInternal("index.html", out), null, out);
   assert.deepEqual(bagDiff(["a", "a", "b"], ["a", "c", "c"]), { missing: ["a", "b"], added: ["c ×2"] });
   assert.deepEqual(bagDiff(["x", "y"], ["y", "x"]), { missing: [], added: [] }, "순서는 보지 않는다");
+});
+
+// ───────────────────────── #289: cto 후속 여덟 개의 변이 시험 ─────────────────────────
+
+/** 합성 한 장. body는 main 안에, head는 title 뒤에 들어간다. */
+const doc = (body, head = "") => `<!doctype html><html lang="ko"><head><title>t</title>${head}</head><body><main id="main">${body}</main></body></html>`;
+const SENTENCE = '<p class="budget-summary">7억대에서 575건이 거래됐습니다(직거래 13건 포함). <span class="when">8월, 9월, 10월 신고분 기준</span></p>';
+/** 고정 사본의 요약 문장 한 줄을 바꾼다. */
+const sentence = (to) => mutate(BUDGET, SENTENCE, to);
+
+test("#289 1번 검출: 인라인 이벤트 핸들러 속성(on*) — 새로 생기거나 값이 바뀌면 하드(s6-handlers), 줄기만 하면 소프트", () => {
+  const r = caught(BUDGET, mutate(BUDGET, '<h2 id="budget-heading">', '<h2 id="budget-heading" onclick="track(\'h\')">'), ["s6-handlers"], "onclick 추가");
+  assert.deepEqual([finding(r, "s6-handlers").missing, finding(r, "s6-handlers").added], [[], ['onclick="track(\'h\')"']]);
+  caught(BUDGET, mutate(BUDGET, "<body>", '<body onload="boot()">'), ["s6-handlers"], "body onload");
+  caught(BUDGET, mutate(BUDGET, '<main id="main">', '<main id="main" onmouseover="x()">'), ["s6-handlers"], "다른 이벤트 이름");
+  // head의 link에 붙이면 head 줄도 달라진다.
+  caught(BUDGET, mutate(BUDGET, '<link rel="stylesheet" href="./style.css">', '<link rel="stylesheet" href="./style.css" onload="x()">'), ["head", "s6-handlers"], "link onload");
+  // 값이 바뀜: 기준에 있던 핸들러의 본문이 달라졌다(속성 안의 JS는 inline-script·바이트 합이 보지 못한다).
+  const withHandler = doc('<button type="button" onclick="open(1)">열기</button>');
+  const changed = caught(withHandler, withHandler.replace("open(1)", "open(2)"), ["s6-handlers"], "값 변경");
+  assert.deepEqual([finding(changed, "s6-handlers").missing, finding(changed, "s6-handlers").added], [['onclick="open(1)"'], ['onclick="open(2)"']]);
+  // 다른 요소로 옮긴 것은 다중집합이 같아 보지 않는다(태그 이름은 디자인이다). 줄기만 하면 소프트.
+  softOnly(withHandler, withHandler.replace(' onclick="open(1)"', ""), ["handlers-removed"], "핸들러 제거");
+  passes(withHandler, withHandler, "그대로");
+  assert.deepEqual(extractPage(doc('<p data-on="x" one="1">가</p>')).handlers, ['one="1"'], "이름이 on으로 시작하면 모두 센다(data-on은 아니다)");
+});
+
+test("#289 2번 검출: robots 메타 전부 — 앞에 끼운 none, 대문자 ROBOTS, body 안의 robots·refresh·base, head 안 noscript", () => {
+  const robots = '<meta name="robots" content="noindex, follow">';
+  // 기준의 메타는 그대로 두고 앞에 하나 더 넣는다 — 마지막 값만 보면 지나간다.
+  const r = caught(RATES, mutate(RATES, robots, `<meta name="robots" content="none">${robots}`), ["noindex"], "앞에 끼운 none");
+  assert.deepEqual([finding(r, "noindex").missing, finding(r, "noindex").added], [[], ["none"]]);
+  caught(RATES, mutate(RATES, robots, `${robots}<meta name="robots" content="noindex, nofollow">`), ["noindex"], "뒤에 더한 것");
+  // 색인 장: 대문자 이름도 robots다. noindex 집합에도 들어간다(none은 noindex와 같은 뜻).
+  const upper = caught(BUDGET, mutate(BUDGET, "<title>", '<meta name="ROBOTS" content="none"><title>'), ["noindex"], "대문자 ROBOTS");
+  assert.deepEqual([finding(upper, "noindex").missing, finding(upper, "noindex").added], [["(robots 없음)"], ["none"]]);
+  assert.deepEqual([upper.noindexA, upper.noindexB], [[], ["page.html"]]);
+  // 둘 가운데 하나만 지워도 잡힌다. 둘의 순서만 바꾼 것은 뜻이 같아 통과한다.
+  const two = doc("<p>가</p>", '<meta name="robots" content="noindex"><meta name="robots" content="max-snippet:0">');
+  const one = caught(two, two.replace('<meta name="robots" content="noindex">', ""), ["noindex"], "둘 중 하나 제거");
+  assert.deepEqual([finding(one, "noindex").missing, finding(one, "noindex").added, one.noindexA, one.noindexB], [["noindex"], [], ["page.html"], []]);
+  passes(two, doc("<p>가</p>", '<meta name="robots" content="max-snippet:0"><meta name="robots" content="noindex">'), "순서만");
+  // body 안: 크롤러·브라우저는 body에 놓인 robots·refresh·base도 읽는다.
+  for (const [why, meta] of [["robots", '<meta name="robots" content="noindex">'], ["refresh", '<meta http-equiv="refresh" content="0;url=https://example.com/">'], ["base", '<base href="https://example.com/">']]) {
+    const body = caught(BUDGET, mutate(BUDGET, '<main id="main">', `<main id="main">${meta}`), ["body-meta"], `body 안 ${why}`);
+    assert.equal(finding(body, "body-meta").added.length, 1);
+  }
+  // head 안 noscript: 파서에게는 글자라 meta 줄로 안 잡힌다 — 본문째로 head에 넣어 견준다.
+  caught(BUDGET, mutate(BUDGET, "<title>", '<noscript><meta http-equiv="refresh" content="0;url=./index.html"></noscript><title>'), ["head"], "head 안 noscript의 refresh");
+});
+
+test("#289 3번 검출: 태그로 숨기기 — template·닫힌 dialog·noscript·noembed·canvas 아래 글자에 숨김 표시, details[open]은 소프트(po 필독)", () => {
+  const p = '<p id="method-callout-text">';
+  const body = "매물 호가가 아니라 국토교통부에 신고된 실거래입니다. 자치구는 한 주 표본이 얇아 최근 4주를 겹쳐 세고, 신고가 5건 미만인 구는 평균을 내지 않고 비워 둡니다.";
+  const whole = `${p}${body}</p>`;
+  const wrap = (open, close) => mutate(BUDGET, whole, `${open}${whole}${close}`);
+  const tpl = caught(BUDGET, wrap("<template>", "</template>"), ["text"], "template으로 감쌈");
+  assert.deepEqual([finding(tpl, "text").missing, finding(tpl, "text").added], [[JSON.stringify(body)], [`${JSON.stringify(body)} [hidden:template]`]]);
+  caught(BUDGET, wrap("<dialog>", "</dialog>"), ["text"], "닫힌 dialog로 감쌈");
+  passes(BUDGET, wrap("<dialog open>", "</dialog>"), "열린 dialog는 보인다");
+  caught(wrap("<dialog open>", "</dialog>"), wrap("<dialog>", "</dialog>"), ["text"], "dialog의 open 제거");
+  // 문장만(블록 안쪽에서) 감싸면 텍스트 노드의 글자는 그대로다 — 숨김 표시가 없으면 지나간다.
+  for (const tag of ["noscript", "noembed", "canvas", "template", "object", "video", "audio", "datalist"]) {
+    const inner = caught(BUDGET, mutate(BUDGET, whole, `${p}<${tag}>${body}</${tag}></p>`), ["text"], `${tag} 안쪽에 넣음`);
+    assert.deepEqual(finding(inner, "text").added, [`${JSON.stringify(body)} [hidden:${tag}]`]);
+  }
+  // 문장의 일부만 template으로: 보이는 조각과 숨은 조각으로 갈린다.
+  const part = caught(BUDGET, mutate(BUDGET, whole, `${p}매물 호가가 아니라 국토교통부에 신고된 실거래입니다.<template> 자치구는 한 주 표본이 얇아 최근 4주를 겹쳐 세고, 신고가 5건 미만인 구는 평균을 내지 않고 비워 둡니다.</template></p>`), ["text"], "일부만 template");
+  assert.equal(finding(part, "text").added.length, 2);
+  // details: open이 빠지면 본문이 접힌다 — 하드는 아니고 소프트 목록(details-open)에 반드시 나온다. 펴는 것도 같다.
+  const open = doc('<details open class="fold"><summary>자세히</summary><p>접히는 본문</p></details>');
+  const closed = open.replace("<details open", "<details");
+  const folded = softOnly(open, closed, ["details-open"], "open 제거");
+  assert.deepEqual([finding(folded, "details-open").missing, finding(folded, "details-open").added], [['details[open] 요약="자세히"'], ['details[닫힘] 요약="자세히"']]);
+  assert.match(formatInvariantsReport(folded), /\[소프트\] details 접힘·펼침\(open\) — 본문을 접거나 펴는 변화, po가 반드시 읽는다 <details-open>/);
+  softOnly(closed, open, ["details-open"], "open 추가");
+  passes(open, open.replace('class="fold"', 'class="tw:rounded"'), "class만");
+});
+
+test("#289 4번 통과: 텍스트 노드의 일부를 중립 인라인으로 감싸기·풀기, 공백 자리의 br — 글자 흐름이 같으면 통과하고 소프트(text-wrap)에 수와 모양을 낸다", () => {
+  const strong = softOnly(BUDGET, sentence(SENTENCE.replace("575건이", '<strong class="tw:font-bold">575</strong>건이')), ["text-wrap"], "숫자를 strong으로");
+  const f = finding(strong, "text-wrap");
+  assert.equal(f.level, "soft");
+  assert.deepEqual(f.missing, ['"7억대에서 575건이 거래됐습니다(직거래 13건 포함). ‹span›8월, 9월, 10월 신고분 기준‹/span›"']);
+  assert.deepEqual(f.added, ['"7억대에서 ‹strong›575‹/strong›건이 거래됐습니다(직거래 13건 포함). ‹span›8월, 9월, 10월 신고분 기준‹/span›"'], "무엇이 감싸졌는지 보인다");
+  assert.equal(f.note, "블록 1개 — 래퍼 1→2개, br 0→0개");
+  assert.match(formatInvariantsReport(strong), /인라인 경계만 다른 블록\(text-wrap, 통과\): 1장 1개/, "보고서 머리에 장 수와 블록 수");
+  // 중립 인라인 여덟 가지 모두, 겹쳐 감싸기, 여러 곳.
+  for (const tag of NEUTRAL_INLINE) softOnly(BUDGET, sentence(SENTENCE.replace("575건이", `<${tag}>575</${tag}>건이`)), ["text-wrap"], tag);
+  assert.deepEqual([...NEUTRAL_INLINE].sort(), ["abbr", "b", "em", "i", "mark", "small", "span", "strong"], "허용 래퍼 목록(README와 같다)");
+  softOnly(BUDGET, sentence(SENTENCE.replace("7억대에서 575건이", "<b><i>7억</i></b>대에서 <strong>575</strong><em>건</em>이").replace("직거래 13건", "직거래 <mark>13</mark>건")), ["text-wrap"], "여러 곳·겹침");
+  // 풀기: 기준에 있던 부분 래퍼를 없앤다.
+  const unwrapped = softOnly(BUDGET, sentence(SENTENCE.replace('<span class="when">8월, 9월, 10월 신고분 기준</span>', "8월, 9월, 10월 신고분 기준")), ["text-wrap"], "span 풀기");
+  assert.equal(finding(unwrapped, "text-wrap").note, "블록 1개 — 래퍼 1→0개, br 0→0개");
+  // br: 공백 한 칸으로 센다 — 낱말 사이 공백 자리에 넣으면 흐름이 같다(공백을 남기든 br로 바꾸든).
+  const br = softOnly(BUDGET, sentence(SENTENCE.replace("575건이 거래됐습니다", "575건이<br>거래됐습니다")), ["text-wrap"], "공백을 br로");
+  assert.equal(finding(br, "text-wrap").note, "블록 1개 — 래퍼 1→1개, br 0→1개");
+  softOnly(BUDGET, sentence(SENTENCE.replace("575건이 거래됐습니다", "575건이 <br>거래됐습니다")), ["text-wrap"], "공백 뒤에 br");
+  // 노드 전체를 감싸거나(잘린 자리가 없다) 중립 태그끼리 바꾸는 것은 보고조차 하지 않는다 — 전부터 통과하던 것이다.
+  passes(BUDGET, mutate(BUDGET, '<h2 id="budget-heading">예산으로 찾기</h2>', '<h2 id="budget-heading"><span class="tw:text-lg">예산으로 찾기</span></h2>'), "노드 전체를 감쌈");
+  passes(BUDGET, sentence(SENTENCE.replace('<span class="when">', '<small class="when">').replace("</span>", "</small>")), "span → small");
+  // 블록 태그끼리 바꾸는 것, 블록을 블록으로 감싸는 것은 흐름을 바꾸지 않는다.
+  passes(BUDGET, sentence(SENTENCE.replace('<p class="budget-summary">', '<div class="budget-summary">').replace("</p>", "</div>")), "p → div");
+  passes(BUDGET, sentence(`<div class="tw:p-4">${SENTENCE}</div>`), "블록 래퍼");
+  // 아이콘(img·svg)은 흐름을 끊지도 보태지도 않는다(새 aria-hidden은 전과 같이 hooks-added 소프트). SVG 안의 글자는 요소마다 따로 센다.
+  softOnly(BUDGET, sentence(SENTENCE.replace("7억대에서 575건이", '7억대에서 <svg class="icon" aria-hidden="true"><path d="M0 0"/></svg>575건이')), ["hooks-added"], "문장 안 svg 아이콘");
+  passes(BUDGET, sentence(SENTENCE.replace("7억대에서 575건이", '7억대에서 <img src="./icons/i.png">575건이')), "문장 안 img 아이콘");
+  assert.deepEqual(extractPage(doc('<p>추이 <svg role="img"><text>1월<tspan>2월</tspan></text><g><text>3월</text></g></svg> 끝</p>')).texts, ['"1월"', '"2월"', '"3월"', '"추이 끝"'], "SVG 덩어리는 바깥 흐름을 끊지 않고 안쪽은 요소마다 한 항목");
+});
+
+test("#289 4번 검출(a): 글자 한 글자·숫자 한 자리는 래퍼 안에서도 하드", () => {
+  const digit = caught(BUDGET, sentence(SENTENCE.replace("575건이", "<strong>576</strong>건이")), ["text"], "래퍼 안 숫자 한 자리");
+  assert.deepEqual(finding(digit, "text").missing, ['"7억대에서 575건이 거래됐습니다(직거래 13건 포함). 8월, 9월, 10월 신고분 기준"'], "항목은 블록 하나의 글자 흐름이다");
+  assert.deepEqual(finding(digit, "text").added, ['"7억대에서 576건이 거래됐습니다(직거래 13건 포함). 8월, 9월, 10월 신고분 기준"']);
+  assert.equal(finding(digit, "text").note, undefined, "글자가 바뀐 것은 '공백만 달라졌다'가 아니다");
+  caught(BUDGET, sentence(SENTENCE.replace("575건이", "<strong>575</strong>껀이")), ["text"], "래퍼 밖 한 글자");
+  caught(BUDGET, sentence(SENTENCE.replace("575건이", "<span><b>5</b>85</span>건이")), ["text"], "겹친 래퍼 안 숫자");
+  caught(BUDGET, sentence(SENTENCE.replace("575건이", "<strong>575</strong>건이").replace("10월 신고분", "11월 신고분")), ["text"], "기준에 있던 래퍼 안 글자");
+  caught(BUDGET, sentence(SENTENCE.replace("575건이", "<strong></strong>건이")), ["text"], "래퍼만 남기고 숫자를 지움");
+  caught(BUDGET, sentence(SENTENCE.replace("575건이", "<strong>575</strong><strong>575</strong>건이")), ["text"], "글자를 한 번 더");
+});
+
+test("#289 4번 검출(b): 블록 안 공백은 추가도 삭제도, 래퍼 경계에서도 하드 — 인라인 사이 공백을 없애 낱말이 붙는 것(cto 거짓 통과 7번)도 잡는다", () => {
+  const note = /글자는 같고 블록 안 공백이나 블록 경계가 달라졌다/;
+  const added = caught(BUDGET, sentence(SENTENCE.replace("575건이", "<strong>575</strong> 건이")), ["text"], "래퍼 뒤에 공백 추가");
+  assert.match(finding(added, "text").note, note);
+  caught(BUDGET, sentence(SENTENCE.replace("7억대에서 575건이", "7억대에서<strong>575</strong>건이")), ["text"], "래퍼 앞 공백 삭제");
+  softOnly(BUDGET, sentence(SENTENCE.replace("7억대에서 575건이", "7억대에서<strong> </strong>575건이")), ["text-wrap"], "대조: 공백을 래퍼 안으로 옮긴 것은 흐름이 같다");
+  caught(BUDGET, sentence(SENTENCE.replace("575건이", "575<br>건이")), ["text"], "낱말 한가운데 br(공백이 생긴다)");
+  caught(BUDGET, sentence(SENTENCE.replace("575건이 거래됐습니다", "575건이거래됐습니다")), ["text"], "노드 안 공백 삭제");
+  // `</strong> 입니다` ↔ `</strong>입니다`: 텍스트 노드로는 둘 다 ["평균은", "8억", "입니다"]라 #285 판은 못 잡았다.
+  const spaced = doc("<p>평균은 <strong>8억</strong> 입니다</p>");
+  const tight = doc("<p>평균은 <strong>8억</strong>입니다</p>");
+  assert.match(finding(caught(spaced, tight, ["text"], "인라인 뒤 공백 삭제(낱말 붙음)"), "text").note, note);
+  caught(tight, spaced, ["text"], "인라인 뒤 공백 추가");
+  caught(doc('<p><a href="./a.html">자세히</a> 보기</p>'), doc('<p><a href="./a.html">자세히</a>보기</p>'), ["text"], "링크 뒤 공백 삭제");
+  // 공백 줄이기(여러 칸 → 한 칸)와 블록 가장자리의 공백은 화면에서 같으므로 통과한다(canon과 같은 규칙).
+  passes(spaced, doc("<p>\n   평균은   <strong>8억</strong>\n 입니다  </p>"), "공백 줄이기·블록 가장자리");
+});
+
+test("#289 4번 검출(c): 블록 경계를 넘는 이동·합침·나눔은 하드 — 블록으로 치는 태그 목록", () => {
+  const moved = caught(doc("<p>가 나</p><p>다</p>"), doc("<p>가</p><p>나 다</p>"), ["text"], "글자가 옆 문단으로 옮겨 감");
+  assert.deepEqual([finding(moved, "text").missing, finding(moved, "text").added], [['"가 나"', '"다"'], ['"가"', '"나 다"']]);
+  caught(doc("<p>가</p><p>나</p>"), doc("<p>가 나</p>"), ["text"], "두 문단이 하나로");
+  caught(doc("<p><span>가</span></p><p><span>나</span></p>"), doc("<p><span>가</span> <span>나</span></p>"), ["text"], "텍스트 노드는 그대로 두고 두 블록을 합침");
+  caught(doc("<p>가 나</p>"), doc("<p>가</p><p>나</p>"), ["text"], "한 문단을 둘로");
+  caught(doc("<table><tbody><tr><td>1</td><td>2</td></tr></tbody></table>"), doc("<table><tbody><tr><td>1 2</td><td></td></tr></tbody></table>"), ["text"], "옆 칸으로");
+  caught(doc("<ul><li>가</li><li>나</li></ul>"), doc("<ul><li>가 나</li></ul>"), ["text"], "li 합침");
+  caught(doc("<h2>제목</h2><p>본문</p>"), doc("<h2>제목 본문</h2>"), ["headings", "text"], "본문이 제목 안으로");
+  caught(doc("<dl><dt>이름</dt><dd>값</dd></dl>"), doc("<dl><dt>이름 값</dt><dd></dd></dl>"), ["text"], "dd → dt");
+  caught(doc("<table><caption>표 제목</caption><tbody><tr><th>구</th></tr></tbody></table>"), doc("<table><caption>표 제목 구</caption><tbody><tr><th></th></tr></tbody></table>"), ["text"], "th → caption");
+  // 인라인 형제를 블록으로 바꾸는 것도 블록 나눔이다(텍스트 노드는 같아도 흐름이 갈린다).
+  caught(doc("<div><span>가</span> <span>나</span></div>"), doc("<div><div>가</div> <div>나</div></div>"), ["text"], "span → div");
+  // 블록을 통째로 옮기는 것(순서)은 전과 같이 소프트다.
+  softOnly(doc("<p>가</p><p>나</p>"), doc("<p>나</p><p>가</p>"), ["text-order"], "블록 순서");
+  for (const tag of ["p", "li", "td", "th", "h1", "h2", "h3", "h4", "h5", "h6", "dt", "dd", "caption", "div", "section", "summary", "figcaption", "blockquote", "button", "label", "option"]) assert.ok(TEXT_BLOCK.has(tag), `${tag}는 블록이다`);
+  for (const tag of ["br", "span", "strong", "a", "code", "del", "sup", "img", "svg"]) assert.ok(!TEXT_BLOCK.has(tag), `${tag}는 블록이 아니다`);
+});
+
+test("#289 4번 검출(d): 허용 래퍼는 중립 인라인 목록뿐 — del·s·ins·sub·sup·a·code와 template·script·style·noscript로 감싸면 하드", () => {
+  for (const tag of ["del", "s", "ins", "sub", "sup", "u", "code", "q", "cite", "time", "x-custom"]) {
+    const r = caught(BUDGET, sentence(SENTENCE.replace("575건이", `<${tag}>575</${tag}>건이`)), ["text"], `${tag}로 일부를 감쌈`);
+    assert.ok(finding(r, "text").added[0].includes(`7억대에서 ‹${tag}›575‹/${tag}›건이`), `${tag}: 흐름에 태그가 남는다`);
+  }
+  // 노드 전체를 감싸도 같다(#285 판은 태그 이름을 보지 않아 문단 전체에 취소선을 그어도 통과했다).
+  caught(doc("<p>가격은 7억입니다</p>"), doc("<p><del>가격은 7억입니다</del></p>"), ["text"], "문단 전체를 del로");
+  caught(doc("<p>10<sup>2</sup></p>"), doc("<p>10<sub>2</sub></p>"), ["text"], "sup → sub");
+  caught(doc("<p>10<sup>2</sup></p>"), doc("<p>10<span>2</span></p>"), ["text"], "뜻 있는 태그를 중립 태그로");
+  caught(BUDGET, sentence(SENTENCE.replace("575건이", '<a href="./index.html">575</a>건이')), ["links", "text"], "a로 감쌈");
+  // 그리지 않는 태그로 일부를 감싸면 그 조각이 흐름에서 빠지거나 숨김 표시가 붙는다.
+  caught(BUDGET, sentence(SENTENCE.replace("575건이", "<template>575</template>건이")), ["text"], "template");
+  caught(BUDGET, sentence(SENTENCE.replace("575건이", "<noscript>575</noscript>건이")), ["text"], "noscript");
+  caught(BUDGET, sentence(SENTENCE.replace("575건이", "<style>575</style>건이")), ["text"], "style");
+  caught(BUDGET, sentence(SENTENCE.replace("575건이", '<script type="text/plain">575</script>건이')), ["inline-script", "s6-inline-bytes", "text"], "script");
+});
+
+test("#289 4번 검출(e): 래퍼에 hidden·aria-hidden·inert가 붙으면 하드 — 일부만 가리는 길", () => {
+  const hidden = caught(BUDGET, sentence(SENTENCE.replace("575건이", "<span hidden>575</span>건이")), ["text"], "hidden");
+  assert.ok(finding(hidden, "text").added.includes('"575" [hidden]'));
+  assert.deepEqual(softIds(hidden), ["semantic"]);
+  const aria = caught(BUDGET, sentence(SENTENCE.replace("575건이", '<span aria-hidden="true">575</span>건이')), ["text"], "aria-hidden");
+  assert.ok(finding(aria, "text").added.includes('"575" [aria-hidden]'));
+  assert.deepEqual(softIds(aria), ["hooks-added"], "전에는 이 소프트 한 줄뿐이었다");
+  const inert = caught(BUDGET, sentence(SENTENCE.replace("575건이", "<span inert>575</span>건이")), ["text"], "inert");
+  assert.ok(finding(inert, "text").added.includes('"575" [inert]'));
+  // 블록 전체에 붙여도 같다. aria-hidden="false"는 가리는 것이 아니다.
+  caught(BUDGET, sentence(SENTENCE.replace('<p class="budget-summary">', '<p class="budget-summary" aria-hidden="true">')), ["text"], "문단 전체 aria-hidden");
+  caught(BUDGET, sentence(SENTENCE.replace('<p class="budget-summary">', '<p class="budget-summary" inert>')), ["text"], "문단 전체 inert");
+  softOnly(BUDGET, sentence(SENTENCE.replace("575건이", '<span aria-hidden="false">575</span>건이')), ["hooks-added", "text-wrap"], 'aria-hidden="false"');
+  // 숨김이 겹치면 표시도 겹쳐 적는다 — 안쪽 것 하나를 떼도 잡힌다.
+  const nested = doc('<div aria-hidden="true"><p hidden>가</p></div>');
+  assert.deepEqual(extractPage(nested).texts, ['"가" [aria-hidden] [hidden]']);
+  caught(nested, nested.replace("<p hidden>", "<p>"), ["text"], "겹친 숨김에서 하나 제거");
+});
+
+test("#289 4번 (h): 제목·링크 글자·속성 글자 check는 이 완화의 영향을 받지 않는다 — 래퍼 안의 변경도 각자 이름으로 건다", () => {
+  const h2 = '<h2 id="budget-heading">예산으로 찾기</h2>';
+  const link = '<a href="./method.html" id="method-callout-link">숫자를 만드는 방법 →</a>';
+  // 글자가 같으면 제목·링크 check는 조용하고(전과 같다) 본문 쪽 소프트만 남는다.
+  softOnly(BUDGET, mutate(BUDGET, h2, '<h2 id="budget-heading">예산으로 <span>찾기</span></h2>'), ["text-wrap"], "제목 안 부분 래퍼");
+  softOnly(BUDGET, mutate(BUDGET, link, '<a href="./method.html" id="method-callout-link"><b>숫자</b>를 만드는 방법 →</a>'), ["text-wrap"], "링크 안 부분 래퍼");
+  // 래퍼 안에서 글자·공백이 바뀌면 제목은 headings, 링크는 links로(본문 text와 함께) 건다.
+  const heading = caught(BUDGET, mutate(BUDGET, h2, '<h2 id="budget-heading">예산으로 <span>찾끼</span></h2>'), ["headings", "text"], "제목: 래퍼 안 한 글자");
+  assert.deepEqual([finding(heading, "headings").missing, finding(heading, "headings").added], [['h2 "예산으로 찾기"'], ['h2 "예산으로 찾끼"']]);
+  caught(BUDGET, mutate(BUDGET, h2, '<h2 id="budget-heading">예산으로<span>찾기</span></h2>'), ["headings", "text"], "제목: 래퍼 경계의 공백 삭제");
+  caught(BUDGET, mutate(BUDGET, h2, '<h2 id="budget-heading">예산<span> </span>으로 찾기</h2>'), ["headings", "text"], "제목: 래퍼로 공백 추가");
+  // 제목·링크 글자에서 br은 아무것도 보태지 않는다(전과 같다): 공백을 남기고 넣으면 같고, 공백을 br로 바꾸면 본문 흐름은 같아도 headings가 건다.
+  softOnly(BUDGET, mutate(BUDGET, h2, '<h2 id="budget-heading">예산으로 <br>찾기</h2>'), ["text-wrap"], "제목: 공백 뒤 br");
+  caught(BUDGET, mutate(BUDGET, h2, '<h2 id="budget-heading">예산으로<br>찾기</h2>'), ["headings"], "제목: 공백을 br로 바꿈");
+  const linked = caught(BUDGET, mutate(BUDGET, link, '<a href="./method.html" id="method-callout-link"><b>숫지</b>를 만드는 방법 →</a>'), ["links", "text"], "링크: 래퍼 안 한 글자");
+  assert.match(finding(linked, "links").added[0], /글자="숫지를 만드는 방법 →"$/);
+  caught(BUDGET, mutate(BUDGET, link, '<a href="./method.html" id="method-callout-link"><b>숫자</b> 를 만드는 방법 →</a>'), ["links", "text"], "링크: 래퍼 뒤 공백 추가");
+  // 속성 글자는 요소를 감싸든 말든 값 그대로 견준다.
+  const wrapped = mutate(SYNTH, "<h1>표</h1>", "<h1><span>표</span></h1>").replace("표본 부족</span>", "<b>표본</b> 부족</span>");
+  softOnly(SYNTH, wrapped, ["text-wrap"], "속성은 그대로");
+  caught(SYNTH, mutate(wrapped, 'title="신고 2건이라 평균을 내기엔 표본이 부족합니다"', 'title="신고 3건이라 평균을 내기엔 표본이 부족합니다"'), ["attr-text"], "속성 글자: 래퍼가 있어도 숫자 한 자리");
+  caught(SYNTH, mutate(wrapped, 'data-label="평당가"', 'data-label="평당 가"'), ["attr-text"], "속성 글자: 공백 추가");
+});
+
+test("#289 4번 (f): 통과시킨 부분 래퍼는 장별 소프트로 — 같은 흐름이 여럿이면 모양이 다른 것만 센다", () => {
+  const a = doc("<table><tbody><tr><td>575</td><td>575건</td><td>575건</td></tr></tbody></table><p>합계 575건이고 평균 8억입니다</p>");
+  const b = doc("<table><tbody><tr><td>575</td><td><strong>575</strong>건</td><td>575건</td></tr></tbody></table><p>합계 <strong>575</strong>건이고<br>평균 <em>8억</em>입니다</p>");
+  const r = softOnly(a, b, ["text-wrap"], "두 블록");
+  const f = finding(r, "text-wrap");
+  assert.deepEqual(f.missing, ['"575건"', '"합계 575건이고 평균 8억입니다"']);
+  assert.deepEqual(f.added, ['"‹strong›575‹/strong›건"', '"합계 ‹strong›575‹/strong›건이고⏎평균 ‹em›8억‹/em›입니다"']);
+  assert.equal(f.note, "블록 2개 — 래퍼 0→3개, br 0→1개");
+  assert.deepEqual([r.pass, r.soft, r.hard], [0, 1, 0]);
+  // 하드가 함께 있어도 통과시킨 래퍼는 따로 적힌다(무엇이 감싸졌는지는 늘 보인다).
+  const mixed = cmp(a, b.replace("<td>575</td>", "<td>576</td>"));
+  assert.deepEqual([hardIds(mixed), softIds(mixed)], [["text"], ["text-wrap"]]);
+  assert.deepEqual([finding(mixed, "text").missing, finding(mixed, "text").added], [['"575"'], ['"576"']], "하드 목록에는 바뀐 블록만 나온다(감싼 블록은 섞이지 않는다)");
+});
+
+test("#289 5번: 훅 목록 어긋남과 기준 대비 빠진 이름을 폴더 단위 소프트로 — --render가 보고에 같이 낸다", () => {
+  const list = { js: ["a", "b", "old"], markup: ["m"] };
+  const head = { js: ["a", "b", "new"], markup: ["m"] };
+  const base = { js: ["a", "b", "gone"], markup: ["m", "moved", "b"] };
+  const findings = hookListFindings({ list, head: { ...head, markup: ["m", "moved"] }, base });
+  assert.deepEqual(
+    findings.map((f) => [f.id, f.level, f.missing, f.added]),
+    [
+      ["hook-list", "soft", ["js: old"], ["js: new", "markup: moved"]],
+      ["hook-list-dropped", "soft", ["gone"], []],
+    ],
+    "목록에만(old)·소스에만(new, moved) / 기준 소스에서는 훅이었고 후보에서는 아닌 이름(gone)"
+  );
+  assert.deepEqual(hookListFindings({ list: head, head, base: head }), [], "맞으면 아무것도 내지 않는다");
+  assert.deepEqual(hookListFindings({ list, head }).map((f) => f.id), ["hook-list"], "기준을 안 주면 어긋남만");
+  // 결과에 보태도 종료 코드는 그대로(소프트)이고 보고서에 이름이 나온다.
+  const r = withSiteFindings(cmp(BUDGET, BUDGET), findings);
+  assert.deepEqual([r.ok, r.pass, r.site.length], [true, 1, 2]);
+  const text = formatInvariantsReport(r);
+  assert.match(text, /\[소프트\] 훅 클래스 목록\(hook-classes\.json\)이 후보 소스와 어긋났다\(- 목록에만, \+ 소스에만\) — --hooks-write로 다시 만든다 <hook-list>: 기준에만 1, 후보에만 2\n  - js: old\n  \+ js: new\n  \+ markup: moved/);
+  assert.match(text, /\[소프트\] 기준 소스에서는 훅이었고 후보 소스에서는 아닌 class\(더는 훅으로 보지 않는다\) <hook-list-dropped>: 기준에만 1, 후보에만 0\n  - gone/);
+  // 하드 항목이 있으면 보태도 실패 그대로다.
+  assert.equal(withSiteFindings(cmp(BUDGET, sentence(SENTENCE.replace("575", "576"))), findings).ok, false);
+});
+
+test("#289 6번 검출: 참조 자원의 대상 파일 — style.css·manifest·아이콘·img를 지우면 하드(resource-target), JS가 읽는 data/는 소프트 목록", async () => {
+  const head = '<link rel="stylesheet" href="./style.css"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icons/icon-192.png"><link rel="canonical" href="https://kyhsa93.github.io/jipgye/index.html"><link rel="preconnect" href="https://fonts.example/">';
+  const base = { "index.html": mini('<img src="./icons/a.png" alt="그림" srcset="./icons/a.png 1x, ./icons/a2.png 2x"> <a href="./a.html">a</a>', head), "a.html": mini("둘째 장", head), "nav.js": "// nav\n", "style.css": ".a{color:red}", "manifest.webmanifest": "{}", "icons/icon-192.png": "png", "icons/a.png": "png", "icons/a2.png": "png", "data/x.json": "{}" };
+  const dirs = { a: await dirWith(base), same: await dirWith(base), noCss: await dirWith({ ...base, "style.css": undefined }), noManifest: await dirWith({ ...base, "manifest.webmanifest": undefined, "icons/icon-192.png": undefined }), noImg: await dirWith({ ...base, "icons/a2.png": undefined }), noData: await dirWith({ ...base, "data/x.json": undefined }) };
+  try {
+    const ok = await compareInvariants(dirs.a, dirs.same, { hookList: [] });
+    assert.deepEqual([ok.ok, ok.pass, ok.site], [true, 2, []]);
+
+    const css = await compareInvariants(dirs.a, dirs.noCss, { hookList: [] });
+    assert.equal(css.ok, false);
+    assert.deepEqual(css.pages.map((p) => [p.file, p.status, p.findings.map((f) => [f.id, f.level, f.added])]), [["a.html", "hard", [["resource-target", "hard", ["./style.css"]]]], ["index.html", "hard", [["resource-target", "hard", ["./style.css"]]]]], "head의 link 줄은 그대로여도 대상이 없으면 장마다 건다");
+    assert.deepEqual(css.site.map((f) => [f.id, f.level, f.missing]), [["files-removed", "soft", ["style.css"]]]);
+
+    const manifest = await compareInvariants(dirs.a, dirs.noManifest, { hookList: [] });
+    assert.deepEqual(manifest.pages.map((p) => p.findings.map((f) => [f.id, f.added])), [[["resource-target", ["./manifest.webmanifest", "./icons/icon-192.png"]]], [["resource-target", ["./manifest.webmanifest", "./icons/icon-192.png"]]]], "manifest·icon");
+
+    const img = await compareInvariants(dirs.a, dirs.noImg, { hookList: [] });
+    assert.deepEqual(img.pages.map((p) => [p.file, p.status, p.findings.map((f) => [f.id, f.added])]), [["a.html", "pass", []], ["index.html", "hard", [["resource-target", ["./icons/a2.png"]]]]], "img srcset의 대상");
+
+    // HTML이 속성으로 가리키지 않는 파일(JS가 fetch로 읽는 data/)은 참조를 못 읽는다 — 폴더 단위 소프트 목록으로만 낸다.
+    const data = await compareInvariants(dirs.a, dirs.noData, { hookList: [] });
+    assert.deepEqual([data.ok, data.hard, data.site.map((f) => [f.id, f.level, f.missing])], [true, 0, [["files-removed", "soft", ["data/x.json"]]]]);
+    assert.match(formatInvariantsReport(data), /\[소프트\] 폴더에서 사라진 파일\(\.html 밖\) <files-removed>: 기준에만 1, 후보에만 0\n  - data\/x\.json/);
+
+    // 기준에서도 없던 대상은 새 실패가 아니다(바깥 주소는 보지 않는다).
+    const already = await compareInvariants(dirs.noCss, dirs.noCss, { hookList: [] });
+    assert.equal(already.ok, true);
+  } finally {
+    await Promise.all(Object.values(dirs).map((d) => rm(d, { recursive: true })));
+  }
+  assert.deepEqual(extractPage(doc('<video poster="./p.png" src="./v.mp4"></video><object data="./o.svg"></object><img srcset="data:image/png;base64,AAAA 1x, ./b.png 2x">')).resources, ["./v.mp4", "./p.png", "./o.svg"], "poster·object[data]도 본다. data: 주소가 섞인 srcset은 읽지 않는다");
+});
+
+test("#289 7번: theme-color 메타가 여럿이면 전부 보고한다(마지막 값만 보지 않는다)", () => {
+  const head = (light, dark) => `<meta name="theme-color" media="(prefers-color-scheme: light)" content="${light}"><meta name="theme-color" media="(prefers-color-scheme: dark)" content="${dark}">`;
+  const a = doc("<p>가</p>", head("#253e81", "#0b1220"));
+  // 앞의 것만 바꾼다 — 마지막 값만 보면 조용히 지나간다.
+  const first = softOnly(a, doc("<p>가</p>", head("#0f766e", "#0b1220")), ["head-exception"], "앞의 것만");
+  assert.deepEqual([finding(first, "head-exception").missing, finding(first, "head-exception").added], [['meta[name=theme-color][media="(prefers-color-scheme: light)"] content=#253e81'], ['meta[name=theme-color][media="(prefers-color-scheme: light)"] content=#0f766e']]);
+  const both = softOnly(a, doc("<p>가</p>", head("#0f766e", "#000000")), ["head-exception"], "둘 다");
+  assert.equal(finding(both, "head-exception").added.length, 2, "둘 다 적힌다");
+  // media를 바꾸거나 하나를 지우는 것은 값이 아니라 줄이 달라진 것이라 head 하드다.
+  caught(a, a.replace("(prefers-color-scheme: dark)", "(min-width: 600px)"), ["head"], "media 변경");
+  caught(a, doc("<p>가</p>", '<meta name="theme-color" media="(prefers-color-scheme: light)" content="#253e81">'), ["head"], "하나 제거");
+  // 하나뿐일 때의 항목 모양은 전과 같다.
+  const single = softOnly(BUDGET, mutate(BUDGET, '<meta name="theme-color" content="#253e81">', '<meta name="theme-color" content="#0f766e">'), ["head-exception"], "하나");
+  assert.deepEqual([finding(single, "head-exception").missing, finding(single, "head-exception").added], [["meta[name=theme-color] content=#253e81"], ["meta[name=theme-color] content=#0f766e"]]);
+});
+
+test("#289 8번 못 잡는 것(적어 둔다): 글자 없는 요소 추가(img·iframe·body 안 link), form action·disabled·tabindex 변경은 통과한다 — README '못 잡는 것'", () => {
+  const form = '<form class="site-search" action="./deal-search.html"><input type="search" name="q"><button type="submit">찾기</button></form>';
+  const a = doc(`<p>가</p>${form}`);
+  passes(a, a.replace("<p>가</p>", '<p>가</p><img src="https://example.com/t.gif">'), "글자 없는 img(alt 없음)");
+  passes(a, a.replace("<p>가</p>", '<p>가</p><iframe src="https://example.com/"></iframe>'), "iframe");
+  passes(a, a.replace("<p>가</p>", '<p>가</p><link rel="stylesheet" href="https://example.com/x.css">'), "body 안 link");
+  passes(a, a.replace('action="./deal-search.html"', 'action="https://example.com/collect"'), "form action");
+  passes(a, a.replace('<button type="submit">', '<button type="submit" disabled>'), "disabled");
+  passes(a, a.replace('<input type="search"', '<input tabindex="-1" type="search"'), "tabindex");
+  // 같은 줄에 적힌 것 가운데 이번에 닫은 것: inert는 글자 위에 붙으면 하드, alt가 있는 img는 속성 글자로 하드.
+  caught(a, a.replace("<p>가</p>", "<p inert>가</p>"), ["text"], "inert");
+  caught(a, a.replace("<p>가</p>", '<p>가</p><img src="./x.png" alt="그림">'), ["attr-text"], "alt가 있는 img");
+});
+
+test("#289 그 밖: 형식이 틀린 예외 목록은 사용법 오류(종료 2, 스택 없이 한 줄)", async () => {
+  const base = { "index.html": mini("가"), "nav.js": "// nav\n" };
+  const [a, b] = [await dirWith(base), await dirWith({ ...base, "index.html": mini("나") })];
+  const expect = path.join(a, "..", `${path.basename(a)}.expect.json`);
+  const run = (...args) => spawnSync(process.execPath, [BIN, a, b, ...args], { encoding: "utf8" });
+  try {
+    assert.equal(run().status, 1, "예외 목록 없이는 하드 실패 1");
+    const cases = { "JSON이 아님": "{ exceptions: [", "배열이 아님": '{"exceptions": {"page": "*"}}', "confirmedBy 없음": JSON.stringify({ exceptions: [{ page: "*", check: "text", missing: ['"가"'], reason: "r" }] }), "check 통째": JSON.stringify([{ page: "*", check: "text", reason: "r", confirmedBy: "c" }]) };
+    for (const [why, body] of Object.entries(cases)) {
+      await writeFile(expect, body);
+      const r = run("--expect", expect);
+      assert.equal(r.status, 2, `${why}: ${r.stderr}`);
+      assert.match(r.stderr, /^예외 목록\(--expect .*\)을 받을 수 없습니다: .+\n$/, why);
+      assert.doesNotMatch(r.stderr, /\n\s+at /, `${why}: 스택을 쏟지 않는다`);
+    }
+    assert.equal(run("--expect", path.join(a, "없는-파일.json")).status, 2, "파일이 없음");
+    // 맞는 목록은 전과 같이 받는다.
+    await writeFile(expect, JSON.stringify({ exceptions: [{ page: "index.html", check: "text", missing: ['"가"'], added: ['"나"'], reason: "문구 교체", confirmedBy: "po 댓글 주소" }] }));
+    const ok = run("--expect", expect);
+    assert.equal(ok.status, 0, ok.stdout + ok.stderr);
+    assert.match(ok.stdout, /의도한 차이로 지운 항목 2개/);
+  } finally {
+    await Promise.all([a, b].map((d) => rm(d, { recursive: true })));
+    await rm(expect, { force: true });
+  }
 });
