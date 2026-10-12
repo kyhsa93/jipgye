@@ -4347,85 +4347,26 @@
     "date": "2026-10-12",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 부동산: 은평구 응암푸르지오 84.2㎡ 아파트가 8억 7800만원에 거래되며 최근 3년간 최고가를 기록했다. 은평구 백련산파크자이 84.901㎡ 아파트는 11억 4500만원에 판매되어 역시 최근 3년간 신고가를 기록했다. 지방 인구 감소 속에서도 일자리와 신규 주택 공급으로 인구가 증가하는 도시들이 주목받고 있다. LH는 임대주택 수를 150만호를 넘어서며 거주 인구는 266만명에 달했다. 장기전세 거주자들에 대한 갈등이 은평·마포·구로 지역에서 본격적으로 표출되고 있다.\n- 증시·환율: 코스피는 오늘 장초반 1% 하락하며 6,500대를 기록했다. 이로써 코스피는 4거래일 연속 하락세를 이어가고 있다. 한투증권은 코스피가 방향성 부재로 인해 3분기 이익 전망치를 하향 조정했다고 밝혔다. 연휴 후 돌아온 코스피는 중동 정세 악화 속에서도 반등을 시도하고 있다. 다만 현재까지의 수치는 여전히 하락세를 유지하고 있다.\n- 금리·예금·투자상품: 한투증권은 초과 세수 활용 가능성에 따라 통화정책이 금리 변수가 될 수 있다고 분석했다. 미국에서는 25년 만의 고금리 상황 속에서 신용위험 증가로 인해 경기 침체 확률이 50%에 달했다. 미국의 9월 물가 발표가 임박하면서 연준의 연말 금리 경로에 주목이 집중되고 있다. 주택연금 구상채권은 5년 반 만에 10배로 증가했으나, 회수율은 절반으로 떨어졌다. 각 기사는 서로 다른 주제로, 별개의 사실을 다루고 있다.\n- 기타 경제 소식: 오늘 10월 12일은 경제 관련 주요일정이 있었으며, 이형일 부총리가 경제현안간담회를 개최했다. 간담회에서는 온누리상품권 환급과 관련된 논의가 이루어졌다. 민생물가에 대한 논의도 함께 진행되었다. 각 기사는 서로 다른 주제로 구성되어 있다. 오늘의 경제 뉴스는 다양한 현안을 다루고 있다.",
-      "en": "- Real Estate: An 84.2㎡ apartment in Eunpyeong-gu, Yeongam Purijeo was traded for 878,000,000 won, setting a record high price over the past three years. An 84.901㎡ apartment in Baekryeonsan Park Jae in Eunpyeong-gu was sold for 1,145,000,000 won, also setting a new high price over the past three years. Cities that are attracting attention are those that are experiencing population growth despite a decrease in population in other areas, due to job opportunities and new housing supply. LH exceeded 1,500,000 rental housing units, reaching a resident population of 2,660,000. Conflicts over long-term lease residents are being openly expressed in Eunpyeong, Mapo, and Guro areas.\n- Stocks & FX: The KOSPI fell 1% at the opening of today's trading session, reaching the 6,500 level. This marks the fourth consecutive trading day of decline for the KOSPI. Han Investment & Securities stated that the KOSPI has revised downward its third-quarter earnings forecast due to a lack of direction. The KOSPI, which returned after the holiday, is attempting a rebound despite the worsening Middle East situation. However, the current figures still show a downward trend.\n- Rates, Deposits & Investment Products: Hanjin Securities analyzed that monetary policy could become a variable affecting interest rates, depending on the possibility of utilizing excess tax revenue. In the U.S., the probability of a recession has reached 50% amid a high-interest rate situation not seen in 25 years, due to increased credit risk. As the U.S. September inflation data is about to be released, attention is focused on the Federal Reserve's year-end interest rate path. The housing pension mortgage-backed securities have increased tenfold in five and a half years, but the recovery rate has dropped by half. Each article covers different topics and deals with separate facts.\n- Other Economic News: Today, October 12th, had major economic events, and Vice Premier Lee Young-ill held an economic policy discussion meeting. Discussions regarding the refund of the Onnuri Gift Card were held at the meeting. Discussions on were also conducted. Each article is composed of different topics. Today's economic news covers various issues."
+      "ko": "- 금리·예금·투자상품: 경제안보품목이 340개로 확대되며, 그 중 핵심 100개에 대해 최대 2.3%p의 금리 우대가 적용된다. 한투증권은 초과 세수 활용에 촉각을 곤두세우며 통화정책이 금리 변수가 될 수 있다고 분석했다. 미국의 25년 만의 고금리 상황 속에서 신용위험까지 고려할 때, 미국 경기 침체 확률이 50%에 달했다. 미국의 9월 물가 발표가 임박하며, 연준의 연말 금리 경로가 주목받고 있다. 각 기사는 별개의 사실을 다루고 있으며, 구체적인 수치와 전망은 위 기사 내용에 기반한다.\n- 기타 경제 소식: 한국은행은 집값 상승 기대를 자극하지 않도록 일관된 정책이 필요하다고 밝혔다. 강남이 아닌 지역에서 집값이 3억 원을 넘어서며 상승세를 보이고 있다. 한은의 정책 방향에 대한 언급은 경제 전반에 대한 관리 의지를 보여주는 것으로 해석된다. 특정 지역에서의 급격한 가격 상승은 주택 시장의 변화를 반영하는 것으로 보인다. 이처럼 다양한 지역에서 나타나는 주택 가격 동향은 정책 결정에 중요한 참고 자료가 될 것으로 보인다.\n- 부동산: LH 임대주택은 오늘 150만호를 돌파하며 가구당 월 392만원의 비용 절감 효과를 기록했다. 인천도시공사는 구월2 공공주택지구에서 손실보상 협의를 시작했다. 주택관리사협회는 17일 '주택관리사 커리어콘서트'를 개최한다. 은평구 백련산파크자이의 84.901㎡ 주택은 11억 4500만원에 거래되며 최근 3년간 신고가를 기록했다. 은평구 응암푸르지오의 84.2㎡ 주택은 8억 7800만원에 거래되며 최근 3년간 신고가를 기록했다.\n- 증시·환율: 코스피는 오늘 장초반 1% 내외 하락하며 6,500대를 기록했다. 이로써 4거래일 연속 하락세를 이어가고 있다. 한투증권은 코스피가 방향성 부재로 인해 3분기 이익 전망치를 하향 조정했다고 밝혔다. 일본 증시는 '스포츠의 날' 공휴일로 인해 오늘 휴장했다. 중동 정세 악화 속에서 코스피가 반등 시도를 하려는 움직임을 보이고 있다.",
+      "en": "- Rates, Deposits & Investment Products: The list of economic security items has been expanded to 340, with a maximum interest rate discount of up to 2.3 percentage points applied to the core 100 items. Han Invest Securities is closely watching the use of excess tax revenue, analyzing that monetary policy could become a variable affecting interest rates. Considering the high interest rate situation in the U.S. not seen in 25 years and credit risk, the probability of a U.S. recession has reached 50 percent. With the U.S. September inflation data release approaching, the Federal Reserve's year-end interest rate path is receiving attention. Each article covers separate facts, and specific figures and forecasts are based on the content of the above article.\n- Other Economic News: The Bank of Korea stated that consistent policies are needed to avoid stimulating expectations of rising housing prices. Housing prices are rising and exceeding 300,000,000 won in areas other than Gangnam. Mentions of the Bank of Korea's policy direction are interpreted as showing a commitment to managing the overall economy. Sudden price increases in certain areas appear to reflect changes in the housing market. Housing price trends appearing in various regions are likely to serve as important references for policy decisions.\n- Real Estate: LH rental housing has exceeded 1,500,000 units today, achieving a monthly cost saving of 3,920,000 won per household. Incheon Urban Development Corporation has started compensation negotiations for losses in the Guryeo 2 public housing area. The Housing Management Association will hold a \"Housing Management Career Concert\" on the 17th. A 84.901㎡ house in Baekryeonsanpark Jae in Eunpyeong-gu was traded for 1,145,000,000 won and set a new high price in the past three years. A 84.2㎡ house in Eungam Purjio in Eunpyeong-gu was traded for 878,000,000 won and set a new high price in the past three years.\n- Stocks & FX: The KOSPI fell about 1% early in the trading session today, reaching the 6,500 level. This marks a fourth consecutive trading day of decline. Han Invest Securities stated that the KOSPI revised down its third-quarter earnings forecast due to a lack of direction. The Japanese stock market was closed today as a public holiday, \"Sports Day.\" Amid worsening Middle East tensions, the KOSPI is showing signs of attempting a rebound."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "은평구 응암푸르지오 84.2㎡ 아파트가 8억 7800만원에 거래되며 최근 3년간 최고가를 기록했다. 은평구 백련산파크자이 84.901㎡ 아파트는 11억 4500만원에 판매되어 역시 최근 3년간 신고가를 기록했다. 지방 인구 감소 속에서도 일자리와 신규 주택 공급으로 인구가 증가하는 도시들이 주목받고 있다. LH는 임대주택 수를 150만호를 넘어서며 거주 인구는 266만명에 달했다. 장기전세 거주자들에 대한 갈등이 은평·마포·구로 지역에서 본격적으로 표출되고 있다.",
-        "lineEn": "An 84.2㎡ apartment in Eunpyeong-gu, Yeongam Purijeo was traded for 878,000,000 won, setting a record high price over the past three years. An 84.901㎡ apartment in Baekryeonsan Park Jae in Eunpyeong-gu was sold for 1,145,000,000 won, also setting a new high price over the past three years. Cities that are attracting attention are those that are experiencing population growth despite a decrease in population in other areas, due to job opportunities and new housing supply. LH exceeded 1,500,000 rental housing units, reaching a resident population of 2,660,000. Conflicts over long-term lease residents are being openly expressed in Eunpyeong, Mapo, and Guro areas.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "은평구 응암푸르지오 84.2㎡ 8억 7800만원 거래… 최근 3년 신고가 [MAI부동산]",
-            "link": "https://www.mk.co.kr/news/realestate/12173316",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "은평구 백련산파크자이 84.901㎡ 11억 4500만원… 최근 3년 신고가 [MAI부동산]",
-            "link": "https://www.mk.co.kr/news/realestate/12173315",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "지방 인구 절벽 속 ‘우상향 도시’의 공통분모…일자리·신규 주택이 끌었다",
-            "link": "https://www.mk.co.kr/news/realestate/12173304",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "LH, 임대주택 150만호 넘었다… 거주 인구는 266만명",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/12/C4A6CPVZMFAOTIZPX46BBPW4H4/",
-            "source": "조선비즈 부동산"
-          },
-          {
-            "title": "[단독] “20년 살았는데 내집 해줘”…장기전세 갈등, 은평·마포·구로 차례온다",
-            "link": "https://www.mk.co.kr/news/economy/12173277",
-            "source": "매일경제 부동산"
-          }
-        ]
-      },
-      {
-        "key": "stocks",
-        "name": "증시·환율",
-        "nameEn": "Stocks & FX",
-        "lineKo": "코스피는 오늘 장초반 1% 하락하며 6,500대를 기록했다. 이로써 코스피는 4거래일 연속 하락세를 이어가고 있다. 한투증권은 코스피가 방향성 부재로 인해 3분기 이익 전망치를 하향 조정했다고 밝혔다. 연휴 후 돌아온 코스피는 중동 정세 악화 속에서도 반등을 시도하고 있다. 다만 현재까지의 수치는 여전히 하락세를 유지하고 있다.",
-        "lineEn": "The KOSPI fell 1% at the opening of today's trading session, reaching the 6,500 level. This marks the fourth consecutive trading day of decline for the KOSPI. Han Investment & Securities stated that the KOSPI has revised downward its third-quarter earnings forecast due to a lack of direction. The KOSPI, which returned after the holiday, is attempting a rebound despite the worsening Middle East situation. However, the current figures still show a downward trend.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "코스피, 장초반 1% 내려 6,500대…4거래일 연속 하락세",
-            "link": "https://www.yna.co.kr/view/AKR20261012030500008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "한투증권 \"방향성 부재 코스피…3분기 이익 전망치 하향 조정\"",
-            "link": "https://www.yna.co.kr/view/AKR20261012016200008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "[마켓뷰] 연휴서 돌아온 코스피, 중동정세 악화속 반등 시도하나",
-            "link": "https://www.yna.co.kr/view/AKR20261012016300008",
-            "source": "연합뉴스 경제"
-          }
-        ]
-      },
-      {
         "key": "rates",
         "name": "금리·예금·투자상품",
         "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "한투증권은 초과 세수 활용 가능성에 따라 통화정책이 금리 변수가 될 수 있다고 분석했다. 미국에서는 25년 만의 고금리 상황 속에서 신용위험 증가로 인해 경기 침체 확률이 50%에 달했다. 미국의 9월 물가 발표가 임박하면서 연준의 연말 금리 경로에 주목이 집중되고 있다. 주택연금 구상채권은 5년 반 만에 10배로 증가했으나, 회수율은 절반으로 떨어졌다. 각 기사는 서로 다른 주제로, 별개의 사실을 다루고 있다.",
-        "lineEn": "Hanjin Securities analyzed that monetary policy could become a variable affecting interest rates, depending on the possibility of utilizing excess tax revenue. In the U.S., the probability of a recession has reached 50% amid a high-interest rate situation not seen in 25 years, due to increased credit risk. As the U.S. September inflation data is about to be released, attention is focused on the Federal Reserve's year-end interest rate path. The housing pension mortgage-backed securities have increased tenfold in five and a half years, but the recovery rate has dropped by half. Each article covers different topics and deals with separate facts.",
+        "lineKo": "경제안보품목이 340개로 확대되며, 그 중 핵심 100개에 대해 최대 2.3%p의 금리 우대가 적용된다. 한투증권은 초과 세수 활용에 촉각을 곤두세우며 통화정책이 금리 변수가 될 수 있다고 분석했다. 미국의 25년 만의 고금리 상황 속에서 신용위험까지 고려할 때, 미국 경기 침체 확률이 50%에 달했다. 미국의 9월 물가 발표가 임박하며, 연준의 연말 금리 경로가 주목받고 있다. 각 기사는 별개의 사실을 다루고 있으며, 구체적인 수치와 전망은 위 기사 내용에 기반한다.",
+        "lineEn": "The list of economic security items has been expanded to 340, with a maximum interest rate discount of up to 2.3 percentage points applied to the core 100 items. Han Invest Securities is closely watching the use of excess tax revenue, analyzing that monetary policy could become a variable affecting interest rates. Considering the high interest rate situation in the U.S. not seen in 25 years and credit risk, the probability of a U.S. recession has reached 50 percent. With the U.S. September inflation data release approaching, the Federal Reserve's year-end interest rate path is receiving attention. Each article covers separate facts, and specific figures and forecasts are based on the content of the above article.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
+          {
+            "title": "경제안보품목 340개로 확대…핵심 100개 금리 최대 2.3%p 우대",
+            "link": "https://www.newsis.com/view/NISX20261012_0003821671",
+            "source": "뉴시스 경제"
+          },
           {
             "title": "한투증권 \"초과 세수 활용 촉각…통화정책이 금리 변수\"",
             "link": "https://www.yna.co.kr/view/AKR20261012022900008",
@@ -4440,11 +4381,6 @@
             "title": "美 9월 물가 발표 임박…연준 연말 금리 경로 주목",
             "link": "https://www.hankyung.com/article/202610125083i",
             "source": "한국경제 경제"
-          },
-          {
-            "title": "주택연금 구상채권 5년반에 10배로…회수율은 절반으로 뚝",
-            "link": "https://www.yna.co.kr/view/AKR20261010029500002",
-            "source": "연합뉴스 경제"
           }
         ]
       },
@@ -4452,21 +4388,90 @@
         "key": "other",
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
-        "lineKo": "오늘 10월 12일은 경제 관련 주요일정이 있었으며, 이형일 부총리가 경제현안간담회를 개최했다. 간담회에서는 온누리상품권 환급과 관련된 논의가 이루어졌다. 민생물가에 대한 논의도 함께 진행되었다. 각 기사는 서로 다른 주제로 구성되어 있다. 오늘의 경제 뉴스는 다양한 현안을 다루고 있다.",
-        "lineEn": "Today, October 12th, had major economic events, and Vice Premier Lee Young-ill held an economic policy discussion meeting. Discussions regarding the refund of the Onnuri Gift Card were held at the meeting. Discussions on were also conducted. Each article is composed of different topics. Today's economic news covers various issues.",
+        "lineKo": "한국은행은 집값 상승 기대를 자극하지 않도록 일관된 정책이 필요하다고 밝혔다. 강남이 아닌 지역에서 집값이 3억 원을 넘어서며 상승세를 보이고 있다. 한은의 정책 방향에 대한 언급은 경제 전반에 대한 관리 의지를 보여주는 것으로 해석된다. 특정 지역에서의 급격한 가격 상승은 주택 시장의 변화를 반영하는 것으로 보인다. 이처럼 다양한 지역에서 나타나는 주택 가격 동향은 정책 결정에 중요한 참고 자료가 될 것으로 보인다.",
+        "lineEn": "The Bank of Korea stated that consistent policies are needed to avoid stimulating expectations of rising housing prices. Housing prices are rising and exceeding 300,000,000 won in areas other than Gangnam. Mentions of the Bank of Korea's policy direction are interpreted as showing a commitment to managing the overall economy. Sudden price increases in certain areas appear to reflect changes in the housing market. Housing price trends appearing in various regions are likely to serve as important references for policy decisions.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "[오늘의 주요일정]경제(10월12일월요일)",
-            "link": "https://www.newsis.com/view/NISX20261008_0003818284",
+            "title": "한은 \"집값 상승 기대 자극 않도록 일관된 정책 필요\"",
+            "link": "https://www.yna.co.kr/view/AKR20261012039000002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "강남도 아닌데 3억 넘게 뛰었다…집값 들썩이는 동네",
+            "link": "https://www.hankyung.com/article/2026101251506",
+            "source": "한국경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "LH 임대주택은 오늘 150만호를 돌파하며 가구당 월 392만원의 비용 절감 효과를 기록했다. 인천도시공사는 구월2 공공주택지구에서 손실보상 협의를 시작했다. 주택관리사협회는 17일 '주택관리사 커리어콘서트'를 개최한다. 은평구 백련산파크자이의 84.901㎡ 주택은 11억 4500만원에 거래되며 최근 3년간 신고가를 기록했다. 은평구 응암푸르지오의 84.2㎡ 주택은 8억 7800만원에 거래되며 최근 3년간 신고가를 기록했다.",
+        "lineEn": "LH rental housing has exceeded 1,500,000 units today, achieving a monthly cost saving of 3,920,000 won per household. Incheon Urban Development Corporation has started compensation negotiations for losses in the Guryeo 2 public housing area. The Housing Management Association will hold a \"Housing Management Career Concert\" on the 17th. A 84.901㎡ house in Baekryeonsanpark Jae in Eunpyeong-gu was traded for 1,145,000,000 won and set a new high price in the past three years. A 84.2㎡ house in Eungam Purjio in Eunpyeong-gu was traded for 878,000,000 won and set a new high price in the past three years.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "LH 임대주택 150만호 돌파…\"가구당 年 392만원 절감\"",
+            "link": "https://www.newsis.com/view/NISX20261012_0003821662",
             "source": "뉴시스 경제"
           },
           {
-            "title": "이형일 부총리, 경제현안간담회 개최…온누리상품권 환급·민생물가 논의",
-            "link": "https://www.newsis.com/view/NISX20261011_0003821177",
+            "title": "인천도시공사, 구월2 공공주택지구 손실보상 협의 시작",
+            "link": "https://www.yna.co.kr/view/AKR20261012046400065",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[게시판] 주택관리사협회, 17일 '주택관리사 커리어콘서트'",
+            "link": "https://www.yna.co.kr/view/AKR20261012045000003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "은평구 백련산파크자이 84.901㎡ 11억 4500만원… 최근 3년 신고가 [MAI부동산]",
+            "link": "https://www.mk.co.kr/news/realestate/12173315",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "은평구 응암푸르지오 84.2㎡ 8억 7800만원 거래… 최근 3년 신고가 [MAI부동산]",
+            "link": "https://www.mk.co.kr/news/realestate/12173316",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "코스피는 오늘 장초반 1% 내외 하락하며 6,500대를 기록했다. 이로써 4거래일 연속 하락세를 이어가고 있다. 한투증권은 코스피가 방향성 부재로 인해 3분기 이익 전망치를 하향 조정했다고 밝혔다. 일본 증시는 '스포츠의 날' 공휴일로 인해 오늘 휴장했다. 중동 정세 악화 속에서 코스피가 반등 시도를 하려는 움직임을 보이고 있다.",
+        "lineEn": "The KOSPI fell about 1% early in the trading session today, reaching the 6,500 level. This marks a fourth consecutive trading day of decline. Han Invest Securities stated that the KOSPI revised down its third-quarter earnings forecast due to a lack of direction. The Japanese stock market was closed today as a public holiday, \"Sports Day.\" Amid worsening Middle East tensions, the KOSPI is showing signs of attempting a rebound.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "코스피, 장초반 1% 내외 내리며 6,500대…4거래일 연속 하락세(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261012030551008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "일본 증시, '스포츠의 날' 공휴일로 휴장",
+            "link": "https://www.newsis.com/view/NISX20261012_0003821493",
             "source": "뉴시스 경제"
+          },
+          {
+            "title": "한투증권 \"방향성 부재 코스피…3분기 이익 전망치 하향 조정\"",
+            "link": "https://www.yna.co.kr/view/AKR20261012016200008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[마켓뷰] 연휴서 돌아온 코스피, 중동정세 악화속 반등 시도하나",
+            "link": "https://www.yna.co.kr/view/AKR20261012016300008",
+            "source": "연합뉴스 경제"
           }
         ]
       }
