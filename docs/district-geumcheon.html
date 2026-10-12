@@ -1266,14 +1266,12 @@ function budgetDealHtml(deal) {
 
 function renderBudget() {
   const section = document.getElementById("budget-section");
-  if (!budgetEnabled || !cache.budget?.bands?.length) {
-    section.hidden = true;
-    return;
-  }
-  section.hidden = false;
+  section.hidden = !budgetEnabled;
+  if (!budgetEnabled) return;
 
   document.getElementById("budget-heading").textContent = t("budgetHeading");
   document.getElementById("budget-note").textContent = t("budgetNote");
+  if (!cache.budget?.bands?.length) return; // #288
   const band = bandFor(budgetEok * EOK);
   const box = document.getElementById("budget-result");
 

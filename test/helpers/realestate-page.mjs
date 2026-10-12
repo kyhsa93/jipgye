@@ -31,6 +31,8 @@ function stubElement(attrs = {}, id = "", shared = null) {
     textContent: "",
     innerHTML: "",
     hidden: false,
+    // 이 요소의 hidden에 쓴 값을 순서대로 남긴다. 끝 상태만 보면 "숨겼다가 다시 편" 것을 못 본다(#288).
+    hiddenWrites: [],
     offsetWidth: 110,
     style: {},
     dataset: {},
@@ -67,12 +69,25 @@ function stubElement(attrs = {}, id = "", shared = null) {
   };
   return new Proxy(base, {
     get: (t, p) => (p in t ? t[p] : typeof p === "symbol" ? undefined : () => {}),
-    set: (t, p, v) => ((t[p] = v), true),
+    set: (t, p, v) => {
+      if (p === "hidden") t.hiddenWrites.push(v);
+      t[p] = v;
+      return true;
+    },
   });
 }
 
-export async function loadRealestatePage({ realestate, trend, budget, complexRatio, budgetBand = null, prerenderedBudget = "", kind = null, district = null, locale = "ko", search = "", analytics } = {}) {
-  const html = await readFile(path.join(root, "docs/realestate.html"), "utf8");
+/**
+ * 시세 틀(또는 그 틀로 찍어낸 장)의 인라인 스크립트를 손으로 만든 DOM 위에서 돌린다.
+ *
+ * - `file`: 스크립트를 읽을 장. 기본은 틀이고, 찍어낸 장(`docs/budget-8eok.html`)을 주면 그 장에 실려 나간 스크립트가 돈다.
+ * - `gate(name)`: 데이터 파일(`realestate`·`budget-deals`…)에 답하기 전에 기다릴 것. 시험이 쥔 약속을 돌려주면 그 응답이
+ *   "받는 중"에 머물고, 던지면 요청이 거부된다(네트워크 실패).
+ * - `baked`: 받은 HTML에 이미 들어 있던 것(`{ "budget-result": { innerHTML } }`). 스텁 요소는 빈 채로 태어나므로,
+ *   스크립트가 구운 내용을 건드렸는지 보려면 여기서 채워 둔다.
+ */
+export async function loadRealestatePage({ realestate, trend, budget, complexRatio, budgetBand = null, prerenderedBudget = "", kind = null, district = null, locale = "ko", search = "", analytics, file = "docs/realestate.html", gate = null, baked = {} } = {}) {
+  const html = await readFile(path.join(root, file), "utf8");
   const script = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
 
   const store = { lang: locale };
@@ -101,6 +116,7 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
     clearInterval: () => {},
     fetch: async (url) => {
       const name = String(url).match(/\/([a-z-]+)\.json/)?.[1];
+      await gate?.(name);
       const body = data[name];
       if (!body) return { ok: false, status: 404, json: async () => ({}) };
       return { ok: true, status: 200, json: async () => body };
@@ -132,6 +148,8 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
       getElementById: (id) => {
         if (!byId.has(id)) {
           const el = stubElement({}, id);
+          Object.assign(el, baked[id] ?? {});
+          el.hiddenWrites.length = 0;
           // 그래프는 자기 카드 안에 있고, 카드는 모두 한 격자 안에 있다. 같은 축을
           // 쓰는 그래프를 찾는 코드가 이 두 관계를 타고 올라간다.
           const chart = /^(.+)-chart$/.exec(id);
@@ -177,7 +195,7 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
   sandbox.self = sandbox;
   sandbox.globalThis = sandbox;
   vm.createContext(sandbox);
-  new vm.Script(script, { filename: "docs/realestate.html:inline" }).runInContext(sandbox);
+  new vm.Script(script, { filename: `${file}:inline` }).runInContext(sandbox);
 
   await new Promise((resolve) => setTimeout(resolve, 0));
   await new Promise((resolve) => setTimeout(resolve, 0));
@@ -195,6 +213,8 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
     cardCurrent: (prefix) => sandbox.document.getElementById(`${prefix}-current`).textContent,
     cardMinMax: (prefix) => sandbox.document.getElementById(`${prefix}-minmax`).textContent,
     cardHidden: (id) => sandbox.document.getElementById(id).hidden,
+    /** 스크립트가 그 요소의 hidden에 쓴 값들(순서대로). 한 번도 안 썼으면 빈 배열. */
+    hiddenWrites: (id) => [...sandbox.document.getElementById(id).hiddenWrites],
     headHtml: () => sandbox.document.getElementById("district-head").innerHTML,
     overallHtml: () => sandbox.document.getElementById("overall-cards").innerHTML,
     budgetHtml: () => sandbox.document.getElementById("budget-result").innerHTML,
