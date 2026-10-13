@@ -1,7 +1,49 @@
 {
-  "updatedAt": "2026-10-13T10:28:11.768Z",
+  "updatedAt": "2026-10-13T14:57:08.618Z",
   "date": "2026-10-13",
   "items": [
+    {
+      "title": "이형일, 베선트와 화상면담…\"힌미 경제·금융 협력 중요성 재확인\"",
+      "link": "https://www.newsis.com/view/NISX20261013_0003824721",
+      "publishedAt": "2026-10-13T14:25:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "other",
+      "preview": "[세종=뉴시스] 안호균 기자 = 이형일 경제부총리 겸 재정경제부 장관이 13일 스콧 베선트 미국 재무장관과의 화상 면담을 통해 한미 경제·금융협력의 중요성을 재확인했다. 지난달 22일 취임 이후 미국 측 카운터파트인…",
+      "dupes": [
+        {
+          "title": "이형일-베선트 화상면담…\"한미 경제·금융협력 중요성 재확인\"",
+          "link": "https://www.yna.co.kr/view/AKR20261013193900002",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "title": "뉴욕증시, 은행 실적·반도체 약세 속 혼조 출발…다우 0.7%↑",
+      "link": "https://www.newsis.com/view/NISX20261013_0003824712",
+      "publishedAt": "2026-10-13T14:10:03.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "[서울=뉴시스] 김승민 기자 = 미국 주요 대형 은행이 3분기 실적 발표를 시작한 가운데 뉴욕증시가 혼조세로 출발했다. 한국 증시 급락 등 중국발 반도체주 약세 흐름의 영향도 있는 것으로 보인다. 뉴욕증권거래소(NY…",
+      "dupes": []
+    },
+    {
+      "title": "[올댓차이나] 대만 증시, 美 반도체 약세에 나흘째 속락 마감…1.95%↓",
+      "link": "https://www.newsis.com/view/NISX20261013_0003824645",
+      "publishedAt": "2026-10-13T11:11:55.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "[서울=뉴시스]이재준 기자 = 대만 타이베이 증시는 13일 전날 뉴욕 증시에서 반도체주가 하락하고 한일 증시도 크게 떨어진 여파로 반도체를 중심으로 매도 출회, 4거래일 연속 내린 채 마감했다. 자취안(加權) 지수는…",
+      "dupes": []
+    },
+    {
+      "title": "“3기 신도시 용적률 높여 6.4만가구 더…수도권 주택 공급·이주 수요 동시에 해결”",
+      "link": "https://www.mk.co.kr/news/realestate/12174873",
+      "publishedAt": "2026-10-13T10:54:14.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "한국도시부동산학회 정비사업 이주대책 토론회 3기 신도시 용적률 300%로 상향 제안 수도권 공급 늘리고 이주 완충지대 확보 이주 충격 단기적…속도조절 공급 역효과전월세 시장 불안..",
+      "dupes": []
+    },
     {
       "title": "[올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑",
       "link": "https://www.newsis.com/view/NISX20261013_0003824613",
@@ -9,8 +51,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 13일 중동 정세 악화와 미국 반도체주 약세 여파로 반락 개장했다가 자원가격 상승으로 관련주에 매수 유입하면서 3거래일 연속 오른 채 마감했다. 항셍지수는 이날 전일 대비…",
-      "dupes": [],
-      "titleEn": "[AllChina] Hong Kong stock market closes up for third consecutive day on strength in resource shares... H shares up 0.08%"
+      "dupes": []
     },
     {
       "title": "인도 9월 소비자물가 5.54%·0.71%P↑…\"식품값 급등에 추가 금리인상 전망\"",
@@ -19,18 +60,16 @@
       "source": "뉴시스 경제",
       "category": "rates",
       "preview": "[서울=뉴시스]이재준 기자 = 2026년 9월 인도 소비자 물가(CPI 속보치)는 전년 동월 대비 5.54% 올랐다고 마켓워치와 PTI 통신, 타임스 오브 인디아, 이코노믹 타임스가 13일 보도했다. 매체는 인도 통…",
-      "dupes": [],
-      "titleEn": "India's September consumer prices rise 5.54%·0.71%P↑...\"Food prices surge sparks expectations of additional rate hikes"
+      "dupes": []
     },
     {
-      "title": "\"국평 새 아파트 5억대에 줍줍\"…'애물단지' 미분양의 반전",
+      "title": "\"5억대에 새 집 줍줍할 기회\"…'애물단지' 아파트의 반전",
       "link": "https://www.hankyung.com/article/2026101394771",
       "publishedAt": "2026-10-13T09:09:52.000Z",
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Kukpyeong New Apartments 500,000,000 Won Grabbed in a Rush\"… 'Boon for Buyers' as Unsold Units Turn Around"
+      "dupes": []
     },
     {
       "title": "연내 1.5만가구 착공 vs 권한이양 추진…재건축 '동상이몽'",
@@ -39,8 +78,7 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Within the year, 15,000 households to start construction vs. push for authority transfer...Reconstruction 'Divided Views"
+      "dupes": []
     },
     {
       "title": "\"비아파트 '주택 수 제외' 혜택 상시화해야\"",
@@ -49,8 +87,7 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Viapart should permanently implement 'exclusion of housing units' benefit"
+      "dupes": []
     },
     {
       "title": "김병연 서울대 석좌교수 \"러와 밀착 北, 깜짝 성장했지만…3년새 환율 9배·쌀값 8배 급등\"",
@@ -59,8 +96,7 @@
       "source": "한국경제 경제",
       "category": "stocks",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Kim Byeong-yeon, Seoul National University Chair Professor, Says \"North Korea's Close Ties with Russia Surprised Everyone... But in 3 Years, Exchange Rate Rose 9 Times and Rice Prices Jumped 8 Times"
+      "dupes": []
     },
     {
       "title": "조윤호 서강대 교수 \"전세 제도 집값 안정에 도움…부동산 거래세, 가계의 최적 선택 막아\"",
@@ -69,8 +105,7 @@
       "source": "한국경제 경제",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Cho Yun-ho, Sogang University Professor, Says \"Renting System Helps Stabilize Housing Prices... Real Estate Transaction Tax Prevents Optimal Choice for Households"
+      "dupes": []
     },
     {
       "title": "임광현 \"李대통령 아파트 거래, 과세 대상 아냐\"",
@@ -79,8 +114,7 @@
       "source": "연합뉴스 경제",
       "category": "realestate",
       "preview": "(세종=연합뉴스) 이대희 기자 = 임광현 국세청장은 13일 이재명 대통령의 분당 아파트 매도 거래에 관해 \"과세 대상이 아닌 것으로 보고를 받았...",
-      "dupes": [],
-      "titleEn": "Im Gwang-hyun: \"Presidential apartment transaction not subject to taxation"
+      "dupes": []
     },
     {
       "title": "미활용 폐교 가치 2조5000억…\"주택 공급·지역거점 활용해야\"",
@@ -89,8 +123,7 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Unused school closures hold value of 2,000,000,000,000500,000,000,000... \"Must be used for housing supply and regional hubs"
+      "dupes": []
     },
     {
       "title": "국고채 금리, 코스피 급락·외인 매수에 이틀째 큰 폭 하락",
@@ -99,18 +132,7 @@
       "source": "연합뉴스 경제",
       "category": "rates",
       "preview": "(서울=연합뉴스) 강수지 기자 = 13일 국고채 금리가 이틀 연속 큰 폭으로 하락하며 8월 말 수준으로 내려갔다.",
-      "dupes": [],
-      "titleEn": "Korea's government bond yields fall sharply for second straight day amid Kospi plunge and foreign buying"
-    },
-    {
-      "title": "[포토] 코스피, 5.5% 급락 '6천피'",
-      "link": "https://www.hankyung.com/article/202610139394i",
-      "publishedAt": "2026-10-13T08:05:28.000Z",
-      "source": "한국경제 경제",
-      "category": "stocks",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "[Photo] Kospi Plummets 5.5% to 6,000"
+      "dupes": []
     },
     {
       "title": "서울아파트 거래 40% '뚝' 전국 거래량도 20% 감소",
@@ -120,7 +142,6 @@
       "category": "realestate",
       "preview": "지난 8월 전국 부동산 거래량이 2025년 1월 이후 최저치를 기록한 것으로 나타났다. 서울의 아파트 거래량이 전월 대비 39.7% 급감하는 등 전국 아파트 거래량이 20.0% 감..",
       "dupes": [],
-      "titleEn": "Seoul apartment transactions drop 40%; nationwide transactions down 20%",
       "context": [
         {
           "kind": "realestate",
@@ -141,8 +162,7 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 황철환 기자 = 인공지능(AI) 인프라 투자 둔화 우려가 재점화한 가운데 코스피가 불과 5거래일 만에 1천 포인트 가까이 빠지...",
-      "dupes": [],
-      "titleEn": "Record Semiconductor Earnings, Yet... 'Black Tuesday' Sends Kospi Plummeting (Comprehensive)"
+      "dupes": []
     },
     {
       "title": "“외곽으로 가거나 좁은 집에 살거나”…신혼부부 대출, 서울선 ‘그림의 떡’",
@@ -152,7 +172,6 @@
       "category": "other",
       "preview": "신혼부부를 대상으로 한 정책대출인 보금자리론의 소득 기준이 이달 중순부터 크게 완화되지만 정작 서울에서 정책대출을 받아 살 수 있는 집은 외곽 지역의 소형·구축 아파트에 쏠려 있는..",
       "dupes": [],
-      "titleEn": "Go to the outskirts or live in a small house\"… Newlyweds' loans in Seoul are \"a picture of a cake",
       "context": [
         {
           "kind": "realestate",
@@ -188,7 +207,6 @@
           "source": "매일경제 부동산"
         }
       ],
-      "titleEn": "Bannpo Junggong 1-danji Reconstruction Project Renamed to 'Dich Bannpo 124",
       "context": [
         {
           "kind": "realestate",
@@ -209,8 +227,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 13일 혼조 마감했다. 이날 상하이종합지수는 전날보다 0.1% 상승한 3800.86로 거래를 마쳤다. 반면 선전성분지수는 전장 대비 0.25% 떨어진 1만2353.7로,…",
-      "dupes": [],
-      "titleEn": "[AllChina] China's stock market closes mixed… Shanghai index up 0.1%"
+      "dupes": []
     },
     {
       "title": "코스피 연일 급락에 공포지수 19% 급등…시총 5천조원 깨져(종합)",
@@ -219,8 +236,7 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 곽윤아 기자 = 한국형 공포지수인 코스피200 변동성지수(VKOSPI)가 13일 19% 넘게 급등했다.",
-      "dupes": [],
-      "titleEn": "Kospi's consecutive sharp declines push fear index up 19%... market capitalization breaks 5,000,000,000,000,000 won (comprehensive)"
+      "dupes": []
     },
     {
       "title": "코스피, 5.5% 급락 '6천피' 간신히 사수…외국인 4.5조 팔았다(종합)",
@@ -229,8 +245,7 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 김유향 기자 = 코스피는 13일 대형 반도체주 중심으로 크게 흔들리면서 5%대의 급락으로 마감했다. 다만 장 후반에 낙폭이 다...",
-      "dupes": [],
-      "titleEn": "KOSPI drops 5.5% to barely hold above 6,000; foreigners sell 4,500,000,000,000 won"
+      "dupes": []
     },
     {
       "title": "日증시, 반도체·AI주 약세속 혼조 마감…닛케이지수 1.82%↓",
@@ -239,8 +254,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 김예진 기자 = 13일 일본 도쿄증시에서 주요 지수는 혼조 마감했다. 니혼게이자이신문에 따르면 닛케이225지수(닛케이평균주가)는 이날 전 거래일 대비 1253.40포인트(1.82%) 내린 6만7777…",
-      "dupes": [],
-      "titleEn": "Tokyo Stock Exchange closes mixed amid weakness in semiconductor and AI stocks... Nikkei index down 1.82%"
+      "dupes": []
     },
     {
       "title": "“이 동네가 이럴 줄이야”…전세 상승률 ‘최고’에 곡소리난 서울 자치구, 어디?",
@@ -250,7 +264,6 @@
       "category": "realestate",
       "preview": "지난달 서울 노원구와 성북구의 아파트 매매·전셋값이 나란히 큰 폭으로 오르면서 실수요자들의 주거비 부담이 커지고 있다. 상대적으로 가격 부담이 덜한 강북권 주요 주거지역에서 매매가..",
       "dupes": [],
-      "titleEn": "Who would have thought this neighborhood would be like this\"… Seoul's self-governing districts, where rental price growth rates are highest, where are they?",
       "context": [
         {
           "kind": "realestate",
@@ -271,50 +284,7 @@
       "source": "연합뉴스 경제",
       "category": "other",
       "preview": "(청주=연합뉴스) 전창해 기자 = 충북도는 민선 9기 민생경제 정책인 '소상공인 및 사회연대경제 추진 계획'을 수립해 추진한다고 13일 밝혔다....",
-      "dupes": [],
-      "titleEn": "충북도 '민선9기 민생경제 정책' 수립…소상공인 성장 지원"
-    },
-    {
-      "title": "중동발 유가상승·증시 급락에…환율 10원 오른 1,345.1원",
-      "link": "https://www.yna.co.kr/view/AKR20261013145100002",
-      "publishedAt": "2026-10-13T07:03:27.000Z",
-      "source": "연합뉴스 경제",
-      "category": "stocks",
-      "preview": "(서울=연합뉴스) 이도흔 기자 = 원/달러 환율은 13일 중동발 지정학적 리스크로 인한 국제유가 상승, 국내 증시 급락에 따른 위험회피 심리 확...",
-      "dupes": [],
-      "titleEn": "Rising oil prices from the Middle East and a sharp stock market decline push the exchange rate up 10 won to 1,345.1 won"
-    },
-    {
-      "title": "서천특화시장 재건축 19일 재개…2028년 11월 준공 목표",
-      "link": "https://www.yna.co.kr/view/AKR20261013145900063",
-      "publishedAt": "2026-10-13T07:03:12.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(서천=연합뉴스) 정윤덕 기자 = 충남 서천군은 중단된 서천특화시장 재건축 사업을 재개한다고 13일 밝혔다.",
-      "dupes": [],
-      "titleEn": "Sacheon Special Market Reconstruction to Resume on 19th… Completion Targeted for November 2028"
-    },
-    {
-      "title": "집값 못 잡고 전셋값도 뛰었다… 서울 토허제, 내년에도 묶나",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/13/Y6ETWIARNZD3FDP3FLQLHL7D4Q/",
-      "publishedAt": "2026-10-13T05:47:51.000Z",
-      "source": "조선비즈 부동산",
-      "category": "other",
-      "preview": "서울 전역과 경기 12개 지역의 토지거래허가구역 지정 기한이 올해 말 끝나면서 규제 연장 여부가 쟁점으로 떠올랐다. 정부는 서울 아파트값 상승세가 이어지고 있어 연장 가능성을 열어두고 있다. 반면 강남권 집값이 하락…",
-      "dupes": [],
-      "titleEn": "Home prices remain uncontrolled and rental prices are rising... Seoul's rent cap, will it continue next year?",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-gangnam.html",
-          "label": "강남구 아파트 84㎡ 전세",
-          "labelEn": "강남구 apartment 84㎡ jeonse",
-          "value": "11억 1,194만원",
-          "valueEn": "₩1,112M",
-          "note": "최근 1주 계약 314건 · 10/6 대비 +0.9%",
-          "noteEn": "314 deals in the last 1 weeks · +0.9% vs Oct 6"
-        }
-      ]
+      "dupes": []
     }
   ],
   "realestateStats": [
