@@ -1,0 +1,159 @@
+
+/* ===== 시안 B 2층 — index 레이아웃 방향. 추이 카드를 맨 위 2×2로, 넓은 화면은 12단(왼쪽 8 : 오른쪽 4). ===== */
+
+.dash {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.dash > section,
+.dash-side > section,
+.split > section {
+  margin-bottom: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+
+/* 추이 카드: 폰에서도 2열. 격자 둘(부동산·금리와 환율)을 한 격자로 푼다. */
+.dash-cards,
+.dash-mcards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.dash-cards > .history-grid,
+.dash-mcards > .history-grid {
+  display: contents;
+}
+
+.dash-cards > .realestate-history-controls,
+.dash-cards > .summary-meta,
+.dash-cards .history-more {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+
+.dash-cards .history-card,
+.dash-mcards .history-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.dash-cards .history-more .history-card {
+  background: var(--card);
+}
+
+.dash-cards .history-minmax,
+.dash-mcards .history-minmax {
+  white-space: normal;
+}
+
+.dash-cards .history-grid-nested {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 0;
+}
+
+.dash-question .question-nav {
+  margin-bottom: 0;
+}
+
+.dash-side {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.dash-side .method-callout {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+
+.split {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+@media (min-width: 1024px) {
+  .dash {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    grid-template-areas:
+      "cards question"
+      "mcards question"
+      "table question"
+      "table side";
+    align-items: start;
+  }
+
+  .dash-cards {
+    grid-area: cards;
+  }
+
+  .dash-mcards {
+    grid-area: mcards;
+  }
+
+  .dash-question {
+    grid-area: question;
+  }
+
+  .dash > #realestate-section {
+    grid-area: table;
+  }
+
+  .dash-side {
+    grid-area: side;
+  }
+
+  /* 오른쪽 4단 안에서는 질문 묶음을 위아래로 쌓고, 묶음 안은 두 칸. */
+  .dash-question .question-nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dash-question .question-group,
+  .dash-question .question-group:not(:first-child) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .split {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+/* 왼쪽 8단(약 780px)에 시세표 네 열을 한 줄씩 넣으려면 껍데기를 1280px까지 쓰고 칸 여백을 줄여야 한다. */
+@media (min-width: 1280px) {
+  main {
+    max-width: 1280px;
+  }
+
+  .dash .realestate-table th,
+  .dash .realestate-table td {
+    padding-left: 8px;
+    padding-right: 8px;
+    white-space: nowrap;
+  }
+
+  .dash .realestate-table th.sortable {
+    padding: 0;
+  }
+
+  .dash .realestate-table th.sortable button {
+    padding: 0 8px;
+  }
+
+  .dash .realestate-table td:first-child {
+    white-space: normal;
+  }
+}

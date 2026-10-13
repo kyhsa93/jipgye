@@ -4347,30 +4347,45 @@
     "date": "2026-10-12",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 금리·예금·투자상품: 국고채 금리가 일제히 하락한 것으로 나타났다. 3년물 국고채 금리는 연 3.921%를 기록했다. 한은 총재는 추가 금리인상 가능성에 대해 답변을 유보했다. 그는 인플레이션 추이가 가장 중요한 요소라고 밝혔다. 두 기사는 각각 다른 주제를 다루고 있으며 관련성이 없다.\n- 증시·환율: 원/달러 환율이 1,332.0원으로 2년만에 최저를 기록했고, 외국인은 올해 코스피에서 199조 원을 순매도했으며, 코스피는 6,300대까지 내려앉으며 한 달 만에 최대 하락률을 기록했고, 삼전의 역대급 실적에도 불구하고 코스피는 3.7% 급락했으며, 코스닥도 4.8% 하락했고, 원/달러 환율은 15:30 기준 1,335.1원으로 7.7원 내린 상태이다.\n- 부동산: 청년주택드림 청약통장 가입 기준이 연 소득 5000만원에서 7000만원으로 완화되었다. 분당 아파트는 재건축 기대감으로 인해 ‘서수정’과 ‘미야오’ 등 지역에서 가격 상승세를 보이고 있다. 동탄 트램은 17년 만에 이달 착공이 추진되며, 남동탄 아파트도 신고가를 기록하고 있다. 강북 아파트 매매가의 절반 이상이 전고점 이상으로 올라 역대 최고가를 기록하고 있다. ‘오송역 헬로우시티’ 지주택 조합원 모집 신고가 접수되며 사업절차가 본격적으로 시작되었다.\n- 기타 경제 소식: IMF 총재는 AI 투자가 세계 경제 성장률을 3% 떠받쳐 올릴 수 있다고 밝혔다. LH 이성훈 사장은 집값이 급락할 가능성에 대해 언급하며 지금 집을 사는 것을 권장하지 않았다. 민주당은 LH 이성훈 사장의 대출 조이기 발언에 대해 질타했다. 10·15대책 시행 1년 만에 한강벨트 지역 거래량이 반토막 났다. 외곽 지역은 거래량이 급증하는 것으로 나타났다.",
-      "en": "- Rates, Deposits & Investment Products: Government bond rates have all declined. The three-year government bond rate recorded 3.921% annually. The Bank of Korea governor reserved his answer regarding the possibility of further interest rate hikes. He stated that the trend of inflation is the most important factor. The two articles cover different topics and are unrelated.\n- Stocks & FX: The won/dollar exchange rate hit 1,332.0 won, its lowest in two years, and foreigners made a net sell of 199,000,000,000,000 won on the KOSPI this year. The KOSPI fell to the 6,300 range, recording its largest monthly decline, even though Samsung Electronics posted record earnings. The KOSPI dropped 3.7%, and the KOSDAQ fell 4.8%. As of 15:30, the won/dollar exchange rate was at 1,335.1 won, down 7.7 won.\n- Real Estate: The eligibility criteria for the Dream Youth Housing application book have been relaxed from an annual income of 50,000,000 won to 70,000,000 won. In Bundang, apartment prices are rising in areas such as Seosu and Miyao due to expectations of reconstruction. The Dongtan tram is set to start construction this month, the first in 17 years, and the Namdongtan apartments are also recording new high prices. More than half of the selling prices of Gangbuk apartments have risen above previous highs, setting a record high. The Hello City housing cooperative for Osong Station has received a new high price application for recruitment, and the project process has officially begun.\n- Other Economic News: IMF ， 3%。LH ， 。 LH 。 “10·15 ” ， ， 。"
+      "ko": "- 부동산: LH 사장은 3주택 중 2주택을 처분해 직원 사내대출 문제를 개선하겠다고 밝혔다. 서울 핵심지역에서 LH가 조합 없이 직접 재개발을 추진하는 방안이 제시됐다. 부산 삼익비치 재건축은 8.5억 원에 매물로 나와 지방 재건축이 여전히 어려운 상황이다. 서울 3분기 아파트 매매 가격은 절반 이상이 전고점을 넘어서며 상승세를 보이고 있다. 일부 벽식 아파트도 평면 구조를 변경하는 방안이 검토되고 있다.\n- 증시·환율: 한국은행 총재는 환율이 아직 예년 수준보다 높은 상태라고 밝혔다. 원/달러 환율은 오늘 1,332.0원으로 기록되어 2년 만에 최저 수준을 기록했다. 원/엔 환율도 금융위기 이후 최저 수준을 나타냈다. 한은 총재는 환율이 추가로 하락할 가능성도 있다고 언급했다. 오늘 발표된 환율 수치는 최근 시장 동향을 반영한 것으로 보인다.\n- 금리·예금·투자상품: 한국은행 총재는 기준금리 0.5%p 인상이 물가상승률을 0.08%p 하락시키는 효과가 있을 것이라고 밝혔다. 외국인은 3년 국채선물에서 역대 두 번째로 순매수를 기록하며 금리가 일제히 하락하는 모습을 보였다. 국고채 금리는 전반적으로 하락했으며, 3년물은 연 3.921%를 기록했다. 한은 총재의 발언은 금리 인상에 대한 기대감을 반영한 것으로 보인다. 외국인의 순매수는 금리 하락을 가속화하는 요인으로 작용했다.\n- 기타 경제 소식: LH 사장은 대출 규제 강화 발언에 대해 해명을 요구받았다고 전했다. 집값이 급락할 가능성이 크다고 밝혔다. LH 사장은 지금 집을 사지 않아도 손해를 보지 않을 수 있다고 말했다. 반도체 산업을 제외하면 한국 경제는 이미 성장이 정체된 상태라고 분석했다. 오늘 경제 관련 주요 소식은 이와 같은 내용을 포함하고 있다.",
+      "en": "- Real Estate: The head of LH stated that he will dispose of two out of three homes to improve the internal loan issues for employees. A proposal was made for LH to directly pursue redevelopment without a consortium in key areas of Seoul. The reconstruction of Samik Beach in Busan is listed for sale at 850,000,000 won, indicating that local reconstruction efforts are still difficult. Apartment sales prices in Seoul in the third quarter have risen, with more than half exceeding previous peaks. Some wall-type apartments are also under consideration for structural plan changes.\n- Stocks & FX: The Bank of Korea Governor stated that the exchange rate is still higher than the level of previous years. The won/dollar exchange rate was recorded at 1,332.0 won today, reaching its lowest level in two years. The won/yen exchange rate also showed its lowest level since the financial crisis. The Bank of Korea Governor mentioned that there is a possibility of further decline in the exchange rate. The exchange rate figures announced today appear to reflect recent market trends.\n- Rates, Deposits & Investment Products: The Bank of Korea Governor stated that raising the benchmark interest rate by 0.5 percentage points would have an effect of reducing the inflation rate by 0.08 percentage points. Foreign investors recorded the second-highest ever net purchase in 3-year government bond futures, showing a trend of interest rates broadly declining. Government bond rates generally declined, with the 3-year rate reaching 3.921% annually. The Governor's remarks appear to reflect expectations of interest rate hikes. Foreign investors' net purchases acted as a factor accelerating the decline in interest rates.\n- Other Economic News: The head of LH was asked to explain his remarks on strengthening loan regulations. He stated that there is a high possibility of a sharp decline in housing prices. He said that people who do not buy a house now may not suffer any loss. He analyzed that, excluding the semiconductor industry, the Korean economy is already in a state of stagnant growth. Today's major economic news includes such content."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "국고채 금리가 일제히 하락한 것으로 나타났다. 3년물 국고채 금리는 연 3.921%를 기록했다. 한은 총재는 추가 금리인상 가능성에 대해 답변을 유보했다. 그는 인플레이션 추이가 가장 중요한 요소라고 밝혔다. 두 기사는 각각 다른 주제를 다루고 있으며 관련성이 없다.",
-        "lineEn": "Government bond rates have all declined. The three-year government bond rate recorded 3.921% annually. The Bank of Korea governor reserved his answer regarding the possibility of further interest rate hikes. He stated that the trend of inflation is the most important factor. The two articles cover different topics and are unrelated.",
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "LH 사장은 3주택 중 2주택을 처분해 직원 사내대출 문제를 개선하겠다고 밝혔다. 서울 핵심지역에서 LH가 조합 없이 직접 재개발을 추진하는 방안이 제시됐다. 부산 삼익비치 재건축은 8.5억 원에 매물로 나와 지방 재건축이 여전히 어려운 상황이다. 서울 3분기 아파트 매매 가격은 절반 이상이 전고점을 넘어서며 상승세를 보이고 있다. 일부 벽식 아파트도 평면 구조를 변경하는 방안이 검토되고 있다.",
+        "lineEn": "The head of LH stated that he will dispose of two out of three homes to improve the internal loan issues for employees. A proposal was made for LH to directly pursue redevelopment without a consortium in key areas of Seoul. The reconstruction of Samik Beach in Busan is listed for sale at 850,000,000 won, indicating that local reconstruction efforts are still difficult. Apartment sales prices in Seoul in the third quarter have risen, with more than half exceeding previous peaks. Some wall-type apartments are also under consideration for structural plan changes.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "국고채 금리 일제히 하락…3년물 연 3.921%",
-            "link": "https://www.yna.co.kr/view/AKR20261012144400008",
-            "source": "연합뉴스 경제"
+            "title": "LH 사장 \"3주택 중 2주택 처분…직원 사내대출 문제 개선할 것\"",
+            "link": "https://www.newsis.com/view/NISX20261012_0003822833",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "한은 총재, '추가 금리인상' 묻자 \"인플레이션 추이 가장 중요\"",
-            "link": "https://www.yna.co.kr/view/AKR20261012110500002",
-            "source": "연합뉴스 경제"
+            "title": "서울 핵심지에 조합없이 LH가 직접 재개발…정부 믿고 들어가볼까 [부동산 손품노트]",
+            "link": "https://www.mk.co.kr/news/realestate/12173983",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "부산 삼익비치도 8.5억…지방 재건축 '막막'",
+            "link": "https://www.hankyung.com/article/2026101269011",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "서울 3분기 아파트 매매…절반 이상 '전고점' 넘어",
+            "link": "https://www.hankyung.com/article/2026101268521",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "\"벽식 아파트도 평면 구조 바꾼다\"",
+            "link": "https://www.hankyung.com/article/2026101268541",
+            "source": "한국경제 부동산"
           }
         ]
       },
@@ -4378,36 +4393,160 @@
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "원/달러 환율이 1,332.0원으로 2년만에 최저를 기록했고, 외국인은 올해 코스피에서 199조 원을 순매도했으며, 코스피는 6,300대까지 내려앉으며 한 달 만에 최대 하락률을 기록했고, 삼전의 역대급 실적에도 불구하고 코스피는 3.7% 급락했으며, 코스닥도 4.8% 하락했고, 원/달러 환율은 15:30 기준 1,335.1원으로 7.7원 내린 상태이다.",
-        "lineEn": "The won/dollar exchange rate hit 1,332.0 won, its lowest in two years, and foreigners made a net sell of 199,000,000,000,000 won on the KOSPI this year. The KOSPI fell to the 6,300 range, recording its largest monthly decline, even though Samsung Electronics posted record earnings. The KOSPI dropped 3.7%, and the KOSDAQ fell 4.8%. As of 15:30, the won/dollar exchange rate was at 1,335.1 won, down 7.7 won.",
+        "lineKo": "한국은행 총재는 환율이 아직 예년 수준보다 높은 상태라고 밝혔다. 원/달러 환율은 오늘 1,332.0원으로 기록되어 2년 만에 최저 수준을 기록했다. 원/엔 환율도 금융위기 이후 최저 수준을 나타냈다. 한은 총재는 환율이 추가로 하락할 가능성도 있다고 언급했다. 오늘 발표된 환율 수치는 최근 시장 동향을 반영한 것으로 보인다.",
+        "lineEn": "The Bank of Korea Governor stated that the exchange rate is still higher than the level of previous years. The won/dollar exchange rate was recorded at 1,332.0 won today, reaching its lowest level in two years. The won/yen exchange rate also showed its lowest level since the financial crisis. The Bank of Korea Governor mentioned that there is a possibility of further decline in the exchange rate. The exchange rate figures announced today appear to reflect recent market trends.",
         "isFallback": false,
         "fallbackReason": null,
-        "degraded": true,
+        "degraded": false,
         "items": [
+          {
+            "title": "한은 총재 \"환율, 아직 예년보다 높아…추가 하락 여지 있다\"",
+            "link": "https://www.yna.co.kr/view/AKR20261012161000002",
+            "source": "연합뉴스 경제"
+          },
           {
             "title": "원/달러 환율 1,332.0원, 2년만에 최저…원/엔 금융위기 후 최저",
             "link": "https://www.yna.co.kr/view/AKR20261012139300002",
             "source": "연합뉴스 경제"
-          },
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "한국은행 총재는 기준금리 0.5%p 인상이 물가상승률을 0.08%p 하락시키는 효과가 있을 것이라고 밝혔다. 외국인은 3년 국채선물에서 역대 두 번째로 순매수를 기록하며 금리가 일제히 하락하는 모습을 보였다. 국고채 금리는 전반적으로 하락했으며, 3년물은 연 3.921%를 기록했다. 한은 총재의 발언은 금리 인상에 대한 기대감을 반영한 것으로 보인다. 외국인의 순매수는 금리 하락을 가속화하는 요인으로 작용했다.",
+        "lineEn": "The Bank of Korea Governor stated that raising the benchmark interest rate by 0.5 percentage points would have an effect of reducing the inflation rate by 0.08 percentage points. Foreign investors recorded the second-highest ever net purchase in 3-year government bond futures, showing a trend of interest rates broadly declining. Government bond rates generally declined, with the 3-year rate reaching 3.921% annually. The Governor's remarks appear to reflect expectations of interest rate hikes. Foreign investors' net purchases acted as a factor accelerating the decline in interest rates.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
           {
-            "title": "외국인, 올해 코스피서 199조 순매도…\"시장 고민은 외인 수급\"(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261012086951008",
+            "title": "한은 총재 \"기준금리 0.5%p 인상, 물가상승률 0.08%p 하락 효과\"(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261012108651002",
             "source": "연합뉴스 경제"
           },
           {
-            "title": "코스피, 6,300대로 내려앉으며 '출렁'…한달만에 최대 하락률(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261012082251008",
+            "title": "외국인, 3년 국채선물 역대 2번째 순매수…금리 일제히↓(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261012144451008",
             "source": "연합뉴스 경제"
           },
           {
-            "title": "코스피, 삼전 역대급 실적에도 3.7% 급락…코스닥도 4.8%↓(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261012129251008",
+            "title": "국고채 금리 일제히 하락…3년물 연 3.921%",
+            "link": "https://www.yna.co.kr/view/AKR20261012144400008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "LH 사장은 대출 규제 강화 발언에 대해 해명을 요구받았다고 전했다. 집값이 급락할 가능성이 크다고 밝혔다. LH 사장은 지금 집을 사지 않아도 손해를 보지 않을 수 있다고 말했다. 반도체 산업을 제외하면 한국 경제는 이미 성장이 정체된 상태라고 분석했다. 오늘 경제 관련 주요 소식은 이와 같은 내용을 포함하고 있다.",
+        "lineEn": "The head of LH was asked to explain his remarks on strengthening loan regulations. He stated that there is a high possibility of a sharp decline in housing prices. He said that people who do not buy a house now may not suffer any loss. He analyzed that, excluding the semiconductor industry, the Korean economy is already in a state of stagnant growth. Today's major economic news includes such content.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "대출 규제 강화 발언 해명 요구하자 LH 사장 “집값 급락할 것”(종합)",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/12/R6PUCWZYPFDJDMYNTIYRP7JO5U/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "\"반도체 제외하면 이미 정체\"…한국경제 저성장 해법은",
+            "link": "https://www.yna.co.kr/view/AKR20261012138300002",
             "source": "연합뉴스 경제"
           },
           {
-            "title": "[외환] 원/달러 환율 7.7원 내린 1,335.1원(15:30 기준가)",
-            "link": "https://www.yna.co.kr/view/AKR20261012126600002",
+            "title": "LH 사장 \"집값 급락 가능성 커…지금 안 사도 손해 안봐\"(종합)",
+            "link": "https://www.newsis.com/view/NISX20261012_0003822629",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2026-10-13",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 증시·환율: 증시·환율: [올댓차이나] 홍콩 증시, 중동정세 악화·美 반도체 약세에 반락 … H주 1.16%↓, '검은 화요일' 코스피 추락에 악소리…닷새만에 '7천피→5천피', 코스피, 장중 6% 급락해 '6천피' 밑으로…삼전닉스 7∼8%↓ +4\n- 금리·예금·투자상품: 국고채 금리가 일제히 하락하며 3년물은 장중 연 3.875%를 기록했다. 노벨경제학상 수상자 우드퍼드는 금리 정책 수립 시 시장 기대를 고려해야 한다고 강조했다. NH농협은행은 최고금리 연 3.9%의 특판예금 상품을 출시했다. 글로벌 금리 급등 상황에서도 한국 국채는 외국인의 역대 두 번째로 큰 선물 순매수를 기록했다. 미국 중앙은행에서 금리 인상이 필요하다는 의견이 제기되며, 이는 고금리 상황을 반영하는 것으로 보인다.\n- 부동산: 임광현은 가상자산 과세가 전세계적인 과제라고 밝히며 자료 교환에 진일보했다고 전했다. 반포주공1단지 재건축 사업은 '디에이치 반포124'로 명명되어 진행 중이다. 수도권 집값 상승으로 분양시장 기대가 개선되었으나, 지방은 여전히 미분양에 직면하고 있다. 서울 아파트 분양전망은 3개월 만에 기준치를 넘어섰다. LH는 노후 아파트 화재 사각지대를 없애기 위해 '간이 스프링클러'를 확대 적용하고 있다.\n- 기타 경제 소식: 이성훈 LH 사장은 서민 대출 축소에 대한 입장을 밝힌 바 있다. 그는 현재 주택 구매가 경제적으로 부담이 될 수 있다고 경고했다. 롯데면세점은 중소 협력사의 ESG 활동을 지원하기 위한 대출 우대 정책을 발표했다. 해당 지원은 협력사의 지속 가능한 성장에 초점을 맞추고 있다. 두 기사는 서로 다른 주제로, 별개의 경제 동향을 반영하고 있다.",
+      "en": "- Stocks & FX: Stocks & FX: [올댓차이나] 홍콩 증시, 중동정세 악화·美 반도체 약세에 반락 … H주 1.16%↓, '검은 화요일' 코스피 추락에 악소리…닷새만에 '7천피→5천피', 코스피, 장중 6% 급락해 '6천피' 밑으로…삼전닉스 7∼8%↓ +4\n- Rates, Deposits & Investment Products: Government bond yields fell universally, with the 3-year bond reaching 3.875% annually during the day. Nobel Economics Prize winner Wudford emphasized that market expectations should be considered when establishing interest rate policies. NH Nonghyup Bank launched a special deposit product with a maximum annual interest rate of 3.9%. Despite the global surge in interest rates, Korean government bonds recorded the second-largest foreign futures buying volume in history. Opinions were raised at the U.S. central bank that interest rate hikes are necessary, which appears to reflect the high-interest rate situation.\n- Real Estate: Lim Gwang-hyun stated that progress has been made in data exchange, noting that taxation of virtual assets is a global challenge. The reconstruction project of Banpo Juso 1-dong is proceeding under the name \"Daecheong Banpo 124.\" While expectations in the housing sales market have improved due to rising prices in the Seoul metropolitan area, local areas continue to face unsold units. Apartment sales expectations in Seoul have exceeded the benchmark for the first time in three months. LH is expanding the application of \"simple sprinklers\" to eliminate fire-prone areas in aging apartment complexes.\n- Other Economic News: Lee Sung-hoon, the CEO of LH, has expressed his stance on reducing loans for low-income individuals. He warned that purchasing housing can now be economically burdensome. Lotte Department Store announced a loan preference policy to support ESG activities of small and medium-sized suppliers. The support focuses on the sustainable growth of suppliers. The two articles address different topics and reflect separate economic trends."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "증시·환율: [올댓차이나] 홍콩 증시, 중동정세 악화·美 반도체 약세에 반락 … H주 1.16%↓, '검은 화요일' 코스피 추락에 악소리…닷새만에 '7천피→5천피', 코스피, 장중 6% 급락해 '6천피' 밑으로…삼전닉스 7∼8%↓ +4",
+        "lineEn": "Stocks & FX: [올댓차이나] 홍콩 증시, 중동정세 악화·美 반도체 약세에 반락 … H주 1.16%↓, '검은 화요일' 코스피 추락에 악소리…닷새만에 '7천피→5천피', 코스피, 장중 6% 급락해 '6천피' 밑으로…삼전닉스 7∼8%↓ +4",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 홍콩 증시, 중동정세 악화·美 반도체 약세에 반락 … H주 1.16%↓",
+            "link": "https://www.newsis.com/view/NISX20261013_0003823796",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "'검은 화요일' 코스피 추락에 악소리…닷새만에 '7천피→5천피'",
+            "link": "https://www.yna.co.kr/view/AKR20261013089200008",
             "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 장중 6% 급락해 '6천피' 밑으로…삼전닉스 7∼8%↓",
+            "link": "https://www.yna.co.kr/view/AKR20261013085200008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.96%↓",
+            "link": "https://www.newsis.com/view/NISX20261013_0003823614",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[속보] 코스피, 6%대 급락에 6,000선 아래로",
+            "link": "https://www.yna.co.kr/view/AKR20261013067100008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 일제히 하락하며 3년물은 장중 연 3.875%를 기록했다. 노벨경제학상 수상자 우드퍼드는 금리 정책 수립 시 시장 기대를 고려해야 한다고 강조했다. NH농협은행은 최고금리 연 3.9%의 특판예금 상품을 출시했다. 글로벌 금리 급등 상황에서도 한국 국채는 외국인의 역대 두 번째로 큰 선물 순매수를 기록했다. 미국 중앙은행에서 금리 인상이 필요하다는 의견이 제기되며, 이는 고금리 상황을 반영하는 것으로 보인다.",
+        "lineEn": "Government bond yields fell universally, with the 3-year bond reaching 3.875% annually during the day. Nobel Economics Prize winner Wudford emphasized that market expectations should be considered when establishing interest rate policies. NH Nonghyup Bank launched a special deposit product with a maximum annual interest rate of 3.9%. Despite the global surge in interest rates, Korean government bonds recorded the second-largest foreign futures buying volume in history. Opinions were raised at the U.S. central bank that interest rate hikes are necessary, which appears to reflect the high-interest rate situation.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "국고채 금리 일제히 하락…3년물 장중 연 3.875%",
+            "link": "https://www.yna.co.kr/view/AKR20261013091300008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "'노벨경제학상' 우드퍼드 \"금리 정책, 시장 기대 중요\"…선제적 안내 강조",
+            "link": "https://www.newsis.com/view/NISX20261013_0003823253",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "NH농협은행, 최고금리 연 3.9% 특판예금 출시",
+            "link": "https://www.yna.co.kr/view/AKR20261013059600002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "글로벌 금리 급등에도 韓 국채 '선방'…외국인 역대 두번째 선물 순매수",
+            "link": "https://www.yna.co.kr/view/AKR20261013052900008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "“비싸도 그냥 산다”…美 중앙은행서 금리 올려야 한다는 이유",
+            "link": "https://www.hankyung.com/article/202610137753i",
+            "source": "한국경제 경제"
           }
         ]
       },
@@ -4415,35 +4554,35 @@
         "key": "realestate",
         "name": "부동산",
         "nameEn": "Real Estate",
-        "lineKo": "청년주택드림 청약통장 가입 기준이 연 소득 5000만원에서 7000만원으로 완화되었다. 분당 아파트는 재건축 기대감으로 인해 ‘서수정’과 ‘미야오’ 등 지역에서 가격 상승세를 보이고 있다. 동탄 트램은 17년 만에 이달 착공이 추진되며, 남동탄 아파트도 신고가를 기록하고 있다. 강북 아파트 매매가의 절반 이상이 전고점 이상으로 올라 역대 최고가를 기록하고 있다. ‘오송역 헬로우시티’ 지주택 조합원 모집 신고가 접수되며 사업절차가 본격적으로 시작되었다.",
-        "lineEn": "The eligibility criteria for the Dream Youth Housing application book have been relaxed from an annual income of 50,000,000 won to 70,000,000 won. In Bundang, apartment prices are rising in areas such as Seosu and Miyao due to expectations of reconstruction. The Dongtan tram is set to start construction this month, the first in 17 years, and the Namdongtan apartments are also recording new high prices. More than half of the selling prices of Gangbuk apartments have risen above previous highs, setting a record high. The Hello City housing cooperative for Osong Station has received a new high price application for recruitment, and the project process has officially begun.",
+        "lineKo": "임광현은 가상자산 과세가 전세계적인 과제라고 밝히며 자료 교환에 진일보했다고 전했다. 반포주공1단지 재건축 사업은 '디에이치 반포124'로 명명되어 진행 중이다. 수도권 집값 상승으로 분양시장 기대가 개선되었으나, 지방은 여전히 미분양에 직면하고 있다. 서울 아파트 분양전망은 3개월 만에 기준치를 넘어섰다. LH는 노후 아파트 화재 사각지대를 없애기 위해 '간이 스프링클러'를 확대 적용하고 있다.",
+        "lineEn": "Lim Gwang-hyun stated that progress has been made in data exchange, noting that taxation of virtual assets is a global challenge. The reconstruction project of Banpo Juso 1-dong is proceeding under the name \"Daecheong Banpo 124.\" While expectations in the housing sales market have improved due to rising prices in the Seoul metropolitan area, local areas continue to face unsold units. Apartment sales expectations in Seoul have exceeded the benchmark for the first time in three months. LH is expanding the application of \"simple sprinklers\" to eliminate fire-prone areas in aging apartment complexes.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "청년주택드림 청약통장 가입 기준, 연 소득 5000만→7000만원으로 완화",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/12/Z6XZUKBQEFH4XKVODC3EUGDNIA/",
-            "source": "조선비즈 부동산"
+            "title": "임광현 \"가상자산 과세는 전세계 과제…진일보한 자료 교환 이뤄질 것\"",
+            "link": "https://www.newsis.com/view/NISX20261013_0003823686",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "‘서수정’ 이어 ‘미야오’까지 들썩…재건축 기대감에 힘받는 분당 아파트",
-            "link": "https://www.mk.co.kr/news/realestate/12173730",
+            "title": "“대한민국 최고 아파트 향해”…반포주공1단지 재건축 ‘디에이치 반포124’로",
+            "link": "https://www.mk.co.kr/news/realestate/12174306",
             "source": "매일경제 부동산"
           },
           {
-            "title": "17년 기다린 동탄 트램, 이달 착공 추진… 남동탄 아파트도 신고가",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/12/MNVYNSIK7RGF5PX4F2R4JORZOA/",
-            "source": "조선비즈 부동산"
+            "title": "수도권 집값 상승에 분양시장 기대 개선…지방은 미분양에 악화",
+            "link": "https://www.yna.co.kr/view/AKR20261013071500003",
+            "source": "연합뉴스 경제"
           },
           {
-            "title": "강북 아파트도 ‘역대 최고가’ 아니면 못사…매매가 절반이 ‘전고점’ 이상",
-            "link": "https://www.mk.co.kr/news/realestate/12173602",
-            "source": "매일경제 부동산"
+            "title": "서울 아파트 분양전망 개선…3개월 만에 기준치 넘어",
+            "link": "https://www.newsis.com/view/NISX20261013_0003823465",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "‘오송역 헬로우시티’ 지주택 조합원 모집신고 수리…“사업절차 본격 착수”",
-            "link": "https://www.mk.co.kr/news/realestate/12173599",
+            "title": "“노후 아파트 화재 사각지대 없앤다”…LH ‘간이 스프링클러’ 확산",
+            "link": "https://www.mk.co.kr/news/realestate/12174274",
             "source": "매일경제 부동산"
           }
         ]
@@ -4452,36 +4591,21 @@
         "key": "other",
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
-        "lineKo": "IMF 총재는 AI 투자가 세계 경제 성장률을 3% 떠받쳐 올릴 수 있다고 밝혔다. LH 이성훈 사장은 집값이 급락할 가능성에 대해 언급하며 지금 집을 사는 것을 권장하지 않았다. 민주당은 LH 이성훈 사장의 대출 조이기 발언에 대해 질타했다. 10·15대책 시행 1년 만에 한강벨트 지역 거래량이 반토막 났다. 외곽 지역은 거래량이 급증하는 것으로 나타났다.",
-        "lineEn": "IMF ， 3%。LH ， 。 LH 。 “10·15 ” ， ， 。",
+        "lineKo": "이성훈 LH 사장은 서민 대출 축소에 대한 입장을 밝힌 바 있다. 그는 현재 주택 구매가 경제적으로 부담이 될 수 있다고 경고했다. 롯데면세점은 중소 협력사의 ESG 활동을 지원하기 위한 대출 우대 정책을 발표했다. 해당 지원은 협력사의 지속 가능한 성장에 초점을 맞추고 있다. 두 기사는 서로 다른 주제로, 별개의 경제 동향을 반영하고 있다.",
+        "lineEn": "Lee Sung-hoon, the CEO of LH, has expressed his stance on reducing loans for low-income individuals. He warned that purchasing housing can now be economically burdensome. Lotte Department Store announced a loan preference policy to support ESG activities of small and medium-sized suppliers. The support focuses on the sustainable growth of suppliers. The two articles address different topics and reflect separate economic trends.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "IMF 총재 \"AI 투자, 세계 경제 성장률 3% 떠받쳐…아시아 수혜\"",
-            "link": "https://www.newsis.com/view/NISX20261012_0003822546",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "LH 사장 \"집값 급락 가능성 있어…지금 집 안사도 손해 안봐\"",
-            "link": "https://www.yna.co.kr/view/AKR20261012133300003",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "LH 이성훈 사장 \"집값 급락 가능성…서둘러 집 살 필요 없어\"",
-            "link": "https://www.newsis.com/view/NISX20261012_0003822464",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "“대출 더 조이라니”…이성훈 LH 사장에 민주당도 질타",
-            "link": "https://www.mk.co.kr/news/economy/12173652",
+            "title": "“서민 대출 줄여라” 소신 밝히더니…이성훈 LH 사장 “지금 집 사면 손해”",
+            "link": "https://www.mk.co.kr/news/realestate/12174288",
             "source": "매일경제 부동산"
           },
           {
-            "title": "대출 옥죈 10·15대책 1년…한강벨트 거래 반토막, 외곽은 급증",
-            "link": "https://www.newsis.com/view/NISX20261012_0003822313",
-            "source": "뉴시스 경제"
+            "title": "대출 우대까지…롯데면세점, 중소 협력사 ESG 지원",
+            "link": "https://www.hankyung.com/article/202610138070g",
+            "source": "한국경제 경제"
           }
         ]
       }

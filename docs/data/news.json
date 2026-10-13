@@ -1,334 +1,324 @@
 {
-  "updatedAt": "2026-10-12T07:48:02.287Z",
-  "date": "2026-10-12",
+  "updatedAt": "2026-10-13T03:31:10.928Z",
+  "date": "2026-10-13",
   "items": [
     {
-      "title": "국고채 금리 일제히 하락…3년물 연 3.921%",
-      "link": "https://www.yna.co.kr/view/AKR20261012144400008",
-      "publishedAt": "2026-10-12T07:40:18.000Z",
+      "title": "[올댓차이나] 홍콩 증시, 중동정세 악화·美 반도체 약세에 반락 … H주 1.16%↓",
+      "link": "https://www.newsis.com/view/NISX20261013_0003823796",
+      "publishedAt": "2026-10-13T03:13:20.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 13일 전날 미국 반도체주가 약세를 보이고 중동 정세가 악화함에 따라 투자심리 위축으로 반락해 개장했다. 항셍지수는 이날 전일 대비 99.11 포인트, 0.40% 하락한 2…",
+      "dupes": [],
+      "titleEn": "[AllChina] Hong Kong stock market drops on worsening Middle East situation and weak U.S. semiconductor sector ... H shares down 1.16%"
+    },
+    {
+      "title": "'검은 화요일' 코스피 추락에 악소리…닷새만에 '7천피→5천피'",
+      "link": "https://www.yna.co.kr/view/AKR20261013089200008",
+      "publishedAt": "2026-10-13T02:45:38.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": "(서울=연합뉴스) 황철환 기자 = 인공지능(AI) 인프라 투자 둔화 우려가 재점화한 가운데 코스피가 불과 5거래일 만에 1천 포인트 넘게 빠지며...",
+      "dupes": [],
+      "titleEn": "Black Tuesday Sends Kospi Plummeting, 7,000 Won to 5,000 Won in Five Days"
+    },
+    {
+      "title": "국고채 금리 일제히 하락…3년물 장중 연 3.875%",
+      "link": "https://www.yna.co.kr/view/AKR20261013091300008",
+      "publishedAt": "2026-10-13T02:43:26.000Z",
       "source": "연합뉴스 경제",
       "category": "rates",
-      "preview": "(서울=연합뉴스) 12일 국고채 금리가 일제히 하락했다.",
+      "preview": "(서울=연합뉴스) 13일 국고채 금리가 일제히 하락하고 있다.",
       "dupes": [],
-      "titleEn": "South Korea's government bond yields fall across the board... 3-year bonds at 3.921% annually"
+      "titleEn": "South Korea's government bond yields fall across the board...3-year bonds trade at 3.875% annually"
     },
     {
-      "title": "원/달러 환율 1,332.0원, 2년만에 최저…원/엔 금융위기 후 최저",
-      "link": "https://www.yna.co.kr/view/AKR20261012139300002",
-      "publishedAt": "2026-10-12T07:35:29.000Z",
+      "title": "코스피, 장중 6% 급락해 '6천피' 밑으로…삼전닉스 7∼8%↓",
+      "link": "https://www.yna.co.kr/view/AKR20261013085200008",
+      "publishedAt": "2026-10-13T02:28:43.000Z",
       "source": "연합뉴스 경제",
       "category": "stocks",
-      "preview": "(서울=연합뉴스) 이도흔 기자 = 원/달러 환율은 12일 수출업체들의 달러 매도 물량이 계속 나오는 가운데 2년여만에 최저를 기록했다.",
+      "preview": "(서울=연합뉴스) 김유향 기자 = 코스피가 13일 6%대의 급락세를 보이며 크게 출렁이고 있다.",
       "dupes": [],
-      "titleEn": "Won/Dollar Exchange Rate Hits 1,332.0 Won, Lowest in 2 Years... Won/Yen at Lowest Since Financial Crisis"
+      "titleEn": "KOSPI drops 6% during trading, falling below '6,000 points'... Samsung SDI down 7-8%"
     },
     {
-      "title": "청년주택드림 청약통장 가입 기준, 연 소득 5000만→7000만원으로 완화",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/12/Z6XZUKBQEFH4XKVODC3EUGDNIA/",
-      "publishedAt": "2026-10-12T07:30:33.000Z",
-      "source": "조선비즈 부동산",
+      "title": "임광현 \"가상자산 과세는 전세계 과제…진일보한 자료 교환 이뤄질 것\"",
+      "link": "https://www.newsis.com/view/NISX20261013_0003823686",
+      "publishedAt": "2026-10-13T02:28:41.000Z",
+      "source": "뉴시스 경제",
       "category": "realestate",
-      "preview": "정부가 청년층의 내 집 마련 기회를 넓히고 침체된 청약 시장에 활력을 불어넣기 위해 주거 지원 제도의 문턱을 낮춘다. 국토교통부는 지난 9월 선보인 ‘주거 안적 플랜’의 후속 조치로, 청년주택드림 청약통장의 가입 소…",
+      "preview": "[세종=뉴시스] 안호균 기자 = 임광현 국세청장은 13일 가상자산 과세 문제와 관련해 \"어떤 쪽으로 결정이 나든 간에 차질없이 집행할 수 있도록 준비를 하고 있다\"고 밝혔다. 임 청장은 이날 오전 정부세종2청사에서…",
       "dupes": [],
-      "titleEn": "Youth Housing Dream Subscription Book Enrollment Criteria Eased from Annual Income 50,000,000 to 70,000,000 Won"
+      "titleEn": "Im Gwang-hyun \"Virtual asset taxation is a global challenge... data exchange will be achieved"
     },
     {
-      "title": "‘서수정’ 이어 ‘미야오’까지 들썩…재건축 기대감에 힘받는 분당 아파트",
-      "link": "https://www.mk.co.kr/news/realestate/12173730",
-      "publishedAt": "2026-10-12T07:29:32.000Z",
+      "title": "“대한민국 최고 아파트 향해”…반포주공1단지 재건축 ‘디에이치 반포124’로",
+      "link": "https://www.mk.co.kr/news/realestate/12174306",
+      "publishedAt": "2026-10-13T02:18:33.000Z",
       "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": "미금·야탑·오리 묶은 신조어 등장 가격부담 낮은 지역에 매수세 유입 1기 신도시 정비사업 진척에 재건축 기대감 확산하는 모양새분당 아파트값이 재건축 기대감에 가파르게 오르면서 상..",
+      "preview": "새로운 이름으로 출발 6개 후보 중 58.78% 지지 “이름을 둘러싼 논란 넘어설 것”서울 서초구 반포주공1단지 1·2·4주구 재건축사업의 아파트 명칭이 ‘디에이치 반포124(TH..",
       "dupes": [],
-      "titleEn": "Soojeong, followed by Miyao, stir up excitement... Apartment prices in Bundang rise on reconstruction expectations"
-    },
-    {
-      "title": "외국인, 올해 코스피서 199조 순매도…\"시장 고민은 외인 수급\"(종합)",
-      "link": "https://www.yna.co.kr/view/AKR20261012086951008",
-      "publishedAt": "2026-10-12T07:26:17.000Z",
-      "source": "연합뉴스 경제",
-      "category": "stocks",
-      "preview": "(서울=연합뉴스) 황철환 기자 = 삼성전자[005930]를 비롯한 국내 주요기업의 호실적에도 불구, 코스피가 4거래일 연속 하락세를 이어가며 글...",
-      "dupes": [],
-      "titleEn": "Foreigners Sell 199,000,000,000,000 Won Worth of KOSPI Stocks This Year...\"Market Concerns Focus on Foreign Investor Supply\"(Comprehensive)"
-    },
-    {
-      "title": "IMF 총재 \"AI 투자, 세계 경제 성장률 3% 떠받쳐…아시아 수혜\"",
-      "link": "https://www.newsis.com/view/NISX20261012_0003822546",
-      "publishedAt": "2026-10-12T07:26:02.000Z",
-      "source": "뉴시스 경제",
-      "category": "other",
-      "preview": "[서울=뉴시스]고재은 기자 = 인공지능(AI) 인프라 투자가 세계 경제 성장률을 3% 수준으로 떠받치고 있으며, 특히 주요 AI 하드웨어 공급국이 있는 아시아 경제가 수혜를 입고 있다고 국제통화기금(IMF) 총재가…",
-      "dupes": [],
-      "titleEn": "IMF Chief: AI Investment to Lift Global Growth by 3%... Asia to Benefit"
-    },
-    {
-      "title": "코스피, 6,300대로 내려앉으며 '출렁'…한달만에 최대 하락률(종합)",
-      "link": "https://www.yna.co.kr/view/AKR20261012082251008",
-      "publishedAt": "2026-10-12T07:23:51.000Z",
-      "source": "연합뉴스 경제",
-      "category": "stocks",
-      "preview": "(서울=연합뉴스) 곽윤아 기자 = 코스피 지수가 12일 3.65% 급락해 결국 두 달 만에 다시 6,300대로 주저앉았다",
-      "dupes": [],
-      "titleEn": "Kospi drops to 6,300s, 'swings' with biggest monthly decline (comprehensive)"
-    },
-    {
-      "title": "코스피, 삼전 역대급 실적에도 3.7% 급락…코스닥도 4.8%↓(종합)",
-      "link": "https://www.yna.co.kr/view/AKR20261012129251008",
-      "publishedAt": "2026-10-12T07:14:18.000Z",
-      "source": "연합뉴스 경제",
-      "category": "stocks",
-      "preview": "(서울=연합뉴스) 김유향 기자 = 한글날 연휴에서 돌아온 코스피가 12일 급락세를 보이며 4거래일 연속 내림세를 이어갔다.",
-      "dupes": [
-        {
-          "title": "[속보] 코스피, 삼전 역대급 실적에도 3.7% 급락…코스닥도 4.8%↓",
-          "link": "https://www.hankyung.com/article/2026101264887",
-          "source": "한국경제 경제"
-        }
-      ],
-      "titleEn": "Kospi drops 3.7% despite Samsung Electronics' record performance…Kosdaq also falls 4.8% (comprehensive)"
-    },
-    {
-      "title": "LH 사장 \"집값 급락 가능성 있어…지금 집 안사도 손해 안봐\"",
-      "link": "https://www.yna.co.kr/view/AKR20261012133300003",
-      "publishedAt": "2026-10-12T06:56:10.000Z",
-      "source": "연합뉴스 경제",
-      "category": "other",
-      "preview": "(서울·세종=연합뉴스) 임기창 오예진 오진송 기자 = 이성훈 한국토지주택공사(LH) 사장이 향후 주택 공급 확대와 금리 상승 등의 영향으로 집값...",
-      "dupes": [],
-      "titleEn": "LH CEO: \"Possibility of sharp drop in home prices... buying a home now won't be a loss"
-    },
-    {
-      "title": "LH 이성훈 사장 \"집값 급락 가능성…서둘러 집 살 필요 없어\"",
-      "link": "https://www.newsis.com/view/NISX20261012_0003822464",
-      "publishedAt": "2026-10-12T06:46:42.000Z",
-      "source": "뉴시스 경제",
-      "category": "other",
-      "preview": "[서울=뉴시스]정유선 기자 = 이성훈 한국토지주택공사(LH) 사장이 최근 논란이 된 자신의 대출 규제 발언이 정부의 공식 입장이 아닌 개인적인 생각이었다고 해명했다. 다만 공급 확대와 고금리가 겹치면서 집값이 급락할…",
-      "dupes": [],
-      "titleEn": "LH President Lee Sung-hoon says possibility of sharp drop in home prices... no need to rush to buy a home",
+      "titleEn": "Heading toward South Korea's top apartment... Banpo Jungang 1-danji redevelopment named 'Daeitchi Banpo 124",
       "context": [
         {
-          "kind": "rates",
-          "label": "주택담보대출 최저금리(상환방식 무관)",
-          "labelEn": "Lowest mortgage rate (any repayment type)",
-          "value": "연 3.70%",
-          "valueEn": "3.70% p.a.",
-          "href": "./mortgage-rates.html"
+          "kind": "realestate",
+          "href": "./district-seocho.html",
+          "label": "서초구 아파트 84㎡ 매매",
+          "labelEn": "서초구 apartment 84㎡ sale",
+          "value": "26억 5,533만원",
+          "valueEn": "₩2,655M",
+          "note": "최근 1주 계약 148건 · 10/6 대비 +1.2%",
+          "noteEn": "148 deals in the last 1 weeks · +1.2% vs Oct 6"
         }
       ]
     },
     {
-      "title": "“대출 더 조이라니”…이성훈 LH 사장에 민주당도 질타",
-      "link": "https://www.mk.co.kr/news/economy/12173652",
-      "publishedAt": "2026-10-12T06:41:36.000Z",
+      "title": "“서민 대출 줄여라” 소신 밝히더니…이성훈 LH 사장 “지금 집 사면 손해”",
+      "link": "https://www.mk.co.kr/news/realestate/12174288",
+      "publishedAt": "2026-10-13T02:03:44.000Z",
       "source": "매일경제 부동산",
       "category": "other",
-      "preview": "LH 사장 대출 규제 강화 발언 여야 질타 “무주택 서민 주거 사다리 걷어차” 이성훈 사장 “사회적 후생 고려한 발언”한국토지주택공사(LH) 국정감사에서 LH 분사 시 발생할 수 ..",
+      "preview": "이성훈 한국토지주택공사(LH) 사장의 잇따른 발언이 부동산 시장에 거센 파장을 일으키고 있다. 무주택 서민을 향해 대출을 죄어야 한다고 주장한 데 이어 최근 국정감사에서는 “향후 ..",
       "dupes": [],
-      "titleEn": "More Tightening of Loans?\"…Democratic Party Also Criticizes LH President Lee Sung-hoon",
-      "context": [
-        {
-          "kind": "rates",
-          "label": "주택담보대출 최저금리(상환방식 무관)",
-          "labelEn": "Lowest mortgage rate (any repayment type)",
-          "value": "연 3.70%",
-          "valueEn": "3.70% p.a.",
-          "href": "./mortgage-rates.html"
-        }
-      ]
+      "titleEn": "Cut Subsidized Loans for the Common People,\" He Said… Lee Sung-hoon, LH President, Says Buying a House Now Would Be a Loss"
     },
     {
-      "title": "[외환] 원/달러 환율 7.7원 내린 1,335.1원(15:30 기준가)",
-      "link": "https://www.yna.co.kr/view/AKR20261012126600002",
-      "publishedAt": "2026-10-12T06:30:42.000Z",
+      "title": "수도권 집값 상승에 분양시장 기대 개선…지방은 미분양에 악화",
+      "link": "https://www.yna.co.kr/view/AKR20261013071500003",
+      "publishedAt": "2026-10-13T02:00:03.000Z",
       "source": "연합뉴스 경제",
-      "category": "stocks",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "[Yen/USD Exchange Rate Falls 7.7 Won to 1,335.1 Won (As of 15:30)]"
-    },
-    {
-      "title": "17년 기다린 동탄 트램, 이달 착공 추진… 남동탄 아파트도 신고가",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/12/MNVYNSIK7RGF5PX4F2R4JORZOA/",
-      "publishedAt": "2026-10-12T06:13:02.000Z",
-      "source": "조선비즈 부동산",
       "category": "realestate",
-      "preview": "공사비 증액과 잇따른 유찰로 장기간 지연된 경기 화성시 동탄 도시철도(트램) 건설 사업이 이달 착공을 추진한다. 2009년 동탄2신도시 교통대책에 처음 반영된 지 17년 만이다. 동탄역 접근성 개선 기대가 커지는 동…",
+      "preview": "(세종=연합뉴스) 오진송 기자 = 수도권 아파트 가격 상승세가 이어지면서 분양시장 기대감이 개선된 반면 지방은 미분양 적체와 주택 수요 위축 등...",
       "dupes": [],
-      "titleEn": "After 17 years, Dongtan Tram to Start Construction This Month... Apartment in Namdongtan Also Hits New High"
+      "titleEn": "Rising Prices in Seoul Area Boost Sales Market Expectations... Local Markets Deteriorate Due to Unsold Units"
     },
     {
-      "title": "대출 옥죈 10·15대책 1년…한강벨트 거래 반토막, 외곽은 급증",
-      "link": "https://www.newsis.com/view/NISX20261012_0003822313",
-      "publishedAt": "2026-10-12T06:06:34.000Z",
+      "title": "서울 아파트 분양전망 개선…3개월 만에 기준치 넘어",
+      "link": "https://www.newsis.com/view/NISX20261013_0003823465",
+      "publishedAt": "2026-10-13T02:00:00.000Z",
       "source": "뉴시스 경제",
-      "category": "other",
-      "preview": "[서울=뉴시스]정유선 기자 = 서울 전역에 실거주 의무를 부과하고 집값별로 대출 한도를 차등 적용한 '10·15 부동산 대책' 시행 뒤 한강벨트 거래량은 반토막 난 반면 외곽 지역은 거래에 불이 붙은 것으로 나타났다…",
+      "category": "realestate",
+      "preview": "[서울=뉴시스]이연희 기자 = 서울 아파트 분양전망이 3개월 만에 기준치를 넘어선 것으로 나타났다. 수도권은 지난달보다 개선될 것이란 전망이 나왔지만 비수도권은 하락 전망이 나오면서 양극화가 심화될 것으로 보인다.…",
       "dupes": [],
-      "titleEn": "Loan restrictions 10·15 measures one year…Han River Belt transactions halved, outskirts surge",
+      "titleEn": "Seoul apartment sales outlook improves... exceeds benchmark in three months",
       "context": [
         {
           "kind": "realestate",
           "href": "./apartment-sale.html",
           "label": "서울 전체 아파트 84㎡ 매매",
           "labelEn": "Seoul apartment 84㎡ sale",
-          "value": "16억 4,554만원",
-          "valueEn": "₩1,646M",
-          "note": "최근 1주 계약 23건 · 10/5 대비 +30.2%",
-          "noteEn": "23 deals in the last 1 weeks · +30.2% vs Oct 5"
+          "value": "12억 9,692만원",
+          "valueEn": "₩1,297M",
+          "note": "최근 1주 계약 281건 · 10/6 대비 -53.1%",
+          "noteEn": "281 deals in the last 1 weeks · -53.1% vs Oct 6"
         }
       ]
     },
     {
-      "title": "강북 아파트도 ‘역대 최고가’ 아니면 못사…매매가 절반이 ‘전고점’ 이상",
-      "link": "https://www.mk.co.kr/news/realestate/12173602",
-      "publishedAt": "2026-10-12T05:57:30.000Z",
+      "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.96%↓",
+      "link": "https://www.newsis.com/view/NISX20261013_0003823614",
+      "publishedAt": "2026-10-13T01:57:33.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 13일 하락 출발했다. 이날 상하이종합지수는 전날보다 0.96% 하락한 3760.8로 장을 시작했다. 선전성분지수는 전장 대비 1.79% 하락한 1만2163.23으로, 중…",
+      "dupes": [],
+      "titleEn": "[AllChina] China's stock market drops at the start... Shanghai Index falls 0.96%"
+    },
+    {
+      "title": "“노후 아파트 화재 사각지대 없앤다”…LH ‘간이 스프링클러’ 확산",
+      "link": "https://www.mk.co.kr/news/realestate/12174274",
+      "publishedAt": "2026-10-13T01:56:03.000Z",
       "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": "서울 아파트 3분기 거래 54.7% 과거 최고 거래가격이거나 더 높아 1분기 38.2%서 크게 늘어나12일 직방이 올해 아파트 매매 실거래가격을 과거 최고 거래가격과 비교한 결과..",
+      "preview": "한국토지주택공사(LH)는 기존 노후 영구임대주택에 추진해 온 ‘간이형 스프링클러’ 설치 사업을 올해부터 노후 국민임대주택까지 단계적으로 확대한다고 밝혔다. 최근 스프링클러 설치 법..",
       "dupes": [],
-      "titleEn": "Buyers in Gangbuk can't purchase apartments unless prices reach historic highs… half of the transaction prices are above previous peaks",
+      "titleEn": "Eliminating fire blind spots in aging apartments...LH expands 'simple sprinkler' system"
+    },
+    {
+      "title": "'노벨경제학상' 우드퍼드 \"금리 정책, 시장 기대 중요\"…선제적 안내 강조",
+      "link": "https://www.newsis.com/view/NISX20261013_0003823253",
+      "publishedAt": "2026-10-13T01:43:40.000Z",
+      "source": "뉴시스 경제",
+      "category": "rates",
+      "preview": "[서울=뉴시스]고재은 기자 = 2026년 노벨경제학상을 공동 수상한 마이클 우드퍼드(70) 미국 컬럼비아대 교수가 12일(현지 시간) 통화정책의 효과를 높이기 위해서는 당국과 시장 간 소통이 중요하다고 강조했다. A…",
+      "dupes": [],
+      "titleEn": "Nobel Economics Laureate Woodford Emphasizes Importance of Market Expectations in Interest Rate Policy, Stresses Proactive Guidance"
+    },
+    {
+      "title": "[속보] 코스피, 6%대 급락에 6,000선 아래로",
+      "link": "https://www.yna.co.kr/view/AKR20261013067100008",
+      "publishedAt": "2026-10-13T01:26:40.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": null,
+      "dupes": [],
+      "titleEn": "Kospi drops 6% to fall below 6,000 mark"
+    },
+    {
+      "title": "대출 규제는 유지, 공급은 연말 집중…국감서 드러난 주택정책",
+      "link": "https://www.mk.co.kr/news/economy/12174227",
+      "publishedAt": "2026-10-13T01:19:31.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "강남 하락… 서울 외곽·경기 남부 상승 LH 착공, 목표의 26% 수준에 머물러 與野, 규제보다 공급 이행에 주문 집중주택 수요 관리 정책이 이어지고 있지만 일부 지역의 집값 상승..",
+      "dupes": [],
+      "titleEn": "Loan regulations to remain in place, supply to focus on year-end... Housing policy revealed during audit hearings",
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-gangnam.html",
+          "label": "강남구 아파트 84㎡ 매매",
+          "labelEn": "강남구 apartment 84㎡ sale",
+          "value": "28억 5,302만원",
+          "valueEn": "₩2,853M",
+          "note": "최근 1주 계약 149건 · 10/6 대비 -2.4%",
+          "noteEn": "149 deals in the last 1 weeks · -2.4% vs Oct 6"
+        },
+        {
+          "kind": "rates",
+          "label": "주택담보대출 최저금리(상환방식 무관)",
+          "labelEn": "Lowest mortgage rate (any repayment type)",
+          "value": "연 3.70%",
+          "valueEn": "3.70% p.a.",
+          "href": "./mortgage-rates.html"
+        }
+      ]
+    },
+    {
+      "title": "“울산은 괜찮다던데 대구경북은 와이카노?”…씨 마르는 전세 ‘직격탄’",
+      "link": "https://www.mk.co.kr/news/realestate/12174210",
+      "publishedAt": "2026-10-13T01:09:18.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "최근 반년 사이 전국에서 전세 매물이 가장 빠르게 감소한 지역으로 대구와 경북, 경남 등 영남권이 나란히 이름을 올렸다. 13일 부동산 빅데이터 업체 아실에 따르면 지난 3월 말 ..",
+      "dupes": [],
+      "titleEn": "Ulsan is okay, but what about Daegu and Gyeongbuk?... 'Waicano' causing a chill in the rental market"
+    },
+    {
+      "title": "NH농협은행, 최고금리 연 3.9% 특판예금 출시",
+      "link": "https://www.yna.co.kr/view/AKR20261013059600002",
+      "publishedAt": "2026-10-13T01:06:45.000Z",
+      "source": "연합뉴스 경제",
+      "category": "rates",
+      "preview": "(서울=연합뉴스) 채새롬 기자 = NH농협은행은 농협금융 플랫폼 NH올원뱅크 서비스 개시 10주년을 기념해 최고 연 3.9% 금리를 제공하는 '...",
+      "dupes": [],
+      "titleEn": "NH Rural Credit Bank Launches Special Deposit with Maximum Interest Rate of 3.9% Annually",
+      "context": [
+        {
+          "kind": "rates",
+          "label": "정기예금 최고금리(12개월)",
+          "labelEn": "Top 12-month deposit rate",
+          "value": "연 4.10%",
+          "valueEn": "4.10% p.a.",
+          "href": "./deposit-rates.html"
+        }
+      ]
+    },
+    {
+      "title": "“지금 서울 아파트값, 평탄화예요? 양극화예요?”…부동산 온도차 커져",
+      "link": "https://www.mk.co.kr/news/realestate/12174206",
+      "publishedAt": "2026-10-13T01:04:12.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "한강벨트는 식고 노도강은 ‘후끈’ 성동·마포·광진 거래량 절반 이하로 외곽 중저가로 실수요자 수요 이동 아파트 전셋값 1년 새 9.96% ‘껑충’10·15 부동산 대책 시행 이후 ..",
+      "dupes": [],
+      "titleEn": "Now, Seoul apartment prices: leveling off? Polarizing?\"... Growing real estate temperature difference",
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-seongdong.html",
+          "label": "성동구 아파트 84㎡ 전세",
+          "labelEn": "성동구 apartment 84㎡ jeonse",
+          "value": "8억 7,690만원",
+          "valueEn": "₩877M",
+          "note": "최근 1주 계약 146건 · 10/6 대비 +0.2%",
+          "noteEn": "146 deals in the last 1 weeks · +0.2% vs Oct 6"
+        }
+      ]
+    },
+    {
+      "title": "'20억 로또' 아파트, '디에이치 반포124'로 새 이름 확정",
+      "link": "https://www.hankyung.com/article/2026101380106",
+      "publishedAt": "2026-10-13T01:02:55.000Z",
+      "source": "한국경제 부동산",
+      "category": "realestate",
+      "preview": null,
+      "dupes": [],
+      "titleEn": "2,000,000,000 Lotto\" Apartment Renames to \"DHC Banpo 124"
+    },
+    {
+      "title": "글로벌 금리 급등에도 韓 국채 '선방'…외국인 역대 두번째 선물 순매수",
+      "link": "https://www.yna.co.kr/view/AKR20261013052900008",
+      "publishedAt": "2026-10-13T01:02:35.000Z",
+      "source": "연합뉴스 경제",
+      "category": "rates",
+      "preview": "(서울=연합뉴스) 강수지 기자 = 올해 미국 국채금리와 국제유가 상승에 민감하게 반응하며 큰 폭으로 올랐던 한국 국고채 금리가 최근 글로벌 금리...",
+      "dupes": [],
+      "titleEn": "Global interest rates surge leaves Korean bonds in good shape... foreigners make second-largest ever futures purchase"
+    },
+    {
+      "title": "코스피, 장중 4%대 급락…약 2달만 '매도 사이드카' 발동",
+      "link": "https://www.yna.co.kr/view/AKR20261013055400008",
+      "publishedAt": "2026-10-13T00:53:53.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": "(서울=연합뉴스) 김유향 기자 = 코스피가 13일 장 초반 4%대의 급락을 보이면서 프로그램 매도호가 일시효력정지(매도 사이드카)가 발동됐다.",
+      "dupes": [],
+      "titleEn": "KOSPI drops over 4% during trading... 'sell sidecar' activated after about 2 months"
+    },
+    {
+      "title": "대출 우대까지…롯데면세점, 중소 협력사 ESG 지원",
+      "link": "https://www.hankyung.com/article/202610138070g",
+      "publishedAt": "2026-10-13T00:52:11.000Z",
+      "source": "한국경제 경제",
+      "category": "other",
+      "preview": null,
+      "dupes": [],
+      "titleEn": "Lotte Department Store Offers ESG Support to Small and Medium-Sized Suppliers, Including Loan Preferences"
+    },
+    {
+      "title": "日증시, 美반도체주 약세에 하락 출발…닛케이 0.68%↓",
+      "link": "https://www.newsis.com/view/NISX20261013_0003823243",
+      "publishedAt": "2026-10-13T00:17:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "[서울=뉴시스] 신효령 기자 = 13일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)가 하락 출발했다. 미국 반도체주 약세와 중동 정세 불안이 투자심리를 위축시켰다. 니혼게이자이신문에 따르면 이날 닛케이지수는 전…",
+      "dupes": [],
+      "titleEn": "Tokyo Stock Exchange drops on weak U.S. semiconductor stocks... Nikkei down 0.68%"
+    },
+    {
+      "title": "“비싸도 그냥 산다”…美 중앙은행서 금리 올려야 한다는 이유",
+      "link": "https://www.hankyung.com/article/202610137753i",
+      "publishedAt": "2026-10-12T23:54:57.000Z",
+      "source": "한국경제 경제",
+      "category": "rates",
+      "preview": null,
+      "dupes": [],
+      "titleEn": "Even if expensive, just buy it\"... U.S. central bank raises interest rates, reasons given"
+    },
+    {
+      "title": "\"2027년 서울 부동산 대격변…공급 절벽에 전월세 올라 매매가 받쳐줄 것\"",
+      "link": "https://www.newsis.com/view/NISX20261012_0003821419",
+      "publishedAt": "2026-10-12T22:30:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "realestate",
+      "preview": "[서울=뉴시스]강주연 인턴 기자 = 2027년 서울 부동산 시장은 강남·강북권의 조정, 공급 가뭄과 GTX 개통이 맞물리면서 구조적 격변을 맞이할 것이라는 분석이 나왔다. 김경민 서울대 환경대학원 교수는 유튜브 채널…",
+      "dupes": [],
+      "titleEn": "2027 Seoul Real Estate Mega Shift... Supply Cliff Pushes Rent Up, Sales Prices to Support",
       "context": [
         {
           "kind": "realestate",
           "href": "./district-gangbuk.html",
-          "label": "강북구 아파트 84㎡ 매매",
-          "labelEn": "강북구 apartment 84㎡ sale",
-          "value": "8억 7,613만원",
-          "valueEn": "₩876M",
-          "note": "최근 1주 계약 105건 · 10/5 대비 +4.7%",
-          "noteEn": "105 deals in the last 1 weeks · +4.7% vs Oct 5"
+          "label": "강북구 아파트 월세",
+          "labelEn": "강북구 apartment rent",
+          "value": "보증금 9,788만원 / 월 100만원",
+          "valueEn": "₩97.9M + ₩1M/mo",
+          "note": "최근 1주 계약 81건 · 10/6 대비 +1.2%",
+          "noteEn": "81 deals in the last 1 weeks · +1.2% vs Oct 6"
         }
       ]
-    },
-    {
-      "title": "‘오송역 헬로우시티’ 지주택 조합원 모집신고 수리…“사업절차 본격 착수”",
-      "link": "https://www.mk.co.kr/news/realestate/12173599",
-      "publishedAt": "2026-10-12T05:54:07.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "아파트 480가구·오피스텔 36실 이달 말 주택홍보관 열고 조합원 본격 모집KTX 오송역 역세권에서 지역주택조합 방식으로 추진 중인 초고층 주거시설이 이달 말 본격적인 조합원 모..",
-      "dupes": [],
-      "titleEn": "Hello City at Osong Station Housing Cooperative Members Recruitment Report Approved... \"Official Start of Project Procedures"
-    },
-    {
-      "title": "서울 아파트 계약 취소 비율 두 배 '껑충'",
-      "link": "https://www.hankyung.com/article/202610126290i",
-      "publishedAt": "2026-10-12T05:42:57.000Z",
-      "source": "한국경제 부동산",
-      "category": "realestate",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "Seoul Apartment Contract Cancellation Rate Soars Twice as High",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./apartment-sale.html",
-          "label": "서울 전체 아파트 84㎡ 매매",
-          "labelEn": "Seoul apartment 84㎡ sale",
-          "value": "16억 4,554만원",
-          "valueEn": "₩1,646M",
-          "note": "최근 1주 계약 23건 · 10/5 대비 +30.2%",
-          "noteEn": "23 deals in the last 1 weeks · +30.2% vs Oct 5"
-        }
-      ]
-    },
-    {
-      "title": "이성훈 LH 사장 “공공 아파트, 시세보다 비싼 가격에 공급된 것 몰랐다”",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/12/35L6UT76HVDULCPYTFDA5QD4YI/",
-      "publishedAt": "2026-10-12T05:40:27.000Z",
-      "source": "조선비즈 부동산",
-      "category": "realestate",
-      "preview": "이성훈 한국토지주택공사(LH) 사장은 수도권 공공분양 아파트 중 시세보다 높은 가격에 공급된 물량이 있다는 사실을 알지 못했다고 밝혔다. 12일 열린 국회 국토교통위원회 국정감사에서 이 사장은 황운하 조국혁신당 의원…",
-      "dupes": [],
-      "titleEn": "Lee Sung-hoon, LH President, says he didn't know public apartments were supplied at prices higher than market value."
-    },
-    {
-      "title": "5000만원→7000만원…청년주택드림 청약통장 가입 소득기준 완화",
-      "link": "https://www.mk.co.kr/news/economy/12173578",
-      "publishedAt": "2026-10-12T05:34:36.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "주거안정플랜 후속 조치 발표 디딤돌·버팀목 대출 기준도 완화 예정청년주택드림 청약통장에 가입할 수 있는 청년의 연 소득기준이 기존 5000만원에서 7000만원으로 완화된다. 지난달..",
-      "dupes": [],
-      "titleEn": "50,000,000 won→70,000,000 won… Youth Housing Dream Subscription Savings Book Enrollment Income Criteria Eased",
-      "context": [
-        {
-          "kind": "rates",
-          "label": "주택담보대출 최저금리(상환방식 무관)",
-          "labelEn": "Lowest mortgage rate (any repayment type)",
-          "value": "연 3.70%",
-          "valueEn": "3.70% p.a.",
-          "href": "./mortgage-rates.html"
-        }
-      ]
-    },
-    {
-      "title": "청년주택드림 청약통장, ‘연소득 7000만원’으로 문턱 낮춘다",
-      "link": "https://www.mk.co.kr/news/realestate/12173577",
-      "publishedAt": "2026-10-12T05:34:25.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "가입기준 소득 5000만→7000만원…최대 연 4.5% 금리 혜택 디딤돌·버팀목도 소득기준 완화…내년엔 월세·전세보증 지원 확대청년주택드림 청약통장의 가입 문턱이 낮아진다. 현재 ..",
-      "dupes": [
-        {
-          "title": "청년주택드림 청약통장 소득 기준 7000만원으로 낮춘다",
-          "link": "https://www.newsis.com/view/NISX20261012_0003822167",
-          "source": "뉴시스 경제"
-        }
-      ],
-      "titleEn": "Dream Youth Housing Savings Book Lowers Threshold to 'Annual Income 70,000,000 Won",
-      "context": [
-        {
-          "kind": "rates",
-          "label": "주택담보대출 최저금리(상환방식 무관)",
-          "labelEn": "Lowest mortgage rate (any repayment type)",
-          "value": "연 3.70%",
-          "valueEn": "3.70% p.a.",
-          "href": "./mortgage-rates.html"
-        }
-      ]
-    },
-    {
-      "title": "\"더 귀해진다\"…역세권 15억 이하 아파트 잡아볼까",
-      "link": "https://www.hankyung.com/article/2026101145401",
-      "publishedAt": "2026-10-12T05:28:17.000Z",
-      "source": "한국경제 부동산",
-      "category": "realestate",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "Getting Even More Expensive\"... Trying to Grab an Apartment Under 1,500,000,000 Won in a Transit-Friendly Area"
-    },
-    {
-      "title": "낙찰가율 115%…경매서도 뜨거운 경기 남부 아파트",
-      "link": "https://www.hankyung.com/article/2026101145371",
-      "publishedAt": "2026-10-12T05:27:07.000Z",
-      "source": "한국경제 부동산",
-      "category": "realestate",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "Auction price 115%…Hot market for southern apartments even at auctions"
-    },
-    {
-      "title": "삼성물산 넥스트 리모델링 1호 반포 푸르지오 아파트…벽식구조 한계 깬 평면 개발",
-      "link": "https://www.mk.co.kr/news/realestate/12173569",
-      "publishedAt": "2026-10-12T05:26:43.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "전용 84㎡ 특화 평면 2종 제안 거실·침실·주방 등 공간 재구성 24일 총회서 시공사 선정 예정삼성물산이 기존 아파트의 골조를 유지하면서 내부 구조와 설비, 외관을 새 아파트 수..",
-      "dupes": [],
-      "titleEn": "Samsung C&T Next Remodeling 1st Banpo Purijio Apartment... Breaks Wall Structure Limit with Flat Development"
-    },
-    {
-      "title": "한은 총재, '추가 금리인상' 묻자 \"인플레이션 추이 가장 중요\"",
-      "link": "https://www.yna.co.kr/view/AKR20261012110500002",
-      "publishedAt": "2026-10-12T05:26:13.000Z",
-      "source": "연합뉴스 경제",
-      "category": "rates",
-      "preview": "(서울=연합뉴스) 한지훈 채새롬 기자 = 신현송 한국은행 총재는 12일 \"가장 중요한 것은 인플레이션 추이\"라고 강조했다.",
-      "dupes": [],
-      "titleEn": "Bank of Korea Governor Says \"Inflation Trend Is Most Important\" When Asked About Further Rate Hikes"
     }
   ],
   "realestateStats": [
@@ -337,30 +327,30 @@
       "href": "./apartment-sale.html",
       "label": "서울 아파트 84㎡ 매매",
       "labelEn": "Seoul apartment 84㎡ sale",
-      "value": "16억 4,554만원",
-      "valueEn": "₩1,646M",
-      "note": "최근 1주 계약 23건 · 10/5 대비 +30.2%",
-      "noteEn": "23 deals in the last 1 weeks · +30.2% vs Oct 5"
+      "value": "12억 9,692만원",
+      "valueEn": "₩1,297M",
+      "note": "최근 1주 계약 281건 · 10/6 대비 -53.1%",
+      "noteEn": "281 deals in the last 1 weeks · -53.1% vs Oct 6"
     },
     {
       "kind": "realestate",
       "href": "./apartment-jeonse.html",
       "label": "서울 아파트 84㎡ 전세",
       "labelEn": "Seoul apartment 84㎡ jeonse",
-      "value": "8억 4,437만원",
-      "valueEn": "₩844M",
-      "note": "최근 1주 계약 6건",
-      "noteEn": "6 deals in the last 1 weeks"
+      "value": "7억 8,034만원",
+      "valueEn": "₩780M",
+      "note": "최근 1주 계약 320건 · 10/6 대비 -7.6%",
+      "noteEn": "320 deals in the last 1 weeks · -7.6% vs Oct 6"
     },
     {
       "kind": "realestate",
       "href": "./apartment-rent.html",
       "label": "서울 아파트 월세",
       "labelEn": "Seoul apartment rent",
-      "value": "보증금 17,629만원 / 월 290만원",
-      "valueEn": "₩176.3M + ₩2.9M/mo",
-      "note": "최근 1주 계약 7건",
-      "noteEn": "7 deals in the last 1 weeks"
+      "value": "보증금 20,429만원 / 월 122만원",
+      "valueEn": "₩204.3M + ₩1.22M/mo",
+      "note": "최근 1주 계약 537건 · 10/6 대비 +73.1%",
+      "noteEn": "537 deals in the last 1 weeks · +73.1% vs Oct 6"
     }
   ]
 }
