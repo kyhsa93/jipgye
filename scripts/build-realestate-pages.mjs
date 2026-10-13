@@ -6,6 +6,7 @@ import { areaPrice } from "./realestate-format.mjs";
 import { dealFileName } from "./deal-files.mjs";
 import { createWriteSet } from "./render-writes.mjs";
 import { districtFacts } from "./district-facts.mjs";
+import { bakeKoHeading } from "./page-heading.mjs";
 import {
   applyPrerender,
   districtFactsHtml,
@@ -69,6 +70,10 @@ export function buildRealestatePage(baseHtml, page, realestate, spread = null) {
 
   html = replaceOnce(html, BASE_TITLE_KEY, `title: ${JSON.stringify(page.title)},`, "한국어 제목 사전");
   html = replaceOnce(html, BASE_TITLE_KEY_EN, `title: ${JSON.stringify(page.titleEn)},`, "영어 제목 사전");
+
+  // 장 제목(h1)을 굽는다(#295). 거래유형 장은 `<title>`(긴 쪽)이 아니라 사전의 `titleSale`·`titleJeonse`·
+  // `titleWolse`를 쓴다 - 화면 스크립트가 넣던 글자가 그것이다.
+  html = bakeKoHeading(html, { kind: page.kind });
 
   html = replaceOnce(
     html,
@@ -146,6 +151,10 @@ export function buildDistrictPage(baseHtml, district, realestate, deals = null, 
 
   html = replaceOnce(html, BASE_TITLE_KEY, `title: ${JSON.stringify(title)},`, "한국어 제목 사전");
   html = replaceOnce(html, BASE_TITLE_KEY_EN, `title: ${JSON.stringify(titleEn)},`, "영어 제목 사전");
+
+  // 장 제목(h1)을 굽는다(#295). 자치구 장은 사전의 `districtTitle(구 이름)`("강남구 아파트 시세")이고,
+  // `<title>`(긴 쪽)과 다르다 - 화면 스크립트가 넣던 글자가 그것이다.
+  html = bakeKoHeading(html, { districtName: district.name });
   html = replaceOnce(
     html,
     '<link rel="canonical"',
