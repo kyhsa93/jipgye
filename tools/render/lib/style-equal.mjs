@@ -379,11 +379,18 @@ async function collectProbe(opts) {
   };
   const styleText = (el, pseudo) => {
     const cs = getComputedStyle(el, pseudo);
+    const seen = new Set();
     const parts = [];
-    for (let i = 0; i < cs.length; i++) parts.push(`${cs[i]}:${cs.getPropertyValue(cs[i])}`);
-    // 사용자 정의 속성은 위 목록에 안 나올 수 있으므로 원문이 선언한 이름을 따로 읽는다.
-    for (const name of opts.customNames) parts.push(`${name}:${cs.getPropertyValue(name)}`);
-    return parts;
+    for (let i = 0; i < cs.length; i++) {
+      seen.add(cs[i]);
+      parts.push(`${cs[i]}:${cs.getPropertyValue(cs[i])}`);
+    }
+    // 사용자 정의 속성은 위 목록에 안 나올 수 있으므로 원문이 선언한 이름을 따로 읽는다(이미 나온 것은 두 번 세지 않는다).
+    for (const name of opts.customNames) if (!seen.has(name)) parts.push(`${name}:${cs.getPropertyValue(name)}`);
+    // **이름으로 정렬한 뒤에 센다.** Chrome이 계산된 스타일을 열거하는 순서는 사용자 정의 속성이 어느 층에서 선언됐는지에 따라
+    // 달라진다 - legacy.css를 `@layer components` 안으로 옮기면 값은 그대로인데 `--fs-h2`와 `--prose`의 자리가 바뀐다
+    // (실측: 속성 503개, 집합 동일, 481번째부터 순서만 다름). 정렬하지 않으면 모든 요소가 "다르다"로 잡힌다. 견주는 것은 값이다.
+    return parts.sort();
   };
   const want = opts.detail ? new Set(opts.detail) : null;
   const els = [...document.querySelectorAll("*")];

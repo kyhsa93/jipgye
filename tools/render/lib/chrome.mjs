@@ -6,7 +6,7 @@
 //   1. 페이지의 analytics.js가 GA·애드센스 로더를 부른다 — 측정이 실제 속성에 조회수를 쌓으면 안 된다(#247 관찰 중).
 //   2. 환율 API 같은 바깥 응답이 화면을 흔들면 같은 입력에서도 결과가 갈린다.
 import { spawn } from "node:child_process";
-import { existsSync } from "node:fs";
+import { createWriteStream, existsSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -40,11 +40,28 @@ export async function launchChrome({ chromePath = findChrome(), timeoutMs = 3000
   if (!chromePath) throw new Error("Chrome을 찾지 못했습니다. CHROME_PATH로 실행 파일을 알려 주세요.");
   if (typeof WebSocket === "undefined") throw new Error("Node 내장 WebSocket이 없습니다(Node 22 이상이 필요합니다).");
   const profile = await mkdtemp(path.join(os.tmpdir(), "jipgye-render-chrome-"));
+  // Chrome의 stderr를 **끝까지 읽어 둔다**. 읽지 않으면 파이프가 차서 Chrome이 막히고, 죽었을 때 왜 죽었는지도 남지 않는다.
+  // 마지막 4KB만 들고 있는다(크래시 줄은 끝에 찍힌다).
+  let errTail = "";
+  const tail = () => errTail.slice(-1500).trim();
   const child = spawn(
     chromePath,
+    // 이 머신에서 Chrome은 `CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670`을 수천 줄 뱉는다(macOS 26.6.2, Chrome 155).
+    // 측정에는 영향이 없다 - 3,400줄을 뱉으면서 168조건을 끝까지 돈 것을 확인했다. `--disable-gpu`·`--screen-info`를 줘도
+    // 줄어들지 않아 주지 않는다(2026-10-13 실측). 브라우저가 죽는 것으로 보였던 일의 진짜 원인은 따로 있었다 -
+    // 차이 난 요소를 전부 펼쳐 evaluate가 수십 MB를 돌려준 것이다(bin/style-equal.mjs의 DETAIL_CAP).
     ["--headless=new", "--remote-debugging-port=0", `--user-data-dir=${profile}`, "--no-first-run", "--no-default-browser-check", "--hide-scrollbars", "--mute-audio", "--disable-background-networking", "--disable-component-update", "--disable-sync", "about:blank"],
     { stdio: ["ignore", "ignore", "pipe"] }
   );
+  child.stderr.setEncoding("utf8");
+  // JIPGYE_CHROME_STDERR를 주면 Chrome의 로그를 통째로 그 파일에 쌓는다(진단용). 기본은 끝 4KB만 메모리에 들고 있는다.
+  const dump = process.env.JIPGYE_CHROME_STDERR ? createWriteStream(process.env.JIPGYE_CHROME_STDERR, { flags: "a" }) : null;
+  child.stderr.on("data", (d) => {
+    errTail = (errTail + d).slice(-4096);
+    dump?.write(d);
+  });
+  let exited = null;
+  child.once("exit", (code, signal) => (exited = signal ?? code));
   const cleanup = async () => {
     child.kill("SIGKILL");
     await rm(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
@@ -52,17 +69,15 @@ export async function launchChrome({ chromePath = findChrome(), timeoutMs = 3000
   let ws;
   try {
     const wsUrl = await new Promise((resolve, reject) => {
-      let err = "";
-      const timer = setTimeout(() => reject(new Error(`Chrome이 ${timeoutMs}ms 안에 뜨지 않았습니다: ${err.slice(-500)}`)), timeoutMs);
+      const timer = setTimeout(() => reject(new Error(`Chrome이 ${timeoutMs}ms 안에 뜨지 않았습니다: ${tail()}`)), timeoutMs);
       child.stderr.on("data", (d) => {
-        err += d;
-        const m = err.match(/DevTools listening on (ws:\/\/\S+)/);
+        const m = String(d).match(/DevTools listening on (ws:\/\/\S+)/);
         if (m) {
           clearTimeout(timer);
           resolve(m[1]);
         }
       });
-      child.once("exit", (code) => reject(new Error(`Chrome이 바로 끝났습니다(${code}): ${err.slice(-500)}`)));
+      child.once("exit", (code) => reject(new Error(`Chrome이 바로 끝났습니다(${code}): ${tail()}`)));
     });
     ws = new WebSocket(wsUrl);
     await new Promise((resolve, reject) => {
@@ -77,6 +92,18 @@ export async function launchChrome({ chromePath = findChrome(), timeoutMs = 3000
   let nextId = 1;
   const pending = new Map();
   const listeners = new Set();
+  // 소켓이 죽으면 기다리던 것을 **전부 거절한다**. 이것이 없으면 CDP 응답이 영영 오지 않아 프로세스가 CPU 0%로 조용히 선다 -
+  // 실제로 540개짜리 비교가 아무 출력 없이 멈춰 원인을 찾는 데 시간을 썼다. 죽은 뒤의 send도 바로 거절한다.
+  let dead = null;
+  const die = (why) => {
+    if (dead) return;
+    // 왜 끊겼는지가 Chrome의 stderr 끝에 있다. 그것 없이는 "소켓이 끊겼다"만 남아 원인을 못 찾는다.
+    dead = new Error(`CDP 소켓이 끊겼습니다(${why}${exited === null ? "" : `, Chrome 종료 ${exited}`}). 측정을 믿을 수 없습니다.${tail() ? ` Chrome stderr 끝: ${tail()}` : ""}`);
+    for (const [, p] of pending) p.reject(new Error(`${p.method}: ${dead.message}`));
+    pending.clear();
+  };
+  ws.addEventListener("close", (ev) => die(`close ${ev.code ?? ""}`.trim()));
+  ws.addEventListener("error", () => die("error"));
   ws.addEventListener("message", (ev) => {
     const msg = JSON.parse(ev.data);
     if (msg.id) {
@@ -88,9 +115,18 @@ export async function launchChrome({ chromePath = findChrome(), timeoutMs = 3000
   });
   const send = (method, params = {}, sessionId) =>
     new Promise((resolve, reject) => {
+      if (dead) {
+        reject(new Error(`${method}: ${dead.message}`));
+        return;
+      }
       const id = nextId++;
       pending.set(id, { resolve, reject, method });
-      ws.send(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) }));
+      try {
+        ws.send(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) }));
+      } catch (e) {
+        pending.delete(id);
+        reject(new Error(`${method}: 소켓에 쓰지 못했습니다 - ${e.message}`));
+      }
     });
 
   const { product } = await send("Browser.getVersion");
@@ -154,6 +190,8 @@ export async function launchChrome({ chromePath = findChrome(), timeoutMs = 3000
       },
       async close() {
         listeners.delete(onEvent);
+        // 컨텍스트를 버리면 그 안의 타깃도 함께 닫힌다. `Target.closeTarget`을 먼저 부르지 말 것 -
+        // 넣어 봤더니 브라우저가 바로 죽어 CDP 소켓이 끊겼다(실측 2026-10-13, Chrome 155.0.8059.40).
         await send("Target.disposeBrowserContext", { browserContextId }).catch(() => {});
       },
     };
