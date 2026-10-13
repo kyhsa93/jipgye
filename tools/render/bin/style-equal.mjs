@@ -301,15 +301,18 @@ try {
 
   // ── C-5. 대조군 ───────────────────────────────────────────────────────────────────────────
 
-  if (opt.control && needBrowser) {
+  // 대조군이 엎어져도 A·B·C의 보고서는 써야 한다 - 한 번 여기서 죽어 540조건을 다시 돌렸다.
+  if (opt.control && needBrowser) try {
     section("C-5. 대조군(일부러 색 하나를 바꾼다)");
     controlDir = path.join(outDir, "control-docs");
     await cp(headDir, controlDir, { recursive: true });
     const css = await readFile(path.join(controlDir, "style.css"), "utf8");
-    // 바꾸는 것은 딱 한 자리다. 본문 색 토큰 하나를 고른다 - 여러 요소가 물려 있어 비교가 못 잡으면 바로 보인다.
-    const m = css.match(/--text\s*:\s*([^;]+);/);
-    if (!m) throw new Error("대조군으로 바꿀 --text 토큰을 후보 CSS에서 찾지 못했습니다.");
-    const mutated = css.replace(m[0], `--text: #ff0000;`);
+    // 바꾸는 것은 딱 한 자리다. **처음 나오는 색 토큰 선언**을 고른다 - 토큰 이름을 코드에 박으면 이름이 바뀌는 날
+    // 대조군이 조용히 사라진다(실제로 `--text`를 찾다 못 찾아 한 번 죽었다. 이 저장소의 본문 색은 `--fg`다).
+    // 여러 요소가 물려 있는 토큰이라 비교가 못 잡으면 바로 보인다.
+    const m = css.match(/(--[a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{3,8})\s*;/);
+    if (!m) throw new Error("대조군으로 바꿀 색 토큰(--이름: #색;)을 후보 CSS에서 찾지 못했습니다.");
+    const mutated = css.replace(m[0], `${m[1]}: #ff0000;`);
     await writeFile(path.join(controlDir, "style.css"), mutated);
     controlSrv = await serveDir(controlDir);
     const job = { page: REPRESENTATIVE[0], mode: MODES[0], width: WIDTHS[1], lang: null };
@@ -322,10 +325,13 @@ try {
       const [da, db] = [await collect(chrome, baseSrv.url, job, { ...copts, detail: idx }), await collect(chrome, controlSrv.url, job, { ...copts, detail: idx })];
       return { c: c2, detail: explain(c2.items.filter((i) => idx.includes(i.index)), da, db) };
     });
-    report.control = { changed: `${m[0].trim()} → --text: #ff0000;`, job: { page: job.page, mode: job.mode.name, width: job.width }, elements: c.elements, values: c.values, diffs: c.diffs, sample: detail.slice(0, 12) };
+    report.control = { changed: `${m[0].trim()} → ${m[1]}: #ff0000;`, job: { page: job.page, mode: job.mode.name, width: job.width }, elements: c.elements, values: c.values, diffs: c.diffs, sample: detail.slice(0, 12) };
     log(`바꾼 것: ${report.control.changed}`);
     log(`${job.page} ${job.mode.name} ${job.width}: 요소 ${c.elements}, 값 ${c.values}, **차이 ${c.diffs}개** (0이면 이 비교는 쓸 수 없다)`);
     for (const d of detail.slice(0, 12)) log(`      ${d.path} ${d.what} ${d.prop}: 기준 ${d.base} / 대조군 ${d.head}`);
+  } catch (e) {
+    report.control = { error: e.message };
+    log(`대조군을 돌리지 못했다: ${e.message}`);
   }
 } finally {
   await controlSrv?.close();
@@ -351,6 +357,7 @@ if (report.C) {
   if (report.C.totals.unsettled !== 0) failures.push(`C: 조용해지지 않은 조건 ${report.C.totals.unsettled}개(값을 믿을 수 없다)`);
   if (report.C.totals.failed !== 0) failures.push(`C: 못 잰 조건 ${report.C.totals.failed}개(시간 제한을 넘겼다 — 덮이지 않은 자리다)`);
 }
+if (opt.control && report.control?.error) failures.push(`C-5: 대조군을 돌리지 못했다 — ${report.control.error}`);
 if (opt.control && report.control && report.control.diffs === 0) failures.push("C-5: 대조군을 잡지 못했다 — 이 비교는 증빙이 되지 않는다");
 report.finishedAt = new Date().toISOString();
 report.failures = failures;
@@ -400,7 +407,8 @@ function summaryMarkdown(r) {
     L.push("", "| 장 | 모드 | 폭 | 요소 | 값 | 차이 |", "|---|---|---|---|---|---|");
     for (const x of r.C.results) L.push(x.error ? `| ${x.page}${x.lang ? ` (${x.lang})` : ""} | ${x.mode} | ${x.width} | — | — | **못 쟀다: ${x.error}** |` : `| ${x.page}${x.lang ? ` (${x.lang})` : ""} | ${x.mode} | ${x.width} | ${x.elements} | ${x.values} | ${x.diffs} |`);
   }
-  if (r.control) {
+  if (r.control?.error) L.push("", "## C-5. 대조군", "", `- 돌리지 못했다: ${r.control.error}`);
+  else if (r.control) {
     L.push("", "## C-5. 대조군", "");
     L.push(`- 바꾼 것: \`${r.control.changed}\` (${r.control.job.page}, ${r.control.job.mode}, ${r.control.job.width})`);
     L.push(`- 요소 ${r.control.elements}개·값 ${r.control.values}개에서 **차이 ${r.control.diffs}개** — 비교가 잡는다.`);
