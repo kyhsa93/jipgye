@@ -5,6 +5,7 @@ import { applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml } fr
 import { clustering } from "./loan-cap.mjs";
 import { lineCounts } from "./policy-loan.mjs";
 import { budgetRulesHtml } from "./budget-rules.mjs";
+import { bakeKoHeading } from "./page-heading.mjs";
 import { createWriteSet } from "./render-writes.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -63,6 +64,9 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
   html = html.replaceAll(`${BASE_URL}realestate.html`, `${BASE_URL}${page.file}`);
   html = replaceOnce(html, BASE_TITLE_KEY, `title: ${JSON.stringify(page.title)},`, "한국어 제목 사전");
   html = replaceOnce(html, BASE_TITLE_KEY_EN, `title: ${JSON.stringify(page.titleEn)},`, "영어 제목 사전");
+
+  // 장 제목(h1)을 굽는다(#295). 사전 패치 뒤라 `title`은 이미 이 장의 제목이고, 화면 스크립트가 넣던 글자와 같다.
+  html = bakeKoHeading(html);
 
   html = replaceOnce(
     html,
