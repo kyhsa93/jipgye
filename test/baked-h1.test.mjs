@@ -80,6 +80,27 @@ test("찍어낸 46장의 구운 h1 = 그 장의 스크립트가 한국어에서 
   }
 });
 
+/**
+ * 위 시험은 장마다 `h1` = **그 장의** 사전값으로 고정한다. 그래서 사전값끼리 겹쳐도 통과한다 — 예산대
+ * 구간이나 자치구가 늘어 두 장이 같은 글자를 받게 되면 위 시험은 조용히 초록이다. 그런데 46장이 같은 `h1`을
+ * 내던 것이 #295가 고친 결함 바로 그것이므로, "46장이 서로 다른 46개"라는 성질을 시험이 쥐고 있어야 한다
+ * (cmo 권고 https://github.com/kyhsa93/jipgye/pull/305#issuecomment-6147859411).
+ */
+test("찍어낸 46장의 구운 h1은 서로 다른 46개 글자다", async () => {
+  const h1OfFile = new Map();
+  for (const file of GENERATED) h1OfFile.set(file, bakedH1(await read(`docs/${file}`)));
+  assert.equal(h1OfFile.size, 46);
+
+  const filesOfH1 = new Map();
+  for (const [file, h1] of h1OfFile) filesOfH1.set(h1, [...(filesOfH1.get(h1) ?? []), file]);
+  const shared = [...filesOfH1].filter(([, files]) => files.length > 1);
+  assert.deepEqual(
+    shared,
+    [],
+    `같은 h1을 내는 장이 있다: ${shared.map(([h1, files]) => `"${h1}" ← ${files.join(", ")}`).join(" / ")}`
+  );
+});
+
 test("영어로 바꾸면 영어 제목이 그대로 들어온다(구운 한국어 h1은 그 뒤에 덮인다)", async () => {
   for (const [file, expected] of [
     ["docs/budget-7eok.html", "Seoul Apartments Around \u20a90.7B - Recent Deals"],
