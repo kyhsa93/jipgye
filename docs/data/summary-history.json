@@ -4471,21 +4471,58 @@
     "date": "2026-10-13",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 증시·환율: 증시·환율: [올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑, 김병연 서울대 석좌교수 \"러와 밀착 北, 깜짝 성장했지만…3년새 환율 9배·쌀값 8배 급등\", [포토] 코스피, 5.5% 급락 '6천피' +6\n- 금리·예금·투자상품: 인도 9월 소비자물가 상승률은 5.54%로 전월 대비 0.71%포인트 상승했다. 이는 주로 식품 가격 급등으로 인한 것으로 나타났다. 인도는 추가 금리 인상이 예상되는 상황이다. 국고채 금리는 코스피 급락과 외인 매수로 인해 이틀째 큰 폭으로 하락했다. 관련 수치는 구체적으로 발표되지 않았다.\n- 부동산: 부동산: \"국평 새 아파트 5억대에 줍줍\"…'애물단지' 미분양의 반전, 연내 1.5만가구 착공 vs 권한이양 추진…재건축 '동상이몽', \"비아파트 '주택 수 제외' 혜택 상시화해야\" +7\n- 기타 경제 소식: 신혼부부 대출에 대한 서울의 현실이 어려운 것으로 나타났다. 충북도는 민선9기 민생경제 정책을 수립하고 소상공인 지원에 나섰다. 서울의 집값과 전셋값 상승세가 지속되고 있다. 토허제는 내년에도 유지될 것으로 보인다. 각 기사는 서로 다른 주제를 다루고 있다.",
-      "en": "- Stocks & FX: Stocks & FX: [올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑, 김병연 서울대 석좌교수 \"러와 밀착 北, 깜짝 성장했지만…3년새 환율 9배·쌀값 8배 급등\", [포토] 코스피, 5.5% 급락 '6천피' +6\n- Rates, Deposits & Investment Products: India's September consumer price increase rate rose to 5.54%, up 0.71 percentage points from the previous month. This was mainly due to a sharp rise in food prices. India is expected to face further interest rate hikes. Government bond yields fell sharply for the second consecutive day due to the Kospi's sharp decline and foreign buying. Specific figures were not officially released.\n- Real Estate: Real Estate: \"국평 새 아파트 5억대에 줍줍\"…'애물단지' 미분양의 반전, 연내 1.5만가구 착공 vs 권한이양 추진…재건축 '동상이몽', \"비아파트 '주택 수 제외' 혜택 상시화해야\" +7\n- Other Economic News: The reality for newlywed couples applying for loans in Seoul has turned out to be difficult. Chungcheongbuk Province has established its 9th-term people-oriented economic policy and started supporting small and medium-sized businesses. The rise in Seoul's housing and rental prices continues. The token system is expected to remain in place next year. Each article covers a different topic."
+      "ko": "- 기타 경제 소식: 이형일과 베선트는 화상면담을 통해 힌미 경제·금융 협력의 중요성을 재확인했고, 신혼부부 대출은 서울에서는 현실적으로 어렵고, 충북도는 민선9기 민생경제 정책을 수립해 소상공인 성장 지원에 나섰다.\n- 증시·환율: 증시·환율: 뉴욕증시, 은행 실적·반도체 약세 속 혼조 출발…다우 0.7%↑, [올댓차이나] 대만 증시, 美 반도체 약세에 나흘째 속락 마감…1.95%↓, [올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑ +6\n- 부동산: 3기 신도시 용적률을 높여 6.4만가구 추가 공급할 계획이다. 5억 원대에 아파트를 구매할 수 있는 기회가 생겼다. 연내 1.5만가구 착공이 예정되지만 재건축 권한 이양 논의는 진행 중이다. 비아파트 주택 수 제외 혜택을 상시화해야 한다는 주장이 제기되고 있다. 조윤호 서강대 교수는 전세 제도가 집값 안정에 도움을 주고, 부동산 거래세가 가계의 최적 선택을 막는다고 밝혔다.\n- 금리·예금·투자상품: 인도 9월 소비자물가 상승률은 5.54%로 전월 대비 0.71%포인트 상승했다. 이는 주로 식품 가격 급등으로 인한 것으로 나타났다. 인도는 추가 금리 인상이 예상되는 상황이다. 국고채 금리는 코스피 급락과 외인 매수로 인해 이틀째 큰 폭으로 하락했다. 관련 수치는 구체적으로 발표되지 않았다.",
+      "en": "- Other Economic News: Lee Hyung-il and Bexont confirmed through a video consultation the importance of Himmee economic and financial cooperation. Getting a loan as a newlywed couple is realistically difficult in Seoul, and Chungcheongbuk Province has established the Minseon 9th term people's livelihood economic policy to support the growth of small and medium-sized businesses.\n- Stocks & FX: Stocks & FX: 뉴욕증시, 은행 실적·반도체 약세 속 혼조 출발…다우 0.7%↑, [올댓차이나] 대만 증시, 美 반도체 약세에 나흘째 속락 마감…1.95%↓, [올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑ +6\n- Real Estate: Plans are in place to increase the floor area ratio in the third phase new city to supply an additional 64,000 households. An opportunity has arisen to purchase apartments in the 500,000,000 won range. Although 15,000 households are scheduled to start construction this year, discussions on the transfer of reconstruction authority are ongoing. There is a growing call to make the benefit of excluding non-apartment housing units a permanent policy. Jo Yun-ho, a professor at Sogang University, stated that the leasehold system helps stabilize housing prices and that the real estate transaction tax prevents households from making optimal choices.\n- Rates, Deposits & Investment Products: India's consumer price increase in September was 5.54%, up 0.71 percentage points from the previous month. This was mainly due to a sharp rise in food prices. India is expected to face further interest rate hikes. Government bond yields fell sharply for the second consecutive day due to the Kospi's sharp decline and foreign buying. Specific figures were not officially released."
     },
     "highlights": [],
     "categories": [
       {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "이형일과 베선트는 화상면담을 통해 힌미 경제·금융 협력의 중요성을 재확인했고, 신혼부부 대출은 서울에서는 현실적으로 어렵고, 충북도는 민선9기 민생경제 정책을 수립해 소상공인 성장 지원에 나섰다.",
+        "lineEn": "Lee Hyung-il and Bexont confirmed through a video consultation the importance of Himmee economic and financial cooperation. Getting a loan as a newlywed couple is realistically difficult in Seoul, and Chungcheongbuk Province has established the Minseon 9th term people's livelihood economic policy to support the growth of small and medium-sized businesses.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "이형일, 베선트와 화상면담…\"힌미 경제·금융 협력 중요성 재확인\"",
+            "link": "https://www.newsis.com/view/NISX20261013_0003824721",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "“외곽으로 가거나 좁은 집에 살거나”…신혼부부 대출, 서울선 ‘그림의 떡’",
+            "link": "https://www.mk.co.kr/news/realestate/12174609",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "충북도 '민선9기 민생경제 정책' 수립…소상공인 성장 지원",
+            "link": "https://www.yna.co.kr/view/AKR20261013143200064",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "증시·환율: [올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑, 김병연 서울대 석좌교수 \"러와 밀착 北, 깜짝 성장했지만…3년새 환율 9배·쌀값 8배 급등\", [포토] 코스피, 5.5% 급락 '6천피' +6",
-        "lineEn": "Stocks & FX: [올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑, 김병연 서울대 석좌교수 \"러와 밀착 北, 깜짝 성장했지만…3년새 환율 9배·쌀값 8배 급등\", [포토] 코스피, 5.5% 급락 '6천피' +6",
+        "lineKo": "증시·환율: 뉴욕증시, 은행 실적·반도체 약세 속 혼조 출발…다우 0.7%↑, [올댓차이나] 대만 증시, 美 반도체 약세에 나흘째 속락 마감…1.95%↓, [올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑ +6",
+        "lineEn": "Stocks & FX: 뉴욕증시, 은행 실적·반도체 약세 속 혼조 출발…다우 0.7%↑, [올댓차이나] 대만 증시, 美 반도체 약세에 나흘째 속락 마감…1.95%↓, [올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑ +6",
         "isFallback": true,
         "fallbackReason": "unverified-entity",
         "degraded": false,
         "items": [
+          {
+            "title": "뉴욕증시, 은행 실적·반도체 약세 속 혼조 출발…다우 0.7%↑",
+            "link": "https://www.newsis.com/view/NISX20261013_0003824712",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 대만 증시, 美 반도체 약세에 나흘째 속락 마감…1.95%↓",
+            "link": "https://www.newsis.com/view/NISX20261013_0003824645",
+            "source": "뉴시스 경제"
+          },
           {
             "title": "[올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑",
             "link": "https://www.newsis.com/view/NISX20261013_0003824613",
@@ -4497,40 +4534,8 @@
             "source": "한국경제 경제"
           },
           {
-            "title": "[포토] 코스피, 5.5% 급락 '6천피'",
-            "link": "https://www.hankyung.com/article/202610139394i",
-            "source": "한국경제 경제"
-          },
-          {
             "title": "사상최대 반도체 실적인데 왜…'검은 화요일' 코스피 추락에 악소리(종합)",
             "link": "https://www.yna.co.kr/view/AKR20261013089251008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "[올댓차이나] 중국 증시 혼조 마감…상하이지수 0.1%↑",
-            "link": "https://www.newsis.com/view/NISX20261013_0003824351",
-            "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "인도 9월 소비자물가 상승률은 5.54%로 전월 대비 0.71%포인트 상승했다. 이는 주로 식품 가격 급등으로 인한 것으로 나타났다. 인도는 추가 금리 인상이 예상되는 상황이다. 국고채 금리는 코스피 급락과 외인 매수로 인해 이틀째 큰 폭으로 하락했다. 관련 수치는 구체적으로 발표되지 않았다.",
-        "lineEn": "India's September consumer price increase rate rose to 5.54%, up 0.71 percentage points from the previous month. This was mainly due to a sharp rise in food prices. India is expected to face further interest rate hikes. Government bond yields fell sharply for the second consecutive day due to the Kospi's sharp decline and foreign buying. Specific figures were not officially released.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "인도 9월 소비자물가 5.54%·0.71%P↑…\"식품값 급등에 추가 금리인상 전망\"",
-            "link": "https://www.newsis.com/view/NISX20261013_0003824568",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "국고채 금리, 코스피 급락·외인 매수에 이틀째 큰 폭 하락",
-            "link": "https://www.yna.co.kr/view/AKR20261013164900008",
             "source": "연합뉴스 경제"
           }
         ]
@@ -4539,14 +4544,19 @@
         "key": "realestate",
         "name": "부동산",
         "nameEn": "Real Estate",
-        "lineKo": "부동산: \"국평 새 아파트 5억대에 줍줍\"…'애물단지' 미분양의 반전, 연내 1.5만가구 착공 vs 권한이양 추진…재건축 '동상이몽', \"비아파트 '주택 수 제외' 혜택 상시화해야\" +7",
-        "lineEn": "Real Estate: \"국평 새 아파트 5억대에 줍줍\"…'애물단지' 미분양의 반전, 연내 1.5만가구 착공 vs 권한이양 추진…재건축 '동상이몽', \"비아파트 '주택 수 제외' 혜택 상시화해야\" +7",
-        "isFallback": true,
-        "fallbackReason": "unverified-entity",
+        "lineKo": "3기 신도시 용적률을 높여 6.4만가구 추가 공급할 계획이다. 5억 원대에 아파트를 구매할 수 있는 기회가 생겼다. 연내 1.5만가구 착공이 예정되지만 재건축 권한 이양 논의는 진행 중이다. 비아파트 주택 수 제외 혜택을 상시화해야 한다는 주장이 제기되고 있다. 조윤호 서강대 교수는 전세 제도가 집값 안정에 도움을 주고, 부동산 거래세가 가계의 최적 선택을 막는다고 밝혔다.",
+        "lineEn": "Plans are in place to increase the floor area ratio in the third phase new city to supply an additional 64,000 households. An opportunity has arisen to purchase apartments in the 500,000,000 won range. Although 15,000 households are scheduled to start construction this year, discussions on the transfer of reconstruction authority are ongoing. There is a growing call to make the benefit of excluding non-apartment housing units a permanent policy. Jo Yun-ho, a professor at Sogang University, stated that the leasehold system helps stabilize housing prices and that the real estate transaction tax prevents households from making optimal choices.",
+        "isFallback": false,
+        "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "\"국평 새 아파트 5억대에 줍줍\"…'애물단지' 미분양의 반전",
+            "title": "“3기 신도시 용적률 높여 6.4만가구 더…수도권 주택 공급·이주 수요 동시에 해결”",
+            "link": "https://www.mk.co.kr/news/realestate/12174873",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "\"5억대에 새 집 줍줍할 기회\"…'애물단지' 아파트의 반전",
             "link": "https://www.hankyung.com/article/2026101394771",
             "source": "한국경제 부동산"
           },
@@ -4564,38 +4574,28 @@
             "title": "조윤호 서강대 교수 \"전세 제도 집값 안정에 도움…부동산 거래세, 가계의 최적 선택 막아\"",
             "link": "https://www.hankyung.com/article/2026101395571",
             "source": "한국경제 경제"
-          },
-          {
-            "title": "임광현 \"李대통령 아파트 거래, 과세 대상 아냐\"",
-            "link": "https://www.yna.co.kr/view/AKR20261013174200002",
-            "source": "연합뉴스 경제"
           }
         ]
       },
       {
-        "key": "other",
-        "name": "기타 경제 소식",
-        "nameEn": "Other Economic News",
-        "lineKo": "신혼부부 대출에 대한 서울의 현실이 어려운 것으로 나타났다. 충북도는 민선9기 민생경제 정책을 수립하고 소상공인 지원에 나섰다. 서울의 집값과 전셋값 상승세가 지속되고 있다. 토허제는 내년에도 유지될 것으로 보인다. 각 기사는 서로 다른 주제를 다루고 있다.",
-        "lineEn": "The reality for newlywed couples applying for loans in Seoul has turned out to be difficult. Chungcheongbuk Province has established its 9th-term people-oriented economic policy and started supporting small and medium-sized businesses. The rise in Seoul's housing and rental prices continues. The token system is expected to remain in place next year. Each article covers a different topic.",
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "인도 9월 소비자물가 상승률은 5.54%로 전월 대비 0.71%포인트 상승했다. 이는 주로 식품 가격 급등으로 인한 것으로 나타났다. 인도는 추가 금리 인상이 예상되는 상황이다. 국고채 금리는 코스피 급락과 외인 매수로 인해 이틀째 큰 폭으로 하락했다. 관련 수치는 구체적으로 발표되지 않았다.",
+        "lineEn": "India's consumer price increase in September was 5.54%, up 0.71 percentage points from the previous month. This was mainly due to a sharp rise in food prices. India is expected to face further interest rate hikes. Government bond yields fell sharply for the second consecutive day due to the Kospi's sharp decline and foreign buying. Specific figures were not officially released.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "“외곽으로 가거나 좁은 집에 살거나”…신혼부부 대출, 서울선 ‘그림의 떡’",
-            "link": "https://www.mk.co.kr/news/realestate/12174609",
-            "source": "매일경제 부동산"
+            "title": "인도 9월 소비자물가 5.54%·0.71%P↑…\"식품값 급등에 추가 금리인상 전망\"",
+            "link": "https://www.newsis.com/view/NISX20261013_0003824568",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "충북도 '민선9기 민생경제 정책' 수립…소상공인 성장 지원",
-            "link": "https://www.yna.co.kr/view/AKR20261013143200064",
+            "title": "국고채 금리, 코스피 급락·외인 매수에 이틀째 큰 폭 하락",
+            "link": "https://www.yna.co.kr/view/AKR20261013164900008",
             "source": "연합뉴스 경제"
-          },
-          {
-            "title": "집값 못 잡고 전셋값도 뛰었다… 서울 토허제, 내년에도 묶나",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/13/Y6ETWIARNZD3FDP3FLQLHL7D4Q/",
-            "source": "조선비즈 부동산"
           }
         ]
       }
