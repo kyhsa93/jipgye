@@ -1,1 +1,3 @@
-{"kind":"sale","district":"11140","yearMonth":"202610","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-10-01T04:00:48.880Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11140","yearMonth":"202610","ok":true,"resultCode":0,"count":1,"totalCount":1,"observedAt":"2026-10-13T03:31:52.003Z","previousObservedAt":"2026-10-01T04:00:48.880Z","arrivals":{"423713b39ce4":"2026-10-13"},"items":[
+{"aptDong":"","aptNm":"삼성","buildYear":1999,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"185,000","dealDay":7,"dealMonth":10,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 중구","excluUseAr":114.91,"floor":8,"jibun":843,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11140,"slerGbn":"개인","umdNm":"신당동"}
+]}
