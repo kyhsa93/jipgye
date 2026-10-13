@@ -385,11 +385,17 @@ async function collectProbe(opts) {
       seen.add(cs[i]);
       parts.push(`${cs[i]}:${cs.getPropertyValue(cs[i])}`);
     }
-    // 사용자 정의 속성은 위 목록에 안 나올 수 있으므로 원문이 선언한 이름을 따로 읽는다(이미 나온 것은 두 번 세지 않는다).
+    // (다) `cs` 열거에 `--*`가 나오지 않는 환경이 있으므로 **원문이 선언한 이름 목록**(opts.customNames)을 따로 읽힌다.
+    // 기준과 후보에 같은 목록이 간다(bin이 legacy.css 한 곳에서 뽑아 양쪽에 넘긴다). 이미 나온 것은 두 번 세지 않는다.
     for (const name of opts.customNames) if (!seen.has(name)) parts.push(`${name}:${cs.getPropertyValue(name)}`);
-    // **이름으로 정렬한 뒤에 센다.** Chrome이 계산된 스타일을 열거하는 순서는 사용자 정의 속성이 어느 층에서 선언됐는지에 따라
-    // 달라진다 - legacy.css를 `@layer components` 안으로 옮기면 값은 그대로인데 `--fs-h2`와 `--prose`의 자리가 바뀐다
-    // (실측: 속성 503개, 집합 동일, 481번째부터 순서만 다름). 정렬하지 않으면 모든 요소가 "다르다"로 잡힌다. 견주는 것은 값이다.
+    // (가) **이름으로 정렬한 뒤 쌍을 전부 견준다.** Chrome이 계산된 스타일을 열거하는 순서는 사용자 정의 속성이 어느 층에서
+    // 선언됐는지에 따라 달라진다 - legacy.css를 `@layer components` 안으로 옮기면 값은 그대로인데 `--fs-h2`와 `--prose`의
+    // 자리가 바뀐다(실측: 속성 503개, 집합 동일, 481번째부터 순서만 다름). 정렬하지 않으면 모든 요소가 "다르다"로 잡힌다.
+    //
+    // 면제는 **열거 순서에만** 준다(cto 개정 1 https://github.com/kyhsa93/jipgye/issues/276#issuecomment-6147173489).
+    // 정렬은 차이를 숨기는 데에도 쓸 수 있으므로 그 대가로 (가) 쌍을 하나도 빼지 않고 해시에 넣고 - 값이 다르면 반드시
+    // 해시가 달라진다 - (나) 쌍의 개수를 아래 pairs로 따로 세어 기준·후보에서 견준다. 규칙 순서(증빙 B)는 종전대로
+    // 순서까지 견준다.
     return parts.sort();
   };
   const want = opts.detail ? new Set(opts.detail) : null;
@@ -397,10 +403,15 @@ async function collectProbe(opts) {
   const rows = [];
   const detail = {};
   let values = 0;
+  // (나) 견준 `이름:값` 쌍의 수만 따로 센다. values에는 상자 4값·문서 4값이 섞여 있어 "쌍의 개수"를 가리키지 못한다.
+  let pairs = 0;
   for (let index = 0; index < els.length; index++) {
     const el = els[index];
     const texts = opts.pseudos.map((p) => styleText(el, p));
-    for (const t of texts) values += t.length;
+    for (const t of texts) {
+      values += t.length;
+      pairs += t.length;
+    }
     const b = el.getBoundingClientRect();
     const rect = `${b.x},${b.y},${b.width},${b.height}`;
     values += 4;
@@ -414,6 +425,8 @@ async function collectProbe(opts) {
     theme: root.getAttribute("data-theme"),
     lang: root.getAttribute("lang"),
     props: getComputedStyle(root).length,
+    customNamesRead: opts.customNames.length,
+    pairs,
     values: values + 4,
     doc: `${root.scrollWidth},${root.scrollHeight},${document.body.scrollWidth},${document.body.scrollHeight}`,
     rows,
@@ -451,7 +464,11 @@ export function compareCollected(a, b) {
   }
   if (a.doc !== b.doc) items.push({ index: -1, path: "(문서)", what: "문서 크기", base: a.doc, head: b.doc });
   if (a.values !== b.values) items.push({ index: -1, path: "(문서)", what: "견준 값의 수", base: String(a.values), head: String(b.values) });
-  return { elements: a.rows.length, values: a.values, diffs: items.length + (domMismatch ? 1 : 0), domMismatch, items };
+  // (나) 쌍의 개수를 양쪽에서 세어 견준다 - 한쪽에만 있는 속성은 여기서 드러나고, 개수가 다르면 그 자체가 차이다(cto 개정 1).
+  if (a.pairs !== b.pairs) items.push({ index: -1, path: "(문서)", what: "견준 쌍의 수", base: String(a.pairs), head: String(b.pairs) });
+  // (다) 원문 선언 이름 목록을 양쪽에 같은 것으로 읽혔는지도 값으로 확인한다.
+  if (a.customNamesRead !== b.customNamesRead) items.push({ index: -1, path: "(문서)", what: "읽힌 사용자 정의 속성 이름 수", base: String(a.customNamesRead), head: String(b.customNamesRead) });
+  return { elements: a.rows.length, values: a.values, pairs: { base: a.pairs, head: b.pairs }, customNamesRead: { base: a.customNamesRead, head: b.customNamesRead }, diffs: items.length + (domMismatch ? 1 : 0), domMismatch, items };
 }
 
 /** 해시가 다른 자리의 값을 속성 단위로 편다. da·db는 detail을 주고 다시 잰 결과. */

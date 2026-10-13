@@ -10,8 +10,14 @@
 // 무엇이 더 다른지 보는 것이 목적이지 멈추는 것이 목적이 아니다. 판정(종료 코드)은 맨 끝에 한 번 한다.
 //
 // 옵션
-//   --scope full|reduced  C의 범위. full = 67장 × 4모드 × 2폭(+영어 2장 × 2폭), reduced = 대표 5장만 4모드 × 2폭이고
-//                         나머지 62장은 1모드(auto-light) × 2폭. **줄였으면 보고서 머리에 "줄임"이 찍힌다**(완료 조건 9-C).
+//   --scope full|reduced|representative
+//                         C의 범위. full = 67장 × 4모드 × 2폭(+영어 2장 × 2폭) = 540조건,
+//                         reduced = 대표 5장만 4모드 × 2폭이고 나머지 62장은 1모드(auto-light) × 2폭 = 168조건,
+//                         representative = **대표 5장만** 4모드 × 2폭(+영어 2장 × 2폭) = 44조건.
+//                         **전수가 아니면 보고서 머리에 그 사실이 찍힌다**(완료 조건 9-C, cto 요청 6147173489).
+//   --pages a.html,b.html C가 볼 장을 직접 고른다(4모드 × 2폭). 고른 장 가운데 영어 대상이 있으면 영어 조건도 함께 돈다.
+//                         `--scope representative`는 이 목록을 대표 5장으로 둔 것과 같다. 전수로 오해되지 않게
+//                         보고서 머리에 "고른 장만"이 찍힌다.
 //   --only A,B,C          일부만 돌린다(기본 A,B,C).
 //   --control             대조군 한 번(C-5): 후보 CSS의 색 하나를 일부러 바꿔 이 비교가 실제로 잡는지 보인다.
 //   --concurrency N       한 번에 여는 탭 수(기본 4). 올리면 빨라지지만 메모리를 쓴다.
@@ -63,11 +69,15 @@ for (let i = 0; i < argv.length; i++) {
   }
 }
 if (!opt.base || !opt.head || !opt.out) {
-  console.error("사용: node tools/render/bin/style-equal.mjs --base <기준 docs> --head <후보 docs> --out <폴더> [--scope full|reduced] [--only A,B,C] [--control] [--concurrency N]");
+  console.error("사용: node tools/render/bin/style-equal.mjs --base <기준 docs> --head <후보 docs> --out <폴더> [--scope full|reduced|representative] [--pages a.html,b.html] [--only A,B,C] [--control] [--concurrency N]");
   process.exit(2);
 }
-if (!["full", "reduced"].includes(opt.scope)) {
-  console.error(`--scope는 full 또는 reduced입니다(받은 값: ${opt.scope}).`);
+if (!["full", "reduced", "representative"].includes(opt.scope)) {
+  console.error(`--scope는 full·reduced·representative 가운데 하나입니다(받은 값: ${opt.scope}).`);
+  process.exit(2);
+}
+if (opt.pages && opt.scope !== "full") {
+  console.error(`--pages와 --scope ${opt.scope}는 같이 쓸 수 없습니다. 장을 직접 고를 때는 --scope를 생략하세요.`);
   process.exit(2);
 }
 const only = new Set(opt.only.split(",").map((s) => s.trim().toUpperCase()));
@@ -101,13 +111,34 @@ const report = {
   input: { base: baseDir, head: headDir, legacy: legacyFile, scope: opt.scope, fixedNow: opt["fixed-now"], concurrency },
   // 범위를 줄였으면 여기서부터 보인다 - 보고서를 읽는 사람이 "전수"로 오해하지 않게 머리에 둔다.
   reduced: opt.scope === "reduced",
+  // 전수가 아닌 모든 꼴(축소형·대표만·고른 장만)이 여기 한 줄로 찍힌다. coverage.full이 false면 전수가 아니다.
+  coverage: null,
 };
 const log = (...a) => console.error(...a);
 const section = (name) => log(`\n── ${name} ${"─".repeat(Math.max(0, 70 - name.length))}`);
 
 // ── 공통 입력 ───────────────────────────────────────────────────────────────────────────────
 
-const pages = (await readdir(headDir)).filter((f) => f.endsWith(".html")).sort();
+const allPages = (await readdir(headDir)).filter((f) => f.endsWith(".html")).sort();
+// C가 볼 장. --pages로 고르거나 --scope representative면 그 목록이고, 아니면 전부다.
+// 고른 이름이 후보 docs에 없으면 조용히 빠지지 않고 여기서 멈춘다 - "0장을 돌고 통과"가 가장 나쁜 결과다.
+const chosen = opt.pages ? opt.pages.split(",").map((s) => s.trim()).filter(Boolean) : opt.scope === "representative" ? [...REPRESENTATIVE] : null;
+if (chosen) {
+  const missing = chosen.filter((p) => !allPages.includes(p));
+  if (missing.length) {
+    console.error(`후보 docs에 없는 장입니다: ${missing.join(", ")}`);
+    process.exit(2);
+  }
+}
+const pages = chosen ? allPages.filter((p) => chosen.includes(p)) : allPages;
+report.coverage = opt.pages
+  ? { full: false, label: "고른 장만", note: `C는 고른 ${pages.length}장만 본다(4모드 × 2폭). 나머지 ${allPages.length - pages.length}장은 C가 보지 않는다.` }
+  : opt.scope === "representative"
+    ? { full: false, label: "대표만", note: `C는 대표 ${pages.length}장만 본다(4모드 × 2폭, 영어 조건 포함). 나머지 ${allPages.length - pages.length}장은 C가 보지 않는다.` }
+    : opt.scope === "reduced"
+      ? { full: false, label: "줄임", note: `C는 축소형이다 - 대표 5장만 4모드 × 2폭이고 나머지 ${allPages.length - REPRESENTATIVE.filter((p) => allPages.includes(p)).length}장은 1모드(auto-light) × 2폭이다.` }
+      : { full: true, label: "전수", note: `C는 ${allPages.length}장 전부를 4모드 × 2폭으로 본다.` };
+report.input.pages = { all: allPages.length, chosen: pages.length };
 const legacyText = await readFile(legacyFile, "utf8");
 const baseCssText = await readFile(path.join(baseDir, "style.css"), "utf8");
 const headCssText = await readFile(path.join(headDir, "style.css"), "utf8");
@@ -200,17 +231,19 @@ try {
   // ── C. 계산된 스타일과 상자 ───────────────────────────────────────────────────────────────
 
   if (only.has("C")) {
-    section(`C. 계산된 스타일·상자 (${opt.scope === "full" ? "전수" : "축소"})`);
+    section(`C. 계산된 스타일·상자 (${report.coverage.label})`);
     const jobs = [];
     const rest = pages.filter((p) => !REPRESENTATIVE.includes(p));
-    const full = opt.scope === "full";
+    const reducedModes = opt.scope === "reduced";
     for (const page of pages) {
       // 축소형이면 대표 5장만 4모드이고 나머지는 auto-light 하나다(완료 조건 9-C가 적은 하한).
-      const modes = full || REPRESENTATIVE.includes(page) ? MODES : [MODES[0]];
+      // 장을 고른 꼴(--pages·representative)은 고른 장을 4모드로 본다 - 장을 줄인 것이지 모드를 줄인 것이 아니다.
+      const modes = !reducedModes || REPRESENTATIVE.includes(page) ? MODES : [MODES[0]];
       for (const mode of modes) for (const width of WIDTHS) jobs.push({ page, mode, width, lang: null });
     }
-    for (const page of ENGLISH_PAGES) for (const width of WIDTHS) jobs.push({ page, mode: MODES[0], width, lang: "en" });
-    report.C = { scope: opt.scope, pages: pages.length, representative: REPRESENTATIVE.filter((p) => pages.includes(p)), restPages: rest.length, jobs: jobs.length, renders: jobs.length * 2, results: [], totals: {} };
+    for (const page of ENGLISH_PAGES.filter((p) => pages.includes(p))) for (const width of WIDTHS) jobs.push({ page, mode: MODES[0], width, lang: "en" });
+    report.C = { scope: opt.scope, coverage: report.coverage.label, pages: pages.length, pagesAll: allPages.length, pageList: chosen ? pages : null, representative: REPRESENTATIVE.filter((p) => pages.includes(p)), restPages: rest.length, jobs: jobs.length, renders: jobs.length * 2, results: [], totals: {} };
+    log(`${report.coverage.note}`);
     log(`장 ${pages.length}개 → 조건 ${jobs.length}개(기준·후보 두 번이라 렌더 ${jobs.length * 2}회), 탭 ${concurrency}개 동시`);
 
     const copts = { customNames, fixedNow };
@@ -218,6 +251,9 @@ try {
     let diffJobs = 0;
     let elements = 0;
     let values = 0;
+    // (나) 견준 `이름:값` 쌍의 수를 기준·후보에서 따로 더한다. 둘이 같아야 "값을 하나도 빼지 않고 견뒀다"가 성립한다.
+    let pairsBase = 0;
+    let pairsHead = 0;
     let diffs = 0;
     let unsettled = 0;
     const t0 = Date.now();
@@ -235,7 +271,7 @@ try {
         return false;
       }
       const c = compareCollected(a, b);
-      const row = { page: job.page, mode: job.mode.name, width: job.width, lang: job.lang, elements: c.elements, values: c.values, diffs: c.diffs, domMismatch: c.domMismatch, settled: a.settled && b.settled, blocked: { base: a.blocked, head: b.blocked } };
+      const row = { page: job.page, mode: job.mode.name, width: job.width, lang: job.lang, elements: c.elements, values: c.values, pairs: c.pairs, customNamesRead: c.customNamesRead, diffs: c.diffs, domMismatch: c.domMismatch, settled: a.settled && b.settled, blocked: { base: a.blocked, head: b.blocked } };
       if (c.diffs) {
         // 해시가 다른 자리만 값을 다시 읽는다 - 장마다 수백만 값이라 처음부터 값을 옮기면 느리다.
         // 한 번에 펼치는 요소 수를 DETAIL_CAP으로 막는다: 전부 펼치면 evaluate가 수십 MB를 돌려주다 Chrome이 죽는다(실측).
@@ -250,6 +286,8 @@ try {
       measured.add(job.id);
       elements += c.elements;
       values += c.values;
+      pairsBase += c.pairs.base;
+      pairsHead += c.pairs.head;
       diffs += c.diffs;
       if (c.diffs) diffJobs++;
       if (!row.settled) unsettled++;
@@ -295,8 +333,12 @@ try {
       log(`  **끝내 못 쟀다**: ${job.page} ${job.mode.name} ${job.width}${job.lang ? ` ${job.lang}` : ""} — ${job.lastError}`);
     }
     report.C.results.sort((x, y) => (x.page === y.page ? (x.mode === y.mode ? x.width - y.width : x.mode < y.mode ? -1 : 1) : x.page < y.page ? -1 : 1));
-    report.C.totals = { jobs: jobs.length, diffJobs, elements, values, diffs, unsettled, failed, seconds: Math.round((Date.now() - t0) / 1000) };
+    report.C.totals = { jobs: jobs.length, diffJobs, elements, values, pairsBase, pairsHead, customProps: customNames.length, diffs, unsettled, failed, seconds: Math.round((Date.now() - t0) / 1000) };
     log(`C 합계: 조건 ${jobs.length}개, 견준 요소 ${elements}개, 값 ${values}개, **차이 ${diffs}개**(차이 난 조건 ${diffJobs}개), 조용해지지 않은 조건 ${unsettled}개, 못 잰 조건 ${failed}개, ${report.C.totals.seconds}초`);
+    // cto 개정 1(https://github.com/kyhsa93/jipgye/issues/276#issuecomment-6147173489): 열거 순서에만 면제를 주는 대가로 셋을 요건으로 둔다.
+    log(`C 정렬 면제의 요건 셋: (가) 이름으로 정렬한 뒤 쌍을 전부 해시에 넣었다(값 누락 0 — 값이 다르면 해시가 다르다), ` +
+      `(나) 견준 쌍 기준 ${pairsBase}개 / 후보 ${pairsHead}개 → ${pairsBase === pairsHead ? "같다" : "**다르다(차이다)**"}, ` +
+      `(다) 원문이 선언한 사용자 정의 속성 ${customNames.length}개를 기준·후보에 같은 목록으로 읽혔다`);
   }
 
   // ── C-5. 대조군 ───────────────────────────────────────────────────────────────────────────
@@ -356,6 +398,9 @@ if (report.C) {
   if (report.C.totals.diffs !== 0) failures.push(`C: 계산된 스타일·상자에 차이 ${report.C.totals.diffs}개`);
   if (report.C.totals.unsettled !== 0) failures.push(`C: 조용해지지 않은 조건 ${report.C.totals.unsettled}개(값을 믿을 수 없다)`);
   if (report.C.totals.failed !== 0) failures.push(`C: 못 잰 조건 ${report.C.totals.failed}개(시간 제한을 넘겼다 — 덮이지 않은 자리다)`);
+  // (나) 쌍의 개수가 다르면 그 자체가 차이다. 조건마다도 보지만(compareCollected) 합계로 한 번 더 막는다.
+  if (report.C.totals.pairsBase !== report.C.totals.pairsHead) failures.push(`C: 견준 쌍의 수가 기준 ${report.C.totals.pairsBase} / 후보 ${report.C.totals.pairsHead}로 다르다`);
+  if (report.C.totals.customProps === 0) failures.push("C: 원문이 선언한 사용자 정의 속성을 하나도 읽히지 못했다(다 요건)");
 }
 if (opt.control && report.control?.error) failures.push(`C-5: 대조군을 돌리지 못했다 — ${report.control.error}`);
 if (opt.control && report.control && report.control.diffs === 0) failures.push("C-5: 대조군을 잡지 못했다 — 이 비교는 증빙이 되지 않는다");
@@ -367,7 +412,7 @@ await writeFile(path.join(outDir, "report.json"), JSON.stringify(report, null, 1
 await writeFile(path.join(outDir, "summary.md"), summaryMarkdown(report));
 section("판정");
 log(`보고서: ${path.join(outDir, "report.json")} / ${path.join(outDir, "summary.md")}`);
-if (report.reduced) log("**범위를 줄였다** — C는 축소형(대표 5장만 4모드 × 2폭, 나머지는 1모드 × 2폭)이다.");
+if (!report.coverage.full) log(`**전수가 아니다 — C 범위: ${report.coverage.label}.** ${report.coverage.note}`);
 log(failures.length ? `실패 ${failures.length}건:\n  - ${failures.join("\n  - ")}` : "전부 0 — 차이 없음.");
 process.exit(failures.length ? 1 : 0);
 
@@ -380,7 +425,8 @@ function summaryMarkdown(r) {
   L.push(`- 기준 docs: \`${r.input.base}\` / 후보 docs: \`${r.input.head}\``);
   L.push(`- style.css SHA-256: 기준 \`${r.input.sha256.baseCss}\` (${r.input.bytes.baseCss}바이트) / 후보 \`${r.input.sha256.headCss}\` (${r.input.bytes.headCss}바이트)`);
   L.push(`- 원문 \`legacy.css\` ${r.input.bytes.legacy}바이트, 기준 style.css와 글자 동일: **${r.input.legacyEqualsBaseCss}**`);
-  if (r.reduced) L.push("", "> **범위를 줄였다.** C는 축소형이다 — 대표 5장만 4모드 × 2폭이고 나머지는 1모드(auto-light) × 2폭이다.");
+  // 전수가 아니면 머리에서 바로 보이게 한다 - "줄임"도 "대표만"도 같은 자리에 같은 꼴로 찍는다(cto 요청 6147173489).
+  if (!r.coverage.full) L.push("", `> **전수가 아니다 — C 범위: ${r.coverage.label}.** ${r.coverage.note}`);
   if (r.A) {
     L.push("", "## A. 전제", "");
     L.push(`- A-1 \`diff -rq\`: 파일 ${r.A.files.total}개 중 같음 ${r.A.files.same}, 다름 ${r.A.files.differ.length}(\`${r.A.files.differ.join("`, `") || "없음"}\`), 한쪽에만 있는 파일 ${r.A.files.onlyBase.length + r.A.files.onlyHead.length}개`);
@@ -391,7 +437,9 @@ function summaryMarkdown(r) {
   }
   if (r.B) {
     L.push("", "## B. CSSOM 규칙 단위", "");
-    L.push(`- B-1·2 기준 규칙 ${r.B.compare.base.rules}개·선언 ${r.B.compare.base.decls}개 / 후보 ${r.B.compare.head.rules}개·선언 ${r.B.compare.head.decls}개 → **차이 ${r.B.compare.diffs}개**(순서 포함)`);
+    // 개정 2(cto 6147173489): 같은 CSS의 "선언 수"가 자에 따라 둘 나온다. 어느 자로 쟀는지 적지 않으면 뒤에 비교할 수 없다.
+    L.push(`- B-1·2 기준 규칙 ${r.B.compare.base.rules}개·**선언 ${r.B.compare.base.decls}개(CSSOM 집계 — 속기가 롱핸드로 펼쳐진 뒤의 수)** / 후보 ${r.B.compare.head.rules}개·선언 ${r.B.compare.head.decls}개 → **차이 ${r.B.compare.diffs}개**(순서 포함)`);
+    if (r.B.rewrites) L.push(`  - 같은 CSS를 **원문 글자로 세면 규칙 ${r.B.rewrites.rules}개·선언 ${r.B.rewrites.decls}개**(파일에 적힌 선언의 수). 두 수는 자가 다를 뿐 둘 다 맞는 수다.`);
     L.push(`- B-1 층 분포 ${JSON.stringify(r.B.compare.layers)}, 층 선언문 ${r.B.compare.head.statements.length}개: ${r.B.compare.head.statements.map((s) => `\`${s}\``).join(", ") || "없음"}`);
     L.push(`- A-3(CSSOM) \`@layer components\` 밖 규칙 **${r.B.compare.outside.length}개**${r.B.compare.outside.length ? `\n  - ${r.B.compare.outside.join("\n  - ")}` : " — 요소에 닿는 선택자 0개"}`);
     L.push(`- B-3 원문 선언: 그대로 ${r.B.sourceFate.kept}개, 브라우저가 버린 선언 ${r.B.sourceFate.dropped.length}개, 같은 블록에서 덮인 선언 ${r.B.sourceFate.shadowed.length}개, 규칙째 못 읽은 것 ${r.B.sourceFate.droppedRules.length}개`);
@@ -400,10 +448,17 @@ function summaryMarkdown(r) {
     for (const x of r.B.rewrites.rewritten.slice(0, 30)) L.push(`  - #${x.index} 원문 \`${x.source}\` → 산출 \`${x.built}\``);
   }
   if (r.C) {
-    L.push("", `## C. 계산된 스타일·상자 (${r.C.scope === "full" ? "전수" : "축소"})`, "");
-    L.push(`- 장 ${r.C.pages}개 × 모드·폭 = 조건 ${r.C.jobs}개, 렌더 ${r.C.renders}회(기준·후보), ${r.C.totals.seconds}초`);
+    L.push("", `## C. 계산된 스타일·상자 (${r.C.coverage ?? (r.C.scope === "full" ? "전수" : "축소")})`, "");
+    L.push(`- 장 ${r.C.pages}개${r.C.pagesAll && r.C.pagesAll !== r.C.pages ? `(후보 docs의 ${r.C.pagesAll}장 가운데 고른 것: ${(r.C.pageList ?? []).join(", ")})` : ""} × 모드·폭 = 조건 ${r.C.jobs}개, 렌더 ${r.C.renders}회(기준·후보), ${r.C.totals.seconds}초`);
     L.push(`- 견준 요소 ${r.C.totals.elements}개, 값 ${r.C.totals.values}개 → **차이 ${r.C.totals.diffs}개**`);
     L.push(`- 조용해지지 않은 조건 ${r.C.totals.unsettled}개, 차이 난 조건 ${r.C.totals.diffJobs}개, 못 잰 조건 ${r.C.totals.failed}개`);
+    // 사용자 정의 속성의 **열거 순서**에만 면제를 주고, 그 대가로 요건 셋을 지켰다는 것을 여기서 보인다(cto 개정 1 6147173489).
+    L.push("", "### C-0. 정렬 면제의 요건 셋 (cto 개정 1)", "");
+    L.push("- (가) 요소·의사요소마다 `이름:값` 쌍을 **이름으로 정렬한 뒤 전부** 견줬다. 값은 하나도 빼지 않았다 — 정렬한 쌍 **전체**를 이어 붙여 SHA-256을 내므로 값이 하나라도 다르면 반드시 해시가 달라진다(`lib/style-equal.mjs`의 `styleText`).");
+    L.push(`- (나) **견준 쌍의 개수**: 기준 ${r.C.totals.pairsBase}개 / 후보 ${r.C.totals.pairsHead}개 → **${r.C.totals.pairsBase === r.C.totals.pairsHead ? "같다" : "다르다 — 그 자체가 차이다"}**. 한쪽에만 있는 속성은 이 수에서 드러난다(조건마다도 견주고 합계로 한 번 더 본다).`);
+    L.push(`- (다) \`cs\` 열거에 \`--*\`가 나오지 않는 환경을 대비해 **원문이 선언한 사용자 정의 속성 이름 ${r.C.totals.customProps}개**를 따로 읽혔고, 기준·후보에 **같은 목록**을 썼다(\`src/css/legacy.css\` 한 곳에서 뽑아 양쪽에 넘긴다).`);
+    L.push("- 면제는 **열거 순서에만** 준다. 규칙 순서(증빙 B)는 종전대로 순서까지 견준다.");
+    L.push("");
     L.push("", "| 장 | 모드 | 폭 | 요소 | 값 | 차이 |", "|---|---|---|---|---|---|");
     for (const x of r.C.results) L.push(x.error ? `| ${x.page}${x.lang ? ` (${x.lang})` : ""} | ${x.mode} | ${x.width} | — | — | **못 쟀다: ${x.error}** |` : `| ${x.page}${x.lang ? ` (${x.lang})` : ""} | ${x.mode} | ${x.width} | ${x.elements} | ${x.values} | ${x.diffs} |`);
   }
