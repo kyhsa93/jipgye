@@ -1,8 +1,8 @@
 # tools/golden — 같은-실행 비교 도구 (#236)
 
 렌더러를 바꾸기 전에 "바뀌지 않았다"를 기계로 판정하는 자다(React SSG 체인, #235). 자체 `package.json`(parse5)이라
-루트 `npm ci`·`node --test test/*.test.mjs`(CI)에는 설치되지 않는다 — **이 폴더의 시험은 CI에 들어가지 않고**, 여기서
-`npm ci && npm test`로 돌린다. 루트 `test/`는 parse5를 import하지 않는다.
+루트 `npm ci`·`node --test test/*.test.mjs`에는 설치되지 않는다 — CI(`.github/workflows/test.yml`)가 루트 시험 뒤에
+이 폴더에서 따로 `npm ci && npm test`를 돌린다(#289 PR 2). 손으로 돌릴 때도 같다. 루트 `test/`는 parse5를 import하지 않는다.
 
 ## 쓰는 법
 
@@ -186,7 +186,7 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
 - 신호 처리는 `spawnSync`(rsync·cp·git)가 도는 동안 그 호출이 끝난 뒤로 미뤄진다(이벤트 루프가 막힌다). Ctrl-C(프로세스 그룹 전체에 간다)는 그 자식도 끊는다. SIGKILL은 못 잡으므로 다음 시작 때의 고아 정리가 맡는다.
 - 고아 정리가 pid로 보호하므로, 죽은 실행의 pid를 다른 프로세스가 재사용하고 있으면 그 고아는 그 프로세스가 끝날 때까지 남는다.
 
-- 이 폴더의 시험은 CI에 없다(워크플로를 바꾸지 않는다, #236). 변이 시험·자기 비교는 PR 본문에 명령·출력을 붙여 증빙한다.
+- `npm test`는 CI(`.github/workflows/test.yml`)가 루트 시험 뒤에 `working-directory: tools/golden`으로 돌린다(#289 PR 2). **`--render` 자기 비교와 `npm run test:live`는 CI에 없다** — 변이 시험·자기 비교 출력은 그대로 PR 본문에 명령·출력을 붙여 증빙한다.
   `npm test` 가운데 "훅 클래스 목록이 소스와 맞는다" 하나만 저장소의 코드(`docs/`의 JS·인라인 script, `test/*.mjs`, `scripts/build-*-pages.mjs`)를 읽는다 — 데이터는 읽지 않는다.
   정리 시험(`test/cleanup.test.mjs`)은 고정 가짜 저장소만 쓰고 시험마다 자기 폴더 안에서 돌아 끝에 지운다.
 - 공백 줄이기는 CSS 공백 접힘을 흉내 낸 규칙이다(블록 요소의 시작·끝·이웃에서만 공백을 뺀다). 화면에서 달라 보이는 공백 차이는 잡고,
