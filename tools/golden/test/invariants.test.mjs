@@ -389,10 +389,14 @@ test("훅 클래스 목록(hook-classes.json)이 소스와 맞는다 — 어긋�
   assert.deepEqual([drift.missing, drift.stale], [[], []], "목록 파일이 소스와 어긋났다");
   assert.equal(await readFile(path.join(import.meta.dirname, "../hook-classes.json"), "utf8"), formatHookList(collected), "파일 모양까지 같다(다시 만들어도 바뀌지 않는다)");
   // ceo 계획 문서(개정 B안 B2-3)가 사람이 확인해 둔 훅이 기계 추출에 전부 들어 있다.
-  // 어느 바구니(js·markup)에 들어 있는지는 묻지 않는다 - 둘을 합친 것이 비교에 쓰이는 목록이다.
-  // icon-toggle은 빠졌다: #306이 공유 버튼을 구운 HTML에 넣으면서 nav.js가 버튼을 만들지 않게 되었고,
-  // 그 class를 읽던 자리(`first?.className || "icon-toggle"`)가 함께 사라졌다. 이제 이 class를 읽는 JS가
-  // 없으므로 기계 추출이 훅으로 보지 않는다(보고서의 hook-list-dropped가 이것을 적는다). cto 확인 대상이다.
+  // 어느 바구니(js·markup)에 들어 있는지는 묻지 않는다 - 비교가 쓰는 것은 둘의 합집합이다
+  // (lib/invariants.mjs의 readHookList().all과 compareInvariants). 전에는 단언이 list.js만 봐서
+  // **도구가 쓰는 것보다 좁았고**, 두 바구니에 다 있는 이름(header-actions)이 우연히 통과하고 있었다.
+  // icon-toggle은 목록에서 아예 빠졌다: #306이 공유 버튼을 구운 HTML에 넣으면서 nav.js가 버튼을
+  // 만들지 않게 되었고, 그 class를 읽던 자리(`first?.className || "icon-toggle"`)가 함께 사라졌다.
+  // 이제 이 class를 읽는 JS가 없으므로 기계 추출이 훅으로 보지 않는다(보고서의 hook-list-dropped).
+  // 대신 새 nav.js의 의존은 class가 아니라 #share-button id와 data-share="page" 속성이고,
+  // 그 둘은 hooks 검사가 하드로 잡는다(id·data-*·aria-* 바구니, data-*는 이름과 값을 함께 본다).
   const known = "table-scroll page-nav sub-nav site-search site-search-results header-actions skip-link brand marker marker-line marker-dot news-item context-chip stat-card news-chip history-more realestate-table budget-summary budget-empty empty read sorted scroll-start scroll-end on placeholder summary-meta".split(" ");
   assert.deepEqual(known.filter((c) => !list.js.includes(c) && !list.markup.includes(c)), []);
 });

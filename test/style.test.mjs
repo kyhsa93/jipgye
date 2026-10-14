@@ -277,14 +277,22 @@ test("머리 버튼은 어느 장이든 공유를 갖는다 - 구운 HTML에 들
   assert.match(nav, /getAttribute\("data-share"\) === "page"\) return;/, "장이 직접 거는 다섯 장에 겹쳐 건다");
   const docs = new URL("../docs/", import.meta.url);
   let seen = 0;
+  let self = 0;
   for (const f of (await readdir(docs)).filter((x) => x.endsWith(".html"))) {
     const html = await rf(new URL(f, docs), "utf8");
     if (!html.includes('class="header-actions"')) continue;
     seen += 1;
     assert.ok(html.includes('id="share-button"'), `${f}: 구운 공유 버튼이 없다`);
-    assert.ok(html.includes('src="./nav.js"') || html.includes('data-share="page"'), `${f}: 공유 버튼에 동작을 걸 길이 없다`);
+    assert.ok(html.includes('src="./nav.js"'), `${f}: nav.js를 싣지 않는다`);
+    // 표시(data-share="page")와 장 안의 핸들러는 짝이어야 한다. 표시만 있고 핸들러가 없으면 죽은 버튼이고,
+    // 핸들러만 있고 표시가 없으면 nav.js가 겹쳐 걸어 한 번 눌러 두 번 공유된다. 둘 다 아니면 nav.js가 건다.
+    const marked = html.includes('data-share="page"');
+    const ownHandler = /getElementById\("share-button"\)[\s\S]{0,120}addEventListener|shareButton\s*=\s*document\.getElementById\("share-button"\)/.test(html);
+    assert.equal(marked, ownHandler, marked ? `${f}: data-share="page"인데 장 안에 공유 핸들러가 없다 - 죽은 버튼` : `${f}: 장 안에 공유 핸들러가 있는데 data-share="page"가 없다 - nav.js가 겹쳐 건다`);
+    if (marked) self += 1;
   }
   assert.ok(seen > 60, `머리를 가진 장을 ${seen}장밖에 못 찾았다 - 검사가 헛돈다`);
+  assert.equal(self, 5, `장이 직접 거는 장이 ${self}장이다 - 첫 화면과 금리 네 장뿐이어야 한다`);
 });
 
 // 장이 자기 문구로 공유하는 다섯 장(첫 화면·금리 넷)은 data-share="page"로 표시하고, 그 표시가 있는

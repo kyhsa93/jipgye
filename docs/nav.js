@@ -243,7 +243,7 @@
 
 // 머리 버튼 셋의 aria-label이 페이지 언어를 따른다 (#112). 정적 HTML은 ko로 박혀 있고, 언어 전환
 // 핸들러는 장마다 인라인(예순일곱 곳)이라 라벨을 따로 갱신하지 않는다 - 전환 때 모두 html lang을
-// 바꾸므로 그 속성을 지켜보다가 세 버튼을 한 곳에서 다시 맞춘다. 공유 버튼은 위에서 만든 뒤에 여기서 채운다.
+// 바꾸므로 그 속성을 지켜보다가 세 버튼을 한 곳에서 다시 맞춘다. 공유 버튼도 구운 HTML에 박혀 있다(#306).
 (function () {
   if (typeof document.getElementById !== "function" || !document.documentElement) return;
   const LABELS = {
