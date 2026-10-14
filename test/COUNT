@@ -1,0 +1,15 @@
+# 루트 `npm test`의 하한 둘 (#315). 래칫은 scripts/test-count-ratchet.mjs.
+# 1행 = `ℹ tests N` 하한, 2행 = `ℹ pass N` 하한. 주석(#)과 빈 줄은 버린다.
+# 둘을 같이 보는 이유: `tests`만 보면 시험을 전부 skip으로 바꿔도 통과하고(cto 실측),
+# `pass`만 보면 정당한 게이트 skip에 매번 걸린다.
+# 내리는 변경은 PR 본문에 사유를 적는다 — 사유 없이 내리는 PR은 승인하지 않는다(#315 범위 4).
+# 센 법: 2026-10-15, merge-base e9a4c668, Node v24.16.0, macOS 26.6.2.
+#   /bin/dash -c "node --test 'test/*.test.{mjs,ts}'" → ℹ tests 1518 · pass 1518 · fail 0 · skipped 0
+#   /bin/bash 에서도 같은 1518. skipped 0 이라 두 하한이 같다.
+#   앞 라운드에 2477b76a 에서 센 값은 1517이었다(#318). 차이 1은 이 PR(#287·PR #321)이
+#   test/rate-pages.test.mjs 에 더한 시험 하나 —
+#   "추이 격자는 그릴 카드 수만큼 자리를 미리 깔고, 그 칸의 높이를 style.css가 잡는다 (#287)".
+#   없어진 시험은 0이다(`git diff e9a4c668..HEAD -- test/` 가 +32줄·-0줄, test() 추가 1·삭제 0).
+#   같은 merge-base e9a4c668 에서 센 값은 1517 로 #318 이 적은 수와 이어진다(병합이 수를 안 움직였다).
+1518
+1518

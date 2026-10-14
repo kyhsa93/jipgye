@@ -37,7 +37,18 @@ jobs:
           "$RUNNER_TEMP/actionlint" -version
           "$RUNNER_TEMP/actionlint"
       - run: npm ci
-      - run: npm test
+      # 시험 개수 래칫(#315). `npm test`만으로는 두 구멍이 안 막힌다 —
+      # (1) 따옴표 없는 글롭은 셸이 먼저 펼쳐, 안 맞는 파일이 Node에 **인자로 전달조차 되지 않는다**
+      #     (package.json에서 따옴표로 묶어 Node가 펼치게 바꿨다. bash는 `{mjs,ts}`를 펼치고 dash는 안 펼쳐
+      #     따옴표가 없으면 동작이 셸에 묶인다 — CI ubuntu의 sh는 dash다),
+      # (2) 글롭이 **하나도 안 맞아도 `node --test`의 종료 코드가 0**이다(pm 재현 2026-10-14, Node v24.16.0).
+      # 그래서 실제로 돈 개수를 커밋된 하한(test/COUNT)과 대조한다. tee로 로그를 남기고 pipefail로
+      # `npm test` 자체의 실패도 그대로 떨어뜨린다.
+      - name: npm test + 시험 개수 래칫
+        run: |
+          set -euo pipefail
+          npm test 2>&1 | tee "$RUNNER_TEMP/root-test.log"
+          node scripts/test-count-ratchet.mjs test/COUNT "$RUNNER_TEMP/root-test.log"
       # tools/golden(#236·#274)은 의존 트리를 루트와 나눠 놨다(parse5) — 루트 `npm ci`로는 설치되지 않아
       # 이 폴더 시험이 CI 밖에 있었다. 그래서 `docs/*.js`의 class 문자열을 바꾸고 훅 목록(`hook-classes.json`)을
       # 안 고친 PR은 누군가 손으로 `tools/golden`에서 `npm test`를 돌릴 때에야 드러났다(#289 본문).
@@ -50,6 +61,11 @@ jobs:
       - name: tools/golden npm ci
         run: npm ci
         working-directory: tools/golden
-      - name: tools/golden npm test
-        run: npm test
+      # 래칫은 루트와 같은 모양이되 하한은 따로 둔다(#315 완료 조건 3) — 의존 트리가 다르고(parse5)
+      # 건너뛰는 11개(GOLDEN_LIVE 게이트)까지 합쳐 `ℹ tests`가 101이라 루트 숫자와 섞으면 안 된다.
+      - name: tools/golden npm test + 시험 개수 래칫
+        run: |
+          set -euo pipefail
+          npm test 2>&1 | tee "$RUNNER_TEMP/golden-test.log"
+          node ../../scripts/test-count-ratchet.mjs test/COUNT "$RUNNER_TEMP/golden-test.log"
         working-directory: tools/golden
