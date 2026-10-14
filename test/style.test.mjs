@@ -326,11 +326,14 @@ const docsPages = async () => {
 // 구운 버튼 셋의 차례는 어느 장이든 공유 -> 테마 -> 언어다. nav.js가 끼워 넣던 자리(맨 앞)와 같다.
 test("머리 버튼 셋의 차례가 장마다 같다 (#306)", async () => {
   const bad = [];
+  let seen = 0;
   for (const [f, html] of await docsPages()) {
     const actions = /<div class="header-actions">([\s\S]*?)<\/div>/.exec(html)?.[1];
     if (!actions) continue;
+    seen += 1;
     const order = [...actions.matchAll(/\bid="([a-z-]+)"/g)].map((m) => m[1]);
     if (order.join(",") !== "share-button,theme-toggle,lang-toggle") bad.push(`${f}: ${order.join(",")}`);
   }
   assert.deepEqual(bad, []);
+  assert.ok(seen > 60, `머리를 읽은 장이 ${seen}장뿐이다 - 검사가 헛돈다`);
 });
