@@ -1231,6 +1231,7 @@ const prerenderedBudgetExtras = (() => {
     return "";
   }
 })();
+const bakedBudgetResult = document.getElementById("budget-result")?.innerHTML ?? "";
 const budgetEok = isBudgetPage ? Math.max(1, Math.round(budgetBand10k / 10000)) : null;
 
 const EOK = 10000;
@@ -1263,27 +1264,35 @@ function budgetDealHtml(deal) {
   );
 }
 
+function withKoOnly(html) {
+  if (locale !== "en") return html;
+  const at = html.indexOf(" data-prerendered");
+  if (at < 0) return html;
+  const open = html.lastIndexOf("<", at);
+  return `${html.slice(0, open)}<p class="content-notice">${escapeHtml(t("budgetKoOnly"))}</p>${html.slice(open)}`;
+}
+
+let budgetResultHtml = bakedBudgetResult;
+function paintBudgetResult() {
+  const box = document.getElementById("budget-result");
+  const next = withKoOnly(budgetResultHtml);
+  if (box.innerHTML !== next) box.innerHTML = next;
+}
+
 function renderBudget() {
   const section = document.getElementById("budget-section");
   section.hidden = !budgetEnabled;
   if (!budgetEnabled) return;
 
   document.getElementById("budget-heading").textContent = t("budgetHeading");
-  document.getElementById("budget-note").textContent = t("budgetNote");
   if (!cache.budget?.bands?.length) return; // #288
   const band = bandFor(budgetEok * EOK);
-  const box = document.getElementById("budget-result");
 
-  if (!band) {
-    box.innerHTML = `<p class="budget-empty">${escapeHtml(t("budgetEmpty"))}</p>`;
-    return;
-  }
-
-  // 부대비용·최소 현금·대출·정책대출·후보 문단은 빌드가 한국 법령 원문을 인용해 한국어로만 굽는다.
-  // 영어 화면에서 말없이 한국어가 튀어나오지 않게, 그렇다고 먼저 알린다(PO 2차 #41).
-  const koOnly = locale === "en" && prerenderedBudgetExtras ? `<p class="content-notice">${escapeHtml(t("budgetKoOnly"))}</p>` : "";
   // 빌드(scripts/prerender.mjs budgetBodyHtml)와 같은 순서: 요약 → 구운 덩어리들 → 거래 목록.
-  box.innerHTML = budgetHeadHtml(band, cache.budget.periods) + koOnly + prerenderedBudgetExtras + budgetDealsHtml(band);
+  budgetResultHtml = band
+    ? budgetHeadHtml(band, cache.budget.periods) + prerenderedBudgetExtras + budgetDealsHtml(band)
+    : `<p class="budget-empty">${escapeHtml(t("budgetEmpty"))}</p>`;
+  paintBudgetResult();
 }
 
 function budgetDealsHtml(band) {
@@ -1337,6 +1346,8 @@ function applyLocale() {
   document.getElementById("nav-news").textContent = t("navNews");
   document.getElementById("nav-realestate").textContent = t("navRealestatePrices");
   document.getElementById("nav-rates").textContent = t("navRates");
+  document.getElementById("budget-note").textContent = t("budgetNote");
+  paintBudgetResult();
   for (const link of document.querySelectorAll("[data-re-page]")) {
     link.textContent = t(NAV_KEYS[link.getAttribute("data-re-page")]);
   }
@@ -1346,7 +1357,8 @@ function applyLocale() {
 function renderUpdated(realestate) {
   // 예산대 장은 본문(예산대 거래)이 주인공이다. 머리에 맨 아래 서울 평균 카드의 이번 주 창을 적으면 본문의
   // "8월, 9월 신고분"과 다른 말을 한다(PO 2차 #41) - 본문과 같은 기간을 적는다.
-  if (isBudgetPage && cache.budget?.periods?.length) {
+  if (isBudgetPage) {
+    if (!cache.budget?.periods?.length) return;
     const periods = cache.budget.periods.map((p) => monthLabel(p)).filter(Boolean).join(", ");
     const at = cache.budget.updatedAt
       ? ` · ${t("updatedWord")} ${new Date(cache.budget.updatedAt).toLocaleDateString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
