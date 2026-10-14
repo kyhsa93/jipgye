@@ -267,14 +267,70 @@ test("h3도 축척 안이다 (#54)", async () => {
   assert.match(css, /\nmain h3 \{\s*font-size: var\(--fs-lg\);/);
 });
 
-test("머리 버튼은 어느 장이든 공유를 갖는다 - 없는 장은 nav.js가 붙인다 (#54)", async () => {
+// 공유 버튼은 어느 장이든 구운 HTML에 있다 (#54, #306). nav.js가 로드 뒤에 끼워 넣던 때는 머리의
+// 버튼이 둘에서 셋으로 늘며 예순두 장이 0.001 밀렸다 - 그래서 nav.js는 더 만들지 않고(createElement가
+// 없어야 한다) 동작만 건다. 구운 버튼이 빠진 장이 생기면 그 장에는 공유 버튼이 아예 없게 되므로 여기서 막는다.
+test("머리 버튼은 어느 장이든 공유를 갖는다 - 구운 HTML에 들어 있다 (#54, #306)", async () => {
   const { readFile: rf, readdir } = await import("node:fs/promises");
   const nav = await rf(new URL("../docs/nav.js", import.meta.url), "utf8");
-  assert.match(nav, /document\.getElementById\("share-button"\)\) return;/, "이미 있는 장에 두 번 붙인다");
+  assert.doesNotMatch(nav, /createElement\("button"\)|id = "share-button"/, "nav.js가 공유 버튼을 다시 만든다");
+  assert.match(nav, /getAttribute\("data-share"\) === "page"\) return;/, "장이 직접 거는 다섯 장에 겹쳐 건다");
   const docs = new URL("../docs/", import.meta.url);
+  let seen = 0;
   for (const f of (await readdir(docs)).filter((x) => x.endsWith(".html"))) {
     const html = await rf(new URL(f, docs), "utf8");
     if (!html.includes('class="header-actions"')) continue;
-    assert.ok(html.includes('id="share-button"') || html.includes('src="./nav.js"'), `${f}: 공유 버튼이 붙을 길이 없다`);
+    seen += 1;
+    assert.ok(html.includes('id="share-button"'), `${f}: 구운 공유 버튼이 없다`);
+    assert.ok(html.includes('src="./nav.js"') || html.includes('data-share="page"'), `${f}: 공유 버튼에 동작을 걸 길이 없다`);
   }
+  assert.ok(seen > 60, `머리를 가진 장을 ${seen}장밖에 못 찾았다 - 검사가 헛돈다`);
+});
+
+// 장이 자기 문구로 공유하는 다섯 장(첫 화면·금리 넷)은 data-share="page"로 표시하고, 그 표시가 있는
+// 장에서는 nav.js가 손을 떼야 한다. 둘 다 걸면 한 번 눌러 두 번 공유된다.
+test("data-share=\"page\"인 장에는 nav.js가 동작을 걸지 않는다 (#306)", async () => {
+  const { readFile: rf, readdir } = await import("node:fs/promises");
+  const vm = await import("node:vm");
+  const nav = await rf(new URL("../docs/nav.js", import.meta.url), "utf8");
+  const bind = (attrs) => {
+    let bound = 0;
+    const button = {
+      getAttribute: (k) => attrs[k] ?? null,
+      setAttribute() {},
+      querySelector: () => ({ textContent: "" }),
+      addEventListener: () => (bound += 1),
+    };
+    vm.runInNewContext(nav, {
+      document: {
+        documentElement: { getAttribute: () => "ko", setAttribute() {} },
+        querySelectorAll: () => [],
+        querySelector: () => null,
+        getElementById: (id) => (id === "share-button" ? button : null),
+      },
+      window: { addEventListener() {} },
+    });
+    return bound;
+  };
+  assert.equal(bind({}), 1, "구운 버튼에 동작을 걸지 않는다");
+  assert.equal(bind({ "data-share": "page" }), 0, "장이 직접 거는 버튼에 겹쳐 건다");
+});
+
+const docsPages = async () => {
+  const { readFile: rf, readdir } = await import("node:fs/promises");
+  const docs = new URL("../docs/", import.meta.url);
+  const files = (await readdir(docs)).filter((x) => x.endsWith(".html")).sort();
+  return Promise.all(files.map(async (f) => [f, await rf(new URL(f, docs), "utf8")]));
+};
+
+// 구운 버튼 셋의 차례는 어느 장이든 공유 -> 테마 -> 언어다. nav.js가 끼워 넣던 자리(맨 앞)와 같다.
+test("머리 버튼 셋의 차례가 장마다 같다 (#306)", async () => {
+  const bad = [];
+  for (const [f, html] of await docsPages()) {
+    const actions = /<div class="header-actions">([\s\S]*?)<\/div>/.exec(html)?.[1];
+    if (!actions) continue;
+    const order = [...actions.matchAll(/\bid="([a-z-]+)"/g)].map((m) => m[1]);
+    if (order.join(",") !== "share-button,theme-toggle,lang-toggle") bad.push(`${f}: ${order.join(",")}`);
+  }
+  assert.deepEqual(bad, []);
 });
