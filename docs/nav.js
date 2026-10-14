@@ -209,19 +209,16 @@
   holder.innerHTML = `<h2>${en ? "Other questions" : "다른 질문"}</h2><nav class="question-nav" aria-label="${en ? "Other questions" : "다른 질문"}">${groups}</nav>`;
 })();
 
-// 머리 버튼은 어느 장이든 셋(공유·테마·언어) - 첫 화면·금리에만 공유가 있어 장마다 버튼 수가 달랐다
-// (UIUX #54). 이미 있는 장(index·rates)은 그 장 것을 쓰고, 없는 장에만 같은 동작의 버튼을 붙인다.
+// 머리 버튼은 어느 장이든 셋(공유·테마·언어)이고, 셋 다 구운 HTML에 들어 있다 (UIUX #54, #306).
+// 예전에는 여기서 공유 버튼을 만들어 끼워 넣었다 - 그러면 첫 그리기 뒤에 머리의 버튼이 둘에서 셋으로
+// 늘어 예순두 장이 0.001 밀렸다(#306). 지금은 만들지 않고 동작만 건다.
+// data-share="page"인 다섯 장(첫 화면·금리 넷)은 장 안의 인라인 스크립트가 자기 문구로 공유하므로
+// 건드리지 않는다 - 겹쳐 걸면 한 번 눌러 두 번 공유된다.
 (function () {
-  if (typeof document.getElementById !== "function" || typeof document.createElement !== "function") return;
-  const actions = document.querySelector(".header-actions");
-  if (!actions || document.getElementById("share-button")) return;
-  const first = actions.querySelector("button");
-  const button = document.createElement("button");
-  button.type = "button";
-  button.id = "share-button";
-  button.className = first?.className || "icon-toggle";
-  button.innerHTML = '<span aria-hidden="true">📤</span>';
-  actions.insertBefore(button, actions.firstChild);
+  if (typeof document.getElementById !== "function") return;
+  const button = document.getElementById("share-button");
+  if (!button || button.getAttribute("data-share") === "page") return;
+  const icon = button.querySelector?.("span") ?? button.firstChild;
   button.addEventListener("click", async () => {
     const data = { title: document.title, url: location.href };
     if (navigator.share) {
@@ -235,8 +232,8 @@
     }
     try {
       await navigator.clipboard.writeText(location.href);
-      button.firstChild.textContent = "✅";
-      setTimeout(() => (button.firstChild.textContent = "📤"), 1500);
+      icon.textContent = "✅";
+      setTimeout(() => (icon.textContent = "📤"), 1500);
       window.analytics?.event("share", { method: "clipboard" });
     } catch {
       window.prompt("Copy this link:", location.href);
@@ -246,7 +243,7 @@
 
 // 머리 버튼 셋의 aria-label이 페이지 언어를 따른다 (#112). 정적 HTML은 ko로 박혀 있고, 언어 전환
 // 핸들러는 장마다 인라인(예순일곱 곳)이라 라벨을 따로 갱신하지 않는다 - 전환 때 모두 html lang을
-// 바꾸므로 그 속성을 지켜보다가 세 버튼을 한 곳에서 다시 맞춘다. 공유 버튼은 위에서 만든 뒤에 여기서 채운다.
+// 바꾸므로 그 속성을 지켜보다가 세 버튼을 한 곳에서 다시 맞춘다. 공유 버튼도 구운 HTML에 박혀 있다(#306).
 (function () {
   if (typeof document.getElementById !== "function" || !document.documentElement) return;
   const LABELS = {
