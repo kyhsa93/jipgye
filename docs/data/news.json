@@ -1,7 +1,130 @@
 {
-  "updatedAt": "2026-10-14T01:50:08.047Z",
+  "updatedAt": "2026-10-14T03:28:59.367Z",
   "date": "2026-10-14",
   "items": [
+    {
+      "title": "이형일 \"불확실성 지속…대외경제 영향 면밀히 점검·대응해야\"",
+      "link": "https://www.yna.co.kr/view/AKR20261014084700002",
+      "publishedAt": "2026-10-14T03:00:03.000Z",
+      "source": "연합뉴스 경제",
+      "category": "other",
+      "preview": "(세종=연합뉴스) 이세원 기자 = 이형일 부총리 겸 재정경제부 장관은 \"각국의 정치·정책 환경 변화가 대외경제 여건에 미칠 영향을 면밀히 점검하...",
+      "dupes": []
+    },
+    {
+      "title": "국고채 금리 일제히 상승…3년물 장중 연 3.883%",
+      "link": "https://www.yna.co.kr/view/AKR20261014091100008",
+      "publishedAt": "2026-10-14T02:41:14.000Z",
+      "source": "연합뉴스 경제",
+      "category": "rates",
+      "preview": "(서울=연합뉴스) 14일 국고채 금리가 일제히 상승하고 있다.",
+      "dupes": []
+    },
+    {
+      "title": "LH, 공동주택 품질 강화… 준공 전부터 입주 후 보수까지 책임 관리",
+      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/14/BO7DHEJREFCGZCRTXDA5CZPLEM/",
+      "publishedAt": "2026-10-14T02:38:04.000Z",
+      "source": "조선비즈 부동산",
+      "category": "realestate",
+      "preview": "한국토지주택공사(LH)가 공동주택 품질 관리를 강화한다. LH는 하자 발생을 최소화하고 입주민 불편을 신속히 해소하기 위해, 준공 전 점검부터 입주 후 보수까지 전 단계에 걸쳐 품질을 관리할 계획이라고 14일 밝혔다…",
+      "dupes": []
+    },
+    {
+      "title": "“텐트 치고 기다린 신축 전세”…대구 흥행 이끈 CR리츠, 부산으로",
+      "link": "https://www.mk.co.kr/news/realestate/12175432",
+      "publishedAt": "2026-10-14T02:28:22.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "국토부 인가 거쳐 설립·운영 신뢰도 높은 공급 방식 도입 대구 ‘상인푸르지오 센터파크’ 전세 오픈런으로 수요 입증 부산 ‘가야역 롯데캐슬 스카이엘’ CR리츠 도입 전세물량 공급..",
+      "dupes": []
+    },
+    {
+      "title": "100억 넘는 전세보증금 빚…HUG, 3조 회수 못 하고 있다",
+      "link": "https://www.newsis.com/view/NISX20261014_0003825193",
+      "publishedAt": "2026-10-14T02:25:04.000Z",
+      "source": "뉴시스 경제",
+      "category": "realestate",
+      "preview": "[서울=뉴시스] 강세훈 기자, 주다영 인턴기자 = 주택도시보증공사(HUG)가 보증금 반환 채무가 100억원을 넘는 집주인들을 대신해 세입자에게 지급한 보증금 가운데 3조1000억원 이상을 회수하지 못한 것으로 나타났…",
+      "dupes": []
+    },
+    {
+      "title": "전날 급락했던 코스피 반등…1~2%대에서 상승폭 조절",
+      "link": "https://www.yna.co.kr/view/AKR20261014080000008",
+      "publishedAt": "2026-10-14T02:13:08.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": "(서울=연합뉴스) 김유향 기자 = 전날 급락했던 코스피가 14일 장중 2%대까지 오른 뒤 상승폭을 다소 줄인 모습이다.",
+      "dupes": []
+    },
+    {
+      "title": "고물가에 버거운 주거비…소년소녀가정 전세임대 43% 장기체납",
+      "link": "https://www.newsis.com/view/NISX20261014_0003825158",
+      "publishedAt": "2026-10-14T02:09:16.000Z",
+      "source": "뉴시스 경제",
+      "category": "realestate",
+      "preview": "[서울=뉴시스] 강세훈 기자, 서윤주 인턴기자 = 한국토지주택공사(LH) 전세임대주택에 거주하는 소년소녀가정 10가구 중 4가구 이상이 3개월 넘게 임대료를 체납하고 있는 것으로 나타났다. 전체 전세임대 장기체납액도…",
+      "dupes": []
+    },
+    {
+      "title": "美 월가 은행 4곳, 3분기 호실적에도…금리 인상에 희비",
+      "link": "https://www.newsis.com/view/NISX20261014_0003825111",
+      "publishedAt": "2026-10-14T02:04:05.000Z",
+      "source": "뉴시스 경제",
+      "category": "rates",
+      "preview": "[서울=뉴시스]고재은 기자 = 미국 월가 주요 은행들이 13일(현지 시간) 3분기 호실적을 발표했다. 주식 거래와 투자은행 부문이 실적 성장을 견인했지만, 금리 상승 여파로 채권 거래 부문에서는 부진한 성적을 거뒀다…",
+      "dupes": []
+    },
+    {
+      "title": "\"웬만한 월세보다 비싸네\"…관리비만 170만원 나오는 '이 아파트'",
+      "link": "https://www.hankyung.com/article/2026101409677",
+      "publishedAt": "2026-10-14T02:03:50.000Z",
+      "source": "한국경제 부동산",
+      "category": "realestate",
+      "preview": null,
+      "dupes": []
+    },
+    {
+      "title": "노원구, 재개발·재건축 이주민 중개보수 최대 20% 감면",
+      "link": "https://www.newsis.com/view/NISX20261014_0003825408",
+      "publishedAt": "2026-10-14T02:02:33.000Z",
+      "source": "뉴시스 경제",
+      "category": "realestate",
+      "preview": "[서울=뉴시스] 박대로 기자 = 서울 노원구(구청장 서준오)가 재개발·재건축에 따른 이주민의 경제적 부담을 덜고 안정적인 주거 이전을 돕기 위해 법정 중개 보수의 최대 20%를 감면하는 지원 사업을 추진한다고 14일…",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-nowon.html",
+          "label": "노원구 아파트 84㎡ 매매",
+          "labelEn": "노원구 apartment 84㎡ sale",
+          "value": "9억 3,000만원",
+          "valueEn": "₩930M",
+          "note": "최근 1주 계약 580건 · 10/7 대비 +0.1%",
+          "noteEn": "580 deals in the last 1 weeks · +0.1% vs Oct 7"
+        }
+      ]
+    },
+    {
+      "title": "\"내 노후를 지켜줄 서울 아파트 투자 공부\"…재테크 서적 출간",
+      "link": "https://www.yna.co.kr/view/AKR20261014076100003",
+      "publishedAt": "2026-10-14T01:52:57.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(서울=연합뉴스) 서미숙 기자 = 서울 아파트값 상승세가 지속되는 가운데, 집값을 움직이는 구조에 대한 이해를 돕는 재테크 서적이 출간됐다.",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./apartment-sale.html",
+          "label": "서울 전체 아파트 84㎡ 매매",
+          "labelEn": "Seoul apartment 84㎡ sale",
+          "value": "13억 1,318만원",
+          "valueEn": "₩1,313M",
+          "note": "최근 1주 계약 458건 · 10/7 대비 -3.9%",
+          "noteEn": "458 deals in the last 1 weeks · -3.9% vs Oct 7"
+        }
+      ]
+    },
     {
       "title": "'지역 내 강남' 몸값 뛴다…청약 경쟁률·집값도 차별화",
       "link": "https://www.newsis.com/view/NISX20261014_0003824974",
@@ -10,7 +133,6 @@
       "category": "realestate",
       "preview": "[서울=뉴시스] 강세훈 기자, 서윤주 인턴기자 = 부동산 시장에서 각 도시를 대표하는 핵심 주거지인 이른바 '지역 내 강남'의 몸값이 갈수록 높아지고 있다. 교통과 학군, 생활 인프라를 두루 갖춘 입지를 중심으로 수…",
       "dupes": [],
-      "titleEn": "Local 'Gangnam' prices rise... subscription competition rates and housing prices also differentiated",
       "context": [
         {
           "kind": "realestate",
@@ -31,8 +153,7 @@
       "source": "뉴시스 경제",
       "category": "other",
       "preview": "[서울=뉴시스]이재준 기자 = 일본 경제 전반의 자금 흐름과 금융 여건을 파악할 수 있는 2026년 9월 통화공급량(머니스톡) 잔액은 전년 동월 대비 1.2% 증가한 1638조3000억엔(약 1경3854조6100억원…",
-      "dupes": [],
-      "titleEn": "Japan's September Money Supply Rises to 1,638,000,000,000,000 Yen, Up 1.2%...\"Maintained in the 1% Range Due to Loan Growth"
+      "dupes": []
     },
     {
       "title": "분양가 급등에 수도권 아파트 청약시장 국평 대신 소형 쏠림",
@@ -41,8 +162,7 @@
       "source": "연합뉴스 경제",
       "category": "realestate",
       "preview": "(서울=연합뉴스) 임기창 기자 = 수도권 아파트 분양가격이 급등하면서 청약시장에서 진입장벽이 상대적으로 낮은 소형 면적에 실수요가 집중된 것으로...",
-      "dupes": [],
-      "titleEn": "Rising Prices Push Seoul Area Apartment Applications Toward Smaller Units Instead of National Average"
+      "dupes": []
     },
     {
       "title": "보훈장관, 오늘 한국경제인협회 방문…제대군인 예우 등 논의",
@@ -51,8 +171,7 @@
       "source": "연합뉴스 경제",
       "category": "other",
       "preview": "(서울=연합뉴스) 김효정 기자 = 권오을 국가보훈부 장관이 제대군인 예우 등 보훈 분야에 대한 경제계의 참여 활성화를 논의하기 위해 한국경제인협...",
-      "dupes": [],
-      "titleEn": "Minister of Patriots and Veterans Affairs visits Korean Business Association today... discusses honors for discharged military personnel"
+      "dupes": []
     },
     {
       "title": "원금 4천만원, 갚은 이자만 5천만원…살인금리에 주부 사망",
@@ -61,8 +180,7 @@
       "source": "연합뉴스 경제",
       "category": "rates",
       "preview": "(전남광주=연합뉴스) 정회성 기자 = 연 최고 578%의 살인적인 금리와 가혹한 채권추심을 한 사채업자들이 경찰에 붙잡혔다.",
-      "dupes": [],
-      "titleEn": "Principal of 40,000,000 won, only 50,000,000 won in interest paid... Housewife dies from usury rate"
+      "dupes": []
     },
     {
       "title": "케이뱅크, 상업용 부동산에도 개인사업자 부동산담보대출",
@@ -71,18 +189,7 @@
       "source": "연합뉴스 경제",
       "category": "realestate",
       "preview": "(서울=연합뉴스) 이도흔 기자 = 케이뱅크[279570]는 개인사업자 대상 '사장님 부동산담보대출'의 담보 물건을 공동주택과 상업용 부동산으로 ...",
-      "dupes": [],
-      "titleEn": "KBank Offers Real Estate Collateral Loans to Individual Business Owners for Commercial Properties"
-    },
-    {
-      "title": "속초시, 상반기 사업체·청년 창업기업 증가세… 지역경제 활기",
-      "link": "https://www.yna.co.kr/view/AKR20261014051100062",
-      "publishedAt": "2026-10-14T00:53:26.000Z",
-      "source": "연합뉴스 경제",
-      "category": "other",
-      "preview": "(속초=연합뉴스) 류호준 기자 = 강원 속초지역 전체 사업체 수와 청년 창업기업 수가 올해 상반기 매월 증가한 것으로 나타났다.",
-      "dupes": [],
-      "titleEn": "Sokcho City Reports Growth in Businesses and Youth Startups in First Half of Year... Local Economy Shows Signs of Recovery"
+      "dupes": []
     },
     {
       "title": "日증시, AI·반도체주 매수세에 상승 출발…닛케이 0.24%↑",
@@ -91,30 +198,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 신효령 기자 = 14일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)가 상승 출발했다. 최근 낙폭이 컸던 인공지능(AI)·반도체 관련주에 매수세가 몰렸다. 니혼게이자이신문에 따르면 이날 닛케이지수…",
-      "dupes": [],
-      "titleEn": "Tokyo Stock Exchange Rises on AI, Semiconductor Buying... Nikkei Up 0.24%"
-    },
-    {
-      "title": "지난해 아파트 관리비 최고는 나인원 한남…\"월 평균 170만원\"",
-      "link": "https://www.yna.co.kr/view/AKR20261014047900001",
-      "publishedAt": "2026-10-14T00:51:24.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(서울=연합뉴스) 노선웅 기자 = 지난해 전국 아파트 가운데 서울 용산구 '나인원 한남'의 세대당 월평균 관리비가 월평균 170만1천847원으로...",
-      "dupes": [],
-      "titleEn": "Last year's highest apartment management fee was in Hanam, Nine Won... \"Monthly average 1,700,000 won",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-yongsan.html",
-          "label": "용산구 아파트 84㎡ 매매",
-          "labelEn": "용산구 apartment 84㎡ sale",
-          "value": "27억 1,098만원",
-          "valueEn": "₩2,711M",
-          "note": "최근 1주 계약 53건 · 10/7 대비 -2.3%",
-          "noteEn": "53 deals in the last 1 weeks · -2.3% vs Oct 7"
-        }
-      ]
+      "dupes": []
     },
     {
       "title": "“이 동네 부동산 근저당 왜 이리 늘었지?”…3분기 서울 강동구 6492건",
@@ -123,40 +207,7 @@
       "source": "매일경제 부동산",
       "category": "realestate",
       "preview": "집합건물 저당권설정등기 신청 강동구 전년대비 2815건 급증 서울 전체 기준으로는 0.9% 줄어올해 3분기 서울에서 집합건물 (근)저당권설정등기 신청 부동산 수가 가장 많았던 자치..",
-      "dupes": [],
-      "titleEn": "Why has mortgage debt in this neighborhood increased so much?\"...6492 cases in Gangdong-gu, Seoul in Q3"
-    },
-    {
-      "title": "LH, 공동주택 중대하자 4년새 90% 감소…\"품질관리 강화\"",
-      "link": "https://www.yna.co.kr/view/AKR20261014047500003",
-      "publishedAt": "2026-10-14T00:41:04.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(서울=연합뉴스) 오예진 기자 = 한국토지주택공사(LH)는 공동주택 품질 개선에 노력한 결과 올해 균열, 누수 등 중대하자 발생 건수가 크게 감...",
-      "dupes": [],
-      "titleEn": "LH, Major Defects in Public Housing Drop 90% in Four Years...\"Strengthening Quality Control"
-    },
-    {
-      "title": "서울 장기전세 만기 앞둔 우선공급 가구 20%가 장애인·고령자 등",
-      "link": "https://www.yna.co.kr/view/AKR20261014041600004",
-      "publishedAt": "2026-10-14T00:32:08.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(서울=연합뉴스) 유한주 기자 = 서울 장기전세주택의 20년 만기가 다가오는 가운데 퇴거 대상 우선공급 가구 중 약 20%는 장애인·저소득층·고...",
-      "dupes": [],
-      "titleEn": "20% of priority supply units for Seoul long-term lease units expiring soon are for people with disabilities and the elderly",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./apartment-jeonse.html",
-          "label": "서울 전체 아파트 84㎡ 전세",
-          "labelEn": "Seoul apartment 84㎡ jeonse",
-          "value": "7억 9,508만원",
-          "valueEn": "₩795M",
-          "note": "최근 1주 계약 452건 · 10/7 대비 +3.4%",
-          "noteEn": "452 deals in the last 1 weeks · +3.4% vs Oct 7"
-        }
-      ]
+      "dupes": []
     },
     {
       "title": "LH 전세임대 소년소녀 가구 46%, 3개월 이상 임대료 체납… 계약 해지 위기",
@@ -165,28 +216,26 @@
       "source": "조선비즈 부동산",
       "category": "realestate",
       "preview": "한국토지주택공사(LH) 전세임대에 거주하는 소년소녀 가장 절반 가까이가 3개월 이상 임대료를 못 낸 장기 체납 상태인 것으로 나타났다. 이를 해결하지 못하면 임대 계약 해지 절차가 진행되기 때문에 이들을 위한 주거…",
-      "dupes": [],
-      "titleEn": "LH Rental Subsidy Families for Youth 46% Default on Rent for Over 3 Months, Risk Contract Termination"
+      "dupes": []
     },
     {
-      "title": "성북구 보문동3가 현대I-PARK 84.57㎡ 12억 9천만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12175182",
+      "title": "중랑구 신내동 동성1 6억8천만원… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12175180",
       "publishedAt": "2026-10-14T00:12:15.000Z",
       "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 13일 국토부 실거래가 시스템에 신규 등록된 서울 성북구 보문동3가 현대I-PARK 전용 84.57㎡가 12억 9천만원에 거래돼 최근 3년 신고가를..",
+      "preview": "MAI 부동산 2026년 10월 13일 국토부 실거래가 시스템에 신규 등록된 서울 중랑구 신내동 동성1 아파트 전용 59.4㎡가 6억 8,000만 원에 거래되며 최근 3년 내 신고..",
       "dupes": [],
-      "titleEn": "Sungbuk-gu, Bomun-dong 3-ga, Hyundai I-PARK 84.57㎡ for 1,290,000,000 won... new high price in the last 3 years [MAI Real Estate]",
       "context": [
         {
           "kind": "realestate",
-          "href": "./district-seongbuk.html",
-          "label": "성북구 아파트 84㎡ 매매",
-          "labelEn": "성북구 apartment 84㎡ sale",
-          "value": "10억 6,950만원",
-          "valueEn": "₩1,070M",
-          "note": "최근 1주 계약 247건 · 10/7 대비 +2.2%",
-          "noteEn": "247 deals in the last 1 weeks · +2.2% vs Oct 7"
+          "href": "./district-jungnang.html",
+          "label": "중랑구 아파트 84㎡ 매매",
+          "labelEn": "중랑구 apartment 84㎡ sale",
+          "value": "8억 7,486만원",
+          "valueEn": "₩875M",
+          "note": "최근 1주 계약 256건 · 10/7 대비 +0.6%",
+          "noteEn": "256 deals in the last 1 weeks · +0.6% vs Oct 7"
         }
       ]
     },
@@ -198,7 +247,6 @@
       "category": "realestate",
       "preview": "MAI 부동산 2026년 10월 13일 국토부 실거래가 시스템에 신규 등록된 서울 강북구 미아동 벽산라이브파크 전용 84.89㎡가 8억 3천만원에 거래되며 동일 면적 기준 최근 3..",
       "dupes": [],
-      "titleEn": "Gangbuk-gu Wallasan Live Park 84.89㎡ traded for 830,000,000 won... new high in 3 years [MAI Real Estate]",
       "context": [
         {
           "kind": "realestate",
@@ -213,14 +261,13 @@
       ]
     },
     {
-      "title": "성북구 돈암동 길음역금호어울림센터힐 59.84㎡ 11억 4천만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12175181",
+      "title": "성북구 보문동3가 현대I-PARK 84.57㎡ 12억 9천만원… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12175182",
       "publishedAt": "2026-10-14T00:12:15.000Z",
       "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 13일 국토교통부 실거래가 시스템에 신규 등록된 서울 성북구 돈암동 길음역금호어울림센터힐 전용 59.84㎡가 11억 4,000만 원에 거래되며 최근..",
+      "preview": "MAI 부동산 2026년 10월 13일 국토부 실거래가 시스템에 신규 등록된 서울 성북구 보문동3가 현대I-PARK 전용 84.57㎡가 12억 9천만원에 거래돼 최근 3년 신고가를..",
       "dupes": [],
-      "titleEn": "Seongbuk-gu, Donam-dong, Gilyeong Station, Geumho Eulrim Center Hill 59.84㎡ 1,140,000,000 won... Recent 3-year new high [MAI Real Estate]",
       "context": [
         {
           "kind": "realestate",
@@ -235,132 +282,25 @@
       ]
     },
     {
-      "title": "중랑구 신내동 동성1 6억8천만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12175180",
+      "title": "성북구 돈암동 길음역금호어울림센터힐 59.84㎡ 11억 4천만원… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12175181",
       "publishedAt": "2026-10-14T00:12:15.000Z",
       "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 13일 국토부 실거래가 시스템에 신규 등록된 서울 중랑구 신내동 동성1 아파트 전용 59.4㎡가 6억 8,000만 원에 거래되며 최근 3년 내 신고..",
+      "preview": "MAI 부동산 2026년 10월 13일 국토교통부 실거래가 시스템에 신규 등록된 서울 성북구 돈암동 길음역금호어울림센터힐 전용 59.84㎡가 11억 4,000만 원에 거래되며 최근..",
       "dupes": [],
-      "titleEn": "Jungnang-gu Sinneong-dong Dongsung 1 680,000,000 won... Recent 3-year high price [MAI Real Estate]",
       "context": [
         {
           "kind": "realestate",
-          "href": "./district-jungnang.html",
-          "label": "중랑구 아파트 84㎡ 매매",
-          "labelEn": "중랑구 apartment 84㎡ sale",
-          "value": "8억 7,486만원",
-          "valueEn": "₩875M",
-          "note": "최근 1주 계약 256건 · 10/7 대비 +0.6%",
-          "noteEn": "256 deals in the last 1 weeks · +0.6% vs Oct 7"
+          "href": "./district-seongbuk.html",
+          "label": "성북구 아파트 84㎡ 매매",
+          "labelEn": "성북구 apartment 84㎡ sale",
+          "value": "10억 6,950만원",
+          "valueEn": "₩1,070M",
+          "note": "최근 1주 계약 247건 · 10/7 대비 +2.2%",
+          "noteEn": "247 deals in the last 1 weeks · +2.2% vs Oct 7"
         }
       ]
-    },
-    {
-      "title": "중랑구 상봉동 엘지,쌍용아파트 68.12㎡ 8억 5천만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12175179",
-      "publishedAt": "2026-10-14T00:12:15.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 13일 국토부 실거래가 시스템에 신규 등록된 서울 중랑구 상봉동 엘지,쌍용아파트 전용 68.12㎡ 거래가 8억 5,000만 원에 체결되며 동일 면적..",
-      "dupes": [],
-      "titleEn": "Jungnang-gu Sangbong-dong LG, Ssangyong Apartments 68.12㎡ for 850,000,000 won... Recent 3-Year High [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-jungnang.html",
-          "label": "중랑구 아파트 84㎡ 매매",
-          "labelEn": "중랑구 apartment 84㎡ sale",
-          "value": "8억 7,486만원",
-          "valueEn": "₩875M",
-          "note": "최근 1주 계약 256건 · 10/7 대비 +0.6%",
-          "noteEn": "256 deals in the last 1 weeks · +0.6% vs Oct 7"
-        }
-      ]
-    },
-    {
-      "title": "동대문구 이문동 중앙하이츠빌 59.4㎡ 10억 4천만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12175177",
-      "publishedAt": "2026-10-14T00:12:15.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 13일 국토부 실거래가 시스템에 신규 등록된 서울 동대문구 이문동 중앙하이츠빌 전용 59.4㎡ 거래가 10억 4,000만 원을 기록하며 최근 3년 ..",
-      "dupes": [],
-      "titleEn": "Dongdaemun-gu, Imundong, Central Heights Ville 59.4㎡ for 1,040,000,000 won... New High Price in 3 Years [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-dongdaemun.html",
-          "label": "동대문구 아파트 84㎡ 매매",
-          "labelEn": "동대문구 apartment 84㎡ sale",
-          "value": "11억 8,766만원",
-          "valueEn": "₩1,188M",
-          "note": "최근 1주 계약 153건 · 10/7 대비 +1.0%",
-          "noteEn": "153 deals in the last 1 weeks · +1.0% vs Oct 7"
-        }
-      ]
-    },
-    {
-      "title": "성동구 성수동1가 쌍용 84.78㎡ 22억 2500만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12175176",
-      "publishedAt": "2026-10-14T00:12:15.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 13일 국토부 실거래가 시스템에 신규 등록된 서울 성동구 성수동1가 쌍용 전용 84.78㎡가 22억 2500만원에 거래되며 최근 3년 내 신고가를 ..",
-      "dupes": [],
-      "titleEn": "Seongdong-gu, Seongsu-dong 1-ga, Samsung 84.78㎡ for 2,225,000,000 won... new high price in the last 3 years [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-seongdong.html",
-          "label": "성동구 아파트 84㎡ 매매",
-          "labelEn": "성동구 apartment 84㎡ sale",
-          "value": "20억 9,200만원",
-          "valueEn": "₩2,092M",
-          "note": "최근 1주 계약 71건 · 10/7 대비 -0.4%",
-          "noteEn": "71 deals in the last 1 weeks · -0.4% vs Oct 7"
-        }
-      ]
-    },
-    {
-      "title": "\"9개월 만에 1억 올랐어요\" 환호…집값 훨훨 나는 '이 동네'",
-      "link": "https://www.hankyung.com/article/2026101402856",
-      "publishedAt": "2026-10-13T23:41:11.000Z",
-      "source": "한국경제 부동산",
-      "category": "other",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "Cheers after 9 months: Prices soar to 100,000,000 won in 'this neighborhood"
-    },
-    {
-      "title": "주택도시보증공사, 100억 이상 ‘고액 채무’ 집주인에게 떼인 돈 3조 넘었다",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/14/D2EXQJPMFRA2DK4HARWKYZAELY/",
-      "publishedAt": "2026-10-13T23:21:09.000Z",
-      "source": "조선비즈 부동산",
-      "category": "realestate",
-      "preview": "주택도시보증공사(HUG)가 고액 대위변제 채무액이 3조원 넘게 회수되지 못한 것으로 나타났다. 고액 대위변제 채무액은 집주인이 돌려주지 못한 보증금을 공사가 세입자에게 먼저 돌려 주고 나중에 집주인에게 회수하는 금액…",
-      "dupes": [],
-      "titleEn": "Housing & Urban Development Corporation's high-value debt exceeding 10,000,000,000 won owed by homeowners surpasses 3,000,000,000,000 won"
-    },
-    {
-      "title": "미 국채금리 24년 만에 최고…급락장에도 큰손들 매수",
-      "link": "https://www.hankyung.com/article/202610140190i",
-      "publishedAt": "2026-10-13T23:14:53.000Z",
-      "source": "한국경제 경제",
-      "category": "rates",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "U.S. Treasury yields hit 24-year high... big buyers step in despite sharp drop"
-    },
-    {
-      "title": "뉴욕 연은 총재 \"연내 추가 금리 인상 가능…내년엔 불필요\"",
-      "link": "https://www.newsis.com/view/NISX20261014_0003824795",
-      "publishedAt": "2026-10-13T23:10:09.000Z",
-      "source": "뉴시스 경제",
-      "category": "rates",
-      "preview": "[서울=뉴시스] 권성근 기자 = 존 윌리엄스 뉴욕 연방준비은행 총재는 올해 기준금리를 한 차례 더 올리는 것은 적절하지만 내년에는 추가 인상이 필요하지 않을 것으로 전망했다. 관세 정책과 이란 전쟁에 따른 에너지 가…",
-      "dupes": [],
-      "titleEn": "New York Fed Chief: \"Further Rate Hikes Possible This Year... Unnecessary Next Year"
     }
   ],
   "realestateStats": [
