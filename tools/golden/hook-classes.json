@@ -30,9 +30,11 @@
     "skip-link",
     "sorted",
     "stat-card",
+    "sub",
     "sub-nav",
     "summary-meta",
-    "table-scroll"
+    "table-scroll",
+    "value"
   ],
   "markup": [
     "active",

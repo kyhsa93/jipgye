@@ -685,9 +685,8 @@ function renderTable(realestate) {
       .join("");
 }
 
-// 구운 "전세가율 단지별 중앙값" 카드. 아래 renderOverall이 받는 중·실패에 지웠다(#311, 수법은 #26).
-// 값이 와서 표본 미달이면 그대로 뺀다(해자 2) - 아직 안 온 것만 이 카드로 메운다.
-const bakedComplexCard = [...document.querySelectorAll("#overall-cards .overall-card")].find((c) => c.textContent.startsWith(T.ko.thRatioByComplex))?.outerHTML ?? "";
+const bakedCard = [...document.querySelectorAll("#overall-cards .overall-card")].find((c) => c.textContent.startsWith(T.ko.thRatioByComplex));
+const bakedSpread = bakedCard && { median: parseFloat(bakedCard.querySelector(".value").textContent), cells: +bakedCard.querySelector(".sub").textContent.replace(/\D/g, "") };
 
 function renderOverall(realestate) {
   const box = document.getElementById("overall-cards");
@@ -704,9 +703,9 @@ function renderOverall(realestate) {
 
   // 표의 전세가율은 이 표의 두 열을 나눈 값이라 표와는 맞지만 어느 단지의 것도
   // 아닐 수 있다. 갈아 끼우면 같은 행의 숫자들과 어긋나므로 옆에 나란히 둔다.
-  const spread = complexSpread();
+  const spread = complexSpread() ?? (cache.complexRatio ? null : bakedSpread);
   const complexCard = () =>
-    spread ? card(t("thRatioByComplex"), formatPercent(spread.median), escapeHtml(t("ratioCells")(spread.cells))) : cache.complexRatio ? "" : bakedComplexCard;
+    spread ? card(t("thRatioByComplex"), formatPercent(spread.median), escapeHtml(t("ratioCells")(spread.cells))) : "";
 
   if (districtName) {
     const sale = resolveMetric(overall, "sale")?.metric;

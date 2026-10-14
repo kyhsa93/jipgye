@@ -452,6 +452,14 @@ export const realestateTableHtml = fragment("realestateTableHtml", realestateTab
 // 어느 글자를 이스케이프하고 어느 글자를 그대로 끼우는지는 조각(seg)의 esc가 정한다 - 예전 그대로다.
 const reSegHtml = ({ text, esc }) => (esc ? escapeHtml(text) : text);
 const reSegsHtml = (segs) => segs.map(reSegHtml).join("");
+// 여기서 구운 카드 가운데 "전세가율 단지별 중앙값" 한 장은 화면 스크립트가 로드 때 **숫자만** 떼어 둔다(docs/realestate.html의 `bakedCard`·`bakedSpread`, #311).
+// 그 카드의 값(complex-ratio.json)은 시세 다음에 받는데, 시세가 도착하면 renderOverall()이 #overall-cards를 통째로 다시 쓰면서 구운 카드를 지웠다 -
+// 받는 동안·요청이 실패했을 때 사라졌다. 떼어 둔 숫자는 값이 **아직 안 왔을 때만** 쓴다: 값이 왔는데 표본이 모자라 빠진 것(spread=null)은
+// 그대로 둬야 한다(DIRECTION 해자 2).
+// **마크업이 아니라 숫자를 떼어 두는 이유**: 구운 조각은 늘 한국어라 그대로 되붙이면 영어 화면에 영어 카드 넉 장 옆에 한국어 카드 한 장이 선다(po 판정, PR #324).
+// 숫자만 떼어 두고 라벨은 그 화면의 locale로 다시 세우면 새 문구도 고지도 필요 없다 - 영어 글자는 틀의 T.en에 이미 있다.
+// 이 설명을 화면 스크립트가 아니라 여기 적는 이유는 그 스크립트가 47장에 그대로 실려 나가 주석도 배포 바이트이기 때문이다(cto 판정, #312와 같은 처리).
+// 떼어 두는 쪽은 이 함수가 내는 마크업(`overall-card` > `label`·`value`·`sub`)과 한국어 라벨 글자에 기댄다 - 둘 중 하나를 바꾸면 docs/realestate.html도 같이 본다.
 const overallCardHtml = ({ label, value, sub }) =>
   `<div class="overall-card"><div class="label">${escapeHtml(label)}</div>` +
   `<div class="value">${reSegsHtml(value)}</div>` +

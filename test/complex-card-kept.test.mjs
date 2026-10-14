@@ -23,7 +23,8 @@ const root = path.resolve(import.meta.dirname, "..");
 const CARD_RE = /<div class="overall-card">[\s\S]*?<\/div><\/div>/g;
 
 // 카드 라벨은 틀에서 읽는다(베껴 적으면 틀이 바뀔 때 시험만 옛 글자를 보고 통과한다).
-// 구운 조각은 늘 한국어라, 값이 오기 전에는 영어 화면에서도 한국어 라벨이 남는 것이 맞다 - 구운 다른 본문과 같다.
+// 구운 조각은 늘 한국어지만 되세우는 쪽은 숫자만 가져가고 라벨은 그 화면의 locale로 다시 세운다(po 판정, PR #324) -
+// 그래서 영어 화면에서는 값이 오기 전에도 영어 라벨이어야 한다.
 const TEMPLATE = await readFile(path.join(root, "docs/realestate.html"), "utf8");
 const LABELS = Object.fromEntries(
   [...TEMPLATE.matchAll(/ {4}thRatioByComplex: "([^"]+)",/g)].map((m, i) => [["ko", "en"][i], m[1]])
@@ -123,11 +124,15 @@ async function checkPage(file, locale) {
       if (!arrived) assert.equal(cards.filter((c) => c.startsWith(LABEL)).length, 0, `${where}: 없던 카드가 생겼다`);
       continue;
     }
-    // 값이 오기 전에는 구운 조각(한국어)이 그대로 남고, 오면 그 화면의 언어로 다시 그린다.
-    const kept = cards.filter((c) => c.startsWith(arrived ? LABELS[locale] : LABEL));
-    assert.equal(kept.length, 1, `${where}: 전세가율 단지별 중앙값 카드가 ${kept.length}장이다`);
+    // 값이 오기 전이든 뒤든 라벨은 늘 그 화면의 locale이다(한국어 조각을 그대로 되붙이지 않는다).
+    const kept = cards.filter((c) => c.startsWith(LABELS[locale]));
+    assert.equal(kept.length, 1, `${where}: ${LABELS[locale]} 카드가 ${kept.length}장이다`);
+    assert.equal(cards.filter((c) => c.startsWith(LABELS.ko)).length, locale === "ko" ? 1 : 0, `${where}: 한국어 카드가 남았다`);
     if (!arrived) {
-      assert.ok(page.overallHtml().includes(baked.card), `${where}: 구운 카드를 지우거나 바꿨다`);
+      // 숫자는 구운 것 그대로다. 한국어 화면이면 글자 하나까지 구운 카드와 같아야 한다.
+      const nums = baked.card.replace(/<[^>]*>/g, "").slice(LABELS.ko.length);
+      for (const n of nums.match(/[\d.,]+/g) ?? []) assert.ok(kept[0].includes(n), `${where}: 구운 숫자 ${n}이 사라졌다`);
+      if (locale === "ko") assert.ok(page.overallHtml().includes(baked.card), `${where}: 구운 카드를 지우거나 바꿨다`);
     }
   }
 }
@@ -175,6 +180,25 @@ test("값이 왔는데 표본이 모자라면 구운 카드를 되살리지 않�
       0,
       `${file}: 표본이 모자란데 구운 카드를 되살렸다`
     );
+  }
+});
+
+test("영어 화면에서는 값이 오기 전에도 라벨이 영어다 — 구운 한국어 조각을 그대로 되붙이지 않는다 (#311, po 판정)", async () => {
+  // 구운 조각은 늘 한국어다. 그대로 되붙이면 영어 카드 넉 장 옆에 한국어 한 장이 서고 고지도 없다(PR #324 po 판정).
+  // 숫자만 떼어 오고 라벨은 T.en으로 다시 세운다 - 새 문구도 새 번역도 만들지 않는다.
+  for (const file of ["docs/apartment-jeonse.html", "docs/district-gangnam.html"]) {
+    for (const [, make, arrived] of STATES) {
+      if (arrived) continue;
+      const { gate, release, ...rest } = make();
+      const { page, baked } = await open(file, { locale: "en", gate, ...rest });
+      if (release) release();
+      const kept = cardsOf(page).filter((c) => c.startsWith(LABELS.en));
+      assert.equal(kept.length, 1, `${file}: 영어 라벨 카드가 ${kept.length}장이다`);
+      assert.ok(!page.overallHtml().includes(LABELS.ko), `${file}: 한국어 라벨이 남아 있다`);
+      // 숫자는 구운 것 그대로여야 한다(새로 지어내지 않는다).
+      const pct = /([\d.]+)%/.exec(baked.card)[1];
+      assert.ok(kept[0].includes(`${pct}%`), `${file}: 구운 값 ${pct}%가 사라졌다`);
+    }
   }
 });
 

@@ -187,6 +187,11 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
             ? [...String(sandbox.document.getElementById("overall-cards").innerHTML).matchAll(/<div class="overall-card">[\s\S]*?<\/div><\/div>/g)].map((m) => ({
                 outerHTML: m[0],
                 textContent: m[0].replace(/<[^>]*>/g, ""),
+                // 카드 안쪽의 label·value·sub. 스크립트가 구운 카드에서 숫자만 떼어 갈 때 쓴다(#311).
+                querySelector: (inner) => {
+                  const hit = new RegExp(`<div class="${inner.slice(1)}">([\\s\\S]*?)</div>`).exec(m[0]);
+                  return hit ? { textContent: hit[1].replace(/<[^>]*>/g, "") } : null;
+                },
               }))
             : [],
       createElement: () => stubElement(),
