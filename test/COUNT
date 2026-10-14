@@ -1,0 +1,6 @@
+# 루트 `npm test`의 `ℹ tests N` 하한 (#315). 래칫은 scripts/test-count-ratchet.mjs.
+# 내리는 변경은 PR 본문에 사유를 적는다 — 사유 없이 내리는 PR은 승인하지 않는다(#315 범위 4).
+# 센 법: 2026-10-14, merge-base 83bd9fb8, Node v24.16.0, macOS 26.6.2.
+#   /bin/dash -c "node --test 'test/*.test.{mjs,ts}'" → ℹ tests 1515 · pass 1515 · fail 0
+#   /bin/bash 에서도 같은 1515(#315 완료 조건 4).
+1515
