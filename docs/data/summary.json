@@ -1,59 +1,27 @@
 {
-  "updatedAt": "2026-10-14T08:40:59.984Z",
+  "updatedAt": "2026-10-14T12:53:09.792Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 부동산: 수도권에서 오피스를 짓는 만큼 주택 공급도 늘리기로 했다. 강남 지역에서 집값이 주춤한 이유로 현금 부자들이 ‘디에이치 반포124’ 분양을 기다리고 있다. 전세 사기 방지 조치로 인해 등기부 열람료가 부담이 되고 있어 중개사와 실수요자 모두 불편을 겪고 있다. 울산바위 인근 공동주택 사업은 경관 보존과 지역 개발 간 갈등으로 미래가 불확실하다. 세종시에 1만 명의 공무원이 입주할 예정이지만, 2년간 입주 물량은 1122가구에 불과했다.\n- 증시·환율: 중국 증시는 상하이지수가 0.88% 하락하며 하락 마감했다. 일본 증시는 닛케이가 0.05% 내리며 하락 마감했다. 코스피는 6거래일 연속 하락하며 6천피를 턱걸이했다. 김성주가 리밸런싱 유예 없이 매일 8천억 원을 매도할 경우 증시에 충격이 올 수 있다고 밝혔다. 환율은 달러 약세로 6.8원 내린 1,338.3원으로 하락 전환했다.\n- 금리·예금·투자상품: 국고채 금리가 사흘 만에 상승했다. 3년물 금리는 연 3.883%로 올랐다. 미국의 물가 발표를 앞두고 시장이 숨을 고르고 있다. 금리 상승은 최근 몇일간 지속되고 있다. 금리 동향은 향후 경제 전망에 영향을 줄 것으로 보인다.\n- 기타 경제 소식: 기타 경제 소식: \"이제 집값 떨어질 것\"…시장서도 고개 드는 '하락론' 근거는, 후티, 빈살만 경제개혁의 심장 아람코 본부까지 공격, \"경제대국이 어쩌다\"…67년 만에 와르르 무너진 '이 나라'",
-    "en": "- Real Estate: We will increase housing supply as much as we build offices in the Seoul metropolitan area. Cash-rich individuals are waiting for the sale of 'DCH Banpo 124' because housing prices in the Gangnam area have slightly decreased. Both real estate agents and genuine buyers are experiencing inconvenience because the registration fee for reviewing the land register has become a burden due to measures to prevent lease fraud. The joint housing project near Ul-sanbae is uncertain about its future due to conflicts between preserving the landscape and regional development. Although 10,000 civil servants are expected to move into Sejong City, the number of units available for occupancy within two years will only be 1,122.\n- Stocks & FX: China's stock market closed lower, with the Shanghai index falling 0.88%. Japan's stock market closed lower, with the Nikkei down 0.05%. The KOSPI fell for the sixth consecutive trading day, hitting 600 points. Kim Sung-joo stated that if 800,000,000,000 won is sold daily without a rebalancing grace period, it could cause a shock to the stock market. The exchange rate fell to 1,338.3 won, down 6.8 won, turning lower due to a weaker dollar.\n- Rates, Deposits & Investment Products: The government bond rate rose after three days. The 3-year rate increased to 3.883% annually. The market is holding its breath ahead of the U.S. inflation data release. The rate increase has been continuing for several days. The interest rate trend is expected to affect the future economic outlook.\n- Other Economic News: Other Economic News: \"이제 집값 떨어질 것\"…시장서도 고개 드는 '하락론' 근거는, 후티, 빈살만 경제개혁의 심장 아람코 본부까지 공격, \"경제대국이 어쩌다\"…67년 만에 와르르 무너진 '이 나라'"
+    "ko": "- 증시·환율: 대만 증시는 AI 관련주 매수로 닷새 만에 반등하며 0.59% 상승했다. 중국 상하이지수는 0.88% 하락하며 하락 마감했다. 일본 닛케이 지수는 미국 기술주 훈풍에도 불구하고 0.05% 하락했다. 코스피는 6거래일 연속 하락하며 6천피 턱걸이를 기록했다. 김성주 측은 리밸런싱 유예가 없었다면 매일 8천억 원 규모의 매도가 발생할 수 있다고 밝혔다.\n- 기타 경제 소식: 신현송 한은 총재가 중·일 중앙은행 총재와 경제동향을 논의했고, 품절 대란으로 중고거래가 10배 폭등했으며, 세종 집값이 오를 가능성이 있고, '닥공' 외침에 따라 조합원 지위 양도 제한과 이주비 대출 규제가 시행되고 있으며, 해외 경제협력은 올해 단 1건에 그쳤다.\n- 부동산: 홍콩 증시는 이익매물로 인해 혼조를 보이며 마감했다. 성수 한강변에서는 9000가구 규모의 재개발 사업이 본격적으로 추진되고 있다. 전국 아파트 관리비 중 최고액은 170만원으로, '나인원한남'에서 기록되고 있다. 수도권에서는 오피스 공급 확대에 따라 주택 공급도 함께 증가하는 방향으로 나가고 있다. 강남 지역 집값은 주춤했으나, 현금 부자들은 '디에이치 반포124' 분양에 관심을 보이고 있다.\n- 금리·예금·투자상품: 미국의 9월 중고주택 판매량은 전월 대비 1.5% 증가했다. 다만 대출금리 상승으로 인해 회복은 제한적일 것으로 보인다. 한국의 국고채 금리는 사흘 만에 상승했으며, 미국의 물가 발표를 앞두고 시장이 숨고르기를 하고 있다. 3년물 국고채 금리는 연 3.883%로 올랐다. 각 기사는 서로 다른 경제 지표와 관련된 내용을 보고하고 있다.",
+    "en": "- Stocks & FX: Taiwan's stock market rose 0.59% as AI-related stocks were bought, marking a rebound after five days. China's Shanghai Composite Index closed down 0.88%. Japan's Nikkei index fell 0.05%, despite a favorable wind from U.S. tech stocks. The KOSPI recorded a 6,000-point threshold after six consecutive trading days of decline. Kim Sung-ju's side stated that if there had been no delay in rebalancing, selling of 800,000,000,000 won would have occurred every day.\n- Other Economic News: Shin Hyeong-song, Governor of the Bank of Korea, discussed economic trends with the governors of the central banks of China and Japan, and the secondary market trade has surged tenfold due to a shortage crisis. There is a possibility of rising housing prices in Sejong, and measures restricting the transfer of cooperative member status and regulating relocation loans have been implemented following the \"Dak Gong\" outcry. Overseas economic cooperation has only achieved one case this year.\n- Real Estate: The Hong Kong stock market closed mixed due to profit-taking. A redevelopment project involving 9,000 households is being actively pushed forward along the Han River in Seoul. The highest apartment management fee nationwide is 1,700,000 won, recorded at 'Nine One Hanam'. In the capital area, housing supply is increasing along with the expansion of office supply. Housing prices in the Gangnam area have eased, but cash-rich individuals are showing interest in the sales of 'DCH Banpo 124'.\n- Rates, Deposits & Investment Products: U.S. September used home sales increased by 1.5% compared to the previous month. However, recovery appears to be limited due to rising loan interest rates. South Korea's government bond yields rose within three days, and the market is taking a breather ahead of the U.S. inflation data release. The 3-year government bond yield rose to 3.883% annually. Each report covers different economic indicators."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "수도권에서 오피스를 짓는 만큼 주택 공급도 늘리기로 했다. 강남 지역에서 집값이 주춤한 이유로 현금 부자들이 ‘디에이치 반포124’ 분양을 기다리고 있다. 전세 사기 방지 조치로 인해 등기부 열람료가 부담이 되고 있어 중개사와 실수요자 모두 불편을 겪고 있다. 울산바위 인근 공동주택 사업은 경관 보존과 지역 개발 간 갈등으로 미래가 불확실하다. 세종시에 1만 명의 공무원이 입주할 예정이지만, 2년간 입주 물량은 1122가구에 불과했다.",
-      "lineEn": "We will increase housing supply as much as we build offices in the Seoul metropolitan area. Cash-rich individuals are waiting for the sale of 'DCH Banpo 124' because housing prices in the Gangnam area have slightly decreased. Both real estate agents and genuine buyers are experiencing inconvenience because the registration fee for reviewing the land register has become a burden due to measures to prevent lease fraud. The joint housing project near Ul-sanbae is uncertain about its future due to conflicts between preserving the landscape and regional development. Although 10,000 civil servants are expected to move into Sejong City, the number of units available for occupancy within two years will only be 1,122.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "수도권서 오피스 짓는 만큼 주택 공급도 늘린다",
-          "link": "https://www.hankyung.com/article/2026101420921",
-          "source": "한국경제 부동산"
-        },
-        {
-          "title": "강남 집값 주춤한 이유 있었네…현금부자들 ‘디에이치 반포124’ 분양만 기다린다",
-          "link": "https://www.mk.co.kr/news/realestate/12175787",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "“전세 사기 막으랬더니 등기부 열람료를”…중개사도 실수요자도 ‘부글부글’",
-          "link": "https://www.mk.co.kr/news/realestate/12175773",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "'경관 보존'vs'지역 개발'…울산바위 인근 공동주택 사업 미래는(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261014124151062",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "공무원 1만명 가는데 씨 마른 전월세… 2년간 세종시 입주 물량은 1122가구 뿐",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/14/NJ7YTHUZBVDH7DTD3XXK7WKYCM/",
-          "source": "조선비즈 부동산"
-        }
-      ]
-    },
-    {
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
-      "lineKo": "중국 증시는 상하이지수가 0.88% 하락하며 하락 마감했다. 일본 증시는 닛케이가 0.05% 내리며 하락 마감했다. 코스피는 6거래일 연속 하락하며 6천피를 턱걸이했다. 김성주가 리밸런싱 유예 없이 매일 8천억 원을 매도할 경우 증시에 충격이 올 수 있다고 밝혔다. 환율은 달러 약세로 6.8원 내린 1,338.3원으로 하락 전환했다.",
-      "lineEn": "China's stock market closed lower, with the Shanghai index falling 0.88%. Japan's stock market closed lower, with the Nikkei down 0.05%. The KOSPI fell for the sixth consecutive trading day, hitting 600 points. Kim Sung-joo stated that if 800,000,000,000 won is sold daily without a rebalancing grace period, it could cause a shock to the stock market. The exchange rate fell to 1,338.3 won, down 6.8 won, turning lower due to a weaker dollar.",
+      "lineKo": "대만 증시는 AI 관련주 매수로 닷새 만에 반등하며 0.59% 상승했다. 중국 상하이지수는 0.88% 하락하며 하락 마감했다. 일본 닛케이 지수는 미국 기술주 훈풍에도 불구하고 0.05% 하락했다. 코스피는 6거래일 연속 하락하며 6천피 턱걸이를 기록했다. 김성주 측은 리밸런싱 유예가 없었다면 매일 8천억 원 규모의 매도가 발생할 수 있다고 밝혔다.",
+      "lineEn": "Taiwan's stock market rose 0.59% as AI-related stocks were bought, marking a rebound after five days. China's Shanghai Composite Index closed down 0.88%. Japan's Nikkei index fell 0.05%, despite a favorable wind from U.S. tech stocks. The KOSPI recorded a 6,000-point threshold after six consecutive trading days of decline. Kim Sung-ju's side stated that if there had been no delay in rebalancing, selling of 800,000,000,000 won would have occurred every day.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
+        {
+          "title": "[올댓차이나] 대만 증시, 주력 AI 관련주 매수로 닷새 만에 반등…0.59%↑",
+          "link": "https://www.newsis.com/view/NISX20261014_0003826390",
+          "source": "뉴시스 경제"
+        },
         {
           "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 0.88%↓",
           "link": "https://www.newsis.com/view/NISX20261014_0003826150",
@@ -73,11 +41,80 @@
           "title": "김성주 \"리밸런싱 유예 안했다면 매일 8천억 매도…증시 충격\"",
           "link": "https://www.yna.co.kr/view/AKR20261014151100530",
           "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "신현송 한은 총재가 중·일 중앙은행 총재와 경제동향을 논의했고, 품절 대란으로 중고거래가 10배 폭등했으며, 세종 집값이 오를 가능성이 있고, '닥공' 외침에 따라 조합원 지위 양도 제한과 이주비 대출 규제가 시행되고 있으며, 해외 경제협력은 올해 단 1건에 그쳤다.",
+      "lineEn": "Shin Hyeong-song, Governor of the Bank of Korea, discussed economic trends with the governors of the central banks of China and Japan, and the secondary market trade has surged tenfold due to a shortage crisis. There is a possibility of rising housing prices in Sejong, and measures restricting the transfer of cooperative member status and regulating relocation loans have been implemented following the \"Dak Gong\" outcry. Overseas economic cooperation has only achieved one case this year.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
+      "items": [
+        {
+          "title": "신현송 한은 총재, 중·일 중앙은행 총재와 경제동향 논의",
+          "link": "https://www.yna.co.kr/view/AKR20261014176200002",
+          "source": "연합뉴스 경제"
         },
         {
-          "title": "환율, 6.8원 내린 1,338.3원…달러 약세에 하락 전환",
-          "link": "https://www.yna.co.kr/view/AKR20261014143800002",
-          "source": "연합뉴스 경제"
+          "title": "\"밤새워야 겨우 들어간다\"…품절 대란에 중고거래 10배 폭등 [덕질경제학]",
+          "link": "https://www.hankyung.com/article/202610141284H",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "\"어게인 2020\" 벌써부터 꿈틀…세종 집값 이번에도 오르나",
+          "link": "https://www.hankyung.com/article/2026101420931",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "'닥공' 외치면서…조합원 지위 양도 제한·이주비 대출 규제",
+          "link": "https://www.hankyung.com/article/2026101422131",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "해외 경제협력, 올해 단 1건…기업 '수출 교두보'가 사라진다",
+          "link": "https://www.hankyung.com/article/2026101421611",
+          "source": "한국경제 경제"
+        }
+      ]
+    },
+    {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "홍콩 증시는 이익매물로 인해 혼조를 보이며 마감했다. 성수 한강변에서는 9000가구 규모의 재개발 사업이 본격적으로 추진되고 있다. 전국 아파트 관리비 중 최고액은 170만원으로, '나인원한남'에서 기록되고 있다. 수도권에서는 오피스 공급 확대에 따라 주택 공급도 함께 증가하는 방향으로 나가고 있다. 강남 지역 집값은 주춤했으나, 현금 부자들은 '디에이치 반포124' 분양에 관심을 보이고 있다.",
+      "lineEn": "The Hong Kong stock market closed mixed due to profit-taking. A redevelopment project involving 9,000 households is being actively pushed forward along the Han River in Seoul. The highest apartment management fee nationwide is 1,700,000 won, recorded at 'Nine One Hanam'. In the capital area, housing supply is increasing along with the expansion of office supply. Housing prices in the Gangnam area have eased, but cash-rich individuals are showing interest in the sales of 'DCH Banpo 124'.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "[올댓차이나] 홍콩 증시, 이익매물로 혼조 마감… H주 0.10%↑",
+          "link": "https://www.newsis.com/view/NISX20261014_0003826354",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "트리마제·아크로포레 다음은…성수 한강변 9000가구 재개발 본궤도 [부동산 심머니]",
+          "link": "https://www.mk.co.kr/news/realestate/12176053",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "전국 아파트 관리비 최고는 170만원 ‘나인원한남’… 지방 최고는 어디",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/14/VERJM6GALNE2TE24NPNLGZZ5KM/",
+          "source": "조선비즈 부동산"
+        },
+        {
+          "title": "수도권서 오피스 짓는 만큼 주택 공급도 늘린다",
+          "link": "https://www.hankyung.com/article/2026101420921",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "강남 집값 주춤한 이유 있었네…현금부자들 ‘디에이치 반포124’ 분양만 기다린다",
+          "link": "https://www.mk.co.kr/news/realestate/12175787",
+          "source": "매일경제 부동산"
         }
       ]
     },
@@ -85,12 +122,17 @@
       "key": "rates",
       "name": "금리·예금·투자상품",
       "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "국고채 금리가 사흘 만에 상승했다. 3년물 금리는 연 3.883%로 올랐다. 미국의 물가 발표를 앞두고 시장이 숨을 고르고 있다. 금리 상승은 최근 몇일간 지속되고 있다. 금리 동향은 향후 경제 전망에 영향을 줄 것으로 보인다.",
-      "lineEn": "The government bond rate rose after three days. The 3-year rate increased to 3.883% annually. The market is holding its breath ahead of the U.S. inflation data release. The rate increase has been continuing for several days. The interest rate trend is expected to affect the future economic outlook.",
+      "lineKo": "미국의 9월 중고주택 판매량은 전월 대비 1.5% 증가했다. 다만 대출금리 상승으로 인해 회복은 제한적일 것으로 보인다. 한국의 국고채 금리는 사흘 만에 상승했으며, 미국의 물가 발표를 앞두고 시장이 숨고르기를 하고 있다. 3년물 국고채 금리는 연 3.883%로 올랐다. 각 기사는 서로 다른 경제 지표와 관련된 내용을 보고하고 있다.",
+      "lineEn": "U.S. September used home sales increased by 1.5% compared to the previous month. However, recovery appears to be limited due to rising loan interest rates. South Korea's government bond yields rose within three days, and the market is taking a breather ahead of the U.S. inflation data release. The 3-year government bond yield rose to 3.883% annually. Each report covers different economic indicators.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
+        {
+          "title": "美 9월 중고주택 판매 1.5%↑…\"대출금리 상승에 회복 제한\"",
+          "link": "https://www.newsis.com/view/NISX20261014_0003826231",
+          "source": "뉴시스 경제"
+        },
         {
           "title": "국고채 금리, 사흘만에 상승…美 물가 발표 앞두고 숨고르기(종합)",
           "link": "https://www.yna.co.kr/view/AKR20261014154951008",
@@ -100,33 +142,6 @@
           "title": "국고채 금리 일제히 상승…3년물 연 3.883%",
           "link": "https://www.yna.co.kr/view/AKR20261014154900008",
           "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "기타 경제 소식: \"이제 집값 떨어질 것\"…시장서도 고개 드는 '하락론' 근거는, 후티, 빈살만 경제개혁의 심장 아람코 본부까지 공격, \"경제대국이 어쩌다\"…67년 만에 와르르 무너진 '이 나라'",
-      "lineEn": "Other Economic News: \"이제 집값 떨어질 것\"…시장서도 고개 드는 '하락론' 근거는, 후티, 빈살만 경제개혁의 심장 아람코 본부까지 공격, \"경제대국이 어쩌다\"…67년 만에 와르르 무너진 '이 나라'",
-      "isFallback": true,
-      "fallbackReason": "unverified-entity",
-      "degraded": false,
-      "items": [
-        {
-          "title": "\"이제 집값 떨어질 것\"…시장서도 고개 드는 '하락론' 근거는",
-          "link": "https://www.newsis.com/view/NISX20261014_0003825932",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "후티, 빈살만 경제개혁의 심장 아람코 본부까지 공격",
-          "link": "https://www.newsis.com/view/NISX20261014_0003825854",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "\"경제대국이 어쩌다\"…67년 만에 와르르 무너진 '이 나라'",
-          "link": "https://www.hankyung.com/article/202610141636H",
-          "source": "한국경제 경제"
         }
       ]
     }
