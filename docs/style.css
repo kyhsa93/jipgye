@@ -252,10 +252,14 @@ h1 {
   font-weight: 700;
 }
 
+/* 갱신 주기 한 줄은 자바스크립트가 채운다(구운 HTML에서는 비어 있다). 비워 두면 채워지는
+ * 순간 머리글이 19px 자라 아래가 통째로 밀린다(#287). 한 줄 자리를 미리 잡아 둔다 -
+ * 두 언어 모두 한 줄이고(2026-10-14 실측 19px), lh 로 적어 글자 크기를 바꾸면 따라오게 한다. */
 .update-schedule {
   color: var(--muted);
   font-size: var(--fs-xs);
   margin-top: 2px;
+  min-height: 1lh;
 }
 
 .back-link {
@@ -869,6 +873,19 @@ ul.news-list {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 12px;
   margin-top: 12px;
+}
+
+/* 금리 네 장의 추이 격자는 데이터가 오기 전에도 넉 칸이다(scripts/rates-template.html이 빈 칸
+ * 셋을 깔아 둔다). 칸 높이를 여기서 잡아야 카드가 들어올 때 격자가 안 늘어난다 - 안 잡아 두면
+ * 54px짜리 한 칸이 579px로 늘면서 아래 내용 전부를 밀었다(2026-10-14 실측 CLS 0.632~0.687,
+ * Good 기준 0.1의 6~7배. #287).
+ * 136px은 412px 폭에서 잰 카드 높이다(라벨 19 + 값 32 + 설명 19 + 추이선 36 + 안팎 여백 30).
+ * 한 줄에 넉 장이 들어가는 넓은 폭에서는 상품명이 두 줄로 접혀 카드가 155px이 되므로 19px이
+ * 모자라지만, 좁은 폭(한 열)과 760px 안팎(두 열)에서는 정확히 맞는다. 모자란 폭까지 맞추려면
+ * 설명 줄 수를 고정해야 하는데 그건 보이는 모양을 바꾸는 일이라 이 수정에 넣지 않았다. */
+#history-grid > .placeholder,
+.history-reserve {
+  min-height: 136px;
 }
 
 .history-more {
@@ -2697,7 +2714,15 @@ summary:focus-visible,
 }
 
 .history-card svg[role="img"] { height: auto; touch-action: none; margin-top: 0; }
-.content-notice.page-notice { margin: -12px 0 20px; }
+/* 공시 기준 안내도 자바스크립트가 채운다. 들어올 줄 수를 미리 잡아 둔다 - 재는 폭(412px,
+ * Lighthouse 모바일 프리셋)에서 한국어·영어 모두 세 줄(61px), 480px 이상에서는 둘 다 두 줄
+ * (41px)이다(2026-10-14 실측). 한국어는 430px부터 두 줄이라 430~479px에서는 한 줄만큼 비는데,
+ * 그 폭에서 영어는 아직 세 줄이라 둘 중 하나는 비게 된다 - 밀리지 않는 쪽을 택했다(#287). */
+.content-notice.page-notice { margin: -12px 0 20px; min-height: 2lh; }
+
+@media (max-width: 480px) {
+  .content-notice.page-notice { min-height: 3lh; }
+}
 
 @media (prefers-color-scheme: dark) {
   :root {

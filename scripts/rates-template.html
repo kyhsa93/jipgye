@@ -75,8 +75,18 @@
 
   <section id="history-section">
     <h2 id="history-heading">금리 추이</h2>
+    <!-- 추이 카드 넉 장(예금·적금·주담대·전세자금)은 rates-history.json이 온 뒤에 그려진다. 자리가
+         한 칸뿐이면 넉 장이 들어오는 순간 격자가 54px에서 579px로 늘어 아래 내용이 통째로 밀렸다
+         (2026-10-14 실측 CLS: deposit 0.651 · saving 0.687 · mortgage·rentLoan 0.632, #287).
+         빈 칸 셋을 미리 깔아 두면 격자가 처음부터 넉 칸이라 열 수가 같고(auto-fit이 폭에 따라
+         1·2·4열로 접는 것까지 그대로), 칸 높이는 style.css가 잡는다. 글자는 넣지 않는다 -
+         구운 본문을 바꾸지 않는 것이 이 수정의 범위다(#287 범위 2).
+         빈 칸은 글자도 역할도 없어 읽어 주는 장치에는 잡히지 않는다 - aria 속성을 따로 달지 않는다. -->
     <div class="history-grid" id="history-grid">
       <div class="placeholder" id="history-placeholder">불러오는 중...</div>
+      <div class="history-reserve"></div>
+      <div class="history-reserve"></div>
+      <div class="history-reserve"></div>
     </div>
   </section>
 
