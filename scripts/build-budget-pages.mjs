@@ -7,6 +7,7 @@ import { lineCounts } from "./policy-loan.mjs";
 import { budgetRulesHtml } from "./budget-rules.mjs";
 import { bakeKoHeading } from "./page-heading.mjs";
 import { createWriteSet } from "./render-writes.mjs";
+import { escapeHtml } from "./html-escape.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const REALESTATE_PATH = path.join(root, "docs/realestate.html");
@@ -38,6 +39,28 @@ export function chipsHtml(page) {
     ).join("") +
     `</nav>`
   );
+}
+
+/**
+ * "국토교통부에 신고된 실거래 기록이지 매물이 아니다" 안내(#budget-note)를 굽는다(#297, po 판정).
+ *
+ * 전에는 화면 스크립트만 넣었다. 그래서 realestate.json을 못 받으면 renderBudget이 돌지 않아, 구운 거래
+ * 목록이 이 안내 없이 그대로 보였다(헤드리스 Chrome 확인: realestate.json 503일 때 #budget-note가 빈 칸).
+ * 목록과 늘 같이 있어야 하는 안내라 빌드가 굽는다 - 받는 중·실패·스크립트를 끈 화면이 한 번에 풀린다.
+ *
+ * 글자는 **틀의 한국어 사전에서 그대로 떠 온다**. 같은 문장을 두 군데 적으면 갈라진다(체크리스트 10) -
+ * 사전이 하나뿐인 원본이고, 여기는 그 값을 옮길 뿐이라 드리프트가 생길 자리가 없다. 영어 화면은 스크립트가
+ * 첫 실행에서 영어 문장으로 바꾼다(cmo 판정 6147877878: 영어 문장은 같이 굽지 않는다 - 한 장에 두 언어가
+ * 구워지면 수집기가 받는 언어 신호가 흐려진다).
+ */
+export function budgetNoteKo(baseHtml) {
+  const koStart = baseHtml.indexOf("  ko: {");
+  const enStart = baseHtml.indexOf("  en: {");
+  const m = baseHtml.match(/\n\s*budgetNote:\s*\n\s*"((?:[^"\\]|\\.)*)",/);
+  if (koStart < 0 || enStart < 0 || !m || m.index < koStart || m.index > enStart) {
+    throw new Error("한국어 사전의 budgetNote 문장을 찾지 못했습니다");
+  }
+  return JSON.parse(`"${m[1]}"`);
 }
 
 function navHtml(page) {
@@ -80,6 +103,13 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
     '<section id="budget-section" hidden>',
     '<section id="budget-section">',
     "예산 섹션"
+  );
+
+  html = replaceOnce(
+    html,
+    '<div class="content-notice" id="budget-note"></div>',
+    `<div class="content-notice" id="budget-note">${escapeHtml(budgetNoteKo(baseHtml))}</div>`,
+    "매물 아님 안내"
   );
 
   // 예산 장의 본문(그 예산대 거래·후보·자금)을 서울 평균 카드와 추이 그래프보다 앞에 둔다. 모바일에서

@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-10-13T18:13:18.967Z",
+  "updatedAt": "2026-10-14T03:31:32.345Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 기타 경제 소식: 이형일이 미국 베선트와 상견례를 갖고 한미 경제·금융 협력의 중요성을 강조했다. 이형일은 베선트와 화상면담을 통해 한미 경제·금융 협력의 중요성을 재확인했다. 신혼부부 대출에 대해 서울에서는 현실적인 어려움이 있는 것으로 나타났다. 외곽으로 이주하거나 좁은 집에 거주하는 선택이 필요한 상황이다. 서울에서 신혼부부 대출은 여전히 큰 부담으로 남아 있다.\n- 증시·환율: 증시·환율: 뉴욕증시, 은행 실적·반도체 약세 속 혼조 출발…다우 0.7%↑, [올댓차이나] 대만 증시, 美 반도체 약세에 나흘째 속락 마감…1.95%↓, [올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑ +6\n- 부동산: 3기 신도시 용적률을 높여 6.4만가구 추가 공급할 계획이다. 5억 원대에 아파트를 구매할 수 있는 기회가 생겼다. 연내 1.5만가구 착공이 예정되지만 재건축 권한 이양 논의는 진행 중이다. 비아파트 주택 수 제외 혜택을 상시화해야 한다는 주장이 제기되고 있다. 조윤호 서강대 교수는 전세 제도가 집값 안정에 도움을 주고, 부동산 거래세가 가계의 최적 선택을 막는다고 밝혔다.\n- 금리·예금·투자상품: 인도 9월 소비자물가 상승률은 5.54%로 전월 대비 0.71%포인트 상승했다. 이는 주로 식품 가격 급등으로 인한 것으로 나타났다. 인도 정부는 추가 금리 인상이 예상된다고 전망하고 있다. 국고채 금리는 코스피 급락과 외인 매수로 인해 이틀째 큰 폭으로 하락했다. 관련 수치는 구체적으로 발표되지 않았으나, 금리 변동이 두드러졌다.",
-    "en": "- Other Economic News: Lee Hyung-il emphasized the importance of U.S.-South Korea economic and financial cooperation during a meeting with U.S. Treasury Secretary Janet Yellen. Lee reaffirmed the importance of U.S.-South Korea economic and financial cooperation through a video conference with Yellen. It has been revealed that there are practical difficulties with newlywed couples' loans in Seoul. The situation requires a choice of relocating to the suburbs or living in a smaller home. Newlywed couples' loans in Seoul remain a significant burden.\n- Stocks & FX: Stocks & FX: 뉴욕증시, 은행 실적·반도체 약세 속 혼조 출발…다우 0.7%↑, [올댓차이나] 대만 증시, 美 반도체 약세에 나흘째 속락 마감…1.95%↓, [올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑ +6\n- Real Estate: Plans are in place to increase the floor area ratio in the third phase new city to supply an additional 64,000 households. An opportunity has arisen to purchase apartments in the 500,000,000 won range. Although 15,000 units are scheduled to be started by year-end, discussions on the transfer of reconstruction authority are ongoing. There is a growing call to permanently implement the benefit of excluding non-apartment housing from the quota. Jo Yun-ho, a professor at Sogang University, stated that the leasehold system helps stabilize housing prices and that the real estate transaction tax prevents households from making optimal choices.\n- Rates, Deposits & Investment Products: India's consumer price increase in September was 5.54%, up 0.71 percentage points from the previous month. This was mainly due to a sharp rise in food prices. The Indian government is expecting further interest rate hikes. Government bond yields fell sharply for the second consecutive day due to the Kospi's sharp decline and foreign buying. Specific figures were not officially released, but interest rate fluctuations were significant."
+    "ko": "- 기타 경제 소식: 이형일은 불확실성이 지속되고 있는 상황에서 대외경제에 미치는 영향을 면밀히 점검하고 대응해야 한다고 밝혔다. 일본의 9월 통화공급량은 1638조엔으로 전월 대비 1.2% 증가했다. 보훈장관은 오늘 한국경제인협회를 방문해 제대군인 예우 등 관련 사항을 논의했다. 일본은 대출 증가로 인해 통화공급량이 1%대를 유지하고 있다. 이형일의 발언은 경제 상황에 대한 경계심을 드러내는 것으로 해석된다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 상승하며 3년물이 장중 연 3.883%를 기록했고, 미국 월가 은행 4곳은 3분기 호실적에도 불구하고 금리 인상에 따라 희비가 엇갈렸으며, 원금 4천만원을 갚은 주부는 이자만 5천만원을 내며 살인금리로 인해 사망했다.\n- 부동산: LH가 공동주택 품질 강화를 위해 준공 전부터 입주 후 보수까지 책임 관리하고 있으며, 대구에서 흥행한 CR리츠가 부산으로 이동하며 신축 전세 수요가 이어지고 있고, HUG는 100억 넘는 전세보증금 빚으로 3조 회수에 실패하고 있으며, 고물가로 인해 소년소녀가정의 전세임대 43%가 장기체납되고 있으며, 관리비가 월 170만원인 아파트가 월세보다 비싼 것으로 나타났다.\n- 증시·환율: 전날 급락했던 코스피는 오늘 1~2%대에서 반등했다. 일본 증시는 AI와 반도체주 매수세에 힘입어 상승 출발했다. 닛케이 지수는 0.24% 상승했다. 코스피는 상승폭을 조절하며 안정적인 흐름을 보였다. 일본 증시의 상승은 주요 산업주들의 강세로 이어졌다.",
+    "en": "- Other Economic News: Lee Hyung-il stated that the impact on foreign economic affairs should be closely examined and addressed in the ongoing situation of uncertainty. Japan's money supply in September was 1,638,000,000,000,000 yen, an increase of 1.2% compared to the previous month. The Minister of Veterans Affairs visited the Korea Chamber of Commerce and Industry today to discuss matters related to the treatment of veterans. Japan has maintained its money supply in the 1% range due to increased lending. Lee Hyung-il's remarks are interpreted as revealing caution about the economic situation.\n- Rates, Deposits & Investment Products: South Korean government bond rates rose uniformly, with the 3-year bond reaching 3.883% annually during trading. Despite strong third-quarter results, four U.S. Wall Street banks experienced mixed outcomes due to rising interest rates. A housewife who repaid 40,000,000 won in principal paid 50,000,000 won in interest and died due to the exorbitant interest rates.\n- Real Estate: LH is responsible for managing and maintaining the quality of public housing from before completion to after occupancy. CR REITs, which were successful in Daegu, are moving to Busan, and the demand for new rental units is continuing. HUG has failed to recover 3,000,000,000,000 won in deposits, with outstanding deposits exceeding 10,000,000,000 won. Due to high prices, 43% of the rental units provided by the Boys' and Girls' Welfare Society are experiencing long-term arrears. An apartment with a monthly management fee of 1,700,000 won was found to be more expensive than monthly rent.\n- Stocks & FX: The KOSPI, which had sharply declined the previous day, rebounded by 1-2% today. The Japanese stock market opened higher, driven by buying in AI and semiconductor stocks. The Nikkei index rose 0.24%. The KOSPI maintained a stable trend by moderating its gains. The rise in the Japanese stock market led to strong performance in major industrial stocks."
   },
   "highlights": [],
   "categories": [
@@ -11,62 +11,52 @@
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "이형일이 미국 베선트와 상견례를 갖고 한미 경제·금융 협력의 중요성을 강조했다. 이형일은 베선트와 화상면담을 통해 한미 경제·금융 협력의 중요성을 재확인했다. 신혼부부 대출에 대해 서울에서는 현실적인 어려움이 있는 것으로 나타났다. 외곽으로 이주하거나 좁은 집에 거주하는 선택이 필요한 상황이다. 서울에서 신혼부부 대출은 여전히 큰 부담으로 남아 있다.",
-      "lineEn": "Lee Hyung-il emphasized the importance of U.S.-South Korea economic and financial cooperation during a meeting with U.S. Treasury Secretary Janet Yellen. Lee reaffirmed the importance of U.S.-South Korea economic and financial cooperation through a video conference with Yellen. It has been revealed that there are practical difficulties with newlywed couples' loans in Seoul. The situation requires a choice of relocating to the suburbs or living in a smaller home. Newlywed couples' loans in Seoul remain a significant burden.",
+      "lineKo": "이형일은 불확실성이 지속되고 있는 상황에서 대외경제에 미치는 영향을 면밀히 점검하고 대응해야 한다고 밝혔다. 일본의 9월 통화공급량은 1638조엔으로 전월 대비 1.2% 증가했다. 보훈장관은 오늘 한국경제인협회를 방문해 제대군인 예우 등 관련 사항을 논의했다. 일본은 대출 증가로 인해 통화공급량이 1%대를 유지하고 있다. 이형일의 발언은 경제 상황에 대한 경계심을 드러내는 것으로 해석된다.",
+      "lineEn": "Lee Hyung-il stated that the impact on foreign economic affairs should be closely examined and addressed in the ongoing situation of uncertainty. Japan's money supply in September was 1,638,000,000,000,000 yen, an increase of 1.2% compared to the previous month. The Minister of Veterans Affairs visited the Korea Chamber of Commerce and Industry today to discuss matters related to the treatment of veterans. Japan has maintained its money supply in the 1% range due to increased lending. Lee Hyung-il's remarks are interpreted as revealing caution about the economic situation.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "이형일, 美베선트와 상견례…\"한미 경제·금융 협력 중요\"(종합)",
-          "link": "https://www.newsis.com/view/NISX20261013_0003824725",
+          "title": "이형일 \"불확실성 지속…대외경제 영향 면밀히 점검·대응해야\"",
+          "link": "https://www.yna.co.kr/view/AKR20261014084700002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "日 9월 통화공급량 1638조엔·1.2%↑…\"대출 증가로 1%대 유지\"",
+          "link": "https://www.newsis.com/view/NISX20261014_0003825287",
           "source": "뉴시스 경제"
         },
         {
-          "title": "이형일, 베선트와 화상면담…\"힌미 경제·금융 협력 중요성 재확인\"",
-          "link": "https://www.newsis.com/view/NISX20261013_0003824721",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "“외곽으로 가거나 좁은 집에 살거나”…신혼부부 대출, 서울선 ‘그림의 떡’",
-          "link": "https://www.mk.co.kr/news/realestate/12174609",
-          "source": "매일경제 부동산"
+          "title": "보훈장관, 오늘 한국경제인협회 방문…제대군인 예우 등 논의",
+          "link": "https://www.yna.co.kr/view/AKR20261014063100504",
+          "source": "연합뉴스 경제"
         }
       ]
     },
     {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "증시·환율: 뉴욕증시, 은행 실적·반도체 약세 속 혼조 출발…다우 0.7%↑, [올댓차이나] 대만 증시, 美 반도체 약세에 나흘째 속락 마감…1.95%↓, [올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑ +6",
-      "lineEn": "Stocks & FX: 뉴욕증시, 은행 실적·반도체 약세 속 혼조 출발…다우 0.7%↑, [올댓차이나] 대만 증시, 美 반도체 약세에 나흘째 속락 마감…1.95%↓, [올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑ +6",
-      "isFallback": true,
-      "fallbackReason": "unverified-entity",
-      "degraded": false,
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "국고채 금리가 일제히 상승하며 3년물이 장중 연 3.883%를 기록했고, 미국 월가 은행 4곳은 3분기 호실적에도 불구하고 금리 인상에 따라 희비가 엇갈렸으며, 원금 4천만원을 갚은 주부는 이자만 5천만원을 내며 살인금리로 인해 사망했다.",
+      "lineEn": "South Korean government bond rates rose uniformly, with the 3-year bond reaching 3.883% annually during trading. Despite strong third-quarter results, four U.S. Wall Street banks experienced mixed outcomes due to rising interest rates. A housewife who repaid 40,000,000 won in principal paid 50,000,000 won in interest and died due to the exorbitant interest rates.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
       "items": [
         {
-          "title": "뉴욕증시, 은행 실적·반도체 약세 속 혼조 출발…다우 0.7%↑",
-          "link": "https://www.newsis.com/view/NISX20261013_0003824712",
+          "title": "국고채 금리 일제히 상승…3년물 장중 연 3.883%",
+          "link": "https://www.yna.co.kr/view/AKR20261014091100008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "美 월가 은행 4곳, 3분기 호실적에도…금리 인상에 희비",
+          "link": "https://www.newsis.com/view/NISX20261014_0003825111",
           "source": "뉴시스 경제"
         },
         {
-          "title": "[올댓차이나] 대만 증시, 美 반도체 약세에 나흘째 속락 마감…1.95%↓",
-          "link": "https://www.newsis.com/view/NISX20261013_0003824645",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "[올댓차이나] 홍콩 증시, 자원주 강세에 사흘째 상승 마감…H주 0.08%↑",
-          "link": "https://www.newsis.com/view/NISX20261013_0003824613",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "김병연 서울대 석좌교수 \"러와 밀착 北, 깜짝 성장했지만…3년새 환율 9배·쌀값 8배 급등\"",
-          "link": "https://www.hankyung.com/article/2026101395581",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "사상최대 반도체 실적인데 왜…'검은 화요일' 코스피 추락에 악소리(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261013089251008",
+          "title": "원금 4천만원, 갚은 이자만 5천만원…살인금리에 주부 사망",
+          "link": "https://www.yna.co.kr/view/AKR20261014047800054",
           "source": "연합뉴스 경제"
         }
       ]
@@ -75,58 +65,58 @@
       "key": "realestate",
       "name": "부동산",
       "nameEn": "Real Estate",
-      "lineKo": "3기 신도시 용적률을 높여 6.4만가구 추가 공급할 계획이다. 5억 원대에 아파트를 구매할 수 있는 기회가 생겼다. 연내 1.5만가구 착공이 예정되지만 재건축 권한 이양 논의는 진행 중이다. 비아파트 주택 수 제외 혜택을 상시화해야 한다는 주장이 제기되고 있다. 조윤호 서강대 교수는 전세 제도가 집값 안정에 도움을 주고, 부동산 거래세가 가계의 최적 선택을 막는다고 밝혔다.",
-      "lineEn": "Plans are in place to increase the floor area ratio in the third phase new city to supply an additional 64,000 households. An opportunity has arisen to purchase apartments in the 500,000,000 won range. Although 15,000 units are scheduled to be started by year-end, discussions on the transfer of reconstruction authority are ongoing. There is a growing call to permanently implement the benefit of excluding non-apartment housing from the quota. Jo Yun-ho, a professor at Sogang University, stated that the leasehold system helps stabilize housing prices and that the real estate transaction tax prevents households from making optimal choices.",
+      "lineKo": "LH가 공동주택 품질 강화를 위해 준공 전부터 입주 후 보수까지 책임 관리하고 있으며, 대구에서 흥행한 CR리츠가 부산으로 이동하며 신축 전세 수요가 이어지고 있고, HUG는 100억 넘는 전세보증금 빚으로 3조 회수에 실패하고 있으며, 고물가로 인해 소년소녀가정의 전세임대 43%가 장기체납되고 있으며, 관리비가 월 170만원인 아파트가 월세보다 비싼 것으로 나타났다.",
+      "lineEn": "LH is responsible for managing and maintaining the quality of public housing from before completion to after occupancy. CR REITs, which were successful in Daegu, are moving to Busan, and the demand for new rental units is continuing. HUG has failed to recover 3,000,000,000,000 won in deposits, with outstanding deposits exceeding 10,000,000,000 won. Due to high prices, 43% of the rental units provided by the Boys' and Girls' Welfare Society are experiencing long-term arrears. An apartment with a monthly management fee of 1,700,000 won was found to be more expensive than monthly rent.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": false,
+      "degraded": true,
       "items": [
         {
-          "title": "“3기 신도시 용적률 높여 6.4만가구 더…수도권 주택 공급·이주 수요 동시에 해결”",
-          "link": "https://www.mk.co.kr/news/realestate/12174873",
+          "title": "LH, 공동주택 품질 강화… 준공 전부터 입주 후 보수까지 책임 관리",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/14/BO7DHEJREFCGZCRTXDA5CZPLEM/",
+          "source": "조선비즈 부동산"
+        },
+        {
+          "title": "“텐트 치고 기다린 신축 전세”…대구 흥행 이끈 CR리츠, 부산으로",
+          "link": "https://www.mk.co.kr/news/realestate/12175432",
           "source": "매일경제 부동산"
         },
         {
-          "title": "\"5억대에 새 집 줍줍할 기회\"…'애물단지' 아파트의 반전",
-          "link": "https://www.hankyung.com/article/2026101394771",
-          "source": "한국경제 부동산"
+          "title": "100억 넘는 전세보증금 빚…HUG, 3조 회수 못 하고 있다",
+          "link": "https://www.newsis.com/view/NISX20261014_0003825193",
+          "source": "뉴시스 경제"
         },
         {
-          "title": "연내 1.5만가구 착공 vs 권한이양 추진…재건축 '동상이몽'",
-          "link": "https://www.hankyung.com/article/2026101394691",
-          "source": "한국경제 부동산"
+          "title": "고물가에 버거운 주거비…소년소녀가정 전세임대 43% 장기체납",
+          "link": "https://www.newsis.com/view/NISX20261014_0003825158",
+          "source": "뉴시스 경제"
         },
         {
-          "title": "\"비아파트 '주택 수 제외' 혜택 상시화해야\"",
-          "link": "https://www.hankyung.com/article/2026101394741",
+          "title": "\"웬만한 월세보다 비싸네\"…관리비만 170만원 나오는 '이 아파트'",
+          "link": "https://www.hankyung.com/article/2026101409677",
           "source": "한국경제 부동산"
-        },
-        {
-          "title": "조윤호 서강대 교수 \"전세 제도 집값 안정에 도움…부동산 거래세, 가계의 최적 선택 막아\"",
-          "link": "https://www.hankyung.com/article/2026101395571",
-          "source": "한국경제 경제"
         }
       ]
     },
     {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "인도 9월 소비자물가 상승률은 5.54%로 전월 대비 0.71%포인트 상승했다. 이는 주로 식품 가격 급등으로 인한 것으로 나타났다. 인도 정부는 추가 금리 인상이 예상된다고 전망하고 있다. 국고채 금리는 코스피 급락과 외인 매수로 인해 이틀째 큰 폭으로 하락했다. 관련 수치는 구체적으로 발표되지 않았으나, 금리 변동이 두드러졌다.",
-      "lineEn": "India's consumer price increase in September was 5.54%, up 0.71 percentage points from the previous month. This was mainly due to a sharp rise in food prices. The Indian government is expecting further interest rate hikes. Government bond yields fell sharply for the second consecutive day due to the Kospi's sharp decline and foreign buying. Specific figures were not officially released, but interest rate fluctuations were significant.",
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "전날 급락했던 코스피는 오늘 1~2%대에서 반등했다. 일본 증시는 AI와 반도체주 매수세에 힘입어 상승 출발했다. 닛케이 지수는 0.24% 상승했다. 코스피는 상승폭을 조절하며 안정적인 흐름을 보였다. 일본 증시의 상승은 주요 산업주들의 강세로 이어졌다.",
+      "lineEn": "The KOSPI, which had sharply declined the previous day, rebounded by 1-2% today. The Japanese stock market opened higher, driven by buying in AI and semiconductor stocks. The Nikkei index rose 0.24%. The KOSPI maintained a stable trend by moderating its gains. The rise in the Japanese stock market led to strong performance in major industrial stocks.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "인도 9월 소비자물가 5.54%·0.71%P↑…\"식품값 급등에 추가 금리인상 전망\"",
-          "link": "https://www.newsis.com/view/NISX20261013_0003824568",
-          "source": "뉴시스 경제"
+          "title": "전날 급락했던 코스피 반등…1~2%대에서 상승폭 조절",
+          "link": "https://www.yna.co.kr/view/AKR20261014080000008",
+          "source": "연합뉴스 경제"
         },
         {
-          "title": "국고채 금리, 코스피 급락·외인 매수에 이틀째 큰 폭 하락",
-          "link": "https://www.yna.co.kr/view/AKR20261013164900008",
-          "source": "연합뉴스 경제"
+          "title": "日증시, AI·반도체주 매수세에 상승 출발…닛케이 0.24%↑",
+          "link": "https://www.newsis.com/view/NISX20261014_0003824991",
+          "source": "뉴시스 경제"
         }
       ]
     }

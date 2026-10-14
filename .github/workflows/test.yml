@@ -47,3 +47,18 @@ jobs:
         run: node scripts/build-css.mjs --check
       - run: npm ci
       - run: npm test
+      # tools/golden(#236·#274)은 의존 트리를 루트와 나눠 놨다(parse5) — 루트 `npm ci`로는 설치되지 않아
+      # 이 폴더 시험이 CI 밖에 있었다. 그래서 `docs/*.js`의 class 문자열을 바꾸고 훅 목록(`hook-classes.json`)을
+      # 안 고친 PR은 누군가 손으로 `tools/golden`에서 `npm test`를 돌릴 때에야 드러났다(#289 본문).
+      # 넣는 것은 고정 fixture만 읽는 `npm test`(단위·변이·훅 목록 어긋남)뿐이다 — 수집한 데이터도 오늘 날짜도
+      # 읽지 않으므로 "데이터·날짜에 따라 결과가 갈리는 검사는 넣지 않는다"(#8에서 데인 자리)에 걸리지 않는다.
+      # 101개 중 90통과·11건너뜀(건너뛴 11은 GOLDEN_LIVE 게이트), 이 기기 6.6초.
+      # `--render` 비교와 `npm run test:live`는 넣지 않는다(#289 cto 판정): merge-base를 받아 두 번 렌더해야 하고,
+      # 의도한 차이는 예외 목록과 po·cmo 확인으로 PR 본문에서 가리는 절차다. R-UI′ 4번의 PR 증빙으로 둔다.
+      # 캐시 설정은 건드리지 않는다 — `npm ci`가 쓰는 것은 전역 npm 캐시(`~/.npm`)이고 위 setup-node가 이미 복원해 둔다.
+      - name: tools/golden npm ci
+        run: npm ci
+        working-directory: tools/golden
+      - name: tools/golden npm test
+        run: npm test
+        working-directory: tools/golden

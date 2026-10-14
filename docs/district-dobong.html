@@ -33,10 +33,11 @@
     <div>
       <a class="brand" id="site-brand" href="./index.html" data-brand-en="Jipgye">집계</a>
       <h1 id="page-title">도봉구 아파트 시세</h1>
-      <div class="updated" id="updated" data-updated="2026-10-13">기준일 2026-10-13</div>
+      <div class="updated" id="updated" data-updated="2026-10-14">기준일 2026-10-14</div>
       <div class="updated updated-warn" id="updated-warn" role="status" hidden></div>
     </div>
     <div class="header-actions">
+      <button class="icon-toggle" type="button" id="share-button" aria-label="공유"><span aria-hidden="true">📤</span></button>
       <button class="icon-toggle" type="button" id="theme-toggle" aria-label="테마 전환"><span aria-hidden="true">🌓</span></button>
       <button class="icon-toggle" type="button" id="lang-toggle" aria-label="언어 전환"><span aria-hidden="true">🌐</span></button>
     </div>
@@ -76,14 +77,14 @@
 
   <section id="overall-section">
     <h2 id="overall-heading">도봉구 평균</h2>
-    <div class="overall-cards" id="overall-cards"><!--prerender:realestateOverall--><div class="overall-card"><div class="label">평당가</div><div class="value">2,798만원</div></div><div class="overall-card"><div class="label">84㎡ 환산</div><div class="value">7억 1,097만원</div></div><div class="overall-card"><div class="label">거래건수</div><div class="value">300건</div></div><div class="overall-card"><div class="label">전세가율</div><div class="value">64.8%</div><div class="sub">매매 300건 · 전세 127건</div></div><div class="overall-card"><div class="label">전세가율 단지별 중앙값</div><div class="value">60.0%</div><div class="sub">단지·평형 48칸</div></div><!--/prerender:realestateOverall--></div>
+    <div class="overall-cards" id="overall-cards"><!--prerender:realestateOverall--><div class="overall-card"><div class="label">평당가</div><div class="value">2,806만원</div></div><div class="overall-card"><div class="label">84㎡ 환산</div><div class="value">7억 1,300만원</div></div><div class="overall-card"><div class="label">거래건수</div><div class="value">318건</div></div><div class="overall-card"><div class="label">전세가율</div><div class="value">64.6%</div><div class="sub">매매 318건 · 전세 135건</div></div><div class="overall-card"><div class="label">전세가율 단지별 중앙값</div><div class="value">60.0%</div><div class="sub">단지·평형 48칸</div></div><!--/prerender:realestateOverall--></div>
   </section>
 
   <section id="district-summary-section" hidden>
-    <p class="district-summary" data-summary-lang="ko"><!--prerender:districtSummaryKo-->도봉구 아파트 매매가는 평당 2,798만원입니다. 서울 평균 5,104만원의 0.5배입니다. 신고 건수가 충분한 25개 구 가운데 가장 낮습니다. 84㎡(약 25평) 기준으로 환산하면 약 7억 1,097만원입니다. 평당가가 가장 가까운 지역은 금천구(3,111만원)입니다. 전세가율은 64.8%로 서울 평균 60.2%보다 높은 편이고, 25개 구를 전세가율 순으로 세우면 강북구와 성북구 사이입니다(이 구 매매 300건·전세 127건, 서울 전체 매매 281건·전세 320건 기준). 매매와 전세가 함께 신고된 단지·평형 48칸에서 하나씩 내면 절반이 50~68.3%에 들어옵니다. 월세는 보증금 7,990만원에 월 92만원 수준입니다. 이 숫자들은 정부에 신고된 매매 300건, 전세 127건, 월세 129건을 집계한 것입니다.<!--/prerender:districtSummaryKo--></p>
-    <p class="district-summary" data-summary-lang="en" hidden><!--prerender:districtSummaryEn-->Apartments in 도봉구 trade at ₩28M per pyeong, 0.5× the Seoul average of ₩51M. That is the lowest among the 25 districts with enough reported transactions. For an 84m² unit that works out to about ₩711M. The closest district by price is 금천구 at ₩31.1M per pyeong. The jeonse ratio is 64.8%, above the Seoul average of 60.2%, ranking between 강북구 and 성북구 among 25 districts (based on 300 sales and 127 jeonse here, 281 and 320 citywide). Measured one unit type at a time across the 48 unit types where both a sale and a jeonse were reported, half fall between 50% and 68.3%. Monthly rentals average a ₩79.9M deposit with ₩0.9M per month. These figures are based on 300 sales, 127 jeonse, 129 rentals reported to the government.<!--/prerender:districtSummaryEn--></p>
-    <p class="district-summary district-facts" data-summary-lang="ko"><!--prerender:districtFactsKo-->위 시세표의 최근 네 주가 아니라, 최근 3개월 동안 신고된 441건을 전부 놓고 보면 이렇습니다. 준공 30년을 넘긴 단지가 67%입니다. 이 정도면 이 구의 시세는 집 자체보다 재건축 기대가 만드는 값에 가깝습니다. 한 단지가 유독 많이 팔렸습니다 — 방학동 신동아아파트1 41건으로 전체의 9%입니다. 기간 중 가장 비싸게 팔린 것은 창동 주공19단지(창동리버타운) 91㎡로 12억원입니다.<!--/prerender:districtFactsKo--></p>
-    <p class="district-summary district-facts" data-summary-lang="en" hidden><!--prerender:districtFactsEn-->Looking at all 441 transactions reported over the past 3 months rather than the four-week average above: 67% are in buildings at least 30 years old — at that share the price here is being set by redevelopment expectations as much as by the flats themselves. A single complex, 신동아아파트1 in 방학동, accounts for 41 of them (9%). The highest price in the period was ₩1200M for a 91㎡ unit at 주공19단지(창동리버타운) in 창동.<!--/prerender:districtFactsEn--></p>
+    <p class="district-summary" data-summary-lang="ko"><!--prerender:districtSummaryKo-->도봉구 아파트 매매가는 평당 2,806만원입니다. 서울 평균 5,168만원의 0.5배입니다. 신고 건수가 충분한 25개 구 가운데 가장 낮습니다. 84㎡(약 25평) 기준으로 환산하면 약 7억 1,300만원입니다. 평당가가 가장 가까운 지역은 금천구(3,111만원)입니다. 전세가율은 64.6%로 서울 평균 60.5%보다 높은 편이고, 25개 구를 전세가율 순으로 세우면 강북구와 성북구 사이입니다(이 구 매매 318건·전세 135건, 서울 전체 매매 458건·전세 452건 기준). 매매와 전세가 함께 신고된 단지·평형 48칸에서 하나씩 내면 절반이 50~68.3%에 들어옵니다. 월세는 보증금 7,795만원에 월 92만원 수준입니다. 이 숫자들은 정부에 신고된 매매 318건, 전세 135건, 월세 133건을 집계한 것입니다.<!--/prerender:districtSummaryKo--></p>
+    <p class="district-summary" data-summary-lang="en" hidden><!--prerender:districtSummaryEn-->Apartments in 도봉구 trade at ₩28.1M per pyeong, 0.5× the Seoul average of ₩51.7M. That is the lowest among the 25 districts with enough reported transactions. For an 84m² unit that works out to about ₩713M. The closest district by price is 금천구 at ₩31.1M per pyeong. The jeonse ratio is 64.6%, above the Seoul average of 60.5%, ranking between 강북구 and 성북구 among 25 districts (based on 318 sales and 135 jeonse here, 458 and 452 citywide). Measured one unit type at a time across the 48 unit types where both a sale and a jeonse were reported, half fall between 50% and 68.3%. Monthly rentals average a ₩78M deposit with ₩0.9M per month. These figures are based on 318 sales, 135 jeonse, 133 rentals reported to the government.<!--/prerender:districtSummaryEn--></p>
+    <p class="district-summary district-facts" data-summary-lang="ko"><!--prerender:districtFactsKo-->위 시세표의 최근 네 주가 아니라, 최근 3개월 동안 신고된 459건을 전부 놓고 보면 이렇습니다. 준공 30년을 넘긴 단지가 67%입니다. 이 정도면 이 구의 시세는 집 자체보다 재건축 기대가 만드는 값에 가깝습니다. 한 단지가 유독 많이 팔렸습니다 — 방학동 신동아아파트1 41건으로 전체의 9%입니다. 기간 중 가장 비싸게 팔린 것은 창동 주공19단지(창동리버타운) 91㎡로 12억원입니다.<!--/prerender:districtFactsKo--></p>
+    <p class="district-summary district-facts" data-summary-lang="en" hidden><!--prerender:districtFactsEn-->Looking at all 459 transactions reported over the past 3 months rather than the four-week average above: 67% are in buildings at least 30 years old — at that share the price here is being set by redevelopment expectations as much as by the flats themselves. A single complex, 신동아아파트1 in 방학동, accounts for 41 of them (9%). The highest price in the period was ₩1200M for a 91㎡ unit at 주공19단지(창동리버타운) in 창동.<!--/prerender:districtFactsEn--></p>
     <p class="district-summary district-facts" data-summary-lang="ko"><!--prerender:districtRenewalKo-->전세로 살던 세입자가 재계약 때 월세로 바꾼 비율이 4.6%로, 서울 전체 7.6%보다 낮습니다 — 이 동네는 아직 전세가 전세로 남습니다.<!--/prerender:districtRenewalKo--></p>
     <p class="district-summary district-facts" data-summary-lang="en" hidden><!--prerender:districtRenewalEn-->Of tenants who had been on jeonse, only 4.6% switched to monthly rent when they renewed, against 7.6% across Seoul.<!--/prerender:districtRenewalEn--></p>
     <p class="card-links district-here"><a href="./deal-search.html?district=%EB%8F%84%EB%B4%89%EA%B5%AC">도봉구 실거래·단지 찾기 →</a> · <a href="./budget-7eok.html">도봉구 84㎡ 값에 맞는 7억대 후보 →</a> · <a href="./renewal-vs-new.html">재계약이 시세보다 싼가(구별 표) →</a> · <a href="./switch-house.html?from=%EB%8F%84%EB%B4%89%EA%B5%AC">도봉구에서 옮기면 — 갈아타기 →</a></p>
@@ -147,7 +148,7 @@
     <div class="table-wrap">
       <table class="data-table"><caption class="sr-only" data-auto>도봉구 아파트 시세 - 매매·전세·월세 실거래가 - 거래 유형별: 3행 4열(구분·평당가·84㎡ 환산·거래건수)</caption>
         <thead id="district-head"><!--prerender:realestateHead--><tr><th scope="col">구분</th><th scope="col">평당가</th><th scope="col">84㎡ 환산</th><th scope="col">거래건수</th></tr><!--/prerender:realestateHead--></thead>
-        <tbody id="district-grid"><!--prerender:realestateTable--><tr><td>매매</td><td data-label="평당가"><span class="price-strong">2,798만원</span> <span class="change up" title="2026-10-06 대비">▲36만원</span></td><td data-label="84㎡ 환산"><span class="price-strong">7억 1,097만원</span></td><td data-label="거래건수"><span class="count">300건</span></td></tr><tr><td>전세</td><td data-label="평당가"><span class="price-strong">1,813만원</span> <span class="change down" title="2026-10-06 대비">▼7만원</span></td><td data-label="84㎡ 환산"><span class="price-strong">4억 6,068만원</span></td><td data-label="거래건수"><span class="count">127건</span></td></tr><tr><td>월세</td><td data-label="평당가"><span class="price-strong">7,990만원</span> / <span class="price-strong">월 92만원</span></td><td data-label="84㎡ 환산">-</td><td data-label="거래건수"><span class="count">129건</span></td></tr><!--/prerender:realestateTable--></tbody>
+        <tbody id="district-grid"><!--prerender:realestateTable--><tr><td>매매</td><td data-label="평당가"><span class="price-strong">2,806만원</span> <span class="change up" title="2026-10-07 대비">▲32만원</span></td><td data-label="84㎡ 환산"><span class="price-strong">7억 1,300만원</span></td><td data-label="거래건수"><span class="count">318건</span></td></tr><tr><td>전세</td><td data-label="평당가"><span class="price-strong">1,814만원</span> <span class="change down" title="2026-10-07 대비">▼14만원</span></td><td data-label="84㎡ 환산"><span class="price-strong">4억 6,094만원</span></td><td data-label="거래건수"><span class="count">135건</span></td></tr><tr><td>월세</td><td data-label="평당가"><span class="price-strong">7,795만원</span> / <span class="price-strong">월 92만원</span></td><td data-label="84㎡ 환산">-</td><td data-label="거래건수"><span class="count">133건</span></td></tr><!--/prerender:realestateTable--></tbody>
       </table>
     </div>
     <div class="content-notice" id="table-note"></div>
@@ -1232,6 +1233,7 @@ const prerenderedBudgetExtras = (() => {
     return "";
   }
 })();
+const bakedBudgetResult = document.getElementById("budget-result")?.innerHTML ?? "";
 const budgetEok = isBudgetPage ? Math.max(1, Math.round(budgetBand10k / 10000)) : null;
 
 const EOK = 10000;
@@ -1264,27 +1266,35 @@ function budgetDealHtml(deal) {
   );
 }
 
+function withKoOnly(html) {
+  if (locale !== "en") return html;
+  const at = html.indexOf(" data-prerendered");
+  if (at < 0) return html;
+  const open = html.lastIndexOf("<", at);
+  return `${html.slice(0, open)}<p class="content-notice">${escapeHtml(t("budgetKoOnly"))}</p>${html.slice(open)}`;
+}
+
+let budgetResultHtml = bakedBudgetResult;
+function paintBudgetResult() {
+  const box = document.getElementById("budget-result");
+  const next = withKoOnly(budgetResultHtml);
+  if (box.innerHTML !== next) box.innerHTML = next;
+}
+
 function renderBudget() {
   const section = document.getElementById("budget-section");
   section.hidden = !budgetEnabled;
   if (!budgetEnabled) return;
 
   document.getElementById("budget-heading").textContent = t("budgetHeading");
-  document.getElementById("budget-note").textContent = t("budgetNote");
   if (!cache.budget?.bands?.length) return; // #288
   const band = bandFor(budgetEok * EOK);
-  const box = document.getElementById("budget-result");
 
-  if (!band) {
-    box.innerHTML = `<p class="budget-empty">${escapeHtml(t("budgetEmpty"))}</p>`;
-    return;
-  }
-
-  // 부대비용·최소 현금·대출·정책대출·후보 문단은 빌드가 한국 법령 원문을 인용해 한국어로만 굽는다.
-  // 영어 화면에서 말없이 한국어가 튀어나오지 않게, 그렇다고 먼저 알린다(PO 2차 #41).
-  const koOnly = locale === "en" && prerenderedBudgetExtras ? `<p class="content-notice">${escapeHtml(t("budgetKoOnly"))}</p>` : "";
   // 빌드(scripts/prerender.mjs budgetBodyHtml)와 같은 순서: 요약 → 구운 덩어리들 → 거래 목록.
-  box.innerHTML = budgetHeadHtml(band, cache.budget.periods) + koOnly + prerenderedBudgetExtras + budgetDealsHtml(band);
+  budgetResultHtml = band
+    ? budgetHeadHtml(band, cache.budget.periods) + prerenderedBudgetExtras + budgetDealsHtml(band)
+    : `<p class="budget-empty">${escapeHtml(t("budgetEmpty"))}</p>`;
+  paintBudgetResult();
 }
 
 function budgetDealsHtml(band) {
@@ -1338,6 +1348,8 @@ function applyLocale() {
   document.getElementById("nav-news").textContent = t("navNews");
   document.getElementById("nav-realestate").textContent = t("navRealestatePrices");
   document.getElementById("nav-rates").textContent = t("navRates");
+  document.getElementById("budget-note").textContent = t("budgetNote");
+  paintBudgetResult();
   for (const link of document.querySelectorAll("[data-re-page]")) {
     link.textContent = t(NAV_KEYS[link.getAttribute("data-re-page")]);
   }
@@ -1347,7 +1359,8 @@ function applyLocale() {
 function renderUpdated(realestate) {
   // 예산대 장은 본문(예산대 거래)이 주인공이다. 머리에 맨 아래 서울 평균 카드의 이번 주 창을 적으면 본문의
   // "8월, 9월 신고분"과 다른 말을 한다(PO 2차 #41) - 본문과 같은 기간을 적는다.
-  if (isBudgetPage && cache.budget?.periods?.length) {
+  if (isBudgetPage) {
+    if (!cache.budget?.periods?.length) return;
     const periods = cache.budget.periods.map((p) => monthLabel(p)).filter(Boolean).join(", ");
     const at = cache.budget.updatedAt
       ? ` · ${t("updatedWord")} ${new Date(cache.budget.updatedAt).toLocaleDateString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
