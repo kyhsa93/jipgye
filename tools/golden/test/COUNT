@@ -1,7 +1,10 @@
-# tools/golden `npm test`의 `ℹ tests N` 하한 (#315). 래칫은 ../../scripts/test-count-ratchet.mjs.
-# 루트와 의존 트리·CI job이 다르므로 하한도 따로 둔다.
+# tools/golden `npm test`의 하한 둘 (#315). 래칫은 ../../scripts/test-count-ratchet.mjs.
+# 1행 = `ℹ tests N` 하한, 2행 = `ℹ pass N` 하한.
+# 루트와 같은 CI job에서 돌지만 의존 트리가 다르고(parse5), 건너뛰는 11개까지 합쳐 숫자가 달라서
+# 하한을 따로 둔다.
 # 내리는 변경은 PR 본문에 사유를 적는다(#315 범위 4).
 # 센 법: 2026-10-14, merge-base 83bd9fb8, Node v24.16.0, macOS 26.6.2.
 #   cd tools/golden && npm ci && npm test → ℹ tests 101 · pass 90 · fail 0 · skipped 11
-#   건너뛴 11은 전부 GOLDEN_LIVE=1에서만 도는 것이라 CI에서도 같은 101이다.
+#   건너뛴 11은 전부 GOLDEN_LIVE=1에서만 도는 것이라 CI에서도 같은 101·90이다.
 101
+90
