@@ -1,35 +1,82 @@
 {
-  "updatedAt": "2026-10-14T03:31:32.345Z",
+  "updatedAt": "2026-10-14T08:40:59.984Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 기타 경제 소식: 이형일은 불확실성이 지속되고 있는 상황에서 대외경제에 미치는 영향을 면밀히 점검하고 대응해야 한다고 밝혔다. 일본의 9월 통화공급량은 1638조엔으로 전월 대비 1.2% 증가했다. 보훈장관은 오늘 한국경제인협회를 방문해 제대군인 예우 등 관련 사항을 논의했다. 일본은 대출 증가로 인해 통화공급량이 1%대를 유지하고 있다. 이형일의 발언은 경제 상황에 대한 경계심을 드러내는 것으로 해석된다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 상승하며 3년물이 장중 연 3.883%를 기록했고, 미국 월가 은행 4곳은 3분기 호실적에도 불구하고 금리 인상에 따라 희비가 엇갈렸으며, 원금 4천만원을 갚은 주부는 이자만 5천만원을 내며 살인금리로 인해 사망했다.\n- 부동산: LH가 공동주택 품질 강화를 위해 준공 전부터 입주 후 보수까지 책임 관리하고 있으며, 대구에서 흥행한 CR리츠가 부산으로 이동하며 신축 전세 수요가 이어지고 있고, HUG는 100억 넘는 전세보증금 빚으로 3조 회수에 실패하고 있으며, 고물가로 인해 소년소녀가정의 전세임대 43%가 장기체납되고 있으며, 관리비가 월 170만원인 아파트가 월세보다 비싼 것으로 나타났다.\n- 증시·환율: 전날 급락했던 코스피는 오늘 1~2%대에서 반등했다. 일본 증시는 AI와 반도체주 매수세에 힘입어 상승 출발했다. 닛케이 지수는 0.24% 상승했다. 코스피는 상승폭을 조절하며 안정적인 흐름을 보였다. 일본 증시의 상승은 주요 산업주들의 강세로 이어졌다.",
-    "en": "- Other Economic News: Lee Hyung-il stated that the impact on foreign economic affairs should be closely examined and addressed in the ongoing situation of uncertainty. Japan's money supply in September was 1,638,000,000,000,000 yen, an increase of 1.2% compared to the previous month. The Minister of Veterans Affairs visited the Korea Chamber of Commerce and Industry today to discuss matters related to the treatment of veterans. Japan has maintained its money supply in the 1% range due to increased lending. Lee Hyung-il's remarks are interpreted as revealing caution about the economic situation.\n- Rates, Deposits & Investment Products: South Korean government bond rates rose uniformly, with the 3-year bond reaching 3.883% annually during trading. Despite strong third-quarter results, four U.S. Wall Street banks experienced mixed outcomes due to rising interest rates. A housewife who repaid 40,000,000 won in principal paid 50,000,000 won in interest and died due to the exorbitant interest rates.\n- Real Estate: LH is responsible for managing and maintaining the quality of public housing from before completion to after occupancy. CR REITs, which were successful in Daegu, are moving to Busan, and the demand for new rental units is continuing. HUG has failed to recover 3,000,000,000,000 won in deposits, with outstanding deposits exceeding 10,000,000,000 won. Due to high prices, 43% of the rental units provided by the Boys' and Girls' Welfare Society are experiencing long-term arrears. An apartment with a monthly management fee of 1,700,000 won was found to be more expensive than monthly rent.\n- Stocks & FX: The KOSPI, which had sharply declined the previous day, rebounded by 1-2% today. The Japanese stock market opened higher, driven by buying in AI and semiconductor stocks. The Nikkei index rose 0.24%. The KOSPI maintained a stable trend by moderating its gains. The rise in the Japanese stock market led to strong performance in major industrial stocks."
+    "ko": "- 부동산: 수도권에서 오피스를 짓는 만큼 주택 공급도 늘리기로 했다. 강남 지역에서 집값이 주춤한 이유로 현금 부자들이 ‘디에이치 반포124’ 분양을 기다리고 있다. 전세 사기 방지 조치로 인해 등기부 열람료가 부담이 되고 있어 중개사와 실수요자 모두 불편을 겪고 있다. 울산바위 인근 공동주택 사업은 경관 보존과 지역 개발 간 갈등으로 미래가 불확실하다. 세종시에 1만 명의 공무원이 입주할 예정이지만, 2년간 입주 물량은 1122가구에 불과했다.\n- 증시·환율: 중국 증시는 상하이지수가 0.88% 하락하며 하락 마감했다. 일본 증시는 닛케이가 0.05% 내리며 하락 마감했다. 코스피는 6거래일 연속 하락하며 6천피를 턱걸이했다. 김성주가 리밸런싱 유예 없이 매일 8천억 원을 매도할 경우 증시에 충격이 올 수 있다고 밝혔다. 환율은 달러 약세로 6.8원 내린 1,338.3원으로 하락 전환했다.\n- 금리·예금·투자상품: 국고채 금리가 사흘 만에 상승했다. 3년물 금리는 연 3.883%로 올랐다. 미국의 물가 발표를 앞두고 시장이 숨을 고르고 있다. 금리 상승은 최근 몇일간 지속되고 있다. 금리 동향은 향후 경제 전망에 영향을 줄 것으로 보인다.\n- 기타 경제 소식: 기타 경제 소식: \"이제 집값 떨어질 것\"…시장서도 고개 드는 '하락론' 근거는, 후티, 빈살만 경제개혁의 심장 아람코 본부까지 공격, \"경제대국이 어쩌다\"…67년 만에 와르르 무너진 '이 나라'",
+    "en": "- Real Estate: We will increase housing supply as much as we build offices in the Seoul metropolitan area. Cash-rich individuals are waiting for the sale of 'DCH Banpo 124' because housing prices in the Gangnam area have slightly decreased. Both real estate agents and genuine buyers are experiencing inconvenience because the registration fee for reviewing the land register has become a burden due to measures to prevent lease fraud. The joint housing project near Ul-sanbae is uncertain about its future due to conflicts between preserving the landscape and regional development. Although 10,000 civil servants are expected to move into Sejong City, the number of units available for occupancy within two years will only be 1,122.\n- Stocks & FX: China's stock market closed lower, with the Shanghai index falling 0.88%. Japan's stock market closed lower, with the Nikkei down 0.05%. The KOSPI fell for the sixth consecutive trading day, hitting 600 points. Kim Sung-joo stated that if 800,000,000,000 won is sold daily without a rebalancing grace period, it could cause a shock to the stock market. The exchange rate fell to 1,338.3 won, down 6.8 won, turning lower due to a weaker dollar.\n- Rates, Deposits & Investment Products: The government bond rate rose after three days. The 3-year rate increased to 3.883% annually. The market is holding its breath ahead of the U.S. inflation data release. The rate increase has been continuing for several days. The interest rate trend is expected to affect the future economic outlook.\n- Other Economic News: Other Economic News: \"이제 집값 떨어질 것\"…시장서도 고개 드는 '하락론' 근거는, 후티, 빈살만 경제개혁의 심장 아람코 본부까지 공격, \"경제대국이 어쩌다\"…67년 만에 와르르 무너진 '이 나라'"
   },
   "highlights": [],
   "categories": [
     {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "이형일은 불확실성이 지속되고 있는 상황에서 대외경제에 미치는 영향을 면밀히 점검하고 대응해야 한다고 밝혔다. 일본의 9월 통화공급량은 1638조엔으로 전월 대비 1.2% 증가했다. 보훈장관은 오늘 한국경제인협회를 방문해 제대군인 예우 등 관련 사항을 논의했다. 일본은 대출 증가로 인해 통화공급량이 1%대를 유지하고 있다. 이형일의 발언은 경제 상황에 대한 경계심을 드러내는 것으로 해석된다.",
-      "lineEn": "Lee Hyung-il stated that the impact on foreign economic affairs should be closely examined and addressed in the ongoing situation of uncertainty. Japan's money supply in September was 1,638,000,000,000,000 yen, an increase of 1.2% compared to the previous month. The Minister of Veterans Affairs visited the Korea Chamber of Commerce and Industry today to discuss matters related to the treatment of veterans. Japan has maintained its money supply in the 1% range due to increased lending. Lee Hyung-il's remarks are interpreted as revealing caution about the economic situation.",
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "수도권에서 오피스를 짓는 만큼 주택 공급도 늘리기로 했다. 강남 지역에서 집값이 주춤한 이유로 현금 부자들이 ‘디에이치 반포124’ 분양을 기다리고 있다. 전세 사기 방지 조치로 인해 등기부 열람료가 부담이 되고 있어 중개사와 실수요자 모두 불편을 겪고 있다. 울산바위 인근 공동주택 사업은 경관 보존과 지역 개발 간 갈등으로 미래가 불확실하다. 세종시에 1만 명의 공무원이 입주할 예정이지만, 2년간 입주 물량은 1122가구에 불과했다.",
+      "lineEn": "We will increase housing supply as much as we build offices in the Seoul metropolitan area. Cash-rich individuals are waiting for the sale of 'DCH Banpo 124' because housing prices in the Gangnam area have slightly decreased. Both real estate agents and genuine buyers are experiencing inconvenience because the registration fee for reviewing the land register has become a burden due to measures to prevent lease fraud. The joint housing project near Ul-sanbae is uncertain about its future due to conflicts between preserving the landscape and regional development. Although 10,000 civil servants are expected to move into Sejong City, the number of units available for occupancy within two years will only be 1,122.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "이형일 \"불확실성 지속…대외경제 영향 면밀히 점검·대응해야\"",
-          "link": "https://www.yna.co.kr/view/AKR20261014084700002",
+          "title": "수도권서 오피스 짓는 만큼 주택 공급도 늘린다",
+          "link": "https://www.hankyung.com/article/2026101420921",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "강남 집값 주춤한 이유 있었네…현금부자들 ‘디에이치 반포124’ 분양만 기다린다",
+          "link": "https://www.mk.co.kr/news/realestate/12175787",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "“전세 사기 막으랬더니 등기부 열람료를”…중개사도 실수요자도 ‘부글부글’",
+          "link": "https://www.mk.co.kr/news/realestate/12175773",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "'경관 보존'vs'지역 개발'…울산바위 인근 공동주택 사업 미래는(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261014124151062",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "日 9월 통화공급량 1638조엔·1.2%↑…\"대출 증가로 1%대 유지\"",
-          "link": "https://www.newsis.com/view/NISX20261014_0003825287",
+          "title": "공무원 1만명 가는데 씨 마른 전월세… 2년간 세종시 입주 물량은 1122가구 뿐",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/14/NJ7YTHUZBVDH7DTD3XXK7WKYCM/",
+          "source": "조선비즈 부동산"
+        }
+      ]
+    },
+    {
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "중국 증시는 상하이지수가 0.88% 하락하며 하락 마감했다. 일본 증시는 닛케이가 0.05% 내리며 하락 마감했다. 코스피는 6거래일 연속 하락하며 6천피를 턱걸이했다. 김성주가 리밸런싱 유예 없이 매일 8천억 원을 매도할 경우 증시에 충격이 올 수 있다고 밝혔다. 환율은 달러 약세로 6.8원 내린 1,338.3원으로 하락 전환했다.",
+      "lineEn": "China's stock market closed lower, with the Shanghai index falling 0.88%. Japan's stock market closed lower, with the Nikkei down 0.05%. The KOSPI fell for the sixth consecutive trading day, hitting 600 points. Kim Sung-joo stated that if 800,000,000,000 won is sold daily without a rebalancing grace period, it could cause a shock to the stock market. The exchange rate fell to 1,338.3 won, down 6.8 won, turning lower due to a weaker dollar.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 0.88%↓",
+          "link": "https://www.newsis.com/view/NISX20261014_0003826150",
           "source": "뉴시스 경제"
         },
         {
-          "title": "보훈장관, 오늘 한국경제인협회 방문…제대군인 예우 등 논의",
-          "link": "https://www.yna.co.kr/view/AKR20261014063100504",
+          "title": "日증시, 美기술주 훈풍에도 하락 마감…닛케이 0.05%↓",
+          "link": "https://www.newsis.com/view/NISX20261014_0003826124",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "코스피, 반등 실패…6거래일 연속 내리며 '6천피' 턱걸이(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261014138351008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "김성주 \"리밸런싱 유예 안했다면 매일 8천억 매도…증시 충격\"",
+          "link": "https://www.yna.co.kr/view/AKR20261014151100530",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "환율, 6.8원 내린 1,338.3원…달러 약세에 하락 전환",
+          "link": "https://www.yna.co.kr/view/AKR20261014143800002",
           "source": "연합뉴스 경제"
         }
       ]
@@ -38,85 +85,48 @@
       "key": "rates",
       "name": "금리·예금·투자상품",
       "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "국고채 금리가 일제히 상승하며 3년물이 장중 연 3.883%를 기록했고, 미국 월가 은행 4곳은 3분기 호실적에도 불구하고 금리 인상에 따라 희비가 엇갈렸으며, 원금 4천만원을 갚은 주부는 이자만 5천만원을 내며 살인금리로 인해 사망했다.",
-      "lineEn": "South Korean government bond rates rose uniformly, with the 3-year bond reaching 3.883% annually during trading. Despite strong third-quarter results, four U.S. Wall Street banks experienced mixed outcomes due to rising interest rates. A housewife who repaid 40,000,000 won in principal paid 50,000,000 won in interest and died due to the exorbitant interest rates.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": true,
-      "items": [
-        {
-          "title": "국고채 금리 일제히 상승…3년물 장중 연 3.883%",
-          "link": "https://www.yna.co.kr/view/AKR20261014091100008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "美 월가 은행 4곳, 3분기 호실적에도…금리 인상에 희비",
-          "link": "https://www.newsis.com/view/NISX20261014_0003825111",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "원금 4천만원, 갚은 이자만 5천만원…살인금리에 주부 사망",
-          "link": "https://www.yna.co.kr/view/AKR20261014047800054",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "LH가 공동주택 품질 강화를 위해 준공 전부터 입주 후 보수까지 책임 관리하고 있으며, 대구에서 흥행한 CR리츠가 부산으로 이동하며 신축 전세 수요가 이어지고 있고, HUG는 100억 넘는 전세보증금 빚으로 3조 회수에 실패하고 있으며, 고물가로 인해 소년소녀가정의 전세임대 43%가 장기체납되고 있으며, 관리비가 월 170만원인 아파트가 월세보다 비싼 것으로 나타났다.",
-      "lineEn": "LH is responsible for managing and maintaining the quality of public housing from before completion to after occupancy. CR REITs, which were successful in Daegu, are moving to Busan, and the demand for new rental units is continuing. HUG has failed to recover 3,000,000,000,000 won in deposits, with outstanding deposits exceeding 10,000,000,000 won. Due to high prices, 43% of the rental units provided by the Boys' and Girls' Welfare Society are experiencing long-term arrears. An apartment with a monthly management fee of 1,700,000 won was found to be more expensive than monthly rent.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": true,
-      "items": [
-        {
-          "title": "LH, 공동주택 품질 강화… 준공 전부터 입주 후 보수까지 책임 관리",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/14/BO7DHEJREFCGZCRTXDA5CZPLEM/",
-          "source": "조선비즈 부동산"
-        },
-        {
-          "title": "“텐트 치고 기다린 신축 전세”…대구 흥행 이끈 CR리츠, 부산으로",
-          "link": "https://www.mk.co.kr/news/realestate/12175432",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "100억 넘는 전세보증금 빚…HUG, 3조 회수 못 하고 있다",
-          "link": "https://www.newsis.com/view/NISX20261014_0003825193",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "고물가에 버거운 주거비…소년소녀가정 전세임대 43% 장기체납",
-          "link": "https://www.newsis.com/view/NISX20261014_0003825158",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "\"웬만한 월세보다 비싸네\"…관리비만 170만원 나오는 '이 아파트'",
-          "link": "https://www.hankyung.com/article/2026101409677",
-          "source": "한국경제 부동산"
-        }
-      ]
-    },
-    {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "전날 급락했던 코스피는 오늘 1~2%대에서 반등했다. 일본 증시는 AI와 반도체주 매수세에 힘입어 상승 출발했다. 닛케이 지수는 0.24% 상승했다. 코스피는 상승폭을 조절하며 안정적인 흐름을 보였다. 일본 증시의 상승은 주요 산업주들의 강세로 이어졌다.",
-      "lineEn": "The KOSPI, which had sharply declined the previous day, rebounded by 1-2% today. The Japanese stock market opened higher, driven by buying in AI and semiconductor stocks. The Nikkei index rose 0.24%. The KOSPI maintained a stable trend by moderating its gains. The rise in the Japanese stock market led to strong performance in major industrial stocks.",
+      "lineKo": "국고채 금리가 사흘 만에 상승했다. 3년물 금리는 연 3.883%로 올랐다. 미국의 물가 발표를 앞두고 시장이 숨을 고르고 있다. 금리 상승은 최근 몇일간 지속되고 있다. 금리 동향은 향후 경제 전망에 영향을 줄 것으로 보인다.",
+      "lineEn": "The government bond rate rose after three days. The 3-year rate increased to 3.883% annually. The market is holding its breath ahead of the U.S. inflation data release. The rate increase has been continuing for several days. The interest rate trend is expected to affect the future economic outlook.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "전날 급락했던 코스피 반등…1~2%대에서 상승폭 조절",
-          "link": "https://www.yna.co.kr/view/AKR20261014080000008",
+          "title": "국고채 금리, 사흘만에 상승…美 물가 발표 앞두고 숨고르기(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261014154951008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "日증시, AI·반도체주 매수세에 상승 출발…닛케이 0.24%↑",
-          "link": "https://www.newsis.com/view/NISX20261014_0003824991",
+          "title": "국고채 금리 일제히 상승…3년물 연 3.883%",
+          "link": "https://www.yna.co.kr/view/AKR20261014154900008",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "기타 경제 소식: \"이제 집값 떨어질 것\"…시장서도 고개 드는 '하락론' 근거는, 후티, 빈살만 경제개혁의 심장 아람코 본부까지 공격, \"경제대국이 어쩌다\"…67년 만에 와르르 무너진 '이 나라'",
+      "lineEn": "Other Economic News: \"이제 집값 떨어질 것\"…시장서도 고개 드는 '하락론' 근거는, 후티, 빈살만 경제개혁의 심장 아람코 본부까지 공격, \"경제대국이 어쩌다\"…67년 만에 와르르 무너진 '이 나라'",
+      "isFallback": true,
+      "fallbackReason": "unverified-entity",
+      "degraded": false,
+      "items": [
+        {
+          "title": "\"이제 집값 떨어질 것\"…시장서도 고개 드는 '하락론' 근거는",
+          "link": "https://www.newsis.com/view/NISX20261014_0003825932",
           "source": "뉴시스 경제"
+        },
+        {
+          "title": "후티, 빈살만 경제개혁의 심장 아람코 본부까지 공격",
+          "link": "https://www.newsis.com/view/NISX20261014_0003825854",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "\"경제대국이 어쩌다\"…67년 만에 와르르 무너진 '이 나라'",
+          "link": "https://www.hankyung.com/article/202610141636H",
+          "source": "한국경제 경제"
         }
       ]
     }

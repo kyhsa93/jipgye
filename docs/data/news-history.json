@@ -11468,7 +11468,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "As Many Offices Are Built in the Seoul Area, Housing Supply Will Also Increase"
       },
       {
         "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 0.88%↓",
@@ -11477,7 +11478,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 14일 하락 마감했다. 이날 상하이종합지수는 전날보다 0.88% 하락한 3767.23으로 거래를 마쳤다. 선전성분지수는 전장 대비 1.97% 떨어진 1만2110.59로,…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] Chinese stock market closes lower…Shanghai index down 0.88%"
       },
       {
         "title": "日증시, 美기술주 훈풍에도 하락 마감…닛케이 0.05%↓",
@@ -11486,7 +11488,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 신효령 기자 = 14일 일본 증시가 해외 투자자의 선물 매도와 소매업체 실적 부진에 일제히 하락 마감했다. 닛케이지수는 장 초반 상승세를 지키지 못하고 5거래일 연속 내렸다. 니혼게이자이신문에 따르면…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Tokyo Stock Exchange Closes Lower Despite U.S. Tech Shares Rally… Nikkei Down 0.05%"
       },
       {
         "title": "국고채 금리, 사흘만에 상승…美 물가 발표 앞두고 숨고르기(종합)",
@@ -11495,7 +11498,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 강수지 기자 = 14일 국고채 금리는 지난 이틀간의 하락분을 일부 되돌리며 사흘 만에 상승했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Korea's Treasury Bond Yield Rises Three Days in a Row... Holding Breath Ahead of U.S. Inflation Data Release (Comprehensive)"
       },
       {
         "title": "\"이제 집값 떨어질 것\"…시장서도 고개 드는 '하락론' 근거는",
@@ -11504,7 +11508,28 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스]이연희 기자 = 서울 아파트값이 87주 연속 상승세를 이어가고 있지만, 연말이나 내년에는 고금리와 대출 규제, 주택 공급 확대 등의 영향으로 집값이 하락할 것이라는 전망도 나오고 있다. 최근 국회 국정…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 1,318만원",
+            "valueEn": "₩1,313M",
+            "note": "최근 1주 계약 458건 · 10/7 대비 -3.9%",
+            "noteEn": "458 deals in the last 1 weeks · -3.9% vs Oct 7"
+          },
+          {
+            "kind": "rates",
+            "label": "주택담보대출 최저금리(상환방식 무관)",
+            "labelEn": "Lowest mortgage rate (any repayment type)",
+            "value": "연 3.70%",
+            "valueEn": "3.70% p.a.",
+            "href": "./mortgage-rates.html"
+          }
+        ],
+        "titleEn": "Now house prices will fall\"…Headline gaining traction in market, basis of 'decline theory' emerges"
       },
       {
         "title": "후티, 빈살만 경제개혁의 심장 아람코 본부까지 공격",
@@ -11513,7 +11538,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스] 신효령 기자 = 예멘의 친(親)이란 반군 후티가 무함마드 빈 살만 왕세자 통치 아래 사우디아라비아 경제를 떠받치는 국영 석유회사 아람코를 공격했다. 공항과 에너지시설을 겨냥한 공격이 이어지면서 사우디…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Houthi Attacks Aramco Headquarters, the Heart of Bin Salman's Economic Reform"
       },
       {
         "title": "국고채 금리 일제히 상승…3년물 연 3.883%",
@@ -11522,7 +11548,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 14일 국고채 금리가 일제히 상승했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "South Korea's government bond rates rise uniformly...3-year bonds at 3.883% annually"
       },
       {
         "title": "강남 집값 주춤한 이유 있었네…현금부자들 ‘디에이치 반포124’ 분양만 기다린다",
@@ -11531,7 +11558,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "반포주공 재건축 내달 일반분양 전용 84㎡ 분양가 30억원대 예상 인근 시세와 20억원 안팎 차이 강남·서초 매수자들 ‘눈치 보기’강남·서초 일대 아파트 매수세가 주춤한 가운데 다..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 84㎡ 매매",
+            "labelEn": "서초구 apartment 84㎡ sale",
+            "value": "26억 3,348만원",
+            "valueEn": "₩2,633M",
+            "note": "최근 1주 계약 150건 · 10/7 대비 -0.6%",
+            "noteEn": "150 deals in the last 1 weeks · -0.6% vs Oct 7"
+          }
+        ],
+        "titleEn": "Cash-rich buyers wait for DH Banpo 124 as Gangnam home prices ease"
       },
       {
         "title": "코스피, 반등 실패…6거래일 연속 내리며 '6천피' 턱걸이(종합)",
@@ -11540,7 +11580,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유향 기자 = 코스피가 14일 전날 급락을 딛고 상승 출발했지만, 장 후반 들어 하락 전환하며 6거래일 연속 하락세를 이어갔...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KOSPI fails to rebound, falling for 6 consecutive trading days, nearing '6,000' level (comprehensive)"
       },
       {
         "title": "“전세 사기 막으랬더니 등기부 열람료를”…중개사도 실수요자도 ‘부글부글’",
@@ -11549,7 +11590,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "등기부 수수료 57% 인상 추진 ‘안전거래 비용 전가’ 지적 나와대법원이 인터넷등기소를 통한 부동산 등기사항증명서 열람·발급 수수료를 최대 57% 인상하는 방안을 추진하면서 부동산..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Trying to stop rental scams, but now it's the registration office fee\"… real estate agents and genuine buyers are \"boiling over"
       },
       {
         "title": "김성주 \"리밸런싱 유예 안했다면 매일 8천억 매도…증시 충격\"",
@@ -11558,7 +11600,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 고유선 기자 = 김성주 국민연금공단 이사장이 올해 초 국내주식 비율 초과에 따른 자산 비중 재조정 작업(리밸런싱)을 유예하지 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kim Sung-ju \"If rebalancing had not been postponed, 800,000,000,000 would have been sold daily... shock to the stock market"
       },
       {
         "title": "환율, 6.8원 내린 1,338.3원…달러 약세에 하락 전환",
@@ -11567,7 +11610,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 이도흔 기자 = 원/달러 환율은 14일 달러 약세와 수출업체 달러 매도 등에 소폭 하락했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Exchange rate falls to 1,338.3 won, down 6.8 won…dollar weakness triggers decline"
       },
       {
         "title": "'경관 보존'vs'지역 개발'…울산바위 인근 공동주택 사업 미래는(종합)",
@@ -11576,7 +11620,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(춘천·강원 고성=연합뉴스) 박영서 류호준 기자 = 강원특별자치도가 설악산 울산바위 인근 공동주택 개발을 둘러싼 속초시와 고성군의 입장차 속 사...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Conservation\" vs. \"Local Development\"... Future of Housing Project Near Ulsan Rock Remains Uncertain (Comprehensive)"
       },
       {
         "title": "공무원 1만명 가는데 씨 마른 전월세… 2년간 세종시 입주 물량은 1122가구 뿐",
@@ -11585,7 +11630,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "2차 중앙행정기관 세종시 이전 계획 발표 후 세종 부동산 시장 전월세난 우려가 불거지고 있다. 전월세 매물이 연초 대비 30% 이상 줄어든 상황에서 향후 2년간 신규 입주 물량은 1000여 가구에 불과해, 이주 공무…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "10,000 public officials move in but rental market remains thin... Only 1,122 units available in Sejong City over two years"
       },
       {
         "title": "[특징주] 코스피 '출렁'에도 이차전지주는 견고…삼성SDI 5%대↑(종합)",
@@ -11594,7 +11640,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 곽윤아 기자 = 14일 코스피가 6거래일 연속 하락한 와중에도 이차전지주는 에너지저장장치(ESS) 수요 확대 기대에 힘입어 강...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi Volatile, Lithium-ion Battery Stocks Hold Firm; Samsung SDI Rises Over 5% (Comprehensive)"
       },
       {
         "title": "'반등 실패' 코스피, 6일 연속 하락…0.4% 내려 6,000선 턱걸이",
@@ -11603,7 +11650,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유향 기자 = 코스피가 14일 전날 급락을 딛고 상승 출발했지만, 장 후반 들어 하락 전환하며 6거래일 연속 하락세를 이어갔...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KOSPI fails to rebound, falls for 6th consecutive day... drops 0.4% to edge below 6,000-line"
       },
       {
         "title": "HS화성, 대구 궁전맨션 재건축 조경 특화…삼성물산과 협업",
@@ -11612,7 +11660,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "하이엔드 주거브랜드 ‘EHCRA(에크라)’ 상품 경쟁력 강화로 재건축 가치 향상 기대HS화성은 지난 12일 본사에서 삼성물산 리조트부문과 ‘궁전맨션 재건축 정비사업 조경 분야 업무..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "HS Hwasung Collaborates with Samsung C&T on Landscape-Focused Redevelopment of Daegu Gungjeong Mansion"
       },
       {
         "title": "\"경제대국이 어쩌다\"…67년 만에 와르르 무너진 '이 나라'",
@@ -11621,7 +11670,8 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "economic giant\"…collapsed after 67 years, \"this country"
       },
       {
         "title": "\"시공사 요구대로 공사비 다 올려줘?\"…국토부, 무검증 재건축 조합 특별점검",
@@ -11630,7 +11680,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Raise construction costs as demanded by the contractor?\"... Ministry of Land, Transport and Urban Infrastructure Conducts Special Inspection on Unverified Reconstruction Associations"
       },
       {
         "title": "“9개월 새 1억2000만원 껑충, 서울 안 부럽다”…아파트값 뛴 경기도 어디?",
@@ -11639,7 +11690,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "올해 경기도 전용 84㎡(구 34평형) 아파트의 평균 매매가격이 약 5000만원 상승한 것으로 나타났다. 특히 강남 접근성과 직주근접 여건이 우수한 한강 이남 지역들이 전체 상승세..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 7,106만원",
+            "valueEn": "₩2,871M",
+            "note": "최근 1주 계약 156건 · 10/7 대비 -0.5%",
+            "noteEn": "156 deals in the last 1 weeks · -0.5% vs Oct 7"
+          }
+        ],
+        "titleEn": "Jumping 120,000,000 won in 9 months, not inferior to Seoul\"… Where in Gyeonggi Province is the apartment price rising?"
       },
       {
         "title": "IPARK현대산업개발, 광명 하안주공 6·7단지 재건축 수의계약 유력",
@@ -11648,7 +11712,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "IPARK현대산업개발이 경기 광명시 하안주공 6·7단지 재건축 사업의 시공권 획득에 한 걸음 가까워진 것으로 나타났다. 우선협상대상자 선정 입찰에 단독으로 참여해 수의계약이 유력하..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "IPARK Hyundai E&C Likely to Secure Negotiation Contract for Reconstruction of Gwangmyeong Haanju Gong 6·7 Complex"
       },
       {
         "title": "HS화성, 궁전맨션 재건축 조경에 삼성물산 리조트부문 참여",
@@ -11657,7 +11722,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "HS화성이 대구 수성구 궁전맨션 재건축사업의 조경 설계와 시공 경쟁력을 높이기 위해 삼성물산 리조트부문과 협력한다. HS화성은 삼성물산 리조트부문과 ‘궁전맨션 재건축 정비사업 조경 분야 업무협약(MOU)’을 체결했다…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "HS Hwaseong, Samsung C&T Resort Division Participates in Palace Mansion Reconstruction Landscaping"
       },
       {
         "title": "서울 강남 재건축 단지에 들어간 고급 변기…프리미엄에 승부수",
@@ -11666,7 +11732,20 @@
         "source": "한국경제 경제",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 7,106만원",
+            "valueEn": "₩2,871M",
+            "note": "최근 1주 계약 156건 · 10/7 대비 -0.5%",
+            "noteEn": "156 deals in the last 1 weeks · -0.5% vs Oct 7"
+          }
+        ],
+        "titleEn": "Premium Toilets in Seoul's Gangnam Redevelopment Projects Bet on Premium Pricing"
       },
       {
         "title": "[집코노미2026 다시보기 영상] 안영효 \"적은 돈으로 주택 구입하는 가장 빠른 길은 이것\"",
@@ -11675,7 +11754,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Homeconomics2026 Revisited Video] An Young-hyo \"The Fastest Way to Buy a House with a Small Amount of Money Is This"
       }
     ]
   }
