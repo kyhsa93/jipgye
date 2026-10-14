@@ -3,8 +3,10 @@
 # 둘을 같이 보는 이유: `tests`만 보면 시험을 전부 skip으로 바꿔도 통과하고(cto 실측),
 # `pass`만 보면 정당한 게이트 skip에 매번 걸린다.
 # 내리는 변경은 PR 본문에 사유를 적는다 — 사유 없이 내리는 PR은 승인하지 않는다(#315 범위 4).
-# 센 법: 2026-10-14, merge-base 83bd9fb8, Node v24.16.0, macOS 26.6.2.
-#   /bin/dash -c "node --test 'test/*.test.{mjs,ts}'" → ℹ tests 1515 · pass 1515 · fail 0 · skipped 0
-#   /bin/bash 에서도, CI ubuntu 에서도 같은 1515(#315 완료 조건 4).
-1515
-1515
+# 센 법: 2026-10-14, merge-base 2477b76a, Node v24.16.0, macOS 26.6.2.
+#   /bin/dash -c "node --test 'test/*.test.{mjs,ts}'" → ℹ tests 1517 · pass 1517 · fail 0 · skipped 0
+#   /bin/bash 에서도, CI ubuntu 에서도 같은 1517(#315 완료 조건 4).
+#   앞 라운드에 83bd9fb8 에서 센 값은 1515였다. 차이 2는 그 사이 병합된 #306(PR #314)이
+#   test/style.test.mjs 에 더한 시험 둘이다(`git diff 83bd9fb8..2477b76a -- test/`).
+1517
+1517
