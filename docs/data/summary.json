@@ -1,59 +1,27 @@
 {
-  "updatedAt": "2026-10-14T02:04:18.848Z",
+  "updatedAt": "2026-10-14T03:31:32.345Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 부동산: 한국 부동산 시장에서 지역 내 강남과 유사한 지역의 몸값이 상승하고 있으며, 분양가 급등으로 수도권 아파트 청약시장이 국평 대신 소형으로 쏠리고 있고, 케이뱅크가 상업용 부동산에 개인사업자 부동산담보대출을 제공하며, 지난해 아파트 관리비 최고는 나인원 한남에서 월 평균 170만원이었고, 서울 강동구의 3분기 부동산 근저당은 6492건이었다.\n- 기타 경제 소식: 일본은 9월 통화공급량이 1638조엔으로 전월 대비 1.2% 증가했다. 보훈장관은 오늘 한국경제인협회를 방문해 제대군인 예우 등에 대해 논의했다. 속초시는 상반기 사업체와 청년 창업기업이 증가세를 보이며 지역경제 활기를 띠고 있다. 한 지역에서는 9개월 만에 집값이 1억 원 상승하며 주민들이 환호하고 있다. 각 기사는 서로 다른 주제로, 별개의 사실을 담고 있다.\n- 금리·예금·투자상품: 원금 4천만원, 갚은 이자만 5천만원…살인금리에 주부 사망하며, 미 국채금리 24년 만에 최고로 올랐고, 뉴욕 연은 총재는 연내 추가 금리 인상 가능성을 언급했다.\n- 증시·환율: 일본 증시는 AI와 반도체 주가에 대한 매수세에 힘입어 상승 출발하며 닛케이 지수는 0.24% 상승했다.",
-    "en": "- Real Estate: In the Korean real estate market, prices in areas similar to Gangnam within the region are rising, and due to a sharp increase in selling prices, apartment applications in the Seoul metropolitan area are shifting toward smaller units instead of national average units. K-Bank is offering personal business property collateral loans for commercial real estate. The highest apartment management fee last year was 1,700,000 won per month on average at Nineon Hanam, and the third quarter commercial real estate mortgages in Gangdong District, Seoul, amounted to 6,492 cases.\n- Other Economic News: Japan's money supply in September was 1,638,000,000,000,000 yen, an increase of 1.2% compared to the previous month. The Minister of Veterans Affairs visited the Korea Chamber of Commerce and Industry today to discuss matters such as the treatment of discharged military personnel. Sokcho City is experiencing a vibrant local economy as the number of businesses and young entrepreneurs continues to rise in the first half of the year. In one area, housing prices have risen by 100,000,000 won after nine months, prompting residents to cheer. Each article covers a different topic and presents separate facts.\n- Rates, Deposits & Investment Products: Principal of 40,000,000 won, only 50,000,000 won in interest paid... a housewife died due to the usurious interest rate, and U.S. Treasury bond rates rose to their highest level in 24 years, while the New York Fed president mentioned the possibility of additional interest rate hikes within the year.\n- Stocks & FX: Japan's stock market rose on buying momentum in AI and semiconductor stocks, with the Nikkei index rising 0.24%."
+    "ko": "- 기타 경제 소식: 이형일은 불확실성이 지속되고 있는 상황에서 대외경제에 미치는 영향을 면밀히 점검하고 대응해야 한다고 밝혔다. 일본의 9월 통화공급량은 1638조엔으로 전월 대비 1.2% 증가했다. 보훈장관은 오늘 한국경제인협회를 방문해 제대군인 예우 등 관련 사항을 논의했다. 일본은 대출 증가로 인해 통화공급량이 1%대를 유지하고 있다. 이형일의 발언은 경제 상황에 대한 경계심을 드러내는 것으로 해석된다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 상승하며 3년물이 장중 연 3.883%를 기록했고, 미국 월가 은행 4곳은 3분기 호실적에도 불구하고 금리 인상에 따라 희비가 엇갈렸으며, 원금 4천만원을 갚은 주부는 이자만 5천만원을 내며 살인금리로 인해 사망했다.\n- 부동산: LH가 공동주택 품질 강화를 위해 준공 전부터 입주 후 보수까지 책임 관리하고 있으며, 대구에서 흥행한 CR리츠가 부산으로 이동하며 신축 전세 수요가 이어지고 있고, HUG는 100억 넘는 전세보증금 빚으로 3조 회수에 실패하고 있으며, 고물가로 인해 소년소녀가정의 전세임대 43%가 장기체납되고 있으며, 관리비가 월 170만원인 아파트가 월세보다 비싼 것으로 나타났다.\n- 증시·환율: 전날 급락했던 코스피는 오늘 1~2%대에서 반등했다. 일본 증시는 AI와 반도체주 매수세에 힘입어 상승 출발했다. 닛케이 지수는 0.24% 상승했다. 코스피는 상승폭을 조절하며 안정적인 흐름을 보였다. 일본 증시의 상승은 주요 산업주들의 강세로 이어졌다.",
+    "en": "- Other Economic News: Lee Hyung-il stated that the impact on foreign economic affairs should be closely examined and addressed in the ongoing situation of uncertainty. Japan's money supply in September was 1,638,000,000,000,000 yen, an increase of 1.2% compared to the previous month. The Minister of Veterans Affairs visited the Korea Chamber of Commerce and Industry today to discuss matters related to the treatment of veterans. Japan has maintained its money supply in the 1% range due to increased lending. Lee Hyung-il's remarks are interpreted as revealing caution about the economic situation.\n- Rates, Deposits & Investment Products: South Korean government bond rates rose uniformly, with the 3-year bond reaching 3.883% annually during trading. Despite strong third-quarter results, four U.S. Wall Street banks experienced mixed outcomes due to rising interest rates. A housewife who repaid 40,000,000 won in principal paid 50,000,000 won in interest and died due to the exorbitant interest rates.\n- Real Estate: LH is responsible for managing and maintaining the quality of public housing from before completion to after occupancy. CR REITs, which were successful in Daegu, are moving to Busan, and the demand for new rental units is continuing. HUG has failed to recover 3,000,000,000,000 won in deposits, with outstanding deposits exceeding 10,000,000,000 won. Due to high prices, 43% of the rental units provided by the Boys' and Girls' Welfare Society are experiencing long-term arrears. An apartment with a monthly management fee of 1,700,000 won was found to be more expensive than monthly rent.\n- Stocks & FX: The KOSPI, which had sharply declined the previous day, rebounded by 1-2% today. The Japanese stock market opened higher, driven by buying in AI and semiconductor stocks. The Nikkei index rose 0.24%. The KOSPI maintained a stable trend by moderating its gains. The rise in the Japanese stock market led to strong performance in major industrial stocks."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "한국 부동산 시장에서 지역 내 강남과 유사한 지역의 몸값이 상승하고 있으며, 분양가 급등으로 수도권 아파트 청약시장이 국평 대신 소형으로 쏠리고 있고, 케이뱅크가 상업용 부동산에 개인사업자 부동산담보대출을 제공하며, 지난해 아파트 관리비 최고는 나인원 한남에서 월 평균 170만원이었고, 서울 강동구의 3분기 부동산 근저당은 6492건이었다.",
-      "lineEn": "In the Korean real estate market, prices in areas similar to Gangnam within the region are rising, and due to a sharp increase in selling prices, apartment applications in the Seoul metropolitan area are shifting toward smaller units instead of national average units. K-Bank is offering personal business property collateral loans for commercial real estate. The highest apartment management fee last year was 1,700,000 won per month on average at Nineon Hanam, and the third quarter commercial real estate mortgages in Gangdong District, Seoul, amounted to 6,492 cases.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": true,
-      "items": [
-        {
-          "title": "'지역 내 강남' 몸값 뛴다…청약 경쟁률·집값도 차별화",
-          "link": "https://www.newsis.com/view/NISX20261014_0003824974",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "분양가 급등에 수도권 아파트 청약시장 국평 대신 소형 쏠림",
-          "link": "https://www.yna.co.kr/view/AKR20261014053700003",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "케이뱅크, 상업용 부동산에도 개인사업자 부동산담보대출",
-          "link": "https://www.yna.co.kr/view/AKR20261014057900002",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "지난해 아파트 관리비 최고는 나인원 한남…\"월 평균 170만원\"",
-          "link": "https://www.yna.co.kr/view/AKR20261014047900001",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "“이 동네 부동산 근저당 왜 이리 늘었지?”…3분기 서울 강동구 6492건",
-          "link": "https://www.mk.co.kr/news/realestate/12175274",
-          "source": "매일경제 부동산"
-        }
-      ]
-    },
-    {
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "일본은 9월 통화공급량이 1638조엔으로 전월 대비 1.2% 증가했다. 보훈장관은 오늘 한국경제인협회를 방문해 제대군인 예우 등에 대해 논의했다. 속초시는 상반기 사업체와 청년 창업기업이 증가세를 보이며 지역경제 활기를 띠고 있다. 한 지역에서는 9개월 만에 집값이 1억 원 상승하며 주민들이 환호하고 있다. 각 기사는 서로 다른 주제로, 별개의 사실을 담고 있다.",
-      "lineEn": "Japan's money supply in September was 1,638,000,000,000,000 yen, an increase of 1.2% compared to the previous month. The Minister of Veterans Affairs visited the Korea Chamber of Commerce and Industry today to discuss matters such as the treatment of discharged military personnel. Sokcho City is experiencing a vibrant local economy as the number of businesses and young entrepreneurs continues to rise in the first half of the year. In one area, housing prices have risen by 100,000,000 won after nine months, prompting residents to cheer. Each article covers a different topic and presents separate facts.",
+      "lineKo": "이형일은 불확실성이 지속되고 있는 상황에서 대외경제에 미치는 영향을 면밀히 점검하고 대응해야 한다고 밝혔다. 일본의 9월 통화공급량은 1638조엔으로 전월 대비 1.2% 증가했다. 보훈장관은 오늘 한국경제인협회를 방문해 제대군인 예우 등 관련 사항을 논의했다. 일본은 대출 증가로 인해 통화공급량이 1%대를 유지하고 있다. 이형일의 발언은 경제 상황에 대한 경계심을 드러내는 것으로 해석된다.",
+      "lineEn": "Lee Hyung-il stated that the impact on foreign economic affairs should be closely examined and addressed in the ongoing situation of uncertainty. Japan's money supply in September was 1,638,000,000,000,000 yen, an increase of 1.2% compared to the previous month. The Minister of Veterans Affairs visited the Korea Chamber of Commerce and Industry today to discuss matters related to the treatment of veterans. Japan has maintained its money supply in the 1% range due to increased lending. Lee Hyung-il's remarks are interpreted as revealing caution about the economic situation.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
+        {
+          "title": "이형일 \"불확실성 지속…대외경제 영향 면밀히 점검·대응해야\"",
+          "link": "https://www.yna.co.kr/view/AKR20261014084700002",
+          "source": "연합뉴스 경제"
+        },
         {
           "title": "日 9월 통화공급량 1638조엔·1.2%↑…\"대출 증가로 1%대 유지\"",
           "link": "https://www.newsis.com/view/NISX20261014_0003825287",
@@ -63,16 +31,6 @@
           "title": "보훈장관, 오늘 한국경제인협회 방문…제대군인 예우 등 논의",
           "link": "https://www.yna.co.kr/view/AKR20261014063100504",
           "source": "연합뉴스 경제"
-        },
-        {
-          "title": "속초시, 상반기 사업체·청년 창업기업 증가세… 지역경제 활기",
-          "link": "https://www.yna.co.kr/view/AKR20261014051100062",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "\"9개월 만에 1억 올랐어요\" 환호…집값 훨훨 나는 '이 동네'",
-          "link": "https://www.hankyung.com/article/2026101402856",
-          "source": "한국경제 부동산"
         }
       ]
     },
@@ -80,26 +38,63 @@
       "key": "rates",
       "name": "금리·예금·투자상품",
       "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "원금 4천만원, 갚은 이자만 5천만원…살인금리에 주부 사망하며, 미 국채금리 24년 만에 최고로 올랐고, 뉴욕 연은 총재는 연내 추가 금리 인상 가능성을 언급했다.",
-      "lineEn": "Principal of 40,000,000 won, only 50,000,000 won in interest paid... a housewife died due to the usurious interest rate, and U.S. Treasury bond rates rose to their highest level in 24 years, while the New York Fed president mentioned the possibility of additional interest rate hikes within the year.",
+      "lineKo": "국고채 금리가 일제히 상승하며 3년물이 장중 연 3.883%를 기록했고, 미국 월가 은행 4곳은 3분기 호실적에도 불구하고 금리 인상에 따라 희비가 엇갈렸으며, 원금 4천만원을 갚은 주부는 이자만 5천만원을 내며 살인금리로 인해 사망했다.",
+      "lineEn": "South Korean government bond rates rose uniformly, with the 3-year bond reaching 3.883% annually during trading. Despite strong third-quarter results, four U.S. Wall Street banks experienced mixed outcomes due to rising interest rates. A housewife who repaid 40,000,000 won in principal paid 50,000,000 won in interest and died due to the exorbitant interest rates.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": true,
       "items": [
         {
-          "title": "원금 4천만원, 갚은 이자만 5천만원…살인금리에 주부 사망",
-          "link": "https://www.yna.co.kr/view/AKR20261014047800054",
+          "title": "국고채 금리 일제히 상승…3년물 장중 연 3.883%",
+          "link": "https://www.yna.co.kr/view/AKR20261014091100008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "미 국채금리 24년 만에 최고…급락장에도 큰손들 매수",
-          "link": "https://www.hankyung.com/article/202610140190i",
-          "source": "한국경제 경제"
+          "title": "美 월가 은행 4곳, 3분기 호실적에도…금리 인상에 희비",
+          "link": "https://www.newsis.com/view/NISX20261014_0003825111",
+          "source": "뉴시스 경제"
         },
         {
-          "title": "뉴욕 연은 총재 \"연내 추가 금리 인상 가능…내년엔 불필요\"",
-          "link": "https://www.newsis.com/view/NISX20261014_0003824795",
+          "title": "원금 4천만원, 갚은 이자만 5천만원…살인금리에 주부 사망",
+          "link": "https://www.yna.co.kr/view/AKR20261014047800054",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "LH가 공동주택 품질 강화를 위해 준공 전부터 입주 후 보수까지 책임 관리하고 있으며, 대구에서 흥행한 CR리츠가 부산으로 이동하며 신축 전세 수요가 이어지고 있고, HUG는 100억 넘는 전세보증금 빚으로 3조 회수에 실패하고 있으며, 고물가로 인해 소년소녀가정의 전세임대 43%가 장기체납되고 있으며, 관리비가 월 170만원인 아파트가 월세보다 비싼 것으로 나타났다.",
+      "lineEn": "LH is responsible for managing and maintaining the quality of public housing from before completion to after occupancy. CR REITs, which were successful in Daegu, are moving to Busan, and the demand for new rental units is continuing. HUG has failed to recover 3,000,000,000,000 won in deposits, with outstanding deposits exceeding 10,000,000,000 won. Due to high prices, 43% of the rental units provided by the Boys' and Girls' Welfare Society are experiencing long-term arrears. An apartment with a monthly management fee of 1,700,000 won was found to be more expensive than monthly rent.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
+      "items": [
+        {
+          "title": "LH, 공동주택 품질 강화… 준공 전부터 입주 후 보수까지 책임 관리",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/14/BO7DHEJREFCGZCRTXDA5CZPLEM/",
+          "source": "조선비즈 부동산"
+        },
+        {
+          "title": "“텐트 치고 기다린 신축 전세”…대구 흥행 이끈 CR리츠, 부산으로",
+          "link": "https://www.mk.co.kr/news/realestate/12175432",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "100억 넘는 전세보증금 빚…HUG, 3조 회수 못 하고 있다",
+          "link": "https://www.newsis.com/view/NISX20261014_0003825193",
           "source": "뉴시스 경제"
+        },
+        {
+          "title": "고물가에 버거운 주거비…소년소녀가정 전세임대 43% 장기체납",
+          "link": "https://www.newsis.com/view/NISX20261014_0003825158",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "\"웬만한 월세보다 비싸네\"…관리비만 170만원 나오는 '이 아파트'",
+          "link": "https://www.hankyung.com/article/2026101409677",
+          "source": "한국경제 부동산"
         }
       ]
     },
@@ -107,12 +102,17 @@
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
-      "lineKo": "일본 증시는 AI와 반도체 주가에 대한 매수세에 힘입어 상승 출발하며 닛케이 지수는 0.24% 상승했다.",
-      "lineEn": "Japan's stock market rose on buying momentum in AI and semiconductor stocks, with the Nikkei index rising 0.24%.",
+      "lineKo": "전날 급락했던 코스피는 오늘 1~2%대에서 반등했다. 일본 증시는 AI와 반도체주 매수세에 힘입어 상승 출발했다. 닛케이 지수는 0.24% 상승했다. 코스피는 상승폭을 조절하며 안정적인 흐름을 보였다. 일본 증시의 상승은 주요 산업주들의 강세로 이어졌다.",
+      "lineEn": "The KOSPI, which had sharply declined the previous day, rebounded by 1-2% today. The Japanese stock market opened higher, driven by buying in AI and semiconductor stocks. The Nikkei index rose 0.24%. The KOSPI maintained a stable trend by moderating its gains. The rise in the Japanese stock market led to strong performance in major industrial stocks.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": true,
+      "degraded": false,
       "items": [
+        {
+          "title": "전날 급락했던 코스피 반등…1~2%대에서 상승폭 조절",
+          "link": "https://www.yna.co.kr/view/AKR20261014080000008",
+          "source": "연합뉴스 경제"
+        },
         {
           "title": "日증시, AI·반도체주 매수세에 상승 출발…닛케이 0.24%↑",
           "link": "https://www.newsis.com/view/NISX20261014_0003824991",

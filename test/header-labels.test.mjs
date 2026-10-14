@@ -41,7 +41,8 @@ test("정적 HTML: lang이 ko면 영어 aria-label이 없고 en이면 한국어�
     }
   }
   assert.ok(seen["theme-toggle"] > 60 && seen["lang-toggle"] > 60, `버튼을 못 찾았다 ${JSON.stringify(seen)} - 검사가 헛돈다`);
-  assert.ok(seen["share-button"] >= 2, "정적 공유 버튼을 못 찾았다");
+  // 공유 버튼도 예순일곱 장 전부에 구워져 있다 (#306). 전에는 다섯 장뿐이었고 나머지는 nav.js가 로드 뒤에 끼워 넣었다.
+  assert.ok(seen["share-button"] > 60, `정적 공유 버튼이 ${seen["share-button"]}장뿐이다 - 구운 버튼이 빠졌다`);
   assert.equal(bad.length, 0, `언어와 어긋난 aria-label ${bad.length}개: ${bad.slice(0, 5).join(" | ")}`);
 });
 
@@ -62,16 +63,13 @@ async function runNav(initialLang) {
       set innerHTML(_) {},
     };
   };
-  // 정적 HTML이 ko로 박아 둔 값에서 시작한다.
+  // 정적 HTML이 ko로 박아 둔 값에서 시작한다. 셋 다 구워져 있다 (#306 - nav.js는 더 만들지 않는다).
+  els.set("share-button", button("share-button", "공유"));
   els.set("theme-toggle", button("theme-toggle", "테마 전환"));
   els.set("lang-toggle", button("lang-toggle", "언어 전환"));
-  const children = [els.get("theme-toggle"), els.get("lang-toggle")];
+  const children = [els.get("share-button"), els.get("theme-toggle"), els.get("lang-toggle")];
   const actions = {
     querySelector: () => children[0],
-    insertBefore: (el) => {
-      children.unshift(el);
-      els.set(el.id, el);
-    },
     get firstChild() {
       return children[0];
     },
