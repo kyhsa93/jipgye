@@ -122,3 +122,35 @@ test("금리 4장과 틀에 표 위 .rates-facts 문단·데이터 블록·렌�
     assert.equal(hit, null, `${file}: 지운 .rates-facts 문단 흔적(${hit?.[0]})이 다시 들어왔다`);
   }
 });
+
+// 금리 네 장의 CLS가 0.632~0.687이었던 원인은 "추이 격자가 한 칸으로 태어나 넉 칸으로 늘어나는 것"이었다(#287).
+// 고친 방식은 빈 칸 셋을 미리 깔고 칸 높이를 style.css가 잡는 것이라, 되풀이는 두 길로만 들어온다 —
+// 카드 종류가 늘어 칸 수가 모자라거나, 높이를 잡는 규칙이 사라지거나. 둘 다 여기서 막는다.
+// 값(금리·날짜)에 기대지 않는 구조 검사다(#8).
+test("추이 격자는 그릴 카드 수만큼 자리를 미리 깔고, 그 칸의 높이를 style.css가 잡는다 (#287)", async () => {
+  const sources = ["scripts/rates-template.html", ...RATE_PAGES.map((p) => `docs/${p.file}`)];
+  for (const file of sources) {
+    const html = await read(file);
+
+    const grid = /<div[^>]+id="history-grid"[^>]*>([\s\S]*?)<\/div>\s*<\/section>/.exec(html);
+    assert.ok(grid, `${file}: 추이 격자를 찾지 못했다`);
+    const cells = [...grid[1].matchAll(/<div class="(?:placeholder|history-reserve)"/g)].length;
+
+    // renderHistory()가 그리는 카드 목록. 종류가 늘면 칸도 같이 늘어야 한다.
+    const list = /const cards = \[([\s\S]*?)\]\s*\n\s*\.map\(historyCardHtml\)/.exec(html);
+    assert.ok(list, `${file}: renderHistory의 카드 목록을 찾지 못했다`);
+    const cards = [...list[1].matchAll(/\{ label:/g)].length;
+
+    assert.equal(cells, cards, `${file}: 추이 격자 자리 ${cells}칸 ≠ 그릴 카드 ${cards}장 — 늘어나면 아래가 밀린다`);
+  }
+
+  // 자리만 깔고 높이를 안 잡으면 빈 칸이 0px이라 같은 밀림이 돌아온다.
+  const css = await read("docs/style.css");
+  for (const rule of [
+    /#history-grid > \.placeholder,\s*\n\.history-reserve \{[^}]*min-height:/,
+    /\.update-schedule \{[^}]*min-height:/,
+    /\.content-notice\.page-notice \{[^}]*min-height:/,
+  ]) {
+    assert.match(css, rule, `docs/style.css: 자리를 잡는 min-height 규칙이 사라졌다`);
+  }
+});
