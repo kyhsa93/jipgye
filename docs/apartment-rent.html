@@ -680,6 +680,9 @@ function renderTable(realestate) {
       .join("");
 }
 
+const bakedCard = [...document.querySelectorAll("#overall-cards .overall-card")].find((c) => c.textContent.startsWith(T.ko.thRatioByComplex));
+const bakedSpread = bakedCard && { median: parseFloat(bakedCard.querySelector(".value").textContent), cells: +bakedCard.querySelector(".sub").textContent.replace(/\D/g, "") };
+
 function renderOverall(realestate) {
   const box = document.getElementById("overall-cards");
   const overall = districtName ? districtEntry() : realestate?.overall;
@@ -695,7 +698,7 @@ function renderOverall(realestate) {
 
   // 표의 전세가율은 이 표의 두 열을 나눈 값이라 표와는 맞지만 어느 단지의 것도
   // 아닐 수 있다. 갈아 끼우면 같은 행의 숫자들과 어긋나므로 옆에 나란히 둔다.
-  const spread = complexSpread();
+  const spread = complexSpread() ?? (cache.complexRatio ? null : bakedSpread);
   const complexCard = () =>
     spread ? card(t("thRatioByComplex"), formatPercent(spread.median), escapeHtml(t("ratioCells")(spread.cells))) : "";
 
