@@ -14,8 +14,15 @@
 // `[hidden]` 표시), 제목 계층, 모든 a[href]의 원문, colspan 같은 표 셀 속성, 모든 속성 값, script src의
 // 순서, 인라인 script 본문(JSON 섬 포함, 키 순서도 그대로 — 일부러 파싱해 느슨하게 만들지 않는다).
 //
-// 의존은 parse5 하나이고 이 폴더의 package.json에만 있다. 루트 test/는 이 모듈을 import하지 않는다.
+// 내용 비교 모드(#277). canonLines(html, { ignoreDesignAttrs: true })는 **class·style 두 속성만** 덤프에서 뺀다.
+// 기본 모드는 그대로다(아무것도 빼지 않는다). 디자인 개편(#279~#283)이 class를 바꿔도 내용이 같으면 통과시키려는 것이고,
+// 지우는 속성 목록은 ../../../scripts/design-attrs.mjs의 DESIGN_ATTRS 하나 — 루트 parity 시험이 쓰는 목록과 같은 배열이다.
+// id·data-*·aria-*(JS 훅)와 href·title·alt 같은 속성 글자는 이 모드에서도 그대로 견준다(DIRECTION.md 369행).
+//
+// 의존은 parse5 하나이고 이 폴더의 package.json에만 있다(design-attrs.mjs는 의존 0의 목록 모듈이다).
+// 루트 test/는 canon.mjs를 import하지 않는다.
 import { parse } from "parse5";
+import { DESIGN_ATTRS } from "../../../scripts/design-attrs.mjs";
 
 // 블록 수준(또는 화면에 안 그려지는) 요소. 이 요소의 시작·끝·이웃에서는 공백이 접힌다.
 export const BLOCK = new Set(
@@ -53,8 +60,12 @@ export function cleanChildren(node) {
 
 const isBlock = (n) => n && n.tagName && BLOCK.has(n.tagName);
 
-function attrsText(node) {
-  const attrs = [...(node.attrs ?? [])].sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+const DESIGN = new Set(DESIGN_ATTRS);
+
+function attrsText(node, ctx) {
+  let attrs = [...(node.attrs ?? [])];
+  if (ctx.ignoreDesignAttrs) attrs = attrs.filter((a) => !DESIGN.has(a.name.toLowerCase()));
+  attrs.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
   return attrs.map((a) => (a.value === "" ? ` ${a.name}=""` : ` ${a.name}=${JSON.stringify(a.value)}`)).join("");
 }
 
@@ -64,7 +75,7 @@ function dump(node, depth, ctx, out) {
   const pad = "  ".repeat(depth);
   const kids = cleanChildren(node);
   const hidden = ctx.hidden || (node.attrs ?? []).some((a) => a.name === "hidden");
-  out.push(`${pad}<${node.tagName}${attrsText(node)}>`);
+  out.push(`${pad}<${node.tagName}${attrsText(node, ctx)}>`);
   if (VOID.has(node.tagName)) return;
 
   if (RAW_TEXT.has(node.tagName)) {
@@ -91,22 +102,25 @@ function dump(node, depth, ctx, out) {
       }
       out.push(`${pad}  ${JSON.stringify(text)}${markHidden(hidden)}`);
     } else if (kid.tagName) {
-      dump(kid, depth + 1, { hidden, verbatim }, out);
+      dump(kid, depth + 1, { hidden, verbatim, ignoreDesignAttrs: ctx.ignoreDesignAttrs }, out);
     }
   });
   out.push(`${pad}</${node.tagName}>`);
 }
 
-/** HTML 문자열 → 정준 덤프 줄 배열. */
-export function canonLines(html) {
+/**
+ * HTML 문자열 → 정준 덤프 줄 배열.
+ * opts.ignoreDesignAttrs가 참이면 DESIGN_ATTRS(class·style) 두 속성만 덤프에서 뺀다(#277 내용 비교 모드).
+ */
+export function canonLines(html, { ignoreDesignAttrs = false } = {}) {
   const doc = parse(html);
   const out = [];
   // 문서 직속: doctype과 <html>. 주석은 뺀다.
   for (const child of doc.childNodes) {
     if (child.nodeName === "#documentType") out.push(`<!doctype ${child.name}>`);
-    else if (child.tagName) dump(child, 0, { hidden: false, verbatim: false }, out);
+    else if (child.tagName) dump(child, 0, { hidden: false, verbatim: false, ignoreDesignAttrs }, out);
   }
   return out;
 }
 
-export const canon = (html) => canonLines(html).join("\n");
+export const canon = (html, opts) => canonLines(html, opts).join("\n");
