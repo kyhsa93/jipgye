@@ -164,6 +164,7 @@
     color: var(--muted);
     font-size: var(--fs-xs);
     margin-top: 2px;
+    min-height: 1lh;
   }
   .back-link {
     margin-top: 4px;
@@ -654,6 +655,9 @@
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 12px;
     margin-top: 12px;
+  }
+  #history-grid > .placeholder, .history-reserve {
+    min-height: 136px;
   }
   .history-more {
     grid-column: 1 / -1;
@@ -2035,6 +2039,12 @@
   }
   .content-notice.page-notice {
     margin: -12px 0 20px;
+    min-height: 2lh;
+  }
+  @media (max-width: 480px) {
+    .content-notice.page-notice {
+      min-height: 3lh;
+    }
   }
   @media (prefers-color-scheme: dark) {
     :root {
