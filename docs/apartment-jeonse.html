@@ -129,6 +129,20 @@
     <div class="chart-tip" id="chart-tip" hidden></div>
   </section>
 
+  <!-- 추이 구획 자리 예약. #trend-section은 realestate-trend.json이 온 뒤에야 펴지는데, 그때 727px(412폭
+       실측 2026-10-16, 47장 전부 같다)이 한 프레임에 끼어들어 아래 내용을 통째로 밀었다(#287 (마)).
+       빈 칸 셋을 미리 깔아 같은 자리를 잡아 둔다 - 칸이 진짜 격자(.history-grid)와 같은 틀 안에 있어
+       auto-fit의 열 접힘을 그대로 따라간다(금리 틀 PR #321과 같은 방식).
+       예약은 #trend-section이 hidden일 때만 보이고, 구획이 펴지면 CSS가 거둔다 - 자바스크립트는 손대지 않는다.
+       글자도 역할도 없어 읽어 주는 장치에는 잡히지 않는다 - aria 속성을 따로 달지 않는다. -->
+  <div class="trend-reserve">
+    <div class="history-grid">
+      <div class="trend-reserve-card"></div>
+      <div class="trend-reserve-card"></div>
+      <div class="trend-reserve-card"></div>
+    </div>
+  </div>
+
   <section id="budget-section" hidden>
     <h2 id="budget-heading">예산으로 찾기</h2>
     <div id="budget-result"><!--prerender:budgetResult--><!--/prerender:budgetResult--></div>

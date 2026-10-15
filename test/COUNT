@@ -24,5 +24,12 @@
 #   같은 워크트리에서 test/schedule-watchdog.test.mjs 를 잠시 빼고 같은 명령 → ℹ tests 1537 · pass 1537.
 #   차이 21은 이 PR이 더한 그 파일 하나에서 나온다(`node --test test/schedule-watchdog.test.mjs` → ℹ tests 21).
 #   고친 시험 파일은 0이고 없어진 시험도 0이다(.skip·.todo 도 0 그대로).
-1558
-1558
+# 센 법: 2026-10-16, merge-base 9c2f1969, Node v24.16.0, macOS 26.6.2 (#287 (마)).
+#   npm test → ℹ tests 1559 · pass 1559 · fail 0 · skipped 0
+#   merge-base 9c2f1969 를 체크아웃한 워크트리에서 같은 명령 → ℹ tests 1558 · pass 1558.
+#   차이 1은 이 PR이 test/realestate-pages.test.mjs 에 더한
+#   "추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 선다 (#287)" 하나다
+#   (`node --test test/realestate-pages.test.mjs` → 기준 72 · 후보 73).
+#   고친 시험 파일은 0이고 없어진 시험도 0이다(.skip·.todo 도 0 그대로).
+1559
+1559

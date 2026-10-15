@@ -1269,6 +1269,76 @@ ul.news-list {
   margin-top: 10px;
 }
 
+/* 추이 구획(#trend-section) 자리 예약 — docs/realestate.html 틀 47장.
+ * 그 구획은 realestate-trend.json이 온 뒤에 hidden이 풀리는데, 그때 412폭에서 727px이 한 프레임에
+ * 끼어들어 아래 내용을 통째로 밀었다(2026-10-16 실측: realestate CLS 0.0248 · 토큰 값이 바뀐
+ * #278 PR C 위에서는 0.0643. #287 (마)).
+ * 예약은 구획이 hidden일 때만 보이고, 펴지는 순간 사라진다 - 두 높이가 같으면 이동이 0이다.
+ * 높이를 숫자 하나로 적지 않고 구획과 같은 조각으로 쌓는 이유: 글자 크기 토큰(--fs-h2·--fs-xs·--fs-xl)이
+ * 바뀌면 구획도 예약도 같이 따라와야 한다. PR C가 바로 그 토큰을 바꾼다.
+ * 412폭 실측(2026-10-16, 47장 전수): 제목 33.4 + 12 + 카드 203.52×3 + 칸 사이 12×2 + 10 + 설명 37.44 = 727.4px. */
+.trend-reserve {
+  display: none;
+}
+
+#trend-section[hidden] + .trend-reserve {
+  display: block;
+  margin-bottom: 32px;
+}
+
+/* 제목 한 줄. h2는 글줄 한 줄 + 아래 여백 6px + 밑줄 1px이고, 그 아래 12px는 h2의 margin-bottom이다
+ * (진짜 격자의 margin-top 12px와 합쳐지는 것까지 같다 - 인접 여백이 겹치기 때문).
+ * 한 줄 높이를 lh가 아니라 1.5em으로 적는다 - body의 line-height가 1.5이고(114행), 브라우저가
+ * 1lh를 1/64px 한 칸 작게 잡아 세 칸 쌓으면 0.13px이 어긋났다(2026-10-16 실측). 그 0.13px이
+ * 이동 한 건이 된다. 1.5em은 진짜 글줄과 같은 수로 떨어진다. */
+.trend-reserve::before {
+  content: "";
+  display: block;
+  font-size: var(--fs-h2);
+  min-height: calc(1.5em + 7px);
+  margin-bottom: 12px;
+}
+
+/* 카드 한 장 = 테두리 1 + 안 여백 12 + 라벨 1lh + 6 + 현재값 1lh + 4 + 그래프 120 + 12 + 1.
+ * 그래프 120px은 스크립트가 그리는 svg의 viewBox 높이다(폭이 바뀌어도 viewBox 폭이 같이 커져
+ * 높이는 120px로 남는다 - 320~1024폭 실측 2026-10-16). */
+.trend-reserve-card {
+  border: 1px solid transparent;
+  padding: 12px 14px;
+}
+
+.trend-reserve-card::before {
+  content: "";
+  display: block;
+  font-size: var(--fs-xs);
+  min-height: 1.5em;
+  margin-bottom: 6px;
+}
+
+.trend-reserve-card::after {
+  content: "";
+  display: block;
+  font-size: var(--fs-xl);
+  min-height: calc(1.5em + 124px);
+}
+
+/* 구획 끝의 설명 한 줄(.trend-meta). 재는 폭(412px)에서 두 줄이고, 600px 이상에서는 한 줄이다
+ * (2026-10-16 실측). 320~360폭에서는 세 줄이라 한 줄만큼 모자라다 - 그 폭은 지금 재는 축이 아니고,
+ * 모자라는 쪽이 남는 쪽보다 안전하다(남으면 구획이 펴질 때 내용이 위로 끌려 올라간다). */
+.trend-reserve::after {
+  content: "";
+  display: block;
+  font-size: var(--fs-xs);
+  min-height: 3em;
+  margin-top: 10px;
+}
+
+@media (min-width: 600px) {
+  .trend-reserve::after {
+    min-height: 1.5em;
+  }
+}
+
 .district-links-heading {
   font-size: var(--fs-sm);
   color: var(--muted);

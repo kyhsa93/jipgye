@@ -899,3 +899,54 @@ test("자치구 장에 '이 구에서' 길 - 이 구의 실거래, 84㎡ 값의 
   assert.match(await read("docs/district-songpa.html"), /class="card-links district-here"/);
   assert.match(html, /switch-house\.html\?from=%EA%B0%80%EA%B5%AC/, "갈아타기로 갈 때 이 구를 골라 두지 않는다 (#52)");
 });
+
+// realestate.html 틀 47장의 CLS는 "#trend-section이 데이터가 온 뒤에야 펴지면서 412폭에서 727px을
+// 한 프레임에 밀어 넣는 것"이었다(#287 (마)). 고친 방식은 그 구획이 hidden인 동안만 보이는 빈 자리를
+// 깔고 높이를 CSS가 잡는 것이라, 되풀이는 세 길로 들어온다 — 자리가 사라지거나, 칸 수가 그릴 카드 수와
+// 어긋나거나, 높이를 잡는 규칙이 없어지거나. 셋 다 여기서 막는다.
+// 값(시세·날짜)에 기대지 않는 구조 검사다(#8).
+test("추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 선다 (#287)", async () => {
+  const { REALESTATE_PAGES: pages } = await import("../scripts/build-realestate-pages.mjs");
+  const { BUDGET_PAGES } = await import("../scripts/budget-pages.mjs");
+  const files = [
+    "realestate.html",
+    ...pages.map((p) => p.file),
+    ...DISTRICT_PAGES.map((d) => d.file),
+    ...BUDGET_PAGES.map((b) => b.file),
+  ];
+  assert.equal(files.length, 47, "틀을 쓰는 장 수가 바뀌었다 - 예약이 닿는 범위를 다시 세라");
+
+  for (const file of files) {
+    const html = await read(`docs/${file}`);
+    assert.ok(html.includes('<section id="trend-section" hidden>'), `${file}: 추이 구획이 hidden으로 구워지지 않는다`);
+
+    // 예약은 구획 바로 뒤에 온다 - CSS가 `#trend-section[hidden] + .trend-reserve`로 집는다.
+    const after = html.slice(html.indexOf('<section id="trend-section" hidden>'));
+    const reserve = /<\/section>\s*(?:<!--[\s\S]*?-->\s*)?<div class="trend-reserve">([\s\S]*?)<\/div>\s*<\/div>/.exec(after);
+    assert.ok(reserve, `${file}: 추이 구획 바로 뒤의 자리 예약을 찾지 못했다`);
+
+    const cells = [...reserve[1].matchAll(/<div class="trend-reserve-card">/g)].length;
+    // 3은 코드에서 유도한 수가 아니라 실측이다 - 47장 × 412폭을 헤드리스 Chrome으로 돌려 전부
+    // "보이는 카드 3장 · 구획 727px"이었다(2026-10-16). 넉 장 중 월세 카드와 전세가율 카드가
+    // 서로 배타라 동시에 서는 것은 석 장이다. 카드 구성이 바뀌면 그 실측이 깨지므로 아래에서 같이 묶는다.
+    assert.equal(cells, 3, `${file}: 예약이 ${cells}칸이다 - 동시에 서는 카드는 석 장이다`);
+    const ids = [...after.slice(0, after.indexOf("</section>")).matchAll(/<div class="history-card" id="([a-z-]+)">/g)].map((m) => m[1]);
+    assert.deepEqual(
+      ids,
+      ["trend-card", "rent-card", "volume-card", "ratio-card"],
+      `${file}: 추이 카드 구성이 바뀌었다 - 예약 칸 수와 높이를 다시 재라`
+    );
+  }
+
+  // 자리만 깔고 높이를 안 잡으면 0px이라 같은 밀림이 돌아온다.
+  const css = await read("src/css/legacy.css");
+  for (const rule of [
+    /#trend-section\[hidden\] \+ \.trend-reserve \{[^}]*display: block;/,
+    /\.trend-reserve::before \{[^}]*min-height:/,
+    /\.trend-reserve-card::before \{[^}]*min-height:/,
+    /\.trend-reserve-card::after \{[^}]*min-height:/,
+    /\.trend-reserve::after \{[^}]*min-height:/,
+  ]) {
+    assert.match(css, rule, "src/css/legacy.css: 추이 자리 예약의 높이를 잡는 규칙이 사라졌다");
+  }
+});
