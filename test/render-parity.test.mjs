@@ -230,7 +230,9 @@ test("react 모드: 이식된 조각 목록이 PORTED와 같고, 그 이름은 �
 
 // ---- 금리 조각(#240): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
 
-const productNames = (html) => [...html.matchAll(/class="product-name">([^<]*)</g)].map((m) => m[1]);
+// class를 글자 그대로 적는다(#279에서 Tailwind 유틸리티가 붙었다): tools/golden의 훅 class 추출기가 이 줄의 class="…"를 읽어
+// hook-classes.json의 markup 쪽을 만든다 - `[^"]*` 같은 조각으로 적으면 product-name이 훅 목록에서 조용히 빠진다(실측).
+const productNames = (html) => [...html.matchAll(/class="product-name tw:whitespace-normal tw:break-keep">([^<]*)</g)].map((m) => m[1]);
 
 test("금리 분기 표: id가 겹치지 않고, 두 조각을 모두 덮는다", () => {
   const ids = RATES_BRANCHES.map((b) => b.id);

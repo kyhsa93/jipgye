@@ -7,8 +7,13 @@ import { ratesHeadHtml, ratesHtml } from "../scripts/prerender.mjs";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
+// 구운 조각에는 #279에서 Tailwind 유틸리티가 붙었고, 틀의 인라인 스크립트가 데이터를 받아 다시 그리는 마크업에는 붙지 않는다
+// (그 스크립트를 고치는 길은 S6와 #282로 막혀 있다 - scripts/prerender.mjs의 금리 조각 주석). 이 시험은 두 쪽을 맞대므로 둘 다 받는다.
+// class를 글자 그대로 적는 이유: tools/golden의 훅 class 추출기가 이 줄의 class="…"를 읽어 hook-classes.json의 markup 쪽을 만든다 -
+// `[^"]*` 같은 조각으로 적으면 그 이름이 훅 목록에서 조용히 빠진다(실측).
+const NET_CELL = ['class="net-interest tw:font-bold"', 'class="net-interest"'];
 const netCells = (html) =>
-  [...html.matchAll(/class="net-interest"[^>]*>([^<]*)</g)].map((m) => m[1].trim());
+  [...html.matchAll(new RegExp(`(?:${NET_CELL.join("|")})[^>]*>([^<]*)<`, "g"))].map((m) => m[1].trim());
 
 const simple = (term, rate) => ({ term, rate, maxRate: rate, rateTypeName: "단리" });
 const compound = (term, rate) => ({ term, rate, maxRate: rate, rateTypeName: "복리" });
@@ -66,7 +71,7 @@ test("정적 HTML의 세후 이자가 실제 첫 화면과 같다", async () => 
 
 test("대출 표에는 세후 이자 열이 없다", () => {
   assert.ok(!ratesHeadHtml("mortgage").includes("세후 이자"));
-  assert.equal(ratesHeadHtml("mortgage").match(/<th scope="col">/g).length, 4);
+  assert.equal(ratesHeadHtml("mortgage").match(/<th scope="col" class="tw:text-muted tw:text-xs tw:font-semibold">/g).length, 4);
 });
 
 test("금액을 바꾸면 표의 세후 이자가 따라 바뀐다", async () => {

@@ -29,27 +29,32 @@ import { renewalSentences } from "../renewal-facts.mjs";
 const str = (value) => String(value ?? "");
 
 // legacy의 `escapeHtml(value ?? "")`는 String()으로 바꿔 쓴다 - React는 숫자 아닌 값(false·객체)을 글자로 내지 않으므로 같게 맞춘다.
+// Tailwind 유틸리티 class는 legacy 쪽(scripts/prerender.mjs의 ratesHeadHtmlLegacy·ratesHtmlLegacy)과 **글자까지 같아야** 한다 -
+// tools/golden의 같은-실행 비교가 두 렌더러의 산출을 바이트로 맞댄다(#237). 왜 이 class들이고 왜 모양을 바꾸지 않는지는 그쪽 주석에 적었다(#279).
+// 이 파일도 @source 목록에 있어 주석까지 훑으므로, 주석에 유틸리티 이름을 접두사까지 적지 않는다.
 const ProductCell = ({ product }) => (
   <td>
-    <div className="product-name">{String(product.name ?? "-")}</div>
-    <div className="product-company">{String(product.company ?? "")}</div>
+    <div className="product-name tw:whitespace-normal tw:break-keep">{String(product.name ?? "-")}</div>
+    <div className="product-company tw:text-xs tw:text-muted">{String(product.company ?? "")}</div>
   </td>
 );
+
+const TH_CLASS = "tw:text-muted tw:text-xs tw:font-semibold";
 
 function ratesHead(category = "deposit") {
   return isSavingCategory(category) ? (
     <tr>
-      <th scope="col">상품</th>
-      <th scope="col">기본금리</th>
-      <th scope="col">최고금리</th>
-      <th scope="col">세후 이자</th>
+      <th scope="col" className={TH_CLASS}>상품</th>
+      <th scope="col" className={TH_CLASS}>기본금리</th>
+      <th scope="col" className={TH_CLASS}>최고금리</th>
+      <th scope="col" className={TH_CLASS}>세후 이자</th>
     </tr>
   ) : (
     <tr>
-      <th scope="col">상품</th>
-      <th scope="col">금리 유형</th>
-      <th scope="col">금리(최저~최고)</th>
-      <th scope="col">평균</th>
+      <th scope="col" className={TH_CLASS}>상품</th>
+      <th scope="col" className={TH_CLASS}>금리 유형</th>
+      <th scope="col" className={TH_CLASS}>금리(최저~최고)</th>
+      <th scope="col" className={TH_CLASS}>평균</th>
     </tr>
   );
 }
@@ -66,10 +71,10 @@ function ratesRows(rates, { category = "deposit", limit = RATES_ROWS } = {}) {
           <tr key={i}>
             <ProductCell product={product} />
             <td data-label="기본금리">{rate(option.rate)}</td>
-            <td className="rate-strong" data-label="최고금리">
+            <td className="rate-strong tw:font-semibold tw:text-up" data-label="최고금리">
               {rate(option.maxRate ?? option.rate)}
             </td>
-            <td className="net-interest" data-label="세후 이자">
+            <td className="net-interest tw:font-bold" data-label="세후 이자">
               {netInterestText(option, category)}
             </td>
           </tr>
@@ -78,7 +83,7 @@ function ratesRows(rates, { category = "deposit", limit = RATES_ROWS } = {}) {
             <ProductCell product={product} />
             <td data-label="금리 유형">{String(option.rateType ?? "-")}</td>
             <td data-label="금리(최저~최고)">{rateRange(option.min, option.max)}</td>
-            <td className="rate-low" data-label="평균">
+            <td className="rate-low tw:font-semibold tw:text-down" data-label="평균">
               {rate(option.avg)}
             </td>
           </tr>

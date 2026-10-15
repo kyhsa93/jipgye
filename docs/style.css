@@ -1,7 +1,15 @@
 /*! tailwindcss v4.3.3 | MIT License | https://tailwindcss.com */
 /*! 이 파일(docs/style.css)은 빌드 산출물이다. 손으로 고치지 않는다 - 규칙은 src/css/legacy.css에서 고치고
  * `node scripts/build-css.mjs`로 다시 만들어 함께 커밋한다(test.yml이 다시 만든 결과와 바이트를 대조한다). */
+@layer properties;
 @layer theme, base, components, utilities;
+@layer theme {
+  :root, :host {
+    --tw-spacing: 0.25rem;
+    --tw-font-weight-semibold: 600;
+    --tw-font-weight-bold: 700;
+  }
+}
 @layer components {
   :root {
     color-scheme: light dark;
@@ -2211,4 +2219,83 @@
     }
   }
 }
-@layer utilities;
+@layer utilities {
+  .tw\:m-0 {
+    margin: 0px;
+  }
+  .tw\:grid {
+    display: grid;
+  }
+  .tw\:max-w-read {
+    max-width: var(--prose);
+  }
+  .tw\:list-none {
+    list-style-type: none;
+  }
+  .tw\:gap-2 {
+    gap: calc(var(--tw-spacing) * 2);
+  }
+  .tw\:rounded {
+    border-radius: 0.25rem;
+  }
+  .tw\:border {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
+  .tw\:border-border {
+    border-color: var(--border);
+  }
+  .tw\:bg-card {
+    background-color: var(--card);
+  }
+  .tw\:p-0 {
+    padding: 0px;
+  }
+  .tw\:p-4 {
+    padding: calc(var(--tw-spacing) * 4);
+  }
+  .tw\:text-xs {
+    font-size: var(--fs-xs);
+    line-height: var(--tw-leading, inherit);
+  }
+  .tw\:font-bold {
+    --tw-font-weight: var(--tw-font-weight-bold);
+    font-weight: var(--tw-font-weight-bold);
+  }
+  .tw\:font-semibold {
+    --tw-font-weight: var(--tw-font-weight-semibold);
+    font-weight: var(--tw-font-weight-semibold);
+  }
+  .tw\:break-keep {
+    word-break: keep-all;
+  }
+  .tw\:whitespace-normal {
+    white-space: normal;
+  }
+  .tw\:text-down {
+    color: var(--down);
+  }
+  .tw\:text-muted {
+    color: var(--muted);
+  }
+  .tw\:text-up {
+    color: var(--up);
+  }
+}
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@property --tw-font-weight {
+  syntax: "*";
+  inherits: false;
+}
+@layer properties {
+  @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
+    *, ::before, ::after, ::backdrop {
+      --tw-border-style: solid;
+      --tw-font-weight: initial;
+    }
+  }
+}
