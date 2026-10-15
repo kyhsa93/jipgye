@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>집계 — 고정 fixture</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">본문 바로가기</a>
+<header class="bar">
+  <a class="chip" id="home" href="index.html">집계</a>
+  <button type="button" id="theme-toggle" aria-label="테마 전환">모드</button>
+  <button type="button" id="lang-toggle" aria-label="언어 전환">EN</button>
+</header>
+<main id="main">
+  <h1 id="page-title">서울 아파트 거래</h1>
+  <p id="lead">이 장은 렌더 기반 검사의 고정 fixture다. 값이 바뀌지 않으므로 CI에서 상시로 돈다.</p>
+  <form class="bar" id="go-form">
+    <input type="search" id="q" aria-label="지역 검색" placeholder="지역">
+    <button type="submit" id="go">이동</button>
+  </form>
+  <section id="block">
+    <h2 id="block-title">요약</h2>
+    <p id="block-body">전용 84㎡ 기준 중위 가격은 11억 2천만원이다.</p>
+    <p class="muted" id="note">표본이 적은 달은 흔들린다.</p>
+  </section>
+  <div class="scroller">
+    <table>
+      <caption>자치구별 중위 가격 (2026년 9월)</caption>
+      <thead><tr><th scope="col">자치구</th><th scope="col">중위 가격</th><th scope="col">거래</th><th scope="col">전월 대비</th><th scope="col">전년 대비</th></tr></thead>
+      <tbody>
+        <tr><td>강남구</td><td>248,000만원</td><td>132건</td><td>+1.4%</td><td>+8.2%</td></tr>
+        <tr><td>노원구</td><td>62,500만원</td><td>211건</td><td>-0.3%</td><td>+2.1%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+<script>
+  // 실제 사이트와 같은 모양: 테마·언어를 localStorage에서 읽어 초기 상태를 정한다(docs/index.html 450~470행).
+  (function () {
+    var T = {
+      ko: { title: "서울 아파트 거래", lead: "이 장은 렌더 기반 검사의 고정 fixture다. 값이 바뀌지 않으므로 CI에서 상시로 돈다.", blockTitle: "요약", blockBody: "전용 84㎡ 기준 중위 가격은 11억 2천만원이다.", note: "표본이 적은 달은 흔들린다.", go: "이동", lang: "EN" },
+      en: { title: "Seoul apartment deals", lead: "This page is the fixed fixture for the render-based check. Its values never move, so it runs in CI.", blockTitle: "Summary", blockBody: "The median price for 84 square metres is 1.12 billion won.", note: "Months with few samples swing.", go: "Go", lang: "KO" }
+    };
+    try {
+      var saved = window.localStorage.getItem("theme");
+      if (saved === "light" || saved === "dark") document.documentElement.setAttribute("data-theme", saved);
+    } catch (e) {}
+    var lang = "ko";
+    try {
+      var l = window.localStorage.getItem("lang");
+      if (l === "en") lang = "en";
+    } catch (e) {}
+    var t = T[lang];
+    document.documentElement.setAttribute("lang", lang);
+    document.getElementById("page-title").textContent = t.title;
+    document.getElementById("lead").textContent = t.lead;
+    document.getElementById("block-title").textContent = t.blockTitle;
+    document.getElementById("block-body").textContent = t.blockBody;
+    document.getElementById("note").textContent = t.note;
+    document.getElementById("go").textContent = t.go;
+    document.getElementById("lang-toggle").textContent = t.lang;
+  })();
+</script>
+</body>
+</html>
