@@ -1,7 +1,7 @@
 # tools/golden — 같은-실행 비교 도구 (#236)
 
 렌더러를 바꾸기 전에 "바뀌지 않았다"를 기계로 판정하는 자다(React SSG 체인, #235). 자체 `package.json`(parse5)이라
-루트 `npm ci`·`node --test test/*.test.mjs`에는 설치되지 않는다 — CI(`.github/workflows/test.yml`)가 루트 시험 뒤에
+루트 `npm ci`·`node --test 'test/*.test.{mjs,ts}'`에는 설치되지 않는다 — CI(`.github/workflows/test.yml`)가 루트 시험 뒤에
 이 폴더에서 따로 `npm ci && npm test`를 돌린다(#289 PR 2). 손으로 돌릴 때도 같다. 루트 `test/`는 parse5를 import하지 않는다.
 
 ## 쓰는 법

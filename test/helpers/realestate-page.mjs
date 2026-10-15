@@ -178,10 +178,22 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
       },
       // 예산 페이지는 빌드가 #budget-result에 구워 둔 덩어리(data-prerendered)를 로드 때 떼어 둔다.
       // 받은 HTML(prerenderedBudget)에서 그 덩어리만 꺼내 준다. 덩어리 안에 같은 태그가 다시 열리지는 않는다.
+      // 시세 요약 카드(#overall-cards)도 같은 부류다(#311) - 거기 구워져 있던 카드를 로드 때 떼어 둔다.
+      // 이쪽은 `baked`로 채운 그 요소의 지금 innerHTML에서 꺼낸다. 실제 DOM처럼 스크립트가 다시 쓴 뒤에는 새 내용이 보인다.
       querySelectorAll: (sel) =>
         sel === "#budget-result [data-prerendered]"
           ? [...String(prerenderedBudget).matchAll(/<(p|section)\b[^>]*data-prerendered[^>]*>[\s\S]*?<\/\1>/g)].map((m) => ({ outerHTML: m[0] }))
-          : [],
+          : sel === "#overall-cards .overall-card"
+            ? [...String(sandbox.document.getElementById("overall-cards").innerHTML).matchAll(/<div class="overall-card">[\s\S]*?<\/div><\/div>/g)].map((m) => ({
+                outerHTML: m[0],
+                textContent: m[0].replace(/<[^>]*>/g, ""),
+                // 카드 안쪽의 label·value·sub. 스크립트가 구운 카드에서 숫자만 떼어 갈 때 쓴다(#311).
+                querySelector: (inner) => {
+                  const hit = new RegExp(`<div class="${inner.slice(1)}">([\\s\\S]*?)</div>`).exec(m[0]);
+                  return hit ? { textContent: hit[1].replace(/<[^>]*>/g, "") } : null;
+                },
+              }))
+            : [],
       createElement: () => stubElement(),
       addEventListener() {},
       documentElement: stubElement(),
