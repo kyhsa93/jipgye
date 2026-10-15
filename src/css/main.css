@@ -26,7 +26,34 @@
  * 4. legacy.css는 글자 그대로 옮긴 기존 스타일시트다. 정규식으로 CSS를 읽는 시험은 산출물이 아니라 그 파일을 읽는다 -
  *    산출물은 층 안으로 들어가며 들여쓰기가 달라지고 주석이 빠진다.
  *
- * 색·글자 크기 토큰을 Tailwind 테마에 물리는 것(@theme inline)은 여기서 하지 않는다. 디자인 값과 함께 #278이 정한다.
+ * 5. @theme inline. 기존 :root 변수(legacy.css)를 Tailwind 토큰 이름에 묶는 자리다(#278 PR B).
+ *    여기서 값을 새로 정하지는 않는다 - 전부 var(--…)로 기존 변수를 가리킨다. 디자인 값 자체는 #278 PR C가 바꾼다.
+ *
+ *    inline이 핵심이다. tw:bg-card가 `background-color: var(--card)`로 나오므로 네 갈래 팔레트(자동 라이트·
+ *    자동 다크·강제 라이트·강제 다크)가 CSS 변수에서 갈리는 지금 구조를 유틸리티가 그대로 따라온다 -
+ *    tw:dark: 변형이 필요 없다. 그 변형은 prefers-color-scheme만 보므로 사용자가 고른 data-theme과 어긋난다
+ *    (css-build.test.mjs가 막는 금지 넷 중 하나). inline 토큰은 :root에 변수로 나오지 않고 값이 유틸리티
+ *    안으로 들어간다 - 산출물에 @layer theme 블록이 생기지 않는 이유다(v4.3.3 출력으로 확인).
+ *
+ *    `--…-*: initial`로 Tailwind가 들고 오는 기본 축척을 먼저 비운다. 비우지 않으면 사다리가 두 벌이 된다 -
+ *    legacy.css가 스물두 단짜리 글자 크기를 여덟 단으로 줄이고 색을 열 개로 묶은 일을 tw:text-base·
+ *    tw:bg-red-500·tw:md:이 그대로 되돌린다. 임의값(tw:p-[3px])을 막는 것과 같은 뜻이다.
+ *    실측(v4.3.3, 같은 입력에 class를 넣어 빌드): 비운 뒤 tw:bg-red-500·tw:text-base·tw:md:flex는
+ *    규칙이 하나도 만들어지지 않는다. transparent·current·inherit 셋은 팔레트가 아니라 키워드라 다시 넣는다.
+ *    간격(--spacing 0.25rem 축척)과 --container-*는 비우지 않는다 - 8·16·24·40·64px이 그 축척의 2·4·6·10·16이다.
+ *
+ *    글자 크기는 --text-*--line-height를 같이 정의해야 한다. 안 하면 출력이 `line-height: var(--tw-leading, )`
+ *    가 돼 무효값이 된다. 여기서는 inherit을 쓴다 - 상속된 줄 높이를 그대로 두는, 값을 더하지 않는 유일한
+ *    선택이다. 줄 간격 축척은 #278 PR C가 정한다.
+ *
+ *    브레이크포인트는 legacy.css의 미디어쿼리 여섯과 같은 px다(480·520·560은 max-width로, 720·1024·1440은
+ *    min-width로 쓰인다). 이름을 px 그대로 둔 것은 tw:1024:…를 읽을 때 legacy.css의 어느 @media와 같은
+ *    자리인지 바로 보이게 하려는 것이다(sm·md·lg는 그 대응을 가린다).
+ *    한계: max- 변형은 열린 구간이다. tw:max-480:은 `@media (width < 480px)`로 나오고 legacy.css의
+ *    `@media (max-width: 480px)`는 480px을 포함한다(실측). 정확히 480px인 폭 하나에서만 갈린다.
+ *
+ *    --prose는 --container-read로 묶는다. --container-prose로 두면 Tailwind가 미리 들고 있는
+ *    tw:max-w-prose(65ch 고정)가 이겨서 var(--prose)가 나오지 않는다(실측).
  *
  * 한계: 층(@layer)을 모르는 브라우저(Chrome 99·Safari 15.4·Firefox 97·Samsung Internet 18 미만)는
  * `@layer components { … }` 안을 통째로 무시하므로 스타일 없는 화면이 된다(#276 본문 "한계").
@@ -35,6 +62,60 @@
 @import "tailwindcss/theme.css" layer(theme) prefix(tw);
 @import "./legacy.css" layer(components);
 @import "tailwindcss/utilities.css" layer(utilities) prefix(tw) source(none);
+@theme inline {
+  /* 색 11. legacy.css :root의 색 변수 전부. --focus는 지금 var(--accent)지만 뜻이 다른 자리라 따로 묶는다. */
+  --color-*: initial;
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --color-accent: var(--accent);
+  --color-accent-on: var(--accent-on);
+  --color-accent-weak: var(--accent-weak);
+  --color-focus: var(--focus);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-inherit: inherit;
+
+  /* 글자 크기 10. legacy.css의 --fs-* 여덟 단 + --fs-3xl + 입력칸 전용 --fs-field. 이름은 --fs-*를 따른다. */
+  --text-*: initial;
+  --text-xs: var(--fs-xs);
+  --text-xs--line-height: inherit;
+  --text-sm: var(--fs-sm);
+  --text-sm--line-height: inherit;
+  --text-md: var(--fs-md);
+  --text-md--line-height: inherit;
+  --text-lg: var(--fs-lg);
+  --text-lg--line-height: inherit;
+  --text-h2: var(--fs-h2);
+  --text-h2--line-height: inherit;
+  --text-xl: var(--fs-xl);
+  --text-xl--line-height: inherit;
+  --text-2xl: var(--fs-2xl);
+  --text-2xl--line-height: inherit;
+  --text-h1: var(--fs-h1);
+  --text-h1--line-height: inherit;
+  --text-3xl: var(--fs-3xl);
+  --text-3xl--line-height: inherit;
+  --text-field: var(--fs-field);
+  --text-field--line-height: inherit;
+
+  /* 폭 2. --prose(글이 늘어나는 한계)와 --tap(손가락이 닿는 최소 크기). */
+  --container-read: var(--prose);
+  --spacing-tap: var(--tap);
+
+  /* 브레이크포인트 6. legacy.css의 @media와 같은 px. */
+  --breakpoint-*: initial;
+  --breakpoint-480: 480px;
+  --breakpoint-520: 520px;
+  --breakpoint-560: 560px;
+  --breakpoint-720: 720px;
+  --breakpoint-1024: 1024px;
+  --breakpoint-1440: 1440px;
+}
 @source "../../docs/*.html";
 @source "../../docs/*.js";
 @source "../../scripts/render/entry.jsx";
