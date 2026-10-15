@@ -96,7 +96,7 @@ test("#178이 가리킨 네 표가 .table-scroll 안에 있다", async () => {
 });
 
 test("CSS: .table-scroll에도 양끝 페이드 mask 규칙이 있다", async () => {
-  const css = await readFile(path.join(docs, "style.css"), "utf8");
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
   for (const sel of [".table-scroll.scroll-end:not(.scroll-start)", ".table-scroll.scroll-start:not(.scroll-end)", ".table-scroll.scroll-start.scroll-end"]) {
     assert.ok(css.includes(sel), `${sel} 규칙이 없다`);
   }
@@ -126,7 +126,7 @@ function finalFocusOffset(css) {
 }
 
 test("CSS: 초점 받은 .table-scroll의 최종 outline-offset이 음수다(뒤 규칙이 덮지 않는다)", async () => {
-  const css = await readFile(path.join(docs, "style.css"), "utf8");
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
   const v = finalFocusOffset(css);
   assert.ok(v !== undefined && v < 0, `최종 outline-offset=${v}px - mask(border-box)에 테두리가 잘린다`);
 });

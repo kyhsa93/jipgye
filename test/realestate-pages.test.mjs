@@ -734,7 +734,7 @@ test("가로 위치에서 가장 가까운 지점을 고른다", async () => {
 });
 
 test("축 글자를 시세 표 글자와 같은 크기로 적는다", async () => {
-  const css = await readFile(path.join(root, "docs/style.css"), "utf8");
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
   const table = css.match(/\.data-table \{[^}]*font-size: ([^;]+);/)?.[1];
   const axis = css.match(/\.history-card \.axis \{[^}]*font-size: ([^;]+);/)?.[1];
 
@@ -758,7 +758,7 @@ test("페이지가 스타일을 따로 품지 않는다", async () => {
 });
 
 test("시세 페이지 추이 카드가 첫 화면과 같은 짜임이다", async () => {
-  const css = await readFile(path.join(root, "docs/style.css"), "utf8");
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
   for (const selector of [
     ".history-grid",
     ".history-card",
@@ -882,7 +882,7 @@ test("1억이 넘는 돈은 늘 'n억 n만원' 꼴로 적는다 (#46)", async ()
 });
 
 test("한국어는 띄어쓰기에서만 줄을 바꾼다 - 돈이 '30 / 억'으로 갈라지지 않게 (#46)", async () => {
-  const css = await read("docs/style.css");
+  const css = await read("src/css/legacy.css");
   const body = css.match(/\nbody \{([^}]*)\}/)?.[1] ?? "";
   assert.match(body, /word-break:\s*keep-all/);
   assert.match(body, /overflow-wrap:\s*break-word/, "띄어쓰기 없는 긴 낱말이 넘친다");

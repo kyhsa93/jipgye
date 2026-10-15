@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
-const css = () => readFile(path.join(root, "docs/style.css"), "utf8");
+const css = () => readFile(path.join(root, "src/css/legacy.css"), "utf8");
 
 // :root 바깥의 규칙만 훑는다. 축척 자체는 :root에 숫자로 적혀 있어야 하기 때문이다.
 // 주석은 먼저 걷어낸다 - 안에 쉼표가 있으면 셀렉터 목록으로 딸려 들어온다.
@@ -256,14 +256,14 @@ test("오르내림 색이 놓이는 자리마다 읽힌다", async () => {
 });
 
 test("단지 카드 표 머리글은 접혀 1280px 안에 든다 (#42)", async () => {
-  const css = await (await import("node:fs/promises")).readFile(new URL("../docs/style.css", import.meta.url), "utf8");
+  const css = await (await import("node:fs/promises")).readFile(new URL("../src/css/legacy.css", import.meta.url), "utf8");
   const rule = css.match(/\.complex-card \.data-table th \{([^}]*)\}/)?.[1] ?? "";
   assert.match(rule, /white-space:\s*normal/);
   assert.match(rule, /word-break:\s*keep-all/, "한국어 낱말 중간에서 꺾인다");
 });
 
 test("h3도 축척 안이다 (#54)", async () => {
-  const css = await (await import("node:fs/promises")).readFile(new URL("../docs/style.css", import.meta.url), "utf8");
+  const css = await (await import("node:fs/promises")).readFile(new URL("../src/css/legacy.css", import.meta.url), "utf8");
   assert.match(css, /\nmain h3 \{\s*font-size: var\(--fs-lg\);/);
 });
 

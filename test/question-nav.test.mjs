@@ -52,7 +52,7 @@ test("데이터 섹션보다 앞에 있다", async () => {
 });
 
 test("여섯 개가 스크롤 없이 한눈에 보인다", async () => {
-  const css = await readFile(path.join(root, "docs/style.css"), "utf8");
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
   const block = /\.question-nav \{([^}]*)\}/.exec(css)?.[1] ?? "";
 
   // 전에는 한 줄로 접어 가로로 밀게 했다. 사이트에서 제일 눌려야 하는 자리를
@@ -85,7 +85,7 @@ test("질문 입구는 장면별 세 묶음이고, 사는 사람 묶음의 첫 �
   assert.match(groups[2], /옮기거나 파는/);
   assert.ok(!block.includes("deposit-rates"), "예금 질문은 금리 탭에 있다 - 질문 입구에서 뺐다");
 
-  const css = await readFile(path.join(root, "docs/style.css"), "utf8");
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
   const group = /\.question-group \{([^}]*)\}/.exec(css)?.[1] ?? "";
   assert.match(group, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/, "모바일에서 한 줄씩 늘어선다");
 });

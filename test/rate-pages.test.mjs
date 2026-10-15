@@ -145,12 +145,15 @@ test("추이 격자는 그릴 카드 수만큼 자리를 미리 깔고, 그 칸�
   }
 
   // 자리만 깔고 높이를 안 잡으면 빈 칸이 0px이라 같은 밀림이 돌아온다.
-  const css = await read("docs/style.css");
+  // 읽는 곳은 산출물(docs/style.css)이 아니라 원문이다 - #276부터 docs/style.css는 src/css/main.css를
+  // 빌드한 결과라 층 안으로 들어가며 들여쓰기가 달라지고 선택자 목록이 한 줄로 합쳐진다(정규식이 못 읽는다).
+  // 원문의 규칙이 산출물에 전부·같은 순서로 남는지는 test/css-build.test.mjs와 build-css.mjs --check가 본다.
+  const css = await read("src/css/legacy.css");
   for (const rule of [
     /#history-grid > \.placeholder,\s*\n\.history-reserve \{[^}]*min-height:/,
     /\.update-schedule \{[^}]*min-height:/,
     /\.content-notice\.page-notice \{[^}]*min-height:/,
   ]) {
-    assert.match(css, rule, `docs/style.css: 자리를 잡는 min-height 규칙이 사라졌다`);
+    assert.match(css, rule, `src/css/legacy.css: 자리를 잡는 min-height 규칙이 사라졌다`);
   }
 });
