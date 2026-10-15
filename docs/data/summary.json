@@ -1,18 +1,55 @@
 {
-  "updatedAt": "2026-10-15T12:39:01.329Z",
+  "updatedAt": "2026-10-15T15:42:59.844Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 증시·환율: 대만 증시는 미국 반도체주 약세로 인해 3.41% 하락하며 마감했다. 홍콩 증시는 미국 증시 약세와 인플레이션 장기화로 인해 H주가 0.98% 하락했다. OLED 소재업체 에스에프씨는 코스피 신규상장 예비심사 통과를 발표했다. 코스피는 삼전닉스 폭락으로 인해 8% 이상 급락했다. 국내 상장사 시총은 증시 휘청임으로 인해 하루새 400조원 이상 증발했다.\n- 부동산: 9월 기준 서울 민간아파트 분양가가 전월과 동일하게 유지되고 있다. 서민 주택대출 연체 건수는 전년 동기 대비 4배 이상 증가했다. 울산 노동계와 진보당은 현대차 공장 재건축에 대해 고용안정을 보장해야 한다고 주장하고 있다. 강원도는 설악산 울산바위 인근 공동주택 사업에 대해 재심의를 결정했다. LH는 주택공급 지연 요인을 선제적으로 점검하고 현장 관리 강화를 추진하고 있다.\n- 기타 경제 소식: 오세훈은 서울 외곽 집값 상승이 실거주 정책 때문이라고 밝히고 공급을 이어갈 것이라고 했으며, 경기 집값은 5년 만에 최대폭으로 상승해 영통을 넘어서 군포·의왕까지 번졌고, '신뢰성 논란' 주간 집값 통계에 대해 공표기간 등 개편안이 예고되었으며, 가계대출은 9개월 만에 감소해 지난달 2조2000억원이 줄었고, 공무원 1만명이 온다는 소식에 세종 집값이 상승했다.\n- 금리·예금·투자상품: 주가 급락으로 국고채 금리가 일제히 하락했다. 3년물 국고채 금리는 연 3.867%를 기록했다. 이는 전일 대비 하락한 수준이다. 금리 하락은 시장의 위험 회피 심리가 강화된 것으로 보인다. 주가와 국고채 금리는 반대 방향으로 움직였다.",
-    "en": "- Stocks & FX: Taiwan's stock market closed down 3.41% due to weakness in U.S. semiconductor stocks. Hong Kong's stock market saw H-shares drop 0.98% due to weakness in U.S. markets and prolonged inflation. OLED material company SFC announced passing the preliminary review for a new listing on the KOSPI. The KOSPI fell more than 8% due to a crash in Samsung Electronics. The total market capitalization of listed companies in South Korea evaporated more than 400,000,000,000,000 won in one day due to market volatility.\n- Real Estate: As of September, the sales price of private apartments in Seoul remains the same as the previous month. The number of delinquent cases for low-income housing loans has increased more than four times compared to the same period last year. The labor community and the Progressive Party in Ulsan are asserting that employment stability must be guaranteed regarding the reconstruction of the Hyundai Motor factory. Gangwon Province has decided to re-examine the joint housing project near Ulsan Rock in Seoraksan. LH is proactively inspecting factors causing delays in housing supply and promoting enhanced on-site management.\n- Other Economic News: Oh Sehun stated that the rise in housing prices outside Seoul is due to the real residence policy and that supply will continue, while housing prices in Gyeonggi rose at the largest rate in five years, spreading beyond Yongsong to Gunpo and Uiwang. A revision plan for the weekly housing price statistics, which has been controversial in terms of reliability, was announced, and household loans decreased for the first time in nine months, dropping 2,200,000,000,000 won last month. In addition, housing prices in Sejong rose due to news that 10,000 civil servants will be coming.\n- Rates, Deposits & Investment Products: The sharp drop in stock prices caused government bond yields to fall across the board. The yield on three-year government bonds reached 3.867% annually. This is a decline from the previous day's level. The drop in yields appears to be due to strengthened risk-averse sentiment in the market. Stock prices and government bond yields moved in opposite directions."
+    "ko": "- 부동산: 부동산 전문가들은 2027년까지 집값이 안정을 찾고 2028년 다시 상승할 수 있다고 전망했다. 9월 기준 서울 민간아파트 분양가는 전월과 동일한 수준을 유지했다. 서민 주택대출 연체는 전년 동기 대비 4배 이상 증가했다. 울산 노동계와 진보당은 현대차 공장 재건축에 대해 고용 안정을 보장해야 한다고 주장했다. 강원도는 설악산 울산바위 인근 공동주택 사업에 대해 재심의를 결정했다.\n- 증시·환율: 대만 증시는 미국 반도체주 약세로 인해 3.41% 하락하며 마감했다. 홍콩 증시는 미국 증시 약세와 인플레이션 장기화로 인해 H주가 0.98% 하락했다. OLED 소재업체 에스에프씨는 코스피 신규상장 예비심사 통과를 발표했다. 코스피는 삼전닉스 폭락으로 인해 8% 이상 급락했다. 국내 상장사 시총은 증시 휘청임으로 인해 하루새 400조원 이상 증발했다.\n- 기타 경제 소식: 오세훈은 서울 외곽 집값 상승을 실거주 정책 때문이라고 밝혔다. 경기 지역 집값은 5년 만에 최대폭으로 상승하며 영통, 군포, 의왕까지 번졌다. 주간 집값 통계에 대한 신뢰성 논란이 일고 있으며, 공표기간 등 개편안이 예고되고 있다. 지난달 가계대출은 9개월 만에 감소하며 2조2000억원 줄어들었다. 세종 집값은 공무원 1만명의 이주로 인해 상승세를 보이고 있다.\n- 금리·예금·투자상품: 주가 급락에 따라 국고채 금리가 일제히 하락했다. 3년물 국고채 금리는 연 3.867%를 기록했다. 이는 전일 대비 하락한 수준이다. 금리 하락은 시장의 위험 회피 심리가 강화된 것으로 보인다. 현재 주식 시장은 불안정한 흐름을 보이고 있다.",
+    "en": "- Real Estate: Real estate experts predict that housing prices may stabilize by 2027 and rise again in 2028. As of September, the sales price of private apartments in Seoul remained at the same level as the previous month. Delinquency rates on housing loans for low-income households increased more than four times compared to the same period last year. The labor community and the Progressive Party in Ulsan argued that employment stability must be guaranteed in the reconstruction of Hyundai Motor's factory. Gangwon Province decided to re-examine the joint housing project near Ulsan Rock in Seoraksan.\n- Stocks & FX: Taiwan's stock market closed down 3.41% due to weakness in U.S. semiconductor stocks. Hong Kong's stock market saw H-shares fall 0.98% due to weakness in U.S. markets and prolonged inflation. OLED material company SFC announced passing the preliminary review for a new listing on the KOSPI. The KOSPI fell more than 8% due to a crash in Samsung Electronics. The total market capitalization of domestic listed companies evaporated more than 400,000,000,000,000 won in one day due to market volatility.\n- Other Economic News: Oh Sehun stated that the rise in housing prices in the outskirts of Seoul is due to the actual residence policy. Housing prices in Gyeonggi Province have risen to the highest level in five years, spreading to areas such as Yeongtong, Gunpo, and Uiwang. There is controversy regarding the reliability of the weekly housing price statistics, and revised plans regarding the disclosure period are being announced. Household loan amounts decreased for the first time in nine months, dropping by 2,200,000,000,000 won last month. Housing prices in Sejong are on the rise due to the relocation of 10,000 civil servants.\n- Rates, Deposits & Investment Products: With the sharp drop in stock prices, government bond yields fell across the board. The 3-year government bond yield stood at 3.867% annually. This is a decline from the previous day. The drop in yields appears to be due to strengthened risk-averse sentiment in the market. The stock market is currently showing unstable trends."
   },
   "highlights": [],
   "categories": [
+    {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "부동산 전문가들은 2027년까지 집값이 안정을 찾고 2028년 다시 상승할 수 있다고 전망했다. 9월 기준 서울 민간아파트 분양가는 전월과 동일한 수준을 유지했다. 서민 주택대출 연체는 전년 동기 대비 4배 이상 증가했다. 울산 노동계와 진보당은 현대차 공장 재건축에 대해 고용 안정을 보장해야 한다고 주장했다. 강원도는 설악산 울산바위 인근 공동주택 사업에 대해 재심의를 결정했다.",
+      "lineEn": "Real estate experts predict that housing prices may stabilize by 2027 and rise again in 2028. As of September, the sales price of private apartments in Seoul remained at the same level as the previous month. Delinquency rates on housing loans for low-income households increased more than four times compared to the same period last year. The labor community and the Progressive Party in Ulsan argued that employment stability must be guaranteed in the reconstruction of Hyundai Motor's factory. Gangwon Province decided to re-examine the joint housing project near Ulsan Rock in Seoraksan.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "\"집값, 2027년 숨 고르고 2028년 다시 뛸 수도\"…부동산 전문가 전망",
+          "link": "https://www.newsis.com/view/NISX20261015_0003827037",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "9월 기준 서울 민간아파트 분양가 전월과 동일",
+          "link": "https://www.yna.co.kr/view/AKR20261015165400003",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "[단독] 서민 주택대출 연체 4배 넘게 늘었다",
+          "link": "https://www.hankyung.com/article/2026101548641",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "울산 노동계·진보당 \"현대차 공장 재건축, 고용안정 보장해야\"",
+          "link": "https://www.yna.co.kr/view/AKR20261015159700057",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "강원도, 설악산 울산바위 인근 공동주택 사업 '재심의' 결정",
+          "link": "https://www.yna.co.kr/view/AKR20261015161500062",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
     {
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
       "lineKo": "대만 증시는 미국 반도체주 약세로 인해 3.41% 하락하며 마감했다. 홍콩 증시는 미국 증시 약세와 인플레이션 장기화로 인해 H주가 0.98% 하락했다. OLED 소재업체 에스에프씨는 코스피 신규상장 예비심사 통과를 발표했다. 코스피는 삼전닉스 폭락으로 인해 8% 이상 급락했다. 국내 상장사 시총은 증시 휘청임으로 인해 하루새 400조원 이상 증발했다.",
-      "lineEn": "Taiwan's stock market closed down 3.41% due to weakness in U.S. semiconductor stocks. Hong Kong's stock market saw H-shares drop 0.98% due to weakness in U.S. markets and prolonged inflation. OLED material company SFC announced passing the preliminary review for a new listing on the KOSPI. The KOSPI fell more than 8% due to a crash in Samsung Electronics. The total market capitalization of listed companies in South Korea evaporated more than 400,000,000,000,000 won in one day due to market volatility.",
+      "lineEn": "Taiwan's stock market closed down 3.41% due to weakness in U.S. semiconductor stocks. Hong Kong's stock market saw H-shares fall 0.98% due to weakness in U.S. markets and prolonged inflation. OLED material company SFC announced passing the preliminary review for a new listing on the KOSPI. The KOSPI fell more than 8% due to a crash in Samsung Electronics. The total market capitalization of domestic listed companies evaporated more than 400,000,000,000,000 won in one day due to market volatility.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
@@ -45,51 +82,14 @@
       ]
     },
     {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "9월 기준 서울 민간아파트 분양가가 전월과 동일하게 유지되고 있다. 서민 주택대출 연체 건수는 전년 동기 대비 4배 이상 증가했다. 울산 노동계와 진보당은 현대차 공장 재건축에 대해 고용안정을 보장해야 한다고 주장하고 있다. 강원도는 설악산 울산바위 인근 공동주택 사업에 대해 재심의를 결정했다. LH는 주택공급 지연 요인을 선제적으로 점검하고 현장 관리 강화를 추진하고 있다.",
-      "lineEn": "As of September, the sales price of private apartments in Seoul remains the same as the previous month. The number of delinquent cases for low-income housing loans has increased more than four times compared to the same period last year. The labor community and the Progressive Party in Ulsan are asserting that employment stability must be guaranteed regarding the reconstruction of the Hyundai Motor factory. Gangwon Province has decided to re-examine the joint housing project near Ulsan Rock in Seoraksan. LH is proactively inspecting factors causing delays in housing supply and promoting enhanced on-site management.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "9월 기준 서울 민간아파트 분양가 전월과 동일",
-          "link": "https://www.yna.co.kr/view/AKR20261015165400003",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "[단독] 서민 주택대출 연체 4배 넘게 늘었다",
-          "link": "https://www.hankyung.com/article/2026101548641",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "울산 노동계·진보당 \"현대차 공장 재건축, 고용안정 보장해야\"",
-          "link": "https://www.yna.co.kr/view/AKR20261015159700057",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "강원도, 설악산 울산바위 인근 공동주택 사업 '재심의' 결정",
-          "link": "https://www.yna.co.kr/view/AKR20261015161500062",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "LH, 주택공급 지연요인 선제 점검…\"현장 관리 강화\"",
-          "link": "https://www.hankyung.com/article/202610154724i",
-          "source": "한국경제 부동산"
-        }
-      ]
-    },
-    {
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "오세훈은 서울 외곽 집값 상승이 실거주 정책 때문이라고 밝히고 공급을 이어갈 것이라고 했으며, 경기 집값은 5년 만에 최대폭으로 상승해 영통을 넘어서 군포·의왕까지 번졌고, '신뢰성 논란' 주간 집값 통계에 대해 공표기간 등 개편안이 예고되었으며, 가계대출은 9개월 만에 감소해 지난달 2조2000억원이 줄었고, 공무원 1만명이 온다는 소식에 세종 집값이 상승했다.",
-      "lineEn": "Oh Sehun stated that the rise in housing prices outside Seoul is due to the real residence policy and that supply will continue, while housing prices in Gyeonggi rose at the largest rate in five years, spreading beyond Yongsong to Gunpo and Uiwang. A revision plan for the weekly housing price statistics, which has been controversial in terms of reliability, was announced, and household loans decreased for the first time in nine months, dropping 2,200,000,000,000 won last month. In addition, housing prices in Sejong rose due to news that 10,000 civil servants will be coming.",
+      "lineKo": "오세훈은 서울 외곽 집값 상승을 실거주 정책 때문이라고 밝혔다. 경기 지역 집값은 5년 만에 최대폭으로 상승하며 영통, 군포, 의왕까지 번졌다. 주간 집값 통계에 대한 신뢰성 논란이 일고 있으며, 공표기간 등 개편안이 예고되고 있다. 지난달 가계대출은 9개월 만에 감소하며 2조2000억원 줄어들었다. 세종 집값은 공무원 1만명의 이주로 인해 상승세를 보이고 있다.",
+      "lineEn": "Oh Sehun stated that the rise in housing prices in the outskirts of Seoul is due to the actual residence policy. Housing prices in Gyeonggi Province have risen to the highest level in five years, spreading to areas such as Yeongtong, Gunpo, and Uiwang. There is controversy regarding the reliability of the weekly housing price statistics, and revised plans regarding the disclosure period are being announced. Household loan amounts decreased for the first time in nine months, dropping by 2,200,000,000,000 won last month. Housing prices in Sejong are on the rise due to the relocation of 10,000 civil servants.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": true,
+      "degraded": false,
       "items": [
         {
           "title": "오세훈 “서울 외곽 집값 상승, 실거주 정책 탓... 공급 이어갈 것”",
@@ -122,8 +122,8 @@
       "key": "rates",
       "name": "금리·예금·투자상품",
       "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "주가 급락으로 국고채 금리가 일제히 하락했다. 3년물 국고채 금리는 연 3.867%를 기록했다. 이는 전일 대비 하락한 수준이다. 금리 하락은 시장의 위험 회피 심리가 강화된 것으로 보인다. 주가와 국고채 금리는 반대 방향으로 움직였다.",
-      "lineEn": "The sharp drop in stock prices caused government bond yields to fall across the board. The yield on three-year government bonds reached 3.867% annually. This is a decline from the previous day's level. The drop in yields appears to be due to strengthened risk-averse sentiment in the market. Stock prices and government bond yields moved in opposite directions.",
+      "lineKo": "주가 급락에 따라 국고채 금리가 일제히 하락했다. 3년물 국고채 금리는 연 3.867%를 기록했다. 이는 전일 대비 하락한 수준이다. 금리 하락은 시장의 위험 회피 심리가 강화된 것으로 보인다. 현재 주식 시장은 불안정한 흐름을 보이고 있다.",
+      "lineEn": "With the sharp drop in stock prices, government bond yields fell across the board. The 3-year government bond yield stood at 3.867% annually. This is a decline from the previous day. The drop in yields appears to be due to strengthened risk-averse sentiment in the market. The stock market is currently showing unstable trends.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
