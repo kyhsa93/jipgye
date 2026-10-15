@@ -950,8 +950,13 @@ ul.news-list {
   margin-bottom: 6px;
 }
 
+/* 줄바꿈을 허용한다(#327). 이 줄은 현재값과 최고·최저를 양끝으로 미는데, 둘 다 글자 수가
+ * 데이터에서 온다 - 320폭에서 용기는 258px인데 강남 자치구의 최소 내용 폭이 301px이라
+ * 문서가 통째로 가로로 밀렸다(측정 ede9f6ce: #trend-minmax의 right 332.3, scrollWidth 332).
+ * wrap이 없으면 flex 줄은 내용 폭 아래로 줄지 않는다 - 좁아지면 줄을 바꾸게 둔다. */
 .history-stats {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
   gap: 8px;
@@ -963,10 +968,17 @@ ul.news-list {
   font-weight: 700;
 }
 
+/* nowrap을 걷어낸다(#327). 이 글("최고 2억 2,225만원 · 최저 1억 6,314만원")은 구운 HTML에 없고
+ * 인라인 스크립트가 넣는다 - 길이가 날마다 바뀐다. nowrap은 줄의 최소 내용 폭을 글 전체 길이로
+ * 못박아, 오늘 안 넘치는 장도 숫자가 한 자리 늘면 그날 넘친다(측정 ede9f6ce, 320폭 47장 전수:
+ * apartment-rent 218px · district-seocho 184px - 용기 258px까지 여유가 글자 몇 개다).
+ * 걷어내면 body의 word-break: keep-all · overflow-wrap: break-word(115·116행)를 물려받아
+ * 띄어쓰기에서만 갈린다 - "1억 2,424만원"이 한가운데서 쪼개지던 UIUX #46은 그 규칙이 막는다.
+ * 그래서 이 수정은 글이 얼마나 길어지든 성립한다: 최소 내용 폭이 글 전체가 아니라 가장 긴 낱말이 된다.
+ * 고정폭 숫자(2210·2215행)는 그대로 둔다 - 자릿수를 세로로 맞추는 것이 이 사이트가 파는 것이다. */
 .history-minmax {
   color: var(--muted);
   font-size: var(--fs-xs);
-  white-space: nowrap;
 }
 
 .history-chart {
@@ -1063,13 +1075,27 @@ ul.news-list {
   color: var(--fg);
 }
 
+/* 줄바꿈을 허용한다(#327). 자식이 다섯(라벨·어제·날짜칸·내일·이동)인데 전부 flex: 0 1 auto이고
+ * min-width: auto라 최소 내용 폭 아래로 줄지 않는다. 그 합이 347px이라 320폭의 용기 288px은 물론
+ * 375폭의 343px도 넘었다(측정 ede9f6ce: 스크립트 끄면 scrollWidth 380 - 320에서 +60, 375에서 +5).
+ * 가장 큰 한 덩어리는 input[type=date]의 UA 고유 폭 142px인데, 그것도 288px보다 작다 -
+ * 줄을 바꾸게 두면 어느 폭에서도 줄이 창을 넘지 않는다. 날짜 칸의 폭은 데이터가 아니라 서식이 정하므로
+ * 이 근거는 내일의 데이터에도 성립한다. 버튼의 min-height: var(--tap)(2337·2342행)은 줄바꿈과 무관하다. */
 .archive-date-jump {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   margin: 4px 0 16px;
   font-size: var(--fs-sm);
   color: var(--muted);
+}
+
+/* 라벨은 제 줄을 통째로 가진다(#327). 줄바꿈만 허용하면 좁은 화면에서 어제(<-)와 내일(->)이
+ * 서로 다른 줄로 갈라져 날짜 칸을 사이에 두고 짝이 깨진다 - 라벨을 먼저 내려보내면 세 짝이 붙어 있다.
+ * (320폭 실측: 라벨 줄 + "<- [날짜] ->" 줄 + "이동" 줄. 375폭에서는 라벨 줄 + 나머지 한 줄이다.) */
+.archive-date-jump > label {
+  flex: 0 0 100%;
 }
 
 .archive-date-jump input,

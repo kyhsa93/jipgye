@@ -712,6 +712,7 @@
   }
   .history-stats {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
     gap: 8px;
@@ -724,7 +725,6 @@
   .history-minmax {
     color: var(--muted);
     font-size: var(--fs-xs);
-    white-space: nowrap;
   }
   .history-chart {
     position: relative;
@@ -801,11 +801,15 @@
   }
   .archive-date-jump {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 8px;
     margin: 4px 0 16px;
     font-size: var(--fs-sm);
     color: var(--muted);
+  }
+  .archive-date-jump > label {
+    flex: 0 0 100%;
   }
   .archive-date-jump input, .archive-date-jump button {
     background: var(--card);
