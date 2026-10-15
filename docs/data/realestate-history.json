@@ -22662,5 +22662,667 @@
         }
       }
     ]
+  },
+  {
+    "date": "2026-10-16",
+    "window": {
+      "basis": "arrival",
+      "from": "2026-10-12",
+      "to": "2026-10-16",
+      "until": "2026-10-19",
+      "weeks": 1,
+      "districtFrom": "2026-09-21",
+      "districtWeeks": 4
+    },
+    "overall": {
+      "sale": {
+        "avgPricePerM2": 15937581.327894162,
+        "avgPricePerPyeong10k": 5269,
+        "transactionCount": 632
+      },
+      "saleNational84": {
+        "avgPricePerM2": 15495736.207521556,
+        "avgPricePerPyeong10k": 5123,
+        "transactionCount": 206
+      },
+      "jeonse": {
+        "avgDepositPerM2": 9532591.934243485,
+        "avgDepositPerPyeong10k": 3151,
+        "transactionCount": 559
+      },
+      "wolse": {
+        "avgConvertedPerPyeong10k": 3292,
+        "avgDeposit10k": 24052,
+        "avgMonthlyRent10k": 151,
+        "transactionCount": 733
+      }
+    },
+    "districts": [
+      {
+        "code": "11110",
+        "name": "종로구",
+        "sale": {
+          "avgPricePerM2": 14200439.656104311,
+          "avgPricePerPyeong10k": 4694,
+          "transactionCount": 40
+        },
+        "saleNational84": {
+          "avgPricePerM2": 14368924.242330307,
+          "avgPricePerPyeong10k": 4750,
+          "transactionCount": 8
+        },
+        "jeonse": {
+          "avgDepositPerM2": 9005304.794257702,
+          "avgDepositPerPyeong10k": 2977,
+          "transactionCount": 28
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 3619,
+          "avgDeposit10k": 11594,
+          "avgMonthlyRent10k": 122,
+          "transactionCount": 101
+        }
+      },
+      {
+        "code": "11140",
+        "name": "중구",
+        "sale": {
+          "avgPricePerM2": 17686763.50911327,
+          "avgPricePerPyeong10k": 5847,
+          "transactionCount": 47
+        },
+        "saleNational84": {
+          "avgPricePerM2": 18125670.371636357,
+          "avgPricePerPyeong10k": 5992,
+          "transactionCount": 10
+        },
+        "jeonse": {
+          "avgDepositPerM2": 9649839.303507809,
+          "avgDepositPerPyeong10k": 3190,
+          "transactionCount": 57
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 3649,
+          "avgDeposit10k": 15673,
+          "avgMonthlyRent10k": 183,
+          "transactionCount": 137
+        }
+      },
+      {
+        "code": "11170",
+        "name": "용산구",
+        "sale": {
+          "avgPricePerM2": 35469775.158003785,
+          "avgPricePerPyeong10k": 11726,
+          "transactionCount": 55
+        },
+        "saleNational84": {
+          "avgPricePerM2": 24105740.891723264,
+          "avgPricePerPyeong10k": 7969,
+          "transactionCount": 18
+        },
+        "jeonse": {
+          "avgDepositPerM2": 9762133.018811367,
+          "avgDepositPerPyeong10k": 3227,
+          "transactionCount": 128
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 4108,
+          "avgDeposit10k": 28530,
+          "avgMonthlyRent10k": 249,
+          "transactionCount": 188
+        }
+      },
+      {
+        "code": "11200",
+        "name": "성동구",
+        "sale": {
+          "avgPricePerM2": 24801811.487612754,
+          "avgPricePerPyeong10k": 8199,
+          "transactionCount": 77
+        },
+        "saleNational84": {
+          "avgPricePerM2": 22994807.19284805,
+          "avgPricePerPyeong10k": 7602,
+          "transactionCount": 30
+        },
+        "jeonse": {
+          "avgDepositPerM2": 10459348.878022917,
+          "avgDepositPerPyeong10k": 3458,
+          "transactionCount": 150
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 3900,
+          "avgDeposit10k": 22798,
+          "avgMonthlyRent10k": 197,
+          "transactionCount": 225
+        }
+      },
+      {
+        "code": "11215",
+        "name": "광진구",
+        "sale": {
+          "avgPricePerM2": 19099911.31680288,
+          "avgPricePerPyeong10k": 6314,
+          "transactionCount": 75
+        },
+        "saleNational84": {
+          "avgPricePerM2": 21250055.37970789,
+          "avgPricePerPyeong10k": 7025,
+          "transactionCount": 24
+        },
+        "jeonse": {
+          "avgDepositPerM2": 9327632.079689039,
+          "avgDepositPerPyeong10k": 3084,
+          "transactionCount": 69
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 3520,
+          "avgDeposit10k": 25761,
+          "avgMonthlyRent10k": 130,
+          "transactionCount": 130
+        }
+      },
+      {
+        "code": "11230",
+        "name": "동대문구",
+        "sale": {
+          "avgPricePerM2": 14162276.380743388,
+          "avgPricePerPyeong10k": 4682,
+          "transactionCount": 156
+        },
+        "saleNational84": {
+          "avgPricePerM2": 15040356.949176189,
+          "avgPricePerPyeong10k": 4972,
+          "transactionCount": 47
+        },
+        "jeonse": {
+          "avgDepositPerM2": 8800801.30424536,
+          "avgDepositPerPyeong10k": 2909,
+          "transactionCount": 114
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 2750,
+          "avgDeposit10k": 15591,
+          "avgMonthlyRent10k": 106,
+          "transactionCount": 251
+        }
+      },
+      {
+        "code": "11260",
+        "name": "중랑구",
+        "sale": {
+          "avgPricePerM2": 10426752.147482306,
+          "avgPricePerPyeong10k": 3447,
+          "transactionCount": 260
+        },
+        "saleNational84": {
+          "avgPricePerM2": 9829957.74059095,
+          "avgPricePerPyeong10k": 3250,
+          "transactionCount": 77
+        },
+        "jeonse": {
+          "avgDepositPerM2": 6443452.910407086,
+          "avgDepositPerPyeong10k": 2130,
+          "transactionCount": 78
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 2122,
+          "avgDeposit10k": 8590,
+          "avgMonthlyRent10k": 41,
+          "transactionCount": 772
+        }
+      },
+      {
+        "code": "11290",
+        "name": "성북구",
+        "sale": {
+          "avgPricePerM2": 12815312.024514887,
+          "avgPricePerPyeong10k": 4236,
+          "transactionCount": 258
+        },
+        "saleNational84": {
+          "avgPricePerM2": 11571092.509120045,
+          "avgPricePerPyeong10k": 3825,
+          "transactionCount": 97
+        },
+        "jeonse": {
+          "avgDepositPerM2": 8174164.47964852,
+          "avgDepositPerPyeong10k": 2702,
+          "transactionCount": 124
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 2798,
+          "avgDeposit10k": 20193,
+          "avgMonthlyRent10k": 110,
+          "transactionCount": 193
+        }
+      },
+      {
+        "code": "11305",
+        "name": "강북구",
+        "sale": {
+          "avgPricePerM2": 10300512.631103918,
+          "avgPricePerPyeong10k": 3405,
+          "transactionCount": 123
+        },
+        "saleNational84": {
+          "avgPricePerM2": 10269349.780906694,
+          "avgPricePerPyeong10k": 3395,
+          "transactionCount": 46
+        },
+        "jeonse": {
+          "avgDepositPerM2": 7052243.455856253,
+          "avgDepositPerPyeong10k": 2331,
+          "transactionCount": 65
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 2590,
+          "avgDeposit10k": 9709,
+          "avgMonthlyRent10k": 101,
+          "transactionCount": 85
+        }
+      },
+      {
+        "code": "11320",
+        "name": "도봉구",
+        "sale": {
+          "avgPricePerM2": 8473847.357265523,
+          "avgPricePerPyeong10k": 2801,
+          "transactionCount": 330
+        },
+        "saleNational84": {
+          "avgPricePerM2": 7763375.932380414,
+          "avgPricePerPyeong10k": 2566,
+          "transactionCount": 116
+        },
+        "jeonse": {
+          "avgDepositPerM2": 5501777.311032054,
+          "avgDepositPerPyeong10k": 1819,
+          "transactionCount": 142
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 1918,
+          "avgDeposit10k": 7748,
+          "avgMonthlyRent10k": 91,
+          "transactionCount": 136
+        }
+      },
+      {
+        "code": "11350",
+        "name": "노원구",
+        "sale": {
+          "avgPricePerM2": 11062851.927914275,
+          "avgPricePerPyeong10k": 3657,
+          "transactionCount": 601
+        },
+        "saleNational84": {
+          "avgPricePerM2": 10121291.230991947,
+          "avgPricePerPyeong10k": 3346,
+          "transactionCount": 130
+        },
+        "jeonse": {
+          "avgDepositPerM2": 6483409.858094096,
+          "avgDepositPerPyeong10k": 2143,
+          "transactionCount": 387
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 2046,
+          "avgDeposit10k": 9770,
+          "avgMonthlyRent10k": 91,
+          "transactionCount": 381
+        }
+      },
+      {
+        "code": "11380",
+        "name": "은평구",
+        "sale": {
+          "avgPricePerM2": 11390595.815430192,
+          "avgPricePerPyeong10k": 3766,
+          "transactionCount": 268
+        },
+        "saleNational84": {
+          "avgPricePerM2": 10855010.113847692,
+          "avgPricePerPyeong10k": 3588,
+          "transactionCount": 84
+        },
+        "jeonse": {
+          "avgDepositPerM2": 7807478.839332491,
+          "avgDepositPerPyeong10k": 2581,
+          "transactionCount": 159
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 2444,
+          "avgDeposit10k": 14688,
+          "avgMonthlyRent10k": 90,
+          "transactionCount": 186
+        }
+      },
+      {
+        "code": "11410",
+        "name": "서대문구",
+        "sale": {
+          "avgPricePerM2": 14128423.959791997,
+          "avgPricePerPyeong10k": 4671,
+          "transactionCount": 172
+        },
+        "saleNational84": {
+          "avgPricePerM2": 13699146.052722951,
+          "avgPricePerPyeong10k": 4529,
+          "transactionCount": 74
+        },
+        "jeonse": {
+          "avgDepositPerM2": 8734063.858063212,
+          "avgDepositPerPyeong10k": 2887,
+          "transactionCount": 147
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 3069,
+          "avgDeposit10k": 22360,
+          "avgMonthlyRent10k": 141,
+          "transactionCount": 165
+        }
+      },
+      {
+        "code": "11440",
+        "name": "마포구",
+        "sale": {
+          "avgPricePerM2": 20146852.96218741,
+          "avgPricePerPyeong10k": 6660,
+          "transactionCount": 147
+        },
+        "saleNational84": {
+          "avgPricePerM2": 20431679.01618256,
+          "avgPricePerPyeong10k": 6754,
+          "transactionCount": 60
+        },
+        "jeonse": {
+          "avgDepositPerM2": 10498961.032055255,
+          "avgDepositPerPyeong10k": 3471,
+          "transactionCount": 242
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 3365,
+          "avgDeposit10k": 21687,
+          "avgMonthlyRent10k": 158,
+          "transactionCount": 303
+        }
+      },
+      {
+        "code": "11470",
+        "name": "양천구",
+        "sale": {
+          "avgPricePerM2": 15616390.964525964,
+          "avgPricePerPyeong10k": 5162,
+          "transactionCount": 147
+        },
+        "saleNational84": {
+          "avgPricePerM2": 14398515.472077625,
+          "avgPricePerPyeong10k": 4760,
+          "transactionCount": 61
+        },
+        "jeonse": {
+          "avgDepositPerM2": 8872749.708220674,
+          "avgDepositPerPyeong10k": 2933,
+          "transactionCount": 253
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 2648,
+          "avgDeposit10k": 27371,
+          "avgMonthlyRent10k": 107,
+          "transactionCount": 241
+        }
+      },
+      {
+        "code": "11500",
+        "name": "강서구",
+        "sale": {
+          "avgPricePerM2": 13951992.056816204,
+          "avgPricePerPyeong10k": 4612,
+          "transactionCount": 375
+        },
+        "saleNational84": {
+          "avgPricePerM2": 13943681.877123712,
+          "avgPricePerPyeong10k": 4610,
+          "transactionCount": 99
+        },
+        "jeonse": {
+          "avgDepositPerM2": 7988267.385057811,
+          "avgDepositPerPyeong10k": 2641,
+          "transactionCount": 287
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 2466,
+          "avgDeposit10k": 15017,
+          "avgMonthlyRent10k": 94,
+          "transactionCount": 307
+        }
+      },
+      {
+        "code": "11530",
+        "name": "구로구",
+        "sale": {
+          "avgPricePerM2": 11008716.70554896,
+          "avgPricePerPyeong10k": 3639,
+          "transactionCount": 300
+        },
+        "saleNational84": {
+          "avgPricePerM2": 10635418.101078374,
+          "avgPricePerPyeong10k": 3516,
+          "transactionCount": 96
+        },
+        "jeonse": {
+          "avgDepositPerM2": 6622887.88247855,
+          "avgDepositPerPyeong10k": 2189,
+          "transactionCount": 157
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 2103,
+          "avgDeposit10k": 10642,
+          "avgMonthlyRent10k": 74,
+          "transactionCount": 343
+        }
+      },
+      {
+        "code": "11545",
+        "name": "금천구",
+        "sale": {
+          "avgPricePerM2": 9404392.312088598,
+          "avgPricePerPyeong10k": 3109,
+          "transactionCount": 124
+        },
+        "saleNational84": {
+          "avgPricePerM2": 9726646.887412334,
+          "avgPricePerPyeong10k": 3215,
+          "transactionCount": 39
+        },
+        "jeonse": {
+          "avgDepositPerM2": 5676994.635489386,
+          "avgDepositPerPyeong10k": 1877,
+          "transactionCount": 46
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 2343,
+          "avgDeposit10k": 10408,
+          "avgMonthlyRent10k": 63,
+          "transactionCount": 214
+        }
+      },
+      {
+        "code": "11560",
+        "name": "영등포구",
+        "sale": {
+          "avgPricePerM2": 18226390.355645332,
+          "avgPricePerPyeong10k": 6025,
+          "transactionCount": 198
+        },
+        "saleNational84": {
+          "avgPricePerM2": 16762357.09792005,
+          "avgPricePerPyeong10k": 5541,
+          "transactionCount": 62
+        },
+        "jeonse": {
+          "avgDepositPerM2": 9131087.42703597,
+          "avgDepositPerPyeong10k": 3019,
+          "transactionCount": 233
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 3089,
+          "avgDeposit10k": 17206,
+          "avgMonthlyRent10k": 105,
+          "transactionCount": 308
+        }
+      },
+      {
+        "code": "11590",
+        "name": "동작구",
+        "sale": {
+          "avgPricePerM2": 18687943.733276315,
+          "avgPricePerPyeong10k": 6178,
+          "transactionCount": 151
+        },
+        "saleNational84": {
+          "avgPricePerM2": 18662888.08685784,
+          "avgPricePerPyeong10k": 6170,
+          "transactionCount": 70
+        },
+        "jeonse": {
+          "avgDepositPerM2": 9307872.114860684,
+          "avgDepositPerPyeong10k": 3077,
+          "transactionCount": 217
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 3108,
+          "avgDeposit10k": 20437,
+          "avgMonthlyRent10k": 105,
+          "transactionCount": 295
+        }
+      },
+      {
+        "code": "11620",
+        "name": "관악구",
+        "sale": {
+          "avgPricePerM2": 11296386.503583543,
+          "avgPricePerPyeong10k": 3734,
+          "transactionCount": 178
+        },
+        "saleNational84": {
+          "avgPricePerM2": 10996337.908411922,
+          "avgPricePerPyeong10k": 3635,
+          "transactionCount": 49
+        },
+        "jeonse": {
+          "avgDepositPerM2": 7735423.887309619,
+          "avgDepositPerPyeong10k": 2557,
+          "transactionCount": 114
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 2559,
+          "avgDeposit10k": 14063,
+          "avgMonthlyRent10k": 101,
+          "transactionCount": 205
+        }
+      },
+      {
+        "code": "11650",
+        "name": "서초구",
+        "sale": {
+          "avgPricePerM2": 31114647.309039216,
+          "avgPricePerPyeong10k": 10286,
+          "transactionCount": 155
+        },
+        "saleNational84": {
+          "avgPricePerM2": 34584243.38516001,
+          "avgPricePerPyeong10k": 11433,
+          "transactionCount": 35
+        },
+        "jeonse": {
+          "avgDepositPerM2": 13379404.160928408,
+          "avgDepositPerPyeong10k": 4423,
+          "transactionCount": 259
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 4446,
+          "avgDeposit10k": 38107,
+          "avgMonthlyRent10k": 254,
+          "transactionCount": 326
+        }
+      },
+      {
+        "code": "11680",
+        "name": "강남구",
+        "sale": {
+          "avgPricePerM2": 33940390.23457287,
+          "avgPricePerPyeong10k": 11220,
+          "transactionCount": 160
+        },
+        "saleNational84": {
+          "avgPricePerM2": 32893783.936835732,
+          "avgPricePerPyeong10k": 10874,
+          "transactionCount": 37
+        },
+        "jeonse": {
+          "avgDepositPerM2": 13287048.040481754,
+          "avgDepositPerPyeong10k": 4392,
+          "transactionCount": 330
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 4504,
+          "avgDeposit10k": 37392,
+          "avgMonthlyRent10k": 214,
+          "transactionCount": 528
+        }
+      },
+      {
+        "code": "11710",
+        "name": "송파구",
+        "sale": {
+          "avgPricePerM2": 25830583.925504185,
+          "avgPricePerPyeong10k": 8539,
+          "transactionCount": 242
+        },
+        "saleNational84": {
+          "avgPricePerM2": 26193265.79547273,
+          "avgPricePerPyeong10k": 8659,
+          "transactionCount": 79
+        },
+        "jeonse": {
+          "avgDepositPerM2": 10806623.57825773,
+          "avgDepositPerPyeong10k": 3572,
+          "transactionCount": 345
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 3839,
+          "avgDeposit10k": 36032,
+          "avgMonthlyRent10k": 192,
+          "transactionCount": 410
+        }
+      },
+      {
+        "code": "11740",
+        "name": "강동구",
+        "sale": {
+          "avgPricePerM2": 17478206.477274004,
+          "avgPricePerPyeong10k": 5778,
+          "transactionCount": 254
+        },
+        "saleNational84": {
+          "avgPricePerM2": 17264345.996984053,
+          "avgPricePerPyeong10k": 5707,
+          "transactionCount": 88
+        },
+        "jeonse": {
+          "avgDepositPerM2": 10073327.721756173,
+          "avgDepositPerPyeong10k": 3330,
+          "transactionCount": 235
+        },
+        "wolse": {
+          "avgConvertedPerPyeong10k": 3655,
+          "avgDeposit10k": 28905,
+          "avgMonthlyRent10k": 133,
+          "transactionCount": 329
+        }
+      }
+    ]
   }
 ]
