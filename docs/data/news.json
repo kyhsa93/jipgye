@@ -9,7 +9,8 @@
       "source": "연합뉴스 경제",
       "category": "rates",
       "preview": "(서울=연합뉴스) 고은지 기자 = 국내 증시가 15일 큰 폭 하락한 가운데 위험회피 심리가 강화되면서 국고채 금리가 동반 하락했다.",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Stocks Plunge as Government Bond Yields Fall Across the Board... 3-Year Bond at Annual 3.867% (Comprehensive)"
     },
     {
       "title": "증시 '휘청'에 국내 상장사 시총 하루새 400조원 이상 '증발'(종합2보)",
@@ -18,7 +19,8 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 김유향 기자 = 국내 증시가 15일 급락하면서 코스피·코스닥 시장의 몸집이 전날보다 무려 400조원 넘게 쪼그라들었다.",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Korean stock market turmoil causes domestic listed companies' market capitalization to drop over 400,000,000,000,000 won in one day (Comprehensive 2nd report)"
     },
     {
       "title": "이헌욱 부동산원장 \"집값 주간 통계 유의미…검증 강화할 것\"(종합)",
@@ -27,7 +29,8 @@
       "source": "뉴시스 경제",
       "category": "realestate",
       "preview": "[서울=뉴시스]이연희 기자 = 조작 및 정확성 논란으로 폐지 요구까지 제기됐던 주간 아파트 시세 통계와 관련해 이헌욱 한국부동산원장이 \"장기적인 추세를 보면 타당한 범위 내에 있다\"며 \"통계적으로 유의미하다고 판단한…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Lee Heon-wook, Real Estate Agency Head, Says Weekly Housing Price Statistics Are Meaningful... Will Strengthen Verification (Comprehensive)"
     },
     {
       "title": "‘집값 평탄화’가 결국 이런거였어?…“이젠 강북 아파트도 못 사겠네”",
@@ -37,6 +40,7 @@
       "category": "realestate",
       "preview": "‘중저가 외곽’ 지역 동반 상승 “사실상 상항 평준화” 지적 실수요자 내집 마련 문턱만 높여정부가 핵심지 가격을 잡고 비핵심지의 상승을 유도해 지역 간 격차를 줄이겠다는 취지의 ‘..",
       "dupes": [],
+      "titleEn": "Price stabilization\" turns out to be this?...\"Now I can't even buy an apartment in Gangbuk",
       "context": [
         {
           "kind": "realestate",
@@ -57,7 +61,8 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 신효령 기자 = 15일 일본 도쿄증시에서 주요 지수가 일제히 하락 마감했다. 미국 인공지능(AI) 클라우드 기업 코어위브의 자금 조달 우려가 AI·반도체 관련주 매도로 번졌다. 니혼게이자이신문에 따르…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Tokyo Stocks Close Lower Amid AI Investment Concerns… Nikkei Down 4.90%"
     },
     {
       "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 1.59%↓",
@@ -66,7 +71,8 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 15일 하락 마감했다. 이날 상하이종합지수는 전날보다 1.59% 하락한 3707.48로 거래를 마쳤다. 선전성분지수는 전장 대비 2.43% 떨어진 1만1816.79로, 중…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "[All China] Chinese stock market closes lower…Shanghai index down 1.59%"
     },
     {
       "title": "코스피 급락에 '변동성지수' 57선 넘어…나흘새 50% 급등(종합)",
@@ -75,7 +81,8 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 정회인 기자 = 코스피가 외국인의 대규모 매도세에 급락한 15일 '한국형 공포지수'로 불리는 코스피200 변동성지수(VKOSP...",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Kospi Plunge Pushes 'Volatility Index' Above 57... Surges 50% in Four Days (Comprehensive)"
     },
     {
       "title": "'검은 목요일'에 패닉…코스피·코스닥, 7%대 급락 마감(종합)",
@@ -90,7 +97,8 @@
           "link": "https://www.hankyung.com/article/2026101543357",
           "source": "한국경제 경제"
         }
-      ]
+      ],
+      "titleEn": "Black Thursday sparks panic... KOSPI, KOSDAQ close with over 7% plunge (comprehensive)"
     },
     {
       "title": "주가 급락 속에 환율 1,350원대로 상승…9거래일만에 최고",
@@ -99,7 +107,8 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 이도흔 기자 = 15일 코스피가 7% 넘게 급락한 가운데 원/달러 환율은 한 때 1,350원대로 올라섰다.",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Stocks Plunge as Exchange Rate Rises to 1,350 Won, Highest in 9 Trading Days"
     },
     {
       "title": "주금공, 보금자리론 연체 대출잔액 6000억원…4년만에 3배 늘어",
@@ -109,6 +118,7 @@
       "category": "other",
       "preview": "연체 차주도 2배 이상 늘어 연체 장기화로 주택 경매로 넘어가기도 박성훈 의원 “서민 주거 안전망 점검해야”서민의 주거 안정을 위해 한국주택금융공사가 제공하는 정책 주택담보대출인..",
       "dupes": [],
+      "titleEn": "Korea Housing Finance Corp. reports 600,000,000,000 won in delinquent housing loan balances for the \"Bogumjari\" loan program… tripled in four years",
       "context": [
         {
           "kind": "rates",
@@ -127,7 +137,8 @@
       "source": "연합뉴스 경제",
       "category": "realestate",
       "preview": "(서울·세종=연합뉴스) 임기창 오예진 오진송 기자 = 주간 아파트 가격 통계 개편을 놓고 전문가들은 통계의 한계를 이유로 조정이 필요하다는 의견...",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "MOHA: Experts Want Adjusted Weekly Apartment Price Statistics, Public Wants Disclosure (Comprehensive)"
     },
     {
       "title": "한미 경제계 \"대미투자 프로젝트, 패스트트랙·세제지원 필요\"(종합)",
@@ -136,7 +147,8 @@
       "source": "연합뉴스 경제",
       "category": "realestate",
       "preview": "(서울=연합뉴스) 김윤구 기자 = 한국과 미국 경제계가 대미 전략투자 프로젝트의 성공적 이행을 위해 신속한 인허가와 세제·금융 지원, 비자 문제...",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Korea-US Business Community Calls for Fast-Track and Tax Support for U.S. Investment Projects (Comprehensive)"
     },
     {
       "title": "주담대 변동금리 또 오른다…코픽스 3년 10개월만 최대폭 상승(종합)",
@@ -146,6 +158,7 @@
       "category": "rates",
       "preview": "(서울=연합뉴스) 채새롬 이도흔 기자 = 기준금리와 시장금리 상승 영향으로 은행권 주택담보대출 변동금리의 기준인 코픽스(COFIX·자금조달비용지...",
       "dupes": [],
+      "titleEn": "Mortgage rates rise again as KOFIX surges to its largest increase in 3 years and 10 months (Comprehensive)",
       "context": [
         {
           "kind": "rates",
@@ -164,7 +177,8 @@
       "source": "조선비즈 부동산",
       "category": "realestate",
       "preview": "주택도시보증공사(HUG)가 전월세 안심신탁 사업에 참여하는 임대인에게 연 4%대 수익을 보장하겠다는 입장을 밝혔다. 최인호 HUG 사장은 15일 국회 국토교통위원회 국정감사에서 강득구 더불어민주당 의원이 “운용 수익…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Housing & Urban Development Corporation President \"Guarantees 4% Rental Income for Landlords Using Monthly Rent Assurance Trust"
     },
     {
       "title": "‘부동산 블랙리스트’ 의혹에 이헌욱 부동산원장 “국감 후 조사”",
@@ -173,7 +187,8 @@
       "source": "조선비즈 부동산",
       "category": "realestate",
       "preview": "이헌욱 한국부동산원장이 과거 문재인 정부 시절 ‘민간인 부동산 불법 사찰·블랙리스트’ 의혹과 관련해 자체적인 진상파악에 나설 방침이다. 이 원장은 15일 열린 국회 국토교통위원회 국정감사에서 국민의힘 김은혜 의원 등…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "I Heon-wook of the Real Estate Institute Responds to \"Real Estate Blacklist\" Allegations, Says Investigation Will Take Place After the National Audit"
     },
     {
       "title": "[올댓차이나] 中 9월 은행 신규대출 217조원으로 급증…\"경기부양책 효과 기대\"",
@@ -182,7 +197,8 @@
       "source": "뉴시스 경제",
       "category": "other",
       "preview": "[서울=뉴시스]이재준 기자 = 중국 9월 신규 위안화 대출은 1조800억 위안(약 217조6740억원)으로 급증하며 시장 예상을 웃돌았다. 경제통과 중국망, 홍콩경제일보는 15일 중국인민은행의 최신 금융통계를 인용해…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "[AllChina] China's September New Bank Loans Surge to 217,000,000,000,000 Won...\"Expectation of Economic Stimulus Policy Effects"
     },
     {
       "title": "文정부 민간인 사찰 의혹…이헌욱 부동산원장 \"국감 후 조사\"(종합)",
@@ -191,7 +207,8 @@
       "source": "뉴시스 경제",
       "category": "realestate",
       "preview": "[서울=뉴시스]이종성 기자 = 이헌욱 한국부동산원장은 15일 문재인 정부 당시 국토교통부와 한국감정원(현 한국부동산원)이 정부의 부동산 정책을 비판하는 민간인을 불법 사찰했다는 의혹에 대해 국정감사 종료 후 사실관계…",
-      "dupes": []
+      "dupes": [],
+      "titleEn": "文정부 민간인 사찰 의혹…이헌욱 부동산원장 \"국감 후 조사\"(종합)"
     },
     {
       "title": "삼성맨 대출 풀리자 집값 껑충…\"옆 동네라도\" 우르르 몰린 곳",
@@ -200,7 +217,8 @@
       "source": "한국경제 부동산",
       "category": "other",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "Samsung Employees' Loans Released, Housing Prices Soar...\"Even Nearby Neighborhoods\" See Rush"
     },
     {
       "title": "[단독] 서민 주택대출 연체, 4년간 네 배 넘게 뛰었다",
@@ -209,7 +227,8 @@
       "source": "한국경제 경제",
       "category": "realestate",
       "preview": null,
-      "dupes": []
+      "dupes": [],
+      "titleEn": "[Exclusive] Home loan delinquencies for the working class jumped more than four times over four years"
     },
     {
       "title": "오피스텔 매매 가격은 하락했지만… 서울 월세는 1% 넘게 ‘쑥’",
@@ -219,6 +238,7 @@
       "category": "realestate",
       "preview": "올해 3분기 서울 오피스텔 시장에서 매매 가격은 하락세를 이어간 반면, 월세 가격이 1% 넘게 오른 것으로 나타났다. 15일 한국부동산원이 발표한 ’2026년 3분기 오피스텔 가격동향조사’에 따르면, 전국 오피스텔…",
       "dupes": [],
+      "titleEn": "Office apartment sales prices have fallen, but Seoul's monthly rent has risen by more than 1%",
       "context": [
         {
           "kind": "realestate",
@@ -240,6 +260,7 @@
       "category": "realestate",
       "preview": "15일 정부가 서울 전역과 경기 주요 지역을 토지거래허가구역으로 묶은 ‘10·15 대책’을 발표한 지 1년이 지난 가운데 서울 아파트 값이 88주 연속 오르며 역대 최장 상승 기록을 다시 갱신했다. 최근 강남권의 약…",
       "dupes": [],
+      "titleEn": "After 1 Year of Trump's Policies, Seoul Apartment Prices Rise for 88 Consecutive Weeks... Gangnam Declines, Outskirts Surge",
       "context": [
         {
           "kind": "realestate",
@@ -261,6 +282,7 @@
       "category": "other",
       "preview": null,
       "dupes": [],
+      "titleEn": "Seoul home prices rise for 88th straight week... Gangnam drops but increase continues for 2nd week",
       "context": [
         {
           "kind": "realestate",
@@ -282,6 +304,7 @@
       "category": "realestate",
       "preview": "주택토지실장, 與 국감 질문에 답변 “국민·중개사들은 공표 원하지만 전문가들은 조정할 필요 있다 말해” 조사자의 역량이 변수로 언급되기도 “의견 수렴 후 통계 개편 방안 발표”주간..",
       "dupes": [],
+      "titleEn": "Unrestrained rise in Seoul apartment prices... Ministry of Land, Infrastructure and Transport to hear opinions on statistical revisions",
       "context": [
         {
           "kind": "realestate",
@@ -303,6 +326,7 @@
       "category": "realestate",
       "preview": "서울 아파트값 88주 연속 상승 중랑·성북 등 강북권 상승세 주도 강남3구 하락 지속…용산은 반등 경기 0.26% 상승, 세종 상승 전환강남3구의 아파트값 하락세에도 서울 집값 상..",
       "dupes": [],
+      "titleEn": "Breaking News: Rising Yongsan Housing Prices... Even Small Apartments in Sambong and Shinne Dong Are Heating Up",
       "context": [
         {
           "kind": "realestate",

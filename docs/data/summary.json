@@ -1,73 +1,31 @@
 {
-  "updatedAt": "2026-10-15T05:13:31.516Z",
+  "updatedAt": "2026-10-15T08:16:26.881Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 부동산: 서울 아파트값은 2주째 상승폭이 확대되며 분당 등 경기남부 지역에서 강세를 보였다. 국토부는 서울 아파트값 상승에 대해 통계 개편 등에 대한 의견을 수렴하겠다고 밝혔다. 9월 서울 주택 매매가격은 0.84% 상승했으나, 상승폭은 두 달째 둔화되는 모습이다. 광주지역 오피스텔은 3분기 매매가격이 하락했으나 월세는 상승했다. 용산 집값은 다시 오르며 상봉·신내동 소형아파트에서도 가격 상승이 나타났다.\n- 기타 경제 소식: 서울 집값은 88주째 상승세를 이어가고 있다. 용산 지역에서는 상승 전환을 기록했으며, 반도체 벨트 지역도 강세를 보였다. 다만, 서울 집값 상승폭은 두 달째 둔화되고 있는 것으로 나타났다. 강남과 서초 지역에서는 가격 하락 폭이 커졌다. 분당 지역에서는 집값 상승으로 인해 강남 입성 기회를 노리는 '갈아타기' 현상이 나타나고 있다.\n- 증시·환율: 코스피와 코스닥은 1단계 서킷브레이커가 발동된 후 거래가 중단됐다. 코스피는 8% 이상 하락하며 폭락세를 보였다. 아시아 증시도 일제히 하락세를 기록했으며, 코스피는 7% 떨어졌다. 홍콩 증시는 미국 반도체주 약세 영향으로 H주가 1.01% 하락했다. 이후 코스피와 코스닥은 거래가 재개되며 서킷브레이커가 해제됐다.\n- 금리·예금·투자상품: 소진공은 홈플러스 입점업체의 긴급자금 금리 인하를 위해 적극적으로 협의에 나서고 있다. 미국의 물가 상승률은 4%를 기록하며 최종금리 상향에 대한 우려가 커지고 있다. 소진공의 이번 조치는 금융 지원을 강화하기 위한 것으로 보인다. 미국의 물가 수치는 경제 정책에 대한 영향을 미칠 수 있는 중요한 지표이다. 이와 별도로 금리와 예금, 투자상품 관련 동향도 주목받고 있다.",
-    "en": "- Real Estate: Seoul apartment prices continued to rise for the second consecutive week, showing strong performance in areas such as Bundang and other southern Gyeonggi regions. The Ministry of Land, Infrastructure and Transport stated that it will collect opinions on revising statistics regarding the rise in Seoul apartment prices. The September Seoul housing transaction price increased by 0.84%, but the growth rate has continued to slow for the second consecutive month. In the Gwangju area, office buildings saw a decline in transaction prices during the third quarter, although monthly rents increased. Yongsan housing prices rose again, and price increases were also observed in small apartments in Sambong and Shinne Dong.\n- Other Economic News: The price of housing in Seoul has continued to rise for the 88th consecutive week. In Yongsan area, a shift to an upward trend was recorded, and the semiconductor belt area also showed a strong performance. However, the rate of increase in Seoul housing prices has been slowing for the second consecutive month. In Gangnam and Seocho areas, the price decline has become more pronounced. In Bundang area, a phenomenon called \"galatagi,\" where people try to move into Gangnam due to rising housing prices, is emerging.\n- Stocks & FX: The KOSPI and KOSDAQ trading was suspended after the first stage circuit breaker was triggered. The KOSPI fell more than 8%, showing a sharp decline. Asian markets also recorded a general decline, with the KOSPI dropping 7%. The Hong Kong market's H shares fell 1.01% due to weakness in U.S. semiconductor stocks. Afterwards, trading on the KOSPI and KOSDAQ resumed and the circuit breaker was lifted.\n- Rates, Deposits & Investment Products: Sojinong is actively engaging in negotiations to lower the interest rates on emergency funds for Homeplus companies. The inflation rate in the United States has reached 4%, increasing concerns about potential hikes in the final interest rate. Sojinong's move appears to be aimed at strengthening financial support. The U.S. inflation figures are an important indicator that can influence economic policy. Separately, trends related to interest rates, deposits, and investment products are also receiving attention."
+    "ko": "- 금리·예금·투자상품: 주가 급락으로 국고채 금리가 일제히 하락했다. 3년물 국고채 금리는 연 3.867%를 기록했다. 주담대 변동금리가 또다시 오르는 것으로 나타났다. 코픽스 3년 10개월 만에 최대폭 상승을 기록했다. 두 기사는 서로 다른 경제 현상을 보여주는 것으로 보인다.\n- 증시·환율: 한국 증시는 급격한 하락으로 코스피와 코스닥이 7%대 급락 마감했다. 국내 상장사 시총은 하루새 400조원 이상 증발하는 충격적인 상황을 맞이했다. 변동성지수는 57선을 넘어서며 나흘 만에 50% 급등했다. 일본 증시는 AI 투자에 대한 불안으로 닛케이가 4.90% 하락 마감했다. 중국 증시 역시 상하이지수가 1.59% 하락하며 하락 마감했다.\n- 부동산: 이헌욱 부동산원장은 주간 집값 통계가 유의미하다고 밝히며 검증을 강화할 계획이라고 밝혔다. 강북 아파트 시장에서는 집값 평탄화로 인해 구매가 어려워지는 현상이 나타나고 있다. 국토부는 주간 아파트값 통계에 대해 전문가와 국민의 요구가 다르다고 설명했다. 주택도시보증공사는 전월세 안심신탁을 맡긴 임대인에게 4%대 수익을 보장한다고 밝혔다. 한미 경제계는 대미투자 프로젝트에 대해 패스트트랙과 세제지원이 필요하다고 주장했다.\n- 기타 경제 소식: 주금공의 보금자리론 연체 대출잔액이 6000억원으로 4년 만에 3배 증가했다. 중국 9월 은행 신규대출이 217조원으로 급증하며 경기부양책 효과가 기대된다. 삼성맨 대출이 풀리면서 주변 지역의 집값이 상승하는 현상이 나타났다. 서울 집값은 88주째 상승세를 이어가고 있으며, 강남 지역은 내렸지만 오름폭이 2주째 커졌다. 각 지역의 주택 시장은 서로 다른 요인에 따라 움직이고 있다.",
+    "en": "- Rates, Deposits & Investment Products: The sharp drop in stock prices caused government bond rates to fall across the board. The 3-year government bond rate reached 3.867% annually. It was shown that the variable interest rate on home purchase loans rose again. The KOPICS index recorded its largest increase in 3 years and 10 months. The two reports appear to show different economic phenomena.\n- Stocks & FX: South Korea's stock market closed with the KOSPI and KOSDAQ falling sharply by over 7%. The total market capitalization of domestic listed companies evaporated more than 400,000,000,000,000 won in a single day, an alarming situation. The volatility index surpassed the 57 level, surging 50% in four days. Japan's stock market closed with the Nikkei falling 4.90% due to concerns over AI investments. China's stock market also closed lower, with the Shanghai index falling 1.59%.\n- Real Estate: Lee Heon-wook, head of the Real Estate Institute, stated that the weekly housing price statistics are significant and that they plan to strengthen verification. In the Gangbuk apartment market, a phenomenon is emerging where purchasing is becoming difficult due to price stabilization. The Ministry of Land, Infrastructure and Transport explained that expert and public demands differ regarding the weekly apartment price statistics. The Housing and Urban Development Corporation stated that it guarantees a 4% return for landlords who entrust their rental properties to the Fast Track and Tax Support program for U.S. investment projects. The Korea-U.S. Economic Council argued that fast-track procedures and tax support are needed for the U.S. investment project.\n- Other Economic News: The overdue loan balance of the Housing Finance Corporation's \"Bogunjari\" loan program reached 600,000,000,000 won, tripling in four years. New bank loans in China surged to 217,000,000,000,000 won in September, raising expectations for the effects of economic stimulus measures. As Samsung Man loans are released, rising housing prices have been observed in surrounding areas. Housing prices in Seoul have continued to rise for 88 consecutive weeks, and although prices in the Gangnam area have decreased, the rate of increase has grown for the second consecutive week. Each region's housing market is moving due to different factors."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "서울 아파트값은 2주째 상승폭이 확대되며 분당 등 경기남부 지역에서 강세를 보였다. 국토부는 서울 아파트값 상승에 대해 통계 개편 등에 대한 의견을 수렴하겠다고 밝혔다. 9월 서울 주택 매매가격은 0.84% 상승했으나, 상승폭은 두 달째 둔화되는 모습이다. 광주지역 오피스텔은 3분기 매매가격이 하락했으나 월세는 상승했다. 용산 집값은 다시 오르며 상봉·신내동 소형아파트에서도 가격 상승이 나타났다.",
-      "lineEn": "Seoul apartment prices continued to rise for the second consecutive week, showing strong performance in areas such as Bundang and other southern Gyeonggi regions. The Ministry of Land, Infrastructure and Transport stated that it will collect opinions on revising statistics regarding the rise in Seoul apartment prices. The September Seoul housing transaction price increased by 0.84%, but the growth rate has continued to slow for the second consecutive month. In the Gwangju area, office buildings saw a decline in transaction prices during the third quarter, although monthly rents increased. Yongsan housing prices rose again, and price increases were also observed in small apartments in Sambong and Shinne Dong.",
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "주가 급락으로 국고채 금리가 일제히 하락했다. 3년물 국고채 금리는 연 3.867%를 기록했다. 주담대 변동금리가 또다시 오르는 것으로 나타났다. 코픽스 3년 10개월 만에 최대폭 상승을 기록했다. 두 기사는 서로 다른 경제 현상을 보여주는 것으로 보인다.",
+      "lineEn": "The sharp drop in stock prices caused government bond rates to fall across the board. The 3-year government bond rate reached 3.867% annually. It was shown that the variable interest rate on home purchase loans rose again. The KOPICS index recorded its largest increase in 3 years and 10 months. The two reports appear to show different economic phenomena.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "고삐 풀린 서울 아파트값 상승…국토부 “통계 개편 등 의견 들을 것”",
-          "link": "https://www.mk.co.kr/news/realestate/12176643",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "광주지역 오피스텔 3분기 매매가격 ↓·월세 ↑",
-          "link": "https://www.yna.co.kr/view/AKR20261015065100054",
+          "title": "주가 급락에 국고채 금리 일제히 하락…3년물 연 3.867%(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261015150351008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "서울 아파트값 2주째 상승폭 확대…분당 등 경기남부 강세",
-          "link": "https://www.yna.co.kr/view/AKR20261015080200003",
+          "title": "주담대 변동금리 또 오른다…코픽스 3년 10개월만 최대폭 상승(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261015126751002",
           "source": "연합뉴스 경제"
-        },
-        {
-          "title": "[속보] 다시 오르는 용산 집값…상봉·신내동 소형아파트까지 ‘들썩’",
-          "link": "https://www.mk.co.kr/news/economy/12176569",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "9월 서울 주택 매매가격 0.84%↑…상승폭 두달째 둔화",
-          "link": "https://www.yna.co.kr/view/AKR20261015092700003",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "서울 집값은 88주째 상승세를 이어가고 있다. 용산 지역에서는 상승 전환을 기록했으며, 반도체 벨트 지역도 강세를 보였다. 다만, 서울 집값 상승폭은 두 달째 둔화되고 있는 것으로 나타났다. 강남과 서초 지역에서는 가격 하락 폭이 커졌다. 분당 지역에서는 집값 상승으로 인해 강남 입성 기회를 노리는 '갈아타기' 현상이 나타나고 있다.",
-      "lineEn": "The price of housing in Seoul has continued to rise for the 88th consecutive week. In Yongsan area, a shift to an upward trend was recorded, and the semiconductor belt area also showed a strong performance. However, the rate of increase in Seoul housing prices has been slowing for the second consecutive month. In Gangnam and Seocho areas, the price decline has become more pronounced. In Bundang area, a phenomenon called \"galatagi,\" where people try to move into Gangnam due to rising housing prices, is emerging.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "서울 집값 88주째 올랐다…용산 상승 전환·반도체 벨트 강세",
-          "link": "https://www.newsis.com/view/NISX20261015_0003827094",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "서울 집값 두 달째 상승폭 둔화…강남·서초 낙폭 커져",
-          "link": "https://www.newsis.com/view/NISX20261015_0003826716",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "\"강남 입성 기회\"…집값 뛴 분당 사람들, '갈아타기' 나섰다 [시장톡]",
-          "link": "https://www.hankyung.com/article/2026101419216",
-          "source": "한국경제 부동산"
         }
       ]
     },
@@ -75,53 +33,105 @@
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
-      "lineKo": "코스피와 코스닥은 1단계 서킷브레이커가 발동된 후 거래가 중단됐다. 코스피는 8% 이상 하락하며 폭락세를 보였다. 아시아 증시도 일제히 하락세를 기록했으며, 코스피는 7% 떨어졌다. 홍콩 증시는 미국 반도체주 약세 영향으로 H주가 1.01% 하락했다. 이후 코스피와 코스닥은 거래가 재개되며 서킷브레이커가 해제됐다.",
-      "lineEn": "The KOSPI and KOSDAQ trading was suspended after the first stage circuit breaker was triggered. The KOSPI fell more than 8%, showing a sharp decline. Asian markets also recorded a general decline, with the KOSPI dropping 7%. The Hong Kong market's H shares fell 1.01% due to weakness in U.S. semiconductor stocks. Afterwards, trading on the KOSPI and KOSDAQ resumed and the circuit breaker was lifted.",
+      "lineKo": "한국 증시는 급격한 하락으로 코스피와 코스닥이 7%대 급락 마감했다. 국내 상장사 시총은 하루새 400조원 이상 증발하는 충격적인 상황을 맞이했다. 변동성지수는 57선을 넘어서며 나흘 만에 50% 급등했다. 일본 증시는 AI 투자에 대한 불안으로 닛케이가 4.90% 하락 마감했다. 중국 증시 역시 상하이지수가 1.59% 하락하며 하락 마감했다.",
+      "lineEn": "South Korea's stock market closed with the KOSPI and KOSDAQ falling sharply by over 7%. The total market capitalization of domestic listed companies evaporated more than 400,000,000,000,000 won in a single day, an alarming situation. The volatility index surpassed the 57 level, surging 50% in four days. Japan's stock market closed with the Nikkei falling 4.90% due to concerns over AI investments. China's stock market also closed lower, with the Shanghai index falling 1.59%.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "[속보] 코스닥 이어 코스피도 거래재개…서킷브레이커 해제",
-          "link": "https://www.yna.co.kr/view/AKR20261015095300008",
+          "title": "증시 '휘청'에 국내 상장사 시총 하루새 400조원 이상 '증발'(종합2보)",
+          "link": "https://www.yna.co.kr/view/AKR20261015073252008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "코스피·코스닥 1단계 서킷브레이커 발동…8% 넘게 폭락(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261015093551008",
+          "title": "日증시, AI 투자 불안에 하락 마감…닛케이 4.90%↓",
+          "link": "https://www.newsis.com/view/NISX20261015_0003827784",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 1.59%↓",
+          "link": "https://www.newsis.com/view/NISX20261015_0003827866",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "코스피 급락에 '변동성지수' 57선 넘어…나흘새 50% 급등(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261015073451008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "아시아 증시, 일제히 폭락세…코스피 7%·日 닛케이 4% '뚝'",
-          "link": "https://www.newsis.com/view/NISX20261015_0003827209",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "[올댓차이나] 홍콩 증시, 美 반도체주 약세에 하락… H주 1.01%↓",
-          "link": "https://www.newsis.com/view/NISX20261015_0003827195",
-          "source": "뉴시스 경제"
+          "title": "'검은 목요일'에 패닉…코스피·코스닥, 7%대 급락 마감(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261015134151008",
+          "source": "연합뉴스 경제"
         }
       ]
     },
     {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "소진공은 홈플러스 입점업체의 긴급자금 금리 인하를 위해 적극적으로 협의에 나서고 있다. 미국의 물가 상승률은 4%를 기록하며 최종금리 상향에 대한 우려가 커지고 있다. 소진공의 이번 조치는 금융 지원을 강화하기 위한 것으로 보인다. 미국의 물가 수치는 경제 정책에 대한 영향을 미칠 수 있는 중요한 지표이다. 이와 별도로 금리와 예금, 투자상품 관련 동향도 주목받고 있다.",
-      "lineEn": "Sojinong is actively engaging in negotiations to lower the interest rates on emergency funds for Homeplus companies. The inflation rate in the United States has reached 4%, increasing concerns about potential hikes in the final interest rate. Sojinong's move appears to be aimed at strengthening financial support. The U.S. inflation figures are an important indicator that can influence economic policy. Separately, trends related to interest rates, deposits, and investment products are also receiving attention.",
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "이헌욱 부동산원장은 주간 집값 통계가 유의미하다고 밝히며 검증을 강화할 계획이라고 밝혔다. 강북 아파트 시장에서는 집값 평탄화로 인해 구매가 어려워지는 현상이 나타나고 있다. 국토부는 주간 아파트값 통계에 대해 전문가와 국민의 요구가 다르다고 설명했다. 주택도시보증공사는 전월세 안심신탁을 맡긴 임대인에게 4%대 수익을 보장한다고 밝혔다. 한미 경제계는 대미투자 프로젝트에 대해 패스트트랙과 세제지원이 필요하다고 주장했다.",
+      "lineEn": "Lee Heon-wook, head of the Real Estate Institute, stated that the weekly housing price statistics are significant and that they plan to strengthen verification. In the Gangbuk apartment market, a phenomenon is emerging where purchasing is becoming difficult due to price stabilization. The Ministry of Land, Infrastructure and Transport explained that expert and public demands differ regarding the weekly apartment price statistics. The Housing and Urban Development Corporation stated that it guarantees a 4% return for landlords who entrust their rental properties to the Fast Track and Tax Support program for U.S. investment projects. The Korea-U.S. Economic Council argued that fast-track procedures and tax support are needed for the U.S. investment project.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "소진공 \"홈플러스 입점업체 긴급자금 금리 인하 적극 협의\"",
-          "link": "https://www.yna.co.kr/view/AKR20261015094500030",
+          "title": "이헌욱 부동산원장 \"집값 주간 통계 유의미…검증 강화할 것\"(종합)",
+          "link": "https://www.newsis.com/view/NISX20261015_0003827883",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "‘집값 평탄화’가 결국 이런거였어?…“이젠 강북 아파트도 못 사겠네”",
+          "link": "https://www.mk.co.kr/news/realestate/12176892",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "국토부 \"주간 아파트값 통계, 전문가는 조정·국민은 공표 원해\"(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261015091651003",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "美 물가 4% 찍나…커지는 美 최종금리 상향 공포 [심성미의 중앙은행 워치]",
-          "link": "https://www.hankyung.com/article/202610153743i",
-          "source": "한국경제 경제"
+          "title": "한미 경제계 \"대미투자 프로젝트, 패스트트랙·세제지원 필요\"(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261014188151003",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "주택도시보증공사 사장 “전월세 안심신탁 맡긴 임대인 4%대 수익 보장”",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/15/YGROBQLWBRCIHPW4YAWOOW3UTU/",
+          "source": "조선비즈 부동산"
+        }
+      ]
+    },
+    {
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "주금공의 보금자리론 연체 대출잔액이 6000억원으로 4년 만에 3배 증가했다. 중국 9월 은행 신규대출이 217조원으로 급증하며 경기부양책 효과가 기대된다. 삼성맨 대출이 풀리면서 주변 지역의 집값이 상승하는 현상이 나타났다. 서울 집값은 88주째 상승세를 이어가고 있으며, 강남 지역은 내렸지만 오름폭이 2주째 커졌다. 각 지역의 주택 시장은 서로 다른 요인에 따라 움직이고 있다.",
+      "lineEn": "The overdue loan balance of the Housing Finance Corporation's \"Bogunjari\" loan program reached 600,000,000,000 won, tripling in four years. New bank loans in China surged to 217,000,000,000,000 won in September, raising expectations for the effects of economic stimulus measures. As Samsung Man loans are released, rising housing prices have been observed in surrounding areas. Housing prices in Seoul have continued to rise for 88 consecutive weeks, and although prices in the Gangnam area have decreased, the rate of increase has grown for the second consecutive week. Each region's housing market is moving due to different factors.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "주금공, 보금자리론 연체 대출잔액 6000억원…4년만에 3배 늘어",
+          "link": "https://www.mk.co.kr/news/realestate/12176847",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "[올댓차이나] 中 9월 은행 신규대출 217조원으로 급증…\"경기부양책 효과 기대\"",
+          "link": "https://www.newsis.com/view/NISX20261015_0003827750",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "삼성맨 대출 풀리자 집값 껑충…\"옆 동네라도\" 우르르 몰린 곳",
+          "link": "https://www.hankyung.com/article/202610154304i",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "서울 집값 88주째 상승…강남 내렸지만 2주째 오름폭 커졌다",
+          "link": "https://www.hankyung.com/article/2026101536836",
+          "source": "한국경제 부동산"
         }
       ]
     }
