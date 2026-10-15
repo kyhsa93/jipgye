@@ -74,18 +74,21 @@ export function diffLines(a, b) {
   return hunks;
 }
 
-/** HTML 문자열 둘을 정준 덤프로 견준다. 같으면 빈 배열. */
-export function diffHtml(htmlA, htmlB) {
-  const a = canonLines(htmlA);
-  const b = canonLines(htmlB);
+/**
+ * HTML 문자열 둘을 정준 덤프로 견준다. 같으면 빈 배열.
+ * opts는 canonLines로 그대로 간다 — { ignoreDesignAttrs: true }면 class·style만 뺀 내용 비교다(#277).
+ */
+export function diffHtml(htmlA, htmlB, opts) {
+  const a = canonLines(htmlA, opts);
+  const b = canonLines(htmlB, opts);
   return diffLines(a, b).map((h) => ({ ...h, context: a.slice(Math.max(0, h.aStart - 2), h.aStart) }));
 }
 
 /**
- * 두 디렉터리의 .html을 쌍으로 견준다(상대 경로가 같은 것끼리).
+ * 두 디렉터리의 .html을 쌍으로 견준다(상대 경로가 같은 것끼리). opts는 diffHtml로 그대로 간다(#277).
  * 반환: { total, equal, pages:[{file,status,hunks}], onlyA:[], onlyB:[] }. status는 equal | diff | onlyA | onlyB.
  */
-export async function compareDirs(dirA, dirB) {
+export async function compareDirs(dirA, dirB, opts) {
   const [filesA, filesB] = await Promise.all([listFiles(dirA, isHtml), listFiles(dirB, isHtml)]);
   const setA = new Set(filesA);
   const setB = new Set(filesB);
@@ -96,7 +99,7 @@ export async function compareDirs(dirA, dirB) {
     else if (!setA.has(file)) pages.push({ file, status: "onlyB", hunks: [] });
     else {
       const [a, b] = await Promise.all([readFile(path.join(dirA, file), "utf8"), readFile(path.join(dirB, file), "utf8")]);
-      const hunks = a === b ? [] : diffHtml(a, b);
+      const hunks = a === b ? [] : diffHtml(a, b, opts);
       pages.push({ file, status: hunks.length ? "diff" : "equal", hunks });
     }
   }

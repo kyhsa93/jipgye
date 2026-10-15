@@ -17,6 +17,7 @@ import { RE_LABELS, headLabels, reAllCells, reCells, reChange, reCount, reCountS
 import { overallCards, ratioBasis } from "../scripts/realestate-overall.mjs";
 import { BUDGET_MORE_LINKS, CANDIDATE_LIST, bodyShape, budgetAnswers, budgetBandLabel, budgetRuleHref, budgetWhen, candidatesShape, capNote, costsNote, dealShape, eokOf, eokText, loanNote, minCashNote, policyNote, whereText } from "../scripts/budget-fragments.mjs";
 import { makeFragment, rendererMode } from "../scripts/renderer.mjs";
+import { DESIGN_ATTRS, stripDesignAttrs } from "../scripts/design-attrs.mjs";
 import { createReactRenderer } from "../scripts/render/react.mjs";
 import { RATES_BRANCHES } from "./fixtures/render/rates-branches.mjs";
 import { JAVASCRIPT_URL_DIFF, NEWS_MARKET_BRANCHES } from "./fixtures/render/news-market-branches.mjs";
@@ -39,6 +40,30 @@ const root = path.resolve(import.meta.dirname, "..");
 const fixture = (name) => path.join(root, "test/fixtures/render", name);
 const tmpDirs = [];
 after(() => Promise.all(tmpDirs.map((d) => rm(d, { recursive: true, force: true }))));
+
+// 내용 비교(#277). 조각 출력이 한쪽에 오는 "같다" 비교는 전부 이 helper를 거친다 — 양쪽에 **같은** 정규화를 걸고,
+// 지우는 속성은 scripts/design-attrs.mjs의 DESIGN_ATTRS(class·style) 둘뿐이다. 그래서 조각 JSX나 legacy 쌍둥이의
+// class·style이 바뀌어도 이 시험은 빨개지지 않고(디자인 개편 #279~#283이 이 시험에 막히지 않게 하는 것이 이 이슈다),
+// 본문 글자·수치·링크 href·태그 이름과 트리·id·data-*·aria-*·속성에 든 글자가 바뀌면 그대로 빨개진다
+// (DIRECTION.md 369행이 지키는 여덟 가지는 하나도 완화 대상이 아니다).
+// 문자열이 아닌 값(null·undefined)은 정규화가 그대로 돌려준다 — 조각이 null을 내는 자리가 있어서다.
+const norm = (v) => stripDesignAttrs(v);
+const sameHtml = (actual, expected, msg) => assert.equal(norm(actual), norm(expected), msg);
+const sameHtmlStrict = (actual, expected, msg) => assert.strictEqual(norm(actual), norm(expected), msg);
+// 서브프로세스가 돌려주는 [id, html] 짝 목록(legacy 모드 프로세스 ↔ react 모드 프로세스)도 같은 정규화를 거친다.
+const normRows = (rows) => rows.map(([id, html]) => [id, norm(html)]);
+
+test("내용 비교의 정규화는 class·style 둘만 지운다(셋째가 생기면 DIRECTION.md 369행을 깎는 것이라 cto 판정)", () => {
+  assert.deepEqual([...DESIGN_ATTRS], ["class", "style"]);
+  // class 값은 Tailwind 접두(tw:)를 쓴다 - 훅 클래스 추출기(tools/golden collectHookClasses)가 test/*.mjs의
+  // class="…"를 읽으므로, 여기 적은 글자가 새 훅 이름으로 잡히지 않게 한다.
+  assert.equal(norm('<p class="tw:mt-4" style="color:red" id="x" data-k="v" aria-label="L" title="T">글 자</p>'), '<p id="x" data-k="v" aria-label="L" title="T">글 자</p>');
+  assert.equal(norm(null), null);
+  assert.equal(norm(undefined), undefined);
+  assert.equal(norm(""), "");
+  // 본문 글자에 든 class=·style= 는 속성이 아니므로 건드리지 않는다.
+  assert.equal(norm('<p>class="tw:p-2" style="y"</p>'), '<p>class="tw:p-2" style="y"</p>');
+});
 
 test("JIPGYE_RENDERER: 미설정·빈 문자열은 react(#246 컷오버), legacy·react만 받고 나머지는 멈춘다", () => {
   assert.equal(rendererMode({}), "react");
@@ -63,7 +88,7 @@ test("prerender.mjs의 *Html() 조각은 전부 래퍼를 거치고 이름이 �
 
 test("기본값(react): 래퍼의 출력이 legacy 원본과 같다", () => {
   const summary = { highlights: [{ title: "제목", textKo: "본문" }], categories: [{ name: "분야", lineKo: "한 줄" }] };
-  assert.equal(prerender.summaryHtml(summary), prerender.summaryHtml.legacy(summary));
+  sameHtml(prerender.summaryHtml(summary), prerender.summaryHtml.legacy(summary));
   assert.equal(prerender.summaryHtml(null), null);
   assert.equal(prerender.marketHtml(null), null);
 });
@@ -106,7 +131,7 @@ test("parity 골격: 같은 입력에서 legacy와 React 쌍둥이의 출력이 
     { highlights: [{ title: "빠짐", textKo: "" }, { title: "남음", textKo: "x" }] },
   ];
   for (const input of inputs) {
-    assert.equal(react(input), prerender.summaryHtml.legacy(input), JSON.stringify(input));
+    sameHtml(react(input), prerender.summaryHtml.legacy(input), JSON.stringify(input));
   }
 });
 
@@ -220,7 +245,7 @@ test("금리 분기 표: id가 겹치지 않고, 두 조각을 모두 덮는다"
 test("금리 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다)", () => {
   for (const b of RATES_BRANCHES) {
     const out = prerender[b.fn].legacy(...b.args);
-    if ("expect" in b) assert.equal(out, b.expect, `${b.id} ${b.cond}`);
+    if ("expect" in b) sameHtml(out, b.expect, `${b.id} ${b.cond}`);
     else assert.deepEqual(productNames(out), b.order, `${b.id} ${b.cond}`);
   }
 });
@@ -229,7 +254,7 @@ test("금리 분기 표: React 조각이 legacy와 바이트까지 같다(분기
   const fragment = makeFragment(await createReactRenderer());
   for (const b of RATES_BRANCHES) {
     const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
-    assert.equal(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+    sameHtml(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
   }
 });
 
@@ -293,22 +318,22 @@ test("react 모드(진입 목록 PORTED): 이식 완료 상태(.legacy를 가진
   assert.equal(PORTED.length, 44);
   assert.equal(b.rates.length, RATES_BRANCHES.length);
   assert.equal(b.news.length, NEWS_MARKET_BRANCHES.length);
-  assert.deepEqual(b.rates, a.rates, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(금리)");
-  assert.deepEqual(b.news, a.news, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(문장·목록)");
+  assert.deepEqual(normRows(b.rates), normRows(a.rates), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(금리)");
+  assert.deepEqual(normRows(b.news), normRows(a.news), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(문장·목록)");
   assert.equal(b.leadLinks.length, LEAD_LINKS_BRANCHES.length);
-  assert.deepEqual(b.leadLinks, a.leadLinks, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(리드·링크)");
+  assert.deepEqual(normRows(b.leadLinks), normRows(a.leadLinks), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(리드·링크)");
   assert.equal(b.realestate.length, REALESTATE_BRANCHES.length);
-  assert.deepEqual(b.realestate, a.realestate, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(실거래 요약)");
+  assert.deepEqual(normRows(b.realestate), normRows(a.realestate), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(실거래 요약)");
   assert.equal(b.districtTables.length, DISTRICT_TABLES_BRANCHES.length);
-  assert.deepEqual(b.districtTables, a.districtTables, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(자치구 문장·링크·표)");
+  assert.deepEqual(normRows(b.districtTables), normRows(a.districtTables), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(자치구 문장·링크·표)");
   assert.equal(b.realestateTable.length, REALESTATE_TABLE_BRANCHES.length);
-  assert.deepEqual(b.realestateTable, a.realestateTable, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(시세표 머리글·표)");
+  assert.deepEqual(normRows(b.realestateTable), normRows(a.realestateTable), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(시세표 머리글·표)");
   assert.equal(b.realestateOverall.length, REALESTATE_OVERALL_BRANCHES.length);
-  assert.deepEqual(b.realestateOverall, a.realestateOverall, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(시세 요약 카드)");
+  assert.deepEqual(normRows(b.realestateOverall), normRows(a.realestateOverall), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(시세 요약 카드)");
   assert.equal(b.budgetLeaves.length, BUDGET_LEAVES_BRANCHES.length);
-  assert.deepEqual(b.budgetLeaves, a.budgetLeaves, "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(예산대 잎 조각)");
+  assert.deepEqual(normRows(b.budgetLeaves), normRows(a.budgetLeaves), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(예산대 잎 조각)");
   assert.equal(b.budgetCb.length, BUDGET_CB_BRANCHES.length);
-  assert.deepEqual(b.budgetCb, a.budgetCb, "react 모드의 prerender.mjs 조각 출력이 순수 legacy(legacy 모드 프로세스)와 다르다(후보 단지·본문 합성)");
+  assert.deepEqual(normRows(b.budgetCb), normRows(a.budgetCb), "react 모드의 prerender.mjs 조각 출력이 순수 legacy(legacy 모드 프로세스)와 다르다(후보 단지·본문 합성)");
 });
 
 // ---- 문장·목록 8개 조각(#241 PR 1): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
@@ -334,7 +359,7 @@ test("문장·목록 분기 표: id가 겹치지 않고, 여덟 조각을 모두
 test("문장·목록 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다)", () => {
   for (const b of NEWS_MARKET_BRANCHES) {
     const out = prerender[b.fn].legacy(...b.args);
-    if ("expect" in b) assert.equal(out, b.expect, `${b.id} ${b.cond}`);
+    if ("expect" in b) sameHtml(out, b.expect, `${b.id} ${b.cond}`);
     else assert.deepEqual(newsTitles(out), b.order, `${b.id} ${b.cond}`);
     if (b.noMore) assert.ok(!out.includes("news-more"), `${b.id}: '더 보기' 줄이 있다`);
     if (b.more) assert.ok(out.includes(`뉴스 전체 ${b.more}건 보기 →`), `${b.id}: '뉴스 전체 ${b.more}건' 줄이 없다`);
@@ -346,7 +371,7 @@ test("문장·목록 분기 표: React 조각이 legacy와 바이트까지 같�
   const fragment = makeFragment(await createReactRenderer());
   for (const b of NEWS_MARKET_BRANCHES) {
     const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
-    assert.equal(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+    sameHtml(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
   }
 });
 
@@ -371,8 +396,8 @@ test("문장·목록 조각: 이식된 이름이라 legacy가 조각 안에서 �
 test("문장·목록 조각: React 19는 javascript: URL을 막아 legacy와 달라진다(알려진 차이 — 실제 입력에는 나오지 않는다)", async () => {
   const { fn, args, legacy, react } = JAVASCRIPT_URL_DIFF;
   const fragment = makeFragment(await createReactRenderer());
-  assert.equal(prerender[fn].legacy(...args), legacy);
-  assert.equal(fragment(fn, prerender[fn].legacy)(...args), react);
+  sameHtml(prerender[fn].legacy(...args), legacy);
+  sameHtml(fragment(fn, prerender[fn].legacy)(...args), react);
 });
 
 test("news-items.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, prerender.mjs가 같은 함수를 다시 내보낸다", () => {
@@ -415,7 +440,7 @@ test("리드·링크 분기 표: id가 겹치지 않고, 열 조각을 모두 �
 
 test("리드·링크 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다)", () => {
   for (const b of LEAD_LINKS_BRANCHES) {
-    assert.equal(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
+    sameHtml(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
   }
 });
 
@@ -423,8 +448,8 @@ test("리드·링크 분기 표: React 조각이 legacy와 바이트까지 같�
   const fragment = makeFragment(await createReactRenderer());
   for (const b of LEAD_LINKS_BRANCHES) {
     const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
-    assert.equal(react, b.expect, `${b.id} ${b.cond}`);
-    assert.equal(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+    sameHtml(react, b.expect, `${b.id} ${b.cond}`);
+    sameHtml(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
   }
 });
 
@@ -510,7 +535,7 @@ test("실거래 요약 분기 표: id가 겹치지 않고, 모든 행에 기대�
 
 test("실거래 요약 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다)", () => {
   for (const b of REALESTATE_BRANCHES) {
-    assert.equal(prerender.realestateHtml.legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
+    sameHtml(prerender.realestateHtml.legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
   }
 });
 
@@ -519,8 +544,8 @@ test("실거래 요약 분기 표: React 조각이 legacy와 바이트까지 같
   const react = fragment("realestateHtml", prerender.realestateHtml.legacy);
   for (const b of REALESTATE_BRANCHES) {
     const out = react(...b.args);
-    assert.equal(out, b.expect, `${b.id} ${b.cond}`);
-    assert.equal(out, prerender.realestateHtml.legacy(...b.args), `${b.id} ${b.cond}`);
+    sameHtml(out, b.expect, `${b.id} ${b.cond}`);
+    sameHtml(out, prerender.realestateHtml.legacy(...b.args), `${b.id} ${b.cond}`);
   }
 });
 
@@ -538,8 +563,8 @@ test("실거래 요약 조각: 표본 부족 칸의 건수가 문자열이면 le
   for (const { id, count, legacy, react } of RAW_COUNT_DIFF) {
     const input = { overall: { sale: { avgPricePerPyeong10k: 5, transactionCount: count } } };
     const row = (cell) => `<tr><td>서울 전체</td><td data-label="매매">${cell}</td><td data-label="전세">-</td><td data-label="월세">-</td></tr>`;
-    assert.equal(prerender.realestateHtml.legacy(input), row(legacy), id);
-    assert.equal(fragment("realestateHtml", prerender.realestateHtml.legacy)(input), row(react), id);
+    sameHtml(prerender.realestateHtml.legacy(input), row(legacy), id);
+    sameHtml(fragment("realestateHtml", prerender.realestateHtml.legacy)(input), row(react), id);
   }
 });
 
@@ -639,7 +664,7 @@ test("자치구 분기 표: 해자 2(표본 부족) 행이 세 표에 있고, �
 
 test("자치구 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다)", () => {
   for (const b of DISTRICT_TABLES_BRANCHES) {
-    assert.equal(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
+    sameHtml(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
   }
 });
 
@@ -647,8 +672,8 @@ test("자치구 분기 표: React 조각이 legacy와 바이트까지 같다(분
   const fragment = makeFragment(await createReactRenderer());
   for (const b of DISTRICT_TABLES_BRANCHES) {
     const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
-    assert.equal(react, b.expect, `${b.id} ${b.cond}`);
-    assert.equal(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+    sameHtml(react, b.expect, `${b.id} ${b.cond}`);
+    sameHtml(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
   }
 });
 
@@ -694,8 +719,8 @@ test("자치구 표: 이스케이프 없이 문자열에 끼우던 칸에 `& < >
   assert.equal(new Set(RAW_TEXT_DIFF.map((d) => d.id)).size, RAW_TEXT_DIFF.length);
   for (const { id, fn, args, legacy, react } of RAW_TEXT_DIFF) {
     assert.notEqual(legacy, react, `${id}: 두 글자가 같으면 알려진 차이가 아니다`);
-    assert.equal(prerender[fn].legacy(...args), legacy, `${id} legacy`);
-    assert.equal(fragment(fn, prerender[fn].legacy)(...args), react, `${id} react`);
+    sameHtml(prerender[fn].legacy(...args), legacy, `${id} legacy`);
+    sameHtml(fragment(fn, prerender[fn].legacy)(...args), react, `${id} react`);
   }
 });
 
@@ -828,7 +853,7 @@ test("시세표 분기 표: 해자 2(표본 부족)가 세 보기(한 줄 표·�
 test("시세표 분기 표: legacy 출력이 손으로 적은 기대값(또는 정렬 순서)과 같다(분기마다)", () => {
   for (const b of REALESTATE_TABLE_BRANCHES) {
     const out = prerender[b.fn].legacy(...b.args);
-    if (hasExpect(b)) assert.equal(out, b.expect, `${b.id} ${b.cond}`);
+    if (hasExpect(b)) sameHtml(out, b.expect, `${b.id} ${b.cond}`);
     else assert.deepEqual(TABLE_NAMES(out), b.order, `${b.id} ${b.cond}`);
   }
 });
@@ -837,9 +862,9 @@ test("시세표 분기 표: React 조각이 legacy와 바이트까지 같다(분
   const fragment = makeFragment(await createReactRenderer());
   for (const b of REALESTATE_TABLE_BRANCHES) {
     const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
-    if (hasExpect(b)) assert.equal(react, b.expect, `${b.id} ${b.cond}`);
+    if (hasExpect(b)) sameHtml(react, b.expect, `${b.id} ${b.cond}`);
     else assert.deepEqual(TABLE_NAMES(react), b.order, `${b.id} ${b.cond}`);
-    assert.equal(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+    sameHtml(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
   }
 });
 
@@ -1094,15 +1119,15 @@ test("시세 요약 분기 표: 해자 2(표본이 모자라면 값을 내지 �
 });
 
 test("시세 요약 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다)", () => {
-  for (const b of OVERALL_ROWS) assert.equal(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
+  for (const b of OVERALL_ROWS) sameHtml(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
 });
 
 test("시세 요약 분기 표: React 조각이 legacy와 바이트까지 같다(분기마다, 허용 변환은 래퍼의 &#x27; 되돌림 하나)", async () => {
   const fragment = makeFragment(await createReactRenderer());
   for (const b of OVERALL_ROWS) {
     const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
-    assert.equal(react, b.expect, `${b.id} ${b.cond}`);
-    assert.equal(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+    sameHtml(react, b.expect, `${b.id} ${b.cond}`);
+    sameHtml(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
   }
 });
 
@@ -1345,15 +1370,15 @@ test("예산대 잎 분기 표: 해자 2 - 표본 문턱·low-sample 스팬이 �
 });
 
 test("예산대 잎 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다, 엄격 비교)", () => {
-  for (const b of LEAF_ROWS) assert.strictEqual(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
+  for (const b of LEAF_ROWS) sameHtmlStrict(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
 });
 
 test("예산대 잎 분기 표: React 조각이 legacy와 바이트까지 같다(분기마다, 허용 변환은 래퍼의 &#x27; 되돌림 하나) - 빈 결과도 null이 아니라 \"\"", async () => {
   const fragment = makeFragment(await createReactRenderer());
   for (const b of LEAF_ROWS) {
     const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
-    assert.strictEqual(react, b.expect, `${b.id} ${b.cond}`);
-    assert.strictEqual(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+    sameHtmlStrict(react, b.expect, `${b.id} ${b.cond}`);
+    sameHtmlStrict(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
   }
 });
 
@@ -1474,15 +1499,15 @@ test("후보 단지·본문 분기 표: 해자 2 - 표본 문턱·low-sample 스
 });
 
 test("후보 단지·본문 분기 표: legacy 출력이 손으로 적은 기대값과 같다(분기마다, 엄격 비교)", () => {
-  for (const b of CB_ROWS) assert.strictEqual(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
+  for (const b of CB_ROWS) sameHtmlStrict(prerender[b.fn].legacy(...b.args), b.expect, `${b.id} ${b.cond}`);
 });
 
 test("후보 단지·본문 분기 표: React 조각이 legacy와 바이트까지 같다(분기마다, 허용 변환은 래퍼의 &#x27; 되돌림 하나) - 후보 단지의 빈 결과는 \"\", 본문은 null", async () => {
   const fragment = makeFragment(await createReactRenderer());
   for (const b of CB_ROWS) {
     const react = fragment(b.fn, prerender[b.fn].legacy)(...b.args);
-    assert.strictEqual(react, b.expect, `${b.id} ${b.cond}`);
-    assert.strictEqual(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
+    sameHtmlStrict(react, b.expect, `${b.id} ${b.cond}`);
+    sameHtmlStrict(react, prerender[b.fn].legacy(...b.args), `${b.id} ${b.cond}`);
   }
 });
 
@@ -1515,7 +1540,7 @@ test("후보 단지·본문 조각: 이식된 이름이라 legacy가 조각 안�
   assert.strictEqual(fragment("budgetCandidatesHtml", spy)(), "");
   assert.strictEqual(fragment("budgetBodyHtml", spy)(null), null);
   assert.strictEqual(fragment("budgetBodyHtml", spy)(), null);
-  assert.ok(fragment("budgetBodyHtml", spy)({ min10k: 30_000, max10k: 40_000, count: 5, deals: [] }).startsWith('<p class="budget-summary">3억대에서 5건이 거래됐습니다.</p>'));
+  assert.ok(norm(fragment("budgetBodyHtml", spy)({ min10k: 30_000, max10k: 40_000, count: 5, deals: [] })).startsWith(norm('<p class="budget-summary">3억대에서 5건이 거래됐습니다.</p>')));
   assert.equal(called, 0);
 });
 
@@ -1524,11 +1549,12 @@ test("후보 단지·본문: 알려진 차이(허용 변환 아님) - 구 건수
   for (const d of BUDGET_BODY_KNOWN_DIFFS) {
     const legacy = prerender[d.fn].legacy(...d.args);
     const react = fragment(d.fn, prerender[d.fn].legacy)(...d.args);
-    assert.ok(legacy.includes(d.legacy), `${d.id} legacy 글자 ${d.cond}`);
-    assert.ok(react.includes(d.react), `${d.id} react 글자 ${d.cond}`);
-    assert.notEqual(legacy, react, `${d.id}: 차이가 사라졌다 - 표를 고친다`);
+    // 알려진 차이 목록(#277 범위 3)은 그대로다. 비교만 내용 비교로 간다 - 찾는 글자(d.legacy·d.react)에도 class가 들어 있어서 양쪽 다 정규화한다.
+    assert.ok(norm(legacy).includes(norm(d.legacy)), `${d.id} legacy 글자 ${d.cond}`);
+    assert.ok(norm(react).includes(norm(d.react)), `${d.id} react 글자 ${d.cond}`);
+    assert.notEqual(norm(legacy), norm(react), `${d.id}: 차이가 사라졌다 - 표를 고친다`);
     // 이 한 자리(지역 줄의 건수) 말고는 같다: 서로의 차이 글자를 바꿔 끼우면 같은 출력이 된다
-    assert.equal(legacy.replace(d.legacy, d.react), react, `${d.id}: 다른 자리도 다르다`);
+    assert.equal(norm(legacy).replace(norm(d.legacy), norm(d.react)), norm(react), `${d.id}: 다른 자리도 다르다`);
   }
 });
 

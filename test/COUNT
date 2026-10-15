@@ -14,5 +14,10 @@
 #   test/style.test.mjs 를 비롯한 아홉 파일은 읽는 곳을 docs/style.css → src/css/legacy.css 로 옮겼을 뿐
 #   시험을 더하거나 빼지 않는다.
 #   없어진 시험은 0이다.
-1536
-1536
+# 센 법: 2026-10-15, merge-base 831604af, Node v24.16.0, macOS 26.6.2 (#277).
+#   npm test → ℹ tests 1537 · pass 1537 · fail 0 · skipped 0
+#   merge-base 831604af 에서 같은 명령 → ℹ tests 1536 · pass 1536. 차이 1은 #277이 더한
+#   test/render-parity.test.mjs 의 "내용 비교의 정규화는 class·style 둘만 지운다" 하나다.
+#   없어진 시험은 0이다(.skip·.todo 도 0 그대로).
+1537
+1537

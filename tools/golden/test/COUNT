@@ -6,5 +6,10 @@
 # 센 법: 2026-10-14, merge-base 83bd9fb8, Node v24.16.0, macOS 26.6.2.
 #   cd tools/golden && npm ci && npm test → ℹ tests 101 · pass 90 · fail 0 · skipped 11
 #   건너뛴 11은 전부 GOLDEN_LIVE=1에서만 도는 것이라 CI에서도 같은 101·90이다.
-101
-90
+# 센 법: 2026-10-15, merge-base 831604af, Node v24.16.0, macOS 26.6.2 (#277).
+#   cd tools/golden && npm ci && npm test → ℹ tests 114 · pass 103 · fail 0 · skipped 11
+#   merge-base 831604af 에서 같은 명령 → ℹ tests 101 · pass 90 · skipped 11.
+#   차이 13은 #277이 더한 test/content-mode.test.mjs 하나다(내용 비교 모드의 변이표 — 통과 변이 2 ·
+#   불합격 변이 8 · id 변이 1 · 대조군 1 · 속성 목록 1). 건너뛰는 11은 그대로다.
+114
+103

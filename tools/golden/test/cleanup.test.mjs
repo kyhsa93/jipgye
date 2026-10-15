@@ -11,7 +11,8 @@ import { commit, fakeRepo, git } from "./helpers/fake-repo.mjs";
 
 // 임시 사본·캐시 정리(#263). 고정 가짜 저장소(test/helpers/fake-repo.mjs)만 쓰고 실제 docs/·raw/는 읽지 않는다.
 // 시험마다 자기 폴더(base) 하나 안에 repo·cache·tmp를 만들고 끝에 base째 지운다 — 시험이 디스크를 채우지 않게(이 이슈의 주제).
-// 이 폴더의 시험은 CI에 없다(`cd tools/golden && npm ci && npm test`).
+// 이 폴더의 시험은 CI(.github/workflows/test.yml 70~80행)가 루트 시험 뒤 `npm ci`·`npm test`로 따로 돌린다(#309).
+// 로컬에서 돌리는 명령은 같다: `cd tools/golden && npm ci && npm test`.
 const BIN = path.join(import.meta.dirname, "../bin/render.mjs");
 const HOUR = 3600 * 1000;
 const STAGES = ["scripts/step1.mjs"];
