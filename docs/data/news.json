@@ -1,7 +1,26 @@
 {
-  "updatedAt": "2026-10-15T13:37:28.263Z",
-  "date": "2026-10-15",
+  "updatedAt": "2026-10-15T15:34:52.341Z",
+  "date": "2026-10-16",
   "items": [
+    {
+      "title": "\"집값, 2027년 숨 고르고 2028년 다시 뛸 수도\"…부동산 전문가 전망",
+      "link": "https://www.newsis.com/view/NISX20261015_0003827037",
+      "publishedAt": "2026-10-15T15:00:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "realestate",
+      "preview": "[서울=뉴시스]전민영 인턴 기자 = 전월세 매물 부족과 대출 규제로 주거 불안이 커지는 가운데, 부동산 시장이 2027년 숨 고르기를 거쳐 2028년 다시 상승할 수 있다는 전문가 전망이 나왔다. 13일 구독자 18…",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "rates",
+          "label": "주택담보대출 최저금리(상환방식 무관)",
+          "labelEn": "Lowest mortgage rate (any repayment type)",
+          "value": "연 3.70%",
+          "valueEn": "3.70% p.a.",
+          "href": "./mortgage-rates.html"
+        }
+      ]
+    },
     {
       "title": "[올댓차이나] 대만 증시, 美 반도체주 약세에 급반락 마감…3.41%↓",
       "link": "https://www.newsis.com/view/NISX20261015_0003828146",
@@ -278,15 +297,6 @@
           "noteEn": "123 deals in the last 1 weeks · -0.2% vs Oct 8"
         }
       ]
-    },
-    {
-      "title": "日증시, AI 투자 불안에 하락 마감…닛케이 4.90%↓",
-      "link": "https://www.newsis.com/view/NISX20261015_0003827784",
-      "publishedAt": "2026-10-15T07:47:35.000Z",
-      "source": "뉴시스 경제",
-      "category": "stocks",
-      "preview": "[서울=뉴시스] 신효령 기자 = 15일 일본 도쿄증시에서 주요 지수가 일제히 하락 마감했다. 미국 인공지능(AI) 클라우드 기업 코어위브의 자금 조달 우려가 AI·반도체 관련주 매도로 번졌다. 니혼게이자이신문에 따르…",
-      "dupes": []
     }
   ],
   "realestateStats": [
