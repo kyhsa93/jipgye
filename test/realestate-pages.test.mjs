@@ -941,12 +941,30 @@ test("추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 �
   // 자리만 깔고 높이를 안 잡으면 0px이라 같은 밀림이 돌아온다.
   const css = await read("src/css/legacy.css");
   for (const rule of [
-    /#trend-section\[hidden\] \+ \.trend-reserve \{[^}]*display: block;/,
-    /\.trend-reserve::before \{[^}]*min-height:/,
-    /\.trend-reserve-card::before \{[^}]*min-height:/,
-    /\.trend-reserve-card::after \{[^}]*min-height:/,
-    /\.trend-reserve::after \{[^}]*min-height:/,
+    /#trend-section\[hidden\] \+ \.trend-reserve \{[^}]*display: block;[^}]*visibility: hidden;/,
+    /\.trend-reserve::before \{\s*content: "\\00a0";/,
+    /\.trend-reserve-card \{[^}]*padding: 12px 14px;/,
+    /\.trend-reserve-card::before \{\s*content: "\\00a0";/,
+    /\.trend-reserve-card::after \{\s*content: "\\00a0";[^}]*padding-bottom: 124px;/,
+    /\.trend-reserve::after \{\s*content: "\\00a0\\A\\00a0";/,
   ]) {
     assert.match(css, rule, "src/css/legacy.css: 추이 자리 예약의 높이를 잡는 규칙이 사라졌다");
+  }
+
+  // 제목 한 줄은 h2 규칙을 같이 받아야 한다. 떨어지면 글자 크기·줄 높이·여백이 따로 놀아
+  // 예약이 남거나 모자란다(#278 PR C에서 7.5px이 남았던 자리).
+  assert.match(
+    css,
+    /\nh2,\n\.trend-reserve::before \{/,
+    "src/css/legacy.css: 예약 제목이 h2 규칙에서 떨어져 나왔다"
+  );
+
+  // 구운 산출물에 개발자용 설명문을 싣지 않는다(장부 규칙 3). 설명은 이 CSS와
+  // scripts/build-realestate-pages.mjs에 있고, 틀과 생성 47장에는 주석이 0줄이다.
+  for (const file of files) {
+    const html = await read(`docs/${file}`);
+    const block = html.slice(html.indexOf('<section id="trend-section" hidden>'), html.indexOf('<div class="trend-reserve">'));
+    const comments = [...block.matchAll(/<!--(?!\/?prerender:)/g)].length;
+    assert.equal(comments, 0, `${file}: 예약 둘레에 구운 주석이 ${comments}줄 남았다 - 설명은 빌드 소스에 적는다`);
   }
 });
