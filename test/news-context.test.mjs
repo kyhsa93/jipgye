@@ -142,7 +142,7 @@ test("금리 값이 금리 페이지 첫 줄과 같은 기준으로 뽑힌다", 
   const rates = await readJson("rates");
 
   for (const [key, cell] of [
-    ["deposit", /class="rate-strong"[^>]*>([\d.]+)%/],
+    ["deposit", /class="rate-strong tw:font-semibold tw:text-up"[^>]*>([\d.]+)%/],
     ["mortgage", /data-label="금리\(최저~최고\)">([\d.]+)~/],
   ]) {
     const top = ratesHtml(rates, { category: key, limit: 1 }).match(cell)?.[1];

@@ -11,14 +11,15 @@ const product = (name, options) => ({ name, company: "은행", options });
 const sv = (rate, maxRate, extra = {}) => ({ term: 12, rate, maxRate, rateTypeName: "단리", ...extra });
 const loan = (rateType, min, max, avg) => ({ rateType, min, max, avg });
 
-const tr = (name, company, tds) => `<tr><td><div class="product-name">${name}</div><div class="product-company">${company}</div></td>${tds}</tr>`;
+// class 문자열은 #279에서 Tailwind 유틸리티가 더해진 뒤의 것이다 - 훅/legacy class는 그대로 두고 뒤에 붙는다(지우지 않는다).
+const tr = (name, company, tds) => `<tr><td><div class="product-name tw:whitespace-normal tw:break-keep">${name}</div><div class="product-company tw:text-xs tw:text-muted">${company}</div></td>${tds}</tr>`;
 const savingTds = (base, max, net) =>
-  `<td data-label="기본금리">${base}</td><td class="rate-strong" data-label="최고금리">${max}</td><td class="net-interest" data-label="세후 이자">${net}</td>`;
+  `<td data-label="기본금리">${base}</td><td class="rate-strong tw:font-semibold tw:text-up" data-label="최고금리">${max}</td><td class="net-interest tw:font-bold" data-label="세후 이자">${net}</td>`;
 const loanTds = (type, range, avg) =>
-  `<td data-label="금리 유형">${type}</td><td data-label="금리(최저~최고)">${range}</td><td class="rate-low" data-label="평균">${avg}</td>`;
+  `<td data-label="금리 유형">${type}</td><td data-label="금리(최저~최고)">${range}</td><td class="rate-low tw:font-semibold tw:text-down" data-label="평균">${avg}</td>`;
 
-const SAVING_HEAD = '<tr><th scope="col">상품</th><th scope="col">기본금리</th><th scope="col">최고금리</th><th scope="col">세후 이자</th></tr>';
-const LOAN_HEAD = '<tr><th scope="col">상품</th><th scope="col">금리 유형</th><th scope="col">금리(최저~최고)</th><th scope="col">평균</th></tr>';
+const SAVING_HEAD = '<tr><th scope="col" class="tw:text-muted tw:text-xs tw:font-semibold">상품</th><th scope="col" class="tw:text-muted tw:text-xs tw:font-semibold">기본금리</th><th scope="col" class="tw:text-muted tw:text-xs tw:font-semibold">최고금리</th><th scope="col" class="tw:text-muted tw:text-xs tw:font-semibold">세후 이자</th></tr>';
+const LOAN_HEAD = '<tr><th scope="col" class="tw:text-muted tw:text-xs tw:font-semibold">상품</th><th scope="col" class="tw:text-muted tw:text-xs tw:font-semibold">금리 유형</th><th scope="col" class="tw:text-muted tw:text-xs tw:font-semibold">금리(최저~최고)</th><th scope="col" class="tw:text-muted tw:text-xs tw:font-semibold">평균</th></tr>';
 
 const M = { category: "mortgage" };
 
