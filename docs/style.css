@@ -965,6 +965,7 @@
   }
   #trend-section[hidden] + .trend-reserve {
     display: block;
+    visibility: hidden;
     margin-bottom: 32px;
   }
   .trend-reserve::before {

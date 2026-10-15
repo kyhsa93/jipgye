@@ -1281,8 +1281,13 @@ ul.news-list {
   display: none;
 }
 
+/* visibility: hidden을 같이 건다. 자리는 그대로 잡으면서 "그려지지 않는 것"으로 선언한다 - 읽어 주는
+ * 장치에서도 빠지고, 레이아웃 이동의 '움직인 요소'로도 잡히지 않는다. 안 걸면 이 빈 칸이 접히는 선에
+ * 걸쳤을 때 자기가 움직인 요소로 보고돼 새 선택자가 하나 생긴다(#307 네 줄 3). 실측: #278 PR C를
+ * 병합한 상태의 district-gangnam에서 6회 중 5회 보고 → 걸면 6회 전부 0회(2026-10-16, 412x823). */
 #trend-section[hidden] + .trend-reserve {
   display: block;
+  visibility: hidden;
   margin-bottom: 32px;
 }
 
