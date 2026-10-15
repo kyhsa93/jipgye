@@ -78,3 +78,42 @@ jobs:
           npm test 2>&1 | tee "$RUNNER_TEMP/golden-test.log"
           node ../../scripts/test-count-ratchet.mjs test/COUNT "$RUNNER_TEMP/golden-test.log"
         working-directory: tools/golden
+
+  # 렌더 기반 접근성 검사(#325 = #278 PR A). **별도 잡이다 — 위 `test`와 병렬로 돈다.**
+  # 왜 별도 잡인가(cto 판정 2026-10-15, #325 `6182990669`):
+  #   - 위 잡은 `jobs.test` 하나에 스텝이 직렬이라, 스텝으로 붙이면 3초가 아니라 체크아웃·`npm ci`까지
+  #     그대로 더해진다. 별도 잡이면 병렬이라 벽시계가 사실상 안 는다.
+  #   - Chrome이 흔들리는 날 **빠른 게이트를 같이 끌고 내려가지 않는다.**
+  # Chrome 설치 스텝이 없는 이유: 이 저장소의 `ubuntu-latest`는 ubuntu-24.04이고 그 이미지에
+  # Google Chrome·Chromium·ChromeDriver가 들어 있다(actions/runner-images Ubuntu2404-Readme.md).
+  # `tools/render/lib/chrome.mjs`의 후보 경로에 `/usr/bin/google-chrome`·`-stable`·`/usr/bin/chromium`이 이미 있다.
+  # ⚠️ **못 찾으면 건너뛰지 않고 죽는다**(#274 체인 공통 규칙 1번) — 건너뛴 시험은 `pass` 하한에 0을
+  # 보태므로, env 게이트를 달면 "브라우저가 없어서 안 돌았다"가 초록으로 끝난다.
+  # 넣는 것은 **고정 fixture만 읽는 `npm test`**(변이 열하나 + 대조군 넷 + 단위)뿐이다. 실제 `docs/`를 읽는
+  # 전수 위반 목록·양성 대조는 **입력이 매일 바뀌므로** CI가 아니라 PR 증빙이다(#8 재발 방지 R3,
+  # `tools/golden`의 `test` ↔ `test:live`와 같은 선).
+  # `npm ci`가 아니라 `npm test`만 부르는 이유: 이 폴더는 **의존이 0**이라 `package-lock.json`이 없고,
+  # 락파일 없는 폴더에서 `npm ci`는 실패한다. 의존이 생기면 락파일과 함께 `npm ci`를 되살린다(#325 결정 1).
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+      # 러너의 Chrome을 **이름과 버전으로 로그에 남긴다.** 아래 시험이 어차피 Chrome 없으면 실패하지만,
+      # 그때 로그에는 "Chrome을 찾지 못했습니다"만 남아 러너 이미지가 바뀐 것인지 알 수 없다.
+      - name: 러너의 Chrome을 찾아 버전을 적는다
+        run: |
+          set -euo pipefail
+          chrome=$(node -e 'import("./tools/render/lib/chrome.mjs").then((m) => { const p = m.findChrome(); if (!p) { console.error("Chrome을 못 찾았다 - 러너 이미지가 바뀌었는지 본다."); process.exit(1); } process.stdout.write(p); });')
+          echo "Chrome: $chrome"
+          "$chrome" --version
+      # 래칫은 루트·tools/golden과 같은 모양이되 하한은 따로 둔다 — 이 폴더에는 정당한 skip이 없어
+      # 두 수(tests·pass)가 같다(tools/render/test/COUNT 주석).
+      - name: tools/render npm test + 시험 개수 래칫
+        run: |
+          set -euo pipefail
+          npm test 2>&1 | tee "$RUNNER_TEMP/render-test.log"
+          node ../../scripts/test-count-ratchet.mjs test/COUNT "$RUNNER_TEMP/render-test.log"
+        working-directory: tools/render
