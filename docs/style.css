@@ -278,7 +278,7 @@
       margin-top: 0;
     }
   }
-  h2 {
+  h2, .trend-reserve::before {
     position: relative;
     font-size: var(--fs-h2);
     margin: 0 0 12px;
@@ -959,6 +959,46 @@
     color: var(--muted);
     font-size: var(--fs-xs);
     margin-top: 10px;
+  }
+  .trend-reserve {
+    display: none;
+  }
+  #trend-section[hidden] + .trend-reserve {
+    display: block;
+    visibility: hidden;
+    margin-bottom: 32px;
+  }
+  .trend-reserve::before {
+    content: "\00a0";
+    display: block;
+  }
+  .trend-reserve-card {
+    border: 1px solid transparent;
+    padding: 12px 14px;
+  }
+  .trend-reserve-card::before {
+    content: "\00a0";
+    display: block;
+    font-size: var(--fs-xs);
+    margin-bottom: 6px;
+  }
+  .trend-reserve-card::after {
+    content: "\00a0";
+    display: block;
+    font-size: var(--fs-xl);
+    padding-bottom: 124px;
+  }
+  .trend-reserve::after {
+    content: "\00a0\A\00a0";
+    white-space: pre;
+    display: block;
+    font-size: var(--fs-xs);
+    margin-top: 10px;
+  }
+  @media (min-width: 600px) {
+    .trend-reserve::after {
+      content: "\00a0";
+    }
   }
   .district-links-heading {
     font-size: var(--fs-sm);
