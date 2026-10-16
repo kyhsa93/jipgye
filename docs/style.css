@@ -2127,6 +2127,25 @@
       min-height: 3lh;
     }
   }
+  @media (max-width: 400px) {
+    main:has(> #top-section) #lead-note {
+      min-height: 8lh;
+    }
+    main:has(> #wolse-section) #lead-note {
+      min-height: 9lh;
+    }
+    main:has(> #month-section) #lead-note {
+      min-height: 11lh;
+    }
+  }
+  @media (max-width: 430px) {
+    #compare-result {
+      min-height: 2lh;
+    }
+    .tagline ~ .update-schedule {
+      min-height: 2lh;
+    }
+  }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #0f1115;

@@ -2913,6 +2913,29 @@ summary:focus-visible,
   .content-notice.page-notice { min-height: 3lh; }
 }
 
+/* 늦게 채워지는 글 다섯 자리의 줄 수를 미리 잡아 둔다(#341). 아래 자리는 구운 HTML 에서 비어 있고 스크립트가 글을 넣는다.
+ * 채워지는 순간 그 밑이 통째로 밀리는데, PR #340 이 머리글을 장마다 20.4px 줄이고(기준일을 바닥글로 내렸다) 그 줄이 바닥글로
+ * 가면서 같은 채움이 접힌 선(812px) 안으로 들어와 이동이 새로 잡혔다. 바닥글의 두 줄은 처음부터 늘 보여 hidden → 펴짐
+ * 전이가 없으므로 (마)식 예약은 안 통하고, 움직이는 쪽 — 채워지는 글 자신 — 에 줄 수를 준다.
+ * 숫자는 px 이 아니라 줄 수(lh)다. lh 는 그 상자 자신의 line-height 라서 .content-notice·.lead·.update-schedule 의
+ * 글자 크기·줄 간격을 고치면 예약이 같이 따라온다. 줄 수는 2026-10-17 실측(Chrome 154, 한국어):
+ *   폭 375: floor-gap #lead-note 8 · renewal-vs-new #lead-note 9 · cancelled-deals #lead-note 11 줄
+ *     (폭 412 에서는 7·8·10 줄로 줄어 400 에서 가둔다. 360 에서는 8·10·11 줄이라 renewal-vs-new 가 한 줄 모자란다)
+ *   폭 320~430: switch-house #compare-result 2 줄(435부터 1줄) · index #update-schedule 2 줄(450부터 1줄)
+ * 폭이 넓을수록 줄이 줄어 예약이 남게 되므로 폭을 가둔다. 재는 폭(375) 밖의 모자람·남음은 PR 본문에 수로 적었다.
+ * 영어는 글이 길어 한 줄쯤 더 늘 수 있다 - 모자란 쪽이 남는 쪽보다 낫다(.trend-reserve 와 같은 판단, #287).
+ * 같은 id 가 세 장에 있어(#lead-note) 줄 수가 다르므로 그 장에만 있는 구획으로 가른다. */
+@media (max-width: 400px) {
+  main:has(> #top-section) #lead-note { min-height: 8lh; }
+  main:has(> #wolse-section) #lead-note { min-height: 9lh; }
+  main:has(> #month-section) #lead-note { min-height: 11lh; }
+}
+
+@media (max-width: 430px) {
+  #compare-result { min-height: 2lh; }
+  .tagline ~ .update-schedule { min-height: 2lh; }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0f1115;

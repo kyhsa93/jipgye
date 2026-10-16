@@ -38,5 +38,10 @@
 #   "조건 칸과 결과 자리는 데이터가 오기 전에도 자리를 잡는다 (#287)" 하나다
 #   (`node --test test/deal-search.test.mjs` → 기준 36 · 후보 37).
 #   고친 시험 파일은 0 이고 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
-1560
-1560
+# 센 법: 2026-10-17, merge-base 7aeb1581, Node v22.16.0, macOS 15.5 (#341).
+#   npm test → ℹ tests 1563 · pass 1563 · fail 0 · skipped 0
+#   merge-base 7aeb1581 에서 같은 명령(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1560 · pass 1560.
+#   차이 3 은 이 PR 이 더한 test/late-fill-reserve.test.mjs 하나에서 나온다(`node --test test/late-fill-reserve.test.mjs` → ℹ tests 3).
+#   고친 시험 파일은 0 이고 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
+1563
+1563
