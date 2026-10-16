@@ -12024,7 +12024,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 강수지 기자 = 16일 국고채 금리는 일제히 하락했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "South Korea's government bond yields fall across the board... Kospi rebounds but foreign investors' buying influence (comprehensive)"
       },
       {
         "title": "한미 재무·통화당국 첫 2+2 면담…\"경제·금융 협력 방안 논의\"",
@@ -12033,7 +12034,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(방콕=연합뉴스) 김수현 기자 = 한국과 미국의 재무장관·중앙은행 총재가 처음으로 4자 회담을 열고 협력 방안을 논의했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Korea-US Financial and Monetary Authorities Hold First 2+2 Talks...Discuss Economic and Financial Cooperation Measures"
       },
       {
         "title": "환율, 1,331원 또 연저점 …2년 만에 최저",
@@ -12042,7 +12044,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 이도흔 기자 = 원/달러 환율이 장중 연저점을 새로 쓰며 2년만에 가장 낮은 수준으로 떨어졌다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Exchange rate hits another low of 1,331 won, lowest in 2 years"
       },
       {
         "title": "日증시, AI 실적주 강세에 상승 마감…닛케이 1.39%↑",
@@ -12051,7 +12054,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 신효령 기자 = 16일 일본 도쿄증시에서 주요 지수가 일제히 상승 마감했다. 인공지능(AI) 투자에 대한 불안이 누그러진 가운데, AI를 활용해 실적을 개선한 기업들에 매수세가 몰렸다. 니혼게이자이신…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Tokyo Stocks Close Higher on AI Performance Stocks, Nikkei Rises 1.39%"
       },
       {
         "title": "국고채 금리 일제히 하락…3년물 연 3.854%",
@@ -12060,7 +12064,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 16일 국고채 금리가 일제히 하락했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "South Korea's government bond rates fall across the board... 3-year bonds at 3.854% annually"
       },
       {
         "title": "코스피 7% 급락한 '검은 목요일'에 800억원대 또 강제청산",
@@ -12069,7 +12074,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 고은지 기자 = 코스피가 7% 넘게 급락했던 지난 15일 반대매매 금액이 전날에 이어 또다시 800억원대에 달한 것으로 나타났...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi plunges 7% in 'black Thursday' as 80,000,000,000won-level forced liquidation occurs again"
       },
       {
         "title": "[일문일답] 국토차관 “추가 대출 규제 현재 검토 안 해… 연말 착공에 최대한 노력”",
@@ -12078,7 +12084,18 @@
         "source": "조선비즈 부동산",
         "category": "other",
         "preview": "김이탁 국토교통부 제1차관은 16일 집값 상승과 전월세시장 불안에 대응한 추가 대출 규제를 현재 검토하고 있지 않다고 밝혔다. 연말에 집중된 주택 착공 계획에 대해서는 “공격적인 목표를 수립하다 보니 하반기에 다소…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "rates",
+            "label": "주택담보대출 최저금리(상환방식 무관)",
+            "labelEn": "Lowest mortgage rate (any repayment type)",
+            "value": "연 3.70%",
+            "valueEn": "3.70% p.a.",
+            "href": "./mortgage-rates.html"
+          }
+        ],
+        "titleEn": "[Q&A] Land Minister's Deputy: \"No review of additional loan restrictions currently... Will do our utmost to start construction by year-end"
       },
       {
         "title": "강남구, 일원개포한신아파트 철거 앞두고 통학안전 협의체 꾸려",
@@ -12087,7 +12104,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 박대로 기자 = 서울 강남구(구청장 김현기)가 올해 하반기 일원개포한신아파트 재건축 해체 공사 착공을 앞두고 학생들의 통학 안전과 교육 환경을 위한 협의체를 구성했다고 16일 밝혔다. 공사장 주변에…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 5,760만원",
+            "valueEn": "₩2,858M",
+            "note": "최근 1주 계약 166건 · 10/8 대비 -0.8%",
+            "noteEn": "166 deals in the last 1 weeks · -0.8% vs Oct 8"
+          }
+        ],
+        "titleEn": "Gangnam District Sets Up Commuting Safety Coordination Body Ahead of Demolition of Iryeon Gaepo Hanshin Apartment"
       },
       {
         "title": "코스피, 급락후 반발매수에 2.1%↑…8거래일만에 반등(종합)",
@@ -12096,7 +12126,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유향 기자 = 최근 폭락장세를 보였던 코스피가 16일 8거래일 만에 반등했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KOSPI rises 2.1% on rebound buying after sharp drop... rebounds for the first time in 8 trading days (comprehensive)"
       },
       {
         "title": "정부 \"착공·분양·입주 상황판 가동\"…주택공급 첫 정례브리핑",
@@ -12105,7 +12136,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 이상현 기자 = 정부가 국민이 보다 쉽게 주택 공급 상황을 확인할 수 있도록 주택 공급 디지털 상황판의 구축·운영에 나선다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Government activates \"Construction, Sales, and Occupancy Status Board\"… First Regular Housing Supply Briefing"
       },
       {
         "title": "[속보]정부 “올 수도권 주택 착공, 목표보다 최대 5만가구 부족”",
@@ -12114,7 +12146,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "정부가 올해 수도권 주택 착공 물량을 21만8000~23만5000가구로 전망했다. 당초 목표인 26만8000가구보다 3만3000천~5만가구 부족하다. 국무조정실과 국토교통부는 16..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-guro.html",
+            "label": "구로구 아파트 84㎡ 매매",
+            "labelEn": "구로구 apartment 84㎡ sale",
+            "value": "9억 1,857만원",
+            "valueEn": "₩919M",
+            "note": "최근 1주 계약 309건 · 10/8 대비 +0.6%",
+            "noteEn": "309 deals in the last 1 weeks · +0.6% vs Oct 8"
+          }
+        ],
+        "titleEn": "[Breaking News] Government: This Year's Housing Starts in Seoul Area May Be Up to 50,000 Units Short of Target"
       },
       {
         "title": "수도권 공적주택 10만호 입주 추진…정부, 공급지원센터 연내 신설",
@@ -12123,7 +12168,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]정유선 이종성 기자 = 정부가 전월세시장 불안 완화를 위해 내년 말까지 수도권에 공적주택 약 10만호 입주를 추진한다. 민간사업장의 인허가와 금융을 함께 지원하는 '통합 주택공급지원센터'도 연내 문을…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Capital Region Public Housing 100,000 Units to Be Occupied... Government to Establish Supply Support Center by Year's End"
       },
       {
         "title": "국토 차관 \"착공 증가, 좋은 시그널\"…추가 대출규제 선 그어",
@@ -12132,7 +12178,18 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스]이종성 기자 = 김이탁 국토교통부 제1차관은 최근 수도권 주택 인허가·착공 지표의 개선 흐름을 두고 \"시장에 좋은 시그널\"이라고 평가했다. 집값 상승과 전월세시장 불안에 대응한 추가적인 대출 규제는 현…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "rates",
+            "label": "주택담보대출 최저금리(상환방식 무관)",
+            "labelEn": "Lowest mortgage rate (any repayment type)",
+            "value": "연 3.70%",
+            "valueEn": "3.70% p.a.",
+            "href": "./mortgage-rates.html"
+          }
+        ],
+        "titleEn": "Land Ministry Deputy Minister Says Increase in Start of Construction Is a Good Signal... Additional Loan Regulations Drawn"
       },
       {
         "title": "'주식 60 채권 40' 공식 깨뜨린 범인…금리가 아니었다",
@@ -12141,7 +12198,8 @@
         "source": "한국경제 경제",
         "category": "rates",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Perpetrator who broke the '60 stocks 40 bonds' rule is not interest rate"
       },
       {
         "title": "워시 \"경제 상황 예상과 부합\" 발언에…10월 금리 인상 확률 28%→13%",
@@ -12150,7 +12208,8 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스]박미선 기자 = 케빈 워시 미국 연방준비제도(Fed·연준) 의장이 최근 물가 상승에도 미국 경제가 연준의 기존 예상에서 크게 벗어나지 않았다고 평가하면서 시장의 10월 기준금리 인상 전망이 크게 약화했…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Woochi's Statement Aligns with Economic Outlook... Probability of October Rate Hike Drops to 13% from 28%"
       },
       {
         "title": "코스피 2.1%↑, 8거래일만 반등…코스닥 4.5%↑",
@@ -12159,7 +12218,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유향 기자 = 코스피가 16일 지난 7거래일 동안 이어진 하락세를 딛고 상승 마감했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi Rises 2.1%, Bounces Back in 8 Trading Days…Kosdaq Up 4.5%"
       },
       {
         "title": "절반이 빌라인데 22%만 반영…주택통계도 아파트 쏠림",
@@ -12168,7 +12228,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Half are villas but only 22% reflected... housing statistics also skewed toward apartments"
       },
       {
         "title": "SH, 고덕강일3단지 토지임대부 분양주택 본청약 시작",
@@ -12177,7 +12238,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 박대로 기자 = 서울주택도시개발공사(SH, 사장 황상하)는 16일 고덕강일3단지(강일동 174 일원) 토지임대부 분양주택 본청약을 진행한다. 고덕강일3단지는 토지는 공공이 소유하고 건물은 분양받은 사…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 327만원",
+            "valueEn": "₩1,303M",
+            "note": "최근 1주 계약 842건 · 10/8 대비 -8.2%",
+            "noteEn": "842 deals in the last 1 weeks · -8.2% vs Oct 8"
+          }
+        ],
+        "titleEn": "SH Starts Pre-Sales for Land-Lease Housing at Godeokgangil 3rd Phase"
       },
       {
         "title": "워시, 美 물가 급등에도 말 아껴…\"금리 결정, 예고 안 해\"",
@@ -12186,7 +12260,8 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스]박미선 기자 = 케빈 워시 미국 연방준비제도(Fed·연준) 의장이 10월 기준금리 인상 여부에 대해 구체적인 신호를 주지 않았다. 최근 미국의 물가 상승 압력이 커진 가운데 연준이 더 이상 금리 결정을…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Woochi, Despite Sharp Rise in U.S. Prices, Holds Fire...\"Interest Rate Decision, No Preview"
       },
       {
         "title": "“대출은 힘들고 아파트는 비싸졌네요”…다시 불붙기 시작한 빌라의 반전",
@@ -12195,7 +12270,18 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "규제에 높아진 아파트 진입 문턱 연립·다세대로 눈 돌린 실수요자 매매가·전셋값 동반 상승세 뚜렷대출 규제 강화와 아파트 매매·전셋값의 가파른 상승으로 인해 아파트 진입 문턱이 높아..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "rates",
+            "label": "주택담보대출 최저금리(상환방식 무관)",
+            "labelEn": "Lowest mortgage rate (any repayment type)",
+            "value": "연 3.70%",
+            "valueEn": "3.70% p.a.",
+            "href": "./mortgage-rates.html"
+          }
+        ],
+        "titleEn": "Loans are hard and apartments have gotten more expensive\"… the villa's unexpected revival begins again"
       },
       {
         "title": "대치쌍용 1차, 재건축으로 999가구 신축 아파트로 변신",
@@ -12204,7 +12290,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "서울 강남구 대치쌍용 1차 아파트가 재건축을 통해 최고 49층 높이의 새 아파트로 다시 지어진다. 서울시는 지난 15일 제21차 정비사업 통합심의위원회에서 ‘대치쌍용 1차 아파트 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 5,760만원",
+            "valueEn": "₩2,858M",
+            "note": "최근 1주 계약 166건 · 10/8 대비 -0.8%",
+            "noteEn": "166 deals in the last 1 weeks · -0.8% vs Oct 8"
+          }
+        ],
+        "titleEn": "Daechi Sungsong 1st to be transformed into 999-unit new apartment complex through reconstruction"
       },
       {
         "title": "[올댓차이나] 홍콩 증시, 해외 증시 강세에 반등 개장… H주 1.27%↑",
@@ -12213,7 +12312,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 16일 아시아 증시에 반발 매수세가 유입한 흐름이 이어져 주력 기술주를 중심으로 폭넓게 매수 선행하면서 반등하고 있다. 미국 장기금리 하락과 뉴욕 증시 강세도 투자심리 회복…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] Hong Kong Market Rises on Strong Overseas Markets, H-Shares Up 1.27%"
       },
       {
         "title": "‘잠실우성4차’ 828가구, ‘대치쌍용1차’는 999가구로 재건축된다",
@@ -12222,7 +12322,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "서울 송파구 잠실우성4차아파트가 공공임대주택 98가구를 포함한 최고 49층, 총 828가구 규모로 재건축된다. 강남구 대치쌍용1차아파트도 최고 49층, 999가구 규모로 탈바꿈한다. 동대문구 제기제6구역 재개발 지역…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-dongdaemun.html",
+            "label": "동대문구 아파트 84㎡ 매매",
+            "labelEn": "동대문구 apartment 84㎡ sale",
+            "value": "11억 9,147만원",
+            "valueEn": "₩1,191M",
+            "note": "최근 1주 계약 162건 · 10/8 대비 +3.1%",
+            "noteEn": "162 deals in the last 1 weeks · +3.1% vs Oct 8"
+          }
+        ],
+        "titleEn": "Jamsil Osung 4th' 828 units, 'Daechi Sungsung 1st' to be redeveloped into 999 units"
       },
       {
         "title": "\"시세 산정 AI도 믿을 수 있게\"…한국부동산원, 국제표준 인증",
@@ -12231,7 +12344,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Price Estimation AI Can Be Trusted\"…Korea Real Estate Institute Earns International Standard Certification"
       }
     ]
   }

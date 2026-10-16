@@ -4893,99 +4893,45 @@
     "date": "2026-10-16",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 부동산: ‘10·15 대책’ 발표 1년 만에 서울 주택시장에서 강남 지역은 수요가 줄어들고 중저가 지역으로 수요가 집중됐다. 대치쌍용1차와 잠실우성4차 재건축은 서울시 통합심의를 통과하며 사업이 탄력을 받았다. 반포주공1단지는 지상 35층, 5007세대 규모로 재건축되며 내년 준공을 목표로 하고 있다. 현대건설은 공동주택에 ALL-PC 시대를 열며 공간 혁신과 탈현장 건설을 가속화하고 있다. 또한 현대건설은 내진성능을 갖춘 탈현장 공법을 공동주택 코어에 확대 적용하고 있다.\n- 증시·환율: 정부와 당국은 증시 변동성을 강화해서 감시하고 교란 행위에 엄정하게 대응하겠다고 밝혔다. 금융시장 위험요인을 점검한 결과, 우리 경제와 증시의 기초여건은 여전히 견조한 것으로 평가됐다. 일본 증시는 미국 증시 반등에 힘입어 닛케이가 0.78% 상승 출발했다. 코스피는 전날 7%대 급락한 후 1% 내외로 강세를 보였고, 코스닥도 2%대 상승했다. 코스피는 1%대 상승 출발했으며, 코스닥 역시 상승세를 이어갔다.\n- 금리·예금·투자상품: 세계 경제가 스태그플레이션 공포로 인해 불안한 상황을 맞이하고 있다. 주식, 채권, 금 가격이 모두 하락하는 것으로 나타났다. 이는 글로벌 경기 둔화와 물가 상승이 동시에 발생하는 상황을 반영한다. 주요 자산 가격의 하락은 투자자들의 심리에 부정적인 영향을 미치고 있다. 관련 시장에서는 향후 경기 전망에 대한 우려가 커지고 있다.\n- 기타 경제 소식: 일본 경제가 엔저 특수에도 불구하고 제조업 부진으로 '동남아화' 경고등이 켜졌다. 경제인협회는 미국 싱크탱크와 협력해 한국의 성장전략을 모색하고 있다. 이창용이 대담을 통해 관련 논의에 참여했다. 일본의 제조업 상황은 경제 구조 변화를 시사하고 있다. 경제인협회와 미국 싱크탱크의 협력은 미래 성장 방향을 탐색하는 계기가 되고 있다.",
-      "en": "- Real Estate: One year after the announcement of the '10·15 measures,' demand in the Seoul housing market has decreased in the Gangnam area and shifted to mid- to low-priced areas. The reconstruction projects of Dachisangyong 1 and Jamsil Osung 4 have passed Seoul's integrated review, gaining momentum. Banpo Jukkong 1 is scheduled to be rebuilt as a 35-story building with 5,0007 units, aiming for completion next year. Hyundai Engineering & Construction is ushering in the ALL-PC era in apartment complexes, accelerating space innovation and offsite construction. Additionally, Hyundai Engineering & Construction is expanding the application of seismic-resistant offsite construction methods in the core of apartment complexes.\n- Stocks & FX: The government and authorities stated they will strengthen monitoring of stock market volatility and strictly respond to disruptive activities. After inspecting risk factors in the financial market, the basic conditions of our economy and stock market were still evaluated as solid. The Japanese stock market rose 0.78% at the opening, driven by a rebound in the U.S. stock market. The KOSPI, after a sharp decline of over 7% the previous day, showed a strong performance with gains of around 1%, and the KOSDAQ also rose by over 2%. The KOSPI opened with gains of over 1%, and the KOSDAQ also continued its upward trend.\n- Rates, Deposits & Investment Products: The global economy is facing an uncertain situation due to fears of stagflation. Stock, bond, and gold prices have all declined. This reflects a situation where global economic slowdown and rising prices occur simultaneously. The decline in major asset prices is negatively affecting investor sentiment. Concerns about future economic outlooks are growing in related markets.\n- Other Economic News: Japan's economy has triggered a warning light of \"Southeast Asianization\" due to manufacturing weakness, despite the yen depreciation special situation. The Business Korea Association is exploring South Korea's growth strategies in cooperation with a U.S. think tank. Lee Chang-woong participated in the related discussions through a bold approach. Japan's manufacturing situation indicates a shift in economic structure. The cooperation between the Business Korea Association and the U.S. think tank is serving as an opportunity to explore future growth directions."
+      "ko": "- 금리·예금·투자상품: 국고채 금리가 일제히 하락한 것으로 나타났다. 3년물 국고채 금리는 연 3.854%를 기록했다. 코스피가 반등했음에도 외인 매수가 영향을 미친 것으로 보인다. 워시는 미국의 경제 상황이 예상과 부합한다고 밝혔다. 이에 따라 10월 금리 인상 확률은 28%에서 13%로 하락했다.\n- 기타 경제 소식: 한미 재무·통화당국이 첫 2+2 면담을 진행하며 경제·금융 협력 방안을 논의했다. 국토차관은 추가 대출 규제에 대한 현재 검토는 하지 않고 있다고 밝혔다. 국토차관은 착공 증가가 좋은 시그널이라고 평가했다. 추가 대출 규제에 대한 선을 그어두고 있다고 설명했다. 연말 착공에 최대한 노력하겠다는 입장을 재확인했다.\n- 증시·환율: 환율은 1,331원으로 2년 만에 최저를 기록했다. 코스피는 7% 급락한 '검은 목요일'에 800억원대의 강제청산이 발생했다. 이후 코스피는 반발매수에 2.1% 상승하며 8거래일 만에 반등했다. 코스닥도 같은 날 4.5% 상승했다. 일본 증시는 AI 실적주 강세로 닛케이가 1.39% 상승하며 상승 마감했다.\n- 부동산: 강남구는 일원개포한신아파트 철거를 앞두고 통학 안전을 위한 협의체를 구성했다. 정부는 주택공급 상황을 공개하기 위해 착공·분양·입주 상황판을 가동하는 첫 정례브리핑을 진행했다. 정부는 올해 수도권 주택 착공이 목표 대비 최대 5만가구 부족할 것으로 예상했다. 수도권 공적주택 10만호 입주를 위해 정부는 연내 공급지원센터를 신설할 계획이다. 주택통계에서는 절반이 빌라인 지역에서 22%만이 반영되는 아파트 쏠림 현상이 나타났다.",
+      "en": "- Rates, Deposits & Investment Products: All government bond rates have fallen. The three-year government bond rate recorded 3.854% annually. Even though the Kospi rebounded, foreign buying appears to have had an impact. Washi stated that the U.S. economic situation matches expectations. As a result, the probability of a rate hike in October dropped from 28% to 13%.\n- Other Economic News: The South Korean and U.S. financial and monetary authorities held their first 2+2 meeting and discussed economic and financial cooperation measures. The Deputy Minister of Land, Infrastructure and Transport stated that they are not currently reviewing additional loan regulations. The Deputy Minister evaluated the increase in construction starts as a positive signal. He explained that they have drawn a line regarding additional loan regulations. He reaffirmed the position of making maximum efforts for construction starts by year-end.\n- Stocks & FX: The exchange rate fell to 1,331 won, the lowest in two years. The KOSPI experienced forced liquidations in the range of 80,000,000,000 won during the \"Black Thursday\" when it plummeted 7%. Afterwards, the KOSPI rose 2.1% due to buying pressure and rebounded after eight trading days. The KOSDAQ also rose 4.5% on the same day. The Japanese market closed higher as the Nikkei rose 1.39% due to strong performance by AI-related stocks.\n- Real Estate: Gangnam-gu established a coordination body to ensure commuting safety ahead of the demolition of the Ilwon Gaepo Hanshin Apartment. The government held its first regular briefing to operate a board displaying construction, sales, and occupancy status in order to disclose housing supply conditions. The government expects that the number of housing units started in the Seoul metropolitan area this year will be up to 50,000 units short of the target. To achieve the occupancy of 100,000 public housing units in the Seoul metropolitan area, the government plans to establish a new support center for housing supply by year-end. In housing statistics, a concentration phenomenon occurred where only 22% of apartments were reflected in areas where half of the housing units are villas."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "‘10·15 대책’ 발표 1년 만에 서울 주택시장에서 강남 지역은 수요가 줄어들고 중저가 지역으로 수요가 집중됐다. 대치쌍용1차와 잠실우성4차 재건축은 서울시 통합심의를 통과하며 사업이 탄력을 받았다. 반포주공1단지는 지상 35층, 5007세대 규모로 재건축되며 내년 준공을 목표로 하고 있다. 현대건설은 공동주택에 ALL-PC 시대를 열며 공간 혁신과 탈현장 건설을 가속화하고 있다. 또한 현대건설은 내진성능을 갖춘 탈현장 공법을 공동주택 코어에 확대 적용하고 있다.",
-        "lineEn": "One year after the announcement of the '10·15 measures,' demand in the Seoul housing market has decreased in the Gangnam area and shifted to mid- to low-priced areas. The reconstruction projects of Dachisangyong 1 and Jamsil Osung 4 have passed Seoul's integrated review, gaining momentum. Banpo Jukkong 1 is scheduled to be rebuilt as a 35-story building with 5,0007 units, aiming for completion next year. Hyundai Engineering & Construction is ushering in the ALL-PC era in apartment complexes, accelerating space innovation and offsite construction. Additionally, Hyundai Engineering & Construction is expanding the application of seismic-resistant offsite construction methods in the core of apartment complexes.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "‘10·15 대책’ 1년 서울 주택시장 보니…강남 외면, 수요 중저가 지역에 몰렸다",
-            "link": "https://www.mk.co.kr/news/economy/12177533",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "대치쌍용1차·잠실우성4차 재건축 탄력…서울시 통합심의 통과",
-            "link": "https://www.yna.co.kr/view/AKR20261016027200004",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "반포주공1단지, 지상 35층·5007세대로 재건축…내년 준공",
-            "link": "https://www.newsis.com/view/NISX20261015_0003828115",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "“공간 혁신·탈현장건설 속도”…현대건설, 공동주택 ALL-PC 시대 연다",
-            "link": "https://www.mk.co.kr/news/realestate/12177503",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "현대건설, 내진성능 탈현장 공법 공동주택 코어에 확대 적용",
-            "link": "https://www.yna.co.kr/view/AKR20261016042200003",
-            "source": "연합뉴스 경제"
-          }
-        ]
-      },
-      {
-        "key": "stocks",
-        "name": "증시·환율",
-        "nameEn": "Stocks & FX",
-        "lineKo": "정부와 당국은 증시 변동성을 강화해서 감시하고 교란 행위에 엄정하게 대응하겠다고 밝혔다. 금융시장 위험요인을 점검한 결과, 우리 경제와 증시의 기초여건은 여전히 견조한 것으로 평가됐다. 일본 증시는 미국 증시 반등에 힘입어 닛케이가 0.78% 상승 출발했다. 코스피는 전날 7%대 급락한 후 1% 내외로 강세를 보였고, 코스닥도 2%대 상승했다. 코스피는 1%대 상승 출발했으며, 코스닥 역시 상승세를 이어갔다.",
-        "lineEn": "The government and authorities stated they will strengthen monitoring of stock market volatility and strictly respond to disruptive activities. After inspecting risk factors in the financial market, the basic conditions of our economy and stock market were still evaluated as solid. The Japanese stock market rose 0.78% at the opening, driven by a rebound in the U.S. stock market. The KOSPI, after a sharp decline of over 7% the previous day, showed a strong performance with gains of around 1%, and the KOSDAQ also rose by over 2%. The KOSPI opened with gains of over 1%, and the KOSDAQ also continued its upward trend.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "정부·당국 \"증시 변동성 감시 강화…교란 행위 엄정 대응\"",
-            "link": "https://www.yna.co.kr/view/AKR20261016046600002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "\"우리 경제·증시 기초여건 여전히 견조\"…금융시장 위험요인 점검",
-            "link": "https://www.newsis.com/view/NISX20261016_0003828620",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "日증시, 美증시 반등에 상승 출발…닛케이 0.78%↑",
-            "link": "https://www.newsis.com/view/NISX20261016_0003828469",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "'전날 7%대 급락' 코스피, 1% 내외 강세…코스닥 2%대↑(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261016033251008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "'전날 7%대 급락' 코스피, 1%대 상승 출발…코스닥도 상승",
-            "link": "https://www.yna.co.kr/view/AKR20261016033200008",
-            "source": "연합뉴스 경제"
-          }
-        ]
-      },
-      {
         "key": "rates",
         "name": "금리·예금·투자상품",
         "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "세계 경제가 스태그플레이션 공포로 인해 불안한 상황을 맞이하고 있다. 주식, 채권, 금 가격이 모두 하락하는 것으로 나타났다. 이는 글로벌 경기 둔화와 물가 상승이 동시에 발생하는 상황을 반영한다. 주요 자산 가격의 하락은 투자자들의 심리에 부정적인 영향을 미치고 있다. 관련 시장에서는 향후 경기 전망에 대한 우려가 커지고 있다.",
-        "lineEn": "The global economy is facing an uncertain situation due to fears of stagflation. Stock, bond, and gold prices have all declined. This reflects a situation where global economic slowdown and rising prices occur simultaneously. The decline in major asset prices is negatively affecting investor sentiment. Concerns about future economic outlooks are growing in related markets.",
+        "lineKo": "국고채 금리가 일제히 하락한 것으로 나타났다. 3년물 국고채 금리는 연 3.854%를 기록했다. 코스피가 반등했음에도 외인 매수가 영향을 미친 것으로 보인다. 워시는 미국의 경제 상황이 예상과 부합한다고 밝혔다. 이에 따라 10월 금리 인상 확률은 28%에서 13%로 하락했다.",
+        "lineEn": "All government bond rates have fallen. The three-year government bond rate recorded 3.854% annually. Even though the Kospi rebounded, foreign buying appears to have had an impact. Washi stated that the U.S. economic situation matches expectations. As a result, the probability of a rate hike in October dropped from 28% to 13%.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "[밤 사이 해외 뉴스 영상] \"주식·채권·금 다 떨어진다\"…세계 경제 스태그플레이션 공포",
-            "link": "https://www.hankyung.com/article/202610165401i",
+            "title": "국고채 금리 일제히 하락…코스피 반등에도 외인 매수 영향(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261016141851008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "국고채 금리 일제히 하락…3년물 연 3.854%",
+            "link": "https://www.yna.co.kr/view/AKR20261016141800008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "'주식 60 채권 40' 공식 깨뜨린 범인…금리가 아니었다",
+            "link": "https://www.hankyung.com/article/202610166691i",
             "source": "한국경제 경제"
+          },
+          {
+            "title": "워시 \"경제 상황 예상과 부합\" 발언에…10월 금리 인상 확률 28%→13%",
+            "link": "https://www.newsis.com/view/NISX20261016_0003829192",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "워시, 美 물가 급등에도 말 아껴…\"금리 결정, 예고 안 해\"",
+            "link": "https://www.newsis.com/view/NISX20261016_0003829027",
+            "source": "뉴시스 경제"
           }
         ]
       },
@@ -4993,21 +4939,100 @@
         "key": "other",
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
-        "lineKo": "일본 경제가 엔저 특수에도 불구하고 제조업 부진으로 '동남아화' 경고등이 켜졌다. 경제인협회는 미국 싱크탱크와 협력해 한국의 성장전략을 모색하고 있다. 이창용이 대담을 통해 관련 논의에 참여했다. 일본의 제조업 상황은 경제 구조 변화를 시사하고 있다. 경제인협회와 미국 싱크탱크의 협력은 미래 성장 방향을 탐색하는 계기가 되고 있다.",
-        "lineEn": "Japan's economy has triggered a warning light of \"Southeast Asianization\" due to manufacturing weakness, despite the yen depreciation special situation. The Business Korea Association is exploring South Korea's growth strategies in cooperation with a U.S. think tank. Lee Chang-woong participated in the related discussions through a bold approach. Japan's manufacturing situation indicates a shift in economic structure. The cooperation between the Business Korea Association and the U.S. think tank is serving as an opportunity to explore future growth directions.",
+        "lineKo": "한미 재무·통화당국이 첫 2+2 면담을 진행하며 경제·금융 협력 방안을 논의했다. 국토차관은 추가 대출 규제에 대한 현재 검토는 하지 않고 있다고 밝혔다. 국토차관은 착공 증가가 좋은 시그널이라고 평가했다. 추가 대출 규제에 대한 선을 그어두고 있다고 설명했다. 연말 착공에 최대한 노력하겠다는 입장을 재확인했다.",
+        "lineEn": "The South Korean and U.S. financial and monetary authorities held their first 2+2 meeting and discussed economic and financial cooperation measures. The Deputy Minister of Land, Infrastructure and Transport stated that they are not currently reviewing additional loan regulations. The Deputy Minister evaluated the increase in construction starts as a positive signal. He explained that they have drawn a line regarding additional loan regulations. He reaffirmed the position of making maximum efforts for construction starts by year-end.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "엔저 특수에도 무너진 제조업…日 경제 '동남아화' 경고등",
-            "link": "https://www.newsis.com/view/NISX20261014_0003825692",
+            "title": "한미 재무·통화당국 첫 2+2 면담…\"경제·금융 협력 방안 논의\"",
+            "link": "https://www.yna.co.kr/view/AKR20261016141100002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[일문일답] 국토차관 “추가 대출 규제 현재 검토 안 해… 연말 착공에 최대한 노력”",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/16/5TSIG4PO3FDD3GO7TFTAVRRNOM/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "국토 차관 \"착공 증가, 좋은 시그널\"…추가 대출규제 선 그어",
+            "link": "https://www.newsis.com/view/NISX20261016_0003829332",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "환율은 1,331원으로 2년 만에 최저를 기록했다. 코스피는 7% 급락한 '검은 목요일'에 800억원대의 강제청산이 발생했다. 이후 코스피는 반발매수에 2.1% 상승하며 8거래일 만에 반등했다. 코스닥도 같은 날 4.5% 상승했다. 일본 증시는 AI 실적주 강세로 닛케이가 1.39% 상승하며 상승 마감했다.",
+        "lineEn": "The exchange rate fell to 1,331 won, the lowest in two years. The KOSPI experienced forced liquidations in the range of 80,000,000,000 won during the \"Black Thursday\" when it plummeted 7%. Afterwards, the KOSPI rose 2.1% due to buying pressure and rebounded after eight trading days. The KOSDAQ also rose 4.5% on the same day. The Japanese market closed higher as the Nikkei rose 1.39% due to strong performance by AI-related stocks.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "환율, 1,331원 또 연저점 …2년 만에 최저",
+            "link": "https://www.yna.co.kr/view/AKR20261016131100002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "日증시, AI 실적주 강세에 상승 마감…닛케이 1.39%↑",
+            "link": "https://www.newsis.com/view/NISX20261016_0003829428",
             "source": "뉴시스 경제"
           },
           {
-            "title": "경제인협회, 미국 싱크탱크와 한국 성장전략 모색…이창용 대담",
-            "link": "https://www.yna.co.kr/view/AKR20261015167000003",
+            "title": "코스피 7% 급락한 '검은 목요일'에 800억원대 또 강제청산",
+            "link": "https://www.yna.co.kr/view/AKR20261016128500008",
             "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 급락후 반발매수에 2.1%↑…8거래일만에 반등(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261016121951008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피 2.1%↑, 8거래일만 반등…코스닥 4.5%↑",
+            "link": "https://www.yna.co.kr/view/AKR20261016121900008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "강남구는 일원개포한신아파트 철거를 앞두고 통학 안전을 위한 협의체를 구성했다. 정부는 주택공급 상황을 공개하기 위해 착공·분양·입주 상황판을 가동하는 첫 정례브리핑을 진행했다. 정부는 올해 수도권 주택 착공이 목표 대비 최대 5만가구 부족할 것으로 예상했다. 수도권 공적주택 10만호 입주를 위해 정부는 연내 공급지원센터를 신설할 계획이다. 주택통계에서는 절반이 빌라인 지역에서 22%만이 반영되는 아파트 쏠림 현상이 나타났다.",
+        "lineEn": "Gangnam-gu established a coordination body to ensure commuting safety ahead of the demolition of the Ilwon Gaepo Hanshin Apartment. The government held its first regular briefing to operate a board displaying construction, sales, and occupancy status in order to disclose housing supply conditions. The government expects that the number of housing units started in the Seoul metropolitan area this year will be up to 50,000 units short of the target. To achieve the occupancy of 100,000 public housing units in the Seoul metropolitan area, the government plans to establish a new support center for housing supply by year-end. In housing statistics, a concentration phenomenon occurred where only 22% of apartments were reflected in areas where half of the housing units are villas.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "강남구, 일원개포한신아파트 철거 앞두고 통학안전 협의체 꾸려",
+            "link": "https://www.newsis.com/view/NISX20261016_0003829327",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "정부 \"착공·분양·입주 상황판 가동\"…주택공급 첫 정례브리핑",
+            "link": "https://www.yna.co.kr/view/AKR20261016108900001",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[속보]정부 “올 수도권 주택 착공, 목표보다 최대 5만가구 부족”",
+            "link": "https://www.mk.co.kr/news/realestate/12177748",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "수도권 공적주택 10만호 입주 추진…정부, 공급지원센터 연내 신설",
+            "link": "https://www.newsis.com/view/NISX20261016_0003829190",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "절반이 빌라인데 22%만 반영…주택통계도 아파트 쏠림",
+            "link": "https://www.hankyung.com/article/202610166669i",
+            "source": "한국경제 부동산"
           }
         ]
       }
