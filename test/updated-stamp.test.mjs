@@ -18,7 +18,11 @@ import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
 const root = path.resolve(import.meta.dirname, "..");
 const DOCS = path.join(root, "docs");
 
-const SHELL = (inner) => `<header><div class="updated" id="updated">불러오는 중...</div></header>${inner}`;
+// 실제 틀과 같은 모양이다 (#282): 경고(#updated-warn)는 머리글, 기준일(#updated)은 바닥글.
+// 옛 픽스처는 둘 다 머리글에 두어 '자리'를 박제하고 있었다 - 틀이 바뀌어도 아무 시험도 안 떨어졌다.
+const SHELL = (inner) =>
+  `<header><h1 id="page-title">제목</h1><div class="updated updated-warn" id="updated-warn" role="status" hidden></div></header>${inner}` +
+  `<footer class="site-footer"><div class="updated" id="updated">불러오는 중...</div></footer>`;
 
 /** nav.js를 가짜 문서에서 돌린다. now는 주입하는 '지금' 시각(ISO). 경고 칸의 최종 상태를 돌려준다. */
 async function runNav(html, nowIso, lang = "ko") {
@@ -218,9 +222,90 @@ test("저장소 docs: id=updated가 있는 장은 모두 표에 있고 정적 '�
     withUpdated.push(f);
     assert.ok(!/id="updated"[^>]*>\s*불러오는 중/.test(html), `docs/${f}: #updated에 '불러오는 중...'이 정적으로 남았다`);
   }
-  const known = new Set([...Object.keys(PAGE_SOURCES), ...NO_DATA_PAGES]);
-  assert.deepEqual(withUpdated.filter((f) => !known.has(f)), [], "소스 표에 없는 장 (PAGE_SOURCES 또는 NO_DATA_PAGES에 넣을 것)");
-  assert.deepEqual([...known].filter((f) => !withUpdated.includes(f)), [], "표에는 있는데 #updated가 없는 장");
+  // #282: #updated는 '기준일' 한 뜻만 진다. 데이터를 읽지 않는 세 장(NO_DATA_PAGES)의 제목 아래 한 줄은
+  // 기준일이 아니라 꼬리표라 #tagline이고, 그래서 #updated를 가진 장 = PAGE_SOURCES의 장이다.
+  const sourced = Object.keys(PAGE_SOURCES);
+  assert.deepEqual(withUpdated.filter((f) => !sourced.includes(f)), [], "소스 표에 없는데 #updated가 있는 장 (PAGE_SOURCES에 넣거나 #tagline로 가를 것)");
+  assert.deepEqual(sourced.filter((f) => !withUpdated.includes(f)), [], "표에는 있는데 #updated가 없는 장");
+  assert.equal(withUpdated.length, 64, "#updated(기준일)를 가진 장 수");
+  assert.equal(withUpdated.length + NO_DATA_PAGES.length, files.length, "기준일 64 + 꼬리표 3 = 전체 67이어야 한다");
+});
+
+/** html에서 태그 하나의 안쪽을 잘라 돌려준다. 없으면 null. */
+function inside(html, openRe, closeTag) {
+  const m = openRe.exec(html);
+  if (!m) return null;
+  const end = html.indexOf(closeTag, m.index);
+  return end < 0 ? null : html.slice(m.index, end);
+}
+
+/**
+ * #282 되풀이 방지. 두 줄이 **제자리**에 있는지를 자리로 센다.
+ *
+ * 전에는 어느 시험도 자리를 안 봤다 - stampHtml의 정규식이 자리를 묻지 않아, 누가 틀을 고쳐 기준일을
+ * 머리글로 되돌려도 1559개 중 아무것도 안 떨어졌다(cto 판정 6205647191 D절).
+ *
+ * 지키는 것은 셋이다.
+ *   - 기준일(#updated)은 바닥글(.site-footer) 안에 있다 - 머리글을 24.4px 줄이려고 내린 것이다.
+ *   - "n일 전 자료" 경고(#updated-warn)는 머리글 안에 있다 - 같이 내리면 낡은 자료 고지가 첫 화면에서
+ *     사라진다(134조건 중 128 -> 1, po 6206109779 / cmo 6207405456).
+ *   - 데이터를 읽지 않는 세 장은 기준일도 경고도 없고 꼬리표(#tagline)를 머리글에 가진다.
+ */
+test("저장소 docs: 기준일은 바닥글에, 낡은 자료 경고는 머리글에 있다 (#282)", async () => {
+  const files = (await readdir(DOCS)).filter((f) => f.endsWith(".html")).sort();
+  const bad = [];
+  let dated = 0;
+  let tagged = 0;
+  for (const f of files) {
+    const html = await readFile(path.join(DOCS, f), "utf8");
+    const header = inside(html, /<header[\s>]/, "</header>");
+    const footer = inside(html, /<footer class="site-footer"[\s>]/, "</footer>");
+    if (!header) bad.push(`${f}: <header>가 없다`);
+    if (NO_DATA_PAGES.includes(f)) {
+      tagged += 1;
+      if (html.includes('id="updated"')) bad.push(`${f}: 데이터를 읽지 않는 장인데 #updated가 있다`);
+      if (html.includes('id="updated-warn"')) bad.push(`${f}: 데이터를 읽지 않는 장인데 #updated-warn이 있다`);
+      if (!header?.includes('id="tagline"')) bad.push(`${f}: 꼬리표(#tagline)가 머리글에 없다`);
+      continue;
+    }
+    dated += 1;
+    if (!footer) bad.push(`${f}: <footer class="site-footer">가 없다`);
+    else if (!footer.includes('id="updated"')) bad.push(`${f}: 기준일(#updated)이 바닥글에 없다`);
+    if (header && !header.includes('id="updated-warn"')) bad.push(`${f}: 경고(#updated-warn)가 머리글에 없다`);
+    if (header?.includes('id="updated"')) bad.push(`${f}: 기준일(#updated)이 머리글에 남아 있다`);
+    if (footer?.includes('id="updated-warn"')) bad.push(`${f}: 경고(#updated-warn)가 바닥글로 내려갔다`);
+    if ((html.match(/id="updated"/g) ?? []).length !== 1) bad.push(`${f}: #updated가 한 개가 아니다`);
+    if ((html.match(/id="updated-warn"/g) ?? []).length !== 1) bad.push(`${f}: #updated-warn이 한 개가 아니다`);
+  }
+  assert.deepEqual(bad, [], bad.join(" | "));
+  assert.equal(dated, 64, "기준일을 가진 장 수");
+  assert.equal(tagged, 3, "꼬리표만 가진 장 수");
+  assert.equal(dated + tagged, files.length, "64 + 3 = 67");
+});
+
+/** 틀(scripts/rates-template.html)도 같은 자리를 가진다 - 금리 네 장이 여기서 찍혀 나온다. */
+test("금리 틀도 기준일은 바닥글에, 경고는 머리글에 있다 (#282)", async () => {
+  const html = await readFile(path.join(root, "scripts/rates-template.html"), "utf8");
+  const header = inside(html, /<header[\s>]/, "</header>");
+  const footer = inside(html, /<footer class="site-footer"[\s>]/, "</footer>");
+  assert.ok(header?.includes('id="updated-warn"'), "경고가 머리글에 있어야 한다");
+  assert.ok(!header?.includes('id="updated"'), "기준일이 머리글에 남으면 안 된다");
+  assert.ok(footer?.includes('id="updated"'), "기준일이 바닥글에 있어야 한다");
+  assert.ok(!footer?.includes('id="updated-warn"'), "경고가 바닥글로 내려가면 안 된다");
+});
+
+/** 기준일 줄을 다시 찍어도 경고 줄이 늘어나지 않는다 - 옛 정규식은 경고까지 삼켜 다시 뱉었다(#282). */
+test("stampHtml은 떨어져 있는 경고 줄을 복제하지 않는다 (#282)", () => {
+  const html = SHELL("<main>본문</main>");
+  const once = stampHtml(html, "2026-10-16");
+  const twice = stampHtml(once, "2026-10-17");
+  for (const [label, out] of [["1회", once], ["2회", twice]]) {
+    assert.equal((out.match(/id="updated-warn"/g) ?? []).length, 1, `${label}: 경고 줄이 하나여야 한다`);
+    assert.equal((out.match(/id="updated"/g) ?? []).length, 1, `${label}: 기준일 줄이 하나여야 한다`);
+    assert.ok(inside(out, /<header[\s>]/, "</header>").includes('id="updated-warn"'), `${label}: 경고는 머리글에 남아야 한다`);
+    assert.ok(inside(out, /<footer class="site-footer"[\s>]/, "</footer>").includes('id="updated"'), `${label}: 기준일은 바닥글에 있어야 한다`);
+  }
+  assert.match(twice, /data-updated="2026-10-17">기준일 2026-10-17</);
 });
 
 test("저장소 docs: 찍힌 기준일이 그 장 소스의 가장 오래된 updatedAt과 같다 (오늘과 비교하지 않는다)", async () => {
