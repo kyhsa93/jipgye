@@ -19,6 +19,13 @@ import {
 } from "./prerender.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
+// 이 틀에서 46장을 찍어 낸다. 틀 자체가 색인되는 장이라 틀에 적는 주석은 47장에 그대로 실려 나간다 -
+// 그래서 "왜 이렇게 생겼나"는 여기나 src/css/legacy.css에 적고 틀에는 안 적는다(장부 규칙 3, 선례 #334).
+//
+// 틀의 #trend-section 바로 뒤에 있는 <div class="trend-reserve">(빈 칸 셋)는 지우면 안 된다. 그 구획은
+// realestate-trend.json이 온 뒤에 hidden이 풀리는데, 자리를 안 잡아 두면 412폭에서 727px이 한 프레임에
+// 끼어들어 아래를 통째로 민다(#287 (마)). 높이를 잡는 규칙과 그 근거는 src/css/legacy.css의
+// ".trend-reserve" 블록에, 되풀이를 막는 검사는 test/realestate-pages.test.mjs에 있다.
 const SOURCE_PATH = path.join(root, "docs/realestate.html");
 const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 
