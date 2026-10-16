@@ -419,7 +419,7 @@ test("조건 칸과 결과 자리는 데이터가 오기 전에도 자리를 잡
     /#search-controls \.search-field:has\(select\) \{\n  flex-basis: calc\(50% - var\(--controls-gap-x\) \/ 2\);\n\}/,
     /@media \(max-width: 519px\) \{\n  #area-chips:empty::after \{\n    content: "\\00a0";\n  \}\n\}/,
     /@media \(max-width: 502px\) \{\n  #age-chips:empty::after \{\n    content: "\\00a0";\n  \}\n\}/,
-    /#search-result:empty \{\n  min-height: 100vh;\n\}/,
+    /#search-result:empty,\n#search-result:has\(> p:only-child\) \{\n  min-height: 100vh;\n\}/,
   ]) {
     assert.match(css, rule, "src/css/legacy.css: deal-search 자리 예약 규칙이 사라졌다");
   }
