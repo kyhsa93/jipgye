@@ -31,5 +31,12 @@
 #   "추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 선다 (#287)" 하나다
 #   (`node --test test/realestate-pages.test.mjs` → 기준 72 · 후보 73).
 #   고친 시험 파일은 0이고 없어진 시험도 0이다(.skip·.todo 도 0 그대로).
-1559
-1559
+# 센 법: 2026-10-16, merge-base 029b16c2, Node v24.16.0, macOS 26.6.2 (#287 (다)).
+#   npm test → ℹ tests 1560 · pass 1560 · fail 0 · skipped 0
+#   merge-base 029b16c2 를 체크아웃한 워크트리에서 같은 명령 → ℹ tests 1559 · pass 1559.
+#   차이 1 은 이 PR 이 test/deal-search.test.mjs 에 더한
+#   "조건 칸과 결과 자리는 데이터가 오기 전에도 자리를 잡는다 (#287)" 하나다
+#   (`node --test test/deal-search.test.mjs` → 기준 36 · 후보 37).
+#   고친 시험 파일은 0 이고 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
+1560
+1560

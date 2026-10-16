@@ -1492,9 +1492,10 @@
     margin-top: 8px;
   }
   .search-controls {
+    --controls-gap-x: 16px;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 16px;
+    gap: 10px var(--controls-gap-x);
     margin-bottom: 16px;
   }
   .search-field {
@@ -2012,7 +2013,7 @@
     flex-wrap: wrap;
     gap: 6px;
   }
-  .chip {
+  .chip, .chip-group:empty::before, .chip-group:empty::after {
     display: inline-flex;
     align-items: center;
     min-height: var(--tap);
@@ -2034,6 +2035,34 @@
     border-color: var(--accent);
     color: var(--accent-on);
     font-weight: 600;
+  }
+  #search-controls .search-field:has(.chip-group) {
+    flex-basis: 100%;
+  }
+  #search-controls .search-field:has(select) {
+    flex-basis: calc(50% - var(--controls-gap-x) / 2);
+  }
+  .chip-group:empty::before, .chip-group:empty::after {
+    content: "\00a0";
+    box-sizing: border-box;
+    flex-basis: 100%;
+    visibility: hidden;
+  }
+  .chip-group:empty::after {
+    content: none;
+  }
+  @media (max-width: 519px) {
+    #area-chips:empty::after {
+      content: "\00a0";
+    }
+  }
+  @media (max-width: 502px) {
+    #age-chips:empty::after {
+      content: "\00a0";
+    }
+  }
+  #search-result:empty, #search-result:has(> p:only-child) {
+    min-height: 100vh;
   }
   .field-label {
     display: block;
