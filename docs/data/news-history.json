@@ -12024,7 +12024,28 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "서울 아파트값 10% 상승 성북·서대문·강서구 14%대↑ 강남·서초 상승률 1~3%대 고가 주택 대출 규제 영향 서울 전세 매물 2만331건 전년 대비 16.6% 감소 대책 발표 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seongbuk.html",
+            "label": "성북구 아파트 84㎡ 전세",
+            "labelEn": "성북구 apartment 84㎡ jeonse",
+            "value": "6억 8,098만원",
+            "valueEn": "₩681M",
+            "note": "최근 1주 계약 131건 · 10/8 대비 +1.9%",
+            "noteEn": "131 deals in the last 1 weeks · +1.9% vs Oct 8"
+          },
+          {
+            "kind": "rates",
+            "label": "주택담보대출 최저금리(상환방식 무관)",
+            "labelEn": "Lowest mortgage rate (any repayment type)",
+            "value": "연 3.70%",
+            "valueEn": "3.70% p.a.",
+            "href": "./mortgage-rates.html"
+          }
+        ],
+        "titleEn": "After 1 year of the '10·15 Measures,' Seoul housing market shows buyers avoiding Gangnam, flocking to mid-to-low priced areas"
       },
       {
         "title": "대치쌍용1차·잠실우성4차 재건축 탄력…서울시 통합심의 통과",
@@ -12033,7 +12054,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 김동규 기자 = 서울 강남구 대치쌍용1차아파트와 송파구 잠실우성4차아파트 재건축 사업이 서울시 통합심의를 통과하면서 속도를 낼...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 5,760만원",
+            "valueEn": "₩2,858M",
+            "note": "최근 1주 계약 166건 · 10/8 대비 -0.8%",
+            "noteEn": "166 deals in the last 1 weeks · -0.8% vs Oct 8"
+          }
+        ],
+        "titleEn": "Daechi Sungsung 1st and Jamsil Uisang 4th reconstruction gains momentum... Seoul city passes integrated review"
       },
       {
         "title": "정부·당국 \"증시 변동성 감시 강화…교란 행위 엄정 대응\"",
@@ -12042,7 +12076,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(세종=연합뉴스) 이세원 기자 = 정부와 관계 당국은 최근 변동성이 커진 증권시장 등의 실시간 합동 모니터링을 강화하고 시장 교란 행위가 있으면...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Government and authorities \"strengthen monitoring of market volatility... strictly respond to disruptive acts"
       },
       {
         "title": "반포주공1단지, 지상 35층·5007세대로 재건축…내년 준공",
@@ -12051,7 +12086,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 박대로 기자 = 서울 서초구 반포주공1단지(1·2·4주구)가 공공 임대 주택 213세대를 포함한 총 5007세대 규모로 재건축된다. 서울시는 지난 15일 제21차 정비 사업 통합 심의 위원회에서 서초…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 84㎡ 매매",
+            "labelEn": "서초구 apartment 84㎡ sale",
+            "value": "26억 2,967만원",
+            "valueEn": "₩2,630M",
+            "note": "최근 1주 계약 157건 · 10/8 대비 -0.6%",
+            "noteEn": "157 deals in the last 1 weeks · -0.6% vs Oct 8"
+          }
+        ],
+        "titleEn": "Bannpo Junggong 1-dong, redeveloped into 35-story, 5007-unit complex…completion next year"
       },
       {
         "title": "\"우리 경제·증시 기초여건 여전히 견조\"…금융시장 위험요인 점검",
@@ -12060,7 +12108,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[세종=뉴시스] 안호균 기자 = 정부와 금융당국이 최근 주가 급락에도 우리 경제와 증시의 기초 여건은 여전히 견조하다고 평가했다. 정부는 자본시장의 변동성을 완화하고 성장성을 높일 수 있는 체질 개선 과제들을 일관되…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Basic Conditions of Our Economy and Stock Market Remain Stable\"... Inspection of Financial Market Risk Factors"
       },
       {
         "title": "“공간 혁신·탈현장건설 속도”…현대건설, 공동주택 ALL-PC 시대 연다",
@@ -12069,7 +12118,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "PC 구조 벽체 시스템 대한건축학회 인증 PC 벽체의 수직 접합 시공 편의성↑ “OSC 시장 활성화 기대”현대건설이 공동주택의 핵심 구조 기술을 연이어 확보하며 탈현장건설(OSC·..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Space innovation and off-site construction accelerate\"…Hyundai Engineering & Construction enters the ALL-PC era for apartment complexes"
       },
       {
         "title": "현대건설, 내진성능 탈현장 공법 공동주택 코어에 확대 적용",
@@ -12078,7 +12128,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 오예진 기자 = 현대건설은 내진 성능을 확보한 탈 현장 공법의 벽체 시스템을 계단실과 엘리베이터 등 공동주택 코어 부분(수직 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Hyundai Engineering & Construction expands application of seismic performance off-site construction method to core residential buildings"
       },
       {
         "title": "日증시, 美증시 반등에 상승 출발…닛케이 0.78%↑",
@@ -12087,7 +12138,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 신효령 기자 = 16일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)가 상승 출발했다. 니혼게이자이신문에 따르면 이날 닛케이지수는 전 거래일보다 499.34포인트(0.78%) 오른 6만4925.2…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Tokyo Stock Exchange Rises on U.S. Market Recovery… Nikkei Up 0.78%"
       },
       {
         "title": "'전날 7%대 급락' 코스피, 1% 내외 강세…코스닥 2%대↑(종합)",
@@ -12096,7 +12148,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유향 기자 = 전날 7%대의 급락으로 폭락장세를 이어가던 코스피가 16일 장 초반 1% 내외 상승률을 나타내고 있다. 전날까...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi Rises 1% Amid 7% Drop the Day Before; Kosdaq Up 2% (Comprehensive)"
       },
       {
         "title": "서대문구 천연뜨란채 56.02㎡ 12억원… 최근 3년 신고가 [MAI부동산]",
@@ -12105,7 +12158,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 15일 국토부 실거래가 시스템에 신규 등록된 서울 서대문구 천연동 천연뜨란채 전용 56.02㎡ 거래가 12억원으로 최근 3년 신고가를 기록했다. 항..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seodaemun.html",
+            "label": "서대문구 아파트 84㎡ 매매",
+            "labelEn": "서대문구 apartment 84㎡ sale",
+            "value": "11억 7,902만원",
+            "valueEn": "₩1,179M",
+            "note": "최근 1주 계약 175건 · 10/8 대비 -0.3%",
+            "noteEn": "175 deals in the last 1 weeks · -0.3% vs Oct 8"
+          }
+        ],
+        "titleEn": "Seodaemun-gu, Cheonnyeotteoranchaebi 56.02㎡ for 1,200,000,000 won... new high price in the last 3 years [MAI Real Estate]"
       },
       {
         "title": "동작구 동작협성휴포레시그니처 84.9869㎡ 14억 3천만원 최근 3년 신고가 [MAI부동산]",
@@ -12114,7 +12180,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 15일 국토부 실거래가 시스템에 신규 등록된 서울 동작구 신대방동 동작협성휴포레시그니처 전용 84.9869㎡가 14억 3,000만 원에 거래되며 최..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-dongjak.html",
+            "label": "동작구 아파트 84㎡ 매매",
+            "labelEn": "동작구 apartment 84㎡ sale",
+            "value": "15억 6,652만원",
+            "valueEn": "₩1,567M",
+            "note": "최근 1주 계약 152건 · 10/8 대비 +0.9%",
+            "noteEn": "152 deals in the last 1 weeks · +0.9% vs Oct 8"
+          }
+        ],
+        "titleEn": "Dongjak-gu Dongjak Hyepsung Signature 84.9869㎡ 1,430,000,000 won recent 3-year new high [MAI Real Estate]"
       },
       {
         "title": "동작구 상도동 동원베네스트 84.958㎡ 16억 3천만원… 최근 3년 신고가 [MAI부동산]",
@@ -12123,7 +12202,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 15일 국토부 실거래가 시스템에 신규 등록된 서울 동작구 상도동 동원베네스트 전용 84.958㎡ 거래가 16억 3천만원에 체결되며 최근 3년 내 신..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-dongjak.html",
+            "label": "동작구 아파트 84㎡ 매매",
+            "labelEn": "동작구 apartment 84㎡ sale",
+            "value": "15억 6,652만원",
+            "valueEn": "₩1,567M",
+            "note": "최근 1주 계약 152건 · 10/8 대비 +0.9%",
+            "noteEn": "152 deals in the last 1 weeks · +0.9% vs Oct 8"
+          }
+        ],
+        "titleEn": "Dongdaemun-gu Sangdo-dong Dongwon Benevest 84.958㎡ 1,630,000,000 won... Recent 3-year high price [MAI Real Estate]"
       },
       {
         "title": "영등포구 대림동 우성1 62.37㎡ 8억 4천만원… 최근 3년 신고가 [MAI부동산]",
@@ -12132,7 +12224,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 15일 국토교통부 실거래가 시스템에 신규 등록된 서울 영등포구 대림동 우성1 아파트 전용 62.37㎡가 8억 4천만원에 거래되며 최근 3년 신고가를..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yeongdeungpo.html",
+            "label": "영등포구 아파트 84㎡ 매매",
+            "labelEn": "영등포구 apartment 84㎡ sale",
+            "value": "15억 2,536만원",
+            "valueEn": "₩1,525M",
+            "note": "최근 1주 계약 200건 · 10/8 대비 -0.1%",
+            "noteEn": "200 deals in the last 1 weeks · -0.1% vs Oct 8"
+          }
+        ],
+        "titleEn": "Yongdingpo-gu Daelim-dong Ussung 1 62.37㎡ 840,000,000won... Recent 3-Year New High [MAI Real Estate]"
       },
       {
         "title": "영등포구 당산삼성래미안4차 84.94㎡ 23억 5천만원… 최근 3년 신고가 [MAI부동산]",
@@ -12141,7 +12246,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 15일 국토부 실거래가 시스템에 신규 등록된 서울 영등포구 당산동5가 당산삼성래미안4차 전용 84.94㎡가 23억 5,000만 원에 거래되며 최근 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yeongdeungpo.html",
+            "label": "영등포구 아파트 84㎡ 매매",
+            "labelEn": "영등포구 apartment 84㎡ sale",
+            "value": "15억 2,536만원",
+            "valueEn": "₩1,525M",
+            "note": "최근 1주 계약 200건 · 10/8 대비 -0.1%",
+            "noteEn": "200 deals in the last 1 weeks · -0.1% vs Oct 8"
+          }
+        ],
+        "titleEn": "Yeongdeungpo-gu Dangsan Samsung Ramean 4th 84.94㎡ 2,350,000,000 won... Recent 3-year new high [MAI Real Estate]"
       },
       {
         "title": "강서구 염창동 현대아이파크 84.84㎡ 14억 2천만원… 최근 3년 신고가 [MAI부동산]",
@@ -12150,7 +12268,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 15일 국토부 실거래가 시스템에 신규 등록된 서울 강서구 염창동 현대아이파크 전용 84.84㎡ 거래가 14억 2천만원을 기록하며 최근 3년 신고가로..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangseo.html",
+            "label": "강서구 아파트 84㎡ 매매",
+            "labelEn": "강서구 apartment 84㎡ sale",
+            "value": "11억 6,936만원",
+            "valueEn": "₩1,169M",
+            "note": "최근 1주 계약 383건 · 10/8 대비 +1.3%",
+            "noteEn": "383 deals in the last 1 weeks · +1.3% vs Oct 8"
+          }
+        ],
+        "titleEn": "Yangchong-dong, Gangseo-gu Hyundai Aipark 84.84㎡ for 1,420,000,000 won... new high in 3 years [MAI Real Estate]"
       },
       {
         "title": "'신길·녹번·송중' 도심 공공주택 복합사업 본격화…LH \"속도낼 것\"",
@@ -12159,7 +12290,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]정유선 기자 = 한국토지주택공사(LH)는 최근 도심 공공주택 복합지구로 지정된 '신길4구역', '녹번동근린공원', '송중동 주민센터 인근' 등 구역에서 후속 절차의 속도를 높이겠다고 16일 밝혔다. 도…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-guro.html",
+            "label": "구로구 아파트 84㎡ 매매",
+            "labelEn": "구로구 apartment 84㎡ sale",
+            "value": "9억 1,857만원",
+            "valueEn": "₩919M",
+            "note": "최근 1주 계약 309건 · 10/8 대비 +0.6%",
+            "noteEn": "309 deals in the last 1 weeks · +0.6% vs Oct 8"
+          }
+        ],
+        "titleEn": "Shin-gil, Nokbeon, and Songjung Urban Public Housing Complex Project Kicks Off...LH to Step Up Pace"
       },
       {
         "title": "'전날 7%대 급락' 코스피, 1%대 상승 출발…코스닥도 상승",
@@ -12168,7 +12312,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유향 기자 = 코스피가 16일 장 초반 1%대 상승률을 나타내고 있다. 전날까지 코스피는 7거래일 연속 하락 마감했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi Rises Over 1% After 7% Drop the Day Before…Kosdaq Also Up"
       },
       {
         "title": "유안타증권 \"코스피 급락, 외국인 매도 받아줄 매수 부족 비롯\"",
@@ -12177,7 +12322,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 강수지 기자 = 유안타증권[003470]은 최근 코스피 급락이 기업 실적 악화보다 외국인의 대규모 매도를 받아줄 매수세가 부족...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Yuanta Securities: Kospi Plunge Due to Lack of Buyers to Absorb Foreign Sell-Off"
       },
       {
         "title": "[밤 사이 해외 뉴스 영상] \"주식·채권·금 다 떨어진다\"…세계 경제 스태그플레이션 공포",
@@ -12186,7 +12332,8 @@
         "source": "한국경제 경제",
         "category": "rates",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Overnight International News Video] \"Stocks, Bonds, Gold All Fall\"...Global Stagflation Fears"
       },
       {
         "title": "[마켓뷰] 휘청했던 코스피, 변동성 이어지나 반등 시도하나",
@@ -12195,7 +12342,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 전날 7%대의 급락으로 폭락장세를 이어가고 있는 코스피가 16일 추가 변동성을 보일지, 간밤 뉴욕증시의 상승에...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Market View: Volatile KOSPI, Will Volatility Continue or Attempt a Recovery?"
       },
       {
         "title": "\"서울 집주인들 비상\"…부동산 경매 44% 급증, 집값도 흔들리나",
@@ -12204,7 +12352,28 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]이지우 인턴 기자 = 서울에서 강제경매로 넘어가는 부동산이 급증하는 가운데, 주택담보대출 연체액까지 빠르게 늘어나면서 향후 집값 하락 압력이 커질 수 있다는 전문가 분석이 나왔다. 지난 12일 이승희…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 327만원",
+            "valueEn": "₩1,303M",
+            "note": "최근 1주 계약 842건 · 10/8 대비 -8.2%",
+            "noteEn": "842 deals in the last 1 weeks · -8.2% vs Oct 8"
+          },
+          {
+            "kind": "rates",
+            "label": "주택담보대출 최저금리(상환방식 무관)",
+            "labelEn": "Lowest mortgage rate (any repayment type)",
+            "value": "연 3.70%",
+            "valueEn": "3.70% p.a.",
+            "href": "./mortgage-rates.html"
+          }
+        ],
+        "titleEn": "Seoul landlords on alert\"… real estate auctions surge 44%, could housing prices waver?"
       },
       {
         "title": "\"집값 정체기엔 보유보다 전세\"…부동산 전문가가 전하는 매수 전략",
@@ -12213,7 +12382,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]김성은 인턴 기자 = 부동산을 살 때는 집값 자체보다 시장이 상승 국면인지 판단하는 것이 중요하다는 전문가의 조언이 나왔다. 상승장이 확실하다면 대출을 활용해 매수할 수 있지만, 상승 여부가 불확실하다…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "During periods of stagnant home prices, renting is better than owning\"… Real estate experts share buying strategies"
       },
       {
         "title": "엔저 특수에도 무너진 제조업…日 경제 '동남아화' 경고등",
@@ -12222,7 +12392,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스]김성은 인턴 기자 = 엔화 약세가 장기간 이어졌음에도 일본의 제조업과 수출 경쟁력이 과거만큼 회복되지 못하면서 일본 경제가 '동남아화'하고 있다는 진단이 나왔다. 서준식 숭실대학교 경제학과 교수는 최근…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Manufacturing collapses despite yen depreciation; Japan's economy warns of \"Southeast Asianization"
       },
       {
         "title": "경제인협회, 미국 싱크탱크와 한국 성장전략 모색…이창용 대담",
@@ -12231,7 +12402,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 홍규빈 기자 = 한국경제인협회(한경협)는 오는 27일 서울 영등포구 FKI타워 콘퍼런스센터에서 미국 피터슨국제경제연구소(PII...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Economic Association to Explore Korea's Growth Strategy with U.S. Think Tank... Lee Chang-yong Interview"
       }
     ]
   }
