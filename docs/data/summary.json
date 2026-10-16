@@ -1,86 +1,32 @@
 {
-  "updatedAt": "2026-10-16T08:08:53.499Z",
+  "updatedAt": "2026-10-16T11:24:48.272Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 금리·예금·투자상품: 국고채 금리가 일제히 하락한 것으로 나타났다. 3년물 국고채 금리는 연 3.854%를 기록했다. 코스피가 반등했음에도 외인 매수가 영향을 미친 것으로 보인다. 워시는 미국의 경제 상황이 예상과 부합한다고 밝혔다. 이에 따라 10월 금리 인상 확률은 28%에서 13%로 하락했다.\n- 기타 경제 소식: 한미 재무·통화당국이 첫 2+2 면담을 진행하며 경제·금융 협력 방안을 논의했다. 국토차관은 추가 대출 규제에 대한 현재 검토는 하지 않고 있다고 밝혔다. 국토차관은 착공 증가가 좋은 시그널이라고 평가했다. 추가 대출 규제에 대한 선을 그어두고 있다고 설명했다. 연말 착공에 최대한 노력하겠다는 입장을 재확인했다.\n- 증시·환율: 환율은 1,331원으로 2년 만에 최저를 기록했다. 코스피는 7% 급락한 '검은 목요일'에 800억원대의 강제청산이 발생했다. 이후 코스피는 반발매수에 2.1% 상승하며 8거래일 만에 반등했다. 코스닥도 같은 날 4.5% 상승했다. 일본 증시는 AI 실적주 강세로 닛케이가 1.39% 상승하며 상승 마감했다.\n- 부동산: 강남구는 일원개포한신아파트 철거를 앞두고 통학 안전을 위한 협의체를 구성했다. 정부는 주택공급 상황을 공개하기 위해 착공·분양·입주 상황판을 가동하는 첫 정례브리핑을 진행했다. 정부는 올해 수도권 주택 착공이 목표 대비 최대 5만가구 부족할 것으로 예상했다. 수도권 공적주택 10만호 입주를 위해 정부는 연내 공급지원센터를 신설할 계획이다. 주택통계에서는 절반이 빌라인 지역에서 22%만이 반영되는 아파트 쏠림 현상이 나타났다.",
-    "en": "- Rates, Deposits & Investment Products: All government bond rates have fallen. The three-year government bond rate recorded 3.854% annually. Even though the Kospi rebounded, foreign buying appears to have had an impact. Washi stated that the U.S. economic situation matches expectations. As a result, the probability of a rate hike in October dropped from 28% to 13%.\n- Other Economic News: The South Korean and U.S. financial and monetary authorities held their first 2+2 meeting and discussed economic and financial cooperation measures. The Deputy Minister of Land, Infrastructure and Transport stated that they are not currently reviewing additional loan regulations. The Deputy Minister evaluated the increase in construction starts as a positive signal. He explained that they have drawn a line regarding additional loan regulations. He reaffirmed the position of making maximum efforts for construction starts by year-end.\n- Stocks & FX: The exchange rate fell to 1,331 won, the lowest in two years. The KOSPI experienced forced liquidations in the range of 80,000,000,000 won during the \"Black Thursday\" when it plummeted 7%. Afterwards, the KOSPI rose 2.1% due to buying pressure and rebounded after eight trading days. The KOSDAQ also rose 4.5% on the same day. The Japanese market closed higher as the Nikkei rose 1.39% due to strong performance by AI-related stocks.\n- Real Estate: Gangnam-gu established a coordination body to ensure commuting safety ahead of the demolition of the Ilwon Gaepo Hanshin Apartment. The government held its first regular briefing to operate a board displaying construction, sales, and occupancy status in order to disclose housing supply conditions. The government expects that the number of housing units started in the Seoul metropolitan area this year will be up to 50,000 units short of the target. To achieve the occupancy of 100,000 public housing units in the Seoul metropolitan area, the government plans to establish a new support center for housing supply by year-end. In housing statistics, a concentration phenomenon occurred where only 22% of apartments were reflected in areas where half of the housing units are villas."
+    "ko": "- 증시·환율: 홍콩 증시는 해외 증시 강세에 반등 마감했고, 중국 증시는 저가 매수세에도 혼조 마감했으며, 환율은 1,331원으로 2년 만에 최저를 기록했고, 일본 증시는 AI 실적주 강세에 상승 마감했으며, 코스피는 7% 급락한 '검은 목요일'에 800억원대 강제청산이 발생했다.\n- 부동산: 부동산 투자자들은 입주권이 아닌 현금청산 조건에 주의해야 한다는 조언이 나왔다. 서울 성북구는 각종 규제에도 불구하고 아파트값이 가장 많이 상승한 지역이다. 강남구는 일원개포한신아파트 철거를 앞두고 통학안전을 위한 협의체를 구성했다. AI 플랫폼 기능을 갖춘 아파트가 난방과 주차 서비스를 맞춤형으로 제공하고 있다. 정부는 주택공급 상황을 공개하기 위해 착공·분양·입주 상황판을 가동하기 시작했다.\n- 금리·예금·투자상품: 미국의 PPI 쇼크에도 불구하고 10년물 금리가 하락했고, 중국의 장기금리가 15개월 만에 최저 수준으로 떨어졌으며, 국고채 금리가 일제히 하락하면서 3년물 금리는 연 3.854%를 기록했고, 주식과 채권 비중 비율을 깨뜨린 원인은 금리가 아니었다.\n- 기타 경제 소식: 부천과 이천의 전통시장 명절대출 금리가 각각 0%와 4.5%로 차이가 나는 한편, 한미 재무·통화당국이 첫 2+2 면담을 통해 경제·금융 협력 방안을 논의했으며, 국토차관은 추가 대출 규제 검토는 현재 하지 않고 있으며, 착공 증가에 대해 긍정적인 시그널이라고 밝혔다.",
+    "en": "- Stocks & FX: The Hong Kong stock market closed higher in a rebound against overseas market strength, while the Chinese stock market closed mixed despite bargain hunting at low prices. The exchange rate hit a two-year low at 1,331 won. The Japanese stock market closed higher due to strong performance by AI-related stocks. The KOSPI experienced a forced liquidation in the range of 80,000,000,000 won on a 7% plunge, known as \"Black Thursday.\n- Real Estate: Real estate investors are advised to pay attention to cash settlement conditions rather than occupancy rights. In Seongbuk District, Seoul, apartment prices have risen the most despite various regulations. Gangnam District has formed a coordination body to ensure school commute safety ahead of the demolition of the Ilwon Gaepo Hanshin Apartment. An apartment equipped with AI platform functions is now providing customized heating and parking services. The government has started operating a construction, sales, and occupancy status board to disclose housing supply conditions.\n- Rates, Deposits & Investment Products: Despite the PPI shock in the United States, the 10-year interest rate fell, and China's long-term interest rate dropped to its lowest level in 15 months. Government bond rates fell universally, with the 3-year rate reaching 3.854% annually. The cause of the breakdown in the stock and bond allocation ratio was not interest rates.\n- Other Economic News: The interest rates for holiday loans in Bucheon and Icheon traditional markets differ at 0% and 4.5%, respectively, while the U.S.-South Korea financial and monetary authorities discussed economic and financial cooperation plans during their first 2+2 meeting. The Deputy Minister of Land, Infrastructure and Transport stated that additional loan regulations are not currently being considered and expressed a positive signal regarding increased construction starts."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "국고채 금리가 일제히 하락한 것으로 나타났다. 3년물 국고채 금리는 연 3.854%를 기록했다. 코스피가 반등했음에도 외인 매수가 영향을 미친 것으로 보인다. 워시는 미국의 경제 상황이 예상과 부합한다고 밝혔다. 이에 따라 10월 금리 인상 확률은 28%에서 13%로 하락했다.",
-      "lineEn": "All government bond rates have fallen. The three-year government bond rate recorded 3.854% annually. Even though the Kospi rebounded, foreign buying appears to have had an impact. Washi stated that the U.S. economic situation matches expectations. As a result, the probability of a rate hike in October dropped from 28% to 13%.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "국고채 금리 일제히 하락…코스피 반등에도 외인 매수 영향(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261016141851008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "국고채 금리 일제히 하락…3년물 연 3.854%",
-          "link": "https://www.yna.co.kr/view/AKR20261016141800008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "'주식 60 채권 40' 공식 깨뜨린 범인…금리가 아니었다",
-          "link": "https://www.hankyung.com/article/202610166691i",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "워시 \"경제 상황 예상과 부합\" 발언에…10월 금리 인상 확률 28%→13%",
-          "link": "https://www.newsis.com/view/NISX20261016_0003829192",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "워시, 美 물가 급등에도 말 아껴…\"금리 결정, 예고 안 해\"",
-          "link": "https://www.newsis.com/view/NISX20261016_0003829027",
-          "source": "뉴시스 경제"
-        }
-      ]
-    },
-    {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "한미 재무·통화당국이 첫 2+2 면담을 진행하며 경제·금융 협력 방안을 논의했다. 국토차관은 추가 대출 규제에 대한 현재 검토는 하지 않고 있다고 밝혔다. 국토차관은 착공 증가가 좋은 시그널이라고 평가했다. 추가 대출 규제에 대한 선을 그어두고 있다고 설명했다. 연말 착공에 최대한 노력하겠다는 입장을 재확인했다.",
-      "lineEn": "The South Korean and U.S. financial and monetary authorities held their first 2+2 meeting and discussed economic and financial cooperation measures. The Deputy Minister of Land, Infrastructure and Transport stated that they are not currently reviewing additional loan regulations. The Deputy Minister evaluated the increase in construction starts as a positive signal. He explained that they have drawn a line regarding additional loan regulations. He reaffirmed the position of making maximum efforts for construction starts by year-end.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "한미 재무·통화당국 첫 2+2 면담…\"경제·금융 협력 방안 논의\"",
-          "link": "https://www.yna.co.kr/view/AKR20261016141100002",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "[일문일답] 국토차관 “추가 대출 규제 현재 검토 안 해… 연말 착공에 최대한 노력”",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/16/5TSIG4PO3FDD3GO7TFTAVRRNOM/",
-          "source": "조선비즈 부동산"
-        },
-        {
-          "title": "국토 차관 \"착공 증가, 좋은 시그널\"…추가 대출규제 선 그어",
-          "link": "https://www.newsis.com/view/NISX20261016_0003829332",
-          "source": "뉴시스 경제"
-        }
-      ]
-    },
-    {
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
-      "lineKo": "환율은 1,331원으로 2년 만에 최저를 기록했다. 코스피는 7% 급락한 '검은 목요일'에 800억원대의 강제청산이 발생했다. 이후 코스피는 반발매수에 2.1% 상승하며 8거래일 만에 반등했다. 코스닥도 같은 날 4.5% 상승했다. 일본 증시는 AI 실적주 강세로 닛케이가 1.39% 상승하며 상승 마감했다.",
-      "lineEn": "The exchange rate fell to 1,331 won, the lowest in two years. The KOSPI experienced forced liquidations in the range of 80,000,000,000 won during the \"Black Thursday\" when it plummeted 7%. Afterwards, the KOSPI rose 2.1% due to buying pressure and rebounded after eight trading days. The KOSDAQ also rose 4.5% on the same day. The Japanese market closed higher as the Nikkei rose 1.39% due to strong performance by AI-related stocks.",
+      "lineKo": "홍콩 증시는 해외 증시 강세에 반등 마감했고, 중국 증시는 저가 매수세에도 혼조 마감했으며, 환율은 1,331원으로 2년 만에 최저를 기록했고, 일본 증시는 AI 실적주 강세에 상승 마감했으며, 코스피는 7% 급락한 '검은 목요일'에 800억원대 강제청산이 발생했다.",
+      "lineEn": "The Hong Kong stock market closed higher in a rebound against overseas market strength, while the Chinese stock market closed mixed despite bargain hunting at low prices. The exchange rate hit a two-year low at 1,331 won. The Japanese stock market closed higher due to strong performance by AI-related stocks. The KOSPI experienced a forced liquidation in the range of 80,000,000,000 won on a 7% plunge, known as \"Black Thursday.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": false,
+      "degraded": true,
       "items": [
+        {
+          "title": "[올댓차이나] 홍콩 증시, 해외 증시 강세에 반등 마감… H주 0.31%↑",
+          "link": "https://www.newsis.com/view/NISX20261016_0003829705",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "[올댓차이나] 中 증시, 저가 매수세에도 혼조 마감…창업판 0.39%↓",
+          "link": "https://www.newsis.com/view/NISX20261016_0003829653",
+          "source": "뉴시스 경제"
+        },
         {
           "title": "환율, 1,331원 또 연저점 …2년 만에 최저",
           "link": "https://www.yna.co.kr/view/AKR20261016131100002",
@@ -95,16 +41,6 @@
           "title": "코스피 7% 급락한 '검은 목요일'에 800억원대 또 강제청산",
           "link": "https://www.yna.co.kr/view/AKR20261016128500008",
           "source": "연합뉴스 경제"
-        },
-        {
-          "title": "코스피, 급락후 반발매수에 2.1%↑…8거래일만에 반등(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261016121951008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "코스피 2.1%↑, 8거래일만 반등…코스닥 4.5%↑",
-          "link": "https://www.yna.co.kr/view/AKR20261016121900008",
-          "source": "연합뉴스 경제"
         }
       ]
     },
@@ -112,12 +48,27 @@
       "key": "realestate",
       "name": "부동산",
       "nameEn": "Real Estate",
-      "lineKo": "강남구는 일원개포한신아파트 철거를 앞두고 통학 안전을 위한 협의체를 구성했다. 정부는 주택공급 상황을 공개하기 위해 착공·분양·입주 상황판을 가동하는 첫 정례브리핑을 진행했다. 정부는 올해 수도권 주택 착공이 목표 대비 최대 5만가구 부족할 것으로 예상했다. 수도권 공적주택 10만호 입주를 위해 정부는 연내 공급지원센터를 신설할 계획이다. 주택통계에서는 절반이 빌라인 지역에서 22%만이 반영되는 아파트 쏠림 현상이 나타났다.",
-      "lineEn": "Gangnam-gu established a coordination body to ensure commuting safety ahead of the demolition of the Ilwon Gaepo Hanshin Apartment. The government held its first regular briefing to operate a board displaying construction, sales, and occupancy status in order to disclose housing supply conditions. The government expects that the number of housing units started in the Seoul metropolitan area this year will be up to 50,000 units short of the target. To achieve the occupancy of 100,000 public housing units in the Seoul metropolitan area, the government plans to establish a new support center for housing supply by year-end. In housing statistics, a concentration phenomenon occurred where only 22% of apartments were reflected in areas where half of the housing units are villas.",
+      "lineKo": "부동산 투자자들은 입주권이 아닌 현금청산 조건에 주의해야 한다는 조언이 나왔다. 서울 성북구는 각종 규제에도 불구하고 아파트값이 가장 많이 상승한 지역이다. 강남구는 일원개포한신아파트 철거를 앞두고 통학안전을 위한 협의체를 구성했다. AI 플랫폼 기능을 갖춘 아파트가 난방과 주차 서비스를 맞춤형으로 제공하고 있다. 정부는 주택공급 상황을 공개하기 위해 착공·분양·입주 상황판을 가동하기 시작했다.",
+      "lineEn": "Real estate investors are advised to pay attention to cash settlement conditions rather than occupancy rights. In Seongbuk District, Seoul, apartment prices have risen the most despite various regulations. Gangnam District has formed a coordination body to ensure school commute safety ahead of the demolition of the Ilwon Gaepo Hanshin Apartment. An apartment equipped with AI platform functions is now providing customized heating and parking services. The government has started operating a construction, sales, and occupancy status board to disclose housing supply conditions.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
+        {
+          "title": "“입주권 산 줄 알았는데 현금청산” … 투자자가 반드시 알아야 할 점은 [부동산 손품노트]",
+          "link": "https://www.mk.co.kr/news/realestate/12178132",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "난방·주차도 맞춤형…'AI 플랫폼' 된 아파트",
+          "link": "https://www.hankyung.com/article/2026101670311",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "각종 규제에도…서울에서 아파트값 가장 많이 오른 성북구, 왜?",
+          "link": "https://www.hankyung.com/article/202610127303i",
+          "source": "한국경제 부동산"
+        },
         {
           "title": "강남구, 일원개포한신아파트 철거 앞두고 통학안전 협의체 꾸려",
           "link": "https://www.newsis.com/view/NISX20261016_0003829327",
@@ -127,21 +78,75 @@
           "title": "정부 \"착공·분양·입주 상황판 가동\"…주택공급 첫 정례브리핑",
           "link": "https://www.yna.co.kr/view/AKR20261016108900001",
           "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "미국의 PPI 쇼크에도 불구하고 10년물 금리가 하락했고, 중국의 장기금리가 15개월 만에 최저 수준으로 떨어졌으며, 국고채 금리가 일제히 하락하면서 3년물 금리는 연 3.854%를 기록했고, 주식과 채권 비중 비율을 깨뜨린 원인은 금리가 아니었다.",
+      "lineEn": "Despite the PPI shock in the United States, the 10-year interest rate fell, and China's long-term interest rate dropped to its lowest level in 15 months. Government bond rates fell universally, with the 3-year rate reaching 3.854% annually. The cause of the breakdown in the stock and bond allocation ratio was not interest rates.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
+      "items": [
+        {
+          "title": "美 'PPI 쇼크'에도…10년물 금리 되레 하락",
+          "link": "https://www.hankyung.com/article/2026101670481",
+          "source": "한국경제 경제"
         },
         {
-          "title": "[속보]정부 “올 수도권 주택 착공, 목표보다 최대 5만가구 부족”",
-          "link": "https://www.mk.co.kr/news/realestate/12177748",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "수도권 공적주택 10만호 입주 추진…정부, 공급지원센터 연내 신설",
-          "link": "https://www.newsis.com/view/NISX20261016_0003829190",
+          "title": "[올댓차이나] 中 장기금리 15개월 만에 최저…유동성 풍부·추가 통화완화 기대",
+          "link": "https://www.newsis.com/view/NISX20261016_0003829553",
           "source": "뉴시스 경제"
         },
         {
-          "title": "절반이 빌라인데 22%만 반영…주택통계도 아파트 쏠림",
-          "link": "https://www.hankyung.com/article/202610166669i",
-          "source": "한국경제 부동산"
+          "title": "국고채 금리 일제히 하락…코스피 반등에도 외인 매수 영향(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261016141851008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "국고채 금리 일제히 하락…3년물 연 3.854%",
+          "link": "https://www.yna.co.kr/view/AKR20261016141800008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "'주식 60 채권 40' 공식 깨뜨린 범인…금리가 아니었다",
+          "link": "https://www.hankyung.com/article/202610166691i",
+          "source": "한국경제 경제"
+        }
+      ]
+    },
+    {
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "부천과 이천의 전통시장 명절대출 금리가 각각 0%와 4.5%로 차이가 나는 한편, 한미 재무·통화당국이 첫 2+2 면담을 통해 경제·금융 협력 방안을 논의했으며, 국토차관은 추가 대출 규제 검토는 현재 하지 않고 있으며, 착공 증가에 대해 긍정적인 시그널이라고 밝혔다.",
+      "lineEn": "The interest rates for holiday loans in Bucheon and Icheon traditional markets differ at 0% and 4.5%, respectively, while the U.S.-South Korea financial and monetary authorities discussed economic and financial cooperation plans during their first 2+2 meeting. The Deputy Minister of Land, Infrastructure and Transport stated that additional loan regulations are not currently being considered and expressed a positive signal regarding increased construction starts.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
+      "items": [
+        {
+          "title": "부천은 0%인데 이천은 4.5%... 천차만별 전통시장 명절대출",
+          "link": "https://www.hankyung.com/article/202610165520i",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "한미 재무·통화당국 첫 2+2 면담…\"경제·금융 협력 방안 논의\"",
+          "link": "https://www.yna.co.kr/view/AKR20261016141100002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "[일문일답] 국토차관 “추가 대출 규제 현재 검토 안 해… 연말 착공에 최대한 노력”",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/16/5TSIG4PO3FDD3GO7TFTAVRRNOM/",
+          "source": "조선비즈 부동산"
+        },
+        {
+          "title": "국토 차관 \"착공 증가, 좋은 시그널\"…추가 대출규제 선 그어",
+          "link": "https://www.newsis.com/view/NISX20261016_0003829332",
+          "source": "뉴시스 경제"
         }
       ]
     }
