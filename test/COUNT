@@ -38,5 +38,13 @@
 #   "조건 칸과 결과 자리는 데이터가 오기 전에도 자리를 잡는다 (#287)" 하나다
 #   (`node --test test/deal-search.test.mjs` → 기준 36 · 후보 37).
 #   고친 시험 파일은 0 이고 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
-1560
-1560
+# 센 법: 2026-10-16, merge-base b5e92274, Node v24.16.0, macOS 26.6.2 (#287 (라)).
+#   npm test → ℹ tests 1561 · pass 1561 · fail 0 · skipped 0
+#   같은 워크트리에서 test/conversion-page.test.mjs 를 merge-base 것으로 되돌리고 같은 명령 →
+#   ℹ tests 1560 · pass 1560. (029b16c2..b5e92274 는 데이터 갱신뿐이라 test/ 가 안 바뀌었다.)
+#   차이 1 은 이 PR 이 test/conversion-page.test.mjs 에 더한
+#   "조건 칸과 답 자리는 데이터가 오기 전에도 자리를 잡는다 (#287)" 하나다
+#   (`node --test test/conversion-page.test.mjs` → 기준 4 · 후보 5).
+#   고친 시험 파일은 0 이고 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
+1561
+1561
