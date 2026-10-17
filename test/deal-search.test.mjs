@@ -372,3 +372,62 @@ test("전수 파일 주소는 자료가 알려준다", () => {
   assert.equal(payload.search.slugs["강남구"], "gangnam");
   assert.ok(!("송파구" in payload.search.slugs), "거래가 없는 지역까지 주소를 냈다");
 });
+
+// deal-search의 CLS는 "조건 칸과 결과 목록이 빈 채로 태어나 데이터가 온 뒤에 채워지는 것"이었다
+// (#287 (다), 2026-10-16 실측 0.4861 — 이 저장소에서 가장 나빴다). 고친 방식은 비어 있는 동안만 서는
+// 자리를 CSS로 까는 것이라, 되풀이는 네 길로 들어온다 — 구운 자리가 안 비거나(또는 이름이 바뀌거나),
+// 예약 규칙이 사라지거나, 칩 예약이 진짜 칩 규칙에서 떨어져 나오거나, 줄 묶음을 못박은 규칙이 빠지거나.
+// 넷 다 여기서 막는다. 값(시세·날짜)에 기대지 않는 구조 검사다(#8).
+test("조건 칸과 결과 자리는 데이터가 오기 전에도 자리를 잡는다 (#287)", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const path = await import("node:path");
+  const root = path.resolve(import.meta.dirname, "..");
+  const read = (p) => readFile(path.join(root, p), "utf8");
+
+  const html = await read("docs/deal-search.html");
+
+  // (1) 예약이 걸리는 자리는 ":empty"다 - 구운 장에서 비어 있지 않으면 규칙이 아예 안 붙는다.
+  for (const id of ["kind-chips", "deposit-chips", "rent-chips", "area-chips", "age-chips"]) {
+    assert.match(
+      html,
+      new RegExp(`<div class="chip-group" id="${id}"[^>]*></div>`),
+      `docs/deal-search.html: #${id}가 빈 칩 묶음으로 구워지지 않는다 - :empty 예약이 안 붙는다`
+    );
+  }
+  assert.match(html, /<div id="search-result"><\/div>/, "docs/deal-search.html: #search-result가 빈 채로 구워지지 않는다");
+  assert.match(html, /<div class="search-controls" id="search-controls">/, "docs/deal-search.html: #search-controls가 없다 - 줄 묶음 예약의 범위가 사라졌다");
+
+  // 폭별 둘째 줄을 여는 미디어 쿼리가 이름으로 집는 묶음 둘은 반드시 이 장에 있어야 한다.
+  for (const id of ["area-chips", "age-chips"]) {
+    assert.ok(html.includes(`id="${id}"`), `docs/deal-search.html: #${id}가 없다 - 둘째 줄 예약이 아무것도 안 집는다`);
+  }
+
+  const css = await read("src/css/legacy.css");
+
+  // (2) 칩 한 줄의 높이는 진짜 칩과 "같은 규칙"에서 와야 한다. 떨어져 나오면 min-height·padding·테두리가
+  // 따로 놀아 예약이 남거나 모자란다(#287 (마)가 숫자를 베껴 적었다가 7.5px 어긋난 자리).
+  assert.match(
+    css,
+    /\n\.chip,\n\.chip-group:empty::before,\n\.chip-group:empty::after \{/,
+    "src/css/legacy.css: 칩 자리 예약이 .chip 규칙에서 떨어져 나왔다"
+  );
+
+  // (3) 예약을 세우는 규칙들. 하나라도 빠지면 같은 밀림이 돌아온다.
+  for (const rule of [
+    /\.chip-group:empty::before,\n\.chip-group:empty::after \{\n  content: "\\00a0";\n  box-sizing: border-box;\n  flex-basis: 100%;\n  visibility: hidden;\n\}/,
+    /#search-controls \.search-field:has\(\.chip-group\) \{\n  flex-basis: 100%;\n\}/,
+    /#search-controls \.search-field:has\(select\) \{\n  flex-basis: calc\(50% - var\(--controls-gap-x\) \/ 2\);\n\}/,
+    /@media \(max-width: 519px\) \{\n  #area-chips:empty::after \{\n    content: "\\00a0";\n  \}\n\}/,
+    /@media \(max-width: 502px\) \{\n  #age-chips:empty::after \{\n    content: "\\00a0";\n  \}\n\}/,
+    /#search-result:empty,\n#search-result:has\(> p:only-child\) \{\n  min-height: 100vh;\n\}/,
+  ]) {
+    assert.match(css, rule, "src/css/legacy.css: deal-search 자리 예약 규칙이 사라졌다");
+  }
+
+  // (4) 셀렉트 칸의 반 줄은 .search-controls의 가로 간격을 나눠 쓴다. 토큰이 없어지면 calc가 죽는다.
+  assert.match(
+    css,
+    /\.search-controls \{\n(?:[^}]*\n)?  --controls-gap-x: 16px;\n(?:[^}]*\n)?  gap: 10px var\(--controls-gap-x\);/,
+    "src/css/legacy.css: --controls-gap-x가 없어졌거나 gap이 그 토큰을 안 쓴다"
+  );
+});
