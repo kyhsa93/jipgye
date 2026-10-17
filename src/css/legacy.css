@@ -10,18 +10,22 @@
 
 :root {
   color-scheme: light dark;
-  --bg: #ffffff;
-  --fg: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f7;
-  --border: #e2e2e5;
+  --bg: #fcfbf8;
+  --fg: #1c1b19;
+  --muted: #5c5a55;
+  --card: #f3f1ea;
+  --border: #dedbd2;
+  /* 빗금 칸처럼 "비었다"를 그림으로 말하는 자리는 --border로는 안 보인다 - 카드 위에서 라이트
+   * 1.19:1 · 다크 1.22:1이었다(실측). 글자가 아니라 도형이라 4.5:1이 아니라 WCAG 2.2 1.4.11
+   * (비텍스트 3:1)이 재는 자리다. 이 값으로 라이트 3.43:1 · 다크 3.42:1이 된다(#278 PR C, po 기준 6). */
+  --border-strong: #85817a;
   /* 오르내림. 이 사이트에서 가장 많이 읽히는 색인데(+18.4% 같은 작은 글씨가 전부
    * 이 색이다), 오래도록 흰 바탕에서 고른 값 하나를 카드 위에서도 다크에서도
    * 그대로 썼다. 재어 보니 카드 배경 위에서 라이트 4.02:1 · 다크 3.85:1로 둘 다
    * 본문 대비 기준(4.5:1)에 못 미쳤고, 다크에는 아예 재정의가 없었다.
    * 이제 테마마다 따로 고르고, 이 색이 놓이는 가장 어두운 바탕(--card,
    * --accent-weak) 위에서 4.5:1을 넘는 값으로 맞춘다. test/style.test.mjs가 잰다. */
-  --up: #bd2f2f;
+  --up: #b3261e;
   --down: #1d4ed8;
 
   /* 브랜드색. manifest와 theme-color가 이 값인데 화면에는 한 번도 안 나왔다.
@@ -31,32 +35,51 @@
    * 섹션 제목 밑줄)에만 쓴다. */
   --accent: #253e81;
   --accent-on: #ffffff;
-  --accent-weak: #eef1f8;
+  --accent-weak: #e9edf6;
+  /* 링크. 지금은 액센트와 같은 값이다 - 뜻이 다른 자리라 이름을 갈라 둔다("여기를 누르면 간다"와
+   * "지금 여기에 있다"는 같은 색이어야 할 이유가 없다). 갈라지는 것은 뒤 이슈 몫이고, 네 갈래를
+   * 다시 손대지 않으려고 토큰을 먼저 세운다(#278 PR C). */
+  --link: #253e81;
 
   /* 글자 크기 축척. 전에는 0.65rem부터 1.4rem까지 스물두 단계가 섞여 있었다.
    * 열 살짜리 계단은 계층이 아니라 우연이라, 여덟 단으로 줄이고 바닥을 올렸다.
-   * 0.78rem(12.5px)이 하한이다 - 한글은 그 아래로 내려가면 획이 뭉갠다.
-   * --fs-field는 16px 미만이면 iOS Safari가 입력칸에 초점이 갈 때 화면을 확대한다. */
-  --fs-xs: 0.78rem;
-  --fs-sm: 0.85rem;
-  --fs-md: 0.92rem;
-  --fs-lg: 1rem;
-  --fs-h2: 1.1rem;
-  --fs-xl: 1.2rem;
-  --fs-2xl: 1.35rem;
-  --fs-h1: 1.45rem;
+   * --fs-field는 16px 미만이면 iOS Safari가 입력칸에 초점이 갈 때 화면을 확대한다.
+   *
+   * 방향 C(#275 D1, #278 PR C)가 그 여덟 단을 **여섯 값**으로 다시 묶었다 - 13 / 15 / 17 / 20 / 22 / 30px.
+   * 단 이름은 그대로 두고 값만 옮긴다(이름을 지우면 쓰는 자리를 전부 고쳐야 하고, 그것은 뒤 이슈다).
+   * 그래서 --fs-md와 --fs-lg가 둘 다 17px, --fs-h2와 --fs-2xl이 둘 다 22px, --fs-h1과 --fs-3xl이
+   * 둘 다 30px이다 - 겹치는 이름을 합치는 것은 쓰는 자리를 옮기는 일이라 여기서 하지 않는다.
+   * 어느 값이 어디에 쓰이나(po 기준 5): 13 = 문장이 아닌 라벨(표 머리글·축·꼬리표·브랜드 줄·좁은
+   * 폭의 내비), 15 = 표 칸·표본·기준일·단서, 17 = 본문, 20 = 답 문장, 22 = h2, 30 = h1.
+   * 바닥이 0.78rem(12.48px)에서 0.8125rem(13px)으로 올라갔다 - 한글 획이 뭉개는 자리에서 한 단 더 멀다. */
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.0625rem;
+  --fs-h2: 1.375rem;
+  --fs-xl: 1.25rem;
+  --fs-2xl: 1.375rem;
+  --fs-h1: 1.875rem;
   /* 사다리 맨 윗단. 사이트 이름에만 쓰던 자리인데, 화면이 내놓는 '답'
    * 하나(전세 vs 월세의 월 실부담)도 같은 크기를 쓸 자격이 있어 이름을 일반화했다.
-   * 단을 새로 만들지는 않았다 - 열 살짜리 계단으로 되돌아가는 길이 그것이다. */
-  --fs-3xl: 1.7rem;
+   * 단을 새로 만들지는 않았다 - 열 살짜리 계단으로 되돌아가는 길이 그것이다.
+   * 지금은 --fs-h1과 같은 값(30px)이다. */
+  --fs-3xl: 1.875rem;
   --fs-field: 1rem;
 
   /* 손가락이 닿아야 하는 최소 크기. 알약 탭 30px, 아이콘 버튼 36px,
    * 뉴스 칩 26px이었다 - 셋 다 엄지 끝보다 작다. */
-  /* 한 줄이 한글 마흔 자 안팎에서 끊기는 폭. 글은 여기까지만 늘어난다. */
-  --prose: 46rem;
+  /* 한 줄이 한글 마흔 자 안팎에서 끊기는 폭. 글은 여기까지만 늘어난다.
+   * 방향 C의 '읽는 단'은 44rem이다(46rem에서 내렸다) - 본문이 17px로 커지면서 한 줄의 글자 수가
+   * 같은 폭에서 늘기 때문에, 폭을 그대로 두면 한 줄이 쉰 자를 넘는다. */
+  --prose: 44rem;
   --tap: 44px;
   --focus: var(--accent);
+
+  /* 모서리. 8px과 10px이 서른두 곳에 섞여 있었고 6·12px이 한 곳씩 더 있었다 - 둘을 가를 규칙이
+   * 아무 데도 없었다. 한 값으로 묶는다. 알약(999px)은 반경이 아니라 모양이라 그대로 둔다. */
+  --radius: 4px;
+  --radius-sm: 2px;
 }
 
 :root[data-theme="dark"] {
@@ -66,6 +89,8 @@
   --muted: #9a9a9a;
   --card: #1a1d24;
   --border: #2a2d35;
+  --border-strong: #6b7080;
+  --link: #8aa9f0;
   --accent: #8aa9f0;
   --accent-on: #0f1115;
   --accent-weak: #191f2c;
@@ -77,16 +102,35 @@
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #ffffff;
-  --fg: #1a1a1a;
-  --muted: #666;
-  --card: #f5f5f7;
-  --border: #e2e2e5;
+  --bg: #fcfbf8;
+  --fg: #1c1b19;
+  --muted: #5c5a55;
+  --card: #f3f1ea;
+  --border: #dedbd2;
+  --border-strong: #85817a;
+  --link: #253e81;
   --accent: #253e81;
   --accent-on: #ffffff;
-  --accent-weak: #eef1f8;
-  --up: #bd2f2f;
+  --accent-weak: #e9edf6;
+  --up: #b3261e;
   --down: #1d4ed8;
+}
+
+/* 좁은 화면에서만 내려오는 두 단. 규칙이 아니라 **토큰**을 덮어쓴다 - 그래야 그 단을 쓰는 자리가
+ * 늘어도 미디어쿼리를 따라 늘리지 않아도 되고, 어느 자리가 줄어드는지가 한곳에서 보인다.
+ * 560px 이하에서 제목 30px은 한국어 열 자가 두 줄로 접히고(실측), 480px 이하에서 답 20px은
+ * 한 줄이 여덟 자밖에 안 들어간다. 색 토큰은 건드리지 않으므로 네 갈래와 부딪히지 않는다. */
+@media (max-width: 560px) {
+  :root {
+    --fs-h1: 1.625rem;
+    --fs-3xl: 1.625rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --fs-xl: 1.125rem;
+  }
 }
 
 [hidden] {
@@ -126,10 +170,12 @@ body {
  * 넓히면서 <strong>글까지 같이 넓히지는 않는다.</strong> 728px에서 이미 한 줄이 한글
  * 46~54자로 편한 범위의 위쪽 끝인데, 껍데기를 따라 늘리면 80자가 되어 지금보다 나빠진다.
  * 폭을 쓰는 것은 표와 격자고, 산문은 --prose에 묶는다(아래 .prose 규칙). */
+/* 윗여백 24 -> 16. 간격 축척(8·16·24·40·64) 안에서 한 단 내린 것이고, 글자가 커지면서 머리가
+ * 아래로 민 만큼을 되사는 자리 가운데 모든 장에 똑같이 듣는 유일한 곳이다(#278 PR C). */
 main {
   max-width: 760px;
   margin: 0 auto;
-  padding: 24px 16px 64px;
+  padding: 16px 16px 64px;
 }
 
 @media (min-width: 1024px) {
@@ -146,7 +192,7 @@ main {
 }
 
 header {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -185,8 +231,11 @@ header {
   }
 }
 
+/* 제목은 산문이 아니다. 본문 줄 높이(1.5)를 30px 제목에 그대로 주면 두 줄짜리 제목의 줄 사이가
+ * 15px 벌어져, 방향 C가 말하는 "머리는 조밀하게"와 정반대로 간다(#278 PR C). h2도 같다. */
 h1 {
   font-size: var(--fs-h1);
+  line-height: 1.25;
   margin: 0 0 4px;
 }
 
@@ -228,7 +277,7 @@ h1 {
   font-size: var(--fs-xs);
   font-weight: 700;
   color: var(--accent);
-  margin: 0 0 6px;
+  margin: 0 0 4px;
 }
 
 .brand::before {
@@ -237,7 +286,7 @@ h1 {
 }
 
 .tagline {
-  margin: 0 0 6px;
+  margin: 0 0 4px;
   color: var(--muted);
   font-size: var(--fs-sm);
 }
@@ -277,7 +326,7 @@ h1 {
 .back-link {
   margin-top: 4px;
   color: var(--muted);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   text-decoration: none;
 }
 
@@ -289,9 +338,22 @@ h1 {
   display: flex;
   gap: 6px;
   overflow-x: auto;
-  margin: 0 0 20px;
+  margin: 0 0 16px;
 }
 
+/* 내비·칩·꼬리표는 13px 라벨 단이다.
+ *
+ * 방향 C의 축척은 13과 15 둘로 갈리고, 13은 "문장이 아닌 라벨에만 - 표 머리글·축·꼬리표·브랜드 줄·
+ * **좁은 폭의 내비**"다(po 기준 5). 전에는 내비도 문장도 다 같은 --fs-sm이었다. 그 단이 15px이 되면서
+ * 내비가 같이 커지면 "머리·내비는 현행보다 조밀하게"가 반대로 간다 - 375폭에서 첫 h2가 아래로 밀린다.
+ *
+ * 그래서 --fs-sm -> --fs-xs로 옮긴 자리(열넷): .page-nav a · .sub-nav a · .question-nav a · .tab ·
+ * .chip · .budget-chips a · .rate-links · .district-links-heading · .section-links · .card-links ·
+ * .back-link · .archive-link · .budget-more-links ul · .history-card .axis.
+ * 옮기지 않은 자리: 표 칸(.data-table·.rate-table)·기준일(.updated)·단서(.content-notice·
+ * .method-callout p) - 전부 C가 "15px 이상"으로 이름 붙인 것들이다.
+ *
+ * 되돌린 자리 둘: .district-links·.site-footer(a 포함). 아래 .site-footer 주석에 수가 있다. */
 .page-nav a {
   flex-shrink: 0;
   display: inline-flex;
@@ -301,7 +363,7 @@ h1 {
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 6px 16px;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   color: var(--fg);
   text-decoration: none;
 }
@@ -310,7 +372,7 @@ h1 {
   display: flex;
   gap: 6px;
   overflow-x: auto;
-  margin: -8px 0 20px;
+  margin: -8px 0 16px;
   padding-bottom: 2px;
 }
 
@@ -323,9 +385,9 @@ h1 {
   min-height: var(--tap);
   padding: 6px 14px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: var(--bg);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   color: var(--muted);
   text-decoration: none;
 }
@@ -361,7 +423,7 @@ h1 {
   flex-shrink: 0;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   width: var(--tap);
   height: var(--tap);
   font-size: var(--fs-h2);
@@ -377,8 +439,10 @@ h1 {
   margin-top: 12px;
 }
 
+/* 구획 사이 32 -> 24(축척 한 단). 본문이 16 -> 17px로 커진 만큼 구획이 길어지므로, 사이를 그대로
+ * 두면 "답까지의 거리"(po 기준 1)가 장마다 늘어난다(#278 PR C). */
 section {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 /* 읽는 것은 글이지 폭이 아니다.
@@ -425,8 +489,9 @@ h2,
 .trend-reserve::before {
   position: relative;
   font-size: var(--fs-h2);
-  margin: 0 0 12px;
-  padding-bottom: 6px;
+  line-height: 1.25;
+  margin: 0 0 8px;
+  padding-bottom: 4px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -456,7 +521,7 @@ h2::after {
   font-weight: 600;
   color: var(--up);
   border: 1px solid currentColor;
-  border-radius: 4px;
+  border-radius: var(--radius);
   padding: 1px 4px;
   margin-left: 4px;
   vertical-align: middle;
@@ -531,7 +596,7 @@ h2::after {
   background: var(--card);
   color: var(--fg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 8px 10px;
   font-size: var(--fs-field);
 }
@@ -705,7 +770,7 @@ ul.news-list {
   display: inline-block;
   margin-top: 10px;
   color: var(--muted);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   text-decoration: none;
 }
 
@@ -718,7 +783,7 @@ ul.news-list {
   font-size: var(--fs-md);
   background: var(--card);
   border: 1px dashed var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 16px;
 }
 
@@ -764,7 +829,7 @@ ul.news-list {
   flex-wrap: wrap;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 12px 14px;
   margin-bottom: 20px;
   font-size: var(--fs-md);
@@ -775,7 +840,7 @@ ul.news-list {
   background: var(--fg);
   color: var(--bg);
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 6px 14px;
   cursor: pointer;
 }
@@ -945,7 +1010,7 @@ ul.news-list {
   background: var(--card);
   color: var(--fg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 6px 8px;
   font-size: var(--fs-field);
 }
@@ -955,7 +1020,7 @@ ul.news-list {
   flex-direction: column;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 12px 14px;
 }
 
@@ -1023,7 +1088,7 @@ ul.news-list {
 
 .history-card .axis {
   fill: var(--muted);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
 }
 
 .history-card .axis.y {
@@ -1048,7 +1113,7 @@ ul.news-list {
   position: fixed;
   z-index: 20;
   padding: 6px 9px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--fg);
@@ -1119,7 +1184,7 @@ ul.news-list {
   background: var(--card);
   color: var(--fg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 6px 10px;
   font-size: var(--fs-field);
 }
@@ -1128,6 +1193,10 @@ ul.news-list {
   cursor: pointer;
 }
 
+/* 바닥글과 자치구 링크 목록은 13px 라벨 단으로 내렸다가 되돌렸다. 두 글자짜리 링크("소개"·"중구")가
+ * 13px에서 폭 22.5px이 되어 WCAG 2.2 2.5.8(24×24 CSS px) 아래로 내려간다 - 전수 실측으로 폭 미달이
+ * 558건 늘었다(0 -> 558, tools/render 67장 × 끔/켬 × 한국어/영어). 15px에서는 25.9px으로 든다.
+ * 글자를 줄여 읽기를 나쁘게 하면서 과녁까지 작아지는 교환이라 되돌렸다(#274 체인 공통 규칙 11). */
 .site-footer {
   margin-top: 40px;
   padding-top: 16px;
@@ -1150,7 +1219,7 @@ ul.news-list {
   flex-shrink: 0;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   width: var(--tap);
   height: var(--tap);
   font-size: var(--fs-h2);
@@ -1162,7 +1231,7 @@ ul.news-list {
 .summary-box {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 14px 16px;
   font-size: var(--fs-md);
 }
@@ -1191,7 +1260,7 @@ ul.news-list {
   background: var(--fg);
   color: var(--bg);
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 4px 12px;
   margin-left: 8px;
   cursor: pointer;
@@ -1206,7 +1275,7 @@ ul.news-list {
 .overall-card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 12px 14px;
 }
 
@@ -1249,7 +1318,7 @@ ul.news-list {
   background: var(--bg);
   color: var(--fg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 5px 9px;
   font-size: var(--fs-field);
   font-family: inherit;
@@ -1258,7 +1327,7 @@ ul.news-list {
 .district-summary {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 12px 14px;
   margin: 0;
   font-size: var(--fs-md);
@@ -1366,7 +1435,7 @@ ul.news-list {
 }
 
 .district-links-heading {
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   color: var(--muted);
   margin: 18px 0 8px;
   font-weight: 600;
@@ -1441,7 +1510,7 @@ ul.news-list {
   align-items: center;
   gap: 6px;
   color: var(--muted);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -1451,9 +1520,9 @@ ul.news-list {
   flex-shrink: 0;
   width: 13px;
   height: 0.9em;
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  background-image: repeating-linear-gradient(-45deg, var(--border) 0 1px, transparent 1px 4px);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background-image: repeating-linear-gradient(-45deg, var(--border-strong) 0 1px, transparent 1px 4px);
 }
 
 /* 표 안 링크(자치구 이름 등). 전에는 밑줄이 --border 점선(흰 바탕 대비 1.29:1)이라 링크로 안 보였고, 누르는
@@ -1476,7 +1545,7 @@ ul.news-list {
   display: inline-block;
   padding: 0 5px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius);
   color: var(--muted);
   font-size: var(--fs-xs);
   vertical-align: middle;
@@ -1487,7 +1556,7 @@ ul.news-list {
   margin: 14px 0 0;
   padding: 12px 14px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--card);
   color: var(--fg);
   font-size: var(--fs-sm);
@@ -1530,7 +1599,7 @@ ul.news-list {
   gap: 4px 10px;
   padding: 9px 12px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--card);
 }
 
@@ -1583,7 +1652,7 @@ ul.news-list {
   min-height: var(--tap);
   border: 1px solid var(--border);
   border-radius: 999px;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   color: var(--fg);
   text-decoration: none;
 }
@@ -1601,7 +1670,7 @@ ul.news-list {
   padding: 12px 14px;
   border: 1px solid var(--border);
   border-left: 3px solid var(--accent);
-  border-radius: 0 10px 10px 0;
+  border-radius: 0 var(--radius) var(--radius) 0;
   background: var(--accent-weak);
 }
 
@@ -1673,7 +1742,7 @@ main h3 {
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 6px 14px;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   cursor: pointer;
   color: var(--fg);
 }
@@ -1693,7 +1762,7 @@ main h3 {
   background: var(--bg);
   color: var(--fg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 6px 10px;
   font-size: var(--fs-field);
   font-family: inherit;
@@ -1738,7 +1807,7 @@ main h3 {
   background: var(--fg);
   color: var(--bg);
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 4px 12px;
   margin-left: 8px;
   cursor: pointer;
@@ -1756,7 +1825,7 @@ main h3 {
   background: var(--card);
   color: var(--fg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 6px 14px;
   font-size: var(--fs-sm);
   cursor: pointer;
@@ -1776,7 +1845,7 @@ main h3 {
   flex-wrap: wrap;
   gap: 6px 14px;
   margin-top: 14px;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
 }
 
 .rate-links a {
@@ -1792,7 +1861,7 @@ main h3 {
 .rates-bridge {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 12px 14px;
   margin: 14px 0 0;
   font-size: var(--fs-md);
@@ -1862,7 +1931,7 @@ main h3 {
   display: inline-block;
   font-size: var(--fs-xs);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius);
   padding: 0 4px;
   margin-left: 4px;
   color: var(--muted);
@@ -1940,7 +2009,7 @@ main h3 {
   gap: 2px;
   padding: 10px 12px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--card);
   text-decoration: none;
 }
@@ -2004,7 +2073,7 @@ main h3 {
   background: var(--bg);
   color: var(--fg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 6px 10px;
   font-size: var(--fs-field);
   font-family: inherit;
@@ -2050,7 +2119,7 @@ main h3 {
   background: var(--bg);
   color: var(--fg);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 6px 10px;
   font-size: var(--fs-field);
   font-family: inherit;
@@ -2078,7 +2147,7 @@ main h3 {
   padding: 14px 16px 14px 18px;
   border: 1px solid var(--border);
   border-left: 4px solid var(--accent);
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 var(--radius) var(--radius) 0;
   background: var(--card);
   margin-bottom: 16px;
 }
@@ -2102,7 +2171,7 @@ main h3 {
 
 .option {
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius);
   padding: 14px 16px;
   background: var(--card);
 }
@@ -2251,7 +2320,7 @@ main h3 {
 .method-body .lead {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 12px 14px;
   line-height: 1.7;
 }
@@ -2284,7 +2353,7 @@ main h3 {
 .method-body code {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius);
   padding: 1px 5px;
   font-size: 0.85em;
 }
@@ -2408,7 +2477,7 @@ main h3 {
   flex-wrap: wrap;
   gap: 6px 16px;
   margin-top: 10px;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
 }
 
 .section-links a {
@@ -2494,7 +2563,7 @@ summary:focus-visible,
   min-height: var(--tap);
   padding: 6px 16px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: var(--card);
   color: var(--fg);
   font-size: var(--fs-sm);
@@ -2518,7 +2587,7 @@ summary:focus-visible,
  *   안내 — 막대·판 없이 회색 작은 글씨 + "방법 →"(.method-callout). 데이터 앞에 두는 자리는 그대로.
  *   카드·근거 — 테두리만(.complex-card, .budget-loan). */
 .method-callout {
-  margin: 0 0 20px;
+  margin: 0 0 8px;
   padding: 0;
   border: 0;
   background: none;
@@ -2533,7 +2602,7 @@ summary:focus-visible,
 
 .method-callout a {
   margin-top: 2px;
-  color: var(--accent);
+  color: var(--link);
   font-size: var(--fs-sm);
   font-weight: 600;
   text-decoration: none;
@@ -2567,8 +2636,8 @@ summary:focus-visible,
 .question-nav {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 14px;
-  margin: 0 0 24px;
+  gap: 8px;
+  margin: 0 0 16px;
 }
 
 @media (min-width: 1024px) {
@@ -2606,9 +2675,9 @@ summary:focus-visible,
   min-height: var(--tap);
   padding: 10px 12px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--accent-weak);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   line-height: 1.35;
   color: var(--fg);
   text-decoration: none;
@@ -2635,7 +2704,7 @@ summary:focus-visible,
  * 화면의 상품 검색이 따로 있었고, '실거래 검색' 화면에는 정작 검색창이 없었다. */
 .site-search {
   position: relative;
-  margin: 0 0 12px;
+  margin: 0 0 8px;
 }
 
 .site-search input {
@@ -2643,7 +2712,7 @@ summary:focus-visible,
   min-height: var(--tap);
   padding: 8px 14px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--card);
   color: var(--fg);
   font-size: var(--fs-field);
@@ -2663,7 +2732,7 @@ summary:focus-visible,
   max-height: 60vh;
   overflow-y: auto;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--bg);
   box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
 }
@@ -2705,7 +2774,7 @@ summary:focus-visible,
   margin: 0 0 20px;
   padding: 14px 16px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--card);
 }
 
@@ -2767,7 +2836,7 @@ summary:focus-visible,
   background: var(--bg);
   color: var(--muted);
   font-family: inherit;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   cursor: pointer;
 }
 
@@ -2906,7 +2975,7 @@ summary:focus-visible,
   min-height: var(--tap);
   padding: 4px 14px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: var(--card);
   color: var(--fg);
   font-family: inherit;
@@ -2958,7 +3027,7 @@ summary:focus-visible,
  * Lighthouse 모바일 프리셋)에서 한국어·영어 모두 세 줄(61px), 480px 이상에서는 둘 다 두 줄
  * (41px)이다(2026-10-14 실측). 한국어는 430px부터 두 줄이라 430~479px에서는 한 줄만큼 비는데,
  * 그 폭에서 영어는 아직 세 줄이라 둘 중 하나는 비게 된다 - 밀리지 않는 쪽을 택했다(#287). */
-.content-notice.page-notice { margin: -12px 0 20px; min-height: 2lh; }
+.content-notice.page-notice { margin: -12px 0 16px; min-height: 2lh; }
 
 @media (max-width: 480px) {
   .content-notice.page-notice { min-height: 3lh; }
@@ -2994,6 +3063,8 @@ summary:focus-visible,
     --muted: #9a9a9a;
     --card: #1a1d24;
     --border: #2a2d35;
+    --border-strong: #6b7080;
+    --link: #8aa9f0;
     --accent: #8aa9f0;
     --accent-on: #0f1115;
     --accent-weak: #191f2c;
@@ -3075,7 +3146,7 @@ summary:focus-visible,
 .budget-more-links ul {
   margin: 6px 0 0;
   padding-left: 18px;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
 }
 
 .budget-more-links li {
@@ -3084,7 +3155,7 @@ summary:focus-visible,
 
 .card-links {
   margin: 8px 0 0;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
 }
 
 /* 좁은 화면에서 전망·갈아타기 표의 마지막 열이 화면 밖으로 밀렸다(PO 검토 #33). 보조 숫자는 줄을 바꾸고
