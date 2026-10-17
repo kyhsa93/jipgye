@@ -5,6 +5,17 @@
  * docs/nav.js가 KST 오늘로 계산한다. 경고를 빌드에 박으면 갱신·빌드가 멈추는 날(#97류) HTML이 같이
  * 얼어서 경고가 영영 안 뜬다. 기준일만 박으면 얼어도 거짓이 아니고, 경고는 보는 쪽 시계가 만든다.
  *
+ * 두 줄이 서는 자리가 다르다 (#282). 기준일(#updated)은 바닥글이고 "n일 전 자료" 경고(#updated-warn)는 머리글이다.
+ * 전에는 둘 다 머리글의 제목 바로 아래였는데, 글자 축척이 15px로 오른 뒤 375폭에서 기준일 한 줄이 두 줄이 되어
+ * 머리글이 커졌다(실측: 67장 중 31장이 커지고 29장은 본문 시작이 9px 밀렸다 - po 댓글 6196624468·cmo 댓글
+ * 6203583946이 따로 잰 같은 수). #278이 적어 둔 두 선택지 "15px로 올리거나 바닥글로 옮긴다" 중 뒤의 것이다.
+ * 경고까지 같이 내리면 낡은 자료 고지가 첫 화면에서 사라진다(134조건 중 128 -> 1, 문서 좌표 중앙 154px -> 4,176px).
+ * 그래서 기준일만 내리고 경고는 제자리에 둔다(po 6206109779 / cmo 6207405456). nav.js는 둘을 getElementById로
+ * 따로 찾으므로 자리가 갈려도 JS는 한 줄도 안 바뀐다.
+ * 데이터를 읽지 않는 세 장(NO_DATA_PAGES)에는 기준일 줄이 아예 없다 - 그 장의 제목 아래 한 줄은 기준일이 아니라
+ * 꼬리표라서 #tagline으로 이름을 갈랐다(#282, po 6206109779 / cmo 6207405456). 한 이름이 두 뜻을 지면
+ * 다음 사람이 64장 규칙을 세 장에 민다.
+ *
  * 기준일 = 그 장이 읽는 docs/data/*.json 소스들의 updatedAt 중 가장 오래된 값의 KST 날짜.
  * 소스 이름과 묶음 규칙(deals-<구> -> deals)은 source-age.mjs와 같다. updatedAt이 없는 파일은 소스가 아니다.
  *
@@ -63,7 +74,7 @@ export const CROSS_PAGES = {
   ...Object.fromEntries(BUDGETS.map((b) => [`${b}.html`, { deals: ["budget-deals"], rates: ["rates"] }])),
 };
 
-/** 데이터를 읽지 않는 장. #updated가 장 제목 줄이라 기준일이 없다. */
+/** 데이터를 읽지 않는 장. 기준일이 없고, 제목 아래 한 줄은 #updated가 아니라 #tagline이다(#282). */
 export const NO_DATA_PAGES = ["about.html", "method.html", "rates.html"]; // rates.html은 상품군 네 장으로 가는 허브라 수치가 없다(#193)
 
 /** 소스들 중 가장 오래된 updatedAt의 KST 날짜. 소스를 못 찾으면 던진다 - 조용히 자리표시자를 남기지 않는다. */
@@ -79,16 +90,14 @@ export function baselineFor(names, sources) {
   return kstDateOf(oldest);
 }
 
-// 이미 찍힌 줄(기준일 + 경고 자리)이나 처음 틀의 자리표시자 줄 어느 쪽이든 한 번에 바꾼다.
-const LINE = /<div class="updated" id="updated"[^>]*>[^<]*<\/div>(\s*<div class="updated updated-warn" id="updated-warn"[^>]*><\/div>)?/;
+// 이미 찍힌 줄이든 처음 틀의 자리표시자 줄이든 기준일 한 줄만 바꾼다. 경고 자리(#updated-warn)는 건드리지 않는다 -
+// 두 줄이 더는 붙어 있지 않기 때문이다(#282: 기준일은 바닥글, 경고는 머리글). 전에는 이 정규식이 경고 줄까지 삼켜
+// 다시 뱉었고, 그대로 두면 떨어져 있는 경고 줄을 바닥글에 하나 더 만들어 id 가 둘이 된다.
+const LINE = /<div class="updated" id="updated"[^>]*>[^<]*<\/div>/;
 
 export function stampHtml(html, ymd) {
   if (!LINE.test(html)) throw new Error('id="updated" 줄을 찾지 못했다');
-  const indent = html.match(/([ \t]*)<div class="updated" id="updated"/)?.[1] ?? "";
-  return html.replace(
-    LINE,
-    () => `<div class="updated" id="updated" data-updated="${ymd}">기준일 ${ymd}</div>\n${indent}<div class="updated updated-warn" id="updated-warn" role="status" hidden></div>`
-  );
+  return html.replace(LINE, () => `<div class="updated" id="updated" data-updated="${ymd}">기준일 ${ymd}</div>`);
 }
 
 // 장 하나를 읽고 쓰는 길. 기본은 디스크이고, 빌드 스크립트는 쓰기를 모아 뒀다가 한꺼번에 내려 쓴다(#237, render-writes.mjs).

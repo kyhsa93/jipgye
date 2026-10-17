@@ -31,6 +31,14 @@
 #   "추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 선다 (#287)" 하나다
 #   (`node --test test/realestate-pages.test.mjs` → 기준 72 · 후보 73).
 #   고친 시험 파일은 0이고 없어진 시험도 0이다(.skip·.todo 도 0 그대로).
+# 센 법: 2026-10-16, merge-base 029b16c2, Node v24.16.0, macOS 26.6.2 (#282 보완).
+#   npm test → ℹ tests 1562 · pass 1562 · fail 0 · skipped 0
+#   같은 워크트리에서 merge-base(029b16c2)를 체크아웃해 같은 명령 → ℹ tests 1559 · pass 1559.
+#   차이 3은 전부 test/updated-stamp.test.mjs 가 더한 #282 되풀이 방지 시험이다
+#   ("기준일은 바닥글에, 낡은 자료 경고는 머리글에 있다" · "금리 틀도 …" · "stampHtml은 … 복제하지 않는다").
+#   `node --test test/updated-stamp.test.mjs` → 기준 18 · 후보 21.
+#   같은 파일의 SHELL 픽스처를 새 자리(경고=머리글·기준일=바닥글)로 고쳤지만 시험을 더하거나 빼지 않았다.
+#   없어진 시험은 0이다(.skip·.todo 도 0 그대로).
 # 센 법: 2026-10-16, merge-base 029b16c2, Node v24.16.0, macOS 26.6.2 (#287 (다)).
 #   npm test → ℹ tests 1560 · pass 1560 · fail 0 · skipped 0
 #   merge-base 029b16c2 를 체크아웃한 워크트리에서 같은 명령 → ℹ tests 1559 · pass 1559.
@@ -38,6 +46,12 @@
 #   "조건 칸과 결과 자리는 데이터가 오기 전에도 자리를 잡는다 (#287)" 하나다
 #   (`node --test test/deal-search.test.mjs` → 기준 36 · 후보 37).
 #   고친 시험 파일은 0 이고 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
+# 센 법: 2026-10-16, merge-base 86f9804c, Node v24.16.0, macOS 26.6.2 (#282 보완, main 병합 뒤).
+#   npm test → ℹ tests 1563 · pass 1563 · fail 0 · skipped 0
+#   merge-base 86f9804c 를 체크아웃해 같은 명령 → ℹ tests 1560 · pass 1560.
+#   차이 3 은 위 #282 세 시험 그대로다(#287 (다) 가 더한 1 은 merge-base 쪽에 이미 들어 있다).
+#   1562(#282 단독) + 1 (#287 (다)) = 1563. 병합이 수를 더 만들지 않았다.
+#   없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
 # 센 법: 2026-10-17, merge-base 7aeb1581, Node v22.16.0, macOS 15.5 (#341).
 #   npm test → ℹ tests 1563 · pass 1563 · fail 0 · skipped 0
 #   merge-base 7aeb1581 에서 같은 명령(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1560 · pass 1560.
@@ -51,5 +65,12 @@
 #   (`node --test test/conversion-render.test.mjs` → 기준 11 · 후보 12).
 #   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 1.
 #   고친 시험 파일은 0 이고(더한 것뿐) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
-1564
-1564
+# 센 법: 2026-10-17, merge-base a99ba94c, Node v22.16.0, macOS 15.5 (#282 보완, main 병합 뒤 — #341·#287 (라) 가 들어간 main).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1567 · pass 1567 · fail 0 · skipped 0
+#   merge-base a99ba94c 를 체크아웃한 워크트리에서 같은 명령 → ℹ tests 1564 · pass 1564 · fail 0 · skipped 0.
+#   차이 3 은 위 #282 가 더한 test/updated-stamp.test.mjs 의 세 시험 그대로다
+#   (`node --test test/updated-stamp.test.mjs` → 기준 18 · 후보 21). 병합이 수를 더 만들지 않았다.
+#   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 3.
+#   없어진 시험은 0 이고 고친 시험 파일도 0 이다(.skip·.todo 도 0 그대로).
+1567
+1567

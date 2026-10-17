@@ -165,6 +165,10 @@
     color: var(--muted);
     font-size: var(--fs-sm);
   }
+  .page-tagline {
+    color: var(--muted);
+    font-size: var(--fs-xs);
+  }
   .updated-warn {
     font-weight: 700;
   }
