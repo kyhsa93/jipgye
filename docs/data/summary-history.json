@@ -5191,5 +5191,144 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-10-18",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 증시·환율: 이달 원/엔 환율은 2년 1개월 만에 최저 수준으로 떨어졌으며, 19년 만에 가장 낮은 수준을 기록했다. 코스피가 하락하자 해외 코인거래소의 큰손들이 90% 이상 반등에 베팅했다. 뉴욕증시는 AI 매도세와 유가 상승으로 인해 하락 마감했으며, 나스닥은 2.1% 하락했다. 원/엔 환율은 19년 만에 가장 낮은 수준을 기록했으며, 코스피 하락에 따라 해외 코인거래소의 큰손들이 반등에 베팅했다. 뉴욕증시는 AI 매도세와 유가 상승으로 인해 하락 마감했고, 나스닥은 2.1% 하락했다.\n- 부동산: 대출이자율이 7년간 66% 상승하면서 전세 가구 수는 144% 증가했다. 부동산 PF 자금은 61조 원 순유출되며 중소 건설사의 공급 기반에 영향을 미치고 있다. 한 소유자는 10년간 보유한 삼전닉스 주식을 처분해 옥수동 아파트를 매수했다. 무주택자들이 생존을 위해 부동산을 매수하는 시대가 온다는 전망이 제기되고 있다. 전월세 계약이 어려워지면 결국 집을 구입해야 한다는 경고가 나오고 있다.\n- 금리·예금·투자상품: 전문가들은 11월에 금리 인상이 이뤄질 것으로 전망하고 있다. 일은 총재는 물가가 2%에 근접하면서 금리 인상을 지속할 필요가 있다고 밝혔다. 다음주 경제 관련 기사에서는 기준금리가 3연속 인상될 가능성이 제기되고 있다. 미국의 PPI 쇼크에도 불구하고 10년물 금리는 하락하는 모습을 보였다. 국고채 금리는 일제히 하락했으며, 코스피 반등에도 불구하고 외인 매수 영향을 받았다.\n- 기타 경제 소식: 정부가 추가 대출 규제를 하지 않을 것이라고 밝히며 강남 집값은 잡혔지만 서울 외곽은 그렇지 않다고 하며, 한미 재무·통화당국은 첫 2+2 면담을 통해 경제·금융 협력 방안을 논의했고, 국토차관은 추가 대출 규제는 현재 검토 중이지 않으며 연말 착공에 최대한 노력하겠다고 밝혔다.",
+      "en": "- Stocks & FX: The won/yen exchange rate fell to its lowest level in two years and one month, recording its lowest level in 19 years. When the Kospi declined, major investors at overseas cryptocurrency exchanges bet on a rebound of over 90%. The New York stock market closed lower due to AI selling and rising oil prices, with the Nasdaq falling 2.1%. The won/yen exchange rate reached its lowest level in 19 years, and major investors at overseas cryptocurrency exchanges bet on a rebound following the Kospi's decline. The New York stock market closed lower due to AI selling and rising oil prices, and the Nasdaq fell 2.1%.\n- Real Estate: With the loan interest rate rising 66% over seven years, the number of households renting out their entire homes has increased 144%. Real estate PF funds are experiencing a net outflow of 61,000,000,000,000 won, affecting the supply base of small and medium-sized construction companies. One owner sold shares in Samcheonics that had been held for ten years to purchase an apartment in Okso-dong. It is being predicted that an era has arrived where people without homes are buying real estate to survive. Warnings are being issued that if monthly and annual rental contracts become difficult, people will eventually have to buy homes.\n- Rates, Deposits & Investment Products: Experts expect interest rates to rise in November. Governor Yi stated that it is necessary to continue raising interest rates as inflation approaches 2%. Next week's economic-related articles suggest the possibility of the benchmark interest rate being raised for the third consecutive time. Despite the PPI shock in the U.S., 10-year bond yields showed a downward trend. Government bond yields all fell, and despite the KOSPI rebound, they were affected by foreign buying.\n- Other Economic News: The government stated it will not implement additional loan restrictions, noting that while Gangnam housing prices have been stabilized, those outside Seoul have not been. The U.S.-South Korea financial and monetary authorities discussed economic and financial cooperation plans during their first 2+2 meeting. The Deputy Minister of Land, Infrastructure and Transport stated that additional loan restrictions are not currently under review, and expressed commitment to do their utmost to ensure construction starts by year-end."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "이달 원/엔 환율은 2년 1개월 만에 최저 수준으로 떨어졌으며, 19년 만에 가장 낮은 수준을 기록했다. 코스피가 하락하자 해외 코인거래소의 큰손들이 90% 이상 반등에 베팅했다. 뉴욕증시는 AI 매도세와 유가 상승으로 인해 하락 마감했으며, 나스닥은 2.1% 하락했다. 원/엔 환율은 19년 만에 가장 낮은 수준을 기록했으며, 코스피 하락에 따라 해외 코인거래소의 큰손들이 반등에 베팅했다. 뉴욕증시는 AI 매도세와 유가 상승으로 인해 하락 마감했고, 나스닥은 2.1% 하락했다.",
+        "lineEn": "The won/yen exchange rate fell to its lowest level in two years and one month, recording its lowest level in 19 years. When the Kospi declined, major investors at overseas cryptocurrency exchanges bet on a rebound of over 90%. The New York stock market closed lower due to AI selling and rising oil prices, with the Nasdaq falling 2.1%. The won/yen exchange rate reached its lowest level in 19 years, and major investors at overseas cryptocurrency exchanges bet on a rebound following the Kospi's decline. The New York stock market closed lower due to AI selling and rising oil prices, and the Nasdaq fell 2.1%.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "이달 환율 2년1개월만에 최저…원/엔 19년만에 가장 낮아",
+            "link": "https://www.yna.co.kr/view/AKR20261017023400002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피 꺾이자…해외 코인거래소 '큰손' 90% 이상 반등 베팅",
+            "link": "https://www.yna.co.kr/view/AKR20261016169500002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "뉴욕증시, AI 매도세·유가 상승에 하락 마감…나스닥, 2.1%↓",
+            "link": "https://www.newsis.com/view/NISX20261017_0003829820",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "대출이자율이 7년간 66% 상승하면서 전세 가구 수는 144% 증가했다. 부동산 PF 자금은 61조 원 순유출되며 중소 건설사의 공급 기반에 영향을 미치고 있다. 한 소유자는 10년간 보유한 삼전닉스 주식을 처분해 옥수동 아파트를 매수했다. 무주택자들이 생존을 위해 부동산을 매수하는 시대가 온다는 전망이 제기되고 있다. 전월세 계약이 어려워지면 결국 집을 구입해야 한다는 경고가 나오고 있다.",
+        "lineEn": "With the loan interest rate rising 66% over seven years, the number of households renting out their entire homes has increased 144%. Real estate PF funds are experiencing a net outflow of 61,000,000,000,000 won, affecting the supply base of small and medium-sized construction companies. One owner sold shares in Samcheonics that had been held for ten years to purchase an apartment in Okso-dong. It is being predicted that an era has arrived where people without homes are buying real estate to survive. Warnings are being issued that if monthly and annual rental contracts become difficult, people will eventually have to buy homes.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "대출이자 집주인 7년간 66% 늘 때 전세 가구 144% 뛰어",
+            "link": "https://www.yna.co.kr/view/AKR20261017030100002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "부동산 PF 61조 순유출…중소 건설사 공급 기반 흔들[공급의 역설②]",
+            "link": "https://www.newsis.com/view/NISX20261016_0003829694",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "소유, 10년 묻어둔 삼전닉스 팔아 산 옥수동 아파트는…",
+            "link": "https://www.newsis.com/view/NISX20261017_0003830125",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "\"무주택자 '생존 매수'하는 시대 온다\"…전문가 경고 들어보니",
+            "link": "https://www.hankyung.com/article/2026101778407",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "\"전월세 못 구하면 결국 집 산다\"…부동산 '강제 매수' 경고",
+            "link": "https://www.newsis.com/view/NISX20261017_0003829868",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "전문가들은 11월에 금리 인상이 이뤄질 것으로 전망하고 있다. 일은 총재는 물가가 2%에 근접하면서 금리 인상을 지속할 필요가 있다고 밝혔다. 다음주 경제 관련 기사에서는 기준금리가 3연속 인상될 가능성이 제기되고 있다. 미국의 PPI 쇼크에도 불구하고 10년물 금리는 하락하는 모습을 보였다. 국고채 금리는 일제히 하락했으며, 코스피 반등에도 불구하고 외인 매수 영향을 받았다.",
+        "lineEn": "Experts expect interest rates to rise in November. Governor Yi stated that it is necessary to continue raising interest rates as inflation approaches 2%. Next week's economic-related articles suggest the possibility of the benchmark interest rate being raised for the third consecutive time. Despite the PPI shock in the U.S., 10-year bond yields showed a downward trend. Government bond yields all fell, and despite the KOSPI rebound, they were affected by foreign buying.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "\"10월 넘기고 11월에\"…전문가들, 금리 인상 '숨고르기' 전망",
+            "link": "https://www.yna.co.kr/view/AKR20261017017500002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "일은 총재, 금리인상 지속 시사 \"물가 2% 근접, 더는 용인 못해\"",
+            "link": "https://www.newsis.com/view/NISX20261017_0003830117",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[다음주 경제] 기준금리 3연속 인상할까…생산자 물가도 발표",
+            "link": "https://www.yna.co.kr/view/AKR20261017011700002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "美 'PPI 쇼크'에도…10년물 금리 되레 하락",
+            "link": "https://www.hankyung.com/article/2026101670481",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "국고채 금리 일제히 하락…코스피 반등에도 외인 매수 영향(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261016141851008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "정부가 추가 대출 규제를 하지 않을 것이라고 밝히며 강남 집값은 잡혔지만 서울 외곽은 그렇지 않다고 하며, 한미 재무·통화당국은 첫 2+2 면담을 통해 경제·금융 협력 방안을 논의했고, 국토차관은 추가 대출 규제는 현재 검토 중이지 않으며 연말 착공에 최대한 노력하겠다고 밝혔다.",
+        "lineEn": "The government stated it will not implement additional loan restrictions, noting that while Gangnam housing prices have been stabilized, those outside Seoul have not been. The U.S.-South Korea financial and monetary authorities discussed economic and financial cooperation plans during their first 2+2 meeting. The Deputy Minister of Land, Infrastructure and Transport stated that additional loan restrictions are not currently under review, and expressed commitment to do their utmost to ensure construction starts by year-end.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "“추가 대출 규제 없다” 못 박은 정부…강남 집값 잡혔다는데, 서울 외곽은?",
+            "link": "https://www.mk.co.kr/news/realestate/12178244",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "한미 재무·통화당국 첫 2+2 면담…\"경제·금융 협력 방안 논의\"",
+            "link": "https://www.yna.co.kr/view/AKR20261016141100002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[일문일답] 국토차관 “추가 대출 규제 현재 검토 안 해… 연말 착공에 최대한 노력”",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/16/5TSIG4PO3FDD3GO7TFTAVRRNOM/",
+            "source": "조선비즈 부동산"
+          }
+        ]
+      }
+    ]
   }
 ]
