@@ -18,6 +18,7 @@ import { factSentences } from "../district-facts.mjs";
 import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-links.mjs";
 import { cancelDistricts, cancelMonths, conversionTable, floorDistricts, renewalDistricts, renewalWolseDistricts } from "../district-tables.mjs";
 import { indexNewsItems } from "../news-items.mjs";
+import { FALLBACK_NOTE_KO, hasFallback } from "../summary-note.mjs";
 import { metricCell, topDistricts } from "../realestate-rows.mjs";
 import { overallCards } from "../realestate-overall.mjs";
 import { headLabels, realestateTable } from "../realestate-table.mjs";
@@ -112,6 +113,7 @@ function summary(data) {
           <strong>{str(c.name)}</strong> {str(c.lineKo)}
         </p>
       ))}
+      {hasFallback(data?.categories) ? <div className="summary-fallback-note">{FALLBACK_NOTE_KO}</div> : null}
     </>
   );
 }
@@ -196,6 +198,7 @@ function newsSummary(data, category = null) {
           <strong>{str(c.name)}</strong> {str(c.lineKo)}
         </p>
       ))}
+      {hasFallback(shown) ? <div className="summary-note">{FALLBACK_NOTE_KO}</div> : null}
     </>
   );
 }

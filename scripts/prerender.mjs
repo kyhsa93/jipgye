@@ -5,6 +5,7 @@ import { fragment } from "./renderer.mjs";
 import { createWriteSet } from "./render-writes.mjs";
 import { INDEX_NEWS, indexNewsItems } from "./news-items.mjs";
 import { escapeHtml } from "./html-escape.mjs";
+import { FALLBACK_NOTE_KO, hasFallback } from "./summary-note.mjs";
 import { linksBlockHtml, slugLinksHtml } from "./district-links.mjs";
 import {
   CONVERSION_BAND,
@@ -59,6 +60,8 @@ function summaryHtmlLegacy(summary) {
   return [
     ...highlights.map((h) => `<p><strong>${escapeHtml(h.title)}</strong> ${escapeHtml(h.textKo)}</p>`),
     ...categories.map((c) => `<p><strong>${escapeHtml(c.name)}</strong> ${escapeHtml(c.lineKo)}</p>`),
+    // 검증 폴백이 있는 날의 안내 한 줄. index.html renderSummary 와 같은 마크업·같은 자리(분류 줄 뒤)다(#350).
+    ...(hasFallback(summary?.categories) ? [`<div class="summary-fallback-note">${escapeHtml(FALLBACK_NOTE_KO)}</div>`] : []),
   ].join("");
 }
 export const summaryHtml = fragment("summaryHtml", summaryHtmlLegacy);
@@ -388,9 +391,11 @@ function newsSummaryHtmlLegacy(summary, category = null) {
   const all = (summary?.categories ?? []).filter((c) => c.lineKo);
   const shown = category ? all.filter((c) => c.key === category) : all;
   if (!shown.length) return null;
-  return shown
-    .map((c) => `<p><strong>${escapeHtml(c.name)}</strong> ${escapeHtml(c.lineKo)}</p>`)
-    .join("");
+  // 보이는 분류에 검증 폴백이 있으면 안내 한 줄을 붙인다 - 뉴스 틀 renderSummary 의 `shown.some(...)` 와 같은 조건이다(#350).
+  return (
+    shown.map((c) => `<p><strong>${escapeHtml(c.name)}</strong> ${escapeHtml(c.lineKo)}</p>`).join("") +
+    (hasFallback(shown) ? `<div class="summary-note">${escapeHtml(FALLBACK_NOTE_KO)}</div>` : "")
+  );
 }
 export const newsSummaryHtml = fragment("newsSummaryHtml", newsSummaryHtmlLegacy);
 
