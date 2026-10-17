@@ -2854,6 +2854,45 @@ summary:focus-visible,
   min-height: 100vh;
 }
 
+/* 전세 vs 월세(docs/jeonse-vs-wolse.html)의 계산기 자리 예약 - #287 (라).
+ *
+ * 【왜】 구운 장에서 입력 칸(#calc-controls)의 셀렉트 둘은 <option> 이 없고 결과 자리(#calc-result)는 빈 <div> 다.
+ * 장 안 스크립트가 데이터(conversion.json)를 받은 뒤 채운다. 채워지는 순간 (1) 셀렉트가 넓어져 칸 둘이 오른쪽으로
+ * 밀리고 좁은 폭에서는 줄이 바뀌고, (2) 결과 카드 한 벌이 들어와 그 아래(#calc-note → #rate-section)가 통째로 내려간다.
+ * 그 장의 CLS 는 0.1601~0.1876 이었다(절대 상한 0.1 의 1.6~1.9배. 2026-10-17 실측, 375x812·JSON 1,500ms 지연·광고와
+ * GA 차단, origin/main 1149891c). 이동은 두 번 잡힌다 - 데이터가 올 때(div#calc-note, 매 회차)와 첫 그리기 직후(section#rate-section,
+ * 장 안 스크립트가 applyLocale() 로 #calc-note 에 글을 넣는 경주라 회차마다 있기도 없기도 하다).
+ *
+ * 【어떻게】 채우기 전과 뒤의 기하를 같게 만든다. 둘이다.
+ *   (1) 셀렉트가 든 칸에 min-width 를 준다. 채워진 칸은 125.53·135.53px 인데 빈 칸은 69.53px 이라 둘째·셋째 칸이 x 로
+ *       밀렸다. 8.5rem(136px)은 채워진 둘째 칸(135.53px)보다 커서 빈 칸도 채운 칸도 같은 폭을 갖는다. 채워진 칸이 이보다 넓어지면
+ *       (면적대 이름이 길어지는 날) 칸은 자라고 그만큼 다시 밀린다 - 값이 데이터에 기댄다. 칸 상자에는 배경도 테두리도 없다.
+ *   (2) 결과 자리는 카드 한 벌이 들어올 높이만큼 min-height 를 준다. 숫자는 px 이 아니라 줄 수(lh)다 - lh 는 이 상자 자신의
+ *       line-height 라서 본문 줄 간격을 고치면 따라온다. 카드 높이는 글자 크기가 다른 줄들의 합이라 줄 수의 정수배가 아니다 -
+ *       기본 칸(강남구 60~85㎡, 가진 돈 3억)을 실측해 올림했다(2026-10-17, 한국어, Chrome 155, 줄 높이 24px):
+ *         폭 375~480 590.91px(24.6줄) → 25줄 · 폭 320~360 612.66px(25.5줄)은 12.66px 모자란다 ·
+ *         폭 521~768 354.8px(14.8줄)·폭 1024~ 333.05px(13.9줄) → 15줄(521부터 카드 둘이 나란히 선다).
+ *       높이는 기본 칸에서 쟀다. 칸에 따라 달라서(375폭 75칸 실측: 590.91px 67칸 · 546.13px 7칸(원인은 안 가렸다) · 473.58px 1칸 -
+ *       강남구 85㎡ 이상, 한쪽이 성립하지 않아 카드 한 장이 짧다) 짧은 칸은 카드 아래가 비고 긴 칸은 없다 - 첫 화면이 아니라
+ *       칸을 바꾼 뒤의 일이다.
+ *       남는 만큼은 카드 아래가 비기만 하고 모자란 만큼은 아래가 다시 밀리므로 올림했다.
+ *
+ * 요청이 실패하거나 자료가 없는 날에도 예약은 걷히지 않는다 - 걷으면 한 줄짜리 안내가 들어오는 순간 그 밑이 화면 안으로
+ * 올라온다(#search-result 가 실측으로 확인한 모양). 빈 자리가 남는 것은 #338 이 이름 붙인 같은 부류다. */
+#calc-controls .search-field:has(select) {
+  min-width: 8.5rem;
+}
+
+#calc-result {
+  min-height: 15lh;
+}
+
+@media (max-width: 520px) {
+  #calc-result {
+    min-height: 25lh;
+  }
+}
+
 .field-label {
   display: block;
   color: var(--muted);
@@ -2923,6 +2962,29 @@ summary:focus-visible,
 
 @media (max-width: 480px) {
   .content-notice.page-notice { min-height: 3lh; }
+}
+
+/* 늦게 채워지는 글 다섯 자리의 줄 수를 미리 잡아 둔다(#341). 아래 자리는 구운 HTML 에서 비어 있고 스크립트가 글을 넣는다.
+ * 채워지는 순간 그 밑이 통째로 밀리는데, PR #340 이 머리글을 장마다 20.4px 줄이고(기준일을 바닥글로 내렸다) 그 줄이 바닥글로
+ * 가면서 같은 채움이 접힌 선(812px) 안으로 들어와 이동이 새로 잡혔다. 바닥글의 두 줄은 처음부터 늘 보여 hidden → 펴짐
+ * 전이가 없으므로 (마)식 예약은 안 통하고, 움직이는 쪽 — 채워지는 글 자신 — 에 줄 수를 준다.
+ * 숫자는 px 이 아니라 줄 수(lh)다. lh 는 그 상자 자신의 line-height 라서 .content-notice·.lead·.update-schedule 의
+ * 글자 크기·줄 간격을 고치면 예약이 같이 따라온다. 줄 수는 2026-10-17 실측(Chrome 154, 한국어):
+ *   폭 375: floor-gap #lead-note 8 · renewal-vs-new #lead-note 9 · cancelled-deals #lead-note 11 줄
+ *     (폭 412 에서는 7·8·10 줄로 줄어 400 에서 가둔다. 360 에서는 8·10·11 줄이라 renewal-vs-new 가 한 줄 모자란다)
+ *   폭 320~430: switch-house #compare-result 2 줄(435부터 1줄) · index #update-schedule 2 줄(450부터 1줄)
+ * 폭이 넓을수록 줄이 줄어 예약이 남게 되므로 폭을 가둔다. 재는 폭(375) 밖의 모자람·남음은 PR 본문에 수로 적었다.
+ * 영어는 글이 길어 한 줄쯤 더 늘 수 있다 - 모자란 쪽이 남는 쪽보다 낫다(.trend-reserve 와 같은 판단, #287).
+ * 같은 id 가 세 장에 있어(#lead-note) 줄 수가 다르므로 그 장에만 있는 구획으로 가른다. */
+@media (max-width: 400px) {
+  main:has(> #top-section) #lead-note { min-height: 8lh; }
+  main:has(> #wolse-section) #lead-note { min-height: 9lh; }
+  main:has(> #month-section) #lead-note { min-height: 11lh; }
+}
+
+@media (max-width: 430px) {
+  #compare-result { min-height: 2lh; }
+  .tagline ~ .update-schedule { min-height: 2lh; }
 }
 
 @media (prefers-color-scheme: dark) {
