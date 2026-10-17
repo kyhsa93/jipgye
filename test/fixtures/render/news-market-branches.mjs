@@ -29,6 +29,10 @@ const stat = (href, label, value, note) =>
   `<a class="stat-card" href="${href}"><span class="stat-label">${label}</span><span class="stat-value">${value}</span>${note === undefined ? "" : `<span class="stat-sub">${note}</span>`}</a>`;
 
 const n = (title, category = "economy", extra = {}) => ({ title, link: `https://e.com/${title}`, source: "S", category, ...extra });
+// 검증 폴백 안내 줄(#350). 글은 손으로 적는다 - scripts/summary-note.mjs 의 상수와 같은지는 test/summary-note.test.mjs 가 틀의 문자열 표와 대조한다.
+const NOTE_TEXT = "일부 항목은 검증에서 걸러져 헤드라인 요약으로 대체됐습니다.";
+const noteNews = `<div class="summary-note">${NOTE_TEXT}</div>`;
+const noteIndex = `<div class="summary-fallback-note">${NOTE_TEXT}</div>`;
 const MORE = '<li class="news-more"><a href="./news.html">뉴스 전체 ';
 
 const ROWS = [
@@ -66,6 +70,11 @@ const ROWS = [
   },
   { id: "S14", fn: "summaryHtml", cond: "제목·이름이 null·undefined·\"\"이면 빈 글자(글은 있다)", args: [{ highlights: [{ title: null, textKo: "a" }, { textKo: "b" }, { title: "", textKo: "c" }], categories: [{ lineKo: "d" }] }], expect: p("", "a") + p("", "b") + p("", "c") + p("", "d") },
   { id: "S15", fn: "summaryHtml", cond: "문자열 \"0\"은 truthy라 남는다(숫자 0과 다르다)", args: [{ highlights: [{ title: "t", textKo: "0" }] }], expect: p("t", "0") },
+  { id: "S16", fn: "summaryHtml", cond: "분야 하나라도 fallbackReason이 있으면 분야 줄 뒤에 안내 한 줄(index.html renderSummary와 같은 마크업·자리, #350)", args: [{ categories: [{ name: "a", lineKo: "b" }, { name: "c", lineKo: "d", fallbackReason: "unverified-entity" }] }], expect: p("a", "b") + p("c", "d") + noteIndex },
+  { id: "S17", fn: "summaryHtml", cond: "하이라이트가 있어도 안내 줄은 맨 끝(하이라이트 → 분야 → 안내)", args: [{ highlights: [{ title: "h", textKo: "t" }], categories: [{ name: "a", lineKo: "b", fallbackReason: "x" }] }], expect: p("h", "t") + p("a", "b") + noteIndex },
+  { id: "S18", fn: "summaryHtml", cond: "fallbackReason가 null·undefined·\"\"·0·false(falsy)면 안내 줄 없음", args: [{ categories: [{ name: "a", lineKo: "1", fallbackReason: null }, { name: "b", lineKo: "2" }, { name: "c", lineKo: "3", fallbackReason: "" }, { name: "d", lineKo: "4", fallbackReason: 0 }, { name: "e", lineKo: "5", fallbackReason: false }] }], expect: p("a", "1") + p("b", "2") + p("c", "3") + p("d", "4") + p("e", "5") },
+  { id: "S19", fn: "summaryHtml", cond: "한 줄이 빈 분야의 fallbackReason도 센다(화면은 categories 전체를 본다) - 글이 남은 분야가 있어야 조각이 선다", args: [{ categories: [{ name: "a", lineKo: "1" }, { name: "b", lineKo: "", fallbackReason: "x" }] }], expect: p("a", "1") + noteIndex },
+  { id: "S20", fn: "summaryHtml", cond: "한 줄 있는 분야가 없으면 fallbackReason가 있어도 null(안내만 있는 상자는 만들지 않는다)", args: [{ categories: [{ name: "b", lineKo: "", fallbackReason: "x" }] }], expect: null },
 
   // ================= marketHtml =================
   { id: "M1", fn: "marketHtml", cond: "market이 null → null", args: [null], expect: null },
@@ -148,6 +157,11 @@ const ROWS = [
   { id: "Y11", fn: "newsSummaryHtml", cond: `특수문자 & < > " '(이름·한 줄)`, args: [{ categories: [{ name: SP, lineKo: SP }] }], expect: p(SP_OUT, SP_OUT) },
   { id: "Y12", fn: "newsSummaryHtml", cond: "비문자열: 이름 false·0·{}·null, 한 줄 5·[1,2]·true·{}", args: [{ categories: [{ name: false, lineKo: 5 }, { name: 0, lineKo: [1, 2] }, { name: {}, lineKo: true }, { name: null, lineKo: {} }] }], expect: p("false", "5") + p("0", "1,2") + p("[object Object]", "true") + p("", "[object Object]") },
   { id: "Y13", fn: "newsSummaryHtml", cond: "이름이 없다(undefined) → 빈 글자", args: [{ categories: [{ lineKo: "x" }] }], expect: p("", "x") },
+  { id: "Y14", fn: "newsSummaryHtml", cond: "보이는 분야에 fallbackReason가 있으면 분야 줄 뒤에 안내 한 줄(뉴스 틀 renderSummary의 shown.some, #350)", args: [{ categories: [{ key: "a", name: "A", lineKo: "1" }, { key: "b", name: "B", lineKo: "2", fallbackReason: "unverified-entity" }] }], expect: p("A", "1") + p("B", "2") + noteNews },
+  { id: "Y15", fn: "newsSummaryHtml", cond: "분야 필터가 있으면 그 분야의 폴백만 센다(다른 분야의 폴백은 안내를 만들지 않는다)", args: [{ categories: [{ key: "a", name: "A", lineKo: "1" }, { key: "b", name: "B", lineKo: "2", fallbackReason: "x" }] }, "a"], expect: p("A", "1") },
+  { id: "Y16", fn: "newsSummaryHtml", cond: "분야 필터가 폴백 있는 분야를 가리키면 그 한 줄 + 안내", args: [{ categories: [{ key: "a", name: "A", lineKo: "1" }, { key: "b", name: "B", lineKo: "2", fallbackReason: "x" }] }, "b"], expect: p("B", "2") + noteNews },
+  { id: "Y17", fn: "newsSummaryHtml", cond: "한 줄이 빈 분야는 보이지 않으므로 그 분야의 fallbackReason는 안내를 만들지 않는다(화면의 shown은 한 줄 있는 것만)", args: [{ categories: [{ key: "a", name: "A", lineKo: "1" }, { key: "b", name: "B", lineKo: "", fallbackReason: "x" }] }], expect: p("A", "1") },
+  { id: "Y18", fn: "newsSummaryHtml", cond: "fallbackReason가 null·\"\"·0·false·없음(falsy)이면 안내 줄 없음", args: [{ categories: [{ key: "a", name: "A", lineKo: "1", fallbackReason: null }, { key: "b", name: "B", lineKo: "2", fallbackReason: "" }, { key: "c", name: "C", lineKo: "3", fallbackReason: 0 }, { key: "d", name: "D", lineKo: "4", fallbackReason: false }, { key: "e", name: "E", lineKo: "5" }] }], expect: p("A", "1") + p("B", "2") + p("C", "3") + p("D", "4") + p("E", "5") },
 
   // ================= newsListHtml(news, category) — 뉴스 장: 정렬·자름·미리보기 없음 =================
   { id: "L1", fn: "newsListHtml", cond: "news가 null → null", args: [null], expect: null },
