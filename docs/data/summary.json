@@ -1,22 +1,106 @@
 {
-  "updatedAt": "2026-10-16T15:23:46.789Z",
+  "updatedAt": "2026-10-17T01:21:38.814Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 증시·환율: 뉴욕증시는 혼조 출발했고, 대만 증시는 소폭 반등 마감했으며, 홍콩 증시는 반등 마감했고, 중국 증시는 혼조 마감했으며, 환율은 1,331원으로 2년 만에 최저를 기록했다.\n- 기타 경제 소식: 정부는 추가 대출 규제가 없다고 밝혔으나 강남 집값은 안정되지만 서울 외곽은 변동이 있는 것으로 나타났고, 부천은 0%인 반면 이천은 4.5%인 전통시장 명절대출 상황이 천차만별이며, 한미 재무·통화당국은 첫 2+2 면담을 통해 경제·금융 협력 방안을 논의했고, 국토차관은 추가 대출 규제 검토는 현재 하지 않고 있으며 연말 착공에 최대한 노력하겠다고 밝혔다.\n- 부동산: 부동산 투자자들은 입주권이 아닌 현금청산이 될 수 있다는 점을 주의해야 한다. 서울 성북구는 각종 규제에도 불구하고 아파트값이 가장 많이 상승한 지역이다. 강남구는 일원개포한신아파트 철거를 앞두고 통학안전을 위한 협의체를 구성했다. AI 플랫폼 기능을 갖춘 아파트가 난방과 주차 서비스를 맞춤형으로 제공하고 있다. 정부는 주택공급 상황을 공개하기 위해 착공·분양·입주 상황판을 가동하기 시작했다.\n- 금리·예금·투자상품: 미국의 PPI 쇼크에도 불구하고 10년물 금리가 하락했고, 중국의 장기금리가 15개월 만에 최저 수준으로 떨어졌으며, 국고채 금리가 일제히 하락했고, 3년물 금리는 연 3.854%를 기록했으며, 주식과 채권 비중 비율을 깨뜨린 원인은 금리가 아니었다.",
-    "en": "- Stocks & FX: The New York stock market opened mixed, the Taiwan stock market closed with a slight rebound, the Hong Kong stock market closed with a rebound, the Chinese stock market closed mixed, and the exchange rate hit a two-year low at 1,331 won.\n- Other Economic News: The government stated there are no additional loan regulations, but while Gangnam housing prices remain stable, areas outside Seoul show fluctuations. In Bucheon, the traditional market holiday loan rate is 0%, whereas in Icheon it is 4.5%, showing a wide disparity. The U.S.-South Korea financial and monetary authorities discussed economic and financial cooperation plans during their first 2+2 meeting. The Deputy Minister of Land, Infrastructure and Transport stated that they are not currently reviewing additional loan regulations and will make every effort to ensure maximum progress in construction by year-end.\n- Real Estate: Real estate investors should be cautious that the units may be settled in cash rather than through occupancy rights. In Seongbuk-gu, Seoul, apartment prices have risen the most despite various regulations. Gangnam-gu has formed a coordination body for school safety in preparation for the demolition of the Ilwon Gaepo Hanshin Apartment Complex. An apartment equipped with AI platform functions is now providing customized heating and parking services. The government has started operating a board displaying construction, sales, and occupancy status to publicly disclose housing supply conditions.\n- Rates, Deposits & Investment Products: Despite the PPI shock in the United States, the 10-year interest rate fell, China's long-term interest rate dropped to its lowest level in 15 months, government bond rates fell across the board, the 3-year interest rate reached 3.854% annually, and the cause of the breakdown in the stock and bond allocation ratio was not interest rates."
+    "ko": "- 금리·예금·투자상품: 다음주 기준금리 3연속 인상 가능성과 생산자 물가 발표, 미국의 PPI 쇼크에도 불구하고 10년물 금리 하락, 중국 장기금리 15개월 만에 최저 기록, 국고채 금리 일제히 하락 및 3년물 연 3.854% 등이 오늘 경제 뉴스에 보도되었다.\n- 부동산: 부동산: 전세계 GDP 14% 묶은 거대블록 CPTPP…트럼프 시대 뜨거운 감자, 日 시니어주택 96% '식사 제공'…\"입주민이 첫손 꼽는 서비스\", “입주권 산 줄 알았는데 현금청산” … 투자자가 반드시 알아야 할 점은 [부동산 손품노트] +3\n- 증시·환율: 코스피가 하락한 가운데 해외 코인거래소는 90% 이상의 반등에 베팅했다. 뉴욕증시는 AI 매도세와 유가 상승으로 인해 하락 마감했으며, 나스닥은 2.1% 내렸다. 뉴욕증시는 혼조 출발했고, 다우와 S&P는 상승했으나 나스닥은 하락했다. 대만 증시는 반발 저가 매수에 따라 0.30% 상승하며 소폭 반등 마감했다. 홍콩 증시는 해외 증시 강세에 힘입어 H주 0.31% 상승하며 반등 마감했다.\n- 기타 경제 소식: 정부는 추가 대출 규제를 검토하지 않겠다고 밝혔다. 강남 지역에서는 집값이 안정됐지만 서울 외곽은 여전히 변동이 있는 것으로 나타났다. 부천에서는 명절 대출 금리가 0%인 반면 이천은 4.5%로 차이가 크다. 한미 재무·통화당국은 첫 2+2 면담을 통해 경제·금융 협력 방안을 논의했다. 국토차관은 추가 대출 규제는 현재 검토 중이지 않으며 연말 착공에 최대한 노력하겠다고 밝혔다.",
+    "en": "- Rates, Deposits & Investment Products: Possibility of three consecutive interest rate hikes next week, producer price index release, 10-year bond yield decline despite the U.S. PPI shock, China's long-term interest rate reaching its lowest level in 15 months, simultaneous decline in government bond yields, and the 3-year yield at 3.854% were reported in today's economic news.\n- Real Estate: Real Estate: 전세계 GDP 14% 묶은 거대블록 CPTPP…트럼프 시대 뜨거운 감자, 日 시니어주택 96% '식사 제공'…\"입주민이 첫손 꼽는 서비스\", “입주권 산 줄 알았는데 현금청산” … 투자자가 반드시 알아야 할 점은 [부동산 손품노트] +3\n- Stocks & FX: As the KOSPI fell, overseas cryptocurrency exchanges bet on a rebound of more than 90%. The New York stock market closed lower due to AI selling and rising oil prices, with the Nasdaq down 2.1%. The New York stock market opened mixed, with the Dow and S&P rising, but the Nasdaq fell. The Taiwan stock market rose 0.30% due to bargain buying at low prices and closed with a slight rebound. The Hong Kong stock market closed with a rebound, with H-shares rising 0.31%, driven by strong overseas markets.\n- Other Economic News: The government stated that it will not review additional loan regulations. While housing prices in the Gangnam area have stabilized, areas outside Seoul still show fluctuations. In Bucheon, the holiday loan interest rate is 0%, whereas in Icheon, it is 4.5%, showing a significant difference. The U.S.-South Korea financial and monetary authorities discussed economic and financial cooperation plans during their first 2+2 meeting. The Deputy Minister of Land, Infrastructure and Transport stated that additional loan regulations are not currently under review, and expressed determination to make maximum efforts for construction to start by year-end."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "뉴욕증시는 혼조 출발했고, 대만 증시는 소폭 반등 마감했으며, 홍콩 증시는 반등 마감했고, 중국 증시는 혼조 마감했으며, 환율은 1,331원으로 2년 만에 최저를 기록했다.",
-      "lineEn": "The New York stock market opened mixed, the Taiwan stock market closed with a slight rebound, the Hong Kong stock market closed with a rebound, the Chinese stock market closed mixed, and the exchange rate hit a two-year low at 1,331 won.",
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "다음주 기준금리 3연속 인상 가능성과 생산자 물가 발표, 미국의 PPI 쇼크에도 불구하고 10년물 금리 하락, 중국 장기금리 15개월 만에 최저 기록, 국고채 금리 일제히 하락 및 3년물 연 3.854% 등이 오늘 경제 뉴스에 보도되었다.",
+      "lineEn": "Possibility of three consecutive interest rate hikes next week, producer price index release, 10-year bond yield decline despite the U.S. PPI shock, China's long-term interest rate reaching its lowest level in 15 months, simultaneous decline in government bond yields, and the 3-year yield at 3.854% were reported in today's economic news.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": true,
       "items": [
+        {
+          "title": "[다음주 경제] 기준금리 3연속 인상할까…생산자 물가도 발표",
+          "link": "https://www.yna.co.kr/view/AKR20261017011700002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "美 'PPI 쇼크'에도…10년물 금리 되레 하락",
+          "link": "https://www.hankyung.com/article/2026101670481",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "[올댓차이나] 中 장기금리 15개월 만에 최저…유동성 풍부·추가 통화완화 기대",
+          "link": "https://www.newsis.com/view/NISX20261016_0003829553",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "국고채 금리 일제히 하락…코스피 반등에도 외인 매수 영향(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261016141851008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "국고채 금리 일제히 하락…3년물 연 3.854%",
+          "link": "https://www.yna.co.kr/view/AKR20261016141800008",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "부동산: 전세계 GDP 14% 묶은 거대블록 CPTPP…트럼프 시대 뜨거운 감자, 日 시니어주택 96% '식사 제공'…\"입주민이 첫손 꼽는 서비스\", “입주권 산 줄 알았는데 현금청산” … 투자자가 반드시 알아야 할 점은 [부동산 손품노트] +3",
+      "lineEn": "Real Estate: 전세계 GDP 14% 묶은 거대블록 CPTPP…트럼프 시대 뜨거운 감자, 日 시니어주택 96% '식사 제공'…\"입주민이 첫손 꼽는 서비스\", “입주권 산 줄 알았는데 현금청산” … 투자자가 반드시 알아야 할 점은 [부동산 손품노트] +3",
+      "isFallback": true,
+      "fallbackReason": "unverified-entity",
+      "degraded": false,
+      "items": [
+        {
+          "title": "전세계 GDP 14% 묶은 거대블록 CPTPP…트럼프 시대 뜨거운 감자",
+          "link": "https://www.yna.co.kr/view/AKR20261016069000003",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "日 시니어주택 96% '식사 제공'…\"입주민이 첫손 꼽는 서비스\"",
+          "link": "https://www.hankyung.com/article/202610153875i",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "“입주권 산 줄 알았는데 현금청산” … 투자자가 반드시 알아야 할 점은 [부동산 손품노트]",
+          "link": "https://www.mk.co.kr/news/realestate/12178132",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "난방·주차도 맞춤형…'AI 플랫폼' 된 아파트",
+          "link": "https://www.hankyung.com/article/2026101670311",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "각종 규제에도…서울에서 아파트값 가장 많이 오른 성북구, 왜?",
+          "link": "https://www.hankyung.com/article/202610127303i",
+          "source": "한국경제 부동산"
+        }
+      ]
+    },
+    {
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "코스피가 하락한 가운데 해외 코인거래소는 90% 이상의 반등에 베팅했다. 뉴욕증시는 AI 매도세와 유가 상승으로 인해 하락 마감했으며, 나스닥은 2.1% 내렸다. 뉴욕증시는 혼조 출발했고, 다우와 S&P는 상승했으나 나스닥은 하락했다. 대만 증시는 반발 저가 매수에 따라 0.30% 상승하며 소폭 반등 마감했다. 홍콩 증시는 해외 증시 강세에 힘입어 H주 0.31% 상승하며 반등 마감했다.",
+      "lineEn": "As the KOSPI fell, overseas cryptocurrency exchanges bet on a rebound of more than 90%. The New York stock market closed lower due to AI selling and rising oil prices, with the Nasdaq down 2.1%. The New York stock market opened mixed, with the Dow and S&P rising, but the Nasdaq fell. The Taiwan stock market rose 0.30% due to bargain buying at low prices and closed with a slight rebound. The Hong Kong stock market closed with a rebound, with H-shares rising 0.31%, driven by strong overseas markets.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "코스피 꺾이자…해외 코인거래소 '큰손' 90% 이상 반등 베팅",
+          "link": "https://www.yna.co.kr/view/AKR20261016169500002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "뉴욕증시, AI 매도세·유가 상승에 하락 마감…나스닥, 2.1%↓",
+          "link": "https://www.newsis.com/view/NISX20261017_0003829820",
+          "source": "뉴시스 경제"
+        },
         {
           "title": "[속보] 뉴욕증시 혼조 출발…다우·S&amp;P↑·나스닥↓",
           "link": "https://www.newsis.com/view/NISX20261016_0003829789",
@@ -31,16 +115,6 @@
           "title": "[올댓차이나] 홍콩 증시, 해외 증시 강세에 반등 마감… H주 0.31%↑",
           "link": "https://www.newsis.com/view/NISX20261016_0003829705",
           "source": "뉴시스 경제"
-        },
-        {
-          "title": "[올댓차이나] 中 증시, 저가 매수세에도 혼조 마감…창업판 0.39%↓",
-          "link": "https://www.newsis.com/view/NISX20261016_0003829653",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "환율, 1,331원 또 연저점 …2년 만에 최저",
-          "link": "https://www.yna.co.kr/view/AKR20261016131100002",
-          "source": "연합뉴스 경제"
         }
       ]
     },
@@ -48,11 +122,11 @@
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "정부는 추가 대출 규제가 없다고 밝혔으나 강남 집값은 안정되지만 서울 외곽은 변동이 있는 것으로 나타났고, 부천은 0%인 반면 이천은 4.5%인 전통시장 명절대출 상황이 천차만별이며, 한미 재무·통화당국은 첫 2+2 면담을 통해 경제·금융 협력 방안을 논의했고, 국토차관은 추가 대출 규제 검토는 현재 하지 않고 있으며 연말 착공에 최대한 노력하겠다고 밝혔다.",
-      "lineEn": "The government stated there are no additional loan regulations, but while Gangnam housing prices remain stable, areas outside Seoul show fluctuations. In Bucheon, the traditional market holiday loan rate is 0%, whereas in Icheon it is 4.5%, showing a wide disparity. The U.S.-South Korea financial and monetary authorities discussed economic and financial cooperation plans during their first 2+2 meeting. The Deputy Minister of Land, Infrastructure and Transport stated that they are not currently reviewing additional loan regulations and will make every effort to ensure maximum progress in construction by year-end.",
+      "lineKo": "정부는 추가 대출 규제를 검토하지 않겠다고 밝혔다. 강남 지역에서는 집값이 안정됐지만 서울 외곽은 여전히 변동이 있는 것으로 나타났다. 부천에서는 명절 대출 금리가 0%인 반면 이천은 4.5%로 차이가 크다. 한미 재무·통화당국은 첫 2+2 면담을 통해 경제·금융 협력 방안을 논의했다. 국토차관은 추가 대출 규제는 현재 검토 중이지 않으며 연말 착공에 최대한 노력하겠다고 밝혔다.",
+      "lineEn": "The government stated that it will not review additional loan regulations. While housing prices in the Gangnam area have stabilized, areas outside Seoul still show fluctuations. In Bucheon, the holiday loan interest rate is 0%, whereas in Icheon, it is 4.5%, showing a significant difference. The U.S.-South Korea financial and monetary authorities discussed economic and financial cooperation plans during their first 2+2 meeting. The Deputy Minister of Land, Infrastructure and Transport stated that additional loan regulations are not currently under review, and expressed determination to make maximum efforts for construction to start by year-end.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": true,
+      "degraded": false,
       "items": [
         {
           "title": "“추가 대출 규제 없다” 못 박은 정부…강남 집값 잡혔다는데, 서울 외곽은?",
@@ -73,80 +147,6 @@
           "title": "[일문일답] 국토차관 “추가 대출 규제 현재 검토 안 해… 연말 착공에 최대한 노력”",
           "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/16/5TSIG4PO3FDD3GO7TFTAVRRNOM/",
           "source": "조선비즈 부동산"
-        }
-      ]
-    },
-    {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "부동산 투자자들은 입주권이 아닌 현금청산이 될 수 있다는 점을 주의해야 한다. 서울 성북구는 각종 규제에도 불구하고 아파트값이 가장 많이 상승한 지역이다. 강남구는 일원개포한신아파트 철거를 앞두고 통학안전을 위한 협의체를 구성했다. AI 플랫폼 기능을 갖춘 아파트가 난방과 주차 서비스를 맞춤형으로 제공하고 있다. 정부는 주택공급 상황을 공개하기 위해 착공·분양·입주 상황판을 가동하기 시작했다.",
-      "lineEn": "Real estate investors should be cautious that the units may be settled in cash rather than through occupancy rights. In Seongbuk-gu, Seoul, apartment prices have risen the most despite various regulations. Gangnam-gu has formed a coordination body for school safety in preparation for the demolition of the Ilwon Gaepo Hanshin Apartment Complex. An apartment equipped with AI platform functions is now providing customized heating and parking services. The government has started operating a board displaying construction, sales, and occupancy status to publicly disclose housing supply conditions.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "“입주권 산 줄 알았는데 현금청산” … 투자자가 반드시 알아야 할 점은 [부동산 손품노트]",
-          "link": "https://www.mk.co.kr/news/realestate/12178132",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "난방·주차도 맞춤형…'AI 플랫폼' 된 아파트",
-          "link": "https://www.hankyung.com/article/2026101670311",
-          "source": "한국경제 부동산"
-        },
-        {
-          "title": "각종 규제에도…서울에서 아파트값 가장 많이 오른 성북구, 왜?",
-          "link": "https://www.hankyung.com/article/202610127303i",
-          "source": "한국경제 부동산"
-        },
-        {
-          "title": "강남구, 일원개포한신아파트 철거 앞두고 통학안전 협의체 꾸려",
-          "link": "https://www.newsis.com/view/NISX20261016_0003829327",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "정부 \"착공·분양·입주 상황판 가동\"…주택공급 첫 정례브리핑",
-          "link": "https://www.yna.co.kr/view/AKR20261016108900001",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "미국의 PPI 쇼크에도 불구하고 10년물 금리가 하락했고, 중국의 장기금리가 15개월 만에 최저 수준으로 떨어졌으며, 국고채 금리가 일제히 하락했고, 3년물 금리는 연 3.854%를 기록했으며, 주식과 채권 비중 비율을 깨뜨린 원인은 금리가 아니었다.",
-      "lineEn": "Despite the PPI shock in the United States, the 10-year interest rate fell, China's long-term interest rate dropped to its lowest level in 15 months, government bond rates fell across the board, the 3-year interest rate reached 3.854% annually, and the cause of the breakdown in the stock and bond allocation ratio was not interest rates.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": true,
-      "items": [
-        {
-          "title": "美 'PPI 쇼크'에도…10년물 금리 되레 하락",
-          "link": "https://www.hankyung.com/article/2026101670481",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "[올댓차이나] 中 장기금리 15개월 만에 최저…유동성 풍부·추가 통화완화 기대",
-          "link": "https://www.newsis.com/view/NISX20261016_0003829553",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "국고채 금리 일제히 하락…코스피 반등에도 외인 매수 영향(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261016141851008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "국고채 금리 일제히 하락…3년물 연 3.854%",
-          "link": "https://www.yna.co.kr/view/AKR20261016141800008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "'주식 60 채권 40' 공식 깨뜨린 범인…금리가 아니었다",
-          "link": "https://www.hankyung.com/article/202610166691i",
-          "source": "한국경제 경제"
         }
       ]
     }
