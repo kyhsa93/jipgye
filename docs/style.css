@@ -73,7 +73,7 @@
   }
   @media (max-width: 560px) {
     :root {
-      --fs-h1: 1.625rem;
+      --fs-h1: 1.45rem;
       --fs-3xl: 1.625rem;
     }
   }
@@ -991,7 +991,7 @@
   #trend-section[hidden] + .trend-reserve {
     display: block;
     visibility: hidden;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
   }
   .trend-reserve::before {
     content: "\00a0";
@@ -1289,7 +1289,7 @@
   }
   .controls input[type="search"] {
     flex: 1;
-    min-width: 140px;
+    min-width: 120px;
   }
   .sector-filter {
     display: flex;
@@ -1706,7 +1706,7 @@
   }
   .lead {
     font-size: var(--fs-lg);
-    line-height: 1.65;
+    line-height: 1.55;
     margin: 0 0 16px;
   }
   .method-body {
@@ -1728,7 +1728,7 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 12px 14px;
-    line-height: 1.7;
+    line-height: 1.55;
   }
   .method-body ul {
     margin: 0 0 10px;

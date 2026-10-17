@@ -119,10 +119,17 @@
 /* 좁은 화면에서만 내려오는 두 단. 규칙이 아니라 **토큰**을 덮어쓴다 - 그래야 그 단을 쓰는 자리가
  * 늘어도 미디어쿼리를 따라 늘리지 않아도 되고, 어느 자리가 줄어드는지가 한곳에서 보인다.
  * 560px 이하에서 제목 30px은 한국어 열 자가 두 줄로 접히고(실측), 480px 이하에서 답 20px은
- * 한 줄이 여덟 자밖에 안 들어간다. 색 토큰은 건드리지 않으므로 네 갈래와 부딪히지 않는다. */
+ * 한 줄이 여덟 자밖에 안 들어간다. 색 토큰은 건드리지 않으므로 네 갈래와 부딪히지 않는다.
+ *
+ * 좁은 폭의 제목은 23.2px(1.45rem)다 - 병합 기준(main)의 제목 크기와 같다. 26px에서는 375폭에서 영어
+ * 제목이 한 줄 더 접혀 머리가 +26~29px 커졌고, 첫 h2와 답 시작이 병합 기준보다 아래로 간 조건이
+ * 242 중 24곳이었다(po 판정, 지연 없이 settle 2,500ms). 그 실패 열다섯 장을 24px로 다시 재면 영어 제목
+ * 두 장(apartment-jeonse·switch-house)이 여전히 한 줄 더 접혀 7곳이 남았고, 23.2px에서는 제목 줄 수가
+ * 는 장이 0이다(2026-10-18, 24 -> 7 -> 4곳. 아래 .lead·.controls 규칙까지 더한 242 전수는 0).
+ * --fs-3xl은 사이트 이름·전세 vs 월세 답에도 쓰여 그대로 26px이다. */
 @media (max-width: 560px) {
   :root {
-    --fs-h1: 1.625rem;
+    --fs-h1: 1.45rem;
     --fs-3xl: 1.625rem;
   }
 }
@@ -1384,7 +1391,10 @@ ul.news-list {
 #trend-section[hidden] + .trend-reserve {
   display: block;
   visibility: hidden;
-  margin-bottom: 32px;
+  /* 위 section 규칙의 24px과 같은 값이어야 한다. 펴진 구획은 section의 margin-bottom을 받으므로, 예약이
+   * 숫자를 따로 가지면 section 여백을 바꿀 때 데이터가 오는 순간 앞뒤 간격이 그만큼 어긋난다. 32였을 때
+   * 47장 × 412폭 전부 -8.00px이었고 24로 맞추자 47장 전부 0.00px이다(2026-10-18, #335 cto 판정 3). */
+  margin-bottom: 24px;
 }
 
 /* 한 줄 자리는 전부 줄 바꿈 없는 빈칸 한 글자로 만든다. min-height로 "1.5em"이나 "1lh"를 적으면
@@ -1770,7 +1780,10 @@ main h3 {
 
 .controls input[type="search"] {
   flex: 1;
-  min-width: 140px;
+  /* 140 -> 120. 라벨이 15px가 되면서 deposit-rates에서 "예치금액" 라벨이 첫 줄에 못 들어가 두 번째 줄로
+   * 내려가고, 140px 검색칸이 그 옆에 못 앉아 세 번째 줄을 만들었다(조건 영역 104 -> 158px, 답 시작 +42.4px).
+   * 120이면 두 번째 줄에 라벨·금액칸·검색칸이 같이 앉아 104px이다. */
+  min-width: 120px;
 }
 
 .sector-filter {
@@ -2292,9 +2305,12 @@ main h3 {
   overflow-x: auto;
 }
 
+/* 17px로 커진 만큼 줄 간격 비율을 1.65 -> 1.55로 내려 한 줄의 높이를 병합 기준(16px × 1.65 = 26.4px)과
+ * 거의 같게(17px × 1.55 = 26.35px) 둔다. 글자가 커져 소개 문단이 한 줄 더 접히는 장에서 첫 h2·답 시작이
+ * 병합 기준보다 아래로 가는 것을 막는 자리다(po 기준 1: jeonse-vs-wolse 답 시작 +6.5px, 1.65에서). */
 .lead {
   font-size: var(--fs-lg);
-  line-height: 1.65;
+  line-height: 1.55;
   margin: 0 0 16px;
 }
 
@@ -2322,7 +2338,9 @@ main h3 {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 12px 14px;
-  line-height: 1.7;
+  /* 위 .lead와 같은 까닭이다. 1.7이면 about 영어 첫 h2 +22.3px · method 영어 +15.5px(po 기준 1, 375폭)이고,
+   * 1.6은 둘 다 0.2px가 모자라 1.55로 했다. 본문 문단(1.75)보다 촘촘한 것은 상자 안의 소개 문단이라서다. */
+  line-height: 1.55;
 }
 
 .method-body ul {
