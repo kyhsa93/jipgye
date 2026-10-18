@@ -166,5 +166,13 @@
 #   고친 시험은 읽는 쪽 경로뿐이다: 틀을 읽는 시험(baked-h1 · budget-pages · complex-card-kept · realestate-pages · inline-comments)은 scripts/realestate-template.html 로,
 #   나가는 장을 보는 시험(method-callout · realestate-pages 의 화면 스크립트·마크업 · loadRealestatePage 기본값)은 docs/realestate.html 그대로다.
 #   inline-comments 의 숫자 셋은 53 → 54(구운 장) · 13 → 12(손으로 쓴 제자리 장) · 틀 경로, 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
-1694
-1694
+# 센 법: 2026-10-18, merge-base 335481a3(= origin/main), Node v22.16.0, macOS 15.5 (#280 PR 1).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1697 · pass 1697 · fail 0 · skipped 0
+#   merge-base 335481a3 를 따로 풀어 같은 명령 → ℹ tests 1694 · pass 1694 · fail 0 · skipped 0(= 직전 하한).
+#   차이 3 은 이 PR 이 더한 test/news-shell.test.mjs 하나에서 나온다(`node --test test/news-shell.test.mjs` → ℹ tests 3):
+#   뉴스 4장 껍데기의 유틸리티·훅 class · 문자열 패치 다섯 needle 과 aria-current 하나씩 · 다시 그려지는 조각·인라인 스크립트에 유틸리티 없음.
+#   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 3.
+#   고친 시험 둘(test/navigation.test.mjs 의 navBlock 정규식 · test/question-nav.test.mjs 의 1층 내비 판별)은 훅 class 뒤에 유틸리티가 붙어도 같은 내비로 읽게 했을 뿐
+#   시험을 더하거나 빼지 않는다. 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
+1697
+1697

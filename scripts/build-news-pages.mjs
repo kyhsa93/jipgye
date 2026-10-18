@@ -49,6 +49,11 @@ export const NEWS_PAGES = [
   },
 ];
 
+// 틀(docs/news.html)의 껍데기 - 머리·1층 내비·2층 내비·요약 구획 - 는 Tailwind 유틸리티를 쓴다(#280 PR 1). 아래 문자열 패치 다섯 곳의 needle 은
+// 틀의 글자 그대로여야 하므로, class 를 달지 않은 요소(캐노니컬 링크·2층 내비의 링크 둘·시세/코스피 구획)는 건드리지 않고 그 부모(내비)에 단다.
+// 다시 그려지는 조각(기사 목록·요약 상자·시세 카드·코스피)과 인라인 스크립트에는 유틸리티를 두지 않는다 - 스크립트가 데이터를 받으면 그 조각을
+// 통째로 다시 그리는데 그 글자는 S6 이 못 바꾸게 막으므로, 구운 첫 화면과 다시 그린 화면이 어긋난다(test/news-shell.test.mjs 가 지킨다).
+// 이 주석에도 유틸리티 이름을 접두사까지 적지 않는다 - 이 파일은 src/css/main.css 의 @source 목록에 있어 Tailwind 가 주석까지 훑는다.
 function replaceOnce(html, needle, replacement, what) {
   if (!html.includes(needle)) throw new Error(`${what}를 찾지 못했습니다: ${needle.slice(0, 60)}`);
   return html.replace(needle, replacement);
