@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { buildPayload } from "../scripts/build-conversion.mjs";
 import { loadConversionPage } from "./helpers/conversion-page.mjs";
+import { stubElement } from "./helpers/digest-page.mjs";
 
 const NOW = new Date("2026-08-26T00:00:00Z");
 
@@ -35,6 +36,24 @@ const RATES = {
 };
 
 const CONVERSION = buildPayload({ deals: DEALS, rates: RATES, months: ["202603", "202608"], now: NOW });
+
+/** `#id { min-height: Nlh; }` 하나. 선언이 이것 하나가 아니면 던진다(px 로 베끼거나 height·overflow 를 두면 자동 광고가 깨진다 - 체인 규칙 3). */
+function reservation(css, id) {
+  const m = new RegExp(String.raw`\n#${id} \{([^{}]*)\}`).exec(css);
+  return m ? lines(m[1], id) : null;
+}
+
+/** `@media (max-width: Wpx) { #id { min-height: Nlh; } }` 를 소스 순서대로 [W, N] 으로. */
+function reservationSteps(css, id) {
+  const re = new RegExp(String.raw`@media \(max-width: (\d+)px\) \{\s*#${id} \{([^{}]*)\}\s*\}`, "g");
+  return [...css.matchAll(re)].map((m) => [Number(m[1]), lines(m[2], id)]);
+}
+
+function lines(decls, id) {
+  const m = /^min-height:\s*(\d+)lh;$/.exec(decls.trim());
+  assert.ok(m, `#${id} 예약은 "min-height: N lh" 하나여야 한다(지금 "${decls.trim()}") - px 로 베끼면 본문 줄 간격을 바꿀 때 따라오지 않고, height·overflow·position 을 두면 자동 광고가 깨진다(체인 규칙 3)`);
+  return Number(m[1]);
+}
 
 const open = (extra = {}) => loadConversionPage({ conversion: CONVERSION, ...extra });
 
@@ -160,22 +179,96 @@ test("입력 칸과 결과 자리는 데이터가 오기 전에도 자리를 잡
   // (2) 셀렉트가 든 칸의 최소 폭. 채워진 칸 폭이 아니라 rem 으로 못박혀야 빈 칸도 같은 폭을 갖는다.
   const field = /#calc-controls \.search-field:has\(select\) \{\s*min-width:\s*([\d.]+)rem;\s*\}/.exec(clean);
   assert.ok(field, "src/css/legacy.css: `#calc-controls .search-field:has(select) { min-width: N rem }` 가 사라졌다 - 채워질 때 둘째·셋째 칸이 오른쪽으로 밀린다");
-  assert.ok(Number(field[1]) >= 8.5, `칸 최소 폭이 ${field[1]}rem 이다 - 채워진 둘째 칸(135.53px = 8.47rem, 2026-10-17 실측)보다 좁으면 채울 때 칸이 다시 자란다`);
+  assert.ok(Number(field[1]) >= 8.65, `칸 최소 폭이 ${field[1]}rem 이다 - 채워진 둘째 칸(138px = 8.63rem, 2026-10-18 실측 - #335 글자 단 뒤 135.53px 에서 커졌다)보다 좁으면 폭 320 에서 채울 때 둘째 칸이 둘째 줄로 내려가 아래 전부가 54px 밀린다`);
 
-  // (3) 결과 자리 예약: 기본(넓은 폭) 하나 + 카드가 한 줄로 쌓이는 폭의 하나. 선언은 min-height 하나, 단위는 lh.
-  const base = /\n#calc-result \{([^{}]*)\}/.exec(clean);
+  // (3) 결과 자리 예약: 기본(넓은 폭) 하나 + 폭이 좁아질수록 커지는 계단. 선언은 min-height 하나, 단위는 lh.
+  const base = reservation(clean, "calc-result");
   assert.ok(base, "src/css/legacy.css: `#calc-result` 예약 규칙이 사라졌다 - 카드가 들어오는 순간 #calc-note 와 #rate-section 이 밀린다");
-  const narrow = /@media \(max-width: (\d+)px\) \{\s*#calc-result \{([^{}]*)\}\s*\}/.exec(clean);
-  assert.ok(narrow, "src/css/legacy.css: 좁은 폭의 `#calc-result` 예약이 사라졌다 - 카드가 쌓이는 폭에서 예약이 모자라다");
-  for (const decls of [base[1], narrow[2]]) {
-    assert.match(decls.trim(), /^min-height:\s*\d+lh;$/, `#calc-result 예약은 "min-height: N lh" 하나여야 한다(지금 "${decls.trim()}") - px 로 베끼면 본문 줄 간격을 바꿀 때 따라오지 않고, height·overflow·position 을 두면 자동 광고가 깨진다(체인 규칙 3)`);
+  const steps = reservationSteps(clean, "calc-result");
+  assert.ok(steps.length >= 2, "src/css/legacy.css: 좁은 폭의 `#calc-result` 예약이 사라졌다 - 카드가 쌓이는 폭에서 예약이 모자라다");
+  assert.deepEqual(steps.map(([w]) => w), [...steps.map(([w]) => w)].sort((x, y) => y - x), "#calc-result 계단이 넓은 폭부터 차례로 있지 않다 - 같은 선택자라 뒤의 것이 이겨 좁은 폭 규칙이 죽는다");
+  let floor = base;
+  for (const [width, lines] of steps) {
+    assert.ok(lines > floor, `#calc-result 예약이 폭 ${width}px 에서 앞 단계(${floor}lh)보다 크지 않다 - 좁을수록 카드가 길다`);
+    floor = lines;
   }
-  assert.ok(clean.indexOf(narrow[0]) > clean.indexOf(base[0]), "좁은 폭 예약이 기본 예약보다 앞에 있다 - 같은 선택자라 뒤의 것이 이겨 좁은 폭 규칙이 죽는다");
-  assert.ok(Number(/(\d+)lh/.exec(narrow[2])[1]) > Number(/(\d+)lh/.exec(base[1])[1]), "좁은 폭 예약이 기본보다 크지 않다 - 카드가 한 줄로 쌓이면 더 높아진다");
 
-  // (4) 예약이 갈리는 폭은 카드가 한 줄로 쌓이는 폭(.options 가 1열이 되는 폭)과 같아야 한다. 떨어지면 카드 둘이 나란한
+  // (4) 마지막 계단(가장 좁은 구간)이 갈리는 폭은 카드가 한 줄로 쌓이는 폭(.options 가 1열이 되는 폭)과 같아야 한다. 떨어지면 카드 둘이 나란한
   // 폭에서 쌓인 높이를 예약하거나 그 반대가 되어 예약이 크게 남거나 모자란다.
   const stack = /@media \(max-width: (\d+)px\) \{\s*\.options \{\s*grid-template-columns:\s*1fr;\s*\}\s*\}/.exec(clean);
   assert.ok(stack, "src/css/legacy.css: `.options` 를 한 줄로 쌓는 미디어 쿼리가 사라졌거나 모양이 달라졌다 - 예약이 갈리는 폭의 기준이 없다");
-  assert.equal(narrow[1], stack[1], `#calc-result 예약이 갈리는 폭(${narrow[1]}px)이 카드가 쌓이는 폭(${stack[1]}px)과 다르다`);
+  assert.equal(String(steps.at(-1)[0]), stack[1], `#calc-result 예약이 마지막으로 갈리는 폭(${steps.at(-1)[0]}px)이 카드가 쌓이는 폭(${stack[1]}px)과 다르다`);
+});
+
+test("안내 자리는 폭마다 줄 수만큼, 결과 자리는 폭 계단으로 예약하고 실패해도 CSS 로 통째로 거두지 않는다 (#349·#348)", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const path = await import("node:path");
+  const css = await readFile(path.resolve(import.meta.dirname, "..", "src/css/legacy.css"), "utf8");
+  const clean = css.replace(/\/\*[\s\S]*?\*\//g, "");
+
+  // 안내(#calc-note)는 글이 정해져 있고 줄 수만 폭에 따라 갈린다. 첫 그리기 직후 스크립트가 글을 넣을 때 아래(#rate-section)가
+  // 밀리지 않도록 줄 수만큼 자리를 잡는다. 좁을수록 커지는 계단이고 단위는 lh(그 상자 자신의 줄 높이)다.
+  const noteBase = reservation(clean, "calc-note");
+  assert.ok(noteBase, "src/css/legacy.css: `#calc-note` 예약이 사라졌다 - 첫 그리기 직후 안내 글이 들어오며 #rate-section 이 밀린다(키 큰 화면)");
+  const noteSteps = reservationSteps(clean, "calc-note");
+  assert.ok(noteSteps.length >= 3, `#calc-note 폭 계단이 ${noteSteps.length}개뿐이다 - 안내 줄 수는 폭 320~569 에서 9줄에서 4줄까지 여섯 단으로 갈린다(2026-10-18 실측)`);
+  assert.deepEqual(noteSteps.map(([w]) => w), [...noteSteps.map(([w]) => w)].sort((x, y) => y - x), "#calc-note 계단이 넓은 폭부터 차례로 있지 않다");
+  let floor = noteBase;
+  for (const [width, lines] of noteSteps) {
+    assert.ok(lines > floor, `#calc-note 예약이 폭 ${width}px 에서 앞 단계(${floor}lh)보다 크지 않다 - 좁을수록 줄이 많다`);
+    floor = lines;
+  }
+
+  // 결과 자리 계단은 앞 시험이 형태를 본다. 여기서는 숫자가 2026-10-18 실측(한국어 기본 칸, 23일치 conversion.json 의 최댓값)을 덮는지 본다.
+  // 폭 ~402 637.69px(26.6줄) · 403~520 613.69px · 521~526 392.69px(16.4줄) · 527~1023 374.69px(15.6줄) · 1024~ 360px 이하.
+  const stepAt = (base, steps, width) => steps.filter(([w]) => width <= w).at(-1)?.[1] ?? base;
+  const resBase = reservation(clean, "calc-result");
+  const resSteps = reservationSteps(clean, "calc-result");
+  for (const [width, px] of [[320, 637.69], [402, 637.69], [412, 613.69], [520, 613.69], [521, 392.69], [768, 374.69], [1023, 374.69], [1024, 360]]) {
+    const lines = stepAt(resBase, resSteps, width);
+    assert.ok(lines * 24 >= px, `폭 ${width}px 의 #calc-result 예약이 ${lines}lh(${lines * 24}px)라 카드(${px}px)에 모자란다 - 채울 때 아래가 밀린다`);
+  }
+
+  // 실패한 날 예약을 CSS 로 거두는 길(`#calc-result:has(> .empty) { min-height: 0 }`)은 막혀 있다: 한 줄 안내가 들어오는 순간 #calc-note 가
+  // 화면 안으로 올라와 CLS 가 0.1533(375x812)~0.2385 가 된다(#348 실측). 거두는 일은 스크립트의 showEmpty 가 보이는 곳이 안 움직이는 만큼만 한다.
+  assert.doesNotMatch(clean, /#calc-result[^{}]*(:has\(|\[data-)/, "src/css/legacy.css: #calc-result 의 예약을 상태 선택자로 거두는 규칙이 있다 - 실패 경로에서 #calc-note 가 화면 안으로 올라온다(#348)");
+});
+
+test("요청이 끝내 실패하면 결과 자리 예약을 보이는 곳이 안 움직이는 만큼만 접고, 카드가 그려지면 다시 편다 (#348)", async () => {
+  const stubBox = (top, height, style = {}) => {
+    const box = stubElement({}, "calc-result");
+    box.getBoundingClientRect = () => ({ top });
+    box.offsetHeight = height;
+    box.style = style;
+    return box;
+  };
+  const folded = async ({ innerHeight, top, height = 648, status }) => {
+    const box = stubBox(top, height);
+    await open({ conversion: undefined, status, innerHeight, seed: { "calc-result": box } });
+    return { box, minHeight: box.style.minHeight };
+  };
+
+  // 375x812: 결과 자리가 y=582 에서 시작하고 예약이 648px 이면 아래(#calc-note)는 y=1230 에 있다. 화면 아래(812)까지만 남기고 접으면
+  // 접은 뒤의 #calc-note 위치(582+230=812)도 화면 밖이라 보이는 곳이 안 움직인다(CLS 0, 문서 높이 -418px).
+  const a = await folded({ innerHeight: 812, top: 582, status: 404 });
+  assert.equal(a.minHeight, "230px", "404(자료 없음) 때 접는 높이가 화면 아래까지 남은 만큼(812-582)이 아니다");
+  assert.match(a.box.innerHTML, /class="empty"/);
+
+  const b = await folded({ innerHeight: 812, top: 582, status: 500 });
+  assert.equal(b.minHeight, "230px", "요청 실패(500) 때 접는 높이가 화면 아래까지 남은 만큼이 아니다");
+  assert.match(b.box.innerHTML, /load-retry/, "요청 실패 때 다시 시도 단추가 없다");
+
+  // 자리가 화면 아래에서 시작하면 끝까지 접어도(0) 아래는 화면 밖이다.
+  const c = await folded({ innerHeight: 568, top: 606, status: 404 });
+  assert.equal(c.minHeight, "0px");
+
+  // 화면이 예약보다 높으면(키 큰 화면) 접으면 아래가 화면 안으로 올라오므로 접지 않는다. 늘리지도 않는다.
+  const d = await folded({ innerHeight: 1400, top: 582, status: 404 });
+  assert.ok(!d.minHeight, `키 큰 화면(1400)에서 예약을 ${d.minHeight} 로 바꿨다 - 접으면 #calc-note 가 올라오고, 늘리면 아래가 밀린다`);
+
+  // 카드가 그려지면 접었던 높이를 지우고 CSS 예약으로 돌아간다(다시 시도 뒤 카드가 230px 상자에 들어오면 아래가 밀린다).
+  const box = stubBox(582, 648, { minHeight: "230px" });
+  await open({ seed: { "calc-result": box } });
+  assert.match(box.innerHTML, /class="verdict"/, "카드가 그려지지 않았다");
+  assert.equal(box.style.minHeight, "", "카드를 그리고도 접었던 min-height 가 남았다");
 });

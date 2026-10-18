@@ -2090,14 +2090,47 @@
     min-height: 100vh;
   }
   #calc-controls .search-field:has(select) {
-    min-width: 8.5rem;
+    min-width: 8.7rem;
   }
   #calc-result {
     min-height: 15lh;
   }
+  #calc-note {
+    min-height: 4lh;
+  }
+  @media (max-width: 1023px) {
+    #calc-result {
+      min-height: 17lh;
+    }
+  }
+  @media (max-width: 568px) {
+    #calc-note {
+      min-height: 5lh;
+    }
+  }
   @media (max-width: 520px) {
     #calc-result {
-      min-height: 25lh;
+      min-height: 27lh;
+    }
+  }
+  @media (max-width: 462px) {
+    #calc-note {
+      min-height: 6lh;
+    }
+  }
+  @media (max-width: 414px) {
+    #calc-note {
+      min-height: 7lh;
+    }
+  }
+  @media (max-width: 351px) {
+    #calc-note {
+      min-height: 8lh;
+    }
+  }
+  @media (max-width: 327px) {
+    #calc-note {
+      min-height: 9lh;
     }
   }
   .field-label {

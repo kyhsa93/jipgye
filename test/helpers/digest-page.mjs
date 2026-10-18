@@ -26,6 +26,8 @@ export function stubElement(attrs = {}, id = "") {
     hidden: false,
     style: {},
     dataset: {},
+    offsetHeight: 0,
+    getBoundingClientRect: () => ({ top: 0, left: 0, width: 0, height: 0 }),
     classList: { add() {}, remove() {}, toggle() {}, contains: () => false },
     getAttribute: (name) => attrs[name] ?? null,
     setAttribute: (name, value) => {
@@ -44,7 +46,7 @@ export function stubElement(attrs = {}, id = "") {
  * 화면마다 사전과 그리는 것이 다르지만 올리는 방법은 같다 - 인라인 스크립트를 꺼내
  * 가짜 document와 fetch 위에서 실행하는 것. 그 같은 부분만 여기 둔다.
  */
-export async function loadPage({ file, data = {}, subNav = [], status = 404, locale = "ko", query = "", analytics, seed = {} } = {}) {
+export async function loadPage({ file, data = {}, subNav = [], status = 404, locale = "ko", query = "", analytics, seed = {}, innerHeight = 800 } = {}) {
   const html = await readFile(path.join(root, "docs", file), "utf8");
   const script = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
 
@@ -64,6 +66,7 @@ export async function loadPage({ file, data = {}, subNav = [], status = 404, loc
     console: { ...console, warn() {}, error() {} },
     Math, Date, JSON, Intl, URL, URLSearchParams, Promise, Number, String, Object, Array, Set, Map,
     setTimeout, clearTimeout,
+    innerHeight,
     fetch: async (url) => {
       const name = String(url).match(/\/([a-z-]+)\.json/)?.[1];
       const body = data[name];
