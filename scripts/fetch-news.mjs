@@ -2,7 +2,7 @@ import Parser from "rss-parser";
 import { writeFile, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { categorizeTitle } from "./categories.mjs";
-import { extractArticleBody, isScrapable, stripTags } from "./article-body.mjs";
+import { extractArticleBody, isScrapable, normalizeFeedTitle, stripTags } from "./article-body.mjs";
 
 const FEEDS = [
   { source: "매일경제 부동산", url: "https://www.mk.co.kr/rss/50300009/" },
@@ -184,7 +184,7 @@ async function fetchFeed(parser, feed) {
   try {
     const parsed = await parser.parseURL(feed.url);
     return (parsed.items ?? []).map((item) => {
-      const title = item.title?.trim() ?? "";
+      const title = normalizeFeedTitle(item.title);
       return {
         title,
         link: item.link ?? "",
