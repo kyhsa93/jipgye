@@ -1,7 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.mjs";
-import { applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml } from "./prerender.mjs";
+import { REALESTATE_TEMPLATE_PATH, applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml, realestateOverallHtml } from "./prerender.mjs";
 import { clustering } from "./loan-cap.mjs";
 import { lineCounts } from "./policy-loan.mjs";
 import { budgetRulesHtml } from "./budget-rules.mjs";
@@ -11,7 +11,7 @@ import { escapeHtml } from "./html-escape.mjs";
 import { stripInlineScriptComments } from "./strip-inline-comments.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
-const REALESTATE_PATH = path.join(root, "docs/realestate.html");
+const REALESTATE_PATH = REALESTATE_TEMPLATE_PATH; // 빈 표지가 있는 틀(scripts/realestate-template.html). 나가는 docs/realestate.html 이 아니다(#374).
 const METHOD_PATH = path.join(root, "docs/method.html");
 const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 
@@ -76,7 +76,7 @@ function navHtml(page) {
   return links.join("");
 }
 
-export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null) {
+export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, realestate = null) {
   const band = (budget?.bands ?? []).find((b) => b.min10k === page.min10k) ?? null;
   const body = budgetBodyHtml(band, budget?.periods, rates, mortgageSeries, complexFiles, capStats, policyCounts);
   if (!body) return null;
@@ -148,6 +148,9 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
   // 문자열 패치(replaceOnce)가 전부 끝난 뒤에, 나가는 장의 인라인 스크립트에서 주석만 뗀다(#313). 틀에는 주석이 그대로 있다.
   return stripInlineScriptComments(applyPrerender(html, {
     budgetResult: body,
+    // 서울 전체 평균 카드. 틀의 표지가 비어 있어(#374) 여기서 채운다 - 전에는 prerender.mjs 가 제자리에서 채운 장을 틀로 읽어 그대로 물려받았다.
+    // 시세 장(docs/realestate.html)과 같은 호출(realestateOverallHtml(realestate))이라 글자까지 같다. 데이터가 없으면 null 이라 비운 채로 둔다.
+    realestateOverall: realestateOverallHtml(realestate),
     budgetFactsKo: budgetFactsHtml(band, "ko"),
     budgetFactsEn: budgetFactsHtml(band, "en"),
     budgetPageNav: navHtml(page),
@@ -223,6 +226,7 @@ async function main() {
   }
 
   const baseHtml = await readFile(REALESTATE_PATH, "utf8");
+  const realestate = await readJson(path.join(root, "docs/data/realestate.json"));
 
 
   // 예산대 장과 method.html이 전부 렌더에 성공한 뒤에 쓴다(#237) - 중간에서 던지면 어느 파일도 바뀌지 않는다.
@@ -232,7 +236,7 @@ async function main() {
   const skipped = [];
 
   for (const page of BUDGET_PAGES) {
-    const html = buildBudgetPage(baseHtml, page, budget, rates, mortgageSeries, complexFiles, capStats, policyCounts);
+    const html = buildBudgetPage(baseHtml, page, budget, rates, mortgageSeries, complexFiles, capStats, policyCounts, realestate);
     if (!html) {
       skipped.push(`${page.eok}억대`);
       continue;

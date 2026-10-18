@@ -9,6 +9,7 @@ import { districtFacts } from "./district-facts.mjs";
 import { bakeKoHeading } from "./page-heading.mjs";
 import { stripInlineScriptComments } from "./strip-inline-comments.mjs";
 import {
+  REALESTATE_TEMPLATE_PATH,
   applyPrerender,
   districtFactsHtml,
   districtRenewalHtml,
@@ -20,16 +21,15 @@ import {
 } from "./prerender.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
-// 이 틀에서 46장을 찍어 낸다. 찍어 낸 46장은 인라인 스크립트의 주석을 굽는 단계가 뗀다(#313, stripInlineScriptComments) -
-// 틀의 주석은 그 장들에 한 바이트도 실리지 않는다. 다만 틀 자체(docs/realestate.html)도 색인되는 장이라 틀의 주석은 **그 한 장에는**
-// 그대로 실려 나간다(제자리에서 prerender.mjs 가 채우는 원본이라 떼면 소스가 지워진다). 그래서 이 한 장의 바이트가 늘지 않게
-// "왜 이렇게 생겼나"는 여전히 여기나 src/css/legacy.css에 적는다(장부 규칙 3, 선례 #334).
+// 이 틀(scripts/realestate-template.html)에서 46장을 찍어 낸다. 틀 자신이 나가는 장(docs/realestate.html)도 prerender.mjs 가 같은 틀을 채워
+// 낸다(#374). 나가는 47장은 모두 인라인 스크립트의 주석을 굽는 단계가 뗀다(#313, stripInlineScriptComments) - 틀의 주석은 그 장들에
+// 한 바이트도 실리지 않는다. 그래서 "왜 이렇게 생겼나"는 이 틀의 주석에 마음껏 적는다.
 //
 // 틀의 #trend-section 바로 뒤에 있는 <div class="trend-reserve">(빈 칸 셋)는 지우면 안 된다. 그 구획은
 // realestate-trend.json이 온 뒤에 hidden이 풀리는데, 자리를 안 잡아 두면 412폭에서 727px이 한 프레임에
 // 끼어들어 아래를 통째로 민다(#287 (마)). 높이를 잡는 규칙과 그 근거는 src/css/legacy.css의
 // ".trend-reserve" 블록에, 되풀이를 막는 검사는 test/realestate-pages.test.mjs에 있다.
-const SOURCE_PATH = path.join(root, "docs/realestate.html");
+const SOURCE_PATH = REALESTATE_TEMPLATE_PATH;
 const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 
 const BASE_TITLE = "서울 아파트 시세 - 25개 자치구 실거래가";

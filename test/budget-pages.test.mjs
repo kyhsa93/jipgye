@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { BUDGET_PAGES, budgetPageFile } from "../scripts/budget-pages.mjs";
 import { buildBudgetPage } from "../scripts/build-budget-pages.mjs";
-import { budgetBodyHtml } from "../scripts/prerender.mjs";
+import { budgetBodyHtml, realestateOverallHtml } from "../scripts/prerender.mjs";
 import { buildBands, mergeBands } from "../scripts/budget-bands.mjs";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
@@ -56,7 +56,8 @@ const REALESTATE = {
 };
 
 const page8 = BUDGET_PAGES.find((p) => p.eok === 8);
-const baseHtml = () => readFile(path.join(root, "docs/realestate.html"), "utf8");
+// 빌더가 읽는 틀(빈 표지, #374). 나가는 장 docs/realestate.html 이 아니다.
+const baseHtml = () => readFile(path.join(root, "scripts/realestate-template.html"), "utf8");
 
 test("주소는 예산 단위로 고정한다", () => {
   assert.equal(budgetPageFile(8), "budget-8eok.html");
@@ -76,6 +77,25 @@ test("예산 페이지에 그 구간 거래와 제목이 들어간다", async ()
   assert.match(html, /팔억가단지/);
   assert.match(html, /도봉구 창동 팔억나단지/);
   assert.match(html, /canonical" href="[^"]*budget-8eok\.html/);
+});
+
+test("예산 페이지의 서울 전체 평균 카드는 틀이 아니라 빌더가 채우고, 시세 장과 같은 글자다 (#374)", async () => {
+  const overall = (html) => html.match(/<!--prerender:realestateOverall-->([\s\S]*?)<!--\/prerender:realestateOverall-->/)?.[1];
+  const template = await baseHtml();
+  assert.equal(overall(template), "", "틀의 카드 표지가 비어 있지 않다 - 예산 페이지가 채워진 장을 틀로 물려받는다");
+
+  // 시세가 없는 호출(데이터가 없는 날)은 카드를 비운 채로 낸다. 시세를 넘기면 시세 장이 쓰는 호출(realestateOverallHtml)과 같은 글자가 든다.
+  assert.equal(overall(buildBudgetPage(template, page8, BUDGET)), "");
+  const cards = realestateOverallHtml(REALESTATE);
+  assert.ok(cards, "시험 입력에서 카드가 안 나온다 - 시험이 아무것도 안 본 것이다");
+  assert.equal(overall(buildBudgetPage(template, page8, BUDGET, null, null, null, null, null, REALESTATE)), cards);
+
+  // 커밋된 열여덟 장은 나가는 시세 장과 같은 카드를 싣는다(둘 다 같은 realestate.json 에서 같은 호출로 굽는다).
+  const shipped = overall(await readFile(path.join(root, "docs/realestate.html"), "utf8"));
+  assert.ok(shipped?.length > 0);
+  for (const page of BUDGET_PAGES) {
+    assert.equal(overall(await readFile(path.join(root, "docs", page.file), "utf8")), shipped, `docs/${page.file}: 서울 전체 평균 카드가 시세 장과 다르다`);
+  }
 });
 
 test("옆 칸 페이지와 조건 검색으로 가는 길을 남긴다", async () => {
@@ -199,7 +219,7 @@ test("몰려 있지도 흩어지지도 않은 예산대에서는 지어내지 �
 });
 
 test("예산 페이지는 자치구 시세표를 다시 싣지 않는다", async () => {
-  // 스물다섯 줄짜리 시세표가 realestate.html에서 예산 페이지 열여덟 장으로 그대로
+  // 스물다섯 줄짜리 시세표가 시세 틀(realestate-template.html)에서 예산 페이지 열여덟 장으로 그대로
   // 복사돼 나가면서, 페이지 본문의 절반이 옆 페이지와 글자까지 같아졌다. 표는 원본
   // 한 곳에 두고 여기서는 접는다 — "10억대로 뭘 살 수 있나"에 답하지도 않는 표다.
   for (const page of BUDGET_PAGES) {
@@ -211,7 +231,7 @@ test("예산 페이지는 자치구 시세표를 다시 싣지 않는다", async
     );
   }
 
-  const source = await readFile(path.join(root, "docs/realestate.html"), "utf8");
+  const source = await readFile(path.join(root, "scripts/realestate-template.html"), "utf8");
   assert.match(source, /<section id="district-section">/, "원본에서까지 표를 접었습니다");
 });
 
@@ -228,7 +248,7 @@ test("표를 접어도 자치구로 가는 길은 남는다", async () => {
 
 test("자치구 링크는 시세표 바깥에 있다", async () => {
   // 링크가 표와 같은 섹션 안에 있으면 예산 페이지에서 표를 접을 때 같이 접힌다.
-  const source = await readFile(path.join(root, "docs/realestate.html"), "utf8");
+  const source = await readFile(path.join(root, "scripts/realestate-template.html"), "utf8");
   const section = source.split('<section id="district-section">')[1].split("</section>")[0];
   assert.ok(
     !section.includes("<!--prerender:districtLinks-->"),

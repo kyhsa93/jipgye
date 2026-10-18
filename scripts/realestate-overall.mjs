@@ -27,7 +27,7 @@ const card = (label, value, sub = null) => ({ label, value, sub });
 
 /**
  * 전세가율 카드 밑에 그 값을 낸 매매·전세 신고 건수를 적는다(#172). 값은 이 두 평균의 비다.
- * 브라우저의 renderOverall(docs/realestate.html)이 같은 문자열을 만든다. 글자만 돌려준다(이스케이프는 쓰는 쪽 - legacy는 escapeHtml, JSX는 React).
+ * 브라우저의 renderOverall(scripts/realestate-template.html)이 같은 문자열을 만든다. 글자만 돌려준다(이스케이프는 쓰는 쪽 - legacy는 escapeHtml, JSX는 React).
  * 두 지표가 모두 값을 낼 때(`jeonseRatio`가 null이 아닐 때)만 부른다 - 아니면 `resolveMetric`이 null이라 던진다(예전 그대로).
  */
 export const ratioBasis = (entry) =>

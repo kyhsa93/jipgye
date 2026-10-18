@@ -1,6 +1,6 @@
 // 찍어낸 장의 구운 `h1` (#295).
 //
-// 틀 `docs/realestate.html`에서 찍어내는 46장(예산대 18·자치구 25·거래유형 3)은 틀의
+// 틀 `scripts/realestate-template.html`에서 찍어내는 46장(예산대 18·자치구 25·거래유형 3)은 틀의
 // `<h1 id="page-title">서울 아파트 시세</h1>`를 그대로 물려받았고, 화면 스크립트 `applyLocale()`이 열린
 // 뒤에야 그 장의 제목으로 바꿨다. 그래서 스크립트를 돌리지 않는 쪽(크롤러의 첫 수집·스크립트 차단·읽기
 // 모드)이 받는 `h1`이 47장 모두 같았고, 예산대 18장에서는 바뀐 제목이 폭 412에서 두 줄이 되며 머리 아래가
@@ -49,7 +49,7 @@ function koDistrictTitle(block) {
 /**
  * 그 장의 한국어 화면에서 `applyLocale()`이 `h1`에 넣는 글자.
  *
- * 고르는 규칙은 `docs/realestate.html`의 `applyLocale()` 첫 두 줄과 같다 — 자치구 장이면 `districtTitle(구 이름)`,
+ * 고르는 규칙은 `scripts/realestate-template.html`의 `applyLocale()` 첫 두 줄과 같다 — 자치구 장이면 `districtTitle(구 이름)`,
  * 거래유형 장이면 `titleSale`·`titleJeonse`·`titleWolse`, 그 밖(틀·예산대)이면 `title`이다. 예산대 장은 생성
  * 스크립트가 사전의 `title`을 그 장 제목으로 이미 바꿔 두므로, **사전 패치 뒤에** 불러야 그 장의 글자가 나온다.
  */
