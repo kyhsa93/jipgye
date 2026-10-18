@@ -733,13 +733,24 @@ test("가로 위치에서 가장 가까운 지점을 고른다", async () => {
   assert.equal(at(0.5, 0), null);
 });
 
-test("축 글자를 시세 표 글자와 같은 크기로 적는다", async () => {
+// 전에는 "축 글자를 시세 표 글자와 같은 크기로 적는다"였다. 방향 C(#275 D1, #278 PR C)가 그 결정을
+// 바꿨다 - 축척이 13px과 15px 둘로 갈리면서 **축은 라벨**(13px)이고 **표 칸은 문장**(15px)이다
+// (po 기준 5: "13px은 문장이 아닌 라벨에만 쓴다 - 표 머리글·축·꼬리표·브랜드 줄·좁은 폭의 내비").
+// 같게 두면 축의 숫자가 표 칸과 같은 무게로 읽혀 그래프가 표처럼 보인다. 바뀐 것은 어느 단을
+// 가리키느냐이지 "축척 안에서 고른다"는 규칙이 아니라, 둘 다 축척 안에 있는 것을 여기서 센다.
+test("축은 라벨 단이고 표 칸은 문장 단이다 (#278 PR C)", async () => {
   const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
   const table = css.match(/\.data-table \{[^}]*font-size: ([^;]+);/)?.[1];
   const axis = css.match(/\.history-card \.axis \{[^}]*font-size: ([^;]+);/)?.[1];
+  const scale = Object.fromEntries(
+    [...css.matchAll(/(--fs-[a-z0-9]+):\s*([\d.]+)rem;/g)].map((m) => [`var(${m[1]})`, Number(m[2])])
+  );
 
   assert.ok(table, "시세 표 글자 크기를 읽지 못했다");
-  assert.equal(axis, table, "그래프 축 글자가 시세 표 글자와 다른 크기다");
+  assert.equal(axis, "var(--fs-xs)", "그래프 축이 라벨 단이 아니다");
+  assert.equal(table, "var(--fs-sm)", "시세 표 칸이 문장 단이 아니다");
+  // 두 단이 뒤집히면(축이 표보다 크면) 위 두 줄이 다 맞아도 화면은 틀린다.
+  assert.ok(scale[axis] < scale[table], `축 ${scale[axis]}rem이 표 칸 ${scale[table]}rem보다 작지 않다`);
 });
 
 // 전에는 두 화면의 카드 CSS를 한 줄씩 맞대어 갈라졌는지 봤다. 스타일시트가 한 장이
