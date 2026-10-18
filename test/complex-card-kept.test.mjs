@@ -25,7 +25,7 @@ const CARD_RE = /<div class="overall-card">[\s\S]*?<\/div><\/div>/g;
 // 카드 라벨은 틀에서 읽는다(베껴 적으면 틀이 바뀔 때 시험만 옛 글자를 보고 통과한다).
 // 구운 조각은 늘 한국어지만 되세우는 쪽은 숫자만 가져가고 라벨은 그 화면의 locale로 다시 세운다(po 판정, PR #324) -
 // 그래서 영어 화면에서는 값이 오기 전에도 영어 라벨이어야 한다.
-const TEMPLATE = await readFile(path.join(root, "docs/realestate.html"), "utf8");
+const TEMPLATE = await readFile(path.join(root, "scripts/realestate-template.html"), "utf8");
 const LABELS = Object.fromEntries(
   [...TEMPLATE.matchAll(/ {4}thRatioByComplex: "([^"]+)",/g)].map((m, i) => [["ko", "en"][i], m[1]])
 );
