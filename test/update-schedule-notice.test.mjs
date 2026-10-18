@@ -8,7 +8,7 @@ import path from "node:path";
 // 시작한 적이 없었다(2026-10-07~12 실행 21건 중 0건, #294). 우리가 지킬 수 없는 시각 약속은 적지 않고, 횟수만 말한 뒤
 // 실제 기준은 화면의 갱신 시각에 맡긴다. 이 시험은 문구 전체를 못박지 않는다 - 시각이 되돌아오는 길만 막는다.
 //
-// 범위는 index 한 장이다. 금리 네 장(scripts/rates-template.html)의 "매일 오전 8시(KST) 갱신"은 이 이슈 밖이다.
+// 범위는 index 한 장이다. 금리 네 장(scripts/rates-template.html)의 같은 종류 문구는 #369 가 따로 닫았다(test/rates-schedule-notice.test.mjs).
 
 const root = path.resolve(import.meta.dirname, "..");
 
