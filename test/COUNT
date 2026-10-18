@@ -97,5 +97,10 @@
 #   고친 시험 파일은 0 이고(더한 것뿐; test/helpers/rates-page.mjs 는 setAttribute 가 쓴 속성을 남기게 했을 뿐 시험이 아니다) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
 # 센 법(따라잡기): 2026-10-18, origin/main 5950c1fb 로 따라잡은 뒤, Node v22.16.0, macOS 15.5 (#337).
 #   따라잡은 결과 npm test → ℹ tests 1582 · pass 1582 · fail 0 · skipped 0 (= main 1579 + 이 PR 3).
-1582
-1582
+# 센 법: 2026-10-18, merge-base 165a178c, Node v22.16.0, macOS (#291).
+#   npm test → ℹ tests 1586 · pass 1586 · fail 0 · skipped 0
+#   기준(165a178c) → 1582. 차이 4는 이 PR이 test/search.test.mjs 에 더한 영어 안내문·라벨 시험 넷이다
+#   ("영어 모드로 열면 …" · "한국어 모드는 구운 글자 그대로다" · "언어를 바꾸면 … 다시 한다" · "검색창을 싣는 장은 모두 한국어 … 구워져 있고 …").
+#   `node --test test/search.test.mjs` → 기준 21 · 후보 25. 없어진 시험은 0이다(.skip·.todo 도 0 그대로).
+1586
+1586

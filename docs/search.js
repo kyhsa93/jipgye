@@ -21,16 +21,33 @@
   // 안내문에 예시가 붙어 있는데("...로 찾기 (예: 강남구, 래미안, 10억)"), 폰에서는
   // 그 괄호가 입력칸 밖으로 나가 "(예: 강남구, 래미"에서 잘린다. 잘린 안내문은
   // 없는 것만 못하므로 좁은 화면에서는 예시를 떼고 할 일만 남긴다.
-  const FULL_HINT = input.placeholder || "";
-  const SHORT_HINT = FULL_HINT.replace(/\s*[(（].*$/, "");
-  if (SHORT_HINT && SHORT_HINT !== FULL_HINT && typeof window.matchMedia === "function") {
-    const narrow = window.matchMedia("(max-width: 560px)");
-    const fitHint = () => {
-      input.placeholder = narrow.matches ? SHORT_HINT : FULL_HINT;
-    };
+  //
+  // 영어 모드에서는 안내문과 sr-only 라벨이 영어여야 한다(#291). 구운 HTML은 ko로 박혀 있고
+  // (한국어 글자는 그대로 둔다), 여기서 html[lang]을 보고 바꾼다 - nav.js가 머리 버튼 라벨을
+  // 맞추는 방식 그대로다(언어 전환 핸들러가 장마다 인라인이라 lang 속성을 지켜본다).
+  // 영어 예시("강남구, 래미안, 10억")는 한국어로 둔다: 색인이 한국어 이름뿐이라 영어로는 안 걸린다.
+  const label = form.querySelector("label");
+  const TEXT = {
+    ko: { hint: input.placeholder || "", label: label ? label.textContent : "" },
+    en: { hint: "Find district, complex, budget (Korean, e.g. 강남구, 래미안, 10억)", label: "Search anything" },
+  };
+  const narrow = typeof window.matchMedia === "function" ? window.matchMedia("(max-width: 560px)") : null;
+  const cut = (hint) => hint.replace(/\s*[(（].*$/, "");
+  let lang = "ko";
+  const fitHint = () => {
+    const full = TEXT[lang].hint;
+    input.placeholder = narrow && narrow.matches ? cut(full) || full : full;
+  };
+  function applyLang() {
+    lang = document.documentElement?.getAttribute("lang") === "en" ? "en" : "ko";
+    if (label) label.textContent = TEXT[lang].label;
     fitHint();
-    narrow.addEventListener("change", fitHint);
   }
+  applyLang();
+  if (document.documentElement && typeof MutationObserver === "function") {
+    new MutationObserver(applyLang).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+  }
+  narrow?.addEventListener("change", fitHint);
 
   let index = null;
   let loading = null;
