@@ -115,5 +115,12 @@
 #   기준은 직전 하한 1597(origin/main dea044e4 의 COUNT). 차이 6 은 이 PR 이 test/search.test.mjs 에 더한 영어 검색 결과 문안 시험 여섯이다
 #   (`node --test test/search.test.mjs` → 기준 25 · 후보 31): 조건 카드 보조 줄·평·억대 · 전세 vs 월세·갈아타기 카드 · 결과 없음 두 문단과 data-note · 한국어 모드 불변 · 목록이 떠 있는 채 언어 전환 후 재렌더(못 찾음 중복 집계 없음) · 스타일시트가 data-note 를 읽음.
 #   고친 시험 파일은 0 이고(더한 것뿐) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
-1603
-1603
+# 센 법: 2026-10-18, origin/main cc57f154, Node v22.16.0, macOS 15.5 (#299).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1655 · pass 1655 · fail 0 · skipped 0
+#   같은 워크트리에서 test/baked-title.test.mjs 를 잠시 빼고 같은 명령 → ℹ tests 1603 · pass 1603 · fail 0 · skipped 0(= origin/main cc57f154 의 하한).
+#   차이 52 는 이 PR 이 더한 그 파일 하나에서 나온다(`node --test test/baked-title.test.mjs` → ℹ tests 52):
+#   최상위 다섯(29장 수 · 한국어 29장 전수 · 예산대 18장 · 영어 대표 넷 · 영어→한국어 되돌림) + 하위 시험 47(29 + 18).
+#   고친 시험 둘(test/realestate-pages.test.mjs 의 "생성된 페이지는 … 자기 제목을 유지한다"·"자치구 페이지는 …")은 문서에 구운 <title>을
+#   넣어 돌리도록 바꿨을 뿐 시험을 더하거나 빼지 않았다. 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
+1655
+1655

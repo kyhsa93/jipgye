@@ -410,6 +410,8 @@ let locale = (() => {
   return saved === "en" || saved === "ko" ? saved : "ko";
 })();
 const t = (key) => T[locale][key];
+// 구운 <title>(한국어, 설명이 붙은 긴 쪽). 한국어 화면은 이것을 그대로 두고 영어 화면만 영어 제목을 넣는다(#299).
+const BAKED_TITLE = document.title;
 
 const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
 let theme = (() => {
@@ -1343,7 +1345,7 @@ const NAV_KEYS = {
 function applyLocale() {
   const suffix = kind === "sale" ? "titleSale" : kind === "jeonse" ? "titleJeonse" : kind === "wolse" ? "titleWolse" : "title";
   const heading = districtName ? t("districtTitle")(districtName) : t(suffix);
-  document.title = heading;
+  document.title = locale === "en" ? heading : BAKED_TITLE;
   document.getElementById("page-title").textContent = heading;
   document.getElementById("overall-heading").textContent = districtName ? t("overallHeadingDistrict")(districtName) : t("overallHeading");
   document.getElementById("district-heading").textContent = districtName ? t("districtHeadingDistrict") : t("districtHeading");
