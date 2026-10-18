@@ -85,3 +85,20 @@ test("커밋된 구운 장 다섯의 안내 줄 유무가 summary.json 과 맞�
     assert.equal(noteOf(box, "summary-note"), hasFallback(shown), `docs/${page.file} 의 안내 줄이 summary.json 과 어긋난다. node scripts/build-news-pages.mjs 를 실행하세요.`);
   }
 });
+
+// legacy 쌍둥이(React 렌더가 실패할 때만 도는 자동 폴백, render-pipeline.mjs)의 class 는 기본 모드의 다른 시험이 하나도 못 본다:
+// render-parity 의 sameHtml 이 class 를 지우고 비교해(#277) 래퍼 출력(react)과 legacy 가 class 만 달라도 통과하기 때문이다(#355).
+// 아래 둘은 래퍼를 거치지 않고 .legacy 원본을 직접 불러 JIPGYE_RENDERER 와 무관하게 legacy 마크업을 본다. #248 이 legacy 를 지우는 날 같이 지운다.
+test("legacy 뉴스 조각(newsSummaryHtml.legacy)의 안내 줄 class 는 summary-note 다 - 기본 모드에서도 잡는다 (#355)", () => {
+  const note = `<div class="summary-note">${FALLBACK_NOTE_KO}</div>`;
+  assert.equal(typeof newsSummaryHtml.legacy, "function", "래퍼에 legacy 원본이 없다");
+  assert.ok(newsSummaryHtml.legacy(WITH).endsWith(note), "legacy 뉴스 조각의 안내 줄이 summary-note 로 상자 끝에 있지 않다");
+  assert.ok(!newsSummaryHtml.legacy(WITHOUT).includes("summary-note"), "폴백 없는 날에 legacy 가 안내 줄을 구웠다");
+});
+
+test("legacy index 조각(summaryHtml.legacy)의 안내 줄 class 는 summary-fallback-note 다 - 기본 모드에서도 잡는다 (#355)", () => {
+  const note = `<div class="summary-fallback-note">${FALLBACK_NOTE_KO}</div>`;
+  assert.equal(typeof summaryHtml.legacy, "function", "래퍼에 legacy 원본이 없다");
+  assert.ok(summaryHtml.legacy(WITH).endsWith(note), "legacy index 조각의 안내 줄이 summary-fallback-note 로 상자 끝에 있지 않다");
+  assert.ok(!summaryHtml.legacy(WITHOUT).includes("fallback-note"), "폴백 없는 날에 legacy 가 안내 줄을 구웠다");
+});
