@@ -147,5 +147,14 @@
 #   구운 53장 수 · 53장 전수 주석 0 · 훑개 다섯(문자열/정규식 안 // · 줄째/줄 끝/블록 · 줄바꿈 블록 · 주석 없음 · 닫히지 않음) · 스크립트 밖 불변 ·
 #   빌더 네 곳 출력 주석 0 · 뉴스 장 · 기계 증명(전후 같은 파서 구문 + 지운 글자가 공백·주석뿐) · 증명기 변이 열 · 틀은 주석 유지 · 범위 밖 고정.
 #   고친 시험 파일은 0 이고(더한 것뿐) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
-1687
-1687
+# 센 법: 2026-10-18, origin/main ded5d128, Node 22.16.0, macOS 15.5 (#374).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1692 · pass 1692 · fail 0 · skipped 0
+#   변경 전 origin/main ded5d128 상태의 같은 워크트리에서 같은 명령 → ℹ tests 1687 · pass 1687 · fail 0 · skipped 0(= 이 PR 의 하한 출발점).
+#   차이 5 는 이 PR 이 더한 시험 다섯에서 나온다: test/inline-comments.test.mjs 14 → 17(시세 틀이 docs 밖에 있고 표지가 비어 있다 · 틀에 #312 §6 의 주석 5줄이 있고
+#   나가는 장에는 없다 · 나가는 장은 틀을 채우고 훑개를 건 것뿐이다) · test/budget-pages.test.mjs 20 → 21(예산 페이지의 서울 전체 평균 카드는 빌더가 채운다) ·
+#   test/render-writes.test.mjs 4 → 5(prerender 가 scripts/ 의 틀을 읽어 docs/realestate.html 로 쓰고 주석을 뗀다). 파일별 `node --test <파일>` 로 다시 쟀다.
+#   고친 시험은 읽는 쪽 경로뿐이다: 틀을 읽는 시험(baked-h1 · budget-pages · complex-card-kept · realestate-pages · inline-comments)은 scripts/realestate-template.html 로,
+#   나가는 장을 보는 시험(method-callout · realestate-pages 의 화면 스크립트·마크업 · loadRealestatePage 기본값)은 docs/realestate.html 그대로다.
+#   inline-comments 의 숫자 셋은 53 → 54(구운 장) · 13 → 12(손으로 쓴 제자리 장) · 틀 경로, 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
+1692
+1692

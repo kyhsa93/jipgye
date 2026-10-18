@@ -13,7 +13,7 @@ import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 /**
  * 구운 `h1`이 그 장의 제목이다 (#295).
  *
- * 찍어낸 46장은 틀 `docs/realestate.html`의 `h1`("서울 아파트 시세")을 그대로 물려받았고, 화면 스크립트
+ * 찍어낸 46장은 틀 `scripts/realestate-template.html`의 `h1`("서울 아파트 시세")을 그대로 물려받았고, 화면 스크립트
  * `applyLocale()`이 열린 뒤에야 그 장의 제목으로 바꿨다. 이제 생성 스크립트가 굽는다.
  *
  * 이 시험이 한 번 확인하고 끝내지 않고 남는 이유: 고친 뒤에는 그 글자의 출처가 **사전**(`T.ko`)과
@@ -27,6 +27,8 @@ import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
+/** 빌더가 읽는 틀(빈 표지). 나가는 장 docs/realestate.html 은 틀을 채운 생성물이라 빌더 입력으로 쓰지 않는다(#374). */
+const TEMPLATE = "scripts/realestate-template.html";
 
 /** 찍어낸 46장: 예산대 18 · 자치구 25 · 거래유형 3. 틀 자신(realestate.html)은 들어가지 않는다(#295 범위 3). */
 const GENERATED = [
@@ -53,10 +55,13 @@ test("찍어낸 장은 46장이다(예산대 18·자치구 25·거래유형 3)",
   assert.equal(new Set(GENERATED).size, 46);
 });
 
+// 틀(scripts/realestate-template.html, 빌더가 읽는다)과 나가는 장(docs/realestate.html) 둘 다 본다(#374).
 test("틀 realestate.html의 h1은 그대로다", async () => {
-  const html = await read("docs/realestate.html");
-  assert.ok(html.includes(BASE_H1), "틀의 h1 한 줄이 바뀌었다");
-  assert.equal(bakedH1(html), "서울 아파트 시세");
+  for (const rel of [TEMPLATE, "docs/realestate.html"]) {
+    const html = await read(rel);
+    assert.ok(html.includes(BASE_H1), `${rel}: 틀의 h1 한 줄이 바뀌었다`);
+    assert.equal(bakedH1(html), "서울 아파트 시세", rel);
+  }
 });
 
 test("찍어낸 46장의 구운 h1 = 그 장의 스크립트가 한국어에서 넣는 글자", async (t) => {
@@ -120,7 +125,7 @@ test("영어로 바꾸면 영어 제목이 그대로 들어온다(구운 한국�
 });
 
 test("생성 스크립트가 굽는 h1은 사전에서 고른 글자다", async () => {
-  const base = await read("docs/realestate.html");
+  const base = await read(TEMPLATE);
   const lowest = BUDGET_PAGES.at(0);
   const budget = {
     periods: ["202608"],
@@ -159,7 +164,7 @@ test("틀의 h1을 못 찾으면 조용히 틀의 글자를 내보내지 않고 
 });
 
 test("사전이 없거나 키가 없으면 던진다", async () => {
-  const base = await read("docs/realestate.html");
+  const base = await read(TEMPLATE);
   assert.throws(() => koHeading("<html></html>"), /한국어 문자열표/);
   assert.throws(() => koHeading(base.replace('    title: "서울 아파트 시세",\n', "")), /title/);
   assert.throws(
@@ -169,7 +174,7 @@ test("사전이 없거나 키가 없으면 던진다", async () => {
 });
 
 test("한국어 문자열표만 읽는다(영어 블록의 같은 키에 걸리지 않는다)", async () => {
-  const base = await read("docs/realestate.html");
+  const base = await read(TEMPLATE);
   assert.equal(koHeading(base), "서울 아파트 시세");
   assert.equal(koHeading(base, { kind: "wolse" }), "서울 아파트 월세 시세");
   assert.notEqual(koHeading(base, { kind: "sale" }), "Seoul Apartment Sale Prices");

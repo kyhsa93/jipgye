@@ -5,6 +5,8 @@ import { cp, mkdir, mkdtemp, readdir, readFile, realpath, rm, writeFile } from "
 import os from "node:os";
 import path from "node:path";
 import { createWriteSet } from "../scripts/render-writes.mjs";
+import { findJsComments, stripInlineScriptComments } from "../scripts/strip-inline-comments.mjs";
+import { jsInlineScripts } from "./helpers/comment-proof.mjs";
 
 // #237: 한 렌더 스크립트는 전부 메모리에서 렌더에 성공한 뒤에 쓴다 - 중간에서 던지면 어느 파일도 바뀌지 않는다.
 // 입력은 test/fixtures/render/의 고정 틀과 이 파일 안의 작은 JSON뿐이다(R3): 저장소의 docs/·docs/data는 읽지 않는다.
@@ -68,6 +70,26 @@ test("prerender.mjs: 마지막 장의 마커가 지워져 던지면 앞 장들�
   assert.notEqual(failed.status, 0, "마커가 없는데 성공했다");
   assert.match(failed.stderr, /cancelLead 자리표시 주석을 찾지 못했습니다/);
   assert.deepEqual(await readAll(path.join(dir, "docs")), before, "렌더가 실패했는데 일부 장이 이미 새 출력이 되었다");
+});
+
+test("prerender.mjs: 시세 장은 scripts/ 의 틀을 읽어 docs/realestate.html 로 쓰고, 그 자리에서 인라인 스크립트 주석을 뗀다 (#374)", async () => {
+  const dir = await tempRepo();
+  const files = ["index", "rates", "news", "jeonse-vs-wolse", "renewal-vs-new", "floor-gap", "switch-house", "record-high", "price-outlook", "method", "cancelled-deals"];
+  const fixture = await readFile(TEMPLATE, "utf8");
+  for (const f of files) await writeFile(path.join(dir, "docs", `${f}.html`), fixture);
+  // docs/realestate.html 을 일부러 만들지 않는다 - 입력이 나가는 장이면 읽다가 던진다. 틀(scripts/ 안 복사본)은 주석을 가진 채 그대로 있어야 한다.
+  const templatePath = path.join(dir, "scripts/realestate-template.html");
+  const template = await readFile(templatePath, "utf8");
+  assert.ok(jsInlineScripts(template).flatMap((x) => findJsComments(x.body)).length > 5, "틀에 주석이 없다 - 시험이 아무것도 못 본다");
+
+  const r = run(dir, "prerender.mjs");
+  assert.equal(r.status, 0, r.stderr);
+  const out = await readFile(path.join(dir, "docs/realestate.html"), "utf8");
+  // 표지 안쪽과 표 캡션(채워진 행 수를 센다)은 데이터에 따라 달라서 마크업은 견주지 않는다 - 스크립트가 틀에서 주석만 뗀 것과 같은지 본다.
+  const want = jsInlineScripts(stripInlineScriptComments(template)).map((x) => x.body);
+  assert.deepEqual(jsInlineScripts(out).map((x) => x.body), want, "나가는 장의 스크립트가 틀에서 주석만 뗀 것과 다르다");
+  assert.equal(jsInlineScripts(out).flatMap((x) => findJsComments(x.body)).length, 0, "나가는 장에 주석이 남았다");
+  assert.equal(await readFile(templatePath, "utf8"), template, "틀이 덮어 써졌다 - 생성물만 쓰고 틀은 건드리지 않는다");
 });
 
 test("build-rate-pages.mjs: 뒤 상품군 장을 그리다 던지면 앞 상품군 장도 만들어지지 않는다", async () => {
