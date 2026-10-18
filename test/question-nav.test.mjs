@@ -101,7 +101,7 @@ test("검색창이 화면 머리에 있는 장은 전부다 - 질문 화면에 �
   const missing = [];
   for (const f of files) {
     const html = await readFile(path.join(root, "docs", f), "utf8");
-    if (!html.includes('class="page-nav"')) continue;
+    if (!/<nav class="page-nav(?: [^"]*)?"/.test(html)) continue; // 훅 class 뒤에 유틸리티 class가 붙어도 1층 내비가 있는 장이다(#280)
     if (!html.includes('class="site-search"') || !html.includes('src="./search.js"')) missing.push(f);
   }
   assert.ok(files.length > 50, "전제: 장이 거의 없다");

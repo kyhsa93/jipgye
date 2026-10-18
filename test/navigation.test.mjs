@@ -9,8 +9,9 @@ const docs = path.join(root, "docs");
 const pages = async () =>
   (await readdir(docs)).filter((f) => f.endsWith(".html")).sort();
 
+// 훅 class 뒤에 유틸리티 class가 더 붙어도 같은 내비로 읽는다(#280).
 const navBlock = (html, cls) =>
-  new RegExp(`<nav class="${cls}"[\\s\\S]*?</nav>`).exec(html)?.[0] ?? null;
+  new RegExp(`<nav class="${cls}(?: [^"]*)?"[\\s\\S]*?</nav>`).exec(html)?.[0] ?? null;
 
 const links = (block) => [...(block ?? "").matchAll(/<a\b[^>]*>([^<]*)<\/a>/g)].map((m) => ({
   attrs: m[0].slice(0, m[0].indexOf(">")),
