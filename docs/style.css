@@ -2135,7 +2135,7 @@
     margin-bottom: 4px;
   }
   .site-search-miss .miss-head::after {
-    content: " — 찾지 못했습니다";
+    content: attr(data-note);
     color: var(--muted);
     font-weight: 400;
   }

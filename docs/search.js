@@ -22,37 +22,69 @@
   // 그 괄호가 입력칸 밖으로 나가 "(예: 강남구, 래미"에서 잘린다. 잘린 안내문은
   // 없는 것만 못하므로 좁은 화면에서는 예시를 떼고 할 일만 남긴다.
   //
-  // 영어 모드에서는 안내문과 sr-only 라벨이 영어여야 한다(#291). 구운 HTML은 ko로 박혀 있고
-  // (한국어 글자는 그대로 둔다), 여기서 html[lang]을 보고 바꾼다 - nav.js가 머리 버튼 라벨을
-  // 맞추는 방식 그대로다(언어 전환 핸들러가 장마다 인라인이라 lang 속성을 지켜본다).
+  // 영어 모드에서는 안내문·sr-only 라벨과 검색 결과 쪽 문안(보조 줄·결과 없음)이 영어여야 한다(#291).
+  // 구운 HTML은 ko로 박혀 있고(한국어 글자는 그대로 둔다), 여기서 html[lang]을 보고 바꾼다 - nav.js가
+  // 머리 버튼 라벨을 맞추는 방식 그대로다(언어 전환 핸들러가 장마다 인라인이라 lang 속성을 지켜본다).
   // 영어 예시("강남구, 래미안, 10억")는 한국어로 둔다: 색인이 한국어 이름뿐이라 영어로는 안 걸린다.
+  // 결과 항목 이름(자치구·동·단지)도 색인이 한국어뿐이라 옮기지 않는다. 문안은 po 확정(#291 댓글 6244732875·6245588745).
   const label = form.querySelector("label");
   const TEXT = {
-    ko: { hint: input.placeholder || "", label: label ? label.textContent : "" },
-    en: { hint: "Find district, complex, budget (Korean, e.g. 강남구, 래미안, 10억)", label: "Search anything" },
+    ko: {
+      hint: input.placeholder || "",
+      label: label ? label.textContent : "",
+      pyeong: (n) => `${n}평`,
+      band: (eok) => `${eok % 1 ? eok.toFixed(1) : eok}억대`,
+      byCondition: "조건으로 찾기",
+      jeonseVsWolse: "전세 vs 월세",
+      whichCheaper: "어느 쪽이 싼가",
+      moving: "갈아타기 — 갈 동네는 얼마나 올랐나",
+      notFound: " — 찾지 못했습니다",
+      can: "자치구·동·단지 이름, 예산(8억), 면적(84㎡·34평)으로 찾을 수 있습니다. 두 가지를 같이 쳐도 됩니다 &mdash; 강남구 84㎡",
+      cannot: "학군·교통·재건축 정보와 보유세·양도세 계산은 이 사이트가 다루지 않습니다. 공시가격은 아직 없고, 취득세·중개보수는 예산대 화면(예: 10억)에 있습니다.",
+    },
+    en: {
+      hint: "Find district, complex, budget (Korean, e.g. 강남구, 래미안, 10억)",
+      label: "Search anything",
+      pyeong: (n) => `${n} pyeong`,
+      band: (eok) => `₩${Math.round(eok * 100).toLocaleString("en-US")}M band`,
+      byCondition: "Search by conditions",
+      jeonseVsWolse: "Jeonse vs Monthly Rent",
+      whichCheaper: "Which is cheaper",
+      moving: "Moving house: how far it rose",
+      notFound: " — Not found",
+      can: "Only Korean names are searched: district, neighbourhood or complex name, budget (8억), size (84㎡, 34평). You can combine two: 강남구 84㎡. No Korean keyboard? Try Deal search.",
+      cannot: "This site does not cover schools, transit, redevelopment, or holding-tax and capital-gains-tax calculations. Official prices (공시가격) are not available yet. Acquisition tax and brokerage fee are on the budget pages (try 10억).",
+    },
   };
   const narrow = typeof window.matchMedia === "function" ? window.matchMedia("(max-width: 560px)") : null;
   const cut = (hint) => hint.replace(/\s*[(（].*$/, "");
   let lang = "ko";
+  let index = null;
+  let loading = null;
+  let items = [];
+  let active = -1;
   const fitHint = () => {
     const full = TEXT[lang].hint;
     input.placeholder = narrow && narrow.matches ? cut(full) || full : full;
   };
   function applyLang() {
+    const before = lang;
     lang = document.documentElement?.getAttribute("lang") === "en" ? "en" : "ko";
     if (label) label.textContent = TEXT[lang].label;
     fitHint();
+    // 목록이 떠 있는 채로 언어를 바꾸면 보조 줄·결과 없음 문안도 따라 바뀐다(항목은 글자가 아니라 검색어로 다시 만든다).
+    // 분석 이벤트는 다시 보내지 않는다 - 같은 못 찾음을 두 번 세지 않게.
+    if (lang !== before && index && !list.hidden && input.value.trim()) {
+      items = search(input.value);
+      if (active >= items.length) active = -1;
+      render(true);
+    }
   }
   applyLang();
   if (document.documentElement && typeof MutationObserver === "function") {
     new MutationObserver(applyLang).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
   }
   narrow?.addEventListener("change", fitHint);
-
-  let index = null;
-  let loading = null;
-  let items = [];
-  let active = -1;
 
   function load() {
     if (index) return Promise.resolve(index);
@@ -113,7 +145,7 @@
   function parseArea(text) {
     const t = squash(text);
     const pyeong = /(\d+(?:\.\d+)?)평/.exec(t);
-    if (pyeong) return { m2: Number(pyeong[1]) * PYEONG_M2, label: `${pyeong[1]}평` };
+    if (pyeong) return { m2: Number(pyeong[1]) * PYEONG_M2, label: TEXT[lang].pyeong(pyeong[1]) };
     const m2 = /(\d+(?:\.\d+)?)\s*(?:㎡|m2|m²|제곱미?터?)/.exec(t);
     return m2 ? { m2: Number(m2[1]), label: `${m2[1]}㎡` } : null;
   }
@@ -162,13 +194,13 @@
     const parts = [];
     if (place?.dong) parts.push(`${place.district} ${place.dong}`);
     else if (place?.district) parts.push(place.district);
-    if (eok) parts.push(`${eok % 1 ? eok.toFixed(1) : eok}억대`);
+    if (eok) parts.push(TEXT[lang].band(eok));
     if (areaKey) parts.push(area.label);
 
     return {
       rank: -1,
       text: parts.filter(Boolean).join(" · "),
-      sub: "조건으로 찾기",
+      sub: TEXT[lang].byCondition,
       href: `./deal-search.html?${params.toString()}`,
     };
   }
@@ -180,7 +212,7 @@
     const words = String(query ?? "").trim().split(/\s+/).filter(Boolean);
     const q = squash(query);
     if (q.includes("전세") && q.includes("월세")) {
-      return { rank: -2, text: "전세 vs 월세", sub: "어느 쪽이 싼가", href: "./jeonse-vs-wolse.html" };
+      return { rank: -2, text: TEXT[lang].jeonseVsWolse, sub: TEXT[lang].whichCheaper, href: "./jeonse-vs-wolse.html" };
     }
     if (words.length !== 2) return null;
     const districts = (index?.entries ?? []).filter((e) => e.kind === "district").map((e) => e.text);
@@ -194,7 +226,7 @@
     return {
       rank: -2,
       text: `${from} → ${to}`,
-      sub: "갈아타기 — 갈 동네는 얼마나 올랐나",
+      sub: TEXT[lang].moving,
       href: `./switch-house.html?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
     };
   }
@@ -262,12 +294,14 @@
    * 세금을 친 사람이 취득세를 찾는 것일 수 있어 예산대 화면을 알려 준다. 붙잡아 두는 것보다 그렇게
    * 말하는 편이 낫다 - method.html의 "하지 않는 것"과 같은 태도다.
    */
-  function renderMiss(query) {
+  function renderMiss(query, quiet) {
+    // 「 — 찾지 못했습니다」는 CSS ::after 가 data-note 를 읽는다(style.css 에 글자를 박으면 영어 모드에서 한국어가 남는다).
+    const t = TEXT[lang];
     list.innerHTML =
       `<div class="site-search-miss">` +
-      `<p class="miss-head">${escapeHtml(query)}</p>` +
-      `<p class="miss-can">자치구·동·단지 이름, 예산(8억), 면적(84㎡·34평)으로 찾을 수 있습니다. 두 가지를 같이 쳐도 됩니다 &mdash; 강남구 84㎡</p>` +
-      `<p class="miss-cannot">학군·교통·재건축 정보와 보유세·양도세 계산은 이 사이트가 다루지 않습니다. 공시가격은 아직 없고, 취득세·중개보수는 예산대 화면(예: 10억)에 있습니다.</p>` +
+      `<p class="miss-head" data-note="${escapeHtml(t.notFound)}">${escapeHtml(query)}</p>` +
+      `<p class="miss-can">${t.can}</p>` +
+      `<p class="miss-cannot">${t.cannot}</p>` +
       `</div>`;
     list.hidden = false;
     input.setAttribute("aria-expanded", "true");
@@ -275,14 +309,14 @@
 
     // 못 찾은 말의 원문은 보내지 않는다 - 자유 입력에는 주소·이름이 섞일 수 있다(GA 약관 7조).
     // 길이와 숫자 여부만으로도 "예산·면적을 쳤는데 못 찾았다"는 갈래는 셀 수 있다.
-    window.analytics?.debouncedEvent?.("search_miss", window.analytics.termShape?.(query));
+    if (!quiet) window.analytics?.debouncedEvent?.("search_miss", window.analytics.termShape?.(query));
   }
 
-  function render() {
+  function render(quiet) {
     if (!items.length) {
       const query = input.value.trim();
       if (query) {
-        renderMiss(query);
+        renderMiss(query, quiet);
         return;
       }
       list.innerHTML = "";
