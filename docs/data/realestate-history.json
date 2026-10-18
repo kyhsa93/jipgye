@@ -24000,14 +24000,14 @@
     },
     "overall": {
       "sale": {
-        "avgPricePerM2": 16570178.247119127,
+        "avgPricePerM2": 16570563.251946142,
         "avgPricePerPyeong10k": 5478,
-        "transactionCount": 1153
+        "transactionCount": 1167
       },
       "saleNational84": {
-        "avgPricePerM2": 14952271.460533775,
-        "avgPricePerPyeong10k": 4943,
-        "transactionCount": 304
+        "avgPricePerM2": 14957768.025285276,
+        "avgPricePerPyeong10k": 4945,
+        "transactionCount": 310
       },
       "jeonse": {
         "avgDepositPerM2": 9767240.041987218,
@@ -24051,14 +24051,14 @@
         "code": "11140",
         "name": "중구",
         "sale": {
-          "avgPricePerM2": 17740862.973363113,
-          "avgPricePerPyeong10k": 5865,
-          "transactionCount": 53
+          "avgPricePerM2": 17843659.81999207,
+          "avgPricePerPyeong10k": 5899,
+          "transactionCount": 54
         },
         "saleNational84": {
-          "avgPricePerM2": 18411077.2856722,
-          "avgPricePerPyeong10k": 6086,
-          "transactionCount": 12
+          "avgPricePerM2": 18733057.295280155,
+          "avgPricePerPyeong10k": 6193,
+          "transactionCount": 13
         },
         "jeonse": {
           "avgDepositPerM2": 9502190.8258329,
@@ -24201,9 +24201,9 @@
         "code": "11290",
         "name": "성북구",
         "sale": {
-          "avgPricePerM2": 12820981.55925984,
-          "avgPricePerPyeong10k": 4238,
-          "transactionCount": 272
+          "avgPricePerM2": 12824476.115340926,
+          "avgPricePerPyeong10k": 4240,
+          "transactionCount": 271
         },
         "saleNational84": {
           "avgPricePerM2": 11627190.64315966,
@@ -24281,7 +24281,7 @@
           "transactionCount": 669
         },
         "saleNational84": {
-          "avgPricePerM2": 10098872.481336636,
+          "avgPricePerM2": 10098872.481336638,
           "avgPricePerPyeong10k": 3338,
           "transactionCount": 145
         },
@@ -24351,9 +24351,9 @@
         "code": "11440",
         "name": "마포구",
         "sale": {
-          "avgPricePerM2": 20149118.045353536,
-          "avgPricePerPyeong10k": 6661,
-          "transactionCount": 150
+          "avgPricePerM2": 20151803.84853499,
+          "avgPricePerPyeong10k": 6662,
+          "transactionCount": 151
         },
         "saleNational84": {
           "avgPricePerM2": 20423153.809277877,
@@ -24476,14 +24476,14 @@
         "code": "11560",
         "name": "영등포구",
         "sale": {
-          "avgPricePerM2": 18182491.06966469,
-          "avgPricePerPyeong10k": 6011,
-          "transactionCount": 203
+          "avgPricePerM2": 18217724.44759278,
+          "avgPricePerPyeong10k": 6022,
+          "transactionCount": 211
         },
         "saleNational84": {
-          "avgPricePerM2": 16867446.796860084,
-          "avgPricePerPyeong10k": 5576,
-          "transactionCount": 63
+          "avgPricePerM2": 16895779.433116753,
+          "avgPricePerPyeong10k": 5585,
+          "transactionCount": 66
         },
         "jeonse": {
           "avgDepositPerM2": 9152347.916378424,

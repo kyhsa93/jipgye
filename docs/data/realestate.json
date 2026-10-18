@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-17T21:06:38.987Z",
+  "updatedAt": "2026-10-18T00:58:47.906Z",
   "window": {
     "basis": "arrival",
     "from": "2026-10-12",
@@ -11,9 +11,9 @@
   },
   "overall": {
     "sale": {
-      "avgPricePerM2": 16570178.247119127,
+      "avgPricePerM2": 16570563.251946142,
       "avgPricePerPyeong10k": 5478,
-      "transactionCount": 1153,
+      "transactionCount": 1167,
       "change": {
         "value10k": -52,
         "percent": -0.9403254972875227
@@ -21,12 +21,12 @@
       "baselineDate": "2026-10-11"
     },
     "saleNational84": {
-      "avgPricePerM2": 14952271.460533775,
-      "avgPricePerPyeong10k": 4943,
-      "transactionCount": 304,
+      "avgPricePerM2": 14957768.025285276,
+      "avgPricePerPyeong10k": 4945,
+      "transactionCount": 310,
       "change": {
-        "value10k": -116,
-        "percent": -2.2929432694208343
+        "value10k": -114,
+        "percent": -2.2534097647756473
       },
       "baselineDate": "2026-10-11"
     },
@@ -102,22 +102,22 @@
       "code": "11140",
       "name": "중구",
       "sale": {
-        "avgPricePerM2": 17740862.973363113,
-        "avgPricePerPyeong10k": 5865,
-        "transactionCount": 53,
+        "avgPricePerM2": 17843659.81999207,
+        "avgPricePerPyeong10k": 5899,
+        "transactionCount": 54,
         "change": {
-          "value10k": -246,
-          "percent": -4.025527736867943
+          "value10k": -212,
+          "percent": -3.4691539846179023
         },
         "baselineDate": "2026-10-11"
       },
       "saleNational84": {
-        "avgPricePerM2": 18411077.2856722,
-        "avgPricePerPyeong10k": 6086,
-        "transactionCount": 12,
+        "avgPricePerM2": 18733057.295280155,
+        "avgPricePerPyeong10k": 6193,
+        "transactionCount": 13,
         "change": {
-          "value10k": 574,
-          "percent": 10.413642960812771
+          "value10k": 681,
+          "percent": 12.354862119013063
         },
         "baselineDate": "2026-10-11"
       },
@@ -372,12 +372,12 @@
       "code": "11290",
       "name": "성북구",
       "sale": {
-        "avgPricePerM2": 12820981.55925984,
-        "avgPricePerPyeong10k": 4238,
-        "transactionCount": 272,
+        "avgPricePerM2": 12824476.115340926,
+        "avgPricePerPyeong10k": 4240,
+        "transactionCount": 271,
         "change": {
-          "value10k": 42,
-          "percent": 1.0009532888465205
+          "value10k": 44,
+          "percent": 1.0486177311725453
         },
         "baselineDate": "2026-10-11"
       },
@@ -517,7 +517,7 @@
         "baselineDate": "2026-10-11"
       },
       "saleNational84": {
-        "avgPricePerM2": 10098872.481336636,
+        "avgPricePerM2": 10098872.481336638,
         "avgPricePerPyeong10k": 3338,
         "transactionCount": 145,
         "change": {
@@ -642,12 +642,12 @@
       "code": "11440",
       "name": "마포구",
       "sale": {
-        "avgPricePerM2": 20149118.045353536,
-        "avgPricePerPyeong10k": 6661,
-        "transactionCount": 150,
+        "avgPricePerM2": 20151803.84853499,
+        "avgPricePerPyeong10k": 6662,
+        "transactionCount": 151,
         "change": {
-          "value10k": -106,
-          "percent": -1.5664252992463423
+          "value10k": -105,
+          "percent": -1.5516477020836412
         },
         "baselineDate": "2026-10-11"
       },
@@ -867,22 +867,22 @@
       "code": "11560",
       "name": "영등포구",
       "sale": {
-        "avgPricePerM2": 18182491.06966469,
-        "avgPricePerPyeong10k": 6011,
-        "transactionCount": 203,
+        "avgPricePerM2": 18217724.44759278,
+        "avgPricePerPyeong10k": 6022,
+        "transactionCount": 211,
         "change": {
-          "value10k": -7,
-          "percent": -0.1163177135260884
+          "value10k": 4,
+          "percent": 0.06646726487205051
         },
         "baselineDate": "2026-10-11"
       },
       "saleNational84": {
-        "avgPricePerM2": 16867446.796860084,
-        "avgPricePerPyeong10k": 5576,
-        "transactionCount": 63,
+        "avgPricePerM2": 16895779.433116753,
+        "avgPricePerPyeong10k": 5585,
+        "transactionCount": 66,
         "change": {
-          "value10k": 70,
-          "percent": 1.2713403559752998
+          "value10k": 79,
+          "percent": 1.4347984017435524
         },
         "baselineDate": "2026-10-11"
       },
