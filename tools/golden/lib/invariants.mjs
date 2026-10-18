@@ -25,6 +25,9 @@
 //                              외부 JS 바이트 합이 기준 이하다. 폴더 안 .js 전체 바이트 합도 기준 이하다.
 //                              인라인 이벤트 핸들러 속성(on*)이 새로 생기거나 값이 바뀌지 않는다(s6-handlers — 속성 안의 JS다).
 //     tw:dark:(tw-dark)        후보의 class·JS·CSS에 `tw:dark:` 변형이 없다(네 갈래 테마는 CSS 변수에서 갈린다).
+//     title 고유(title-unique)  **후보 폴더만** 본다: 색인 대상 장(noindex·none 메타가 없는 장)의 구운 한국어 `<title>`이 서로 다르고,
+//                              인라인 script의 영어 사전 `title`(`title: "…"` 줄이 둘 이상일 때 마지막 것)도 서로 다르다(#337 — 영어 금리 네 장이
+//                              한 title을 쓰는데 기준과 후보를 견주는 이 도구는 바뀐 것만 봐서 기준에 있던 중복을 못 봤다). 폴더 단위 항목이다.
 //   소프트(종료 코드를 바꾸지 않고 목록만 낸다 — PR에 붙여 사람이 본다)
 //     텍스트 순서(text-order), 텍스트 노드 경계(text-wrap — 글자·공백은 같고 인라인 래퍼·br만 다른 블록과 그 수),
 //     details 접힘·펼침(details-open — 본문을 접는 일이라 po가 반드시 읽는다), head 허용 예외의 값(head-exception),
@@ -738,6 +741,32 @@ export function comparePage(file, a, b, { snapA, snapB, hooks, siteBase = SITE_B
   return out;
 }
 
+/**
+ * 색인 대상 장의 title 중복(#337). 두 언어를 따로 센다 - 한국어는 구운 `<title>`, 영어는 인라인 script 사전의 `title`이다
+ * (JS가 영어로 바꾸는 값이라 구운 HTML만 보는 head 검사는 못 본다). 영어 사전의 위치는 장 종류마다 들여쓰기가 달라
+ * `title: "…"` 줄 전체를 찾고, 한 script에 둘 이상이면(한·영 사전) 마지막을 영어로 본다. 읽을 수 없는 장은 건너뛴다.
+ * 반환: 중복 하나당 `ko "<title>": a.html, b.html` 한 줄.
+ */
+export function duplicateTitles(pages) {
+  const byLang = { ko: new Map(), en: new Map() };
+  const add = (lang, title, file) => byLang[lang].set(title, [...(byLang[lang].get(title) ?? []), file]);
+  for (const [file, p] of Object.entries(pages)) {
+    if (p.robots.some((r) => /\b(?:noindex|none)\b/i.test(r))) continue;
+    const ko = p.head.map((l) => /^<title>\s(".*")$/s.exec(l)?.[1]).find(Boolean);
+    if (ko) add("ko", JSON.parse(ko), file);
+    for (const body of p.inline) {
+      const titles = [...body.matchAll(/^\s+title:\s*("(?:[^"\\\n]|\\.)*"),?\s*$/gm)].map((m) => JSON.parse(m[1]));
+      if (titles.length >= 2) {
+        add("en", titles[titles.length - 1], file);
+        break;
+      }
+    }
+  }
+  return ["ko", "en"].flatMap((lang) =>
+    [...byLang[lang]].filter(([, files]) => files.length > 1).map(([title, files]) => `${lang} ${JSON.stringify(title)}: ${files.sort().join(", ")}`)
+  );
+}
+
 const summarize = (pages, site) => {
   const status = (p) => (p.status === "onlyA" || p.status === "onlyB" ? p.status : p.findings.some((f) => f.level === "hard") ? "hard" : p.findings.length ? "soft" : "pass");
   for (const p of pages) p.status = status(p);
@@ -774,6 +803,8 @@ export function compareSnapshots(snapA, snapB, { hookList = [], extraHooks = [],
     const names = [...new Set([...Object.keys(snapA.jsBytes), ...Object.keys(snapB.jsBytes)])].sort().filter((f) => snapA.jsBytes[f] !== snapB.jsBytes[f]);
     site.push({ id: "s6-js-total", check: "S6 폴더 안 JS 바이트 합", level: "hard", missing: [`${jsTotalA}B`], added: [`${jsTotalB}B (+${jsTotalB - jsTotalA})`, ...names.map((f) => `${f}: ${snapA.jsBytes[f] ?? "없음"} → ${snapB.jsBytes[f] ?? "없음"}`)] });
   }
+  const dupTitles = duplicateTitles(snapB.pages);
+  if (dupTitles.length) site.push({ id: "title-unique", check: "색인 대상 장의 title이 언어마다 고유하다(후보 폴더)", level: "hard", missing: [], added: dupTitles });
   if (snapB.twDarkFiles.length) site.push({ id: "tw-dark", check: "tw:dark: 변형(.js·.css)", level: "hard", missing: [], added: snapB.twDarkFiles });
   // 폴더에서 사라진 파일(.html은 url-set이 본다). HTML이 속성으로 가리키는 것은 resource-target·link-target·s6-src-missing이 하드로 잡고,
   // JS가 fetch로 읽는 data/ 따위는 이 도구가 참조를 못 읽으므로 목록만 낸다.

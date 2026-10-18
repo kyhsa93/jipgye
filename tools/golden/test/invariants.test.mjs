@@ -410,7 +410,7 @@ async function dirWith(files) {
   }
   return dir;
 }
-const mini = (body, head = "") => `<!doctype html><html lang="ko"><head><title>t</title>${head}</head><body><main>${body}</main><script src="./nav.js" defer></script></body></html>`;
+const mini = (body, head = "", title = "t") => `<!doctype html><html lang="ko"><head><title>${title}</title>${head}</head><body><main>${body}</main><script src="./nav.js" defer></script></body></html>`;
 
 test("폴더 비교: URL 집합·noindex 집합·내부 링크 대상·폴더 JS 바이트 합·CSS의 tw:dark:·스냅숏 JSON", async () => {
   const base = { "index.html": mini('<a href="./a.html">a</a> <a href="https://example.com/x">밖</a> <a href="#top">위</a>'), "a.html": mini('<a href="./index.html?x=1#y">홈</a>', '<meta name="robots" content="noindex, follow">'), "nav.js": "// nav\n", "sw.js": "// sw\n", "style.css": ".a{color:red}", "data/x.json": "{}" };
@@ -740,7 +740,7 @@ test("#289 5번: 훅 목록 어긋남과 기준 대비 빠진 이름을 폴더 �
 
 test("#289 6번 검출: 참조 자원의 대상 파일 — style.css·manifest·아이콘·img를 지우면 하드(resource-target), JS가 읽는 data/는 소프트 목록", async () => {
   const head = '<link rel="stylesheet" href="./style.css"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icons/icon-192.png"><link rel="canonical" href="https://kyhsa93.github.io/jipgye/index.html"><link rel="preconnect" href="https://fonts.example/">';
-  const base = { "index.html": mini('<img src="./icons/a.png" alt="그림" srcset="./icons/a.png 1x, ./icons/a2.png 2x"> <a href="./a.html">a</a>', head), "a.html": mini("둘째 장", head), "nav.js": "// nav\n", "style.css": ".a{color:red}", "manifest.webmanifest": "{}", "icons/icon-192.png": "png", "icons/a.png": "png", "icons/a2.png": "png", "data/x.json": "{}" };
+  const base = { "index.html": mini('<img src="./icons/a.png" alt="그림" srcset="./icons/a.png 1x, ./icons/a2.png 2x"> <a href="./a.html">a</a>', head), "a.html": mini("둘째 장", head, "둘째"), "nav.js": "// nav\n", "style.css": ".a{color:red}", "manifest.webmanifest": "{}", "icons/icon-192.png": "png", "icons/a.png": "png", "icons/a2.png": "png", "data/x.json": "{}" };
   const dirs = { a: await dirWith(base), same: await dirWith(base), noCss: await dirWith({ ...base, "style.css": undefined }), noManifest: await dirWith({ ...base, "manifest.webmanifest": undefined, "icons/icon-192.png": undefined }), noImg: await dirWith({ ...base, "icons/a2.png": undefined }), noData: await dirWith({ ...base, "data/x.json": undefined }) };
   try {
     const ok = await compareInvariants(dirs.a, dirs.same, { hookList: [] });
@@ -915,5 +915,48 @@ test("못 잡는 것(적어 둔다, PR #292 cto): 글자를 option·textarea·SV
     assert.deepEqual([r.ok, r.pass, r.site], [true, 1, []]);
   } finally {
     await Promise.all([full, empty].map((d) => rm(d, { recursive: true })));
+  }
+});
+
+// #337: 영어 금리 네 장이 인라인 사전의 title 하나를 나눠 썼다. 구운 <title>만 보는 head 검사는 기준과 후보의 차이만 보므로
+// 기준에 있던 중복도, JS가 영어로 바꾸는 값도 못 봤다. title-unique는 후보 폴더 하나만 보고 색인 대상 장의 두 언어 title을 센다.
+test("#337 검출: 색인 대상 장의 title 중복 — 구운 한국어 <title>과 인라인 사전의 영어 title을 따로 센다 (title-unique)", async () => {
+  const dict = (ko, en) => `<script>\n  const T = {\n    ko: {\n      title: ${JSON.stringify(ko)},\n      tagline: "x",\n    },\n    en: {\n      title: ${JSON.stringify(en)},\n      tagline: "y",\n    },\n  };\n</script>`;
+  const page = (title, ko, en, head = "") => mini(`본문 ${title}${dict(ko, en)}`, head, title);
+  const noindex = '<meta name="robots" content="noindex, follow">';
+  const base = { "a.html": page("가", "가", "Alpha"), "b.html": page("나", "나", "Beta"), "c.html": page("다", "다", "Gamma") };
+  const dirs = {
+    base: await dirWith(base),
+    // 영어만 같다 - 금리 네 장의 모양(한국어 title은 장마다 다르고 영어 사전만 한 값)
+    enDup: await dirWith({ ...base, "b.html": page("나", "나", "Alpha") }),
+    // 한국어 <title>만 같다
+    koDup: await dirWith({ ...base, "b.html": page("가", "나", "Beta") }),
+    // 같은 title이어도 색인 대상이 아닌 장(noindex)은 세지 않는다
+    noindexDup: await dirWith({ ...base, "b.html": page("나", "나", "Alpha", noindex) }),
+  };
+  try {
+    const r0 = await compareInvariants(dirs.base, dirs.base, { hookList: [] });
+    assert.deepEqual([r0.ok, r0.site], [true, []], "대조군: 모두 다르면 통과");
+
+    const en = await compareInvariants(dirs.base, dirs.enDup, { hookList: [] });
+    assert.equal(en.ok, false);
+    assert.deepEqual(en.site.map((f) => [f.id, f.level, f.added]), [["title-unique", "hard", ['en "Alpha": a.html, b.html']]]);
+    assert.equal(en.hard, 1, "inline-script 변경까지 합쳐 b.html 한 장만 하드(장 단위)이고 폴더 단위 항목이 따로 실패시킨다");
+
+    const ko = await compareInvariants(dirs.base, dirs.koDup, { hookList: [] });
+    assert.deepEqual(ko.site.map((f) => [f.id, f.added]), [["title-unique", ['ko "가": a.html, b.html']]]);
+
+    const skipped = await compareInvariants(dirs.base, dirs.noindexDup, { hookList: [] });
+    assert.deepEqual(skipped.site.map((f) => f.id), [], "noindex 장은 셈에서 빠진다");
+
+    // 기준 쪽의 중복은 보지 않는다 - 후보가 고친 PR이 기준 때문에 실패하면 안 된다.
+    const fixed = await compareInvariants(dirs.enDup, dirs.base, { hookList: [] });
+    assert.deepEqual(fixed.site.map((f) => f.id), []);
+
+    // 의도해서 겹치게 하는 경우는 폴더 단위 항목이라 SITE_PAGE로 예외를 받는다.
+    const excused = applyExceptions(en, [{ page: SITE_PAGE, check: "title-unique", added: ['en "Alpha": a.html, b.html'], reason: "r", confirmedBy: "c" }]);
+    assert.deepEqual(excused.site, []);
+  } finally {
+    await Promise.all(Object.values(dirs).map((d) => rm(d, { recursive: true })));
   }
 });

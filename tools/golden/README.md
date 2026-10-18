@@ -67,6 +67,7 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
 | `s6-scripts`·`s6-inline-bytes`·`s6-external-bytes`·`s6-src-missing`·`s6-js-total` | script 줄 목록이 늘거나 바뀌지 않는다, 인라인·외부 JS 바이트 합이 기준 이하, 폴더 안 `.js` 합이 기준 이하 | 늘면 하드, 줄면 통과(`scripts-removed`는 소프트) |
 | `s6-handlers` | 인라인 이벤트 핸들러 속성(`onclick`·`onload` … 이름이 `on`으로 시작하는 것)의 (이름=값) 다중집합. 속성 안의 JS라 위 바이트 합이 못 본다 | 새로 생기거나 값이 바뀌면 하드, 줄기만 하면 소프트 `handlers-removed` |
 | `tw-dark` | 후보의 class·JS·CSS에 `tw:dark:` 변형이 없다(네 갈래 테마는 CSS 변수에서 갈린다) | 하드 |
+| `title-unique` | **후보 폴더만** 본다(#337): 색인 대상 장(noindex·none 메타가 없는 장)의 구운 한국어 `<title>`이 서로 다르고, 인라인 script 영어 사전의 `title`(`title: "…"` 줄이 둘 이상일 때 마지막 것)도 서로 다르다. 기준에 있던 중복도 후보에 남아 있으면 걸린다 | 하드(폴더 단위, `SITE_PAGE`로 예외를 받는다) |
 | `semantic` | `role`·`hidden`·`name`·`for`·`scope`·`colspan` 따위 | 소프트 |
 | `hook-list`·`hook-list-dropped` | (`--render`만) 훅 클래스 목록 파일이 후보 소스와 어긋났다 / 기준 소스에서는 훅이었는데 후보 소스에서는 아닌 class | 소프트(폴더 단위) |
 

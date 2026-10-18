@@ -78,5 +78,10 @@
 #   차이 5 는 이 PR 이 더한 그 파일 하나에서 나온다(`node --test test/summary-note.test.mjs` → ℹ tests 5).
 #   test/fixtures/render/news-market-branches.mjs 에 분기 행 열(S16~S20·Y14~Y18)을 더했지만 한 시험 안의 반복이라 시험 수는 그대로다.
 #   없어진 시험은 0 이고 고친 시험 파일도 0 이다(.skip·.todo 도 0 그대로).
-1572
-1572
+# 센 법: 2026-10-18, merge-base 7d77149d, Node v22.16.0, macOS 15.5 (#337).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1575 · pass 1575 · fail 0 · skipped 0
+#   기준은 직전 하한 1572(merge-base 7d77149d 의 COUNT). 차이 3 은 이 PR 이 test/rate-pages.test.mjs 에 더한 시험 셋이다
+#   (`node --test test/rate-pages.test.mjs` → 기준 9 · 후보 12): 영어 title·description·h1 이 장마다 다르다 · 영어 shareTitle · 영어 문안이 JS 문자열을 깨지 않는다.
+#   고친 시험 파일은 0 이고(더한 것뿐; test/helpers/rates-page.mjs 는 setAttribute 가 쓴 속성을 남기게 했을 뿐 시험이 아니다) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
+1575
+1575
