@@ -8,6 +8,7 @@ import { budgetRulesHtml } from "./budget-rules.mjs";
 import { bakeKoHeading } from "./page-heading.mjs";
 import { createWriteSet } from "./render-writes.mjs";
 import { escapeHtml } from "./html-escape.mjs";
+import { stripInlineScriptComments } from "./strip-inline-comments.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const REALESTATE_PATH = path.join(root, "docs/realestate.html");
@@ -144,7 +145,8 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
     "자치구 시세 섹션"
   );
 
-  return applyPrerender(html, {
+  // 문자열 패치(replaceOnce)가 전부 끝난 뒤에, 나가는 장의 인라인 스크립트에서 주석만 뗀다(#313). 틀에는 주석이 그대로 있다.
+  return stripInlineScriptComments(applyPrerender(html, {
     budgetResult: body,
     budgetFactsKo: budgetFactsHtml(band, "ko"),
     budgetFactsEn: budgetFactsHtml(band, "en"),
@@ -154,7 +156,7 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
     realestateHead: "",
     realestateTable: "",
     districtLinks: districtLinksHtml(null, "자치구별 시세 보기"),
-  });
+  }));
 }
 
 /**

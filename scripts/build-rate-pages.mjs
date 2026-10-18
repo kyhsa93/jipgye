@@ -3,6 +3,7 @@ import path from "node:path";
 import { applyPrerender, ratesHeadHtml, ratesHtml } from "./prerender.mjs";
 import { createWriteSet } from "./render-writes.mjs";
 import { rateBridgeHtml } from "./rate-bridge.mjs";
+import { stripInlineScriptComments } from "./strip-inline-comments.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 // 상품군 페이지 넷의 틀. 예전에는 docs/rates.html이 이 틀을 겸했고 예금 페이지와 본문이 글자까지
@@ -121,13 +122,14 @@ export function buildRatePage(baseHtml, page, rates) {
     "상품군 링크"
   );
 
-  return applyPrerender(html, {
+  // 문자열 패치(replaceOnce)가 전부 끝난 뒤에, 나가는 장의 인라인 스크립트에서 주석만 뗀다(#313). 틀에는 주석이 그대로 있다.
+  return stripInlineScriptComments(applyPrerender(html, {
     rates: ratesHtml(rates, { category: page.category }),
     ratesHead: ratesHeadHtml(page.category),
     // 금리 다음에 볼 곳 문단은 상품군마다 다른 말을 한다(scripts/rate-bridge.mjs).
     rateBridgeKo: rateBridgeHtml(page.category, "ko"),
     rateBridgeEn: rateBridgeHtml(page.category, "en"),
-  });
+  }));
 }
 
 async function main() {

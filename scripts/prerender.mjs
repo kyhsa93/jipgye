@@ -494,7 +494,7 @@ const reSegsHtml = (segs) => segs.map(reSegHtml).join("");
 // 그대로 둬야 한다(DIRECTION 해자 2).
 // **마크업이 아니라 숫자를 떼어 두는 이유**: 구운 조각은 늘 한국어라 그대로 되붙이면 영어 화면에 영어 카드 넉 장 옆에 한국어 카드 한 장이 선다(po 판정, PR #324).
 // 숫자만 떼어 두고 라벨은 그 화면의 locale로 다시 세우면 새 문구도 고지도 필요 없다 - 영어 글자는 틀의 T.en에 이미 있다.
-// 이 설명을 화면 스크립트가 아니라 여기 적는 이유는 그 스크립트가 47장에 그대로 실려 나가 주석도 배포 바이트이기 때문이다(cto 판정, #312와 같은 처리).
+// 이 설명을 화면 스크립트가 아니라 여기 적는 이유는 틀 자신(docs/realestate.html)이 색인되는 장이라 그 스크립트의 주석이 그 한 장에는 그대로 실려 나가 배포 바이트이기 때문이다(cto 판정, #312와 같은 처리. 찍어 낸 46장은 #313 뒤로 굽는 단계가 주석을 뗀다).
 // 떼어 두는 쪽은 이 함수가 내는 마크업(`overall-card` > `label`·`value`·`sub`)과 한국어 라벨 글자에 기댄다 - 둘 중 하나를 바꾸면 docs/realestate.html도 같이 본다.
 const overallCardHtml = ({ label, value, sub }) =>
   `<div class="overall-card"><div class="label">${escapeHtml(label)}</div>` +

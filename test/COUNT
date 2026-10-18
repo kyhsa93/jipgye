@@ -140,5 +140,12 @@
 #   차이 3 은 이 PR 이 더한 그 파일 하나에서 나온다(`node --test test/rates-schedule-notice.test.mjs` → ℹ tests 3):
 #   금리 틀과 구운 네 장의 updateSchedule ko·en 에 시각 모양이 없다 · 구운 네 장이 틀과 글자까지 같다 · 그 검사가 옛 문구 둘과 시각 모양 여섯을 실제로 잡는다.
 #   옛 문구("매일 오전 8시(KST) 갱신"·"Updated daily at 8 AM KST")를 못박은 시험은 없었다(`grep -rn '오전 8시\|8 AM KST' test` 에 이 파일 추가 전 걸리던 것은 test/update-schedule-notice.test.mjs 11·15행 주석 두 줄뿐이다) - 고친 시험 0(11행 주석 한 줄만 이 PR 이 새 시험 파일을 가리키도록 고쳤다), 없어진 시험 0(.skip·.todo 도 0 그대로).
-1673
-1673
+# 센 법: 2026-10-18, merge-base 8833e48a(= origin/main), Node v22.16.0, macOS 15.5 (#313).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1687 · pass 1687 · fail 0 · skipped 0
+#   같은 워크트리에서 test/inline-comments.test.mjs 를 잠시 빼고 같은 명령 → ℹ tests 1673 · pass 1673 · fail 0 · skipped 0(= merge-base 8833e48a 의 하한).
+#   차이 14는 이 PR이 더한 그 파일 하나에서 나온다(`node --test test/inline-comments.test.mjs` → ℹ tests 14):
+#   구운 53장 수 · 53장 전수 주석 0 · 훑개 다섯(문자열/정규식 안 // · 줄째/줄 끝/블록 · 줄바꿈 블록 · 주석 없음 · 닫히지 않음) · 스크립트 밖 불변 ·
+#   빌더 네 곳 출력 주석 0 · 뉴스 장 · 기계 증명(전후 같은 파서 구문 + 지운 글자가 공백·주석뿐) · 증명기 변이 열 · 틀은 주석 유지 · 범위 밖 고정.
+#   고친 시험 파일은 0 이고(더한 것뿐) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
+1687
+1687
