@@ -13013,14 +13013,22 @@
     "date": "2026-10-19",
     "items": [
       {
+        "title": "\"집 보러 줄 섰는데 이젠 뚝 끊겼다\"…서울 집값 상승세 꺾이나",
+        "link": "https://www.newsis.com/view/NISX20261017_0003830032",
+        "publishedAt": "2026-10-18T18:05:00.000Z",
+        "source": "뉴시스 경제",
+        "category": "other",
+        "preview": "[서울=뉴시스]전민영 인턴 기자 = 서울 아파트값이 87주 연속 상승했다는 통계가 나왔지만, 실제 매수세는 추석 이후 급격히 꺾였다는 부동산 전문가의 분석이 나왔다. 집값 상승세가 이어지는 것처럼 보이지만 거래가 줄…",
+        "dupes": []
+      },
+      {
         "title": "\"AI 혜택, 美·中 넘어 세계로\"…경제학자들 \"대량 실업 없을 것\"",
         "link": "https://www.newsis.com/view/NISX20261018_0003830696",
         "publishedAt": "2026-10-18T14:38:22.000Z",
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스]박미선 기자 = 인공지능(AI)이 향후 10년간 미국과 중국을 넘어 세계 주요국의 경제성장과 생산성을 높이면서도 대규모 실업을 초래하지는 않을 것이라는 경제학자들의 전망이 나왔다. 18일(현지 시간)…",
-        "dupes": [],
-        "titleEn": "AI Benefits to Spread Beyond U.S., China to the World\"... Economists Say \"Mass Unemployment Unlikely"
+        "dupes": []
       },
       {
         "title": "빌라까지 전월세대란…수도권 매물 36% 뚝",
@@ -13029,8 +13037,7 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "\"원래도 빌라 투룸 전월세 매물이 많지는 않았는데 인근에서 재개발 사업이 두 건이나 진행되면서 이젠 찾기가 더 어려워졌어요. 제가 지금 갖고 있는 빌라 전월세 물건은 1.5룸 한 ..",
-        "dupes": [],
-        "titleEn": "Rental Market Chaos Spreads to Villas... Supply in Seoul Area Drops 36%"
+        "dupes": []
       },
       {
         "title": "\"신축 매입때만 대출 지원 역부족 기존 빌라도 풀어줘야 공급 가속\"",
@@ -13039,28 +13046,7 @@
         "source": "매일경제 부동산",
         "category": "other",
         "preview": "\"신축뿐 아니라 기축 비아파트에 대해서도 부동산 대출 규제가 완화돼야 합니다.\" 이상무 한국부동산임대운영협회장(사진)이 최근 서울 성동구 소재 협회 사무실에서 매일경제와 만나 이같..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-seongdong.html",
-            "label": "성동구 아파트 84㎡ 매매",
-            "labelEn": "성동구 apartment 84㎡ sale",
-            "value": "21억 3,900만원",
-            "valueEn": "₩2,139M",
-            "note": "최근 4주 계약 44건 · 10/12 대비 +2.2%",
-            "noteEn": "44 deals in the last 4 weeks · +2.2% vs Oct 12"
-          },
-          {
-            "kind": "rates",
-            "label": "주택담보대출 최저금리(상환방식 무관)",
-            "labelEn": "Lowest mortgage rate (any repayment type)",
-            "value": "연 3.70%",
-            "valueEn": "3.70% p.a.",
-            "href": "./mortgage-rates.html"
-          }
-        ],
-        "titleEn": "Only new construction purchases get loan support, existing buildings also need to be freed up to accelerate supply"
+        "dupes": []
       },
       {
         "title": "빌라 1년이면 짓는데 … 고금리·규제에 끊긴 '주거 사다리'",
@@ -13069,18 +13055,7 @@
         "source": "매일경제 부동산",
         "category": "rates",
         "preview": "수도권 빌라의 매물이 확 줄어든 요인으로는 2022년부터 시작된 공급 위축이 꼽힌다. 고금리와 세금·대출 규제에 전세사기 여파로 빌라 기피 현상까지 겹쳐 신규 공급이 급감했다. 전..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "rates",
-            "label": "주택담보대출 최저금리(상환방식 무관)",
-            "labelEn": "Lowest mortgage rate (any repayment type)",
-            "value": "연 3.70%",
-            "valueEn": "3.70% p.a.",
-            "href": "./mortgage-rates.html"
-          }
-        ],
-        "titleEn": "Villa Takes a Year to Build ... But High Interest Rates and Regulations Halt the 'Housing Ladder"
+        "dupes": []
       },
       {
         "title": "\"한은, 기준금리 10월 동결, 11월엔 인상 유력\"",
@@ -13089,8 +13064,7 @@
         "source": "한국경제 경제",
         "category": "rates",
         "preview": null,
-        "dupes": [],
-        "titleEn": "BOK Freezes Base Rate in October, Hike Likely in November"
+        "dupes": []
       },
       {
         "title": "여의도 시범에 래미안 깃발 … 삼성물산 2.2조 재건축 수주",
@@ -13099,20 +13073,7 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "삼성물산 건설부문이 서울 여의도 재건축 최대어로 꼽히는 시범아파트 시공권을 따냈다. 지난해 대교아파트, 지난달 목화아파트에 이어 시범아파트까지 확보하면서 여의도 한강변에 '래미안 ..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "12억 4,864만원",
-            "valueEn": "₩1,249M",
-            "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
-            "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
-          }
-        ],
-        "titleEn": "Lamian flag flies at Yeouido pilot project ... Samsung C&T wins 2,200,000,000,000 reconstruction contract"
+        "dupes": []
       },
       {
         "title": "고금리에 망설이는 내집 마련…정책대출 활용하세요",
@@ -13121,8 +13082,7 @@
         "source": "한국경제 부동산",
         "category": "rates",
         "preview": null,
-        "dupes": [],
-        "titleEn": "Hesitant about buying a home due to high interest rates? Make use of policy-backed loans."
+        "dupes": []
       },
       {
         "title": "저금리 전세금 정책대출…청년·신혼부부 주목",
@@ -13131,8 +13091,7 @@
         "source": "한국경제 부동산",
         "category": "rates",
         "preview": null,
-        "dupes": [],
-        "titleEn": "Low-interest deposit guarantee loan policy... Attracting attention of youth and newlyweds"
+        "dupes": []
       },
       {
         "title": "정부 \"주택 공급·시장동향 지표 개선…중장기 안정화 전망\"",
@@ -13141,20 +13100,7 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 임기창 기자 = 정부가 최근 강남2구(서초·강남) 아파트값 하락세 지속과 주택 공급 선행지표 개선 등을 주택시장 안정화의 긍정...",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-seocho.html",
-            "label": "서초구 아파트 84㎡ 매매",
-            "labelEn": "서초구 apartment 84㎡ sale",
-            "value": "25억 1,126만원",
-            "valueEn": "₩2,511M",
-            "note": "최근 4주 계약 77건 · 10/12 대비 -5.1%",
-            "noteEn": "77 deals in the last 4 weeks · -5.1% vs Oct 12"
-          }
-        ],
-        "titleEn": "Government: \"Improvement in housing supply and market trend indicators... long-term stabilization outlook"
+        "dupes": []
       },
       {
         "title": "국토부 “서울 집값 하향 안정 신호”… 입주물량 감소는 변수",
@@ -13163,28 +13109,7 @@
         "source": "조선비즈 부동산",
         "category": "other",
         "preview": "국토교통부가 서울 주택시장에서 거래 감소와 매물 증가 등 가격 하향 안정 신호가 나타나고 있다고 진단했다. 대출 규제와 토지거래허가구역 지정 등 수요 억제 정책의 효과가 나타나고 있다는 설명이다. 다만 올해 수도권…",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "12억 4,864만원",
-            "valueEn": "₩1,249M",
-            "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
-            "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
-          },
-          {
-            "kind": "rates",
-            "label": "주택담보대출 최저금리(상환방식 무관)",
-            "labelEn": "Lowest mortgage rate (any repayment type)",
-            "value": "연 3.70%",
-            "valueEn": "3.70% p.a.",
-            "href": "./mortgage-rates.html"
-          }
-        ],
-        "titleEn": "MOHA: \"Signs of Stable Decline in Seoul Housing Prices,\" but Reduced Supply is a Variable"
+        "dupes": []
       },
       {
         "title": "국토부 \"강남 집값 떨어지고 매물 쌓여…시장 하향 안정 신호\"",
@@ -13193,20 +13118,7 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]정유선 기자 = 서울 강남·서초 아파트값이 10주 연속 하락하고 매물이 쌓이는 등 주택시장에서 일부 하향 안정 지표가 나타나고 있다고 정부가 진단했다. 공급 선행지표가 개선되면서 중장기적으로 시장 안정…",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-seocho.html",
-            "label": "서초구 아파트 84㎡ 매매",
-            "labelEn": "서초구 apartment 84㎡ sale",
-            "value": "25억 1,126만원",
-            "valueEn": "₩2,511M",
-            "note": "최근 4주 계약 77건 · 10/12 대비 -5.1%",
-            "noteEn": "77 deals in the last 4 weeks · -5.1% vs Oct 12"
-          }
-        ],
-        "titleEn": "MOHA: Gangnam home prices falling, inventory piling up... market shows signs of downward stabilization"
+        "dupes": []
       },
       {
         "title": "전세자금도 정책대출로…청년·신혼부부·출산가구별 지원",
@@ -13215,18 +13127,7 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": [],
-        "context": [
-          {
-            "kind": "rates",
-            "label": "전세자금대출 최저금리",
-            "labelEn": "Lowest jeonse loan rate",
-            "value": "연 3.69%",
-            "valueEn": "3.69% p.a.",
-            "href": "./rent-loan-rates.html"
-          }
-        ],
-        "titleEn": "Down payment loans to be offered as policy loans... support for young people, newlywed couples, and families with children"
+        "dupes": []
       },
       {
         "title": "고금리에 얼어붙은 내 집 마련…정책대출로 살 수 있는 아파트는",
@@ -13235,8 +13136,7 @@
         "source": "한국경제 부동산",
         "category": "rates",
         "preview": null,
-        "dupes": [],
-        "titleEn": "Frozen home purchases due to high interest rates... Apartments that can be bought with policy loans"
+        "dupes": []
       },
       {
         "title": "\"2년 만에 나가야 할 판\"…1만2000가구 대단지에 무슨 일이 [이송렬의 부동산한입]",
@@ -13245,8 +13145,7 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": [],
-        "titleEn": "Must leave after 2 years\"… What's happening at 10,0002000-unit large complex [Lee Isong's Real Estate Bite]"
+        "dupes": []
       },
       {
         "title": "[부동산 손품노트] 철도노선 관건은 뚫리는 시점 매플이 교통망 핵심 정리했죠",
@@ -13255,8 +13154,7 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "부동산 호재나 매물 설명에 가장 자주 등장하는 단어가 노선 이름이다. 위례신사선, 위례과천선, 서부선, GTX-D·E·F 등이 대표적이다. 이러한 이름들을 뉴스에서 보는 시점과 실..",
-        "dupes": [],
-        "titleEn": "[Real Estate Insight] The Key to Railway Lines is When the Tunnel is Broken, Map Shows the Core of the Transportation Network"
+        "dupes": []
       },
       {
         "title": "고민 많은 다주택자 …\"팔려면 지금, 버티려면 종부세 계산을\"",
@@ -13265,8 +13163,7 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "정부가 지난 8월 발표한 세제개편안이 국무회의 수정을 거쳐 국회로 넘어갔다. 종합부동산세 기준을 '집 수'에서 '집값'으로 바꾸고 다주택자 양도소득세 중과를 한시적으로 완화하는 게..",
-        "dupes": [],
-        "titleEn": "Hesitant multi-homeowners ... \"Sell now, or calculate property tax if you want to hold on"
+        "dupes": []
       },
       {
         "title": "대출이자 집주인 7년 새 66% 늘 때 전세 세입자는 144% 뛰어",
@@ -13275,8 +13172,7 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "전세 가구의 이자 비용 증가율, 자가 가구 웃돌아전세 가구가 매달 내는 평균 이자 비용이 7년 새 2.4배로 늘어난 것으로 나타났다. 같은 기간 자가 가구의 이자 비용 증가율(66..",
-        "dupes": [],
-        "titleEn": "Landlords' loan interest rises 66% in 7 years, while tenants' deposit payments jump 144%"
+        "dupes": []
       },
       {
         "title": "신한은행, 중저신용자 대출금리 0.3%P 인하",
@@ -13291,8 +13187,7 @@
             "link": "https://www.yna.co.kr/view/AKR20261016159400002",
             "source": "연합뉴스 경제"
           }
-        ],
-        "titleEn": "Shinhan Bank Lowers Interest Rates for Medium- and Low-Credit Borrowers by 0.3%"
+        ]
       },
       {
         "title": "서울 집값 88주째 올랐는데…\"2027년부터 금리 효과 본격화\"",
@@ -13301,20 +13196,7 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스]김성은 인턴 기자 = 서울 집값이 88주 연속 상승한 가운데 금리 상승의 여파가 시차를 두고 나타나면서 2027년부터 집값 흐름이 달라질 수 있다는 전망이 나왔다. 특히 삼성전자와 SK하이닉스의 성과급…",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "12억 4,864만원",
-            "valueEn": "₩1,249M",
-            "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
-            "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
-          }
-        ],
-        "titleEn": "Seoul Home Prices Rise for 88th Consecutive Week...\"Interest Rate Effects to Intensify from 2027"
+        "dupes": []
       },
       {
         "title": "오세훈 시장 “10·15 부동산 대책 성적표 참담…정부, 실패 인정해야”",
@@ -13323,20 +13205,7 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "‘서울시 주택 공급정책 20년 백서’ 소개 “반성없는 정책은 실패 반복…대가는 국민의 몫”오세훈 서울시장이 이재명 정부의 10·15 부동산 대책을 비판하며 정부와 여당을 향해 “이..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "12억 4,864만원",
-            "valueEn": "₩1,249M",
-            "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
-            "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
-          }
-        ],
-        "titleEn": "O Se-hoon says \"10·15 real estate policy report card disappointing... government must admit failure"
+        "dupes": []
       },
       {
         "title": "\"감정가 50억 아파트, 40억에 낙찰\"…전문가가 본 서울 부동산의 이상 징후",
@@ -13345,20 +13214,7 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]허준희 인턴 기자 = 서울 주요 지역의 아파트 경매 낙찰가가 감정가를 밑도는 사례가 늘고 있는 가운데, 무리한 대출을 통한 주택 매수에 주의해야 한다는 전문가의 조언이 나왔다. 지난 17일 구독자 87…",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "12억 4,864만원",
-            "valueEn": "₩1,249M",
-            "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
-            "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
-          }
-        ],
-        "titleEn": "Emotional price 5,000,000,000 apartment, 4,000,000,000 won auction\"… Experts see signs of abnormality in Seoul real estate"
+        "dupes": []
       },
       {
         "title": "삼성물산, 2조원 여의도 시범 재건축 수주… 2491가구로 탈바꿈",
@@ -13367,20 +13223,7 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "삼성물산 건설부문이 약 2조원 규모의 서울 여의도 시범아파트 재건축 사업 시공권을 따냈다. 18일 정비업계에 따르면 사업시행자인 한국자산신탁은 지난 16일 토지등소유자 전체회의를 열고 삼성물산을 시공사로 선정하는 안…",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-guro.html",
-            "label": "구로구 아파트 84㎡ 매매",
-            "labelEn": "구로구 apartment 84㎡ sale",
-            "value": "8억 5,784만원",
-            "valueEn": "₩858M",
-            "note": "최근 4주 계약 183건 · 10/12 대비 -6.8%",
-            "noteEn": "183 deals in the last 4 weeks · -6.8% vs Oct 12"
-          }
-        ],
-        "titleEn": "Samsung C&T wins 2,000,000,000,000 won Yeouido pilot reconstruction project to transform into 2,491 units"
+        "dupes": []
       },
       {
         "title": "\"트리플 아닌 쿼드러플 상승\"…전세·월세·반전세 다 오른다",
@@ -13389,30 +13232,7 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]김성은 인턴 기자 = 정부가 주택 공급 확대를 강조하고 있지만 규제와 사업 여건이 개선되지 않는 한 실질적인 공급 확대는 어렵다는 부동산 전문가의 지적이 나왔다. 특히 전세·월세뿐 아니라 반전세까지 가…",
-        "dupes": [],
-        "titleEn": "Triple, not quadruple increase\"... all rent, monthly rent, and reverse rent are rising"
-      },
-      {
-        "title": "오세훈 \"정부 여당, 부동산정책 실패 인정하고 방향 바로잡아야\"",
-        "link": "https://www.yna.co.kr/view/AKR20261018013900004",
-        "publishedAt": "2026-10-18T00:46:09.000Z",
-        "source": "연합뉴스 경제",
-        "category": "realestate",
-        "preview": "(서울=연합뉴스) 김동규 기자 = 오세훈 서울시장은 18일 서울시가 최근 발간한 주택정책 백서를 거론하며 \"정부와 여당도 이제는 실패를 인정하고...",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "12억 4,864만원",
-            "valueEn": "₩1,249M",
-            "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
-            "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
-          }
-        ],
-        "titleEn": "Oh Sehun says government and ruling party must acknowledge failure of real estate policy and correct course"
+        "dupes": []
       }
     ]
   }
