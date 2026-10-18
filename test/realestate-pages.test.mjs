@@ -186,7 +186,10 @@ test("커밋된 거래 유형별 페이지가 지금 원본·데이터로 찍은
 
 test("생성된 페이지는 화면을 그린 뒤에도 자기 제목을 유지한다", async () => {
   const realestate = await readJson("realestate");
-  const { sandbox } = await loadRealestatePage({ realestate, kind: "sale" });
+  const html = await read("docs/apartment-sale.html");
+  const baked = /<title>([^<]*)<\/title>/.exec(html)[1];
+  const { sandbox } = await loadRealestatePage({ realestate, file: "docs/apartment-sale.html", kind: "sale", title: baked });
+  assert.equal(sandbox.document.title, baked);
   assert.match(sandbox.document.title, /매매/);
   assert.ok(!sandbox.document.title.includes("전세"), sandbox.document.title);
 });
@@ -373,7 +376,8 @@ test("추이를 못 받아도 표는 그대로 나온다", async () => {
 
 test("자치구 페이지는 한 지역의 세 유형을 행으로 보여준다", async () => {
   const realestate = await readJson("realestate");
-  const page = await loadRealestatePage({ realestate, district: "강남구" });
+  const baked = /<title>([^<]*)<\/title>/.exec(await read("docs/district-gangnam.html"))[1];
+  const page = await loadRealestatePage({ realestate, file: "docs/district-gangnam.html", district: "강남구", title: baked });
 
   assert.deepEqual(headCells(page.headHtml()), ["구분", "평당가", "84㎡ 환산", "거래건수"]);
   assert.deepEqual(names(page.tableHtml()), ["매매", "전세", "월세"]);

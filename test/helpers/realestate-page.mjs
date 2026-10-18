@@ -83,10 +83,11 @@ function stubElement(attrs = {}, id = "", shared = null) {
  * - `file`: 스크립트를 읽을 장. 기본은 틀이고, 찍어낸 장(`docs/budget-8eok.html`)을 주면 그 장에 실려 나간 스크립트가 돈다.
  * - `gate(name)`: 데이터 파일(`realestate`·`budget-deals`…)에 답하기 전에 기다릴 것. 시험이 쥔 약속을 돌려주면 그 응답이
  *   "받는 중"에 머물고, 던지면 요청이 거부된다(네트워크 실패).
+ * - `title`: 스크립트가 도는 시점의 `document.title`. 실제 문서에서는 구운 `<title>`이 이미 들어 있다(#299). 기본은 빈 글자.
  * - `baked`: 받은 HTML에 이미 들어 있던 것(`{ "budget-result": { innerHTML } }`). 스텁 요소는 빈 채로 태어나므로,
  *   스크립트가 구운 내용을 건드렸는지 보려면 여기서 채워 둔다.
  */
-export async function loadRealestatePage({ realestate, trend, budget, complexRatio, budgetBand = null, prerenderedBudget = "", kind = null, district = null, locale = "ko", search = "", analytics, file = "docs/realestate.html", gate = null, baked = {} } = {}) {
+export async function loadRealestatePage({ realestate, trend, budget, complexRatio, budgetBand = null, prerenderedBudget = "", kind = null, district = null, locale = "ko", search = "", analytics, file = "docs/realestate.html", gate = null, baked = {}, title = "" } = {}) {
   const html = await readFile(path.join(root, file), "utf8");
   const script = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
 
@@ -199,7 +200,7 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
       documentElement: stubElement(),
       body: stubElement(),
       head: stubElement(),
-      title: "",
+      title,
     },
   };
   if (analytics) sandbox.analytics = analytics;
