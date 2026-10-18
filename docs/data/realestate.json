@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-18T21:10:24.426Z",
+  "updatedAt": "2026-10-18T21:31:27.405Z",
   "window": {
     "basis": "contract",
     "from": "2026-08-17",
@@ -11,7 +11,7 @@
   },
   "overall": {
     "sale": {
-      "avgPricePerM2": 14864133.185103096,
+      "avgPricePerM2": 14864133.185103098,
       "avgPricePerPyeong10k": 4914,
       "transactionCount": 3042,
       "change": {
@@ -732,7 +732,7 @@
       "code": "11500",
       "name": "강서구",
       "sale": {
-        "avgPricePerM2": 13444370.824038196,
+        "avgPricePerM2": 13444370.824038204,
         "avgPricePerPyeong10k": 4444,
         "transactionCount": 232,
         "change": {
@@ -742,7 +742,7 @@
         "baselineDate": "2026-10-12"
       },
       "saleNational84": {
-        "avgPricePerM2": 13284717.931506192,
+        "avgPricePerM2": 13284717.93150619,
         "avgPricePerPyeong10k": 4392,
         "transactionCount": 58,
         "change": {
