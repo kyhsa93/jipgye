@@ -33,48 +33,66 @@ const n = (title, category = "economy", extra = {}) => ({ title, link: `https://
 const NOTE_TEXT = "일부 항목은 검증에서 걸러져 헤드라인 요약으로 대체됐습니다.";
 const noteNews = `<div class="summary-note">${NOTE_TEXT}</div>`;
 const noteIndex = `<div class="summary-fallback-note">${NOTE_TEXT}</div>`;
+// index 요약 상자 조각의 마크업(#352). 손으로 적는다 - scripts/prerender.mjs·render/entry.jsx 의 마크업과 test/summary-box.test.mjs 가 index.html 스크립트 출력과 맞댄다.
+const cat = (name, line) => `<div class="summary-category"><div class="summary-category-label">${name}</div><div class="summary-category-line">${line}</div></div>`;
+const hl = (title, link, source, text) =>
+  `<div class="summary-highlight"><a href="${link}" target="_blank" rel="noopener">${title}</a><span class="summary-link-source"> · ${source}</span><div class="summary-highlight-text">${text}</div></div>`;
+const hls = (...items) => `<div class="summary-highlights"><div class="summary-section-label">오늘의 핵심</div>${items.join("")}</div><div class="summary-section-label">분야별 요약</div>`;
+const meta = (text) => `<span class="summary-meta">${text}</span>`;
+const META0 = meta("AI 생성 · -");
 const MORE = '<li class="news-more"><a href="./news.html">뉴스 전체 ';
 
 const ROWS = [
   // ================= summaryHtml =================
+  // index.html renderSummary 가 그리는 모양과 같다(#352): 하이라이트 구획(있을 때) → 분류 라벨 + 줄 div → 검증 폴백 안내 → .summary-meta.
+  // 분류(categories)가 비어 있으면 스크립트가 구획을 그리지 않으므로 굽지도 않는다(null) - 하이라이트만 있어도 마찬가지다.
   { id: "S1", fn: "summaryHtml", cond: "summary가 null → null", args: [null], expect: null },
   { id: "S2", fn: "summaryHtml", cond: "summary가 undefined → null", args: [undefined], expect: null },
   { id: "S3", fn: "summaryHtml", cond: "빈 객체 → null", args: [{}], expect: null },
   { id: "S4", fn: "summaryHtml", cond: "highlights·categories가 둘 다 빈 배열 → null", args: [{ highlights: [], categories: [] }], expect: null },
-  { id: "S5", fn: "summaryHtml", cond: "하이라이트만", args: [{ highlights: [{ title: "제목", textKo: "본문" }] }], expect: p("제목", "본문") },
-  { id: "S6", fn: "summaryHtml", cond: "분야만", args: [{ categories: [{ name: "분야", lineKo: "한 줄" }] }], expect: p("분야", "한 줄") },
+  { id: "S5", fn: "summaryHtml", cond: "하이라이트만(분류 없음) → null - 스크립트도 분류 없이는 하이라이트 구획을 그리지 않는다", args: [{ highlights: [{ title: "제목", link: "u", source: "S", textKo: "본문" }] }], expect: null },
+  { id: "S6", fn: "summaryHtml", cond: "분야만 - 분류 라벨 + 줄 div, 끝에 .summary-meta(모델·날짜가 없으면 'AI 생성 · -')", args: [{ categories: [{ name: "분야", lineKo: "한 줄" }] }], expect: cat("분야", "한 줄") + META0 },
   {
-    id: "S7", fn: "summaryHtml", cond: "둘 다 있으면 하이라이트 먼저, 분야 나중(각각 입력 순서)",
-    args: [{ highlights: [{ title: "h1", textKo: "t1" }, { title: "h2", textKo: "t2" }], categories: [{ name: "c1", lineKo: "l1" }, { name: "c2", lineKo: "l2" }] }],
-    expect: p("h1", "t1") + p("h2", "t2") + p("c1", "l1") + p("c2", "l2"),
+    id: "S7", fn: "summaryHtml", cond: "둘 다 있으면 하이라이트 구획 먼저, 분야 나중(각각 입력 순서)",
+    args: [{ highlights: [{ title: "h1", link: "u1", source: "s1", textKo: "t1" }, { title: "h2", link: "u2", source: "s2", textKo: "t2" }], categories: [{ name: "c1", lineKo: "l1" }, { name: "c2", lineKo: "l2" }] }],
+    expect: hls(hl("h1", "u1", "s1", "t1"), hl("h2", "u2", "s2", "t2")) + cat("c1", "l1") + cat("c2", "l2") + META0,
   },
   {
-    id: "S8", fn: "summaryHtml", cond: "글이 비었거나 falsy(\"\"·null·undefined·0·false)인 항목은 거른다(제목이 있어도), 남은 것만",
+    id: "S8", fn: "summaryHtml", cond: "글이 비었거나 falsy(\"\"·null·undefined·0·false)인 항목도 스크립트처럼 그린다(거르지 않는다) - 거르면 스크립트가 다시 그릴 때 줄 수가 달라진다",
     args: [{
-      highlights: [{ title: "a", textKo: "" }, { title: "b" }, { title: "c", textKo: null }, { title: "d", textKo: 0 }, { title: "e", textKo: false }, { title: "남음", textKo: "x" }],
+      highlights: [{ title: "a", link: "u", source: "s", textKo: "" }, { title: "b", link: "u", source: "s" }, { title: "c", link: "u", source: "s", textKo: null }, { title: "d", link: "u", source: "s", textKo: 0 }, { title: "e", link: "u", source: "s", textKo: false }],
       categories: [{ name: "f", lineKo: "" }, { name: "g" }, { name: "남음2", lineKo: "y" }],
     }],
-    expect: p("남음", "x") + p("남음2", "y"),
+    expect: hls(hl("a", "u", "s", ""), hl("b", "u", "s", ""), hl("c", "u", "s", ""), hl("d", "u", "s", "0"), hl("e", "u", "s", "false")) + cat("f", "") + cat("g", "") + cat("남음2", "y") + META0,
   },
-  { id: "S9", fn: "summaryHtml", cond: "걸러 남는 것이 없으면 null(항목은 있다)", args: [{ highlights: [{ title: "a", textKo: "" }], categories: [{ name: "b", lineKo: "" }] }], expect: null },
-  { id: "S10", fn: "summaryHtml", cond: "highlights가 null이고 categories만 있다(?? [] 경로)", args: [{ highlights: null, categories: [{ name: "a", lineKo: "b" }] }], expect: p("a", "b") },
-  { id: "S11", fn: "summaryHtml", cond: "categories가 null이고 highlights만 있다", args: [{ highlights: [{ title: "a", textKo: "b" }], categories: null }], expect: p("a", "b") },
-  { id: "S12", fn: "summaryHtml", cond: `특수문자 & < > " '(제목·본문·분야·한 줄)`, args: [{ highlights: [{ title: SP, textKo: SP }], categories: [{ name: SP, lineKo: SP }] }], expect: p(SP_OUT, SP_OUT) + p(SP_OUT, SP_OUT) },
+  { id: "S9", fn: "summaryHtml", cond: "categories가 빈 배열이면 하이라이트가 있어도 null", args: [{ highlights: [{ title: "a", link: "u", source: "s", textKo: "x" }], categories: [] }], expect: null },
+  { id: "S10", fn: "summaryHtml", cond: "highlights가 null이고 categories만 있다(배열이 아니면 빈 목록 경로)", args: [{ highlights: null, categories: [{ name: "a", lineKo: "b" }] }], expect: cat("a", "b") + META0 },
+  { id: "S11", fn: "summaryHtml", cond: "categories가 null이고 highlights만 있다 → null", args: [{ highlights: [{ title: "a", link: "u", source: "s", textKo: "b" }], categories: null }], expect: null },
   {
-    id: "S13", fn: "summaryHtml", cond: "비문자열: 제목 false·{}·[1,2], 글 숫자 7·true·{}, 분야 이름 0·false·{}·[1,2], 한 줄 [1,2]·\"x\"·\"y\"·\"z\"",
+    id: "S12", fn: "summaryHtml", cond: `특수문자 & < > " '(제목·출처·본문·분야·한 줄·모델 이름, 링크의 &)`,
+    args: [{ model: SP, updatedAt: "2026-10-17T00:00:00Z", highlights: [{ title: SP, link: "https://e.com/?a=1&b=2", source: SP, textKo: SP }], categories: [{ name: SP, lineKo: SP }] }],
+    expect: hls(hl(SP_OUT, "https://e.com/?a=1&amp;b=2", SP_OUT, SP_OUT)) + cat(SP_OUT, SP_OUT) + meta(`${SP_OUT} 생성 · 2026. 10. 17. 오전 9:00 KST`),
+  },
+  {
+    id: "S13", fn: "summaryHtml", cond: "비문자열: 제목 false·{}·[1,2], 출처 7·true·{}, 글 숫자 7·true·{}, 분야 이름 0·false·{}·[1,2], 한 줄 [1,2]·\"x\"·\"y\"·\"z\", 모델 0",
     args: [{
-      highlights: [{ title: false, textKo: 7 }, { title: {}, textKo: true }, { title: [1, 2], textKo: {} }],
+      model: 0, updatedAt: "2026-10-17T00:00:00Z",
+      highlights: [{ title: false, link: "u1", source: 7, textKo: 7 }, { title: {}, link: "u2", source: true, textKo: true }, { title: [1, 2], link: "u3", source: {}, textKo: {} }],
       categories: [{ name: 0, lineKo: [1, 2] }, { name: false, lineKo: "x" }, { name: {}, lineKo: "y" }, { name: [1, 2], lineKo: "z" }],
     }],
-    expect: p("false", "7") + p("[object Object]", "true") + p("1,2", "[object Object]") + p("0", "1,2") + p("false", "x") + p("[object Object]", "y") + p("1,2", "z"),
+    expect: hls(hl("false", "u1", "7", "7"), hl("[object Object]", "u2", "true", "true"), hl("1,2", "u3", "[object Object]", "[object Object]")) +
+      cat("0", "1,2") + cat("false", "x") + cat("[object Object]", "y") + cat("1,2", "z") + meta("0 생성 · 2026. 10. 17. 오전 9:00 KST"),
   },
-  { id: "S14", fn: "summaryHtml", cond: "제목·이름이 null·undefined·\"\"이면 빈 글자(글은 있다)", args: [{ highlights: [{ title: null, textKo: "a" }, { textKo: "b" }, { title: "", textKo: "c" }], categories: [{ lineKo: "d" }] }], expect: p("", "a") + p("", "b") + p("", "c") + p("", "d") },
-  { id: "S15", fn: "summaryHtml", cond: "문자열 \"0\"은 truthy라 남는다(숫자 0과 다르다)", args: [{ highlights: [{ title: "t", textKo: "0" }] }], expect: p("t", "0") },
-  { id: "S16", fn: "summaryHtml", cond: "분야 하나라도 fallbackReason이 있으면 분야 줄 뒤에 안내 한 줄(index.html renderSummary와 같은 마크업·자리, #350)", args: [{ categories: [{ name: "a", lineKo: "b" }, { name: "c", lineKo: "d", fallbackReason: "unverified-entity" }] }], expect: p("a", "b") + p("c", "d") + noteIndex },
-  { id: "S17", fn: "summaryHtml", cond: "하이라이트가 있어도 안내 줄은 맨 끝(하이라이트 → 분야 → 안내)", args: [{ highlights: [{ title: "h", textKo: "t" }], categories: [{ name: "a", lineKo: "b", fallbackReason: "x" }] }], expect: p("h", "t") + p("a", "b") + noteIndex },
-  { id: "S18", fn: "summaryHtml", cond: "fallbackReason가 null·undefined·\"\"·0·false(falsy)면 안내 줄 없음", args: [{ categories: [{ name: "a", lineKo: "1", fallbackReason: null }, { name: "b", lineKo: "2" }, { name: "c", lineKo: "3", fallbackReason: "" }, { name: "d", lineKo: "4", fallbackReason: 0 }, { name: "e", lineKo: "5", fallbackReason: false }] }], expect: p("a", "1") + p("b", "2") + p("c", "3") + p("d", "4") + p("e", "5") },
-  { id: "S19", fn: "summaryHtml", cond: "한 줄이 빈 분야의 fallbackReason도 센다(화면은 categories 전체를 본다) - 글이 남은 분야가 있어야 조각이 선다", args: [{ categories: [{ name: "a", lineKo: "1" }, { name: "b", lineKo: "", fallbackReason: "x" }] }], expect: p("a", "1") + noteIndex },
-  { id: "S20", fn: "summaryHtml", cond: "한 줄 있는 분야가 없으면 fallbackReason가 있어도 null(안내만 있는 상자는 만들지 않는다)", args: [{ categories: [{ name: "b", lineKo: "", fallbackReason: "x" }] }], expect: null },
+  { id: "S14", fn: "summaryHtml", cond: "제목·출처·이름이 null·undefined·\"\"이면 빈 글자", args: [{ highlights: [{ title: null, link: "u", source: null, textKo: "a" }, { link: "u", textKo: "b" }, { title: "", link: "u", source: "", textKo: "c" }], categories: [{ lineKo: "d" }] }], expect: hls(hl("", "u", "", "a"), hl("", "u", "", "b"), hl("", "u", "", "c")) + cat("", "d") + META0 },
+  { id: "S15", fn: "summaryHtml", cond: "문자열 \"0\"은 글자 그대로(숫자 0과 같다)", args: [{ highlights: [{ title: "t", link: "u", source: "s", textKo: "0" }], categories: [{ name: "c", lineKo: "0" }] }], expect: hls(hl("t", "u", "s", "0")) + cat("c", "0") + META0 },
+  { id: "S16", fn: "summaryHtml", cond: "분야 하나라도 fallbackReason이 있으면 분야 줄 뒤·.summary-meta 앞에 안내 한 줄(index.html renderSummary와 같은 마크업·자리, #350)", args: [{ categories: [{ name: "a", lineKo: "b" }, { name: "c", lineKo: "d", fallbackReason: "unverified-entity" }] }], expect: cat("a", "b") + cat("c", "d") + noteIndex + META0 },
+  { id: "S17", fn: "summaryHtml", cond: "하이라이트가 있어도 안내 줄은 분야 줄 뒤(하이라이트 → 분야 → 안내 → meta)", args: [{ highlights: [{ title: "h", link: "u", source: "s", textKo: "t" }], categories: [{ name: "a", lineKo: "b", fallbackReason: "x" }] }], expect: hls(hl("h", "u", "s", "t")) + cat("a", "b") + noteIndex + META0 },
+  { id: "S18", fn: "summaryHtml", cond: "fallbackReason가 null·undefined·\"\"·0·false(falsy)면 안내 줄 없음", args: [{ categories: [{ name: "a", lineKo: "1", fallbackReason: null }, { name: "b", lineKo: "2" }, { name: "c", lineKo: "3", fallbackReason: "" }, { name: "d", lineKo: "4", fallbackReason: 0 }, { name: "e", lineKo: "5", fallbackReason: false }] }], expect: cat("a", "1") + cat("b", "2") + cat("c", "3") + cat("d", "4") + cat("e", "5") + META0 },
+  { id: "S19", fn: "summaryHtml", cond: "한 줄이 빈 분야의 fallbackReason도 센다(화면은 categories 전체를 본다)", args: [{ categories: [{ name: "a", lineKo: "1" }, { name: "b", lineKo: "", fallbackReason: "x" }] }], expect: cat("a", "1") + cat("b", "") + noteIndex + META0 },
+  { id: "S20", fn: "summaryHtml", cond: "한 줄이 빈 분야만 있어도 스크립트처럼 그린다(라벨 + 빈 줄 + 안내)", args: [{ categories: [{ name: "b", lineKo: "", fallbackReason: "x" }] }], expect: cat("b", "") + noteIndex + META0 },
+  { id: "S21", fn: "summaryHtml", cond: ".summary-meta: 모델 이름과 한국 시각(날짜 medium · 시각 short, 뒤에 KST) - 오후", args: [{ model: "qwen3:14b", updatedAt: "2026-10-18T03:05:38.770Z", categories: [{ name: "a", lineKo: "b" }] }], expect: cat("a", "b") + meta("qwen3:14b 생성 · 2026. 10. 18. 오후 12:05 KST") },
+  { id: "S22", fn: "summaryHtml", cond: ".summary-meta: UTC 날짜와 한국 날짜가 갈리는 시각(15:30Z → 다음 날 00:30 KST)", args: [{ model: "m", updatedAt: "2026-10-17T15:30:00Z", categories: [{ name: "a", lineKo: "b" }] }], expect: cat("a", "b") + meta("m 생성 · 2026. 10. 18. 오전 12:30 KST") },
+  { id: "S23", fn: "summaryHtml", cond: ".summary-meta: 모델이 null이면 'AI', updatedAt이 없으면 '-'", args: [{ model: null, categories: [{ name: "a", lineKo: "b" }] }], expect: cat("a", "b") + META0 },
 
   // ================= marketHtml =================
   { id: "M1", fn: "marketHtml", cond: "market이 null → null", args: [null], expect: null },

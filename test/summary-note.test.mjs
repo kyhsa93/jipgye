@@ -59,7 +59,8 @@ test("폴백이 있는 날 index.html 의 구운 #summary-box 에 안내 줄이 
   const note = `<div class="summary-fallback-note">${FALLBACK_NOTE_KO}</div>`;
   const withNote = boxOf(applyPrerender(base, { summary: summaryHtml(WITH) }), "summary");
   const without = boxOf(applyPrerender(base, { summary: summaryHtml(WITHOUT) }), "summary");
-  assert.ok(withNote.endsWith(note), "index 의 안내 줄이 상자 끝에 없다");
+  // 안내 줄은 분류 줄 뒤, `.summary-meta`(#352) 앞이다 - 화면 스크립트가 안내를 붙인 뒤 meta 를 붙이는 순서.
+  assert.ok(withNote.includes(`${note}<span class="summary-meta">`) && withNote.endsWith("</span>"), "index 의 안내 줄이 분류 줄 뒤·.summary-meta 앞에 없다");
   assert.ok(!without.includes("fallback-note"), "폴백 없는 날에 안내 줄이 구워졌다");
 });
 
@@ -99,6 +100,6 @@ test("legacy 뉴스 조각(newsSummaryHtml.legacy)의 안내 줄 class 는 summa
 test("legacy index 조각(summaryHtml.legacy)의 안내 줄 class 는 summary-fallback-note 다 - 기본 모드에서도 잡는다 (#355)", () => {
   const note = `<div class="summary-fallback-note">${FALLBACK_NOTE_KO}</div>`;
   assert.equal(typeof summaryHtml.legacy, "function", "래퍼에 legacy 원본이 없다");
-  assert.ok(summaryHtml.legacy(WITH).endsWith(note), "legacy index 조각의 안내 줄이 summary-fallback-note 로 상자 끝에 있지 않다");
+  assert.ok(summaryHtml.legacy(WITH).includes(`${note}<span class="summary-meta">`), "legacy index 조각의 안내 줄이 summary-fallback-note 로 분류 줄 뒤(.summary-meta 앞)에 있지 않다");
   assert.ok(!summaryHtml.legacy(WITHOUT).includes("fallback-note"), "폴백 없는 날에 legacy 가 안내 줄을 구웠다");
 });

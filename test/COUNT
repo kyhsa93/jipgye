@@ -97,5 +97,11 @@
 #   고친 시험 파일은 0 이고(더한 것뿐; test/helpers/rates-page.mjs 는 setAttribute 가 쓴 속성을 남기게 했을 뿐 시험이 아니다) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
 # 센 법(따라잡기): 2026-10-18, origin/main 5950c1fb 로 따라잡은 뒤, Node v22.16.0, macOS 15.5 (#337).
 #   따라잡은 결과 npm test → ℹ tests 1582 · pass 1582 · fail 0 · skipped 0 (= main 1579 + 이 PR 3).
-1582
-1582
+# 센 법: 2026-10-18, origin/main 165a178c, Node v22.16.0, macOS 15.5 (#352).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1593 · pass 1593 · fail 0 · skipped 0
+#   같은 워크트리에서 test/summary-box.test.mjs 를 잠시 빼고 같은 명령 → ℹ tests 1582 · pass 1582 · fail 0 · skipped 0(= origin/main 165a178c 의 하한).
+#   차이 11 은 이 PR 이 더한 그 파일 하나에서 나온다(`node --test test/summary-box.test.mjs` → ℹ tests 11).
+#   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 11.
+#   고친 시험 파일(prerender·render-loader·render-parity·summary-note 시험, fixtures)은 기대 마크업만 새 모양으로 바꿨고 시험을 더하거나 빼지 않았다. 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
+1593
+1593

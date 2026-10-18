@@ -38,14 +38,15 @@ test("react 진입점: 이식된 조각 목록을 조회하고 React 요소를 �
   assert.deepEqual(r.names(), ["marketHtml", "newsHtml", "summaryHtml"]);
   assert.equal(r.has("summaryHtml"), true);
   assert.equal(r.has("ratesHtml"), false);
-  const html = r.render("summaryHtml", [{ highlights: [{ title: "제목", textKo: "본문" }], categories: [{ name: "분야", lineKo: "한 줄" }] }]);
-  assert.equal(html, "<p><strong>제목</strong> 본문</p><p><strong>분야</strong> 한 줄</p>");
+  const html = r.render("summaryHtml", [{ highlights: [{ title: "제목", link: "u", source: "S", textKo: "본문" }], categories: [{ name: "분야", lineKo: "한 줄" }] }]);
+  assert.ok(html.includes("<div class=\"summary-category-label\">분야</div><div class=\"summary-category-line\">한 줄</div>"), html);
+  assert.ok(html.includes("<a href=\"u\" target=\"_blank\" rel=\"noopener\">제목</a>"), html);
 });
 
 test("react 진입점: `'`는 legacy와 같이 그대로 두고 &, <, >, \"는 React가 낸 대로 이스케이프한다", async () => {
   const r = await createReactRenderer({ entry: fixture("fragments.jsx") });
-  const html = r.render("summaryHtml", [{ highlights: [{ title: `it's <b> & "q"`, textKo: "x" }] }]);
-  assert.equal(html, `<p><strong>it's &lt;b&gt; &amp; &quot;q&quot;</strong> x</p>`);
+  const html = r.render("summaryHtml", [{ highlights: [{ title: `it's <b> & "q"`, link: "u", source: "S", textKo: "x" }], categories: [{ name: "c", lineKo: "l" }] }]);
+  assert.ok(html.includes(`>it's &lt;b&gt; &amp; &quot;q&quot;</a>`), html);
   assert.ok(!html.includes("&#x27;"));
 });
 
