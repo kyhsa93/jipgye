@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { applyPrerender, newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "./prerender.mjs";
 import { createWriteSet } from "./render-writes.mjs";
+import { stripInlineScriptComments } from "./strip-inline-comments.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const NEWS_PATH = path.join(root, "docs/news.html");
@@ -96,12 +97,13 @@ export function buildNewsPage(baseHtml, page, { news, summary, market = null }) 
   const kospi = page.category === "stocks" ? newsKospiHtml(market) : null;
   if (kospi) html = replaceOnce(html, '<section id="kospi-section" hidden>', '<section id="kospi-section">', "코스피 섹션");
 
-  return applyPrerender(html, {
+  // 문자열 패치(replaceOnce)가 전부 끝난 뒤에, 나가는 장의 인라인 스크립트에서 주석만 뗀다(#313). 틀에는 주석이 그대로 있다.
+  return stripInlineScriptComments(applyPrerender(html, {
     newsSummary: newsSummaryHtml(summary, page.category),
     newsList: newsListHtml(news, page.category),
     ...(stats ? { realestateStats: stats } : {}),
     newsKospi: kospi ?? "",
-  });
+  }));
 }
 
 async function main() {
