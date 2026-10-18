@@ -213,5 +213,13 @@
 #   굽는 조각 다섯(<!--prerender:floor…-->)과 인라인 스크립트에 유틸리티 없음 · 이 장이 색인 대상으로 남는다(캐노니컬·robots 메타 없음·h1 하나·제목 단계).
 #   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 4.
 #   고친 시험은 0 이고(더한 것뿐) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
-1718
-1718
+# 센 법: 2026-10-19, merge-base 9e5ce1ee(= origin/main), Node v22.16.0, macOS 15.5 (#281 PR 6).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1722 · pass 1722 · fail 0 · skipped 0
+#   merge-base 9e5ce1ee 를 따로 풀어 같은 명령 → ℹ tests 1718 · pass 1718 · fail 0 · skipped 0(= 직전 하한).
+#   차이 4 는 이 PR 이 더한 test/switch-house-shell.test.mjs 하나에서 나온다(`node --test test/switch-house-shell.test.mjs` → ℹ tests 4):
+#   갈아타기 장 껍데기(머리·1층 내비·본문 구획 넷, 이 장에는 2층 내비가 없다)의 유틸리티·훅 class · 첫 구획 위 안내 aside 와 답 요소(.switch-answer, 구운 상태에서 비어 있음)에 유틸리티 없음 ·
+#   이 장의 <code> 는 있으면 전부 글자 크기 유틸리티를 단다 · 굽는 조각 셋(<!--prerender:switch…-->)과 인라인 스크립트에 유틸리티 없음 · 이 장이 색인 대상으로 남는다(캐노니컬·robots 메타 없음·h1 하나·제목 단계).
+#   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 4.
+#   고친 시험은 0 이고(더한 것뿐) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
+1722
+1722
