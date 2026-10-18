@@ -5320,17 +5320,118 @@
     "date": "2026-10-19",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 부동산: 은평구 중심상권의 대형 치과 매물이 10억7000만원에 거래될 예정이다. 초고층 아파트가 30년 뒤 슬럼화될 수 있다는 전망이 제기되고 있다. 비싼 아파트의 가격에 붙는 숫자 124·129·91의 비밀에 대한 설명이 나왔다. 수도권 전월세 매물은 36% 감소한 것으로 나타났다. 삼성물산은 여의도 시범 프로젝트로 2.2조 원 규모의 재건축 수주에 성공했다.\n- 증시·환율: 주간뉴욕증시에서 메타, 테슬라, 스페이스X의 실적 발표가 이어졌다. 코스피는 급락하며 하루 800억 원 규모의 강제 청산이 발생했다. 해당 기사는 \"빚내서 버텼는데\"라는 표현으로 투자자들의 불안을 강조했다. AI 관련 투심은 실적 발표에 따라 변동이 있었다. 강제 청산은 시장의 급격한 변동성으로 인해 발생했다.\n- 기타 경제 소식: 한국 경제가 성장률 반등으로 주목받고 있다. 오늘 10월 19일은 경제 관련 주요 일정이 많은 날이다. 서울의 집값 상승세가 꺾인 것으로 보인다. AI 혜택이 미국과 중국을 넘어 세계로 확대될 것으로 전망된다. 신축 매입 시만 대출 지원이 이뤄지지 않아 기존 빌라에도 지원이 필요하다는 의견이 제기되고 있다.\n- 금리·예금·투자상품: 한국은행은 10월 기준금리를 동결하고 11월 인상이 유력하다고 전망했다. 고금리와 규제로 인해 주거 사다리가 끊기면서 내집 마련이 어려워지고 있다. 정책대출을 활용하면 고금리 상황에서도 주택 구매가 가능하다는 조언이 나왔다. 청년과 신혼부부를 대상으로 저금리 전세금 정책대출이 제공되고 있다. 고금리로 인해 아파트 시장도 얼어붙은 것으로 나타났다.",
-      "en": "- Real Estate: 은평구 중심상권의 대형 치과 매물이 10억7000만원에 거래될 예정이다. 초고층 아파트가 30년 뒤 슬럼화될 수 있다는 전망이 제기되고 있다. 비싼 아파트의 가격에 붙는 숫자 124·129·91의 비밀에 대한 설명이 나왔다. 수도권 전월세 매물은 36% 감소한 것으로 나타났다. 삼성물산은 여의도 시범 프로젝트로 2.2조 원 규모의 재건축 수주에 성공했다.\n- Stocks & FX: Meta, Tesla, and SpaceX continued to report their earnings on the weekly New York stock market. The KOSPI sharply declined, resulting in forced liquidations amounting to 80,000,000,000 won in a single day. The article emphasized investors' anxiety with the phrase \"held on by borrowing.\" Investor sentiment related to AI fluctuated depending on the earnings reports. The forced liquidations occurred due to the market's sudden volatility.\n- Other Economic News: South Korea's economy is drawing attention due to a rebound in growth rate. Today, October 19th, is a day with many important economic schedules. It appears that the rising trend in Seoul's housing prices has slowed down. The benefits of AI are expected to expand beyond the United States and China to the world. There is an opinion being raised that since loan support is only provided for newly constructed purchases, support is also needed for existing villas.\n- Rates, Deposits & Investment Products: The Bank of Korea kept the benchmark interest rate unchanged as of October and expects a rate hike in November. Due to high interest rates and regulations, the housing ladder is breaking, making it difficult to purchase a home. It was advised that using policy loans makes it possible to purchase a home even in a high-interest rate environment. A low-interest deposit policy loan is being offered to young people and newlyweds. It has been shown that the apartment market has also frozen due to high interest rates."
+      "ko": "- 기타 경제 소식: 부산시는 테크노파크, 부산신보, 경제진흥원 기관장을 임명했다. 한국 경제는 성장률 반등으로 대만과 유사한 흐름을 보이고 있다. 오늘 경제 관련 주요 일정이 발표되었다. 서울의 집값 상승세가 꺾인 것으로 보인다. AI 혜택은 미국과 중국을 넘어 세계로 확대될 것으로 경제학자들이 전망하고 있다.\n- 증시·환율: 코스피는 반등했으나 다시 하락하며 투자심리가 위축됐다. 미국 증시와 함께 하락세를 보이며 불안감이 커지고 있다. 메타, 테슬라, 스페이스X는 실적 발표를 진행 중이다. 코스피 급락으로 인해 하루 800억 원 규모의 강제 청산이 발생했다. 이는 투자자들이 빚을 내서 버텼다가 손실을 입은 것으로 나타났다.\n- 금리·예금·투자상품: 한국 경제 뉴스에서 Fed 금리인상 우려가 줄었음에도 불구하고 금값은 유가에 발목을 잡혔고, 고금리와 규제로 인해 빌라 건설이 지연되며 주거 사다리가 끊기고 있으며, 한은은 기준금리를 10월 동결하고 11월에는 인상이 유력하다는 전망이 나오고 있으며, 고금리로 인해 내집 마련에 망설이는 사람들이 정책대출을 활용할 것을 권장받고 있으며, 저금리 전세금 정책대출은 청년과 신혼부부에게 주목받고 있다.\n- 부동산: 은평구 중심상권의 대형 치과 매물이 10억7000만원에 거래될 예정이다. 초고층 아파트가 30년 뒤 슬럼화될 수 있다는 전망이 제기되고 있다. 비싼 아파트의 가격 뒤에 숫자 124·129·91 등이 붙는 이유가 주목받고 있다. 수도권 전월세 매물은 36% 감소하며 시장 변화를 보이고 있다. 삼성물산은 여의도 시범 프로젝트로 2.2조 원 규모의 재건축 수주에 성공했다.",
+      "en": "- Other Economic News: Busan appointed heads for the Techno Park, Busan Shinbo, and the Economic Promotion Agency. South Korea's economy is showing a trend similar to Taiwan with a rebound in growth rate. Major economic schedules for today were announced. It appears that the rising trend in Seoul's housing prices has slowed down. Economists predict that the benefits of AI will expand beyond the U.S. and China to the rest of the world.\n- Stocks & FX: The KOSPI rebounded but fell again, causing investors' sentiment to contract. It is showing a downward trend alongside the U.S. stock market, increasing anxiety. Meta, Tesla, and SpaceX are in the process of announcing their financial results. Due to the sharp drop in the KOSPI, forced liquidations worth 80,000,000,000 won occurred in a single day. It has been revealed that this was due to investors who had borrowed money and suffered losses.\n- Rates, Deposits & Investment Products: Despite concerns over Fed rate hikes in Korean economic news declining, gold prices are being held back by rising oil prices. Villa construction is being delayed due to high interest rates and regulations, causing the housing ladder to break. The Bank of Korea is expected to freeze the benchmark rate in October and raise it in November. People hesitating to buy homes due to high interest rates are advised to use policy loans, and low-interest deposit policy loans are gaining attention among young people and newlyweds.\n- Real Estate: 은평구 중심상권의 대형 치과 매물이 10억7000만원에 거래될 예정이다. 초고층 아파트가 30년 뒤 슬럼화될 수 있다는 전망이 제기되고 있다. 비싼 아파트의 가격 뒤에 숫자 124·129·91 등이 붙는 이유가 주목받고 있다. 수도권 전월세 매물은 36% 감소하며 시장 변화를 보이고 있다. 삼성물산은 여의도 시범 프로젝트로 2.2조 원 규모의 재건축 수주에 성공했다."
     },
     "highlights": [],
     "categories": [
       {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "부산시는 테크노파크, 부산신보, 경제진흥원 기관장을 임명했다. 한국 경제는 성장률 반등으로 대만과 유사한 흐름을 보이고 있다. 오늘 경제 관련 주요 일정이 발표되었다. 서울의 집값 상승세가 꺾인 것으로 보인다. AI 혜택은 미국과 중국을 넘어 세계로 확대될 것으로 경제학자들이 전망하고 있다.",
+        "lineEn": "Busan appointed heads for the Techno Park, Busan Shinbo, and the Economic Promotion Agency. South Korea's economy is showing a trend similar to Taiwan with a rebound in growth rate. Major economic schedules for today were announced. It appears that the rising trend in Seoul's housing prices has slowed down. Economists predict that the benefits of AI will expand beyond the U.S. and China to the rest of the world.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "부산시, 테크노파크·부산신보·경제진흥원 기관장 임명",
+            "link": "https://www.yna.co.kr/view/AKR20261019015000051",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[글로컬] '성장률 반등' 한국 경제, 대만 닮아간다는데",
+            "link": "https://www.yna.co.kr/view/AKR20261018059000546",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[오늘의 주요일정]경제(10월19일 월요일)",
+            "link": "https://www.newsis.com/view/NISX20261016_0003828244",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "\"집 보러 줄 섰는데 이젠 뚝 끊겼다\"…서울 집값 상승세 꺾이나",
+            "link": "https://www.newsis.com/view/NISX20261017_0003830032",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "\"AI 혜택, 美·中 넘어 세계로\"…경제학자들 \"대량 실업 없을 것\"",
+            "link": "https://www.newsis.com/view/NISX20261018_0003830696",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "코스피는 반등했으나 다시 하락하며 투자심리가 위축됐다. 미국 증시와 함께 하락세를 보이며 불안감이 커지고 있다. 메타, 테슬라, 스페이스X는 실적 발표를 진행 중이다. 코스피 급락으로 인해 하루 800억 원 규모의 강제 청산이 발생했다. 이는 투자자들이 빚을 내서 버텼다가 손실을 입은 것으로 나타났다.",
+        "lineEn": "The KOSPI rebounded but fell again, causing investors' sentiment to contract. It is showing a downward trend alongside the U.S. stock market, increasing anxiety. Meta, Tesla, and SpaceX are in the process of announcing their financial results. Due to the sharp drop in the KOSPI, forced liquidations worth 80,000,000,000 won occurred in a single day. It has been revealed that this was due to investors who had borrowed money and suffered losses.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[마켓뷰] 코스피, 반등했지만 다시 시험대로…美 증시 동반 하락",
+            "link": "https://www.yna.co.kr/view/AKR20261019014000008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[주간뉴욕증시] 메타·테슬라·스페이스X 실적 발표…AI 투심은?",
+            "link": "https://www.newsis.com/view/NISX20261019_0003830716",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "\"빚내서 버텼는데\"…코스피 급락에 하루 800억씩 강제 청산[간추린 주말 뉴스]",
+            "link": "https://www.newsis.com/view/NISX20261018_0003830650",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "한국 경제 뉴스에서 Fed 금리인상 우려가 줄었음에도 불구하고 금값은 유가에 발목을 잡혔고, 고금리와 규제로 인해 빌라 건설이 지연되며 주거 사다리가 끊기고 있으며, 한은은 기준금리를 10월 동결하고 11월에는 인상이 유력하다는 전망이 나오고 있으며, 고금리로 인해 내집 마련에 망설이는 사람들이 정책대출을 활용할 것을 권장받고 있으며, 저금리 전세금 정책대출은 청년과 신혼부부에게 주목받고 있다.",
+        "lineEn": "Despite concerns over Fed rate hikes in Korean economic news declining, gold prices are being held back by rising oil prices. Villa construction is being delayed due to high interest rates and regulations, causing the housing ladder to break. The Bank of Korea is expected to freeze the benchmark rate in October and raise it in November. People hesitating to buy homes due to high interest rates are advised to use policy loans, and low-interest deposit policy loans are gaining attention among young people and newlyweds.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "Fed 금리인상 우려 줄었는데…금값은 유가에 발목",
+            "link": "https://www.hankyung.com/article/202610199339i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "빌라 1년이면 짓는데 … 고금리·규제에 끊긴 '주거 사다리'",
+            "link": "https://www.mk.co.kr/news/realestate/12179058",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "\"한은, 기준금리 10월 동결, 11월엔 인상 유력\"",
+            "link": "https://www.hankyung.com/article/2026101888781",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "고금리에 망설이는 내집 마련…정책대출 활용하세요",
+            "link": "https://www.hankyung.com/article/2026101888091",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "저금리 전세금 정책대출…청년·신혼부부 주목",
+            "link": "https://www.hankyung.com/article/2026101888101",
+            "source": "한국경제 부동산"
+          }
+        ]
+      },
+      {
         "key": "realestate",
         "name": "부동산",
         "nameEn": "Real Estate",
-        "lineKo": "은평구 중심상권의 대형 치과 매물이 10억7000만원에 거래될 예정이다. 초고층 아파트가 30년 뒤 슬럼화될 수 있다는 전망이 제기되고 있다. 비싼 아파트의 가격에 붙는 숫자 124·129·91의 비밀에 대한 설명이 나왔다. 수도권 전월세 매물은 36% 감소한 것으로 나타났다. 삼성물산은 여의도 시범 프로젝트로 2.2조 원 규모의 재건축 수주에 성공했다.",
-        "lineEn": "은평구 중심상권의 대형 치과 매물이 10억7000만원에 거래될 예정이다. 초고층 아파트가 30년 뒤 슬럼화될 수 있다는 전망이 제기되고 있다. 비싼 아파트의 가격에 붙는 숫자 124·129·91의 비밀에 대한 설명이 나왔다. 수도권 전월세 매물은 36% 감소한 것으로 나타났다. 삼성물산은 여의도 시범 프로젝트로 2.2조 원 규모의 재건축 수주에 성공했다.",
+        "lineKo": "은평구 중심상권의 대형 치과 매물이 10억7000만원에 거래될 예정이다. 초고층 아파트가 30년 뒤 슬럼화될 수 있다는 전망이 제기되고 있다. 비싼 아파트의 가격 뒤에 숫자 124·129·91 등이 붙는 이유가 주목받고 있다. 수도권 전월세 매물은 36% 감소하며 시장 변화를 보이고 있다. 삼성물산은 여의도 시범 프로젝트로 2.2조 원 규모의 재건축 수주에 성공했다.",
+        "lineEn": "은평구 중심상권의 대형 치과 매물이 10억7000만원에 거래될 예정이다. 초고층 아파트가 30년 뒤 슬럼화될 수 있다는 전망이 제기되고 있다. 비싼 아파트의 가격 뒤에 숫자 124·129·91 등이 붙는 이유가 주목받고 있다. 수도권 전월세 매물은 36% 감소하며 시장 변화를 보이고 있다. 삼성물산은 여의도 시범 프로젝트로 2.2조 원 규모의 재건축 수주에 성공했다.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
@@ -5359,102 +5460,6 @@
             "title": "여의도 시범에 래미안 깃발 … 삼성물산 2.2조 재건축 수주",
             "link": "https://www.mk.co.kr/news/realestate/12179010",
             "source": "매일경제 부동산"
-          }
-        ]
-      },
-      {
-        "key": "stocks",
-        "name": "증시·환율",
-        "nameEn": "Stocks & FX",
-        "lineKo": "주간뉴욕증시에서 메타, 테슬라, 스페이스X의 실적 발표가 이어졌다. 코스피는 급락하며 하루 800억 원 규모의 강제 청산이 발생했다. 해당 기사는 \"빚내서 버텼는데\"라는 표현으로 투자자들의 불안을 강조했다. AI 관련 투심은 실적 발표에 따라 변동이 있었다. 강제 청산은 시장의 급격한 변동성으로 인해 발생했다.",
-        "lineEn": "Meta, Tesla, and SpaceX continued to report their earnings on the weekly New York stock market. The KOSPI sharply declined, resulting in forced liquidations amounting to 80,000,000,000 won in a single day. The article emphasized investors' anxiety with the phrase \"held on by borrowing.\" Investor sentiment related to AI fluctuated depending on the earnings reports. The forced liquidations occurred due to the market's sudden volatility.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "[주간뉴욕증시] 메타·테슬라·스페이스X 실적 발표…AI 투심은?",
-            "link": "https://www.newsis.com/view/NISX20261019_0003830716",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "\"빚내서 버텼는데\"…코스피 급락에 하루 800억씩 강제 청산[간추린 주말 뉴스]",
-            "link": "https://www.newsis.com/view/NISX20261018_0003830650",
-            "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
-        "key": "other",
-        "name": "기타 경제 소식",
-        "nameEn": "Other Economic News",
-        "lineKo": "한국 경제가 성장률 반등으로 주목받고 있다. 오늘 10월 19일은 경제 관련 주요 일정이 많은 날이다. 서울의 집값 상승세가 꺾인 것으로 보인다. AI 혜택이 미국과 중국을 넘어 세계로 확대될 것으로 전망된다. 신축 매입 시만 대출 지원이 이뤄지지 않아 기존 빌라에도 지원이 필요하다는 의견이 제기되고 있다.",
-        "lineEn": "South Korea's economy is drawing attention due to a rebound in growth rate. Today, October 19th, is a day with many important economic schedules. It appears that the rising trend in Seoul's housing prices has slowed down. The benefits of AI are expected to expand beyond the United States and China to the world. There is an opinion being raised that since loan support is only provided for newly constructed purchases, support is also needed for existing villas.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "[글로컬] '성장률 반등' 한국 경제, 대만 닮아간다는데",
-            "link": "https://www.yna.co.kr/view/AKR20261018059000546",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "[오늘의 주요일정]경제(10월19일 월요일)",
-            "link": "https://www.newsis.com/view/NISX20261016_0003828244",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "\"집 보러 줄 섰는데 이젠 뚝 끊겼다\"…서울 집값 상승세 꺾이나",
-            "link": "https://www.newsis.com/view/NISX20261017_0003830032",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "\"AI 혜택, 美·中 넘어 세계로\"…경제학자들 \"대량 실업 없을 것\"",
-            "link": "https://www.newsis.com/view/NISX20261018_0003830696",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "\"신축 매입때만 대출 지원 역부족 기존 빌라도 풀어줘야 공급 가속\"",
-            "link": "https://www.mk.co.kr/news/realestate/12179057",
-            "source": "매일경제 부동산"
-          }
-        ]
-      },
-      {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "한국은행은 10월 기준금리를 동결하고 11월 인상이 유력하다고 전망했다. 고금리와 규제로 인해 주거 사다리가 끊기면서 내집 마련이 어려워지고 있다. 정책대출을 활용하면 고금리 상황에서도 주택 구매가 가능하다는 조언이 나왔다. 청년과 신혼부부를 대상으로 저금리 전세금 정책대출이 제공되고 있다. 고금리로 인해 아파트 시장도 얼어붙은 것으로 나타났다.",
-        "lineEn": "The Bank of Korea kept the benchmark interest rate unchanged as of October and expects a rate hike in November. Due to high interest rates and regulations, the housing ladder is breaking, making it difficult to purchase a home. It was advised that using policy loans makes it possible to purchase a home even in a high-interest rate environment. A low-interest deposit policy loan is being offered to young people and newlyweds. It has been shown that the apartment market has also frozen due to high interest rates.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "빌라 1년이면 짓는데 … 고금리·규제에 끊긴 '주거 사다리'",
-            "link": "https://www.mk.co.kr/news/realestate/12179058",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "\"한은, 기준금리 10월 동결, 11월엔 인상 유력\"",
-            "link": "https://www.hankyung.com/article/2026101888781",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "고금리에 망설이는 내집 마련…정책대출 활용하세요",
-            "link": "https://www.hankyung.com/article/2026101888091",
-            "source": "한국경제 부동산"
-          },
-          {
-            "title": "저금리 전세금 정책대출…청년·신혼부부 주목",
-            "link": "https://www.hankyung.com/article/2026101888101",
-            "source": "한국경제 부동산"
-          },
-          {
-            "title": "고금리에 얼어붙은 내 집 마련…정책대출로 살 수 있는 아파트는",
-            "link": "https://www.hankyung.com/article/202610188720i",
-            "source": "한국경제 부동산"
           }
         ]
       }
