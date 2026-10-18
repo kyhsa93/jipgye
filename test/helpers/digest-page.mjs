@@ -44,12 +44,13 @@ export function stubElement(attrs = {}, id = "") {
  * 화면마다 사전과 그리는 것이 다르지만 올리는 방법은 같다 - 인라인 스크립트를 꺼내
  * 가짜 document와 fetch 위에서 실행하는 것. 그 같은 부분만 여기 둔다.
  */
-export async function loadPage({ file, data = {}, subNav = [], status = 404, locale = "ko", query = "", analytics } = {}) {
+export async function loadPage({ file, data = {}, subNav = [], status = 404, locale = "ko", query = "", analytics, seed = {} } = {}) {
   const html = await readFile(path.join(root, "docs", file), "utf8");
   const script = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
 
   const store = { lang: locale };
-  const byId = new Map();
+  // seed: 스크립트가 돌기 전에 미리 세워 둘 요소({ id: 요소 }). 구운 표처럼 처음부터 내용이 있는 자리에 쓴다.
+  const byId = new Map(Object.entries(seed));
   const navLinks = subNav.map((page) => stubElement({ "data-re-page": page }));
 
   function applyUrl(url) {

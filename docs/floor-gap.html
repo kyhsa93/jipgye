@@ -222,6 +222,14 @@ function setText(id, text) {
   if (el) el.textContent = text;
 }
 
+// 다시 그려도 구운 caption은 남긴다 (#300).
+function setTable(id, html) {
+  const el = document.getElementById(id);
+  const cap = el.querySelector("caption");
+  el.innerHTML = html;
+  if (cap) el.prepend(cap);
+}
+
 const localeTag = () => (locale === "en" ? "en-US" : "ko-KR");
 const num = (value) => Number(value ?? 0).toLocaleString(localeTag());
 
@@ -253,7 +261,7 @@ function renderDistrictTable() {
     })
     .join("");
 
-  table.innerHTML = `${head}<tbody>${body}</tbody>`;
+  setTable("district-table", `${head}<tbody>${body}</tbody>`);
 }
 
 function renderDistrictLinks() {

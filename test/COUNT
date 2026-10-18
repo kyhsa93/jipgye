@@ -128,5 +128,11 @@
 #   차이 2 는 이 PR 이 더한 그 파일 하나에서 나온다(`node --test test/update-schedule-notice.test.mjs` → ℹ tests 2):
 #   index 의 updateSchedule ko·en 에 시각 모양이 없다 · 그 검사가 옛 문구 둘을 실제로 잡는다.
 #   옛 문구를 못박은 시험은 없었다(`git grep "시경\|아침에\|4×/day"` 로 test/ 0건) - 고친 시험 파일 0, 없어진 시험 0(.skip·.todo 도 0 그대로).
-1657
-1657
+# 센 법: 2026-10-18, origin/main 42ad9505 로 따라잡은 뒤(#298 병합 위), Node v22.16.0, macOS 15.5 (#300).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1670 · pass 1670 · fail 0 · skipped 0
+#   같은 워크트리에서 test/table-caption-kept.test.mjs 를 잠시 빼고 같은 명령 → ℹ tests 1657 · pass 1657 · fail 0 · skipped 0(= origin/main 42ad9505 의 하한).
+#   차이 13 은 이 PR 이 더한 그 파일 하나에서 나온다(`node --test test/table-caption-kept.test.mjs` → ℹ tests 13):
+#   최상위 하나(구운 caption 14개 · 6장) + 장마다 둘(한국어 열기→영어→한국어 · 영어로 열기) = 1 + 12.
+#   고친 시험 파일은 0 이다(test/helpers/digest-page.mjs 는 loadPage 에 선택 인자 seed 를 더했을 뿐 시험이 아니다). 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
+1670
+1670

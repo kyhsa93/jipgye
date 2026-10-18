@@ -264,6 +264,14 @@ function setText(id, text) {
   if (el) el.textContent = text;
 }
 
+// 다시 그려도 구운 caption은 남긴다 (#300).
+function setTable(id, html) {
+  const el = document.getElementById(id);
+  const cap = el.querySelector("caption");
+  el.innerHTML = html;
+  if (cap) el.prepend(cap);
+}
+
 const localeTag = () => (locale === "en" ? "en-US" : "ko-KR");
 const num = (value) => Number(value ?? 0).toLocaleString(localeTag());
 const pct = (value) => (value === null || value === undefined ? "-" : `${value}%`);
@@ -292,7 +300,7 @@ function renderDistrictTable() {
     )
     .join("");
 
-  table.innerHTML = `${head}<tbody>${body}</tbody>`;
+  setTable("district-table", `${head}<tbody>${body}</tbody>`);
 }
 
 function renderMonthTable() {
@@ -316,7 +324,7 @@ function renderMonthTable() {
     )
     .join("");
 
-  table.innerHTML = `${head}<tbody>${body}</tbody>`;
+  setTable("month-table", `${head}<tbody>${body}</tbody>`);
 }
 
 // 문장과 표는 빌더가 두 언어로 만든다(scripts/cancel-by-price.mjs). 여기서는 고르기만 한다.
@@ -324,7 +332,7 @@ function renderPriceBands() {
   const bands = cache.data?.priceBands;
   if (!bands) return;
   if (bands.lead?.[locale]) setText("price-lead", bands.lead[locale]);
-  if (bands.table?.[locale]) document.getElementById("price-table").innerHTML = bands.table[locale];
+  if (bands.table?.[locale]) setTable("price-table", bands.table[locale]);
 }
 
 function renderMonthLead() {
