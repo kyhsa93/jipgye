@@ -7,7 +7,9 @@ import {
   settledWeek,
   weekStart,
 } from "../scripts/realestate-weekly.mjs";
-import { arrivalWindowReady, contractRows, representWindow } from "../scripts/build-realestate.mjs";
+import { arrivalShortfall, arrivalWindowReady, contractRows, representWindow } from "../scripts/build-realestate.mjs";
+import { DISTRICTS } from "../scripts/realestate-districts.mjs";
+import { MIN_SAMPLE } from "../scripts/realestate-format.mjs";
 
 const NOW = new Date("2026-09-07T00:00:00Z");
 
@@ -208,4 +210,56 @@ test("주간 시세에서도 갱신계약을 뺀다", () => {
   const rows = contractRows(rawFile("rent", items), "노원구");
 
   assert.equal(rows.length, 1, "갱신계약이 주간 집계에 들어갔다");
+});
+
+// 이번 주 신고분 Map(`readWindowItems`의 items 모양): 키 `sale:<코드>`·`rent:<코드>`, 값은 { item, date } 배열.
+const arrivalItems = (districtCount, { sale = 0, jeonse = 0, wolse = 0 } = {}) => {
+  const items = new Map();
+  const rows = (make, count) => Array.from({ length: count }, (_, i) => ({ item: make(i), date: "2026-10-19" }));
+  for (const { code } of DISTRICTS.slice(0, districtCount)) {
+    if (sale) items.set(`sale:${code}`, rows((i) => saleRaw({ aptNm: `매매${i}` }), sale));
+    const rent = [...rows((i) => rentRaw({ aptNm: `전세${i}` }), jeonse), ...rows((i) => rentRaw({ aptNm: `월세${i}`, monthlyRent: "50" }), wolse)];
+    if (rent.length) items.set(`rent:${code}`, rent);
+  }
+  return items;
+};
+
+test("신고일 기준 전환: 자치구 절반(13)을 못 채우면 표본이 많아도 안 넘어간다", () => {
+  const items = arrivalItems(12, { sale: 9, jeonse: 9, wolse: 9 });
+  assert.equal(arrivalWindowReady(items), false);
+  assert.equal(arrivalShortfall(items).reason, "districts");
+  assert.equal(arrivalWindowReady(arrivalItems(13, { sale: 9, jeonse: 9, wolse: 9 })), true, "13곳이면 문턱을 넘는다(ceil(25/2))");
+});
+
+test("신고일 기준 전환: 자치구가 걸쳐도 서울 전체 전세가 0건이면 안 넘어간다 (#387)", () => {
+  // 2026-10-19 새벽: 16개 구에 매매 17건·월세 4건, 전세는 없었다.
+  const items = arrivalItems(16, { sale: 1, wolse: 0 });
+  const shortfall = arrivalShortfall(items);
+  assert.equal(shortfall.reason, "sample");
+  assert.deepEqual(shortfall.short, ["전세", "월세"]);
+  assert.equal(shortfall.counts.jeonse, 0);
+  assert.equal(arrivalWindowReady(items), false);
+});
+
+// 종류별 서울 전체 건수를 정확히 맞춘다: 매매·전세·월세 모두 앞 구부터 한 구에 한 건씩이다. 다른 두 종류가 13곳씩 깔려 있으면 자치구 문턱(13)은 늘 넘는다.
+const exactCounts = ({ sale, jeonse, wolse }) => {
+  const items = new Map();
+  const put = (key, row) => items.set(key, [...(items.get(key) ?? []), { item: row, date: "2026-10-19" }]);
+  DISTRICTS.slice(0, sale).forEach(({ code }, i) => put(`sale:${code}`, saleRaw({ aptNm: `매매${i}` })));
+  DISTRICTS.slice(0, jeonse).forEach(({ code }, i) => put(`rent:${code}`, rentRaw({ aptNm: `전세${i}` })));
+  DISTRICTS.slice(0, wolse).forEach(({ code }, i) => put(`rent:${code}`, rentRaw({ aptNm: `월세${i}`, monthlyRent: "50" })));
+  return items;
+};
+
+test("신고일 기준 전환: 매매·전세·월세 각각 MIN_SAMPLE 건부터 넘어간다, 하나라도 모자라면 안 넘어간다 (#387)", () => {
+  const full = { sale: 13, jeonse: 13, wolse: 13 };
+  assert.equal(arrivalWindowReady(exactCounts(full)), true);
+
+  for (const [kind, label] of [["sale", "매매"], ["jeonse", "전세"], ["wolse", "월세"]]) {
+    const short = arrivalShortfall(exactCounts({ ...full, [kind]: MIN_SAMPLE - 1 }));
+    assert.equal(short?.reason, "sample", `${label} ${MIN_SAMPLE - 1}건인데 넘어갔다`);
+    assert.deepEqual(short.short, [label]);
+    assert.equal(short.counts[kind], MIN_SAMPLE - 1);
+    assert.equal(arrivalWindowReady(exactCounts({ ...full, [kind]: MIN_SAMPLE })), true, `${label} 딱 ${MIN_SAMPLE}건이면 넘어가야 한다`);
+  }
 });
