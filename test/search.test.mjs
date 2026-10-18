@@ -309,3 +309,146 @@ test("검색창을 싣는 장은 모두 한국어 안내문·라벨로 구워져
   }
   assert.ok(seen > 60, `검색창을 실은 장이 ${seen}장뿐이다 - 검사가 헛돈다`);
 });
+
+// --- 영어 모드의 검색 결과 쪽 문안 (#291, 둘째) -------------------------------------
+//
+// 결과 보조 줄·결과 제목·N평·N억대·결과 없음 두 문단. 문안은 po 확정(#291 댓글 6245588745).
+// 결과 항목 이름(자치구·단지)은 색인이 한국어뿐이라 한국어 그대로다.
+
+/** 언어를 정해 search.js 를 올리고, 글자를 치고, 중간에 언어를 바꿀 수 있게 한다. */
+async function searchSession({ lang = "ko" } = {}) {
+  const source = await readFile(path.join(root, "docs/search.js"), "utf8");
+  const listeners = {};
+  const observers = [];
+  const state = { lang };
+  const events = [];
+  const el = (extra = {}) => ({
+    addEventListener: (type, fn) => ((listeners[type] ||= []).push(fn), undefined),
+    setAttribute() {},
+    removeAttribute() {},
+    querySelector: () => null,
+    contains: () => true,
+    innerHTML: "",
+    hidden: true,
+    value: "",
+    ...extra,
+  });
+  const input = el({ placeholder: "자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)" });
+  const list = el();
+  const label = { textContent: "무엇이든 찾기" };
+  const form = el({ querySelector: (sel) => (sel === "input" ? input : sel === "label" ? label : list) });
+  vm.runInNewContext(source, {
+    document: {
+      documentElement: { getAttribute: (k) => (k === "lang" ? state.lang : null) },
+      querySelector: (sel) => (sel === ".site-search" ? form : null),
+      addEventListener() {},
+    },
+    MutationObserver: class { constructor(fn) { observers.push(fn); } observe() {} },
+    fetch: async () => ({ ok: true, json: async () => INDEX }),
+    location: { href: "" },
+    URLSearchParams,
+    window: {
+      analytics: { debouncedEvent: (name) => events.push(name), termShape: () => ({}) },
+    },
+  });
+  return {
+    events,
+    get html() { return list.innerHTML; },
+    async type(query) {
+      input.value = query;
+      for (const fn of listeners.input ?? []) await fn({});
+      await new Promise((r) => setTimeout(r, 5));
+      return list.innerHTML;
+    },
+    setLang(next) { state.lang = next; for (const fn of observers) fn(); },
+  };
+}
+
+const EN_CAN =
+  "Only Korean names are searched: district, neighbourhood or complex name, budget (8억), size (84㎡, 34평). You can combine two: 강남구 84㎡. No Korean keyboard? Try Deal search.";
+const EN_CANNOT =
+  "This site does not cover schools, transit, redevelopment, or holding-tax and capital-gains-tax calculations. Official prices (공시가격) are not available yet. Acquisition tax and brokerage fee are on the budget pages (try 10억).";
+const KO_CAN = "자치구·동·단지 이름, 예산(8억), 면적(84㎡·34평)으로 찾을 수 있습니다. 두 가지를 같이 쳐도 됩니다 &mdash; 강남구 84㎡";
+const KO_CANNOT =
+  "학군·교통·재건축 정보와 보유세·양도세 계산은 이 사이트가 다루지 않습니다. 공시가격은 아직 없고, 취득세·중개보수는 예산대 화면(예: 10억)에 있습니다.";
+
+test("영어 모드: 조건으로 찾기 카드의 보조 줄과 평·억대가 영어다", async () => {
+  const s = await searchSession({ lang: "en" });
+  const eight = await s.type("8억");
+  assert.match(eight, /class="hit">₩800M band</, "8억대 -> ₩800M band");
+  assert.match(eight, /class="where">Search by conditions</);
+  assert.match(await s.type("8.5억"), /class="hit">₩850M band</, "소수 억대를 반올림해 M 으로 못 옮겼다");
+  assert.match(await s.type("12억"), /class="hit">₩1,200M band</, "천 단위 쉼표가 없다");
+  assert.match(await s.type("34평"), /class="hit">34 pyeong</);
+  assert.match(await s.type("84㎡"), /class="hit">84㎡</, "㎡ 라벨은 그대로여야 한다");
+  const combo = await s.type("강남구 8억 34평");
+  assert.match(combo, /강남구 · ₩800M band · 34 pyeong/);
+  assert.doesNotMatch(combo, /억대|34평|조건으로/, "영어 모드에 한국어 문안이 남았다");
+});
+
+test("영어 모드: 전세 vs 월세와 갈아타기 카드가 영어 제목·보조 줄이다", async () => {
+  const s = await searchSession({ lang: "en" });
+  const rent = await s.type("전세 월세");
+  assert.match(rent, /class="hit">Jeonse vs Monthly Rent</);
+  assert.match(rent, /class="where">Which is cheaper</);
+  assert.match(rent, /jeonse-vs-wolse\.html/, "주소가 바뀌면 안 된다");
+  const move = await s.type("노원 송파");
+  assert.match(move, /class="hit">노원구 → 송파구</, "자치구 이름은 한국어 그대로다");
+  assert.match(move, /class="where">Moving house: how far it rose</);
+  assert.match(move, /switch-house\.html/);
+});
+
+test("영어 모드: 결과 없음 두 문단이 확정 문안이고 머리 글자는 data-note 로 준다", async () => {
+  const s = await searchSession({ lang: "en" });
+  const html = await s.type("Seocho");
+  assert.ok(html.includes(`<p class="miss-can">${EN_CAN}</p>`), "miss-can 문안이 다르다");
+  assert.ok(html.includes(`<p class="miss-cannot">${EN_CANNOT}</p>`), "miss-cannot 문안이 다르다");
+  assert.ok(html.includes(`<p class="miss-head" data-note=" — Not found">Seocho</p>`), "머리 글자가 영어가 아니다");
+  assert.doesNotMatch(html, /찾지 못했습니다|다루지 않습니다/, "영어 모드에 한국어 문안이 남았다");
+  assert.ok(EN_CAN.includes("(8억)") && EN_CAN.includes("(84㎡, 34평)") && EN_CAN.includes("강남구 84㎡"), "한국어 예시는 풀지 않는다");
+});
+
+test("한국어 모드: 결과 카드와 결과 없음 글자는 이전과 같다", async () => {
+  const s = await searchSession({ lang: "ko" });
+  const eight = await s.type("8.5억");
+  assert.match(eight, /class="hit">8\.5억대</);
+  assert.match(eight, /class="where">조건으로 찾기</);
+  assert.match(await s.type("8억"), /class="hit">8억대</);
+  assert.match(await s.type("34평"), /class="hit">34평</);
+  const rent = await s.type("전세 월세");
+  assert.match(rent, /class="hit">전세 vs 월세</);
+  assert.match(rent, /class="where">어느 쪽이 싼가</);
+  assert.match(await s.type("노원 송파"), /class="where">갈아타기 — 갈 동네는 얼마나 올랐나</);
+  const miss = await s.type("학군");
+  assert.ok(miss.includes(`<p class="miss-head" data-note=" — 찾지 못했습니다">학군</p>`));
+  assert.ok(miss.includes(`<p class="miss-can">${KO_CAN}</p>`));
+  assert.ok(miss.includes(`<p class="miss-cannot">${KO_CANNOT}</p>`));
+});
+
+test("목록이 떠 있는 채로 언어를 바꾸면 새로 고침 없이 결과 문안이 따라 바뀌고 못 찾음을 두 번 세지 않는다", async () => {
+  const s = await searchSession({ lang: "ko" });
+  await s.type("8억");
+  assert.match(s.html, /8억대/);
+  s.setLang("en");
+  assert.match(s.html, /₩800M band/, "영어로 바꿨는데 카드가 그대로다");
+  assert.match(s.html, /Search by conditions/);
+  s.setLang("ko");
+  assert.match(s.html, /8억대/);
+  assert.match(s.html, /조건으로 찾기/);
+
+  await s.type("학군");
+  assert.deepEqual(s.events, ["search_miss"]);
+  s.setLang("en");
+  assert.ok(s.html.includes(EN_CAN), "결과 없음이 영어로 안 바뀌었다");
+  assert.ok(s.html.includes('data-note=" — Not found"'));
+  s.setLang("ko");
+  assert.ok(s.html.includes(KO_CAN));
+  assert.deepEqual(s.events, ["search_miss"], "언어를 바꿀 때 못 찾음을 다시 셌다");
+});
+
+test("스타일시트는 결과 없음 머리 글자를 data-note 에서 읽고 한국어 글자를 박지 않는다", async () => {
+  const css = await readFile(path.join(root, "docs/style.css"), "utf8");
+  const rule = /\.site-search-miss \.miss-head::after\s*\{([^}]*)\}/.exec(css)?.[1] ?? "";
+  assert.match(rule, /content:\s*attr\(data-note\)/, "::after 가 data-note 를 읽지 않는다");
+  assert.doesNotMatch(css, /찾지 못했습니다/, "style.css 에 박힌 한국어 문안이 남았다");
+});

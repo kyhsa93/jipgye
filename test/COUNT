@@ -110,5 +110,10 @@
 #   고친 시험 파일(prerender·render-loader·render-parity·summary-note 시험, fixtures)은 기대 마크업만 새 모양으로 바꿨고 시험을 더하거나 빼지 않았다. 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
 # 센 법(따라잡기): 2026-10-18, origin/main 58e948c4 로 따라잡은 뒤(#361 병합 090517d8 위), Node v22.16.0, macOS 15.5 (#352).
 #   따라잡은 결과 npm test → ℹ tests 1597 · pass 1597 · fail 0 · skipped 0 (= main 1586 + 이 PR 11). 양쪽 로그 시험 이름 comm: 기준에만 0 · 후보에만 11.
-1597
-1597
+# 센 법: 2026-10-18, origin/main dea044e4, Node v22.16.0, macOS 15.5 (#291, 둘째).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1603 · pass 1603 · fail 0 · skipped 0
+#   기준은 직전 하한 1597(origin/main dea044e4 의 COUNT). 차이 6 은 이 PR 이 test/search.test.mjs 에 더한 영어 검색 결과 문안 시험 여섯이다
+#   (`node --test test/search.test.mjs` → 기준 25 · 후보 31): 조건 카드 보조 줄·평·억대 · 전세 vs 월세·갈아타기 카드 · 결과 없음 두 문단과 data-note · 한국어 모드 불변 · 목록이 떠 있는 채 언어 전환 후 재렌더(못 찾음 중복 집계 없음) · 스타일시트가 data-note 를 읽음.
+#   고친 시험 파일은 0 이고(더한 것뿐) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
+1603
+1603

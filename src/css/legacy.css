@@ -3022,8 +3022,9 @@ summary:focus-visible,
   margin-bottom: 4px;
 }
 
+/* 「 — 찾지 못했습니다」 글자는 search.js 가 data-note 로 준다(언어별 문안 사전, #291). 여기에 박으면 영어 모드에서 한국어가 남는다. */
 .site-search-miss .miss-head::after {
-  content: " — 찾지 못했습니다";
+  content: attr(data-note);
   color: var(--muted);
   font-weight: 400;
 }
