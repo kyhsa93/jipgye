@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import Parser from "rss-parser";
 import { normalizeFeedTitle } from "../scripts/article-body.mjs";
 import { newsListHtml } from "../scripts/prerender.mjs";
+import { loadIndexPage } from "./helpers/index-page.mjs";
 
 // #354: 뉴시스 RSS 제목은 `<![CDATA[...S&amp;P...]]>`로 온다. rss-parser는 CDATA 안을 풀지 않아 저장값에 `&amp;`가 남았고,
 // 굽는 쪽 escapeHtml이 한 번 더 감싸 구운 HTML에 `S&amp;amp;P`가 실렸다(브라우저는 `S&amp;P` 글자 그대로 그린다).
@@ -44,4 +45,25 @@ test("normalizeFeedTitle: 없는 제목은 빈 문자열, 모르는 엔티티는
 test("fetch-news.mjs가 피드 제목을 normalizeFeedTitle로 거친다 (#354)", async () => {
   const src = await readFile(new URL("../scripts/fetch-news.mjs", import.meta.url), "utf8");
   assert.match(src, /const title = normalizeFeedTitle\(item\.title\);/);
+});
+
+// 저장값이 엔티티가 풀린 순수 글자가 되면(위) 소비자마다 자기 몫의 이스케이프를 해야 한다. index.html 의 오늘 뉴스 칸은
+// newsItemHtml 이 제목을 innerHTML 에 넣는다 — 여기서 한 번 감싸지 않으면 제목의 `<`·`>` 가 태그로 읽힌다.
+// 인라인 스크립트를 helpers/index-page.mjs 의 vm 샌드박스에서 돌려 renderNews 가 쓴 #news-list 를 본다.
+test("index.html 오늘 뉴스 칸은 제목·출처의 `<`·`>`·`&` 를 정확히 한 번 이스케이프한다 (#354)", async () => {
+  const hostile = { title: "<img src=x onerror=1> S&P <ESG 경영>", source: "A&B <b>", link: "https://example.test/h", category: "stocks" };
+  const page = await loadIndexPage({
+    fetch: async (url) => {
+      const ok = String(url).includes("/data/news.json");
+      return { ok, json: async () => (ok ? { items: [hostile] } : {}) };
+    },
+  });
+  for (let i = 0; i < 200 && !String(page.byId("news-list").innerHTML).includes("news-item"); i += 1) await new Promise((r) => setTimeout(r, 5));
+  const html = String(page.byId("news-list").innerHTML);
+  assert.ok(html.includes("news-item"), "오늘 뉴스 칸이 그려지지 않았다");
+  assert.ok(!html.includes("<img"), "제목의 <img 가 태그로 실렸다");
+  assert.ok(!html.includes("<b>"), "출처의 <b> 가 태그로 실렸다");
+  assert.ok(html.includes("&lt;img src=x onerror=1&gt; S&amp;P &lt;ESG 경영&gt;"), "제목이 한 겹 이스케이프로 실리지 않았다");
+  assert.ok(html.includes("A&amp;B &lt;b&gt;"), "출처가 한 겹 이스케이프로 실리지 않았다");
+  assert.ok(!html.includes("&amp;amp;") && !html.includes("&amp;lt;"), "이중 이스케이프");
 });
