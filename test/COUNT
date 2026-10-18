@@ -147,6 +147,16 @@
 #   구운 53장 수 · 53장 전수 주석 0 · 훑개 다섯(문자열/정규식 안 // · 줄째/줄 끝/블록 · 줄바꿈 블록 · 주석 없음 · 닫히지 않음) · 스크립트 밖 불변 ·
 #   빌더 네 곳 출력 주석 0 · 뉴스 장 · 기계 증명(전후 같은 파서 구문 + 지운 글자가 공백·주석뿐) · 증명기 변이 열 · 틀은 주석 유지 · 범위 밖 고정.
 #   고친 시험 파일은 0 이고(더한 것뿐) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
+# 센 법: 2026-10-18, origin/main 30942349(#313 병합 af7d8405 뒤), Node v22.16.0, macOS 15.5 (#348·#349).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1689 · pass 1689 · fail 0 · skipped 0
+#   origin/main 30942349 에서 같은 명령(변경을 stash 한 같은 워크트리) → ℹ tests 1687 · pass 1687 · fail 0 · skipped 0.
+#   차이 2 는 이 PR 이 test/conversion-render.test.mjs 에 더한 시험 둘이다(`node --test test/conversion-render.test.mjs` → 기준 12 · 후보 14):
+#   "안내 자리는 폭마다 줄 수만큼, 결과 자리는 폭 계단으로 예약하고 실패해도 CSS 로 통째로 거두지 않는다 (#349·#348)" ·
+#   "요청이 끝내 실패하면 결과 자리 예약을 보이는 곳이 안 움직이는 만큼만 접고, 카드가 그려지면 다시 편다 (#348)".
+#   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 - 기준에만 있는 이름 0, 후보에만 있는 이름 2.
+#   고친 시험은 같은 파일의 "입력 칸과 결과 자리는 데이터가 오기 전에도 자리를 잡는다 (#287)" 하나(결과 자리 예약이 한 쌍에서 폭 계단으로 바뀌어
+#   단언만 고쳤고 시험을 더하거나 빼지 않았다)와 test/helpers/digest-page.mjs(가짜 요소에 getBoundingClientRect·offsetHeight, 쪽에 innerHeight 를 더했다 - 시험이 아니다).
+#   없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
 # 센 법: 2026-10-18, origin/main ded5d128, Node 22.16.0, macOS 15.5 (#374).
 #   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1692 · pass 1692 · fail 0 · skipped 0
 #   변경 전 origin/main ded5d128 상태의 같은 워크트리에서 같은 명령 → ℹ tests 1687 · pass 1687 · fail 0 · skipped 0(= 이 PR 의 하한 출발점).
@@ -156,5 +166,5 @@
 #   고친 시험은 읽는 쪽 경로뿐이다: 틀을 읽는 시험(baked-h1 · budget-pages · complex-card-kept · realestate-pages · inline-comments)은 scripts/realestate-template.html 로,
 #   나가는 장을 보는 시험(method-callout · realestate-pages 의 화면 스크립트·마크업 · loadRealestatePage 기본값)은 docs/realestate.html 그대로다.
 #   inline-comments 의 숫자 셋은 53 → 54(구운 장) · 13 → 12(손으로 쓴 제자리 장) · 틀 경로, 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
-1692
-1692
+1694
+1694

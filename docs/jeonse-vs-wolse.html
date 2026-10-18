@@ -378,11 +378,19 @@ function optionHtml(kind, cell, side, win) {
   );
 }
 
+function showEmpty(html) {
+  const box = document.getElementById("calc-result");
+  box.innerHTML = `<p class="empty">${html}</p>`;
+  const room = innerHeight - box.getBoundingClientRect().top;
+  if (room < box.offsetHeight) box.style.minHeight = Math.max(room, 0) + "px";
+}
+
 function renderResult() {
   const box = document.getElementById("calc-result");
   const cell = currentCell();
+  box.style.minHeight = "";
   if (!cell) {
-    box.innerHTML = `<p class="empty">${escapeHtml(t("notReady"))}</p>`;
+    showEmpty(escapeHtml(t("notReady")));
     return;
   }
 
@@ -556,7 +564,7 @@ async function main() {
     const conversion = await loadJson("conversion");
     if (!conversion?.cells?.length) {
       document.getElementById("calc-controls").hidden = true;
-      document.getElementById("calc-result").innerHTML = `<p class="empty">${escapeHtml(t("notReady"))}</p>`;
+      showEmpty(escapeHtml(t("notReady")));
       setText("updated", "-");
       return;
     }
@@ -573,8 +581,7 @@ async function main() {
       description: `load conversion: ${error?.message ?? error}`.slice(0, 100),
       fatal: true,
     });
-    document.getElementById("calc-result").innerHTML =
-      `<p class="empty">${escapeHtml(t("loadError"))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button></p>`;
+    showEmpty(`${escapeHtml(t("loadError"))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button>`);
     document.getElementById("load-retry")?.addEventListener("click", (e) => {
       e.currentTarget.disabled = true;
       main();
