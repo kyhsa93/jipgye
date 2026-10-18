@@ -31,6 +31,13 @@ export function decodeEntities(text) {
   });
 }
 
+// RSS 제목은 엔티티가 풀린 글자로 저장한다(#354). rss-parser(xml2js)는 일반 요소의 `&amp;`는 `&`로 풀지만
+// `<![CDATA[...]]>` 안은 그대로 두고(뉴시스 「S&amp;P」가 그렇게 저장돼 있었다), 피드가 `&amp;amp;`로 두 번 감싸면 한 겹이 남는다.
+// 저장값이 이스케이프된 채면 굽는 쪽 escapeHtml이 `&`를 한 번 더 감싸 `S&amp;amp;P`가 실린다 — 약속은 "데이터=순수 글자, 이스케이프=굽는 한 곳"이다.
+export function normalizeFeedTitle(raw) {
+  return decodeEntities(String(raw ?? "")).trim();
+}
+
 export function stripTags(html) {
   const withoutCode = html.replace(/<(script|style|noscript)\b[^>]*>[\s\S]*?<\/\1>/gi, " ");
   return decodeEntities(withoutCode.replace(/<[^>]*>/g, " "))

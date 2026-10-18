@@ -1411,8 +1411,8 @@
       : "";
     const readClass = readNewsLinks.has(item.link) ? " read" : "";
     return `<li class="news-item${readClass}">
-      <a href="${item.link}" target="_blank" rel="noopener">${pickTitle(item)}</a>
-      <div class="news-meta"${timeTitle}>${item.source} · ${timeLabel}</div>
+      <a href="${item.link}" target="_blank" rel="noopener">${escapeHtml(pickTitle(item))}</a>
+      <div class="news-meta"${timeTitle}>${escapeHtml(item.source)} · ${timeLabel}</div>
       ${preview}
       ${newsContextHtml(item.context)}
       ${dupes}
