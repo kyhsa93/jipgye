@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
+import { connect } from "node:net";
 import { execFile } from "node:child_process";
 import { mkdtemp, readFile, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -33,6 +34,30 @@ function startStub(handler) {
       });
     });
   });
+}
+
+// 「아무도 안 듣는 주소」를 결정적으로 얻는다(#339). 스텁을 띄웠다 닫아 그 포트를 쓰면(옛 모양) 닫는 순간
+// 포트가 OS 풀로 돌아가 같은 실행의 다른 프로세스(시험 파일은 병렬로 돈다)의 listen(0)이 그걸 집을 수 있고,
+// 그러면 연결이 거절되지 않고 정상 응답이 와서 깜빡인다. 그래서 포트를 반납하지 않고 처음부터 listen(0)이
+// 절대 내주지 않는 값을 쓴다: 임시 포트 범위(리눅스 32768~, macOS·윈도 49152~)는 모두 1024 위이고,
+// 아래쪽 번호는 root가 명시해 bind해야만 잡힌다. 1·7·9 같은 번호는 fetch가 먼저 "bad port"로 막으므로
+// 막힌 목록에 없는 번호만 후보로 둔다. 그래도 그 번호를 누가 듣고 있으면(드문 환경) 후보를 넘긴다 -
+// 실제로 거절되는지 net.connect로 한 번 확인한 것만 돌려준다(이 확인이 실패하면 시험이 아니라 환경 문제라 던진다).
+const REFUSED_PORT_CANDIDATES = [2, 3, 4, 5, 6, 8, 10, 12];
+
+function refuses(port) {
+  return new Promise((resolve) => {
+    const socket = connect({ host: "127.0.0.1", port });
+    socket.once("connect", () => { socket.destroy(); resolve(false); });
+    socket.once("error", (err) => resolve(err.code === "ECONNREFUSED"));
+  });
+}
+
+async function refusedBase() {
+  for (const port of REFUSED_PORT_CANDIDATES) {
+    if (await refuses(port)) return `http://127.0.0.1:${port}`;
+  }
+  throw new Error(`127.0.0.1 의 낮은 포트 ${REFUSED_PORT_CANDIDATES.join(",")} 가 전부 연결을 받는다 - 거절 시험을 만들 수 없는 환경`);
 }
 
 function savingResponse({ products, maxPageNo = 1 }) {
@@ -478,9 +503,8 @@ test("워크플로는 금리 단계를 막지 않고 끝에서 실패로 반영�
 });
 
 test("연결이 안 되면 원인 코드를 남기고 코드 3으로 끝낸다", async () => {
-  const stub = await startStub(() => ({ json: savingResponse({ products: [] }) }));
-  const base = stub.base;
-  await stub.close();
+  // 스텁을 닫아 얻은 포트가 아니다 - 닫은 포트는 다른 프로세스가 집을 수 있다(#339). refusedBase 주석 참고.
+  const base = await refusedBase();
   const outDir = await tempDir();
 
   const { stdout, stderr } = await runAllFailed(base, outDir);
