@@ -224,3 +224,88 @@ test("두 단어 질문: 자치구 둘이면 갈아타기, 전세·월세면 전
   assert.match(rent, /jeonse-vs-wolse\.html/);
   assert.doesNotMatch(await runSearch("노원 노원"), /switch-house/, "같은 구 둘을 갈아타기로 보냈다");
 });
+
+// --- 영어 모드의 검색창 안내문·라벨 (#291) -------------------------------------
+//
+// 구운 HTML은 ko 글자를 박고, search.js가 html[lang]을 보고 영어로 바꾼다(nav.js의 머리 버튼 라벨과 같은 방식).
+// 문안은 po 확정(#291 댓글 6244732875): 영어 예시는 한국어로 둔다 - 색인이 한국어 이름뿐이라서.
+
+const KO_HINT = "자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)";
+const EN_HINT = "Find district, complex, budget (Korean, e.g. 강남구, 래미안, 10억)";
+const EN_SHORT = "Find district, complex, budget";
+
+/** search.js를 가짜 문서에 올리고 lang 속성과 폭을 손으로 바꿀 수 있게 돌려준다. */
+async function mountSearch({ lang = "ko", narrow = false } = {}) {
+  const source = await readFile(path.join(root, "docs/search.js"), "utf8");
+  const mq = { matches: narrow, fns: [], addEventListener(type, fn) { if (type === "change") this.fns.push(fn); } };
+  const observers = [];
+  const state = { lang };
+  const documentElement = { getAttribute: (k) => (k === "lang" ? state.lang : null) };
+  const input = { placeholder: KO_HINT, value: "", addEventListener() {}, setAttribute() {}, removeAttribute() {} };
+  const label = { textContent: "무엇이든 찾기" };
+  const list = { innerHTML: "", hidden: true, addEventListener() {}, setAttribute() {}, removeAttribute() {}, contains: () => true };
+  const form = {
+    addEventListener() {},
+    querySelector: (sel) => (sel === "input" ? input : sel === "label" ? label : list),
+    contains: () => true,
+  };
+  vm.runInNewContext(source, {
+    document: { documentElement, querySelector: (sel) => (sel === ".site-search" ? form : null), addEventListener() {} },
+    MutationObserver: class { constructor(fn) { observers.push(fn); } observe() {} },
+    window: { matchMedia: () => mq },
+    fetch: async () => ({ ok: true, json: async () => INDEX }),
+    location: { href: "" },
+    URLSearchParams,
+  });
+  return {
+    input,
+    label,
+    setLang(next) { state.lang = next; for (const fn of observers) fn(); },
+    setNarrow(next) { mq.matches = next; for (const fn of mq.fns) fn(); },
+  };
+}
+
+test("영어 모드로 열면 안내문과 라벨이 확정 영어 문안이다", async () => {
+  const page = await mountSearch({ lang: "en" });
+  assert.equal(page.input.placeholder, EN_HINT);
+  assert.equal(page.label.textContent, "Search anything");
+});
+
+test("한국어 모드는 구운 글자 그대로다", async () => {
+  const wide = await mountSearch({ lang: "ko" });
+  assert.equal(wide.input.placeholder, KO_HINT);
+  assert.equal(wide.label.textContent, "무엇이든 찾기");
+  const narrow = await mountSearch({ lang: "ko", narrow: true });
+  assert.equal(narrow.input.placeholder, "자치구·단지·예산으로 찾기", "좁은 화면의 한국어 동작이 달라졌다");
+  assert.equal(narrow.label.textContent, "무엇이든 찾기");
+});
+
+test("언어를 바꾸면 새로 고치지 않아도 안내문이 따라 바뀌고 좁은 폭 판정을 다시 한다", async () => {
+  const page = await mountSearch({ lang: "ko" });
+  page.setLang("en");
+  assert.equal(page.input.placeholder, EN_HINT);
+  assert.equal(page.label.textContent, "Search anything");
+  page.setNarrow(true);
+  assert.equal(page.input.placeholder, EN_SHORT, "좁은 화면에서 영어 예시를 떼지 않았다");
+  assert.equal(EN_SHORT.length, 30);
+  page.setLang("ko");
+  assert.equal(page.input.placeholder, "자치구·단지·예산으로 찾기", "좁은 화면에서 영어로 바꾼 뒤 한국어로 못 돌아온다");
+  assert.equal(page.label.textContent, "무엇이든 찾기");
+  page.setLang("en");
+  page.setNarrow(false);
+  assert.equal(page.input.placeholder, EN_HINT);
+});
+
+test("검색창을 싣는 장은 모두 한국어 안내문·라벨로 구워져 있고 예시가 괄호 안에 있다", async () => {
+  const dir = path.join(root, "docs");
+  let seen = 0;
+  for (const f of (await readdir(dir)).filter((n) => n.endsWith(".html"))) {
+    const html = await readFile(path.join(dir, f), "utf8");
+    if (!html.includes('class="site-search"')) continue;
+    seen += 1;
+    assert.match(html, /<html lang="ko"/, `${f}: 구운 lang 이 ko 가 아니다`);
+    assert.ok(html.includes(`placeholder="${KO_HINT}"`), `${f}: 구운 안내문이 바뀌었다`);
+    assert.ok(html.includes(">무엇이든 찾기</label>"), `${f}: 구운 라벨이 바뀌었다`);
+  }
+  assert.ok(seen > 60, `검색창을 실은 장이 ${seen}장뿐이다 - 검사가 헛돈다`);
+});

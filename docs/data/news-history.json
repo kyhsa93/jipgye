@@ -12606,26 +12606,70 @@
     "date": "2026-10-18",
     "items": [
       {
-        "title": "성북구 월곡두산위브 84.843㎡ 11억 8500만원… 최근 3년 신고가 [MAI부동산]",
-        "link": "https://www.mk.co.kr/news/realestate/12178727",
-        "publishedAt": "2026-10-18T03:48:20.000Z",
-        "source": "매일경제 부동산",
-        "category": "realestate",
-        "preview": "MAI 부동산 2026년 10월 17일 국토부 실거래가 시스템에 신규 등록된 서울 성북구 하월곡동 월곡두산위브 전용 84.843㎡ 거래가 11억 8,500만 원으로 집계돼, 동일 ..",
+        "title": "서울 집값 88주째 올랐는데…\"2027년부터 금리 효과 본격화\"",
+        "link": "https://www.newsis.com/view/NISX20261018_0003830404",
+        "publishedAt": "2026-10-18T04:57:39.000Z",
+        "source": "뉴시스 경제",
+        "category": "rates",
+        "preview": "[서울=뉴시스]김성은 인턴 기자 = 서울 집값이 88주 연속 상승한 가운데 금리 상승의 여파가 시차를 두고 나타나면서 2027년부터 집값 흐름이 달라질 수 있다는 전망이 나왔다. 특히 삼성전자와 SK하이닉스의 성과급…",
         "dupes": [],
         "context": [
           {
             "kind": "realestate",
-            "href": "./district-seongbuk.html",
-            "label": "성북구 아파트 84㎡ 매매",
-            "labelEn": "성북구 apartment 84㎡ sale",
-            "value": "10억 7,738만원",
-            "valueEn": "₩1,077M",
-            "note": "최근 1주 계약 271건 · 10/11 대비 +1.0%",
-            "noteEn": "271 deals in the last 1 weeks · +1.0% vs Oct 11"
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 9,195만원",
+            "valueEn": "₩1,392M",
+            "note": "최근 1주 계약 1,167건 · 10/11 대비 -0.9%",
+            "noteEn": "1,167 deals in the last 1 weeks · -0.9% vs Oct 11"
           }
         ],
-        "titleEn": "Seongbuk-gu Wallyeok Dusan Weib 84.843㎡ 1,185,000,000 won... Recent 3-year new high [MAI Real Estate]"
+        "titleEn": "Seoul Housing Prices Rise for 88th Consecutive Week...\"Interest Rate Effects to Intensify from 2027"
+      },
+      {
+        "title": "오세훈 시장 “10·15 부동산 대책 성적표 참담…정부, 실패 인정해야”",
+        "link": "https://www.mk.co.kr/news/realestate/12178762",
+        "publishedAt": "2026-10-18T04:57:09.000Z",
+        "source": "매일경제 부동산",
+        "category": "realestate",
+        "preview": "‘서울시 주택 공급정책 20년 백서’ 소개 “반성없는 정책은 실패 반복…대가는 국민의 몫”오세훈 서울시장이 이재명 정부의 10·15 부동산 대책을 비판하며 정부와 여당을 향해 “이..",
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 9,195만원",
+            "valueEn": "₩1,392M",
+            "note": "최근 1주 계약 1,167건 · 10/11 대비 -0.9%",
+            "noteEn": "1,167 deals in the last 1 weeks · -0.9% vs Oct 11"
+          }
+        ],
+        "titleEn": "O Se-hoon says \"10·15 real estate measures performance sheet disappointing... government must admit failure"
+      },
+      {
+        "title": "\"감정가 50억 아파트, 40억에 낙찰\"…전문가가 본 서울 부동산의 이상 징후",
+        "link": "https://www.newsis.com/view/NISX20261018_0003830257",
+        "publishedAt": "2026-10-18T04:00:00.000Z",
+        "source": "뉴시스 경제",
+        "category": "realestate",
+        "preview": "[서울=뉴시스]허준희 인턴 기자 = 서울 주요 지역의 아파트 경매 낙찰가가 감정가를 밑도는 사례가 늘고 있는 가운데, 무리한 대출을 통한 주택 매수에 주의해야 한다는 전문가의 조언이 나왔다. 지난 17일 구독자 87…",
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 9,195만원",
+            "valueEn": "₩1,392M",
+            "note": "최근 1주 계약 1,167건 · 10/11 대비 -0.9%",
+            "noteEn": "1,167 deals in the last 1 weeks · -0.9% vs Oct 11"
+          }
+        ],
+        "titleEn": "Emotional price 5,000,000,000 apartment, 4,000,000,000 won auction\"… Experts see signs of abnormality in Seoul real estate"
       },
       {
         "title": "성북구 길음뉴타운경남아너스빌 114.63㎡ 11억 6천만원… 최근 3년 신고가 [MAI부동산]",
@@ -12647,7 +12691,7 @@
             "noteEn": "271 deals in the last 1 weeks · +1.0% vs Oct 11"
           }
         ],
-        "titleEn": "Sungbuk-gu Gilleum New Town Gyeongnam Honersville 114.63㎡ 1,160,000,000won... Recent 3-Year High Price [MAI Real Estate]"
+        "titleEn": "Sungbuk-gu Gilleum New Town Gyeongnam Honersville 114.63㎡ 1,160,000,000 won... Recent 3-Year High Price [MAI Real Estate]"
       },
       {
         "title": "관악구 신림동 동부 50.57㎡ 6억 9천만원… 최근 3년 신고가 [MAI부동산]",
@@ -12669,7 +12713,7 @@
             "noteEn": "187 deals in the last 1 weeks · +1.0% vs Oct 11"
           }
         ],
-        "titleEn": "Gwanak-gu Sinrim-dong Eastern 50.57㎡ 690,000,000won... Recent 3-Year New High [MAI Real Estate]"
+        "titleEn": "Gwanak-gu Sinrim-dong Eastern 50.57㎡ 690,000,000won... New High Price in Last 3 Years [MAI Real Estate]"
       },
       {
         "title": "구로구 구로현대 84.57㎡ 9억 2천만원… 최근 3년 신고가 [MAI부동산]",
@@ -12757,7 +12801,7 @@
             "noteEn": "184 deals in the last 1 weeks · +0.3% vs Oct 11"
           }
         ],
-        "titleEn": "Hongeun-dong, Seodaemun-gu e-ppihan-seosang Seodaemun 59.991㎡ for 1,295,000,000 won... new high price in 3 years [MAI Real Estate]"
+        "titleEn": "Seodaemun-gu Hong-eun-dong e-ppian-han-seosang Seodaemun 59.991㎡ 1,295,000,000won... Recent 3-Year High Price [MAI Real Estate]"
       },
       {
         "title": "노원구 상계동 한양 86.62㎡ 9억 2천만원 거래 [MAI부동산]",
@@ -12782,28 +12826,6 @@
         "titleEn": "Nowon-gu Sanggye-dong Hyundai 86.62㎡ 920,000,000won transaction [MAI Real Estate]"
       },
       {
-        "title": "\"서울역이 코앞이래\"…24억 새 아파트 등장한 '이 동네' [철길옆집]",
-        "link": "https://www.hankyung.com/article/2026101538486",
-        "publishedAt": "2026-10-18T03:00:04.000Z",
-        "source": "한국경제 부동산",
-        "category": "realestate",
-        "preview": null,
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "13억 9,195만원",
-            "valueEn": "₩1,392M",
-            "note": "최근 1주 계약 1,167건 · 10/11 대비 -0.9%",
-            "noteEn": "1,167 deals in the last 1 weeks · -0.9% vs Oct 11"
-          }
-        ],
-        "titleEn": "Seoul Station is just around the corner,\"... 2,400,000,000 new apartments emerge in 'this neighborhood' [Railway Side House]"
-      },
-      {
         "title": "삼성물산, 2조원 여의도 시범 재건축 수주… 2491가구로 탈바꿈",
         "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/18/ZGS35HYWLRFHRL7WQUBQZJU66I/",
         "publishedAt": "2026-10-18T02:07:25.000Z",
@@ -12823,7 +12845,7 @@
             "noteEn": "315 deals in the last 1 weeks · -0.1% vs Oct 11"
           }
         ],
-        "titleEn": "Samsung C&T wins 2,000,000,000,000 won Yeouido pilot reconstruction project, to transform into 2,491 units"
+        "titleEn": "Samsung C&T secures 2,000,000,000,000 won Yeouido pilot reconstruction project... to be transformed into 2,491 units"
       },
       {
         "title": "\"트리플 아닌 쿼드러플 상승\"…전세·월세·반전세 다 오른다",
@@ -12833,7 +12855,7 @@
         "category": "realestate",
         "preview": "[서울=뉴시스]김성은 인턴 기자 = 정부가 주택 공급 확대를 강조하고 있지만 규제와 사업 여건이 개선되지 않는 한 실질적인 공급 확대는 어렵다는 부동산 전문가의 지적이 나왔다. 특히 전세·월세뿐 아니라 반전세까지 가…",
         "dupes": [],
-        "titleEn": "Triple, not quadruple increase\"…rent, monthly rent, and reverse rent all rise"
+        "titleEn": "Triple, not quadruple increase\"...rent, monthly rent, and reverse rent all rise"
       },
       {
         "title": "오세훈 \"정부 여당, 부동산정책 실패 인정하고 방향 바로잡아야\"",
@@ -12885,7 +12907,7 @@
         "category": "rates",
         "preview": "(서울=연합뉴스) 이도흔 기자 = 신한은행은 중·저신용 고객의 금융비용 부담을 완화하고 민간 중금리대출 공급을 확대하기 위해 16일부터 중금리대...",
         "dupes": [],
-        "titleEn": "Shinhan Bank Lowers Interest Rate on Private Medium-Rate Loans for Medium-to-Low Creditworthiness Individuals by an Additional 0.3%p"
+        "titleEn": "Shinhan Bank Lowers Interest Rate on Private Medium-Rate Loans for Medium-to-Low Creditworthiness Customers by an Additional 0.3 Percentage Points"
       },
       {
         "title": "추억의 뺑뺑이 사라지고 워터파크…아파트 놀이터 40년 변천사[출동!인턴]",
@@ -12917,7 +12939,7 @@
         "category": "other",
         "preview": "[서울=뉴시스]이지우 인턴 기자 = 국내 주식시장이 호황을 이어가는 것과 달리 자영업자와 청년들은 경기 침체로 어려움을 겪는 가운데, 무리한 투자와 과도한 채무를 주의해야 한다는 전문가의 경고가 나왔다. 17일 구독…",
         "dupes": [],
-        "titleEn": "Stock Market Thrives But Commoners' Economy Slumps…Warning from Bankruptcy Specialist Lawyer"
+        "titleEn": "Stock Market Thrives but Ordinary People's Economy Suffers… Warning from Bankruptcy Specialist Lawyer"
       },
       {
         "title": "\"심상치 않은 부동산 시장\"…끝나지 않는 전월세난과 토허제로 읽는 시장의 향방",
@@ -12939,7 +12961,7 @@
             "noteEn": "1,114 deals in the last 1 weeks · +5.7% vs Oct 11"
           }
         ],
-        "titleEn": "Unusual Real Estate Market... Endless Rental and Lease Difficulties and Reading the Market's Outlook Through the Tophae System"
+        "titleEn": "Unusual Real Estate Market... Endless Rental and Deposit Problems and Reading the Market's Outlook Through the Topho System"
       },
       {
         "title": "전세금도 안 올렸는데…'너무한 거 아냐?' 집주인들 '멘붕' [김용우의 각개전투]",
@@ -12959,7 +12981,7 @@
         "category": "other",
         "preview": "(세종=연합뉴스) 오진송 기자 = 지난해 10·15 부동산 대책으로 토지거래허가구역(토허구역)으로 지정된 경기 12개 지역 가운데 11곳에서 규...",
         "dupes": [],
-        "titleEn": "[Expansion of Toguhu Area After 1 Year] 11 of 12 Areas in Gyeonggi Show Increased Housing Prices After Designation"
+        "titleEn": "[Expansion of Toguhu Area 1 Year] 11 out of 12 areas in Gyeonggi saw rising home prices after designation"
       },
       {
         "title": "'지난주 14.5% 폭락' 코스피, 회복까지 얼마나…과거 사례는",
@@ -12969,7 +12991,7 @@
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 코스피가 올해 들어 연속 하락으로 10% 넘게 떨어진 후에는 되돌림까지 평균 약 14거래일 걸린 것으로 나타났...",
         "dupes": [],
-        "titleEn": "KOSPI drops 14.5% last week; how long until recovery? Past examples"
+        "titleEn": "KOSPI Falls 14.5% Last Week, How Long Until Recovery... Past Examples"
       },
       {
         "title": "폭락장세 뒤 반등했지만 악재는 여전…이번주 코스피 향배는",
@@ -12979,7 +13001,7 @@
         "category": "stocks",
         "preview": "(서울=연합뉴스) 황철환 기자 = 지난 한 주간 한국 주식시장은 올해 7월 전 세계를 강타했던 글로벌 반도체 조정 당시의 악몽이 재연된 듯한 양...",
         "dupes": [],
-        "titleEn": "After a sharp decline, the market rebounded, but bad news remains... KOSPI's direction this week"
+        "titleEn": "After a sharp decline, the market rebounded, but bad news remains... Direction of KOSPI this week"
       },
       {
         "title": "이달 환율 2년1개월만에 최저…원/엔 19년만에 가장 낮아",
@@ -12990,16 +13012,6 @@
         "preview": "(서울=연합뉴스) 이도흔 기자 = 이달 원/달러 환율이 반도체 수출 호조에 따른 달러 공급 확대 등에 힘입어 2년 1개월 만에 최저 수준으로 내...",
         "dupes": [],
         "titleEn": "Exchange rate hits 2-year, 1-month low this month… won/yen reaches lowest in 19 years"
-      },
-      {
-        "title": "대출이자 집주인 7년간 66% 늘 때 전세 가구 144% 뛰어",
-        "link": "https://www.yna.co.kr/view/AKR20261017030100002",
-        "publishedAt": "2026-10-17T20:48:00.000Z",
-        "source": "연합뉴스 경제",
-        "category": "realestate",
-        "preview": "(세종=연합뉴스) 송정은 기자 = 올해 2분기 전세 가구의 월평균 이자 비용이 7년 새 144% 넘게 늘어 자가 가구의 증가율을 2배 넘게 웃돌...",
-        "dupes": [],
-        "titleEn": "Rental households surge 144% as landlords' loan interest rises 66% over 7 years"
       }
     ]
   }
