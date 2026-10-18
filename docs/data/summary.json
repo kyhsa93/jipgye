@@ -1,73 +1,68 @@
 {
-  "updatedAt": "2026-10-18T08:00:39.270Z",
+  "updatedAt": "2026-10-18T09:06:49.607Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 기타 경제 소식: 국토부는 서울 집값이 하향 안정 신호를 보이고 있다고 밝혔다. 파산 전문 변호사는 주식시장 호황과 서민경제 불황의 격차를 경고했다. 토허구역 확대 지정 1년 후 경기 12곳 중 11곳에서 집값 상승이 확대됐다. 입주물량 감소는 서울 집값에 변수로 작용할 수 있다는 분석이다. 토허구역 지정 전후 비교를 통해 집값 변화가 명확히 드러났다.\n- 부동산: 국토부는 강남 지역 집값이 하락하고 매물이 쌓이며 시장이 하향 안정 신호를 보이고 있다고 밝혔다. 강동권에서는 첫 전세 만기가 돌아오면서 전세대란이 우려되고 있다. 철도노선의 진척 상황이 부동산 시장에 중요한 영향을 미칠 것으로 보인다. 다주택자들은 현재 시점에서 매도 여부를 고민 중이며, 종부세 계산에 주목하고 있다. 대출이자율은 집주인에게 7년 만에 66% 증가했고, 전세 세입자는 144% 상승했다.\n- 금리·예금·투자상품: 신한은행은 중저신용자 대출 금리를 0.3%포인트 인하했다. 서울의 주택 가격은 88주 연속 상승세를 이어가고 있다. 관련 기사는 2027년부터 금리 효과가 본격적으로 나타날 것으로 전망했다. 금리 인하와 집값 상승은 별개의 경제 현상이다. 이 두 기사는 각각 다른 요인에 의해 발생했다.\n- 증시·환율: 이형일은 반도체 호황이 적어도 내년까지 이어질 것으로 전망했다. 그는 증시 변동성에도 불구하고 시장이 견조한 상태를 유지하고 있다고 밝혔다. 해당 전망은 최근 반도체 수요 증가와 공급 부족 지속을 바탕으로 한 것이라고 한다. 이형일은 관련 산업의 성장세가 지속될 것으로 보고 있다. 다만 구체적인 성장률이나 수치는 기사에서 언급되지 않았다.",
-    "en": "- Other Economic News: The Ministry of Land, Infrastructure and Transport stated that housing prices in Seoul are showing signs of downward stabilization. A bankruptcy specialist lawyer warned about the gap between the booming stock market and the struggling economy of ordinary citizens. One year after the expansion of the Toguhu area designation, housing prices have risen in 11 out of 12 areas in Gyeonggi. Analysis suggests that the decrease in new housing supply could act as a variable affecting Seoul's housing prices. Comparing before and after the designation of the Toguhu area clearly revealed changes in housing prices.\n- Real Estate: The Ministry of Land, Infrastructure and Transport stated that the housing market in the Gangnam area is showing signs of downward stabilization as home prices fall and inventory accumulates. In the Gangdong area, a lease expiration is approaching, raising concerns about a lease market disruption. The progress of railway lines is expected to have a significant impact on the real estate market. Multi-homeowners are currently considering whether to sell their properties and are paying attention to property tax calculations. Mortgage interest rates have increased by 66% for homeowners over seven years, and for lease tenants, they have risen by 144%.\n- Rates, Deposits & Investment Products: Shinhan Bank lowered the interest rate for medium- and low-credit borrowers by 0.3 percentage points. Housing prices in Seoul have continued to rise for 88 consecutive weeks. Related articles predict that the interest rate effects will begin to appear significantly from 2027. The interest rate cut and rising housing prices are separate economic phenomena. These two articles arose due to different factors.\n- Stocks & FX: Lee Hyung-il expects the semiconductor boom to continue at least until next year. He stated that the market has maintained a stable condition despite market volatility. This forecast is based on recent increases in semiconductor demand and the continued shortage of supply. Lee Hyung-il believes the growth trend in the related industry will continue. However, specific growth rates or figures are not mentioned in the article."
+    "ko": "- 부동산: 수도권 부동산 시장에서 빌라까지 전월세대란이 발생하며 매물이 36% 감소했다. 삼성물산은 여의도 시범사업에 참여해 2.2조 원 규모의 재건축 사업을 수주했다. 정부는 주택 공급과 시장 동향 지표가 개선되며 중장기 안정화를 전망하고 있다. 국토부는 강남 지역에서 집값이 하락하고 매물이 쌓이며 시장 하향 안정 신호를 보이고 있다고 밝혔다. 정부는 전세자금을 청년, 신혼부부, 출산가구별로 정책대출로 지원하는 방안을 추진하고 있다.\n- 기타 경제 소식: 신축 매입 시점에만 대출 지원이 이뤄지면 기존 빌라에도 풀어줘야 한다는 의견이 제기됐다. 국토부는 서울 집값이 하향 안정 신호를 보이고 있다고 밝혔다. 다만 입주 물량 감소는 가격 안정에 변수로 작용할 수 있다는 분석이다. 신축 매입 대출 지원 확대가 필요하다는 주장이 나왔다. 기존 빌라에 대한 대출 지원도 함께 검토해야 한다는 목소리가 커지고 있다.\n- 금리·예금·투자상품: 한국은행은 10월 기준금리를 동결하고 11월 인상이 유력하다고 전망했다. 고금리와 규제로 인해 주거 사다리가 끊기면서 내집 마련이 어려워지고 있다. 정책대출을 활용하면 고금리 상황에서도 주택 구매가 가능하다는 조언이 나왔다. 청년과 신혼부부를 대상으로 저금리 전세금 정책대출이 제공되고 있다. 고금리로 인해 아파트 시장도 얼어붙은 것으로 나타났다.\n- 증시·환율: 이형일은 반도체 호황이 적어도 내년까지 이어질 것으로 전망했다. 그는 증시 변동성에도 불구하고 시장이 견조한 상태를 유지하고 있다고 밝혔다. 해당 전망은 최근 반도체 수요 증가와 공급 부족 지속을 바탕으로 한 것이다. 이형일은 관련 산업의 성장세가 지속될 것으로 보고 있다. 그는 이러한 상황이 향후 경제 전반에 긍정적인 영향을 미칠 것으로 기대하고 있다.",
+    "en": "- Real Estate: 수도권 부동산 시장에서 빌라까지 전월세대란이 발생하며 매물이 36% 감소했다. 삼성물산은 여의도 시범사업에 참여해 2.2조 원 규모의 재건축 사업을 수주했다. 정부는 주택 공급과 시장 동향 지표가 개선되며 중장기 안정화를 전망하고 있다. 국토부는 강남 지역에서 집값이 하락하고 매물이 쌓이며 시장 하향 안정 신호를 보이고 있다고 밝혔다. 정부는 전세자금을 청년, 신혼부부, 출산가구별로 정책대출로 지원하는 방안을 추진하고 있다.\n- Other Economic News: Concerns were raised that if loan support is only provided at the time of purchasing new construction, it should also be extended to existing villas. The Ministry of Land, Infrastructure and Transport stated that housing prices in Seoul are showing signs of downward stabilization. However, analysts noted that a decrease in available housing units could act as a variable affecting price stability. There were calls for expanding loan support for new construction purchases. There is growing sentiment that loan support for existing villas should also be reviewed.\n- Rates, Deposits & Investment Products: The Bank of Korea kept the benchmark interest rate unchanged as of October and predicted that an increase is likely in November. Due to high interest rates and regulations, the housing ladder has been broken, making it difficult for people to buy homes. It was advised that using policy loans makes it possible to purchase homes even in the high interest rate environment. A low-interest deposit policy loan is being offered to young people and newlyweds. It has been found that the apartment market has also frozen due to high interest rates.\n- Stocks & FX: Lee Hyung-il expects the semiconductor boom to continue at least until next year. He stated that the market has maintained a stable condition despite stock market volatility. This forecast is based on recent increases in semiconductor demand and the continued shortage of supply. Lee Hyung-il expects the growth trend in the related industry to continue. He expects this situation to have a positive impact on the overall economy in the future."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "국토부는 서울 집값이 하향 안정 신호를 보이고 있다고 밝혔다. 파산 전문 변호사는 주식시장 호황과 서민경제 불황의 격차를 경고했다. 토허구역 확대 지정 1년 후 경기 12곳 중 11곳에서 집값 상승이 확대됐다. 입주물량 감소는 서울 집값에 변수로 작용할 수 있다는 분석이다. 토허구역 지정 전후 비교를 통해 집값 변화가 명확히 드러났다.",
-      "lineEn": "The Ministry of Land, Infrastructure and Transport stated that housing prices in Seoul are showing signs of downward stabilization. A bankruptcy specialist lawyer warned about the gap between the booming stock market and the struggling economy of ordinary citizens. One year after the expansion of the Toguhu area designation, housing prices have risen in 11 out of 12 areas in Gyeonggi. Analysis suggests that the decrease in new housing supply could act as a variable affecting Seoul's housing prices. Comparing before and after the designation of the Toguhu area clearly revealed changes in housing prices.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "국토부 “서울 집값 하향 안정 신호”… 입주물량 감소는 변수",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/18/7OK7F4SPBNDUPBCROUKOVLLCLU/",
-          "source": "조선비즈 부동산"
-        },
-        {
-          "title": "\"주식시장은 호황인데 서민경제는 불황\"…파산 전문 변호사의 경고",
-          "link": "https://www.newsis.com/view/NISX20261017_0003829898",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "[토허구역 확대 1년] 지정 전후 경기 12곳 중 11곳서 집값 상승 확대",
-          "link": "https://www.yna.co.kr/view/AKR20261017041100003",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
       "key": "realestate",
       "name": "부동산",
       "nameEn": "Real Estate",
-      "lineKo": "국토부는 강남 지역 집값이 하락하고 매물이 쌓이며 시장이 하향 안정 신호를 보이고 있다고 밝혔다. 강동권에서는 첫 전세 만기가 돌아오면서 전세대란이 우려되고 있다. 철도노선의 진척 상황이 부동산 시장에 중요한 영향을 미칠 것으로 보인다. 다주택자들은 현재 시점에서 매도 여부를 고민 중이며, 종부세 계산에 주목하고 있다. 대출이자율은 집주인에게 7년 만에 66% 증가했고, 전세 세입자는 144% 상승했다.",
-      "lineEn": "The Ministry of Land, Infrastructure and Transport stated that the housing market in the Gangnam area is showing signs of downward stabilization as home prices fall and inventory accumulates. In the Gangdong area, a lease expiration is approaching, raising concerns about a lease market disruption. The progress of railway lines is expected to have a significant impact on the real estate market. Multi-homeowners are currently considering whether to sell their properties and are paying attention to property tax calculations. Mortgage interest rates have increased by 66% for homeowners over seven years, and for lease tenants, they have risen by 144%.",
+      "lineKo": "수도권 부동산 시장에서 빌라까지 전월세대란이 발생하며 매물이 36% 감소했다. 삼성물산은 여의도 시범사업에 참여해 2.2조 원 규모의 재건축 사업을 수주했다. 정부는 주택 공급과 시장 동향 지표가 개선되며 중장기 안정화를 전망하고 있다. 국토부는 강남 지역에서 집값이 하락하고 매물이 쌓이며 시장 하향 안정 신호를 보이고 있다고 밝혔다. 정부는 전세자금을 청년, 신혼부부, 출산가구별로 정책대출로 지원하는 방안을 추진하고 있다.",
+      "lineEn": "수도권 부동산 시장에서 빌라까지 전월세대란이 발생하며 매물이 36% 감소했다. 삼성물산은 여의도 시범사업에 참여해 2.2조 원 규모의 재건축 사업을 수주했다. 정부는 주택 공급과 시장 동향 지표가 개선되며 중장기 안정화를 전망하고 있다. 국토부는 강남 지역에서 집값이 하락하고 매물이 쌓이며 시장 하향 안정 신호를 보이고 있다고 밝혔다. 정부는 전세자금을 청년, 신혼부부, 출산가구별로 정책대출로 지원하는 방안을 추진하고 있다.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
+        {
+          "title": "빌라까지 전월세대란…수도권 매물 36% 뚝",
+          "link": "https://www.mk.co.kr/news/realestate/12179067",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "여의도 시범에 래미안 깃발 … 삼성물산 2.2조 재건축 수주",
+          "link": "https://www.mk.co.kr/news/realestate/12179010",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "정부 \"주택 공급·시장동향 지표 개선…중장기 안정화 전망\"",
+          "link": "https://www.yna.co.kr/view/AKR20261018042600003",
+          "source": "연합뉴스 경제"
+        },
         {
           "title": "국토부 \"강남 집값 떨어지고 매물 쌓여…시장 하향 안정 신호\"",
           "link": "https://www.newsis.com/view/NISX20261018_0003830526",
           "source": "뉴시스 경제"
         },
         {
-          "title": "첫 전세 만기 닥친 '올파포'…강동권 전세대란 오나 [이송렬의 부동산한입]",
-          "link": "https://www.hankyung.com/article/2026101539076",
+          "title": "전세자금도 정책대출로…청년·신혼부부·출산가구별 지원",
+          "link": "https://www.hankyung.com/article/202610188721i",
           "source": "한국경제 부동산"
-        },
+        }
+      ]
+    },
+    {
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "신축 매입 시점에만 대출 지원이 이뤄지면 기존 빌라에도 풀어줘야 한다는 의견이 제기됐다. 국토부는 서울 집값이 하향 안정 신호를 보이고 있다고 밝혔다. 다만 입주 물량 감소는 가격 안정에 변수로 작용할 수 있다는 분석이다. 신축 매입 대출 지원 확대가 필요하다는 주장이 나왔다. 기존 빌라에 대한 대출 지원도 함께 검토해야 한다는 목소리가 커지고 있다.",
+      "lineEn": "Concerns were raised that if loan support is only provided at the time of purchasing new construction, it should also be extended to existing villas. The Ministry of Land, Infrastructure and Transport stated that housing prices in Seoul are showing signs of downward stabilization. However, analysts noted that a decrease in available housing units could act as a variable affecting price stability. There were calls for expanding loan support for new construction purchases. There is growing sentiment that loan support for existing villas should also be reviewed.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
         {
-          "title": "[부동산 손품노트] 철도노선 관건은 뚫리는 시점 매플이 교통망 핵심 정리했죠",
-          "link": "https://www.mk.co.kr/news/realestate/12178859",
+          "title": "\"신축 매입때만 대출 지원 역부족 기존 빌라도 풀어줘야 공급 가속\"",
+          "link": "https://www.mk.co.kr/news/realestate/12179057",
           "source": "매일경제 부동산"
         },
         {
-          "title": "고민 많은 다주택자 …\"팔려면 지금, 버티려면 종부세 계산을\"",
-          "link": "https://www.mk.co.kr/news/realestate/12178858",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "대출이자 집주인 7년 새 66% 늘 때 전세 세입자는 144% 뛰어",
-          "link": "https://www.mk.co.kr/news/realestate/12178825",
-          "source": "매일경제 부동산"
+          "title": "국토부 “서울 집값 하향 안정 신호”… 입주물량 감소는 변수",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/18/7OK7F4SPBNDUPBCROUKOVLLCLU/",
+          "source": "조선비즈 부동산"
         }
       ]
     },
@@ -75,21 +70,36 @@
       "key": "rates",
       "name": "금리·예금·투자상품",
       "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "신한은행은 중저신용자 대출 금리를 0.3%포인트 인하했다. 서울의 주택 가격은 88주 연속 상승세를 이어가고 있다. 관련 기사는 2027년부터 금리 효과가 본격적으로 나타날 것으로 전망했다. 금리 인하와 집값 상승은 별개의 경제 현상이다. 이 두 기사는 각각 다른 요인에 의해 발생했다.",
-      "lineEn": "Shinhan Bank lowered the interest rate for medium- and low-credit borrowers by 0.3 percentage points. Housing prices in Seoul have continued to rise for 88 consecutive weeks. Related articles predict that the interest rate effects will begin to appear significantly from 2027. The interest rate cut and rising housing prices are separate economic phenomena. These two articles arose due to different factors.",
+      "lineKo": "한국은행은 10월 기준금리를 동결하고 11월 인상이 유력하다고 전망했다. 고금리와 규제로 인해 주거 사다리가 끊기면서 내집 마련이 어려워지고 있다. 정책대출을 활용하면 고금리 상황에서도 주택 구매가 가능하다는 조언이 나왔다. 청년과 신혼부부를 대상으로 저금리 전세금 정책대출이 제공되고 있다. 고금리로 인해 아파트 시장도 얼어붙은 것으로 나타났다.",
+      "lineEn": "The Bank of Korea kept the benchmark interest rate unchanged as of October and predicted that an increase is likely in November. Due to high interest rates and regulations, the housing ladder has been broken, making it difficult for people to buy homes. It was advised that using policy loans makes it possible to purchase homes even in the high interest rate environment. A low-interest deposit policy loan is being offered to young people and newlyweds. It has been found that the apartment market has also frozen due to high interest rates.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "신한은행, 중저신용자 대출금리 0.3%P 인하",
-          "link": "https://www.hankyung.com/article/202610188571i",
+          "title": "빌라 1년이면 짓는데 … 고금리·규제에 끊긴 '주거 사다리'",
+          "link": "https://www.mk.co.kr/news/realestate/12179058",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "\"한은, 기준금리 10월 동결, 11월엔 인상 유력\"",
+          "link": "https://www.hankyung.com/article/2026101888781",
           "source": "한국경제 경제"
         },
         {
-          "title": "서울 집값 88주째 올랐는데…\"2027년부터 금리 효과 본격화\"",
-          "link": "https://www.newsis.com/view/NISX20261018_0003830404",
-          "source": "뉴시스 경제"
+          "title": "고금리에 망설이는 내집 마련…정책대출 활용하세요",
+          "link": "https://www.hankyung.com/article/2026101888091",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "저금리 전세금 정책대출…청년·신혼부부 주목",
+          "link": "https://www.hankyung.com/article/2026101888101",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "고금리에 얼어붙은 내 집 마련…정책대출로 살 수 있는 아파트는",
+          "link": "https://www.hankyung.com/article/202610188720i",
+          "source": "한국경제 부동산"
         }
       ]
     },
@@ -97,8 +107,8 @@
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
-      "lineKo": "이형일은 반도체 호황이 적어도 내년까지 이어질 것으로 전망했다. 그는 증시 변동성에도 불구하고 시장이 견조한 상태를 유지하고 있다고 밝혔다. 해당 전망은 최근 반도체 수요 증가와 공급 부족 지속을 바탕으로 한 것이라고 한다. 이형일은 관련 산업의 성장세가 지속될 것으로 보고 있다. 다만 구체적인 성장률이나 수치는 기사에서 언급되지 않았다.",
-      "lineEn": "Lee Hyung-il expects the semiconductor boom to continue at least until next year. He stated that the market has maintained a stable condition despite market volatility. This forecast is based on recent increases in semiconductor demand and the continued shortage of supply. Lee Hyung-il believes the growth trend in the related industry will continue. However, specific growth rates or figures are not mentioned in the article.",
+      "lineKo": "이형일은 반도체 호황이 적어도 내년까지 이어질 것으로 전망했다. 그는 증시 변동성에도 불구하고 시장이 견조한 상태를 유지하고 있다고 밝혔다. 해당 전망은 최근 반도체 수요 증가와 공급 부족 지속을 바탕으로 한 것이다. 이형일은 관련 산업의 성장세가 지속될 것으로 보고 있다. 그는 이러한 상황이 향후 경제 전반에 긍정적인 영향을 미칠 것으로 기대하고 있다.",
+      "lineEn": "Lee Hyung-il expects the semiconductor boom to continue at least until next year. He stated that the market has maintained a stable condition despite stock market volatility. This forecast is based on recent increases in semiconductor demand and the continued shortage of supply. Lee Hyung-il expects the growth trend in the related industry to continue. He expects this situation to have a positive impact on the overall economy in the future.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
