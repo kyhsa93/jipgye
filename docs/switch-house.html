@@ -264,6 +264,14 @@ function setText(id, text) {
   if (el) el.textContent = text;
 }
 
+// 다시 그려도 구운 caption은 남긴다 (#300).
+function setTable(id, html) {
+  const el = document.getElementById(id);
+  const cap = el.querySelector("caption");
+  el.innerHTML = html;
+  if (cap) el.prepend(cap);
+}
+
 const localeTag = () => (locale === "en" ? "en-US" : "ko-KR");
 
 const cache = { data: null };
@@ -382,8 +390,8 @@ function renderAll() {
   applyLocale();
   const data = cache.data;
   if (data?.lead?.[locale]) setText("lead", data.lead[locale]);
-  if (data?.table?.[locale]) document.getElementById("district-table").innerHTML = data.table[locale];
-  if (data?.regionTable?.[locale]) document.getElementById("region-table").innerHTML = data.regionTable[locale];
+  if (data?.table?.[locale]) setTable("district-table", data.table[locale]);
+  if (data?.regionTable?.[locale]) setTable("region-table", data.regionTable[locale]);
   fillSelects();
   renderCompare();
   renderDistrictLinks();

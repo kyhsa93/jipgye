@@ -122,5 +122,11 @@
 #   최상위 다섯(29장 수 · 한국어 29장 전수 · 예산대 18장 · 영어 대표 넷 · 영어→한국어 되돌림) + 하위 시험 47(29 + 18).
 #   고친 시험 둘(test/realestate-pages.test.mjs 의 "생성된 페이지는 … 자기 제목을 유지한다"·"자치구 페이지는 …")은 문서에 구운 <title>을
 #   넣어 돌리도록 바꿨을 뿐 시험을 더하거나 빼지 않았다. 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
-1655
-1655
+# 센 법: 2026-10-18, origin/main 58e7c528, Node v22.16.0, macOS 15.5 (#300).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1668 · pass 1668 · fail 0 · skipped 0
+#   같은 워크트리에서 test/table-caption-kept.test.mjs 를 잠시 빼고 같은 명령 → ℹ tests 1655 · pass 1655 · fail 0 · skipped 0(= origin/main 58e7c528 의 하한).
+#   차이 13 은 이 PR 이 더한 그 파일 하나에서 나온다(`node --test test/table-caption-kept.test.mjs` → ℹ tests 13):
+#   최상위 하나(구운 caption 14개 · 6장) + 장마다 둘(한국어 열기→영어→한국어 · 영어로 열기) = 1 + 12.
+#   고친 시험 파일은 0 이다(test/helpers/digest-page.mjs 는 loadPage 에 선택 인자 seed 를 더했을 뿐 시험이 아니다). 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
+1668
+1668

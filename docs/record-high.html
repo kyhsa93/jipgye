@@ -190,6 +190,14 @@ function setText(id, text) {
   if (el) el.textContent = text;
 }
 
+// 다시 그려도 구운 caption은 남긴다 (#300).
+function setTable(id, html) {
+  const el = document.getElementById(id);
+  const cap = el.querySelector("caption");
+  el.innerHTML = html;
+  if (cap) el.prepend(cap);
+}
+
 const localeTag = () => (locale === "en" ? "en-US" : "ko-KR");
 
 const cache = { data: null };
@@ -237,7 +245,7 @@ function renderAll() {
     if (block) setText(id, block[locale] ?? "");
   }
   const table = data?.tables?.robust?.[locale];
-  if (table) document.getElementById("robust-table").innerHTML = table;
+  if (table) setTable("robust-table", table);
   renderUpdated();
 }
 

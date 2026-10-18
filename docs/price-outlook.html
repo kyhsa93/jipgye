@@ -261,6 +261,14 @@ function setText(id, text) {
   if (el) el.textContent = text;
 }
 
+// 다시 그려도 구운 caption은 남긴다 (#300).
+function setTable(id, html) {
+  const el = document.getElementById(id);
+  const cap = el.querySelector("caption");
+  el.innerHTML = html;
+  if (cap) el.prepend(cap);
+}
+
 const localeTag = () => (locale === "en" ? "en-US" : "ko-KR");
 
 const cache = { data: null };
@@ -317,11 +325,11 @@ function renderAll() {
   document.getElementById("move-in-section").hidden = !mi?.lead;
   if (mi?.lead) {
     setText("move-in-lead", mi.lead[locale] ?? "");
-    document.getElementById("move-in-table").innerHTML = mi.table?.[locale] ?? "";
+    setTable("move-in-table", mi.table?.[locale] ?? "");
     setText("move-in-districts", mi.districts?.[locale] ?? "");
   }
   if (ind?.lead) setText("indicator-lead", ind.lead[locale] ?? "");
-  if (ind?.table?.[locale]) document.getElementById("indicator-table").innerHTML = ind.table[locale];
+  if (ind?.table?.[locale]) setTable("indicator-table", ind.table[locale]);
   for (const [id, key] of [
     ["lead", "lead"],
     ["long-lead", "longLead"],
@@ -337,7 +345,7 @@ function renderAll() {
     ["score-table", "score"],
   ]) {
     const html = data?.tables?.[key]?.[locale];
-    if (html) document.getElementById(id).innerHTML = html;
+    if (html) setTable(id, html);
   }
   renderUpdated();
 }
