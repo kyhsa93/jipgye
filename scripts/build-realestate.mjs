@@ -14,6 +14,7 @@ import {
   summarizeRent,
   summarizeSaleItems,
 } from "./realestate-metrics.mjs";
+import { MIN_SAMPLE, hasEnoughSample } from "./realestate-format.mjs";
 import { itemKey, readSlotFile } from "./realestate-raw.mjs";
 import { windowMonths } from "./realestate-slots.mjs";
 import {
@@ -249,10 +250,38 @@ async function writeRentFiles(now) {
   );
 }
 
-export function arrivalWindowReady(items, districtCount = DISTRICTS.length) {
+// 서울 전체 카드 세 장(매매·전세·월세, realestate-overall.mjs `overallCards`)이 이번 주 신고분만으로 값을 낼 수 있어야 하는 종류.
+const ARRIVAL_OVERALL_KINDS = [
+  ["sale", "매매"],
+  ["jeonse", "전세"],
+  ["wolse", "월세"],
+];
+
+/**
+ * 신고일 기준으로 넘어가도 되는 이유가 모자란 데를 돌려준다. 충분하면 null.
+ *
+ * 1) 신고가 든 자치구가 절반(ceil(25/2)=13)에 못 미치면 자치구 쪽이 아직 덜 찼다.
+ * 2) 자치구 수만으로는 모자라다. 서울 전체는 `overallItems`(= 이번 주 신고분)만으로 만들어 매매·전세·월세가 각각 MIN_SAMPLE
+ *    이상이어야 카드가 값을 낸다 - 아니면 해자 2(표본 부족 숨김)가 그 카드를 "-"로 바꾼다. 월요일 새벽에는 신고가 열여섯 구로
+ *    퍼져도 건수가 한 자리라(2026-10-19: 매매 17·전세 0·월세 4) 자치구 수만 보면 서울 전체가 통째로 "-"가 된다(#387).
+ *    값을 못 낼 기준으로 넘어가느니 낡아도 값이 있는 계약일 기준에 머문다. 이 문턱은 `computeOverall(districtEntries(...))`가 만드는
+ *    값 그대로 - 쓰는 쪽(`writeRepresentative`의 overall)과 같은 계산이라 어긋나지 않는다.
+ */
+export function arrivalShortfall(items, districtCount = DISTRICTS.length) {
   const covered = new Set([...items.keys()].map((key) => key.split(":")[1]));
-  return covered.size >= Math.ceil(districtCount / 2);
+  const need = Math.ceil(districtCount / 2);
+  if (covered.size < need) return { reason: "districts", covered: covered.size, need };
+
+  const overall = computeOverall(districtEntries(items));
+  const counts = Object.fromEntries(
+    ARRIVAL_OVERALL_KINDS.map(([kind]) => [kind, overall[kind]?.transactionCount ?? 0])
+  );
+  const short = ARRIVAL_OVERALL_KINDS.filter(([kind]) => !hasEnoughSample(overall[kind])).map(([, label]) => label);
+  return short.length ? { reason: "sample", short, counts } : null;
 }
+
+export const arrivalWindowReady = (items, districtCount = DISTRICTS.length) =>
+  arrivalShortfall(items, districtCount) === null;
 
 function narrowTo(items, from) {
   const out = new Map();
@@ -269,7 +298,8 @@ async function pickWindow(now) {
   const read = await readWindowItems(now, { ...arrival, from: districtFrom });
 
   const thisWeek = narrowTo(read.items, arrival.from);
-  if (arrivalWindowReady(thisWeek)) {
+  const shortfall = arrivalShortfall(thisWeek);
+  if (!shortfall) {
     return {
       window: { ...arrival, districtFrom, districtWeeks: REPRESENT_WEEKS },
       districtItems: read.items,
@@ -278,7 +308,11 @@ async function pickWindow(now) {
   }
 
   console.log(
-    `[build-realestate] ${arrival.from} 이후 신고가 자치구 절반에도 못 미칩니다, 계약일 기준으로 냅니다`
+    shortfall.reason === "districts"
+      ? `[build-realestate] ${arrival.from} 이후 신고가 자치구 절반에도 못 미칩니다, 계약일 기준으로 냅니다`
+      : `[build-realestate] ${arrival.from} 이후 신고는 자치구 절반을 넘었지만 서울 전체 표본이 모자랍니다` +
+          ` (매매 ${shortfall.counts.sale}건 · 전세 ${shortfall.counts.jeonse}건 · 월세 ${shortfall.counts.wolse}건,` +
+          ` 각 ${MIN_SAMPLE}건 이상 필요 - ${shortfall.short.join("·")} 부족), 계약일 기준으로 냅니다`
   );
 
   const contract = representWindow(now, "contract");

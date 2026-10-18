@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { errorXml, monthDays, rentItem, saleItem, startFakeMolit, successXml } from "./helpers/fake-molit.mjs";
+import { MIN_SAMPLE } from "../scripts/realestate-format.mjs";
 import { refreshMonths, windowMonths } from "../scripts/realestate-slots.mjs";
 
 const run = promisify(execFile);
@@ -367,15 +368,27 @@ test("기준이 바뀌는 날에는 지난 기준 값을 물려받지 않는다"
   );
 });
 
-test("신고가 자치구 전반에 들어오면 신고일 기준으로 넘어간다", async (t) => {
-  let rows = 2;
-  const server = await startFakeMolit((kind, { yearMonth }) =>
+/**
+ * 신고 건수를 단계마다 바꿀 수 있는 가짜 국토부. 단지 i번째가 그 달의 i번째 날 거래이고, 앞 단계 건수가 늘면 늘어난 만큼이 새 신고(= 이번 주 신고분)다.
+ * `wolse`가 true면 홀수 번째 임대 건은 월세다(아니면 전부 전세 - rentItem 기본값).
+ */
+async function startArrivalMolit(state) {
+  return startFakeMolit((kind, { yearMonth }) =>
     successXml(
       monthDays(yearMonth)
-        .slice(0, rows)
-        .map((on, i) => (kind === "sale" ? saleItem({ ...on, aptNm: `단지${i}` }) : rentItem({ ...on, aptNm: `단지${i}` })))
+        .slice(0, kind === "sale" ? state.sale : state.rent)
+        .map((on, i) =>
+          kind === "sale"
+            ? saleItem({ ...on, aptNm: `단지${i}` })
+            : rentItem({ ...on, aptNm: `단지${i}`, ...(state.wolse && i % 2 === 1 ? { monthlyRent: 50 } : {}) })
+        )
     )
   );
+}
+
+test("신고가 자치구 전반에 들어오면 신고일 기준으로 넘어간다", async (t) => {
+  const state = { sale: 2, rent: 2, wolse: true };
+  const server = await startArrivalMolit(state);
   t.after(() => server.close());
   const space = await workspace();
 
@@ -383,7 +396,8 @@ test("신고가 자치구 전반에 들어오면 신고일 기준으로 넘어�
   const before = await readJson(path.join(space.dataDir, "realestate.json"));
   assert.equal(before.window.basis, "contract", "첫 수집부터 신고일 기준을 썼다");
 
-  rows = 5;
+  state.sale = 5;
+  state.rent = 5;
   const { stdout } = await collect(server, { ...space, backfillLimit: 400 });
 
   const after = await readJson(path.join(space.dataDir, "realestate.json"));
@@ -392,4 +406,58 @@ test("신고가 자치구 전반에 들어오면 신고일 기준으로 넘어�
   assert.equal(after.window.districtWeeks, 4, "자치구는 네 주를 겹쳐야 한다");
   assert.ok(after.window.districtFrom < after.window.from, "자치구 창이 더 넓지 않다");
   assert.ok(after.overall.sale.transactionCount > 0);
+  // 서울 전체 카드 세 장이 다 값을 낼 만큼 찼을 때만 넘어간다(#387).
+  for (const kind of ["sale", "jeonse", "wolse"]) {
+    assert.ok(after.overall[kind]?.transactionCount >= MIN_SAMPLE, `${kind} 표본이 ${MIN_SAMPLE}건에 못 미친다`);
+  }
+});
+
+test("신고가 자치구 절반을 넘어도 서울 전체 전세가 표본에 못 미치면 계약일 기준에 머문다 (#387)", async (t) => {
+  // 2026-10-19 월요일 새벽의 모양: 매매 신고만 여러 구에 들어오고 전월세 신고는 아직 없다.
+  const state = { sale: 2, rent: 2, wolse: true };
+  const server = await startArrivalMolit(state);
+  t.after(() => server.close());
+  const space = await workspace();
+
+  await collect(server, { ...space, backfillLimit: 400 });
+
+  state.sale = 5;
+  const { stdout } = await collect(server, { ...space, backfillLimit: 400 });
+
+  assert.match(stdout, /서울 전체 표본이 모자랍니다/, stdout);
+  assert.match(stdout, /전세 0건/, stdout);
+  const payload = await readJson(path.join(space.dataDir, "realestate.json"));
+  assert.equal(payload.window.basis, "contract", "서울 전체가 '-'가 될 신고일 기준으로 넘어갔다");
+  assert.ok(payload.overall.jeonse.transactionCount >= MIN_SAMPLE, "계약일 기준 서울 전체 전세가 비었다");
+  assert.ok(payload.overall.wolse.transactionCount >= MIN_SAMPLE, "계약일 기준 서울 전체 월세가 비었다");
+});
+
+test("월세만 모자라도 계약일 기준에 머물고, 표본이 차면 신고일 기준으로 넘어간다 (#387)", async (t) => {
+  // 월세 카드("월세 보증금 / 월세")도 서울 전체 값이 있어야 낸다 - 매매·전세만 보면 이 날 월세 카드가 '-'가 된다.
+  const state = { sale: 2, rent: 2, wolse: false };
+  const server = await startArrivalMolit(state);
+  t.after(() => server.close());
+  const space = await workspace();
+
+  await collect(server, { ...space, backfillLimit: 400 });
+
+  state.sale = 5;
+  state.rent = 5;
+  const { stdout } = await collect(server, { ...space, backfillLimit: 400 });
+
+  assert.match(stdout, /서울 전체 표본이 모자랍니다/, stdout);
+  assert.match(stdout, /월세 부족/, stdout);
+  const held = await readJson(path.join(space.dataDir, "realestate.json"));
+  assert.equal(held.window.basis, "contract");
+
+  // 월세 신고가 들어와 서울 전체가 찬다 = 화요일 이후의 모양. 같은 날 다시 돌려도 기준이 신고일로 넘어가고 history 에 그 기준이 남는다.
+  state.wolse = true;
+  state.rent = 6;
+  const again = await collect(server, { ...space, backfillLimit: 400 });
+  const arrived = await readJson(path.join(space.dataDir, "realestate.json"));
+  assert.equal(arrived.window.basis, "arrival", again.stdout);
+  assert.ok(arrived.overall.wolse.transactionCount >= MIN_SAMPLE);
+
+  const history = await readJson(path.join(space.dataDir, "realestate-history.json"));
+  assert.equal(history.at(-1).window?.basis, "arrival", "history 의 오늘 항목이 새 기준을 남기지 않았다");
 });
