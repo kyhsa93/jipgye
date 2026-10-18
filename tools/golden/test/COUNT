@@ -11,5 +11,9 @@
 #   merge-base 831604af 에서 같은 명령 → ℹ tests 101 · pass 90 · skipped 11.
 #   차이 13은 #277이 더한 test/content-mode.test.mjs 하나다(내용 비교 모드의 변이표 — 통과 변이 2 ·
 #   불합격 변이 8 · id 변이 1 · 대조군 1 · 속성 목록 1). 건너뛰는 11은 그대로다.
-114
-103
+# 센 법: 2026-10-18, merge-base 7d77149d, Node v22.16.0, macOS 15.5 (#337).
+#   cd tools/golden && npm ci && npm test → ℹ tests 115 · pass 104 · fail 0 · skipped 11 (기준 114 · 103 · 11).
+#   차이 1 은 test/invariants.test.mjs 에 더한 "#337 검출: 색인 대상 장의 title 중복 …" 하나다(`node --test test/invariants.test.mjs` → 기준 44 · 후보 45).
+#   고친 시험 파일은 0 이고(mini() 에 title 인자를 더해 기존 한 시험의 둘째 장 title 만 달리했을 뿐 시험을 더하거나 빼지 않았다) 없어진 시험도 0 이다.
+115
+104

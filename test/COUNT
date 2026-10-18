@@ -90,5 +90,12 @@
 #   차이 5 는 이 PR 이 더한 그 파일 하나에서 나온다(`node --test test/news-title-escape.test.mjs` → ℹ tests 5).
 #   처음 4 에 index.html 오늘 뉴스 칸의 이스케이프 시험 하나(cto 보완 요청)가 더해졌다.
 #   고친 시험 파일은 0 이고 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
-1579
-1579
+# 센 법: 2026-10-18, merge-base 7d77149d, Node v22.16.0, macOS 15.5 (#337).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1575 · pass 1575 · fail 0 · skipped 0
+#   기준은 직전 하한 1572(merge-base 7d77149d 의 COUNT). 차이 3 은 이 PR 이 test/rate-pages.test.mjs 에 더한 시험 셋이다
+#   (`node --test test/rate-pages.test.mjs` → 기준 9 · 후보 12): 영어 title·description·h1 이 장마다 다르다 · 영어 shareTitle · 영어 문안이 JS 문자열을 깨지 않는다.
+#   고친 시험 파일은 0 이고(더한 것뿐; test/helpers/rates-page.mjs 는 setAttribute 가 쓴 속성을 남기게 했을 뿐 시험이 아니다) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
+# 센 법(따라잡기): 2026-10-18, origin/main 5950c1fb 로 따라잡은 뒤, Node v22.16.0, macOS 15.5 (#337).
+#   따라잡은 결과 npm test → ℹ tests 1582 · pass 1582 · fail 0 · skipped 0 (= main 1579 + 이 PR 3).
+1582
+1582

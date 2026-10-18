@@ -211,8 +211,9 @@
       shareTitle: "주택담보대출 금리 비교 - 은행별 최저금리",
     },
     en: {
-      title: "Deposit, Savings & Loan Rates",
-      description: "Daily-updated Korean bank and savings bank deposit, installment savings, mortgage and jeonse loan rates, from the FSS financial product disclosure data.",
+      title: "Mortgage Loan Rates - Lowest Rate by Korean Bank",
+      h1: "Mortgage Loan Rates",
+      description: "Compare Korean bank mortgage loan rates by lowest rate, with rate type, rate range and last month's average. Updated daily from FSS data.",
       navDigest: "Today",
       navNews: "News",
       navRealestate: "Apartment prices",
@@ -281,7 +282,7 @@
       footerPrivacyLink: "Privacy Policy",
       footerMethod: "How these numbers are made",
       footerAbout: "About",
-      shareTitle: "Deposit, Savings & Loan Rates",
+      shareTitle: "Mortgage Loan Rates: Lowest Rate by Bank in Korea",
     },
   };
 
@@ -939,7 +940,8 @@
     document.documentElement.lang = locale;
     document.title = t("title");
     document.querySelector('meta[name="description"]').setAttribute("content", t("description"));
-    document.getElementById("page-title").textContent = t("title");
+    // h1 은 title 과 키를 나눈다(#337): 영어 title 은 검색 결과용으로 길어 h1 에 그대로 넣으면 줄 수·CLS 가 는다. ko 는 h1 키가 없어 title 이다.
+    document.getElementById("page-title").textContent = t("h1") ?? t("title");
     document.getElementById("nav-digest").textContent = t("navDigest");
     document.getElementById("nav-news").textContent = t("navNews");
     document.getElementById("nav-realestate").textContent = t("navRealestate");

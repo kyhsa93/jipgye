@@ -22,7 +22,11 @@ function makeDom(html = "") {
         (this.listeners[type] ||= []).push(fn);
       },
       removeEventListener() {},
-      setAttribute() {},
+      // 화면 스크립트가 쓴 속성을 남긴다(영어 모드에서 meta[name=description]에 무엇이 들어가는지 읽는다, #337).
+      attrs: {},
+      setAttribute(name, value) {
+        this.attrs[name] = String(value);
+      },
       removeAttribute() {},
       getAttribute: () => null,
       appendChild(child) {

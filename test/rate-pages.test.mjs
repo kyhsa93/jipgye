@@ -162,3 +162,62 @@ test("추이 격자는 그릴 카드 수만큼 자리를 미리 깔고, 그 칸�
     assert.match(css, rule, `src/css/legacy.css: 자리를 잡는 min-height 규칙이 사라졌다`);
   }
 });
+
+// #337: 영어 화면에서 금리 네 장이 `<title>` 하나("Deposit, Savings & Loan Rates")를 공유했다. 한국어는 장마다 구운 <title>이
+// 고유한데 영어는 틀의 `en` 사전 한 값이라 검색 결과·탭·공유 카드·GA page_title 이 한 줄로 합쳐졌다.
+// 영어 title·shareTitle·description 의 출처는 RATE_PAGES(생성 스크립트)와 구워진 사전 두 곳이라 한쪽만 고치면 갈린다 -
+// 그래서 구운 장의 스크립트를 실제로 돌려 `document.title`·description meta·h1 에 들어가는 글자를 받아 RATE_PAGES 와 견준다.
+// 문안은 고정 문자열이고 날짜·금리 값에 기대지 않는다(#8).
+// 영어 h1 길이 상한 25자 = po 확정 h1 문안(이슈 #337 댓글 6244892406)의 최대("Installment Savings Rates"). 이 PR 이전 h1("Deposit, Savings & Loan Rates")은
+// 29자였고 main 에서 375폭 1줄이었다. 영어 title(46~66자)을 h1 에도 썼더니 375폭 1→2~3줄, 768폭 1→2줄이 되어 영어 전환 CLS 가 0.04→0.18 로 늘었다
+// (Chrome 측정, PR #358 판정). h1 은 title 과 키를 나눠 이 길이 안에 둔다.
+const EN_H1_MAX = 25;
+
+test("영어 화면의 title·description·h1 은 장마다 다르고, 구운 스크립트가 넣는 글자가 RATE_PAGES 와 같다 (#337)", async () => {
+  const titles = new Set();
+  const descriptions = new Set();
+  const h1s = new Set();
+  for (const page of RATE_PAGES) {
+    const en = await loadRatesPage({ file: `docs/${page.file}`, locale: "en" });
+    assert.equal(en.sandbox.document.title, page.titleEn, `${page.file}: 영어 document.title`);
+    assert.equal(en.byId.get('meta[name="description"]').attrs.content, page.descriptionEn, `${page.file}: 영어 description`);
+    assert.equal(en.byId.get("page-title").textContent, page.h1En, `${page.file}: 영어 h1`);
+    assert.ok(page.h1En.length <= EN_H1_MAX, `${page.file}: 영어 h1 이 ${EN_H1_MAX}자를 넘는다(${page.h1En.length}자): ${page.h1En}`);
+    assert.ok(page.h1En.length < page.titleEn.length, `${page.file}: 영어 h1 이 title 보다 짧지 않다 - 둘을 나눈 이유가 없어진다`);
+    h1s.add(page.h1En);
+    titles.add(en.sandbox.document.title);
+    descriptions.add(en.byId.get('meta[name="description"]').attrs.content);
+
+    // 한국어는 구운 <title>·description 과 스크립트가 넣는 글자가 이미 같다 - 영어만 갈리던 것이 이 이슈다.
+    const ko = await loadRatesPage({ file: `docs/${page.file}`, locale: "ko" });
+    assert.equal(ko.sandbox.document.title, page.title, `${page.file}: 한국어 document.title`);
+    assert.equal(ko.byId.get('meta[name="description"]').attrs.content, page.description, `${page.file}: 한국어 description`);
+    assert.equal(ko.byId.get("page-title").textContent, page.title, `${page.file}: 한국어 h1(영어 h1 키가 없어 title 로 돌아간다)`);
+  }
+  assert.equal(titles.size, RATE_PAGES.length, `영어 title 이 겹친다: ${[...titles]}`);
+  assert.equal(descriptions.size, RATE_PAGES.length, `영어 description 이 겹친다: ${[...descriptions]}`);
+  assert.equal(h1s.size, RATE_PAGES.length, `영어 h1 이 겹친다: ${[...h1s]}`);
+});
+
+test("영어 공유 카드 제목(shareTitle)은 장마다 다르고, 틀의 옛 한 줄이 4장에 남지 않는다 (#337)", async () => {
+  const shareTitles = new Set();
+  for (const page of RATE_PAGES) {
+    const html = await read(`docs/${page.file}`);
+    const shares = [...html.matchAll(/shareTitle: "([^"]*)"/g)].map((m) => m[1]);
+    assert.equal(shares.length, 2, `${page.file}: shareTitle 이 한·영 두 줄이 아니다`);
+    assert.equal(shares[0], page.title, `${page.file}: 한국어 shareTitle`);
+    assert.equal(shares[1], page.shareTitleEn, `${page.file}: 영어 shareTitle`);
+    shareTitles.add(shares[1]);
+    assert.ok(!html.includes("Deposit, Savings & Loan Rates"), `${page.file}: 영어 사전에 옛 공용 제목이 남았다`);
+    assert.ok(!html.includes("Daily-updated Korean bank and savings bank deposit"), `${page.file}: 영어 사전에 옛 공용 description 이 남았다`);
+  }
+  assert.equal(shareTitles.size, RATE_PAGES.length, `영어 공유 제목이 겹친다: ${[...shareTitles]}`);
+});
+
+test("영어 문안이 JS 문자열을 깨지 않는다 - 따옴표·역슬래시·줄바꿈·치환 기호가 없다 (#337)", () => {
+  for (const page of RATE_PAGES) {
+    for (const text of [page.titleEn, page.h1En, page.shareTitleEn, page.descriptionEn]) {
+      assert.match(text, /^[^"\\\n$]+$/, `${page.file}: 사전 문자열에 넣을 수 없는 글자가 있다: ${text}`);
+    }
+  }
+});

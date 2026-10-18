@@ -14,6 +14,13 @@ const BASE_TITLE = "예금·적금·대출 금리 비교";
 const BASE_DESCRIPTION =
   "금융감독원 금융상품통합비교공시 데이터를 매일 갱신해 은행·저축은행 정기예금과 적금 금리, 주택담보대출·전세자금대출 금리를 한 표에서 비교합니다.";
 
+// 틀 `en` 사전의 title·shareTitle(틀에서는 같은 글자)과 description. 한국어는 위 BASE_*가 장마다 갈리는데 영어는
+// 한 값으로 남아 네 장이 같은 영어 title·공유 카드·description을 냈다(#337). 한국어와 같은 축으로 가른다.
+// 문안은 po가 이슈 #337 댓글(2026-10-18)로 정했다. title은 검색 결과·탭, shareTitle은 공유 카드, h1은 화면 머리(짧아야 영어 전환 때 줄 수가 안 는다)라 셋을 따로 둔다.
+const BASE_TITLE_EN = "Deposit, Savings & Loan Rates";
+const BASE_DESCRIPTION_EN =
+  "Daily-updated Korean bank and savings bank deposit, installment savings, mortgage and jeonse loan rates, from the FSS financial product disclosure data.";
+
 export const RATE_PAGES = [
   {
     category: "deposit",
@@ -21,6 +28,11 @@ export const RATE_PAGES = [
     title: "정기예금 금리 비교 - 은행·저축은행 12개월",
     description:
       "은행·저축은행 정기예금 금리를 12개월 기준 최고금리 순으로 비교합니다. 금융감독원 금융상품통합비교공시 데이터를 매일 갱신합니다.",
+    titleEn: "Term Deposit Rates - Korean Banks & Savings Banks, 12-Month",
+    h1En: "Term Deposit Rates",
+    shareTitleEn: "Term Deposit Rates: Best 12-Month Rates in Korea",
+    descriptionEn:
+      "Compare Korean bank and savings bank term deposit rates by highest 12-month rate. Updated daily from FSS financial product disclosure data.",
   },
   {
     category: "saving",
@@ -28,6 +40,11 @@ export const RATE_PAGES = [
     title: "적금 금리 비교 - 은행·저축은행 12개월",
     description:
       "은행·저축은행 적금 금리를 12개월 기준 최고금리 순으로 비교합니다. 금융감독원 금융상품통합비교공시 데이터를 매일 갱신합니다.",
+    titleEn: "Installment Savings Rates - Korean Banks & Savings Banks, 12-Month",
+    h1En: "Installment Savings Rates",
+    shareTitleEn: "Installment Savings Rates: Best 12-Month Rates in Korea",
+    descriptionEn:
+      "Compare Korean bank and savings bank installment savings rates by highest 12-month rate. Updated daily from FSS financial product disclosure data.",
   },
   {
     category: "mortgage",
@@ -35,6 +52,11 @@ export const RATE_PAGES = [
     title: "주택담보대출 금리 비교 - 은행별 최저금리",
     description:
       "은행 주택담보대출 금리를 최저금리 순으로 비교합니다. 금리 유형과 금리 범위, 지난달 평균금리를 함께 보여주며 매일 갱신합니다.",
+    titleEn: "Mortgage Loan Rates - Lowest Rate by Korean Bank",
+    h1En: "Mortgage Loan Rates",
+    shareTitleEn: "Mortgage Loan Rates: Lowest Rate by Bank in Korea",
+    descriptionEn:
+      "Compare Korean bank mortgage loan rates by lowest rate, with rate type, rate range and last month's average. Updated daily from FSS data.",
   },
   {
     category: "rentLoan",
@@ -42,6 +64,11 @@ export const RATE_PAGES = [
     title: "전세자금대출 금리 비교 - 은행별 최저금리",
     description:
       "은행 전세자금대출 금리를 최저금리 순으로 비교합니다. 금리 유형과 금리 범위, 지난달 평균금리를 함께 보여주며 매일 갱신합니다.",
+    titleEn: "Jeonse Loan Rates - Lowest Rate by Korean Bank",
+    h1En: "Jeonse Loan Rates",
+    shareTitleEn: "Jeonse Loan Rates: Lowest Rate by Bank in Korea",
+    descriptionEn:
+      "Compare Korean bank jeonse loan rates by lowest rate, with rate type, rate range and last month's average. Updated daily from FSS data.",
   },
 ];
 
@@ -55,6 +82,12 @@ export function buildRatePage(baseHtml, page, rates) {
 
   html = html.replaceAll(BASE_TITLE, page.title);
   html = html.replaceAll(BASE_DESCRIPTION, page.description);
+  // 영어 사전의 title·shareTitle·description. 키까지 맞춰 한 번씩만 바꾼다 - 틀에서 둘이 같은 글자라 글자만 보고 바꾸면
+  // 둘을 갈라 놓을 수 없다. 함수로 넘겨 문안의 `$`가 치환 패턴으로 읽히지 않게 한다.
+  html = replaceOnce(html, `shareTitle: "${BASE_TITLE_EN}",`, () => `shareTitle: ${JSON.stringify(page.shareTitleEn)},`, "영어 공유 제목 사전");
+  html = replaceOnce(html, `h1: "${BASE_TITLE_EN}",`, () => `h1: ${JSON.stringify(page.h1En)},`, "영어 h1 사전");
+  html = replaceOnce(html, `title: "${BASE_TITLE_EN}",`, () => `title: ${JSON.stringify(page.titleEn)},`, "영어 제목 사전");
+  html = replaceOnce(html, `description: "${BASE_DESCRIPTION_EN}",`, () => `description: ${JSON.stringify(page.descriptionEn)},`, "영어 설명 사전");
 
   html = html.replaceAll(`${BASE_URL}rates.html`, `${BASE_URL}${page.file}`);
 
