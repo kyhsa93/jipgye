@@ -197,5 +197,13 @@
 #   test/realestate-collect.test.mjs 2("… 서울 전체 전세가 표본에 못 미치면 계약일 기준에 머문다" · "월세만 모자라도 … 표본이 차면 신고일 기준으로 넘어간다").
 #   "신고가 자치구 전반에 들어오면 신고일 기준으로 넘어간다" 는 이름 그대로 고쳤을 뿐(월세 신고를 섞고 서울 전체 표본 단언을 더했다) 개수를 안 바꾼다.
 #   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 5. 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
-1710
-1710
+# 센 법: 2026-10-19, merge-base 32d848d5(= origin/main), Node v22.16.0, macOS 15.5 (#281 PR 3).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1714 · pass 1714 · fail 0 · skipped 0
+#   merge-base 32d848d5 를 따로 풀어 같은 명령 → ℹ tests 1710 · pass 1710 · fail 0 · skipped 0(= 직전 하한).
+#   차이 4 는 이 PR 이 더한 test/renewal-vs-new-shell.test.mjs 하나에서 나온다(`node --test test/renewal-vs-new-shell.test.mjs` → ℹ tests 4):
+#   재계약 장 껍데기(머리·1층 내비·2층 내비·본문 구획 넷)의 유틸리티·훅 class · 첫 구획 위 안내 aside 에 유틸리티 없음 · 이 장의 <code> 는 있으면 전부 글자 크기 유틸리티를 단다 ·
+#   굽는 조각 여섯(<!--prerender:renewal…-->)과 인라인 스크립트에 유틸리티 없음 · 이 장이 색인 대상으로 남는다(캐노니컬·robots 메타 없음·h1 하나·제목 단계).
+#   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 4.
+#   고친 시험은 0 이고(더한 것뿐) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
+1714
+1714
