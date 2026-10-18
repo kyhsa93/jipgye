@@ -86,11 +86,13 @@ test("시장지표는 값이 있는 항목만 줄을 만든다", () => {
   assert.ok(!html.includes("환율"), "값이 없는 환율까지 줄을 만들었다");
 });
 
+// 마크업은 스크립트가 그리는 모양(분류 라벨 + 줄 div)이다 (#352).
 test("요약은 카테고리별 한국어 문장을 싣는다", () => {
   assert.equal(summaryHtml({ categories: [] }), null);
   const html = summaryHtml({ categories: [{ name: "부동산", lineKo: "서울 주택난" }, { name: "증시" }] });
-  assert.ok(html.includes("<strong>부동산</strong>") && html.includes("서울 주택난"));
-  assert.ok(!html.includes("증시"), "문장이 없는 카테고리까지 실었다");
+  assert.ok(html.includes('<div class="summary-category-label">부동산</div><div class="summary-category-line">서울 주택난</div>'));
+  // 문장이 없는 분류도 스크립트는 라벨과 빈 줄로 그린다 - 구운 쪽이 걸러 내면 스크립트가 다시 그릴 때 상자 높이가 달라진다.
+  assert.ok(html.includes('<div class="summary-category-label">증시</div><div class="summary-category-line"></div>'));
 });
 
 test("배포된 index.html에 자리표시 주석 네 쌍이 남아 있다", async () => {

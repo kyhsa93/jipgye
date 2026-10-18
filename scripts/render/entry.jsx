@@ -19,6 +19,7 @@ import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-link
 import { cancelDistricts, cancelMonths, conversionTable, floorDistricts, renewalDistricts, renewalWolseDistricts } from "../district-tables.mjs";
 import { indexNewsItems } from "../news-items.mjs";
 import { FALLBACK_NOTE_KO, hasFallback } from "../summary-note.mjs";
+import { SUMMARY_CATEGORIES_LABEL_KO, SUMMARY_HIGHLIGHTS_LABEL_KO, summaryMetaKo } from "../summary-box.mjs";
 import { metricCell, topDistricts } from "../realestate-rows.mjs";
 import { overallCards } from "../realestate-overall.mjs";
 import { headLabels, realestateTable } from "../realestate-table.mjs";
@@ -96,24 +97,39 @@ function ratesRows(rates, { category = "deposit", limit = RATES_ROWS } = {}) {
 
 // ---- 문장·목록 조각 (#241 PR 1) ----
 
-// 첫 화면 AI 요약: 하이라이트 → 분야 줄. 글이 빈 항목은 거른다(legacy와 같은 truthy 검사).
+// 첫 화면 AI 요약 상자: legacy summaryHtmlLegacy 와 같은 마크업·구조·글(index.html renderSummary 가 그리는 모양, #352).
+// 하이라이트 구획(있을 때) → 분류 라벨 + 줄 div → 검증 폴백 안내(#350) → `.summary-meta`. 분류가 없으면 legacy 처럼 null.
 function summary(data) {
-  const highlights = (data?.highlights ?? []).filter((h) => h.textKo);
-  const categories = (data?.categories ?? []).filter((c) => c.lineKo);
-  if (!highlights.length && !categories.length) return null;
+  const categories = Array.isArray(data?.categories) ? data.categories : [];
+  if (!categories.length) return null;
+  const highlights = Array.isArray(data?.highlights) ? data.highlights : [];
   return (
     <>
-      {highlights.map((h, i) => (
-        <p key={`h${i}`}>
-          <strong>{str(h.title)}</strong> {str(h.textKo)}
-        </p>
-      ))}
+      {highlights.length ? (
+        <>
+          <div className="summary-highlights">
+            <div className="summary-section-label">{SUMMARY_HIGHLIGHTS_LABEL_KO}</div>
+            {highlights.map((h, i) => (
+              <div className="summary-highlight" key={`h${i}`}>
+                <a href={str(h.link)} target="_blank" rel="noopener">
+                  {str(h.title)}
+                </a>
+                <span className="summary-link-source">{` · ${str(h.source)}`}</span>
+                <div className="summary-highlight-text">{str(h.textKo)}</div>
+              </div>
+            ))}
+          </div>
+          <div className="summary-section-label">{SUMMARY_CATEGORIES_LABEL_KO}</div>
+        </>
+      ) : null}
       {categories.map((c, i) => (
-        <p key={`c${i}`}>
-          <strong>{str(c.name)}</strong> {str(c.lineKo)}
-        </p>
+        <div className="summary-category" key={`c${i}`}>
+          <div className="summary-category-label">{str(c.name)}</div>
+          <div className="summary-category-line">{str(c.lineKo)}</div>
+        </div>
       ))}
-      {hasFallback(data?.categories) ? <div className="summary-fallback-note">{FALLBACK_NOTE_KO}</div> : null}
+      {hasFallback(categories) ? <div className="summary-fallback-note">{FALLBACK_NOTE_KO}</div> : null}
+      <span className="summary-meta">{summaryMetaKo(data)}</span>
     </>
   );
 }

@@ -101,7 +101,7 @@ test("래퍼: 이식된 조각만 React로 그리고 나머지는 legacy에 맡�
   const rates = fragment("ratesHtml", (r) => (calls.push("legacy-rates"), `legacy:${r}`)); // 이식 목록에 없다
   assert.equal(rates("x"), "legacy:x");
   assert.deepEqual(calls, ["legacy-rates"]);
-  assert.equal(summary({ highlights: [{ title: "a", textKo: "b" }] }), "<p><strong>a</strong> b</p>");
+  assert.ok(summary({ categories: [{ name: "a", lineKo: "b" }] }).includes('<div class="summary-category-label">a</div>'));
   assert.deepEqual(calls, ["legacy-rates"], "이식된 조각을 그리면서 legacy를 부르면 안 된다");
   assert.equal(summary.name, "summaryHtml");
   assert.equal(typeof summary.legacy, "function");
@@ -122,13 +122,15 @@ test("parity 골격: 같은 입력에서 legacy와 React 쌍둥이의 출력이 
     null,
     {},
     { highlights: [], categories: [] },
-    { highlights: [{ title: "제목", textKo: "본문" }] },
+    // 분류가 없으면(하이라이트만 있어도) 양쪽 다 null이다.
+    { highlights: [{ title: "제목", link: "u", source: "S", textKo: "본문" }] },
     { categories: [{ name: "분야", lineKo: "한 줄" }] },
-    { highlights: [{ title: "a", textKo: "b" }], categories: [{ name: "c", lineKo: "d" }] },
+    { highlights: [{ title: "a", link: "u", source: "S", textKo: "b" }], categories: [{ name: "c", lineKo: "d" }] },
+    { model: "m", updatedAt: "2026-10-18T03:05:38.770Z", categories: [{ name: "c", lineKo: "d", fallbackReason: "x" }] },
     // 특수문자: React가 `'`만 다르게(&#x27;) 내므로 래퍼의 치환 한 줄이 맞춰야 한다. & < > "는 양쪽이 같다.
-    { highlights: [{ title: `it's <b> & "q"`, textKo: "don't & <i>" }], categories: [{ name: `a'b`, lineKo: `c'd` }] },
-    // textKo가 비면 legacy는 그 항목을 거른다.
-    { highlights: [{ title: "빠짐", textKo: "" }, { title: "남음", textKo: "x" }] },
+    { highlights: [{ title: `it's <b> & "q"`, link: "https://e.com/?a=1&b=2", source: `s'<`, textKo: "don't & <i>" }], categories: [{ name: `a'b`, lineKo: `c'd` }] },
+    // 글이 비어도 legacy는 스크립트처럼 그린다(거르지 않는다).
+    { highlights: [{ title: "빈 글", link: "u", source: "S", textKo: "" }, { title: "남음", link: "u", source: "S", textKo: "x" }], categories: [{ name: "n", lineKo: "" }] },
   ];
   for (const input of inputs) {
     sameHtml(react(input), prerender.summaryHtml.legacy(input), JSON.stringify(input));

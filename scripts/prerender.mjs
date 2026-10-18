@@ -6,6 +6,7 @@ import { createWriteSet } from "./render-writes.mjs";
 import { INDEX_NEWS, indexNewsItems } from "./news-items.mjs";
 import { escapeHtml } from "./html-escape.mjs";
 import { FALLBACK_NOTE_KO, hasFallback } from "./summary-note.mjs";
+import { SUMMARY_CATEGORIES_LABEL_KO, SUMMARY_HIGHLIGHTS_LABEL_KO, summaryMetaKo } from "./summary-box.mjs";
 import { linksBlockHtml, slugLinksHtml } from "./district-links.mjs";
 import {
   CONVERSION_BAND,
@@ -52,17 +53,47 @@ export { MIN_SAMPLE };
 // escapeHtml과 linksBlockHtml은 순수 모듈로 옮겼다(JSX 쪽 조각과 같이 쓴다, #241 PR 2). 다른 모듈이 여기서 import하던 이름은 그대로 둔다.
 export { escapeHtml };
 
+// 첫 화면 AI 요약 상자. index.html renderSummary 가 JSON 을 받아 그리는 것과 같은 마크업·구조·글이다(#352): 하이라이트 구획(있을 때) →
+// 분류 라벨 + 줄 div → 검증 폴백 안내(#350) → `.summary-meta`. 예전엔 `<p><strong>분류</strong> 줄</p>` 목록을 구워서, 요약 JSON 이 오는 순간
+// 스크립트가 상자를 다시 그려 +40.4px 자랐다. 스크립트가 거르지 않는 것은 여기서도 거르지 않는다(항목마다 글이 있는지 보지 않는다).
+// 스크립트가 분류 없이 그리는 길(요약 글 한 덩이, plainSummaryHtml)은 굽지 않는다 - 그때는 null 이라 구운 자리를 건드리지 않는다.
 function summaryHtmlLegacy(summary) {
-  const highlights = (summary?.highlights ?? []).filter((h) => h.textKo);
-  const categories = (summary?.categories ?? []).filter((c) => c.lineKo);
-  if (!highlights.length && !categories.length) return null;
+  const categories = Array.isArray(summary?.categories) ? summary.categories : [];
+  if (!categories.length) return null;
+  const highlights = Array.isArray(summary?.highlights) ? summary.highlights : [];
 
-  return [
-    ...highlights.map((h) => `<p><strong>${escapeHtml(h.title)}</strong> ${escapeHtml(h.textKo)}</p>`),
-    ...categories.map((c) => `<p><strong>${escapeHtml(c.name)}</strong> ${escapeHtml(c.lineKo)}</p>`),
-    // 검증 폴백이 있는 날의 안내 한 줄. index.html renderSummary 와 같은 마크업·같은 자리(분류 줄 뒤)다(#350).
-    ...(hasFallback(summary?.categories) ? [`<div class="summary-fallback-note">${escapeHtml(FALLBACK_NOTE_KO)}</div>`] : []),
-  ].join("");
+  const highlightsHtml = highlights.length
+    ? `<div class="summary-highlights">` +
+      `<div class="summary-section-label">${SUMMARY_HIGHLIGHTS_LABEL_KO}</div>` +
+      highlights
+        .map(
+          (h) =>
+            `<div class="summary-highlight">` +
+            `<a href="${escapeHtml(h.link)}" target="_blank" rel="noopener">${escapeHtml(h.title)}</a>` +
+            `<span class="summary-link-source"> · ${escapeHtml(h.source)}</span>` +
+            `<div class="summary-highlight-text">${escapeHtml(h.textKo)}</div>` +
+            `</div>`
+        )
+        .join("") +
+      `</div>` +
+      `<div class="summary-section-label">${SUMMARY_CATEGORIES_LABEL_KO}</div>`
+    : "";
+
+  return (
+    highlightsHtml +
+    categories
+      .map(
+        (c) =>
+          `<div class="summary-category">` +
+          `<div class="summary-category-label">${escapeHtml(c.name)}</div>` +
+          `<div class="summary-category-line">${escapeHtml(c.lineKo)}</div>` +
+          `</div>`
+      )
+      .join("") +
+    // 검증 폴백이 있는 날의 안내 한 줄. renderSummary 와 같은 마크업·같은 자리(분류 줄 뒤)다(#350).
+    (hasFallback(categories) ? `<div class="summary-fallback-note">${escapeHtml(FALLBACK_NOTE_KO)}</div>` : "") +
+    `<span class="summary-meta">${escapeHtml(summaryMetaKo(summary))}</span>`
+  );
 }
 export const summaryHtml = fragment("summaryHtml", summaryHtmlLegacy);
 
