@@ -1,21 +1,132 @@
 {
-  "updatedAt": "2026-10-19T08:49:32.708Z",
+  "updatedAt": "2026-10-19T10:58:49.087Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 기타 경제 소식: 대통령은 집값을 잡기 위해 세금을 올렸다는 주장은 사실이 아니며 2028년까지 공급을 정상화하겠다고 밝혔고, 오세훈은 서울 집값이 연말이나 내년 초까지 우상향할 가능성이 높다고 전망했으며, 토허제 해제에 대한 논란이 일고 있으며, 중국 경제에 이상 신호가 나타나고 있다.\n- 증시·환율: 일본 증시는 AI 투자에 대한 불안감으로 인해 혼조세를 보이며 닛케이 지수가 0.62% 하락했다. 중국 증시는 상하이지수가 0.39% 상승하며 혼조 마감했다. 원/달러 환율은 2년 만에 최저 수준으로 떨어졌고, 위안화 환율도 1년 만에 최저를 기록했다. 코스피는 1.8% 상승하며 5,768에 마감해 이틀 연속 상승세를 이어갔다. 코스피는 저가 매수에 힘입어 반등했으나 반도체주에 대한 투자심리는 여전히 신중한 것으로 나타났다.\n- 부동산: 중국 9월 신축주택 가격은 0.14% 하락하며 중소도시 침체가 지속되고 있다. 한국주택협회와 대한건축학회는 주택산업 발전을 위한 협력 강화를 발표했다. 서울 주택정책은 20년간 성과와 문제점이 엇갈린 것으로 나타났다. 부동산원은 2026년 공공건축물 그린리모델링 의무화 기술지원 사업 설명회를 진행한다. 주택협회와 건축학회는 주택건설사업 발전을 위한 업무협약을 체결했다.\n- 금리·예금·투자상품: 국고채 금리가 금통위 앞두고 일제히 상승했고, 국채이자 내년 43조 육박할 것으로 예상되며 재정당국은 고금리에 발행 축소를 고심하고 있다.",
-    "en": "- Other Economic News: The claim that the president raised taxes to control housing prices is false, and the president stated that supply will be normalized by 2028. Oh Sehun predicted that Seoul housing prices are likely to rise again by year-end or early next year, and there is controversy over the lifting of the housing purchase restrictions. Unusual signals are emerging in the Chinese economy.\n- Stocks & FX: Japan's stock market showed a mixed performance, with the Nikkei index falling 0.62% due to concerns over AI investments. China's stock market closed mixed, with the Shanghai index rising 0.39%. The won/dollar exchange rate fell to its lowest level in two years, and the yuan also hit its lowest level in a year. The KOSPI closed at 5,768, rising 1.8%, continuing its two-day upward trend. The KOSPI rebounded due to low-price buying, but investor sentiment toward semiconductor stocks remained cautious.\n- Real Estate: China's new home prices fell 0.14% in September, indicating continued stagnation in medium and small cities. The Korea Housing Association and the Korean Institute of Architects announced a strengthening of cooperation for the development of the housing industry. Seoul's housing policies have shown mixed results and problems over the past 20 years. The Real Estate Institute will hold a seminar explaining the mandatory technical support program for green remodeling of public buildings by 2026. The Housing Association and the Institute of Architects signed a memorandum of cooperation to promote the development of housing construction projects.\n- Rates, Deposits & Investment Products: Korea's government bond rates rose uniformly ahead of the MPC meeting, and it is expected that government bond interest payments will approach 43,000,000,000,000 next year, prompting the fiscal authorities to consider reducing issuance amid high interest rates."
+    "ko": "- 부동산: 중국 3분기 경제 성장률은 4.5%를 기록하며 수출 호조를 보였으나, 소비와 부동산 시장은 여전히 침체 상태를 유지하고 있다. 중국 9월 신축주택 가격은 0.14% 하락하며 대도시는 가격 안정을 유지했으나 중소도시에서는 침체가 지속되고 있다. 한국주택협회와 대한건축학회는 주택산업 발전을 위한 협력 강화를 발표했다. 전 세계 식량 가격은 2027년까지 고공행진을 이어갈 전망이다. 고급 아파트에 대한 새로운 기준으로 '하이필로티'가 제시되었다.\n- 금리·예금·투자상품: 금리·예금·투자상품: 中, 대출금리 결정체계 대수술…기업이 기준금리 직접 고른다 [차이나 워치], 시중금리 오르는데 저축銀 예금금리는 제자리, 치솟는 강북 이주비 금리…'닥공' 가로막나 +2\n- 증시·환율: 대만 증시는 0.61% 하락하며 마감했고, 일본 증시는 AI 투자 불안으로 인해 혼조세를 보이며 닛케이가 0.62% 하락했으며, 중국 증시는 혼조 마감했으나 상하이 지수가 0.39% 상승했고, 원/달러 환율은 2년 만에 최저를 기록했으며, 코스피는 1.8% 상승하며 5,768에 마감했다.\n- 기타 경제 소식: 대통령은 집값을 잡기 위해 세금을 올렸다는 주장에 대해 사실이 아니라고 밝혔다. 오세훈은 토허제 해제가 불가피하다는 주장과 집값 상승에 대한 우려를 동시에 제기했다. 그는 서울 집값이 내년 초까지 우상향할 가능성이 있다고 전망했다. 이에 따라 실거주 정책의 전환을 촉구하는 목소리가 커지고 있다. 대통령과 오세훈은 집값 관련 정책 방향에 대해 의견 충돌을 보이고 있다.",
+    "en": "- Real Estate: China's third quarter economic growth rate reached 4.5%, showing strong exports, but consumption and the real estate market remain in a state of stagnation. China's new home prices in September fell by 0.14%, with major cities maintaining price stability, while smaller and medium-sized cities continue to experience stagnation. The Korea Housing Association and the Korean Institute of Architects announced a strengthening of cooperation for the development of the housing industry. Global food prices are expected to continue rising until 2027. A new standard called \"high podium\" has been proposed for high-end apartments.\n- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: 中, 대출금리 결정체계 대수술…기업이 기준금리 직접 고른다 [차이나 워치], 시중금리 오르는데 저축銀 예금금리는 제자리, 치솟는 강북 이주비 금리…'닥공' 가로막나 +2\n- Stocks & FX: Taiwan's stock market closed down 0.61%, Japan's stock market showed a mixed performance with the Nikkei down 0.62% due to concerns over AI investment, China's stock market closed mixed but the Shanghai index rose 0.39%, the won/dollar exchange rate hit a two-year low, and the KOSPI rose 1.8% to close at 5,768.\n- Other Economic News: The president stated that the claim that taxes were increased to control housing prices is not true. Oh Se-hoon raised concerns about the necessity to lift the tax suspension and the fear of rising housing prices at the same time. He predicted that Seoul housing prices could rise further by early next year. As a result, calls for a shift in the actual residence policy are growing. The president and Oh Se-hoon are showing differences in opinion regarding housing price-related policies."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "대통령은 집값을 잡기 위해 세금을 올렸다는 주장은 사실이 아니며 2028년까지 공급을 정상화하겠다고 밝혔고, 오세훈은 서울 집값이 연말이나 내년 초까지 우상향할 가능성이 높다고 전망했으며, 토허제 해제에 대한 논란이 일고 있으며, 중국 경제에 이상 신호가 나타나고 있다.",
-      "lineEn": "The claim that the president raised taxes to control housing prices is false, and the president stated that supply will be normalized by 2028. Oh Sehun predicted that Seoul housing prices are likely to rise again by year-end or early next year, and there is controversy over the lifting of the housing purchase restrictions. Unusual signals are emerging in the Chinese economy.",
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "중국 3분기 경제 성장률은 4.5%를 기록하며 수출 호조를 보였으나, 소비와 부동산 시장은 여전히 침체 상태를 유지하고 있다. 중국 9월 신축주택 가격은 0.14% 하락하며 대도시는 가격 안정을 유지했으나 중소도시에서는 침체가 지속되고 있다. 한국주택협회와 대한건축학회는 주택산업 발전을 위한 협력 강화를 발표했다. 전 세계 식량 가격은 2027년까지 고공행진을 이어갈 전망이다. 고급 아파트에 대한 새로운 기준으로 '하이필로티'가 제시되었다.",
+      "lineEn": "China's third quarter economic growth rate reached 4.5%, showing strong exports, but consumption and the real estate market remain in a state of stagnation. China's new home prices in September fell by 0.14%, with major cities maintaining price stability, while smaller and medium-sized cities continue to experience stagnation. The Korea Housing Association and the Korean Institute of Architects announced a strengthening of cooperation for the development of the housing industry. Global food prices are expected to continue rising until 2027. A new standard called \"high podium\" has been proposed for high-end apartments.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "\"지금도 비싼데 더 오른다\"…전세계 식량값 2027년까지 고공행진",
+          "link": "https://www.hankyung.com/article/202610191660i",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "'수출 호조' 中, 3분기 4.5% 성장…소비·부동산 침체는 여전",
+          "link": "https://www.hankyung.com/article/2026101914591",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "고급 아파트의 새 기준된 '하이필로티'",
+          "link": "https://www.hankyung.com/article/202610190847i",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "[올댓차이나] 9월 中 신축주택 가격 0.14%↓…대도시 안정·중소도시 침체 지속",
+          "link": "https://www.newsis.com/view/NISX20261019_0003832132",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "한국주택협회-대한건축학회, 주택산업 발전 협력 강화",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/19/OTLQEKVNAZFQXP3UCOY2LCTHMA/",
+          "source": "조선비즈 부동산"
+        }
+      ]
+    },
+    {
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "금리·예금·투자상품: 中, 대출금리 결정체계 대수술…기업이 기준금리 직접 고른다 [차이나 워치], 시중금리 오르는데 저축銀 예금금리는 제자리, 치솟는 강북 이주비 금리…'닥공' 가로막나 +2",
+      "lineEn": "Rates, Deposits & Investment Products: 中, 대출금리 결정체계 대수술…기업이 기준금리 직접 고른다 [차이나 워치], 시중금리 오르는데 저축銀 예금금리는 제자리, 치솟는 강북 이주비 금리…'닥공' 가로막나 +2",
+      "isFallback": true,
+      "fallbackReason": "unverified-entity",
+      "degraded": false,
+      "items": [
+        {
+          "title": "中, 대출금리 결정체계 대수술…기업이 기준금리 직접 고른다 [차이나 워치]",
+          "link": "https://www.hankyung.com/article/202610191663i",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "시중금리 오르는데 저축銀 예금금리는 제자리",
+          "link": "https://www.hankyung.com/article/2026101915221",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "치솟는 강북 이주비 금리…'닥공' 가로막나",
+          "link": "https://www.hankyung.com/article/2026101913671",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "국고채 금리, 금통위 앞두고 일제히 상승…3년물 연 3.877%(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261019145251008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "국채이자 내년 43조 육박…고금리에 재정당국 발행 축소 고심",
+          "link": "https://www.newsis.com/view/NISX20261019_0003831911",
+          "source": "뉴시스 경제"
+        }
+      ]
+    },
+    {
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "대만 증시는 0.61% 하락하며 마감했고, 일본 증시는 AI 투자 불안으로 인해 혼조세를 보이며 닛케이가 0.62% 하락했으며, 중국 증시는 혼조 마감했으나 상하이 지수가 0.39% 상승했고, 원/달러 환율은 2년 만에 최저를 기록했으며, 코스피는 1.8% 상승하며 5,768에 마감했다.",
+      "lineEn": "Taiwan's stock market closed down 0.61%, Japan's stock market showed a mixed performance with the Nikkei down 0.62% due to concerns over AI investment, China's stock market closed mixed but the Shanghai index rose 0.39%, the won/dollar exchange rate hit a two-year low, and the KOSPI rose 1.8% to close at 5,768.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": true,
+      "items": [
+        {
+          "title": "[올댓차이나] 대만 증시, 美 반도체주 급락에 반락 마감…0.61%↓",
+          "link": "https://www.newsis.com/view/NISX20261019_0003832323",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "日증시, AI 투자 불안에 혼조 마감…닛케이 0.62%↓",
+          "link": "https://www.newsis.com/view/NISX20261019_0003832076",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "[올댓차이나] 중국 증시 혼조 마감…상하이지수 0.39%↑",
+          "link": "https://www.newsis.com/view/NISX20261019_0003832092",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "원/달러 환율 2년만에 또 최저…위안화 환율도 1년만에 최저(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261019137151002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "코스피, 1.8% 오른 5,768…이틀 연속 상승하며 반등흐름 유지(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261019137000008",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "대통령은 집값을 잡기 위해 세금을 올렸다는 주장에 대해 사실이 아니라고 밝혔다. 오세훈은 토허제 해제가 불가피하다는 주장과 집값 상승에 대한 우려를 동시에 제기했다. 그는 서울 집값이 내년 초까지 우상향할 가능성이 있다고 전망했다. 이에 따라 실거주 정책의 전환을 촉구하는 목소리가 커지고 있다. 대통령과 오세훈은 집값 관련 정책 방향에 대해 의견 충돌을 보이고 있다.",
+      "lineEn": "The president stated that the claim that taxes were increased to control housing prices is not true. Oh Se-hoon raised concerns about the necessity to lift the tax suspension and the fear of rising housing prices at the same time. He predicted that Seoul housing prices could rise further by early next year. As a result, calls for a shift in the actual residence policy are growing. The president and Oh Se-hoon are showing differences in opinion regarding housing price-related policies.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
       "items": [
         {
           "title": "[속보]이 대통령 \"집값 잡으려 세금 올렸단 주장 사실 아냐…2028년 공급 정상화\"",
@@ -36,107 +147,6 @@
           "title": "오세훈 \"서울 집값 연말·내년 초까지 우상향 가능성 높아\"(종합)",
           "link": "https://www.yna.co.kr/view/AKR20261019084951004",
           "source": "연합뉴스 경제"
-        },
-        {
-          "title": "수출 대박나면 뭐하나…중국 경제에 나타난 '이상 신호' [차이나 워치]",
-          "link": "https://www.hankyung.com/article/202610190820i",
-          "source": "한국경제 경제"
-        }
-      ]
-    },
-    {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "일본 증시는 AI 투자에 대한 불안감으로 인해 혼조세를 보이며 닛케이 지수가 0.62% 하락했다. 중국 증시는 상하이지수가 0.39% 상승하며 혼조 마감했다. 원/달러 환율은 2년 만에 최저 수준으로 떨어졌고, 위안화 환율도 1년 만에 최저를 기록했다. 코스피는 1.8% 상승하며 5,768에 마감해 이틀 연속 상승세를 이어갔다. 코스피는 저가 매수에 힘입어 반등했으나 반도체주에 대한 투자심리는 여전히 신중한 것으로 나타났다.",
-      "lineEn": "Japan's stock market showed a mixed performance, with the Nikkei index falling 0.62% due to concerns over AI investments. China's stock market closed mixed, with the Shanghai index rising 0.39%. The won/dollar exchange rate fell to its lowest level in two years, and the yuan also hit its lowest level in a year. The KOSPI closed at 5,768, rising 1.8%, continuing its two-day upward trend. The KOSPI rebounded due to low-price buying, but investor sentiment toward semiconductor stocks remained cautious.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "日증시, AI 투자 불안에 혼조 마감…닛케이 0.62%↓",
-          "link": "https://www.newsis.com/view/NISX20261019_0003832076",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "[올댓차이나] 중국 증시 혼조 마감…상하이지수 0.39%↑",
-          "link": "https://www.newsis.com/view/NISX20261019_0003832092",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "원/달러 환율 2년만에 또 최저…위안화 환율도 1년만에 최저(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261019137151002",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "코스피, 1.8% 오른 5,768…이틀 연속 상승하며 반등흐름 유지(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261019137000008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "코스피, 저가매수에 반등 '선방'…반도체주 투심 여전히 '신중'(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261019083551008",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "중국 9월 신축주택 가격은 0.14% 하락하며 중소도시 침체가 지속되고 있다. 한국주택협회와 대한건축학회는 주택산업 발전을 위한 협력 강화를 발표했다. 서울 주택정책은 20년간 성과와 문제점이 엇갈린 것으로 나타났다. 부동산원은 2026년 공공건축물 그린리모델링 의무화 기술지원 사업 설명회를 진행한다. 주택협회와 건축학회는 주택건설사업 발전을 위한 업무협약을 체결했다.",
-      "lineEn": "China's new home prices fell 0.14% in September, indicating continued stagnation in medium and small cities. The Korea Housing Association and the Korean Institute of Architects announced a strengthening of cooperation for the development of the housing industry. Seoul's housing policies have shown mixed results and problems over the past 20 years. The Real Estate Institute will hold a seminar explaining the mandatory technical support program for green remodeling of public buildings by 2026. The Housing Association and the Institute of Architects signed a memorandum of cooperation to promote the development of housing construction projects.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "[올댓차이나] 9월 中 신축주택 가격 0.14%↓…대도시 안정·중소도시 침체 지속",
-          "link": "https://www.newsis.com/view/NISX20261019_0003832132",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "한국주택협회-대한건축학회, 주택산업 발전 협력 강화",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/19/OTLQEKVNAZFQXP3UCOY2LCTHMA/",
-          "source": "조선비즈 부동산"
-        },
-        {
-          "title": "“서울 아파트 공급 어디서부터 꼬였나”…서울 주택정책 20년 엇갈린 성적표",
-          "link": "https://www.mk.co.kr/news/realestate/12179748",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "부동산원, 2026년 공공건축물 그린리모델링  의무화 기술지원 사업 설명회",
-          "link": "https://www.mk.co.kr/news/realestate/12179730",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "[게시판] 주택협회·건축학회, 주택건설사업 발전 업무협약",
-          "link": "https://www.yna.co.kr/view/AKR20261019136500003",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "국고채 금리가 금통위 앞두고 일제히 상승했고, 국채이자 내년 43조 육박할 것으로 예상되며 재정당국은 고금리에 발행 축소를 고심하고 있다.",
-      "lineEn": "Korea's government bond rates rose uniformly ahead of the MPC meeting, and it is expected that government bond interest payments will approach 43,000,000,000,000 next year, prompting the fiscal authorities to consider reducing issuance amid high interest rates.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": true,
-      "items": [
-        {
-          "title": "국고채 금리, 금통위 앞두고 일제히 상승…3년물 연 3.877%(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261019145251008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "국채이자 내년 43조 육박…고금리에 재정당국 발행 축소 고심",
-          "link": "https://www.newsis.com/view/NISX20261019_0003831911",
-          "source": "뉴시스 경제"
         }
       ]
     }
