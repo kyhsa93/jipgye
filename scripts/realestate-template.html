@@ -1425,6 +1425,47 @@ function foldReserve() {
   if (room < box.offsetHeight) box.style.cssText = `height:${Math.max(room, 0)}px;overflow:hidden`;
 }
 
+// 구운 표를 남기고 그 위에 실패를 알리는 길(#296). 본문은 docs/load-state.js 의 notifyBeside 와 한 글자도 다르지 않다 -
+// 정본은 그 파일이고 test/load-failure.test.mjs 가 같은 글자임을 본다. 구운 47장에는 <script src> 없이 이 본문이 실린다.
+function notifyBeside(anchor, message, retryLabel, onRetry) {
+  notifyBeside.last?.remove();
+  const en = document.documentElement.getAttribute("lang") === "en";
+  const day = document.getElementById("updated")?.getAttribute("data-updated");
+  const asOf = en
+    ? `Shown below is what this page was built with${day ? ` on ${day}` : "; see its as-of date"}.`
+    : `아래는 ${day ? `기준일(${day})` : "이 화면의 기준일"}에 만든 값입니다.`;
+  const text = [message, onRetry && asOf, en && "Some of it is in Korean only."].filter(Boolean).join(" ");
+  if (!text) return;
+  anchor.insertAdjacentHTML("afterend", '<p class="content-notice"></p>');
+  const box = (notifyBeside.last = anchor.nextElementSibling);
+  box.append(text);
+  if (!onRetry) return;
+  box.insertAdjacentHTML("beforeend", ' <button type="button" id="load-retry"></button>');
+  const button = box.lastElementChild;
+  button.textContent = retryLabel;
+  button.addEventListener("click", () => {
+    button.disabled = true;
+    box.remove();
+    onRetry();
+  });
+}
+
+// 실패했는데 구운 표를 남길 수 없는 자리(예산대 장은 구획이 접혀 있고, 처음부터 ?area=59 면 구운 84㎡ 표는 그 보기의 답이 아니다)와
+// 알림이 선 뒤 방문자가 면적을 바꾼 화면은 구운 표를 걷고 실패 문구 한 줄 + 재시도로 바꾼다(규칙 1·3). 아래 catch 와 change 가 같이 쓴다.
+// 면적을 바꾼 뒤에는 알림이 영어 고지만 들고 남아 있다가(구운 카드가 아직 한국어라서) 다시 시도가 성공하면 걷힌다.
+let bakedGrid = true;
+function showGridFailure() {
+  bakedGrid = false;
+  document.getElementById("district-grid").innerHTML =
+    `<tr><td colspan="4">${escapeHtml(t("loadError"))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button></td></tr>`;
+  document.getElementById("load-retry")?.addEventListener("click", (e) => {
+    e.currentTarget.disabled = true;
+    main().then(() => {
+      if (cache.realestate) notifyBeside.last?.remove();
+    });
+  });
+}
+
 async function main() {
   applyTheme(theme);
   applyLocale();
@@ -1472,12 +1513,11 @@ async function main() {
   } catch (error) {
     reportLoadFailure(error);
     foldReserve();
-    document.getElementById("district-grid").innerHTML =
-      `<tr><td colspan="4">${escapeHtml(t("loadError"))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button></td></tr>`;
-    document.getElementById("load-retry")?.addEventListener("click", (e) => {
-      e.currentTarget.disabled = true;
-      main();
-    });
+    if (!budgetEnabled && bakedGrid && (!hasAreaColumn || areaM2 === DEFAULT_AREA_M2)) {
+      notifyBeside(document.getElementById("area-controls"), t("loadError"), t("retry"), main);
+      return;
+    }
+    showGridFailure();
   }
 }
 
@@ -1486,6 +1526,11 @@ document.getElementById("area-controls").addEventListener("change", (e) => {
   areaM2 = normalizeArea(e.target.value);
   syncAreaUrl();
   renderAll();
+  if (notifyBeside.last?.isConnected) {
+    notifyBeside.last.remove();
+    showGridFailure();
+    if (document.getElementById("overall-cards").innerHTML) notifyBeside(e.currentTarget);
+  }
   window.analytics?.event("realestate_area", { area_m2: String(areaM2), realestate_kind: kind ?? "all" });
 });
 

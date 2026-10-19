@@ -12,7 +12,7 @@ const root = path.resolve(import.meta.dirname, "../..");
  */
 const CHART_WIDTH = 300;
 
-function stubElement(attrs = {}, id = "", shared = null) {
+function stubElement(attrs = {}, id = "", shared = null, reg = null) {
   const listeners = {};
   // 안쪽 요소들. svg는 그래프 칸과 같은 주머니를 쓴다 — 실제 DOM에서 `#trend-chart .marker`
   // 와 `#trend-chart svg`의 `.marker`는 같은 하나이기 때문이다. 따로 두면 마커를 찍는
@@ -60,12 +60,34 @@ function stubElement(attrs = {}, id = "", shared = null) {
         // 마커는 마크업에서 `hidden`으로 태어난다. 스텁도 그래야 "한 번도 안 찍힌 것"과
         // "찍혔다 지워진 것"이 같게 보인다.
         const born = sel === ".marker" ? { hidden: "hidden" } : {};
-        children.set(sel, stubElement(born, `${id}${sel}`, sel === "svg" ? children : null));
+        children.set(sel, stubElement(born, `${id}${sel}`, sel === "svg" ? children : null, reg));
       }
       return children.get(sel);
     },
     querySelectorAll: () => [],
     closest: () => null,
+    // insertAdjacentHTML 로 세운 노드(#296 notifyBeside). 실제 DOM 처럼 id 가 있으면 getElementById 가 그 노드를 돌려주고,
+    // afterend 는 앵커의 nextElementSibling, beforeend 는 부모의 lastElementChild 가 된다. remove() 는 isConnected 를 끄고 그 id 를 놓는다.
+    isConnected: true,
+    inserted: [],
+    ownText: "",
+    insertAdjacentHTML(pos, html) {
+      const node = stubElement({}, /\bid="([^"]*)"/.exec(html)?.[1] ?? "", null, reg);
+      node.tag = /^\s*<([a-z]+)/.exec(html)?.[1] ?? null;
+      node.markup = html;
+      node.cls = /\bclass="([^"]*)"/.exec(html)?.[1] ?? null;
+      if (node.id) reg?.(node.id, node);
+      if (pos === "afterend") this.nextElementSibling = node;
+      if (pos === "beforeend") this.lastElementChild = node;
+      this.inserted.push(node);
+    },
+    append(text) {
+      this.ownText += text;
+    },
+    remove() {
+      this.isConnected = false;
+      if (this.id) reg?.(this.id, null);
+    },
   };
   return new Proxy(base, {
     get: (t, p) => (p in t ? t[p] : typeof p === "symbol" ? undefined : () => {}),
@@ -98,7 +120,8 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
   const byId = new Map();
   // 추이 격자 하나. 이 화면의 그래프는 전부 여기 들어 있고, 서로 같은 주를 x축으로 쓴다.
   const CHART_PREFIXES = ["trend", "rent", "volume", "ratio"];
-  const grid = stubElement({}, "history-grid");
+  const reg = (id, node) => (node ? byId.set(id, node) : byId.delete(id));
+  const grid = stubElement({}, "history-grid", null, reg);
   grid.querySelectorAll = (sel) =>
     sel === ".history-chart"
       ? CHART_PREFIXES.map((prefix) => sandbox.document.getElementById(`${prefix}-chart`))
@@ -153,9 +176,9 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
     document: {
       getElementById: (id) => {
         if (!byId.has(id)) {
-          const el = stubElement({}, id);
+          const el = stubElement({}, id, null, reg);
           if (id === "trend-section") {
-            const reserve = stubElement({}, "trend-reserve");
+            const reserve = stubElement({}, "trend-reserve", null, reg);
             reserve.getBoundingClientRect = () => ({ top: 1230 });
             reserve.offsetHeight = 725;
             el.nextElementSibling = reserve;

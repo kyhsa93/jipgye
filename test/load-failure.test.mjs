@@ -5,10 +5,12 @@
 // fetch를 거부하도록 주입하고, 화면 조각의 innerHTML과 단추의 click 리스너를 본다.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
+import { loadRealestatePage } from "./helpers/realestate-page.mjs";
+import { stripInlineScriptComments } from "../scripts/strip-inline-comments.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readJson = (name) => readFile(path.join(root, `docs/data/${name}.json`), "utf8").then(JSON.parse);
@@ -446,4 +448,363 @@ test("단지 카드(전세 쪽): 실패 표시는 공용 규칙으로만 만든�
   assert.ok(html.includes('<div id="complex-card"></div>'), "#complex-card 자리가 HTML에 없다");
   assert.ok(!html.includes('id="load-retry-rents-card"'), "load-retry-rents-card 마크업을 직접 썼다");
   assert.ok(!/<button[^>]*load-retry-rents-card/.test(html), "재시도 단추를 직접 만들었다");
+});
+
+// ============================================================================================================
+// 구운 자리를 남기고 옆에 알리는 길 (#296 조건 4, 규칙 2~5). 틀별 행으로 두어 다음 틀 PR 은 행만 더한다.
+// 첫 행: 시세 틀(realestate) 47장 - 알림 대상 29장(자치구 25 + 거래유형 3 + realestate)과, 코드만 실리고 알림이 없는 예산대 18장.
+// 화면에 "보인다"의 뜻 중 (i)~(iv) 는 실제 Chrome 에서 잰다(PR 증빙). 여기서는 손으로 만든 DOM 이 알림을 어디에 세우고 무엇을 쓰는지 본다.
+// ============================================================================================================
+const loadStateSource = await readFile(path.join(root, "docs/load-state.js"), "utf8");
+const FN_START = loadStateSource.indexOf("  function notifyBeside(");
+const FN_END = loadStateSource.indexOf("\n  }\n", FN_START) + "\n  }\n".length;
+// 들여쓰기(2칸)만 걷은 본문 - 틀과 구운 47장에 이 글자 그대로 실려야 한다.
+const NOTIFY_FN = loadStateSource.slice(FN_START, FN_END).split("\n").map((l) => l.replace(/^ {2}/, "")).join("\n");
+const scriptOf = (html) => [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
+const templateScript = scriptOf(stripInlineScriptComments(await readFile(path.join(root, "scripts/realestate-template.html"), "utf8")));
+
+const REAL = await readJson("realestate");
+const KO_ONLY = "Some of it is in Korean only.";
+const BAD_WORDS = /오늘|최신|today|latest/i;
+
+const slice = (html, open, close) => {
+  const a = html.indexOf(open);
+  return a < 0 ? "" : html.slice(a + open.length, html.indexOf(close, a + open.length));
+};
+const frames = [];
+{
+  const files = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html")).sort();
+  const pages = [];
+  for (const file of files) {
+    const html = await readFile(path.join(root, "docs", file), "utf8");
+    if (!html.includes('id="trend-section"')) continue;
+    const budgetBand = /name="budget-band" content="(\d+)"/.exec(html)?.[1];
+    const district = /name="realestate-district" content="([^"]+)"/.exec(html)?.[1];
+    const kind = /name="realestate-kind" content="([^"]+)"/.exec(html)?.[1];
+    pages.push({
+      file,
+      html,
+      script: scriptOf(html),
+      budget: budgetBand !== undefined,
+      budgetBand: budgetBand === undefined ? null : Number(budgetBand),
+      district: district ?? null,
+      kind: kind ?? null,
+      hasArea: Boolean(district) || kind === "sale" || kind === "jeonse",
+      grid: slice(html, '<tbody id="district-grid">', "</tbody>"),
+      cards: slice(html, 'id="overall-cards">', "</div>\n  </section>"),
+      budgetResult: slice(html, '<div id="budget-result">', "</div>\n    <p class=\"district-summary budget-facts\""),
+      updated: /id="updated" data-updated="([^"]+)"/.exec(html)?.[1] ?? null,
+    });
+  }
+  frames.push({
+    name: "시세 틀(realestate)",
+    pages,
+    /** mode: "404"(응답이 404) | "reject"(요청이 거부). down: 아직 실패 중인지(고쳐 두면 다시 시도가 성공한다). */
+    async open(page, { locale = "ko", search = "", mode = "reject", only } = {}) {
+      const state = { down: true, sets: [] };
+      const fails = only ? (name) => name === only : () => true;
+      const web = await loadRealestatePage({
+        file: `docs/${page.file}`,
+        locale,
+        search,
+        kind: page.kind,
+        district: page.district,
+        budgetBand: page.budgetBand,
+        prerenderedBudget: page.budgetResult,
+        realestate: mode === "404" && fails("realestate") ? undefined : REAL,
+        gate: async (name) => {
+          if (mode === "reject" && state.down && fails(name)) throw new TypeError("Failed to fetch");
+        },
+        baked: {
+          "district-grid": { innerHTML: page.grid },
+          "overall-cards": { innerHTML: page.cards },
+          "budget-result": { innerHTML: page.budgetResult },
+          updated: { getAttribute: (n) => (n === "data-updated" ? page.updated : null), setAttribute: (n) => state.sets.push(n) },
+        },
+      });
+      const notices = () => web.byId("area-controls").inserted.filter((n) => n.tag === "p" && n.isConnected);
+      const textOf = (n) => n.ownText + (n.lastElementChild ? ` ${n.lastElementChild.textContent}` : "");
+      return { ...web, state, notices, textOf, koOnly: () => notices().filter((n) => textOf(n).includes(KO_ONLY)).length };
+    },
+  });
+}
+const settleMany = () => settle(30);
+const { pages: PAGES } = frames[0];
+const NOTICE_PAGES = PAGES.filter((p) => !p.budget);
+const BUDGET_PAGES = PAGES.filter((p) => p.budget);
+const AREA_PAGES = NOTICE_PAGES.filter((p) => p.hasArea);
+const retryButton = (n) => n.lastElementChild;
+
+test("(바) 범위: 시세 틀은 47장이고 알림 대상은 29장(자치구 25 + 거래유형 3 + realestate), 예산대는 18장, 면적 고르기는 27장", () => {
+  assert.equal(PAGES.length, 47);
+  assert.equal(NOTICE_PAGES.length, 29);
+  assert.equal(BUDGET_PAGES.length, 18);
+  assert.equal(AREA_PAGES.length, 27);
+  assert.deepEqual(NOTICE_PAGES.filter((p) => !p.hasArea).map((p) => p.file), ["apartment-rent.html", "realestate.html"]);
+});
+
+test("ⓕ 공통 함수는 docs/load-state.js 에 한 번 쓰고, 틀과 구운 47장에 들여쓰기만 걷은 같은 글자로 실린다 - 외부 script 는 더하지 않는다", async () => {
+  // 머리 주석의 규칙은 다섯 줄이다(조건 4): 번호 1~5 가 하나씩, 옛 한 줄 문장은 없다.
+  const rules = loadStateSource.match(/^\/\/ {3}[1-5]\. /gm) ?? [];
+  assert.deepEqual(rules.map((r) => r.match(/[1-5]/)[0]), ["1", "2", "3", "4", "5"], "docs/load-state.js 머리 주석의 규칙이 다섯 줄이 아니다");
+  assert.ok(!loadStateSource.includes("로드 중과 실패는 다른 상태다"), "옛 한 줄 규칙이 남았다");
+  assert.ok(NOTIFY_FN.startsWith("function notifyBeside(anchor, message, retryLabel, onRetry) {\n") && NOTIFY_FN.endsWith("\n}\n"), "load-state.js 에서 함수를 못 뽑았다");
+  assert.ok(templateScript.includes(NOTIFY_FN), "scripts/realestate-template.html 의 notifyBeside 가 docs/load-state.js 와 다르다");
+  for (const p of PAGES) {
+    assert.ok(p.script.includes(NOTIFY_FN), `docs/${p.file}: notifyBeside 가 docs/load-state.js 와 한 글자라도 다르다 - 틀을 고치고 굽지 않았다`);
+    assert.ok(!p.html.includes("load-state.js"), `docs/${p.file}: 시세 장이 load-state.js 를 <script src> 로 문다 - 정상 방문 47장의 요청이 +1 이다`);
+    assert.doesNotMatch(NOTIFY_FN, /\/\/|\/\*/, "함수 본문에 주석이 있다 - 구운 장에서 걷혀 글자가 갈라진다");
+  }
+  // 함수는 밖의 변수를 쓰지 않는다: 함수 본문만 따로 돌려도 돈다(전역 document 외 이름이 없다).
+  assert.doesNotMatch(NOTIFY_FN, /\b(?:cache|locale|t\(|escapeHtml|areaM2|main)\b/, "함수가 화면 코드의 이름을 쓴다 - 본문이 두 곳에서 같을 수 없다");
+});
+
+test("ⓕ 구운 자리의 실패 표시는 이 함수로만 만든다: 알림 마크업·재시도 단추 마크업이 틀과 47장에 더 없다", () => {
+  for (const [name, script] of [["template", templateScript], ...PAGES.map((p) => [p.file, p.script])]) {
+    assert.equal(script.match(/<p class="content-notice">/g)?.length, 2, `${name}: <p class="content-notice"> 가 2(withKoOnly 의 옛 것 + notifyBeside)가 아니다`);
+    assert.equal(script.match(/<button type="button" id="load-retry">/g)?.length, 2, `${name}: 재시도 단추 마크업이 2(notifyBeside + 빈 자리 옛 행)가 아니다`);
+    assert.equal(script.match(/notifyBeside\(/g)?.length, 3, `${name}: notifyBeside 정의 1 + 호출 2(바깥 catch · 면적 변경 뒤 영어 고지)가 아니다`);
+    assert.doesNotMatch(script, /dataset|classList|className/, `${name}: 새 훅(dataset·class 쓰기)을 만들었다`);
+    assert.ok(script.includes('getAttribute("data-updated")'), `${name}: 기준일을 getAttribute 로 읽지 않는다`);
+    assert.doesNotMatch(script, /\/\/|\/\*/, `${name}: 주석이 구워져 나갔다`);
+  }
+});
+
+test("(바) 범위 선: complex-ratio·realestate-trend·budget-deals 의 무음 갈래 글자는 그대로이고, 새 코드는 바깥 catch 에서 reportLoadFailure(error); foldReserve(); 바로 뒤에만 있다", () => {
+  const RATIO = "    try {\n      const ratioRes = await fetch(`./data/complex-ratio.json?_=${Date.now()}`);\n      if (ratioRes.ok) {\n        cache.complexRatio = await ratioRes.json();\n        renderAll();\n      }\n    } catch {\n    }\n";
+  const TREND = "    try {\n      const trendRes = await fetch(`./data/realestate-trend.json?_=${Date.now()}`);\n      if (trendRes.ok) {\n        cache.trend = await trendRes.json();\n        renderTrend();\n      } else {\n        foldReserve();\n      }\n    } catch {\n      foldReserve();\n    }\n";
+  const BUDGET = "    if (budgetEnabled) {\n      try {\n        const budgetRes = await fetch(`./data/budget-deals.json?_=${Date.now()}`);\n        if (budgetRes.ok) {\n          cache.budget = await budgetRes.json();\n          renderBudget();\n          renderUpdated(cache.realestate);\n        }\n      } catch {\n      }\n    }\n";
+  const CALL = "  } catch (error) {\n    reportLoadFailure(error);\n    foldReserve();\n    if (!budgetEnabled && bakedGrid && (!hasAreaColumn || areaM2 === DEFAULT_AREA_M2)) {\n      notifyBeside(document.getElementById(\"area-controls\"), t(\"loadError\"), t(\"retry\"), main);\n      return;\n    }\n    showGridFailure();\n  }\n}\n";
+  for (const [name, script] of [["template", templateScript], ...PAGES.map((p) => [p.file, p.script])]) {
+    for (const [label, block] of [["complex-ratio", RATIO], ["realestate-trend", TREND], ["budget-deals", BUDGET]]) assert.ok(script.includes(block), `${name}: ${label} 블록의 글자가 바뀌었다 - 이 PR 은 건드리지 않는다`);
+    assert.ok(script.includes(CALL), `${name}: 바깥 catch 의 새 코드가 계약한 모양이 아니다`);
+    const main = script.slice(script.indexOf("async function main()"));
+    assert.equal(main.slice(0, main.indexOf("  } catch (error) {")).match(/notifyBeside|showGridFailure/g), null, `${name}: 정상 경로(try 본문)에 알림 코드가 있다`);
+  }
+});
+
+for (const mode of ["404", "reject"]) {
+  test(`ⓐⓑⓒⓔ 알림 대상 29장(${mode}): 구운 표·머리는 실패 뒤에도 그대로이고, 알림은 #area-controls 바로 아래에 하나, 기준일은 data-updated 에서 읽는다 - 한국어·영어`, async () => {
+    for (const p of NOTICE_PAGES) {
+      for (const locale of ["ko", "en"]) {
+        const page = await frames[0].open(p, { locale, mode });
+        const label = `${p.file} ${locale} ${mode}`;
+        // ⓐ 구운 표가 그대로이고 숨지 않는다
+        assert.equal(page.tableHtml(), p.grid, `${label}: 구운 표가 바뀌었다`);
+        assert.equal(page.overallHtml(), p.cards, `${label}: 구운 카드가 바뀌었다`);
+        assert.deepEqual(page.hiddenWrites("district-section"), [], `${label}: 구획의 hidden 을 건드렸다`);
+        assert.deepEqual(page.hiddenWrites("district-grid"), [], `${label}: 표의 hidden 을 건드렸다`);
+        // ⓑ 알림 하나, #area-controls 바로 아래(.table-wrap 위), 재시도 단추
+        const [note, ...rest] = page.notices();
+        assert.ok(note && rest.length === 0, `${label}: 알림이 ${page.notices().length}개다`);
+        assert.equal(page.byId("area-controls").nextElementSibling, note, `${label}: 알림이 #area-controls 바로 아래가 아니다`);
+        assert.equal(note.cls, "content-notice", `${label}: 알림 class`);
+        assert.equal(retryButton(note).id, "load-retry", `${label}: 재시도 단추 id`);
+        assert.ok(retryButton(note).listeners.click?.length, `${label}: 재시도 단추에 누름 처리가 없다`);
+        assert.ok(!page.byId("load-retry").hidden && retryButton(note).textContent === (locale === "en" ? "Retry" : "다시 시도"), `${label}: 재시도 단추 글자`);
+        const text = page.textOf(note);
+        assert.ok(text.startsWith(locale === "en" ? "Could not load transaction data." : "실거래가를 불러오지 못했습니다."), `${label}: 실패 문구로 시작하지 않는다: ${text}`);
+        // ⓒ 기준일은 구운 data-updated 를 그대로 적고, #updated 도 data-updated 도 건드리지 않는다
+        assert.ok(p.updated && text.includes(p.updated), `${label}: 알림이 구운 기준일(${p.updated})을 말하지 않는다`);
+        assert.ok(text.includes(locale === "en" ? `Shown below is what this page was built with on ${p.updated}.` : `아래는 기준일(${p.updated})에 만든 값입니다.`), `${label}: 둘째 문장`);
+        assert.deepEqual(page.state.sets, [], `${label}: #updated 의 속성을 썼다`);
+        assert.equal(page.byId("updated").textContent, "", `${label}: #updated 의 글자를 바꿨다`);
+        // ⓔ "오늘"·"최신" 류를 쓰지 않는다
+        assert.doesNotMatch(text, BAD_WORDS, `${label}: 알림이 지금 값처럼 말한다: ${text}`);
+      }
+    }
+  });
+}
+
+test("ⓑ 알림 자리는 #district-section 안, #area-controls 아래·.table-wrap 위이고 .trend-reserve 와 표의 밖이다 (구운 47장 마크업)", () => {
+  for (const p of PAGES) {
+    const sec = p.html.indexOf('<section id="district-section"');
+    const reserve = p.html.indexOf('<div class="trend-reserve">');
+    const controls = p.html.indexOf('id="area-controls"', sec);
+    const table = p.html.indexOf("<table", sec);
+    assert.ok(reserve > 0 && reserve < sec && sec > 0 && sec < controls && controls < table, `docs/${p.file}: 구획·컨트롤·표 자리의 순서가 다르다`);
+    // 컨트롤 상자 바로 뒤가 표를 감싼 상자(.table-wrap)이고 그 사이에 다른 것이 없다 - 알림(afterend)은 그 사이에 선다.
+    assert.match(p.html.slice(p.html.indexOf("</div>", controls), table), /^<\/div>\s*<div[^>]*>\s*$/, `docs/${p.file}: #area-controls 와 표 사이에 다른 것이 있다`);
+  }
+});
+
+test("ⓑ 예산대 18장: 알림 요소를 만들지 않는다 - 실패해도 구운 예산 본문 자리는 merge-base 와 같은 옛 실패 행만 쓴다", async () => {
+  for (const p of BUDGET_PAGES) {
+    for (const locale of ["ko", "en"]) {
+      for (const mode of ["404", "reject"]) {
+        const page = await frames[0].open(p, { locale, mode });
+        const label = `${p.file} ${locale} ${mode}`;
+        assert.equal(page.byId("area-controls").inserted.length, 0, `${label}: 예산대 장에 알림 요소를 만들었다`);
+        assert.equal(page.notices().length, 0, label);
+        assert.equal(
+          page.tableHtml(),
+          `<tr><td colspan="4">${locale === "en" ? "Could not load transaction data." : "실거래가를 불러오지 못했습니다."} <button type="button" id="load-retry">${locale === "en" ? "Retry" : "다시 시도"}</button></td></tr>`,
+          `${label}: 옛 실패 행이 아니다`
+        );
+      }
+    }
+  }
+});
+
+test("ⓗ 영어 + 실패: 29장은 `Some of it is in Korean only.` 정확히 1(알림 안), 18장은 `Some of it…` 0 이고 budgetKoOnly 의 \"in Korean only\" 보이는 요소 정확히 1", async () => {
+  const inKoOnly = (html) => html.match(/in Korean only/g)?.length ?? 0;
+  for (const mode of ["404", "reject"]) {
+    for (const p of NOTICE_PAGES) {
+      const page = await frames[0].open(p, { locale: "en", mode });
+      assert.equal(page.koOnly(), 1, `${p.file} ${mode}: 영어 실패에서 고지가 ${page.koOnly()}개다`);
+      const total = page.notices().reduce((a, n) => a + (page.textOf(n).match(/in Korean only/g)?.length ?? 0), 0) + inKoOnly(page.budgetHtml()) + inKoOnly(page.tableHtml());
+      assert.equal(total, 1, `${p.file} ${mode}: 화면에 \"in Korean only\" 가 ${total}번 보인다`);
+    }
+    for (const p of BUDGET_PAGES) {
+      const page = await frames[0].open(p, { locale: "en", mode });
+      assert.equal(page.koOnly(), 0, `${p.file} ${mode}: 예산대 장에 새 고지가 떴다`);
+      assert.equal(inKoOnly(page.budgetHtml()), 1, `${p.file} ${mode}: budgetKoOnly 가 정확히 1 이 아니다`);
+    }
+  }
+});
+
+test("ⓗ 한국어 + 실패: 29장은 알림 1·영어 고지 0, 18장은 알림 0", async () => {
+  for (const p of PAGES) {
+    const page = await frames[0].open(p, { locale: "ko", mode: "reject" });
+    assert.equal(page.notices().length, p.budget ? 0 : 1, `${p.file}: 한국어 실패의 알림 수`);
+    assert.equal(page.koOnly(), 0, `${p.file}: 한국어에 영어 고지가 떴다`);
+    assert.doesNotMatch(page.notices().map(page.textOf).join(""), /[A-Za-z]{4}/, `${p.file}: 한국어 알림에 영어가 섞였다`);
+  }
+});
+
+test("ⓖ 재시도: 다시 시도가 성공하면 알림이 사라지고 구운 표가 받은 값으로 바뀐다 (영어 고지도 0), 또 실패하면 알림은 갈아 끼워 하나뿐이다", async () => {
+  for (const p of NOTICE_PAGES) {
+    for (const locale of ["ko", "en"]) {
+      const page = await frames[0].open(p, { locale });
+      const first = page.notices()[0];
+      // 또 실패: 고치지 않고 누른다
+      retryButton(first).dispatch("click");
+      await settleMany();
+      assert.equal(first.isConnected, false, `${p.file} ${locale}: 누른 알림이 남았다`);
+      assert.equal(page.notices().length, 1, `${p.file} ${locale}: 또 실패했는데 알림이 ${page.notices().length}개다`);
+      assert.equal(page.koOnly(), locale === "en" ? 1 : 0, `${p.file} ${locale}: 또 실패 뒤 고지 수`);
+      // 성공
+      page.state.down = false;
+      retryButton(page.notices()[0]).dispatch("click");
+      await settleMany();
+      assert.equal(page.notices().length, 0, `${p.file} ${locale}: 재시도가 성공했는데 알림이 남았다`);
+      assert.equal(page.koOnly(), 0, `${p.file} ${locale}: 재시도 성공 뒤 고지가 남았다`);
+      assert.notEqual(page.tableHtml(), p.grid, `${p.file} ${locale}: 재시도가 성공했는데 구운 표 그대로다`);
+      assert.match(page.tableHtml(), /<td/, `${p.file} ${locale}: 표가 안 그려졌다`);
+    }
+  }
+});
+
+test("ⓓ(i) 처음부터 ?area=59·114 로 연 27장: 실패하면 구운 84㎡ 표를 남기지 않고 실패 문구 + 재시도(빈 자리)로 간다 - 알림·기준일 문장 없음", async () => {
+  for (const p of AREA_PAGES) {
+    for (const area of [59, 114]) {
+      for (const locale of ["ko", "en"]) {
+        const page = await frames[0].open(p, { locale, search: `?area=${area}` });
+        const label = `${p.file} ?area=${area} ${locale}`;
+        assert.equal(page.notices().length, 0, `${label}: 면적을 바꾼 보기에서 알림(기준일 문장)이 섰다`);
+        assert.equal(page.byId("area-controls").inserted.length, 0, label);
+        const grid = page.tableHtml();
+        assert.ok(grid.startsWith('<tr><td colspan="4">') && grid.includes('id="load-retry"') && !grid.includes("data-label"), `${label}: 실패 행이 아니다: ${grid.slice(0, 80)}`);
+        assert.notEqual(grid, p.grid, `${label}: 구운 84㎡ 표가 남았다`);
+        assert.ok(!page.tableHtml().includes(p.grid.slice(0, 60)), label);
+      }
+    }
+  }
+});
+
+test("ⓓ(i) 양성 대조: realestate·apartment-rent 는 면적 컨트롤이 hidden 이라 ?area=59 를 무시한다 - 구운 표를 남기고 알림이 선다", async () => {
+  for (const file of ["realestate.html", "apartment-rent.html"]) {
+    const p = PAGES.find((x) => x.file === file);
+    for (const locale of ["ko", "en"]) {
+      const page = await frames[0].open(p, { locale, search: "?area=59" });
+      assert.equal(page.tableHtml(), p.grid, `${file} ${locale}: 구운 표를 걷었다`);
+      assert.equal(page.notices().length, 1, `${file} ${locale}: 알림 수`);
+    }
+  }
+  // ?area=84(기본)는 59 가 아니므로 구운 표를 남긴다
+  const gangnam = PAGES.find((x) => x.file === "district-gangnam.html");
+  const page = await frames[0].open(gangnam, { search: "?area=84" });
+  assert.equal(page.tableHtml(), gangnam.grid);
+  assert.equal(page.notices().length, 1);
+});
+
+test("ⓓ(ii) 실패한 뒤 면적을 바꾸면(27장): 구운 표를 걷고 실패 문구 + 재시도로 바꾸고 알림의 기준일 문장을 뺀다 - 영어는 구운 한국어가 남는 동안 고지 하나, 84 로 되돌려도 복원하지 않는다", async () => {
+  const change = (page, value) => page.byId("area-controls").dispatch("change", { target: { id: "area-select", value }, currentTarget: page.byId("area-controls") });
+  for (const p of AREA_PAGES) {
+    for (const locale of ["ko", "en"]) {
+      const page = await frames[0].open(p, { locale });
+      const label = `${p.file} ${locale}`;
+      const before = page.notices()[0];
+      assert.ok(before && page.tableHtml() === p.grid, `${label}: 시작 상태`);
+      change(page, "59");
+      const grid = page.tableHtml();
+      assert.ok(grid.startsWith('<tr><td colspan="4">') && grid.includes('id="load-retry"') && !grid.includes("data-label"), `${label}: 면적 변경 뒤 구운 표가 남았다: ${grid.slice(0, 80)}`);
+      assert.equal(before.isConnected, false, `${label}: 변경 뒤 옛 알림(기준일 문장)이 남았다`);
+      assert.doesNotMatch(page.notices().map(page.textOf).join(""), /기준일|Shown below/, `${label}: 변경 뒤 알림에 기준일 문장이 남았다`);
+      // 구운 카드(#overall-cards)는 그대로라 영어에서는 고지가 정확히 하나, 한국어는 알림이 없다
+      assert.equal(page.overallHtml(), p.cards, `${label}: 카드를 건드렸다`);
+      assert.equal(page.notices().length, locale === "en" ? 1 : 0, `${label}: 변경 뒤 알림 수`);
+      assert.equal(page.koOnly(), locale === "en" ? 1 : 0, `${label}: 변경 뒤 고지 수`);
+      assert.match(page.headHtml(), /59/, `${label}: 머리가 59㎡ 로 안 바뀌었다`);
+      assert.ok(page.byId("load-retry").listeners.click?.length, `${label}: 변경 뒤 재시도 단추에 누름 처리가 없다`);
+      // 84 로 되돌려도 구운 표를 복원하지 않는다
+      change(page, "84");
+      assert.ok(page.tableHtml().includes("load-retry") && page.tableHtml() !== p.grid, `${label}: 84 로 되돌리자 구운 표가 돌아왔다`);
+      assert.equal(page.koOnly(), locale === "en" ? 1 : 0, `${label}: 되돌린 뒤 고지 수`);
+      // 재시도가 성공하면 고른 면적으로 그려진다
+      change(page, "59");
+      page.state.down = false;
+      page.byId("load-retry").dispatch("click", { currentTarget: page.byId("load-retry") });
+      await settleMany();
+      assert.match(page.tableHtml(), /<td/, `${label}: 변경 뒤 재시도 성공이 표를 안 그렸다`);
+      assert.match(page.headHtml(), /59/, `${label}: 재시도 성공 뒤 머리`);
+      assert.equal(page.notices().length, 0, `${label}: 재시도 성공 뒤 알림이 남았다`);
+    }
+  }
+});
+
+test("ⓓ(ii) 변경 뒤 또 실패하면(재시도 실패) 면적을 바꾼 보기라 알림 없이 실패 행만 남는다", async () => {
+  const p = PAGES.find((x) => x.file === "apartment-sale.html");
+  const page = await frames[0].open(p);
+  page.byId("area-controls").dispatch("change", { target: { id: "area-select", value: "59" }, currentTarget: page.byId("area-controls") });
+  page.byId("load-retry").dispatch("click", { currentTarget: page.byId("load-retry") });
+  await settleMany();
+  assert.ok(page.tableHtml().includes("load-retry"));
+  assert.equal(page.notices().length, 0);
+});
+
+test("(바) 범위 선: complex-ratio·realestate-trend 한 가지만 실패하면 알림이 서지 않고, 예산대의 budget-deals.json 실패도 알림이 없다", async () => {
+  for (const only of ["complex-ratio", "realestate-trend"]) {
+    for (const p of PAGES.filter((x) => ["realestate.html", "apartment-sale.html", "district-gangnam.html", "budget-7eok.html"].includes(x.file))) {
+      const page = await frames[0].open(p, { locale: "en", only });
+      assert.equal(page.notices().length, 0, `${p.file} ${only}: 다른 데이터의 실패에 알림이 섰다`);
+      assert.equal(page.byId("area-controls").inserted.length, 0);
+    }
+  }
+  for (const p of BUDGET_PAGES) {
+    const page = await frames[0].open(p, { locale: "en", only: "budget-deals" });
+    assert.equal(page.notices().length, 0, `${p.file}: budget-deals 실패에 알림이 섰다`);
+  }
+});
+
+test("S6 의도한 차이 (#296 (바)): 인라인 장당 +1,800B 이하, 47장 합 84,600B 이하, docs/load-state.js 순증가 2,000B 이하", async () => {
+  // 이 PR 이 스크립트에 더한 바이트: 되돌려 놓은 사본과 견준다(옛 실패 행은 showGridFailure 로 옮겨졌을 뿐 같은 글자다).
+  const revert = (script) => {
+    const a = script.indexOf("function notifyBeside(");
+    const b = script.indexOf("async function main()");
+    const catchNew = script.slice(script.indexOf("    if (!budgetEnabled && bakedGrid"), script.indexOf("    showGridFailure();\n") + "    showGridFailure();\n".length);
+    const row = script.slice(script.indexOf("function showGridFailure() {\n  bakedGrid = false;\n") + "function showGridFailure() {\n  bakedGrid = false;\n".length, script.indexOf("\n}\n\nasync function main()")).split("\n").map((l) => `  ${l}`).join("\n");
+    const guardOpen = script.indexOf("  if (notifyBeside.last?.isConnected) {");
+    const guard = script.slice(guardOpen, script.indexOf("  }\n", script.indexOf("notifyBeside(e.currentTarget)")) + "  }\n".length);
+    return script.slice(0, a) + script.slice(b).replace(catchNew, `${row}\n`).replace(guard, "");
+  };
+  let total = 0;
+  for (const p of PAGES) {
+    const added = Buffer.byteLength(p.script) - Buffer.byteLength(revert(p.script));
+    assert.ok(added > 1000 && added <= 1800, `docs/${p.file}: 이 PR 의 인라인 증가가 ${added}B - cto 한도 1,800B/장`);
+    total += added;
+  }
+  assert.ok(total <= 84_600, `47장 합 ${total}B - cto 한도 84,600B 를 넘었다`);
+  const base = Buffer.byteLength(loadStateSource) - 2578;
+  assert.ok(base <= 2000, `docs/load-state.js 순증가 ${base}B - cto 한도 2,000B`);
 });
