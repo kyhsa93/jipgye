@@ -13019,7 +13019,8 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스]고재은 기자 = 프랑스 전역에서 폭력 시위가 잇따른 가운데 국채 매도세가 다시 거세질 수 있다는 우려가 제기됐다. 차입 비용이 치솟고 무분별한 지출을 이어가는 포퓰리즘 정부가 탄생할 가능성이 커지고 있…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "France Faces Risk of Becoming Unrulable Nation... Violence in Protests Sparks Concern Over Soaring Bond Yields"
       },
       {
         "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.6%↓",
@@ -13028,7 +13029,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 19일 하락 출발했다. 이날 상하이종합지수는 전거래일보다 0.6% 하락한 3694.12로 장을 시작했다. 선전성분지수는 전장 대비 0.5% 내린 1만1743.22로, 중국…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] China's stock market drops at the start... Shanghai index falls 0.6%"
       },
       {
         "title": "오세훈 “신통기획 1만5000호 착공… 규제 풀어 주택 공급 속도”",
@@ -13037,7 +13039,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "오세훈 서울시장은 “신속통합기획을 통해 올해 1만5000호가 실제 착공에 들어갔고, 모아주택도 지난 8월 첫 준공의 결실을 맺었다”며 불합리한 규제를 풀어 주택 공급 속도를 높이겠다고 밝혔다. 오 시장은 19일 국회…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "12억 4,864만원",
+            "valueEn": "₩1,249M",
+            "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
+            "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
+          }
+        ],
+        "titleEn": "Oh Sehun “Shin Tong Planning 10,0005000th Project Breaks Ground… Ease Regulations to Speed Up Housing Supply"
       },
       {
         "title": "제주은행, 매월 신용 재평가로 대출금리 깎아주는 서비스",
@@ -13046,7 +13061,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 한지훈 기자 = 신한금융그룹 계열 제주은행[006220]은 매달 신용 상태를 재평가해 대출 금리를 낮춰주는 '다이나믹 금리인하...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Jeju Bank Offers Service to Lower Loan Rates Through Monthly Credit Reassessment"
       },
       {
         "title": "코스피, 장중 상승 전환하며 5,700선 근접…전장보다 0.47%↑",
@@ -13055,7 +13071,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 19일 코스피가 장중 상승세로 전환했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KOSPI approaches 5,700 level, turning upward during the session… up 0.47% from previous session"
       },
       {
         "title": "토허구역 지정 1년…경기 12곳 중 11곳 집값 상승폭 커졌다",
@@ -13064,7 +13081,8 @@
         "source": "매일경제 부동산",
         "category": "other",
         "preview": "광명 2→21%·수지 5→20% 과천만 유일하게 상승률 둔화 “풍선효과” vs “상승률 제어”지난해 10·15 부동산 대책 발표로 토지거래허가구역(토허구역)으로 지정된 경기 12개..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Designation of the Tuhu Area as a Special Zone 1 Year Later... 11 Out of 12 Areas in Gyeonggi Show Larger Price Increases"
       },
       {
         "title": "“더 이상 안 오른다”…매물 30% 쌓이자 “집값 과열 잡았다”는 국토부",
@@ -13073,7 +13091,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "정부가 아파트 거래량 감소와 매물 증가 등 주택시장 하향 안정 신호가 포착되고 있다며 각종 규제와 금융 정책이 집값 과열을 성공적으로 차단했다고 평가했다. 정부는 향후 강남·서초 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 84㎡ 매매",
+            "labelEn": "서초구 apartment 84㎡ sale",
+            "value": "25억 1,126만원",
+            "valueEn": "₩2,511M",
+            "note": "최근 4주 계약 77건 · 10/12 대비 -5.1%",
+            "noteEn": "77 deals in the last 4 weeks · -5.1% vs Oct 12"
+          }
+        ],
+        "titleEn": "Price won't rise anymore\"… As inventory piles up 30%, Ministry of Land, Infrastructure and Transport says \"housing prices overheating is under control"
       },
       {
         "title": "“전셋값 더 뛰겠네요”…11월 수도권 아파트 입주 물량 절반 ‘뚝’",
@@ -13082,7 +13113,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "수도권 11월 아파트 입주 물량이 전월 대비 절반 수준으로 급감한 것으로 나타났다. 매물 부족 현상이 지속되면서 당분간 전셋값 상승세가 이어질 것이라는 전망이 나온다. 19일 부동..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Rental prices will rise even more\"… Half of the apartment supply in the Seoul metropolitan area for November drops"
       },
       {
         "title": "[동정] 부동산원장 \"행정구역 넘어 다핵 초광역경제권으로 국토 재편\"",
@@ -13091,7 +13123,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "▲ 이헌욱 한국부동산원장은 지난 17일 대구대학교에서 열린 일반대학원 부동산학과 명사 초청 강연에서 '모두의 부동산, 위대한 도시'를 주제로 발...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Communique] Real Estate Agency Head: \"Reorganize the Territory from Administrative Regions to a Multi-core, Ultra-wide Economic Zone"
       },
       {
         "title": "이헌욱 부동산원장, 대구대 강연…\"지속가능한 인재 생태계 구축해야\"",
@@ -13100,7 +13133,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]정유선 기자 = 이헌욱 한국부동산원장이 지역의 지속 가능한 성장을 위해서는 단순한 일자리 배분을 넘어 지식과 사람이 모이는 '인재 생태계'를 구축해야 한다고 강조했다. 19일 한국부동산원에 따르면 이…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Lee Heon-wook, Real Estate Institute Director, Gives Lecture at Daegu University...\"Need to Build Sustainable Talent Ecosystem"
       },
       {
         "title": "오세훈 \"불합리한 규제 풀어 주택 공급 중단 없게\"",
@@ -13109,7 +13143,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 박대로 기자 = 오세훈 서울시장은 불합리한 규제를 풀어 주택 공급 속도를 높이겠다고 밝혔다. 오 시장은 19일 국회 국토교통위원회 서울시 국정감사에서 인사말을 통해 \"서울시는 충분하고 지속적인 공급이…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "12억 4,864만원",
+            "valueEn": "₩1,249M",
+            "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
+            "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
+          }
+        ],
+        "titleEn": "Oh Sehun vows to remove unreasonable regulations to prevent housing supply disruptions"
       },
       {
         "title": "이형일 \"환율, 펀더멘털 찾는 중…한미스와프, 의미있고 필요\"",
@@ -13118,7 +13165,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(방콕=연합뉴스) 김수현 기자 = 이형일 부총리 겸 재정경제부 장관은 최근 원/달러 환율이 1,330원 안팎으로 내려온 상황을 두고 \"현재는 (...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Lee Hyung-il: \"Exchange rate finding fundamentals... U.S.-South Korea swap meaningful and necessary"
       },
       {
         "title": "이형일 \"성장세, 소비로 전이될 것…환율은 펀더멘털 찾는 과정\"",
@@ -13127,7 +13175,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[방콕=뉴시스]임하은 기자 = 이형일 경제부총리 겸 재정경제부 장관이 최근 반도체를 중심으로 나타나는 투자 주도 성장세에 대해 \"시간이 지나면 그 성장세가 소비 쪽으로도 전이될 것\"이라고 밝혔다. 최근 2년여 만에…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Lee Hyung-il: \"Growth momentum will shift to consumption... Exchange rate is in the process of finding fundamentals"
       },
       {
         "title": "이형일 \"조정지역 임대아파트, 공공에 팔면 양도세 혜택 검토\"",
@@ -13136,7 +13185,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[방콕=뉴시스]임하은 기자 = 이형일 경제부총리 겸 재정경제부 장관이 \"조정대상지역 내 매입임대아파트를 LH 등 공공부문에 매각하면 추가적인 양도세 감면도 고민하고 있다\"고 밝혔다. 조정지역의 매각이 원활하지 않고…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Lee Hyung-il: \"Public sale of rental apartments in designated readjustment areas to be considered for transfer tax benefits"
       },
       {
         "title": "일일이 확인하던 대출이자…이제는 매월 알아서 깎아준다",
@@ -13145,7 +13195,8 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Daily-checked loan interest... Now automatically reduced every month"
       },
       {
         "title": "\"주택 공급 위해 '분상제' 해제\" 민원…서울시 \"신중 검토\"",
@@ -13154,7 +13205,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 박대로 기자 = 분양가 상한제가 재개발·재건축을 통한 주택 공급을 방해하고 있다며 해제해야 한다는 민원이 제기됐다. 서울시는 신중히 검토하겠다는 반응을 보였다. 19일 서울시에 따르면 염모씨는 서울시…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "12억 4,864만원",
+            "valueEn": "₩1,249M",
+            "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
+            "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
+          }
+        ],
+        "titleEn": "Complaints over lifting 'split ownership' system for housing supply... Seoul says to carefully review"
       },
       {
         "title": "유진이엔티·재능교육, 가족 경제교육 강연 '머니인더스쿨' 운영",
@@ -13163,7 +13227,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스] 박성환 기자 = 유진그룹 계열 유진이엔티가 교육기업 재능교육과 함께 부모와 자녀를 위한 경제교육 강연 프로그램을 선보인다. 유진이엔티는 경제교양 유튜브 채널 '머니인더트랩'을 통해 내달 14일부터 프…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Eugene ENTEC, Jae-nam Education to Operate Family Financial Education Seminar 'Money in the School"
       },
       {
         "title": "코스피, 3.2% 급락 개장후 일부 되돌림…1%대 초반 하락세(종합)",
@@ -13172,7 +13237,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 19일 장 초반 코스피가 3%대 급락 출발 후 낙폭을 일부 회복하며 1%대 초중반의 하락률을 보인다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KOSPI drops 3.2% at opening, partial rebound as it falls in the 1% range (comprehensive)"
       },
       {
         "title": "삼성물산, 2.2조원대 서울 여의도 시범아파트 재건축 수주",
@@ -13181,7 +13247,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 임기창 기자 = 삼성물산은 공사비 2조2천억원대 정비사업인 서울 영등포구 여의도동 시범아파트 재건축 시공사로 최종 선정됐다고 ...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yeongdeungpo.html",
+            "label": "영등포구 아파트 84㎡ 매매",
+            "labelEn": "영등포구 apartment 84㎡ sale",
+            "value": "15억 6,627만원",
+            "valueEn": "₩1,566M",
+            "note": "최근 4주 계약 127건 · 10/12 대비 +2.4%",
+            "noteEn": "127 deals in the last 4 weeks · +2.4% vs Oct 12"
+          }
+        ],
+        "titleEn": "Samsung C&T secures 2,200,000,000,000 won contract for redevelopment of Seoul Yeouido pilot apartment complex"
       },
       {
         "title": "여의도 시범아파트 59층·2천491세대로 재건축…사업시행인가",
@@ -13190,7 +13269,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 김동규 기자 = 서울 영등포구(구청장 조유진)는 여의도 시범아파트 재건축정비사업의 사업시행계획을 인가했다고 19일 밝혔다.",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yeongdeungpo.html",
+            "label": "영등포구 아파트 84㎡ 매매",
+            "labelEn": "영등포구 apartment 84㎡ sale",
+            "value": "15억 6,627만원",
+            "valueEn": "₩1,566M",
+            "note": "최근 4주 계약 127건 · 10/12 대비 +2.4%",
+            "noteEn": "127 deals in the last 4 weeks · +2.4% vs Oct 12"
+          }
+        ],
+        "titleEn": "Yeouido Pilot Apartment to be Reconstructed into 59-Story, 2,491-Unit Building... Business Implementation Approval"
       },
       {
         "title": "코스피, 3.2% 급락한 5,488 개장…코스닥도 2.7%↓",
@@ -13199,7 +13291,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 19일 코스피가 3%대 급락 출발했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi drops 3.2% to open at 5,488…Kosdaq also falls 2.7%"
       },
       {
         "title": "“미래형 주거공간 구현”…삼성물산, 2.3조 규모 여의도 시범아파트 재건축 수주",
@@ -13208,7 +13301,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "총 18개동 2480가구 중 2032가구 한강 조망 공사비 2조2685억원·단지명 ‘래미안 소넬리’ 세계적 건축그룹 ‘OMA’와 협업 15m 필로티·270도 서라운드 창호 ‘넥스..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Samsung E&C wins order to rebuild Yeouido model apartment complex with 2,300,000,000,000 won budget, aiming to realize future-style living spaces"
       },
       {
         "title": "\"실거주 안해도 돼\"…강북 아파트 경매, 웃돈 주고 산다",
@@ -13217,7 +13311,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangbuk.html",
+            "label": "강북구 아파트 84㎡ 매매",
+            "labelEn": "강북구 apartment 84㎡ sale",
+            "value": "8억 6,571만원",
+            "valueEn": "₩866M",
+            "note": "최근 4주 계약 77건 · 10/12 대비 -1.2%",
+            "noteEn": "77 deals in the last 4 weeks · -1.2% vs Oct 12"
+          }
+        ],
+        "titleEn": "Bidding Premiums for Apartment Auctions in Gangbuk\"… \"No Need to Actually Live There"
       },
       {
         "title": "\"전셋값 또 오르겠네\"…수도권 11월 아파트 입주 절반으로 '뚝'",
@@ -13226,7 +13333,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Rental Prices Are Rising Again...\" Seoul Area Apartment Deliveries Drop to Half in November"
       }
     ]
   }
