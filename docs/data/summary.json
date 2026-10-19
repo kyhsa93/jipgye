@@ -1,73 +1,46 @@
 {
-  "updatedAt": "2026-10-19T06:18:22.228Z",
+  "updatedAt": "2026-10-19T08:49:32.708Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 부동산: 현대건설이 2조6천억 원 규모의 목동10단지 재건축 시공사로 선정되었다. 울산 남구는 시유지 무단점유로 인한 아파트 변상금 부과에 대해 2심에서 패소 판결을 받았다. 한국부동산원은 그린리모델링 기술지원을 위해 11월 3일까지 참여기관을 모집 중이다. 한국부동산원은 공공 건축물 그린리모델링 지원신청을 접수하고 있다. 현대건설은 목동10단지 재건축 사업을 수주하며 2.6조 원 규모의 공사에 착수하게 되었다.\n- 기타 경제 소식: 강남 지역 집값이 하락하면서 정부가 안정론을 띄웠다. 중국의 3분기 경제성장률은 4.5%로 전분기 대비 0.2%포인트 상승했다. 토허구역 지정 1년 만에 경기 지역 12곳 중 11곳에서 집값 상승폭이 커졌다. 중국 1~3분기 경제성장률은 4.6%를 기록했다. 강남 집값 하락은 외곽 지역의 강세와 별개의 현상이다.\n- 증시·환율: 코스피는 오늘 저가매수 기회와 불안감이 공존하며 신중한 분위기를 보였다. 이달 세계증시에서 가장 약세를 보인 코스피는 국내 상장사 10개 중 7개가 하락했다. 증권가에서는 코스피가 바닥에 근접했다는 분석을 내놓았으나, 반등 여부는 AI 신용위험에 달려 있다고 전망했다. 중국 증시는 상하이지수가 0.6% 하락하며 출발했다. 각 기사는 별개의 사실을 다루고 있으며, 구체적인 수치와 상황만을 기반으로 작성했다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 하락한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.845%를 기록했다. 프랑스에서는 폭력 시위가 이어지고 있다. 이로 인해 통치 불가능한 국가가 되는 것이 아니냐는 우려가 나오고 있다. 프랑스의 상황이 악화되면서 국채금리 급등 우려가 커지고 있다.",
-    "en": "- Real Estate: Hyundai Engineering and Construction has been selected as the contractor for the Muldong 10th Phase reconstruction project, which is valued at 2,600,000,000,000 won. In the second instance, Namgu, Ulsan, received a judgment of defeat regarding the imposition of apartment compensation fees due to unauthorized occupation of municipal land. The Korea Real Estate Research Institute is recruiting participating organizations until November 3rd to provide technical support for green remodeling. The Korea Real Estate Research Institute is accepting applications for support of green remodeling of public buildings. Hyundai Engineering and Construction has started work on a 2,600,000,000,000 won construction project after winning the contract for the Muldong 10th Phase reconstruction project.\n- Other Economic News: With falling apartment prices in the Gangnam area, the government raised the issue of stability. China's third-quarter economic growth rate rose 0.2 percentage points from the previous quarter to 4.5%. Within a year of designating the Tuohe area, apartment prices rose sharply in 11 out of 12 locations in the Gyeonggi region. China's first to third quarter economic growth rate reached 4.6%. The decline in Gangnam apartment prices is a separate phenomenon from the strong performance in outer areas.\n- Stocks & FX: The KOSPI showed a cautious tone today, with low-price buying opportunities and uncertainty coexisting. The KOSPI, which was the weakest among global stock markets this month, saw 7 out of 10 domestic listed companies decline. Financial institutions presented analyses suggesting the KOSPI is nearing its bottom, but its recovery depends on AI credit risk, they forecasted. The Chinese market opened with the Shanghai Composite Index falling 0.6%. Each article covers separate facts and was written based only on specific figures and situations.\n- Rates, Deposits & Investment Products: Government bond rates have all fallen. The 3-year government bond rate reached 3.845% annually during trading. Violent protests are continuing in France. Concerns are arising that this may make France an ungovernable country. As the situation in France deteriorates, fears of a sharp rise in bond rates are increasing."
+    "ko": "- 기타 경제 소식: 대통령은 집값을 잡기 위해 세금을 올렸다는 주장은 사실이 아니며 2028년까지 공급을 정상화하겠다고 밝혔고, 오세훈은 서울 집값이 연말이나 내년 초까지 우상향할 가능성이 높다고 전망했으며, 토허제 해제에 대한 논란이 일고 있으며, 중국 경제에 이상 신호가 나타나고 있다.\n- 증시·환율: 일본 증시는 AI 투자에 대한 불안감으로 인해 혼조세를 보이며 닛케이 지수가 0.62% 하락했다. 중국 증시는 상하이지수가 0.39% 상승하며 혼조 마감했다. 원/달러 환율은 2년 만에 최저 수준으로 떨어졌고, 위안화 환율도 1년 만에 최저를 기록했다. 코스피는 1.8% 상승하며 5,768에 마감해 이틀 연속 상승세를 이어갔다. 코스피는 저가 매수에 힘입어 반등했으나 반도체주에 대한 투자심리는 여전히 신중한 것으로 나타났다.\n- 부동산: 중국 9월 신축주택 가격은 0.14% 하락하며 중소도시 침체가 지속되고 있다. 한국주택협회와 대한건축학회는 주택산업 발전을 위한 협력 강화를 발표했다. 서울 주택정책은 20년간 성과와 문제점이 엇갈린 것으로 나타났다. 부동산원은 2026년 공공건축물 그린리모델링 의무화 기술지원 사업 설명회를 진행한다. 주택협회와 건축학회는 주택건설사업 발전을 위한 업무협약을 체결했다.\n- 금리·예금·투자상품: 국고채 금리가 금통위 앞두고 일제히 상승했고, 국채이자 내년 43조 육박할 것으로 예상되며 재정당국은 고금리에 발행 축소를 고심하고 있다.",
+    "en": "- Other Economic News: The claim that the president raised taxes to control housing prices is false, and the president stated that supply will be normalized by 2028. Oh Sehun predicted that Seoul housing prices are likely to rise again by year-end or early next year, and there is controversy over the lifting of the housing purchase restrictions. Unusual signals are emerging in the Chinese economy.\n- Stocks & FX: Japan's stock market showed a mixed performance, with the Nikkei index falling 0.62% due to concerns over AI investments. China's stock market closed mixed, with the Shanghai index rising 0.39%. The won/dollar exchange rate fell to its lowest level in two years, and the yuan also hit its lowest level in a year. The KOSPI closed at 5,768, rising 1.8%, continuing its two-day upward trend. The KOSPI rebounded due to low-price buying, but investor sentiment toward semiconductor stocks remained cautious.\n- Real Estate: China's new home prices fell 0.14% in September, indicating continued stagnation in medium and small cities. The Korea Housing Association and the Korean Institute of Architects announced a strengthening of cooperation for the development of the housing industry. Seoul's housing policies have shown mixed results and problems over the past 20 years. The Real Estate Institute will hold a seminar explaining the mandatory technical support program for green remodeling of public buildings by 2026. The Housing Association and the Institute of Architects signed a memorandum of cooperation to promote the development of housing construction projects.\n- Rates, Deposits & Investment Products: Korea's government bond rates rose uniformly ahead of the MPC meeting, and it is expected that government bond interest payments will approach 43,000,000,000,000 next year, prompting the fiscal authorities to consider reducing issuance amid high interest rates."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "현대건설이 2조6천억 원 규모의 목동10단지 재건축 시공사로 선정되었다. 울산 남구는 시유지 무단점유로 인한 아파트 변상금 부과에 대해 2심에서 패소 판결을 받았다. 한국부동산원은 그린리모델링 기술지원을 위해 11월 3일까지 참여기관을 모집 중이다. 한국부동산원은 공공 건축물 그린리모델링 지원신청을 접수하고 있다. 현대건설은 목동10단지 재건축 사업을 수주하며 2.6조 원 규모의 공사에 착수하게 되었다.",
-      "lineEn": "Hyundai Engineering and Construction has been selected as the contractor for the Muldong 10th Phase reconstruction project, which is valued at 2,600,000,000,000 won. In the second instance, Namgu, Ulsan, received a judgment of defeat regarding the imposition of apartment compensation fees due to unauthorized occupation of municipal land. The Korea Real Estate Research Institute is recruiting participating organizations until November 3rd to provide technical support for green remodeling. The Korea Real Estate Research Institute is accepting applications for support of green remodeling of public buildings. Hyundai Engineering and Construction has started work on a 2,600,000,000,000 won construction project after winning the contract for the Muldong 10th Phase reconstruction project.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "현대건설, ‘2.6조’ 목동10단지 재건축 수주",
-          "link": "https://www.mk.co.kr/news/realestate/12179609",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "'시유지 무단점유' 아파트 변상금 부과한 울산 남구, 2심서 패소",
-          "link": "https://www.yna.co.kr/view/AKR20261019109300057",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "한국부동산원, 그린리모델링 기술지원… 11월 3일까지 참여기관 모집",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/19/NLDHOMFEZJBH7ECM2PUBIIGQIM/",
-          "source": "조선비즈 부동산"
-        },
-        {
-          "title": "[게시판] 한국부동산원, 공공 건축물 그린리모델링 지원신청 접수",
-          "link": "https://www.yna.co.kr/view/AKR20261019110300003",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "현대건설, 2조6천억 규모 목동10단지 재건축 시공사 선정",
-          "link": "https://www.yna.co.kr/view/AKR20261019098000003",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "강남 지역 집값이 하락하면서 정부가 안정론을 띄웠다. 중국의 3분기 경제성장률은 4.5%로 전분기 대비 0.2%포인트 상승했다. 토허구역 지정 1년 만에 경기 지역 12곳 중 11곳에서 집값 상승폭이 커졌다. 중국 1~3분기 경제성장률은 4.6%를 기록했다. 강남 집값 하락은 외곽 지역의 강세와 별개의 현상이다.",
-      "lineEn": "With falling apartment prices in the Gangnam area, the government raised the issue of stability. China's third-quarter economic growth rate rose 0.2 percentage points from the previous quarter to 4.5%. Within a year of designating the Tuohe area, apartment prices rose sharply in 11 out of 12 locations in the Gyeonggi region. China's first to third quarter economic growth rate reached 4.6%. The decline in Gangnam apartment prices is a separate phenomenon from the strong performance in outer areas.",
+      "lineKo": "대통령은 집값을 잡기 위해 세금을 올렸다는 주장은 사실이 아니며 2028년까지 공급을 정상화하겠다고 밝혔고, 오세훈은 서울 집값이 연말이나 내년 초까지 우상향할 가능성이 높다고 전망했으며, 토허제 해제에 대한 논란이 일고 있으며, 중국 경제에 이상 신호가 나타나고 있다.",
+      "lineEn": "The claim that the president raised taxes to control housing prices is false, and the president stated that supply will be normalized by 2028. Oh Sehun predicted that Seoul housing prices are likely to rise again by year-end or early next year, and there is controversy over the lifting of the housing purchase restrictions. Unusual signals are emerging in the Chinese economy.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": false,
+      "degraded": true,
       "items": [
         {
-          "title": "강남 집값 하락에 안정론 띄운 정부…외곽은 여전히 강세",
-          "link": "https://www.newsis.com/view/NISX20261019_0003831636",
+          "title": "[속보]이 대통령 \"집값 잡으려 세금 올렸단 주장 사실 아냐…2028년 공급 정상화\"",
+          "link": "https://www.newsis.com/view/NISX20261019_0003832266",
           "source": "뉴시스 경제"
         },
         {
-          "title": "中 3분기 경제성장률 4.5%·0.2%P↑…1~3분기는 4.6%(종합)",
-          "link": "https://www.newsis.com/view/NISX20261019_0003831627",
-          "source": "뉴시스 경제"
+          "title": "\"토허제 해제 불가피\" vs \"집값에 기름 부어\"…오세훈·野 공방",
+          "link": "https://www.hankyung.com/article/202610190979i",
+          "source": "한국경제 부동산"
         },
         {
-          "title": "토허구역 지정 1년…경기 12곳 중 11곳 집값 상승폭 커졌다",
-          "link": "https://www.mk.co.kr/news/economy/12179330",
-          "source": "매일경제 부동산"
+          "title": "오세훈 “서울 집값 내년 초까지 우상향 가능성”… 실거주 정책 전환 촉구",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/19/QM7I4UI6ZFAAHAILF5BETLBGOY/",
+          "source": "조선비즈 부동산"
+        },
+        {
+          "title": "오세훈 \"서울 집값 연말·내년 초까지 우상향 가능성 높아\"(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261019084951004",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "수출 대박나면 뭐하나…중국 경제에 나타난 '이상 신호' [차이나 워치]",
+          "link": "https://www.hankyung.com/article/202610190820i",
+          "source": "한국경제 경제"
         }
       ]
     },
@@ -75,31 +48,73 @@
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
-      "lineKo": "코스피는 오늘 저가매수 기회와 불안감이 공존하며 신중한 분위기를 보였다. 이달 세계증시에서 가장 약세를 보인 코스피는 국내 상장사 10개 중 7개가 하락했다. 증권가에서는 코스피가 바닥에 근접했다는 분석을 내놓았으나, 반등 여부는 AI 신용위험에 달려 있다고 전망했다. 중국 증시는 상하이지수가 0.6% 하락하며 출발했다. 각 기사는 별개의 사실을 다루고 있으며, 구체적인 수치와 상황만을 기반으로 작성했다.",
-      "lineEn": "The KOSPI showed a cautious tone today, with low-price buying opportunities and uncertainty coexisting. The KOSPI, which was the weakest among global stock markets this month, saw 7 out of 10 domestic listed companies decline. Financial institutions presented analyses suggesting the KOSPI is nearing its bottom, but its recovery depends on AI credit risk, they forecasted. The Chinese market opened with the Shanghai Composite Index falling 0.6%. Each article covers separate facts and was written based only on specific figures and situations.",
+      "lineKo": "일본 증시는 AI 투자에 대한 불안감으로 인해 혼조세를 보이며 닛케이 지수가 0.62% 하락했다. 중국 증시는 상하이지수가 0.39% 상승하며 혼조 마감했다. 원/달러 환율은 2년 만에 최저 수준으로 떨어졌고, 위안화 환율도 1년 만에 최저를 기록했다. 코스피는 1.8% 상승하며 5,768에 마감해 이틀 연속 상승세를 이어갔다. 코스피는 저가 매수에 힘입어 반등했으나 반도체주에 대한 투자심리는 여전히 신중한 것으로 나타났다.",
+      "lineEn": "Japan's stock market showed a mixed performance, with the Nikkei index falling 0.62% due to concerns over AI investments. China's stock market closed mixed, with the Shanghai index rising 0.39%. The won/dollar exchange rate fell to its lowest level in two years, and the yuan also hit its lowest level in a year. The KOSPI closed at 5,768, rising 1.8%, continuing its two-day upward trend. The KOSPI rebounded due to low-price buying, but investor sentiment toward semiconductor stocks remained cautious.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "\"저가매수 기회\" vs \"불안 여전\"…코스피 신중 모드",
-          "link": "https://www.yna.co.kr/view/AKR20261019083500008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "이달 세계증시 중 '꼴찌' 코스피…국내 상장사 10개 중 7개 하락",
-          "link": "https://www.yna.co.kr/view/AKR20261019068400008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "코스피 '바닥 근접' 분석…증권가 \"반등 여부 AI 신용위험 달려\"",
-          "link": "https://www.yna.co.kr/view/AKR20261019071600008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.6%↓",
-          "link": "https://www.newsis.com/view/NISX20261019_0003831371",
+          "title": "日증시, AI 투자 불안에 혼조 마감…닛케이 0.62%↓",
+          "link": "https://www.newsis.com/view/NISX20261019_0003832076",
           "source": "뉴시스 경제"
+        },
+        {
+          "title": "[올댓차이나] 중국 증시 혼조 마감…상하이지수 0.39%↑",
+          "link": "https://www.newsis.com/view/NISX20261019_0003832092",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "원/달러 환율 2년만에 또 최저…위안화 환율도 1년만에 최저(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261019137151002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "코스피, 1.8% 오른 5,768…이틀 연속 상승하며 반등흐름 유지(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261019137000008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "코스피, 저가매수에 반등 '선방'…반도체주 투심 여전히 '신중'(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261019083551008",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "중국 9월 신축주택 가격은 0.14% 하락하며 중소도시 침체가 지속되고 있다. 한국주택협회와 대한건축학회는 주택산업 발전을 위한 협력 강화를 발표했다. 서울 주택정책은 20년간 성과와 문제점이 엇갈린 것으로 나타났다. 부동산원은 2026년 공공건축물 그린리모델링 의무화 기술지원 사업 설명회를 진행한다. 주택협회와 건축학회는 주택건설사업 발전을 위한 업무협약을 체결했다.",
+      "lineEn": "China's new home prices fell 0.14% in September, indicating continued stagnation in medium and small cities. The Korea Housing Association and the Korean Institute of Architects announced a strengthening of cooperation for the development of the housing industry. Seoul's housing policies have shown mixed results and problems over the past 20 years. The Real Estate Institute will hold a seminar explaining the mandatory technical support program for green remodeling of public buildings by 2026. The Housing Association and the Institute of Architects signed a memorandum of cooperation to promote the development of housing construction projects.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "[올댓차이나] 9월 中 신축주택 가격 0.14%↓…대도시 안정·중소도시 침체 지속",
+          "link": "https://www.newsis.com/view/NISX20261019_0003832132",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "한국주택협회-대한건축학회, 주택산업 발전 협력 강화",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/19/OTLQEKVNAZFQXP3UCOY2LCTHMA/",
+          "source": "조선비즈 부동산"
+        },
+        {
+          "title": "“서울 아파트 공급 어디서부터 꼬였나”…서울 주택정책 20년 엇갈린 성적표",
+          "link": "https://www.mk.co.kr/news/realestate/12179748",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "부동산원, 2026년 공공건축물 그린리모델링  의무화 기술지원 사업 설명회",
+          "link": "https://www.mk.co.kr/news/realestate/12179730",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "[게시판] 주택협회·건축학회, 주택건설사업 발전 업무협약",
+          "link": "https://www.yna.co.kr/view/AKR20261019136500003",
+          "source": "연합뉴스 경제"
         }
       ]
     },
@@ -107,20 +122,20 @@
       "key": "rates",
       "name": "금리·예금·투자상품",
       "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "국고채 금리가 일제히 하락한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.845%를 기록했다. 프랑스에서는 폭력 시위가 이어지고 있다. 이로 인해 통치 불가능한 국가가 되는 것이 아니냐는 우려가 나오고 있다. 프랑스의 상황이 악화되면서 국채금리 급등 우려가 커지고 있다.",
-      "lineEn": "Government bond rates have all fallen. The 3-year government bond rate reached 3.845% annually during trading. Violent protests are continuing in France. Concerns are arising that this may make France an ungovernable country. As the situation in France deteriorates, fears of a sharp rise in bond rates are increasing.",
+      "lineKo": "국고채 금리가 금통위 앞두고 일제히 상승했고, 국채이자 내년 43조 육박할 것으로 예상되며 재정당국은 고금리에 발행 축소를 고심하고 있다.",
+      "lineEn": "Korea's government bond rates rose uniformly ahead of the MPC meeting, and it is expected that government bond interest payments will approach 43,000,000,000,000 next year, prompting the fiscal authorities to consider reducing issuance amid high interest rates.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": false,
+      "degraded": true,
       "items": [
         {
-          "title": "국고채 금리 일제히 하락…3년물 장중 연 3.845%",
-          "link": "https://www.yna.co.kr/view/AKR20261019085900008",
+          "title": "국고채 금리, 금통위 앞두고 일제히 상승…3년물 연 3.877%(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261019145251008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "\"프랑스, 통치 불가 국가됐나\"…폭력 시위에 국채금리도 급등 우려",
-          "link": "https://www.newsis.com/view/NISX20261019_0003831203",
+          "title": "국채이자 내년 43조 육박…고금리에 재정당국 발행 축소 고심",
+          "link": "https://www.newsis.com/view/NISX20261019_0003831911",
           "source": "뉴시스 경제"
         }
       ]
