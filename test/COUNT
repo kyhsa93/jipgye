@@ -1,8 +1,10 @@
-# 루트 `npm test`의 하한 둘 (#315). 래칫은 scripts/test-count-ratchet.mjs.
+# 루트 `npm test`의 하한 둘 (#315). `npm test`가 scripts/run-tests.mjs를 거쳐 scripts/test-count-ratchet.mjs의 함수로 대조한다(#319).
 # 1행 = `ℹ tests N` 하한, 2행 = `ℹ pass N` 하한. 주석(#)과 빈 줄은 버린다.
 # 둘을 같이 보는 이유: `tests`만 보면 시험을 전부 skip으로 바꿔도 통과하고(cto 실측),
 # `pass`만 보면 정당한 게이트 skip에 매번 걸린다.
 # 내리는 변경은 PR 본문에 사유를 적는다 — 사유 없이 내리는 PR은 승인하지 않는다(#315 범위 4).
+# 숫자 줄은 **정확히 둘**이다(#319) — 셋 이상이면 `npm test`가 시험 전에 종료 1이다. 센 법을 덧붙일 때 숫자 쌍을 아래에 또 두지 말고 맨 끝의 두 줄을 제자리에서 고친다.
+# 센 법의 Node는 24.x다 - 래퍼가 타입 스트리핑을 단언해 Node 22에서는 `npm test`가 돌지 않는다.
 # 센 법: 2026-10-15, merge-base f61981ba, Node v24.16.0, macOS 26.6.2.
 #   /bin/dash -c "node --test 'test/*.test.{mjs,ts}'" → ℹ tests 1536 · pass 1536 · fail 0 · skipped 0
 #   /bin/bash 에서도 같은 1536. skipped 0 이라 두 하한이 같다.
@@ -290,8 +292,6 @@
 #   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 17.
 #   고친 기존 시험은 0 이고 없어진 시험도 0 이다(.skip·.todo 도 0 그대로). 공용 도우미 test/helpers/realestate-page.mjs 에 insertAdjacentHTML·append·remove·nextElementSibling 을 흉내 내는 스텁을 더했다 -
 #   더하지 않으면 실패 경로를 타는 기존 시험이 `box.append is not a function` 으로 멈춘다(실측: 66개). 도우미만 고쳤고 그 시험들은 한 줄도 안 바뀌었다. test/realestate-fold.test.mjs 는 한 글자도 안 바뀌고 통과한다.
-1775
-1775
 # 센 법: 2026-10-20, merge-base afcc8b78, Node v22.16.0, macOS 15.5 (#283).
 #   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1782 · pass 1782 · fail 0 · skipped 0
 #   merge-base afcc8b78 의 같은 워크트리에서 새 시험 파일만 빼고 같은 명령 → ℹ tests 1775 · pass 1775 · fail 0 · skipped 0(= 직전 하한).
@@ -300,5 +300,12 @@
 #   옛 예약 규칙에 아래 여백 숫자가 안 남음 · 구획과 예약의 .history-grid 둘이 다 tw:max-w-read(po 6273570907, 1280 단 안 2칸) · 다시 그려지는 조각·굽는 조각·인라인 스크립트(notifyBeside·foldReserve 문자열 포함)에 유틸리티 0 · <code> 규칙 ·
 #   docs/ 전체에서 tw:mb-2·tw:mb-10 을 단 머리·내비·구획이 tw:1024: 변형을 같이 가짐(질문 입구 제외) · 안내 상자 53장이 같은 모양 유틸리티.
 #   고친 기존 시험은 열일곱 개 파일이고(껍데기 유틸리티 목록에 1024 변형과 안내 상자 줄을 더하거나, 구운 여는 태그 글자에 class 가 붙은 것을 따라감) 시험을 더하거나 빼지 않았다. 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
-1782
-1782
+# 센 법: 2026-10-20, merge-base fcee1788, Node v24.22.0, macOS 15.5 (#319 시험 개수 래칫을 npm test 안으로).
+#   npm test(= node scripts/run-tests.mjs, 러너는 node --test --test-reporter=spec --test-reporter-destination=stdout 'test/*.test.{mjs,ts}') → ℹ tests 1802 · pass 1802 · fail 0 · skipped 0
+#   merge-base fcee1788 를 풀어 둔 사본에서 옛 `npm test`(node --test 'test/*.test.{mjs,ts}') → ℹ tests 1782 · pass 1782 · fail 0 · skipped 0. 같은 Node 24.22.0 이다.
+#   차이 20 은 이 PR 이 더한 test/run-tests.test.mjs 하나에서 나온다(`node --test test/run-tests.test.mjs` → ℹ tests 20).
+#   낡은 쌍을 지웠다: #417(757680e3)이 첫 쌍(1775)을 고치지 않고 둘째 쌍(1782)을 끝에 덧붙여, 래칫이 첫 두 숫자 줄인 1775 만 읽고 있었다.
+#   1782 는 #417 이 Node v22.16.0 에서 센 값이라 베끼지 않고 Node 24.x 에서 다시 쟀다(같은 1782 가 나왔다). 숫자 줄은 이제 정확히 둘이다.
+#   없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
+1802
+1802
