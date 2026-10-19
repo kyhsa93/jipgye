@@ -60,7 +60,7 @@ test("접는 대상 trendSection.nextElementSibling 은 47장 모두 빈 칸 셋
     const open = html.indexOf('<section id="trend-section"');
     assert.ok(open >= 0, `${name}: 추이 구획 여는 태그를 못 찾았다`);
     const close = html.indexOf("</section>", open);
-    assert.match(html.slice(close + "</section>".length, close + 120), /^\s*<div class="trend-reserve">\s*<div class="[^"]+">\s*<div class="trend-reserve-card"><\/div>/, `${name}: 추이 구획 바로 뒤 형제가 .trend-reserve 가 아니다 - 접는 줄이 엉뚱한 상자를 접거나 null 에서 던진다(실패 때 다시 시도 단추가 안 그려진다)`);
+    assert.match(html.slice(close + "</section>".length, close + 200), /^\s*<div class="trend-reserve tw:mb-10 tw:1024:mb-16">\s*<div class="[^"]+">\s*<div class="trend-reserve-card"><\/div>/, `${name}: 추이 구획 바로 뒤 형제가 .trend-reserve 가 아니다 - 접는 줄이 엉뚱한 상자를 접거나 null 에서 던진다(실패 때 다시 시도 단추가 안 그려진다)`);
   }
 });
 

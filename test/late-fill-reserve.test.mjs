@@ -105,7 +105,7 @@ test("예약이 집는 자리가 구운 장에 있다 (#341)", async () => {
   assert.ok(header && !header.includes('id="update-schedule"'), "docs/index.html: #update-schedule 이 머리에 있다 - 채움 이동을 막는 예약은 없다(#398)");
   // 머리를 가리키던 예약 규칙(`.tagline ~ .update-schedule`)은 아무것도 안 집는 죽은 규칙이다 - 남겨 두면 다음 사람이 머리로 되돌려도 예약이 살아 있는 줄 안다.
   assert.ok(!(await read("src/css/legacy.css")).includes(".tagline ~ .update-schedule"), "src/css/legacy.css: 죽은 예약 규칙 `.tagline ~ .update-schedule` 이 남아 있다(#398)");
-  assert.ok(index.includes('<footer class="site-footer">\n    <div class="update-schedule tw:text-sm" id="update-schedule"></div>'), "docs/index.html: #update-schedule 이 바닥글 첫 줄에 없다(#398)");
+  assert.ok(index.includes('<footer class="site-footer">\n    <div class="update-schedule tw:text-sm tw:mb-2" id="update-schedule"></div>'), "docs/index.html: #update-schedule 이 바닥글 첫 줄에 없다(#398)");
   // 다른 장의 .update-schedule(금리 네 장)은 .tagline 이 없어 이 예약이 안 걸려야 한다 - 걸리면 그 장의 한 줄 예약이 두 줄로 부푼다.
   for (const page of ["deposit-rates.html", "saving-rates.html", "mortgage-rates.html", "rent-loan-rates.html"]) {
     const html = await read(`docs/${page}`);

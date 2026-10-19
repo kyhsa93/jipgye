@@ -29,7 +29,7 @@
 <body>
 <a class="skip-link" href="#main" data-skip-en="Skip to content">본문 바로가기</a>
 <main id="main">
-  <header>
+  <header class="tw:mb-2 tw:1024:mb-6">
     <div>
       <a class="brand" id="site-brand" href="./index.html" data-brand-en="Jipgye">집계</a>
       <h1 id="page-title">동대문구 아파트 시세</h1>
@@ -42,14 +42,14 @@
     </div>
   </header>
 
-  <nav class="page-nav" aria-label="섹션">
+  <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="섹션">
     <a href="./index.html" id="nav-digest">오늘</a>
     <a href="./realestate.html" id="nav-realestate" class="active">아파트 시세</a>
     <a href="./rates.html" id="nav-rates">금리 비교</a>
     <a href="./news.html" id="nav-news">뉴스</a>
   </nav>
 
-  <nav class="sub-nav" aria-label="거래 유형">
+  <nav class="sub-nav tw:mt-0 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="거래 유형">
     <a href="./realestate.html" data-re-page="all">전체</a>
     <a href="./apartment-sale.html" data-re-page="sale">매매</a>
     <a href="./apartment-jeonse.html" data-re-page="jeonse">전세</a>
@@ -69,17 +69,17 @@
          aria-labelledby="site-search-label" hidden></div>
   </form>
 
-  <aside class="method-callout">
-    <p id="method-callout-text">매물 호가가 아니라 국토교통부에 신고된 실거래입니다. 자치구는 한 주 표본이 얇아 최근 4주를 겹쳐 세고, 신고가 5건 미만인 구는 평균을 내지 않고 비워 둡니다.</p>
+  <aside class="method-callout tw:-ml-2.75 tw:pl-2 tw:border-l-3 tw:border-border-strong">
+    <p id="method-callout-text" class="tw:text-fg">매물 호가가 아니라 국토교통부에 신고된 실거래입니다. 자치구는 한 주 표본이 얇아 최근 4주를 겹쳐 세고, 신고가 5건 미만인 구는 평균을 내지 않고 비워 둡니다.</p>
     <a href="./method.html" id="method-callout-link">숫자를 만드는 방법 →</a>
   </aside>
 
-  <section id="overall-section">
+  <section id="overall-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="overall-heading">동대문구 평균</h2>
     <div class="overall-cards" id="overall-cards"><!--prerender:realestateOverall--><div class="overall-card"><div class="label">평당가</div><div class="value">4,525만원</div></div><div class="overall-card"><div class="label">84㎡ 환산</div><div class="value">11억 4,980만원</div></div><div class="overall-card"><div class="label">거래건수</div><div class="value">100건</div></div><div class="overall-card"><div class="label">전세가율</div><div class="value">64.0%</div><div class="sub">매매 100건 · 전세 100건</div></div><div class="overall-card"><div class="label">전세가율 단지별 중앙값</div><div class="value">51.4%</div><div class="sub">단지·평형 48칸</div></div><!--/prerender:realestateOverall--></div>
   </section>
 
-  <section id="district-summary-section" hidden>
+  <section id="district-summary-section" class="tw:mb-10 tw:1024:mb-16" hidden>
     <p class="district-summary" data-summary-lang="ko"><!--prerender:districtSummaryKo-->동대문구 아파트 매매가는 평당 4,525만원입니다. 서울 평균 4,914만원의 0.9배입니다. 신고 건수가 충분한 25개 구 가운데 15번째로 높습니다. 84㎡(약 25평) 기준으로 환산하면 약 11억 4,980만원입니다. 평당가가 가장 가까운 지역은 강서구(4,444만원)입니다. 전세가율은 64.0%로 서울 평균 61.3%보다 높은 편이고, 25개 구를 전세가율 순으로 세우면 서대문구와 구로구 사이입니다(이 구 매매 100건·전세 100건, 서울 전체 매매 3,042건·전세 3,091건 기준). 매매와 전세가 함께 신고된 단지·평형 48칸에서 하나씩 내면 절반이 48.4~55.7%에 들어옵니다 — 위 자치구 값은 구 전체 평균 둘을 나눈 것인데, 이 구에서는 매매가 신고된 단지와 전세가 신고된 단지가 서로 달라 그만큼 벌어집니다. 월세는 보증금 1억 3,621만원에 월 112만원 수준입니다. 이 숫자들은 정부에 신고된 매매 100건, 전세 100건, 월세 197건을 집계한 것입니다.<!--/prerender:districtSummaryKo--></p>
     <p class="district-summary" data-summary-lang="en" hidden><!--prerender:districtSummaryEn-->Apartments in 동대문구 trade at ₩45.3M per pyeong, 0.9× the Seoul average of ₩49.1M. That is 15th among the 25 districts with enough reported transactions. For an 84m² unit that works out to about ₩1,150M. The closest district by price is 강서구 at ₩44.4M per pyeong. The jeonse ratio is 64.0%, above the Seoul average of 61.3%, ranking between 서대문구 and 구로구 among 25 districts (based on 100 sales and 100 jeonse here, 3,042 and 3,091 citywide). Measured one unit type at a time across the 48 unit types where both a sale and a jeonse were reported, half fall between 48.4% and 55.7% — the district figure divides one district-wide average by another, and here the complexes filing sales are not the ones filing jeonse. Monthly rentals average a ₩136.2M deposit with ₩1.1M per month. These figures are based on 100 sales, 100 jeonse, 197 rentals reported to the government.<!--/prerender:districtSummaryEn--></p>
     <p class="district-summary district-facts" data-summary-lang="ko"><!--prerender:districtFactsKo-->위 시세표의 최근 네 주가 아니라, 최근 3개월 동안 신고된 260건을 전부 놓고 보면 이렇습니다. 한 단지가 유독 많이 팔렸습니다 — 전농동 래미안크레시티 15건으로 전체의 6%입니다. 기간 중 가장 비싸게 팔린 것은 전농동 래미안크레시티 122㎡로 22억원입니다.<!--/prerender:districtFactsKo--></p>
@@ -89,9 +89,9 @@
     <p class="card-links district-here"><a href="./deal-search.html?district=%EB%8F%99%EB%8C%80%EB%AC%B8%EA%B5%AC">동대문구 실거래·단지 찾기 →</a> · <a href="./budget-11eok.html">동대문구 84㎡ 값에 맞는 11억대 후보 →</a> · <a href="./renewal-vs-new.html">재계약이 시세보다 싼가(구별 표) →</a> · <a href="./switch-house.html?from=%EB%8F%99%EB%8C%80%EB%AC%B8%EA%B5%AC">동대문구에서 옮기면 — 갈아타기 →</a></p>
   </section>
 
-  <section id="trend-section" hidden>
+  <section id="trend-section" class="tw:mb-10 tw:1024:mb-16" hidden>
     <h2 id="trend-heading">최근 추이</h2>
-    <div class="history-grid">
+    <div class="history-grid tw:max-w-read">
       <div class="history-card" id="trend-card">
         <div class="label" id="trend-label"></div>
         <div class="history-stats">
@@ -129,15 +129,15 @@
     <div class="chart-tip" id="chart-tip" hidden></div>
   </section>
 
-  <div class="trend-reserve">
-    <div class="history-grid">
+  <div class="trend-reserve tw:mb-10 tw:1024:mb-16">
+    <div class="history-grid tw:max-w-read">
       <div class="trend-reserve-card"></div>
       <div class="trend-reserve-card"></div>
       <div class="trend-reserve-card"></div>
     </div>
   </div>
 
-  <section id="budget-section" hidden>
+  <section id="budget-section" class="tw:mb-10 tw:1024:mb-16" hidden>
     <h2 id="budget-heading">예산으로 찾기</h2>
     <div id="budget-result"><!--prerender:budgetResult--><!--/prerender:budgetResult--></div>
     <p class="district-summary budget-facts" data-summary-lang="ko"><!--prerender:budgetFactsKo--><!--/prerender:budgetFactsKo--></p>
@@ -146,7 +146,7 @@
     <div class="content-notice" id="budget-note"></div>
   </section>
 
-  <section id="district-section">
+  <section id="district-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="district-heading">거래 유형별</h2>
     <div class="controls" id="area-controls" hidden>
       <label for="area-select" id="area-label">평형</label>

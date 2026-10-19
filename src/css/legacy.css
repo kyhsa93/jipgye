@@ -1391,10 +1391,10 @@ ul.news-list {
 #trend-section[hidden] + .trend-reserve {
   display: block;
   visibility: hidden;
-  /* 위 section 규칙의 24px과 같은 값이어야 한다. 펴진 구획은 section의 margin-bottom을 받으므로, 예약이
-   * 숫자를 따로 가지면 section 여백을 바꿀 때 데이터가 오는 순간 앞뒤 간격이 그만큼 어긋난다. 32였을 때
-   * 47장 × 412폭 전부 -8.00px이었고 24로 맞추자 47장 전부 0.00px이다(2026-10-18, #335 cto 판정 3). */
-  margin-bottom: 24px;
+  /* 아래 여백은 이 규칙이 아니라 틀의 여는 태그가 가진다. 구획(#trend-section)과 예약(.trend-reserve)이 같은 유틸리티를 달아
+   * 한 곳에서 같은 값을 받는다(test/realestate-shell.test.mjs 가 둘이 같음을 지킨다). 펴진 구획은 section의 margin-bottom을
+   * 받으므로, 예약이 숫자를 따로 가지면 여백을 바꿀 때 데이터가 오는 순간 앞뒤 간격이 그만큼 어긋난다. 32였을 때 47장 × 412폭
+   * 전부 -8.00px이었고 24로 맞추자 전부 0.00px이었다(2026-10-18, #335 cto 판정 3). */
 }
 
 /* 한 줄 자리는 전부 줄 바꿈 없는 빈칸 한 글자로 만든다. min-height로 "1.5em"이나 "1lh"를 적으면

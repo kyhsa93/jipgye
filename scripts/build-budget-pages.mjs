@@ -99,10 +99,12 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
     "정규 URL 링크"
   );
 
+  // 틀의 구획 여는 태그는 구획 아래 여백 유틸리티 class 를 가진다(#283). 아래 needle 셋은 그 글자를 그대로 쓰므로 틀의 class 를 바꾸면 여기와
+  // test/realestate-shell.test.mjs 를 같이 고친다.
   html = replaceOnce(
     html,
-    '<section id="budget-section" hidden>',
-    '<section id="budget-section">',
+    '<section id="budget-section" class="tw:mb-10 tw:1024:mb-16" hidden>',
+    '<section id="budget-section" class="tw:mb-10 tw:1024:mb-16">',
     "예산 섹션"
   );
 
@@ -116,9 +118,9 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
   // 예산 장의 본문(그 예산대 거래·후보·자금)을 서울 평균 카드와 추이 그래프보다 앞에 둔다. 모바일에서
   // 예산 본문이 1,702px 아래에서 시작했다(PO 검토 #33) - 이 장을 연 사람이 찾는 것은 서울 평균이 아니다.
   {
-    const start = html.indexOf('<section id="budget-section">');
+    const start = html.indexOf('<section id="budget-section" class="tw:mb-10 tw:1024:mb-16">');
     const end = html.indexOf("</section>", start) + "</section>".length;
-    const anchor = html.indexOf('<section id="overall-section">');
+    const anchor = html.indexOf('<section id="overall-section"');
     if (start < 0 || anchor < 0 || anchor > start) throw new Error("예산 섹션을 앞으로 옮길 자리를 찾지 못했습니다");
     const block = html.slice(start, end);
     html = html.slice(0, start) + html.slice(end);
@@ -140,8 +142,8 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
   // 자치구 페이지로 가는 길이 끊기지 않는다.
   html = replaceOnce(
     html,
-    '<section id="district-section">',
-    '<section id="district-section" hidden>',
+    '<section id="district-section" class="tw:mb-10 tw:1024:mb-16">',
+    '<section id="district-section" class="tw:mb-10 tw:1024:mb-16" hidden>',
     "자치구 시세 섹션"
   );
 

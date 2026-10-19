@@ -945,11 +945,11 @@ test("추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 �
 
   for (const file of files) {
     const html = await read(`docs/${file}`);
-    assert.ok(html.includes('<section id="trend-section" hidden>'), `${file}: 추이 구획이 hidden으로 구워지지 않는다`);
+    assert.ok(html.includes('<section id="trend-section" class="tw:mb-10 tw:1024:mb-16" hidden>'), `${file}: 추이 구획이 hidden으로 구워지지 않는다`);
 
     // 예약은 구획 바로 뒤에 온다 - CSS가 `#trend-section[hidden] + .trend-reserve`로 집는다.
-    const after = html.slice(html.indexOf('<section id="trend-section" hidden>'));
-    const reserve = /<\/section>\s*(?:<!--[\s\S]*?-->\s*)?<div class="trend-reserve">([\s\S]*?)<\/div>\s*<\/div>/.exec(after);
+    const after = html.slice(html.indexOf('<section id="trend-section" class="tw:mb-10 tw:1024:mb-16" hidden>'));
+    const reserve = /<\/section>\s*(?:<!--[\s\S]*?-->\s*)?<div class="trend-reserve tw:mb-10 tw:1024:mb-16">([\s\S]*?)<\/div>\s*<\/div>/.exec(after);
     assert.ok(reserve, `${file}: 추이 구획 바로 뒤의 자리 예약을 찾지 못했다`);
 
     const cells = [...reserve[1].matchAll(/<div class="trend-reserve-card">/g)].length;
@@ -990,7 +990,7 @@ test("추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 �
   // scripts/build-realestate-pages.mjs에 있고, 틀과 생성 47장에는 주석이 0줄이다.
   for (const file of files) {
     const html = await read(`docs/${file}`);
-    const block = html.slice(html.indexOf('<section id="trend-section" hidden>'), html.indexOf('<div class="trend-reserve">'));
+    const block = html.slice(html.indexOf('<section id="trend-section" class="tw:mb-10 tw:1024:mb-16" hidden>'), html.indexOf('<div class="trend-reserve '));
     const comments = [...block.matchAll(/<!--(?!\/?prerender:)/g)].length;
     assert.equal(comments, 0, `${file}: 예약 둘레에 구운 주석이 ${comments}줄 남았다 - 설명은 빌드 소스에 적는다`);
   }

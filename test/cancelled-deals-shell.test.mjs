@@ -17,14 +17,14 @@ const tokens = (cls) => cls.split(/\s+/).filter(Boolean);
 // 값은 방향 C의 머리·내비는 조밀하게(8)·본문 구획 사이는 넉넉하게(40)이고(#384·#385 와 같은 값), 높이 예산(첫 h2 ≤ merge-base)은
 // 머리 아래 여백 16→8, 2층 내비 아래 여백 16→8로 16px를 산다. 이 수를 바꾸면 PR 본문의 윗변 표를 다시 재야 한다.
 const SHELL = [
-  { name: "머리글", pattern: /<header(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-2"] },
-  { name: "1층 내비", pattern: /<nav class="([^"]*)" aria-label="섹션">/, hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:*:rounded"] },
-  { name: "2층 내비", pattern: /<nav class="([^"]*)" aria-label="거래 유형">/, hooks: ["sub-nav"], utilities: ["tw:gap-2", "tw:mt-0", "tw:mb-2", "tw:*:rounded"] },
+  { name: "머리글", pattern: /<header(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-2", "tw:1024:mb-6"] },
+  { name: "1층 내비", pattern: /<nav class="([^"]*)" aria-label="섹션">/, hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:1024:mb-4", "tw:*:rounded"] },
+  { name: "2층 내비", pattern: /<nav class="([^"]*)" aria-label="거래 유형">/, hooks: ["sub-nav"], utilities: ["tw:gap-2", "tw:mt-0", "tw:mb-2", "tw:1024:mb-4", "tw:*:rounded"] },
   ...["lead", "district", "month", "price"].map((id) => ({
     name: `${id} 구획`,
     pattern: new RegExp(`<section id="${id}-section"(?: class="([^"]*)")?>`),
     hooks: [],
-    utilities: ["tw:mb-10"],
+    utilities: ["tw:mb-10", "tw:1024:mb-16"],
   })),
 ];
 

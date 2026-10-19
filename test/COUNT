@@ -292,3 +292,13 @@
 #   더하지 않으면 실패 경로를 타는 기존 시험이 `box.append is not a function` 으로 멈춘다(실측: 66개). 도우미만 고쳤고 그 시험들은 한 줄도 안 바뀌었다. test/realestate-fold.test.mjs 는 한 글자도 안 바뀌고 통과한다.
 1775
 1775
+# 센 법: 2026-10-20, merge-base afcc8b78, Node v22.16.0, macOS 15.5 (#283).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1782 · pass 1782 · fail 0 · skipped 0
+#   merge-base afcc8b78 의 같은 워크트리에서 새 시험 파일만 빼고 같은 명령 → ℹ tests 1775 · pass 1775 · fail 0 · skipped 0(= 직전 하한).
+#   차이 7 은 이 PR 이 더한 test/realestate-shell.test.mjs 하나에서 나온다(`node --test test/realestate-shell.test.mjs` → ℹ tests 7):
+#   시세 틀 47장과 틀의 껍데기 열 곳(머리·1·2층 내비·안내 상자와 문단·구획 다섯·추이 예약)이 같은 유틸리티와 그대로인 훅 class · 추이 구획과 예약이 같은 여백 유틸리티를 받고
+#   옛 예약 규칙에 아래 여백 숫자가 안 남음 · 구획과 예약의 .history-grid 둘이 다 tw:max-w-read(po 6273570907, 1280 단 안 2칸) · 다시 그려지는 조각·굽는 조각·인라인 스크립트(notifyBeside·foldReserve 문자열 포함)에 유틸리티 0 · <code> 규칙 ·
+#   docs/ 전체에서 tw:mb-2·tw:mb-10 을 단 머리·내비·구획이 tw:1024: 변형을 같이 가짐(질문 입구 제외) · 안내 상자 53장이 같은 모양 유틸리티.
+#   고친 기존 시험은 열일곱 개 파일이고(껍데기 유틸리티 목록에 1024 변형과 안내 상자 줄을 더하거나, 구운 여는 태그 글자에 class 가 붙은 것을 따라감) 시험을 더하거나 빼지 않았다. 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
+1782
+1782

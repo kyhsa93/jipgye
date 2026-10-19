@@ -28,7 +28,7 @@
 <body>
 <a class="skip-link" href="#main" data-skip-en="Skip to content">본문 바로가기</a>
 <main id="main">
-  <header class="tw:mb-2">
+  <header class="tw:mb-2 tw:1024:mb-6">
     <div>
       <a class="brand" id="site-brand" href="./index.html" data-brand-en="Jipgye">집계</a>
       <h1 id="page-title">재계약이 시세보다 싼가</h1>
@@ -41,14 +41,14 @@
     </div>
   </header>
 
-  <nav class="page-nav tw:gap-2 tw:mb-2 tw:*:rounded" aria-label="섹션">
+  <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="섹션">
     <a href="./index.html" id="nav-digest">오늘</a>
     <a href="./realestate.html" id="nav-realestate" class="active">아파트 시세</a>
     <a href="./rates.html" id="nav-rates">금리 비교</a>
     <a href="./news.html" id="nav-news">뉴스</a>
   </nav>
 
-  <nav class="sub-nav tw:gap-2 tw:mt-0 tw:mb-2 tw:*:rounded" aria-label="거래 유형">
+  <nav class="sub-nav tw:gap-2 tw:mt-0 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="거래 유형">
     <a href="./realestate.html" data-re-page="all">전체</a>
     <a href="./apartment-sale.html" data-re-page="sale">매매</a>
     <a href="./apartment-jeonse.html" data-re-page="jeonse">전세</a>
@@ -68,18 +68,18 @@
          aria-labelledby="site-search-label" hidden></div>
   </form>
 
-  <aside class="method-callout">
-    <p id="method-callout-text">시세표는 신규 계약만 셉니다. 갱신은 지금 시세가 아니라서인데, 그렇게 빠지는 것이 서울 전월세 신고의 절반입니다. 이 화면은 그 절반을 봅니다 — 전세는 전세끼리, 월세는 월세끼리.</p>
+  <aside class="method-callout tw:-ml-2.75 tw:pl-2 tw:border-l-3 tw:border-border-strong">
+    <p id="method-callout-text" class="tw:text-fg">시세표는 신규 계약만 셉니다. 갱신은 지금 시세가 아니라서인데, 그렇게 빠지는 것이 서울 전월세 신고의 절반입니다. 이 화면은 그 절반을 봅니다 — 전세는 전세끼리, 월세는 월세끼리.</p>
     <a href="./method.html" id="method-callout-link">숫자를 만드는 방법 →</a>
   </aside>
 
-  <section id="lead-section" class="tw:mb-10">
+  <section id="lead-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="lead-heading">갱신과 신규의 차이</h2>
     <p class="lead" id="lead"><!--prerender:renewalLead-->서울에서 재계약하는 세입자는 같은 단지 같은 평형에 그달 새로 맺어진 전세보다 보증금을 11.0% 적게 냅니다. 맞물린 계약 1,706건 가운데 79.8%가 시세보다 싸게 맺어졌습니다 — 나가서 다시 구하면 그 차이만큼을 더 내야 한다는 뜻입니다.<!--/prerender:renewalLead--></p>
     <div class="content-notice" id="lead-note"></div>
   </section>
 
-  <section id="district-section" class="tw:mb-10">
+  <section id="district-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="district-heading">자치구별 갱신 vs 신규</h2>
     <div class="table-scroll">
       <table class="rate-table" id="district-table"><caption class="sr-only" data-auto>전세 재계약 vs 새로 구하기 - 서울 아파트 갱신 보증금 비교 - 자치구별 갱신 vs 신규: 25행 6열(자치구·갱신 − 신규·시세보다 싼 비율·맞물린 계약 등)</caption><!--prerender:renewalDistricts--><thead><tr><th scope="col">자치구</th><th scope="col">갱신 − 신규</th><th scope="col">시세보다 싼 비율</th><th scope="col">맞물린 계약</th><th scope="col">상한 미달</th><th scope="col">요구권 행사</th></tr></thead><tbody><tr><td>강서구</td><td>-22%</td><td>79.4%</td><td>131</td><td>46.1%</td><td>720</td></tr><tr><td>강동구</td><td>-20.6%</td><td>86.4%</td><td>118</td><td>32.5%</td><td>872</td></tr><tr><td>송파구</td><td>-12.5%</td><td>89.1%</td><td>303</td><td>36.3%</td><td>1,189</td></tr><tr><td>노원구</td><td>-12%</td><td>76.4%</td><td>275</td><td>40.6%</td><td>1,034</td></tr><tr><td>양천구</td><td>-8.7%</td><td>78.9%</td><td>133</td><td>40.8%</td><td>735</td></tr><tr><td>강남구</td><td>-7.2%</td><td>67.9%</td><td>112</td><td>46.5%</td><td>1,202</td></tr><tr><td>마포구</td><td>-4.1%</td><td>65.2%</td><td>92</td><td>54.6%</td><td>701</td></tr><tr><td>종로구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>2</td><td>-</td><td>105</td></tr><tr><td>중구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>27</td><td>50.2%</td><td>209</td></tr><tr><td>용산구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>16</td><td>47.5%</td><td>356</td></tr><tr><td>성동구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>51</td><td>46.8%</td><td>626</td></tr><tr><td>광진구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>26</td><td>39.1%</td><td>225</td></tr><tr><td>동대문구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>32</td><td>43.2%</td><td>421</td></tr><tr><td>중랑구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>12</td><td>41.8%</td><td>280</td></tr><tr><td>성북구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>25</td><td>37.1%</td><td>560</td></tr><tr><td>강북구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>6</td><td>-</td><td>161</td></tr><tr><td>도봉구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>55</td><td>42.1%</td><td>318</td></tr><tr><td>은평구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>56</td><td>42.7%</td><td>454</td></tr><tr><td>서대문구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>22</td><td>41.8%</td><td>407</td></tr><tr><td>구로구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>22</td><td>52.6%</td><td>382</td></tr><tr><td>금천구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>10</td><td>-</td><td>117</td></tr><tr><td>영등포구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>55</td><td>41.2%</td><td>587</td></tr><tr><td>동작구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>37</td><td>39.5%</td><td>526</td></tr><tr><td>관악구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>48</td><td>46.3%</td><td>296</td></tr><tr><td>서초구</td><td><span class="low-sample">표본 부족</span></td><td>-</td><td>40</td><td>43.5%</td><td>689</td></tr></tbody><!--/prerender:renewalDistricts--></table>
@@ -87,7 +87,7 @@
     <div class="content-notice" id="district-note"></div>
   </section>
 
-  <section id="wolse-section" class="tw:mb-10">
+  <section id="wolse-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="wolse-heading">월세로 재계약하면</h2>
     <p class="lead" id="wolse-lead"><!--prerender:renewalWolseLead-->재계약 32,542건 가운데 전세에서 전세로 간 것이 54.7%, 월세에서 월세로 간 것이 40.2%, 유형이 바뀐 것이 5.1%입니다. 위의 비교는 첫째 몫만 셉니다. 월세로 재계약한 세입자가 내는 값은 같은 단지 같은 평형에 그달 새로 맺어진 월세의 중앙값보다 5.5% 적습니다. 보증금과 월세를 서울 실측 전월세전환율 4.8%로 묶어 견준 값이고, 맞물린 계약 2,029건 가운데 70.1%가 시세보다 싸게 맺어졌습니다. 이 크기는 묶는 배수에 달려 있습니다 — 3%로 보면 6.8% 적고, 10%로 보면 2.6% 적습니다. 전세(11.0%)만큼 크다고 읽으면 안 됩니다.<!--/prerender:renewalWolseLead--></p>
     <div class="table-scroll">
@@ -95,7 +95,7 @@
     </div>
     <div class="content-notice" id="wolse-note"></div>
   </section>
-  <section id="cap-section" class="tw:mb-10">
+  <section id="cap-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="cap-heading">천장에 닿았나</h2>
     <p class="lead" id="cap-lead"><!--prerender:renewalCapLead-->계약갱신요구권을 쓴 재계약 13,172건 가운데 42.9%가 상한 5%에 못 미친 선에서 맺어졌습니다. 여기서 재는 것이 인상률의 평균이 아니라 천장에 닿았는지인 이유는, 상한이 걸린 시장에서 평균을 내면 시장이 아니라 법조문을 다시 읽게 되기 때문입니다.<!--/prerender:renewalCapLead--></p>
     <div class="content-notice" id="cap-note"></div>

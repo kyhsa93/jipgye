@@ -17,13 +17,13 @@ const tokens = (cls) => cls.split(/\s+/).filter(Boolean);
 // 값은 방향 C의 머리·내비는 조밀하게(8)·본문 구획 사이는 넉넉하게(40)이고(#384·#385 와 같은 값), 높이 예산(첫 h2 ≤ merge-base)은
 // 머리 아래 여백 16→8, 1층 내비 아래 여백 16→8로 16px를 산다. 이 수를 바꾸면 PR 본문의 윗변 표를 다시 재야 한다.
 const SHELL = [
-  { name: "머리글", pattern: /<header(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-2"] },
-  { name: "1층 내비", pattern: /<nav class="([^"]*)" aria-label="섹션">/, hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:*:rounded"] },
+  { name: "머리글", pattern: /<header(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-2", "tw:1024:mb-6"] },
+  { name: "1층 내비", pattern: /<nav class="([^"]*)" aria-label="섹션">/, hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:1024:mb-4", "tw:*:rounded"] },
   ...["lead", "top", "district"].map((id) => ({
     name: `${id} 구획`,
     pattern: new RegExp(`<section id="${id}-section"(?: class="([^"]*)")?>`),
     hooks: [],
-    utilities: ["tw:mb-10"],
+    utilities: ["tw:mb-10", "tw:1024:mb-16"],
   })),
 ];
 
@@ -41,9 +41,9 @@ test("층별 가격 장의 껍데기는 같은 유틸리티를 갖고 훅 class�
   // 구획 id 가 바뀌어도 이 시험이 눈먼 채 통과하지 않게: 구획 셋은 이 순서로 한 번씩, 다섯째(질문 입구)는 스크립트가 채우므로 유틸리티가 없다.
   const ids = [...html.matchAll(/<section id="([^"]+)"/g)].map((m) => m[1]);
   assert.deepEqual(ids, ["lead-section", "top-section", "district-section", "other-questions"], `${FILE}: 구획이 달라졌다`);
-  // 첫 구획 위의 안내(방법 안내 aside)는 스크립트가 글자만 바꾸는 곳이고 이 개편의 범위 밖이다 - 첫 h2 높이를 정하는 것이라 모양 유틸리티를 두지 않는다.
+  // 첫 구획 위의 안내(방법 안내 aside)는 스크립트가 글자만 바꾸는 곳이고 모양은 #283 이 53장 한 번에 정했다(test/realestate-shell.test.mjs).
   const callout = html.match(/<aside\b[^>]*>/)?.[0];
-  assert.ok(callout && !callout.includes("tw:"), `${FILE}: 안내 aside 에 유틸리티가 붙었다: ${callout}`);
+  assert.equal(callout, '<aside class="method-callout tw:-ml-2.75 tw:pl-2 tw:border-l-3 tw:border-border-strong">', `${FILE}: 안내 aside 의 모양 유틸리티가 달라졌다(#283 이 53장 한 번에 정했다): ${callout}`);
   const entry = html.match(/<section id="other-questions"[^>]*>/)?.[0];
   assert.ok(entry && !entry.includes("tw:"), `${FILE}: 질문 입구 구획에 유틸리티가 붙었다: ${entry}`);
 });

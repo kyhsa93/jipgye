@@ -73,7 +73,7 @@ test("예산 페이지에 그 구간 거래와 제목이 들어간다", async ()
 
   assert.match(html, /<title>8억대로 살 수 있는 서울 아파트 - 최근 실거래<\/title>/);
   assert.match(html, /<meta name="budget-band" content="80000">/);
-  assert.match(html, /<section id="budget-section">/, "예산 섹션이 접힌 채로 나갔다");
+  assert.match(html, /<section id="budget-section" class="tw:mb-10 tw:1024:mb-16">/, "예산 섹션이 접힌 채로 나갔다");
   assert.match(html, /팔억가단지/);
   assert.match(html, /도봉구 창동 팔억나단지/);
   assert.match(html, /canonical" href="[^"]*budget-8eok\.html/);
@@ -226,13 +226,13 @@ test("예산 페이지는 자치구 시세표를 다시 싣지 않는다", async
     const html = await readFile(path.join(root, "docs", page.file), "utf8");
     assert.match(
       html,
-      /<section id="district-section" hidden>/,
+      /<section id="district-section" class="tw:mb-10 tw:1024:mb-16" hidden>/,
       `docs/${page.file}이 자치구 시세표를 다시 싣습니다`
     );
   }
 
   const source = await readFile(path.join(root, "scripts/realestate-template.html"), "utf8");
-  assert.match(source, /<section id="district-section">/, "원본에서까지 표를 접었습니다");
+  assert.match(source, /<section id="district-section" class="tw:mb-10 tw:1024:mb-16">/, "원본에서까지 표를 접었습니다");
 });
 
 test("표를 접어도 자치구로 가는 길은 남는다", async () => {
@@ -249,7 +249,7 @@ test("표를 접어도 자치구로 가는 길은 남는다", async () => {
 test("자치구 링크는 시세표 바깥에 있다", async () => {
   // 링크가 표와 같은 섹션 안에 있으면 예산 페이지에서 표를 접을 때 같이 접힌다.
   const source = await readFile(path.join(root, "scripts/realestate-template.html"), "utf8");
-  const section = source.split('<section id="district-section">')[1].split("</section>")[0];
+  const section = source.split('<section id="district-section" class="tw:mb-10 tw:1024:mb-16">')[1].split("</section>")[0];
   assert.ok(
     !section.includes("<!--prerender:districtLinks-->"),
     "자치구 링크가 시세표 섹션 안으로 들어왔습니다"
