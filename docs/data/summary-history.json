@@ -5320,29 +5320,44 @@
     "date": "2026-10-19",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 금리·예금·투자상품: 프랑스에서 폭력 시위가 일어나면서 통치 불가능한 국가로 갈 수 있다는 우려가 커지고 있다. 이로 인해 프랑스 국채금리가 급등할 가능성도 제기되고 있다. 제주은행은 매월 신용 재평가를 통해 대출금리를 낮춰주는 서비스를 제공하고 있다. 해당 서비스는 고객의 신용 상태를 정기적으로 점검하여 금리를 조정하는 방식이다. 이는 고객에게 더 유리한 금리 혜택을 제공하기 위한 제주은행의 전략이다.\n- 증시·환율: 중국 증시는 오늘 하락 출발하며 상하이지수가 0.6% 하락했다. 코스피는 장중 상승 전환하며 5,700선 근접했고, 전장보다 0.47% 상승했다. 이형일은 환율이 펀더멘털을 찾는 과정이라고 밝혔다. 또한 성장세가 소비로 전이될 것으로 전망했다. 코스피는 개장 후 3.2% 급락했으나 이후 일부 되돌림을 보이며 1%대 초반 하락세를 기록했다.\n- 부동산: 오세훈은 신통기획 1만5000호 착공을 발표하며 규제 완화를 통해 주택 공급을 가속화하겠다고 밝혔다. 국토부는 매물이 30% 쌓이면서 집값 과열을 잡았다고 판단했다. 11월 수도권 아파트 입주 물량은 전월 대비 절반으로 줄어들었다. 부동산원장은 행정구역을 넘어 다핵 초광역경제권으로 국토를 재편해야 한다고 주장했다. 이헌욱 부동산원장은 대구대에서 지속가능한 인재 생태계 구축의 필요성을 강조했다.\n- 기타 경제 소식: 경기 12곳 중 11곳에서 토허구역 지정 1년 만에 집값 상승폭이 커졌다. 대출이자에 대한 확인 절차가 간소화되며 매월 자동으로 이자가 깎여주는 방식으로 변경됐다. 유진이엔티와 재능교육은 가족 경제교육 강연 '머니인더스쿨'을 운영하고 있다. 토허구역 지정과 관련된 주택 가격 동향은 지역별로 차이가 있는 것으로 나타났다. 이자 감면 방식의 변화는 금융 서비스의 편의성 향상에 기여하고 있다.",
-      "en": "- Rates, Deposits & Investment Products: Concerns are growing in France that violent protests could lead the country toward becoming ungovernable. This has also raised the possibility of a sharp rise in French government bond yields. Jeju Bank offers a service that lowers loan rates by conducting monthly credit reassessments. The service works by regularly checking the customer's credit status and adjusting the rate accordingly. This is Jeju Bank's strategy to provide customers with more favorable interest rate benefits.\n- Stocks & FX: China's stock market opened lower today, with the Shanghai index falling 0.6%. The KOSPI turned upward during the session, approaching the 5,700 level and rising 0.47% from the previous session. Lee Hyung-il stated that the exchange rate is in the process of finding fundamentals. He also predicted that the growth trend would shift to consumption. The KOSPI fell sharply by 3.2% after opening, but later showed some recovery, recording a decline in the early 1% range.\n- Real Estate: Oh Sehun announced the groundbreaking of Shin Tong Planning Project No. 10,0005000, stating that he will accelerate housing supply through deregulation. The Ministry of Land, Infrastructure and Transport judged that the housing price overheating has been contained as inventory has accumulated by 30%. The number of new apartment units in the Seoul metropolitan area in November decreased by half compared to the previous month. The head of the Real Estate Institute argued that the country's territory should be reorganized into a multi-core, ultra-wide economic zone beyond administrative boundaries. Lee Heon-wook, head of the Real Estate Institute, emphasized the necessity of building a sustainable talent ecosystem at Daegu University.\n- Other Economic News: In 11 out of 12 areas in Gyeonggi, the rate of increase in housing prices has grown significantly within a year of designating the special housing zones. The procedure for confirming loan interest has been simplified, and the method has changed to automatically reduce interest every month. Yu Jin ENTE and Jae-ryeong Education are operating a family financial education lecture called \"Money in the School.\" Trends in housing prices related to the designation of special housing zones have shown differences by region. The change in the method of interest reduction has contributed to improving the convenience of financial services."
+      "ko": "- 부동산: 오세훈 시장은 서울 주택공급 감소에 대해 박원순과 관련된 비판을 했고, 현대건설은 목동10단지 재건축을 수주하며 도시정비 목표 12조를 돌파했으며, 삼성물산은 여의도 대장 시범아파트를 수주해 41층 스카이 브릿지를 만들고 있으며, 정선군은 공공임대주택 건립을 통해 농촌 정주 여건 개선에 박차를 가하고 있다.\n- 증시·환율: 코스피는 오늘 신중한 투자 분위기 속에서 소폭 상승 후 하락했다. 이달 세계증시 중 가장 낮은 수준을 기록하며 국내 상장사 10개 중 7개가 하락했다. 증권가에서는 코스피가 바닥에 가까워졌다고 분석했으나 반등 여부는 AI 신용위험에 달려 있다. 외국인은 한때 상승 전환 후 다시 순매도세를 보였다. 중국 증시는 상하이지수가 0.6% 하락하며 출발했다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 하락한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.845%를 기록했다. 프랑스에서는 폭력 시위가 이어지고 있다. 이로 인해 통치 불가능한 국가가 되는 것 아니냐는 우려가 나오고 있다. 프랑스의 상황이 악화되면서 국채금리 급등 우려가 커지고 있다.\n- 기타 경제 소식: 인뱅 대출을 받은 자영업자 중 5년 반 동안 4만명이 폐업했으며, 연체율은 9.5%를 기록했다. 토허구역 지정 1년 만에 경기 12곳 중 11곳에서 집값 상승폭이 커졌다. '6억 제한' 규제에도 불구하고 은행 직원들이 줄줄이 대출을 받아갔다. 대출 이자는 이제 매월 자동으로 깎아주는 방식으로 변경됐다. 각 기사는 서로 다른 주제로, 별개의 경제 현상을 보여준다.",
+      "en": "- Real Estate: Mayor Oh Sehun criticized Park Won-soon regarding the decrease in Seoul's housing supply, Hyundai Engineering & Construction exceeded the urban redevelopment target of 12,000,000,000,000 by winning the bid for the Muldong 10th District reconstruction, Samsung C&T is constructing a 41-story Sky Bridge by winning the bid for the Yeouido Grand Demonstration Apartment, and Jeongseon County is accelerating improvements in rural living conditions through the construction of public rental housing.\n- Stocks & FX: The KOSPI rose slightly and then fell today amid cautious investment sentiment. It recorded the lowest level among global stock markets this month, with seven out of ten domestic listed companies declining. Analysts in the securities industry said the KOSPI is nearing its bottom, but whether it rebounds depends on AI credit risk. Foreign investors initially switched to a rising trend but then resumed net selling. The Chinese market opened with the Shanghai index falling 0.6%.\n- Rates, Deposits & Investment Products: All government bond rates have fallen. The 3-year government bond rate reached 3.845% annually during trading. Violent protests are continuing in France. Concerns are growing that France may become a state that is ungovernable. As the situation in France deteriorates, fears of a sharp rise in bond rates are increasing.\n- Other Economic News: Of the small business owners who took loans from the Industrial Bank, 40,000 closed their businesses within 5.5 years, and the delinquency rate reached 9.5%. Within a year of designating the Tuhuo area, housing prices rose sharply in 11 out of 12 areas in Gyeonggi. Despite the \"600,000,000 limit\" regulation, bank employees continued to take out loans one after another. Loan interest is now automatically reduced on a monthly basis. Each article covers a different topic, illustrating separate economic phenomena."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "프랑스에서 폭력 시위가 일어나면서 통치 불가능한 국가로 갈 수 있다는 우려가 커지고 있다. 이로 인해 프랑스 국채금리가 급등할 가능성도 제기되고 있다. 제주은행은 매월 신용 재평가를 통해 대출금리를 낮춰주는 서비스를 제공하고 있다. 해당 서비스는 고객의 신용 상태를 정기적으로 점검하여 금리를 조정하는 방식이다. 이는 고객에게 더 유리한 금리 혜택을 제공하기 위한 제주은행의 전략이다.",
-        "lineEn": "Concerns are growing in France that violent protests could lead the country toward becoming ungovernable. This has also raised the possibility of a sharp rise in French government bond yields. Jeju Bank offers a service that lowers loan rates by conducting monthly credit reassessments. The service works by regularly checking the customer's credit status and adjusting the rate accordingly. This is Jeju Bank's strategy to provide customers with more favorable interest rate benefits.",
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "오세훈 시장은 서울 주택공급 감소에 대해 박원순과 관련된 비판을 했고, 현대건설은 목동10단지 재건축을 수주하며 도시정비 목표 12조를 돌파했으며, 삼성물산은 여의도 대장 시범아파트를 수주해 41층 스카이 브릿지를 만들고 있으며, 정선군은 공공임대주택 건립을 통해 농촌 정주 여건 개선에 박차를 가하고 있다.",
+        "lineEn": "Mayor Oh Sehun criticized Park Won-soon regarding the decrease in Seoul's housing supply, Hyundai Engineering & Construction exceeded the urban redevelopment target of 12,000,000,000,000 by winning the bid for the Muldong 10th District reconstruction, Samsung C&T is constructing a 41-story Sky Bridge by winning the bid for the Yeouido Grand Demonstration Apartment, and Jeongseon County is accelerating improvements in rural living conditions through the construction of public rental housing.",
         "isFallback": false,
         "fallbackReason": null,
-        "degraded": false,
+        "degraded": true,
         "items": [
           {
-            "title": "\"프랑스, 통치 불가 국가됐나\"…폭력 시위에 국채금리도 급등 우려",
-            "link": "https://www.newsis.com/view/NISX20261019_0003831203",
+            "title": "오세훈 “서울 주택공급 줄어든 것은 박원순이 뿌리 뽑고 제초제까지 뿌린 탓”",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/19/OV5R77L7HRDZNII6EL7ZA6UY4U/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "현대건설, 목동10단지 재건축 수주…도시정비 목표 12조 돌파",
+            "link": "https://www.newsis.com/view/NISX20261019_0003831505",
             "source": "뉴시스 경제"
           },
           {
-            "title": "제주은행, 매월 신용 재평가로 대출금리 깎아주는 서비스",
-            "link": "https://www.yna.co.kr/view/AKR20261019064200002",
+            "title": "오세훈 시장 \"박원순, 주택공급 씨앗 뿌리 뽑고 제초제까지 뿌려\"",
+            "link": "https://www.yna.co.kr/view/AKR20261019084900004",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "삼성물산 ‘여의도 대장’ 시범아파트 수주…41층 스카이 브릿지 만든다",
+            "link": "https://www.mk.co.kr/news/realestate/12179405",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "정선군, 공공임대주택 건립 박차…농촌 정주 여건 개선",
+            "link": "https://www.yna.co.kr/view/AKR20261019075100062",
             "source": "연합뉴스 경제"
           }
         ]
@@ -5351,72 +5366,57 @@
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "중국 증시는 오늘 하락 출발하며 상하이지수가 0.6% 하락했다. 코스피는 장중 상승 전환하며 5,700선 근접했고, 전장보다 0.47% 상승했다. 이형일은 환율이 펀더멘털을 찾는 과정이라고 밝혔다. 또한 성장세가 소비로 전이될 것으로 전망했다. 코스피는 개장 후 3.2% 급락했으나 이후 일부 되돌림을 보이며 1%대 초반 하락세를 기록했다.",
-        "lineEn": "China's stock market opened lower today, with the Shanghai index falling 0.6%. The KOSPI turned upward during the session, approaching the 5,700 level and rising 0.47% from the previous session. Lee Hyung-il stated that the exchange rate is in the process of finding fundamentals. He also predicted that the growth trend would shift to consumption. The KOSPI fell sharply by 3.2% after opening, but later showed some recovery, recording a decline in the early 1% range.",
+        "lineKo": "코스피는 오늘 신중한 투자 분위기 속에서 소폭 상승 후 하락했다. 이달 세계증시 중 가장 낮은 수준을 기록하며 국내 상장사 10개 중 7개가 하락했다. 증권가에서는 코스피가 바닥에 가까워졌다고 분석했으나 반등 여부는 AI 신용위험에 달려 있다. 외국인은 한때 상승 전환 후 다시 순매도세를 보였다. 중국 증시는 상하이지수가 0.6% 하락하며 출발했다.",
+        "lineEn": "The KOSPI rose slightly and then fell today amid cautious investment sentiment. It recorded the lowest level among global stock markets this month, with seven out of ten domestic listed companies declining. Analysts in the securities industry said the KOSPI is nearing its bottom, but whether it rebounds depends on AI credit risk. Foreign investors initially switched to a rising trend but then resumed net selling. The Chinese market opened with the Shanghai index falling 0.6%.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
+          {
+            "title": "\"저가매수 기회\" vs \"불안 여전\"…코스피 신중 모드",
+            "link": "https://www.yna.co.kr/view/AKR20261019083500008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "이달 세계증시 중 '꼴찌' 코스피…국내 상장사 10개 중 7개 하락",
+            "link": "https://www.yna.co.kr/view/AKR20261019068400008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피 '바닥 근접' 분석…증권가 \"반등 여부 AI 신용위험 달려\"",
+            "link": "https://www.yna.co.kr/view/AKR20261019071600008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 한때 상승 전환 후 소폭 내려…외국인 다시 순매도세(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261019064351008",
+            "source": "연합뉴스 경제"
+          },
           {
             "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.6%↓",
             "link": "https://www.newsis.com/view/NISX20261019_0003831371",
             "source": "뉴시스 경제"
-          },
-          {
-            "title": "코스피, 장중 상승 전환하며 5,700선 근접…전장보다 0.47%↑",
-            "link": "https://www.yna.co.kr/view/AKR20261019064300008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "이형일 \"환율, 펀더멘털 찾는 중…한미스와프, 의미있고 필요\"",
-            "link": "https://www.yna.co.kr/view/AKR20261017048400002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "이형일 \"성장세, 소비로 전이될 것…환율은 펀더멘털 찾는 과정\"",
-            "link": "https://www.newsis.com/view/NISX20261018_0003830617",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "코스피, 3.2% 급락 개장후 일부 되돌림…1%대 초반 하락세(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261019042200008",
-            "source": "연합뉴스 경제"
           }
         ]
       },
       {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "오세훈은 신통기획 1만5000호 착공을 발표하며 규제 완화를 통해 주택 공급을 가속화하겠다고 밝혔다. 국토부는 매물이 30% 쌓이면서 집값 과열을 잡았다고 판단했다. 11월 수도권 아파트 입주 물량은 전월 대비 절반으로 줄어들었다. 부동산원장은 행정구역을 넘어 다핵 초광역경제권으로 국토를 재편해야 한다고 주장했다. 이헌욱 부동산원장은 대구대에서 지속가능한 인재 생태계 구축의 필요성을 강조했다.",
-        "lineEn": "Oh Sehun announced the groundbreaking of Shin Tong Planning Project No. 10,0005000, stating that he will accelerate housing supply through deregulation. The Ministry of Land, Infrastructure and Transport judged that the housing price overheating has been contained as inventory has accumulated by 30%. The number of new apartment units in the Seoul metropolitan area in November decreased by half compared to the previous month. The head of the Real Estate Institute argued that the country's territory should be reorganized into a multi-core, ultra-wide economic zone beyond administrative boundaries. Lee Heon-wook, head of the Real Estate Institute, emphasized the necessity of building a sustainable talent ecosystem at Daegu University.",
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 일제히 하락한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.845%를 기록했다. 프랑스에서는 폭력 시위가 이어지고 있다. 이로 인해 통치 불가능한 국가가 되는 것 아니냐는 우려가 나오고 있다. 프랑스의 상황이 악화되면서 국채금리 급등 우려가 커지고 있다.",
+        "lineEn": "All government bond rates have fallen. The 3-year government bond rate reached 3.845% annually during trading. Violent protests are continuing in France. Concerns are growing that France may become a state that is ungovernable. As the situation in France deteriorates, fears of a sharp rise in bond rates are increasing.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "오세훈 “신통기획 1만5000호 착공… 규제 풀어 주택 공급 속도”",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/19/H3LXZL2LU5ELBP7NKDFAUPBMZI/",
-            "source": "조선비즈 부동산"
-          },
-          {
-            "title": "“더 이상 안 오른다”…매물 30% 쌓이자 “집값 과열 잡았다”는 국토부",
-            "link": "https://www.mk.co.kr/news/realestate/12179326",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "“전셋값 더 뛰겠네요”…11월 수도권 아파트 입주 물량 절반 ‘뚝’",
-            "link": "https://www.mk.co.kr/news/realestate/12179325",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "[동정] 부동산원장 \"행정구역 넘어 다핵 초광역경제권으로 국토 재편\"",
-            "link": "https://www.yna.co.kr/view/AKR20261019058100003",
+            "title": "국고채 금리 일제히 하락…3년물 장중 연 3.845%",
+            "link": "https://www.yna.co.kr/view/AKR20261019085900008",
             "source": "연합뉴스 경제"
           },
           {
-            "title": "이헌욱 부동산원장, 대구대 강연…\"지속가능한 인재 생태계 구축해야\"",
-            "link": "https://www.newsis.com/view/NISX20261019_0003831227",
+            "title": "\"프랑스, 통치 불가 국가됐나\"…폭력 시위에 국채금리도 급등 우려",
+            "link": "https://www.newsis.com/view/NISX20261019_0003831203",
             "source": "뉴시스 경제"
           }
         ]
@@ -5425,26 +5425,31 @@
         "key": "other",
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
-        "lineKo": "경기 12곳 중 11곳에서 토허구역 지정 1년 만에 집값 상승폭이 커졌다. 대출이자에 대한 확인 절차가 간소화되며 매월 자동으로 이자가 깎여주는 방식으로 변경됐다. 유진이엔티와 재능교육은 가족 경제교육 강연 '머니인더스쿨'을 운영하고 있다. 토허구역 지정과 관련된 주택 가격 동향은 지역별로 차이가 있는 것으로 나타났다. 이자 감면 방식의 변화는 금융 서비스의 편의성 향상에 기여하고 있다.",
-        "lineEn": "In 11 out of 12 areas in Gyeonggi, the rate of increase in housing prices has grown significantly within a year of designating the special housing zones. The procedure for confirming loan interest has been simplified, and the method has changed to automatically reduce interest every month. Yu Jin ENTE and Jae-ryeong Education are operating a family financial education lecture called \"Money in the School.\" Trends in housing prices related to the designation of special housing zones have shown differences by region. The change in the method of interest reduction has contributed to improving the convenience of financial services.",
+        "lineKo": "인뱅 대출을 받은 자영업자 중 5년 반 동안 4만명이 폐업했으며, 연체율은 9.5%를 기록했다. 토허구역 지정 1년 만에 경기 12곳 중 11곳에서 집값 상승폭이 커졌다. '6억 제한' 규제에도 불구하고 은행 직원들이 줄줄이 대출을 받아갔다. 대출 이자는 이제 매월 자동으로 깎아주는 방식으로 변경됐다. 각 기사는 서로 다른 주제로, 별개의 경제 현상을 보여준다.",
+        "lineEn": "Of the small business owners who took loans from the Industrial Bank, 40,000 closed their businesses within 5.5 years, and the delinquency rate reached 9.5%. Within a year of designating the Tuhuo area, housing prices rose sharply in 11 out of 12 areas in Gyeonggi. Despite the \"600,000,000 limit\" regulation, bank employees continued to take out loans one after another. Loan interest is now automatically reduced on a monthly basis. Each article covers a different topic, illustrating separate economic phenomena.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
+          {
+            "title": "인뱅 대출받고 폐업한 자영업자 5년 반동안 4만명…연체율 9.5%",
+            "link": "https://www.yna.co.kr/view/AKR20261019075600002",
+            "source": "연합뉴스 경제"
+          },
           {
             "title": "토허구역 지정 1년…경기 12곳 중 11곳 집값 상승폭 커졌다",
             "link": "https://www.mk.co.kr/news/economy/12179330",
             "source": "매일경제 부동산"
           },
           {
-            "title": "일일이 확인하던 대출이자…이제는 매월 알아서 깎아준다",
-            "link": "https://www.hankyung.com/article/202610199953i",
+            "title": "'6억 제한' 규제에도…은행 직원들은 줄줄이 대출 받아갔다",
+            "link": "https://www.hankyung.com/article/202610190055i",
             "source": "한국경제 경제"
           },
           {
-            "title": "유진이엔티·재능교육, 가족 경제교육 강연 '머니인더스쿨' 운영",
-            "link": "https://www.newsis.com/view/NISX20261019_0003831009",
-            "source": "뉴시스 경제"
+            "title": "일일이 확인하던 대출이자…이제는 매월 알아서 깎아준다",
+            "link": "https://www.hankyung.com/article/202610199953i",
+            "source": "한국경제 경제"
           }
         ]
       }
