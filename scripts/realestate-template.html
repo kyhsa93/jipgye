@@ -1418,6 +1418,13 @@ function reportLoadFailure(error) {
   });
 }
 
+function foldReserve() {
+  // 실패가 확정된 자리에서만 부른다(#338). 화면 안에 들어오는 만큼만 남기고 화면 아래 몫은 접는다 - 그 아래는 안 움직인다.
+  const box = trendSection.nextElementSibling;
+  const room = innerHeight - box.getBoundingClientRect().top;
+  if (room < box.offsetHeight) box.style.cssText = `height:${Math.max(room, 0)}px;overflow:hidden`;
+}
+
 async function main() {
   applyTheme(theme);
   applyLocale();
@@ -1444,8 +1451,11 @@ async function main() {
       if (trendRes.ok) {
         cache.trend = await trendRes.json();
         renderTrend();
+      } else {
+        foldReserve();
       }
     } catch {
+      foldReserve();
     }
 
     if (budgetEnabled) {
@@ -1461,6 +1471,7 @@ async function main() {
     }
   } catch (error) {
     reportLoadFailure(error);
+    foldReserve();
     document.getElementById("district-grid").innerHTML =
       `<tr><td colspan="4">${escapeHtml(t("loadError"))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button></td></tr>`;
     document.getElementById("load-retry")?.addEventListener("click", (e) => {

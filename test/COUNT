@@ -267,5 +267,15 @@
 #   시험 수는 더한 것 4 뿐이고 없어진 시험은 0 이다(.skip·.todo 도 0 그대로). 고친 기존 시험은 셋이다: test/late-fill-reserve.test.mjs(위 — 예약 다섯 → 네 자리, index 줄은 「바닥글 첫 줄에 있다」 로 바뀜) ·
 #   test/news-pages.test.mjs(구획 여는 태그를 `<section id="…">` 로 찾던 것을 `>` 를 뺀 접두사로) · test/question-nav.test.mjs(질문 입구 여는 태그를 `<nav class="question-nav"` 로 찾던 것을 훅 class 뒤에
 #   유틸리티가 붙어도 맞게 풀었다 - 둘은 정규식, 하나는 닫는 따옴표를 뺀 접두사라 `question-nav` 훅이 markup 목록에 남는다). 시험을 더하거나 빼지 않았다.
-1745
-1745
+# 센 법: 2026-10-19, merge-base 7c9f0452(= origin/main), Node v22.16.0, macOS 15.5 (#338 실패 경로 예약 접기).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1758 · pass 1758 · fail 0 · skipped 0
+#   merge-base 7c9f0452 를 따로 풀어 같은 명령 → ℹ tests 1745 · pass 1745 · fail 0 · skipped 0(= 직전 하한).
+#   차이 13 은 이 PR 이 더한 test/realestate-fold.test.mjs 하나에서 나온다(`node --test test/realestate-fold.test.mjs` → ℹ tests 13):
+#   추이 구획이 있는 장 47장 전부 foldReserve 4번(정의 1 + 호출 3) · 호출이 바깥 catch·추이 !ok·추이 안쪽 catch 세 자리에만 있고 정상 경로(try 본문)에는 추이 실패 갈래 둘뿐 ·
+#   접는 대상 trendSection.nextElementSibling 이 47장 모두 빈 칸 셋을 가진 .trend-reserve · 새 훅 0(dataset·class·id) · S6 한도(장당 +360B, 47장 합 16,920B, 주석 0) · 틀과 구운 47장의 foldReserve 가 같은 글자 ·
+#   동작 여섯(경로 A 404·reject, 경로 B 404·reject, 키 큰 화면·경계, 정상 경로·다른 요청 실패는 안 건드림, 다시 시도).
+#   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 13.
+#   고친 기존 시험은 0 이고 없어진 시험도 0 이다(.skip·.todo 도 0 그대로). 공용 도우미 test/helpers/realestate-page.mjs 에 기본 창 높이(823)와 trend-section 뒤 형제 스텁을 더했다 -
+#   더하지 않으면 실패 경로를 타는 기존 시험 134개가 foldReserve 에서 `innerHeight is not defined` 로 멈춘다(도우미만 고쳤고 그 시험들은 한 줄도 안 바뀌었다).
+1758
+1758
