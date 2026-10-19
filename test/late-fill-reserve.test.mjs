@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-// 늦게 채워지는 글 다섯 자리의 줄 수 예약(#341). 이 시험은 "예약이 서 있는가"를 본다. 예약이 정확한가(줄 수가 실제와 같은가)는
+// 늦게 채워지는 글 네 자리의 줄 수 예약(#341; 다섯째였던 index #update-schedule 은 머리에서 바닥글로 옮겨 예약이 필요 없어졌다 - #398). 이 시험은 "예약이 서 있는가"를 본다. 예약이 정확한가(줄 수가 실제와 같은가)는
 // 브라우저가 아는 일이라 여기서 못 본다 - 그건 PR 본문의 측정(375x812, 장당 3회, 네 폴더)이 한다. 줄 수는 글에 달려 있고
 // 글은 날마다 바뀔 수 있어(#8) 줄 수를 시험에 못박으면 값에 기대는 시험이 된다. 그래서 줄 수는 "정수 lh"인지만 본다.
 //
@@ -18,13 +18,12 @@ import path from "node:path";
 const root = path.resolve(import.meta.dirname, "..");
 const read = (p) => readFile(path.join(root, p), "utf8");
 
-// 예약 다섯 자리. selector 는 legacy.css 에 적힌 글자 그대로다.
+// 예약 네 자리. selector 는 legacy.css 에 적힌 글자 그대로다.
 const RESERVES = [
   { selector: "main:has(> #top-section) #lead-note", page: "floor-gap.html", maxWidth: 400 },
   { selector: "main:has(> #wolse-section) #lead-note", page: "renewal-vs-new.html", maxWidth: 400 },
   { selector: "main:has(> #month-section) #lead-note", page: "cancelled-deals.html", maxWidth: 400 },
   { selector: "#compare-result", page: "switch-house.html", maxWidth: 430 },
-  { selector: ".tagline ~ .update-schedule", page: "index.html", maxWidth: 430 },
 ];
 
 /** 짝이 맞는 `}` 의 자리. 주석 안의 중괄호는 미리 지운 글에서 센다. */
@@ -52,7 +51,7 @@ function maxWidthRules(css) {
   return out;
 }
 
-test("늦게 채워지는 글 다섯 자리의 예약이 좁은 폭에서 서 있다 (#341)", async () => {
+test("늦게 채워지는 글 네 자리의 예약이 좁은 폭에서 서 있다 (#341)", async () => {
   const css = await read("src/css/legacy.css");
   const rules = maxWidthRules(css);
   for (const { selector, maxWidth } of RESERVES) {
@@ -99,10 +98,14 @@ test("예약이 집는 자리가 구운 장에 있다 (#341)", async () => {
 
   assert.match(pages["switch-house.html"], /<p class="lead" id="compare-result">/, "docs/switch-house.html: #compare-result 가 없다");
 
-  // index: .tagline 다음 형제로 #update-schedule 이 와야 `.tagline ~ .update-schedule` 이 집는다.
-  const head = /<p class="tagline"[^>]*>[\s\S]*?<div class="update-schedule" id="update-schedule">/.exec(pages["index.html"]);
-  assert.ok(head, "docs/index.html: .tagline 뒤에 #update-schedule 이 없다 - 2줄 예약이 아무것도 안 집는다");
-  assert.ok(!/<\/div>\s*<\/header>/.test(head[0]) && !head[0].includes("</header>"), "docs/index.html: .tagline 과 #update-schedule 사이에 머리글이 닫힌다 - 형제가 아니다");
+  // index: #update-schedule 은 머리가 아니라 바닥글 첫 줄에 있다(#398). 머리에 있으면 채워지는 순간 아래가 통째로 밀려 예약이 필요했지만,
+  // 바닥글은 접힌 선(812px) 밖이라 이동으로 안 잡힌다. 되돌아와 머리(.tagline 뒤)로 가면 예약 없이 채움 이동이 돌아온다.
+  const index = await read("docs/index.html");
+  const header = /<header\b[\s\S]*?<\/header>/.exec(index)?.[0] ?? "";
+  assert.ok(header && !header.includes('id="update-schedule"'), "docs/index.html: #update-schedule 이 머리에 있다 - 채움 이동을 막는 예약은 없다(#398)");
+  // 머리를 가리키던 예약 규칙(`.tagline ~ .update-schedule`)은 아무것도 안 집는 죽은 규칙이다 - 남겨 두면 다음 사람이 머리로 되돌려도 예약이 살아 있는 줄 안다.
+  assert.ok(!(await read("src/css/legacy.css")).includes(".tagline ~ .update-schedule"), "src/css/legacy.css: 죽은 예약 규칙 `.tagline ~ .update-schedule` 이 남아 있다(#398)");
+  assert.ok(index.includes('<footer class="site-footer">\n    <div class="update-schedule tw:text-sm" id="update-schedule"></div>'), "docs/index.html: #update-schedule 이 바닥글 첫 줄에 없다(#398)");
   // 다른 장의 .update-schedule(금리 네 장)은 .tagline 이 없어 이 예약이 안 걸려야 한다 - 걸리면 그 장의 한 줄 예약이 두 줄로 부푼다.
   for (const page of ["deposit-rates.html", "saving-rates.html", "mortgage-rates.html", "rent-loan-rates.html"]) {
     const html = await read(`docs/${page}`);

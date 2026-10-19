@@ -2211,9 +2211,6 @@
     #compare-result {
       min-height: 2lh;
     }
-    .tagline ~ .update-schedule {
-      min-height: 2lh;
-    }
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -2402,6 +2399,9 @@
   }
   .tw\:gap-2 {
     gap: calc(var(--tw-spacing) * 2);
+  }
+  .tw\:gap-6 {
+    gap: calc(var(--tw-spacing) * 6);
   }
   .tw\:rounded {
     border-radius: 0.25rem;

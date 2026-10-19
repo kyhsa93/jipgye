@@ -29,12 +29,11 @@
 <body>
 <a class="skip-link" href="#main" data-skip-en="Skip to content">본문 바로가기</a>
 <main id="main">
-  <header>
+  <header class="tw:mb-2">
     <div>
       <h1 class="wordmark" id="page-title">집계</h1>
       <p class="tagline" id="tagline">서울 아파트, 신고된 거래만 세어서 말합니다</p>
       <div class="updated updated-warn" id="updated-warn" role="status" hidden></div>
-      <div class="update-schedule" id="update-schedule"></div>
       <a class="back-link" id="archive-back-link" href="./index.html" hidden></a>
     </div>
     <div class="header-actions">
@@ -50,7 +49,7 @@
     </div>
   </header>
 
-  <nav class="page-nav">
+  <nav class="page-nav tw:gap-2 tw:mb-2 tw:*:rounded">
     <a id="nav-digest" class="active" href="./index.html" aria-current="page">오늘</a>
     <a id="nav-realestate" href="./realestate.html">아파트 시세</a>
     <a id="nav-rates" href="./rates.html">금리 비교</a>
@@ -79,7 +78,7 @@
   </aside>
 
   <h2 class="question-heading" id="question-heading">무엇을 알아보러 오셨나요</h2>
-  <nav class="question-nav" id="question-nav" aria-labelledby="question-heading">
+  <nav class="question-nav tw:gap-6 tw:mb-10" id="question-nav" aria-labelledby="question-heading">
     <div class="question-group">
       <h3 class="question-group-title" id="qg-buy">집을 사려는 사람</h3>
       <a id="q-budget" href="./budget-10eok.html">내 예산이면 서울 어디까지</a>
@@ -101,7 +100,7 @@
     </div>
   </nav>
 
-  <section id="realestate-section">
+  <section id="realestate-section" class="tw:mb-10">
     <h2 id="realestate-heading">서울 아파트, 이번 주 신고된 값</h2>
     <div class="content-notice" id="realestate-unit-caption" style="margin-top: -8px;"></div>
     <div class="realestate-search">
@@ -136,7 +135,7 @@
     <div class="summary-meta" id="realestate-history-note"></div>
     <div class="summary-meta" id="realestate-meta"></div>
   </section>
-  <section id="market-section">
+  <section id="market-section" class="tw:mb-10">
     <h2 id="market-heading">돈의 값 — 기준금리·환율</h2>
     <div class="table-wrap">
       <table class="data-table"><caption class="sr-only" data-auto>집계 — 계약 전에 확인하는 서울 아파트 실거래·금리 - 돈의 값 — 기준금리·환율: 2행 3열(지표·값·증감)</caption>
@@ -154,12 +153,12 @@
     <a class="back-link" id="rates-link" href="./rates.html">예금·적금·대출 금리 비교 →</a>
   </section>
 
-  <section id="summary-section">
+  <section id="summary-section" class="tw:mb-10">
     <h2 id="summary-heading">오늘의 AI 요약</h2>
     <div id="summary-box"><!--prerender:summary--><div class="summary-category"><div class="summary-category-label">부동산</div><div class="summary-category-line">오세훈 시장은 서울 주택공급 감소에 대해 박원순과 관련된 비판을 했고, 현대건설은 목동10단지 재건축을 수주하며 도시정비 목표 12조를 돌파했으며, 삼성물산은 여의도 대장 시범아파트를 수주해 41층 스카이 브릿지를 만들고 있으며, 정선군은 공공임대주택 건립을 통해 농촌 정주 여건 개선에 박차를 가하고 있다.</div></div><div class="summary-category"><div class="summary-category-label">증시·환율</div><div class="summary-category-line">코스피는 오늘 신중한 투자 분위기 속에서 소폭 상승 후 하락했다. 이달 세계증시 중 가장 낮은 수준을 기록하며 국내 상장사 10개 중 7개가 하락했다. 증권가에서는 코스피가 바닥에 가까워졌다고 분석했으나 반등 여부는 AI 신용위험에 달려 있다. 외국인은 한때 상승 전환 후 다시 순매도세를 보였다. 중국 증시는 상하이지수가 0.6% 하락하며 출발했다.</div></div><div class="summary-category"><div class="summary-category-label">금리·예금·투자상품</div><div class="summary-category-line">국고채 금리가 일제히 하락한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.845%를 기록했다. 프랑스에서는 폭력 시위가 이어지고 있다. 이로 인해 통치 불가능한 국가가 되는 것 아니냐는 우려가 나오고 있다. 프랑스의 상황이 악화되면서 국채금리 급등 우려가 커지고 있다.</div></div><div class="summary-category"><div class="summary-category-label">기타 경제 소식</div><div class="summary-category-line">인뱅 대출을 받은 자영업자 중 5년 반 동안 4만명이 폐업했으며, 연체율은 9.5%를 기록했다. 토허구역 지정 1년 만에 경기 12곳 중 11곳에서 집값 상승폭이 커졌다. '6억 제한' 규제에도 불구하고 은행 직원들이 줄줄이 대출을 받아갔다. 대출 이자는 이제 매월 자동으로 깎아주는 방식으로 변경됐다. 각 기사는 서로 다른 주제로, 별개의 경제 현상을 보여준다.</div></div><span class="summary-meta">qwen3:14b 생성 · 2026. 10. 19. 오후 1:21 KST</span><!--/prerender:summary--></div>
   </section>
 
-  <section id="news-section">
+  <section id="news-section" class="tw:mb-10">
     <h2 id="news-heading">오늘의 경제·부동산 뉴스</h2>
     <div id="news-controls" hidden>
       <div class="news-filters" id="news-filters" role="group" aria-label="카테고리 필터"></div>
@@ -184,6 +183,7 @@
   </section>
 
   <footer class="site-footer">
+    <div class="update-schedule tw:text-sm" id="update-schedule"></div>
     <div class="updated" id="updated" data-updated="2026-10-19">기준일 2026-10-19</div>
     <a href="./about.html" id="footer-about">소개</a>
     <span aria-hidden="true"> · </span>

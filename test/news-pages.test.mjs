@@ -153,7 +153,7 @@ test("첫 화면에 먼저 오는 것은 우리가 만든 데이터다", async (
   // 숫자지 우리가 만든 것이 아니다. 우리 계산이 들어간 것은 실거래 쪽이므로
   // 원칙("처음 보는 것이 우리가 만든 데이터")을 그대로 적용하면 실거래가 맨 위다.
   const html = await read("docs/index.html");
-  const at = (id) => html.indexOf(`<section id="${id}">`);
+  const at = (id) => html.indexOf(`<section id="${id}"`); // `>` 를 뺀 접두사: 유틸리티 class 가 붙어도 같은 구획이다(#398)
   assert.ok(at("market-section") > 0 && at("realestate-section") > 0 && at("summary-section") > 0);
   assert.ok(
     at("summary-section") > at("realestate-section"),
