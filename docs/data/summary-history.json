@@ -5464,5 +5464,159 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-10-20",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 기타 경제 소식: 이찬진은 의무복무 병사 대출 금지 검토를 언급했다. 세종시에서는 공무원 감축 발표 후 입주 물량이 없어 집값 상승이 우려되고 있다. 이 대통령은 집값 안정을 위해 세금 인상 주장은 사실이 아니라고 밝혔다. 오세훈과 야당은 토허제 해제에 대해 의견 충돌을 보이고 있다. 2028년까지 주택 공급이 정상화될 것이라고 대통령이 언급했다.\n- 증시·환율: 미 증시에서 AI 관련 주식 저가 매수 흐름이 나타나며 나스닥은 1% 상승했다. 뉴욕증시는 AI주 저가매수에 따라 혼조 출발했으나 나스닥은 1% 올랐다. 대만 증시는 미국 반도체주 급락 영향으로 0.61% 하락하며 반락 마감했다. 일본 증시는 AI 투자에 대한 불안감으로 혼조 마감했고 닛케이 지수는 0.62% 하락했다. 중국 증시는 혼조 마감했으나 상하이지수는 0.39% 상승했다.\n- 부동산: ‘아크메르 동탄’ 견본주택은 사흘간 2만7000여 명이 방문했다. 매경플러스는 수도권 교통 호재 관련 정보를 PDF로 제공하고 있다. 전세계 식량값은 2027년까지 고공행진할 것으로 전망되고 있다. 중국은 3분기 4.5% 성장했으나 소비와 부동산은 여전히 침체 상태이다. 고급 아파트의 새로운 기준으로 ‘하이필로티’가 등장했다.\n- 금리·예금·투자상품: DB저축가 파킹통장 한도를 1억원으로 확대하고 금리를 3.3%로 설정한 가운데, 중국이 대출금리 결정체계를 개편해 기업이 기준금리를 직접 선택하게 되었고, 시중금리 상승에도 불구하고 저축의 예금금리는 변동이 없었으며, 강북 이주비 금리가 치솟고 있으며, 국고채 금리가 금통위 회의 전일인 3년물 기준으로 연 3.877%로 상승했다.",
+      "en": "- Other Economic News: Lee Chan-jin mentioned the review of a ban on loans for conscripted soldiers. After the announcement of public sector staff reductions in Sejong City, there is concern that housing prices may rise due to the lack of new housing units. The president stated that it is not true that he advocates raising taxes to stabilize housing prices. Oh Sehun and the opposition have shown conflicting opinions regarding the abolition of the housing purchase restriction. The president mentioned that housing supply is expected to normalize by 2028.\n- Stocks & FX: In the U.S. stock market, a low-price buying trend for AI-related stocks emerged, pushing the Nasdaq up 1%. The New York stock market opened mixed due to low-price buying in AI stocks, but the Nasdaq rose 1%. The Taiwan stock market closed down 0.61% due to the impact of a sharp decline in U.S. semiconductor stocks. The Japanese stock market closed mixed due to concerns over AI investments, with the Nikkei index falling 0.62%. The Chinese stock market closed mixed, but the Shanghai index rose 0.39%.\n- Real Estate: The 'Akmir Dongtan' model housing complex was visited by more than 20,000,700 people over three days. Maeil Economic Plus provides information related to transportation benefits in the Seoul metropolitan area in PDF format. Global food prices are expected to remain high until 2027. China grew by 4.5% in the third quarter, but consumption and real estate remain in a slump. A new standard for luxury apartments, 'High Pile,' has emerged.\n- Rates, Deposits & Investment Products: DB Savings Bank has expanded the parking account limit to 100,000,000 won and set the interest rate at 3.3%. Meanwhile, China has revised its loan interest rate determination system, allowing companies to directly select benchmark rates. Despite the rise in market interest rates, the deposit interest rate for savings remained unchanged. The relocation fee interest rate in the northern part of Seoul has surged, and the government bond interest rate rose to an annual 3.877% based on the 3-year benchmark on the day before the Monetary Policy Committee meeting."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "이찬진은 의무복무 병사 대출 금지 검토를 언급했다. 세종시에서는 공무원 감축 발표 후 입주 물량이 없어 집값 상승이 우려되고 있다. 이 대통령은 집값 안정을 위해 세금 인상 주장은 사실이 아니라고 밝혔다. 오세훈과 야당은 토허제 해제에 대해 의견 충돌을 보이고 있다. 2028년까지 주택 공급이 정상화될 것이라고 대통령이 언급했다.",
+        "lineEn": "Lee Chan-jin mentioned the review of a ban on loans for conscripted soldiers. After the announcement of public sector staff reductions in Sejong City, there is concern that housing prices may rise due to the lack of new housing units. The president stated that it is not true that he advocates raising taxes to stabilize housing prices. Oh Sehun and the opposition have shown conflicting opinions regarding the abolition of the housing purchase restriction. The president mentioned that housing supply is expected to normalize by 2028.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "이찬진 \"의무복무 병사 대부업체 대출 금지 검토\"(종합3보)",
+            "link": "https://www.yna.co.kr/view/AKR20261019071353002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "공무원 1만명 내려가라더니 입주물량 0…세종시 집값 벌써부터 ‘들썩’",
+            "link": "https://www.mk.co.kr/news/realestate/12180093",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "[속보]이 대통령 \"집값 잡으려 세금 올렸단 주장 사실 아냐…2028년 공급 정상화\"",
+            "link": "https://www.newsis.com/view/NISX20261019_0003832266",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "\"토허제 해제 불가피\" vs \"집값에 기름 부어\"…오세훈·野 공방",
+            "link": "https://www.hankyung.com/article/202610190979i",
+            "source": "한국경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "미 증시에서 AI 관련 주식 저가 매수 흐름이 나타나며 나스닥은 1% 상승했다. 뉴욕증시는 AI주 저가매수에 따라 혼조 출발했으나 나스닥은 1% 올랐다. 대만 증시는 미국 반도체주 급락 영향으로 0.61% 하락하며 반락 마감했다. 일본 증시는 AI 투자에 대한 불안감으로 혼조 마감했고 닛케이 지수는 0.62% 하락했다. 중국 증시는 혼조 마감했으나 상하이지수는 0.39% 상승했다.",
+        "lineEn": "In the U.S. stock market, a low-price buying trend for AI-related stocks emerged, pushing the Nasdaq up 1%. The New York stock market opened mixed due to low-price buying in AI stocks, but the Nasdaq rose 1%. The Taiwan stock market closed down 0.61% due to the impact of a sharp decline in U.S. semiconductor stocks. The Japanese stock market closed mixed due to concerns over AI investments, with the Nikkei index falling 0.62%. The Chinese stock market closed mixed, but the Shanghai index rose 0.39%.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "美 증시, AI관련 주식 저가 매수에 나스닥 반등",
+            "link": "https://www.hankyung.com/article/202610191800i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "뉴욕증시, 'AI주 저가매수' 흐름 속 혼조 출발…나스닥 1%↑",
+            "link": "https://www.newsis.com/view/NISX20261019_0003832444",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 대만 증시, 美 반도체주 급락에 반락 마감…0.61%↓",
+            "link": "https://www.newsis.com/view/NISX20261019_0003832323",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "日증시, AI 투자 불안에 혼조 마감…닛케이 0.62%↓",
+            "link": "https://www.newsis.com/view/NISX20261019_0003832076",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 혼조 마감…상하이지수 0.39%↑",
+            "link": "https://www.newsis.com/view/NISX20261019_0003832092",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "‘아크메르 동탄’ 견본주택은 사흘간 2만7000여 명이 방문했다. 매경플러스는 수도권 교통 호재 관련 정보를 PDF로 제공하고 있다. 전세계 식량값은 2027년까지 고공행진할 것으로 전망되고 있다. 중국은 3분기 4.5% 성장했으나 소비와 부동산은 여전히 침체 상태이다. 고급 아파트의 새로운 기준으로 ‘하이필로티’가 등장했다.",
+        "lineEn": "The 'Akmir Dongtan' model housing complex was visited by more than 20,000,700 people over three days. Maeil Economic Plus provides information related to transportation benefits in the Seoul metropolitan area in PDF format. Global food prices are expected to remain high until 2027. China grew by 4.5% in the third quarter, but consumption and real estate remain in a slump. A new standard for luxury apartments, 'High Pile,' has emerged.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "‘아크메르 동탄’ 견본주택 사흘간 2만7000여 명 방문",
+            "link": "https://www.mk.co.kr/news/realestate/12180036",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "수도권 교통 호재에 대한 모든 것…매경플러스서 PDF 다운 받으세요 [부동산 손품노트]",
+            "link": "https://www.mk.co.kr/news/realestate/12180007",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "\"지금도 비싼데 더 오른다\"…전세계 식량값 2027년까지 고공행진",
+            "link": "https://www.hankyung.com/article/202610191660i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "'수출 호조' 中, 3분기 4.5% 성장…소비·부동산 침체는 여전",
+            "link": "https://www.hankyung.com/article/2026101914591",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "고급 아파트의 새 기준된 '하이필로티'",
+            "link": "https://www.hankyung.com/article/202610190847i",
+            "source": "한국경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "DB저축가 파킹통장 한도를 1억원으로 확대하고 금리를 3.3%로 설정한 가운데, 중국이 대출금리 결정체계를 개편해 기업이 기준금리를 직접 선택하게 되었고, 시중금리 상승에도 불구하고 저축의 예금금리는 변동이 없었으며, 강북 이주비 금리가 치솟고 있으며, 국고채 금리가 금통위 회의 전일인 3년물 기준으로 연 3.877%로 상승했다.",
+        "lineEn": "DB Savings Bank has expanded the parking account limit to 100,000,000 won and set the interest rate at 3.3%. Meanwhile, China has revised its loan interest rate determination system, allowing companies to directly select benchmark rates. Despite the rise in market interest rates, the deposit interest rate for savings remained unchanged. The relocation fee interest rate in the northern part of Seoul has surged, and the government bond interest rate rose to an annual 3.877% based on the 3-year benchmark on the day before the Monetary Policy Committee meeting.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "[게시판] DB저축銀, 파킹통장 한도 1억원으로 확대…금리 3.3%",
+            "link": "https://www.yna.co.kr/view/AKR20261019175000002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "中, 대출금리 결정체계 대수술…기업이 기준금리 직접 고른다 [차이나 워치]",
+            "link": "https://www.hankyung.com/article/202610191663i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "시중금리 오르는데 저축銀 예금금리는 제자리",
+            "link": "https://www.hankyung.com/article/2026101915221",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "치솟는 강북 이주비 금리…'닥공' 가로막나",
+            "link": "https://www.hankyung.com/article/2026101913671",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "국고채 금리, 금통위 앞두고 일제히 상승…3년물 연 3.877%(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261019145251008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
