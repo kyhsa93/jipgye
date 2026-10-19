@@ -9,7 +9,7 @@ const indexHtml = () => readFile(path.join(root, "docs/index.html"), "utf8");
 
 const links = async () => {
   const html = await indexHtml();
-  const block = /<nav class="question-nav"[\s\S]*?<\/nav>/.exec(html)?.[0] ?? "";
+  const block = /<nav class="question-nav(?: [^"]*)?"[\s\S]*?<\/nav>/.exec(html)?.[0] ?? "";
   return [...block.matchAll(/<a id="([^"]+)" href="([^"]+)">([^<]*)<\/a>/g)].map((m) => ({
     id: m[1],
     href: m[2],
@@ -46,7 +46,7 @@ test("질문은 조건을 넣지 않아도 답이 보이는 화면으로 보낸�
 test("데이터 섹션보다 앞에 있다", async () => {
   const html = await indexHtml();
   assert.ok(
-    html.indexOf('class="question-nav"') < html.search(/<section id="/),
+    html.indexOf('class="question-nav') < html.search(/<section id="/), // 닫는 따옴표를 뺀 접두사: 훅 class 뒤에 유틸리티 class 가 붙어도 같은 입구다(#398)
     "질문 입구가 표 밑에 있다"
   );
 });
@@ -77,7 +77,7 @@ test("영어 화면에서는 질문도 영어다", async () => {
 
 test("질문 입구는 장면별 세 묶음이고, 사는 사람 묶음의 첫 질문이 예산이다 (#44)", async () => {
   const html = await indexHtml();
-  const block = /<nav class="question-nav"[\s\S]*?<\/nav>/.exec(html)?.[0] ?? "";
+  const block = /<nav class="question-nav(?: [^"]*)?"[\s\S]*?<\/nav>/.exec(html)?.[0] ?? "";
   const groups = [...block.matchAll(/<div class="question-group">([\s\S]*?)<\/div>/g)].map((m) => m[1]);
   assert.equal(groups.length, 3, "묶음이 셋이 아니다");
   assert.match(groups[0], /집을 사려는 사람<\/h3>\s*<a id="q-budget"/, "예산 질문이 맨 앞이 아니다");
