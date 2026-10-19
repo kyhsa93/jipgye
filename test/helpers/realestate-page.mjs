@@ -86,8 +86,11 @@ function stubElement(attrs = {}, id = "", shared = null) {
  * - `title`: 스크립트가 도는 시점의 `document.title`. 실제 문서에서는 구운 `<title>`이 이미 들어 있다(#299). 기본은 빈 글자.
  * - `baked`: 받은 HTML에 이미 들어 있던 것(`{ "budget-result": { innerHTML } }`). 스텁 요소는 빈 채로 태어나므로,
  *   스크립트가 구운 내용을 건드렸는지 보려면 여기서 채워 둔다.
+ * - `globals`: 스크립트가 도는 전역에 얹을 값(`innerHeight` 처럼 실제 창에만 있는 것, #338). 기본 창 높이는 823(412x823).
+ *   `trend-section` 바로 뒤 형제(.trend-reserve)는 `baked["trend-section"].nextElementSibling` 으로 바꿔 끼운다. 기본은 윗변 1230 · 높이 725 인 스텁이다 -
+ *   실패 경로를 타는 시험이 접는 줄(foldReserve, #338)에서 멈추지 않게 한다.
  */
-export async function loadRealestatePage({ realestate, trend, budget, complexRatio, budgetBand = null, prerenderedBudget = "", kind = null, district = null, locale = "ko", search = "", analytics, file = "docs/realestate.html", gate = null, baked = {}, title = "" } = {}) {
+export async function loadRealestatePage({ realestate, trend, budget, complexRatio, budgetBand = null, prerenderedBudget = "", kind = null, district = null, locale = "ko", search = "", analytics, file = "docs/realestate.html", gate = null, baked = {}, title = "", globals = {} } = {}) {
   const html = await readFile(path.join(root, file), "utf8");
   const script = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
 
@@ -111,6 +114,8 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
 
   const sandbox = {
     console: { ...console, warn() {}, error() {} },
+    innerHeight: 823,
+    ...globals,
     Math, Date, JSON, Intl, URL, URLSearchParams,
     setTimeout, clearTimeout,
     setInterval: () => 0,
@@ -149,6 +154,12 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
       getElementById: (id) => {
         if (!byId.has(id)) {
           const el = stubElement({}, id);
+          if (id === "trend-section") {
+            const reserve = stubElement({}, "trend-reserve");
+            reserve.getBoundingClientRect = () => ({ top: 1230 });
+            reserve.offsetHeight = 725;
+            el.nextElementSibling = reserve;
+          }
           Object.assign(el, baked[id] ?? {});
           el.hiddenWrites.length = 0;
           // 그래프는 자기 카드 안에 있고, 카드는 모두 한 격자 안에 있다. 같은 축을
