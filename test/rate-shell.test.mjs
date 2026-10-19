@@ -29,7 +29,13 @@ const SHELL_PAGE = [
   { name: "추이 구획", pattern: /<section id="history-section"(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-10"] },
   { name: "상품 구획", pattern: /<section id="products-section"(?: class="([^"]*)")?>/, hooks: [], utilities: [] },
 ];
-const SHELL_HUB = [HEADER, { ...NAV, pattern: /<nav class="([^"]*)" aria-label="섹션">/ }];
+// 허브는 구획이 하나(본문 구획 method-body, about·method 와 같은 모양)이고 바닥글이 .site-footer 가 아닌 맨 <footer> 라 margin-top 이 없다 -
+// 상쇄되는 마진이 없어 구획 아래 24 가 그대로 남으므로 40 을 단다(cmo·po 판정 #399 po 7). 달면 허브 장 높이가 −16 에서 0 으로 돌아온다.
+const SHELL_HUB = [
+  HEADER,
+  { ...NAV, pattern: /<nav class="([^"]*)" aria-label="섹션">/ },
+  { name: "본문 구획", pattern: /<section class="([^"]*)">\s*<div data-lang="ko"/, hooks: ["method-body"], utilities: ["tw:max-w-read", "tw:mb-10"] },
+];
 
 function checkShell(html, file, shell) {
   for (const { name, pattern, hooks, utilities } of shell) {
