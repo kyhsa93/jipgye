@@ -1,14 +1,152 @@
 {
-  "updatedAt": "2026-10-19T00:06:31.236Z",
+  "updatedAt": "2026-10-19T01:10:06.992Z",
   "date": "2026-10-19",
   "items": [
     {
-      "title": "[속보] 코스피, 3.2% 급락한 5,488 개장…코스닥도 2.7%↓",
-      "link": "https://www.yna.co.kr/view/AKR20261019030400008",
-      "publishedAt": "2026-10-19T00:02:01.000Z",
+      "title": "이형일 \"환율, 펀더멘털 찾는 중…한미스와프, 의미있고 필요\"",
+      "link": "https://www.yna.co.kr/view/AKR20261017048400002",
+      "publishedAt": "2026-10-19T01:00:05.000Z",
       "source": "연합뉴스 경제",
       "category": "stocks",
-      "preview": null,
+      "preview": "(방콕=연합뉴스) 김수현 기자 = 이형일 부총리 겸 재정경제부 장관은 최근 원/달러 환율이 1,330원 안팎으로 내려온 상황을 두고 \"현재는 (...",
+      "dupes": []
+    },
+    {
+      "title": "이형일 \"성장세, 소비로 전이될 것…환율은 펀더멘털 찾는 과정\"",
+      "link": "https://www.newsis.com/view/NISX20261018_0003830617",
+      "publishedAt": "2026-10-19T01:00:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "[방콕=뉴시스]임하은 기자 = 이형일 경제부총리 겸 재정경제부 장관이 최근 반도체를 중심으로 나타나는 투자 주도 성장세에 대해 \"시간이 지나면 그 성장세가 소비 쪽으로도 전이될 것\"이라고 밝혔다. 최근 2년여 만에…",
+      "dupes": []
+    },
+    {
+      "title": "이형일 \"조정지역 임대아파트, 공공에 팔면 양도세 혜택 검토\"",
+      "link": "https://www.newsis.com/view/NISX20261018_0003830644",
+      "publishedAt": "2026-10-19T01:00:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "realestate",
+      "preview": "[방콕=뉴시스]임하은 기자 = 이형일 경제부총리 겸 재정경제부 장관이 \"조정대상지역 내 매입임대아파트를 LH 등 공공부문에 매각하면 추가적인 양도세 감면도 고민하고 있다\"고 밝혔다. 조정지역의 매각이 원활하지 않고…",
+      "dupes": []
+    },
+    {
+      "title": "\"주택 공급 위해 '분상제' 해제\" 민원…서울시 \"신중 검토\"",
+      "link": "https://www.newsis.com/view/NISX20261007_0003818079",
+      "publishedAt": "2026-10-19T00:50:42.000Z",
+      "source": "뉴시스 경제",
+      "category": "realestate",
+      "preview": "[서울=뉴시스] 박대로 기자 = 분양가 상한제가 재개발·재건축을 통한 주택 공급을 방해하고 있다며 해제해야 한다는 민원이 제기됐다. 서울시는 신중히 검토하겠다는 반응을 보였다. 19일 서울시에 따르면 염모씨는 서울시…",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./apartment-sale.html",
+          "label": "서울 전체 아파트 84㎡ 매매",
+          "labelEn": "Seoul apartment 84㎡ sale",
+          "value": "12억 4,864만원",
+          "valueEn": "₩1,249M",
+          "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
+          "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
+        }
+      ]
+    },
+    {
+      "title": "유진이엔티·재능교육, 가족 경제교육 강연 '머니인더스쿨' 운영",
+      "link": "https://www.newsis.com/view/NISX20261019_0003831009",
+      "publishedAt": "2026-10-19T00:45:34.000Z",
+      "source": "뉴시스 경제",
+      "category": "other",
+      "preview": "[서울=뉴시스] 박성환 기자 = 유진그룹 계열 유진이엔티가 교육기업 재능교육과 함께 부모와 자녀를 위한 경제교육 강연 프로그램을 선보인다. 유진이엔티는 경제교양 유튜브 채널 '머니인더트랩'을 통해 내달 14일부터 프…",
+      "dupes": []
+    },
+    {
+      "title": "코스피, 3.2% 급락 개장후 일부 되돌림…1%대 초반 하락세(종합)",
+      "link": "https://www.yna.co.kr/view/AKR20261019042200008",
+      "publishedAt": "2026-10-19T00:42:01.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": "(서울=연합뉴스) 김유아 기자 = 19일 장 초반 코스피가 3%대 급락 출발 후 낙폭을 일부 회복하며 1%대 초중반의 하락률을 보인다.",
+      "dupes": []
+    },
+    {
+      "title": "삼성물산, 2.2조원대 서울 여의도 시범아파트 재건축 수주",
+      "link": "https://www.yna.co.kr/view/AKR20261019034800003",
+      "publishedAt": "2026-10-19T00:42:01.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(서울=연합뉴스) 임기창 기자 = 삼성물산은 공사비 2조2천억원대 정비사업인 서울 영등포구 여의도동 시범아파트 재건축 시공사로 최종 선정됐다고 ...",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-yeongdeungpo.html",
+          "label": "영등포구 아파트 84㎡ 매매",
+          "labelEn": "영등포구 apartment 84㎡ sale",
+          "value": "15억 6,627만원",
+          "valueEn": "₩1,566M",
+          "note": "최근 4주 계약 127건 · 10/12 대비 +2.4%",
+          "noteEn": "127 deals in the last 4 weeks · +2.4% vs Oct 12"
+        }
+      ]
+    },
+    {
+      "title": "여의도 시범아파트 59층·2천491세대로 재건축…사업시행인가",
+      "link": "https://www.yna.co.kr/view/AKR20261019045000004",
+      "publishedAt": "2026-10-19T00:40:08.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(서울=연합뉴스) 김동규 기자 = 서울 영등포구(구청장 조유진)는 여의도 시범아파트 재건축정비사업의 사업시행계획을 인가했다고 19일 밝혔다.",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-yeongdeungpo.html",
+          "label": "영등포구 아파트 84㎡ 매매",
+          "labelEn": "영등포구 apartment 84㎡ sale",
+          "value": "15억 6,627만원",
+          "valueEn": "₩1,566M",
+          "note": "최근 4주 계약 127건 · 10/12 대비 +2.4%",
+          "noteEn": "127 deals in the last 4 weeks · +2.4% vs Oct 12"
+        }
+      ]
+    },
+    {
+      "title": "日증시, AI·반도체주 약세에 하락 출발…닛케이 0.77%↓",
+      "link": "https://www.newsis.com/view/NISX20261019_0003830970",
+      "publishedAt": "2026-10-19T00:31:57.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "[서울=뉴시스] 신효령 기자 = 19일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)가 하락 출발했다. 미국 증시에서 인공지능(AI) 투자 우려와 국제유가 상승으로 반도체주 등이 큰 폭으로 내린 영향이다. 니혼게…",
+      "dupes": []
+    },
+    {
+      "title": "삼성물산, 여의도 시범아파트 재건축 수주…공사비 2조2685억 규모",
+      "link": "https://www.newsis.com/view/NISX20261019_0003830977",
+      "publishedAt": "2026-10-19T00:31:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "realestate",
+      "preview": "[서울=뉴시스] 박성환 기자 = 삼성물산 건설부문이 서울 영등포구 여의도 시범아파트 재건축 사업의 시공권을 확보했다. 공사비가 2조2685억원에 달하는 대형 사업이다. 삼성물산은 세계적인 건축설계사와 협업해 한강변…",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-yeongdeungpo.html",
+          "label": "영등포구 아파트 84㎡ 매매",
+          "labelEn": "영등포구 apartment 84㎡ sale",
+          "value": "15억 6,627만원",
+          "valueEn": "₩1,566M",
+          "note": "최근 4주 계약 127건 · 10/12 대비 +2.4%",
+          "noteEn": "127 deals in the last 4 weeks · +2.4% vs Oct 12"
+        }
+      ]
+    },
+    {
+      "title": "코스피, 3.2% 급락한 5,488 개장…코스닥도 2.7%↓",
+      "link": "https://www.yna.co.kr/view/AKR20261019033200008",
+      "publishedAt": "2026-10-19T00:07:06.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": "(서울=연합뉴스) 김유아 기자 = 19일 코스피가 3%대 급락 출발했다.",
       "dupes": []
     },
     {
@@ -27,6 +165,36 @@
       "source": "매일경제 부동산",
       "category": "realestate",
       "preview": "총 18개동 2480가구 중 2032가구 한강 조망 공사비 2조2685억원·단지명 ‘래미안 소넬리’ 세계적 건축그룹 ‘OMA’와 협업 15m 필로티·270도 서라운드 창호 ‘넥스..",
+      "dupes": []
+    },
+    {
+      "title": "\"실거주 안해도 돼\"…강북 아파트 경매, 웃돈 주고 산다",
+      "link": "https://www.hankyung.com/article/2026101887711",
+      "publishedAt": "2026-10-18T23:56:17.000Z",
+      "source": "한국경제 부동산",
+      "category": "realestate",
+      "preview": null,
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-gangbuk.html",
+          "label": "강북구 아파트 84㎡ 매매",
+          "labelEn": "강북구 apartment 84㎡ sale",
+          "value": "8억 6,571만원",
+          "valueEn": "₩866M",
+          "note": "최근 4주 계약 77건 · 10/12 대비 -1.2%",
+          "noteEn": "77 deals in the last 4 weeks · -1.2% vs Oct 12"
+        }
+      ]
+    },
+    {
+      "title": "\"전셋값 또 오르겠네\"…수도권 11월 아파트 입주 절반으로 '뚝'",
+      "link": "https://www.hankyung.com/article/2026101994816",
+      "publishedAt": "2026-10-18T23:47:42.000Z",
+      "source": "한국경제 부동산",
+      "category": "realestate",
+      "preview": null,
       "dupes": []
     },
     {
@@ -60,39 +228,12 @@
       "dupes": []
     },
     {
-      "title": "중진공, 中企 임직원 대상 '내년 경제 전망' 온라인 세미나",
-      "link": "https://www.yna.co.kr/view/AKR20261019019400030",
-      "publishedAt": "2026-10-18T23:31:14.000Z",
-      "source": "연합뉴스 경제",
-      "category": "other",
-      "preview": "(서울=연합뉴스) 이상서 기자 = 중소벤처기업진흥공단은 급변하는 경영환경에서 중소벤처기업의 대응력 확보를 돕고자 두 차례에 걸쳐 '경제전망·소비...",
-      "dupes": []
-    },
-    {
       "title": "11월 전국 아파트 입주 1만1559가구… 전년 동기 比 49% 줄어",
       "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/19/3MT5SZTH5NGD5AM2RYWOOZ347Y/",
       "publishedAt": "2026-10-18T23:16:27.000Z",
       "source": "조선비즈 부동산",
       "category": "realestate",
       "preview": "다음 달 전국 아파트 입주 물량이 1만1500여 가구인 것으로 집계됐다. 지난해 같은 기간보다 50% 가까이 줄어든 수치다. 19일 부동산 플랫폼 직방에 따르면 2026년 11월 전국 아파트 입주 물량은 21개 단지…",
-      "dupes": []
-    },
-    {
-      "title": "부산시, 테크노파크·부산신보·경제진흥원 기관장 임명",
-      "link": "https://www.yna.co.kr/view/AKR20261019015000051",
-      "publishedAt": "2026-10-18T23:02:52.000Z",
-      "source": "연합뉴스 경제",
-      "category": "other",
-      "preview": "(부산=연합뉴스) 김선호 기자 = 부산시는 심재운 부산테크노파크 원장, 김현준 부산신용보증재단 이사장, 황선웅 부산경제진흥원 원장을 각각 임명했...",
-      "dupes": []
-    },
-    {
-      "title": "[마켓뷰] 코스피, 반등했지만 다시 시험대로…美 증시 동반 하락",
-      "link": "https://www.yna.co.kr/view/AKR20261019014000008",
-      "publishedAt": "2026-10-18T22:57:46.000Z",
-      "source": "연합뉴스 경제",
-      "category": "stocks",
-      "preview": "(서울=연합뉴스) 김유향 기자 = 코스피는 19일 인공지능(AI) 투자 수익성에 대한 우려가 재차 불거진 가운데 반등 흐름을 이어갈 수 있을지 ...",
       "dupes": []
     },
     {
@@ -135,15 +276,6 @@
       "dupes": []
     },
     {
-      "title": "[글로컬] '성장률 반등' 한국 경제, 대만 닮아간다는데",
-      "link": "https://www.yna.co.kr/view/AKR20261018059000546",
-      "publishedAt": "2026-10-18T22:07:01.000Z",
-      "source": "연합뉴스 경제",
-      "category": "other",
-      "preview": "(서울=연합뉴스) 한승호 선임기자 = 국제통화기금(IMF)이 최근 세계경제전망에서 한국의 잠재성장률이 지난해 1.94%에서 올해 2.14%, 내...",
-      "dupes": []
-    },
-    {
       "title": "\"초고층 아파트 30년 뒤엔 슬럼화…미래 세대 재앙 될 것\"",
       "link": "https://www.newsis.com/view/NISX20261014_0003825577",
       "publishedAt": "2026-10-18T22:00:00.000Z",
@@ -162,54 +294,6 @@
       "dupes": []
     },
     {
-      "title": "\"빚내서 버텼는데\"…코스피 급락에 하루 800억씩 강제 청산[간추린 주말 뉴스]",
-      "link": "https://www.newsis.com/view/NISX20261018_0003830650",
-      "publishedAt": "2026-10-18T21:30:00.000Z",
-      "source": "뉴시스 경제",
-      "category": "stocks",
-      "preview": "[서울=뉴시스]박지혁 기자 = 코스피 지수가 연일 곤두박질치면서 빚을 내 주식을 샀던 개인 투자자들의 반대매매가 쏟아지고 있다. 담보 비율을 채우지 못해 강제로 처분된 주식 규모가 이틀 연속 800억 원대를 넘어서며…",
-      "dupes": []
-    },
-    {
-      "title": "[오늘의 주요일정]경제(10월19일 월요일)",
-      "link": "https://www.newsis.com/view/NISX20261016_0003828244",
-      "publishedAt": "2026-10-18T21:00:00.000Z",
-      "source": "뉴시스 경제",
-      "category": "other",
-      "preview": "[세종=뉴시스] ▲10:00 김정관 산업통상부 장관, 산업기술보호위원회(무보) ▲10:00 주병기 공정거래위원장, 현안점검 간부회의(대회의실) ▲10:00 남동일 공정거래위원회 부위원장, 현안점검 간부회의(대회의실)…",
-      "dupes": []
-    },
-    {
-      "title": "\"집 보러 줄 섰는데 이젠 뚝 끊겼다\"…서울 집값 상승세 꺾이나",
-      "link": "https://www.newsis.com/view/NISX20261017_0003830032",
-      "publishedAt": "2026-10-18T18:05:00.000Z",
-      "source": "뉴시스 경제",
-      "category": "other",
-      "preview": "[서울=뉴시스]전민영 인턴 기자 = 서울 아파트값이 87주 연속 상승했다는 통계가 나왔지만, 실제 매수세는 추석 이후 급격히 꺾였다는 부동산 전문가의 분석이 나왔다. 집값 상승세가 이어지는 것처럼 보이지만 거래가 줄…",
-      "dupes": [],
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./apartment-sale.html",
-          "label": "서울 전체 아파트 84㎡ 매매",
-          "labelEn": "Seoul apartment 84㎡ sale",
-          "value": "12억 4,864만원",
-          "valueEn": "₩1,249M",
-          "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
-          "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
-        }
-      ]
-    },
-    {
-      "title": "\"AI 혜택, 美·中 넘어 세계로\"…경제학자들 \"대량 실업 없을 것\"",
-      "link": "https://www.newsis.com/view/NISX20261018_0003830696",
-      "publishedAt": "2026-10-18T14:38:22.000Z",
-      "source": "뉴시스 경제",
-      "category": "other",
-      "preview": "[서울=뉴시스]박미선 기자 = 인공지능(AI)이 향후 10년간 미국과 중국을 넘어 세계 주요국의 경제성장과 생산성을 높이면서도 대규모 실업을 초래하지는 않을 것이라는 경제학자들의 전망이 나왔다. 18일(현지 시간)…",
-      "dupes": []
-    },
-    {
       "title": "빌라까지 전월세대란…수도권 매물 36% 뚝",
       "link": "https://www.mk.co.kr/news/realestate/12179067",
       "publishedAt": "2026-10-18T08:44:55.000Z",
@@ -217,84 +301,6 @@
       "category": "realestate",
       "preview": "\"원래도 빌라 투룸 전월세 매물이 많지는 않았는데 인근에서 재개발 사업이 두 건이나 진행되면서 이젠 찾기가 더 어려워졌어요. 제가 지금 갖고 있는 빌라 전월세 물건은 1.5룸 한 ..",
       "dupes": []
-    },
-    {
-      "title": "\"신축 매입때만 대출 지원 역부족 기존 빌라도 풀어줘야 공급 가속\"",
-      "link": "https://www.mk.co.kr/news/realestate/12179057",
-      "publishedAt": "2026-10-18T08:41:30.000Z",
-      "source": "매일경제 부동산",
-      "category": "other",
-      "preview": "\"신축뿐 아니라 기축 비아파트에 대해서도 부동산 대출 규제가 완화돼야 합니다.\" 이상무 한국부동산임대운영협회장(사진)이 최근 서울 성동구 소재 협회 사무실에서 매일경제와 만나 이같..",
-      "dupes": [],
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-seongdong.html",
-          "label": "성동구 아파트 84㎡ 매매",
-          "labelEn": "성동구 apartment 84㎡ sale",
-          "value": "21억 3,900만원",
-          "valueEn": "₩2,139M",
-          "note": "최근 4주 계약 44건 · 10/12 대비 +2.2%",
-          "noteEn": "44 deals in the last 4 weeks · +2.2% vs Oct 12"
-        },
-        {
-          "kind": "rates",
-          "label": "주택담보대출 최저금리(상환방식 무관)",
-          "labelEn": "Lowest mortgage rate (any repayment type)",
-          "value": "연 3.70%",
-          "valueEn": "3.70% p.a.",
-          "href": "./mortgage-rates.html"
-        }
-      ]
-    },
-    {
-      "title": "빌라 1년이면 짓는데 … 고금리·규제에 끊긴 '주거 사다리'",
-      "link": "https://www.mk.co.kr/news/realestate/12179058",
-      "publishedAt": "2026-10-18T08:41:30.000Z",
-      "source": "매일경제 부동산",
-      "category": "rates",
-      "preview": "수도권 빌라의 매물이 확 줄어든 요인으로는 2022년부터 시작된 공급 위축이 꼽힌다. 고금리와 세금·대출 규제에 전세사기 여파로 빌라 기피 현상까지 겹쳐 신규 공급이 급감했다. 전..",
-      "dupes": [],
-      "context": [
-        {
-          "kind": "rates",
-          "label": "주택담보대출 최저금리(상환방식 무관)",
-          "labelEn": "Lowest mortgage rate (any repayment type)",
-          "value": "연 3.70%",
-          "valueEn": "3.70% p.a.",
-          "href": "./mortgage-rates.html"
-        }
-      ]
-    },
-    {
-      "title": "\"한은, 기준금리 10월 동결, 11월엔 인상 유력\"",
-      "link": "https://www.hankyung.com/article/2026101888781",
-      "publishedAt": "2026-10-18T08:27:09.000Z",
-      "source": "한국경제 경제",
-      "category": "rates",
-      "preview": null,
-      "dupes": []
-    },
-    {
-      "title": "여의도 시범에 래미안 깃발 … 삼성물산 2.2조 재건축 수주",
-      "link": "https://www.mk.co.kr/news/realestate/12179010",
-      "publishedAt": "2026-10-18T08:21:39.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "삼성물산 건설부문이 서울 여의도 재건축 최대어로 꼽히는 시범아파트 시공권을 따냈다. 지난해 대교아파트, 지난달 목화아파트에 이어 시범아파트까지 확보하면서 여의도 한강변에 '래미안 ..",
-      "dupes": [],
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./apartment-sale.html",
-          "label": "서울 전체 아파트 84㎡ 매매",
-          "labelEn": "Seoul apartment 84㎡ sale",
-          "value": "12억 4,864만원",
-          "valueEn": "₩1,249M",
-          "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
-          "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
-        }
-      ]
     }
   ],
   "realestateStats": [
