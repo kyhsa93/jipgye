@@ -73,6 +73,10 @@ export const RATE_PAGES = [
   },
 ];
 
+// 틀(scripts/rates-template.html)의 껍데기 - 머리·1층 내비·추이 구획 - 는 Tailwind 유틸리티를 쓴다(#282). 아래 문자열 패치 여덟 곳의 needle 은 틀의 글자 그대로여야 하므로,
+// 링크 둘(1층 내비의 금리 비교 링크·본문 상품군 링크)에는 class 를 달지 않고 그 부모(<nav>)에 단다 - 링크에 달면 needle 이 깨져 아래 호출이 던진다(test/rate-shell.test.mjs 가 지킨다).
+// 스크립트가 다시 그리는 조각(탭·조건 칸·표·추이 카드)과 인라인 스크립트에는 유틸리티를 두지 않는다 - 구운 첫 화면과 다시 그린 화면이 어긋나는데 S6 이 스크립트를 못 바꾸게 막는다.
+// 이 주석에도 유틸리티 이름을 접두사까지 적지 않는다 - 이 파일은 src/css/main.css 의 @source 목록에 있어 Tailwind 가 주석까지 훑는다.
 function replaceOnce(html, needle, replacement, what) {
   if (!html.includes(needle)) throw new Error(`${what}를 찾지 못했습니다: ${needle.slice(0, 60)}`);
   return html.replace(needle, replacement);

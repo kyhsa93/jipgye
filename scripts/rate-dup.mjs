@@ -19,7 +19,8 @@ export function renderedBody(html) {
   s = s.replace(/<head[\s\S]*?<\/head>/gi, " ");
   s = s.replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, " ");
   s = s.replace(/<header\b[\s\S]*?<\/header>/gi, " ");
-  s = s.replace(/<nav class="page-nav"[\s\S]*?<\/nav>/gi, " ");
+  // 1층 내비는 훅 class(page-nav) 뒤에 유틸리티 class 가 붙는다(#282, 유틸리티를 단 금리 틀 4장·허브). class 속성이 훅 하나만 담는다고 가정하지 않는다.
+  s = s.replace(/<nav\b[^>]*?\sclass="(?:[^"]*\s)?page-nav(?:\s[^"]*)?"[^>]*>[\s\S]*?<\/nav>/gi, " ");
   s = s.replace(/<form\b[\s\S]*?<\/form>/gi, " ");
   s = s.replace(/<footer\b[\s\S]*?<\/footer>/gi, " ");
   s = s.replace(/<tbody\b[\s\S]*?<\/tbody>/gi, " ");

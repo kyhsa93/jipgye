@@ -246,5 +246,14 @@
 #   이 장의 <code> 는 있으면 전부 글자 크기 유틸리티를 단다 · 굽는 조각 셋(<!--prerender:conversion…-->)과 인라인 스크립트(showEmpty 포함)에 유틸리티 없음 ·
 #   이 장이 색인 대상으로 남는다(캐노니컬·robots 메타 없음·h1 하나·제목 단계). 양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 5.
 #   고친 시험은 0 이고(더한 것뿐) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로).
-1735
-1735
+# 센 법: 2026-10-19, merge-base f196c8af(= origin/main), Node v22.16.0, macOS 15.5 (#282 금리 틀 PR).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1741 · pass 1741 · fail 0 · skipped 0
+#   merge-base f196c8af 를 따로 풀어 같은 명령 → ℹ tests 1735 · pass 1735 · fail 0 · skipped 0(= 직전 하한).
+#   차이 6 은 이 PR 이 더한 test/rate-shell.test.mjs 하나에서 나온다(`node --test test/rate-shell.test.mjs` → ℹ tests 6):
+#   금리 4장·틀·허브의 껍데기(머리·1층 내비·추이 구획, 허브는 본문 구획 포함)의 유틸리티·훅 class · 문자열 패치(replaceOnce) 여덟 needle 이 틀에 한 번씩 있고 호출이 여덟 · needle 한 곳을 깬 틀에서 빌더가 던짐 ·
+#   다시 그려지는 조각(추이 격자·상품군 링크 내비)과 인라인 스크립트에 유틸리티 없음 · 금리 4장은 색인 대상(캐노니컬·robots index, follow·제목 단계)이고 허브는 noindex ·
+#   scripts/rate-dup.mjs 가 훅 class 뒤에 유틸리티가 붙은 1층 내비를 걷어 내고(옛 정규식은 못 걷음 - 양성 대조) 이름이 비슷한 다른 내비는 걷지 않음.
+#   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 6.
+#   고친 시험은 0 이고(더한 것뿐) 없어진 시험도 0 이다(.skip·.todo 도 0 그대로). scripts/rate-dup.mjs 22행 정규식은 고쳤으나 그것을 쓰는 test/rate-hub.test.mjs 는 한 줄도 안 바뀌었다.
+1741
+1741
