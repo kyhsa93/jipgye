@@ -1,7 +1,16 @@
 {
-  "updatedAt": "2026-10-19T14:34:57.657Z",
-  "date": "2026-10-19",
+  "updatedAt": "2026-10-19T15:01:50.866Z",
+  "date": "2026-10-20",
   "items": [
+    {
+      "title": "이찬진 \"의무복무 병사 대부업체 대출 금지 검토\"(종합3보)",
+      "link": "https://www.yna.co.kr/view/AKR20261019071353002",
+      "publishedAt": "2026-10-19T14:43:18.000Z",
+      "source": "연합뉴스 경제",
+      "category": "other",
+      "preview": "(서울=연합뉴스) 배영경 강수련 김지연 강류나 기자 = 이찬진 금융감독원장은 19일 단일종목 레버리지 상장지수펀드(ETF)의 상장 일정을 맞추기...",
+      "dupes": []
+    },
     {
       "title": "美 증시, AI관련 주식 저가 매수에 나스닥 반등",
       "link": "https://www.hankyung.com/article/202610191800i",
@@ -9,8 +18,7 @@
       "source": "한국경제 경제",
       "category": "stocks",
       "preview": null,
-      "dupes": [],
-      "titleEn": "U.S. Markets, Nasdaq Rises on Low-price Buying of AI-related Stocks"
+      "dupes": []
     },
     {
       "title": "공무원 1만명 내려가라더니 입주물량 0…세종시 집값 벌써부터 ‘들썩’",
@@ -20,7 +28,6 @@
       "category": "other",
       "preview": "44개 중앙행정기관 이전 발표 나성동 84㎡ 10.9억 신고가 내년 입주 0가구…전세 품귀“여기는 주민 절반이 공무원이라 기관 이전 얘기가 나와도 도장 찍기 전까지는 잘 안 믿어요..",
       "dupes": [],
-      "titleEn": "Officials said 10,000 civil servants would move out, but available housing is zero... Sejong City's housing prices are already rising",
       "context": [
         {
           "kind": "realestate",
@@ -29,8 +36,8 @@
           "labelEn": "성동구 apartment 84㎡ jeonse",
           "value": "8억 8,985만원",
           "valueEn": "₩890M",
-          "note": "최근 4주 계약 103건 · 10/12 대비 +2.0%",
-          "noteEn": "103 deals in the last 4 weeks · +2.0% vs Oct 12"
+          "note": "최근 4주 계약 103건 · 10/13 대비 +1.5%",
+          "noteEn": "103 deals in the last 4 weeks · +1.5% vs Oct 13"
         }
       ]
     },
@@ -41,8 +48,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 김승민 기자 = 최근 폭락을 이어온 미국 주요 인공지능(AI) 관련 주식이 저가 매수세를 타면서 뉴욕증시가 혼조세로 출발했다. 뉴욕증권거래소(NYSE)에 따르면 19일(현지 시간) 오전 9시31분 기…",
-      "dupes": [],
-      "titleEn": "New York Stock Market Opens Mixed Amid 'AI Stocks Buy at Low Prices' Trend... Nasdaq Rises 1%"
+      "dupes": []
     },
     {
       "title": "‘아크메르 동탄’ 견본주택 사흘간 2만7000여 명 방문",
@@ -57,8 +63,7 @@
           "link": "https://www.hankyung.com/article/202610190835i",
           "source": "한국경제 부동산"
         }
-      ],
-      "titleEn": "Acmere Dongtan model home visited by 20,0007000+ people over three days"
+      ]
     },
     {
       "title": "수도권 교통 호재에 대한 모든 것…매경플러스서 PDF 다운 받으세요 [부동산 손품노트]",
@@ -67,8 +72,7 @@
       "source": "매일경제 부동산",
       "category": "realestate",
       "preview": "매경플러스 유료독자 PDF 배포부동산 호재나 매물 설명에 가장 자주 등장하는 단어가 노선 이름이다. 위례신사선, 위례과천선, 서부선, GTX-D·E·F 등이 대표적이다. 이러한 이..",
-      "dupes": [],
-      "titleEn": "Everything you need to know about transportation improvements in the Seoul metropolitan area... Download the PDF from Maeil Economic Plus [Real Estate Tips Notebook]"
+      "dupes": []
     },
     {
       "title": "[게시판] DB저축銀, 파킹통장 한도 1억원으로 확대…금리 3.3%",
@@ -78,7 +82,6 @@
       "category": "rates",
       "preview": "▲ DB저축은행이 파킹통장(수시입출금 통장) 상품인 '드림빅(DreamBig) 보통예금'의 최고금리를 연 3.3%로 인상하고, 금리 적용 한도를...",
       "dupes": [],
-      "titleEn": "[Board] DB Savings Bank Expands Parking Account Limit to 100,000,000 Won, Interest Rate 3.3%",
       "context": [
         {
           "kind": "rates",
@@ -97,8 +100,7 @@
       "source": "한국경제 경제",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Still Expensive, But Getting More Expensive\"…Global Food Prices to Remain High Until 2027"
+      "dupes": []
     },
     {
       "title": "中, 대출금리 결정체계 대수술…기업이 기준금리 직접 고른다 [차이나 워치]",
@@ -107,8 +109,7 @@
       "source": "한국경제 경제",
       "category": "rates",
       "preview": null,
-      "dupes": [],
-      "titleEn": "China Overhauls Loan Rate Determination System: Companies to Choose Benchmark Rates Directly [China Watch]"
+      "dupes": []
     },
     {
       "title": "[올댓차이나] 대만 증시, 美 반도체주 급락에 반락 마감…0.61%↓",
@@ -117,8 +118,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스]이재준 기자 = 대만 타이베이 증시는 19일 주말 뉴욕 증시에서 반도체주가 급락한 여파로 주력 기술주에 매도 선행하면서 반락 마감했다. 자취안(加權) 지수는 이날 지난 16일 대비 289.18 포인트,…",
-      "dupes": [],
-      "titleEn": "[TechChina] Taiwan Stock Market Closes Lower Amid Sharp Drop in U.S. Semiconductor Stocks…0.61%↓"
+      "dupes": []
     },
     {
       "title": "'수출 호조' 中, 3분기 4.5% 성장…소비·부동산 침체는 여전",
@@ -127,8 +127,7 @@
       "source": "한국경제 경제",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Export Strength' Drives 4.5% Growth in Q3... Consumer and Real Estate Slump Persists"
+      "dupes": []
     },
     {
       "title": "고급 아파트의 새 기준된 '하이필로티'",
@@ -137,8 +136,7 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "New Benchmark for High-End Apartments: 'High Pile"
+      "dupes": []
     },
     {
       "title": "시중금리 오르는데 저축銀 예금금리는 제자리",
@@ -148,7 +146,6 @@
       "category": "rates",
       "preview": null,
       "dupes": [],
-      "titleEn": "Market interest rates rise, but savings bank deposit rates remain unchanged",
       "context": [
         {
           "kind": "rates",
@@ -173,8 +170,7 @@
           "link": "https://www.yna.co.kr/view/AKR20261019158800001",
           "source": "연합뉴스 경제"
         }
-      ],
-      "titleEn": "[Breaking News] President Lee says claim that taxes were raised to control housing prices is false... Supply to normalize by 2028"
+      ]
     },
     {
       "title": "日증시, AI 투자 불안에 혼조 마감…닛케이 0.62%↓",
@@ -183,8 +179,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 신효령 기자 = 19일 일본 도쿄증시가 혼조세로 마감했다. 미국 인공지능(AI) 기업 코어위브의 자금 조달 우려로 반도체주가 하락했다. 반면 가스·제약 등 경기 영향을 덜 받는 종목에는 매수세가 유입…",
-      "dupes": [],
-      "titleEn": "Tokyo Stock Exchange Closes Mixed Amid AI Investment Concerns… Nikkei Down 0.62%"
+      "dupes": []
     },
     {
       "title": "치솟는 강북 이주비 금리…'닥공' 가로막나",
@@ -194,7 +189,6 @@
       "category": "rates",
       "preview": null,
       "dupes": [],
-      "titleEn": "Soaring Gangbuk relocation loan rates blocked by 'Dakgong",
       "context": [
         {
           "kind": "rates",
@@ -213,8 +207,7 @@
       "source": "뉴시스 경제",
       "category": "realestate",
       "preview": "[서울=뉴시스]이재준 기자 = 중국 9월 신규주택 가격이 전월보다 내렸지만 낙폭은 다소 줄었다. 상하이 등 대도시에서는 주택가격이 안정되는 조짐이 나타난 반면 중소도시에서는 신규주택과 중고주택 가격이 모두 하락세를…",
-      "dupes": [],
-      "titleEn": "[AllChina] Sept. China New Residential Property Prices Down 0.14%... Major Cities Stable, Smaller Cities Continue Slump"
+      "dupes": []
     },
     {
       "title": "국고채 금리, 금통위 앞두고 일제히 상승…3년물 연 3.877%(종합)",
@@ -223,8 +216,7 @@
       "source": "연합뉴스 경제",
       "category": "rates",
       "preview": "(서울=연합뉴스) 김태종 기자 = 국고채 금리가 19일 일제히 상승 마감했다.",
-      "dupes": [],
-      "titleEn": "Korea's government bond rates rise ahead of the MPC meeting... 3-year bonds at 3.877% annually (comprehensive)"
+      "dupes": []
     },
     {
       "title": "국채이자 내년 43조 육박…고금리에 재정당국 발행 축소 고심",
@@ -233,8 +225,7 @@
       "source": "뉴시스 경제",
       "category": "rates",
       "preview": "[세종=뉴시스] 안호균 기자 = 고금리 장기화에 대한 우려로 재정당국의 고심이 커지고 있다. 중동전쟁 장기화에 따른 고물가와 인공지능(AI) 기업들의 대규모 자금 조달, 주요국의 재정불안, 중앙은행의 긴축 등으로 금…",
-      "dupes": [],
-      "titleEn": "Government Bonds Interest Rates to Approach 43,000,000,000,000 Won Next Year... High Rates Prompt Fiscal Authorities to Consider Reducing Issuance"
+      "dupes": []
     },
     {
       "title": "\"토허제 해제 불가피\" vs \"집값에 기름 부어\"…오세훈·野 공방",
@@ -243,8 +234,7 @@
       "source": "한국경제 부동산",
       "category": "other",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Removing Tohokje Unavoidable\" vs \"Pouring Oil on Housing Prices\"... Oh Sehun and Wild Party Clash"
+      "dupes": []
     },
     {
       "title": "한국주택협회-대한건축학회, 주택산업 발전 협력 강화",
@@ -253,8 +243,7 @@
       "source": "조선비즈 부동산",
       "category": "realestate",
       "preview": "한국주택협회와 대한건축학회가 주택산업 발전을 위한 정책 개발과 청년층 취업 활성화 등에 협력하기로 했다. 한국주택협회와 대한건축학회는은 지난 15일 학회 건축센터 대강당에서 주택건설 관련 정책수립 및 미래세대 성장…",
-      "dupes": [],
-      "titleEn": "Korea Housing Association and Korean Institute of Architects to Strengthen Collaboration for Housing Industry Development"
+      "dupes": []
     },
     {
       "title": "[올댓차이나] 중국 증시 혼조 마감…상하이지수 0.39%↑",
@@ -263,8 +252,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 19일 혼조 마감했다. 이날 상하이종합지수는 전거래일보다 0.39% 상승한 3707.48로 거래를 마쳤다. 선전성분지수는 전장 대비 0.13% 오른 1만1817.42로,…",
-      "dupes": [],
-      "titleEn": "[AllChina] China's stock market closes mixed… Shanghai index up 0.39%"
+      "dupes": []
     },
     {
       "title": "“서울 아파트 공급 어디서부터 꼬였나”…서울 주택정책 20년 엇갈린 성적표",
@@ -274,7 +262,6 @@
       "category": "realestate",
       "preview": "2012∼2020년 정비구역 389곳 해제 착공 연평균 2만9000호→1만5000호 오세훈 복귀 후 구역 지정 77곳→172곳서울시가 박원순 전 시장 재임기 정비구역 683곳 가운..",
       "dupes": [],
-      "titleEn": "Where Did Seoul Apartment Supply Go Wrong?\"... Seoul Housing Policy's 20-Year Mixed Record",
       "context": [
         {
           "kind": "realestate",
@@ -283,8 +270,8 @@
           "labelEn": "Seoul apartment 84㎡ sale",
           "value": "12억 4,864만원",
           "valueEn": "₩1,249M",
-          "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
-          "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
+          "note": "최근 4주 계약 3,042건 · 10/13 대비 -3.7%",
+          "noteEn": "3,042 deals in the last 4 weeks · -3.7% vs Oct 13"
         }
       ]
     },
@@ -295,18 +282,7 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 채새롬 기자 = 19일 원/달러 환율이 오후 3시 30분 기준 1,330원선까지 내려가며 2년 만에 최저치를 다시 기록했다.",
-      "dupes": [],
-      "titleEn": "Won/Dollar Exchange Rate Hits Two-Year Low Again... Yuan Exchange Rate Also Hits One-Year Low (Comprehensive)"
-    },
-    {
-      "title": "코스피, 1.8% 오른 5,768…이틀 연속 상승하며 반등흐름 유지(종합)",
-      "link": "https://www.yna.co.kr/view/AKR20261019137000008",
-      "publishedAt": "2026-10-19T07:23:32.000Z",
-      "source": "연합뉴스 경제",
-      "category": "stocks",
-      "preview": "(서울=연합뉴스) 김유아 기자 = 19일 코스피와 코스닥이 장 막판 뒷심을 발휘하며 상승세로 마감했다.",
-      "dupes": [],
-      "titleEn": "Kospi rises 1.8% to 5,768... maintains rebound trend with two consecutive days of gains (comprehensive)"
+      "dupes": []
     }
   ],
   "realestateStats": [
@@ -317,8 +293,8 @@
       "labelEn": "Seoul apartment 84㎡ sale",
       "value": "12억 4,864만원",
       "valueEn": "₩1,249M",
-      "note": "최근 4주 계약 3,042건 · 10/12 대비 -24.1%",
-      "noteEn": "3,042 deals in the last 4 weeks · -24.1% vs Oct 12"
+      "note": "최근 4주 계약 3,042건 · 10/13 대비 -3.7%",
+      "noteEn": "3,042 deals in the last 4 weeks · -3.7% vs Oct 13"
     },
     {
       "kind": "realestate",
@@ -327,8 +303,8 @@
       "labelEn": "Seoul apartment 84㎡ jeonse",
       "value": "7억 6,484만원",
       "valueEn": "₩765M",
-      "note": "최근 4주 계약 3,091건 · 10/12 대비 -9.4%",
-      "noteEn": "3,091 deals in the last 4 weeks · -9.4% vs Oct 12"
+      "note": "최근 4주 계약 3,091건 · 10/13 대비 -2.0%",
+      "noteEn": "3,091 deals in the last 4 weeks · -2.0% vs Oct 13"
     },
     {
       "kind": "realestate",
@@ -337,8 +313,8 @@
       "labelEn": "Seoul apartment rent",
       "value": "보증금 19,702만원 / 월 123만원",
       "valueEn": "₩197M + ₩1.23M/mo",
-      "note": "최근 4주 계약 4,854건 · 10/12 대비 -20.7%",
-      "noteEn": "4,854 deals in the last 4 weeks · -20.7% vs Oct 12"
+      "note": "최근 4주 계약 4,854건 · 10/13 대비 -5.5%",
+      "noteEn": "4,854 deals in the last 4 weeks · -5.5% vs Oct 13"
     }
   ]
 }
