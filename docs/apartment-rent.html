@@ -1359,6 +1359,42 @@ function foldReserve() {
   if (room < box.offsetHeight) box.style.cssText = `height:${Math.max(room, 0)}px;overflow:hidden`;
 }
 
+function notifyBeside(anchor, message, retryLabel, onRetry) {
+  notifyBeside.last?.remove();
+  const en = document.documentElement.getAttribute("lang") === "en";
+  const day = document.getElementById("updated")?.getAttribute("data-updated");
+  const asOf = en
+    ? `Shown below is what this page was built with${day ? ` on ${day}` : "; see its as-of date"}.`
+    : `아래는 ${day ? `기준일(${day})` : "이 화면의 기준일"}에 만든 값입니다.`;
+  const text = [message, onRetry && asOf, en && "Some of it is in Korean only."].filter(Boolean).join(" ");
+  if (!text) return;
+  anchor.insertAdjacentHTML("afterend", '<p class="content-notice"></p>');
+  const box = (notifyBeside.last = anchor.nextElementSibling);
+  box.append(text);
+  if (!onRetry) return;
+  box.insertAdjacentHTML("beforeend", ' <button type="button" id="load-retry"></button>');
+  const button = box.lastElementChild;
+  button.textContent = retryLabel;
+  button.addEventListener("click", () => {
+    button.disabled = true;
+    box.remove();
+    onRetry();
+  });
+}
+
+let bakedGrid = true;
+function showGridFailure() {
+  bakedGrid = false;
+  document.getElementById("district-grid").innerHTML =
+    `<tr><td colspan="4">${escapeHtml(t("loadError"))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button></td></tr>`;
+  document.getElementById("load-retry")?.addEventListener("click", (e) => {
+    e.currentTarget.disabled = true;
+    main().then(() => {
+      if (cache.realestate) notifyBeside.last?.remove();
+    });
+  });
+}
+
 async function main() {
   applyTheme(theme);
   applyLocale();
@@ -1406,12 +1442,11 @@ async function main() {
   } catch (error) {
     reportLoadFailure(error);
     foldReserve();
-    document.getElementById("district-grid").innerHTML =
-      `<tr><td colspan="4">${escapeHtml(t("loadError"))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button></td></tr>`;
-    document.getElementById("load-retry")?.addEventListener("click", (e) => {
-      e.currentTarget.disabled = true;
-      main();
-    });
+    if (!budgetEnabled && bakedGrid && (!hasAreaColumn || areaM2 === DEFAULT_AREA_M2)) {
+      notifyBeside(document.getElementById("area-controls"), t("loadError"), t("retry"), main);
+      return;
+    }
+    showGridFailure();
   }
 }
 
@@ -1420,6 +1455,11 @@ document.getElementById("area-controls").addEventListener("change", (e) => {
   areaM2 = normalizeArea(e.target.value);
   syncAreaUrl();
   renderAll();
+  if (notifyBeside.last?.isConnected) {
+    notifyBeside.last.remove();
+    showGridFailure();
+    if (document.getElementById("overall-cards").innerHTML) notifyBeside(e.currentTarget);
+  }
   window.analytics?.event("realestate_area", { area_m2: String(areaM2), realestate_kind: kind ?? "all" });
 });
 

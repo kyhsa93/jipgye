@@ -277,5 +277,18 @@
 #   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 13.
 #   고친 기존 시험은 0 이고 없어진 시험도 0 이다(.skip·.todo 도 0 그대로). 공용 도우미 test/helpers/realestate-page.mjs 에 기본 창 높이(823)와 trend-section 뒤 형제 스텁을 더했다 -
 #   더하지 않으면 실패 경로를 타는 기존 시험 134개가 foldReserve 에서 `innerHeight is not defined` 로 멈춘다(도우미만 고쳤고 그 시험들은 한 줄도 안 바뀌었다).
-1758
-1758
+# 센 법: 2026-10-19, merge-base 4ac73262(= origin/main), Node v22.16.0, macOS 15.5 (#296 (바) 시세 틀 실패 알림).
+#   npm test(/bin/dash -c "node --test 'test/*.test.{mjs,ts}'") → ℹ tests 1775 · pass 1775 · fail 0 · skipped 0
+#   merge-base 4ac73262 를 따로 풀어 같은 명령 → ℹ tests 1758 · pass 1758 · fail 0 · skipped 0(= 직전 하한).
+#   차이 17 은 이 PR 이 더한 test/load-failure.test.mjs 의 새 시험 17개에서 나온다(`node --test test/load-failure.test.mjs` → 기준 26 → 후보 43):
+#   범위(시세 틀 47장 = 알림 29 + 예산대 18, 면적 고르기 27) · ⓕ 공통 함수 notifyBeside 가 docs/load-state.js 와 틀·구운 47장에 들여쓰기만 다른 같은 글자이고 시세 장이 load-state.js 를 <script src> 로 물지 않음 ·
+#   ⓕ 알림·재시도 단추 마크업이 이 함수와 옛 빈 자리 행으로만 있고 새 훅(dataset·class 쓰기)·주석 0 · 범위 선(complex-ratio·realestate-trend·budget-deals 블록 글자 그대로, 새 코드는 바깥 catch 의 reportLoadFailure; foldReserve; 바로 뒤) ·
+#   ⓐⓑⓒⓔ 29장 × ko·en × 404·reject(구운 표·카드 그대로, 알림 하나가 #area-controls 바로 아래, 기준일은 data-updated, 지금 값처럼 말하는 낱말 0) · ⓑ 구운 마크업의 자리 순서 · ⓑ 예산대 18장은 알림 요소 0 + 옛 실패 행 ·
+#   ⓗ 영어 실패(29장 고지 정확히 1 · 18장 새 고지 0 + budgetKoOnly 1)와 한국어 실패(29장 알림 1 · 영어 고지 0 · 18장 0) · ⓖ 재시도(또 실패하면 알림은 갈아 끼워 하나, 성공하면 알림 0·고지 0·표가 받은 값) ·
+#   ⓓ(i) 27장 ?area=59·114 는 구운 표를 남기지 않고 알림 0 + 양성 대조 realestate·apartment-rent · ⓓ(ii) 실패 뒤 면적 변경(구운 표 걷음·기준일 문장 뺌·영어 고지 하나·84 로 되돌려도 복원 안 함·재시도 성공 시 선택 면적) · ⓓ(ii) 변경 뒤 재시도 실패 ·
+#   다른 요청(complex-ratio·realestate-trend·budget-deals) 한 가지만 실패하면 알림 0 · S6 한도(장당 +1,800B · 47장 합 84,600B · load-state.js 순증가 2,000B).
+#   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 17.
+#   고친 기존 시험은 0 이고 없어진 시험도 0 이다(.skip·.todo 도 0 그대로). 공용 도우미 test/helpers/realestate-page.mjs 에 insertAdjacentHTML·append·remove·nextElementSibling 을 흉내 내는 스텁을 더했다 -
+#   더하지 않으면 실패 경로를 타는 기존 시험이 `box.append is not a function` 으로 멈춘다(실측: 66개). 도우미만 고쳤고 그 시험들은 한 줄도 안 바뀌었다. test/realestate-fold.test.mjs 는 한 글자도 안 바뀌고 통과한다.
+1775
+1775
