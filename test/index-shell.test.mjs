@@ -22,16 +22,16 @@ const tokens = (cls) => cls.split(/\s+/).filter(Boolean);
 // 값은 방향 C의 머리·내비는 조밀하게(8)·본문 구획 사이는 넉넉하게(40)이고(#384·#385·#399 와 같은 값), 높이 예산(첫 h2 ≤ merge-base)은
 // 머리 아래 여백 16→8, 1층 내비 아래 여백 16→8로 16px를 산다. 이 수를 바꾸면 PR 본문의 윗변 표(252 조건)를 다시 재야 한다.
 const SHELL = [
-  { name: "머리글", pattern: /<header(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-2"] },
+  { name: "머리글", pattern: /<header(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-2", "tw:1024:mb-6"] },
   // index 의 1층 내비에는 aria-label 이 없다(다른 장은 aria-label="섹션"). 훅 class 로 찾는다.
-  { name: "1층 내비", pattern: /<nav class="(page-nav[^"]*)">/, hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:*:rounded"] },
+  { name: "1층 내비", pattern: /<nav class="(page-nav[^"]*)">/, hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:1024:mb-4", "tw:*:rounded"] },
   // 질문 입구: 묶음 사이 24(grid gap 8→24) · 입구 아래 40(16→40). 시안 C(c-layout.css `.question-nav { gap: 24px }` · c.css `.question-nav { margin-bottom: 40px }`)와 같은 값이다.
   { name: "질문 입구", pattern: /<nav class="(question-nav[^"]*)" id="question-nav"/, hooks: ["question-nav"], utilities: ["tw:gap-6", "tw:mb-10"] },
   ...["realestate", "market", "summary", "news"].map((id) => ({
     name: `${id} 구획`,
     pattern: new RegExp(`<section id="${id}-section"(?: class="([^"]*)")?>`),
     hooks: [],
-    utilities: ["tw:mb-10"],
+    utilities: ["tw:mb-10", "tw:1024:mb-16"],
   })),
 ];
 
@@ -53,9 +53,7 @@ test("index 의 껍데기는 같은 유틸리티를 갖고 훅 class는 그대�
   assert.match(html, /<\/section>\n\n {2}<footer class="site-footer">/, `${FILE}: 지난 기록 구획과 바닥글 사이에 무엇이 끼었다 - 마진 상쇄가 깨진다`);
   const css = await read("src/css/legacy.css");
   assert.match(css, /\.site-footer \{\s*margin-top: 40px;/, ".site-footer 의 margin-top 이 40px 가 아니다 - 지난 기록 구획의 마진 상쇄 전제가 깨진다");
-  // 방법 안내 aside·질문 입구 제목·검색창은 첫 h2 높이를 정하는 곳이라 이 PR 의 모양 유틸리티 범위 밖이다(aside.method-callout 은 #283).
-  const callout = html.match(/<aside\b[^>]*>/)?.[0];
-  assert.ok(callout && !callout.includes("tw:"), `${FILE}: 안내 aside 에 유틸리티가 붙었다: ${callout}`);
+  // 방법 안내 aside 의 모양은 #283 이 53장 한 번에 정했다(test/realestate-shell.test.mjs 가 지킨다). 질문 입구 제목·검색창은 첫 h2 높이를 정하는 곳이라 유틸리티가 없다.
   for (const tag of [html.match(/<h2\b[^>]*id="question-heading"[^>]*>/)?.[0], html.match(/<form\b[^>]*role="search"[^>]*>/)?.[0]]) {
     assert.ok(tag && !tag.includes("tw:"), `${FILE}: 질문 입구 제목·검색창 여는 태그에 유틸리티가 붙었다: ${tag}`);
   }
@@ -70,7 +68,7 @@ test("갱신 주기 안내(#update-schedule)는 머리가 아니라 바닥글 �
   assert.ok(!header.includes('id="update-schedule"'), `${FILE}: #update-schedule 이 머리에 있다`);
   const footer = html.match(/<footer class="site-footer">\n( {4}<div[^>]*>)([^\n]*)\n( {4}<div[^>]*>)/);
   assert.ok(footer, `${FILE}: 바닥글 첫 줄을 못 읽었다`);
-  assert.equal(footer[1], '    <div class="update-schedule tw:text-sm" id="update-schedule">', `${FILE}: 바닥글 첫 줄이 갱신 주기 안내가 아니다`);
+  assert.equal(footer[1], '    <div class="update-schedule tw:text-sm tw:mb-2" id="update-schedule">', `${FILE}: 바닥글 첫 줄이 갱신 주기 안내가 아니다`);
   assert.equal(footer[2], "</div>", `${FILE}: 갱신 주기 안내는 구운 HTML 에서 비어 있어야 한다(스크립트가 채운다)`);
   assert.ok(footer[3].includes('id="updated"'), `${FILE}: 갱신 주기 안내 바로 아래가 #updated 가 아니다 - 문구의 "아래 갱신 시각"이 어긋난다`);
   assert.equal(html.split('id="update-schedule"').length - 1, 1, `${FILE}: #update-schedule 이 하나가 아니다`);

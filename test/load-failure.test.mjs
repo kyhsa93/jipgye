@@ -619,7 +619,7 @@ for (const mode of ["404", "reject"]) {
 test("ⓑ 알림 자리는 #district-section 안, #area-controls 아래·.table-wrap 위이고 .trend-reserve 와 표의 밖이다 (구운 47장 마크업)", () => {
   for (const p of PAGES) {
     const sec = p.html.indexOf('<section id="district-section"');
-    const reserve = p.html.indexOf('<div class="trend-reserve">');
+    const reserve = p.html.indexOf('<div class="trend-reserve ');
     const controls = p.html.indexOf('id="area-controls"', sec);
     const table = p.html.indexOf("<table", sec);
     assert.ok(reserve > 0 && reserve < sec && sec > 0 && sec < controls && controls < table, `docs/${p.file}: 구획·컨트롤·표 자리의 순서가 다르다`);

@@ -991,7 +991,6 @@
   #trend-section[hidden] + .trend-reserve {
     display: block;
     visibility: hidden;
-    margin-bottom: 24px;
   }
   .trend-reserve::before {
     content: "\00a0";
@@ -2388,6 +2387,9 @@
   .tw\:mb-10 {
     margin-bottom: calc(var(--tw-spacing) * 10);
   }
+  .tw\:-ml-2\.75 {
+    margin-left: calc(var(--tw-spacing) * -2.75);
+  }
   .tw\:grid {
     display: grid;
   }
@@ -2410,8 +2412,15 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
+  .tw\:border-l-3 {
+    border-left-style: var(--tw-border-style);
+    border-left-width: 3px;
+  }
   .tw\:border-border {
     border-color: var(--border);
+  }
+  .tw\:border-border-strong {
+    border-color: var(--border-strong);
   }
   .tw\:bg-card {
     background-color: var(--card);
@@ -2421,6 +2430,9 @@
   }
   .tw\:p-4 {
     padding: calc(var(--tw-spacing) * 4);
+  }
+  .tw\:pl-2 {
+    padding-left: calc(var(--tw-spacing) * 2);
   }
   .tw\:text-sm {
     font-size: var(--fs-sm);
@@ -2447,6 +2459,9 @@
   .tw\:text-down {
     color: var(--down);
   }
+  .tw\:text-fg {
+    color: var(--fg);
+  }
   .tw\:text-muted {
     color: var(--muted);
   }
@@ -2455,6 +2470,17 @@
   }
   :is(.tw\:\*\:rounded > *) {
     border-radius: 0.25rem;
+  }
+  @media (width >= 1024px) {
+    .tw\:1024\:mb-4 {
+      margin-bottom: calc(var(--tw-spacing) * 4);
+    }
+    .tw\:1024\:mb-6 {
+      margin-bottom: calc(var(--tw-spacing) * 6);
+    }
+    .tw\:1024\:mb-16 {
+      margin-bottom: calc(var(--tw-spacing) * 16);
+    }
   }
 }
 @property --tw-border-style {

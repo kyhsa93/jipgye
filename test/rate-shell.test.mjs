@@ -21,12 +21,12 @@ const attr = (name, value) => ` ${name}=${JSON.stringify(value)}`;
 // 값은 방향 C 의 머리·내비는 조밀하게(8)·본문 구획 사이는 넉넉하게(40)이고, 높이 예산은 머리 아래 여백 16→8, 내비 아래 여백 16→8 로 16px 를 사서
 // 두 구획 사이 24→40 에 다시 쓴다(첫 h2 −16, 답 시작 #products-body 는 −16+16=0). 이 수를 바꾸면 PR 본문의 윗변 표를 다시 재야 한다.
 // 두 번째 구획(#products-section)에는 달지 않는다: 그 아래는 .site-footer 의 margin-top 40 과 겹쳐(마진 상쇄) 40 이 이미 나오므로 달아도 높이가 같다.
-const HEADER = { name: "머리글", pattern: /<header(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-2"] };
-const NAV = { name: "1층 내비", hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:*:rounded"] };
+const HEADER = { name: "머리글", pattern: /<header(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-2", "tw:1024:mb-6"] };
+const NAV = { name: "1층 내비", hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:1024:mb-4", "tw:*:rounded"] };
 const SHELL_PAGE = [
   HEADER,
   { ...NAV, pattern: /<nav class="([^"]*)">/ },
-  { name: "추이 구획", pattern: /<section id="history-section"(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-10"] },
+  { name: "추이 구획", pattern: /<section id="history-section"(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-10", "tw:1024:mb-16"] },
   { name: "상품 구획", pattern: /<section id="products-section"(?: class="([^"]*)")?>/, hooks: [], utilities: [] },
 ];
 // 허브는 구획이 하나(본문 구획 method-body, about·method 와 같은 모양)이고 바닥글이 .site-footer 가 아닌 맨 <footer> 라 margin-top 이 없다 -
@@ -34,7 +34,7 @@ const SHELL_PAGE = [
 const SHELL_HUB = [
   HEADER,
   { ...NAV, pattern: /<nav class="([^"]*)" aria-label="섹션">/ },
-  { name: "본문 구획", pattern: /<section class="([^"]*)">\s*<div data-lang="ko"/, hooks: ["method-body"], utilities: ["tw:max-w-read", "tw:mb-10"] },
+  { name: "본문 구획", pattern: /<section class="([^"]*)">\s*<div data-lang="ko"/, hooks: ["method-body"], utilities: ["tw:max-w-read", "tw:mb-10", "tw:1024:mb-16"] },
 ];
 
 function checkShell(html, file, shell) {
