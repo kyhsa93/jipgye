@@ -1,0 +1,10 @@
+{
+  "name": "jipgye-typescript",
+  "private": true,
+  "type": "module",
+  "description": "tsc --noEmit 타입 검사 전용(#316 G-TS 1단계, #421). 실행은 Node 24 타입 스트리핑이 하고 이 폴더는 검사만 한다 - 산출물을 만들지 않는다(tsconfig.json noEmit). 루트와 의존을 나눈다: 루트 `npm ci`로는 설치되지 않고, CI(.github/workflows/test.yml)가 tools/golden `npm ci` 뒤에 이 폴더에서 따로 `npm ci && npx tsc -p tsconfig.json`을 돌린다.",
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "typescript": "5.9.3"
+  }
+}

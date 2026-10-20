@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "strict": false,
+    "allowJs": false,
+    "checkJs": false,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "target": "esnext",
+    "lib": ["esnext"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["node"],
+    "skipLibCheck": true
+  },
+  "include": [
+    "../golden/bin/bench.ts",
+    "../golden/bin/compare.ts",
+    "../golden/bin/invariants.ts",
+    "../golden/bin/render.ts",
+    "../golden/lib/canon.ts",
+    "../golden/lib/cleanup.ts",
+    "../golden/lib/compare.ts",
+    "../golden/lib/invariants.ts",
+    "../golden/lib/mock-date-now.ts",
+    "../golden/lib/render.ts",
+    "../golden/test/canon.test.ts",
+    "../golden/test/cleanup.test.ts",
+    "../golden/test/compare.test.ts",
+    "../golden/test/content-mode.test.ts",
+    "../golden/test/helpers/fake-repo.ts",
+    "../golden/test/helpers/prepare.ts",
+    "../golden/test/invariants.test.ts",
+    "../golden/test/live.test.ts",
+    "../golden/test/mutation.test.ts",
+    "../golden/test/render.test.ts"
+  ]
+}
