@@ -7,7 +7,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import {
   ALLOWED_COMPARISON, ALLOWED_DISTRICT, ALLOWED_MONTH, ALLOWED_SOURCE, ALLOWED_TOP, CSV_HEADER, MIN_CELL, SUPERSEDED_MARK, SUPERSEDED_PREFIX,
   assertAllowedShape, buildFigures, buildRelease, readSales, renderBody, renderTitle, supersede, toCsv,
-} from "../scripts/build-correction-release.mjs";
+} from "../scripts/build-correction-release.ts";
 import { repeatedLiveStats } from "../scripts/cancellation.ts";
 
 // #218: 정정 재신고 집계 Release 산출. 값에 따라 갈리는 검사는 두지 않는다(#8) - 구조·금지어·두 구현의 일치만 본다.
@@ -165,7 +165,7 @@ test("check.py는 표준 라이브러리만 쓰고 입력 경로를 환경변수
 });
 
 test("산출 스크립트는 환경변수 경로로 입력을 받고, 사이트와 같은 함수를 쓴다(산식 이중 구현 없음)", async () => {
-  const src = await read("scripts/build-correction-release.mjs");
+  const src = await read("scripts/build-correction-release.ts");
   assert.match(src, /from "\.\/cancellation\.ts"/);
   for (const fn of ["withoutCorrections", "correctionStats", "registrationStats", "repeatedLiveStats"]) assert.match(src, new RegExp(`\\b${fn}\\b`));
   assert.match(src, /RAW_DIR/);
@@ -316,7 +316,7 @@ test("본문: 출처 문구(clo 조건 4)·가공값 구분이 한·영에 있�
   assert.doesNotMatch(json, /license|이용허락|제한 없음|checkedAt/i);
   assert.deepEqual(ALLOWED_SOURCE, ["datasetId"]);
   assert.deepEqual(Object.keys(figures.source), ["datasetId"]);
-  assert.doesNotMatch(await read("scripts/build-correction-release.mjs"), /LICENSE_CHECKED|licenseCheckedAt/);
+  assert.doesNotMatch(await read("scripts/build-correction-release.ts"), /LICENSE_CHECKED|licenseCheckedAt/);
 });
 
 test("수집 시각: 파일 observedAt의 KST 최솟값·최댓값을 JSON에 내고, 본문은 범위로 적는다(같은 날이면 하루만)(legal M1)", async () => {
@@ -441,7 +441,7 @@ test("CLI --same: 지문이 같으면 0, 다르면 1, 비교하지 못하면 2(�
   const pa = await write("a.json", a);
   const pb = await write("b.json", { ...a, asOf: "2026-12-01" });
   const pc = await write("c.json", { ...a, figuresDigest: "0000" });
-  const run = (x, y) => spawnSync("node", [path.join(root, "scripts/build-correction-release.mjs"), "--same", x, y], { encoding: "utf8" });
+  const run = (x, y) => spawnSync("node", [path.join(root, "scripts/build-correction-release.ts"), "--same", x, y], { encoding: "utf8" });
   assert.equal(run(pa, pb).status, 0);
   assert.equal(run(pa, pc).status, 1);
   // 비교 불가: 없는 파일·깨진 JSON·지문 없는 새 JSON·인자 부족은 2. 이전 쪽에 지문이 없는 것은 '다름'(1)이다.
@@ -453,7 +453,7 @@ test("CLI --same: 지문이 같으면 0, 다르면 1, 비교하지 못하면 2(�
     assert.equal(r.status, 2, `${why}: 종료 코드 ${r.status}`);
     assert.match(r.stderr, /숫자를 비교하지 못했다/);
   }
-  assert.equal(spawnSync("node", [path.join(root, "scripts/build-correction-release.mjs"), "--same", pa], { encoding: "utf8" }).status, 2, "인자 부족");
+  assert.equal(spawnSync("node", [path.join(root, "scripts/build-correction-release.ts"), "--same", pa], { encoding: "utf8" }).status, 2, "인자 부족");
   assert.equal(run(noDigest, pa).status, 1, "이전 쪽에 지문이 없으면 같다고 볼 근거가 없다");
 });
 
@@ -471,7 +471,7 @@ test("buildRelease: 시험 입력으로 파일 다섯 개와 tag.txt·title.txt�
 });
 
 test("산출물 폴더는 커밋 대상이 아니다 - 스크립트는 저장소 안에 기본 산출 경로를 두지 않는다", async () => {
-  const src = await read("scripts/build-correction-release.mjs");
+  const src = await read("scripts/build-correction-release.ts");
   assert.match(src, /CORRECTION_OUT_DIR\(산출 폴더\)가 필요하다/);
   assert.doesNotMatch(src, /path\.join\(root, "(dist|out)/);
 });
@@ -515,8 +515,8 @@ test("워크플로: 일일 파이프라인과 update-all에 들어가지 않고,
   assert.doesNotMatch(daily, /correction-release|build-correction-release/);
   assert.doesNotMatch(updateAll, /build-correction-release/);
   assert.match(wf, /gh release create "\$tag"/);
-  assert.match(wf, /build-correction-release\.mjs --same/);
-  assert.match(wf, /build-correction-release\.mjs --supersede/);
+  assert.match(wf, /build-correction-release\.ts --same/);
+  assert.match(wf, /build-correction-release\.ts --supersede/);
   assert.match(wf, /gh release edit/);
   assert.match(wf, /gh release list/);
   assert.match(wf, /--notes-file/);

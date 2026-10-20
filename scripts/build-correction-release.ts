@@ -15,7 +15,7 @@
  *   입력 중 가장 늦은 수집 시각(observedAt)의 한국 날짜다 - 같은 입력이면 같은 이름·같은 숫자. 파일마다 수집일이 달라서
  *   가장 이른 날도 collectedFrom으로 같이 낸다(본문이 수집 시각을 범위로 적는다).
  *
- * 쓰는 법(저장소 루트): REALESTATE_RAW_DIR=raw CORRECTION_OUT_DIR=/tmp/x node scripts/build-correction-release.mjs
+ * 쓰는 법(저장소 루트): REALESTATE_RAW_DIR=raw CORRECTION_OUT_DIR=/tmp/x node scripts/build-correction-release.ts
  * 워크플로 보조: --same <이전.json> <새.json>  숫자가 같으면 0, 다르면 1, 읽거나 풀지 못하는 등 내부 오류면 2로 끝난다
  *               (워크플로는 1일 때만 새 Release로 넘어가므로 오류가 '숫자가 다름'으로 읽히지 않는다).
  *               --supersede <이전 본문.md> <새 태그>  이전 본문 맨 위에 '정정됨' 표시를 붙여 stdout으로 낸다.
