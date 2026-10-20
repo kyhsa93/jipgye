@@ -20,5 +20,5 @@
 #   차이 3 은 새 시험 셋이다: test/invariants.test.mjs 의 "#418 HOOKCOUNT: …"(숫자 줄 정확히 셋·하한·--hooks-write 불변)와
 #   "#418 collectHookClasses: …"(.mjs·.ts 를 같이 고르는 합성 저장소), test/render.test.mjs 의 "#418 readWorkflowStages: …"(.ts 줄·render-pipeline.ts).
 #   없어진 시험은 0 이다. 숫자 줄은 이번에도 정확히 둘이다(쌍을 더하지 않고 두 줄을 고쳤다).
-118
-107
+120
+109
