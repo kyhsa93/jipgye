@@ -81,3 +81,4 @@ main().catch((err) => {
   console.error(`대조 실패: ${err.message}`);
   process.exit(1);
 });
+const ctlWrongType: number = "문자열";
