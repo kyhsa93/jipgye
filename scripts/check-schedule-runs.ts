@@ -39,9 +39,9 @@
  *   한계도 같이 적는다: **별도 cron 도 버려질 수 있어 완전 자가면역은 없다.** 그 워크플로 머리 주석 참조.
  *
  * 사용:
- *   node scripts/check-schedule-runs.mjs                       # GitHub API 조회, 지금 기준
- *   node scripts/check-schedule-runs.mjs --runs-file runs.json --now 2026-08-27T04:00:00Z
- *   node scripts/check-schedule-runs.mjs --count=success --window-hours=24
+ *   node scripts/check-schedule-runs.ts                       # GitHub API 조회, 지금 기준
+ *   node scripts/check-schedule-runs.ts --runs-file runs.json --now 2026-08-27T04:00:00Z
+ *   node scripts/check-schedule-runs.ts --count=success --window-hours=24
  *
  * 재현(이 저장소의 실행 이력을 파일로 내려 두고 돌리는 법):
  *   gh api "repos/kyhsa93/jipgye/actions/workflows/daily-update.yml/runs?event=schedule&per_page=100&page=1" \

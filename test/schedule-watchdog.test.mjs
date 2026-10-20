@@ -5,10 +5,10 @@ import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { countCrons, countInWindow, parseArgs, verdict } from "../scripts/check-schedule-runs.mjs";
+import { countCrons, countInWindow, parseArgs, verdict } from "../scripts/check-schedule-runs.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
-const script = path.join(root, "scripts/check-schedule-runs.mjs");
+const script = path.join(root, "scripts/check-schedule-runs.ts");
 
 /**
  * 이 파일은 **고정 입력만 읽는다** - 네트워크도, 오늘 날짜도 보지 않는다(#8: 데이터·날짜에 따라
@@ -19,7 +19,7 @@ const script = path.join(root, "scripts/check-schedule-runs.mjs");
 
 test("daily-update.yml 의 cron 은 지금 4개다 - 이 수가 문턱이 된다", async () => {
   // ⚠️ 못박아 둔 수다. cron 을 늘리거나 줄이면 이 시험이 실패해 **사람에게 알린다.**
-  // 장치(scripts/check-schedule-runs.mjs)는 이 시험을 기다리지 않고 파일을 다시 세어 바로 따라간다 -
+  // 장치(scripts/check-schedule-runs.ts)는 이 시험을 기다리지 않고 파일을 다시 세어 바로 따라간다 -
   // 자동 연동이 본체고, 이 줄은 변경을 소리나게 하는 표식이다(#322 완료 조건 1).
   const text = await readFile(path.join(root, ".github/workflows/daily-update.yml"), "utf8");
   assert.equal(countCrons(text), 4);
@@ -216,7 +216,7 @@ test("탐지기는 daily-update·summarize 밖의 별도 워크플로에서, 자
   const dir = path.join(root, ".github/workflows");
   const watchdog = await readFile(path.join(dir, "schedule-watchdog.yml"), "utf8");
   assert.equal(countCrons(watchdog), 2, "한 틱이 버려져도 다음 틱이 덮게 둘 이상이어야 한다");
-  assert.match(watchdog, /node scripts\/check-schedule-runs\.mjs/);
+  assert.match(watchdog, /node scripts\/check-schedule-runs\.ts/);
   assert.match(watchdog, /actions: read/, "다른 워크플로의 run 목록을 읽을 권한");
 
   for (const f of ["daily-update.yml", "summarize.yml", "test.yml"]) {
