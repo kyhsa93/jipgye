@@ -1,14 +1,14 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { districtCells, districtMeta, indexLevels, marketDeal, referenceMonth, windowStart, WINDOW_DAYS } from "./complex-price.mjs";
-import { DISTRICT_SLUGS } from "./district-slugs.mjs";
+import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { INDEX_FILE } from "./fetch-price-index.mjs";
-import { DISTRICTS } from "./realestate-districts.mjs";
-import { readSlotFile } from "./realestate-raw.mjs";
-import { recentMonths } from "./realestate-source.mjs";
-import { periods } from "./district-change.mjs";
-import { shiftMonth } from "./outlook.mjs";
-import { RETENTION_MONTHS, yearMonthOf } from "./realestate-slots.mjs";
+import { DISTRICTS } from "./realestate-districts.ts";
+import { readSlotFile } from "./realestate-raw.ts";
+import { recentMonths } from "./realestate-source.ts";
+import { periods } from "./district-change.ts";
+import { shiftMonth } from "./outlook.ts";
+import { RETENTION_MONTHS, yearMonthOf } from "./realestate-slots.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const dataDir = process.env.COMPLEX_PRICE_DIR ? path.resolve(process.env.COMPLEX_PRICE_DIR) : path.join(root, "docs/data");

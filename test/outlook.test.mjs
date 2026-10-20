@@ -13,9 +13,9 @@ import {
   shiftMonth,
   toDeal,
   toSeries,
-} from "../scripts/outlook.mjs";
+} from "../scripts/outlook.ts";
 import { backfillDrift, buildPayload, closedBefore, freezeScores, scoreLog, updateLog } from "../scripts/build-outlook.mjs";
-import { coverageSummary, realtimeCoverage, recordSentence } from "../scripts/outlook.mjs";
+import { coverageSummary, realtimeCoverage, recordSentence } from "../scripts/outlook.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -296,7 +296,7 @@ test("정적 HTML이 오늘 데이터의 문장과 표를 싣는다", async () =
 });
 
 test("'10억이면'은 오늘 값이 아니라 공식 지수 마지막 달 값에서 잰 것이라고 적는다 (#34)", async () => {
-  const { leadSentence } = await import("../scripts/outlook.mjs");
+  const { leadSentence } = await import("../scripts/outlook.ts");
   const seoul = { cards: [{ h: 3, origins: 170, from: "201201", mae: { model: 2.4, naive: 3.1 }, forecast: { target: "202610", change: 2.6, low: -0.3, high: 6.3 } }] };
   assert.match(leadSentence(seoul, "202607", "ko"), /2026년 7월에 10억이던 집이면 [0-9.]+억~[0-9.]+억입니다\(오늘 값이 아니라 2026년 7월 값에서 잰 것입니다\)/);
 });

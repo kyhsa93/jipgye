@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { access, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { RATE_PAGES } from "../scripts/build-rate-pages.mjs";
-import { countShared } from "../scripts/rate-dup.mjs";
+import { countShared } from "../scripts/rate-dup.ts";
 
 // #193: docs/rates.html은 상품군 네 장으로 가는 요약 허브다. 예금 페이지와 본문이 글자까지 같던 것을
 // 없앴고(기준선: 같은 문단 2쌍·같은 문장 14쌍), 그게 다시 생기지 않게 지킨다.

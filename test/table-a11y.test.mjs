@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { accessibleTables } from "../scripts/table-a11y.mjs";
+import { accessibleTables } from "../scripts/table-a11y.ts";
 
 const PAGE = (table) =>
   `<html><head><title>서울 아파트 시세</title></head><body><h2>자치구별</h2>${table}</body></html>`;

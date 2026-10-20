@@ -2,8 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { districtFacts, factSentences } from "../scripts/district-facts.mjs";
-import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.mjs";
+import { districtFacts, factSentences } from "../scripts/district-facts.ts";
+import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const dealsOf = (name) =>

@@ -15,7 +15,7 @@
 // 구운 글자와 견준다. 한쪽만 고치면 거기서 깨진다(cpo 권고, #295 완료 조건 5).
 //
 // 영어는 건드리지 않는다. 지금처럼 구운 한국어 `h1`이 먼저 보이고 `applyLocale()`이 영어로 바꾼다.
-import { escapeHtml } from "./html-escape.mjs";
+import { escapeHtml } from "./html-escape.ts";
 
 /** 틀에 있는 `h1` 한 줄. 생성 스크립트가 이 줄을 통째로 바꾼다. */
 export const BASE_H1 = '<h1 id="page-title">서울 아파트 시세</h1>';

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { words, windows } from "../scripts/prose-share.mjs";
-import { CLOSED_ISSUES, MERGED_PRS, EXCLUDED } from "../scripts/check-corrections-refs.mjs";
+import { CLOSED_ISSUES, MERGED_PRS, EXCLUDED } from "../scripts/check-corrections-refs.ts";
 
 // #159: method.html의 「고친 오류」 한 절. 법무 조건(이슈 댓글 7개)을 구조·금지어로 못 박는다.
 // 이슈·PR이 실제로 닫혔고 병합됐는지는 네트워크가 필요해 scripts/check-corrections-refs.mjs(수동)가 본다.

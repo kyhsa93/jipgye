@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import Parser from "rss-parser";
-import { normalizeFeedTitle } from "../scripts/article-body.mjs";
+import { normalizeFeedTitle } from "../scripts/article-body.ts";
 import { newsListHtml } from "../scripts/prerender.mjs";
 import { loadIndexPage } from "./helpers/index-page.mjs";
 

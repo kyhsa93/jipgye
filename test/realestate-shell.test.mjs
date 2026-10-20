@@ -9,8 +9,8 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { REALESTATE_PAGES } from "../scripts/build-realestate-pages.mjs";
-import { BUDGET_PAGES } from "../scripts/budget-pages.mjs";
-import { DISTRICT_PAGES } from "../scripts/district-slugs.mjs";
+import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
+import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");

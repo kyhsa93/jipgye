@@ -2,7 +2,7 @@
 // node research/indicators-3/fetch.mjs → research/indicators-3/cache/series.json
 import { mkdir, writeFile } from "node:fs/promises";
 import { fetchEcos, fetchRone } from "../../scripts/fetch-indicators.mjs";
-import { ecosKey } from "../../scripts/ecos.mjs";
+import { ecosKey } from "../../scripts/ecos.ts";
 
 const out = {};
 const key = ecosKey();

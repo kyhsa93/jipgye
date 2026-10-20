@@ -18,9 +18,9 @@
 import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { areaKey, cellKey } from "./official-price-key.mjs";
-import { OFFICIAL_PRICE_LICENSE, OFFICIAL_PRICE_LICENSE_CHECKED } from "./official-price-license.mjs";
+import { OFFICIAL_PRICE_LICENSE, OFFICIAL_PRICE_LICENSE_CHECKED } from "./official-price-license.ts";
 import { ALLOWED_KEYS, MAX_OUTPUT_BYTES, MIN_HOUSEHOLDS, REQUIRED_LICENSE, assertDerived, median } from "./official-price-fold.mjs";
-import { orderTargets } from "./official-price-targets.mjs";
+import { orderTargets } from "./official-price-targets.ts";
 
 export const DEFAULT_BASE = "https://apis.data.go.kr/1613000/BldRgstHubService";
 export const SOURCE = "data.go.kr/data/15134735";

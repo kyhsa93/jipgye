@@ -14,7 +14,7 @@
  * 적지 않는다.
  */
 
-import { REGIONS, shiftMonth } from "./outlook.mjs";
+import { REGIONS, shiftMonth } from "./outlook.ts";
 
 export const PERIOD = 3;
 export const MIN_CELLS = 30;

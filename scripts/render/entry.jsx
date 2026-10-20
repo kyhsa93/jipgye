@@ -10,21 +10,21 @@
 // renewalDistrictsHtml·renewalWolseDistrictsHtml·floorDistrictsHtml (#242 PR 1, 자치구 문장·링크 4개와 표 6개), realestateHeadHtml·realestateTableHtml (#242 PR 2, 시세표 머리글·표),
 // realestateOverallHtml (#242 PR 3, 시세 요약 카드), budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml
 // (#243 PR A, 예산대 잎 조각 8개), budgetCandidatesHtml·budgetBodyHtml (#243 PR B, 후보 단지와 합성 - 이것으로 prerender.mjs의 조각 44개가 모두 이식됐다).
-import { DISTRICT_PAGES } from "../district-slugs.mjs";
+import { DISTRICT_PAGES } from "../district-slugs.ts";
 import { BUDGET_MORE_LINKS, bodyShape, budgetAnswers, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "../budget-fragments.mjs";
-import { budgetFactSentences } from "../budget-facts.mjs";
-import { districtSentences } from "../district-summary.mjs";
-import { factSentences } from "../district-facts.mjs";
-import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-links.mjs";
-import { cancelDistricts, cancelMonths, conversionTable, floorDistricts, renewalDistricts, renewalWolseDistricts } from "../district-tables.mjs";
-import { indexNewsItems } from "../news-items.mjs";
-import { FALLBACK_NOTE_KO, hasFallback } from "../summary-note.mjs";
-import { SUMMARY_CATEGORIES_LABEL_KO, SUMMARY_HIGHLIGHTS_LABEL_KO, summaryMetaKo } from "../summary-box.mjs";
-import { metricCell, topDistricts } from "../realestate-rows.mjs";
+import { budgetFactSentences } from "../budget-facts.ts";
+import { districtSentences } from "../district-summary.ts";
+import { factSentences } from "../district-facts.ts";
+import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-links.ts";
+import { cancelDistricts, cancelMonths, conversionTable, floorDistricts, renewalDistricts, renewalWolseDistricts } from "../district-tables.ts";
+import { indexNewsItems } from "../news-items.ts";
+import { FALLBACK_NOTE_KO, hasFallback } from "../summary-note.ts";
+import { SUMMARY_CATEGORIES_LABEL_KO, SUMMARY_HIGHLIGHTS_LABEL_KO, summaryMetaKo } from "../summary-box.ts";
+import { metricCell, topDistricts } from "../realestate-rows.ts";
 import { overallCards } from "../realestate-overall.mjs";
 import { headLabels, realestateTable } from "../realestate-table.mjs";
-import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "../rates-table.mjs";
-import { renewalSentences } from "../renewal-facts.mjs";
+import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "../rates-table.ts";
+import { renewalSentences } from "../renewal-facts.ts";
 
 // legacy `escapeHtml(value)`의 값 변환(`String(value ?? "")`). React는 문자열·숫자만 글자로 내고 false·null·객체·배열은 비우거나 다르게 내거나 던지므로,
 // legacy가 `escapeHtml`을 거치던 자리는 전부 이 함수를 거친다(비문자열 값이 "[object Object]"·"false"로 나오는 것까지 같게 맞춘다).

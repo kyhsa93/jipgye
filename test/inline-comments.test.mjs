@@ -2,15 +2,15 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { access, readFile, readdir } from "node:fs/promises";
 import path from "node:path";
-import { findJsComments, stripJsComments, stripInlineScriptComments } from "../scripts/strip-inline-comments.mjs";
-import { BUDGET_PAGES } from "../scripts/budget-pages.mjs";
-import { DISTRICT_PAGES } from "../scripts/district-slugs.mjs";
+import { findJsComments, stripJsComments, stripInlineScriptComments } from "../scripts/strip-inline-comments.ts";
+import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
+import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.mjs";
 import { buildBudgetPage } from "../scripts/build-budget-pages.mjs";
 import { REALESTATE_TEMPLATE_PATH, applyPrerender, realestateHeadHtml, realestateOverallHtml, realestateTableHtml } from "../scripts/prerender.mjs";
 import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.mjs";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.mjs";
-import { buildBands, mergeBands } from "../scripts/budget-bands.mjs";
+import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
 import { jsInlineScripts, proveCommentsOnly, proveHtmlCommentsOnly, onlyWhitespaceAndCommentsRemoved, sameSyntax } from "./helpers/comment-proof.mjs";
 
 /**

@@ -1,7 +1,7 @@
 // render-loader·render-parity 시험용 진입 파일. 실제 이식은 scripts/render/entry.jsx에 들어간다(#240~).
 // summaryHtml의 쌍둥이: legacy(`prerender.mjs`의 summaryHtmlLegacy)와 같은 입력에서 같은 바이트를 내야 한다.
-import { FALLBACK_NOTE_KO, hasFallback } from "../../../scripts/summary-note.mjs";
-import { SUMMARY_CATEGORIES_LABEL_KO, SUMMARY_HIGHLIGHTS_LABEL_KO, summaryMetaKo } from "../../../scripts/summary-box.mjs";
+import { FALLBACK_NOTE_KO, hasFallback } from "../../../scripts/summary-note.ts";
+import { SUMMARY_CATEGORIES_LABEL_KO, SUMMARY_HIGHLIGHTS_LABEL_KO, summaryMetaKo } from "../../../scripts/summary-box.ts";
 
 // (#352 부터 이 쌍둥이도 index 요약 상자 모양이다 - entry.jsx 의 summary 와 같은 구조를 줄여 적었다.)
 export const fragments = {

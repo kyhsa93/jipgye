@@ -1,8 +1,8 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { clampRows, ecosKey, searchAll } from "./ecos.mjs";
-import { shiftMonth } from "./outlook.mjs";
-import { yearMonthOf } from "./realestate-slots.mjs";
+import { clampRows, ecosKey, searchAll } from "./ecos.ts";
+import { shiftMonth } from "./outlook.ts";
+import { yearMonthOf } from "./realestate-slots.ts";
 
 /**
  * "가격보다 먼저 움직이는가"를 매일 다시 재는 데 쓰는 지표 계열.

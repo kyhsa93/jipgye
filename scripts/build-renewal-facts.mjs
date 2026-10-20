@@ -1,10 +1,10 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { capLead, districtRow, renewalFacts, seoulLead, seoulTally, sortRows, sortWolseRows, tally, wolseLead } from "./renewal-facts.mjs";
-import { DISTRICT_SLUGS } from "./district-slugs.mjs";
-import { DISTRICTS } from "./realestate-districts.mjs";
-import { readSlotFile } from "./realestate-raw.mjs";
-import { recentMonths } from "./realestate-source.mjs";
+import { capLead, districtRow, renewalFacts, seoulLead, seoulTally, sortRows, sortWolseRows, tally, wolseLead } from "./renewal-facts.ts";
+import { DISTRICT_SLUGS } from "./district-slugs.ts";
+import { DISTRICTS } from "./realestate-districts.ts";
+import { readSlotFile } from "./realestate-raw.ts";
+import { recentMonths } from "./realestate-source.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 

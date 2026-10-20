@@ -1,6 +1,6 @@
 // 자치구 링크 조각이 같이 쓰는 것. 순수 모듈 - prerender.mjs(legacy)와 render/entry.jsx(JSX)가 같은 함수·같은 경로 규칙을 쓴다(#241 PR 2).
 // 여기서 `prerender.mjs`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다).
-import { escapeHtml } from "./html-escape.mjs";
+import { escapeHtml } from "./html-escape.ts";
 
 /**
  * 링크 묶음의 모양(마크업 없이): 머리글과 상자의 id, 머리글 글자. 링크가 하나도 없으면 null이다(머리글도 내지 않는다).

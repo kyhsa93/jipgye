@@ -8,7 +8,7 @@ import {
   ALLOWED_COMPARISON, ALLOWED_DISTRICT, ALLOWED_MONTH, ALLOWED_SOURCE, ALLOWED_TOP, CSV_HEADER, MIN_CELL, SUPERSEDED_MARK, SUPERSEDED_PREFIX,
   assertAllowedShape, buildFigures, buildRelease, readSales, renderBody, renderTitle, supersede, toCsv,
 } from "../scripts/build-correction-release.mjs";
-import { repeatedLiveStats } from "../scripts/cancellation.mjs";
+import { repeatedLiveStats } from "../scripts/cancellation.ts";
 
 // #218: 정정 재신고 집계 Release 산출. 값에 따라 갈리는 검사는 두지 않는다(#8) - 구조·금지어·두 구현의 일치만 본다.
 const root = path.resolve(import.meta.dirname, "..");
@@ -166,7 +166,7 @@ test("check.py는 표준 라이브러리만 쓰고 입력 경로를 환경변수
 
 test("산출 스크립트는 환경변수 경로로 입력을 받고, 사이트와 같은 함수를 쓴다(산식 이중 구현 없음)", async () => {
   const src = await read("scripts/build-correction-release.mjs");
-  assert.match(src, /from "\.\/cancellation\.mjs"/);
+  assert.match(src, /from "\.\/cancellation\.ts"/);
   for (const fn of ["withoutCorrections", "correctionStats", "registrationStats", "repeatedLiveStats"]) assert.match(src, new RegExp(`\\b${fn}\\b`));
   assert.match(src, /RAW_DIR/);
   // 계약 키·정정 판정을 여기서 다시 정의하지 않는다.

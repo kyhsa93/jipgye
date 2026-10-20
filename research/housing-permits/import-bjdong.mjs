@@ -3,7 +3,7 @@
 // 사용: node research/housing-permits/import-bjdong.mjs <전체자료.txt> <출력.json>
 // 받은 파일은 신뢰하지 않는다 - 줄을 정규식으로만 읽고, 형식이 다르면 멈춘다.
 import { readFile, writeFile } from "node:fs/promises";
-import { DISTRICTS } from "../../scripts/realestate-districts.mjs";
+import { DISTRICTS } from "../../scripts/realestate-districts.ts";
 
 const [src, out] = process.argv.slice(2);
 if (!src || !out) throw new Error("사용: import-bjdong.mjs <전체자료.txt> <출력.json>");

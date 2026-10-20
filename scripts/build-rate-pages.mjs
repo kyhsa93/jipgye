@@ -1,9 +1,9 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { applyPrerender, ratesHeadHtml, ratesHtml } from "./prerender.mjs";
-import { createWriteSet } from "./render-writes.mjs";
-import { rateBridgeHtml } from "./rate-bridge.mjs";
-import { stripInlineScriptComments } from "./strip-inline-comments.mjs";
+import { createWriteSet } from "./render-writes.ts";
+import { rateBridgeHtml } from "./rate-bridge.ts";
+import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 // 상품군 페이지 넷의 틀. 예전에는 docs/rates.html이 이 틀을 겸했고 예금 페이지와 본문이 글자까지

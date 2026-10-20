@@ -1,4 +1,4 @@
-import { spreadSentence } from "./complex-ratio.mjs";
+import { spreadSentence } from "./complex-ratio.ts";
 import {
   areaPrice,
   formatEok,

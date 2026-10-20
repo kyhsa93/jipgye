@@ -10,7 +10,7 @@ import path from "node:path";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
-import { stripInlineScriptComments } from "../scripts/strip-inline-comments.mjs";
+import { stripInlineScriptComments } from "../scripts/strip-inline-comments.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readJson = (name) => readFile(path.join(root, `docs/data/${name}.json`), "utf8").then(JSON.parse);

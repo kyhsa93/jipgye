@@ -98,7 +98,7 @@ export function icon(size) {
   ]);
 }
 
-if (process.argv[1] && process.argv[1].endsWith("build-icons.mjs")) {
+if (process.argv[1] && process.argv[1].endsWith("build-icons.ts")) {
   const dir = path.resolve(import.meta.dirname, "../docs/icons");
   for (const size of [192, 512]) {
     await writeFile(path.join(dir, `icon-${size}.png`), icon(size));

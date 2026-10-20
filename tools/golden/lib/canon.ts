@@ -22,7 +22,7 @@
 // 의존은 parse5 하나이고 이 폴더의 package.json에만 있다(design-attrs.mjs는 의존 0의 목록 모듈이다).
 // 루트 test/는 canon.ts를 import하지 않는다.
 import { parse } from "parse5";
-import { DESIGN_ATTRS } from "../../../scripts/design-attrs.mjs";
+import { DESIGN_ATTRS } from "../../../scripts/design-attrs.ts";
 
 // 블록 수준(또는 화면에 안 그려지는) 요소. 이 요소의 시작·끝·이웃에서는 공백이 접힌다.
 export const BLOCK = new Set(

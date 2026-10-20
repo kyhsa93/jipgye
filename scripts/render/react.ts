@@ -7,7 +7,7 @@
 // 실패는 예외로 올라간다: 로더 오류, 진입 모듈 모양 오류, 조각을 그리다 난 오류 모두 삼키지 않는다(폴백은 #238).
 import path from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
-import { loadJsxModule } from "./load-jsx.mjs";
+import { loadJsxModule } from "./load-jsx.ts";
 
 export const DEFAULT_ENTRY = path.join(import.meta.dirname, "entry.jsx");
 

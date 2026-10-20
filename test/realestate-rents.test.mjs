@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import * as summarizeModule from "../scripts/realestate-metrics.mjs";
-import { contractRenewal, normalizeRentDeal } from "../scripts/realestate-metrics.mjs";
-import { buildRentFiles, collectDeals } from "../scripts/deal-files.mjs";
+import * as summarizeModule from "../scripts/realestate-metrics.ts";
+import { contractRenewal, normalizeRentDeal } from "../scripts/realestate-metrics.ts";
+import { buildRentFiles, collectDeals } from "../scripts/deal-files.ts";
 
 const NOW = new Date("2026-08-17T00:00:00Z");
 

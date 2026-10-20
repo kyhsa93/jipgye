@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { priceBandSentence, priceBandStats, settledMonths } from "../scripts/cancel-by-price.mjs";
+import { priceBandSentence, priceBandStats, settledMonths } from "../scripts/cancel-by-price.ts";
 
 /** 계약 y-m-15, 해제면 cancelAfter일 뒤 해제. */
 const deal = (y, m, amount, cancelAfter = null) => {

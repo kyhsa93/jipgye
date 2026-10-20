@@ -19,7 +19,7 @@ export function rendererMode(env = process.env) {
 
 export const RENDERER = rendererMode();
 
-const react = RENDERER === "react" ? await (await import("./render/react.mjs")).createReactRenderer() : null;
+const react = RENDERER === "react" ? await (await import("./render/react.ts")).createReactRenderer() : null;
 
 /** 이식된 조각 이름. legacy 모드에서는 로더를 부르지 않으므로 항상 빈 배열이다. */
 export const portedFragments = () => (react ? react.names() : []);

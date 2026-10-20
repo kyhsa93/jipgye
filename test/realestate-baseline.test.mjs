@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { WOLSE_CONVERSION_RATE, attachChanges, findBaseline, summarizeRent } from "../scripts/realestate-metrics.mjs";
+import { WOLSE_CONVERSION_RATE, attachChanges, findBaseline, summarizeRent } from "../scripts/realestate-metrics.ts";
 
 const entry = (date, period, count, perPyeong) => ({
   date,

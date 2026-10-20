@@ -8,7 +8,7 @@ import {
   fetchSummary,
   isCancelledDeal,
   normalizeDeal,
-} from "../scripts/realestate-metrics.mjs";
+} from "../scripts/realestate-metrics.ts";
 
 const deal = (extra = {}) => ({
   aptNm: "역삼아이파크",

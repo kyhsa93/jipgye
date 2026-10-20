@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildPayload } from "../scripts/build-floor-gap.mjs";
-import { cellRatio, districtRows, noiseBand, tally, toCells, topRatio } from "../scripts/floor-gap.mjs";
+import { cellRatio, districtRows, noiseBand, tally, toCells, topRatio } from "../scripts/floor-gap.ts";
 import { floorDistrictsHtml } from "../scripts/prerender.mjs";
 import { loadFloorPage } from "./helpers/floor-page.mjs";
 

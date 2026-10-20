@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { MIN_DEALS_PER_SIDE, cellRatios } from "../scripts/complex-ratio.mjs";
+import { MIN_DEALS_PER_SIDE, cellRatios } from "../scripts/complex-ratio.ts";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -93,7 +93,7 @@ test("화면이 낸 전세가율이 빌드 쪽 계산과 같다", async () => {
   // 한 구만 보면 그날 신고가 얇을 때 견줄 칸이 모자라 검사가 빨개진다 - 노원구가
   // 19칸으로 떨어진 날 배포가 멈췄다. 25개 구를 전부 대조해 표본을 데이터에 맡기지 않는다.
   const p = await page("?district=노원구&apt=상계주공7(고층)");
-  const { DISTRICT_SLUGS } = await import("../scripts/district-slugs.mjs");
+  const { DISTRICT_SLUGS } = await import("../scripts/district-slugs.ts");
 
   const fromScreen = [];
   const fromBuild = [];

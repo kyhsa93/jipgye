@@ -1,8 +1,8 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { BUDGET_PAGES } from "./budget-pages.mjs";
-import { DISTRICT_PAGES, DISTRICT_SLUGS } from "./district-slugs.mjs";
-import { dealFileName } from "./deal-files.mjs";
+import { BUDGET_PAGES } from "./budget-pages.ts";
+import { DISTRICT_PAGES, DISTRICT_SLUGS } from "./district-slugs.ts";
+import { dealFileName } from "./deal-files.ts";
 
 /**
  * 무엇을 넣어도 받는 검색창이 쓰는 색인.

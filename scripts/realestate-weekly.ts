@@ -1,4 +1,4 @@
-import { kstDateParts } from "./realestate-slots.mjs";
+import { kstDateParts } from "./realestate-slots.ts";
 
 const PYEONG_M2 = 3.3058;
 export const MOVING_WEEKS = 4;

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildBands, mergeBands } from "../scripts/budget-bands.mjs";
-import { BUDGET_PAGES } from "../scripts/budget-pages.mjs";
+import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
+import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 
 const REALESTATE = {

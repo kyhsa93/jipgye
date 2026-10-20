@@ -16,7 +16,7 @@
  * 출력은 집계뿐이다(C1): 호 단위 값·PK·지번 키·응답 원문이 없다. 검증이 어긋나도(범위 밖 stdDay, 쪽 합 불일치, 필수 필드 누락,
  * 소유자 계열 키) 던지지 않고 건수로 센다 - 탐색의 목적이 그 분포를 보는 것이다. 키 이름(스키마)은 출력하되 값은 아니다.
  */
-import { orderTargets } from "./official-price-targets.mjs";
+import { orderTargets } from "./official-price-targets.ts";
 import { ApiFatalError, MAX_PAGES_PER_PARCEL, OP_AREA, OP_PRICE, OWNER_KEY_RE, PAGE_SIZE, ParcelFailed, StopRun, AREA_FIELDS, PRICE_FIELDS, bump, fetchParcelOp, makeClient, extract } from "./official-price-api.mjs";
 
 const quant = (arr, q) => { if (!arr.length) return null; const s = [...arr].sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.floor(q * s.length))]; };

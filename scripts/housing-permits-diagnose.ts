@@ -17,7 +17,7 @@
  * 필드 이름은 응답 명세(30개 키)의 실제 이름을 직접 쓴다. spec의 FIELDS 매핑은 PREREG 5절과 같은 이름으로 맞춰져 있다(#133).
  */
 import { createHash } from "node:crypto";
-import { MAX_KEYS, parseDay } from "./housing-permits-fold.mjs";
+import { MAX_KEYS, parseDay } from "./housing-permits-fold.ts";
 
 /** PREREG가 고정한 기준일(2026-10-10). 실행일에 따라 바뀌지 않는다. 부등호는 `>`다. */
 const CUTOFF = 20261010;

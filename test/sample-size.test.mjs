@@ -2,12 +2,12 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
-import { DISTRICT_SLUGS } from "../scripts/district-slugs.mjs";
+import { DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 import { realestateOverallHtml } from "../scripts/prerender.mjs";
-import { districtSentences } from "../scripts/district-summary.mjs";
+import { districtSentences } from "../scripts/district-summary.ts";
 import { regionTableHtml } from "../scripts/build-district-change.mjs";
-import { leadSentence as conversionLead } from "../scripts/conversion.mjs";
-import { controlSentence, leadSentence as recordLead, survivalSentence } from "../scripts/record-high.mjs";
+import { leadSentence as conversionLead } from "../scripts/conversion.ts";
+import { controlSentence, leadSentence as recordLead, survivalSentence } from "../scripts/record-high.ts";
 
 /**
  * 값 옆에 표본 수가 없는 칸 4종 (#172). 규칙은 하나다 - 값 바로 옆, 같은 문장 안에 건수와 단위.

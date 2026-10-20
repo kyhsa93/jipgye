@@ -24,15 +24,15 @@
  * 출력 형식은 source-age.mjs 를 따른다: 머리 한 줄, 이상 항목 줄, 요약 한 줄.
  *
  * 사용:
- *   node scripts/deploy-check.mjs
- *   node scripts/deploy-check.mjs --base=https://kyhsa93.github.io/jipgye/ --docs=docs --gap=20
+ *   node scripts/deploy-check.ts
+ *   node scripts/deploy-check.ts --base=https://kyhsa93.github.io/jipgye/ --docs=docs --gap=20
  */
 
 import { createHash } from "node:crypto";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, dirname, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { todayKst } from "./source-age.mjs";
+import { todayKst } from "./source-age.ts";
 
 export const DEFAULT_BASE = "https://kyhsa93.github.io/jipgye/";
 

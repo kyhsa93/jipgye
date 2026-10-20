@@ -18,8 +18,8 @@
  *   조사(KB)의 그 달 값은 앞선 것이 아니라 답을 일찍 본 것이다. 그런 변형은 따로 표시한다.
  */
 
-import { leastSquares } from "./outlook.mjs";
-import { candidates3 } from "./indicator-candidates-3.mjs";
+import { leastSquares } from "./outlook.ts";
+import { candidates3 } from "./indicator-candidates-3.ts";
 
 export const HORIZONS = [3, 6];
 export const START = "201201";

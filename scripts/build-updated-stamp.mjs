@@ -2,8 +2,8 @@
 // 틀에서 장을 다시 쓰는 빌더보다 앞서면 날짜가 덮인다.
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { createWriteSet } from "./render-writes.mjs";
-import { crossStampAll, stampAll } from "./updated-stamp.mjs";
+import { createWriteSet } from "./render-writes.ts";
+import { crossStampAll, stampAll } from "./updated-stamp.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 

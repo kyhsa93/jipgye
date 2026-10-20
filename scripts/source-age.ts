@@ -14,9 +14,9 @@
  * - 실거래 원본은 raw/sale·raw/rent 에서 가장 최근 달(yearMonth) 슬롯 파일들의 `observedAt` 중 최신.
  *
  * 사용:
- *   node scripts/source-age.mjs                 전체 표(경과일 큰 순) + 요약 한 줄
- *   node scripts/source-age.mjs --statusline    경과 >= 2일일 때만 한 줄 출력, 아니면 아무것도 안 찍는다
- *   node scripts/source-age.mjs --today=2026-10-10 --data=docs/data --raw=raw   (시험·재현용)
+ *   node scripts/source-age.ts                 전체 표(경과일 큰 순) + 요약 한 줄
+ *   node scripts/source-age.ts --statusline    경과 >= 2일일 때만 한 줄 출력, 아니면 아무것도 안 찍는다
+ *   node scripts/source-age.ts --today=2026-10-10 --data=docs/data --raw=raw   (시험·재현용)
  */
 
 import { readdirSync, readFileSync, existsSync } from "node:fs";

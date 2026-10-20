@@ -9,7 +9,7 @@ import {
   cellRatios,
   spreadOf,
   spreadSentence,
-} from "../scripts/complex-ratio.mjs";
+} from "../scripts/complex-ratio.ts";
 import { buildPayload } from "../scripts/build-complex-ratio.mjs";
 import { formatPercent } from "../scripts/realestate-format.mjs";
 

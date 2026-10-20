@@ -8,8 +8,8 @@ import path from "node:path";
 import { promisify } from "node:util";
 import { realItem } from "./helpers/housing-permits-items.mjs";
 import { DAILY_LIMIT, FIELDS, LICENSE, PAGE_SIZE } from "../scripts/housing-permits-spec.mjs";
-import { foldProjects } from "../scripts/housing-permits-fold.mjs";
-import { DISTRICTS } from "../scripts/realestate-districts.mjs";
+import { foldProjects } from "../scripts/housing-permits-fold.ts";
+import { DISTRICTS } from "../scripts/realestate-districts.ts";
 
 // 중단 진행 로그·시험 호출 모드·사업 관리번호 비노출 (#141). 전부 합성 응답과 로컬 스텁 서버다 - 실제 API는 부르지 않는다.
 // 사업 관리번호 자리에는 MARK가 들어간다. 이 문자열이 stdout·stderr·파일 어디에도 나오면 낙제다.

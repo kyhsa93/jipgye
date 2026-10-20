@@ -12,13 +12,13 @@ import {
   correctionSentence,
   correctionStats,
   withoutCorrections,
-} from "./cancellation.mjs";
-import { priceBandSentence, priceBandStats, priceBandTableHtml, settledMonths } from "./cancel-by-price.mjs";
-import { DISTRICTS } from "./realestate-districts.mjs";
-import { DISTRICT_SLUGS } from "./district-slugs.mjs";
-import { readSlotFile } from "./realestate-raw.mjs";
-import { RETENTION_MONTHS } from "./realestate-slots.mjs";
-import { recentMonths } from "./realestate-source.mjs";
+} from "./cancellation.ts";
+import { priceBandSentence, priceBandStats, priceBandTableHtml, settledMonths } from "./cancel-by-price.ts";
+import { DISTRICTS } from "./realestate-districts.ts";
+import { DISTRICT_SLUGS } from "./district-slugs.ts";
+import { readSlotFile } from "./realestate-raw.ts";
+import { RETENTION_MONTHS } from "./realestate-slots.ts";
+import { recentMonths } from "./realestate-source.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { slotKey } from "./realestate-slots.mjs";
+import { slotKey } from "./realestate-slots.ts";
 
 export const RAW_DIR = process.env.REALESTATE_RAW_DIR
   ? path.resolve(process.env.REALESTATE_RAW_DIR)

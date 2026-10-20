@@ -1,6 +1,6 @@
 import { writeFile, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { BASE_RATE, KOSPI, changedOn, clampRows, ecosKey, statisticSearch } from "./ecos.mjs";
+import { BASE_RATE, KOSPI, changedOn, clampRows, ecosKey, statisticSearch } from "./ecos.ts";
 
 const dataDir = path.resolve(import.meta.dirname, "../docs/data");
 const outFile = path.join(dataDir, "market.json");

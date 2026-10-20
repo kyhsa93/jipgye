@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { scoreShadow, updateShadow } from "../scripts/build-outlook.mjs";
-import { priceSeries, shadowForecast } from "../scripts/indicator-backtest.mjs";
-import { predict, toSeries } from "../scripts/outlook.mjs";
+import { priceSeries, shadowForecast } from "../scripts/indicator-backtest.ts";
+import { predict, toSeries } from "../scripts/outlook.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readRaw = (p) => readFile(path.join(root, p), "utf8").then(JSON.parse);

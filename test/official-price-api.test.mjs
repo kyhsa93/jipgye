@@ -5,13 +5,13 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { OFFICIAL_PRICE_LICENSE, OFFICIAL_PRICE_LICENSE_CHECKED } from "../scripts/official-price-license.mjs";
+import { OFFICIAL_PRICE_LICENSE, OFFICIAL_PRICE_LICENSE_CHECKED } from "../scripts/official-price-license.ts";
 import {
   ApiFatalError, ApiValidationError, MAX_PAGES_PER_PARCEL, OWNER_KEY_RE, buildPart, checkLicense, foldParcel, loadState, mergeParts, projectItem, runCollector, summaryLines,
 } from "../scripts/official-price-api.mjs";
 import { assertDerived } from "../scripts/official-price-fold.mjs";
-import { loadTargets, orderTargets } from "../scripts/official-price-targets.mjs";
-import { runExplore } from "../scripts/official-price-explore.mjs";
+import { loadTargets, orderTargets } from "../scripts/official-price-targets.ts";
+import { runExplore } from "../scripts/official-price-explore.ts";
 import { FAKE_KEY, FAKE_OWNER, buildParcel, hogs, pkey, startMock, target, targetsOf } from "./helpers/official-price-mock.mjs";
 
 const exec = promisify(execFile);
@@ -554,7 +554,7 @@ test("기본 이용허락 상수(코드): 문자열이 제한 없음이고 확�
   assert.equal(OFFICIAL_PRICE_LICENSE, "제한 없음");
   assert.match(OFFICIAL_PRICE_LICENSE_CHECKED, /^\d{4}-\d{2}-\d{2}$/);
   // 시험 시점(실제 오늘) 기준. 실패하면: 상세 페이지(data.go.kr/data/15134735)를 다시 보고 scripts/official-price-license.mjs의 확인일을 고쳐 PR.
-  assert.doesNotThrow(() => checkLicense({}), "기본 상수가 유효하지 않다(확인일 만료·형식·미래) - scripts/official-price-license.mjs 갱신 필요");
+  assert.doesNotThrow(() => checkLicense({}), "기본 상수가 유효하지 않다(확인일 만료·형식·미래) - scripts/official-price-license.ts 갱신 필요");
   assert.deepEqual(checkLicense({}), { license: OFFICIAL_PRICE_LICENSE, checked: OFFICIAL_PRICE_LICENSE_CHECKED });
   // 만료 경계: 확인일 + 365일은 통과, + 366일은 365일 초과로 멈춘다
   const at = new Date(`${OFFICIAL_PRICE_LICENSE_CHECKED}T00:00:00Z`);

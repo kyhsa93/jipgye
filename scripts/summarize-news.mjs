@@ -1,6 +1,6 @@
 import { writeFile, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { FALLBACK_CATEGORY, categoryOf } from "./categories.mjs";
+import { FALLBACK_CATEGORY, categoryOf } from "./categories.ts";
 
 const dataDir = process.env.SUMMARY_DATA_DIR
   ? path.resolve(process.env.SUMMARY_DATA_DIR)

@@ -6,7 +6,7 @@
 // 그 차이는 test/render-parity.test.mjs가 분기마다 견준다.
 //
 // 순수해야 한다: JSX 로더가 이 파일을 묶어 들어가므로 파일을 읽거나 환경을 보는 코드를 넣지 않는다.
-import { DEFAULT_AMOUNT, formatWon, netInterestOf } from "./interest.mjs";
+import { DEFAULT_AMOUNT, formatWon, netInterestOf } from "./interest.ts";
 
 export const RATES_TERM = 12;
 export const RATES_ROWS = 20;

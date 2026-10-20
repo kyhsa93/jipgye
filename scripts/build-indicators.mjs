@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { INDEX_FILE } from "./fetch-price-index.mjs";
 import { INDICATOR_FILE } from "./fetch-indicators.mjs";
-import { judge, leadSentence, priceSeries, tableHtml } from "./indicator-backtest.mjs";
+import { judge, leadSentence, priceSeries, tableHtml } from "./indicator-backtest.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const outFile = process.env.OUTLOOK_INDICATORS_FILE

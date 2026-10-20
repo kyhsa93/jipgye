@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { checkDeploy, render, canonicalOf, locsOf, linksOf, urlOf, resolveSitemap, isNoindex } from "../scripts/deploy-check.mjs";
+import { checkDeploy, render, canonicalOf, locsOf, linksOf, urlOf, resolveSitemap, isNoindex } from "../scripts/deploy-check.ts";
 
 const BASE = "https://example.test/site/";
 

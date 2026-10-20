@@ -127,3 +127,4 @@
 @source "../../docs/*.js";
 @source "../../scripts/render/entry.jsx";
 @source "../../scripts/*.mjs";
+@source "../../scripts/*.ts";

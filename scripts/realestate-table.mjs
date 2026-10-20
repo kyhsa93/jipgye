@@ -17,7 +17,7 @@
 // 표본 문턱(MIN_SAMPLE)은 여기서 다시 적용하지 않는다. `resolveMetric`(realestate-format.mjs, `hasEnoughSample`)이 legacy와 JSX가 같이 부르는 한 곳에서 판정하고,
 // 이 모듈은 그 결과(값 있음 / 값 없음)를 따를 뿐이다. `reLowSample`의 n은 건수 문턱이 아니라 건수 표기다(`transactionCount` 그대로, 없으면 0).
 // DIRECTION 해자 2: 표본이 모자라면 값을 내지 않고 모자란다고 적는다(`low-sample` 조각) - 이 판정을 건너뛰는 변경은 방향에 어긋난다.
-import { DISTRICT_SLUGS, districtFile } from "./district-slugs.mjs";
+import { DISTRICT_SLUGS, districtFile } from "./district-slugs.ts";
 import {
   KIND_FIELDS,
   areaPrice,
@@ -28,7 +28,7 @@ import {
   resolveMetric,
   valueOf,
 } from "./realestate-format.mjs";
-import { WOLSE_CONVERSION_RATE } from "./realestate-metrics.mjs";
+import { WOLSE_CONVERSION_RATE } from "./realestate-metrics.ts";
 
 export const RE_LABELS = {
   district: "지역",

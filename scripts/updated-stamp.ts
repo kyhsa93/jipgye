@@ -29,7 +29,7 @@
 
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { kstDateOf, readDataSources } from "./source-age.mjs";
+import { kstDateOf, readDataSources } from "./source-age.ts";
 
 // 구 25곳·예산 18곳·아파트 3곳 + 부동산 첫 장이 같은 틀(realestate.html)에서 나오고 같은 네 파일을 읽는다.
 const REALESTATE = ["realestate", "realestate-trend", "complex-ratio", "budget-deals"];

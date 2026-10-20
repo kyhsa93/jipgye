@@ -9,7 +9,7 @@ import {
   readSlots,
   removeSlotFile,
   writeSlotFile,
-} from "../scripts/realestate-raw.mjs";
+} from "../scripts/realestate-raw.ts";
 
 const AT = "2026-08-17T23:07:00.000Z";
 

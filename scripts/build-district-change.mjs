@@ -12,14 +12,14 @@ import {
   regionCheck,
   surveyChange,
   toDeal,
-} from "./district-change.mjs";
+} from "./district-change.ts";
 import { DISTRICT_INDEX_FILE } from "./fetch-district-index.mjs";
 import { INDEX_FILE } from "./fetch-price-index.mjs";
-import { DISTRICT_SLUGS } from "./district-slugs.mjs";
-import { shiftMonth } from "./outlook.mjs";
-import { RAW_DIR } from "./realestate-raw.mjs";
-import { DISTRICTS } from "./realestate-districts.mjs";
-import { yearMonthOf } from "./realestate-slots.mjs";
+import { DISTRICT_SLUGS } from "./district-slugs.ts";
+import { shiftMonth } from "./outlook.ts";
+import { RAW_DIR } from "./realestate-raw.ts";
+import { DISTRICTS } from "./realestate-districts.ts";
+import { yearMonthOf } from "./realestate-slots.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const outFile = process.env.DISTRICT_CHANGE_FILE

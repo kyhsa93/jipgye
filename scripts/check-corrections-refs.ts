@@ -1,7 +1,7 @@
 // method.html 「고친 오류」(#159)가 링크하는 이슈·PR이 실제로 있고, 이슈는 닫혔고 PR은 병합됐는지
 // gh로 확인하는 수동 점검. 네트워크가 필요해 npm test에 넣지 않는다(시험은 번호 목록의 구조만 본다).
 //
-//   node scripts/check-corrections-refs.mjs
+//   node scripts/check-corrections-refs.ts
 //
 // 번호 목록의 원본은 여기다. test/method-corrections.test.mjs가 화면의 링크와 이 목록이 같은지 대조한다.
 import { execFileSync } from "node:child_process";

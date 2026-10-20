@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
-import { LOAN_LTV, compare, monthlyCost } from "../scripts/conversion.mjs";
+import { LOAN_LTV, compare, monthlyCost } from "../scripts/conversion.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const PAGE = path.join(root, "docs/jeonse-vs-wolse.html");
@@ -63,7 +63,7 @@ test("화면의 비교 결과가 빌드 쪽과 같은 쪽을 고른다", async (
 
 test("화면이 쓰는 이자소득세율이 금리 화면과 같다", async () => {
   const page = await pageCalculator();
-  const { TAX_RATE } = await import("../scripts/interest.mjs");
+  const { TAX_RATE } = await import("../scripts/interest.ts");
   assert.equal(page.TAX_RATE, TAX_RATE);
 });
 

@@ -1,4 +1,4 @@
-import { DISTRICT_SLUGS } from "./district-slugs.mjs";
+import { DISTRICT_SLUGS } from "./district-slugs.ts";
 
 export const MAX_MONTHS = 3;
 

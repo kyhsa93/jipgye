@@ -15,7 +15,7 @@
  * 고친 값에도 그만큼의 오차가 남는다(체크리스트 13) - 보정 전 중앙값을 옆에 같이 싣는다.
  */
 
-import { REGIONS } from "./outlook.mjs";
+import { REGIONS } from "./outlook.ts";
 
 /** 창. 시세 화면과 같은 여섯 달. */
 export const WINDOW_DAYS = 183;

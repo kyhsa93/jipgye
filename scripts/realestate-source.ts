@@ -1,7 +1,7 @@
-import { DISTRICTS } from "./realestate-districts.mjs";
-import { dropCancelled, normalizeDeal, normalizeRentDeal } from "./realestate-metrics.mjs";
-import { readSlotFile } from "./realestate-raw.mjs";
-import { shiftMonth, yearMonthOf } from "./realestate-slots.mjs";
+import { DISTRICTS } from "./realestate-districts.ts";
+import { dropCancelled, normalizeDeal, normalizeRentDeal } from "./realestate-metrics.ts";
+import { readSlotFile } from "./realestate-raw.ts";
+import { shiftMonth, yearMonthOf } from "./realestate-slots.ts";
 
 export const SEARCH_MONTHS = 3;
 

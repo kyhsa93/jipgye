@@ -7,7 +7,7 @@ import path from "node:path";
 import { promisify } from "node:util";
 import { errorXml, monthDays, rentItem, saleItem, startFakeMolit, successXml } from "./helpers/fake-molit.mjs";
 import { MIN_SAMPLE } from "../scripts/realestate-format.mjs";
-import { refreshMonths, windowMonths } from "../scripts/realestate-slots.mjs";
+import { refreshMonths, windowMonths } from "../scripts/realestate-slots.ts";
 
 const run = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");

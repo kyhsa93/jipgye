@@ -1,6 +1,6 @@
 // 금리 화면 두 장의 렌더 본문에서 같은 문단·같은 문장 쌍이 몇 개인지 센다(#193).
 //
-//   node scripts/rate-dup.mjs docs/rates.html docs/deposit-rates.html
+//   node scripts/rate-dup.ts docs/rates.html docs/deposit-rates.html
 //
 // "렌더 본문"의 정의(바꾸면 기준선이 달라지니 숫자를 인용할 때 같이 적는다):
 //  - <head>·<script>·<style>·주석을 지운다. 스크립트 안 문구 사전은 렌더 본문이 아니다.
@@ -78,7 +78,7 @@ if (process.argv[1] && import.meta.filename === process.argv[1]) {
   const { readFile } = await import("node:fs/promises");
   const [fa, fb] = process.argv.slice(2);
   if (!fa || !fb) {
-    console.error("사용: node scripts/rate-dup.mjs <화면A.html> <화면B.html>");
+    console.error("사용: node scripts/rate-dup.ts <화면A.html> <화면B.html>");
     process.exit(2);
   }
   const [a, b] = await Promise.all([readFile(fa, "utf8"), readFile(fb, "utf8")]);

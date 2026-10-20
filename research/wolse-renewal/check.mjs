@@ -2,8 +2,8 @@
 // node research/wolse-renewal/check.mjs
 import { readFile } from "node:fs/promises";
 import { readRawRents, MONTHS } from "../../scripts/build-renewal-facts.mjs";
-import { recentMonths } from "../../scripts/realestate-source.mjs";
-import { renewalGap, wolseRenewalGaps } from "../../scripts/renewal-facts.mjs";
+import { recentMonths } from "../../scripts/realestate-source.ts";
+import { renewalGap, wolseRenewalGaps } from "../../scripts/renewal-facts.ts";
 
 const now = new Date();
 const byDistrict = await readRawRents(recentMonths(now, MONTHS));

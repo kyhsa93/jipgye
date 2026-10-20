@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { DISTRICTS } from "./realestate-districts.mjs";
+import { DISTRICTS } from "./realestate-districts.ts";
 import {
   attachChanges,
   carryForward,
@@ -13,10 +13,10 @@ import {
   normalizeRentDeal,
   summarizeRent,
   summarizeSaleItems,
-} from "./realestate-metrics.mjs";
+} from "./realestate-metrics.ts";
 import { MIN_SAMPLE, hasEnoughSample } from "./realestate-format.mjs";
-import { itemKey, readSlotFile } from "./realestate-raw.mjs";
-import { windowMonths } from "./realestate-slots.mjs";
+import { itemKey, readSlotFile } from "./realestate-raw.ts";
+import { windowMonths } from "./realestate-slots.ts";
 import {
   FILING_GRACE_DAYS,
   REPRESENT_WEEKS,
@@ -26,9 +26,9 @@ import {
   nextWeek,
   settledWeek,
   weekStart,
-} from "./realestate-weekly.mjs";
-import { buildRentFiles, rentFileName } from "./deal-files.mjs";
-import { readRentSource } from "./realestate-source.mjs";
+} from "./realestate-weekly.ts";
+import { buildRentFiles, rentFileName } from "./deal-files.ts";
+import { readRentSource } from "./realestate-source.ts";
 
 const dataDir = process.env.REALESTATE_DATA_DIR
   ? path.resolve(process.env.REALESTATE_DATA_DIR)

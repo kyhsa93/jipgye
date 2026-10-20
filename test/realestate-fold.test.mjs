@@ -8,7 +8,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
-import { stripInlineScriptComments } from "../scripts/strip-inline-comments.mjs";
+import { stripInlineScriptComments } from "../scripts/strip-inline-comments.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");

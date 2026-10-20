@@ -10,7 +10,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.mjs";
-import { countShared, renderedBody } from "../scripts/rate-dup.mjs";
+import { countShared, renderedBody } from "../scripts/rate-dup.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
