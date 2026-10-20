@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { buildContext } from "./news-context.mjs";
+import { CtlX } from "./policy-loan.ts";
 
 const dataDir = path.resolve(import.meta.dirname, "../docs/data");
 const readJson = async (name) => {
