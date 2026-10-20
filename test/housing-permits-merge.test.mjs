@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { mergeSmallCells, OTHER_KEY, MIN_PROJECTS } from "../scripts/housing-permits-merge.ts";
-import { SERIES } from "../scripts/housing-permits-spec.mjs";
+import { SERIES } from "../scripts/housing-permits-spec.ts";
 import { flawedMergeMonth } from "./helpers/housing-permits-mutants.mjs";
 
 // n<3 합침 (#133, PREREG 5절 "n<3 합침"). 전부 합성 입력이다.

@@ -90,7 +90,7 @@
 2. `git log --oneline -20` — 최근에 무엇이 바뀌었나
 3. `npm ci` (또는 `npm install`) 후 `npm test` — 통과하는가
 4. 생성물이 소스와 맞는가:
-   `node scripts/build-realestate-pages.mjs && node scripts/build-budget-pages.mjs && node scripts/build-news-pages.mjs && node scripts/build-rate-pages.mjs`
+   `node scripts/build-realestate-pages.mjs && node scripts/build-budget-pages.mjs && node scripts/build-news-pages.mjs && node scripts/build-rate-pages.ts`
    실행 뒤 `git status --porcelain docs`가 비어야 한다
 5. 데이터 상태:
    - `docs/data/*.json`의 `updatedAt`이 얼마나 묵었나 (전부 하루 1회 갱신이다): `node scripts/source-age.ts` (아래 「수집 신선도」)

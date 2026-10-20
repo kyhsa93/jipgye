@@ -4,7 +4,7 @@ import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { words, windows, measure, formatLine } from "../scripts/prose-share.mjs";
+import { words, windows, measure, formatLine } from "../scripts/prose-share.ts";
 
 // 이 검사는 측정 도구의 정의(이슈 #66 본문 「측정 정의」)가 코드에서 안 바뀌게 못 박는다.
 // 실제 docs/를 재서 값을 단정하지 않는다 - 값은 페이지가 바뀌면 바뀌는 게 맞다(게이트 아님).
@@ -81,7 +81,7 @@ test("CLI: 폴더를 받아 budget-{3..20}eok.html만 읽고 --both로 두 정�
       await writeFile(path.join(dir, `budget-${n}eok.html`), `<p>${seq("c", 12)} ${n}억 ${seq(`u${n}_`, 12)}</p>`);
     }
     await writeFile(path.join(dir, "index.html"), "<p>무시</p>");
-    const script = path.resolve(import.meta.dirname, "../scripts/prose-share.mjs");
+    const script = path.resolve(import.meta.dirname, "../scripts/prose-share.ts");
     const one = execFileSync("node", [script, dir], { encoding: "utf8" });
     assert.equal(one.trim().split("\n").length, 1);
     assert.match(one, /18장|공통 산문/);
@@ -117,7 +117,7 @@ test("0만 든 토큰도 숫자로 가린다 - [1-9]가 아니라 [0-9]", () => 
 });
 
 test("대상 범위: budget-3eok ~ budget-20eok 18장 전부 필요하고 그 밖의 장은 읽지 않는다", async () => {
-  const script = path.resolve(import.meta.dirname, "../scripts/prose-share.mjs");
+  const script = path.resolve(import.meta.dirname, "../scripts/prose-share.ts");
   const run = (dir) => {
     try {
       return { ok: true, out: execFileSync("node", [script, dir], { encoding: "utf8", stdio: "pipe" }) };

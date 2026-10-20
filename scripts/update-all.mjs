@@ -40,7 +40,7 @@ async function main() {
   run("node scripts/build-search-index.mjs");
   run("node scripts/news-context.mjs");
   run("node scripts/prerender.mjs");
-  run("node scripts/build-rate-pages.mjs");
+  run("node scripts/build-rate-pages.ts");
   run("node scripts/build-news-pages.mjs");
   run("node scripts/build-budget-pages.mjs");
   run("node scripts/build-realestate-pages.mjs");

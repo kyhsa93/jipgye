@@ -9,7 +9,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.mjs";
+import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.ts";
 import { countShared, renderedBody } from "../scripts/rate-dup.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -73,7 +73,7 @@ test("문자열 패치(replaceOnce) 여덟 곳의 needle이 틀에 글자 그대
   for (const [what, needle] of NEEDLES) assert.equal(count(template, needle), 1, `틀에 needle이 한 번이 아니다(${what}): ${needle}`);
 
   // 호출 여덟 곳(정의 한 줄과 주석은 센 것이 아니다) - 영어 사전 넷 + 색인 지시 + 정규 URL + 금리 내비 + 상품군 링크(장마다 needle 이 달라도 호출은 한 곳).
-  const builder = await read("scripts/build-rate-pages.mjs");
+  const builder = await read("scripts/build-rate-pages.ts");
   const calls = builder.split("\n").filter((l) => /\breplaceOnce\(/.test(l) && !/^\s*(?:function |\/\/)/.test(l) && !/^\s*export function/.test(l));
   assert.equal(calls.length, 8, `replaceOnce 호출이 ${calls.length}곳이다 - 여덟 needle과 짝이 맞아야 한다(상품군 링크 네 장은 한 호출)`);
   assert.equal(new Set(NEEDLES.map(([what]) => what.replace(/ (deposit|saving|mortgage|rentLoan)$/, ""))).size, 8, "시험의 needle 목록이 여덟 종이 아니다");

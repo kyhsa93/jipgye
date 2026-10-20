@@ -10,8 +10,8 @@
  * 기준일이 6개월 넘으면 점검 봇이 원문 재대조 이슈를 올린다(audit/HOWTO.md).
  */
 
-import { capFor } from "./loan-cap.mjs";
-import { purchaseCosts } from "./purchase-costs.mjs";
+import { capFor } from "./loan-cap.ts";
+import { purchaseCosts } from "./purchase-costs.ts";
 
 export const BASIS_DATE = "2026-10-01";
 

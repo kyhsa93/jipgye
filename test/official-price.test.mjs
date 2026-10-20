@@ -7,8 +7,8 @@ import path from "node:path";
 import { Readable } from "node:stream";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { assertDerived, foldStream, parseCsvLine, mapHeader, median } from "../scripts/official-price-fold.mjs";
-import { normalizeJibun, areaKey, cellKey, cellKeyOfDeal, parcelKey, parcelKeyOfDeal } from "../scripts/official-price-key.mjs";
+import { assertDerived, foldStream, parseCsvLine, mapHeader, median } from "../scripts/official-price-fold.ts";
+import { normalizeJibun, areaKey, cellKey, cellKeyOfDeal, parcelKey, parcelKeyOfDeal } from "../scripts/official-price-key.ts";
 import { targetParcels } from "../scripts/fetch-official-price.mjs";
 
 // 합성 입력만 쓴다 - 실제 공시가격 파일은 받지 않는다(15,851,336행, 호 단위 행).
@@ -245,7 +245,7 @@ test("워크플로: dispatch 전용, 시크릿 없음, 최소 권한, 액션 SHA
   for (const m of text.matchAll(/uses: (\S+)/g)) assert.match(m[1], /@[0-9a-f]{40}$/, m[1]);
   for (const block of text.split(/\n\s+run: /).slice(1)) assert.doesNotMatch(block.split("\n- ")[0], /\$\{\{\s*inputs\./);
   // 해시·기준연도·이용허락 문자열은 코드가 아니라 입력으로만 받는다
-  const code = await Promise.all(["official-price-fold", "official-price-key", "fetch-official-price"].map((n) => readFile(path.join(root, "scripts", `${n}.mjs`), "utf8")));
+  const code = await Promise.all(["official-price-fold.ts", "official-price-key.ts", "fetch-official-price.mjs"].map((n) => readFile(path.join(root, "scripts", n), "utf8")));
   assert.doesNotMatch(code.join("\n"), /BBDFE3E1|15851336|15,851,336/i);
   assert.match(text, /download_url[\s\S]*sha256[\s\S]*rows[\s\S]*base_year[\s\S]*license[\s\S]*page_modified[\s\S]*source_page/);
   assert.match(text, /--source-page "\$SOURCE_PAGE"/);
@@ -256,7 +256,7 @@ test("워크플로: dispatch 전용, 시크릿 없음, 최소 권한, 액션 SHA
 test("연결: foldStream이 돌려주기 전에 assertDerived를 부른다 (#68 cto 후속)", async () => {
   // assertDerived 단독 시험은 있지만 foldStream 끝 호출이 빠져도 통과한다. ESM 함수를 가로챌 수 없어
   // 소스에서 foldStream 본문의 마지막 return 직전에 호출이 있는지 본다.
-  const src = await readFile(path.join(root, "scripts", "official-price-fold.mjs"), "utf8");
+  const src = await readFile(path.join(root, "scripts", "official-price-fold.ts"), "utf8");
   const body = src.slice(src.indexOf("export async function foldStream"));
   const call = body.indexOf("assertDerived(out);");
   assert.ok(call > 0, "foldStream 안에 assertDerived(out) 호출이 없다");

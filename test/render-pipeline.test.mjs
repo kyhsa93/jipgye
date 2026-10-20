@@ -184,7 +184,7 @@ test("존재하지 않는 단계는 실패다(조용히 건너뛰지 않는다)"
 test("기본 단계는 지금까지 워크플로가 부르던 여섯 스크립트의 순서 그대로이고 update-all의 렌더 꼬리와 같다", async () => {
   assert.deepEqual(RENDER_STEPS, [
     "scripts/prerender.mjs",
-    "scripts/build-rate-pages.mjs",
+    "scripts/build-rate-pages.ts",
     "scripts/build-news-pages.mjs",
     "scripts/build-budget-pages.mjs",
     "scripts/build-realestate-pages.mjs",
@@ -226,7 +226,7 @@ test("daily-update는 기본 여섯, summarize는 같은 순서의 다섯(build-
 
   const summarize = stepOf(await read(WORKFLOWS[1]), "정적 HTML에 오늘 내용 심기");
   const args = [...summarize.matchAll(/^ {12}(scripts\/[a-z-]+\.(?:mjs|ts))/gm)].map((m) => m[1]);
-  assert.deepEqual(args, RENDER_STEPS.filter((s) => s !== "scripts/build-rate-pages.mjs"));
+  assert.deepEqual(args, RENDER_STEPS.filter((s) => s !== "scripts/build-rate-pages.ts"));
   assert.ok(summarize.indexOf("news-context.mjs") >= 0 && summarize.indexOf("news-context.mjs") < summarize.indexOf("render-pipeline.mjs"), "news-context는 폴백 밖, 파이프라인 앞에 둔다");
 });
 

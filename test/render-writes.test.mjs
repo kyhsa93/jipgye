@@ -97,7 +97,7 @@ test("build-rate-pages.mjs: 뒤 상품군 장을 그리다 던지면 앞 상품�
   const rates = (mortgage) => JSON.stringify({ deposit: [], saving: [], mortgage, rentLoan: [] });
   // 대조군: 전부 멀쩡하면 네 장이 생긴다.
   await writeFile(path.join(dir, "docs/data/rates.json"), rates([]));
-  const control = run(dir, "build-rate-pages.mjs");
+  const control = run(dir, "build-rate-pages.ts");
   assert.equal(control.status, 0, control.stderr);
   const made = (await readdir(path.join(dir, "docs"))).filter((f) => f.endsWith(".html")).sort();
   assert.equal(made.length, 4, `상품군 장 넷이 생겨야 한다: ${made}`);
@@ -105,7 +105,7 @@ test("build-rate-pages.mjs: 뒤 상품군 장을 그리다 던지면 앞 상품�
 
   // options가 배열이 아닌 상품 하나 - 주담대 장을 그릴 때만 던진다(예적금 장은 이미 그려진 뒤다).
   await writeFile(path.join(dir, "docs/data/rates.json"), rates([{ name: "x", options: 5 }]));
-  const failed = run(dir, "build-rate-pages.mjs");
+  const failed = run(dir, "build-rate-pages.ts");
   assert.notEqual(failed.status, 0, "던져야 한다");
   assert.deepEqual((await readdir(path.join(dir, "docs"))).filter((f) => f.endsWith(".html")), [], "앞 장이 이미 만들어졌다");
 });

@@ -8,13 +8,13 @@
 // 렌더 때가 아니라 빌더가 만든 데이터 칸(`cell.n`, complex-price.mjs MIN_DEALS)에 이미 반영돼 있다(candidatesInBand는 거르지 않는다). 정책대출 건수가 없으면 문장 자체가 빠진다(policySentence).
 // budgetWhereHtml의 0.5·10개 구는 표본 문턱이 아니라 문장 선택 문턱이다(상위 세 구가 절반을 넘으면 "몰렸다", 아니면 열 개 구 이상일 때만 "흩어졌다").
 // 렌더러·prerender.mjs를 부르지 않는다(로더가 막는다).
-import { candidatesInBand } from "./complex-price.mjs";
-import { BASIS_DATE as CAP_DATE, capSentence } from "./loan-cap.mjs";
-import { BASIS_DATE as MIN_CASH_DATE, minCash, minCashSentence } from "./min-cash.mjs";
-import { apartmentOptions, loanSentence, monthlyPayment, rateSpread } from "./mortgage.mjs";
-import { BASIS_DATE as POLICY_DATE_BASIS, policySentence, policyShort } from "./policy-loan.mjs";
-import { BASIS_DATE as COSTS_DATE, costsSentence, purchaseCosts } from "./purchase-costs.mjs";
-import { formatEok, monthLabel } from "./realestate-format.mjs";
+import { candidatesInBand } from "./complex-price.ts";
+import { BASIS_DATE as CAP_DATE, capSentence } from "./loan-cap.ts";
+import { BASIS_DATE as MIN_CASH_DATE, minCash, minCashSentence } from "./min-cash.ts";
+import { apartmentOptions, loanSentence, monthlyPayment, rateSpread } from "./mortgage.ts";
+import { BASIS_DATE as POLICY_DATE_BASIS, policySentence, policyShort } from "./policy-loan.ts";
+import { BASIS_DATE as COSTS_DATE, costsSentence, purchaseCosts } from "./purchase-costs.ts";
+import { formatEok, monthLabel } from "./realestate-format.ts";
 
 /** 예산대 이름("5억대"·"3억 미만"·"20억 이상"). 두 억 단위는 반올림이다. prerender.mjs가 같은 이름으로 다시 내보낸다. */
 export const budgetBandLabel = (band) => {

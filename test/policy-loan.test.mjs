@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { BASIS_DATE, POLICY_LINES, POLICY_TAIL, lineCounts, policySentence, policyShareSentence } from "../scripts/policy-loan.mjs";
+import { BASIS_DATE, POLICY_LINES, POLICY_TAIL, lineCounts, policySentence, policyShareSentence } from "../scripts/policy-loan.ts";
 
 // 선은 마이홈포털(디딤돌)과 한국주택금융공사(보금자리론) 원문에서 손으로 옮긴 것이다.
 test("디딤돌은 가격과 면적을 둘 다, 보금자리론은 가격만 본다 — 경계값은 안에 든다", () => {

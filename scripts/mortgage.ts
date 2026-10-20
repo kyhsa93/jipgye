@@ -1,4 +1,4 @@
-import { capFor } from "./loan-cap.mjs";
+import { capFor } from "./loan-cap.ts";
 /**
  * 예산을 월 상환액으로 옮긴다.
  *

@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { buildPayload } from "../scripts/build-cancellation.mjs";
 import { MIN_DEALS, registrationSentence, registrationStats } from "../scripts/cancellation.ts";
-import { yearChangeSentence } from "../scripts/mortgage.mjs";
+import { yearChangeSentence } from "../scripts/mortgage.ts";
 
 const NOW = new Date("2026-10-01T00:00:00Z");
 const pad = (n) => String(n).padStart(2, "0");

@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { realItem } from "./helpers/housing-permits-items.mjs";
-import { DAILY_LIMIT, FIELDS, LICENSE, PAGE_SIZE } from "../scripts/housing-permits-spec.mjs";
+import { DAILY_LIMIT, FIELDS, LICENSE, PAGE_SIZE } from "../scripts/housing-permits-spec.ts";
 import { foldProjects } from "../scripts/housing-permits-fold.ts";
 import { DISTRICTS } from "../scripts/realestate-districts.ts";
 
@@ -291,7 +291,7 @@ test("일 한도 상수는 그대로 5000이다(소유자 조건 5, 올리는 �
 
 test("쪽 크기: 기본 100을 유지하고 spec에 사실/추정 구분이 적혀 있다", async () => {
   assert.equal(PAGE_SIZE, 100);
-  const spec = await readFile(path.resolve(import.meta.dirname, "../scripts/housing-permits-spec.mjs"), "utf8");
+  const spec = await readFile(path.resolve(import.meta.dirname, "../scripts/housing-permits-spec.ts"), "utf8");
   assert.match(spec, /\[사실\]/);
   assert.match(spec, /\[추정\]/);
 });

@@ -17,7 +17,7 @@
  * 소유자 계열 키) 던지지 않고 건수로 센다 - 탐색의 목적이 그 분포를 보는 것이다. 키 이름(스키마)은 출력하되 값은 아니다.
  */
 import { orderTargets } from "./official-price-targets.ts";
-import { ApiFatalError, MAX_PAGES_PER_PARCEL, OP_AREA, OP_PRICE, OWNER_KEY_RE, PAGE_SIZE, ParcelFailed, StopRun, AREA_FIELDS, PRICE_FIELDS, bump, fetchParcelOp, makeClient, extract } from "./official-price-api.mjs";
+import { ApiFatalError, MAX_PAGES_PER_PARCEL, OP_AREA, OP_PRICE, OWNER_KEY_RE, PAGE_SIZE, ParcelFailed, StopRun, AREA_FIELDS, PRICE_FIELDS, bump, fetchParcelOp, makeClient, extract } from "./official-price-api.ts";
 
 const quant = (arr, q) => { if (!arr.length) return null; const s = [...arr].sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.floor(q * s.length))]; };
 const mean = (a) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : null);

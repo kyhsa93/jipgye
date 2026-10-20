@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { loadIndexPage } from "./helpers/index-page.mjs";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
-import { RATE_PAGES } from "../scripts/build-rate-pages.mjs";
+import { RATE_PAGES } from "../scripts/build-rate-pages.ts";
 import { NEWS_PAGES } from "../scripts/build-news-pages.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");

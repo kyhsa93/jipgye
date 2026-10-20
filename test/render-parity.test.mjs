@@ -12,11 +12,11 @@ import { linksBlockHtml, linksBlockShape, slugLinkEntries, slugLinkHref, slugLin
 import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 import { CONVERSION_BAND, cancelDistricts, cancelMonths, conversionTable, count, floorDistricts, pct, renewalDistricts, renewalWolseDistricts, signed } from "../scripts/district-tables.ts";
 import { MAX_DISTRICTS, changeOf, countOf, man, metricCell, topDistricts } from "../scripts/realestate-rows.ts";
-import { MIN_SAMPLE, hasEnoughSample } from "../scripts/realestate-format.mjs";
-import { RE_LABELS, headLabels, reAllCells, reCells, reChange, reCount, reCountSpan, reDistrictLink, reDistrictRows, reEok, reHeadLabels, reLowSample, reMan, reRow, reSorted, reStaleTag, reWolseChange, realestateTable } from "../scripts/realestate-table.mjs";
-import { overallCards, ratioBasis } from "../scripts/realestate-overall.mjs";
-import { BUDGET_MORE_LINKS, CANDIDATE_LIST, bodyShape, budgetAnswers, budgetBandLabel, budgetRuleHref, budgetWhen, candidatesShape, capNote, costsNote, dealShape, eokOf, eokText, loanNote, minCashNote, policyNote, whereText } from "../scripts/budget-fragments.mjs";
-import { makeFragment, rendererMode } from "../scripts/renderer.mjs";
+import { MIN_SAMPLE, hasEnoughSample } from "../scripts/realestate-format.ts";
+import { RE_LABELS, headLabels, reAllCells, reCells, reChange, reCount, reCountSpan, reDistrictLink, reDistrictRows, reEok, reHeadLabels, reLowSample, reMan, reRow, reSorted, reStaleTag, reWolseChange, realestateTable } from "../scripts/realestate-table.ts";
+import { overallCards, ratioBasis } from "../scripts/realestate-overall.ts";
+import { BUDGET_MORE_LINKS, CANDIDATE_LIST, bodyShape, budgetAnswers, budgetBandLabel, budgetRuleHref, budgetWhen, candidatesShape, capNote, costsNote, dealShape, eokOf, eokText, loanNote, minCashNote, policyNote, whereText } from "../scripts/budget-fragments.ts";
+import { makeFragment, rendererMode } from "../scripts/renderer.ts";
 import { DESIGN_ATTRS, stripDesignAttrs } from "../scripts/design-attrs.ts";
 import { createReactRenderer } from "../scripts/render/react.ts";
 import { RATES_BRANCHES } from "./fixtures/render/rates-branches.mjs";
@@ -143,7 +143,7 @@ test("parity 골격: 같은 입력에서 legacy와 React 쌍둥이의 출력이 
 async function importIn(dir, env) {
   return spawnSync(
     process.execPath,
-    ["--input-type=module", "-e", 'const r = await import("./scripts/renderer.mjs"); await import("./scripts/prerender.mjs"); console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments() }));'],
+    ["--input-type=module", "-e", 'const r = await import("./scripts/renderer.ts"); await import("./scripts/prerender.mjs"); console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments() }));'],
     { cwd: dir, encoding: "utf8", env: { ...process.env, JIPGYE_RENDERER: "", ...env } }
   );
 }
@@ -287,7 +287,7 @@ test("react 모드(진입 목록 PORTED): 이식 완료 상태(.legacy를 가진
       [
         "--input-type=module",
         "-e",
-        `const r = await import("./scripts/renderer.mjs"); const p = await import("./scripts/prerender.mjs");
+        `const r = await import("./scripts/renderer.ts"); const p = await import("./scripts/prerender.mjs");
          const { RATES_BRANCHES } = await import(${JSON.stringify(ratesUrl)});
          const { NEWS_MARKET_BRANCHES } = await import(${JSON.stringify(newsUrl)});
          const { LEAD_LINKS_BRANCHES } = await import(${JSON.stringify(leadUrl)});
@@ -581,7 +581,7 @@ test("realestate-rows.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, 표
   for (const f of scripts) {
     if (/^\s*(export\s+)?const\s+MIN_SAMPLE\s*=/m.test(await readFile(path.join(root, "scripts", f), "utf8"))) definers.push(f);
   }
-  assert.deepEqual(definers, ["realestate-format.mjs"], "MIN_SAMPLE을 정의하는 파일이 둘 이상이다");
+  assert.deepEqual(definers, ["realestate-format.ts"], "MIN_SAMPLE을 정의하는 파일이 둘 이상이다");
   assert.equal(MAX_DISTRICTS, 4);
   assert.equal(man(5530), "5,530만원");
   assert.equal(man("abc"), "NaN만원");
@@ -991,7 +991,7 @@ test("realestate-table.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - �
 });
 
 test("realestate-table.mjs: 표본 문턱을 정의하거나 다시 적용하지 않는다 - resolveMetric(realestate-format.mjs)이 한 곳에서 정한다", async () => {
-  const source = await readFile(path.join(root, "scripts/realestate-table.mjs"), "utf8");
+  const source = await readFile(path.join(root, "scripts/realestate-table.ts"), "utf8");
   const code = source.replace(/^\s*\/\/.*$/gm, "");
   assert.doesNotMatch(code, /MIN_SAMPLE|hasEnoughSample|metricOf/, "문턱을 이 모듈이 다시 부른다");
   assert.match(code, /resolveMetric\(entry, kind\)/);
@@ -1208,7 +1208,7 @@ test("realestate-overall.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 -
 });
 
 test("realestate-overall.mjs: 표본 문턱을 정의하거나 다시 적용하지 않고, 클래스·마크업을 들고 있지 않다 - resolveMetric(realestate-format.mjs)이 한 곳에서 정한다", async () => {
-  const source = await readFile(path.join(root, "scripts/realestate-overall.mjs"), "utf8");
+  const source = await readFile(path.join(root, "scripts/realestate-overall.ts"), "utf8");
   const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
   assert.doesNotMatch(code, /MIN_SAMPLE|hasEnoughSample|metricOf/, "문턱을 이 모듈이 다시 부른다");
   assert.match(code, /resolveMetric\(overall, "sale"\)/);
@@ -1699,14 +1699,14 @@ test("budget-fragments.mjs: 한눈에 줄 모양 - 예산대 없으면 null, 줄
 });
 
 test("budget-fragments.mjs: 표본 문턱을 정의하거나 부르지 않고, 클래스·마크업·이스케이프를 들고 있지 않다 - 마크업은 legacy(prerender.mjs)·JSX(entry.jsx)가 각자 입힌다", async () => {
-  const source = await readFile(path.join(root, "scripts/budget-fragments.mjs"), "utf8");
+  const source = await readFile(path.join(root, "scripts/budget-fragments.ts"), "utf8");
   const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
   assert.doesNotMatch(code, /MIN_SAMPLE|hasEnoughSample|metricOf|low-sample/, "표본 문턱이 이 모듈에 있다");
   assert.doesNotMatch(code, /prerender\.(?:mjs|ts)|renderer\.(?:mjs|ts)|escapeHtml|html-escape/, "순수 모듈이 렌더러 스위치·이스케이프를 부른다");
   assert.doesNotMatch(code, /class=|className|data-prerendered|<[a-z]|<\/|answer-|budget-loan|budget-rule-link|budget-answers/, "순수 모듈이 마크업·클래스를 들고 있다 - 한 곳의 오타를 같은 실행 비교가 못 잡는다");
   // import는 순수 모듈뿐이다(렌더러·prerender·JSX 없음): 후보 고르기(complex-price)·억 글자·월 이름(realestate-format)과 문장 모듈 다섯
   const imports = [...code.matchAll(/from "(\.\/[^"]+)"/g)].map((m) => m[1]).sort();
-  assert.deepEqual(imports, ["./complex-price.mjs", "./loan-cap.mjs", "./min-cash.mjs", "./mortgage.mjs", "./policy-loan.mjs", "./purchase-costs.mjs", "./realestate-format.mjs"]);
+  assert.deepEqual(imports, ["./complex-price.ts", "./loan-cap.ts", "./min-cash.ts", "./mortgage.ts", "./policy-loan.ts", "./purchase-costs.ts", "./realestate-format.ts"]);
 });
 
 test("prerender.mjs의 공개 export는 추출 뒤에도 같은 이름이다 - budgetRuleLink·budgetBandLabel·CANDIDATE_LIST(PR B에서 옮겼다)·MIN_SAMPLE·escapeHtml", () => {

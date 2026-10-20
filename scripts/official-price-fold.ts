@@ -7,7 +7,7 @@
  */
 import { createHash } from "node:crypto";
 import { StringDecoder } from "node:string_decoder";
-import { parcelKey, cellKey, sigunguOf, joinJibun, normalizeJibun, areaKey } from "./official-price-key.mjs";
+import { parcelKey, cellKey, sigunguOf, joinJibun, normalizeJibun, areaKey } from "./official-price-key.ts";
 
 /** 칸·층 값을 남기는 최소 호수 (C2). 층 차원에서 호 1~2개면 중앙값이 곧 개별 호 값이다. */
 export const MIN_HOUSEHOLDS = 3;

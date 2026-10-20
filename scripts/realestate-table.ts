@@ -27,7 +27,7 @@ import {
   jeonseRatio,
   resolveMetric,
   valueOf,
-} from "./realestate-format.mjs";
+} from "./realestate-format.ts";
 import { WOLSE_CONVERSION_RATE } from "./realestate-metrics.ts";
 
 export const RE_LABELS = {

@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
-import { words, windows } from "../scripts/prose-share.mjs";
+import { words, windows } from "../scripts/prose-share.ts";
 import { CLOSED_ISSUES, MERGED_PRS, EXCLUDED } from "../scripts/check-corrections-refs.ts";
 
 // #159: method.html의 「고친 오류」 한 절. 법무 조건(이슈 댓글 7개)을 구조·금지어로 못 박는다.

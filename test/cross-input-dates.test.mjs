@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
-import { measure, words } from "../scripts/prose-share.mjs";
+import { measure, words } from "../scripts/prose-share.ts";
 import { STALE_DAYS, readDataSources } from "../scripts/source-age.ts";
 import { CROSS_PAGES, baselineFor, crossStampHtml } from "../scripts/updated-stamp.ts";
 

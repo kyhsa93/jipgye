@@ -9,7 +9,7 @@ import {
 } from "../scripts/realestate-weekly.ts";
 import { arrivalShortfall, arrivalWindowReady, contractRows, representWindow } from "../scripts/build-realestate.mjs";
 import { DISTRICTS } from "../scripts/realestate-districts.ts";
-import { MIN_SAMPLE } from "../scripts/realestate-format.mjs";
+import { MIN_SAMPLE } from "../scripts/realestate-format.ts";
 
 const NOW = new Date("2026-09-07T00:00:00Z");
 

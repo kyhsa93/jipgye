@@ -15,7 +15,7 @@ import { pathToFileURL } from "node:url";
 const root = path.resolve(import.meta.dirname, "../..");
 const CACHE_DIR = path.join(root, "node_modules/.cache/jipgye-render");
 // JSX가 이 둘을 (간접으로라도) 부르면 묶인 사본이 렌더러를 또 만들어 끝없이 돈다.
-const FORBIDDEN = ["scripts/renderer.mjs", "scripts/prerender.mjs"];
+const FORBIDDEN = ["scripts/renderer.ts", "scripts/prerender.mjs"];
 
 export async function loadJsxModule(entry, { cacheDir = CACHE_DIR } = {}) {
   const { build } = await import("esbuild");

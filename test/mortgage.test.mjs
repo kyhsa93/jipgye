@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { apartmentOptions, loanHeadSentence, loanSentence, monthlyPayment, rateSpread } from "../scripts/mortgage.mjs";
+import { apartmentOptions, loanHeadSentence, loanSentence, monthlyPayment, rateSpread } from "../scripts/mortgage.ts";
 import { budgetLoanHtml } from "../scripts/prerender.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");

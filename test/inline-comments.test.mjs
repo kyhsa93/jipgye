@@ -8,7 +8,7 @@ import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.mjs";
 import { buildBudgetPage } from "../scripts/build-budget-pages.mjs";
 import { REALESTATE_TEMPLATE_PATH, applyPrerender, realestateHeadHtml, realestateOverallHtml, realestateTableHtml } from "../scripts/prerender.mjs";
-import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.mjs";
+import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.ts";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.mjs";
 import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
 import { jsInlineScripts, proveCommentsOnly, proveHtmlCommentsOnly, onlyWhitespaceAndCommentsRemoved, sameSyntax } from "./helpers/comment-proof.mjs";

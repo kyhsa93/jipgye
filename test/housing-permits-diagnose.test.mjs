@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { createDiagnostics } from "../scripts/housing-permits-diagnose.ts";
-import { LICENSE } from "../scripts/housing-permits-spec.mjs";
+import { LICENSE } from "../scripts/housing-permits-spec.ts";
 import { DISTRICTS } from "../scripts/realestate-districts.ts";
 
 // 수집기 진단 출력 (#147). 규칙: 출력은 개수·비율·연도 히스토그램·코드성 범주뿐이고, 개별 값

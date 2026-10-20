@@ -11,7 +11,7 @@ import {
   spreadSentence,
 } from "../scripts/complex-ratio.ts";
 import { buildPayload } from "../scripts/build-complex-ratio.mjs";
-import { formatPercent } from "../scripts/realestate-format.mjs";
+import { formatPercent } from "../scripts/realestate-format.ts";
 
 const NOW = new Date("2026-08-29T00:00:00Z");
 const sale = (amount, extra = {}) => ({ aptNm: "가상아파트", excluUseAr: 59.94, dealAmount: amount, ...extra });

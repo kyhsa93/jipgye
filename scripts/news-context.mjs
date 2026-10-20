@@ -7,7 +7,7 @@ import {
   areaPrice,
   formatEok,
   monthLabel,
-} from "./realestate-format.mjs";
+} from "./realestate-format.ts";
 
 const MAX_CONTEXT = 2;
 

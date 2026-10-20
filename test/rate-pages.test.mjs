@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.mjs";
+import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.ts";
 import { ratesHtml } from "../scripts/prerender.mjs";
 import { stampHtml } from "../scripts/updated-stamp.ts";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
@@ -29,7 +29,7 @@ test("커밋된 상품군별 페이지가 지금 원본·데이터로 찍은 결
     assert.equal(
       committed,
       stampHtml(built, ymd),
-      `docs/${page.file}이 원본과 어긋납니다. node scripts/build-rate-pages.mjs를 실행하세요.`
+      `docs/${page.file}이 원본과 어긋납니다. node scripts/build-rate-pages.ts를 실행하세요.`
     );
   }
 });

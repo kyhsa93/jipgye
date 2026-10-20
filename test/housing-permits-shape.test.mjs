@@ -6,7 +6,7 @@ import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import { FIELDS, LICENSE } from "../scripts/housing-permits-spec.mjs";
+import { FIELDS, LICENSE } from "../scripts/housing-permits-spec.ts";
 import * as fold from "../scripts/housing-permits-fold.ts";
 import { realItem } from "./helpers/housing-permits-items.mjs";
 import { DISTRICTS } from "../scripts/realestate-districts.ts";

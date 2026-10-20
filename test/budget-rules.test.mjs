@@ -4,10 +4,10 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { budgetRulesHtml } from "../scripts/budget-rules.ts";
 import { escapeHtml } from "../scripts/prerender.mjs";
-import { COSTS_RULES } from "../scripts/purchase-costs.mjs";
-import { MIN_CASH_RULES } from "../scripts/min-cash.mjs";
-import { POLICY_LINES, POLICY_TAIL } from "../scripts/policy-loan.mjs";
-import { CAP_RULES_HIGH } from "../scripts/loan-cap.mjs";
+import { COSTS_RULES } from "../scripts/purchase-costs.ts";
+import { MIN_CASH_RULES } from "../scripts/min-cash.ts";
+import { POLICY_LINES, POLICY_TAIL } from "../scripts/policy-loan.ts";
+import { CAP_RULES_HIGH } from "../scripts/loan-cap.ts";
 import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
 
 // #66: 예산대 18장에 똑같이 실리던 규칙 문단은 method.html 한 자리에만 있고, 장에는 링크만 남는다.

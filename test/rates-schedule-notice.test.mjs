@@ -53,7 +53,7 @@ test("금리 틀과 구운 네 장의 갱신 안내 문자열표(ko·en)에는 �
 test("구운 네 장의 갱신 안내는 틀과 글자까지 같다 (#369)", async () => {
   const template = updateSchedules(await readFile(path.join(root, FILES[0]), "utf8"));
   for (const file of FILES.slice(1)) {
-    assert.deepEqual(updateSchedules(await readFile(path.join(root, file), "utf8")), template, `${file}: 틀과 다르다 - node scripts/build-rate-pages.mjs 로 다시 굽는다`);
+    assert.deepEqual(updateSchedules(await readFile(path.join(root, file), "utf8")), template, `${file}: 틀과 다르다 - node scripts/build-rate-pages.ts 로 다시 굽는다`);
   }
 });
 

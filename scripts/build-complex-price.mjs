@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { districtCells, districtMeta, indexLevels, marketDeal, referenceMonth, windowStart, WINDOW_DAYS } from "./complex-price.mjs";
+import { districtCells, districtMeta, indexLevels, marketDeal, referenceMonth, windowStart, WINDOW_DAYS } from "./complex-price.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { INDEX_FILE } from "./fetch-price-index.mjs";
 import { DISTRICTS } from "./realestate-districts.ts";

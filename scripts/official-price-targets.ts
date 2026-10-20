@@ -13,7 +13,7 @@ import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { DISTRICTS } from "./realestate-districts.ts";
-import { parcelKey } from "./official-price-key.mjs";
+import { parcelKey } from "./official-price-key.ts";
 
 /** 바꾸면 모든 진행 상태의 순서 의미가 바뀐다 - 이어 받는 도중에 바꾸지 않는다. */
 export const SHUFFLE_SEED = "official-price-api-v1";
