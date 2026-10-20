@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
+import { existsSync } from "node:fs";
 import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -192,6 +193,16 @@ test("기본 단계는 지금까지 워크플로가 부르던 여섯 스크립�
   ]);
   const all = [...(await read("scripts/update-all.mjs")).matchAll(/run\("node (scripts\/[a-z-]+\.(?:mjs|ts))"\)/g)].map((m) => m[1]);
   assert.deepEqual(all.slice(all.indexOf("scripts/prerender.mjs")), RENDER_STEPS, "update-all의 렌더 순서와 기본 단계가 갈라졌다");
+});
+
+// #427: 위 시험은 소스의 목록과 시험 안의 목록을 맞댈 뿐이라 둘이 같이 옛 이름으로 남으면 초록이다(개명이 두 곳을 같이 놓치면 무인 렌더만 죽는다).
+// 목록이 가리키는 파일이 저장소에 실제로 있는지를 따로 본다 - 확장자를 박지 않고 목록에 적힌 이름 그대로 연다.
+test("RENDER_STEPS와 update-all의 렌더 꼬리가 가리키는 파일이 모두 저장소에 있다 - 개명이 목록을 놓치면 무인 렌더만 죽는다", async () => {
+  const tail = [...(await read("scripts/update-all.mjs")).matchAll(/run\("node (scripts\/[a-z-]+\.(?:mjs|ts))"\)/g)].map((m) => m[1]);
+  const fromPrerender = tail.slice(tail.findIndex((s) => /^scripts\/prerender\.(?:mjs|ts)$/.test(s)));
+  assert.ok(RENDER_STEPS.length >= 6 && fromPrerender.length >= 6, `목록이 비었다: RENDER_STEPS ${RENDER_STEPS.length}, update-all 꼬리 ${fromPrerender.length}`);
+  const missing = [...new Set([...RENDER_STEPS, ...fromPrerender])].filter((rel) => !existsSync(path.join(root, rel)));
+  assert.deepEqual(missing, [], `렌더 단계가 가리키는 파일이 없다(개명 때 목록을 같이 고쳤는지 본다): ${missing.join(", ")}`);
 });
 
 // --- 워크플로 문자열 ---------------------------------------------------------------------------------------------------------
