@@ -22,7 +22,6 @@ import { fileURLToPath } from "node:url";
 const WINDOW = 8;
 const FIRST = 3;
 const LAST = 20;
-const ctlWrongType: number = "문자열";
 
 export function words(html, { maskNumbers }) {
   const text = html
