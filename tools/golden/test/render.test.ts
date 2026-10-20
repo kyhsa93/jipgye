@@ -122,6 +122,43 @@ test("단계가 실패하면 어느 스크립트인지 적어 예외로 낸다",
   }
 });
 
+test("#428 renderIsolated: base(.mjs)와 head(.ts 로 개명)를 같은 .mjs 목록으로 굽고 timings 라벨은 목록 이름 그대로다", async () => {
+  const base = await fakeRepo();
+  const head = await fakeRepo();
+  const cache = await mkdtemp(path.join(os.tmpdir(), "golden-cache-"));
+  try {
+    // head: step2.mjs → step2.ts (개명). 목록(STAGES)은 두 쪽 모두 .mjs 그대로다.
+    await rm(path.join(head, "scripts/step2.mjs"));
+    await writeFile(path.join(head, "scripts/step2.ts"), STEP2);
+    const opt = { stages: STAGES, mockNow: "2026-10-11T00:00:00Z" };
+    const b = await renderIsolated(await preparePristine({ srcDir: base, cacheDir: cache }), opt);
+    const h = await renderIsolated(await preparePristine({ srcDir: head, cacheDir: cache }), opt);
+    try {
+      assert.equal(await read(h.docsDir, "env.html"), await read(b.docsDir, "env.html"), "개명해도 같은 출력이다");
+      assert.deepEqual((await compareBytes(b.docsDir, h.docsDir)).diffs, []);
+      assert.deepEqual(h.timings.map((t) => t.stage), STAGES, "timings 라벨은 목록에 적힌 이름 그대로(확장자를 안 바꾼다)");
+    } finally {
+      await Promise.all([b.dispose(), h.dispose()]);
+    }
+  } finally {
+    await Promise.all([rm(base, { recursive: true }), rm(head, { recursive: true }), rm(cache, { recursive: true })]);
+  }
+});
+
+test("#428 renderIsolated: 같은 단계가 .mjs 와 .ts 로 둘 다 있으면 던지고, 둘 다 없으면 이름 그대로 모듈 없음으로 죽는다", async () => {
+  const repo = await fakeRepo();
+  const cache = await mkdtemp(path.join(os.tmpdir(), "golden-cache-"));
+  try {
+    await writeFile(path.join(repo, "scripts/step2.ts"), STEP2); // step2.mjs 도 있다
+    const pristine = await preparePristine({ srcDir: repo, cacheDir: cache });
+    await assert.rejects(renderIsolated(pristine, { stages: STAGES }), /렌더 단계 scripts\/step2 이 \.mjs 와 \.ts 로 둘 다 있습니다/);
+    await assert.rejects(renderIsolated(pristine, { stages: ["scripts/nope.mjs"] }), /scripts\/nope\.mjs 실패/);
+    await rm(pristine.dir, { recursive: true });
+  } finally {
+    await Promise.all([rm(repo, { recursive: true }), rm(cache, { recursive: true })]);
+  }
+});
+
 test("readWorkflowStages: 워크플로의 렌더 단계 줄을 순서대로 읽는다", async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), "golden-wf-"));
   try {

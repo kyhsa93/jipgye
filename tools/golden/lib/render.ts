@@ -33,7 +33,7 @@ import {
   writeOwner,
 } from "./cleanup.ts";
 
-/** origin/main `daily-update.yml`의 "정적 HTML에 오늘 내용 심기" 단계(#236 범위 3, 6단계). */
+/** origin/main `daily-update.yml`의 "정적 HTML에 오늘 내용 심기" 단계(#236 범위 3, 6단계). 확장자는 렌더 때 사본에서 해소한다(`resolveStage`, #428). */
 export const RENDER_STAGES = [
   "scripts/prerender.mjs",
   "scripts/build-rate-pages.mjs",
@@ -51,7 +51,7 @@ const SCRUB = ["BUILD_NOW", "JIPGYE_RENDERER", "GOLDEN_MOCK_NOW", "NODE_OPTIONS"
 // 워크플로 줄의 스크립트 확장자는 .mjs 한 가지로 박지 않는다(#418, #316 0단계). 박아 두면 개명 순간 줄이 안 잡혀 단계 수가
 // 예외 없이 줄어든다(render-pipeline을 .ts로 바꾸면 빈 배열).
 const SCRIPT_LINE = /^\s+(?:run: )?node (scripts\/[\w.-]+\.(?:mjs|ts))\s*$/;
-const withoutExt = (file) => file.replace(/\.(?:mjs|ts)$/, "");
+export const withoutExt = (file) => file.replace(/\.(?:mjs|ts)$/, "");
 
 /**
  * 워크플로의 렌더 단계 줄(`node scripts/x.mjs`)을 읽는다. RENDER_STAGES와 어긋났는지 시험이 본다.
@@ -213,6 +213,18 @@ async function statSnapshot(dir) {
   return map;
 }
 
+/**
+ * 목록에 적힌 단계 이름(`scripts/x.mjs`)을 작업 사본에서 실제 파일로 푼다(#428, #316 3단계 선행). 개명(.mjs → .ts)을 건너는 base·head 를
+ * 같은 목록으로 굽기 위해서다. stem(`withoutExt`)이 같은 `.mjs`·`.ts` 중 사본에 있는 쪽을 돌리고, 둘 다 있으면 던지고, 둘 다 없으면
+ * 이름 그대로 둔다(지금처럼 모듈 없음으로 죽는다).
+ */
+export function resolveStage(stage: string, workDir: string): string {
+  const stem = withoutExt(stage);
+  const found = [".mjs", ".ts"].map((ext) => stem + ext).filter((f) => existsSync(path.join(workDir, f)));
+  if (found.length > 1) throw new Error(`렌더 단계 ${stem} 이 .mjs 와 .ts 로 둘 다 있습니다`);
+  return found[0] ?? stage;
+}
+
 function runStage(script, cwd, env, nodeArgs) {
   return new Promise<{ stage: string; ms: number; log: string }>((resolve, reject) => {
     const t0 = performance.now();
@@ -270,7 +282,7 @@ export async function renderIsolated(pristine, { env = {}, mockNow = null, stage
     const timings = [];
     for (const stage of stages) {
       assertNotTerminating();
-      const { ms } = await runStage(stage, workDir, full, nodeArgs);
+      const { ms } = await runStage(resolveStage(stage, workDir), workDir, full, nodeArgs);
       timings.push({ stage, ms });
     }
     const after = await statSnapshot(workDir);

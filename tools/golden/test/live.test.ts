@@ -6,7 +6,7 @@ import path from "node:path";
 import { canonLines } from "../lib/canon.ts";
 import { compareBytes, compareDirs, formatReport, listFiles, treeHash } from "../lib/compare.ts";
 import { collectHookClasses, compareInvariants, formatInvariantsReport, hookListDrift, hookListFindings, readHookList, snapshotDir, snapshotHash } from "../lib/invariants.ts";
-import { RENDER_STAGES, preparePristine, readWorkflowStages, renderIsolated } from "../lib/render.ts";
+import { RENDER_STAGES, preparePristine, readWorkflowStages, renderIsolated, withoutExt } from "../lib/render.ts";
 
 // 실제 저장소로 돌리는 측정(#236 완료 조건 1·2와 변이 시험의 시각 의존 확인). `npm run test:live`(GOLDEN_LIVE=1)에서만 돈다.
 // 읽는 것: 저장소의 실제 docs/·raw/ — 그래서 `npm test`(고정 fixture만)와 갈랐고 CI에도 넣지 않는다(#8 재발 방지, R3).
@@ -63,7 +63,7 @@ test("입력 기록: SHA와 raw/ 지문", opts, async () => {
 
 test("렌더 단계 목록이 daily-update.yml과 같다", opts, async () => {
   const fromWorkflow = await readWorkflowStages(path.join(REPO, ".github/workflows/daily-update.yml"));
-  assert.deepEqual(RENDER_STAGES, fromWorkflow);
+  assert.deepEqual(RENDER_STAGES.map(withoutExt), fromWorkflow.map(withoutExt));
 });
 
 for (const tz of ["UTC", "Asia/Seoul"]) {
