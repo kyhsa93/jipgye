@@ -53,6 +53,7 @@
     "../../scripts/budget-fragments.ts",
     "../../scripts/budget-pages.ts",
     "../../scripts/budget-rules.ts",
+    "../../scripts/build-correction-release.ts",
     "../../scripts/build-icons.ts",
     "../../scripts/build-rate-pages.ts",
     "../../scripts/cancel-by-price.ts",

@@ -135,7 +135,7 @@ function cell(cancelRecords, withTwin) {
  * 집계를 낸다. 순서는 사이트(build-cancellation.mjs buildPayload)와 같다: 구마다 withoutCorrections로 짝이 있는 해제 기록을
  * 가르고, 그것을 뺀 기록 전체로 익은 달을 정해(registrationStats) correctionStats에 넘긴다.
  */
-export function computeFigures(byDistrict) {
+export function computeFigures(byDistrict: Record<string, unknown[]>) {
   const cleaned = {};
   const corrections = [];
   for (const [name, items] of Object.entries(byDistrict)) {
@@ -203,12 +203,25 @@ const digestOf = (figures) =>
     .digest("hex")
     .slice(0, 16);
 
+// 지문(figuresDigest)은 나머지 칸을 다 채운 뒤에 붙으므로 만드는 동안만 비어 있다.
+type Computed = ReturnType<typeof computeFigures>;
+type Figures = Pick<Computed, "seoul" | "districts" | "months"> & {
+  schema: string;
+  asOf: string;
+  collectedAt: string;
+  collectedFrom: string;
+  collectedTo: string;
+  source: { datasetId: string };
+  sample: Computed["sample"] & { districtFiles: number };
+  figuresDigest?: string;
+};
+
 export function buildFigures({ byDistrict, observedAt, firstObservedAt = observedAt, files }) {
   const computed = computeFigures(byDistrict);
   if (!observedAt) throw new Error("원본 파일에 수집 시각(observedAt)이 없어 기준일을 정할 수 없다");
   // 수집일은 파일마다 다르다. asOf·collectedAt·collectedTo는 가장 늦은 날(KST), collectedFrom은 가장 이른 날이다.
   const collectedAt = kstDay(observedAt);
-  const figures = {
+  const figures: Figures = {
     schema: SCHEMA,
     asOf: collectedAt,
     collectedAt,
@@ -264,7 +277,7 @@ export function renderTitle(figures) {
  * - 투자·구매 권유, 특정 단지·중개사 거론 없음. 금지어는 test/correction-release.test.mjs가 막는다.
  * 사이트 lead(correctionSentence)와 같은 '해제 표시 없이 다시 있다'는 구조이되, Release용으로 따로 쓴 문장이다.
  */
-export function renderBody(figures, { tag } = {}) {
+export function renderBody(figures, { tag }: { tag?: string } = {}) {
   const s = figures.seoul;
   const reg = s.registration;
   const cmp = s.comparison;
