@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true
+  },
+  "include": [
+    "../../scripts/budget-fragments.mjs",
+    "../../scripts/build-rate-pages.mjs",
+    "../../scripts/complex-price.mjs",
+    "../../scripts/housing-permits-spec.mjs",
+    "../../scripts/loan-cap.mjs",
+    "../../scripts/min-cash.mjs",
+    "../../scripts/mortgage.mjs",
+    "../../scripts/official-price-api.mjs",
+    "../../scripts/official-price-fold.mjs",
+    "../../scripts/official-price-key.mjs",
+    "../../scripts/policy-loan.mjs",
+    "../../scripts/prose-share.mjs",
+    "../../scripts/purchase-costs.mjs",
+    "../../scripts/realestate-format.mjs",
+    "../../scripts/realestate-overall.mjs",
+    "../../scripts/realestate-table.mjs",
+    "../../scripts/renderer.mjs"
+  ]
+}
