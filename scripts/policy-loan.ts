@@ -12,7 +12,6 @@
  * 안내로 확인해 넣었다(2026-10-01, #31).
  */
 
-export interface CtlX { name: string }
 export const BASIS_DATE = "2026-10-01";
 
 export const SOURCES = [
