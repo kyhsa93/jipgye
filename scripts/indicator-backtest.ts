@@ -226,7 +226,7 @@ export function judge(prices, series) {
       const published = (c.published ?? []).includes(lag);
       const byH = {};
       for (const h of HORIZONS) {
-        const s = score(seoul, h, c.fn, lag);
+        const s: Record<string, any> = score(seoul, h, c.fn, lag);
         if (s?.passes) {
           s.regionWins = regions.filter(([, p]) => score(p, h, c.fn, lag)?.passes).length;
           s.regions = regions.length;

@@ -79,7 +79,7 @@ export const NO_DATA_PAGES = ["about.html", "method.html", "rates.html"]; // rat
 
 /** 소스들 중 가장 오래된 updatedAt의 KST 날짜. 소스를 못 찾으면 던진다 - 조용히 자리표시자를 남기지 않는다. */
 export function baselineFor(names, sources) {
-  const byName = new Map(sources.map((s) => [s.name, s]));
+  const byName = new Map<string, any>(sources.map((s) => [s.name, s]));
   let oldest = null;
   for (const n of names) {
     const s = byName.get(n);
@@ -104,7 +104,7 @@ export function stampHtml(html, ymd) {
 const diskIo = { read: (file) => readFileSync(file, "utf8"), write: (file, text) => writeFileSync(file, text) };
 
 /** docsDir의 장들에 기준일을 찍는다. 바뀐 파일만 쓰고, 찍은 장 목록을 돌려준다. */
-export function stampAll({ docsDir, dataDir, pages = PAGE_SOURCES, io = diskIo } = {}) {
+export function stampAll({ docsDir, dataDir, pages = PAGE_SOURCES, io = diskIo }: { docsDir?: string; dataDir?: string; pages?: typeof PAGE_SOURCES; io?: typeof diskIo } = {}) {
   const sources = readDataSources(dataDir);
   const done = [];
   for (const file of readdirSync(docsDir).filter((f) => f.endsWith(".html")).sort()) {
@@ -155,7 +155,7 @@ export function crossStampHtml(html, file, dealsYmd, ratesYmd) {
 }
 
 /** docsDir의 교차값 화면들에 입력별 기준일 줄을 찍는다. 바뀐 파일만 쓰고 찍은 장 목록을 돌려준다. */
-export function crossStampAll({ docsDir, dataDir, pages = CROSS_PAGES, io = diskIo } = {}) {
+export function crossStampAll({ docsDir, dataDir, pages = CROSS_PAGES, io = diskIo }: { docsDir?: string; dataDir?: string; pages?: typeof CROSS_PAGES; io?: typeof diskIo } = {}) {
   const sources = readDataSources(dataDir);
   const done = [];
   for (const [file, inputs] of Object.entries(pages)) {

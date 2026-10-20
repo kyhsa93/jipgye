@@ -80,8 +80,8 @@ export function summarize(rows) {
   };
 }
 
-const num = (n, en) => n.toLocaleString(en ? "en-US" : "ko-KR");
-const ymText = (ym, en) => {
+const num = (n, en?: boolean) => n.toLocaleString(en ? "en-US" : "ko-KR");
+const ymText = (ym, en?: boolean) => {
   const [y, m] = ym.split("-");
   return en ? `${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Number(m) - 1]} ${y}` : `${y}년 ${Number(m)}월`;
 };
@@ -91,7 +91,7 @@ const halfText = (h, en) => {
   if (m[2] === "?") return en ? `${m[1]}, month not set` : `${m[1]}년 (달 미정)`;
   return en ? `${m[2] === "H1" ? "Jan–Jun" : "Jul–Dec"} ${m[1]}` : `${m[1]}년 ${m[2] === "H1" ? "상반기" : "하반기"}`;
 };
-const basisText = (basis, en) => {
+const basisText = (basis, en?: boolean) => {
   if (!basis) return "";
   const [y, m, d] = basis.split("-");
   return en ? `as of ${ymText(`${y}-${m}`, true).replace(/^(\w+)/, `$1 ${Number(d)},`)}` : `${y}년 ${Number(m)}월 ${Number(d)}일 기준`;

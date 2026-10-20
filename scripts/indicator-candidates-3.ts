@@ -11,7 +11,7 @@
  */
 
 const ymi = (ym) => Number(ym.slice(0, 4)) * 12 + Number(ym.slice(4, 6)) - 1;
-const toMap = (rows) => new Map((rows ?? []).filter(([, v]) => Number.isFinite(Number(v))).map(([m, v]) => [ymi(m), Number(v)]));
+const toMap = (rows) => new Map<number, number>((rows ?? []).filter(([, v]) => Number.isFinite(Number(v))).map(([m, v]) => [ymi(m), Number(v)]));
 
 /** 인허가는 해마다 1월부터 쌓인 누계로 온다 - 달 값으로 푼다(1월은 그대로). */
 export function monthlyFromYtd(rows) {

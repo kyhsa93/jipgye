@@ -18,7 +18,7 @@ function depositInterest(amount, monthlyRate, term, compound) {
 
 const isCompound = (option) => (option?.rateTypeName ?? "").includes("복리");
 
-export function interestOf(option, { amount, saving = false, useMaxRate = true } = {}) {
+export function interestOf(option, { amount, saving = false, useMaxRate = true }: { amount?: number; saving?: boolean; useMaxRate?: boolean } = {}) {
   const rate = useMaxRate ? option?.maxRate ?? option?.rate : option?.rate;
   const term = option?.term;
   if (typeof rate !== "number" || !Number.isFinite(rate)) return null;

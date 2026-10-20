@@ -92,7 +92,7 @@ export function topRatio(rows) {
 }
 
 /** 거래 목록을 칸으로 묶는다. 자치구 이름은 칸마다 하나뿐이다. */
-export function toCells(byDistrict) {
+export function toCells(byDistrict: Record<string, any>) {
   const cells = new Map();
   for (const [district, items] of Object.entries(byDistrict ?? {})) {
     for (const item of items ?? []) {
@@ -194,7 +194,7 @@ export function districtRows(byDistrict, pool) {
   // 값이 빈 구는 맨 뒤로 보낸다. null을 숫자로 빼면 0으로 읽혀 순서가 뒤섞인다.
   return rows.sort(
     (a, b) =>
-      (a.median === null) - (b.median === null) ||
+      ((a.median === null) as any) - ((b.median === null) as any) ||
       (a.median ?? 0) - (b.median ?? 0) ||
       a.district.localeCompare(b.district, "ko")
   );

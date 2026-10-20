@@ -47,7 +47,7 @@ export async function runExplore(opts) {
     stdYears: {}, crtnYears: {}, pk25: 0, pk26: 0, both: 0, items: 0, hsprcInvalid: 0,
   };
   const C = { sample: { price: [], area: [], pricePages: [], areaPages: [], truncated: 0 }, big: { price: [], area: [], pricePages: [], areaPages: [] } };
-  const D = { pages: {}, early: { parcels: 0, allFound: 0, ratio: [], pagesAll: 0, pagesNeeded: 0 }, areaKinds: {} }; // pages: 구간 -> {rows, expos}
+  const D = { pages: {} as Record<string, { rows: number; expos: number }>, early: { parcels: 0, allFound: 0, ratio: [], pagesAll: 0, pagesNeeded: 0 }, areaKinds: {} }; // pages: 구간 -> {rows, expos}
   const bucket = (i) => (i <= 3 ? String(i) : i <= 5 ? "4-5" : i <= 10 ? "6-10" : i <= 30 ? "11-30" : "31+");
   let stopped = null;
   let fatal = null;

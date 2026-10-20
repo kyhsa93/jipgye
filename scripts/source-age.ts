@@ -158,7 +158,7 @@ export function summarize(ages, minDays = STALE_DAYS) {
   return `경과 최대 ${max}일: ${stale.filter((a) => a.ageDays === max).map((a) => a.file).join(", ")}`;
 }
 
-export function collect({ today = todayKst(), dataDir, rawDir, housingDir } = {}) {
+export function collect({ today = todayKst(), dataDir, rawDir, housingDir }: { today?: string; dataDir?: string; rawDir?: string; housingDir?: string } = {}) {
   const sources = [...readDataSources(dataDir), ...(rawDir ? readRawSources(rawDir) : []), ...(housingDir ? readHousingSources(housingDir) : [])];
   return computeAges(sources, today);
 }

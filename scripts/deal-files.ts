@@ -32,7 +32,7 @@ export function buildDealFiles(source, now, maxMonths = MAX_MONTHS, valueOf = by
   if (!source?.period) return null;
 
   const byDistrict = new Map();
-  for (const deal of Object.values(source?.districts ?? {}).flat()) {
+  for (const deal of Object.values<any>(source?.districts ?? {}).flat()) {
     const name = String(deal?.district ?? "").trim();
     if (!name || !DISTRICT_SLUGS[name]) continue;
     if (!byDistrict.has(name)) byDistrict.set(name, []);

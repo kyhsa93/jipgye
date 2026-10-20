@@ -50,7 +50,7 @@ export function toDeal(item) {
 export function periods(recentEnd, available) {
   const recent = Array.from({ length: PERIOD }, (_, k) => shiftMonth(recentEnd, k - PERIOD + 1));
   const yearAgo = recent.map((m) => shiftMonth(m, -12));
-  const have = new Set(available);
+  const have = new Set<string>(available);
   if (yearAgo.every((m) => have.has(m))) return { base: yearAgo, recent, months: 12 };
   const earliest = [...have].filter((m) => m < recent[0]).sort().slice(0, PERIOD);
   if (earliest.length < PERIOD) return null;
@@ -122,7 +122,7 @@ export function regionCheck(byDistrict, official, { base, recent }) {
   return REGIONS.filter((r) => r.districts).map((r) => {
     const values = r.districts.flatMap((code) => byDistrict.get(code) ?? []);
     const rows = official?.[r.code];
-    const map = new Map(rows ?? []);
+    const map = new Map<string, number>(rows ?? []);
     const at = (m) => map.get(m);
     const ours = values.length >= MIN_CELLS ? pct(median(values)) : null;
     const from = at(base[1]);
@@ -145,12 +145,12 @@ export function surveyChange(series, { base, recent }) {
   return a && b ? pct(Math.log(b / a)) : null;
 }
 
-const label = (m, en) =>
+const label = (m, en?: boolean) =>
   en
     ? `${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Number(m.slice(4)) - 1]} ${m.slice(0, 4)}`
     : `${m.slice(0, 4)}년 ${Number(m.slice(4))}월`;
 /** 같은 해면 "2025년 8~10월", 해가 걸치면 "2025년 12월~2026년 2월". */
-const span = (ms, en) => {
+const span = (ms, en?: boolean) => {
   const [a, b] = [ms[0], ms.at(-1)];
   if (en) return `${label(a, true)}–${label(b, true)}`;
   return a.slice(0, 4) === b.slice(0, 4) ? `${a.slice(0, 4)}년 ${Number(a.slice(4))}~${Number(b.slice(4))}월` : `${label(a)}~${label(b)}`;

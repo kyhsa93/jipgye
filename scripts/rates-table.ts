@@ -52,7 +52,7 @@ export function selectRateRows(rates, category = "deposit", limit = RATES_ROWS) 
   }
 
   rows.sort((a, b) => {
-    if (a.sort === null || b.sort === null) return (a.sort === null) - (b.sort === null);
+    if (a.sort === null || b.sort === null) return ((a.sort === null) as any) - ((b.sort === null) as any);
     return asc ? a.sort - b.sort : b.sort - a.sort;
   });
 

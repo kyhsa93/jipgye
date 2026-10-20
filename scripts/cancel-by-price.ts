@@ -45,7 +45,7 @@ export function settledMonths(items) {
   const settleDays = gaps[Math.floor(gaps.length * SETTLE_QUANTILE)];
   // 스프레드는 인자 수만큼 호출 스택을 쓴다. 원본 전체(13만 건 넘음)를 받는 자리라 reduce로 센다(#97).
   const end = items.reduce((m, item) => Math.max(m, dealTime(item)), -Infinity);
-  const months = [...new Set(items.map(monthOf))].filter((m) => {
+  const months = [...new Set<string>(items.map(monthOf))].filter((m) => {
     const last = Date.UTC(Number(m.slice(0, 4)), Number(m.slice(4)), 0);
     return (end - last) / DAY >= settleDays;
   });
@@ -112,7 +112,7 @@ export function priceBandStats(items, { rounds = ROUNDS, seed = 20261001 } = {})
   };
 }
 
-const span = (ms, en) => {
+const span = (ms, en?: boolean) => {
   const f = (m) => (en ? `${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Number(m.slice(4)) - 1]} ${m.slice(0, 4)}` : `${m.slice(0, 4)}년 ${Number(m.slice(4))}월`);
   return `${f(ms[0])}~${f(ms.at(-1))}`;
 };

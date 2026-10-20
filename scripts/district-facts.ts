@@ -67,7 +67,7 @@ export function districtFacts(dealFile) {
   const deals = dealFile?.deals ?? [];
   if (!deals.length) return null;
 
-  const facts = { total: deals.length, months: dealFile?.periods?.length ?? null };
+  const facts: Record<string, any> = { total: deals.length, months: dealFile?.periods?.length ?? null };
 
   // 가장 비싸게 팔린 것. 이건 문턱이 없다 — 구마다 다른 단지가 나오고, 비중과 달리
   // 표본이 얇아도 거짓말을 하지 않는다. 실제로 그 값에 팔린 한 건이다.

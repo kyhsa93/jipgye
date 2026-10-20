@@ -352,7 +352,7 @@ export function attachChanges(overall, districts, baseline) {
 
 export function carryForward(allDistricts, fetched, existing, existingIsToday) {
   const fetchedByCode = new Map((fetched ?? []).map((d) => [d.code, d]));
-  const existingByCode = new Map((existing?.districts ?? []).map((d) => [d.code, d]));
+  const existingByCode = new Map<string, any>((existing?.districts ?? []).map((d) => [d.code, d]));
 
   const districts = [];
   const carriedNames = [];

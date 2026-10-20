@@ -21,7 +21,7 @@ export const SHUFFLE_SEED = "official-price-api-v1";
 const SGG_NAME = new Map(DISTRICTS.map((d) => [d.code, d.name]));
 
 /** 이름 -> 10자리 코드 표를 검사해 돌려준다. */
-export function checkNames(table) {
+export function checkNames(table: Record<string, string>) {
   if (!table || typeof table !== "object") throw new Error("법정동 이름표가 객체가 아니다");
   for (const [name, code] of Object.entries(table)) {
     if (!/^서울특별시 \S+ \S+$/.test(name) || !/^11\d{8}$/.test(code)) throw new Error("법정동 이름표 형식이 다르다");

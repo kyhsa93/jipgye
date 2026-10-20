@@ -130,7 +130,7 @@ export async function checkDeploy({ base = DEFAULT_BASE, docsDir, fetchImpl = fe
   if (!base.endsWith("/")) base += "/";
   const deadline = now() + budgetMs;
   const files = listFiles(docsDir);
-  const local = new Map(files.map((rel) => [urlOf(base, rel), { rel, buf: readFileSync(join(docsDir, rel)) }]));
+  const local = new Map<string, { rel: string; buf: Buffer; hash?: string }>(files.map((rel) => [urlOf(base, rel), { rel, buf: readFileSync(join(docsDir, rel)) }]));
   for (const v of local.values()) v.hash = sha256(v.buf);
   const htmlFiles = files.filter((f) => f.endsWith(".html"));
 

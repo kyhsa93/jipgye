@@ -62,11 +62,11 @@ const areaOf = (deal) => (typeof deal?.area === "number" && deal.area > 0 ? deal
  * `deals`는 대표 거래가 아니라 그 예산대에 들어온 거래 전부여야 한다. 대표 몇 건 위에
  * 비중을 얹으면 화면이 조용히 틀린 말을 하게 되는 것은 실거래 검색에서 이미 겪었다.
  */
-export function budgetFacts(deals, { year } = {}) {
+export function budgetFacts(deals, { year }: { year?: number } = {}) {
   const list = (deals ?? []).filter((d) => areaOf(d));
   if (!list.length) return null;
 
-  const facts = { total: list.length };
+  const facts: Record<string, any> = { total: list.length };
 
   // 이 예산으로 실제 팔린 것 중 가장 좁은 것과 가장 넓은 것.
   //

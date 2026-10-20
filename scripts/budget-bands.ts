@@ -109,7 +109,7 @@ export function mergeDistrictMonths(months, limit = DEALS_PER_DISTRICT_BAND * 2)
   );
 }
 
-export function mergeBands(months, limit = DEALS_PER_BAND * 2) {
+export function mergeBands(months: Record<string, any>, limit = DEALS_PER_BAND * 2) {
   const byStart = new Map();
 
   for (const bands of Object.values(months ?? {})) {

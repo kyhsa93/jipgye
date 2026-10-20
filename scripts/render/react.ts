@@ -19,7 +19,7 @@ export async function createReactRenderer({ entry = DEFAULT_ENTRY } = {}) {
   if (fragments === null || typeof fragments !== "object") {
     throw new Error(`${entry}는 fragments 객체를 내보내야 합니다`);
   }
-  const table = new Map(Object.entries(fragments));
+  const table = new Map<string, Function>(Object.entries(fragments));
   for (const [name, fn] of table) {
     if (typeof fn !== "function") throw new Error(`fragments.${name}은 함수여야 합니다`);
   }

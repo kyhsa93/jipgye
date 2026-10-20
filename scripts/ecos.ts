@@ -75,7 +75,7 @@ export async function statisticSearch(options, { fetchImpl = fetch } = {}) {
   const res = await fetchImpl(searchUrl(options));
   if (!res.ok) throw new Error(`ecos http ${res.status}`);
 
-  const json = await res.json();
+  const json: any = await res.json();
   const code = json?.RESULT?.CODE;
   if (code) {
     if (code === "INFO-200") return [];

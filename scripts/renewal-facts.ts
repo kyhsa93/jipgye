@@ -313,7 +313,7 @@ export function seoulTally(byDistrict, now, options) {
  */
 export function renewalFacts(districtTally, seoul) {
   if (!districtTally) return null;
-  const facts = {};
+  const facts: Record<string, any> = {};
 
   if (districtTally.rightUsed >= MIN_RENEWALS && districtTally.capMissShare !== null) {
     const share = districtTally.capMissShare;
