@@ -78,6 +78,17 @@ jobs:
           npm test 2>&1 | tee "$RUNNER_TEMP/golden-test.log"
           node ../../scripts/test-count-ratchet.mjs test/COUNT "$RUNNER_TEMP/golden-test.log"
         working-directory: tools/golden
+      # 타입 검사(#316 G-TS 1단계, #421). `.ts`를 실행하는 것은 위 `npm test`(Node 24 타입 스트리핑)이고, 아래 스텝은 `tsc --noEmit`으로 **검사만** 한다 -
+      # 산출물이 없다(tools/typescript/tsconfig.json의 noEmit. 루트 test/typescript-gate.test.mjs가 지킨다). 의존(typescript·@types/node, 정확 버전)은
+      # 루트·tools/golden과 나눠 tools/typescript에만 있다. 플래그는 그 폴더의 tsconfig.json 한 파일에 전부 적혀 있고 명령줄에는 얹지 않는다(`strict`는 끈 채다).
+      # 순서가 뜻을 갖는다: `tools/golden npm ci` **뒤**여야 한다 - 앞에 두면 `parse5`를 못 찾아 TS2307이 오류 수에 섞인다.
+      # 이 스텝이 무는지는 #421의 대조군 커밋(시험이 안 부르는 tools/golden/bin/bench.ts를 일부러 깬 것)의 run으로 본다.
+      - name: tools/typescript npm ci
+        run: npm ci
+        working-directory: tools/typescript
+      - name: tsc --noEmit (tools/golden의 .ts)
+        run: npx tsc -p tsconfig.json
+        working-directory: tools/typescript
 
   # 렌더 기반 접근성 검사(#325 = #278 PR A). **별도 잡이다 — 위 `test`와 병렬로 돈다.**
   # 왜 별도 잡인가(cto 판정 2026-10-15, #325 `6182990669`):

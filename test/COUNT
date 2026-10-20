@@ -307,5 +307,10 @@
 #   낡은 쌍을 지웠다: #417(757680e3)이 첫 쌍(1775)을 고치지 않고 둘째 쌍(1782)을 끝에 덧붙여, 래칫이 첫 두 숫자 줄인 1775 만 읽고 있었다.
 #   1782 는 #417 이 Node v22.16.0 에서 센 값이라 베끼지 않고 Node 24.x 에서 다시 쟀다(같은 1782 가 나왔다). 숫자 줄은 이제 정확히 둘이다.
 #   없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
-1802
-1802
+# 센 법: 2026-10-20, merge-base 11fb8c4f, Node v24.22.0, macOS (#421, #316 1단계).
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1803 · pass 1803 · fail 0 · skipped 0
+#   merge-base 11fb8c4f 의 같은 명령 → ℹ tests 1802 · pass 1802 · fail 0 · skipped 0 (= 직전 하한).
+#   차이 1 은 이 PR 이 더한 test/typescript-gate.test.mjs 하나다(clo 게이트: tools/typescript/tsconfig.json 의 noEmit·outDir/emitDeclarationOnly/declaration 부재, 루트 test·update 줄에 esbuild 부재 + 대조군).
+#   고친 기존 시험은 test/run-tests.test.mjs 의 문자열 한 줄(test:live 줄의 파일명 .mjs → .ts)이고 시험을 더하거나 빼지 않았다. 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
+1803
+1803

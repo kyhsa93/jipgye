@@ -4,6 +4,8 @@
 루트 `npm ci`·`node --test 'test/*.test.{mjs,ts}'`에는 설치되지 않는다 — CI(`.github/workflows/test.yml`)가 루트 시험 뒤에
 이 폴더에서 따로 `npm ci && npm test`를 돌린다(#289 PR 2). 손으로 돌릴 때도 같다. 루트 `test/`는 parse5를 import하지 않는다.
 
+코드는 TypeScript(`.ts`)이고 Node 24의 타입 스트리핑으로 그대로 실행한다(번들·선컴파일 없음, `erasableSyntaxOnly`라 `enum`·`namespace`는 못 쓴다). 타입 검사는 `tools/typescript`의 `tsc --noEmit`이 CI에서 따로 한다(`strict`는 꺼 둔 채, #316 G-TS 1단계).
+
 ## 쓰는 법
 
 ```

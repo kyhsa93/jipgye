@@ -7,7 +7,8 @@ import { DiskSpaceError, installSignalHandlers, isTerminating } from "../lib/cle
 import { preparePristine, renderIsolated, RENDER_STAGES } from "../lib/render.ts";
 
 const argv = process.argv.slice(2);
-const opt = { env: {}, runs: "10", warmup: "1" };
+// 이름을 아는 옵션은 따로 적고, 나머지 `--이름 값`은 인덱스 시그니처로 받는다.
+const opt: { env: Record<string, string>; runs: string; warmup: string; repo?: string; sha?: string; [flag: string]: string | Record<string, string> } = { env: {}, runs: "10", warmup: "1" };
 for (let i = 0; i < argv.length; i++) {
   if (argv[i] === "--env") {
     const [k, ...v] = argv[++i].split("=");

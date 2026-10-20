@@ -74,14 +74,15 @@ test("실패 경로: 렌더 단계가 예외로 끝나도 스냅숏·렌더 사�
   });
 });
 
-for (const [sig, code] of [["SIGINT", 130], ["SIGTERM", 143]]) {
+const SIGNAL_CASES: [NodeJS.Signals, number][] = [["SIGINT", 130], ["SIGTERM", 143]];
+for (const [sig, code] of SIGNAL_CASES) {
   test(`${sig}: 렌더 도중 신호를 받으면 스냅숏·렌더 사본을 지우고 단계 프로세스도 끝내며 종료 ${code}`, async () => {
     await sandbox(async (d) => {
       const child = spawn(process.execPath, [BIN, "--src", d.repo, "--out", path.join(d.base, "out"), "--cache", d.cache, "--stages", "scripts/sleep.mjs"], {
         env: { ...process.env, TMPDIR: d.tmp },
         stdio: ["ignore", "pipe", "pipe"],
       });
-      const closed = new Promise((resolve) => child.on("close", (c, s) => resolve({ c, s })));
+      const closed = new Promise<{ c: number | null; s: NodeJS.Signals | null }>((resolve) => child.on("close", (c, s) => resolve({ c, s })));
       // 렌더 단계가 `started`(자기 pid)를 쓸 때까지 기다린다 = 사본 두 개가 실제로 있는 시점.
       let stagePid = null;
       for (let i = 0; i < 400 && !stagePid; i++) {
@@ -210,7 +211,7 @@ test("동시 실행: 같은 SHA를 여섯 프로세스가 동시에 만들어도
     const sha = git(d.repo, "rev-parse", "HEAD").stdout.trim();
     const script = path.join(import.meta.dirname, "helpers/prepare.ts");
     const runs = Array.from({ length: 6 }, () =>
-      new Promise((resolve) => {
+      new Promise<{ code: number | null; out: string; err: string }>((resolve) => {
         const c = spawn(process.execPath, [script, d.repo, sha, d.cache], { env: { ...process.env, TMPDIR: d.tmp }, stdio: ["ignore", "pipe", "pipe"] });
         let out = "";
         let err = "";
@@ -309,7 +310,7 @@ test("디스크 점검: 실제 statfs로 읽고 환경변수 GOLDEN_MIN_FREE_GB�
 test("고아 정리: 24시간 넘은 snap-*·jipgye-render-*는 지우고, 젊은 것·살아 있는 pid·sha-* 캐시는 남긴다", async () => {
   await sandbox(async (d) => {
     const deadPid = spawnSync(process.execPath, ["-e", ""]).pid; // 이미 끝난 프로세스의 pid
-    const mk = async (root, name, { pid = deadPid, hours, extra } = {}) => {
+    const mk = async (root, name, { pid = deadPid, hours, extra }: { pid?: number; hours?: number; extra?: Record<string, unknown> } = {}) => {
       const dir = path.join(root, name);
       await mkdir(dir, { recursive: true });
       await writeOwner(dir, extra);

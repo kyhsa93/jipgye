@@ -17,6 +17,8 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { listFiles } from "./compare.ts";
 import {
+  type Limits,
+  type StatfsFn,
   assertDiskSpace,
   OWNER,
   assertNotTerminating,
@@ -81,6 +83,26 @@ function run(cmd, args, opts = {}) {
   return r.stdout;
 }
 
+/** `preparePristine` 의 인자. repo+sha(커밋된 상태) 또는 srcDir(작업 트리 스냅숏) 중 하나를 준다. 나머지는 Limits 넷(문턱·상한)을 덮는 옵션이다. */
+export interface PristineOptions extends Partial<Limits> {
+  repo?: string;
+  sha?: string;
+  srcDir?: string;
+  cacheDir?: string;
+  tmpRoot?: string;
+  statfsFn?: StatfsFn;
+}
+
+/** `renderIsolated` 의 인자. */
+export interface RenderOptions {
+  env?: Record<string, string>;
+  mockNow?: string | null;
+  stages?: string[];
+  tmpRoot?: string;
+  minFreeBytes?: number;
+  statfsFn?: StatfsFn;
+}
+
 /**
  * 출발점 만들기. { repo, sha } → 커밋된 상태, { srcDir } → 작업 트리 스냅숏(.git·node_modules 제외).
  * 반환: { dir, label, nodeModules, temporary, keep(), dispose() }
@@ -91,7 +113,7 @@ function run(cmd, args, opts = {}) {
  * 시작 때 하는 일(#263): 디스크 여유 점검(cacheDir·tmpRoot 둘, 문턱 미만이면 DiskSpaceError), 24시간 넘은 고아 정리.
  * 문턱·상한은 옵션(minFreeBytes·maxShaCaches·graceMs·orphanMs)이나 GOLDEN_* 환경변수로 준다(cleanup.ts).
  */
-export async function preparePristine({ repo, sha, srcDir, cacheDir = path.join(os.tmpdir(), "jipgye-golden"), tmpRoot = os.tmpdir(), statfsFn, ...limitOpts }) {
+export async function preparePristine({ repo, sha, srcDir, cacheDir = path.join(os.tmpdir(), "jipgye-golden"), tmpRoot = os.tmpdir(), statfsFn, ...limitOpts }: PristineOptions) {
   // 상대경로(README 예: --repo ../..)로 받아도 node_modules 링크가 렌더 사본 안에서 끊기지 않게 절대경로로 바꾼다(#237: react 모드가 처음 읽었다).
   if (repo) repo = path.resolve(repo);
   if (srcDir) srcDir = path.resolve(srcDir);
@@ -192,7 +214,7 @@ async function statSnapshot(dir) {
 }
 
 function runStage(script, cwd, env, nodeArgs) {
-  return new Promise((resolve, reject) => {
+  return new Promise<{ stage: string; ms: number; log: string }>((resolve, reject) => {
     const t0 = performance.now();
     const child = spawn(process.execPath, [...nodeArgs, script], { cwd, env, stdio: ["ignore", "pipe", "pipe"] });
     trackChild(child); // 신호로 끝낼 때 단계 프로세스도 같이 끝낸다(사본을 지우는 중에 계속 쓰지 않게)
@@ -218,7 +240,7 @@ function runStage(script, cwd, env, nodeArgs) {
  *   touched — 렌더 단계가 쓰거나 만들거나 지운 파일(렌더 전후 크기·mtime 스냅숏 차이). docs/ 밖이 섞이면 격리를 다시 봐야 한다.
  * 사본(jipgye-render-*)은 dispose()가 지운다. 복제·단계가 예외로 끝나면 여기서 먼저 지우고 던진다(옛 판은 남겼다, #263).
  */
-export async function renderIsolated(pristine, { env = {}, mockNow = null, stages = RENDER_STAGES, tmpRoot, minFreeBytes, statfsFn } = {}) {
+export async function renderIsolated(pristine, { env = {}, mockNow = null, stages = RENDER_STAGES, tmpRoot, minFreeBytes, statfsFn }: RenderOptions = {}) {
   assertNotTerminating();
   const base = tmpRoot ?? os.tmpdir();
   await assertDiskSpace([base], { minFreeBytes: resolveLimits({ minFreeBytes }).minFreeBytes, statfsFn });

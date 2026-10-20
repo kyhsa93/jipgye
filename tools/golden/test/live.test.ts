@@ -220,7 +220,7 @@ test("invariants(#289): 실제 67장에 변이를 넣는다 — 숫자를 strong
   };
   // body의 첫 숫자 한 자리(태그 밖 텍스트)를 고른다 — 위 digit 변이와 같은 자리다.
   const FIRST_DIGIT = /(<body[\s\S]*?>[^<>]*?)(\d)(?=[^<>]*<)/;
-  const variants = {
+  const variants: Record<string, { fn: (html: string) => string; remove?: string; unchanged?: boolean; expect: string; id: string }> = {
     // 그 숫자를 <strong>으로 감싼다(텍스트 노드가 셋으로 잘린다) — 글자 흐름은 같다.
     wrap: { fn: (html) => outsideScripts(html, (h) => h.replace(FIRST_DIGIT, (m, pre, d) => `${pre}<strong class="tw:font-bold">${d}</strong>`)), expect: "soft", id: "text-wrap" },
     // 감싸면서 한 자리를 바꾼다.

@@ -61,14 +61,14 @@ const hardIds = (r) => [...new Set([...r.site, ...r.pages.flatMap((p) => p.findi
 const softIds = (r) => [...new Set(r.pages.flatMap((p) => p.findings).filter((f) => f.level === "soft").map((f) => f.id))].sort();
 const finding = (r, id) => r.pages.flatMap((p) => p.findings).find((f) => f.id === id);
 /** 변이가 하드로 걸리고, 걸린 check가 정확히 ids다. */
-function caught(a, b, ids, why, opts) {
+function caught(a, b, ids, why, opts?) {
   const r = cmp(a, b, opts);
   assert.equal(r.ok, false, `${why}: 잡혀야 한다`);
   assert.deepEqual(hardIds(r), [...ids].sort(), why);
   return r;
 }
 /** 변이가 하드 없이 소프트만 남기고, 남긴 소프트 check가 정확히 ids다. */
-function softOnly(a, b, ids, why, opts) {
+function softOnly(a, b, ids, why, opts?) {
   const r = cmp(a, b, opts);
   assert.equal(r.ok, true, `${why}: 하드가 없어야 한다\n${formatInvariantsReport(r)}`);
   assert.deepEqual(hardIds(r), [], why);
@@ -76,7 +76,7 @@ function softOnly(a, b, ids, why, opts) {
   return r;
 }
 /** 변이가 하드도 소프트도 남기지 않는다. */
-function passes(a, b, why, opts) {
+function passes(a, b, why, opts?) {
   const r = cmp(a, b, opts);
   assert.equal(r.ok, true, `${why}: 통과해야 한다\n${formatInvariantsReport(r)}`);
   assert.deepEqual(r.pages.flatMap((p) => p.findings), [], why);
@@ -402,7 +402,7 @@ test("훅 클래스 목록(hook-classes.json)이 소스와 맞는다 — 소스�
   assert.deepEqual(known.filter((c) => !list.js.includes(c) && !list.markup.includes(c)), []);
 });
 
-async function dirWith(files) {
+async function dirWith(files: Record<string, string | undefined>) {
   const dir = await mkdtemp(path.join(os.tmpdir(), "golden-inv-"));
   for (const [name, content] of Object.entries(files)) {
     if (content === undefined) continue; // { ...base, "a.html": undefined }로 한 장을 뺀다
@@ -834,7 +834,7 @@ test("#289 그 밖: 형식이 틀린 예외 목록은 사용법 오류(종료 2,
 test("#289 4번 검출(d) 보완: 뜻 있는 인라인이 블록을 바깥에서 감싸도 하드 — 안쪽 블록의 항목에 [in:태그] 표시가 붙는다", () => {
   const base = doc('<p>▲ 상승</p><div class="answer">답</div><ul><li>가</li><li>나</li></ul>');
   // cto가 넣어 통과를 확인한 다섯 가지(391f6901). 여는 표시(`‹del›`)가 든 통에 글자가 없어 통째로 버려지던 자리다.
-  const outside = {
+  const outside: Record<string, [string, string[]]> = {
     del: [base.replace("<p>▲ 상승</p>", "<del><p>▲ 상승</p></del>"), ['"▲ 상승" [in:del]']],
     s: [base.replace('<div class="answer">답</div>', '<s><div class="answer">답</div></s>'), ['"답" [in:s]']],
     ins: [base.replace("<ul><li>가</li><li>나</li></ul>", "<ins><ul><li>가</li><li>나</li></ul></ins>"), ['"가" [in:ins]', '"나" [in:ins]']],

@@ -116,11 +116,12 @@ export function canonLines(html, { ignoreDesignAttrs = false } = {}) {
   const doc = parse(html);
   const out = [];
   // 문서 직속: doctype과 <html>. 주석은 뺀다.
-  for (const child of doc.childNodes) {
+  // parse5 의 ChildNode 합집합은 nodeName 으로 좁혀지지 않아(Element 의 nodeName 이 string) 느슨하게 받는다.
+  for (const child of doc.childNodes as any[]) {
     if (child.nodeName === "#documentType") out.push(`<!doctype ${child.name}>`);
     else if (child.tagName) dump(child, 0, { hidden: false, verbatim: false, ignoreDesignAttrs }, out);
   }
   return out;
 }
 
-export const canon = (html, opts) => canonLines(html, opts).join("\n");
+export const canon = (html, opts?) => canonLines(html, opts).join("\n");

@@ -155,7 +155,7 @@ function textOf(node) {
  * 정규식으로 읽는 어림이다 — 변수로 조립한 선택자(`querySelector(sel)`)는 못 읽는다(--hooks로 보탠다).
  */
 export function jsClassRefs(js) {
-  const out = new Set();
+  const out = new Set<string>();
   const str = "(?:\\\\.|(?!\\1)[^\\\\])*";
   for (const m of js.matchAll(new RegExp(`\\b(?:querySelector(?:All)?|closest|matches)\\(\\s*(["'\`])(${str})\\1`, "g"))) {
     // 템플릿의 ${…}와 속성 선택자([href$=".html"])는 class가 아니다.
@@ -182,7 +182,7 @@ export function jsClassRefs(js) {
  * 이름 모양이 아닌 조각(`${x}`, 정규식 `[^"]*`)은 버린다.
  */
 export function markupClassRefs(source) {
-  const out = new Set();
+  const out = new Set<string>();
   for (const m of source.matchAll(/\bclass=\\?(["'])([^"'\\\n]*)/g)) {
     for (const c of m[2].split(/\s+/).filter((x) => CLASS_NAME.test(x))) out.add(c);
   }
@@ -203,6 +203,20 @@ function withMarks(base, node, a, inBody) {
 
 /** srcset·imagesrcset에서 주소만 뽑는다. data: 주소가 섞이면(쉼표가 주소 안에 있다) 읽지 않는다. */
 const srcsetUrls = (value) => (value.includes("data:") ? [] : value.split(",").map((c) => c.trim().split(WS)[0]).filter(Boolean));
+
+/** `extractPage` 가 낸 장 하나의 추출 결과. */
+export type PageData = ReturnType<typeof extractPage>;
+
+/** `snapshotDir` 가 만드는 스냅숏(JSON 으로 저장·비교한다). */
+export interface Snapshot {
+  version: number;
+  label: string;
+  files: string[];
+  jsBytes: Record<string, number>;
+  jsHooks: string[];
+  twDarkFiles: string[];
+  pages: Record<string, PageData>;
+}
 
 /** HTML 한 장에서 불변 사실을 뽑는다. 배열은 문서 순서다(다중집합 비교는 compare 쪽에서 센다). */
 export function extractPage(html) {
@@ -391,7 +405,8 @@ export function extractPage(html) {
     leave();
   };
 
-  for (const child of parse(html).childNodes) {
+  // parse5 의 ChildNode 합집합은 nodeName 으로 좁혀지지 않아(Element 의 nodeName 이 string) 느슨하게 받는다.
+  for (const child of parse(html).childNodes as any[]) {
     if (child.tagName) visit(child, { mark: "", inl: "", verbatim: false, foreign: false, inHead: false, inBody: false });
   }
   flush(cur);
@@ -446,9 +461,9 @@ const isJs = (f) => f.endsWith(".js") || f.endsWith(".mjs");
  */
 export async function snapshotDir(dir, { label = dir } = {}) {
   const files = await listFiles(dir);
-  const pages = {};
-  const hooks = new Set();
-  const jsBytes = {};
+  const pages: Record<string, PageData> = {};
+  const hooks = new Set<string>();
+  const jsBytes: Record<string, number> = {};
   const twDarkFiles = [];
   for (const file of files) {
     if (isHtml(file)) {
@@ -585,7 +600,7 @@ const isSubsequence = (short, long) => {
   return i === short.length;
 };
 
-function pageScriptBytes(file, page, snap, siteBase) {
+function pageScriptBytes(file, page, snap: Snapshot, siteBase) {
   let bytes = 0;
   const missing = [];
   for (const src of page.srcs) {
@@ -664,7 +679,7 @@ function wrapDiffs(a, b) {
 /** 한 장의 기준(a)·후보(b)를 견준다. 반환: findings [{ id, check, level: "hard"|"soft", missing, added, note? }]. */
 export function comparePage(file, a, b, { snapA, snapB, hooks, siteBase = SITE_BASE }) {
   const out = [];
-  const push = (id, check, level, missing, added, note) => {
+  const push = (id, check, level, missing, added, note?) => {
     if (missing.length || added.length || note) out.push({ id, check, level, missing, added, ...(note ? { note } : {}) });
   };
   const bag = (id, check, level, x, y) => {
@@ -769,7 +784,7 @@ export function comparePage(file, a, b, { snapA, snapB, hooks, siteBase = SITE_B
  * `title: "…"` 줄 전체를 찾고, 한 script에 둘 이상이면(한·영 사전) 마지막을 영어로 본다. 읽을 수 없는 장은 건너뛴다.
  * 반환: 중복 하나당 `ko "<title>": a.html, b.html` 한 줄.
  */
-export function duplicateTitles(pages) {
+export function duplicateTitles(pages: Record<string, PageData>) {
   const byLang = { ko: new Map(), en: new Map() };
   const add = (lang, title, file) => byLang[lang].set(title, [...(byLang[lang].get(title) ?? []), file]);
   for (const [file, p] of Object.entries(pages)) {
@@ -803,7 +818,7 @@ const summarize = (pages, site) => {
  * 반환: { total, pass, soft, hard, ok, pages:[{file,status,findings}], site:[findings], failing, noindexA, noindexB, hooks, … }
  * status는 pass | soft | hard | onlyA | onlyB (onlyA·onlyB는 URL 집합 하드 실패다).
  */
-export function compareSnapshots(snapA, snapB, { hookList = [], extraHooks = [], siteBase = SITE_BASE } = {}) {
+export function compareSnapshots(snapA: Snapshot, snapB: Snapshot, { hookList = [], extraHooks = [], siteBase = SITE_BASE } = {}) {
   const hooks = [...new Set([...hookList, ...snapB.jsHooks, ...extraHooks])].sort();
   const all = [...new Set([...Object.keys(snapA.pages), ...Object.keys(snapB.pages)])].sort();
   const pages = all.map((file) => {
@@ -818,7 +833,7 @@ export function compareSnapshots(snapA, snapB, { hookList = [], extraHooks = [],
   const onlyA = pages.filter((p) => p.status === "onlyA").map((p) => p.file);
   const onlyB = pages.filter((p) => p.status === "onlyB").map((p) => p.file);
   if (onlyA.length || onlyB.length) site.push({ id: "url-set", check: "URL 집합(.html 파일)", level: "hard", missing: onlyA, added: onlyB });
-  const sum = (o) => Object.values(o).reduce((x, y) => x + y, 0);
+  const sum = (o: Record<string, number>) => Object.values(o).reduce((x, y) => x + y, 0);
   const jsTotalA = sum(snapA.jsBytes);
   const jsTotalB = sum(snapB.jsBytes);
   if (jsTotalB > jsTotalA) {
@@ -835,7 +850,7 @@ export function compareSnapshots(snapA, snapB, { hookList = [], extraHooks = [],
   if (gone.length) site.push({ id: "files-removed", check: "폴더에서 사라진 파일(.html 밖)", level: "soft", missing: gone, added: [] });
 
   // 메타가 여럿이면 하나라도 noindex(또는 같은 뜻의 none)면 그 장은 색인되지 않는다.
-  const noindex = (snap) => Object.entries(snap.pages).filter(([, p]) => p.robots.some((r) => /\b(?:noindex|none)\b/i.test(r))).map(([f]) => f).sort();
+  const noindex = (snap: Snapshot) => Object.entries(snap.pages).filter(([, p]) => p.robots.some((r) => /\b(?:noindex|none)\b/i.test(r))).map(([f]) => f).sort();
   return {
     labelA: snapA.label,
     labelB: snapB.label,
@@ -932,8 +947,8 @@ export async function compareInvariants(inputA, inputB, opts = {}) {
  * HTML 문자열 둘을 한 장으로 견준다(변이 시험용). jsA·jsB는 { "nav.js": "…" }처럼 그 장이 싣는 외부 JS의 내용이다.
  * 고정 사본 한 장만 견주므로 내부 링크·참조 자원의 대상은 전부 "있는 파일"로 친다(대상 확인은 폴더 비교에서 한다).
  */
-export function compareHtmlInvariants(htmlA, htmlB, { file = "page.html", jsA = {}, jsB = jsA, hookList = [], extraHooks = [] } = {}) {
-  const snap = (html, js, label) => {
+export function compareHtmlInvariants(htmlA, htmlB, { file = "page.html", jsA = {}, jsB = jsA, hookList = [], extraHooks = [] }: { file?: string; jsA?: Record<string, string>; jsB?: Record<string, string>; hookList?: string[]; extraHooks?: string[] } = {}) {
+  const snap = (html, js: Record<string, string>, label) => {
     const page = extractPage(html);
     const hooks = new Set(page.jsRefs);
     delete page.jsRefs;
@@ -997,7 +1012,7 @@ export function formatInvariantsReport(r, { maxItems = 8 } = {}) {
 }
 
 /** 스냅숏을 장별 표(마크다운)로 편다 — 기준선 기록용(#274 범위 3: 장별 JS 바이트·canonical·noindex). */
-export function formatSnapshotTable(snap, { siteBase = SITE_BASE } = {}) {
+export function formatSnapshotTable(snap: Snapshot, { siteBase = SITE_BASE } = {}) {
   const rows = ["| 장 | robots | canonical | 텍스트 블록 | 속성 글자 | a[href] | 제목 | id | script src | 인라인 JS(B) | 외부 JS(B) |", "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|"];
   const total = { texts: 0, attrs: 0, links: 0, headings: 0, ids: 0, scripts: 0, inline: 0, ext: 0 };
   for (const [file, p] of Object.entries(snap.pages)) {

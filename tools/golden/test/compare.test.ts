@@ -7,7 +7,7 @@ import { compareBytes, compareDirs, diffLines, formatReport, treeHash } from "..
 
 const page = (body) => `<!doctype html><html><head><title>t</title></head><body>${body}</body></html>`;
 
-async function dirWith(files) {
+async function dirWith(files: Record<string, string>) {
   const dir = await mkdtemp(path.join(os.tmpdir(), "golden-cmp-"));
   for (const [name, content] of Object.entries(files)) {
     await mkdir(path.dirname(path.join(dir, name)), { recursive: true });

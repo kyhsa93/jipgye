@@ -54,7 +54,8 @@ const USAGE = `사용:
 
 const FLAGS = new Set(["render", "table", "hooks-check", "hooks-write"]);
 const argv = process.argv.slice(2);
-const opt = {};
+// FLAGS 에 든 옵션은 불리언이고 나머지 `--이름 값`은 문자열이다.
+const opt: Record<string, any> = {};
 const rest = [];
 for (let i = 0; i < argv.length; i++) {
   const k = argv[i];

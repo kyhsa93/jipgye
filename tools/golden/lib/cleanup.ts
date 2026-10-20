@@ -5,6 +5,7 @@
 // 이슈 #263의 사고: `--src` 변형 비교가 snap-* 69개(약 20GB)를 쌓아 디스크가 찼다. 한 사본이 약 290MB다.
 // 이 모듈은 (1) 시작 전 디스크 점검 (2) 신호·예외에서의 정리 (3) 처리 못 하는 종료(SIGKILL·ENOSPC)가 남긴 고아 정리
 // (4) SHA 캐시 상한을 맡는다. 파일을 만들고 지우는 쪽(render.ts)은 여기 함수를 부르기만 한다.
+import type { ChildProcess } from "node:child_process";
 import { readdir, readFile, lstat, rename, rm, stat, statfs, utimes, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -20,14 +21,25 @@ export const OWNER = ".golden-owner";
 //   GOLDEN_CACHE_MAX_SHA   `sha-*` 캐시를 몇 개까지 둘지(기본 8 ≈ 2.3GB: 한 개 약 290MB, #263 측정).
 //   GOLDEN_CACHE_GRACE_MIN 이 시간 안에 쓴 캐시는 상한을 넘어도 지우지 않는다(분, 기본 10) — 다른 실행이 쓰는 중일 수 있다.
 //   GOLDEN_ORPHAN_HOURS    이 시간 넘은 snap-*·jipgye-render-*를 시작 때 지운다(시간, 기본 24).
-const num = (env, name, dflt) => {
+const num = (env: NodeJS.ProcessEnv, name: string, dflt: number) => {
   if (env[name] === undefined || env[name] === "") return dflt;
   const v = Number(env[name]);
   if (!Number.isFinite(v) || v < 0) throw new Error(`${name}=${env[name]}는 0 이상의 숫자가 아닙니다`);
   return v;
 };
 
-export function limitsFromEnv(env = process.env) {
+/** 디스크 문턱·정리 상한 넷. 전부 숫자다(minFreeBytes·graceMs·orphanMs는 바이트·밀리초). */
+export interface Limits {
+  minFreeBytes: number;
+  maxShaCaches: number;
+  graceMs: number;
+  orphanMs: number;
+}
+
+/** `statfs`와 같은 모양에서 쓰는 두 필드만 든 시험 주입용 함수 모양. */
+export type StatfsFn = (path: string) => Promise<{ bsize: number | bigint; bavail: number | bigint }>;
+
+export function limitsFromEnv(env: NodeJS.ProcessEnv = process.env): Limits {
   return {
     minFreeBytes: num(env, "GOLDEN_MIN_FREE_GB", 5) * GiB,
     maxShaCaches: num(env, "GOLDEN_CACHE_MAX_SHA", 8),
@@ -37,7 +49,7 @@ export function limitsFromEnv(env = process.env) {
 }
 
 /** 호출자가 준 옵션(undefined는 건너뜀)이 환경변수 값을 덮는다. */
-export function resolveLimits(opts = {}, env = process.env) {
+export function resolveLimits(opts: Partial<Limits> = {}, env: NodeJS.ProcessEnv = process.env): Limits {
   const out = limitsFromEnv(env);
   for (const k of Object.keys(out)) if (opts[k] !== undefined) out[k] = opts[k];
   return out;
@@ -75,7 +87,7 @@ async function nearestExisting(p) {
  * paths의 여유(`statfs`의 bavail × bsize)가 하나라도 minFreeBytes 미만이면 DiskSpaceError.
  * 아직 없는 폴더는 있는 가장 가까운 윗 폴더를 본다. statfsFn은 시험이 여유를 흉내 낼 때 쓴다.
  */
-export async function assertDiskSpace(paths, { minFreeBytes = 5 * GiB, statfsFn = statfs } = {}) {
+export async function assertDiskSpace(paths: Iterable<string>, { minFreeBytes = 5 * GiB, statfsFn = statfs }: { minFreeBytes?: number; statfsFn?: StatfsFn } = {}) {
   for (const p of new Set(paths)) {
     const probe = await nearestExisting(p);
     const s = await statfsFn(probe);
@@ -232,7 +244,7 @@ export async function commitDir(tmp, final) {
 // ---------------------------------------------------------------- 신호·예외 때 정리할 목록
 
 const live = new Map();
-const children = new Set();
+const children = new Set<ChildProcess>();
 let terminating = false;
 
 /** 정리가 필요한 것(사본 폴더)을 등록한다. 돌려주는 함수로 등록을 푼다. */
