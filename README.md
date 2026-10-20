@@ -244,6 +244,10 @@ npm run update        # 수집 → 빌드 → 커밋·푸시
 않는다 — 키 없이 돌리는 로컬 갱신이라서다. 그 둘은 하루 한 번 `daily-update.yml`의 full 실행이
 시크릿을 넣어 부른다. 로컬에서 받으려면 키를 넘겨 그 스크립트를 따로 돌린다.
 
+Node 24 이상이 필요하다. `npm test`는 `scripts/run-tests.mjs`를 거쳐 러너를 띄우고 시험 개수 하한(`test/COUNT`)을
+같이 지키는데, 시작할 때 타입 스트리핑(`process.features.typescript`가 `"strip"`)을 단언해서 Node 22에서는 시험이 있어도
+종료 1이다(메시지에 찾은 Node 버전이 찍힌다). 리포터도 래퍼가 정하므로 `NODE_OPTIONS`에 `--test-reporter`를 두었다면 빼야 한다.
+
 테스트는 인증키 없이 전부 돈다(외부 API는 스텁 서버로 대신한다).
 수집을 직접 돌리려면 인증키를 환경변수로 넘겨야 한다. 스크립트가 `.env`를 읽지 않으므로
 파일에 두려면 `node --env-file=.env scripts/…`로 돌린다.
