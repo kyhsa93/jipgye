@@ -50,7 +50,6 @@ import {
   sha256,
   sourceFate,
   WIDTHS,
-  CtlX,
 } from "../lib/style-equal.ts";
 import { flattenCss } from "../../../test/helpers/css-source.mjs";
 
