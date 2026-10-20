@@ -13324,14 +13324,103 @@
     "date": "2026-10-20",
     "items": [
       {
+        "title": "[올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 개장… H주 0.94%↓",
+        "link": "https://www.newsis.com/view/NISX20261020_0003833182",
+        "publishedAt": "2026-10-20T03:10:42.000Z",
+        "source": "뉴시스 경제",
+        "category": "rates",
+        "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 20일 국제 유가 고공행진과 세계적인 금리인상이 투자심리를 끌어내리면서 반락 출발했다. 중국 경제 내수 부진 우려와 한국과 일본 증시가 약세를 보이는 것도 매도를 부추기고…",
+        "dupes": []
+      },
+      {
+        "title": "美국채금리 고공행진 장기화 전망…경제학자 75% \"연말에도 5% 이상\"",
+        "link": "https://www.newsis.com/view/NISX20261020_0003832967",
+        "publishedAt": "2026-10-20T02:49:28.000Z",
+        "source": "뉴시스 경제",
+        "category": "rates",
+        "preview": "[서울=뉴시스]박미선 기자 = 미국의 10년물 국채금리가 5%를 넘어선 가운데 경제학자 대다수가 연말까지 5% 이상의 고금리가 유지될 것으로 전망했다. 경제성장 개선과 인플레이션 압력, 미국의 재정 건전성에 대한 우…",
+        "dupes": []
+      },
+      {
+        "title": "1∼9월 서울 아파트 전세 거래 28% 급감…월세 비중 첫 50% 돌파(종합)",
+        "link": "https://www.yna.co.kr/view/AKR20261019159051003",
+        "publishedAt": "2026-10-20T02:46:13.000Z",
+        "source": "연합뉴스 경제",
+        "category": "realestate",
+        "preview": "(세종=연합뉴스) 오진송 기자 = 1∼9월 서울 아파트 임대차 거래에서 월세가 차지하는 비중이 처음으로 50%를 넘어선 것으로 나타났다.",
+        "dupes": []
+      },
+      {
+        "title": "또다시 눌린 코스피…佛정세불안 유탄•AI 부채우려 재부각",
+        "link": "https://www.yna.co.kr/view/AKR20261020083200008",
+        "publishedAt": "2026-10-20T02:45:50.000Z",
+        "source": "연합뉴스 경제",
+        "category": "stocks",
+        "preview": "(서울=연합뉴스) 황철환 기자 = 이틀 연속 반등하며 바닥을 친 듯 보였던 코스피가 또다시 급락하고 있다. 아시아 주요국 증시도 일제히 약세다.",
+        "dupes": []
+      },
+      {
+        "title": "국고채 금리 혼조세…3년물 장중 연 3.879%",
+        "link": "https://www.yna.co.kr/view/AKR20261020084200008",
+        "publishedAt": "2026-10-20T02:41:17.000Z",
+        "source": "연합뉴스 경제",
+        "category": "rates",
+        "preview": "(서울=연합뉴스) 20일 국고채 금리가 혼조세를 보이고 있다.",
+        "dupes": []
+      },
+      {
+        "title": "올해 서울 6억원 미만 아파트 거래 비중 작년 대비 5%p↑",
+        "link": "https://www.yna.co.kr/view/AKR20261020030500003",
+        "publishedAt": "2026-10-20T02:39:28.000Z",
+        "source": "연합뉴스 경제",
+        "category": "realestate",
+        "preview": "(서울=연합뉴스) 임기창 기자 = 서울 아파트 시장에서 저가에 해당하는 6억원 미만 가격대 거래 비중이 작년 같은 기간 대비 커진 것으로 나타났...",
+        "dupes": []
+      },
+      {
+        "title": "강원도, 2030년까지 공공임대주택 1만호 공급…내년 442호 추진",
+        "link": "https://www.yna.co.kr/view/AKR20261020081000062",
+        "publishedAt": "2026-10-20T02:31:05.000Z",
+        "source": "연합뉴스 경제",
+        "category": "realestate",
+        "preview": "(춘천=연합뉴스) 이재현 기자 = 강원특별자치도가 청년 인구 유출을 막고 지역 정착을 지원하기 위해 2030년까지 공공임대주택 1만호 공급에 나...",
+        "dupes": []
+      },
+      {
+        "title": "中, 기준금리 1년물 LPR 3.0%·5년물 3.5%…17개월째 동결",
+        "link": "https://www.newsis.com/view/NISX20261020_0003833113",
+        "publishedAt": "2026-10-20T02:24:31.000Z",
+        "source": "뉴시스 경제",
+        "category": "rates",
+        "preview": "[서울=뉴시스]이재준 기자 = 중국인민은행은 20일 금융기관의 대출금리 기준이 되는 우량대출금리(LPR 론프라임 레이트) 1년물을 3.00%로 동결했다. 경제통과 신화망(新華網), 재신쾌보, 신랑재경에 따르면 인민은…",
+        "dupes": []
+      },
+      {
+        "title": "코스피, 3%대 급락하며 5,600선 공방…한때 5,500선 깨지기도",
+        "link": "https://www.yna.co.kr/view/AKR20261020079700008",
+        "publishedAt": "2026-10-20T02:24:07.000Z",
+        "source": "연합뉴스 경제",
+        "category": "stocks",
+        "preview": "(서울=연합뉴스) 김유아 기자 = 20일 코스피가 3% 안팎의 낙폭을 보이며 5,600선에서 공방을 벌이고 있다.",
+        "dupes": []
+      },
+      {
         "title": "'세종' 아파트 매물 전국서 유일하게 감소…집값 반등 조짐",
         "link": "https://www.newsis.com/view/NISX20261020_0003832825",
         "publishedAt": "2026-10-20T02:15:14.000Z",
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]이종성 기자 = 정부가 공무원 정원 약 1만명 규모의 수도권 행정기관 44곳을 세종으로 옮기는 계획을 발표한 뒤 세종 아파트 매매 매물이 전국에서 유일하게 감소했다. 같은 단지에서 전달보다 수억원 높은…",
-        "dupes": [],
-        "titleEn": "Sejong\" Apartment Listings Decrease Nationally for the First Time, Housing Prices Show Signs of Recovery"
+        "dupes": []
+      },
+      {
+        "title": "서울시, 모아주택 조합설립도 공공지원…구역당 최대 1억원 지원",
+        "link": "https://www.yna.co.kr/view/AKR20261020056400004",
+        "publishedAt": "2026-10-20T02:15:01.000Z",
+        "source": "연합뉴스 경제",
+        "category": "realestate",
+        "preview": "(서울=연합뉴스) 김동규 기자 = 서울시는 대규모 정비사업을 중심으로 시행해온 조합설립 공공지원을 모아타운 내 모아주택 사업구역까지 확대한다고 ...",
+        "dupes": []
       },
       {
         "title": "모아주택 조합설립 시·자치구가 돕는다… “1억 지원하고 전문관리업체 선정”",
@@ -13340,20 +13429,7 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "서울시와 자치구가 모아주택 조합설립을 돕기 위해 정비사업전문관리업체 선정을 돕고, 최대 1억원을 지원한다. 서울시는 그동안 그동안 대규모 정비사업을 중심으로 시행해 온 조합설립 공..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "12억 7,075만원",
-            "valueEn": "₩1,271M",
-            "note": "최근 1주 계약 278건 · 10/13 대비 -2.0%",
-            "noteEn": "278 deals in the last 1 weeks · -2.0% vs Oct 13"
-          }
-        ],
-        "titleEn": "Moa Housing Cooperative Establishment Supported by Local Government... \"Supporting 100,000,000 Won and Selecting a Professional Management Company"
+        "dupes": []
       },
       {
         "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.33%↓",
@@ -13362,8 +13438,7 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 20일 하락 출발했다. 이날 상하이종합지수는 전거래일보다 0.33% 하락한 3718.44로 장을 시작했다. 선전성분지수는 전장 대비 0.36% 내린 1만1774.39로,…",
-        "dupes": [],
-        "titleEn": "[AllChina] Chinese stock market drops at start... Shanghai index down 0.33%"
+        "dupes": []
       },
       {
         "title": "올해 서울 ‘6억 미만 아파트’ 거래 늘었다…노원·도봉 집중",
@@ -13372,20 +13447,7 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "올해 3분기까지 6억원 미만 비중 21.9% 지난해 같은 기간보다 5%포인트 상승 정책대출 활용 실수요자 관심 집중 영향올해 3분기까지 서울에서 거래된 아파트 가운데 5건 중 1건..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-dobong.html",
-            "label": "도봉구 아파트 84㎡ 매매",
-            "labelEn": "도봉구 apartment 84㎡ sale",
-            "value": "7억 843만원",
-            "valueEn": "₩708M",
-            "note": "최근 1주 계약 396건 · 10/13 대비 -0.4%",
-            "noteEn": "396 deals in the last 1 weeks · -0.4% vs Oct 13"
-          }
-        ],
-        "titleEn": "Transactions of Seoul apartments under 600,000,000 won increase... Focus on Nowon, Dobong"
+        "dupes": []
       },
       {
         "title": "극동건설, 금천 시흥동 가로주택정비사업 수주…231가구 조성",
@@ -13394,20 +13456,7 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]이종성 기자 = 극동건설이 서울 금천구 시흥동에서 한국토지주택공사(LH)가 공동 시행자로 참여하는 가로주택정비사업을 수주했다. 극동건설은 지난 17일 열린 금천구 시흥동 가로주택정비사업 시공사 선정총회…",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-geumcheon.html",
-            "label": "금천구 아파트 84㎡ 매매",
-            "labelEn": "금천구 apartment 84㎡ sale",
-            "value": "7억 9,787만원",
-            "valueEn": "₩798M",
-            "note": "최근 1주 계약 134건 · 10/13 대비 +0.9%",
-            "noteEn": "134 deals in the last 1 weeks · +0.9% vs Oct 13"
-          }
-        ],
-        "titleEn": "East Korea Construction Wins Gyeongcheon Siheung-dong Housing Redevelopment Project... 231 Units to be Built"
+        "dupes": []
       },
       {
         "title": "수도권 주택사업 경기전망 3개월 만에 낙관 우세",
@@ -13416,30 +13465,7 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 오예진 기자 = 수도권 집값이 상승세를 이어가며 주택사업자들의 경기 전망도 석 달 만에 낙관적으로 돌아섰다.",
-        "dupes": [],
-        "titleEn": "Optimistic Outlook for Housing Projects in the Seoul Area Dominates for the First Time in Three Months"
-      },
-      {
-        "title": "서울 동자동 쪽방촌 공공주택지구 지정…2천150가구 공급",
-        "link": "https://www.yna.co.kr/view/AKR20261020064900003",
-        "publishedAt": "2026-10-20T02:00:02.000Z",
-        "source": "연합뉴스 경제",
-        "category": "realestate",
-        "preview": "(세종=연합뉴스) 오진송 기자 = 서울역 인근 동자동 쪽방촌이 공공주택지구로 지정돼 주택 2천150가구가 공급된다.",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-guro.html",
-            "label": "구로구 아파트 84㎡ 매매",
-            "labelEn": "구로구 apartment 84㎡ sale",
-            "value": "9억 2,695만원",
-            "valueEn": "₩927M",
-            "note": "최근 1주 계약 334건 · 10/13 대비 +0.1%",
-            "noteEn": "334 deals in the last 1 weeks · +0.1% vs Oct 13"
-          }
-        ],
-        "titleEn": "Seoul Dongdaemun-gu Side Room Village Public Housing Area Designated... 2,150 Units to Be Supplied"
+        "dupes": []
       },
       {
         "title": "서울역 앞 동자동 쪽방촌, 공공주택 2150가구로 재정비",
@@ -13454,20 +13480,7 @@
             "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/20/AP42OV364RE27LYGC6OPZNN3L4/",
             "source": "조선비즈 부동산"
           }
-        ],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-guro.html",
-            "label": "구로구 아파트 84㎡ 매매",
-            "labelEn": "구로구 apartment 84㎡ sale",
-            "value": "9억 2,695만원",
-            "valueEn": "₩927M",
-            "note": "최근 1주 계약 334건 · 10/13 대비 +0.1%",
-            "noteEn": "334 deals in the last 1 weeks · +0.1% vs Oct 13"
-          }
-        ],
-        "titleEn": "Dongjao-dong Rooming House Near Seoul Station to Be Redeveloped into 2,150 Public Housing Units"
+        ]
       },
       {
         "title": "서울역 앞 동자동 쪽방촌에 2150호…21일 공공주택지구 지정",
@@ -13476,20 +13489,7 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]이종성 기자 = 서울역 앞 용산구 동자동 쪽방촌이 공공주택지구로 지정된다. 정부는 이 일대에 공공임대 1000호와 분양주택 1150호 등 총 2150호를 공급하고 2032년 입주를 목표로 사업을 추진한…",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-yongsan.html",
-            "label": "용산구 아파트 84㎡ 매매",
-            "labelEn": "용산구 apartment 84㎡ sale",
-            "value": "29억 8,033만원",
-            "valueEn": "₩2,980M",
-            "note": "최근 1주 계약 61건 · 10/13 대비 +9.6%",
-            "noteEn": "61 deals in the last 1 weeks · +9.6% vs Oct 13"
-          }
-        ],
-        "titleEn": "2,150 units in Dongjak-dong's side street village near Seoul Station... Public housing area designated on 21st"
+        "dupes": []
       },
       {
         "title": "10월 주택사업경기 전망 개선…한 달 새 6.5p 상승",
@@ -13498,20 +13498,7 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 박성환 기자 = 주택 경기 개선 기대감이 커지면서 주택사업경기 전망지수가 상승했다. 수도권은 서울과 경기의 주택가격 상승세에 힘입어 기준선인 100을 넘어섰고, 자금조달과 자재수급 여건에 대한 전망도…",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-sale.html",
-            "label": "서울 전체 아파트 84㎡ 매매",
-            "labelEn": "Seoul apartment 84㎡ sale",
-            "value": "12억 7,075만원",
-            "valueEn": "₩1,271M",
-            "note": "최근 1주 계약 278건 · 10/13 대비 -2.0%",
-            "noteEn": "278 deals in the last 1 weeks · -2.0% vs Oct 13"
-          }
-        ],
-        "titleEn": "October housing business climate outlook improves... rises 6.5p in a month"
+        "dupes": []
       },
       {
         "title": "“강북인데 국평 전세가 10억이라고?”…평균 전셋값 6억 돌파 ‘눈앞’",
@@ -13520,126 +13507,7 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "9월 전세 평균 5.9억 ‘역대 최고’ 이달 성북·노원 등 잇단 신고가 “강북 전세자금 마련 부담 커져”# 노원구 중계동 청구3차 1층 전세물건은 이달 8억5000만원에 계약이 맺..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-seongbuk.html",
-            "label": "성북구 아파트 84㎡ 전세",
-            "labelEn": "성북구 apartment 84㎡ jeonse",
-            "value": "6억 8,861만원",
-            "valueEn": "₩689M",
-            "note": "최근 1주 계약 148건 · 10/13 대비 +1.6%",
-            "noteEn": "148 deals in the last 1 weeks · +1.6% vs Oct 13"
-          },
-          {
-            "kind": "rates",
-            "label": "전세자금대출 최저금리",
-            "labelEn": "Lowest jeonse loan rate",
-            "value": "연 3.69%",
-            "valueEn": "3.69% p.a.",
-            "href": "./rent-loan-rates.html"
-          }
-        ],
-        "titleEn": "North of the Han River, but the average deposit price is 1,000,000,000?\"... Average deposit price breaks through 600,000,000 \"in front of eyes"
-      },
-      {
-        "title": "이 대통령 \"주택 공급 전격전 펼쳐달라…택지조성·인허가·착공기간 최대한 단축\"",
-        "link": "https://www.newsis.com/view/NISX20261020_0003832941",
-        "publishedAt": "2026-10-20T01:54:47.000Z",
-        "source": "뉴시스 경제",
-        "category": "realestate",
-        "preview": "[서울=뉴시스]조재완 김경록 기자 = 이재명 대통령은 20일 부동산 문제와 관련해 \"기존의 관행과 절차에 얽매이지 말고, 택지 조성부터 각종 인허가와 착공에 소요되는 기간을 최대한 단축해 공급 전격전을 펼쳐주길 바란…",
-        "dupes": [],
-        "titleEn": "President Lee urges immediate action on housing supply…shorten land development, permits, and construction periods as much as possible"
-      },
-      {
-        "title": "채권시장 참여자 93% \"10월 금통위서 기준금리 동결 예상\"",
-        "link": "https://www.yna.co.kr/view/AKR20261020070400008",
-        "publishedAt": "2026-10-20T01:54:03.000Z",
-        "source": "연합뉴스 경제",
-        "category": "rates",
-        "preview": "(서울=연합뉴스) 강수지 기자 = 채권시장 참여자 10명 중 9명은 이달 한국은행 금융통화위원회가 기준금리를 동결할 것으로 예상했다.",
-        "dupes": [],
-        "titleEn": "93% of bond market participants expect interest rates to remain unchanged at the October monetary policy committee meeting"
-      },
-      {
-        "title": "도봉구 최대 재건축 '방학신동아1단지' 시행자에 대신자산신탁",
-        "link": "https://www.yna.co.kr/view/AKR20261020070800004",
-        "publishedAt": "2026-10-20T01:48:34.000Z",
-        "source": "연합뉴스 경제",
-        "category": "realestate",
-        "preview": "(서울=연합뉴스) 정준영 기자 = 서울 도봉구(구청장 김동욱)는 방학신동아1단지아파트 재건축 정비사업의 사업시행자(지정개발자)로 대신자산신탁을 ...",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-dobong.html",
-            "label": "도봉구 아파트 84㎡ 매매",
-            "labelEn": "도봉구 apartment 84㎡ sale",
-            "value": "7억 843만원",
-            "valueEn": "₩708M",
-            "note": "최근 1주 계약 396건 · 10/13 대비 -0.4%",
-            "noteEn": "396 deals in the last 1 weeks · -0.4% vs Oct 13"
-          }
-        ],
-        "titleEn": "Dobong-gu's Largest Reconstruction Project 'Banghak Shin Dong-A 1st Phase' to be Handled by Daesin Asset Trust"
-      },
-      {
-        "title": "'인구감소지역' 지정 통영시, 주택 구입·기업 투자 지방세 감면",
-        "link": "https://www.yna.co.kr/view/AKR20261020067000052",
-        "publishedAt": "2026-10-20T01:46:02.000Z",
-        "source": "연합뉴스 경제",
-        "category": "realestate",
-        "preview": "(통영=연합뉴스) 정종호 기자 = 최근 인구감소지역으로 지정된 경남 통영시는 20일부터 지역 내 주택 구입자와 창업·이전 기업 등을 대상으로 한...",
-        "dupes": [],
-        "titleEn": "Designated as \"population-declining area,\" Tongyeong City to cut local taxes on home purchases and business investments"
-      },
-      {
-        "title": "美 10월 주택시장 지수 29로 3P↓…\"14년4개월 만에 최저\"",
-        "link": "https://www.newsis.com/view/NISX20261020_0003833011",
-        "publishedAt": "2026-10-20T01:45:20.000Z",
-        "source": "뉴시스 경제",
-        "category": "realestate",
-        "preview": "[서울=뉴시스]이재준 기자 = 미국 주택건설 업체의 경기 체감과 향후 전망을 보여주는 선행성 심리지표인 2026년 10월 주택시장 지수는 29를 기록했다고 마켓워치와 RTT 뉴스 등이 20일 보도했다. 매체에 따르면…",
-        "dupes": [],
-        "titleEn": "U.S. October Housing Market Index Falls to 29, Down 3 Points...\"Lowest in 14 Years 4 Months"
-      },
-      {
-        "title": "李대통령 \"관행·절차 얽매이지 말고 주택공급 전격전 펼치길\"",
-        "link": "https://www.yna.co.kr/view/AKR20261020061500001",
-        "publishedAt": "2026-10-20T01:21:55.000Z",
-        "source": "연합뉴스 경제",
-        "category": "realestate",
-        "preview": "(서울=연합뉴스) 임형섭 황윤기 기자 = 이재명 대통령은 20일 주택 공급 정책과 관련해 \"기존의 관행과 절차에 얽매이지 말고, 택지 조성부터 ...",
-        "dupes": [
-          {
-            "title": "[속보] 이 대통령 “관행·절차 얽매이지 말고 주택공급 전격전 펼치길”",
-            "link": "https://www.mk.co.kr/news/politics/12180337",
-            "source": "매일경제 부동산"
-          }
-        ],
-        "titleEn": "President urges immediate action on housing supply, warning against being bound by convention and procedure"
-      },
-      {
-        "title": "[속보] 中, 기준금리 1년물 LPR 3.0% 5년물 3.5%…17개월째 동결",
-        "link": "https://www.newsis.com/view/NISX20261020_0003832889",
-        "publishedAt": "2026-10-20T01:03:59.000Z",
-        "source": "뉴시스 경제",
-        "category": "rates",
-        "preview": "[서울=뉴시스]이재준 기자 = 중국인민은행은 20일 금융기관의 대출금리 기준이 되는 우량대출금리(LPR 론프라임 레이트) 1년물을 3.00%로 동결했다. 신화망(新華網)과 신랑재경(新浪財經) 등에 따르면 인민은행은…",
-        "dupes": [],
-        "titleEn": "[Breaking News] China Freezes 1-Year LPR at 3.0%, 5-Year at 3.5% for 17th Consecutive Month"
-      },
-      {
-        "title": "카뱅, 코스피 200 연계 원금지급형 ELB 펀드…연 7.4% 수익률",
-        "link": "https://www.yna.co.kr/view/AKR20261020048700002",
-        "publishedAt": "2026-10-20T00:44:25.000Z",
-        "source": "연합뉴스 경제",
-        "category": "rates",
-        "preview": "(서울=연합뉴스) 이도흔 기자 = 카카오뱅크[323410]는 코스피 200과 연계한 원금지급형 주가연계파생결합사채(ELB) 펀드를 출시했다고 2...",
-        "dupes": [],
-        "titleEn": "Kabang Links Kospi 200 to Principal-Payment ELB Fund with 7.4% Annual Yield"
+        "dupes": []
       },
       {
         "title": "“전세 사라지고 월세만 남는 시대 오나”…서울 아파트 월세 비중 50% 첫 돌파",
@@ -13648,52 +13516,16 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "줄어든 전세 거래량 여파에 월세 비율 43.7%→51.0% 서울 25개 자치구 아파트 중 월세 우위 지역 1년 새 4→13곳 중랑구 월세비율 상승 폭 가장 커올해 들어 9월까지 서..",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-jungnang.html",
-            "label": "중랑구 아파트 84㎡ 전세",
-            "labelEn": "중랑구 apartment 84㎡ jeonse",
-            "value": "5억 4,962만원",
-            "valueEn": "₩550M",
-            "note": "최근 1주 계약 85건 · 10/13 대비 +1.7%",
-            "noteEn": "85 deals in the last 1 weeks · +1.7% vs Oct 13"
-          }
-        ],
-        "titleEn": "An era where rent-only contracts replace full-price purchases may be arriving\"…Monthly rent share in Seoul apartments hits 50% for the first time"
+        "dupes": []
       },
       {
-        "title": "코스피, 장 초반 낙폭 키우며 2%대 급락…외인·기관 매도(종합)",
-        "link": "https://www.yna.co.kr/view/AKR20261020046800008",
-        "publishedAt": "2026-10-20T00:36:48.000Z",
-        "source": "연합뉴스 경제",
-        "category": "stocks",
-        "preview": "(서울=연합뉴스) 김유아 기자 = 20일 코스피가 장 초반 2% 넘게 급락하고 있다.",
-        "dupes": [],
-        "titleEn": "KOSPI plunges over 2% early in trading as foreigners and institutions sell (comprehensive)"
-      },
-      {
-        "title": "\"서울서 전세가 사라진다\"…아파트 계약 절반이 월세",
+        "title": "\"전세 시대 저무나\"…서울 아파트 임대차 계약 절반이 월세",
         "link": "https://www.hankyung.com/article/2026102022426",
         "publishedAt": "2026-10-19T23:47:50.000Z",
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-jeonse.html",
-            "label": "서울 전체 아파트 84㎡ 전세",
-            "labelEn": "Seoul apartment 84㎡ jeonse",
-            "value": "8억 321만원",
-            "valueEn": "₩803M",
-            "note": "최근 1주 계약 411건 · 10/13 대비 +2.9%",
-            "noteEn": "411 deals in the last 1 weeks · +2.9% vs Oct 13"
-          }
-        ],
-        "titleEn": "Rental prices disappearing in Seoul\"… Half of apartment contracts are monthly rent"
+        "dupes": []
       },
       {
         "title": "최대 20% 수익 내건 코인 대출…美·유럽 규제 검토",
@@ -13702,8 +13534,7 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": [],
-        "titleEn": "Crypto Lending Offers Up to 20% Returns... U.S. and Europe Consider Regulations"
+        "dupes": []
       },
       {
         "title": "\"집 지을 사람이 없다\"…이민 단속에 미국 주택 건설비 급등",
@@ -13712,8 +13543,7 @@
         "source": "한국경제 경제",
         "category": "realestate",
         "preview": null,
-        "dupes": [],
-        "titleEn": "Nobody to build homes\"… Immigration Crackdown Drives Up U.S. Housing Costs"
+        "dupes": []
       }
     ]
   }
