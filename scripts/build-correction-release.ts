@@ -4,7 +4,7 @@
  * 그런 해제 기록을 세어, GitHub Release 한 건으로 낼 파일들을 임시 폴더에 만든다. 커밋하지 않는다 - 올리는 것은 .github/workflows/correction-release.yml이다.
  *
  * - 숫자는 사이트와 같은 함수(withoutCorrections·correctionStats·registrationStats)에서 낸다. 산식을 여기서 다시 쓰지 않는다
- *   (DIRECTION 체크리스트 10). 비교군만 사이트에 없던 셈이라 cancellation.mjs의 repeatedLiveStats로 한 곳에 둔다.
+ *   (DIRECTION 체크리스트 10). 비교군만 사이트에 없던 셈이라 cancellation.ts의 repeatedLiveStats로 한 곳에 둔다.
  * - 입력은 raw/sale/*.json이고 경로는 환경변수 REALESTATE_RAW_DIR로 받는다(#175 결론이 나면 이 경로만 맞춘다).
  *   읽는 필드는 최소 집합뿐이다: sggCd·umdNm·jibun·aptNm·excluUseAr·floor·dealYear·dealMonth·dealDay·dealAmount(계약 키),
  *   cdealType·cdealDay(해제 여부), rgstDate(짝의 등기일). 값은 집계에만 쓰고 출력에는 어떤 행 필드도 싣지 않는다.
@@ -320,7 +320,7 @@ export function renderBody(figures, { tag }: { tag?: string } = {}) {
 
 - \`${TAG_PREFIX}${figures.asOf}.json\`·\`.csv\`: 위 집계(같은 값).
 - \`check.py\`·\`check.out\`: 저장소의 \`research/correction-twins/check.py\`와 이 기준일 입력에서의 출력입니다. 파이썬 표준 라이브러리만 씁니다.
-- 숫자는 사이트와 같은 함수(\`scripts/cancellation.mjs\`의 \`withoutCorrections\`·\`correctionStats\`)에서 냈습니다. 산출 스크립트는 \`scripts/build-correction-release.mjs\`입니다.
+- 숫자는 사이트와 같은 함수(\`scripts/cancellation.ts\`의 \`withoutCorrections\`·\`correctionStats\`)에서 냈습니다. 산출 스크립트는 \`scripts/build-correction-release.ts\`입니다.
 
 ## 갱신
 
@@ -357,7 +357,7 @@ These figures count records that match each other. The reason for a filing is no
 
 - \`${TAG_PREFIX}${figures.asOf}.json\` and \`.csv\`: the aggregates above (same values).
 - \`check.py\` and \`check.out\`: \`research/correction-twins/check.py\` from the repository and its output on this as-of input. It uses only the Python standard library.
-- The numbers come from the same functions the site uses (\`withoutCorrections\` and \`correctionStats\` in \`scripts/cancellation.mjs\`). The build script is \`scripts/build-correction-release.mjs\`.
+- The numbers come from the same functions the site uses (\`withoutCorrections\` and \`correctionStats\` in \`scripts/cancellation.ts\`). The build script is \`scripts/build-correction-release.ts\`.
 
 ## Updates
 

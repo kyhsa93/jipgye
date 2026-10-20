@@ -319,6 +319,16 @@ test("본문: 출처 문구(clo 조건 4)·가공값 구분이 한·영에 있�
   assert.doesNotMatch(await read("scripts/build-correction-release.ts"), /LICENSE_CHECKED|licenseCheckedAt/);
 });
 
+test("본문: 본문이 말하는 scripts/ 경로가 저장소에 있다 - 개명이 공개 본문을 낡게 만들지 않는다(#434)", async () => {
+  const figures = await fixtureFigures();
+  const body = renderBody(figures, { tag: `correction-twins-${figures.asOf}` });
+  const refs = [...new Set([...body.matchAll(/scripts\/[A-Za-z0-9._\/-]+\.(?:mjs|ts)/g)].map((m) => m[0]))];
+  assert.ok(refs.length >= 2, `본문에서 경로를 못 뽑았다: ${refs.join(", ")}`);
+  const missing = [];
+  for (const r of refs) await readFile(path.join(root, r)).catch(() => missing.push(r));
+  assert.deepEqual(missing, [], "본문이 없는 파일을 말한다");
+});
+
 test("수집 시각: 파일 observedAt의 KST 최솟값·최댓값을 JSON에 내고, 본문은 범위로 적는다(같은 날이면 하루만)(legal M1)", async () => {
   // 시험 입력은 모두 같은 날이다 - 단일 날짜.
   const same = await fixtureFigures();
