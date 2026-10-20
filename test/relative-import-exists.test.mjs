@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { build } from "esbuild";
@@ -123,4 +123,56 @@ test("scripts/·test/·tools/ 의 모든 상대 리터럴 import 가 가리키�
   assert.deepEqual(r.unparseable.sort(), [...UNPARSEABLE_FIXTURES.keys()].sort(), "문법 오류로 못 읽는 파일이 허용 목록과 다르다 - 새로 깨진 파일이면 고치고, 일부러 깬 fixture 면 이유를 적어 UNPARSEABLE_FIXTURES 에 둔다");
   // 아무것도 안 훑고 통과하는 길을 막는다(경로 계산이 틀어져 0곳을 훑어도 「없는 것 0」이 되므로). 값은 오늘의 631곳/327파일보다 훨씬 낮은 하한이다.
   assert.ok(r.files >= 300 && r.sites >= 500, `훑은 양이 이상하게 적다(${r.files}파일 · ${r.sites}곳) - 훑는 범위가 틀어졌다`);
+});
+
+// 워크플로가 부르는 scripts/·tools/ 파일 존재 전수 (#431 완료 조건 10, cto 판정 ②; #316 R-TS 7).
+// 위 시험은 .mjs/.ts 안의 import 줄만 본다. `node scripts/x.ts` 처럼 워크플로 YAML 이 진입점을 이름으로 부르는 줄은 import 가 아니라서
+// 개명 때 못 따라 고쳐도 `npm test`·PR CI 가 초록이고 다음 무인 실행(또는 dispatch)에서야 터진다(housing-permits.yml 의 measure 줄은 기존 시험도 안 읽는다).
+// 읽는 법: .github/workflows/*.yml 의 비주석 줄(`^\s*#` 줄과 ` #…` 꼬리 제외)에서 `[./]*(scripts|tools)/….(mjs|ts|sh|rb)` 를 뽑아 existsSync.
+// `./`·`../../` 접두(working-directory 가 tools/*/ 인 줄)는 떼고 저장소 루트 기준으로 본다. research/ 는 범위 밖(옛 분석 코드에 이미 없는 파일을 가리키는 곳이 있다).
+// 글롭(`scripts/*.mjs`)은 `*` 가 경로 글자가 아니라 뽑히지 않는다. git 이력·ruby·네트워크는 쓰지 않는다 - 파일을 읽을 뿐이다.
+const WORKFLOW_REF = /(?:\.{1,2}\/)*((?:scripts|tools)\/[\p{L}\p{N}_./-]+\.(?:mjs|ts|sh|rb))(?![\p{L}\p{N}_])/gu;
+
+// 텍스트 한 덩어리의 { line, ref } 목록(주석 제외).
+function workflowRefs(text) {
+  const out = [];
+  text.split("\n").forEach((raw, i) => {
+    if (/^\s*#/.test(raw)) return;
+    const line = raw.replace(/\s#.*$/, "");
+    for (const m of line.matchAll(WORKFLOW_REF)) out.push({ line: i + 1, ref: m[1] });
+  });
+  return out;
+}
+
+test(".github/workflows/*.yml 비주석 줄이 부르는 scripts/·tools/ 파일이 전부 있다 (자기 점검 포함, 개명이 워크플로 줄을 소리 없이 남기는 깨짐을 막는다)", (t) => {
+  // 자기 점검: 같은 추출 함수에 없는 파일 한 줄을 넣으면 「없음 1」, 주석·꼬리 주석·글롭은 세지 않는다.
+  const synthetic = [
+    "      - run: node scripts/zzz-없음.mjs",
+    "      # node scripts/commented-out.mjs",
+    "      - run: node scripts/housing-permits-measure.ts # node scripts/tail-comment.mjs",
+    "      - run: node ../../scripts/test-count-ratchet.mjs test/COUNT x.log",
+    '      - run: echo "scripts/*.mjs"',
+  ].join("\n");
+  const probe = workflowRefs(synthetic);
+  assert.deepEqual(probe.map((r) => r.ref), ["scripts/zzz-없음.mjs", "scripts/housing-permits-measure.ts", "scripts/test-count-ratchet.mjs"], "자기 점검: 주석 줄·꼬리 주석·글롭은 빼고 셋만 뽑아야 한다");
+  const probeMissing = probe.filter((r) => !existsSync(path.join(root, r.ref)));
+  assert.deepEqual(probeMissing.map((r) => r.ref), ["scripts/zzz-없음.mjs"], "자기 점검: 없는 파일은 정확히 하나로 잡혀야 한다");
+
+  // 저장소 전수.
+  const dir = path.join(root, ".github", "workflows");
+  const perFile = new Map();
+  const missing = [];
+  let lines = 0;
+  for (const name of readdirSync(dir).filter((n) => /\.ya?ml$/.test(n)).sort()) {
+    const refs = workflowRefs(readFileSync(path.join(dir, name), "utf8"));
+    perFile.set(name, refs.length);
+    lines += refs.length;
+    for (const { line, ref } of refs) if (!existsSync(path.join(root, ref))) missing.push(`${name}:${line}: ${ref}`);
+  }
+  const unique = new Set([...perFile.keys()].flatMap((name) => workflowRefs(readFileSync(path.join(dir, name), "utf8")).map((r) => r.ref)));
+  t.diagnostic(`참조 ${lines}줄 · 고유 파일 ${unique.size} · 없는 파일 ${missing.length}`);
+  assert.deepEqual(missing, [], "워크플로가 부르는데 없는 파일 - 개명 때 워크플로 줄을 못 따라 고쳤거나 오탈자다(다음 무인 실행·dispatch 에서 터진다)");
+  // 아무것도 안 읽고 통과하는 길을 막는다(정확한 개수는 박지 않는다 - 갈래마다 개명으로 변하지 않지만 워크플로가 늘 수 있다). 하한은 오늘 값보다 낮다.
+  assert.ok(lines >= 40 && unique.size >= 30, `읽은 양이 이상하게 적다(${lines}줄 · 고유 ${unique.size}) - 추출 규칙이 틀어졌다`);
+  assert.ok((perFile.get("housing-permits.yml") ?? 0) >= 3, "housing-permits.yml 에서 진입점 3줄 이상을 읽어야 한다");
 });
