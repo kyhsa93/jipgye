@@ -109,7 +109,7 @@ export function loanHeadSentence(spread, years = YEARS) {
  * (yearChangeSentence)는 열여덟 장에서 똑같은 값이라 method.html 한 자리로 옮겼다(#66). 1억당 값은 장 맨 위
  * "한눈에"에도 있다. "한도는 가정하지 않는다"는 단서(소득·DSR)는 이 화면의 원칙이라 장에 남긴다.
  */
-export function loanSentence(spread, { eok, years = YEARS } = {}) {
+export function loanSentence(spread, { eok, years = YEARS }: { eok?: number; years?: number } = {}) {
   const head = loanHeadSentence(spread, years);
   if (!head || !Number.isFinite(eok)) return head;
 

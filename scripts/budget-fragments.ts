@@ -165,7 +165,7 @@ export function whereText(band) {
 }
 
 // 평형대로 나눈다 - 상위가 재건축 소형으로만 채워지면 59·84형을 찾는 사람이 다시 걸러야 했다(#35).
-const AREA_BANDS = [
+const AREA_BANDS: [string, (r: { area: number }) => boolean][] = [
   ["60㎡ 미만", (r) => r.area < 60],
   ["60~85㎡", (r) => r.area >= 60 && r.area <= 85],
   ["85㎡ 초과", (r) => r.area > 85],
