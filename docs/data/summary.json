@@ -1,20 +1,57 @@
 {
-  "updatedAt": "2026-10-20T01:34:49.277Z",
+  "updatedAt": "2026-10-20T02:01:46.583Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 금리·예금·투자상품: 금리·예금·투자상품: [속보] 中, 기준금리 1년물 LPR 3.0% 5년물 3.5%…17개월째 동결, 카뱅, 코스피 200 연계 원금지급형 ELB 펀드…연 7.4% 수익률, 신한카드, 카드사 첫 '중금리 생활안정대출' 출시…최저 연 9.9% +1\n- 부동산: 서울 아파트 계약 중 월세 비중이 50%를 처음으로 넘어서며 전세 시장이 위축되고 있는 것으로 나타났다. 건설·자재·부동산 경기 전망에 대한 세미나가 건산연에서 개최되었다. 서울에서 아파트 계약의 절반이 월세로 이뤄지며 전세 시장이 사라지고 있다는 분석이 나왔다. 미국에서 이민 단속으로 주택 건설비가 급등하며 집을 지을 사람이 부족한 상황이 발생했다. LH는 노후 임대주택 수리비로 758억원을 낭비한 것으로 드러났다.\n- 증시·환율: 코스피는 오늘 장 초반 2%대 급락하며 5,733.57포인트로 출발했다. 코스닥도 0.44% 하락하며 부진을 이어갔다. 외인과 기관의 매도세가 주가 하락을 가속화했다. ADB는 한국 증시가 역내에서 가장 큰 낙폭을 기록했다고 분석했다. 레버리지 ETF가 하락폭을 더 키웠다는 분석도 제기됐다.\n- 기타 경제 소식: 코인 대출 서비스가 최대 20%의 수익을 기록하며 미국과 유럽에서 규제 검토가 진행되고 있다. 오늘 10월 20일 화요일, 경제 관련 주요 일정이 발표되었다. 동탄 지역에서 은행 밖 근저당이 역대 최대 규모로 설정되며 삼성의 사내대출 자금이 유입되고 있다. 강남 지역의 집값 상승을 억제하기 위한 상향평준화 정책이 멈추는 기미가 보이지 않고 있다. 이찬진은 의무복무 병사가 대부업체 대출을 받는 것을 금지하는 방안을 검토하고 있다고 밝혔다.",
-    "en": "- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: [속보] 中, 기준금리 1년물 LPR 3.0% 5년물 3.5%…17개월째 동결, 카뱅, 코스피 200 연계 원금지급형 ELB 펀드…연 7.4% 수익률, 신한카드, 카드사 첫 '중금리 생활안정대출' 출시…최저 연 9.9% +1\n- Real Estate: In Seoul, the proportion of monthly rent payments in apartment contracts has exceeded 50% for the first time, indicating a shrinking deposit market. A seminar on the outlook for construction, materials, and real estate was held at Geunsanryeon. Analysis shows that half of apartment contracts in Seoul are now made through monthly rent, signaling the disappearance of the deposit market. In the U.S., the cost of housing construction has sharply increased due to intensified immigration enforcement, leading to a shortage of people willing to build homes. LH was found to have wasted 75,800,000,000 won on repair costs for aging rental housing.\n- Stocks & FX: The KOSPI fell sharply by over 2% at the opening of today's trading session, starting at 5,733.57 points. The KOSDAQ also continued its poor performance, falling 0.44%. Foreign and institutional selling accelerated the decline in stock prices. ADB analyzed that the Korean stock market recorded the largest decline in the region. There were also analyses suggesting that leveraged ETFs exacerbated the decline.\n- Other Economic News: Coin lending services have recorded a maximum profit of 20%, and regulatory reviews are underway in the United States and Europe. Today, October 20, Tuesday, major economic schedules were announced. In the Dongtan area, external collateral mortgages outside banks have been set at a record high, and Samsung's internal loan funds are flowing in. There is no sign that the policy to stabilize rising housing prices in the Gangnam area is stopping. Lee Chan-jin stated that measures are being considered to prohibit conscript soldiers from taking out loans from private lenders."
+    "ko": "- 부동산: 통영시가 인구감소지역 지정에 따라 주택 구입과 기업 투자에 대한 지방세를 감면하고, 미국의 10월 주택시장 지수는 29로 3포인트 하락하며 14년 4개월 만에 최저를 기록했으며, 대통령은 주택공급 전격전을 펼치라고 주문했고, 서울 아파트의 월세 비중이 50%를 처음으로 돌파했으며, 건산연은 건설·자재·부동산 경기 전망 세미나를 개최했다.\n- 금리·예금·투자상품: 중국이 1년물 LPR을 3.0%, 5년물 LPR을 3.5%로 유지하며 17개월째 기준금리를 동결했다. 카뱅은 코스피 200 연계 원금지급형 ELB 펀드를 출시해 연 7.4% 수익률을 기록했다. 신한카드는 카드사 최초로 '중금리 생활안정대출'을 출시하며 최저 연 9.9% 금리를 적용했다. 전문가들은 금리 상승이 부동산 시장에 부정적 영향을 줄 수 있다고 분석하고 있다. 이와 별도로 중국의 금리 동결은 국내 금융시장에 영향을 미칠 수 있는 요인으로 주목받고 있다.\n- 증시·환율: 코스피는 오늘 장 초반 2%대 급락하며 5,733.57포인트로 출발했다. 코스닥도 0.44% 하락하며 부진을 이어갔다. 외인과 기관의 매도세가 주가 하락을 가속화했다. ADB는 한국 증시가 역내에서 가장 큰 낙폭을 기록했다고 분석했다. 레버리지 ETF가 하락폭을 더 키웠다는 분석도 제기됐다.\n- 기타 경제 소식: 코인 대출 서비스에서 최대 20%의 수익을 기록한 것으로 알려졌다. 미국과 유럽이 관련 규제를 검토하고 있는 것으로 보인다. 오늘 10월 20일 화요일은 주요 경제 일정이 있는 날이다. 강남 지역의 집값 상승을 억제하기 위한 상향평준화 정책이 계속되고 있다. 다만, 해당 정책이 멈출 기미를 보이지 않고 있다.",
+    "en": "- Real Estate: Tongyeong City reduced local taxes on home purchases and corporate investments due to its designation as a population-declining area, the U.S. October housing market index fell to 29, dropping 3 points and reaching its lowest level in 14 years and 4 months, the president ordered an aggressive push to increase housing supply, the share of monthly rent in Seoul apartment prices for the first time exceeded 50 percent, and the Korea Construction and Building Materials Research Institute held a seminar on the outlook for the construction, materials, and real estate sectors.\n- Rates, Deposits & Investment Products: China kept its 1-year LPR at 3.0% and its 5-year LPR at 3.5%, maintaining the benchmark interest rate for the 17th consecutive month. KABank launched a principal-guaranteed ELB fund linked to the KOSPI 200, achieving an annual yield of 7.4%. Shinhan Card introduced the first 'Moderate Interest Rate Living Stability Loan' among card companies, applying a minimum annual interest rate of 9.9%. Experts analyze that rising interest rates could have a negative impact on the real estate market. Separately, China's interest rate freeze is being watched as a factor that could affect the domestic financial market.\n- Stocks & FX: The KOSPI fell sharply by over 2% at the opening of today's trading session, starting at 5,733.57 points. The KOSDAQ also continued its poor performance, falling 0.44%. Foreign and institutional selling accelerated the decline in stock prices. ADB analyzed that the Korean stock market recorded the largest decline in the region. There were also analyses suggesting that leveraged ETFs exacerbated the decline.\n- Other Economic News: It is reported that the coin lending service has recorded a maximum profit of 20%. It appears that the United States and Europe are reviewing related regulations. Today, Tuesday, October 20, is a day with major economic schedules. The policy of price stabilization to suppress rising housing prices in the Gangnam area continues. However, the policy shows no signs of stopping."
   },
   "highlights": [],
   "categories": [
     {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "통영시가 인구감소지역 지정에 따라 주택 구입과 기업 투자에 대한 지방세를 감면하고, 미국의 10월 주택시장 지수는 29로 3포인트 하락하며 14년 4개월 만에 최저를 기록했으며, 대통령은 주택공급 전격전을 펼치라고 주문했고, 서울 아파트의 월세 비중이 50%를 처음으로 돌파했으며, 건산연은 건설·자재·부동산 경기 전망 세미나를 개최했다.",
+      "lineEn": "Tongyeong City reduced local taxes on home purchases and corporate investments due to its designation as a population-declining area, the U.S. October housing market index fell to 29, dropping 3 points and reaching its lowest level in 14 years and 4 months, the president ordered an aggressive push to increase housing supply, the share of monthly rent in Seoul apartment prices for the first time exceeded 50 percent, and the Korea Construction and Building Materials Research Institute held a seminar on the outlook for the construction, materials, and real estate sectors.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
+      "items": [
+        {
+          "title": "'인구감소지역' 지정 통영시, 주택 구입·기업 투자 지방세 감면",
+          "link": "https://www.yna.co.kr/view/AKR20261020067000052",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "美 10월 주택시장 지수 29로 3P↓…\"14년4개월 만에 최저\"",
+          "link": "https://www.newsis.com/view/NISX20261020_0003833011",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "李대통령 \"관행·절차 얽매이지 말고 주택공급 전격전 펼치길\"",
+          "link": "https://www.yna.co.kr/view/AKR20261020061500001",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "“전세 사라지고 월세만 남는 시대 오나”…서울 아파트 월세 비중 50% 첫 돌파",
+          "link": "https://www.mk.co.kr/news/economy/12180304",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "건산연, '건설·자재·부동산 경기 전망 세미나' 개최",
+          "link": "https://www.newsis.com/view/NISX20261020_0003832719",
+          "source": "뉴시스 경제"
+        }
+      ]
+    },
+    {
       "key": "rates",
       "name": "금리·예금·투자상품",
       "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "금리·예금·투자상품: [속보] 中, 기준금리 1년물 LPR 3.0% 5년물 3.5%…17개월째 동결, 카뱅, 코스피 200 연계 원금지급형 ELB 펀드…연 7.4% 수익률, 신한카드, 카드사 첫 '중금리 생활안정대출' 출시…최저 연 9.9% +1",
-      "lineEn": "Rates, Deposits & Investment Products: [속보] 中, 기준금리 1년물 LPR 3.0% 5년물 3.5%…17개월째 동결, 카뱅, 코스피 200 연계 원금지급형 ELB 펀드…연 7.4% 수익률, 신한카드, 카드사 첫 '중금리 생활안정대출' 출시…최저 연 9.9% +1",
-      "isFallback": true,
-      "fallbackReason": "unverified-entity",
+      "lineKo": "중국이 1년물 LPR을 3.0%, 5년물 LPR을 3.5%로 유지하며 17개월째 기준금리를 동결했다. 카뱅은 코스피 200 연계 원금지급형 ELB 펀드를 출시해 연 7.4% 수익률을 기록했다. 신한카드는 카드사 최초로 '중금리 생활안정대출'을 출시하며 최저 연 9.9% 금리를 적용했다. 전문가들은 금리 상승이 부동산 시장에 부정적 영향을 줄 수 있다고 분석하고 있다. 이와 별도로 중국의 금리 동결은 국내 금융시장에 영향을 미칠 수 있는 요인으로 주목받고 있다.",
+      "lineEn": "China kept its 1-year LPR at 3.0% and its 5-year LPR at 3.5%, maintaining the benchmark interest rate for the 17th consecutive month. KABank launched a principal-guaranteed ELB fund linked to the KOSPI 200, achieving an annual yield of 7.4%. Shinhan Card introduced the first 'Moderate Interest Rate Living Stability Loan' among card companies, applying a minimum annual interest rate of 9.9%. Experts analyze that rising interest rates could have a negative impact on the real estate market. Separately, China's interest rate freeze is being watched as a factor that could affect the domestic financial market.",
+      "isFallback": false,
+      "fallbackReason": null,
       "degraded": false,
       "items": [
         {
@@ -36,43 +73,6 @@
           "title": "\"금리 앞에서는 어떤 자산도 못 버텨\"…전문가가 본 '부동산 불패'의 종말",
           "link": "https://www.newsis.com/view/NISX20261019_0003830954",
           "source": "뉴시스 경제"
-        }
-      ]
-    },
-    {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "서울 아파트 계약 중 월세 비중이 50%를 처음으로 넘어서며 전세 시장이 위축되고 있는 것으로 나타났다. 건설·자재·부동산 경기 전망에 대한 세미나가 건산연에서 개최되었다. 서울에서 아파트 계약의 절반이 월세로 이뤄지며 전세 시장이 사라지고 있다는 분석이 나왔다. 미국에서 이민 단속으로 주택 건설비가 급등하며 집을 지을 사람이 부족한 상황이 발생했다. LH는 노후 임대주택 수리비로 758억원을 낭비한 것으로 드러났다.",
-      "lineEn": "In Seoul, the proportion of monthly rent payments in apartment contracts has exceeded 50% for the first time, indicating a shrinking deposit market. A seminar on the outlook for construction, materials, and real estate was held at Geunsanryeon. Analysis shows that half of apartment contracts in Seoul are now made through monthly rent, signaling the disappearance of the deposit market. In the U.S., the cost of housing construction has sharply increased due to intensified immigration enforcement, leading to a shortage of people willing to build homes. LH was found to have wasted 75,800,000,000 won on repair costs for aging rental housing.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "“전세 사라지고 월세만 남는 시대 오나”…서울 아파트 월세 비중 50% 첫 돌파",
-          "link": "https://www.mk.co.kr/news/economy/12180304",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "건산연, '건설·자재·부동산 경기 전망 세미나' 개최",
-          "link": "https://www.newsis.com/view/NISX20261020_0003832719",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "\"서울서 전세가 사라진다\"…아파트 계약 절반이 월세",
-          "link": "https://www.hankyung.com/article/2026102022426",
-          "source": "한국경제 부동산"
-        },
-        {
-          "title": "\"집 지을 사람이 없다\"…이민 단속에 미국 주택 건설비 급등",
-          "link": "https://www.hankyung.com/article/202610202248i",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "[단독] 노후 임대주택 고칠 돈으로 ‘빚투’...758억원 까먹은 LH",
-          "link": "https://www.mk.co.kr/news/economy/12179552",
-          "source": "매일경제 부동산"
         }
       ]
     },
@@ -117,8 +117,8 @@
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "코인 대출 서비스가 최대 20%의 수익을 기록하며 미국과 유럽에서 규제 검토가 진행되고 있다. 오늘 10월 20일 화요일, 경제 관련 주요 일정이 발표되었다. 동탄 지역에서 은행 밖 근저당이 역대 최대 규모로 설정되며 삼성의 사내대출 자금이 유입되고 있다. 강남 지역의 집값 상승을 억제하기 위한 상향평준화 정책이 멈추는 기미가 보이지 않고 있다. 이찬진은 의무복무 병사가 대부업체 대출을 받는 것을 금지하는 방안을 검토하고 있다고 밝혔다.",
-      "lineEn": "Coin lending services have recorded a maximum profit of 20%, and regulatory reviews are underway in the United States and Europe. Today, October 20, Tuesday, major economic schedules were announced. In the Dongtan area, external collateral mortgages outside banks have been set at a record high, and Samsung's internal loan funds are flowing in. There is no sign that the policy to stabilize rising housing prices in the Gangnam area is stopping. Lee Chan-jin stated that measures are being considered to prohibit conscript soldiers from taking out loans from private lenders.",
+      "lineKo": "코인 대출 서비스에서 최대 20%의 수익을 기록한 것으로 알려졌다. 미국과 유럽이 관련 규제를 검토하고 있는 것으로 보인다. 오늘 10월 20일 화요일은 주요 경제 일정이 있는 날이다. 강남 지역의 집값 상승을 억제하기 위한 상향평준화 정책이 계속되고 있다. 다만, 해당 정책이 멈출 기미를 보이지 않고 있다.",
+      "lineEn": "It is reported that the coin lending service has recorded a maximum profit of 20%. It appears that the United States and Europe are reviewing related regulations. Today, Tuesday, October 20, is a day with major economic schedules. The policy of price stabilization to suppress rising housing prices in the Gangnam area continues. However, the policy shows no signs of stopping.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
@@ -134,19 +134,9 @@
           "source": "뉴시스 경제"
         },
         {
-          "title": "동탄 '은행 밖 근저당' 역대 최대…삼성 사내대출 자금 유입",
-          "link": "https://www.newsis.com/view/NISX20261019_0003832282",
-          "source": "뉴시스 경제"
-        },
-        {
           "title": "강남 집값만 잡으면 된다고? … ‘상향평준화’ 멈출 기미 안보인다",
           "link": "https://www.mk.co.kr/news/realestate/12179478",
           "source": "매일경제 부동산"
-        },
-        {
-          "title": "이찬진 \"의무복무 병사 대부업체 대출 금지 검토\"(종합3보)",
-          "link": "https://www.yna.co.kr/view/AKR20261019071353002",
-          "source": "연합뉴스 경제"
         }
       ]
     }
