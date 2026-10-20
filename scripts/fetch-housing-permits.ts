@@ -337,7 +337,7 @@ async function main() {
     timeoutMs: numberEnv("BUILDINGHUB_TIMEOUT_MS", 15_000),
     retryMs: numberEnv("BUILDINGHUB_RETRY_MS", 3000),
     calls: 0, pages: 0, items: 0, maxPageItems: 0, totalCountSum: 0, dongsDone: 0, dongsTotal: districts.reduce((n, d) => n + bjdong[d.code].length, 0), where: null, rawDir, rawHash: createHash("sha256"),
-    inputTimeField: v["input-time-field"] || null, responseFields: new Set(), districtsWithData: new Set(), diag: createDiagnostics(),
+    inputTimeField: v["input-time-field"] || null, responseFields: new Set<string>(), districtsWithData: new Set(), diag: createDiagnostics(),
   };
 
   const all = [];
