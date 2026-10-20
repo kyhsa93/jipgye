@@ -11,10 +11,10 @@
 // 실제 `docs/`를 읽는 전수 검사는 PR 증빙이고, CI에서 상시로 도는 것은 고정 fixture를 읽는 `test/`의 변이 시험뿐이다.
 import path from "node:path";
 import { readdir } from "node:fs/promises";
-import { serveDir } from "./serve.mjs";
-import { CONTRAST_PROBE, FIELD_PROBE, FOCUS_PROBE, FONT_PROBE, NARROW_WIDTHS, OVERFLOW_PROBE, TAP_PROBE, TEXT_PROBE, TEXT_WIDTHS } from "./probe.mjs";
+import { serveDir } from "./serve.ts";
+import { CONTRAST_PROBE, FIELD_PROBE, FOCUS_PROBE, FONT_PROBE, NARROW_WIDTHS, OVERFLOW_PROBE, TAP_PROBE, TEXT_PROBE, TEXT_WIDTHS } from "./probe.ts";
 
-export { CONTRAST_LARGE, CONTRAST_NORMAL, FIELD_MIN, FONT_MIN, NARROW_WIDTHS, TAP_MIN, TAP_MIN_WIDTH, TEXT_WIDTHS } from "./probe.mjs";
+export { CONTRAST_LARGE, CONTRAST_NORMAL, FIELD_MIN, FONT_MIN, NARROW_WIDTHS, TAP_MIN, TAP_MIN_WIDTH, TEXT_WIDTHS } from "./probe.ts";
 
 /**
  * 네 모드(test/style.test.mjs "네 갈래 팔레트"와 같은 넷):
@@ -64,7 +64,7 @@ const bagDiff = (a, b) => {
  * 장 하나를 재서 위반 목록을 낸다. `page`는 이미 그 장을 연 CDP 페이지다.
  * 반환: { findings: [{check, where, detail}], unmeasurable: [...], texts: {폭: [...]}}.
  */
-export async function probePage(page, { url, settleMs = 0, wantTexts = false } = {}) {
+export async function probePage(page, { url, settleMs = 0, wantTexts = false }: { url?: string; settleMs?: number; wantTexts?: boolean } = {}) {
   const findings = [];
   const unmeasurable = [];
   // **무엇을 몇 개나 봤는지**를 같이 센다. "위반 0건"만 돌려주면 "깨끗하다"와 "안 봤다"를 가를 수 없다
@@ -130,7 +130,7 @@ export async function probePage(page, { url, settleMs = 0, wantTexts = false } =
  * 폴더 하나를 재다. `js`는 페이지 스크립트를 켤지, `lang`은 "ko"|"en".
  * 반환: { dir, js, lang, pages: { [file]: {findings, unmeasurable, texts} } }
  */
-export async function checkDir(dir, { chrome, pages = null, js = false, lang = "ko", settleMs = null, wantTexts = false, onPage = null } = {}) {
+export async function checkDir(dir, { chrome, pages = null, js = false, lang = "ko", settleMs = null, wantTexts = false, onPage = null }: { chrome?: any; pages?: string[] | null; js?: boolean; lang?: string; settleMs?: number | null; wantTexts?: boolean; onPage?: ((file: string, r: any) => void) | null } = {}) {
   if (lang === "en" && !js) throw new Error("영어 모드는 페이지 스크립트가 번역한다 — js:false로는 잴 수 없다(검사 ⑤).");
   const files = pages ?? (await listPages(dir));
   const server = await serveDir(dir);
@@ -188,8 +188,11 @@ export function mergeTextFindings(cand, findings) {
   return cand;
 }
 
+/** `checkDir` 의 반환 모양 중 집계·보고서가 읽는 부분. */
+type Run = { dir?: string; js?: boolean; lang?: string; pages: Record<string, any> };
+
 /** 실행 여럿을 한 줄짜리 집계로. 반환: { total, byCheck } */
-export function summarize(runs) {
+export function summarize(runs: Run[]) {
   const byCheck = {};
   let total = 0;
   for (const run of runs) {
@@ -209,7 +212,7 @@ const modeLabel = (run) => `${run.lang === "en" ? "영어" : "한국어"}\u00b7�
  * 전수 보고서. **장마다 한 줄**이다 — 위반 0건인 장도 "0건"으로 한 줄을 차지한다.
  * 빠지면 "안 쟀다"와 구별이 안 된다(#325 완료 조건 1-c).
  */
-export function formatReport(runs, { detail = true } = {}) {
+export function formatReport(runs: Run[], { detail = true }: { detail?: boolean } = {}) {
   const lines = [];
   const s = summarize(runs);
   for (const run of runs) {

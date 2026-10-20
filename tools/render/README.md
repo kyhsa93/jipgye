@@ -27,9 +27,9 @@ CSS가 실제로 무엇을 했는지는 브라우저만 안다.
 
 ```sh
 cd tools/render
-node bin/check.mjs ../../docs --js both            # 스크립트 끔·켬 둘 다, 장마다 한 줄
-node bin/check.mjs ../../docs --pages index.html   # 장을 고른다
-node bin/check.mjs 후보 --baseline 기준             # 검사 ①(가시 텍스트)까지 본다
+node bin/check.ts ../../docs --js both            # 스크립트 끔·켬 둘 다, 장마다 한 줄
+node bin/check.ts ../../docs --pages index.html   # 장을 고른다
+node bin/check.ts 후보 --baseline 기준             # 검사 ①(가시 텍스트)까지 본다
 npm test                                            # 고정 fixture 변이 시험 (CI가 돌리는 것)
 ```
 
@@ -72,8 +72,8 @@ npm test                                            # 고정 fixture 변이 시�
 - 스크롤 위치에 따라 달라지는 겹침(`position: sticky`).
 - **영어 모드는 스크립트를 켜야 잰다** — 번역이 페이지 스크립트의 일이라 `--js off`와 `--lang en`은 함께 설 수 없다.
 
-## 같은 폴더의 `bin/style-equal.mjs`는 다른 것이다
+## 같은 폴더의 `bin/style-equal.ts`는 다른 것이다
 
 소유자가 뺀 **「화면 동일 증빙」 전용 진입점**이고(#276 완료 조건 9 폐기, #247), 이 도구는 그것을
 **고치지도 지우지도 않는다**(#325 결정 2). 되살려 뒤 PR의 게이트로 쓰지 않는다 — 소유자가 뺀 자리에
-대체 측정을 넣는 것은 결정을 우회하는 것이다. 이어받은 것은 `lib/chrome.mjs`·`lib/serve.mjs` 둘뿐이다.
+대체 측정을 넣는 것은 결정을 우회하는 것이다. 이어받은 것은 `lib/chrome.ts`·`lib/serve.ts` 둘뿐이다.

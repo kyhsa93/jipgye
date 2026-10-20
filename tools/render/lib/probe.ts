@@ -223,7 +223,7 @@ export const FONT_PROBE = `(() => {${HELPERS}
   return { bad: [...seen.values()], checked };
 })()`;
 
-/** 대비(검사 ③-대비). 네 모드 각각에서 돈다 — 모드는 부른 쪽이 바꾼다(lib/check.mjs의 MODES). */
+/** 대비(검사 ③-대비). 네 모드 각각에서 돈다 — 모드는 부른 쪽이 바꾼다(lib/check.ts의 MODES). */
 export const CONTRAST_PROBE = `(() => {${HELPERS}
   const bad = new Map();
   const unmeasurable = new Map();

@@ -2,6 +2,7 @@
 // 배포 사이트가 아니라 로컬 폴더를 재야 병합 전의 후보도 같은 방식으로 잴 수 있다. 의존 없음(node:http).
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
+import type { AddressInfo } from "node:net";
 import path from "node:path";
 
 const TYPES = {
@@ -38,11 +39,11 @@ export async function serveDir(dir, { port = 0 } = {}) {
       res.writeHead(404, { "content-type": "text/plain; charset=utf-8" }).end("404");
     }
   });
-  await new Promise((resolve, reject) => server.once("error", reject).listen(port, "127.0.0.1", resolve));
+  await new Promise<void>((resolve, reject) => server.once("error", reject).listen(port, "127.0.0.1", resolve));
   return {
-    url: `http://127.0.0.1:${server.address().port}/`,
+    url: `http://127.0.0.1:${(server.address() as AddressInfo).port}/`,
     close: () =>
-      new Promise((resolve) => {
+      new Promise<void>((resolve) => {
         server.closeAllConnections?.();
         server.close(() => resolve());
       }),

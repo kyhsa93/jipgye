@@ -25,6 +25,10 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { flattenCss, parseCss, ruleLine, stripComments } from "../../../test/helpers/css-source.mjs";
 
+// 아래 함수 넷(cssomProbe·sourceProbe·initScript·collectProbe)은 Chrome 페이지 안에서 도는 코드라 이 이름들은 Node 가 아니라 브라우저의 전역이다.
+// tsconfig 의 lib 에 dom 을 열지 않으려고(tools/golden 까지 DOM 전역이 열린다) 이 파일 범위에서만 any 로 선언한다(#423).
+declare const document: any, getComputedStyle: any, MutationObserver: any, location: any;
+
 export const MODES = [
   // 강제 쪽은 OS와 반대로 둔다 - "사용자가 고른 테마가 OS 설정을 이기는가"가 깨지기 쉬운 자리다.
   { name: "auto-light", colorScheme: "light", theme: null },
@@ -331,7 +335,7 @@ function initScript(fixedNow, theme, lang) {
   } catch {}
   const RealDate = Date;
   globalThis.Date = new Proxy(RealDate, {
-    construct: (target, args) => (args.length ? new target(...args) : new target(fixedNow)),
+    construct: (target: any, args) => (args.length ? new target(...args) : new target(fixedNow)),
     apply: () => new RealDate(fixedNow).toString(),
     get: (target, key) => (key === "now" ? () => fixedNow : Reflect.get(target, key)),
   });
@@ -435,7 +439,7 @@ async function collectProbe(opts) {
 }
 
 /** 한 장을 한 조건으로 열어 잰다. job: { page, mode(MODES의 하나), width, lang }. */
-export async function collect(chrome, serverUrl, job, { customNames, fixedNow, quietMs = 300, maxWaitMs = 10000, height = 900, detail = null } = {}) {
+export async function collect(chrome, serverUrl, job, { customNames, fixedNow, quietMs = 300, maxWaitMs = 10000, height = 900, detail = null }: { customNames?: string[]; fixedNow?: number; quietMs?: number; maxWaitMs?: number; height?: number; detail?: number[] | null } = {}) {
   const tab = await chrome.newPage({ allowOrigin: serverUrl, js: true, width: job.width, height, colorScheme: job.mode.colorScheme, initScript: call(initScript, fixedNow, job.mode.theme, job.lang ?? null) });
   try {
     await tab.goto(serverUrl + job.page);

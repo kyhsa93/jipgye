@@ -78,7 +78,7 @@ jobs:
           npm test 2>&1 | tee "$RUNNER_TEMP/golden-test.log"
           node ../../scripts/test-count-ratchet.mjs test/COUNT "$RUNNER_TEMP/golden-test.log"
         working-directory: tools/golden
-      # 타입 검사(#316 G-TS 1단계, #421). `.ts`를 실행하는 것은 위 `npm test`(Node 24 타입 스트리핑)이고, 아래 스텝은 `tsc --noEmit`으로 **검사만** 한다 -
+      # 타입 검사(#316 G-TS 1단계 #421, 1b단계 #423이 tools/render의 .ts 11개를 같은 스텝에 더했다). `.ts`를 실행하는 것은 위 `npm test`(Node 24 타입 스트리핑)이고, 아래 스텝은 `tsc --noEmit`으로 **검사만** 한다 -
       # 산출물이 없다(tools/typescript/tsconfig.json의 noEmit. 루트 test/typescript-gate.test.mjs가 지킨다). 의존(typescript·@types/node, 정확 버전)은
       # 루트·tools/golden과 나눠 tools/typescript에만 있다. 플래그는 그 폴더의 tsconfig.json 한 파일에 전부 적혀 있고 명령줄에는 얹지 않는다(`strict`는 끈 채다).
       # 순서가 뜻을 갖는다: `tools/golden npm ci` **뒤**여야 한다 - 앞에 두면 `parse5`를 못 찾아 TS2307이 오류 수에 섞인다.
@@ -86,7 +86,7 @@ jobs:
       - name: tools/typescript npm ci
         run: npm ci
         working-directory: tools/typescript
-      - name: tsc --noEmit (tools/golden의 .ts)
+      - name: tsc --noEmit (tools/golden·tools/render의 .ts)
         run: npx tsc -p tsconfig.json
         working-directory: tools/typescript
 
@@ -97,7 +97,7 @@ jobs:
   #   - Chrome이 흔들리는 날 **빠른 게이트를 같이 끌고 내려가지 않는다.**
   # Chrome 설치 스텝이 없는 이유: 이 저장소의 `ubuntu-latest`는 ubuntu-24.04이고 그 이미지에
   # Google Chrome·Chromium·ChromeDriver가 들어 있다(actions/runner-images Ubuntu2404-Readme.md).
-  # `tools/render/lib/chrome.mjs`의 후보 경로에 `/usr/bin/google-chrome`·`-stable`·`/usr/bin/chromium`이 이미 있다.
+  # `tools/render/lib/chrome.ts`의 후보 경로에 `/usr/bin/google-chrome`·`-stable`·`/usr/bin/chromium`이 이미 있다.
   # ⚠️ **못 찾으면 건너뛰지 않고 죽는다**(#274 체인 공통 규칙 1번) — 건너뛴 시험은 `pass` 하한에 0을
   # 보태므로, env 게이트를 달면 "브라우저가 없어서 안 돌았다"가 초록으로 끝난다.
   # 넣는 것은 **고정 fixture만 읽는 `npm test`**(변이 열하나 + 대조군 넷 + 단위)뿐이다. 실제 `docs/`를 읽는
@@ -117,7 +117,7 @@ jobs:
       - name: 러너의 Chrome을 찾아 버전을 적는다
         run: |
           set -euo pipefail
-          chrome=$(node -e 'import("./tools/render/lib/chrome.mjs").then((m) => { const p = m.findChrome(); if (!p) { console.error("Chrome을 못 찾았다 - 러너 이미지가 바뀌었는지 본다."); process.exit(1); } process.stdout.write(p); });')
+          chrome=$(node -e 'import("./tools/render/lib/chrome.ts").then((m) => { const p = m.findChrome(); if (!p) { console.error("Chrome을 못 찾았다 - 러너 이미지가 바뀌었는지 본다."); process.exit(1); } process.stdout.write(p); });')
           echo "Chrome: $chrome"
           "$chrome" --version
       # 래칫은 루트·tools/golden과 같은 모양이되 하한은 따로 둔다 — 이 폴더에는 정당한 skip이 없어

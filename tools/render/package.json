@@ -5,7 +5,7 @@
   "description": "렌더 기반 접근성 검사(#325 = #278 PR A): 헤드리스 Chrome으로 구운 폴더를 열어 가시 텍스트·가로 넘침·터치 크기·입력 글자·글자 크기 하한·네 모드 대비·건너뛰기 링크를 잰다. 의존은 0이다 — 이 파일이 있는 이유는 의존 격리가 아니라 `npm test`의 **실행 단위**다(#274 체인 공통 규칙 1번). 도구의 시험을 루트 test/에 두면 수집 워크플로 넷(daily-update·summarize·housing-permits·official-price)의 게이트에 Chrome 의존이 섞여, 브라우저가 흔들리는 날 수집이 멈춘다(하루치는 다시 못 받는다, #62).",
   "scripts": {
     "test": "node ../../scripts/run-tests.mjs",
-    "check": "node bin/check.mjs"
+    "check": "node bin/check.ts"
   },
   "dependencies": {}
 }

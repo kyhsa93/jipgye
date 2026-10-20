@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // 화면 동일 증빙을 한 번에 낸다(#276 완료 조건 9, 방법은 cto 판정 https://github.com/kyhsa93/jipgye/issues/276#issuecomment-6119194912).
-// lib/style-equal.mjs가 재는 함수들이고 이 파일은 그것을 순서대로 돌려 보고서를 쓰는 진입점이다.
+// lib/style-equal.ts가 재는 함수들이고 이 파일은 그것을 순서대로 돌려 보고서를 쓰는 진입점이다.
 //
-//   node tools/render/bin/style-equal.mjs --base <기준 docs> --head <후보 docs> --out <보고서 폴더> [옵션]
+//   node tools/render/bin/style-equal.ts --base <기준 docs> --head <후보 docs> --out <보고서 폴더> [옵션]
 //
 // 기준·후보 docs 폴더는 **같은 BUILD_NOW로 렌더해서** 만든다(완료 조건 9-A 1번). 저장소에 이미 그 도구가 있다:
 //   node tools/golden/bin/render.ts --repo <저장소> --sha <SHA> --out <폴더> --env TZ=Asia/Seoul --env BUILD_NOW=<ISO>
@@ -30,11 +30,11 @@
 //
 // 종료 코드: 0 = 전부 0(차이 없음), 1 = 차이가 있다(보고서에 전부 적힌다), 2 = 쓰는 법이 틀렸다.
 //
-// 못 보는 것은 lib/style-equal.mjs 머리와 PR 본문 "이 방법이 못 덮는 것"에 적는다.
+// 못 보는 것은 lib/style-equal.ts 머리와 PR 본문 "이 방법이 못 덮는 것"에 적는다.
 import { cp, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { launchChrome } from "../lib/chrome.mjs";
-import { serveDir } from "../lib/serve.mjs";
+import { launchChrome } from "../lib/chrome.ts";
+import { serveDir } from "../lib/serve.ts";
 import {
   buildRewrites,
   collect,
@@ -50,7 +50,7 @@ import {
   sha256,
   sourceFate,
   WIDTHS,
-} from "../lib/style-equal.mjs";
+} from "../lib/style-equal.ts";
 import { flattenCss } from "../../../test/helpers/css-source.mjs";
 
 const repoRoot = path.resolve(import.meta.dirname, "../../..");
@@ -58,7 +58,7 @@ const repoRoot = path.resolve(import.meta.dirname, "../../..");
 // ── 인자 ────────────────────────────────────────────────────────────────────────────────────
 
 const argv = process.argv.slice(2);
-const opt = { scope: "full", only: "A,B,C", concurrency: "4", "fixed-now": "2026-01-01T00:00:00Z", "job-timeout": "90000" };
+const opt: Record<string, any> = { scope: "full", only: "A,B,C", concurrency: "4", "fixed-now": "2026-01-01T00:00:00Z", "job-timeout": "90000" };
 for (let i = 0; i < argv.length; i++) {
   const k = argv[i];
   if (k === "--control") opt.control = true;
@@ -69,7 +69,7 @@ for (let i = 0; i < argv.length; i++) {
   }
 }
 if (!opt.base || !opt.head || !opt.out) {
-  console.error("사용: node tools/render/bin/style-equal.mjs --base <기준 docs> --head <후보 docs> --out <폴더> [--scope full|reduced|representative] [--pages a.html,b.html] [--only A,B,C] [--control] [--concurrency N]");
+  console.error("사용: node tools/render/bin/style-equal.ts --base <기준 docs> --head <후보 docs> --out <폴더> [--scope full|reduced|representative] [--pages a.html,b.html] [--only A,B,C] [--control] [--concurrency N]");
   process.exit(2);
 }
 if (!["full", "reduced", "representative"].includes(opt.scope)) {
@@ -102,10 +102,10 @@ if (!Number.isFinite(fixedNow)) {
 
 // Chrome이 죽는 순간 CDP가 기다리던 요청이 한꺼번에 거절되는데, 그 가운데 아무도 await하지 않는 것이 섞여 프로세스를 죽인다.
 // 여기서 받아 적고 계속 간다 - 실제로 못 잰 조건은 아래 재시도가 다시 잡고, 끝내 못 잰 것은 보고서에 "못 쟀다"로 남는다.
-process.on("unhandledRejection", (e) => console.error(`(이어서 감) 처리되지 않은 거절: ${e?.message ?? e}`));
+process.on("unhandledRejection", (e: any) => console.error(`(이어서 감) 처리되지 않은 거절: ${e?.message ?? e}`));
 
 await mkdir(outDir, { recursive: true });
-const report = {
+const report: Record<string, any> = {
   startedAt: new Date().toISOString(),
   machine: { node: process.version, platform: `${process.platform}-${process.arch}` },
   input: { base: baseDir, head: headDir, legacy: legacyFile, scope: opt.scope, fixedNow: opt["fixed-now"], concurrency },
@@ -271,7 +271,7 @@ try {
         return false;
       }
       const c = compareCollected(a, b);
-      const row = { page: job.page, mode: job.mode.name, width: job.width, lang: job.lang, elements: c.elements, values: c.values, pairs: c.pairs, customNamesRead: c.customNamesRead, diffs: c.diffs, domMismatch: c.domMismatch, settled: a.settled && b.settled, blocked: { base: a.blocked, head: b.blocked } };
+      const row: Record<string, any> = { page: job.page, mode: job.mode.name, width: job.width, lang: job.lang, elements: c.elements, values: c.values, pairs: c.pairs, customNamesRead: c.customNamesRead, diffs: c.diffs, domMismatch: c.domMismatch, settled: a.settled && b.settled, blocked: { base: a.blocked, head: b.blocked } };
       if (c.diffs) {
         // 해시가 다른 자리만 값을 다시 읽는다 - 장마다 수백만 값이라 처음부터 값을 옮기면 느리다.
         // 한 번에 펼치는 요소 수를 DETAIL_CAP으로 막는다: 전부 펼치면 evaluate가 수십 MB를 돌려주다 Chrome이 죽는다(실측).
@@ -454,7 +454,7 @@ function summaryMarkdown(r) {
     L.push(`- 조용해지지 않은 조건 ${r.C.totals.unsettled}개, 차이 난 조건 ${r.C.totals.diffJobs}개, 못 잰 조건 ${r.C.totals.failed}개`);
     // 사용자 정의 속성의 **열거 순서**에만 면제를 주고, 그 대가로 요건 셋을 지켰다는 것을 여기서 보인다(cto 개정 1 6147173489).
     L.push("", "### C-0. 정렬 면제의 요건 셋 (cto 개정 1)", "");
-    L.push("- (가) 요소·의사요소마다 `이름:값` 쌍을 **이름으로 정렬한 뒤 전부** 견줬다. 값은 하나도 빼지 않았다 — 정렬한 쌍 **전체**를 이어 붙여 SHA-256을 내므로 값이 하나라도 다르면 반드시 해시가 달라진다(`lib/style-equal.mjs`의 `styleText`).");
+    L.push("- (가) 요소·의사요소마다 `이름:값` 쌍을 **이름으로 정렬한 뒤 전부** 견줬다. 값은 하나도 빼지 않았다 — 정렬한 쌍 **전체**를 이어 붙여 SHA-256을 내므로 값이 하나라도 다르면 반드시 해시가 달라진다(`lib/style-equal.ts`의 `styleText`).");
     L.push(`- (나) **견준 쌍의 개수**: 기준 ${r.C.totals.pairsBase}개 / 후보 ${r.C.totals.pairsHead}개 → **${r.C.totals.pairsBase === r.C.totals.pairsHead ? "같다" : "다르다 — 그 자체가 차이다"}**. 한쪽에만 있는 속성은 이 수에서 드러난다(조건마다도 견주고 합계로 한 번 더 본다).`);
     L.push(`- (다) \`cs\` 열거에 \`--*\`가 나오지 않는 환경을 대비해 **원문이 선언한 사용자 정의 속성 이름 ${r.C.totals.customProps}개**를 따로 읽혔고, 기준·후보에 **같은 목록**을 썼다(\`src/css/legacy.css\` 한 곳에서 뽑아 양쪽에 넘긴다).`);
     L.push("- 면제는 **열거 순서에만** 준다. 규칙 순서(증빙 B)는 종전대로 순서까지 견준다.");
