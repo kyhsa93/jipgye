@@ -1,7 +1,7 @@
 /**
  * 건축HUB 주택인허가(HsPmsHubService) 수집기 골격 (#130, #58 단계 A).
  *
- *   BUILDINGHUB_API_KEY=... node scripts/fetch-housing-permits.mjs \
+ *   BUILDINGHUB_API_KEY=... node scripts/fetch-housing-permits.ts \
  *     [--bjdong-file research/housing-permits/bjdong-seoul.json] [--out-dir research/housing-permits]
  *
  * - 키(BUILDINGHUB_API_KEY)가 없으면 "생략" 로그만 남기고 종료 코드 0, 네트워크는 쓰지 않는다.

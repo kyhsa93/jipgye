@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { DISTRICTS } from "../scripts/realestate-districts.ts";
 import { OTHER_KEY } from "../scripts/housing-permits-merge.ts";
 import { SERIES } from "../scripts/housing-permits-spec.ts";
-import { B2_MAX_MEDIAN, seoulMonthly, measureB1, measureB2, measureB3, measureB4 } from "../scripts/housing-permits-measure.mjs";
+import { B2_MAX_MEDIAN, seoulMonthly, measureB1, measureB2, measureB3, measureB4 } from "../scripts/housing-permits-measure.ts";
 import { flawedB2Verdict } from "./helpers/housing-permits-mutants.mjs";
 
 // B1~B4 측정 (#133, PREREG 4절). 정의는 PREREG에서 그대로 옮겼다. 전부 합성 입력.

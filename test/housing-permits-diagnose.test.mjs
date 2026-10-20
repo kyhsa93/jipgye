@@ -211,7 +211,7 @@ test("값 비노출: 모든 문자열 필드에 심은 값이 출력 전체에 �
 
 const MARK = "SECRET-e2e-7d1";
 const KEY = "AbCdEfGh1234zzQq";
-const script = path.resolve(import.meta.dirname, "../scripts/fetch-housing-permits.mjs");
+const script = path.resolve(import.meta.dirname, "../scripts/fetch-housing-permits.ts");
 const execFileAsync = promisify(execFile);
 
 function e2eItem(sgg, n, extra = {}) {

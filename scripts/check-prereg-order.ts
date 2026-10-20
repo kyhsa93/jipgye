@@ -1,7 +1,7 @@
 /**
  * 사전 등록 순서 확인 (#133 완료 조건 1). 첫 실호출 전에 PREREG 커밋이 먼저임을 git 이력으로 확인한다.
  *
- *   node scripts/check-prereg-order.mjs --prereg <40자리 해시> [--prereg-path research/housing-permits/PREREG.md]
+ *   node scripts/check-prereg-order.ts --prereg <40자리 해시> [--prereg-path research/housing-permits/PREREG.md]
  *     [--output research/housing-permits/folded.json]
  *
  * 세 가지를 본다. (1) 해시가 40자리 전체이고 그 커밋에 PREREG 파일이 있다. (2) 그 커밋이 현재 HEAD의 조상이다
