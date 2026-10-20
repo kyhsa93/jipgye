@@ -5469,21 +5469,63 @@
     "date": "2026-10-20",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 기타 경제 소식: 기타 경제 소식: 경남도, 사회연대경제기업 돕는 '소셜임팩트 페스타' 24일 개최, 정부, 청년·초혁신경제 사업 집행 점검…\"연말까지 효과 내야\", 세종 집값 다시 들썩?… 행복청 \"연간 8000호 공급도 검토\" +2\n- 증시·환율: 원/달러 환율은 1,325원으로 연저점을 경신하는 등 하락세를 이어갔다. 코스피는 3.7% 하락한 5,552로 마감했고, 코스닥도 3.3% 내린 수준을 기록했다. 원/달러 환율은 15시 30분 기준 1,328.1원으로 2.2원 내렸다. 증시 폭락으로 소비심리가 위축되며 명품 소비도 감소하는 것으로 나타났다. 각 시장은 서로 다른 요인에 따라 하락세를 보였다.\n- 금리·예금·투자상품: 인민은행이 익일물 금리를 핵심 정책금리로 전환을 추진하고 있으며, 홍콩 증시는 고유가와 글로벌 금리 상승으로 인해 반락 개장했고, 미국 국채금리가 연말까지 5% 이상을 유지할 것으로 전망되고 있다.\n- 부동산: 세종시 아파트 공급량을 연간 기준 두 배로 상향 조정했다. 가락우성 재건축 시공사 입찰은 유찰되며 대우건설이 단독 참여하게 됐다. 여의도 시범 재건축 사업은 삼성물산이 시공사로 선정되었으며 최고 59층 규모로 진행된다. 수도권 주택사업 전망은 3개월 만에 기준치를 상회하며 집값 상승 영향을 받고 있다. 리츠협회는 장기 민간 임대주택에 아파트를 포함해야 한다고 개선을 건의했다.",
-      "en": "- Other Economic News: Other Economic News: 경남도, 사회연대경제기업 돕는 '소셜임팩트 페스타' 24일 개최, 정부, 청년·초혁신경제 사업 집행 점검…\"연말까지 효과 내야\", 세종 집값 다시 들썩?… 행복청 \"연간 8000호 공급도 검토\" +2\n- Stocks & FX: The won/dollar exchange rate fell to 1,325 won, breaking the annual low and continuing its downward trend. The KOSPI closed at 5,552, down 3.7%, and the KOSDAQ also recorded a decline of 3.3%. As of 3:30 p.m., the won/dollar exchange rate was at 1,328.1 won, down 2.2 won. It was revealed that luxury consumption has also decreased as consumer sentiment has become more cautious due to the stock market crash. Each market showed a downward trend due to different factors.\n- Rates, Deposits & Investment Products: The People's Bank is pushing to shift the overnight rate into a key policy rate, the Hong Kong stock market opened lower due to high oil prices and rising global interest rates, and U.S. Treasury yields are expected to remain above 5% until year-end.\n- Real Estate: The apartment supply in Sejong City has been doubled on an annual basis. The construction bid for the Garak Useong reconstruction project was canceled, resulting in Doowon Construction being the sole participant. The Yeouido pilot reconstruction project has selected Samsung C&T as the contractor, and it will proceed with a maximum of 59 floors. The outlook for housing projects in the Seoul metropolitan area has exceeded the benchmark within three months, affected by rising housing prices. The REITs Association recommended including apartments in long-term private rental housing for improvement."
+      "ko": "- 부동산: 노원·도봉·구로 지역에서 6억 원 이하 아파트 거래가 증가한 것으로 나타났다. LH는 임대주택 고치는 데 사용한 비용으로 인해 758억 원의 손실을 기록했다. 올해 서울 아파트 매매 중 5건 중 1건은 6억 원 미만인 것으로 조사됐다. 가락우성 재건축 시공사 입찰은 유찰되며 현설에 대우건설만 참여하게 됐다. 여의도 시범 재건축 사업은 삼성물산이 시공사로 선정되며 최고 59층 규모로 진행될 예정이다.\n- 기타 경제 소식: 기타 경제 소식: 경제계 \"초광역특구법안 환영…노동특례는 경쟁력 제고에 필수\", 경남도, 사회연대경제기업 돕는 '소셜임팩트 페스타' 24일 개최, 정부, 청년·초혁신경제 사업 집행 점검…\"연말까지 효과 내야\" +2\n- 금리·예금·투자상품: 국고채 금리가 외인 순매수와 증시 급락으로 하락했다. 3년물 국고채 금리는 연 3.840%로 일제히 하락했다. 인민은행은 익일물 금리를 핵심 정책금리로 전환하는 방안을 추진하고 있다. 외인의 순매수는 위험회피 심리가 강화되고 있음을 보여준다. 이는 금융시장의 변동성 확대에 영향을 미칠 수 있다.\n- 증시·환율: 코스피는 3.7% 급락한 5,552로 마감하며 최근 이틀 반등분을 모두 반납했다. 코스닥도 3.3% 하락하며 약세를 보였다. 일본 닛케이지수는 반도체와 AI주 약세로 1.30% 하락했다. 원/달러 환율은 1,325원으로 연저점을 또 경신했다. 원/엔 환율도 하락세를 이어가고 있다.",
+      "en": "- Real Estate: Apartment transactions of 600,000,000 won or less have increased in the Nowon, Dobong, and Guro areas. LH recorded a loss of 75,800,000,000 won due to costs incurred in repairing rental housing. A survey showed that one out of five apartment sales in Seoul this year involved properties priced under 600,000,000 won. The construction bid for the Garak-Useong redevelopment project was canceled, leaving only Daewoo Engineering & Construction as the participant. The Yeouido pilot redevelopment project has selected Samsung C&T as the construction company, and the project is expected to proceed with a maximum of 59 floors.\n- Other Economic News: Other Economic News: 경제계 \"초광역특구법안 환영…노동특례는 경쟁력 제고에 필수\", 경남도, 사회연대경제기업 돕는 '소셜임팩트 페스타' 24일 개최, 정부, 청년·초혁신경제 사업 집행 점검…\"연말까지 효과 내야\" +2\n- Rates, Deposits & Investment Products: The government bond rate fell due to foreign investors' net buying and a sharp decline in the stock market. The 3-year government bond rate fell uniformly to 3.840% annually. The People's Bank is promoting a plan to shift the next-day rate into the core policy rate. Foreign investors' net buying indicates that risk-avoidance sentiment is intensifying. This may affect the expansion of financial market volatility.\n- Stocks & FX: The KOSPI fell 3.7% to close at 5,552, giving up all of its recent two-day rebound. The KOSDAQ also declined 3.3%, showing weakness. Japan's Nikkei index dropped 1.30% due to weakness in semiconductor and AI stocks. The won/dollar exchange rate hit another record low at 1,325 won. The won/yen exchange rate is also continuing its downward trend."
     },
     "highlights": [],
     "categories": [
       {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "노원·도봉·구로 지역에서 6억 원 이하 아파트 거래가 증가한 것으로 나타났다. LH는 임대주택 고치는 데 사용한 비용으로 인해 758억 원의 손실을 기록했다. 올해 서울 아파트 매매 중 5건 중 1건은 6억 원 미만인 것으로 조사됐다. 가락우성 재건축 시공사 입찰은 유찰되며 현설에 대우건설만 참여하게 됐다. 여의도 시범 재건축 사업은 삼성물산이 시공사로 선정되며 최고 59층 규모로 진행될 예정이다.",
+        "lineEn": "Apartment transactions of 600,000,000 won or less have increased in the Nowon, Dobong, and Guro areas. LH recorded a loss of 75,800,000,000 won due to costs incurred in repairing rental housing. A survey showed that one out of five apartment sales in Seoul this year involved properties priced under 600,000,000 won. The construction bid for the Garak-Useong redevelopment project was canceled, leaving only Daewoo Engineering & Construction as the participant. The Yeouido pilot redevelopment project has selected Samsung C&T as the construction company, and the project is expected to proceed with a maximum of 59 floors.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "노원·도봉 6억 이하 아파트 거래 '쑥'",
+            "link": "https://www.mk.co.kr/news/realestate/12180731",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "임대주택 고칠 돈으로 '빚투'… LH, 758억 손실",
+            "link": "https://www.mk.co.kr/news/realestate/12180730",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "올해 서울 아파트 매매 5건 중 1건은 6억 미만…노원·도봉·구로 집중",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/20/OVM6YZXG3FHXZM4KYMWAPEKJLI/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "가락우성 재건축 시공사 입찰 유찰…현설에 대우건설 단독 참여",
+            "link": "https://www.newsis.com/view/NISX20261020_0003833465",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "여의도 시범, 사업시행인가 이어 시공사 삼성물산…최고 59층 재건축",
+            "link": "https://www.hankyung.com/article/202610203435i",
+            "source": "한국경제 부동산"
+          }
+        ]
+      },
+      {
         "key": "other",
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
-        "lineKo": "기타 경제 소식: 경남도, 사회연대경제기업 돕는 '소셜임팩트 페스타' 24일 개최, 정부, 청년·초혁신경제 사업 집행 점검…\"연말까지 효과 내야\", 세종 집값 다시 들썩?… 행복청 \"연간 8000호 공급도 검토\" +2",
-        "lineEn": "Other Economic News: 경남도, 사회연대경제기업 돕는 '소셜임팩트 페스타' 24일 개최, 정부, 청년·초혁신경제 사업 집행 점검…\"연말까지 효과 내야\", 세종 집값 다시 들썩?… 행복청 \"연간 8000호 공급도 검토\" +2",
+        "lineKo": "기타 경제 소식: 경제계 \"초광역특구법안 환영…노동특례는 경쟁력 제고에 필수\", 경남도, 사회연대경제기업 돕는 '소셜임팩트 페스타' 24일 개최, 정부, 청년·초혁신경제 사업 집행 점검…\"연말까지 효과 내야\" +2",
+        "lineEn": "Other Economic News: 경제계 \"초광역특구법안 환영…노동특례는 경쟁력 제고에 필수\", 경남도, 사회연대경제기업 돕는 '소셜임팩트 페스타' 24일 개최, 정부, 청년·초혁신경제 사업 집행 점검…\"연말까지 효과 내야\" +2",
         "isFallback": true,
         "fallbackReason": "unverified-entity",
         "degraded": false,
         "items": [
+          {
+            "title": "경제계 \"초광역특구법안 환영…노동특례는 경쟁력 제고에 필수\"",
+            "link": "https://www.yna.co.kr/view/AKR20261020144400003",
+            "source": "연합뉴스 경제"
+          },
           {
             "title": "경남도, 사회연대경제기업 돕는 '소셜임팩트 페스타' 24일 개최",
             "link": "https://www.yna.co.kr/view/AKR20261020131200052",
@@ -5503,11 +5545,33 @@
             "title": "“규제 묶으면 집값 안 오를 줄 알았지?”…광명 20% 뛰고 분당 22% 올랐다",
             "link": "https://www.mk.co.kr/news/realestate/12180562",
             "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 외인 순매수와 증시 급락으로 하락했다. 3년물 국고채 금리는 연 3.840%로 일제히 하락했다. 인민은행은 익일물 금리를 핵심 정책금리로 전환하는 방안을 추진하고 있다. 외인의 순매수는 위험회피 심리가 강화되고 있음을 보여준다. 이는 금융시장의 변동성 확대에 영향을 미칠 수 있다.",
+        "lineEn": "The government bond rate fell due to foreign investors' net buying and a sharp decline in the stock market. The 3-year government bond rate fell uniformly to 3.840% annually. The People's Bank is promoting a plan to shift the next-day rate into the core policy rate. Foreign investors' net buying indicates that risk-avoidance sentiment is intensifying. This may affect the expansion of financial market volatility.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "국고채 금리, 외인 순매수·증시 급락에 하락…위험회피 심리↑(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261020142851008",
+            "source": "연합뉴스 경제"
           },
           {
-            "title": "파주시, 월드푸드테크협의회와 평화경제특구 업무협약",
-            "link": "https://www.yna.co.kr/view/AKR20261020105000060",
+            "title": "국고채 금리 일제히 하락…3년물 연 3.840%",
+            "link": "https://www.yna.co.kr/view/AKR20261020142800008",
             "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 인민은행, 익일물 금리를 핵심 정책금리로 전환 추진",
+            "link": "https://www.newsis.com/view/NISX20261020_0003833632",
+            "source": "뉴시스 경제"
           }
         ]
       },
@@ -5515,12 +5579,27 @@
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "원/달러 환율은 1,325원으로 연저점을 경신하는 등 하락세를 이어갔다. 코스피는 3.7% 하락한 5,552로 마감했고, 코스닥도 3.3% 내린 수준을 기록했다. 원/달러 환율은 15시 30분 기준 1,328.1원으로 2.2원 내렸다. 증시 폭락으로 소비심리가 위축되며 명품 소비도 감소하는 것으로 나타났다. 각 시장은 서로 다른 요인에 따라 하락세를 보였다.",
-        "lineEn": "The won/dollar exchange rate fell to 1,325 won, breaking the annual low and continuing its downward trend. The KOSPI closed at 5,552, down 3.7%, and the KOSDAQ also recorded a decline of 3.3%. As of 3:30 p.m., the won/dollar exchange rate was at 1,328.1 won, down 2.2 won. It was revealed that luxury consumption has also decreased as consumer sentiment has become more cautious due to the stock market crash. Each market showed a downward trend due to different factors.",
+        "lineKo": "코스피는 3.7% 급락한 5,552로 마감하며 최근 이틀 반등분을 모두 반납했다. 코스닥도 3.3% 하락하며 약세를 보였다. 일본 닛케이지수는 반도체와 AI주 약세로 1.30% 하락했다. 원/달러 환율은 1,325원으로 연저점을 또 경신했다. 원/엔 환율도 하락세를 이어가고 있다.",
+        "lineEn": "The KOSPI fell 3.7% to close at 5,552, giving up all of its recent two-day rebound. The KOSDAQ also declined 3.3%, showing weakness. Japan's Nikkei index dropped 1.30% due to weakness in semiconductor and AI stocks. The won/dollar exchange rate hit another record low at 1,325 won. The won/yen exchange rate is also continuing its downward trend.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
+          {
+            "title": "또다시 눌린 코스피…佛정세불안 유탄·AI 부채우려 재부각(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261020083251008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 3.7% 급락한 5,552 마감…최근 이틀 반등분 모두 반납(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261020133400008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "日증시, 반도체·AI주 약세에 하락 마감…닛케이지수 1.30%↓",
+            "link": "https://www.newsis.com/view/NISX20261020_0003833647",
+            "source": "뉴시스 경제"
+          },
           {
             "title": "원/달러 환율 1,325원 연저점 또 경신…원/엔 환율도",
             "link": "https://www.yna.co.kr/view/AKR20261020131100002",
@@ -5529,80 +5608,6 @@
           {
             "title": "코스피, 3.7% 급락한 5,552 마감…코스닥도 3.3%↓",
             "link": "https://www.yna.co.kr/view/AKR20261020126200008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "[외환] 원/달러 환율 2.2원 내린 1,328.1원(15:30 기준가)",
-            "link": "https://www.yna.co.kr/view/AKR20261020124400002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "증시 폭락에 가벼워진 지갑…명품 소비도 꺾였다",
-            "link": "https://www.hankyung.com/article/202610191316i",
-            "source": "한국경제 경제"
-          }
-        ]
-      },
-      {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "인민은행이 익일물 금리를 핵심 정책금리로 전환을 추진하고 있으며, 홍콩 증시는 고유가와 글로벌 금리 상승으로 인해 반락 개장했고, 미국 국채금리가 연말까지 5% 이상을 유지할 것으로 전망되고 있다.",
-        "lineEn": "The People's Bank is pushing to shift the overnight rate into a key policy rate, the Hong Kong stock market opened lower due to high oil prices and rising global interest rates, and U.S. Treasury yields are expected to remain above 5% until year-end.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": true,
-        "items": [
-          {
-            "title": "[올댓차이나] 인민은행, 익일물 금리를 핵심 정책금리로 전환 추진",
-            "link": "https://www.newsis.com/view/NISX20261020_0003833632",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "[올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 개장… H주 0.94%↓",
-            "link": "https://www.newsis.com/view/NISX20261020_0003833182",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "美국채금리 고공행진 장기화 전망…경제학자 75% \"연말에도 5% 이상\"",
-            "link": "https://www.newsis.com/view/NISX20261020_0003832967",
-            "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "세종시 아파트 공급량을 연간 기준 두 배로 상향 조정했다. 가락우성 재건축 시공사 입찰은 유찰되며 대우건설이 단독 참여하게 됐다. 여의도 시범 재건축 사업은 삼성물산이 시공사로 선정되었으며 최고 59층 규모로 진행된다. 수도권 주택사업 전망은 3개월 만에 기준치를 상회하며 집값 상승 영향을 받고 있다. 리츠협회는 장기 민간 임대주택에 아파트를 포함해야 한다고 개선을 건의했다.",
-        "lineEn": "The apartment supply in Sejong City has been doubled on an annual basis. The construction bid for the Garak Useong reconstruction project was canceled, resulting in Doowon Construction being the sole participant. The Yeouido pilot reconstruction project has selected Samsung C&T as the contractor, and it will proceed with a maximum of 59 floors. The outlook for housing projects in the Seoul metropolitan area has exceeded the benchmark within three months, affected by rising housing prices. The REITs Association recommended including apartments in long-term private rental housing for improvement.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "세종시 아파트 공급속도 높인다…\"연간 공급계획 두 배로 상향\"",
-            "link": "https://www.yna.co.kr/view/AKR20261020123000063",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "가락우성 재건축 시공사 입찰 유찰…현설에 대우건설 단독 참여",
-            "link": "https://www.newsis.com/view/NISX20261020_0003833465",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "여의도 시범, 사업시행인가 이어 시공사 삼성물산…최고 59층 재건축",
-            "link": "https://www.hankyung.com/article/202610203435i",
-            "source": "한국경제 부동산"
-          },
-          {
-            "title": "수도권 주택사업 전망, 3개월 만에 기준치 상회… 수도권 집값 상승 영향",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/20/FJRG2OIBYFEWDGSYTUM53NMKFE/",
-            "source": "조선비즈 부동산"
-          },
-          {
-            "title": "리츠협회 \"장기 민간 임대주택에 아파트 포함해야\"…개선 건의",
-            "link": "https://www.yna.co.kr/view/AKR20261020114600003",
             "source": "연합뉴스 경제"
           }
         ]
