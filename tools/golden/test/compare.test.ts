@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { compareBytes, compareDirs, diffLines, formatReport, treeHash } from "../lib/compare.mjs";
+import { compareBytes, compareDirs, diffLines, formatReport, treeHash } from "../lib/compare.ts";
 
 const page = (body) => `<!doctype html><html><head><title>t</title></head><body>${body}</body></html>`;
 

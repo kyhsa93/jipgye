@@ -2,20 +2,20 @@
 // 불변 조건 비교(#274): 디자인이 바뀌어도 변하면 안 되는 것만 견준다. 하드 실패가 없으면 종료 0, 있으면 1(소프트는 목록만 낸다).
 // 쓰는 법이 틀렸거나(예외 목록의 형식이 틀린 것 포함) 렌더가 실패하면 2, 디스크 여유가 모자라면 3.
 //
-//   node bin/invariants.mjs --render --repo <저장소> [--base <SHA>] [--head <SHA>|--src <디렉터리>] [--build-now <ISO>]
+//   node bin/invariants.ts --render --repo <저장소> [--base <SHA>] [--head <SHA>|--src <디렉터리>] [--build-now <ISO>]
 //        기준(merge-base)과 후보를 **같은 BUILD_NOW로 렌더해** 견준다. PR 증빙은 이 모양으로 낸다.
 //          --base       기본: `git merge-base origin/main HEAD`
 //          --head/--src 기본: --src <저장소>(미커밋 변경을 포함한 작업 트리 스냅숏)
 //          --build-now  기본: 기준 커밋의 커밋 시각
 //        훅 클래스는 목록 파일에 **후보 소스에서 다시 뽑은 것**을 더해 쓰고(목록이 낡아도 판정이 새지 않게), 목록이 후보 소스와
 //        어긋난 것(hook-list)과 기준 소스에서는 훅이었는데 후보에서 빠진 이름(hook-list-dropped)을 보고에 소프트로 같이 낸다.
-//   node bin/invariants.mjs <기준> <후보>
+//   node bin/invariants.ts <기준> <후보>
 //        이미 구운 폴더(또는 --snapshot이 낸 JSON) 둘을 견준다. 둘이 같은 입력·같은 BUILD_NOW로 구운 것인지는 부르는 쪽 책임이다 —
 //        다른 날 데이터로 구운 폴더끼리 견주면 데이터 때문에 텍스트가 갈린다(#8 부류).
-//   node bin/invariants.mjs --snapshot <폴더> [--out <파일>] [--table]
+//   node bin/invariants.ts --snapshot <폴더> [--out <파일>] [--table]
 //        폴더의 불변 사실을 JSON으로 뜬다(--table이면 장별 표). 지문(sha256)을 stderr에 적는다.
-//   node bin/invariants.mjs --hooks-check --repo <저장소>     훅 클래스 목록(hook-classes.json)이 소스와 맞는지 본다(어긋나면 1).
-//   node bin/invariants.mjs --hooks-write --repo <저장소>     소스에서 다시 뽑아 목록 파일을 쓴다. 소스가 는 경우에만 쓴다 —
+//   node bin/invariants.ts --hooks-check --repo <저장소>     훅 클래스 목록(hook-classes.json)이 소스와 맞는지 본다(어긋나면 1).
+//   node bin/invariants.ts --hooks-write --repo <저장소>     소스에서 다시 뽑아 목록 파일을 쓴다. 소스가 는 경우에만 쓴다 —
 //        줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다(test/HOOKCOUNT 하한이 줄어든 채 굳는 것을 막는다).
 //
 //   비교 공통
@@ -26,7 +26,7 @@
 import { spawnSync } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { DiskSpaceError, installSignalHandlers, isTerminating } from "../lib/cleanup.mjs";
+import { DiskSpaceError, installSignalHandlers, isTerminating } from "../lib/cleanup.ts";
 import {
   applyExceptions,
   collectHookClasses,
@@ -42,14 +42,14 @@ import {
   snapshotDir,
   snapshotHash,
   withSiteFindings,
-} from "../lib/invariants.mjs";
-import { preparePristine, renderIsolated } from "../lib/render.mjs";
+} from "../lib/invariants.ts";
+import { preparePristine, renderIsolated } from "../lib/render.ts";
 
 const USAGE = `사용:
-  node bin/invariants.mjs --render --repo <저장소> [--base <SHA>] [--head <SHA>|--src <디렉터리>] [--build-now <ISO>]
-  node bin/invariants.mjs <기준 폴더|스냅숏.json> <후보 폴더|스냅숏.json>
-  node bin/invariants.mjs --snapshot <폴더> [--out <파일>] [--table]
-  node bin/invariants.mjs --hooks-check|--hooks-write --repo <저장소>
+  node bin/invariants.ts --render --repo <저장소> [--base <SHA>] [--head <SHA>|--src <디렉터리>] [--build-now <ISO>]
+  node bin/invariants.ts <기준 폴더|스냅숏.json> <후보 폴더|스냅숏.json>
+  node bin/invariants.ts --snapshot <폴더> [--out <파일>] [--table]
+  node bin/invariants.ts --hooks-check|--hooks-write --repo <저장소>
   비교 공통: [--expect <예외 목록.json>] [--json <파일>] [--hooks a,b] [--max-items N]`;
 
 const FLAGS = new Set(["render", "table", "hooks-check", "hooks-write"]);

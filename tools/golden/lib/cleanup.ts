@@ -4,7 +4,7 @@
 //   jipgye-render-*   렌더 한 번의 작업 사본(`os.tmpdir()`). 렌더마다 지운다.
 // 이슈 #263의 사고: `--src` 변형 비교가 snap-* 69개(약 20GB)를 쌓아 디스크가 찼다. 한 사본이 약 290MB다.
 // 이 모듈은 (1) 시작 전 디스크 점검 (2) 신호·예외에서의 정리 (3) 처리 못 하는 종료(SIGKILL·ENOSPC)가 남긴 고아 정리
-// (4) SHA 캐시 상한을 맡는다. 파일을 만들고 지우는 쪽(render.mjs)은 여기 함수를 부르기만 한다.
+// (4) SHA 캐시 상한을 맡는다. 파일을 만들고 지우는 쪽(render.ts)은 여기 함수를 부르기만 한다.
 import { readdir, readFile, lstat, rename, rm, stat, statfs, utimes, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";

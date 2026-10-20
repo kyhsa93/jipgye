@@ -1,4 +1,4 @@
-# 훅 클래스 추출의 하한 셋 (#418, #316 0단계). 읽는 곳은 test/invariants.test.mjs 의 parseHookCount (lib/invariants.mjs).
+# 훅 클래스 추출의 하한 셋 (#418, #316 0단계). 읽는 곳은 test/invariants.test.ts 의 parseHookCount (lib/invariants.ts).
 # 숫자 줄은 정확히 셋이다: 1행 = hook-classes.json 의 js 이름 수 하한, 2행 = markup 이름 수 하한,
 # 3행 = collectHookClasses 가 읽은 test/·scripts/ 소스 파일 수 하한. 주석(#)과 빈 줄은 버린다. 셋이 아니면 시험이 실패한다
 # (#417 에서 루트 test/COUNT 숫자 줄이 넷이 되어 래칫이 앞 둘만 읽고 하한이 낮게 선 일을 물려받지 않으려는 것이다).

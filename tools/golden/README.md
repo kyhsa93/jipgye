@@ -11,33 +11,33 @@ cd tools/golden && npm ci
 npm test                       # 고정 fixture만 읽는 시험(정준 덤프·변이 시험·비교기·렌더 격리·invariants) — 오늘의 docs/ 데이터를 읽지 않는다
 npm run test:live              # 실제 저장소로: 자기 비교(TZ=UTC·Asia/Seoul), BUILD_NOW 시각 의존, invariants 자기 비교·실제 67장 변이(#274 셋, #289 여섯), (GOLDEN_BASE_SHA가 있으면) 미설정 바이트 동일
 
-node bin/render.mjs  --repo ../.. --sha HEAD --out /tmp/a  --env TZ=UTC --env BUILD_NOW=2026-10-11T00:00:00Z
-node bin/render.mjs  --repo ../.. --sha HEAD --out /tmp/b  --env JIPGYE_RENDERER=react --env BUILD_NOW=2026-10-11T00:00:00Z
-node bin/render.mjs  --repo ../.. --src ../.. --out /tmp/c --keep   # 미커밋 작업 트리 스냅숏으로 렌더. 스냅숏은 끝나면 지운다(--keep이면 남기고 경로를 출력)
-node bin/compare.mjs /tmp/a /tmp/b [--bytes]     # 정준 비교(+ 바이트). 같으면 종료 0
-node bin/bench.mjs   --repo ../.. --sha HEAD --runs 10   # 렌더 단계 시간 중앙값·상한
+node bin/render.ts  --repo ../.. --sha HEAD --out /tmp/a  --env TZ=UTC --env BUILD_NOW=2026-10-11T00:00:00Z
+node bin/render.ts  --repo ../.. --sha HEAD --out /tmp/b  --env JIPGYE_RENDERER=react --env BUILD_NOW=2026-10-11T00:00:00Z
+node bin/render.ts  --repo ../.. --src ../.. --out /tmp/c --keep   # 미커밋 작업 트리 스냅숏으로 렌더. 스냅숏은 끝나면 지운다(--keep이면 남기고 경로를 출력)
+node bin/compare.ts /tmp/a /tmp/b [--bytes]     # 정준 비교(+ 바이트). 같으면 종료 0
+node bin/bench.ts   --repo ../.. --sha HEAD --runs 10   # 렌더 단계 시간 중앙값·상한
 
-node bin/invariants.mjs --render --repo ../..    # 불변 조건(#274): merge-base와 작업 트리를 같은 BUILD_NOW로 렌더해 견준다. 하드 실패가 없으면 종료 0
-node bin/invariants.mjs /tmp/a /tmp/b            # 이미 구운 폴더 둘(같은 입력·같은 BUILD_NOW로 구운 것만)
-node bin/invariants.mjs --snapshot ../../docs --table   # 장별 표(robots·canonical·JS 바이트). --table을 빼면 스냅숏 JSON, 지문은 stderr
-node bin/invariants.mjs --hooks-check --repo ../..      # 훅 클래스 목록이 소스와 맞는지(소스가 는 경우에만 --hooks-write. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다)
+node bin/invariants.ts --render --repo ../..    # 불변 조건(#274): merge-base와 작업 트리를 같은 BUILD_NOW로 렌더해 견준다. 하드 실패가 없으면 종료 0
+node bin/invariants.ts /tmp/a /tmp/b            # 이미 구운 폴더 둘(같은 입력·같은 BUILD_NOW로 구운 것만)
+node bin/invariants.ts --snapshot ../../docs --table   # 장별 표(robots·canonical·JS 바이트). --table을 빼면 스냅숏 JSON, 지문은 stderr
+node bin/invariants.ts --hooks-check --repo ../..      # 훅 클래스 목록이 소스와 맞는지(소스가 는 경우에만 --hooks-write. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다)
 ```
 
 ## 구성
 
-- `lib/render.mjs` — 렌더 단계 여섯(`daily-update.yml`의 "정적 HTML에 오늘 내용 심기")을 **깨끗한 작업 사본**에서 돌린다.
+- `lib/render.ts` — 렌더 단계 여섯(`daily-update.yml`의 "정적 HTML에 오늘 내용 심기")을 **깨끗한 작업 사본**에서 돌린다.
   출발점(pristine)은 `git archive <SHA>`(커밋된 상태) 또는 `--src <디렉터리>`(작업 트리 스냅숏 — #238의 shadow가 "같은 렌더
   전 스냅숏"을 만들 때 쓰는 모양)이고, 렌더마다 복제해 쓰므로 저장소 `docs/`는 바뀌지 않고 두 렌더가 같은 출발점을 갖는다.
   호출자가 준 환경변수(`TZ`·`BUILD_NOW`·`JIPGYE_RENDERER`)만 들어간다.
-- `lib/cleanup.mjs` — 임시 사본·캐시 정리(#263): 시작 전 디스크 점검, 신호·예외 때 정리 목록, 24시간 넘은 고아 정리, SHA 캐시 상한, 동시 실행용 rename 확정.
+- `lib/cleanup.ts` — 임시 사본·캐시 정리(#263): 시작 전 디스크 점검, 신호·예외 때 정리 목록, 24시간 넘은 고아 정리, SHA 캐시 상한, 동시 실행용 rename 확정.
   아래 "임시 사본과 정리".
-- `lib/canon.mjs` — 정준 덤프. 허용 차이는 주석·속성 순서·엔티티 표기·공백 줄이기(없애기는 불허)·인라인 script 줄바꿈뿐이다.
+- `lib/canon.ts` — 정준 덤프. 허용 차이는 주석·속성 순서·엔티티 표기·공백 줄이기(없애기는 불허)·인라인 script 줄바꿈뿐이다.
   head 메타 전부, 본문 텍스트(hidden 아래는 `[hidden]`), 제목 계층, 모든 href, 표 셀 속성, script src 순서, 인라인 script 본문(JSON 섬 포함)은 남긴다.
-- `lib/compare.mjs` — 디렉터리 쌍 비교(정준·바이트), 줄 diff, 보고서.
-- `lib/invariants.mjs`·`bin/invariants.mjs` — 불변 조건 비교(#274). 아래 "불변 조건(invariants)".
+- `lib/compare.ts` — 디렉터리 쌍 비교(정준·바이트), 줄 diff, 보고서.
+- `lib/invariants.ts`·`bin/invariants.ts` — 불변 조건 비교(#274). 아래 "불변 조건(invariants)".
 - `hook-classes.json` — 기계로 뽑은 훅 클래스 목록. 손으로 고치지 않는다.
-- `lib/mock-date-now.mjs` — `--import`로 `Date.now()`를 `GOLDEN_MOCK_NOW`에 고정한다(BUILD_NOW 도입 전·후 코드 비교용).
-- `test/mutation.test.mjs` — 비교기 변이 시험: 검출 4(표본 문장 삭제·noindex 제거·숫자 한 자리·인라인 script)·통과 1(속성 순서)·대조군.
+- `lib/mock-date-now.ts` — `--import`로 `Date.now()`를 `GOLDEN_MOCK_NOW`에 고정한다(BUILD_NOW 도입 전·후 코드 비교용).
+- `test/mutation.test.ts` — 비교기 변이 시험: 검출 4(표본 문장 삭제·noindex 제거·숫자 한 자리·인라인 script)·통과 1(속성 순서)·대조군.
   입력은 `test/fixtures/`의 고정 HTML 사본이다.
 
 ## 불변 조건(invariants) (#274)
@@ -84,7 +84,7 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
 | 그 밖의 인라인 | `a` `code` `sup` `sub` `del` `ins` `s` `u` `q` `cite` `time` … 과 모르는 태그 | 뜻이 실리므로 흐름에 `‹a›…‹/a›`처럼 남는다. 블록을 **바깥에서** 감싸면(`<del><p>…</p></del>`, 블록 링크 `<a href><div>…</div></a>`) 안쪽 블록의 항목에 `[in:del]`·`[in:a]` 표시로 남는다 |
 
 `img`·`wbr`·`picture`·`source`와 SVG·MathML 덩어리 자체는 흐름을 끊지도 보태지도 않는다(문장 안에 아이콘을 넣는 것은 글자 변화가 아니다. SVG 안의 글자는 요소마다 한 항목이다).
-블록 목록은 `canon.mjs`의 공백 규칙이 쓰는 목록에서 `br`을 빼고 폼 컨트롤 다섯을 더한 것이다. 중립 인라인 목록은 위 여덟 개로 **확정**이다(cto, PR #292 —
+블록 목록은 `canon.ts`의 공백 규칙이 쓰는 목록에서 `br`을 빼고 폼 컨트롤 다섯을 더한 것이다. 중립 인라인 목록은 위 여덟 개로 **확정**이다(cto, PR #292 —
 `br`은 공백 한 칸으로 두고 `code`·`kbd`·`time`·`u`는 넣지 않는다).
 
 - **통과하는 것(소프트 `text-wrap`)**: 블록 안 글자의 일부를 중립 인라인으로 감싸거나 푸는 것, 낱말 사이 공백 자리에 `<br>`을 넣는 것(공백을 남기든 br로 바꾸든).
@@ -123,7 +123,7 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
 - **훅 클래스는 기계로 뽑는다.** `hook-classes.json`의 `js`는 `docs/` 아래 `.js`와 `docs/*.html` 인라인 script의
   `querySelector(All)`·`closest`·`matches`·`getElementsByClassName`·`classList`·`className`에서, `markup`은 루트 `test/*.mjs`와
   `scripts/build-*-pages.mjs`가 문자열로 쓰는 `class="…"`에서 뽑은 이름이다(`collectHookClasses`). 목록이 소스와 어긋나면
-  `test/invariants.test.mjs`가 실패한다. 소스가 는 경우에만 `--hooks-write`로 다시 만들고, 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다(줄어든 채 굳지 않게 `test/HOOKCOUNT`가 js·markup 이름 수와 읽은 소스 파일 수의 하한을 둔다). 비교 때는 목록에 **후보 폴더의 JS가 읽는 class**를 더한다.
+  `test/invariants.test.ts`가 실패한다. 소스가 는 경우에만 `--hooks-write`로 다시 만들고, 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다(줄어든 채 굳지 않게 `test/HOOKCOUNT`가 js·markup 이름 수와 읽은 소스 파일 수의 하한을 둔다). 비교 때는 목록에 **후보 폴더의 JS가 읽는 class**를 더한다.
   `--render`는 소스를 갖고 있으므로 한 걸음 더 간다: **후보 소스에서 다시 뽑은 이름**을 목록에 더해 판정하고(목록이 낡아도 새지 않는다), 목록이 후보 소스와
   어긋난 것(`hook-list`)과 기준 소스에서는 훅이었는데 후보 소스에서는 빠진 이름(`hook-list-dropped`)을 보고에 소프트로 같이 낸다. 빠진 이름은 더는 훅으로 보지 않으므로
   (HTML에서 그 class가 사라져도 `hooks`가 안 건다) PR에서 사람이 읽는다.
@@ -148,7 +148,7 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
   ] }
   ```
 - **못 보는 것.** parse5는 CSS를 모른다. 유틸리티 class(`tw:hidden`·`tw:sr-only`·`tw:invisible`·`tw:opacity-0`)나 `style`로 본문을 숨겨도
-  통과한다(`test/invariants.test.mjs`가 이 구멍을 시험으로 적어 둔다). 가로 넘침, 대화형 요소 크기, 대비, 초점 순서, `::before`가 그리는
+  통과한다(`test/invariants.test.ts`가 이 구멍을 시험으로 적어 둔다). 가로 넘침, 대화형 요소 크기, 대비, 초점 순서, `::before`가 그리는
   `attr(data-label)`도 못 본다. 이쪽은 #278 PR A의 렌더 검사 도구가 맡는다. 그 밖에 보지 않는 것(시험 "#289 8번 못 잡는 것"과 "못 잡는 것(적어 둔다, PR #292 cto)"이 적어 둔다):
   - **글자 없는 요소의 추가**: `alt` 없는 `img`, `iframe`, body 안의 `link`(stylesheet 포함), 빈 `div`. 글자도 훅도 없으면 어느 check에도 걸리지 않는다
     (가리키는 내부 파일이 없을 때만 `resource-target`이 건다. `alt`가 있으면 `attr-text`가 건다).
@@ -165,7 +165,7 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
   - 블록 가장자리의 공백, SVG 안에서 `<text>` 밖에 놓여 그려지지 않는 글자, `manifest.webmanifest`·CSS·JS **안에서** 가리키는 파일(HTML 속성이 가리키는 것만 대상 확인을 한다).
   - `details`를 닫아 본문을 접는 것은 하드가 아니다(`details-open` 소프트).
 - 스냅숏(`--snapshot`)은 기준선 기록용이다(#274 범위 3). 저장소에 커밋하지 않고 기준 SHA에서 다시 만든다: `git archive <SHA> docs | tar -x -C <폴더>` 뒤
-  `node bin/invariants.mjs --snapshot <폴더>/docs`. 추출 항목이 바뀌면 스냅숏 `version`이 오르고 지문도 달라진다(#289에서 2 — 예전 JSON은 읽지 않고 다시 뜨라고 알린다).
+  `node bin/invariants.ts --snapshot <폴더>/docs`. 추출 항목이 바뀌면 스냅숏 `version`이 오르고 지문도 달라진다(#289에서 2 — 예전 JSON은 읽지 않고 다시 뜨라고 알린다).
 
 ## 임시 사본과 정리 (#263)
 
@@ -177,7 +177,7 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
 | `$TMPDIR/jipgye-render-*` (렌더 한 번의 작업 사본) | 렌더마다 `dispose()`. 렌더 단계가 예외로 끝나도 `renderIsolated`가 먼저 지우고 던진다 |
 | `$TMPDIR/jipgye-golden/sha-<SHA>` (`git archive` 캐시) | 지우지 않고 재사용한다. 쓸 때마다 `.done`의 mtime을 올리고(atime은 믿지 못한다), 개수 상한을 넘으면 **mtime이 오래된 것부터** 지운다. 지금 쓰는 것과 10분 안에 쓴 것은 남긴다 |
 
-- **시작 전 디스크 점검**: 캐시 폴더와 렌더 사본 폴더(`os.tmpdir()`) 둘의 `statfs` 여유가 5GiB 미만이면 아무것도 만들지 않고 종료 3으로 멈춘다(`bin/render.mjs`·`bin/bench.mjs`).
+- **시작 전 디스크 점검**: 캐시 폴더와 렌더 사본 폴더(`os.tmpdir()`) 둘의 `statfs` 여유가 5GiB 미만이면 아무것도 만들지 않고 종료 3으로 멈춘다(`bin/render.ts`·`bin/bench.ts`).
 - **고아 정리**: SIGKILL·`ENOSPC`는 정리할 틈이 없으므로, 시작 때 24시간 넘은 `snap-*`·`jipgye-render-*`·만들다 만 `sha-*.tmp-*`를 지운다. 폴더마다 `.golden-owner`(pid·생성 시각)를 두고 그 pid가 살아 있으면 건드리지 않는다.
 - **동시 실행**: `.done`은 잠금이 아니라 "다 만들었다"는 표시다. SHA 캐시는 `sha-<SHA>.tmp-XXXXXX`에 끝까지 만들고 `rename`으로 확정한다 — 둘이 동시에 만들면 먼저 확정한 쪽이 이기고 진 쪽은 자기 것을 지우고 이긴 쪽을 쓴다. 스냅숏·렌더 사본은 매번 새 이름이라 겹치지 않는다.
 - 상한·문턱은 환경변수로 바꾼다(시험이 이 값을 주입한다): `GOLDEN_MIN_FREE_GB`(기본 5, GiB), `GOLDEN_CACHE_MAX_SHA`(기본 8 ≈ 2.3GB), `GOLDEN_CACHE_GRACE_MIN`(기본 10분), `GOLDEN_ORPHAN_HOURS`(기본 24).
@@ -194,7 +194,7 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
 
 - `npm test`는 CI(`.github/workflows/test.yml`)가 루트 시험 뒤에 `working-directory: tools/golden`으로 돌린다(#289 PR 2). **`--render` 자기 비교와 `npm run test:live`는 CI에 없다** — 변이 시험·자기 비교 출력은 그대로 PR 본문에 명령·출력을 붙여 증빙한다.
   `npm test` 가운데 "훅 클래스 목록이 소스와 맞는다" 하나만 저장소의 코드(`docs/`의 JS·인라인 script, `test/*.mjs`, `scripts/build-*-pages.mjs`)를 읽는다 — 데이터는 읽지 않는다.
-  정리 시험(`test/cleanup.test.mjs`)은 고정 가짜 저장소만 쓰고 시험마다 자기 폴더 안에서 돌아 끝에 지운다.
+  정리 시험(`test/cleanup.test.ts`)은 고정 가짜 저장소만 쓰고 시험마다 자기 폴더 안에서 돌아 끝에 지운다.
 - 공백 줄이기는 CSS 공백 접힘을 흉내 낸 규칙이다(블록 요소의 시작·끝·이웃에서만 공백을 뺀다). 화면에서 달라 보이는 공백 차이는 잡고,
   화면에서 같은 공백 차이는 통과시킨다.
 - 비교 대상은 `.html`이다. JSON·CSS·JS의 차이는 `--bytes`로 따로 본다.

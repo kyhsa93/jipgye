@@ -20,7 +20,7 @@
 // id·data-*·aria-*(JS 훅)와 href·title·alt 같은 속성 글자는 이 모드에서도 그대로 견준다(DIRECTION.md 369행).
 //
 // 의존은 parse5 하나이고 이 폴더의 package.json에만 있다(design-attrs.mjs는 의존 0의 목록 모듈이다).
-// 루트 test/는 canon.mjs를 import하지 않는다.
+// 루트 test/는 canon.ts를 import하지 않는다.
 import { parse } from "parse5";
 import { DESIGN_ATTRS } from "../../../scripts/design-attrs.mjs";
 
@@ -43,7 +43,7 @@ function childrenOf(node) {
   return node.tagName === "template" && node.content ? node.content.childNodes : node.childNodes ?? [];
 }
 
-/** 주석을 빼고 이웃한 텍스트 노드를 이어 붙인다(주석이 사이에 있던 `a<!--c-->b`는 "ab"다). invariants.mjs도 같은 걸음으로 걷는다. */
+/** 주석을 빼고 이웃한 텍스트 노드를 이어 붙인다(주석이 사이에 있던 `a<!--c-->b`는 "ab"다). invariants.ts도 같은 걸음으로 걷는다. */
 export function cleanChildren(node) {
   const out = [];
   for (const child of childrenOf(node)) {

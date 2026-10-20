@@ -1,6 +1,6 @@
 // 불변 조건(invariants) 비교 (#274). 디자인이 바뀌어도 변하면 안 되는 것만 본다.
 //
-// canon.mjs(#236 S1)는 class를 포함한 모든 속성과 태그 트리를 견준다. Tailwind 도입과 디자인 개편은 class와 껍데기
+// canon.ts(#236 S1)는 class를 포함한 모든 속성과 태그 트리를 견준다. Tailwind 도입과 디자인 개편은 class와 껍데기
 // 구조를 바꾸므로 그 자는 더 못 쓴다. 이 모듈은 같은 parse5 트리에서 "디자인과 무관한 사실"만 뽑아 견준다.
 // 판정 표는 #274 본문 범위 1이다. 괄호 안은 보고서·예외 목록이 쓰는 check 이름이다.
 //
@@ -34,7 +34,7 @@
 //     훅·script·on* 속성이 늘거나 준 것, 의미 속성(semantic), 폴더에서 사라진 파일(files-removed), 훅 목록 어긋남(hook-list*).
 //   보지 않는 것: class·style 속성, 블록·중립 인라인 태그의 이름과 트리 모양, 주석, 속성 순서, 블록 가장자리의 공백.
 //   **못 보는 것**: CSS가 하는 일 전부 — class로 숨긴 글자(display:none·sr-only·opacity 0), 가로 넘침, 요소 크기, 대비, 초점 순서.
-//                   parse5는 CSS를 모른다. 렌더 기반 검사는 #278 PR A가 맡는다(test/invariants.test.mjs가 이 구멍을 시험으로 적어 둔다).
+//                   parse5는 CSS를 모른다. 렌더 기반 검사는 #278 PR A가 맡는다(test/invariants.test.ts가 이 구멍을 시험으로 적어 둔다).
 //
 // 블록 단위 글자 흐름(#289 4번). 텍스트 노드 하나가 아니라 **블록 하나**가 비교 단위다 — 숫자를 <strong>으로 감싸 노드가 셋으로
 // 잘려도 블록의 글자 흐름은 같다. 요소는 넷으로 나뉜다.
@@ -48,7 +48,7 @@
 // 중립 인라인으로 감싸거나 푸는 것만 통과한다. 통과시킨 블록은 text-wrap(소프트)에 무엇이 감싸졌는지와 수를 적는다.
 //
 // 비교 조건(#8 부류): 기준은 PR의 merge-base, 후보는 PR 머리이고 **같은 입력·같은 BUILD_NOW로 렌더한 둘**만 견준다
-// (bin/invariants.mjs --render). 다른 날 데이터로 구운 폴더끼리 견주면 데이터 때문에 텍스트가 갈린다.
+// (bin/invariants.ts --render). 다른 날 데이터로 구운 폴더끼리 견주면 데이터 때문에 텍스트가 갈린다.
 //
 // 훅 클래스는 손으로 적지 않는다. 소스에서 기계로 뽑아 hook-classes.json에 두고(collectHookClasses), 목록이 소스와
 // 어긋나면 시험이 실패한다(hookListDrift). 비교 때는 그 목록에 **후보 폴더의 JS가 읽는 class**를 더한다 — 후보가
@@ -57,13 +57,13 @@
 // 의도한 차이(#274 범위 1): 하드 항목을 일부러 바꾸는 PR은 차이를 목록으로 적고 po·cmo가 확인한 것만 예외다.
 // 도구는 그 목록을 JSON으로 받는다(applyExceptions) — 항목 문자열이 글자 그대로 맞는 것만 지우고, 목록에 없는 차이는 하드로 남는다.
 //
-// 의존은 canon.mjs와 같은 parse5 하나다. 입력 둘은 폴더이거나 snapshotDir이 낸 JSON이다.
+// 의존은 canon.ts와 같은 parse5 하나다. 입력 둘은 폴더이거나 snapshotDir이 낸 JSON이다.
 import { createHash } from "node:crypto";
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { parse } from "parse5";
-import { BLOCK, cleanChildren } from "./canon.mjs";
-import { diffLines, listFiles } from "./compare.mjs";
+import { BLOCK, cleanChildren } from "./canon.ts";
+import { diffLines, listFiles } from "./compare.ts";
 
 // 2: #289 — texts가 텍스트 노드가 아니라 블록 흐름이고(shapes가 짝), robots·exceptions가 목록이며 handlers·bodyMeta·details·resources가 늘었다.
 export const SNAPSHOT_VERSION = 2;
@@ -71,7 +71,7 @@ export const SNAPSHOT_VERSION = 2;
 /** 내부 링크로 치는 절대 주소의 머리(canonical·og:url이 쓰는 값). */
 export const SITE_BASE = "https://kyhsa93.github.io/jipgye/";
 
-/** 훅 클래스 목록 파일. `node bin/invariants.mjs --hooks-write`가 쓰고 test/invariants.test.mjs가 소스와 대조한다.
+/** 훅 클래스 목록 파일. `node bin/invariants.ts --hooks-write`가 쓰고 test/invariants.test.ts가 소스와 대조한다.
  * 소스가 는 경우에만 다시 쓴다. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다(test/HOOKCOUNT가 줄어든 채 굳는 것을 막는다). */
 export const HOOK_LIST_FILE = path.join(import.meta.dirname, "../hook-classes.json");
 
@@ -94,7 +94,7 @@ export const isTextAttr = (name) => TEXT_ATTR_NAMES.has(name) || /^data-.+-en$/.
 export const SEMANTIC_ATTRS = new Set("role hidden name for scope colspan rowspan headers type value".split(" "));
 
 /**
- * 글자 흐름을 끊는 태그(#289 4번 "블록으로 치는 태그 목록"). canon.mjs의 BLOCK(공백이 접히는 자리)에서 br을 빼고,
+ * 글자 흐름을 끊는 태그(#289 4번 "블록으로 치는 태그 목록"). canon.ts의 BLOCK(공백이 접히는 자리)에서 br을 빼고,
  * 글자를 따로 담는 폼 컨트롤(button·input·textarea·label·legend)을 더했다 — 버튼 글자와 옆 문장은 한 문장이 아니다.
  * 이 목록의 태그끼리 바꾸는 것(div → section, p → li)은 흐름을 바꾸지 않는다. 블록을 나누거나 합치면 흐름이 달라진다.
  */
@@ -539,7 +539,7 @@ export async function readHookList(file = HOOK_LIST_FILE) {
 export function formatHookList({ js, markup }) {
   return `${JSON.stringify(
     {
-      "//": "기계로 뽑은 훅 클래스 목록(#274). 손으로 고치지 않는다 — 소스가 는 경우에만 `node bin/invariants.mjs --hooks-write --repo ../..`. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다.",
+      "//": "기계로 뽑은 훅 클래스 목록(#274). 손으로 고치지 않는다 — 소스가 는 경우에만 `node bin/invariants.ts --hooks-write --repo ../..`. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다.",
       sources: {
         js: "docs/ 아래 .js와 docs/*.html 인라인 script의 querySelector(All)·closest·matches·getElementsByClassName·classList·className",
         markup: 'test/*.mjs와 scripts/build-*-pages.mjs가 문자열로 쓰는 class="…"',

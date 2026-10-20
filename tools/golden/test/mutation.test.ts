@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { diffHtml } from "../lib/compare.mjs";
+import { diffHtml } from "../lib/compare.ts";
 
 // 비교기 변이 시험(낙제 시험, #236). 입력은 test/fixtures/의 고정 HTML 사본이다 — 오늘의 docs/나 골든 파일을 읽지 않는다.
 //   잡혀야 하는 것 4(표본 부족 문장 삭제·noindex 제거·숫자 한 자리·인라인 script), 통과해야 하는 것 1(속성 순서),

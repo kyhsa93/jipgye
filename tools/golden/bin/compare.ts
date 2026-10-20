@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 // 두 디렉터리의 .html을 정준 덤프로 견준다. 같으면 종료 0, 다르면 1.
-//   node bin/compare.mjs <dirA> <dirB> [--no-class-style] [--bytes] [--max-hunks N] [--max-lines N]
+//   node bin/compare.ts <dirA> <dirB> [--no-class-style] [--bytes] [--max-hunks N] [--max-lines N]
 //   --bytes           정준 비교 대신(뒤에 덧붙여) 모든 파일을 바이트로도 견준다.
 //   --no-class-style  내용 비교 모드(#277). class·style **두 속성만** 덤프에서 빼고 나머지는 그대로 견준다.
 //                     기본 모드(이 플래그가 없을 때)는 손대지 않았다 — class 한 글자가 달라도 종료 1이다.
 //                     --bytes는 이 모드와 무관하다(바이트 비교는 언제나 글자 그대로다).
-import { compareBytes, compareDirs, formatReport } from "../lib/compare.mjs";
+import { compareBytes, compareDirs, formatReport } from "../lib/compare.ts";
 
 const args = process.argv.slice(2);
 const flag = (name, dflt) => {
@@ -26,7 +26,7 @@ const bytes = take("--bytes");
 const ignoreDesignAttrs = take("--no-class-style");
 const [a, b] = args;
 if (!a || !b) {
-  console.error("사용: node bin/compare.mjs <dirA> <dirB> [--no-class-style] [--bytes] [--max-hunks N] [--max-lines N]");
+  console.error("사용: node bin/compare.ts <dirA> <dirB> [--no-class-style] [--bytes] [--max-hunks N] [--max-lines N]");
   process.exit(2);
 }
 const result = await compareDirs(a, b, { ignoreDesignAttrs });

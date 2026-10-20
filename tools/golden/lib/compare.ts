@@ -1,9 +1,9 @@
 // 두 디렉터리(또는 두 HTML)를 정준 덤프로 견준다. S1·S2의 측정 수단이다.
-// 쓰는 쪽: bin/compare.mjs, test/, 그리고 나중에 #238의 shadow 단계·#244의 합격 측정.
+// 쓰는 쪽: bin/compare.ts, test/, 그리고 나중에 #238의 shadow 단계·#244의 합격 측정.
 import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { canonLines } from "./canon.mjs";
+import { canonLines } from "./canon.ts";
 
 /** dir 아래의 파일을 상대 경로(/ 구분, 정렬)로 센다. pick이 false를 주면 뺀다. */
 export async function listFiles(dir, pick = () => true) {
