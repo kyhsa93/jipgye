@@ -29,6 +29,10 @@ import { flattenCss, parseCss, ruleLine, stripComments } from "../../../test/hel
 // tsconfig 의 lib 에 dom 을 열지 않으려고(tools/golden 까지 DOM 전역이 열린다) 이 파일 범위에서만 any 로 선언한다(#423).
 declare const document: any, getComputedStyle: any, MutationObserver: any, location: any;
 
+export interface CtlX {
+  name: string;
+}
+
 export const MODES = [
   // 강제 쪽은 OS와 반대로 둔다 - "사용자가 고른 테마가 OS 설정을 이기는가"가 깨지기 쉬운 자리다.
   { name: "auto-light", colorScheme: "light", theme: null },
