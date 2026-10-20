@@ -2,9 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { judge, leadSentence, priceSeries, run } from "../scripts/indicator-backtest.mjs";
+import { judge, leadSentence, priceSeries, run } from "../scripts/indicator-backtest.ts";
 import { fetchRone, merge } from "../scripts/fetch-indicators.mjs";
-import { shiftMonth } from "../scripts/outlook.mjs";
+import { shiftMonth } from "../scripts/outlook.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -129,7 +129,7 @@ test("정적 HTML이 오늘 판정 표를 싣는다", async () => {
 });
 
 test("3차 후보(#57): 인허가는 연중 누계를 달 값으로 풀고, 외지인 비중은 3개월 합으로 낸다", async () => {
-  const { monthlyFromYtd, candidates3 } = await import("../scripts/indicator-candidates-3.mjs");
+  const { monthlyFromYtd, candidates3 } = await import("../scripts/indicator-candidates-3.ts");
   const m = monthlyFromYtd([["202401", 100], ["202402", 250], ["202403", 300], ["202501", 50]]);
   const ymi = (ym) => Number(ym.slice(0, 4)) * 12 + Number(ym.slice(4, 6)) - 1;
   assert.equal(m.get(ymi("202401")), 100, "1월은 누계 그대로");
@@ -156,13 +156,13 @@ test("R-ONE 지역이 GRP에 있는 표는 GRP_ID로 건다", async () => {
 });
 
 test("매일 판정에 3차 후보가 들어간다", async () => {
-  const { candidates } = await import("../scripts/indicator-backtest.mjs");
+  const { candidates } = await import("../scripts/indicator-backtest.ts");
   const ids = candidates({}).map((c) => c.id);
   for (const id of ["out_share", "out_share12", "mort_bal12", "mort_bal_seoul12", "permits12", "permits_lag36"]) assert.ok(ids.includes(id), id);
 });
 
 test("표 끝에 백테스트에 못 들어간 건축HUB 주택인허가 한 행이 정적으로 붙고, 매일 판정 행 수는 그대로다 (#153)", async () => {
-  const { NOT_TESTED, tableHtml } = await import("../scripts/indicator-backtest.mjs");
+  const { NOT_TESTED, tableHtml } = await import("../scripts/indicator-backtest.ts");
   const [html, payload] = await Promise.all([
     readFile(path.join(root, "docs/price-outlook.html"), "utf8"),
     readFile(path.join(root, "docs/data/outlook-indicators.json"), "utf8").then(JSON.parse),
@@ -181,7 +181,7 @@ test("표 끝에 백테스트에 못 들어간 건축HUB 주택인허가 한 행
 });
 
 test("건축HUB 정적 행의 수치는 #133 기록(measure.json B2)과 같고, 사업명·사업주체명·지번·관리번호를 담지 않는다 (#153)", async () => {
-  const { NOT_TESTED } = await import("../scripts/indicator-backtest.mjs");
+  const { NOT_TESTED } = await import("../scripts/indicator-backtest.ts");
   const measure = JSON.parse(await readFile(path.join(root, "research/housing-permits/measure.json"), "utf8"));
   assert.equal(measure.B2.verdict, "fail");
   const gap = (measure.B2.median * 100).toFixed(1);

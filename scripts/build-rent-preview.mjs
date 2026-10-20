@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { DISTRICT_PAGES, DISTRICT_SLUGS } from "./district-slugs.mjs";
-import { rentFileName } from "./deal-files.mjs";
+import { DISTRICT_PAGES, DISTRICT_SLUGS } from "./district-slugs.ts";
+import { rentFileName } from "./deal-files.ts";
 
 /**
  * 자치구를 고르기 전에 보여줄 전월세 맛보기.

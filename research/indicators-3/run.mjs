@@ -1,8 +1,8 @@
 // 3차 후보 백테스트. node research/indicators-3/run.mjs → 표준출력 + cache/result.json
 import { readFile, writeFile } from "node:fs/promises";
 import { INDEX_FILE } from "../../scripts/fetch-price-index.mjs";
-import { REGION_WINS, priceSeries, score } from "../../scripts/indicator-backtest.mjs";
-import { candidates3 } from "../../scripts/indicator-candidates-3.mjs";
+import { REGION_WINS, priceSeries, score } from "../../scripts/indicator-backtest.ts";
+import { candidates3 } from "../../scripts/indicator-candidates-3.ts";
 
 const HORIZONS = [3, 6, 12];
 const index = JSON.parse(await readFile(INDEX_FILE, "utf8"));

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { decodeEntities, extractArticleBody, isScrapable, stripTags } from "../scripts/article-body.mjs";
+import { decodeEntities, extractArticleBody, isScrapable, stripTags } from "../scripts/article-body.ts";
 
 const HANKYUNG_URL = "https://www.hankyung.com/article/2026081425951";
 const YNA_URL = "https://www.yna.co.kr/view/AKR20260815011500002";

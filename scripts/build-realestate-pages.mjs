@@ -1,13 +1,13 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { DISTRICT_PAGES, DISTRICT_SLUGS } from "./district-slugs.mjs";
-import { BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.mjs";
+import { DISTRICT_PAGES, DISTRICT_SLUGS } from "./district-slugs.ts";
+import { BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.ts";
 import { areaPrice } from "./realestate-format.mjs";
-import { dealFileName } from "./deal-files.mjs";
-import { createWriteSet } from "./render-writes.mjs";
-import { districtFacts } from "./district-facts.mjs";
-import { bakeKoHeading } from "./page-heading.mjs";
-import { stripInlineScriptComments } from "./strip-inline-comments.mjs";
+import { dealFileName } from "./deal-files.ts";
+import { createWriteSet } from "./render-writes.ts";
+import { districtFacts } from "./district-facts.ts";
+import { bakeKoHeading } from "./page-heading.ts";
+import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 import {
   REALESTATE_TEMPLATE_PATH,
   applyPrerender,

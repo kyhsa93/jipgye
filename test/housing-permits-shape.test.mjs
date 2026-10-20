@@ -7,9 +7,9 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { FIELDS, LICENSE } from "../scripts/housing-permits-spec.mjs";
-import * as fold from "../scripts/housing-permits-fold.mjs";
+import * as fold from "../scripts/housing-permits-fold.ts";
 import { realItem } from "./helpers/housing-permits-items.mjs";
-import { DISTRICTS } from "../scripts/realestate-districts.mjs";
+import { DISTRICTS } from "../scripts/realestate-districts.ts";
 
 // 응답 모양 오류(ShapeError) 때의 진단 출력 (#133 남은 항목, #141). 첫 시험 호출(run 38025773084)이
 // "mgmPmsrgstPk 없음"(옛 가정 이름)으로 멈췄는데 실제 필드 이름이 로그에 없어 무엇이 맞는지 알 수 없었다.

@@ -2,8 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { BUDGET_PAGES } from "../scripts/budget-pages.mjs";
-import { DISTRICT_PAGES } from "../scripts/district-slugs.mjs";
+import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
+import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 import { REALESTATE_PAGES } from "../scripts/build-realestate-pages.mjs";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 

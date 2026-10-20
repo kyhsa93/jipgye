@@ -1,14 +1,14 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.mjs";
+import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.ts";
 import { REALESTATE_TEMPLATE_PATH, applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml, realestateOverallHtml } from "./prerender.mjs";
 import { clustering } from "./loan-cap.mjs";
 import { lineCounts } from "./policy-loan.mjs";
-import { budgetRulesHtml } from "./budget-rules.mjs";
-import { bakeKoHeading } from "./page-heading.mjs";
-import { createWriteSet } from "./render-writes.mjs";
-import { escapeHtml } from "./html-escape.mjs";
-import { stripInlineScriptComments } from "./strip-inline-comments.mjs";
+import { budgetRulesHtml } from "./budget-rules.ts";
+import { bakeKoHeading } from "./page-heading.ts";
+import { createWriteSet } from "./render-writes.ts";
+import { escapeHtml } from "./html-escape.ts";
+import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const REALESTATE_PATH = REALESTATE_TEMPLATE_PATH; // 빈 표지가 있는 틀(scripts/realestate-template.html). 나가는 docs/realestate.html 이 아니다(#374).

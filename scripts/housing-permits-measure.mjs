@@ -12,8 +12,8 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { DISTRICTS } from "./realestate-districts.mjs";
-import { monthlyFromYtd } from "./indicator-candidates-3.mjs";
+import { DISTRICTS } from "./realestate-districts.ts";
+import { monthlyFromYtd } from "./indicator-candidates-3.ts";
 import { DAILY_LIMIT, SERIES } from "./housing-permits-spec.mjs";
 
 /** PREREG B1: 시작은 이 달 이하(2012-12 이전 포함), 길이는 150개월 이상. 150 = 90 + 60 (PREREG 산식표). */

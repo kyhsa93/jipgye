@@ -4,8 +4,8 @@ import { spawnSync } from "node:child_process";
 import { cp, mkdir, mkdtemp, readdir, readFile, realpath, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { createWriteSet } from "../scripts/render-writes.mjs";
-import { findJsComments, stripInlineScriptComments } from "../scripts/strip-inline-comments.mjs";
+import { createWriteSet } from "../scripts/render-writes.ts";
+import { findJsComments, stripInlineScriptComments } from "../scripts/strip-inline-comments.ts";
 import { jsInlineScripts } from "./helpers/comment-proof.mjs";
 
 // #237: 한 렌더 스크립트는 전부 메모리에서 렌더에 성공한 뒤에 쓴다 - 중간에서 던지면 어느 파일도 바뀌지 않는다.
@@ -111,7 +111,7 @@ test("build-rate-pages.mjs: 뒤 상품군 장을 그리다 던지면 앞 상품�
 });
 
 test("stampAll(io): 뒤 장에서 던지면 쓰기 묶음에 올린 앞 장은 디스크에 내려가지 않고, 이어받기는 올린 것을 읽는다", async () => {
-  const { stampAll } = await import("../scripts/updated-stamp.mjs");
+  const { stampAll } = await import("../scripts/updated-stamp.ts");
   const { readFileSync } = await import("node:fs");
   const dir = await realpath(await mkdtemp(path.join(os.tmpdir(), "jipgye-stamp-")));
   tmpDirs.push(dir);

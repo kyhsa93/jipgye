@@ -20,9 +20,9 @@ import {
   buildDistrictPage,
   buildRealestatePage,
 } from "../scripts/build-realestate-pages.mjs";
-import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.mjs";
-import { districtSentences } from "../scripts/district-summary.mjs";
-import { stampHtml } from "../scripts/updated-stamp.mjs";
+import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
+import { districtSentences } from "../scripts/district-summary.ts";
+import { stampHtml } from "../scripts/updated-stamp.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -934,7 +934,7 @@ test("자치구 장에 '이 구에서' 길 - 이 구의 실거래, 84㎡ 값의 
 // 값(시세·날짜)에 기대지 않는 구조 검사다(#8).
 test("추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 선다 (#287)", async () => {
   const { REALESTATE_PAGES: pages } = await import("../scripts/build-realestate-pages.mjs");
-  const { BUDGET_PAGES } = await import("../scripts/budget-pages.mjs");
+  const { BUDGET_PAGES } = await import("../scripts/budget-pages.ts");
   const files = [
     "realestate.html",
     ...pages.map((p) => p.file),

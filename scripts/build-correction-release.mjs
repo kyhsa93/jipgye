@@ -31,9 +31,9 @@ import {
   registrationStats,
   repeatedLiveStats,
   withoutCorrections,
-} from "./cancellation.mjs";
-import { DISTRICTS } from "./realestate-districts.mjs";
-import { RAW_DIR, readSlotFile } from "./realestate-raw.mjs";
+} from "./cancellation.ts";
+import { DISTRICTS } from "./realestate-districts.ts";
+import { RAW_DIR, readSlotFile } from "./realestate-raw.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 

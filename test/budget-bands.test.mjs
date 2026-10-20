@@ -8,7 +8,7 @@ import {
   bandStart,
   buildBands,
   mergeBands,
-} from "../scripts/budget-bands.mjs";
+} from "../scripts/budget-bands.ts";
 import { buildPayload } from "../scripts/build-budget-deals.mjs";
 
 const deal = (amount10k, extra = {}) => ({

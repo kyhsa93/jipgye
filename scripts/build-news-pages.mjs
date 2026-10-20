@@ -1,8 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { applyPrerender, newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "./prerender.mjs";
-import { createWriteSet } from "./render-writes.mjs";
-import { stripInlineScriptComments } from "./strip-inline-comments.mjs";
+import { createWriteSet } from "./render-writes.ts";
+import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const NEWS_PATH = path.join(root, "docs/news.html");

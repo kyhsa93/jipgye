@@ -1,8 +1,8 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { APT_PRICE_INDEX, clampRows, ecosKey, searchAll } from "./ecos.mjs";
-import { REGIONS, shiftMonth } from "./outlook.mjs";
-import { yearMonthOf } from "./realestate-slots.mjs";
+import { APT_PRICE_INDEX, clampRows, ecosKey, searchAll } from "./ecos.ts";
+import { REGIONS, shiftMonth } from "./outlook.ts";
+import { yearMonthOf } from "./realestate-slots.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 

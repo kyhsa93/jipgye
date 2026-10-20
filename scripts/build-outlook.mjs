@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { INDEX_FILE } from "./fetch-price-index.mjs";
 import { INDICATOR_FILE } from "./fetch-indicators.mjs";
-import { SHADOW, priceSeries, shadowForecast } from "./indicator-backtest.mjs";
+import { SHADOW, priceSeries, shadowForecast } from "./indicator-backtest.ts";
 import {
   HORIZONS,
   REGIONS,
@@ -21,10 +21,10 @@ import {
   scoreTableHtml,
   toDeal,
   toSeries,
-} from "./outlook.mjs";
-import { readSlotFile } from "./realestate-raw.mjs";
-import { RETENTION_MONTHS, shiftMonth, yearMonthOf } from "./realestate-slots.mjs";
-import { recentMonths } from "./realestate-source.mjs";
+} from "./outlook.ts";
+import { readSlotFile } from "./realestate-raw.ts";
+import { RETENTION_MONTHS, shiftMonth, yearMonthOf } from "./realestate-slots.ts";
+import { recentMonths } from "./realestate-source.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const dataDir = process.env.OUTLOOK_DIR ? path.resolve(process.env.OUTLOOK_DIR) : path.join(root, "docs/data");
@@ -223,7 +223,7 @@ export const closedBefore = (now) => shiftMonth(yearMonthOf(now), -1);
 async function readDeals(now) {
   const current = closedBefore(now);
   const months = recentMonths(now, RETENTION_MONTHS).filter((m) => m < current);
-  const { DISTRICTS } = await import("./realestate-districts.mjs");
+  const { DISTRICTS } = await import("./realestate-districts.ts");
   const files = await Promise.all(
     DISTRICTS.flatMap(({ code }) => months.map((month) => readSlotFile("sale", code, month)))
   );

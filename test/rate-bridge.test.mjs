@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { RATE_PAGES } from "../scripts/build-rate-pages.mjs";
-import { RATE_BRIDGE, BUDGET_HREF, CONVERSION_HREF } from "../scripts/rate-bridge.mjs";
+import { RATE_BRIDGE, BUDGET_HREF, CONVERSION_HREF } from "../scripts/rate-bridge.ts";
 
 // #179: 금리 화면 다섯 장이 실거래(10억대)와 전월세전환율 화면으로 가는 길을 갖되,
 // 다섯 장의 문구가 한 문장 틀에 숫자만 바꾼 것이 되지 않게 지킨다(애드센스 반려 사유).

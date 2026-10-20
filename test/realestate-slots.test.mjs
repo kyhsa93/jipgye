@@ -11,7 +11,7 @@ import {
   slotStateOf,
   windowMonths,
   yearMonthOf,
-} from "../scripts/realestate-slots.mjs";
+} from "../scripts/realestate-slots.ts";
 
 const NOW = new Date("2026-08-17T00:00:00Z");
 const DISTRICTS = [{ code: "11110" }, { code: "11680" }];

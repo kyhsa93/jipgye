@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { basisFrom, detailKeyFrom, fetchMoveIn } from "../scripts/fetch-move-in.mjs";
-import { halfOf, moveInLead, moveInTableHtml, parseCsv, summarize } from "../scripts/move-in.mjs";
+import { halfOf, moveInLead, moveInTableHtml, parseCsv, summarize } from "../scripts/move-in.ts";
 
 const CSV = [
   "입주예정월,지역,사업유형,주소,아파트명,세대수",

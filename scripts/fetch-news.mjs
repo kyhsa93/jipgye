@@ -1,8 +1,8 @@
 import Parser from "rss-parser";
 import { writeFile, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { categorizeTitle } from "./categories.mjs";
-import { extractArticleBody, isScrapable, normalizeFeedTitle, stripTags } from "./article-body.mjs";
+import { categorizeTitle } from "./categories.ts";
+import { extractArticleBody, isScrapable, normalizeFeedTitle, stripTags } from "./article-body.ts";
 
 const FEEDS = [
   { source: "매일경제 부동산", url: "https://www.mk.co.kr/rss/50300009/" },

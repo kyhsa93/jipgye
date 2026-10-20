@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { budgetFacts, budgetFactSentences } from "../scripts/budget-facts.mjs";
+import { budgetFacts, budgetFactSentences } from "../scripts/budget-facts.ts";
 
 /**
  * 이 파일은 그날 데이터를 읽지 않는다.

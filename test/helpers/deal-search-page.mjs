@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
-import { DISTRICT_SLUGS } from "../../scripts/district-slugs.mjs";
+import { DISTRICT_SLUGS } from "../../scripts/district-slugs.ts";
 
 const root = path.resolve(import.meta.dirname, "../..");
 

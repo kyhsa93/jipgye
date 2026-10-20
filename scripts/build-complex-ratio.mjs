@@ -1,9 +1,9 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { DISTRICTS } from "./realestate-districts.mjs";
-import { readSlotFile } from "./realestate-raw.mjs";
-import { recentMonths } from "./realestate-source.mjs";
-import { cellRatios, spreadOf } from "./complex-ratio.mjs";
+import { DISTRICTS } from "./realestate-districts.ts";
+import { readSlotFile } from "./realestate-raw.ts";
+import { recentMonths } from "./realestate-source.ts";
+import { cellRatios, spreadOf } from "./complex-ratio.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 

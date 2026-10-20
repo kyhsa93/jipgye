@@ -1,8 +1,8 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { AREA_BANDS, LOAN_LTV, cellNote, conversionPairs, districtRates, leadSentence, median, verdictOf } from "./conversion.mjs";
-import { DISTRICT_SLUGS } from "./district-slugs.mjs";
-import { readRentSource, recentMonths } from "./realestate-source.mjs";
+import { AREA_BANDS, LOAN_LTV, cellNote, conversionPairs, districtRates, leadSentence, median, verdictOf } from "./conversion.ts";
+import { DISTRICT_SLUGS } from "./district-slugs.ts";
+import { readRentSource, recentMonths } from "./realestate-source.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 

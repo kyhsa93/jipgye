@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { DISTRICT_SLUGS, districtFile } from "./district-slugs.mjs";
+import { DISTRICT_SLUGS, districtFile } from "./district-slugs.ts";
 import {
   BASE_AREA_M2,
   MIN_SAMPLE,

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildDealFiles, collectDeals, periodOf } from "../scripts/deal-files.mjs";
+import { buildDealFiles, collectDeals, periodOf } from "../scripts/deal-files.ts";
 
 const NOW = new Date("2026-08-17T00:00:00Z");
 

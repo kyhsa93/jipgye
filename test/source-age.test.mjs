@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { collect, summarize, kstDayNumber } from "../scripts/source-age.mjs";
+import { collect, summarize, kstDayNumber } from "../scripts/source-age.ts";
 
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "source-age-"));

@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { DEFAULT_AMOUNT, TAX_RATE, formatWon, interestOf } from "../scripts/interest.mjs";
+import { DEFAULT_AMOUNT, TAX_RATE, formatWon, interestOf } from "../scripts/interest.ts";
 import { ratesHeadHtml, ratesHtml } from "../scripts/prerender.mjs";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 

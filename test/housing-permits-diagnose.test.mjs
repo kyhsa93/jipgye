@@ -6,9 +6,9 @@ import { mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import { createDiagnostics } from "../scripts/housing-permits-diagnose.mjs";
+import { createDiagnostics } from "../scripts/housing-permits-diagnose.ts";
 import { LICENSE } from "../scripts/housing-permits-spec.mjs";
-import { DISTRICTS } from "../scripts/realestate-districts.mjs";
+import { DISTRICTS } from "../scripts/realestate-districts.ts";
 
 // 수집기 진단 출력 (#147). 규칙: 출력은 개수·비율·연도 히스토그램·코드성 범주뿐이고, 개별 값
 // (관리번호·사업명·주소·지번·날짜 원문)은 어떤 형태로도 나오지 않는다. 전부 합성 응답이다.

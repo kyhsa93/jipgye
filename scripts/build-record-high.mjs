@@ -9,8 +9,8 @@ import {
   measure,
   survivalSentence,
   toDeal,
-} from "./record-high.mjs";
-import { RAW_DIR } from "./realestate-raw.mjs";
+} from "./record-high.ts";
+import { RAW_DIR } from "./realestate-raw.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const outFile = process.env.RECORD_HIGH_FILE

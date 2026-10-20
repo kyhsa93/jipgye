@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { icon } from "../scripts/build-icons.mjs";
+import { icon } from "../scripts/build-icons.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -13,7 +13,7 @@ test("앱 아이콘은 스크립트가 그린 것과 같다", async () => {
     const committed = await readFile(path.join(root, `docs/icons/icon-${size}.png`));
     assert.ok(
       committed.equals(icon(size)),
-      `docs/icons/icon-${size}.png가 원본과 어긋납니다. node scripts/build-icons.mjs를 실행하세요.`
+      `docs/icons/icon-${size}.png가 원본과 어긋납니다. node scripts/build-icons.ts를 실행하세요.`
     );
   }
 });

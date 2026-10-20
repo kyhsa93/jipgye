@@ -2,12 +2,12 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { BUDGET_PAGES } from "../scripts/budget-pages.mjs";
-import { buildBands } from "../scripts/budget-bands.mjs";
-import { DISTRICT_PAGES } from "../scripts/district-slugs.mjs";
+import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
+import { buildBands } from "../scripts/budget-bands.ts";
+import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.mjs";
 import { buildBudgetPage } from "../scripts/build-budget-pages.mjs";
-import { BASE_H1, bakeHeading, koHeading } from "../scripts/page-heading.mjs";
+import { BASE_H1, bakeHeading, koHeading } from "../scripts/page-heading.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 
 /**

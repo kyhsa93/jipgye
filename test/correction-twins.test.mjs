@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildPayload } from "../scripts/build-cancellation.mjs";
-import { correctionSentence, correctionStats, withoutCorrections } from "../scripts/cancellation.mjs";
+import { correctionSentence, correctionStats, withoutCorrections } from "../scripts/cancellation.ts";
 
 const NOW = new Date("2026-10-01T00:00:00Z");
 const base = {

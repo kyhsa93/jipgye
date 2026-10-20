@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { settledMonths } from "../scripts/cancel-by-price.mjs";
+import { settledMonths } from "../scripts/cancel-by-price.ts";
 import { buildPayload } from "../scripts/build-record-high.mjs";
 
 // raw/sale 전체가 13만 건을 넘기며 Math.max(...배열)이 RangeError를 냈다(#97).

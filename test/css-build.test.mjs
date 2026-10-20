@@ -110,7 +110,7 @@ test("산출물 신선도(바이너리 없이 보는 쪽): 배너·층 선언이
   assert.ok(flatMain.statements.includes('@import "./legacy.css" layer(components)'), "legacy.css를 components 층으로 불러오지 않는다");
   const imports = flatMain.statements.filter((s) => s.startsWith("@import") && s.includes("tailwindcss"));
   assert.deepEqual(imports, ['@import "tailwindcss/theme.css" layer(theme) prefix(tw)', '@import "tailwindcss/utilities.css" layer(utilities) prefix(tw) source(none)'], "Tailwind는 theme과 utilities만, 접두사를 붙여, 자동 훑기를 끄고 불러온다(preflight를 켜면 제목·목록·버튼이 바뀐다)");
-  assert.deepEqual(sourceGlobs(main), ["../../docs/*.html", "../../docs/*.js", "../../scripts/render/entry.jsx", "../../scripts/*.mjs"], "@source 목록이 바뀌었다 - #276 본문의 목록과 함께 고친다");
+  assert.deepEqual(sourceGlobs(main), ["../../docs/*.html", "../../docs/*.js", "../../scripts/render/entry.jsx", "../../scripts/*.mjs", "../../scripts/*.ts"], "@source 목록이 바뀌었다 - #276 본문의 목록과 함께 고친다");
   assert.ok(built.statements.includes("@layer theme, base, components, utilities"), "산출물에 층 순서 선언이 없다");
 
   // 소스 → 산출물: 소스에 적힌 class마다 규칙이 있다(오타이거나, class를 넣고 다시 빌드하지 않았거나).

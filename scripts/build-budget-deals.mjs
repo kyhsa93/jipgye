@@ -5,11 +5,11 @@ import {
   flattenDistrictMonths,
   mergeBands,
   mergeDistrictMonths,
-} from "./budget-bands.mjs";
-import { budgetFacts } from "./budget-facts.mjs";
-import { buildDealFiles, dealFileName, periodOf } from "./deal-files.mjs";
-import { DISTRICT_SLUGS } from "./district-slugs.mjs";
-import { readDealSource } from "./realestate-source.mjs";
+} from "./budget-bands.ts";
+import { budgetFacts } from "./budget-facts.ts";
+import { buildDealFiles, dealFileName, periodOf } from "./deal-files.ts";
+import { DISTRICT_SLUGS } from "./district-slugs.ts";
+import { readDealSource } from "./realestate-source.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 

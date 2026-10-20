@@ -93,7 +93,7 @@
    `node scripts/build-realestate-pages.mjs && node scripts/build-budget-pages.mjs && node scripts/build-news-pages.mjs && node scripts/build-rate-pages.mjs`
    실행 뒤 `git status --porcelain docs`가 비어야 한다
 5. 데이터 상태:
-   - `docs/data/*.json`의 `updatedAt`이 얼마나 묵었나 (전부 하루 1회 갱신이다): `node scripts/source-age.mjs` (아래 「수집 신선도」)
+   - `docs/data/*.json`의 `updatedAt`이 얼마나 묵었나 (전부 하루 1회 갱신이다): `node scripts/source-age.ts` (아래 「수집 신선도」)
    - `docs/data/realestate.json`에서 표본이 얇아 값을 비운 자치구가 몇이나 되나
    - `docs/data/realestate-trend.json`에서 주간 변동이 비정상적으로 큰 자치구
    - 예산대별 거래 건수(`docs/data/budget-deals.json`)가 0에 가까운 밴드
@@ -152,7 +152,7 @@ $ 실제로 실행한 명령
 - 갱신일: `docs/data/*.json`의 `updatedAt`(`-<구>` 접미사 묶음은 한 소스, 가장 오래된 값),
   실거래 원본은 `raw/sale`·`raw/rent`의 가장 최근 달 슬롯 파일 `observedAt` 중 최신.
   `updatedAt`이 없는 파일(히스토리·메타)은 소스가 아니라 건너뛴다.
-- 읽는 법: `node scripts/source-age.mjs`는 경과일 큰 순으로 소스·파일·`updatedAt`을 찍고 끝에
+- 읽는 법: `node scripts/source-age.ts`는 경과일 큰 순으로 소스·파일·`updatedAt`을 찍고 끝에
   `경과 최대 2일: cancellation.json` 꼴 한 줄을 붙인다. #97(해제 통계 `updatedAt` 정지)이 이 모양이다.
 - 문턱: **경과 >= 2일** 소유자 상태줄(`--statusline`, 이상 없으면 아무것도 안 찍는다),
   **경과 >= 3일** 열린 이슈에 댓글(없을 때만 새 이슈 1건).

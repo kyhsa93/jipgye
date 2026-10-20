@@ -1,8 +1,8 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fetchRone, merge, REFRESH_MONTHS } from "./fetch-indicators.mjs";
-import { shiftMonth } from "./outlook.mjs";
-import { yearMonthOf } from "./realestate-slots.mjs";
+import { shiftMonth } from "./outlook.ts";
+import { yearMonthOf } from "./realestate-slots.ts";
 
 /**
  * 한국부동산원 주택가격동향조사 - 월간 아파트 매매가격지수, 서울 자치구별(R-ONE A_2024_00045).

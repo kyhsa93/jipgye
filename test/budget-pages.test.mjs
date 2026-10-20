@@ -2,10 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { BUDGET_PAGES, budgetPageFile } from "../scripts/budget-pages.mjs";
+import { BUDGET_PAGES, budgetPageFile } from "../scripts/budget-pages.ts";
 import { buildBudgetPage } from "../scripts/build-budget-pages.mjs";
 import { budgetBodyHtml, realestateOverallHtml } from "../scripts/prerender.mjs";
-import { buildBands, mergeBands } from "../scripts/budget-bands.mjs";
+import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
 

@@ -2,13 +2,13 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { budgetRulesHtml } from "../scripts/budget-rules.mjs";
+import { budgetRulesHtml } from "../scripts/budget-rules.ts";
 import { escapeHtml } from "../scripts/prerender.mjs";
 import { COSTS_RULES } from "../scripts/purchase-costs.mjs";
 import { MIN_CASH_RULES } from "../scripts/min-cash.mjs";
 import { POLICY_LINES, POLICY_TAIL } from "../scripts/policy-loan.mjs";
 import { CAP_RULES_HIGH } from "../scripts/loan-cap.mjs";
-import { BUDGET_PAGES } from "../scripts/budget-pages.mjs";
+import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
 
 // #66: 예산대 18장에 똑같이 실리던 규칙 문단은 method.html 한 자리에만 있고, 장에는 링크만 남는다.
 // 값(금리·거래 수)에 기대는 문장은 데이터에 따라 달라지므로 여기서 단정하지 않는다(#8) - 글자가 고정인 규칙만 본다.

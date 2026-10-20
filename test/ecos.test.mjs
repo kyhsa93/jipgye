@@ -9,7 +9,7 @@ import {
   ecosKey,
   searchUrl,
   statisticSearch,
-} from "../scripts/ecos.mjs";
+} from "../scripts/ecos.ts";
 import { baseRateFrom, rateLabel, ymdLabel } from "../scripts/fetch-market.mjs";
 
 const day = (time, value) => ({ TIME: time, DATA_VALUE: value });

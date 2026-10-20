@@ -1,13 +1,13 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { accessibleTables } from "./table-a11y.mjs";
+import { accessibleTables } from "./table-a11y.ts";
 import { fragment } from "./renderer.mjs";
-import { createWriteSet } from "./render-writes.mjs";
-import { INDEX_NEWS, indexNewsItems } from "./news-items.mjs";
-import { escapeHtml } from "./html-escape.mjs";
-import { FALLBACK_NOTE_KO, hasFallback } from "./summary-note.mjs";
-import { SUMMARY_CATEGORIES_LABEL_KO, SUMMARY_HIGHLIGHTS_LABEL_KO, summaryMetaKo } from "./summary-box.mjs";
-import { linksBlockHtml, slugLinksHtml } from "./district-links.mjs";
+import { createWriteSet } from "./render-writes.ts";
+import { INDEX_NEWS, indexNewsItems } from "./news-items.ts";
+import { escapeHtml } from "./html-escape.ts";
+import { FALLBACK_NOTE_KO, hasFallback } from "./summary-note.ts";
+import { SUMMARY_CATEGORIES_LABEL_KO, SUMMARY_HIGHLIGHTS_LABEL_KO, summaryMetaKo } from "./summary-box.ts";
+import { linksBlockHtml, slugLinksHtml } from "./district-links.ts";
 import {
   CONVERSION_BAND,
   cancelDistricts,
@@ -16,21 +16,21 @@ import {
   floorDistricts,
   renewalDistricts,
   renewalWolseDistricts,
-} from "./district-tables.mjs";
-import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "./rates-table.mjs";
-import { BUDGET_PAGES } from "./budget-pages.mjs";
-import { budgetFactSentences } from "./budget-facts.mjs";
-import { DISTRICT_PAGES } from "./district-slugs.mjs";
-import { districtSentences } from "./district-summary.mjs";
-import { factSentences } from "./district-facts.mjs";
-import { renewalSentences } from "./renewal-facts.mjs";
+} from "./district-tables.ts";
+import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "./rates-table.ts";
+import { BUDGET_PAGES } from "./budget-pages.ts";
+import { budgetFactSentences } from "./budget-facts.ts";
+import { DISTRICT_PAGES } from "./district-slugs.ts";
+import { districtSentences } from "./district-summary.ts";
+import { factSentences } from "./district-facts.ts";
+import { renewalSentences } from "./renewal-facts.ts";
 import { BUDGET_MORE_LINKS, CANDIDATE_LIST, bodyShape, budgetAnswers, budgetBandLabel, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "./budget-fragments.mjs";
-import { rateBridgeHtml } from "./rate-bridge.mjs";
-import { metricCell, topDistricts } from "./realestate-rows.mjs";
+import { rateBridgeHtml } from "./rate-bridge.ts";
+import { metricCell, topDistricts } from "./realestate-rows.ts";
 import { headLabels, realestateTable } from "./realestate-table.mjs";
 import { overallCards } from "./realestate-overall.mjs";
 import { MIN_SAMPLE } from "./realestate-format.mjs";
-import { stripInlineScriptComments } from "./strip-inline-comments.mjs";
+import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const INDEX_PATH = path.join(root, "docs/index.html");

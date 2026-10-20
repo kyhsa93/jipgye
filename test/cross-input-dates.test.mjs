@@ -4,8 +4,8 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
 import { measure, words } from "../scripts/prose-share.mjs";
-import { STALE_DAYS, readDataSources } from "../scripts/source-age.mjs";
-import { CROSS_PAGES, baselineFor, crossStampHtml } from "../scripts/updated-stamp.mjs";
+import { STALE_DAYS, readDataSources } from "../scripts/source-age.ts";
+import { CROSS_PAGES, baselineFor, crossStampHtml } from "../scripts/updated-stamp.ts";
 
 /**
  * 교차값(실거래 x 금리)에 입력별 기준일을 병기하고, 입력 하나라도 낡으면 글로 경고한다 (#154, #107·#111 후속).
@@ -184,7 +184,7 @@ test("저장소 docs: 그 화면 전부의 정적 HTML에 입력별 기준일 �
 });
 
 test("교차 입력의 소스는 그 화면이 읽는 소스 또는 금리다 (소스 표와 어긋나지 않는다)", async () => {
-  const { PAGE_SOURCES } = await import("../scripts/updated-stamp.mjs");
+  const { PAGE_SOURCES } = await import("../scripts/updated-stamp.ts");
   for (const [file, inputs] of Object.entries(CROSS_PAGES)) {
     for (const n of inputs.deals) assert.ok(PAGE_SOURCES[file].includes(n), `${file}: 실거래 소스 ${n}이 화면 소스 표에 없다`);
     assert.deepEqual(inputs.rates, ["rates"], `${file}: 금리 소스는 rates.json 하나다`);

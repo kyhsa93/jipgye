@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { MOVE_IN_DIR } from "./fetch-move-in.mjs";
-import { moveInDistrictsText, moveInLead, moveInTableHtml, parseCsv, summarize } from "./move-in.mjs";
+import { moveInDistrictsText, moveInLead, moveInTableHtml, parseCsv, summarize } from "./move-in.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const outFile = process.env.MOVE_IN_FILE ? path.resolve(process.env.MOVE_IN_FILE) : path.join(root, "docs/data/move-in.json");

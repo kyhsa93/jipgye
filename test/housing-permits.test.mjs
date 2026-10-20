@@ -7,10 +7,10 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { COMPLETE_CANDIDATES, DAILY_LIMIT, FIELDS, LICENSE, OPERATION, PROJECTED_FIELDS, SERIES } from "../scripts/housing-permits-spec.mjs";
-import { assertCoreFields, foldProjects, parseDay, projectItem } from "../scripts/housing-permits-fold.mjs";
-import { OTHER_KEY } from "../scripts/housing-permits-merge.mjs";
+import { assertCoreFields, foldProjects, parseDay, projectItem } from "../scripts/housing-permits-fold.ts";
+import { OTHER_KEY } from "../scripts/housing-permits-merge.ts";
 import { dailyLimit } from "../scripts/fetch-housing-permits.mjs";
-import { DISTRICTS } from "../scripts/realestate-districts.mjs";
+import { DISTRICTS } from "../scripts/realestate-districts.ts";
 import { flawedFold } from "./helpers/housing-permits-mutants.mjs";
 import { REAL_KEYS, realItem } from "./helpers/housing-permits-items.mjs";
 

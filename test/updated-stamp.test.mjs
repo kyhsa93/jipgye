@@ -4,8 +4,8 @@ import { mkdtemp, mkdir, readFile, readdir, writeFile, rm } from "node:fs/promis
 import { tmpdir } from "node:os";
 import path from "node:path";
 import vm from "node:vm";
-import { STALE_DAYS, computeAges, kstDayNumber, readDataSources } from "../scripts/source-age.mjs";
-import { NO_DATA_PAGES, PAGE_SOURCES, baselineFor, stampAll, stampHtml } from "../scripts/updated-stamp.mjs";
+import { STALE_DAYS, computeAges, kstDayNumber, readDataSources } from "../scripts/source-age.ts";
+import { NO_DATA_PAGES, PAGE_SOURCES, baselineFor, stampAll, stampHtml } from "../scripts/updated-stamp.ts";
 import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
 
 /**

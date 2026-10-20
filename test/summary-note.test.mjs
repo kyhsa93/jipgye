@@ -7,7 +7,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.mjs";
 import { applyPrerender, newsSummaryHtml, summaryHtml } from "../scripts/prerender.mjs";
-import { FALLBACK_NOTE_KO, hasFallback } from "../scripts/summary-note.mjs";
+import { FALLBACK_NOTE_KO, hasFallback } from "../scripts/summary-note.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");

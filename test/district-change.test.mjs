@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { MIN_CELLS, cellChanges, districtRows, pairVerdicts, periods, surveyChange, toDeal } from "../scripts/district-change.mjs";
+import { MIN_CELLS, cellChanges, districtRows, pairVerdicts, periods, surveyChange, toDeal } from "../scripts/district-change.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -109,7 +109,7 @@ test("두 구 견주기는 금액 간격의 변화를 옮겨 갈 구 기준 부�
 });
 
 test("금액 간격: 같은 %라도 비싼 구가 더 많이 오른다", async () => {
-  const { moneyGap, cellLevels, districtLevel } = await import("../scripts/district-change.mjs");
+  const { moneyGap, cellLevels, districtLevel } = await import("../scripts/district-change.ts");
   const cheap = Array.from({ length: 40 }, (_, i) => ({ b: 1000 + i, r: (1000 + i) * 1.1 })); // 만원/㎡
   const dear = Array.from({ length: 40 }, (_, i) => ({ b: 3000 + i, r: (3000 + i) * 1.1 }));
   const g = moneyGap(cheap, dear);
@@ -124,7 +124,7 @@ test("금액 간격: 같은 %라도 비싼 구가 더 많이 오른다", async (
 });
 
 test("84㎡ 환산 두 시기 값은 같은 줄의 %와 같은 통계다 (#36)", async () => {
-  const { cellLevels, districtLevel, districtRows, cellChanges } = await import("../scripts/district-change.mjs");
+  const { cellLevels, districtLevel, districtRows, cellChanges } = await import("../scripts/district-change.ts");
   const p = { base: ["202508", "202509", "202510"], recent: ["202606", "202607", "202608"] };
   const deals = [];
   const add = (cell, b, r) => {

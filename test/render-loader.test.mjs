@@ -2,8 +2,8 @@ import test, { after } from "node:test";
 import assert from "node:assert/strict";
 import { readdir, rm } from "node:fs/promises";
 import path from "node:path";
-import { loadJsxModule } from "../scripts/render/load-jsx.mjs";
-import { createReactRenderer } from "../scripts/render/react.mjs";
+import { loadJsxModule } from "../scripts/render/load-jsx.ts";
+import { createReactRenderer } from "../scripts/render/react.ts";
 
 // #237: esbuild 자작 로더와 react 진입점. 읽는 것은 test/fixtures/render/의 고정 JSX뿐이다(R3) - docs/data도 골든 파일도 아니다.
 

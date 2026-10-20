@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { DISTRICTS } from "../scripts/realestate-districts.mjs";
-import { OTHER_KEY } from "../scripts/housing-permits-merge.mjs";
+import { DISTRICTS } from "../scripts/realestate-districts.ts";
+import { OTHER_KEY } from "../scripts/housing-permits-merge.ts";
 import { SERIES } from "../scripts/housing-permits-spec.mjs";
 import { B2_MAX_MEDIAN, seoulMonthly, measureB1, measureB2, measureB3, measureB4 } from "../scripts/housing-permits-measure.mjs";
 import { flawedB2Verdict } from "./helpers/housing-permits-mutants.mjs";

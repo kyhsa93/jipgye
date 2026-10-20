@@ -13,8 +13,8 @@ import { appendFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import { ApiFatalError, ApiValidationError, DEFAULT_BASE, DEFAULT_DAILY_BUDGET, DEFAULT_END_DATE, DEFAULT_START_DATE, MIN_GAP_MS, normalizeKey, runCollector, summaryLines } from "./official-price-api.mjs";
-import { runExplore } from "./official-price-explore.mjs";
-import { loadTargets } from "./official-price-targets.mjs";
+import { runExplore } from "./official-price-explore.ts";
+import { loadTargets } from "./official-price-targets.ts";
 
 /** collect 모드 호출 예산 입력의 상한(개발계정 일 10,000건 안). 입력이 더 크면 이 값으로 자른다. */
 const MAX_COLLECT_BUDGET = 9000;

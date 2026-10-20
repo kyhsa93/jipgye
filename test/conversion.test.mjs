@@ -10,7 +10,7 @@ import {
   median,
   monthlyCost,
   verdictOf,
-} from "../scripts/conversion.mjs";
+} from "../scripts/conversion.ts";
 import { buildPayload, depositRateOf, loanRateOf } from "../scripts/build-conversion.mjs";
 
 const NOW = new Date("2026-08-26T00:00:00Z");

@@ -12,7 +12,7 @@ import {
   summaryHtml,
 } from "../scripts/prerender.mjs";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
-import { rateBridgeHtml } from "../scripts/rate-bridge.mjs";
+import { rateBridgeHtml } from "../scripts/rate-bridge.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readIndex = () => readFile(path.join(root, "docs/index.html"), "utf8");

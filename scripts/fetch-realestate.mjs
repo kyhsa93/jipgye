@@ -1,8 +1,8 @@
 import { XMLParser } from "fast-xml-parser";
 import path from "node:path";
-import { DISTRICTS, districtNames } from "./realestate-districts.mjs";
-import { buildSlotFile, readSlots, removeSlotFile, writeSlotFile } from "./realestate-raw.mjs";
-import { planFetch, planSummary } from "./realestate-slots.mjs";
+import { DISTRICTS, districtNames } from "./realestate-districts.ts";
+import { buildSlotFile, readSlots, removeSlotFile, writeSlotFile } from "./realestate-raw.ts";
+import { planFetch, planSummary } from "./realestate-slots.ts";
 
 const SALE_API_URL = process.env.MOLIT_API_ENDPOINT;
 const SALE_SERVICE_KEY = process.env.MOLIT_API_KEY;

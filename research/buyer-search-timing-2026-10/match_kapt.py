@@ -10,7 +10,7 @@ import os, re, json, glob, collections
 REPO = os.environ.get("REPO", os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 HERE = os.path.dirname(os.path.abspath(__file__))
 kapt = json.load(open(os.path.join(HERE, "cache", "kapt-seoul.json")))
-src = open(os.path.join(REPO, "scripts/realestate-districts.mjs")).read()
+src = open(os.path.join(REPO, "scripts/realestate-districts.ts")).read()
 SGG = dict(re.findall(r'code: "(\d+)", name: "([^"]+)"', src))
 
 def norm(name):

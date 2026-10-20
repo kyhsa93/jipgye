@@ -9,7 +9,7 @@ import {
   renewalSentences,
   seoulTally,
   tally,
-} from "../scripts/renewal-facts.mjs";
+} from "../scripts/renewal-facts.ts";
 import { buildPayload } from "../scripts/build-renewal-facts.mjs";
 import { districtRenewalHtml } from "../scripts/prerender.mjs";
 
@@ -200,7 +200,7 @@ const market = (n, amount) =>
   Array.from({ length: n }, (_, i) => jeonse({ deposit: String(amount), dealDay: 1 + i }));
 
 test("갱신 보증금을 같은 칸의 신규 중앙값과 견준다", async () => {
-  const { renewalGap } = await import("../scripts/renewal-facts.mjs");
+  const { renewalGap } = await import("../scripts/renewal-facts.ts");
   const items = [
     ...market(3, 50000),
     jeonse({ contractType: "갱신", deposit: "45,000" }), // 10% 싸다
@@ -213,7 +213,7 @@ test("갱신 보증금을 같은 칸의 신규 중앙값과 견준다", async ()
 });
 
 test("신규가 세 건에 못 미치는 칸은 견줄 시세로 쓰지 않는다", async () => {
-  const { renewalGap, MIN_MARKET_DEALS } = await import("../scripts/renewal-facts.mjs");
+  const { renewalGap, MIN_MARKET_DEALS } = await import("../scripts/renewal-facts.ts");
   assert.equal(MIN_MARKET_DEALS, 3, "두 건으로 낸 중앙값은 그냥 두 값의 평균이다");
 
   const thin = [...market(2, 50000), jeonse({ contractType: "갱신", deposit: "45,000" })];
@@ -221,7 +221,7 @@ test("신규가 세 건에 못 미치는 칸은 견줄 시세로 쓰지 않는�
 });
 
 test("평형이 다르면 같은 단지라도 견주지 않는다", async () => {
-  const { renewalGap } = await import("../scripts/renewal-facts.mjs");
+  const { renewalGap } = await import("../scripts/renewal-facts.ts");
   const items = [
     ...market(3, 50000),
     jeonse({ contractType: "갱신", deposit: "45,000", excluUseAr: 84.97 }),
@@ -230,7 +230,7 @@ test("평형이 다르면 같은 단지라도 견주지 않는다", async () => 
 });
 
 test("반전세는 순수 전세와 견주지 않는다", async () => {
-  const { renewalGap } = await import("../scripts/renewal-facts.mjs");
+  const { renewalGap } = await import("../scripts/renewal-facts.ts");
   // 보증금과 월세를 한 값으로 묶으려면 전환율을 먼저 가정해야 한다.
   const items = [
     ...market(3, 50000),
@@ -240,7 +240,7 @@ test("반전세는 순수 전세와 견주지 않는다", async () => {
 });
 
 test("기한이 남은 달은 격차에서도 뺀다", async () => {
-  const { renewalGap } = await import("../scripts/renewal-facts.mjs");
+  const { renewalGap } = await import("../scripts/renewal-facts.ts");
   const open = { dealYear: 2026, dealMonth: 8 };
   const items = [
     ...market(3, 50000).map((r) => ({ ...r, ...open })),
@@ -250,7 +250,7 @@ test("기한이 남은 달은 격차에서도 뺀다", async () => {
 });
 
 test("견줄 값이 잘못 붙은 것은 버린다", async () => {
-  const { renewalGap, GAP_OUTLIER } = await import("../scripts/renewal-facts.mjs");
+  const { renewalGap, GAP_OUTLIER } = await import("../scripts/renewal-facts.ts");
   assert.equal(GAP_OUTLIER, 90);
   const items = [...market(3, 50000), jeonse({ contractType: "갱신", deposit: "1,000" })];
   assert.equal(renewalGap(items, NOW).gapMatched, 0, "98% 어긋난 것을 격차로 셌다");
@@ -258,7 +258,7 @@ test("견줄 값이 잘못 붙은 것은 버린다", async () => {
 
 test("말하는 문턱이 표본 잡음 바깥에 있다", async () => {
   const { MIN_GAP_SAMPLE, GAP_WIDE_RATIO, GAP_NARROW_RATIO } = await import(
-    "../scripts/renewal-facts.mjs"
+    "../scripts/renewal-facts.ts"
   );
   // 서울 표본을 60건씩 다시 뽑으면 서울과 똑같은 구도 -12.5% ~ -5.0%에 떨어진다.
   // 두 문턱은 그 바깥이어야 한다 - 안쪽이면 우연이 문장을 만든다.
@@ -272,7 +272,7 @@ test("말하는 문턱이 표본 잡음 바깥에 있다", async () => {
 });
 
 test("격차가 0이면 0% 싸다고 쓰지 않는다", async () => {
-  const { renewalSentences } = await import("../scripts/renewal-facts.mjs");
+  const { renewalSentences } = await import("../scripts/renewal-facts.ts");
   const flat = renewalSentences({ renewGapNarrow: { gap: 0, seoul: -9.7, cheaper: 22.1, counted: 95 } })[0];
   assert.match(flat, /사실상 차이가 없습니다/);
   assert.ok(!/0\.0% /.test(flat), `"0.0% 싸다"는 문장이 아니다: ${flat}`);
@@ -282,7 +282,7 @@ test("격차가 0이면 0% 싸다고 쓰지 않는다", async () => {
 });
 
 test("문턱을 넘은 구만 격차를 말한다", async () => {
-  const { renewalFacts } = await import("../scripts/renewal-facts.mjs");
+  const { renewalFacts } = await import("../scripts/renewal-facts.ts");
   const seoul = { gapMedian: -9.7, capMissShare: 44.8, toWolseShare: 7.5 };
   const base = { rightUsed: 0, fromJeonse: 0, capMissShare: null, toWolseShare: null, gapCheaperShare: 80 };
 
@@ -301,7 +301,7 @@ test("문턱을 넘은 구만 격차를 말한다", async () => {
 
 // --- 월세 재계약 (#7) ---------------------------------------------------------------
 
-import { MIN_WOLSE_GAP_SAMPLE, WOLSE_RATE_RANGE, districtRow, wolseGap, wolseLead, wolseRenewalGaps } from "../scripts/renewal-facts.mjs";
+import { MIN_WOLSE_GAP_SAMPLE, WOLSE_RATE_RANGE, districtRow, wolseGap, wolseLead, wolseRenewalGaps } from "../scripts/renewal-facts.ts";
 
 const W_NOW = new Date("2026-08-26T00:00:00Z");
 const wl = (extra = {}) => ({

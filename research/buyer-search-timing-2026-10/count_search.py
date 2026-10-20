@@ -6,7 +6,7 @@ K-apt 매칭(match_kapt.py → cache/match.json)이 붙으면 세대수 조건�
 import os, re, json, glob, collections, itertools, statistics
 REPO = os.environ.get("REPO", os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 HERE = os.path.dirname(os.path.abspath(__file__))
-SGG = dict(re.findall(r'code: "(\d+)", name: "([^"]+)"', open(os.path.join(REPO, "scripts/realestate-districts.mjs")).read()))
+SGG = dict(re.findall(r'code: "(\d+)", name: "([^"]+)"', open(os.path.join(REPO, "scripts/realestate-districts.ts")).read()))
 match = json.load(open(os.path.join(HERE, "cache", "match.json")))
 kapt = {k["단지코드"]: k for k in json.load(open(os.path.join(HERE, "cache", "kapt-seoul.json")))}
 MONTHS = {f"2026{m:02d}" for m in range(3, 9)}

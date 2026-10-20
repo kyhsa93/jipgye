@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildPayload } from "../scripts/build-budget-deals.mjs";
-import { buildDealFiles, buildRentFiles } from "../scripts/deal-files.mjs";
+import { buildDealFiles, buildRentFiles } from "../scripts/deal-files.ts";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 
 const NOW = new Date("2026-08-17T00:00:00Z");

@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { MIN_RECORDS, byCell, grid, holds, leadSentence, measure, toDeal } from "../scripts/record-high.mjs";
+import { MIN_RECORDS, byCell, grid, holds, leadSentence, measure, toDeal } from "../scripts/record-high.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const DAY = 86400000;
