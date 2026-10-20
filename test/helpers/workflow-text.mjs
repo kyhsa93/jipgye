@@ -3,11 +3,12 @@
 // 호출로 펼쳐서, 순서·포함을 보는 기존 시험이 워크플로 구조가 바뀌어도 같은 말을 하게 한다. 인자가 없으면 기본 단계다.
 import { RENDER_STEPS } from "../../scripts/render-pipeline.mjs";
 
-const CALL = /node scripts\/render-pipeline\.mjs((?:[ \t]*\\?\s*scripts\/[a-z-]+\.mjs)*)/g;
+// 스크립트 확장자는 .mjs 하나로 박지 않는다(#418, #316 0단계) - 개명이 호출 줄을 조용히 놓치지 않게 한다.
+const CALL = /node scripts\/render-pipeline\.(?:mjs|ts)((?:[ \t]*\\?\s*scripts\/[a-z-]+\.(?:mjs|ts))*)/g;
 
 export function expandRenderPipeline(text) {
   return text.replace(CALL, (_, args) => {
-    const given = [...args.matchAll(/scripts\/[a-z-]+\.mjs/g)].map((m) => m[0]);
+    const given = [...args.matchAll(/scripts\/[a-z-]+\.(?:mjs|ts)/g)].map((m) => m[0]);
     return (given.length ? given : RENDER_STEPS).map((s) => `node ${s}`).join("\n");
   });
 }

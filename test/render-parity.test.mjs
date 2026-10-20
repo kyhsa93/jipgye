@@ -576,7 +576,7 @@ test("realestate-rows.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, 표
   // 문턱은 하나다: prerender.mjs는 다시 내보낼 뿐이고(이 모듈에서 import하던 쪽의 호환), 값은 realestate-format.mjs의 것이다.
   assert.equal(MIN_SAMPLE, 5);
   assert.equal(prerender.MIN_SAMPLE, MIN_SAMPLE);
-  const scripts = (await readdir(path.join(root, "scripts"))).filter((f) => f.endsWith(".mjs"));
+  const scripts = (await readdir(path.join(root, "scripts"))).filter((f) => /\.(?:mjs|ts)$/.test(f)); // 확장자를 .mjs 하나로 박지 않는다(#418): 개명이 전수를 조용히 줄이지 않게
   const definers = [];
   for (const f of scripts) {
     if (/^\s*(export\s+)?const\s+MIN_SAMPLE\s*=/m.test(await readFile(path.join(root, "scripts", f), "utf8"))) definers.push(f);
@@ -995,7 +995,7 @@ test("realestate-table.mjs: 표본 문턱을 정의하거나 다시 적용하지
   const code = source.replace(/^\s*\/\/.*$/gm, "");
   assert.doesNotMatch(code, /MIN_SAMPLE|hasEnoughSample|metricOf/, "문턱을 이 모듈이 다시 부른다");
   assert.match(code, /resolveMetric\(entry, kind\)/);
-  assert.doesNotMatch(code, /prerender\.mjs|renderer\.mjs/, "순수 모듈이 렌더러 스위치를 부른다");
+  assert.doesNotMatch(code, /prerender\.(?:mjs|ts)|renderer\.(?:mjs|ts)/, "순수 모듈이 렌더러 스위치를 부른다");
   // 문턱은 realestate-format.mjs의 5건 하나다(위 realestate-rows 시험이 정의가 하나뿐임을 지킨다)
   assert.equal(hasEnoughSample({ transactionCount: 5 }), true);
   assert.equal(hasEnoughSample({ transactionCount: 4 }), false);
@@ -1213,7 +1213,7 @@ test("realestate-overall.mjs: 표본 문턱을 정의하거나 다시 적용하�
   assert.doesNotMatch(code, /MIN_SAMPLE|hasEnoughSample|metricOf/, "문턱을 이 모듈이 다시 부른다");
   assert.match(code, /resolveMetric\(overall, "sale"\)/);
   assert.match(code, /jeonseRatio\(overall\)/);
-  assert.doesNotMatch(code, /prerender\.mjs|renderer\.mjs/, "순수 모듈이 렌더러 스위치를 부른다");
+  assert.doesNotMatch(code, /prerender\.(?:mjs|ts)|renderer\.(?:mjs|ts)/, "순수 모듈이 렌더러 스위치를 부른다");
   assert.doesNotMatch(code, /overall-card|"label"|"value"|"sub"|<div|escapeHtml/, "순수 모듈이 마크업·클래스를 들고 있다 - 한 곳의 오타를 같은 실행 비교가 못 잡는다");
   // 문턱 정의는 realestate-format.mjs 하나다
   assert.equal(hasEnoughSample({ transactionCount: 5 }), true);
@@ -1702,7 +1702,7 @@ test("budget-fragments.mjs: 표본 문턱을 정의하거나 부르지 않고, �
   const source = await readFile(path.join(root, "scripts/budget-fragments.mjs"), "utf8");
   const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
   assert.doesNotMatch(code, /MIN_SAMPLE|hasEnoughSample|metricOf|low-sample/, "표본 문턱이 이 모듈에 있다");
-  assert.doesNotMatch(code, /prerender\.mjs|renderer\.mjs|escapeHtml|html-escape/, "순수 모듈이 렌더러 스위치·이스케이프를 부른다");
+  assert.doesNotMatch(code, /prerender\.(?:mjs|ts)|renderer\.(?:mjs|ts)|escapeHtml|html-escape/, "순수 모듈이 렌더러 스위치·이스케이프를 부른다");
   assert.doesNotMatch(code, /class=|className|data-prerendered|<[a-z]|<\/|answer-|budget-loan|budget-rule-link|budget-answers/, "순수 모듈이 마크업·클래스를 들고 있다 - 한 곳의 오타를 같은 실행 비교가 못 잡는다");
   // import는 순수 모듈뿐이다(렌더러·prerender·JSX 없음): 후보 고르기(complex-price)·억 글자·월 이름(realestate-format)과 문장 모듈 다섯
   const imports = [...code.matchAll(/from "(\.\/[^"]+)"/g)].map((m) => m[1]).sort();

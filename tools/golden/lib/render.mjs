@@ -46,6 +46,11 @@ const MOCK_NOW = pathToFileURL(path.join(import.meta.dirname, "mock-date-now.mjs
 // 렌더 결과를 흔드는 환경변수는 호출자가 명시한 것만 들어가게 상속에서 뺀다.
 const SCRUB = ["BUILD_NOW", "JIPGYE_RENDERER", "GOLDEN_MOCK_NOW", "NODE_OPTIONS"];
 
+// 워크플로 줄의 스크립트 확장자는 .mjs 한 가지로 박지 않는다(#418, #316 0단계). 박아 두면 개명 순간 줄이 안 잡혀 단계 수가
+// 예외 없이 줄어든다(render-pipeline을 .ts로 바꾸면 빈 배열).
+const SCRIPT_LINE = /^\s+(?:run: )?node (scripts\/[\w.-]+\.(?:mjs|ts))\s*$/;
+const withoutExt = (file) => file.replace(/\.(?:mjs|ts)$/, "");
+
 /**
  * 워크플로의 렌더 단계 줄(`node scripts/x.mjs`)을 읽는다. RENDER_STAGES와 어긋났는지 시험이 본다.
  * 워크플로가 `node scripts/render-pipeline.mjs`(렌더 폴백, #238 F1 최소판) 한 줄로 부르면 그 저장소의 기본 단계(`RENDER_STEPS`)로 펼친다
@@ -58,9 +63,10 @@ export async function readWorkflowStages(workflowFile) {
   if (at < 0) throw new Error("워크플로에서 렌더 단계를 찾지 못했습니다");
   const out = [];
   for (const line of lines.slice(at + 1)) {
-    const m = line.match(/^\s+(?:run: )?node (scripts\/[\w.-]+\.mjs)\s*$/);
-    if (m?.[1] === "scripts/render-pipeline.mjs") {
-      const pipeline = path.resolve(path.dirname(workflowFile), "../../scripts/render-pipeline.mjs");
+    const m = line.match(SCRIPT_LINE);
+    if (m && withoutExt(m[1]) === "scripts/render-pipeline") {
+      // 확장자는 워크플로가 적은 그대로 따른다(.mjs → .ts 개명 단계에서도 같은 코드가 읽는다, #418).
+      const pipeline = path.resolve(path.dirname(workflowFile), "../..", m[1]);
       out.push(...(await import(pathToFileURL(pipeline).href)).RENDER_STEPS);
     } else if (m) out.push(m[1]);
     else if (/^\s+(run:|-)/.test(line) && out.length) break;

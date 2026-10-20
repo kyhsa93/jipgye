@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdtemp, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import {
@@ -19,6 +19,7 @@ import {
   isTextAttr,
   jsClassRefs,
   markupClassRefs,
+  parseHookCount,
   readHookList,
   resolveInternal,
   SITE_PAGE,
@@ -381,7 +382,7 @@ test("훅 목록과 소스의 어긋남을 잡는다(합성): 소스에만 있�
   assert.deepEqual(hookListDrift({ js: ["a", "b"], markup: [] }, collected).missing, ["markup: m"]);
 });
 
-test("훅 클래스 목록(hook-classes.json)이 소스와 맞는다 — 어긋나면 `node bin/invariants.mjs --hooks-write --repo ../..`", async () => {
+test("훅 클래스 목록(hook-classes.json)이 소스와 맞는다 — 소스가 는 경우에만 `node bin/invariants.mjs --hooks-write --repo ../..`. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다", async () => {
   // 읽는 것: docs/ 아래 .js·docs/*.html의 인라인 script, test/*.mjs, scripts/build-*-pages.mjs. 전부 코드다(구운 HTML의 class 속성은 읽지 않는다).
   const collected = await collectHookClasses(REPO);
   const list = await readHookList();
@@ -732,7 +733,7 @@ test("#289 5번: 훅 목록 어긋남과 기준 대비 빠진 이름을 폴더 �
   const r = withSiteFindings(cmp(BUDGET, BUDGET), findings);
   assert.deepEqual([r.ok, r.pass, r.site.length], [true, 1, 2]);
   const text = formatInvariantsReport(r);
-  assert.match(text, /\[소프트\] 훅 클래스 목록\(hook-classes\.json\)이 후보 소스와 어긋났다\(- 목록에만, \+ 소스에만\) — --hooks-write로 다시 만든다 <hook-list>: 기준에만 1, 후보에만 2\n  - js: old\n  \+ js: new\n  \+ markup: moved/);
+  assert.match(text, /\[소프트\] 훅 클래스 목록\(hook-classes\.json\)이 후보 소스와 어긋났다\(- 목록에만, \+ 소스에만\) — 소스가 는 경우에만 --hooks-write\. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다 <hook-list>: 기준에만 1, 후보에만 2\n  - js: old\n  \+ js: new\n  \+ markup: moved/);
   assert.match(text, /\[소프트\] 기준 소스에서는 훅이었고 후보 소스에서는 아닌 class\(더는 훅으로 보지 않는다\) <hook-list-dropped>: 기준에만 1, 후보에만 0\n  - gone/);
   // 하드 항목이 있으면 보태도 실패 그대로다.
   assert.equal(withSiteFindings(cmp(BUDGET, sentence(SENTENCE.replace("575", "576"))), findings).ok, false);
@@ -958,5 +959,76 @@ test("#337 검출: 색인 대상 장의 title 중복 — 구운 한국어 <title
     assert.deepEqual(excused.site, []);
   } finally {
     await Promise.all(Object.values(dirs).map((d) => rm(d, { recursive: true })));
+  }
+});
+
+// --- #418 (#316 0단계): 소스 집합이 조용히 줄어 굳는 길을 막는다 -------------------------------------------------------------
+
+test("#418 HOOKCOUNT: 숫자 줄이 정확히 셋 · 수집이 하한 아래로 내려가지 않는다 · --hooks-write 가 파일을 바이트까지 그대로 둔다", async () => {
+  const floor = parseHookCount(await readFile(path.join(import.meta.dirname, "HOOKCOUNT"), "utf8"));
+  const collected = await collectHookClasses(REPO);
+  assert.ok(collected.js.length >= floor.js, `js 이름 ${collected.js.length}개 < 하한 ${floor.js} - 소스 집합이 줄었다. --hooks-write 로 덮지 말고 왜 줄었는지부터 본다`);
+  assert.ok(collected.markup.length >= floor.markup, `markup 이름 ${collected.markup.length}개 < 하한 ${floor.markup} - 소스 집합이 줄었다. --hooks-write 로 덮지 말고 왜 줄었는지부터 본다`);
+  assert.ok(collected.sources.length >= floor.sources, `읽은 소스 ${collected.sources.length}개 < 하한 ${floor.sources} - test/·scripts/ 소스 집합이 줄었다(확장자를 박은 선택이 개명에 놓쳤는지 본다)`);
+  // 목록 파일에 굳은 수도 하한 아래가 아니다(굳은 뒤에 하한을 못 따라잡는 모양을 막는다).
+  const list = await readHookList();
+  assert.ok(list.js.length >= floor.js && list.markup.length >= floor.markup);
+
+  // 대조군: 숫자 줄 모양이 틀리면 던진다 - 하나를 더하면(넷)·빼면(둘)·숫자가 아니면·0이면.
+  const ok = "# 주석\n\n30\n99\n147\n";
+  assert.deepEqual(parseHookCount(ok), { js: 30, markup: 99, sources: 147 });
+  assert.throws(() => parseHookCount(`${ok}7\n`), /정확히 셋/, "숫자 줄 하나를 더하면(넷) 실패한다");
+  assert.throws(() => parseHookCount("30\n99\n"), /정확히 셋/, "둘이면 실패한다");
+  assert.throws(() => parseHookCount("30\n99\nx\n"), /정확히 셋/, "숫자가 아니면 실패한다");
+  assert.throws(() => parseHookCount("30\n99\n0\n"), /정확히 셋/, "0 하한은 하한이 아니다");
+  assert.throws(() => parseHookCount(""), /정확히 셋/);
+
+  // `--hooks-write` 는 HOOKCOUNT 를 바이트까지 그대로 둔다(도구 복사본에서 돌린다 - 저장소 파일을 쓰지 않는다).
+  // bin 은 lib 옆의 hook-classes.json 을 쓰고 canon.mjs 는 ../../../scripts 를 읽는다 - 같은 상대 위치로 복사본을 세운다.
+  const root = await mkdtemp(path.join(os.tmpdir(), "golden-hookcount-"));
+  try {
+    const golden = path.join(root, "tools/golden");
+    const src = path.join(import.meta.dirname, "..");
+    await mkdir(path.join(golden, "test"), { recursive: true });
+    for (const d of ["bin", "lib"]) await cp(path.join(src, d), path.join(golden, d), { recursive: true });
+    for (const f of ["hook-classes.json", "test/HOOKCOUNT"]) await cp(path.join(src, f), path.join(golden, f));
+    await symlink(path.join(src, "node_modules"), path.join(golden, "node_modules"));
+    await symlink(path.join(REPO, "scripts"), path.join(root, "scripts"));
+    const countFile = path.join(golden, "test/HOOKCOUNT");
+    const before = await readFile(countFile);
+    // 목록을 비워 두고 다시 만들게 한다: 쓰기가 실제로 일어났는지(목록이 소스에서 다시 채워진다)도 같이 본다.
+    await writeFile(path.join(golden, "hook-classes.json"), JSON.stringify({ js: [], markup: [] }));
+    const r = spawnSync(process.execPath, [path.join(golden, "bin/invariants.mjs"), "--hooks-write", "--repo", REPO], { encoding: "utf8" });
+    assert.equal(r.status, 0, r.stderr);
+    assert.match(r.stdout, /훅 클래스 목록을 썼습니다/);
+    assert.equal(await readFile(path.join(golden, "hook-classes.json"), "utf8"), formatHookList(await collectHookClasses(REPO)), "--hooks-write 가 목록 파일을 다시 썼다");
+    assert.ok(before.equals(await readFile(countFile)), "--hooks-write 가 HOOKCOUNT 를 건드렸다");
+  } finally {
+    await rm(root, { recursive: true });
+  }
+});
+
+test("#418 collectHookClasses: test/·scripts/ 소스 집합이 .mjs 와 .ts 를 같이 고르고 읽은 수를 내놓는다(합성 저장소)", async () => {
+  const repo = await dirWith({
+    "docs/a.js": 'document.querySelector(".js-hook");\n',
+    "docs/b.html": "<!doctype html><title>t</title>",
+    "docs/data/x.json": "{}",
+    "test/one.test.mjs": 'const a = `<p class="m-one">`;\n',
+    "test/two.test.ts": 'const a = `<p class="m-two">`;\n',
+    "test/COUNT": "1\n",
+    "test/helpers/h.mjs": 'const a = `<p class="m-nested">`;\n',
+    "scripts/build-x-pages.mjs": 'const a = `<p class="m-three">`;\n',
+    "scripts/build-y-pages.ts": 'const a = `<p class="m-four">`;\n',
+    "scripts/build-z-stamp.mjs": 'const a = `<p class="m-skip">`;\n',
+    "scripts/other.mjs": 'const a = `<p class="m-skip2">`;\n',
+  });
+  try {
+    const c = await collectHookClasses(repo);
+    assert.deepEqual(c.sources, ["scripts/build-x-pages.mjs", "scripts/build-y-pages.ts", "test/one.test.mjs", "test/two.test.ts"]);
+    assert.deepEqual(c.markup, ["m-four", "m-one", "m-three", "m-two"], ".ts 소스의 class 도 읽는다");
+    assert.deepEqual(c.js, ["js-hook"]);
+    assert.deepEqual(c.docs, ["docs/a.js", "docs/b.html"]);
+  } finally {
+    await rm(repo, { recursive: true });
   }
 });

@@ -71,7 +71,8 @@ export const SNAPSHOT_VERSION = 2;
 /** 내부 링크로 치는 절대 주소의 머리(canonical·og:url이 쓰는 값). */
 export const SITE_BASE = "https://kyhsa93.github.io/jipgye/";
 
-/** 훅 클래스 목록 파일. `node bin/invariants.mjs --hooks-write`가 쓰고 test/invariants.test.mjs가 소스와 대조한다. */
+/** 훅 클래스 목록 파일. `node bin/invariants.mjs --hooks-write`가 쓰고 test/invariants.test.mjs가 소스와 대조한다.
+ * 소스가 는 경우에만 다시 쓴다. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다(test/HOOKCOUNT가 줄어든 채 굳는 것을 막는다). */
 export const HOOK_LIST_FILE = path.join(import.meta.dirname, "../hook-classes.json");
 
 /**
@@ -434,6 +435,9 @@ export function resolveInternal(file, url, siteBase = SITE_BASE) {
 }
 
 const isHtml = (f) => f.endsWith(".html");
+// 루트 test/·scripts/ 소스의 확장자. `.mjs`만 박지 않는다(#418, #316 0단계): .ts 개명이 집합을 조용히 줄이지 않게 한다.
+const SOURCE_EXT = /\.(?:mjs|ts)$/;
+const BUILD_PAGES = /^build-.*-pages\.(?:mjs|ts)$/;
 const isJs = (f) => f.endsWith(".js") || f.endsWith(".mjs");
 
 /**
@@ -487,24 +491,42 @@ export function snapshotHash(snap) {
 /**
  * 저장소 소스에서 훅 클래스를 뽑는다(#274 범위 1 "훅 클래스 목록은 기계로 뽑는다").
  *   js     — docs/ 아래 .js와 docs/*.html의 인라인 script가 선택자·classList·className으로 읽는 class(jsClassRefs).
- *   markup — test/*.mjs와 scripts/build-*-pages.mjs가 문자열로 쓰는 class="…"(markupClassRefs).
+ *   markup — test/*.{mjs,ts}와 scripts/build-*-pages.{mjs,ts}가 문자열로 쓰는 class="…"(markupClassRefs).
  * 읽는 것은 전부 코드다(인라인 script도 틀에서 온 코드). 그날의 데이터에 따라 갈리지 않게 구운 HTML의 class 속성은 읽지 않는다 —
  * 예컨대 low-sample은 표본이 모자란 날에만 구운 HTML에 나온다(#8 부류를 피한다).
+ * 소스 집합은 확장자를 `.mjs` 한 가지로 박지 않는다(`SOURCE_EXT`, #418): 개명(.mjs → .ts) 순간 조용히 줄어든 집합으로 목록이 굳지 않게 한다.
+ * 반환: { js, markup, sources, docs } — sources는 읽은 test/·scripts/ 소스의 저장소 상대 경로(정렬), docs는 읽은 docs/ 파일(.js·.html)의
+ * 상대 경로(정렬)다. 읽은 수가 하한 아래로 내려가는 것을 test/HOOKCOUNT가 막는다.
  */
 export async function collectHookClasses(repo) {
   const js = new Set();
   const markup = new Set();
   const docs = path.join(repo, "docs");
-  for (const file of await listFiles(docs, (f) => isJs(f) || isHtml(f))) {
+  const docFiles = (await listFiles(docs, (f) => isJs(f) || isHtml(f))).sort();
+  for (const file of docFiles) {
     const text = await readFile(path.join(docs, file), "utf8");
     for (const c of isHtml(file) ? extractPage(text).jsRefs : jsClassRefs(text)) js.add(c);
   }
   const sources = [
-    ...(await readdir(path.join(repo, "test"))).filter((f) => f.endsWith(".mjs")).map((f) => path.join(repo, "test", f)),
-    ...(await readdir(path.join(repo, "scripts"))).filter((f) => /^build-.*-pages\.mjs$/.test(f)).map((f) => path.join(repo, "scripts", f)),
-  ];
-  for (const file of sources.sort()) for (const c of markupClassRefs(await readFile(file, "utf8"))) markup.add(c);
-  return { js: [...js].sort(), markup: [...markup].sort() };
+    ...(await readdir(path.join(repo, "test"))).filter((f) => SOURCE_EXT.test(f)).map((f) => `test/${f}`),
+    ...(await readdir(path.join(repo, "scripts"))).filter((f) => BUILD_PAGES.test(f)).map((f) => `scripts/${f}`),
+  ].sort();
+  for (const file of sources) for (const c of markupClassRefs(await readFile(path.join(repo, file), "utf8"))) markup.add(c);
+  return { js: [...js].sort(), markup: [...markup].sort(), sources, docs: docFiles.map((f) => `docs/${f}`) };
+}
+
+/**
+ * test/HOOKCOUNT(#418)를 읽는다: 주석(#)과 빈 줄을 버린 숫자 줄이 **정확히 셋**이어야 한다 — 1행 js 이름 수 하한,
+ * 2행 markup 이름 수 하한, 3행 읽은 소스 파일 수(test/·scripts/) 하한. 모양이 틀리면 던진다. 숫자 줄이 넷이 되어 앞 둘만 읽고 하한이
+ * 낮게 서던 일(#417, 루트 test/COUNT)을 물려받지 않으려는 것이다.
+ */
+export function parseHookCount(text, name = "HOOKCOUNT") {
+  const lines = text.split("\n").map((l) => l.trim()).filter((l) => l && !l.startsWith("#"));
+  if (lines.length !== 3 || !lines.every((l) => /^[1-9]\d*$/.test(l))) {
+    throw new Error(`${name}: 숫자 줄이 정확히 셋(js · markup · 읽은 소스 파일 수)이어야 한다 — 찾은 줄 ${lines.length}개: ${JSON.stringify(lines)}`);
+  }
+  const [js, markup, sources] = lines.map(Number);
+  return { js, markup, sources };
 }
 
 /** 목록 파일을 읽는다. 반환: { js, markup, all }. */
@@ -517,7 +539,7 @@ export async function readHookList(file = HOOK_LIST_FILE) {
 export function formatHookList({ js, markup }) {
   return `${JSON.stringify(
     {
-      "//": "기계로 뽑은 훅 클래스 목록(#274). 손으로 고치지 않는다 — `node bin/invariants.mjs --hooks-write --repo ../..`로 다시 만든다.",
+      "//": "기계로 뽑은 훅 클래스 목록(#274). 손으로 고치지 않는다 — 소스가 는 경우에만 `node bin/invariants.mjs --hooks-write --repo ../..`. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다.",
       sources: {
         js: "docs/ 아래 .js와 docs/*.html 인라인 script의 querySelector(All)·closest·matches·getElementsByClassName·classList·className",
         markup: 'test/*.mjs와 scripts/build-*-pages.mjs가 문자열로 쓰는 class="…"',
@@ -846,7 +868,7 @@ export const SITE_PAGE = "(폴더)";
 export function hookListFindings({ list, head, base = null }) {
   const out = [];
   const drift = hookListDrift(list, head);
-  if (!drift.ok) out.push({ id: "hook-list", check: "훅 클래스 목록(hook-classes.json)이 후보 소스와 어긋났다(- 목록에만, + 소스에만) — --hooks-write로 다시 만든다", level: "soft", missing: drift.stale, added: drift.missing });
+  if (!drift.ok) out.push({ id: "hook-list", check: "훅 클래스 목록(hook-classes.json)이 후보 소스와 어긋났다(- 목록에만, + 소스에만) — 소스가 는 경우에만 --hooks-write. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다", level: "soft", missing: drift.stale, added: drift.missing });
   if (base) {
     const now = new Set([...head.js, ...head.markup]);
     const dropped = [...new Set([...base.js, ...base.markup])].filter((c) => !now.has(c)).sort();

@@ -176,6 +176,25 @@ test("readWorkflowStages: render-pipeline 한 줄이면 그 저장소의 기본 
   }
 });
 
+test("#418 readWorkflowStages: 확장자가 .ts 로 바뀐 줄·render-pipeline 도 같은 단계 수로 읽는다(개명해도 빈 배열이 되지 않는다)", async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), "golden-wf-"));
+  try {
+    await mkdir(path.join(dir, ".github/workflows"), { recursive: true });
+    await mkdir(path.join(dir, "scripts"), { recursive: true });
+    const wf = (lines) => `jobs:\n  x:\n    steps:\n      - name: 정적 HTML에 오늘 내용 심기\n        run: |\n${lines.map((l) => `          ${l}\n`).join("")}\n      - name: 변경사항 커밋 및 푸시\n        run: |\n          node scripts/not-a-stage.ts\n`;
+    const file = path.join(dir, ".github/workflows/wf.yml");
+    // 직접 부르는 줄: .mjs 와 .ts 가 섞여도 둘 다 읽는다.
+    await writeFile(file, wf(["node scripts/prerender.ts", "node scripts/build-rate-pages.mjs"]));
+    assert.deepEqual(await readWorkflowStages(file), ["scripts/prerender.ts", "scripts/build-rate-pages.mjs"]);
+    // render-pipeline 한 줄: 파일이 .ts 로 바뀌어도 워크플로가 적은 이름 그대로 찾아 펼친다.
+    await writeFile(path.join(dir, "scripts/render-pipeline.ts"), 'export const RENDER_STEPS: string[] = ["scripts/a.ts", "scripts/b.mjs"];\n');
+    await writeFile(file, wf(["node scripts/render-pipeline.ts"]));
+    assert.deepEqual(await readWorkflowStages(file), ["scripts/a.ts", "scripts/b.mjs"]);
+  } finally {
+    await rm(dir, { recursive: true });
+  }
+});
+
 test("상대경로 --repo로 줘도 node_modules 링크가 절대경로로 걸려 렌더 사본에서 풀린다", async () => {
   const repo = await fakeRepo();
   const cache = await mkdtemp(path.join(os.tmpdir(), "golden-cache-"));

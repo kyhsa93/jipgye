@@ -15,5 +15,10 @@
 #   cd tools/golden && npm ci && npm test → ℹ tests 115 · pass 104 · fail 0 · skipped 11 (기준 114 · 103 · 11).
 #   차이 1 은 test/invariants.test.mjs 에 더한 "#337 검출: 색인 대상 장의 title 중복 …" 하나다(`node --test test/invariants.test.mjs` → 기준 44 · 후보 45).
 #   고친 시험 파일은 0 이고(mini() 에 title 인자를 더해 기존 한 시험의 둘째 장 title 만 달리했을 뿐 시험을 더하거나 빼지 않았다) 없어진 시험도 0 이다.
-115
-104
+# 센 법: 2026-10-20, merge-base ff707582, Node v24.22.0, macOS (#418, #316 0단계).
+#   cd tools/golden && npm ci && npm test → ℹ tests 118 · pass 107 · fail 0 · skipped 11 (기준 115 · 104 · 11).
+#   차이 3 은 새 시험 셋이다: test/invariants.test.mjs 의 "#418 HOOKCOUNT: …"(숫자 줄 정확히 셋·하한·--hooks-write 불변)와
+#   "#418 collectHookClasses: …"(.mjs·.ts 를 같이 고르는 합성 저장소), test/render.test.mjs 의 "#418 readWorkflowStages: …"(.ts 줄·render-pipeline.ts).
+#   없어진 시험은 0 이다. 숫자 줄은 이번에도 정확히 둘이다(쌍을 더하지 않고 두 줄을 고쳤다).
+118
+107

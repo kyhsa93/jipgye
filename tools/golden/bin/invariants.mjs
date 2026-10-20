@@ -15,7 +15,8 @@
 //   node bin/invariants.mjs --snapshot <폴더> [--out <파일>] [--table]
 //        폴더의 불변 사실을 JSON으로 뜬다(--table이면 장별 표). 지문(sha256)을 stderr에 적는다.
 //   node bin/invariants.mjs --hooks-check --repo <저장소>     훅 클래스 목록(hook-classes.json)이 소스와 맞는지 본다(어긋나면 1).
-//   node bin/invariants.mjs --hooks-write --repo <저장소>     소스에서 다시 뽑아 목록 파일을 쓴다.
+//   node bin/invariants.mjs --hooks-write --repo <저장소>     소스에서 다시 뽑아 목록 파일을 쓴다. 소스가 는 경우에만 쓴다 —
+//        줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다(test/HOOKCOUNT 하한이 줄어든 채 굳는 것을 막는다).
 //
 //   비교 공통
 //     --expect <파일>   의도한 차이(예외 목록 JSON). 모양은 README "의도한 차이". 목록에 글자 그대로 있는 항목만 하드에서 빠진다.
@@ -97,7 +98,7 @@ if (opt["hooks-check"] || opt["hooks-write"]) {
     console.log(`훅 클래스 목록을 썼습니다: js ${collected.js.length}개, markup ${collected.markup.length}개 → ${HOOK_LIST_FILE}`);
   } else {
     const drift = hookListDrift(await readHookList(), collected);
-    console.log(drift.ok ? `훅 클래스 목록이 소스와 맞습니다(js ${collected.js.length}개, markup ${collected.markup.length}개).` : `훅 클래스 목록이 소스와 어긋났습니다 — --hooks-write로 다시 만드세요.\n  소스에만: ${drift.missing.join(", ") || "없음"}\n  목록에만: ${drift.stale.join(", ") || "없음"}`);
+    console.log(drift.ok ? `훅 클래스 목록이 소스와 맞습니다(js ${collected.js.length}개, markup ${collected.markup.length}개).` : `훅 클래스 목록이 소스와 어긋났습니다 — 소스가 는 경우에만 --hooks-write. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 보세요.\n  소스에만: ${drift.missing.join(", ") || "없음"}\n  목록에만: ${drift.stale.join(", ") || "없음"}`);
     process.exitCode = drift.ok ? 0 : 1;
   }
 } else if (opt.snapshot) {
