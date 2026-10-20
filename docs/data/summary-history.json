@@ -5469,11 +5469,65 @@
     "date": "2026-10-20",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 금리·예금·투자상품: 금리·예금·투자상품: [올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 개장… H주 0.94%↓, 美국채금리 고공행진 장기화 전망…경제학자 75% \"연말에도 5% 이상\", 국고채 금리 혼조세…3년물 장중 연 3.879% +1\n- 부동산: 1∼9월 서울 아파트 전세 거래는 28% 급감했으며, 월세 비중은 처음으로 50%를 넘었다. 올해 서울에서 6억원 미만 아파트 거래 비중은 작년 대비 5%p 증가했다. 강원도는 2030년까지 공공임대주택 1만호를 공급하고, 내년에는 442호를 추진할 계획이다. 세종 아파트 매물은 전국에서 유일하게 감소하며 집값 반등 조짐을 보이고 있다. 서울시는 모아주택 조합설립에 공공지원을 하며, 구역당 최대 1억원을 지원한다.\n- 증시·환율: 코스피는 오늘 3%대 급락하며 5,600선을 오르내리며 흔들렸다. 한때 5,500선을 하회하는 등 하락세가 지속됐다. 이는 프랑스 정세 불안과 AI 부채 우려가 영향을 미친 것으로 나타났다. 중국 증시도 하락 출발하며 상하이지수가 0.33% 하락했다. 각 시장에서는 외부 요인에 따른 변동이 두드러졌다.\n- 기타 경제 소식: 최대 20% 수익을 기록한 암호화폐 대출 서비스가 주목받고 있다. 미국과 유럽은 해당 서비스에 대한 규제 검토를 진행 중이다. 암호화폐 시장의 변동성이 커지면서 투자자들의 관심이 집중되고 있다. 관련 규제가 본격적으로 시행되면 시장에 큰 영향을 미칠 것으로 보인다. 현재까지 발표된 규제 방향은 명확하지 않다.",
-      "en": "- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: [올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 개장… H주 0.94%↓, 美국채금리 고공행진 장기화 전망…경제학자 75% \"연말에도 5% 이상\", 국고채 금리 혼조세…3년물 장중 연 3.879% +1\n- Real Estate: From January to September, the number of leasehold apartment transactions in Seoul dropped sharply by 28%, and the proportion of monthly rent transactions exceeded 50% for the first time. The share of apartment transactions in Seoul priced below 600,000,000 won increased by 5 percentage points compared to last year. Gangwon Province plans to supply 10,000 public rental housing units by 2030, and will proceed with 442 units next year. The number of apartment listings in Sejong is the only one nationwide to decrease, showing signs of a rebound in housing prices. Seoul City will provide public support for the establishment of the Moa Housing cooperative, offering up to 100,000,000 won per area.\n- Stocks & FX: The KOSPI sharply fell by over 3%, fluctuating around the 5,600 level. At times, it fell below the 5,500 level, continuing its downward trend. This was influenced by instability in France and concerns over AI debt. The Chinese market also started with a decline, with the Shanghai index falling 0.33%. Each market showed significant fluctuations due to external factors.\n- Other Economic News: Cryptocurrency lending services that have recorded up to 20% profit are attracting attention. The United States and Europe are reviewing regulations related to the service. As the volatility of the cryptocurrency market increases, investors' interest is growing. If related regulations are officially implemented, they are expected to have a significant impact on the market. The direction of the regulations announced so far is not clear."
+      "ko": "- 부동산: 도봉구 최대 재건축 사업인 방학신동아1단지아파트의 사업시행자가 확정되었다. 아파트 매수자 중 절반 이상이 30대와 40대인 것으로 나타났으며, 신도시에서는 70% 이상이 해당 연령대다. 서울시는 모아주택 조합설립을 지원하며, 구역당 최대 1억 원의 지원금을 제공한다. 민간임대주택법 시행령 개정안은 관리비와 사용료도 신고 대상으로 포함하는 내용을 담고 국무회의를 통과했다. 올해 1~9월 서울 아파트 월세 거래량은 50%를 넘어서며, 처음으로 전세 거래량을 초과했다.\n- 기타 경제 소식: 파주시가 월드푸드테크협의회와 평화경제특구 업무협약을 체결했다. 오늘 경제 관련 소식 중 하나는 파주시와 월드푸드테크협의회의 협약 체결이다. 해당 협약은 평화경제특구의 발전을 위한 공동 노력의 일환이다. 오늘 발표된 소식은 파주시가 국제 협력을 통해 경제 특구를 강화하고자 하는 의지를 보여주는 것이라 할 수 있다. 각 기사는 서로 다른 주제로, 오늘의 경제 뉴스는 다양한 분야에서의 움직임을 보여준다.\n- 금리·예금·투자상품: 금리·예금·투자상품: [올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 개장… H주 0.94%↓, 美국채금리 고공행진 장기화 전망…경제학자 75% \"연말에도 5% 이상\", 국고채 금리 혼조세…3년물 장중 연 3.879% +1\n- 증시·환율: 한국 증시는 오늘 코스피가 3%대 급락하며 5,600선을 오르내렸다. 특히 한때 5,500선을 하회하는 등 하락세가 두드러졌다. 이는 프랑스 정세 불안과 AI 부채 우려가 영향을 미친 것으로 나타났다. 명품 소비도 증시 하락으로 인해 감소하는 것으로 나타났다. 중국 증시 역시 상하이지수가 0.33% 하락하며 하락 출발했다.",
+      "en": "- Real Estate: The developer for the largest redevelopment project in Dobong-gu, Banghak Shin Donga 1-danji Apartment, has been determined. More than half of the apartment buyers are in their 30s and 40s, and in new cities, more than 70% are in this age group. Seoul City supports the establishment of the Moea Housing Cooperative, providing up to 100,000,000 won per area. The revised Implementation Regulation of the Private Rental Housing Act includes management fees and usage charges as reporting targets, and it has passed the State Council meeting. The monthly rent transaction volume for Seoul apartments from January to September this year exceeded 50%, surpassing the transaction volume of long-term leases for the first time.\n- Other Economic News: The city of Paju has signed a business agreement with the World Food Tech Council on the Peace Economic Special Zone. One of today's economic news items is the agreement between Paju City and the World Food Tech Council. This agreement is part of a joint effort to promote the development of the Peace Economic Special Zone. The news released today can be seen as a demonstration of Paju's determination to strengthen the economic special zone through international cooperation. Each article covers different topics, showing movements in various fields within today's economic news.\n- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: [올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 개장… H주 0.94%↓, 美국채금리 고공행진 장기화 전망…경제학자 75% \"연말에도 5% 이상\", 국고채 금리 혼조세…3년물 장중 연 3.879% +1\n- Stocks & FX: South Korea's stock market saw the Kospi drop by over 3%, fluctuating around the 5,600 level today. The decline was particularly pronounced at times, with the index falling below the 5,500 level. This appears to have been influenced by instability in France and concerns over AI debt. Premium consumption also showed a decline due to the falling stock market. China's stock market also started lower, with the Shanghai index dropping 0.33%."
     },
     "highlights": [],
     "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "도봉구 최대 재건축 사업인 방학신동아1단지아파트의 사업시행자가 확정되었다. 아파트 매수자 중 절반 이상이 30대와 40대인 것으로 나타났으며, 신도시에서는 70% 이상이 해당 연령대다. 서울시는 모아주택 조합설립을 지원하며, 구역당 최대 1억 원의 지원금을 제공한다. 민간임대주택법 시행령 개정안은 관리비와 사용료도 신고 대상으로 포함하는 내용을 담고 국무회의를 통과했다. 올해 1~9월 서울 아파트 월세 거래량은 50%를 넘어서며, 처음으로 전세 거래량을 초과했다.",
+        "lineEn": "The developer for the largest redevelopment project in Dobong-gu, Banghak Shin Donga 1-danji Apartment, has been determined. More than half of the apartment buyers are in their 30s and 40s, and in new cities, more than 70% are in this age group. Seoul City supports the establishment of the Moea Housing Cooperative, providing up to 100,000,000 won per area. The revised Implementation Regulation of the Private Rental Housing Act includes management fees and usage charges as reporting targets, and it has passed the State Council meeting. The monthly rent transaction volume for Seoul apartments from January to September this year exceeded 50%, surpassing the transaction volume of long-term leases for the first time.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "도봉구 최대 재건축 방학신동아1단지아파트, 사업시행자 확정",
+            "link": "https://www.newsis.com/view/NISX20261020_0003833438",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "“아파트 매수자 절반 이상 3040”…신도시는 70%대로 비중 더 높아",
+            "link": "https://www.mk.co.kr/news/realestate/12180507",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "서울시, 모아주택 조합설립 지원… 구역당 최대 1억",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/20/NFPAS6VIH5AEJPMYDRORFBKVYU/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "관리비·사용료도 신고… 민간임대주택법 시행령 개정안, 국무회의 통과",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/20/Y2BEQ4FLCJH6ZOZI4BJ6AW6CE4/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "올해 1~9월 서울 아파트 월세 거래량 50% 돌파… 처음으로 전세 넘었다",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/20/5W6IKJMRI5B4ZNUN2BYBTBNOSM/",
+            "source": "조선비즈 부동산"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "파주시가 월드푸드테크협의회와 평화경제특구 업무협약을 체결했다. 오늘 경제 관련 소식 중 하나는 파주시와 월드푸드테크협의회의 협약 체결이다. 해당 협약은 평화경제특구의 발전을 위한 공동 노력의 일환이다. 오늘 발표된 소식은 파주시가 국제 협력을 통해 경제 특구를 강화하고자 하는 의지를 보여주는 것이라 할 수 있다. 각 기사는 서로 다른 주제로, 오늘의 경제 뉴스는 다양한 분야에서의 움직임을 보여준다.",
+        "lineEn": "The city of Paju has signed a business agreement with the World Food Tech Council on the Peace Economic Special Zone. One of today's economic news items is the agreement between Paju City and the World Food Tech Council. This agreement is part of a joint effort to promote the development of the Peace Economic Special Zone. The news released today can be seen as a demonstration of Paju's determination to strengthen the economic special zone through international cooperation. Each article covers different topics, showing movements in various fields within today's economic news.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "파주시, 월드푸드테크협의회와 평화경제특구 업무협약",
+            "link": "https://www.yna.co.kr/view/AKR20261020105000060",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
       {
         "key": "rates",
         "name": "금리·예금·투자상품",
@@ -5507,54 +5561,22 @@
         ]
       },
       {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "1∼9월 서울 아파트 전세 거래는 28% 급감했으며, 월세 비중은 처음으로 50%를 넘었다. 올해 서울에서 6억원 미만 아파트 거래 비중은 작년 대비 5%p 증가했다. 강원도는 2030년까지 공공임대주택 1만호를 공급하고, 내년에는 442호를 추진할 계획이다. 세종 아파트 매물은 전국에서 유일하게 감소하며 집값 반등 조짐을 보이고 있다. 서울시는 모아주택 조합설립에 공공지원을 하며, 구역당 최대 1억원을 지원한다.",
-        "lineEn": "From January to September, the number of leasehold apartment transactions in Seoul dropped sharply by 28%, and the proportion of monthly rent transactions exceeded 50% for the first time. The share of apartment transactions in Seoul priced below 600,000,000 won increased by 5 percentage points compared to last year. Gangwon Province plans to supply 10,000 public rental housing units by 2030, and will proceed with 442 units next year. The number of apartment listings in Sejong is the only one nationwide to decrease, showing signs of a rebound in housing prices. Seoul City will provide public support for the establishment of the Moa Housing cooperative, offering up to 100,000,000 won per area.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "1∼9월 서울 아파트 전세 거래 28% 급감…월세 비중 첫 50% 돌파(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261019159051003",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "올해 서울 6억원 미만 아파트 거래 비중 작년 대비 5%p↑",
-            "link": "https://www.yna.co.kr/view/AKR20261020030500003",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "강원도, 2030년까지 공공임대주택 1만호 공급…내년 442호 추진",
-            "link": "https://www.yna.co.kr/view/AKR20261020081000062",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "'세종' 아파트 매물 전국서 유일하게 감소…집값 반등 조짐",
-            "link": "https://www.newsis.com/view/NISX20261020_0003832825",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "서울시, 모아주택 조합설립도 공공지원…구역당 최대 1억원 지원",
-            "link": "https://www.yna.co.kr/view/AKR20261020056400004",
-            "source": "연합뉴스 경제"
-          }
-        ]
-      },
-      {
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "코스피는 오늘 3%대 급락하며 5,600선을 오르내리며 흔들렸다. 한때 5,500선을 하회하는 등 하락세가 지속됐다. 이는 프랑스 정세 불안과 AI 부채 우려가 영향을 미친 것으로 나타났다. 중국 증시도 하락 출발하며 상하이지수가 0.33% 하락했다. 각 시장에서는 외부 요인에 따른 변동이 두드러졌다.",
-        "lineEn": "The KOSPI sharply fell by over 3%, fluctuating around the 5,600 level. At times, it fell below the 5,500 level, continuing its downward trend. This was influenced by instability in France and concerns over AI debt. The Chinese market also started with a decline, with the Shanghai index falling 0.33%. Each market showed significant fluctuations due to external factors.",
+        "lineKo": "한국 증시는 오늘 코스피가 3%대 급락하며 5,600선을 오르내렸다. 특히 한때 5,500선을 하회하는 등 하락세가 두드러졌다. 이는 프랑스 정세 불안과 AI 부채 우려가 영향을 미친 것으로 나타났다. 명품 소비도 증시 하락으로 인해 감소하는 것으로 나타났다. 중국 증시 역시 상하이지수가 0.33% 하락하며 하락 출발했다.",
+        "lineEn": "South Korea's stock market saw the Kospi drop by over 3%, fluctuating around the 5,600 level today. The decline was particularly pronounced at times, with the index falling below the 5,500 level. This appears to have been influenced by instability in France and concerns over AI debt. Premium consumption also showed a decline due to the falling stock market. China's stock market also started lower, with the Shanghai index dropping 0.33%.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "또다시 눌린 코스피…佛정세불안 유탄•AI 부채우려 재부각",
+            "title": "증시 폭락에 가벼워진 지갑…명품 소비도 꺾였다",
+            "link": "https://www.hankyung.com/article/202610191316i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "또다시 눌린 코스피…佛정세불안 유탄·AI 부채우려 재부각",
             "link": "https://www.yna.co.kr/view/AKR20261020083200008",
             "source": "연합뉴스 경제"
           },
@@ -5567,23 +5589,6 @@
             "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.33%↓",
             "link": "https://www.newsis.com/view/NISX20261020_0003833072",
             "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
-        "key": "other",
-        "name": "기타 경제 소식",
-        "nameEn": "Other Economic News",
-        "lineKo": "최대 20% 수익을 기록한 암호화폐 대출 서비스가 주목받고 있다. 미국과 유럽은 해당 서비스에 대한 규제 검토를 진행 중이다. 암호화폐 시장의 변동성이 커지면서 투자자들의 관심이 집중되고 있다. 관련 규제가 본격적으로 시행되면 시장에 큰 영향을 미칠 것으로 보인다. 현재까지 발표된 규제 방향은 명확하지 않다.",
-        "lineEn": "Cryptocurrency lending services that have recorded up to 20% profit are attracting attention. The United States and Europe are reviewing regulations related to the service. As the volatility of the cryptocurrency market increases, investors' interest is growing. If related regulations are officially implemented, they are expected to have a significant impact on the market. The direction of the regulations announced so far is not clear.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "최대 20% 수익 내건 코인 대출…美·유럽 규제 검토",
-            "link": "https://www.hankyung.com/article/202610202263i",
-            "source": "한국경제 경제"
           }
         ]
       }
