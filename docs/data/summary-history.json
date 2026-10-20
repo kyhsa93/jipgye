@@ -5469,76 +5469,39 @@
     "date": "2026-10-20",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 기타 경제 소식: 이찬진이 의무복무 병사 대출 금지 검토를 언급하며 관련 정책 논의가 이어졌다. 세종시에서 공무원 감축 발표 이후 입주 물량이 없어 집값 상승이 우려되고 있다. 이 대통령은 집값 안정을 위해 세금 인상 주장은 사실이 아니라고 밝혔다. 오세훈과 야당은 토허제 해제에 대해 의견 충돌을 보이고 있다. 2028년까지 주택 공급이 정상화될 것이라고 대통령이 언급했다.\n- 증시·환율: 미 증시에서 AI 관련 주식 저가 매수 흐름이 나타나며 나스닥은 1% 상승했다. 뉴욕증시는 AI주 저가매수에 따라 혼조 출발했으나 나스닥은 1% 올랐다. 대만 증시는 미국 반도체주 급락 영향으로 0.61% 하락하며 반락 마감했다. 일본 증시는 AI 투자에 대한 불안감으로 혼조 마감했고 닛케이 지수는 0.62% 하락했다. 중국 증시는 혼조 마감했으나 상하이지수는 0.39% 상승했다.\n- 부동산: ‘아크메르 동탄’ 견본주택은 사흘간 2만7000여 명이 방문했다. 매경플러스는 수도권 교통 호재 관련 정보를 PDF로 제공한다. 전세계 식량값은 2027년까지 고공행진할 것으로 전망된다. 중국은 3분기 4.5% 성장했으나 소비와 부동산은 여전히 침체 상태다. 고급 아파트의 새로운 기준으로 ‘하이필로티’가 등장했다.\n- 금리·예금·투자상품: 금리·예금·투자상품: [게시판] DB저축銀, 파킹통장 한도 1억원으로 확대…금리 3.3%, 中, 대출금리 결정체계 대수술…기업이 기준금리 직접 고른다 [차이나 워치], 시중금리 오르는데 저축銀 예금금리는 제자리 +3",
-      "en": "- Other Economic News: Lee Chan-jin mentioned the review of a ban on loans for conscripted soldiers, and discussions on related policies continued. After the announcement of public sector staff reductions in Sejong City, there is concern that rising housing prices may occur due to the lack of new housing units. The president stated that it is not true that he supports increasing taxes to stabilize housing prices. Oh Se-hoon and the opposition have shown conflicting views on the abolition of the housing purchase restriction. The president mentioned that housing supply will normalize by 2028.\n- Stocks & FX: In the US stock market, a low-price buying trend for AI-related stocks emerged, pushing the Nasdaq up 1%. The New York stock market opened mixed due to low-price buying in AI stocks, but the Nasdaq rose 1%. The Taiwan stock market closed down 0.61% due to the decline in US semiconductor stocks. The Japanese stock market closed mixed due to concerns over AI investments, with the Nikkei index falling 0.62%. The Chinese stock market closed mixed, but the Shanghai index rose 0.39%.\n- Real Estate: The 'Akmir Dongtan' model housing complex was visited by more than 20,000,700 people over three days. Maeil Economic Plus provides information related to transportation benefits in the Seoul metropolitan area in PDF format. Global food prices are expected to remain high until 2027. China grew by 4.5% in the third quarter, but consumption and real estate remain in a slump. A new standard for high-end apartments, 'Haifilotti,' has emerged.\n- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: [게시판] DB저축銀, 파킹통장 한도 1억원으로 확대…금리 3.3%, 中, 대출금리 결정체계 대수술…기업이 기준금리 직접 고른다 [차이나 워치], 시중금리 오르는데 저축銀 예금금리는 제자리 +3"
+      "ko": "- 금리·예금·투자상품: 금리·예금·투자상품: [속보] 中, 기준금리 1년물 LPR 3.0% 5년물 3.5%…17개월째 동결, 카뱅, 코스피 200 연계 원금지급형 ELB 펀드…연 7.4% 수익률, 신한카드, 카드사 첫 '중금리 생활안정대출' 출시…최저 연 9.9% +1\n- 부동산: 서울 아파트 계약 중 월세 비중이 50%를 처음으로 넘어서며 전세 시장이 위축되고 있는 것으로 나타났다. 건설·자재·부동산 경기 전망에 대한 세미나가 건산연에서 개최되었다. 서울에서 아파트 계약의 절반이 월세로 이뤄지며 전세 시장이 사라지고 있다는 분석이 나왔다. 미국에서 이민 단속으로 주택 건설비가 급등하며 집을 지을 사람이 부족한 상황이 발생했다. LH는 노후 임대주택 수리비로 758억원을 낭비한 것으로 드러났다.\n- 증시·환율: 코스피는 오늘 장 초반 2%대 급락하며 5,733.57포인트로 출발했다. 코스닥도 0.44% 하락하며 부진을 이어갔다. 외인과 기관의 매도세가 주가 하락을 가속화했다. ADB는 한국 증시가 역내에서 가장 큰 낙폭을 기록했다고 분석했다. 레버리지 ETF가 하락폭을 더 키웠다는 분석도 제기됐다.\n- 기타 경제 소식: 코인 대출 서비스가 최대 20%의 수익을 기록하며 미국과 유럽에서 규제 검토가 진행되고 있다. 오늘 10월 20일 화요일, 경제 관련 주요 일정이 발표되었다. 동탄 지역에서 은행 밖 근저당이 역대 최대 규모로 설정되며 삼성의 사내대출 자금이 유입되고 있다. 강남 지역의 집값 상승을 억제하기 위한 상향평준화 정책이 멈추는 기미가 보이지 않고 있다. 이찬진은 의무복무 병사가 대부업체 대출을 받는 것을 금지하는 방안을 검토하고 있다고 밝혔다.",
+      "en": "- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: [속보] 中, 기준금리 1년물 LPR 3.0% 5년물 3.5%…17개월째 동결, 카뱅, 코스피 200 연계 원금지급형 ELB 펀드…연 7.4% 수익률, 신한카드, 카드사 첫 '중금리 생활안정대출' 출시…최저 연 9.9% +1\n- Real Estate: In Seoul, the proportion of monthly rent payments in apartment contracts has exceeded 50% for the first time, indicating a shrinking deposit market. A seminar on the outlook for construction, materials, and real estate was held at Geunsanryeon. Analysis shows that half of apartment contracts in Seoul are now made through monthly rent, signaling the disappearance of the deposit market. In the U.S., the cost of housing construction has sharply increased due to intensified immigration enforcement, leading to a shortage of people willing to build homes. LH was found to have wasted 75,800,000,000 won on repair costs for aging rental housing.\n- Stocks & FX: The KOSPI fell sharply by over 2% at the opening of today's trading session, starting at 5,733.57 points. The KOSDAQ also continued its poor performance, falling 0.44%. Foreign and institutional selling accelerated the decline in stock prices. ADB analyzed that the Korean stock market recorded the largest decline in the region. There were also analyses suggesting that leveraged ETFs exacerbated the decline.\n- Other Economic News: Coin lending services have recorded a maximum profit of 20%, and regulatory reviews are underway in the United States and Europe. Today, October 20, Tuesday, major economic schedules were announced. In the Dongtan area, external collateral mortgages outside banks have been set at a record high, and Samsung's internal loan funds are flowing in. There is no sign that the policy to stabilize rising housing prices in the Gangnam area is stopping. Lee Chan-jin stated that measures are being considered to prohibit conscript soldiers from taking out loans from private lenders."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "other",
-        "name": "기타 경제 소식",
-        "nameEn": "Other Economic News",
-        "lineKo": "이찬진이 의무복무 병사 대출 금지 검토를 언급하며 관련 정책 논의가 이어졌다. 세종시에서 공무원 감축 발표 이후 입주 물량이 없어 집값 상승이 우려되고 있다. 이 대통령은 집값 안정을 위해 세금 인상 주장은 사실이 아니라고 밝혔다. 오세훈과 야당은 토허제 해제에 대해 의견 충돌을 보이고 있다. 2028년까지 주택 공급이 정상화될 것이라고 대통령이 언급했다.",
-        "lineEn": "Lee Chan-jin mentioned the review of a ban on loans for conscripted soldiers, and discussions on related policies continued. After the announcement of public sector staff reductions in Sejong City, there is concern that rising housing prices may occur due to the lack of new housing units. The president stated that it is not true that he supports increasing taxes to stabilize housing prices. Oh Se-hoon and the opposition have shown conflicting views on the abolition of the housing purchase restriction. The president mentioned that housing supply will normalize by 2028.",
-        "isFallback": false,
-        "fallbackReason": null,
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "금리·예금·투자상품: [속보] 中, 기준금리 1년물 LPR 3.0% 5년물 3.5%…17개월째 동결, 카뱅, 코스피 200 연계 원금지급형 ELB 펀드…연 7.4% 수익률, 신한카드, 카드사 첫 '중금리 생활안정대출' 출시…최저 연 9.9% +1",
+        "lineEn": "Rates, Deposits & Investment Products: [속보] 中, 기준금리 1년물 LPR 3.0% 5년물 3.5%…17개월째 동결, 카뱅, 코스피 200 연계 원금지급형 ELB 펀드…연 7.4% 수익률, 신한카드, 카드사 첫 '중금리 생활안정대출' 출시…최저 연 9.9% +1",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
         "degraded": false,
         "items": [
           {
-            "title": "이찬진 \"의무복무 병사 대부업체 대출 금지 검토\"(종합3보)",
-            "link": "https://www.yna.co.kr/view/AKR20261019071353002",
+            "title": "[속보] 中, 기준금리 1년물 LPR 3.0% 5년물 3.5%…17개월째 동결",
+            "link": "https://www.newsis.com/view/NISX20261020_0003832889",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "카뱅, 코스피 200 연계 원금지급형 ELB 펀드…연 7.4% 수익률",
+            "link": "https://www.yna.co.kr/view/AKR20261020048700002",
             "source": "연합뉴스 경제"
           },
           {
-            "title": "공무원 1만명 내려가라더니 입주물량 0…세종시 집값 벌써부터 ‘들썩’",
-            "link": "https://www.mk.co.kr/news/realestate/12180093",
-            "source": "매일경제 부동산"
+            "title": "신한카드, 카드사 첫 '중금리 생활안정대출' 출시…최저 연 9.9%",
+            "link": "https://www.yna.co.kr/view/AKR20261020039800002",
+            "source": "연합뉴스 경제"
           },
           {
-            "title": "[속보]이 대통령 \"집값 잡으려 세금 올렸단 주장 사실 아냐…2028년 공급 정상화\"",
-            "link": "https://www.newsis.com/view/NISX20261019_0003832266",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "\"토허제 해제 불가피\" vs \"집값에 기름 부어\"…오세훈·野 공방",
-            "link": "https://www.hankyung.com/article/202610190979i",
-            "source": "한국경제 부동산"
-          }
-        ]
-      },
-      {
-        "key": "stocks",
-        "name": "증시·환율",
-        "nameEn": "Stocks & FX",
-        "lineKo": "미 증시에서 AI 관련 주식 저가 매수 흐름이 나타나며 나스닥은 1% 상승했다. 뉴욕증시는 AI주 저가매수에 따라 혼조 출발했으나 나스닥은 1% 올랐다. 대만 증시는 미국 반도체주 급락 영향으로 0.61% 하락하며 반락 마감했다. 일본 증시는 AI 투자에 대한 불안감으로 혼조 마감했고 닛케이 지수는 0.62% 하락했다. 중국 증시는 혼조 마감했으나 상하이지수는 0.39% 상승했다.",
-        "lineEn": "In the US stock market, a low-price buying trend for AI-related stocks emerged, pushing the Nasdaq up 1%. The New York stock market opened mixed due to low-price buying in AI stocks, but the Nasdaq rose 1%. The Taiwan stock market closed down 0.61% due to the decline in US semiconductor stocks. The Japanese stock market closed mixed due to concerns over AI investments, with the Nikkei index falling 0.62%. The Chinese stock market closed mixed, but the Shanghai index rose 0.39%.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "美 증시, AI 관련 주식 저가 매수에 나스닥 반등",
-            "link": "https://www.hankyung.com/article/202610191800i",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "뉴욕증시, 'AI주 저가매수' 흐름 속 혼조 출발…나스닥 1%↑",
-            "link": "https://www.newsis.com/view/NISX20261019_0003832444",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "[올댓차이나] 대만 증시, 美 반도체주 급락에 반락 마감…0.61%↓",
-            "link": "https://www.newsis.com/view/NISX20261019_0003832323",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "日증시, AI 투자 불안에 혼조 마감…닛케이 0.62%↓",
-            "link": "https://www.newsis.com/view/NISX20261019_0003832076",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "[올댓차이나] 중국 증시 혼조 마감…상하이지수 0.39%↑",
-            "link": "https://www.newsis.com/view/NISX20261019_0003832092",
+            "title": "\"금리 앞에서는 어떤 자산도 못 버텨\"…전문가가 본 '부동산 불패'의 종말",
+            "link": "https://www.newsis.com/view/NISX20261019_0003830954",
             "source": "뉴시스 경제"
           }
         ]
@@ -5547,72 +5510,109 @@
         "key": "realestate",
         "name": "부동산",
         "nameEn": "Real Estate",
-        "lineKo": "‘아크메르 동탄’ 견본주택은 사흘간 2만7000여 명이 방문했다. 매경플러스는 수도권 교통 호재 관련 정보를 PDF로 제공한다. 전세계 식량값은 2027년까지 고공행진할 것으로 전망된다. 중국은 3분기 4.5% 성장했으나 소비와 부동산은 여전히 침체 상태다. 고급 아파트의 새로운 기준으로 ‘하이필로티’가 등장했다.",
-        "lineEn": "The 'Akmir Dongtan' model housing complex was visited by more than 20,000,700 people over three days. Maeil Economic Plus provides information related to transportation benefits in the Seoul metropolitan area in PDF format. Global food prices are expected to remain high until 2027. China grew by 4.5% in the third quarter, but consumption and real estate remain in a slump. A new standard for high-end apartments, 'Haifilotti,' has emerged.",
+        "lineKo": "서울 아파트 계약 중 월세 비중이 50%를 처음으로 넘어서며 전세 시장이 위축되고 있는 것으로 나타났다. 건설·자재·부동산 경기 전망에 대한 세미나가 건산연에서 개최되었다. 서울에서 아파트 계약의 절반이 월세로 이뤄지며 전세 시장이 사라지고 있다는 분석이 나왔다. 미국에서 이민 단속으로 주택 건설비가 급등하며 집을 지을 사람이 부족한 상황이 발생했다. LH는 노후 임대주택 수리비로 758억원을 낭비한 것으로 드러났다.",
+        "lineEn": "In Seoul, the proportion of monthly rent payments in apartment contracts has exceeded 50% for the first time, indicating a shrinking deposit market. A seminar on the outlook for construction, materials, and real estate was held at Geunsanryeon. Analysis shows that half of apartment contracts in Seoul are now made through monthly rent, signaling the disappearance of the deposit market. In the U.S., the cost of housing construction has sharply increased due to intensified immigration enforcement, leading to a shortage of people willing to build homes. LH was found to have wasted 75,800,000,000 won on repair costs for aging rental housing.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "‘아크메르 동탄’ 견본주택 사흘간 2만7000여 명 방문",
-            "link": "https://www.mk.co.kr/news/realestate/12180036",
+            "title": "“전세 사라지고 월세만 남는 시대 오나”…서울 아파트 월세 비중 50% 첫 돌파",
+            "link": "https://www.mk.co.kr/news/economy/12180304",
             "source": "매일경제 부동산"
           },
           {
-            "title": "수도권 교통 호재에 대한 모든 것…매경플러스서 PDF 다운 받으세요 [부동산 손품노트]",
-            "link": "https://www.mk.co.kr/news/realestate/12180007",
-            "source": "매일경제 부동산"
+            "title": "건산연, '건설·자재·부동산 경기 전망 세미나' 개최",
+            "link": "https://www.newsis.com/view/NISX20261020_0003832719",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "\"지금도 비싼데 더 오른다\"…전세계 식량값 2027년까지 고공행진",
-            "link": "https://www.hankyung.com/article/202610191660i",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "'수출 호조' 中, 3분기 4.5% 성장…소비·부동산 침체는 여전",
-            "link": "https://www.hankyung.com/article/2026101914591",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "고급 아파트의 새 기준된 '하이필로티'",
-            "link": "https://www.hankyung.com/article/202610190847i",
+            "title": "\"서울서 전세가 사라진다\"…아파트 계약 절반이 월세",
+            "link": "https://www.hankyung.com/article/2026102022426",
             "source": "한국경제 부동산"
+          },
+          {
+            "title": "\"집 지을 사람이 없다\"…이민 단속에 미국 주택 건설비 급등",
+            "link": "https://www.hankyung.com/article/202610202248i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "[단독] 노후 임대주택 고칠 돈으로 ‘빚투’...758억원 까먹은 LH",
+            "link": "https://www.mk.co.kr/news/economy/12179552",
+            "source": "매일경제 부동산"
           }
         ]
       },
       {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "금리·예금·투자상품: [게시판] DB저축銀, 파킹통장 한도 1억원으로 확대…금리 3.3%, 中, 대출금리 결정체계 대수술…기업이 기준금리 직접 고른다 [차이나 워치], 시중금리 오르는데 저축銀 예금금리는 제자리 +3",
-        "lineEn": "Rates, Deposits & Investment Products: [게시판] DB저축銀, 파킹통장 한도 1억원으로 확대…금리 3.3%, 中, 대출금리 결정체계 대수술…기업이 기준금리 직접 고른다 [차이나 워치], 시중금리 오르는데 저축銀 예금금리는 제자리 +3",
-        "isFallback": true,
-        "fallbackReason": "unverified-entity",
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "코스피는 오늘 장 초반 2%대 급락하며 5,733.57포인트로 출발했다. 코스닥도 0.44% 하락하며 부진을 이어갔다. 외인과 기관의 매도세가 주가 하락을 가속화했다. ADB는 한국 증시가 역내에서 가장 큰 낙폭을 기록했다고 분석했다. 레버리지 ETF가 하락폭을 더 키웠다는 분석도 제기됐다.",
+        "lineEn": "The KOSPI fell sharply by over 2% at the opening of today's trading session, starting at 5,733.57 points. The KOSDAQ also continued its poor performance, falling 0.44%. Foreign and institutional selling accelerated the decline in stock prices. ADB analyzed that the Korean stock market recorded the largest decline in the region. There were also analyses suggesting that leveraged ETFs exacerbated the decline.",
+        "isFallback": false,
+        "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "[게시판] DB저축銀, 파킹통장 한도 1억원으로 확대…금리 3.3%",
-            "link": "https://www.yna.co.kr/view/AKR20261019175000002",
+            "title": "코스피, 장 초반 낙폭 키우며 2%대 급락…외인·기관 매도(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261020046800008",
             "source": "연합뉴스 경제"
           },
           {
-            "title": "中, 대출금리 결정체계 대수술…기업이 기준금리 직접 고른다 [차이나 워치]",
-            "link": "https://www.hankyung.com/article/202610191663i",
+            "title": "日증시, 美다우 하락 여파에 하락 출발…닛케이 0.25%↓",
+            "link": "https://www.newsis.com/view/NISX20261020_0003832706",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "코스피, 0.60% 내린 5,733.57 출발…코스닥도 0.44%↓",
+            "link": "https://www.yna.co.kr/view/AKR20261020036800008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[마켓뷰] AI 투자 의견 분분…코스피 반등 지속성 시험대",
+            "link": "https://www.yna.co.kr/view/AKR20261020021900008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "ADB \"韓 증시 역내 최대 낙폭…'레버리지 ETF'가 하락폭 키웠다\"",
+            "link": "https://www.newsis.com/view/NISX20261019_0003832273",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "코인 대출 서비스가 최대 20%의 수익을 기록하며 미국과 유럽에서 규제 검토가 진행되고 있다. 오늘 10월 20일 화요일, 경제 관련 주요 일정이 발표되었다. 동탄 지역에서 은행 밖 근저당이 역대 최대 규모로 설정되며 삼성의 사내대출 자금이 유입되고 있다. 강남 지역의 집값 상승을 억제하기 위한 상향평준화 정책이 멈추는 기미가 보이지 않고 있다. 이찬진은 의무복무 병사가 대부업체 대출을 받는 것을 금지하는 방안을 검토하고 있다고 밝혔다.",
+        "lineEn": "Coin lending services have recorded a maximum profit of 20%, and regulatory reviews are underway in the United States and Europe. Today, October 20, Tuesday, major economic schedules were announced. In the Dongtan area, external collateral mortgages outside banks have been set at a record high, and Samsung's internal loan funds are flowing in. There is no sign that the policy to stabilize rising housing prices in the Gangnam area is stopping. Lee Chan-jin stated that measures are being considered to prohibit conscript soldiers from taking out loans from private lenders.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "최대 20% 수익 내건 코인 대출…美·유럽 규제 검토",
+            "link": "https://www.hankyung.com/article/202610202263i",
             "source": "한국경제 경제"
           },
           {
-            "title": "시중금리 오르는데 저축銀 예금금리는 제자리",
-            "link": "https://www.hankyung.com/article/2026101915221",
-            "source": "한국경제 경제"
+            "title": "[오늘의 주요일정]경제(10월20일화요일)",
+            "link": "https://www.newsis.com/view/NISX20261019_0003830754",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "치솟는 강북 이주비 금리…공급 가로막나",
-            "link": "https://www.hankyung.com/article/2026101913671",
-            "source": "한국경제 부동산"
+            "title": "동탄 '은행 밖 근저당' 역대 최대…삼성 사내대출 자금 유입",
+            "link": "https://www.newsis.com/view/NISX20261019_0003832282",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "국고채 금리, 금통위 앞두고 일제히 상승…3년물 연 3.877%(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261019145251008",
+            "title": "강남 집값만 잡으면 된다고? … ‘상향평준화’ 멈출 기미 안보인다",
+            "link": "https://www.mk.co.kr/news/realestate/12179478",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "이찬진 \"의무복무 병사 대부업체 대출 금지 검토\"(종합3보)",
+            "link": "https://www.yna.co.kr/view/AKR20261019071353002",
             "source": "연합뉴스 경제"
           }
         ]
