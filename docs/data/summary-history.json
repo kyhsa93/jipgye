@@ -5469,44 +5469,76 @@
     "date": "2026-10-20",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 부동산: 세종 아파트 매물은 전국에서 유일하게 감소하며 집값 반등 조짐을 보이고 있다. 모아주택 조합설립을 위해 시·자치구가 지원에 나서며 1억 원을 지원하고 전문관리업체를 선정한다. 올해 서울에서 6억 원 미만 아파트 거래가 늘었으며, 노원·도봉 지역에 집중되고 있다. 극동건설은 금천 시흥동 가로주택정비사업을 수주해 231가구를 조성할 계획이다. 수도권 주택사업에 대한 경기전망은 3개월 만에 낙관 우세로 전환됐다.\n- 증시·환율: 중국 증시가 하락 출발하며 상하이지수는 0.33% 내렸고, 코스피는 장 초반에 낙폭을 키워 2%대 급락했다.\n- 금리·예금·투자상품: 채권시장 참여자의 93%가 10월 금통위에서 기준금리가 동결될 것으로 예상했으며, 중국은 1년물 LPR을 3.0%, 5년물 LPR을 3.5%로 17개월째 동결했고, 카뱅은 코스피 200 연계 원금지급형 ELB 펀드를 통해 연 7.4% 수익률을 기록했다.\n- 기타 경제 소식: 최대 20% 수익을 기록한 암호화폐 대출 서비스가 주목받고 있다. 미국과 유럽은 해당 서비스에 대한 규제 검토를 진행 중이다. 암호화폐 시장의 변동성이 커지면서 투자자들의 관심이 집중되고 있다. 관련 규제가 본격적으로 시행되면 시장에 큰 영향을 미칠 것으로 보인다. 현재까지 발표된 규제 방향은 명확하지 않다.",
-      "en": "- Real Estate: The number of apartment listings in Sejong is the only one nationwide showing a decline, indicating a sign of rising home prices. The city and self-governing districts are stepping in to support the establishment of the Moa Housing Cooperative, providing 100,000,000 won and selecting a professional management company. This year, apartment transactions under 600,000,000 won in Seoul have increased, concentrating in Nowon and Dobong areas. Dongbu Construction has won the contract for the Guro Siheungdong housing redevelopment project, planning to build 231 units. The outlook for housing projects in the Seoul metropolitan area has shifted to optimism within three months.\n- Stocks & FX: China's stock market fell from the start, with the Shanghai index down 0.33%, and the KOSPI widened its losses early in the session, plunging more than 2%.\n- Rates, Deposits & Investment Products: 93% of debt market participants expected the benchmark rate to be held at the October MPC meeting, China kept the 1-year LPR at 3.0% and the 5-year LPR at 3.5% for the 17th consecutive month, and KAB held a 7.4% annual yield through a KOSPI 200-linked principal protected ELB fund.\n- Other Economic News: Cryptocurrency lending services that have recorded up to 20% profit are attracting attention. The United States and Europe are reviewing regulations for the service. As the volatility of the cryptocurrency market increases, investors' interest is growing. If related regulations are officially implemented, they are expected to have a significant impact on the market. The direction of the regulations announced so far is not clear."
+      "ko": "- 금리·예금·투자상품: 금리·예금·투자상품: [올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 개장… H주 0.94%↓, 美국채금리 고공행진 장기화 전망…경제학자 75% \"연말에도 5% 이상\", 국고채 금리 혼조세…3년물 장중 연 3.879% +1\n- 부동산: 1∼9월 서울 아파트 전세 거래는 28% 급감했으며, 월세 비중은 처음으로 50%를 넘었다. 올해 서울에서 6억원 미만 아파트 거래 비중은 작년 대비 5%p 증가했다. 강원도는 2030년까지 공공임대주택 1만호를 공급하고, 내년에는 442호를 추진할 계획이다. 세종 아파트 매물은 전국에서 유일하게 감소하며 집값 반등 조짐을 보이고 있다. 서울시는 모아주택 조합설립에 공공지원을 하며, 구역당 최대 1억원을 지원한다.\n- 증시·환율: 코스피는 오늘 3%대 급락하며 5,600선을 오르내리며 흔들렸다. 한때 5,500선을 하회하는 등 하락세가 지속됐다. 이는 프랑스 정세 불안과 AI 부채 우려가 영향을 미친 것으로 나타났다. 중국 증시도 하락 출발하며 상하이지수가 0.33% 하락했다. 각 시장에서는 외부 요인에 따른 변동이 두드러졌다.\n- 기타 경제 소식: 최대 20% 수익을 기록한 암호화폐 대출 서비스가 주목받고 있다. 미국과 유럽은 해당 서비스에 대한 규제 검토를 진행 중이다. 암호화폐 시장의 변동성이 커지면서 투자자들의 관심이 집중되고 있다. 관련 규제가 본격적으로 시행되면 시장에 큰 영향을 미칠 것으로 보인다. 현재까지 발표된 규제 방향은 명확하지 않다.",
+      "en": "- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: [올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 개장… H주 0.94%↓, 美국채금리 고공행진 장기화 전망…경제학자 75% \"연말에도 5% 이상\", 국고채 금리 혼조세…3년물 장중 연 3.879% +1\n- Real Estate: From January to September, the number of leasehold apartment transactions in Seoul dropped sharply by 28%, and the proportion of monthly rent transactions exceeded 50% for the first time. The share of apartment transactions in Seoul priced below 600,000,000 won increased by 5 percentage points compared to last year. Gangwon Province plans to supply 10,000 public rental housing units by 2030, and will proceed with 442 units next year. The number of apartment listings in Sejong is the only one nationwide to decrease, showing signs of a rebound in housing prices. Seoul City will provide public support for the establishment of the Moa Housing cooperative, offering up to 100,000,000 won per area.\n- Stocks & FX: The KOSPI sharply fell by over 3%, fluctuating around the 5,600 level. At times, it fell below the 5,500 level, continuing its downward trend. This was influenced by instability in France and concerns over AI debt. The Chinese market also started with a decline, with the Shanghai index falling 0.33%. Each market showed significant fluctuations due to external factors.\n- Other Economic News: Cryptocurrency lending services that have recorded up to 20% profit are attracting attention. The United States and Europe are reviewing regulations related to the service. As the volatility of the cryptocurrency market increases, investors' interest is growing. If related regulations are officially implemented, they are expected to have a significant impact on the market. The direction of the regulations announced so far is not clear."
     },
     "highlights": [],
     "categories": [
       {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "금리·예금·투자상품: [올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 개장… H주 0.94%↓, 美국채금리 고공행진 장기화 전망…경제학자 75% \"연말에도 5% 이상\", 국고채 금리 혼조세…3년물 장중 연 3.879% +1",
+        "lineEn": "Rates, Deposits & Investment Products: [올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 개장… H주 0.94%↓, 美국채금리 고공행진 장기화 전망…경제학자 75% \"연말에도 5% 이상\", 국고채 금리 혼조세…3년물 장중 연 3.879% +1",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 개장… H주 0.94%↓",
+            "link": "https://www.newsis.com/view/NISX20261020_0003833182",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "美국채금리 고공행진 장기화 전망…경제학자 75% \"연말에도 5% 이상\"",
+            "link": "https://www.newsis.com/view/NISX20261020_0003832967",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "국고채 금리 혼조세…3년물 장중 연 3.879%",
+            "link": "https://www.yna.co.kr/view/AKR20261020084200008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "中, 기준금리 1년물 LPR 3.0%·5년물 3.5%…17개월째 동결",
+            "link": "https://www.newsis.com/view/NISX20261020_0003833113",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
         "key": "realestate",
         "name": "부동산",
         "nameEn": "Real Estate",
-        "lineKo": "세종 아파트 매물은 전국에서 유일하게 감소하며 집값 반등 조짐을 보이고 있다. 모아주택 조합설립을 위해 시·자치구가 지원에 나서며 1억 원을 지원하고 전문관리업체를 선정한다. 올해 서울에서 6억 원 미만 아파트 거래가 늘었으며, 노원·도봉 지역에 집중되고 있다. 극동건설은 금천 시흥동 가로주택정비사업을 수주해 231가구를 조성할 계획이다. 수도권 주택사업에 대한 경기전망은 3개월 만에 낙관 우세로 전환됐다.",
-        "lineEn": "The number of apartment listings in Sejong is the only one nationwide showing a decline, indicating a sign of rising home prices. The city and self-governing districts are stepping in to support the establishment of the Moa Housing Cooperative, providing 100,000,000 won and selecting a professional management company. This year, apartment transactions under 600,000,000 won in Seoul have increased, concentrating in Nowon and Dobong areas. Dongbu Construction has won the contract for the Guro Siheungdong housing redevelopment project, planning to build 231 units. The outlook for housing projects in the Seoul metropolitan area has shifted to optimism within three months.",
+        "lineKo": "1∼9월 서울 아파트 전세 거래는 28% 급감했으며, 월세 비중은 처음으로 50%를 넘었다. 올해 서울에서 6억원 미만 아파트 거래 비중은 작년 대비 5%p 증가했다. 강원도는 2030년까지 공공임대주택 1만호를 공급하고, 내년에는 442호를 추진할 계획이다. 세종 아파트 매물은 전국에서 유일하게 감소하며 집값 반등 조짐을 보이고 있다. 서울시는 모아주택 조합설립에 공공지원을 하며, 구역당 최대 1억원을 지원한다.",
+        "lineEn": "From January to September, the number of leasehold apartment transactions in Seoul dropped sharply by 28%, and the proportion of monthly rent transactions exceeded 50% for the first time. The share of apartment transactions in Seoul priced below 600,000,000 won increased by 5 percentage points compared to last year. Gangwon Province plans to supply 10,000 public rental housing units by 2030, and will proceed with 442 units next year. The number of apartment listings in Sejong is the only one nationwide to decrease, showing signs of a rebound in housing prices. Seoul City will provide public support for the establishment of the Moa Housing cooperative, offering up to 100,000,000 won per area.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
+          {
+            "title": "1∼9월 서울 아파트 전세 거래 28% 급감…월세 비중 첫 50% 돌파(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261019159051003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "올해 서울 6억원 미만 아파트 거래 비중 작년 대비 5%p↑",
+            "link": "https://www.yna.co.kr/view/AKR20261020030500003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "강원도, 2030년까지 공공임대주택 1만호 공급…내년 442호 추진",
+            "link": "https://www.yna.co.kr/view/AKR20261020081000062",
+            "source": "연합뉴스 경제"
+          },
           {
             "title": "'세종' 아파트 매물 전국서 유일하게 감소…집값 반등 조짐",
             "link": "https://www.newsis.com/view/NISX20261020_0003832825",
             "source": "뉴시스 경제"
           },
           {
-            "title": "모아주택 조합설립 시·자치구가 돕는다… “1억 지원하고 전문관리업체 선정”",
-            "link": "https://www.mk.co.kr/news/realestate/12180416",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "올해 서울 ‘6억 미만 아파트’ 거래 늘었다…노원·도봉 집중",
-            "link": "https://www.mk.co.kr/news/realestate/12180411",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "극동건설, 금천 시흥동 가로주택정비사업 수주…231가구 조성",
-            "link": "https://www.newsis.com/view/NISX20261020_0003832971",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "수도권 주택사업 경기전망 3개월 만에 낙관 우세",
-            "link": "https://www.yna.co.kr/view/AKR20261020039500003",
+            "title": "서울시, 모아주택 조합설립도 공공지원…구역당 최대 1억원 지원",
+            "link": "https://www.yna.co.kr/view/AKR20261020056400004",
             "source": "연합뉴스 경제"
           }
         ]
@@ -5515,48 +5547,26 @@
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "중국 증시가 하락 출발하며 상하이지수는 0.33% 내렸고, 코스피는 장 초반에 낙폭을 키워 2%대 급락했다.",
-        "lineEn": "China's stock market fell from the start, with the Shanghai index down 0.33%, and the KOSPI widened its losses early in the session, plunging more than 2%.",
+        "lineKo": "코스피는 오늘 3%대 급락하며 5,600선을 오르내리며 흔들렸다. 한때 5,500선을 하회하는 등 하락세가 지속됐다. 이는 프랑스 정세 불안과 AI 부채 우려가 영향을 미친 것으로 나타났다. 중국 증시도 하락 출발하며 상하이지수가 0.33% 하락했다. 각 시장에서는 외부 요인에 따른 변동이 두드러졌다.",
+        "lineEn": "The KOSPI sharply fell by over 3%, fluctuating around the 5,600 level. At times, it fell below the 5,500 level, continuing its downward trend. This was influenced by instability in France and concerns over AI debt. The Chinese market also started with a decline, with the Shanghai index falling 0.33%. Each market showed significant fluctuations due to external factors.",
         "isFallback": false,
         "fallbackReason": null,
-        "degraded": true,
+        "degraded": false,
         "items": [
+          {
+            "title": "또다시 눌린 코스피…佛정세불안 유탄•AI 부채우려 재부각",
+            "link": "https://www.yna.co.kr/view/AKR20261020083200008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 3%대 급락하며 5,600선 공방…한때 5,500선 깨지기도",
+            "link": "https://www.yna.co.kr/view/AKR20261020079700008",
+            "source": "연합뉴스 경제"
+          },
           {
             "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.33%↓",
             "link": "https://www.newsis.com/view/NISX20261020_0003833072",
             "source": "뉴시스 경제"
-          },
-          {
-            "title": "코스피, 장 초반 낙폭 키우며 2%대 급락…외인·기관 매도(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261020046800008",
-            "source": "연합뉴스 경제"
-          }
-        ]
-      },
-      {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "채권시장 참여자의 93%가 10월 금통위에서 기준금리가 동결될 것으로 예상했으며, 중국은 1년물 LPR을 3.0%, 5년물 LPR을 3.5%로 17개월째 동결했고, 카뱅은 코스피 200 연계 원금지급형 ELB 펀드를 통해 연 7.4% 수익률을 기록했다.",
-        "lineEn": "93% of debt market participants expected the benchmark rate to be held at the October MPC meeting, China kept the 1-year LPR at 3.0% and the 5-year LPR at 3.5% for the 17th consecutive month, and KAB held a 7.4% annual yield through a KOSPI 200-linked principal protected ELB fund.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": true,
-        "items": [
-          {
-            "title": "채권시장 참여자 93% \"10월 금통위서 기준금리 동결 예상\"",
-            "link": "https://www.yna.co.kr/view/AKR20261020070400008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "[속보] 中, 기준금리 1년물 LPR 3.0% 5년물 3.5%…17개월째 동결",
-            "link": "https://www.newsis.com/view/NISX20261020_0003832889",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "카뱅, 코스피 200 연계 원금지급형 ELB 펀드…연 7.4% 수익률",
-            "link": "https://www.yna.co.kr/view/AKR20261020048700002",
-            "source": "연합뉴스 경제"
           }
         ]
       },
@@ -5565,7 +5575,7 @@
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
         "lineKo": "최대 20% 수익을 기록한 암호화폐 대출 서비스가 주목받고 있다. 미국과 유럽은 해당 서비스에 대한 규제 검토를 진행 중이다. 암호화폐 시장의 변동성이 커지면서 투자자들의 관심이 집중되고 있다. 관련 규제가 본격적으로 시행되면 시장에 큰 영향을 미칠 것으로 보인다. 현재까지 발표된 규제 방향은 명확하지 않다.",
-        "lineEn": "Cryptocurrency lending services that have recorded up to 20% profit are attracting attention. The United States and Europe are reviewing regulations for the service. As the volatility of the cryptocurrency market increases, investors' interest is growing. If related regulations are officially implemented, they are expected to have a significant impact on the market. The direction of the regulations announced so far is not clear.",
+        "lineEn": "Cryptocurrency lending services that have recorded up to 20% profit are attracting attention. The United States and Europe are reviewing regulations related to the service. As the volatility of the cryptocurrency market increases, investors' interest is growing. If related regulations are officially implemented, they are expected to have a significant impact on the market. The direction of the regulations announced so far is not clear.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
