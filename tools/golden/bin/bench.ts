@@ -68,6 +68,3 @@ if (!failed) {
     )
   );
 }
-
-// 대조군(가): tsc 스텝이 무는지 보려고 일부러 넣은 타입 오류 한 줄(#421). 되돌린다.
-const ctlWrongType: number = "문자열";
