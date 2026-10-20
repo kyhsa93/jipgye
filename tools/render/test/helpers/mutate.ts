@@ -11,11 +11,13 @@ import path from "node:path";
 
 export const BASE = path.resolve(import.meta.dirname, "../fixtures/base");
 
+type Mutation = { check: string; file: string; find: string; put: string; baseline?: boolean; lang?: string; js?: boolean };
+
 /**
  * 변이 목록. `check`는 이 변이가 걸려야 하는 #274 체인 공통 규칙 1번의 검사 이름이고,
  * `lang`·`js`·`baseline`은 그 변이를 보려면 어떤 조건으로 돌려야 하는지다.
  */
-export const MUTATIONS = {
+export const MUTATIONS: Record<string, Mutation> = {
   // ① 유틸리티 class로 본문 한 블록 숨김 — 네 가지 각각. 글자는 HTML에 그대로 있다(parse5는 통과시킨다).
   "tw:hidden": { check: "가시 텍스트", baseline: true, file: "index.html", find: `<section id="block">`, put: `<section id="block" class="tw:hidden">` },
   "tw:sr-only": { check: "가시 텍스트", baseline: true, file: "index.html", find: `<section id="block">`, put: `<section id="block" class="tw:sr-only">` },

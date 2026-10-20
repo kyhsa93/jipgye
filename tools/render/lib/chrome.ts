@@ -68,7 +68,7 @@ export async function launchChrome({ chromePath = findChrome(), timeoutMs = 3000
   };
   let ws;
   try {
-    const wsUrl = await new Promise((resolve, reject) => {
+    const wsUrl = await new Promise<string>((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error(`Chrome이 ${timeoutMs}ms 안에 뜨지 않았습니다: ${tail()}`)), timeoutMs);
       child.stderr.on("data", (d) => {
         const m = String(d).match(/DevTools listening on (ws:\/\/\S+)/);
@@ -91,7 +91,7 @@ export async function launchChrome({ chromePath = findChrome(), timeoutMs = 3000
 
   let nextId = 1;
   const pending = new Map();
-  const listeners = new Set();
+  const listeners = new Set<(msg: any) => void>();
   // 소켓이 죽으면 기다리던 것을 **전부 거절한다**. 이것이 없으면 CDP 응답이 영영 오지 않아 프로세스가 CPU 0%로 조용히 선다 -
   // 실제로 540개짜리 비교가 아무 출력 없이 멈춰 원인을 찾는 데 시간을 썼다. 죽은 뒤의 send도 바로 거절한다.
   let dead = null;
@@ -113,8 +113,8 @@ export async function launchChrome({ chromePath = findChrome(), timeoutMs = 3000
       else p?.resolve(msg.result);
     } else for (const fn of listeners) fn(msg);
   });
-  const send = (method, params = {}, sessionId) =>
-    new Promise((resolve, reject) => {
+  const send = (method: string, params: object = {}, sessionId?: string) =>
+    new Promise<any>((resolve, reject) => {
       if (dead) {
         reject(new Error(`${method}: ${dead.message}`));
         return;
@@ -135,7 +135,7 @@ export async function launchChrome({ chromePath = findChrome(), timeoutMs = 3000
     const { browserContextId } = await send("Target.createBrowserContext");
     const { targetId } = await send("Target.createTarget", { url: "about:blank", browserContextId });
     const { sessionId } = await send("Target.attachToTarget", { targetId, flatten: true });
-    const cmd = (method, params) => send(method, params, sessionId);
+    const cmd = (method: string, params?: object) => send(method, params, sessionId);
     const blocked = [];
     const onEvent = (msg) => {
       if (msg.sessionId !== sessionId || msg.method !== "Fetch.requestPaused") return;

@@ -20,7 +20,7 @@ const run = promisify(execFile);
 const BIN = path.resolve(import.meta.dirname, "../bin/check.ts");
 
 /** 도구를 **프로세스로** 돌린다. 반환: { code, out }. 라이브러리를 직접 부르면 종료 코드를 못 잰다. */
-async function check(dir, args = []) {
+async function check(dir: string, args: string[] = []) {
   try {
     const { stdout, stderr } = await run(process.execPath, [BIN, dir, ...args], { maxBuffer: 64 * 1024 * 1024 });
     return { code: 0, out: stdout + stderr };
@@ -46,7 +46,7 @@ for (const [label, args] of [
   ["한국어·스크립트 켬", ["--js", "on", "--lang", "ko"]],
   ["영어·스크립트 켬", ["--js", "on", "--lang", "en"]],
   ["기준끼리 견줌(검사 ①)", ["--js", "off", "--lang", "ko", "--baseline", BASE]],
-]) {
+] as [string, string[]][]) {
   test(`대조군: 기준 fixture는 위반 0건으로 끝난다 — ${label}`, async () => {
     const r = await check(BASE, args);
     assert.equal(r.code, 0, `기준 fixture가 종료 코드 ${r.code}로 끝났다:\n${r.out}`);

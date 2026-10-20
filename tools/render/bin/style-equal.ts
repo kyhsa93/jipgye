@@ -58,7 +58,7 @@ const repoRoot = path.resolve(import.meta.dirname, "../../..");
 // ── 인자 ────────────────────────────────────────────────────────────────────────────────────
 
 const argv = process.argv.slice(2);
-const opt = { scope: "full", only: "A,B,C", concurrency: "4", "fixed-now": "2026-01-01T00:00:00Z", "job-timeout": "90000" };
+const opt: Record<string, any> = { scope: "full", only: "A,B,C", concurrency: "4", "fixed-now": "2026-01-01T00:00:00Z", "job-timeout": "90000" };
 for (let i = 0; i < argv.length; i++) {
   const k = argv[i];
   if (k === "--control") opt.control = true;
@@ -102,10 +102,10 @@ if (!Number.isFinite(fixedNow)) {
 
 // Chrome이 죽는 순간 CDP가 기다리던 요청이 한꺼번에 거절되는데, 그 가운데 아무도 await하지 않는 것이 섞여 프로세스를 죽인다.
 // 여기서 받아 적고 계속 간다 - 실제로 못 잰 조건은 아래 재시도가 다시 잡고, 끝내 못 잰 것은 보고서에 "못 쟀다"로 남는다.
-process.on("unhandledRejection", (e) => console.error(`(이어서 감) 처리되지 않은 거절: ${e?.message ?? e}`));
+process.on("unhandledRejection", (e: any) => console.error(`(이어서 감) 처리되지 않은 거절: ${e?.message ?? e}`));
 
 await mkdir(outDir, { recursive: true });
-const report = {
+const report: Record<string, any> = {
   startedAt: new Date().toISOString(),
   machine: { node: process.version, platform: `${process.platform}-${process.arch}` },
   input: { base: baseDir, head: headDir, legacy: legacyFile, scope: opt.scope, fixedNow: opt["fixed-now"], concurrency },
@@ -271,7 +271,7 @@ try {
         return false;
       }
       const c = compareCollected(a, b);
-      const row = { page: job.page, mode: job.mode.name, width: job.width, lang: job.lang, elements: c.elements, values: c.values, pairs: c.pairs, customNamesRead: c.customNamesRead, diffs: c.diffs, domMismatch: c.domMismatch, settled: a.settled && b.settled, blocked: { base: a.blocked, head: b.blocked } };
+      const row: Record<string, any> = { page: job.page, mode: job.mode.name, width: job.width, lang: job.lang, elements: c.elements, values: c.values, pairs: c.pairs, customNamesRead: c.customNamesRead, diffs: c.diffs, domMismatch: c.domMismatch, settled: a.settled && b.settled, blocked: { base: a.blocked, head: b.blocked } };
       if (c.diffs) {
         // 해시가 다른 자리만 값을 다시 읽는다 - 장마다 수백만 값이라 처음부터 값을 옮기면 느리다.
         // 한 번에 펼치는 요소 수를 DETAIL_CAP으로 막는다: 전부 펼치면 evaluate가 수십 MB를 돌려주다 Chrome이 죽는다(실측).

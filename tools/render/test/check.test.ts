@@ -12,7 +12,7 @@ import { parseArgs, planRuns } from "../bin/check.ts";
 const run = promisify(execFile);
 const BIN = path.resolve(import.meta.dirname, "../bin/check.ts");
 
-const fakeRun = (pages, { js = false, lang = "ko" } = {}) => ({
+const fakeRun = (pages: Record<string, unknown[]>, { js = false, lang = "ko" } = {}) => ({
   dir: "/tmp/fake",
   js,
   lang,
@@ -103,7 +103,7 @@ test("도구가 돌지 못하면 종료 코드가 2다 — 위반 0건(0)과 섞
   // "검사가 안 돌았다"가 "위반이 없다"로 읽히면 이 도구는 장식이 된다.
   await assert.rejects(
     () => run(process.execPath, [BIN, "/이_폴더는_없다"]),
-    (e) => {
+    (e: any) => {
       assert.equal(e.code, 2, `종료 코드가 ${e.code}다`);
       assert.match(e.stderr, /검사를 돌리지 못했다/);
       return true;
