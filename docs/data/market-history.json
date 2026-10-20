@@ -752,11 +752,11 @@
       "asOf": "10/19"
     },
     "usdKrw": {
-      "value": 1333.598991,
-      "asOf": "Mon, 19 Oct 2026 00:02:32 +0000",
+      "value": 1330.794448,
+      "asOf": "Tue, 20 Oct 2026 00:02:32 +0000",
       "prevValue": 1333.598991,
-      "change": "0.00",
-      "direction": "UNCHANGED"
+      "change": "-2.80",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "3.00",
