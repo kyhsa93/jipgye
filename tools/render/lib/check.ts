@@ -11,10 +11,10 @@
 // 실제 `docs/`를 읽는 전수 검사는 PR 증빙이고, CI에서 상시로 도는 것은 고정 fixture를 읽는 `test/`의 변이 시험뿐이다.
 import path from "node:path";
 import { readdir } from "node:fs/promises";
-import { serveDir } from "./serve.mjs";
-import { CONTRAST_PROBE, FIELD_PROBE, FOCUS_PROBE, FONT_PROBE, NARROW_WIDTHS, OVERFLOW_PROBE, TAP_PROBE, TEXT_PROBE, TEXT_WIDTHS } from "./probe.mjs";
+import { serveDir } from "./serve.ts";
+import { CONTRAST_PROBE, FIELD_PROBE, FOCUS_PROBE, FONT_PROBE, NARROW_WIDTHS, OVERFLOW_PROBE, TAP_PROBE, TEXT_PROBE, TEXT_WIDTHS } from "./probe.ts";
 
-export { CONTRAST_LARGE, CONTRAST_NORMAL, FIELD_MIN, FONT_MIN, NARROW_WIDTHS, TAP_MIN, TAP_MIN_WIDTH, TEXT_WIDTHS } from "./probe.mjs";
+export { CONTRAST_LARGE, CONTRAST_NORMAL, FIELD_MIN, FONT_MIN, NARROW_WIDTHS, TAP_MIN, TAP_MIN_WIDTH, TEXT_WIDTHS } from "./probe.ts";
 
 /**
  * 네 모드(test/style.test.mjs "네 갈래 팔레트"와 같은 넷):

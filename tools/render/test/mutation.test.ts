@@ -13,11 +13,11 @@ import { execFile } from "node:child_process";
 import { rm } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
-import { findChrome } from "../lib/chrome.mjs";
-import { BASE, MUTATIONS, makeMutant } from "./helpers/mutate.mjs";
+import { findChrome } from "../lib/chrome.ts";
+import { BASE, MUTATIONS, makeMutant } from "./helpers/mutate.ts";
 
 const run = promisify(execFile);
-const BIN = path.resolve(import.meta.dirname, "../bin/check.mjs");
+const BIN = path.resolve(import.meta.dirname, "../bin/check.ts");
 
 /** 도구를 **프로세스로** 돌린다. 반환: { code, out }. 라이브러리를 직접 부르면 종료 코드를 못 잰다. */
 async function check(dir, args = []) {
@@ -95,7 +95,7 @@ test("변이 「대비」는 네 모드 가운데 dark 한 갈래에서만 걸�
 
 test("변이가 실제로 파일을 바꾼다 — 찾을 자리가 없으면 그 자리에서 던진다", async () => {
   // 패치가 조용히 안 걸리면 변이 시험이 **기준을 재면서 통과**한다. 그 길을 helper가 막는 것을 확인한다.
-  const { MUTATIONS: table } = await import("./helpers/mutate.mjs");
+  const { MUTATIONS: table } = await import("./helpers/mutate.ts");
   const saved = table["가로 넘침"].find;
   table["가로 넘침"].find = "이 문자열은 fixture에 없다";
   try {

@@ -97,7 +97,7 @@ jobs:
   #   - Chrome이 흔들리는 날 **빠른 게이트를 같이 끌고 내려가지 않는다.**
   # Chrome 설치 스텝이 없는 이유: 이 저장소의 `ubuntu-latest`는 ubuntu-24.04이고 그 이미지에
   # Google Chrome·Chromium·ChromeDriver가 들어 있다(actions/runner-images Ubuntu2404-Readme.md).
-  # `tools/render/lib/chrome.mjs`의 후보 경로에 `/usr/bin/google-chrome`·`-stable`·`/usr/bin/chromium`이 이미 있다.
+  # `tools/render/lib/chrome.ts`의 후보 경로에 `/usr/bin/google-chrome`·`-stable`·`/usr/bin/chromium`이 이미 있다.
   # ⚠️ **못 찾으면 건너뛰지 않고 죽는다**(#274 체인 공통 규칙 1번) — 건너뛴 시험은 `pass` 하한에 0을
   # 보태므로, env 게이트를 달면 "브라우저가 없어서 안 돌았다"가 초록으로 끝난다.
   # 넣는 것은 **고정 fixture만 읽는 `npm test`**(변이 열하나 + 대조군 넷 + 단위)뿐이다. 실제 `docs/`를 읽는
@@ -117,7 +117,7 @@ jobs:
       - name: 러너의 Chrome을 찾아 버전을 적는다
         run: |
           set -euo pipefail
-          chrome=$(node -e 'import("./tools/render/lib/chrome.mjs").then((m) => { const p = m.findChrome(); if (!p) { console.error("Chrome을 못 찾았다 - 러너 이미지가 바뀌었는지 본다."); process.exit(1); } process.stdout.write(p); });')
+          chrome=$(node -e 'import("./tools/render/lib/chrome.ts").then((m) => { const p = m.findChrome(); if (!p) { console.error("Chrome을 못 찾았다 - 러너 이미지가 바뀌었는지 본다."); process.exit(1); } process.stdout.write(p); });')
           echo "Chrome: $chrome"
           "$chrome" --version
       # 래칫은 루트·tools/golden과 같은 모양이되 하한은 따로 둔다 — 이 폴더에는 정당한 skip이 없어

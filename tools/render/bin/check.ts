@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // 렌더 기반 접근성 검사의 진입점(#325 = #278 PR A).
 //
-// ⚠️ **같은 폴더의 `bin/style-equal.mjs`와 다른 파일이다.** 그쪽은 소유자가 뺀 「화면 동일 증빙」 전용
+// ⚠️ **같은 폴더의 `bin/style-equal.ts`와 다른 파일이다.** 그쪽은 소유자가 뺀 「화면 동일 증빙」 전용
 // 진입점이고(#276 완료 조건 9 폐기, #247), 이 이슈는 그것을 **고치지도 지우지도 않는다**(#325 결정 2).
-// 이어받은 것은 `lib/chrome.mjs`·`lib/serve.mjs` 둘뿐이다.
+// 이어받은 것은 `lib/chrome.ts`·`lib/serve.ts` 둘뿐이다.
 //
 // 쓰는 법:
-//   node tools/render/bin/check.mjs <폴더> [옵션]
+//   node tools/render/bin/check.ts <폴더> [옵션]
 //     --baseline <폴더>   기준 폴더. 주면 검사 ①(가시 텍스트 다중집합, 375·1280)을 함께 본다.
 //     --pages a.html,b.html   장을 고른다(기본: 폴더의 .html 전부)
 //     --js on|off|both    페이지 스크립트(기본 off). `both`면 끔·켬 둘 다 돌려 장마다 두 줄이 나온다.
@@ -19,8 +19,8 @@
 // ⚠️ **Chrome을 못 찾으면 건너뛰지 않고 2로 죽는다**(#274 체인 공통 규칙 1번). 건너뛴 검사는
 // "브라우저가 없어서 안 돌았다"를 초록으로 만든다 — 그 길을 여기서 막는다.
 import { writeFile } from "node:fs/promises";
-import { launchChrome } from "../lib/chrome.mjs";
-import { checkDir, compareTexts, formatReport, mergeTextFindings, summarize } from "../lib/check.mjs";
+import { launchChrome } from "../lib/chrome.ts";
+import { checkDir, compareTexts, formatReport, mergeTextFindings, summarize } from "../lib/check.ts";
 
 function parseArgs(argv) {
   const opts = { dir: null, baseline: null, pages: null, js: "off", lang: "ko", json: null, quiet: false, settle: null };
@@ -43,7 +43,7 @@ function parseArgs(argv) {
     else if (opts.dir === null) opts.dir = a;
     else throw new Error(`폴더는 하나만 받는다(둘째: ${a})`);
   }
-  if (!opts.dir) throw new Error("검사할 폴더를 달라: node bin/check.mjs <폴더>");
+  if (!opts.dir) throw new Error("검사할 폴더를 달라: node bin/check.ts <폴더>");
   if (!["on", "off", "both"].includes(opts.js)) throw new Error(`--js는 on|off|both다(받은 것: ${opts.js})`);
   if (!["ko", "en", "both"].includes(opts.lang)) throw new Error(`--lang은 ko|en|both다(받은 것: ${opts.lang})`);
   return opts;

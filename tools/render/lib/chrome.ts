@@ -1,6 +1,6 @@
 // 헤드리스 Chrome을 띄워 DevTools 프로토콜(CDP)로 모는 최소 클라이언트(#274 기준선 측정 때 쓴 것을 #276이 저장소에 넣었다).
 // npm 의존이 없다 — 이 머신의 Chrome과 Node 내장 WebSocket(Node 22 이상)만 쓴다. puppeteer를 들이면 락파일이 생기고 Chromium을 따로 받는다.
-// 쓰는 쪽: lib/style-equal.mjs(화면 동일 증빙). #278 PR A의 렌더 검사 도구가 이 파일과 serve.mjs를 이어받는다.
+// 쓰는 쪽: lib/style-equal.ts(화면 동일 증빙). #278 PR A의 렌더 검사 도구가 이 파일과 serve.ts를 이어받는다.
 //
 // 바깥 요청은 기본으로 막는다(allowOrigin 밖은 전부 실패 처리). 이유가 둘이다.
 //   1. 페이지의 analytics.js가 GA·애드센스 로더를 부른다 — 측정이 실제 속성에 조회수를 쌓으면 안 된다(#247 관찰 중).
@@ -49,7 +49,7 @@ export async function launchChrome({ chromePath = findChrome(), timeoutMs = 3000
     // 이 머신에서 Chrome은 `CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670`을 수천 줄 뱉는다(macOS 26.6.2, Chrome 155).
     // 측정에는 영향이 없다 - 3,400줄을 뱉으면서 168조건을 끝까지 돈 것을 확인했다. `--disable-gpu`·`--screen-info`를 줘도
     // 줄어들지 않아 주지 않는다(2026-10-13 실측). 브라우저가 죽는 것으로 보였던 일의 진짜 원인은 따로 있었다 -
-    // 차이 난 요소를 전부 펼쳐 evaluate가 수십 MB를 돌려준 것이다(bin/style-equal.mjs의 DETAIL_CAP).
+    // 차이 난 요소를 전부 펼쳐 evaluate가 수십 MB를 돌려준 것이다(bin/style-equal.ts의 DETAIL_CAP).
     ["--headless=new", "--remote-debugging-port=0", `--user-data-dir=${profile}`, "--no-first-run", "--no-default-browser-check", "--hide-scrollbars", "--mute-audio", "--disable-background-networking", "--disable-component-update", "--disable-sync", "about:blank"],
     { stdio: ["ignore", "ignore", "pipe"] }
   );

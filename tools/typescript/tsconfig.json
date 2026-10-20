@@ -34,6 +34,17 @@
     "../golden/test/invariants.test.ts",
     "../golden/test/live.test.ts",
     "../golden/test/mutation.test.ts",
-    "../golden/test/render.test.ts"
+    "../golden/test/render.test.ts",
+    "../render/bin/check.ts",
+    "../render/bin/style-equal.ts",
+    "../render/lib/check.ts",
+    "../render/lib/chrome.ts",
+    "../render/lib/probe.ts",
+    "../render/lib/serve.ts",
+    "../render/lib/style-equal.ts",
+    "../render/test/check.test.ts",
+    "../render/test/chrome.test.ts",
+    "../render/test/helpers/mutate.ts",
+    "../render/test/mutation.test.ts"
   ]
 }

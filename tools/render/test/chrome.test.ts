@@ -5,7 +5,7 @@
 // `launchChrome`이 이미 그 자리에서 던지므로 — **그 성질을 고정한다.**
 import test from "node:test";
 import assert from "node:assert/strict";
-import { findChrome, launchChrome } from "../lib/chrome.mjs";
+import { findChrome, launchChrome } from "../lib/chrome.ts";
 
 test("Chrome 경로가 없으면 launchChrome이 그 자리에서 던진다 (건너뛰지 않는다)", async () => {
   await assert.rejects(() => launchChrome({ chromePath: null }), /Chrome을 찾지 못했습니다/);
@@ -25,7 +25,7 @@ test("findChrome은 CHROME_PATH를 먼저 본다", () => {
 
 test("이 시험 파일에는 env 게이트가 없다", async () => {
   // 스스로를 읽어 확인한다. 나중에 누가 `if (!process.env.X) return;`을 넣으면 여기서 걸린다.
-  const src = await (await import("node:fs/promises")).readFile(new URL("./mutation.test.mjs", import.meta.url), "utf8");
+  const src = await (await import("node:fs/promises")).readFile(new URL("./mutation.test.ts", import.meta.url), "utf8");
   assert.doesNotMatch(src, /\{\s*skip:/, "변이 시험에 skip 옵션이 들어왔다");
   assert.doesNotMatch(src, /test\.skip\(/, "변이 시험에 test.skip이 들어왔다");
   assert.doesNotMatch(src, /process\.env\.\w+\s*(\?|&&|\|\||===|!==)/, "변이 시험이 환경변수로 갈린다 — Chrome 없음이 초록으로 끝나는 길이다");
