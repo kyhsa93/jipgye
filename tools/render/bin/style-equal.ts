@@ -54,6 +54,7 @@ import {
 import { flattenCss } from "../../../test/helpers/css-source.mjs";
 
 const repoRoot = path.resolve(import.meta.dirname, "../../..");
+const ctlWrongType: number = "문자열";
 
 // ── 인자 ────────────────────────────────────────────────────────────────────────────────────
 
