@@ -35,5 +35,3 @@ export function categorizeTitle(title) {
 export function categoryOf(item) {
   return (item.category && BY_KEY.get(item.category)) || categorizeTitle(item.title);
 }
-
-export interface CtlX { name: string }
