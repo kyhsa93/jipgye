@@ -4,7 +4,9 @@
 //   node bin/bench.ts --repo <저장소> [--sha <SHA>] [--runs 10] [--env K=V ...]
 // 첫 실행은 파일 캐시가 덜 데워져 있을 수 있어 `--warmup 1`(기본)로 한 번 돌리고 버린다.
 import { DiskSpaceError, installSignalHandlers, isTerminating } from "../lib/cleanup.ts";
-import { preparePristine, renderIsolated, RENDER_STAGES } from "../lib/render.ts";
+import { preparePristine, renderIsolated, RENDER_STAGES, RenderOptions } from "../lib/render.ts";
+// 대조군(나): 인터페이스를 import type 없이 값처럼 가져온다(verbatimModuleSyntax 위반, #421). 되돌린다.
+const ctlOpts: RenderOptions = {};
 
 const argv = process.argv.slice(2);
 // 이름을 아는 옵션은 따로 적고, 나머지 `--이름 값`은 인덱스 시그니처로 받는다.
