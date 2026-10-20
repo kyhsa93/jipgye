@@ -1,12 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { canon } from "../lib/canon.mjs";
-import { diffHtml } from "../lib/compare.mjs";
+import { canon } from "../lib/canon.ts";
+import { diffHtml } from "../lib/compare.ts";
 
 // 합성 HTML만 쓴다. 허용하는 차이(주석·속성 순서·엔티티·공백 줄이기·script 줄바꿈)는 같고, 나머지는 다르다.
 const page = (body, head = "") => `<!doctype html><html lang="ko"><head><meta charset="utf-8">${head}<title>t</title></head><body>${body}</body></html>`;
-const same = (a, b, why) => assert.equal(canon(a), canon(b), why);
-const differ = (a, b, why) => assert.notEqual(canon(a), canon(b), why);
+const same = (a, b, why?) => assert.equal(canon(a), canon(b), why);
+const differ = (a, b, why?) => assert.notEqual(canon(a), canon(b), why);
 
 test("허용: 주석", () => {
   same(page("<p>a</p>"), page("<!-- 주석 --><p>a</p><!--x-->"));

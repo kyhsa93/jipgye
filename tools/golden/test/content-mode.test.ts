@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { canonLines } from "../lib/canon.mjs";
+import { canonLines } from "../lib/canon.ts";
 import { DESIGN_ATTRS } from "../../../scripts/design-attrs.mjs";
 
 // 내용 비교 모드(`--no-class-style`)의 변이 시험 (#277 완료 조건 2-b).
@@ -13,7 +13,7 @@ import { DESIGN_ATTRS } from "../../../scripts/design-attrs.mjs";
 // 기본 모드를 본다 — 새 모드를 세는 자가 따로 없으면 "구현만 되고 아무것도 안 잡은 채" 병합된다
 // (PR #314 첫 판 가드가 돌연변이 27/27을 통과한 자리다). 그래서 **종료 코드**로 센다.
 //
-// 재는 법. `bin/compare.mjs <A> <B>`는 같으면 0, 다르면 1이다. 변이 하나마다 임시 폴더 둘(원본·변이)을 만들어
+// 재는 법. `bin/compare.ts <A> <B>`는 같으면 0, 다르면 1이다. 변이 하나마다 임시 폴더 둘(원본·변이)을 만들어
 // 그 CLI를 돌리고 **종료 코드**를 본다(출력 문구가 아니다). 입력은 test/fixtures/rates.html 고정 사본 하나뿐이고
 // 오늘의 docs/는 읽지 않는다 — 데일리 데이터가 매일 바뀌면 변이가 헛돈다(#8 부류).
 //
@@ -24,7 +24,7 @@ import { DESIGN_ATTRS } from "../../../scripts/design-attrs.mjs";
 //   그리고 ⑨id (cpo 보완 2026-10-15)                   → 새 모드 **1**
 //     ⑨가 없으면 "class·style만 지운다"가 시험으로 안 선다 — id까지 지우는 정규화도 ①~⑧을 전부 통과한다.
 //     id는 DIRECTION.md 369행이 지키는 JS 훅이라, 정규화가 그걸 지우면 체인 전체의 불변 검사가 무력해진다.
-const BIN = path.join(import.meta.dirname, "../bin/compare.mjs");
+const BIN = path.join(import.meta.dirname, "../bin/compare.ts");
 const RATES = await readFile(path.join(import.meta.dirname, "fixtures/rates.html"), "utf8");
 
 const bases = [];
@@ -47,11 +47,11 @@ async function pair(mutated) {
   return { a, b };
 }
 
-/** bin/compare.mjs의 종료 코드. 0·1이 아니면(예: 사용법 오류 2) 그 자리에서 멈춘다. */
+/** bin/compare.ts의 종료 코드. 0·1이 아니면(예: 사용법 오류 2) 그 자리에서 멈춘다. */
 function exitCode(a, b, { contentMode }) {
   const args = contentMode ? [BIN, a, b, "--no-class-style"] : [BIN, a, b];
   const r = spawnSync(process.execPath, args, { encoding: "utf8" });
-  assert.ok(r.status === 0 || r.status === 1, `compare.mjs가 0·1이 아닌 ${r.status}로 끝났다: ${r.stderr}`);
+  assert.ok(r.status === 0 || r.status === 1, `compare.ts가 0·1이 아닌 ${r.status}로 끝났다: ${r.stderr}`);
   return r.status;
 }
 

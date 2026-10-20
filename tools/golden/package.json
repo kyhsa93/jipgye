@@ -5,7 +5,7 @@
   "description": "같은-실행 비교 도구(#236): 렌더 격리·정준 덤프 비교·변이 시험, 불변 조건 비교(#274). 루트와 의존을 나눈다 — 루트 `npm ci`로는 설치되지 않고, CI(.github/workflows/test.yml)가 루트 시험 뒤 이 폴더에서 따로 `npm ci && npm test`를 돌린다(#289).",
   "scripts": {
     "test": "node ../../scripts/run-tests.mjs",
-    "test:live": "GOLDEN_LIVE=1 node --test test/live.test.mjs"
+    "test:live": "GOLDEN_LIVE=1 node --test test/live.test.ts"
   },
   "dependencies": {
     "parse5": "8.0.1"

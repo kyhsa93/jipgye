@@ -304,7 +304,7 @@ test("호출 불변 대조군: 명령 위치의 `node --test`는 잡고, 주석�
   assert.deepEqual(f("scripts/x.mjs", 'const a = ["--test-reporter=spec"];\n'), []);
   assert.deepEqual(f("scripts/x.mjs", 'run("node", ["scripts/a.mjs", "--test-mode"]);\n'), []);
   // 허용 목록: test:live는 목록에 있어 거짓 실패를 안 낸다.
-  const live = f("tools/golden/package.json", '    "test:live": "GOLDEN_LIVE=1 node --test test/live.test.mjs"\n');
+  const live = f("tools/golden/package.json", '    "test:live": "GOLDEN_LIVE=1 node --test test/live.test.ts"\n');
   assert.equal(live.length, 1);
   assert.ok(readAllowlist().includes(live[0]));
 });

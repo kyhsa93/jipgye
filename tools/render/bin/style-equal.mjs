@@ -5,7 +5,7 @@
 //   node tools/render/bin/style-equal.mjs --base <기준 docs> --head <후보 docs> --out <보고서 폴더> [옵션]
 //
 // 기준·후보 docs 폴더는 **같은 BUILD_NOW로 렌더해서** 만든다(완료 조건 9-A 1번). 저장소에 이미 그 도구가 있다:
-//   node tools/golden/bin/render.mjs --repo <저장소> --sha <SHA> --out <폴더> --env TZ=Asia/Seoul --env BUILD_NOW=<ISO>
+//   node tools/golden/bin/render.ts --repo <저장소> --sha <SHA> --out <폴더> --env TZ=Asia/Seoul --env BUILD_NOW=<ISO>
 // 두 폴더가 style.css 하나만 다른 것을 이 스크립트가 다시 확인한다(A-1). 다르면 A에서 멈추지 않고 적어 둔 뒤 계속 간다 —
 // 무엇이 더 다른지 보는 것이 목적이지 멈추는 것이 목적이 아니다. 판정(종료 코드)은 맨 끝에 한 번 한다.
 //

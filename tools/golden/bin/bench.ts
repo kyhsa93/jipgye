@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 // 렌더 단계 시간 기준선(#236 기준선 2, S4의 분모). 깨끗한 사본을 N번 새로 만들어 단계마다 시간을 재고
 // 단계별·합계의 중앙값과 상한(최댓값)을 낸다. S4는 이 값 자체가 아니라 같은 실행에서 legacy·react를 함께 잰 비율이다.
-//   node bin/bench.mjs --repo <저장소> [--sha <SHA>] [--runs 10] [--env K=V ...]
+//   node bin/bench.ts --repo <저장소> [--sha <SHA>] [--runs 10] [--env K=V ...]
 // 첫 실행은 파일 캐시가 덜 데워져 있을 수 있어 `--warmup 1`(기본)로 한 번 돌리고 버린다.
-import { DiskSpaceError, installSignalHandlers, isTerminating } from "../lib/cleanup.mjs";
-import { preparePristine, renderIsolated, RENDER_STAGES } from "../lib/render.mjs";
+import { DiskSpaceError, installSignalHandlers, isTerminating } from "../lib/cleanup.ts";
+import { preparePristine, renderIsolated, RENDER_STAGES } from "../lib/render.ts";
 
 const argv = process.argv.slice(2);
-const opt = { env: {}, runs: "10", warmup: "1" };
+// 이름을 아는 옵션은 따로 적고, 나머지 `--이름 값`은 인덱스 시그니처로 받는다.
+const opt: { env: Record<string, string>; runs: string; warmup: string; repo?: string; sha?: string; [flag: string]: string | Record<string, string> } = { env: {}, runs: "10", warmup: "1" };
 for (let i = 0; i < argv.length; i++) {
   if (argv[i] === "--env") {
     const [k, ...v] = argv[++i].split("=");
@@ -15,7 +16,7 @@ for (let i = 0; i < argv.length; i++) {
   } else if (argv[i].startsWith("--")) opt[argv[i].slice(2)] = argv[++i];
 }
 if (!opt.repo) {
-  console.error("사용: node bin/bench.mjs --repo <저장소> [--sha <SHA>] [--runs 10] [--warmup 1] [--env K=V]");
+  console.error("사용: node bin/bench.ts --repo <저장소> [--sha <SHA>] [--runs 10] [--warmup 1] [--env K=V]");
   process.exit(2);
 }
 const median = (xs) => {

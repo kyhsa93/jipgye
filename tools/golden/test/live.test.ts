@@ -3,10 +3,10 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { canonLines } from "../lib/canon.mjs";
-import { compareBytes, compareDirs, formatReport, listFiles, treeHash } from "../lib/compare.mjs";
-import { collectHookClasses, compareInvariants, formatInvariantsReport, hookListDrift, hookListFindings, readHookList, snapshotDir, snapshotHash } from "../lib/invariants.mjs";
-import { RENDER_STAGES, preparePristine, readWorkflowStages, renderIsolated } from "../lib/render.mjs";
+import { canonLines } from "../lib/canon.ts";
+import { compareBytes, compareDirs, formatReport, listFiles, treeHash } from "../lib/compare.ts";
+import { collectHookClasses, compareInvariants, formatInvariantsReport, hookListDrift, hookListFindings, readHookList, snapshotDir, snapshotHash } from "../lib/invariants.ts";
+import { RENDER_STAGES, preparePristine, readWorkflowStages, renderIsolated } from "../lib/render.ts";
 
 // 실제 저장소로 돌리는 측정(#236 완료 조건 1·2와 변이 시험의 시각 의존 확인). `npm run test:live`(GOLDEN_LIVE=1)에서만 돈다.
 // 읽는 것: 저장소의 실제 docs/·raw/ — 그래서 `npm test`(고정 fixture만)와 갈랐고 CI에도 넣지 않는다(#8 재발 방지, R3).
@@ -129,7 +129,7 @@ test("시각 의존 확인: BUILD_NOW를 하루 다르게 준 두 렌더는 정�
   const changed = found.cmp.failing.flatMap((f) => f.hunks.flatMap((h) => [...h.removed, ...h.added]));
   assert.ok(changed.length > 0 && changed.every(isPolicyLine), "달라진 줄은 전부 그 정책대출 거래 수 문장이다(다른 시각 의존이 없다)");
   // invariants(#274)도 같은 장을 본문 텍스트로 낙제시킨다 — BUILD_NOW가 다른 두 렌더는 디자인이 같아도 "다르다".
-  // 그래서 기준과 후보는 같은 입력·같은 BUILD_NOW로 렌더해 견준다(bin/invariants.mjs --render).
+  // 그래서 기준과 후보는 같은 입력·같은 BUILD_NOW로 렌더해 견준다(bin/invariants.ts --render).
   const invHard = found.inv.pages.filter((p) => p.status === "hard");
   say(`invariants: BUILD_NOW가 하루 다른 쌍에서 하드 ${invHard.length}장(${invHard.map((p) => p.file).join(", ")}), check ${[...new Set(invHard.flatMap((p) => p.findings.map((f) => f.id)))].join("·")}`);
   assert.deepEqual(invHard.map((p) => p.file), failNames, "정준 비교가 낙제시킨 장과 같다");
@@ -220,7 +220,7 @@ test("invariants(#289): 실제 67장에 변이를 넣는다 — 숫자를 strong
   };
   // body의 첫 숫자 한 자리(태그 밖 텍스트)를 고른다 — 위 digit 변이와 같은 자리다.
   const FIRST_DIGIT = /(<body[\s\S]*?>[^<>]*?)(\d)(?=[^<>]*<)/;
-  const variants = {
+  const variants: Record<string, { fn: (html: string) => string; remove?: string; unchanged?: boolean; expect: string; id: string }> = {
     // 그 숫자를 <strong>으로 감싼다(텍스트 노드가 셋으로 잘린다) — 글자 흐름은 같다.
     wrap: { fn: (html) => outsideScripts(html, (h) => h.replace(FIRST_DIGIT, (m, pre, d) => `${pre}<strong class="tw:font-bold">${d}</strong>`)), expect: "soft", id: "text-wrap" },
     // 감싸면서 한 자리를 바꾼다.

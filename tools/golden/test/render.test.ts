@@ -4,8 +4,8 @@ import { spawnSync } from "node:child_process";
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { compareBytes, treeHash } from "../lib/compare.mjs";
-import { preparePristine, readWorkflowStages, renderIsolated } from "../lib/render.mjs";
+import { compareBytes, treeHash } from "../lib/compare.ts";
+import { preparePristine, readWorkflowStages, renderIsolated } from "../lib/render.ts";
 
 // 렌더 격리와 환경 주입(#236 범위 3·4). 작은 가짜 저장소(고정 파일)를 만들어 쓴다 — 실제 docs/나 raw/는 읽지 않는다.
 //   step1은 docs/a.html을 읽어 덮어쓴다(prerender.mjs와 같은 모양: 두 번 돌리면 두 번 덧칠된다).

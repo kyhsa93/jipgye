@@ -5,15 +5,15 @@ import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, readdir, readFile, rm, stat, utimes, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { DiskSpaceError, OWNER, assertDiskSpace, commitDir, limitsFromEnv, pruneShaCaches, sweepOrphans, writeOwner } from "../lib/cleanup.mjs";
-import { preparePristine, renderIsolated } from "../lib/render.mjs";
-import { commit, fakeRepo, git } from "./helpers/fake-repo.mjs";
+import { DiskSpaceError, OWNER, assertDiskSpace, commitDir, limitsFromEnv, pruneShaCaches, sweepOrphans, writeOwner } from "../lib/cleanup.ts";
+import { preparePristine, renderIsolated } from "../lib/render.ts";
+import { commit, fakeRepo, git } from "./helpers/fake-repo.ts";
 
-// 임시 사본·캐시 정리(#263). 고정 가짜 저장소(test/helpers/fake-repo.mjs)만 쓰고 실제 docs/·raw/는 읽지 않는다.
+// 임시 사본·캐시 정리(#263). 고정 가짜 저장소(test/helpers/fake-repo.ts)만 쓰고 실제 docs/·raw/는 읽지 않는다.
 // 시험마다 자기 폴더(base) 하나 안에 repo·cache·tmp를 만들고 끝에 base째 지운다 — 시험이 디스크를 채우지 않게(이 이슈의 주제).
 // 이 폴더의 시험은 CI(.github/workflows/test.yml 70~80행)가 루트 시험 뒤 `npm ci`·`npm test`로 따로 돌린다(#309).
 // 로컬에서 돌리는 명령은 같다: `cd tools/golden && npm ci && npm test`.
-const BIN = path.join(import.meta.dirname, "../bin/render.mjs");
+const BIN = path.join(import.meta.dirname, "../bin/render.ts");
 const HOUR = 3600 * 1000;
 const STAGES = ["scripts/step1.mjs"];
 
@@ -74,14 +74,15 @@ test("실패 경로: 렌더 단계가 예외로 끝나도 스냅숏·렌더 사�
   });
 });
 
-for (const [sig, code] of [["SIGINT", 130], ["SIGTERM", 143]]) {
+const SIGNAL_CASES: [NodeJS.Signals, number][] = [["SIGINT", 130], ["SIGTERM", 143]];
+for (const [sig, code] of SIGNAL_CASES) {
   test(`${sig}: 렌더 도중 신호를 받으면 스냅숏·렌더 사본을 지우고 단계 프로세스도 끝내며 종료 ${code}`, async () => {
     await sandbox(async (d) => {
       const child = spawn(process.execPath, [BIN, "--src", d.repo, "--out", path.join(d.base, "out"), "--cache", d.cache, "--stages", "scripts/sleep.mjs"], {
         env: { ...process.env, TMPDIR: d.tmp },
         stdio: ["ignore", "pipe", "pipe"],
       });
-      const closed = new Promise((resolve) => child.on("close", (c, s) => resolve({ c, s })));
+      const closed = new Promise<{ c: number | null; s: NodeJS.Signals | null }>((resolve) => child.on("close", (c, s) => resolve({ c, s })));
       // 렌더 단계가 `started`(자기 pid)를 쓸 때까지 기다린다 = 사본 두 개가 실제로 있는 시점.
       let stagePid = null;
       for (let i = 0; i < 400 && !stagePid; i++) {
@@ -208,9 +209,9 @@ test("SHA 캐시: preparePristine이 새 캐시를 만들면 상한까지 오래
 test("동시 실행: 같은 SHA를 여섯 프로세스가 동시에 만들어도 모두 같은 완성된 캐시를 받고 찌꺼기가 없다", async () => {
   await sandbox(async (d) => {
     const sha = git(d.repo, "rev-parse", "HEAD").stdout.trim();
-    const script = path.join(import.meta.dirname, "helpers/prepare.mjs");
+    const script = path.join(import.meta.dirname, "helpers/prepare.ts");
     const runs = Array.from({ length: 6 }, () =>
-      new Promise((resolve) => {
+      new Promise<{ code: number | null; out: string; err: string }>((resolve) => {
         const c = spawn(process.execPath, [script, d.repo, sha, d.cache], { env: { ...process.env, TMPDIR: d.tmp }, stdio: ["ignore", "pipe", "pipe"] });
         let out = "";
         let err = "";
@@ -309,7 +310,7 @@ test("디스크 점검: 실제 statfs로 읽고 환경변수 GOLDEN_MIN_FREE_GB�
 test("고아 정리: 24시간 넘은 snap-*·jipgye-render-*는 지우고, 젊은 것·살아 있는 pid·sha-* 캐시는 남긴다", async () => {
   await sandbox(async (d) => {
     const deadPid = spawnSync(process.execPath, ["-e", ""]).pid; // 이미 끝난 프로세스의 pid
-    const mk = async (root, name, { pid = deadPid, hours, extra } = {}) => {
+    const mk = async (root, name, { pid = deadPid, hours, extra }: { pid?: number; hours?: number; extra?: Record<string, unknown> } = {}) => {
       const dir = path.join(root, name);
       await mkdir(dir, { recursive: true });
       await writeOwner(dir, extra);

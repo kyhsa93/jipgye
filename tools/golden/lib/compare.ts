@@ -1,12 +1,12 @@
 // 두 디렉터리(또는 두 HTML)를 정준 덤프로 견준다. S1·S2의 측정 수단이다.
-// 쓰는 쪽: bin/compare.mjs, test/, 그리고 나중에 #238의 shadow 단계·#244의 합격 측정.
+// 쓰는 쪽: bin/compare.ts, test/, 그리고 나중에 #238의 shadow 단계·#244의 합격 측정.
 import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { canonLines } from "./canon.mjs";
+import { canonLines } from "./canon.ts";
 
 /** dir 아래의 파일을 상대 경로(/ 구분, 정렬)로 센다. pick이 false를 주면 뺀다. */
-export async function listFiles(dir, pick = () => true) {
+export async function listFiles(dir, pick: (file: string) => boolean = () => true) {
   const out = [];
   async function walk(rel) {
     for (const entry of await readdir(path.join(dir, rel), { withFileTypes: true })) {
@@ -78,7 +78,7 @@ export function diffLines(a, b) {
  * HTML 문자열 둘을 정준 덤프로 견준다. 같으면 빈 배열.
  * opts는 canonLines로 그대로 간다 — { ignoreDesignAttrs: true }면 class·style만 뺀 내용 비교다(#277).
  */
-export function diffHtml(htmlA, htmlB, opts) {
+export function diffHtml(htmlA, htmlB, opts?) {
   const a = canonLines(htmlA, opts);
   const b = canonLines(htmlB, opts);
   return diffLines(a, b).map((h) => ({ ...h, context: a.slice(Math.max(0, h.aStart - 2), h.aStart) }));
@@ -88,7 +88,7 @@ export function diffHtml(htmlA, htmlB, opts) {
  * 두 디렉터리의 .html을 쌍으로 견준다(상대 경로가 같은 것끼리). opts는 diffHtml로 그대로 간다(#277).
  * 반환: { total, equal, pages:[{file,status,hunks}], onlyA:[], onlyB:[] }. status는 equal | diff | onlyA | onlyB.
  */
-export async function compareDirs(dirA, dirB, opts) {
+export async function compareDirs(dirA, dirB, opts?) {
   const [filesA, filesB] = await Promise.all([listFiles(dirA, isHtml), listFiles(dirB, isHtml)]);
   const setA = new Set(filesA);
   const setB = new Set(filesB);
@@ -134,7 +134,7 @@ export async function compareBytes(dirA, dirB) {
 }
 
 /** 디렉터리 전체의 지문(경로와 내용 해시를 묶은 해시). 렌더 전후로 저장소 docs/가 안 바뀌었는지 보는 데 쓴다. */
-export async function treeHash(dir, pick = () => true) {
+export async function treeHash(dir, pick: (file: string) => boolean = () => true) {
   const h = createHash("sha256");
   for (const file of await listFiles(dir, pick)) {
     h.update(file);

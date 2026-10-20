@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // 렌더 단계 여섯 개를 깨끗한 작업 사본에서 돌리고 docs/를 --out으로 복사한다. 저장소 작업 트리는 건드리지 않는다.
-//   node bin/render.mjs --repo <저장소> [--sha <SHA>|--src <디렉터리>] --out <디렉터리>
+//   node bin/render.ts --repo <저장소> [--sha <SHA>|--src <디렉터리>] --out <디렉터리>
 //        [--env KEY=VAL ...] [--mock-now <ISO>] [--cache <디렉터리>] [--keep]
 //   --src로 만든 스냅숏(snap-*)은 렌더가 끝나면(성공·실패·SIGINT·SIGTERM 모두) 지운다. 남기려면 --keep(경로를 출력에 적는다, 7일 뒤 고아 정리).
 //   시작 전 디스크 여유가 5GiB 미만이면(GOLDEN_MIN_FREE_GB로 조정) 아무것도 만들지 않고 종료 3으로 멈춘다.
@@ -8,11 +8,12 @@
 // 나중에 react와 비교할 때는 같은 pristine에서 --env JIPGYE_RENDERER=react를 더해 한 번 더 돌린다.
 import { cp, mkdir, rm } from "node:fs/promises";
 import path from "node:path";
-import { DiskSpaceError, installSignalHandlers, isTerminating } from "../lib/cleanup.mjs";
-import { preparePristine, renderIsolated } from "../lib/render.mjs";
+import { DiskSpaceError, installSignalHandlers, isTerminating } from "../lib/cleanup.ts";
+import { preparePristine, renderIsolated } from "../lib/render.ts";
 
 const argv = process.argv.slice(2);
-const opt = { env: {} };
+// 이름을 아는 옵션은 따로 적고(--keep 만 불리언), 나머지 `--이름 값`은 인덱스 시그니처로 받는다.
+const opt: { env: Record<string, string>; keep?: boolean; repo?: string; sha?: string; src?: string; out?: string; cache?: string; stages?: string; "mock-now"?: string; [flag: string]: string | boolean | Record<string, string> } = { env: {} };
 for (let i = 0; i < argv.length; i++) {
   const k = argv[i];
   if (k === "--env") {
@@ -22,7 +23,7 @@ for (let i = 0; i < argv.length; i++) {
   else if (k.startsWith("--")) opt[k.slice(2)] = argv[++i];
 }
 if (!opt.repo && !opt.src || !opt.out) {
-  console.error("사용: node bin/render.mjs --repo <저장소> [--sha <SHA>|--src <디렉터리>] --out <디렉터리> [--env K=V] [--mock-now ISO] [--keep]");
+  console.error("사용: node bin/render.ts --repo <저장소> [--sha <SHA>|--src <디렉터리>] --out <디렉터리> [--env K=V] [--mock-now ISO] [--keep]");
   process.exit(2);
 }
 installSignalHandlers();

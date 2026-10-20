@@ -28,9 +28,9 @@ import {
   TEXT_BLOCK,
   NEUTRAL_INLINE,
   withSiteFindings,
-} from "../lib/invariants.mjs";
+} from "../lib/invariants.ts";
 
-// invariants 비교기의 변이 시험(#274 범위 2). mutation.test.mjs와 같은 방식이다: 입력은 test/fixtures/의 고정 HTML 사본과
+// invariants 비교기의 변이 시험(#274 범위 2). mutation.test.ts와 같은 방식이다: 입력은 test/fixtures/의 고정 HTML 사본과
 // 이 파일 안의 합성 HTML뿐이고 오늘의 docs/를 읽지 않는다(단 하나, 맨 아래 "훅 클래스 목록이 소스와 맞는다"는 저장소의
 // **코드**를 읽는다 — 데이터가 아니라 선택자·class 문자열이라 그날 값에 따라 갈리지 않는다).
 //   잡혀야 하는 것: 문장 삭제·숫자 한 자리·noindex 제거·canonical 변경·링크 제거·제목 레벨 변경·훅 클래스 제거·인라인 스크립트 증가,
@@ -45,7 +45,7 @@ const fx = (name) => readFile(path.join(import.meta.dirname, "fixtures", name), 
 const [BUDGET, RATES, ABOUT] = await Promise.all([fx("budget-7eok.html"), fx("rates.html"), fx("about.html")]);
 const PAGES = { "budget-7eok": BUDGET, rates: RATES, about: ABOUT };
 const REPO = path.resolve(import.meta.dirname, "../../..");
-const BIN = path.join(import.meta.dirname, "../bin/invariants.mjs");
+const BIN = path.join(import.meta.dirname, "../bin/invariants.ts");
 
 // 고정 사본이 싣는 외부 JS의 대역. 실제 nav.js가 읽는 선택자 한 줄만 옮겼다(훅 추출의 입력).
 const JS = { "nav.js": 'document.querySelectorAll(".page-nav, .sub-nav, .table-scroll");\ndocument.querySelector(".skip-link[data-skip-en]");\n', "search.js": "// search\n", "analytics.js": "// analytics\n" };
@@ -61,14 +61,14 @@ const hardIds = (r) => [...new Set([...r.site, ...r.pages.flatMap((p) => p.findi
 const softIds = (r) => [...new Set(r.pages.flatMap((p) => p.findings).filter((f) => f.level === "soft").map((f) => f.id))].sort();
 const finding = (r, id) => r.pages.flatMap((p) => p.findings).find((f) => f.id === id);
 /** 변이가 하드로 걸리고, 걸린 check가 정확히 ids다. */
-function caught(a, b, ids, why, opts) {
+function caught(a, b, ids, why, opts?) {
   const r = cmp(a, b, opts);
   assert.equal(r.ok, false, `${why}: 잡혀야 한다`);
   assert.deepEqual(hardIds(r), [...ids].sort(), why);
   return r;
 }
 /** 변이가 하드 없이 소프트만 남기고, 남긴 소프트 check가 정확히 ids다. */
-function softOnly(a, b, ids, why, opts) {
+function softOnly(a, b, ids, why, opts?) {
   const r = cmp(a, b, opts);
   assert.equal(r.ok, true, `${why}: 하드가 없어야 한다\n${formatInvariantsReport(r)}`);
   assert.deepEqual(hardIds(r), [], why);
@@ -76,7 +76,7 @@ function softOnly(a, b, ids, why, opts) {
   return r;
 }
 /** 변이가 하드도 소프트도 남기지 않는다. */
-function passes(a, b, why, opts) {
+function passes(a, b, why, opts?) {
   const r = cmp(a, b, opts);
   assert.equal(r.ok, true, `${why}: 통과해야 한다\n${formatInvariantsReport(r)}`);
   assert.deepEqual(r.pages.flatMap((p) => p.findings), [], why);
@@ -382,7 +382,7 @@ test("훅 목록과 소스의 어긋남을 잡는다(합성): 소스에만 있�
   assert.deepEqual(hookListDrift({ js: ["a", "b"], markup: [] }, collected).missing, ["markup: m"]);
 });
 
-test("훅 클래스 목록(hook-classes.json)이 소스와 맞는다 — 소스가 는 경우에만 `node bin/invariants.mjs --hooks-write --repo ../..`. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다", async () => {
+test("훅 클래스 목록(hook-classes.json)이 소스와 맞는다 — 소스가 는 경우에만 `node bin/invariants.ts --hooks-write --repo ../..`. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다", async () => {
   // 읽는 것: docs/ 아래 .js·docs/*.html의 인라인 script, test/*.mjs, scripts/build-*-pages.mjs. 전부 코드다(구운 HTML의 class 속성은 읽지 않는다).
   const collected = await collectHookClasses(REPO);
   const list = await readHookList();
@@ -391,7 +391,7 @@ test("훅 클래스 목록(hook-classes.json)이 소스와 맞는다 — 소스�
   assert.equal(await readFile(path.join(import.meta.dirname, "../hook-classes.json"), "utf8"), formatHookList(collected), "파일 모양까지 같다(다시 만들어도 바뀌지 않는다)");
   // ceo 계획 문서(개정 B안 B2-3)가 사람이 확인해 둔 훅이 기계 추출에 전부 들어 있다.
   // 어느 바구니(js·markup)에 들어 있는지는 묻지 않는다 - 비교가 쓰는 것은 둘의 합집합이다
-  // (lib/invariants.mjs의 readHookList().all과 compareInvariants). 전에는 단언이 list.js만 봐서
+  // (lib/invariants.ts의 readHookList().all과 compareInvariants). 전에는 단언이 list.js만 봐서
   // **도구가 쓰는 것보다 좁았고**, 두 바구니에 다 있는 이름(header-actions)이 우연히 통과하고 있었다.
   // icon-toggle은 목록에서 아예 빠졌다: #306이 공유 버튼을 구운 HTML에 넣으면서 nav.js가 버튼을
   // 만들지 않게 되었고, 그 class를 읽던 자리(`first?.className || "icon-toggle"`)가 함께 사라졌다.
@@ -402,7 +402,7 @@ test("훅 클래스 목록(hook-classes.json)이 소스와 맞는다 — 소스�
   assert.deepEqual(known.filter((c) => !list.js.includes(c) && !list.markup.includes(c)), []);
 });
 
-async function dirWith(files) {
+async function dirWith(files: Record<string, string | undefined>) {
   const dir = await mkdtemp(path.join(os.tmpdir(), "golden-inv-"));
   for (const [name, content] of Object.entries(files)) {
     if (content === undefined) continue; // { ...base, "a.html": undefined }로 한 장을 뺀다
@@ -834,7 +834,7 @@ test("#289 그 밖: 형식이 틀린 예외 목록은 사용법 오류(종료 2,
 test("#289 4번 검출(d) 보완: 뜻 있는 인라인이 블록을 바깥에서 감싸도 하드 — 안쪽 블록의 항목에 [in:태그] 표시가 붙는다", () => {
   const base = doc('<p>▲ 상승</p><div class="answer">답</div><ul><li>가</li><li>나</li></ul>');
   // cto가 넣어 통과를 확인한 다섯 가지(391f6901). 여는 표시(`‹del›`)가 든 통에 글자가 없어 통째로 버려지던 자리다.
-  const outside = {
+  const outside: Record<string, [string, string[]]> = {
     del: [base.replace("<p>▲ 상승</p>", "<del><p>▲ 상승</p></del>"), ['"▲ 상승" [in:del]']],
     s: [base.replace('<div class="answer">답</div>', '<s><div class="answer">답</div></s>'), ['"답" [in:s]']],
     ins: [base.replace("<ul><li>가</li><li>나</li></ul>", "<ins><ul><li>가</li><li>나</li></ul></ins>"), ['"가" [in:ins]', '"나" [in:ins]']],
@@ -984,7 +984,7 @@ test("#418 HOOKCOUNT: 숫자 줄이 정확히 셋 · 수집이 하한 아래로 
   assert.throws(() => parseHookCount(""), /정확히 셋/);
 
   // `--hooks-write` 는 HOOKCOUNT 를 바이트까지 그대로 둔다(도구 복사본에서 돌린다 - 저장소 파일을 쓰지 않는다).
-  // bin 은 lib 옆의 hook-classes.json 을 쓰고 canon.mjs 는 ../../../scripts 를 읽는다 - 같은 상대 위치로 복사본을 세운다.
+  // bin 은 lib 옆의 hook-classes.json 을 쓰고 canon.ts 는 ../../../scripts 를 읽는다 - 같은 상대 위치로 복사본을 세운다.
   const root = await mkdtemp(path.join(os.tmpdir(), "golden-hookcount-"));
   try {
     const golden = path.join(root, "tools/golden");
@@ -998,7 +998,7 @@ test("#418 HOOKCOUNT: 숫자 줄이 정확히 셋 · 수집이 하한 아래로 
     const before = await readFile(countFile);
     // 목록을 비워 두고 다시 만들게 한다: 쓰기가 실제로 일어났는지(목록이 소스에서 다시 채워진다)도 같이 본다.
     await writeFile(path.join(golden, "hook-classes.json"), JSON.stringify({ js: [], markup: [] }));
-    const r = spawnSync(process.execPath, [path.join(golden, "bin/invariants.mjs"), "--hooks-write", "--repo", REPO], { encoding: "utf8" });
+    const r = spawnSync(process.execPath, [path.join(golden, "bin/invariants.ts"), "--hooks-write", "--repo", REPO], { encoding: "utf8" });
     assert.equal(r.status, 0, r.stderr);
     assert.match(r.stdout, /훅 클래스 목록을 썼습니다/);
     assert.equal(await readFile(path.join(golden, "hook-classes.json"), "utf8"), formatHookList(await collectHookClasses(REPO)), "--hooks-write 가 목록 파일을 다시 썼다");
