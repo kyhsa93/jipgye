@@ -190,7 +190,7 @@ test("기본 단계는 지금까지 워크플로가 부르던 여섯 스크립�
     "scripts/build-realestate-pages.mjs",
     "scripts/build-updated-stamp.mjs",
   ]);
-  const all = [...(await read("scripts/update-all.mjs")).matchAll(/run\("node (scripts\/[a-z-]+\.mjs)"\)/g)].map((m) => m[1]);
+  const all = [...(await read("scripts/update-all.mjs")).matchAll(/run\("node (scripts\/[a-z-]+\.(?:mjs|ts))"\)/g)].map((m) => m[1]);
   assert.deepEqual(all.slice(all.indexOf("scripts/prerender.mjs")), RENDER_STEPS, "update-all의 렌더 순서와 기본 단계가 갈라졌다");
 });
 
@@ -210,13 +210,13 @@ test("두 워크플로의 렌더 단계는 render-pipeline을 부르고 id: rend
     const step = stepOf(yml, "정적 HTML에 오늘 내용 심기");
     assert.match(step, /^ {8}id: render$/m, `${file}: 렌더 단계에 id: render가 없다`);
     assert.match(step, /node scripts\/render-pipeline\.mjs/, `${file}: 렌더 단계가 render-pipeline을 부르지 않는다`);
-    assert.ok(!/node scripts\/(prerender|build-[a-z]+-pages|build-updated-stamp)\.mjs/.test(step), `${file}: 렌더 스크립트를 인라인으로 다시 부른다(폴백을 우회한다)`);
+    assert.ok(!/node scripts\/(prerender|build-[a-z]+-pages|build-updated-stamp)\.(?:mjs|ts)/.test(step), `${file}: 렌더 스크립트를 인라인으로 다시 부른다(폴백을 우회한다)`);
   }
   // 어느 워크플로 파일에도 인라인 렌더 호출이 남으면 안 된다(렌더 단계가 하나 더 생겨 폴백을 우회하는 것을 막는다).
   const dir = path.join(root, ".github/workflows");
   for (const name of await readdir(dir)) {
     const text = await readFile(path.join(dir, name), "utf8");
-    assert.ok(!/node scripts\/prerender\.mjs/.test(text), `${name}: prerender.mjs를 워크플로에서 직접 부른다`);
+    assert.ok(!/node scripts\/prerender\.(?:mjs|ts)/.test(text), `${name}: prerender.mjs를 워크플로에서 직접 부른다`);
   }
 });
 
@@ -225,7 +225,7 @@ test("daily-update는 기본 여섯, summarize는 같은 순서의 다섯(build-
   assert.match(daily, /run: node scripts\/render-pipeline\.mjs$/m, "daily-update는 기본 단계(인자 없음)를 쓴다");
 
   const summarize = stepOf(await read(WORKFLOWS[1]), "정적 HTML에 오늘 내용 심기");
-  const args = [...summarize.matchAll(/^ {12}(scripts\/[a-z-]+\.mjs)/gm)].map((m) => m[1]);
+  const args = [...summarize.matchAll(/^ {12}(scripts\/[a-z-]+\.(?:mjs|ts))/gm)].map((m) => m[1]);
   assert.deepEqual(args, RENDER_STEPS.filter((s) => s !== "scripts/build-rate-pages.mjs"));
   assert.ok(summarize.indexOf("news-context.mjs") >= 0 && summarize.indexOf("news-context.mjs") < summarize.indexOf("render-pipeline.mjs"), "news-context는 폴백 밖, 파이프라인 앞에 둔다");
 });

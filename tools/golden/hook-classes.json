@@ -1,5 +1,5 @@
 {
-  "//": "기계로 뽑은 훅 클래스 목록(#274). 손으로 고치지 않는다 — `node bin/invariants.mjs --hooks-write --repo ../..`로 다시 만든다.",
+  "//": "기계로 뽑은 훅 클래스 목록(#274). 손으로 고치지 않는다 — 소스가 는 경우에만 `node bin/invariants.mjs --hooks-write --repo ../..`. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다.",
   "sources": {
     "js": "docs/ 아래 .js와 docs/*.html 인라인 script의 querySelector(All)·closest·matches·getElementsByClassName·classList·className",
     "markup": "test/*.mjs와 scripts/build-*-pages.mjs가 문자열로 쓰는 class=\"…\""

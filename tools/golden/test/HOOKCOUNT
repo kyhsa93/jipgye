@@ -1,0 +1,13 @@
+# 훅 클래스 추출의 하한 셋 (#418, #316 0단계). 읽는 곳은 test/invariants.test.mjs 의 parseHookCount (lib/invariants.mjs).
+# 숫자 줄은 정확히 셋이다: 1행 = hook-classes.json 의 js 이름 수 하한, 2행 = markup 이름 수 하한,
+# 3행 = collectHookClasses 가 읽은 test/·scripts/ 소스 파일 수 하한. 주석(#)과 빈 줄은 버린다. 셋이 아니면 시험이 실패한다
+# (#417 에서 루트 test/COUNT 숫자 줄이 넷이 되어 래칫이 앞 둘만 읽고 하한이 낮게 선 일을 물려받지 않으려는 것이다).
+# 왜 있나: 소스 집합이 조용히 줄면(확장자를 .mjs 한 가지로 박은 선택이 .ts 개명에 놓친 것 따위) 목록이 줄어든 채로 맞아 보인다.
+# 그때 `--hooks-write` 로 덮으면 줄어든 목록이 굳는다(#289 구멍). 이 하한이 그 빨강을 덮지 못하게 문다.
+# `--hooks-write` 는 이 파일을 건드리지 않는다(시험이 바이트까지 단언한다). 소스가 늘면 사람이 올리고, 내리는 변경은 PR 본문에 사유를 적는다.
+# 센 법: 2026-10-20, merge-base ff707582, Node v24.22.0, macOS.
+#   tools/golden 에서 collectHookClasses(저장소 루트) → js 30 · markup 99 · sources 147 (= 루트 test/ 최상위 소스 143 + scripts/ 의 build-*-pages 4).
+#   docs/ 에서 읽은 72(.js 5 + .html 67)는 이 하한에 넣지 않는다 — docs/ 는 이 트랙(.ts 개명) 밖이다.
+30
+99
+147

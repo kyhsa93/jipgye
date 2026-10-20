@@ -10,7 +10,7 @@ const read = (rel) => readFile(path.join(root, rel), "utf8");
 const readWorkflow = async (rel) => expandRenderPipeline(await read(rel));
 
 const scriptsIn = (text) =>
-  [...text.matchAll(/node scripts\/([a-z-]+\.mjs)/g)].map((m) => m[1]);
+  [...text.matchAll(/node scripts\/([a-z-]+\.(?:mjs|ts))/g)].map((m) => m[1]);
 
 /**
  * 매일 도는 워크플로가 update-all이 부르는 빌더를 하나라도 빠뜨리면, 그 빌더가

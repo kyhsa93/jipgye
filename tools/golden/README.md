@@ -20,7 +20,7 @@ node bin/bench.mjs   --repo ../.. --sha HEAD --runs 10   # 렌더 단계 시간 
 node bin/invariants.mjs --render --repo ../..    # 불변 조건(#274): merge-base와 작업 트리를 같은 BUILD_NOW로 렌더해 견준다. 하드 실패가 없으면 종료 0
 node bin/invariants.mjs /tmp/a /tmp/b            # 이미 구운 폴더 둘(같은 입력·같은 BUILD_NOW로 구운 것만)
 node bin/invariants.mjs --snapshot ../../docs --table   # 장별 표(robots·canonical·JS 바이트). --table을 빼면 스냅숏 JSON, 지문은 stderr
-node bin/invariants.mjs --hooks-check --repo ../..      # 훅 클래스 목록이 소스와 맞는지(어긋나면 --hooks-write로 다시 만든다)
+node bin/invariants.mjs --hooks-check --repo ../..      # 훅 클래스 목록이 소스와 맞는지(소스가 는 경우에만 --hooks-write. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다)
 ```
 
 ## 구성
@@ -123,7 +123,7 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
 - **훅 클래스는 기계로 뽑는다.** `hook-classes.json`의 `js`는 `docs/` 아래 `.js`와 `docs/*.html` 인라인 script의
   `querySelector(All)`·`closest`·`matches`·`getElementsByClassName`·`classList`·`className`에서, `markup`은 루트 `test/*.mjs`와
   `scripts/build-*-pages.mjs`가 문자열로 쓰는 `class="…"`에서 뽑은 이름이다(`collectHookClasses`). 목록이 소스와 어긋나면
-  `test/invariants.test.mjs`가 실패하고, `--hooks-write`로 다시 만든다. 비교 때는 목록에 **후보 폴더의 JS가 읽는 class**를 더한다.
+  `test/invariants.test.mjs`가 실패한다. 소스가 는 경우에만 `--hooks-write`로 다시 만들고, 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다(줄어든 채 굳지 않게 `test/HOOKCOUNT`가 js·markup 이름 수와 읽은 소스 파일 수의 하한을 둔다). 비교 때는 목록에 **후보 폴더의 JS가 읽는 class**를 더한다.
   `--render`는 소스를 갖고 있으므로 한 걸음 더 간다: **후보 소스에서 다시 뽑은 이름**을 목록에 더해 판정하고(목록이 낡아도 새지 않는다), 목록이 후보 소스와
   어긋난 것(`hook-list`)과 기준 소스에서는 훅이었는데 후보 소스에서는 빠진 이름(`hook-list-dropped`)을 보고에 소프트로 같이 낸다. 빠진 이름은 더는 훅으로 보지 않으므로
   (HTML에서 그 class가 사라져도 `hooks`가 안 건다) PR에서 사람이 읽는다.

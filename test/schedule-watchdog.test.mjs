@@ -221,7 +221,7 @@ test("탐지기는 daily-update·summarize 밖의 별도 워크플로에서, 자
 
   for (const f of ["daily-update.yml", "summarize.yml", "test.yml"]) {
     const text = await readFile(path.join(dir, f), "utf8");
-    assert.doesNotMatch(text, /check-schedule-runs\.mjs/, `${f} 안에 두면 그 실행이 안 뜰 때 탐지기도 안 뜬다 (#322 완료 조건 4)`);
+    assert.doesNotMatch(text, /check-schedule-runs\.(?:mjs|ts)/, `${f} 안에 두면 그 실행이 안 뜰 때 탐지기도 안 뜬다 (#322 완료 조건 4)`);
   }
 });
 
