@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "./district-slugs.ts";
 import { BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.ts";
-import { areaPrice } from "./realestate-format.mjs";
+import { areaPrice } from "./realestate-format.ts";
 import { dealFileName } from "./deal-files.ts";
 import { createWriteSet } from "./render-writes.ts";
 import { districtFacts } from "./district-facts.ts";

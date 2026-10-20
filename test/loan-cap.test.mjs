@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { BASIS_DATE, CAP_RULES_HIGH, capFor, capSentence, clustering } from "../scripts/loan-cap.mjs";
+import { BASIS_DATE, CAP_RULES_HIGH, capFor, capSentence, clustering } from "../scripts/loan-cap.ts";
 
 // 상한은 금융위원회 원문(10·15 대책, '26년도 가계부채 관리방안)에서 손으로 옮긴 것이다.
 test("15억 '이하'는 6억, 25억 이하는 4억, 그 위는 2억", () => {
@@ -43,7 +43,7 @@ test("15억 경계에 걸친 예산대에만, LTV·DSR로 더 낮을 수 있다�
 });
 
 test("예산대 '절반을 빌린다면' 예시는 그 가격대 상한을 넘지 않는다 (#29)", async () => {
-  const { loanSentence } = await import("../scripts/mortgage.mjs");
+  const { loanSentence } = await import("../scripts/mortgage.ts");
   const spread = { low: 4, mid: 5, high: 6, count: 10 };
   assert.match(loanSentence(spread, { eok: 10 }), /절반인 5억을 빌린다면/);
   const s16 = loanSentence(spread, { eok: 16 });

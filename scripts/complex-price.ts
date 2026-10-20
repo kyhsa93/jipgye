@@ -77,7 +77,7 @@ export function indexLevels(index, outlook) {
   for (const { code } of REGIONS) {
     const rows = index?.series?.[code];
     if (!rows?.length) continue;
-    const byMonth = new Map(rows.map(([m, v]) => [m, Number(v)]));
+    const byMonth = new Map<string, number>(rows.map(([m, v]) => [m, Number(v)]));
     let last = rows.at(-1)[0];
     filled[code] = [];
     const region = outlook?.regions?.find((r) => r.code === code);
@@ -93,7 +93,7 @@ export function indexLevels(index, outlook) {
 }
 
 /** 기준 달. 서울 계열의 마지막 달(공식 또는 메운 달). 권역마다 다르면 가장 이른 것을 쓴다. */
-export function referenceMonth(levels) {
+export function referenceMonth(levels: Record<string, { last: string }>) {
   const lasts = Object.values(levels).map((l) => l.last);
   return lasts.length ? lasts.sort()[0] : null;
 }
@@ -224,7 +224,7 @@ export function districtCells(deals, levels, reference, { yearAgo = [], yearAgoM
     }
     out[apt] = {};
     for (const [name, group] of [...cells].sort(([a], [b]) => a - b)) {
-      const areas = [...new Set(group.map((d) => d.area))].sort((a, b) => a - b);
+      const areas = [...new Set<number>(group.map((d) => d.area))].sort((a, b) => a - b);
       out[apt][name] = { ...summarize(group, levels, reference), ...(areas.length > 1 ? { areas } : {}) };
     }
   }

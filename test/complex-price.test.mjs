@@ -11,7 +11,7 @@ import {
   indexLevels,
   marketDeal,
   summarize,
-} from "../scripts/complex-price.mjs";
+} from "../scripts/complex-price.ts";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -173,7 +173,7 @@ test("두 달 목록에 없는 단지도 여섯 달 안에 거래가 있으면 �
 });
 
 test("한 단지 안 1㎡ 안쪽 면적은 한 칸으로 묶되, 사슬로 번지지 않는다 (#32)", async () => {
-  const { areaGroups } = await import("../scripts/complex-price.mjs");
+  const { areaGroups } = await import("../scripts/complex-price.ts");
   const deals = [84.95, 84.96, 84.98, 84.98, 84.99, 59.9, 84.0, 84.9, 85.8].map((area) => ({ area }));
   const label = areaGroups(deals);
   // 84.0부터 1㎡ 안(84.0~84.99)은 한 묶음, 85.8은 84.0에서 1㎡를 넘어 따로 - 84.9를 거쳐 사슬로 붙지 않는다.

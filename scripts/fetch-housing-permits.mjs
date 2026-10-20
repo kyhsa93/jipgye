@@ -33,7 +33,7 @@ import { DISTRICTS } from "./realestate-districts.ts";
 import { assertCoreFields, assertItemObjects, describeShape, foldProjects, listKeys, projectItem, ShapeError } from "./housing-permits-fold.ts";
 import { createDiagnostics } from "./housing-permits-diagnose.ts";
 import { mergeSmallCells } from "./housing-permits-merge.ts";
-import { DAILY_LIMIT, DEFAULT_ENDPOINT, FIELDS, LICENSE, OPERATION, PAGE_SIZE } from "./housing-permits-spec.mjs";
+import { DAILY_LIMIT, DEFAULT_ENDPOINT, FIELDS, LICENSE, OPERATION, PAGE_SIZE } from "./housing-permits-spec.ts";
 
 const EXIT_SHAPE = 1;
 const EXIT_INCOMPLETE = 3;

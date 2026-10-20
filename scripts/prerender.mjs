@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { accessibleTables } from "./table-a11y.ts";
-import { fragment } from "./renderer.mjs";
+import { fragment } from "./renderer.ts";
 import { createWriteSet } from "./render-writes.ts";
 import { INDEX_NEWS, indexNewsItems } from "./news-items.ts";
 import { escapeHtml } from "./html-escape.ts";
@@ -24,12 +24,12 @@ import { DISTRICT_PAGES } from "./district-slugs.ts";
 import { districtSentences } from "./district-summary.ts";
 import { factSentences } from "./district-facts.ts";
 import { renewalSentences } from "./renewal-facts.ts";
-import { BUDGET_MORE_LINKS, CANDIDATE_LIST, bodyShape, budgetAnswers, budgetBandLabel, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "./budget-fragments.mjs";
+import { BUDGET_MORE_LINKS, CANDIDATE_LIST, bodyShape, budgetAnswers, budgetBandLabel, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "./budget-fragments.ts";
 import { rateBridgeHtml } from "./rate-bridge.ts";
 import { metricCell, topDistricts } from "./realestate-rows.ts";
-import { headLabels, realestateTable } from "./realestate-table.mjs";
-import { overallCards } from "./realestate-overall.mjs";
-import { MIN_SAMPLE } from "./realestate-format.mjs";
+import { headLabels, realestateTable } from "./realestate-table.ts";
+import { overallCards } from "./realestate-overall.ts";
+import { MIN_SAMPLE } from "./realestate-format.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 
 const root = path.resolve(import.meta.dirname, "..");

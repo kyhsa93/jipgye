@@ -7,7 +7,7 @@ import {
   jeonseRatio,
   resolveMetric,
   valueOf,
-} from "./realestate-format.mjs";
+} from "./realestate-format.ts";
 
 const round1 = (n) => Math.round(n * 10) / 10;
 

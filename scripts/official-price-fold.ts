@@ -7,7 +7,7 @@
  */
 import { createHash } from "node:crypto";
 import { StringDecoder } from "node:string_decoder";
-import { parcelKey, cellKey, sigunguOf, joinJibun, normalizeJibun, areaKey } from "./official-price-key.mjs";
+import { parcelKey, cellKey, sigunguOf, joinJibun, normalizeJibun, areaKey } from "./official-price-key.ts";
 
 /** 칸·층 값을 남기는 최소 호수 (C2). 층 차원에서 호 1~2개면 중앙값이 곧 개별 호 값이다. */
 export const MIN_HOUSEHOLDS = 3;
@@ -52,7 +52,7 @@ export function mapHeader(names) {
     const hit = aliases.find((a) => idx.has(clean(a)));
     return hit === undefined ? -1 : idx.get(clean(hit));
   };
-  const cols = {};
+  const cols: Record<string, number> = {};
   const missing = [];
   for (const [logical, aliases] of Object.entries(REQUIRED_COLUMNS)) {
     cols[logical] = pick(aliases);
@@ -275,7 +275,7 @@ export async function foldStream(stream, input) {
       .filter(([, v]) => v.length >= MIN_HOUSEHOLDS)
       .sort(([x], [y]) => x - y)
       .map(([l, v]) => ({ l, n: v.length, m: median(v) }));
-    const c = { s, d, j, a, n: cell.all.length, m: median(cell.all) };
+    const c: { s: string; d: string; j: string; a: string; n: number; m: number; f?: { l: number; n: number; m: number }[] } = { s, d, j, a, n: cell.all.length, m: median(cell.all) };
     if (f.length) c.f = f;
     outCells.push(c);
   }

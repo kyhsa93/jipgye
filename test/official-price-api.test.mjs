@@ -8,8 +8,8 @@ import { promisify } from "node:util";
 import { OFFICIAL_PRICE_LICENSE, OFFICIAL_PRICE_LICENSE_CHECKED } from "../scripts/official-price-license.ts";
 import {
   ApiFatalError, ApiValidationError, MAX_PAGES_PER_PARCEL, OWNER_KEY_RE, buildPart, checkLicense, foldParcel, loadState, mergeParts, projectItem, runCollector, summaryLines,
-} from "../scripts/official-price-api.mjs";
-import { assertDerived } from "../scripts/official-price-fold.mjs";
+} from "../scripts/official-price-api.ts";
+import { assertDerived } from "../scripts/official-price-fold.ts";
 import { loadTargets, orderTargets } from "../scripts/official-price-targets.ts";
 import { runExplore } from "../scripts/official-price-explore.ts";
 import { FAKE_KEY, FAKE_OWNER, buildParcel, hogs, pkey, startMock, target, targetsOf } from "./helpers/official-price-mock.mjs";
@@ -219,7 +219,7 @@ test("낙제: n<3 칸이 값을 가지거나 허용 외 필드가 있으면 쓰�
 });
 
 test("연결: 부분 파일은 쓰기 직전 assertDerived를 거친다 (foldStream 끝 연결 시험의 API 경로판)", async () => {
-  const src = await readFile(path.join(root, "scripts", "official-price-api.mjs"), "utf8");
+  const src = await readFile(path.join(root, "scripts", "official-price-api.ts"), "utf8");
   const body = src.slice(src.indexOf("export function buildPart"), src.indexOf("/** 진행 요약용 투영"));
   const call = body.indexOf("assertDerived(out");
   assert.ok(call > 0, "buildPart 안에 assertDerived 호출이 없다");
@@ -227,7 +227,7 @@ test("연결: 부분 파일은 쓰기 직전 assertDerived를 거친다 (foldStr
   const run = src.slice(src.indexOf("export async function runCollector"));
   assert.ok(run.indexOf("buildPart(") < run.indexOf("writeFile("), "buildPart가 쓰기보다 앞이어야 한다");
   assert.ok(src.slice(src.indexOf("async function readParts")).indexOf("assertDerived(data") > 0, "읽어 들이는 부분 파일도 검사한다");
-  const fold = await readFile(path.join(root, "scripts", "official-price-fold.mjs"), "utf8");
+  const fold = await readFile(path.join(root, "scripts", "official-price-fold.ts"), "utf8");
   const fb = fold.slice(fold.indexOf("export async function foldStream"));
   assert.ok(fb.indexOf("assertDerived(out);") > 0 && fb.indexOf("assertDerived(out);") < fb.lastIndexOf("return out;"), "foldStream 끝 assertDerived");
 });

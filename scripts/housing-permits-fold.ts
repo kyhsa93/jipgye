@@ -17,7 +17,7 @@
  *  - 사업이 있으면 호수가 0이어도 그 칸의 n으로 센다(칸이 생긴다). 사업이 0건인 달·구는 만들지 않고, 0과 결측의 구분은
  *    수집 쪽의 전수 순회 성공 기록이 맡는다.
  */
-import { CANCELLATION, COMPLETE_CANDIDATES, FIELDS, PROJECTED_FIELDS, SERIES } from "./housing-permits-spec.mjs";
+import { CANCELLATION, COMPLETE_CANDIDATES, FIELDS, PROJECTED_FIELDS, SERIES } from "./housing-permits-spec.ts";
 
 export class ShapeError extends Error {}
 

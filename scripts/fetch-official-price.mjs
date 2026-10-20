@@ -15,8 +15,8 @@
 import { readdir, readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { foldStream } from "./official-price-fold.mjs";
-import { parcelKeyOfDeal } from "./official-price-key.mjs";
+import { foldStream } from "./official-price-fold.ts";
+import { parcelKeyOfDeal } from "./official-price-key.ts";
 
 /** raw/sale·raw/rent 슬롯 파일에서 지번 키 집합을 모은다. */
 export async function targetParcels(rawDir) {

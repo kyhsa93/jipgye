@@ -27,7 +27,7 @@ const repoRoot = path.resolve(import.meta.dirname, "..");
 /** 기본 단계: 지금까지 워크플로가 이 순서로 부르던 여섯 스크립트(순서가 곧 의존 순서다 - 기준일 찍기가 마지막). */
 export const RENDER_STEPS = [
   "scripts/prerender.mjs",
-  "scripts/build-rate-pages.mjs",
+  "scripts/build-rate-pages.ts",
   "scripts/build-news-pages.mjs",
   "scripts/build-budget-pages.mjs",
   "scripts/build-realestate-pages.mjs",

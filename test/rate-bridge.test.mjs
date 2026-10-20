@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { RATE_PAGES } from "../scripts/build-rate-pages.mjs";
+import { RATE_PAGES } from "../scripts/build-rate-pages.ts";
 import { RATE_BRIDGE, BUDGET_HREF, CONVERSION_HREF } from "../scripts/rate-bridge.ts";
 
 // #179: 금리 화면 다섯 장이 실거래(10억대)와 전월세전환율 화면으로 가는 길을 갖되,

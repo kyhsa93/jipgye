@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { candidatesInBand } from "../scripts/complex-price.mjs";
+import { candidatesInBand } from "../scripts/complex-price.ts";
 import { CANDIDATE_LIST, budgetCandidatesHtml } from "../scripts/prerender.mjs";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 

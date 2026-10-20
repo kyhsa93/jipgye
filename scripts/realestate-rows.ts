@@ -4,7 +4,7 @@
 //
 // 표본 문턱(MIN_SAMPLE)과 그 판정(hasEnoughSample)은 realestate-format.mjs의 것을 쓴다 - 둘이던 것(prerender.mjs 49행)을 하나로 했다.
 // DIRECTION 해자 2: 표본이 모자라면 값을 내지 않고 모자란다고 적는다(`low`) - 이 판정을 건너뛰는 변경은 방향에 어긋난다.
-import { KIND_FIELDS, hasEnoughSample } from "./realestate-format.mjs";
+import { KIND_FIELDS, hasEnoughSample } from "./realestate-format.ts";
 
 // 첫 화면에 그리는 자치구 수. 모바일에서 표는 행마다 카드로 펼쳐지므로
 // 열한 행이면 요약까지 1,500px을 내려야 한다. 나머지는 표 밑 '더 보기'로 편다.

@@ -8,7 +8,7 @@ import {
   costsSentence,
   educationRate,
   purchaseCosts,
-} from "../scripts/purchase-costs.mjs";
+} from "../scripts/purchase-costs.ts";
 
 // 값은 법령 원문에서 손으로 옮긴 것이다(지방세법 제11조 제1항 제8호, 제151조; 농어촌특별세법 제5조;
 // 공인중개사법 시행규칙 별표 1). 계산 코드와 같은 식으로 기대값을 만들면 검사가 아니다.

@@ -18,8 +18,8 @@ import {
   jeonseRatio,
   resolveMetric,
   valueOf,
-} from "./realestate-format.mjs";
-import { RE_LABELS, reCount, reEok, reMan } from "./realestate-table.mjs";
+} from "./realestate-format.ts";
+import { RE_LABELS, reCount, reEok, reMan } from "./realestate-table.ts";
 
 const raw = (text) => ({ text, esc: false });
 const esc = (text) => ({ text, esc: true });

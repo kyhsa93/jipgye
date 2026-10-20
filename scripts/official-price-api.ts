@@ -17,9 +17,9 @@
  */
 import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { areaKey, cellKey } from "./official-price-key.mjs";
+import { areaKey, cellKey } from "./official-price-key.ts";
 import { OFFICIAL_PRICE_LICENSE, OFFICIAL_PRICE_LICENSE_CHECKED } from "./official-price-license.ts";
-import { ALLOWED_KEYS, MAX_OUTPUT_BYTES, MIN_HOUSEHOLDS, REQUIRED_LICENSE, assertDerived, median } from "./official-price-fold.mjs";
+import { ALLOWED_KEYS, MAX_OUTPUT_BYTES, MIN_HOUSEHOLDS, REQUIRED_LICENSE, assertDerived, median } from "./official-price-fold.ts";
 import { orderTargets } from "./official-price-targets.ts";
 
 export const DEFAULT_BASE = "https://apis.data.go.kr/1613000/BldRgstHubService";
@@ -52,11 +52,11 @@ export const OWNER_KEY_RE = /own|jumin|jmno|rrn|resno|ssn|regno|psn|prsn|소유|
 const GROUND_FLOOR = "20"; // flrGbCd 지상
 
 /** 고정 문구로만 말하는 오류들 - 값이 메시지에 들어가지 않는다(C1). */
-export class ApiValidationError extends Error { constructor(m, code) { super(m); this.name = "ApiValidationError"; this.code = code; } }
+export class ApiValidationError extends Error { declare code: string; constructor(m, code) { super(m); this.name = "ApiValidationError"; this.code = code; } }
 /** 쓰기 없이 실패해야 하는 오류(키 권한 등). */
 export class ApiFatalError extends Error { constructor(m) { super(m); this.name = "ApiFatalError"; } }
 /** 끝난 지번까지 저장하고 정상 종료해야 하는 신호. */
-export class StopRun extends Error { constructor(reason) { super(reason); this.name = "StopRun"; this.reason = reason; } }
+export class StopRun extends Error { declare reason: string; constructor(reason) { super(reason); this.name = "StopRun"; this.reason = reason; } }
 /** 이 지번만 버리고 다음으로 가는 일시 오류. */
 export class ParcelFailed extends Error { constructor(m) { super(m); this.name = "ParcelFailed"; } }
 
@@ -189,7 +189,7 @@ export function planPages(first) {
  * first가 주어지면 그 응답을 1쪽으로 쓴다(호출 안 함) - 호출한 쪽이 상한·예산을 먼저 보려고 1쪽을 미리 받은 경우.
  * 반환: {total, pages, items(허용 필드만), capped}
  */
-export async function fetchParcelOp(client, op, kind, t, extra, { issues, onPlan, onRaw, first, maxPages = MAX_PAGES_PER_PARCEL } = {}) {
+export async function fetchParcelOp(client, op, kind, t, extra, { issues, onPlan, onRaw, first, maxPages = MAX_PAGES_PER_PARCEL }: { issues?: Record<string, number>; onPlan?: (pages: number) => void; onRaw?: (raw: object) => void; first?: { total: number; items: object[] }; maxPages?: number } = {}) {
   const items = [];
   let total = 0;
   let pageSize = PAGE_SIZE;
@@ -228,7 +228,7 @@ export async function fetchParcelOp(client, op, kind, t, extra, { issues, onPlan
  * 반환: years별 { cells:[{a,n,m,f?}] (n>=3만), cellsBelow, households, mismatch, unjoined, invalid }
  * stdDay 연도가 years 밖이면 던진다(요청 범위 밖 응답).
  */
-export function foldParcel(priceItems, areaItems, years, issues) {
+export function foldParcel(priceItems, areaItems, years, issues?) {
   // 호별 전용면적(전유·주건축물 면적 합)과 지상 층
   const areaOf = new Map(); // pk -> { sum(1e-4㎡ 정수), flr:number|null }
   for (const it of areaItems) {
@@ -281,7 +281,7 @@ export function foldParcel(priceItems, areaItems, years, issues) {
     for (const [a, c] of [...cells].sort(([x], [z]) => (x < z ? -1 : 1))) {
       if (c.all.length < MIN_HOUSEHOLDS) { below += 1; continue; } // 값을 버리고 칸 수만 센다 (C2)
       const f = [...c.floors].filter(([, v]) => v.length >= MIN_HOUSEHOLDS).sort(([x], [z]) => x - z).map(([l, v]) => ({ l, n: v.length, m: median(v) }));
-      const cell = { a, n: c.all.length, m: median(c.all) };
+      const cell: { a: string; n: number; m: number; f?: { l: number; n: number; m: number }[] } = { a, n: c.all.length, m: median(c.all) };
       if (f.length) cell.f = f;
       kept.push(cell);
     }
@@ -337,7 +337,7 @@ export function mergeParts(parts, year, extraMeta) {
   const seenCell = new Set();
   const seenParcel = new Set();
   const sum = { apiCalls: 0, cellsBelowMin: 0, households: 0, householdsMismatch: 0, householdsUnjoined: 0, householdsInvalid: 0 };
-  const same = {};
+  const same: Record<string, string> = {};
   for (const { data } of parts) {
     const m = data.meta;
     for (const k of Object.keys(sum)) sum[k] += m[k] ?? 0;
@@ -418,7 +418,7 @@ export async function runCollector(opts) {
   const y1 = Number(endDate.slice(0, 4));
   const years = [];
   for (let y = y0; y <= y1; y += 1) years.push(y);
-  const summary = { status: "", years, maxPages, calls: 0, finishedNow: 0, cappedParcels: 0, abandoned: 0, stopReason: null, wrote: [], merged: false };
+  const summary: Record<string, any> = { status: "", years, maxPages, calls: 0, finishedNow: 0, cappedParcels: 0, abandoned: 0, stopReason: null, wrote: [], merged: false };
 
   if (await isComplete(outDir, years)) {
     summary.status = "complete";

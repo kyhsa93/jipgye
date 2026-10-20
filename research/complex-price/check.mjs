@@ -3,7 +3,7 @@
 // 저장소 루트에서: node research/complex-price/check.mjs
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
-import { adjust, areaGroups, indexLevels, marketDeal, MIN_DEALS, WINDOW_DAYS } from "../../scripts/complex-price.mjs";
+import { adjust, areaGroups, indexLevels, marketDeal, MIN_DEALS, WINDOW_DAYS } from "../../scripts/complex-price.ts";
 
 const root = path.resolve(import.meta.dirname, "../..");
 const index = JSON.parse(await readFile(path.join(root, "raw/ecos/apt-price-index.json"), "utf8"));

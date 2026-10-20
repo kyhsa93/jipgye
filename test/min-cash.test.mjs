@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { BASIS_DATE, MIN_CASH_RULES, minCash, minCashSentence } from "../scripts/min-cash.mjs";
+import { BASIS_DATE, MIN_CASH_RULES, minCash, minCashSentence } from "../scripts/min-cash.ts";
 
 // LTV(40/70%)는 10·15 대책 원문, 생애최초 감면(12억 이하 200만원)은 지방세특례제한법 제36조의3에서 옮겼다.
 test("대출 천장은 min(LTV×집값, 구간 상한)", () => {

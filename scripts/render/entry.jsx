@@ -11,7 +11,7 @@
 // realestateOverallHtml (#242 PR 3, 시세 요약 카드), budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml
 // (#243 PR A, 예산대 잎 조각 8개), budgetCandidatesHtml·budgetBodyHtml (#243 PR B, 후보 단지와 합성 - 이것으로 prerender.mjs의 조각 44개가 모두 이식됐다).
 import { DISTRICT_PAGES } from "../district-slugs.ts";
-import { BUDGET_MORE_LINKS, bodyShape, budgetAnswers, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "../budget-fragments.mjs";
+import { BUDGET_MORE_LINKS, bodyShape, budgetAnswers, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "../budget-fragments.ts";
 import { budgetFactSentences } from "../budget-facts.ts";
 import { districtSentences } from "../district-summary.ts";
 import { factSentences } from "../district-facts.ts";
@@ -21,8 +21,8 @@ import { indexNewsItems } from "../news-items.ts";
 import { FALLBACK_NOTE_KO, hasFallback } from "../summary-note.ts";
 import { SUMMARY_CATEGORIES_LABEL_KO, SUMMARY_HIGHLIGHTS_LABEL_KO, summaryMetaKo } from "../summary-box.ts";
 import { metricCell, topDistricts } from "../realestate-rows.ts";
-import { overallCards } from "../realestate-overall.mjs";
-import { headLabels, realestateTable } from "../realestate-table.mjs";
+import { overallCards } from "../realestate-overall.ts";
+import { headLabels, realestateTable } from "../realestate-table.ts";
 import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "../rates-table.ts";
 import { renewalSentences } from "../renewal-facts.ts";
 

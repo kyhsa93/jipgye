@@ -6,11 +6,11 @@
 // 상수로 내보낸 원문을 그대로 놓고, 장은 숫자만 남기고 #budget-rules-* 로 링크한다.
 // 기준일은 각 모듈의 BASIS_DATE라 규칙 문구와 확인일이 한 곳에서만 바뀐다.
 import { escapeHtml } from "./prerender.mjs";
-import { apartmentOptions, loanHeadSentence, rateSpread, yearChangeSentence } from "./mortgage.mjs";
-import { COSTS_RULES } from "./purchase-costs.mjs";
-import { MIN_CASH_RULES } from "./min-cash.mjs";
-import { POLICY_LINES, POLICY_TAIL, policyShareSentence } from "./policy-loan.mjs";
-import { CAP_RULES_HIGH } from "./loan-cap.mjs";
+import { apartmentOptions, loanHeadSentence, rateSpread, yearChangeSentence } from "./mortgage.ts";
+import { COSTS_RULES } from "./purchase-costs.ts";
+import { MIN_CASH_RULES } from "./min-cash.ts";
+import { POLICY_LINES, POLICY_TAIL, policyShareSentence } from "./policy-loan.ts";
+import { CAP_RULES_HIGH } from "./loan-cap.ts";
 
 const para = (text) => `<p>${escapeHtml(text)}</p>`;
 

@@ -9,7 +9,7 @@ import {
   jeonseRatio,
   metricOf,
   normalizeArea,
-} from "../scripts/realestate-format.mjs";
+} from "../scripts/realestate-format.ts";
 import {
   realestateHeadHtml,
   realestateOverallHtml,
@@ -898,7 +898,7 @@ test("자치구 요약 절은 제 문단으로만 열린다 - 예산대 문단�
 });
 
 test("1억이 넘는 돈은 늘 'n억 n만원' 꼴로 적는다 (#46)", async () => {
-  const { formatMan } = await import("../scripts/realestate-format.mjs");
+  const { formatMan } = await import("../scripts/realestate-format.ts");
   assert.equal(formatMan(20264), "2억 264만원");
   assert.equal(formatMan(20000), "2억원");
   assert.equal(formatMan(9999), "9,999만원");

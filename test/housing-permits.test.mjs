@@ -6,7 +6,7 @@ import { mkdtemp, readFile, readdir, writeFile, access, rm } from "node:fs/promi
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import { COMPLETE_CANDIDATES, DAILY_LIMIT, FIELDS, LICENSE, OPERATION, PROJECTED_FIELDS, SERIES } from "../scripts/housing-permits-spec.mjs";
+import { COMPLETE_CANDIDATES, DAILY_LIMIT, FIELDS, LICENSE, OPERATION, PROJECTED_FIELDS, SERIES } from "../scripts/housing-permits-spec.ts";
 import { assertCoreFields, foldProjects, parseDay, projectItem } from "../scripts/housing-permits-fold.ts";
 import { OTHER_KEY } from "../scripts/housing-permits-merge.ts";
 import { dailyLimit } from "../scripts/fetch-housing-permits.mjs";

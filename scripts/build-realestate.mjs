@@ -14,7 +14,7 @@ import {
   summarizeRent,
   summarizeSaleItems,
 } from "./realestate-metrics.ts";
-import { MIN_SAMPLE, hasEnoughSample } from "./realestate-format.mjs";
+import { MIN_SAMPLE, hasEnoughSample } from "./realestate-format.ts";
 import { itemKey, readSlotFile } from "./realestate-raw.ts";
 import { windowMonths } from "./realestate-slots.ts";
 import {

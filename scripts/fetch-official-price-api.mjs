@@ -12,7 +12,7 @@
 import { appendFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
-import { ApiFatalError, ApiValidationError, DEFAULT_BASE, DEFAULT_DAILY_BUDGET, DEFAULT_END_DATE, DEFAULT_START_DATE, MIN_GAP_MS, normalizeKey, runCollector, summaryLines } from "./official-price-api.mjs";
+import { ApiFatalError, ApiValidationError, DEFAULT_BASE, DEFAULT_DAILY_BUDGET, DEFAULT_END_DATE, DEFAULT_START_DATE, MIN_GAP_MS, normalizeKey, runCollector, summaryLines } from "./official-price-api.ts";
 import { runExplore } from "./official-price-explore.ts";
 import { loadTargets } from "./official-price-targets.ts";
 

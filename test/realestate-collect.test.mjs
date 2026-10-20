@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { errorXml, monthDays, rentItem, saleItem, startFakeMolit, successXml } from "./helpers/fake-molit.mjs";
-import { MIN_SAMPLE } from "../scripts/realestate-format.mjs";
+import { MIN_SAMPLE } from "../scripts/realestate-format.ts";
 import { refreshMonths, windowMonths } from "../scripts/realestate-slots.ts";
 
 const run = promisify(execFile);
