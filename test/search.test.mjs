@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
-import { buildPayload, complexesByDistrict, squash } from "../scripts/build-search-index.mjs";
+import { buildPayload, complexesByDistrict, squash } from "../scripts/build-search-index.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const NOW = new Date("2026-08-29T00:00:00Z");

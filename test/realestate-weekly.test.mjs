@@ -7,7 +7,7 @@ import {
   settledWeek,
   weekStart,
 } from "../scripts/realestate-weekly.ts";
-import { arrivalShortfall, arrivalWindowReady, contractRows, representWindow } from "../scripts/build-realestate.mjs";
+import { arrivalShortfall, arrivalWindowReady, contractRows, representWindow } from "../scripts/build-realestate.ts";
 import { DISTRICTS } from "../scripts/realestate-districts.ts";
 import { MIN_SAMPLE } from "../scripts/realestate-format.ts";
 

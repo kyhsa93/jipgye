@@ -23,7 +23,7 @@ async function main() {
   run("node scripts/fetch-indicators.mjs");
   run("node scripts/fetch-move-in.mjs");
   run("node scripts/fetch-district-index.mjs");
-  run("node scripts/build-realestate.mjs");
+  run("node scripts/build-realestate.ts");
   run("node scripts/build-budget-deals.ts");
   run("node scripts/build-conversion.ts");
   run("node scripts/build-cancellation.ts");
@@ -32,12 +32,12 @@ async function main() {
   run("node scripts/build-outlook.ts");
   run("node scripts/build-indicators.ts");
   run("node scripts/build-move-in.ts");
-  run("node scripts/build-complex-price.mjs");
+  run("node scripts/build-complex-price.ts");
   run("node scripts/build-record-high.ts");
   run("node scripts/build-district-change.ts");
-  run("node scripts/build-complex-ratio.mjs");
+  run("node scripts/build-complex-ratio.ts");
   run("node scripts/build-rent-preview.ts");
-  run("node scripts/build-search-index.mjs");
+  run("node scripts/build-search-index.ts");
   run("node scripts/news-context.ts");
   run("node scripts/prerender.ts");
   run("node scripts/build-rate-pages.ts");

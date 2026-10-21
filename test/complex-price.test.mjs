@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { buildFiles } from "../scripts/build-complex-price.mjs";
+import { buildFiles } from "../scripts/build-complex-price.ts";
 import {
   MIN_DEALS,
   QUARTILE_FROM,

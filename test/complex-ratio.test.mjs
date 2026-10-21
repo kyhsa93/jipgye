@@ -10,7 +10,7 @@ import {
   spreadOf,
   spreadSentence,
 } from "../scripts/complex-ratio.ts";
-import { buildPayload } from "../scripts/build-complex-ratio.mjs";
+import { buildPayload } from "../scripts/build-complex-ratio.ts";
 import { formatPercent } from "../scripts/realestate-format.ts";
 
 const NOW = new Date("2026-08-29T00:00:00Z");
