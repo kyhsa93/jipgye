@@ -1,46 +1,78 @@
 {
-  "updatedAt": "2026-10-20T21:44:07.024Z",
+  "updatedAt": "2026-10-21T00:59:00.786Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 금리·예금·투자상품: 금리·예금·투자상품: 佛 채권금리 年 5% 육박…재정위기 초기 그리스 넘어, [올댓차이나] 대만 증시, 중동정세 악화·글로벌 금리 상승에 속락 마감…1.13%↓, [올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 마감… H주 1.21%↓ +2\n- 기타 경제 소식: 신협의 여신한도 초과대출 규모가 5조7천억원에 달해 2023년 대비 3.7배 증가했다. 강북 지역의 집값 상승 기대가 강남보다 높아져 전망지수 격차가 역대 최대를 기록했다. 오늘 경제 관련 주요일정이 발표됐다. 서민대출 중개플랫폼의 알선 대비 실행률은 4%에 그쳤고, 은행권은 2%대를 유지하고 있다. 5대은행의 대출취급 6개월 내 금융사고 규모는 449억원으로, 국민은행이 90%를 차지했다.\n- 부동산: 부동산: 화곡동 5평 원룸 월세가 110만원… 서울 빌라 월세지수 역대 최고, 올해 서울 아파트 재산세 3조원 돌파…1년 새 4천781억 급증, 서울주택분 '재산세 500만원 초과' 10만명 첫 돌파…작년比 47%↑ +9\n- 증시·환율: 삼성증권은 모니모서를 통해 신규 계좌를 개설하는 고객에게 코스피200 주식을 증정하는 이벤트를 진행하고 있다. 중국 증시는 고유가와 저가 매수의 교차로 인해 혼조세를 보이며 마감했다. 창업판 지수는 0.26% 하락한 것으로 나타났다. 각 기사는 서로 다른 주제를 다루고 있으며, 직접적인 연관성은 없다. 이벤트와 중국 증시 동향은 별개의 경제 상황을 반영하고 있다.",
-    "en": "- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: 佛 채권금리 年 5% 육박…재정위기 초기 그리스 넘어, [올댓차이나] 대만 증시, 중동정세 악화·글로벌 금리 상승에 속락 마감…1.13%↓, [올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 마감… H주 1.21%↓ +2\n- Other Economic News: The amount of excess lending by Shinhan Financial Group has reached 5,700,000,000,000 won, an increase of 3.7 times compared to 2023. The expectation of rising housing prices in the Gangbuk area has increased more than in Gangnam, resulting in the largest-ever gap in the outlook index. Today, major economic schedules were announced. The execution rate of the Shemil loan intermediary platform was only 4%, while the banking sector has maintained rates in the 2% range. The scale of financial accidents within six months of loan processing by the five major banks was 44,900,000,000 won, with Kookmin Bank accounting for 90%.\n- Real Estate: Real Estate: 화곡동 5평 원룸 월세가 110만원… 서울 빌라 월세지수 역대 최고, 올해 서울 아파트 재산세 3조원 돌파…1년 새 4천781억 급증, 서울주택분 '재산세 500만원 초과' 10만명 첫 돌파…작년比 47%↑ +9\n- Stocks & FX: Samsung Securities is running an event in which it gives away KOSPI 200 stocks to customers who open new accounts through Monimoseo. The Chinese stock market closed in a mixed state due to the intersection of high oil prices and low-price buying. The Start-up Board index fell by 0.26%. Each article covers different topics and there is no direct connection between them. The event and the Chinese stock market trend reflect separate economic situations."
+    "ko": "- 부동산: 서울 강동구의 부동산 등기 신청 건수가 급증한 반면, 성동구는 급감하는 등 지역별로 엇갈린 결과가 나타났다. 하나은행은 서울 북촌에서 부동산 투어 세미나를 진행했다. 울산시는 부동산 강좌 수강생을 선착순 400명 모집 중이다. 메르츠는 베를린 주택 국유화 논란에 대해 재산권 실험에 반대하는 입장을 밝혔다. 용산구는 QR 코드를 활용한 주택임대차 신고 서비스를 전국 최초로 도입했다.\n- 증시·환율: 코스피는 반발 매수세에 3% 반등하며 5,700선을 회복했다. 코스닥도 2.5% 상승하며 반등했다. 이어 코스피는 2%대 반등하며 5,666선으로 출발했다. 코스닥 역시 1.46% 상승했다. 일본 닛케이 지수는 미국 기술주 선물 강세에 1.26% 상승 출발했다.\n- 기타 경제 소식: KB국민은행이 비대면 가계대출 신청 절차를 간소화했으며, 강북 집값 상승 기대가 강남을 앞서며 전망지수 격차가 역대 최대를 기록했고, 10월21일 수요일에 경제 관련 주요일정이 예정되어 있다.\n- 금리·예금·투자상품: 금리·예금·투자상품: iM증권, 한화생명 목표가↓…\"금리·환율 영향 투자 손실 악화\", Fed 추가 금리 인상 우려에 금값 하락…4000달러 지지선 주목, 美 9월 주택시장 급랭…7%대 대출금리에 매매계약 '역대 최저' +1",
+    "en": "- Real Estate: The number of real estate registration applications surged sharply in Gangdong District, Seoul, while a sharp decline was recorded in Seongdong District, resulting in divergent outcomes by region. Hana Bank held a real estate tour seminar in Bukchon, Seoul. Ulsan City is currently recruiting the first 400 participants on a first-come, first-served basis for a real estate course. Merz expressed opposition to property rights experiments in response to the controversy over the nationalization of housing in Berlin. Yongsan District introduced the country's first service for reporting housing leases using QR codes.\n- Stocks & FX: The KOSPI rebounded 3% to recover to the 5,700 level due to buying pressure. The KOSDAQ also rebounded by 2.5%. Following this, the KOSPI rebounded by over 2% to start at the 5,666 level. The KOSDAQ also rose by 1.46%. The Nikkei index in Japan opened up 1.26% due to strong performance in U.S. tech stock futures.\n- Other Economic News: KB Kookmin Bank has simplified the process for applying for non-face-to-face household loans, and the expectation of rising housing prices in Gangbuk has outpaced that in Gangnam, resulting in the largest-ever gap in the outlook index, and there are major economic schedules planned for Wednesday, October 21.\n- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: iM증권, 한화생명 목표가↓…\"금리·환율 영향 투자 손실 악화\", Fed 추가 금리 인상 우려에 금값 하락…4000달러 지지선 주목, 美 9월 주택시장 급랭…7%대 대출금리에 매매계약 '역대 최저' +1"
   },
   "highlights": [],
   "categories": [
     {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "금리·예금·투자상품: 佛 채권금리 年 5% 육박…재정위기 초기 그리스 넘어, [올댓차이나] 대만 증시, 중동정세 악화·글로벌 금리 상승에 속락 마감…1.13%↓, [올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 마감… H주 1.21%↓ +2",
-      "lineEn": "Rates, Deposits & Investment Products: 佛 채권금리 年 5% 육박…재정위기 초기 그리스 넘어, [올댓차이나] 대만 증시, 중동정세 악화·글로벌 금리 상승에 속락 마감…1.13%↓, [올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 마감… H주 1.21%↓ +2",
-      "isFallback": true,
-      "fallbackReason": "unverified-entity",
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "서울 강동구의 부동산 등기 신청 건수가 급증한 반면, 성동구는 급감하는 등 지역별로 엇갈린 결과가 나타났다. 하나은행은 서울 북촌에서 부동산 투어 세미나를 진행했다. 울산시는 부동산 강좌 수강생을 선착순 400명 모집 중이다. 메르츠는 베를린 주택 국유화 논란에 대해 재산권 실험에 반대하는 입장을 밝혔다. 용산구는 QR 코드를 활용한 주택임대차 신고 서비스를 전국 최초로 도입했다.",
+      "lineEn": "The number of real estate registration applications surged sharply in Gangdong District, Seoul, while a sharp decline was recorded in Seongdong District, resulting in divergent outcomes by region. Hana Bank held a real estate tour seminar in Bukchon, Seoul. Ulsan City is currently recruiting the first 400 participants on a first-come, first-served basis for a real estate course. Merz expressed opposition to property rights experiments in response to the controversy over the nationalization of housing in Berlin. Yongsan District introduced the country's first service for reporting housing leases using QR codes.",
+      "isFallback": false,
+      "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "佛 채권금리 年 5% 육박…재정위기 초기 그리스 넘어",
-          "link": "https://www.hankyung.com/article/2026102041591",
+          "title": "강동구 급증했는데 성동구는 급감…서울 부동산 등기 신청 건수 엇갈려",
+          "link": "https://www.mk.co.kr/news/realestate/12181452",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "[게시판] 하나은행, 서울 북촌서 부동산 투어 세미나",
+          "link": "https://www.yna.co.kr/view/AKR20261021035400002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "울산시, 부동산 강좌 수강생 400명 선착순 모집",
+          "link": "https://www.yna.co.kr/view/AKR20261020170500057",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "메르츠 \"재산권 실험 안돼\"…베를린 주택 국유화 갈등",
+          "link": "https://www.hankyung.com/article/202610214782i",
           "source": "한국경제 경제"
         },
         {
-          "title": "[올댓차이나] 대만 증시, 중동정세 악화·글로벌 금리 상승에 속락 마감…1.13%↓",
-          "link": "https://www.newsis.com/view/NISX20261020_0003834043",
+          "title": "용산구, QR 활용 주택임대차 '바로 신고' 서비스…\"전국 최초\"",
+          "link": "https://www.yna.co.kr/view/AKR20261021023000004",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "코스피는 반발 매수세에 3% 반등하며 5,700선을 회복했다. 코스닥도 2.5% 상승하며 반등했다. 이어 코스피는 2%대 반등하며 5,666선으로 출발했다. 코스닥 역시 1.46% 상승했다. 일본 닛케이 지수는 미국 기술주 선물 강세에 1.26% 상승 출발했다.",
+      "lineEn": "The KOSPI rebounded 3% to recover to the 5,700 level due to buying pressure. The KOSDAQ also rebounded by 2.5%. Following this, the KOSPI rebounded by over 2% to start at the 5,666 level. The KOSDAQ also rose by 1.46%. The Nikkei index in Japan opened up 1.26% due to strong performance in U.S. tech stock futures.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "코스피, 반발 매수세에 3% 반등하며 5,700선…코스닥 2.5%↑(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261021041800008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "日증시, 美기술주 선물 강세에 상승 출발…닛케이 1.26%↑",
+          "link": "https://www.newsis.com/view/NISX20261021_0003834392",
           "source": "뉴시스 경제"
         },
         {
-          "title": "[올댓차이나] 홍콩 증시, 고유가·글로벌 금리상승에 반락 마감… H주 1.21%↓",
-          "link": "https://www.newsis.com/view/NISX20261020_0003834023",
-          "source": "뉴시스 경제"
+          "title": "코스피, 2%대 반등하며 5,666 출발…코스닥도 1.46%↑",
+          "link": "https://www.yna.co.kr/view/AKR20261021034000008",
+          "source": "연합뉴스 경제"
         },
         {
-          "title": "[단독] \"채권 금리 올리지마\" 재경부, 은행채 발행 자제령",
-          "link": "https://www.hankyung.com/article/2026102039961",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "신한카드, 업계 최초 중금리 대출",
-          "link": "https://www.hankyung.com/article/2026102039941",
-          "source": "한국경제 경제"
+          "title": "[마켓뷰] 메타 실적발표 앞두고 뉴욕증시 혼조 마감…코스피 향방은",
+          "link": "https://www.yna.co.kr/view/AKR20261021019400008",
+          "source": "연합뉴스 경제"
         }
       ]
     },
@@ -48,15 +80,15 @@
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "신협의 여신한도 초과대출 규모가 5조7천억원에 달해 2023년 대비 3.7배 증가했다. 강북 지역의 집값 상승 기대가 강남보다 높아져 전망지수 격차가 역대 최대를 기록했다. 오늘 경제 관련 주요일정이 발표됐다. 서민대출 중개플랫폼의 알선 대비 실행률은 4%에 그쳤고, 은행권은 2%대를 유지하고 있다. 5대은행의 대출취급 6개월 내 금융사고 규모는 449억원으로, 국민은행이 90%를 차지했다.",
-      "lineEn": "The amount of excess lending by Shinhan Financial Group has reached 5,700,000,000,000 won, an increase of 3.7 times compared to 2023. The expectation of rising housing prices in the Gangbuk area has increased more than in Gangnam, resulting in the largest-ever gap in the outlook index. Today, major economic schedules were announced. The execution rate of the Shemil loan intermediary platform was only 4%, while the banking sector has maintained rates in the 2% range. The scale of financial accidents within six months of loan processing by the five major banks was 44,900,000,000 won, with Kookmin Bank accounting for 90%.",
+      "lineKo": "KB국민은행이 비대면 가계대출 신청 절차를 간소화했으며, 강북 집값 상승 기대가 강남을 앞서며 전망지수 격차가 역대 최대를 기록했고, 10월21일 수요일에 경제 관련 주요일정이 예정되어 있다.",
+      "lineEn": "KB Kookmin Bank has simplified the process for applying for non-face-to-face household loans, and the expectation of rising housing prices in Gangbuk has outpaced that in Gangnam, resulting in the largest-ever gap in the outlook index, and there are major economic schedules planned for Wednesday, October 21.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": false,
+      "degraded": true,
       "items": [
         {
-          "title": "신협 여신한도 초과대출 5조7천억원 육박…\"2023년比 3.7배\"",
-          "link": "https://www.yna.co.kr/view/AKR20261020157500001",
+          "title": "KB국민은행, 비대면 가계대출 신청 절차 간소화",
+          "link": "https://www.yna.co.kr/view/AKR20261021035000002",
           "source": "연합뉴스 경제"
         },
         {
@@ -68,75 +100,38 @@
           "title": "[오늘의 주요일정]경제(10월21일수요일)",
           "link": "https://www.newsis.com/view/NISX20261020_0003832558",
           "source": "뉴시스 경제"
-        },
-        {
-          "title": "서민대출 중개플랫폼 알선 대비 실행률 4%…은행권은 2%대 그쳐",
-          "link": "https://www.yna.co.kr/view/AKR20261020180100002",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "5대은행 대출취급 6개월 내 금융사고 449억원…국민銀 90% 집중",
-          "link": "https://www.yna.co.kr/view/AKR20261020173200002",
-          "source": "연합뉴스 경제"
         }
       ]
     },
     {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "부동산: 화곡동 5평 원룸 월세가 110만원… 서울 빌라 월세지수 역대 최고, 올해 서울 아파트 재산세 3조원 돌파…1년 새 4천781억 급증, 서울주택분 '재산세 500만원 초과' 10만명 첫 돌파…작년比 47%↑ +9",
-      "lineEn": "Real Estate: 화곡동 5평 원룸 월세가 110만원… 서울 빌라 월세지수 역대 최고, 올해 서울 아파트 재산세 3조원 돌파…1년 새 4천781억 급증, 서울주택분 '재산세 500만원 초과' 10만명 첫 돌파…작년比 47%↑ +9",
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "금리·예금·투자상품: iM증권, 한화생명 목표가↓…\"금리·환율 영향 투자 손실 악화\", Fed 추가 금리 인상 우려에 금값 하락…4000달러 지지선 주목, 美 9월 주택시장 급랭…7%대 대출금리에 매매계약 '역대 최저' +1",
+      "lineEn": "Rates, Deposits & Investment Products: iM증권, 한화생명 목표가↓…\"금리·환율 영향 투자 손실 악화\", Fed 추가 금리 인상 우려에 금값 하락…4000달러 지지선 주목, 美 9월 주택시장 급랭…7%대 대출금리에 매매계약 '역대 최저' +1",
       "isFallback": true,
       "fallbackReason": "unverified-entity",
       "degraded": false,
       "items": [
         {
-          "title": "화곡동 5평 원룸 월세가 110만원… 서울 빌라 월세지수 역대 최고",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/21/TOKMLFPEMFBK5HYJWBQM5FCNPU/",
-          "source": "조선비즈 부동산"
-        },
-        {
-          "title": "올해 서울 아파트 재산세 3조원 돌파…1년 새 4천781억 급증",
-          "link": "https://www.yna.co.kr/view/AKR20261020130500001",
+          "title": "iM증권, 한화생명 목표가↓…\"금리·환율 영향 투자 손실 악화\"",
+          "link": "https://www.yna.co.kr/view/AKR20261021023200008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "서울주택분 '재산세 500만원 초과' 10만명 첫 돌파…작년比 47%↑",
-          "link": "https://www.yna.co.kr/view/AKR20261019174000001",
-          "source": "연합뉴스 경제"
+          "title": "Fed 추가 금리 인상 우려에 금값 하락…4000달러 지지선 주목",
+          "link": "https://www.hankyung.com/article/202610214657i",
+          "source": "한국경제 경제"
         },
         {
-          "title": "은평·성북도 월세 300만원 확산…1년 전보다 8배 늘어",
-          "link": "https://www.newsis.com/view/NISX20261020_0003833377",
+          "title": "美 9월 주택시장 급랭…7%대 대출금리에 매매계약 '역대 최저'",
+          "link": "https://www.newsis.com/view/NISX20261021_0003834173",
           "source": "뉴시스 경제"
         },
         {
-          "title": "미 9월 민간주택 건축, 연환산 140만건 허가·122만건 기공·119만건 완공",
-          "link": "https://www.newsis.com/view/NISX20261020_0003834093",
-          "source": "뉴시스 경제"
-        }
-      ]
-    },
-    {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "삼성증권은 모니모서를 통해 신규 계좌를 개설하는 고객에게 코스피200 주식을 증정하는 이벤트를 진행하고 있다. 중국 증시는 고유가와 저가 매수의 교차로 인해 혼조세를 보이며 마감했다. 창업판 지수는 0.26% 하락한 것으로 나타났다. 각 기사는 서로 다른 주제를 다루고 있으며, 직접적인 연관성은 없다. 이벤트와 중국 증시 동향은 별개의 경제 상황을 반영하고 있다.",
-      "lineEn": "Samsung Securities is running an event in which it gives away KOSPI 200 stocks to customers who open new accounts through Monimoseo. The Chinese stock market closed in a mixed state due to the intersection of high oil prices and low-price buying. The Start-up Board index fell by 0.26%. Each article covers different topics and there is no direct connection between them. The event and the Chinese stock market trend reflect separate economic situations.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "삼성증권 \"모니모서 신규 계좌 개설시 코스피200 주식 증정\"",
-          "link": "https://www.yna.co.kr/view/AKR20261020171900008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "[올댓차이나] 中 증시, 고유가·저가 매수 교차에 혼조 마감…창업판 0.26%↓",
-          "link": "https://www.newsis.com/view/NISX20261020_0003833993",
-          "source": "뉴시스 경제"
+          "title": "佛 채권금리 年 5% 육박…재정위기 초기 그리스 넘어",
+          "link": "https://www.hankyung.com/article/2026102041591",
+          "source": "한국경제 경제"
         }
       ]
     }
