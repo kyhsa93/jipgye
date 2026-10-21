@@ -11,7 +11,7 @@ import {
   monthlyCost,
   verdictOf,
 } from "../scripts/conversion.ts";
-import { buildPayload, depositRateOf, loanRateOf } from "../scripts/build-conversion.mjs";
+import { buildPayload, depositRateOf, loanRateOf } from "../scripts/build-conversion.ts";
 
 const NOW = new Date("2026-08-26T00:00:00Z");
 

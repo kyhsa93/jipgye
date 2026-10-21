@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildPayload } from "../scripts/build-conversion.mjs";
+import { buildPayload } from "../scripts/build-conversion.ts";
 import { loadConversionPage } from "./helpers/conversion-page.mjs";
 import { stubElement } from "./helpers/digest-page.mjs";
 

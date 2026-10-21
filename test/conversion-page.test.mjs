@@ -70,7 +70,7 @@ test("화면이 쓰는 이자소득세율이 금리 화면과 같다", async () 
 test("화면이 대출 한도를 빌드와 같은 값으로 넘긴다", async () => {
   // ltv는 화면이 스스로 정하지 않고 conversion.json에 실려 온다. 빌드가 넣는 값과
   // 테스트가 쓰는 값이 같아야 위의 두 검사가 의미를 가진다.
-  const { buildPayload } = await import("../scripts/build-conversion.mjs");
+  const { buildPayload } = await import("../scripts/build-conversion.ts");
   const deal = (extra) => ({
     district: "노원구",
     dong: "하계동",
