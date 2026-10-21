@@ -18,6 +18,8 @@ import { parseArgs } from "node:util";
 import { foldStream } from "./official-price-fold.ts";
 import { parcelKeyOfDeal } from "./official-price-key.ts";
 
+const ctlType: number = "tsc 대조군";
+
 /** raw/sale·raw/rent 슬롯 파일에서 지번 키 집합을 모은다. */
 export async function targetParcels(rawDir) {
   const targets = new Set();
