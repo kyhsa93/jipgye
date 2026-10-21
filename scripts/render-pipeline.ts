@@ -31,7 +31,7 @@ export const RENDER_STEPS = [
   "scripts/build-news-pages.mjs",
   "scripts/build-budget-pages.mjs",
   "scripts/build-realestate-pages.mjs",
-  "scripts/build-updated-stamp.mjs",
+  "scripts/build-updated-stamp.ts",
 ];
 
 /** `$GITHUB_OUTPUT`에 쓰는 키. 워크플로의 마지막 단계 `if`가 이 이름을 읽는다(시험이 둘을 맞댄다). */

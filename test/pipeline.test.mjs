@@ -59,7 +59,7 @@ test("summarize.yml의 페이지 빌드 순서가 daily-update.yml과 어긋나�
   const d = scriptsIn(daily);
   const s = stepOf(summarize);
   assert.ok(d.length >= 20 && s.length >= 5, `단계를 못 읽었다: daily ${d.length}개, summarize ${s.length}개`);
-  assert.equal(s.at(-1), "build-updated-stamp.mjs", "summarize.yml 페이지 빌드 단계가 build-updated-stamp로 끝나지 않는다");
+  assert.equal(s.at(-1), "build-updated-stamp.ts", "summarize.yml 페이지 빌드 단계가 build-updated-stamp로 끝나지 않는다");
 
   let from = 0;
   for (const name of s) {
