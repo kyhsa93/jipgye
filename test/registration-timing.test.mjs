@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildPayload } from "../scripts/build-cancellation.mjs";
+import { buildPayload } from "../scripts/build-cancellation.ts";
 import { MIN_DEALS, registrationSentence, registrationStats } from "../scripts/cancellation.ts";
 import { yearChangeSentence } from "../scripts/mortgage.ts";
 

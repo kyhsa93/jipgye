@@ -5,7 +5,7 @@ import path from "node:path";
 import { DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 import { realestateOverallHtml } from "../scripts/prerender.ts";
 import { districtSentences } from "../scripts/district-summary.ts";
-import { regionTableHtml } from "../scripts/build-district-change.mjs";
+import { regionTableHtml } from "../scripts/build-district-change.ts";
 import { leadSentence as conversionLead } from "../scripts/conversion.ts";
 import { controlSentence, leadSentence as recordLead, survivalSentence } from "../scripts/record-high.ts";
 

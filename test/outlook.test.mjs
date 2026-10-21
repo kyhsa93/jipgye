@@ -14,7 +14,7 @@ import {
   toDeal,
   toSeries,
 } from "../scripts/outlook.ts";
-import { backfillDrift, buildPayload, closedBefore, freezeScores, scoreLog, updateLog } from "../scripts/build-outlook.mjs";
+import { backfillDrift, buildPayload, closedBefore, freezeScores, scoreLog, updateLog } from "../scripts/build-outlook.ts";
 import { coverageSummary, realtimeCoverage, recordSentence } from "../scripts/outlook.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -230,7 +230,7 @@ test("drift가 없던 옛 항목은 그날까지의 지수로 채우고 넣은 �
 test("얼리기를 뺀 사본은 위 검사에서 빨갛게 된다 (낙제 시험)", async () => {
   const { readFile: read, rm, writeFile } = await import("node:fs/promises");
   const scripts = path.join(root, "scripts");
-  const source = await read(path.join(scripts, "build-outlook.mjs"), "utf8");
+  const source = await read(path.join(scripts, "build-outlook.ts"), "utf8");
   const guard = "if (entry.actual !== undefined) return entry; // 얼리기";
   assert.ok(source.includes(guard), "얼리기 줄을 못 찾았다 - 이 낙제 시험도 같이 고쳐야 한다");
   // 사본은 scripts/ 안에 둬야 상대 import가 풀린다. 끝나면 지운다.

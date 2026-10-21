@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildPayload } from "../scripts/build-cancellation.mjs";
+import { buildPayload } from "../scripts/build-cancellation.ts";
 import { loadCancellationPage } from "./helpers/cancellation-page.mjs";
 
 const NOW = new Date("2026-08-26T00:00:00Z");

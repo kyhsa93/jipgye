@@ -13,7 +13,7 @@ import {
   registrationByMonth,
   registrationStats,
 } from "../scripts/cancellation.ts";
-import { buildPayload } from "../scripts/build-cancellation.mjs";
+import { buildPayload } from "../scripts/build-cancellation.ts";
 
 const NOW = new Date("2026-08-26T00:00:00Z");
 
@@ -239,7 +239,7 @@ test("자치구는 늘 같은 순서로 담긴다", async () => {
   const { mkdtemp, mkdir, writeFile } = await import("node:fs/promises");
   const { tmpdir } = await import("node:os");
   const nodePath = await import("node:path");
-  const { readRawSales } = await import("../scripts/build-cancellation.mjs");
+  const { readRawSales } = await import("../scripts/build-cancellation.ts");
   const { DISTRICTS } = await import("../scripts/realestate-districts.ts");
 
   const dir = await mkdtemp(nodePath.join(tmpdir(), "raw-order-"));

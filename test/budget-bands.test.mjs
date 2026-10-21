@@ -9,7 +9,7 @@ import {
   buildBands,
   mergeBands,
 } from "../scripts/budget-bands.ts";
-import { buildPayload } from "../scripts/build-budget-deals.mjs";
+import { buildPayload } from "../scripts/build-budget-deals.ts";
 
 const deal = (amount10k, extra = {}) => ({
   district: "노원구",

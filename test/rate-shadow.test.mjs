@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { scoreShadow, updateShadow } from "../scripts/build-outlook.mjs";
+import { scoreShadow, updateShadow } from "../scripts/build-outlook.ts";
 import { priceSeries, shadowForecast } from "../scripts/indicator-backtest.ts";
 import { predict, toSeries } from "../scripts/outlook.ts";
 
