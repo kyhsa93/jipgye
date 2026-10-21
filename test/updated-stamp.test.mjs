@@ -313,7 +313,7 @@ test("저장소 docs: 찍힌 기준일이 그 장 소스의 가장 오래된 upd
   for (const [file, names] of Object.entries(PAGE_SOURCES)) {
     const html = await readFile(path.join(DOCS, file), "utf8");
     const want = baselineFor(names, sources);
-    assert.match(html, new RegExp(`id="updated" data-updated="${want}">기준일 ${want}<`), `docs/${file}: 기준일이 ${want}이어야 한다 (node scripts/build-updated-stamp.mjs)`);
+    assert.match(html, new RegExp(`id="updated" data-updated="${want}">기준일 ${want}<`), `docs/${file}: 기준일이 ${want}이어야 한다 (node scripts/build-updated-stamp.ts)`);
   }
 });
 
@@ -334,8 +334,8 @@ test("스탬프 빌더가 update-all과 워크플로 양쪽에, 모든 페이지
   const [all, wf] = await Promise.all([readFile(path.join(root, "scripts/update-all.mjs"), "utf8"), readFile(path.join(root, ".github/workflows/daily-update.yml"), "utf8")]);
   for (const [name, text] of [["update-all.mjs", all], ["daily-update.yml", expandRenderPipeline(wf)]]) {
     const order = [...text.matchAll(/node scripts\/([a-z-]+\.(?:mjs|ts))/g)].map((m) => m[1]);
-    const stamp = order.indexOf("build-updated-stamp.mjs");
-    assert.ok(stamp >= 0, `${name}이 build-updated-stamp.mjs를 부르지 않는다`);
+    const stamp = order.indexOf("build-updated-stamp.ts");
+    assert.ok(stamp >= 0, `${name}이 build-updated-stamp.ts를 부르지 않는다`);
     assert.ok(stamp > order.indexOf("build-realestate-pages.mjs"), `${name}: 페이지 빌더가 다시 쓰기 전에 찍으면 날짜가 덮인다`);
   }
 });

@@ -189,7 +189,7 @@ test("기본 단계는 지금까지 워크플로가 부르던 여섯 스크립�
     "scripts/build-news-pages.mjs",
     "scripts/build-budget-pages.mjs",
     "scripts/build-realestate-pages.mjs",
-    "scripts/build-updated-stamp.mjs",
+    "scripts/build-updated-stamp.ts",
   ]);
   const all = [...(await read("scripts/update-all.mjs")).matchAll(/run\("node (scripts\/[a-z-]+\.(?:mjs|ts))"\)/g)].map((m) => m[1]);
   assert.deepEqual(all.slice(all.indexOf("scripts/prerender.mjs")), RENDER_STEPS, "update-all의 렌더 순서와 기본 단계가 갈라졌다");

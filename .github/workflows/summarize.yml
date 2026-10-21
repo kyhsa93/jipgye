@@ -101,7 +101,7 @@ jobs:
             scripts/build-news-pages.mjs \
             scripts/build-budget-pages.mjs \
             scripts/build-realestate-pages.mjs \
-            scripts/build-updated-stamp.mjs
+            scripts/build-updated-stamp.ts
 
       - name: 테스트
         run: npm test
