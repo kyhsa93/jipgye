@@ -1,7 +1,16 @@
 {
-  "updatedAt": "2026-10-21T19:05:27.932Z",
+  "updatedAt": "2026-10-21T20:15:39.800Z",
   "date": "2026-10-22",
   "items": [
+    {
+      "title": "[속보]뉴욕증시 美기업 실적 기대감에 상승 마감",
+      "link": "https://www.newsis.com/view/NISX20261022_0003835869",
+      "publishedAt": "2026-10-21T20:04:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "후속기사가 이어집니다 ◎공감언론 뉴시스 ksk@newsis.com",
+      "dupes": []
+    },
     {
       "title": "佛 국채 10년물 금리 年5% 돌파…2002년 이후 처음",
       "link": "https://www.hankyung.com/article/2026102171271",
@@ -9,8 +18,7 @@
       "source": "한국경제 경제",
       "category": "rates",
       "preview": null,
-      "dupes": [],
-      "titleEn": "South Korea's 10-year government bond yield breaks 5% annually... first since 2002"
+      "dupes": []
     },
     {
       "title": "뉴욕증시, 美기업 실적 호조에 상승 출발…나스닥 0.45%↑",
@@ -19,8 +27,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 권성근 기자 = 뉴욕증시는 21일(현지 시간) 미국 기업들의 실적 호조에 상승세로 장을 출발했다. 이날 뉴욕증권거래소(NYSE)에서 우량주 중심의 다우존스 30 산업평균지수는 오전 9시 40분(미 동…",
-      "dupes": [],
-      "titleEn": "New York stock market rises on strong U.S. corporate earnings... Nasdaq up 0.45%"
+      "dupes": []
     },
     {
       "title": "후티 공격에 사우디 전세기 요금 급등",
@@ -29,8 +36,7 @@
       "source": "한국경제 경제",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Saudi Charter Flight Prices Soar After Houthi Attack"
+      "dupes": []
     },
     {
       "title": "올 서울 빌라 전세 4.7%↑…15년 만에 최고 상승률",
@@ -40,7 +46,6 @@
       "category": "realestate",
       "preview": null,
       "dupes": [],
-      "titleEn": "This Year's Seoul Villa Lease Prices Rise 4.7%... Highest Increase in 15 Years",
       "context": [
         {
           "kind": "realestate",
@@ -61,8 +66,7 @@
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "Gwangmyeong·Hanhnam 'Guelp' rent hits 1,000,000,000... \"Shortage of new residents to worsen next year"
+      "dupes": []
     },
     {
       "title": "\"경기도 전세라도…\" 서울 전셋집 포기하려던 30대 '한숨'",
@@ -72,7 +76,6 @@
       "category": "realestate",
       "preview": null,
       "dupes": [],
-      "titleEn": "Even rental housing in Gyeonggi...\" 30s generation who were about to give up on Seoul rental homes sighs",
       "context": [
         {
           "kind": "realestate",
@@ -94,7 +97,6 @@
       "category": "rates",
       "preview": null,
       "dupes": [],
-      "titleEn": "Loan platform 'Finda' acquires Daewon Savings Bank",
       "context": [
         {
           "kind": "rates",
@@ -114,7 +116,6 @@
       "category": "rates",
       "preview": null,
       "dupes": [],
-      "titleEn": "Toss Bank Offers Fixed Deposit with Customizable Maturity Date at Up to 3.8% Annual Interest Rate",
       "context": [
         {
           "kind": "rates",
@@ -133,8 +134,7 @@
       "source": "한국경제 경제",
       "category": "realestate",
       "preview": null,
-      "dupes": [],
-      "titleEn": "[Exclusive] Side effects of strengthening the obligation to reside in a property? Youth rent and deposit loans reach all-time high"
+      "dupes": []
     },
     {
       "title": "용산 아세아아파트 공사 무기한 중단…연내 분양 차질",
@@ -144,7 +144,6 @@
       "category": "realestate",
       "preview": "[서울=뉴시스] 변해정 기자 = 서울 용산구에 969가구 규모로 들어설 예정인 아세아아파트의 신축 공사가 무기한 중단됐다. 21일 건설업계와 용산구청에 따르면 부영주택은 지난 7월말 구청에 '한강로3가 아세아아파트…",
       "dupes": [],
-      "titleEn": "Yongsan Ace Asia Apartment Construction Suspended Indefinitely... Delay in Sales This Year",
       "context": [
         {
           "kind": "realestate",
@@ -165,8 +164,7 @@
       "source": "매일경제 부동산",
       "category": "realestate",
       "preview": "반도건설이 23일 인천 계양신도시에 들어서는 주상복합 아파트 '계양신도시 카이브 유보라'(투시도)와 상업시설 '시간(時間)'의 견본주택을 개관한다고 21일 밝혔다. 카이브 유보라는..",
-      "dupes": [],
-      "titleEn": "Gye Yang New Town 'Cave Urbana'...Bando Construction to Open Model House on 23rd"
+      "dupes": []
     },
     {
       "title": "국민경제자문회의, '전력망 병목과 에너지 지정학' 세미나",
@@ -175,8 +173,7 @@
       "source": "뉴시스 경제",
       "category": "other",
       "preview": "[세종=뉴시스] 안호균 기자 = 국민경제자문회의와 서울대 국가미래전략원은 오는 28일 오후 2시 서울 명동 은행회관 2층 국제회의실에서 '전력망 병목, 에너지 지정학 어떻게 극복할 것인가'를 주제로 공동세미나를 개최…",
-      "dupes": [],
-      "titleEn": "National Economic Advisory Council Hosts Seminar on 'Power Grid Bottlenecks and Energy Geopolitics"
+      "dupes": []
     },
     {
       "title": "금통위 앞두고 국고채 금리 대체로 하락…3년물 연 3.822%(종합)",
@@ -185,8 +182,7 @@
       "source": "연합뉴스 경제",
       "category": "rates",
       "preview": "(서울=연합뉴스) 고은지 기자 = 한국은행 금융통화위원회를 하루 앞둔 21일 국고채 금리가 대체로 하락했다.",
-      "dupes": [],
-      "titleEn": "Yields on government bonds fall ahead of the MPC meeting... 3-year bond at 3.822% annually (comprehensive)"
+      "dupes": []
     },
     {
       "title": "코스피 일단 반등했지만…'폭락→급등' 널뛰기에 '불안' 지속(종합2보)",
@@ -195,8 +191,7 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 곽윤아 기자 = 코스피 지수가 하루 3∼4%씩 올랐다 떨어지는 롤러코스터 장세를 보이고 있다.",
-      "dupes": [],
-      "titleEn": "Kospi rebounds for now but 'plummet→surge' rollercoaster continues to cause unease (Comprehensive 2nd report)"
+      "dupes": []
     },
     {
       "title": "주택도시보증공사-동아대, 부동산·PF 전문 인력 양성 업무협약",
@@ -205,8 +200,7 @@
       "source": "조선비즈 부동산",
       "category": "realestate",
       "preview": "주택도시보증공사(HUG)는 동아대학교와 주택·도시·부동산·건설·PF 분야 우수 인재 양성 및 연구 교류를 위한 업무협약을 체결했다고 21일 밝혔다. 이번 협약은 직원 직무 역량 개발을 위해 교육·연구 협력이 필요한…",
-      "dupes": [],
-      "titleEn": "Housing & Urban Development Corporation and Dong-A University sign agreement to train real estate and PF professionals"
+      "dupes": []
     },
     {
       "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 0.6%↓",
@@ -215,8 +209,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 21일 하락 마감했다. 이날 상하이종합지수는 전날보다 0.6% 하락한 3713.03로 거래를 마쳤다. 선전성분지수는 전장 대비 0.82% 내린 1만1704.35로, 중국판…",
-      "dupes": [],
-      "titleEn": "[AllChina] Chinese stock market closes lower… Shanghai index down 0.6%"
+      "dupes": []
     },
     {
       "title": "HUG, 동아대와 부동산·PF 분야 전문인재 양성 나선다",
@@ -225,8 +218,7 @@
       "source": "뉴시스 경제",
       "category": "realestate",
       "preview": "[서울=뉴시스] 변해정 기자 = 주택도시보증공사(HUG)는 21일 동아대학교와 부동산·프로젝트 파이낸싱(PF) 분야 우수 인재 양성 및 연구 교류를 위한 업무협약을 체결했다고 밝혔다. 양측은 이 협약에 따라 부동산·…",
-      "dupes": [],
-      "titleEn": "HUG to train specialists in real estate and PF with Dong-a University"
+      "dupes": []
     },
     {
       "title": "강원도, 지역 맞춤형 청년 공공임대주택 확대…정착 기반 강화",
@@ -235,8 +227,7 @@
       "source": "연합뉴스 경제",
       "category": "realestate",
       "preview": "(춘천=연합뉴스) 이재현 기자 = 강원특별자치도가 청년이 머물고 성장하는 '청년 강원' 실현을 위해 지역별 일자리와 생활 여건을 반영한 맞춤형 ...",
-      "dupes": [],
-      "titleEn": "Gangwon Province Expands Customized Public Rental Housing for Youth to Strengthen Settlement Foundations"
+      "dupes": []
     },
     {
       "title": "춘천시, 무허가 주택 양성화 추진…12월 17일 특별법 시행",
@@ -245,8 +236,7 @@
       "source": "연합뉴스 경제",
       "category": "realestate",
       "preview": "(춘천=연합뉴스) 이상학 기자 = 건축허가나 사용승인을 받지 못한 주거용 건축물을 합법화할 수 있는 특별법이 12월부터 한시적으로 시행된다.",
-      "dupes": [],
-      "titleEn": "Chuncheon City to Promote Legalization of Unauthorized Housing... Special Law to Take Effect December 17"
+      "dupes": []
     },
     {
       "title": "허그·동아대, 부동산·PF 인재 함께 키운다",
@@ -255,8 +245,7 @@
       "source": "매일경제 부동산",
       "category": "realestate",
       "preview": "부산 이전 후 부동산대학원과 첫 협약 임직원 부동산대학원 학위과정 파견 PF·부동산 개발 연구 교류 중점 추진주택도시보증공사(허그)와 동아대학교가 주택·도시·부동산·건설·프로젝트 ..",
-      "dupes": [],
-      "titleEn": "Hug, Dong-a University to jointly develop real estate and PF talent"
+      "dupes": []
     },
     {
       "title": "日증시, 반도체·AI주 강세에 상승 마감…닛케이지수 0.85%↑",
@@ -265,8 +254,7 @@
       "source": "뉴시스 경제",
       "category": "stocks",
       "preview": "[서울=뉴시스] 김예진 기자 = 21일 일본 도쿄증시에서 주요 지수는 상승 마감했다. 니혼게이자이신문에 따르면 닛케이225지수(닛케이평균주가)는 이날 전 거래일 대비 545.82포인트(0.85%) 오른 6만4621.…",
-      "dupes": [],
-      "titleEn": "Tokyo Stock Exchange closes higher on semiconductor and AI stocks... Nikkei index up 0.85%"
+      "dupes": []
     },
     {
       "title": "코스피, AI 투자심리 회복에 3.3% 급등 마감…삼전닉스 5%↑(종합)",
@@ -275,8 +263,7 @@
       "source": "연합뉴스 경제",
       "category": "stocks",
       "preview": "(서울=연합뉴스) 김유아 기자 = 21일 코스피가 3%대 급등한 채 정규장 거래를 마감했다.",
-      "dupes": [],
-      "titleEn": "KOSPI surges 3.3% on recovery in AI investment sentiment, Samsung Electronics up 5% (Comprehensive)"
+      "dupes": []
     },
     {
       "title": "LH, 모듈러주택 발주 확대…2030년까지 1만6000호",
@@ -296,18 +283,7 @@
           "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/21/BQCUUJ5EDFD4FODILEHDVMB654/",
           "source": "조선비즈 부동산"
         }
-      ],
-      "titleEn": "LH expands modular housing orders... 10,0006000 units by 2030"
-    },
-    {
-      "title": "“주택공급 속도 높인다”…LH, 모듈러주택 활성화 추진",
-      "link": "https://www.mk.co.kr/news/realestate/12181784",
-      "publishedAt": "2026-10-21T07:05:21.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "2030년까지 모듈러주택 1.6만 가구 발주 고양창릉·남양주왕숙2·포천송우 연내 2100가구 달성 모듈러 주택 공급 확대·기술고도화 논의한국토지주택공사(LH)가 모듈러주택 활성화로..",
-      "dupes": [],
-      "titleEn": "Accelerating housing supply...LH to promote modular housing activation"
+      ]
     }
   ],
   "realestateStats": [
