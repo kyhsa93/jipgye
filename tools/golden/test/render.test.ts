@@ -8,7 +8,7 @@ import { compareBytes, treeHash } from "../lib/compare.ts";
 import { preparePristine, readWorkflowStages, renderIsolated } from "../lib/render.ts";
 
 // 렌더 격리와 환경 주입(#236 범위 3·4). 작은 가짜 저장소(고정 파일)를 만들어 쓴다 — 실제 docs/나 raw/는 읽지 않는다.
-//   step1은 docs/a.html을 읽어 덮어쓴다(prerender.mjs와 같은 모양: 두 번 돌리면 두 번 덧칠된다).
+//   step1은 docs/a.html을 읽어 덮어쓴다(prerender.ts와 같은 모양: 두 번 돌리면 두 번 덧칠된다).
 //   step2는 환경(TZ·BUILD_NOW·JIPGYE_RENDERER)과 Date.now()를 docs/env.html에 적는다.
 const STEP1 = `import { readFile, writeFile } from "node:fs/promises";
 const f = new URL("../docs/a.html", import.meta.url);

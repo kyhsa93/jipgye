@@ -33,7 +33,7 @@ const n = (title, category = "economy", extra = {}) => ({ title, link: `https://
 const NOTE_TEXT = "일부 항목은 검증에서 걸러져 헤드라인 요약으로 대체됐습니다.";
 const noteNews = `<div class="summary-note">${NOTE_TEXT}</div>`;
 const noteIndex = `<div class="summary-fallback-note">${NOTE_TEXT}</div>`;
-// index 요약 상자 조각의 마크업(#352). 손으로 적는다 - scripts/prerender.mjs·render/entry.jsx 의 마크업과 test/summary-box.test.mjs 가 index.html 스크립트 출력과 맞댄다.
+// index 요약 상자 조각의 마크업(#352). 손으로 적는다 - scripts/prerender.ts·render/entry.jsx 의 마크업과 test/summary-box.test.mjs 가 index.html 스크립트 출력과 맞댄다.
 const cat = (name, line) => `<div class="summary-category"><div class="summary-category-label">${name}</div><div class="summary-category-line">${line}</div></div>`;
 const hl = (title, link, source, text) =>
   `<div class="summary-highlight"><a href="${link}" target="_blank" rel="noopener">${title}</a><span class="summary-link-source"> · ${source}</span><div class="summary-highlight-text">${text}</div></div>`;

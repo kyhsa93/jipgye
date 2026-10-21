@@ -1,8 +1,8 @@
-// 렌더러 스위치 (#237). `JIPGYE_RENDERER=legacy|react`로 조각 함수(`prerender.mjs`의 `*Html()`)를 어느 쪽이 그릴지 고른다.
+// 렌더러 스위치 (#237). `JIPGYE_RENDERER=legacy|react`로 조각 함수(`prerender.ts`의 `*Html()`)를 어느 쪽이 그릴지 고른다.
 //
 // - 기본값은 react다(미설정·빈 문자열; #246 컷오버, 소유자 지시 2026-10-12). 되돌릴 때는 아래 `rendererMode`의 기본값 한 줄을 "legacy"로 바꾼다.
 //   `JIPGYE_RENDERER=legacy`를 명시하면 로더·esbuild·react를 import하지 않고 legacy가 돈다(롤백·시험용) - 아래 동적 import가 react일 때만 돈다.
-//   그래서 기본값에서는 `npm ci`(react·react-dom·esbuild) 없이 이 모듈이나 prerender.mjs를 import하면 import에서 던진다.
+//   그래서 기본값에서는 `npm ci`(react·react-dom·esbuild) 없이 이 모듈이나 prerender.ts를 import하면 import에서 던진다.
 // - react 모드는 이식된 조각(`render/entry.jsx`의 `fragments`)만 React로 그리고, 나머지는 legacy에 맡긴다.
 //   이식된 조각은 legacy와 같은 바이트를 내야 한다(허용 변환은 react.mjs의 `'` 한 가지) - 조각마다 분기별 parity 시험이 지킨다.
 // - 로더·진입 모듈·조각 렌더의 오류는 예외로 올라간다. react가 실패했다고 조용히 legacy로 넘기지 않는다(폴백은 #238, 워크플로 쪽).
@@ -35,5 +35,5 @@ export const makeFragment = (renderer) => (name, legacy) => {
   return wrapped;
 };
 
-/** `prerender.mjs`가 `*Html()` 하나하나를 감싸는 래퍼. 모드는 import 때 정해진 하나다. */
+/** `prerender.ts`가 `*Html()` 하나하나를 감싸는 래퍼. 모드는 import 때 정해진 하나다. */
 export const fragment = makeFragment(react);

@@ -1,6 +1,6 @@
-// 이식된 조각의 목록 (#237). 이름은 prerender.mjs의 `*Html()` 함수 이름 그대로, 값은 같은 인자를 받아 React 요소를 돌려주는 함수다.
+// 이식된 조각의 목록 (#237). 이름은 prerender.ts의 `*Html()` 함수 이름 그대로, 값은 같은 인자를 받아 React 요소를 돌려주는 함수다.
 // 데이터가 없을 때는 legacy처럼 null을 돌려준다(그러면 자리표시가 legacy와 같은 방식으로 비게 된다). legacy가 null이 아니라 빈 문자열("")을 내는 조각(자치구 문장 묶음·예산대 잎 8개)은 빈 조각으로 ""를 낸다 - 둘은 자리표시 치환에서 다르다.
-// 여기서 `scripts/renderer.mjs`·`scripts/prerender.mjs`를 불러오면 안 된다(로더가 막는다). 계산은 순수 모듈에서 가져온다.
+// 여기서 `scripts/renderer.mjs`·`scripts/prerender.ts`를 불러오면 안 된다(로더가 막는다). 계산은 순수 모듈에서 가져온다.
 //
 // 이식된 것: ratesHtml·ratesHeadHtml (#240, 금리 4개 상품군), summaryHtml·marketHtml·newsContextHtml·newsHtml·newsSummaryHtml·
 // newsListHtml·newsKospiHtml·newsRealestateStatsHtml (#241 PR 1, 문장·목록 8개), conversionLeadHtml·cancelLeadHtml·cancelMonthLeadHtml·
@@ -9,7 +9,7 @@
 // districtSummaryHtml·districtRenewalHtml·districtFactsHtml·districtLinksHtml·conversionTableHtml·cancelDistrictsHtml·cancelMonthsHtml·
 // renewalDistrictsHtml·renewalWolseDistrictsHtml·floorDistrictsHtml (#242 PR 1, 자치구 문장·링크 4개와 표 6개), realestateHeadHtml·realestateTableHtml (#242 PR 2, 시세표 머리글·표),
 // realestateOverallHtml (#242 PR 3, 시세 요약 카드), budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml
-// (#243 PR A, 예산대 잎 조각 8개), budgetCandidatesHtml·budgetBodyHtml (#243 PR B, 후보 단지와 합성 - 이것으로 prerender.mjs의 조각 44개가 모두 이식됐다).
+// (#243 PR A, 예산대 잎 조각 8개), budgetCandidatesHtml·budgetBodyHtml (#243 PR B, 후보 단지와 합성 - 이것으로 prerender.ts의 조각 44개가 모두 이식됐다).
 import { DISTRICT_PAGES } from "../district-slugs.ts";
 import { BUDGET_MORE_LINKS, bodyShape, budgetAnswers, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "../budget-fragments.ts";
 import { budgetFactSentences } from "../budget-facts.ts";
@@ -31,7 +31,7 @@ import { renewalSentences } from "../renewal-facts.ts";
 const str = (value) => String(value ?? "");
 
 // legacy의 `escapeHtml(value ?? "")`는 String()으로 바꿔 쓴다 - React는 숫자 아닌 값(false·객체)을 글자로 내지 않으므로 같게 맞춘다.
-// Tailwind 유틸리티 class는 legacy 쪽(scripts/prerender.mjs의 ratesHeadHtmlLegacy·ratesHtmlLegacy)과 **글자까지 같아야** 한다 -
+// Tailwind 유틸리티 class는 legacy 쪽(scripts/prerender.ts의 ratesHeadHtmlLegacy·ratesHtmlLegacy)과 **글자까지 같아야** 한다 -
 // tools/golden의 같은-실행 비교가 두 렌더러의 산출을 바이트로 맞댄다(#237). 왜 이 class들이고 왜 모양을 바꾸지 않는지는 그쪽 주석에 적었다(#279).
 // 이 파일도 @source 목록에 있어 주석까지 훑으므로, 주석에 유틸리티 이름을 접두사까지 적지 않는다.
 const ProductCell = ({ product }) => (
@@ -818,7 +818,7 @@ const BudgetDeal = ({ deal }) => {
   );
 };
 
-// 예산대 본문 합성: 거래 요약 → 한눈에 → 후보 단지 → 돈 문단(근거) → 다음 질문 → 거래 목록. JSX는 prerender.mjs의 래퍼를 부를 수 없으므로 하위 조각을 JSX 함수로 직접 잇는다
+// 예산대 본문 합성: 거래 요약 → 한눈에 → 후보 단지 → 돈 문단(근거) → 다음 질문 → 거래 목록. JSX는 prerender.ts의 래퍼를 부를 수 없으므로 하위 조각을 JSX 함수로 직접 잇는다
 // (그래서 후보 단지가 JSX로 있어야 이 조각을 옮길 수 있었다). 예산대가 없으면 null이다 - 합성 조각만 null이고 잎은 ""다(잎의 반환값이 이어 붙는 자리에 "null" 글자가 박히지 않게).
 // 하위 조각의 호출 순서는 legacy와 같다(입력이 이상할 때 던지는 자리가 같아야 한다). 거래 목록은 맨 뒤라 이상한 거래(null 등)는 하위 조각을 다 부른 뒤에 던진다.
 function budgetBodyJsx(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null) {

@@ -2,7 +2,7 @@
 //
 // 이 장은 색인 대상이다(robots 메타 없음, 캐노니컬은 루트). 모양을 바꾸는 유틸리티는 "껍데기 여는 태그에 class를 더하는 것"에만 있고,
 // 글자·제목 계층·링크는 바뀌지 않는다(invariants 하드 항목이 따로 센다). 손으로 쓴 HTML 이라 빌더(replaceOnce)는 걸리지 않고, 굽는 조각 넷
-// (<!--prerender:realestate·market·summary·news-->)은 scripts/prerender.mjs 와 scripts/render/entry.jsx 두 렌더러가 같은 글자로 낸다.
+// (<!--prerender:realestate·market·summary·news-->)은 scripts/prerender.ts 와 scripts/render/entry.jsx 두 렌더러가 같은 글자로 낸다.
 // 이 개편이 껍데기 유틸리티 말고 더한 것은 하나다: 갱신 주기 안내(#update-schedule)를 머리에서 바닥글 첫 줄로 옮기고 15px 로 한다(po 「구현 때 고친다」 ①).
 //
 // 높이 예산(PR 본문): 머리 아래 16→8 · 1층 내비 아래 16→8 · 머리에서 뺀 갱신 주기 안내 한 줄(ko 41px)이 첫 h2 를 59px 올린다. 그 59px 은 질문 입구의 묶음 사이(8→24, 둘)와

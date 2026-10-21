@@ -1,4 +1,4 @@
-// index.html AI 요약 상자(#summary-box)의 한국어 글 두 가지 (#352). 순수 모듈 - prerender.mjs(legacy)와 render/entry.jsx(JSX)가 같은 글을 쓴다.
+// index.html AI 요약 상자(#summary-box)의 한국어 글 두 가지 (#352). 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 글을 쓴다.
 //
 // 구운 상자가 `<p><strong>분류</strong> 줄</p>` 목록이던 때는 요약 JSON 이 오는 순간 화면 스크립트(index.html renderSummary)가 상자를
 // 분류 라벨 div + 줄 div + `.summary-meta` 로 다시 그려 상자가 +40.4px 자랐고 아래 #news-section 이 233.1px 밀렸다(375폭, #352).

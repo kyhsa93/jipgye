@@ -1,5 +1,5 @@
-// 실거래 시세 요약 카드(realestateOverallHtml)와 그 전용 보조 함수 `ratioBasis`가 같이 쓰는 카드 규칙. 순수 모듈 - prerender.mjs(legacy)와 render/entry.jsx(JSX)가 같은 함수를 쓴다(#242 PR 3).
-// 여기서 `prerender.mjs`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다). 예전에 prerender.mjs에 있던 `ratioBasis`와 `realestateOverallHtmlLegacy`의 분기가 여기 있다.
+// 실거래 시세 요약 카드(realestateOverallHtml)와 그 전용 보조 함수 `ratioBasis`가 같이 쓰는 카드 규칙. 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 함수를 쓴다(#242 PR 3).
+// 여기서 `prerender.ts`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다). 예전에 prerender.ts에 있던 `ratioBasis`와 `realestateOverallHtmlLegacy`의 분기가 여기 있다.
 //
 // 이 모듈은 마크업(HTML)을 만들지 않는다. 카드가 몇 장이고 어떤 라벨·값·부가 글자를 갖는지만 정하고, `<div class="overall-card">` 같은 마크업(클래스 포함)은 legacy(문자열)·JSX(요소)가 각자 입힌다
 // (#255 `realestate-rows.mjs`, #256 `district-tables.mjs`, #242 PR 2 `realestate-table.mjs`와 같은 방식). 클래스를 모듈이 들고 있으면 한 곳의 오타를 같은 실행 비교가 못 잡는다.

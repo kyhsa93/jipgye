@@ -1,13 +1,13 @@
 // 예산대 장 조각의 모양과 값 글자 (#243 PR A: 잎 조각 여덟 개 budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·
 // budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml, PR B: 후보 단지 budgetCandidatesHtml·합성 budgetBodyHtml과 helper budgetDealHtml·budgetWhereHtml·budgetWhen).
-// 순수 모듈 - prerender.mjs(legacy)와 render/entry.jsx(JSX)가 같은 규칙을 쓴다.
+// 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 규칙을 쓴다.
 //
 // 이 모듈은 HTML을 만들지 않는다: 어느 문단이 나오는지·어떤 줄이 있는지·글자가 무엇인지만 정하고, 클래스·태그·`data-prerendered`·이스케이프는
 // 쓰는 쪽(legacy 문자열·JSX 요소)이 각자 입힌다. 모듈이 마크업을 들고 있으면 한 곳의 오타를 같은 실행 비교가 못 잡는다(#255~#257·#242 PR 3과 같은 방식).
 // 표본 문턱·해자 `low-sample` 분기는 없다 - 이 조각들은 값을 못 낸 자리를 비우거나 줄을 빼기만 하고, 후보 단지의 "같은 평형 6개월 3번 이상" 문턱은
 // 렌더 때가 아니라 빌더가 만든 데이터 칸(`cell.n`, complex-price.mjs MIN_DEALS)에 이미 반영돼 있다(candidatesInBand는 거르지 않는다). 정책대출 건수가 없으면 문장 자체가 빠진다(policySentence).
 // budgetWhereHtml의 0.5·10개 구는 표본 문턱이 아니라 문장 선택 문턱이다(상위 세 구가 절반을 넘으면 "몰렸다", 아니면 열 개 구 이상일 때만 "흩어졌다").
-// 렌더러·prerender.mjs를 부르지 않는다(로더가 막는다).
+// 렌더러·prerender.ts를 부르지 않는다(로더가 막는다).
 import { candidatesInBand } from "./complex-price.ts";
 import { BASIS_DATE as CAP_DATE, capSentence } from "./loan-cap.ts";
 import { BASIS_DATE as MIN_CASH_DATE, minCash, minCashSentence } from "./min-cash.ts";
@@ -16,7 +16,7 @@ import { BASIS_DATE as POLICY_DATE_BASIS, policySentence, policyShort } from "./
 import { BASIS_DATE as COSTS_DATE, costsSentence, purchaseCosts } from "./purchase-costs.ts";
 import { formatEok, monthLabel } from "./realestate-format.ts";
 
-/** 예산대 이름("5억대"·"3억 미만"·"20억 이상"). 두 억 단위는 반올림이다. prerender.mjs가 같은 이름으로 다시 내보낸다. */
+/** 예산대 이름("5억대"·"3억 미만"·"20억 이상"). 두 억 단위는 반올림이다. prerender.ts가 같은 이름으로 다시 내보낸다. */
 export const budgetBandLabel = (band) => {
   const from = Math.round(band.min10k / 10_000);
   const to = band.max10k === null ? null : Math.round(band.max10k / 10_000);
@@ -120,7 +120,7 @@ export const BUDGET_MORE_LINKS = Object.freeze([
 
 // ---- 후보 단지·합성 (#243 PR B) ----
 
-/** 목록에 이름을 올리는 단지 수. 나머지는 검색의 "단지로 묶어 보기"로 보낸다 - 열여덟 장이 같은 긴 목록이 되지 않게. prerender.mjs가 같은 이름으로 다시 내보낸다. */
+/** 목록에 이름을 올리는 단지 수. 나머지는 검색의 "단지로 묶어 보기"로 보낸다 - 열여덟 장이 같은 긴 목록이 되지 않게. prerender.ts가 같은 이름으로 다시 내보낸다. */
 export const CANDIDATE_LIST = 12;
 
 /** 거래일("2026-09-15") → "9/15". 월·일이 없으면 "". */

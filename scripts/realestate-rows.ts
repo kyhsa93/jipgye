@@ -1,8 +1,8 @@
-// 첫 화면 실거래 요약 표(realestateHtml)가 같이 쓰는 것. 순수 모듈 - prerender.mjs(legacy)와 render/entry.jsx(JSX)가 같은 칸 규칙·같은 정렬을 쓴다(#241 PR 3).
-// 여기서 `prerender.mjs`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다). 글자(HTML)는 만들지 않는다 - 칸 하나가 어떤 모양인지(없음·표본 부족·값)와
+// 첫 화면 실거래 요약 표(realestateHtml)가 같이 쓰는 것. 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 칸 규칙·같은 정렬을 쓴다(#241 PR 3).
+// 여기서 `prerender.ts`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다). 글자(HTML)는 만들지 않는다 - 칸 하나가 어떤 모양인지(없음·표본 부족·값)와
 // 그 값의 글자만 정하고, 마크업은 쓰는 쪽(legacy 문자열, JSX 요소)이 입힌다. 그래야 분기가 한 곳에만 있다.
 //
-// 표본 문턱(MIN_SAMPLE)과 그 판정(hasEnoughSample)은 realestate-format.mjs의 것을 쓴다 - 둘이던 것(prerender.mjs 49행)을 하나로 했다.
+// 표본 문턱(MIN_SAMPLE)과 그 판정(hasEnoughSample)은 realestate-format.mjs의 것을 쓴다 - 둘이던 것(prerender.ts 49행)을 하나로 했다.
 // DIRECTION 해자 2: 표본이 모자라면 값을 내지 않고 모자란다고 적는다(`low`) - 이 판정을 건너뛰는 변경은 방향에 어긋난다.
 import { KIND_FIELDS, hasEnoughSample } from "./realestate-format.ts";
 
@@ -12,7 +12,7 @@ import { KIND_FIELDS, hasEnoughSample } from "./realestate-format.ts";
 // 붙는 순간 표 길이가 튀고, 그걸 index-realestate-rows 검사가 잡는다.
 export const MAX_DISTRICTS = 4;
 
-/** 만원 단위 값을 "1,234만원"으로. 숫자가 아닌 값은 Number()를 거친 대로(NaN이면 "NaN만원") 낸다 - 예전 prerender.mjs의 `man`과 같다. */
+/** 만원 단위 값을 "1,234만원"으로. 숫자가 아닌 값은 Number()를 거친 대로(NaN이면 "NaN만원") 낸다 - 예전 prerender.ts의 `man`과 같다. */
 export const man = (value) => `${Number(value).toLocaleString("ko-KR")}만원`;
 
 /** 직전 대비 증감. 없거나 숫자가 아니면 null, 있으면 부호(+·-·없음)와 "1,234만"(절댓값). */

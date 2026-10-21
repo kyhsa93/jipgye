@@ -1,6 +1,6 @@
 // React 렌더러의 진입점 한 곳 (#237). 조각 함수는 각자 로더를 부르지 않고, 이 파일이 만든 렌더러를 `scripts/renderer.mjs`를 거쳐 쓴다.
 //
-// 이식된 조각의 목록은 진입 JSX(`entry.jsx`)의 `fragments`다. 이름은 `prerender.mjs`의 `*Html()` 함수 이름이고,
+// 이식된 조각의 목록은 진입 JSX(`entry.jsx`)의 `fragments`다. 이름은 `prerender.ts`의 `*Html()` 함수 이름이고,
 // 값은 그 함수와 같은 인자를 받아 React 요소를 돌려주는 함수다. #240(금리 조각)이 채웠고 #241~#243이 이어서 채운다.
 // 목록에 없는 조각은 react 모드에서도 legacy에 맡긴다.
 //

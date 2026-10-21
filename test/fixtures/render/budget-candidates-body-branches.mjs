@@ -1,5 +1,5 @@
 // 예산대 후보 단지·본문 합성 조각의 분기별 고정 fixture (#243 PR B): budgetCandidatesHtml(band, complexFiles)·budgetBodyHtml(band, periodList, rates, mortgageSeries, complexFiles, capStats, policyCounts)
-// (그리고 이 둘 안에서만 쓰이는 helper budgetWhereHtml·budgetDealHtml·budgetWhen은 본문 행으로 닫는다 - fragment가 아니라 prerender.mjs 밖으로 안 나온다).
+// (그리고 이 둘 안에서만 쓰이는 helper budgetWhereHtml·budgetDealHtml·budgetWhen은 본문 행으로 닫는다 - fragment가 아니라 prerender.ts 밖으로 안 나온다).
 // 데이터 값이나 날짜에 따라 결과가 갈리지 않는다(R3): 저장소의 docs/·raw/를 읽지 않고 코드(budget-fragments.mjs 등)도 부르지 않는다.
 // 한 줄이 한 분기다. `args`는 legacy 함수에 그대로 넘기는 인자이고, `expect`는 legacy가 내야 하는 글자다(본문은 합성 조각이라 예산대가 없으면 `null`, 그 밖에는 문자열).
 //
