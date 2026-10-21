@@ -43,7 +43,7 @@ function runAll(steps, env, cwd) {
     console.log(`[render-pipeline] ${step}`);
     const r = spawnSync(process.execPath, [path.resolve(cwd, step)], { cwd, env, stdio: "inherit" });
     if (r.status !== 0) {
-      const why = r.error ? `실행 오류 ${r.error.code ?? r.error.message}` : r.signal ? `신호 ${r.signal}` : `종료 코드 ${r.status}`;
+      const why = r.error ? `실행 오류 ${(r.error as NodeJS.ErrnoException).code ?? r.error.message}` : r.signal ? `신호 ${r.signal}` : `종료 코드 ${r.status}`;
       return { ok: false, step, why };
     }
   }
