@@ -9,7 +9,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { assertDerived, foldStream, parseCsvLine, mapHeader, median } from "../scripts/official-price-fold.ts";
 import { normalizeJibun, areaKey, cellKey, cellKeyOfDeal, parcelKey, parcelKeyOfDeal } from "../scripts/official-price-key.ts";
-import { targetParcels } from "../scripts/fetch-official-price.mjs";
+import { targetParcels } from "../scripts/fetch-official-price.ts";
 
 // 합성 입력만 쓴다 - 실제 공시가격 파일은 받지 않는다(15,851,336행, 호 단위 행).
 const HEADER = ["시군구코드", "법정동명", "지번", "전용면적", "층", "호명", "공시가격", "기준연도", "단지명"];
@@ -205,7 +205,7 @@ test("CLI: 입력이 어긋나면 종료 코드 1이고 아무 파일도 만들�
   const out = path.join(work, "out");
   const args = (extra = {}) => {
     const a = { "--sha256": sha(GOOD), "--rows": "7", "--base-year": "2025", "--license": "제한 없음", "--page-modified": "2026-10-07", "--source-page": "https://www.data.go.kr/data/3073746/fileData.do", "--raw-commit": "b".repeat(40), "--raw-dir": path.join(work, "raw"), "--out-dir": out, ...extra };
-    return ["scripts/fetch-official-price.mjs", ...Object.entries(a).flat()];
+    return ["scripts/fetch-official-price.ts", ...Object.entries(a).flat()];
   };
   const spawn = (a) => new Promise((resolve) => {
     const child = execFile("node", a, { cwd: root }, (error, stdout, stderr) => resolve({ code: error?.code ?? 0, stdout, stderr }));
@@ -245,7 +245,7 @@ test("워크플로: dispatch 전용, 시크릿 없음, 최소 권한, 액션 SHA
   for (const m of text.matchAll(/uses: (\S+)/g)) assert.match(m[1], /@[0-9a-f]{40}$/, m[1]);
   for (const block of text.split(/\n\s+run: /).slice(1)) assert.doesNotMatch(block.split("\n- ")[0], /\$\{\{\s*inputs\./);
   // 해시·기준연도·이용허락 문자열은 코드가 아니라 입력으로만 받는다
-  const code = await Promise.all(["official-price-fold.ts", "official-price-key.ts", "fetch-official-price.mjs"].map((n) => readFile(path.join(root, "scripts", n), "utf8")));
+  const code = await Promise.all(["official-price-fold.ts", "official-price-key.ts", "fetch-official-price.ts"].map((n) => readFile(path.join(root, "scripts", n), "utf8")));
   assert.doesNotMatch(code.join("\n"), /BBDFE3E1|15851336|15,851,336/i);
   assert.match(text, /download_url[\s\S]*sha256[\s\S]*rows[\s\S]*base_year[\s\S]*license[\s\S]*page_modified[\s\S]*source_page/);
   assert.match(text, /--source-page "\$SOURCE_PAGE"/);

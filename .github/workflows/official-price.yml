@@ -96,7 +96,7 @@ jobs:
           ZIP_SHA256="$(sha256sum "$RUNNER_TEMP/official-price.zip" | cut -d' ' -f1)"
           export ZIP_SHA256
           unzip -p "$RUNNER_TEMP/official-price.zip" '*.csv' \
-            | node scripts/fetch-official-price.mjs \
+            | node scripts/fetch-official-price.ts \
                 --sha256 "$EXPECT_SHA256" --rows "$EXPECT_ROWS" --base-year "$BASE_YEAR" \
                 --license "$LICENSE_TEXT" --page-modified "$PAGE_MODIFIED" --source-page "$SOURCE_PAGE" \
                 --raw-commit "$RAW_COMMIT" --raw-dir raw-at-commit/raw

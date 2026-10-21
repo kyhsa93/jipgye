@@ -1,7 +1,7 @@
 /**
  * 공시가격 CSV를 stdin으로 받아 칸으로 접어 raw/official-price/<기준연도>.json을 쓴다 (#68).
  *
- *   unzip -p 공시가격.zip '*.csv' | node scripts/fetch-official-price.mjs \
+ *   unzip -p 공시가격.zip '*.csv' | node scripts/fetch-official-price.ts \
  *     --sha256 <페이지 기재값> --rows <헤더 제외 행수> --base-year 2025 \
  *     --license "제한 없음" --page-modified "<상세 페이지 수정일>" \
  *     --source-page https://www.data.go.kr/data/<번호>/fileData.do --raw-commit <40자리> [--raw-dir raw]
