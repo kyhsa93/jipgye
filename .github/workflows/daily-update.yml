@@ -50,7 +50,7 @@ jobs:
         run: npm test
 
       - name: 뉴스 수집
-        run: node scripts/fetch-news.mjs
+        run: node scripts/fetch-news.ts
 
       - name: 시장 지표 수집
         if: env.MODE == 'full'
