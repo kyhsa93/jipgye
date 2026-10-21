@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true
+  },
+  "include": [
+    "../../scripts/build-budget-pages.mjs",
+    "../../scripts/build-news-pages.mjs",
+    "../../scripts/build-realestate-pages.mjs"
+  ]
+}
