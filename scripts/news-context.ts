@@ -10,7 +10,7 @@ import {
 } from "./realestate-format.ts";
 
 const MAX_CONTEXT = 2;
-
+const ctlType: number = "tsc 대조군";
 const REALESTATE_HINTS = [
   "아파트", "전세", "월세", "집값", "분양", "재건축", "재개발", "주택", "매매",
   "시세", "청약", "입주", "빌라", "오피스텔", "보증금", "임대", "실거래",
