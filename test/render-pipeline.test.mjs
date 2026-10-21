@@ -238,7 +238,7 @@ test("daily-update는 기본 여섯, summarize는 같은 순서의 다섯(build-
   const summarize = stepOf(await read(WORKFLOWS[1]), "정적 HTML에 오늘 내용 심기");
   const args = [...summarize.matchAll(/^ {12}(scripts\/[a-z-]+\.(?:mjs|ts))/gm)].map((m) => m[1]);
   assert.deepEqual(args, RENDER_STEPS.filter((s) => s !== "scripts/build-rate-pages.ts"));
-  assert.ok(summarize.indexOf("news-context.mjs") >= 0 && summarize.indexOf("news-context.mjs") < summarize.indexOf("render-pipeline.mjs"), "news-context는 폴백 밖, 파이프라인 앞에 둔다");
+  assert.ok(summarize.indexOf("news-context.ts") >= 0 && summarize.indexOf("news-context.ts") < summarize.indexOf("render-pipeline.mjs"), "news-context는 폴백 밖, 파이프라인 앞에 둔다");
 });
 
 test("마지막 실패 단계의 if가 스크립트가 쓰는 $GITHUB_OUTPUT 키와 렌더 단계 id를 정확히 읽고, 커밋·테스트·배포 뒤에서 job을 실패시킨다", withFixture(SIX("reactFails"), async (fx) => {

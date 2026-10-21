@@ -95,7 +95,7 @@ jobs:
       - name: 정적 HTML에 오늘 내용 심기
         id: render
         run: |
-          node scripts/news-context.mjs
+          node scripts/news-context.ts
           node scripts/render-pipeline.mjs \
             scripts/prerender.mjs \
             scripts/build-news-pages.mjs \

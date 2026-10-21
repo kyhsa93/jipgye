@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { attachContext, buildRealestateStats } from "../scripts/news-context.mjs";
+import { attachContext, buildRealestateStats } from "../scripts/news-context.ts";
 import { newsRealestateStatsHtml } from "../scripts/prerender.mjs";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.mjs";
 import { loadNewsPage } from "./helpers/news-page.mjs";
