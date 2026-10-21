@@ -10,7 +10,7 @@ import { createWriteSet } from "./render-writes.ts";
 import { escapeHtml } from "./html-escape.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 
-const root = path.resolve(import.meta.dirname, "..");
+const root: number = path.resolve(import.meta.dirname, "..");
 const REALESTATE_PATH = REALESTATE_TEMPLATE_PATH; // 빈 표지가 있는 틀(scripts/realestate-template.html). 나가는 docs/realestate.html 이 아니다(#374).
 const METHOD_PATH = path.join(root, "docs/method.html");
 const BASE_URL = "https://kyhsa93.github.io/jipgye/";

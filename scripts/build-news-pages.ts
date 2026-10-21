@@ -4,7 +4,7 @@ import { applyPrerender, newsKospiHtml, newsListHtml, newsRealestateStatsHtml, n
 import { createWriteSet } from "./render-writes.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 
-const root = path.resolve(import.meta.dirname, "..");
+const root: number = path.resolve(import.meta.dirname, "..");
 const NEWS_PATH = path.join(root, "docs/news.html");
 const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 
