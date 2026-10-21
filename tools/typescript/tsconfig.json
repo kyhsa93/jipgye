@@ -91,6 +91,7 @@
     "../../scripts/district-tables.ts",
     "../../scripts/ecos.ts",
     "../../scripts/fetch-housing-permits.ts",
+    "../../scripts/fetch-news.ts",
     "../../scripts/fetch-official-price-api.ts",
     "../../scripts/fetch-official-price.ts",
     "../../scripts/floor-gap.ts",
