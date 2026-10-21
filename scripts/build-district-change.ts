@@ -21,7 +21,7 @@ import { RAW_DIR } from "./realestate-raw.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { yearMonthOf } from "./realestate-slots.ts";
 
-const root = path.resolve(import.meta.dirname, "..");
+const root: number = path.resolve(import.meta.dirname, "..");
 const outFile = process.env.DISTRICT_CHANGE_FILE
   ? path.resolve(process.env.DISTRICT_CHANGE_FILE)
   : path.join(root, "docs/data/district-change.json");
