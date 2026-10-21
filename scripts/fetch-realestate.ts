@@ -17,7 +17,7 @@ function numberEnv(name, fallback) {
 }
 
 const CONCURRENCY = numberEnv("MOLIT_CONCURRENCY", 3) || 3;
-const MAX_RETRIES: string = 3;
+const MAX_RETRIES = 3;
 const BACKFILL_LIMIT = numberEnv("MOLIT_BACKFILL_LIMIT", 50);
 const REQUEST_TIMEOUT_MS = numberEnv("MOLIT_TIMEOUT_MS", 15_000);
 const ABORT_AFTER = numberEnv("MOLIT_ABORT_AFTER", 12);
