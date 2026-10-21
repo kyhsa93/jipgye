@@ -107,6 +107,7 @@
     "../../scripts/outlook.ts",
     "../../scripts/page-heading.ts",
     "../../scripts/policy-loan.ts",
+    "../../scripts/prerender.ts",
     "../../scripts/prose-share.ts",
     "../../scripts/purchase-costs.ts",
     "../../scripts/rate-bridge.ts",
