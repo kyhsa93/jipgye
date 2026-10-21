@@ -28,9 +28,9 @@ const repoRoot = path.resolve(import.meta.dirname, "..");
 export const RENDER_STEPS = [
   "scripts/prerender.mjs",
   "scripts/build-rate-pages.ts",
-  "scripts/build-news-pages.mjs",
-  "scripts/build-budget-pages.mjs",
-  "scripts/build-realestate-pages.mjs",
+  "scripts/build-news-pages.ts",
+  "scripts/build-budget-pages.ts",
+  "scripts/build-realestate-pages.ts",
   "scripts/build-updated-stamp.ts",
 ];
 

@@ -41,9 +41,9 @@ async function main() {
   run("node scripts/news-context.ts");
   run("node scripts/prerender.mjs");
   run("node scripts/build-rate-pages.ts");
-  run("node scripts/build-news-pages.mjs");
-  run("node scripts/build-budget-pages.mjs");
-  run("node scripts/build-realestate-pages.mjs");
+  run("node scripts/build-news-pages.ts");
+  run("node scripts/build-budget-pages.ts");
+  run("node scripts/build-realestate-pages.ts");
   run("node scripts/build-updated-stamp.ts");
 
   const status = execSync("git status --porcelain -- docs raw", { cwd: repoRoot }).toString().trim();

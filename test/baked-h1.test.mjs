@@ -5,8 +5,8 @@ import path from "node:path";
 import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
 import { buildBands } from "../scripts/budget-bands.ts";
 import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
-import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.mjs";
-import { buildBudgetPage } from "../scripts/build-budget-pages.mjs";
+import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.ts";
+import { buildBudgetPage } from "../scripts/build-budget-pages.ts";
 import { BASE_H1, bakeHeading, koHeading } from "../scripts/page-heading.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 

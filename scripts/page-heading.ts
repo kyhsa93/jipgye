@@ -67,6 +67,6 @@ export function bakeHeading(html, heading) {
 }
 
 /** 사전에서 고른 글자를 그대로 굽는다. 생성 스크립트 셋이 부르는 한 줄. */
-export function bakeKoHeading(html, options) {
+export function bakeKoHeading(html, options?) {
   return bakeHeading(html, koHeading(html, options));
 }

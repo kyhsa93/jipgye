@@ -7,7 +7,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { NEWS_PAGES } from "../scripts/build-news-pages.mjs";
+import { NEWS_PAGES } from "../scripts/build-news-pages.ts";
 import { newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "../scripts/prerender.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -53,7 +53,7 @@ test("문자열 패치(replaceOnce) 다섯 곳의 needle이 틀에 글자 그대
   for (const needle of needles) assert.equal(count(template, needle), 1, `틀에 needle이 한 번이 아니다: ${needle}`);
 
   // 호출 5곳(정의 한 줄과 주석은 센 것이 아니다) - 세 장 모두에서 맞아야 하므로 장 수와는 무관하게 빌더의 호출 수를 못박는다.
-  const builder = await read("scripts/build-news-pages.mjs");
+  const builder = await read("scripts/build-news-pages.ts");
   const calls = builder.split("\n").filter((l) => /\breplaceOnce\(/.test(l) && !/^\s*(?:function |\/\/)/.test(l));
   assert.equal(calls.length, 5, `replaceOnce 호출이 ${calls.length}곳이다 - 다섯 needle과 짝이 맞아야 한다`);
 

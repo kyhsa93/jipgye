@@ -336,6 +336,6 @@ test("스탬프 빌더가 update-all과 워크플로 양쪽에, 모든 페이지
     const order = [...text.matchAll(/node scripts\/([a-z-]+\.(?:mjs|ts))/g)].map((m) => m[1]);
     const stamp = order.indexOf("build-updated-stamp.ts");
     assert.ok(stamp >= 0, `${name}이 build-updated-stamp.ts를 부르지 않는다`);
-    assert.ok(stamp > order.indexOf("build-realestate-pages.mjs"), `${name}: 페이지 빌더가 다시 쓰기 전에 찍으면 날짜가 덮인다`);
+    assert.ok(stamp > order.indexOf("build-realestate-pages.ts"), `${name}: 페이지 빌더가 다시 쓰기 전에 찍으면 날짜가 덮인다`);
   }
 });

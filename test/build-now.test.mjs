@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildNowMs } from "../scripts/build-budget-pages.mjs";
+import { buildNowMs } from "../scripts/build-budget-pages.ts";
 
 // #236: 예산대 빌더의 시각(`since` = 183일 전)을 BUILD_NOW로 고정할 수 있어야 하고, 미설정이면 전과 똑같아야 한다.
 // 고정 값만 쓴다 — 오늘 날짜나 오늘의 docs/data에 기대지 않는다.
