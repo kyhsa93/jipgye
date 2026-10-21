@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
-import { attachContext, bestRate, buildContext, findDistrict } from "../scripts/news-context.mjs";
+import { attachContext, bestRate, buildContext, findDistrict } from "../scripts/news-context.ts";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 import { newsContextHtml, newsListHtml, ratesHtml, realestateTableHtml } from "../scripts/prerender.mjs";
 import { loadNewsPage } from "./helpers/news-page.mjs";

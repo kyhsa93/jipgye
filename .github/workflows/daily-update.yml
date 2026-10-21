@@ -104,7 +104,7 @@ jobs:
           FSS_FINLIFE_API_KEY: ${{ secrets.FSS_FINLIFE_API_KEY }}
 
       - name: 기사에 실거래가·금리 수치 붙이기
-        run: node scripts/news-context.mjs
+        run: node scripts/news-context.ts
 
       # 여섯 렌더 스크립트(prerender·build-rate-pages·build-news-pages·build-budget-pages·build-realestate-pages·build-updated-stamp)는
       # scripts/render-pipeline.mjs가 순서대로 돌린다. 하나라도 실패하면 JIPGYE_RENDERER=legacy로 처음부터 다시 렌더해
