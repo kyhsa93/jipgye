@@ -5732,17 +5732,54 @@
     "date": "2026-10-22",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 금리·예금·투자상품: 프랑스 10년 국채 금리가 연 5%를 돌파하며 2002년 이후 처음으로 해당 수준을 기록했다. 대출 플랫폼 ‘핀다’가 대원저축은행을 인수하며 금융업계에 변화를 주도하고 있다. 토스뱅크는 만기일을 직접 정하는 정기예금 상품을 출시하며 연 3.8%의 최고 금리를 제공하고 있다. 금통위 회의 전 금융시장에서 국고채 3년물 금리가 연 3.822%로 하락했다. 각 기사는 별개의 사건을 다루고 있으며, 서로 다른 경제 현상에 대한 보도이다.\n- 증시·환율: 뉴욕증시는 미국 기업 실적 호조에 상승 출발했고, 코스피는 AI 투자심리 회복에 3.3% 급등 마감했으며, 중국 증시는 하락 마감했고, 일본 증시는 반도체와 AI 주가 강세에 상승 마감했다.\n- 부동산: 올해 서울 빌라 전세가 4.7% 상승하며 15년 만에 최고 상승률을 기록했다. 광명과 하남의 '국평' 전세는 10억 원에 달하며 입주가뭄이 지속되고 있다. 서울 전셋집을 포기하려던 30대는 경기도 전세 상황에 대해 한숨을 내쉬고 있다. 청년 전·월세 대출은 실거주 의무 강화로 인해 사상 최대 규모로 증가했다. 후티의 공격으로 인해 사우디 전세기 요금이 급등하는 등 부동산 시장은 다양한 변수에 영향을 받고 있다.\n- 기타 경제 소식: 국민경제자문회의는 오늘 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다. 오늘 경제 관련 주요 소식 중 하나는 에너지 분야의 전력망 문제와 관련된 전문가들의 논의였다. 다른 소식에서는 에너지 지정학적 요인이 경제에 미치는 영향을 다루는 내용이 포함됐다. 각 기사는 서로 다른 주제를 다루고 있으며, 오늘 발표된 내용은 전문가들의 분석과 의견을 중심으로 구성됐다. 오늘의 경제 뉴스는 전력망과 에너지 정책에 대한 심층적인 논의를 담고 있다.",
-      "en": "- Rates, Deposits & Investment Products: France's 10-year government bond yield broke through 5% annually, reaching that level for the first time since 2002. Loan platform 'Finda' is leading changes in the financial industry by acquiring Daewon Savings Bank. Tos Bank is offering its highest interest rate of 3.8% annually by launching a fixed deposit product where customers can set the maturity date themselves. Before the MPC meeting, the 3-year government bond yield fell to 3.822% annually in the financial market. Each article covers separate events and reports on different economic phenomena.\n- Stocks & FX: The New York stock market opened higher on strong U.S. corporate earnings, the KOSPI closed up 3.3% on recovery in AI investment sentiment, the Chinese stock market closed lower, and the Japanese stock market closed higher on strong performance in semiconductor and AI stocks.\n- Real Estate: This year, Seoul villa lease prices rose 4.7%, marking the highest increase in 15 years. The lease prices for \"Gukpyeong\" in Gwangmyeong and Hanyang have reached 1,000,000,000 won, and the shortage of available units continues. The 30-somethings who were considering giving up on Seoul lease housing are sighing at the situation in Gyeonggi's lease market. Youth rent and lease loans have increased to an all-time high due to strengthened requirements for actual residence. The Saudi lease prices have sharply risen due to attacks by the Houthis, and the real estate market is being affected by various factors.\n- Other Economic News: The National Economic Advisory Council held a seminar today with the theme \"Power Grid Bottlenecks and Energy Geopolitics.\" One of the main economic news items today was the discussion by experts on power grid issues in the energy sector. Another news item included content addressing the impact of energy geopolitical factors on the economy. Each article covers different topics, and today's presentations were mainly composed of experts' analyses and opinions. Today's economic news includes in-depth discussions on power grids and energy policies."
+      "ko": "- 증시·환율: 뉴욕증시는 미국 기업 실적 기대감에 따라 상승 마감했다. 나스닥 지수는 0.45% 상승하며 출발했다. 코스피는 일시적으로 반등했으나, 폭락과 급등을 반복하며 불안감이 지속되고 있다. 중국 증시는 상하이지수 0.6% 하락하며 하락 마감했다. 일본 증시는 반도체와 AI 주가 강세에 힘입어 닛케이지수 0.85% 상승하며 상승 마감했다.\n- 금리·예금·투자상품: 프랑스 국채 10년물 금리가 연 5%를 돌파하며 2002년 이후 처음으로 해당 수준을 기록했다. 대출 플랫폼 ‘핀다’가 대원저축은행을 인수하며 금융업계에 변화를 예고했다. 토스뱅크는 만기일을 직접 정하는 정기예금 상품을 출시하며 최고 연 3.8% 금리를 제공하고 있다. 금통위 회의를 앞두고 국고채 금리가 대체로 하락하며 3년물은 연 3.822%를 기록했다. 각 기사는 별개의 사실을 다루고 있으며, 수치와 내용은 기사에 명시된 그대로 반영했다.\n- 부동산: 올해 서울 빌라 전세가 4.7% 상승하며 15년 만에 최고 상승률을 기록했다. 광명과 하남의 '국평' 전세는 10억 원에 달하며 입주가뭄이 지속되고 있다. 서울 전셋집을 포기하려던 30대는 경기도 전세 상황에 대해 한숨을 내쉬고 있다. 청년 전·월세 대출은 실거주 의무 강화로 인해 사상 최대 규모로 증가했다. 후티의 공격으로 인해 사우디 전세기 요금이 급등하는 등 부동산 시장은 다양한 변수에 영향을 받고 있다.\n- 기타 경제 소식: 국민경제자문회의는 오늘 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다. 각 기사는 서로 다른 주제로 구성되어 있으며, 오늘의 주요 소식은 세미나 개최였다. 기사 본문 일부는 세미나의 내용을 다루고 있다. 오늘의 경제 뉴스는 주로 세미나 관련 정보로 이루어졌다. 각 기사는 별개의 주제로 나뉘어져 있다.",
+      "en": "- Stocks & FX: The New York stock market closed higher due to expectations of strong U.S. corporate earnings. The Nasdaq index opened up 0.45%. The KOSPI briefly rebounded but continued to fluctuate between sharp declines and rallies, maintaining uncertainty. The Chinese stock market closed lower, with the Shanghai index down 0.6%. The Japanese stock market closed higher, with the Nikkei index up 0.85%, driven by strong performance in semiconductor and AI stocks.\n- Rates, Deposits & Investment Products: The 10-year French government bond yield broke through 5% annually, recording that level for the first time since 2002. Loan platform 'Finda' announced its acquisition of Dae Won Savings Bank, signaling changes in the financial industry. Toss Bank launched a fixed deposit product allowing customers to set their own maturity dates, offering a maximum annual interest rate of 3.8%. Ahead of the MPC meeting, government bond yields generally fell, with the 3-year yield reaching 3.822% annually. Each article covers separate facts, and figures and content are reflected exactly as stated in the articles.\n- Real Estate: This year, Seoul villa lease prices rose 4.7%, marking the highest increase in 15 years. The lease prices for \"Gukpyeong\" in Gwangmyeong and Hanyang have reached 1,000,000,000 won, and the shortage of available units continues. The 30-somethings who were considering giving up on Seoul lease housing are sighing at the situation in Gyeonggi's lease market. Youth lease and monthly rent loans have increased to an all-time high due to strengthened requirements for actual residence. The Saudi lease prices have surged sharply due to attacks by Houthi rebels, among other factors, showing that the real estate market is affected by various variables.\n- Other Economic News: The National Economic Advisory Council held a seminar today with the theme \"Power Grid Bottlenecks and Energy Geopolitics.\" Each article is composed of different topics, and today's main news was the seminar's holding. Some parts of the article cover the content of the seminar. Today's economic news was mainly composed of information related to the seminar. Each article is divided into separate topics."
     },
     "highlights": [],
     "categories": [
       {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "뉴욕증시는 미국 기업 실적 기대감에 따라 상승 마감했다. 나스닥 지수는 0.45% 상승하며 출발했다. 코스피는 일시적으로 반등했으나, 폭락과 급등을 반복하며 불안감이 지속되고 있다. 중국 증시는 상하이지수 0.6% 하락하며 하락 마감했다. 일본 증시는 반도체와 AI 주가 강세에 힘입어 닛케이지수 0.85% 상승하며 상승 마감했다.",
+        "lineEn": "The New York stock market closed higher due to expectations of strong U.S. corporate earnings. The Nasdaq index opened up 0.45%. The KOSPI briefly rebounded but continued to fluctuate between sharp declines and rallies, maintaining uncertainty. The Chinese stock market closed lower, with the Shanghai index down 0.6%. The Japanese stock market closed higher, with the Nikkei index up 0.85%, driven by strong performance in semiconductor and AI stocks.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[속보]뉴욕증시 美기업 실적 기대감에 상승 마감",
+            "link": "https://www.newsis.com/view/NISX20261022_0003835869",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "뉴욕증시, 美기업 실적 호조에 상승 출발…나스닥 0.45%↑",
+            "link": "https://www.newsis.com/view/NISX20261021_0003835851",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "코스피 일단 반등했지만…'폭락→급등' 널뛰기에 '불안' 지속(종합2보)",
+            "link": "https://www.yna.co.kr/view/AKR20261021084352008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 0.6%↓",
+            "link": "https://www.newsis.com/view/NISX20261021_0003835563",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "日증시, 반도체·AI주 강세에 상승 마감…닛케이지수 0.85%↑",
+            "link": "https://www.newsis.com/view/NISX20261021_0003835486",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
         "key": "rates",
         "name": "금리·예금·투자상품",
         "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "프랑스 10년 국채 금리가 연 5%를 돌파하며 2002년 이후 처음으로 해당 수준을 기록했다. 대출 플랫폼 ‘핀다’가 대원저축은행을 인수하며 금융업계에 변화를 주도하고 있다. 토스뱅크는 만기일을 직접 정하는 정기예금 상품을 출시하며 연 3.8%의 최고 금리를 제공하고 있다. 금통위 회의 전 금융시장에서 국고채 3년물 금리가 연 3.822%로 하락했다. 각 기사는 별개의 사건을 다루고 있으며, 서로 다른 경제 현상에 대한 보도이다.",
-        "lineEn": "France's 10-year government bond yield broke through 5% annually, reaching that level for the first time since 2002. Loan platform 'Finda' is leading changes in the financial industry by acquiring Daewon Savings Bank. Tos Bank is offering its highest interest rate of 3.8% annually by launching a fixed deposit product where customers can set the maturity date themselves. Before the MPC meeting, the 3-year government bond yield fell to 3.822% annually in the financial market. Each article covers separate events and reports on different economic phenomena.",
+        "lineKo": "프랑스 국채 10년물 금리가 연 5%를 돌파하며 2002년 이후 처음으로 해당 수준을 기록했다. 대출 플랫폼 ‘핀다’가 대원저축은행을 인수하며 금융업계에 변화를 예고했다. 토스뱅크는 만기일을 직접 정하는 정기예금 상품을 출시하며 최고 연 3.8% 금리를 제공하고 있다. 금통위 회의를 앞두고 국고채 금리가 대체로 하락하며 3년물은 연 3.822%를 기록했다. 각 기사는 별개의 사실을 다루고 있으며, 수치와 내용은 기사에 명시된 그대로 반영했다.",
+        "lineEn": "The 10-year French government bond yield broke through 5% annually, recording that level for the first time since 2002. Loan platform 'Finda' announced its acquisition of Dae Won Savings Bank, signaling changes in the financial industry. Toss Bank launched a fixed deposit product allowing customers to set their own maturity dates, offering a maximum annual interest rate of 3.8%. Ahead of the MPC meeting, government bond yields generally fell, with the 3-year yield reaching 3.822% annually. Each article covers separate facts, and figures and content are reflected exactly as stated in the articles.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
@@ -5770,48 +5807,11 @@
         ]
       },
       {
-        "key": "stocks",
-        "name": "증시·환율",
-        "nameEn": "Stocks & FX",
-        "lineKo": "뉴욕증시는 미국 기업 실적 호조에 상승 출발했고, 코스피는 AI 투자심리 회복에 3.3% 급등 마감했으며, 중국 증시는 하락 마감했고, 일본 증시는 반도체와 AI 주가 강세에 상승 마감했다.",
-        "lineEn": "The New York stock market opened higher on strong U.S. corporate earnings, the KOSPI closed up 3.3% on recovery in AI investment sentiment, the Chinese stock market closed lower, and the Japanese stock market closed higher on strong performance in semiconductor and AI stocks.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": true,
-        "items": [
-          {
-            "title": "뉴욕증시, 美기업 실적 호조에 상승 출발…나스닥 0.45%↑",
-            "link": "https://www.newsis.com/view/NISX20261021_0003835851",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "코스피 일단 반등했지만…'폭락→급등' 널뛰기에 '불안' 지속(종합2보)",
-            "link": "https://www.yna.co.kr/view/AKR20261021084352008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 0.6%↓",
-            "link": "https://www.newsis.com/view/NISX20261021_0003835563",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "日증시, 반도체·AI주 강세에 상승 마감…닛케이지수 0.85%↑",
-            "link": "https://www.newsis.com/view/NISX20261021_0003835486",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "코스피, AI 투자심리 회복에 3.3% 급등 마감…삼전닉스 5%↑(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261021134800008",
-            "source": "연합뉴스 경제"
-          }
-        ]
-      },
-      {
         "key": "realestate",
         "name": "부동산",
         "nameEn": "Real Estate",
         "lineKo": "올해 서울 빌라 전세가 4.7% 상승하며 15년 만에 최고 상승률을 기록했다. 광명과 하남의 '국평' 전세는 10억 원에 달하며 입주가뭄이 지속되고 있다. 서울 전셋집을 포기하려던 30대는 경기도 전세 상황에 대해 한숨을 내쉬고 있다. 청년 전·월세 대출은 실거주 의무 강화로 인해 사상 최대 규모로 증가했다. 후티의 공격으로 인해 사우디 전세기 요금이 급등하는 등 부동산 시장은 다양한 변수에 영향을 받고 있다.",
-        "lineEn": "This year, Seoul villa lease prices rose 4.7%, marking the highest increase in 15 years. The lease prices for \"Gukpyeong\" in Gwangmyeong and Hanyang have reached 1,000,000,000 won, and the shortage of available units continues. The 30-somethings who were considering giving up on Seoul lease housing are sighing at the situation in Gyeonggi's lease market. Youth rent and lease loans have increased to an all-time high due to strengthened requirements for actual residence. The Saudi lease prices have sharply risen due to attacks by the Houthis, and the real estate market is being affected by various factors.",
+        "lineEn": "This year, Seoul villa lease prices rose 4.7%, marking the highest increase in 15 years. The lease prices for \"Gukpyeong\" in Gwangmyeong and Hanyang have reached 1,000,000,000 won, and the shortage of available units continues. The 30-somethings who were considering giving up on Seoul lease housing are sighing at the situation in Gyeonggi's lease market. Youth lease and monthly rent loans have increased to an all-time high due to strengthened requirements for actual residence. The Saudi lease prices have surged sharply due to attacks by Houthi rebels, among other factors, showing that the real estate market is affected by various variables.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
@@ -5847,8 +5847,8 @@
         "key": "other",
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
-        "lineKo": "국민경제자문회의는 오늘 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다. 오늘 경제 관련 주요 소식 중 하나는 에너지 분야의 전력망 문제와 관련된 전문가들의 논의였다. 다른 소식에서는 에너지 지정학적 요인이 경제에 미치는 영향을 다루는 내용이 포함됐다. 각 기사는 서로 다른 주제를 다루고 있으며, 오늘 발표된 내용은 전문가들의 분석과 의견을 중심으로 구성됐다. 오늘의 경제 뉴스는 전력망과 에너지 정책에 대한 심층적인 논의를 담고 있다.",
-        "lineEn": "The National Economic Advisory Council held a seminar today with the theme \"Power Grid Bottlenecks and Energy Geopolitics.\" One of the main economic news items today was the discussion by experts on power grid issues in the energy sector. Another news item included content addressing the impact of energy geopolitical factors on the economy. Each article covers different topics, and today's presentations were mainly composed of experts' analyses and opinions. Today's economic news includes in-depth discussions on power grids and energy policies.",
+        "lineKo": "국민경제자문회의는 오늘 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다. 각 기사는 서로 다른 주제로 구성되어 있으며, 오늘의 주요 소식은 세미나 개최였다. 기사 본문 일부는 세미나의 내용을 다루고 있다. 오늘의 경제 뉴스는 주로 세미나 관련 정보로 이루어졌다. 각 기사는 별개의 주제로 나뉘어져 있다.",
+        "lineEn": "The National Economic Advisory Council held a seminar today with the theme \"Power Grid Bottlenecks and Energy Geopolitics.\" Each article is composed of different topics, and today's main news was the seminar's holding. Some parts of the article cover the content of the seminar. Today's economic news was mainly composed of information related to the seminar. Each article is divided into separate topics.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
