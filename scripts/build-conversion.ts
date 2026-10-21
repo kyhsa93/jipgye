@@ -4,7 +4,7 @@ import { AREA_BANDS, LOAN_LTV, cellNote, conversionPairs, districtRates, leadSen
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { readRentSource, recentMonths } from "./realestate-source.ts";
 
-const root = path.resolve(import.meta.dirname, "..");
+const root: number = path.resolve(import.meta.dirname, "..");
 
 // 자치구를 세 면적대로 다시 쪼개면 한 칸이 얇아진다. 시세 화면이 쓰는 3개월로는
 // 75칸 중 두 칸이 비어서, 여기서만 여섯 달을 본다. 전환율은 주 단위로 움직이는
