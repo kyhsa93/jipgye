@@ -143,7 +143,6 @@
     "../../scripts/summary-note.ts",
     "../../scripts/table-a11y.ts",
     "../../scripts/translate-news.ts",
-    "../../scripts/updated-stamp.ts",
-    "ctl-probe.ts"
+    "../../scripts/updated-stamp.ts"
   ]
 }
