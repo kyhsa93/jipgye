@@ -5608,20 +5608,57 @@
     "date": "2026-10-21",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 금리·예금·투자상품: 대출 플랫폼 '핀다'가 대원저축은행을 인수하는 협약을 체결했다. 토스뱅크는 만기일을 직접 정하는 정기예금 상품을 출시하고 최고 연 3.8% 금리를 제공한다. 금통위 회의를 앞두고 국고채 금리가 대체로 하락했으며, 3년물 금리는 연 3.822%를 기록했다. 각 기사는 서로 다른 주제를 다루고 있으며, 인과관계는 명시되지 않았다. 이들 기사는 금융시장의 다양한 움직임을 보여주는 사례로, 각각의 수치와 내용은 실제 기사에서 나왔다.\n- 부동산: 청년 전·월세 대출이 사상 최대인 75조 원을 기록하며 실거주 의무 강화의 부작용이 우려되고 있다. 용산 아세아아파트 공사가 무기한 중단되면서 연내 분양에 차질이 생겼다. 계양신도시에 반도건설이 '카이브 유보라' 견본주택을 23일 개관한다. 주택도시보증공사와 동아대는 부동산 및 PF 전문 인력 양성을 위한 업무협약을 체결했다. 청년들의 주거 부담은 집값 상승으로 인해 더욱 커지고 있다.\n- 기타 경제 소식: 국민경제자문회의는 오늘 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다. 오늘 경제 관련 주요 소식 중 하나는 에너지 분야의 전력망 문제와 국제적 에너지 상황에 대한 논의였다. 다른 소식에서는 경제 정책 관련 전문가들이 모여 다양한 주제를 다루는 자리가 마련됐다. 오늘 발표된 내용은 에너지 안보와 관련된 전략적 고민을 반영하고 있다. 각 기사는 서로 다른 주제를 다루었지만 모두 오늘의 경제 동향을 반영하고 있다.\n- 증시·환율: 코스피는 AI 투자심리 회복에 3.3% 급등 마감하며 삼전닉스가 5% 상승했고, 중국 증시는 상하이지수가 0.6% 하락 마감했으며, 일본 증시는 반도체·AI주 강세에 닛케이지수가 0.85% 상승 마감했다.",
-      "en": "- Rates, Deposits & Investment Products: Loan platform \"Finda\" has concluded a contract to acquire Daewon Savings Bank. Toss Bank has launched a fixed deposit product where customers can set their own maturity dates, offering a maximum annual interest rate of 3.8%. Ahead of the MPC meeting, government bond rates generally fell, with the 3-year rate recording an annual 3.822%. Each article covers different topics, and no causal relationships are stated. These articles are examples illustrating various movements in the financial market, with each figure and content derived from the actual articles.\n- Real Estate: The youth rent and mortgage loan has reached an all-time high of 75,000,000,000,000 won, raising concerns about the adverse effects of strengthening the obligation to reside in one's own home. The construction of Asiana Apartment in Yongsan has been indefinitely suspended, causing delays in the sales this year. Hyundai Engineering & Construction will open a model house for 'Caybe Yubora' in Gyeongyang New City on the 23rd. The Housing and Urban Development Corporation and Dong-A University have signed a memorandum of understanding to cultivate professionals in real estate and project finance. The housing burden on young people is increasing further due to rising housing prices.\n- Other Economic News: The National Economic Advisory Council held a seminar today with the theme \"Power Grid Bottlenecks and Energy Geopolitics.\" One of the major economic news items today involved discussions on power grid issues in the energy sector and the international energy situation. Another news item featured a gathering of economic policy experts discussing various topics. The content presented today reflects strategic considerations related to energy security. Although each article covered different topics, they all reflect today's economic trends.\n- Stocks & FX: The KOSPI surged 3.3% at close due to recovery in AI investment sentiment, with Samsung Electronics rising 5%. The Chinese market closed with the Shanghai Composite down 0.6%, while the Japanese market closed with the Nikkei up 0.85% due to strong performance in semiconductor and AI stocks."
+      "ko": "- 부동산: 올해 서울 빌라 전세가 4.7% 상승하며 15년 만에 최고 상승률을 기록했다. 광명과 하남 지역의 '국평' 전세 가격도 10억 원에 달하며 내년 입주 물량 부족으로 가격 상승 압력이 이어지고 있다. 서울 전셋집을 포기하려던 30대는 경기도 전세 시장의 어려움으로 인해 한숨을 쉬고 있다. 전·월세 대출 규모는 75조 원으로 역대 최대 규모를 기록하며 집값 안정을 위한 정책 효과가 나타나고 있다. 사우디 전세기 요금은 후티 공격으로 인해 급등하는 등 부동산 관련 다양한 이슈가 동시에 발생하고 있다.\n- 금리·예금·투자상품: 대출 플랫폼 '핀다'가 대원저축을 인수했고, 토스뱅크는 만기일을 직접 정하는 정기예금 상품을 출시해 최고 연 3.8% 금리를 제공하며, 금통위 회의 전 금통위 앞두고 국고채 금리가 대체로 하락해 3년물은 연 3.822%를 기록했다.\n- 기타 경제 소식: 국민경제자문회의는 오늘 '전력망 병목과 에너지 지정학'이라는 주제의 세미나를 진행했다. 해당 세미나는 전력망의 문제점과 에너지 분야의 국제적 상황을 다루는 자리였다. 오늘 경제 관련 주요 소식 중 하나로, 전력망과 에너지 지정학에 대한 논의가 이어졌다. 다른 소식들은 오늘 발표된 경제 관련 주제와 별개로 진행되었다. 오늘의 경제 뉴스는 다양한 주제로 구성되어 있었다.\n- 증시·환율: 코스피는 AI 투자심리 회복에 3.3% 급등 마감하며 삼전닉스가 5% 상승했고, 중국 증시는 상하이지수가 0.6% 하락 마감했으며, 일본 증시는 반도체와 AI주 강세에 닛케이지수가 0.85% 상승 마감했다.",
+      "en": "- Real Estate: This year, Seoul villa lease prices rose 4.7%, marking the highest increase in 15 years. The lease prices for \"Gukpyeong\" in Gwangmyeong and Hanyang areas have reached 1,000,000,000 won, and price pressure is continuing due to a shortage of housing stock expected next year. The 30s generation, who had intended to give up on Seoul lease housing, are sighing in relief due to difficulties in the Gyeonggi lease market. The scale of lease and monthly rental loans has reached 75,000,000,000,000 won, the largest in history, and policy effects aimed at stabilizing housing prices are emerging. Saudi lease aircraft fees have surged due to Houthi attacks, and various real estate-related issues are occurring simultaneously.\n- Rates, Deposits & Investment Products: Loan platform 'Finda' has acquired Daewon Savings, and Toss Bank has launched a fixed deposit product where customers can set the maturity date themselves, offering a maximum annual interest rate of 3.8%. Ahead of the Bank of Korea meeting, government bond rates generally fell, with the 3-year bond recording an annual rate of 3.822%.\n- Other Economic News: The National Economic Advisory Council held a seminar today with the theme \"Power Grid Bottlenecks and Energy Geopolitics.\" The seminar addressed issues with the power grid and the international situation in the energy sector. Among today's major economic news, discussions on the power grid and energy geopolitics continued. Other news items proceeded separately from today's announced economic topics. Today's economic news was composed of various topics.\n- Stocks & FX: The KOSPI surged 3.3% at close due to recovery in AI investment sentiment, with Samsung Electronics rising 5%. The Chinese market closed with the Shanghai Index down 0.6%, while the Japanese market closed with the Nikkei Index up 0.85% due to strong performance in semiconductor and AI stocks."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "대출 플랫폼 '핀다'가 대원저축은행을 인수하는 협약을 체결했다. 토스뱅크는 만기일을 직접 정하는 정기예금 상품을 출시하고 최고 연 3.8% 금리를 제공한다. 금통위 회의를 앞두고 국고채 금리가 대체로 하락했으며, 3년물 금리는 연 3.822%를 기록했다. 각 기사는 서로 다른 주제를 다루고 있으며, 인과관계는 명시되지 않았다. 이들 기사는 금융시장의 다양한 움직임을 보여주는 사례로, 각각의 수치와 내용은 실제 기사에서 나왔다.",
-        "lineEn": "Loan platform \"Finda\" has concluded a contract to acquire Daewon Savings Bank. Toss Bank has launched a fixed deposit product where customers can set their own maturity dates, offering a maximum annual interest rate of 3.8%. Ahead of the MPC meeting, government bond rates generally fell, with the 3-year rate recording an annual 3.822%. Each article covers different topics, and no causal relationships are stated. These articles are examples illustrating various movements in the financial market, with each figure and content derived from the actual articles.",
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "올해 서울 빌라 전세가 4.7% 상승하며 15년 만에 최고 상승률을 기록했다. 광명과 하남 지역의 '국평' 전세 가격도 10억 원에 달하며 내년 입주 물량 부족으로 가격 상승 압력이 이어지고 있다. 서울 전셋집을 포기하려던 30대는 경기도 전세 시장의 어려움으로 인해 한숨을 쉬고 있다. 전·월세 대출 규모는 75조 원으로 역대 최대 규모를 기록하며 집값 안정을 위한 정책 효과가 나타나고 있다. 사우디 전세기 요금은 후티 공격으로 인해 급등하는 등 부동산 관련 다양한 이슈가 동시에 발생하고 있다.",
+        "lineEn": "This year, Seoul villa lease prices rose 4.7%, marking the highest increase in 15 years. The lease prices for \"Gukpyeong\" in Gwangmyeong and Hanyang areas have reached 1,000,000,000 won, and price pressure is continuing due to a shortage of housing stock expected next year. The 30s generation, who had intended to give up on Seoul lease housing, are sighing in relief due to difficulties in the Gyeonggi lease market. The scale of lease and monthly rental loans has reached 75,000,000,000,000 won, the largest in history, and policy effects aimed at stabilizing housing prices are emerging. Saudi lease aircraft fees have surged due to Houthi attacks, and various real estate-related issues are occurring simultaneously.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
+        "items": [
+          {
+            "title": "후티 공격에 사우디 전세기 요금 급등",
+            "link": "https://www.hankyung.com/article/2026102169961",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "올 서울 빌라 전세 4.7%↑…15년 만에 최고 상승률",
+            "link": "https://www.hankyung.com/article/2026102167951",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "광명·하남 '국평' 전세도 10억…내년 입주가뭄까지 덮친다",
+            "link": "https://www.hankyung.com/article/2026102167931",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "\"경기도 전세라도…\" 서울 전셋집 포기하려던 30대 '한숨'",
+            "link": "https://www.hankyung.com/article/2026102167471",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "[단독] 집값 잡으려다 청년 잡겠네…전·월세 대출 75조 '역대급'",
+            "link": "https://www.hankyung.com/article/2026102167961",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "대출 플랫폼 '핀다'가 대원저축을 인수했고, 토스뱅크는 만기일을 직접 정하는 정기예금 상품을 출시해 최고 연 3.8% 금리를 제공하며, 금통위 회의 전 금통위 앞두고 국고채 금리가 대체로 하락해 3년물은 연 3.822%를 기록했다.",
+        "lineEn": "Loan platform 'Finda' has acquired Daewon Savings, and Toss Bank has launched a fixed deposit product where customers can set the maturity date themselves, offering a maximum annual interest rate of 3.8%. Ahead of the Bank of Korea meeting, government bond rates generally fell, with the 3-year bond recording an annual rate of 3.822%.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
         "items": [
           {
             "title": "대출 플랫폼 '핀다' 대원저축銀 인수",
@@ -5629,7 +5666,7 @@
             "source": "한국경제 경제"
           },
           {
-            "title": "만기일 직접 정하는 정기예금\n토스뱅크, 최고 연 3.8% 금리",
+            "title": "만기일 직접 정하는 정기예금…토스뱅크, 최고 연 3.8% 금리",
             "link": "https://www.hankyung.com/article/2026102167181",
             "source": "한국경제 경제"
           },
@@ -5641,48 +5678,11 @@
         ]
       },
       {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "청년 전·월세 대출이 사상 최대인 75조 원을 기록하며 실거주 의무 강화의 부작용이 우려되고 있다. 용산 아세아아파트 공사가 무기한 중단되면서 연내 분양에 차질이 생겼다. 계양신도시에 반도건설이 '카이브 유보라' 견본주택을 23일 개관한다. 주택도시보증공사와 동아대는 부동산 및 PF 전문 인력 양성을 위한 업무협약을 체결했다. 청년들의 주거 부담은 집값 상승으로 인해 더욱 커지고 있다.",
-        "lineEn": "The youth rent and mortgage loan has reached an all-time high of 75,000,000,000,000 won, raising concerns about the adverse effects of strengthening the obligation to reside in one's own home. The construction of Asiana Apartment in Yongsan has been indefinitely suspended, causing delays in the sales this year. Hyundai Engineering & Construction will open a model house for 'Caybe Yubora' in Gyeongyang New City on the 23rd. The Housing and Urban Development Corporation and Dong-A University have signed a memorandum of understanding to cultivate professionals in real estate and project finance. The housing burden on young people is increasing further due to rising housing prices.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "[단독] 실거주 의무 강화 부작용? 청년 전·월세 대출 '사상 최대'",
-            "link": "https://www.hankyung.com/article/2026102167961",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "용산 아세아아파트 공사 무기한 중단…연내 분양 차질",
-            "link": "https://www.newsis.com/view/NISX20261021_0003834882",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "계양신도시 '카이브 유보라' 반도건설, 23일 견본주택 개관",
-            "link": "https://www.mk.co.kr/news/realestate/12181909",
-            "source": "매일경제 부동산"
-          },
-          {
-            "title": "[단독] 집값에 치이는 청년들…전월세대출 75조 '사상 최대'",
-            "link": "https://www.hankyung.com/article/202610216013i",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "주택도시보증공사-동아대, 부동산·PF 전문 인력 양성 업무협약",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/21/AW2VGD2QZNDH5PW5BX5ECNA6TI/",
-            "source": "조선비즈 부동산"
-          }
-        ]
-      },
-      {
         "key": "other",
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
-        "lineKo": "국민경제자문회의는 오늘 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다. 오늘 경제 관련 주요 소식 중 하나는 에너지 분야의 전력망 문제와 국제적 에너지 상황에 대한 논의였다. 다른 소식에서는 경제 정책 관련 전문가들이 모여 다양한 주제를 다루는 자리가 마련됐다. 오늘 발표된 내용은 에너지 안보와 관련된 전략적 고민을 반영하고 있다. 각 기사는 서로 다른 주제를 다루었지만 모두 오늘의 경제 동향을 반영하고 있다.",
-        "lineEn": "The National Economic Advisory Council held a seminar today with the theme \"Power Grid Bottlenecks and Energy Geopolitics.\" One of the major economic news items today involved discussions on power grid issues in the energy sector and the international energy situation. Another news item featured a gathering of economic policy experts discussing various topics. The content presented today reflects strategic considerations related to energy security. Although each article covered different topics, they all reflect today's economic trends.",
+        "lineKo": "국민경제자문회의는 오늘 '전력망 병목과 에너지 지정학'이라는 주제의 세미나를 진행했다. 해당 세미나는 전력망의 문제점과 에너지 분야의 국제적 상황을 다루는 자리였다. 오늘 경제 관련 주요 소식 중 하나로, 전력망과 에너지 지정학에 대한 논의가 이어졌다. 다른 소식들은 오늘 발표된 경제 관련 주제와 별개로 진행되었다. 오늘의 경제 뉴스는 다양한 주제로 구성되어 있었다.",
+        "lineEn": "The National Economic Advisory Council held a seminar today with the theme \"Power Grid Bottlenecks and Energy Geopolitics.\" The seminar addressed issues with the power grid and the international situation in the energy sector. Among today's major economic news, discussions on the power grid and energy geopolitics continued. Other news items proceeded separately from today's announced economic topics. Today's economic news was composed of various topics.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
@@ -5698,8 +5698,8 @@
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "코스피는 AI 투자심리 회복에 3.3% 급등 마감하며 삼전닉스가 5% 상승했고, 중국 증시는 상하이지수가 0.6% 하락 마감했으며, 일본 증시는 반도체·AI주 강세에 닛케이지수가 0.85% 상승 마감했다.",
-        "lineEn": "The KOSPI surged 3.3% at close due to recovery in AI investment sentiment, with Samsung Electronics rising 5%. The Chinese market closed with the Shanghai Composite down 0.6%, while the Japanese market closed with the Nikkei up 0.85% due to strong performance in semiconductor and AI stocks.",
+        "lineKo": "코스피는 AI 투자심리 회복에 3.3% 급등 마감하며 삼전닉스가 5% 상승했고, 중국 증시는 상하이지수가 0.6% 하락 마감했으며, 일본 증시는 반도체와 AI주 강세에 닛케이지수가 0.85% 상승 마감했다.",
+        "lineEn": "The KOSPI surged 3.3% at close due to recovery in AI investment sentiment, with Samsung Electronics rising 5%. The Chinese market closed with the Shanghai Index down 0.6%, while the Japanese market closed with the Nikkei Index up 0.85% due to strong performance in semiconductor and AI stocks.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": true,
