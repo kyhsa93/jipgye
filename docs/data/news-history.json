@@ -13642,7 +13642,8 @@
             "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/21/BQCUUJ5EDFD4FODILEHDVMB654/",
             "source": "조선비즈 부동산"
           }
-        ]
+        ],
+        "titleEn": "LH expands modular housing orders... 10,0006000 units by 2030"
       },
       {
         "title": "“주택공급 속도 높인다”…LH, 모듈러주택 활성화 추진",
@@ -13651,7 +13652,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "2030년까지 모듈러주택 1.6만 가구 발주 고양창릉·남양주왕숙2·포천송우 연내 2100가구 달성 모듈러 주택 공급 확대·기술고도화 논의한국토지주택공사(LH)가 모듈러주택 활성화로..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Accelerating housing supply...LH to promote modular housing activation"
       },
       {
         "title": "김이탁 국토1차관 “행복기숙사 확대…공유형 청년주택도 적극 공급”",
@@ -13660,7 +13662,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "김이탁 국토교통부 제1차관은 21일 “대학생들의 주거부담 완화를 위해 행복기숙사를 꾸준히 늘려나가겠다”면서 “한국토지주택공사(LH)가 주택을 매입해 저렴하게 재임대하는 공유형 청년주택도 적극 공급할 계획”이라고 밝혔…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kim I-tak, First Deputy Minister of Land, expands Happy Dormitory program...actively supplies shared-type youth housing"
       },
       {
         "title": "건설협회 \"매출 3% 과징금 건설안전법 제정시 주택공급 어려워\"",
@@ -13669,7 +13672,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 임기창 기자 = 산업재해 사망사고 발생 기업에 영업이익의 최고 5% 과징금을 부과하는 산업안전보건법 개정안이 최근 국무회의를 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Construction Association \"Revenue 3% Penalty Fine Under Construction Safety Act Would Make Housing Supply Difficult"
       },
       {
         "title": "\"분양가 지금이 가장 싸다\"…청약·정책대출 문 두드려라",
@@ -13678,7 +13682,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Current price is the cheapest\"… knock on the door of subscription and policy loans"
       },
       {
         "title": "서초 반포 재건축 1832가구…동탄엔 '삼성 직주근접' 아파트",
@@ -13687,7 +13692,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 84㎡ 매매",
+            "labelEn": "서초구 apartment 84㎡ sale",
+            "value": "25억 9,994만원",
+            "valueEn": "₩2,600M",
+            "note": "최근 1주 계약 173건 · 10/14 대비 -1.3%",
+            "noteEn": "173 deals in the last 1 weeks · -1.3% vs Oct 14"
+          }
+        ],
+        "titleEn": "Seocho Banpo Reconstruction 1832 Units... Dongtan Has 'Samsung Mixed-Use' Apartment"
       },
       {
         "title": "동마다 다른 대지지분…재건축 분쟁 '뇌관' 될 수도",
@@ -13696,7 +13714,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Different land shares per block... could become a stumbling block in reconstruction disputes"
       },
       {
         "title": "부진한 일산 1기 신도시 재건축…홍지선 장관 \"제도·행정 지원\"",
@@ -13705,7 +13724,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Stagnant Ilsan 1st Phase New Town Reconstruction... Hong Ji-seon Minister \"Institutional and Administrative Support"
       },
       {
         "title": "원/달러 환율 4거래일 연속 연저점 기록…1,320원대 초반",
@@ -13714,7 +13734,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 채새롬 기자 = 반도체 수출 호조에 환율 하락 기대가 지속되면서 21일 원/달러 환율이 4거래일 연속 연저점을 경신했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Won/dollar exchange rate hits 4-day consecutive low…1,320 won range early on"
       },
       {
         "title": "고양시장, 국토부 장관 만나 공공주택지구 제도 개선 건의",
@@ -13723,7 +13744,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(고양=연합뉴스) 노승혁 기자 = 경기 고양시는 민경선 시장이 21일 홍지선 국토교통부 장관을 만나 일산 노후 계획도시 정비사업 추진 상황을 점...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Goyang Mayor Meets with Minister of Land, Transport and Infrastructure to Propose Improvements to Public Housing Development System"
       },
       {
         "title": "접경지역 토지 분양, '평화경제' 잠재력 품은 DMZ 접경지",
@@ -13732,7 +13754,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Land Sales in Border Areas, DMZ Border Zone Holds Potential for Peace Economy"
       },
       {
         "title": "코스피 3.3% 급등한 5,735 마감…코스닥도 1.4%↑",
@@ -13741,7 +13764,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 21일 코스피가 3%대 급등한 채 정규장 거래를 마감했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi closes at 5,735, up 3.3%... Kosdaq also rises 1.4%"
       },
       {
         "title": "[외환] 원/달러 환율 2.9원 내린 1,325.2원(15:30 기준가)",
@@ -13750,7 +13774,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Yen/USD Exchange Rate Falls 2.9 Won to 1,325.2 Won (As of 15:30)]"
       },
       {
         "title": "\"재건축 멈춘다\"…세계유산 등재 반대 나선 중구 주민들",
@@ -13759,7 +13784,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-jung.html",
+            "label": "중구 아파트 84㎡ 매매",
+            "labelEn": "중구 apartment 84㎡ sale",
+            "value": "14억 8,572만원",
+            "valueEn": "₩1,486M",
+            "note": "최근 1주 계약 59건 · 10/14 대비 +1.8%",
+            "noteEn": "59 deals in the last 1 weeks · +1.8% vs Oct 14"
+          }
+        ],
+        "titleEn": "Residents of Jung-gu Oppose UNESCO World Heritage Listing, Saying \"Reconstruction Will Halt"
       },
       {
         "title": "부동산 허위 의심 연 3만건…자금조달 점검 대상은 두배↑",
@@ -13768,7 +13806,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Real Estate Fraud Suspicions Reach 30,000 Cases Annually... Funds Raising Inspection Targets Double"
       },
       {
         "title": "최고 39층·264가구...동부건설 ‘남춘천 센트레빌’ 이달 견본주택 개관",
@@ -13777,7 +13816,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "단지 최상층에는 스카이 커뮤니티 조성동부건설이 강원 춘천시 효자동에 ‘남춘천 센트레빌’을 공급하며 춘천 주택시장 공략에 나선다. 동부건설은 춘천시 효자동 681-12번지 일원에 조..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seongdong.html",
+            "label": "성동구 아파트 84㎡ 매매",
+            "labelEn": "성동구 apartment 84㎡ sale",
+            "value": "20억 7,955만원",
+            "valueEn": "₩2,080M",
+            "note": "최근 1주 계약 85건 · 10/14 대비 -0.6%",
+            "noteEn": "85 deals in the last 1 weeks · -0.6% vs Oct 14"
+          }
+        ],
+        "titleEn": "Up to 39 floors, 264 units... Dongbu Construction's 'Nam Chuncheon Centreville' to open model house this month"
       },
       {
         "title": "경기 분양 아파트 중 중대형 8.2%뿐…하남·포천·동두천은 '0'",
@@ -13786,7 +13838,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Mid-to-large sized apartments account for only 8.2% of new construction apartments in Gyeonggi Province... Hanyang, Pocheon, and Dongducheon are '0"
       },
       {
         "title": "코스피 일단 반등했지만…'폭락→급등' 널뛰기에 '불안' 지속",
@@ -13795,7 +13848,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 곽윤아 기자 = 코스피 지수가 하루 3∼4%씩 올랐다 떨어지는 롤러코스터 장세를 보이고 있다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KOSPI rebounds for now but 'plummet→surge' rollercoaster continues to cause unease"
       },
       {
         "title": "국고채 금리 일제히 하락…3년물 장중 연 3.832%",
@@ -13804,7 +13858,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 21일 국고채 금리가 일제히 하락하고 있다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "South Korea's government bond yields fall across the board...3-year bond hits 3.832% intraday"
       },
       {
         "title": "동부건설, 남춘천 센트레빌 견본주택 이달 개관…본격 분양",
@@ -13813,7 +13868,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 변해정 기자 = 동부건설은 '남춘천 센트레빌'의 견본주택을 이달 중 개관하고 본격 분양에 나선다고 21일 밝혔다. 남춘천 센트레빌은 강원특별자치도 춘천시 효자동 681-12번지 일원에 지하 6층~지상…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Dongbu Construction to Open Sample House for Centreville in Namchuncheon This Month…Official Sales to Begin"
       },
       {
         "title": "반도건설, 계양신도시 카이브 유보라, 브랜드상업시설 ‘시간’ 견본주택 오픈",
@@ -13822,7 +13878,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "전용 84~93㎡ 총 1110가구 공급반도건설이 오는 23일 인천 계양신도시에 들어서는 주상복합 아파트 ‘계양신도시 카이브 유보라’와 상업시설 ‘시간(時間)’의 견본주택을 개관한다..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Bando Construction Opens Model House for 'Time' Commercial Facility in Gye Yang New City, Kaibyulboa"
       },
       {
         "title": "코스피, 4% 이상 급등에 두달 만의 '매수' 사이드카…외국인 순매수세",
@@ -13831,7 +13888,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 코스피가 21일 상승 폭을 확대하며 두 달 만에 매수 사이드카가 발동됐다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi surges over 4% to two-month high 'buy' signal... foreigners post net buying"
       },
       {
         "title": "[올댓차이나] 중국 증시 상승 출발…상하이지수 0.14%↑",
@@ -13840,7 +13898,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 21일 상승 출발했다. 이날 상하이종합지수는 전날보다 0.14% 상승한 3740.57로 장을 시작했다. 선전성분지수는 전장 대비 0.32% 오른 1만1838.79로, 중국…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] China's stock market rises on opening... Shanghai Index up 0.14%"
       },
       {
         "title": "서울시, 재건축 공사비 갈등 전담 ‘공사비120센터’ 운영",
@@ -13849,7 +13908,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "서울시가 재개발·재건축 사업장에서 발생하는 공사비 갈등을 초기 상담부터 중재, 합의 이후 후속 절차까지 관리하는 전담 창구를 만든다. 서울시는 21일부터 ‘공사비120센터’를 운영한다고 밝혔다. 그동안 서울시와 자치…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "12억 7,329만원",
+            "valueEn": "₩1,273M",
+            "note": "최근 1주 계약 754건 · 10/14 대비 -3.0%",
+            "noteEn": "754 deals in the last 1 weeks · -3.0% vs Oct 14"
+          }
+        ],
+        "titleEn": "Seoul to Operate Dedicated 'Construction Cost 120 Center' to Address Disputes Over Reconstruction Construction Costs"
       }
     ]
   }
