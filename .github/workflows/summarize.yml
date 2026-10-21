@@ -90,13 +90,13 @@ jobs:
         run: node scripts/translate-news.mjs
 
       # news-context는 렌더러와 무관한 데이터 가공이라 폴백 밖에 둔다. 렌더 스크립트는 daily-update.yml과 같은
-      # scripts/render-pipeline.mjs가 돌리고, 실패하면 JIPGYE_RENDERER=legacy로 처음부터 다시 렌더한다(#238).
+      # scripts/render-pipeline.ts가 돌리고, 실패하면 JIPGYE_RENDERER=legacy로 처음부터 다시 렌더한다(#238).
       # 단계 목록은 일부러 다섯이다: 금리를 수집하지 않는 이 워크플로는 전에도 build-rate-pages를 안 불렀다(기본 여섯과 다르다).
       - name: 정적 HTML에 오늘 내용 심기
         id: render
         run: |
           node scripts/news-context.ts
-          node scripts/render-pipeline.mjs \
+          node scripts/render-pipeline.ts \
             scripts/prerender.mjs \
             scripts/build-news-pages.mjs \
             scripts/build-budget-pages.mjs \

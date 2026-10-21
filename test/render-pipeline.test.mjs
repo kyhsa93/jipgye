@@ -6,13 +6,13 @@ import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import { FALLBACK_OUTPUT, RENDER_STEPS } from "../scripts/render-pipeline.mjs";
+import { FALLBACK_OUTPUT, RENDER_STEPS } from "../scripts/render-pipeline.ts";
 
 // 렌더 파이프라인의 legacy 폴백 (#238 F1 최소판). 단계는 임시 폴더의 가짜 노드 스크립트로 주입하고(고정 fixture, 외부 의존 없음),
 // 호출 기록(어느 단계가 어느 JIPGYE_RENDERER로 몇 번 돌았는지)으로 재시도의 범위를 본다.
 const run = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
-const PIPELINE = path.join(root, "scripts/render-pipeline.mjs");
+const PIPELINE = path.join(root, "scripts/render-pipeline.ts");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
 
 // 가짜 단계의 행동. 호출마다 `<이름> <JIPGYE_RENDERER>` 한 줄을 기록 파일에 남기고 아래 규칙대로 끝난다.
@@ -220,7 +220,7 @@ test("두 워크플로의 렌더 단계는 render-pipeline을 부르고 id: rend
     const yml = await read(file);
     const step = stepOf(yml, "정적 HTML에 오늘 내용 심기");
     assert.match(step, /^ {8}id: render$/m, `${file}: 렌더 단계에 id: render가 없다`);
-    assert.match(step, /node scripts\/render-pipeline\.mjs/, `${file}: 렌더 단계가 render-pipeline을 부르지 않는다`);
+    assert.match(step, /node scripts\/render-pipeline\.ts/, `${file}: 렌더 단계가 render-pipeline을 부르지 않는다`);
     assert.ok(!/node scripts\/(prerender|build-[a-z]+-pages|build-updated-stamp)\.(?:mjs|ts)/.test(step), `${file}: 렌더 스크립트를 인라인으로 다시 부른다(폴백을 우회한다)`);
   }
   // 어느 워크플로 파일에도 인라인 렌더 호출이 남으면 안 된다(렌더 단계가 하나 더 생겨 폴백을 우회하는 것을 막는다).
@@ -233,12 +233,12 @@ test("두 워크플로의 렌더 단계는 render-pipeline을 부르고 id: rend
 
 test("daily-update는 기본 여섯, summarize는 같은 순서의 다섯(build-rate-pages 없음 - 전에도 안 불렀다)을 넘기고 news-context는 파이프라인 앞에 있다", async () => {
   const daily = stepOf(await read(WORKFLOWS[0]), "정적 HTML에 오늘 내용 심기");
-  assert.match(daily, /run: node scripts\/render-pipeline\.mjs$/m, "daily-update는 기본 단계(인자 없음)를 쓴다");
+  assert.match(daily, /run: node scripts\/render-pipeline\.ts$/m, "daily-update는 기본 단계(인자 없음)를 쓴다");
 
   const summarize = stepOf(await read(WORKFLOWS[1]), "정적 HTML에 오늘 내용 심기");
   const args = [...summarize.matchAll(/^ {12}(scripts\/[a-z-]+\.(?:mjs|ts))/gm)].map((m) => m[1]);
   assert.deepEqual(args, RENDER_STEPS.filter((s) => s !== "scripts/build-rate-pages.ts"));
-  assert.ok(summarize.indexOf("news-context.ts") >= 0 && summarize.indexOf("news-context.ts") < summarize.indexOf("render-pipeline.mjs"), "news-context는 폴백 밖, 파이프라인 앞에 둔다");
+  assert.ok(summarize.indexOf("news-context.ts") >= 0 && summarize.indexOf("news-context.ts") < summarize.indexOf("render-pipeline.ts"), "news-context는 폴백 밖, 파이프라인 앞에 둔다");
 });
 
 test("마지막 실패 단계의 if가 스크립트가 쓰는 $GITHUB_OUTPUT 키와 렌더 단계 id를 정확히 읽고, 커밋·테스트·배포 뒤에서 job을 실패시킨다", withFixture(SIX("reactFails"), async (fx) => {

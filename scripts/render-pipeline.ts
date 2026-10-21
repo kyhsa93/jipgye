@@ -16,7 +16,7 @@
 // `JIPGYE_RENDERER=legacy`가 **명시된** 1차 실패는 재시도하지 않는다 - 같은 legacy를 다시 돌려 봐야 같은 실패다. 미설정은 재시도 대상이다:
 // 기본값은 컷오버 뒤 react이고(`renderer.mjs`), 이 스크립트는 그 기본값을 읽지 않는다(react를 import하지 않는다) - 환경변수 글자만 본다.
 //
-// 단계 목록은 인자로 주입할 수 있다(`node scripts/render-pipeline.mjs a.mjs b.mjs`) - 시험이 가짜 단계로 실패를 만든다.
+// 단계 목록은 인자로 주입할 수 있다(`node scripts/render-pipeline.ts a.mjs b.mjs`) - 시험이 가짜 단계로 실패를 만든다.
 // 인자가 없으면 기본 여섯이다. 상대 경로는 저장소 루트 기준이다.
 import { spawnSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
@@ -43,7 +43,7 @@ function runAll(steps, env, cwd) {
     console.log(`[render-pipeline] ${step}`);
     const r = spawnSync(process.execPath, [path.resolve(cwd, step)], { cwd, env, stdio: "inherit" });
     if (r.status !== 0) {
-      const why = r.error ? `실행 오류 ${r.error.code ?? r.error.message}` : r.signal ? `신호 ${r.signal}` : `종료 코드 ${r.status}`;
+      const why = r.error ? `실행 오류 ${(r.error as NodeJS.ErrnoException).code ?? r.error.message}` : r.signal ? `신호 ${r.signal}` : `종료 코드 ${r.status}`;
       return { ok: false, step, why };
     }
   }

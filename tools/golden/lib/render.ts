@@ -55,8 +55,8 @@ export const withoutExt = (file) => file.replace(/\.(?:mjs|ts)$/, "");
 
 /**
  * 워크플로의 렌더 단계 줄(`node scripts/x.mjs`)을 읽는다. RENDER_STAGES와 어긋났는지 시험이 본다.
- * 워크플로가 `node scripts/render-pipeline.mjs`(렌더 폴백, #238 F1 최소판) 한 줄로 부르면 그 저장소의 기본 단계(`RENDER_STEPS`)로 펼친다
- * (워크플로 파일 기준 `../../scripts/render-pipeline.mjs`). 인자를 넘기는 호출은 이 시험의 대상이 아니다(daily-update는 기본 단계를 쓴다).
+ * 워크플로가 `node scripts/render-pipeline.ts`(렌더 폴백, #238 F1 최소판) 한 줄로 부르면 그 저장소의 기본 단계(`RENDER_STEPS`)로 펼친다
+ * (워크플로 파일 기준 `../../scripts/render-pipeline.ts`). 인자를 넘기는 호출은 이 시험의 대상이 아니다(daily-update는 기본 단계를 쓴다).
  */
 export async function readWorkflowStages(workflowFile) {
   const text = await readFile(workflowFile, "utf8");

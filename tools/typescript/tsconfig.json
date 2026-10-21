@@ -119,6 +119,7 @@
     "../../scripts/realestate-table.ts",
     "../../scripts/realestate-weekly.ts",
     "../../scripts/record-high.ts",
+    "../../scripts/render-pipeline.ts",
     "../../scripts/render-writes.ts",
     "../../scripts/render/load-jsx.ts",
     "../../scripts/render/react.ts",
