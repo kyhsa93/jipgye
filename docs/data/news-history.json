@@ -13631,7 +13631,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 곽윤아 기자 = 코스피 지수가 하루 3∼4%씩 올랐다 떨어지는 롤러코스터 장세를 보이고 있다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi rebounds for now but 'plummet→surge' wild swings continue to cause unease"
       },
       {
         "title": "국고채 금리 일제히 하락…3년물 장중 연 3.832%",
@@ -13640,7 +13641,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 21일 국고채 금리가 일제히 하락하고 있다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "South Korea's government bond yields fall across the board...3-year bond hits 3.832% intraday"
       },
       {
         "title": "동부건설, 남춘천 센트레빌 견본주택 이달 개관…본격 분양",
@@ -13649,7 +13651,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 변해정 기자 = 동부건설은 '남춘천 센트레빌'의 견본주택을 이달 중 개관하고 본격 분양에 나선다고 21일 밝혔다. 남춘천 센트레빌은 강원특별자치도 춘천시 효자동 681-12번지 일원에 지하 6층~지상…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Dongbu Construction to Open Sample House for Centreville in Namchuncheon This Month…Official Sales to Begin"
       },
       {
         "title": "반도건설, 계양신도시 카이브 유보라, 브랜드상업시설 ‘시간’ 견본주택 오픈",
@@ -13658,7 +13661,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "전용 84~93㎡ 총 1110가구 공급반도건설이 오는 23일 인천 계양신도시에 들어서는 주상복합 아파트 ‘계양신도시 카이브 유보라’와 상업시설 ‘시간(時間)’의 견본주택을 개관한다..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Bando Construction Opens Model House for 'Time' Commercial Facility in GyeYang New City, Kaibe Yuโบรา"
       },
       {
         "title": "코스피, 4% 이상 급등에 두달 만의 '매수' 사이드카…외국인 순매수세",
@@ -13667,7 +13671,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 코스피가 21일 상승 폭을 확대하며 두 달 만에 매수 사이드카가 발동됐다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi surges over 4% to two-month high 'buy' signal… foreigners post net buying"
       },
       {
         "title": "코스피, 장중 4%대 급등에 '매수 사이드카' 발동",
@@ -13676,7 +13681,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유향 기자 = 21일 코스피가 전날 하락을 딛고 4%대의 급등세를 보이면서 유가증권시장에 프로그램매수호가 일시효력정지(매수 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KOSPI triggers 'buying sidecar' amid midday surge of over 4%"
       },
       {
         "title": "[올댓차이나] 중국 증시 상승 출발…상하이지수 0.14%↑",
@@ -13685,7 +13691,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 21일 상승 출발했다. 이날 상하이종합지수는 전날보다 0.14% 상승한 3740.57로 장을 시작했다. 선전성분지수는 전장 대비 0.32% 오른 1만1838.79로, 중국…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] China's stock market rises on opening... Shanghai index up 0.14%"
       },
       {
         "title": "[속보] 급등장에 코스피 매수 사이드카 발동",
@@ -13694,7 +13701,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Breaking News] Kospi Buy Sidecar Activated Amid Sharp Rise"
       },
       {
         "title": "서울시, 재건축 공사비 갈등 전담 ‘공사비120센터’ 운영",
@@ -13703,7 +13711,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "서울시가 재개발·재건축 사업장에서 발생하는 공사비 갈등을 초기 상담부터 중재, 합의 이후 후속 절차까지 관리하는 전담 창구를 만든다. 서울시는 21일부터 ‘공사비120센터’를 운영한다고 밝혔다. 그동안 서울시와 자치…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "12억 7,329만원",
+            "valueEn": "₩1,273M",
+            "note": "최근 1주 계약 754건 · 10/14 대비 -3.0%",
+            "noteEn": "754 deals in the last 1 weeks · -3.0% vs Oct 14"
+          }
+        ],
+        "titleEn": "Seoul to Operate Dedicated 'Construction Cost 120 Center' to Resolve Disputes Over Reconstruction Costs"
       },
       {
         "title": "강원 고성군, 청년 공공임대주택 공모 선정…48세대 공급",
@@ -13712,7 +13733,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(강원 고성=연합뉴스) 류호준 기자 = 강원 고성군은 '2027년 강원형 청년 채움 공공임대주택 사업' 대상지로 최종 선정됐다고 21일 밝혔다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Gangwon Goesung County Selected in Public Rental Housing Grant for Youth…48 Units to Be Provided"
       },
       {
         "title": "“한옥만 보이나요? 투자 가치도 봅니다”…하나은행, 북촌 부동산 투어",
@@ -13721,7 +13743,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "체험형 부동산 투자자문 서비스 2015년 국내 금융권 최초 시행 용산, 한남동, 성수동 등 11회 개최하나은행은 지난 20일과 오는 22일 양일간 자산가 손님 60여 명을 초청해 ..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Only Looking at Hanok? Also Check Investment Value\"…Hana Bank Hosts Bukchon Real Estate Tour"
       },
       {
         "title": "극동건설, 서울 금천구 LH참여형 가로주택정비사업 수주",
@@ -13730,7 +13753,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "극동건설이 서울 금천구에서 231가구 규모의 ‘LH참여형 가로주택정비사업’을 수주했다. 21일 극동건설에 따르면 이 회사는 지난 17일 금천구 시흥동 가로주택정비사업 시공사 선정 총회에서 최종 시공사로 선정됐다. 이…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-geumcheon.html",
+            "label": "금천구 아파트 84㎡ 매매",
+            "labelEn": "금천구 apartment 84㎡ sale",
+            "value": "8억 1,108만원",
+            "valueEn": "₩811M",
+            "note": "최근 1주 계약 138건 · 10/14 대비 +2.6%",
+            "noteEn": "138 deals in the last 1 weeks · +2.6% vs Oct 14"
+          }
+        ],
+        "titleEn": "East Star Construction wins bid for LH-participated horizontal housing redevelopment project in Seoul's Geumcheon-gu"
       },
       {
         "title": "\"나가면 손해\"…서울 전세 갱신 비율, 임대차3법 이후 최고",
@@ -13739,7 +13775,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]이종성 기자 = 서울 아파트 전세 시장에서 신규 계약 비중이 급감하고 있다. 외곽 지역을 중심으로 매물 가뭄과 함께 전세 가격도 가파르게 오르며, 세입자들이 이사를 미루고 기존 주거지에 머무르는 갱신계…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-jeonse.html",
+            "label": "서울 전체 아파트 84㎡ 전세",
+            "labelEn": "Seoul apartment 84㎡ jeonse",
+            "value": "8억 2,049만원",
+            "valueEn": "₩820M",
+            "note": "최근 1주 계약 650건 · 10/14 대비 +3.2%",
+            "noteEn": "650 deals in the last 1 weeks · +3.2% vs Oct 14"
+          }
+        ],
+        "titleEn": "Leaving is a loss\"… Seoul's renewed lease rate hits highest since the Three Rental Laws"
       },
       {
         "title": "부산 동구 침수위험지구 정비, 오염토·주택균열로 6개월째 중단",
@@ -13748,7 +13797,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(부산=연합뉴스) 김재홍 기자 = 상습 침수지역인 부산 동구 자성대아파트 일대에 배수펌프를 확충하는 사업이 6개월째 중단되고 있다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Busan Dong-gu Flood Risk Area Remediation Halts for 6th Month Due to Contaminated Soil and House Cracks"
       },
       {
         "title": "강동구 급증했는데 성동구는 급감…서울 부동산 등기 신청 건수 엇갈려",
@@ -13757,7 +13807,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "올해 3분기 서울 집합건물 부동산등기 신청 건수가 전년 동기 대비 소폭 증가한 것으로 나타났다. 강동구가 가장 큰 증가 폭을 기록한 반면 성동구는 신청 건수가 크게 줄어 자치구별로..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Jangdong-gu sees sharp increase while Seongdong-gu plummets... Seoul real estate registration applications diverge"
       },
       {
         "title": "코스피, 반발 매수세에 3% 반등하며 5,700선…코스닥 2.5%↑(종합)",
@@ -13766,7 +13817,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 21일 코스피가 큰 폭의 반등세로 출발했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi rebounds 3% to 5,700 level on buying spree... Kosdaq up 2.5% (comprehensive)"
       },
       {
         "title": "日증시, 美기술주 선물 강세에 상승 출발…닛케이 1.26%↑",
@@ -13775,7 +13827,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 신효령 기자 = 21일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)가 상승 출발했다. 국제유가 상승세가 주춤해지고 미국 기술주 선물이 강세를 보이면서 인공지능(AI)·반도체 관련주에 매수세가 유…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Tokyo Stocks Rise on Strong U.S. Tech Shares Futures... Nikkei Up 1.26%"
       },
       {
         "title": "\"대치동만 그런 게 아니었다\"…'이 동네' 집값 6억 더 비싼 이유",
@@ -13784,7 +13837,8 @@
         "source": "한국경제 부동산",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "It's Not Just Daechi-dong\"… Why 'This Neighborhood' Is 600,000,000 Won More Expensive"
       },
       {
         "title": "메르츠 \"재산권 실험 안돼\"…베를린 주택 국유화 갈등",
@@ -13793,7 +13847,8 @@
         "source": "한국경제 경제",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Merz: \"Property rights experiment won't work\"... Berlin housing nationalization conflict"
       },
       {
         "title": "도봉구 창동주공3단지 전용 41.3㎡ 7억원… 최근 3년 신고가 [MAI부동산]",
@@ -13802,7 +13857,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 20일 국토부 실거래가 시스템에 신규 등록된 서울 도봉구 창동주공3단지(해등마을) 전용 41.3㎡ 거래가 7억원으로 확인돼 동일 면적 기준 최근 3..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-dobong.html",
+            "label": "도봉구 아파트 84㎡ 매매",
+            "labelEn": "도봉구 apartment 84㎡ sale",
+            "value": "7억 792만원",
+            "valueEn": "₩708M",
+            "note": "최근 1주 계약 405건 · 10/14 대비 -0.7%",
+            "noteEn": "405 deals in the last 1 weeks · -0.7% vs Oct 14"
+          }
+        ],
+        "titleEn": "Dobong-gu Changdongjuong 3-danji, 41.3㎡, 700,000,000 won... Recent 3-year high price [MAI Real Estate]"
       },
       {
         "title": "노원구 하계동 청구 70.69㎡, 9억 3800만원 `최근 3년 신고가` [MAI부동산]",
@@ -13811,7 +13879,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 서울 노원구 하계동 청구 아파트에서 전용 70.69㎡가 9억 3,800만원에 거래되며 최근 3년 내 신고가를 기록했다. 항목 내용 항목 내용 준공 1988년 10월 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-nowon.html",
+            "label": "노원구 아파트 84㎡ 매매",
+            "labelEn": "노원구 apartment 84㎡ sale",
+            "value": "9억 2,924만원",
+            "valueEn": "₩929M",
+            "note": "최근 1주 계약 709건 · 10/14 대비 -0.1%",
+            "noteEn": "709 deals in the last 1 weeks · -0.1% vs Oct 14"
+          }
+        ],
+        "titleEn": "Nowon-gu Haegyedong listing 70.69㎡, 938,000,000 won \"highest price in 3 years\" [MAI Real Estate]"
       },
       {
         "title": "노원구 하계동 건영 53.14㎡ 7억 2700만원…최근 3년 신고가 [MAI부동산]",
@@ -13820,7 +13901,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 20일 국토부 실거래가 시스템에 신규 등록된 서울 노원구 하계동 건영 전용 53.14㎡가 7억 2700만원에 거래되며 최근 3년 신고가를 기록했다...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-nowon.html",
+            "label": "노원구 아파트 84㎡ 매매",
+            "labelEn": "노원구 apartment 84㎡ sale",
+            "value": "9억 2,924만원",
+            "valueEn": "₩929M",
+            "note": "최근 1주 계약 709건 · 10/14 대비 -0.1%",
+            "noteEn": "709 deals in the last 1 weeks · -0.1% vs Oct 14"
+          }
+        ],
+        "titleEn": "Nowon-gu Haegyedong Geonyeong 53.14㎡ 727,000,000won... Recent 3-year new high [MAI Real Estate]"
       },
       {
         "title": "노원구 태릉우성아파트 66.87㎡ 8억 5천만원… 최근 3년 신고가 [MAI부동산]",
@@ -13829,7 +13923,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 20일 국토부 실거래가 시스템에 신규 등록된 서울 노원구 공릉동 태릉우성아파트 전용 66.87㎡가 8억 5천만원에 거래되며 최근 3년 내 신고가를 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-nowon.html",
+            "label": "노원구 아파트 84㎡ 매매",
+            "labelEn": "노원구 apartment 84㎡ sale",
+            "value": "9억 2,924만원",
+            "valueEn": "₩929M",
+            "note": "최근 1주 계약 709건 · 10/14 대비 -0.1%",
+            "noteEn": "709 deals in the last 1 weeks · -0.1% vs Oct 14"
+          }
+        ],
+        "titleEn": "Nowon-gu Taereung Uisung Apt. 66.87㎡ 850,000,000won... Recent 3-Year High Price [MAI Real Estate]"
       },
       {
         "title": "도봉구 창동주공4단지 41.3㎡ 5억 8천만원… 최근 3년 신고가 [MAI부동산]",
@@ -13838,7 +13945,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 20일 국토부 실거래가 시스템에 신규 등록된 서울 도봉구 창동주공4단지 전용 41.3㎡ 거래가 5억 8천만원에 체결돼, 동일 면적 기준 최근 3년 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-dobong.html",
+            "label": "도봉구 아파트 84㎡ 매매",
+            "labelEn": "도봉구 apartment 84㎡ sale",
+            "value": "7억 792만원",
+            "valueEn": "₩708M",
+            "note": "최근 1주 계약 405건 · 10/14 대비 -0.7%",
+            "noteEn": "405 deals in the last 1 weeks · -0.7% vs Oct 14"
+          }
+        ],
+        "titleEn": "Dobong-gu Changdongjuong 4-danji 41.3㎡ 580,000,000 won... Recent 3-year record high [MAI Real Estate]"
       }
     ]
   }
