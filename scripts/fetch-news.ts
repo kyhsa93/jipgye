@@ -206,7 +206,7 @@ async function main() {
   const results = await Promise.all(FEEDS.map((feed) => fetchFeed(parser, feed)));
   let items = results.flat().filter((item) => item.title && matchesKeyword(item.title));
 
-  items.sort((a, b) => new Date(b.publishedAt ?? 0) - new Date(a.publishedAt ?? 0));
+  items.sort((a, b) => (new Date(b.publishedAt ?? 0) as unknown as number) - (new Date(a.publishedAt ?? 0) as unknown as number));
 
   items = dedupeSimilarTitles(items);
   items = capPerSource(items, MAX_ITEMS_PER_SOURCE);
