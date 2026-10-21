@@ -184,7 +184,7 @@ test("존재하지 않는 단계는 실패다(조용히 건너뛰지 않는다)"
 
 test("기본 단계는 지금까지 워크플로가 부르던 여섯 스크립트의 순서 그대로이고 update-all의 렌더 꼬리와 같다", async () => {
   assert.deepEqual(RENDER_STEPS, [
-    "scripts/prerender.mjs",
+    "scripts/prerender.ts",
     "scripts/build-rate-pages.ts",
     "scripts/build-news-pages.ts",
     "scripts/build-budget-pages.ts",
@@ -192,7 +192,7 @@ test("기본 단계는 지금까지 워크플로가 부르던 여섯 스크립�
     "scripts/build-updated-stamp.ts",
   ]);
   const all = [...(await read("scripts/update-all.mjs")).matchAll(/run\("node (scripts\/[a-z-]+\.(?:mjs|ts))"\)/g)].map((m) => m[1]);
-  assert.deepEqual(all.slice(all.indexOf("scripts/prerender.mjs")), RENDER_STEPS, "update-all의 렌더 순서와 기본 단계가 갈라졌다");
+  assert.deepEqual(all.slice(all.indexOf("scripts/prerender.ts")), RENDER_STEPS, "update-all의 렌더 순서와 기본 단계가 갈라졌다");
 });
 
 // #427: 위 시험은 소스의 목록과 시험 안의 목록을 맞댈 뿐이라 둘이 같이 옛 이름으로 남으면 초록이다(개명이 두 곳을 같이 놓치면 무인 렌더만 죽는다).
@@ -227,7 +227,7 @@ test("두 워크플로의 렌더 단계는 render-pipeline을 부르고 id: rend
   const dir = path.join(root, ".github/workflows");
   for (const name of await readdir(dir)) {
     const text = await readFile(path.join(dir, name), "utf8");
-    assert.ok(!/node scripts\/prerender\.(?:mjs|ts)/.test(text), `${name}: prerender.mjs를 워크플로에서 직접 부른다`);
+    assert.ok(!/node scripts\/prerender\.(?:mjs|ts)/.test(text), `${name}: prerender.ts를 워크플로에서 직접 부른다`);
   }
 });
 

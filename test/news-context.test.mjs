@@ -4,7 +4,7 @@ import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { attachContext, bestRate, buildContext, findDistrict } from "../scripts/news-context.ts";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
-import { newsContextHtml, newsListHtml, ratesHtml, realestateTableHtml } from "../scripts/prerender.mjs";
+import { newsContextHtml, newsListHtml, ratesHtml, realestateTableHtml } from "../scripts/prerender.ts";
 import { loadNewsPage } from "./helpers/news-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");

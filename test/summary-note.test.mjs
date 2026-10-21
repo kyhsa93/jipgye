@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
-import { applyPrerender, newsSummaryHtml, summaryHtml } from "../scripts/prerender.mjs";
+import { applyPrerender, newsSummaryHtml, summaryHtml } from "../scripts/prerender.ts";
 import { FALLBACK_NOTE_KO, hasFallback } from "../scripts/summary-note.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -76,7 +76,7 @@ test("커밋된 구운 장 다섯의 안내 줄 유무가 summary.json 과 맞�
   const noteOf = (html, cls) => html.includes(`<div class="${cls}">${FALLBACK_NOTE_KO}</div>`);
 
   const index = boxOf(await read("docs/index.html"), "summary");
-  assert.equal(noteOf(index, "summary-fallback-note"), hasFallback(summary.categories), "docs/index.html 의 안내 줄이 summary.json 과 어긋난다. node scripts/prerender.mjs 를 실행하세요.");
+  assert.equal(noteOf(index, "summary-fallback-note"), hasFallback(summary.categories), "docs/index.html 의 안내 줄이 summary.json 과 어긋난다. node scripts/prerender.ts 를 실행하세요.");
 
   const hub = boxOf(await read("docs/news.html"), "newsSummary");
   assert.equal(noteOf(hub, "summary-note"), hasFallback(summary.categories.filter((c) => c.lineKo)), "docs/news.html 의 안내 줄이 summary.json 과 어긋난다.");

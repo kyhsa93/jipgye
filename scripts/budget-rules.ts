@@ -5,7 +5,7 @@
 // 규칙의 글자는 바꾸지 않았다 - 각 모듈(purchase-costs·min-cash·policy-loan·loan-cap·mortgage)이
 // 상수로 내보낸 원문을 그대로 놓고, 장은 숫자만 남기고 #budget-rules-* 로 링크한다.
 // 기준일은 각 모듈의 BASIS_DATE라 규칙 문구와 확인일이 한 곳에서만 바뀐다.
-import { escapeHtml } from "./prerender.mjs";
+import { escapeHtml } from "./prerender.ts";
 import { apartmentOptions, loanHeadSentence, rateSpread, yearChangeSentence } from "./mortgage.ts";
 import { COSTS_RULES } from "./purchase-costs.ts";
 import { MIN_CASH_RULES } from "./min-cash.ts";

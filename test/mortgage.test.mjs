@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { apartmentOptions, loanHeadSentence, loanSentence, monthlyPayment, rateSpread } from "../scripts/mortgage.ts";
-import { budgetLoanHtml } from "../scripts/prerender.mjs";
+import { budgetLoanHtml } from "../scripts/prerender.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 

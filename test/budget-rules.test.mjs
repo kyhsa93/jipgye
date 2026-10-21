@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { budgetRulesHtml } from "../scripts/budget-rules.ts";
-import { escapeHtml } from "../scripts/prerender.mjs";
+import { escapeHtml } from "../scripts/prerender.ts";
 import { COSTS_RULES } from "../scripts/purchase-costs.ts";
 import { MIN_CASH_RULES } from "../scripts/min-cash.ts";
 import { POLICY_LINES, POLICY_TAIL } from "../scripts/policy-loan.ts";

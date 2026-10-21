@@ -97,7 +97,7 @@ jobs:
         run: |
           node scripts/news-context.ts
           node scripts/render-pipeline.ts \
-            scripts/prerender.mjs \
+            scripts/prerender.ts \
             scripts/build-news-pages.ts \
             scripts/build-budget-pages.ts \
             scripts/build-realestate-pages.ts \

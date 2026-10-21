@@ -10,7 +10,7 @@ import {
   ratesHtml,
   realestateHtml,
   summaryHtml,
-} from "../scripts/prerender.mjs";
+} from "../scripts/prerender.ts";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 import { rateBridgeHtml } from "../scripts/rate-bridge.ts";
 
@@ -21,7 +21,7 @@ const readRates = () => readFile(path.join(root, "docs/deposit-rates.html"), "ut
 const readHub = () => readFile(path.join(root, "docs/rates.html"), "utf8");
 
 // 구운 조각에는 #279에서 Tailwind 유틸리티가 붙었고, 틀의 인라인 스크립트가 데이터를 받아 다시 그리는 마크업에는 붙지 않는다
-// (그 스크립트를 고치는 길은 S6와 #282로 막혀 있다 - scripts/prerender.mjs의 금리 조각 주석). 이 시험은 두 쪽을 맞대므로 둘 다 받는다.
+// (그 스크립트를 고치는 길은 S6와 #282로 막혀 있다 - scripts/prerender.ts의 금리 조각 주석). 이 시험은 두 쪽을 맞대므로 둘 다 받는다.
 // class를 글자 그대로 적는 이유: tools/golden의 훅 class 추출기가 이 줄의 class="…"를 읽어 hook-classes.json의 markup 쪽을 만든다 -
 // `[^"]*` 같은 조각으로 적으면 그 이름이 훅 목록에서 조용히 빠진다(실측).
 const PRODUCT_NAME = ['class="product-name tw:whitespace-normal tw:break-keep"', 'class="product-name"'];
@@ -116,7 +116,7 @@ test("커밋된 HTML이 지금 데이터로 다시 그린 결과와 같다", asy
     news: newsHtml(news),
   });
 
-  assert.equal(html, expected, "docs/index.html이 데이터와 어긋납니다. node scripts/prerender.mjs를 실행하세요.");
+  assert.equal(html, expected, "docs/index.html이 데이터와 어긋납니다. node scripts/prerender.ts를 실행하세요.");
 });
 
 test("금리 표의 정적 HTML이 실제 첫 화면과 같은 상품·순서다", async () => {
@@ -151,14 +151,14 @@ test("커밋된 rates.html(허브)이 지금 문구 원본으로 다시 그린 �
   assert.equal(
     html,
     applyPrerender(html, { rateBridgeKo: rateBridgeHtml("rates", "ko"), rateBridgeEn: rateBridgeHtml("rates", "en") }),
-    "docs/rates.html이 문구 원본과 어긋납니다. node scripts/prerender.mjs를 실행하세요."
+    "docs/rates.html이 문구 원본과 어긋납니다. node scripts/prerender.ts를 실행하세요."
   );
 });
 
 test("크롤러가 받는 HTML에 오늘 기사 제목이 실제로 들어 있다", async () => {
   const [html, news] = await Promise.all([readIndex(), readData("news")]);
   // 첫 화면은 다섯 건만, 부동산 먼저 싣는다(#48) - 그 첫 건이 실려 있어야 한다.
-  const { indexNewsItems } = await import("../scripts/prerender.mjs");
+  const { indexNewsItems } = await import("../scripts/prerender.ts");
   const first = indexNewsItems(news.items)[0];
   assert.ok(first, "기사가 한 건도 없다 - 수집이 통째로 실패했다");
   assert.ok(html.includes(escapeHtml(first.title)), "첫 기사 제목이 정적 HTML에 없다");
@@ -203,7 +203,7 @@ test("정적 마크업이 클라이언트가 그리는 구조와 같은 뼈대�
 });
 
 test("첫 화면 뉴스는 다섯 건, 부동산 먼저, 나머지는 뉴스 화면으로 (#48)", async () => {
-  const { indexNewsItems, INDEX_NEWS } = await import("../scripts/prerender.mjs");
+  const { indexNewsItems, INDEX_NEWS } = await import("../scripts/prerender.ts");
   const items = [
     ...Array.from({ length: 4 }, (_, i) => ({ title: `금리${i}`, link: `https://x/r${i}`, category: "rates" })),
     ...Array.from({ length: 3 }, (_, i) => ({ title: `부동산${i}`, link: `https://x/e${i}`, category: "realestate" })),

@@ -14,7 +14,7 @@ import {
   realestateHeadHtml,
   realestateOverallHtml,
   realestateTableHtml,
-} from "../scripts/prerender.mjs";
+} from "../scripts/prerender.ts";
 import {
   REALESTATE_PAGES,
   buildDistrictPage,

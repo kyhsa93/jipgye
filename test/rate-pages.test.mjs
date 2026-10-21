@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.ts";
-import { ratesHtml } from "../scripts/prerender.mjs";
+import { ratesHtml } from "../scripts/prerender.ts";
 import { stampHtml } from "../scripts/updated-stamp.ts";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 
@@ -11,7 +11,7 @@ const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
 const readRates = () => read("docs/data/rates.json").then(JSON.parse);
 // 구운 조각에는 #279에서 Tailwind 유틸리티가 붙었고, 틀의 인라인 스크립트가 데이터를 받아 다시 그리는 마크업에는 붙지 않는다
-// (그 스크립트를 고치는 길은 S6와 #282로 막혀 있다 - scripts/prerender.mjs의 금리 조각 주석). 이 시험은 두 쪽을 맞대므로 둘 다 받는다.
+// (그 스크립트를 고치는 길은 S6와 #282로 막혀 있다 - scripts/prerender.ts의 금리 조각 주석). 이 시험은 두 쪽을 맞대므로 둘 다 받는다.
 // class를 글자 그대로 적는 이유: tools/golden의 훅 class 추출기가 이 줄의 class="…"를 읽어 hook-classes.json의 markup 쪽을 만든다 -
 // `[^"]*` 같은 조각으로 적으면 그 이름이 훅 목록에서 조용히 빠진다(실측).
 const PRODUCT_NAME = ['class="product-name tw:whitespace-normal tw:break-keep"', 'class="product-name"'];

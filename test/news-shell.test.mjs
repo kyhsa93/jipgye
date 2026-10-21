@@ -1,14 +1,14 @@
 // 뉴스 틀(docs/news.html → news·rate-news·realestate-news·stock-news) 껍데기의 Tailwind 개편(#280 PR 1)이 지켜야 하는 것.
 //
 // 이 개편의 범위는 틀 껍데기(머리·내비·구획 틀)뿐이다. 다시 그려지는 조각(#news-list·#summary-box·시세 카드·코스피)은
-// 스크립트와 두 렌더러(scripts/prerender.mjs · scripts/render/entry.jsx)가 같은 글자로 내는 마크업이라, 여기에 모양이 바뀌는
+// 스크립트와 두 렌더러(scripts/prerender.ts · scripts/render/entry.jsx)가 같은 글자로 내는 마크업이라, 여기에 모양이 바뀌는
 // 유틸리티를 두면 구운 첫 화면과 다시 그린 화면이 어긋난다. 그 스크립트를 맞추는 길은 S6이 막는다(#279 PR 본문).
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NEWS_PAGES } from "../scripts/build-news-pages.ts";
-import { newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "../scripts/prerender.mjs";
+import { newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "../scripts/prerender.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");

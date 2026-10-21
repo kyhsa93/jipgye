@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { applyPrerender, newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "./prerender.mjs";
+import { applyPrerender, newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "./prerender.ts";
 import { createWriteSet } from "./render-writes.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 

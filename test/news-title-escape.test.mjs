@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import Parser from "rss-parser";
 import { normalizeFeedTitle } from "../scripts/article-body.ts";
-import { newsListHtml } from "../scripts/prerender.mjs";
+import { newsListHtml } from "../scripts/prerender.ts";
 import { loadIndexPage } from "./helpers/index-page.mjs";
 
 // #354: 뉴시스 RSS 제목은 `<![CDATA[...S&amp;P...]]>`로 온다. rss-parser는 CDATA 안을 풀지 않아 저장값에 `&amp;`가 남았고,

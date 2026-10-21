@@ -5,7 +5,7 @@ import { cp, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import * as prerender from "../scripts/prerender.mjs";
+import * as prerender from "../scripts/prerender.ts";
 import { INDEX_NEWS, indexNewsItems } from "../scripts/news-items.ts";
 import { escapeHtml } from "../scripts/html-escape.ts";
 import { linksBlockHtml, linksBlockShape, slugLinkEntries, slugLinkHref, slugLinksHtml } from "../scripts/district-links.ts";
@@ -33,7 +33,7 @@ import { BUDGET_BODY_KNOWN_DIFFS, BUDGET_CB_BRANCHES, BUDGET_CB_FNS, BUDGET_CB_T
 // #241 PR 1이 문장·목록 8개(summaryHtml·marketHtml·뉴스 6개)를, PR 2가 리드·링크 10개(*LeadHtml 6·*DistrictLinksHtml 4)를,
 // PR 3이 첫 화면 실거래 요약(realestateHtml)을, #242 PR 1이 자치구 문장·링크 4개와 표 6개를, PR 2가 시세표 머리글·표(realestateHeadHtml·realestateTableHtml)를, PR 3이 시세 요약 카드(realestateOverallHtml)를,
 // #243 PR A가 예산대 잎 조각 8개(budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml)를, PR B가 후보 단지와 합성(budgetCandidatesHtml·budgetBodyHtml)을
-// 더해 prerender.mjs의 조각 44개가 모두 이식됐다(서브프로세스 시험이 "이식 완료 상태"를 검증한다).
+// 더해 prerender.ts의 조각 44개가 모두 이식됐다(서브프로세스 시험이 "이식 완료 상태"를 검증한다).
 // 입력은 이 파일 안의 값과 test/fixtures/render/의 고정 파일뿐이다(R3): 저장소의 docs/·docs/data는 읽지 않는다.
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -75,7 +75,7 @@ test("JIPGYE_RENDERER: 미설정·빈 문자열은 react(#246 컷오버), legacy
   }
 });
 
-test("prerender.mjs의 *Html() 조각은 전부 래퍼를 거치고 이름이 그대로다", () => {
+test("prerender.ts의 *Html() 조각은 전부 래퍼를 거치고 이름이 그대로다", () => {
   const names = Object.keys(prerender).filter((k) => k.endsWith("Html") && k !== "escapeHtml");
   assert.ok(names.length >= 40, `조각 함수를 ${names.length}개밖에 못 찾았다`);
   for (const name of names) {
@@ -139,11 +139,11 @@ test("parity 골격: 같은 입력에서 legacy와 React 쌍둥이의 출력이 
 
 // 명시한 legacy(롤백·시험용)가 로더를 만지지 않는다는 것, react 모드(기본값 포함)의 실패가 삼켜지지 않는다는 것을 한 번에 본다:
 // node_modules가 없는 scripts/ 복사본에서는 esbuild·react를 읽을 수 없다. legacy는 그래도 import가 되고, react는 import에서 던진다.
-// 컷오버(#246) 전에는 기본값이 legacy라 이 복사본에서 통과했다. 이제 기본값이 react라서 `npm ci` 없이 prerender.mjs·renderer.mjs를 부르는 길은 던진다.
+// 컷오버(#246) 전에는 기본값이 legacy라 이 복사본에서 통과했다. 이제 기본값이 react라서 `npm ci` 없이 prerender.ts·renderer.mjs를 부르는 길은 던진다.
 async function importIn(dir, env) {
   return spawnSync(
     process.execPath,
-    ["--input-type=module", "-e", 'const r = await import("./scripts/renderer.ts"); await import("./scripts/prerender.mjs"); console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments() }));'],
+    ["--input-type=module", "-e", 'const r = await import("./scripts/renderer.ts"); await import("./scripts/prerender.ts"); console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments() }));'],
     { cwd: dir, encoding: "utf8", env: { ...process.env, JIPGYE_RENDERER: "", ...env } }
   );
 }
@@ -221,11 +221,11 @@ const PORTED = [
 ];
 const NEWS_MARKET_FNS = ["marketHtml", "newsContextHtml", "newsHtml", "newsKospiHtml", "newsListHtml", "newsRealestateStatsHtml", "newsSummaryHtml", "summaryHtml"];
 
-test("react 모드: 이식된 조각 목록이 PORTED와 같고, 그 이름은 전부 .legacy를 가진 prerender.mjs 조각이다(오타·없는 조각을 막는다)", async () => {
+test("react 모드: 이식된 조각 목록이 PORTED와 같고, 그 이름은 전부 .legacy를 가진 prerender.ts 조각이다(오타·없는 조각을 막는다)", async () => {
   const renderer = await createReactRenderer();
   assert.deepEqual(renderer.names(), PORTED);
   for (const name of renderer.names()) {
-    assert.equal(typeof prerender[name]?.legacy, "function", `entry.jsx의 ${name}은 prerender.mjs의 *Html() 조각이 아니다`);
+    assert.equal(typeof prerender[name]?.legacy, "function", `entry.jsx의 ${name}은 prerender.ts의 *Html() 조각이 아니다`);
     assert.equal(prerender[name].name, name);
   }
 });
@@ -271,7 +271,7 @@ test("금리 조각: 이식된 이름이라 legacy가 조각 안에서 불리지
   assert.equal(called, 0);
 });
 
-test("react 모드(진입 목록 PORTED): 이식 완료 상태(.legacy를 가진 조각 44개 전부 React)이고, 모든 분기 표에서 prerender.mjs 조각 출력이 legacy 모드와 같다", async () => {
+test("react 모드(진입 목록 PORTED): 이식 완료 상태(.legacy를 가진 조각 44개 전부 React)이고, 모든 분기 표에서 prerender.ts 조각 출력이 legacy 모드와 같다", async () => {
   const ratesUrl = pathToFileURL(fixture("rates-branches.mjs")).href;
   const newsUrl = pathToFileURL(fixture("news-market-branches.mjs")).href;
   const leadUrl = pathToFileURL(fixture("lead-links-branches.mjs")).href;
@@ -287,7 +287,7 @@ test("react 모드(진입 목록 PORTED): 이식 완료 상태(.legacy를 가진
       [
         "--input-type=module",
         "-e",
-        `const r = await import("./scripts/renderer.ts"); const p = await import("./scripts/prerender.mjs");
+        `const r = await import("./scripts/renderer.ts"); const p = await import("./scripts/prerender.ts");
          const { RATES_BRANCHES } = await import(${JSON.stringify(ratesUrl)});
          const { NEWS_MARKET_BRANCHES } = await import(${JSON.stringify(newsUrl)});
          const { LEAD_LINKS_BRANCHES } = await import(${JSON.stringify(leadUrl)});
@@ -298,7 +298,7 @@ test("react 모드(진입 목록 PORTED): 이식 완료 상태(.legacy를 가진
          const { BUDGET_LEAVES_BRANCHES } = await import(${JSON.stringify(budgetLeavesUrl)});
          const { BUDGET_CB_BRANCHES } = await import(${JSON.stringify(budgetCbUrl)});
          const run = (rows) => rows.map((b) => [b.id, p[b.fn](...b.args)]);
-         // 이식 완료 상태(#243 PR B): prerender.mjs에서 .legacy를 가진 조각 이름 전부를 함께 내보낸다 - react 모드의 portedFragments()가 이것과 같아야 하고 legacy 모드는 []다.
+         // 이식 완료 상태(#243 PR B): prerender.ts에서 .legacy를 가진 조각 이름 전부를 함께 내보낸다 - react 모드의 portedFragments()가 이것과 같아야 하고 legacy 모드는 []다.
          // 합성 조각 budgetBodyHtml은 하위 조각의 래퍼를 부르므로(legacy 원본 안에서) react 모드 프로세스의 .legacy는 이식된 하위 조각을 쓴다 - 순수 legacy가 아니다. 그래서 parity는 이 프로세스의 래퍼 출력을 legacy 모드 프로세스의 출력과 맞댄다.
          const legacyNames = Object.keys(p).filter((k) => typeof p[k]?.legacy === "function").sort();
          console.log(JSON.stringify({ mode: r.RENDERER, ported: r.portedFragments(), legacyNames, rates: run(RATES_BRANCHES), news: run(NEWS_MARKET_BRANCHES), leadLinks: run(LEAD_LINKS_BRANCHES), realestate: run(REALESTATE_BRANCHES), districtTables: run(DISTRICT_TABLES_BRANCHES), realestateTable: run(REALESTATE_TABLE_BRANCHES), realestateOverall: run(REALESTATE_OVERALL_BRANCHES), budgetLeaves: run(BUDGET_LEAVES_BRANCHES), budgetCb: run(BUDGET_CB_BRANCHES) }));`,
@@ -316,28 +316,28 @@ test("react 모드(진입 목록 PORTED): 이식 완료 상태(.legacy를 가진
   // 이식 완료 상태 검증: legacy 모드는 이식된 조각이 없고([]), react 모드는 .legacy를 가진 조각 이름 전부(44개)를 React로 낸다(남는 조각이 없다).
   // 위임 동작 자체(이식 안 된 조각은 legacy로 간다)는 makeFragment와 가짜 렌더러(fixtures/fragments.jsx)를 쓰는 시험이 계속 지킨다 - #248이 legacy를 지울 때 이 상태 검증이 사라지는 것은 그대로다.
   assert.deepEqual(a.ported, []);
-  assert.equal(a.legacyNames.length, 44, "prerender.mjs의 조각이 44개가 아니다");
-  assert.deepEqual(b.ported, a.legacyNames, "react 모드가 이식하지 않은 조각이 남았다(또는 entry.jsx에 prerender.mjs에 없는 이름이 있다)");
+  assert.equal(a.legacyNames.length, 44, "prerender.ts의 조각이 44개가 아니다");
+  assert.deepEqual(b.ported, a.legacyNames, "react 모드가 이식하지 않은 조각이 남았다(또는 entry.jsx에 prerender.ts에 없는 이름이 있다)");
   assert.deepEqual(b.ported, PORTED);
   assert.equal(PORTED.length, 44);
   assert.equal(b.rates.length, RATES_BRANCHES.length);
   assert.equal(b.news.length, NEWS_MARKET_BRANCHES.length);
-  assert.deepEqual(normRows(b.rates), normRows(a.rates), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(금리)");
-  assert.deepEqual(normRows(b.news), normRows(a.news), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(문장·목록)");
+  assert.deepEqual(normRows(b.rates), normRows(a.rates), "react 모드의 prerender.ts 조각 출력이 legacy 모드와 다르다(금리)");
+  assert.deepEqual(normRows(b.news), normRows(a.news), "react 모드의 prerender.ts 조각 출력이 legacy 모드와 다르다(문장·목록)");
   assert.equal(b.leadLinks.length, LEAD_LINKS_BRANCHES.length);
-  assert.deepEqual(normRows(b.leadLinks), normRows(a.leadLinks), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(리드·링크)");
+  assert.deepEqual(normRows(b.leadLinks), normRows(a.leadLinks), "react 모드의 prerender.ts 조각 출력이 legacy 모드와 다르다(리드·링크)");
   assert.equal(b.realestate.length, REALESTATE_BRANCHES.length);
-  assert.deepEqual(normRows(b.realestate), normRows(a.realestate), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(실거래 요약)");
+  assert.deepEqual(normRows(b.realestate), normRows(a.realestate), "react 모드의 prerender.ts 조각 출력이 legacy 모드와 다르다(실거래 요약)");
   assert.equal(b.districtTables.length, DISTRICT_TABLES_BRANCHES.length);
-  assert.deepEqual(normRows(b.districtTables), normRows(a.districtTables), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(자치구 문장·링크·표)");
+  assert.deepEqual(normRows(b.districtTables), normRows(a.districtTables), "react 모드의 prerender.ts 조각 출력이 legacy 모드와 다르다(자치구 문장·링크·표)");
   assert.equal(b.realestateTable.length, REALESTATE_TABLE_BRANCHES.length);
-  assert.deepEqual(normRows(b.realestateTable), normRows(a.realestateTable), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(시세표 머리글·표)");
+  assert.deepEqual(normRows(b.realestateTable), normRows(a.realestateTable), "react 모드의 prerender.ts 조각 출력이 legacy 모드와 다르다(시세표 머리글·표)");
   assert.equal(b.realestateOverall.length, REALESTATE_OVERALL_BRANCHES.length);
-  assert.deepEqual(normRows(b.realestateOverall), normRows(a.realestateOverall), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(시세 요약 카드)");
+  assert.deepEqual(normRows(b.realestateOverall), normRows(a.realestateOverall), "react 모드의 prerender.ts 조각 출력이 legacy 모드와 다르다(시세 요약 카드)");
   assert.equal(b.budgetLeaves.length, BUDGET_LEAVES_BRANCHES.length);
-  assert.deepEqual(normRows(b.budgetLeaves), normRows(a.budgetLeaves), "react 모드의 prerender.mjs 조각 출력이 legacy 모드와 다르다(예산대 잎 조각)");
+  assert.deepEqual(normRows(b.budgetLeaves), normRows(a.budgetLeaves), "react 모드의 prerender.ts 조각 출력이 legacy 모드와 다르다(예산대 잎 조각)");
   assert.equal(b.budgetCb.length, BUDGET_CB_BRANCHES.length);
-  assert.deepEqual(normRows(b.budgetCb), normRows(a.budgetCb), "react 모드의 prerender.mjs 조각 출력이 순수 legacy(legacy 모드 프로세스)와 다르다(후보 단지·본문 합성)");
+  assert.deepEqual(normRows(b.budgetCb), normRows(a.budgetCb), "react 모드의 prerender.ts 조각 출력이 순수 legacy(legacy 모드 프로세스)와 다르다(후보 단지·본문 합성)");
 });
 
 // ---- 문장·목록 8개 조각(#241 PR 1): 분기마다 fixture, 분기마다 legacy 기대값과 legacy↔react 바이트 일치 ----
@@ -404,7 +404,7 @@ test("문장·목록 조각: React 19는 javascript: URL을 막아 legacy와 달
   sameHtml(fragment(fn, prerender[fn].legacy)(...args), react);
 });
 
-test("news-items.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, prerender.mjs가 같은 함수를 다시 내보낸다", () => {
+test("news-items.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, prerender.ts가 같은 함수를 다시 내보낸다", () => {
   assert.equal(INDEX_NEWS, 5);
   assert.equal(prerender.INDEX_NEWS, INDEX_NEWS);
   assert.equal(prerender.indexNewsItems, indexNewsItems);
@@ -503,7 +503,7 @@ test("district-links.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, link
   assert.ok(here.startsWith('<h3 class="district-links-heading" id="district-links-heading">자치구별 시세 보기</h3>'));
   assert.ok(here.includes('<a href="./district-jung.html" aria-current="page">중구</a>'));
   assert.equal(here.match(/aria-current/g).length, 1);
-  // escapeHtml: prerender.mjs가 같은 함수를 다시 내보내고(다른 모듈의 import 호환), 래퍼 밖의 순수 도구다.
+  // escapeHtml: prerender.ts가 같은 함수를 다시 내보내고(다른 모듈의 import 호환), 래퍼 밖의 순수 도구다.
   assert.equal(prerender.escapeHtml, escapeHtml);
   assert.equal(escapeHtml(`a&<>"'`), "a&amp;&lt;&gt;&quot;'");
   assert.equal(escapeHtml(null), "");
@@ -573,7 +573,7 @@ test("실거래 요약 조각: 표본 부족 칸의 건수가 문자열이면 le
 });
 
 test("realestate-rows.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, 표본 문턱은 realestate-format.mjs의 하나만 쓴다", async () => {
-  // 문턱은 하나다: prerender.mjs는 다시 내보낼 뿐이고(이 모듈에서 import하던 쪽의 호환), 값은 realestate-format.mjs의 것이다.
+  // 문턱은 하나다: prerender.ts는 다시 내보낼 뿐이고(이 모듈에서 import하던 쪽의 호환), 값은 realestate-format.mjs의 것이다.
   assert.equal(MIN_SAMPLE, 5);
   assert.equal(prerender.MIN_SAMPLE, MIN_SAMPLE);
   const scripts = (await readdir(path.join(root, "scripts"))).filter((f) => /\.(?:mjs|ts)$/.test(f)); // 확장자를 .mjs 하나로 박지 않는다(#418): 개명이 전수를 조용히 줄이지 않게
@@ -772,7 +772,7 @@ test("district-tables.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - �
   const cells = [{ district: "가", band: "60to85", rate: 1, pairs: 1 }, { district: "나", band: "60to85", rate: 2, pairs: 1 }, { district: "다", band: "60to85", rate: 2, pairs: 1 }];
   assert.deepEqual(conversionTable({ cells }).rows.map((r) => r.district), ["나", "다", "가"]);
   assert.deepEqual(cells.map((c) => c.district), ["가", "나", "다"]);
-  // 같은 모듈을 쓰므로 prerender.mjs가 이 이름을 다시 내보내는 것은 CONVERSION_BAND 하나뿐이다(다른 이름은 밖에서 쓰지 않는다)
+  // 같은 모듈을 쓰므로 prerender.ts가 이 이름을 다시 내보내는 것은 CONVERSION_BAND 하나뿐이다(다른 이름은 밖에서 쓰지 않는다)
 });
 
 test("district-links.mjs: linksBlockShape는 JSX가 쓰는 분기이고 linksBlockHtml(legacy)이 같은 분기를 쓴다", () => {
@@ -1622,7 +1622,7 @@ test("budget-fragments.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - �
   assert.equal(budgetBandLabel({ min10k: 0 }), "NaN억 미만", "하한 0에 max10k가 undefined면(null이 아니면) 상한이 NaN으로 읽힌다 - 예전 그대로(빌더는 null을 넣는다)");
   assert.equal(budgetBandLabel({ min10k: -20_000, max10k: 30_000 }), "-2억대", "하한이 음수면 0 판정(===)에 안 걸린다 - 예전 그대로");
   assert.throws(() => budgetBandLabel(null), TypeError);
-  assert.equal(prerender.budgetBandLabel, budgetBandLabel, "prerender.mjs가 같은 이름으로 다시 내보낸다");
+  assert.equal(prerender.budgetBandLabel, budgetBandLabel, "prerender.ts가 같은 이름으로 다시 내보낸다");
   // eokText: 만원 → N억 M만원(반올림은 Math.round)
   assert.equal(eokText(0), "0만원");
   assert.equal(eokText(9_999), "9,999만원");
@@ -1698,7 +1698,7 @@ test("budget-fragments.mjs: 한눈에 줄 모양 - 예산대 없으면 null, 줄
   assert.equal(budgetAnswers({ min10k: 160_000 }, rates).lines.length, 4);
 });
 
-test("budget-fragments.mjs: 표본 문턱을 정의하거나 부르지 않고, 클래스·마크업·이스케이프를 들고 있지 않다 - 마크업은 legacy(prerender.mjs)·JSX(entry.jsx)가 각자 입힌다", async () => {
+test("budget-fragments.mjs: 표본 문턱을 정의하거나 부르지 않고, 클래스·마크업·이스케이프를 들고 있지 않다 - 마크업은 legacy(prerender.ts)·JSX(entry.jsx)가 각자 입힌다", async () => {
   const source = await readFile(path.join(root, "scripts/budget-fragments.ts"), "utf8");
   const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
   assert.doesNotMatch(code, /MIN_SAMPLE|hasEnoughSample|metricOf|low-sample/, "표본 문턱이 이 모듈에 있다");
@@ -1709,11 +1709,11 @@ test("budget-fragments.mjs: 표본 문턱을 정의하거나 부르지 않고, �
   assert.deepEqual(imports, ["./complex-price.ts", "./loan-cap.ts", "./min-cash.ts", "./mortgage.ts", "./policy-loan.ts", "./purchase-costs.ts", "./realestate-format.ts"]);
 });
 
-test("prerender.mjs의 공개 export는 추출 뒤에도 같은 이름이다 - budgetRuleLink·budgetBandLabel·CANDIDATE_LIST(PR B에서 옮겼다)·MIN_SAMPLE·escapeHtml", () => {
+test("prerender.ts의 공개 export는 추출 뒤에도 같은 이름이다 - budgetRuleLink·budgetBandLabel·CANDIDATE_LIST(PR B에서 옮겼다)·MIN_SAMPLE·escapeHtml", () => {
   assert.equal(typeof prerender.budgetRuleLink, "function");
   assert.equal(prerender.budgetBandLabel, budgetBandLabel);
   assert.equal(prerender.CANDIDATE_LIST, 12);
-  assert.equal(prerender.CANDIDATE_LIST, CANDIDATE_LIST, "순수 모듈로 옮긴 CANDIDATE_LIST를 prerender.mjs가 같은 이름으로 다시 내보낸다(test/complex-candidates.test.mjs가 === 12를 확인한다)");
+  assert.equal(prerender.CANDIDATE_LIST, CANDIDATE_LIST, "순수 모듈로 옮긴 CANDIDATE_LIST를 prerender.ts가 같은 이름으로 다시 내보낸다(test/complex-candidates.test.mjs가 === 12를 확인한다)");
   assert.equal(prerender.MIN_SAMPLE, MIN_SAMPLE);
   assert.equal(prerender.escapeHtml, escapeHtml);
   assert.equal(prerender.budgetRuleLink("costs", "x"), prerender.budgetRuleLink("costs", "x"));

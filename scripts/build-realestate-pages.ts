@@ -18,10 +18,10 @@ import {
   realestateHeadHtml,
   realestateOverallHtml,
   realestateTableHtml,
-} from "./prerender.mjs";
+} from "./prerender.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
-// 이 틀(scripts/realestate-template.html)에서 46장을 찍어 낸다. 틀 자신이 나가는 장(docs/realestate.html)도 prerender.mjs 가 같은 틀을 채워
+// 이 틀(scripts/realestate-template.html)에서 46장을 찍어 낸다. 틀 자신이 나가는 장(docs/realestate.html)도 prerender.ts 가 같은 틀을 채워
 // 낸다(#374). 나가는 47장은 모두 인라인 스크립트의 주석을 굽는 단계가 뗀다(#313, stripInlineScriptComments) - 틀의 주석은 그 장들에
 // 한 바이트도 실리지 않는다. 그래서 "왜 이렇게 생겼나"는 이 틀의 주석에 마음껏 적는다.
 //

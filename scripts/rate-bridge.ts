@@ -13,7 +13,7 @@
  * 링크 대상은 한 곳씩으로 고정한다. 예산대를 장마다 다르게 고르면 문턱을 정하는 일
  * (DIRECTION 체크리스트 4)이 되므로 첫 화면이 입구로 쓰는 10억대 한 장만 건다.
  */
-import { escapeHtml } from "./prerender.mjs";
+import { escapeHtml } from "./prerender.ts";
 
 export const BUDGET_HREF = "./budget-10eok.html";
 export const CONVERSION_HREF = "./jeonse-vs-wolse.html";
