@@ -28,7 +28,7 @@ const DISTRICT_COUNT = 25;
  */
 const REFRESH_MONTHS = refreshMonths(NOW);
 const REFRESH_SLOTS = DISTRICT_COUNT * REFRESH_MONTHS.length;
-const STEPS = ["scripts/fetch-realestate.mjs", "scripts/build-realestate.ts"];
+const STEPS = ["scripts/fetch-realestate.ts", "scripts/build-realestate.ts"];
 
 const spread = (kind, yearMonth, extra = {}) =>
   successXml(monthDays(yearMonth).map((on) => (kind === "sale" ? saleItem({ ...on, ...extra }) : rentItem({ ...on, ...extra }))));
@@ -298,7 +298,7 @@ test("연달아 실패하면 남은 슬롯을 다음 실행으로 넘긴다", as
   const { stdout } = await collect(
     server,
     { ...space, backfillLimit: 50, env: { MOLIT_ABORT_AFTER: "5" } },
-    ["scripts/fetch-realestate.mjs"]
+    ["scripts/fetch-realestate.ts"]
   );
 
   assert.match(stdout, /5개 연속 실패로 중단했습니다/, stdout);

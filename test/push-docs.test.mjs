@@ -73,7 +73,7 @@ test("실거래는 날마다 받는다", async () => {
 
   const step = yml.split("- name: 실거래 수집")[1]?.split("- name:")[0] ?? "";
   assert.match(step, /if: env\.MODE == 'full'/, "실거래가 날마다 도는 자리에 없다");
-  assert.match(step, /fetch-realestate\.mjs/);
+  assert.match(step, /fetch-realestate\.ts/);
   assert.ok(!yml.includes("weekly"), "주 1회 모드가 남아 있다");
 });
 
@@ -107,7 +107,7 @@ test("경로를 주면 그 경로만 커밋한다", async () => {
 test("데일리 워크플로가 실거래 원본을 받자마자 먼저 커밋한다", async () => {
   const yml = await read(".github/workflows/daily-update.yml");
   const step = yml.split("- name: 실거래 수집")[1]?.split("- name:")[0] ?? "";
-  const fetchAt = step.indexOf("fetch-realestate.mjs");
+  const fetchAt = step.indexOf("fetch-realestate.ts");
   const commitAt = step.search(/push-docs\.sh "[^"]*" raw\b/);
   const buildAt = step.indexOf("build-realestate.ts");
   assert.ok(fetchAt >= 0 && commitAt > fetchAt, "원본 수집 뒤에 원본 커밋이 없다");
