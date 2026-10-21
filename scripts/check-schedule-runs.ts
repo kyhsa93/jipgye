@@ -39,9 +39,9 @@
  *   한계도 같이 적는다: **별도 cron 도 버려질 수 있어 완전 자가면역은 없다.** 그 워크플로 머리 주석 참조.
  *
  * 사용:
- *   node scripts/check-schedule-runs.mjs                       # GitHub API 조회, 지금 기준
- *   node scripts/check-schedule-runs.mjs --runs-file runs.json --now 2026-08-27T04:00:00Z
- *   node scripts/check-schedule-runs.mjs --count=success --window-hours=24
+ *   node scripts/check-schedule-runs.ts                       # GitHub API 조회, 지금 기준
+ *   node scripts/check-schedule-runs.ts --runs-file runs.json --now 2026-08-27T04:00:00Z
+ *   node scripts/check-schedule-runs.ts --count=success --window-hours=24
  *
  * 재현(이 저장소의 실행 이력을 파일로 내려 두고 돌리는 법):
  *   gh api "repos/kyhsa93/jipgye/actions/workflows/daily-update.yml/runs?event=schedule&per_page=100&page=1" \
@@ -136,7 +136,7 @@ export function verdict({ fired, success, expected, mode }) {
 /** GitHub API 에서 schedule run 100건(≈25일치)을 한 번에 받는다. 28시간 창에는 넘치고도 남는다. */
 export async function fetchRuns({ repo, workflowFile, token, fetchImpl = fetch }) {
   const url = `${API}/repos/${repo}/actions/workflows/${workflowFile}/runs?event=schedule&per_page=100&page=1`;
-  const headers = {
+  const headers: Record<string, string> = {
     Accept: "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28",
     "User-Agent": "jipgye-schedule-watchdog",
@@ -144,7 +144,7 @@ export async function fetchRuns({ repo, workflowFile, token, fetchImpl = fetch }
   if (token) headers.Authorization = `Bearer ${token}`;
   const res = await fetchImpl(url, { headers });
   if (!res.ok) throw new Error(`GitHub API ${res.status} ${res.statusText} - ${url}`);
-  const body = await res.json();
+  const body: { workflow_runs?: unknown } = await res.json();
   if (!Array.isArray(body.workflow_runs)) throw new Error("GitHub API 응답에 workflow_runs 배열이 없다");
   return body.workflow_runs;
 }
@@ -175,7 +175,10 @@ export function parseArgs(argv) {
   return opts;
 }
 
-export async function main(argv, { readFile, log = console.log, error = console.error } = {}) {
+export async function main(
+  argv: string[],
+  { readFile, log = console.log, error = console.error }: { readFile?: (path: string, encoding: "utf8") => Promise<string>; log?: (message: string) => void; error?: (message: string) => void } = {},
+) {
   const opts = parseArgs(argv);
   const expected = countCrons(await readFile(opts.workflow, "utf8"), opts.workflow);
 

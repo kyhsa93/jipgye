@@ -8,7 +8,7 @@
 #     cpo 가 「남는 거짓 경보 자리」로 미리 적어 둔 자리(지연이 커지면 어제 성공이 창 밖으로 밀린다)가 실재했다.
 #     그래서 **미리 승인된 길 ⓐ(창 26~28h)** 를 쓴다. 같은 이력에서 25h→55 · 26h→30 · 27h→9 · **28h→0** 이다.
 #     28h 로도 2026-08-26 의 실제 누락은 그대로 잡는다(08-27 에 83 시점 울음, 최저 2).
-#   - **횟수 = cron 수** - 상수가 아니다. scripts/check-schedule-runs.mjs 가 daily-update.yml 의 `on.schedule` 아래
+#   - **횟수 = cron 수** - 상수가 아니다. scripts/check-schedule-runs.ts 가 daily-update.yml 의 `on.schedule` 아래
 #     `- cron:` 줄을 세어 쓴다(**자동 연동**). cron 을 하나 더하면 문턱도 그날부터 5가 된다. 블록을 못 찾으면 4로
 #     되돌아가지 않고 종료 코드 2로 죽는다 - 조용히 느슨해지는 것이 이 이슈가 막으려는 모양이다.
 #     (수동 쪽 표식도 하나 둔다: test/schedule-watchdog.test.mjs 가 "지금 cron 은 4개"를 못박아, cron 을 고치면
@@ -63,4 +63,4 @@ jobs:
       - name: 지난 28시간의 daily-update 정기 실행 수를 센다
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/check-schedule-runs.mjs
+        run: node scripts/check-schedule-runs.ts
