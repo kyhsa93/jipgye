@@ -127,7 +127,11 @@ export function findDistrict(text, districts = []) {
   return null;
 }
 
-export function metricEntry(entry, kind, { name, nameEn, slug = null, window } = {}) {
+// 옵션 객체의 모양만 적는다(타입 표기 전용 - 런타임 코드는 그대로). window 는 noteOf 가 weeks 만 읽는
+// 실거래 집계 창이라 여기서는 모양을 고정하지 않는다.
+type MetricOptions = { name?: string; nameEn?: string; slug?: string | null; window?: unknown };
+
+export function metricEntry(entry, kind, { name, nameEn, slug = null, window }: MetricOptions = {}) {
   const metric = entry?.[kind];
   if (!enoughSample(metric)) return null;
 
@@ -249,7 +253,7 @@ function ratesContext(text, rates) {
   return null;
 }
 
-export function buildContext(item, { realestate, rates } = {}) {
+export function buildContext(item, { realestate, rates }: { realestate?: unknown; rates?: unknown } = {}) {
   const text = articleText(item);
   if (!text.trim()) return [];
 

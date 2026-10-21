@@ -92,6 +92,7 @@
     "../../scripts/min-cash.ts",
     "../../scripts/mortgage.ts",
     "../../scripts/move-in.ts",
+    "../../scripts/news-context.ts",
     "../../scripts/news-items.ts",
     "../../scripts/official-price-api.ts",
     "../../scripts/official-price-explore.ts",
