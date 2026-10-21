@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { attachContext, buildRealestateStats } from "../scripts/news-context.ts";
 import { newsRealestateStatsHtml } from "../scripts/prerender.mjs";
-import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.mjs";
+import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { loadNewsPage } from "./helpers/news-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -133,7 +133,7 @@ test("커밋된 뉴스 페이지의 지표 줄이 커밋된 뉴스 데이터와 
     assert.equal(
       html.includes('<section id="realestate-stats-section">'),
       shouldOpen,
-      `${page.file}의 지표 줄이 news.json과 어긋난다 - node scripts/build-news-pages.mjs`
+      `${page.file}의 지표 줄이 news.json과 어긋난다 - node scripts/build-news-pages.ts`
     );
   }
 });

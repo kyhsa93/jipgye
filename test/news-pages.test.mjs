@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.mjs";
+import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { escapeHtml, newsListHtml, newsSummaryHtml } from "../scripts/prerender.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -18,7 +18,7 @@ test("커밋된 카테고리 페이지가 지금 원본·데이터로 찍은 결
     assert.equal(
       await read(`docs/${page.file}`),
       built,
-      `docs/${page.file}이 원본과 어긋납니다. node scripts/build-news-pages.mjs를 실행하세요.`
+      `docs/${page.file}이 원본과 어긋납니다. node scripts/build-news-pages.ts를 실행하세요.`
     );
   }
 });

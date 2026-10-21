@@ -7,7 +7,7 @@
 // test/render-parity.test.mjs가 이 표로 (1) legacy 출력이 expect와 같은지(엄격 비교 - 빈 결과는 null이 아니라 ""다), (2) React 조각이 legacy와 바이트까지 같은지 견준다.
 //
 // 이 조각들에는 표본 문턱·`low-sample` 스팬이 없다. 문턱은 렌더 때가 아니라 빌더가 이미 적용한 데이터 칸에 있다 - band.facts의 문턱(budget-facts.mjs MIN_DEALS 120·STANDARD_MIN_DEALS 30)은 build-budget-deals.mjs가,
-// 15억 경계 몰림(capStats)의 표본 문턱(clustering minEach 100)과 정책대출 건수(policyCounts)는 build-budget-pages.mjs가 정한다. 조각은 있는 것만 말한다: capStats가 없으면 몰림 문장이 빠지고
+// 15억 경계 몰림(capStats)의 표본 문턱(clustering minEach 100)과 정책대출 건수(policyCounts)는 build-budget-pages.ts가 정한다. 조각은 있는 것만 말한다: capStats가 없으면 몰림 문장이 빠지고
 // policyCounts.n이 거짓이면 정책대출 문단 전체가 빠진다(그 분기를 아래 행이 닫는다). 이 조각이 렌더 때 정하는 것은 예산대 구간(3~9억 정책대출·14·15억·16~24억 상한)과 글자뿐이다.
 //
 // 모든 값 자리에 같은 종류의 값을 넣었다(#240·#241 교훈): 비문자열(true·false·0·NaN·{}·[1,2]·[])·null·undefined·특수문자 & < > " '·이미 이스케이프된 &amp;·빈 값 행.

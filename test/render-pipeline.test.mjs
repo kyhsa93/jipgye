@@ -186,9 +186,9 @@ test("기본 단계는 지금까지 워크플로가 부르던 여섯 스크립�
   assert.deepEqual(RENDER_STEPS, [
     "scripts/prerender.mjs",
     "scripts/build-rate-pages.ts",
-    "scripts/build-news-pages.mjs",
-    "scripts/build-budget-pages.mjs",
-    "scripts/build-realestate-pages.mjs",
+    "scripts/build-news-pages.ts",
+    "scripts/build-budget-pages.ts",
+    "scripts/build-realestate-pages.ts",
     "scripts/build-updated-stamp.ts",
   ]);
   const all = [...(await read("scripts/update-all.mjs")).matchAll(/run\("node (scripts\/[a-z-]+\.(?:mjs|ts))"\)/g)].map((m) => m[1]);

@@ -98,9 +98,9 @@ jobs:
           node scripts/news-context.ts
           node scripts/render-pipeline.ts \
             scripts/prerender.mjs \
-            scripts/build-news-pages.mjs \
-            scripts/build-budget-pages.mjs \
-            scripts/build-realestate-pages.mjs \
+            scripts/build-news-pages.ts \
+            scripts/build-budget-pages.ts \
+            scripts/build-realestate-pages.ts \
             scripts/build-updated-stamp.ts
 
       - name: 테스트

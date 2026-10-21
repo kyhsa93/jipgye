@@ -19,7 +19,7 @@ import {
   REALESTATE_PAGES,
   buildDistrictPage,
   buildRealestatePage,
-} from "../scripts/build-realestate-pages.mjs";
+} from "../scripts/build-realestate-pages.ts";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 import { districtSentences } from "../scripts/district-summary.ts";
 import { stampHtml } from "../scripts/updated-stamp.ts";
@@ -184,7 +184,7 @@ test("커밋된 거래 유형별 페이지가 지금 원본·데이터로 찍은
     assert.equal(
       committed,
       stampHtml(buildRealestatePage(baseHtml, page, realestate, complexRatio?.seoul ?? null), ymd),
-      `docs/${page.file}이 원본과 어긋납니다. node scripts/build-realestate-pages.mjs를 실행하세요.`
+      `docs/${page.file}이 원본과 어긋납니다. node scripts/build-realestate-pages.ts를 실행하세요.`
     );
   }
 });
@@ -445,7 +445,7 @@ test("커밋된 자치구 페이지 25개가 지금 원본·데이터로 찍은 
         ),
         ymd
       ),
-      `docs/${district.file}이 원본과 어긋납니다. node scripts/build-realestate-pages.mjs를 실행하세요.`
+      `docs/${district.file}이 원본과 어긋납니다. node scripts/build-realestate-pages.ts를 실행하세요.`
     );
   }
 });
@@ -916,7 +916,7 @@ test("한국어는 띄어쓰기에서만 줄을 바꾼다 - 돈이 '30 / 억'으
 });
 
 test("자치구 장에 '이 구에서' 길 - 이 구의 실거래, 84㎡ 값의 예산대, 재계약, 갈아타기 (#45)", async () => {
-  const { districtHereHtml } = await import("../scripts/build-realestate-pages.mjs");
+  const { districtHereHtml } = await import("../scripts/build-realestate-pages.ts");
   const realestate = { districts: [{ name: "가구", sale: { avgPricePerPyeong10k: 3000 } }, { name: "나구", sale: { avgPricePerPyeong10k: 20000 } }] };
   const html = districtHereHtml("가구", realestate);
   assert.match(html, /deal-search\.html\?district=%EA%B0%80%EA%B5%AC/);
@@ -933,7 +933,7 @@ test("자치구 장에 '이 구에서' 길 - 이 구의 실거래, 84㎡ 값의 
 // 어긋나거나, 높이를 잡는 규칙이 없어지거나. 셋 다 여기서 막는다.
 // 값(시세·날짜)에 기대지 않는 구조 검사다(#8).
 test("추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 선다 (#287)", async () => {
-  const { REALESTATE_PAGES: pages } = await import("../scripts/build-realestate-pages.mjs");
+  const { REALESTATE_PAGES: pages } = await import("../scripts/build-realestate-pages.ts");
   const { BUDGET_PAGES } = await import("../scripts/budget-pages.ts");
   const files = [
     "realestate.html",
@@ -987,7 +987,7 @@ test("추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 �
   );
 
   // 구운 산출물에 개발자용 설명문을 싣지 않는다(장부 규칙 3). 설명은 이 CSS와
-  // scripts/build-realestate-pages.mjs에 있고, 틀과 생성 47장에는 주석이 0줄이다.
+  // scripts/build-realestate-pages.ts에 있고, 틀과 생성 47장에는 주석이 0줄이다.
   for (const file of files) {
     const html = await read(`docs/${file}`);
     const block = html.slice(html.indexOf('<section id="trend-section" class="tw:mb-10 tw:1024:mb-16" hidden>'), html.indexOf('<div class="trend-reserve '));

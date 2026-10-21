@@ -5,7 +5,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.mjs";
+import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { applyPrerender, newsSummaryHtml, summaryHtml } from "../scripts/prerender.mjs";
 import { FALLBACK_NOTE_KO, hasFallback } from "../scripts/summary-note.ts";
 
@@ -83,7 +83,7 @@ test("커밋된 구운 장 다섯의 안내 줄 유무가 summary.json 과 맞�
   for (const page of NEWS_PAGES) {
     const box = boxOf(await read(`docs/${page.file}`), "newsSummary");
     const shown = summary.categories.filter((c) => c.key === page.category && c.lineKo);
-    assert.equal(noteOf(box, "summary-note"), hasFallback(shown), `docs/${page.file} 의 안내 줄이 summary.json 과 어긋난다. node scripts/build-news-pages.mjs 를 실행하세요.`);
+    assert.equal(noteOf(box, "summary-note"), hasFallback(shown), `docs/${page.file} 의 안내 줄이 summary.json 과 어긋난다. node scripts/build-news-pages.ts 를 실행하세요.`);
   }
 });
 

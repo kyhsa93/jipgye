@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { BUDGET_PAGES, budgetPageFile } from "../scripts/budget-pages.ts";
-import { buildBudgetPage } from "../scripts/build-budget-pages.mjs";
+import { buildBudgetPage } from "../scripts/build-budget-pages.ts";
 import { budgetBodyHtml, realestateOverallHtml } from "../scripts/prerender.mjs";
 import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";

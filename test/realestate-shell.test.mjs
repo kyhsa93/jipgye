@@ -8,7 +8,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
-import { REALESTATE_PAGES } from "../scripts/build-realestate-pages.mjs";
+import { REALESTATE_PAGES } from "../scripts/build-realestate-pages.ts";
 import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
 import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 

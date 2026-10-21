@@ -5,11 +5,11 @@ import path from "node:path";
 import { findJsComments, stripJsComments, stripInlineScriptComments } from "../scripts/strip-inline-comments.ts";
 import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
 import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
-import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.mjs";
-import { buildBudgetPage } from "../scripts/build-budget-pages.mjs";
+import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.ts";
+import { buildBudgetPage } from "../scripts/build-budget-pages.ts";
 import { REALESTATE_TEMPLATE_PATH, applyPrerender, realestateHeadHtml, realestateOverallHtml, realestateTableHtml } from "../scripts/prerender.mjs";
 import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.ts";
-import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.mjs";
+import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
 import { jsInlineScripts, proveCommentsOnly, proveHtmlCommentsOnly, onlyWhitespaceAndCommentsRemoved, sameSyntax } from "./helpers/comment-proof.mjs";
 
@@ -282,7 +282,7 @@ test("시세 틀은 docs 밖에 있고 표지가 비어 있다 - 틀 읽는 쪽 
 
   // 읽는 쪽 셋: 틀 경로는 prerender.mjs 가 하나만 내보내고, 두 빌더는 그 값을 읽는다. 나가는 장의 경로 글자를 입력으로 쓰지 않는다.
   assert.equal(REALESTATE_TEMPLATE_PATH, path.join(root, TEMPLATE));
-  for (const rel of ["scripts/build-realestate-pages.mjs", "scripts/build-budget-pages.mjs"]) {
+  for (const rel of ["scripts/build-realestate-pages.ts", "scripts/build-budget-pages.ts"]) {
     const src = await read(rel);
     assert.match(src, /REALESTATE_TEMPLATE_PATH/, `${rel}: 틀 경로를 읽지 않는다`);
     assert.doesNotMatch(src, /["'`]docs\/realestate\.html["'`]/, `${rel}: 나가는 장(docs/realestate.html)을 틀로 읽는다`);
