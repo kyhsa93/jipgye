@@ -107,11 +107,11 @@ jobs:
         run: node scripts/news-context.ts
 
       # 여섯 렌더 스크립트(prerender·build-rate-pages·build-news-pages·build-budget-pages·build-realestate-pages·build-updated-stamp)는
-      # scripts/render-pipeline.mjs가 순서대로 돌린다. 하나라도 실패하면 JIPGYE_RENDERER=legacy로 처음부터 다시 렌더해
+      # scripts/render-pipeline.ts가 순서대로 돌린다. 하나라도 실패하면 JIPGYE_RENDERER=legacy로 처음부터 다시 렌더해
       # 뒤의 커밋이 돌게 한다(그날 받은 수집분이 사라지지 않게). 폴백이 발동하면 맨 끝 "렌더 폴백 반영" 단계가 job을 실패로 끝낸다(#238).
       - name: 정적 HTML에 오늘 내용 심기
         id: render
-        run: node scripts/render-pipeline.mjs
+        run: node scripts/render-pipeline.ts
 
       # 커밋이 테스트보다 먼저다.
       #

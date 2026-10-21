@@ -6,7 +6,7 @@ import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
-// 워크플로는 렌더 여섯을 render-pipeline.mjs 한 줄로 부른다(#238) - 순서·포함을 읽는 시험은 그 줄을 펼쳐서 본다.
+// 워크플로는 렌더 여섯을 render-pipeline.ts 한 줄로 부른다(#238) - 순서·포함을 읽는 시험은 그 줄을 펼쳐서 본다.
 const readWorkflow = async (rel) => expandRenderPipeline(await read(rel));
 
 const scriptsIn = (text) =>
