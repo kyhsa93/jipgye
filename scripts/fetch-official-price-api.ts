@@ -16,6 +16,8 @@ import { ApiFatalError, ApiValidationError, DEFAULT_BASE, DEFAULT_DAILY_BUDGET, 
 import { runExplore } from "./official-price-explore.ts";
 import { loadTargets } from "./official-price-targets.ts";
 
+const ctlType: number = "tsc 대조군";
+
 /** collect 모드 호출 예산 입력의 상한(개발계정 일 10,000건 안). 입력이 더 크면 이 값으로 자른다. */
 const MAX_COLLECT_BUDGET = 9000;
 const LOCAL_BASE = /^http:\/\/127\.0\.0\.1:\d{2,5}$/;
