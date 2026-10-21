@@ -84,7 +84,7 @@ jobs:
           ollama pull "$OLLAMA_MODEL"
 
       - name: AI 요약 생성
-        run: node scripts/summarize-news.mjs
+        run: node scripts/summarize-news.ts
 
       - name: 뉴스 제목 영어 번역
         run: node scripts/translate-news.mjs

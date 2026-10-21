@@ -125,6 +125,7 @@
     "../../scripts/renewal-facts.ts",
     "../../scripts/source-age.ts",
     "../../scripts/strip-inline-comments.ts",
+    "../../scripts/summarize-news.ts",
     "../../scripts/summary-box.ts",
     "../../scripts/summary-note.ts",
     "../../scripts/table-a11y.ts",
