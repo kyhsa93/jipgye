@@ -36,6 +36,7 @@ import { DISTRICTS } from "./realestate-districts.ts";
 import { RAW_DIR, readSlotFile } from "./realestate-raw.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
+const ctlType: number = "tsc 대조군";
 
 /** 칸의 해제 기록이 이보다 적으면 숫자를 비운다(clo 조건 3). */
 export const MIN_CELL = 3;
