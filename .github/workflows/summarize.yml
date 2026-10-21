@@ -37,7 +37,7 @@ jobs:
         with:
           node-version: "24"
       - id: decide
-        run: node scripts/summary-needed.mjs
+        run: node scripts/summary-needed.ts
 
   summarize:
     needs: check
@@ -87,7 +87,7 @@ jobs:
         run: node scripts/summarize-news.ts
 
       - name: 뉴스 제목 영어 번역
-        run: node scripts/translate-news.mjs
+        run: node scripts/translate-news.ts
 
       # news-context는 렌더러와 무관한 데이터 가공이라 폴백 밖에 둔다. 렌더 스크립트는 daily-update.yml과 같은
       # scripts/render-pipeline.ts가 돌리고, 실패하면 JIPGYE_RENDERER=legacy로 처음부터 다시 렌더한다(#238).
