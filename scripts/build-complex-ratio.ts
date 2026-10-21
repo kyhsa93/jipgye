@@ -5,7 +5,7 @@ import { readSlotFile } from "./realestate-raw.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { cellRatios, spreadOf } from "./complex-ratio.ts";
 
-const root = path.resolve(import.meta.dirname, "..");
+const root: number = path.resolve(import.meta.dirname, "..");
 
 /** 시세 화면과 같은 창. 칸 하나에 매매·전세가 각각 세 건씩 있어야 해서 짧으면 안 찬다. */
 export const MONTHS = 6;
