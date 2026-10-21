@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true
+  },
+  "include": [
+    "../../scripts/build-complex-price.mjs",
+    "../../scripts/build-complex-ratio.mjs",
+    "../../scripts/build-realestate.mjs",
+    "../../scripts/build-search-index.mjs"
+  ]
+}
