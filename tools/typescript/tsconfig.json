@@ -129,8 +129,10 @@
     "../../scripts/strip-inline-comments.ts",
     "../../scripts/summarize-news.ts",
     "../../scripts/summary-box.ts",
+    "../../scripts/summary-needed.ts",
     "../../scripts/summary-note.ts",
     "../../scripts/table-a11y.ts",
+    "../../scripts/translate-news.ts",
     "../../scripts/updated-stamp.ts"
   ]
 }

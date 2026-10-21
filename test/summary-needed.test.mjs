@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { decide } from "../scripts/summary-needed.mjs";
+import { decide } from "../scripts/summary-needed.ts";
 
 const NOW = new Date("2026-08-17T05:00:00.000Z");
 
