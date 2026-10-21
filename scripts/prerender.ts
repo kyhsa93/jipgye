@@ -32,7 +32,7 @@ import { overallCards } from "./realestate-overall.ts";
 import { MIN_SAMPLE } from "./realestate-format.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 
-const root = path.resolve(import.meta.dirname, "..");
+const root: number = path.resolve(import.meta.dirname, "..");
 const INDEX_PATH = path.join(root, "docs/index.html");
 const RATES_PATH = path.join(root, "docs/rates.html");
 const NEWS_PATH = path.join(root, "docs/news.html");
