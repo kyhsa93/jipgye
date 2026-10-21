@@ -1,3 +1,4 @@
+import { StatsBase } from "node:fs";
 /**
  * 정기 실행 누락 탐지 (#322).
  *
