@@ -1,22 +1,54 @@
 {
-  "updatedAt": "2026-10-21T08:34:08.439Z",
+  "updatedAt": "2026-10-21T08:58:51.544Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 부동산: 용산 아세아아파트 공사가 무기한 중단되면서 연내 분양에 차질이 생겼다. 계양신도시에서 반도건설이 ‘카이브 유보라’ 견본주택을 23일 개관한다. 주택도시보증공사(HUG)와 동아대는 부동산 및 PF 전문 인력 양성을 위한 업무협약을 체결했다. HUG는 동아대와 함께 부동산·PF 분야의 전문인재 양성에 나선다. 강원도는 지역 맞춤형 청년 공공임대주택을 확대해 청년 정착 기반을 강화하고 있다.\n- 기타 경제 소식: 국민경제자문회의가 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다.\n- 금리·예금·투자상품: 금통위 회의를 앞두고 국고채 금리가 대체로 하락했다. 3년물 국고채 금리는 연 3.822%를 기록했다. 이는 금통위 결정 전 시장의 기대감이 반영된 것으로 보인다. 각 기관은 금리 동향을 주시하며 다음 회의에 대비하고 있다. 현재 시장에서는 금리 변동에 따른 투자자들의 움직임이 주목받고 있다.\n- 증시·환율: 코스피는 AI 투자심리 회복에 3.3% 급등 마감했지만, 원/달러 환율은 4거래일 연속 연저점 기록하며 1,320원대 초반을 기록했고, 중국 증시는 상하이지수 0.6% 하락 마감했으며, 일본 증시는 반도체·AI주 강세에 닛케이지수 0.85% 상승 마감했다.",
-    "en": "- Real Estate: The construction of the Yongsan Asia Apartment was indefinitely suspended, causing delays in the sales this year. Bandoo Construction will open a model house for 'Caybe Yubora' in Gye Yang New City on the 23rd. The Housing & Urban Development Corporation (HUG) and Dong-A University have signed a memorandum of understanding to train professionals in real estate and PF. HUG is working with Dong-A University to cultivate specialized professionals in the real estate and PF fields. Gangwon Province is expanding region-specific public rental housing for youth to strengthen the foundation for youth settlement.\n- Other Economic News: The National Economic Advisory Council held a seminar on the topic of \"Power Grid Bottlenecks and Energy Geopolitics.\n- Rates, Deposits & Investment Products: Ahead of the MPC meeting, government bond rates generally fell. The 3-year government bond rate recorded 3.822% annually. This appears to reflect market expectations prior to the MPC decision. Each institution is monitoring interest rate trends in preparation for the next meeting. Currently, investors' movements in response to interest rate fluctuations are receiving attention.\n- Stocks & FX: The KOSPI surged 3.3% to close as investor sentiment in AI recovered, but the won/dollar exchange rate hit a new low for the fourth consecutive trading day, reaching the early 1,320 won range. The Chinese stock market closed with the Shanghai Index down 0.6%, while the Japanese stock market closed with the Nikkei Index up 0.85% amid strong performance in semiconductor and AI stocks."
+    "ko": "- 금리·예금·투자상품: 대출 플랫폼 '핀다'가 대원저축은행을 인수하는 협약을 체결했다. 토스뱅크는 만기일을 직접 정하는 정기예금 상품을 출시하고 최고 연 3.8% 금리를 제공한다. 금통위 회의를 앞두고 국고채 금리가 대체로 하락했으며, 3년물 금리는 연 3.822%를 기록했다. 각 기사는 서로 다른 주제를 다루고 있으며, 인과관계는 명시되지 않았다. 이들 기사는 금융시장의 다양한 움직임을 보여주는 사례로, 각각의 수치와 내용은 실제 기사에서 나왔다.\n- 부동산: 청년 전·월세 대출이 사상 최대인 75조 원을 기록하며 실거주 의무 강화의 부작용이 우려되고 있다. 용산 아세아아파트 공사가 무기한 중단되면서 연내 분양에 차질이 생겼다. 계양신도시에 반도건설이 '카이브 유보라' 견본주택을 23일 개관한다. 주택도시보증공사와 동아대는 부동산 및 PF 전문 인력 양성을 위한 업무협약을 체결했다. 청년들의 주거 부담은 집값 상승으로 인해 더욱 커지고 있다.\n- 기타 경제 소식: 국민경제자문회의는 오늘 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다. 오늘 경제 관련 주요 소식 중 하나는 에너지 분야의 전력망 문제와 국제적 에너지 상황에 대한 논의였다. 다른 소식에서는 경제 정책 관련 전문가들이 모여 다양한 주제를 다루는 자리가 마련됐다. 오늘 발표된 내용은 에너지 안보와 관련된 전략적 고민을 반영하고 있다. 각 기사는 서로 다른 주제를 다루었지만 모두 오늘의 경제 동향을 반영하고 있다.\n- 증시·환율: 코스피는 AI 투자심리 회복에 3.3% 급등 마감하며 삼전닉스가 5% 상승했고, 중국 증시는 상하이지수가 0.6% 하락 마감했으며, 일본 증시는 반도체·AI주 강세에 닛케이지수가 0.85% 상승 마감했다.",
+    "en": "- Rates, Deposits & Investment Products: Loan platform \"Finda\" has concluded a contract to acquire Daewon Savings Bank. Toss Bank has launched a fixed deposit product where customers can set their own maturity dates, offering a maximum annual interest rate of 3.8%. Ahead of the MPC meeting, government bond rates generally fell, with the 3-year rate recording an annual 3.822%. Each article covers different topics, and no causal relationships are stated. These articles are examples illustrating various movements in the financial market, with each figure and content derived from the actual articles.\n- Real Estate: The youth rent and mortgage loan has reached an all-time high of 75,000,000,000,000 won, raising concerns about the adverse effects of strengthening the obligation to reside in one's own home. The construction of Asiana Apartment in Yongsan has been indefinitely suspended, causing delays in the sales this year. Hyundai Engineering & Construction will open a model house for 'Caybe Yubora' in Gyeongyang New City on the 23rd. The Housing and Urban Development Corporation and Dong-A University have signed a memorandum of understanding to cultivate professionals in real estate and project finance. The housing burden on young people is increasing further due to rising housing prices.\n- Other Economic News: The National Economic Advisory Council held a seminar today with the theme \"Power Grid Bottlenecks and Energy Geopolitics.\" One of the major economic news items today involved discussions on power grid issues in the energy sector and the international energy situation. Another news item featured a gathering of economic policy experts discussing various topics. The content presented today reflects strategic considerations related to energy security. Although each article covered different topics, they all reflect today's economic trends.\n- Stocks & FX: The KOSPI surged 3.3% at close due to recovery in AI investment sentiment, with Samsung Electronics rising 5%. The Chinese market closed with the Shanghai Composite down 0.6%, while the Japanese market closed with the Nikkei up 0.85% due to strong performance in semiconductor and AI stocks."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "용산 아세아아파트 공사가 무기한 중단되면서 연내 분양에 차질이 생겼다. 계양신도시에서 반도건설이 ‘카이브 유보라’ 견본주택을 23일 개관한다. 주택도시보증공사(HUG)와 동아대는 부동산 및 PF 전문 인력 양성을 위한 업무협약을 체결했다. HUG는 동아대와 함께 부동산·PF 분야의 전문인재 양성에 나선다. 강원도는 지역 맞춤형 청년 공공임대주택을 확대해 청년 정착 기반을 강화하고 있다.",
-      "lineEn": "The construction of the Yongsan Asia Apartment was indefinitely suspended, causing delays in the sales this year. Bandoo Construction will open a model house for 'Caybe Yubora' in Gye Yang New City on the 23rd. The Housing & Urban Development Corporation (HUG) and Dong-A University have signed a memorandum of understanding to train professionals in real estate and PF. HUG is working with Dong-A University to cultivate specialized professionals in the real estate and PF fields. Gangwon Province is expanding region-specific public rental housing for youth to strengthen the foundation for youth settlement.",
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "대출 플랫폼 '핀다'가 대원저축은행을 인수하는 협약을 체결했다. 토스뱅크는 만기일을 직접 정하는 정기예금 상품을 출시하고 최고 연 3.8% 금리를 제공한다. 금통위 회의를 앞두고 국고채 금리가 대체로 하락했으며, 3년물 금리는 연 3.822%를 기록했다. 각 기사는 서로 다른 주제를 다루고 있으며, 인과관계는 명시되지 않았다. 이들 기사는 금융시장의 다양한 움직임을 보여주는 사례로, 각각의 수치와 내용은 실제 기사에서 나왔다.",
+      "lineEn": "Loan platform \"Finda\" has concluded a contract to acquire Daewon Savings Bank. Toss Bank has launched a fixed deposit product where customers can set their own maturity dates, offering a maximum annual interest rate of 3.8%. Ahead of the MPC meeting, government bond rates generally fell, with the 3-year rate recording an annual 3.822%. Each article covers different topics, and no causal relationships are stated. These articles are examples illustrating various movements in the financial market, with each figure and content derived from the actual articles.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
+        {
+          "title": "대출 플랫폼 '핀다' 대원저축銀 인수",
+          "link": "https://www.hankyung.com/article/2026102167131",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "만기일 직접 정하는 정기예금\n토스뱅크, 최고 연 3.8% 금리",
+          "link": "https://www.hankyung.com/article/2026102167181",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "금통위 앞두고 국고채 금리 대체로 하락…3년물 연 3.822%(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261021144851008",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "청년 전·월세 대출이 사상 최대인 75조 원을 기록하며 실거주 의무 강화의 부작용이 우려되고 있다. 용산 아세아아파트 공사가 무기한 중단되면서 연내 분양에 차질이 생겼다. 계양신도시에 반도건설이 '카이브 유보라' 견본주택을 23일 개관한다. 주택도시보증공사와 동아대는 부동산 및 PF 전문 인력 양성을 위한 업무협약을 체결했다. 청년들의 주거 부담은 집값 상승으로 인해 더욱 커지고 있다.",
+      "lineEn": "The youth rent and mortgage loan has reached an all-time high of 75,000,000,000,000 won, raising concerns about the adverse effects of strengthening the obligation to reside in one's own home. The construction of Asiana Apartment in Yongsan has been indefinitely suspended, causing delays in the sales this year. Hyundai Engineering & Construction will open a model house for 'Caybe Yubora' in Gyeongyang New City on the 23rd. The Housing and Urban Development Corporation and Dong-A University have signed a memorandum of understanding to cultivate professionals in real estate and project finance. The housing burden on young people is increasing further due to rising housing prices.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "[단독] 실거주 의무 강화 부작용? 청년 전·월세 대출 '사상 최대'",
+          "link": "https://www.hankyung.com/article/2026102167961",
+          "source": "한국경제 경제"
+        },
         {
           "title": "용산 아세아아파트 공사 무기한 중단…연내 분양 차질",
           "link": "https://www.newsis.com/view/NISX20261021_0003834882",
@@ -28,19 +60,14 @@
           "source": "매일경제 부동산"
         },
         {
+          "title": "[단독] 집값에 치이는 청년들…전월세대출 75조 '사상 최대'",
+          "link": "https://www.hankyung.com/article/202610216013i",
+          "source": "한국경제 경제"
+        },
+        {
           "title": "주택도시보증공사-동아대, 부동산·PF 전문 인력 양성 업무협약",
           "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/21/AW2VGD2QZNDH5PW5BX5ECNA6TI/",
           "source": "조선비즈 부동산"
-        },
-        {
-          "title": "HUG, 동아대와 부동산·PF 분야 전문인재 양성 나선다",
-          "link": "https://www.newsis.com/view/NISX20261021_0003835499",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "강원도, 지역 맞춤형 청년 공공임대주택 확대…정착 기반 강화",
-          "link": "https://www.yna.co.kr/view/AKR20261021146200062",
-          "source": "연합뉴스 경제"
         }
       ]
     },
@@ -48,11 +75,11 @@
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "국민경제자문회의가 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다.",
-      "lineEn": "The National Economic Advisory Council held a seminar on the topic of \"Power Grid Bottlenecks and Energy Geopolitics.",
+      "lineKo": "국민경제자문회의는 오늘 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다. 오늘 경제 관련 주요 소식 중 하나는 에너지 분야의 전력망 문제와 국제적 에너지 상황에 대한 논의였다. 다른 소식에서는 경제 정책 관련 전문가들이 모여 다양한 주제를 다루는 자리가 마련됐다. 오늘 발표된 내용은 에너지 안보와 관련된 전략적 고민을 반영하고 있다. 각 기사는 서로 다른 주제를 다루었지만 모두 오늘의 경제 동향을 반영하고 있다.",
+      "lineEn": "The National Economic Advisory Council held a seminar today with the theme \"Power Grid Bottlenecks and Energy Geopolitics.\" One of the major economic news items today involved discussions on power grid issues in the energy sector and the international energy situation. Another news item featured a gathering of economic policy experts discussing various topics. The content presented today reflects strategic considerations related to energy security. Although each article covered different topics, they all reflect today's economic trends.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": true,
+      "degraded": false,
       "items": [
         {
           "title": "국민경제자문회의, '전력망 병목과 에너지 지정학' 세미나",
@@ -62,28 +89,11 @@
       ]
     },
     {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "금통위 회의를 앞두고 국고채 금리가 대체로 하락했다. 3년물 국고채 금리는 연 3.822%를 기록했다. 이는 금통위 결정 전 시장의 기대감이 반영된 것으로 보인다. 각 기관은 금리 동향을 주시하며 다음 회의에 대비하고 있다. 현재 시장에서는 금리 변동에 따른 투자자들의 움직임이 주목받고 있다.",
-      "lineEn": "Ahead of the MPC meeting, government bond rates generally fell. The 3-year government bond rate recorded 3.822% annually. This appears to reflect market expectations prior to the MPC decision. Each institution is monitoring interest rate trends in preparation for the next meeting. Currently, investors' movements in response to interest rate fluctuations are receiving attention.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "금통위 앞두고 국고채 금리 대체로 하락…3년물 연 3.822%(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261021144851008",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
-      "lineKo": "코스피는 AI 투자심리 회복에 3.3% 급등 마감했지만, 원/달러 환율은 4거래일 연속 연저점 기록하며 1,320원대 초반을 기록했고, 중국 증시는 상하이지수 0.6% 하락 마감했으며, 일본 증시는 반도체·AI주 강세에 닛케이지수 0.85% 상승 마감했다.",
-      "lineEn": "The KOSPI surged 3.3% to close as investor sentiment in AI recovered, but the won/dollar exchange rate hit a new low for the fourth consecutive trading day, reaching the early 1,320 won range. The Chinese stock market closed with the Shanghai Index down 0.6%, while the Japanese stock market closed with the Nikkei Index up 0.85% amid strong performance in semiconductor and AI stocks.",
+      "lineKo": "코스피는 AI 투자심리 회복에 3.3% 급등 마감하며 삼전닉스가 5% 상승했고, 중국 증시는 상하이지수가 0.6% 하락 마감했으며, 일본 증시는 반도체·AI주 강세에 닛케이지수가 0.85% 상승 마감했다.",
+      "lineEn": "The KOSPI surged 3.3% at close due to recovery in AI investment sentiment, with Samsung Electronics rising 5%. The Chinese market closed with the Shanghai Composite down 0.6%, while the Japanese market closed with the Nikkei up 0.85% due to strong performance in semiconductor and AI stocks.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": true,
@@ -106,11 +116,6 @@
         {
           "title": "코스피, AI 투자심리 회복에 3.3% 급등 마감…삼전닉스 5%↑(종합)",
           "link": "https://www.yna.co.kr/view/AKR20261021134800008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "원/달러 환율 4거래일 연속 연저점 기록…1,320원대 초반",
-          "link": "https://www.yna.co.kr/view/AKR20261021129200002",
           "source": "연합뉴스 경제"
         }
       ]
