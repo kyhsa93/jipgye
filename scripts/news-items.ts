@@ -1,4 +1,4 @@
-// 첫 화면 뉴스에 어느 기사를 싣는가. 순수 모듈 - prerender.mjs(legacy)와 render/entry.jsx(JSX)가 같은 함수를 쓴다(#241).
+// 첫 화면 뉴스에 어느 기사를 싣는가. 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 함수를 쓴다(#241).
 
 /**
  * 첫 화면 뉴스는 다섯 건만 - 부동산 먼저. 전에는 스물네 건이 다 실려 AI 요약의 주제별 헤드라인과 같은 기사를

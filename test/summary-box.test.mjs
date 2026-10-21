@@ -11,7 +11,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { loadIndexPage } from "./helpers/index-page.mjs";
-import { applyPrerender, summaryHtml } from "../scripts/prerender.mjs";
+import { applyPrerender, summaryHtml } from "../scripts/prerender.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -99,7 +99,7 @@ test("커밋된 구운 index.html 의 상자가 summary.json 으로 다시 찍�
   const a = html.indexOf("<!--prerender:summary-->") + "<!--prerender:summary-->".length;
   const baked = html.slice(a, html.indexOf("<!--/prerender:summary-->"));
   const strip = (h) => h.replace(/<span class="summary-meta">[^<]*<\/span>$/, "");
-  assert.equal(strip(baked), strip(summaryHtml.legacy(summary)), "docs/index.html 의 구운 상자가 summary.json 과 어긋난다. node scripts/prerender.mjs 를 실행하세요.");
+  assert.equal(strip(baked), strip(summaryHtml.legacy(summary)), "docs/index.html 의 구운 상자가 summary.json 과 어긋난다. node scripts/prerender.ts 를 실행하세요.");
   // 날짜 글자는 ICU 판에 따라 달라질 수 있어 형태만 본다(같은 판 안의 정확한 글자는 위 스크립트 대조가 본다).
   const meta = baked.match(/<span class="summary-meta">([^<]*)<\/span>$/)?.[1];
   assert.match(meta ?? "", /^.+ 생성 · \d{4}\. \d{1,2}\. \d{1,2}\. (오전|오후) \d{1,2}:\d{2} KST$/, ".summary-meta 의 형태가 다르다");

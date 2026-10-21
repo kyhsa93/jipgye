@@ -971,8 +971,8 @@ async function main() {
     ],
   ]) {
     // 틀이 따로 있는 장은 틀을 읽어 채우고 훑개를 건다(훑개는 굽는 단계의 마지막이다). 나가는 장의 지금 내용은 "변경 없음" 비교용이다.
-    const html = await readFile(templatePath ?? path_, "utf8");
-    const current = templatePath ? await readFile(path_, "utf8").catch(() => null) : html;
+    const html = await readFile((templatePath ?? path_) as string, "utf8");
+    const current = templatePath ? await readFile(path_ as string, "utf8").catch(() => null) : html;
     const filled = applyPrerender(html, fileBlocks);
     const next = templatePath ? stripInlineScriptComments(filled) : filled;
 

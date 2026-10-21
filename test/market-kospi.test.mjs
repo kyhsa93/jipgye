@@ -85,7 +85,7 @@ test("화면이 종가 날짜와 환율 증감을 함께 적는다", async () =>
 });
 
 test("코스피는 증시 뉴스 장에 종가 날짜와 함께 실린다 (#56)", async () => {
-  const { newsKospiHtml } = await import("../scripts/prerender.mjs");
+  const { newsKospiHtml } = await import("../scripts/prerender.ts");
   const html = newsKospiHtml({ kospi: { value: "6,788.88", change: "-123.49", asOf: "8/28" } });
   assert.match(html, /코스피 8\/28 종가/);
   assert.match(html, /6,788\.88/);

@@ -7,7 +7,7 @@ import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
 import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.ts";
 import { buildBudgetPage } from "../scripts/build-budget-pages.ts";
-import { REALESTATE_TEMPLATE_PATH, applyPrerender, realestateHeadHtml, realestateOverallHtml, realestateTableHtml } from "../scripts/prerender.mjs";
+import { REALESTATE_TEMPLATE_PATH, applyPrerender, realestateHeadHtml, realestateOverallHtml, realestateTableHtml } from "../scripts/prerender.ts";
 import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.ts";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
@@ -24,14 +24,14 @@ import { jsInlineScripts, proveCommentsOnly, proveHtmlCommentsOnly, onlyWhitespa
  *   3. 틀은 주석을 그대로 갖는다(소스가 단일 출처다 - 소스맵은 쓰지 않는다).
  *
  * 범위: 틀에서 찍어 내는 장 54장. 시세 틀은 #374 에서 docs/ 밖(scripts/realestate-template.html)으로 옮겼고, 틀 자신이 나가는 장
- * docs/realestate.html 도 prerender.mjs 가 틀을 채운 뒤 훑개를 걸어 낸다 - 그래서 이 장도 53장과 같은 줄에 선다.
+ * docs/realestate.html 도 prerender.ts 가 틀을 채운 뒤 훑개를 걸어 낸다 - 그래서 이 장도 53장과 같은 줄에 선다.
  * 손으로 쓴 나머지 장(index·deal-search …)은 제자리 원본이라 범위 밖이다 - 아래 "범위 밖" 시험이 숫자로 고정한다.
  */
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
 
-// 구운 장 = 빌더 넷이 찍어 내는 장 + 시세 틀을 prerender.mjs 가 채워 내는 docs/realestate.html(#374). 장 수는 아래 시험이 고정한다.
+// 구운 장 = 빌더 넷이 찍어 내는 장 + 시세 틀을 prerender.ts 가 채워 내는 docs/realestate.html(#374). 장 수는 아래 시험이 고정한다.
 const TEMPLATE = "scripts/realestate-template.html";
 const BAKED = [
   "realestate.html",
@@ -243,7 +243,7 @@ test("틀은 주석을 그대로 갖는다(소스가 단일 출처다) - 구운 
 });
 
 test("범위 밖을 숫자로 고정한다: 손으로 쓴 제자리 장은 주석을 그대로 싣는다", async () => {
-  // 이 장들은 틀에서 찍는 장이 아니라 docs 안의 원본이다(prerender.mjs 가 제자리에서 채운다). 굽는 단계에서 떼면 원본이 지워진다.
+  // 이 장들은 틀에서 찍는 장이 아니라 docs 안의 원본이다(prerender.ts 가 제자리에서 채운다). 굽는 단계에서 떼면 원본이 지워진다.
   // 이 목록이 줄면 좋은 일이다(원본을 docs 밖으로 옮겼다는 뜻) - 그때 이 시험의 숫자를 줄인다. #374 가 realestate.html 을 뺐다(13 -> 12).
   const names = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html"));
   const rest = names.filter((f) => !BAKED.includes(f)).sort();
@@ -260,7 +260,7 @@ test("범위 밖을 숫자로 고정한다: 손으로 쓴 제자리 장은 주�
 });
 
 // ---- #374: 시세 틀을 docs/ 밖으로 옮긴다 -------------------------------------------------------------------------------------
-// 읽는 쪽이 둘로 갈린다. 틀을 읽는 쪽(prerender.mjs · build-realestate-pages · build-budget-pages · 빌더를 부르는 시험)은 빈 <!--prerender:…--> 표지가
+// 읽는 쪽이 둘로 갈린다. 틀을 읽는 쪽(prerender.ts · build-realestate-pages · build-budget-pages · 빌더를 부르는 시험)은 빈 <!--prerender:…--> 표지가
 // 있는 scripts/realestate-template.html 을, 나가는 장을 보는 쪽(화면 스크립트를 돌리는 시험 · 마크업을 보는 시험)은 docs/realestate.html 을 읽는다.
 // 둘을 섞으면 시험이 조용히 다른 파일을 본다 - 아래 셋이 그 경계를 못박는다.
 
@@ -275,20 +275,20 @@ test("시세 틀은 docs 밖에 있고 표지가 비어 있다 - 틀 읽는 쪽 
   const baked = await read("docs/realestate.html");
   for (const name of MARKERS) {
     assert.equal(markerBody(template, name), "", `틀의 ${name} 표지가 비어 있지 않다 - 빌더가 채워진 장을 틀로 물려받는다`);
-    assert.ok(markerBody(baked, name)?.length > 0, `나가는 장의 ${name} 표지가 비었다 - prerender.mjs 가 틀을 채우지 못했다`);
+    assert.ok(markerBody(baked, name)?.length > 0, `나가는 장의 ${name} 표지가 비었다 - prerender.ts 가 틀을 채우지 못했다`);
   }
   assert.match(template, /<div class="updated" id="updated"><\/div>/, "틀에 찍힌 기준일이 남아 있다 - 날마다 틀이 바뀐다");
   assert.match(baked, /<div class="updated" id="updated" data-updated="\d{4}-\d{2}-\d{2}">/, "나가는 장에 기준일이 안 찍혔다");
 
-  // 읽는 쪽 셋: 틀 경로는 prerender.mjs 가 하나만 내보내고, 두 빌더는 그 값을 읽는다. 나가는 장의 경로 글자를 입력으로 쓰지 않는다.
+  // 읽는 쪽 셋: 틀 경로는 prerender.ts 가 하나만 내보내고, 두 빌더는 그 값을 읽는다. 나가는 장의 경로 글자를 입력으로 쓰지 않는다.
   assert.equal(REALESTATE_TEMPLATE_PATH, path.join(root, TEMPLATE));
   for (const rel of ["scripts/build-realestate-pages.ts", "scripts/build-budget-pages.ts"]) {
     const src = await read(rel);
     assert.match(src, /REALESTATE_TEMPLATE_PATH/, `${rel}: 틀 경로를 읽지 않는다`);
     assert.doesNotMatch(src, /["'`]docs\/realestate\.html["'`]/, `${rel}: 나가는 장(docs/realestate.html)을 틀로 읽는다`);
   }
-  const prerender = await read("scripts/prerender.mjs");
-  assert.equal(prerender.match(/["'`]docs\/realestate\.html["'`]/g).length, 2, "prerender.mjs 에서 나가는 장의 경로는 출력 경로와 항목 이름 두 곳뿐이다");
+  const prerender = await read("scripts/prerender.ts");
+  assert.equal(prerender.match(/["'`]docs\/realestate\.html["'`]/g).length, 2, "prerender.ts 에서 나가는 장의 경로는 출력 경로와 항목 이름 두 곳뿐이다");
 });
 
 test("시세 틀에는 #312 판정 §6 이 뺀 주석 다섯 줄이 있고 나가는 장에는 한 줄도 없다 (#374)", async () => {
@@ -339,7 +339,7 @@ test("나가는 docs/realestate.html 은 틀을 채우고 훑개를 건 것뿐�
       .replace(/<div class="updated" id="updated"[^>]*>[^<]*<\/div>/, '<div class="updated" id="updated"></div>');
   assert.equal(fold(baked), fold(template), "표지 안과 기준일 말고도 틀과 다른 곳이 있다 - 생성물을 손으로 고쳤다");
 
-  // 지금 데이터로 prerender.mjs 가 하는 일(틀 채우기 -> 훑개)을 그대로 해 보면 커밋된 장과 같다(기준일 줄만 build-updated-stamp 가 마지막에 찍는다).
+  // 지금 데이터로 prerender.ts 가 하는 일(틀 채우기 -> 훑개)을 그대로 해 보면 커밋된 장과 같다(기준일 줄만 build-updated-stamp 가 마지막에 찍는다).
   const realestate = JSON.parse(await read("docs/data/realestate.json"));
   const stamp = (html) => html.replace(/<div class="updated" id="updated"[^>]*>[^<]*<\/div>/, '<div class="updated" id="updated"></div>');
   const rebuilt = stripInlineScriptComments(

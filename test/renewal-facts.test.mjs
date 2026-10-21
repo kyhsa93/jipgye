@@ -11,7 +11,7 @@ import {
   tally,
 } from "../scripts/renewal-facts.ts";
 import { buildPayload } from "../scripts/build-renewal-facts.mjs";
-import { districtRenewalHtml } from "../scripts/prerender.mjs";
+import { districtRenewalHtml } from "../scripts/prerender.ts";
 
 const NOW = new Date("2026-08-26T00:00:00Z");
 

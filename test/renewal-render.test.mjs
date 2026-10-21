@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildPayload } from "../scripts/build-renewal-facts.mjs";
-import { renewalDistrictsHtml, renewalWolseDistrictsHtml } from "../scripts/prerender.mjs";
+import { renewalDistrictsHtml, renewalWolseDistrictsHtml } from "../scripts/prerender.ts";
 import { loadRenewalPage } from "./helpers/renewal-page.mjs";
 
 // 3월 계약은 신고 기한(30일)이 지나 마감됐다. 마감된 달만 세므로 이 날짜라야 잡힌다.

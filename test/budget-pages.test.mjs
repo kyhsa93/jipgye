@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { BUDGET_PAGES, budgetPageFile } from "../scripts/budget-pages.ts";
 import { buildBudgetPage } from "../scripts/build-budget-pages.ts";
-import { budgetBodyHtml, realestateOverallHtml } from "../scripts/prerender.mjs";
+import { budgetBodyHtml, realestateOverallHtml } from "../scripts/prerender.ts";
 import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
@@ -279,7 +279,7 @@ test("예산대 장 머리는 본문과 같은 기간을, 건수는 직거래가
   assert.match(head, /8월 신고분 기준/, `머리: ${head}`);
   assert.doesNotMatch(head, /2026-09-28/, "맨 아래 서울 평균 카드의 창을 머리에 적었다");
   assert.match(page.budgetHtml(), /건이 거래됐습니다\(직거래 1건 포함\)/);
-  const { budgetBodyHtml: prerender } = await import("../scripts/prerender.mjs");
+  const { budgetBodyHtml: prerender } = await import("../scripts/prerender.ts");
   assert.match(prerender({ ...band, direct: 1 }, BUDGET.periods, RATES, null, COMPLEX_FILES), /\(직거래 1건 포함\)/, "빌드와 화면이 갈렸다");
 });
 
@@ -293,7 +293,7 @@ test("영어 화면의 예산대 장은 한국어로만 굽는 문단이 있다�
 });
 
 test("예산대 장 맨 위 '한눈에'는 아래 문단과 같은 함수에서 나온 값을 한 줄씩 적는다 (#43)", async () => {
-  const { budgetAnswersHtml } = await import("../scripts/prerender.mjs");
+  const { budgetAnswersHtml } = await import("../scripts/prerender.ts");
   const html = budgetAnswersHtml({ min10k: 70_000 }, RATES);
   assert.match(html, /7억 5,000만원짜리를 산다면/);
   assert.match(html, /자기 돈이 적어도<\/span><strong class="answer-value">4억 6,950만원<\/strong><span class="answer-note">생애최초면 2억 4,250만원/);

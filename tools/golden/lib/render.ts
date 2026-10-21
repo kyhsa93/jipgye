@@ -1,6 +1,6 @@
 // 렌더 단계 전체를 "깨끗한 작업 사본"에서 한 번 돌린다 (#236 범위 3).
 //
-// 왜 사본인가: prerender.mjs는 docs HTML을 읽어 같은 파일 위에 덮어쓴다. 같은 SHA에서 두 번 렌더하거나 legacy와
+// 왜 사본인가: prerender.ts는 docs HTML을 읽어 같은 파일 위에 덮어쓴다. 같은 SHA에서 두 번 렌더하거나 legacy와
 // react를 나란히 렌더하려면 매번 같은 출발점이 있어야 하고, 저장소 작업 트리의 docs/는 바뀌면 안 된다.
 //   1. 출발점(pristine)을 한 번 만든다: `git archive <sha>`(커밋된 상태) 또는 작업 트리 스냅숏(미커밋 상태, rsync).
 //   2. 렌더마다 pristine을 새 디렉터리로 복제한다(macOS는 APFS clone, Linux는 reflink → 비용이 거의 없다).

@@ -74,7 +74,7 @@ test("이 장에 <code>가 생기면 전부 글자 크기 유틸리티를 단다
 });
 
 test("굽는 조각 셋·다시 그려지는 표·링크·인라인 스크립트(showEmpty 포함)에는 유틸리티를 두지 않는다 (#281)", async () => {
-  // 조각은 scripts/prerender.mjs 와 scripts/render/entry.jsx 두 렌더러가 같은 글자로 내고, 표·링크는 스크립트가 데이터를 받으면 통째로 다시 그린다.
+  // 조각은 scripts/prerender.ts 와 scripts/render/entry.jsx 두 렌더러가 같은 글자로 내고, 표·링크는 스크립트가 데이터를 받으면 통째로 다시 그린다.
   // 결과 카드는 스크립트가 템플릿 문자열로 그린다 - 거기에 유틸리티를 두면 구운 첫 화면과 다시 그린 화면이 어긋난다.
   const html = await read();
   const names = ["conversionLead", "conversionTable", "conversionDistrictLinks"];

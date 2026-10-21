@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { loadIndexPage } from "./helpers/index-page.mjs";
-import { summaryHtml } from "../scripts/prerender.mjs";
+import { summaryHtml } from "../scripts/prerender.ts";
 
 const SUMMARY = {
   updatedAt: new Date().toISOString(),

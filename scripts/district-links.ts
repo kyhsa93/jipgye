@@ -1,5 +1,5 @@
-// 자치구 링크 조각이 같이 쓰는 것. 순수 모듈 - prerender.mjs(legacy)와 render/entry.jsx(JSX)가 같은 함수·같은 경로 규칙을 쓴다(#241 PR 2).
-// 여기서 `prerender.mjs`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다).
+// 자치구 링크 조각이 같이 쓰는 것. 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 함수·같은 경로 규칙을 쓴다(#241 PR 2).
+// 여기서 `prerender.ts`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다).
 import { escapeHtml } from "./html-escape.ts";
 
 /**
@@ -14,7 +14,7 @@ export function linksBlockShape(id, heading, hasLinks) {
 
 /**
  * 링크 묶음의 머리글과 상자. 링크가 하나도 없으면 머리글도 내지 않는다(빈 문자열).
- * 부르는 쪽은 districtLinksHtml(prerender.mjs)이고, JSX 쪽은 같은 분기를 `linksBlockShape`로 쓴다(문자열을 요소에 끼우지 않으려고 모양과 마크업을 나눴다).
+ * 부르는 쪽은 districtLinksHtml(prerender.ts)이고, JSX 쪽은 같은 분기를 `linksBlockShape`로 쓴다(문자열을 요소에 끼우지 않으려고 모양과 마크업을 나눴다).
  * `links`는 이미 만든 `<a>` 글자 묶음이다.
  */
 export function linksBlockHtml(id, heading, links) {

@@ -1,6 +1,6 @@
 // 금리 표 조각(`ratesHtml`·`ratesHeadHtml`)의 계산 (#240). 상수·값 모양·행 선택·정렬·세후 이자 칸의 값이 여기 한 곳에 있다.
 //
-// 두 곳이 같이 쓴다: `prerender.mjs`의 legacy 문자열 조각과 `render/entry.jsx`의 JSX 조각. JSX 진입 파일은 `prerender.mjs`를
+// 두 곳이 같이 쓴다: `prerender.ts`의 legacy 문자열 조각과 `render/entry.jsx`의 JSX 조각. JSX 진입 파일은 `prerender.ts`를
 // 불러올 수 없으므로(로더가 막는다 - #237) 이 계산을 두 곳에 복제하는 대신 부르는 쪽이 같은 모듈을 가져온다 - 같은 계산이 두 곳에
 // 있으면 한쪽만 고쳐 드리프트가 난다(DIRECTION 새 아이디어 10). 마크업(어떤 태그에 어떤 클래스를 붙이나)만 두 곳에 따로 있고,
 // 그 차이는 test/render-parity.test.mjs가 분기마다 견준다.

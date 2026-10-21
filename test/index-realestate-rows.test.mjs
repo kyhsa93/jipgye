@@ -26,7 +26,7 @@ async function page() {
   });
 }
 
-// scripts/realestate-rows.mjs의 MAX_DISTRICTS(prerender.mjs가 그린다), index.html의 MAX_VISIBLE_DISTRICTS와 같은 수.
+// scripts/realestate-rows.mjs의 MAX_DISTRICTS(prerender.ts가 그린다), index.html의 MAX_VISIBLE_DISTRICTS와 같은 수.
 const VISIBLE = 4;
 const districtCount = () => loaded.districts.length;
 const shownCount = () => Math.min(districtCount(), VISIBLE);

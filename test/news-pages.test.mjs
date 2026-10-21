@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
-import { escapeHtml, newsListHtml, newsSummaryHtml } from "../scripts/prerender.mjs";
+import { escapeHtml, newsListHtml, newsSummaryHtml } from "../scripts/prerender.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");

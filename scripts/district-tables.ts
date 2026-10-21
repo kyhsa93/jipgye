@@ -1,5 +1,5 @@
-// 표 조각 여섯(전환율·해제·미등기·재계약 둘·층 격차)의 행 모양과 글자 규칙. 순수 모듈 - prerender.mjs(legacy)와 render/entry.jsx(JSX)가 같은 함수를 쓴다(#242 PR 1).
-// 여기서 `prerender.mjs`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다).
+// 표 조각 여섯(전환율·해제·미등기·재계약 둘·층 격차)의 행 모양과 글자 규칙. 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 함수를 쓴다(#242 PR 1).
+// 여기서 `prerender.ts`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다).
 //
 // 이 모듈은 마크업(HTML)을 만들지 않는다. 어떤 행을 어느 순서로 그리는지, 칸이 값인지 "표본 부족"인지, 칸에 들어가는 글자가 무엇인지만 정한다.
 // 마크업(`<tr>`·`<td>`·`<span class="low-sample">`)은 legacy(문자열)·JSX(요소)가 각자 입힌다 - 분기가 한 곳에만 있다(#255 `realestate-rows.mjs`와 같은 방식).

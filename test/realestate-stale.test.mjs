@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { realestateTableHtml } from "../scripts/prerender.mjs";
+import { realestateTableHtml } from "../scripts/prerender.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 
 const district = (name, extra = {}) => ({

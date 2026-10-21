@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
-import { realestateOverallHtml } from "../scripts/prerender.mjs";
+import { realestateOverallHtml } from "../scripts/prerender.ts";
 import { districtSentences } from "../scripts/district-summary.ts";
 import { regionTableHtml } from "../scripts/build-district-change.mjs";
 import { leadSentence as conversionLead } from "../scripts/conversion.ts";

@@ -1,13 +1,13 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { applyPrerender, ratesHeadHtml, ratesHtml } from "./prerender.mjs";
+import { applyPrerender, ratesHeadHtml, ratesHtml } from "./prerender.ts";
 import { createWriteSet } from "./render-writes.ts";
 import { rateBridgeHtml } from "./rate-bridge.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 // 상품군 페이지 넷의 틀. 예전에는 docs/rates.html이 이 틀을 겸했고 예금 페이지와 본문이 글자까지
-// 같았다(#193). 지금 docs/rates.html은 네 장으로 가는 요약 허브(scripts/prerender.mjs가 채운다)다.
+// 같았다(#193). 지금 docs/rates.html은 네 장으로 가는 요약 허브(scripts/prerender.ts가 채운다)다.
 export const RATES_TEMPLATE_PATH = path.join(root, "scripts/rates-template.html");
 const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 

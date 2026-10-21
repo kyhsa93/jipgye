@@ -1,5 +1,5 @@
-// 실거래 시세표(realestateHeadHtml·realestateTableHtml)가 같이 쓰는 칸 규칙과 정렬. 순수 모듈 - prerender.mjs(legacy)와 render/entry.jsx(JSX)가 같은 함수를 쓴다(#242 PR 2).
-// 여기서 `prerender.mjs`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다). 예전에 prerender.mjs에 있던 `re*` 보조 함수 열여섯이 이름 그대로 여기 있다:
+// 실거래 시세표(realestateHeadHtml·realestateTableHtml)가 같이 쓰는 칸 규칙과 정렬. 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 함수를 쓴다(#242 PR 2).
+// 여기서 `prerender.ts`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다). 예전에 prerender.ts에 있던 `re*` 보조 함수 열여섯이 이름 그대로 여기 있다:
 // RE_LABELS·reHeadLabels·reCount·reMan·reEok·reChange·reWolseChange·reCountSpan·reLowSample·reCells·reAllCells·reStaleTag·reDistrictLink·reRow·reSorted·reDistrictRows.
 //
 // 이 모듈은 마크업(HTML)을 만들지 않는다. 칸 하나가 어떤 모양인지(없음·표본 부족·값·증감·건수)와 그 글자만 정하고, `<span>`·`<td>`는 legacy(문자열)·JSX(요소)가 각자 입힌다

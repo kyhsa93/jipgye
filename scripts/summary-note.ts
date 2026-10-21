@@ -1,4 +1,4 @@
-// AI 요약 상자의 "검증 폴백 안내" 한 줄 (#350). 순수 모듈 - prerender.mjs(legacy)와 render/entry.jsx(JSX)가 같은 글을 쓴다.
+// AI 요약 상자의 "검증 폴백 안내" 한 줄 (#350). 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 글을 쓴다.
 //
 // 요약 봇이 분류 하나를 검증에서 걸러 헤드라인 목록으로 갈아 끼운 날(summary.json 의 categories[].fallbackReason)에는
 // 화면 스크립트(index.html renderSummary, 뉴스 틀 renderSummary)가 상자 끝에 안내 한 줄을 붙인다. 구운 HTML 이 이 줄을 안 싣던 때는

@@ -49,14 +49,14 @@ test("쓰기 묶음: commit 전에는 디스크에 아무것도 쓰지 않고, c
   assert.equal(set.size, 0);
 });
 
-test("prerender.mjs: 마지막 장의 마커가 지워져 던지면 앞 장들도 새 출력이 되지 않는다", async () => {
+test("prerender.ts: 마지막 장의 마커가 지워져 던지면 앞 장들도 새 출력이 되지 않는다", async () => {
   const dir = await tempRepo();
   const files = ["index", "rates", "news", "realestate", "jeonse-vs-wolse", "renewal-vs-new", "floor-gap", "switch-house", "record-high", "price-outlook", "method", "cancelled-deals"];
   const template = await readFile(TEMPLATE, "utf8");
   for (const f of files) await writeFile(path.join(dir, "docs", `${f}.html`), template);
 
   // 대조군: 틀이 멀쩡하면 데이터 없이도 rates·realestate는 바뀐다(허브 링크·자치구 머리글) - 이 시험이 보는 "앞 장"이다.
-  const control = run(dir, "prerender.mjs");
+  const control = run(dir, "prerender.ts");
   assert.equal(control.status, 0, control.stderr);
   const after1 = await readAll(path.join(dir, "docs"));
   assert.notEqual(after1["rates.html"], template, "대조군에서 rates.html이 바뀌지 않았다 - 시험이 아무것도 못 본다");
@@ -66,13 +66,13 @@ test("prerender.mjs: 마지막 장의 마커가 지워져 던지면 앞 장들�
   for (const f of files) await writeFile(path.join(dir, "docs", `${f}.html`), template);
   await writeFile(path.join(dir, "docs/cancelled-deals.html"), template.replace("<!--/prerender:cancelLead-->", ""));
   const before = await readAll(path.join(dir, "docs"));
-  const failed = run(dir, "prerender.mjs");
+  const failed = run(dir, "prerender.ts");
   assert.notEqual(failed.status, 0, "마커가 없는데 성공했다");
   assert.match(failed.stderr, /cancelLead 자리표시 주석을 찾지 못했습니다/);
   assert.deepEqual(await readAll(path.join(dir, "docs")), before, "렌더가 실패했는데 일부 장이 이미 새 출력이 되었다");
 });
 
-test("prerender.mjs: 시세 장은 scripts/ 의 틀을 읽어 docs/realestate.html 로 쓰고, 그 자리에서 인라인 스크립트 주석을 뗀다 (#374)", async () => {
+test("prerender.ts: 시세 장은 scripts/ 의 틀을 읽어 docs/realestate.html 로 쓰고, 그 자리에서 인라인 스크립트 주석을 뗀다 (#374)", async () => {
   const dir = await tempRepo();
   const files = ["index", "rates", "news", "jeonse-vs-wolse", "renewal-vs-new", "floor-gap", "switch-house", "record-high", "price-outlook", "method", "cancelled-deals"];
   const fixture = await readFile(TEMPLATE, "utf8");
@@ -82,7 +82,7 @@ test("prerender.mjs: 시세 장은 scripts/ 의 틀을 읽어 docs/realestate.ht
   const template = await readFile(templatePath, "utf8");
   assert.ok(jsInlineScripts(template).flatMap((x) => findJsComments(x.body)).length > 5, "틀에 주석이 없다 - 시험이 아무것도 못 본다");
 
-  const r = run(dir, "prerender.mjs");
+  const r = run(dir, "prerender.ts");
   assert.equal(r.status, 0, r.stderr);
   const out = await readFile(path.join(dir, "docs/realestate.html"), "utf8");
   // 표지 안쪽과 표 캡션(채워진 행 수를 센다)은 데이터에 따라 달라서 마크업은 견주지 않는다 - 스크립트가 틀에서 주석만 뗀 것과 같은지 본다.

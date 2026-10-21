@@ -62,10 +62,10 @@ test("react 진입점: fragments가 없거나 함수가 아닌 값이 있으면 
   await assert.rejects(createReactRenderer({ entry: fixture("bad-shape.jsx") }), /notAFunction은 함수여야/);
 });
 
-test("react 진입점: 저장소의 진입 파일(scripts/render/entry.jsx)이 로드되고, 등록된 이름은 전부 prerender.mjs의 조각이다", async () => {
+test("react 진입점: 저장소의 진입 파일(scripts/render/entry.jsx)이 로드되고, 등록된 이름은 전부 prerender.ts의 조각이다", async () => {
   const r = await createReactRenderer();
-  const prerender = await import("../scripts/prerender.mjs");
+  const prerender = await import("../scripts/prerender.ts");
   for (const name of r.names()) {
-    assert.equal(typeof prerender[name]?.legacy, "function", `${name}은 prerender.mjs의 *Html() 조각이 아니다`);
+    assert.equal(typeof prerender[name]?.legacy, "function", `${name}은 prerender.ts의 *Html() 조각이 아니다`);
   }
 });

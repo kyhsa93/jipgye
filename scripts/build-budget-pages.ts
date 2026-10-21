@@ -1,7 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.ts";
-import { REALESTATE_TEMPLATE_PATH, applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml, realestateOverallHtml } from "./prerender.mjs";
+import { REALESTATE_TEMPLATE_PATH, applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml, realestateOverallHtml } from "./prerender.ts";
 import { clustering } from "./loan-cap.ts";
 import { lineCounts } from "./policy-loan.ts";
 import { budgetRulesHtml } from "./budget-rules.ts";
@@ -150,7 +150,7 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
   // 문자열 패치(replaceOnce)가 전부 끝난 뒤에, 나가는 장의 인라인 스크립트에서 주석만 뗀다(#313). 틀에는 주석이 그대로 있다.
   return stripInlineScriptComments(applyPrerender(html, {
     budgetResult: body,
-    // 서울 전체 평균 카드. 틀의 표지가 비어 있어(#374) 여기서 채운다 - 전에는 prerender.mjs 가 제자리에서 채운 장을 틀로 읽어 그대로 물려받았다.
+    // 서울 전체 평균 카드. 틀의 표지가 비어 있어(#374) 여기서 채운다 - 전에는 prerender.ts 가 제자리에서 채운 장을 틀로 읽어 그대로 물려받았다.
     // 시세 장(docs/realestate.html)과 같은 호출(realestateOverallHtml(realestate))이라 글자까지 같다. 데이터가 없으면 null 이라 비운 채로 둔다.
     realestateOverall: realestateOverallHtml(realestate),
     budgetFactsKo: budgetFactsHtml(band, "ko"),
