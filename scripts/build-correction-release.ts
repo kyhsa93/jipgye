@@ -4,7 +4,7 @@
  * 그런 해제 기록을 세어, GitHub Release 한 건으로 낼 파일들을 임시 폴더에 만든다. 커밋하지 않는다 - 올리는 것은 .github/workflows/correction-release.yml이다.
  *
  * - 숫자는 사이트와 같은 함수(withoutCorrections·correctionStats·registrationStats)에서 낸다. 산식을 여기서 다시 쓰지 않는다
- *   (DIRECTION 체크리스트 10). 비교군만 사이트에 없던 셈이라 cancellation.mjs의 repeatedLiveStats로 한 곳에 둔다.
+ *   (DIRECTION 체크리스트 10). 비교군만 사이트에 없던 셈이라 cancellation.ts의 repeatedLiveStats로 한 곳에 둔다.
  * - 입력은 raw/sale/*.json이고 경로는 환경변수 REALESTATE_RAW_DIR로 받는다(#175 결론이 나면 이 경로만 맞춘다).
  *   읽는 필드는 최소 집합뿐이다: sggCd·umdNm·jibun·aptNm·excluUseAr·floor·dealYear·dealMonth·dealDay·dealAmount(계약 키),
  *   cdealType·cdealDay(해제 여부), rgstDate(짝의 등기일). 값은 집계에만 쓰고 출력에는 어떤 행 필드도 싣지 않는다.
@@ -15,7 +15,7 @@
  *   입력 중 가장 늦은 수집 시각(observedAt)의 한국 날짜다 - 같은 입력이면 같은 이름·같은 숫자. 파일마다 수집일이 달라서
  *   가장 이른 날도 collectedFrom으로 같이 낸다(본문이 수집 시각을 범위로 적는다).
  *
- * 쓰는 법(저장소 루트): REALESTATE_RAW_DIR=raw CORRECTION_OUT_DIR=/tmp/x node scripts/build-correction-release.mjs
+ * 쓰는 법(저장소 루트): REALESTATE_RAW_DIR=raw CORRECTION_OUT_DIR=/tmp/x node scripts/build-correction-release.ts
  * 워크플로 보조: --same <이전.json> <새.json>  숫자가 같으면 0, 다르면 1, 읽거나 풀지 못하는 등 내부 오류면 2로 끝난다
  *               (워크플로는 1일 때만 새 Release로 넘어가므로 오류가 '숫자가 다름'으로 읽히지 않는다).
  *               --supersede <이전 본문.md> <새 태그>  이전 본문 맨 위에 '정정됨' 표시를 붙여 stdout으로 낸다.
@@ -135,7 +135,7 @@ function cell(cancelRecords, withTwin) {
  * 집계를 낸다. 순서는 사이트(build-cancellation.mjs buildPayload)와 같다: 구마다 withoutCorrections로 짝이 있는 해제 기록을
  * 가르고, 그것을 뺀 기록 전체로 익은 달을 정해(registrationStats) correctionStats에 넘긴다.
  */
-export function computeFigures(byDistrict) {
+export function computeFigures(byDistrict: Record<string, unknown[]>) {
   const cleaned = {};
   const corrections = [];
   for (const [name, items] of Object.entries(byDistrict)) {
@@ -203,12 +203,25 @@ const digestOf = (figures) =>
     .digest("hex")
     .slice(0, 16);
 
+// 지문(figuresDigest)은 나머지 칸을 다 채운 뒤에 붙으므로 만드는 동안만 비어 있다.
+type Computed = ReturnType<typeof computeFigures>;
+type Figures = Pick<Computed, "seoul" | "districts" | "months"> & {
+  schema: string;
+  asOf: string;
+  collectedAt: string;
+  collectedFrom: string;
+  collectedTo: string;
+  source: { datasetId: string };
+  sample: Computed["sample"] & { districtFiles: number };
+  figuresDigest?: string;
+};
+
 export function buildFigures({ byDistrict, observedAt, firstObservedAt = observedAt, files }) {
   const computed = computeFigures(byDistrict);
   if (!observedAt) throw new Error("원본 파일에 수집 시각(observedAt)이 없어 기준일을 정할 수 없다");
   // 수집일은 파일마다 다르다. asOf·collectedAt·collectedTo는 가장 늦은 날(KST), collectedFrom은 가장 이른 날이다.
   const collectedAt = kstDay(observedAt);
-  const figures = {
+  const figures: Figures = {
     schema: SCHEMA,
     asOf: collectedAt,
     collectedAt,
@@ -264,7 +277,7 @@ export function renderTitle(figures) {
  * - 투자·구매 권유, 특정 단지·중개사 거론 없음. 금지어는 test/correction-release.test.mjs가 막는다.
  * 사이트 lead(correctionSentence)와 같은 '해제 표시 없이 다시 있다'는 구조이되, Release용으로 따로 쓴 문장이다.
  */
-export function renderBody(figures, { tag } = {}) {
+export function renderBody(figures, { tag }: { tag?: string } = {}) {
   const s = figures.seoul;
   const reg = s.registration;
   const cmp = s.comparison;
@@ -307,7 +320,7 @@ export function renderBody(figures, { tag } = {}) {
 
 - \`${TAG_PREFIX}${figures.asOf}.json\`·\`.csv\`: 위 집계(같은 값).
 - \`check.py\`·\`check.out\`: 저장소의 \`research/correction-twins/check.py\`와 이 기준일 입력에서의 출력입니다. 파이썬 표준 라이브러리만 씁니다.
-- 숫자는 사이트와 같은 함수(\`scripts/cancellation.mjs\`의 \`withoutCorrections\`·\`correctionStats\`)에서 냈습니다. 산출 스크립트는 \`scripts/build-correction-release.mjs\`입니다.
+- 숫자는 사이트와 같은 함수(\`scripts/cancellation.ts\`의 \`withoutCorrections\`·\`correctionStats\`)에서 냈습니다. 산출 스크립트는 \`scripts/build-correction-release.ts\`입니다.
 
 ## 갱신
 
@@ -344,7 +357,7 @@ These figures count records that match each other. The reason for a filing is no
 
 - \`${TAG_PREFIX}${figures.asOf}.json\` and \`.csv\`: the aggregates above (same values).
 - \`check.py\` and \`check.out\`: \`research/correction-twins/check.py\` from the repository and its output on this as-of input. It uses only the Python standard library.
-- The numbers come from the same functions the site uses (\`withoutCorrections\` and \`correctionStats\` in \`scripts/cancellation.mjs\`). The build script is \`scripts/build-correction-release.mjs\`.
+- The numbers come from the same functions the site uses (\`withoutCorrections\` and \`correctionStats\` in \`scripts/cancellation.ts\`). The build script is \`scripts/build-correction-release.ts\`.
 
 ## Updates
 
