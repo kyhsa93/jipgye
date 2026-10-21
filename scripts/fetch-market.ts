@@ -5,7 +5,7 @@ import { BASE_RATE, KOSPI, changedOn, clampRows, ecosKey, statisticSearch } from
 const dataDir = path.resolve(import.meta.dirname, "../docs/data");
 const outFile = path.join(dataDir, "market.json");
 const historyFile = path.join(dataDir, "market-history.json");
-const HISTORY_MAX_DAYS = 180;
+const HISTORY_MAX_DAYS: string = 180;
 
 function kstDateString(date) {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(date);
