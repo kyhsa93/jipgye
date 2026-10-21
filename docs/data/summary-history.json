@@ -5608,8 +5608,8 @@
     "date": "2026-10-21",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 부동산: LH는 모듈러주택 발주를 확대해 2030년까지 1만6000호를 공급할 계획이다. 김이탁 국토1차관은 행복기숙사 확대와 공유형 청년주택 공급을 적극 추진할 방침이라고 밝혔다. 건설협회는 건설안전법 제정으로 매출 3% 과징금이 부과될 경우 주택공급에 어려움이 생길 수 있다고 경고했다. 부동산 전문가들은 분양가가 지금이 가장 싸다고 판단해 청약과 정책대출에 대한 관심이 높아지고 있다. LH는 모듈러주택 활성화를 통해 주택공급 속도를 높이기로 했다.\n- 증시·환율: 원/달러 환율은 4거래일 연속 연저점을 기록하며 1,320원대 초반을 유지하고 있다. 코스피는 3.3% 급등하며 5,735점으로 마감했고, 코스닥도 1.4% 상승했다. 오후 3시 30분 기준 원/달러 환율은 2.9원 내려 1,325.2원을 기록했다. 코스피는 일시적으로 반등했지만, 폭락과 급등을 반복하며 투자자들의 불안을 계속하고 있다. 코스피는 4% 이상 급등하며 두 달 만에 '매수' 사이드카를 기록했고, 외국인은 순매수세를 보였다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 하락하며 3년물은 장중 연 3.832%를 기록했다.",
-      "en": "- Real Estate: LH plans to expand modular housing orders and supply 10,0006000 units by 2030. Kim I-tak, First Deputy Minister of Land, announced that they will actively promote the expansion of Happy Dormitory and the supply of shared-type youth housing. The Construction Association warned that if a 3% penalty is imposed on revenue due to the establishment of the Construction Safety Act, it could cause difficulties in housing supply. Real estate experts believe that the selling price is currently the lowest, leading to increased interest in applications and policy loans. LH has decided to increase the speed of housing supply through the activation of modular housing.\n- Stocks & FX: The won/dollar exchange rate has remained in the early 1,320 won range, hitting the annual low for four consecutive trading days. The KOSPI surged 3.3% to close at 5,735 points, while the KOSDAQ rose 1.4%. As of 3:30 p.m., the won/dollar exchange rate fell by 2.9 won to 1,325.2 won. The KOSPI temporarily rebounded but continued to fluctuate between sharp declines and surges, causing ongoing investor anxiety. The KOSPI surged more than 4%, recording a 'buy' sidecar for the first time in two months, and foreigners showed a net buying trend.\n- Rates, Deposits & Investment Products: The government bond yield fell across the board, with the 3-year bond reaching 3.832% annually during trading."
+      "ko": "- 부동산: 용산 아세아아파트 공사가 무기한 중단되면서 연내 분양에 차질이 생겼다. 계양신도시에서 반도건설이 ‘카이브 유보라’ 견본주택을 23일 개관한다. 주택도시보증공사(HUG)와 동아대는 부동산 및 PF 전문 인력 양성을 위한 업무협약을 체결했다. HUG는 동아대와 함께 부동산·PF 분야의 전문인재 양성에 나선다. 강원도는 지역 맞춤형 청년 공공임대주택을 확대해 청년 정착 기반을 강화하고 있다.\n- 기타 경제 소식: 국민경제자문회의가 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다.\n- 금리·예금·투자상품: 금통위 회의를 앞두고 국고채 금리가 대체로 하락했다. 3년물 국고채 금리는 연 3.822%를 기록했다. 이는 금통위 결정 전 시장의 기대감이 반영된 것으로 보인다. 각 기관은 금리 동향을 주시하며 다음 회의에 대비하고 있다. 현재 시장에서는 금리 변동에 따른 투자자들의 움직임이 주목받고 있다.\n- 증시·환율: 코스피는 AI 투자심리 회복에 3.3% 급등 마감했지만, 원/달러 환율은 4거래일 연속 연저점 기록하며 1,320원대 초반을 기록했고, 중국 증시는 상하이지수 0.6% 하락 마감했으며, 일본 증시는 반도체·AI주 강세에 닛케이지수 0.85% 상승 마감했다.",
+      "en": "- Real Estate: The construction of the Yongsan Asia Apartment was indefinitely suspended, causing delays in the sales this year. Bandoo Construction will open a model house for 'Caybe Yubora' in Gye Yang New City on the 23rd. The Housing & Urban Development Corporation (HUG) and Dong-A University have signed a memorandum of understanding to train professionals in real estate and PF. HUG is working with Dong-A University to cultivate specialized professionals in the real estate and PF fields. Gangwon Province is expanding region-specific public rental housing for youth to strengthen the foundation for youth settlement.\n- Other Economic News: The National Economic Advisory Council held a seminar on the topic of \"Power Grid Bottlenecks and Energy Geopolitics.\n- Rates, Deposits & Investment Products: Ahead of the MPC meeting, government bond rates generally fell. The 3-year government bond rate recorded 3.822% annually. This appears to reflect market expectations prior to the MPC decision. Each institution is monitoring interest rate trends in preparation for the next meeting. Currently, investors' movements in response to interest rate fluctuations are receiving attention.\n- Stocks & FX: The KOSPI surged 3.3% to close as investor sentiment in AI recovered, but the won/dollar exchange rate hit a new low for the fourth consecutive trading day, reaching the early 1,320 won range. The Chinese stock market closed with the Shanghai Index down 0.6%, while the Japanese stock market closed with the Nikkei Index up 0.85% amid strong performance in semiconductor and AI stocks."
     },
     "highlights": [],
     "categories": [
@@ -5617,73 +5617,53 @@
         "key": "realestate",
         "name": "부동산",
         "nameEn": "Real Estate",
-        "lineKo": "LH는 모듈러주택 발주를 확대해 2030년까지 1만6000호를 공급할 계획이다. 김이탁 국토1차관은 행복기숙사 확대와 공유형 청년주택 공급을 적극 추진할 방침이라고 밝혔다. 건설협회는 건설안전법 제정으로 매출 3% 과징금이 부과될 경우 주택공급에 어려움이 생길 수 있다고 경고했다. 부동산 전문가들은 분양가가 지금이 가장 싸다고 판단해 청약과 정책대출에 대한 관심이 높아지고 있다. LH는 모듈러주택 활성화를 통해 주택공급 속도를 높이기로 했다.",
-        "lineEn": "LH plans to expand modular housing orders and supply 10,0006000 units by 2030. Kim I-tak, First Deputy Minister of Land, announced that they will actively promote the expansion of Happy Dormitory and the supply of shared-type youth housing. The Construction Association warned that if a 3% penalty is imposed on revenue due to the establishment of the Construction Safety Act, it could cause difficulties in housing supply. Real estate experts believe that the selling price is currently the lowest, leading to increased interest in applications and policy loans. LH has decided to increase the speed of housing supply through the activation of modular housing.",
+        "lineKo": "용산 아세아아파트 공사가 무기한 중단되면서 연내 분양에 차질이 생겼다. 계양신도시에서 반도건설이 ‘카이브 유보라’ 견본주택을 23일 개관한다. 주택도시보증공사(HUG)와 동아대는 부동산 및 PF 전문 인력 양성을 위한 업무협약을 체결했다. HUG는 동아대와 함께 부동산·PF 분야의 전문인재 양성에 나선다. 강원도는 지역 맞춤형 청년 공공임대주택을 확대해 청년 정착 기반을 강화하고 있다.",
+        "lineEn": "The construction of the Yongsan Asia Apartment was indefinitely suspended, causing delays in the sales this year. Bandoo Construction will open a model house for 'Caybe Yubora' in Gye Yang New City on the 23rd. The Housing & Urban Development Corporation (HUG) and Dong-A University have signed a memorandum of understanding to train professionals in real estate and PF. HUG is working with Dong-A University to cultivate specialized professionals in the real estate and PF fields. Gangwon Province is expanding region-specific public rental housing for youth to strengthen the foundation for youth settlement.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "LH, 모듈러주택 발주 확대…2030년까지 1만6000호",
-            "link": "https://www.newsis.com/view/NISX20261021_0003835442",
+            "title": "용산 아세아아파트 공사 무기한 중단…연내 분양 차질",
+            "link": "https://www.newsis.com/view/NISX20261021_0003834882",
             "source": "뉴시스 경제"
           },
           {
-            "title": "“주택공급 속도 높인다”…LH, 모듈러주택 활성화 추진",
-            "link": "https://www.mk.co.kr/news/realestate/12181784",
+            "title": "계양신도시 '카이브 유보라' 반도건설, 23일 견본주택 개관",
+            "link": "https://www.mk.co.kr/news/realestate/12181909",
             "source": "매일경제 부동산"
           },
           {
-            "title": "김이탁 국토1차관 “행복기숙사 확대…공유형 청년주택도 적극 공급”",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/21/TKOLIT3NCNC47N7DEYOL4VH74E/",
+            "title": "주택도시보증공사-동아대, 부동산·PF 전문 인력 양성 업무협약",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/21/AW2VGD2QZNDH5PW5BX5ECNA6TI/",
             "source": "조선비즈 부동산"
           },
           {
-            "title": "건설협회 \"매출 3% 과징금 건설안전법 제정시 주택공급 어려워\"",
-            "link": "https://www.yna.co.kr/view/AKR20261021120800003",
-            "source": "연합뉴스 경제"
+            "title": "HUG, 동아대와 부동산·PF 분야 전문인재 양성 나선다",
+            "link": "https://www.newsis.com/view/NISX20261021_0003835499",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "\"분양가 지금이 가장 싸다\"…청약·정책대출 문 두드려라",
-            "link": "https://www.hankyung.com/article/2026102152621",
-            "source": "한국경제 부동산"
+            "title": "강원도, 지역 맞춤형 청년 공공임대주택 확대…정착 기반 강화",
+            "link": "https://www.yna.co.kr/view/AKR20261021146200062",
+            "source": "연합뉴스 경제"
           }
         ]
       },
       {
-        "key": "stocks",
-        "name": "증시·환율",
-        "nameEn": "Stocks & FX",
-        "lineKo": "원/달러 환율은 4거래일 연속 연저점을 기록하며 1,320원대 초반을 유지하고 있다. 코스피는 3.3% 급등하며 5,735점으로 마감했고, 코스닥도 1.4% 상승했다. 오후 3시 30분 기준 원/달러 환율은 2.9원 내려 1,325.2원을 기록했다. 코스피는 일시적으로 반등했지만, 폭락과 급등을 반복하며 투자자들의 불안을 계속하고 있다. 코스피는 4% 이상 급등하며 두 달 만에 '매수' 사이드카를 기록했고, 외국인은 순매수세를 보였다.",
-        "lineEn": "The won/dollar exchange rate has remained in the early 1,320 won range, hitting the annual low for four consecutive trading days. The KOSPI surged 3.3% to close at 5,735 points, while the KOSDAQ rose 1.4%. As of 3:30 p.m., the won/dollar exchange rate fell by 2.9 won to 1,325.2 won. The KOSPI temporarily rebounded but continued to fluctuate between sharp declines and surges, causing ongoing investor anxiety. The KOSPI surged more than 4%, recording a 'buy' sidecar for the first time in two months, and foreigners showed a net buying trend.",
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "국민경제자문회의가 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다.",
+        "lineEn": "The National Economic Advisory Council held a seminar on the topic of \"Power Grid Bottlenecks and Energy Geopolitics.",
         "isFallback": false,
         "fallbackReason": null,
-        "degraded": false,
+        "degraded": true,
         "items": [
           {
-            "title": "원/달러 환율 4거래일 연속 연저점 기록…1,320원대 초반",
-            "link": "https://www.yna.co.kr/view/AKR20261021129200002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "코스피 3.3% 급등한 5,735 마감…코스닥도 1.4%↑",
-            "link": "https://www.yna.co.kr/view/AKR20261021126500008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "[외환] 원/달러 환율 2.9원 내린 1,325.2원(15:30 기준가)",
-            "link": "https://www.yna.co.kr/view/AKR20261021124900002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "코스피 일단 반등했지만…'폭락→급등' 널뛰기에 '불안' 지속",
-            "link": "https://www.yna.co.kr/view/AKR20261021084300008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "코스피, 4% 이상 급등에 두달 만의 '매수' 사이드카…외국인 순매수세",
-            "link": "https://www.yna.co.kr/view/AKR20261021079700008",
-            "source": "연합뉴스 경제"
+            "title": "국민경제자문회의, '전력망 병목과 에너지 지정학' 세미나",
+            "link": "https://www.newsis.com/view/NISX20261021_0003835617",
+            "source": "뉴시스 경제"
           }
         ]
       },
@@ -5691,15 +5671,52 @@
         "key": "rates",
         "name": "금리·예금·투자상품",
         "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "국고채 금리가 일제히 하락하며 3년물은 장중 연 3.832%를 기록했다.",
-        "lineEn": "The government bond yield fell across the board, with the 3-year bond reaching 3.832% annually during trading.",
+        "lineKo": "금통위 회의를 앞두고 국고채 금리가 대체로 하락했다. 3년물 국고채 금리는 연 3.822%를 기록했다. 이는 금통위 결정 전 시장의 기대감이 반영된 것으로 보인다. 각 기관은 금리 동향을 주시하며 다음 회의에 대비하고 있다. 현재 시장에서는 금리 변동에 따른 투자자들의 움직임이 주목받고 있다.",
+        "lineEn": "Ahead of the MPC meeting, government bond rates generally fell. The 3-year government bond rate recorded 3.822% annually. This appears to reflect market expectations prior to the MPC decision. Each institution is monitoring interest rate trends in preparation for the next meeting. Currently, investors' movements in response to interest rate fluctuations are receiving attention.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "금통위 앞두고 국고채 금리 대체로 하락…3년물 연 3.822%(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261021144851008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "코스피는 AI 투자심리 회복에 3.3% 급등 마감했지만, 원/달러 환율은 4거래일 연속 연저점 기록하며 1,320원대 초반을 기록했고, 중국 증시는 상하이지수 0.6% 하락 마감했으며, 일본 증시는 반도체·AI주 강세에 닛케이지수 0.85% 상승 마감했다.",
+        "lineEn": "The KOSPI surged 3.3% to close as investor sentiment in AI recovered, but the won/dollar exchange rate hit a new low for the fourth consecutive trading day, reaching the early 1,320 won range. The Chinese stock market closed with the Shanghai Index down 0.6%, while the Japanese stock market closed with the Nikkei Index up 0.85% amid strong performance in semiconductor and AI stocks.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": true,
         "items": [
           {
-            "title": "국고채 금리 일제히 하락…3년물 장중 연 3.832%",
-            "link": "https://www.yna.co.kr/view/AKR20261021085100008",
+            "title": "코스피 일단 반등했지만…'폭락→급등' 널뛰기에 '불안' 지속(종합2보)",
+            "link": "https://www.yna.co.kr/view/AKR20261021084352008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 0.6%↓",
+            "link": "https://www.newsis.com/view/NISX20261021_0003835563",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "日증시, 반도체·AI주 강세에 상승 마감…닛케이지수 0.85%↑",
+            "link": "https://www.newsis.com/view/NISX20261021_0003835486",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "코스피, AI 투자심리 회복에 3.3% 급등 마감…삼전닉스 5%↑(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261021134800008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "원/달러 환율 4거래일 연속 연저점 기록…1,320원대 초반",
+            "link": "https://www.yna.co.kr/view/AKR20261021129200002",
             "source": "연합뉴스 경제"
           }
         ]
