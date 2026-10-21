@@ -15,7 +15,6 @@
     "skipLibCheck": true
   },
   "include": [
-    "ctl-probe.ts",
     "../golden/bin/bench.ts",
     "../golden/bin/compare.ts",
     "../golden/bin/invariants.ts",
