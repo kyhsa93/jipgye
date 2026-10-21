@@ -17,7 +17,7 @@ const KEYWORDS = [
   "부동산", "집값", "아파트", "전세", "월세", "금리", "경제", "환율", "코스피", "증시",
   "주택", "재건축", "대출",
 ];
-const MAX_ITEMS = 24;
+const MAX_ITEMS: string = 24;
 const MAX_PREVIEW_LENGTH = 120;
 const MAX_DUPES = 3;
 const MAX_ITEMS_PER_SOURCE = 8;
