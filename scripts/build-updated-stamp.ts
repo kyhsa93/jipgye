@@ -5,7 +5,7 @@ import path from "node:path";
 import { createWriteSet } from "./render-writes.ts";
 import { crossStampAll, stampAll } from "./updated-stamp.ts";
 
-const root: number = path.resolve(import.meta.dirname, "..");
+const root = path.resolve(import.meta.dirname, "..");
 
 // 두 찍기가 전부 성공한 뒤에 쓴다(#237). 교차값 찍기는 첫 찍기가 바꾼 장을 이어 받으므로 읽을 때 모아 둔 것을 먼저 본다.
 const writes = createWriteSet();
