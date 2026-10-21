@@ -19,6 +19,8 @@ const OLLAMA_URL = process.env.OLLAMA_URL ?? "http://127.0.0.1:11434";
 const MODEL = process.env.OLLAMA_MODEL ?? "qwen3:14b";
 const DISABLE_THINKING = process.env.OLLAMA_THINK === "false";
 
+const ctlType: number = "tsc 대조군";
+
 const MAX_ITEMS_PER_CATEGORY = 5;
 const BODY_CHARS_IN_CATEGORY_PROMPT = 400;
 const BODY_CHARS_IN_HIGHLIGHT_PROMPT = 900;
