@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { INDEX_FILE } from "./fetch-price-index.mjs";
-import { INDICATOR_FILE } from "./fetch-indicators.mjs";
+import { INDEX_FILE } from "./fetch-price-index.ts";
+import { INDICATOR_FILE } from "./fetch-indicators.ts";
 import { SHADOW, priceSeries, shadowForecast } from "./indicator-backtest.ts";
 import {
   HORIZONS,

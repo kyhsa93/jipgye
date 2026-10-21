@@ -1,6 +1,6 @@
 // 3차 후보 백테스트. node research/indicators-3/run.mjs → 표준출력 + cache/result.json
 import { readFile, writeFile } from "node:fs/promises";
-import { INDEX_FILE } from "../../scripts/fetch-price-index.mjs";
+import { INDEX_FILE } from "../../scripts/fetch-price-index.ts";
 import { REGION_WINS, priceSeries, score } from "../../scripts/indicator-backtest.ts";
 import { candidates3 } from "../../scripts/indicator-candidates-3.ts";
 

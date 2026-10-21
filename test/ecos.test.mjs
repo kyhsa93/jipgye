@@ -10,7 +10,7 @@ import {
   searchUrl,
   statisticSearch,
 } from "../scripts/ecos.ts";
-import { baseRateFrom, rateLabel, ymdLabel } from "../scripts/fetch-market.mjs";
+import { baseRateFrom, rateLabel, ymdLabel } from "../scripts/fetch-market.ts";
 
 const day = (time, value) => ({ TIME: time, DATA_VALUE: value });
 const reply = (body, ok = true) => async () => ({ ok, json: async () => body });

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { judge, leadSentence, priceSeries, run } from "../scripts/indicator-backtest.ts";
-import { fetchRone, merge } from "../scripts/fetch-indicators.mjs";
+import { fetchRone, merge } from "../scripts/fetch-indicators.ts";
 import { shiftMonth } from "../scripts/outlook.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -148,7 +148,7 @@ test("3차 후보(#57): 인허가는 연중 누계를 달 값으로 풀고, 외�
 });
 
 test("R-ONE 지역이 GRP에 있는 표는 GRP_ID로 건다", async () => {
-  const { roneUrl } = await import("../scripts/fetch-indicators.mjs");
+  const { roneUrl } = await import("../scripts/fetch-indicators.ts");
   const url = new URL(roneUrl({ statbl: "A_2024_00609", grp: 900002, cls: 500005, itm: 100001 }, "202601", "202605"));
   assert.equal(url.searchParams.get("GRP_ID"), "900002");
   assert.equal(url.searchParams.get("CLS_ID"), "500005");

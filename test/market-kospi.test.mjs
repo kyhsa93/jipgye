@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { kospiFrom, shortYmd, usdKrwWithChange } from "../scripts/fetch-market.mjs";
+import { kospiFrom, shortYmd, usdKrwWithChange } from "../scripts/fetch-market.ts";
 import { loadIndexPage } from "./helpers/index-page.mjs";
 
 const close = (time, value) => ({ TIME: time, DATA_VALUE: String(value) });

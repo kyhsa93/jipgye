@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { fetchRone, merge, REFRESH_MONTHS } from "./fetch-indicators.mjs";
+import { fetchRone, merge, REFRESH_MONTHS } from "./fetch-indicators.ts";
 import { shiftMonth } from "./outlook.ts";
 import { yearMonthOf } from "./realestate-slots.ts";
 

@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { MOVE_IN_DIR } from "./fetch-move-in.mjs";
+import { MOVE_IN_DIR } from "./fetch-move-in.ts";
 import { moveInDistrictsText, moveInLead, moveInTableHtml, parseCsv, summarize } from "./move-in.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
