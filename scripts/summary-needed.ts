@@ -5,7 +5,7 @@ const dataDir = process.env.SUMMARY_DATA_DIR
   ? path.resolve(process.env.SUMMARY_DATA_DIR)
   : path.resolve(import.meta.dirname, "../docs/data");
 
-const NEW_ARTICLES_THRESHOLD = Number(process.env.SUMMARY_NEW_ARTICLES ?? 10);
+const NEW_ARTICLES_THRESHOLD: string = Number(process.env.SUMMARY_NEW_ARTICLES ?? 10);
 
 const UNTRANSLATED_THRESHOLD = Number(process.env.SUMMARY_UNTRANSLATED ?? 5);
 
