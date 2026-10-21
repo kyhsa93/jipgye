@@ -23,7 +23,7 @@ export function buildPayload({ index, indicators, now }) {
   const rows = judge(prices, indicators.series);
   const both = (fn) => ({ ko: fn("ko"), en: fn("en") });
   // 판정에 쓴 지표 계열의 마지막 달. 화면이 "어디까지 보고 낸 판정인가"를 적는다.
-  const lastMonths = Object.fromEntries(Object.entries(indicators.series).map(([k, v]) => [k, v.at(-1)?.[0] ?? null]));
+  const lastMonths = Object.fromEntries((Object.entries(indicators.series) as [string, unknown[][]][]).map(([k, v]) => [k, v.at(-1)?.[0] ?? null]));
   return {
     updatedAt: now.toISOString(),
     priceLast: index.series["200"].at(-1)[0],

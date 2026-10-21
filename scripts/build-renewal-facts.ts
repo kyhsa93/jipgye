@@ -19,7 +19,7 @@ const outFile = process.env.RENEWAL_FACTS_FILE
  * 자치구를 DISTRICTS 순서로 담는다 - 완료되는 대로 담으면 출력 순서가 그날그날
  * 달라져 뜻 없는 변경이 매일 커밋된다.
  */
-export async function readRawRents(months, dir) {
+export async function readRawRents(months, dir?) {
   const perDistrict = await Promise.all(
     DISTRICTS.map(async ({ code, name }) => {
       const files = await Promise.all(months.map((yearMonth) => readSlotFile("rent", code, yearMonth, dir)));

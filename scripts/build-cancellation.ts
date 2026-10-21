@@ -38,7 +38,7 @@ const outFile = process.env.CANCELLATION_FILE
  * 어느 파일을 먼저 내주었는지가 그대로 출력 순서가 되고, 자치구 링크 줄이 빌드할
  * 때마다 뒤바뀌어 매일 뜻 없는 변경이 커밋된다.
  */
-export async function readRawSales(months, dir) {
+export async function readRawSales(months, dir?) {
   const perDistrict = await Promise.all(
     DISTRICTS.map(async ({ code, name }) => {
       const files = await Promise.all(months.map((yearMonth) => readSlotFile("sale", code, yearMonth, dir)));

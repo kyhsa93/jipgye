@@ -31,7 +31,7 @@ const dealFilesDir = process.env.DEAL_FILES_DIR
 
 const trimForSearch = (byDistrict) =>
   Object.fromEntries(
-    Object.entries(byDistrict).map(([name, bands]) => [
+    (Object.entries(byDistrict) as [string, { districts?: unknown; deals: Record<string, unknown>[] }[]][]).map(([name, bands]) => [
       name,
       bands.map(({ districts: _counts, deals, ...band }) => ({
         ...band,
@@ -48,7 +48,7 @@ const slugsFor = (byDistrict) =>
   );
 
 export function buildPayload(source, now) {
-  const deals = Object.values(source?.districts ?? {}).flat();
+  const deals = Object.values(source?.districts ?? {}).flat() as { date?: unknown }[];
   if (!deals.length) return null;
 
   const byPeriod = new Map();
@@ -107,7 +107,7 @@ async function writeDealFiles(source, now) {
     )
   );
 
-  const all = Object.values(files).flatMap((file) => file.deals);
+  const all = (Object.values(files) as { deals: Record<string, unknown>[] }[]).flatMap((file) => file.deals);
   const direct = all.filter((deal) => deal.direct === true).length;
   const unknown = all.filter((deal) => !("direct" in deal)).length;
   console.log(
