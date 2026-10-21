@@ -70,7 +70,7 @@ English headline:`;
     }),
   });
   if (!res.ok) throw new Error(`ollama http ${res.status}`);
-  const json = await res.json();
+  const json = await res.json() as { response?: string };
   if (!json.response) throw new Error("ollama 응답에 response 필드 없음");
 
   return json.response
