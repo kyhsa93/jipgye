@@ -18,7 +18,7 @@ const itemsOf = (files) =>
   files.filter((file) => file?.ok !== false && Array.isArray(file?.items)).flatMap((file) => file.items);
 
 /** DISTRICTS 순서로 담는다 - 끝나는 대로 담으면 출력 순서가 그날그날 달라진다. */
-export async function readRaw(months, dir) {
+export async function readRaw(months, dir?) {
   const perDistrict = await Promise.all(
     DISTRICTS.map(async ({ code, name }) => {
       const [sales, rents] = await Promise.all([
@@ -35,7 +35,7 @@ export function buildPayload({ byDistrict, now }) {
   const districts = {};
   const all = [];
 
-  for (const [name, { sales, rents }] of Object.entries(byDistrict ?? {})) {
+  for (const [name, { sales, rents }] of Object.entries<{ sales: unknown[]; rents: unknown[] }>(byDistrict ?? {})) {
     const ratios = cellRatios(sales, rents);
     all.push(...ratios);
     const spread = spreadOf(ratios);
@@ -59,7 +59,7 @@ async function main() {
   await mkdir(path.dirname(outFile), { recursive: true });
   await writeFile(outFile, JSON.stringify(payload));
 
-  const { seoul, districts } = payload;
+  const { seoul, districts }: { seoul: { cells: number; median: number; q1?: number; q3?: number }; districts: object } = payload;
   console.log(
     `  단지·평형 ${seoul.cells.toLocaleString("ko-KR")}칸 · 서울 중앙 ${seoul.median}% (절반이 ${seoul.q1}~${seoul.q3}%)`
   );
