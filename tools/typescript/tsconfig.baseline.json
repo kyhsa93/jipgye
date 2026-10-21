@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true
+  },
+  "include": [
+    "../../scripts/build-budget-deals.mjs",
+    "../../scripts/build-cancellation.mjs",
+    "../../scripts/build-district-change.mjs",
+    "../../scripts/build-indicators.mjs",
+    "../../scripts/build-outlook.mjs",
+    "../../scripts/build-renewal-facts.mjs"
+  ]
+}
