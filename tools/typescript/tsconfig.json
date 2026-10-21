@@ -56,6 +56,7 @@
     "../../scripts/build-correction-release.ts",
     "../../scripts/build-icons.ts",
     "../../scripts/build-rate-pages.ts",
+    "../../scripts/build-updated-stamp.ts",
     "../../scripts/cancel-by-price.ts",
     "../../scripts/cancellation.ts",
     "../../scripts/categories.ts",
