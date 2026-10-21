@@ -179,7 +179,7 @@ export async function main(
   argv: string[],
   { readFile, log = console.log, error = console.error }: { readFile?: (path: string, encoding: "utf8") => Promise<string>; log?: (message: string) => void; error?: (message: string) => void } = {},
 ) {
-  const opts: number = parseArgs(argv);
+  const opts = parseArgs(argv);
   const expected = countCrons(await readFile(opts.workflow, "utf8"), opts.workflow);
 
   const runs = opts.runsFile
