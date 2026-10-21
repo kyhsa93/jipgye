@@ -1,7 +1,7 @@
 /**
  * 건축HUB 주택인허가(HsPmsHubService) 수집기 골격 (#130, #58 단계 A).
  *
- *   BUILDINGHUB_API_KEY=... node scripts/fetch-housing-permits.mjs \
+ *   BUILDINGHUB_API_KEY=... node scripts/fetch-housing-permits.ts \
  *     [--bjdong-file research/housing-permits/bjdong-seoul.json] [--out-dir research/housing-permits]
  *
  * - 키(BUILDINGHUB_API_KEY)가 없으면 "생략" 로그만 남기고 종료 코드 0, 네트워크는 쓰지 않는다.
@@ -337,7 +337,7 @@ async function main() {
     timeoutMs: numberEnv("BUILDINGHUB_TIMEOUT_MS", 15_000),
     retryMs: numberEnv("BUILDINGHUB_RETRY_MS", 3000),
     calls: 0, pages: 0, items: 0, maxPageItems: 0, totalCountSum: 0, dongsDone: 0, dongsTotal: districts.reduce((n, d) => n + bjdong[d.code].length, 0), where: null, rawDir, rawHash: createHash("sha256"),
-    inputTimeField: v["input-time-field"] || null, responseFields: new Set(), districtsWithData: new Set(), diag: createDiagnostics(),
+    inputTimeField: v["input-time-field"] || null, responseFields: new Set<string>(), districtsWithData: new Set(), diag: createDiagnostics(),
   };
 
   const all = [];

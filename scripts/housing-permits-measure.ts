@@ -2,7 +2,7 @@
  * 건축HUB 첫 실측 B1~B4 (#133, #58 단계 B). 정의는 research/housing-permits/PREREG.md 4절을 그대로 옮겼고
  * 이 파일에서 바꾼 것은 없다 - 문턱·창·판정 규칙을 고치려면 PREREG부터 바꿔야 한다(첫 실호출 뒤에는 바꾸지 않는다).
  *
- *   node scripts/housing-permits-measure.mjs [--folded research/housing-permits/folded.json]
+ *   node scripts/housing-permits-measure.ts [--folded research/housing-permits/folded.json]
  *     [--ecos raw/indicators/series.json] [--limit 5000] [--out research/housing-permits/measure.json]
  *
  * 입력은 합침을 거친 folded.json(저장소에 올라가는 것)과 저장소의 ECOS 계열 파일(permits_seoul = 901Y105 SEO의

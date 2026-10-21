@@ -9,7 +9,7 @@ import { promisify } from "node:util";
 import { COMPLETE_CANDIDATES, DAILY_LIMIT, FIELDS, LICENSE, OPERATION, PROJECTED_FIELDS, SERIES } from "../scripts/housing-permits-spec.ts";
 import { assertCoreFields, foldProjects, parseDay, projectItem } from "../scripts/housing-permits-fold.ts";
 import { OTHER_KEY } from "../scripts/housing-permits-merge.ts";
-import { dailyLimit } from "../scripts/fetch-housing-permits.mjs";
+import { dailyLimit } from "../scripts/fetch-housing-permits.ts";
 import { DISTRICTS } from "../scripts/realestate-districts.ts";
 import { flawedFold } from "./helpers/housing-permits-mutants.mjs";
 import { REAL_KEYS, realItem } from "./helpers/housing-permits-items.mjs";
@@ -219,7 +219,7 @@ test("SERIES는 permit·start·complete 셋이고 FIELDS.dates와 같은 이름�
 // ---- 수집기 (자식 프로세스 + 스텁 서버) ----
 
 const execFileAsync = promisify(execFile);
-const script = path.resolve(import.meta.dirname, "../scripts/fetch-housing-permits.mjs");
+const script = path.resolve(import.meta.dirname, "../scripts/fetch-housing-permits.ts");
 const KEY_DECODED = "AbCdEfGh1234+/=zzQq";
 const KEY_ENCODED = encodeURIComponent(KEY_DECODED);
 

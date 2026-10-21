@@ -40,8 +40,8 @@ test("워크플로: 시크릿은 이름만 참조하고 수집 스텝 env에만 
 
 test("워크플로: 사전 등록 순서 확인이 첫 호출 스텝보다 앞에 있고 전체 이력을 받는다", () => {
   assert.match(text, /fetch-depth: 0/);
-  const check = text.indexOf("check-prereg-order.mjs");
-  const collect = text.indexOf("fetch-housing-permits.mjs");
+  const check = text.indexOf("check-prereg-order.ts");
+  const collect = text.indexOf("fetch-housing-permits.ts");
   assert.ok(check > 0 && collect > check, "확인 → 수집 순서");
   assert.match(text, /dac5e98db7d00aca37dfa57dda1da9f4d39314ca/);
 });

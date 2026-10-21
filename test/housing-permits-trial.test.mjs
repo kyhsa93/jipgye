@@ -16,7 +16,7 @@ import { DISTRICTS } from "../scripts/realestate-districts.ts";
 
 const MARK = "PKMARK-9f3a1c";
 const KEY = "AbCdEfGh1234zzQq";
-const script = path.resolve(import.meta.dirname, "../scripts/fetch-housing-permits.mjs");
+const script = path.resolve(import.meta.dirname, "../scripts/fetch-housing-permits.ts");
 const execFileAsync = promisify(execFile);
 const D = FIELDS.dates;
 

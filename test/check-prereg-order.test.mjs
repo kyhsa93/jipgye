@@ -8,7 +8,7 @@ import { promisify } from "node:util";
 
 // 사전 등록 순서 확인 (#133 완료 조건 1). 임시 git 저장소로만 돈다.
 const execFileAsync = promisify(execFile);
-const script = path.resolve(import.meta.dirname, "../scripts/check-prereg-order.mjs");
+const script = path.resolve(import.meta.dirname, "../scripts/check-prereg-order.ts");
 const PREREG = "research/housing-permits/PREREG.md";
 const OUT = "research/housing-permits/folded.json";
 
