@@ -76,6 +76,7 @@
     "../../scripts/district-tables.ts",
     "../../scripts/ecos.ts",
     "../../scripts/fetch-housing-permits.ts",
+    "../../scripts/fetch-official-price.ts",
     "../../scripts/floor-gap.ts",
     "../../scripts/housing-permits-diagnose.ts",
     "../../scripts/housing-permits-fold.ts",
