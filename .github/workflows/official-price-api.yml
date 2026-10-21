@@ -10,7 +10,7 @@
 # data.go.kr/data/15134735를 다시 보고, 그대로면 그 파일의 확인일을 고쳐 PR로 올린다(시험의 "기본 이용허락 상수"가 만료 때 실패해 알린다).
 # 본 수집의 첫 dispatch는 clo 기록(#68)·소유자 결정 A 뒤에만 한다. daily-update.yml과 concurrency 그룹을 공유하지 않는다
 # (digest-pipeline을 3시간 넘게 잡으면 일일 수집이 막힌다) - 대신 푸시 경합은 scripts/push-docs.sh의 rebase 재시도가 받는다.
-# collect 모드의 호출 예산 입력은 9,000으로 자른다(scripts/fetch-official-price-api.mjs, explore는 기존대로).
+# collect 모드의 호출 예산 입력은 9,000으로 자른다(scripts/fetch-official-price-api.ts, explore는 기존대로).
 # 일일 수집(UTC 23:07·03:07·07:07·11:07) 뒤인 14:17 UTC(한국 23:17)에 돈다.
 name: Official price API
 
@@ -91,9 +91,9 @@ jobs:
           set +x
           set -eu
           if [ "$MODE" = "explore" ]; then
-            node scripts/fetch-official-price-api.mjs --explore --raw-commit "$RAW_COMMIT" --raw-dir raw-at-commit/raw
+            node scripts/fetch-official-price-api.ts --explore --raw-commit "$RAW_COMMIT" --raw-dir raw-at-commit/raw
           else
-            node scripts/fetch-official-price-api.mjs --raw-commit "$RAW_COMMIT" --raw-dir raw-at-commit/raw
+            node scripts/fetch-official-price-api.ts --raw-commit "$RAW_COMMIT" --raw-dir raw-at-commit/raw
           fi
 
       - name: 커밋 (탐색 모드는 쓰지 않는다)

@@ -482,7 +482,7 @@ async function cliWorld({ ownerField = false } = {}) {
 }
 const runCli = async (dir, base, args = [], env = {}) => {
   const summary = path.join(dir, "summary.md");
-  const r = await exec(process.execPath, [path.join(root, "scripts/fetch-official-price-api.mjs"), "--raw-dir", path.join(dir, "raw"), "--names-file", path.join(dir, "names.json"), "--out-dir", path.join(dir, "out"), "--raw-commit", COMMIT, ...args], {
+  const r = await exec(process.execPath, [path.join(root, "scripts/fetch-official-price-api.ts"), "--raw-dir", path.join(dir, "raw"), "--names-file", path.join(dir, "names.json"), "--out-dir", path.join(dir, "out"), "--raw-commit", COMMIT, ...args], {
     env: { PATH: process.env.PATH, PUBLIC_DATA_PORTAL_API_KEY: FAKE_KEY, OFFICIAL_PRICE_API_BASE: base, CALL_GAP_MS: "0", GITHUB_STEP_SUMMARY: summary, ...env },
   }).catch((e) => e);
   const sum = await readFile(summary, "utf8").catch(() => "");
@@ -689,7 +689,7 @@ test("워크플로: official-price-api.yml은 dispatch+schedule, 별도 concurre
   const steps = text.split(/\n      - /);
   const holders = steps.filter((s) => /secrets\./.test(s));
   assert.equal(holders.length, 1);
-  assert.match(holders[0], /fetch-official-price-api\.mjs/);
+  assert.match(holders[0], /fetch-official-price-api\.ts/);
   assert.match(holders[0], /\n        env:\n(?:          .*\n)*?          PUBLIC_DATA_PORTAL_API_KEY: \$\{\{ secrets\.PUBLIC_DATA_PORTAL_API_KEY \}\}/);
   for (const block of text.split(/\n\s+run: /).slice(1)) assert.doesNotMatch(block.split("\n      - ")[0], /\$\{\{\s*(inputs|vars)\./, "run에 입력·변수를 직접 보간하지 않는다");
   assert.doesNotMatch(text, /actions\/cache|upload-artifact/);

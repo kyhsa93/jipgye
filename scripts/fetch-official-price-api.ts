@@ -2,7 +2,7 @@
  * 공시가격 API 수집 실행기 (#68 E1·E3). 건축HUB 건축물대장 API에서 지번별로 받아 칸으로 접는다.
  *
  *   PUBLIC_DATA_PORTAL_API_KEY=... \
- *     node scripts/fetch-official-price-api.mjs --raw-commit <40자리> [--raw-dir raw-at-commit/raw] [--out-dir raw/official-price]
+ *     node scripts/fetch-official-price-api.ts --raw-commit <40자리> [--raw-dir raw-at-commit/raw] [--out-dir raw/official-price]
  *   ... --explore   # 쓰기 없음, 집계만(E3)
  *
  * 하루 호출 예산(기본 9,000, env DAILY_CALL_BUDGET)·초당 1회 이하·한도 코드(22)에서 "끝난 지번까지 저장하고 정상 종료"
