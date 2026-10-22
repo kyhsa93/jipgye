@@ -7,7 +7,7 @@ const dataDir = process.env.RATES_OUT_DIR
 const outFile = path.join(dataDir, "rates.json");
 const historyFile = path.join(dataDir, "rates-history.json");
 const metaFile = path.join(dataDir, "rates-meta.json");
-const HISTORY_MAX_DAYS = 180;
+const HISTORY_MAX_DAYS: string = 180;
 
 const API_KEY = process.env.FSS_FINLIFE_API_KEY;
 
