@@ -4,7 +4,7 @@
 //   ① 가시 텍스트 다중집합(375·1280)   — 기준 폴더를 같이 줄 때만(`baseline`). 유틸리티로 숨긴 글자를 잡는다.
 //   ② 가로 넘침(320·375)
 //   ③ 대화형 요소 크기 44px · 입력칸 글자 16px · 글자 크기 하한 · 네 모드 각각의 대비 4.5:1
-//   ④ 건너뛰기 링크가 첫 초점이고 #content로 간다
+//   ④ 건너뛰기 링크가 첫 초점이고, 누른 뒤 첫 Tab 이 머리 틀 밖 main 안에 닿는다
 //   ⑤ 영어 모드에서도 ①~③
 //
 // **입력이 매일 바뀌는 측정은 CI에 넣지 않는다**(#8 재발 방지 R3, `tools/golden`의 `test` ↔ `test:live`와 같은 선).
@@ -106,11 +106,27 @@ export async function probePage(page, { url, settleMs = 0, wantTexts = false }: 
   await page.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-color-scheme", value: "light" }] });
   await page.evaluate(`document.documentElement.removeAttribute("data-theme")`);
 
-  // ④ 건너뛰기 링크 — Tab 한 번. 초점 상태는 되돌릴 수 없으므로(한 번 누르면 다음 것으로 간다) 마지막에 가깝게 둔다.
-  for (const type of ["keyDown", "keyUp"]) await page.send("Input.dispatchKeyEvent", { type, key: "Tab", code: "Tab", windowsVirtualKeyCode: 9 });
-  const focus = await page.evaluate(FOCUS_PROBE);
-  if (focus.href !== "#content") {
-    findings.push({ check: "건너뛰기 링크", where: "375px", detail: `Tab 한 번 뒤 초점이 ${focus.el}${focus.href ? `[href=${focus.href}]` : ""} — #content로 가는 건너뛰기 링크가 아니다` });
+  // ④ 건너뛰기 링크 — **눌러 보고** 그 다음 Tab 이 어디로 가는지로 잰다(#463). href 문자열만 비교하면
+  // 목적지가 머리 안이어도(예: `#page-title`) 통과한다 — 링크는 "있고 #content 같다"에서 끝나고, 사람이 겪는 것은
+  // 눌렀는데도 다음 Tab 이 머리 단추로 돌아가는 일이다. 초점 상태는 되돌릴 수 없으므로(한 번 누르면 다음 것으로 간다)
+  // 마지막에 가깝게 둔다.
+  const key = async (name, code, vk, text = "") => {
+    for (const type of ["keyDown", "keyUp"]) await page.send("Input.dispatchKeyEvent", { type, key: name, code, windowsVirtualKeyCode: vk, ...(type === "keyDown" && text ? { text } : {}) });
+  };
+  await key("Tab", "Tab", 9);
+  const skip = await page.evaluate(FOCUS_PROBE);
+  if (!skip.href?.startsWith("#") || !skip.targetExists) {
+    findings.push({ check: "건너뛰기 링크", where: "375px", detail: `Tab 한 번 뒤 초점이 ${skip.el}${skip.href ? `[href=${skip.href}]` : ""} — 이 장 안의 조각으로 가는 건너뛰기 링크가 아니다` });
+  } else {
+    await key("Enter", "Enter", 13, "\r");
+    await key("Tab", "Tab", 9);
+    const after = await page.evaluate(FOCUS_PROBE);
+    const at = `${after.el}${after.href ? `[href=${after.href}]` : ""}`;
+    if (after.frame) {
+      findings.push({ check: "건너뛰기 링크", where: "375px", detail: `${skip.el}[href=${skip.href}]을 누른 뒤 첫 Tab 이 머리 틀(${after.frame}) 안 ${at}로 간다 — 아무것도 건너뛰지 못했다` });
+    } else if (!after.inMain) {
+      findings.push({ check: "건너뛰기 링크", where: "375px", detail: `${skip.el}[href=${skip.href}]을 누른 뒤 첫 Tab 이 main 밖 ${at}로 간다` });
+    }
   }
 
   // ① 가시 텍스트 — 기준과 견줄 때만 모은다(혼자서는 판정할 수 없다).
