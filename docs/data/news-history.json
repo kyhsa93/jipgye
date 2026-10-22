@@ -13937,311 +13937,232 @@
     "date": "2026-10-22",
     "items": [
       {
-        "title": "[속보]뉴욕증시 美기업 실적 기대감에 상승 마감",
-        "link": "https://www.newsis.com/view/NISX20261022_0003835869",
-        "publishedAt": "2026-10-21T20:04:00.000Z",
-        "source": "뉴시스 경제",
-        "category": "stocks",
-        "preview": "후속기사가 이어집니다 ◎공감언론 뉴시스 ksk@newsis.com",
-        "dupes": [],
-        "titleEn": "[Breaking News] NY Stock Exchange Closes Higher on Expectation of Strong U.S. Corporate Earnings"
-      },
-      {
-        "title": "佛 국채 10년물 금리 年5% 돌파…2002년 이후 처음",
-        "link": "https://www.hankyung.com/article/2026102171271",
-        "publishedAt": "2026-10-21T14:56:46.000Z",
-        "source": "한국경제 경제",
-        "category": "rates",
-        "preview": null,
-        "dupes": [],
-        "titleEn": "South Korea's 10-year government bond yield breaks 5% annually... first since 2002"
-      },
-      {
-        "title": "뉴욕증시, 美기업 실적 호조에 상승 출발…나스닥 0.45%↑",
-        "link": "https://www.newsis.com/view/NISX20261021_0003835851",
-        "publishedAt": "2026-10-21T14:06:23.000Z",
-        "source": "뉴시스 경제",
-        "category": "stocks",
-        "preview": "[서울=뉴시스] 권성근 기자 = 뉴욕증시는 21일(현지 시간) 미국 기업들의 실적 호조에 상승세로 장을 출발했다. 이날 뉴욕증권거래소(NYSE)에서 우량주 중심의 다우존스 30 산업평균지수는 오전 9시 40분(미 동…",
-        "dupes": [],
-        "titleEn": "New York stock market rises on strong U.S. corporate earnings... Nasdaq up 0.45%"
-      },
-      {
-        "title": "후티 공격에 사우디 전세기 요금 급등",
-        "link": "https://www.hankyung.com/article/2026102169961",
-        "publishedAt": "2026-10-21T11:06:59.000Z",
-        "source": "한국경제 경제",
-        "category": "realestate",
-        "preview": null,
-        "dupes": [],
-        "titleEn": "Saudi Charter Flight Prices Soar After Houthi Attack"
-      },
-      {
-        "title": "올 서울 빌라 전세 4.7%↑…15년 만에 최고 상승률",
-        "link": "https://www.hankyung.com/article/2026102167951",
-        "publishedAt": "2026-10-21T08:58:01.000Z",
-        "source": "한국경제 부동산",
-        "category": "realestate",
-        "preview": null,
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-jeonse.html",
-            "label": "서울 전체 아파트 84㎡ 전세",
-            "labelEn": "Seoul apartment 84㎡ jeonse",
-            "value": "8억 2,049만원",
-            "valueEn": "₩820M",
-            "note": "최근 1주 계약 650건 · 10/14 대비 +3.2%",
-            "noteEn": "650 deals in the last 1 weeks · +3.2% vs Oct 14"
-          }
-        ],
-        "titleEn": "Annual Seoul villa lease prices up 4.7%...highest increase in 15 years"
-      },
-      {
-        "title": "광명·하남 '국평' 전세도 10억…\"입주가뭄 덮치는 내년이 더 문제\"",
-        "link": "https://www.hankyung.com/article/2026102167931",
-        "publishedAt": "2026-10-21T08:57:40.000Z",
-        "source": "한국경제 부동산",
-        "category": "realestate",
-        "preview": null,
-        "dupes": [],
-        "titleEn": "Gwangmyeong·Hanhnam 'National Average' Rent Reaches 1,000,000,000... \"Shortage of New Units to Worsen Next Year"
-      },
-      {
-        "title": "\"경기도 전세라도…\" 서울 전셋집 포기하려던 30대 '한숨'",
-        "link": "https://www.hankyung.com/article/2026102167471",
-        "publishedAt": "2026-10-21T08:55:27.000Z",
-        "source": "한국경제 부동산",
-        "category": "realestate",
-        "preview": null,
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./apartment-jeonse.html",
-            "label": "서울 전체 아파트 84㎡ 전세",
-            "labelEn": "Seoul apartment 84㎡ jeonse",
-            "value": "8억 2,049만원",
-            "valueEn": "₩820M",
-            "note": "최근 1주 계약 650건 · 10/14 대비 +3.2%",
-            "noteEn": "650 deals in the last 1 weeks · +3.2% vs Oct 14"
-          }
-        ],
-        "titleEn": "Even rental housing in Gyeonggi...\" 30-somethings who were about to give up on Seoul rental homes sigh in relief"
-      },
-      {
-        "title": "대출 플랫폼 '핀다', 대원저축은행 인수",
-        "link": "https://www.hankyung.com/article/2026102167131",
-        "publishedAt": "2026-10-21T08:47:43.000Z",
-        "source": "한국경제 경제",
-        "category": "rates",
-        "preview": null,
-        "dupes": [],
-        "context": [
-          {
-            "kind": "rates",
-            "label": "적금 최고금리(12개월)",
-            "labelEn": "Top 12-month savings rate",
-            "value": "연 14.00%",
-            "valueEn": "14.00% p.a.",
-            "href": "./saving-rates.html"
-          }
-        ],
-        "titleEn": "Loan platform 'Finda' acquires Daewon Savings Bank"
-      },
-      {
-        "title": "만기일 직접 정하는 정기예금…토스뱅크, 최고 연 3.8% 금리",
-        "link": "https://www.hankyung.com/article/2026102167181",
-        "publishedAt": "2026-10-21T08:45:54.000Z",
-        "source": "한국경제 경제",
-        "category": "rates",
-        "preview": null,
-        "dupes": [],
-        "context": [
-          {
-            "kind": "rates",
-            "label": "정기예금 최고금리(12개월)",
-            "labelEn": "Top 12-month deposit rate",
-            "value": "연 4.10%",
-            "valueEn": "4.10% p.a.",
-            "href": "./deposit-rates.html"
-          }
-        ],
-        "titleEn": "Customizing Maturity Date for Regular Savings Accounts... Toss Bank Offers Highest Annual Interest Rate of 3.8%"
-      },
-      {
-        "title": "[단독] 실거주 의무 강화 부작용? 청년 전·월세 대출 '사상 최대'",
-        "link": "https://www.hankyung.com/article/2026102167961",
-        "publishedAt": "2026-10-21T08:42:38.000Z",
-        "source": "한국경제 경제",
-        "category": "realestate",
-        "preview": null,
-        "dupes": [],
-        "titleEn": "[Exclusive] Side effects of strengthening the mandatory residency requirement? Youth rent and deposit loans hit all-time high"
-      },
-      {
-        "title": "용산 아세아아파트 공사 무기한 중단…연내 분양 차질",
-        "link": "https://www.newsis.com/view/NISX20261021_0003834882",
-        "publishedAt": "2026-10-21T08:18:34.000Z",
-        "source": "뉴시스 경제",
-        "category": "realestate",
-        "preview": "[서울=뉴시스] 변해정 기자 = 서울 용산구에 969가구 규모로 들어설 예정인 아세아아파트의 신축 공사가 무기한 중단됐다. 21일 건설업계와 용산구청에 따르면 부영주택은 지난 7월말 구청에 '한강로3가 아세아아파트…",
-        "dupes": [],
-        "context": [
-          {
-            "kind": "realestate",
-            "href": "./district-yongsan.html",
-            "label": "용산구 아파트 84㎡ 매매",
-            "labelEn": "용산구 apartment 84㎡ sale",
-            "value": "29억 1,426만원",
-            "valueEn": "₩2,914M",
-            "note": "최근 1주 계약 64건 · 10/14 대비 +7.5%",
-            "noteEn": "64 deals in the last 1 weeks · +7.5% vs Oct 14"
-          }
-        ],
-        "titleEn": "Yongsan Ace Asia Apartment Construction Suspended Indefinitely... Delay in Year-End Sales"
-      },
-      {
-        "title": "계양신도시 '카이브 유보라'…반도건설, 23일 견본주택 개관",
-        "link": "https://www.mk.co.kr/news/realestate/12181909",
-        "publishedAt": "2026-10-21T08:11:56.000Z",
+        "title": "“살던 아파트에서 전문 요양을”…삼성물산, 에이지테크로 실버 시장 공략",
+        "link": "https://www.mk.co.kr/news/realestate/12182597",
+        "publishedAt": "2026-10-22T01:26:11.000Z",
         "source": "매일경제 부동산",
         "category": "realestate",
-        "preview": "반도건설이 23일 인천 계양신도시에 들어서는 주상복합 아파트 '계양신도시 카이브 유보라'(투시도)와 상업시설 '시간(時間)'의 견본주택을 개관한다고 21일 밝혔다. 카이브 유보라는..",
-        "dupes": [],
-        "titleEn": "Gye Yang New City 'Cave Urbra'...Bando Construction to Open Model House on 23rd"
+        "preview": "삼성노블라이프와 MOU 너싱홈·시니어 레지던스 개발 및 리모델링 협력삼성물산 건설부문(이하 삼성물산)이 고령자 거주시설 사업 확대를 위해 삼성노블라이프와 업무협약(MOU)을 체결했..",
+        "dupes": []
       },
       {
-        "title": "국민경제자문회의, '전력망 병목과 에너지 지정학' 세미나",
-        "link": "https://www.newsis.com/view/NISX20261021_0003835617",
-        "publishedAt": "2026-10-21T08:10:15.000Z",
-        "source": "뉴시스 경제",
-        "category": "other",
-        "preview": "[세종=뉴시스] 안호균 기자 = 국민경제자문회의와 서울대 국가미래전략원은 오는 28일 오후 2시 서울 명동 은행회관 2층 국제회의실에서 '전력망 병목, 에너지 지정학 어떻게 극복할 것인가'를 주제로 공동세미나를 개최…",
-        "dupes": [],
-        "titleEn": "National Economic Advisory Council Hosts Seminar on 'Power Grid Bottlenecks and Energy Geopolitics"
-      },
-      {
-        "title": "금통위 앞두고 국고채 금리 대체로 하락…3년물 연 3.822%(종합)",
-        "link": "https://www.yna.co.kr/view/AKR20261021144851008",
-        "publishedAt": "2026-10-21T08:07:11.000Z",
-        "source": "연합뉴스 경제",
-        "category": "rates",
-        "preview": "(서울=연합뉴스) 고은지 기자 = 한국은행 금융통화위원회를 하루 앞둔 21일 국고채 금리가 대체로 하락했다.",
-        "dupes": [],
-        "titleEn": "Yield on government bonds falls ahead of MPC meeting... 3-year bond at 3.822% annually (comprehensive)"
-      },
-      {
-        "title": "코스피 일단 반등했지만…'폭락→급등' 널뛰기에 '불안' 지속(종합2보)",
-        "link": "https://www.yna.co.kr/view/AKR20261021084352008",
-        "publishedAt": "2026-10-21T08:01:49.000Z",
-        "source": "연합뉴스 경제",
-        "category": "stocks",
-        "preview": "(서울=연합뉴스) 곽윤아 기자 = 코스피 지수가 하루 3∼4%씩 올랐다 떨어지는 롤러코스터 장세를 보이고 있다.",
-        "dupes": [],
-        "titleEn": "Kospi rebounds for now but 'plummet→surge' rollercoaster continues to cause unease (Comprehensive 2nd report)"
-      },
-      {
-        "title": "주택도시보증공사-동아대, 부동산·PF 전문 인력 양성 업무협약",
-        "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/21/AW2VGD2QZNDH5PW5BX5ECNA6TI/",
-        "publishedAt": "2026-10-21T07:53:00.000Z",
+        "title": "홍지선 국토장관 “전월세 가격 상승, 착공 부진 탓… 근본 해법은 공급”",
+        "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/22/US4MKWMDK5BZVEBKAO5HIUUOEE/",
+        "publishedAt": "2026-10-22T01:14:57.000Z",
         "source": "조선비즈 부동산",
         "category": "realestate",
-        "preview": "주택도시보증공사(HUG)는 동아대학교와 주택·도시·부동산·건설·PF 분야 우수 인재 양성 및 연구 교류를 위한 업무협약을 체결했다고 21일 밝혔다. 이번 협약은 직원 직무 역량 개발을 위해 교육·연구 협력이 필요한…",
-        "dupes": [],
-        "titleEn": "Housing & Urban Development Corporation and Dong-A University sign MoU to train real estate and PF professionals"
+        "preview": "홍지선 국토교통부 장관이 22일 “전월세 가격 상승의 가장 큰 원인은 착공 부진에 따른 입주 물량 감소”이라며 “근본 해법은 공급”이라고 말했다. 홍 장관은 엑스(X·옛 트위터)에서 ‘월세 부담에 대한 걱정, 무겁게…",
+        "dupes": []
       },
       {
-        "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 0.6%↓",
-        "link": "https://www.newsis.com/view/NISX20261021_0003835563",
-        "publishedAt": "2026-10-21T07:52:59.000Z",
-        "source": "뉴시스 경제",
-        "category": "stocks",
-        "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 21일 하락 마감했다. 이날 상하이종합지수는 전날보다 0.6% 하락한 3713.03로 거래를 마쳤다. 선전성분지수는 전장 대비 0.82% 내린 1만1704.35로, 중국판…",
-        "dupes": [],
-        "titleEn": "[AllChina] Chinese stock market closes lower… Shanghai index down 0.6%"
-      },
-      {
-        "title": "HUG, 동아대와 부동산·PF 분야 전문인재 양성 나선다",
-        "link": "https://www.newsis.com/view/NISX20261021_0003835499",
-        "publishedAt": "2026-10-21T07:52:25.000Z",
-        "source": "뉴시스 경제",
-        "category": "realestate",
-        "preview": "[서울=뉴시스] 변해정 기자 = 주택도시보증공사(HUG)는 21일 동아대학교와 부동산·프로젝트 파이낸싱(PF) 분야 우수 인재 양성 및 연구 교류를 위한 업무협약을 체결했다고 밝혔다. 양측은 이 협약에 따라 부동산·…",
-        "dupes": [],
-        "titleEn": "HUG to train specialists in real estate and PF with Dong-A University"
-      },
-      {
-        "title": "강원도, 지역 맞춤형 청년 공공임대주택 확대…정착 기반 강화",
-        "link": "https://www.yna.co.kr/view/AKR20261021146200062",
-        "publishedAt": "2026-10-21T07:47:54.000Z",
+        "title": "상계한신 1·2차 1천140세대로 재건축…미아동엔 1천577세대",
+        "link": "https://www.yna.co.kr/view/AKR20261022051600004",
+        "publishedAt": "2026-10-22T01:00:01.000Z",
         "source": "연합뉴스 경제",
         "category": "realestate",
-        "preview": "(춘천=연합뉴스) 이재현 기자 = 강원특별자치도가 청년이 머물고 성장하는 '청년 강원' 실현을 위해 지역별 일자리와 생활 여건을 반영한 맞춤형 ...",
-        "dupes": [],
-        "titleEn": "Gangwon Province expands customized public rental housing for youth to strengthen settlement foundations"
+        "preview": "(서울=연합뉴스) 김동규 기자 = 서울 노원구 상계한신1·2차 아파트가 재건축을 통해 최고 35층, 1천140세대 규모의 주거단지로 거듭난다.",
+        "dupes": []
       },
       {
-        "title": "춘천시, 무허가 주택 양성화 추진…12월 17일 특별법 시행",
-        "link": "https://www.yna.co.kr/view/AKR20261021145500062",
-        "publishedAt": "2026-10-21T07:46:56.000Z",
+        "title": "한국은행, 기준금리 3.00% 동결…다음달 추가 인상 가능성",
+        "link": "https://www.hankyung.com/article/2026102279097",
+        "publishedAt": "2026-10-22T00:59:25.000Z",
+        "source": "한국경제 경제",
+        "category": "rates",
+        "preview": null,
+        "dupes": []
+      },
+      {
+        "title": "농협경제지주, 농식품부와 3억5천만원 규모 과채류 할인 행사",
+        "link": "https://www.yna.co.kr/view/AKR20261022043500030",
+        "publishedAt": "2026-10-22T00:56:16.000Z",
         "source": "연합뉴스 경제",
-        "category": "realestate",
-        "preview": "(춘천=연합뉴스) 이상학 기자 = 건축허가나 사용승인을 받지 못한 주거용 건축물을 합법화할 수 있는 특별법이 12월부터 한시적으로 시행된다.",
-        "dupes": [],
-        "titleEn": "Chuncheon City to promote regularization of unauthorized housing...special law to take effect December 17"
+        "category": "other",
+        "preview": "(서울=연합뉴스) 김세린 기자 = 농협경제지주는 농림축산식품부와 함께 생산량 증가와 소비 부진으로 가격이 하락한 주요 과채류의 소비 촉진을 위해...",
+        "dupes": []
       },
       {
-        "title": "허그·동아대, 부동산·PF 인재 함께 키운다",
-        "link": "https://www.mk.co.kr/news/realestate/12181840",
-        "publishedAt": "2026-10-21T07:29:52.000Z",
-        "source": "매일경제 부동산",
-        "category": "realestate",
-        "preview": "부산 이전 후 부동산대학원과 첫 협약 임직원 부동산대학원 학위과정 파견 PF·부동산 개발 연구 교류 중점 추진주택도시보증공사(허그)와 동아대학교가 주택·도시·부동산·건설·프로젝트 ..",
-        "dupes": [],
-        "titleEn": "Hug, Dong-a University to jointly develop real estate and PF talent"
-      },
-      {
-        "title": "日증시, 반도체·AI주 강세에 상승 마감…닛케이지수 0.85%↑",
-        "link": "https://www.newsis.com/view/NISX20261021_0003835486",
-        "publishedAt": "2026-10-21T07:22:48.000Z",
-        "source": "뉴시스 경제",
-        "category": "stocks",
-        "preview": "[서울=뉴시스] 김예진 기자 = 21일 일본 도쿄증시에서 주요 지수는 상승 마감했다. 니혼게이자이신문에 따르면 닛케이225지수(닛케이평균주가)는 이날 전 거래일 대비 545.82포인트(0.85%) 오른 6만4621.…",
-        "dupes": [],
-        "titleEn": "Tokyo Stock Exchange closes higher on semiconductor and AI stocks... Nikkei index up 0.85%"
-      },
-      {
-        "title": "코스피, AI 투자심리 회복에 3.3% 급등 마감…삼전닉스 5%↑(종합)",
-        "link": "https://www.yna.co.kr/view/AKR20261021134800008",
-        "publishedAt": "2026-10-21T07:20:49.000Z",
+        "title": "급한 불 끈 한은, 금리인상 건너 뛴다…11월에 다시 올리나",
+        "link": "https://www.yna.co.kr/view/AKR20261022056400002",
+        "publishedAt": "2026-10-22T00:54:07.000Z",
         "source": "연합뉴스 경제",
-        "category": "stocks",
-        "preview": "(서울=연합뉴스) 김유아 기자 = 21일 코스피가 3%대 급등한 채 정규장 거래를 마감했다.",
-        "dupes": [],
-        "titleEn": "KOSPI surges 3.3% on recovery in AI investment sentiment, Samsung Electronics up 5% (Comprehensive)"
+        "category": "rates",
+        "preview": "(서울=연합뉴스) 채새롬 기자 = 한국은행 금융통화위원회가 기준금리를 연달아 올린 뒤 일단 한 템포 쉬면서 긴축 호흡을 가다듬는 결정을 내렸다.",
+        "dupes": []
       },
       {
-        "title": "LH, 모듈러주택 발주 확대…2030년까지 1만6000호",
-        "link": "https://www.newsis.com/view/NISX20261021_0003835442",
-        "publishedAt": "2026-10-21T07:09:31.000Z",
+        "title": "엔화, 일본 조기금리 인상 관측에 1달러=158엔대 전반 출발",
+        "link": "https://www.newsis.com/view/NISX20261022_0003836290",
+        "publishedAt": "2026-10-22T00:53:36.000Z",
         "source": "뉴시스 경제",
-        "category": "realestate",
-        "preview": "[서울=뉴시스]정유선 기자 = 한국토지주택공사(LH)가 주택 공급 속도를 높이기 위해 2030년까지 총 1만6000호 규모의 모듈러주택 발주를 추진한다고 21일 밝혔다. 우선 올해 당초 목표인 2000호를 웃도는 2…",
+        "category": "rates",
+        "preview": "[서울=뉴시스]이재준 기자 = 엔화 환율은 22일 중동 정세 악화로 국제 유가가 고공행진하는 가운데 일본은행의 조기 금리인상 관측이 고조하면서 1달러=158엔대 전반으로 시작했다. 도쿄 외환시장에서 엔화 환율은 이날…",
+        "dupes": []
+      },
+      {
+        "title": "[속보] 한은, 기준금리 연 3.00%로 동결",
+        "link": "https://www.hankyung.com/article/2026102278806",
+        "publishedAt": "2026-10-22T00:52:48.000Z",
+        "source": "한국경제 경제",
+        "category": "rates",
+        "preview": null,
         "dupes": [
           {
-            "title": "LH, 모듈러주택 발주 확대…2030년까지 1만6천가구",
-            "link": "https://www.yna.co.kr/view/AKR20261021133200003",
+            "title": "[1보] 한은, 기준금리 연 3.00%로 동결",
+            "link": "https://www.yna.co.kr/view/AKR20261022055600002",
             "source": "연합뉴스 경제"
-          },
-          {
-            "title": "LH “2030년까지 모듈러 주택 1만6000호 발주”",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/21/BQCUUJ5EDFD4FODILEHDVMB654/",
-            "source": "조선비즈 부동산"
           }
-        ],
-        "titleEn": "LH expands modular housing orders…10,0006000 units by 2030"
+        ]
+      },
+      {
+        "title": "한은, 물가·집값 경계 속 기준금리 동결…긴축 속도조절(종합)",
+        "link": "https://www.yna.co.kr/view/AKR20261022050500002",
+        "publishedAt": "2026-10-22T00:51:04.000Z",
+        "source": "연합뉴스 경제",
+        "category": "rates",
+        "preview": "(서울=연합뉴스) 한지훈 채새롬 이도흔 기자 = 한국은행 금융통화위원회는 22일 시장 예상대로 기준금리를 연 3.00%로 동결했다.",
+        "dupes": []
+      },
+      {
+        "title": "[속보] 한은, 기준금리 연 3.0%로 동결…\"인상 효과 점검해야\"",
+        "link": "https://www.hankyung.com/article/202610227805i",
+        "publishedAt": "2026-10-22T00:50:37.000Z",
+        "source": "한국경제 경제",
+        "category": "rates",
+        "preview": null,
+        "dupes": []
+      },
+      {
+        "title": "코스피, 차익실현 매물에 1%대 하락 출발 후 낙폭 축소 시도(종합)",
+        "link": "https://www.yna.co.kr/view/AKR20261022047500008",
+        "publishedAt": "2026-10-22T00:48:03.000Z",
+        "source": "연합뉴스 경제",
+        "category": "realestate",
+        "preview": "(서울=연합뉴스) 김유아 기자 = 22일 코스피가 1%가량 내린 상태로 출발한 이후 낙폭 축소를 시도하고 있다.",
+        "dupes": []
+      },
+      {
+        "title": "LH, 15년 만기 5000만 유로화 채권 발행…\"주택 공급 활용\"",
+        "link": "https://www.newsis.com/view/NISX20261022_0003836104",
+        "publishedAt": "2026-10-22T00:43:33.000Z",
+        "source": "뉴시스 경제",
+        "category": "rates",
+        "preview": "[서울=뉴시스]정유선 기자 = 한국토지주택공사(LH)가 5000만 규모(약 745억원) 유로화 표시 채권 발행에 성공했다고 22일 밝혔다. 채권 발행 확정일은 지난 21일이며, 만기는 15년이다. 글로벌 채권시장에서…",
+        "dupes": []
+      },
+      {
+        "title": "서울 원룸 월세 71만원…한 달 새 5.2% 뛰었다",
+        "link": "https://www.newsis.com/view/NISX20261022_0003836037",
+        "publishedAt": "2026-10-22T00:43:07.000Z",
+        "source": "뉴시스 경제",
+        "category": "realestate",
+        "preview": "[서울=뉴시스]정유선 기자 = 지난달 서울 지역 연립·다세대 원룸의 평균 월세가 한 달 새 5% 이상 오르며 70만원을 넘어선 것으로 나타났다. 부동산 정보 플랫폼 '다방'은 22일 올해 9월 기준 서울 지역 연립·…",
+        "dupes": []
+      },
+      {
+        "title": "4% 금리에 포인트도…파킹통장 혜택 이어가는 네이버페이",
+        "link": "https://www.hankyung.com/article/202610227750i",
+        "publishedAt": "2026-10-22T00:42:09.000Z",
+        "source": "한국경제 경제",
+        "category": "rates",
+        "preview": null,
+        "dupes": []
+      },
+      {
+        "title": "전국 아파트 1순위 청약 경쟁률 6개월째 하락…부산은 첫 미달",
+        "link": "https://www.yna.co.kr/view/AKR20261022042100003",
+        "publishedAt": "2026-10-22T00:36:02.000Z",
+        "source": "연합뉴스 경제",
+        "category": "realestate",
+        "preview": "(서울=연합뉴스) 임기창 기자 = 전국 아파트 1순위 청약 경쟁률이 6개월 연속 하락했다.",
+        "dupes": []
+      },
+      {
+        "title": "“월세 100만원, 아파트에 사세요?”…“아뇨, 방 한칸 원룸입니다”",
+        "link": "https://www.mk.co.kr/news/realestate/12182538",
+        "publishedAt": "2026-10-22T00:35:53.000Z",
+        "source": "매일경제 부동산",
+        "category": "realestate",
+        "preview": "9월 서울 원룸 평균 월세 71만원 전세 보증금은 전월보다 1.1%↓ 강남구, 평균 전세·월세 모두 1위 전세 2억 8708만원, 월세 97만원서울 원룸 월세가 전반적으로 상승했지..",
+        "dupes": []
+      },
+      {
+        "title": "한투부동산신탁, 양평동4가 도심복합개발사업 운영위와 MOU",
+        "link": "https://www.yna.co.kr/view/AKR20261022045300008",
+        "publishedAt": "2026-10-22T00:29:09.000Z",
+        "source": "연합뉴스 경제",
+        "category": "realestate",
+        "preview": "(서울=연합뉴스) 임은진 기자 = 한국금융지주[071050]의 자회사인 한국투자부동산신탁은 서울 영등포구 양평동4가 247번지 일대에 추진 중인...",
+        "dupes": []
+      },
+      {
+        "title": "美 경제학자 75% \"연말 국채금리 5% 이상\"…고금리 장기화 경고",
+        "link": "https://www.hankyung.com/article/202610227670i",
+        "publishedAt": "2026-10-22T00:27:53.000Z",
+        "source": "한국경제 경제",
+        "category": "rates",
+        "preview": null,
+        "dupes": []
+      },
+      {
+        "title": "日증시, 중동 긴장에 하락 출발…닛케이 0.13%↓",
+        "link": "https://www.newsis.com/view/NISX20261022_0003836105",
+        "publishedAt": "2026-10-22T00:26:04.000Z",
+        "source": "뉴시스 경제",
+        "category": "stocks",
+        "preview": "[서울=뉴시스] 신효령 기자 = 22일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)가 하락 출발했다. 중동 불안에 매도세가 나왔지만, 인공지능(AI)·반도체주 매수세가 지수를 지지했다. 니혼게이자이신문에 따르면…",
+        "dupes": []
+      },
+      {
+        "title": "홍지선 장관 \"청년월세 소득기준 내년 완화…전월세 안심신탁 연내 공모\"",
+        "link": "https://www.hankyung.com/article/202610227719i",
+        "publishedAt": "2026-10-22T00:16:50.000Z",
+        "source": "한국경제 부동산",
+        "category": "realestate",
+        "preview": null,
+        "dupes": []
+      },
+      {
+        "title": "코스피, 1.1% 하락 출발후 낙폭 축소 시도…코스닥은 0.9%↓",
+        "link": "https://www.yna.co.kr/view/AKR20261022037200008",
+        "publishedAt": "2026-10-22T00:06:54.000Z",
+        "source": "연합뉴스 경제",
+        "category": "stocks",
+        "preview": "(서울=연합뉴스) 김유아 기자 = 22일 코스피가 하락 출발한 뒤 낙폭을 좁히는 흐름을 보이고 있다.",
+        "dupes": []
+      },
+      {
+        "title": "“서울 아파트 실거래가 1년 새 15.5% 상승… 2021년 이후 최대폭”",
+        "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/22/2HV7SIZMJ5FX5JTMWSO7ISATZY/",
+        "publishedAt": "2026-10-22T00:06:26.000Z",
+        "source": "조선비즈 부동산",
+        "category": "realestate",
+        "preview": "서울 아파트 매매 실거래가격이 1년 새 15.5% 오르며 2021년 이후 가장 높은 상승률을 기록했다. 22일 서울시가 공개한 한국부동산원의 아파트 실거래가격지수에 따르면 지난 8월 서울 아파트 매매 실거래가격은 전…",
+        "dupes": [
+          {
+            "title": "서울 아파트 실거래가 1년 새 15.5%↑…2021년 이후 최대 상승",
+            "link": "https://www.yna.co.kr/view/AKR20261021153100004",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "title": "9월 서울 원룸 평균 월세 71만원… 전월보다 5.2% 올라",
+        "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/22/KIEQIVDYPJD37PZZ4BWC5SOHCI/",
+        "publishedAt": "2026-10-22T00:02:42.000Z",
+        "source": "조선비즈 부동산",
+        "category": "realestate",
+        "preview": "지난달 서울 원룸의 평균 월세가 71만원인 것으로 조사됐다. 전달보다 5% 넘게 올랐다. 부동산 정보 플랫폼 다방은 이런 내용을 포함한 ‘9월 다방여지도’를 22일 발표했다. 다방여지도는 서울 지역 연립·다세대 원룸…",
+        "dupes": []
+      },
+      {
+        "title": "\"AI 거품도 금리 앞에선 무너진다\"…2000년 닷컴버블 경고",
+        "link": "https://www.hankyung.com/article/202610227593i",
+        "publishedAt": "2026-10-22T00:01:55.000Z",
+        "source": "한국경제 경제",
+        "category": "rates",
+        "preview": null,
+        "dupes": []
       }
     ]
   }
