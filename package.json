@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "fetch:news": "node scripts/fetch-news.mjs",
+    "fetch:news": "node scripts/fetch-news.ts",
     "fetch:realestate": "node scripts/fetch-realestate.mjs",
     "build:realestate": "node scripts/build-realestate.mjs",
     "fetch:market": "node scripts/fetch-market.mjs",

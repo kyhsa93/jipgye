@@ -41,9 +41,9 @@ test("normalizeFeedTitle: 없는 제목은 빈 문자열, 모르는 엔티티는
   assert.equal(normalizeFeedTitle("AT&T; &unknownentity; 끝"), "AT&T; &unknownentity; 끝");
 });
 
-// fetch-news.mjs는 import하면 main()이 돌아 불러 쓸 수 없다. 수집이 풀이 함수를 거치는지는 소스로 지킨다.
-test("fetch-news.mjs가 피드 제목을 normalizeFeedTitle로 거친다 (#354)", async () => {
-  const src = await readFile(new URL("../scripts/fetch-news.mjs", import.meta.url), "utf8");
+// fetch-news.ts는 import하면 main()이 돌아 불러 쓸 수 없다. 수집이 풀이 함수를 거치는지는 소스로 지킨다.
+test("fetch-news.ts가 피드 제목을 normalizeFeedTitle로 거친다 (#354)", async () => {
+  const src = await readFile(new URL("../scripts/fetch-news.ts", import.meta.url), "utf8");
   assert.match(src, /const title = normalizeFeedTitle\(item\.title\);/);
 });
 

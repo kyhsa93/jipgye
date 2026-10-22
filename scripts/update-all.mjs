@@ -17,7 +17,7 @@ function trackedPaths() {
 // 멈춘다. 그 둘은 daily-update.yml의 full 실행이 시크릿을 넣어 부른다. 빌더는
 // 커밋돼 있는 실거래 원본(raw/)으로 다시 계산하므로 여기서도 그대로 돈다.
 async function main() {
-  run("node scripts/fetch-news.mjs");
+  run("node scripts/fetch-news.ts");
   run("node scripts/fetch-market.mjs");
   run("node scripts/fetch-price-index.mjs");
   run("node scripts/fetch-indicators.mjs");
