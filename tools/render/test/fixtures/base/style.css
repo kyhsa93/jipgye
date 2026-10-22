@@ -71,7 +71,7 @@ p { font-size: 16px; }
 }
 .skip-link:focus-visible { top: 8px; }
 
-.bar { display: flex; gap: 8px; align-items: center; padding: 8px 0; }
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 0; }
 button, .chip {
   display: inline-flex;
   align-items: center;

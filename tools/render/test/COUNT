@@ -7,5 +7,7 @@
 # 내리는 변경은 PR 본문에 사유를 적는다(#315 범위 4).
 # 센 법: 2026-10-15, merge-base 82ee67ee, Node v24.16.0, macOS 26.6.2, Chrome 155.0.8059.40, Apple M3 Pro.
 #   cd tools/render && npm test → ℹ tests 33 · pass 33 · fail 0 · skipped 0 (17.2초)
-33
-33
+# 갱신: 2026-10-22(#463 PR 2), base 2135dd59, Node v24.22.0, Chrome 155.0.8059.85 — 변이 「건너뛰기 목적지가 머리 안」 1개가 변이 표에서 시험 1개를 더한다.
+#   cd tools/render && npm test → ℹ tests 34 · pass 34 · fail 0 · skipped 0 (18.2초)
+34
+34

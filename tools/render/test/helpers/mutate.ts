@@ -51,9 +51,12 @@ export const MUTATIONS: Record<string, Mutation> = {
   // ⑤ 320·375폭에서 넘치는 표 — 가로 스크롤 상자를 떼면 표가 문서를 넓힌다(#211과 같은 모양).
   "가로 넘침": { check: "가로 넘침", file: "style.css", find: `.scroller { overflow-x: auto; }`, put: `.scroller { overflow-x: visible; }` },
 
-  // ⑥ 건너뛰기 링크 — 지우는 것과 #content 아닌 곳으로 보내는 것, 둘 다.
+  // ⑥ 건너뛰기 링크 — 지우는 것, 없는 곳으로 보내는 것, **머리 안으로 보내는 것**, 셋 다.
+  // 셋째가 양성 대조다(#463): 링크도 있고 목적지(#page-title)도 실제로 있는데 그 목적지가 머리 안이라, href 문자열만 재는
+  // 검사는 통과시킨다. 눌러 본 뒤의 첫 Tab 이 머리 단추로 돌아가야만 걸린다.
   "건너뛰기 링크 없음": { check: "건너뛰기 링크", file: "index.html", find: `<a class="skip-link" href="#content">본문 바로가기</a>\n`, put: `` },
   "건너뛰기 링크가 #main이 아님": { check: "건너뛰기 링크", file: "index.html", find: `<a class="skip-link" href="#content">`, put: `<a class="skip-link" href="#top">` },
+  "건너뛰기 목적지가 머리 안": { check: "건너뛰기 링크", file: "index.html", find: `<a class="skip-link" href="#content">`, put: `<a class="skip-link" href="#page-title">` },
 
   // ⑦ **영어 모드에서만** 나는 위반(①~⑤ 중 글자 크기 하한). 한국어로 돌면 안 걸린다 — 그것까지 시험이 건다.
   "영어 모드에서만": {

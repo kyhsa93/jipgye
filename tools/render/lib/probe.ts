@@ -252,9 +252,27 @@ export const CONTRAST_PROBE = `(() => {${HELPERS}
   return { bad: [...bad.values()], unmeasurable: [...unmeasurable.values()], checked };
 })()`;
 
-/** 건너뛰기 링크(검사 ④). Tab 한 번 뒤의 초점이 어디인지. 누르는 것은 부른 쪽(CDP Input). */
+/**
+ * 건너뛰기 링크(검사 ④). **지금 초점이 어디인지**를 구조로 읽는다. 누르는 것은 부른 쪽(CDP Input).
+ * - `href`·`targetExists`: 초점 요소가 같은 장 안 조각(`#…`)으로 가는 링크이고 그 조각이 실제로 있는가.
+ * - `inMain`: 초점이 `main` 안인가.
+ * - `frame`: 초점이 **머리 틀** 안이면 그 이름. 건너뛰기를 눌렀는데도 여기 내려앉으면 아무것도 건너뛰지 못한 것이다.
+ *   금지 구역 = `header` · `nav.page-nav` · `nav.sub-nav` · 사이트 검색(`form.site-search`, 입력 `#site-search-input`).
+ *   머리가 `main` 안에 있는 실제 틀에서는 `inMain`만으로는 못 가른다(#463) — 그래서 둘을 따로 낸다.
+ */
+export const FRAME_SELECTOR = "header, nav.page-nav, nav.sub-nav, form.site-search, #site-search-input";
 export const FOCUS_PROBE = `(() => {${HELPERS}
   const el = document.activeElement;
-  if (!el || el === document.body || el === document.documentElement) return { el: "(초점 없음)", href: null, text: "" };
-  return { el: label(el), href: el.getAttribute("href"), text: snip(el.textContent || el.getAttribute("aria-label") || "", 40) };
+  if (!el || el === document.body || el === document.documentElement) return { el: "(초점 없음)", href: null, targetExists: false, inMain: false, frame: null, text: "" };
+  const href = el.getAttribute("href");
+  const hash = href && href.charAt(0) === "#" ? href.slice(1) : null;
+  const frame = el.closest(${JSON.stringify(FRAME_SELECTOR)});
+  return {
+    el: label(el),
+    href,
+    targetExists: hash !== null && hash !== "" && !!document.getElementById(hash),
+    inMain: !!el.closest("main"),
+    frame: frame ? label(frame) : null,
+    text: snip(el.textContent || el.getAttribute("aria-label") || "", 40),
+  };
 })()`;

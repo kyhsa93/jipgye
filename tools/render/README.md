@@ -20,7 +20,7 @@ CSS가 실제로 무엇을 했는지는 브라우저만 안다.
 | ③ | 입력칸 글자 크기 | `input`·`select`·`textarea`의 계산된 `font-size` **16px** 이상 |
 | ③ | 글자 크기 하한 | 보이는 글자의 계산된 `font-size` **12px** 이상(축척 바닥 `--fs-xs` 0.78rem = 12.48px) |
 | ③ | 대비 | **네 모드 각각**에서 4.5:1(큰 글자 3:1). 네 모드 = `:root` · `@media (prefers-color-scheme: dark)` · `[data-theme="dark"]` · `[data-theme="light"]` |
-| ④ | 건너뛰기 링크 | Tab 한 번 뒤 초점이 `href="#content"`인 링크에 있는지 |
+| ④ | 건너뛰기 링크 | Tab 한 번 뒤 초점이 이 장 안 조각(`#…`)으로 가는 링크에 있고, **그 링크를 Enter로 누른 뒤 첫 Tab 이 머리 틀(`header`·`nav.page-nav`·`nav.sub-nav`·`form.site-search`/`#site-search-input`) 밖 `main` 안에 닿는지**. `href` 문자열 비교가 아니라 실제 초점 위치다(#463) |
 | ⑤ | 영어 모드 | 위를 `localStorage.lang = "en"`을 심은 채 한 번 더 |
 
 ## 쓰는 법
