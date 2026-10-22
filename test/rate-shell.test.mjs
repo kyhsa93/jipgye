@@ -25,7 +25,7 @@ const HEADER = { name: "머리글", pattern: /<header(?: class="([^"]*)")?>/, ho
 const NAV = { name: "1층 내비", hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:1024:mb-4", "tw:*:rounded"] };
 const SHELL_PAGE = [
   HEADER,
-  { ...NAV, pattern: /<nav class="([^"]*)">/ },
+  { ...NAV, pattern: /<nav class="([^"]*)" aria-label="섹션">/ },
   { name: "추이 구획", pattern: /<section id="history-section"(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-10", "tw:1024:mb-16"] },
   { name: "상품 구획", pattern: /<section id="products-section"(?: class="([^"]*)")?>/, hooks: [], utilities: [] },
 ];
