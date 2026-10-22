@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildPayload } from "../scripts/build-budget-deals.mjs";
+import { buildPayload } from "../scripts/build-budget-deals.ts";
 import { buildDealFiles, buildRentFiles } from "../scripts/deal-files.ts";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 

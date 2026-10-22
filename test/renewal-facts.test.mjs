@@ -10,7 +10,7 @@ import {
   seoulTally,
   tally,
 } from "../scripts/renewal-facts.ts";
-import { buildPayload } from "../scripts/build-renewal-facts.mjs";
+import { buildPayload } from "../scripts/build-renewal-facts.ts";
 import { districtRenewalHtml } from "../scripts/prerender.ts";
 
 const NOW = new Date("2026-08-26T00:00:00Z");

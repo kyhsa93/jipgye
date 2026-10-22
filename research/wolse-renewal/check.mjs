@@ -1,7 +1,7 @@
 // #7 월세→월세 재계약 격차: 전환율에 얼마나 달렸나, 자치구 문턱은 몇 건인가.
 // node research/wolse-renewal/check.mjs
 import { readFile } from "node:fs/promises";
-import { readRawRents, MONTHS } from "../../scripts/build-renewal-facts.mjs";
+import { readRawRents, MONTHS } from "../../scripts/build-renewal-facts.ts";
 import { recentMonths } from "../../scripts/realestate-source.ts";
 import { renewalGap, wolseRenewalGaps } from "../../scripts/renewal-facts.ts";
 

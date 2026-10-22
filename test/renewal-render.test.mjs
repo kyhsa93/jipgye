@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildPayload } from "../scripts/build-renewal-facts.mjs";
+import { buildPayload } from "../scripts/build-renewal-facts.ts";
 import { renewalDistrictsHtml, renewalWolseDistrictsHtml } from "../scripts/prerender.ts";
 import { loadRenewalPage } from "./helpers/renewal-page.mjs";
 
