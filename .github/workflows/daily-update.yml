@@ -103,6 +103,18 @@ jobs:
         env:
           FSS_FINLIFE_API_KEY: ${{ secrets.FSS_FINLIFE_API_KEY }}
 
+      # conversion.json은 rates.json의 대출 금리 중앙값·옵션 수를 읽는데, 첫 build-conversion은
+      # 위 "실거래 수집" 단계 안에서 금리 수집보다 먼저 돈다. 금감원 공시월이 바뀐 날
+      # (2026-10-22, 202609→202610) rates만 새것이고 conversion은 어제 금리로 남아 수집 후 테스트가
+      # 빨개지고 배포가 막혔다(#467). 그래서 금리 수집 뒤에 한 번 더 돌린다 - API 호출 없이 raw와
+      # rates.json을 읽을 뿐이라 몇 초다. 금리 수집이 실패했으면 rates.json이 그대로라 같은 값이
+      # 다시 나온다(일관). 이 단계가 실패해도 job을 멈추지 않는다: 멈추면 같은 실행의 수집분
+      # 커밋이 안 돌아 데이터가 사라진다(#62). conversion이 낡은 채 남으면 수집 후 테스트가 잡는다.
+      - name: 전환율 다시 만들기 (금리 반영)
+        if: env.MODE == 'full'
+        continue-on-error: true
+        run: node scripts/build-conversion.ts
+
       - name: 기사에 실거래가·금리 수치 붙이기
         run: node scripts/news-context.ts
 
