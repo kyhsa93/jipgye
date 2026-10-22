@@ -5732,8 +5732,8 @@
     "date": "2026-10-22",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 증시·환율: 뉴욕증시는 미국 기업 실적 기대감에 따라 상승 마감했다. 나스닥 지수는 0.45% 상승하며 출발했다. 코스피는 일시적으로 반등했으나, 폭락과 급등을 반복하며 불안감이 지속되고 있다. 중국 증시는 상하이지수 0.6% 하락하며 하락 마감했다. 일본 증시는 반도체와 AI 주가 강세에 힘입어 닛케이지수 0.85% 상승하며 상승 마감했다.\n- 금리·예금·투자상품: 프랑스 국채 10년물 금리가 연 5%를 돌파하며 2002년 이후 처음으로 해당 수준을 기록했다. 대출 플랫폼 ‘핀다’가 대원저축은행을 인수하며 금융업계에 변화를 예고했다. 토스뱅크는 만기일을 직접 정하는 정기예금 상품을 출시하며 최고 연 3.8% 금리를 제공하고 있다. 금통위 회의를 앞두고 국고채 금리가 대체로 하락하며 3년물은 연 3.822%를 기록했다. 각 기사는 별개의 사실을 다루고 있으며, 수치와 내용은 기사에 명시된 그대로 반영했다.\n- 부동산: 올해 서울 빌라 전세가 4.7% 상승하며 15년 만에 최고 상승률을 기록했다. 광명과 하남의 '국평' 전세는 10억 원에 달하며 입주가뭄이 지속되고 있다. 서울 전셋집을 포기하려던 30대는 경기도 전세 상황에 대해 한숨을 내쉬고 있다. 청년 전·월세 대출은 실거주 의무 강화로 인해 사상 최대 규모로 증가했다. 후티의 공격으로 인해 사우디 전세기 요금이 급등하는 등 부동산 시장은 다양한 변수에 영향을 받고 있다.\n- 기타 경제 소식: 국민경제자문회의는 오늘 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다. 각 기사는 서로 다른 주제로 구성되어 있으며, 오늘의 주요 소식은 세미나 개최였다. 기사 본문 일부는 세미나의 내용을 다루고 있다. 오늘의 경제 뉴스는 주로 세미나 관련 정보로 이루어졌다. 각 기사는 별개의 주제로 나뉘어져 있다.",
-      "en": "- Stocks & FX: The New York stock market closed higher due to expectations of strong U.S. corporate earnings. The Nasdaq index opened up 0.45%. The KOSPI briefly rebounded but continued to fluctuate between sharp declines and rallies, maintaining uncertainty. The Chinese stock market closed lower, with the Shanghai index down 0.6%. The Japanese stock market closed higher, with the Nikkei index up 0.85%, driven by strong performance in semiconductor and AI stocks.\n- Rates, Deposits & Investment Products: The 10-year French government bond yield broke through 5% annually, recording that level for the first time since 2002. Loan platform 'Finda' announced its acquisition of Dae Won Savings Bank, signaling changes in the financial industry. Toss Bank launched a fixed deposit product allowing customers to set their own maturity dates, offering a maximum annual interest rate of 3.8%. Ahead of the MPC meeting, government bond yields generally fell, with the 3-year yield reaching 3.822% annually. Each article covers separate facts, and figures and content are reflected exactly as stated in the articles.\n- Real Estate: This year, Seoul villa lease prices rose 4.7%, marking the highest increase in 15 years. The lease prices for \"Gukpyeong\" in Gwangmyeong and Hanyang have reached 1,000,000,000 won, and the shortage of available units continues. The 30-somethings who were considering giving up on Seoul lease housing are sighing at the situation in Gyeonggi's lease market. Youth lease and monthly rent loans have increased to an all-time high due to strengthened requirements for actual residence. The Saudi lease prices have surged sharply due to attacks by Houthi rebels, among other factors, showing that the real estate market is affected by various variables.\n- Other Economic News: The National Economic Advisory Council held a seminar today with the theme \"Power Grid Bottlenecks and Energy Geopolitics.\" Each article is composed of different topics, and today's main news was the seminar's holding. Some parts of the article cover the content of the seminar. Today's economic news was mainly composed of information related to the seminar. Each article is divided into separate topics."
+      "ko": "- 증시·환율: 원/달러 환율은 금통위의 매파적 동결 기대에 따라 하락세를 보였다. 한은 총재는 주가 하락이 실물경제에 영향을 줄 수 있다고 밝혔다. 신현송 한은 총재는 원화가 여전히 약세를 보이고 있으며, 최근 환율 하락은 정상화 과정이라고 설명했다. 홍콩 증시는 중국 경기선행 지표 불안으로 인해 사흘째 하락세를 이어갔다. 한은 총재는 실효환율 기준으로도 원화가 여전히 약세라고 강조했다.\n- 부동산: 서울시는 수서 4개 단지의 재건축을 위해 신속통합기획 자문을 진행하고 있다. 이계인은 부동산 투자에 대해 \"팔면 오르고 옮기면 폭망\"이라고 말하며 경험을 공유했다. 외국인 부동산 투기 방지를 위한 조치가 발표되었으나, 실제로 집을 사겠다는 100명 중 96명이 통과 조건을 충족했다. 서울시는 수서택지 4개 단지 재건축을 위해 현장 합동 신속통합자문을 진행 중이다. 수서 4개 단지 재건축은 통합 기획을 통해 속도가 빨라지고 있다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 하락하며 3년물은 장중 연 3.817%를 기록했다. 신현송 한은 총재는 금리 동결을 선제 인상의 결실로 평가하며 정책 여력 확보를 강조했다. 한은은 물가와 집값에 대한 경계 속에서도 금리 동결을 결정하고 인상 영향을 점검 중이다. 중국 컴퓨터사 레노버는 기존보다 저렴한 금리로 20억 달러 규모의 자금을 조달하는 방안을 추진하고 있다. 각 기사는 서로 다른 주제를 다루며 구체적인 수치와 내용을 제시하고 있다.",
+      "en": "- Stocks & FX: The won/dollar exchange rate fell amid expectations of a hawkish rate freeze by the MPC. The Bank of Korea Governor stated that falling stock prices could affect the real economy. Governor Shin Hyeon-song of the Bank of Korea explained that the won is still weak, and the recent decline in the exchange rate is part of the normalization process. The Hong Kong stock market continued its downward trend for the third consecutive day due to concerns over China's leading economic indicators. The Bank of Korea Governor emphasized that the won remains weak even based on the effective exchange rate.\n- Real Estate: Seoul is conducting a rapid integrated planning advisory for the reconstruction of four housing complexes in Suseo. Lee Gye-in shared his experience on real estate investment, saying, \"If you sell, it goes up; if you move, it's a disaster.\" Although measures to prevent foreign real estate speculation have been announced, out of 100 people who actually intend to buy a house, 96 met the passing conditions. Seoul is currently conducting on-site joint rapid integrated advisory for the reconstruction of four housing complexes in Suseo. The reconstruction of the four Suseo housing complexes is proceeding faster through integrated planning.\n- Rates, Deposits & Investment Products: Korean government bond rates fell universally, with the 3-year rate reaching 3.817% annually during the day. Shin Hyeon-song, the Bank of Korea Governor, evaluated the interest rate freeze as a result of preemptive hikes and emphasized securing policy capacity. The Bank of Korea decided to maintain interest rates despite vigilance over inflation and housing prices, and is currently checking the impact of the hikes. Chinese computer company Lenovo is promoting a plan to raise 2,000,000,000 dollars of funds at a lower interest rate than before. Each newspaper covers different topics and presents specific figures and content."
     },
     "highlights": [],
     "categories": [
@@ -5741,67 +5741,35 @@
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "뉴욕증시는 미국 기업 실적 기대감에 따라 상승 마감했다. 나스닥 지수는 0.45% 상승하며 출발했다. 코스피는 일시적으로 반등했으나, 폭락과 급등을 반복하며 불안감이 지속되고 있다. 중국 증시는 상하이지수 0.6% 하락하며 하락 마감했다. 일본 증시는 반도체와 AI 주가 강세에 힘입어 닛케이지수 0.85% 상승하며 상승 마감했다.",
-        "lineEn": "The New York stock market closed higher due to expectations of strong U.S. corporate earnings. The Nasdaq index opened up 0.45%. The KOSPI briefly rebounded but continued to fluctuate between sharp declines and rallies, maintaining uncertainty. The Chinese stock market closed lower, with the Shanghai index down 0.6%. The Japanese stock market closed higher, with the Nikkei index up 0.85%, driven by strong performance in semiconductor and AI stocks.",
+        "lineKo": "원/달러 환율은 금통위의 매파적 동결 기대에 따라 하락세를 보였다. 한은 총재는 주가 하락이 실물경제에 영향을 줄 수 있다고 밝혔다. 신현송 한은 총재는 원화가 여전히 약세를 보이고 있으며, 최근 환율 하락은 정상화 과정이라고 설명했다. 홍콩 증시는 중국 경기선행 지표 불안으로 인해 사흘째 하락세를 이어갔다. 한은 총재는 실효환율 기준으로도 원화가 여전히 약세라고 강조했다.",
+        "lineEn": "The won/dollar exchange rate fell amid expectations of a hawkish rate freeze by the MPC. The Bank of Korea Governor stated that falling stock prices could affect the real economy. Governor Shin Hyeon-song of the Bank of Korea explained that the won is still weak, and the recent decline in the exchange rate is part of the normalization process. The Hong Kong stock market continued its downward trend for the third consecutive day due to concerns over China's leading economic indicators. The Bank of Korea Governor emphasized that the won remains weak even based on the effective exchange rate.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "[속보]뉴욕증시 美기업 실적 기대감에 상승 마감",
-            "link": "https://www.newsis.com/view/NISX20261022_0003835869",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "뉴욕증시, 美기업 실적 호조에 상승 출발…나스닥 0.45%↑",
-            "link": "https://www.newsis.com/view/NISX20261021_0003835851",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "코스피 일단 반등했지만…'폭락→급등' 널뛰기에 '불안' 지속(종합2보)",
-            "link": "https://www.yna.co.kr/view/AKR20261021084352008",
+            "title": "원/달러 환율, '매파적 동결' 금통위 소화하며 하락세",
+            "link": "https://www.yna.co.kr/view/AKR20261022102800002",
             "source": "연합뉴스 경제"
           },
           {
-            "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 0.6%↓",
-            "link": "https://www.newsis.com/view/NISX20261021_0003835563",
+            "title": "한은 총재 \"주가 하락, 실물경제에 영향…소비 일시적 줄어\"",
+            "link": "https://www.yna.co.kr/view/AKR20261022100900002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "신현송 한은 총재 \"원화 아직 약세…최근 환율 하락은 정상화 과정\"",
+            "link": "https://www.hankyung.com/article/2026102284177",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "[올댓차이나] 홍콩 증시, 중국 경기선행 불안에 사흘째 속락… H주 2.95%↓",
+            "link": "https://www.newsis.com/view/NISX20261022_0003836666",
             "source": "뉴시스 경제"
           },
           {
-            "title": "日증시, 반도체·AI주 강세에 상승 마감…닛케이지수 0.85%↑",
-            "link": "https://www.newsis.com/view/NISX20261021_0003835486",
-            "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "프랑스 국채 10년물 금리가 연 5%를 돌파하며 2002년 이후 처음으로 해당 수준을 기록했다. 대출 플랫폼 ‘핀다’가 대원저축은행을 인수하며 금융업계에 변화를 예고했다. 토스뱅크는 만기일을 직접 정하는 정기예금 상품을 출시하며 최고 연 3.8% 금리를 제공하고 있다. 금통위 회의를 앞두고 국고채 금리가 대체로 하락하며 3년물은 연 3.822%를 기록했다. 각 기사는 별개의 사실을 다루고 있으며, 수치와 내용은 기사에 명시된 그대로 반영했다.",
-        "lineEn": "The 10-year French government bond yield broke through 5% annually, recording that level for the first time since 2002. Loan platform 'Finda' announced its acquisition of Dae Won Savings Bank, signaling changes in the financial industry. Toss Bank launched a fixed deposit product allowing customers to set their own maturity dates, offering a maximum annual interest rate of 3.8%. Ahead of the MPC meeting, government bond yields generally fell, with the 3-year yield reaching 3.822% annually. Each article covers separate facts, and figures and content are reflected exactly as stated in the articles.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "佛 국채 10년물 금리 年5% 돌파…2002년 이후 처음",
-            "link": "https://www.hankyung.com/article/2026102171271",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "대출 플랫폼 '핀다', 대원저축은행 인수",
-            "link": "https://www.hankyung.com/article/2026102167131",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "만기일 직접 정하는 정기예금…토스뱅크, 최고 연 3.8% 금리",
-            "link": "https://www.hankyung.com/article/2026102167181",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "금통위 앞두고 국고채 금리 대체로 하락…3년물 연 3.822%(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261021144851008",
+            "title": "한은 총재 \"실효환율 기준 원화 아직 약세…예측가능성이 중요\"",
+            "link": "https://www.yna.co.kr/view/AKR20261022097200002",
             "source": "연합뉴스 경제"
           }
         ]
@@ -5810,52 +5778,67 @@
         "key": "realestate",
         "name": "부동산",
         "nameEn": "Real Estate",
-        "lineKo": "올해 서울 빌라 전세가 4.7% 상승하며 15년 만에 최고 상승률을 기록했다. 광명과 하남의 '국평' 전세는 10억 원에 달하며 입주가뭄이 지속되고 있다. 서울 전셋집을 포기하려던 30대는 경기도 전세 상황에 대해 한숨을 내쉬고 있다. 청년 전·월세 대출은 실거주 의무 강화로 인해 사상 최대 규모로 증가했다. 후티의 공격으로 인해 사우디 전세기 요금이 급등하는 등 부동산 시장은 다양한 변수에 영향을 받고 있다.",
-        "lineEn": "This year, Seoul villa lease prices rose 4.7%, marking the highest increase in 15 years. The lease prices for \"Gukpyeong\" in Gwangmyeong and Hanyang have reached 1,000,000,000 won, and the shortage of available units continues. The 30-somethings who were considering giving up on Seoul lease housing are sighing at the situation in Gyeonggi's lease market. Youth lease and monthly rent loans have increased to an all-time high due to strengthened requirements for actual residence. The Saudi lease prices have surged sharply due to attacks by Houthi rebels, among other factors, showing that the real estate market is affected by various variables.",
+        "lineKo": "서울시는 수서 4개 단지의 재건축을 위해 신속통합기획 자문을 진행하고 있다. 이계인은 부동산 투자에 대해 \"팔면 오르고 옮기면 폭망\"이라고 말하며 경험을 공유했다. 외국인 부동산 투기 방지를 위한 조치가 발표되었으나, 실제로 집을 사겠다는 100명 중 96명이 통과 조건을 충족했다. 서울시는 수서택지 4개 단지 재건축을 위해 현장 합동 신속통합자문을 진행 중이다. 수서 4개 단지 재건축은 통합 기획을 통해 속도가 빨라지고 있다.",
+        "lineEn": "Seoul is conducting a rapid integrated planning advisory for the reconstruction of four housing complexes in Suseo. Lee Gye-in shared his experience on real estate investment, saying, \"If you sell, it goes up; if you move, it's a disaster.\" Although measures to prevent foreign real estate speculation have been announced, out of 100 people who actually intend to buy a house, 96 met the passing conditions. Seoul is currently conducting on-site joint rapid integrated advisory for the reconstruction of four housing complexes in Suseo. The reconstruction of the four Suseo housing complexes is proceeding faster through integrated planning.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "후티 공격에 사우디 전세기 요금 급등",
-            "link": "https://www.hankyung.com/article/2026102169961",
-            "source": "한국경제 경제"
+            "title": "서울시, 강남 수서 4개 단지 동시에 신통기획 자문… 통합 재건축 속도 높인다",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/22/VTQC62LHP5CEFIYGQ6K3AQ4S3M/",
+            "source": "조선비즈 부동산"
           },
           {
-            "title": "올 서울 빌라 전세 4.7%↑…15년 만에 최고 상승률",
-            "link": "https://www.hankyung.com/article/2026102167951",
-            "source": "한국경제 부동산"
+            "title": "이계인 \"팔면 오르고 옮기면 폭망\"…파란만장 부동산 오디세이",
+            "link": "https://www.newsis.com/view/NISX20261022_0003836594",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "광명·하남 '국평' 전세도 10억…\"입주가뭄 덮치는 내년이 더 문제\"",
-            "link": "https://www.hankyung.com/article/2026102167931",
-            "source": "한국경제 부동산"
+            "title": "‘외국인 부동산 투기’ 막겠다더니…집 사겠다는 100명 중 96명 통과",
+            "link": "https://www.mk.co.kr/news/realestate/12182692",
+            "source": "매일경제 부동산"
           },
           {
-            "title": "\"경기도 전세라도…\" 서울 전셋집 포기하려던 30대 '한숨'",
-            "link": "https://www.hankyung.com/article/2026102167471",
-            "source": "한국경제 부동산"
+            "title": "서울시, 수서 4개 단지 재건축 동시 자문…신속통합기획 '속도'",
+            "link": "https://www.yna.co.kr/view/AKR20261022063900004",
+            "source": "연합뉴스 경제"
           },
           {
-            "title": "[단독] 실거주 의무 강화 부작용? 청년 전·월세 대출 '사상 최대'",
-            "link": "https://www.hankyung.com/article/2026102167961",
-            "source": "한국경제 경제"
+            "title": "서울시, 수서택지 4개 단지 재건축 '현장 합동 신속통합자문'",
+            "link": "https://www.newsis.com/view/NISX20261022_0003836541",
+            "source": "뉴시스 경제"
           }
         ]
       },
       {
-        "key": "other",
-        "name": "기타 경제 소식",
-        "nameEn": "Other Economic News",
-        "lineKo": "국민경제자문회의는 오늘 '전력망 병목과 에너지 지정학'이라는 주제로 세미나를 진행했다. 각 기사는 서로 다른 주제로 구성되어 있으며, 오늘의 주요 소식은 세미나 개최였다. 기사 본문 일부는 세미나의 내용을 다루고 있다. 오늘의 경제 뉴스는 주로 세미나 관련 정보로 이루어졌다. 각 기사는 별개의 주제로 나뉘어져 있다.",
-        "lineEn": "The National Economic Advisory Council held a seminar today with the theme \"Power Grid Bottlenecks and Energy Geopolitics.\" Each article is composed of different topics, and today's main news was the seminar's holding. Some parts of the article cover the content of the seminar. Today's economic news was mainly composed of information related to the seminar. Each article is divided into separate topics.",
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 일제히 하락하며 3년물은 장중 연 3.817%를 기록했다. 신현송 한은 총재는 금리 동결을 선제 인상의 결실로 평가하며 정책 여력 확보를 강조했다. 한은은 물가와 집값에 대한 경계 속에서도 금리 동결을 결정하고 인상 영향을 점검 중이다. 중국 컴퓨터사 레노버는 기존보다 저렴한 금리로 20억 달러 규모의 자금을 조달하는 방안을 추진하고 있다. 각 기사는 서로 다른 주제를 다루며 구체적인 수치와 내용을 제시하고 있다.",
+        "lineEn": "Korean government bond rates fell universally, with the 3-year rate reaching 3.817% annually during the day. Shin Hyeon-song, the Bank of Korea Governor, evaluated the interest rate freeze as a result of preemptive hikes and emphasized securing policy capacity. The Bank of Korea decided to maintain interest rates despite vigilance over inflation and housing prices, and is currently checking the impact of the hikes. Chinese computer company Lenovo is promoting a plan to raise 2,000,000,000 dollars of funds at a lower interest rate than before. Each newspaper covers different topics and presents specific figures and content.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "국민경제자문회의, '전력망 병목과 에너지 지정학' 세미나",
-            "link": "https://www.newsis.com/view/NISX20261021_0003835617",
+            "title": "국고채 금리 일제히 하락…3년물 장중 연 3.817%",
+            "link": "https://www.yna.co.kr/view/AKR20261022094400008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "신현송 한은 총재 \"금리 동결은 선제 인상의 결실…정책 여력 확보\"",
+            "link": "https://www.hankyung.com/article/2026102283597",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "한은, 물가·집값 경계 속 금리 동결…\"인상 영향 점검\"(종합2보)",
+            "link": "https://www.yna.co.kr/view/AKR20261022050551002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 中 컴퓨터사 레노버, 기존보다 싼 금리로 20억＄ 조달 추진",
+            "link": "https://www.newsis.com/view/NISX20261022_0003836456",
             "source": "뉴시스 경제"
           }
         ]
