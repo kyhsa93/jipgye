@@ -70,7 +70,7 @@ const RETRY_DELAYS_MS = (process.env.RATES_RETRY_DELAYS_MS ?? "30000,120000")
   .map(Number);
 
 function connectionError(message, cause) {
-  const err = new Error(message);
+  const err: Error & { connection?: boolean; code?: string } = new Error(message);
   err.connection = true;
   err.code = cause;
   return err;
@@ -108,7 +108,7 @@ async function fetchPageOnce(endpoint, topFinGrpNo, pageNo) {
   // 200인데 JSON이 아닌 응답(2026-10-09, HTML)이 원인 규명 없이 SyntaxError로만 남았다(#107).
   // 상태 코드·content-type·본문 앞부분을 남겨 키 문제/차단/엔드포인트 변경을 가릴 수 있게 한다.
   const diagnose = (what) => {
-    const err = new Error(`${what} (http ${res.status}, ${contentType})`);
+    const err: Error & { diagnostic?: string } = new Error(`${what} (http ${res.status}, ${contentType})`);
     err.diagnostic = `http ${res.status} · content-type ${contentType} · 본문 앞 ${BODY_PREVIEW_CHARS}자: ${mask(text).slice(0, BODY_PREVIEW_CHARS).replace(/\s+/g, " ")}`;
     return err;
   };
@@ -298,7 +298,7 @@ async function main() {
     return;
   }
 
-  let previous = {};
+  let previous: { disclosureMonth?: string | null } = {};
   try {
     previous = JSON.parse(await readFile(outFile, "utf-8"));
   } catch {
