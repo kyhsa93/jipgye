@@ -114,4 +114,14 @@ test("index 는 색인 대상으로 남고 「답 시작」 자(시세표 첫 �
   const firstRow = tbody.match(/<tr>([\s\S]*?)<\/tr>/)?.[1] ?? "";
   assert.ok(/<td>[^<]+<\/td>/.test(firstRow), `${FILE}: 시세표 첫 행이 없거나 첫 칸이 비었다 - 「답 시작」 자가 눈먼다`);
   assert.ok(!/\berror\b/.test(firstRow), `${FILE}: 구운 첫 행이 오류 행이다`);
+  // 첫 칸 이름의 출처가 둘이다: 구운 글자(두 렌더러)와 인라인 문자열표 realestateOverallLabel(스크립트가 .json 을 받아 다시 그릴 때, #405).
+  // ko 는 구운 글자와 같아야 첫 칸 교체가 없고, en 은 시세 장(realestate.html)의 영어 사전 overall 과 같은 글자여야 한다. 문자열표는 ko 첫째·en 둘째이고 JS 를 실행하지 않는다.
+  // 둘을 하나로 모으는 일은 렌더러 편집(D 면)이라 여기서 하지 않는다(#474) - 갈리면 이 단언이 먼저 알린다.
+  const bakedName = firstRow.match(/^<td>([^<]+)<\/td>/)?.[1];
+  const labels = [...html.matchAll(/realestateOverallLabel:\s*"([^"]*)"/g)].map((m) => m[1]);
+  assert.equal(labels.length, 2, `${FILE}: realestateOverallLabel 이 ko·en 둘이 아니다`);
+  assert.equal(labels[0], bakedName, `${FILE}: 구운 첫 칸 글자와 문자열표 ko realestateOverallLabel 이 다르다 - 방문자 화면에서 첫 칸이 바뀐다`);
+  const realestateOverall = [...(await read("docs/realestate.html")).matchAll(/\boverall:\s*"([^"]*)"/g)].map((m) => m[1]);
+  assert.equal(realestateOverall.length, 2, "realestate.html: 사전 overall 이 ko·en 둘이 아니다");
+  assert.equal(labels[1], realestateOverall[1], `${FILE}: 문자열표 en realestateOverallLabel 이 realestate.html 영어 사전 overall 과 다르다`);
 });
