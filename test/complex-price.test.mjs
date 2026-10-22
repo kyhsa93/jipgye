@@ -247,7 +247,7 @@ test("고친 범위와 고치지 않은 실제 최고 신고를 머리글에서 
   const p = await page("?district=노원구&apt=오른단지", file);
   const html = p.byId("complex-card").innerHTML;
   // #51부터 고친 값과 신고된 그대로의 값을 열 둘로 가른다.
-  assert.match(html, /<th scope="col">지금 시세 \(2026년 8월 값\)<\/th>/);
+  assert.match(html, /<th scope="col">2026년 8월 기준 시세<\/th>/);
   assert.match(html, /<th scope="col">신고된 그대로 \(고치기 전\)<\/th>/);
   assert.match(html, /고친 최저~최고/);
   assert.match(html, /class="as-filed"><div class="sub">고치기 전 중앙값 36억 5,000만원<\/div><div class="sub">실제 최고 신고 36억 8,000만원 12층/);

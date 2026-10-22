@@ -263,7 +263,7 @@
       realestateShowMore: (n) => `자치구 ${n}개 더 보기`,
       realestateShowLess: "접기",
       realestateShownCount: (shown, total) => `${total}개 중 ${shown}개`,
-      realestateUnitCaption: "전용면적 기준 평당가(3.3㎡) · 국토교통부 아파트매매·전월세 실거래가 (서울 25개 자치구 전체). 공급면적(공용면적 포함) 기준 시세보다 높게 나올 수 있습니다. 신고 건수가 5건 미만인 구는 평균이 거래 한두 건에 좌우돼서 값을 보여주지 않습니다(월초에 특히 잦습니다).",
+      realestateUnitCaption: "매매·전세는 전용면적 기준 평당가(3.3㎡), 월세는 거래 1건당 단순평균 보증금 / 월세(면적 보정 없음)입니다. 국토교통부 아파트매매·전월세 실거래가 (서울 25개 자치구 전체). 공급면적(공용면적 포함) 기준 시세보다 높게 나올 수 있습니다. 신고 5건 미만인 구는 한두 건에 좌우돼 값을 내지 않습니다(월초에 잦음).",
       realestateCountSuffix: (n) => `${n}건`,
       realestateLowSample: (n) => `표본 ${n}건`,
       realestateLowSampleTitle: (n) => `신고 ${n}건이라 평균을 내기엔 표본이 부족합니다`,
@@ -381,7 +381,7 @@
       realestateShowMore: (n) => `Show ${n} more districts`,
       realestateShowLess: "Show less",
       realestateShownCount: (shown, total) => `${shown} of ${total}`,
-      realestateUnitCaption: "Price per pyeong of exclusive area (3.3㎡) · based on MOLIT apartment sale & lease transactions (all 25 Seoul districts). May read higher than prices quoted by supply area (which includes shared space). Districts with fewer than 5 reported transactions are left blank, since one or two sales would decide the average (common early in the month).",
+      realestateUnitCaption: "Sale and jeonse are per pyeong of exclusive area (3.3㎡); the monthly-rent column is the per-transaction simple average deposit / rent, with no area adjustment. Based on MOLIT apartment sale & lease transactions (all 25 Seoul districts). May read higher than prices quoted by supply area (which includes shared space). Districts with fewer than 5 reported transactions are left blank, since one or two sales would decide the average (common early in the month).",
       realestateCountSuffix: (n) => `${n} txns`,
       realestateLowSample: (n) => `${n} txns only`,
       realestateLowSampleTitle: (n) => `${n} reported transaction(s) — too few to average`,
@@ -1029,13 +1029,7 @@
   function realestateWolseCellHtml(wolse) {
     if (!wolse) return "-";
     if (!hasEnoughSample(wolse)) return realestateLowSampleHtml(wolse);
-    const hintAttr = realestateDateHintAttr({
-      change: wolse.change,
-      baselineDate: wolse.baselineDate,
-    });
-    const depositText = formatPyeongPrice(wolse.avgDeposit10k);
-    const rentText = `${t("realestateMonthlyPrefix")}${formatPyeongPrice(wolse.avgMonthlyRent10k)} ${realestateChangeHtml(wolse.change)}`;
-    return `<span${hintAttr}>${depositText} / ${rentText}</span> ${realestateCountHtml(wolse)}`;
+    return `${formatPyeongPrice(wolse.avgDeposit10k)} / ${t("realestateMonthlyPrefix")}${formatPyeongPrice(wolse.avgMonthlyRent10k)} ${realestateCountHtml(wolse)}`;
   }
 
   function realestateRowHtml(rawEntry, label, isOverall) {
