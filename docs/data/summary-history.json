@@ -5732,94 +5732,45 @@
     "date": "2026-10-22",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 금리·예금·투자상품: 한국은행 총재는 금리 동결을 '호미질의 결실'이라고 설명하며 긴축기조를 이어갈 것이라고 밝혔다. 국고채 금리는 일제히 하락하며 3년물이 장중 연 3.817%를 기록했다. 신현송 한은 총재는 금리 동결이 선제 인상의 결과라고 강조하며 정책 여력 확보를 언급했다. 중국 컴퓨터사 레노버는 기존보다 저렴한 금리로 20억 달러 규모의 자금을 조달하는 방안을 추진 중이다. 각 기사는 별개의 주제를 다루며 서로 다른 경제 상황을 반영하고 있다.\n- 부동산: 9월 서울 원룸 평균 월세는 71만원으로, 한 달 만에 5% 이상 상승했다. 도봉구는 지역 내 15개 재건축·재개발 대표와 정비사업 관련 논의를 진행 중이다. 서울시는 강남 수서 4개 단지를 동시에 신통기획에 자문을 요청하며 통합 재건축을 가속화하고 있다. 이계인은 부동산 투자에 대해 \"팔면 오르고 옮기면 폭망\"이라고 설명했다. 외국인 부동산 투기 방지를 위한 조치에도 불구하고, 집을 사겠다는 100명 중 96명이 통과 조건을 충족했다.\n- 기타 경제 소식: 시장 침체 속에서도 집값 상승률 1위를 기록한 전북은 전주를 중심으로 익산과 군산 인접지역에서도 기대감이 높아지고 있다.\n- 증시·환율: 원/달러 환율은 금통위의 매파적 동결 기대에 따라 하락세를 보였다. 한은 총재는 주가 하락이 실물경제에 영향을 줄 수 있다고 밝혔다. 신현송 한은 총재는 원화가 여전히 약세라고 판단하며 최근 환율 하락은 정상화 과정이라고 설명했다. 홍콩 증시는 중국 경기선행 지표 불안으로 인해 사흘째 하락세를 이어갔다. 한은 총재는 실효환율 기준으로도 원화가 여전히 약세라고 강조했다.",
-      "en": "- Rates, Deposits & Investment Products: The Bank of Korea Governor explained that maintaining the interest rate as \"the result of mending the fence\" and stated that the tight monetary stance would continue. Government bond rates all fell, with the 3-year bond reaching 3.817% annually during the day. Shin Hyun-song, the Bank of Korea Governor, emphasized that the interest rate freeze was the result of a preemptive increase and mentioned securing policy capacity. Lenovo, the Chinese computer company, is pushing to raise 2,000,000,000 dollars of funds at a lower interest rate than before. Each article covers a separate topic and reflects different economic situations.\n- Real Estate: The average monthly rent for a one-room apartment in Seoul in September was 710,000 won, rising more than 5% in a month. Dobong-gu is currently holding discussions with 15 representative reconstruction and redevelopment projects within the area regarding redevelopment projects. Seoul Metropolitan Government is accelerating integrated redevelopment by simultaneously requesting advice from Shin Tong Planning for four complexes in Gangnam Suseo. Lee Gye-in explained about real estate investment as \"if you sell, it goes up, but if you move, it's a total loss.\" Despite measures to prevent foreign real estate speculation, out of 100 people who wanted to buy a house, 96 met the passing conditions.\n- Other Economic News: Despite the market slump, Jeonbuk recorded the highest rate of rising home prices, and expectations are growing high in areas near Iksan and Gunsan, centered around Jeonju.\n- Stocks & FX: The won/dollar exchange rate fell amid expectations of a hawkish rate freeze by the MPC. The Bank of Korea governor stated that falling stock prices could affect the real economy. Governor Shin Hyeon-song of the Bank of Korea judged that the won is still weak, explaining that the recent decline in the exchange rate is part of the normalization process. The Hong Kong stock market continued its downward trend for the third consecutive day due to concerns over China's leading economic indicators. The Bank of Korea governor emphasized that the won remains weak even according to the effective exchange rate."
+      "ko": "- 부동산: 동부건설은 남춘천 센트레빌에서 264가구의 견본주택을 개관했다. 서울 중대형 아파트값은 상승세를 보이며 주민들의 주거비용 부담이 커지고 있다. LH는 모듈러 주택 1.6만가구를 공급할 계획이라고 밝혔다. 홍지선 장관은 전·월세난의 근본적인 해결책으로 공급 확대를 강조했다. 주건협은 주택사업 실무교육을 실시하며 세제 개편과 PF 대응을 위한 준비를 진행 중이다.\n- 증시·환율: 일본 증시는 AI 과잉투자 우려로 닛케이가 2.65% 하락하며 마감했다. 중국 증시도 상하이지수가 1.48% 떨어지며 하락 마감했다. 한국 코스피는 메타의 호실적에도 불구하고 3.5% 급락해 5,533포인트를 기록했다. 원/달러 환율은 금통위의 매파적 동결 기대 속에 연저점을 또 경신하며 하락했다. 코스피와 코스닥은 각각 3% 이상 급락하며 투자자들의 우려를 자아냈다.\n- 금리·예금·투자상품: 국고채 금리가 혼조세를 보이며 변동했다. 국고 3년물 금리는 3.84%로 나타났다. NH농협은행은 주담대 금리를 인하했다. 비수도권 주담대 금리는 0.2%p 인하됐다. 수도권 주담대 금리는 0.1%p 인하됐다.\n- 기타 경제 소식: 학원가 주택 가격이 지역 평균보다 최고 6억 원 비싸다는 소식이 전해졌다. 이는 학원 수요로 인한 집값 상승 현상이다. 한 가정은 학원 때문에 이사하려다 기겁한 사례도 보도되었다. 해당 지역의 주택 시장은 학원 인프라와 밀접한 관련이 있는 것으로 나타났다. 학원 수업이 집값에 미치는 영향은 지역마다 차이가 있다.",
+      "en": "- Real Estate: Dongbu Construction opened a model house for 264 units at Nam Chuncheon Centreville. Seoul's mid-sized apartment prices are on an upward trend, increasing residents' housing cost burdens. LH announced plans to supply 16,000 modular homes. Minister Hong Jisun emphasized expanding supply as a fundamental solution to the rental and lease difficulties. The Korea Housing Association is conducting practical training for housing projects and is preparing for tax system reforms and PF responses.\n- Stocks & FX: Japan's stock market closed with the Nikkei down 2.65% due to concerns over AI overinvestment. China's stock market also closed lower, with the Shanghai index down 1.48%. South Korea's Kospi fell 3.5% to 5,533 points, despite Meta's strong earnings. The won/dollar exchange rate hit a new low, continuing its decline amid expectations of a hawkish hold by the Monetary Policy Committee. Both the Kospi and KOSDAQ fell more than 3%, raising investor concerns.\n- Rates, Deposits & Investment Products: The government bond rate showed mixed movements. The 3-year government bond rate stood at 3.84%. NH Rural Credit Cooperative Bank lowered its housing loan rate. The housing loan rate in non-capital area decreased by 0.2 percentage points. The housing loan rate in the capital area decreased by 0.1 percentage points.\n- Other Economic News: It was reported that housing prices in the academy area are as much as 600,000,000 won higher than the regional average. This is a phenomenon of rising housing prices due to demand for academies. There was a report of a family that was shocked and decided to move because of the academies. It was found that the housing market in the area is closely related to the academy infrastructure. The impact of academy classes on housing prices varies by region."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "rates",
-        "name": "금리·예금·투자상품",
-        "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "한국은행 총재는 금리 동결을 '호미질의 결실'이라고 설명하며 긴축기조를 이어갈 것이라고 밝혔다. 국고채 금리는 일제히 하락하며 3년물이 장중 연 3.817%를 기록했다. 신현송 한은 총재는 금리 동결이 선제 인상의 결과라고 강조하며 정책 여력 확보를 언급했다. 중국 컴퓨터사 레노버는 기존보다 저렴한 금리로 20억 달러 규모의 자금을 조달하는 방안을 추진 중이다. 각 기사는 별개의 주제를 다루며 서로 다른 경제 상황을 반영하고 있다.",
-        "lineEn": "The Bank of Korea Governor explained that maintaining the interest rate as \"the result of mending the fence\" and stated that the tight monetary stance would continue. Government bond rates all fell, with the 3-year bond reaching 3.817% annually during the day. Shin Hyun-song, the Bank of Korea Governor, emphasized that the interest rate freeze was the result of a preemptive increase and mentioned securing policy capacity. Lenovo, the Chinese computer company, is pushing to raise 2,000,000,000 dollars of funds at a lower interest rate than before. Each article covers a separate topic and reflects different economic situations.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "한은 총재 \"금리 동결은 '호미질'의 결실…긴축기조 이어간다\"(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261022107000002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "국고채 금리 일제히 하락…3년물 장중 연 3.817%",
-            "link": "https://www.yna.co.kr/view/AKR20261022094400008",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "신현송 한은 총재 \"금리 동결은 선제 인상의 결실…정책 여력 확보\"",
-            "link": "https://www.hankyung.com/article/2026102283597",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "[올댓차이나] 中 컴퓨터사 레노버, 기존보다 싼 금리로 20억＄ 조달 추진",
-            "link": "https://www.newsis.com/view/NISX20261022_0003836456",
-            "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
         "key": "realestate",
         "name": "부동산",
         "nameEn": "Real Estate",
-        "lineKo": "9월 서울 원룸 평균 월세는 71만원으로, 한 달 만에 5% 이상 상승했다. 도봉구는 지역 내 15개 재건축·재개발 대표와 정비사업 관련 논의를 진행 중이다. 서울시는 강남 수서 4개 단지를 동시에 신통기획에 자문을 요청하며 통합 재건축을 가속화하고 있다. 이계인은 부동산 투자에 대해 \"팔면 오르고 옮기면 폭망\"이라고 설명했다. 외국인 부동산 투기 방지를 위한 조치에도 불구하고, 집을 사겠다는 100명 중 96명이 통과 조건을 충족했다.",
-        "lineEn": "The average monthly rent for a one-room apartment in Seoul in September was 710,000 won, rising more than 5% in a month. Dobong-gu is currently holding discussions with 15 representative reconstruction and redevelopment projects within the area regarding redevelopment projects. Seoul Metropolitan Government is accelerating integrated redevelopment by simultaneously requesting advice from Shin Tong Planning for four complexes in Gangnam Suseo. Lee Gye-in explained about real estate investment as \"if you sell, it goes up, but if you move, it's a total loss.\" Despite measures to prevent foreign real estate speculation, out of 100 people who wanted to buy a house, 96 met the passing conditions.",
+        "lineKo": "동부건설은 남춘천 센트레빌에서 264가구의 견본주택을 개관했다. 서울 중대형 아파트값은 상승세를 보이며 주민들의 주거비용 부담이 커지고 있다. LH는 모듈러 주택 1.6만가구를 공급할 계획이라고 밝혔다. 홍지선 장관은 전·월세난의 근본적인 해결책으로 공급 확대를 강조했다. 주건협은 주택사업 실무교육을 실시하며 세제 개편과 PF 대응을 위한 준비를 진행 중이다.",
+        "lineEn": "Dongbu Construction opened a model house for 264 units at Nam Chuncheon Centreville. Seoul's mid-sized apartment prices are on an upward trend, increasing residents' housing cost burdens. LH announced plans to supply 16,000 modular homes. Minister Hong Jisun emphasized expanding supply as a fundamental solution to the rental and lease difficulties. The Korea Housing Association is conducting practical training for housing projects and is preparing for tax system reforms and PF responses.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "9월 서울 원룸 평균 월세 71만원…한 달 새 5% 넘게 뛰었다",
-            "link": "https://www.mk.co.kr/news/realestate/12182722",
+            "title": "남춘천 센트레빌 264가구 … 동부건설, 견본주택 개관",
+            "link": "https://www.mk.co.kr/news/realestate/12183161",
             "source": "매일경제 부동산"
           },
           {
-            "title": "도봉구, 지역 15개 재건축·재개발 대표와 정비사업 논의",
-            "link": "https://www.newsis.com/view/NISX20261022_0003836664",
-            "source": "뉴시스 경제"
+            "title": "\"이 가격이면 차라리 큰 집\"… 서울 중대형 아파트값 '쑥'",
+            "link": "https://www.mk.co.kr/news/realestate/12183156",
+            "source": "매일경제 부동산"
           },
           {
-            "title": "서울시, 강남 수서 4개 단지 동시에 신통기획 자문… 통합 재건축 속도 높인다",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/22/VTQC62LHP5CEFIYGQ6K3AQ4S3M/",
+            "title": "LH, 모듈러 주택 1.6만가구 공급한다",
+            "link": "https://www.hankyung.com/article/2026102293101",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "홍지선 장관 \"전·월세난 근본 해법은 공급\"",
+            "link": "https://www.hankyung.com/article/2026102293161",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "주건협, 주택사업 실무교육 실시… 세제 개편·PF 등 대응",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/22/3WUM6QPIL5FR5HRKC3ISEHOB3Q/",
             "source": "조선비즈 부동산"
-          },
-          {
-            "title": "이계인 \"팔면 오르고 옮기면 폭망\"…파란만장 부동산 오디세이",
-            "link": "https://www.newsis.com/view/NISX20261022_0003836594",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "‘외국인 부동산 투기’ 막겠다더니…집 사겠다는 100명 중 96명 통과",
-            "link": "https://www.mk.co.kr/news/realestate/12182692",
-            "source": "매일경제 부동산"
-          }
-        ]
-      },
-      {
-        "key": "other",
-        "name": "기타 경제 소식",
-        "nameEn": "Other Economic News",
-        "lineKo": "시장 침체 속에서도 집값 상승률 1위를 기록한 전북은 전주를 중심으로 익산과 군산 인접지역에서도 기대감이 높아지고 있다.",
-        "lineEn": "Despite the market slump, Jeonbuk recorded the highest rate of rising home prices, and expectations are growing high in areas near Iksan and Gunsan, centered around Jeonju.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": true,
-        "items": [
-          {
-            "title": "시장 침체 속 집값 상승률 1위 ‘전북’…전주 견인에 익산·군산 인접지도 기대감",
-            "link": "https://www.mk.co.kr/news/realestate/12182603",
-            "source": "매일경제 부동산"
           }
         ]
       },
@@ -5827,36 +5778,80 @@
         "key": "stocks",
         "name": "증시·환율",
         "nameEn": "Stocks & FX",
-        "lineKo": "원/달러 환율은 금통위의 매파적 동결 기대에 따라 하락세를 보였다. 한은 총재는 주가 하락이 실물경제에 영향을 줄 수 있다고 밝혔다. 신현송 한은 총재는 원화가 여전히 약세라고 판단하며 최근 환율 하락은 정상화 과정이라고 설명했다. 홍콩 증시는 중국 경기선행 지표 불안으로 인해 사흘째 하락세를 이어갔다. 한은 총재는 실효환율 기준으로도 원화가 여전히 약세라고 강조했다.",
-        "lineEn": "The won/dollar exchange rate fell amid expectations of a hawkish rate freeze by the MPC. The Bank of Korea governor stated that falling stock prices could affect the real economy. Governor Shin Hyeon-song of the Bank of Korea judged that the won is still weak, explaining that the recent decline in the exchange rate is part of the normalization process. The Hong Kong stock market continued its downward trend for the third consecutive day due to concerns over China's leading economic indicators. The Bank of Korea governor emphasized that the won remains weak even according to the effective exchange rate.",
+        "lineKo": "일본 증시는 AI 과잉투자 우려로 닛케이가 2.65% 하락하며 마감했다. 중국 증시도 상하이지수가 1.48% 떨어지며 하락 마감했다. 한국 코스피는 메타의 호실적에도 불구하고 3.5% 급락해 5,533포인트를 기록했다. 원/달러 환율은 금통위의 매파적 동결 기대 속에 연저점을 또 경신하며 하락했다. 코스피와 코스닥은 각각 3% 이상 급락하며 투자자들의 우려를 자아냈다.",
+        "lineEn": "Japan's stock market closed with the Nikkei down 2.65% due to concerns over AI overinvestment. China's stock market also closed lower, with the Shanghai index down 1.48%. South Korea's Kospi fell 3.5% to 5,533 points, despite Meta's strong earnings. The won/dollar exchange rate hit a new low, continuing its decline amid expectations of a hawkish hold by the Monetary Policy Committee. Both the Kospi and KOSDAQ fell more than 3%, raising investor concerns.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "원/달러 환율, '매파적 동결' 금통위 소화하며 하락세",
-            "link": "https://www.yna.co.kr/view/AKR20261022102800002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "한은 총재 \"주가 하락, 실물경제에 영향…소비 일시적 줄어\"",
-            "link": "https://www.yna.co.kr/view/AKR20261022100900002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "신현송 한은 총재 \"원화 아직 약세…최근 환율 하락은 정상화 과정\"",
-            "link": "https://www.hankyung.com/article/2026102284177",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "[올댓차이나] 홍콩 증시, 중국 경기선행 불안에 사흘째 속락… H주 2.95%↓",
-            "link": "https://www.newsis.com/view/NISX20261022_0003836666",
+            "title": "日증시, AI 과잉투자 우려에 하락 마감…닛케이 2.65%↓",
+            "link": "https://www.newsis.com/view/NISX20261022_0003837351",
             "source": "뉴시스 경제"
           },
           {
-            "title": "한은 총재 \"실효환율 기준 원화 아직 약세…예측가능성이 중요\"",
-            "link": "https://www.yna.co.kr/view/AKR20261022097200002",
+            "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 1.48%↓",
+            "link": "https://www.newsis.com/view/NISX20261022_0003837341",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "코스피, 3.5% 급락한 5,533…메타 호실적에도 AI 의구심 지속(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261022153000008",
             "source": "연합뉴스 경제"
+          },
+          {
+            "title": "원/달러 환율 '매파적 동결' 금통위에 하락…연저점 또 경신(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261022102851002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[포토] \"내 주식 어쩌나\"…코스피·코스닥 3퍼센트 넘게 급락",
+            "link": "https://www.hankyung.com/article/202610229094i",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 혼조세를 보이며 변동했다. 국고 3년물 금리는 3.84%로 나타났다. NH농협은행은 주담대 금리를 인하했다. 비수도권 주담대 금리는 0.2%p 인하됐다. 수도권 주담대 금리는 0.1%p 인하됐다.",
+        "lineEn": "The government bond rate showed mixed movements. The 3-year government bond rate stood at 3.84%. NH Rural Credit Cooperative Bank lowered its housing loan rate. The housing loan rate in non-capital area decreased by 0.2 percentage points. The housing loan rate in the capital area decreased by 0.1 percentage points.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "국고채 금리, 금통위 소화하며 혼조세…국고 3년 3.84%(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261022161351008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "국고채 금리 혼조세…3년물 연 3.840%",
+            "link": "https://www.yna.co.kr/view/AKR20261022161300008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "NH농협은행, 주담대 금리 인하…비수도권 0.2%p·수도권 0.1%p↓",
+            "link": "https://www.yna.co.kr/view/AKR20261022151500002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "학원가 주택 가격이 지역 평균보다 최고 6억 원 비싸다는 소식이 전해졌다. 이는 학원 수요로 인한 집값 상승 현상이다. 한 가정은 학원 때문에 이사하려다 기겁한 사례도 보도되었다. 해당 지역의 주택 시장은 학원 인프라와 밀접한 관련이 있는 것으로 나타났다. 학원 수업이 집값에 미치는 영향은 지역마다 차이가 있다.",
+        "lineEn": "It was reported that housing prices in the academy area are as much as 600,000,000 won higher than the regional average. This is a phenomenon of rising housing prices due to demand for academies. There was a report of a family that was shocked and decided to move because of the academies. It was found that the housing market in the area is closely related to the academy infrastructure. The impact of academy classes on housing prices varies by region.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "“학원 때문에 이사가려다 기겁”…지역 평균보다 최고 6억 비싸다는 학원가 집값",
+            "link": "https://www.mk.co.kr/news/economy/12182937",
+            "source": "매일경제 부동산"
           }
         ]
       }
