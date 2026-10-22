@@ -13943,7 +13943,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[세종=뉴시스] 안호균 기자 = 이형일 경제부총리 겸 재정경제부 장관은 22일 올해 하반기 국내 주식시장이 약세를 보이고 있는 이유에 대해 \"우리 주식시장이 반도체의 비중이 굉장히 높다 보니까 반도체와 관련된 외부의…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Lee Hyung-il: \"Market decline due to high semiconductor sector weight in our market"
       },
       {
         "title": "한 총리 \"도심 유휴부지 활용해 청년·신혼부부 주거지원…주택공급 속도내야\"(종합)",
@@ -13952,7 +13953,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 김지은 기자 = 한성숙 국무총리가 22일 서울시 강서구의 옛 공항고등학교 부지를 방문해 학교용지 복합개발 사업 현황을 점검하고, 신속한 주택공급의 차질없는 이행을 당부했다. 이 부지는 8·13 공급…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangseo.html",
+            "label": "강서구 아파트 84㎡ 매매",
+            "labelEn": "강서구 apartment 84㎡ sale",
+            "value": "11억 8,842만원",
+            "valueEn": "₩1,188M",
+            "note": "최근 1주 계약 443건 · 10/15 대비 +1.4%",
+            "noteEn": "443 deals in the last 1 weeks · +1.4% vs Oct 15"
+          }
+        ],
+        "titleEn": "Prime Minister Han: Need to Speed Up Housing Supply by Utilizing Urban Vacant Land to Support Youth and Newlywed Couples (Comprehensive)"
       },
       {
         "title": "[올댓차이나] 홍콩 증시, 중국 경기선행 불안에 사흘째 속락 마감… H주 3.2%↓",
@@ -13961,7 +13975,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 22일 중국 경기선행에 대한 불안감에서 폭넓은 종목에 매도 선행하면서 3거래일째 속락 마감했다. 중동 정세 악화와 국제유가 상승, 한일 증시 약세, 중국기업 실적 부진도 투…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] Hong Kong Market Closes Lower for Third Consecutive Day Amid Concerns Over China's Leading Economic Indicators... H-Share Down 3.2%"
       },
       {
         "title": "연일 출렁이는데…한화증권 \"내년 코스피 최대 9,300\" 전망",
@@ -13970,7 +13985,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 곽윤아 기자 = 코스피가 연일 큰 폭의 등락을 거듭하는 가운데 지수가 내년에 최대 9,300까지 오를 수 있다는 전망이 나왔다...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Rising day after day... Hanwha Securities forecasts KOSPI could reach as high as 9,300 next year"
       },
       {
         "title": "30년 에너지경제 연구…\"1가구 1태양광 시대 열어야\"",
@@ -13979,7 +13995,8 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "30 Years of Energy Economy Research...\"Enter the Era of One Household, One Solar Panel"
       },
       {
         "title": "김소영 서울대 경제학부 교수, 제4회 한중경제발전포럼 개최",
@@ -13988,7 +14005,8 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kim So-young, Professor of Economics at Seoul National University, Hosts 4th Sino-Korean Economic Development Forum"
       },
       {
         "title": "韓총리 \"도심 주택공급 활용부지 적극 발굴…사업 속도내야\"",
@@ -13997,7 +14015,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 이상현 기자 = 한성숙 국무총리는 22일 서울 강서구의 옛 공항고등학교 부지를 방문해 주택공급 사업 추진 현황을 점검했다.",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangseo.html",
+            "label": "강서구 아파트 84㎡ 매매",
+            "labelEn": "강서구 apartment 84㎡ sale",
+            "value": "11억 8,842만원",
+            "valueEn": "₩1,188M",
+            "note": "최근 1주 계약 443건 · 10/15 대비 +1.4%",
+            "noteEn": "443 deals in the last 1 weeks · +1.4% vs Oct 15"
+          }
+        ],
+        "titleEn": "South Korea's Prime Minister Calls for Active Exploration of Urban Housing Supply Sites and Urges Accelerating Projects"
       },
       {
         "title": "[올댓차이나] 대만 증시, 해외 반도체주 약세 ·중동정세 악화에 반락…1.81%↓",
@@ -14006,7 +14037,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 대만 타이베이 증시는 22일 중동 정세 악화와 해외 반도체 약세에 위험 회피를 위한 매물이 선행하면서 반락 마감했다. 자취안(加權) 지수는 이날 전일 대비 846.34 포인트, 1.81…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Taiwan's stock market falls 1.81% on weak overseas semiconductor stocks and deteriorating Middle East situation]"
       },
       {
         "title": "7·8월 금리 올린 한은, 이번엔 숨 고르기…시장은 11월 인상 무게",
@@ -14015,7 +14047,8 @@
         "source": "한국경제 경제",
         "category": "rates",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "BOK Raises Rates in July and August, This Time Taking a Breather... Market Weighs November Hike"
       },
       {
         "title": "새 아파트 귀한 서울 '분양 큰 장'…7769가구 쏟아진다",
@@ -14024,7 +14057,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 505만원",
+            "valueEn": "₩1,305M",
+            "note": "최근 1주 계약 924건 · 10/15 대비 -2.5%",
+            "noteEn": "924 deals in the last 1 weeks · -2.5% vs Oct 15"
+          }
+        ],
+        "titleEn": "New apartments in precious Seoul 'big event' for sales...7769 units to be released"
       },
       {
         "title": "서울 집값 89주째 상승…'반도체 벨트'도 강세",
@@ -14033,7 +14079,20 @@
         "source": "한국경제 부동산",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 505만원",
+            "valueEn": "₩1,305M",
+            "note": "최근 1주 계약 924건 · 10/15 대비 -2.5%",
+            "noteEn": "924 deals in the last 1 weeks · -2.5% vs Oct 15"
+          }
+        ],
+        "titleEn": "Seoul home prices rise for 89th consecutive week...'semiconductor belt' also strong"
       },
       {
         "title": "이형일 \"가상자산 과세 최대한 숙고…부동산 시장 안정 찾을 것\"(종합)",
@@ -14042,7 +14101,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[세종=뉴시스] 안호균 기자 = 이형일 경제부총리 겸 재정경제부 장관이 내년 1월부터 시행될 예정인 가상자산 소득 과세에 대해 \"최대한 숙고하겠다\"고 밝혔다. 수도권 부동산 시장 불안에 대해서는 아파트 인허가·착공…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Lee Hyung-il says he will thoroughly consider virtual asset taxation and stabilize the real estate market (comprehensive)"
       },
       {
         "title": "[단독] 코스피 급락에 '패닉'…개미들 14조 들고 몰려간 곳",
@@ -14051,7 +14111,8 @@
         "source": "한국경제 경제",
         "category": "stocks",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Exclusive] Panic as KOSPI Plummets... Retail Investors Flee with 14,000,000,000,000 Won"
       },
       {
         "title": "남춘천 센트레빌 264가구 … 동부건설, 견본주택 개관",
@@ -14060,7 +14121,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "동부건설은 '남춘천 센트레빌'(조감도)의 견본주택을 이달 중 개관하고 본격 분양에 나선다고 22일 밝혔다. 남춘천 센트레빌은 강원특별자치도 춘천시 효자동 681-12 일원에 지하 ..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Namchuncheon Centrebil 264 units ... Dongbu Construction opens model house"
       },
       {
         "title": "\"이 가격이면 차라리 큰 집\"… 서울 중대형 아파트값 '쑥'",
@@ -14069,7 +14131,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "지난 8월 서울 아파트 가운데 중대형 평형의 매매 가격 상승률이 모든 평형 중 가장 높은 것으로 나타났다. 최근 소형과 초소형 평형 아파트값이 크게 오르면서 중대형과 가격 차이가 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 505만원",
+            "valueEn": "₩1,305M",
+            "note": "최근 1주 계약 924건 · 10/15 대비 -2.5%",
+            "noteEn": "924 deals in the last 1 weeks · -2.5% vs Oct 15"
+          }
+        ],
+        "titleEn": "At this price, maybe a bigger house\"… Seoul mid-to-large-sized apartment prices \"soar"
       },
       {
         "title": "LH, 모듈러 주택 1.6만가구 공급한다",
@@ -14078,7 +14153,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "LH to supply 16,000 modular homes"
       },
       {
         "title": "홍지선 장관 \"전·월세난 근본 해법은 공급\"",
@@ -14087,7 +14163,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Minister Hong Jisun: \"Fundamental Solution to Rental and Lease Difficulties is Supply"
       },
       {
         "title": "주건협, 주택사업 실무교육 실시… 세제 개편·PF 등 대응",
@@ -14096,7 +14173,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "대한주택건설협회는 오는 28일 세제 개편과 프로젝트 파이낸싱(PF) 경색 등 급변하는 주택 시장에 대응하기 위해 전국 회원사를 대상으로 ‘2026년 하반기 회원사 주택사업 실무교육’을 실시한다. 22일 주건협에 따르…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Main Housing Association Conducts Practical Training for Housing Projects… Responding to Tax Reform, PF, etc."
       },
       {
         "title": "日증시, AI 과잉투자 우려에 하락 마감…닛케이 2.65%↓",
@@ -14105,7 +14183,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 신효령 기자 = 22일 일본 도쿄증시에서 주요 지수가 일제히 하락 마감했다. 미국 메타의 실적 호조에도 인공지능(AI) 투자 부담에 대한 우려가 커지면서 반도체 관련주에 매도세가 몰렸다. 니혼게이자이…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Tokyo Stock Exchange Closes Lower Amid AI Overinvestment Fears… Nikkei Down 2.65%"
       },
       {
         "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 1.48%↓",
@@ -14114,7 +14193,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 22일 하락 마감했다. 이날 상하이종합지수는 전날보다 1.48% 하락한 3658.03로 거래를 마쳤다. 선전성분지수는 전장 대비 2.96% 내린 1만1357.32로, 중국…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] China's stock market closes lower… Shanghai index down 1.48%"
       },
       {
         "title": "국고채 금리, 금통위 소화하며 혼조세…국고 3년 3.84%(종합)",
@@ -14123,7 +14203,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 강수지 기자 = 22일 국고채 금리는 혼조세를 나타냈다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Treasury bond rates mixed as MPC digests data... 3-year government bond at 3.84% (comprehensive)"
       },
       {
         "title": "“집 주인 들어온다는데 어디로 가죠”…전세 만기 앞둔 올파포, 인근 전세난 우려",
@@ -14132,7 +14213,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "2년 전 대규모 입주에 전셋값 하락 이번엔 집주인 실거주에 매물 감소 전용 59㎡ 전세 6억→13억 급등 강동·송파·하남 전세시장 긴장국내 최대 재건축 단지인 서울 강동구 둔촌동 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-songpa.html",
+            "label": "송파구 아파트 84㎡ 전세",
+            "labelEn": "송파구 apartment 84㎡ jeonse",
+            "value": "9억 2,085만원",
+            "valueEn": "₩921M",
+            "note": "최근 1주 계약 399건 · 10/15 대비 +1.5%",
+            "noteEn": "399 deals in the last 1 weeks · +1.5% vs Oct 15"
+          }
+        ],
+        "titleEn": "Landlord is coming\"… Olleppo, facing lease expiration, worries about nearby lease shortage"
       },
       {
         "title": "국고채 금리 혼조세…3년물 연 3.840%",
@@ -14141,7 +14235,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 22일 국고채 금리가 혼조세를 보였다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Mixed performance in government bond rates... 3-year bonds at 3.840% annually"
       },
       {
         "title": "\"살던 아파트서 돌봄까지\"…삼성물산, 시니어 사업 확대",
@@ -14150,7 +14245,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "\"살던 아파트서 돌봄까지\"…삼성물산, 시니어 사업 확대"
       }
     ]
   }

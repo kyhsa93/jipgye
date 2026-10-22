@@ -5732,82 +5732,109 @@
     "date": "2026-10-22",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 부동산: 동부건설은 남춘천 센트레빌에서 264가구의 견본주택을 개관했다. 서울 중대형 아파트값은 상승세를 보이며 주민들의 주거비용 부담이 커지고 있다. LH는 모듈러 주택 1.6만가구를 공급할 계획이라고 밝혔다. 홍지선 장관은 전·월세난의 근본적인 해결책으로 공급 확대를 강조했다. 주건협은 주택사업 실무교육을 실시하며 세제 개편과 PF 대응을 위한 준비를 진행 중이다.\n- 증시·환율: 일본 증시는 AI 과잉투자 우려로 닛케이가 2.65% 하락하며 마감했다. 중국 증시도 상하이지수가 1.48% 떨어지며 하락 마감했다. 한국 코스피는 메타의 호실적에도 불구하고 3.5% 급락해 5,533포인트를 기록했다. 원/달러 환율은 금통위의 매파적 동결 기대 속에 연저점을 또 경신하며 하락했다. 코스피와 코스닥은 각각 3% 이상 급락하며 투자자들의 우려를 자아냈다.\n- 금리·예금·투자상품: 국고채 금리가 혼조세를 보이며 변동했다. 국고 3년물 금리는 3.84%로 나타났다. NH농협은행은 주담대 금리를 인하했다. 비수도권 주담대 금리는 0.2%p 인하됐다. 수도권 주담대 금리는 0.1%p 인하됐다.\n- 기타 경제 소식: 학원가 주택 가격이 지역 평균보다 최고 6억 원 비싸다는 소식이 전해졌다. 이는 학원 수요로 인한 집값 상승 현상이다. 한 가정은 학원 때문에 이사하려다 기겁한 사례도 보도되었다. 해당 지역의 주택 시장은 학원 인프라와 밀접한 관련이 있는 것으로 나타났다. 학원 수업이 집값에 미치는 영향은 지역마다 차이가 있다.",
-      "en": "- Real Estate: Dongbu Construction opened a model house for 264 units at Nam Chuncheon Centreville. Seoul's mid-sized apartment prices are on an upward trend, increasing residents' housing cost burdens. LH announced plans to supply 16,000 modular homes. Minister Hong Jisun emphasized expanding supply as a fundamental solution to the rental and lease difficulties. The Korea Housing Association is conducting practical training for housing projects and is preparing for tax system reforms and PF responses.\n- Stocks & FX: Japan's stock market closed with the Nikkei down 2.65% due to concerns over AI overinvestment. China's stock market also closed lower, with the Shanghai index down 1.48%. South Korea's Kospi fell 3.5% to 5,533 points, despite Meta's strong earnings. The won/dollar exchange rate hit a new low, continuing its decline amid expectations of a hawkish hold by the Monetary Policy Committee. Both the Kospi and KOSDAQ fell more than 3%, raising investor concerns.\n- Rates, Deposits & Investment Products: The government bond rate showed mixed movements. The 3-year government bond rate stood at 3.84%. NH Rural Credit Cooperative Bank lowered its housing loan rate. The housing loan rate in non-capital area decreased by 0.2 percentage points. The housing loan rate in the capital area decreased by 0.1 percentage points.\n- Other Economic News: It was reported that housing prices in the academy area are as much as 600,000,000 won higher than the regional average. This is a phenomenon of rising housing prices due to demand for academies. There was a report of a family that was shocked and decided to move because of the academies. It was found that the housing market in the area is closely related to the academy infrastructure. The impact of academy classes on housing prices varies by region."
+      "ko": "- 증시·환율: 한국 증시는 최근 하락세를 보이며 이형일이 반도체 비중이 높은 점을 원인으로 지목했다. 홍콩 증시는 중국 경기선행 지표 불안으로 인해 사흘째 하락 마감하며 H주가 3.2% 내렸다. 한화증권은 내년 코스피가 최대 9,300까지 오를 것으로 전망했다. 대만 증시는 해외 반도체주 약세와 중동 정세 악화로 인해 1.81% 하락했다. 코스피 급락에 투자자들이 패닉에 빠지며 14조 원 규모의 자금이 몰렸다.\n- 부동산: 한국 총리가 도심 유휴부지를 활용해 청년과 신혼부부의 주거지원을 강조하며 주택공급을 가속화해야 한다고 밝혔다. 서울에서는 새 아파트 분양이 활발하게 진행되며 7769가구가 공급될 예정이다. 이형일은 가상자산 과세 문제를 최대한 숙고해 부동산 시장의 안정을 도모하겠다고 밝혔다. 동부건설은 남춘천 센트레빌 단지에서 264가구를 공급하기 위해 견본주택을 개관했다. 정부는 도심 주택공급을 위해 활용 가능한 부지를 적극적으로 발굴하고 사업 속도를 높일 계획이다.\n- 기타 경제 소식: 에너지경제 분야에서 30년간 연구한 전문가가 1가구 1태양광 시대를 강조하는 등 에너지 전환에 대한 논의가 이어졌다. 김소영 서울대 경제학부 교수가 제4회 한중경제발전포럼을 개최하며 한중 간 경제 협력 방안을 논의했다. 서울의 주택 가격은 89주째 상승세를 이어가고 있다. 특히 반도체 산업이 집중된 지역에서도 집값이 강세를 보이고 있다. 각 분야별로 주요 이슈들이 별도로 보도되었다.\n- 금리·예금·투자상품: 한국은행은 7·8월에 금리를 인상한 후 이번에는 금통위에서 금리 인상에 대한 움직임을 보이지 않겠다는 방침을 밝혔다. 국고채 금리는 금통위 회의를 소화하며 혼조세를 보였다. 국고채 3년물 금리는 3.840%를 기록했다. 금리 인상 가능성에 대한 시장의 기대는 11월에 집중되고 있다. 한은의 이번 움직임은 시장의 예상과는 다른 방향으로 흘러가고 있다.",
+      "en": "- Stocks & FX: The Korean stock market has recently declined, with Lee Young-il pointing to the high semiconductor sector weight as the cause. The Hong Kong stock market fell for the third consecutive day due to concerns over China's leading economic indicators, with H-shares dropping 3.2%. Hanwha Securities forecasts that the KOSPI could rise as high as 9,300 next year. The Taiwan stock market fell 1.81% due to weakness in overseas semiconductor stocks and worsening Middle East tensions. Investors panicked over the KOSPI's sharp decline, leading to a rush of 14,000,000,000,000 won in funds.\n- Real Estate: South Korea's Prime Minister emphasized the need to accelerate housing supply by utilizing underused urban land to support young people and newlyweds. In Seoul, new apartment sales are actively proceeding, with 7,769 units expected to be supplied. Lee Hyung-il stated that he will carefully consider the taxation of virtual assets to promote stability in the real estate market. Dongbu Construction opened a model house at the Namchuncheon Centreville complex to supply 264 units. The government plans to actively identify usable land for urban housing supply and increase the pace of projects.\n- Other Economic News: Discussions on energy transition continued, with an expert who has researched the energy economics field for 30 years emphasizing the era of one household, one solar panel. Kim So-young, a professor in the Department of Economics at Seoul National University, discussed economic cooperation between South Korea and China while hosting the 4th Sino-Korean Economic Development Forum. Housing prices in Seoul have continued to rise for the 89th consecutive week. Particularly in areas where the semiconductor industry is concentrated, housing prices are showing strong momentum. Major issues in each field were separately reported.\n- Rates, Deposits & Investment Products: After raising interest rates in July and August, the Bank of Korea stated that it will not show any movement toward raising interest rates at this monetary policy committee meeting. The government bond interest rates showed a mixed performance as the monetary policy committee meeting was digested. The three-year government bond interest rate recorded 3.840%. Expectations of a potential interest rate hike are concentrated in November. The Bank of Korea's current move is going in a direction different from market expectations."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "동부건설은 남춘천 센트레빌에서 264가구의 견본주택을 개관했다. 서울 중대형 아파트값은 상승세를 보이며 주민들의 주거비용 부담이 커지고 있다. LH는 모듈러 주택 1.6만가구를 공급할 계획이라고 밝혔다. 홍지선 장관은 전·월세난의 근본적인 해결책으로 공급 확대를 강조했다. 주건협은 주택사업 실무교육을 실시하며 세제 개편과 PF 대응을 위한 준비를 진행 중이다.",
-        "lineEn": "Dongbu Construction opened a model house for 264 units at Nam Chuncheon Centreville. Seoul's mid-sized apartment prices are on an upward trend, increasing residents' housing cost burdens. LH announced plans to supply 16,000 modular homes. Minister Hong Jisun emphasized expanding supply as a fundamental solution to the rental and lease difficulties. The Korea Housing Association is conducting practical training for housing projects and is preparing for tax system reforms and PF responses.",
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "한국 증시는 최근 하락세를 보이며 이형일이 반도체 비중이 높은 점을 원인으로 지목했다. 홍콩 증시는 중국 경기선행 지표 불안으로 인해 사흘째 하락 마감하며 H주가 3.2% 내렸다. 한화증권은 내년 코스피가 최대 9,300까지 오를 것으로 전망했다. 대만 증시는 해외 반도체주 약세와 중동 정세 악화로 인해 1.81% 하락했다. 코스피 급락에 투자자들이 패닉에 빠지며 14조 원 규모의 자금이 몰렸다.",
+        "lineEn": "The Korean stock market has recently declined, with Lee Young-il pointing to the high semiconductor sector weight as the cause. The Hong Kong stock market fell for the third consecutive day due to concerns over China's leading economic indicators, with H-shares dropping 3.2%. Hanwha Securities forecasts that the KOSPI could rise as high as 9,300 next year. The Taiwan stock market fell 1.81% due to weakness in overseas semiconductor stocks and worsening Middle East tensions. Investors panicked over the KOSPI's sharp decline, leading to a rush of 14,000,000,000,000 won in funds.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "남춘천 센트레빌 264가구 … 동부건설, 견본주택 개관",
-            "link": "https://www.mk.co.kr/news/realestate/12183161",
-            "source": "매일경제 부동산"
+            "title": "이형일 \"증시 하락, 우리 시장 반도체 비중 높기 때문\"",
+            "link": "https://www.newsis.com/view/NISX20261022_0003837650",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "\"이 가격이면 차라리 큰 집\"… 서울 중대형 아파트값 '쑥'",
-            "link": "https://www.mk.co.kr/news/realestate/12183156",
-            "source": "매일경제 부동산"
+            "title": "[올댓차이나] 홍콩 증시, 중국 경기선행 불안에 사흘째 속락 마감… H주 3.2%↓",
+            "link": "https://www.newsis.com/view/NISX20261022_0003837627",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "LH, 모듈러 주택 1.6만가구 공급한다",
-            "link": "https://www.hankyung.com/article/2026102293101",
-            "source": "한국경제 부동산"
+            "title": "연일 출렁이는데…한화증권 \"내년 코스피 최대 9,300\" 전망",
+            "link": "https://www.yna.co.kr/view/AKR20261022183400008",
+            "source": "연합뉴스 경제"
           },
           {
-            "title": "홍지선 장관 \"전·월세난 근본 해법은 공급\"",
-            "link": "https://www.hankyung.com/article/2026102293161",
-            "source": "한국경제 부동산"
+            "title": "[올댓차이나] 대만 증시, 해외 반도체주 약세 ·중동정세 악화에 반락…1.81%↓",
+            "link": "https://www.newsis.com/view/NISX20261022_0003837556",
+            "source": "뉴시스 경제"
           },
           {
-            "title": "주건협, 주택사업 실무교육 실시… 세제 개편·PF 등 대응",
-            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/22/3WUM6QPIL5FR5HRKC3ISEHOB3Q/",
-            "source": "조선비즈 부동산"
+            "title": "[단독] 코스피 급락에 '패닉'…개미들 14조 들고 몰려간 곳",
+            "link": "https://www.hankyung.com/article/2026102295241",
+            "source": "한국경제 경제"
           }
         ]
       },
       {
-        "key": "stocks",
-        "name": "증시·환율",
-        "nameEn": "Stocks & FX",
-        "lineKo": "일본 증시는 AI 과잉투자 우려로 닛케이가 2.65% 하락하며 마감했다. 중국 증시도 상하이지수가 1.48% 떨어지며 하락 마감했다. 한국 코스피는 메타의 호실적에도 불구하고 3.5% 급락해 5,533포인트를 기록했다. 원/달러 환율은 금통위의 매파적 동결 기대 속에 연저점을 또 경신하며 하락했다. 코스피와 코스닥은 각각 3% 이상 급락하며 투자자들의 우려를 자아냈다.",
-        "lineEn": "Japan's stock market closed with the Nikkei down 2.65% due to concerns over AI overinvestment. China's stock market also closed lower, with the Shanghai index down 1.48%. South Korea's Kospi fell 3.5% to 5,533 points, despite Meta's strong earnings. The won/dollar exchange rate hit a new low, continuing its decline amid expectations of a hawkish hold by the Monetary Policy Committee. Both the Kospi and KOSDAQ fell more than 3%, raising investor concerns.",
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "한국 총리가 도심 유휴부지를 활용해 청년과 신혼부부의 주거지원을 강조하며 주택공급을 가속화해야 한다고 밝혔다. 서울에서는 새 아파트 분양이 활발하게 진행되며 7769가구가 공급될 예정이다. 이형일은 가상자산 과세 문제를 최대한 숙고해 부동산 시장의 안정을 도모하겠다고 밝혔다. 동부건설은 남춘천 센트레빌 단지에서 264가구를 공급하기 위해 견본주택을 개관했다. 정부는 도심 주택공급을 위해 활용 가능한 부지를 적극적으로 발굴하고 사업 속도를 높일 계획이다.",
+        "lineEn": "South Korea's Prime Minister emphasized the need to accelerate housing supply by utilizing underused urban land to support young people and newlyweds. In Seoul, new apartment sales are actively proceeding, with 7,769 units expected to be supplied. Lee Hyung-il stated that he will carefully consider the taxation of virtual assets to promote stability in the real estate market. Dongbu Construction opened a model house at the Namchuncheon Centreville complex to supply 264 units. The government plans to actively identify usable land for urban housing supply and increase the pace of projects.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "日증시, AI 과잉투자 우려에 하락 마감…닛케이 2.65%↓",
-            "link": "https://www.newsis.com/view/NISX20261022_0003837351",
+            "title": "한 총리 \"도심 유휴부지 활용해 청년·신혼부부 주거지원…주택공급 속도내야\"(종합)",
+            "link": "https://www.newsis.com/view/NISX20261022_0003837639",
             "source": "뉴시스 경제"
           },
           {
-            "title": "[올댓차이나] 중국 증시 하락 마감…상하이지수 1.48%↓",
-            "link": "https://www.newsis.com/view/NISX20261022_0003837341",
+            "title": "韓총리 \"도심 주택공급 활용부지 적극 발굴…사업 속도내야\"",
+            "link": "https://www.yna.co.kr/view/AKR20261022181400001",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "새 아파트 귀한 서울 '분양 큰 장'…7769가구 쏟아진다",
+            "link": "https://www.hankyung.com/article/2026102294971",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "이형일 \"가상자산 과세 최대한 숙고…부동산 시장 안정 찾을 것\"(종합)",
+            "link": "https://www.newsis.com/view/NISX20261022_0003837435",
             "source": "뉴시스 경제"
           },
           {
-            "title": "코스피, 3.5% 급락한 5,533…메타 호실적에도 AI 의구심 지속(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261022153000008",
-            "source": "연합뉴스 경제"
-          },
+            "title": "남춘천 센트레빌 264가구 … 동부건설, 견본주택 개관",
+            "link": "https://www.mk.co.kr/news/realestate/12183161",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "에너지경제 분야에서 30년간 연구한 전문가가 1가구 1태양광 시대를 강조하는 등 에너지 전환에 대한 논의가 이어졌다. 김소영 서울대 경제학부 교수가 제4회 한중경제발전포럼을 개최하며 한중 간 경제 협력 방안을 논의했다. 서울의 주택 가격은 89주째 상승세를 이어가고 있다. 특히 반도체 산업이 집중된 지역에서도 집값이 강세를 보이고 있다. 각 분야별로 주요 이슈들이 별도로 보도되었다.",
+        "lineEn": "Discussions on energy transition continued, with an expert who has researched the energy economics field for 30 years emphasizing the era of one household, one solar panel. Kim So-young, a professor in the Department of Economics at Seoul National University, discussed economic cooperation between South Korea and China while hosting the 4th Sino-Korean Economic Development Forum. Housing prices in Seoul have continued to rise for the 89th consecutive week. Particularly in areas where the semiconductor industry is concentrated, housing prices are showing strong momentum. Major issues in each field were separately reported.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
           {
-            "title": "원/달러 환율 '매파적 동결' 금통위에 하락…연저점 또 경신(종합)",
-            "link": "https://www.yna.co.kr/view/AKR20261022102851002",
-            "source": "연합뉴스 경제"
-          },
-          {
-            "title": "[포토] \"내 주식 어쩌나\"…코스피·코스닥 3퍼센트 넘게 급락",
-            "link": "https://www.hankyung.com/article/202610229094i",
+            "title": "30년 에너지경제 연구…\"1가구 1태양광 시대 열어야\"",
+            "link": "https://www.hankyung.com/article/2026102294731",
             "source": "한국경제 경제"
+          },
+          {
+            "title": "김소영 서울대 경제학부 교수, 제4회 한중경제발전포럼 개최",
+            "link": "https://www.hankyung.com/article/2026102294661",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "서울 집값 89주째 상승…'반도체 벨트'도 강세",
+            "link": "https://www.hankyung.com/article/2026102294941",
+            "source": "한국경제 부동산"
           }
         ]
       },
@@ -5815,12 +5842,17 @@
         "key": "rates",
         "name": "금리·예금·투자상품",
         "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "국고채 금리가 혼조세를 보이며 변동했다. 국고 3년물 금리는 3.84%로 나타났다. NH농협은행은 주담대 금리를 인하했다. 비수도권 주담대 금리는 0.2%p 인하됐다. 수도권 주담대 금리는 0.1%p 인하됐다.",
-        "lineEn": "The government bond rate showed mixed movements. The 3-year government bond rate stood at 3.84%. NH Rural Credit Cooperative Bank lowered its housing loan rate. The housing loan rate in non-capital area decreased by 0.2 percentage points. The housing loan rate in the capital area decreased by 0.1 percentage points.",
+        "lineKo": "한국은행은 7·8월에 금리를 인상한 후 이번에는 금통위에서 금리 인상에 대한 움직임을 보이지 않겠다는 방침을 밝혔다. 국고채 금리는 금통위 회의를 소화하며 혼조세를 보였다. 국고채 3년물 금리는 3.840%를 기록했다. 금리 인상 가능성에 대한 시장의 기대는 11월에 집중되고 있다. 한은의 이번 움직임은 시장의 예상과는 다른 방향으로 흘러가고 있다.",
+        "lineEn": "After raising interest rates in July and August, the Bank of Korea stated that it will not show any movement toward raising interest rates at this monetary policy committee meeting. The government bond interest rates showed a mixed performance as the monetary policy committee meeting was digested. The three-year government bond interest rate recorded 3.840%. Expectations of a potential interest rate hike are concentrated in November. The Bank of Korea's current move is going in a direction different from market expectations.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
+          {
+            "title": "7·8월 금리 올린 한은, 이번엔 숨 고르기…시장은 11월 인상 무게",
+            "link": "https://www.hankyung.com/article/2026102294751",
+            "source": "한국경제 경제"
+          },
           {
             "title": "국고채 금리, 금통위 소화하며 혼조세…국고 3년 3.84%(종합)",
             "link": "https://www.yna.co.kr/view/AKR20261022161351008",
@@ -5830,28 +5862,6 @@
             "title": "국고채 금리 혼조세…3년물 연 3.840%",
             "link": "https://www.yna.co.kr/view/AKR20261022161300008",
             "source": "연합뉴스 경제"
-          },
-          {
-            "title": "NH농협은행, 주담대 금리 인하…비수도권 0.2%p·수도권 0.1%p↓",
-            "link": "https://www.yna.co.kr/view/AKR20261022151500002",
-            "source": "연합뉴스 경제"
-          }
-        ]
-      },
-      {
-        "key": "other",
-        "name": "기타 경제 소식",
-        "nameEn": "Other Economic News",
-        "lineKo": "학원가 주택 가격이 지역 평균보다 최고 6억 원 비싸다는 소식이 전해졌다. 이는 학원 수요로 인한 집값 상승 현상이다. 한 가정은 학원 때문에 이사하려다 기겁한 사례도 보도되었다. 해당 지역의 주택 시장은 학원 인프라와 밀접한 관련이 있는 것으로 나타났다. 학원 수업이 집값에 미치는 영향은 지역마다 차이가 있다.",
-        "lineEn": "It was reported that housing prices in the academy area are as much as 600,000,000 won higher than the regional average. This is a phenomenon of rising housing prices due to demand for academies. There was a report of a family that was shocked and decided to move because of the academies. It was found that the housing market in the area is closely related to the academy infrastructure. The impact of academy classes on housing prices varies by region.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "“학원 때문에 이사가려다 기겁”…지역 평균보다 최고 6억 비싸다는 학원가 집값",
-            "link": "https://www.mk.co.kr/news/economy/12182937",
-            "source": "매일경제 부동산"
           }
         ]
       }
