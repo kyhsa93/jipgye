@@ -1613,6 +1613,13 @@ ul.news-list {
   background: var(--card);
 }
 
+/* 후보 카드의 단지 이름 링크도 줄 단위 링크 목록이라 손가락 크기로(#459). flex 항목이라 inline 이 아니고 높이가 24px 였다. */
+.budget-candidates .budget-deal > a.apt {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+}
+
 .budget-deal .place {
   font-weight: 600;
 }
