@@ -49,7 +49,7 @@
     </div>
   </header>
 
-  <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded">
+  <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="섹션">
     <a id="nav-digest" class="active" href="./index.html" aria-current="page">오늘</a>
     <a id="nav-realestate" href="./realestate.html">아파트 시세</a>
     <a id="nav-rates" href="./rates.html">금리 비교</a>
@@ -59,7 +59,7 @@
   <form class="site-search" role="search">
     <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
     <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
-           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off" enterkeyhint="search"
            placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
     <div class="site-search-results" id="site-search-results" role="listbox"
          aria-labelledby="site-search-label" hidden></div>
@@ -104,7 +104,7 @@
     <h2 id="realestate-heading">서울 아파트, 이번 주 신고된 값</h2>
     <div class="content-notice" id="realestate-unit-caption" style="margin-top: -8px;"></div>
     <div class="realestate-search">
-      <input type="search" id="realestate-search-input" placeholder="지역 검색 (예: 강남)">
+      <input type="search" id="realestate-search-input" placeholder="지역 검색 (예: 강남)" aria-label="지역 검색 (예: 강남)">
     </div>
     <p class="sr-only" role="status" id="realestate-status"></p>
     <div class="table-wrap">
@@ -163,7 +163,7 @@
     <div id="news-controls" hidden>
       <div class="news-filters" id="news-filters" role="group" aria-label="카테고리 필터"></div>
       <div class="news-search">
-        <input type="search" id="news-search-input" placeholder="뉴스 검색 (예: 금리)">
+        <input type="search" id="news-search-input" placeholder="뉴스 검색 (예: 금리)" aria-label="뉴스 검색 (예: 금리)">
       </div>
     </div>
     <p class="sr-only" role="status" id="news-status"></p>
@@ -1643,10 +1643,11 @@
     document.getElementById("re-th-jeonse").textContent = t("realestateTagJeonse");
     document.getElementById("re-th-wolse").textContent = t("realestateTagWolse");
     document.getElementById("realestate-district-select-label").textContent = t("realestateDistrictSelectLabel");
-    document.getElementById("realestate-search-input").placeholder = t("realestateSearchPlaceholder");
+    const rsi = document.getElementById("realestate-search-input");
+    rsi.placeholder = rsi.ariaLabel = t("realestateSearchPlaceholder");
     document.getElementById("news-heading").textContent = t("newsHeading");
     const searchInput = document.getElementById("news-search-input");
-    searchInput.placeholder = t("newsSearchPlaceholder");
+    searchInput.placeholder = searchInput.ariaLabel = t("newsSearchPlaceholder");
     if (searchInput.value !== newsQuery) searchInput.value = newsQuery;
     document.getElementById("news-archive-link").textContent = t("newsArchiveLink");
     document.getElementById("archive-heading").textContent = t("archiveHeading");

@@ -54,7 +54,7 @@
     </div>
   </header>
 
-  <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded">
+  <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="섹션">
     <a id="nav-digest" href="./index.html">오늘</a>
     <a id="nav-realestate" href="./realestate.html">아파트 시세</a>
     <a id="nav-rates" href="./rates.html" class="active" aria-current="page">금리 비교</a>
@@ -64,7 +64,7 @@
   <form class="site-search" role="search">
     <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
     <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
-           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off" enterkeyhint="search"
            placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
     <div class="site-search-results" id="site-search-results" role="listbox"
          aria-labelledby="site-search-label" hidden></div>

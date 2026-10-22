@@ -23,8 +23,8 @@ const tokens = (cls) => cls.split(/\s+/).filter(Boolean);
 // 머리 아래 여백 16→8, 1층 내비 아래 여백 16→8로 16px를 산다. 이 수를 바꾸면 PR 본문의 윗변 표(252 조건)를 다시 재야 한다.
 const SHELL = [
   { name: "머리글", pattern: /<header(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-2", "tw:1024:mb-6"] },
-  // index 의 1층 내비에는 aria-label 이 없다(다른 장은 aria-label="섹션"). 훅 class 로 찾는다.
-  { name: "1층 내비", pattern: /<nav class="(page-nav[^"]*)">/, hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:1024:mb-4", "tw:*:rounded"] },
+  // 1층 내비는 다른 장과 같이 aria-label="섹션" 을 갖는다(#465, 예전엔 index 만 없었다). 훅 class 로 찾는다.
+  { name: "1층 내비", pattern: /<nav class="(page-nav[^"]*)" aria-label="섹션">/, hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:1024:mb-4", "tw:*:rounded"] },
   // 질문 입구: 묶음 사이 24(grid gap 8→24) · 입구 아래 40(16→40). 시안 C(c-layout.css `.question-nav { gap: 24px }` · c.css `.question-nav { margin-bottom: 40px }`)와 같은 값이다.
   { name: "질문 입구", pattern: /<nav class="(question-nav[^"]*)" id="question-nav"/, hooks: ["question-nav"], utilities: ["tw:gap-6", "tw:mb-10"] },
   ...["realestate", "market", "summary", "news"].map((id) => ({
