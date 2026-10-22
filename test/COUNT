@@ -315,5 +315,9 @@
 # 센 법: 2026-10-22, merge-base 6f92946b, Node v24.22.0, macOS (#467).
 #   npm test(= node scripts/run-tests.mjs) → ℹ tests 1808 · pass 1808 · fail 0 · skipped 0
 #   merge-base 6f92946b 의 직전 하한 1807 에서 +1: 이 PR 이 test/pipeline.test.mjs 에 더한 시험 하나(금리 수집 뒤 build-conversion 순서). 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
-1808
-1808
+# 센 법: 2026-10-22, merge-base c95b87d4, Node v24.22.0, macOS (#458 ①).
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1812 · pass 1812 · fail 0 · skipped 0
+#   직전 하한 1808 + 이 PR 이 더한 test/conversion-en.test.mjs 의 시험 4 (`node --test test/conversion-en.test.mjs` → ℹ tests 4 · pass 4) = 1812.
+#   고친 기존 시험 파일은 0이고 없어진 시험도 0이다(.skip·.todo 도 0 그대로).
+1812
+1812

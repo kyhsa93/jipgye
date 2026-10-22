@@ -239,8 +239,8 @@ const T = {
     notReady: "No conversion data yet. It fills in as MOLIT filings arrive.",
     loadError: "Could not load the conversion data.",
     retry: "Retry",
-    eok: (v) => `₩${v}00M`,
-    man: (v) => `₩${v}0K`,
+    eok: (_, e) => `${Math.round(e * 100).toLocaleString("en-US", KRW)}M`,
+    man: (_, n) => `${(n * 10 + 0).toLocaleString("en-US", KRW)}K`,
   },
 };
 
@@ -341,12 +341,14 @@ const bandLabel = (key) =>
 
 const currentCell = () => cells().find((c) => c.district === district && c.band === bandKey) ?? null;
 
+// man 의 + 0 은 -0 을 0 으로
+const KRW = { style: "currency", currency: "KRW" };
 const eok = (value10k) => {
   const eokPart = value10k / EOK;
   const rounded = Math.round(eokPart * 100) / 100;
-  return t("eok")(rounded.toLocaleString(localeTag(), { maximumFractionDigits: 2 }));
+  return t("eok")(rounded.toLocaleString(localeTag(), { maximumFractionDigits: 2 }), rounded);
 };
-const man = (value10k) => t("man")(Math.round(value10k).toLocaleString(localeTag()));
+const man = (value10k, n = Math.round(value10k)) => t("man")(n.toLocaleString(localeTag()), n);
 
 function optionHtml(kind, cell, side, win) {
   const name = kind === "jeonse" ? t("jeonse") : t("wolse");
