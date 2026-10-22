@@ -99,6 +99,14 @@ test("누르는 것은 손가락이 닿는 크기다", async () => {
   const apt = rules(text).find((r) => parts(r.sel) === parts(".budget-candidates .budget-deal > a.apt"));
   assert.match(apt.body, /display: inline-flex/, "a.apt 가 inline-flex 가 아니다");
   assert.match(apt.body, /align-items: center/, "a.apt 글자가 위에 붙는다");
+  // 체크박스는 input 자신의 상자가 폭 24 이상·높이 --tap 이다(#459 PR 2). 상자만 키우면 WebKit 이 표시를 16px 로 그려
+  // zoom 1.5 로 24px 정사각을 맞춘다 - 폭 16 x 1.5 = 24, 높이 (--tap / 1.5) x 1.5 = --tap.
+  const box = rules(text).find((r) => r.sel.includes('.search-field input[type="checkbox"]'));
+  assert.ok(box, "체크박스 규칙이 없다");
+  const zoom = Number(box.body.match(/zoom:\s*([\d.]+)/)?.[1]);
+  assert.ok(zoom > 1, "체크박스 zoom 이 없다");
+  assert.ok(Number(box.body.match(/(?<![-\w])width:\s*(\d+)px/)?.[1]) * zoom >= 24, "체크박스 상자 폭이 24px 미만이다");
+  assert.match(box.body, new RegExp(`min-height: calc\\(var\\(--tap\\) / ${zoom}\\)`), "체크박스 높이가 --tap 이 아니다");
   const tableLink = rules(text).find((r) => parts(r.sel) === parts(".data-table td a"));
   assert.match(tableLink.body, /text-decoration-color: var\(--muted\)/, "표 안 링크 밑줄이 안 보인다");
   assert.doesNotMatch(tableLink.body, /var\(--border\)/, "밑줄이 1.29:1 테두리색이다");

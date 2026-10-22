@@ -2104,8 +2104,16 @@ main h3 {
   width: 8.5rem;
 }
 
+/* 체크박스는 상자 자체가 폭 24 · 높이 --tap 이다(#459 PR 2; 렌더 검사 ③은 input 자신의 상자를 잰다).
+ * 높이만 늘리면 그리는 쪽이 정사각 표시를 짧은 변에 맞추는데, WebKit 은 24 짜리 상자에도 표시를 16px
+ * 로만 그린다(2026-10-22 실측, Chrome 은 24px). 그래서 1.5 배로 키워 둔 상자(16 x 29.33 -> 24 x 44)를
+ * 쓰면 두 엔진 모두 24px 정사각이다. 금리 틀 네 장(.controls label > input)은 #403 이 이 규칙의 선택자
+ * 목록에 자기 선택자만 더한다(선언은 한 벌). */
 .search-field input[type="checkbox"] {
   margin: 0;
+  zoom: 1.5;
+  width: 16px;
+  min-height: calc(var(--tap) / 1.5);
 }
 
 .search-field.toggle label {
