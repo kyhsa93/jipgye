@@ -51,9 +51,9 @@ export const MUTATIONS: Record<string, Mutation> = {
   // ⑤ 320·375폭에서 넘치는 표 — 가로 스크롤 상자를 떼면 표가 문서를 넓힌다(#211과 같은 모양).
   "가로 넘침": { check: "가로 넘침", file: "style.css", find: `.scroller { overflow-x: auto; }`, put: `.scroller { overflow-x: visible; }` },
 
-  // ⑥ 건너뛰기 링크 — 지우는 것과 #main 아닌 곳으로 보내는 것, 둘 다.
-  "건너뛰기 링크 없음": { check: "건너뛰기 링크", file: "index.html", find: `<a class="skip-link" href="#main">본문 바로가기</a>\n`, put: `` },
-  "건너뛰기 링크가 #main이 아님": { check: "건너뛰기 링크", file: "index.html", find: `<a class="skip-link" href="#main">`, put: `<a class="skip-link" href="#top">` },
+  // ⑥ 건너뛰기 링크 — 지우는 것과 #content 아닌 곳으로 보내는 것, 둘 다.
+  "건너뛰기 링크 없음": { check: "건너뛰기 링크", file: "index.html", find: `<a class="skip-link" href="#content">본문 바로가기</a>\n`, put: `` },
+  "건너뛰기 링크가 #main이 아님": { check: "건너뛰기 링크", file: "index.html", find: `<a class="skip-link" href="#content">`, put: `<a class="skip-link" href="#top">` },
 
   // ⑦ **영어 모드에서만** 나는 위반(①~⑤ 중 글자 크기 하한). 한국어로 돌면 안 걸린다 — 그것까지 시험이 건다.
   "영어 모드에서만": {

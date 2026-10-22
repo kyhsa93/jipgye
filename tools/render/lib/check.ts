@@ -4,7 +4,7 @@
 //   ① 가시 텍스트 다중집합(375·1280)   — 기준 폴더를 같이 줄 때만(`baseline`). 유틸리티로 숨긴 글자를 잡는다.
 //   ② 가로 넘침(320·375)
 //   ③ 대화형 요소 크기 44px · 입력칸 글자 16px · 글자 크기 하한 · 네 모드 각각의 대비 4.5:1
-//   ④ 건너뛰기 링크가 첫 초점이고 #main으로 간다
+//   ④ 건너뛰기 링크가 첫 초점이고 #content로 간다
 //   ⑤ 영어 모드에서도 ①~③
 //
 // **입력이 매일 바뀌는 측정은 CI에 넣지 않는다**(#8 재발 방지 R3, `tools/golden`의 `test` ↔ `test:live`와 같은 선).
@@ -109,8 +109,8 @@ export async function probePage(page, { url, settleMs = 0, wantTexts = false }: 
   // ④ 건너뛰기 링크 — Tab 한 번. 초점 상태는 되돌릴 수 없으므로(한 번 누르면 다음 것으로 간다) 마지막에 가깝게 둔다.
   for (const type of ["keyDown", "keyUp"]) await page.send("Input.dispatchKeyEvent", { type, key: "Tab", code: "Tab", windowsVirtualKeyCode: 9 });
   const focus = await page.evaluate(FOCUS_PROBE);
-  if (focus.href !== "#main") {
-    findings.push({ check: "건너뛰기 링크", where: "375px", detail: `Tab 한 번 뒤 초점이 ${focus.el}${focus.href ? `[href=${focus.href}]` : ""} — #main으로 가는 건너뛰기 링크가 아니다` });
+  if (focus.href !== "#content") {
+    findings.push({ check: "건너뛰기 링크", where: "375px", detail: `Tab 한 번 뒤 초점이 ${focus.el}${focus.href ? `[href=${focus.href}]` : ""} — #content로 가는 건너뛰기 링크가 아니다` });
   }
 
   // ① 가시 텍스트 — 기준과 견줄 때만 모은다(혼자서는 판정할 수 없다).
