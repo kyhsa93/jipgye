@@ -46,7 +46,7 @@ export function buildFiles({ itemsByDistrict, yearAgoByDistrict = {}, yearAgoMon
       since,
       reference,
       // 기준 달이 공식 지수가 아니라 우리 원본으로 메운 달이면 화면이 그렇다고 적는다.
-      referenceFilled: Object.values(filled).some((months) => months.includes(reference)),
+      referenceFilled: Object.values<string[]>(filled).some((months) => months.includes(reference)),
       // 메운 달이 공식 지수보다 평균 얼마나 높게 나와 왔나(서울, %p). 화면 각주에 그대로 적는다.
       referenceBias: outlook?.regions?.find((r) => r.code === "200")?.nowcast?.bias ?? null,
       cells: districtCells(deals, levels, reference, {
@@ -102,7 +102,7 @@ async function main() {
   let cells = 0;
   let ranged = 0;
   // 자치구 순서대로 쓴다 - 완료 순서가 출력 순서가 되면 값이 안 변해도 diff가 난다.
-  for (const [slug, file] of Object.entries(built.files)) {
+  for (const [slug, file] of Object.entries<{ cells: Record<string, Record<string, { median?: unknown }>> }>(built.files)) {
     await writeFile(path.join(dataDir, complexPriceFileName(slug)), `${JSON.stringify(file)}\n`);
     for (const areas of Object.values(file.cells)) {
       for (const cell of Object.values(areas)) {

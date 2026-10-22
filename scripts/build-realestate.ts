@@ -240,7 +240,7 @@ async function writeRentFiles(now) {
     )
   );
 
-  const all = Object.values(files).flatMap((file) => file.deals);
+  const all = Object.values<{ deals: { monthlyRent10k?: number; renewal?: boolean }[] }>(files).flatMap((file) => file.deals);
   const wolse = all.filter((deal) => deal.monthlyRent10k > 0).length;
   const renewal = all.filter((deal) => deal.renewal === true).length;
   console.log(

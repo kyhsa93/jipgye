@@ -28,7 +28,7 @@ const DISTRICT_COUNT = 25;
  */
 const REFRESH_MONTHS = refreshMonths(NOW);
 const REFRESH_SLOTS = DISTRICT_COUNT * REFRESH_MONTHS.length;
-const STEPS = ["scripts/fetch-realestate.mjs", "scripts/build-realestate.mjs"];
+const STEPS = ["scripts/fetch-realestate.mjs", "scripts/build-realestate.ts"];
 
 const spread = (kind, yearMonth, extra = {}) =>
   successXml(monthDays(yearMonth).map((on) => (kind === "sale" ? saleItem({ ...on, ...extra }) : rentItem({ ...on, ...extra }))));
@@ -210,7 +210,7 @@ test("원본만 있으면 조회 없이 산출물을 다시 만든다", async (t
   const first = await readFile(path.join(space.dataDir, "realestate.json"), "utf-8");
 
   await server.close();
-  await collect(server, space, ["scripts/build-realestate.mjs"]);
+  await collect(server, space, ["scripts/build-realestate.ts"]);
   const second = await readFile(path.join(space.dataDir, "realestate.json"), "utf-8");
 
   const strip = (text) => text.replace(/"updatedAt": "[^"]+"/g, "");
@@ -357,7 +357,7 @@ test("기준이 바뀌는 날에는 지난 기준 값을 물려받지 않는다"
   const swapped = { ...first, window: { ...first.window, basis: "arrival" } };
   await writeFile(path.join(space.dataDir, "realestate.json"), JSON.stringify(swapped));
 
-  await collect(server, { ...space, backfillLimit: 400 }, ["scripts/build-realestate.mjs"]);
+  await collect(server, { ...space, backfillLimit: 400 }, ["scripts/build-realestate.ts"]);
   const again = await readJson(path.join(space.dataDir, "realestate.json"));
 
   assert.equal(again.window.basis, "contract");

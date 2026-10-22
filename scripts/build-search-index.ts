@@ -90,12 +90,12 @@ export function staticEntries() {
  * 때문이다. 주소는 브라우저가 만들면 되고 자치구는 묶으면 한 번만 적으면 된다.
  */
 export function complexesByDistrict(byDistrict) {
-  const out = {};
+  const out: Record<string, string[]> = {};
 
   for (const district of DISTRICT_PAGES) {
     const deals = byDistrict?.[district.name];
     if (!deals?.length) continue;
-    const names = new Set();
+    const names = new Set<string>();
     for (const deal of deals) {
       const name = String(deal?.apt ?? "").trim();
       if (name) names.add(name);
@@ -114,12 +114,12 @@ export function complexesByDistrict(byDistrict) {
  * 있는데 색인에 없어서, "상계동"을 치면 아무것도 안 나왔다. 285쌍에 4KB다.
  */
 export function dongsByDistrict(byDistrict) {
-  const out = {};
+  const out: Record<string, string[]> = {};
 
   for (const district of DISTRICT_PAGES) {
     const deals = byDistrict?.[district.name];
     if (!deals?.length) continue;
-    const names = new Set();
+    const names = new Set<string>();
     for (const deal of deals) {
       const name = String(deal?.dong ?? "").trim();
       if (name) names.add(name);

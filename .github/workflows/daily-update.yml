@@ -71,7 +71,7 @@ jobs:
           # 받은 원본은 바로 커밋한다. 뒤의 빌더나 다른 수집이 실패해도 그날 원본이
           # 사라지지 않게 - 2026-10-03에 금리 단계 하나가 175슬롯을 버렸다(#62).
           ./scripts/push-docs.sh "chore: 실거래 원본 $(TZ=Asia/Seoul date +%Y-%m-%d)" raw
-          node scripts/build-realestate.mjs
+          node scripts/build-realestate.ts
           node scripts/build-budget-deals.ts
           node scripts/build-conversion.ts
           node scripts/build-cancellation.ts
@@ -80,12 +80,12 @@ jobs:
           node scripts/build-outlook.ts
           node scripts/build-indicators.ts
           node scripts/build-move-in.ts
-          node scripts/build-complex-price.mjs
+          node scripts/build-complex-price.ts
           node scripts/build-record-high.ts
           node scripts/build-district-change.ts
-          node scripts/build-complex-ratio.mjs
+          node scripts/build-complex-ratio.ts
           node scripts/build-rent-preview.ts
-          node scripts/build-search-index.mjs
+          node scripts/build-search-index.ts
         env:
           MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
           MOLIT_API_ENDPOINT: ${{ secrets.MOLIT_API_ENDPOINT }}

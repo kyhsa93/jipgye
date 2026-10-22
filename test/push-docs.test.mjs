@@ -109,7 +109,7 @@ test("데일리 워크플로가 실거래 원본을 받자마자 먼저 커밋�
   const step = yml.split("- name: 실거래 수집")[1]?.split("- name:")[0] ?? "";
   const fetchAt = step.indexOf("fetch-realestate.mjs");
   const commitAt = step.search(/push-docs\.sh "[^"]*" raw\b/);
-  const buildAt = step.indexOf("build-realestate.mjs");
+  const buildAt = step.indexOf("build-realestate.ts");
   assert.ok(fetchAt >= 0 && commitAt > fetchAt, "원본 수집 뒤에 원본 커밋이 없다");
   assert.ok(commitAt < buildAt, "원본 커밋이 빌더보다 뒤에 있다");
 });
