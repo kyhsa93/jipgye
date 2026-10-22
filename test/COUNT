@@ -312,5 +312,8 @@
 #   merge-base 11fb8c4f 의 같은 명령 → ℹ tests 1802 · pass 1802 · fail 0 · skipped 0 (= 직전 하한).
 #   차이 1 은 이 PR 이 더한 test/typescript-gate.test.mjs 하나다(clo 게이트: tools/typescript/tsconfig.json 의 noEmit·outDir/emitDeclarationOnly/declaration 부재, 루트 test·update 줄에 esbuild 부재 + 대조군).
 #   고친 기존 시험은 test/run-tests.test.mjs 의 문자열 한 줄(test:live 줄의 파일명 .mjs → .ts)이고 시험을 더하거나 빼지 않았다. 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
-1807
-1807
+# 센 법: 2026-10-22, merge-base 6f92946b, Node v24.22.0, macOS (#467).
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1808 · pass 1808 · fail 0 · skipped 0
+#   merge-base 6f92946b 의 직전 하한 1807 에서 +1: 이 PR 이 test/pipeline.test.mjs 에 더한 시험 하나(금리 수집 뒤 build-conversion 순서). 없어진 시험은 0 이다(.skip·.todo 도 0 그대로).
+1808
+1808

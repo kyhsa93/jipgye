@@ -68,3 +68,41 @@ test("summarize.yml의 페이지 빌드 순서가 daily-update.yml과 어긋나�
     from = at + 1;
   }
 });
+
+/**
+ * conversion.json은 rates.json의 대출 금리·옵션 수를 읽는다. 첫 build-conversion은 "실거래 수집"
+ * 단계 안에서 금리 수집보다 먼저 돌아서, 금감원 공시월이 바뀐 날(2026-10-22) rates만 새것이 되고
+ * conversion은 어제 금리로 남아 수집 후 테스트(sample-size 154행)가 빨개졌다(#467).
+ * 이 시험은 워크플로 스텝 순서를 읽어, 마지막 build-conversion이 fetch-rates 뒤 · conversion을
+ * 읽는 렌더(render-pipeline)·커밋·수집 후 테스트 앞에서 돈다고 단언한다. 같은 호출이 앞 단계에만
+ * 있으면(옛 워크플로) 실패한다.
+ */
+test("full 모드에서 build-conversion이 fetch-rates 뒤 · 렌더·커밋·수집 후 테스트 앞에서 다시 돈다", async () => {
+  const workflow = await read(".github/workflows/daily-update.yml");
+  // 스텝 머리는 6칸 들여쓴 `- ` 다. 스텝마다 그 본문(주석 포함)까지 한 덩어리로 자른다.
+  const steps = workflow.split(/\n(?=      - )/).filter((s) => s.startsWith("      - "));
+  const indexesOf = (needle) => steps.flatMap((s, i) => (s.includes(needle) ? [i] : []));
+  const only = (needle) => {
+    const at = indexesOf(needle);
+    assert.equal(at.length, 1, `${needle}을 부르는 스텝이 ${at.length}개다`);
+    return at[0];
+  };
+
+  const rates = only("node scripts/fetch-rates.mjs");
+  const render = only("node scripts/render-pipeline.ts");
+  const commit = only("./scripts/push-docs.sh \"chore: 데일리 데이터 갱신");
+  const testsAfter = indexesOf("npm test").at(-1);
+  const conversions = indexesOf("node scripts/build-conversion.ts");
+
+  assert.ok(conversions.length >= 2, `build-conversion을 부르는 스텝이 ${conversions.length}개다 - 실거래 수집 안의 것 하나뿐이면 금리 수집 전 값으로 남는다(#467)`);
+  const last = conversions.at(-1);
+  assert.ok(last > rates, "마지막 build-conversion이 fetch-rates보다 앞이다 - conversion이 어제 금리로 남는다(#467)");
+  assert.ok(last < render, "마지막 build-conversion이 render-pipeline보다 뒤다 - 렌더가 낡은 conversion을 읽는다");
+  assert.ok(last < commit && last < testsAfter, "마지막 build-conversion이 커밋·수집 후 테스트보다 뒤다");
+
+  // 금리 수집이 full에서만 돌므로 다시 만들기도 full에서만 돈다(news 모드에서 금리 없이 도는 일이 없게).
+  assert.match(steps[rates], /if: env\.MODE == 'full'/);
+  assert.match(steps[last], /if: env\.MODE == 'full'/);
+  // 이 단계 실패가 job을 멈추면 같은 실행의 수집분 커밋이 안 돈다(#62) - 멈추지 않는다.
+  assert.match(steps[last], /continue-on-error: true/);
+});
