@@ -1553,6 +1553,9 @@
   }
   .search-field input[type="checkbox"] {
     margin: 0;
+    zoom: 1.5;
+    width: 16px;
+    min-height: calc(var(--tap) / 1.5);
   }
   .search-field.toggle label {
     cursor: pointer;
