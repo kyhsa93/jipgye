@@ -73,18 +73,18 @@ jobs:
           ./scripts/push-docs.sh "chore: 실거래 원본 $(TZ=Asia/Seoul date +%Y-%m-%d)" raw
           node scripts/build-realestate.mjs
           node scripts/build-budget-deals.mjs
-          node scripts/build-conversion.mjs
+          node scripts/build-conversion.ts
           node scripts/build-cancellation.mjs
           node scripts/build-renewal-facts.mjs
-          node scripts/build-floor-gap.mjs
+          node scripts/build-floor-gap.ts
           node scripts/build-outlook.mjs
           node scripts/build-indicators.mjs
-          node scripts/build-move-in.mjs
+          node scripts/build-move-in.ts
           node scripts/build-complex-price.mjs
-          node scripts/build-record-high.mjs
+          node scripts/build-record-high.ts
           node scripts/build-district-change.mjs
           node scripts/build-complex-ratio.mjs
-          node scripts/build-rent-preview.mjs
+          node scripts/build-rent-preview.ts
           node scripts/build-search-index.mjs
         env:
           MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}

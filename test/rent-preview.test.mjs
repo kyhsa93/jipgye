@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { PREVIEW_ROWS, buildPayload } from "../scripts/build-rent-preview.mjs";
+import { PREVIEW_ROWS, buildPayload } from "../scripts/build-rent-preview.ts";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
