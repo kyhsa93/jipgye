@@ -93,7 +93,7 @@ async function fetchKospi(now = new Date()) {
 async function fetchUsdKrw() {
   const res = await fetch("https://open.er-api.com/v6/latest/USD");
   if (!res.ok) throw new Error(`fx http ${res.status}`);
-  const json = await res.json();
+  const json = await res.json() as { rates?: { KRW?: number }; time_last_update_utc?: string };
   const krw = json.rates?.KRW;
   if (!krw) throw new Error("fx 응답 형식 이상");
   return { value: krw, asOf: json.time_last_update_utc };
@@ -194,7 +194,7 @@ async function fetchWithFallback(label, fn, previous) {
 }
 
 async function main() {
-  let previous = {};
+  let previous: { kospi?: unknown; usdKrw?: unknown; baseRate?: unknown } = {};
   try {
     previous = JSON.parse(await readFile(outFile, "utf-8"));
   } catch {

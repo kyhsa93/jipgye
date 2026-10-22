@@ -13,8 +13,8 @@ import {
   surveyChange,
   toDeal,
 } from "./district-change.ts";
-import { DISTRICT_INDEX_FILE } from "./fetch-district-index.mjs";
-import { INDEX_FILE } from "./fetch-price-index.mjs";
+import { DISTRICT_INDEX_FILE } from "./fetch-district-index.ts";
+import { INDEX_FILE } from "./fetch-price-index.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { shiftMonth } from "./outlook.ts";
 import { RAW_DIR } from "./realestate-raw.ts";

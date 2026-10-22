@@ -6,7 +6,7 @@
     "fetch:news": "node scripts/fetch-news.ts",
     "fetch:realestate": "node scripts/fetch-realestate.mjs",
     "build:realestate": "node scripts/build-realestate.ts",
-    "fetch:market": "node scripts/fetch-market.mjs",
+    "fetch:market": "node scripts/fetch-market.ts",
     "fetch:rates": "node scripts/fetch-rates.mjs",
     "update": "node scripts/update-all.mjs",
     "test": "node scripts/run-tests.mjs"

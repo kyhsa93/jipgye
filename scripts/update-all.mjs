@@ -18,11 +18,11 @@ function trackedPaths() {
 // 커밋돼 있는 실거래 원본(raw/)으로 다시 계산하므로 여기서도 그대로 돈다.
 async function main() {
   run("node scripts/fetch-news.ts");
-  run("node scripts/fetch-market.mjs");
-  run("node scripts/fetch-price-index.mjs");
-  run("node scripts/fetch-indicators.mjs");
-  run("node scripts/fetch-move-in.mjs");
-  run("node scripts/fetch-district-index.mjs");
+  run("node scripts/fetch-market.ts");
+  run("node scripts/fetch-price-index.ts");
+  run("node scripts/fetch-indicators.ts");
+  run("node scripts/fetch-move-in.ts");
+  run("node scripts/fetch-district-index.ts");
   run("node scripts/build-realestate.ts");
   run("node scripts/build-budget-deals.ts");
   run("node scripts/build-conversion.ts");

@@ -76,7 +76,7 @@ export async function fetchRone(spec, from, to, { fetchImpl = fetch } = {}) {
     const end = shiftMonth(month, RONE_PAGE - 1) < to ? shiftMonth(month, RONE_PAGE - 1) : to;
     const res = await fetchImpl(roneUrl(spec, month, end));
     if (!res.ok) throw new Error(`r-one http ${res.status}`);
-    const json = await res.json();
+    const json = await res.json() as { SttsApiTblData?: { row?: { DTA_VAL?: string; WRTTIME_IDTFR_ID?: string }[] }[] };
     const rows = json?.SttsApiTblData?.[1]?.row ?? [];
     for (const row of rows) {
       const value = Number(row.DTA_VAL);
@@ -91,7 +91,7 @@ export async function fetchEcos({ stat, item }, from, to, key) {
   // 빈 값("")을 Number로 바꾸면 0이 된다 - 0을 값으로 받으면 그 달 금리가 0%가 된다.
   return rows
     .filter((row) => String(row.DATA_VALUE ?? "").trim() !== "")
-    .map((row) => [String(row.TIME), Number(row.DATA_VALUE)])
+    .map((row): [string, number] => [String(row.TIME), Number(row.DATA_VALUE)])
     .filter(([month, value]) => /^\d{6}$/.test(month) && Number.isFinite(value));
 }
 
@@ -117,8 +117,8 @@ async function main() {
   const failed = [];
 
   const jobs = [
-    ...Object.entries(ECOS_SERIES).map(([name, spec]) => [name, () => fetchEcos(spec, from, to, key)]),
-    ...Object.entries(RONE_SERIES).map(([name, spec]) => [name, () => fetchRone(spec, from, to)]),
+    ...Object.entries(ECOS_SERIES).map(([name, spec]) => [name, () => fetchEcos(spec, from, to, key)] as const),
+    ...Object.entries(RONE_SERIES).map(([name, spec]) => [name, () => fetchRone(spec, from, to)] as const),
   ];
   // 하나씩 부른다 - 두 기관 모두 키 없는 호출이라 몰아서 부르면 막힐 수 있다.
   for (const [name, job] of jobs) {

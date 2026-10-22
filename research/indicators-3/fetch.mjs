@@ -1,7 +1,7 @@
 // 3차 후보 계열을 처음부터 받는다(매일 수집은 최근 14개월만 다시 받으므로, 긴 머리는 여기서 한 번).
 // node research/indicators-3/fetch.mjs → research/indicators-3/cache/series.json
 import { mkdir, writeFile } from "node:fs/promises";
-import { fetchEcos, fetchRone } from "../../scripts/fetch-indicators.mjs";
+import { fetchEcos, fetchRone } from "../../scripts/fetch-indicators.ts";
 import { ecosKey } from "../../scripts/ecos.ts";
 
 const out = {};
