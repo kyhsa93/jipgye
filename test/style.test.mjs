@@ -94,6 +94,11 @@ test("누르는 것은 손가락이 닿는 크기다", async () => {
   assert.ok(lists, "줄 단위 링크 목록 규칙이 없다");
   assert.match(lists.body, /min-height: var\(--tap\)/);
   for (const sel of [".section-links a", ".back-link", ".method-callout a"]) assert.ok(lists.sel.includes(sel), `${sel}이 빠졌다`);
+  // 예산대 후보 카드의 단지 이름 링크(a.apt)는 flex 항목이라 inline 이 아니다 - 자기 상자가 --tap 이어야 한다(#459).
+  uses(".budget-candidates .budget-deal > a.apt");
+  const apt = rules(text).find((r) => parts(r.sel) === parts(".budget-candidates .budget-deal > a.apt"));
+  assert.match(apt.body, /display: inline-flex/, "a.apt 가 inline-flex 가 아니다");
+  assert.match(apt.body, /align-items: center/, "a.apt 글자가 위에 붙는다");
   const tableLink = rules(text).find((r) => parts(r.sel) === parts(".data-table td a"));
   assert.match(tableLink.body, /text-decoration-color: var\(--muted\)/, "표 안 링크 밑줄이 안 보인다");
   assert.doesNotMatch(tableLink.body, /var\(--border\)/, "밑줄이 1.29:1 테두리색이다");
