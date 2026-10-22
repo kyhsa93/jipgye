@@ -99,7 +99,7 @@ jobs:
         id: rates
         if: env.MODE == 'full'
         continue-on-error: true
-        run: node scripts/fetch-rates.mjs
+        run: node scripts/fetch-rates.ts
         env:
           FSS_FINLIFE_API_KEY: ${{ secrets.FSS_FINLIFE_API_KEY }}
 

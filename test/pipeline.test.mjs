@@ -88,7 +88,7 @@ test("full 모드에서 build-conversion이 fetch-rates 뒤 · 렌더·커밋·�
     return at[0];
   };
 
-  const rates = only("node scripts/fetch-rates.mjs");
+  const rates = only("node scripts/fetch-rates.ts");
   const render = only("node scripts/render-pipeline.ts");
   const commit = only("./scripts/push-docs.sh \"chore: 데일리 데이터 갱신");
   const testsAfter = indexesOf("npm test").at(-1);

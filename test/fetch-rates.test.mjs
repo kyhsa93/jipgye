@@ -9,7 +9,7 @@ import path from "node:path";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
-const scriptPath = path.resolve(import.meta.dirname, "../scripts/fetch-rates.mjs");
+const scriptPath = path.resolve(import.meta.dirname, "../scripts/fetch-rates.ts");
 
 function startStub(handler) {
   const server = createServer((req, res) => {
