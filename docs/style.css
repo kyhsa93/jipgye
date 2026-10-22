@@ -1871,6 +1871,9 @@
   .skip-link:focus-visible {
     top: 8px;
   }
+  #content:focus-visible {
+    outline: none;
+  }
   .method-callout {
     margin: 0 0 8px;
     padding: 0;

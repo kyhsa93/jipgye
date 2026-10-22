@@ -119,7 +119,9 @@ test("모든 페이지에 본문으로 건너뛰는 길이 있다", async () => 
   const docs = path.join(root, "docs");
   for (const file of (await readdir(docs)).filter((f) => f.endsWith(".html"))) {
     const html = await readFile(path.join(docs, file), "utf8");
-    assert.match(html, /<a class="skip-link" href="#main"/, `docs/${file}에 건너뛰기 링크가 없다`);
+    assert.match(html, /<a class="skip-link" href="#content"/, `docs/${file}에 건너뛰기 링크가 없다`);
+    // 착지점은 검색 폼 바로 뒤다. 그 뒤에 두면 #content-notice·#load-error(로드 실패 알림)를 건너뛴다.
+    assert.match(html, /<\/form>\s*<div id="content" tabindex="-1"><\/div>/, `docs/${file}의 건너뛰기 착지점이 검색 폼 바로 뒤에 없다`);
     assert.match(html, /<main id="main">/, `docs/${file}의 본문에 닿을 곳이 없다`);
   }
 });
