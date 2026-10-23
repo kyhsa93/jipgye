@@ -252,7 +252,8 @@ test("마지막 실패 단계의 if가 스크립트가 쓰는 $GITHUB_OUTPUT 키
     const render = stepOf(yml, "정적 HTML에 오늘 내용 심기");
     const id = render.match(/^ {8}id: (\S+)$/m)[1];
     const fail = stepOf(yml, "렌더 폴백 반영");
-    assert.ok(fail.includes(`if: steps.${id}.outputs.${key} == 'true'`), `${file}: 마지막 단계의 if가 steps.${id}.outputs.${key}를 읽지 않는다\n${fail}`);
+    // `!cancelled() &&` 는 #509 가 붙였다(앞 반영 단계가 먼저 exit 1 해도 이 단계가 건너뛰어지지 않게). YAML 에서 `!` 로 시작하는 맨 스칼라는 태그라 ${{ }} 로 감싼다.
+    assert.ok(fail.includes(`if: \${{ !cancelled() && steps.${id}.outputs.${key} == 'true' }}`), `${file}: 마지막 단계의 if가 steps.${id}.outputs.${key}를 읽지 않는다\n${fail}`);
     assert.match(fail, /exit 1/);
     assert.ok(fail.includes("React 렌더 실패 → legacy로 폴백했음. 사이트는 정상 배포됨, 원인 조사 필요"), `${file}: 실패 메시지가 다르다`);
     // 커밋·배포가 모두 끝난 뒤에야 실패로 끝낸다 - 폴백이 사이트를 막지 않는다.

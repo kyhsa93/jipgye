@@ -55,12 +55,13 @@ for (const [file, order] of [
   test(`${file}: 반영 단계는 배포 뒤에서 steps.health.outcome == 'failure' 일 때만 exit 1 로 끝난다`, async () => {
     const list = steps(await read(file));
     const r = list[index(list, REFLECT)];
-    assert.equal(r.if, "steps.health.outcome == 'failure'");
+    // `!cancelled() &&` 는 #509 가 붙였다: 상태 함수가 없으면 앞 반영 단계(금리·렌더 폴백)가 먼저 exit 1 했을 때 이 단계가 건너뛰어져 점검 실패가 가려졌다.
+    assert.equal(r.if.replace(/^\$\{\{\s*|\s*\}\}$/g, ""), "!cancelled() && steps.health.outcome == 'failure'");
     assert.match(r.run, /^\s*exit 1$/m);
     assert.match(r.run, /::error::/);
     assert.ok(index(list, "Pages에 배포") < index(list, REFLECT), "배포보다 앞이면 반영 단계가 배포를 막는다");
-    // 상태 함수(always·failure)를 안 쓴다: 앞 스텝이 이미 실패했으면 이 단계는 건너뛰고 run 은 이미 빨갛다.
-    assert.ok(!/always\(\)|failure\(\)|cancelled\(\)/.test(r.if));
+    // always()·failure() 는 쓰지 않는다: 취소된 run 에서 돌면 안 된다(`!cancelled()` 만 허용).
+    assert.ok(!/always\(\)|failure\(\)/.test(r.if));
   });
 }
 

@@ -129,16 +129,17 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
 
+      # 반영 단계 둘은 `!cancelled() &&` 로 시작한다(#509, daily-update.yml 과 같다): 앞 반영 단계가 먼저 exit 1 해도 뒤 반영이 건너뛰어지지 않는다.
       # 렌더 폴백이 발동한 날의 표시다(daily-update.yml과 같은 단계). 커밋·테스트·배포가 모두 끝난 뒤에야 실패로 끝낸다.
       - name: 렌더 폴백 반영
-        if: steps.render.outputs.fallback == 'true'
+        if: ${{ !cancelled() && steps.render.outputs.fallback == 'true' }}
         run: |
           echo "::error::React 렌더 실패 → legacy로 폴백했음. 사이트는 정상 배포됨, 원인 조사 필요 - 위 '정적 HTML에 오늘 내용 심기' 단계의 1차 시도 로그를 본다"
           exit 1
 
       # 데이터 건강 점검이 실패한 날의 표시다(#507, daily-update.yml 과 같은 단계). 커밋·테스트·배포가 모두 끝난 뒤에야 실패로 끝낸다.
       - name: 데이터 건강 점검 실패 반영
-        if: steps.health.outcome == 'failure'
+        if: ${{ !cancelled() && steps.health.outcome == 'failure' }}
         run: |
           echo "::error::데이터 건강 점검(tools/health)이 실패했다 - 위 '데이터 건강 점검 (비차단)' 단계의 로그를 본다. 커밋·배포는 끝났고 이 점검은 그것을 막지 않았다"
           exit 1
