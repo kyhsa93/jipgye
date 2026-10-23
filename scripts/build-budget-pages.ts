@@ -21,6 +21,9 @@ const BASE_DESCRIPTION =
 const BASE_TITLE_KEY = 'title: "서울 아파트 시세",';
 const BASE_TITLE_KEY_EN = 'title: "Seoul Apartment Prices",';
 
+// 틀의 예산 섹션 제목. 장에서는 본문 칸으로 옮겨 가므로(buildBudgetPage) 틀 자리에서 떼는 글자와 본문에 넣는 글자가 같은 상수 하나다.
+const BUDGET_HEADING_HTML = '<h2 id="budget-heading">예산으로 찾기</h2>';
+
 function replaceOnce(html, needle, replacement, what) {
   if (!html.includes(needle)) throw new Error(`${what}를 찾지 못했습니다: ${needle.slice(0, 60)}`);
   return html.replace(needle, replacement);
@@ -78,7 +81,8 @@ function navHtml(page) {
 
 export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, realestate = null) {
   const band = (budget?.bands ?? []).find((b) => b.min10k === page.min10k) ?? null;
-  const body = budgetBodyHtml(band, budget?.periods, rates, mortgageSeries, complexFiles, capStats, policyCounts);
+  // 제목과 칩 줄은 본문 칸 안, 어디로 가는가 문장 뒤 후보 앞에 놓인다(#460) - 틀의 제목 자리는 비우고 본문이 들고 간다.
+  const body = budgetBodyHtml(band, budget?.periods, rates, mortgageSeries, complexFiles, capStats, policyCounts, `${BUDGET_HEADING_HTML}${chipsHtml(page)}`);
   if (!body) return null;
 
   let html = baseHtml;
@@ -127,12 +131,7 @@ export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSe
     html = html.slice(0, anchor) + block + "\n\n  " + html.slice(anchor);
   }
 
-  html = replaceOnce(
-    html,
-    '<h2 id="budget-heading">예산으로 찾기</h2>',
-    `<h2 id="budget-heading">예산으로 찾기</h2>\n    ${chipsHtml(page)}`,
-    "예산 섹션 제목"
-  );
+  html = replaceOnce(html, `${BUDGET_HEADING_HTML}\n    `, "", "예산 섹션 제목");
 
   // 스물다섯 줄짜리 자치구 시세표는 여기 있을 것이 아니다.
   //

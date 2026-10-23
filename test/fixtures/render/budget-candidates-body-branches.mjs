@@ -1269,11 +1269,11 @@ const MORE =
   `<li><a href="./price-outlook.html">3개월 뒤 아파트값과 그 오차</a></li>` +
   `<li><a href="./cancelled-deals.html#month-section">계약에서 등기(잔금)까지 걸리는 날</a></li>` +
   `</ul></section>`;
-// 합성 순서: 거래 요약 → 지역 줄 → 어디로 가는가 → 한눈에 → 후보 단지 → 대출 → 부대비용 → 최소 현금 → 상한 → 정책대출 → 다음 질문 → 거래 목록
-const BODY = ({ summary, span = "", districts = "", where = "", answers = "", cands = "", loan = "", costs = "", mincash = "", cap = "", policy = "", deals = "" }) =>
+// 합성 순서: 거래 요약 → 한눈에 → 지역 줄 → 어디로 가는가 → 예산으로 찾기(제목+칩, 인자로 받은 마크업) → 후보 단지 → 대출 → 부대비용 → 최소 현금 → 상한 → 정책대출 → 다음 질문 → 거래 목록 (#460)
+const BODY = ({ summary, span = "", districts = "", where = "", answers = "", finder = "", cands = "", loan = "", costs = "", mincash = "", cap = "", policy = "", deals = "" }) =>
   `<p class="budget-summary">${summary}${span ? ` <span class="when">${span}</span>` : ""}</p>` +
-  (districts ? `<div class="budget-districts">거래가 많은 지역: ${districts}</div>` : "") +
-  where + answers + cands + loan + costs + mincash + cap + policy + MORE + `<ul class="budget-deals">${deals}</ul>`;
+  answers + (districts ? `<div class="budget-districts">거래가 많은 지역: ${districts}</div>` : "") +
+  where + (finder ? `<div data-prerendered="">${finder}</div>` : "") + cands + loan + costs + mincash + cap + policy + MORE + `<ul class="budget-deals">${deals}</ul>`;
 const WHERE_P = (text) => `<p class="budget-where" data-prerendered="">${text}</p>`;
 const DEAL = (place, spec, when, price) =>
   `<li class="budget-deal"><span class="place">${place}</span><span class="spec">${spec}</span><span class="when">${when}</span><span class="price">${price}</span></li>`;
@@ -1419,6 +1419,11 @@ add("BO-K05", BO, "금리가 없으면(null) 한눈에의 1억당 줄과 대출 
 add("BO-K06", BO, "셋째 인자(mortgageSeries)는 읽지 않는다 - 무엇이든 같은 출력", [bb(3), null, RATES_STD, { x: 1 }, null, null, POLICY_COUNTS], B3());
 add("BO-K07", BO, "인자를 하나만(예산대) 주면 기본값(null) 갈래: 금리·후보·상한·정책대출 없음", [bb(3)], BODY({ summary: SUM("3억대"), answers: leaf("budgetAnswersHtml", 3), costs: P3.costs, mincash: P3.mincash }));
 add("BO-K08", BO, "예산대에 다른 필드(facts·extra)가 있어도 본문은 읽지 않는다", [bb(3, { facts: { total: 5 }, extra: SP }), null, RATES_STD, null, null, null, POLICY_COUNTS], B3());
+add("BO-K09", BO, "여덟째 인자(제목+칩 마크업)가 있으면 어디로 가는가 뒤 후보 앞에 data-prerendered 덩어리로 놓인다(마크업은 그대로)", [bb(3), null, RATES_STD, null, null, null, POLICY_COUNTS, '<h2 id="budget-heading">예산으로 찾기</h2><nav class="budget-chips" aria-label="예산대"><a href="./budget-3eok.html" aria-current="page">3억</a><a href="./budget-4eok.html">4억</a></nav>'],
+  B3({ finder: '<h2 id="budget-heading">예산으로 찾기</h2><nav class="budget-chips" aria-label="예산대"><a href="./budget-3eok.html" aria-current="page">3억</a><a href="./budget-4eok.html">4억</a></nav>' }));
+add("BO-K10", BO, "여덟째 인자가 빈 문자열이면 덩어리가 없다(인자를 안 준 것과 같다)", [bb(3), null, RATES_STD, null, null, null, POLICY_COUNTS, ""], B3());
+add("BO-K11", BO, "여덟째 인자와 후보 단지 둘 다 있으면 후보 단지 앞에 선다 - 지역 줄·어디로 가는가 뒤", [bb(16, { count: 1000, districts: dist(["노원구", 300], ["도봉구", 200], ["중랑구", 100]) }), ["202609"], RATES_STD, null, CAND_GEN.FB16.files, CAP_STATS, null, "<h2>f</h2>"],
+  BODY({ summary: SUM("16억대", "1,000"), span: "9월 신고분 기준", ...P16, districts: "노원구 300 · 도봉구 200 · 중랑구 100", where: WHERE_HEAVY("16억대", 60, "노원구·도봉구·중랑구"), finder: "<h2>f</h2>", cands: CAND_GEN.FB16.expect }));
 
 // 거래 목록(budgetDealHtml, 맨 뒤): 네 칸(장소·규격·날짜·금액)
 add("BO-D01", BO, "거래 없음 → 빈 목록 <ul class=\"budget-deals\"></ul>", a3(bb(3, { deals: [] })), B3({ deals: "" }));

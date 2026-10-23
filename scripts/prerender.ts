@@ -220,23 +220,27 @@ function budgetWhereHtml(band) {
   return text ? `<p class="budget-where" data-prerendered="">${escapeHtml(text)}</p>` : "";
 }
 
-function budgetBodyHtmlLegacy(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null) {
+function budgetBodyHtmlLegacy(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, finderHtml = "") {
   const shape = bodyShape(band, periodList);
   if (!shape) return null;
 
   // districts: 이름은 이스케이프하고 건수는 숫자 서식 글자다(이 줄은 이스케이프 없이 아래 템플릿에 끼운다).
   const districts = shape.districts.map((d) => `${escapeHtml(d.name)} ${d.count}`).join(" · ");
 
-  // 순서: 거래 요약 → 한눈에(돈 네 줄) → 후보 단지 → 돈 문단(근거) → 다음 질문 → 거래 12줄(예시).
-  // 후보가 "이 돈이면 어디"의 답이고 거래 12줄은 예시라 맨 뒤다(UIUX #43). 화면(realestate.html)은
-  // 요약을 다시 그리고 data-prerendered 덩어리를 이 순서 그대로 붙인 뒤 거래 목록을 붙인다 - 둘이 같아야 한다.
+  // 순서: 거래 요약 → 한눈에(돈 네 줄) → 지역 줄 → 어디로 가는가 → 예산으로 찾기(제목+칩) → 후보 단지 → 돈 문단(근거) → 다음 질문 → 거래 12줄(예시).
+  // 답(한눈에)이 첫 화면 안에 들어오게 답이 아닌 것(지역 줄·where·칩)을 뒤로 옮겼다(#460, po 판정 6354774227·6361525534). 후보가 "이 돈이면 어디"의 답이고
+  // 거래 12줄은 예시라 맨 뒤다(UIUX #43). 날짜 줄(#cross-basis)은 이 칸 밖 바로 위에 있다.
+  // 화면(realestate.html)은 요약을 다시 그리고 data-prerendered 덩어리를 이 순서 그대로 붙인 뒤 거래 목록을 붙인다 - 지역 줄만 화면이 다시 그려 한눈에 바로 뒤에 끼운다.
+  // 순서 한 벌: 이 함수 · render/entry.jsx 의 budgetBodyJsx · realestate-template.html 의 renderBudget(budgetHeadHtml) 셋은 같아야 하고, DOM 순서가 곧 화면 순서다(CSS order 로 바꾸지 않는다).
+  // finderHtml: 예산으로 찾기 제목과 칩 줄(build-budget-pages 가 장마다 만든다). 비면 이 절은 없다.
   return (
     `<p class="budget-summary">${escapeHtml(shape.summary)}` +
     (shape.periods ? ` <span class="when">${escapeHtml(shape.periods)}</span>` : "") +
     `</p>` +
+    budgetAnswersHtml(band, rates) +
     (districts ? `<div class="budget-districts">거래가 많은 지역: ${districts}</div>` : "") +
     budgetWhereHtml(band) +
-    budgetAnswersHtml(band, rates) +
+    (finderHtml ? `<div data-prerendered="">${finderHtml}</div>` : "") +
     budgetCandidatesHtml(band, complexFiles) +
     budgetLoanHtml(band, rates, mortgageSeries) +
     budgetCostsHtml(band) +

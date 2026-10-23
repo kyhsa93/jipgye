@@ -304,28 +304,83 @@ test("예산대 장 맨 위 '한눈에'는 아래 문단과 같은 함수에서 
   assert.doesNotMatch(budgetAnswersHtml({ min10k: 70_000 }, null), /1억을 빌리면/, "금리가 없는 날 상환액 줄을 지어냈다");
 });
 
-test("예산대 본문 순서: 요약 → 한눈에 → 후보 → 돈 문단 → 거래 목록, 화면이 다시 그려도 같다 (#43)", async () => {
+test("예산대 본문 순서: 요약 → 한눈에 → 지역 줄 → 어디로 가는가 → 예산으로 찾기 → 후보 → 돈 문단 → 거래 목록, 화면이 다시 그려도 같다 (#43, #460)", async () => {
   const many = ["노원구", "도봉구", "강북구", "중랑구"].flatMap((district, i) =>
     Array.from({ length: 3 }, (_, k) => deal(80_000 + i * 1000 + k, { district, apt: `${district}단지${k}` }))
   );
   const budget = { ...BUDGET, bands: mergeBands({ "202608": buildBands(many) }) };
   const band = budget.bands.find((b) => b.min10k === page8.min10k);
-  const prerendered = budgetBodyHtml(band, budget.periods, RATES, null, COMPLEX_FILES);
+  const prerendered = budgetBodyHtml(band, budget.periods, RATES, null, COMPLEX_FILES, null, null, FINDER);
   const at = (needle) => prerendered.indexOf(needle);
   assert.ok(at('class="budget-where"') > 0, "전제: 지역 문단이 있어야 한다");
-  assert.ok(at("budget-answers") < at("budget-candidates"), "한눈에가 후보보다 뒤다");
+  assert.ok(at("budget-summary") < at("budget-answers"), "거래 요약이 한눈에보다 뒤다");
+  assert.ok(at("budget-answers") < at('class="budget-districts"'), "지역 줄이 한눈에보다 앞이다");
+  assert.ok(at('class="budget-districts"') < at('class="budget-where"'), "어디로 가는가가 지역 줄보다 앞이다");
+  assert.ok(at('class="budget-where"') < at('id="budget-heading"'), "예산으로 찾기가 어디로 가는가보다 앞이다");
+  assert.ok(at('id="budget-heading"') < at('class="budget-chips"') && at('class="budget-chips"') < at("budget-candidates"), "칩이 제목 뒤·후보 앞이 아니다");
   assert.ok(at("budget-candidates") < at("budget-costs"), "후보가 돈 문단보다 뒤다");
   assert.ok(at("budget-costs") < prerendered.lastIndexOf('<ul class="budget-deals">'), "거래 목록이 돈 문단보다 앞이다");
   const page = await loadRealestatePage({ realestate: REALESTATE, budget, budgetBand: page8.min10k, prerenderedBudget: prerendered });
   assert.equal(page.budgetHtml(), prerendered, "화면이 다시 그리며 순서가 바뀌거나 지역 문단을 지웠다");
 });
 
-test("예산대 열여덟 장 모두 위에 예산 칩 줄이 있고 제 칩이 켜져 있다 (#43)", async () => {
+// 틀 밖에서 만들어 본문 칸 안에 놓는 제목+칩 마크업(build-budget-pages 가 장마다 만든다). 순서 시험은 이 모양만 본다.
+const FINDER = '<h2 id="budget-heading">예산으로 찾기</h2><nav class="budget-chips" aria-label="예산대"><a href="./budget-8eok.html" aria-current="page">8억</a></nav>';
+// 장 안 요소의 출현 순서(#460, po 판정 6361525534): 날짜 줄 → 거래 요약 → (영어 안내문) → 한눈에 → 지역 줄 → 어디로 가는가 → 예산으로 찾기 제목 → 칩 → 후보 단지.
+// 지역 줄·어디로 가는가·후보는 그날 데이터에 따라 없을 수 있어 있을 때만 순서를 본다(데이터 값에 기대는 검사를 넣지 않는다).
+const ORDER = ['id="cross-basis"', 'class="budget-summary"', 'class="budget-answers"', 'class="budget-districts"', 'class="budget-where"', 'id="budget-heading"', 'class="budget-chips"', 'class="budget-candidates"'];
+const ORDER_REQUIRED = new Set(['id="cross-basis"', 'class="budget-summary"', 'class="budget-answers"', 'id="budget-heading"', 'class="budget-chips"']);
+function assertOrder(html, label) {
+  let prev = -1;
+  let prevKey = "";
+  for (const key of ORDER) {
+    const i = html.indexOf(key);
+    if (i < 0) {
+      assert.ok(!ORDER_REQUIRED.has(key), `${label}: ${key} 가 없다`);
+      continue;
+    }
+    assert.ok(i > prev, `${label}: ${key} 가 ${prevKey} 앞에 있다`);
+    prev = i;
+    prevKey = key;
+  }
+}
+
+test("예산대 열여덟 장의 구운 HTML 은 날짜 줄 → 요약 → 한눈에 → 지역 줄 → 어디로 가는가 → 제목 → 칩 → 후보 순서다 (#460)", async () => {
+  for (const page of BUDGET_PAGES) {
+    const html = await readFile(path.join(root, "docs", page.file), "utf8");
+    assertOrder(html, page.file);
+    assert.equal([...html.matchAll(/<h2 id="budget-heading">예산으로 찾기<\/h2>/g)].length, 1, `${page.file}: 제목이 하나여야 한다`);
+    assert.ok(html.indexOf('id="budget-result"') < html.indexOf('id="budget-heading"'), `${page.file}: 제목이 본문 칸 밖에 남았다`);
+  }
+});
+
+test("예산대 화면이 다시 그려도(한국어·영어) 같은 순서이고 영어 안내문은 한눈에 바로 앞 형제다 (#460)", async () => {
+  for (const page of BUDGET_PAGES) {
+    const band = (buildBands([deal(page.min10k + 5_000, { apt: "가단지" }), deal(page.min10k + 6_000, { apt: "나단지", district: "도봉구" })]) ?? []).find((b) => b.min10k === page.min10k);
+    const budget = { ...BUDGET, bands: [band] };
+    const prerendered = budgetBodyHtml(band, budget.periods, RATES, null, COMPLEX_FILES, null, null, FINDER);
+    for (const locale of ["ko", "en"]) {
+      const view = await loadRealestatePage({ realestate: REALESTATE, budget, budgetBand: page.min10k, prerenderedBudget: prerendered, locale });
+      const html = `<p class="updated cross-basis" id="cross-basis"></p>${view.budgetHtml()}`;
+      assertOrder(html, `${page.file} ${locale}`);
+      if (locale === "en") {
+        assert.match(view.budgetHtml(), /<\/p><p class="content-notice">[^<]+<\/p><section class="budget-answers"/, `${page.file}: 영어 안내문이 한눈에 바로 앞 형제가 아니다`);
+        assert.match(view.budgetHtml(), /<h2 id="budget-heading">Search by budget<\/h2>/, `${page.file}: 영어 제목이 아니다`);
+      } else {
+        assert.doesNotMatch(view.budgetHtml(), /content-notice/);
+        assert.match(view.budgetHtml(), /<h2 id="budget-heading">예산으로 찾기<\/h2>/);
+      }
+    }
+  }
+});
+
+test("예산대 열여덟 장 모두 한눈에 뒤에 예산 칩 줄이 있고 제 칩이 켜져 있다 (#43, #460)", async () => {
   for (const page of BUDGET_PAGES) {
     const html = await readFile(path.join(root, "docs", page.file), "utf8");
     const nav = html.match(/<nav class="budget-chips"[\s\S]*?<\/nav>/)?.[0] ?? "";
     assert.equal((nav.match(/<a /g) ?? []).length, 18, `${page.file}: 칩이 열여덟이 아니다`);
     assert.match(nav, new RegExp(`href="\\./${page.file}" aria-current="page">${page.eok}억<`), `${page.file}: 제 칩이 안 켜졌다`);
-    assert.ok(html.indexOf("budget-chips") < html.indexOf('id="budget-result"'), `${page.file}: 칩이 본문 아래다`);
+    assert.ok(html.indexOf('id="budget-result"') < html.indexOf("budget-chips"), `${page.file}: 칩이 본문 칸 밖에 있다`);
+    assert.ok(html.indexOf('class="budget-answers"') < html.indexOf("budget-chips"), `${page.file}: 칩이 한눈에 앞이다`);
   }
 });
