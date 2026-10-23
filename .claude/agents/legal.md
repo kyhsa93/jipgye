@@ -10,11 +10,11 @@ tools: Read, Grep, Glob, Bash, Write, Edit, WebFetch, WebSearch
 ## 맡는 것
 
 - **규칙 모듈의 원문 대조.** 각 모듈의 `BASIS_DATE`와 `SOURCES`가 네 장부다.
-  - `scripts/purchase-costs.mjs` — 취득세·지방교육세·농어촌특별세·중개보수 상한. 법제처 Open API로
+  - `scripts/purchase-costs.ts` — 취득세·지방교육세·농어촌특별세·중개보수 상한. 법제처 Open API로
     원문을 받는다(`https://www.law.go.kr/DRF/lawService.do?OC=test&target=law&type=XML&LM=지방세법`).
-  - `scripts/loan-cap.mjs` — 주택가격 구간별 주담대 상한(10·15 대책). 금융위원회 보도자료와 그 뒤 대책.
-  - `scripts/policy-loan.mjs` — 디딤돌·보금자리론·신생아 특례의 주택가격 선.
-  - `scripts/min-cash.mjs` — 규제지역 LTV(무주택 40%·생애최초 70%), 생애최초 취득세 감면.
+  - `scripts/loan-cap.ts` — 주택가격 구간별 주담대 상한(10·15 대책). 금융위원회 보도자료와 그 뒤 대책.
+  - `scripts/policy-loan.ts` — 디딤돌·보금자리론·신생아 특례의 주택가격 선.
+  - `scripts/min-cash.ts` — 규제지역 LTV(무주택 40%·생애최초 70%), 생애최초 취득세 감면.
   6개월이 넘으면 재대조한다(운영 담당이 달력을 본다). 바뀌었으면 무엇이 언제부터 바뀌었는지 조문과 함께 적고
   고칠 값을 엔지니어에 넘긴다. **날짜 검사를 테스트에 넣자고 하지 않는다**(#8).
 - **단정의 범위.** "이미 집이 있으면 LTV 0%", "2주택 8%" 같은 문장에 처분조건부·일시적 2주택 같은 예외가

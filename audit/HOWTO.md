@@ -19,15 +19,15 @@
 
 돌아가지 않거나, 틀린 값을 보여주거나, 조용히 깨진 것.
 
-날짜가 박힌 규칙도 여기 든다. `scripts/purchase-costs.mjs`의 `BASIS_DATE`(취득세·지방교육세·
+날짜가 박힌 규칙도 여기 든다. `scripts/purchase-costs.ts`의 `BASIS_DATE`(취득세·지방교육세·
 농어촌특별세·중개보수 상한을 법령 원문과 마지막으로 대조한 날)가 오늘에서 **6개월을 넘었으면**
 이슈를 올린다 — 법이 바뀌었는지는 원문을 다시 봐야 알고, 바뀐 줄 모르고 옛 세율을 자신 있게
 적는 것이 가장 나쁘다. 원문은 법제처 Open API(`https://www.law.go.kr/DRF/lawService.do?OC=test&target=law&type=XML&LM=지방세법`)로
 받을 수 있다. 테스트로 막지 않는 이유: 날짜에 따라 갈리는 검사는 그날 배포를 멈춘다(#8).
-`scripts/loan-cap.mjs`의 `BASIS_DATE`(주택가격 구간별 주담대 상한을 금융위원회 원문과 대조한 날)도
+`scripts/loan-cap.ts`의 `BASIS_DATE`(주택가격 구간별 주담대 상한을 금융위원회 원문과 대조한 날)도
 같다 — 6개월을 넘었으면 금융위원회 보도자료(`SOURCES`의 URL)와 그 뒤 나온 대책을 다시 보고, 상한이
-바뀌었으면 이슈를 올린다. `scripts/policy-loan.mjs`(디딤돌·보금자리론·신생아 특례 주택가격 선)와
-`scripts/min-cash.mjs`(규제지역 LTV 40%·생애최초 70%, 생애최초 취득세 감면)도 같다.
+바뀌었으면 이슈를 올린다. `scripts/policy-loan.ts`(디딤돌·보금자리론·신생아 특례 주택가격 선)와
+`scripts/min-cash.ts`(규제지역 LTV 40%·생애최초 70%, 생애최초 취득세 감면)도 같다.
 
 ### 2. 사업성·상품성
 
@@ -82,7 +82,7 @@
   그게 설계다.
 - **자동 생성 페이지를 늘리자는 제안** 그 자체. 페이지 수를 늘리는 것이 아니라 페이지가
   서로 다른 이야기를 하게 만드는 것이 이 사이트가 반려에서 배운 것이다
-  (`scripts/district-facts.mjs` 주석 참고).
+  (`scripts/district-facts.ts` 주석 참고).
 
 ## 절차
 
@@ -143,7 +143,7 @@ $ 실제로 실행한 명령
 - `npm test`가 깨졌다고 코드를 고치지 마라. 깨진 사실을 이슈로 올리고 끝낸다.
 - 올릴 것이 없으면 아무것도 하지 마라. 억지로 채우지 마라.
 
-## 수집 신선도 (`scripts/source-age.mjs`, #72)
+## 수집 신선도 (`scripts/source-age.ts`, #72)
 
 읽기 전용이다. 게이트가 아니고 `npm test`가 오늘 날짜를 읽지도 않는다(#8).
 

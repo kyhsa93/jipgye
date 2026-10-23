@@ -17,7 +17,7 @@ GitHub Pages가 배포하는 **서버 없는 정적 사이트**이고, 그게 �
   - 새 빌더는 `update-all.mjs`와 워크플로 **양쪽에**(체크리스트 11, `test/pipeline.test.mjs`가 대조).
   - **데이터 값이나 날짜에 따라 결과가 갈리는 검사는 넣지 않는다** — 데일리 수집을 한 달 멈춘 적이
     있다(#8). 그런 것은 운영 담당의 점검 봇이 이슈로 올리게 한다.
-  - 페이지 안 `<style>` 금지, 아이콘은 `build-icons.mjs` 출력과 대조 같은 기존 방어선을 유지.
+  - 페이지 안 `<style>` 금지, 아이콘은 `build-icons.ts` 출력과 대조 같은 기존 방어선을 유지.
 - **CI.** `.github/workflows/test.yml`·`static.yml`과, 워크플로 코드로서의 `daily-update.yml`·
   `summarize.yml`(돌아가는 상태는 운영 담당). 액션은 SHA로 고정돼 있다 — 그 관례를 지킨다.
 - **보안.** 저장소 시크릿(`MOLIT_*`·`FSS_FINLIFE_API_KEY`·`ECOS_API_KEY`)이 로그·생성물·커밋에 새지
