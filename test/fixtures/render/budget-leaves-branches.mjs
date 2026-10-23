@@ -121,7 +121,7 @@ const LI = (label, value, note = "", text = false) =>
 const ANSWER = (e, line2 = "") => {
   const a = ANSWERS_T[e];
   return (
-    `<section class="budget-answers" data-prerendered=""><h3>${a.heading}</h3><ul>` +
+    `<section class="budget-answers" data-prerendered=""><h2>${a.heading}</h2><ul>` +
     LI("자기 돈이 적어도", a.cash, a.first) +
     line2 +
     LI("매매가 위에 더 드는 돈", a.costs, "취득세·지방교육세·중개보수 상한") +

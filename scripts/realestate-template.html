@@ -1234,9 +1234,9 @@ const budgetBand10k = (() => {
 const isBudgetPage = budgetBand10k !== null;
 const budgetEnabled = isBudgetPage;
 
-// 빌드가 이 예산대에 구워 둔 덩어리(월 상환액, 매매가 말고 드는 돈, 단지 후보 - data-prerendered). 아래 renderBudget이 목록을
-// 다시 그리면서 이것들을 지워, 사람은 한 번도 못 보고 있었다(#26). 처음 받은 HTML에서 떼어
-// 두었다가 다시 그릴 때 붙인다 - 이 페이지는 자기 예산대 하나만 그리므로 그대로 맞는다.
+// 빌드가 이 예산대에 구워 둔 덩어리(한눈에, 어디로 가는가, 예산으로 찾기 제목·칩, 단지 후보, 월 상환액, 매매가 말고 드는 돈 - data-prerendered).
+// 아래 renderBudget이 목록을 다시 그리면서 이것들을 지워, 사람은 한 번도 못 보고 있었다(#26). 처음 받은 HTML에서 문서 순서대로
+// 떼어 두었다가 다시 그릴 때 붙인다 - 이 페이지는 자기 예산대 하나만 그리므로 그대로 맞는다. 첫 덩어리는 한눈에 절이다(budgetHeadHtml이 그 뒤에 지역 줄을 끼운다).
 const prerenderedBudgetExtras = (() => {
   try {
     const nodes = document.querySelectorAll("#budget-result [data-prerendered]");
@@ -1282,10 +1282,10 @@ function budgetDealHtml(deal) {
 // 구운 한국어 문단 앞에 "한국어로만 있다"를 먼저 알린다(PO 2차 #41). 받는 중·실패에도 붙는다(#297).
 function withKoOnly(html) {
   if (locale !== "en") return html;
-  const at = html.indexOf(" data-prerendered");
-  if (at < 0) return html;
-  const open = html.lastIndexOf("<", at);
-  return `${html.slice(0, open)}<p class="content-notice">${escapeHtml(t("budgetKoOnly"))}</p>${html.slice(open)}`;
+  // 안내는 처음 구운 덩어리(한눈에)의 여는 태그 바로 앞에 선다. 예산으로 찾기 제목은 구운 덩어리 안에 있어(#460) 영어 글자로 갈아 끼운다(한국어는 구운 글자 그대로다).
+  return html
+    .replace(/<[^<>]* data-prerendered/, (tag) => `<p class="content-notice">${escapeHtml(t("budgetKoOnly"))}</p>${tag}`)
+    .replace(/(budget-heading">)[^<]*/, `$1${t("budgetHeading")}`);
 }
 
 // 지금 쓸 본문(구운 것 또는 renderBudget이 갈아 끼운 것). 화면에 거는 곳은 여기 하나다.
@@ -1301,13 +1301,12 @@ function renderBudget() {
   section.hidden = !budgetEnabled;
   if (!budgetEnabled) return;
 
-  document.getElementById("budget-heading").textContent = t("budgetHeading");
   if (!cache.budget?.bands?.length) return; // #288
   const band = bandFor(budgetEok * EOK);
 
-  // 빌드(scripts/prerender.mjs budgetBodyHtml)와 같은 순서: 요약 → 구운 덩어리들 → 거래 목록.
+  // 빌드(scripts/prerender.ts budgetBodyHtml)와 같은 순서: 요약 → 구운 덩어리들(지역 줄은 한눈에 바로 뒤) → 거래 목록.
   budgetResultHtml = band
-    ? budgetHeadHtml(band, cache.budget.periods) + prerenderedBudgetExtras + budgetDealsHtml(band)
+    ? budgetHeadHtml(band, cache.budget.periods) + budgetDealsHtml(band)
     : `<p class="budget-empty">${escapeHtml(t("budgetEmpty"))}</p>`;
   paintBudgetResult();
 }
@@ -1329,7 +1328,7 @@ function budgetHeadHtml(band, periodList) {
     `<p class="budget-summary">${escapeHtml(t("budgetSummary")(bandLabel(band), band.count, band.direct))}` +
     (periods ? ` <span class="when">${escapeHtml(t("budgetPeriods")(periods))}</span>` : "") +
     `</p>` +
-    (districts ? `<div class="budget-districts">${escapeHtml(t("budgetDistricts"))}: ${districts}</div>` : "")
+    prerenderedBudgetExtras.replace("</section>", (end) => end + (districts ? `<div class="budget-districts">${escapeHtml(t("budgetDistricts"))}: ${districts}</div>` : ""))
   );
 }
 

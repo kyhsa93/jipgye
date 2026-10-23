@@ -713,7 +713,7 @@ function budgetAnswersJsx(band, rates = null) {
   if (!answers) return blank;
   return (
     <section className="budget-answers" data-prerendered="">
-      <h3>{answers.heading}</h3>
+      <h2>{answers.heading}</h2>
       <ul>
         {answers.lines.map((line, i) => (
           <li key={i}>
@@ -818,10 +818,11 @@ const BudgetDeal = ({ deal }) => {
   );
 };
 
-// 예산대 본문 합성: 거래 요약 → 한눈에 → 후보 단지 → 돈 문단(근거) → 다음 질문 → 거래 목록. JSX는 prerender.ts의 래퍼를 부를 수 없으므로 하위 조각을 JSX 함수로 직접 잇는다
-// (그래서 후보 단지가 JSX로 있어야 이 조각을 옮길 수 있었다). 예산대가 없으면 null이다 - 합성 조각만 null이고 잎은 ""다(잎의 반환값이 이어 붙는 자리에 "null" 글자가 박히지 않게).
+// 예산대 본문 합성: 거래 요약 → 한눈에 → 지역 줄 → 어디로 가는가 → 예산으로 찾기(제목+칩) → 후보 단지 → 돈 문단(근거) → 다음 질문 → 거래 목록. JSX는 prerender.ts의 래퍼를 부를 수 없으므로 하위 조각을 JSX 함수로 직접 잇는다
+// (그래서 후보 단지가 JSX로 있어야 이 조각을 옮길 수 있었다). 순서는 prerender.ts의 budgetBodyHtmlLegacy와 같다(#460). 예산대가 없으면 null이다 - 합성 조각만 null이고 잎은 ""다(잎의 반환값이 이어 붙는 자리에 "null" 글자가 박히지 않게).
 // 하위 조각의 호출 순서는 legacy와 같다(입력이 이상할 때 던지는 자리가 같아야 한다). 거래 목록은 맨 뒤라 이상한 거래(null 등)는 하위 조각을 다 부른 뒤에 던진다.
-function budgetBodyJsx(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null) {
+// finderHtml은 빌드가 만든 마크업 문자열(제목+칩)이라 그대로 낸다. 비면 이 절은 없다.
+function budgetBodyJsx(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, finderHtml = "") {
   const shape = bodyShape(band, periodList);
   if (!shape) return null;
   return (
@@ -835,13 +836,14 @@ function budgetBodyJsx(band, periodList, rates = null, mortgageSeries = null, co
           </>
         ) : null}
       </p>
+      {budgetAnswersJsx(band, rates)}
       {shape.districts.length ? (
         <div className="budget-districts">
           거래가 많은 지역: {shape.districts.flatMap((d, i) => [i ? " · " : "", str(d.name), " ", d.count])}
         </div>
       ) : null}
       {budgetWhereJsx(band)}
-      {budgetAnswersJsx(band, rates)}
+      {finderHtml ? <div data-prerendered="" dangerouslySetInnerHTML={{ __html: finderHtml }} /> : null}
       {budgetCandidatesJsx(band, complexFiles)}
       {budgetLoanJsx(band, rates)}
       {budgetCostsJsx(band)}

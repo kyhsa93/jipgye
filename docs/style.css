@@ -1218,11 +1218,18 @@
   main h3 {
     font-size: var(--fs-lg);
   }
-  .budget-answers h3 {
+  .budget-answers h2 {
+    position: static;
     margin: 0 0 8px;
+    padding-bottom: 0;
+    border-bottom: 0;
     font-size: var(--fs-sm);
+    line-height: inherit;
     color: var(--muted);
     font-weight: 600;
+  }
+  .budget-answers h2::after {
+    content: none;
   }
   .budget-answers ul {
     list-style: none;
