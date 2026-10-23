@@ -7,6 +7,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { RENDER_STEPS } from "../scripts/render-pipeline.ts";
+import { buildFixtureSite } from "./helpers/fixture-site.mjs";
 import { DOCS_DIR, REPO_ROOT, SITE_DIR_ENV, requireSite, siteDir, siteLabel, sitePath, stageSite } from "../scripts/site-dir.ts";
 
 // 출력 디렉터리 (#508, 구조 B-2). 렌더 여섯 스크립트가 docs/ 대신 다른 디렉터리의 복사본을 읽고 쓰게 하는 길이다.
@@ -142,23 +143,33 @@ test("render-pipeline --out: docs/ 는 한 바이트도 안 바뀌고 출력 디
   for (const f of ["style.css", "nav.js", "sw.js", "manifest.webmanifest"]) assert.ok(rendered.has(f), `${f} 가 출력 디렉터리에 있다`);
 });
 
-test("생성 53장이 없는 복사본에서 그려도 전체를 그린 것과 같다 - 생성 페이지는 입력이 아니다 (B4에서 docs/ 의 생성물을 걷어내도 안전)", async () => {
-  const full = path.join(tmp(), "full");
-  await run(process.execPath, [path.join(REPO_ROOT, "scripts/render-pipeline.ts"), `--out=${full}`], { env: pipelineEnv() });
+// (#520) 이 시험은 처음에 실제 docs/data 로 돌았다(생성 53장 전부). 그 판은 tools/health/test/site-dir.test.mjs 로 옮겼다(비차단) - 실제 데이터의 모양이 바뀌면
+// (예산 밴드의 min10k 가 어긋나 build-budget-pages 가 '3억대' 장을 건너뛰면 build-updated-stamp 가 budget-3eok.html 이 없다고 던진다) 기능 PR 시험이 막혔다.
+// 여기는 같은 약속("생성 페이지는 입력이 아니다")을 고정 데이터로 지킨다: 저장소 복사본(test/helpers/fixture-site.mjs)에서 `--out` 판과 생성 페이지를 걷어낸 판을 같은 데이터로 렌더해 맞댄다.
+// 고정 데이터에는 예산 밴드가 없어 build-budget-pages 가 장을 만들지 않으므로(그 단계는 '예산 데이터가 없습니다'로 끝난다) 예산 18장은 걷어내지 않는다 - 그 18장은 health 판이 본다.
+test("생성 35장이 없는 복사본에서 고정 데이터로 그려도 전체를 그린 것과 같다 - 생성 페이지는 입력이 아니다 (B4에서 docs/ 의 생성물을 걷어내도 안전)", async () => {
+  const site = buildFixtureSite({ steps: [] });
+  try {
+    const env = { ...pipelineEnv() };
+    const full = path.join(tmp(), "full");
+    await run(process.execPath, [path.join(site.root, "scripts/render-pipeline.ts"), `--out=${full}`], { env });
 
-  const bare = path.join(tmp(), "bare");
-  await run(process.execPath, [path.join(REPO_ROOT, "scripts/stage-site.ts"), `--out=${bare}`], { env: pipelineEnv() });
-  let removed = 0;
-  for (const f of readdirSync(bare)) {
-    if (!GENERATED.test(f)) continue;
-    rmSync(path.join(bare, f));
-    removed += 1;
+    const bare = path.join(tmp(), "bare");
+    await run(process.execPath, [path.join(site.root, "scripts/stage-site.ts"), `--out=${bare}`], { env });
+    let removed = 0;
+    for (const f of readdirSync(bare)) {
+      if (!GENERATED.test(f) || /^budget-/.test(f)) continue;
+      rmSync(path.join(bare, f));
+      removed += 1;
+    }
+    assert.equal(removed, 35);
+    for (const step of RENDER_STEPS) {
+      await run(process.execPath, [path.join(site.root, step)], { env: { ...env, [SITE_DIR_ENV]: bare } });
+    }
+    assert.deepEqual([...tree(bare)], [...tree(full)]);
+  } finally {
+    site.cleanup();
   }
-  assert.equal(removed, 53);
-  for (const step of RENDER_STEPS) {
-    await run(process.execPath, [path.join(REPO_ROOT, step)], { env: { ...pipelineEnv(), [SITE_DIR_ENV]: bare } });
-  }
-  assert.deepEqual([...tree(bare)], [...tree(full)]);
 });
 
 test("render-pipeline: 출력 디렉터리를 준비할 수 없으면(docs/ 안) 렌더를 시작하지 않고 종료 1이다 - docs/ 는 그대로", async () => {

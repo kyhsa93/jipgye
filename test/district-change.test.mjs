@@ -142,11 +142,28 @@ test("84㎡ 환산 두 시기 값은 같은 줄의 %와 같은 통계다 (#36)",
   assert.equal(lv.recent, Math.round(1200 * 84), "지금 값은 최근 ㎡당 중앙값 × 84");
 });
 
-test("빌드된 갈아타기 자료에서 금액과 %가 25개 구 모두 맞는다", async () => {
-  const { readFile } = await import("node:fs/promises");
-  const d = JSON.parse(await readFile(new URL("../docs/data/district-change.json", import.meta.url), "utf8"));
+// (#520) 예전에는 커밋된 docs/data/district-change.json 을 읽어 줄의 %와 금액(84㎡ 환산 두 값)이 맞는지 봤다 - 파일 안 두 수의 관계라
+// 데이터가 한쪽만 바뀐 모양(합성 교란: 모든 수 +1 이면 17% 대 15.99%)에서 기능 PR 시험이 막혔다. 시험의 주제는 빌더가 두 수를 같은 통계에서
+// 내는가이므로, 25개 구에 합성 거래를 넣고 같은 빌더(buildPayload)를 돌려 그 출력에서 같은 단언을 한다. 저장소의 docs/data·raw 는 읽지 않는다.
+test("빌더가 낸 갈아타기 자료에서 금액과 %가 25개 구 모두 맞는다", async () => {
+  const { buildPayload } = await import("../scripts/build-district-change.ts");
+  const { DISTRICTS } = await import("../scripts/realestate-districts.ts");
+  const items = [];
+  DISTRICTS.forEach((dist, di) => {
+    // 구마다 칸 MIN_CELLS+5개, 칸마다 두 시기(2025-08~10 · 2026-06~08)의 석 달에 한 번씩. 칸별 오름폭을 0~12% 로 갈라 두 시기 중앙값을 따로 내면 어긋나는 모양으로 둔다.
+    for (let i = 0; i < MIN_CELLS + 5; i += 1) {
+      const base = 60_000 + di * 2_000 + i * 500;
+      const recent = Math.round(base * (1 + (i % 13) / 100));
+      const row = (dealYear, dealMonth, price) => ({
+        sggCd: dist.code, aptNm: `단지${i}`, excluUseAr: 84, dealAmount: price.toLocaleString("en-US"), dealYear, dealMonth, dealingGbn: "중개거래",
+      });
+      for (const m of [8, 9, 10]) items.push(row(2025, m, base));
+      for (const m of [6, 7, 8]) items.push(row(2026, m, recent));
+    }
+  });
+  const d = buildPayload({ items, now: new Date("2026-10-01T00:00:00Z"), official: null, survey: null });
   const rows = d.rows.filter((r) => r.change !== null && r.level84);
-  assert.ok(rows.length >= 20, "값을 낸 구가 거의 없다 - 검사가 아무것도 안 본다");
+  assert.equal(rows.length, DISTRICTS.length, "값을 낸 구가 25개가 아니다 - 검사가 일부만 본다");
   for (const r of rows) {
     const money = (r.level84.recent / r.level84.base - 1) * 100;
     assert.ok(Math.abs(money - r.change) < 0.15, `${r.name}: 줄은 ${r.change}%, 금액은 ${money.toFixed(2)}%`);

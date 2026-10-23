@@ -7,7 +7,8 @@ import { realestateOverallHtml } from "../scripts/prerender.ts";
 import { districtSentences } from "../scripts/district-summary.ts";
 import { regionTableHtml } from "../scripts/build-district-change.ts";
 import { leadSentence as conversionLead } from "../scripts/conversion.ts";
-import { controlSentence, leadSentence as recordLead, survivalSentence } from "../scripts/record-high.ts";
+import { controlSentence, gridTableHtml, leadSentence as recordLead, survivalSentence } from "../scripts/record-high.ts";
+import { readFixture } from "./helpers/fixture-data.mjs";
 
 /**
  * 값 옆에 표본 수가 없는 칸 4종 (#172). 규칙은 하나다 - 값 바로 옆, 같은 문장 안에 건수와 단위.
@@ -149,18 +150,8 @@ test("conversion 문장: 상품·옵션 수를 받으면 영어도 같은 문장
 
 // --- 3. switch-house 권역표 ---------------------------------------------------------
 
-test("switch-house: 권역 5줄 모두 '같은 칸(우리)' 값 옆에 칸 수가 있고 JSON과 같다", async () => {
-  const [html, data] = await Promise.all([read("docs/switch-house.html"), json("docs/data/district-change.json")]);
-  assert.equal(data.regions.length, 5);
-  const rows = [...block(html, "switchRegions").matchAll(/<tr><td>([^<]*)<\/td><td>([\s\S]*?)<\/td><td>/g)];
-  assert.equal(rows.length, 5, "권역 줄이 5개가 아니다");
-  for (const [i, [, name, ours]] of rows.entries()) {
-    const region = data.regions[i];
-    assert.equal(name, region.name.ko);
-    assert.ok(Number.isInteger(region.cells) && region.cells > 0, `${name}: JSON에 칸 수가 없다`);
-    assert.ok(textOf(ours).includes(`${region.cells.toLocaleString("ko-KR")}칸`), `${name}: 값 옆에 칸 수가 없다: ${ours}`);
-  }
-});
+// (#520) "switch-house: 권역 5줄 모두 '같은 칸(우리)' 값 옆에 칸 수가 있고 JSON과 같다" 는 커밋된 docs/switch-house.html 과 커밋된 district-change.json 을 맞대는 짝 검사였다 -
+// 한쪽만 바뀌면(합성 교란) 기능 PR 시험이 막혔다. 같은 단언을 고정 데이터로 찍은 장에 대고 하는 시험으로 test/fixture-site.test.mjs 에 옮겼다.
 
 test("switch-house 권역표: 값이 있으면 % 옆에 칸 수, 값이 비면 % 없이 칸 수만 (#171 두 갈래)", () => {
   const regions = [
@@ -196,10 +187,19 @@ test("record-high: 리드 문단 3개의 % 문장마다 같은 문장 안에 건
   }
 });
 
+// (#520) 예전에는 커밋된 record-high.json 의 문장·표를 읽어 건수가 분모와 같은지 봤다 - 파일 안 두 수(문장 속 건수, 표의 n 열)의 관계라 한쪽만 바뀐 모양(합성 교란)에서
+// 기능 PR 시험이 막혔다. 시험의 주제는 문장·표를 만드는 코드가 같은 분모를 쓰는가이므로, 얼린 고정 데이터의 main·robust 에 같은 함수(leadSentence·controlSentence·
+// survivalSentence·gridTableHtml, 빌더 build-record-high.ts 가 부르는 것 그대로)를 돌려 그 출력에서 같은 단언을 한다. 저장소의 docs/data 는 읽지 않는다.
 test("record-high: 문장의 건수가 JSON의 분모와 같고, 생존 문장의 건수는 문턱표의 같은 줄 n 열과 같다", async () => {
-  const data = await json("docs/data/record-high.json");
+  const fixture = await readFixture("record-high");
+  const { main, robust } = fixture;
+  const data = {
+    lead: { ko: recordLead(main, robust, "ko") },
+    control: { ko: controlSentence(main, "ko") },
+    survival: { ko: survivalSentence(main, "ko") },
+    tables: { robust: { ko: gridTableHtml(robust, "ko") } },
+  };
   const ko = (n) => n.toLocaleString("ko-KR");
-  const { main } = data;
   assert.ok(data.lead.ko.includes(`신고가 ${ko(main.withNext)}건 중 ${main.record}%`));
   assert.ok(data.lead.ko.includes(`${ko(main.allCount)}건 중 ${main.all}%`));
   assert.ok(data.lead.ko.includes(`${ko(main.withNext)}건 중 ${main.aboveOld}%`));

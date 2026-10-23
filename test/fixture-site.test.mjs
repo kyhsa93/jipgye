@@ -280,6 +280,21 @@ test("[sample-size] 고정 데이터로 찍은 jeonse-vs-wolse 대출 금리 문
   assert.equal(lead, data.seoul.leadKo, "화면 문장이 JSON의 문장과 다르다");
 });
 
+// (#520) test/sample-size.test.mjs 에서 옮겨 온 시험이다. 원래는 커밋된 docs/switch-house.html 과 커밋된 district-change.json 을 맞댔다.
+test("[sample-size] 고정 데이터로 찍은 switch-house 권역 5줄 모두 '같은 칸(우리)' 값 옆에 칸 수가 있고 JSON과 같다", async () => {
+  const textOf = (html) => html.replace(/<[^>]+>/g, "");
+  const [html, data] = await Promise.all([Promise.resolve(site.read("docs/switch-house.html")), fixtureRead("district-change")]);
+  assert.equal(data.regions.length, 5);
+  const rows = [...block(html, "switchRegions").matchAll(/<tr><td>([^<]*)<\/td><td>([\s\S]*?)<\/td><td>/g)];
+  assert.equal(rows.length, 5, "권역 줄이 5개가 아니다");
+  for (const [i, [, name, ours]] of rows.entries()) {
+    const region = data.regions[i];
+    assert.equal(name, region.name.ko);
+    assert.ok(Number.isInteger(region.cells) && region.cells > 0, `${name}: JSON에 칸 수가 없다`);
+    assert.ok(textOf(ours).includes(`${region.cells.toLocaleString("ko-KR")}칸`), `${name}: 값 옆에 칸 수가 없다: ${ours}`);
+  }
+});
+
 // --- 기준일 ------------------------------------------------------------------------------------------------------------------
 
 test("[updated-stamp] 고정 소스로 찍은 기준일이 그 장 소스의 가장 오래된 updatedAt과 같다", () => {
