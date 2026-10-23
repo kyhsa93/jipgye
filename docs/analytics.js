@@ -71,6 +71,9 @@
 
   setTimeout(() => pageView(), PAGE_VIEW_FALLBACK_MS);
 
+  // 로컬엔 GA·AdSense를 안 붙인다(#466). LAN IP·*.local은 안 막는다.
+  if (["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)) return;
+
   const gaScript = document.createElement("script");
   gaScript.async = true;
   gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;

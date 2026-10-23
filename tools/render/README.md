@@ -64,6 +64,10 @@ npm test                                            # 고정 fixture 변이 시�
 시험은 `ℹ tests`에는 들어가고 `ℹ pass`에는 **0을 보태므로**, 게이트를 달면 "브라우저가 없어서 안
 돌았다"가 초록으로 끝난다. `test/COUNT`의 두 수가 같은 것(`33`·`33`)이 그 성질의 자국이다.
 
+## 로컬 서버와 GA·AdSense (#466)
+
+`docs/analytics.js`는 `localhost`·`127.0.0.1`·`[::1]`에서 GA·AdSense script를 붙이지 않는다. **LAN IP·`*.local`은 막지 않는다** — 모바일 실기기를 그 주소로 열면 요청이 나간다. 가드 뒤의 로컬 Lighthouse·렌더 측정은 서드파티 script 비용이 빠져 좋아 보이므로, UX 전후 비교는 가드 병합 SHA(기준선 메모에 적는다) 앞뒤를 섞지 않는다.
+
 ## 못 보는 것
 
 - `::before`/`::after`의 `content` 글자 — 텍스트 노드가 아니라 TreeWalker에 안 걸린다(값은
