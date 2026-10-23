@@ -3,9 +3,9 @@ import path from "node:path";
 import { applyPrerender, newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "./prerender.ts";
 import { createWriteSet } from "./render-writes.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
+import { requireSite, siteLabel, sitePath } from "./site-dir.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
-const NEWS_PATH = path.join(root, "docs/news.html");
 const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 
 const BASE_TITLE = "오늘의 경제·부동산 뉴스";
@@ -112,8 +112,9 @@ export function buildNewsPage(baseHtml, page, { news, summary, market = null }) 
 }
 
 async function main() {
+  requireSite(); // 출력 디렉터리가 docs/ 가 아니면 docs/ 복사본이 먼저 있어야 한다(#508)
   const [baseHtml, news, summary] = await Promise.all([
-    readFile(NEWS_PATH, "utf8"),
+    readFile(sitePath("news.html"), "utf8"),
     readFile(path.join(root, "docs/data/news.json"), "utf8").then(JSON.parse),
     readFile(path.join(root, "docs/data/summary.json"), "utf8").then(JSON.parse),
   ]);
@@ -124,13 +125,13 @@ async function main() {
   const writes = createWriteSet();
   for (const page of NEWS_PAGES) {
     const html = buildNewsPage(baseHtml, page, { news, summary, market });
-    const target = path.join(root, "docs", page.file);
+    const target = sitePath(page.file);
     const before = await readFile(target, "utf8").catch(() => null);
     if (before === html) {
-      console.log(`  docs/${page.file} 변경 없음`);
+      console.log(`  ${siteLabel(page.file)} 변경 없음`);
       continue;
     }
-    writes.stage(target, html, `  docs/${page.file} ${before === null ? "생성" : "갱신"}`);
+    writes.stage(target, html, `  ${siteLabel(page.file)} ${before === null ? "생성" : "갱신"}`);
   }
   writes.commit();
 }

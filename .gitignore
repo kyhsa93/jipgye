@@ -3,3 +3,5 @@ node_modules/
 cache/
 # 연구 폴더의 cache/는 결과를 다시 만드는 입력이라 커밋한다(외부에서 받은 계열). 위 cache/는 뉴스 본문 캐시용.
 !research/*/cache/
+# 렌더 출력 디렉터리의 관례 위치(JIPGYE_SITE_DIR=build/site, #508). 산출물이라 커밋하지 않는다.
+build/

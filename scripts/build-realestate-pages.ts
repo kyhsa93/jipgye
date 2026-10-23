@@ -8,6 +8,7 @@ import { createWriteSet } from "./render-writes.ts";
 import { districtFacts } from "./district-facts.ts";
 import { bakeKoHeading } from "./page-heading.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
+import { requireSite, siteLabel, sitePath } from "./site-dir.ts";
 import {
   REALESTATE_TEMPLATE_PATH,
   applyPrerender,
@@ -207,6 +208,7 @@ export function buildDistrictPage(baseHtml, district, realestate, deals = null, 
 }
 
 async function main() {
+  requireSite(); // 출력 디렉터리가 docs/ 가 아니면 docs/ 복사본이 먼저 있어야 한다(#508)
   const [baseHtml, realestate, renewalFacts, complexRatio] = await Promise.all([
     readFile(SOURCE_PATH, "utf8"),
     readFile(path.join(root, "docs/data/realestate.json"), "utf8").then(JSON.parse),
@@ -256,14 +258,14 @@ async function main() {
   console.log(`  자치구 페이지 ${DISTRICT_PAGES.length}개 (생성 ${created} · 갱신 ${updated})`);
 
   async function write(file, html, quiet = false) {
-    const target = path.join(root, "docs", file);
+    const target = sitePath(file);
     const before = await readFile(target, "utf8").catch(() => null);
     if (before === html) {
-      if (!quiet) console.log(`  docs/${file} 변경 없음`);
+      if (!quiet) console.log(`  ${siteLabel(file)} 변경 없음`);
       return "변경 없음";
     }
     const what = before === null ? "생성" : "갱신";
-    writes.stage(target, html, quiet ? null : `  docs/${file} ${what}`);
+    writes.stage(target, html, quiet ? null : `  ${siteLabel(file)} ${what}`);
     return what;
   }
 }

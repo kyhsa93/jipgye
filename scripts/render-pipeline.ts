@@ -18,9 +18,15 @@
 //
 // 단계 목록은 인자로 주입할 수 있다(`node scripts/render-pipeline.ts a.mjs b.mjs`) - 시험이 가짜 단계로 실패를 만든다.
 // 인자가 없으면 기본 여섯이다. 상대 경로는 저장소 루트 기준이다.
+//
+// 출력 디렉터리(#508, 구조 B-2): `--out=<디렉터리>` 인자나 환경변수 JIPGYE_SITE_DIR 이 docs/ 가 아닌 디렉터리를 가리키면, 첫 단계 전에
+// docs/ 를 그 디렉터리로 통째로 복사하고(scripts/site-dir.ts stageSite) 여섯 스크립트가 거기서 읽고 쓴다. docs/ 는 한 바이트도 안 바뀐다.
+// 복사는 1차 시도 전에 한 번만 한다 - legacy 재시도는 위에 적은 대로 앞 단계의 출력 위에 덮어도 처음부터 그린 것과 같다.
+// 인자도 환경변수도 없으면 전과 똑같이 docs/ 를 제자리에서 갱신한다.
 import { spawnSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
 import path from "node:path";
+import { DOCS_DIR, SITE_DIR_ENV, shownPath, siteDir, stageSite } from "./site-dir.ts";
 
 const repoRoot = path.resolve(import.meta.dirname, "..");
 
@@ -64,6 +70,19 @@ export function runRenderPipeline({ steps = RENDER_STEPS, env = process.env, cwd
   const record = (fallback) => appendIfSet(env.GITHUB_OUTPUT, `${FALLBACK_OUTPUT}=${fallback}\n`);
   const summary = (text) => appendIfSet(env.GITHUB_STEP_SUMMARY, `${text}\n`);
 
+  // 출력 디렉터리가 docs/ 가 아니면 1차 시도 전에 복사한다. 복사가 막히면(docs/ 안, 비사이트 디렉터리 등) 렌더를 시작하지 않고 종료 1이다.
+  const out = siteDir(env);
+  if (out !== DOCS_DIR) {
+    try {
+      const { copied } = stageSite({ out });
+      console.log(`[render-pipeline] 출력 디렉터리 ${shownPath(out)} <- docs/ ${copied}개 파일`);
+    } catch (err) {
+      console.error(`[render-pipeline] 출력 디렉터리 준비 실패: ${(err as Error).message}`);
+      record(false);
+      return 1;
+    }
+  }
+
   const first = runAll(steps, env, cwd);
   if (first.ok) {
     record(false);
@@ -97,6 +116,9 @@ export function runRenderPipeline({ steps = RENDER_STEPS, env = process.env, cwd
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) {
-  const steps = process.argv.length > 2 ? process.argv.slice(2) : RENDER_STEPS;
-  process.exitCode = runRenderPipeline({ steps });
+  const args = process.argv.slice(2);
+  const outArg = args.find((a) => a.startsWith("--out="))?.slice("--out=".length);
+  const rest = args.filter((a) => !a.startsWith("--out="));
+  const steps = rest.length > 0 ? rest : RENDER_STEPS;
+  process.exitCode = runRenderPipeline({ steps, env: outArg ? { ...process.env, [SITE_DIR_ENV]: outArg } : process.env });
 }
