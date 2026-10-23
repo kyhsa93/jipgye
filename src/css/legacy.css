@@ -1794,6 +1794,16 @@ main h3 {
   min-width: 120px;
 }
 
+/* 560px 이하에서는 검색칸이 자기 줄을 통째로 쓴다(#464). 앞 줄 끝에 남는 자리(375px 예금 102px·적금 98px·담보대출
+ * 155px, 영어는 144~146px)에 끼면 안쪽 폭이 글자보다 좁아 placeholder 가 잘렸다(한국어 105.5px·영어 170.4px,
+ * WebKit 실측). 기준 100% 면 앞 줄에 못 앉고 줄을 바꾸며, 한 줄 전체(320px 에서 288px)는 두 말 모두 들어간다.
+ * 패딩·글자 크기를 줄이는 쪽은 택하지 않았다(15px 미만 글자 #406). */
+@media (max-width: 560px) {
+  .controls input[type="search"] {
+    flex-basis: 100%;
+  }
+}
+
 .sector-filter {
   display: flex;
   gap: 10px;
@@ -3121,8 +3131,11 @@ summary:focus-visible,
 /* 공시 기준 안내도 자바스크립트가 채운다. 들어올 줄 수를 미리 잡아 둔다 - 재는 폭(412px,
  * Lighthouse 모바일 프리셋)에서 한국어·영어 모두 세 줄(61px), 480px 이상에서는 둘 다 두 줄
  * (41px)이다(2026-10-14 실측). 한국어는 430px부터 두 줄이라 430~479px에서는 한 줄만큼 비는데,
- * 그 폭에서 영어는 아직 세 줄이라 둘 중 하나는 비게 된다 - 밀리지 않는 쪽을 택했다(#287). */
-.content-notice.page-notice { margin: -12px 0 16px; min-height: 2lh; }
+ * 그 폭에서 영어는 아직 세 줄이라 둘 중 하나는 비게 된다 - 밀리지 않는 쪽을 택했다(#287).
+ * 위 여백은 8px 이다(#464). 전에는 -12px 였고, 바로 위 .site-search(margin-bottom 8px)의 여백과 겹쳐 합쳐지면서
+ * 8 + (-12) = -4px 가 되어 알림이 검색창 상자 안으로 4px 파고들었다(금리 네 장 320·375·414px 모두 -4px, 2026-10-23
+ * WebKit 실측). 음수 여백을 없애고 흐름 안의 간격을 직접 둔다. 이웃 여백과는 합쳐져 큰 쪽(8px)이 간격이 된다. */
+.content-notice.page-notice { margin: 8px 0 16px; min-height: 2lh; }
 
 @media (max-width: 480px) {
   .content-notice.page-notice { min-height: 3lh; }
