@@ -5,12 +5,15 @@
  * 그 수가 **`daily-update.yml` 의 cron 수**보다 적으면 종료 코드 1로 끝난다(= 워크플로가 빨개지고 실패 알림이 간다).
  *
  * 왜 「간격」이 아니라 「센다」인가 (#322 범위 2, cpo 실측):
- *   cron 은 23:07·03:07·07:07·11:07(UTC) 이라 간격이 `4·4·12·4` 다. 「마지막 성공으로부터 N시간」 규칙은
- *   정상 밤 구간(12h) + #294 가 정상으로 둔 지연(3~7h) = 19h 를 안 울려야 하고, 네 번 중 한 번이 버려진 날
- *   (간격 8h)에는 울어야 한다 — **19 < N ≤ 8 인 N 은 없다.** 세는 쪽은 어느 자리가 빠져도 잡고 지연에 둔감하다.
+ *   (#506 전의 서술이다. 그때 cron 은 23:07·03:07·07:07·11:07(UTC) 넷이라 간격이 `4·4·12·4` 였다.)
+ *   「마지막 성공으로부터 N시간」 규칙은 정상 밤 구간(12h) + #294 가 정상으로 둔 지연(3~7h) = 19h 를 안 울려야 하고,
+ *   네 번 중 한 번이 버려진 날(간격 8h)에는 울어야 한다 — **19 < N ≤ 8 인 N 은 없다.** 세는 쪽은 어느 자리가 빠져도
+ *   잡고 지연에 둔감하다. 지금은 cron 이 `7 23 * * *` 하나뿐이라 정상 최대 간격이 24h 다(#505). 세는 방식은 그대로 쓴다.
  *
  * 문턱 둘:
- *   - **창 28시간** — 고정 날짜가 아니라 **미끄러지는 창**이다(`--now` 에서 28시간 뒤로). 날짜 경계로 세면
+ *   - **창 `MISSING_CHECK_WINDOW_HOURS`(36시간)** — **cto 판정 2026-10-23: 36h**(#506, #505 「감시 문턱」). 근거 (2026-10-23 daily-update schedule run 287건 실측: 지연 중앙 2.1h·최대 7.8h, 연속 run 간격 21.1~28.9h; 23:07 칸만 남긴 10-05~10-23 재생에서 창 24h 는 25점 거짓 경보, 28~40h 는 0). cron 이 하나로
+ *     줄어 정상 최대 간격 24h + 정상 지연 7h = **31h** 가 됐으므로 옛 28h 로는 지연 하나에 오경보가 난다. 값을 바꾸면 이 상수 한 줄이다.
+ *     아래 28h 서술과 수치는 cron 넷일 때의 실측이다(옛 근거). 고정 날짜가 아니라 **미끄러지는 창**이다(`--now` 에서 28시간 뒤로). 날짜 경계로 세면
  *     23:07 분이 자정을 넘어 밀릴 때 한 번 적게 세어진다(#322 cpo 경계 지적). 미끄러지는 창에는 그 자리가 없다.
  *     ⚠️ **24 가 아니라 28 인 이유는 실측이다.** #322 가 처방한 24시간으로 실제 이력(10-05~10-13, 10분 간격
  *     1,296 시점)에 돌리면 **118 시점이 운다**(최저 2) — cpo 가 「남는 거짓 경보 자리」로 미리 적어 둔 바로 그
@@ -49,6 +52,13 @@
  */
 
 const API = "https://api.github.com";
+
+/**
+ * 누락 검사 창(시간). 기본값이고 `--window-hours` 가 덮는다.
+ * cto 판정 2026-10-23: 36h(근거: 지연 최대 7.8h, 간격 21.1~28.9h, 24h 는 거짓 경보·28~40h 는 0). 값을 바꿀 땐 이 한 줄만 고친다. 하한은 정상 최대 간격 24h + 정상 지연 7h = 31h 다
+ * (cron 이 하나뿐이라 한 번 늦으면 직전 run 이 31h 전에 있다). 이보다 짧으면 지연 하나에 거짓 경보가 난다.
+ */
+export const MISSING_CHECK_WINDOW_HOURS = 36;
 
 /**
  * 워크플로 파일의 `on.schedule` 아래 `- cron:` 줄 수.
@@ -133,7 +143,7 @@ export function verdict({ fired, success, expected, mode }) {
   };
 }
 
-/** GitHub API 에서 schedule run 100건(≈25일치)을 한 번에 받는다. 28시간 창에는 넘치고도 남는다. */
+/** GitHub API 에서 schedule run 100건(하루 한 번이면 ≈100일치)을 한 번에 받는다. 창에는 넘치고도 남는다. */
 export async function fetchRuns({ repo, workflowFile, token, fetchImpl = fetch }) {
   const url = `${API}/repos/${repo}/actions/workflows/${workflowFile}/runs?event=schedule&per_page=100&page=1`;
   const headers: Record<string, string> = {
@@ -152,7 +162,7 @@ export async function fetchRuns({ repo, workflowFile, token, fetchImpl = fetch }
 export function parseArgs(argv) {
   const opts = {
     workflow: ".github/workflows/daily-update.yml",
-    windowHours: 28,
+    windowHours: MISSING_CHECK_WINDOW_HOURS,
     count: "fired",
     now: null,
     runsFile: null,

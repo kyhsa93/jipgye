@@ -44,8 +44,8 @@ test("시각 모양 검사는 옛 문구 둘을 실제로 잡는다 (#298)", () 
   ];
   for (const text of old) assert.ok(CLOCK.some(([re]) => re.test(text)), `옛 문구를 못 잡는다: ${text}`);
   const now = [
-    "뉴스·AI 요약은 하루 네 번, 시장지표·부동산은 하루 한 번 갱신됩니다. 실제 기준은 아래 갱신 시각을 보세요.",
-    "News and the AI summary refresh four times a day; market and real estate once a day. See the time below.",
+    "뉴스·AI 요약, 시장지표·부동산 모두 하루 한 번 갱신됩니다. 실제 기준은 아래 갱신 시각을 보세요.",
+    "News, the AI summary, market data and real estate all refresh once a day. See the time below.",
   ];
   for (const text of now) assert.ok(!CLOCK.some(([re]) => re.test(text)), `새 문구가 걸린다: ${text}`);
 });
