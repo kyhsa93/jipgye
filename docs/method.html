@@ -62,10 +62,42 @@
   <div data-lang="ko" class="on">
     <p class="lead">이 사이트의 숫자는 전부 정부가 공개한 원본에서 나옵니다. 다만 원본을 그대로 옮기면 틀린 그림이 나오는 대목이 몇 군데 있어서, 그때마다 어떻게 세었는지를 여기 적어 둡니다. 화면의 숫자가 다른 곳과 다르게 보인다면 대개 이 문서에 그 이유가 있습니다.</p>
 
-    <h2>여기 나오는 것은 매물이 아니라 신고된 실거래입니다</h2>
+    <nav class="method-toc" aria-label="차례">
+      <details class="fold">
+        <summary>차례 (24)</summary>
+        <ol>
+          <li><a href="#real-deals">여기 나오는 것은 매물이 아니라 신고된 실거래입니다</a></li>
+          <li><a href="#reporting-lag">신고 기한 30일이 만드는 착시</a></li>
+          <li><a href="#four-weeks">자치구는 네 주를 겹쳐 셉니다</a></li>
+          <li><a href="#wolse-change">월세 증감은 보증금과 월세를 묶은 ㎡당 값으로 잽니다</a></li>
+          <li><a href="#trend-lines">추이 그래프의 실선과 점선</a></li>
+          <li><a href="#filtered-count">표본 위에 조건을 얹으면 건수가 거짓말을 합니다</a></li>
+          <li><a href="#direct-deals">직거래를 따로 셉니다</a></li>
+          <li><a href="#share-sample">비중은 표본이 충분할 때만 말합니다</a></li>
+          <li><a href="#jeonse-wolse-yardstick">전세와 월세를 견줄 때 쓰는 자</a></li>
+          <li><a href="#jeonse-ratio">전세가율은 평균 둘을 나눈 값이라 어느 단지의 것도 아닐 수 있습니다</a></li>
+          <li><a href="#cancelled-unregistered">해제된 거래와 아직 등기가 안 된 거래</a></li>
+          <li><a href="#renewal-cap">재계약에서만 보이는 것, 그리고 5% 상한이 가리는 것</a></li>
+          <li><a href="#complex-price">단지 평형별 매매가 범위는 지난 거래를 기준 달 값으로 고쳐 냅니다</a></li>
+          <li><a href="#switch-house">자치구의 변화는 같은 단지 같은 평형을 두 시기에 견줘 잽니다</a></li>
+          <li><a href="#record-high">신고가 다음 거래는 아무 거래 뒤와 견줍니다</a></li>
+          <li><a href="#floor-cells">층은 같은 칸 안에서만 견줍니다</a></li>
+          <li><a href="#budget-payment">예산을 월 상환액으로 옮길 때 한도는 가정하지 않습니다</a></li>
+          <li><a href="#outlook">몇 달 뒤를 짐작할 때는 오차를 먼저 적습니다</a></li>
+          <li><a href="#outlook-prereg">첫 채점 규칙은 결과를 보기 전에 적어 둡니다</a></li>
+          <li><a href="#budget-rules">예산대 장에 똑같이 실리던 규칙 문단</a></li>
+          <li><a href="#sources">출처와 갱신</a></li>
+          <li><a href="#not-doing">하지 않는 것</a></li>
+          <li><a href="#corrections">고친 오류</a></li>
+          <li><a href="#report-error">틀린 것을 찾으셨다면</a></li>
+        </ol>
+      </details>
+    </nav>
+
+    <h2 id="real-deals">여기 나오는 것은 매물이 아니라 신고된 실거래입니다</h2>
     <p>포털의 호가나 중개업소에 올라온 매물이 아닙니다. 계약이 끝나고 국토교통부에 신고된 거래만 실었습니다. 그래서 "지금 이 값에 살 수 있다"가 아니라 "이 값에 팔렸다"입니다. 둘은 같은 시기에도 꽤 벌어집니다.</p>
 
-    <h2>신고 기한 30일이 만드는 착시</h2>
+    <h2 id="reporting-lag">신고 기한 30일이 만드는 착시</h2>
     <p>계약은 체결일로부터 30일 안에만 신고하면 됩니다. 그래서 <strong>최근 거래일수록 아직 덜 들어와 있습니다.</strong> 이번 주 데이터를 그대로 그리면 마지막 몇 주가 늘 푹 꺼져 보이는데, 거래가 줄어서가 아니라 아직 신고가 끝나지 않아서입니다.</p>
     <p>이걸 그냥 두면 "최근 거래량 급감" 같은 잘못된 결론이 나옵니다. 그래서 시세를 두 가지 기준 중 하나로 냅니다.</p>
     <dl>
@@ -76,45 +108,45 @@
     </dl>
     <p>어느 쪽으로 냈는지는 화면에 적히고, 데이터 파일에도 <code class="tw:text-sm">window.basis</code>로 남습니다. 기본은 신고 기준이고, 신고 기록이 모자랄 때만 계약 기준으로 물러납니다. 화면 위쪽의 기준일은 자료를 집계한 날이지 거래가 신고된 날이 아닙니다.</p>
 
-    <h2>자치구는 네 주를 겹쳐 셉니다</h2>
+    <h2 id="four-weeks">자치구는 네 주를 겹쳐 셉니다</h2>
     <p>서울 전체는 한 주 표본이 충분하지만 자치구 하나는 그렇지 않습니다. 어떤 구는 석 달 신고가 백 건에 못 미치는데, 그 위에서 주간 평균을 내면 큰 거래 한 건에 평당가가 출렁입니다. 그래서 자치구 시세는 네 주를 겹쳐 셉니다. 반응이 한 주 느려지는 대신 한 건에 흔들리지 않습니다.</p>
 
     <h2 id="wolse-change">월세 증감은 보증금과 월세를 묶은 ㎡당 값으로 잽니다</h2>
     <p>월세 시세표의 평균 보증금과 평균 월세는 그 주에 신고된 계약의 단순평균입니다. 그런데 이 두 값의 증감을 그대로 내면, 큰 방이 많이 신고된 주에는 오르고 작은 방이 많이 신고된 주에는 내립니다 &mdash; 시세가 아니라 신고 구성이 움직인 것입니다. 보증금을 올리고 월세를 낮춘 계약이 많아도 보증금만 오른 것처럼 보입니다. 그래서 증감 표시는 하나만 두고, <strong>(보증금 + 월세&times;12&divide;4.8%) &divide; 전용면적</strong>으로 잽니다. 4.8%는 서울에서 같은 단지 전세&middot;월세로 실측한 전월세전환율입니다.</p>
     <p>네 주 창을 이레씩 밀어 가며 2025년 10월~2026년 8월 자치구 1,200주를 다시 재 보니, 이레 사이 10% 넘게 움직인 주가 보증금 단순평균으로는 17.6%, 이 값으로는 4.3%였습니다. 전환율을 3%에서 10%까지 바꿔도 4.3~4.7%라 결론이 이 배수에 달려 있지 않습니다. 그래도 같은 방법으로 잰 전세(0.8%)보다는 흔들립니다 &mdash; 월세는 단지마다 값 차이가 커서, 어느 단지가 그 주에 신고됐는지가 남습니다. 증감은 기준 값이 열나흘보다 오래됐으면 붙이지 않습니다. 수집이 멈췄던 사이를 &lsquo;전주 대비&rsquo;라고 부를 수 없어서입니다.</p>
 
-    <h2>추이 그래프의 실선과 점선</h2>
+    <h2 id="trend-lines">추이 그래프의 실선과 점선</h2>
     <p>추이는 계약일 기준 주간으로, 여섯 달을 소급해 그립니다. <strong>신고 기한이 지나 마감된 주까지는 실선, 아직 기한이 남아 신고가 덜 들어온 주는 점선</strong>입니다. 점선 구간은 앞으로 위로 올라갑니다 — 내려간 것이 아니라 아직 안 찬 것입니다.</p>
 
-    <h2>표본 위에 조건을 얹으면 건수가 거짓말을 합니다</h2>
+    <h2 id="filtered-count">표본 위에 조건을 얹으면 건수가 거짓말을 합니다</h2>
     <p>실거래 검색을 만들 때 겪은 일입니다. 화면에 뿌릴 만큼만 추린 목록 위에서 "강남구" "10억 이하" 같은 조건을 걸면, 나오는 건수는 <em>추려진 표본 안의</em> 건수입니다. 실제 거래가 몇 건인지와는 다른 숫자인데 화면에서는 구별이 되지 않습니다.</p>
     <p>그래서 자치구별로 <strong>전수 파일</strong>을 따로 둡니다. 지역·예산·면적으로 거르는 화면은 추려진 목록이 아니라 그 파일을 읽습니다. 석 달치 전부가 들어 있어서, 조건을 얹어도 건수가 실제 건수입니다.</p>
 
-    <h2>직거래를 따로 셉니다</h2>
+    <h2 id="direct-deals">직거래를 따로 셉니다</h2>
     <p>중개를 끼지 않은 직거래에는 가족 간 증여성 거래와 시행사–수분양자 정산이 섞입니다. 둘 다 시장에서 붙은 값이 아닙니다. 서울 스물다섯 개 구의 직거래 비중은 0%에서 40%가 넘는 곳까지 갈리는데, 평균만 보면 이 차이가 보이지 않습니다. 그래서 비중이 큰 구에는 자치구 페이지에 그렇다고 적어 둡니다.</p>
 
-    <h2>비중은 표본이 충분할 때만 말합니다</h2>
+    <h2 id="share-sample">비중은 표본이 충분할 때만 말합니다</h2>
     <p>"열 건 중 넷이 대형"은 그 열 건이 실제로 수백 건일 때만 뜻이 있습니다. 석 달 신고가 120건에 못 미치는 구에서는 비중을 말하지 않고 개별 거래만 싣습니다. 한 단지가 입주하면 다음 주에 뒤집힐 숫자를 단정적으로 쓰지 않기 위해서입니다.</p>
 
-    <h2>전세와 월세를 견줄 때 쓰는 자</h2>
+    <h2 id="jeonse-wolse-yardstick">전세와 월세를 견줄 때 쓰는 자</h2>
     <p>전월세전환율은 월세 &times; 12개월 &divide; (전세보증금 &minus; 월세보증금)입니다. 같은 자치구, 같은 면적대에서 전세와 월세가 <strong>둘 다</strong> 신고된 단지만 씁니다. 단지마다 먼저 중앙값을 내고 그 값들의 중앙값을 자치구 대표로 삼는데, 한 단지에서 신고가 몰린 날이 자치구 전체를 끌고 가지 않게 하려는 것입니다. 단지가 세 곳이 안 되는 칸은 아예 내보내지 않습니다.</p>
     <p>여기서만 여섯 달을 봅니다. 자치구를 세 면적대로 다시 쪼개면 석 달로는 채워지지 않는 칸이 생기는데, 전환율은 주 단위로 움직이는 값이 아니라 길게 봐도 무디어지지 않습니다. 시세 화면과 마찬가지로 갱신계약은 빼고 신규 계약만 셉니다.</p>
     <p>월 실부담은 양쪽을 같은 식으로 잽니다 &mdash; (보증금에 모자란 만큼 빌린 이자) &minus; (쓰고 남은 돈을 예금에 넣어 받는 세후 이자), 월세 쪽은 거기에 월세를 더합니다. 전세자금대출은 보증금의 80%까지 빌릴 수 있다고 <strong>가정</strong>했습니다. 상품마다 한도가 다르고 보증기관 심사에 달렸으니 그대로 믿을 값이 아닙니다. 중도상환수수료와 보증료, 이사비용, 대출이자 소득공제는 넣지 않았습니다. 어느 쪽이 싸다는 말은 이 가정 안에서만 성립합니다.</p>
 
-    <h2>전세가율은 평균 둘을 나눈 값이라 어느 단지의 것도 아닐 수 있습니다</h2>
+    <h2 id="jeonse-ratio">전세가율은 평균 둘을 나눈 값이라 어느 단지의 것도 아닐 수 있습니다</h2>
     <p>시세표의 전세가율은 그 자치구의 <strong>전세 평당 보증금 &divide; 매매 평당가</strong>입니다. 둘 다 평당으로 맞춰져 있으니 넓이는 정규화되지만, 두 평균이 <strong>서로 다른 단지들</strong>에서 나온다는 문제가 남습니다. 전세 신고가 어떤 단지에 몰리고 매매 신고가 다른 단지에 몰리면, 그 비율은 어느 단지의 전세가율도 아니게 됩니다.</p>
     <p>실제로 벌어집니다. 매매와 전세가 함께 신고된 단지의 같은 평형에서 각각 중앙값을 내고 하나씩 전세가율을 구한 뒤 그 중앙값과 견주면, 자치구 값이 중앙 6.1%p 어긋납니다. 종로구는 83.7% 대 55.6%로 28%p 벌어집니다. 어긋남은 <strong>거래가 적을수록 커집니다</strong> &mdash; 맞물린 칸이 40개 미만인 구는 평균 14.7%p, 80개 이상인 구는 3.6%p입니다(로그 칸수와의 상관 &minus;0.62). 표본이 쌓이면 매매 쪽과 전세 쪽의 단지 구성이 서로 닮아 가기 때문입니다.</p>
     <p>표의 값을 칸 기반 값으로 갈아 끼우지는 않았습니다. 시세표 한 행에는 매매 평당가와 전세 평당가가 나란히 있어서, 전세가율만 다른 방식으로 낸 값으로 바꾸면 같은 행의 두 숫자로 반박되는 숫자가 됩니다. 그래서 <strong>둘을 나란히 둡니다</strong> &mdash; 표의 값은 그 표의 두 열과 맞고, 옆에 놓인 &lsquo;단지별 중앙값&rsquo;은 실제 단지와 맞습니다. 추이 그래프는 주 단위라 한 주에 같은 단지의 매매와 전세가 각각 세 건씩 신고되는 일이 거의 없어, 칸 기반으로는 그릴 수 없습니다. 그래서 그래프는 평당가 기준이고, 제목에 그 식을 적어 두었습니다.</p>
     <p>그래서 자치구 값 뒤에 칸 하나하나에서 낸 값의 분포를 붙입니다. 한쪽이라도 세 건이 안 되는 칸은 중앙값을 시세로 볼 수 없어 빼고, 해제된 매매와 갱신 전세도 뺍니다. 반전세는 보증금과 월세를 한 값으로 묶어야 하는데 묶는 배수가 곧 전월세전환율이라 순수 전세끼리만 견줍니다. 칸이 스물이 안 되면 사분위를 내지 않고 중앙값만, 열이 안 되면 아무 말도 하지 않습니다.</p>
     <p>극단은 실제로 존재합니다. 위쪽 끝은 36&#8202;㎡ 안팎의 소형이 96&ndash;100%까지 가고, 아래쪽 끝은 준공 1970&ndash;80년대 재건축 대상 단지가 11&ndash;12%입니다 &mdash; 매매가에 재건축 기대가 붙어 있기 때문입니다. 다만 <strong>연식이나 면적으로 전세가율이 갈린다고 말할 수는 없습니다.</strong> 준공 30년 이상 칸의 중앙값이 48%, 10년 미만이 50%로 사실상 같습니다. 갈리는 것은 극단 몇 칸이지 전체가 아닙니다.</p>
-    <h2>해제된 거래와 아직 등기가 안 된 거래</h2>
+    <h2 id="cancelled-unregistered">해제된 거래와 아직 등기가 안 된 거래</h2>
     <p>신고된 거래가 나중에 취소되면 해제로 표시됩니다. 시세는 해제된 거래를 빼고 내지만, 뺀 것이 무엇이었는지는 시세표에 남지 않아 따로 셉니다. 해제 사유는 공개되지 않습니다 &mdash; 잔금 미납, 대출 부결, 조건 변경, 신고 착오가 모두 같은 표시로 들어옵니다.</p>
     <p>해제를 세기 전에 <strong>정정 재신고</strong>부터 뺍니다. 같은 계약(단지&middot;면적&middot;층&middot;계약일&middot;금액이 모두 같은 것)이 해제 표시 없이 다시 신고돼 있으면, 그 해제 기록은 신고를 고쳐 쓴 것으로 보고 뺍니다. 사유가 공개되지 않아 확인하는 것은 기록이 같다는 점까지입니다. 해제 기록의 대부분이 이런 쌍둥이라 빼지 않으면 해제율이 크게 높아집니다. 신고가 쌓이며 비율이 날마다 바뀌어 여기에는 적지 않고, 그날 값은 해제&middot;등기 화면 첫 문단에 적습니다. 쌍둥이를 그대로 두고 셌을 때는 &lsquo;비싼 집일수록 계약이 깨진다&rsquo;처럼 보였지만, 빼고 나면 가격대로 갈리지 않습니다.</p>
     <p>해제되지 않은 채 다시 있는 해제 기록을 센 집계는 <a href="https://github.com/kyhsa93/jipgye/releases/latest" target="_blank" rel="noopener">GitHub Release</a>에서 내려받을 수 있습니다.</p>
     <p>해제 거래가 그 단지 최고가라는 말도 자주 오갑니다. 세어 보면 그렇지 않습니다 &mdash; 같은 단지 같은 면적에 남은 거래의 중앙값과 견주면 높았던 것보다 낮았던 것이 더 많습니다. 비율은 신고가 쌓이며 날마다 조금씩 바뀌어 여기 적지 않고, 해제&middot;등기 화면 첫 문단에 그날 값으로 적습니다.</p>
     <p>미등기는 다릅니다. 계약이 최근일수록 등기 전인 것이 당연해서, 그대로 세면 최근 거래가 많은 구가 무조건 나빠 보입니다. 그래서 <strong>익은 달</strong>의 계약만 셉니다 &mdash; 그 달 계약의 열에 여덟이 이미 등기를 마친 달입니다. 기준을 등기까지 걸린 날의 분포에서 뽑지 않는 것도 같은 이유입니다. 그 분포에는 이미 등기를 마친 거래만 들어 있어서 빠른 쪽으로 기울고, 정작 늦은 거래는 세어지지 않습니다. 익은 달은 서울 전체에서 한 번 정해 스물다섯 개 구에 똑같이 적용합니다. 정정 재신고의 짝 기록에 등기일이 있는지도 같은 익은 달 기준으로 세어 해제&middot;등기 화면에 적습니다(저장소의 <code class="tw:text-sm">research/correction-twins/check.py</code> 출력은 2026년 3월까지의 계약만 세는 일회성 점검이라 값이 조금 다릅니다).</p>
 
-    <h2>재계약에서만 보이는 것, 그리고 5% 상한이 가리는 것</h2>
+    <h2 id="renewal-cap">재계약에서만 보이는 것, 그리고 5% 상한이 가리는 것</h2>
     <p>시세는 신규 계약만 셉니다. 갱신은 이전 조건을 잇는 것이라 지금 시세가 아니어서인데, 그렇게 빠지는 것이 서울 전월세 신고의 절반입니다. 그 절반에는 시세표에 없는 것이 하나 있습니다 &mdash; 같은 세입자가 <strong>전에 내던 조건</strong>이 나란히 적혀 있습니다.</p>
     <p>그렇다고 인상률을 평균 내지는 않습니다. 계약갱신요구권을 쓰면 5%가 상한이고, 실제로 요구권을 행사한 계약의 절반 이상이 5% 언저리에 몰려 있습니다. 그 평균은 시장을 잰 것이 아니라 법조문을 다시 읽은 것에 가깝습니다. 상한이 걸리지 않는 합의 갱신도 중앙값이 5.0%에서 움직이지 않는데, 5%가 법을 떠나 관행의 기준점이 되었기 때문입니다.</p>
     <p>그래서 재는 것은 인상률이 아니라 <strong>천장에 닿았는지</strong>입니다. 상한까지 올리지 못한 계약이 많다는 것은 집주인이 부르는 값을 그 동네 시장이 다 받아 주지 않았다는 뜻이고, 이것은 상한이 있기 때문에 오히려 읽을 수 있는 신호입니다. 자치구별로 33%에서 59%까지 갈립니다. 전세가 월세로 바뀌는 비율도 같이 봅니다 &mdash; 전세로 살던 세입자가 재계약 때 월세로 옮긴 비율이고, 서울은 7.5%입니다.</p>
@@ -143,14 +175,14 @@
     <p>다음 거래가 있는 신고가만 세면 빨리 다시 팔리는 단지만 남습니다. 그래서 90일 넘게 지난 신고가만 놓고, 그 안에 다음 거래가 없었던 것도 &ldquo;다음 거래 없음&rdquo;으로 같이 셉니다.</p>
     <p>선행 거래 수(2&middot;3&middot;5건), 비교 기간(90&middot;180일), 기다린 날(90&middot;180일)을 바꿔 매일 다시 세고, 모든 조합에서 결론이 유지될 때만 화면의 첫 문장을 씁니다. 1년 비교는 원본이 아직 2년이 안 돼 셀 수 없습니다.</p>
 
-    <h2>층은 같은 칸 안에서만 견줍니다</h2>
+    <h2 id="floor-cells">층은 같은 칸 안에서만 견줍니다</h2>
     <p>1층이 얼마나 싼지는 자치구 평균으로는 나오지 않습니다. 그 평균에는 낡은 단지와 새 단지가, 역세권과 아닌 곳이 함께 들어 있어서 층 말고 다른 것이 먼저 값을 가릅니다. 그래서 견주는 자리를 <strong>같은 자치구, 같은 단지, 같은 전용면적</strong>으로 좁힙니다. 한 칸 안에서는 층 말고 거의 모든 것이 같습니다.</p>
     <p>1층만 셉니다. 2층도 저층으로 값이 깎이는 자리라, 대조군(3층 이상)에 넣으면 1층 할인이 실제보다 작아 보입니다. 한 칸에 3층 이상 거래가 세 건은 있어야 견줍니다 &mdash; 둘로 낸 중앙값은 그냥 두 값의 평균입니다. 한쪽이 50%를 넘게 벗어난 칸은 같은 이름의 다른 단지가 섞였거나 신고가 잘못 들어온 것으로 보고 버립니다.</p>
     <p>여섯 달을 한 칸에 담으므로 <strong>시점 차이는 통제되지 않습니다.</strong> 값이 오르는 국면에 1층 거래가 우연히 앞쪽에 몰리면 할인이 부풀 수 있어서, 만들 때 그것부터 확인했습니다 &mdash; 저층 거래의 중앙 계약월과 나머지의 중앙 계약월 차이가 칸별로 중앙값 0.00개월이었습니다. 몰려 있지 않습니다.</p>
     <p>최상층은 그 칸에서 <strong>관측된</strong> 가장 높은 층으로 봅니다. 건물이 몇 층인지는 실거래 자료에 없습니다. 그래서 거래가 적은 칸에서는 실제 최상층이 아닌 층이 최상층으로 잡힐 수 있고, 그만큼 이 값은 1층 값보다 무딥니다. 다섯 층을 안 넘는 칸은 세지 않습니다.</p>
     <p>자치구 값은 맞물린 칸이 20개는 있어야 냅니다. 그리고 <strong>값을 낸다고 해서 서울과 다르다고 말하지는 않습니다.</strong> 서울 칸을 그 구의 칸 수만큼 400번 넘게 다시 뽑아 보면 서울과 똑같은 구에서도 중앙값이 얼마까지 흔들리는지가 나오는데, 그 범위 바깥일 때만 다르다고 적습니다. 지금 스물다섯 구 가운데 넷입니다. 나머지는 표에 값이 적혀 있어도 서울과 갈라 볼 수 없다는 뜻이고, 표를 순위로 읽으면 안 되는 이유가 그것입니다.</p>
 
-    <h2>예산을 월 상환액으로 옮길 때 한도는 가정하지 않습니다</h2>
+    <h2 id="budget-payment">예산을 월 상환액으로 옮길 때 한도는 가정하지 않습니다</h2>
     <p>예산대 화면에는 &ldquo;그래서 매달 얼마&rdquo;를 붙였습니다. 금융감독원 공시에서 <strong>아파트를 담보로 나누어 갚는</strong> 상품만 골라 씁니다 &mdash; 만기일시상환은 매달 이자만 내다가 만기에 원금을 갚는 것이라 월 상환액의 뜻이 아예 다릅니다.</p>
     <p>대표 금리는 상품별 최저금리의 <strong>중앙값</strong>입니다. 가장 낮은 하나를 쓰면 우대조건을 다 채운 사람의 값이 모두의 값처럼 보입니다. 대신 상품들이 얼마나 벌어져 있는지를 같이 적습니다 &mdash; 그 폭이 이 숫자의 오차입니다.</p>
     <p>&ldquo;자기 돈이 적어도 얼마 필요한가&rdquo;는 계산합니다. 서울 전역이 규제지역이 된 뒤(2025-10-16) 주택구입 대출의 LTV(무주택 40%, 생애최초 70%)와 가격 구간 상한은 소득과 무관하게 집값만으로 정해지는 <strong>천장</strong>이라, 집값 &minus; min(LTV &times; 집값, 구간 상한) + 부대비용이 대출이 아무리 잘 나와도 필요한 자기 돈입니다. 생애최초는 취득세 감면(12억 이하 아파트 200만원)도 반영합니다.</p>
@@ -211,7 +243,7 @@
     <p>최근 6개월 서울 아파트 중개거래 28,769건(직거래 제외) 가운데 디딤돌 일반 선 아래는 3,462건(12%), 신혼·2자녀 선 아래는 5,838건(20.3%), 보금자리론 선 아래는 5,921건(20.6%), 신생아 특례 선 아래는 12,601건(43.8%)입니다.</p>
     <p>소득·자산 요건과 한도는 따로 있어 여기서는 가격선만 적습니다(신생아 특례도 수도권·규제지역은 LTV 70%). (마이홈포털·한국주택금융공사 기준, 2026-10-01 확인)</p><!--/prerender:budgetRules-->
 
-    <h2>출처와 갱신</h2>
+    <h2 id="sources">출처와 갱신</h2>
     <ul>
       <li><strong>아파트 실거래</strong> — 국토교통부 아파트 매매·전월세 실거래가 공개시스템. 하루 1회 갱신. 국토부 응답 원본을 스물네 달치 그대로 보관하고, 실거래 관련 파일은 전부 그 원본에서 다시 만듭니다. 화면이 세는 것은 그 가운데 최근 여섯 달입니다.</li>
       <li><strong>예적금·대출 금리</strong> — 금융감독원 금융상품통합비교공시. 하루 1회.</li>
@@ -220,7 +252,7 @@
       <li><strong>뉴스</strong> — 경제지 RSS. 하루 4회. 제목과 링크만 싣고 본문은 원문으로 보냅니다.</li>
     </ul>
 
-    <h2>하지 않는 것</h2>
+    <h2 id="not-doing">하지 않는 것</h2>
     <p>특정 단지나 지역을 권하지 않고, 광고비를 받고 매물을 올리지 않습니다. 몇 달 뒤를 짐작하는 화면이 하나 있지만 <a href="#outlook">그 짐작이 지난 14년 동안 얼마나 틀렸는지</a>와 같이 싣고, 기준선을 못 이기는 칸은 비웁니다. 사고팔 때를 정해 드리지 않습니다. 그 숫자로 무엇을 할지는 읽는 분의 몫입니다.</p>
 
     <h2 id="corrections">고친 오류</h2>
@@ -234,16 +266,47 @@
       <li><strong>2026-10-01</strong> &mdash; 예산대 장의 &lsquo;절반을 빌린다면&rsquo; 월 상환액 예시가 그 가격대의 주택담보대출 상한보다 큰 금액으로 계산돼 있었고(예: 16억대 장은 상한 4억인데 8억), 상한 안으로 줄이면서 상한에 걸렸다는 말을 붙였습니다. 13억대부터 20억대까지의 장이 영향 범위입니다. (<a href="https://github.com/kyhsa93/jipgye/issues/29" target="_blank" rel="noopener">#29</a>)</li>
     </ul>
 
-    <h2>틀린 것을 찾으셨다면</h2>
+    <h2 id="report-error">틀린 것을 찾으셨다면</h2>
     <p>계산이 어긋나 보이는 곳이 있으면 알려 주세요. 원본을 보관하고 있어서 특정 시점의 숫자를 다시 만들어 확인할 수 있습니다.</p>
   </div>
   <div data-lang="en">
     <p class="lead">Every number on this site comes from data the Korean government publishes. In a few places, though, copying the source verbatim produces a picture that is wrong — so this page records how each of those was counted. If a figure here looks different from somewhere else, the reason is usually in this document.</p>
 
-    <h2>These are reported transactions, not listings</h2>
+    <nav class="method-toc" aria-label="Contents">
+      <details class="fold">
+        <summary>Contents (23)</summary>
+        <ol>
+          <li><a href="#real-deals-en">These are reported transactions, not listings</a></li>
+          <li><a href="#reporting-lag-en">The 30-day reporting window, and the illusion it creates</a></li>
+          <li><a href="#four-weeks-en">Districts are counted over four overlapping weeks</a></li>
+          <li><a href="#wolse-change-en">Monthly-rent change is measured on deposit and rent combined, per ㎡</a></li>
+          <li><a href="#trend-lines-en">Solid and dotted lines on the trend charts</a></li>
+          <li><a href="#filtered-count-en">Filtering a sample makes the count lie</a></li>
+          <li><a href="#direct-deals-en">Direct deals are counted separately</a></li>
+          <li><a href="#share-sample-en">Shares are only stated when the sample supports them</a></li>
+          <li><a href="#jeonse-wolse-yardstick-en">The yardstick for comparing jeonse and monthly rent</a></li>
+          <li><a href="#jeonse-ratio-en">The jeonse ratio divides one average by another, so it may belong to no actual complex</a></li>
+          <li><a href="#cancelled-unregistered-en">Cancelled deals and deals not yet registered</a></li>
+          <li><a href="#renewal-cap-en">What renewals show, and what the 5% cap hides</a></li>
+          <li><a href="#complex-price-en">Sale ranges by unit type adjust past deals to a reference month</a></li>
+          <li><a href="#switch-house-en">District changes compare the same complex and unit type across two periods</a></li>
+          <li><a href="#record-high-en">The sale after a record high is compared with the sale after any sale</a></li>
+          <li><a href="#floor-cells-en">Floors are compared only inside the same cell</a></li>
+          <li><a href="#budget-payment-en">Turning a budget into a monthly payment without assuming a limit</a></li>
+          <li><a href="#outlook-en">Forecasts come with their error first</a></li>
+          <li><a href="#outlook-prereg-en">The first scoring rule is written down before the result</a></li>
+          <li><a href="#sources-en">Sources and update cadence</a></li>
+          <li><a href="#not-doing-en">What this site does not do</a></li>
+          <li><a href="#corrections-en">Corrections</a></li>
+          <li><a href="#report-error-en">If something looks wrong</a></li>
+        </ol>
+      </details>
+    </nav>
+
+    <h2 id="real-deals-en">These are reported transactions, not listings</h2>
     <p>Nothing here is an asking price or an agency listing. Only contracts that closed and were reported to the Ministry of Land, Infrastructure and Transport appear. So the figures say "this is what it sold for", not "this is what you can buy it for". The two differ, often considerably, at the same moment in time.</p>
 
-    <h2>The 30-day reporting window, and the illusion it creates</h2>
+    <h2 id="reporting-lag-en">The 30-day reporting window, and the illusion it creates</h2>
     <p>A contract only has to be reported within 30 days of signing. So <strong>the more recent a transaction is, the less likely it has arrived yet.</strong> Plot this week's data as-is and the last few weeks always sag — not because trading fell off, but because the reporting is not finished.</p>
     <p>Left alone that produces conclusions like "transaction volume is collapsing" that are simply artefacts. So prices are stated on one of two bases.</p>
     <dl>
@@ -254,45 +317,45 @@
     </dl>
     <p>Which one is in use is printed on the page and recorded as <code class="tw:text-sm">window.basis</code> in the data file. Reported basis is the default; contract basis is the fallback when there are not enough reports. The date shown at the top of the page is the day the data was compiled, not the day a deal was reported.</p>
 
-    <h2>Districts are counted over four overlapping weeks</h2>
+    <h2 id="four-weeks-en">Districts are counted over four overlapping weeks</h2>
     <p>Seoul as a whole has enough transactions in any given week. A single district does not. Some districts have fewer than a hundred reports in three months, and a weekly average on that base swings on one large sale. So district prices are counted over four overlapping weeks: a week slower to react, but not moved by a single transaction.</p>
 
     <h2 id="wolse-change-en">Monthly-rent change is measured on deposit and rent combined, per ㎡</h2>
     <p>The average deposit and average monthly rent in the rent table are plain averages of that week's filings. Their week-on-week change rises in a week when larger flats were filed and falls when smaller ones were &mdash; the mix moved, not the market. A run of contracts that trade higher deposits for lower rent also looks like deposits alone went up. So there is one change badge, measured on <strong>(deposit + rent&times;12&divide;4.8%) &divide; floor area</strong>. 4.8% is Seoul's conversion rate, measured from complexes where both jeonse and monthly rent were filed.</p>
     <p>Re-running four-week windows a week apart over 1,200 district-weeks from October 2025 to August 2026, the share that moved more than 10% in a week was 17.6% for the plain average deposit and 4.3% for this value. Any rate from 3% to 10% gives 4.3&ndash;4.7%, so the conclusion does not hinge on the multiplier. It still moves more than jeonse measured the same way (0.8%) &mdash; rents differ widely between complexes, so which complexes filed that week still shows. No change is shown when the baseline is more than fourteen days old; a gap in collection is not &ldquo;last week&rdquo;.</p>
 
-    <h2>Solid and dotted lines on the trend charts</h2>
+    <h2 id="trend-lines-en">Solid and dotted lines on the trend charts</h2>
     <p>Trends are weekly by contract date, drawn back six months. <strong>Weeks whose reporting window has closed are drawn solid; weeks still inside it are dotted.</strong> The dotted section will rise from here — it has not fallen, it is not yet full.</p>
 
-    <h2>Filtering a sample makes the count lie</h2>
+    <h2 id="filtered-count-en">Filtering a sample makes the count lie</h2>
     <p>This came out of building the transaction search. If you filter a list that was already trimmed to what fits on screen — by "Gangnam-gu", by "under ₩1B" — the count you get back is the count <em>within that trimmed sample</em>. It is a different number from how many transactions there actually were, and nothing on screen distinguishes them.</p>
     <p>So there is a <strong>complete file per district</strong>. The screens that filter by area, budget or size read that file rather than a trimmed list. All three months are in it, so adding a condition still returns the real count.</p>
 
-    <h2>Direct deals are counted separately</h2>
+    <h2 id="direct-deals-en">Direct deals are counted separately</h2>
     <p>Transactions closed without an agent include family transfers and developer settlements. Neither is a price the open market set. Across Seoul's 25 districts the direct-deal share ranges from 0% to over 40%, and an average alone hides that entirely — so where the share is large, the district page says so.</p>
 
-    <h2>Shares are only stated when the sample supports them</h2>
+    <h2 id="share-sample-en">Shares are only stated when the sample supports them</h2>
     <p>"Four in ten are large units" means something only if those ten are really several hundred. Districts with fewer than 120 reports over three months get individual transactions and no percentages, so that a figure which one new complex would overturn next week is not stated as fact.</p>
 
-    <h2>The yardstick for comparing jeonse and monthly rent</h2>
+    <h2 id="jeonse-wolse-yardstick-en">The yardstick for comparing jeonse and monthly rent</h2>
     <p>The conversion rate is monthly rent &times; 12 &divide; (jeonse deposit &minus; monthly-rent deposit). Only complexes where <strong>both</strong> jeonse and monthly rent were filed in the same district and size band are used. A median is taken per complex first, then the median of those becomes the district figure, so that one complex with a burst of filings cannot drag a whole district. Cells with fewer than three complexes are not published at all.</p>
     <p>This screen alone looks back six months. Splitting each district into three size bands leaves cells that three months cannot fill, and the conversion rate does not move week to week, so a longer window costs nothing. As on the price screens, renewals are excluded and only new contracts are counted.</p>
     <p>The real monthly cost is measured the same way on both sides &mdash; (interest on what must be borrowed to cover the deposit) &minus; (after-tax interest on what is left in a deposit account), with rent added on the monthly-rent side. The jeonse loan is <strong>assumed</strong> to cover up to 80% of the deposit; limits differ by product and rest on the guarantor's review, so it is not a figure to take as given. Early-repayment fees, guarantee fees, moving costs and the income-tax deduction on loan interest are left out. Any claim that one side is cheaper holds only inside these assumptions.</p>
 
-    <h2>The jeonse ratio divides one average by another, so it may belong to no actual complex</h2>
+    <h2 id="jeonse-ratio-en">The jeonse ratio divides one average by another, so it may belong to no actual complex</h2>
     <p>The jeonse ratio on the price tables is that district's <strong>jeonse deposit per pyeong &divide; sale price per pyeong</strong>. Both sides are normalised for size, but the two averages are drawn from <strong>different sets of complexes</strong>. When jeonse filings cluster in one set of buildings and sales in another, the ratio between the two averages is nobody's actual ratio.</p>
     <p>This is not hypothetical. Taking each complex-and-unit-type where both a sale and a jeonse were filed, computing a median on each side, and comparing the median of those per-unit ratios, the district figure is off by 6.1 percentage points at the median. In Jongno-gu it is 83.7% against 55.6% &mdash; a 28-point gap. The error <strong>grows as transactions thin out</strong>: districts with fewer than 40 matched unit types are off by 14.7 points on average, those with 80 or more by 3.6 (correlation &minus;0.62 against log cell count). With enough filings the two sets of complexes converge.</p>
     <p>The table figure was not swapped out for the per-unit one. A row on the price table carries the sale price and the jeonse deposit side by side, so replacing only the ratio would leave a number the other two numbers in the same row contradict. <strong>Both are shown instead</strong> &mdash; the table figure agrees with its own columns, and the &lsquo;median by unit type&rsquo; beside it agrees with actual complexes. The trend chart stays on the per-pyeong basis: a single week almost never carries three sales and three jeonse filings for the same unit type, so there is no per-unit series to plot. The chart title states the formula it uses.</p>
     <p>So the distribution of the per-unit figures is stated right after the district figure. Cells with fewer than three filings on either side are dropped, as are cancelled sales and renewal leases. Only pure jeonse is compared &mdash; a deposit-plus-rent contract would have to be collapsed using the conversion rate, which is the thing being measured elsewhere. Below 20 cells the quartiles are dropped and only the median is stated; below 10, nothing is said at all.</p>
     <p>The extremes are real. At the top, units around 36&#8202;m&sup2; reach 96&ndash;100%; at the bottom, complexes built in the 1970s and 1980s and slated for redevelopment sit at 11&ndash;12%, because the sale price carries the redevelopment premium. But <strong>age and floor area do not sort the ratio.</strong> Cells in buildings over 30 years old have a median of 48%; those under 10 years, 50%. What differs is a handful of extremes, not the body.</p>
-    <h2>Cancelled deals and deals not yet registered</h2>
+    <h2 id="cancelled-unregistered-en">Cancelled deals and deals not yet registered</h2>
     <p>A filed transaction later undone is marked as cancelled. Prices are calculated with these removed, but nothing on the price screens says what was removed, so they are counted separately. The reason is never published &mdash; an unpaid balance, a rejected loan, changed terms and a filing error all arrive as the same mark.</p>
     <p>Before cancellations are counted, <strong>corrected re-filings</strong> are removed. When the same contract (same complex, floor area, floor, contract date and amount) appears again without the cancelled mark, the cancelled record is treated as a corrected filing. Reasons are not published, so what is verified is that the records match. Most cancelled records are such twins, and left in they raise the cancellation rate considerably. The share changes daily as filings accumulate, so it is not stated here; the day's value is in the first paragraph of the &ldquo;Cancelled &amp; registered&rdquo; page. With the twins left in it looked as if dearer homes fell through more often; without them, price bands do not separate.</p>
     <p>The tally of cancellation records that appear again without a cancellation mark can be downloaded from the <a href="https://github.com/kyhsa93/jipgye/releases/latest" target="_blank" rel="noopener">latest GitHub release</a>.</p>
     <p>It is also often said that cancelled deals are the top prints in a complex. Counting them says otherwise &mdash; against the median of what remained in the same complex and floor area, more sat below than above. The shares shift a little every day as filings accumulate, so they are not written here; the first paragraph of the &ldquo;Cancelled &amp; registered&rdquo; page states that day's values.</p>
     <p>Unregistered deals are a different matter. A recent contract has simply not had time, so counting them all would make districts with recent activity look worse for no reason. Only contracts from a <strong>matured month</strong> are counted &mdash; one where eight in ten contracts have already completed registration. The threshold is deliberately not drawn from the distribution of days-to-registration: that distribution contains only deals already registered, so it leans fast and the late ones it should catch are missing from it. Matured months are decided once for Seoul and applied identically to all twenty-five districts. Whether the paired record carries a registration date is counted over the same matured months and stated on the &ldquo;Cancelled &amp; registered&rdquo; page (the output of <code class="tw:text-sm">research/correction-twins/check.py</code> in the repository counts only contracts through March 2026, a one-off check, so its figure differs slightly).</p>
 
-    <h2>What renewals show, and what the 5% cap hides</h2>
+    <h2 id="renewal-cap-en">What renewals show, and what the 5% cap hides</h2>
     <p>Prices count new contracts only. A renewal carries forward old terms, so it is not today's market &mdash; but that exclusion drops half of all rental filings in Seoul. And that half holds something the price tables do not: the terms the same tenant <strong>had been paying</strong>, recorded side by side with the new ones.</p>
     <p>Even so, the increase itself is never averaged. Where a tenant invokes the statutory renewal right, 5% is the ceiling, and more than half of those contracts land right at it. Averaging them measures the statute, not the market. Renewals by mutual agreement, which the cap does not bind, hold a median of exactly 5.0% month after month &mdash; 5% has become the customary reference point quite apart from the law.</p>
     <p>So what is measured is not the increase but <strong>whether the ceiling was reached</strong>. A high share of contracts settling below the cap means landlords there could not get what they asked, and that is readable precisely because the cap exists. Districts range from 33% to 59%. The shift from jeonse to monthly rent is tracked the same way &mdash; the share of tenants previously on jeonse who moved to monthly rent at renewal, which is 7.5% across Seoul.</p>
@@ -321,14 +384,14 @@
     <p>Counting only record highs that were followed by a sale would keep only fast-trading complexes. So only record highs at least 90 days old are used, and those with no following sale are counted as such.</p>
     <p>The number of earlier sales (2, 3, 5), the history (90, 180 days) and the wait (90, 180 days) are varied and re-counted every day; the page's headline is used only if every combination agrees. A one-year history cannot be tested yet.</p>
 
-    <h2>Floors are compared only inside the same cell</h2>
+    <h2 id="floor-cells-en">Floors are compared only inside the same cell</h2>
     <p>A district average cannot say what a first floor costs. That average mixes old buildings with new ones and stations with none, and those decide the price before the floor does. So the comparison narrows to <strong>one district, one complex, one exclusive floor area</strong>. Inside such a cell almost nothing differs but the floor.</p>
     <p>Only the first floor is counted. The second is also discounted as a low floor, so putting it in the comparison group would understate the first-floor gap. A cell needs at least three deals on the third floor or above &mdash; a median of two is the average of two numbers. Cells more than 50% apart are treated as a mis-joined name or a bad filing and dropped.</p>
     <p>Six months sit in one cell, so <strong>timing is not controlled.</strong> In a rising market, first-floor deals landing early would inflate the discount, so that was the first thing checked: the median gap between the low-floor deals' median contract month and the rest was 0.00 months across cells. They are not clustered.</p>
     <p>The top floor is the highest floor <strong>observed</strong> in that cell; building height is not in the filings. In thin cells that may not be the real top floor, which makes this figure blunter than the first-floor one. Cells topping out below five floors are skipped.</p>
     <p>A district figure needs 20 matched cells. And <strong>having a figure is not the same as differing from Seoul.</strong> Resampling the Seoul pool at that district's cell count, several hundred times, shows how far the median can wander for a district identical to Seoul; only a figure outside that range is called different. Four of the 25 districts are, at present. For the rest, a number in the table means it cannot be told apart from Seoul — which is why the table is not a ranking.</p>
 
-    <h2>Turning a budget into a monthly payment without assuming a limit</h2>
+    <h2 id="budget-payment-en">Turning a budget into a monthly payment without assuming a limit</h2>
     <p>The by-budget pages now answer &ldquo;so what is that per month&rdquo;. Only products that lend against an apartment and are <strong>repaid in instalments</strong> are used &mdash; a bullet loan pays interest only until maturity, so its monthly figure means something else entirely.</p>
     <p>The headline rate is the <strong>median</strong> of each product's lowest rate. Using the single lowest would present the figure of someone who cleared every preferential condition as everyone's figure. The spread across products is stated alongside it; that spread is the error bar.</p>
     <p>How much can be borrowed is <strong>not assumed.</strong> LTV and DSR turn on whether the area is regulated and on income, and they change from year to year; fixing one number would make this screen quietly wrong every year with full confidence. So the figure is per ₩100M and the reader multiplies. One worked case at half the budget is shown, but that is a place to start multiplying rather than a regulatory limit, and the screen says so.</p>
@@ -372,7 +435,7 @@
     <p>So no hit rate (%) is published until twelve non-overlapping origins have been scored &mdash; for three months ahead, 2029 at the earliest &mdash; and then only with a binomial interval.</p>
     <p><strong>A prior criterion for the range method.</strong> If the real-time coverage above (since 2014, four regions, three months ahead) is below 70%, the range is widened to the quantiles that would have given 80% in real time. It is 64% now, so widening is likely. The decision is made in the week of 9&ndash;15 November 2026 and the wider range applies <strong>from new origins only</strong>; forecasts from July to September 2026 are scored with the range as published. The December result is not an input. The date and outcome of the decision will be appended here.</p>
 
-    <h2>Sources and update cadence</h2>
+    <h2 id="sources-en">Sources and update cadence</h2>
     <ul>
       <li><strong>Apartment transactions</strong> — Ministry of Land, Infrastructure and Transport open data. Daily. The ministry's raw responses are kept for twenty-four months exactly as received, and every transaction-derived file is rebuilt from them; the screens count the most recent six.</li>
       <li><strong>Deposit and loan rates</strong> — Financial Supervisory Service comparison disclosure. Daily.</li>
@@ -381,7 +444,7 @@
       <li><strong>News</strong> — newspaper RSS, four times a day. Headlines and links only; the article itself stays at the source.</li>
     </ul>
 
-    <h2>What this site does not do</h2>
+    <h2 id="not-doing-en">What this site does not do</h2>
     <p>It does not recommend a particular complex or district, and does not take money to list anything. One page does guess a few months ahead, but always next to <a href="#outlook-en">how wrong that guess has been over fourteen years</a>, and cells that cannot beat a naive baseline stay blank. It does not tell anyone when to buy or sell. What to do with the numbers is yours.</p>
 
     <h2 id="corrections-en">Corrections</h2>
@@ -395,7 +458,7 @@
       <li><strong>2026-10-01</strong> &mdash; The &ldquo;if you borrowed half&rdquo; monthly-payment example on budget pages used a loan above the mortgage cap for that price band (the 1.6 billion won page used 800 million against a 400 million cap); it is now held to the cap and says when the cap applies. The pages for budgets from the 1.3-billion-won range up to the 2-billion-won range are the ones affected. (<a href="https://github.com/kyhsa93/jipgye/issues/29" target="_blank" rel="noopener">#29</a>)</li>
     </ul>
 
-    <h2>If something looks wrong</h2>
+    <h2 id="report-error-en">If something looks wrong</h2>
     <p>Please say so. The raw responses are kept, so any figure can be rebuilt from a given point in time and checked.</p>
   </div>
   </section>

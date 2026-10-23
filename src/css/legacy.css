@@ -1464,6 +1464,7 @@ ul.news-list {
 .card-links a,
 .back-link,
 .method-callout a,
+.method-toc a,
 .budget-nav a,
 .archive-link,
 .site-footer a {
@@ -2366,6 +2367,12 @@ main h3 {
 
 .method-body li {
   margin-bottom: 4px;
+}
+
+/* 맨 위 접힌 차례(#462). 항목 링크는 손가락 크기(--tap)로, 번호 자리만 둔다. */
+.method-toc ol {
+  margin: 0 0 12px;
+  padding-left: 1.8rem;
 }
 
 .method-body dl {
