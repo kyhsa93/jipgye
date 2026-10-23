@@ -256,3 +256,99 @@ test("탐지기 cron 은 daily-update 의 cron 과 같은 시각이 아니다", 
   const daily = await crons("daily-update.yml");
   assert.equal(mine.filter((c) => daily.includes(c)).length, 0, "같은 틱에 몰리면 같은 지연·같은 버림을 맞는다");
 });
+
+// ── 「뜨지만 매번 실패」: 창 안 성공이 0이면 운다 (#499, #449 의 449-B) ─────────
+// 위 검사는 「떴는가」만 센다. 이쪽은 `--check=success` 로 「성공이 있는가」만 본다 - 문턱은 cron 수가 아니라 1회, 창은 54시간이다.
+// 합성 입력만 읽는다(네트워크·오늘 날짜 없음). 실제 이력 재생은 PR 증빙 쪽이다.
+
+import { SUCCESS_CHECK_WINDOW_HOURS, successVerdict } from "../scripts/check-schedule-runs.ts";
+
+const NOW = "2026-10-20T10:00:00Z";
+const ago = (hours) => new Date(Date.parse(NOW) - hours * 3600 * 1000).toISOString();
+const callSuccess = async (runs, extra = []) => {
+  const { runsFile, wf } = await bed(runs);
+  return call(["--check=success", `--runs-file=${runsFile}`, `--workflow=${wf}`, `--now=${NOW}`, ...extra]);
+};
+
+test("success 검사 - 창 안에 run 은 있지만 성공이 0이면 종료 코드 1로 운다", async () => {
+  const r = await callSuccess([run(ago(50), "failure"), run(ago(26), "failure"), run(ago(2), "failure")]);
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stderr, /::error::daily-update 정기 실행이 뜨지만 성공이 없다/);
+  assert.match(r.stdout, /발화 3 · 그중 성공 0/);
+});
+
+test("success 검사 - 성공이 하나라도 있으면 종료 코드 0으로 조용하다 (단발·연속 실패라도 직전 성공이 창 안이면)", async () => {
+  // 단발 실패: 직전 성공 26h 전 + 방금 실패. 빨간 run 이 이미 울고, 이 장치는 안 운다.
+  const single = await callSuccess([run(ago(26), "success"), run(ago(2), "failure")]);
+  assert.equal(single.status, 0, single.stdout + single.stderr);
+  assert.equal(single.stderr, "");
+  // 이틀째 실패 직전: 마지막 성공이 창 끝 가까이(53h 전)여도 안 운다.
+  const edge = await callSuccess([run(ago(53), "success"), run(ago(29), "failure"), run(ago(5), "failure")]);
+  assert.equal(edge.status, 0, edge.stdout + edge.stderr);
+  assert.match(edge.stdout, /발화 3 · 그중 성공 1/);
+});
+
+test("success 검사 - 창 경계: 54시간 정각 전 성공은 창 밖이라 울고, 1분 안쪽이면 안 운다", async () => {
+  assert.equal(SUCCESS_CHECK_WINDOW_HOURS, 54);
+  const out = await callSuccess([run(ago(54), "success"), run(ago(30), "failure"), run(ago(6), "failure")]);
+  assert.equal(out.status, 1, out.stdout + out.stderr); // (now-54h, now] - 시작은 열려 있다
+  const inside = await callSuccess([run(new Date(Date.parse(ago(54)) + 60000).toISOString(), "success"), run(ago(6), "failure")]);
+  assert.equal(inside.status, 0, inside.stdout + inside.stderr);
+});
+
+test("success 검사 - 실행 중·취소·dispatch 의 성공은 성공으로 세지 않는다", async () => {
+  const runs = [
+    run(ago(40), "cancelled"),
+    run(ago(30), "skipped"),
+    run(ago(20), null, { status: "in_progress" }),
+    { ...run(ago(10), "success"), event: "workflow_dispatch" }, // 수동 dispatch 로 경보를 덮을 수 없다
+  ];
+  const r = await callSuccess(runs);
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+});
+
+test("success 검사 - run 이 하나도 없어도 운다 (0 = 성공 0)", async () => {
+  const r = await callSuccess([]);
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stdout, /발화 0 · 그중 성공 0/);
+});
+
+test("success 검사 - cron 수와 무관하다: cron 이 없는 워크플로 파일이어도 죽지 않고 성공 수만 본다", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sw-"));
+  const wf = path.join(dir, "no-cron.yml");
+  const runsFile = path.join(dir, "runs.json");
+  await writeFile(wf, "name: d\non:\n  workflow_dispatch:\njobs:\n  a: {}\n");
+  await writeFile(runsFile, JSON.stringify([run(ago(10), "success")]));
+  const r = call(["--check=success", `--runs-file=${runsFile}`, `--workflow=${wf}`, `--now=${NOW}`]);
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+});
+
+test("success 검사 - --window-hours 가 기본 창을 덮고, 기본 검사의 창은 그대로다", () => {
+  assert.equal(parseArgs(["--check=success"]).windowHours, SUCCESS_CHECK_WINDOW_HOURS);
+  assert.equal(parseArgs(["--check=success", "--window-hours=30"]).windowHours, 30);
+  assert.equal(parseArgs([]).check, "missing");
+  assert.equal(parseArgs([]).windowHours, parseArgs(["--check=missing"]).windowHours, "success 창이 첫 검사의 기본 창으로 새지 않는다");
+  assert.notEqual(parseArgs([]).windowHours, SUCCESS_CHECK_WINDOW_HOURS);
+  assert.throws(() => parseArgs(["--check=maybe"]), /--check 는 missing 또는 success/);
+  assert.deepEqual(successVerdict({ success: 0 }), { ok: false, counted: 0, expected: 1 });
+  assert.equal(successVerdict({ success: 1 }).ok, true);
+});
+
+test("success 창 54h 는 daily-update 정상 최대 간격의 두 배보다 길다 - cron 이 바뀌면 소리 난다 (#499, cto: 54 > 2×24)", async () => {
+  // 첫 검사의 「cron 은 지금 N개다」 표식과 짝이다. 여기서는 cron 시각에서 최대 간격을 직접 구해,
+  // 간격이 늘어(예: 하루 1회 → 이틀 1회) 54h 가 단발 실패에 울게 되거나 줄어 창이 낭비되는 변경을 막는다.
+  const text = await readFile(path.join(root, ".github/workflows/daily-update.yml"), "utf8");
+  const hours = [...text.matchAll(/- cron: "(\d+) (\d+) \* \* \*"/g)].map((m) => Number(m[2]) + Number(m[1]) / 60).sort((a, b) => a - b);
+  assert.equal(hours.length, countCrons(text), "하루 1회 이상 꼴(`M H * * *`)이 아닌 cron 이 있다 - 최대 간격을 못 구한다. cto 재판정");
+  const gaps = hours.map((h, i) => (i === hours.length - 1 ? hours[0] + 24 - h : hours[i + 1] - h));
+  const maxGap = Math.max(...gaps);
+  assert.ok(SUCCESS_CHECK_WINDOW_HOURS > 2 * maxGap, `창 ${SUCCESS_CHECK_WINDOW_HOURS}h 가 정상 최대 간격 ${maxGap}h 의 두 배 이하다 - 단발 실패에 운다`);
+  assert.ok(SUCCESS_CHECK_WINDOW_HOURS <= 62, "cto 판정의 상한(이틀 연속 실패를 둘째 점검 안에 잡는 한계 약 62h)을 넘었다");
+});
+
+test("워치독 워크플로는 success 검사 스텝을 두고, 앞 스텝이 실패해도 돈다", async () => {
+  const watchdog = await readFile(path.join(root, ".github/workflows/schedule-watchdog.yml"), "utf8");
+  assert.match(watchdog, /run: node scripts\/check-schedule-runs\.ts --check=success\n/);
+  assert.match(watchdog, /if: \$\{\{ !cancelled\(\) \}\}\n\s+env:\n\s+GITHUB_TOKEN:[^\n]*\n\s+run: node scripts\/check-schedule-runs\.ts --check=success/, "앞 스텝이 실패해도 돌아야 두 경보가 서로를 가리지 않는다");
+  assert.match(watchdog, /run: node scripts\/check-schedule-runs\.ts\n/, "첫 검사 스텝은 그대로 남아 있다");
+});

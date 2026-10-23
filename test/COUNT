@@ -339,5 +339,5 @@
 #   npm test(= node scripts/run-tests.mjs) → ℹ tests 1842 · pass 1842 · fail 0 · skipped 0
 #   직전 하한 1841 + 이 PR 이 test/district-facts.test.mjs 에 더한 시험 1 (`node --test test/district-facts.test.mjs` → ℹ tests 10 · pass 10; 전 9) = 1842.
 #   고친 기존 시험은 0이고 없어진 시험도 0이다(.skip·.todo 도 0 그대로).
-1842
-1842
+1853
+1853
