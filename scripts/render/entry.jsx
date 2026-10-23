@@ -713,7 +713,7 @@ function budgetAnswersJsx(band, rates = null) {
   if (!answers) return blank;
   return (
     <section className="budget-answers" data-prerendered="">
-      <h3>{answers.heading}</h3>
+      <h2>{answers.heading}</h2>
       <ul>
         {answers.lines.map((line, i) => (
           <li key={i}>

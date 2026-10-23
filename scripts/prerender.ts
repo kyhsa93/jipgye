@@ -271,7 +271,7 @@ function budgetAnswersHtmlLegacy(band, rates = null) {
     .join("");
   return (
     `<section class="budget-answers" data-prerendered="">` +
-    `<h3>${escapeHtml(answers.heading)}</h3><ul>${lines}</ul>` +
+    `<h2>${escapeHtml(answers.heading)}</h2><ul>${lines}</ul>` +
     `<p class="answer-more">근거와 예외는 아래 문단의 링크(→)에 있습니다.</p></section>`
   );
 }
