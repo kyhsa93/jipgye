@@ -139,7 +139,7 @@ test("--count 가 보는 수를 바꾼다", () => {
 
 test("기본 창은 MISSING_CHECK_WINDOW_HOURS 고, 정상 최대 간격 24h + 지연 7h = 31h 보다 길다 (#506)", () => {
   // cron 넷이던 때(#322)는 24h 처방이 실측에서 118 시점 거짓 경보라 28h 를 골랐다(옛 근거).
-  // cron 이 하나뿐인 지금의 하한은 31h 이고, 36 은 pm 제안값이라 cto 판정 대기다 - 값은 상수 한 줄이고, 이 시험은 하한만 못박는다.
+  // cron 이 하나뿐인 지금의 하한은 31h 이고, 36 은 cto 판정 2026-10-23(지연 최대 7.8h, 간격 21.1~28.9h, 24h 는 거짓 경보·28~40h 는 0)이다 - 값은 상수 한 줄이고, 이 시험은 하한만 못박는다.
   assert.equal(parseArgs([]).windowHours, MISSING_CHECK_WINDOW_HOURS);
   assert.ok(MISSING_CHECK_WINDOW_HOURS > 24 + 7, `창 ${MISSING_CHECK_WINDOW_HOURS}h 가 정상 최대 간격 24h + 지연 7h 이하다 - 지연 하나에 거짓 경보가 난다`);
   assert.equal(parseArgs([]).count, "fired");
