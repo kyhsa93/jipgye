@@ -1,96 +1,27 @@
 {
-  "updatedAt": "2026-10-23T12:38:13.168Z",
+  "updatedAt": "2026-10-23T15:47:23.528Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 기타 경제 소식: LH 사장은 집값 상승이 전 정부 시절 공급 부족 때문이라고 밝혔다. 또한 공급이 본격화되면 가격이 폭락할 수 있다고 전망했다. 경제계는 초광역특구 추진에 환영의 뜻을 나타내며 신속한 입법을 요구하고 있다. 하이닉스는 미국 낸드공장 건설을 위해 새로운 자금 조달 방안을 모색하고 있다. 원주시는 웰니스 관광 활성화를 위해 업무협약을 체결하며 지역경제 활력을 모색하고 있다.\n- 증시·환율: 홍콩 증시는 저가 매수세에 힘입어 나흘 만에 반등하며 H주가 0.69% 상승했다. 일본 증시는 미국 반도체 시장의 급락 영향으로 닛케이가 0.34% 하락하며 마감했다. 중국 증시는 상하이지수가 0.89% 상승하며 상승 마감했다. 원/달러 환율은 소폭 반등하며 1,320원대 중반을 기록했다. 코스피는 솔리다임의 IPO 중단으로 인해 낙폭을 줄이며 5,500선을 회복한 채 마감했다.\n- 부동산: 83세 거장이 짓고, 30대 창업자가 샀다…218억 아파트의 비밀 [슈퍼리치의 아파트]가 보도되었고, 서울 정비사업 4.8만가구 이주가 앞당겨져 전월세 시장에 영향을 줄 것으로 보이며, 여야는 실거주 규제가 전세난을 가중시키고 있다고 지적했고, 홍지선 국토장관은 전월세난이 규제만의 문제는 아니며 연말 시장이 안정될 것이라고 밝혔으며, 재건축·재개발로 2~3년 내 사라지는 집은 4만8249가구로, 용산구가 8336가구로 최다였다.\n- 금리·예금·투자상품: 금리·예금·투자상품: 국토장관 \"집값 상승폭 둔화…연말 금리 상향 시 시장 안정화\"(종합), 박홍근 \"대통령, 초과세수 활용 고금리 취약계층 지원 지시\", 국고채 금리 일제히 하락…美 국채 강세 영향(종합) +1",
-    "en": "- Other Economic News: The head of LH stated that the rise in housing prices is due to a shortage of supply during the previous government's term. He also predicted that prices could plummet once supply increases significantly. The business community has expressed approval of the push for a super metropolitan special zone and is demanding swift legislation. Hynix is exploring new funding strategies to construct a NAND factory in the United States. Wonju City is seeking to boost the vitality of the local economy by signing a memorandum of understanding to promote wellness tourism.\n- Stocks & FX: The Hong Kong stock market rebounded for the first time in four days, driven by bargain hunters, with H-shares rising 0.69%. The Japanese stock market closed with the Nikkei down 0.34%, affected by the sharp decline in the U.S. semiconductor market. The Chinese stock market closed higher, with the Shanghai index rising 0.89%. The won/dollar exchange rate slightly rebounded, reaching the mid-1,320 level. The Kospi recovered to the 5,500 level, narrowing its losses due to the suspension of Solidiam's IPO.\n- Real Estate: An 83-year-old master builder constructed it, and a 30-something entrepreneur bought it... the secret of the 21,800,000,000 won apartment [Super Rich's Apartment] was reported, and the relocation of 48,000 households in Seoul's redevelopment projects has been accelerated, expected to affect the rental market, and both ruling and opposition parties pointed out that real occupancy regulations are exacerbating the rental crisis, and Hong Ji-seon, the Minister of Land, stated that the rental crisis is not solely due to regulations and that the market will stabilize by year-end, and homes that will disappear within 2-3 years due to reconstruction and redevelopment amount to 40,0008249 units, with Yongsan-gu having the most at 8336 units.\n- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: 국토장관 \"집값 상승폭 둔화…연말 금리 상향 시 시장 안정화\"(종합), 박홍근 \"대통령, 초과세수 활용 고금리 취약계층 지원 지시\", 국고채 금리 일제히 하락…美 국채 강세 영향(종합) +1"
+    "ko": "- 부동산: 부동산: \"거래량 뚝 떨어졌다\"…서울 아파트값 속 확산하는 '위험 신호', 83세 거장이 짓고, 30대 창업자가 샀다…218억 아파트의 비밀 [슈퍼리치의 아파트], 서울 정비사업 4.8만가구 이주 앞둬…전월세 시장 흔드나 +5\n- 증시·환율: 뉴욕증시는 유가 상승 영향으로 하락 출발했다. 홍콩 증시는 저가 매수세에 힘입어 나흘 만에 반등하며 H주가 0.69% 상승했다. 일본 닛케이 증시는 미국 반도체 시장 급락으로 인해 0.34% 하락 마감했다. 중국 상하이지수는 0.89% 상승하며 상승 마감했다. 원/달러 환율은 소폭 반등하며 1,320원대 중반을 기록했다.\n- 기타 경제 소식: LH 사장은 전 정부의 정책이 집값 폭등의 시한폭탄을 설치했다고 지적했다. 집값 상승은 공급 부족 때문이라고 설명하며, 공급을 본격화하면 가격이 폭락할 수 있다고 밝혔다. 경제계는 초광역특구 추진에 환영의 뜻을 나타내며 신속한 입법을 요구하고 있다. 하이닉스는 미국 낸드공장 건설을 위해 새로운 자금줄을 찾고 있다. 각 기사는 서로 다른 주제로, 별개의 사실을 다루고 있다.\n- 금리·예금·투자상품: 금리·예금·투자상품: 국토장관 \"집값 상승폭 둔화…연말 금리 상향 시 시장 안정화\"(종합), 박홍근 \"대통령, 초과세수 활용 고금리 취약계층 지원 지시\", 국고채 금리 일제히 하락…美 국채 강세 영향(종합) +1",
+    "en": "- Real Estate: Real Estate: \"거래량 뚝 떨어졌다\"…서울 아파트값 속 확산하는 '위험 신호', 83세 거장이 짓고, 30대 창업자가 샀다…218억 아파트의 비밀 [슈퍼리치의 아파트], 서울 정비사업 4.8만가구 이주 앞둬…전월세 시장 흔드나 +5\n- Stocks & FX: The New York stock market opened lower due to rising oil prices. The Hong Kong stock market rebounded for the first time in four days, driven by bargain hunting, with H-shares rising 0.69%. The Japanese Nikkei stock market closed 0.34% lower due to a sharp decline in the U.S. semiconductor market. The Shanghai Composite Index closed up 0.89%. The won/dollar exchange rate slightly rebounded, reaching the mid-1,320 won range.\n- Other Economic News: The head of LH pointed out that the previous government's policies have planted a time bomb for skyrocketing housing prices. He explained that the rise in housing prices is due to a lack of supply, and noted that prices could crash once supply is significantly increased. The economic sector has expressed approval of the push for a super metropolitan special zone and is demanding swift legislation. Hynix is looking for new sources of funding for the construction of its NAND factory in the United States. Each article covers different topics and deals with separate facts.\n- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: 국토장관 \"집값 상승폭 둔화…연말 금리 상향 시 시장 안정화\"(종합), 박홍근 \"대통령, 초과세수 활용 고금리 취약계층 지원 지시\", 국고채 금리 일제히 하락…美 국채 강세 영향(종합) +1"
   },
   "highlights": [],
   "categories": [
     {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "LH 사장은 집값 상승이 전 정부 시절 공급 부족 때문이라고 밝혔다. 또한 공급이 본격화되면 가격이 폭락할 수 있다고 전망했다. 경제계는 초광역특구 추진에 환영의 뜻을 나타내며 신속한 입법을 요구하고 있다. 하이닉스는 미국 낸드공장 건설을 위해 새로운 자금 조달 방안을 모색하고 있다. 원주시는 웰니스 관광 활성화를 위해 업무협약을 체결하며 지역경제 활력을 모색하고 있다.",
-      "lineEn": "The head of LH stated that the rise in housing prices is due to a shortage of supply during the previous government's term. He also predicted that prices could plummet once supply increases significantly. The business community has expressed approval of the push for a super metropolitan special zone and is demanding swift legislation. Hynix is exploring new funding strategies to construct a NAND factory in the United States. Wonju City is seeking to boost the vitality of the local economy by signing a memorandum of understanding to promote wellness tourism.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "LH 사장 “집값 상승은 前정부 공급부족 탓…공급 본격화하면 폭락”",
-          "link": "https://www.mk.co.kr/news/realestate/12184564",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "LH 사장 \"집값 상승은 공급부족 탓…前정부 폭등 시한폭탄 설치\"",
-          "link": "https://www.yna.co.kr/view/AKR20261023181200003",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "경제계 \"초광역특구 추진 환영\"…신속한 입법 요구",
-          "link": "https://www.yna.co.kr/view/AKR20261023167000003",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "사모대출? 증자?…하이닉스, 美 낸드공장 자금줄 새로 찾는다",
-          "link": "https://www.hankyung.com/article/2026102318411",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "원주시, 웰니스 관광 활성화 업무협약…지역경제 활력 모색",
-          "link": "https://www.yna.co.kr/view/AKR20261023152100062",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "홍콩 증시는 저가 매수세에 힘입어 나흘 만에 반등하며 H주가 0.69% 상승했다. 일본 증시는 미국 반도체 시장의 급락 영향으로 닛케이가 0.34% 하락하며 마감했다. 중국 증시는 상하이지수가 0.89% 상승하며 상승 마감했다. 원/달러 환율은 소폭 반등하며 1,320원대 중반을 기록했다. 코스피는 솔리다임의 IPO 중단으로 인해 낙폭을 줄이며 5,500선을 회복한 채 마감했다.",
-      "lineEn": "The Hong Kong stock market rebounded for the first time in four days, driven by bargain hunters, with H-shares rising 0.69%. The Japanese stock market closed with the Nikkei down 0.34%, affected by the sharp decline in the U.S. semiconductor market. The Chinese stock market closed higher, with the Shanghai index rising 0.89%. The won/dollar exchange rate slightly rebounded, reaching the mid-1,320 level. The Kospi recovered to the 5,500 level, narrowing its losses due to the suspension of Solidiam's IPO.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "[올댓차이나] 홍콩 증시, 저가 매수세에 나흘 만에 반등 마감… H주 0.69%↑",
-          "link": "https://www.newsis.com/view/NISX20261023_0003839267",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "日증시, 美반도체 급락 여파에 하락 마감…닛케이 0.34%↓",
-          "link": "https://www.newsis.com/view/NISX20261023_0003839106",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "[올댓차이나] 중국 증시 상승 마감…상하이지수 0.89%↑",
-          "link": "https://www.newsis.com/view/NISX20261023_0003839055",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "원/달러 환율 소폭 반등…1,320원대 중반",
-          "link": "https://www.yna.co.kr/view/AKR20261023134800002",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "솔리다임 IPO 중단 덕분?…코스피, 낙폭 좁혀 5,500선 회복 마감(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261023137600008",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
       "key": "realestate",
       "name": "부동산",
       "nameEn": "Real Estate",
-      "lineKo": "83세 거장이 짓고, 30대 창업자가 샀다…218억 아파트의 비밀 [슈퍼리치의 아파트]가 보도되었고, 서울 정비사업 4.8만가구 이주가 앞당겨져 전월세 시장에 영향을 줄 것으로 보이며, 여야는 실거주 규제가 전세난을 가중시키고 있다고 지적했고, 홍지선 국토장관은 전월세난이 규제만의 문제는 아니며 연말 시장이 안정될 것이라고 밝혔으며, 재건축·재개발로 2~3년 내 사라지는 집은 4만8249가구로, 용산구가 8336가구로 최다였다.",
-      "lineEn": "An 83-year-old master builder constructed it, and a 30-something entrepreneur bought it... the secret of the 21,800,000,000 won apartment [Super Rich's Apartment] was reported, and the relocation of 48,000 households in Seoul's redevelopment projects has been accelerated, expected to affect the rental market, and both ruling and opposition parties pointed out that real occupancy regulations are exacerbating the rental crisis, and Hong Ji-seon, the Minister of Land, stated that the rental crisis is not solely due to regulations and that the market will stabilize by year-end, and homes that will disappear within 2-3 years due to reconstruction and redevelopment amount to 40,0008249 units, with Yongsan-gu having the most at 8336 units.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": true,
+      "lineKo": "부동산: \"거래량 뚝 떨어졌다\"…서울 아파트값 속 확산하는 '위험 신호', 83세 거장이 짓고, 30대 창업자가 샀다…218억 아파트의 비밀 [슈퍼리치의 아파트], 서울 정비사업 4.8만가구 이주 앞둬…전월세 시장 흔드나 +5",
+      "lineEn": "Real Estate: \"거래량 뚝 떨어졌다\"…서울 아파트값 속 확산하는 '위험 신호', 83세 거장이 짓고, 30대 창업자가 샀다…218억 아파트의 비밀 [슈퍼리치의 아파트], 서울 정비사업 4.8만가구 이주 앞둬…전월세 시장 흔드나 +5",
+      "isFallback": true,
+      "fallbackReason": "unverified-entity",
+      "degraded": false,
       "items": [
+        {
+          "title": "\"거래량 뚝 떨어졌다\"…서울 아파트값 속 확산하는 '위험 신호'",
+          "link": "https://www.newsis.com/view/NISX20261023_0003838988",
+          "source": "뉴시스 경제"
+        },
         {
           "title": "83세 거장이 짓고, 30대 창업자가 샀다…218억 아파트의 비밀 [슈퍼리치의 아파트]",
           "link": "https://www.mk.co.kr/news/realestate/12184498",
@@ -110,11 +41,80 @@
           "title": "홍지선 \"전월세난, 규제만의 문제 아냐…연말 시장 안정될 것\"(종합)",
           "link": "https://www.newsis.com/view/NISX20261023_0003839059",
           "source": "뉴시스 경제"
+        }
+      ]
+    },
+    {
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "뉴욕증시는 유가 상승 영향으로 하락 출발했다. 홍콩 증시는 저가 매수세에 힘입어 나흘 만에 반등하며 H주가 0.69% 상승했다. 일본 닛케이 증시는 미국 반도체 시장 급락으로 인해 0.34% 하락 마감했다. 중국 상하이지수는 0.89% 상승하며 상승 마감했다. 원/달러 환율은 소폭 반등하며 1,320원대 중반을 기록했다.",
+      "lineEn": "The New York stock market opened lower due to rising oil prices. The Hong Kong stock market rebounded for the first time in four days, driven by bargain hunting, with H-shares rising 0.69%. The Japanese Nikkei stock market closed 0.34% lower due to a sharp decline in the U.S. semiconductor market. The Shanghai Composite Index closed up 0.89%. The won/dollar exchange rate slightly rebounded, reaching the mid-1,320 won range.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "[속보]뉴욕증시, 유가 상승 속 하락 출발",
+          "link": "https://www.newsis.com/view/NISX20261023_0003839347",
+          "source": "뉴시스 경제"
         },
         {
-          "title": "재건축·재개발로 2~3년 내 사라지는 집, ‘4만8249가구’… 용산구 8336가구로 ‘최다’",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/23/DQMH64WHLNHGRMVGF7ELGXEYQA/",
+          "title": "[올댓차이나] 홍콩 증시, 저가 매수세에 나흘 만에 반등 마감… H주 0.69%↑",
+          "link": "https://www.newsis.com/view/NISX20261023_0003839267",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "日증시, 美반도체 급락 여파에 하락 마감…닛케이 0.34%↓",
+          "link": "https://www.newsis.com/view/NISX20261023_0003839106",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "[올댓차이나] 중국 증시 상승 마감…상하이지수 0.89%↑",
+          "link": "https://www.newsis.com/view/NISX20261023_0003839055",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "원/달러 환율 소폭 반등…1,320원대 중반",
+          "link": "https://www.yna.co.kr/view/AKR20261023134800002",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "LH 사장은 전 정부의 정책이 집값 폭등의 시한폭탄을 설치했다고 지적했다. 집값 상승은 공급 부족 때문이라고 설명하며, 공급을 본격화하면 가격이 폭락할 수 있다고 밝혔다. 경제계는 초광역특구 추진에 환영의 뜻을 나타내며 신속한 입법을 요구하고 있다. 하이닉스는 미국 낸드공장 건설을 위해 새로운 자금줄을 찾고 있다. 각 기사는 서로 다른 주제로, 별개의 사실을 다루고 있다.",
+      "lineEn": "The head of LH pointed out that the previous government's policies have planted a time bomb for skyrocketing housing prices. He explained that the rise in housing prices is due to a lack of supply, and noted that prices could crash once supply is significantly increased. The economic sector has expressed approval of the push for a super metropolitan special zone and is demanding swift legislation. Hynix is looking for new sources of funding for the construction of its NAND factory in the United States. Each article covers different topics and deals with separate facts.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "LH 사장 “전 정부, 집값 폭등 시한폭탄 설치”",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/23/6YHFYKF5BRAMDLXK6P2FA7TUFQ/",
           "source": "조선비즈 부동산"
+        },
+        {
+          "title": "LH 사장 “집값 상승은 前정부 공급부족 탓…공급 본격화하면 폭락”",
+          "link": "https://www.mk.co.kr/news/realestate/12184564",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "LH 사장 \"집값 상승은 공급부족 탓…前정부 폭등 시한폭탄 설치\"",
+          "link": "https://www.yna.co.kr/view/AKR20261023181200003",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "경제계 \"초광역특구 추진 환영\"…신속한 입법 요구",
+          "link": "https://www.yna.co.kr/view/AKR20261023167000003",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "사모대출? 증자?…하이닉스, 美 낸드공장 자금줄 새로 찾는다",
+          "link": "https://www.hankyung.com/article/2026102318411",
+          "source": "한국경제 경제"
         }
       ]
     },
