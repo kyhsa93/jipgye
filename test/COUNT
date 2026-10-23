@@ -327,5 +327,9 @@
 #   npm test(= node scripts/run-tests.mjs) → ℹ tests 1827 · pass 1827 · fail 0 · skipped 0
 #   직전 하한 1824 + 이 PR 이 test/analytics.test.mjs 에 더한 시험 3 (`node --test test/analytics.test.mjs` → ℹ tests 20 · pass 20; 전 17) = 1827.
 #   고친 기존 시험은 loadAnalytics 헬퍼에 인자 둘(hostname·transform)을 더한 것뿐이고 없어진 시험은 0이다(.skip·.todo 도 0 그대로).
-1827
-1827
+# 센 법: 2026-10-23, merge-base 313ba6a0(= origin/main), Node v24.22.0, macOS (#449-A).
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1839 · pass 1839 · fail 0 · skipped 0
+#   직전 하한 1827 + 이 PR 이 더한 test/daily-pretest.test.mjs 의 시험 12 (`node --test test/daily-pretest.test.mjs` → ℹ tests 12 · pass 12) = 1839.
+#   고친 기존 시험 파일은 0이고 없어진 시험도 0이다(.skip·.todo 도 0 그대로).
+1839
+1839
