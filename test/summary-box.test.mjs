@@ -2,7 +2,7 @@
 // 구운 상자가 `<p><strong>분류</strong> 줄</p>` 목록이던 때는 요약 JSON 이 오는 순간 스크립트가 상자를 분류 라벨 div + 줄 div + `.summary-meta` 로 갈아 끼워
 // 상자 높이가 바뀌고 아래 #news-section 이 밀렸다. 게다가 상자 틀에 placeholder class(점선 테두리·안쪽 여백 16px)가 붙은 채 구워져, 스크립트가 그 class 를 떼는 순간 폭도 달라졌다.
 // 이 파일의 시험은 데이터 값에 좌우되지 않는다: 고정 fixture 를 실제 index.html 스크립트(test/helpers/index-page.mjs)에 먹여 나온 상자와
-// 구운 조각(summaryHtml)을 글자까지 맞댄다. 저장소 docs/ 는 "원본·데이터로 다시 찍은 것과 같은가"만 본다.
+// 구운 조각(summaryHtml)을 글자까지 맞댄다. 저장소 docs/ 가 "원본·데이터로 다시 찍은 것과 같은가"는 tools/health 가 비차단으로 보고(#507), 고정 데이터로 찍은 출력은 test/fixture-site.test.mjs 가 본다.
 //
 // 주의: test/render-parity.test.mjs 의 sameHtml 은 class 를 지우고 비교한다(#277). 그래서 여기서는 래퍼(React)·legacy 쌍둥이를 가리지 않고
 // **정규화 없이** 문자열을 맞대고, legacy 쌍둥이(summaryHtml.legacy)를 래퍼를 거치지 않고 직접 불러 JIPGYE_RENDERER 와 무관하게 본다(#355 와 같은 이유).
@@ -94,13 +94,4 @@ test("index.html 의 상자 틀은 placeholder class 없이 구워진다 - 스�
   assert.ok(applyPrerender(html, { summary: summaryHtml(CASES["하이라이트 없음 · 폴백 없음"]) }).includes('id="summary-box"><!--prerender:summary--><div class="summary-category">'), "상자 틀 바로 안쪽이 분류 div 로 시작하지 않는다");
 });
 
-test("커밋된 구운 index.html 의 상자가 summary.json 으로 다시 찍은 것과 같다 - 데이터가 바뀌면 다시 구워야 한다 (#352)", async () => {
-  const [html, summary] = await Promise.all([read("docs/index.html"), readJson("summary")]);
-  const a = html.indexOf("<!--prerender:summary-->") + "<!--prerender:summary-->".length;
-  const baked = html.slice(a, html.indexOf("<!--/prerender:summary-->"));
-  const strip = (h) => h.replace(/<span class="summary-meta">[^<]*<\/span>$/, "");
-  assert.equal(strip(baked), strip(summaryHtml.legacy(summary)), "docs/index.html 의 구운 상자가 summary.json 과 어긋난다. node scripts/prerender.ts 를 실행하세요.");
-  // 날짜 글자는 ICU 판에 따라 달라질 수 있어 형태만 본다(같은 판 안의 정확한 글자는 위 스크립트 대조가 본다).
-  const meta = baked.match(/<span class="summary-meta">([^<]*)<\/span>$/)?.[1];
-  assert.match(meta ?? "", /^.+ 생성 · \d{4}\. \d{1,2}\. \d{1,2}\. (오전|오후) \d{1,2}:\d{2} KST$/, ".summary-meta 의 형태가 다르다");
-});
+// (#507) "커밋된 구운 index.html 의 상자가 summary.json 으로 다시 찍은 것과 같다 - 데이터가 바뀌면 다시 구워야 한다 (#352)" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/summary-box.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.

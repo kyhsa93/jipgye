@@ -1,6 +1,6 @@
 // 검증 폴백 안내 줄은 구운 HTML 이 싣는다 (#350). 안 싣던 때는 요약 JSON 이 오는 순간 화면 스크립트가 줄을 붙여
 // #summary-box 아래 구획이 한 줄(28.7px, 375폭)만큼 밀렸다 - 폴백이 있는 날에만(summary.json 의 categories[].fallbackReason).
-// 이 파일의 시험은 데이터 값에 좌우되지 않는다: 고정 fixture 로 구운 결과를 보고, 저장소 docs/ 는 "원본·데이터로 다시 찍은 것과 같은가"만 본다.
+// 이 파일의 시험은 데이터 값에 좌우되지 않는다: 고정 fixture 로 구운 결과를 본다. 저장소 docs/ 가 "원본·데이터로 다시 찍은 것과 같은가"는 tools/health 가 비차단으로 보고(#507), 고정 데이터로 찍은 출력은 test/fixture-site.test.mjs 가 본다.
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -71,21 +71,7 @@ test("hasFallback 은 화면 스크립트와 같은 truthy 검사다 (#350)", ()
   assert.equal(hasFallback([]), false);
 });
 
-test("커밋된 구운 장 다섯의 안내 줄 유무가 summary.json 과 맞는다 - 데이터가 바뀌면 다시 구워야 한다 (#350)", async () => {
-  const summary = await readJson("summary");
-  const noteOf = (html, cls) => html.includes(`<div class="${cls}">${FALLBACK_NOTE_KO}</div>`);
-
-  const index = boxOf(await read("docs/index.html"), "summary");
-  assert.equal(noteOf(index, "summary-fallback-note"), hasFallback(summary.categories), "docs/index.html 의 안내 줄이 summary.json 과 어긋난다. node scripts/prerender.ts 를 실행하세요.");
-
-  const hub = boxOf(await read("docs/news.html"), "newsSummary");
-  assert.equal(noteOf(hub, "summary-note"), hasFallback(summary.categories.filter((c) => c.lineKo)), "docs/news.html 의 안내 줄이 summary.json 과 어긋난다.");
-  for (const page of NEWS_PAGES) {
-    const box = boxOf(await read(`docs/${page.file}`), "newsSummary");
-    const shown = summary.categories.filter((c) => c.key === page.category && c.lineKo);
-    assert.equal(noteOf(box, "summary-note"), hasFallback(shown), `docs/${page.file} 의 안내 줄이 summary.json 과 어긋난다. node scripts/build-news-pages.ts 를 실행하세요.`);
-  }
-});
+// (#507) "커밋된 구운 장 다섯의 안내 줄 유무가 summary.json 과 맞는다 - 데이터가 바뀌면 다시 구워야 한다 (#350)" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/summary-note.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 // legacy 쌍둥이(React 렌더가 실패할 때만 도는 자동 폴백, render-pipeline.ts)의 class 는 기본 모드의 다른 시험이 하나도 못 본다:
 // render-parity 의 sameHtml 이 class 를 지우고 비교해(#277) 래퍼 출력(react)과 legacy 가 class 만 달라도 통과하기 때문이다(#355).

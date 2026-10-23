@@ -103,21 +103,7 @@ test("배포된 index.html에 자리표시 주석 네 쌍이 남아 있다", asy
   }
 });
 
-test("커밋된 HTML이 지금 데이터로 다시 그린 결과와 같다", async () => {
-  const html = await readIndex();
-  const [summary, market, realestate, news] = await Promise.all(
-    ["summary", "market", "realestate", "news"].map(readData)
-  );
-
-  const expected = applyPrerender(html, {
-    summary: summaryHtml(summary),
-    market: marketHtml(market),
-    realestate: realestateHtml(realestate),
-    news: newsHtml(news),
-  });
-
-  assert.equal(html, expected, "docs/index.html이 데이터와 어긋납니다. node scripts/prerender.ts를 실행하세요.");
-});
+// (#507) "커밋된 HTML이 지금 데이터로 다시 그린 결과와 같다" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/prerender.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 test("금리 표의 정적 HTML이 실제 첫 화면과 같은 상품·순서다", async () => {
   const [rates, { byId }] = await Promise.all([
@@ -155,15 +141,7 @@ test("커밋된 rates.html(허브)이 지금 문구 원본으로 다시 그린 �
   );
 });
 
-test("크롤러가 받는 HTML에 오늘 기사 제목이 실제로 들어 있다", async () => {
-  const [html, news] = await Promise.all([readIndex(), readData("news")]);
-  // 첫 화면은 다섯 건만, 부동산 먼저 싣는다(#48) - 그 첫 건이 실려 있어야 한다.
-  const { indexNewsItems } = await import("../scripts/prerender.ts");
-  const first = indexNewsItems(news.items)[0];
-  assert.ok(first, "기사가 한 건도 없다 - 수집이 통째로 실패했다");
-  assert.ok(html.includes(escapeHtml(first.title)), "첫 기사 제목이 정적 HTML에 없다");
-  assert.ok(html.includes(escapeHtml(first.link)), "첫 기사 링크가 정적 HTML에 없다");
-});
+// (#507) "크롤러가 받는 HTML에 오늘 기사 제목이 실제로 들어 있다" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/prerender.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 test("좁은 화면 카드 라벨이 클라이언트 사전과 같은 글자다", async () => {
   const [ratesHtmlSource, indexHtml] = await Promise.all([readRates(), readIndex()]);

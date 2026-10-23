@@ -1,0 +1,5 @@
+# tools/health `npm test`(= 루트 `npm run health`)의 하한 둘 (#315의 래칫을 그대로 쓴다). 래칫은 ../../scripts/test-count-ratchet.mjs.
+# 1행 = `ℹ tests N` 하한, 2행 = `ℹ pass N` 하한. 정당한 skip 이 없어서 두 수가 같다.
+# 이 숫자는 루트 test/COUNT 에서 옮겨 온 검사의 수다(#507) - 루트에서 빠진 만큼 여기서 센다. 내리는 변경은 PR 본문에 사유를 적는다.
+14
+14

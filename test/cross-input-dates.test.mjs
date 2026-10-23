@@ -12,7 +12,7 @@ import { CROSS_PAGES, baselineFor, crossStampHtml } from "../scripts/updated-sta
  *
  * #111의 규칙을 그대로 따른다: 기준일은 빌드가 HTML에 글자로 박고, "n일 전 자료"는 보는 순간 nav.js가
  * KST 오늘로 센다(빌드·배포가 멈추면 HTML이 얼어도 경고가 사라지지 않게). 날짜 의존 검사는 넣지 않는다(#8) -
- * 오늘은 전부 인자로 주입하고, 저장소 docs/는 '생성물이 소스와 맞나'만 본다(오늘과 비교하지 않는다).
+ * 오늘은 전부 인자로 주입한다. 저장소 docs/ 가 '생성물이 소스와 맞나'는 tools/health 가 비차단으로 보고(#507), 고정 데이터로 찍은 출력은 test/fixture-site.test.mjs 가 본다.
  */
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -170,18 +170,7 @@ test("저장소 docs: 교차값이 있는 화면 전수 - 표와 같다", async 
   assert.deepEqual(carrying, EXPECTED, "교차값을 싣는 화면과 CROSS_PAGES가 다르다");
 });
 
-test("저장소 docs: 그 화면 전부의 정적 HTML에 입력별 기준일 줄이 있고, 값은 소스 updatedAt의 가장 오래된 날짜다", async () => {
-  const sources = readDataSources(path.join(DOCS, "data"));
-  for (const [file, inputs] of Object.entries(CROSS_PAGES)) {
-    const html = await readFile(path.join(DOCS, file), "utf8");
-    const deals = baselineFor(inputs.deals, sources);
-    const rates = baselineFor(inputs.rates, sources);
-    const line = `<p class="updated cross-basis" id="cross-basis" data-deals="${deals}" data-rates="${rates}">실거래 ${deals.slice(5)} x 금리 ${rates.slice(5)}</p>`;
-    assert.ok(html.includes(line), `docs/${file}: 기준일 줄이 ${line} 이어야 한다 (node scripts/build-updated-stamp.ts)`);
-    assert.equal([...html.matchAll(/id="cross-basis"/g)].length, 1, `docs/${file}: 기준일 줄이 한 번이어야 한다`);
-    assert.match(html, /<p class="updated updated-warn" id="cross-warn" role="status" hidden><\/p>/, `docs/${file}: 경고 자리`);
-  }
-});
+// (#507) "저장소 docs: 그 화면 전부의 정적 HTML에 입력별 기준일 줄이 있고, 값은 소스 updatedAt의 가장 오래된 날짜다" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/cross-input-dates.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 test("교차 입력의 소스는 그 화면이 읽는 소스 또는 금리다 (소스 표와 어긋나지 않는다)", async () => {
   const { PAGE_SOURCES } = await import("../scripts/updated-stamp.ts");

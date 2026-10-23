@@ -114,13 +114,4 @@ test("표본이 모자라면 아무 말도 하지 않는다", () => {
   assert.match(leadSentence(main, grid(cells, END), "ko"), /아직 적어/);
 });
 
-test("정적 HTML이 오늘 데이터의 문장과 표를 싣는다", async () => {
-  const [html, data] = await Promise.all([
-    readFile(path.join(root, "docs/record-high.html"), "utf8"),
-    readFile(path.join(root, "docs/data/record-high.json"), "utf8").then(JSON.parse),
-  ]);
-  const block = (name) => html.match(new RegExp(`<!--prerender:${name}-->([\\s\\S]*?)<!--/prerender:${name}-->`))?.[1];
-  assert.equal(block("recordRobust"), data.tables.robust.ko);
-  assert.ok(block("recordLead")?.includes(String(data.main.record)), "첫 문장이 오늘 숫자를 싣지 않는다");
-  assert.ok(data.lead.en && data.tables.robust.en);
-});
+// (#507) "정적 HTML이 오늘 데이터의 문장과 표를 싣는다" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/record-high.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
