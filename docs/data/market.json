@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-22T04:34:10.114Z",
+  "updatedAt": "2026-10-23T01:27:27.843Z",
   "kospi": {
     "value": "5,735.66",
     "change": "182.92",
@@ -7,10 +7,10 @@
     "asOf": "10/21"
   },
   "usdKrw": {
-    "value": 1326.143133,
-    "asOf": "Thu, 22 Oct 2026 00:02:31 +0000",
-    "prevValue": 1327.17027,
-    "change": "-1.03",
+    "value": 1324.953768,
+    "asOf": "Fri, 23 Oct 2026 00:02:31 +0000",
+    "prevValue": 1326.143133,
+    "change": "-1.19",
     "direction": "FALLING"
   },
   "baseRate": {
