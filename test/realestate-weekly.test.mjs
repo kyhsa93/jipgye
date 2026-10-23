@@ -7,7 +7,7 @@ import {
   settledWeek,
   weekStart,
 } from "../scripts/realestate-weekly.ts";
-import { arrivalShortfall, arrivalWindowReady, contractRows, representWindow } from "../scripts/build-realestate.ts";
+import { arrivalShortfall, arrivalWindowReady, contractRows, readWindowItems, representWindow } from "../scripts/build-realestate.ts";
 import { DISTRICTS } from "../scripts/realestate-districts.ts";
 import { MIN_SAMPLE } from "../scripts/realestate-format.ts";
 
@@ -262,4 +262,54 @@ test("신고일 기준 전환: 매매·전세·월세 각각 MIN_SAMPLE 건부�
     assert.equal(short.counts[kind], MIN_SAMPLE - 1);
     assert.equal(arrivalWindowReady(exactCounts({ ...full, [kind]: MIN_SAMPLE })), true, `${label} 딱 ${MIN_SAMPLE}건이면 넘어가야 한다`);
   }
+});
+
+// #477: readWindowItems 는 읽기를 동시에 하되 합치는 순서를 완료 순서가 아닌 고정 순서(months -> DISTRICTS -> sale·rent)로 둔다.
+// 읽기 함수를 갈아 끼워 슬롯마다 끝나는 순서를 바꿔 본다 - 완료 순서가 새면 항목 배열 순서가 달라진다.
+const WINDOW_477 = { basis: "contract", from: "2026-07-01", until: "2026-10-01" };
+const MONTHS_477 = ["202607", "202608", "202609"];
+const readerWith = (delayOf) => async (kind, code, yearMonth) => {
+  await new Promise((resolve) => setTimeout(resolve, delayOf(kind, code, yearMonth)));
+  const make = kind === "sale" ? saleRaw : rentRaw;
+  return rawFile(kind, [make({ aptNm: `${kind}-${code}-${yearMonth}`, dealMonth: Number(yearMonth.slice(4)), dealDay: 5 })]);
+};
+
+test("readWindowItems: 항목은 완료 순서가 아니라 months -> DISTRICTS -> sale·rent 고정 순서로 쌓인다 (#477)", async () => {
+  // 늦은 달이 먼저 끝나고 같은 달 안에서도 뒤 구·rent 가 먼저 끝나도록 지연을 거꾸로 준다.
+  const slotIndex = (kind, code, yearMonth) =>
+    MONTHS_477.indexOf(yearMonth) * DISTRICTS.length * 2 + DISTRICTS.findIndex((d) => d.code === code) * 2 + (kind === "rent" ? 1 : 0);
+  const total = MONTHS_477.length * DISTRICTS.length * 2;
+  const reversed = readerWith((kind, code, yearMonth) => total - slotIndex(kind, code, yearMonth));
+
+  const { items } = await readWindowItems(NOW, WINDOW_477, reversed);
+
+  const keys = [...items.keys()];
+  assert.deepEqual(
+    keys,
+    DISTRICTS.flatMap(({ code }) => [`sale:${code}`, `rent:${code}`]),
+    "Map 키 순서는 DISTRICTS 순서에 sale·rent 가 붙은 모양이다"
+  );
+  for (const [key, rows] of items) {
+    const [kind, code] = key.split(":");
+    assert.deepEqual(
+      rows.map((row) => row.item.aptNm),
+      MONTHS_477.map((m) => `${kind}-${code}-${m}`),
+      `${key} 의 항목은 달 순서(값 정렬이 아니라 months 인덱스 순)다`
+    );
+  }
+});
+
+test("readWindowItems: 슬롯이 끝나는 순서가 달라도 결과가 같다 (#477)", async () => {
+  const schedules = [
+    () => 0,
+    (kind, code, yearMonth) => 30 - MONTHS_477.indexOf(yearMonth) * 10,
+    (kind, code) => (Number(code) * 7) % 11,
+  ];
+  const results = [];
+  for (const delayOf of schedules) {
+    const { items } = await readWindowItems(NOW, WINDOW_477, readerWith(delayOf));
+    results.push(JSON.stringify([...items]));
+  }
+  assert.equal(results[1], results[0]);
+  assert.equal(results[2], results[0]);
 });
