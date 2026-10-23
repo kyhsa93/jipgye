@@ -319,5 +319,9 @@
 #   npm test(= node scripts/run-tests.mjs) → ℹ tests 1812 · pass 1812 · fail 0 · skipped 0
 #   직전 하한 1808 + 이 PR 이 더한 test/conversion-en.test.mjs 의 시험 4 (`node --test test/conversion-en.test.mjs` → ℹ tests 4 · pass 4) = 1812.
 #   고친 기존 시험 파일은 0이고 없어진 시험도 0이다(.skip·.todo 도 0 그대로).
-1812
-1812
+# 센 법: 2026-10-23, merge-base ad23644f(= origin/main), Node v24.22.0, macOS (#320).
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1824 · pass 1824 · fail 0 · skipped 0
+#   직전 하한 1812 + 이 PR 이 더한 test/test-set.test.mjs 의 시험 12 (`node --test test/test-set.test.mjs` → ℹ tests 12 · pass 12) = 1824.
+#   고친 기존 시험 파일은 0이고 없어진 시험도 0이다(.skip·.todo 도 0 그대로).
+1824
+1824
