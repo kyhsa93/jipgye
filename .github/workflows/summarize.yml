@@ -103,6 +103,13 @@ jobs:
             scripts/build-realestate-pages.ts \
             scripts/build-updated-stamp.ts
 
+      # 데이터 건강 점검(#507): daily-update.yml 의 같은 이름 단계와 같다. 커밋된 데이터와 그 생성물이 맞는지 보는 검사(tools/health)를
+      # 루트 `npm test`에서 뺐다. 비차단이라 실패해도 아래 테스트·커밋·배포는 그대로 돌고, 맨 끝 "데이터 건강 점검 실패 반영"이 run 을 빨갛게 끝낸다.
+      - name: 데이터 건강 점검 (비차단)
+        id: health
+        continue-on-error: true
+        run: npm run health
+
       - name: 테스트
         run: npm test
 
@@ -127,4 +134,11 @@ jobs:
         if: steps.render.outputs.fallback == 'true'
         run: |
           echo "::error::React 렌더 실패 → legacy로 폴백했음. 사이트는 정상 배포됨, 원인 조사 필요 - 위 '정적 HTML에 오늘 내용 심기' 단계의 1차 시도 로그를 본다"
+          exit 1
+
+      # 데이터 건강 점검이 실패한 날의 표시다(#507, daily-update.yml 과 같은 단계). 커밋·테스트·배포가 모두 끝난 뒤에야 실패로 끝낸다.
+      - name: 데이터 건강 점검 실패 반영
+        if: steps.health.outcome == 'failure'
+        run: |
+          echo "::error::데이터 건강 점검(tools/health)이 실패했다 - 위 '데이터 건강 점검 (비차단)' 단계의 로그를 본다. 커밋·배포는 끝났고 이 점검은 그것을 막지 않았다"
           exit 1

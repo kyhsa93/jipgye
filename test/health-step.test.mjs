@@ -1,0 +1,102 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile, readdir } from "node:fs/promises";
+import path from "node:path";
+
+/**
+ * 데이터 건강 점검은 워크플로에서 비차단이고, 실패하면 맨 끝에서 run 을 빨갛게 끝낸다 (#507, 구조 B-1).
+ *
+ * 커밋된 데이터와 그 생성물을 맞대는 검사는 루트 `npm test`에서 tools/health 로 옮겼다. 그 검사가 배포·병합을 막으면 옮긴 보람이 없고
+ * (2026-09-02~10-01 한 검사가 매 run 을 막은 것과 같은 모양), 아무도 안 보는 곳에서 조용히 빨개져도 소용이 없다. 그래서 점검 스텝은
+ * continue-on-error 로 두고(daily-pretest.test.mjs 의 수집 전 테스트와 같은 방식, #449), 맨 끝 반영 단계가 run 을 실패로 끝낸다.
+ * 이 파일은 워크플로 YAML 의 스텝 줄만 읽는다 - 고정 입력이고, 데이터도 날짜도 네트워크도 보지 않는다(#8).
+ */
+
+const root = path.resolve(import.meta.dirname, "..");
+const read = (rel) => readFile(path.join(root, rel), "utf8");
+
+const HEALTH = "데이터 건강 점검 (비차단)";
+const REFLECT = "데이터 건강 점검 실패 반영";
+
+/** 점검 스텝이 든 job 의 steps: 를 스텝 덩어리로 자른다. 덩어리마다 name · 8칸 키(id·if·continue-on-error) · run 본문(들여쓴 줄 전부). */
+function steps(text) {
+  const jobs = text.split(/\n(?= {2}[\w-]+:\n)/).slice(1); // jobs: 아래 2칸 키마다 한 덩어리
+  const job = jobs.find((j) => j.includes(HEALTH));
+  assert.ok(job, `'${HEALTH}' 가 든 job 이 없다`);
+  const body = job.split(/\n {4}steps:\n/)[1];
+  return body
+    .split(/\n(?=      - )/)
+    .filter((c) => c.startsWith("      - "))
+    .map((chunk) => {
+      const key = (k) => chunk.match(new RegExp(`^ {6}(?:- | {2})${k}: (.*)$`, "m"))?.[1]?.replace(/\s+#.*$/, "") ?? null;
+      return { name: key("name") ?? key("uses"), id: key("id"), if: key("if"), coe: key("continue-on-error"), run: chunk.match(/^ {8}run: ([^|>\n].*)$/m)?.[1] ?? chunk.split(/^ {8}run: [|>]\n/m)[1] ?? "" };
+    });
+}
+const index = (list, name) => {
+  const i = list.findIndex((s) => s.name === name);
+  assert.ok(i >= 0, `스텝 '${name}' 을 못 찾았다`);
+  return i;
+};
+
+for (const [file, order] of [
+  [".github/workflows/daily-update.yml", { before: "테스트 (수집 후)", after: "변경사항 커밋 및 푸시" }],
+  [".github/workflows/summarize.yml", { before: "테스트", after: "정적 HTML에 오늘 내용 심기" }],
+]) {
+  test(`${file}: 건강 점검 스텝은 비차단이고 npm run health 를 부르며, 렌더(·커밋) 뒤 · 테스트 앞이다`, async () => {
+    const list = steps(await read(file));
+    const h = list[index(list, HEALTH)];
+    assert.equal(h.id, "health");
+    assert.equal(h.coe, "true", "continue-on-error: true 가 아니면 점검 실패가 배포를 막는다");
+    assert.equal(h.run.trim(), "npm run health");
+    assert.ok(index(list, order.after) < index(list, HEALTH), `${order.after} 보다 앞이면 안 된다`);
+    assert.ok(index(list, HEALTH) < index(list, order.before), `${order.before} 보다 뒤면 안 된다`);
+  });
+
+  test(`${file}: 반영 단계는 배포 뒤에서 steps.health.outcome == 'failure' 일 때만 exit 1 로 끝난다`, async () => {
+    const list = steps(await read(file));
+    const r = list[index(list, REFLECT)];
+    assert.equal(r.if, "steps.health.outcome == 'failure'");
+    assert.match(r.run, /^\s*exit 1$/m);
+    assert.match(r.run, /::error::/);
+    assert.ok(index(list, "Pages에 배포") < index(list, REFLECT), "배포보다 앞이면 반영 단계가 배포를 막는다");
+    // 상태 함수(always·failure)를 안 쓴다: 앞 스텝이 이미 실패했으면 이 단계는 건너뛰고 run 은 이미 빨갛다.
+    assert.ok(!/always\(\)|failure\(\)|cancelled\(\)/.test(r.if));
+  });
+}
+
+test("test.yml: PR 의 건강 점검 스텝도 continue-on-error 라서 Test 판정을 빨갛게 하지 않는다", async () => {
+  const list = steps(await read(".github/workflows/test.yml"));
+  const h = list[index(list, HEALTH)];
+  assert.equal(h.coe, "true");
+  assert.equal(h.run.trim(), "npm run health");
+  assert.ok(index(list, "npm test + 시험 개수 래칫") < index(list, HEALTH));
+});
+
+test("건강 점검 이름은 세 워크플로가 같고, 점검 스텝이 걸린 워크플로는 이 셋뿐이다", async () => {
+  const dir = path.join(root, ".github/workflows");
+  const using = [];
+  for (const f of (await readdir(dir)).filter((n) => /\.ya?ml$/.test(n)).sort()) {
+    const text = await readFile(path.join(dir, f), "utf8");
+    if (/^\s*run: .*npm run health\b/m.test(text)) using.push(f);
+  }
+  assert.deepEqual(using, ["daily-update.yml", "summarize.yml", "test.yml"]);
+});
+
+test("npm run health 는 tools/health 의 npm test(= run-tests 래퍼 + test/COUNT 래칫)를 부른다", async () => {
+  const pkg = JSON.parse(await read("package.json"));
+  assert.equal(pkg.scripts.health, "npm --prefix tools/health test");
+  assert.equal(JSON.parse(await read("tools/health/package.json")).scripts.test, "node ../../scripts/run-tests.mjs");
+});
+
+test("tools/health 의 시험 파일은 모두 원본 시험의 출처를 적었고, 원본이 가리키는 곳으로 옮긴 시험이 실제로 있다", async () => {
+  const dir = path.join(root, "tools/health/test");
+  const files = (await readdir(dir)).filter((f) => f.endsWith(".test.mjs"));
+  assert.ok(files.length >= 10, `건강 점검 시험 파일이 ${files.length}개뿐이다 - 옮긴 시험이 빠졌다`);
+  for (const f of files) {
+    const text = await readFile(path.join(dir, f), "utf8");
+    assert.match(text.split("\n")[0], /^\/\/ 원본: test\/[\w-]+\.test\.mjs /, `${f}: 첫 줄에 원본 시험의 출처가 없다`);
+    // 옮긴 자리의 원본 파일에 포인터 주석이 남아 있다 - 옮겼다는 사실이 원본 쪽에서도 읽힌다.
+    const origin = await readFile(path.join(root, "test", f), "utf8");
+    assert.ok(origin.includes(`tools/health/test/${f}`), `test/${f} 에 옮긴 곳을 가리키는 주석이 없다`);
+  }
+});

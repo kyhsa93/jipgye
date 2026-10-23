@@ -25,9 +25,9 @@ import { build } from "esbuild";
 // 비용: 시험을 헬퍼에 감싸 재수출하고 시험 파일은 헬퍼만 import 하는 구조는 시험 파일 쪽이 import 집합에서 빠져 걸린다
 // (지금 test/helpers 에 그런 것 0건). 그 구조를 쓰려면 이 단언을 먼저 고친다 - 시험 파일이 러너와 같은 근거로 보이는 상태를 지키는 제약이다.
 //
-// 범위: `npm test` 가 scripts/run-tests.mjs 를 거치는 세 패키지(루트·tools/golden·tools/render). research/ 는 CI 밖이라 뺀다.
+// 범위: `npm test` 가 scripts/run-tests.mjs 를 거치는 네 패키지(루트·tools/golden·tools/render·tools/health(#507)). research/ 는 CI 밖이라 뺀다.
 const root = path.resolve(import.meta.dirname, "..");
-const PACKAGES = [".", "tools/golden", "tools/render"];
+const PACKAGES = [".", "tools/golden", "tools/render", "tools/health"];
 
 // 글롭은 래퍼 소스의 `const GLOB = "…"` 한 곳에서 읽는다 - 여기에 다시 적으면 한쪽만 고쳐진다.
 function runnerGlob() {

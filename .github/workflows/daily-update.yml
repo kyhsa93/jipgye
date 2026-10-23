@@ -142,6 +142,15 @@ jobs:
             ./scripts/push-docs.sh "chore: 뉴스 갱신 $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M') KST"
           fi
 
+      # 데이터 건강 점검(#507, 구조 B-1): 커밋된 데이터(docs/data)와 그 데이터로 찍은 생성물(docs/*.html)이 서로 맞는지 보는
+      # 검사들이다(tools/health). 예전에는 루트 `npm test`가 들고 있어서 데이터가 바뀌는 날 기능 PR 시험이 그날 데이터에 기댔다 -
+      # 2026-09-02~10-01 매 run 을 막은 모양이다(#8, #449). 여기서는 **비차단**이다: 실패해도 아래 "테스트 (수집 후)"와 배포는 그대로
+      # 돌고(커밋은 이미 끝났다), 맨 끝 "데이터 건강 점검 실패 반영" 단계가 run 을 빨갛게 끝낸다. 지우거나 약화하지 않는다.
+      - name: 데이터 건강 점검 (비차단)
+        id: health
+        continue-on-error: true
+        run: npm run health
+
       - name: 테스트 (수집 후)
         run: npm test
 
@@ -171,6 +180,14 @@ jobs:
         if: steps.render.outputs.fallback == 'true'
         run: |
           echo "::error::React 렌더 실패 → legacy로 폴백했음. 사이트는 정상 배포됨, 원인 조사 필요 - 위 '정적 HTML에 오늘 내용 심기' 단계의 1차 시도 로그를 본다"
+          exit 1
+
+      # 데이터 건강 점검이 실패한 날의 표시다(#507). 위 "데이터 건강 점검 (비차단)"은 continue-on-error 라 배포를 막지 않았다 -
+      # 수집분은 이미 커밋됐고, 수집 후 테스트가 통과했으면 배포도 나갔다. 커밋·테스트·배포가 모두 끝난 뒤에야 run 을 빨갛게 끝낸다.
+      - name: 데이터 건강 점검 실패 반영
+        if: steps.health.outcome == 'failure'
+        run: |
+          echo "::error::데이터 건강 점검(tools/health)이 실패했다 - 위 '데이터 건강 점검 (비차단)' 단계의 로그를 본다. 커밋·배포는 끝났고 이 점검은 그것을 막지 않았다"
           exit 1
 
       # 수집 전 테스트가 실패한 날의 표시다(#449). 커밋·수집·배포가 모두 끝난 뒤에야 실패로 끝낸다 -

@@ -10,18 +10,7 @@ const read = (rel) => readFile(path.join(root, rel), "utf8");
 const readJson = (name) => read(`docs/data/${name}.json`).then(JSON.parse);
 const titles = (html) => [...html.matchAll(/rel="noopener">([^<]*)</g)].map((m) => m[1].trim());
 
-test("커밋된 카테고리 페이지가 지금 원본·데이터로 찍은 결과와 같다", async () => {
-  const [baseHtml, news, summary, market] = await Promise.all([read("docs/news.html"), readJson("news"), readJson("summary"), readJson("market")]);
-
-  for (const page of NEWS_PAGES) {
-    const built = buildNewsPage(baseHtml, page, { news, summary, market });
-    assert.equal(
-      await read(`docs/${page.file}`),
-      built,
-      `docs/${page.file}이 원본과 어긋납니다. node scripts/build-news-pages.ts를 실행하세요.`
-    );
-  }
-});
+// (#507) "커밋된 카테고리 페이지가 지금 원본·데이터로 찍은 결과와 같다" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/news-pages.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 test("각 페이지가 자기 분야를 정규 URL·제목·필터로 선언한다", async () => {
   for (const page of NEWS_PAGES) {

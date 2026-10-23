@@ -12,7 +12,7 @@ import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
  * 데이터 기준일(정적)과 "n일 전 자료"(보는 순간 계산)를 나눈 것을 묶는다 (#111).
  *
  * 날짜 의존 검사는 넣지 않는다(#8): 오늘 날짜는 전부 인자로 주입하고, 파일 시험은 고정 입력(임시 폴더)으로
- * 돈다. 저장소에 커밋된 docs/는 '생성물이 소스와 맞나'만 본다(오늘과 비교하지 않는다).
+ * 돈다. 저장소에 커밋된 docs/ 가 '생성물이 소스와 맞나'는 tools/health 가 비차단으로 보고(#507), 고정 소스로 찍은 출력은 test/fixture-site.test.mjs 가 본다.
  */
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -308,14 +308,7 @@ test("stampHtml은 떨어져 있는 경고 줄을 복제하지 않는다 (#282)"
   assert.match(twice, /data-updated="2026-10-17">기준일 2026-10-17</);
 });
 
-test("저장소 docs: 찍힌 기준일이 그 장 소스의 가장 오래된 updatedAt과 같다 (오늘과 비교하지 않는다)", async () => {
-  const sources = readDataSources(path.join(DOCS, "data"));
-  for (const [file, names] of Object.entries(PAGE_SOURCES)) {
-    const html = await readFile(path.join(DOCS, file), "utf8");
-    const want = baselineFor(names, sources);
-    assert.match(html, new RegExp(`id="updated" data-updated="${want}">기준일 ${want}<`), `docs/${file}: 기준일이 ${want}이어야 한다 (node scripts/build-updated-stamp.ts)`);
-  }
-});
+// (#507) "저장소 docs: 찍힌 기준일이 그 장 소스의 가장 오래된 updatedAt과 같다 (오늘과 비교하지 않는다)" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/updated-stamp.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 test("소스 표가 장이 실제로 읽는 파일을 빠뜨리지 않는다", async () => {
   const sources = readDataSources(path.join(DOCS, "data"));

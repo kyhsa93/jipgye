@@ -58,6 +58,13 @@ jobs:
           set -euo pipefail
           npm test 2>&1 | tee "$RUNNER_TEMP/root-test.log"
           node scripts/test-count-ratchet.mjs test/COUNT "$RUNNER_TEMP/root-test.log"
+      # 데이터 건강 점검(#507): 커밋된 데이터와 그 생성물이 맞는지 보는 검사(tools/health)다. 루트 `npm test`에서 뺐다 - 데이터가
+      # 하루에 한 번 바뀌는 구조에서 기능 PR 시험이 그날 데이터에 기대면 안 된다. 여기서는 **비차단**(continue-on-error)이라
+      # 실패해도 이 job 과 Test+Deploy 판정은 초록이고, 단계 실패 표시와 로그로만 알린다. 데이터가 바뀌는 날의 빨간 run 은
+      # daily-update.yml·summarize.yml 의 맨 끝 "데이터 건강 점검 실패 반영" 단계가 맡는다.
+      - name: 데이터 건강 점검 (비차단)
+        continue-on-error: true
+        run: npm run health
       # tools/golden(#236·#274)은 의존 트리를 루트와 나눠 놨다(parse5) — 루트 `npm ci`로는 설치되지 않아
       # 이 폴더 시험이 CI 밖에 있었다. 그래서 `docs/*.js`의 class 문자열을 바꾸고 훅 목록(`hook-classes.json`)을
       # 안 고친 PR은 누군가 손으로 `tools/golden`에서 `npm test`를 돌릴 때에야 드러났다(#289 본문).

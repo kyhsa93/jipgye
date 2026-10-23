@@ -17,22 +17,7 @@ const readRates = () => read("docs/data/rates.json").then(JSON.parse);
 const PRODUCT_NAME = ['class="product-name tw:whitespace-normal tw:break-keep"', 'class="product-name"'];
 const productNames = (html) => [...html.matchAll(new RegExp(`(?:${PRODUCT_NAME.join("|")})>([^<]*)`, "g"))].map((m) => m[1].trim());
 
-test("커밋된 상품군별 페이지가 지금 원본·데이터로 찍은 결과와 같다", async () => {
-  const [baseHtml, rates] = await Promise.all([read("scripts/rates-template.html"), readRates()]);
-
-  for (const page of RATE_PAGES) {
-    const built = buildRatePage(baseHtml, page, rates);
-    const committed = await read(`docs/${page.file}`);
-    // 틀에는 기준일이 비어 있고 날짜는 build-updated-stamp가 나중에 찍는다. 커밋본의 날짜를 같이 찍어 견준다.
-    const ymd = /data-updated="(\d{4}-\d{2}-\d{2})"/.exec(committed)?.[1];
-    assert.ok(ymd, `docs/${page.file}에 기준일이 없다`);
-    assert.equal(
-      committed,
-      stampHtml(built, ymd),
-      `docs/${page.file}이 원본과 어긋납니다. node scripts/build-rate-pages.ts를 실행하세요.`
-    );
-  }
-});
+// (#507) "커밋된 상품군별 페이지가 지금 원본·데이터로 찍은 결과와 같다" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/rate-pages.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 test("각 페이지가 자기 상품군을 정규 URL·제목·첫 탭으로 선언한다", async () => {
   for (const page of RATE_PAGES) {

@@ -9,7 +9,8 @@
     "fetch:market": "node scripts/fetch-market.ts",
     "fetch:rates": "node scripts/fetch-rates.ts",
     "update": "node scripts/update-all.mjs",
-    "test": "node scripts/run-tests.mjs"
+    "test": "node scripts/run-tests.mjs",
+    "health": "npm --prefix tools/health test"
   },
   "dependencies": {
     "esbuild": "0.28.2",

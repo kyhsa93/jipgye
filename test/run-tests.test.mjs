@@ -206,7 +206,7 @@ test("래칫 스크립트는 로그 파일로도 그대로 돈다(test.yml의 �
 });
 
 test("저장소의 COUNT 셋은 숫자 줄이 정확히 둘이다(쌍을 덧붙이지 않고 첫 두 줄을 고친다)", () => {
-  for (const p of ["test/COUNT", "tools/golden/test/COUNT", "tools/render/test/COUNT"]) {
+  for (const p of ["test/COUNT", "tools/golden/test/COUNT", "tools/render/test/COUNT", "tools/health/test/COUNT"]) {
     const f = readFloors(path.join(root, p));
     assert.ok(f.tests >= f.pass && f.pass > 0, `${p}: ${JSON.stringify(f)}`);
   }
@@ -261,6 +261,7 @@ function scannedFiles() {
     path.join(root, "package.json"),
     path.join(root, "tools", "golden", "package.json"),
     path.join(root, "tools", "render", "package.json"),
+    path.join(root, "tools", "health", "package.json"),
   ];
   return picked.map((p) => ({ file: rel(p), text: readFileSync(p, "utf8") }));
 }
@@ -275,8 +276,8 @@ test("호출 불변: 러너를 직접 부르는 곳이 허용 목록뿐이고, �
   assert.deepEqual(allow.filter((a) => !hits.includes(a)), [], "허용 목록에 있는데 파일에서 사라진 줄이 있다 - 목록에서도 뺀다");
 });
 
-test("호출 불변: 세 package.json의 test는 래퍼 한 줄이고 test:live만 러너를 직접 부른다", () => {
-  const want = { "package.json": "node scripts/run-tests.mjs", "tools/golden/package.json": "node ../../scripts/run-tests.mjs", "tools/render/package.json": "node ../../scripts/run-tests.mjs" };
+test("호출 불변: 네 package.json의 test는 래퍼 한 줄이고 test:live만 러너를 직접 부른다", () => {
+  const want = { "package.json": "node scripts/run-tests.mjs", "tools/golden/package.json": "node ../../scripts/run-tests.mjs", "tools/render/package.json": "node ../../scripts/run-tests.mjs", "tools/health/package.json": "node ../../scripts/run-tests.mjs" };
   for (const [p, cmd] of Object.entries(want)) {
     const scripts = JSON.parse(readFileSync(path.join(root, p), "utf8")).scripts;
     assert.equal(scripts.test, cmd, p);

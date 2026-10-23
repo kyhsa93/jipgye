@@ -343,5 +343,9 @@
 #   npm test(= node scripts/run-tests.mjs) → ℹ tests 1855 · pass 1855 · fail 0 · skipped 0
 #   직전 하한 1853 + 이 PR 이 test/realestate-weekly.test.mjs 에 더한 시험 2 (`node --test test/realestate-weekly.test.mjs` → ℹ tests 23 · pass 23; 전 21) = 1855.
 #   고친 기존 시험은 0이고 없어진 시험도 0이다(.skip·.todo 도 0 그대로).
-1855
-1855
+# 갱신: 2026-10-24(#507 구조 B-1), base 5f0e9698(= origin/main), Node v24.22.0, macOS.
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1865 · pass 1865 · fail 0 · skipped 0
+#   직전 하한 1855 - 옮긴 시험 14 + 고정 데이터 짝 15(test/fixture-site.test.mjs: 옮긴 열네 시험의 짝 14 + 작업 폴더 격리 1) + 건강 점검 스텝 시험 8(test/health-step.test.mjs) + 시험 파일 집합 시험의 패키지 1(test/test-set.test.mjs, 네 번째 패키지 tools/health) = 1865.
+#   옮긴 14는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health 로 간다 - 거기서 `npm run health` 가 14 센다(tools/health/test/COUNT 14·14). 두 군데를 합치면 1865로 전보다 늘었다. 고친 기존 시험은 이름만 바뀐 둘(run-tests·test-set 의 세 -> 네)이고 .skip·.todo 는 0 그대로다.
+1865
+1865

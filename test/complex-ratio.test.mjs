@@ -116,33 +116,7 @@ test("거래가 하나도 없으면 파일을 만들지 않는다", () => {
 
 // --- 화면에 실제로 어떻게 붙는가 --------------------------------------------
 
-test("정적 HTML과 자바스크립트가 같은 카드를 그린다", async () => {
-  const { readFile } = await import("node:fs/promises");
-  const { loadRealestatePage } = await import("./helpers/realestate-page.mjs");
-  const root = path.resolve(import.meta.dirname, "..");
-  const readJson = (name) => readFile(path.join(root, `docs/data/${name}.json`), "utf8").then(JSON.parse);
-
-  const [realestate, complexRatio] = await Promise.all([readJson("realestate"), readJson("complex-ratio")]);
-  const district = "노원구";
-  const spread = complexRatio.districts[district];
-  assert.ok(spread, `${district}에 분포가 없다 - 다른 구로 검사를 바꿔야 한다`);
-
-  // 56.0처럼 정수로 떨어지는 날에도 화면은 "56.0%"를 적는다. 숫자를 그대로 붙이면 "56%"를 찾는다.
-  const shown = formatPercent(spread.median).replace(".", "\\.");
-
-  // 정적 HTML에 들어 있는 값
-  const html = await readFile(path.join(root, "docs/district-nowon.html"), "utf8");
-  assert.match(html, new RegExp(`단지별 중앙값</div><div class="value">${shown}`));
-
-  // 자바스크립트가 붙은 뒤의 값. 다르면 화면이 한 번 튄다.
-  const page = await loadRealestatePage({ realestate, complexRatio, district });
-  for (let i = 0; i < 200 && !String(page.byId("overall-cards").innerHTML).includes("단지별"); i += 1) {
-    await new Promise((r) => setTimeout(r, 5));
-  }
-  const rendered = String(page.byId("overall-cards").innerHTML);
-  assert.match(rendered, new RegExp(`단지별 중앙값</div><div class="value">${shown}`));
-  assert.match(rendered, new RegExp(`단지·평형 ${spread.cells.toLocaleString("ko-KR")}칸`));
-});
+// (#507) "정적 HTML과 자바스크립트가 같은 카드를 그린다" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/complex-ratio.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 test("분포 파일이 없으면 카드 없이 그대로 돈다", async () => {
   const { readFile } = await import("node:fs/promises");
