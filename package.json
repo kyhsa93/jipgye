@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "fetch:news": "node scripts/fetch-news.ts",
-    "fetch:realestate": "node scripts/fetch-realestate.mjs",
+    "fetch:realestate": "node scripts/fetch-realestate.ts",
     "build:realestate": "node scripts/build-realestate.ts",
     "fetch:market": "node scripts/fetch-market.ts",
     "fetch:rates": "node scripts/fetch-rates.mjs",

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { errorDetail } from "../scripts/fetch-realestate.mjs";
+import { errorDetail } from "../scripts/fetch-realestate.ts";
 import {
   carryForward,
   dealingDirect,
