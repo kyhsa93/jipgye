@@ -129,11 +129,18 @@ export function districtFacts(dealFile) {
   return facts;
 }
 
-/** 억 단위로 읽는 금액. 시세 문장이 쓰는 형식과 같게 맞춘다. */
+/**
+ * 억 단위로 읽는 금액. 시세 문장이 쓰는 형식과 같게 맞춘다.
+ *
+ * 반올림은 한국어와 영어가 같은 한 번이다(10억 이상은 정수 억, 미만은 소수 1자리). 영어는
+ * 반올림한 글자를 수로 되읽어 100을 곱해 M으로 쓴다. 글자 뒤에 `00`을 붙이면 소수점이
+ * 그대로 남아 6.6억이 `₩6.600M`이 된다(660M이어야 한다). 쉼표는 넣지 않는다 — 구운 영어
+ * 본문의 표기(`₩10000M`)를 그대로 둔다.
+ */
 function eok(amount10k, en) {
   const value = amount10k / 10000;
   const text = value >= 10 ? value.toFixed(0) : value.toFixed(1);
-  return en ? `₩${text}00M` : `${text}억원`;
+  return en ? `₩${Math.round(Number(text) * 100)}M` : `${text}억원`;
 }
 
 const area = (value) => `${Number(value).toFixed(0)}㎡`;

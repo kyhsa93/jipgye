@@ -147,6 +147,30 @@ test("영문 문단도 같은 관찰을 말한다", async () => {
   assert.match(en.join(" "), /reported/, "영문 문단이 영어로 쓰여 있어야 합니다");
 });
 
+test("영문 최고가는 소수점 없이 M 단위로 쓰고 한국어와 같은 반올림을 따른다", () => {
+  // 영어 `eok`가 반올림한 글자 뒤에 `00M`을 이어 붙이던 때는 10억 미만이 `₩6.600M`처럼 나왔다.
+  // 구운 영어 자치구 25장은 최고가가 모두 10억 이상이라 화면에는 없던 결함이고, 그래서 표본으로 가린다.
+  // 10억 이상은 억 단위로 반올림해 굽는 것이 현행이고(쉼표 없음) 그대로 둔다.
+  const cases = [
+    // [만원, 영어, 한국어]
+    [66000, "₩660M", "6.6억원"],
+    [66500, "₩670M", "6.7억원"], // 한국어 반올림과 같은 쪽
+    [90000, "₩900M", "9.0억원"],
+    [95000, "₩950M", "9.5억원"],
+    [158000, "₩1600M", "16억원"], // 10억 이상은 정수 억
+    [320000, "₩3200M", "32억원"],
+    [1000000, "₩10000M", "100억원"],
+  ];
+  for (const [amount10k, en, ko] of cases) {
+    const facts = districtFacts({ deals: [{ dong: "가", apt: "나", area: 84, amount10k }] });
+    const enText = factSentences(facts, "en").join(" ");
+    const koText = factSentences(facts, "ko").join(" ");
+    assert.ok(enText.includes(` ${en} for a `), `${amount10k}만원: 영어 ${en} 이어야 합니다 - ${enText}`);
+    assert.ok(koText.includes(`로 ${ko}입니다`), `${amount10k}만원: 한국어 ${ko} 이어야 합니다 - ${koText}`);
+    assert.doesNotMatch(enText, /₩\d+\.\d/, `${amount10k}만원: 영어 금액에 소수점이 남았습니다`);
+  }
+});
+
 test("창을 밝히고 시작한다", async () => {
   // 위 시세표는 최근 네 주 계약분이고 여기 숫자는 석 달 신고분이라, 두 숫자가 어긋나
   // 보일 때 어느 쪽이 무엇인지 읽는 사람이 알 수 있어야 한다.

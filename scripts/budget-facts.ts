@@ -119,13 +119,6 @@ export function budgetFacts(deals, { year }: { year?: number } = {}) {
 
 const area = (value) => `${Number(value).toFixed(0)}㎡`;
 
-function eok(amount10k, en) {
-  if (!Number.isFinite(amount10k)) return null;
-  const value = amount10k / 10000;
-  const text = value >= 10 ? value.toFixed(0) : value.toFixed(1);
-  return en ? `₩${text}00M` : `${text}억원`;
-}
-
 function place(deal, en) {
   const parts = [deal.district, deal.dong, deal.apt].filter(Boolean);
   if (!parts.length) return null;
