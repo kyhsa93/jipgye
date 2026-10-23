@@ -335,5 +335,9 @@
 #   npm test(= node scripts/run-tests.mjs) → ℹ tests 1841 · pass 1841 · fail 0 · skipped 0
 #   직전 하한 1839 + 이 PR 이 test/budget-pages.test.mjs 에 더한 시험 2 (`node --test test/budget-pages.test.mjs` → ℹ tests 23 · pass 23; 전 21) = 1841.
 #   고친 기존 시험은 budget-pages 의 본문 순서·칩 줄 둘, render-parity 분기 표 fixture(합성 순서 한 줄·행 3개 추가 - 행은 시험 개수에 안 든다), 도우미 realestate-page 의 덩어리 꺼내기 정규식(div 추가)이고 없어진 시험은 0이다(.skip·.todo 도 0 그대로).
-1841
-1841
+# 센 법: 2026-10-23, merge-base c16d14b6(= origin/main), Node v24.22.0, macOS (#458 ②).
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1842 · pass 1842 · fail 0 · skipped 0
+#   직전 하한 1841 + 이 PR 이 test/district-facts.test.mjs 에 더한 시험 1 (`node --test test/district-facts.test.mjs` → ℹ tests 10 · pass 10; 전 9) = 1842.
+#   고친 기존 시험은 0이고 없어진 시험도 0이다(.skip·.todo 도 0 그대로).
+1842
+1842
