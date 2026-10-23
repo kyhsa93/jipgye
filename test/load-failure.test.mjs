@@ -10,6 +10,7 @@ import path from "node:path";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
+import { loadIndexPage } from "./helpers/index-page.mjs";
 import { stripInlineScriptComments } from "../scripts/strip-inline-comments.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -807,4 +808,268 @@ test("S6 의도한 차이 (#296 (바)): 인라인 장당 +1,800B 이하, 47장 �
   assert.ok(total <= 84_600, `47장 합 ${total}B - cto 한도 84,600B 를 넘었다`);
   const base = Buffer.byteLength(loadStateSource) - 2578;
   assert.ok(base <= 2000, `docs/load-state.js 순증가 ${base}B - cto 한도 2,000B`);
+});
+
+// ============================================================================================================
+// 둘째 행: 첫 화면(docs/index.html, 틀 (다), F1~F4). 같은 규칙 2~5 를 이 장의 머리 배너(#load-error)로 지킨다 -
+// 구운 표 넷(#market-grid·#realestate-grid·#news-list·#summary-box)과 구운 기준일(#updated)을 실패해도 지우지 않고, 배너가
+// [무엇을 못 받았는지] + [아래는 기준일(구운 data-updated)에 만든 값입니다] + (영어) [Some of it is in Korean only.] + [다시 시도] 를 말한다.
+// 이 장은 load-state.js 를 <script src> 로 물지 않는다(S6) - 문장 글자만 같게 두고 그것을 아래에서 맞대 본다. 실패 이유("HTTP 503")는 보이지 않는다.
+// 오늘 값이 구운 것이므로 지난 날짜 보기(?date=)는 구운 것을 남기지 않는다(규칙 3): 그 자리는 실패 문구 + 배너의 다시 시도(규칙 1)다.
+// ============================================================================================================
+const INDEX_SPOTS = ["market-grid", "realestate-grid", "summary-box", "news-list"];
+const INDEX_TODAY = ["market", "news", "summary", "realestate"];
+const indexSource = await readFile(path.join(root, "docs/index.html"), "utf8");
+const indexScript = scriptOf(indexSource);
+const HTTP_WORDS = /HTTP|\b(?:404|503)\b/;
+
+// 데이터 요청을 막는 서버. mode 는 바꿔 끼울 수 있다(재시도 시험). only 가 있으면 그 파일만 실패한다.
+function indexServer(mode, only = null) {
+  const state = { mode };
+  state.fetch = async (url) => {
+    const name = String(url).split("/data/")[1]?.split(".json")[0];
+    const down = state.mode !== "ok" && (!only || only === name);
+    if (down && state.mode === "network") throw new TypeError("Failed to fetch");
+    if (down) return { ok: false, status: state.mode === "404" ? 404 : 503, json: async () => ({}) };
+    if (!name) return { ok: false, status: 404, json: async () => ({}) };
+    return { ok: true, json: () => readJson(name) };
+  };
+  return state;
+}
+const openIndex = async ({ lang = "ko", mode = "network", only = null, search = "", mutate } = {}) => {
+  const server = indexServer(mode, only);
+  const page = await loadIndexPage({ baked: true, fetch: server.fetch, storage: { lang }, search, mutate });
+  await settle(60);
+  return { page, server };
+};
+const bannerOf = (page) => ({
+  hidden: page.byId("load-error").hidden,
+  text: String(page.byId("load-error-text").textContent),
+  retry: String(page.byId("load-error-retry").textContent),
+});
+const countOf = (text, needle) => text.split(needle).length - 1;
+const clickRetry = async (page) => {
+  const button = page.byId("load-error-retry");
+  button.dispatch("click", { currentTarget: button });
+  await settle(60);
+};
+
+// ⓐⓒ 구운 자리·구운 기준일이 실패 뒤에도 그대로다. 변이 시험이 같은 함수를 쓴다.
+function assertBakedKept(page, label) {
+  for (const id of INDEX_SPOTS) assert.equal(page.byId(id).innerHTML, page.baked[id], `${label}: #${id} 의 구운 내용이 바뀌었다`);
+  assert.equal(page.byId("updated").textContent, page.baked.updatedText, `${label}: 구운 기준일 글자가 바뀌었다`);
+  assert.equal(page.byId("updated").getAttribute("data-updated"), page.baked.day, `${label}: data-updated 가 바뀌었다`);
+}
+
+test("(다) 범위: index 는 구운 조각 넷과 구운 기준일(data-updated)을 갖고, load-state.js 를 <script src> 로 물지 않는다 (S6)", () => {
+  assert.equal(indexSource.includes("load-state.js"), false, "index 가 load-state.js 를 문다 - 외부 JS 를 더하는 일이라 cto 허용 표가 먼저다");
+  for (const name of ["market", "realestate", "summary", "news"]) {
+    assert.match(indexSource, new RegExp(`<!--prerender:${name}-->[\\s\\S]+<!--/prerender:${name}-->`), `구운 ${name} 조각이 비었다`);
+  }
+  assert.match(indexSource, /<div class="updated" id="updated" data-updated="\d{4}-\d{2}-\d{2}">/, "구운 기준일 줄에 data-updated 가 없다");
+});
+
+test("ⓐⓒ (다) 요청이 전부 실패(네트워크·404·503)해도 구운 표 넷과 구운 기준일 글자·data-updated 가 한 글자도 안 바뀐다 - 한국어·영어", async () => {
+  for (const lang of ["ko", "en"]) {
+    for (const mode of ["network", "404", "503"]) {
+      const { page } = await openIndex({ lang, mode });
+      assertBakedKept(page, `${lang} ${mode}`);
+    }
+  }
+});
+
+test("ⓑⓔ (다) 실패하면 머리 배너가 보이고 이름 + 구운 기준일 문장 + 다시 시도를 말한다 - 영어는 한국어 고지 정확히 1, 한국어는 0, 실패 이유·오늘·최신은 없다", async () => {
+  for (const [lang, names, kept, retry] of [
+    ["ko", "시장지표, 뉴스, AI 요약, 부동산을 불러오지 못했습니다.", (day) => `아래는 기준일(${day})에 만든 값입니다.`, "다시 시도"],
+    ["en", "Could not load: market data, news, AI summary, real estate.", (day) => `Shown below is what this page was built with on ${day}.`, "Retry"],
+  ]) {
+    for (const mode of ["network", "404", "503"]) {
+      const { page } = await openIndex({ lang, mode });
+      const banner = bannerOf(page);
+      const label = `${lang} ${mode}`;
+      assert.equal(banner.hidden, false, `${label}: 배너가 안 보인다`);
+      assert.ok(banner.text.startsWith(names), `${label}: 못 받은 것의 이름이 다르다: ${banner.text}`);
+      assert.ok(banner.text.includes(kept(page.baked.day)), `${label}: 구운 기준일 문장이 없다: ${banner.text}`);
+      assert.equal(countOf(banner.text, KO_ONLY), lang === "en" ? 1 : 0, `${label}: 한국어 고지 수가 다르다: ${banner.text}`);
+      assert.equal(banner.retry, retry, `${label}: 다시 시도 단추 글자`);
+      assert.ok((page.byId("load-error-retry").listeners.click ?? []).length > 0, `${label}: 다시 시도 단추에 누름 처리가 없다`);
+      assert.equal(HTTP_WORDS.test(banner.text), false, `${label}: 실패 이유가 방문자에게 보인다: ${banner.text}`);
+      assert.equal(BAD_WORDS.test(banner.text), false, `${label}: 알림이 지금 값처럼 말한다: ${banner.text}`);
+    }
+  }
+});
+
+test("ⓑ (다) 실패한 뒤 언어를 바꾸면 배너 문구가 그 언어로 바뀌고 구운 표는 그대로다", async () => {
+  const { page } = await openIndex({ lang: "ko" });
+  assert.equal(countOf(bannerOf(page).text, KO_ONLY), 0);
+  page.byId("lang-toggle").dispatch("click");
+  await settle(10);
+  const en = bannerOf(page);
+  assert.equal(en.hidden, false);
+  assert.ok(en.text.startsWith("Could not load:") && countOf(en.text, KO_ONLY) === 1 && en.retry === "Retry", `영어 배너: ${en.text}`);
+  page.byId("lang-toggle").dispatch("click");
+  await settle(10);
+  assert.equal(countOf(bannerOf(page).text, KO_ONLY), 0);
+  assertBakedKept(page, "언어 전환 뒤");
+});
+
+test("ⓐ (다) 한 가지만 실패하면 그 자리만 구운 채로 남고 나머지는 받은 값으로 바뀐다 - 배너는 실패한 것만 말한다", async () => {
+  const ids = { market: "market-grid", news: "news-list", summary: "summary-box", realestate: "realestate-grid" };
+  const label = { market: "시장지표를", news: "뉴스를", summary: "AI 요약을", realestate: "부동산을" };
+  for (const failing of INDEX_TODAY) {
+    const { page } = await openIndex({ mode: "503", only: failing });
+    assert.equal(page.byId(ids[failing]).innerHTML, page.baked[ids[failing]], `${failing}: 못 받은 자리의 구운 내용이 바뀌었다`);
+    for (const other of INDEX_TODAY.filter((k) => k !== failing)) {
+      assert.notEqual(page.byId(ids[other]).innerHTML, page.baked[ids[other]], `${failing} 실패인데 ${other} 는 받은 값으로 안 바뀌었다`);
+    }
+    const banner = bannerOf(page);
+    assert.equal(banner.hidden, false);
+    assert.ok(banner.text.startsWith(`${label[failing]} 불러오지 못했습니다.`), `${failing}: ${banner.text}`);
+  }
+});
+
+test("ⓖ (다) 다시 시도가 성공하면 배너가 걷히고 구운 자리가 받은 값으로 바뀐다, 또 실패하면 구운 채로 배너가 남는다", async () => {
+  for (const lang of ["ko", "en"]) {
+    const { page, server } = await openIndex({ lang });
+    await clickRetry(page);
+    assert.equal(bannerOf(page).hidden, false, `${lang}: 다시 실패했는데 배너가 걷혔다`);
+    assertBakedKept(page, `${lang} 재시도 실패`);
+
+    server.mode = "ok";
+    await clickRetry(page);
+    const banner = bannerOf(page);
+    assert.equal(banner.hidden, true, `${lang}: 성공했는데 배너가 남았다`);
+    assert.equal(banner.text, "", `${lang}: 걷힌 배너에 글자가 남았다`);
+    for (const id of ["market-grid", "news-list", "summary-box"]) assert.notEqual(page.byId(id).innerHTML, page.baked[id], `${lang}: #${id} 가 받은 값으로 안 바뀌었다`);
+    assert.ok(String(page.byId("news-list").innerHTML).includes("news-item"), `${lang}: 뉴스가 안 그려졌다`);
+  }
+});
+
+test("ⓓ (다) 지난 날짜 보기(?date=)에서 요청이 실패하면 오늘 구운 값이 남지 않고, 실패 문구 + 배너의 다시 시도가 보인다 - 기준일 줄은 그 날짜를 말한다", async () => {
+  const DATE = "2026-09-01";
+  for (const lang of ["ko", "en"]) {
+    for (const mode of ["network", "404", "503"]) {
+      const { page } = await openIndex({ lang, mode, search: `?date=${DATE}` });
+      const label = `${lang} ${mode}`;
+      for (const id of ["market-grid", "news-list", "summary-box"]) {
+        assert.notEqual(page.byId(id).innerHTML, page.baked[id], `${label}: #${id} 에 오늘 구운 값이 남았다`);
+      }
+      assert.match(String(page.byId("market-grid").innerHTML), /불러오지 못했습니다|Failed to load data/, `${label}: 시장지표 실패 문구`);
+      assert.match(String(page.byId("news-list").innerHTML), /불러오지 못했습니다|Failed to load data/, `${label}: 뉴스 실패 문구`);
+      assert.ok(
+        String(page.byId("summary-box").textContent).includes(lang === "ko" ? "AI 요약을 불러오지 못했습니다." : "Could not load the AI summary."),
+        `${label}: 요약이 실패를 '아직 없음'으로 말한다: ${page.byId("summary-box").textContent}`,
+      );
+      assert.equal(page.byId("realestate-section").hidden, true, `${label}: 지난 날짜에 부동산 구획이 열렸다`);
+      assert.ok(String(page.byId("updated").textContent).includes(DATE), `${label}: 기준일 줄이 그 날짜를 말하지 않는다: ${page.byId("updated").textContent}`);
+      assert.notEqual(page.byId("updated").textContent, page.baked.updatedText, `${label}: 기준일 줄이 구운 기준일로 되돌아갔다`);
+      const banner = bannerOf(page);
+      assert.equal(banner.hidden, false, `${label}: 배너가 안 보인다 (재시도 단추가 없다)`);
+      assert.equal(banner.retry, lang === "ko" ? "다시 시도" : "Retry", `${label}: 다시 시도 단추`);
+      assert.ok(banner.text.includes(lang === "ko" ? "시장지표, AI 요약, 뉴스" : "market data, AI summary, news"), `${label}: 못 받은 것의 이름: ${banner.text}`);
+      assert.equal(/기준일\(|Shown below|Korean only/.test(banner.text), false, `${label}: 가리킬 구운 값이 없는데 기준일 문장이 붙었다: ${banner.text}`);
+      assert.equal(HTTP_WORDS.test(banner.text), false, `${label}: 실패 이유가 보인다: ${banner.text}`);
+      const notice = page.byId("content-notice");
+      assert.equal(/기록이 없습니다|No record/.test(String(notice.textContent)), false, `${label}: 실패를 '기록이 없다'고 말한다: ${notice.textContent}`);
+    }
+  }
+});
+
+test("ⓖ (다) 지난 날짜 보기에서 다시 시도가 성공하면 배너가 걷히고 그날 기록이 그려진다", async () => {
+  const newsHistory = await readJson("news-history");
+  const day = newsHistory.findLast((entry) => entry.items?.length)?.date;
+  const { page, server } = await openIndex({ search: `?date=${day}` });
+  assert.equal(bannerOf(page).hidden, false);
+  server.mode = "ok";
+  await clickRetry(page);
+  assert.equal(bannerOf(page).hidden, true, "성공했는데 배너가 남았다");
+  assert.ok(String(page.byId("news-list").innerHTML).includes("news-item"), "그날 뉴스가 안 그려졌다");
+});
+
+test("ⓓ (다) 지난 날짜의 기록이 없을 때(받았는데 비었다)도 오늘 구운 값이 남지 않는다 - 배너는 없고 '기록이 없습니다'로 말한다", async () => {
+  const { page } = await openIndex({ mode: "ok", search: "?date=2020-01-01" });
+  for (const id of ["market-grid", "news-list", "summary-box"]) {
+    assert.notEqual(page.byId(id).innerHTML, page.baked[id], `#${id} 에 오늘 구운 값이 남았다`);
+    assert.ok(String(page.byId(id).textContent + page.byId(id).innerHTML).includes("이 날짜의 기록이 없습니다."), `#${id} 가 기록 없음을 말하지 않는다`);
+  }
+  assert.equal(bannerOf(page).hidden, true, "기록 없음에 실패 배너가 떴다");
+});
+
+test("(다) 규칙 5: 받았는데 비어 있는 것은 실패가 아니다 - 구운 값을 남기지 않고 '아직 없음'으로 말하며 실패 배너가 뜨지 않는다", async () => {
+  const server = indexServer("ok");
+  const fetchEmpty = async (url) => {
+    const name = String(url).split("/data/")[1]?.split(".json")[0];
+    if (name === "news") return { ok: true, json: async () => ({ items: [] }) };
+    if (name === "summary") return { ok: true, json: async () => ({}) };
+    return server.fetch(url);
+  };
+  const page = await loadIndexPage({ baked: true, fetch: fetchEmpty });
+  await settle(60);
+  assert.notEqual(page.byId("news-list").innerHTML, page.baked["news-list"], "받은 빈 뉴스인데 구운 뉴스가 남았다");
+  assert.notEqual(page.byId("summary-box").innerHTML, page.baked["summary-box"], "받은 빈 요약인데 구운 요약이 남았다");
+  assert.ok(String(page.byId("summary-box").textContent).includes("아직 생성된 요약이 없습니다."), page.byId("summary-box").textContent);
+  assert.equal(bannerOf(page).hidden, true, "받았는데 실패 배너가 떴다");
+});
+
+test("(다) 규칙 1: 구운 내용이 없는 빈 자리는 실패하면 실패 문구로 바꾸고 구운 기준일 문장은 말하지 않는다", async () => {
+  const server = indexServer("network");
+  const page = await loadIndexPage({ fetch: server.fetch });
+  await settle(60);
+  for (const id of ["market-grid", "news-list"]) assert.ok(String(page.byId(id).innerHTML).includes("불러오지 못했습니다"), `#${id} 빈 자리에 실패 문구가 없다`);
+  assert.ok(String(page.byId("summary-box").textContent).includes("AI 요약을 불러오지 못했습니다."));
+  assert.equal(/기준일\(/.test(bannerOf(page).text), false, "구운 기준일이 없는데 기준일 문장이 붙었다");
+});
+
+test("ⓕ (다) 구운 자리 넷의 실패 갈래는 쓰기 전에 baked() 로 먼저 나간다 - 새 실패 마크업은 없고 알림은 머리 배너 한 곳이다", () => {
+  for (const [fn, guard] of [
+    ["renderMarket", "baked(tbody, market)"],
+    ["renderRealestate", "baked(tbody, realestate)"],
+    ["renderNews", "baked(list, news)"],
+    ["renderSummary", "baked(box, summary)"],
+  ]) {
+    const a = indexScript.indexOf(`function ${fn}(`);
+    const body = indexScript.slice(a, indexScript.indexOf("\n  function ", a + 10));
+    const g = body.indexOf(`if (${guard}) return;`);
+    assert.ok(g > 0, `${fn}: 구운 내용을 남기는 갈래가 없다`);
+    assert.equal(/innerHTML\s*=|textContent\s*=|classList\.add|hidden\s*=/.test(body.slice(0, g)), false, `${fn}: baked() 보다 먼저 자리를 건드린다`);
+  }
+  assert.equal(countOf(indexScript, "const baked = "), 1);
+  assert.equal(countOf(indexScript, 'id="load-retry"'), 0, "index 에 재시도 단추 마크업이 새로 생겼다 - 머리 배너(#load-error-retry) 하나만 쓴다");
+  assert.equal(/insertAdjacentHTML|notifyBeside|showFailure/.test(indexScript), false, "index 에 알림 요소를 직접 만들었다");
+});
+
+test("(다) 배너의 둘째 문장은 load-state.js 의 notifyBeside 와 같은 말이다 (한·영) - 문구가 두 곳에서 갈라지지 않게", () => {
+  assert.ok(loadStateSource.includes("`Shown below is what this page was built with${day ? ` on ${day}` :"), "load-state.js 의 영어 문장이 바뀌었다");
+  assert.ok(indexScript.includes("Shown below is what this page was built with on ${day}. Some of it is in Korean only."), "index 의 영어 문장이 load-state.js 와 다르다");
+  assert.ok(loadStateSource.includes('en && "Some of it is in Korean only."'));
+  assert.ok(loadStateSource.includes("`아래는 ${day ? `기준일(${day})` :") && loadStateSource.includes("에 만든 값입니다.`"), "load-state.js 의 한국어 문장이 바뀌었다");
+  assert.ok(indexScript.includes("아래는 기준일(${day})에 만든 값입니다."), "index 의 한국어 문장이 load-state.js 와 다르다");
+});
+
+// 변이 증빙: 같은 점검이 규칙을 어긴 사본에서는 실패해야 한다(통과만 하는 시험이 아님을 보인다).
+const mutation = (from, to) => (script) => {
+  assert.ok(script.includes(from), `변이 대상 글자를 못 찾았다: ${from}`);
+  return script.replace(from, to);
+};
+
+test("변이 증빙 (다): 구운 내용을 남기는 갈래를 지운 사본, 지난 날짜 가드를 지운 사본, 구운 기준일을 지우는 사본은 위 점검이 실패시킨다", async () => {
+  const noKeep = await openIndex({ mutate: mutation("const baked = (el, data) => !data && !isArchiveView && el.textContent;", "const baked = () => false;") });
+  assert.throws(() => assertBakedKept(noKeep.page, "변이1"), /구운 내용이 바뀌었다/, "구운 내용을 안 남겨도 ⓐ 가 통과한다");
+
+  const noArchiveGuard = await openIndex({ search: "?date=2026-09-01", mutate: mutation("!data && !isArchiveView && el.textContent", "!data && el.textContent") });
+  const left = ["market-grid", "news-list", "summary-box"].filter((id) => noArchiveGuard.page.byId(id).innerHTML === noArchiveGuard.page.baked[id]);
+  assert.ok(left.length > 0, "지난 날짜 가드를 지워도 오늘 구운 값이 안 남는다 - ⓓ 가 눈이 멀었다");
+
+  const noStamp = await openIndex({
+    mutate: mutation(
+      'if (latest) document.getElementById("updated").textContent = t("lastUpdated")(fmtUpdated(latest));',
+      'document.getElementById("updated").textContent = latest ? t("lastUpdated")(fmtUpdated(latest)) : "-";',
+    ),
+  });
+  assert.throws(() => assertBakedKept(noStamp.page, "변이3"), /구운 기준일 글자가 바뀌었다/, "기준일을 '-'로 바꿔도 ⓒ 가 통과한다");
+});
+
+test("S6 의도한 차이 (#296 (다)): index 인라인 스크립트 순증가 +400B 이하 (merge-base 75,413B)", () => {
+  const added = Buffer.byteLength(indexScript) - 75_413;
+  assert.ok(added <= 400, `index 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
 });

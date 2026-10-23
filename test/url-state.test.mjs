@@ -181,11 +181,12 @@ test("무엇을 못 받았는지 이름을 말한다", async () => {
     assert.ok(!text.includes("을(를)"), `조사가 자동으로 안 붙는다: ${text}`);
   }
 
+  // 실패 이유("HTTP 404")는 방문자에게 보이지 않는다(#296 (다)). 무엇이 실패했는지는 위 이름이 말한다.
   const withReason = await loadWithFailure("summary");
-  await until(() => /\(HTTP \d+\)/.test(String(withReason.byId("load-error-text").textContent)));
+  await until(() => String(withReason.byId("load-error-text").textContent).includes("AI 요약"));
   assert.ok(
-    /\(HTTP \d+\)/.test(withReason.byId("load-error-text").textContent),
-    `실패 이유가 안 실린다: ${withReason.byId("load-error-text").textContent}`
+    !/HTTP|\b\d{3}\b/.test(withReason.byId("load-error-text").textContent),
+    `실패 이유가 방문자에게 보인다: ${withReason.byId("load-error-text").textContent}`
   );
 
   const summaryFailed = await loadWithFailure("summary");

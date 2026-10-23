@@ -5,7 +5,8 @@ import vm from "node:vm";
 
 const root = path.resolve(import.meta.dirname, "../..");
 
-function stubElement() {
+// faithful: 구운 조각 자리(#296)는 실제 DOM 처럼 textContent 를 쓰면 안쪽 마크업이 글자로 바뀌고, 읽으면 마크업을 걷은 글자가 나온다.
+function stubElement(faithful = false) {
   const listeners = {};
   const base = {
     listeners,
@@ -24,20 +25,50 @@ function stubElement() {
     dataset: {},
     classList: { add() {}, remove() {}, toggle() {}, contains: () => false },
   };
+  if (faithful) {
+    let html = "";
+    delete base.innerHTML;
+    delete base.textContent;
+    Object.defineProperties(base, {
+      innerHTML: { get: () => html, set: (v) => void (html = String(v)), enumerable: true },
+      textContent: { get: () => html.replace(/<[^>]*>/g, ""), set: (v) => void (html = String(v).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c])), enumerable: true },
+    });
+  }
   return new Proxy(base, {
     get: (t, p) => (p in t ? t[p] : typeof p === "symbol" ? undefined : () => {}),
     set: (t, p, v) => ((t[p] = v), true),
   });
 }
 
-export async function loadIndexPage({ analytics, fetch: fetchImpl, search = "", serviceWorker, storage } = {}) {
+// 구운 조각이 든 자리(#296). 빌드가 docs/index.html 에 구운 글자를 그대로 심어, 실패해도 그 글자가 남는지 본다.
+const BAKED_SPOTS = { "market-grid": "market", "realestate-grid": "realestate", "summary-box": "summary", "news-list": "news" };
+
+export async function loadIndexPage({ analytics, fetch: fetchImpl, search = "", serviceWorker, storage, baked = false, mutate } = {}) {
   const html = await readFile(path.join(root, "docs/index.html"), "utf8");
-  const script = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
-  assert.ok(script.includes("hasEnoughSample"), "렌더링 스크립트를 찾지 못했다");
+  const script0 = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
+  assert.ok(script0.includes("hasEnoughSample"), "렌더링 스크립트를 찾지 못했다");
+  const script = mutate ? mutate(script0) : script0;
 
   const store = { ...storage };
   const observed = [];
   const byId = new Map();
+  const bakedHtml = {};
+  if (baked) {
+    for (const [id, name] of Object.entries(BAKED_SPOTS)) {
+      const fragment = html.match(new RegExp(`<!--prerender:${name}-->([\\s\\S]*?)<!--/prerender:${name}-->`))?.[1] ?? "";
+      assert.ok(fragment, `docs/index.html 에 구운 ${name} 조각이 없다`);
+      const el = stubElement(true);
+      el.innerHTML = bakedHtml[id] = fragment;
+      byId.set(id, el);
+    }
+    const stamp = html.match(/<div class="updated" id="updated" data-updated="([^"]*)">([^<]*)<\/div>/);
+    assert.ok(stamp, "docs/index.html 의 구운 기준일 줄을 못 찾았다");
+    const el = stubElement();
+    el.textContent = bakedHtml.updatedText = stamp[2];
+    el.getAttribute = (name) => (name === "data-updated" ? stamp[1] : null);
+    bakedHtml.day = stamp[1];
+    byId.set("updated", el);
+  }
   const listeners = { window: {}, document: {} };
   const reloads = [];
 
@@ -138,6 +169,7 @@ export async function loadIndexPage({ analytics, fetch: fetchImpl, search = "", 
 
   return {
     app: sandbox,
+    baked: bakedHtml,
     fire,
     reloads: () => reloads.length,
     byId: (id) => sandbox.document.getElementById(id),

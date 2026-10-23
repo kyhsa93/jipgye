@@ -371,5 +371,17 @@
 #   직전 하한 1893 + 새 시험 3 = 1896: test/mortgage.test.mjs 의 2(최저금리가 빈 값 null·undefined·""·" "·false·true·[]이면 0%로 세지 않고 뺀다 / 전부 비면 옵션 0개라 문장이 없다),
 #   test/fetch-rates.test.mjs 의 1(lend_rate_min만 빈 응답 -> rates.json min null -> apartmentOptions가 제외). 고친 기존 시험은 0, 없어진 시험은 0이다(.skip·.todo 도 0 그대로).
 #   render-parity 의 고정 행은 시험 개수가 아니다: AN-R12~R14·LO-R13 의 기대값(null·""·false 를 0%로 세던 것)을 값 없음으로 고치고 AN-R16·LO-R16 을 더했다.
-1896
-1896
+# 센 법: 2026-10-24, merge-base d3aa489d(= origin/main), Node v24.22.0, macOS 15.5 (#296 (다) index 틀 실패 알림).
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1911 · pass 1911 · fail 0 · skipped 0
+#   merge-base d3aa489d 를 따로 풀어 같은 명령 → ℹ tests 1896 · pass 1896 · fail 0 · skipped 0(= 직전 하한).
+#   차이 15 는 이 PR 이 test/load-failure.test.mjs 에 더한 index 행의 새 시험 15개에서 나온다(`node --test test/load-failure.test.mjs` → 기준 43 → 후보 58):
+#   범위(구운 조각 넷·구운 기준일·load-state.js 를 <script src> 로 물지 않음) · ⓐⓒ 요청 전부 실패(네트워크·404·503 × ko·en)에도 구운 표 넷과 #updated 글자·data-updated 그대로 ·
+#   ⓑⓔ 배너(이름 + 구운 기준일 문장 + 다시 시도, 영어는 한국어 고지 정확히 1·한국어 0, 실패 이유·오늘·최신 0) · ⓑ 실패 뒤 언어 전환 · ⓐ 한 가지만 실패(4가지 각각) ·
+#   ⓖ 다시 시도(재실패는 구운 채 배너 유지, 성공하면 배너 걷힘·받은 값) · ⓓ 지난 날짜 보기(?date=) 실패는 오늘 구운 값 0 + 배너 다시 시도 + 기준일 줄은 그 날짜 · ⓖ 지난 날짜 다시 시도 성공 ·
+#   ⓓ 지난 날짜에 기록 없음(받았는데 빔) · 규칙 5 받았는데 빈 뉴스·요약은 구운 값을 남기지 않음 · 규칙 1 빈 자리 · ⓕ 구운 자리 넷은 쓰기 전에 baked() 로 먼저 나감(새 알림 마크업 0) ·
+#   배너 문장이 load-state.js 의 notifyBeside 와 같은 말 · 변이 증빙 셋(구운 남김 갈래 삭제·지난 날짜 가드 삭제·기준일을 "-"로 바꿈이 각각 위 점검에 걸림) · S6(index 인라인 순증가 +400B 이하, merge-base 75,413B).
+#   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 15.
+#   고친 기존 시험은 하나다: test/url-state.test.mjs "무엇을 못 받았는지 이름을 말한다" 의 「배너에 (HTTP n) 이유가 실린다」 단언을 「이유가 방문자에게 안 보인다」로 뒤집었다(이름은 그대로, 개수 -0 +0) -
+#   #296 이 index 배너에서 "HTTP 503" 노출을 없애라고 정한 바로 그 자리다. 없어진 시험은 0이고(.skip·.todo 도 0 그대로) 공용 도우미 test/helpers/index-page.mjs 에는 구운 조각을 심는 baked·mutate 선택지만 더했다(기본값이면 이전과 같다).
+1911
+1911
