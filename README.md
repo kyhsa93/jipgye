@@ -123,7 +123,7 @@ CFO는 두지 않았다. 드는 돈이 없고(GitHub 무료, 요약은 자체 Ol
 흩어졌는지, 소형이 팔리는지 대형이 팔리는지, 준공 30년을 넘긴 단지가 얼마나 되는지,
 직거래 비중이 큰지. **문턱을 넘은 것만 말한다.** 스물다섯 구에 같은 다섯 문장을 더 붙이면
 여섯 문장짜리 틀이 열한 문장짜리 틀이 될 뿐이라, 튀는 데가 없는 구는 튀는 데가 없다고
-적고 끝낸다. 어느 관찰이 어느 구에 붙는지는 `scripts/district-facts.mjs`에 있다.
+적고 끝낸다. 어느 관찰이 어느 구에 붙는지는 `scripts/district-facts.ts`에 있다.
 
 금리 화면은 표 위 요약 문단을 두지 않는다(#214, 노출 설계는 #232).
 
@@ -284,12 +284,12 @@ esbuild의 플랫폼 바이너리 `@esbuild/*`는 esbuild의 `optionalDependenci
 것은 없다 - 빌드 때 HTML 문자열을 만드는 데만 쓰고, 틀에 구워 넣은 결과는 전과 같은 바이트다.
 
 `JIPGYE_RENDERER=legacy|react`가 `scripts/prerender.ts`의 `*Html()` 조각 함수를 어느 쪽이 그릴지 고른다. **기본값은 react**이고(#246 컷오버,
-2026-10-12 소유자 지시), 그래서 `prerender.ts`·`build-*-pages.mjs`는 `npm ci`로 `node_modules`가 깔린 곳에서만 돈다. `JIPGYE_RENDERER=legacy`를
-명시하면 esbuild·react를 불러오지 않고 legacy가 돈다(롤백·시험용; 기본값을 되돌리는 것은 `scripts/renderer.mjs`의 `rendererMode` 한 줄이다).
+2026-10-12 소유자 지시), 그래서 `prerender.ts`·`build-*-pages.ts`는 `npm ci`로 `node_modules`가 깔린 곳에서만 돈다. `JIPGYE_RENDERER=legacy`를
+명시하면 esbuild·react를 불러오지 않고 legacy가 돈다(롤백·시험용; 기본값을 되돌리는 것은 `scripts/renderer.ts`의 `rendererMode` 한 줄이다).
 react 모드는 이식된 조각(`scripts/render/entry.jsx`의 `fragments`; 지금은 조각 44개 전부)을 React로 그리고, 두 모드의 출력은 같은 바이트다.
 react 쪽 오류는 삼키지 않고 예외로 올라온다(폴백은 워크플로의 일이다).
-진입점은 `scripts/render/react.mjs` 한 곳이고, JSX를 읽는 로더는 esbuild로 진입 파일을 묶어 import하는 `scripts/render/load-jsx.mjs`다
-(Node의 `--loader` 플래그는 쓰지 않는다). 렌더 스크립트는 전 장을 메모리에서 그린 뒤에 한꺼번에 쓴다(`scripts/render-writes.mjs`) -
+진입점은 `scripts/render/react.ts` 한 곳이고, JSX를 읽는 로더는 esbuild로 진입 파일을 묶어 import하는 `scripts/render/load-jsx.ts`다
+(Node의 `--loader` 플래그는 쓰지 않는다). 렌더 스크립트는 전 장을 메모리에서 그린 뒤에 한꺼번에 쓴다(`scripts/render-writes.ts`) -
 도중에 던져도 일부 장만 새 출력이 되지 않는다. legacy와 react가 같은 바이트를 내는지는 `tools/golden/README.md`의 같은-실행 비교로 본다.
 
 ### 화면
@@ -297,7 +297,7 @@ react 쪽 오류는 삼키지 않고 예외로 올라온다(폴백은 워크플�
 67장 HTML이 전부 `docs/style.css` 한 장을 본다. 손으로 고치는 것은 열네 장뿐이고
 (`index` `news` `realestate` `rates` `deal-search` `jeonse-vs-wolse` `cancelled-deals`
 `renewal-vs-new` `floor-gap` `record-high` `switch-house` `price-outlook` `about` `method`)
-나머지 53장은 이 중 몇 장을 틀로 삼아 `scripts/build-*-pages.mjs`가 찍어낸다. 그러니 **생성된 페이지를 직접 고치지 말고 틀과 스타일시트를 고친다.**
+나머지 53장은 이 중 몇 장을 틀로 삼아 `scripts/build-*-pages.ts`가 찍어낸다. 그러니 **생성된 페이지를 직접 고치지 말고 틀과 스타일시트를 고친다.**
 
 전에는 62장이 각자 `<style>`을 품고 있었고 그 사이에 일곱 갈래로 갈라져 있었다.
 `.data-table`이 한 장에서는 왼쪽 정렬, 나머지 61장에서는 오른쪽 정렬인 식이었다.
@@ -305,7 +305,7 @@ react 쪽 오류는 삼키지 않고 예외로 올라온다(폴백은 워크플�
 
 이름의 마크는 그림 파일이 아니라 도형이다. 화면 왼쪽 위의 워드마크는 `style.css`의
 `.wordmark::before`(첫 화면 밖에서는 `.brand::before`)가 그러데이션 넷과 가로지르는 한 획으로 그리고, 앱 아이콘
-(`docs/icons/*.png`)은 같은 모양을 `scripts/build-icons.mjs`가 그린다 — 손으로 갈아
+(`docs/icons/*.png`)은 같은 모양을 `scripts/build-icons.ts`가 그린다 — 손으로 갈아
 끼우면 둘이 조용히 갈라지므로 `test/icons.test.mjs`가 스크립트 출력과 대조한다.
 자치구·예산대 페이지에는 사이트 이름이 한 번도 안 나왔었다. 검색으로 그 페이지에 떨어진
 사람은 자기가 어디에 있는지 모른 채 표부터 보게 되므로, 워드마크를 예순일곱 장 머리에 둔다.
@@ -347,7 +347,7 @@ react 쪽 오류는 삼키지 않고 예외로 올라온다(폴백은 워크플�
 **실거래 검색은 조건을 넣기 전에도 결과를 보여준다.** 매매는 원래 그랬다(서울 전체
 건수 + 최근 30건). 전세·월세만 자치구를 고르기 전엔 빈 화면이었는데, 전월세 전수 파일이
 자치구별로 쪼개져 있고 스물다섯 개가 6.8MB(그렇게 정한 2026-08-29 값. 아래 크기·개수도 결정 당시 값이고 매일 바뀐다)라 서울 전체를 그 자리에서 못 만들기 때문이다.
-그래서 서울 전체 건수와 최근 30건만 미리 만들어 둔다(`build-rent-preview.mjs`, 그때 9KB).
+그래서 서울 전체 건수와 최근 30건만 미리 만들어 둔다(`build-rent-preview.ts`, 그때 9KB).
 
 **다만 그 맛보기로 조건을 거르지는 않는다.** 최근 30건 위에 "60㎡ 미만"을 얹으면 나오는
 건수는 서울에서 그 조건에 맞는 거래 수가 아니라 이 목록 안의 수인데, 화면에서는 구별되지
@@ -356,7 +356,7 @@ react 쪽 오류는 삼키지 않고 예외로 올라온다(폴백은 워크플�
 
 **검색에서 단지를 고르면 평형별 카드가 뜬다.** 목록은 "얼마에 팔렸나"에는 답하지만
 "이 단지 전세가율이 얼마냐"에는 답하지 않는다 — 그건 평형마다 매매와 전세를 따로 모아야
-나온다. 규칙은 `scripts/complex-ratio.mjs`와 같고(한쪽이라도 3건 미만이면 값을 내지 않음),
+나온다. 규칙은 `scripts/complex-ratio.ts`와 같고(한쪽이라도 3건 미만이면 값을 내지 않음),
 **표본이 모자란 평형은 비워 두지 않고 "신고 1건"이라고 적는다.** 이 카드의 값어치는 숫자가
 아니라 그 숫자를 낼 수 있었는지까지 보이는 데 있다. 같은 규칙이 빌드와 화면 양쪽에 있으므로
 `test/complex-card.test.mjs`가 실제 자치구 데이터로 두 결과를 맞대어 드리프트를 잡는다.
@@ -383,7 +383,7 @@ react 쪽 오류는 삼키지 않고 예외로 올라온다(폴백은 워크플�
 일곱 개). 단지명 검색은 자치구를 먼저 골라야 동작해서 "래미안"을 서울 전체에서 못 찾았다.
 `docs/search.js`가 자치구·예산대·화면·단지를 한 입구에서 받는다.
 
-색인(`scripts/build-search-index.mjs` → `docs/data/search-index.json`)은 **자치구별로 묶어
+색인(`scripts/build-search-index.ts` → `docs/data/search-index.json`)은 **자치구별로 묶어
 이름만** 담는다. 항목마다 자치구와 주소를 되풀이했더니 579KB였는데, 주소를 브라우저가
 만들게 하고 자치구를 묶으니 37KB(gzip 22KB, 2026-08-29 값)가 됐다. 고른 뒤 그 자치구 전수 파일 하나만
 더 받으면 되므로 스물다섯 개를 다 받을 이유가 없다. 색인은 처음 쓸 때 받는다.

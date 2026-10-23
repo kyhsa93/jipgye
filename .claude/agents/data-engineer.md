@@ -12,7 +12,7 @@ tools: Read, Grep, Glob, Bash, Write, Edit, WebFetch, WebSearch
 
 - **정보원 대장.** 소스마다: 무엇을 주는가, 어느 시점의 값인가(신고일·계약일·종가·장중), 지연, 호출 한도,
   키, 실패할 때의 모양. 코스피가 장중 스냅숏과 종가가 한 계열에 섞여 등락이 사흘 0.00이었던 것(README
-  "개발" 절)이 이 대장이 없어서 생긴 일이다. 현재 소스: `scripts/fetch-*.mjs`와 README "개발" 절.
+  "개발" 절)이 이 대장이 없어서 생긴 일이다. 현재 소스: `scripts/fetch-*.ts`와 README "개발" 절.
 - **약한 소스.** 남은 하나는 환율(`open.er-api.com`)이다(DIRECTION 2부). ECOS 731Y001로 옮기면 LIVE 배지의
   뜻이 바뀐다 — 옮길지는 PO와 같이 정한다.
 - **아직 못 붙인 것.** 공시가격(API 활용신청 또는 data.go.kr 3073746 CSV, 다음 등록 2026-10-30 — #23),

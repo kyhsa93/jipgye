@@ -22,7 +22,7 @@ tools: Read, Grep, Glob, Bash, Write, Edit, WebFetch, WebSearch
   `crontab -l`. 봇이 멈췄는지, 하루 상한(3건·2건)을 지키는지, 0건인 날이 정상으로 이어지는지.
   `audit/HOWTO.md`는 네 소유다.
   봇 프로세스가 도는지·락·D 상태 멈춤은 coo(머신은 cto)도 본다. 멈춤을 찾으면 그쪽에 넘기고, 너는 사양(`audit/HOWTO.md`)과 하루 상한을 본다.
-- **기준일 달력.** `scripts/purchase-costs.mjs`·`loan-cap.mjs`·`policy-loan.mjs`·`min-cash.mjs`의
+- **기준일 달력.** `scripts/purchase-costs.ts`·`loan-cap.ts`·`policy-loan.ts`·`min-cash.ts`의
   `BASIS_DATE`가 6개월을 넘기 전에 법무 담당에게 원문 재대조를 넘긴다. 날짜 검사를 테스트에 넣지 않는다(#8).
 - **이슈 위생.** 라벨(`audit`·`research`·`우선순위: 지금/다음/후순위`·`사람 필요`)이 맞게 붙었는지,
   완료 조건을 채운 이슈가 열려 있지 않은지, `사람 필요` 이슈가 무엇을 기다리는지 소유자에게 한 줄로.

@@ -124,7 +124,7 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
   같은 `--build-now`(기본 기준 커밋의 커밋 시각)로 `renderIsolated`에 넣는다. 폴더 둘을 직접 줄 때는 부르는 쪽이 책임진다.
 - **훅 클래스는 기계로 뽑는다.** `hook-classes.json`의 `js`는 `docs/` 아래 `.js`와 `docs/*.html` 인라인 script의
   `querySelector(All)`·`closest`·`matches`·`getElementsByClassName`·`classList`·`className`에서, `markup`은 루트 `test/*.mjs`와
-  `scripts/build-*-pages.mjs`가 문자열로 쓰는 `class="…"`에서 뽑은 이름이다(`collectHookClasses`). 목록이 소스와 어긋나면
+  `scripts/build-*-pages.ts`가 문자열로 쓰는 `class="…"`에서 뽑은 이름이다(`collectHookClasses`). 목록이 소스와 어긋나면
   `test/invariants.test.ts`가 실패한다. 소스가 는 경우에만 `--hooks-write`로 다시 만들고, 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다(줄어든 채 굳지 않게 `test/HOOKCOUNT`가 js·markup 이름 수와 읽은 소스 파일 수의 하한을 둔다). 비교 때는 목록에 **후보 폴더의 JS가 읽는 class**를 더한다.
   `--render`는 소스를 갖고 있으므로 한 걸음 더 간다: **후보 소스에서 다시 뽑은 이름**을 목록에 더해 판정하고(목록이 낡아도 새지 않는다), 목록이 후보 소스와
   어긋난 것(`hook-list`)과 기준 소스에서는 훅이었는데 후보 소스에서는 빠진 이름(`hook-list-dropped`)을 보고에 소프트로 같이 낸다. 빠진 이름은 더는 훅으로 보지 않으므로
@@ -195,7 +195,7 @@ invariants는 같은 parse5 트리에서 **디자인이 바뀌어도 변하면 �
 - 고아 정리가 pid로 보호하므로, 죽은 실행의 pid를 다른 프로세스가 재사용하고 있으면 그 고아는 그 프로세스가 끝날 때까지 남는다.
 
 - `npm test`는 CI(`.github/workflows/test.yml`)가 루트 시험 뒤에 `working-directory: tools/golden`으로 돌린다(#289 PR 2). **`--render` 자기 비교와 `npm run test:live`는 CI에 없다** — 변이 시험·자기 비교 출력은 그대로 PR 본문에 명령·출력을 붙여 증빙한다.
-  `npm test` 가운데 "훅 클래스 목록이 소스와 맞는다" 하나만 저장소의 코드(`docs/`의 JS·인라인 script, `test/*.mjs`, `scripts/build-*-pages.mjs`)를 읽는다 — 데이터는 읽지 않는다.
+  `npm test` 가운데 "훅 클래스 목록이 소스와 맞는다" 하나만 저장소의 코드(`docs/`의 JS·인라인 script, `test/*.mjs`, `scripts/build-*-pages.ts`)를 읽는다 — 데이터는 읽지 않는다.
   정리 시험(`test/cleanup.test.ts`)은 고정 가짜 저장소만 쓰고 시험마다 자기 폴더 안에서 돌아 끝에 지운다.
 - 공백 줄이기는 CSS 공백 접힘을 흉내 낸 규칙이다(블록 요소의 시작·끝·이웃에서만 공백을 뺀다). 화면에서 달라 보이는 공백 차이는 잡고,
   화면에서 같은 공백 차이는 통과시킨다.
