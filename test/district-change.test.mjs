@@ -145,6 +145,7 @@ test("84㎡ 환산 두 시기 값은 같은 줄의 %와 같은 통계다 (#36)",
 // (#520) 예전에는 커밋된 docs/data/district-change.json 을 읽어 줄의 %와 금액(84㎡ 환산 두 값)이 맞는지 봤다 - 파일 안 두 수의 관계라
 // 데이터가 한쪽만 바뀐 모양(합성 교란: 모든 수 +1 이면 17% 대 15.99%)에서 기능 PR 시험이 막혔다. 시험의 주제는 빌더가 두 수를 같은 통계에서
 // 내는가이므로, 25개 구에 합성 거래를 넣고 같은 빌더(buildPayload)를 돌려 그 출력에서 같은 단언을 한다. 저장소의 docs/data·raw 는 읽지 않는다.
+// (#524) 커밋된 파일 자체를 맞대는 옛 판은 tools/health/test/district-change.test.mjs 로 옮겼다(비차단) - 코드 쪽 약속은 여기, 오늘 파일이 그 약속을 지키는지는 거기가 본다.
 test("빌더가 낸 갈아타기 자료에서 금액과 %가 25개 구 모두 맞는다", async () => {
   const { buildPayload } = await import("../scripts/build-district-change.ts");
   const { DISTRICTS } = await import("../scripts/realestate-districts.ts");

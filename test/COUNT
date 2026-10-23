@@ -362,5 +362,9 @@
 #   옮긴 시험은 둘이고 개수는 그대로다: test/sample-size.test.mjs 의 switch-house 권역표 시험 → test/fixture-site.test.mjs(-1 +1), test/site-dir.test.mjs 의 생성 53장 시험 → 같은 약속의 고정 데이터 판으로 바꾸고(0) 실제 데이터 판은 tools/health/test/site-dir.test.mjs 로 옮김(health COUNT 14 → 15).
 #   고친 기존 시험(이름 그대로, 입력만 바꿈)은 after-tax·rate-pages 둘·prerender 둘·news-context·district-change·sample-size record-high·rates-sort·realestate-pages 의 열 건이고, 없어진 시험은 0이다(.skip·.todo 도 0 그대로).
 #   합성 교란(docs/data 의 모든 수 +1 / 모든 날짜 +1일, 재생성 없음) 뒤 npm test: 전 10건·2건 실패 → 0건·0건 실패(둘 다 ℹ tests 1893 · pass 1893).
+# 센 법: 2026-10-24, base 136dcf7d(= origin/main), Node v24.22.0, macOS (#524).
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1893 · pass 1893 · fail 0 · skipped 0 (하한 그대로)
+#   시험을 더하거나 뺀 것이 없다: test/site-dir.test.mjs 의 고정 데이터 판이 고정 데이터에 예산 밴드 18개를 얻어 예산 18장까지 걷어내고(35장 -> 53장) 다시 그리게 바뀌었을 뿐이고(입력은 test/fixtures/site/data/budget-deals.json),
+#   district-change 의 커밋된 파일 검사는 tools/health/test/district-change.test.mjs 로 새로 생겼다(health COUNT 15 -> 16, 루트에는 영향 없음). 없어진 시험은 0이다(.skip·.todo 도 0 그대로).
 1893
 1893

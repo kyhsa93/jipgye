@@ -1,7 +1,7 @@
 // 원본: test/site-dir.test.mjs 의 아래 시험을 옮겼다(#520). 경로 접두(../ 한 단 -> 세 단)와 시험 안의 도움 함수 복사만 다르고 단언은 같다.
 // 옮긴 이유: 실제 docs/data 로 생성 페이지 53장을 걷어낸 복사본에서 다시 그려 전체와 맞대는 검사라 데이터 모양이 바뀌면 결과가 갈린다(예산 밴드의 min10k 가 어긋나
 // build-budget-pages 가 '3억대' 장을 건너뛰면 build-updated-stamp 가 budget-3eok.html 이 없다고 던진다 - 합성 교란에서 재현) - 루트 `npm test`에서는 비차단 점검으로 뺐다.
-// 같은 약속의 고정 데이터 판(생성 35장, 예산 제외)은 루트 test/site-dir.test.mjs 에 남아 있다.
+// 같은 약속의 고정 데이터 판(생성 53장 전부, 예산 18장 포함 - #524)은 루트 test/site-dir.test.mjs 에 남아 있다.
 import test from "node:test";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
