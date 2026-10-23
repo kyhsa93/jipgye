@@ -215,15 +215,14 @@
       tagline: "서울 아파트, 신고된 거래만 세어서 말합니다",
       description: "서울 아파트 실거래와 예적금·대출 금리를 매일 모아, 전세와 월세 중 어느 쪽이 싼지·지금 갱신이 새로 구하는 것보다 싼지까지 계산합니다. 표본이 모자란 자치구는 평균을 내지 않습니다.",
       lastUpdated: (s) => `갱신 ${s}`,
-      lastUpdatedUnknown: "갱신 정보를 불러오지 못했습니다.",
       updateSchedule: "뉴스·AI 요약, 시장지표·부동산 모두 하루 한 번 갱신됩니다. 실제 기준은 아래 갱신 시각을 보세요.",
       loading: "불러오는 중...",
       contentNotice: null,
       summaryHeading: "오늘의 AI 요약",
       summaryEmpty: "아직 생성된 요약이 없습니다.",
       summaryLoadError: "AI 요약을 불러오지 못했습니다.",
-      loadFailedNotice: (names, reason) =>
-        `${names ? withObjectParticle(names) : "데이터를"} 불러오지 못했습니다${reason ? ` (${reason})` : ""}.`,
+      loadFailedNotice: (names, day) =>
+        `${names ? withObjectParticle(names) : "데이터를"} 불러오지 못했습니다.${day ? ` 아래는 기준일(${day})에 만든 값입니다.` : ""}`,
       loadFailedNames: { market: "시장지표", news: "뉴스", summary: "AI 요약", realestate: "부동산" },
       retry: "다시 시도",
       summaryFallbackNote: "일부 항목은 검증에서 걸러져 헤드라인 요약으로 대체됐습니다.",
@@ -333,15 +332,14 @@
       tagline: "Seoul apartment deals — counted, not quoted",
       description: "Seoul apartment transactions and Korean deposit and loan rates, collected daily and worked out for you: whether jeonse or monthly rent costs less, and whether renewing beats signing anew. Districts with too few deals get no average.",
       lastUpdated: (s) => `Updated ${s}`,
-      lastUpdatedUnknown: "Could not load update info.",
       updateSchedule: "News, the AI summary, market data and real estate all refresh once a day. See the time below.",
       loading: "Loading...",
       contentNotice: "News headlines are machine-translated from Korean by a small local AI model. Company and person names in particular may be mistranslated as unrelated real entities - each headline links to the original Korean article for verification.",
       summaryHeading: "Today's AI Summary",
       summaryEmpty: "No summary generated yet.",
       summaryLoadError: "Could not load the AI summary.",
-      loadFailedNotice: (names, reason) =>
-        `Could not load: ${names || "data"}${reason ? ` (${reason})` : ""}.`,
+      loadFailedNotice: (names, day) =>
+        `Could not load: ${names || "data"}.${day ? ` Shown below is what this page was built with on ${day}. Some of it is in Korean only.` : ""}`,
       loadFailedNames: { market: "market data", news: "news", summary: "AI summary", realestate: "real estate" },
       retry: "Retry",
       summaryFallbackNote: "Some summaries failed verification and were replaced with headline lists.",
@@ -501,6 +499,9 @@
     return isArchiveView && Array.isArray(cache[historyKey]);
   }
 
+  // 못 받은 오늘 보기는 구운 내용을 남긴다(#296 규칙 2·3)
+  const baked = (el, data) => !data && !isArchiveView && el.textContent;
+
   function archiveDates() {
     const all = new Set();
     for (const history of [cache.newsHistory, cache.summaryHistory, cache.history]) {
@@ -620,6 +621,7 @@
   function renderMarket(market) {
     const tbody = document.getElementById("market-grid");
     if (!market) {
+      if (baked(tbody, market)) return;
       tbody.innerHTML = `<tr><td colspan="3" class="error">${archiveNoRecordFor("history") ? t("archiveNoRecord") : t("marketError")}</td></tr>`;
       return;
     }
@@ -1147,6 +1149,7 @@
     const tbody = document.getElementById("realestate-grid");
     const meta = document.getElementById("realestate-meta");
     if (!realestate?.overall) {
+      if (baked(tbody, realestate)) return;
       tbody.innerHTML = `<tr><td colspan="4" class="error">${t("realestateError")}</td></tr>`;
       meta.textContent = "";
       return;
@@ -1424,6 +1427,7 @@
     const list = document.getElementById("news-list");
     const controls = document.getElementById("news-controls");
     if (!news || !news.items?.length) {
+      if (baked(list, news)) return;
       controls.hidden = true;
       list.innerHTML = `<li class="error">${archiveNoRecordFor("newsHistory") ? t("archiveNoRecord") : t("newsError")}</li>`;
       return;
@@ -1518,10 +1522,11 @@
     const text = pickSummaryText(summary?.summary);
 
     if (!hasCategories && !text) {
+      if (baked(box, summary)) return;
       box.classList.add("placeholder");
       box.textContent = archiveNoRecordFor("summaryHistory")
         ? t("archiveNoRecord")
-        : failedLoads.has("summary")
+        : (isArchiveView ? !cache.summaryHistory : failedLoads.has("summary"))
           ? t("summaryLoadError")
           : t("summaryEmpty");
       return;
@@ -1602,9 +1607,7 @@
 
     const latestSources = [market, news, summary].filter(Boolean);
     const latest = latestSources.map((v) => v.updatedAt).filter(Boolean).sort().pop();
-    document.getElementById("updated").textContent = latest
-      ? t("lastUpdated")(fmtUpdated(latest))
-      : t("lastUpdatedUnknown");
+    if (latest) document.getElementById("updated").textContent = t("lastUpdated")(fmtUpdated(latest));
   }
 
   function setMetaContent(selector, content) {
@@ -1673,11 +1676,10 @@
     document.getElementById("q-search").textContent = t("q_search");
     document.getElementById("footer-about").textContent = t("footerAbout");
     const missing = isArchiveView
-      ? []
+      ? Object.entries(HISTORY_FILES).filter(([key]) => !cache[key]).map(([, file]) => file.split("-")[0])
       : ["market", "news", "summary", "realestate"].filter((key) => !cache[key]);
     const failedNames = missing.map((key) => t("loadFailedNames")[key] ?? key).join(", ");
-    const reasons = [...new Set(missing.map((key) => failedLoads.get(key)).filter(Boolean))].join(", ");
-    const loadErrorText = t("loadFailedNotice")(failedNames, reasons);
+    const loadErrorText = t("loadFailedNotice")(failedNames, !isArchiveView && document.getElementById("updated").getAttribute("data-updated"));
 
     const notice = document.getElementById("content-notice");
     const noticeText = archiveMissing
@@ -1909,7 +1911,7 @@
     if (isArchiveView) {
       await Promise.all(Object.keys(HISTORY_FILES).map((key) => loadHistoryInto(key)));
       const dates = archiveDates();
-      archiveMissing = !dates.includes(viewDate);
+      archiveMissing = dates.length > 0 && !dates.includes(viewDate);
       const input = document.getElementById("archive-date-input");
       if (dates.length) input.min = dates[0];
       document.getElementById("archive-prev-day").disabled = Boolean(dates.length) && viewDate <= dates[0];
