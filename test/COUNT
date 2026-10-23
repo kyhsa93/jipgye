@@ -351,5 +351,10 @@
 #   npm test(= node scripts/run-tests.mjs) → ℹ tests 1875 · pass 1875 · fail 0 · skipped 0
 #   직전 하한 1865 + 이 PR 이 더한 test/site-dir.test.mjs 의 시험 10 (`node --test test/site-dir.test.mjs` → ℹ tests 10 · pass 10) = 1875.
 #   고친 기존 시험은 test/inline-comments.test.mjs 의 한 단언(prerender.ts 에 `docs/realestate.html` 글자를 세던 것을 출력 디렉터리 호출 `at(…)`·`label(…)` 두 곳 세기 + docs/ 글자 금지로 바꿈)뿐이고 시험 개수는 그대로다. 없어진 시험은 0이다(.skip·.todo 도 0 그대로).
-1875
-1875
+# 센 법: 2026-10-24, merge-base 30332b52(= origin/main), Node v24.22.0, macOS (#509 구조 B-3).
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1892 · pass 1892 · fail 0 · skipped 0
+#   직전 하한 1875 + 이 PR 이 더한 시험 17 = 1892: test/site-hashes.test.mjs 8 · test/deploy-yml.test.mjs 7 · test/daily-pretest.test.mjs 2(`!cancelled()` 반영 단계 셋이 같은 날 전부 도는 시험과 그 대조군).
+#   (`node --test test/site-hashes.test.mjs test/deploy-yml.test.mjs` → ℹ tests 15 · pass 15; `node --test test/daily-pretest.test.mjs` → ℹ tests 14 · pass 14; 전 12)
+#   고친 기존 시험은 반영 단계의 `if` 글자를 `!cancelled() &&` 로 새로 읽게 한 네 단언뿐이고(health-step 의 둘 · daily-pretest 의 하나 · render-pipeline 의 하나) 시험을 더하거나 빼지 않았다. 없어진 시험은 0이다(.skip·.todo 도 0 그대로).
+1892
+1892

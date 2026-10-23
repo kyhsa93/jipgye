@@ -152,7 +152,7 @@ test("수집 후 테스트는 그대로다 - 막는 스텝이고 커밋 뒤 · �
 test("실패 반영 단계는 맨 끝이고 steps.pretest.outcome == 'failure' 일 때 ::error:: 를 쓰고 exit 1 로 끝낸다", () => {
   const last = steps.at(-1);
   assert.equal(nameOf(last), REFLECT, "맨 끝 스텝이 수집 전 테스트 실패 반영이 아니다");
-  assert.equal(last.if, "steps.pretest.outcome == 'failure'");
+  assert.equal(last.if.replace(/^\$\{\{\s*|\s*\}\}$/g, ""), "!cancelled() && steps.pretest.outcome == 'failure'"); // `!cancelled() &&` 는 #509: 앞 반영 단계가 먼저 실패해도 건너뛰지 않는다
   assert.match(last.run, /::error::/);
   assert.match(last.run, /^exit 1$/m);
   assert.equal(last["continue-on-error"], undefined);
@@ -239,4 +239,23 @@ test("대조군: continue-on-error 만 빠져도 (가)가 빨개진다", () => {
   assert.notEqual(partial, yml);
   const r = simulate(partial, { failNames: [PRE] });
   assert.ok(!r.ran.includes(COMMIT));
+});
+
+// ── 반영 단계끼리 가리지 않는다 (#509: #507 cto·cpo 조건) ───────────────────────
+
+const REFLECTS = ["금리 수집 실패 반영", "데이터 건강 점검 실패 반영", REFLECT];
+const FAIL_ALL = ["예·적금·대출 금리 수집", "데이터 건강 점검 (비차단)", PRE];
+
+test("금리 수집·건강 점검·수집 전 테스트가 같은 날 모두 실패하면 반영 단계 셋이 전부 돈다 (앞 반영의 exit 1 이 뒤를 가리지 않는다)", () => {
+  const r = simulate(yml, { failNames: FAIL_ALL });
+  for (const n of [DEPLOY, ...REFLECTS]) assert.ok(r.ran.includes(n), `${n} 이 안 돌았다`);
+  assert.equal(r.jobFailed, true);
+});
+
+test("대조군: `!cancelled() && ` 를 걷어낸 사본에서는 앞 반영 단계가 먼저 실패해 뒤 반영이 건너뛰어진다", () => {
+  const plain = yml.replaceAll("${{ !cancelled() && ", "${{ ").replace(/if: \$\{\{ (steps\.[^}]*?) \}\}/g, "if: $1");
+  assert.notEqual(plain, yml);
+  const r = simulate(plain, { failNames: FAIL_ALL });
+  assert.ok(r.ran.includes("금리 수집 실패 반영"));
+  assert.ok(r.skipped.includes("데이터 건강 점검 실패 반영") && r.skipped.includes(REFLECT), "가림이 재현되지 않는다 - 대조가 무력하다");
 });
