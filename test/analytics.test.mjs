@@ -23,8 +23,10 @@ async function loadAnalytics({
   href = "https://example.test/rates.html",
   search = "",
   siteGroup = "digest",
+  hostname = new URL(href).hostname,
+  transform = (text) => text,
 } = {}) {
-  const source = await readFile(path.join(root, "docs/analytics.js"), "utf8");
+  const source = transform(await readFile(path.join(root, "docs/analytics.js"), "utf8"));
 
   const appended = [];
   const timers = [];
@@ -40,7 +42,7 @@ async function loadAnalytics({
           ? { getAttribute: (name) => (name === "content" ? siteGroup : null) }
           : null,
     },
-    location: { href, search },
+    location: { href, search, hostname },
     URLSearchParams,
     URL,
     setTimeout(fn, ms) {
@@ -92,6 +94,71 @@ test("페이지뷰 자동 전송은 꺼두고 로더가 gtag/adsense를 붙인�
   const srcs = a.scriptSrcs();
   assert.ok(srcs.some((s) => s.includes("googletagmanager.com/gtag/js?id=G-")));
   assert.ok(srcs.some((s) => s.includes("adsbygoogle.js?client=ca-pub-")));
+});
+
+// 로컬 가드(#466): 호스트가 정확히 이 셋일 때만 GA·AdSense script를 안 붙인다. location.hostname 은
+// 브라우저에서 IPv6 를 대괄호째 준다. 근접 오탐(접두·접미·부분 일치)은 운영처럼 두 개가 붙어야 한다.
+const LOCAL_HOSTS = ["localhost", "127.0.0.1", "[::1]"];
+const NOT_LOCAL_HOSTS = [
+  "kyhsa93.github.io",
+  "localhost.example.com",
+  "mylocalhost",
+  "127.0.0.1.evil.com",
+  "127.0.0.10",
+  "evil-localhost",
+  "[::2]",
+  "::1",
+  "LOCALHOST.example",
+  "",
+];
+const GUARD_LINE = /^ *if \(\[[^\n]*\]\.includes\(location\.hostname\)\) return;\n/m;
+
+function hostHref(host) {
+  return `http://${host}/rates.html`;
+}
+
+test("로컬 호스트에서는 GA·AdSense script를 안 붙이되 analytics API는 no-op으로 남는다", async () => {
+  for (const hostname of LOCAL_HOSTS) {
+    const a = await loadAnalytics({ href: hostHref(hostname), hostname });
+    assert.deepEqual(a.scriptSrcs(), [], `${hostname}에서 script가 붙었다`);
+    assert.deepEqual(
+      Object.keys(a.window.analytics).sort(),
+      ["debouncedEvent", "event", "pageView", "termShape"],
+      `${hostname}에서 analytics 네 함수가 없다`
+    );
+    assert.doesNotThrow(() => {
+      a.analytics.pageView({ site_language: "ko" });
+      a.analytics.event("x", { y: "1" });
+      a.analytics.debouncedEvent("s", {});
+      a.analytics.termShape("가1");
+      a.runTimers();
+    }, `${hostname}에서 호출이 던졌다`);
+  }
+});
+
+test("운영·근접 오탐 호스트는 script 둘을 그대로 붙인다", async () => {
+  for (const hostname of NOT_LOCAL_HOSTS) {
+    const a = await loadAnalytics({ href: hostHref(hostname || "x.test"), hostname });
+    assert.deepEqual(
+      a.scriptSrcs(),
+      [
+        "https://www.googletagmanager.com/gtag/js?id=G-Z1LH7S1ZE5",
+        "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1195159445218373",
+      ],
+      `${JSON.stringify(hostname)}에서 script 둘이 정확히 붙어야 한다`
+    );
+  }
+});
+
+test("양성 대조: 가드 줄을 빼면 로컬 호스트에서도 script가 붙는다(위 시험이 가드를 실제로 본다)", async () => {
+  const stripped = (text) => {
+    assert.ok(GUARD_LINE.test(text), "가드 줄을 못 찾았다 - 이 대조가 허공을 친다");
+    return text.replace(GUARD_LINE, "");
+  };
+  for (const hostname of LOCAL_HOSTS) {
+    const a = await loadAnalytics({ href: hostHref(hostname), hostname, transform: stripped });
+    assert.equal(a.scriptSrcs().length, 2, `${hostname}: 가드를 빼도 안 붙으면 로컬 시험이 아무것도 안 잡는다`);
+  }
 });
 
 test("페이지뷰는 렌더가 끝난 뒤 제목·언어와 함께 나간다", async () => {
