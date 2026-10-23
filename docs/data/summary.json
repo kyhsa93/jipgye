@@ -1,105 +1,46 @@
 {
-  "updatedAt": "2026-10-23T08:32:48.429Z",
+  "updatedAt": "2026-10-23T12:38:13.168Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 부동산: 재건축·재개발로 2~3년 내 사라지는 주택이 4만8249가구에 달하며, 용산구가 8336가구로 가장 많았다. 홍지선은 주택 인허가·착공 감소가 전세난의 원인이라고 밝혔다. 오세훈표 정책은 고비를 넘긴 후 재건축과 강북 전성시대를 앞당기고 있다. 미성년자가 주택을 매수하는 사례가 늘어나는 이유에 대해 관심이 집중되고 있다. LH는 시흥거모 공공주택지구에서 300호를 분양하며 11월 17일 일반공급 접수를 받는다.\n- 금리·예금·투자상품: 박홍근은 대통령이 초과세수를 활용해 고금리 취약계층을 지원하라고 지시했으며, 국고채 금리는 미국 국채 강세 영향으로 일제히 하락했고, 3년물은 연 3.803%를 기록했다.\n- 기타 경제 소식: 원주시가 웰니스 관광 활성화를 위한 업무협약을 체결하며 지역경제 활력을 모색하고 있다. 가계대출과 주담대는 이자 부담으로 인해 감소하는 것으로 나타났다. 홍지선은 집값 상승폭이 둔화되고 있으며, 연말에는 시장이 안정화될 것으로 전망했다. 세입자를 내쫓아야 대출이 가능하다는 금융규제 차별이 실수요자에게 부담을 주고 있다. 각 기사는 서로 다른 주제로, 별개의 경제 현상과 대응 방안을 다루고 있다.\n- 증시·환율: 중국 증시는 상하이지수가 0.89% 상승하며 상승 마감했다. 원/달러 환율은 1,320원대 중반으로 소폭 반등했다. 코스피는 솔리다임의 IPO 중단으로 인해 낙폭을 좁혀 5,500선을 회복하며 마감했다. AI 신용우려로 인해 코스피는 출렁였으나, 하이닉스의 호재로 한숨을 돌렸다. 네오클라우드에서 빅테크로 옮겨붙은 AI 신용위험은 코스피를 흔들었다.",
-    "en": "- Real Estate: Approximately 40,0008249 housing units are expected to disappear within 2 to 3 years due to reconstruction and redevelopment, with Yongsan-gu having the highest number at 8336 units. Hong Jisun stated that the decrease in housing permits and construction is the cause of the rental crisis. Oh Sehun's policy, after overcoming a critical challenge, is accelerating the era of reconstruction and the dominance of the Gangbuk area. There is growing interest in the increasing number of cases where minors are purchasing housing. LH will sell 300 units in the Siheung Geommo Public Housing Complex and will accept general supply applications on November 17.\n- Rates, Deposits & Investment Products: Park Hong-geun instructed the president to use the excess tax revenue to support the vulnerable population affected by high interest rates, and government bond rates fell uniformly due to the strength of U.S. Treasury bonds, with the 3-year bond recording an annual rate of 3.803%.\n- Other Economic News: Wonju City is seeking to boost the local economy by signing a memorandum of understanding to promote wellness tourism. Household loans and housing loans are decreasing due to the burden of interest. Hong Jisun stated that the rate of increase in housing prices is slowing down, and that the market is expected to stabilize by year-end. Financial regulations that discriminate against tenants by requiring them to be evicted in order to obtain a loan are imposing a burden on real demanders. Each article covers different topics and addresses separate economic phenomena and response measures.\n- Stocks & FX: China's stock market closed higher, with the Shanghai index rising 0.89%. The won/dollar exchange rate slightly rebounded to the mid-1,320 won range. The KOSPI narrowed its losses due to Solidam's suspension of its IPO and recovered to the 5,500 level. The KOSPI fluctuated due to AI credit risks but found relief due to favorable news about Hynix. AI credit risks that shifted from NeoCloud to big tech companies shook the KOSPI."
+    "ko": "- 기타 경제 소식: LH 사장은 집값 상승이 전 정부 시절 공급 부족 때문이라고 밝혔다. 또한 공급이 본격화되면 가격이 폭락할 수 있다고 전망했다. 경제계는 초광역특구 추진에 환영의 뜻을 나타내며 신속한 입법을 요구하고 있다. 하이닉스는 미국 낸드공장 건설을 위해 새로운 자금 조달 방안을 모색하고 있다. 원주시는 웰니스 관광 활성화를 위해 업무협약을 체결하며 지역경제 활력을 모색하고 있다.\n- 증시·환율: 홍콩 증시는 저가 매수세에 힘입어 나흘 만에 반등하며 H주가 0.69% 상승했다. 일본 증시는 미국 반도체 시장의 급락 영향으로 닛케이가 0.34% 하락하며 마감했다. 중국 증시는 상하이지수가 0.89% 상승하며 상승 마감했다. 원/달러 환율은 소폭 반등하며 1,320원대 중반을 기록했다. 코스피는 솔리다임의 IPO 중단으로 인해 낙폭을 줄이며 5,500선을 회복한 채 마감했다.\n- 부동산: 83세 거장이 짓고, 30대 창업자가 샀다…218억 아파트의 비밀 [슈퍼리치의 아파트]가 보도되었고, 서울 정비사업 4.8만가구 이주가 앞당겨져 전월세 시장에 영향을 줄 것으로 보이며, 여야는 실거주 규제가 전세난을 가중시키고 있다고 지적했고, 홍지선 국토장관은 전월세난이 규제만의 문제는 아니며 연말 시장이 안정될 것이라고 밝혔으며, 재건축·재개발로 2~3년 내 사라지는 집은 4만8249가구로, 용산구가 8336가구로 최다였다.\n- 금리·예금·투자상품: 금리·예금·투자상품: 국토장관 \"집값 상승폭 둔화…연말 금리 상향 시 시장 안정화\"(종합), 박홍근 \"대통령, 초과세수 활용 고금리 취약계층 지원 지시\", 국고채 금리 일제히 하락…美 국채 강세 영향(종합) +1",
+    "en": "- Other Economic News: The head of LH stated that the rise in housing prices is due to a shortage of supply during the previous government's term. He also predicted that prices could plummet once supply increases significantly. The business community has expressed approval of the push for a super metropolitan special zone and is demanding swift legislation. Hynix is exploring new funding strategies to construct a NAND factory in the United States. Wonju City is seeking to boost the vitality of the local economy by signing a memorandum of understanding to promote wellness tourism.\n- Stocks & FX: The Hong Kong stock market rebounded for the first time in four days, driven by bargain hunters, with H-shares rising 0.69%. The Japanese stock market closed with the Nikkei down 0.34%, affected by the sharp decline in the U.S. semiconductor market. The Chinese stock market closed higher, with the Shanghai index rising 0.89%. The won/dollar exchange rate slightly rebounded, reaching the mid-1,320 level. The Kospi recovered to the 5,500 level, narrowing its losses due to the suspension of Solidiam's IPO.\n- Real Estate: An 83-year-old master builder constructed it, and a 30-something entrepreneur bought it... the secret of the 21,800,000,000 won apartment [Super Rich's Apartment] was reported, and the relocation of 48,000 households in Seoul's redevelopment projects has been accelerated, expected to affect the rental market, and both ruling and opposition parties pointed out that real occupancy regulations are exacerbating the rental crisis, and Hong Ji-seon, the Minister of Land, stated that the rental crisis is not solely due to regulations and that the market will stabilize by year-end, and homes that will disappear within 2-3 years due to reconstruction and redevelopment amount to 40,0008249 units, with Yongsan-gu having the most at 8336 units.\n- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: 국토장관 \"집값 상승폭 둔화…연말 금리 상향 시 시장 안정화\"(종합), 박홍근 \"대통령, 초과세수 활용 고금리 취약계층 지원 지시\", 국고채 금리 일제히 하락…美 국채 강세 영향(종합) +1"
   },
   "highlights": [],
   "categories": [
     {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "재건축·재개발로 2~3년 내 사라지는 주택이 4만8249가구에 달하며, 용산구가 8336가구로 가장 많았다. 홍지선은 주택 인허가·착공 감소가 전세난의 원인이라고 밝혔다. 오세훈표 정책은 고비를 넘긴 후 재건축과 강북 전성시대를 앞당기고 있다. 미성년자가 주택을 매수하는 사례가 늘어나는 이유에 대해 관심이 집중되고 있다. LH는 시흥거모 공공주택지구에서 300호를 분양하며 11월 17일 일반공급 접수를 받는다.",
-      "lineEn": "Approximately 40,0008249 housing units are expected to disappear within 2 to 3 years due to reconstruction and redevelopment, with Yongsan-gu having the highest number at 8336 units. Hong Jisun stated that the decrease in housing permits and construction is the cause of the rental crisis. Oh Sehun's policy, after overcoming a critical challenge, is accelerating the era of reconstruction and the dominance of the Gangbuk area. There is growing interest in the increasing number of cases where minors are purchasing housing. LH will sell 300 units in the Siheung Geommo Public Housing Complex and will accept general supply applications on November 17.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "재건축·재개발로 2~3년 내 사라지는 집, ‘4만8249가구’… 용산구 8336가구로 ‘최다’",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/23/DQMH64WHLNHGRMVGF7ELGXEYQA/",
-          "source": "조선비즈 부동산"
-        },
-        {
-          "title": "홍지선 \"주택 인허가·착공 감소가 전세난 원인\"",
-          "link": "https://www.hankyung.com/article/2026102316861",
-          "source": "한국경제 부동산"
-        },
-        {
-          "title": "고비 넘긴 '오세훈표 정책'…재건축·강북 전성시대 속도 낼듯",
-          "link": "https://www.yna.co.kr/view/AKR20261023133700004",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "\"10대가 집 살 돈 어디서?\"…미성년자 주택 매수 늘어난 이유",
-          "link": "https://www.hankyung.com/article/202610231344i",
-          "source": "한국경제 부동산"
-        },
-        {
-          "title": "LH, 시흥거모 공공주택지구 300호 분양… 11월 17일 일반공급 접수",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/23/WQSWOLZMKNBP5DOY5P53H4MLZQ/",
-          "source": "조선비즈 부동산"
-        }
-      ]
-    },
-    {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "박홍근은 대통령이 초과세수를 활용해 고금리 취약계층을 지원하라고 지시했으며, 국고채 금리는 미국 국채 강세 영향으로 일제히 하락했고, 3년물은 연 3.803%를 기록했다.",
-      "lineEn": "Park Hong-geun instructed the president to use the excess tax revenue to support the vulnerable population affected by high interest rates, and government bond rates fell uniformly due to the strength of U.S. Treasury bonds, with the 3-year bond recording an annual rate of 3.803%.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": true,
-      "items": [
-        {
-          "title": "박홍근 \"대통령, 초과세수 활용 고금리 취약계층 지원 지시\"",
-          "link": "https://www.newsis.com/view/NISX20261023_0003839082",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "국고채 금리 일제히 하락…美 국채 강세 영향(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261023146851008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "국고채 금리 일제히 하락…3년물 연 3.803%",
-          "link": "https://www.yna.co.kr/view/AKR20261023146800008",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "원주시가 웰니스 관광 활성화를 위한 업무협약을 체결하며 지역경제 활력을 모색하고 있다. 가계대출과 주담대는 이자 부담으로 인해 감소하는 것으로 나타났다. 홍지선은 집값 상승폭이 둔화되고 있으며, 연말에는 시장이 안정화될 것으로 전망했다. 세입자를 내쫓아야 대출이 가능하다는 금융규제 차별이 실수요자에게 부담을 주고 있다. 각 기사는 서로 다른 주제로, 별개의 경제 현상과 대응 방안을 다루고 있다.",
-      "lineEn": "Wonju City is seeking to boost the local economy by signing a memorandum of understanding to promote wellness tourism. Household loans and housing loans are decreasing due to the burden of interest. Hong Jisun stated that the rate of increase in housing prices is slowing down, and that the market is expected to stabilize by year-end. Financial regulations that discriminate against tenants by requiring them to be evicted in order to obtain a loan are imposing a burden on real demanders. Each article covers different topics and addresses separate economic phenomena and response measures.",
+      "lineKo": "LH 사장은 집값 상승이 전 정부 시절 공급 부족 때문이라고 밝혔다. 또한 공급이 본격화되면 가격이 폭락할 수 있다고 전망했다. 경제계는 초광역특구 추진에 환영의 뜻을 나타내며 신속한 입법을 요구하고 있다. 하이닉스는 미국 낸드공장 건설을 위해 새로운 자금 조달 방안을 모색하고 있다. 원주시는 웰니스 관광 활성화를 위해 업무협약을 체결하며 지역경제 활력을 모색하고 있다.",
+      "lineEn": "The head of LH stated that the rise in housing prices is due to a shortage of supply during the previous government's term. He also predicted that prices could plummet once supply increases significantly. The business community has expressed approval of the push for a super metropolitan special zone and is demanding swift legislation. Hynix is exploring new funding strategies to construct a NAND factory in the United States. Wonju City is seeking to boost the vitality of the local economy by signing a memorandum of understanding to promote wellness tourism.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
+        {
+          "title": "LH 사장 “집값 상승은 前정부 공급부족 탓…공급 본격화하면 폭락”",
+          "link": "https://www.mk.co.kr/news/realestate/12184564",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "LH 사장 \"집값 상승은 공급부족 탓…前정부 폭등 시한폭탄 설치\"",
+          "link": "https://www.yna.co.kr/view/AKR20261023181200003",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "경제계 \"초광역특구 추진 환영\"…신속한 입법 요구",
+          "link": "https://www.yna.co.kr/view/AKR20261023167000003",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "사모대출? 증자?…하이닉스, 美 낸드공장 자금줄 새로 찾는다",
+          "link": "https://www.hankyung.com/article/2026102318411",
+          "source": "한국경제 경제"
+        },
         {
           "title": "원주시, 웰니스 관광 활성화 업무협약…지역경제 활력 모색",
           "link": "https://www.yna.co.kr/view/AKR20261023152100062",
           "source": "연합뉴스 경제"
-        },
-        {
-          "title": "[그래픽 경제] 이자 폭탄 맞을라…가계대출·주담대 줄었다",
-          "link": "https://www.newsis.com/view/NISX20261023_0003837857",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "홍지선 “집값 상승폭 둔화…연말엔 시장 안정화될 것”",
-          "link": "https://www.mk.co.kr/news/realestate/12184186",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "[단독]“세입자 내쫓아야 대출 나와”…빌라 등 금융규제 차별 실수요자 ‘날벼락’",
-          "link": "https://www.mk.co.kr/news/economy/12184126",
-          "source": "매일경제 부동산"
         }
       ]
     },
@@ -107,12 +48,22 @@
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
-      "lineKo": "중국 증시는 상하이지수가 0.89% 상승하며 상승 마감했다. 원/달러 환율은 1,320원대 중반으로 소폭 반등했다. 코스피는 솔리다임의 IPO 중단으로 인해 낙폭을 좁혀 5,500선을 회복하며 마감했다. AI 신용우려로 인해 코스피는 출렁였으나, 하이닉스의 호재로 한숨을 돌렸다. 네오클라우드에서 빅테크로 옮겨붙은 AI 신용위험은 코스피를 흔들었다.",
-      "lineEn": "China's stock market closed higher, with the Shanghai index rising 0.89%. The won/dollar exchange rate slightly rebounded to the mid-1,320 won range. The KOSPI narrowed its losses due to Solidam's suspension of its IPO and recovered to the 5,500 level. The KOSPI fluctuated due to AI credit risks but found relief due to favorable news about Hynix. AI credit risks that shifted from NeoCloud to big tech companies shook the KOSPI.",
+      "lineKo": "홍콩 증시는 저가 매수세에 힘입어 나흘 만에 반등하며 H주가 0.69% 상승했다. 일본 증시는 미국 반도체 시장의 급락 영향으로 닛케이가 0.34% 하락하며 마감했다. 중국 증시는 상하이지수가 0.89% 상승하며 상승 마감했다. 원/달러 환율은 소폭 반등하며 1,320원대 중반을 기록했다. 코스피는 솔리다임의 IPO 중단으로 인해 낙폭을 줄이며 5,500선을 회복한 채 마감했다.",
+      "lineEn": "The Hong Kong stock market rebounded for the first time in four days, driven by bargain hunters, with H-shares rising 0.69%. The Japanese stock market closed with the Nikkei down 0.34%, affected by the sharp decline in the U.S. semiconductor market. The Chinese stock market closed higher, with the Shanghai index rising 0.89%. The won/dollar exchange rate slightly rebounded, reaching the mid-1,320 level. The Kospi recovered to the 5,500 level, narrowing its losses due to the suspension of Solidiam's IPO.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
+        {
+          "title": "[올댓차이나] 홍콩 증시, 저가 매수세에 나흘 만에 반등 마감… H주 0.69%↑",
+          "link": "https://www.newsis.com/view/NISX20261023_0003839267",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "日증시, 美반도체 급락 여파에 하락 마감…닛케이 0.34%↓",
+          "link": "https://www.newsis.com/view/NISX20261023_0003839106",
+          "source": "뉴시스 경제"
+        },
         {
           "title": "[올댓차이나] 중국 증시 상승 마감…상하이지수 0.89%↑",
           "link": "https://www.newsis.com/view/NISX20261023_0003839055",
@@ -127,15 +78,74 @@
           "title": "솔리다임 IPO 중단 덕분?…코스피, 낙폭 좁혀 5,500선 회복 마감(종합)",
           "link": "https://www.yna.co.kr/view/AKR20261023137600008",
           "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "83세 거장이 짓고, 30대 창업자가 샀다…218억 아파트의 비밀 [슈퍼리치의 아파트]가 보도되었고, 서울 정비사업 4.8만가구 이주가 앞당겨져 전월세 시장에 영향을 줄 것으로 보이며, 여야는 실거주 규제가 전세난을 가중시키고 있다고 지적했고, 홍지선 국토장관은 전월세난이 규제만의 문제는 아니며 연말 시장이 안정될 것이라고 밝혔으며, 재건축·재개발로 2~3년 내 사라지는 집은 4만8249가구로, 용산구가 8336가구로 최다였다.",
+      "lineEn": "An 83-year-old master builder constructed it, and a 30-something entrepreneur bought it... the secret of the 21,800,000,000 won apartment [Super Rich's Apartment] was reported, and the relocation of 48,000 households in Seoul's redevelopment projects has been accelerated, expected to affect the rental market, and both ruling and opposition parties pointed out that real occupancy regulations are exacerbating the rental crisis, and Hong Ji-seon, the Minister of Land, stated that the rental crisis is not solely due to regulations and that the market will stabilize by year-end, and homes that will disappear within 2-3 years due to reconstruction and redevelopment amount to 40,0008249 units, with Yongsan-gu having the most at 8336 units.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
+      "items": [
+        {
+          "title": "83세 거장이 짓고, 30대 창업자가 샀다…218억 아파트의 비밀 [슈퍼리치의 아파트]",
+          "link": "https://www.mk.co.kr/news/realestate/12184498",
+          "source": "매일경제 부동산"
         },
         {
-          "title": "AI 신용우려에 코스피 '출렁'…하이닉스 호재에 한숨 돌려(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261023079351008",
+          "title": "서울 정비사업 4.8만가구 이주 앞둬…전월세 시장 흔드나",
+          "link": "https://www.newsis.com/view/NISX20261023_0003839127",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "여야 “실거주 규제로 전세난 가중” 지적에… 홍지선 국토장관 “공급이 해결책” (종합)",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/23/AS4KXQEMOZDPNAR6CQJLBIUWYA/",
+          "source": "조선비즈 부동산"
+        },
+        {
+          "title": "홍지선 \"전월세난, 규제만의 문제 아냐…연말 시장 안정될 것\"(종합)",
+          "link": "https://www.newsis.com/view/NISX20261023_0003839059",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "재건축·재개발로 2~3년 내 사라지는 집, ‘4만8249가구’… 용산구 8336가구로 ‘최다’",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/23/DQMH64WHLNHGRMVGF7ELGXEYQA/",
+          "source": "조선비즈 부동산"
+        }
+      ]
+    },
+    {
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "금리·예금·투자상품: 국토장관 \"집값 상승폭 둔화…연말 금리 상향 시 시장 안정화\"(종합), 박홍근 \"대통령, 초과세수 활용 고금리 취약계층 지원 지시\", 국고채 금리 일제히 하락…美 국채 강세 영향(종합) +1",
+      "lineEn": "Rates, Deposits & Investment Products: 국토장관 \"집값 상승폭 둔화…연말 금리 상향 시 시장 안정화\"(종합), 박홍근 \"대통령, 초과세수 활용 고금리 취약계층 지원 지시\", 국고채 금리 일제히 하락…美 국채 강세 영향(종합) +1",
+      "isFallback": true,
+      "fallbackReason": "unverified-entity",
+      "degraded": false,
+      "items": [
+        {
+          "title": "국토장관 \"집값 상승폭 둔화…연말 금리 상향 시 시장 안정화\"(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261023088651003",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "네오클라우드서 빅테크로 옮겨붙은 AI 신용위험…코스피 '흔들'(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261023083151008",
+          "title": "박홍근 \"대통령, 초과세수 활용 고금리 취약계층 지원 지시\"",
+          "link": "https://www.newsis.com/view/NISX20261023_0003839082",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "국고채 금리 일제히 하락…美 국채 강세 영향(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261023146851008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "국고채 금리 일제히 하락…3년물 연 3.803%",
+          "link": "https://www.yna.co.kr/view/AKR20261023146800008",
           "source": "연합뉴스 경제"
         }
       ]
