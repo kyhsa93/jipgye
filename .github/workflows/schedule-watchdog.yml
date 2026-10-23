@@ -68,3 +68,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/check-schedule-runs.ts
+      # 둘째 검사 (#499, #449 의 449-B): 「뜨지만 매번 실패」. 위 검사는 떴는지만 보므로 매번 실패하는 run 은 통과한다.
+      # 지난 54시간(scripts/check-schedule-runs.ts 의 `SUCCESS_CHECK_WINDOW_HOURS`, cto 판정 2026-10-23)의 schedule run 중
+      # 성공이 0이면 이 스텝이 실패한다 - 알림 경로는 위와 같다(워치독 run 이 빨개지고 GitHub 의 실패 알림이 소유자에게 간다. 새 서비스·비용 0).
+      # `!cancelled()` 인 이유: 위 스텝이 실패해도 이 스텝이 돌아야 두 경보가 서로를 가리지 않는다.
+      # 허용된 잔여 위험: 수집이 전면 실패해도 경보는 마지막 성공 뒤 약 58~71h 에야 온다(단발 실패는 빨간 run, 누락은 위 스텝이 맡는다).
+      - name: 지난 54시간에 daily-update 정기 실행 성공이 있는지 본다
+        if: ${{ !cancelled() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/check-schedule-runs.ts --check=success

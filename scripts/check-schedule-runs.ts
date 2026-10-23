@@ -41,8 +41,20 @@
  *   `daily-update` 안에 두면 그 실행이 안 뜰 때 탐지기도 안 뜬다(#322 완료 조건 4).
  *   한계도 같이 적는다: **별도 cron 도 버려질 수 있어 완전 자가면역은 없다.** 그 워크플로 머리 주석 참조.
  *
+ * 둘째 검사 — **「뜨지만 매번 실패」** (`--check=success`, #499, #449 의 449-B):
+ *   위 검사는 「떴는가」만 본다(기본이 `fired` 인 이유는 위). 그래서 run 은 매번 뜨는데 매번 실패하는 모양은 못 잡는다 -
+ *   2026-09-03~09-30 에 데일리가 한 달 가까이 실패한 채 돌았다(#449). **지난 `SUCCESS_CHECK_WINDOW_HOURS`(54시간,
+ *   미끄러지는 창) 안의 schedule run 중 `conclusion === "success"` 가 0이면** 종료 코드 1로 끝난다. 문턱은 「1회 이상」 하나다
+ *   (cron 수가 아니다). 쓰지 않는 것: `docs/data/*.json` 의 `updatedAt`(체크아웃·데이터 상태에 기대고 뉴스 틱도 갱신해 지연을 못 가른다).
+ *   알림 경로는 첫 검사와 같다 - 워치독 run 이 빨개지고 GitHub 의 실패 알림이 소유자에게 간다(새 서비스·비용 0).
+ *   54 의 근거는 cto 판정(https://github.com/kyhsa93/jipgye/issues/499#issuecomment-6356876591, 2026-10-23)이다:
+ *   단발 실패 직전 성공의 나이는 다음 틱 직전 점검에서 최대 약 47h 라 48h 는 여유 1h 안팎이어서 기각, 이틀 연속 실패는 둘째 실패 틱 뒤 첫 점검(약 58.6h - 지연)에서
+ *   울어야 하므로 상한은 약 62h. 정상 최대 간격이 24h(cron 1개, #505) 라는 전제에서 **54 > 2×24** 다 - cron 이 바뀌면 cto 재판정을 받는다(시험이 표식).
+ *   ⚠️ 허용된 잔여 위험: 수집이 전면 실패해도 경보는 마지막 성공 뒤 약 58~71h 에야 온다. 단발 실패는 빨간 run, 누락은 첫 검사가 맡는다.
+ *
  * 사용:
  *   node scripts/check-schedule-runs.ts                       # GitHub API 조회, 지금 기준
+ *   node scripts/check-schedule-runs.ts --check=success       # 「뜨지만 매번 실패」 - 지난 54시간에 성공이 0이면 실패
  *   node scripts/check-schedule-runs.ts --runs-file runs.json --now 2026-08-27T04:00:00Z
  *   node scripts/check-schedule-runs.ts --count=success --window-hours=24
  *
@@ -159,6 +171,19 @@ export async function fetchRuns({ repo, workflowFile, token, fetchImpl = fetch }
   return body.workflow_runs;
 }
 
+/**
+ * 「뜨지만 매번 실패」 검사 창(시간, `--check=success`). 기본값이고 `--window-hours` 가 덮는다.
+ * cto 판정 2026-10-23(#499): 54h. 하한은 단발 실패가 안 울 조건 - 직전 성공의 나이가 다음 틱 직전 점검에서 최대 약 47h 라
+ * 48h 는 여유 1h 안팎(기각) - 이고, 이틀 연속 실패가 울 조건의 상한은 약 62h 다. 정상 최대 간격 24h 의 두 배 + 여유 6h.
+ * cron 수(=정상 최대 간격)가 바뀌면 이 값만 못 바꾼다 - cto 재판정을 받는다(test/schedule-watchdog.test.mjs 가 54 > 2×간격 을 못박는다).
+ */
+export const SUCCESS_CHECK_WINDOW_HOURS = 54;
+
+/** 「뜨지만 매번 실패」 판정. 창 안 성공이 0이면 ok=false. 문턱은 cron 수가 아니라 1회다. */
+export function successVerdict({ success }) {
+  return { ok: success >= 1, counted: success, expected: 1 };
+}
+
 export function parseArgs(argv) {
   const opts = {
     workflow: ".github/workflows/daily-update.yml",
@@ -167,20 +192,28 @@ export function parseArgs(argv) {
     now: null,
     runsFile: null,
     repo: process.env.GITHUB_REPOSITORY ?? "kyhsa93/jipgye",
+    check: "missing",
+    windowGiven: false,
   };
   for (const a of argv) {
     const m = a.match(/^--([a-z-]+)(?:=(.*))?$/);
     if (!m) throw new Error(`모르는 인자: ${a}`);
     const [, key, value] = m;
     if (key === "workflow") opts.workflow = value;
-    else if (key === "window-hours") opts.windowHours = Number(value);
+    else if (key === "window-hours") {
+      opts.windowHours = Number(value);
+      opts.windowGiven = true;
+    }
     else if (key === "count") opts.count = value;
     else if (key === "now") opts.now = value;
     else if (key === "runs-file") opts.runsFile = value;
     else if (key === "repo") opts.repo = value;
+    else if (key === "check") opts.check = value;
     else throw new Error(`모르는 옵션: --${key}`);
   }
   if (!Number.isFinite(opts.windowHours) || opts.windowHours <= 0) throw new Error(`--window-hours 가 양수가 아니다: ${opts.windowHours}`);
+  if (opts.check !== "missing" && opts.check !== "success") throw new Error(`--check 는 missing 또는 success 다: ${opts.check}`);
+  if (opts.check === "success" && !opts.windowGiven) opts.windowHours = SUCCESS_CHECK_WINDOW_HOURS;
   if (opts.count !== "fired" && opts.count !== "success") throw new Error(`--count 는 fired 또는 success 다: ${opts.count}`);
   return opts;
 }
@@ -190,11 +223,32 @@ export async function main(
   { readFile, log = console.log, error = console.error }: { readFile?: (path: string, encoding: "utf8") => Promise<string>; log?: (message: string) => void; error?: (message: string) => void } = {},
 ) {
   const opts = parseArgs(argv);
+  const loadRuns = async () =>
+    opts.runsFile
+      ? JSON.parse(await readFile(opts.runsFile, "utf8"))
+      : await fetchRuns({ repo: opts.repo, workflowFile: opts.workflow.split("/").pop(), token: process.env.GITHUB_TOKEN });
+
+  if (opts.check === "success") {
+    // 「뜨지만 매번 실패」(#499): cron 수는 필요 없다 - 창 안 성공이 0이냐만 본다. --count 는 이 검사에서 무시한다.
+    const w = countInWindow(await loadRuns(), { now: opts.now ?? Date.now(), windowHours: opts.windowHours });
+    const sv = successVerdict({ success: w.success });
+    log(`창: ${w.start} ~ ${w.end} (${opts.windowHours}시간, created_at 축, 끝만 포함)`);
+    log(`창 안 schedule 발화 ${w.fired} · 그중 성공 ${w.success} · 문턱: 성공 ${sv.expected}회 이상`);
+    for (const r of w.runs) log(`  - ${r.created_at} ${r.conclusion ?? r.status ?? "?"} ${r.id ?? ""}`);
+    if (!sv.ok) {
+      error(
+        `::error::daily-update 정기 실행이 뜨지만 성공이 없다 - 지난 ${opts.windowHours}시간의 schedule 성공이 0회다(발화 ${w.fired}회). ` +
+          `Actions 에서 Daily update 의 실패 단계를 확인한다. 수동 dispatch 로 덮지 말고 원인을 먼저 고친다(#499)`,
+      );
+      return 1;
+    }
+    log("합격 - 창 안에 성공한 정기 실행이 있다");
+    return 0;
+  }
+
   const expected = countCrons(await readFile(opts.workflow, "utf8"), opts.workflow);
 
-  const runs = opts.runsFile
-    ? JSON.parse(await readFile(opts.runsFile, "utf8"))
-    : await fetchRuns({ repo: opts.repo, workflowFile: opts.workflow.split("/").pop(), token: process.env.GITHUB_TOKEN });
+  const runs = await loadRuns();
 
   const win = countInWindow(runs, { now: opts.now ?? Date.now(), windowHours: opts.windowHours });
   const v = verdict({ fired: win.fired, success: win.success, expected, mode: opts.count });
