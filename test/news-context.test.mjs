@@ -6,6 +6,7 @@ import { attachContext, bestRate, buildContext, findDistrict } from "../scripts/
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 import { newsContextHtml, newsListHtml, ratesHtml, realestateTableHtml } from "../scripts/prerender.ts";
 import { loadNewsPage } from "./helpers/news-page.mjs";
+import { readFixture } from "./helpers/fixture-data.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readJson = (name) =>
@@ -138,8 +139,9 @@ test("한 기사에 두 개까지만 붙인다", () => {
   assert.deepEqual(many.map((c) => c.kind), ["realestate", "rates"]);
 });
 
+// (#520) bestRate 와 ratesHtml 이 같은 기준인가는 코드 쪽 약속이라 고정 데이터로 돈다 - docs/data 의 12개월 옵션 유무 같은 모양에 기대지 않는다.
 test("금리 값이 금리 페이지 첫 줄과 같은 기준으로 뽑힌다", async () => {
-  const rates = await readJson("rates");
+  const rates = await readFixture("rates");
 
   for (const [key, cell] of [
     ["deposit", /class="rate-strong tw:font-semibold tw:text-up"[^>]*>([\d.]+)%/],

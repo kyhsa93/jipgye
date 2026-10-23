@@ -12,6 +12,7 @@ import {
   summaryHtml,
 } from "../scripts/prerender.ts";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
+import { readFixture } from "./helpers/fixture-data.mjs";
 import { rateBridgeHtml } from "../scripts/rate-bridge.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -105,11 +106,10 @@ test("배포된 index.html에 자리표시 주석 네 쌍이 남아 있다", asy
 
 // (#507) "커밋된 HTML이 지금 데이터로 다시 그린 결과와 같다" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/prerender.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
+// (#520) 아래 두 시험은 코드 쪽 약속(구운 조각 == 화면 스크립트, 대출 표는 안 심음)이라 고정 데이터로 돈다 - docs/data 의 12개월 옵션 유무 같은 모양에 기대지 않는다.
 test("금리 표의 정적 HTML이 실제 첫 화면과 같은 상품·순서다", async () => {
-  const [rates, { byId }] = await Promise.all([
-    readFile(path.join(root, "docs/data/rates.json"), "utf8").then(JSON.parse),
-    loadRatesPage(),
-  ]);
+  const rates = await readFixture("rates");
+  const { byId } = await loadRatesPage({ rates });
 
   const rendered = productNames(byId.get("products-body").innerHTML);
   const prerendered = productNames(ratesHtml(rates));
@@ -119,10 +119,7 @@ test("금리 표의 정적 HTML이 실제 첫 화면과 같은 상품·순서다
 });
 
 test("금리 표는 첫 화면에 없는 탭까지 심지 않는다", async () => {
-  const [rates, html] = await Promise.all([
-    readFile(path.join(root, "docs/data/rates.json"), "utf8").then(JSON.parse),
-    readRates(),
-  ]);
+  const [rates, html] = await Promise.all([readFixture("rates"), readRates()]);
 
   const staticNames = new Set(productNames(ratesHtml(rates)));
   for (const product of rates.mortgage ?? []) {

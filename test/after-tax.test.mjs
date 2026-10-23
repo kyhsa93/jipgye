@@ -1,12 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { DEFAULT_AMOUNT, TAX_RATE, formatWon, interestOf } from "../scripts/interest.ts";
 import { ratesHeadHtml, ratesHtml } from "../scripts/prerender.ts";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
+import { readFixture } from "./helpers/fixture-data.mjs";
 
-const root = path.resolve(import.meta.dirname, "..");
 // 구운 조각에는 #279에서 Tailwind 유틸리티가 붙었고, 틀의 인라인 스크립트가 데이터를 받아 다시 그리는 마크업에는 붙지 않는다
 // (그 스크립트를 고치는 길은 S6와 #282로 막혀 있다 - scripts/prerender.ts의 금리 조각 주석). 이 시험은 두 쪽을 맞대므로 둘 다 받는다.
 // class를 글자 그대로 적는 이유: tools/golden의 훅 class 추출기가 이 줄의 class="…"를 읽어 hook-classes.json의 markup 쪽을 만든다 -
@@ -55,11 +53,10 @@ test("우대조건을 못 채우는 사람을 위해 기본금리로도 계산�
   assert.equal(base.gross, Math.round(10_000_000 * 0.0245));
 });
 
+// (#520) 구운 조각과 화면 스크립트가 같은 입력을 받는 코드 쪽 약속이라 고정 데이터로 돈다 - docs/data 의 모양(12개월 옵션이 있는가)에 기대지 않는다.
 test("정적 HTML의 세후 이자가 실제 첫 화면과 같다", async () => {
-  const [rates, { byId }] = await Promise.all([
-    readFile(path.join(root, "docs/data/rates.json"), "utf8").then(JSON.parse),
-    loadRatesPage(),
-  ]);
+  const rates = await readFixture("rates");
+  const { byId } = await loadRatesPage({ rates });
 
   const rendered = netCells(byId.get("products-body").innerHTML);
   const prerendered = netCells(ratesHtml(rates));

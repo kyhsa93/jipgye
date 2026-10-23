@@ -11,6 +11,8 @@
 // 그리고 updated-stamp 시험이 쓰는 기준일만 있는 소스들이다(fixtures/site/README 대신 이 주석이 출처다: 2026-10-23 origin/main 5bff9be4 의 docs/data 에서
 // rates 의 예금·적금·주담대는 앞 6개만, 나머지는 그대로 얼렸다. 얼린 뒤에는 오늘 데이터와 아무 관계가 없다).
 //
+// (#520) district-change.json 은 기준일만 있던 소스에 합성 권역 5줄(regions)과 그 표(regionTable)를 더했다 - switch-house 권역표 시험의 입력이다. 칸 수를 오늘 값과 일부러 다르게 뒀다.
+//
 // 복사하는 docs/*.html 은 생성물이기도 한 틀이다(B4 에서 git 밖으로 나간다 - B2 가 출력 폴더를 인자로 받게 하면 이 복사가 필요 없어진다).
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";

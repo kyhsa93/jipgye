@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
+import { readFixture } from "./helpers/fixture-data.mjs";
 
 const rateOf = (row, key) => row.option[key];
 
@@ -111,24 +112,27 @@ test("정렬 기준은 같은 열 구성을 쓰는 탭끼리 유지된다", asyn
   assert.equal(sandbox.__state.sort.saving.key, "rate");
 });
 
+// (#520) 후보가 없는 줄을 `continue` 로 건너뛰는 갈래가 있어서, 어느 날 데이터에 후보가 한 줄도 없으면 이 시험은 단언 없이 조용히 통과했다.
+// 고정 데이터(test/fixtures/site/data/rates.json)로 돌려 후보가 있는 줄이 있음을 못박고, 세어서 비면 실패로 만든다.
 test("표에 보이는 숫자와 정렬 기준이 같은 옵션에서 나온다", async () => {
-  const { sandbox, clickTab, clickSortHeader } = await loadRatesPage();
+  const { sandbox, clickTab, clickSortHeader } = await loadRatesPage({ rates: await readFixture("rates") });
   clickTab("mortgage");
 
-  for (const row of sandbox.visibleRows()) {
-    const candidates = (row.product.options ?? []).filter((o) => o.min !== null && o.min !== undefined);
-    if (!candidates.length) continue;
-    const lowest = Math.min(...candidates.map((o) => o.min));
-    assert.equal(row.option.min, lowest, `${row.product.company}: 최저금리 옵션이 아닌 줄이 뽑혔다`);
-  }
+  const check = (field, label) => {
+    let checked = 0;
+    for (const row of sandbox.visibleRows()) {
+      const candidates = (row.product.options ?? []).filter((o) => o[field] !== null && o[field] !== undefined);
+      if (!candidates.length) continue;
+      const lowest = Math.min(...candidates.map((o) => o[field]));
+      assert.equal(row.option[field], lowest, `${row.product.company}: ${label} 옵션이 아닌 줄이 뽑혔다`);
+      checked += 1;
+    }
+    assert.ok(checked > 0, `${label}: 후보가 있는 줄이 하나도 없어 검사가 아무것도 안 봤다`);
+  };
 
+  check("min", "최저금리");
   clickSortHeader("avg");
-  for (const row of sandbox.visibleRows()) {
-    const candidates = (row.product.options ?? []).filter((o) => o.avg !== null && o.avg !== undefined);
-    if (!candidates.length) continue;
-    const lowest = Math.min(...candidates.map((o) => o.avg));
-    assert.equal(row.option.avg, lowest, `${row.product.company}: 평균금리 옵션이 아닌 줄이 뽑혔다`);
-  }
+  check("avg", "평균금리");
 });
 
 test("정렬 중인 열에만 방향 표시가 붙는다", async () => {

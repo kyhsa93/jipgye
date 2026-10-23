@@ -6,10 +6,10 @@ import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.ts";
 import { ratesHtml } from "../scripts/prerender.ts";
 import { stampHtml } from "../scripts/updated-stamp.ts";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
+import { readFixture } from "./helpers/fixture-data.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
-const readRates = () => read("docs/data/rates.json").then(JSON.parse);
 // 구운 조각에는 #279에서 Tailwind 유틸리티가 붙었고, 틀의 인라인 스크립트가 데이터를 받아 다시 그리는 마크업에는 붙지 않는다
 // (그 스크립트를 고치는 길은 S6와 #282로 막혀 있다 - scripts/prerender.ts의 금리 조각 주석). 이 시험은 두 쪽을 맞대므로 둘 다 받는다.
 // class를 글자 그대로 적는 이유: tools/golden의 훅 class 추출기가 이 줄의 class="…"를 읽어 hook-classes.json의 markup 쪽을 만든다 -
@@ -35,11 +35,12 @@ test("각 페이지가 자기 상품군을 정규 URL·제목·첫 탭으로 선
   }
 });
 
+// (#520) 아래 두 시험은 구운 조각과 화면 스크립트를 같은 입력으로 맞대는 코드 쪽 약속이라 고정 데이터로 돈다(docs/data 의 12개월 옵션 유무 같은 모양에 기대지 않는다).
 test("각 페이지의 정적 표가 그 페이지 첫 화면과 같은 상품·순서다", async () => {
-  const rates = await readRates();
+  const rates = await readFixture("rates");
 
   for (const page of RATE_PAGES) {
-    const { byId } = await loadRatesPage({ file: `docs/${page.file}` });
+    const { byId } = await loadRatesPage({ file: `docs/${page.file}`, rates });
     const rendered = productNames(byId.get("products-body").innerHTML);
     const prerendered = productNames(ratesHtml(rates, { category: page.category }));
 
@@ -49,7 +50,7 @@ test("각 페이지의 정적 표가 그 페이지 첫 화면과 같은 상품·
 });
 
 test("네 페이지가 서로 다른 상품을 보여준다", async () => {
-  const rates = await readRates();
+  const rates = await readFixture("rates");
   const firstRows = RATE_PAGES.map((page) => productNames(ratesHtml(rates, { category: page.category }))[0]);
   assert.equal(new Set(firstRows).size, RATE_PAGES.length, `상품군별로 표가 갈리지 않는다: ${firstRows}`);
 });

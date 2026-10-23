@@ -10,13 +10,35 @@ const readJson = (name) =>
 
 let loaded = null;
 
-async function page() {
+// (#520) 추이 카드를 그리는 두 시험은 합성 추이로 돈다: 주 목록과 주 키(overall 의 키)가 맞아야 카드가 그려지는데, 실제 파일을 읽으면 그날 데이터의 모양
+// (잠정 주가 있는가, 주 키가 어긋났는가)에 시험이 기댄다. 아래 합성 추이는 일부러 오늘 데이터와 아무 관계가 없다(주 목록·값 모두 손으로 둔 것).
+const MONDAYS = ["2026-03-02", "2026-03-09", "2026-03-16", "2026-03-23", "2026-03-30", "2026-04-06"];
+const PENDING = ["2026-04-13", "2026-04-20"];
+const syntheticTrend = ({ pending }) => {
+  const pendingWeeks = pending ? PENDING : [];
+  const entry = (i) => ({
+    sale: { avgPricePerPyeong10k: 4000 + i * 25, transactionCount: 500 + i * 7, national84: { avgPricePerPyeong10k: 3900 + i * 20, transactionCount: 120 + i } },
+    jeonse: { avgDepositPerPyeong10k: 2500 + i * 10, transactionCount: 300 + i * 3 },
+    wolse: { transactionCount: 90 + i },
+  });
+  return {
+    updatedAt: "2026-04-21T01:00:00.000Z",
+    weeks: MONDAYS,
+    pendingWeeks,
+    movingWeeks: pendingWeeks,
+    settledWeek: MONDAYS.at(-1),
+    overall: Object.fromEntries([...MONDAYS, ...pendingWeeks].map((w, i) => [w, entry(i)])),
+    districts: {},
+  };
+};
+
+async function page({ trend } = {}) {
   const names = [
     "summary", "market", "realestate", "news",
     "realestate-trend", "market-history", "summary-history", "news-history",
   ];
   const data = {};
-  for (const name of names) data[name] = await readJson(name);
+  for (const name of names) data[name] = name === "realestate-trend" && trend ? trend : await readJson(name);
   loaded = data.realestate;
   return loadIndexPage({
     fetch: async (url) => {
@@ -133,7 +155,7 @@ test("감춘 구가 있으면 전체 보기로 안내한다", async () => {
 });
 
 test("메인 화면 추이 카드에도 양 축 눈금과 짚을 자리를 둔다", async () => {
-  const p = await page();
+  const p = await page({ trend: syntheticTrend({ pending: true }) });
   const grid = p.byId("realestate-history-grid").innerHTML;
 
   assert.ok(grid.includes("polyline"), "추이 카드가 그려지지 않았다");
@@ -144,15 +166,11 @@ test("메인 화면 추이 카드에도 양 축 눈금과 짚을 자리를 둔�
   assert.ok(!grid.includes('preserveAspectRatio="none"'), "가로로 늘어나 글자가 찌그러진다");
 });
 
+// (#520) 예전에는 실제 파일의 pendingWeeks 가 비었는지에 따라 단언이 갈렸고, 비면 점선 없음만 보고 조용히 끝났다(데이터가 한쪽 갈래로 굳으면 점선 단언이 안 돈다).
+// 이제 두 갈래를 합성 추이로 각각 항상 돈다.
 test("메인 화면도 덜 찬 주를 점선으로 잇는다", async () => {
-  const p = await page();
+  const p = await page({ trend: syntheticTrend({ pending: true }) });
   const grid = p.byId("realestate-history-grid").innerHTML;
-  const trend = await readJson("realestate-trend");
-
-  if (!(trend.pendingWeeks ?? []).length) {
-    assert.ok(!grid.includes('spark pending'), "잠정 주가 없는데 점선을 그었다");
-    return;
-  }
 
   assert.match(grid, /class="[^"]*\bpending\b[^"]*"[^>]*stroke-dasharray/, "잠정 구간이 점선이 아니다");
   assert.match(
@@ -160,6 +178,16 @@ test("메인 화면도 덜 찬 주를 점선으로 잇는다", async () => {
     /점선/,
     "점선이 무엇인지 밝히지 않았다"
   );
+});
+
+test("메인 화면은 잠정 주가 없으면 점선을 긋지 않고 안내도 하지 않는다", async () => {
+  const p = await page({ trend: syntheticTrend({ pending: false }) });
+  const grid = p.byId("realestate-history-grid").innerHTML;
+
+  assert.ok(grid.includes("polyline"), "추이 카드가 그려지지 않았다 - 아래 단언이 빈 화면에서 통과한다");
+  assert.ok(!grid.includes('spark pending'), "잠정 주가 없는데 점선을 그었다");
+  assert.ok(!/stroke-dasharray/.test(grid), "잠정 주가 없는데 점선 속성이 남았다");
+  assert.equal(p.byId("realestate-history-note").textContent, "", "잠정 주가 없는데 점선 안내가 남았다");
 });
 
 test("시장 지표에는 잠정 구간이 없다", async () => {

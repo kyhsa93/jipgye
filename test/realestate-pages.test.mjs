@@ -24,6 +24,7 @@ import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 import { districtSentences } from "../scripts/district-summary.ts";
 import { stampHtml } from "../scripts/updated-stamp.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
+import { readFixture } from "./helpers/fixture-data.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -431,18 +432,17 @@ test("자치구 페이지는 자기 지역을 링크 목록에서 표시한다",
   assert.ok(block.includes('<a href="./district-songpa.html" aria-current="page">송파구</a>'));
 });
 
-test("지역마다 다른 문장이 나온다", async (t) => {
-  const realestate = await readJson("realestate");
+// (#520) 표본이 충분한 구가 둘 미만이면 `t.diagnostic` 만 남기고 `return` 해서 순위 문장 단언이 안 돌았다(그날 데이터가 한쪽 갈래로 굳으면 조용히 통과).
+// 고정 데이터(test/fixtures/site/data/realestate.json)로 돌리고, 둘 미만이면 건너뛰지 않고 실패로 만든다.
+test("지역마다 다른 문장이 나온다", async () => {
+  const realestate = await readFixture("realestate");
   const of = (entry) => districtSentences(entry, realestate).join(" ");
 
   const priced = realestate.districts
     .filter((d) => typeof d.sale?.avgPricePerPyeong10k === "number" && d.sale.transactionCount >= 5)
     .sort((a, b) => b.sale.avgPricePerPyeong10k - a.sale.avgPricePerPyeong10k);
 
-  if (priced.length < 2) {
-    t.diagnostic(`표본이 충분한 구가 ${priced.length}개뿐이라 순위 문장 검사를 건너뛴다`);
-    return;
-  }
+  assert.ok(priced.length >= 2, `표본이 충분한 구가 ${priced.length}개뿐이라 순위 문장 검사가 아무것도 안 본다`);
 
   const top = of(priced[0]);
   const bottom = of(priced[priced.length - 1]);
