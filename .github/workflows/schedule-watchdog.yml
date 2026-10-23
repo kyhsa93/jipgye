@@ -1,8 +1,11 @@
 # 정기 실행 누락 탐지 (#322). `daily-update` 의 `schedule` 실행이 **통째로 빠져도** 아무도 모르던 자리를 막는다.
-# 재는 것 하나: **지난 28시간(미끄러지는 창) 안에 `daily-update` 의 schedule run 이 cron 수만큼 떴는가.**
+# 재는 것 하나: **지난 36시간(미끄러지는 창) 안에 `daily-update` 의 schedule run 이 cron 수만큼 떴는가.**
 # 모자라면 이 워크플로가 실패로 끝난다 - 빨간 run 과 GitHub 의 실패 알림이 저장소 안에서 우는 자리다(새 서비스·계정·비용 0, #322 범위 3).
 #
 # 문턱 둘과 근거 (#322 완료 조건 1):
+#   - ⚠️ **#506 뒤의 창은 36시간이다(scripts/check-schedule-runs.ts 의 `MISSING_CHECK_WINDOW_HOURS`, pm 제안값 - cto 판정 대기).**
+#     daily-update 의 cron 이 `7 23 * * *` 하나로 줄어 정상 최대 간격 24h 에 정상 지연 7h 를 더하면 31h 라, 28h 로는 지연 하나에
+#     운다. 아래 28시간 서술과 수치는 cron 넷이던 때의 실측이다(옛 근거로 남긴다).
 #   - **창 28시간** - 고정 날짜가 아니라 미끄러지는 창이다. 날짜로 세면 23:07 분이 자정을 넘겨 밀릴 때 한 번 적게 세어진다.
 #     ⚠️ 처방은 24시간이었다. 실제 이력(10-05~10-13, 10분 간격 1,296 시점)에 24h 로 돌리면 **118 시점이 운다** -
 #     cpo 가 「남는 거짓 경보 자리」로 미리 적어 둔 자리(지연이 커지면 어제 성공이 창 밖으로 밀린다)가 실재했다.
@@ -11,7 +14,7 @@
 #   - **횟수 = cron 수** - 상수가 아니다. scripts/check-schedule-runs.ts 가 daily-update.yml 의 `on.schedule` 아래
 #     `- cron:` 줄을 세어 쓴다(**자동 연동**). cron 을 하나 더하면 문턱도 그날부터 5가 된다. 블록을 못 찾으면 4로
 #     되돌아가지 않고 종료 코드 2로 죽는다 - 조용히 느슨해지는 것이 이 이슈가 막으려는 모양이다.
-#     (수동 쪽 표식도 하나 둔다: test/schedule-watchdog.test.mjs 가 "지금 cron 은 4개"를 못박아, cron 을 고치면
+#     (수동 쪽 표식도 하나 둔다: test/schedule-watchdog.test.mjs 가 "지금 cron 은 1개"를 못박아, cron 을 고치면
 #      `npm test` 가 그 사실을 소리나게 알린다. 장치 자체는 시험을 안 기다리고 바로 따라간다.)
 #
 # **왜 여기인가, 그리고 이 자리의 한계** (#322 완료 조건 4 - 이 이슈의 핵심 함정):
@@ -30,7 +33,7 @@
 # 아니라 **실행이 실패한 날**이다. 실패는 이미 빨간 run 과 실패 메일로 운다 - 조용한 누락을 잡는 장치가 시끄러운 것을 다시
 # 울리면 #322 「비용」 절이 적은 대로 아무도 안 보게 된다. 판정 기준을 바꾸려면 `--count=success` 한 줄이다.
 #
-# cron 시각은 daily-update(23:07·03:07·07:07·11:07 UTC)·official-price-api(14:17)·correction-release(매월 12일 17:43)와
+# cron 시각은 daily-update(23:07 UTC)·official-price-api(14:17)·correction-release(매월 12일 17:43)와
 # 겹치지 않게 05:29·17:29 UTC(14:29·02:29 KST)로 둔다. 커밋·푸시가 없어 digest-pipeline 그룹을 공유하지 않는다.
 name: Schedule watchdog
 
@@ -60,7 +63,7 @@ jobs:
           node-version: "24"
       # `npm ci` 가 없는 이유: 이 스크립트는 의존이 0이다(Node 24 의 전역 fetch 만 쓴다).
       # 탐지기가 설치 단계에서 깨지면 누락을 못 보므로, 지나는 단계를 일부러 적게 둔다.
-      - name: 지난 28시간의 daily-update 정기 실행 수를 센다
+      - name: 지난 36시간의 daily-update 정기 실행 수를 센다
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/check-schedule-runs.ts

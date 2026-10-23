@@ -5,7 +5,7 @@ import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { countCrons, countInWindow, parseArgs, verdict } from "../scripts/check-schedule-runs.ts";
+import { MISSING_CHECK_WINDOW_HOURS, countCrons, countInWindow, parseArgs, verdict } from "../scripts/check-schedule-runs.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const script = path.join(root, "scripts/check-schedule-runs.ts");
@@ -17,12 +17,12 @@ const script = path.join(root, "scripts/check-schedule-runs.ts");
 
 // ── cron 수 세기 (문턱의 출처) ──────────────────────────────────────────────
 
-test("daily-update.yml 의 cron 은 지금 4개다 - 이 수가 문턱이 된다", async () => {
+test("daily-update.yml 의 cron 은 지금 1개다 - 이 수가 문턱이 된다 (#506: 뉴스 하루 1회)", async () => {
   // ⚠️ 못박아 둔 수다. cron 을 늘리거나 줄이면 이 시험이 실패해 **사람에게 알린다.**
   // 장치(scripts/check-schedule-runs.ts)는 이 시험을 기다리지 않고 파일을 다시 세어 바로 따라간다 -
   // 자동 연동이 본체고, 이 줄은 변경을 소리나게 하는 표식이다(#322 완료 조건 1).
   const text = await readFile(path.join(root, ".github/workflows/daily-update.yml"), "utf8");
-  assert.equal(countCrons(text), 4);
+  assert.equal(countCrons(text), 1);
 });
 
 test("cron 을 하나 더하면 세어지는 수도 같이 는다", () => {
@@ -137,10 +137,11 @@ test("--count 가 보는 수를 바꾼다", () => {
   assert.equal(verdict({ ...w, mode: "success" }).ok, false);
 });
 
-test("기본 창은 28시간이다 - 24시간은 실측에서 거짓 경보가 났다", () => {
-  // #322 처방은 24h 였으나 실제 이력(10-05~10-13, 10분 간격 1,296 시점)에서 118 시점이 울었다.
-  // 미리 승인된 길 ⓐ(26~28h) 중 25h→55 · 26h→30 · 27h→9 · 28h→0 이라 28을 골랐다(PR 본문의 표).
-  assert.equal(parseArgs([]).windowHours, 28);
+test("기본 창은 MISSING_CHECK_WINDOW_HOURS 고, 정상 최대 간격 24h + 지연 7h = 31h 보다 길다 (#506)", () => {
+  // cron 넷이던 때(#322)는 24h 처방이 실측에서 118 시점 거짓 경보라 28h 를 골랐다(옛 근거).
+  // cron 이 하나뿐인 지금의 하한은 31h 이고, 36 은 pm 제안값이라 cto 판정 대기다 - 값은 상수 한 줄이고, 이 시험은 하한만 못박는다.
+  assert.equal(parseArgs([]).windowHours, MISSING_CHECK_WINDOW_HOURS);
+  assert.ok(MISSING_CHECK_WINDOW_HOURS > 24 + 7, `창 ${MISSING_CHECK_WINDOW_HOURS}h 가 정상 최대 간격 24h + 지연 7h 이하다 - 지연 하나에 거짓 경보가 난다`);
   assert.equal(parseArgs([]).count, "fired");
 });
 
@@ -189,6 +190,29 @@ test("cron 이 다섯이 되면 같은 네 번짜리 입력이 그때부터 운�
   const r = call([`--runs-file=${runsFile}`, `--workflow=${wf}`, "--now=2026-10-15T02:00:00Z"]);
   assert.equal(r.status, 1, r.stdout + r.stderr);
   assert.match(r.stdout, /문턱: 5/);
+});
+
+// ── cron 하나(#506): 거짓 경보 없음 / 진짜 경보 ────────────────────────────
+
+const ONE = ["7 23 * * *"];
+
+test("cron 하나 - 직전 run 이 정상 최대 지연(24h + 7h = 31h 전)이어도 안 운다 (#506)", async () => {
+  // 다음 run 이 7시간 늦어 아직 안 뜬 순간: 직전 run 은 now 에서 31h - 1분 전.
+  const now = "2026-10-15T06:06:00Z";
+  const { runsFile, wf } = await bed([run("2026-10-14T23:07:00Z"), run("2026-10-13T23:07:00Z")], ONE);
+  const r = call([`--runs-file=${runsFile}`, `--workflow=${wf}`, `--now=${now}`]);
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.match(r.stdout, /문턱: 1 /);
+  assert.equal(r.stderr, "");
+});
+
+test("cron 하나 - 창 안에 run 이 0이면 종료 코드 1로 운다 (#506)", async () => {
+  // 직전 run 이 창보다 오래됐다: 하루가 통째로 빠지고 지연까지 겹친 모양.
+  const { runsFile, wf } = await bed([run("2026-10-12T23:07:00Z")], ONE);
+  const r = call([`--runs-file=${runsFile}`, `--workflow=${wf}`, "--now=2026-10-15T06:06:00Z"]);
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stderr, /::error::daily-update 정기 실행 누락/);
+  assert.match(r.stdout, /창 안 schedule 발화 0 /);
 });
 
 test("cron 블록이 없으면 4로 되돌아가지 않고 종료 코드 2로 죽는다", async () => {
