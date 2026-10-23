@@ -9,10 +9,10 @@ import { bakeKoHeading } from "./page-heading.ts";
 import { createWriteSet } from "./render-writes.ts";
 import { escapeHtml } from "./html-escape.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
+import { requireSite, sitePath } from "./site-dir.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const REALESTATE_PATH = REALESTATE_TEMPLATE_PATH; // 빈 표지가 있는 틀(scripts/realestate-template.html). 나가는 docs/realestate.html 이 아니다(#374).
-const METHOD_PATH = path.join(root, "docs/method.html");
 const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 
 const BASE_TITLE = "서울 아파트 시세 - 25개 자치구 실거래가";
@@ -202,6 +202,8 @@ async function readJson(file) {
 }
 
 async function main() {
+  requireSite(); // 출력 디렉터리가 docs/ 가 아니면 docs/ 복사본이 먼저 있어야 한다(#508)
+  const METHOD_PATH = sitePath("method.html");
   const budget = await readJson(path.join(root, "docs/data/budget-deals.json"));
   // 금리가 아직 없는 날에도 예산 페이지는 나와야 한다. 월 상환액 문단만 빠진다.
   const rates = await readJson(path.join(root, "docs/data/rates.json"));
@@ -243,7 +245,7 @@ async function main() {
       continue;
     }
 
-    const target = path.join(root, "docs", page.file);
+    const target = sitePath(page.file);
     const before = await readFile(target, "utf8").catch(() => null);
     if (before === html) continue;
     writes.stage(target, html);

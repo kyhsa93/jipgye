@@ -4,6 +4,7 @@ import { applyPrerender, ratesHeadHtml, ratesHtml } from "./prerender.ts";
 import { createWriteSet } from "./render-writes.ts";
 import { rateBridgeHtml } from "./rate-bridge.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
+import { requireSite, siteLabel, sitePath } from "./site-dir.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 // 상품군 페이지 넷의 틀. 예전에는 docs/rates.html이 이 틀을 겸했고 예금 페이지와 본문이 글자까지
@@ -137,6 +138,7 @@ export function buildRatePage(baseHtml, page, rates) {
 }
 
 async function main() {
+  requireSite(); // 출력 디렉터리가 docs/ 가 아니면 docs/ 복사본이 먼저 있어야 한다(#508)
   const [baseHtml, rates] = await Promise.all([
     readFile(RATES_TEMPLATE_PATH, "utf8"),
     readFile(path.join(root, "docs/data/rates.json"), "utf8").then(JSON.parse),
@@ -146,13 +148,13 @@ async function main() {
   const writes = createWriteSet();
   for (const page of RATE_PAGES) {
     const html = buildRatePage(baseHtml, page, rates);
-    const target = path.join(root, "docs", page.file);
+    const target = sitePath(page.file);
     const before = await readFile(target, "utf8").catch(() => null);
     if (before === html) {
-      console.log(`  docs/${page.file} 변경 없음`);
+      console.log(`  ${siteLabel(page.file)} 변경 없음`);
       continue;
     }
-    writes.stage(target, html, `  docs/${page.file} ${before === null ? "생성" : "갱신"}`);
+    writes.stage(target, html, `  ${siteLabel(page.file)} ${before === null ? "생성" : "갱신"}`);
   }
   writes.commit();
 }

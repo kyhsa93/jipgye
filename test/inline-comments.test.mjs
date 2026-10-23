@@ -288,7 +288,9 @@ test("시세 틀은 docs 밖에 있고 표지가 비어 있다 - 틀 읽는 쪽 
     assert.doesNotMatch(src, /["'`]docs\/realestate\.html["'`]/, `${rel}: 나가는 장(docs/realestate.html)을 틀로 읽는다`);
   }
   const prerender = await read("scripts/prerender.ts");
-  assert.equal(prerender.match(/["'`]docs\/realestate\.html["'`]/g).length, 2, "prerender.ts 에서 나가는 장의 경로는 출력 경로와 항목 이름 두 곳뿐이다");
+  // 출력 디렉터리 도입(#508) 뒤로 경로 글자는 `docs/realestate.html` 이 아니라 출력 디렉터리 안의 이름이다: at(…)는 쓰는 경로, label(…)는 항목 이름.
+  assert.doesNotMatch(prerender, /["'`]docs\/realestate\.html["'`]/, "prerender.ts 가 docs/ 경로를 글자로 박았다 - 출력 디렉터리(JIPGYE_SITE_DIR)를 우회한다");
+  assert.equal(prerender.match(/\b(?:at|label)\("realestate\.html"\)/g).length, 2, "prerender.ts 에서 나가는 장의 경로는 출력 경로와 항목 이름 두 곳뿐이다");
 });
 
 test("시세 틀에는 #312 판정 §6 이 뺀 주석 다섯 줄이 있고 나가는 장에는 한 줄도 없다 (#374)", async () => {

@@ -31,24 +31,13 @@ import { headLabels, realestateTable } from "./realestate-table.ts";
 import { overallCards } from "./realestate-overall.ts";
 import { MIN_SAMPLE } from "./realestate-format.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
+import { requireSite, siteLabel, sitePath } from "./site-dir.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
-const INDEX_PATH = path.join(root, "docs/index.html");
-const RATES_PATH = path.join(root, "docs/rates.html");
-const NEWS_PATH = path.join(root, "docs/news.html");
 // 시세 장은 틀(scripts/)과 나가는 장(docs/)으로 갈라져 있다(#374, rates-template.html 과 같은 모양). 틀에는 "왜"를 마음껏 적고,
 // 이 파일이 틀을 채운 뒤 인라인 스크립트의 주석을 떼어 docs/realestate.html 로 낸다. 두 빌더(build-realestate-pages·build-budget-pages)도
 // 같은 틀을 읽는다. docs/realestate.html 은 생성물이라 손으로 고치지 않는다.
 export const REALESTATE_TEMPLATE_PATH = path.join(root, "scripts/realestate-template.html");
-const REALESTATE_PATH = path.join(root, "docs/realestate.html");
-const CONVERSION_PATH = path.join(root, "docs/jeonse-vs-wolse.html");
-const CANCELLATION_PATH = path.join(root, "docs/cancelled-deals.html");
-const RENEWAL_PATH = path.join(root, "docs/renewal-vs-new.html");
-const FLOOR_PATH = path.join(root, "docs/floor-gap.html");
-const OUTLOOK_PATH = path.join(root, "docs/price-outlook.html");
-const RECORD_PATH = path.join(root, "docs/record-high.html");
-const SWITCH_PATH = path.join(root, "docs/switch-house.html");
-const METHOD_PATH = path.join(root, "docs/method.html");
 const DATA_DIR = path.join(root, "docs/data");
 
 // 표본 문턱은 realestate-format.mjs의 것 하나다(예전엔 여기에도 하나 더 있었다). 이 모듈에서 import하던 쪽을 위해 다시 내보낸다.
@@ -836,6 +825,10 @@ async function readJson(name) {
 }
 
 async function main() {
+  // 읽고 쓰는 장의 디렉터리. 기본은 docs/ 이고, JIPGYE_SITE_DIR 이 있으면 그 디렉터리의 복사본이다(#508, scripts/site-dir.ts). 데이터는 어느 쪽이든 docs/data 다.
+  requireSite();
+  const at = (rel) => sitePath(rel);
+  const label = (rel) => siteLabel(rel);
   const [summary, market, realestate, news] = await Promise.all(
     ["summary", "market", "realestate", "news"].map(readJson)
   );
@@ -864,16 +857,16 @@ async function main() {
   const writes = createWriteSet();
   // 넷째 칸(선택)은 틀 경로다. 있으면 path_ 는 나가는 장이고, 틀을 채운 뒤 인라인 스크립트 주석을 떼어 path_ 에 쓴다(#374).
   for (const [file, path_, fileBlocks, templatePath] of [
-    ["docs/index.html", INDEX_PATH, blocks],
-    ["docs/rates.html", RATES_PATH, { rateBridgeKo: rateBridgeHtml("rates", "ko"), rateBridgeEn: rateBridgeHtml("rates", "en") }], // 허브: 표·상품군 문단은 상품군 페이지 넷이 그린다(#193)
+    [label("index.html"), at("index.html"), blocks],
+    [label("rates.html"), at("rates.html"), { rateBridgeKo: rateBridgeHtml("rates", "ko"), rateBridgeEn: rateBridgeHtml("rates", "en") }], // 허브: 표·상품군 문단은 상품군 페이지 넷이 그린다(#193)
     [
-      "docs/news.html",
-      NEWS_PATH,
+      label("news.html"),
+      at("news.html"),
       { newsSummary: newsSummaryHtml(summary), newsList: newsListHtml(news) },
     ],
     [
-      "docs/realestate.html",
-      REALESTATE_PATH,
+      label("realestate.html"),
+      at("realestate.html"),
       {
         realestateOverall: realestateOverallHtml(realestate),
         realestateHead: realestateHeadHtml(),
@@ -889,8 +882,8 @@ async function main() {
       REALESTATE_TEMPLATE_PATH,
     ],
     [
-      "docs/jeonse-vs-wolse.html",
-      CONVERSION_PATH,
+      label("jeonse-vs-wolse.html"),
+      at("jeonse-vs-wolse.html"),
       {
         conversionLead: conversionLeadHtml(conversion),
         conversionTable: conversionTableHtml(conversion),
@@ -898,8 +891,8 @@ async function main() {
       },
     ],
     [
-      "docs/renewal-vs-new.html",
-      RENEWAL_PATH,
+      label("renewal-vs-new.html"),
+      at("renewal-vs-new.html"),
       {
         renewalLead: renewalLeadHtml(renewal),
         renewalCapLead: renewalCapLeadHtml(renewal),
@@ -910,8 +903,8 @@ async function main() {
       },
     ],
     [
-      "docs/floor-gap.html",
-      FLOOR_PATH,
+      label("floor-gap.html"),
+      at("floor-gap.html"),
       {
         floorLead: floor?.lead?.ko ? escapeHtml(floor.lead.ko) : null,
         floorTopLead: floor?.topLead?.ko ? escapeHtml(floor.topLead.ko) : null,
@@ -921,8 +914,8 @@ async function main() {
       },
     ],
     [
-      "docs/switch-house.html",
-      SWITCH_PATH,
+      label("switch-house.html"),
+      at("switch-house.html"),
       {
         switchLead: change?.lead?.ko ? escapeHtml(change.lead.ko) : null,
         switchTable: change?.table?.ko ?? null,
@@ -930,8 +923,8 @@ async function main() {
       },
     ],
     [
-      "docs/record-high.html",
-      RECORD_PATH,
+      label("record-high.html"),
+      at("record-high.html"),
       {
         recordLead: recordText("lead"),
         recordControl: recordText("control"),
@@ -940,8 +933,8 @@ async function main() {
       },
     ],
     [
-      "docs/price-outlook.html",
-      OUTLOOK_PATH,
+      label("price-outlook.html"),
+      at("price-outlook.html"),
       {
         outlookLead: outlookText("lead"),
         outlookRegions: outlook?.tables?.regions?.ko ?? null,
@@ -958,10 +951,10 @@ async function main() {
       },
     ],
     // 손으로 쓴 장이라 채울 자리는 없다. 표의 머리글 방향·이름만 같은 길로 단다.
-    ["docs/method.html", METHOD_PATH, {}],
+    [label("method.html"), at("method.html"), {}],
     [
-      "docs/cancelled-deals.html",
-      CANCELLATION_PATH,
+      label("cancelled-deals.html"),
+      at("cancelled-deals.html"),
       {
         cancelLead: cancelLeadHtml(cancellation),
         cancelCorrectionLead: cancellation?.seoul?.correctionLead?.ko ? escapeHtml(cancellation.seoul.correctionLead.ko) : null,
