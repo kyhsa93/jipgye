@@ -266,6 +266,49 @@ test("여러 페이지를 max_page_no만큼 이어서 가져온다", async () =>
   }
 });
 
+test("최저금리만 빈 대출 옵션은 min null로 남고 월 상환액 계산에서 0%로 세지 않는다 (#269)", async () => {
+  // loanOption은 min·max·avg 중 하나라도 있으면 옵션을 유지한다 - 그래서 lend_rate_min만 빈 날
+  // `min: null`이 rates.json에 실제로 들어간다. 그 옵션을 소비하는 apartmentOptions가 0%로 읽지 않아야 한다.
+  const stub = await startStub(({ endpoint, topFinGrpNo }) => {
+    if (endpoint === "depositProductsSearch" || endpoint === "savingProductsSearch") {
+      return { json: savingResponse({ products: [] }) };
+    }
+    return {
+      json: loanResponse({
+        products: [
+          {
+            co: topFinGrpNo,
+            cd: "L1",
+            company: "국민은행",
+            name: "주택담보대출",
+            options: [
+              { rateType: "변동금리", min: "", max: 5.2, avg: 4.3 },
+              { rateType: "변동금리", min: 4, max: 5.2, avg: 4.3 },
+              { rateType: "변동금리", min: 6, max: 6.5, avg: 6.2 },
+            ],
+          },
+        ],
+      }),
+    };
+  });
+  const outDir = await tempDir();
+
+  try {
+    await run(stub.base, outDir);
+    const rates = await readJson(outDir, "rates.json");
+    const mins = rates.mortgage[0].options.map((o) => o.min);
+    assert.deepEqual(mins, [null, 4, 6], "빈 lend_rate_min이 null로 남지 않았다");
+
+    const { apartmentOptions, rateSpread } = await import("../scripts/mortgage.ts");
+    const spread = rateSpread(apartmentOptions(rates));
+    assert.equal(spread.count, 2, "빈 최저금리 옵션이 0% 상품으로 세어졌다");
+    assert.equal(spread.low, 4);
+    assert.equal(spread.mid, 5);
+  } finally {
+    await stub.close();
+  }
+});
+
 test("금리 옵션이 없는 상품은 목록에서 제외한다", async () => {
   const stub = await startStub(({ topFinGrpNo }) =>
     ({
