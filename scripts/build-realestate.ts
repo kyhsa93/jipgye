@@ -78,37 +78,42 @@ function monthsBetween(from, until) {
   return [...months];
 }
 
-async function readWindowItems(now, window) {
+// 읽기는 동시에 하되 합치는 건 고정 순서로 한다: months -> DISTRICTS -> sale·rent 인덱스 순(값 정렬 아님).
+// Promise.all 은 완료 순서가 아니라 넘긴 순서대로 결과를 돌려준다. 읽는 쪽 콜백에서 바로 Map 에 넣으면
+// 항목 배열이 완료 순서로 쌓이고, summarizeSaleItems 의 부동소수 합산 순서가 실행마다 달라져 말단 자리가 갈린다(#477).
+// `read` 는 시험이 완료 순서를 뒤집어 보려고 갈아 끼우는 자리다.
+export async function readWindowItems(now, window, read = readSlotFile) {
   const months = window.basis === "arrival" ? windowMonths(now) : monthsBetween(window.from, window.until);
   const items = new Map();
   let earliestArrival = null;
 
-  await Promise.all(
+  const slots = await Promise.all(
     months.flatMap((yearMonth) =>
       DISTRICTS.flatMap(({ code }) =>
-        ["sale", "rent"].map(async (kind) => {
-          const file = await readSlotFile(kind, code, yearMonth);
-          if (file?.ok === false || !Array.isArray(file?.items)) return;
-
-          const arrivals = file.arrivals ?? {};
-          for (const day of Object.values(arrivals)) {
-            if (!earliestArrival || day < earliestArrival) earliestArrival = day;
-          }
-
-          const dateOf = window.basis === "arrival" ? (item) => arrivals[itemKey(item)] : contractDate;
-          const picked = [];
-          for (const item of file.items) {
-            const date = dateOf(item);
-            if (date && date >= window.from && date < window.until) picked.push({ item, date });
-          }
-          if (!picked.length) return;
-
-          const key = `${kind}:${code}`;
-          items.set(key, [...(items.get(key) ?? []), ...picked]);
-        })
+        ["sale", "rent"].map(async (kind) => ({ kind, code, file: await read(kind, code, yearMonth) }))
       )
     )
   );
+
+  for (const { kind, code, file } of slots) {
+    if (file?.ok === false || !Array.isArray(file?.items)) continue;
+
+    const arrivals = file.arrivals ?? {};
+    for (const day of Object.values(arrivals)) {
+      if (!earliestArrival || day < earliestArrival) earliestArrival = day;
+    }
+
+    const dateOf = window.basis === "arrival" ? (item) => arrivals[itemKey(item)] : contractDate;
+    const picked = [];
+    for (const item of file.items) {
+      const date = dateOf(item);
+      if (date && date >= window.from && date < window.until) picked.push({ item, date });
+    }
+    if (!picked.length) continue;
+
+    const key = `${kind}:${code}`;
+    items.set(key, [...(items.get(key) ?? []), ...picked]);
+  }
 
   return { items, earliestArrival };
 }
