@@ -108,6 +108,9 @@
       <input type="search" id="realestate-search-input" placeholder="지역 검색 (예: 강남)" aria-label="지역 검색 (예: 강남)">
     </div>
     <p class="sr-only" role="status" id="realestate-status"></p>
+    <!-- 표 날짜(서울 전체 창·자치구 창, renderRealestate). 구운 HTML 에서는 비어 있다가 JS 가 채우므로
+         한 줄 높이를 미리 잡는다: 13px(--fs-xs) x line-height 1.5 = 19.5px = 1.5em (#461 PR-2, 측정). -->
+    <div class="summary-meta" id="realestate-meta" style="min-height: 1.5em;"></div>
     <div class="table-wrap">
       <table class="data-table realestate-table"><caption class="sr-only" data-auto>집계 — 계약 전에 확인하는 서울 아파트 실거래·금리 - 서울 아파트, 이번 주 신고된 값: 5행 4열(지역·매매·전세·월세)</caption>
         <thead>
@@ -134,7 +137,6 @@
     </div>
     <div class="history-grid" id="realestate-history-grid"></div>
     <div class="summary-meta" id="realestate-history-note"></div>
-    <div class="summary-meta" id="realestate-meta"></div>
   </section>
   <section id="market-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="market-heading">돈의 값 — 기준금리·환율</h2>
@@ -1159,12 +1161,16 @@
     ];
     tbody.innerHTML = rows.join("");
     renderRealestateSortState();
-    const basisKo = realestate.window?.basis === "arrival" ? "신고" : "계약";
-    const basisEn = realestate.window?.basis === "arrival" ? "Filings" : "Contracts";
-    meta.textContent = realestate.window?.from
+    const w = realestate.window;
+    const basisKo = w?.basis === "arrival" ? "신고" : "계약";
+    const basisEn = w?.basis === "arrival" ? "Filings" : "Contracts";
+    meta.textContent = w?.from
       ? t("realestatePeriodLabel")(
           locale === "en" ? basisEn : basisKo,
-          `${realestate.window.from} ~ ${realestate.window.to}`
+          (w.districtFrom < w.from
+            ? `${t("realestateOverallLabel")} ${w.from}~${w.to} · ${t("realestateTagDistrict")} ${w.districtFrom}~${w.to}`
+            : `${w.from}~${w.to}`
+          ).replace(/\d{4}-/g, "")
         )
       : "";
     applyRealestateSearch();
