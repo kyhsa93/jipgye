@@ -50,6 +50,31 @@ test("아파트를 나누어 갚는 상품만 고른다", () => {
   assert.deepEqual(options.map((o) => o.min), [4, 5, 6]);
 });
 
+test("최저금리가 비어 있으면 0%로 세지 않고 뺀다 (#269)", () => {
+  // fetch-rates.ts의 loanOption은 min·max·avg 중 하나라도 있으면 옵션을 유지하므로
+  // lend_rate_min만 빈 날 `min: null`이 rates.json에 들어간다. Number(null)·Number("")·
+  // Number(false)·Number([])는 모두 0이라 예전 거름은 이를 연 0% 상품으로 세어 중앙값을 끌어내렸다.
+  const row = (min) => ({ mortgageType: "아파트", repayType: "분할상환방식", min });
+  const withEmpty = (empty) => ({ mortgage: [{ company: "가나은행", options: [row(empty), row(4), row(6)] }] });
+  for (const empty of [null, undefined, "", "  ", false, true, []]) {
+    const options = apartmentOptions(withEmpty(empty));
+    assert.deepEqual(options.map((o) => o.min), [4, 6], `빈 값 ${JSON.stringify(empty)}이 0%로 들어왔다`);
+    assert.equal(rateSpread(options).mid, 5, "빈 값이 중앙값을 끌어내렸다");
+    assert.equal(rateSpread(options).low, 4, "빈 값이 최저를 0으로 만들었다");
+  }
+  // 값이 있는 0%는 그대로 센다 - 막는 것은 "비어 있음"이지 0이 아니다(budget-leaves AN-R07).
+  assert.deepEqual(apartmentOptions(withEmpty(0)).map((o) => o.min), [0, 4, 6]);
+  assert.deepEqual(apartmentOptions(withEmpty("0")).map((o) => o.min), [0, 4, 6]);
+});
+
+test("최저금리가 전부 비면 옵션이 0개라 문장을 만들지 않는다 (#269)", () => {
+  const rates = { mortgage: [{ company: "가나은행", options: [{ mortgageType: "아파트", repayType: "분할상환방식", min: null, max: 6, avg: 5 }] }] };
+  assert.deepEqual(apartmentOptions(rates), []);
+  assert.equal(rateSpread(apartmentOptions(rates)), null);
+  assert.equal(loanHeadSentence(rateSpread(apartmentOptions(rates))), null);
+  assert.equal(loanSentence(rateSpread(apartmentOptions(rates)), { eok: 10 }), null);
+});
+
 test("대표 금리는 가장 낮은 것이 아니라 중앙값이다", () => {
   // 최저 하나를 쓰면 우대조건을 다 채운 사람의 값이 모두의 값처럼 보인다.
   const spread = rateSpread(apartmentOptions(RATES));

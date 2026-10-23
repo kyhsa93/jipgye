@@ -26,6 +26,20 @@ export const YEARS = 30;
  */
 export const APARTMENT = { mortgageType: "아파트", repayType: "분할상환방식" };
 
+/**
+ * 최저금리를 숫자로 읽는다. 비어 있으면 NaN - "값 없음"을 0%로 만들지 않는다(#269).
+ *
+ * Number(null)·Number("")·Number(false)·Number([])는 모두 0이다. fetch-rates.ts의 loanOption은
+ * 최저·최고·평균 중 하나라도 있으면 옵션을 남기므로 lend_rate_min만 빈 날 `min: null`이
+ * rates.json에 들어가는데, 예전 거름은 이를 연 0% 상품으로 세어 중앙값과 최저를 끌어내렸다.
+ * 값이 있는 0과 숫자 문자열("4.5")은 그대로 읽는다 - 막는 것은 "비어 있음"이다.
+ */
+function minRate(value) {
+  if (value == null || typeof value === "boolean") return Number.NaN;
+  if (String(value).trim() === "") return Number.NaN;
+  return Number(value);
+}
+
 export function apartmentOptions(rates) {
   return (rates?.mortgage ?? []).flatMap((product) =>
     (product.options ?? [])
@@ -33,9 +47,9 @@ export function apartmentOptions(rates) {
         (option) =>
           option?.mortgageType === APARTMENT.mortgageType &&
           option?.repayType === APARTMENT.repayType &&
-          Number.isFinite(Number(option?.min))
+          Number.isFinite(minRate(option?.min))
       )
-      .map((option) => ({ company: product.company, min: Number(option.min) }))
+      .map((option) => ({ company: product.company, min: minRate(option.min) }))
   );
 }
 
