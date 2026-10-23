@@ -161,6 +161,15 @@ test("추이 격자는 그릴 카드 수만큼 자리를 미리 깔고, 그 칸�
   ]) {
     assert.match(css, rule, `src/css/legacy.css: 자리를 잡는 min-height 규칙이 사라졌다`);
   }
+  // 알림의 위 여백이 음수면 바로 위 .site-search(margin-bottom 8px)와 합쳐져 알림이 검색창을 파고든다(-12 + 8 = -4px, #464).
+  const notice = /\.content-notice\.page-notice \{\s*margin:\s*(-?\d+)px/.exec(css);
+  assert.ok(notice && Number(notice[1]) >= 8, `src/css/legacy.css: .content-notice.page-notice 위 여백이 8px 미만(${notice?.[1]}px)이다 - 검색창과 겹친다`);
+  // 검색 입력은 placeholder 를 줄이지 않고 전체 글을 접근 가능한 이름으로 갖는다(#464, WCAG 2.5.3).
+  assert.match(
+    await read("scripts/rates-template.html"),
+    /id="search-input" placeholder="\$\{escapeHtml\(\s*t\("searchPlaceholder"\)\s*\)\}" aria-label="\$\{escapeHtml\(t\("searchPlaceholder"\)\)\}"/,
+    "scripts/rates-template.html: #search-input 에 aria-label(전체 searchPlaceholder)이 없다"
+  );
 });
 
 // #337: 영어 화면에서 금리 네 장이 `<title>` 하나("Deposit, Savings & Loan Rates")를 공유했다. 한국어는 장마다 구운 <title>이

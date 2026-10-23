@@ -1295,6 +1295,11 @@
     flex: 1;
     min-width: 120px;
   }
+  @media (max-width: 560px) {
+    .controls input[type="search"] {
+      flex-basis: 100%;
+    }
+  }
   .sector-filter {
     display: flex;
     gap: 10px;
@@ -2202,7 +2207,7 @@
     margin-top: 0;
   }
   .content-notice.page-notice {
-    margin: -12px 0 16px;
+    margin: 8px 0 16px;
     min-height: 2lh;
   }
   @media (max-width: 480px) {

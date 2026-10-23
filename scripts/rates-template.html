@@ -621,7 +621,7 @@
     const controls = document.getElementById("controls");
     const searchHtml = `<input type="search" id="search-input" placeholder="${escapeHtml(
       t("searchPlaceholder")
-    )}" value="${escapeHtml(state.query)}">`;
+    )}" aria-label="${escapeHtml(t("searchPlaceholder"))}" value="${escapeHtml(state.query)}">`;
 
     if (isSavingCategory(state.category)) {
       const terms = availableTerms();
