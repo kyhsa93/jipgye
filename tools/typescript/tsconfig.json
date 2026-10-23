@@ -103,6 +103,7 @@
     "../../scripts/fetch-official-price-api.ts",
     "../../scripts/fetch-official-price.ts",
     "../../scripts/fetch-price-index.ts",
+    "../../scripts/fetch-rates.ts",
     "../../scripts/fetch-realestate.ts",
     "../../scripts/floor-gap.ts",
     "../../scripts/housing-permits-diagnose.ts",
