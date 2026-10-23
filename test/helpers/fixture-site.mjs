@@ -13,6 +13,9 @@
 //
 // (#520) district-change.json 은 기준일만 있던 소스에 합성 권역 5줄(regions)과 그 표(regionTable)를 더했다 - switch-house 권역표 시험의 입력이다. 칸 수를 오늘 값과 일부러 다르게 뒀다.
 //
+// (#524) budget-deals.json 은 기준일만 있던 소스에 예산 밴드 18개(3억대~20억대)를 더했다 - 오늘 docs/data/budget-deals.json(origin/main 136dcf7d)에서 밴드별 거래를 앞 3건으로 줄여 얼린 것이다.
+// build-budget-pages 가 이 밴드로 예산 18장을 만든다(site-dir 시험이 53장 전부를 걷어내고 다시 그리는 데 쓴다). SITE_STEPS 에는 그 단계가 없어 다른 시험은 이 밴드를 쓰지 않는다.
+//
 // 복사하는 docs/*.html 은 생성물이기도 한 틀이다(B4 에서 git 밖으로 나간다 - B2 가 출력 폴더를 인자로 받게 하면 이 복사가 필요 없어진다).
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";

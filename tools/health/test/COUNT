@@ -4,5 +4,8 @@
 # 갱신: 2026-10-24(#520), Node v24.22.0, macOS. `npm run health` → ℹ tests 15 · pass 15 · fail 0 · skipped 0
 #   직전 하한 14 + 루트 test/site-dir.test.mjs 에서 옮겨 온 시험 1(생성 53장이 없는 복사본에서 그려도 전체를 그린 것과 같다: 실제 docs/data 로 도는 판) = 15.
 #   루트에는 같은 약속의 고정 데이터 판(생성 35장)이 남아 개수가 그대로다.
-15
-15
+# 갱신: 2026-10-24(#524), base 136dcf7d(= origin/main), Node v24.22.0, macOS. `npm run health` → ℹ tests 16 · pass 16 · fail 0 · skipped 0
+#   직전 하한 15 + test/district-change.test.mjs 에서 옮겨 온 시험 1(커밋된 docs/data/district-change.json 의 금액과 %가 25개 구 모두 맞는다: 실제 파일로 도는 판) = 16.
+#   루트에는 같은 단언을 합성 거래·빌더 출력으로 하는 판이 남아 개수가 그대로다(#520).
+16
+16

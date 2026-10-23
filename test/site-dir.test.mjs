@@ -146,8 +146,9 @@ test("render-pipeline --out: docs/ 는 한 바이트도 안 바뀌고 출력 디
 // (#520) 이 시험은 처음에 실제 docs/data 로 돌았다(생성 53장 전부). 그 판은 tools/health/test/site-dir.test.mjs 로 옮겼다(비차단) - 실제 데이터의 모양이 바뀌면
 // (예산 밴드의 min10k 가 어긋나 build-budget-pages 가 '3억대' 장을 건너뛰면 build-updated-stamp 가 budget-3eok.html 이 없다고 던진다) 기능 PR 시험이 막혔다.
 // 여기는 같은 약속("생성 페이지는 입력이 아니다")을 고정 데이터로 지킨다: 저장소 복사본(test/helpers/fixture-site.mjs)에서 `--out` 판과 생성 페이지를 걷어낸 판을 같은 데이터로 렌더해 맞댄다.
-// 고정 데이터에는 예산 밴드가 없어 build-budget-pages 가 장을 만들지 않으므로(그 단계는 '예산 데이터가 없습니다'로 끝난다) 예산 18장은 걷어내지 않는다 - 그 18장은 health 판이 본다.
-test("생성 35장이 없는 복사본에서 고정 데이터로 그려도 전체를 그린 것과 같다 - 생성 페이지는 입력이 아니다 (B4에서 docs/ 의 생성물을 걷어내도 안전)", async () => {
+// (#524) 고정 데이터(test/fixtures/site/data/budget-deals.json)에 예산 밴드 18개(3억대~20억대, 오늘 데이터를 줄여 얼린 것)를 두어 build-budget-pages 가 18장을 만든다 -
+// 그래서 이 판도 예산 18장을 걷어내고 53장 전부를 다시 그려 맞댄다. health 판(실제 docs/data)과 단언이 같고 입력만 다르다.
+test("생성 53장이 없는 복사본에서 고정 데이터로 그려도 전체를 그린 것과 같다 - 생성 페이지는 입력이 아니다 (B4에서 docs/ 의 생성물을 걷어내도 안전)", async () => {
   const site = buildFixtureSite({ steps: [] });
   try {
     const env = { ...pipelineEnv() };
@@ -158,11 +159,11 @@ test("생성 35장이 없는 복사본에서 고정 데이터로 그려도 전�
     await run(process.execPath, [path.join(site.root, "scripts/stage-site.ts"), `--out=${bare}`], { env });
     let removed = 0;
     for (const f of readdirSync(bare)) {
-      if (!GENERATED.test(f) || /^budget-/.test(f)) continue;
+      if (!GENERATED.test(f)) continue;
       rmSync(path.join(bare, f));
       removed += 1;
     }
-    assert.equal(removed, 35);
+    assert.equal(removed, 53);
     for (const step of RENDER_STEPS) {
       await run(process.execPath, [path.join(site.root, step)], { env: { ...env, [SITE_DIR_ENV]: bare } });
     }
