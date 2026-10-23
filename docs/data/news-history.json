@@ -14260,7 +14260,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "재건축·재개발 등 정비사업으로 2~3년 내 사라지는 집이 4만8000가구가 넘는 것으로 분석됐다. 용산구에서만 8300가구의 멸실이 발생할 전망이다. 집의 멸실 속도와 새 집 건축 속도가 다르기에 이주 관리를 촘촘히…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yongsan.html",
+            "label": "용산구 아파트 84㎡ 매매",
+            "labelEn": "용산구 apartment 84㎡ sale",
+            "value": "29억 1,426만원",
+            "valueEn": "₩2,914M",
+            "note": "최근 1주 계약 64건 · 10/16 대비 -3.8%",
+            "noteEn": "64 deals in the last 1 weeks · -3.8% vs Oct 16"
+          }
+        ],
+        "titleEn": "Homes to disappear within 2-3 years due to reconstruction and redevelopment: 40,0008249 households... Yongsan-gu with 8,336 households is the highest"
       },
       {
         "title": "홍지선 \"주택 인허가·착공 감소가 전세난 원인\"",
@@ -14269,7 +14282,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Hong Jisun \"Decline in housing permits and starts causes rental crisis"
       },
       {
         "title": "박홍근 \"대통령, 초과세수 활용 고금리 취약계층 지원 지시\"",
@@ -14278,7 +14292,8 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[세종=뉴시스]박광온 기자 = 박홍근 기획예산처 장관은 23일 \"대통령께서 최근 초과세수 등을 활용해 취약 차주와 서민금융 등 고금리로 타격을 받을 분야와 계층에 대한 보완책을 마련하라고 요청했다\"고 밝혔다. 박 장…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Park Hong-gyun: \"President Instructed to Use Excess Tax Revenue to Support Vulnerable Groups Affected by High Interest Rates"
       },
       {
         "title": "원주시, 웰니스 관광 활성화 업무협약…지역경제 활력 모색",
@@ -14287,7 +14302,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(원주=연합뉴스) 류호준 기자 = 강원 원주시가 지역 대학의 의료·헬스케어 역량을 활용해 수면과 휴식을 주제로 한 웰니스 관광 활성화에 나선다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Wonju City Signs Wellness Tourism Promotion Agreement to Boost Local Economy"
       },
       {
         "title": "[올댓차이나] 중국 증시 상승 마감…상하이지수 0.89%↑",
@@ -14296,7 +14312,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 23일 상승 마감했다. 이날 상하이종합지수는 전날보다 0.89% 상승한 3690.48로 거래를 마쳤다. 선전성분지수는 전장 대비 2.79% 오른 1만1673.83으로, 중…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] China's stock market closes higher…Shanghai index up 0.89%"
       },
       {
         "title": "국고채 금리 일제히 하락…美 국채 강세 영향(종합)",
@@ -14305,7 +14322,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 강수지 기자 = 23일 국고채 금리가 일제히 하락했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "South Korea's government bond rates fall across the board... influenced by strong U.S. Treasury performance (comprehensive)"
       },
       {
         "title": "국고채 금리 일제히 하락…3년물 연 3.803%",
@@ -14314,7 +14332,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 23일 국고채 금리가 일제히 하락했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "South Korea's government bond yields fall across the board... 3-year bonds at 3.803% annually"
       },
       {
         "title": "원/달러 환율 소폭 반등…1,320원대 중반",
@@ -14323,7 +14342,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 채새롬 기자 = 23일 원/달러 환율이 1,320원대 초반까지 떨어졌다가 소폭 반등해 1,320원대 중반을 기록했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Won/dollar exchange rate slightly rises to mid-1,320s"
       },
       {
         "title": "솔리다임 IPO 중단 덕분?…코스피, 낙폭 좁혀 5,500선 회복 마감(종합)",
@@ -14332,7 +14352,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 23일 코스피가 등락을 거듭한 끝에 상승 마감했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Solidigm IPO Suspension Helps Kospi Narrow Loss, Recover to 5,500 Level at Close (Comprehensive)"
       },
       {
         "title": "고비 넘긴 '오세훈표 정책'…재건축·강북 전성시대 속도 낼듯",
@@ -14341,7 +14362,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 유한주 기자 = 오세훈 서울시장이 23일 정치자금법 위반 혐의 항소심에서 1심의 유죄를 뒤집고 무죄를 선고받으면서 그가 추진해...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangbuk.html",
+            "label": "강북구 아파트 84㎡ 매매",
+            "labelEn": "강북구 apartment 84㎡ sale",
+            "value": "8억 6,216만원",
+            "valueEn": "₩862M",
+            "note": "최근 1주 계약 146건 · 10/16 대비 +0.4%",
+            "noteEn": "146 deals in the last 1 weeks · +0.4% vs Oct 16"
+          }
+        ],
+        "titleEn": "Overcoming hurdles, 'Oh Sehun-style policies' likely to accelerate the era of reconstruction and Gangbuk's boom"
       },
       {
         "title": "AI 신용우려에 코스피 '출렁'…하이닉스 호재에 한숨 돌려(종합)",
@@ -14350,7 +14384,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 곽윤아 기자 = 코스피가 23일 장중 5,300선에서 5,500선을 오가며 크게 출렁였다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "AI Credit Concerns Send Kospi Reeling, but HiNICs Good News Eases Worries (Comprehensive)"
       },
       {
         "title": "[그래픽 경제] 이자 폭탄 맞을라…가계대출·주담대 줄었다",
@@ -14359,7 +14394,28 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스]안지혜 전진우 기자 = 그래픽으로 보는 한주간의 경제 뉴스. ◆ 9개월 만에 감소한 가계대출…주담대 증가세도 둔화 ◆ 서울 오피스텔 월세 상승폭 역대 최대…매매는 둔화 ◆코스피 5500선 강보합 마감…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-rent.html",
+            "label": "서울 전체 아파트 월세",
+            "labelEn": "Seoul apartment rent",
+            "value": "보증금 21,371만원 / 월 129만원",
+            "valueEn": "₩213.7M + ₩1.29M/mo",
+            "note": "최근 1주 계약 820건 · 10/16 대비 -3.9%",
+            "noteEn": "820 deals in the last 1 weeks · -3.9% vs Oct 16"
+          },
+          {
+            "kind": "rates",
+            "label": "주택담보대출 최저금리(상환방식 무관)",
+            "labelEn": "Lowest mortgage rate (any repayment type)",
+            "value": "연 3.95%",
+            "valueEn": "3.95% p.a.",
+            "href": "./mortgage-rates.html"
+          }
+        ],
+        "titleEn": "[Graphic Economy] Household Loans, Mortgage Loans Drop as Families Brace for Interest Rate Bomb"
       },
       {
         "title": "네오클라우드서 빅테크로 옮겨붙은 AI 신용위험…코스피 '흔들'(종합)",
@@ -14368,7 +14424,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 황철환 기자 = 그동안 수차례 제기됐지만, 단기 노이즈에 그쳤던 인공지능(AI) 수익성 논란의 기세가 이번에는 쉽사리 꺾이지 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "AI credit risk shifts to big tech from NeoCloud, shaking KOSPI (Comprehensive)"
       },
       {
         "title": "OECD 경기선행지수 2개월 연속 하락…\"증시 급락 영향\"",
@@ -14377,7 +14434,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[세종=뉴시스] 안호균 기자 = 경제협력개발기구(OECD)가 발표하는 한국의 경기선행지수(CLI)가 18개월 연속 상승 흐름을 끊고 2개월 연속 하락했다. 7월 이후 국내 증시가 주요국 중 가장 부진한 모습을 보이면…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "OECD Leading Index Falls for Second Consecutive Month...\"Impact of Stock Market Plunge"
       },
       {
         "title": "홍지선 “집값 상승폭 둔화…연말엔 시장 안정화될 것”",
@@ -14386,7 +14444,8 @@
         "source": "매일경제 부동산",
         "category": "other",
         "preview": "올해 공급목표 달성 어려워…“민간 물량 부진” 토허제 해제 건의엔 “시장 상황 면밀히 파악”홍지선 국토교통부 장관이 최근 주택가격 상승폭이 둔화하고 있다며 연말께 부동산 시장이 안..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Hong Jisun: \"Slowing pace of housing price increases... market to stabilize by year-end"
       },
       {
         "title": "\"10대가 집 살 돈 어디서?\"…미성년자 주택 매수 늘어난 이유",
@@ -14395,7 +14454,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Where do teens get the money to buy a house?\"…Reasons for the rise in underage home purchases"
       },
       {
         "title": "LH, 시흥거모 공공주택지구 300호 분양… 11월 17일 일반공급 접수",
@@ -14404,7 +14464,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "한국토지주택공사(LH)가 시흥거모 공공주택지구에 300호 규모 공공분양을 시작한다. LH는 시흥거모 공공주택지구 공공분양 S-1블록 300호 입주자모집공고를 시행한다고 23일 밝혔다. S-1블록은 지구 내 첫 일반…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "LH Offers 300 Units in Siheung Geomo Public Housing Complex… General Supply Applications Open November 17"
       },
       {
         "title": "[단독]“세입자 내쫓아야 대출 나와”…빌라 등 금융규제 차별 실수요자 ‘날벼락’",
@@ -14413,7 +14474,18 @@
         "source": "매일경제 부동산",
         "category": "other",
         "preview": "아파트 중심 핀셋 완화에 빌라 등 ‘역차별’ 생애 최초 200만원 세금 감면 혜택도 무용지물 ‘6개월 전입 족쇄’에 세입자·매수자 갈등 조장정부의 주택담보대출 전입의무 규제가 아파..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "rates",
+            "label": "주택담보대출 최저금리(상환방식 무관)",
+            "labelEn": "Lowest mortgage rate (any repayment type)",
+            "value": "연 3.95%",
+            "valueEn": "3.95% p.a.",
+            "href": "./mortgage-rates.html"
+          }
+        ],
+        "titleEn": "[Exclusive]\"Evict tenants to get a loan\"…villa and other financial regulations discriminate against real demanders, causing a blow"
       },
       {
         "title": "면목·사당 모아주택 2121가구 추진… 임대 161가구 줄여 사업성 높인다",
@@ -14422,7 +14494,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "서울 중랑구 면목동과 동작구 사당동 모아주택 사업에 사업성 보정계수가 적용되면서 총 2121가구 공급이 추진된다. 사업성을 높이기 위해 두 지역의 임대주택 물량은 기존 계획보다 161가구 줄어든다. 서울시는 지난 2…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-jungnang.html",
+            "label": "중랑구 아파트 84㎡ 매매",
+            "labelEn": "중랑구 apartment 84㎡ sale",
+            "value": "8억 8,020만원",
+            "valueEn": "₩880M",
+            "note": "최근 1주 계약 282건 · 10/16 대비 +0.3%",
+            "noteEn": "282 deals in the last 1 weeks · +0.3% vs Oct 16"
+          }
+        ],
+        "titleEn": "Mianmok and Sadtang Merge to Develop 2121 Housing Units... Reduce 161 Rental Units to Improve Project Viability"
       },
       {
         "title": "현대건설, 노후 아파트 리뉴얼 세대 내부까지 확대… 현대리바트와 협력",
@@ -14431,7 +14516,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "현대건설이 노후 아파트 주거환경을 개선하는 ‘더 뉴 하우스’ 사업 범위를 단지 공용공간에서 개별 세대 내부까지 확대한다. 현대건설은 지난 22일 서울 강남구 디에이치 갤러리에서 현대리바트와 ‘더 뉴 하우스 공용부·세…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 8,682만원",
+            "valueEn": "₩2,887M",
+            "note": "최근 1주 계약 187건 · 10/16 대비 +1.0%",
+            "noteEn": "187 deals in the last 1 weeks · +1.0% vs Oct 16"
+          }
+        ],
+        "titleEn": "Hyundai Engineering & Construction Expands Apartment Renewal to Interior Units in Collaboration with Hyundai Livent"
       },
       {
         "title": "'메달 따면 아파트 특공' 논란…국토장관 \"대상자 자체 검증\"",
@@ -14440,7 +14538,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 변해정 정유선 이종성 기자 = 정부가 체육계 우수선수와 해외건설 근로자를 대상으로 운용 중인 주택 특별공급 청약제도를 보완해 나가기로 했다. 홍지선 국토교통부 장관은 23일 국회 국토교통위원회 종합국…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Controversy over \"Apartment Special Operation for Medal Winners\"… Minister of Land, Transport and Housing says \"Verify Eligibility of Recipients"
       },
       {
         "title": "서울시와 ‘주택공급 일괄 타결’ 선 그은 국토장관 “합의 가능 사업부터”",
@@ -14449,7 +14548,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "정부와 서울시 간 주택공급 현안을 둘러싼 일괄 타결 가능성에 대해 홍지선 국토교통부 장관이 선을 그었다. 홍 장관은 23일 열린 국회 국토교통위원회 국정감사에서 더불어민주당 김남근 의원이 오세훈 서울시장의 ‘11월…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 505만원",
+            "valueEn": "₩1,305M",
+            "note": "최근 1주 계약 924건 · 10/16 대비 +0.1%",
+            "noteEn": "924 deals in the last 1 weeks · +0.1% vs Oct 16"
+          }
+        ],
+        "titleEn": "Seoul Mayor and Minister of Land, Transport and Infrastructure Ink Comprehensive Housing Supply Agreement \"Possible Projects First"
       },
       {
         "title": "홍지선 국토장관 “전월세 시장 불안은 공급 부족 탓… 집값 폭등락 대비中”",
@@ -14458,7 +14570,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "홍지선 국토교통부 장관이 최근 전월세 매물 감소와 수급 불균형 현상의 주요 원인으로 주택 공급 물량 부족을 꼽았다. 홍 장관은 23일 열린 국회 국토교통위원회 국정감사에서 정일영 더불어민주당 의원이 민간임대사업자 규…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Hong Jisun, Minister of Land, \"Instability in the rental market is due to supply shortages... Preparing for sharp rises and falls in housing prices"
       },
       {
         "title": "[올댓차이나] 홍콩 증시, 저가 매수세에 나흘 만에 반등… H주 0.63%↑",
@@ -14467,7 +14580,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 23일 그간 하락에 대한 반동으로 저가 매수세가 선행하면서 4거래일 만에 반등하고 있다. 다만 전날 미국 기술주 약세와 중동 정세 불안감은 투자심리를 압박, 추가 상승을 제…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] Hong Kong Market Rallies on Low-price Buying, H-shares Up 0.63% After Four Days"
       }
     ]
   }
