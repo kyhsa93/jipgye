@@ -121,7 +121,7 @@ test("금리 5장: 표와 추이 구역의 재시도 단추를 연달아 눌러�
   }
 });
 
-test("금리 5장: rates.json만 받고 rates-history가 거부되면 전과 같이 추이 없음 문구로 떨어진다", async () => {
+test("금리 5장: rates.json만 받고 rates-history가 거부되면 추이 안내 칸이 실패 문구 + 재시도로 바뀐다 - '쌓이면' 문구는 받았는데 빈 때만 (#532)", async () => {
   const rates = await readJson("rates");
   const page = await loadRatesPage({
     fetch: async (url) => {
@@ -131,7 +131,9 @@ test("금리 5장: rates.json만 받고 rates-history가 거부되면 전과 같
   });
   const grid = page.byId.get("history-grid").innerHTML;
   assert.ok(!grid.includes("불러오는 중"));
-  assert.ok(grid.includes("추이는 데이터가 하루 이상 쌓이면 표시됩니다."));
+  const spot = page.byId.get("history-placeholder").innerHTML;
+  assert.ok(spot.includes("금리 추이를 불러오지 못했습니다.") && spot.includes('id="load-retry-history"'));
+  assert.ok(!grid.includes("추이는 데이터가 하루 이상 쌓이면 표시됩니다."), "못 받았는데 '아직 없음'으로 말한다(규칙 5)");
 });
 
 async function dealSearch(query, extra = {}) {
@@ -1523,11 +1525,108 @@ test("변이 증빙 (마): 격자를 통째로 갈아 끼우는 사본, 보기 �
   assert.equal(noNotice.page.notice(), null, "알림을 안 세우는 사본이 알림을 세웠다 - ⓑ 가 눈이 멀었다");
 });
 
-test("S6 의도한 차이 (#296 (마)): 금리 4장 인라인 스크립트 순증가 +430B 이하(cto 가 이 PR 에 한해 +400 → +430, 영어 고지 한 문장 몫) (merge-base 5af7d1aa), load-state.js 순증가 0B", () => {
+// ---- #532 (#296 (마) 잔여): rates.json 은 오는데 rates-history.json 만 실패하면 추이 격자를 접지 않고 실패를 말한다 --------------------------------------------
+// 못 받았다(cache.history = null)와 받았는데 비었다([])는 다른 말이다(규칙 5). 예전에는 둘 다 []이라 격자 전체가 historyEmpty 한 칸(412px 폭 612→136px)으로 접히고
+// 실패가 「데이터가 쌓이면 보인다」로 말해졌다. 지금은 안내 칸(#history-placeholder) 하나만 실패 문구 + 재시도로 바꿔 빈 칸 셋이 남는다.
+const RATES_TREND_EMPTY = { ko: "추이는 데이터가 하루 이상 쌓이면 표시됩니다.", en: "The trend appears once more than one day of data is collected." };
+const HISTORY_ONLY = "rates-history";
+function assertTrendFailedKept(page, lang, label) {
+  const grid = page.byId.get("history-grid").innerHTML;
+  assert.equal(countOf(grid, "history-reserve"), 3, `${label}: 추이 격자의 빈 칸 셋이 사라졌다 - 격자가 접힌다`);
+  const spot = page.byId.get("history-placeholder").innerHTML;
+  assert.ok(spot.includes(RATES_TREND_ERROR[lang]), `${label}: 추이 안내 칸에 실패 문구가 없다: ${spot}`);
+  assert.ok(spot.includes(`id="load-retry-history">${RATES_RETRY[lang]}</button>`), `${label}: 추이 안내 칸에 재시도 단추가 없다: ${spot}`);
+  assert.ok(!grid.includes(RATES_TREND_EMPTY.ko) && !grid.includes(RATES_TREND_EMPTY.en), `${label}: 못 받았는데 '아직 없음'으로 말한다(규칙 5)`);
+  assert.ok(!/불러오는 중|Loading/.test(spot), `${label}: 로드 중 문구가 남았다`);
+}
+
+test("(마) #532 rates.json 은 받고 rates-history 만 실패(네트워크·404·503)해도 추이 격자의 빈 칸 셋이 남고 안내 칸이 실패 문구 + 재시도를 말한다 - 4장 × 한국어·영어", async () => {
+  for (const name of RATE_PAGES) {
+    for (const lang of ["ko", "en"]) {
+      for (const mode of ["network", "404", "503"]) {
+        const { page } = await openRates(name, { lang, mode, only: HISTORY_ONLY });
+        const label = `${name} ${lang} ${mode}`;
+        assertTrendFailedKept(page, lang, label);
+        assert.ok((page.byId.get("load-retry-history").listeners.click ?? []).length > 0, `${label}: 추이 단추에 누름 처리가 없다`);
+        assert.equal(page.notice(), null, `${label}: rates.json 은 받았는데 표 위 알림이 떴다`);
+        assert.equal(countOf(page.byId.get("history-placeholder").innerHTML, KO_ONLY), 0, `${label}: 구운 표가 안 남는 자리인데 한국어 고지가 붙었다(영어 고지는 구운 표를 남기는 알림에만)`);
+        assert.notEqual(page.byId.get("products-body").innerHTML, page.baked.body, `${label}: 받은 표가 구운 표로 되돌아갔다`);
+        assert.equal(page.byId.get("updated").textContent === "-", false, `${label}: 기준일 줄이 '-' 다`);
+      }
+    }
+  }
+});
+
+test("(마) #532 추이만 실패한 뒤 언어를 바꾸면 안내 칸 문구가 그 언어로 바뀌고 격자는 그대로다", async () => {
+  const { page } = await openRates("deposit-rates", { lang: "ko", mode: "503", only: HISTORY_ONLY });
+  assertTrendFailedKept(page, "ko", "전환 전");
+  page.byId.get("lang-toggle").dispatch("click");
+  await settle(10);
+  assertTrendFailedKept(page, "en", "언어 전환 뒤");
+  page.byId.get("lang-toggle").dispatch("click");
+  await settle(10);
+  assertTrendFailedKept(page, "ko", "언어 전환 두 번 뒤");
+});
+
+test("(마) #532 추이 재시도: 한 번 누르면 rates·rates-history 를 한 번씩 다시 받고, 또 실패하면 안내 칸이 그대로 남고, 성공하면 카드가 그려진다", async () => {
+  for (const name of RATE_PAGES) {
+    const { page, server } = await openRates(name, { mode: "network", only: HISTORY_ONLY });
+    const count = (n) => server.requests.filter((r) => r === n).length;
+    const before = [count("rates"), count(HISTORY_ONLY)];
+    const press = (button) => {
+      if (button.disabled !== true) button.dispatch("click");
+    };
+    const first = page.byId.get("load-retry-history");
+    press(first);
+    press(first);
+    await settle(30);
+    assert.deepEqual([count("rates"), count(HISTORY_ONLY)], [before[0] + 1, before[1] + 1], `${name}: 재시도 한 번이 요청을 한 번씩 보내지 않았다`);
+    assertTrendFailedKept(page, "ko", `${name} 재시도 재실패`); // 재실패는 showFailure 가 단추를 새로 그린다(진짜 DOM 은 새 단추, 이 시험용 DOM 은 같은 노드를 재사용해 disabled 가 남으므로 그것은 보지 않는다)
+
+    server.mode = "ok";
+    page.byId.get("load-retry-history").dispatch("click");
+    await settle(30);
+    const grid = page.byId.get("history-grid").innerHTML;
+    assert.ok(grid.includes("history-card"), `${name}: 재시도가 성공했는데 추이 카드가 안 그려졌다`);
+    assert.ok(!grid.includes("load-retry-history") && !grid.includes(RATES_TREND_ERROR.ko), `${name}: 성공했는데 실패 문구가 남았다`);
+  }
+});
+
+test("(마) #532 규칙 5: 받았는데 비어 있는 rates-history 는 실패가 아니다 - '쌓이면' 문구를 말하고 재시도 단추·실패 문구가 없다", async () => {
+  for (const lang of ["ko", "en"]) {
+    const { page } = await openRates("deposit-rates", { lang, mode: "ok", overrides: { [HISTORY_ONLY]: [] } });
+    const grid = page.byId.get("history-grid").innerHTML;
+    assert.ok(grid.includes(RATES_TREND_EMPTY[lang]), `${lang}: 받았는데 빈 추이가 '아직 없음'으로 말해지지 않았다: ${grid}`);
+    assert.ok(!grid.includes("load-retry-history") && !grid.includes(RATES_TREND_ERROR[lang]), `${lang}: 받았는데 빈 추이가 실패로 말해진다`);
+  }
+});
+
+test("(마) #532 틀: 추이 요청 실패는 null 로 두고(받았는데 빈 []과 구분) 안내 칸 하나만 바꾼다 - 변이 사본(실패를 []로 두는 옛 코드)은 위 점검이 실패시킨다", async () => {
+  for (const name of RATE_PAGES) {
+    const script = ratesSources[name];
+    assert.equal(countOf(script, "cache.history = null;"), 1, `${name}: 추이 실패를 null 로 두지 않는다`);
+    assert.equal(countOf(script, "cache.history = [];"), 0, `${name}: 추이 실패를 []로 둔다(받았는데 빈 것과 같은 말이 된다)`);
+    assert.ok(script.includes("if (!cache.history) return showTrendFailure();"), `${name}: renderHistory 가 못 받은 추이를 실패로 말하지 않는다`);
+    assert.equal(countOf(script, "showFailure("), 1, `${name}: 실패 표시가 공용 함수 한 곳이 아니다`);
+  }
+  const old = await openRates("deposit-rates", { mode: "network", only: HISTORY_ONLY, mutate: mutation("cache.history = null;", "cache.history = [];") });
+  assert.throws(() => assertTrendFailedKept(old.page, "ko", "변이"), /빈 칸 셋이 사라졌다|'아직 없음'으로 말한다|실패 문구가 없다/, "옛 코드(실패를 []로 둠)가 점검을 통과한다");
+});
+
+test("S6 의도한 차이 (#532): 금리 4장 인라인 스크립트 순증가 +150B 이하(cto 예상치, 기본 한도 +400B) (base 594feb68 = #531 병합 뒤 main), load-state.js 순증가 0B", () => {
+  const BASE = { "deposit-rates": 38_444, "saving-rates": 38_454, "mortgage-rates": 38_425, "rent-loan-rates": 38_417 };
+  for (const name of RATE_PAGES) {
+    const added = Buffer.byteLength(ratesSources[name]) - BASE[name];
+    assert.ok(added > 0 && added <= 150, `${SITE}/${name}.html: 인라인 증가가 ${added}B - cto 예상 +150B/장, 넘으면 PR 전에 묻는다`);
+  }
+  assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
+});
+
+test("S6 의도한 차이 (#296 (마)): 금리 4장 인라인 스크립트 순증가 +430B 이하(cto 가 이 PR 에 한해 +400 → +430, 영어 고지 한 문장 몫) 에 #532 의 +150B 를 더한 +580B 이하 (merge-base 5af7d1aa), load-state.js 순증가 0B", () => {
   const BASE = { "deposit-rates": 38_022, "saving-rates": 38_032, "mortgage-rates": 38_003, "rent-loan-rates": 37_995 };
   for (const name of RATE_PAGES) {
     const added = Buffer.byteLength(ratesSources[name]) - BASE[name];
-    assert.ok(added > 0 && added <= 430, `${SITE}/${name}.html: 인라인 증가가 ${added}B - 이 PR 의 cto 한도 +430B/장, 넘으면 PR 전에 묻는다`);
+    assert.ok(added > 0 && added <= 580, `${SITE}/${name}.html: 인라인 증가가 ${added}B - 이 PR 의 cto 한도 +430B/장 + #532 의 +150B/장, 넘으면 PR 전에 묻는다`);
   }
   assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
 });

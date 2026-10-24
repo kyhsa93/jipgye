@@ -586,6 +586,8 @@
       .map(historyCardHtml)
       .filter(Boolean)
       .join("");
+    // 못 받았다(null)는 받았는데 비었다([])와 다른 말이다(규칙 5). 못 받았으면 격자의 칸을 갈아 끼우지 않고 안내 칸 하나만 바꾼다(#532).
+    if (!cache.history) return showTrendFailure();
     grid.innerHTML = cards || `<div class="placeholder">${escapeHtml(t("historyEmpty"))}</div>`;
   }
 
@@ -1077,11 +1079,12 @@
   // 규칙 2: 구운 표를 그대로 두고 그 위에 알림 한 줄(실패 + 구운 기준일 + 다시 시도). 규칙 3: 구운 표(기본 탭·12개월·유형 전체·검색어 없음·기본 금액)와 다른 보기를
   // 주소(?tab·term·type·q·amt)로 열었으면 구운 표는 그 보기의 답이 아니라서 표 자리를 실패 문구 + 재시도로 바꾸고 기준일은 "-"다.
   // 추이 구역은 구운 내용이 없는 빈 자리라 실패 문구 + 재시도(규칙 1)다. 칸을 갈아 끼우지 않고 안내 칸 하나만 바꿔야 격자가 넉 칸 높이(580px)로 남는다(#323).
+  const retry = () => { window.analytics?.event("load_retry", { rate_category: state.category }); main(); };
+  const show = (id, message, wrap, retryId) => window.loadState.showFailure(document.getElementById(id), { message, retryLabel: t("retry"), wrap, retryId, onRetry: retry });
+  const showTrendFailure = () => show("history-placeholder", t("historyLoadError"), undefined, "load-retry-history");
   function renderFailure() {
-    const retry = () => { window.analytics?.event("load_retry", { rate_category: state.category }); main(); };
-    const show = (id, message, wrap, retryId) => window.loadState.showFailure(document.getElementById(id), { message, retryLabel: t("retry"), wrap, retryId, onRetry: retry });
     renderMeta();
-    show("history-placeholder", t("historyLoadError"), undefined, "load-retry-history");
+    showTrendFailure();
     if (state.category === DEFAULT_CATEGORY && state.term === 12 && !(state.rateType + state.query) && !initialAmount) {
       show("content", `${t("loadError")} ${t("asOf")(document.getElementById("updated").dataset.updated)}`, (s) => `<p class="content-notice">${s}</p>`);
     } else {
@@ -1104,7 +1107,7 @@
     try {
       cache.history = await loadJson("rates-history");
     } catch (err) {
-      cache.history = [];
+      cache.history = null;
       reportLoadFailure("rates-history", err, false);
     }
 
