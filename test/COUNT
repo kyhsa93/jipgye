@@ -412,5 +412,7 @@
 #   "금리 5장: 추이 구역의 재시도 단추를 누르면 …" 의 첫 단언(단추가 격자 안 → 안내 칸 안) - 이름·개수 -0 +0. test/analytics.test.mjs "로드가 실패하면 다시 시도할 수단을 준다" 의 정규식에 공용 함수를 부르는 줄(`window.loadState.showFailure(`)을 더했다
 #   (표 위 알림의 단추 id 가 공용 함수의 기본값 load-retry 라 글자로 안 남는다, 실제 단추는 load-failure 시험이 누른다). 공용 도우미 test/helpers/rates-page.mjs 에는 baked·mutate 선택지와 notice()·baked 결과, 구운 기준일 줄 시드만 더했다(기본값이면 이전과 같다).
 #   `npm run test:site`(배포 게이트) 748 → 758(금리 행 10개가 build/site 를 읽음), 하한은 test/COUNT-site.
+# 갱신: 2026-10-24(PR #531 po 변경 요청), 금리 알림의 영어 문장 끝에 "Some of it is in Korean only." 를 정확히 한 번 붙였다(영어 1·한국어 0, 다른 보기 갈래는 문장 없음). 개수 변화 없음: `npm test` → ℹ tests 1951 · pass 1951 (하한 그대로).
+#   ⓗ 단언을 「고지 0」에서 「영어 1·한국어 0」으로 바꿨고(이름의 '영어 고지' 구절만 고침, 개수 -0 +0), 규칙 3 시험에 「다른 보기 표 자리에 고지 문장 없음」을 더했다. S6 한도는 이 PR 에 한해 +430B/장(cto): 측정 +422B/장(합 1,688B), load-state.js 불변.
 1951
 1951

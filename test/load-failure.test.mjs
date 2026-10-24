@@ -1313,7 +1313,7 @@ test("S6 의도한 차이 (#296 (나)): 뉴스 4장 인라인 스크립트 순�
 // [금리 데이터를 불러오지 못했습니다.] + [아래는 기준일(구운 data-updated)에 만든 값입니다.] + [다시 시도] 를 말하는 것으로 지킨다.
 // 추이 구역(#history-grid)은 구운 내용이 없는 빈 자리라 규칙 1(실패 문구 + 재시도)이다. 예전에는 격자 전체를 안내 칸 하나로 갈아 끼워 넉 칸 높이(412px 폭 580px)가
 // 한 칸(136px)으로 접히며 아래를 밀었다(#323). 지금은 안내 칸(#history-placeholder) 안만 바꿔 빈 칸 셋이 그대로 남는다.
-// 금리 틀은 영어 고지("Some of it is in Korean only.")를 붙이지 않는다 - 구운 표와 받아서 그린 표가 둘 다 한국어라 실패가 언어를 바꾸지 않는다(po 판정). ⓗ 는 「고지 0」으로 고정한다.
+// 영어에서는 알림 끝에 "Some of it is in Korean only." 를 정확히 한 번 붙인다 - 구운 표 머리·값은 한국어로 남고 받아 그린 표는 영어라서다(po 변경 요청, PR #531). 한국어는 0, 다른 보기(규칙 3) 갈래는 문장이 없다.
 // 보기를 바꾸는 입력은 주소의 ?tab·term·type·q·amt 다(구운 표는 기본 탭·12개월·유형 전체·검색어 없음·기본 금액). 그 보기에서는 구운 표가 그 보기의 답이 아니므로 규칙 3 이 걸린다.
 // ============================================================================================================
 const ratesSources = {};
@@ -1342,7 +1342,7 @@ const clickRatesRetry = async (page) => {
   page.byId.get("load-retry").dispatch("click");
   await settle(30);
 };
-const RATES_ASOF = { ko: (day) => `아래는 기준일(${day})에 만든 값입니다.`, en: (day) => `Shown below is what this page was built with on ${day}.` };
+const RATES_ASOF = { ko: (day) => `아래는 기준일(${day})에 만든 값입니다.`, en: (day) => `Shown below is what this page was built with on ${day}. ${KO_ONLY}` };
 const RATES_ERROR = { ko: "금리 데이터를 불러오지 못했습니다.", en: "Could not load the rate data." };
 const RATES_TREND_ERROR = { ko: "금리 추이를 불러오지 못했습니다.", en: "Could not load the rate trend." };
 const RATES_RETRY = { ko: "다시 시도", en: "Retry" };
@@ -1381,7 +1381,7 @@ test("ⓐⓒ (마) #323 요청이 전부 실패(네트워크·404·503)해도 �
   }
 });
 
-test("ⓑⓔⓗ (마) 실패하면 알림이 보이고 [금리 데이터 실패] + [구운 기준일 문장] + 다시 시도를 말한다 - 영어 고지는 한국어·영어 모두 0, 실패 이유·오늘·최신은 없다", async () => {
+test("ⓑⓔⓗ (마) 실패하면 알림이 보이고 [금리 데이터 실패] + [구운 기준일 문장] + 다시 시도를 말한다 - 영어 고지는 영어 정확히 1·한국어 0, 실패 이유·오늘·최신은 없다", async () => {
   for (const name of RATE_PAGES) {
     for (const lang of ["ko", "en"]) {
       for (const mode of ["network", "404", "503"]) {
@@ -1393,9 +1393,9 @@ test("ⓑⓔⓗ (마) 실패하면 알림이 보이고 [금리 데이터 실패]
         assert.equal(notice.retry, RATES_RETRY[lang], `${label}: 다시 시도 단추 글자`);
         assert.ok(notice.html.startsWith('<p class="content-notice">'), `${label}: 알림이 기존 content-notice 모양이 아니다`);
         assert.ok((notice.button.listeners.click ?? []).length > 0, `${label}: 다시 시도 단추에 누름 처리가 없다`);
-        // ⓗ 금리 틀은 「고지 0」: 화면에 보이는 글자(알림 + 추이 안내 칸)에 한국어 고지가 없다
+        // ⓗ 영어에서 구운 표 머리·값은 한국어로 남고 받아 그린 표는 영어다(po 판정 2026-10-24) - 보이는 글자(알림 + 추이 안내 칸)에 한국어 고지가 영어 정확히 1, 한국어 0
         const visible = `${notice.text} ${page.byId.get("history-placeholder").innerHTML}`;
-        assert.equal(countOf(visible, KO_ONLY), 0, `${label}: 금리 틀이 한국어 고지를 붙였다 - 구운 것과 받은 것이 같은 언어라 붙이지 않는다`);
+        assert.equal(countOf(visible, KO_ONLY), lang === "en" ? 1 : 0, `${label}: 한국어 고지 수`);
         assert.equal(HTTP_WORDS.test(notice.html), false, `${label}: 실패 이유가 방문자에게 보인다: ${notice.text}`);
         assert.equal(BAD_WORDS.test(notice.text), false, `${label}: 알림이 지금 값처럼 말한다: ${notice.text}`);
       }
@@ -1421,7 +1421,7 @@ test("규칙 3 (마): 주소로 구운 표와 다른 보기(?tab·term·type·q�
       assert.ok(body.includes(RATES_ERROR[lang]) && body.includes(`id="load-retry">${RATES_RETRY[lang]}</button>`), `${label}: 표 자리의 실패 문구·재시도 단추: ${body}`);
       assert.equal(page.notice(), null, `${label}: 구운 값이 없는데 '구운 값입니다' 알림이 떴다`);
       assert.equal(page.byId.get("updated").textContent, "-", `${label}: 구운 기준일을 되살렸다`);
-      assert.equal(body.includes("기준일(") || body.includes("built with"), false, `${label}: 표 자리에 기준일 문장이 붙었다`);
+      assert.equal(body.includes("기준일(") || body.includes("built with") || body.includes(KO_ONLY), false, `${label}: 표 자리에 기준일·고지 문장이 붙었다(가리킬 구운 값이 없다)`);
     }
   }
   // 양성 대조: 보기를 안 바꾸는 주소(광고 꼬리표, 기본값과 같은 값, 금리 틀이 무시하는 값)는 구운 표를 남기고 알림을 세운다
@@ -1495,8 +1495,8 @@ test("ⓕ (마) 실패 표시는 renderFailure 한 곳이고 공용 함수로만
     assert.ok(meta.includes('if (cache.rates?.updatedAt) document.getElementById("updated")'), `${name}: renderMeta 가 못 받았을 때 기준일을 지운다`);
   }
   assert.ok(ratesSources["deposit-rates"].includes("아래는 기준일(${day})에 만든 값입니다."));
-  assert.ok(ratesSources["deposit-rates"].includes("Shown below is what this page was built with on ${day}."));
-  assert.equal(ratesSources["deposit-rates"].includes("Some of it is in Korean only"), false, "금리 틀에 한국어 고지가 들어갔다");
+  assert.ok(ratesSources["deposit-rates"].includes("Shown below is what this page was built with on ${day}. Some of it is in Korean only."));
+  assert.equal(countOf(ratesSources["deposit-rates"], "Some of it is in Korean only"), 1, "영어 고지는 알림 문장 하나에만 있다");
 });
 
 test("변이 증빙 (마): 격자를 통째로 갈아 끼우는 사본, 보기 가드를 지운 사본, renderAll 가드를 지운 사본, 알림을 안 세우는 사본은 위 점검이 실패시킨다", async () => {
@@ -1522,11 +1522,11 @@ test("변이 증빙 (마): 격자를 통째로 갈아 끼우는 사본, 보기 �
   assert.equal(noNotice.page.notice(), null, "알림을 안 세우는 사본이 알림을 세웠다 - ⓑ 가 눈이 멀었다");
 });
 
-test("S6 의도한 차이 (#296 (마)): 금리 4장 인라인 스크립트 순증가 +400B 이하 (merge-base 5af7d1aa), load-state.js 순증가 0B", () => {
+test("S6 의도한 차이 (#296 (마)): 금리 4장 인라인 스크립트 순증가 +430B 이하(cto 가 이 PR 에 한해 +400 → +430, 영어 고지 한 문장 몫) (merge-base 5af7d1aa), load-state.js 순증가 0B", () => {
   const BASE = { "deposit-rates": 38_022, "saving-rates": 38_032, "mortgage-rates": 38_003, "rent-loan-rates": 37_995 };
   for (const name of RATE_PAGES) {
     const added = Buffer.byteLength(ratesSources[name]) - BASE[name];
-    assert.ok(added > 0 && added <= 400, `${SITE}/${name}.html: 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
+    assert.ok(added > 0 && added <= 430, `${SITE}/${name}.html: 인라인 증가가 ${added}B - 이 PR 의 cto 한도 +430B/장, 넘으면 PR 전에 묻는다`);
   }
   assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
 });
