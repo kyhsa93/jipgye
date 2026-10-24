@@ -180,6 +180,7 @@ const T = {
     footerAbout: "소개",
     loadError: "전망 자료를 불러오지 못했습니다.",
     moveInLoadError: "입주 예정 자료를 불러오지 못했습니다.",
+    indicatorLoadError: "지표 자료를 불러오지 못했습니다.",
     asOf: (day) => `아래는 기준일(${day})에 만든 값입니다.`,
     retry: "다시 시도",
   },
@@ -226,6 +227,7 @@ const T = {
     footerAbout: "About",
     loadError: "Could not load the outlook data.",
     moveInLoadError: "Could not load the move-in data.",
+    indicatorLoadError: "Could not load the indicator data.",
     asOf: (day) => `Shown below is what this page was built with on ${day}. Some of it is in Korean only.`,
     retry: "Retry",
   },
@@ -289,7 +291,7 @@ function renderUpdated() {
 }
 
 function renderLoadNotice() {
-  const failed = [cache.failed && "loadError", cache.moveIn === null && "moveInLoadError"].filter(Boolean).map(t).join(" ");
+  const failed = [cache.failed && "loadError", cache.moveIn === null && "moveInLoadError", cache.indicators === null && "indicatorLoadError"].filter(Boolean).map(t).join(" ");
   document.getElementById("content").innerHTML = failed
     ? `<p class="content-notice">${failed} ${t("asOf")(document.getElementById("updated").getAttribute("data-updated"))} <button type="button" id="load-retry">${t("retry")}</button></p>`
     : "";
