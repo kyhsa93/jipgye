@@ -2282,6 +2282,9 @@
       min-height: 11lh;
     }
   }
+  #compare-result {
+    min-height: 1lh;
+  }
   @media (max-width: 430px) {
     #compare-result {
       min-height: 2lh;

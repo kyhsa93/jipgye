@@ -3243,7 +3243,7 @@ summary:focus-visible,
  * 글자 크기·줄 간격을 고치면 예약이 같이 따라온다. 줄 수는 2026-10-17 실측(Chrome 154, 한국어):
  *   폭 375: floor-gap #lead-note 8 · renewal-vs-new #lead-note 9 · cancelled-deals #lead-note 11 줄
  *     (폭 412 에서는 7·8·10 줄로 줄어 400 에서 가둔다. 360 에서는 8·10·11 줄이라 renewal-vs-new 가 한 줄 모자란다)
- *   폭 320~430: switch-house #compare-result 2 줄(435부터 1줄)
+ *   폭 320~430: switch-house #compare-result 2 줄, 431 이상은 1 줄(#538: 실패 문장 한 줄이 예약을 채워 실패 전후 높이 변화 0 - 431·1280 에서 1줄 26.3px 실측)
  *   (index #update-schedule 은 머리에서 바닥글로 옮겼다(#398). 바닥글은 접힌 선 밖이라 채워져도 이동으로 안 잡히고, 예약이 따로 필요 없다.)
  * 폭이 넓을수록 줄이 줄어 예약이 남게 되므로 폭을 가둔다. 재는 폭(375) 밖의 모자람·남음은 PR 본문에 수로 적었다.
  * 영어는 글이 길어 한 줄쯤 더 늘 수 있다 - 모자란 쪽이 남는 쪽보다 낫다(.trend-reserve 와 같은 판단, #287).
@@ -3253,6 +3253,8 @@ summary:focus-visible,
   main:has(> #wolse-section) #lead-note { min-height: 9lh; }
   main:has(> #month-section) #lead-note { min-height: 11lh; }
 }
+
+#compare-result { min-height: 1lh; }
 
 @media (max-width: 430px) {
   #compare-result { min-height: 2lh; }
