@@ -11,7 +11,10 @@ import { refreshMonths, windowMonths } from "../scripts/realestate-slots.ts";
 
 const run = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
-const NOW = new Date();
+// 시험의 "오늘"은 고정이다(#261). 실제 시계를 읽으면 시험 파일이 도는 수 초 사이에 KST 월 경계·월 시작 유예 끝이 끼었을 때
+// 시험이 정한 달과 자식 스크립트가 각자 `new Date()`로 읽은 달이 갈린다. 자식에는 REALESTATE_NOW로 같은 값을 넘긴다.
+// 달 한가운데(KST 2026-10-21 12:00)라서 유예(월 시작 사흘)에도 걸리지 않는다 — 경계는 아래 전용 시험이 고정 시각으로 가로지른다.
+const NOW = new Date("2026-10-21T03:00:00Z");
 const PERIOD = windowMonths(NOW)[0];
 const DISTRICT_COUNT = 25;
 
@@ -47,6 +50,7 @@ async function collect(server, { rawDir, dataDir, backfillLimit = 0, env = {} },
       MOLIT_BACKFILL_LIMIT: String(backfillLimit),
       MOLIT_SWEEP_DELAY_MS: "0",
       MOLIT_RETRY_MS: "0",
+      REALESTATE_NOW: NOW.toISOString(),
       ...env,
     },
   };
@@ -460,4 +464,55 @@ test("월세만 모자라도 계약일 기준에 머물고, 표본이 차면 신
 
   const history = await readJson(path.join(space.dataDir, "realestate-history.json"));
   assert.equal(history.at(-1).window?.basis, "arrival", "history 의 오늘 항목이 새 기준을 남기지 않았다");
+});
+
+// ---- #261: 수집 스크립트의 시계는 REALESTATE_NOW 하나이고, KST 월 경계·월 시작 유예 끝을 고정 시각으로 가로지른다 ----
+// 시험은 실제 시계를 읽지 않는다. 각 줄은 [REALESTATE_NOW, 그 시각의 KST 표기, 다시 받는 달(기대, 리터럴)]이다.
+// 경계 인스턴트는 UTC 15:00(= KST 00:00)이다: 월 경계 2026-10-31T15:00:00Z(KST 11-01), 유예 끝 2026-11-03T15:00:00Z(KST 11-04), 연말 2026-12-31T15:00:00Z(KST 2027-01-01).
+const BOUNDARIES = [
+  ["2026-10-31T14:59:59Z", "KST 10-31 23:59:59 (월 경계 직전)", ["202610", "202609"]],
+  ["2026-10-31T15:00:00Z", "KST 11-01 00:00:00 (월 경계)", ["202611", "202610", "202609"]],
+  ["2026-11-03T14:59:59Z", "KST 11-03 23:59:59 (유예 끝 직전)", ["202611", "202610", "202609"]],
+  ["2026-11-03T15:00:00Z", "KST 11-04 00:00:00 (유예 끝)", ["202611", "202610"]],
+  ["2026-12-31T14:59:59Z", "KST 12-31 23:59:59 (연말 직전)", ["202612", "202611"]],
+  ["2026-12-31T15:00:00Z", "KST 2027-01-01 00:00:00 (연말)", ["202701", "202612", "202611"]],
+];
+
+for (const [now, label, months] of BOUNDARIES) {
+  test(`고정 시각 ${now} ${label}: 다시 받는 달이 ${months.join("·")}이다`, async (t) => {
+    const server = await startFakeMolit((kind, { yearMonth }) => {
+      const on = { dealYear: Number(yearMonth.slice(0, 4)), dealMonth: Number(yearMonth.slice(4)) };
+      return successXml([kind === "sale" ? saleItem(on) : rentItem(on)]);
+    });
+    t.after(() => server.close());
+    const space = await workspace();
+
+    // 기대는 리터럴이고, 스크립트 쪽은 REALESTATE_NOW 로만 시각을 얻는다 — 두 스텝(받기·굽기)이 같은 시각을 읽는다.
+    await collect(server, { ...space, env: { REALESTATE_NOW: now } });
+
+    const expected = [...months].sort();
+    for (const kind of ["sale", "rent"]) {
+      const names = await rawNames(space.rawDir, kind);
+      assert.equal(names.length, DISTRICT_COUNT * months.length, `${kind} 슬롯 수가 다르다`);
+      assert.deepEqual([...new Set(names.map((name) => name.slice(6, 12)))].sort(), expected);
+    }
+    const rents = await readJson(path.join(space.dataDir, "rents-jongno.json"));
+    assert.deepEqual(rents.periods, expected, "빌더가 받아둔 달과 다른 달을 읽었다");
+    // 시험 쪽 계산(refreshMonths)도 같은 값이어야 한다 — 한 시각을 두 곳이 같게 읽는다.
+    assert.deepEqual([...refreshMonths(new Date(now))].sort(), expected);
+  });
+}
+
+test("REALESTATE_NOW 가 읽을 수 없는 값이면 오늘 시각으로 넘기지 않고 멈춘다", async (t) => {
+  const server = await startFakeMolit(() => successXml([saleItem()]));
+  t.after(() => server.close());
+  const space = await workspace();
+
+  for (const step of STEPS) {
+    await assert.rejects(
+      collect(server, { ...space, env: { REALESTATE_NOW: "2026-10-31" } }, [step]),
+      (err) => err.code === 1 && /REALESTATE_NOW를 읽을 수 없습니다/.test(err.stderr),
+      step,
+    );
+  }
 });

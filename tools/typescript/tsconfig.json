@@ -81,6 +81,7 @@
     "../../scripts/check-corrections-refs.ts",
     "../../scripts/check-prereg-order.ts",
     "../../scripts/check-schedule-runs.ts",
+    "../../scripts/collection-now.ts",
     "../../scripts/complex-price.ts",
     "../../scripts/complex-ratio.ts",
     "../../scripts/conversion.ts",

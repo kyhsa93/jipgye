@@ -3,6 +3,7 @@ import path from "node:path";
 import { DISTRICTS, districtNames } from "./realestate-districts.ts";
 import { buildSlotFile, readSlots, removeSlotFile, writeSlotFile } from "./realestate-raw.ts";
 import { planFetch, planSummary } from "./realestate-slots.ts";
+import { collectionNow } from "./collection-now.ts";
 
 const SALE_API_URL = process.env.MOLIT_API_ENDPOINT;
 const SALE_SERVICE_KEY = process.env.MOLIT_API_KEY;
@@ -108,7 +109,7 @@ async function main() {
     return;
   }
 
-  const now = new Date();
+  const now = collectionNow("REALESTATE_NOW");
   const observedAt = now.toISOString();
 
   const plan = planFetch({

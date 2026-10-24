@@ -29,6 +29,7 @@ import {
 } from "./realestate-weekly.ts";
 import { buildRentFiles, rentFileName } from "./deal-files.ts";
 import { readRentSource } from "./realestate-source.ts";
+import { collectionNow } from "./collection-now.ts";
 
 const dataDir = process.env.REALESTATE_DATA_DIR
   ? path.resolve(process.env.REALESTATE_DATA_DIR)
@@ -370,7 +371,7 @@ async function writeRepresentative(now) {
 }
 
 async function main() {
-  const now = new Date();
+  const now = collectionNow("REALESTATE_NOW");
 
   await mkdir(dataDir, { recursive: true });
 
