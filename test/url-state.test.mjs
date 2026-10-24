@@ -6,6 +6,7 @@ import { loadIndexPage } from "./helpers/index-page.mjs";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 import { RATE_PAGES } from "../scripts/build-rate-pages.ts";
 import { NEWS_PAGES } from "../scripts/build-news-pages.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -39,15 +40,15 @@ test("금리 페이지는 주소의 탭·기간·검색어로 시작한다", asy
 });
 
 test("상품군별 페이지는 주소가 없어도 자기 탭으로 시작한다", async () => {
-  const page = await loadRatesPage({ file: "docs/rent-loan-rates.html" });
+  const page = await loadRatesPage({ file: `${SITE}/rent-loan-rates.html` });
   assert.equal(page.state.category, "rentLoan");
 
-  const overridden = await loadRatesPage({ file: "docs/rent-loan-rates.html", search: "?tab=saving" });
+  const overridden = await loadRatesPage({ file: `${SITE}/rent-loan-rates.html`, search: "?tab=saving" });
   assert.equal(overridden.state.category, "saving");
 });
 
 test("검색은 기록을 쌓지 않고 탭·필터는 쌓는다", async () => {
-  for (const file of ["docs/index.html", "docs/deposit-rates.html"]) {
+  for (const file of [`${SITE}/index.html`, `${SITE}/deposit-rates.html`]) {
     const html = await read(file);
     assert.ok(
       /history\[push \? "pushState" : "replaceState"\]/.test(html),
@@ -59,13 +60,13 @@ test("검색은 기록을 쌓지 않고 탭·필터는 쌓는다", async () => {
 });
 
 test("기본값은 주소에 남기지 않는다", async () => {
-  const html = await read("docs/deposit-rates.html");
+  const html = await read(`${SITE}/deposit-rates.html`);
   assert.ok(html.includes('["tab", state.category, DEFAULT_CATEGORY]'), "기본 탭 기준이 페이지에 맞지 않는다");
   assert.ok(html.includes('if (value === empty) next.delete(key);'), "기본값을 지우지 않는다");
 });
 
 test("부동산 표도 머리글로 정렬한다", async () => {
-  const html = await read("docs/index.html");
+  const html = await read(`${SITE}/index.html`);
   for (const key of ["name", "sale", "jeonse", "wolse"]) {
     assert.ok(html.includes(`data-re-sort="${key}"`), `${key} 정렬 머리글이 없다`);
   }
@@ -73,13 +74,13 @@ test("부동산 표도 머리글로 정렬한다", async () => {
 });
 
 test("아카이브를 하루씩 넘길 수 있다", async () => {
-  const html = await read("docs/index.html");
+  const html = await read(`${SITE}/index.html`);
   assert.ok(html.includes('id="archive-prev-day"') && html.includes('id="archive-next-day"'), "이전/다음 날 버튼이 없다");
   assert.ok(html.includes("if (next > kstToday()) return;"), "미래 날짜를 막지 않는다");
 });
 
 test("뉴스 페이지도 읽은 기사를 표시한다", async () => {
-  const html = await read("docs/news.html");
+  const html = await read(`${SITE}/news.html`);
   assert.ok(html.includes('const READ_NEWS_KEY = "readNews"'), "읽음 저장소가 메인과 다르다");
   assert.ok(html.includes("markNewsRead(link.getAttribute"), "클릭을 읽음으로 기록하지 않는다");
   assert.ok((await read("src/css/legacy.css")).includes(".news-item.read"), "읽은 기사 스타일이 없다");
@@ -151,7 +152,7 @@ test("일부 섹션만 기록이 없는 날짜도 오류라고 말하지 않는�
 });
 
 test("보관 범위보다 뒤로는 넘기지 못한다", async () => {
-  const html = await read("docs/index.html");
+  const html = await read(`${SITE}/index.html`);
   assert.ok(html.includes('document.getElementById("archive-prev-day").disabled'), "이전 날 버튼을 막지 않는다");
   assert.ok(html.includes("input.min = dates[0]"), "날짜 선택 범위를 제한하지 않는다");
 });
@@ -196,7 +197,7 @@ test("무엇을 못 받았는지 이름을 말한다", async () => {
 });
 
 test("데이터가 다 있으면 어떤 경우에도 오류 배너가 뜨지 않는다", async () => {
-  const html = await read("docs/index.html");
+  const html = await read(`${SITE}/index.html`);
   assert.ok(
     html.includes('["market", "news", "summary", "realestate"].filter((key) => !cache[key])'),
     "배너가 여전히 플래그로 뜬다"
@@ -213,11 +214,11 @@ test("감춰야 할 요소가 CSS 때문에 계속 보이지 않는다", async (
   assert.match(css, /\[hidden\] \{\s*display: none !important;\s*\}/, "감춤 보호 규칙이 없다");
 
   const files = [
-    "docs/index.html",
-    "docs/rates.html",
-    "docs/news.html",
-    ...RATE_PAGES.map((p) => `docs/${p.file}`),
-    ...NEWS_PAGES.map((p) => `docs/${p.file}`),
+    `${SITE}/index.html`,
+    `${SITE}/rates.html`,
+    `${SITE}/news.html`,
+    ...RATE_PAGES.map((p) => `${SITE}/${p.file}`),
+    ...NEWS_PAGES.map((p) => `${SITE}/${p.file}`),
   ];
 
   for (const file of files) {
@@ -256,7 +257,7 @@ test("아카이브에서는 부동산 섹션을 접는다", async () => {
 });
 
 test("부동산 기록은 아카이브 날짜 목록에 넣지 않는다", async () => {
-  const html = await read("docs/index.html");
+  const html = await read(`${SITE}/index.html`);
 
   assert.ok(
     !/archiveDates[\s\S]{0,200}realestateHistory/.test(html),

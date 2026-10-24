@@ -46,6 +46,17 @@ jobs:
           TAILWIND_CACHE_DIR: ${{ runner.temp }}/tailwindcss
         run: node scripts/build-css.mjs --check
       - run: npm ci
+      # 사이트 생성(#510, 구조 B-4): 생성 HTML 53장은 main 에 없다. 시험은 build/site 를 읽고(test/helpers/site-root.mjs), 그 폴더는 render-pipeline 이 main 의 코드+데이터로 만든다.
+      # `npm test` 는 pretest 로 같은 렌더를 한 번 더 하지만(로컬에서도 그냥 `npm test` 가 돌게), 렌더 폴백(React 렌더 실패 -> legacy)은 pretest 에서 조용히 지나간다 - 여기서 막는다.
+      # deploy.yml 의 배포 게이트와 같은 규칙이다: 폴백한 산출물은 PR 에서도 병합 후에도 통과시키지 않는다.
+      - name: 사이트 생성 (build/site)
+        id: render
+        run: node scripts/render-pipeline.ts --out=build/site
+      - name: 렌더 폴백이면 실패
+        if: ${{ steps.render.outputs.fallback == 'true' }}
+        run: |
+          echo "::error::React 렌더 실패 → legacy 로 폴백했다 - 위 '사이트 생성 (build/site)' 단계의 1차 시도 로그를 본다. 병합되면 deploy.yml 이 같은 이유로 배포를 막는다"
+          exit 1
       # 시험 개수 래칫(#315). `npm test`만으로는 두 구멍이 안 막힌다 —
       # (1) 따옴표 없는 글롭은 셸이 먼저 펼쳐, 안 맞는 파일이 Node에 **인자로 전달조차 되지 않는다**
       #     (package.json에서 따옴표로 묶어 Node가 펼치게 바꿨다. bash는 `{mjs,ts}`를 펼치고 dash는 안 펼쳐
@@ -58,6 +69,10 @@ jobs:
           set -euo pipefail
           npm test 2>&1 | tee "$RUNNER_TEMP/root-test.log"
           node scripts/test-count-ratchet.mjs test/COUNT "$RUNNER_TEMP/root-test.log"
+      # 배포 게이트와 같은 명령(#510). 위 `npm test` 가 build/site 기준 시험을 전부 포함하지만, 게이트는 그 부분집합을 따로 세는 하한(test/COUNT-site)으로 돈다 -
+      # 시험 파일이 build/site 를 안 읽게 바뀌거나 지워져 게이트가 비는 PR 이 여기서 빨개진다(병합 후 데이터 배포 날에야 드러나지 않게). 위 pretest 가 방금 만든 build/site 를 읽는다.
+      - name: 배포 게이트 시험 (build/site 기준)
+        run: npm run test:site
       # 데이터 건강 점검(#507): 커밋된 데이터와 그 생성물이 맞는지 보는 검사(tools/health)다. 루트 `npm test`에서 뺐다 - 데이터가
       # 하루에 한 번 바뀌는 구조에서 기능 PR 시험이 그날 데이터에 기대면 안 된다. 여기서는 **비차단**(continue-on-error)이라
       # 실패해도 이 job 과 Test+Deploy 판정은 초록이고, 단계 실패 표시와 로그로만 알린다. 데이터가 바뀌는 날의 빨간 run 은

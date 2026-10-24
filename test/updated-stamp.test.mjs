@@ -7,6 +7,7 @@ import vm from "node:vm";
 import { STALE_DAYS, computeAges, kstDayNumber, readDataSources } from "../scripts/source-age.ts";
 import { NO_DATA_PAGES, PAGE_SOURCES, baselineFor, stampAll, stampHtml } from "../scripts/updated-stamp.ts";
 import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 /**
  * 데이터 기준일(정적)과 "n일 전 자료"(보는 순간 계산)를 나눈 것을 묶는다 (#111).
@@ -16,7 +17,7 @@ import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
  */
 
 const root = path.resolve(import.meta.dirname, "..");
-const DOCS = path.join(root, "docs");
+const DOCS = path.join(root, SITE);
 
 // 실제 틀과 같은 모양이다 (#282): 경고(#updated-warn)는 머리글, 기준일(#updated)은 바닥글.
 // 옛 픽스처는 둘 다 머리글에 두어 '자리'를 박제하고 있었다 - 틀이 바뀌어도 아무 시험도 안 떨어졌다.
@@ -158,7 +159,7 @@ test("저장소 docs: 영어 화면에서 기준일을 찍은 모든 장의 라�
     const html = await readFile(path.join(DOCS, file), "utf8");
     const r = await runNavFull(html, "2026-10-09T03:00:00Z", "en");
     n += 1;
-    assert.match(r.updated.textContent, /^As of \d{4}-\d{2}-\d{2}$/, `docs/${file}: 영어 화면에 '${r.updated.textContent}'`);
+    assert.match(r.updated.textContent, /^As of \d{4}-\d{2}-\d{2}$/, `${SITE}/${file}: 영어 화면에 '${r.updated.textContent}'`);
   }
   assert.equal(n, Object.keys(PAGE_SOURCES).length);
 });
@@ -220,7 +221,7 @@ test("저장소 docs: id=updated가 있는 장은 모두 표에 있고 정적 '�
     const html = await readFile(path.join(DOCS, f), "utf8");
     if (!html.includes('id="updated"')) continue;
     withUpdated.push(f);
-    assert.ok(!/id="updated"[^>]*>\s*불러오는 중/.test(html), `docs/${f}: #updated에 '불러오는 중...'이 정적으로 남았다`);
+    assert.ok(!/id="updated"[^>]*>\s*불러오는 중/.test(html), `${SITE}/${f}: #updated에 '불러오는 중...'이 정적으로 남았다`);
   }
   // #282: #updated는 '기준일' 한 뜻만 진다. 데이터를 읽지 않는 세 장(NO_DATA_PAGES)의 제목 아래 한 줄은
   // 기준일이 아니라 꼬리표라 #tagline이고, 그래서 #updated를 가진 장 = PAGE_SOURCES의 장이다.
@@ -323,9 +324,11 @@ test("소스 표가 장이 실제로 읽는 파일을 빠뜨리지 않는다", a
   }
 });
 
-test("스탬프 빌더가 update-all과 워크플로 양쪽에, 모든 페이지 빌더 뒤에 있다", async () => {
-  const [all, wf] = await Promise.all([readFile(path.join(root, "scripts/update-all.mjs"), "utf8"), readFile(path.join(root, ".github/workflows/daily-update.yml"), "utf8")]);
-  for (const [name, text] of [["update-all.mjs", all], ["daily-update.yml", expandRenderPipeline(wf)]]) {
+test("스탬프 빌더가 렌더 파이프라인(deploy.yml)에, 모든 페이지 빌더 뒤에 있다", async () => {
+  // (#510) update-all·daily-update 에서 렌더가 빠졌다 - 렌더는 deploy.yml 의 render-pipeline 한 줄(기본 여섯 단계)이다. 수집 쪽에는 스탬프 빌더가 없어야 한다.
+  const [all, daily, wf] = await Promise.all([readFile(path.join(root, "scripts/update-all.mjs"), "utf8"), readFile(path.join(root, ".github/workflows/daily-update.yml"), "utf8"), readFile(path.join(root, ".github/workflows/deploy.yml"), "utf8")]);
+  assert.ok(!all.includes("build-updated-stamp") && !daily.replace(/^\s*#.*$/gm, "").includes("build-updated-stamp"), "수집 쪽(update-all·daily-update)이 스탬프 빌더를 부른다 - docs/ 에 생성 HTML 이 생긴다");
+  for (const [name, text] of [["deploy.yml", expandRenderPipeline(wf)]]) {
     const order = [...text.matchAll(/node scripts\/([a-z-]+\.(?:mjs|ts))/g)].map((m) => m[1]);
     const stamp = order.indexOf("build-updated-stamp.ts");
     assert.ok(stamp >= 0, `${name}이 build-updated-stamp.ts를 부르지 않는다`);

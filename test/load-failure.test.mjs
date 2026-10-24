@@ -13,6 +13,7 @@ import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 import { loadIndexPage } from "./helpers/index-page.mjs";
 import { loadNewsPage } from "./helpers/news-page.mjs";
 import { stripInlineScriptComments } from "../scripts/strip-inline-comments.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readJson = (name) => readFile(path.join(root, `docs/data/${name}.json`), "utf8").then(JSON.parse);
@@ -23,7 +24,7 @@ const settle = async (n = 20) => {
 
 test("공용 규칙 파일을 쓰는 페이지는 인라인 스크립트보다 먼저 물고 있다", async () => {
   for (const name of [...RATE_PAGES, "deal-search"]) {
-    const html = await readFile(path.join(root, `docs/${name}.html`), "utf8");
+    const html = await readFile(path.join(root, `${SITE}/${name}.html`), "utf8");
     const tag = html.indexOf('<script src="./load-state.js"></script>');
     assert.ok(tag > 0, `${name}.html이 load-state.js를 물고 있지 않다`);
     assert.ok(tag < html.lastIndexOf("<script>\n"), `${name}.html: load-state.js가 인라인 스크립트보다 뒤에 있다`);
@@ -37,7 +38,7 @@ test("금리 5장: rates.json 로드가 거부되면 추이 구역과 표가 모
       ["en", "Could not load the rate trend.", "Retry"],
     ]) {
       const page = await loadRatesPage({
-        file: `docs/${name}.html`,
+        file: `${SITE}/${name}.html`,
         locale,
         fetch: async () => {
           throw new TypeError("network down");
@@ -61,7 +62,7 @@ test("금리 5장: 추이 구역의 재시도 단추를 누르면 다시 받아 
   let down = true;
   const events = [];
   const page = await loadRatesPage({
-    file: "docs/deposit-rates.html",
+    file: `${SITE}/deposit-rates.html`,
     analytics: { event: (...args) => events.push(args), pageView() {} },
     fetch: async (url) => {
       if (down) throw new TypeError("network down");
@@ -89,7 +90,7 @@ test("금리 5장: 표와 추이 구역의 재시도 단추를 연달아 눌러�
     let down = true;
     let ratesFetches = 0;
     const page = await loadRatesPage({
-      file: `docs/${name}.html`,
+      file: `${SITE}/${name}.html`,
       fetch: async (url) => {
         const isRates = !String(url).includes("rates-history");
         if (isRates) ratesFetches += 1;
@@ -223,7 +224,7 @@ test("단지 카드: 가격 파일이 아직 없는 날(404)은 실패로 보이
 });
 
 test("단지 카드: 실패 표시는 공용 규칙으로만 만든다 - 페이지에 재시도 단추 마크업을 직접 쓰지 않는다", async () => {
-  const html = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
+  const html = await readFile(path.join(root, `${SITE}/deal-search.html`), "utf8");
   assert.ok(!html.includes('id="load-retry-price"'), "load-retry-price 마크업을 직접 썼다");
 });
 
@@ -283,7 +284,7 @@ const LIST_CASES = [
 ];
 
 test("거래 목록: 결과 자리와 카드 자리는 실제 HTML에 있다 (가짜 DOM 함정 방지)", async () => {
-  const html = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
+  const html = await readFile(path.join(root, `${SITE}/deal-search.html`), "utf8");
   assert.ok(html.includes('<div id="search-result"></div>'), "#search-result 자리가 HTML에 없다");
   assert.ok(html.includes('<div id="complex-card"></div>'), "#complex-card 자리가 HTML에 없다");
   assert.ok(!html.includes('id="load-retry-deals"') && !html.includes('id="load-retry-rents"'), "재시도 단추 마크업을 직접 썼다");
@@ -446,7 +447,7 @@ test("단지 카드(전세 쪽): 재시도 단추를 연달아 눌러도 rents-*
 });
 
 test("단지 카드(전세 쪽): 실패 표시는 공용 규칙으로만 만든다 - 재시도 단추 마크업을 직접 쓰지 않는다", async () => {
-  const html = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
+  const html = await readFile(path.join(root, `${SITE}/deal-search.html`), "utf8");
   assert.ok(html.includes('<div id="complex-card"></div>'), "#complex-card 자리가 HTML에 없다");
   assert.ok(!html.includes('id="load-retry-rents-card"'), "load-retry-rents-card 마크업을 직접 썼다");
   assert.ok(!/<button[^>]*load-retry-rents-card/.test(html), "재시도 단추를 직접 만들었다");
@@ -475,10 +476,10 @@ const slice = (html, open, close) => {
 };
 const frames = [];
 {
-  const files = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html")).sort();
+  const files = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html")).sort();
   const pages = [];
   for (const file of files) {
-    const html = await readFile(path.join(root, "docs", file), "utf8");
+    const html = await readFile(path.join(root, SITE, file), "utf8");
     if (!html.includes('id="trend-section"')) continue;
     const budgetBand = /name="budget-band" content="(\d+)"/.exec(html)?.[1];
     const district = /name="realestate-district" content="([^"]+)"/.exec(html)?.[1];
@@ -506,7 +507,7 @@ const frames = [];
       const state = { down: true, sets: [] };
       const fails = only ? (name) => name === only : () => true;
       const web = await loadRealestatePage({
-        file: `docs/${page.file}`,
+        file: `${SITE}/${page.file}`,
         locale,
         search,
         kind: page.kind,
@@ -553,8 +554,8 @@ test("ⓕ 공통 함수는 docs/load-state.js 에 한 번 쓰고, 틀과 구운 
   assert.ok(NOTIFY_FN.startsWith("function notifyBeside(anchor, message, retryLabel, onRetry) {\n") && NOTIFY_FN.endsWith("\n}\n"), "load-state.js 에서 함수를 못 뽑았다");
   assert.ok(templateScript.includes(NOTIFY_FN), "scripts/realestate-template.html 의 notifyBeside 가 docs/load-state.js 와 다르다");
   for (const p of PAGES) {
-    assert.ok(p.script.includes(NOTIFY_FN), `docs/${p.file}: notifyBeside 가 docs/load-state.js 와 한 글자라도 다르다 - 틀을 고치고 굽지 않았다`);
-    assert.ok(!p.html.includes("load-state.js"), `docs/${p.file}: 시세 장이 load-state.js 를 <script src> 로 문다 - 정상 방문 47장의 요청이 +1 이다`);
+    assert.ok(p.script.includes(NOTIFY_FN), `${SITE}/${p.file}: notifyBeside 가 docs/load-state.js 와 한 글자라도 다르다 - 틀을 고치고 굽지 않았다`);
+    assert.ok(!p.html.includes("load-state.js"), `${SITE}/${p.file}: 시세 장이 load-state.js 를 <script src> 로 문다 - 정상 방문 47장의 요청이 +1 이다`);
     assert.doesNotMatch(NOTIFY_FN, /\/\/|\/\*/, "함수 본문에 주석이 있다 - 구운 장에서 걷혀 글자가 갈라진다");
   }
   // 함수는 밖의 변수를 쓰지 않는다: 함수 본문만 따로 돌려도 돈다(전역 document 외 이름이 없다).
@@ -624,9 +625,9 @@ test("ⓑ 알림 자리는 #district-section 안, #area-controls 아래·.table-
     const reserve = p.html.indexOf('<div class="trend-reserve ');
     const controls = p.html.indexOf('id="area-controls"', sec);
     const table = p.html.indexOf("<table", sec);
-    assert.ok(reserve > 0 && reserve < sec && sec > 0 && sec < controls && controls < table, `docs/${p.file}: 구획·컨트롤·표 자리의 순서가 다르다`);
+    assert.ok(reserve > 0 && reserve < sec && sec > 0 && sec < controls && controls < table, `${SITE}/${p.file}: 구획·컨트롤·표 자리의 순서가 다르다`);
     // 컨트롤 상자 바로 뒤가 표를 감싼 상자(.table-wrap)이고 그 사이에 다른 것이 없다 - 알림(afterend)은 그 사이에 선다.
-    assert.match(p.html.slice(p.html.indexOf("</div>", controls), table), /^<\/div>\s*<div[^>]*>\s*$/, `docs/${p.file}: #area-controls 와 표 사이에 다른 것이 있다`);
+    assert.match(p.html.slice(p.html.indexOf("</div>", controls), table), /^<\/div>\s*<div[^>]*>\s*$/, `${SITE}/${p.file}: #area-controls 와 표 사이에 다른 것이 있다`);
   }
 });
 
@@ -803,7 +804,7 @@ test("S6 의도한 차이 (#296 (바)): 인라인 장당 +1,800B 이하, 47장 �
   let total = 0;
   for (const p of PAGES) {
     const added = Buffer.byteLength(p.script) - Buffer.byteLength(revert(p.script));
-    assert.ok(added > 1000 && added <= 1800, `docs/${p.file}: 이 PR 의 인라인 증가가 ${added}B - cto 한도 1,800B/장`);
+    assert.ok(added > 1000 && added <= 1800, `${SITE}/${p.file}: 이 PR 의 인라인 증가가 ${added}B - cto 한도 1,800B/장`);
     total += added;
   }
   assert.ok(total <= 84_600, `47장 합 ${total}B - cto 한도 84,600B 를 넘었다`);
@@ -820,7 +821,7 @@ test("S6 의도한 차이 (#296 (바)): 인라인 장당 +1,800B 이하, 47장 �
 // ============================================================================================================
 const INDEX_SPOTS = ["market-grid", "realestate-grid", "summary-box", "news-list"];
 const INDEX_TODAY = ["market", "news", "summary", "realestate"];
-const indexSource = await readFile(path.join(root, "docs/index.html"), "utf8");
+const indexSource = await readFile(path.join(root, `${SITE}/index.html`), "utf8");
 const indexScript = scriptOf(indexSource);
 const HTTP_WORDS = /HTTP|\b(?:404|503)\b/;
 
@@ -1086,7 +1087,7 @@ test("S6 의도한 차이 (#296 (다)): index 인라인 스크립트 순증가 +
 const NEWS_FILES = ["news", "rate-news", "realestate-news", "stock-news"];
 const newsSources = {};
 for (const name of NEWS_FILES) {
-  const html = await readFile(path.join(root, `docs/${name}.html`), "utf8");
+  const html = await readFile(path.join(root, `${SITE}/${name}.html`), "utf8");
   newsSources[name] = { html, script: scriptOf(html), category: /name="news-category" content="([^"]+)"/.exec(html)?.[1] ?? null };
 }
 
@@ -1106,7 +1107,7 @@ function newsServer(mode, only = null, overrides = {}) {
 }
 const openNews = async (name, { lang = "ko", mode = "network", only = null, overrides = {}, mutate } = {}) => {
   const server = newsServer(mode, only, overrides);
-  const page = await loadNewsPage({ file: `docs/${name}.html`, category: newsSources[name].category, locale: lang, fetch: server.fetch, baked: true, mutate });
+  const page = await loadNewsPage({ file: `${SITE}/${name}.html`, category: newsSources[name].category, locale: lang, fetch: server.fetch, baked: true, mutate });
   await settle(30);
   return { page, server };
 };
@@ -1128,7 +1129,7 @@ test("(나) 범위: 뉴스 4장은 구운 기사 목록·요약·기준일(data-
   for (const name of NEWS_FILES) {
     const { html } = newsSources[name];
     assert.equal(html.includes("load-state.js"), false, `${name}: load-state.js 를 문다 - 외부 JS 를 더하는 일이라 cto 허용 표가 먼저다`);
-    const page = await loadNewsPage({ file: `docs/${name}.html`, baked: true });
+    const page = await loadNewsPage({ file: `${SITE}/${name}.html`, baked: true });
     assert.ok(page.baked["news-list"].includes("news-item"), `${name}: 구운 기사 목록이 비었다`);
     assert.ok(page.baked["summary-box"].includes("<p>"), `${name}: 구운 요약이 비었다`);
     assert.match(page.baked.day, /^\d{4}-\d{2}-\d{2}$/, `${name}: 구운 기준일 줄에 data-updated 가 없다`);
@@ -1297,7 +1298,7 @@ test("S6 의도한 차이 (#296 (나)): 뉴스 4장 인라인 스크립트 순�
   const BASE = { news: 13_647, "rate-news": 13_711, "realestate-news": 13_726, "stock-news": 13_710 };
   for (const name of NEWS_FILES) {
     const added = Buffer.byteLength(newsSources[name].script) - BASE[name];
-    assert.ok(added > 0 && added <= 400, `docs/${name}.html: 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
+    assert.ok(added > 0 && added <= 400, `${SITE}/${name}.html: 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
   }
   assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
 });

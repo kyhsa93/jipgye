@@ -10,15 +10,16 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { stripInlineScriptComments } from "../scripts/strip-inline-comments.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
 const scriptOf = (html) => [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
 
-const files = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html")).sort();
+const files = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html")).sort();
 const pages = [];
 for (const f of files) {
-  const html = await read(`docs/${f}`);
+  const html = await read(`${SITE}/${f}`);
   if (html.includes('id="trend-section"')) pages.push({ file: f, script: scriptOf(html) });
 }
 
@@ -36,13 +37,13 @@ const withoutFold = (script) =>
 test("추이 구획이 있는 장은 47장이고 전부 foldReserve 를 4번(정의 1 + 호출 3) 갖는다 (#338)", () => {
   assert.equal(pages.length, 47, `추이 구획이 있는 장이 ${pages.length}장이다 - 47장이어야 이 PR 의 범위와 같다`);
   for (const { file, script } of pages) {
-    assert.equal(script.match(/foldReserve/g)?.length, 4, `docs/${file}: foldReserve 가 정의 1 + 호출 3 이 아니다 - 호출이 정상·지연 경로로 새거나 세 자리 중 하나가 빠졌다`);
+    assert.equal(script.match(/foldReserve/g)?.length, 4, `${SITE}/${file}: foldReserve 가 정의 1 + 호출 3 이 아니다 - 호출이 정상·지연 경로로 새거나 세 자리 중 하나가 빠졌다`);
   }
 });
 
 test("호출은 실패가 확정된 세 자리에만 있다: 바깥 catch · 추이 !ok · 추이 안쪽 catch (#338)", async () => {
   const template = scriptOf(stripInlineScriptComments(await read("scripts/realestate-template.html")));
-  for (const [name, script] of [["scripts/realestate-template.html", template], ...pages.map((p) => [`docs/${p.file}`, p.script])]) {
+  for (const [name, script] of [["scripts/realestate-template.html", template], ...pages.map((p) => [`${SITE}/${p.file}`, p.script])]) {
     assert.match(script, DEF, `${name}: foldReserve 정의가 계약한 모양이 아니다`);
     assert.ok(script.includes(OUTER), `${name}: 경로 A - 바깥 catch 에서 reportLoadFailure 바로 뒤에 foldReserve() 가 없다`);
     assert.ok(script.includes(TREND_SITES), `${name}: 경로 B - 추이 !ok 의 else 와 안쪽 catch 에 foldReserve() 가 없다`);
@@ -56,7 +57,7 @@ test("호출은 실패가 확정된 세 자리에만 있다: 바깥 catch · 추
 
 test("접는 대상 trendSection.nextElementSibling 은 47장 모두 빈 칸 셋을 가진 .trend-reserve 다 (#338)", async () => {
   const template = await read("scripts/realestate-template.html");
-  for (const [name, html] of [["scripts/realestate-template.html", template], ...(await Promise.all(pages.map(async (p) => [`docs/${p.file}`, await read(`docs/${p.file}`)])))]) {
+  for (const [name, html] of [["scripts/realestate-template.html", template], ...(await Promise.all(pages.map(async (p) => [`${SITE}/${p.file}`, await read(`${SITE}/${p.file}`)])))]) {
     const open = html.indexOf('<section id="trend-section"');
     assert.ok(open >= 0, `${name}: 추이 구획 여는 태그를 못 찾았다`);
     const close = html.indexOf("</section>", open);
@@ -66,11 +67,11 @@ test("접는 대상 trendSection.nextElementSibling 은 47장 모두 빈 칸 셋
 
 test("새 훅을 만들지 않는다: dataset·id·data-*·class 를 쓰지 않고 틀의 .trend-reserve 를 JS 가 읽지도 않는다 (#338)", () => {
   for (const { file, script } of pages) {
-    assert.ok(!/dataset/.test(script), `docs/${file}: dataset 을 쓴다 - 새 data-* 훅이다`);
-    assert.ok(!/classList\.(add|toggle)\(["']trend/.test(script), `docs/${file}: 추이 예약에 class 를 단다`);
-    assert.ok(!/querySelector\(["'][^"']*trend-reserve/.test(script) && !/getElementsByClassName\(["']trend-reserve/.test(script), `docs/${file}: .trend-reserve 를 JS 가 class 로 읽는다 - hook-classes.json 이 바뀐다`);
+    assert.ok(!/dataset/.test(script), `${SITE}/${file}: dataset 을 쓴다 - 새 data-* 훅이다`);
+    assert.ok(!/classList\.(add|toggle)\(["']trend/.test(script), `${SITE}/${file}: 추이 예약에 class 를 단다`);
+    assert.ok(!/querySelector\(["'][^"']*trend-reserve/.test(script) && !/getElementsByClassName\(["']trend-reserve/.test(script), `${SITE}/${file}: .trend-reserve 를 JS 가 class 로 읽는다 - hook-classes.json 이 바뀐다`);
     const fold = script.match(DEF)[0];
-    assert.ok(fold.includes("trendSection.nextElementSibling"), `docs/${file}: 접는 대상을 trendSection.nextElementSibling 으로 잡지 않는다`);
+    assert.ok(fold.includes("trendSection.nextElementSibling"), `${SITE}/${file}: 접는 대상을 trendSection.nextElementSibling 으로 잡지 않는다`);
   }
 });
 
@@ -78,9 +79,9 @@ test("S6 의도한 차이: 장당 +360B 이하, 47장 합 16,920B 이하, 외부
   let total = 0;
   for (const { file, script } of pages) {
     const added = Buffer.byteLength(script) - Buffer.byteLength(withoutFold(script));
-    assert.ok(added > 0, `docs/${file}: 접는 줄을 걷어 냈는데 바이트가 안 줄었다 - 걷는 모양이 틀렸다`);
-    assert.ok(added <= 360, `docs/${file}: 접는 줄이 ${added}B - cto 한도 360B/장을 넘었다(넘으면 병합 전에 cto 가 다시 판정한다)`);
-    assert.doesNotMatch(script, /\/\/|\/\*/, `docs/${file}: 접는 줄에 주석이 구워져 나갔다`);
+    assert.ok(added > 0, `${SITE}/${file}: 접는 줄을 걷어 냈는데 바이트가 안 줄었다 - 걷는 모양이 틀렸다`);
+    assert.ok(added <= 360, `${SITE}/${file}: 접는 줄이 ${added}B - cto 한도 360B/장을 넘었다(넘으면 병합 전에 cto 가 다시 판정한다)`);
+    assert.doesNotMatch(script, /\/\/|\/\*/, `${SITE}/${file}: 접는 줄에 주석이 구워져 나갔다`);
     total += added;
   }
   assert.ok(total <= 16_920, `47장 합 ${total}B - cto 한도 16,920B 를 넘었다`);
@@ -89,7 +90,7 @@ test("S6 의도한 차이: 장당 +360B 이하, 47장 합 16,920B 이하, 외부
 test("틀의 foldReserve 는 구운 47장에 한 글자도 다르지 않게 실려 있다 (#338)", async () => {
   const template = scriptOf(stripInlineScriptComments(await read("scripts/realestate-template.html")));
   const def = template.match(DEF)[0];
-  for (const { file, script } of pages) assert.ok(script.includes(def), `docs/${file}: 틀의 foldReserve 와 다르다 - 틀을 고치고 굽지 않았다`);
+  for (const { file, script } of pages) assert.ok(script.includes(def), `${SITE}/${file}: 틀의 foldReserve 와 다르다 - 틀을 고치고 굽지 않았다`);
 });
 
 // ---- 동작 ----
@@ -120,7 +121,7 @@ const metrics = (offset = 0) => ({
 const REALESTATE = { period: "202608", updatedAt: "2026-08-15T00:00:00.000Z", overall: metrics(), districts: [{ code: "11680", name: "강남구", ...metrics(500) }] };
 const TREND = { weeks: ["2026-08-03", "2026-08-10"], overall: { "2026-08-03": metrics(-20), "2026-08-10": metrics() }, districts: { 강남구: { "2026-08-03": metrics(480), "2026-08-10": metrics(500) } } };
 
-const open = async ({ top, innerHeight = 823, height, file = "docs/realestate.html", fail = [], reject = [], budget } = {}) => {
+const open = async ({ top, innerHeight = 823, height, file = `${SITE}/realestate.html`, fail = [], reject = [], budget } = {}) => {
   const box = reserve(top, height);
   const gate = async (name) => {
     if (reject.includes(name)) throw new TypeError("Failed to fetch");
@@ -180,7 +181,7 @@ test("정상 경로·다른 요청의 실패는 예약을 건드리지도 재지
   const ratio = await open({ top: 730, fail: ["complex-ratio"] });
   assert.equal(ratio.box.rectReads, 0);
   // 예산 장에서 budget-deals.json 이 실패해도 추이 예약은 그대로다.
-  const budget = await open({ top: 5439, file: "docs/budget-7eok.html", fail: ["budget-deals"] });
+  const budget = await open({ top: 5439, file: `${SITE}/budget-7eok.html`, fail: ["budget-deals"] });
   assert.equal(budget.box.style.cssText, "", "budget-deals.json 실패에서 추이 예약을 접었다");
   assert.equal(budget.box.rectReads, 0);
 });

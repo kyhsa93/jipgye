@@ -6,6 +6,7 @@ import vm from "node:vm";
 import { measure, words } from "../scripts/prose-share.ts";
 import { STALE_DAYS, readDataSources } from "../scripts/source-age.ts";
 import { CROSS_PAGES, baselineFor, crossStampHtml } from "../scripts/updated-stamp.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 /**
  * 교차값(실거래 x 금리)에 입력별 기준일을 병기하고, 입력 하나라도 낡으면 글로 경고한다 (#154, #107·#111 후속).
@@ -16,7 +17,7 @@ import { CROSS_PAGES, baselineFor, crossStampHtml } from "../scripts/updated-sta
  */
 
 const root = path.resolve(import.meta.dirname, "..");
-const DOCS = path.join(root, "docs");
+const DOCS = path.join(root, SITE);
 
 /** 교차값이 있는 화면 전수: 금리로 계산한 값이 실거래 값과 한 문장·한 줄에 나오는 화면. */
 const BUDGET_FILES = Array.from({ length: 18 }, (_, i) => `budget-${i + 3}eok.html`);

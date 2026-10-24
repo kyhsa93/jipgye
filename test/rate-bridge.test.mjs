@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { RATE_PAGES } from "../scripts/build-rate-pages.ts";
 import { RATE_BRIDGE, BUDGET_HREF, CONVERSION_HREF } from "../scripts/rate-bridge.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 // #179: 금리 화면 다섯 장이 실거래(10억대)와 전월세전환율 화면으로 가는 길을 갖되,
 // 다섯 장의 문구가 한 문장 틀에 숫자만 바꾼 것이 되지 않게 지킨다(애드센스 반려 사유).
@@ -64,7 +65,7 @@ export const JACCARD_LIMIT = 0.2;
 
 const bridges = async () => {
   const out = {};
-  for (const { category, file } of PAGES) out[category] = await read(`docs/${file}`);
+  for (const { category, file } of PAGES) out[category] = await read(`${SITE}/${file}`);
   return out;
 };
 
@@ -81,7 +82,7 @@ test("금리 다섯 장 모두 한·영 문단에 예산대와 전월세전환�
 
 test("링크 대상 두 화면이 실제로 있다", async () => {
   for (const href of [BUDGET_HREF, CONVERSION_HREF]) {
-    await read(`docs/${href.replace("./", "")}`);
+    await read(`${SITE}/${href.replace("./", "")}`);
   }
 });
 

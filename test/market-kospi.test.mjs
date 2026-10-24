@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { kospiFrom, shortYmd, usdKrwWithChange } from "../scripts/fetch-market.ts";
 import { loadIndexPage } from "./helpers/index-page.mjs";
+import { sitePath } from "./helpers/site-root.mjs";
 
 const close = (time, value) => ({ TIME: time, DATA_VALUE: String(value) });
 
@@ -92,8 +93,8 @@ test("코스피는 증시 뉴스 장에 종가 날짜와 함께 실린다 (#56)"
   assert.match(html, /전 거래일 대비 -123\.49/);
   assert.equal(newsKospiHtml({}), null);
   const { readFile } = await import("node:fs/promises");
-  const stock = await readFile(new URL("../docs/stock-news.html", import.meta.url), "utf8");
+  const stock = await readFile(sitePath("stock-news.html"), "utf8");
   assert.match(stock, /<section id="kospi-section">/, "증시 뉴스 장에서 코스피 절이 숨어 있다");
-  const realestate = await readFile(new URL("../docs/realestate-news.html", import.meta.url), "utf8");
+  const realestate = await readFile(sitePath("realestate-news.html"), "utf8");
   assert.match(realestate, /<section id="kospi-section" hidden>/, "부동산 뉴스 장에 코스피가 떴다");
 });

@@ -11,6 +11,7 @@ import path from "node:path";
 import { REALESTATE_PAGES } from "../scripts/build-realestate-pages.ts";
 import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
 import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -46,7 +47,7 @@ const SHELL = [
 
 test("시세 틀 47장과 틀의 껍데기는 같은 유틸리티를 갖고 훅 class는 그대로다 (#283)", async () => {
   assert.equal(FILES.length, 47, "틀을 쓰는 장 수가 바뀌었다 - 이 시험의 범위와 PR 본문의 188조건을 다시 센다");
-  for (const file of ["scripts/realestate-template.html", ...FILES.map((f) => `docs/${f}`)]) {
+  for (const file of ["scripts/realestate-template.html", ...FILES.map((f) => `${SITE}/${f}`)]) {
     const html = await read(file);
     for (const { name, pattern, hooks, utilities } of SHELL) {
       const m = html.match(pattern);
@@ -63,7 +64,7 @@ test("시세 틀 47장과 틀의 껍데기는 같은 유틸리티를 갖고 훅 
 
 test("추이 구획과 그 자리를 잡는 예약은 같은 여백 유틸리티를 받는다 - 구획이 펴지는 순간 앞뒤 간격이 안 어긋난다 (#283, #335 cto 판정 3)", async () => {
   for (const file of FILES) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     const section = html.match(/<section id="trend-section" class="([^"]*)"/)?.[1];
     const reserve = html.match(/<div class="trend-reserve ([^"]*)">/)?.[1];
     assert.ok(section && reserve, `${file}: 추이 구획이나 예약을 못 찾았다 - 이 시험이 아무것도 안 본 것이다`);
@@ -83,7 +84,7 @@ test("추이 구획과 예약의 .history-grid 는 둘 다 읽는 단 폭 유틸
   // 훅 class(history-grid)는 인라인 스크립트의 closest(".history-grid") 가 읽으므로 그대로 둔다. 다른 장의 history-grid(index 의 nested 등)는 이 틀 밖이다.
   const WANT = ["history-grid", "tw:max-w-read"];
   const grids = (html) => [...html.matchAll(/<div class="([^"]*)">/g)].map((m) => ({ cls: tokens(m[1]), at: m.index })).filter((g) => g.cls.includes("history-grid"));
-  for (const file of ["scripts/realestate-template.html", ...FILES.map((f) => `docs/${f}`)]) {
+  for (const file of ["scripts/realestate-template.html", ...FILES.map((f) => `${SITE}/${f}`)]) {
     const html = await read(file);
     const g = grids(html);
     assert.equal(g.length, 2, `${file}: 여는 태그의 .history-grid 가 둘(구획 안 · 예약 안)이 아니다`);
@@ -97,7 +98,7 @@ test("추이 구획과 예약의 .history-grid 는 둘 다 읽는 단 폭 유틸
 
 test("다시 그려지는 조각·굽는 조각·인라인 스크립트에는 유틸리티를 두지 않는다 (#283, #296 (바) cto 판정)", async () => {
   for (const file of FILES) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     const scripts = [...html.matchAll(/<script>\n([\s\S]*?)<\/script>/g)].map((m) => m[1]);
     assert.equal(scripts.length, 1, `${file}: 인라인 스크립트가 ${scripts.length}개다`);
     assert.ok(scripts[0].length > 50000, `${file}: 인라인 스크립트를 못 찾았다`);
@@ -111,7 +112,7 @@ test("다시 그려지는 조각·굽는 조각·인라인 스크립트에는 �
 
 test("이 틀에 <code>가 생기면 전부 글자 크기 유틸리티를 단다 (#283, #385 cto 판정 3 (1))", async () => {
   // 지금 이 틀에는 <code>가 없다(스크립트 문자열 포함). 처음 들이는 PR 이 method 와 같은 유틸리티(`tw:text-sm`)를 단다.
-  for (const file of ["scripts/realestate-template.html", ...FILES.map((f) => `docs/${f}`)]) {
+  for (const file of ["scripts/realestate-template.html", ...FILES.map((f) => `${SITE}/${f}`)]) {
     for (const tag of (await read(file)).matchAll(/<code\b[^>]*>/g)) assert.equal(tag[0], '<code class="tw:text-sm">', `${file}: <code>에 글자 크기 유틸리티가 없다: ${tag[0]}`);
   }
 });
@@ -119,10 +120,10 @@ test("이 틀에 <code>가 생기면 전부 글자 크기 유틸리티를 단다
 test("docs/ 어느 장이든 머리·내비·구획 아래 여백 유틸리티는 넓은 화면(1024+) 변형을 같이 갖는다 (#283 이월)", async () => {
   // 폭 조건이 없는 tw:mb-2·tw:mb-10 은 1024 이상에서도 8/8/40 이다. 방향 C 시안은 데스크톱에서 머리 24 · 내비 16 · 구획 64 다.
   // 질문 입구(`nav.question-nav`)는 시안도 40 이라 구획과 다른 줄이다.
-  const files = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html")).sort();
+  const files = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html")).sort();
   let headers = 0, navs = 0, sections = 0;
   for (const file of files) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     for (const m of html.matchAll(/<(header|nav|section)\b([^>]*)>/g)) {
       const cls = tokens(/\sclass="([^"]*)"/.exec(m[2])?.[1] ?? "");
       if (!cls.includes("tw:mb-2") && !cls.includes("tw:mb-10")) continue;
@@ -136,10 +137,10 @@ test("docs/ 어느 장이든 머리·내비·구획 아래 여백 유틸리티�
 });
 
 test("안내 상자(aside.method-callout)가 있는 53장은 모두 같은 모양 유틸리티를 단다 (#283 이월)", async () => {
-  const files = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html")).sort();
+  const files = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html")).sort();
   let n = 0;
   for (const file of files) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     if (!html.includes('class="method-callout')) continue;
     n += 1;
     assert.ok(html.includes('<aside class="method-callout tw:-ml-2.75 tw:pl-2 tw:border-l-3 tw:border-border-strong">'), `${file}: 안내 상자의 모양 유틸리티가 다르다`);

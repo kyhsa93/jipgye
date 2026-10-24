@@ -6,6 +6,7 @@ import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
 import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 import { REALESTATE_PAGES } from "../scripts/build-realestate-pages.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 /**
  * 한국어 화면에서 스크립트를 실행한 뒤의 `document.title`은 구운 `<title>`과 같다 (#299).
@@ -34,9 +35,9 @@ const AFFECTED = ["realestate.html", ...DISTRICT_PAGES.map((p) => p.file), ...RE
 const SAME_TEXT = BUDGET_PAGES.map((p) => p.file);
 
 const load = async (file, locale) => {
-  const html = await read(`docs/${file}`);
+  const html = await read(`${SITE}/${file}`);
   const page = await loadRealestatePage({
-    file: `docs/${file}`,
+    file: `${SITE}/${file}`,
     locale,
     kind: metaOf(html, "realestate-kind"),
     district: metaOf(html, "realestate-district"),

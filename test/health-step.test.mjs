@@ -38,16 +38,17 @@ const index = (list, name) => {
   return i;
 };
 
-for (const [file, order] of [
-  [".github/workflows/daily-update.yml", { before: "테스트 (수집 후)", after: "변경사항 커밋 및 푸시" }],
-  [".github/workflows/summarize.yml", { before: "테스트", after: "정적 HTML에 오늘 내용 심기" }],
+// (#510, 구조 B-4) 건강 점검은 수집 워크플로(daily-update·summarize)에서 deploy.yml 로 옮겼다 - 점검이 읽는 사이트(build/site)가 거기서 만들어진다. 수집은 커밋으로 끝난다.
+// deploy.yml 에서는 build/site 기준 시험(배포 게이트) 뒤 · Pages 배포 앞이고, `--ignore-scripts` 로 pretest(사이트 재생성)를 건너뛰어 방금 만든 build/site 를 그대로 읽는다.
+for (const [file, order, run] of [
+  [".github/workflows/deploy.yml", { before: "Pages 배포", after: "테스트 (build/site 기준)" }, "npm run health --ignore-scripts"],
 ]) {
-  test(`${file}: 건강 점검 스텝은 비차단이고 npm run health 를 부르며, 렌더(·커밋) 뒤 · 테스트 앞이다`, async () => {
+  test(`${file}: 건강 점검 스텝은 비차단이고 npm run health 를 부르며, 렌더·게이트 시험 뒤 · Pages 배포 앞이다`, async () => {
     const list = steps(await read(file));
     const h = list[index(list, HEALTH)];
     assert.equal(h.id, "health");
     assert.equal(h.coe, "true", "continue-on-error: true 가 아니면 점검 실패가 배포를 막는다");
-    assert.equal(h.run.trim(), "npm run health");
+    assert.equal(h.run.trim(), run);
     assert.ok(index(list, order.after) < index(list, HEALTH), `${order.after} 보다 앞이면 안 된다`);
     assert.ok(index(list, HEALTH) < index(list, order.before), `${order.before} 보다 뒤면 안 된다`);
   });
@@ -55,7 +56,7 @@ for (const [file, order] of [
   test(`${file}: 반영 단계는 배포 뒤에서 steps.health.outcome == 'failure' 일 때만 exit 1 로 끝난다`, async () => {
     const list = steps(await read(file));
     const r = list[index(list, REFLECT)];
-    // `!cancelled() &&` 는 #509 가 붙였다: 상태 함수가 없으면 앞 반영 단계(금리·렌더 폴백)가 먼저 exit 1 했을 때 이 단계가 건너뛰어져 점검 실패가 가려졌다.
+    // `!cancelled() &&` 는 #509 가 붙였다: 상태 함수가 없으면 앞 반영 단계가 먼저 exit 1 했을 때 이 단계가 건너뛰어져 점검 실패가 가려졌다.
     assert.equal(r.if.replace(/^\$\{\{\s*|\s*\}\}$/g, ""), "!cancelled() && steps.health.outcome == 'failure'");
     assert.match(r.run, /^\s*exit 1$/m);
     assert.match(r.run, /::error::/);
@@ -65,6 +66,13 @@ for (const [file, order] of [
   });
 }
 
+test("수집 워크플로(daily-update·summarize)에는 건강 점검이 없다 - 점검이 읽는 사이트가 거기서 안 만들어지고, 수집이 점검에 묶이지 않는다 (#510)", async () => {
+  for (const f of ["daily-update.yml", "summarize.yml"]) {
+    const text = (await read(`.github/workflows/${f}`)).replace(/^\s*#.*$/gm, "");
+    assert.ok(!/npm run health|건강 점검/.test(text), `${f}: 건강 점검이 남았다`);
+  }
+});
+
 test("test.yml: PR 의 건강 점검 스텝도 continue-on-error 라서 Test 판정을 빨갛게 하지 않는다", async () => {
   const list = steps(await read(".github/workflows/test.yml"));
   const h = list[index(list, HEALTH)];
@@ -73,20 +81,31 @@ test("test.yml: PR 의 건강 점검 스텝도 continue-on-error 라서 Test 판
   assert.ok(index(list, "npm test + 시험 개수 래칫") < index(list, HEALTH));
 });
 
-test("건강 점검 이름은 세 워크플로가 같고, 점검 스텝이 걸린 워크플로는 이 셋뿐이다", async () => {
+test("건강 점검 스텝이 걸린 워크플로는 deploy.yml 과 test.yml 둘뿐이다 (#510: 수집 워크플로에서 옮겼다)", async () => {
   const dir = path.join(root, ".github/workflows");
   const using = [];
   for (const f of (await readdir(dir)).filter((n) => /\.ya?ml$/.test(n)).sort()) {
     const text = await readFile(path.join(dir, f), "utf8");
     if (/^\s*run: .*npm run health\b/m.test(text)) using.push(f);
   }
-  assert.deepEqual(using, ["daily-update.yml", "summarize.yml", "test.yml"]);
+  assert.deepEqual(using, ["deploy.yml", "test.yml"]);
 });
 
 test("npm run health 는 tools/health 의 npm test(= run-tests 래퍼 + test/COUNT 래칫)를 부른다", async () => {
   const pkg = JSON.parse(await read("package.json"));
   assert.equal(pkg.scripts.health, "npm --prefix tools/health test");
   assert.equal(JSON.parse(await read("tools/health/package.json")).scripts.test, "node ../../scripts/run-tests.mjs");
+});
+
+test("pretest 가 사이트를 만든다: 루트와 tools/health 의 pretest 는 render-pipeline --out=build/site 이고, deploy.yml 의 점검은 --ignore-scripts 로 그것을 건너뛴다 (#510)", async () => {
+  const want = (rel) => rel === "package.json" ? "node scripts/render-pipeline.ts --out=build/site" : "node ../../scripts/render-pipeline.ts --out=build/site";
+  for (const rel of ["package.json", "tools/health/package.json"]) {
+    assert.equal(JSON.parse(await read(rel)).scripts.pretest, want(rel), `${rel}: pretest 가 build/site 를 만들지 않는다 - 시험이 읽는 사이트가 없다`);
+  }
+  assert.equal(JSON.parse(await read("package.json")).scripts["test:site"], "node scripts/run-tests.mjs --site", "배포 게이트 명령이 바뀌었다 - deploy.yml 과 함께 고친다");
+  const deploy = (await read(".github/workflows/deploy.yml")).replace(/^\s*#.*$/gm, "");
+  assert.match(deploy, /run: npm run health --ignore-scripts$/m, "deploy.yml 의 점검이 pretest 를 건너뛰지 않는다 - 게이트가 본 build/site 를 다시 만든다");
+  assert.match(deploy, /run: npm run test:site$/m, "deploy.yml 의 게이트 명령이 npm run test:site 가 아니다");
 });
 
 test("tools/health 의 시험 파일은 모두 원본 시험의 출처를 적었고, 원본이 가리키는 곳으로 옮긴 시험이 실제로 있다", async () => {

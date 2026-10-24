@@ -5,13 +5,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { summaryHtml } from "../../../scripts/prerender.ts";
+import { SITE } from "../../../test/helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
 const readJson = (name) => read(`docs/data/${name}.json`).then(JSON.parse);
 
 test("커밋된 구운 index.html 의 상자가 summary.json 으로 다시 찍은 것과 같다 - 데이터가 바뀌면 다시 구워야 한다 (#352)", async () => {
-  const [html, summary] = await Promise.all([read("docs/index.html"), readJson("summary")]);
+  const [html, summary] = await Promise.all([read(`${SITE}/index.html`), readJson("summary")]);
   const a = html.indexOf("<!--prerender:summary-->") + "<!--prerender:summary-->".length;
   const baked = html.slice(a, html.indexOf("<!--/prerender:summary-->"));
   const strip = (h) => h.replace(/<span class="summary-meta">[^<]*<\/span>$/, "");

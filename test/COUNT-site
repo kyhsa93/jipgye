@@ -1,0 +1,8 @@
+# 배포 게이트(`npm run test:site` = `node scripts/run-tests.mjs --site`)의 하한 둘 (#510, 구조 B-4). 형식은 test/COUNT 와 같다: 1행 `ℹ tests N` 하한, 2행 `ℹ pass N` 하한.
+# 대상은 test/helpers/site-root.mjs(나가는 사이트 build/site)를 부르는 시험 파일이다(scripts/site-test-files.mjs 의 기준 - 직접 import 하거나 그것을 import 하는 헬퍼를 거친다).
+# 하한은 그 부분집합의 개수라서 루트 test/COUNT 와 따로 센다 - 게이트가 조용히 비는 일(파일이 build/site 를 안 읽게 바뀌거나 지워짐)을 PR 의 test.yml 이 잡는다.
+# 내리는 변경은 PR 본문에 사유를 적는다(test/COUNT 와 같은 규칙).
+# 갱신: 2026-10-24(#510), base 6521bb9c + 이 PR, Node v24.22.0, macOS. `npm run test:site` → ℹ tests 736 · pass 736 · fail 0 · skipped 0 (파일 52개, 약 15초).
+# 갱신: 2026-10-24(#510 리베이스), base fc5f21fd(#528 뉴스 틀 (나), 뉴스 행 12개가 build/site 를 읽음) + 이 PR. `npm run test:site` → ℹ tests 748 · pass 748 · fail 0 (736 + 12).
+748
+748

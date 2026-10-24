@@ -3,13 +3,15 @@ import assert from "node:assert/strict";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
+import { SITE_DIR } from "./helpers/site-root.mjs";
 
 // 표의 머리글 방향(scope)·표 이름(caption), 차트 SVG의 접근 가능한 이름(#110).
 // 외부 도구(axe-core 등) 없이 쓰는 이유: 새 devDependency는 승인 전이라, 검사 가능한 합격선만
 // 정적 HTML과 빌더·브라우저 렌더 출력에서 직접 센다. 데이터 값에 따라 갈리는 검사는 넣지 않았다 -
 // 있는지/없는지, 두 쪽이 같은지만 본다.
 
-const docs = path.resolve(import.meta.dirname, "../docs");
+// 나가는 사이트 전체(67장). 생성 53장은 main 의 docs/ 에 없고 build/site 에만 있다(#510).
+const docs = SITE_DIR;
 const pages = async () =>
   Promise.all(
     (await readdir(docs))

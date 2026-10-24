@@ -3,6 +3,6 @@
 # 한 줄 = `파일 | 줄 내용(앞뒤 공백 뺀 것)`. 훑는 면: .github/workflows/ · scripts/ (.mjs·.ts) · package.json 셋.
 # 세는 것은 명령 위치뿐이다: YAML은 `#` 줄, .mjs는 `//`·`/*`·`*` 줄을 뺀다.
 # 늘리는 변경은 이 파일의 diff에 걸린다 — PR 본문에 사유를 적는다. 목록에 있는데 파일에서 사라진 줄도 실패다(썩지 않게).
-scripts/run-tests.mjs | ["--test", "--test-reporter=spec", "--test-reporter-destination=stdout", ...process.argv.slice(2), GLOB],
+scripts/run-tests.mjs | ["--test", "--test-reporter=spec", "--test-reporter-destination=stdout", ...runnerArgs, ...targets],
 # test:live는 단일 파일 지명이라 글롭 구멍이 없다. 빼면 그 줄이 거짓 실패를 낸다.
 tools/golden/package.json | "test:live": "GOLDEN_LIVE=1 node --test test/live.test.ts"

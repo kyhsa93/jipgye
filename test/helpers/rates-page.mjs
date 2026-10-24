@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
+import { SITE } from "./site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "../..");
 
@@ -106,7 +107,7 @@ function makeDom(html = "") {
 export async function loadRatesPage({
   analytics,
   fetch: fetchImpl,
-  file = "docs/deposit-rates.html",
+  file = `${SITE}/deposit-rates.html`,
   search = "",
   rates: ratesOverride,
   locale = "ko",

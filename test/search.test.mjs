@@ -4,6 +4,7 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
 import { buildPayload, complexesByDistrict, squash } from "../scripts/build-search-index.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const NOW = new Date("2026-08-29T00:00:00Z");
@@ -47,7 +48,7 @@ test("실제 색인이 브라우저가 들고 있어도 되는 크기다", async
 });
 
 test("색인의 화면 주소가 전부 실재한다", async () => {
-  const files = new Set((await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html")));
+  const files = new Set((await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html")));
   const { entries } = buildPayload({ byDistrict: {}, now: NOW });
   for (const entry of entries) {
     const file = entry.href.replace("./", "").split(/[?#]/)[0];
@@ -297,7 +298,7 @@ test("언어를 바꾸면 새로 고치지 않아도 안내문이 따라 바뀌�
 });
 
 test("검색창을 싣는 장은 모두 한국어 안내문·라벨로 구워져 있고 예시가 괄호 안에 있다", async () => {
-  const dir = path.join(root, "docs");
+  const dir = path.join(root, SITE);
   let seen = 0;
   for (const f of (await readdir(dir)).filter((n) => n.endsWith(".html"))) {
     const html = await readFile(path.join(dir, f), "utf8");

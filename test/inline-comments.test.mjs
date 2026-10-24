@@ -12,6 +12,7 @@ import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.ts";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
 import { jsInlineScripts, proveCommentsOnly, proveHtmlCommentsOnly, onlyWhitespaceAndCommentsRemoved, sameSyntax } from "./helpers/comment-proof.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 /**
  * 틀의 인라인 스크립트 주석은 굽는 단계에서 뗀다 (#313).
@@ -55,7 +56,7 @@ test("구운 장 수: 예산대 18 · 자치구 25 · 거래유형 3 · 금리 4
 test("구운 54장 전수: 인라인 스크립트에 줄 주석도 블록 주석도 없다", async () => {
   const bad = [];
   for (const file of BAKED) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     const scripts = jsInlineScripts(html);
     assert.ok(scripts.length >= 1, `${file}: 인라인 스크립트가 없다 - 이 시험이 아무것도 안 본 것이다`);
     for (const s of scripts) {
@@ -170,7 +171,7 @@ test("빌더 출력: 틀에 주석이 있어도 나가는 장에는 없다(예�
 });
 
 test("뉴스 장: 틀(news.html)에 주석이 생겨도 찍은 세 장에는 안 실린다", async () => {
-  const base = await read("docs/news.html");
+  const base = await read(`${SITE}/news.html`);
   const marked = base.replace("<script>\n", "<script>\n// 시험이 끼운 주석 - 찍힌 장에는 없어야 한다\n");
   assert.notEqual(marked, base, "news.html 의 인라인 <script> 시작을 못 찾았다");
   const page = NEWS_PAGES[0];
@@ -183,8 +184,8 @@ test("주석만 바뀌었다 - 기계 증명: 주석을 가진 모든 스크립�
   // 굽는 장의 "전"은 틀이다(빌더가 틀에 문자열 패치를 한 뒤 훑개를 돌린다) - 그래서 입력은 틀 둘과, 틀이 아닌 docs 안 원본 전부다.
   // docs/realestate.html 은 이제 구운 장이라 주석이 0이다(고정점). 그 장의 "전"은 시세 틀이다 - 틀과 견준 증명은 아래 #374 시험이 선다.
   // 이미 구워진 장(주석 0)은 위 전수 시험이 고정점으로 본다. 기준 main 의 구운 장 50장과 견준 결과는 PR 본문에 있다.
-  const names = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html")).sort();
-  const files = [...names.map((f) => `docs/${f}`), TEMPLATE, "scripts/rates-template.html"];
+  const names = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html")).sort();
+  const files = [...names.map((f) => `${SITE}/${f}`), TEMPLATE, "scripts/rates-template.html"];
   assert.ok(names.length >= 67);
   let removedTotal = 0;
   let pagesWithComments = 0;
@@ -245,11 +246,11 @@ test("틀은 주석을 그대로 갖는다(소스가 단일 출처다) - 구운 
 test("범위 밖을 숫자로 고정한다: 손으로 쓴 제자리 장은 주석을 그대로 싣는다", async () => {
   // 이 장들은 틀에서 찍는 장이 아니라 docs 안의 원본이다(prerender.ts 가 제자리에서 채운다). 굽는 단계에서 떼면 원본이 지워진다.
   // 이 목록이 줄면 좋은 일이다(원본을 docs 밖으로 옮겼다는 뜻) - 그때 이 시험의 숫자를 줄인다. #374 가 realestate.html 을 뺐다(13 -> 12).
-  const names = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html"));
+  const names = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html"));
   const rest = names.filter((f) => !BAKED.includes(f)).sort();
   const withComments = [];
   for (const f of rest) {
-    const html = await read(`docs/${f}`);
+    const html = await read(`${SITE}/${f}`);
     if (jsInlineScripts(html).some((s) => findJsComments(s.body).length)) withComments.push(f);
   }
   assert.deepEqual(
@@ -269,10 +270,10 @@ const markerBody = (html, name) => html.match(new RegExp(`<!--prerender:${name}-
 
 test("시세 틀은 docs 밖에 있고 표지가 비어 있다 - 틀 읽는 쪽 셋은 틀을, 나가는 장은 채워진 것을 본다 (#374)", async () => {
   await access(path.join(root, TEMPLATE));
-  await assert.rejects(access(path.join(root, "docs/realestate-template.html")), "틀이 docs 안에 또 있다");
+  await assert.rejects(access(path.join(root, `${SITE}/realestate-template.html`)), "틀이 docs 안에 또 있다");
 
   const template = await read(TEMPLATE);
-  const baked = await read("docs/realestate.html");
+  const baked = await read(`${SITE}/realestate.html`);
   for (const name of MARKERS) {
     assert.equal(markerBody(template, name), "", `틀의 ${name} 표지가 비어 있지 않다 - 빌더가 채워진 장을 틀로 물려받는다`);
     assert.ok(markerBody(baked, name)?.length > 0, `나가는 장의 ${name} 표지가 비었다 - prerender.ts 가 틀을 채우지 못했다`);
@@ -302,7 +303,7 @@ test("시세 틀에는 #312 판정 §6 이 뺀 주석 다섯 줄이 있고 나�
     "  // 예산 기간을 모르면 구운 기준일 줄을 그대로 둔다 - 그 창을 적어 본문과 어긋났다(#297).",
   ];
   const template = (await read(TEMPLATE)).split("\n");
-  const baked = await read("docs/realestate.html");
+  const baked = await read(`${SITE}/realestate.html`);
   for (const line of FIVE) {
     assert.equal(template.filter((l) => l === line).length, 1, `틀에 한 번 있어야 한다: ${line.trim()}`);
     assert.ok(!baked.includes(line.trim()), `나가는 장에 실렸다: ${line.trim()}`);

@@ -11,6 +11,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.ts";
 import { countShared, renderedBody } from "../scripts/rate-dup.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -48,8 +49,8 @@ function checkShell(html, file, shell) {
 }
 
 test("금리 4장과 허브의 껍데기는 같은 유틸리티를 갖고 훅 class는 그대로다 (#282)", async () => {
-  for (const { file } of RATE_PAGES) checkShell(await read(`docs/${file}`), file, SHELL_PAGE);
-  checkShell(await read("docs/rates.html"), "rates.html", SHELL_HUB);
+  for (const { file } of RATE_PAGES) checkShell(await read(`${SITE}/${file}`), file, SHELL_PAGE);
+  checkShell(await read(`${SITE}/rates.html`), "rates.html", SHELL_HUB);
   // 틀(scripts/rates-template.html)이 원본이므로 틀도 같은 모양이어야 4장이 다시 구워져도 유지된다.
   checkShell(await read("scripts/rates-template.html"), "rates-template.html", SHELL_PAGE);
 });
@@ -98,7 +99,7 @@ test("needle 한 곳을 깬 틀에서는 빌더가 던지고, 깨지 않은 틀�
 
 test("다시 그려지는 조각과 인라인 스크립트에는 유틸리티를 새로 두지 않는다 - 구운 화면과 다시 그린 화면이 어긋난다 (#282)", async () => {
   for (const file of [...RATE_PAGES.map((p) => p.file), "rates-template.html"]) {
-    const html = await read(file === "rates-template.html" ? "scripts/rates-template.html" : `docs/${file}`);
+    const html = await read(file === "rates-template.html" ? "scripts/rates-template.html" : `${SITE}/${file}`);
     const script = html.match(/<script>\n([\s\S]*?)<\/script>/)?.[1];
     assert.ok(script && script.length > 5000, `${file}: 인라인 스크립트를 못 찾았다`);
     assert.ok(!script.includes("tw:"), `${file}: 인라인 스크립트에 유틸리티가 있다`);
@@ -123,8 +124,8 @@ test("금리 4장은 색인 대상으로, 허브는 noindex 로 남는다 - 캐�
     assert.ok(html.includes(`<link rel="canonical" href="https://kyhsa93.github.io/jipgye/${file}">`), `${file}: 캐노니컬이 자기 자신이 아니다`);
     return html.match(/<meta name="robots" content="([^"]*)">/)?.[1];
   };
-  for (const { file } of RATE_PAGES) assert.equal(check(file, await read(`docs/${file}`)), "index, follow", `${file}: 색인 지시가 index, follow 가 아니다`);
-  assert.equal(check("rates.html", await read("docs/rates.html")), "noindex, follow", "허브가 noindex 를 잃었다");
+  for (const { file } of RATE_PAGES) assert.equal(check(file, await read(`${SITE}/${file}`)), "index, follow", `${file}: 색인 지시가 index, follow 가 아니다`);
+  assert.equal(check("rates.html", await read(`${SITE}/rates.html`)), "noindex, follow", "허브가 noindex 를 잃었다");
 });
 
 test("rate-dup 은 훅 class 뒤에 유틸리티가 붙은 1층 내비도 걷어 낸다 - 내비 글자가 중복으로 세이지 않는다 (#282)", () => {

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { loadPage, stubElement } from "./helpers/digest-page.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 /**
  * 화면 스크립트가 표를 다시 그려도 빌드가 단 caption(sr-only, data-auto)은 남는다 (#300).
@@ -116,7 +117,7 @@ const PAGES = [
 const TOTAL = PAGES.reduce((n, p) => n + p.ids.length, 0);
 
 async function open(page, locale) {
-  const html = await readFile(path.join(root, "docs", page.file), "utf8");
+  const html = await readFile(path.join(root, SITE, page.file), "utf8");
   const tables = Object.fromEntries(page.ids.map((id) => [id, bakedTable(id, html)]));
   const seed = Object.fromEntries(Object.entries(tables).map(([id, t]) => [id, t.el]));
   const loaded = await loadPage({ file: page.file, data: page.data, locale, seed });

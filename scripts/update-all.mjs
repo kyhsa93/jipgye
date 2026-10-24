@@ -8,8 +8,11 @@ function run(cmd) {
   execSync(cmd, { cwd: repoRoot, stdio: "inherit" });
 }
 
+// 수집·빌더가 만드는 것은 데이터뿐이다 - docs/data 와 raw 만 커밋한다(#510, 구조 B-4. scripts/push-docs.sh 의 DATA_PATHS 와 같다).
+// 사이트 HTML 은 만들지도 커밋하지도 않는다: 보고 싶으면 scripts/render-pipeline.ts 에 --out=build/site 를 줘서 build/site 에 만든다(.gitignore).
+const DATA_PATHS = ["docs/data", "raw"];
 function trackedPaths() {
-  return ["docs", "raw"].filter((dir) => existsSync(path.join(repoRoot, dir)));
+  return DATA_PATHS.filter((dir) => existsSync(path.join(repoRoot, dir)));
 }
 
 // 실거래(fetch-realestate)·금리(fetch-rates) 수집은 일부러 부르지 않는다. 둘 다 인증키가
@@ -39,14 +42,8 @@ async function main() {
   run("node scripts/build-rent-preview.ts");
   run("node scripts/build-search-index.ts");
   run("node scripts/news-context.ts");
-  run("node scripts/prerender.ts");
-  run("node scripts/build-rate-pages.ts");
-  run("node scripts/build-news-pages.ts");
-  run("node scripts/build-budget-pages.ts");
-  run("node scripts/build-realestate-pages.ts");
-  run("node scripts/build-updated-stamp.ts");
 
-  const status = execSync("git status --porcelain -- docs raw", { cwd: repoRoot }).toString().trim();
+  const status = execSync(`git status --porcelain -- ${DATA_PATHS.join(" ")}`, { cwd: repoRoot }).toString().trim();
   if (!status) {
     console.log("[update-all] 변경사항 없음, 커밋 생략");
     return;

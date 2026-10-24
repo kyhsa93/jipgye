@@ -3,16 +3,17 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { loadIndexPage } from "./helpers/index-page.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
-const indexHtml = () => readFile(path.join(root, "docs/index.html"), "utf8");
+const indexHtml = () => readFile(path.join(root, `${SITE}/index.html`), "utf8");
 
 // 안내를 다는 화면. 첫 화면과 시세 계열 전부 - 검색으로 들어오는 사람도,
 // 심사자도 대개 자치구 페이지에 먼저 떨어지고, 거기가 "표본이 모자라 비워 둔
 // 칸"을 실제로 보게 되는 화면이다.
 const CALLOUT_PAGES = async () => {
   const { readdir } = await import("node:fs/promises");
-  const all = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html"));
+  const all = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html"));
   return all.filter(
     (f) =>
       f === "index.html" ||
@@ -45,18 +46,18 @@ test("시세 계열 전부가 같은 안내를 갖는다", async () => {
   assert.ok(pages.length >= 47, `안내를 달 화면이 ${pages.length}장뿐이다`);
 
   for (const file of pages) {
-    const html = await readFile(path.join(root, "docs", file), "utf8");
+    const html = await readFile(path.join(root, SITE, file), "utf8");
     const callout = html.indexOf('class="method-callout');
     const firstData = html.search(/<section id="(market|overall)-section"/);
-    assert.notEqual(callout, -1, `docs/${file}에 집계 기준 안내가 없다`);
-    assert.ok(callout < firstData, `docs/${file}: 안내가 첫 데이터 섹션보다 뒤에 있다`);
-    assert.match(html.slice(callout, firstData), /href="\.\/method\.html"/, `docs/${file}: method.html로 가지 않는다`);
+    assert.notEqual(callout, -1, `${SITE}/${file}에 집계 기준 안내가 없다`);
+    assert.ok(callout < firstData, `${SITE}/${file}: 안내가 첫 데이터 섹션보다 뒤에 있다`);
+    assert.match(html.slice(callout, firstData), /href="\.\/method\.html"/, `${SITE}/${file}: method.html로 가지 않는다`);
   }
 });
 
 test("시세 화면은 빈칸이 왜 비었는지를 먼저 말한다", async () => {
   // 표를 처음 본 사람이 가장 먼저 묻는 것이 "왜 이 구는 값이 없나"다.
-  const html = await readFile(path.join(root, "docs/realestate.html"), "utf8");
+  const html = await readFile(path.join(root, `${SITE}/realestate.html`), "utf8");
   const text = /<p id="method-callout-text"[^>]*>([^<]*)<\/p>/.exec(html)?.[1] ?? "";
   assert.match(text, /5건/, "표본 기준을 안 밝힌다");
   assert.match(text, /4주/, "네 주 겹쳐 세는 것을 안 밝힌다");
@@ -64,12 +65,12 @@ test("시세 화면은 빈칸이 왜 비었는지를 먼저 말한다", async ()
 
 test("안내가 데이터 앞을 막지 않는다", async () => {
   for (const file of ["index.html", "realestate.html"]) {
-    const html = await readFile(path.join(root, "docs", file), "utf8");
+    const html = await readFile(path.join(root, SITE, file), "utf8");
     const text = /<p id="method-callout-text"[^>]*>([^<]*)<\/p>/.exec(html)?.[1] ?? "";
-    assert.ok(text.length > 0, `docs/${file}: 안내 문구가 비었다`);
+    assert.ok(text.length > 0, `${SITE}/${file}: 안내 문구가 비었다`);
   // 3단계에서 시세표를 열한 행에서 다섯 행으로 접어 요약까지의 길을 줄여 놨다.
   // 이 안내가 길어지면 그때 번 자리를 도로 까먹는다. 지금 91자, 모바일 세 줄.
-    assert.ok(text.length <= 120, `docs/${file}: 안내가 ${text.length}자다 - 첫 화면을 도로 잡아먹는다`);
+    assert.ok(text.length <= 120, `${SITE}/${file}: 안내가 ${text.length}자다 - 첫 화면을 도로 잡아먹는다`);
   }
 });
 
@@ -95,14 +96,14 @@ test("한국어 화면은 한국어로, 영어 화면은 영어로 말한다", a
 
 test("어느 화면에서든 안내는 120자 안이다 - 질문 화면도 데이터 앞을 막지 않게 (#47)", async () => {
   const { readdir } = await import("node:fs/promises");
-  const files = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html"));
+  const files = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html"));
   let seen = 0;
   for (const file of files) {
-    const html = await readFile(path.join(root, "docs", file), "utf8");
+    const html = await readFile(path.join(root, SITE, file), "utf8");
     const text = /<p id="method-callout-text"[^>]*>([^<]*)<\/p>/.exec(html)?.[1];
     if (text === undefined) continue;
     seen += 1;
-    assert.ok(text.length <= 120, `docs/${file}: 안내가 ${text.length}자다`);
+    assert.ok(text.length <= 120, `${SITE}/${file}: 안내가 ${text.length}자다`);
   }
   assert.ok(seen >= 52, `안내를 단 화면이 ${seen}장뿐이다 - 검사가 아무것도 안 본다`);
 });

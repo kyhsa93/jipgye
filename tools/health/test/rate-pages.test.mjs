@@ -6,6 +6,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { RATE_PAGES, buildRatePage } from "../../../scripts/build-rate-pages.ts";
 import { stampHtml } from "../../../scripts/updated-stamp.ts";
+import { SITE } from "../../../test/helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -16,14 +17,14 @@ test("커밋된 상품군별 페이지가 지금 원본·데이터로 찍은 결
 
   for (const page of RATE_PAGES) {
     const built = buildRatePage(baseHtml, page, rates);
-    const committed = await read(`docs/${page.file}`);
+    const committed = await read(`${SITE}/${page.file}`);
     // 틀에는 기준일이 비어 있고 날짜는 build-updated-stamp가 나중에 찍는다. 커밋본의 날짜를 같이 찍어 견준다.
     const ymd = /data-updated="(\d{4}-\d{2}-\d{2})"/.exec(committed)?.[1];
-    assert.ok(ymd, `docs/${page.file}에 기준일이 없다`);
+    assert.ok(ymd, `${SITE}/${page.file}에 기준일이 없다`);
     assert.equal(
       committed,
       stampHtml(built, ymd),
-      `docs/${page.file}이 원본과 어긋납니다. node scripts/build-rate-pages.ts를 실행하세요.`
+      `${SITE}/${page.file}이 원본과 어긋납니다. node scripts/build-rate-pages.ts를 실행하세요.`
     );
   }
 });

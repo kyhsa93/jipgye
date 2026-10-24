@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -76,7 +77,7 @@ test("스크롤할 때마다 남은 쪽을 다시 센다", async () => {
 });
 
 test("모든 페이지가 nav.js를 부른다", async () => {
-  const docs = path.join(root, "docs");
+  const docs = path.join(root, SITE); // 나가는 사이트 전체(#510)
   for (const file of (await readdir(docs)).filter((f) => f.endsWith(".html"))) {
     const html = await readFile(path.join(docs, file), "utf8");
     assert.ok(html.includes('src="./nav.js"'), `docs/${file}이 nav.js를 부르지 않는다`);
@@ -116,7 +117,7 @@ test("영어 화면에서는 건너뛰기 링크도 영어다", async () => {
 });
 
 test("모든 페이지에 본문으로 건너뛰는 길이 있다", async () => {
-  const docs = path.join(root, "docs");
+  const docs = path.join(root, SITE); // 나가는 사이트 전체(#510)
   for (const file of (await readdir(docs)).filter((f) => f.endsWith(".html"))) {
     const html = await readFile(path.join(docs, file), "utf8");
     assert.match(html, /<a class="skip-link" href="#content"/, `docs/${file}에 건너뛰기 링크가 없다`);

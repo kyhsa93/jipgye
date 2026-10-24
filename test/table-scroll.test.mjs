@@ -3,12 +3,13 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
+import { SITE } from "./helpers/site-root.mjs";
 
 // #178: 가로로 넘치는 표(.table-scroll)에 오른쪽 페이드 신호. 실측(scrollWidth)은 headless 브라우저가
 // 필요해 이 시험에 없다 - 여기서는 (1) 훅이 모든 .table-scroll 화면에 붙는지 (2) 토글 논리 (3) CSS 규칙을 본다.
 
 const root = path.resolve(import.meta.dirname, "..");
-const docs = path.join(root, "docs");
+const docs = path.join(root, SITE); // 나가는 사이트 전체(#510)
 
 function fakeTable({ scrollWidth, clientWidth, scrollLeft = 0, current = null }) {
   const classes = new Set();

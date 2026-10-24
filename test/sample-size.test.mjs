@@ -9,6 +9,7 @@ import { regionTableHtml } from "../scripts/build-district-change.ts";
 import { leadSentence as conversionLead } from "../scripts/conversion.ts";
 import { controlSentence, gridTableHtml, leadSentence as recordLead, survivalSentence } from "../scripts/record-high.ts";
 import { readFixture } from "./helpers/fixture-data.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 /**
  * 값 옆에 표본 수가 없는 칸 4종 (#172). 규칙은 하나다 - 값 바로 옆, 같은 문장 안에 건수와 단위.
@@ -29,7 +30,7 @@ const block = (html, name) => html.match(new RegExp(`<!--prerender:${name}-->([\
 
 // --- 1. 구 전세가율 25장 ----------------------------------------------------------
 
-const districtPages = Object.entries(DISTRICT_SLUGS).map(([name, slug]) => ({ name, file: `docs/district-${slug}.html` }));
+const districtPages = Object.entries(DISTRICT_SLUGS).map(([name, slug]) => ({ name, file: `${SITE}/district-${slug}.html` }));
 
 async function ratioSentenceOf({ name, file }) {
   const html = await read(file);
@@ -96,10 +97,10 @@ test("district 전세가율 시험: 건수 없이 '개'만 있는 합성 문장(
 const RATIO_CARD = /<div class="label">전세가율<\/div><div class="value">([^<]*)<\/div>(?:<div class="sub">([^<]*)<\/div>)?/g;
 
 test("서울 전체 전세가율 카드: 정적 HTML의 % 카드마다 같은 카드 안에 건수가 있다", async () => {
-  const files = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html") && !f.startsWith("district-"));
+  const files = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html") && !f.startsWith("district-"));
   let cards = 0;
   for (const f of files) {
-    for (const m of (await read(`docs/${f}`)).matchAll(RATIO_CARD)) {
+    for (const m of (await read(`${SITE}/${f}`)).matchAll(RATIO_CARD)) {
       cards += 1;
       assert.ok(PERCENT.test(m[1]) ? COUNT_GEON.test(m[2] ?? "") : true, `${f}: 전세가율 값 옆에 건수가 없다: ${m[0]}`);
     }
@@ -109,7 +110,7 @@ test("서울 전체 전세가율 카드: 정적 HTML의 % 카드마다 같은 �
 
 test("서울 전체 전세가율 카드: 빌드와 브라우저 템플릿이 같은 표기를 만든다 (드리프트)", async () => {
   const [template, ...copies] = await Promise.all(
-    ["realestate.html", "apartment-jeonse.html", "budget-3eok.html", "budget-20eok.html"].map((f) => read(`docs/${f}`))
+    ["realestate.html", "apartment-jeonse.html", "budget-3eok.html", "budget-20eok.html"].map((f) => read(`${SITE}/${f}`))
   );
   assert.match(template, /t\("thSale"\)\} \$\{t\("countUnit"\)\(resolveMetric\(overall, "sale"\)\.metric\.transactionCount\)\} · /);
   for (const c of copies) assert.equal(c.includes('card(\n          t("thRatio")'), true, "복제 화면의 템플릿이 원본과 다르다");
@@ -171,7 +172,7 @@ test("switch-house 권역표: 값이 있으면 % 옆에 칸 수, 값이 비면 %
 // --- 4. record-high 리드 문단 -------------------------------------------------------
 
 test("record-high: 리드 문단 3개의 % 문장마다 같은 문장 안에 건수가 있다", async () => {
-  const [html, data] = await Promise.all([read("docs/record-high.html"), json("docs/data/record-high.json")]);
+  const [html, data] = await Promise.all([read(`${SITE}/record-high.html`), json("docs/data/record-high.json")]);
   for (const name of ["recordLead", "recordControl", "recordSurvival"]) {
     const text = block(html, name);
     assert.ok(text, `${name} 문단이 비었다`);

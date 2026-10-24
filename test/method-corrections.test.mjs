@@ -4,6 +4,7 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { words, windows } from "../scripts/prose-share.ts";
 import { CLOSED_ISSUES, MERGED_PRS, EXCLUDED } from "../scripts/check-corrections-refs.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 // #159: method.html의 「고친 오류」 한 절. 법무 조건(이슈 댓글 7개)을 구조·금지어로 못 박는다.
 // 이슈·PR이 실제로 닫혔고 병합됐는지는 네트워크가 필요해 scripts/check-corrections-refs.mjs(수동)가 본다.
@@ -158,8 +159,8 @@ test("절의 문장은 docs/*.html 어디에도 같은 8단어 창으로 없다"
   let rest = html;
   for (const s of [...spans].sort((a, b) => b.start - a.start)) rest = rest.slice(0, s.start) + rest.slice(s.end);
   const others = [["method.html(절 밖)", rest]];
-  for (const f of (await readdir(path.join(root, "docs"))).filter((n) => n.endsWith(".html") && n !== "method.html")) {
-    others.push([f, await readFile(path.join(root, "docs", f), "utf8")]);
+  for (const f of (await readdir(path.join(root, SITE))).filter((n) => n.endsWith(".html") && n !== "method.html")) {
+    others.push([f, await readFile(path.join(root, SITE, f), "utf8")]);
   }
   for (const [name, text] of others) {
     const w = windows(words(text, { maskNumbers: true }));
@@ -282,8 +283,8 @@ test("Release 링크 문장은 docs/*.html 어디에도 같은 8단어 창으로
   let rest = html;
   for (const para of paras) rest = rest.replace(para, "");
   const others = [["method.html(링크 문단 밖)", rest]];
-  for (const f of (await readdir(path.join(root, "docs"))).filter((n) => n.endsWith(".html") && n !== "method.html")) {
-    others.push([f, await readFile(path.join(root, "docs", f), "utf8")]);
+  for (const f of (await readdir(path.join(root, SITE))).filter((n) => n.endsWith(".html") && n !== "method.html")) {
+    others.push([f, await readFile(path.join(root, SITE, f), "utf8")]);
   }
   for (const [name, text] of others) {
     const w = windows(words(text, { maskNumbers: true }));

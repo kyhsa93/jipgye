@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 const REALESTATE = {
   updatedAt: "2026-08-21T00:00:00.000Z",
@@ -67,7 +68,7 @@ test("월세 카드는 보증금과 거래량 사이에 있다", async () => {
   // 요청받은 자리다. 보증금 → 월세 → 거래량 순으로 읽혀야, 세 카드가 "얼마를 맡기고
   // 매달 얼마를 내는 계약이 몇 건 있었나" 한 문장으로 읽힌다.
   const { readFile } = await import("node:fs/promises");
-  const html = await readFile("docs/apartment-rent.html", "utf8");
+  const html = await readFile(`${SITE}/apartment-rent.html`, "utf8");
   const at = (id) => html.indexOf(`id="${id}-card"`);
   assert.ok(at("trend") > 0 && at("rent") > 0 && at("volume") > 0);
   assert.ok(at("rent") > at("trend"), "월세 카드가 보증금 카드보다 위에 있습니다");

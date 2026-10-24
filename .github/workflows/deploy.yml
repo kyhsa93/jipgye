@@ -1,41 +1,54 @@
-name: Build site
+name: Deploy site
 
-# 구조 B-3(#509, 부모 #505, #272 흡수): main HEAD(코드 + 데이터)에서 사이트를 build/site 로 새로 만들고, 기존 배포 산출물(= 커밋된 docs/)과
-# 파일별 sha256 을 맞댄다. **배포는 하지 않는다** - 이 단계의 실제 게시는 daily-update.yml·summarize.yml·static.yml 이 그대로 한다.
-# 배포 환경(github-pages)·pages/id-token 권한·deploy-pages 를 이 파일에 두는 순간 두 번째 배포 경로가 켜지고 컷오버(B4)가 된다
-# (test/deploy-yml.test.mjs 가 막는다). 이름이 deploy.yml 인 것은 B4 에서 이 파일이 배포를 맡기 때문이고, 그때까지는 "산출 해시만" 만든다.
+# 구조 B-4(#510, 부모 #505): 사이트를 만들고 게시하는 **유일한** 워크플로다. 컷오버 이후 main 은 생성 HTML(docs/*.html 중 생성 53장)을 들고 있지 않다 -
+# 이 워크플로가 main HEAD(코드 + 데이터)를 받아 build/site 로 새로 만들고(scripts/render-pipeline.ts, B2) 시험한 뒤 Pages 에 올린다. 수집(daily-update.yml)·요약(summarize.yml)은
+# 데이터(docs/data·raw)만 커밋하고 렌더·시험·배포를 하지 않는다 - 그래서 수집은 렌더·시험 실패에 막히지 않고(2026-09-02~10-01 28일 시계열 유실의 모양), 기능 병합은 데이터 커밋과
+# 같은 파일을 건드리지 않는다.
 #
-# 2틱 대조(합격선): 자연 full 틱(Daily -> Summarize) 두 번에서 이 워크플로의 "산출 해시 대조" 스텝이 연속으로 초록이고, 요약의 목록 해시가
-# 두 줄 모두 A 와 B 가 같으면 통과다(수동 dispatch 는 증빙에 안 쓴다). 같은 SHA 의 재실행(Re-run) 목록끼리는 같은 명령으로 맞댄다:
-#   node scripts/site-hashes.ts compare <내려받은 a.txt> <다른 실행의 b.txt>
-# 렌더·해시가 수집 job 과 갈라져 이 워크플로만 재실행할 수 있다는 점이 #272 의 기대 효과 2번이다.
+# 트리거 (cto 판정 2026-10-24):
+#  - push main(경로 제한 없음): 기능·문서·틀 병합. 수집 워크플로의 봇 커밋은 GITHUB_TOKEN 푸시라 push 이벤트를 만들지 않는다 - 그 몫은 아래 workflow_run 이다.
+#  - workflow_run [Daily update, Summarize] completed(취소는 제외): 수집·요약이 실패로 끝나도 이미 커밋한 데이터가 있을 수 있어 돌린다.
+#  - workflow_dispatch: **롤백 전용**이다. 평소에 손으로 돌리지 않는다(실행 전 알림). 수동 실행의 증빙은 자연 틱 확인에 쓰지 않는다.
+# 어느 이벤트든 `main` 의 지금 HEAD 를 체크아웃한다(이벤트 SHA 가 아니다): 늦게 도는 실행도 가장 새 코드+데이터로 한 번에 만든다.
+#
+# 게이트 = 렌더 폴백 없음 + build/site 기준 시험(`npm run test:site`) 둘뿐이다. 기능 시험(틀·스크립트·워크플로 글자)은 PR 의 test.yml 에 남는다 - 데이터 배포가 기능 시험
+# 실패에 막히지 않게 한다(cto). 배포 전 별도 정합 점검은 두지 않는다(#510 cpo 조건 A 결정): 사이트는 한 체크아웃의 코드+데이터에서만 나오므로 "커밋된 HTML 과 데이터가 어긋남"이라는
+# 상태가 존재하지 않고(B1 이 그 짝 검사를 tools/health 로 옮긴 이유), 모양 검사는 위 시험이, 렌더 실패는 폴백 차단이 맡는다.
+#
+# 롤백 (되돌리기): main 에서 이 컷오버 커밋을 revert 1건으로 되돌린다 - 생성 HTML·static.yml·옛 daily-update/summarize·옛 deploy.yml(비배포 병행판)이 복원된다. 그 revert 푸시가
+# 옛 static.yml 을 돌려 docs/ 를 게시하는데, 복원된 docs/ 의 생성 장은 컷오버 시점의 낡은 것이다 - 그래서 이어서 Daily update 를 한 번 수동 실행해(옛 파이프라인이 다시 렌더·커밋·배포)
+# 데이터를 따라잡는다. 순서와 확인은 PR #510 본문 「롤백」에 있다.
 on:
   push:
     branches: [main]
   workflow_run:
     workflows: ["Daily update", "Summarize"]
     types: [completed]
+  workflow_dispatch:
 
-# 읽기뿐이다. 시크릿도 안 쓴다 - 렌더는 커밋된 데이터만 읽고 외부 API 를 부르지 않는다(env 의 BUILD_NOW 하나가 전부).
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
-# digest-pipeline(수집·요약 직렬화)·pages(static.yml 의 배포)와 다른 그룹이다. 이 워크플로는 쓰는 것이 없어 수집과 겹쳐 돌아도 무해하고,
-# 수집 틱을 기다리게 하지도 않는다. 같은 SHA 에 배포가 둘 겹치는 일은 배포가 없으니 생기지 않는다.
+# 배포는 한 줄이다. digest-pipeline(수집·요약 직렬화)과 다른 그룹이다 - 배포가 수집을 기다리게 하지도, 수집이 배포를 막게 하지도 않는다.
+# cancel-in-progress: false 라 올라가는 중인 배포를 끊지 않고, 대기 중인 실행은 가장 새 것 하나만 남는다(그 실행이 main HEAD 를 받으므로 놓치는 데이터가 없다).
 concurrency:
-  group: site-build
+  group: pages
   cancel-in-progress: false
 
 jobs:
-  build:
-    # 취소된 상위 실행의 후속은 돌지 않는다. 실패한 Daily 도 데이터는 이미 커밋했을 수 있어 돌린다.
+  deploy:
+    # 취소된 상위 실행의 후속은 돌지 않는다. 실패한 Daily/Summarize 도 데이터는 이미 커밋했을 수 있어 돌린다.
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion != 'cancelled'
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      # push 는 그 커밋을, workflow_run 은 지금의 main 을 받는다(daily-update·summarize 와 같다). 어느 쪽이든 아래 두 산출물은 이 체크아웃 하나에서 나온다.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.sha }}
+          ref: main
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -43,48 +56,54 @@ jobs:
 
       - run: npm ci
 
-      # 예산 장의 "최근 6개월" 창이 Date.now() 를 읽는 유일한 렌더 입력이다(build-budget-pages.ts). 그대로 두면 UTC 자정을 넘겨 늦게 도는 실행(크론이
-      # 2~6시간 늦는다)이 커밋된 docs/ 와 다른 날짜로 그려 오탐을 낸다. HEAD 커밋 시각으로 못박는다 - 데이터를 커밋한 쪽의 렌더가 그 직전이다.
-      # 하루 단위 값이라 분 단위 차이는 영향이 없다. B4 에서 배포 산출물의 시각을 무엇으로 할지는 거기서 정한다(이 값은 대조용이다).
+      # 예산 장의 "최근 6개월" 창이 Date.now() 를 읽는 유일한 렌더 입력이다(build-budget-pages.ts). 그대로 두면 UTC 자정을 넘겨 늦게 도는 실행(크론이 2~6시간 늦는다)과
+      # 같은 데이터의 재실행이 다른 날짜로 그린다. HEAD 커밋 시각으로 못박는다(#510 결정, cto): 같은 HEAD 는 언제 돌려도 같은 바이트이고(재실행·롤백 확인이 된다),
+      # 데이터를 커밋한 쪽의 렌더가 그 직후다. 하루 단위 값이라 분 단위 차이는 영향이 없다. 창의 UTC 날짜가 바뀌는 시각을 낀 기능 병합은 그날 예산 장·방법 장의 건수가 하루치
+      # 만큼 움직일 수 있다(의도: 같은 입력이면 같은 출력, 시계가 아니라 커밋이 기준).
       - name: 렌더 시각 고정
         run: echo "BUILD_NOW=$(git log -1 --format=%cI HEAD)" >> "$GITHUB_ENV"
 
-      # 출력 위치는 build/site 하나로 고정한다(사용자 입력 아님, #508 cto). render-pipeline 이 docs/ 를 복사한 뒤 여섯 단계를 그 복사본에서 돌린다.
-      # React 렌더가 실패하면 legacy 로 폴백한다 - 이 워크플로의 맨 끝 "렌더 폴백 반영"이 그 날을 빨갛게 표시한다.
+      # 출력 위치는 build/site 하나로 고정한다(사용자 입력 아님, #508 cto). render-pipeline 이 docs/(손으로 고치는 틀 14장·정적 자산·data)를 복사한 뒤
+      # 여섯 단계를 그 복사본에서 돌려 생성 53장을 만든다. React 렌더가 실패하면 legacy 로 폴백하는데, 폴백은 배포하지 않는다(아래 단계).
       - name: 사이트 생성 (build/site)
         id: render
         run: node scripts/render-pipeline.ts --out=build/site
 
-      # A = 커밋된 docs/(기존 배포가 올리는 것), B = 방금 만든 build/site. 어긋나도 아래 테스트·목록 업로드는 돈다 - 맨 끝 "해시 어긋남 반영"이 빨갛게 끝낸다.
-      - name: 산출 해시 대조
-        id: hashes
-        continue-on-error: true
+      # 게이트 1: 렌더 폴백이면 배포하지 않는다. 전에는 폴백 산출물을 배포하고 맨 끝에서 빨갛게 끝냈다(수집 job 이 커밋 뒤에 렌더했기 때문 - 커밋은 이미 끝나 있었다).
+      # 이제 수집은 커밋으로 끝나 있으므로 막아도 데이터는 안전하고, 사이트는 직전 배포에 머문다. 원인은 위 '사이트 생성' 단계의 1차 시도 로그에 있다.
+      - name: 렌더 폴백이면 배포하지 않는다
+        if: ${{ steps.render.outputs.fallback == 'true' }}
         run: |
-          echo "HEAD $(git rev-parse HEAD)"
-          node scripts/site-hashes.ts compare docs build/site --out-dir=build/hashes
-
-      # 최종 모양(B4)에서 배포 앞의 게이트가 될 시험이다. 지금은 커밋된 docs/ 를 읽으므로 test.yml 과 같은 신호이고, 배포는 이 결과를 기다리지 않는다.
-      - name: 테스트
-        run: npm test
-
-      - name: 산출 해시 목록 업로드
-        if: ${{ !cancelled() && steps.hashes.outcome != 'skipped' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: site-hashes-${{ github.run_id }}-${{ github.run_attempt }}
-          path: build/hashes
-          retention-days: 30
-          if-no-files-found: error
-
-      # 아래 반영 단계는 모두 `!cancelled() &&` 로 시작한다 - 앞 반영 단계가 먼저 exit 1 해도 뒤 반영이 건너뛰어지지 않아 원인이 한 run 에 다 보인다.
-      - name: 렌더 폴백 반영
-        if: ${{ !cancelled() && steps.render.outputs.fallback == 'true' }}
-        run: |
-          echo "::error::React 렌더 실패 → legacy 로 폴백했음 - 위 '사이트 생성 (build/site)' 단계의 1차 시도 로그를 본다. 폴백 산출은 기존 배포와 다를 수 있다"
+          echo "::error::React 렌더 실패 → legacy 로 폴백했다 - 배포하지 않는다(사이트는 직전 배포에 머문다). 위 '사이트 생성 (build/site)' 단계의 1차 시도 로그를 본다"
           exit 1
 
-      - name: 해시 어긋남 반영
-        if: ${{ !cancelled() && steps.hashes.outcome == 'failure' }}
+      # 게이트 2: build/site 기준 시험. test/helpers/site-root.mjs 를 부르는 시험 파일만 돈다(scripts/site-test-files.mjs) - 나가는 사이트 67장이 읽히는 모양인지 본다.
+      # 하한은 test/COUNT-site 다(개수 래칫). 기능 시험 전체(`npm test`)는 여기서 돌지 않는다.
+      - name: 테스트 (build/site 기준)
+        run: npm run test:site
+
+      # 데이터 건강 점검(#507): 데이터와 그 생성물의 모양을 보는 tools/health 검사. **비차단**이다 - 실패해도 배포는 그대로 나가고(데이터는 이미 커밋돼 있다), 맨 끝 반영 단계가
+      # run 을 빨갛게 끝낸다. 지우거나 약화하지 않는다. `--ignore-scripts` 는 pretest(사이트를 다시 만든다)를 건너뛴다 - 위에서 만든 build/site 를 그대로 읽는다.
+      - name: 데이터 건강 점검 (비차단)
+        id: health
+        continue-on-error: true
+        run: npm run health --ignore-scripts
+
+      - name: Pages 배포
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - name: Pages 아티팩트 업로드
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: "./build/site"
+
+      - name: Pages에 배포
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
+
+      # 데이터 건강 점검이 실패한 날의 표시다. 배포가 끝난 뒤에야 run 을 빨갛게 끝낸다 - 점검은 배포를 막지 않았다. `!cancelled() &&` 로 시작한다(#509).
+      - name: 데이터 건강 점검 실패 반영
+        if: ${{ !cancelled() && steps.health.outcome == 'failure' }}
         run: |
-          echo "::error::build/site 가 커밋된 docs/ 와 다르다 - 위 '산출 해시 대조' 단계의 어긋난 파일 목록을 본다. 이 워크플로는 배포하지 않으므로 사이트는 영향이 없다"
+          echo "::error::데이터 건강 점검(tools/health)이 실패했다 - 위 '데이터 건강 점검 (비차단)' 단계의 로그를 본다. 이 점검은 배포를 막지 않았고 사이트는 이미 올라갔다"
           exit 1

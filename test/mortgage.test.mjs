@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { apartmentOptions, loanHeadSentence, loanSentence, monthlyPayment, rateSpread } from "../scripts/mortgage.ts";
 import { budgetLoanHtml } from "../scripts/prerender.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -101,12 +102,12 @@ test("한도는 가정하지 않고 1억당 값으로 말한다", () => {
 });
 
 test("예산 페이지에 월 상환액 문단이 붙어 있다", async () => {
-  const html = await readFile(path.join(root, "docs/budget-10eok.html"), "utf8");
+  const html = await readFile(path.join(root, `${SITE}/budget-10eok.html`), "utf8");
   assert.match(html, /<p class="budget-loan" data-prerendered(="")?>/, "예산 페이지에 문단이 없다(또는 화면이 다시 그릴 때 지워지지 않게 하는 표시가 없다)");
   // 1억당 값·금리 범위는 열여덟 장 공통이라 method.html 한 자리로 옮겼다(#66). 장에는 한눈에 줄과 링크가 남는다.
   assert.doesNotMatch(html, /1억을 30년 원리금균등으로 빌리면 매달/, "옮긴 문단이 장에 또 실렸다");
   assert.match(html, /href="\.\/method\.html#budget-rules-loan"/);
   assert.match(html, /answer-label">1억을 빌리면 매달/);
-  const method = await readFile(path.join(root, "docs/method.html"), "utf8");
+  const method = await readFile(path.join(root, `${SITE}/method.html`), "utf8");
   assert.match(method, /id="budget-rules-loan"[\s\S]*1억을 30년 원리금균등으로 빌리면 매달/, "옮겨 간 자리에 문단이 없다");
 });

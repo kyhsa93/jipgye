@@ -2,6 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
+import { SITE, SITE_DIR } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const css = () => readFile(path.join(root, "src/css/legacy.css"), "utf8");
@@ -134,9 +136,9 @@ test("스크린리더만 읽는 자리가 화면에서는 안 보인다", async 
 test("걸러낸 결과를 소리로도 알린다", async () => {
   const { readFile } = await import("node:fs/promises");
   const has = async (file, id) => {
-    const html = await readFile(path.join(root, "docs", file), "utf8");
+    const html = await readFile(path.join(root, SITE, file), "utf8");
     const tag = new RegExp(`<[^>]*id="${id}"[^>]*>`).exec(html)?.[0] ?? "";
-    assert.match(tag, /role="status"/, `docs/${file}의 #${id}가 알림 영역이 아니다`);
+    assert.match(tag, /role="status"/, `${SITE}/${file}의 #${id}가 알림 영역이 아니다`);
   };
   await has("index.html", "realestate-status");
   await has("index.html", "news-status");
@@ -288,7 +290,7 @@ test("머리 버튼은 어느 장이든 공유를 갖는다 - 구운 HTML에 들
   const nav = await rf(new URL("../docs/nav.js", import.meta.url), "utf8");
   assert.doesNotMatch(nav, /createElement\("button"\)|id = "share-button"/, "nav.js가 공유 버튼을 다시 만든다");
   assert.match(nav, /getAttribute\("data-share"\) === "page"\) return;/, "장이 직접 거는 다섯 장에 겹쳐 건다");
-  const docs = new URL("../docs/", import.meta.url);
+  const docs = pathToFileURL(`${SITE_DIR}/`); // 나가는 사이트 전체(#510)
   let seen = 0;
   let self = 0;
   for (const f of (await readdir(docs)).filter((x) => x.endsWith(".html"))) {
@@ -339,7 +341,7 @@ test("data-share=\"page\"인 장에는 nav.js가 동작을 걸지 않는다 (#30
 
 const docsPages = async () => {
   const { readFile: rf, readdir } = await import("node:fs/promises");
-  const docs = new URL("../docs/", import.meta.url);
+  const docs = pathToFileURL(`${SITE_DIR}/`); // 나가는 사이트 전체(#510)
   const files = (await readdir(docs)).filter((x) => x.endsWith(".html")).sort();
   return Promise.all(files.map(async (f) => [f, await rf(new URL(f, docs), "utf8")]));
 };

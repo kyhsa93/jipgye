@@ -4,6 +4,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { SITE } from "../../../test/helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
 const read = (file) => readFile(path.join(root, file), "utf8");
@@ -15,7 +16,7 @@ const block = (html, name) => html.match(new RegExp(`<!--prerender:${name}-->([\
 
 test("jeonse-vs-wolse: 대출 금리 문장의 상품·옵션 수가 conversion.json·rates.json과 같고 '평균'이라 쓰지 않는다", async () => {
   const [html, data, rates] = await Promise.all([
-    read("docs/jeonse-vs-wolse.html"),
+    read(`${SITE}/jeonse-vs-wolse.html`),
     json("docs/data/conversion.json"),
     json("docs/data/rates.json"),
   ]);

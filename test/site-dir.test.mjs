@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
@@ -132,7 +132,10 @@ test("render-pipeline --out: docs/ 는 한 바이트도 안 바뀌고 출력 디
   assert.deepEqual([...after], [...before], "docs/ 는 그대로");
 
   const rendered = tree(out);
-  assert.deepEqual([...rendered.keys()], [...before.keys()], "파일 집합 동일 - 더하지도 빼지도 않는다");
+  // (#510, 구조 B-4) main 의 docs/ 는 생성 53장을 안 들고 있다 - 출력 디렉터리 = docs/ 의 파일 집합(소스 14장·정적 자산·data) + 생성 53장이다.
+  assert.deepEqual([...before.keys()].filter((f) => GENERATED.test(f)), [], "main 의 docs/ 에 생성 장이 있다 - 산출물은 build/site 에만 생긴다");
+  assert.equal([...rendered.keys()].filter((f) => GENERATED.test(f)).length, 53, "생성 장이 53장이 아니다");
+  assert.deepEqual([...rendered.keys()].filter((f) => !GENERATED.test(f)), [...before.keys()], "파일 집합 동일 - docs/ 의 것에 생성 53장만 더해진다");
   const htmls = [...rendered.keys()].filter((f) => f.endsWith(".html"));
   assert.equal(htmls.length, 67);
   // 렌더가 만지지 않는 것(스타일시트·스크립트·SW·매니페스트·아이콘·데이터)은 복사 그대로 - 배포 산출물에 정적 자산이 들어 있다는 뜻이다.
@@ -140,34 +143,34 @@ test("render-pipeline --out: docs/ 는 한 바이트도 안 바뀌고 출력 디
     if (f.endsWith(".html")) continue;
     assert.equal(rendered.get(f), before.get(f), `${f} 바이트`);
   }
+  // 손으로 고치는 틀 14장은 docs/ 에도 있다(소스) - 생성 장만 출력 디렉터리에만 있다.
+  assert.equal(htmls.filter((f) => !GENERATED.test(f)).length, 14);
   for (const f of ["style.css", "nav.js", "sw.js", "manifest.webmanifest"]) assert.ok(rendered.has(f), `${f} 가 출력 디렉터리에 있다`);
 });
 
 // (#520) 이 시험은 처음에 실제 docs/data 로 돌았다(생성 53장 전부). 그 판은 tools/health/test/site-dir.test.mjs 로 옮겼다(비차단) - 실제 데이터의 모양이 바뀌면
 // (예산 밴드의 min10k 가 어긋나 build-budget-pages 가 '3억대' 장을 건너뛰면 build-updated-stamp 가 budget-3eok.html 이 없다고 던진다) 기능 PR 시험이 막혔다.
-// 여기는 같은 약속("생성 페이지는 입력이 아니다")을 고정 데이터로 지킨다: 저장소 복사본(test/helpers/fixture-site.mjs)에서 `--out` 판과 생성 페이지를 걷어낸 판을 같은 데이터로 렌더해 맞댄다.
+// 여기는 같은 약속("생성 페이지는 입력이 아니다")을 고정 데이터로 지킨다: 저장소 복사본(test/helpers/fixture-site.mjs)에서 만든 전체 산출을 같은 데이터로 한 번 더 그려 맞댄다.
 // (#524) 고정 데이터(test/fixtures/site/data/budget-deals.json)에 예산 밴드 18개(3억대~20억대, 오늘 데이터를 줄여 얼린 것)를 두어 build-budget-pages 가 18장을 만든다 -
-// 그래서 이 판도 예산 18장을 걷어내고 53장 전부를 다시 그려 맞댄다. health 판(실제 docs/data)과 단언이 같고 입력만 다르다.
-test("생성 53장이 없는 복사본에서 고정 데이터로 그려도 전체를 그린 것과 같다 - 생성 페이지는 입력이 아니다 (B4에서 docs/ 의 생성물을 걷어내도 안전)", async () => {
+// 그래서 이 판도 예산 18장을 포함한 53장 전부를 본다. health 판(실제 docs/data)과 단언이 같고 입력만 다르다.
+// (#510, 구조 B-4) 방향이 뒤집혔다. 예전에는 docs/ 에 커밋된 생성 53장을 "걷어낸" 복사본에서 그려도 같음을 보였다(걷어내도 안전함의 증빙). main 이 생성 장을 안 들고 있게 된 지금,
+// 같은 약속의 남은 쪽은 "이미 생성 장이 있는 디렉터리 위에 다시 그려도 같다"이다 - 롤백(옛 docs/ 복원)이나 한 디렉터리를 두 번 렌더하는 길에서 낡은 생성 장이 입력으로 새지 않는다.
+test("생성 53장이 이미 있는 디렉터리 위에 다시 그려도 처음 그린 것과 같다 - 생성 페이지는 입력이 아니다 (B4: main 의 docs/ 에는 생성 장이 없다)", async () => {
   const site = buildFixtureSite({ steps: [] });
   try {
+    assert.deepEqual(readdirSync(path.join(site.root, "docs")).filter((f) => GENERATED.test(f)), [], "고정 데이터 작업 폴더의 docs/ 에 생성 장이 있다 - 생성 장은 main 에 없다");
     const env = { ...pipelineEnv() };
     const full = path.join(tmp(), "full");
     await run(process.execPath, [path.join(site.root, "scripts/render-pipeline.ts"), `--out=${full}`], { env });
+    assert.equal(readdirSync(full).filter((f) => GENERATED.test(f)).length, 53, "처음 그린 산출에 생성 53장이 있어야 한다");
 
-    const bare = path.join(tmp(), "bare");
-    await run(process.execPath, [path.join(site.root, "scripts/stage-site.ts"), `--out=${bare}`], { env });
-    let removed = 0;
-    for (const f of readdirSync(bare)) {
-      if (!GENERATED.test(f)) continue;
-      rmSync(path.join(bare, f));
-      removed += 1;
-    }
-    assert.equal(removed, 53);
+    // 처음 그린 산출(생성 53장 포함)을 통째로 복사해 그 자리에서 여섯 단계를 다시 돌린다.
+    const again = path.join(tmp(), "again");
+    cpSync(full, again, { recursive: true });
     for (const step of RENDER_STEPS) {
-      await run(process.execPath, [path.join(site.root, step)], { env: { ...env, [SITE_DIR_ENV]: bare } });
+      await run(process.execPath, [path.join(site.root, step)], { env: { ...env, [SITE_DIR_ENV]: again } });
     }
-    assert.deepEqual([...tree(bare)], [...tree(full)]);
+    assert.deepEqual([...tree(again)], [...tree(full)]);
   } finally {
     site.cleanup();
   }

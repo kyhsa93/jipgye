@@ -182,7 +182,8 @@ test("존재하지 않는 단계는 실패다(조용히 건너뛰지 않는다)"
   assert.equal(await fx.file("output"), `${FALLBACK_OUTPUT}=false\n`);
 }));
 
-test("기본 단계는 지금까지 워크플로가 부르던 여섯 스크립트의 순서 그대로이고 update-all의 렌더 꼬리와 같다", async () => {
+// (#510, 구조 B-4) 뒤집었다: 이전에는 update-all 의 렌더 꼬리가 기본 단계와 같다고 맞댔다. 이제 update-all(수집 + 데이터 커밋)은 렌더를 안 부른다 - 렌더는 deploy.yml 의 일이다.
+test("기본 단계는 지금까지 워크플로가 부르던 여섯 스크립트의 순서 그대로이고 update-all 은 이 여섯을 부르지 않는다 (렌더는 deploy.yml 의 일)", async () => {
   assert.deepEqual(RENDER_STEPS, [
     "scripts/prerender.ts",
     "scripts/build-rate-pages.ts",
@@ -192,22 +193,26 @@ test("기본 단계는 지금까지 워크플로가 부르던 여섯 스크립�
     "scripts/build-updated-stamp.ts",
   ]);
   const all = [...(await read("scripts/update-all.mjs")).matchAll(/run\("node (scripts\/[a-z-]+\.(?:mjs|ts))"\)/g)].map((m) => m[1]);
-  assert.deepEqual(all.slice(all.indexOf("scripts/prerender.ts")), RENDER_STEPS, "update-all의 렌더 순서와 기본 단계가 갈라졌다");
+  assert.ok(all.length >= 20, `update-all 이 부르는 스크립트를 ${all.length}개밖에 못 읽었다`);
+  assert.deepEqual(all.filter((s) => RENDER_STEPS.includes(s)), [], "update-all 이 렌더 스크립트를 부른다 - 수집·커밋이 렌더에 묶이고 docs/ 에 생성 HTML 이 생긴다(#510)");
+  assert.ok(!all.includes("scripts/render-pipeline.ts"));
 });
 
 // #427: 위 시험은 소스의 목록과 시험 안의 목록을 맞댈 뿐이라 둘이 같이 옛 이름으로 남으면 초록이다(개명이 두 곳을 같이 놓치면 무인 렌더만 죽는다).
 // 목록이 가리키는 파일이 저장소에 실제로 있는지를 따로 본다 - 확장자를 박지 않고 목록에 적힌 이름 그대로 연다.
-test("RENDER_STEPS와 update-all의 렌더 꼬리가 가리키는 파일이 모두 저장소에 있다 - 개명이 목록을 놓치면 무인 렌더만 죽는다", async () => {
-  const tail = [...(await read("scripts/update-all.mjs")).matchAll(/run\("node (scripts\/[a-z-]+\.(?:mjs|ts))"\)/g)].map((m) => m[1]);
-  const fromPrerender = tail.slice(tail.findIndex((s) => /^scripts\/prerender\.(?:mjs|ts)$/.test(s)));
-  assert.ok(RENDER_STEPS.length >= 6 && fromPrerender.length >= 6, `목록이 비었다: RENDER_STEPS ${RENDER_STEPS.length}, update-all 꼬리 ${fromPrerender.length}`);
-  const missing = [...new Set([...RENDER_STEPS, ...fromPrerender])].filter((rel) => !existsSync(path.join(root, rel)));
-  assert.deepEqual(missing, [], `렌더 단계가 가리키는 파일이 없다(개명 때 목록을 같이 고쳤는지 본다): ${missing.join(", ")}`);
+test("RENDER_STEPS와 update-all이 부르는 스크립트가 가리키는 파일이 모두 저장소에 있다 - 개명이 목록을 놓치면 무인 렌더·수집만 죽는다", async () => {
+  // (#510) update-all 의 렌더 꼬리가 없어졌으므로 update-all 쪽은 부르는 스크립트 전부가 대상이다.
+  const called = [...(await read("scripts/update-all.mjs")).matchAll(/run\("node (scripts\/[a-z-]+\.(?:mjs|ts))"\)/g)].map((m) => m[1]);
+  assert.ok(RENDER_STEPS.length >= 6 && called.length >= 20, `목록이 비었다: RENDER_STEPS ${RENDER_STEPS.length}, update-all 호출 ${called.length}`);
+  const missing = [...new Set([...RENDER_STEPS, ...called])].filter((rel) => !existsSync(path.join(root, rel)));
+  assert.deepEqual(missing, [], `단계가 가리키는 파일이 없다(개명 때 목록을 같이 고쳤는지 본다): ${missing.join(", ")}`);
 });
 
 // --- 워크플로 문자열 ---------------------------------------------------------------------------------------------------------
 
-const WORKFLOWS = [".github/workflows/daily-update.yml", ".github/workflows/summarize.yml"];
+// (#510, 구조 B-4) 렌더는 deploy.yml 한 곳이다. 수집 두 워크플로(daily-update·summarize)는 렌더를 안 부른다 - 아래 시험이 그 경계를 지킨다.
+const DEPLOY = ".github/workflows/deploy.yml";
+const COLLECTORS = [".github/workflows/daily-update.yml", ".github/workflows/summarize.yml"];
 
 const stepOf = (yml, name) => {
   const at = yml.indexOf(`- name: ${name}\n`);
@@ -215,57 +220,57 @@ const stepOf = (yml, name) => {
   return yml.slice(at).split("\n      - ")[0].split(/\n      #/)[0];
 };
 
-test("두 워크플로의 렌더 단계는 render-pipeline을 부르고 id: render를 갖는다 - 인라인 렌더 스크립트가 남지 않는다", async () => {
-  for (const file of WORKFLOWS) {
-    const yml = await read(file);
-    const step = stepOf(yml, "정적 HTML에 오늘 내용 심기");
-    assert.match(step, /^ {8}id: render$/m, `${file}: 렌더 단계에 id: render가 없다`);
-    assert.match(step, /node scripts\/render-pipeline\.ts/, `${file}: 렌더 단계가 render-pipeline을 부르지 않는다`);
-    assert.ok(!/node scripts\/(prerender|build-[a-z]+-pages|build-updated-stamp)\.(?:mjs|ts)/.test(step), `${file}: 렌더 스크립트를 인라인으로 다시 부른다(폴백을 우회한다)`);
-  }
+test("렌더 단계는 deploy.yml 에 id: render 로 하나이고 render-pipeline --out=build/site 를 부른다 - 인라인 렌더 스크립트가 어느 워크플로에도 없다", async () => {
+  const yml = await read(DEPLOY);
+  const step = stepOf(yml, "사이트 생성 (build/site)");
+  assert.match(step, /^ {8}id: render$/m, `${DEPLOY}: 렌더 단계에 id: render가 없다`);
+  assert.match(step, /run: node scripts\/render-pipeline\.ts --out=build\/site$/m, `${DEPLOY}: 렌더 단계가 render-pipeline --out=build/site 가 아니다`);
+  assert.ok(!/node scripts\/(prerender|build-[a-z]+-pages|build-updated-stamp)\.(?:mjs|ts)/.test(step), `${DEPLOY}: 렌더 스크립트를 인라인으로 다시 부른다(폴백을 우회한다)`);
   // 어느 워크플로 파일에도 인라인 렌더 호출이 남으면 안 된다(렌더 단계가 하나 더 생겨 폴백을 우회하는 것을 막는다).
   const dir = path.join(root, ".github/workflows");
   for (const name of await readdir(dir)) {
     const text = await readFile(path.join(dir, name), "utf8");
     assert.ok(!/node scripts\/prerender\.(?:mjs|ts)/.test(text), `${name}: prerender.ts를 워크플로에서 직접 부른다`);
   }
+  // 수집 두 워크플로에는 render-pipeline 도 없다(렌더가 수집에 묶이면 9월 모양이다).
+  // 주석은 걷고 본다(주석은 일부러 이 이름을 적는다).
+  for (const file of COLLECTORS) assert.ok(!/render-pipeline/.test((await read(file)).replace(/^\s*#.*$/gm, "")), `${file}: 수집 워크플로가 렌더를 부른다 - deploy.yml 의 일이다`);
 });
 
-test("daily-update는 기본 여섯, summarize는 같은 순서의 다섯(build-rate-pages 없음 - 전에도 안 불렀다)을 넘기고 news-context는 파이프라인 앞에 있다", async () => {
-  const daily = stepOf(await read(WORKFLOWS[0]), "정적 HTML에 오늘 내용 심기");
-  assert.match(daily, /run: node scripts\/render-pipeline\.ts$/m, "daily-update는 기본 단계(인자 없음)를 쓴다");
-
-  const summarize = stepOf(await read(WORKFLOWS[1]), "정적 HTML에 오늘 내용 심기");
-  const args = [...summarize.matchAll(/^ {12}(scripts\/[a-z-]+\.(?:mjs|ts))/gm)].map((m) => m[1]);
-  assert.deepEqual(args, RENDER_STEPS.filter((s) => s !== "scripts/build-rate-pages.ts"));
-  assert.ok(summarize.indexOf("news-context.ts") >= 0 && summarize.indexOf("news-context.ts") < summarize.indexOf("render-pipeline.ts"), "news-context는 폴백 밖, 파이프라인 앞에 둔다");
+test("deploy.yml 은 기본 여섯 단계(인자 없음)로 그린다 - summarize 의 「일부러 다섯」(rate 4장 제외)은 없어졌다", async () => {
+  const step = stepOf(await read(DEPLOY), "사이트 생성 (build/site)");
+  assert.ok(!/^ {12}scripts\//m.test(step), "deploy.yml 이 단계 목록을 인자로 넘긴다 - 기본 여섯(RENDER_STEPS)이어야 rate 4장이 빠지지 않는다");
+  assert.equal(RENDER_STEPS.length, 6);
+  // summarize 에는 단계 인자도 render-pipeline 도 없다(위 시험). news-context 는 렌더 밖 데이터 가공이라 수집 워크플로에 남는다.
+  const summarize = await read(COLLECTORS[1]);
+  assert.match(summarize, /^ {8}run: node scripts\/news-context\.ts$/m, "summarize 의 news-context 단계가 사라졌다");
 });
 
-test("마지막 실패 단계의 if가 스크립트가 쓰는 $GITHUB_OUTPUT 키와 렌더 단계 id를 정확히 읽고, 커밋·테스트·배포 뒤에서 job을 실패시킨다", withFixture(SIX("reactFails"), async (fx) => {
+// (#510) 뒤집었다: 전에는 폴백이 발동해도 legacy 산출물을 배포하고 맨 끝에서 빨갛게 끝냈다(커밋 뒤에 렌더했으므로). 이제 폴백은 **배포를 막는다** - 수집은 커밋으로 끝나 있어
+// 데이터가 안전하고, 사이트는 직전 배포에 머문다(cto 판정: 게이트 = 렌더 폴백 없음 + build/site 기준 시험).
+test("폴백 게이트 단계의 if가 스크립트가 쓰는 출력 키와 렌더 단계 id를 정확히 읽고, 시험·배포 앞에서 job을 실패시킨다", withFixture(SIX("reactFails"), async (fx) => {
   await pipeline(fx, { renderer: "react" });
   const [key, value] = (await fx.file("output")).trim().split("=");
   assert.equal(key, FALLBACK_OUTPUT);
   assert.equal(value, "true");
 
-  for (const file of WORKFLOWS) {
-    const yml = await read(file);
-    const render = stepOf(yml, "정적 HTML에 오늘 내용 심기");
-    const id = render.match(/^ {8}id: (\S+)$/m)[1];
-    const fail = stepOf(yml, "렌더 폴백 반영");
-    // `!cancelled() &&` 는 #509 가 붙였다(앞 반영 단계가 먼저 exit 1 해도 이 단계가 건너뛰어지지 않게). YAML 에서 `!` 로 시작하는 맨 스칼라는 태그라 ${{ }} 로 감싼다.
-    assert.ok(fail.includes(`if: \${{ !cancelled() && steps.${id}.outputs.${key} == 'true' }}`), `${file}: 마지막 단계의 if가 steps.${id}.outputs.${key}를 읽지 않는다\n${fail}`);
-    assert.match(fail, /exit 1/);
-    assert.ok(fail.includes("React 렌더 실패 → legacy로 폴백했음. 사이트는 정상 배포됨, 원인 조사 필요"), `${file}: 실패 메시지가 다르다`);
-    // 커밋·배포가 모두 끝난 뒤에야 실패로 끝낸다 - 폴백이 사이트를 막지 않는다.
-    const at = (name) => yml.indexOf(`- name: ${name}\n`);
-    assert.ok(at("변경사항 커밋 및 푸시") > at("정적 HTML에 오늘 내용 심기"));
-    assert.ok(at("렌더 폴백 반영") > at("Pages에 배포"), `${file}: 실패 단계가 배포보다 앞에 있다`);
+  const yml = await read(DEPLOY);
+  const render = stepOf(yml, "사이트 생성 (build/site)");
+  const id = render.match(/^ {8}id: (\S+)$/m)[1];
+  const gate = stepOf(yml, "렌더 폴백이면 배포하지 않는다");
+  // 폴백일 때만 돈다. 상태 함수가 없어 앞 단계가 실패하면 건너뛰어지지만 그건 어차피 배포가 안 나가는 날이다 - 이 단계의 일은 "렌더는 성공했지만 폴백한 날"을 막는 것이다.
+  assert.ok(gate.includes(`if: \${{ steps.${id}.outputs.${key} == 'true' }}`), `${DEPLOY}: 폴백 게이트의 if가 steps.${id}.outputs.${key}를 읽지 않는다\n${gate}`);
+  assert.match(gate, /exit 1/);
+  assert.ok(gate.includes("legacy 로 폴백했다 - 배포하지 않는다"), `${DEPLOY}: 게이트 메시지가 다르다`);
+  // 시험·건강 점검·Pages 단계가 모두 이 게이트 뒤다 - 폴백한 산출물이 올라가지 않는다.
+  const at = (name) => yml.indexOf(`- name: ${name}\n`);
+  assert.ok(at("렌더 폴백이면 배포하지 않는다") > at("사이트 생성 (build/site)"));
+  for (const later of ["테스트 (build/site 기준)", "데이터 건강 점검 (비차단)", "Pages 배포", "Pages 아티팩트 업로드", "Pages에 배포"]) {
+    assert.ok(at(later) > at("렌더 폴백이면 배포하지 않는다"), `${DEPLOY}: '${later}' 가 폴백 게이트보다 앞에 있다`);
   }
 }));
 
-test("렌더 단계는 폴백이 발동해도 job을 막지 않는다 - 렌더 단계에 continue-on-error나 if가 붙지 않는다", async () => {
-  for (const file of WORKFLOWS) {
-    const step = stepOf(await read(file), "정적 HTML에 오늘 내용 심기");
-    assert.ok(!/continue-on-error|^ {8}if:/m.test(step), `${file}: 렌더 단계에 조건이 붙었다`);
-  }
+test("렌더 단계 자체는 폴백이 발동해도 종료 0 이다 - 렌더 단계에 continue-on-error나 if가 붙지 않고, 막는 것은 뒤의 게이트 단계다", async () => {
+  const step = stepOf(await read(DEPLOY), "사이트 생성 (build/site)");
+  assert.ok(!/continue-on-error|^ {8}if:/m.test(step), `${DEPLOY}: 렌더 단계에 조건이 붙었다`);
 });

@@ -9,7 +9,9 @@
     "fetch:market": "node scripts/fetch-market.ts",
     "fetch:rates": "node scripts/fetch-rates.ts",
     "update": "node scripts/update-all.mjs",
+    "pretest": "node scripts/render-pipeline.ts --out=build/site",
     "test": "node scripts/run-tests.mjs",
+    "test:site": "node scripts/run-tests.mjs --site",
     "health": "npm --prefix tools/health test"
   },
   "dependencies": {

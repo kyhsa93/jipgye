@@ -8,7 +8,7 @@ import path from "node:path";
 import { promisify } from "node:util";
 import { diffManifests, formatManifest, hashTree, isSame, main, parseManifest, treeHash } from "../scripts/site-hashes.ts";
 
-// 산출 해시 목록·대조 (#509, 구조 B-3). deploy.yml 이 커밋된 docs/ 와 build/site 를 맞대는 도구다.
+// 산출 해시 목록·대조 (#509, 구조 B-3). B3 에서는 deploy.yml 이 커밋된 docs/ 와 build/site 를 맞댔고, B4(#510) 뒤에는 같은 SHA 의 두 산출을 손으로 맞대는 도구다.
 // 합성 디렉터리만 읽는다 - 오늘 날짜도 docs/ 의 현재 내용도 보지 않는다(#8). 실제 docs/ -> build/site 일치는 시험이 아니라 PR·틱 증빙이다.
 const run = promisify(execFile);
 const made = [];

@@ -7,6 +7,7 @@ import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 import { newsContextHtml, newsListHtml, ratesHtml, realestateTableHtml } from "../scripts/prerender.ts";
 import { loadNewsPage } from "./helpers/news-page.mjs";
 import { readFixture } from "./helpers/fixture-data.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readJson = (name) =>
@@ -68,7 +69,7 @@ test("칩이 가리키는 페이지가 모두 존재한다", async () => {
     [...DISTRICT_PAGES.map((d) => `./${d.file}`), "./apartment-sale.html", "./apartment-jeonse.html", "./apartment-rent.html"]
   );
   for (const href of targets) {
-    await access(path.join(root, "docs", href.slice(2)));
+    await access(path.join(root, SITE, href.slice(2)));
   }
 
   const districts = REALESTATE.districts.map((d) => d.name);

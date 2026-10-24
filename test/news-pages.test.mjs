@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { escapeHtml, newsListHtml, newsSummaryHtml } from "../scripts/prerender.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -14,7 +15,7 @@ const titles = (html) => [...html.matchAll(/rel="noopener">([^<]*)</g)].map((m) 
 
 test("각 페이지가 자기 분야를 정규 URL·제목·필터로 선언한다", async () => {
   for (const page of NEWS_PAGES) {
-    const html = await read(`docs/${page.file}`);
+    const html = await read(`${SITE}/${page.file}`);
     assert.ok(html.includes(`<title>${page.title}</title>`), `${page.file} 제목이 다르다`);
     assert.ok(
       html.includes(`<link rel="canonical" href="https://kyhsa93.github.io/jipgye/${page.file}">`),
@@ -69,7 +70,7 @@ test("정적 목록에 만든 시점에 좌우되는 값을 넣지 않는다", a
 });
 
 test("허브와 카테고리 페이지가 서로를 진짜 링크로 가리킨다", async () => {
-  const files = ["docs/news.html", ...NEWS_PAGES.map((p) => `docs/${p.file}`)];
+  const files = [`${SITE}/news.html`, ...NEWS_PAGES.map((p) => `${SITE}/${p.file}`)];
   for (const file of files) {
     const html = await read(file);
     for (const page of NEWS_PAGES) {
@@ -78,12 +79,12 @@ test("허브와 카테고리 페이지가 서로를 진짜 링크로 가리킨�
     assert.ok(html.includes('href="./index.html"'), `${file}에 메인 링크가 없다`);
   }
 
-  const index = await read("docs/index.html");
+  const index = await read(`${SITE}/index.html`);
   assert.ok(index.includes('href="./news.html"'), "메인에 뉴스 허브 링크가 없다");
 });
 
 test("뉴스 페이지에도 테마·언어 토글이 있다", async () => {
-  for (const file of ["docs/news.html", ...NEWS_PAGES.map((p) => `docs/${p.file}`)]) {
+  for (const file of [`${SITE}/news.html`, ...NEWS_PAGES.map((p) => `${SITE}/${p.file}`)]) {
     const html = await read(file);
     assert.ok(html.includes('id="theme-toggle"'), `${file}에 테마 토글이 없다`);
     assert.ok(html.includes('id="lang-toggle"'), `${file}에 언어 토글이 없다`);
@@ -92,7 +93,7 @@ test("뉴스 페이지에도 테마·언어 토글이 있다", async () => {
 });
 
 test("뉴스 페이지에도 GA 로더와 사이트 구분이 붙어 있다", async () => {
-  for (const file of ["docs/news.html", ...NEWS_PAGES.map((p) => `docs/${p.file}`)]) {
+  for (const file of [`${SITE}/news.html`, ...NEWS_PAGES.map((p) => `${SITE}/${p.file}`)]) {
     const html = await read(file);
     assert.ok(html.includes('<script src="./analytics.js"></script>'), `${file}에 로더가 없다`);
     assert.ok(html.includes('<meta name="site-group" content="digest">'), `${file}에 사이트 구분이 없다`);
@@ -101,7 +102,7 @@ test("뉴스 페이지에도 GA 로더와 사이트 구분이 붙어 있다", as
 });
 
 test("기사 로드 실패는 원인을 함께 알린다", async () => {
-  for (const file of ["docs/news.html", ...NEWS_PAGES.map((p) => `docs/${p.file}`)]) {
+  for (const file of [`${SITE}/news.html`, ...NEWS_PAGES.map((p) => `${SITE}/${p.file}`)]) {
     const html = await read(file);
     // 상태 코드는 계측(reportLoadFailure)에만 남는다. 방문자에게는 이유("HTTP 503")를 보이지 않는다(#296 틀 (나)) - 무엇을 못 받았는지만 말한다.
     assert.ok(html.includes("throw new Error(`HTTP ${res.status}`)"), `${file}가 상태 코드를 안 남긴다`);
@@ -121,17 +122,17 @@ test("뉴스 페이지는 색인에서 빠지고, 데이터 페이지는 빠지�
   // deposit-rates.html과 본문이 글자까지 같아서다 — 같은 페이지 두 장 중 한 장을
   // 접은 것이고, 금리 표 자체는 상품군 페이지 넷으로 그대로 색인에 남는다.
   for (const file of ["news.html", "deal-search.html", "rates.html", ...NEWS_PAGES.map((p) => p.file)]) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     assert.match(
       html,
       /<meta name="robots" content="noindex, follow">/,
-      `docs/${file}에 noindex가 없습니다`
+      `${SITE}/${file}에 noindex가 없습니다`
     );
   }
 
   for (const file of ["index.html", "realestate.html", "deposit-rates.html", "district-gangnam.html", "budget-10eok.html"]) {
-    const html = await read(`docs/${file}`);
-    assert.doesNotMatch(html, /content="noindex/, `docs/${file}은 색인에서 빠지면 안 됩니다`);
+    const html = await read(`${SITE}/${file}`);
+    assert.doesNotMatch(html, /content="noindex/, `${SITE}/${file}은 색인에서 빠지면 안 됩니다`);
   }
 });
 
@@ -142,7 +143,7 @@ test("첫 화면에 먼저 오는 것은 우리가 만든 데이터다", async (
   // 그때는 시장 지표를 맨 위에 뒀는데, 코스피·환율·기준금리는 받아서 그대로 옮기는
   // 숫자지 우리가 만든 것이 아니다. 우리 계산이 들어간 것은 실거래 쪽이므로
   // 원칙("처음 보는 것이 우리가 만든 데이터")을 그대로 적용하면 실거래가 맨 위다.
-  const html = await read("docs/index.html");
+  const html = await read(`${SITE}/index.html`);
   const at = (id) => html.indexOf(`<section id="${id}"`); // `>` 를 뺀 접두사: 유틸리티 class 가 붙어도 같은 구획이다(#398)
   assert.ok(at("market-section") > 0 && at("realestate-section") > 0 && at("summary-section") > 0);
   assert.ok(

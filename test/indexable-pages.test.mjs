@@ -2,9 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
-const docs = path.join(root, "docs");
+const docs = path.join(root, SITE);
 
 /**
  * 검색에 내보내기로 한 페이지 전부.

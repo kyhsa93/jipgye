@@ -14,22 +14,26 @@
 // (#520) district-change.json 은 기준일만 있던 소스에 합성 권역 5줄(regions)과 그 표(regionTable)를 더했다 - switch-house 권역표 시험의 입력이다. 칸 수를 오늘 값과 일부러 다르게 뒀다.
 //
 // (#524) budget-deals.json 은 기준일만 있던 소스에 예산 밴드 18개(3억대~20억대)를 더했다 - 오늘 docs/data/budget-deals.json(origin/main 136dcf7d)에서 밴드별 거래를 앞 3건으로 줄여 얼린 것이다.
-// build-budget-pages 가 이 밴드로 예산 18장을 만든다(site-dir 시험이 53장 전부를 걷어내고 다시 그리는 데 쓴다). SITE_STEPS 에는 그 단계가 없어 다른 시험은 이 밴드를 쓰지 않는다.
+// build-budget-pages 가 이 밴드로 예산 18장을 만든다(site-dir 시험이 53장 전부를 걷어내고 다시 그리는 데 쓴다). B4(#510)부터 SITE_STEPS 에도 그 단계가 있어 모든 고정 데이터 작업 폴더가 이 밴드로 예산 18장을 찍는다.
 //
-// 복사하는 docs/*.html 은 생성물이기도 한 틀이다(B4 에서 git 밖으로 나간다 - B2 가 출력 폴더를 인자로 받게 하면 이 복사가 필요 없어진다).
+// 복사하는 docs/*.html 은 손으로 고치는 틀 14장뿐이다(#510, 구조 B-4: 생성 53장은 main 에서 걷혔다). 생성 장은 아래 SITE_STEPS 가 이 작업 폴더에서 새로 찍는다 -
+// 예산 장(build-budget-pages)도 이제 그 단계에 든다(기준일 찍기가 예산 18장을 읽는다). 렌더 시각은 BUILD_NOW 로 못박아 날짜에 기대지 않는다(#8).
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
 const repo = path.resolve(import.meta.dirname, "../..");
-export const FIXTURE_DATA = path.join(repo, "test/fixtures/site/data");
+/** 고정 데이터 렌더의 "지금". build-budget-pages 의 최근 6개월 창이 읽는 유일한 시각이다. */
+export const FIXTURE_NOW = "2026-10-23T00:00:00Z";
+export const FIXTURE_DATA =path.join(repo, "test/fixtures/site/data");
 
 /** 이 순서로 돈다: 프리렌더가 틀을 채우고, 페이지 빌더가 장을 찍고, 기준일 찍기가 마지막이다(render-pipeline.ts 의 순서와 같다). */
 export const SITE_STEPS = [
   "scripts/prerender.ts",
   "scripts/build-rate-pages.ts",
   "scripts/build-news-pages.ts",
+  "scripts/build-budget-pages.ts",
   "scripts/build-realestate-pages.ts",
   "scripts/build-updated-stamp.ts",
 ];
@@ -51,7 +55,7 @@ export function buildFixtureSite({ steps = SITE_STEPS, env = {} } = {}) {
   cpSync(FIXTURE_DATA, path.join(root, "docs/data"), { recursive: true });
   symlinkSync(path.join(repo, "node_modules"), path.join(root, "node_modules"), "dir");
   for (const step of steps) {
-    const r = spawnSync(process.execPath, [path.join(root, step)], { cwd: root, env: { ...process.env, ...env }, encoding: "utf8" });
+    const r = spawnSync(process.execPath, [path.join(root, step)], { cwd: root, env: { ...process.env, BUILD_NOW: FIXTURE_NOW, ...env }, encoding: "utf8" });
     if (r.status !== 0) {
       rmSync(root, { recursive: true, force: true });
       throw new Error(`고정 데이터 렌더 실패: ${step} (종료 ${r.status}${r.signal ? `, ${r.signal}` : ""})\n${r.stderr}`);

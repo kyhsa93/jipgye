@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 /**
  * 구운 "전세가율 단지별 중앙값" 카드가 데이터를 받는 동안·못 받았을 때 살아 있는지 본다(#311).
@@ -138,7 +139,7 @@ async function checkPage(file, locale) {
 }
 
 test("대표 장: 구운 전세가율 단지별 중앙값 카드가 네 상태 · 두 언어에서 남는다 (#311)", async () => {
-  for (const file of ["docs/apartment-jeonse.html", "docs/district-gangnam.html"]) {
+  for (const file of [`${SITE}/apartment-jeonse.html`, `${SITE}/district-gangnam.html`]) {
     for (const locale of ["ko", "en"]) await checkPage(file, locale);
   }
 });
@@ -146,15 +147,15 @@ test("대표 장: 구운 전세가율 단지별 중앙값 카드가 네 상태 �
 test("찍어낸 자치구 스물다섯 장 + 전세 한 장에 실려 나간 스크립트도 같다 (#311)", async () => {
   // 대상 25장(전세 1 + 자치구 24) 전수 × 네 상태 × 두 언어. 종로구는 구운 카드가 없는 장으로 같은 틀에서 같이 본다.
   for (const locale of ["ko", "en"]) {
-    for (const { file } of DISTRICT_PAGES) await checkPage(`docs/${file}`, locale);
-    await checkPage("docs/apartment-jeonse.html", locale);
+    for (const { file } of DISTRICT_PAGES) await checkPage(`${SITE}/${file}`, locale);
+    await checkPage(`${SITE}/apartment-jeonse.html`, locale);
   }
 });
 
 test("대조군: 구운 카드가 없는 장은 값이 안 와도 그대로다 (#311 완료 조건 6)", async () => {
   // apartment-sale·budget-7eok은 전세가율 카드를 그리는 분기를 아예 타지 않고, district-jongno는 그 분기를 타지만
   // 표본이 모자라 구워진 카드가 없다. 값이 안 온 세 상태에서 카드 장수가 흔들리면 안 된다(없던 자리에 아무것도 안 생긴다).
-  for (const file of ["docs/apartment-sale.html", "docs/budget-7eok.html", "docs/district-jongno.html"]) {
+  for (const file of [`${SITE}/apartment-sale.html`, `${SITE}/budget-7eok.html`, `${SITE}/district-jongno.html`]) {
     const { baked } = await open(file);
     const bakedCount = (baked.inner.match(CARD_RE) ?? []).length;
     for (const [state, make, arrived] of STATES) {
@@ -172,7 +173,7 @@ test("대조군: 구운 카드가 없는 장은 값이 안 와도 그대로다 (
 test("값이 왔는데 표본이 모자라면 구운 카드를 되살리지 않는다 (해자 2, #311)", async () => {
   // `complex-ratio.json`은 왔는데 이 자치구·서울 몫이 문턱 미달이라 빠진 경우다. 구운 값은 어제 것이라 되붙이면 안 된다.
   const empty = { updatedAt: RATIO.updatedAt, seoul: null, districts: {} };
-  for (const file of ["docs/apartment-jeonse.html", "docs/district-gangnam.html"]) {
+  for (const file of [`${SITE}/apartment-jeonse.html`, `${SITE}/district-gangnam.html`]) {
     const { page, baked } = await open(file, { complexRatio: empty });
     assert.ok(baked.card, `${file}: 이 시험은 구운 카드가 있는 장을 전제로 한다`);
     assert.equal(
@@ -186,7 +187,7 @@ test("값이 왔는데 표본이 모자라면 구운 카드를 되살리지 않�
 test("영어 화면에서는 값이 오기 전에도 라벨이 영어다 — 구운 한국어 조각을 그대로 되붙이지 않는다 (#311, po 판정)", async () => {
   // 구운 조각은 늘 한국어다. 그대로 되붙이면 영어 카드 넉 장 옆에 한국어 한 장이 서고 고지도 없다(PR #324 po 판정).
   // 숫자만 떼어 오고 라벨은 T.en으로 다시 세운다 - 새 문구도 새 번역도 만들지 않는다.
-  for (const file of ["docs/apartment-jeonse.html", "docs/district-gangnam.html"]) {
+  for (const file of [`${SITE}/apartment-jeonse.html`, `${SITE}/district-gangnam.html`]) {
     for (const [, make, arrived] of STATES) {
       if (arrived) continue;
       const { gate, release, ...rest } = make();
@@ -204,7 +205,7 @@ test("영어 화면에서는 값이 오기 전에도 라벨이 영어다 — 구
 
 test("값이 도착하면 구운 카드를 새 값으로 바꾼다 (#311)", async () => {
   const { gate, release } = hold("complex-ratio");
-  const { page, baked } = await open("docs/district-gangnam.html", { complexRatio: RATIO, gate });
+  const { page, baked } = await open(`${SITE}/district-gangnam.html`, { complexRatio: RATIO, gate });
   assert.ok(page.overallHtml().includes(baked.card), "받는 중에 구운 카드가 없다");
   release();
   await settle();

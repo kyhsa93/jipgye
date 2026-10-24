@@ -25,6 +25,7 @@ import { districtSentences } from "../scripts/district-summary.ts";
 import { stampHtml } from "../scripts/updated-stamp.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 import { readFixture } from "./helpers/fixture-data.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -174,9 +175,9 @@ test("정적 HTML의 표가 실제 화면과 같다", async () => {
 
 test("생성된 페이지는 화면을 그린 뒤에도 자기 제목을 유지한다", async () => {
   const realestate = await readJson("realestate");
-  const html = await read("docs/apartment-sale.html");
+  const html = await read(`${SITE}/apartment-sale.html`);
   const baked = /<title>([^<]*)<\/title>/.exec(html)[1];
-  const { sandbox } = await loadRealestatePage({ realestate, file: "docs/apartment-sale.html", kind: "sale", title: baked });
+  const { sandbox } = await loadRealestatePage({ realestate, file: `${SITE}/apartment-sale.html`, kind: "sale", title: baked });
   assert.equal(sandbox.document.title, baked);
   assert.match(sandbox.document.title, /매매/);
   assert.ok(!sandbox.document.title.includes("전세"), sandbox.document.title);
@@ -364,8 +365,8 @@ test("추이를 못 받아도 표는 그대로 나온다", async () => {
 
 test("자치구 페이지는 한 지역의 세 유형을 행으로 보여준다", async () => {
   const realestate = await readJson("realestate");
-  const baked = /<title>([^<]*)<\/title>/.exec(await read("docs/district-gangnam.html"))[1];
-  const page = await loadRealestatePage({ realestate, file: "docs/district-gangnam.html", district: "강남구", title: baked });
+  const baked = /<title>([^<]*)<\/title>/.exec(await read(`${SITE}/district-gangnam.html`))[1];
+  const page = await loadRealestatePage({ realestate, file: `${SITE}/district-gangnam.html`, district: "강남구", title: baked });
 
   assert.deepEqual(headCells(page.headHtml()), ["구분", "평당가", "84㎡ 환산", "거래건수"]);
   assert.deepEqual(names(page.tableHtml()), ["매매", "전세", "월세"]);
@@ -402,7 +403,7 @@ test("자치구 페이지에는 평형 선택이 뜬다", async () => {
 
 test("모든 시세 페이지가 25개 자치구로 링크한다", async () => {
   for (const file of ["realestate.html", "apartment-sale.html", "district-gangnam.html"]) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     for (const { file: target } of DISTRICT_PAGES) {
       assert.ok(html.includes(`href="./${target}"`), `${file}: ${target} 링크가 없다`);
     }
@@ -411,7 +412,7 @@ test("모든 시세 페이지가 25개 자치구로 링크한다", async () => {
 
 test("표가 있는 페이지에는 하단 지역 목록을 두지 않는다", async () => {
   const block = async (file) =>
-    (await read(`docs/${file}`)).split("<!--prerender:districtLinks-->")[1]?.split("<!--/prerender")[0] ?? "";
+    (await read(`${SITE}/${file}`)).split("<!--prerender:districtLinks-->")[1]?.split("<!--/prerender")[0] ?? "";
 
   for (const file of ["realestate.html", "apartment-sale.html", "apartment-jeonse.html"]) {
     assert.equal(await block(file), "", `${file}: 하단 목록이 남아 있다`);
@@ -421,13 +422,13 @@ test("표가 있는 페이지에는 하단 지역 목록을 두지 않는다", a
 });
 
 test("표의 지역 이름이 그 지역 페이지로 간다", async () => {
-  const html = await read("docs/realestate.html");
+  const html = await read(`${SITE}/realestate.html`);
   assert.match(html, /<td><a href="\.\/district-gangnam\.html">강남구<\/a>/);
   assert.match(html, /<tr class="overall-row"><td>서울 전체<\/td>/);
 });
 
 test("자치구 페이지는 자기 지역을 링크 목록에서 표시한다", async () => {
-  const html = await read("docs/district-songpa.html");
+  const html = await read(`${SITE}/district-songpa.html`);
   const block = html.split("<!--prerender:districtLinks-->")[1].split("<!--/prerender")[0];
   assert.ok(block.includes('<a href="./district-songpa.html" aria-current="page">송파구</a>'));
 });
@@ -501,7 +502,7 @@ test("조사를 받침에 맞춰 고른다", () => {
 });
 
 test("정적 HTML에 한국어·영어 문단이 모두 심긴다", async () => {
-  const html = await read("docs/district-songpa.html");
+  const html = await read(`${SITE}/district-songpa.html`);
   const ko = html.split("<!--prerender:districtSummaryKo-->")[1].split("<!--/prerender")[0];
   const en = html.split("<!--prerender:districtSummaryEn-->")[1].split("<!--/prerender")[0];
 
@@ -514,7 +515,7 @@ test("정적 HTML에 한국어·영어 문단이 모두 심긴다", async () => 
 
 test("자치구가 아닌 페이지에는 서술이 없다", async () => {
   for (const file of ["realestate.html", "apartment-sale.html"]) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     const ko = html.split("<!--prerender:districtSummaryKo-->")[1].split("<!--/prerender")[0];
     assert.equal(ko, "", `${file}에 서술이 들어갔다`);
   }
@@ -723,13 +724,13 @@ test("축은 라벨 단이고 표 칸은 문장 단이다 (#278 PR C)", async ()
 // 페이지 안에 <style>이 다시 생기는 순간 예순두 갈래로 가는 길이 열린다.
 test("페이지가 스타일을 따로 품지 않는다", async () => {
   const { readdir } = await import("node:fs/promises");
-  const pages = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html"));
+  const pages = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html"));
   assert.ok(pages.length >= 60, `HTML을 ${pages.length}장밖에 못 찾았다`);
 
   for (const page of pages) {
-    const html = await readFile(path.join(root, "docs", page), "utf8");
-    assert.ok(!html.includes("<style>"), `docs/${page}에 <style>이 다시 생겼다`);
-    assert.ok(html.includes('href="./style.css"'), `docs/${page}이 스타일시트를 부르지 않는다`);
+    const html = await readFile(path.join(root, SITE, page), "utf8");
+    assert.ok(!html.includes("<style>"), `${SITE}/${page}에 <style>이 다시 생겼다`);
+    assert.ok(html.includes('href="./style.css"'), `${SITE}/${page}이 스타일시트를 부르지 않는다`);
   }
 });
 
@@ -748,8 +749,8 @@ test("시세 페이지 추이 카드가 첫 화면과 같은 짜임이다", asyn
   }
 
   const [realestate, index] = await Promise.all([
-    readFile(path.join(root, "docs/realestate.html"), "utf8"),
-    readFile(path.join(root, "docs/index.html"), "utf8"),
+    readFile(path.join(root, `${SITE}/realestate.html`), "utf8"),
+    readFile(path.join(root, `${SITE}/index.html`), "utf8"),
   ]);
   for (const [what, html] of [["시세", realestate], ["첫 화면", index]]) {
     assert.match(html, /class="history-card"/, `${what}: 카드 짜임이 다르다`);
@@ -760,8 +761,8 @@ test("시세 페이지 추이 카드가 첫 화면과 같은 짜임이다", asyn
 
 test("두 화면의 그래프가 같은 좌표계로 그려진다", async () => {
   const [realestate, index] = await Promise.all([
-    readFile(path.join(root, "docs/realestate.html"), "utf8"),
-    readFile(path.join(root, "docs/index.html"), "utf8"),
+    readFile(path.join(root, `${SITE}/realestate.html`), "utf8"),
+    readFile(path.join(root, `${SITE}/index.html`), "utf8"),
   ]);
 
   const chartConst = (html) => html.match(/const CHART = \{[^}]*\}/)?.[0].replace(/\s+/g, " ");
@@ -803,7 +804,7 @@ test("그래프에 마우스를 올릴 자리를 마련해 둔다", async () => 
   const page = await loadRealestatePage({ realestate: trendRealestate(), trend: trendData(), kind: "sale" });
   assert.match(page.trendHtml(), /class="marker" hidden/, "짚어줄 표시가 없다");
 
-  const html = await readFile(path.join(root, "docs/realestate.html"), "utf8");
+  const html = await readFile(path.join(root, `${SITE}/realestate.html`), "utf8");
   assert.match(html, /<div class="chart-tip" id="chart-tip" hidden>/, "말풍선이 처음부터 떠 있다");
   assert.match(html, /trendSection\.addEventListener\("mousemove"/, "마우스를 따라가지 않는다");
   assert.match(html, /trendSection\.addEventListener\("touchstart"/, "손가락으로는 볼 수 없다");
@@ -824,11 +825,11 @@ test("월세 페이지(브라우저)도 증감 하나를 월세 칸에 % 로 붙
 });
 
 test("자치구 페이지 제목은 그 구를 말한다 - '서울 전체 평균' 아래 그 구의 숫자가 나오지 않게 (#42)", async () => {
-  const html = await read("docs/district-songpa.html");
+  const html = await read(`${SITE}/district-songpa.html`);
   assert.match(html, /<h2 id="overall-heading">송파구 평균<\/h2>/);
   assert.match(html, /<h2 id="district-heading">거래 유형별<\/h2>/);
   assert.doesNotMatch(html, /<h2 id="overall-heading">서울 전체 평균/);
-  assert.match(await read("docs/realestate.html"), /<h2 id="overall-heading">서울 전체 평균<\/h2>/, "서울 시세 화면은 그대로");
+  assert.match(await read(`${SITE}/realestate.html`), /<h2 id="overall-heading">서울 전체 평균<\/h2>/, "서울 시세 화면은 그대로");
 
   const realestate = await readJson("realestate");
   const page = await loadRealestatePage({ realestate, district: "강남구" });
@@ -837,7 +838,7 @@ test("자치구 페이지 제목은 그 구를 말한다 - '서울 전체 평균
 });
 
 test("자치구 요약 절은 제 문단으로만 열린다 - 예산대 문단이 빈 절을 열지 않게 (#42)", async () => {
-  const html = await read("docs/budget-7eok.html");
+  const html = await read(`${SITE}/budget-7eok.html`);
   const start = html.indexOf('<section id="district-summary-section"');
   const section = html.slice(start, html.indexOf("</section>", start));
   assert.ok(!section.includes("budget-facts"), "예산대 문단이 요약 절 안으로 들어왔다 - 아래 검사의 전제가 바뀌었다");
@@ -872,7 +873,7 @@ test("자치구 장에 '이 구에서' 길 - 이 구의 실거래, 84㎡ 값의 
   assert.match(html, /budget-7eok\.html">가구 84㎡ 값에 맞는 7억대 후보/, "3,000만원/평 × 84㎡ ≈ 7.6억");
   assert.match(districtHereHtml("나구", realestate), /budget-20eok\.html/, "20억대 위는 끝 장으로");
   assert.doesNotMatch(districtHereHtml("다구", realestate), /budget-/, "값이 없는 구에 예산대를 지어냈다");
-  assert.match(await read("docs/district-songpa.html"), /class="card-links district-here"/);
+  assert.match(await read(`${SITE}/district-songpa.html`), /class="card-links district-here"/);
   assert.match(html, /switch-house\.html\?from=%EA%B0%80%EA%B5%AC/, "갈아타기로 갈 때 이 구를 골라 두지 않는다 (#52)");
 });
 
@@ -893,7 +894,7 @@ test("추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 �
   assert.equal(files.length, 47, "틀을 쓰는 장 수가 바뀌었다 - 예약이 닿는 범위를 다시 세라");
 
   for (const file of files) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     assert.ok(html.includes('<section id="trend-section" class="tw:mb-10 tw:1024:mb-16" hidden>'), `${file}: 추이 구획이 hidden으로 구워지지 않는다`);
 
     // 예약은 구획 바로 뒤에 온다 - CSS가 `#trend-section[hidden] + .trend-reserve`로 집는다.
@@ -938,7 +939,7 @@ test("추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 �
   // 구운 산출물에 개발자용 설명문을 싣지 않는다(장부 규칙 3). 설명은 이 CSS와
   // scripts/build-realestate-pages.ts에 있고, 틀과 생성 47장에는 주석이 0줄이다.
   for (const file of files) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     const block = html.slice(html.indexOf('<section id="trend-section" class="tw:mb-10 tw:1024:mb-16" hidden>'), html.indexOf('<div class="trend-reserve '));
     const comments = [...block.matchAll(/<!--(?!\/?prerender:)/g)].length;
     assert.equal(comments, 0, `${file}: 예약 둘레에 구운 주석이 ${comments}줄 남았다 - 설명은 빌드 소스에 적는다`);

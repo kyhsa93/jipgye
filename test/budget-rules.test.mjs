@@ -9,6 +9,7 @@ import { MIN_CASH_RULES } from "../scripts/min-cash.ts";
 import { POLICY_LINES, POLICY_TAIL } from "../scripts/policy-loan.ts";
 import { CAP_RULES_HIGH } from "../scripts/loan-cap.ts";
 import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 // #66: 예산대 18장에 똑같이 실리던 규칙 문단은 method.html 한 자리에만 있고, 장에는 링크만 남는다.
 // 값(금리·거래 수)에 기대는 문장은 데이터에 따라 달라지므로 여기서 단정하지 않는다(#8) - 글자가 고정인 규칙만 본다.
@@ -27,7 +28,7 @@ test("규칙 문단은 데이터가 없어도 method.html 자리에 글자 그�
 });
 
 test("method.html에는 규칙 문단이 한 번씩만 있다", async () => {
-  const method = await readFile(path.join(root, "docs/method.html"), "utf8");
+  const method = await readFile(path.join(root, `${SITE}/method.html`), "utf8");
   for (const [name, text] of Object.entries(RULES)) {
     const count = method.split(escapeHtml(text)).length - 1;
     assert.equal(count, 1, `${name}가 method.html에 ${count}번 있다`);
@@ -36,7 +37,7 @@ test("method.html에는 규칙 문단이 한 번씩만 있다", async () => {
 
 test("예산대 18장에는 옮긴 규칙 문단이 없고 method.html 링크가 있다", async () => {
   for (const page of BUDGET_PAGES) {
-    const html = await readFile(path.join(root, "docs", page.file), "utf8");
+    const html = await readFile(path.join(root, SITE, page.file), "utf8");
     for (const [name, text] of Object.entries(RULES)) {
       assert.ok(!html.includes(escapeHtml(text)), `${page.file}에 ${name}가 또 실렸다`);
     }

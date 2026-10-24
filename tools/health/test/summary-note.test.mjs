@@ -6,6 +6,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NEWS_PAGES } from "../../../scripts/build-news-pages.ts";
 import { FALLBACK_NOTE_KO, hasFallback } from "../../../scripts/summary-note.ts";
+import { SITE } from "../../../test/helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -24,14 +25,14 @@ test("커밋된 구운 장 다섯의 안내 줄 유무가 summary.json 과 맞�
   const summary = await readJson("summary");
   const noteOf = (html, cls) => html.includes(`<div class="${cls}">${FALLBACK_NOTE_KO}</div>`);
 
-  const index = boxOf(await read("docs/index.html"), "summary");
+  const index = boxOf(await read(`${SITE}/index.html`), "summary");
   assert.equal(noteOf(index, "summary-fallback-note"), hasFallback(summary.categories), "docs/index.html 의 안내 줄이 summary.json 과 어긋난다. node scripts/prerender.ts 를 실행하세요.");
 
-  const hub = boxOf(await read("docs/news.html"), "newsSummary");
+  const hub = boxOf(await read(`${SITE}/news.html`), "newsSummary");
   assert.equal(noteOf(hub, "summary-note"), hasFallback(summary.categories.filter((c) => c.lineKo)), "docs/news.html 의 안내 줄이 summary.json 과 어긋난다.");
   for (const page of NEWS_PAGES) {
-    const box = boxOf(await read(`docs/${page.file}`), "newsSummary");
+    const box = boxOf(await read(`${SITE}/${page.file}`), "newsSummary");
     const shown = summary.categories.filter((c) => c.key === page.category && c.lineKo);
-    assert.equal(noteOf(box, "summary-note"), hasFallback(shown), `docs/${page.file} 의 안내 줄이 summary.json 과 어긋난다. node scripts/build-news-pages.ts 를 실행하세요.`);
+    assert.equal(noteOf(box, "summary-note"), hasFallback(shown), `${SITE}/${page.file} 의 안내 줄이 summary.json 과 어긋난다. node scripts/build-news-pages.ts 를 실행하세요.`);
   }
 });
