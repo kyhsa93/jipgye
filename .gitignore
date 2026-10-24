@@ -5,3 +5,15 @@ cache/
 !research/*/cache/
 # 렌더 출력 디렉터리의 관례 위치(JIPGYE_SITE_DIR=build/site, #508). 산출물이라 커밋하지 않는다.
 build/
+# 생성 HTML 53장(#510, 구조 B-4): main 은 이 장들을 들고 있지 않는다 - 사이트는 build/site 에 만들고 deploy.yml 이 거기서 게시한다.
+# render-pipeline 을 출력 디렉터리 없이(docs/ 제자리) 돌리면 이 장들이 docs/ 에 생기는데, 실수로 커밋되지 않게 막는다. 손으로 고치는 틀 14장은 이 목록에 없다.
+/docs/deposit-rates.html
+/docs/saving-rates.html
+/docs/mortgage-rates.html
+/docs/rent-loan-rates.html
+/docs/rate-news.html
+/docs/realestate-news.html
+/docs/stock-news.html
+/docs/apartment-*.html
+/docs/budget-*eok.html
+/docs/district-*.html

@@ -537,9 +537,10 @@ test("워크플로는 금리 단계를 막지 않고 끝에서 실패로 반영�
   assert.match(ratesStep, /id: rates/);
   assert.match(ratesStep, /continue-on-error: true/);
   const commitAt = yml.indexOf("- name: 변경사항 커밋 및 푸시");
-  const deployAt = yml.indexOf("- name: Pages에 배포");
   const failAt = yml.indexOf("- name: 금리 수집 실패 반영");
-  assert.ok(commitAt > 0 && deployAt > commitAt && failAt > deployAt, "실패 반영 단계가 커밋·배포 뒤에 있어야 한다");
+  // (#510) 배포 단계는 deploy.yml 로 갔다 - 수집 워크플로의 마지막 두 단계는 커밋 -> 실패 반영이다. 실패 반영은 커밋 뒤라 수집분(원본·데이터)이 먼저 남는다.
+  assert.ok(commitAt > 0 && failAt > commitAt, "실패 반영 단계가 커밋 뒤에 있어야 한다");
+  assert.ok(!yml.includes("- name: Pages에 배포"), "수집 워크플로에 배포 단계가 남았다 - 배포는 deploy.yml 의 일이다");
   const failStep = yml.slice(failAt);
   assert.match(failStep, /steps\.rates\.outcome == 'failure'/);
   assert.match(failStep, /exit 1/);

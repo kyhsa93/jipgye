@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
+import { SITE } from "./site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "../..");
 
@@ -47,7 +48,7 @@ export function stubElement(attrs = {}, id = "") {
  * 가짜 document와 fetch 위에서 실행하는 것. 그 같은 부분만 여기 둔다.
  */
 export async function loadPage({ file, data = {}, subNav = [], status = 404, locale = "ko", query = "", analytics, seed = {}, innerHeight = 800 } = {}) {
-  const html = await readFile(path.join(root, "docs", file), "utf8");
+  const html = await readFile(path.join(root, SITE, file), "utf8");
   const script = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
 
   const store = { lang: locale };
@@ -114,7 +115,7 @@ export async function loadPage({ file, data = {}, subNav = [], status = 404, loc
   sandbox.self = sandbox;
   sandbox.globalThis = sandbox;
   vm.createContext(sandbox);
-  new vm.Script(script, { filename: `docs/${file}:inline` }).runInContext(sandbox);
+  new vm.Script(script, { filename: `${SITE}/${file}:inline` }).runInContext(sandbox);
 
   await settle();
 

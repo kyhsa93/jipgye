@@ -26,9 +26,20 @@
 
 import { spawn } from "node:child_process";
 import { readFloors, checkRatchet } from "./test-count-ratchet.mjs";
+import { siteTestFiles } from "./site-test-files.mjs";
 
-const FLOOR_PATH = "test/COUNT";
+// `--site`(#510, 구조 B-4): 배포 게이트 판이다. build/site 를 읽는 시험 파일(scripts/site-test-files.mjs 의 기준)만 돌리고, 하한은 따로 둔 `test/COUNT-site` 다.
+// 그 외는 전과 같다 - 래칫·종료 코드·가드가 한 벌이고, 이 플래그는 "무슨 파일을, 어느 하한으로"만 바꾼다. 파일이 하나도 안 골라지면 시험 0개로 초록이 되는 길이라 종료 1이다.
+const argv = process.argv.slice(2);
+const siteMode = argv.includes("--site");
+const runnerArgs = argv.filter((a) => a !== "--site");
+const FLOOR_PATH = siteMode ? "test/COUNT-site" : "test/COUNT";
 const GLOB = "test/*.test.{mjs,ts}";
+const targets = siteMode ? siteTestFiles() : [GLOB];
+if (siteMode && targets.length === 0) {
+  console.error("run-tests 실패[게이트]: --site 인데 build/site 를 읽는 시험 파일(test/helpers/site-root.mjs 를 부르는 것)이 하나도 없다.");
+  process.exit(1);
+}
 
 if (process.features.typescript !== "strip") {
   console.error(
@@ -52,7 +63,7 @@ if (process.stdout.isTTY && env.NO_COLOR === undefined && env.FORCE_COLOR === un
 
 const child = spawn(
   process.execPath,
-  ["--test", "--test-reporter=spec", "--test-reporter-destination=stdout", ...process.argv.slice(2), GLOB],
+  ["--test", "--test-reporter=spec", "--test-reporter-destination=stdout", ...runnerArgs, ...targets],
   { stdio: ["inherit", "pipe", "inherit"], env },
 );
 

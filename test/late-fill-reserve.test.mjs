@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { SITE } from "./helpers/site-root.mjs";
 
 // 늦게 채워지는 글 네 자리의 줄 수 예약(#341; 다섯째였던 index #update-schedule 은 머리에서 바닥글로 옮겨 예약이 필요 없어졌다 - #398). 이 시험은 "예약이 서 있는가"를 본다. 예약이 정확한가(줄 수가 실제와 같은가)는
 // 브라우저가 아는 일이라 여기서 못 본다 - 그건 PR 본문의 측정(375x812, 장당 3회, 네 폴더)이 한다. 줄 수는 글에 달려 있고
@@ -83,16 +84,16 @@ test("예약은 min-height 하나뿐이고 고정 높이·overflow·sticky 를 �
 
 test("예약이 집는 자리가 구운 장에 있다 (#341)", async () => {
   // 규칙이 아무것도 안 집으면 조용히 죽는다. 선택자가 가리키는 요소가 그 장에 그 모양으로 있는지 본다.
-  const pages = Object.fromEntries(await Promise.all([...new Set(RESERVES.map((r) => r.page))].map(async (p) => [p, await read(`docs/${p}`)])));
+  const pages = Object.fromEntries(await Promise.all([...new Set(RESERVES.map((r) => r.page))].map(async (p) => [p, await read(`${SITE}/${p}`)])));
 
   // 같은 id(#lead-note)가 세 장에 있고 줄 수가 달라서 그 장에만 있는 구획으로 가른다. 구획은 main 의 직계 자식이어야 한다(`>`).
   // 구운 장은 main 의 자식을 두 칸 들여 쓴다(빌더가 만든 모양) - 들여쓰기가 바뀌면 이 시험이 알려 준다.
   for (const [page, section] of [["floor-gap.html", "top-section"], ["renewal-vs-new.html", "wolse-section"], ["cancelled-deals.html", "month-section"]]) {
-    assert.match(pages[page], new RegExp(`\\n  <section id="${section}"`), `docs/${page}: main 직계의 #${section} 이 없다 - 예약이 이 장을 못 가른다`);
-    assert.match(pages[page], /<div class="content-notice" id="lead-note">/, `docs/${page}: #lead-note 가 없다`);
+    assert.match(pages[page], new RegExp(`\\n  <section id="${section}"`), `${SITE}/${page}: main 직계의 #${section} 이 없다 - 예약이 이 장을 못 가른다`);
+    assert.match(pages[page], /<div class="content-notice" id="lead-note">/, `${SITE}/${page}: #lead-note 가 없다`);
     // 다른 두 장의 구획이 이 장에 섞여 들어오면 한 장에 예약이 둘 걸린다.
     for (const other of ["top-section", "wolse-section", "month-section"].filter((s) => s !== section)) {
-      assert.ok(!pages[page].includes(`id="${other}"`), `docs/${page}: #${other} 가 같이 있다 - #lead-note 예약이 두 줄 수로 겹친다`);
+      assert.ok(!pages[page].includes(`id="${other}"`), `${SITE}/${page}: #${other} 가 같이 있다 - #lead-note 예약이 두 줄 수로 겹친다`);
     }
   }
 
@@ -100,7 +101,7 @@ test("예약이 집는 자리가 구운 장에 있다 (#341)", async () => {
 
   // index: #update-schedule 은 머리가 아니라 바닥글 첫 줄에 있다(#398). 머리에 있으면 채워지는 순간 아래가 통째로 밀려 예약이 필요했지만,
   // 바닥글은 접힌 선(812px) 밖이라 이동으로 안 잡힌다. 되돌아와 머리(.tagline 뒤)로 가면 예약 없이 채움 이동이 돌아온다.
-  const index = await read("docs/index.html");
+  const index = await read(`${SITE}/index.html`);
   const header = /<header\b[\s\S]*?<\/header>/.exec(index)?.[0] ?? "";
   assert.ok(header && !header.includes('id="update-schedule"'), "docs/index.html: #update-schedule 이 머리에 있다 - 채움 이동을 막는 예약은 없다(#398)");
   // 머리를 가리키던 예약 규칙(`.tagline ~ .update-schedule`)은 아무것도 안 집는 죽은 규칙이다 - 남겨 두면 다음 사람이 머리로 되돌려도 예약이 살아 있는 줄 안다.
@@ -108,7 +109,7 @@ test("예약이 집는 자리가 구운 장에 있다 (#341)", async () => {
   assert.ok(index.includes('<footer class="site-footer">\n    <div class="update-schedule tw:text-sm tw:mb-2" id="update-schedule"></div>'), "docs/index.html: #update-schedule 이 바닥글 첫 줄에 없다(#398)");
   // 다른 장의 .update-schedule(금리 네 장)은 .tagline 이 없어 이 예약이 안 걸려야 한다 - 걸리면 그 장의 한 줄 예약이 두 줄로 부푼다.
   for (const page of ["deposit-rates.html", "saving-rates.html", "mortgage-rates.html", "rent-loan-rates.html"]) {
-    const html = await read(`docs/${page}`);
-    assert.ok(html.includes('id="update-schedule"') && !html.includes('class="tagline"'), `docs/${page}: .tagline 이 생겼다 - index 의 2줄 예약이 이 장에도 걸린다`);
+    const html = await read(`${SITE}/${page}`);
+    assert.ok(html.includes('id="update-schedule"') && !html.includes('class="tagline"'), `${SITE}/${page}: .tagline 이 생겼다 - index 의 2줄 예약이 이 장에도 걸린다`);
   }
 });

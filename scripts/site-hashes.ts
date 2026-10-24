@@ -1,7 +1,9 @@
 // 사이트 산출물의 파일별 해시 목록과 두 산출물의 대조 (#509, 구조 B-3).
 //
-// deploy.yml(병행 가동)이 매 실행에서 부른다: main HEAD 의 커밋된 docs/(= 기존 배포가 올리는 산출물)와, 같은 HEAD 에서 render-pipeline 이
-// build/site 로 새로 만든 산출물을 파일별 sha256 으로 맞댄다. 두 번의 자연 full 틱에서 연속으로 일치하면 B3 합격선이다.
+// B3 시절 deploy.yml(병행 가동)이 매 실행에서 불렀다: main HEAD 의 커밋된 docs/(= 기존 배포가 올리는 산출물)와, 같은 HEAD 에서 render-pipeline 이
+// build/site 로 새로 만든 산출물을 파일별 sha256 으로 맞댔다. 두 번의 자연 full 틱에서 연속으로 일치하면 B3 합격선이었다.
+// (#510, B4 컷오버) deploy.yml 은 더 이상 이 도구를 안 부른다 - main 의 docs/ 에서 생성 HTML 53장이 빠져 "커밋된 docs/ 와 build/site" 대조가 성립하지 않는다.
+// 손 도구로 남는다: 같은 SHA 의 두 산출(예: 재렌더, 롤백 전후의 build/site)을 파일별로 맞대는 데 쓴다. 배포본끼리의 전후 대조는 scripts/site-snapshot.ts 다.
 //
 //   node scripts/site-hashes.ts manifest <디렉터리|목록파일>
 //   node scripts/site-hashes.ts compare <A> <B> [--out-dir=<디렉터리>]

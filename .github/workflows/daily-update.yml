@@ -15,10 +15,10 @@ on:
         type: string
         default: ""
 
+# 수집 워크플로는 저장소에 쓰는 권한 하나만 가진다(#510, 구조 B-4). 렌더·시험·Pages 배포는 deploy.yml 의 일이다 - 수집이 배포 권한(pages·id-token)이나
+# 배포 환경(github-pages)을 쥐고 있으면 그 단계가 다시 붙어 수집이 렌더·시험 실패에 묶이는 2026-09-02~10-01 모양으로 돌아간다. 커밋은 docs/data 와 raw 만 한다(push-docs.sh).
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: digest-pipeline
@@ -29,9 +29,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || (github.event.schedule == '7 23 * * *' && 'full' || 'news') }}
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -42,15 +39,6 @@ jobs:
           node-version: "24"
 
       - run: npm ci
-
-      # 수집 전 테스트가 빨개도 수집·커밋은 돈다(#449). 2026-09-02~10-01에 검사 하나가 이 스텝을 매 run 막아
-      # 수집이 통째로 사라졌고(28일 시계열 유실, 국토부 응답은 날짜별로 다시 받을 수 없다) 되살릴 수 없었다.
-      # 지우거나 약화하지 않는다 - 실패는 맨 끝 "수집 전 테스트 실패 반영" 단계가 job을 빨갛게 끝낸다.
-      # 배포 게이트는 아래 "테스트 (수집 후)"가 그대로 쥔다.
-      - name: 테스트 (수집 전)
-        id: pretest
-        continue-on-error: true
-        run: npm test
 
       - name: 뉴스 수집
         run: node scripts/fetch-news.ts
@@ -112,7 +100,7 @@ jobs:
       # 빨개지고 배포가 막혔다(#467). 그래서 금리 수집 뒤에 한 번 더 돌린다 - API 호출 없이 raw와
       # rates.json을 읽을 뿐이라 몇 초다. 금리 수집이 실패했으면 rates.json이 그대로라 같은 값이
       # 다시 나온다(일관). 이 단계가 실패해도 job을 멈추지 않는다: 멈추면 같은 실행의 수집분
-      # 커밋이 안 돌아 데이터가 사라진다(#62). conversion이 낡은 채 남으면 수집 후 테스트가 잡는다.
+      # 커밋이 안 돌아 데이터가 사라진다(#62). conversion이 낡은 채 남으면 deploy.yml 의 build/site 시험(sample-size)이 그 배포를 막는다.
       - name: 전환율 다시 만들기 (금리 반영)
         if: env.MODE == 'full'
         continue-on-error: true
@@ -121,19 +109,10 @@ jobs:
       - name: 기사에 실거래가·금리 수치 붙이기
         run: node scripts/news-context.ts
 
-      # 여섯 렌더 스크립트(prerender·build-rate-pages·build-news-pages·build-budget-pages·build-realestate-pages·build-updated-stamp)는
-      # scripts/render-pipeline.ts가 순서대로 돌린다. 하나라도 실패하면 JIPGYE_RENDERER=legacy로 처음부터 다시 렌더해
-      # 뒤의 커밋이 돌게 한다(그날 받은 수집분이 사라지지 않게). 폴백이 발동하면 맨 끝 "렌더 폴백 반영" 단계가 job을 실패로 끝낸다(#238).
-      - name: 정적 HTML에 오늘 내용 심기
-        id: render
-        run: node scripts/render-pipeline.ts
-
-      # 커밋이 테스트보다 먼저다.
-      #
-      # 수집 후 테스트가 깨지면 그날 받은 데이터가 통째로 사라진다 — 국토부·금감원에서
-      # 하루치를 다시 받을 방법이 없고, 실제로 수집이 사흘 연속 유실된 적이 있다.
-      # 커밋을 먼저 하면 자료는 남고, 아래 테스트가 실패하면 배포는 멈춘 채로 빨갛게
-      # 뜬다. 잃는 것(그날 배포가 밀림)이 잃지 않는 것(그날 자료)보다 싸다.
+      # 이 워크플로의 마지막 일은 커밋이다(#510, 구조 B-4). 렌더·시험·Pages 배포는 deploy.yml 이 이 워크플로의 완료(workflow_run)와 main 푸시를 받아 따로 한다 -
+      # 여기서 렌더하거나 시험을 부르면 수집이 렌더·시험 실패에 다시 묶인다(2026-09-02~10-01, 28일 시계열 유실. 국토부·금감원 응답은 날짜별로 다시 받을 수 없다).
+      # 그래서 이 워크플로에는 render-pipeline·npm test·Pages 단계가 없고(test/daily-no-render.test.mjs 가 지킨다), 커밋 경로는 docs/data 와 raw 둘뿐이다(push-docs.sh).
+      # 원본(raw)은 위 "실거래 수집" 안에서 이미 따로 먼저 커밋했다(#62). 아래 커밋이 막혀도 그날 원본은 남는다.
       - name: 변경사항 커밋 및 푸시
         run: |
           if [ "$MODE" = "full" ]; then
@@ -142,61 +121,10 @@ jobs:
             ./scripts/push-docs.sh "chore: 뉴스 갱신 $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M') KST"
           fi
 
-      # 데이터 건강 점검(#507, 구조 B-1): 커밋된 데이터(docs/data)와 그 데이터로 찍은 생성물(docs/*.html)이 서로 맞는지 보는
-      # 검사들이다(tools/health). 예전에는 루트 `npm test`가 들고 있어서 데이터가 바뀌는 날 기능 PR 시험이 그날 데이터에 기댔다 -
-      # 2026-09-02~10-01 매 run 을 막은 모양이다(#8, #449). 여기서는 **비차단**이다: 실패해도 아래 "테스트 (수집 후)"와 배포는 그대로
-      # 돌고(커밋은 이미 끝났다), 맨 끝 "데이터 건강 점검 실패 반영" 단계가 run 을 빨갛게 끝낸다. 지우거나 약화하지 않는다.
-      - name: 데이터 건강 점검 (비차단)
-        id: health
-        continue-on-error: true
-        run: npm run health
-
-      - name: 테스트 (수집 후)
-        run: npm test
-
-      - name: Pages 배포
-        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
-
-      - name: Pages 아티팩트 업로드
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
-        with:
-          path: "./docs"
-
-      - name: Pages에 배포
-        id: deployment
-        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
-
-      # 원본 커밋·테스트·배포가 모두 끝난 뒤에야 실패로 끝낸다. 아래 반영 단계 넷은 모두 `!cancelled() &&` 로 시작한다(#509):
-      # 상태 함수 없는 `if` 는 앞 단계(수집 후 테스트·앞선 반영 단계)가 실패하면 건너뛰어져, 금리 수집이 실패한 날 뒤의
-      # 건강 점검·수집 전 테스트 실패가 로그에서 가려졌다. 앞 단계가 실패해 배포가 건너뛰어진 날에도 돌므로, 메시지의
-      # "배포는 끝났다"는 그날은 해당 없다 - 먼저 빨간 단계를 본다.
+      # 맨 끝 반영 단계다. 원본·수집분 커밋이 모두 끝난 뒤에야 run 을 빨갛게 끝낸다. `!cancelled() &&` 로 시작한다(#509): 상태 함수 없는 `if` 는 앞 단계가 실패하면
+      # 건너뛰어진다. 배포는 이 워크플로 밖(deploy.yml)이라 이 메시지가 배포를 말하지 않는다 - 사이트가 갱신됐는지는 이어서 도는 Deploy site 의 run 이 말한다.
       - name: 금리 수집 실패 반영
         if: ${{ !cancelled() && steps.rates.outcome == 'failure' }}
         run: |
-          echo "::error::금리 수집(금감원 finlife)이 실패했다 - 위 '예·적금·대출 금리 수집' 단계의 진단 로그와 docs/data/rates-meta.json의 failCause를 본다. 원본 커밋·배포는 끝났다"
-          exit 1
-
-      # 렌더 폴백이 발동한 날의 표시다. 커밋·테스트·배포가 모두 끝난 뒤에야 실패로 끝낸다 -
-      # 사이트는 legacy 출력으로 정상 배포됐고, 빨간 job과 실패 메일이 원인 조사를 알린다.
-      - name: 렌더 폴백 반영
-        if: ${{ !cancelled() && steps.render.outputs.fallback == 'true' }}
-        run: |
-          echo "::error::React 렌더 실패 → legacy로 폴백했음. 사이트는 정상 배포됨, 원인 조사 필요 - 위 '정적 HTML에 오늘 내용 심기' 단계의 1차 시도 로그를 본다"
-          exit 1
-
-      # 데이터 건강 점검이 실패한 날의 표시다(#507). 위 "데이터 건강 점검 (비차단)"은 continue-on-error 라 배포를 막지 않았다 -
-      # 수집분은 이미 커밋됐고, 수집 후 테스트가 통과했으면 배포도 나갔다. 커밋·테스트·배포가 모두 끝난 뒤에야 run 을 빨갛게 끝낸다.
-      - name: 데이터 건강 점검 실패 반영
-        if: ${{ !cancelled() && steps.health.outcome == 'failure' }}
-        run: |
-          echo "::error::데이터 건강 점검(tools/health)이 실패했다 - 위 '데이터 건강 점검 (비차단)' 단계의 로그를 본다. 커밋·배포는 끝났고 이 점검은 그것을 막지 않았다"
-          exit 1
-
-      # 수집 전 테스트가 실패한 날의 표시다(#449). 커밋·수집·배포가 모두 끝난 뒤에야 실패로 끝낸다 -
-      # 수집분은 이미 커밋됐고, 수집 후 테스트가 통과했으면 배포도 나갔다. 지키는 것은 수집분(데이터 보존)이지
-      # 화면 신선도가 아니다: 수집 후 테스트도 실패하면 배포가 건너뛰어지고 job은 이미 실패다(이 단계는 `!cancelled()` 라 그날도 돌아 원인을 적는다).
-      - name: 수집 전 테스트 실패 반영
-        if: ${{ !cancelled() && steps.pretest.outcome == 'failure' }}
-        run: |
-          echo "::error::수집 전 테스트가 실패했다 - 위 '테스트 (수집 전)' 단계의 로그를 본다. 수집·원본 커밋은 끝났고, 배포는 수집 후 테스트 결과를 따랐다"
+          echo "::error::금리 수집(금감원 finlife)이 실패했다 - 위 '예·적금·대출 금리 수집' 단계의 진단 로그와 docs/data/rates-meta.json의 failCause를 본다. 수집분·원본 커밋은 이 단계 전에 끝났다(사이트 갱신은 Deploy site 가 따로 한다)"
           exit 1

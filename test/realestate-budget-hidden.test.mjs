@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
 import { BUDGET_PAGES } from "../scripts/budget-pages.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 const REALESTATE = {
   updatedAt: "2026-08-17T00:00:00.000Z",
@@ -132,7 +133,7 @@ test("예산대 장: 예산 데이터를 못 받아도 구운 구획이 그 방�
 test("찍어낸 예산대 열여덟 장에 실려 나간 스크립트도 받는 중에 구운 구획을 숨기지 않는다 (#288)", async () => {
   for (const { file, min10k } of BUDGET_PAGES) {
     const { gate } = hold("budget-deals");
-    const page = await openBudgetPage({ file: `docs/${file}`, budgetBand: min10k, gate });
-    assertBakedKept(page, `docs/${file}`);
+    const page = await openBudgetPage({ file: `${SITE}/${file}`, budgetBand: min10k, gate });
+    assertBakedKept(page, `${SITE}/${file}`);
   }
 });

@@ -3,9 +3,10 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { loadIndexPage } from "./helpers/index-page.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
-const indexHtml = () => readFile(path.join(root, "docs/index.html"), "utf8");
+const indexHtml = () => readFile(path.join(root, `${SITE}/index.html`), "utf8");
 
 const links = async () => {
   const html = await indexHtml();
@@ -28,14 +29,14 @@ test("질문 입구가 첫 화면에 있다", async () => {
 test("질문은 조건을 넣지 않아도 답이 보이는 화면으로 보낸다", async () => {
   // 빈 화면으로 보내면 질문을 누른 사람이 다시 막힌다. 실거래 검색만 예외인데,
   // 그건 "조건을 걸어 찾기"라고 적혀 있어 무엇을 해야 하는지 알고 들어간다.
-  const files = new Set((await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html")));
+  const files = new Set((await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html")));
   const items = await links();
 
   for (const item of items) {
     const file = item.href.replace("./", "");
     assert.ok(files.has(file), `${item.id}가 없는 페이지 ${file}로 보낸다`);
     if (file === "deal-search.html") continue;
-    const html = await readFile(path.join(root, "docs", file), "utf8");
+    const html = await readFile(path.join(root, SITE, file), "utf8");
     assert.ok(
       /<!--prerender:[a-zA-Z]+-->[\s\S]{40,}?<!--\/prerender/.test(html),
       `${file}이 미리 그려 둔 답 없이 비어 있다`
@@ -97,10 +98,10 @@ test("묶음 제목도 영어로 바뀐다", async () => {
 });
 
 test("검색창이 화면 머리에 있는 장은 전부다 - 질문 화면에 들어가면 검색이 사라지지 않게 (#45)", async () => {
-  const files = (await readdir(path.join(root, "docs"))).filter((f) => f.endsWith(".html"));
+  const files = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html"));
   const missing = [];
   for (const f of files) {
-    const html = await readFile(path.join(root, "docs", f), "utf8");
+    const html = await readFile(path.join(root, SITE, f), "utf8");
     if (!/<nav class="page-nav(?: [^"]*)?"/.test(html)) continue; // 훅 class 뒤에 유틸리티 class가 붙어도 1층 내비가 있는 장이다(#280)
     if (!html.includes('class="site-search"') || !html.includes('src="./search.js"')) missing.push(f);
   }
@@ -116,7 +117,7 @@ test("'다른 질문' 목록은 첫 화면 질문 입구와 같다 - 두 벌이 
   const fromIndex = (await links()).map((l) => `${l.href} ${l.text}`);
   assert.deepEqual(fromNav, fromIndex);
   for (const f of ["floor-gap", "record-high", "switch-house", "price-outlook", "jeonse-vs-wolse", "renewal-vs-new", "cancelled-deals"]) {
-    const html = await readFile(path.join(root, `docs/${f}.html`), "utf8");
+    const html = await readFile(path.join(root, `${SITE}/${f}.html`), "utf8");
     assert.match(html, /<section id="other-questions"/, `${f}에 다른 질문 자리가 없다`);
   }
 });

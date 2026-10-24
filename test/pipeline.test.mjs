@@ -43,41 +43,35 @@ test("파생 데이터를 만드는 빌더가 원본 수집과 같은 단계에 
 });
 
 /**
- * summarize.yml도 정적 HTML을 틀에서 다시 쓴다(prerender·build-*-pages). 기준일 찍기
- * (build-updated-stamp)는 그 뒤에 돌아야 하는데, 이게 빠져 Summarize가 4회 연속
- * 실패했다(#212: 시험 228·231 - 기준일 줄이 틀 상태로 돌아감). 이 시험은 두 워크플로의
- * "정적 HTML에 오늘 내용 심기" 단계가 같은 순서를 지키는지 본다. summarize는 금리를
- * 수집하지 않아 build-rate-pages를 안 부르므로(없어도 통과함을 재현으로 확인) 부분 순서만 본다.
+ * (#510, 구조 B-4) 뒤집었다. summarize.yml 도 정적 HTML 을 틀에서 다시 쓰던 시절에는 기준일 찍기(build-updated-stamp)가 빠져 Summarize 가 4회 연속 실패했다(#212:
+ * 시험 228·231 - 기준일 줄이 틀 상태로 돌아감). 렌더가 deploy.yml 한 곳으로 모인 지금은 그 어긋남이 구조적으로 없다: 렌더는 render-pipeline 의 기본 여섯 단계 한 줄이고, 기준일
+ * 찍기가 그 맨 끝이다. 이 시험은 (1) 수집 두 워크플로에 렌더가 없고 (2) deploy.yml 이 기본 여섯(인자 없음)을 부르며 (3) 그 순서가 기준일 찍기로 끝난다는 것을 본다.
+ * 「일부러 다섯」(rate 4장 제외)은 커밋된 docs/ 에 rate 4장이 있어서만 성립하던 모양이라 없어졌다.
  */
-test("summarize.yml의 페이지 빌드 순서가 daily-update.yml과 어긋나지 않고 기준일 찍기로 끝난다", async () => {
-  const [daily, summarize] = await Promise.all([
+test("렌더는 deploy.yml 의 기본 여섯 단계 한 줄이고 기준일 찍기로 끝난다 - summarize.yml·daily-update.yml 에는 렌더가 없다", async () => {
+  const [daily, summarize, deploy] = await Promise.all([
     readWorkflow(".github/workflows/daily-update.yml"),
     readWorkflow(".github/workflows/summarize.yml"),
+    readWorkflow(".github/workflows/deploy.yml"),
   ]);
-  const stepOf = (text) => scriptsIn(text.split("- name: 정적 HTML에 오늘 내용 심기")[1]?.split("\n      - name:")[0] ?? "");
-  // daily는 news-context를 앞 단계(기사에 수치 붙이기)에서 부르므로, 순서는 daily 전체에서 대조한다.
-  const d = scriptsIn(daily);
-  const s = stepOf(summarize);
-  assert.ok(d.length >= 20 && s.length >= 5, `단계를 못 읽었다: daily ${d.length}개, summarize ${s.length}개`);
-  assert.equal(s.at(-1), "build-updated-stamp.ts", "summarize.yml 페이지 빌드 단계가 build-updated-stamp로 끝나지 않는다");
-
-  let from = 0;
-  for (const name of s) {
-    const at = d.indexOf(name, from);
-    assert.ok(at >= 0, `summarize.yml의 ${name}이 daily-update.yml에 없거나 순서가 다르다`);
-    from = at + 1;
+  const RENDERERS = /prerender|build-(?:rate|news|budget|realestate)-pages|build-updated-stamp/;
+  for (const [name, text] of [["daily-update.yml", daily], ["summarize.yml", summarize]]) {
+    assert.deepEqual(scriptsIn(text).filter((s) => RENDERERS.test(s)), [], `${name}이 렌더 스크립트를 부른다 - 렌더는 deploy.yml 의 일이다`);
   }
+  const d = scriptsIn(deploy);
+  assert.deepEqual(d, ["prerender.ts", "build-rate-pages.ts", "build-news-pages.ts", "build-budget-pages.ts", "build-realestate-pages.ts", "build-updated-stamp.ts"], "deploy.yml 의 렌더 순서가 기본 여섯과 다르다");
+  assert.equal(d.at(-1), "build-updated-stamp.ts", "deploy.yml 렌더가 build-updated-stamp로 끝나지 않는다");
 });
 
 /**
  * conversion.json은 rates.json의 대출 금리·옵션 수를 읽는다. 첫 build-conversion은 "실거래 수집"
  * 단계 안에서 금리 수집보다 먼저 돌아서, 금감원 공시월이 바뀐 날(2026-10-22) rates만 새것이 되고
  * conversion은 어제 금리로 남아 수집 후 테스트(sample-size 154행)가 빨개졌다(#467).
- * 이 시험은 워크플로 스텝 순서를 읽어, 마지막 build-conversion이 fetch-rates 뒤 · conversion을
- * 읽는 렌더(render-pipeline)·커밋·수집 후 테스트 앞에서 돈다고 단언한다. 같은 호출이 앞 단계에만
- * 있으면(옛 워크플로) 실패한다.
+ * 이 시험은 워크플로 스텝 순서를 읽어, 마지막 build-conversion이 fetch-rates 뒤 · 이 conversion을
+ * 읽는 news-context·커밋 앞에서 돈다고 단언한다. 같은 호출이 앞 단계에만 있으면(옛 워크플로) 실패한다.
+ * (#510) 렌더와 시험은 deploy.yml 로 갔으므로 "렌더·수집 후 테스트 앞" 대신 "커밋 앞"이 기준이다 - 커밋 뒤에 다시 만들면 낡은 conversion 이 커밋된다.
  */
-test("full 모드에서 build-conversion이 fetch-rates 뒤 · 렌더·커밋·수집 후 테스트 앞에서 다시 돈다", async () => {
+test("full 모드에서 build-conversion이 fetch-rates 뒤 · news-context·커밋 앞에서 다시 돈다", async () => {
   const workflow = await read(".github/workflows/daily-update.yml");
   // 스텝 머리는 6칸 들여쓴 `- ` 다. 스텝마다 그 본문(주석 포함)까지 한 덩어리로 자른다.
   const steps = workflow.split(/\n(?=      - )/).filter((s) => s.startsWith("      - "));
@@ -89,20 +83,20 @@ test("full 모드에서 build-conversion이 fetch-rates 뒤 · 렌더·커밋·�
   };
 
   const rates = only("node scripts/fetch-rates.ts");
-  const render = only("node scripts/render-pipeline.ts");
+  const context = only("node scripts/news-context.ts");
   const commit = only("./scripts/push-docs.sh \"chore: 데일리 데이터 갱신");
-  const testsAfter = indexesOf("npm test").at(-1);
   const conversions = indexesOf("node scripts/build-conversion.ts");
 
   assert.ok(conversions.length >= 2, `build-conversion을 부르는 스텝이 ${conversions.length}개다 - 실거래 수집 안의 것 하나뿐이면 금리 수집 전 값으로 남는다(#467)`);
   const last = conversions.at(-1);
   assert.ok(last > rates, "마지막 build-conversion이 fetch-rates보다 앞이다 - conversion이 어제 금리로 남는다(#467)");
-  assert.ok(last < render, "마지막 build-conversion이 render-pipeline보다 뒤다 - 렌더가 낡은 conversion을 읽는다");
-  assert.ok(last < commit && last < testsAfter, "마지막 build-conversion이 커밋·수집 후 테스트보다 뒤다");
+  assert.ok(last < context, "마지막 build-conversion이 news-context보다 뒤다 - 기사에 붙는 수치가 낡은 conversion을 읽는다");
+  assert.ok(last < commit, "마지막 build-conversion이 커밋보다 뒤다 - 낡은 conversion이 커밋된다");
+  assert.ok(!workflow.replace(/^\s*#.*$/gm, "").includes("render-pipeline"), "수집 워크플로가 렌더를 부른다(#510)");
 
   // 금리 수집이 full에서만 돌므로 다시 만들기도 full에서만 돈다(news 모드에서 금리 없이 도는 일이 없게).
   assert.match(steps[rates], /if: env\.MODE == 'full'/);
   assert.match(steps[last], /if: env\.MODE == 'full'/);
-  // 이 단계 실패가 job을 멈추면 같은 실행의 수집분 커밋이 안 돈다(#62) - 멈추지 않는다.
+  // 이 단계 실패가 job을 멈추면 같은 실행의 수집분 커밋이 안 돌아 데이터가 사라진다(#62) - 멈추지 않는다.
   assert.match(steps[last], /continue-on-error: true/);
 });

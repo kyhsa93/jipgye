@@ -4,6 +4,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import path from "node:path";
 import { formatPercent } from "../../../scripts/realestate-format.ts";
+import { SITE } from "../../../test/helpers/site-root.mjs";
 
 test("정적 HTML과 자바스크립트가 같은 카드를 그린다", async () => {
   const { readFile } = await import("node:fs/promises");
@@ -20,7 +21,7 @@ test("정적 HTML과 자바스크립트가 같은 카드를 그린다", async ()
   const shown = formatPercent(spread.median).replace(".", "\\.");
 
   // 정적 HTML에 들어 있는 값
-  const html = await readFile(path.join(root, "docs/district-nowon.html"), "utf8");
+  const html = await readFile(path.join(root, `${SITE}/district-nowon.html`), "utf8");
   assert.match(html, new RegExp(`단지별 중앙값</div><div class="value">${shown}`));
 
   // 자바스크립트가 붙은 뒤의 값. 다르면 화면이 한 번 튄다.

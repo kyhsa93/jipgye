@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { WOLSE_CONVERSION_RATE, attachChanges, findBaseline, summarizeRent } from "../scripts/realestate-metrics.ts";
+import { sitePath } from "./helpers/site-root.mjs";
 
 const entry = (date, period, count, perPyeong) => ({
   date,
@@ -85,7 +86,7 @@ test("화면이 적는 전환율이 계산에 쓰는 값과 같다", async () =>
   const { readFile } = await import("node:fs/promises");
   const rate = `${(WOLSE_CONVERSION_RATE * 100).toFixed(1)}%`;
   for (const page of ["realestate", "apartment-sale", "apartment-rent", "apartment-jeonse", "method"]) {
-    const html = await readFile(new URL(`../docs/${page}.html`, import.meta.url), "utf8");
+    const html = await readFile(sitePath(`${page}.html`), "utf8");
     const written = [...html.matchAll(/(?:×|&times;)12(?:÷|&divide;)([\d.]+%)/g)].map((m) => m[1]);
     assert.ok(written.length >= 2, `${page}: 전환율 문구가 없다`);
     for (const w of written) assert.equal(w, rate, `${page}: 화면은 ${w}, 계산은 ${rate}`);

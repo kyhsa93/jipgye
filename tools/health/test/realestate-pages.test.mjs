@@ -7,6 +7,7 @@ import path from "node:path";
 import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../../../scripts/build-realestate-pages.ts";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../../../scripts/district-slugs.ts";
 import { stampHtml } from "../../../scripts/updated-stamp.ts";
+import { SITE } from "../../../test/helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -20,14 +21,14 @@ test("커밋된 거래 유형별 페이지가 지금 원본·데이터로 찍은
   ]);
 
   for (const page of REALESTATE_PAGES) {
-    const committed = await read(`docs/${page.file}`);
+    const committed = await read(`${SITE}/${page.file}`);
     // 틀에는 기준일이 비어 있고 날짜는 build-updated-stamp가 나중에 찍는다(#374). 커밋본의 날짜를 같이 찍어 견준다.
     const ymd = /data-updated="(\d{4}-\d{2}-\d{2})"/.exec(committed)?.[1];
-    assert.ok(ymd, `docs/${page.file}에 기준일이 없다`);
+    assert.ok(ymd, `${SITE}/${page.file}에 기준일이 없다`);
     assert.equal(
       committed,
       stampHtml(buildRealestatePage(baseHtml, page, realestate, complexRatio?.seoul ?? null), ymd),
-      `docs/${page.file}이 원본과 어긋납니다. node scripts/build-realestate-pages.ts를 실행하세요.`
+      `${SITE}/${page.file}이 원본과 어긋납니다. node scripts/build-realestate-pages.ts를 실행하세요.`
     );
   }
 });
@@ -45,10 +46,10 @@ test("커밋된 자치구 페이지 25개가 지금 원본·데이터로 찍은 
     // 자치구 페이지는 realestate.json 말고 그 구의 전수 거래 파일도 읽는다. 빌드가
     // 넘기는 것과 같은 것을 넘겨야 같은 결과가 나온다.
     const deals = await readJson(`deals-${DISTRICT_SLUGS[district.name]}`).catch(() => null);
-    const committed = await read(`docs/${district.file}`);
+    const committed = await read(`${SITE}/${district.file}`);
     // 틀에는 기준일이 비어 있고 날짜는 build-updated-stamp가 나중에 찍는다(#374). 커밋본의 날짜를 같이 찍어 견준다.
     const ymd = /data-updated="(\d{4}-\d{2}-\d{2})"/.exec(committed)?.[1];
-    assert.ok(ymd, `docs/${district.file}에 기준일이 없다`);
+    assert.ok(ymd, `${SITE}/${district.file}에 기준일이 없다`);
     assert.equal(
       committed,
       stampHtml(
@@ -62,7 +63,7 @@ test("커밋된 자치구 페이지 25개가 지금 원본·데이터로 찍은 
         ),
         ymd
       ),
-      `docs/${district.file}이 원본과 어긋납니다. node scripts/build-realestate-pages.ts를 실행하세요.`
+      `${SITE}/${district.file}이 원본과 어긋납니다. node scripts/build-realestate-pages.ts를 실행하세요.`
     );
   }
 });

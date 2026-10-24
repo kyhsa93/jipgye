@@ -163,7 +163,9 @@ const BANS = [
 for (const [name, bad] of BANS) {
   test(`${name} (#276)`, async () => {
     const files = await scannedFiles();
-    assert.ok(files.length > 150, `훑는 소스를 ${files.length}개밖에 못 찾았다`);
+    // 하한 150 -> 130 (#510): 생성 HTML 53장이 main 의 docs/ 에서 걷혀 훑는 소스가 194 -> 141개가 됐다. 그 장들의 class 는 훑는 틀·스크립트(scripts/*.ts·render/entry.jsx)에서
+    // 나오므로 훑는 토큰의 합집합은 같다 - build-css.mjs --check 가 걷어낸 뒤에도 docs/style.css 와 바이트 동일임을 확인했다. 130 은 "훑기가 헛돌지 않는다"만 지킨다.
+    assert.ok(files.length > 130, `훑는 소스를 ${files.length}개밖에 못 찾았다`);
     const hits = (await scannedTokens()).filter(({ token }) => bad(token)).map(({ file, token }) => `${file}: ${token}`);
     assert.deepEqual(hits, []);
   });

@@ -6,15 +6,16 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { readDataSources } from "../../../scripts/source-age.ts";
 import { PAGE_SOURCES, baselineFor } from "../../../scripts/updated-stamp.ts";
+import { SITE } from "../../../test/helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
-const DOCS = path.join(root, "docs");
+const DOCS = path.join(root, SITE);
 
 test("저장소 docs: 찍힌 기준일이 그 장 소스의 가장 오래된 updatedAt과 같다 (오늘과 비교하지 않는다)", async () => {
   const sources = readDataSources(path.join(DOCS, "data"));
   for (const [file, names] of Object.entries(PAGE_SOURCES)) {
     const html = await readFile(path.join(DOCS, file), "utf8");
     const want = baselineFor(names, sources);
-    assert.match(html, new RegExp(`id="updated" data-updated="${want}">기준일 ${want}<`), `docs/${file}: 기준일이 ${want}이어야 한다 (node scripts/build-updated-stamp.ts)`);
+    assert.match(html, new RegExp(`id="updated" data-updated="${want}">기준일 ${want}<`), `${SITE}/${file}: 기준일이 ${want}이어야 한다 (node scripts/build-updated-stamp.ts)`);
   }
 });

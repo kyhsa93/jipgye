@@ -5,9 +5,10 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { applyPrerender, escapeHtml, marketHtml, newsHtml, realestateHtml, summaryHtml } from "../../../scripts/prerender.ts";
+import { SITE } from "../../../test/helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
-const readIndex = () => readFile(path.join(root, "docs/index.html"), "utf8");
+const readIndex = () => readFile(path.join(root, `${SITE}/index.html`), "utf8");
 const readData = async (name) =>
   JSON.parse(await readFile(path.join(root, `docs/data/${name}.json`), "utf8"));
 

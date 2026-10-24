@@ -9,6 +9,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NEWS_PAGES } from "../scripts/build-news-pages.ts";
 import { newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "../scripts/prerender.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -29,7 +30,7 @@ const SHELL = [
 
 test("뉴스 4장의 껍데기는 같은 유틸리티를 갖고 훅 class는 그대로다 (#280)", async () => {
   for (const file of FILES) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     for (const { name, pattern, hooks, utilities } of SHELL) {
       const m = html.match(pattern);
       assert.ok(m, `${file}: ${name}를 못 찾았다`);
@@ -41,7 +42,7 @@ test("뉴스 4장의 껍데기는 같은 유틸리티를 갖고 훅 class는 그
 });
 
 test("문자열 패치(replaceOnce) 다섯 곳의 needle이 틀에 글자 그대로 한 번씩 있고, 찍은 세 장은 aria-current가 정확히 하나다 (#280)", async () => {
-  const template = await read("docs/news.html");
+  const template = await read(`${SITE}/news.html`);
   const count = (s, needle) => s.split(needle).length - 1;
   const needles = [
     '<link rel="canonical"',
@@ -59,7 +60,7 @@ test("문자열 패치(replaceOnce) 다섯 곳의 needle이 틀에 글자 그대
 
   const expected = { "news.html": "all", ...Object.fromEntries(NEWS_PAGES.map((p) => [p.file, p.category])) };
   for (const file of FILES) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     const block = html.match(/<nav class="sub-nav[^"]*" aria-label="분야">[\s\S]*?<\/nav>/)?.[0];
     assert.ok(block, `${file}: 2층 내비가 없다`);
     const anchors = [...block.matchAll(/<a\b[^>]*>/g)].map((m) => m[0]);
@@ -86,7 +87,7 @@ test("다시 그려지는 조각과 인라인 스크립트에는 유틸리티를
   assert.ok(rendered.newsListHtml.includes("news-item"), "전제: 기사 목록 조각이 비었다 - 이 시험이 아무것도 안 본 것이다");
 
   for (const file of FILES) {
-    const html = await read(`docs/${file}`);
+    const html = await read(`${SITE}/${file}`);
     const script = html.match(/<script>\n([\s\S]*?)<\/script>/)?.[1];
     assert.ok(script && script.length > 5000, `${file}: 인라인 스크립트를 못 찾았다`);
     assert.ok(!script.includes("tw:"), `${file}: 인라인 스크립트에 유틸리티가 있다`);

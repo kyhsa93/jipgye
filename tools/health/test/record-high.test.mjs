@@ -4,12 +4,13 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { SITE } from "../../../test/helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
 
 test("정적 HTML이 오늘 데이터의 문장과 표를 싣는다", async () => {
   const [html, data] = await Promise.all([
-    readFile(path.join(root, "docs/record-high.html"), "utf8"),
+    readFile(path.join(root, `${SITE}/record-high.html`), "utf8"),
     readFile(path.join(root, "docs/data/record-high.json"), "utf8").then(JSON.parse),
   ]);
   const block = (name) => html.match(new RegExp(`<!--prerender:${name}-->([\\s\\S]*?)<!--/prerender:${name}-->`))?.[1];

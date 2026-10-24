@@ -5,6 +5,7 @@ import path from "node:path";
 import vm from "node:vm";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 import { loadIndexPage } from "./helpers/index-page.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -237,7 +238,7 @@ test("DebugView는 ?ga_debug=1을 붙였을 때만 켜진다", async () => {
 
 test("이벤트 매개변수에 GA4 예약 이름을 쓰지 않는다", async () => {
   const [index, rates] = await Promise.all(
-    ["docs/index.html", "docs/rates.html"].map((p) => readFile(path.join(root, p), "utf8"))
+    [`${SITE}/index.html`, `${SITE}/rates.html`].map((p) => readFile(path.join(root, p), "utf8"))
   );
 
   for (const [name, html] of [
@@ -332,7 +333,7 @@ test("계측 스크립트가 차단돼도 금리 페이지는 그대로 그려�
 
 test("두 페이지와 서비스워커가 모두 analytics.js를 물고 있다", async () => {
   const [index, rates, sw] = await Promise.all(
-    ["docs/index.html", "docs/rates.html", "docs/sw.js"].map((p) =>
+    [`${SITE}/index.html`, `${SITE}/rates.html`, "docs/sw.js"].map((p) =>
       readFile(path.join(root, p), "utf8")
     )
   );
@@ -351,7 +352,7 @@ test("두 페이지와 서비스워커가 모두 analytics.js를 물고 있다",
 });
 
 test("요약이 폴백된 날은 메인에도 그 사실을 표시한다", async () => {
-  const html = await readFile(path.join(root, "docs/index.html"), "utf8");
+  const html = await readFile(path.join(root, `${SITE}/index.html`), "utf8");
   assert.ok(html.includes("summaryFallbackNote"), "안내 문구 사전 항목이 없다");
   assert.ok(
     html.includes("categories.some((c) => c.fallbackReason)"),
@@ -363,7 +364,7 @@ test("요약이 폴백된 날은 메인에도 그 사실을 표시한다", async
 });
 
 test("로드가 실패하면 다시 시도할 수단을 준다", async () => {
-  for (const file of ["docs/index.html", "docs/deposit-rates.html", "docs/news.html"]) {
+  for (const file of [`${SITE}/index.html`, `${SITE}/deposit-rates.html`, `${SITE}/news.html`]) {
     const html = await readFile(path.join(root, file), "utf8");
     // 금리 페이지는 단추를 공용 docs/load-state.js가 만든다(#173) - 페이지에는 id만 남는다.
     assert.ok(/id="load-(error-)?retry"|retryId: "load-retry"/.test(html), `${file}에 재시도 버튼이 없다`);

@@ -6,6 +6,7 @@ import { attachContext, buildRealestateStats } from "../scripts/news-context.ts"
 import { newsRealestateStatsHtml } from "../scripts/prerender.ts";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { loadNewsPage } from "./helpers/news-page.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -101,7 +102,7 @@ test("영어 화면은 카드도 영어로 그린다", async () => {
 // 지표가 정당하게 비어 부동산 장도 접혀 나오는데, 예전 검사는 그날 데이터가 지표를 낼 거라 가정해
 // 데일리 갱신(2026-10-06)이 바뀐 날부터 main과 데일리 수집 전 테스트를 막았다.
 test("빌더는 부동산 장에서만, 지표가 있을 때만 지표 줄을 편다", async () => {
-  const base = await readFile(path.join(root, "docs", "news.html"), "utf8");
+  const base = await readFile(path.join(root, SITE, "news.html"), "utf8");
   const summary = { categories: [] };
   const open = '<section id="realestate-stats-section">';
   const closed = '<section id="realestate-stats-section" hidden>';
@@ -128,7 +129,7 @@ test("커밋된 뉴스 페이지의 지표 줄이 커밋된 뉴스 데이터와 
   const stats = newsRealestateStatsHtml(news);
 
   for (const page of NEWS_PAGES) {
-    const html = await readFile(path.join(root, "docs", page.file), "utf8");
+    const html = await readFile(path.join(root, SITE, page.file), "utf8");
     const shouldOpen = page.category === "realestate" && Boolean(stats);
     assert.equal(
       html.includes('<section id="realestate-stats-section">'),

@@ -14,12 +14,13 @@ import {
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 import { readFixture } from "./helpers/fixture-data.mjs";
 import { rateBridgeHtml } from "../scripts/rate-bridge.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
-const readIndex = () => readFile(path.join(root, "docs/index.html"), "utf8");
+const readIndex = () => readFile(path.join(root, `${SITE}/index.html`), "utf8");
 // docs/rates.html은 허브(#193)라 표가 없다. 표 자리표시는 예금 페이지(틀에서 찍은 것)에서 본다.
-const readRates = () => readFile(path.join(root, "docs/deposit-rates.html"), "utf8");
-const readHub = () => readFile(path.join(root, "docs/rates.html"), "utf8");
+const readRates = () => readFile(path.join(root, `${SITE}/deposit-rates.html`), "utf8");
+const readHub = () => readFile(path.join(root, `${SITE}/rates.html`), "utf8");
 
 // 구운 조각에는 #279에서 Tailwind 유틸리티가 붙었고, 틀의 인라인 스크립트가 데이터를 받아 다시 그리는 마크업에는 붙지 않는다
 // (그 스크립트를 고치는 길은 S6와 #282로 막혀 있다 - scripts/prerender.ts의 금리 조각 주석). 이 시험은 두 쪽을 맞대므로 둘 다 받는다.

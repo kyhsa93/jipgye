@@ -7,6 +7,7 @@ import { ratesHtml } from "../scripts/prerender.ts";
 import { stampHtml } from "../scripts/updated-stamp.ts";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 import { readFixture } from "./helpers/fixture-data.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -21,7 +22,7 @@ const productNames = (html) => [...html.matchAll(new RegExp(`(?:${PRODUCT_NAME.j
 
 test("각 페이지가 자기 상품군을 정규 URL·제목·첫 탭으로 선언한다", async () => {
   for (const page of RATE_PAGES) {
-    const html = await read(`docs/${page.file}`);
+    const html = await read(`${SITE}/${page.file}`);
     assert.ok(html.includes(`<title>${page.title}</title>`), `${page.file} 제목이 다르다`);
     assert.ok(
       html.includes(`<link rel="canonical" href="https://kyhsa93.github.io/jipgye/${page.file}">`),
@@ -40,7 +41,7 @@ test("각 페이지의 정적 표가 그 페이지 첫 화면과 같은 상품·
   const rates = await readFixture("rates");
 
   for (const page of RATE_PAGES) {
-    const { byId } = await loadRatesPage({ file: `docs/${page.file}`, rates });
+    const { byId } = await loadRatesPage({ file: `${SITE}/${page.file}`, rates });
     const rendered = productNames(byId.get("products-body").innerHTML);
     const prerendered = productNames(ratesHtml(rates, { category: page.category }));
 
@@ -56,7 +57,7 @@ test("네 페이지가 서로 다른 상품을 보여준다", async () => {
 });
 
 test("모든 금리 페이지가 서로를 진짜 링크로 가리킨다", async () => {
-  const files = ["docs/rates.html", ...RATE_PAGES.map((p) => `docs/${p.file}`)];
+  const files = [`${SITE}/rates.html`, ...RATE_PAGES.map((p) => `${SITE}/${p.file}`)];
   for (const file of files) {
     const html = await read(file);
     for (const page of RATE_PAGES) {
@@ -69,15 +70,15 @@ test("허브(rates.html)는 색인에서 빠지고, 상품군 페이지 넷만 �
   // 예전에는 rates.html이 예금 페이지와 본문이 글자까지 같아 둘 다 색인에 두면 같은 페이지 두 장이
   // 됐다. 지금 rates.html은 링크만 있는 허브(#193)라 그 이유는 없어졌지만 noindex는 그대로 둔다.
   // 여기서는 상품군 장이 허브의 noindex를 물려받지 않는지 본다(허브 쪽 단언은 test/rate-hub.test.mjs와 겹친다).
-  const base = await read("docs/rates.html");
+  const base = await read(`${SITE}/rates.html`);
   assert.match(base, /<meta name="robots" content="noindex, follow">/);
 
   for (const page of RATE_PAGES) {
-    const html = await read(`docs/${page.file}`);
+    const html = await read(`${SITE}/${page.file}`);
     assert.match(
       html,
       /<meta name="robots" content="index, follow">/,
-      `docs/${page.file}이 허브의 noindex를 그대로 물려받았습니다`
+      `${SITE}/${page.file}이 허브의 noindex를 그대로 물려받았습니다`
     );
   }
 });
@@ -86,7 +87,7 @@ test("허브(rates.html)는 색인에서 빠지고, 상품군 페이지 넷만 �
 // 4장 모두(대출 2장은 화면에 안 쓰이지만 같은 스크립트 사본이다)와 틀의 한·영 문장에 새 값이 있고 옛 값이 없는지 본다.
 // 문자열 존재 검사일 뿐이고 날짜·데이터 값에 따라 갈리지 않는다(#8). 법무가 확정한 문장은 이슈 #229 댓글.
 test("savingNote가 예금자보호 한도를 금융회사별 1억원으로 적고 옛 값(5천만원·KRW 50M)이 없다 — 틀과 4장, 한·영", async () => {
-  const sources = ["scripts/rates-template.html", ...RATE_PAGES.map((p) => `docs/${p.file}`)];
+  const sources = ["scripts/rates-template.html", ...RATE_PAGES.map((p) => `${SITE}/${p.file}`)];
   for (const file of sources) {
     const notes = [...(await read(file)).matchAll(/savingNote: "([^"]*)"/g)].map((m) => m[1]);
     assert.equal(notes.length, 2, `${file}: savingNote가 한·영 두 줄이 아니다`);
@@ -107,7 +108,7 @@ test("savingNote가 예금자보호 한도를 금융회사별 1억원으로 적�
 // 같은 PR에서 이 시험을 지운다 — 그 PR이 이 시험을 지우는 것이 재도입의 신호다.
 test("금리 4장과 틀에 표 위 .rates-facts 문단·데이터 블록·렌더 함수가 없다 (#214, 재개는 #232)", async () => {
   const gone = /rates-facts|rate-facts-data|RATE_FACTS|renderRateFacts|prerender:rateFacts/;
-  const sources = ["scripts/rates-template.html", ...RATE_PAGES.map((p) => `docs/${p.file}`)];
+  const sources = ["scripts/rates-template.html", ...RATE_PAGES.map((p) => `${SITE}/${p.file}`)];
   for (const file of sources) {
     const hit = gone.exec(await read(file));
     assert.equal(hit, null, `${file}: 지운 .rates-facts 문단 흔적(${hit?.[0]})이 다시 들어왔다`);
@@ -119,7 +120,7 @@ test("금리 4장과 틀에 표 위 .rates-facts 문단·데이터 블록·렌�
 // 카드 종류가 늘어 칸 수가 모자라거나, 높이를 잡는 규칙이 사라지거나. 둘 다 여기서 막는다.
 // 값(금리·날짜)에 기대지 않는 구조 검사다(#8).
 test("추이 격자는 그릴 카드 수만큼 자리를 미리 깔고, 그 칸의 높이를 style.css가 잡는다 (#287)", async () => {
-  const sources = ["scripts/rates-template.html", ...RATE_PAGES.map((p) => `docs/${p.file}`)];
+  const sources = ["scripts/rates-template.html", ...RATE_PAGES.map((p) => `${SITE}/${p.file}`)];
   for (const file of sources) {
     const html = await read(file);
 
@@ -173,7 +174,7 @@ test("영어 화면의 title·description·h1 은 장마다 다르고, 구운 �
   const descriptions = new Set();
   const h1s = new Set();
   for (const page of RATE_PAGES) {
-    const en = await loadRatesPage({ file: `docs/${page.file}`, locale: "en" });
+    const en = await loadRatesPage({ file: `${SITE}/${page.file}`, locale: "en" });
     assert.equal(en.sandbox.document.title, page.titleEn, `${page.file}: 영어 document.title`);
     assert.equal(en.byId.get('meta[name="description"]').attrs.content, page.descriptionEn, `${page.file}: 영어 description`);
     assert.equal(en.byId.get("page-title").textContent, page.h1En, `${page.file}: 영어 h1`);
@@ -184,7 +185,7 @@ test("영어 화면의 title·description·h1 은 장마다 다르고, 구운 �
     descriptions.add(en.byId.get('meta[name="description"]').attrs.content);
 
     // 한국어는 구운 <title>·description 과 스크립트가 넣는 글자가 이미 같다 - 영어만 갈리던 것이 이 이슈다.
-    const ko = await loadRatesPage({ file: `docs/${page.file}`, locale: "ko" });
+    const ko = await loadRatesPage({ file: `${SITE}/${page.file}`, locale: "ko" });
     assert.equal(ko.sandbox.document.title, page.title, `${page.file}: 한국어 document.title`);
     assert.equal(ko.byId.get('meta[name="description"]').attrs.content, page.description, `${page.file}: 한국어 description`);
     assert.equal(ko.byId.get("page-title").textContent, page.title, `${page.file}: 한국어 h1(영어 h1 키가 없어 title 로 돌아간다)`);
@@ -197,7 +198,7 @@ test("영어 화면의 title·description·h1 은 장마다 다르고, 구운 �
 test("영어 공유 카드 제목(shareTitle)은 장마다 다르고, 틀의 옛 한 줄이 4장에 남지 않는다 (#337)", async () => {
   const shareTitles = new Set();
   for (const page of RATE_PAGES) {
-    const html = await read(`docs/${page.file}`);
+    const html = await read(`${SITE}/${page.file}`);
     const shares = [...html.matchAll(/shareTitle: "([^"]*)"/g)].map((m) => m[1]);
     assert.equal(shares.length, 2, `${page.file}: shareTitle 이 한·영 두 줄이 아니다`);
     assert.equal(shares[0], page.title, `${page.file}: 한국어 shareTitle`);

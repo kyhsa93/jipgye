@@ -4,6 +4,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
 import { loadIndexPage } from "./helpers/index-page.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 // 머리 버튼 셋(공유·테마·언어)의 aria-label이 페이지 언어를 따른다 (#112).
 // 두 층을 본다: ① 정적 HTML(첫 화면, 스크립트가 돌기 전·돌지 않을 때 스크린리더가 읽는 값),
@@ -12,7 +13,7 @@ import { loadIndexPage } from "./helpers/index-page.mjs";
 // 그 전제(모든 장이 nav.js를 불러오고, 전환 때 html lang을 바꾼다)를 ③에서 소스로 확인한다.
 
 const root = path.resolve(import.meta.dirname, "..");
-const docs = path.join(root, "docs");
+const docs = path.join(root, SITE);
 const pages = async () =>
   Promise.all(
     (await readdir(docs))

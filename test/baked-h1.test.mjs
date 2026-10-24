@@ -9,6 +9,7 @@ import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scr
 import { buildBudgetPage } from "../scripts/build-budget-pages.ts";
 import { BASE_H1, bakeHeading, koHeading } from "../scripts/page-heading.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 /**
  * 구운 `h1`이 그 장의 제목이다 (#295).
@@ -57,7 +58,7 @@ test("찍어낸 장은 46장이다(예산대 18·자치구 25·거래유형 3)",
 
 // 틀(scripts/realestate-template.html, 빌더가 읽는다)과 나가는 장(docs/realestate.html) 둘 다 본다(#374).
 test("틀 realestate.html의 h1은 그대로다", async () => {
-  for (const rel of [TEMPLATE, "docs/realestate.html"]) {
+  for (const rel of [TEMPLATE, `${SITE}/realestate.html`]) {
     const html = await read(rel);
     assert.ok(html.includes(BASE_H1), `${rel}: 틀의 h1 한 줄이 바뀌었다`);
     assert.equal(bakedH1(html), "서울 아파트 시세", rel);
@@ -67,12 +68,12 @@ test("틀 realestate.html의 h1은 그대로다", async () => {
 test("찍어낸 46장의 구운 h1 = 그 장의 스크립트가 한국어에서 넣는 글자", async (t) => {
   for (const file of GENERATED) {
     await t.test(file, async () => {
-      const html = await read(`docs/${file}`);
+      const html = await read(`${SITE}/${file}`);
       const baked = bakedH1(html);
 
       // 그 장에 실려 나간 인라인 스크립트를 그대로 돌린다(데이터 없음 - applyLocale()은 받기 전에 돈다).
       const page = await loadRealestatePage({
-        file: `docs/${file}`,
+        file: `${SITE}/${file}`,
         locale: "ko",
         kind: metaOf(html, "realestate-kind"),
         district: metaOf(html, "realestate-district"),
@@ -93,7 +94,7 @@ test("찍어낸 46장의 구운 h1 = 그 장의 스크립트가 한국어에서 
  */
 test("찍어낸 46장의 구운 h1은 서로 다른 46개 글자다", async () => {
   const h1OfFile = new Map();
-  for (const file of GENERATED) h1OfFile.set(file, bakedH1(await read(`docs/${file}`)));
+  for (const file of GENERATED) h1OfFile.set(file, bakedH1(await read(`${SITE}/${file}`)));
   assert.equal(h1OfFile.size, 46);
 
   const filesOfH1 = new Map();
@@ -108,9 +109,9 @@ test("찍어낸 46장의 구운 h1은 서로 다른 46개 글자다", async () =
 
 test("영어로 바꾸면 영어 제목이 그대로 들어온다(구운 한국어 h1은 그 뒤에 덮인다)", async () => {
   for (const [file, expected] of [
-    ["docs/budget-7eok.html", "Seoul Apartments Around \u20a90.7B - Recent Deals"],
-    ["docs/district-gangnam.html", "강남구 apartment prices"],
-    ["docs/apartment-sale.html", "Seoul Apartment Sale Prices"],
+    [`${SITE}/budget-7eok.html`, "Seoul Apartments Around \u20a90.7B - Recent Deals"],
+    [`${SITE}/district-gangnam.html`, "강남구 apartment prices"],
+    [`${SITE}/apartment-sale.html`, "Seoul Apartment Sale Prices"],
   ]) {
     const html = await read(file);
     const page = await loadRealestatePage({

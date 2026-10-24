@@ -8,6 +8,7 @@ import { budgetBodyHtml, realestateOverallHtml } from "../scripts/prerender.ts";
 import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const RATES = JSON.parse(await readFile(path.join(root, "docs/data/rates.json"), "utf8"));
@@ -91,10 +92,10 @@ test("예산 페이지의 서울 전체 평균 카드는 틀이 아니라 빌더
   assert.equal(overall(buildBudgetPage(template, page8, BUDGET, null, null, null, null, null, REALESTATE)), cards);
 
   // 커밋된 열여덟 장은 나가는 시세 장과 같은 카드를 싣는다(둘 다 같은 realestate.json 에서 같은 호출로 굽는다).
-  const shipped = overall(await readFile(path.join(root, "docs/realestate.html"), "utf8"));
+  const shipped = overall(await readFile(path.join(root, `${SITE}/realestate.html`), "utf8"));
   assert.ok(shipped?.length > 0);
   for (const page of BUDGET_PAGES) {
-    assert.equal(overall(await readFile(path.join(root, "docs", page.file), "utf8")), shipped, `docs/${page.file}: 서울 전체 평균 카드가 시세 장과 다르다`);
+    assert.equal(overall(await readFile(path.join(root, SITE, page.file), "utf8")), shipped, `${SITE}/${page.file}: 서울 전체 평균 카드가 시세 장과 다르다`);
   }
 });
 
@@ -123,7 +124,7 @@ test("거래가 없는 구간은 페이지를 만들지 않는다", async () => 
 
 test("예산대 목록은 어느 페이지에도 두지 않는다", async () => {
   for (const file of ["realestate.html", "deal-search.html", "apartment-sale.html", "district-gangnam.html", "budget-8eok.html"]) {
-    const html = await readFile(path.join(root, "docs", file), "utf8");
+    const html = await readFile(path.join(root, SITE, file), "utf8");
     assert.ok(!html.includes("budget-links"), `${file}: 예산대 목록이 남아 있다`);
     assert.ok(!html.includes("예산대별 실거래"), `${file}: 예산대 목록 제목이 남아 있다`);
   }
@@ -161,7 +162,8 @@ test("예산 페이지는 그 구간만 보여주고 주소를 건드리지 않�
 });
 
 test("예산 페이지는 시세 페이지에서 찍어내는 것들보다 먼저 돈다", async () => {
-  for (const file of ["scripts/update-all.mjs", ".github/workflows/daily-update.yml"]) {
+  // (#510) 렌더는 deploy.yml 의 render-pipeline 한 줄이다(update-all·daily-update 에서 빠졌다). 펼친 순서를 본다.
+  for (const file of [".github/workflows/deploy.yml"]) {
     const text = expandRenderPipeline(await readFile(path.join(root, file), "utf8"));
     const budget = text.indexOf("build-budget-pages");
     const realestate = text.indexOf("build-realestate-pages");
@@ -184,7 +186,7 @@ test("예산대마다 그 돈이 서울에서 어디로 가는지 다르게 말�
   // budget-facts.test.mjs가 표본을 직접 만들어 확인한다.
   const said = new Map();
   for (const page of BUDGET_PAGES) {
-    const html = await readFile(path.join(root, "docs", page.file), "utf8");
+    const html = await readFile(path.join(root, SITE, page.file), "utf8");
     const prose = [
       /<p class="budget-where">([\s\S]*?)<\/p>/.exec(html)?.[1],
       /<p class="district-summary budget-facts" data-summary-lang="ko">([\s\S]*?)<\/p>/.exec(html)?.[1],
@@ -223,11 +225,11 @@ test("예산 페이지는 자치구 시세표를 다시 싣지 않는다", async
   // 복사돼 나가면서, 페이지 본문의 절반이 옆 페이지와 글자까지 같아졌다. 표는 원본
   // 한 곳에 두고 여기서는 접는다 — "10억대로 뭘 살 수 있나"에 답하지도 않는 표다.
   for (const page of BUDGET_PAGES) {
-    const html = await readFile(path.join(root, "docs", page.file), "utf8");
+    const html = await readFile(path.join(root, SITE, page.file), "utf8");
     assert.match(
       html,
       /<section id="district-section" class="tw:mb-10 tw:1024:mb-16" hidden>/,
-      `docs/${page.file}이 자치구 시세표를 다시 싣습니다`
+      `${SITE}/${page.file}이 자치구 시세표를 다시 싣습니다`
     );
   }
 
@@ -239,10 +241,10 @@ test("표를 접어도 자치구로 가는 길은 남는다", async () => {
   // 표에는 스물다섯 개 자치구 링크가 같이 들어 있었다. 표만 접고 끝내면 예산 페이지
   // 열여덟 장에서 자치구 페이지로 흘러가는 링크가 통째로 사라진다.
   for (const page of BUDGET_PAGES) {
-    const html = await readFile(path.join(root, "docs", page.file), "utf8");
+    const html = await readFile(path.join(root, SITE, page.file), "utf8");
     const block = html.split("<!--prerender:districtLinks-->")[1]?.split("<!--/prerender")[0] ?? "";
     const links = [...block.matchAll(/href="\.\/(district-[a-z]+\.html)"/g)].map((m) => m[1]);
-    assert.equal(links.length, 25, `docs/${page.file}: 자치구 링크가 ${links.length}개입니다`);
+    assert.equal(links.length, 25, `${SITE}/${page.file}: 자치구 링크가 ${links.length}개입니다`);
   }
 });
 
@@ -260,12 +262,12 @@ test("접은 표는 HTML에서도 빠진다", async () => {
   // hidden은 눈에만 안 보이게 한다. 스물다섯 줄이 마크업에 그대로 남으면 중복을 재도
   // 접기 전과 같은 값이 나오고, 크롤러가 받는 바이트도 줄지 않는다.
   for (const page of BUDGET_PAGES) {
-    const html = await readFile(path.join(root, "docs", page.file), "utf8");
+    const html = await readFile(path.join(root, SITE, page.file), "utf8");
     const body = /<tbody id="district-grid">([\s\S]*?)<\/tbody>/.exec(html)?.[1] ?? "";
     assert.equal(
       body.replace(/<!--[\s\S]*?-->/g, "").replace(/<[^>]+>/g, "").trim(),
       "",
-      `docs/${page.file}: 접은 표의 내용이 HTML에 남아 있습니다`
+      `${SITE}/${page.file}: 접은 표의 내용이 HTML에 남아 있습니다`
     );
   }
 });
@@ -347,7 +349,7 @@ function assertOrder(html, label) {
 
 test("예산대 열여덟 장의 구운 HTML 은 날짜 줄 → 요약 → 한눈에 → 지역 줄 → 어디로 가는가 → 제목 → 칩 → 후보 순서다 (#460)", async () => {
   for (const page of BUDGET_PAGES) {
-    const html = await readFile(path.join(root, "docs", page.file), "utf8");
+    const html = await readFile(path.join(root, SITE, page.file), "utf8");
     assertOrder(html, page.file);
     assert.equal([...html.matchAll(/<h2 id="budget-heading">예산으로 찾기<\/h2>/g)].length, 1, `${page.file}: 제목이 하나여야 한다`);
     assert.ok(html.indexOf('id="budget-result"') < html.indexOf('id="budget-heading"'), `${page.file}: 제목이 본문 칸 밖에 남았다`);
@@ -376,7 +378,7 @@ test("예산대 화면이 다시 그려도(한국어·영어) 같은 순서이�
 
 test("예산대 열여덟 장 모두 한눈에 뒤에 예산 칩 줄이 있고 제 칩이 켜져 있다 (#43, #460)", async () => {
   for (const page of BUDGET_PAGES) {
-    const html = await readFile(path.join(root, "docs", page.file), "utf8");
+    const html = await readFile(path.join(root, SITE, page.file), "utf8");
     const nav = html.match(/<nav class="budget-chips"[\s\S]*?<\/nav>/)?.[0] ?? "";
     assert.equal((nav.match(/<a /g) ?? []).length, 18, `${page.file}: 칩이 열여덟이 아니다`);
     assert.match(nav, new RegExp(`href="\\./${page.file}" aria-current="page">${page.eok}억<`), `${page.file}: 제 칩이 안 켜졌다`);

@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { SITE } from "./helpers/site-root.mjs";
 
 // 금리 네 장 머리의 갱신 안내(#update-schedule)는 시각을 말하지 않는다 (#369).
 // 옛 문구는 "매일 오전 8시(KST) 갱신" / "Updated daily at 8 AM KST"였다. 금리는 daily-update 의 full 실행(cron KST 08:07)에서 모으는데
@@ -14,10 +15,10 @@ import path from "node:path";
 const root = path.resolve(import.meta.dirname, "..");
 const FILES = [
   "scripts/rates-template.html",
-  "docs/deposit-rates.html",
-  "docs/saving-rates.html",
-  "docs/mortgage-rates.html",
-  "docs/rent-loan-rates.html",
+  `${SITE}/deposit-rates.html`,
+  `${SITE}/saving-rates.html`,
+  `${SITE}/mortgage-rates.html`,
+  `${SITE}/rent-loan-rates.html`,
 ];
 
 // 한국어: "8시", "오전 8시", "오후" · 시계 모양 "08:00" · "아침". 영어: "08:00", "8 AM", "morning".

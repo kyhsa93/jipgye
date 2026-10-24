@@ -394,5 +394,13 @@
 #   없어진 시험 0, 새 이름 12 (diff 의 `-test(` 줄 0). 고친 기존 시험은 하나다: test/news-pages.test.mjs "기사 로드 실패는 원인을 함께 알린다" 의 「실패 이유를 화면에 쓴다」 단언 둘을
 #   「화면에 쓰지 않는다 + 기사 실패 문구가 있다」로 뒤집었다(이름은 그대로, 개수 -0 +0) - #296 이 방문자에게 "HTTP 503" 노출을 없애라고 정한 자리이고 상태 코드는 계측에만 남는다. 공용 도우미 test/helpers/news-page.mjs 에는
 #   file·fetch·baked·mutate 선택지와 listeners·notice() 만 더했다(기본값이면 이전과 같다).
-1923
-1923
+# 갱신: 2026-10-24(#510 구조 B-4 컷오버), base fc5f21fd(= origin/main), Node v24.22.0, macOS. `npm test` → ℹ tests 1941 · pass 1941 · fail 0 · skipped 0 (기준 1923 → +18).
+#   기준 로그와 후보 로그에서 시험 이름을 뽑아 견줬다(다중집합): 기준에서 줄어든 36 · 늘어난 54 = 순증 18. 줄어든 36은 전부 워크플로·update-all 글자를 읽던 시험을 새 계약으로 뒤집은 것이다(이름을 바꾸거나 단언을 뒤집음 -
+#   아래 목록, 대응 없이 없어진 시험 0). .skip·.todo 0.
+#   뒤집은 시험: test/daily-pretest.test.mjs 14 → test/daily-no-render.test.mjs 14(수집 전·후 시험·건강 점검·렌더·배포가 수집 워크플로에서 빠진 계약) · deploy-yml 7 → 9(병행 가동 → 유일한 배포 경로) ·
+#   health-step 8 → 8(건강 점검이 수집 워크플로에서 deploy.yml 로) · push-docs 9 → 13(커밋 범위 docs/data·raw, 기능 병합과 겹침) · pipeline 2·render-pipeline 6·budget-pages 1·updated-stamp 1·fetch-rates 1(렌더가 deploy.yml 한 줄) ·
+#   site-dir 1(걷어낸 복사본 → 이미 있는 디렉터리 위 재렌더, 같은 이름 아님). 새 시험: test/collector-output-paths.test.mjs 4(수집·빌더가 쓰는 곳은 docs/data·raw 뿐) · test/site-snapshot.test.mjs 8(배포본 전후 스냅샷).
+#   기존 단언을 낮춘 곳은 하나다: test/css-build.test.mjs 의 「훑는 소스 > 150」 하한을 130 으로(생성 HTML 53장이 docs/ 에서 빠져 194 → 141개, build-css.mjs --check 는 바이트 동일 확인).
+#   `npm run test:site`(배포 게이트)는 build/site 를 읽는 시험 파일 52개의 부분집합이고 하한은 test/COUNT-site 에 따로 둔다(736).
+1941
+1941
