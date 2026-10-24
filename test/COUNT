@@ -445,5 +445,6 @@
 #   (d) aria-describedby 가 가리키는 id·aria-live 0 · (d) 새 리스너 0·return 앞 갱신 · (e) 변이 사본(fmtAmount 로 읽으면 걸림). 그 밖에 test/load-failure.test.mjs 에 S6(#498) 하나(+600B/장 이하, base 0427ba1d).
 #   고친 기존 시험 둘은 S6 (#532)·S6 (#296 (마)) 의 절대 한도(+150 → +750, +580 → +1180: 이 PR 의 +600 을 더함, 개수 -0 +0). 없어진 시험 0, .skip·.todo 0.
 #   `npm run test:site` 788 → 796(amount-read 7 + S6 1 이 build/site 를 읽음), 하한은 test/COUNT-site.
-2021
-2021
+#   2026-10-24(#511 B5), base 1f840130 + 이 PR. `npm test` → ℹ tests 2023 · pass 2023 · fail 0 (2021 + 2: test/site-class-ban.test.mjs 2개 = 나가는 장 build/site 의 Tailwind 금지 넷 0개·쓰인 tw: class 마다 style.css 규칙). 없어진 시험 0, .skip·.todo 0. `npm run test:site` 797 → 799.
+2023
+2023
