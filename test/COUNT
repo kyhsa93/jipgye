@@ -419,5 +419,9 @@
 #   `node --test test/schedule-watchdog.test.mjs` → ℹ tests 45 · pass 45 (전 32). 고친 기존 시험은 한 줄(--check 오류 문구 정규식), 없어진 시험 0, .skip·.todo 0 그대로.
 #   변이 대조(스크립트에 한 줄씩 넣어 시험이 죽는지 봤다): dispatch 를 셈에 넣기 → 실패 1 · 이벤트를 schedule 로 → 7 · API 조회에 event=schedule 유지 → 1 · 창 36h → 4 · 창 72h → 3 ·
 #   기본 워크플로 제거 → 2 · 판정 문턱 0 → 13 · cancelled 를 성공으로 셈 → 4 · 배포 기본 창 제거 → 4. 전부 죽는다. 배포 게이트(`npm run test:site`)는 이 PR 이 안 건드려 COUNT-site 그대로.
-1964
-1964
+# 센 법: 2026-10-24(#261), base 594feb68 + 이 PR, Node v24.22.0, macOS.
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1982 · pass 1982 · fail 0 · skipped 0 (직전 하한 1964 + 18).
+#   차이 18 = test/collection-now.test.mjs 5 + test/realestate-collect.test.mjs 7(KST 월 경계·유예 끝·연말 고정 시각 6 + 읽을 수 없는 값 1) + test/fetch-rates.test.mjs 6(같은 날/다른 날 고정 시각 5 + 읽을 수 없는 값 1).
+#   없어진 시험 0, .skip·.todo 0. 기존 시험의 시계만 REALESTATE_NOW·RATES_NOW 로 고정했다.
+1982
+1982

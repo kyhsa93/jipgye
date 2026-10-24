@@ -1,5 +1,6 @@
 import { writeFile, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
+import { collectionNow } from "./collection-now.ts";
 
 const dataDir = process.env.RATES_OUT_DIR
   ? path.resolve(process.env.RATES_OUT_DIR)
@@ -289,7 +290,7 @@ async function fetchCategory(category) {
 async function main() {
   if (!API_KEY) throw new Error("FSS_FINLIFE_API_KEY 환경변수가 필요합니다");
 
-  const now = new Date();
+  const now = collectionNow("RATES_NOW");
   const today = kstDateString(now);
 
   const meta = await readMeta();

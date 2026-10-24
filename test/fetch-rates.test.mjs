@@ -127,10 +127,15 @@ function loanResponse({ products }) {
   };
 }
 
-async function run(base, outDir, { key = "TESTKEY", force = false, retryDelays = "1,1" } = {}) {
+// 스크립트의 "오늘"은 고정이다(#261). 실제 시계를 읽으면 "같은 날 다시 실행" 시험의 두 실행 사이에 KST 자정이 끼었을 때
+// 둘째 실행이 다른 날로 API를 다시 부른다. 자식에는 RATES_NOW 로 시각을 넘긴다(KST 2026-10-21 12:00 — 자정에서 멀다).
+const FIXED_NOW = "2026-10-21T03:00:00Z";
+
+async function run(base, outDir, { key = "TESTKEY", force = false, retryDelays = "1,1", now = FIXED_NOW } = {}) {
   return execFileAsync("node", [scriptPath], {
     env: {
       ...process.env,
+      RATES_NOW: now,
       FSS_API_BASE: base,
       RATES_OUT_DIR: outDir,
       FSS_FINLIFE_API_KEY: key,
@@ -731,6 +736,67 @@ test("같은 날 다시 실행하면 API를 아예 호출하지 않는다", asyn
 
     await run(stub.base, outDir, { force: true });
     assert.ok(calls > afterFirst, "RATES_FORCE=1인데도 호출하지 않았다");
+  } finally {
+    await stub.close();
+  }
+});
+
+// ---- #261: 스크립트의 시계는 RATES_NOW 하나이고, "같은 날"은 KST 날짜끼리의 비교다 — 고정 시각 둘로 자정·월·연 경계를 가로지른다 ----
+// 각 줄은 [첫 실행, 둘째 실행, 둘째가 건너뛰는가]이다. 경계 인스턴트는 UTC 15:00(= KST 00:00)이다.
+const SAME_DAY_CASES = [
+  ["2026-10-20T15:00:00Z", "2026-10-21T14:59:59Z", true, "KST 10-21 00:00:00 → 23:59:59 (같은 KST 날, UTC로는 두 날)"],
+  ["2026-10-21T14:59:59Z", "2026-10-21T15:00:00Z", false, "KST 10-21 23:59:59 → 10-22 00:00:00 (자정)"],
+  ["2026-10-31T14:59:59Z", "2026-10-31T15:00:00Z", false, "KST 10-31 23:59:59 → 11-01 00:00:00 (월 경계)"],
+  ["2026-12-31T14:59:59Z", "2026-12-31T15:00:00Z", false, "KST 12-31 23:59:59 → 2027-01-01 00:00:00 (연 경계)"],
+  ["2026-10-21T00:00:00Z", "2026-10-21T14:59:59Z", true, "KST 10-21 09:00 → 23:59:59 (같은 날)"],
+];
+
+for (const [first, second, skips, label] of SAME_DAY_CASES) {
+  test(`고정 시각 ${first} → ${second}: ${skips ? "같은 날이라 건너뛴다" : "다른 날이라 다시 받는다"} (${label})`, async () => {
+    let calls = 0;
+    const stub = await startStub(({ topFinGrpNo }) => {
+      calls += 1;
+      return {
+        json: savingResponse({
+          products: [
+            { co: topFinGrpNo, cd: "P1", company: "테스트은행", name: "예금", options: [{ term: 12, rate: 3.0, maxRate: 3.1 }] },
+          ],
+        }),
+      };
+    });
+    const outDir = await tempDir();
+
+    try {
+      await run(stub.base, outDir, { now: first });
+      const afterFirst = calls;
+      assert.ok(afterFirst > 0, "첫 실행에서 호출이 있어야 한다");
+
+      const { stdout } = await run(stub.base, outDir, { now: second });
+      if (skips) {
+        assert.equal(calls, afterFirst, "같은 KST 날인데 API를 다시 호출했다");
+        assert.match(stdout, /이미 조회함/);
+      } else {
+        assert.ok(calls > afterFirst, "다른 KST 날인데 건너뛰었다");
+        assert.doesNotMatch(stdout, /이미 조회함/);
+      }
+    } finally {
+      await stub.close();
+    }
+  });
+}
+
+test("RATES_NOW 가 읽을 수 없는 값이면 오늘 시각으로 넘기지 않고 멈춘다", async () => {
+  const stub = await startStub(() => ({ json: savingResponse({ products: [] }) }));
+  const outDir = await tempDir();
+
+  try {
+    for (const bad of ["2026-10-21", "2026-10-21T12:00:00", "어제", "2026-02-30T00:00:00Z"]) {
+      await assert.rejects(
+        () => run(stub.base, outDir, { now: bad }),
+        (err) => err.code === 1 && /RATES_NOW를 읽을 수 없습니다/.test(err.stderr),
+        bad,
+      );
+    }
   } finally {
     await stub.close();
   }
