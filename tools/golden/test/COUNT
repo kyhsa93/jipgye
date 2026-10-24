@@ -20,5 +20,8 @@
 #   차이 3 은 새 시험 셋이다: test/invariants.test.mjs 의 "#418 HOOKCOUNT: …"(숫자 줄 정확히 셋·하한·--hooks-write 불변)와
 #   "#418 collectHookClasses: …"(.mjs·.ts 를 같이 고르는 합성 저장소), test/render.test.mjs 의 "#418 readWorkflowStages: …"(.ts 줄·render-pipeline.ts).
 #   없어진 시험은 0 이다. 숫자 줄은 이번에도 정확히 둘이다(쌍을 더하지 않고 두 줄을 고쳤다).
-120
-109
+# 센 법: 2026-10-24, merge-base 1f840130, Node v24.22.0, macOS (#544).
+#   cd tools/golden && npm ci && npm test → ℹ tests 121 · pass 110 · fail 0 · skipped 11 (기준 120 · 109 · 11).
+#   차이 1 은 test/cleanup.test.ts 에 더한 "buildShaCache: 이미 확정된(.done) 캐시는 지우지 않고 그대로 둔다 …" 하나다. 없어진 시험은 0 이다.
+121
+110

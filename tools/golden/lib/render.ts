@@ -174,7 +174,10 @@ export async function preparePristine({ repo, sha, srcDir, cacheDir = path.join(
 // `.done`는 잠금이 아니다(둘이 동시에 같은 SHA를 만들면 서로의 rm·tar가 엇갈렸다, #263). 그래서 임시 이름(sha-<SHA>.tmp-XXXXXX)에
 // 끝까지 만들고 `.done`을 찍은 뒤 rename으로 확정한다. 먼저 확정한 쪽이 이기고, 진 쪽은 자기 것을 지우고 이긴 쪽을 쓴다.
 // `.done` 없이 최종 이름만 있는 폴더(옛 판이 만들다 만 것)는 먼저 치운다.
-async function buildShaCache({ repo, full, dir }) {
+// 호출자가 `.done`을 보고 "없다"고 한 뒤 여기 들어서는 사이 남이 확정할 수 있다(#544). 그때 이미 확정된 것은 지우지 않고 쓴다 —
+// 지우면 같은 SHA를 쓰던 다른 실행의 commitDir가 ENOTEMPTY로 졌다가 `.done`이 사라진 것을 보고 던진다.
+export async function buildShaCache({ repo, full, dir }) {
+  if (existsSync(path.join(dir, ".done"))) return;
   if (existsSync(dir)) await removeDir(dir);
   const tmp = await mkdtemp(`${dir}.tmp-`);
   const dispose = () => rm(tmp, { recursive: true, force: true });

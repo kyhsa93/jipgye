@@ -6,7 +6,7 @@ import { mkdir, mkdtemp, readdir, readFile, rm, stat, utimes, writeFile } from "
 import os from "node:os";
 import path from "node:path";
 import { DiskSpaceError, OWNER, assertDiskSpace, commitDir, limitsFromEnv, pruneShaCaches, sweepOrphans, writeOwner } from "../lib/cleanup.ts";
-import { preparePristine, renderIsolated } from "../lib/render.ts";
+import { buildShaCache, preparePristine, renderIsolated } from "../lib/render.ts";
 import { commit, fakeRepo, git } from "./helpers/fake-repo.ts";
 
 // 임시 사본·캐시 정리(#263). 고정 가짜 저장소(test/helpers/fake-repo.ts)만 쓰고 실제 docs/·raw/는 읽지 않는다.
@@ -227,6 +227,21 @@ test("동시 실행: 같은 SHA를 여섯 프로세스가 동시에 만들어도
     const dir = path.join(d.cache, `sha-${sha}`);
     assert.ok(existsSync(path.join(dir, ".done")) && existsSync(path.join(dir, "docs/a.html")) && existsSync(path.join(dir, "scripts/step1.mjs")));
     assert.equal(existsSync(path.join(dir, OWNER)), false, "주인 표지는 확정 전에 뗀다");
+  });
+});
+
+// 위 시험이 CI에서 한 번 붉었다(#544, 겹침 2/200 — 8개 병렬 반복). preparePristine이 `.done`을 보고 "없다"고 한 뒤 buildShaCache에
+// 들어서기 전에 남이 확정하면, 늦은 쪽이 확정된 캐시를 "만들다 만 것"으로 알고 지워 버렸다(다른 프로세스는 그 사이 rename이 막혀 .done을 못 보고 던졌다).
+// 시간에 기대지 않고 그 순간을 직접 만든다: 이미 확정된 캐시 앞에서 buildShaCache를 부른다.
+test("buildShaCache: 이미 확정된(.done) 캐시는 지우지 않고 그대로 둔다 — 늦게 들어선 쪽이 이긴 쪽을 부수지 않는다 (#544)", async () => {
+  await sandbox(async (d) => {
+    const full = git(d.repo, "rev-parse", "HEAD").stdout.trim();
+    const dir = path.join(d.cache, `sha-${full}`);
+    await mkdir(path.join(dir, ".done"), { recursive: true });
+    await writeFile(path.join(dir, "winner"), "먼저 확정된 것");
+    await buildShaCache({ repo: d.repo, full, dir });
+    assert.equal(await readFile(path.join(dir, "winner"), "utf8"), "먼저 확정된 것", "이긴 쪽의 캐시가 그대로");
+    assert.deepEqual(await ls(d.cache), [`sha-${full}`], "내 임시 폴더·휴지통도 만들지 않는다");
   });
 });
 
