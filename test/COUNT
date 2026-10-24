@@ -446,5 +446,10 @@
 #   고친 기존 시험 둘은 S6 (#532)·S6 (#296 (마)) 의 절대 한도(+150 → +750, +580 → +1180: 이 PR 의 +600 을 더함, 개수 -0 +0). 없어진 시험 0, .skip·.todo 0.
 #   `npm run test:site` 788 → 796(amount-read 7 + S6 1 이 build/site 를 읽음), 하한은 test/COUNT-site.
 #   2026-10-24(#511 B5), base 1f840130 + 이 PR. `npm test` → ℹ tests 2023 · pass 2023 · fail 0 (2021 + 2: test/site-class-ban.test.mjs 2개 = 나가는 장 build/site 의 Tailwind 금지 넷 0개·쓰인 tw: class 마다 style.css 규칙). 없어진 시험 0, .skip·.todo 0. `npm run test:site` 797 → 799.
-2023
-2023
+# 갱신: 2026-10-24(#410·#413), base 25a95470(= origin/main). `npm test` → ℹ tests 2039 · pass 2039 · fail 0 · skipped 0 (직전 하한 2023 + 17 - 1).
+#   `node --test test/load-failure.test.mjs` → 기준 110 → 후보 126. 새 시험 17: 받는 중(영어 고지 1·18장 0) · 받는 중 → 실패(404·거부) · 받는 중 → 성공 · 재시도 응답 대기 · 받는 중 ?area=59·114 칸 가림 · 양성 대조 ·
+#   받는 중 면적 바꾸기 · ?area=59 실패 뒤 재시도 · 실패 알림 중 언어 전환(404·거부) · 받는 중 언어 전환 · 면적 변경 뒤 언어 전환 · 18장 실패·전환 · ⓕ(drawNote 한 곳) · 변이 사본 셋 · S6(+400B/장 이하).
+#   바뀐 기존 시험: 「S6 의도한 차이 (#296 (바))」는 되돌린 사본과 견주던 한 번짜리 한도 시험이라 이 PR 의 S6 시험(틀 55,788B 기준 +400B, load-state.js 불변)으로 바꿨다(개수 -1 +1 에 포함),
+#   (바) 범위 선의 CALL 모양·ⓓ(i)의 영어 알림 수 단언을 새 상태 코드(note·drawNote)에 맞췄다. 없어진 시험 0, .skip·.todo 0.
+2039
+2039
