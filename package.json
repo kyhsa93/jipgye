@@ -12,7 +12,8 @@
     "pretest": "node scripts/render-pipeline.ts --out=build/site",
     "test": "node scripts/run-tests.mjs",
     "test:site": "node scripts/run-tests.mjs --site",
-    "health": "npm --prefix tools/health test"
+    "health": "npm --prefix tools/health test",
+    "count:bump": "node scripts/count-bump.mjs"
   },
   "dependencies": {
     "esbuild": "0.28.2",

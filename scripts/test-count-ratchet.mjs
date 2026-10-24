@@ -19,6 +19,7 @@
 //   2행 `pass` 하한. 셋 이상은 낡은 쌍이 숨은 것이고(#417이 둘째 쌍을 덧붙여 래칫이 첫 쌍 1775만 읽었다) 한 줄뿐인 것도 실패다.
 //   **주석이나 워크플로 인라인 숫자로 두지 않는다** — 파일이어야 올릴 때 diff에
 //   잡혀 리뷰에 걸린다(#315 범위 3). 하한을 **낮추는** 변경은 PR 본문에 사유를 적는다(#315 범위 4).
+//   **올리는 것은 PR 이 아니라 병합 담당이다(#548)** — 하루 끝에 `npm run count:bump`(scripts/count-bump.mjs)가 한 번 올린다. PR 은 COUNT 를 건드리지 않고, 내릴 때만 예외다.
 //
 // **`npm test`가 이 파일의 함수를 직접 부른다(#319).** scripts/run-tests.mjs가 러너를 띄워 같은 자리에서 래칫을 돌리므로,
 // 하한 파일을 읽는 함수와 합계 줄을 읽는 함수는 여기 한 벌뿐이다(복제 금지 — 출처 하나). 실패 메시지의 `[...]`는
@@ -50,17 +51,27 @@ export function readFloors(floorPath) {
 
 // 러너 출력의 합계 줄. 기본(spec) 리포터는 `ℹ tests N`·`ℹ pass N`, tap 리포터는 `# tests N`·`# pass N`이다.
 // 파이프·리다이렉트로 비TTY가 되어도 기본 리포터는 `ℹ` 그대로다(pm 확인 2026-10-14). 색이 켜진 출력은 이스케이프를 벗기고 읽는다.
+// 합계 줄을 읽는 곳은 이 함수 하나다 — 래칫(checkRatchet)과 하한 갱신(scripts/count-bump.mjs, #548)이 같이 쓴다(복제 금지).
+// 반환: { tests, pass, skipped, fail, cancelled } — 각 값은 그 줄의 **마지막** 숫자이고, 줄이 없으면 null.
+export function parseTotals(logText) {
+  const log = logText.replace(/\x1b\[[0-9;]*m/g, "");
+  const totals = {};
+  for (const key of ["tests", "pass", "skipped", "fail", "cancelled"]) {
+    const hits = [...log.matchAll(new RegExp(String.raw`^[ℹ#] ${key} (\d+)$`, "gm"))].map((m) => Number(m[1]));
+    totals[key] = hits.length === 0 ? null : hits[hits.length - 1];
+  }
+  return totals;
+}
+
+// 러너 출력의 합계 줄을 하한과 대조한다.
 // **못 찾으면 통과시키지 않는다** — 출력 형식이 바뀌어 래칫이 조용히 장식이 되는 것이 이 이슈가 막는 것이다.
 // 반환: { ok, lines } — lines는 찍을 문장들(실패면 stderr, 통과면 stdout 한 줄).
 export function checkRatchet(floors, logText, { floorPath, logLabel }) {
-  const log = logText.replace(/\x1b\[[0-9;]*m/g, "");
-  const actual = {};
+  const actual = parseTotals(logText);
   for (const key of ["tests", "pass"]) {
-    const hits = [...log.matchAll(new RegExp(String.raw`^[ℹ#] ${key} (\d+)$`, "gm"))].map((m) => Number(m[1]));
-    if (hits.length === 0) {
+    if (actual[key] === null) {
       return { ok: false, lines: [`래칫 실패[형식]: ${logLabel}에서 "ℹ ${key} N" 합계 줄을 찾지 못했다. 러너 출력 형식이 바뀌었는지 본다.`] };
     }
-    actual[key] = hits[hits.length - 1];
   }
 
   const short = ["tests", "pass"].filter((key) => actual[key] < floors[key]);

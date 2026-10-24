@@ -1,10 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { spawn, spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { checkRatchet, readFloors } from "../scripts/test-count-ratchet.mjs";
+import { checkRatchet, parseTotals, readFloors } from "../scripts/test-count-ratchet.mjs";
+import { COUNT_HEADER, SUITES, bumpFloor, decideBump, renderCount } from "../scripts/count-bump.mjs";
 
 // `npm test` 안의 시험 개수 래칫(#319). 래퍼(scripts/run-tests.mjs)를 가짜 패키지(임시 폴더의 test/*.test.mjs +
 // test/COUNT)에서 돌려, 대조군마다 종료 코드와 **어느 가드가 물었는지**(메시지의 `[...]`)를 본다.
@@ -210,6 +211,151 @@ test("저장소의 COUNT 셋은 숫자 줄이 정확히 둘이다(쌍을 덧붙�
     const f = readFloors(path.join(root, p));
     assert.ok(f.tests >= f.pass && f.pass > 0, `${p}: ${JSON.stringify(f)}`);
   }
+});
+
+// ---- COUNT 머리 주석 ≤6줄 + 하한 갱신(scripts/count-bump.mjs) 대조군 (#548) ----
+// 설명 블록은 PR 본문·이력에 둔다 — COUNT 는 고정 머리와 숫자 둘뿐이다. 실제 시험을 돌리지 않고 임시 사본과 합성 로그로만 본다.
+const COUNT_FILES = [
+  "test/COUNT",
+  "test/COUNT-site",
+  ...readdirSync(path.join(root, "tools"), { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => path.join("tools", d.name, "test", "COUNT"))
+    .filter((p) => existsSync(path.join(root, p))),
+];
+
+function logOf({ tests, pass, skipped = 0, fail = 0, cancelled = 0 }) {
+  return `ℹ tests ${tests}\nℹ suites 0\nℹ pass ${pass}\nℹ fail ${fail}\nℹ cancelled ${cancelled}\nℹ skipped ${skipped}\nℹ todo 0\n`;
+}
+
+function countFixture(text) {
+  const dir = mkdtempSync(path.join(os.tmpdir(), "jipgye-count-bump-"));
+  const file = path.join(dir, "COUNT");
+  writeFileSync(file, text);
+  return { dir, file };
+}
+
+test("COUNT 파일: 머리 주석은 ≤6줄이고 숫자 둘 앞에만 있다(설명 블록 금지)", () => {
+  assert.deepEqual(
+    COUNT_FILES.slice(0, 2).concat(COUNT_FILES.slice(2).sort()),
+    ["test/COUNT", "test/COUNT-site", ...["golden", "health", "render"].map((n) => `tools/${n}/test/COUNT`)],
+    "전제: 다섯 COUNT 파일이 모두 잡힌다 - 새 패키지는 SUITES 와 이 목록을 같이 고친다",
+  );
+  for (const p of COUNT_FILES) {
+    const lines = readFileSync(path.join(root, p), "utf8").trimEnd().split("\n");
+    const numbers = lines.filter((l) => /^\d+$/.test(l));
+    const comments = lines.filter((l) => l.startsWith("#"));
+    assert.equal(numbers.length, 2, `${p}: 숫자 줄 둘`);
+    assert.equal(comments.length + numbers.length, lines.length, `${p}: 주석·숫자 말고 다른 줄이 있다`);
+    assert.ok(comments.length <= 6, `${p}: 머리 주석 ${comments.length}줄 > 6 - 설명은 PR 본문에 둔다`);
+    assert.deepEqual(lines.slice(0, comments.length), comments, `${p}: 주석은 숫자 앞 머리에만 둔다`);
+  }
+  assert.ok(COUNT_HEADER.split("\n").length <= 6, "count-bump 가 쓰는 고정 머리도 ≤6줄");
+});
+
+test("parseTotals: spec·tap·색 이스케이프를 읽고 마지막 합계를 쓰며 없는 줄은 null", () => {
+  assert.deepEqual(parseTotals(logOf({ tests: 5, pass: 4, skipped: 1 })), { tests: 5, pass: 4, skipped: 1, fail: 0, cancelled: 0 });
+  assert.equal(parseTotals("# tests 7\n# pass 6\n# skipped 1\n# fail 0\n# cancelled 0\n").tests, 7);
+  assert.equal(parseTotals("\x1b[34mℹ\x1b[39m tests 5\n\x1b[34mℹ\x1b[39m pass 5\n").pass, 5);
+  assert.equal(parseTotals("ℹ tests 1\nℹ pass 1\nℹ tests 9\nℹ pass 8\n").tests, 9, "마지막 합계");
+  assert.deepEqual(parseTotals(""), { tests: null, pass: null, skipped: null, fail: null, cancelled: null });
+});
+
+test("count-bump: 올릴 때 고정 머리 + 숫자 둘만 쓴다(옛 설명 블록은 사라진다)", () => {
+  const long = "# 옛 설명\n".repeat(30) + "5\n4\n";
+  const { dir, file } = countFixture(long);
+  const d = bumpFloor(file, logOf({ tests: 9, pass: 8, skipped: 1 }), { exitCode: 0 });
+  const text = readFileSync(file, "utf8");
+  rmSync(dir, { recursive: true, force: true });
+  assert.equal(d.ok, true, d.lines.join("\n"));
+  assert.equal(text, renderCount({ tests: 9, pass: 8 }));
+  assert.equal(text, `${COUNT_HEADER}\n9\n8\n`);
+  assert.ok(text.trimEnd().split("\n").length <= 8, "머리 ≤6줄 + 숫자 둘");
+});
+
+test("count-bump: 하한을 내리는 쓰기는 --allow-lower 없이 거부하고 파일은 그대로, 있으면 쓴다", () => {
+  const before = "10\n9\n";
+  const { dir, file } = countFixture(before);
+  const lower = logOf({ tests: 8, pass: 7, skipped: 1 });
+  const d = bumpFloor(file, lower, { exitCode: 0 });
+  assert.equal(d.ok, false);
+  assert.match(d.lines[0], /거부\[내림\].*tests 8 < 하한 10.*pass 7 < 하한 9/);
+  assert.equal(readFileSync(file, "utf8"), before);
+  assert.equal(bumpFloor(file, logOf({ tests: 11, pass: 8, skipped: 3 }), { exitCode: 0, allowLower: true }).ok, true, "tests 는 올라도 pass 가 내리면 내림이다 - 허용 플래그로만");
+  assert.equal(readFileSync(file, "utf8"), renderCount({ tests: 11, pass: 8 }));
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test("count-bump: 초록이 아닌 로그는 거부한다(fail·cancelled·종료 코드·합계 줄 없음·skip 증가·0)", () => {
+  const before = "10\n9\n";
+  const { dir, file } = countFixture(before);
+  const cases = [
+    ["fail 1", logOf({ tests: 20, pass: 19, skipped: 0, fail: 1 }), 0, /거부\[실패\]/],
+    ["cancelled 1", logOf({ tests: 20, pass: 19, cancelled: 1 }), 0, /거부\[실패\]/],
+    ["종료 코드 1", logOf({ tests: 20, pass: 19, skipped: 1 }), 1, /거부\[종료 코드\]/],
+    ["합계 줄 없음", "ℹ tests 20\nℹ pass 19\n", 0, /거부\[형식\]/],
+    ["빈 로그", "", 0, /거부\[형식\]/],
+    ["skip 증가", logOf({ tests: 20, pass: 18, skipped: 2 }), 0, /거부\[skip\].*skipped 2 > .*1/],
+    ["pass 0", logOf({ tests: 20, pass: 0, skipped: 20 }), 0, /거부\[(개수|skip)\]/],
+  ];
+  for (const [name, log, exitCode, re] of cases) {
+    const d = bumpFloor(file, log, { exitCode });
+    assert.equal(d.ok, false, name);
+    assert.match(d.lines[0], re, name);
+    assert.equal(readFileSync(file, "utf8"), before, `${name}: 파일 그대로`);
+  }
+  // --allow-lower 도 빨강은 받지 않는다. 래칫([개수])으로만 빨간 것은 받는다.
+  assert.equal(bumpFloor(file, logOf({ tests: 20, pass: 19, fail: 1 }), { exitCode: 1, allowLower: true }).ok, false);
+  const redRun = `${logOf({ tests: 20, pass: 19, skipped: 1 })}run-tests 실패[종료 코드]: 러너가 종료 코드 1로 끝났다.\n`;
+  assert.equal(bumpFloor(file, redRun, { exitCode: 1, allowLower: true }).ok, false);
+  assert.equal(readFileSync(file, "utf8"), before);
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test("count-bump: 하한과 같거나 오른 값은 받는다 - 같으면 그대로, 오르면 쓴다, skip 이 줄면 받는다", () => {
+  assert.deepEqual(decideBump({ tests: 121, pass: 110 }, logOf({ tests: 121, pass: 110, skipped: 11 }), { exitCode: 0 }).write, { tests: 121, pass: 110 });
+  assert.match(decideBump({ tests: 121, pass: 110 }, logOf({ tests: 121, pass: 110, skipped: 11 }), { exitCode: 0 }).lines[0], /^그대로/);
+  const { dir, file } = countFixture(renderCount({ tests: 5, pass: 5 }));
+  const same = bumpFloor(file, logOf({ tests: 5, pass: 5 }), { exitCode: 0 });
+  assert.equal(same.ok, true);
+  assert.equal(readFileSync(file, "utf8"), renderCount({ tests: 5, pass: 5 }));
+  const up = bumpFloor(file, logOf({ tests: 7, pass: 7 }), { exitCode: 0 });
+  assert.equal(up.ok, true);
+  assert.match(up.lines[0], /^갱신: tests 5 → 7 · pass 5 → 7/);
+  assert.deepEqual(readFloors(file), { tests: 7, pass: 7 });
+  const fewerSkips = bumpFloor(file, logOf({ tests: 7, pass: 7 }), { exitCode: 0 });
+  assert.equal(fewerSkips.ok, true);
+  const dry = bumpFloor(file, logOf({ tests: 9, pass: 9 }), { exitCode: 0, dryRun: true });
+  assert.equal(dry.ok, true);
+  assert.deepEqual(readFloors(file), { tests: 7, pass: 7 }, "--dry-run 은 쓰지 않는다");
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test("count-bump CLI(--floor/--log): 올리면 0·쓰고, 내리면 1·그대로, --dry-run 은 쓰지 않는다 - 시험은 돌리지 않는다", () => {
+  const { dir, file } = countFixture("# 옛 설명\n3\n3\n");
+  const logFile = path.join(dir, "run.log");
+  const cli = (args) => spawnSync(process.execPath, [path.join(root, "scripts", "count-bump.mjs"), "--floor", file, "--log", logFile, ...args], { encoding: "utf8" });
+  writeFileSync(logFile, logOf({ tests: 4, pass: 4 }));
+  assert.equal(cli(["--dry-run"]).status, 0);
+  assert.equal(readFileSync(file, "utf8"), "# 옛 설명\n3\n3\n");
+  const up = cli(["--exit", "0"]);
+  assert.equal(up.status, 0, up.stderr);
+  assert.equal(readFileSync(file, "utf8"), renderCount({ tests: 4, pass: 4 }));
+  writeFileSync(logFile, logOf({ tests: 2, pass: 2 }));
+  const low = cli([]);
+  assert.equal(low.status, 1);
+  assert.match(low.stderr, /거부\[내림\]/);
+  assert.deepEqual(readFloors(file), { tests: 4, pass: 4 });
+  assert.equal(cli(["--allow-lower"]).status, 0);
+  assert.deepEqual(readFloors(file), { tests: 2, pass: 2 });
+  assert.equal(spawnSync(process.execPath, [path.join(root, "scripts", "count-bump.mjs"), "--floor", file], { encoding: "utf8" }).status, 2, "--log 없이는 사용법 오류");
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test("count-bump 배선: SUITES 의 하한 파일이 COUNT 파일 목록과 같고, cwd 가 있고, package.json 에 count:bump 가 있다", () => {
+  assert.deepEqual(SUITES.map((s) => s.floor).sort(), [...COUNT_FILES].sort(), "COUNT 파일마다 그것을 갱신하는 패키지 시험이 하나씩");
+  for (const s of SUITES) assert.ok(existsSync(path.join(root, s.cwd)), `${s.name}: cwd ${s.cwd}`);
+  assert.equal(JSON.parse(readFileSync(path.join(root, "package.json"), "utf8")).scripts["count:bump"], "node scripts/count-bump.mjs");
 });
 
 // ---- 호출 불변: `node --test`를 적은 곳이 허용 목록(test/NODE-TEST-CALLS)뿐이다 (#319 범위 9) ----
