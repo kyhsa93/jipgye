@@ -1947,6 +1947,10 @@ function assertAnalysisBakedKept(page, ids, hiddenIds, label, { stamp = true } =
 }
 const assertOutlookKept = (page, label, ids = OUTLOOK_BAKED, opts) => assertAnalysisBakedKept(page, ids, ["move-in-section"], label, opts);
 
+const OUTLOOK_NAMES = {
+  ko: { moveIn: "입주 예정 자료를 불러오지 못했습니다.", indicator: "지표 자료를 불러오지 못했습니다." },
+  en: { moveIn: "Could not load the move-in data.", indicator: "Could not load the indicator data." },
+};
 const ANALYSIS_ASOF = { ko: (day) => `아래는 기준일(${day})에 만든 값입니다.`, en: (day) => `Shown below is what this page was built with on ${day}. ${KO_ONLY}` };
 
 test("(가) 범위: price-outlook 은 구운 머리 문단·표·입주 예정 구획(hidden 아님)·기준일(data-updated)을 갖고 load-state.js 를 <script src> 로 물지 않는다 (S6)", async () => {
@@ -1976,8 +1980,8 @@ test("ⓑⓔⓗ F7·F8 실패하면 알림이 보이고 [이름] + [구운 기�
       const notice = page.notice();
       const label = `${lang} ${mode}`;
       assert.ok(notice, `${label}: 알림이 안 보인다`);
-      // 404 는 두 파일이 다 "안 왔다"고 끝난다 - 알림이 둘 다 말한다. 네트워크·503 은 한 번에 거부돼 전망 자료 하나만 말한다(입주 예정은 알 수 없다).
-      const names = mode === "404" ? `${name} ${lang === "ko" ? "입주 예정 자료를 불러오지 못했습니다." : "Could not load the move-in data."}` : name;
+      // 404 는 세 파일이 다 "안 왔다"고 끝난다 - 알림이 셋 다 말한다(전망·입주 예정·지표, #537). 네트워크·503 은 한 번에 거부돼 전망 자료 하나만 말한다(나머지는 알 수 없다).
+      const names = mode === "404" ? `${name} ${OUTLOOK_NAMES[lang].moveIn} ${OUTLOOK_NAMES[lang].indicator}` : name;
       assert.equal(notice.text, `${names} ${ANALYSIS_ASOF[lang](page.baked.day)}`, `${label}: 알림 문장`);
       assert.equal(notice.retry, retry, `${label}: 다시 시도 단추 글자`);
       assert.ok((notice.button.listeners.click ?? []).length > 0, `${label}: 다시 시도 단추에 누름 처리가 없다`);
@@ -2009,19 +2013,49 @@ test("ⓐⓑⓗ H1 move-in.json 만 못 받으면(네트워크·404·503) 구운
       assert.equal(page.byId("lead").textContent, data.lead[lang], `${label}: 받은 머리 문단이 안 그려졌다`);
       const notice = page.notice();
       assert.ok(notice, `${label}: 알림이 안 보인다`);
-      assert.equal(notice.text, `${lang === "ko" ? "입주 예정 자료를 불러오지 못했습니다." : "Could not load the move-in data."} ${ANALYSIS_ASOF[lang](page.baked.day)}`, `${label}: 알림 문장`);
+      assert.equal(notice.text, `${OUTLOOK_NAMES[lang].moveIn} ${ANALYSIS_ASOF[lang](page.baked.day)}`, `${label}: 알림 문장`);
       assert.equal(countOf(notice.text, KO_ONLY), lang === "en" ? 1 : 0, `${label}: 한국어 고지 수`);
-      assert.equal(/전망 자료|outlook data/.test(notice.text), false, `${label}: 받은 전망 자료를 못 받았다고 말한다`);
+      assert.equal(/전망 자료|outlook data|지표 자료|indicator data/.test(notice.text), false, `${label}: 받은 자료를 못 받았다고 말한다`);
     }
   }
 });
 
-test("(가) H1 경계: 받았는데 lead 가 없는 입주 예정 응답은 구획을 닫고 알림이 없다 - 실패와 '아직 없음'이 갈린다. outlook-indicators 실패는 전과 같이 조용하다", async () => {
+// #537: outlook-indicators.json 만 못 받으면(네트워크·404·503 모두 null) 같은 알림이 "지표 자료" 이름을 말한다. 접힌 표(#indicator-fold)·구운 지표 문단·표는 구운 채다.
+test("ⓐⓑⓗ #537 outlook-indicators.json 만 못 받으면(네트워크·404·503) 알림이 지표 자료를 말하고 구운 지표 자리는 그대로다 - 영어 고지 1, 한국어 0, 나머지는 받은 값이다", async () => {
+  const data = await readJson("outlook");
+  const bakedIds = [...OUTLOOK_BAKED, "indicator-lead", "indicator-table"];
+  for (const lang of ["ko", "en"]) {
+    for (const mode of ["network", "404", "503"]) {
+      const server = analysisServer(mode, "outlook-indicators");
+      const page = await loadAnalysisPage({ file: `${SITE}/price-outlook.html`, locale: lang, fetch: server.fetch, bake: bakedIds, hiddenIds: ["move-in-section"] });
+      await settle(30);
+      const label = `${lang} ${mode}`;
+      assertOutlookKept(page, label, ["indicator-lead", "indicator-table"], { stamp: false });
+      assert.equal(page.byId("lead").textContent, data.lead[lang], `${label}: 받은 머리 문단이 안 그려졌다`);
+      const notice = page.notice();
+      assert.ok(notice, `${label}: 알림이 안 보인다`);
+      assert.equal(notice.text, `${OUTLOOK_NAMES[lang].indicator} ${ANALYSIS_ASOF[lang](page.baked.day)}`, `${label}: 알림 문장`);
+      assert.equal(notice.retry, lang === "ko" ? "다시 시도" : "Retry", `${label}: 다시 시도 단추 글자`);
+      assert.equal(countOf(notice.text, KO_ONLY), lang === "en" ? 1 : 0, `${label}: 한국어 고지 수`);
+      assert.equal(HTTP_WORDS.test(notice.html), false, `${label}: 실패 이유가 방문자에게 보인다`);
+      assert.equal(/전망 자료|outlook data|입주 예정 자료|move-in data/.test(notice.text), false, `${label}: 받은 자료를 못 받았다고 말한다`);
+      // 지표와 입주 예정이 같이 안 오면 한 알림이 둘 다 말한다 - 알림 요소는 하나다.
+      assert.equal(countOf(notice.html, 'id="load-retry"'), 1, `${label}: 다시 시도 단추가 하나가 아니다`);
+    }
+  }
+  const both = analysisServer("404", ["outlook-indicators", "move-in"]);
+  const page = await loadAnalysisPage({ file: `${SITE}/price-outlook.html`, locale: "en", fetch: both.fetch, bake: OUTLOOK_BAKED, hiddenIds: ["move-in-section"] });
+  await settle(30);
+  assert.equal(page.notice().text, `${OUTLOOK_NAMES.en.moveIn} ${OUTLOOK_NAMES.en.indicator} ${ANALYSIS_ASOF.en(page.baked.day)}`, "두 파일이 안 오면 알림이 둘 다 말한다");
+  assert.equal(countOf(page.notice().text, KO_ONLY), 1);
+});
+
+test("(가) H1 경계: 받았는데 lead 가 없는 입주 예정 응답은 구획을 닫고 알림이 없다 - 실패와 '아직 없음'이 갈린다. 받은 지표 응답은 lead 가 없어도 알림이 없다(#537)", async () => {
   const { page } = await openOutlook({ mode: "ok", overrides: { "move-in": { table: {} } } });
   assert.equal(page.byId("move-in-section").hidden, true, "받은 빈 입주 예정인데 구획이 열려 있다");
   assert.equal(page.notice(), null, "받았는데 실패 알림이 떴다");
-  const silent = await openOutlook({ mode: "503", only: "outlook-indicators" });
-  assert.equal(silent.page.notice(), null, "outlook-indicators 실패가 알림을 세웠다 - 이 PR 의 범위 밖(알려진 잔여)");
+  const empty = await openOutlook({ mode: "ok", overrides: { "outlook-indicators": { table: {} } } });
+  assert.equal(empty.page.notice(), null, "받은 지표 응답인데 실패 알림이 떴다 - 실패(null)와 받은 빈 응답이 갈려야 한다");
 });
 
 test("ⓑ (가) 실패한 뒤 언어를 바꾸면 알림 문구가 그 언어로 바뀌고 구운 자리·기준일은 그대로다 - 구운 표를 비우지 않는다", async () => {
@@ -2110,6 +2144,12 @@ test("변이 증빙 (가): 입주 예정 숨김을 되돌린 사본, 받은 값 
 
   const noNotice = await openOutlook({ mutate: mutation("cache.failed = !cache.data;", "cache.failed = false;") });
   assert.equal(noNotice.page.notice(), null, "알림을 안 세우는 사본이 알림을 세웠다 - ⓑ 가 눈이 멀었다");
+
+  // #537: 지표 이름을 알림 배열에서 뺀 사본은 지표만 못 받은 때 알림이 안 서고, 사전 키를 지운 사본은 이름이 비어 위 문장 대조가 실패한다.
+  const noIndicator = await openOutlook({ mode: "503", only: "outlook-indicators", mutate: mutation(' cache.indicators === null && "indicatorLoadError"', "") });
+  assert.equal(noIndicator.page.notice(), null, "지표 이름을 뺀 사본이 알림을 세웠다 - #537 시험이 눈이 멀었다");
+  const noKey = await openOutlook({ lang: "en", mode: "503", only: "outlook-indicators", mutate: mutation('    indicatorLoadError: "Could not load the indicator data.",\n', "") });
+  assert.notEqual(noKey.page.notice()?.text, `${OUTLOOK_NAMES.en.indicator} ${ANALYSIS_ASOF.en(noKey.page.baked.day)}`, "영어 사전 키를 지운 사본이 같은 알림을 낸다 - #537 시험이 눈이 멀었다");
 });
 
 // ============================================================================================================
