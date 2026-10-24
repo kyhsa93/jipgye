@@ -383,5 +383,16 @@
 #   양쪽 로그에서 시험 이름을 뽑아 `comm` 으로 견줬다 — 기준에만 있는 이름 0, 후보에만 있는 이름 15.
 #   고친 기존 시험은 하나다: test/url-state.test.mjs "무엇을 못 받았는지 이름을 말한다" 의 「배너에 (HTTP n) 이유가 실린다」 단언을 「이유가 방문자에게 안 보인다」로 뒤집었다(이름은 그대로, 개수 -0 +0) -
 #   #296 이 index 배너에서 "HTTP 503" 노출을 없애라고 정한 바로 그 자리다. 없어진 시험은 0이고(.skip·.todo 도 0 그대로) 공용 도우미 test/helpers/index-page.mjs 에는 구운 조각을 심는 baked·mutate 선택지만 더했다(기본값이면 이전과 같다).
-1911
-1911
+# 센 법: 2026-10-24, merge-base 6521bb9c(= origin/main), Node v24.22.0, macOS 15.5 (#296 (나) 뉴스 틀 실패 알림).
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1923 · pass 1923 · fail 0 · skipped 0
+#   직전 하한은 1911(위 (다) index 블록). 차이 12 는 이 PR 이 test/load-failure.test.mjs 에 더한 뉴스 행의 새 시험 12개에서 나온다(`node --test test/load-failure.test.mjs` → 기준 58 → 후보 70):
+#   범위(4장 구운 조각·구운 기준일·load-state.js 를 <script src> 로 물지 않음) · ⓐⓒ 요청 전부 실패(네트워크·404·503 × ko·en × 4장)에도 구운 목록·요약·시세 카드와 #updated 글자·data-updated·H2 hidden 그대로 ·
+#   ⓑⓔⓗ 알림(이름 + 구운 기준일 문장 + 다시 시도, 영어는 한국어 고지 정확히 1·한국어 0, 실패 이유·오늘·최신 0) · ⓑ F6 요약 실패는 「AI 요약을 불러오지 못했습니다」(index 와 같은 글자)이고 「아직 없음」이 아님 ·
+#   ⓐ 한 가지만 실패(기사·요약 각각) · ⓑ 실패 뒤 언어 전환 · ⓖ 다시 시도(재실패는 구운 채 알림 유지, 성공하면 알림 걷힘·받은 값·갱신 시각) · 규칙 5·H2 받았는데 빈 목록·요약·시세는 구운 값을 남기지 않고 알림 없음·시세 구획 닫힘 ·
+#   ⓕ 구운 자리 그림은 news·summary 가드 안에서만 돌고 새 알림 요소·"-" 갈래 없음 · 알림 둘째 문장이 load-state.js 의 notifyBeside 와 같은 말 · 변이 증빙 셋(기사 가드 삭제·요약 가드 삭제·알림 생략이 각각 위 점검에 걸림) ·
+#   S6(뉴스 4장 인라인 순증가 +400B 이하, merge-base 6521bb9c 에서 news 13,647B·rate-news 13,711B·realestate-news 13,726B·stock-news 13,710B, load-state.js 불변).
+#   없어진 시험 0, 새 이름 12 (diff 의 `-test(` 줄 0). 고친 기존 시험은 하나다: test/news-pages.test.mjs "기사 로드 실패는 원인을 함께 알린다" 의 「실패 이유를 화면에 쓴다」 단언 둘을
+#   「화면에 쓰지 않는다 + 기사 실패 문구가 있다」로 뒤집었다(이름은 그대로, 개수 -0 +0) - #296 이 방문자에게 "HTTP 503" 노출을 없애라고 정한 자리이고 상태 코드는 계측에만 남는다. 공용 도우미 test/helpers/news-page.mjs 에는
+#   file·fetch·baked·mutate 선택지와 listeners·notice() 만 더했다(기본값이면 이전과 같다).
+1923
+1923
