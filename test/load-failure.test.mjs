@@ -2117,8 +2117,7 @@ test("변이 증빙 (가): 입주 예정 숨김을 되돌린 사본, 받은 값 
 // (가) price-outlook 과 같은 길이다: 데이터 파일 하나가 안 오면(네트워크·404·빈 파일) 구운 머리 문단(#lead)·구운 표·구운 기준일(#updated)을 지우지 않고,
 // #content 안 알림 한 줄이 [못 받은 것의 이름] + [아래는 기준일(구운 data-updated)에 만든 값입니다.] + (영어) [Some of it is in Korean only.] + [다시 시도] 를 말한다.
 // 예전에는 #lead 를 실패 문구(네트워크 실패)나 "준비 중"(404·빈 파일)으로 갈아 끼우고 404 갈래에서 #updated 를 "-"로 바꿨다. 404·빈 응답도 "새로 받지 못했다"다(규칙 5).
-// switch-house 는 #345(실패 때 구 고르기가 비고 그 밑 빈 두 줄) 의 도구 영역(#from-select·#to-select·#compare-result)을 이 PR 이 건드리지 않는다 -
-// 이 알림이 "이 장이 실패를 말한다"(#345 완료 조건 1)만 채우고, 예약 높이(조건 2)와 구 고르기는 po 확인 뒤다(흡수 알림 6376796513 "po 확인 필요").
+// switch-house 의 도구 영역(#from-select·#to-select·#compare-result)은 이 알림이 건드리지 않는다 - 실패 때 쓸 수 없음을 말하는 것은 #538 이고 아래 「switch-house 도구 영역」 시험이다.
 // 이 5장은 load-state.js 를 <script src> 로 물지 않는다(S6). 보기를 바꾸는 입력이 없어 규칙 3번이 걸리지 않는다(분석 6장은 po 실측으로 해당 없음).
 // ============================================================================================================
 const leadOf = (data, lang) => data.lead[lang];
@@ -2282,6 +2281,102 @@ test("변이 증빙 (라): 받은 값 가드를 지운 사본, 알림을 안 세
 
   const dash = await openAnalysis(cancelled, { mode: "404", mutate: mutation("cache.failed = !cache.data;", 'cache.failed = !cache.data; if (cache.failed) document.getElementById("updated").textContent = "-";') });
   assert.throws(() => assertAnalysisKept(cancelled, dash.page, "변이3"), /구운 기준일 글자가 바뀌었다/, "기준일을 '-'로 되돌려도 ⓒ 가 통과한다");
+});
+
+// ------------------------------------------------------------------------------------------------------------
+// switch-house 도구 영역 (#538, po 2026-10-24): 실패(cache.failed)하면 도구를 숨기지 않고 제자리에 둔 채 쓸 수 없음을 말한다.
+//   - 두 select: 비활성 옵션 `—` 하나(value="") + disabled. #compare-result: 사전 키 하나(`down`). 숨기면 아래 표가 끌려 올라가 실패 경로 CLS 라 숨기지 않는다.
+//   - 재시도가 성공하면 fillSelects 가 25개 구 옵션과 disabled=false 를 되돌리고 문장은 비교 결과로 바뀐다.
+// 높이 변화 0·CLS 네 줄·axe 는 실제 Chrome 증빙(PR 본문)이다 - 이 시험은 손으로 만든 DOM 에서 상태를 본다.
+// ------------------------------------------------------------------------------------------------------------
+const SWITCH = ANALYSIS_PAGES.find((spec) => spec.name === "switch-house");
+const DOWN = { ko: "자료를 받지 못해 지금은 견줄 수 없습니다.", en: "Can't compare: the data did not load." };
+const DASH_OPTION = '<option value="" disabled>—</option>';
+// 손으로 만든 DOM 의 빈 요소는 .value 가 함수다 - 진짜 select 처럼 빈 문자열로 시작하게 스크립트 앞에 붙인다(옵션 선택 규칙 자체는 실제 Chrome 증빙).
+const SELECT_INIT = 'document.getElementById("from-select").value = ""; document.getElementById("to-select").value = "";\n';
+const withSelects = (mutate) => (script) => SELECT_INIT + (mutate ? mutate(script) : script);
+const openSwitch = ({ mutate, ...opts } = {}) => openAnalysis(SWITCH, { ...opts, mutate: withSelects(mutate) });
+function assertCompareDown(page, lang, label) {
+  for (const id of ["from-select", "to-select"]) {
+    const el = page.byId(id);
+    assert.equal(el.innerHTML, DASH_OPTION, `${label}: #${id} 옵션이 비활성 — 하나가 아니다`);
+    assert.equal(el.disabled, true, `${label}: #${id} 가 잠기지 않았다`);
+    assert.equal(el.value, "", `${label}: #${id} 값이 비어 있지 않다`);
+  }
+  assert.equal(page.byId("compare-result").textContent, DOWN[lang], `${label}: #compare-result 문장`);
+  assert.equal(countOf(page.byId("compare-result").textContent, KO_ONLY), 0, `${label}: 도구 문장에 한국어 고지가 붙었다(알림에 알림당 1회가 이미 있다)`);
+  assert.equal(page.byId("compare-answer").textContent, "", `${label}: 답 한 줄이 남았다`);
+  assert.equal(page.byId("compare-section").hidden, false, `${label}: 도구 구획을 숨겼다`);
+}
+
+test("#538 실패(네트워크·404·503·빈 응답)하면 두 select 는 비활성 — 하나, #compare-result 는 쓸 수 없음 문장이고 도구 구획은 그대로다 - 한국어·영어", async () => {
+  for (const lang of ["ko", "en"]) {
+    for (const [label, opts] of [["network", { mode: "network" }], ["404", { mode: "404" }], ["503", { mode: "503" }], ["빈 응답", { mode: "ok", overrides: { "district-change": SWITCH.empty } }]]) {
+      const { page } = await openSwitch({ lang, ...opts });
+      assertCompareDown(page, lang, `${lang} ${label}`);
+      assert.ok(page.notice(), `${lang} ${label}: 알림이 사라졌다`);
+    }
+  }
+});
+
+test("#538 받는 중에는 도구 자리를 건드리지 않고(실패 확정 전), 정상 경로는 25개 구 옵션과 비교 결과를 그린다", async () => {
+  const gate = Promise.withResolvers();
+  const server = analysisServer("ok");
+  const pending = await loadAnalysisPage({ file: `${SITE}/switch-house.html`, fetch: async (url) => (await gate.promise, server.fetch(url)), bake: SWITCH.bake, mutate: withSelects() });
+  assert.notEqual(pending.byId("from-select").disabled, true, "받는 중인데 select 를 잠갔다");
+  assert.equal(pending.byId("compare-result").textContent, "", "받는 중인데 문장이 섰다");
+  gate.resolve();
+  await settle(30);
+  for (const id of ["from-select", "to-select"]) {
+    assert.equal(pending.byId(id).disabled, false, `정상 경로: #${id} 가 잠겼다`);
+    assert.equal(countOf(pending.byId(id).innerHTML, "<option "), 25, `정상 경로: #${id} 옵션이 25개가 아니다`);
+    assert.equal(pending.byId(id).innerHTML.includes("—"), false, `정상 경로: #${id} 에 — 옵션이 남았다`);
+  }
+  assert.notEqual(pending.byId("compare-result").textContent, DOWN.ko, "정상 경로에서 쓸 수 없음 문장이 남았다");
+  assert.match(pending.byId("compare-result").textContent, /종로구/, "정상 경로에서 첫 두 구(종로구는 칸이 모자라 값 없음)의 문장이 안 그려졌다");
+});
+
+test("#538 실패한 뒤 언어를 바꾸면 문장이 그 언어로 바뀌고 select 는 잠긴 채다, 또 실패해도 그대로다", async () => {
+  const { page, server } = await openSwitch({ lang: "ko" });
+  page.byId("lang-toggle").dispatch("click");
+  await settle(10);
+  assertCompareDown(page, "en", "영어로 전환");
+  page.byId("lang-toggle").dispatch("click");
+  await settle(10);
+  assertCompareDown(page, "ko", "한국어로 되돌림");
+  await clickAnalysisRetry(page);
+  assert.ok(server.requests.length > 1, "다시 시도가 요청을 안 보냈다");
+  assertCompareDown(page, "ko", "재시도 실패");
+});
+
+test("#538 다시 시도가 성공하면 select 가 풀리고 25개 구 옵션과 비교 결과가 돌아온다 - 한국어·영어", async () => {
+  for (const lang of ["ko", "en"]) {
+    const { page, server } = await openSwitch({ lang });
+    assertCompareDown(page, lang, `${lang} 시작`);
+    server.mode = "ok";
+    await clickAnalysisRetry(page);
+    for (const id of ["from-select", "to-select"]) {
+      assert.equal(page.byId(id).disabled, false, `${lang}: 성공했는데 #${id} 가 잠겨 있다`);
+      assert.equal(countOf(page.byId(id).innerHTML, "<option "), 25, `${lang}: #${id} 옵션이 25개로 돌아오지 않았다`);
+      assert.equal(page.byId(id).innerHTML.includes("—"), false, `${lang}: #${id} 에 — 옵션이 남았다`);
+    }
+    assert.notEqual(page.byId("compare-result").textContent, DOWN[lang], `${lang}: 성공했는데 쓸 수 없음 문장이 남았다`);
+    assert.ok(page.byId("compare-result").textContent.length > 20, `${lang}: 비교 문장이 안 그려졌다`);
+    assert.equal(page.notice(), null, `${lang}: 알림이 남았다`);
+  }
+});
+
+test("#538 변이 대조군: 실패 분기를 지운 사본, 옵션을 비우는 옛 모양, disabled 를 안 푸는 사본은 위 점검이 실패시킨다", async () => {
+  const noBranch = await openSwitch({ mutate: mutation('fillSelects();\n    setText("compare-result", t("down"));', "") });
+  assert.throws(() => assertCompareDown(noBranch.page, "ko", "변이1"), /옵션이 비활성 — 하나가 아니다/, "실패 분기를 지워도 점검이 통과한다");
+  const empty = await openSwitch({ mutate: mutation(` || '${DASH_OPTION}'`, "") });
+  assert.throws(() => assertCompareDown(empty.page, "ko", "변이2"), /옵션이 비활성 — 하나가 아니다/, "옵션을 비워도 점검이 통과한다");
+  const stuck = await openSwitch({ mutate: mutation("from.disabled = to.disabled = !rows[0];", "") });
+  assert.throws(() => assertCompareDown(stuck.page, "ko", "변이3"), /잠기지 않았다/, "잠그지 않아도 점검이 통과한다");
+  const locked = await openSwitch({ mutate: mutation("from.disabled = to.disabled = !rows[0];", "from.disabled = to.disabled = true;") });
+  locked.server.mode = "ok";
+  await clickAnalysisRetry(locked.page);
+  assert.equal(locked.page.byId("from-select").disabled, true, "변이4: 성공해도 잠긴 사본이 잠기지 않은 것으로 읽힌다 - 복원 점검이 눈이 멀었다");
 });
 
 // ============================================================================================================
