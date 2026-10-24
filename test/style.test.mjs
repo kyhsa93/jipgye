@@ -114,6 +114,27 @@ test("누르는 것은 손가락이 닿는 크기다", async () => {
   assert.doesNotMatch(tableLink.body, /var\(--border\)/, "밑줄이 1.29:1 테두리색이다");
 });
 
+test("금리 4장의 누르는 것도 손가락이 닿는 크기다(#403)", async () => {
+  const text = await css();
+  const all = rules(text);
+  // 상품군 탭(button.tab, 30px 였다)은 자기 규칙에서 높이 --tap.
+  const tab = all.find((r) => parts(r.sel) === parts(".tab"));
+  assert.match(tab.body, /min-height: var\(--tap\)/, ".tab 이 --tap 을 안 쓴다");
+  // 상품군 링크 줄(nav.rate-links a, 19.5px 였다)은 줄 단위 링크 목록 규칙의 선택자에 들어 있고, 줄 간격은 0 이다(--tap 이 줄 사이를 벌린다).
+  const lists = all.find((r) => r.sel.includes(".district-links a") && r.sel.includes(".card-links a"));
+  assert.ok(lists.sel.split(",").map((x) => x.trim()).includes(".rate-links a"), ".rate-links a 가 줄 단위 링크 목록에 없다");
+  assert.match(lists.body, /display: inline-flex/);
+  assert.match(lists.body, /min-height: var\(--tap\)/);
+  assert.match(all.find((r) => parts(r.sel) === parts(".rate-links")).body, /gap: 0 14px/, "링크 줄 간격이 --tap 위에 6px 를 또 더한다");
+  // 자세히 단추(button.detail-toggle, 폭 22.5px 였다)는 자기 상자에 min-width 24 이상.
+  const toggle = all.find((r) => parts(r.sel) === parts(".detail-toggle") && /min-width/.test(r.body));
+  assert.ok(Number(toggle?.body.match(/min-width:\s*(\d+)px/)?.[1]) >= 24, ".detail-toggle min-width 가 24px 미만이거나 없다");
+  // 체크박스는 #459 의 한 규칙(zoom 1.5)의 선택자 목록에 선택자만 더했다 - 선언을 복사한 둘째 zoom 규칙이 없어야 한다.
+  const zooms = all.filter((r) => r.sel.includes('input[type="checkbox"]') && /zoom:/.test(r.body));
+  assert.equal(zooms.length, 1, `체크박스 zoom 규칙이 ${zooms.length}개다`);
+  assert.ok(zooms[0].sel.includes('.controls label > input[type="checkbox"]'), "금리 장 체크박스 선택자가 공유 규칙에 없다");
+});
+
 test("키보드로 훑을 때 지금 어디인지 보인다", async () => {
   const text = await css();
   const focus = rules(text).filter((r) => r.sel.includes(":focus-visible") && /outline:/.test(r.body));

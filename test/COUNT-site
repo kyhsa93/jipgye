@@ -8,5 +8,6 @@
 # 갱신: 2026-10-24(#296 틀 (가) price-outlook), base 97ec974d + 이 PR. `npm run test:site` → ℹ tests 771 · pass 771 · fail 0 (758 + 13, price-outlook 행 13개가 build/site 를 읽음).
 # 갱신: 2026-10-24(#296 틀 (라) 분석 5장), base c8592c65(틀 (가)) + 이 커밋. `npm run test:site` → ℹ tests 782 · pass 782 · fail 0 (771 + 11, 분석 5장 행 11개가 build/site 를 읽음).
 # 갱신: 2026-10-24(#532), base 594feb68 + 이 PR. `npm run test:site` → ℹ tests 788 · pass 788 · fail 0 (758 + 6, 금리 행 6개가 build/site 를 읽음).
-788
-788
+# 갱신: 2026-10-24(#403), base 0427ba1d + 이 PR. `npm run test:site` → ℹ tests 789 · pass 789 · fail 0 (788 + 1, test/style.test.mjs 의 금리 4장 CSS 점검 1개가 이 목록에도 든다).
+789
+789
