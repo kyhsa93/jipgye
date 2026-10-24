@@ -11,6 +11,7 @@ import { loadRatesPage } from "./helpers/rates-page.mjs";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 import { loadIndexPage } from "./helpers/index-page.mjs";
+import { loadNewsPage } from "./helpers/news-page.mjs";
 import { stripInlineScriptComments } from "../scripts/strip-inline-comments.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -1072,4 +1073,231 @@ test("변이 증빙 (다): 구운 내용을 남기는 갈래를 지운 사본, �
 test("S6 의도한 차이 (#296 (다)): index 인라인 스크립트 순증가 +400B 이하 (merge-base 75,413B)", () => {
   const added = Buffer.byteLength(indexScript) - 75_413;
   assert.ok(added <= 400, `index 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
+});
+
+// ============================================================================================================
+// 셋째 행: 뉴스 틀(docs/news.html)과 그 틀로 찍은 3장(rate-news·realestate-news·stock-news), 틀 (나), F5·F6·H2. 같은 규칙 2~5 를
+// #content 안의 알림 한 줄로 지킨다 - 구운 기사 목록(#news-list)·AI 요약(#summary-box)·시세 카드(#realestate-stats)와 구운 기준일(#updated)을
+// 실패해도 지우지·숨기지 않고, 알림이 [못 받은 것의 이름] + [아래는 기준일(구운 data-updated)에 만든 값입니다] + (영어) [Some of it is in Korean only.] +
+// [다시 시도] 를 말한다. 이 4장은 load-state.js 를 <script src> 로 물지 않는다(S6) - 문장 글자만 같게 두고 아래에서 맞대 본다. 실패 이유("HTTP 503")는 보이지 않는다.
+// 분류는 <meta name="news-category"> 로 장마다 고정이고 방문자가 바꾸지 않는다 - 규칙 3번이 걸리는 보기가 없다(po 2026-10-14 실측).
+// 구운 한국어 본문은 영어 화면에서도 한국어이므로 영어 고지를 붙인다(금리 틀만 뺀다는 po 판정, 이 틀은 붙이는 쪽).
+// ============================================================================================================
+const NEWS_FILES = ["news", "rate-news", "realestate-news", "stock-news"];
+const newsSources = {};
+for (const name of NEWS_FILES) {
+  const html = await readFile(path.join(root, `docs/${name}.html`), "utf8");
+  newsSources[name] = { html, script: scriptOf(html), category: /name="news-category" content="([^"]+)"/.exec(html)?.[1] ?? null };
+}
+
+// 데이터 요청을 막는 서버(index 와 같은 모양). only 가 있으면 그 파일만 실패한다. overrides 는 성공 응답을 바꿔 끼운다.
+function newsServer(mode, only = null, overrides = {}) {
+  const state = { mode, requests: [] };
+  state.fetch = async (url) => {
+    const name = String(url).match(/\/([a-z-]+)\.json/)?.[1];
+    state.requests.push(name);
+    const down = state.mode !== "ok" && (!only || only === name);
+    if (down && state.mode === "network") throw new TypeError("Failed to fetch");
+    if (down) return { ok: false, status: state.mode === "404" ? 404 : 503, json: async () => ({}) };
+    if (name in overrides) return { ok: true, status: 200, json: async () => overrides[name] };
+    return { ok: true, status: 200, json: () => readJson(name) };
+  };
+  return state;
+}
+const openNews = async (name, { lang = "ko", mode = "network", only = null, overrides = {}, mutate } = {}) => {
+  const server = newsServer(mode, only, overrides);
+  const page = await loadNewsPage({ file: `docs/${name}.html`, category: newsSources[name].category, locale: lang, fetch: server.fetch, baked: true, mutate });
+  await settle(30);
+  return { page, server };
+};
+const NEWS_SPOTS = ["news-list", "summary-box", "realestate-stats"];
+const clickNewsRetry = async (page) => {
+  page.byId("load-retry").dispatch("click");
+  await settle(30);
+};
+
+// ⓐⓒ 구운 자리·구운 기준일·H2 구획의 hidden 이 실패 뒤에도 그대로다. 변이 시험이 같은 함수를 쓴다.
+function assertNewsBakedKept(page, label) {
+  for (const id of NEWS_SPOTS) assert.equal(page.byId(id).innerHTML, page.baked[id], `${label}: #${id} 의 구운 내용이 바뀌었다`);
+  assert.equal(page.byId("realestate-stats-section").hidden, page.baked.statsHidden, `${label}: 시세 구획의 hidden 이 바뀌었다`);
+  assert.equal(page.byId("updated").textContent, page.baked.updatedText, `${label}: 구운 기준일 글자가 바뀌었다`);
+  assert.equal(page.byId("updated").getAttribute("data-updated"), page.baked.day, `${label}: data-updated 가 바뀌었다`);
+}
+
+test("(나) 범위: 뉴스 4장은 구운 기사 목록·요약·기준일(data-updated)을 갖고 load-state.js 를 <script src> 로 물지 않으며, 시세 카드가 열려 구워진 것은 realestate-news 하나다 (S6)", async () => {
+  for (const name of NEWS_FILES) {
+    const { html } = newsSources[name];
+    assert.equal(html.includes("load-state.js"), false, `${name}: load-state.js 를 문다 - 외부 JS 를 더하는 일이라 cto 허용 표가 먼저다`);
+    const page = await loadNewsPage({ file: `docs/${name}.html`, baked: true });
+    assert.ok(page.baked["news-list"].includes("news-item"), `${name}: 구운 기사 목록이 비었다`);
+    assert.ok(page.baked["summary-box"].includes("<p>"), `${name}: 구운 요약이 비었다`);
+    assert.match(page.baked.day, /^\d{4}-\d{2}-\d{2}$/, `${name}: 구운 기준일 줄에 data-updated 가 없다`);
+    assert.equal(page.baked.statsHidden, name !== "realestate-news", `${name}: 시세 구획의 구운 hidden`);
+    if (name === "realestate-news") assert.ok(page.baked["realestate-stats"].includes("stat-card"), "구운 시세 카드가 비었다");
+  }
+  assert.equal(newsSources.news.category, null, "news.html 은 분류가 없는 전체 장이다");
+});
+
+test("ⓐⓒ (나) 요청이 전부 실패(네트워크·404·503)해도 구운 기사 목록·요약·시세 카드와 구운 기준일 글자·data-updated 가 한 글자도 안 바뀐다 - 4장 × 한국어·영어", async () => {
+  for (const name of NEWS_FILES) {
+    for (const lang of ["ko", "en"]) {
+      for (const mode of ["network", "404", "503"]) {
+        const { page } = await openNews(name, { lang, mode });
+        assertNewsBakedKept(page, `${name} ${lang} ${mode}`);
+      }
+    }
+  }
+});
+
+test("ⓑⓔⓗ (나) 실패하면 알림이 보이고 이름 + 구운 기준일 문장 + 다시 시도를 말한다 - 영어는 한국어 고지 정확히 1, 한국어는 0, 실패 이유·오늘·최신은 없다", async () => {
+  for (const name of NEWS_FILES) {
+    for (const [lang, names, kept, retry] of [
+      ["ko", "기사를 불러오지 못했습니다. AI 요약을 불러오지 못했습니다.", (day) => `아래는 기준일(${day})에 만든 값입니다.`, "다시 시도"],
+      ["en", "Could not load the articles. Could not load the AI summary.", (day) => `Shown below is what this page was built with on ${day}. ${KO_ONLY}`, "Retry"],
+    ]) {
+      for (const mode of ["network", "404", "503"]) {
+        const { page } = await openNews(name, { lang, mode });
+        const notice = page.notice();
+        const label = `${name} ${lang} ${mode}`;
+        assert.ok(notice, `${label}: 알림이 안 보인다`);
+        assert.equal(notice.text, `${names} ${kept(page.baked.day)}`, `${label}: 알림 문장`);
+        assert.equal(notice.retry, retry, `${label}: 다시 시도 단추 글자`);
+        assert.ok((notice.button.listeners.click ?? []).length > 0, `${label}: 다시 시도 단추에 누름 처리가 없다`);
+        assert.equal(countOf(notice.text, KO_ONLY), lang === "en" ? 1 : 0, `${label}: 한국어 고지 수`);
+        assert.equal(HTTP_WORDS.test(notice.html), false, `${label}: 실패 이유가 방문자에게 보인다: ${notice.text}`);
+        assert.equal(BAD_WORDS.test(notice.text), false, `${label}: 알림이 지금 값처럼 말한다: ${notice.text}`);
+      }
+    }
+  }
+});
+
+test("ⓑ (나) F6: 요약을 못 받았으면 '요약이 아직 없다'가 아니라 'AI 요약을 불러오지 못했습니다'(index 와 같은 글자)로 말하고 구운 요약을 남긴다", async () => {
+  for (const [lang, failed, empty] of [
+    ["ko", "AI 요약을 불러오지 못했습니다.", "오늘 요약이 아직 없습니다."],
+    ["en", "Could not load the AI summary.", "No summary yet today."],
+  ]) {
+    for (const mode of ["network", "404"]) {
+      const { page } = await openNews("realestate-news", { lang, mode, only: "summary" });
+      assert.ok(page.notice().text.includes(failed), `${lang} ${mode}: ${page.notice().text}`);
+      assert.equal(page.byId("summary-box").innerHTML, page.baked["summary-box"], `${lang} ${mode}: 구운 요약이 바뀌었다`);
+      assert.equal(page.byId("summary-box").innerHTML.includes(empty), false, `${lang} ${mode}: 실패를 '아직 없음'으로 말한다`);
+    }
+  }
+  // index 의 문자열표와 같은 글자인지(같은 것을 두 곳에서 다르게 부르지 않는다)
+  assert.ok(indexSource.includes('summaryLoadError: "AI 요약을 불러오지 못했습니다."') && indexSource.includes('summaryLoadError: "Could not load the AI summary."'));
+});
+
+test("ⓐ (나) 한 가지만 실패하면 그 자리만 구운 채로 남고 나머지는 받은 값으로 바뀐다 - 알림은 실패한 것만 말한다", async () => {
+  // 기사(news.json) 실패: 목록·시세 카드·기준일은 구운 채, 요약은 받은 값
+  for (const lang of ["ko", "en"]) {
+    const { page } = await openNews("realestate-news", { lang, mode: "503", only: "news" });
+    for (const id of ["news-list", "realestate-stats"]) assert.equal(page.byId(id).innerHTML, page.baked[id], `기사 실패 ${lang}: #${id}`);
+    assert.equal(page.byId("realestate-stats-section").hidden, false, `기사 실패 ${lang}: 시세 구획이 숨었다(H2)`);
+    assert.equal(page.byId("updated").textContent, page.baked.updatedText, `기사 실패 ${lang}: 구운 기준일이 바뀌었다`);
+    assert.notEqual(page.byId("summary-box").innerHTML, page.baked["summary-box"], `기사 실패 ${lang}: 받은 요약이 안 그려졌다`);
+    const text = page.notice().text;
+    assert.ok(text.startsWith(lang === "ko" ? "기사를 불러오지 못했습니다. 아래는" : "Could not load the articles. Shown below"), text);
+    assert.equal(/AI 요약|AI summary/.test(text), false, `기사 실패 ${lang}: 받은 요약을 못 받았다고 말한다`);
+  }
+  // 요약(summary.json) 실패: 요약은 구운 채, 목록은 받은 값
+  const { page } = await openNews("news", { mode: "503", only: "summary" });
+  assert.equal(page.byId("summary-box").innerHTML, page.baked["summary-box"]);
+  assert.notEqual(page.byId("news-list").innerHTML, page.baked["news-list"]);
+  assert.ok(page.byId("news-list").innerHTML.includes("news-item"));
+  assert.ok(page.notice().text.startsWith("AI 요약을 불러오지 못했습니다. 아래는"), page.notice().text);
+  assert.equal(page.byId("updated").getAttribute("data-updated"), page.baked.day);
+});
+
+test("ⓑ (나) 실패한 뒤 언어를 바꾸면 알림 문구가 그 언어로 바뀌고 구운 자리는 그대로다", async () => {
+  const { page } = await openNews("realestate-news", { lang: "ko" });
+  assert.equal(countOf(page.notice().text, KO_ONLY), 0);
+  page.byId("lang-toggle").dispatch("click");
+  await settle(10);
+  const en = page.notice();
+  assert.ok(en.text.startsWith("Could not load the articles.") && countOf(en.text, KO_ONLY) === 1 && en.retry === "Retry", `영어 알림: ${en.text}`);
+  assertNewsBakedKept(page, "언어 전환 뒤");
+  page.byId("lang-toggle").dispatch("click");
+  await settle(10);
+  assert.equal(countOf(page.notice().text, KO_ONLY), 0);
+});
+
+test("ⓖ (나) 다시 시도가 성공하면 알림이 걷히고 구운 자리가 받은 값으로 바뀐다, 또 실패하면 구운 채로 알림이 남는다", async () => {
+  for (const name of NEWS_FILES) {
+    for (const lang of ["ko", "en"]) {
+      const { page, server } = await openNews(name, { lang });
+      const first = server.requests.length;
+      await clickNewsRetry(page);
+      assert.ok(server.requests.length > first, `${name} ${lang}: 다시 시도가 요청을 안 보냈다`);
+      assert.ok(page.notice(), `${name} ${lang}: 다시 실패했는데 알림이 걷혔다`);
+      assertNewsBakedKept(page, `${name} ${lang} 재시도 실패`);
+
+      server.mode = "ok";
+      await clickNewsRetry(page);
+      assert.equal(page.notice(), null, `${name} ${lang}: 성공했는데 알림이 남았다`);
+      assert.notEqual(page.byId("news-list").innerHTML, page.baked["news-list"], `${name} ${lang}: 목록이 받은 값으로 안 바뀌었다`);
+      assert.notEqual(page.byId("summary-box").innerHTML, page.baked["summary-box"], `${name} ${lang}: 요약이 받은 값으로 안 바뀌었다`);
+      assert.notEqual(page.byId("updated").textContent, page.baked.updatedText, `${name} ${lang}: 기준일 줄이 받은 갱신 시각으로 안 바뀌었다`);
+    }
+  }
+});
+
+test("(나) 규칙 5·H2: 받았는데 비어 있는 것은 실패가 아니다 - 구운 값을 남기지 않고 '아직 없음'으로 말하며 알림이 뜨지 않고, 받은 시세가 비면 구획을 닫는다", async () => {
+  const news = await readJson("news");
+  const { page } = await openNews("realestate-news", { mode: "ok", overrides: { news: { ...news, items: [], realestateStats: [] }, summary: { categories: [] } } });
+  assert.notEqual(page.byId("news-list").innerHTML, page.baked["news-list"], "받은 빈 목록인데 구운 목록이 남았다");
+  assert.ok(page.byId("news-list").innerHTML.includes("오늘 이 분야 기사가 아직 없습니다."), page.byId("news-list").innerHTML);
+  assert.ok(page.byId("summary-box").innerHTML.includes("오늘 요약이 아직 없습니다."), page.byId("summary-box").innerHTML);
+  assert.equal(page.byId("realestate-stats-section").hidden, true, "받은 시세가 비었는데 구획이 열려 있다");
+  assert.equal(page.notice(), null, "받았는데 실패 알림이 떴다");
+});
+
+test("ⓕ (나) 구운 자리·구운 기준일을 건드리는 그림은 받은 값이 있을 때만 돈다 - 실패 표시는 알림 함수 한 곳이고 새 알림 요소·옛 실패 줄은 없다", () => {
+  for (const name of NEWS_FILES) {
+    const { script } = newsSources[name];
+    const apply = script.slice(script.indexOf("function applyLocale("), script.indexOf("const cache = "));
+    assert.ok(/if \(cache\.news\) \{\s+renderUpdated\(\);\s+renderRealestateStats\(\);\s+renderNews\(\);\s+\}/.test(apply), `${name}: 기사·시세·기준일 그림이 news 가드 안에 없다`);
+    assert.ok(apply.includes("if (cache.summary) renderSummary();"), `${name}: 요약 그림이 summary 가드 안에 없다`);
+    for (const call of ["renderUpdated();", "renderRealestateStats();", "renderNews();", "renderSummary();"]) {
+      assert.equal(countOf(script, call), 1, `${name}: ${call} 를 가드 밖에서도 부른다`);
+    }
+    assert.equal(/textContent = [^;\n]*"-"|: "-"/.test(script), false, `${name}: 구운 기준일을 "-"로 바꾸는 갈래가 남았다`);
+    assert.equal(/insertAdjacentHTML|notifyBeside|showFailure|loadError\)\(/.test(script), false, `${name}: 알림 요소를 직접 만들거나 옛 실패 줄이 남았다`);
+    assert.equal(countOf(script, 'id="load-retry"'), 1, `${name}: 재시도 단추 마크업이 하나가 아니다`);
+    const fn = script.slice(script.indexOf("function renderLoadNotice("), script.indexOf("function statCardsHtml"));
+    assert.ok(fn.includes('document.getElementById("content").innerHTML'), `${name}: 알림 자리가 #content 가 아니다`);
+    assert.ok(fn.includes('getAttribute("data-updated")'), `${name}: 구운 data-updated 를 읽지 않는다`);
+    assert.equal(/new Date\(|Date\.now/.test(fn), false, `${name}: 알림이 새 날짜를 계산한다`);
+  }
+});
+
+test("(나) 알림의 둘째 문장은 load-state.js 의 notifyBeside 와 같은 말이다 (한·영) - 문구가 두 곳에서 갈라지지 않게", () => {
+  const { script } = newsSources.news;
+  assert.ok(script.includes("Shown below is what this page was built with on ${day}. Some of it is in Korean only."), "news 의 영어 문장이 load-state.js 와 다르다");
+  assert.ok(script.includes("아래는 기준일(${day})에 만든 값입니다."), "news 의 한국어 문장이 load-state.js 와 다르다");
+  assert.ok(loadStateSource.includes("`Shown below is what this page was built with${day ? ` on ${day}` :"));
+  assert.ok(loadStateSource.includes("`아래는 ${day ? `기준일(${day})` :") && loadStateSource.includes("에 만든 값입니다.`"));
+});
+
+test("변이 증빙 (나): 기사·시세·기준일 가드를 지운 사본, 요약 가드를 지운 사본, 알림을 안 세우는 사본은 위 점검이 실패시킨다", async () => {
+  const noNewsGuard = await openNews("realestate-news", {
+    mutate: (script) => mutation("if (cache.news) {", "if (true) {")(script.replaceAll("cache.news.", "cache.news?.")),
+  });
+  assert.throws(() => assertNewsBakedKept(noNewsGuard.page, "변이1"), /구운 내용이 바뀌었다|hidden 이 바뀌었다/, "기사 가드를 지워도 ⓐ 가 통과한다");
+
+  const noSummaryGuard = await openNews("news", {
+    mutate: (script) => mutation("if (cache.summary) renderSummary();", "renderSummary();")(script.replaceAll("cache.summary.categories", "cache.summary?.categories")),
+  });
+  assert.throws(() => assertNewsBakedKept(noSummaryGuard.page, "변이2"), /#summary-box 의 구운 내용이 바뀌었다/, "요약 가드를 지워도 ⓐ 가 통과한다");
+
+  const noNotice = await openNews("news", { mutate: mutation("const failed = [", "const failed = false && [") });
+  assert.equal(noNotice.page.notice(), null, "알림을 안 세우는 사본이 알림을 세웠다 - ⓑ 가 눈이 멀었다");
+});
+
+test("S6 의도한 차이 (#296 (나)): 뉴스 4장 인라인 스크립트 순증가 +400B 이하 (merge-base 6521bb9c), load-state.js 순증가 0B", () => {
+  const BASE = { news: 13_647, "rate-news": 13_711, "realestate-news": 13_726, "stock-news": 13_710 };
+  for (const name of NEWS_FILES) {
+    const added = Buffer.byteLength(newsSources[name].script) - BASE[name];
+    assert.ok(added > 0 && added <= 400, `docs/${name}.html: 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
+  }
+  assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
 });

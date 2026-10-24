@@ -137,7 +137,9 @@
       footerPrivacy: "개인정보처리방침",
       footerMethod: "숫자를 만드는 방법",
       footerAbout: "소개",
-      loadError: (reason) => `기사를 불러오지 못했습니다${reason ? ` (${reason})` : ""}.`,
+      loadError: "기사를 불러오지 못했습니다.",
+      summaryLoadError: "AI 요약을 불러오지 못했습니다.",
+      asOf: (day) => `아래는 기준일(${day})에 만든 값입니다.`,
       retry: "다시 시도",
       relative: (n, unit) => `${n}${{ minute: "분", hour: "시간", day: "일" }[unit]} 전`,
     },
@@ -166,7 +168,9 @@
       footerPrivacy: "Privacy Policy",
       footerMethod: "How these numbers are made",
       footerAbout: "About",
-      loadError: (reason) => `Could not load the articles${reason ? ` (${reason})` : ""}.`,
+      loadError: "Could not load the articles.",
+      summaryLoadError: "Could not load the AI summary.",
+      asOf: (day) => `Shown below is what this page was built with on ${day}. Some of it is in Korean only.`,
       retry: "Retry",
       relative: (n, unit) => `${n} ${unit}${n === 1 ? "" : "s"} ago`,
     },
@@ -217,8 +221,6 @@
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
   }
-
-  let newsLoadError = null;
 
   function relativeTime(iso) {
     if (!iso) return "";
@@ -298,10 +300,14 @@
             </li>`;
           })
           .join("")
-      : cache.news
-        ? `<li class="empty">${escapeHtml(t("newsEmpty"))}</li>`
-        : `<li class="empty">${escapeHtml(t("loadError")(newsLoadError))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button></li>`;
+      : `<li class="empty">${escapeHtml(t("newsEmpty"))}</li>`;
+  }
 
+  function renderLoadNotice() {
+    const failed = [!cache.news && "loadError", !cache.summary && "summaryLoadError"].filter(Boolean).map(t).join(" ");
+    document.getElementById("content").innerHTML = failed
+      ? `<p class="content-notice">${failed} ${t("asOf")(document.getElementById("updated").getAttribute("data-updated"))} <button type="button" id="load-retry">${t("retry")}</button></p>`
+      : "";
     document.getElementById("load-retry")?.addEventListener("click", (e) => {
       e.currentTarget.disabled = true;
       window.analytics?.event("load_retry", { news_category: category ?? "all" });
@@ -324,7 +330,7 @@
 
   function renderRealestateStats() {
     const section = document.getElementById("realestate-stats-section");
-    const stats = cache.news?.realestateStats ?? [];
+    const stats = cache.news.realestateStats ?? [];
     if (category !== "realestate" || !stats.length) {
       section.hidden = true;
       return;
@@ -339,7 +345,7 @@
 
   function renderSummary() {
     const box = document.getElementById("summary-box");
-    const all = cache.summary?.categories ?? [];
+    const all = cache.summary.categories ?? [];
     const shown = (category ? all.filter((c) => c.key === category) : all).filter((c) => summaryLine(c));
 
     if (!shown.length) {
@@ -356,10 +362,8 @@
   }
 
   function renderUpdated() {
-    const updatedAt = cache.news?.updatedAt;
-    document.getElementById("updated").textContent = updatedAt
-      ? `${t("updatedPrefix")} ${new Date(updatedAt).toLocaleString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium", timeStyle: "short" })} KST`
-      : "-";
+    const updatedAt = cache.news.updatedAt;
+    if (updatedAt) document.getElementById("updated").textContent = `${t("updatedPrefix")} ${new Date(updatedAt).toLocaleString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium", timeStyle: "short" })} KST`;
   }
 
   function applyLocale(next) {
@@ -382,10 +386,13 @@
     for (const link of document.querySelectorAll("[data-news-page]")) {
       link.textContent = t(NAV_KEYS[link.dataset.newsPage]);
     }
-    renderUpdated();
-    renderRealestateStats();
-    renderSummary();
-    renderNews();
+    if (cache.news) {
+      renderUpdated();
+      renderRealestateStats();
+      renderNews();
+    }
+    if (cache.summary) renderSummary();
+    renderLoadNotice();
   }
 
   const cache = { news: null, summary: null };
@@ -393,13 +400,8 @@
   async function main() {
     const [news, summary] = await Promise.allSettled([loadJson("news"), loadJson("summary")]);
 
-    if (news.status === "fulfilled") {
-      cache.news = news.value;
-      newsLoadError = null;
-    } else {
-      newsLoadError = news.reason?.message ?? String(news.reason);
-      reportLoadFailure("news", news.reason, true);
-    }
+    if (news.status === "fulfilled") cache.news = news.value;
+    else reportLoadFailure("news", news.reason, true);
 
     if (summary.status === "fulfilled") cache.summary = summary.value;
     else reportLoadFailure("summary", summary.reason, false);
