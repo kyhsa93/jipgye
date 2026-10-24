@@ -14561,7 +14561,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 이세원 한지훈 배영경 기자 = 다음 주(26∼30일)에는 한국은행이 올해 3분기 실질 국내총생산(GDP) 성장률을 발표한다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Next Week's Economy] 3rd Quarter Growth Rate...September Industrial Trends Also Watched"
       },
       {
         "title": "\"집값 2035년까지 오른다…지금이라도 내집마련 해야\" 대학교수의 조언",
@@ -14570,7 +14571,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스]김성은 인턴 기자 = 수도권 전월세 시장 불안이 공급 부족과 규제 여파로 오는 2035년까지 이어질 수 있어 실거주 목적의 매수 전환을 적극 검토해야 한다는 전문가 지적이 나왔다. 지난 21일 구독자…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "House prices to rise until 2035... Still need to prepare for homeownership now, says university professor"
       },
       {
         "title": "\"태국서만 月 1억씩 번다\"…전세계서 난리 난 한국 식당 [권용훈의 트렌드워치]",
@@ -14579,7 +14581,8 @@
         "source": "한국경제 경제",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Making 100,000,000 won a month only in Thailand\"…Korean restaurants cause a stir worldwide [Trend Watch by Kwon Yong-hoon]"
       },
       {
         "title": "뉴욕증시, 유가 급등 속 하락 마감…다우 1.23%↓",
@@ -14588,7 +14591,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 김예진 기자 = 미국과 이란 간 전쟁이 다시 격화할 수 있다는 우려로 국제유가가 급등하면서 23일(현지시간) 뉴욕증시 주요 지수가 일제히 하락했다. 이날 CNBC, 마켓워치 등에 따르면 뉴욕증권거래소…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "New York Stock Market Closes Lower Amid Sharp Rise in Oil Prices... Dow Down 1.23%"
       },
       {
         "title": "[부동산캘린더] 내주 전국 5천555가구 분양…수도권·부산 중심",
@@ -14597,7 +14601,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(세종=연합뉴스) 오진송 기자 = 다음 주에는 전국 8곳에서 5천500여 가구가 청약 신청을 받는다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Real Estate Calendar: 5,555 Units to be Sold Nationwide Next Week, Focused on Seoul Metropolitan Area and Busan"
       },
       {
         "title": "[유럽의 분노②] 치솟는 물가·눈덩이 나랏빚…경제 뇌관 되나",
@@ -14606,7 +14611,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스] 신효령 기자 = 유럽 각국에서 생활비 부담에 항의하는 시위가 잇따르고 있다. 학생들은 교육 여건 개선을, 노동자들은 임금 인상을, 세입자들은 주거 안정을 요구했다. 나라별 요구는 다르지만 소득으로 생…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Europe's Anger②: Soaring Prices, Piling-Up National Debt... Could It Become an Economic Brain?"
       },
       {
         "title": "강남 수억 내리고, 강북은 신고가…서울 집값 상승축 이동[부동산 머니무브①]",
@@ -14615,7 +14621,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 박성환 기자 = 서울 집값 상승의 무게중심이 강남권에서 상대적으로 가격 부담이 낮은 강북 지역으로 옮겨가는 모습이 뚜렷해지고 있다. 강남3구(강남·서초·송파)와 용산 등 고가 주택 밀집 지역의 매수세…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yongsan.html",
+            "label": "용산구 아파트 84㎡ 매매",
+            "labelEn": "용산구 apartment 84㎡ sale",
+            "value": "29억 2,239만원",
+            "valueEn": "₩2,922M",
+            "note": "최근 1주 계약 66건 · 10/17 대비 -3.5%",
+            "noteEn": "66 deals in the last 1 weeks · -3.5% vs Oct 17"
+          }
+        ],
+        "titleEn": "Prices Fall in Gangnam, Rise in Gangbuk as Seoul Housing Price Growth Shifts [Real Estate Money Move ①]"
       },
       {
         "title": "[속보]뉴욕증시, 유가 상승 등에 하락 마감…다우 1.23%↓",
@@ -14624,7 +14643,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "후속기사가 이어집니다 ◎공감언론 뉴시스 aci27@newsis.com",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Breaking News] NY Stock Market Closes Lower Amid Rising Oil Prices... Dow Down 1.23%"
       },
       {
         "title": "[매경플러스 리바이벌] 오세훈 시대 서울 부동산 다시 읽기",
@@ -14633,7 +14653,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "‘오세훈 시대 서울 부동산’ 3회 시리즈오세훈 서울시장이 23일 ‘명태균 여론조사비 대납 의혹’ 항소심에서 무죄를 선고받았다. 앞서 1심은 벌금 1000만원과 추징금 2100만원을..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Maekyung Plus Revival] Reading Seoul Real Estate Again in the Oh Sehun Era"
       },
       {
         "title": "무주택자 눈 빠지게 기다린 '30억 로또'…반포124 12월8일 청약",
@@ -14642,7 +14663,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 강세훈 기자, 주다영 인턴기자 = 올해 청약시장 최대어로 꼽히는 서울 서초구 반포동 '디에이치 반포124'의 분양 일정이 오는 12월로 확정됐다. 분양가상한제 적용으로 전용면적 84㎡의 예상 분양가가…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 84㎡ 매매",
+            "labelEn": "서초구 apartment 84㎡ sale",
+            "value": "26억 578만원",
+            "valueEn": "₩2,606M",
+            "note": "최근 1주 계약 195건 · 10/17 대비 -0.5%",
+            "noteEn": "195 deals in the last 1 weeks · -0.5% vs Oct 17"
+          }
+        ],
+        "titleEn": "Homeless buyers wait eagerly for the \"3,000,000,000 lotto\"... Banpo 124 on December 8th applies for housing subscription"
       },
       {
         "title": "\"거래량 뚝 떨어졌다\"…서울 아파트값 속 확산하는 '위험 신호'",
@@ -14651,7 +14685,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]김성은 인턴 기자 = 서울 아파트값 상승세가 이어지고 있지만 거래량이 급감하면서 향후 시장의 방향을 가를 위험 신호가 나타나고 있다는 분석이 나왔다. 금리 인상과 정부 정책 변화가 본격화될 경우 중저가…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 1,547만원",
+            "valueEn": "₩1,315M",
+            "note": "최근 1주 계약 1,236건 · 10/17 대비 -5.5%",
+            "noteEn": "1,236 deals in the last 1 weeks · -5.5% vs Oct 17"
+          }
+        ],
+        "titleEn": "Trading volume sharply dropped\"…Dangerous signals spreading in Seoul apartment prices"
       },
       {
         "title": "[속보]뉴욕증시, 유가 상승 속 하락 출발",
@@ -14660,7 +14707,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "후속기사가 이어집니다 ◎공감언론 뉴시스 aci27@newsis.com",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Breaking News] NY Stock Market Opens Lower Amid Rising Oil Prices"
       },
       {
         "title": "LH 사장 “전 정부, 집값 폭등 시한폭탄 설치”",
@@ -14669,7 +14717,8 @@
         "source": "조선비즈 부동산",
         "category": "other",
         "preview": "이성훈 한국토지주택공사(LH) 사장이 23일 주택 가격 상승의 원인을 윤석열 정부에 돌리며 “공사 기간이 3년인데, 3년짜리 집값 폭등 시한폭탄을 설치한 것과 같다”고 했다. 이 사장은 이날 국회 국토교통위원회의 국…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "LH President Says Previous Government Planted a Time Bomb for Skyrocketing Housing Prices"
       },
       {
         "title": "LH 사장 “집값 상승은 前정부 공급부족 탓…공급 본격화하면 폭락”",
@@ -14678,7 +14727,8 @@
         "source": "매일경제 부동산",
         "category": "other",
         "preview": "이성훈 한국토지주택공사(LH) 사장이 최근 집값 상승의 원인으로 주택 공급 부족을 지목하며 지난 정부가 ‘3년짜리 집값 폭등 시한폭탄’을 설치했다고 주장했다. 향후 3년간 주택 공..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "LH CEO: Rising home prices due to previous government's supply shortage... Prices will crash once supply increases"
       },
       {
         "title": "LH 사장 \"집값 상승은 공급부족 탓…前정부 폭등 시한폭탄 설치\"",
@@ -14687,7 +14737,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(세종=연합뉴스) 오진송 기자 = 이성훈 한국토지주택공사(LH) 사장은 최근 집값 상승의 원인으로 주택 공급 부족을 지목하며 지난 정부가 '3년...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "LH CEO: Rising housing prices due to supply shortage... Previous government planted a time bomb with sharp increase"
       },
       {
         "title": "83세 거장이 짓고, 30대 창업자가 샀다…218억 아파트의 비밀 [슈퍼리치의 아파트]",
@@ -14696,7 +14747,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "②공시지가 1위, 에테르노 청담코로나19 팬데믹 시기인 2020년 2월, 83세의 스페인의 건축 거장 라파엘 모네오는 한국행을 택했다. 창호 구성과 펜트하우스 형태, 건물 외벽의 ..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "83-Year-Old Mastermind Built It, 30-Year-Old Entrepreneur Bought It... The Secret Behind the 21,800,000,000-Won Apartment [The Super Rich's Apartment]"
       },
       {
         "title": "경제계 \"초광역특구 추진 환영\"…신속한 입법 요구",
@@ -14705,7 +14757,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 장하나 박초롱 기자 = 경제계가 정부의 초광역특구 규제 합리화 방안을 환영하며 신속한 입법을 촉구했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Economy sector welcomes push for super metropolitan special zone...calls for swift legislation"
       },
       {
         "title": "사모대출? 증자?…하이닉스, 美 낸드공장 자금줄 새로 찾는다",
@@ -14714,7 +14767,8 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Hyundai Electronics Seeks New Funding Sources for U.S. NAND Plant"
       },
       {
         "title": "여야 “실거주 규제로 전세난 가중” 지적에… 홍지선 국토장관 “공급이 해결책” (종합)",
@@ -14723,7 +14777,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "23일 열린 국회 국토교통위원회의 국토교통부 종합감사에서는 실거주 의무 강화 중심의 주택 정책이 전월세난을 부추기고 있다는 지적이 쏟아졌다. 홍지선 국토부 장관은 규제의 일부 영향을 인정하면서도 주택 공급 부족을 근…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Opposition and ruling parties criticize rent control measures for worsening housing crisis... Hong Jisun, Minister of Land, says supply is the solution (comprehensive)"
       },
       {
         "title": "국토장관 \"집값 상승폭 둔화…연말 금리 상향 시 시장 안정화\"(종합)",
@@ -14732,7 +14787,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울·세종=연합뉴스) 오예진 오진송 기자 = 홍지선 국토교통부 장관은 최근 주택 가격 상승폭이 둔화하고 있다며 연말 금리가 오르면 주택시장이 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Land Minister: \"Slowing pace of housing price increases... market stabilization expected if interest rates are raised by year-end\" (Comprehensive)"
       },
       {
         "title": "재건축·재개발로 2~3년 내 사라지는 집, ‘4만8249가구’… 용산구 8336가구로 ‘최다’",
@@ -14741,7 +14797,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "재건축·재개발 등 정비사업으로 2~3년 내 사라지는 집이 4만8000가구가 넘는 것으로 분석됐다. 용산구에서만 8300가구의 멸실이 발생할 전망이다. 집의 멸실 속도와 새 집 건축 속도가 다르기에 이주 관리를 촘촘히…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yongsan.html",
+            "label": "용산구 아파트 84㎡ 매매",
+            "labelEn": "용산구 apartment 84㎡ sale",
+            "value": "29억 2,239만원",
+            "valueEn": "₩2,922M",
+            "note": "최근 1주 계약 66건 · 10/17 대비 -3.5%",
+            "noteEn": "66 deals in the last 1 weeks · -3.5% vs Oct 17"
+          }
+        ],
+        "titleEn": "Homes to disappear within 2-3 years due to reconstruction and redevelopment: 40,0008249 households... Yongsan District with 8,336 households is the highest"
       },
       {
         "title": "서울도 아닌데 전세 8억?…세입자들 비명 터진 '이 도시'",
@@ -14750,7 +14819,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-jeonse.html",
+            "label": "서울 전체 아파트 84㎡ 전세",
+            "labelEn": "Seoul apartment 84㎡ jeonse",
+            "value": "8억 499만원",
+            "valueEn": "₩805M",
+            "note": "최근 1주 계약 1,100건 · 10/17 대비 -1.9%",
+            "noteEn": "1,100 deals in the last 1 weeks · -1.9% vs Oct 17"
+          }
+        ],
+        "titleEn": "Not even Seoul, yet rent is 800,000,000? Tenants scream over this city"
       },
       {
         "title": "홍지선 \"주택 인허가·착공 감소가 전세난 원인\"",
@@ -14759,7 +14841,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Hong Jisun \"Decline in housing permits and starts causes rental crisis"
       },
       {
         "title": "원주시, 웰니스 관광 활성화 업무협약…지역경제 활력 모색",
@@ -14768,7 +14851,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(원주=연합뉴스) 류호준 기자 = 강원 원주시가 지역 대학의 의료·헬스케어 역량을 활용해 수면과 휴식을 주제로 한 웰니스 관광 활성화에 나선다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Wonju City Signs Wellness Tourism Promotion Agreement to Boost Local Economy"
       }
     ]
   }
