@@ -64,8 +64,14 @@ test("늦게 채워지는 글 네 자리의 예약이 좁은 폭에서 서 있�
   }
   // 예약은 좁은 폭 미디어 쿼리 안에만 있다. 밖(전 폭)에 같은 선택자가 있으면 넓은 화면에서 남는다.
   const outside = css.replace(/\/\*[\s\S]*?\*\//g, "").replace(/@media[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, "");
+  // 예외 하나: #compare-result 는 실패 문장 한 줄이 전 폭에서 이 자리를 채우므로(#538) 밖에 1lh 가 있고 ≤430 이 2줄로 덮는다
+  // (test/compare-result-reserve.test.mjs 가 그 모양을 본다). 다른 자리에는 이 예외가 없다.
   for (const { selector } of RESERVES) {
     const head = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    if (selector === "#compare-result") {
+      assert.match(outside, new RegExp(`(?:^|\\n)${head}\\s*\\{\\s*min-height:\\s*1lh;\\s*\\}`), `${selector}: 미디어 밖 1lh 예약이 없다(#538)`);
+      continue;
+    }
     assert.doesNotMatch(outside, new RegExp(`(?:^|\\n)${head}\\s*\\{[^}]*min-height`), `${selector}: 미디어 쿼리 밖에 min-height 규칙이 있다 - 넓은 화면에서 예약이 남는다`);
   }
 });
