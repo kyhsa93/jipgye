@@ -178,8 +178,9 @@ const T = {
     footerPrivacy: "개인정보처리방침",
     footerMethod: "숫자를 만드는 방법",
     footerAbout: "소개",
-    notReady: "아직 전망 자료가 없습니다. 실거래가격지수를 받는 대로 채워집니다.",
     loadError: "전망 자료를 불러오지 못했습니다.",
+    moveInLoadError: "입주 예정 자료를 불러오지 못했습니다.",
+    asOf: (day) => `아래는 기준일(${day})에 만든 값입니다.`,
     retry: "다시 시도",
   },
   en: {
@@ -223,8 +224,9 @@ const T = {
     footerPrivacy: "Privacy policy",
     footerMethod: "How the numbers are made",
     footerAbout: "About",
-    notReady: "No outlook data yet. It fills in once the price index is collected.",
     loadError: "Could not load the outlook data.",
+    moveInLoadError: "Could not load the move-in data.",
+    asOf: (day) => `Shown below is what this page was built with on ${day}. Some of it is in Korean only.`,
     retry: "Retry",
   },
 };
@@ -286,6 +288,17 @@ function renderUpdated() {
   );
 }
 
+function renderLoadNotice() {
+  const failed = [cache.failed && "loadError", cache.moveIn === null && "moveInLoadError"].filter(Boolean).map(t).join(" ");
+  document.getElementById("content").innerHTML = failed
+    ? `<p class="content-notice">${failed} ${t("asOf")(document.getElementById("updated").getAttribute("data-updated"))} <button type="button" id="load-retry">${t("retry")}</button></p>`
+    : "";
+  document.getElementById("load-retry")?.addEventListener("click", (e) => {
+    e.currentTarget.disabled = true;
+    main();
+  });
+}
+
 function applyLocale() {
   document.title = t("title");
   setText("page-title", t("title"));
@@ -319,11 +332,13 @@ function applyLocale() {
 // 같은 표를 브라우저가 다시 그리면 규칙이 두 벌이 되고 언젠가 서로 다른 말을 한다.
 function renderAll() {
   applyLocale();
+  renderLoadNotice();
+  if (!cache.data) return;
   const data = cache.data;
   const ind = cache.indicators;
   // 입주 예정은 사실 문장과 표만 - 빌드가 두 언어로 굽고 화면은 고르기만 한다(#60).
   const mi = cache.moveIn;
-  document.getElementById("move-in-section").hidden = !mi?.lead;
+  document.getElementById("move-in-section").hidden = !!mi && !mi.lead;
   if (mi?.lead) {
     setText("move-in-lead", mi.lead[locale] ?? "");
     setTable("move-in-table", mi.table?.[locale] ?? "");
@@ -370,26 +385,18 @@ async function main() {
     ]);
     cache.indicators = indicators;
     cache.moveIn = moveIn;
-    if (!data?.regions?.length) {
-      setText("lead", t("notReady"));
-      setText("updated", "-");
-      return;
+    if (data?.regions?.length) {
+      cache.data = data;
+      renderAll();
     }
-
-    cache.data = data;
-    renderAll();
   } catch (error) {
     window.analytics?.event("exception", {
       description: `load outlook: ${error?.message ?? error}`.slice(0, 100),
       fatal: true,
     });
-    document.getElementById("lead").innerHTML =
-      `${escapeHtml(t("loadError"))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button>`;
-    document.getElementById("load-retry")?.addEventListener("click", (e) => {
-      e.currentTarget.disabled = true;
-      main();
-    });
   }
+  cache.failed = !cache.data;
+  renderLoadNotice();
 }
 
 document.getElementById("theme-toggle").addEventListener("click", () => {

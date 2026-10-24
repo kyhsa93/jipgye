@@ -5,5 +5,7 @@
 # 갱신: 2026-10-24(#510), base 6521bb9c + 이 PR, Node v24.22.0, macOS. `npm run test:site` → ℹ tests 736 · pass 736 · fail 0 · skipped 0 (파일 52개, 약 15초).
 # 갱신: 2026-10-24(#510 리베이스), base fc5f21fd(#528 뉴스 틀 (나), 뉴스 행 12개가 build/site 를 읽음) + 이 PR. `npm run test:site` → ℹ tests 748 · pass 748 · fail 0 (736 + 12).
 # 갱신: 2026-10-24(#296 틀 (마) 금리 4장), base 5af7d1aa + 이 PR. `npm run test:site` → ℹ tests 758 · pass 758 · fail 0 (748 + 10, 금리 행 10개가 build/site 를 읽음).
-758
-758
+# 갱신: 2026-10-24(#296 틀 (가) price-outlook), base 97ec974d + 이 PR. `npm run test:site` → ℹ tests 771 · pass 771 · fail 0 (758 + 13, price-outlook 행 13개가 build/site 를 읽음).
+# 갱신: 2026-10-24(#296 틀 (라) 분석 5장), base c8592c65(틀 (가)) + 이 커밋. `npm run test:site` → ℹ tests 782 · pass 782 · fail 0 (771 + 11, 분석 5장 행 11개가 build/site 를 읽음).
+782
+782

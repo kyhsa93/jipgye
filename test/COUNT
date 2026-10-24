@@ -415,7 +415,7 @@
 # 갱신: 2026-10-24(PR #531 po 변경 요청), 금리 알림의 영어 문장 끝에 "Some of it is in Korean only." 를 정확히 한 번 붙였다(영어 1·한국어 0, 다른 보기 갈래는 문장 없음). 개수 변화 없음: `npm test` → ℹ tests 1951 · pass 1951 (하한 그대로).
 #   ⓗ 단언을 「고지 0」에서 「영어 1·한국어 0」으로 바꿨고(이름의 '영어 고지' 구절만 고침, 개수 -0 +0), 규칙 3 시험에 「다른 보기 표 자리에 고지 문장 없음」을 더했다. S6 한도는 이 PR 에 한해 +430B/장(cto): 측정 +422B/장(합 1,688B), load-state.js 불변.
 # 갱신: 2026-10-24(#530, 부모 #505), 워치독 셋째 검사 `--check=deploy` — Deploy site(deploy.yml)의 지난 54시간 push·workflow_run 실행 중 성공이 0이면 워치독 실패. test/schedule-watchdog.test.mjs 에 시험 +13.
-#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1964 · pass 1964 · fail 0 · skipped 0 (직전 하한 1951 + 13).
+#   npm test(= node scripts/run-tests.mjs) → ℹ tests 1995 · pass 1995 · fail 0 · skipped 0 (직전 하한 1951 + 13).
 #   `node --test test/schedule-watchdog.test.mjs` → ℹ tests 45 · pass 45 (전 32). 고친 기존 시험은 한 줄(--check 오류 문구 정규식), 없어진 시험 0, .skip·.todo 0 그대로.
 #   변이 대조(스크립트에 한 줄씩 넣어 시험이 죽는지 봤다): dispatch 를 셈에 넣기 → 실패 1 · 이벤트를 schedule 로 → 7 · API 조회에 event=schedule 유지 → 1 · 창 36h → 4 · 창 72h → 3 ·
 #   기본 워크플로 제거 → 2 · 판정 문턱 0 → 13 · cancelled 를 성공으로 셈 → 4 · 배포 기본 창 제거 → 4. 전부 죽는다. 배포 게이트(`npm run test:site`)는 이 PR 이 안 건드려 COUNT-site 그대로.
@@ -423,5 +423,14 @@
 #   npm test(= node scripts/run-tests.mjs) → ℹ tests 1982 · pass 1982 · fail 0 · skipped 0 (직전 하한 1964 + 18).
 #   차이 18 = test/collection-now.test.mjs 5 + test/realestate-collect.test.mjs 7(KST 월 경계·유예 끝·연말 고정 시각 6 + 읽을 수 없는 값 1) + test/fetch-rates.test.mjs 6(같은 날/다른 날 고정 시각 5 + 읽을 수 없는 값 1).
 #   없어진 시험 0, .skip·.todo 0. 기존 시험의 시계만 REALESTATE_NOW·RATES_NOW 로 고정했다.
-1982
-1982
+# 갱신: 2026-10-24(#296 틀 (가) price-outlook H1 + F7·F8), base 97ec974d + 이 PR. `npm test` → ℹ tests 1995 · pass 1995 · fail 0 · skipped 0 (1951 + 13).
+#   새 이름 13(test/load-failure.test.mjs 다섯째 행: 범위·ⓐⓒ·ⓑⓔⓗ·규칙 5·H1 둘·언어 전환·받는 중 언어 전환·ⓖ·ⓕ·문장 대조·변이 증빙·S6), 없어진 시험 0(diff 의 `-test(` 줄 0), 고친 기존 시험 0.
+#   공용 도우미 test/helpers/analysis-page.mjs 는 새 파일이다(분석 6장의 인라인 스크립트를 손으로 만든 DOM 에서 돌린다 - 뉴스 틀 도우미와 같은 모양).
+#   `npm run test:site`(배포 게이트) 758 → 771(그 13개가 build/site 를 읽음), 하한은 test/COUNT-site.
+# 갱신: 2026-10-24(#296 틀 (라) 분석 5장 F7·F8), base c8592c65(틀 (가)) + 이 커밋. `npm test` → ℹ tests 1988 · pass 1988 · fail 0 · skipped 0 (1964 + 11).
+#   새 이름 11(test/load-failure.test.mjs 여섯째 행: 범위·ⓐⓒ·ⓑⓔⓗ·규칙 5·언어 전환·받는 중 언어 전환·ⓖ·ⓕ·문장 대조·변이 증빙·S6), 없어진 시험 0(diff 의 `-test(` 줄 0).
+#   고친 기존 시험 넷(이름·개수 -0 +0): test/cancellation-render.test.mjs "자료가 없으면 그렇다고 말한다"·"불러오다 실패하면 다시 시도할 수 있다", test/floor-gap.test.mjs·test/renewal-render.test.mjs "자료가 없으면 없다고 말한다" -
+#   옛 단언이 404 에서 머리 문단을 "아직 … 자료가 없습니다"로 갈아 끼우고 실패 단추를 머리 문단 안에 두는 것을 못박고 있었다(#296 F7·F8 이 고치는 바로 그 동작). 이제 #content 알림이 "불러오지 못했습니다"·"다시 시도"를 말하고 머리 문단은 그대로임을 본다.
+#   `npm run test:site`(배포 게이트) 771 → 782(그 11개가 build/site 를 읽음), 하한은 test/COUNT-site.
+2006
+2006

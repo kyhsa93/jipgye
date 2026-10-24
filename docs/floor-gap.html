@@ -143,8 +143,8 @@ const T = {
     footerPrivacy: "개인정보처리방침",
     footerMethod: "숫자를 만드는 방법",
     footerAbout: "소개",
-    notReady: "아직 층 격차 자료가 없습니다. 국토교통부 신고분을 받는 대로 채워집니다.",
     loadError: "층 격차 자료를 불러오지 못했습니다.",
+    asOf: (day) => `아래는 기준일(${day})에 만든 값입니다.`,
     retry: "다시 시도",
   },
   en: {
@@ -184,8 +184,8 @@ const T = {
     footerPrivacy: "Privacy policy",
     footerMethod: "How the numbers are made",
     footerAbout: "About",
-    notReady: "No floor data yet. It fills in as MOLIT filings arrive.",
     loadError: "Could not load the floor data.",
+    asOf: (day) => `Shown below is what this page was built with on ${day}. Some of it is in Korean only.`,
     retry: "Retry",
   },
 };
@@ -284,6 +284,16 @@ function renderUpdated() {
   );
 }
 
+function renderLoadNotice() {
+  document.getElementById("content").innerHTML = cache.failed
+    ? `<p class="content-notice">${t("loadError")} ${t("asOf")(document.getElementById("updated").getAttribute("data-updated"))} <button type="button" id="load-retry">${t("retry")}</button></p>`
+    : "";
+  document.getElementById("load-retry")?.addEventListener("click", (e) => {
+    e.currentTarget.disabled = true;
+    main();
+  });
+}
+
 function applyLocale() {
   document.title = t("title");
   setText("page-title", t("title"));
@@ -311,6 +321,8 @@ function applyLocale() {
 
 function renderAll() {
   applyLocale();
+  renderLoadNotice();
+  if (!cache.data) return;
   for (const [id, key] of [["lead", "lead"], ["top-lead", "topLead"], ["district-lead", "districtLead"]]) {
     const block = cache.data?.[key];
     if (block) setText(id, locale === "en" ? block.en : block.ko);
@@ -333,26 +345,18 @@ async function main() {
 
   try {
     const data = await loadJson("floor-gap");
-    if (!data?.districts?.length) {
-      setText("lead", t("notReady"));
-      setText("updated", "-");
-      return;
+    if (data?.districts?.length) {
+      cache.data = data;
+      renderAll();
     }
-
-    cache.data = data;
-    renderAll();
   } catch (error) {
     window.analytics?.event("exception", {
       description: `load floor-gap: ${error?.message ?? error}`.slice(0, 100),
       fatal: true,
     });
-    document.getElementById("lead").innerHTML =
-      `${escapeHtml(t("loadError"))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button>`;
-    document.getElementById("load-retry")?.addEventListener("click", (e) => {
-      e.currentTarget.disabled = true;
-      main();
-    });
   }
+  cache.failed = !cache.data;
+  renderLoadNotice();
 }
 
 document.getElementById("theme-toggle").addEventListener("click", () => {

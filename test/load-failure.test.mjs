@@ -12,6 +12,7 @@ import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 import { loadIndexPage } from "./helpers/index-page.mjs";
 import { loadNewsPage } from "./helpers/news-page.mjs";
+import { loadAnalysisPage } from "./helpers/analysis-page.mjs";
 import { stripInlineScriptComments } from "../scripts/strip-inline-comments.ts";
 import { SITE } from "./helpers/site-root.mjs";
 
@@ -1527,6 +1528,406 @@ test("S6 의도한 차이 (#296 (마)): 금리 4장 인라인 스크립트 순�
   for (const name of RATE_PAGES) {
     const added = Buffer.byteLength(ratesSources[name]) - BASE[name];
     assert.ok(added > 0 && added <= 430, `${SITE}/${name}.html: 인라인 증가가 ${added}B - 이 PR 의 cto 한도 +430B/장, 넘으면 PR 전에 묻는다`);
+  }
+  assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
+});
+
+// ============================================================================================================
+// 다섯째 행: 분석 6장 중 price-outlook (docs/price-outlook.html, 손으로 쓴 장), 틀 (가), H1 + F7·F8.
+// 규칙 2~5 를 outlook.json·move-in.json 이 안 올 때 구운 머리 문단(#lead)과 구운 표·문단·기준일(#updated)을 지우지·숨기지 않고,
+// #content 안 알림 한 줄이 [못 받은 것의 이름] + [아래는 기준일(구운 data-updated)에 만든 값입니다.] + (영어) [Some of it is in Korean only.] + [다시 시도] 를 말하는 것으로 지킨다.
+//   - F7(네트워크 실패)·F8(404·빈 파일): 예전에는 #lead 를 실패 문구/"준비 중"으로 갈아 끼우고 #updated 를 "-"로 바꿨다(404 갈래). 지금은 둘 다 구운 채로 남고 알림이 선다.
+//     404·빈 응답도 "새로 받지 못했다"다(규칙 5) - 구운 머리 문단이 있는 장이라 "아직 없습니다"로 말하지 않는다.
+//   - H1: move-in.json 이 안 오면(실패·404 모두 null) 구운 #move-in-section(입주 예정 문단·표·자치구별 줄)을 방문 내내 숨겼다. 지금은 열어 둔다.
+//     숨김만 풀면 영어 화면에 말없이 한국어가 들어서므로(po) 영어 알림 끝에 고지를 붙인다. 받았는데 lead 가 없는 응답은 예전처럼 구획을 닫는다.
+// 이 장은 load-state.js 를 <script src> 로 물지 않는다(S6) - 문장 글자만 같게 두고 아래에서 맞대 본다. 알림은 #content 에 쓰므로 새 id·class 가 없다.
+// 보기를 바꾸는 입력이 없어 규칙 3번이 걸리지 않는다(po 실측). outlook-indicators.json 의 무음 갈래는 건드리지 않는다(알려진 잔여).
+// ============================================================================================================
+const OUTLOOK_BAKED = ["lead", "long-lead", "nowcast-lead", "record-lead", "region-table", "nowcast-table", "score-table", "move-in-lead", "move-in-table", "move-in-districts"];
+const outlookSource = await readFile(path.join(root, `${SITE}/price-outlook.html`), "utf8");
+const outlookScript = scriptOf(outlookSource);
+
+// 데이터 요청을 막는 서버. only 가 있으면 그 파일만 실패한다(여러 파일이면 배열). overrides 는 성공 응답을 바꿔 끼운다.
+function analysisServer(mode, only = null, overrides = {}) {
+  const state = { mode, requests: [] };
+  state.fetch = async (url) => {
+    const name = String(url).match(/\/([a-z-]+)\.json/)?.[1];
+    state.requests.push(name);
+    const down = state.mode !== "ok" && (!only || [].concat(only).includes(name));
+    if (down && state.mode === "network") throw new TypeError("Failed to fetch");
+    if (down) return { ok: false, status: state.mode === "404" ? 404 : 503, json: async () => ({}) };
+    if (name in overrides) return { ok: true, status: 200, json: async () => overrides[name] };
+    return { ok: true, status: 200, json: () => readJson(name) };
+  };
+  return state;
+}
+const openOutlook = async ({ lang = "ko", mode = "network", only = null, overrides = {}, mutate } = {}) => {
+  const server = analysisServer(mode, only, overrides);
+  const page = await loadAnalysisPage({ file: `${SITE}/price-outlook.html`, locale: lang, fetch: server.fetch, bake: OUTLOOK_BAKED, hiddenIds: ["move-in-section"], mutate });
+  await settle(30);
+  return { page, server };
+};
+const clickAnalysisRetry = async (page) => {
+  page.byId("load-retry").dispatch("click");
+  await settle(30);
+};
+
+// ⓐⓒ 구운 자리·구운 기준일·H1 구획의 hidden 이 실패 뒤에도 그대로다. 변이 시험이 같은 함수를 쓴다.
+function assertAnalysisBakedKept(page, ids, hiddenIds, label, { stamp = true } = {}) {
+  for (const id of ids) assert.equal(page.byId(id).innerHTML, page.baked[id], `${label}: #${id} 의 구운 내용이 바뀌었다`);
+  for (const id of hiddenIds) assert.equal(page.byId(id).hidden, page.baked.hidden[id], `${label}: #${id} 의 hidden 이 바뀌었다`);
+  if (stamp) assert.equal(page.byId("updated").textContent, page.baked.updatedText, `${label}: 구운 기준일 글자가 바뀌었다`);
+  assert.equal(page.byId("updated").getAttribute("data-updated"), page.baked.day, `${label}: data-updated 가 바뀌었다`);
+}
+const assertOutlookKept = (page, label, ids = OUTLOOK_BAKED, opts) => assertAnalysisBakedKept(page, ids, ["move-in-section"], label, opts);
+
+const ANALYSIS_ASOF = { ko: (day) => `아래는 기준일(${day})에 만든 값입니다.`, en: (day) => `Shown below is what this page was built with on ${day}. ${KO_ONLY}` };
+
+test("(가) 범위: price-outlook 은 구운 머리 문단·표·입주 예정 구획(hidden 아님)·기준일(data-updated)을 갖고 load-state.js 를 <script src> 로 물지 않는다 (S6)", async () => {
+  assert.equal(outlookSource.includes("load-state.js"), false, "load-state.js 를 문다 - 외부 JS 를 더하는 일이라 cto 허용 표가 먼저다");
+  const { page } = await openOutlook({ mode: "ok" });
+  for (const id of ["lead", "region-table", "move-in-lead", "move-in-table", "move-in-districts"]) assert.ok(page.baked[id].length > 20, `구운 #${id} 가 비었다`);
+  assert.equal(page.baked.hidden["move-in-section"], false, "구운 입주 예정 구획이 처음부터 숨어 있다");
+  assert.match(page.baked.day, /^\d{4}-\d{2}-\d{2}$/, "구운 기준일 줄에 data-updated 가 없다");
+});
+
+test("ⓐⓒ F7·F8 요청이 전부 실패(네트워크·404·503)해도 구운 머리 문단·표·입주 예정 구획과 구운 기준일 글자·data-updated 가 한 글자도 안 바뀐다 - 한국어·영어", async () => {
+  for (const lang of ["ko", "en"]) {
+    for (const mode of ["network", "404", "503"]) {
+      const { page } = await openOutlook({ lang, mode });
+      assertOutlookKept(page, `${lang} ${mode}`);
+    }
+  }
+});
+
+test("ⓑⓔⓗ F7·F8 실패하면 알림이 보이고 [이름] + [구운 기준일 문장] + 다시 시도를 말한다 - 영어는 한국어 고지 정확히 1, 한국어는 0, 실패 이유·오늘·최신은 없다", async () => {
+  for (const [lang, name, retry] of [
+    ["ko", "전망 자료를 불러오지 못했습니다.", "다시 시도"],
+    ["en", "Could not load the outlook data.", "Retry"],
+  ]) {
+    for (const mode of ["network", "404", "503"]) {
+      const { page } = await openOutlook({ lang, mode });
+      const notice = page.notice();
+      const label = `${lang} ${mode}`;
+      assert.ok(notice, `${label}: 알림이 안 보인다`);
+      // 404 는 두 파일이 다 "안 왔다"고 끝난다 - 알림이 둘 다 말한다. 네트워크·503 은 한 번에 거부돼 전망 자료 하나만 말한다(입주 예정은 알 수 없다).
+      const names = mode === "404" ? `${name} ${lang === "ko" ? "입주 예정 자료를 불러오지 못했습니다." : "Could not load the move-in data."}` : name;
+      assert.equal(notice.text, `${names} ${ANALYSIS_ASOF[lang](page.baked.day)}`, `${label}: 알림 문장`);
+      assert.equal(notice.retry, retry, `${label}: 다시 시도 단추 글자`);
+      assert.ok((notice.button.listeners.click ?? []).length > 0, `${label}: 다시 시도 단추에 누름 처리가 없다`);
+      assert.equal(countOf(notice.text, KO_ONLY), lang === "en" ? 1 : 0, `${label}: 한국어 고지 수`);
+      assert.equal(HTTP_WORDS.test(notice.html), false, `${label}: 실패 이유가 방문자에게 보인다: ${notice.text}`);
+      assert.equal(BAD_WORDS.test(notice.text), false, `${label}: 알림이 지금 값처럼 말한다: ${notice.text}`);
+    }
+  }
+});
+
+test("규칙 5 F8: 404 와 빈 응답은 '준비 중'이 아니라 새로 받지 못했다고 알리고 구운 머리 문단을 남긴다", async () => {
+  for (const [label, server] of [["404", { mode: "404" }], ["빈 regions", { mode: "ok", overrides: { outlook: { regions: [] } } }], ["빈 파일 {}", { mode: "ok", overrides: { outlook: {} } }]]) {
+    const { page } = await openOutlook(server);
+    assert.equal(page.byId("lead").innerHTML, page.baked.lead, `${label}: 구운 머리 문단이 바뀌었다`);
+    assert.equal(page.byId("updated").textContent, page.baked.updatedText, `${label}: 구운 기준일이 바뀌었다`);
+    assert.ok(page.notice()?.text.startsWith("전망 자료를 불러오지 못했습니다."), `${label}: ${page.notice()?.text}`);
+    assert.equal(/아직|준비 중/.test(page.byId("lead").innerHTML + page.notice().text), false, `${label}: 못 받은 것을 '아직 없음'으로 말한다`);
+  }
+});
+
+test("ⓐⓑⓗ H1 move-in.json 만 못 받으면(네트워크·404·503) 구운 입주 예정 구획이 열린 채 구운 글자로 남고 알림이 그 이름을 말한다 - 나머지는 받은 값이다", async () => {
+  const data = await readJson("outlook");
+  for (const lang of ["ko", "en"]) {
+    for (const mode of ["network", "404", "503"]) {
+      const { page } = await openOutlook({ lang, mode, only: "move-in" });
+      const label = `${lang} ${mode}`;
+      assertOutlookKept(page, label, ["move-in-lead", "move-in-table", "move-in-districts"], { stamp: false });
+      assert.equal(page.byId("move-in-section").hidden, false, `${label}: 입주 예정 구획이 숨었다(H1)`);
+      assert.equal(page.byId("lead").textContent, data.lead[lang], `${label}: 받은 머리 문단이 안 그려졌다`);
+      const notice = page.notice();
+      assert.ok(notice, `${label}: 알림이 안 보인다`);
+      assert.equal(notice.text, `${lang === "ko" ? "입주 예정 자료를 불러오지 못했습니다." : "Could not load the move-in data."} ${ANALYSIS_ASOF[lang](page.baked.day)}`, `${label}: 알림 문장`);
+      assert.equal(countOf(notice.text, KO_ONLY), lang === "en" ? 1 : 0, `${label}: 한국어 고지 수`);
+      assert.equal(/전망 자료|outlook data/.test(notice.text), false, `${label}: 받은 전망 자료를 못 받았다고 말한다`);
+    }
+  }
+});
+
+test("(가) H1 경계: 받았는데 lead 가 없는 입주 예정 응답은 구획을 닫고 알림이 없다 - 실패와 '아직 없음'이 갈린다. outlook-indicators 실패는 전과 같이 조용하다", async () => {
+  const { page } = await openOutlook({ mode: "ok", overrides: { "move-in": { table: {} } } });
+  assert.equal(page.byId("move-in-section").hidden, true, "받은 빈 입주 예정인데 구획이 열려 있다");
+  assert.equal(page.notice(), null, "받았는데 실패 알림이 떴다");
+  const silent = await openOutlook({ mode: "503", only: "outlook-indicators" });
+  assert.equal(silent.page.notice(), null, "outlook-indicators 실패가 알림을 세웠다 - 이 PR 의 범위 밖(알려진 잔여)");
+});
+
+test("ⓑ (가) 실패한 뒤 언어를 바꾸면 알림 문구가 그 언어로 바뀌고 구운 자리·기준일은 그대로다 - 구운 표를 비우지 않는다", async () => {
+  const { page } = await openOutlook({ lang: "ko" });
+  assert.equal(countOf(page.notice().text, KO_ONLY), 0);
+  page.byId("lang-toggle").dispatch("click");
+  await settle(10);
+  const en = page.notice();
+  assert.ok(en.text.startsWith("Could not load the outlook data.") && countOf(en.text, KO_ONLY) === 1 && en.retry === "Retry", `영어 알림: ${en.text}`);
+  assertOutlookKept(page, "언어 전환 뒤");
+  page.byId("lang-toggle").dispatch("click");
+  await settle(10);
+  assert.equal(countOf(page.notice().text, KO_ONLY), 0);
+  assertOutlookKept(page, "언어 전환 되돌린 뒤");
+});
+
+test("(가) 받는 중에 언어를 바꿔도 실패 알림이 미리 서지 않는다", async () => {
+  const gate = Promise.withResolvers();
+  const server = analysisServer("ok");
+  const page = await loadAnalysisPage({ file: `${SITE}/price-outlook.html`, fetch: async (url) => (await gate.promise, server.fetch(url)), bake: OUTLOOK_BAKED, hiddenIds: ["move-in-section"] });
+  page.byId("lang-toggle").dispatch("click");
+  await settle(5);
+  assert.equal(page.notice(), null, "받는 중인데 실패 알림이 섰다");
+  gate.resolve();
+  await settle(30);
+  assert.equal(page.notice(), null);
+});
+
+test("ⓖ (가) 다시 시도가 성공하면 알림이 걷히고 구운 자리가 받은 값으로 바뀐다, 또 실패하면 구운 채로 알림이 남는다 - H1 도 같다", async () => {
+  const data = await readJson("outlook");
+  const moveIn = await readJson("move-in");
+  for (const lang of ["ko", "en"]) {
+    const { page, server } = await openOutlook({ lang });
+    const first = server.requests.length;
+    await clickAnalysisRetry(page);
+    assert.ok(server.requests.length > first, `${lang}: 다시 시도가 요청을 안 보냈다`);
+    assert.ok(page.notice(), `${lang}: 다시 실패했는데 알림이 걷혔다`);
+    assertOutlookKept(page, `${lang} 재시도 실패`);
+
+    server.mode = "ok";
+    await clickAnalysisRetry(page);
+    assert.equal(page.notice(), null, `${lang}: 성공했는데 알림이 남았다`);
+    assert.equal(page.byId("lead").textContent, data.lead[lang], `${lang}: 머리 문단이 받은 값으로 안 바뀌었다`);
+    assert.equal(page.byId("move-in-lead").textContent, moveIn.lead[lang], `${lang}: 입주 예정 문단이 받은 값으로 안 바뀌었다`);
+    assert.notEqual(page.byId("updated").textContent, page.baked.updatedText, `${lang}: 기준일 줄이 받은 갱신일로 안 바뀌었다`);
+  }
+  const { page, server } = await openOutlook({ lang: "en", mode: "503", only: "move-in" });
+  assert.ok(page.notice());
+  server.mode = "ok";
+  await clickAnalysisRetry(page);
+  assert.equal(page.notice(), null, "H1: 성공했는데 알림이 남았다");
+  assert.equal(page.byId("move-in-lead").textContent, moveIn.lead.en);
+});
+
+test("ⓕ (가) 구운 자리·구운 기준일을 건드리는 그림은 받은 값이 있을 때만 돈다 - 실패 표시는 알림 함수 한 곳이고 옛 실패 줄·'준비 중'·기준일 '-' 갈래가 없다", () => {
+  const script = outlookScript;
+  const all = script.slice(script.indexOf("function renderAll("), script.indexOf("async function loadJson("));
+  assert.ok(/renderLoadNotice\(\);\s+if \(!cache\.data\) return;/.test(all), "renderAll 이 받은 값이 없을 때 알림 뒤에서 끝나지 않는다 - 언어를 바꾸면 구운 표를 비운다");
+  assert.ok(all.includes("hidden = !!mi && !mi.lead;"), "입주 예정 구획이 못 받은 때(null)도 숨는다(H1)");
+  const main = script.slice(script.indexOf("async function main("), script.indexOf('document.getElementById("theme-toggle")'));
+  assert.equal(/"-"|notReady|document\.getElementById\("lead"\)\.innerHTML/.test(main), false, "main 에 구운 기준일을 지우거나 머리 문단을 갈아 끼우는 옛 갈래가 남았다");
+  assert.equal(script.includes("notReady"), false, "받은 것이 없을 때 '준비 중'으로 말하는 문자열이 남았다");
+  assert.equal(countOf(script, 'id="load-retry"'), 1, "재시도 단추 마크업이 하나가 아니다");
+  assert.equal(/insertAdjacentHTML|notifyBeside|showFailure/.test(script), false, "알림 요소를 직접 만드는 길이 있다");
+  const fn = script.slice(script.indexOf("function renderLoadNotice("), script.indexOf("function applyLocale("));
+  assert.ok(fn.includes('document.getElementById("content").innerHTML'), "알림 자리가 #content 가 아니다");
+  assert.ok(fn.includes('getAttribute("data-updated")'), "구운 data-updated 를 읽지 않는다");
+  assert.equal(/new Date\(|Date\.now/.test(fn), false, "알림이 새 날짜를 계산한다");
+});
+
+test("(가) 알림의 둘째 문장은 load-state.js 의 notifyBeside 와 같은 말이다 (한·영) - 문구가 두 곳에서 갈라지지 않게", () => {
+  assert.ok(outlookScript.includes("Shown below is what this page was built with on ${day}. Some of it is in Korean only."), "영어 문장이 load-state.js 와 다르다");
+  assert.ok(outlookScript.includes("아래는 기준일(${day})에 만든 값입니다."), "한국어 문장이 load-state.js 와 다르다");
+  assert.ok(loadStateSource.includes("`Shown below is what this page was built with${day ? ` on ${day}` :"));
+  assert.ok(loadStateSource.includes("`아래는 ${day ? `기준일(${day})` :") && loadStateSource.includes("에 만든 값입니다.`"));
+});
+
+test("변이 증빙 (가): 입주 예정 숨김을 되돌린 사본, 받은 값 가드를 지운 사본, 알림을 안 세우는 사본은 위 점검이 실패시킨다", async () => {
+  const hides = await openOutlook({ lang: "en", mode: "503", only: "move-in", mutate: mutation("hidden = !!mi && !mi.lead;", "hidden = !mi?.lead;") });
+  assert.throws(() => assertOutlookKept(hides.page, "변이1", ["move-in-lead"], { stamp: false }), /hidden 이 바뀌었다/, "숨김을 되돌려도 ⓐ 가 통과한다");
+
+  const noGuard = await openOutlook({ mutate: mutation("if (!cache.data) return;", "") });
+  noGuard.page.byId("lang-toggle").dispatch("click");
+  await settle(10);
+  assert.throws(() => assertOutlookKept(noGuard.page, "변이2"), /기준일 글자가 바뀌었다|구운 내용이 바뀌었다/, "받은 값 가드를 지워도 언어 전환 뒤 ⓐⓒ 가 통과한다");
+
+  const noNotice = await openOutlook({ mutate: mutation("cache.failed = !cache.data;", "cache.failed = false;") });
+  assert.equal(noNotice.page.notice(), null, "알림을 안 세우는 사본이 알림을 세웠다 - ⓑ 가 눈이 멀었다");
+});
+
+test("S6 의도한 차이 (#296 (가)): price-outlook 인라인 스크립트 순증가 +400B 이하 (merge-base 97ec974d), load-state.js 순증가 0B", () => {
+  const added = Buffer.byteLength(outlookScript) - 17_095;
+  assert.ok(added > 0 && added <= 400, `${SITE}/price-outlook.html: 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
+  assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
+});
+
+// ============================================================================================================
+// 여섯째 행: 분석 나머지 5장(cancelled-deals·renewal-vs-new·floor-gap·record-high·switch-house, 손으로 쓴 장), 틀 (라), F7·F8.
+// (가) price-outlook 과 같은 길이다: 데이터 파일 하나가 안 오면(네트워크·404·빈 파일) 구운 머리 문단(#lead)·구운 표·구운 기준일(#updated)을 지우지 않고,
+// #content 안 알림 한 줄이 [못 받은 것의 이름] + [아래는 기준일(구운 data-updated)에 만든 값입니다.] + (영어) [Some of it is in Korean only.] + [다시 시도] 를 말한다.
+// 예전에는 #lead 를 실패 문구(네트워크 실패)나 "준비 중"(404·빈 파일)으로 갈아 끼우고 404 갈래에서 #updated 를 "-"로 바꿨다. 404·빈 응답도 "새로 받지 못했다"다(규칙 5).
+// switch-house 는 #345(실패 때 구 고르기가 비고 그 밑 빈 두 줄) 의 도구 영역(#from-select·#to-select·#compare-result)을 이 PR 이 건드리지 않는다 -
+// 이 알림이 "이 장이 실패를 말한다"(#345 완료 조건 1)만 채우고, 예약 높이(조건 2)와 구 고르기는 po 확인 뒤다(흡수 알림 6376796513 "po 확인 필요").
+// 이 5장은 load-state.js 를 <script src> 로 물지 않는다(S6). 보기를 바꾸는 입력이 없어 규칙 3번이 걸리지 않는다(분석 6장은 po 실측으로 해당 없음).
+// ============================================================================================================
+const leadOf = (data, lang) => data.lead[lang];
+const ANALYSIS_PAGES = [
+  { name: "cancelled-deals", json: "cancellation", error: ["해제·등기 자료를 불러오지 못했습니다.", "Could not load the cancellation data."], empty: { districts: [] }, lead: (d, l) => d.seoul[l === "en" ? "leadEn" : "leadKo"], bake: ["lead", "correction-lead", "district-table", "month-lead", "month-table", "district-links", "price-lead", "price-table"], base: 15_337 },
+  { name: "renewal-vs-new", json: "renewal-facts", error: ["재계약 자료를 불러오지 못했습니다.", "Could not load the renewal data."], empty: { table: [] }, lead: (d, l) => d.lead[l], bake: ["lead", "district-table", "wolse-lead", "wolse-table", "cap-lead", "district-links"], base: 17_261 },
+  { name: "floor-gap", json: "floor-gap", error: ["층 격차 자료를 불러오지 못했습니다.", "Could not load the floor data."], empty: { districts: [] }, lead: leadOf, bake: ["lead", "top-lead", "district-lead", "district-table", "district-links"], base: 12_168 },
+  { name: "record-high", json: "record-high", error: ["신고가 자료를 불러오지 못했습니다.", "Could not load the record-high data."], empty: {}, lead: leadOf, bake: ["lead", "control-lead", "survival-lead", "robust-table"], base: 8_342 },
+  { name: "switch-house", json: "district-change", error: ["갈아타기 자료를 불러오지 못했습니다.", "Could not load the data."], empty: { rows: [] }, lead: leadOf, bake: ["lead", "district-table", "region-table"], base: 17_089 },
+];
+const analysisSources = {};
+for (const spec of ANALYSIS_PAGES) {
+  const html = await readFile(path.join(root, `${SITE}/${spec.name}.html`), "utf8");
+  analysisSources[spec.name] = { html, script: scriptOf(html) };
+}
+const openAnalysis = async (spec, { lang = "ko", mode = "network", overrides = {}, mutate } = {}) => {
+  const server = analysisServer(mode, null, overrides);
+  const page = await loadAnalysisPage({ file: `${SITE}/${spec.name}.html`, locale: lang, fetch: server.fetch, bake: spec.bake, mutate });
+  await settle(30);
+  return { page, server };
+};
+const assertAnalysisKept = (spec, page, label) => assertAnalysisBakedKept(page, spec.bake, [], label);
+
+test("(라) 범위: 분석 5장은 구운 머리 문단·표·기준일(data-updated)을 갖고 load-state.js 를 <script src> 로 물지 않는다 (S6)", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    assert.equal(analysisSources[spec.name].html.includes("load-state.js"), false, `${spec.name}: load-state.js 를 문다 - 외부 JS 를 더하는 일이라 cto 허용 표가 먼저다`);
+    const { page } = await openAnalysis(spec, { mode: "ok" });
+    for (const id of spec.bake) assert.ok(page.baked[id].length > 10, `${spec.name}: 구운 #${id} 가 비었다`);
+    assert.match(page.baked.day, /^\d{4}-\d{2}-\d{2}$/, `${spec.name}: 구운 기준일 줄에 data-updated 가 없다`);
+  }
+});
+
+test("ⓐⓒ (라) F7·F8 요청이 실패(네트워크·404·503)해도 구운 머리 문단·표와 구운 기준일 글자·data-updated 가 한 글자도 안 바뀐다 - 5장 × 한국어·영어", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    for (const lang of ["ko", "en"]) {
+      for (const mode of ["network", "404", "503"]) {
+        const { page } = await openAnalysis(spec, { lang, mode });
+        assertAnalysisKept(spec, page, `${spec.name} ${lang} ${mode}`);
+      }
+    }
+  }
+});
+
+test("ⓑⓔⓗ (라) 실패하면 알림이 보이고 [이름] + [구운 기준일 문장] + 다시 시도를 말한다 - 영어는 한국어 고지 정확히 1, 한국어는 0, 실패 이유·오늘·최신은 없다", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    for (const [lang, name, retry] of [["ko", spec.error[0], "다시 시도"], ["en", spec.error[1], "Retry"]]) {
+      for (const mode of ["network", "404", "503"]) {
+        const { page } = await openAnalysis(spec, { lang, mode });
+        const notice = page.notice();
+        const label = `${spec.name} ${lang} ${mode}`;
+        assert.ok(notice, `${label}: 알림이 안 보인다`);
+        assert.equal(notice.text, `${name} ${ANALYSIS_ASOF[lang](page.baked.day)}`, `${label}: 알림 문장`);
+        assert.equal(notice.retry, retry, `${label}: 다시 시도 단추 글자`);
+        assert.ok((notice.button.listeners.click ?? []).length > 0, `${label}: 다시 시도 단추에 누름 처리가 없다`);
+        assert.equal(countOf(notice.text, KO_ONLY), lang === "en" ? 1 : 0, `${label}: 한국어 고지 수`);
+        assert.equal(HTTP_WORDS.test(notice.html), false, `${label}: 실패 이유가 방문자에게 보인다: ${notice.text}`);
+        assert.equal(BAD_WORDS.test(notice.text), false, `${label}: 알림이 지금 값처럼 말한다: ${notice.text}`);
+      }
+    }
+  }
+});
+
+test("규칙 5 F8 (라): 404 와 빈 응답은 '준비 중'이 아니라 새로 받지 못했다고 알리고 구운 머리 문단·기준일을 남긴다", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    for (const [label, opts] of [["404", { mode: "404" }], ["빈 응답", { mode: "ok", overrides: { [spec.json]: spec.empty } }]]) {
+      const { page } = await openAnalysis(spec, opts);
+      assertAnalysisKept(spec, page, `${spec.name} ${label}`);
+      assert.ok(page.notice()?.text.startsWith(spec.error[0]), `${spec.name} ${label}: ${page.notice()?.text}`);
+      assert.equal(/아직|준비 중/.test(page.byId("lead").innerHTML + page.notice().text), false, `${spec.name} ${label}: 못 받은 것을 '아직 없음'으로 말한다`);
+    }
+  }
+});
+
+test("ⓑ (라) 실패한 뒤 언어를 바꾸면 알림 문구가 그 언어로 바뀌고 구운 표·기준일은 그대로다 - 구운 표를 비우지 않는다", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    const { page } = await openAnalysis(spec, { lang: "ko" });
+    page.byId("lang-toggle").dispatch("click");
+    await settle(10);
+    const en = page.notice();
+    assert.ok(en.text.startsWith(spec.error[1]) && countOf(en.text, KO_ONLY) === 1 && en.retry === "Retry", `${spec.name} 영어 알림: ${en.text}`);
+    assertAnalysisKept(spec, page, `${spec.name} 언어 전환 뒤`);
+    page.byId("lang-toggle").dispatch("click");
+    await settle(10);
+    assert.equal(countOf(page.notice().text, KO_ONLY), 0, `${spec.name}: 한국어로 돌아왔는데 고지가 남았다`);
+    assertAnalysisKept(spec, page, `${spec.name} 언어 되돌린 뒤`);
+  }
+});
+
+test("(라) 받는 중에 언어를 바꿔도 실패 알림이 미리 서지 않는다", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    const gate = Promise.withResolvers();
+    const server = analysisServer("ok");
+    const page = await loadAnalysisPage({ file: `${SITE}/${spec.name}.html`, fetch: async (url) => (await gate.promise, server.fetch(url)), bake: spec.bake });
+    page.byId("lang-toggle").dispatch("click");
+    await settle(5);
+    assert.equal(page.notice(), null, `${spec.name}: 받는 중인데 실패 알림이 섰다`);
+    gate.resolve();
+    await settle(30);
+    assert.equal(page.notice(), null, `${spec.name}: 받은 뒤에 알림이 남았다`);
+  }
+});
+
+test("ⓖ (라) 다시 시도가 성공하면 알림이 걷히고 구운 머리 문단이 받은 값으로 바뀐다, 또 실패하면 구운 채로 알림이 남는다", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    const data = await readJson(spec.json);
+    for (const lang of ["ko", "en"]) {
+      const { page, server } = await openAnalysis(spec, { lang });
+      const first = server.requests.length;
+      await clickAnalysisRetry(page);
+      assert.ok(server.requests.length > first, `${spec.name} ${lang}: 다시 시도가 요청을 안 보냈다`);
+      assert.ok(page.notice(), `${spec.name} ${lang}: 다시 실패했는데 알림이 걷혔다`);
+      assertAnalysisKept(spec, page, `${spec.name} ${lang} 재시도 실패`);
+
+      server.mode = "ok";
+      await clickAnalysisRetry(page);
+      assert.equal(page.notice(), null, `${spec.name} ${lang}: 성공했는데 알림이 남았다`);
+      assert.equal(page.byId("lead").textContent, spec.lead(data, lang), `${spec.name} ${lang}: 머리 문단이 받은 값으로 안 바뀌었다`);
+      assert.notEqual(page.byId("updated").textContent, page.baked.updatedText, `${spec.name} ${lang}: 기준일 줄이 받은 갱신일로 안 바뀌었다`);
+    }
+  }
+});
+
+test("ⓕ (라) 구운 자리·구운 기준일을 건드리는 그림은 받은 값이 있을 때만 돈다 - 실패 표시는 알림 함수 한 곳이고 옛 실패 줄·'준비 중'·기준일 '-' 갈래가 없다", () => {
+  for (const spec of ANALYSIS_PAGES) {
+    const { script } = analysisSources[spec.name];
+    const all = script.slice(script.indexOf("function renderAll("), script.indexOf("async function loadJson("));
+    assert.ok(/renderLoadNotice\(\);\s+if \(!cache\.data\) return;/.test(all), `${spec.name}: renderAll 이 받은 값이 없을 때 알림 뒤에서 끝나지 않는다 - 언어를 바꾸면 구운 표를 비운다`);
+    const main = script.slice(script.indexOf("async function main("), script.indexOf('document.getElementById("theme-toggle")'));
+    assert.equal(/"-"|notReady|document\.getElementById\("lead"\)\.innerHTML/.test(main), false, `${spec.name}: main 에 구운 기준일을 지우거나 머리 문단을 갈아 끼우는 옛 갈래가 남았다`);
+    assert.ok(main.includes("cache.failed = !cache.data;"), `${spec.name}: 실패 여부를 받은 값 하나로 가르지 않는다`);
+    assert.equal(script.includes("notReady"), false, `${spec.name}: 받은 것이 없을 때 '준비 중'으로 말하는 문자열이 남았다`);
+    assert.equal(countOf(script, 'id="load-retry"'), 1, `${spec.name}: 재시도 단추 마크업이 하나가 아니다`);
+    assert.equal(/insertAdjacentHTML|notifyBeside|showFailure/.test(script), false, `${spec.name}: 알림 요소를 직접 만드는 길이 있다`);
+    const fn = script.slice(script.indexOf("function renderLoadNotice("), script.indexOf("function applyLocale("));
+    assert.ok(fn.includes('document.getElementById("content").innerHTML'), `${spec.name}: 알림 자리가 #content 가 아니다`);
+    assert.ok(fn.includes('getAttribute("data-updated")'), `${spec.name}: 구운 data-updated 를 읽지 않는다`);
+    assert.equal(/new Date\(|Date\.now/.test(fn), false, `${spec.name}: 알림이 새 날짜를 계산한다`);
+  }
+});
+
+test("(라) 알림의 둘째 문장은 load-state.js 의 notifyBeside 와 같은 말이다 (한·영) - 5장 모두 문구가 두 곳에서 갈라지지 않게", () => {
+  for (const spec of ANALYSIS_PAGES) {
+    const { script } = analysisSources[spec.name];
+    assert.ok(script.includes("Shown below is what this page was built with on ${day}. Some of it is in Korean only."), `${spec.name}: 영어 문장이 load-state.js 와 다르다`);
+    assert.ok(script.includes("아래는 기준일(${day})에 만든 값입니다."), `${spec.name}: 한국어 문장이 load-state.js 와 다르다`);
+    assert.ok(script.includes(`loadError: "${spec.error[0]}"`) && script.includes(`loadError: "${spec.error[1]}"`), `${spec.name}: 실패 문구가 바뀌었다`);
+  }
+});
+
+test("변이 증빙 (라): 받은 값 가드를 지운 사본, 알림을 안 세우는 사본, 기준일을 '-'로 되돌린 사본은 위 점검이 실패시킨다", async () => {
+  const cancelled = ANALYSIS_PAGES[0];
+  const noGuard = await openAnalysis(cancelled, { mutate: mutation("if (!cache.data) return;", "") });
+  noGuard.page.byId("lang-toggle").dispatch("click");
+  await settle(10);
+  assert.throws(() => assertAnalysisKept(cancelled, noGuard.page, "변이1"), /구운 내용이 바뀌었다/, "받은 값 가드를 지워도 언어 전환 뒤 ⓐ 가 통과한다");
+
+  for (const spec of ANALYSIS_PAGES) {
+    const noNotice = await openAnalysis(spec, { mutate: mutation("cache.failed = !cache.data;", "cache.failed = false;") });
+    assert.equal(noNotice.page.notice(), null, `${spec.name}: 알림을 안 세우는 사본이 알림을 세웠다 - ⓑ 가 눈이 멀었다`);
+  }
+
+  const dash = await openAnalysis(cancelled, { mode: "404", mutate: mutation("cache.failed = !cache.data;", 'cache.failed = !cache.data; if (cache.failed) document.getElementById("updated").textContent = "-";') });
+  assert.throws(() => assertAnalysisKept(cancelled, dash.page, "변이3"), /구운 기준일 글자가 바뀌었다/, "기준일을 '-'로 되돌려도 ⓒ 가 통과한다");
+});
+
+test("S6 의도한 차이 (#296 (라)): 분석 5장 인라인 스크립트 순증가 +400B 이하 (merge-base 97ec974d), load-state.js 순증가 0B", () => {
+  for (const spec of ANALYSIS_PAGES) {
+    const added = Buffer.byteLength(analysisSources[spec.name].script) - spec.base;
+    assert.ok(added > 0 && added <= 400, `${SITE}/${spec.name}.html: 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
   }
   assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
 });

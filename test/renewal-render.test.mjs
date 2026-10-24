@@ -90,7 +90,9 @@ test("영어 화면에 우리가 쓴 한국어가 남지 않는다", async () =>
 
 test("자료가 없으면 없다고 말한다", async () => {
   const page = await loadRenewalPage({});
-  assert.match(page.leadText(), /아직 재계약 자료가 없습니다/);
+  assert.match(page.html("content"), /재계약 자료를 불러오지 못했습니다/);
+  assert.doesNotMatch(page.leadText() + page.html("content"), /아직/);
+  assert.equal(page.leadText(), "", "머리 문단을 갈아 끼웠다");
 });
 
 // --- 월세 재계약 (#7) ---------------------------------------------------------------
