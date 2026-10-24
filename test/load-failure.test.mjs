@@ -1751,3 +1751,183 @@ test("S6 의도한 차이 (#296 (가)): price-outlook 인라인 스크립트 순
   assert.ok(added > 0 && added <= 400, `${SITE}/price-outlook.html: 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
   assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
 });
+
+// ============================================================================================================
+// 여섯째 행: 분석 나머지 5장(cancelled-deals·renewal-vs-new·floor-gap·record-high·switch-house, 손으로 쓴 장), 틀 (라), F7·F8.
+// (가) price-outlook 과 같은 길이다: 데이터 파일 하나가 안 오면(네트워크·404·빈 파일) 구운 머리 문단(#lead)·구운 표·구운 기준일(#updated)을 지우지 않고,
+// #content 안 알림 한 줄이 [못 받은 것의 이름] + [아래는 기준일(구운 data-updated)에 만든 값입니다.] + (영어) [Some of it is in Korean only.] + [다시 시도] 를 말한다.
+// 예전에는 #lead 를 실패 문구(네트워크 실패)나 "준비 중"(404·빈 파일)으로 갈아 끼우고 404 갈래에서 #updated 를 "-"로 바꿨다. 404·빈 응답도 "새로 받지 못했다"다(규칙 5).
+// switch-house 는 #345(실패 때 구 고르기가 비고 그 밑 빈 두 줄) 의 도구 영역(#from-select·#to-select·#compare-result)을 이 PR 이 건드리지 않는다 -
+// 이 알림이 "이 장이 실패를 말한다"(#345 완료 조건 1)만 채우고, 예약 높이(조건 2)와 구 고르기는 po 확인 뒤다(흡수 알림 6376796513 "po 확인 필요").
+// 이 5장은 load-state.js 를 <script src> 로 물지 않는다(S6). 보기를 바꾸는 입력이 없어 규칙 3번이 걸리지 않는다(분석 6장은 po 실측으로 해당 없음).
+// ============================================================================================================
+const leadOf = (data, lang) => data.lead[lang];
+const ANALYSIS_PAGES = [
+  { name: "cancelled-deals", json: "cancellation", error: ["해제·등기 자료를 불러오지 못했습니다.", "Could not load the cancellation data."], empty: { districts: [] }, lead: (d, l) => d.seoul[l === "en" ? "leadEn" : "leadKo"], bake: ["lead", "correction-lead", "district-table", "month-lead", "month-table", "district-links", "price-lead", "price-table"], base: 15_337 },
+  { name: "renewal-vs-new", json: "renewal-facts", error: ["재계약 자료를 불러오지 못했습니다.", "Could not load the renewal data."], empty: { table: [] }, lead: (d, l) => d.lead[l], bake: ["lead", "district-table", "wolse-lead", "wolse-table", "cap-lead", "district-links"], base: 17_261 },
+  { name: "floor-gap", json: "floor-gap", error: ["층 격차 자료를 불러오지 못했습니다.", "Could not load the floor data."], empty: { districts: [] }, lead: leadOf, bake: ["lead", "top-lead", "district-lead", "district-table", "district-links"], base: 12_168 },
+  { name: "record-high", json: "record-high", error: ["신고가 자료를 불러오지 못했습니다.", "Could not load the record-high data."], empty: {}, lead: leadOf, bake: ["lead", "control-lead", "survival-lead", "robust-table"], base: 8_342 },
+  { name: "switch-house", json: "district-change", error: ["갈아타기 자료를 불러오지 못했습니다.", "Could not load the data."], empty: { rows: [] }, lead: leadOf, bake: ["lead", "district-table", "region-table"], base: 17_089 },
+];
+const analysisSources = {};
+for (const spec of ANALYSIS_PAGES) {
+  const html = await readFile(path.join(root, `${SITE}/${spec.name}.html`), "utf8");
+  analysisSources[spec.name] = { html, script: scriptOf(html) };
+}
+const openAnalysis = async (spec, { lang = "ko", mode = "network", overrides = {}, mutate } = {}) => {
+  const server = analysisServer(mode, null, overrides);
+  const page = await loadAnalysisPage({ file: `${SITE}/${spec.name}.html`, locale: lang, fetch: server.fetch, bake: spec.bake, mutate });
+  await settle(30);
+  return { page, server };
+};
+const assertAnalysisKept = (spec, page, label) => assertAnalysisBakedKept(page, spec.bake, [], label);
+
+test("(라) 범위: 분석 5장은 구운 머리 문단·표·기준일(data-updated)을 갖고 load-state.js 를 <script src> 로 물지 않는다 (S6)", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    assert.equal(analysisSources[spec.name].html.includes("load-state.js"), false, `${spec.name}: load-state.js 를 문다 - 외부 JS 를 더하는 일이라 cto 허용 표가 먼저다`);
+    const { page } = await openAnalysis(spec, { mode: "ok" });
+    for (const id of spec.bake) assert.ok(page.baked[id].length > 10, `${spec.name}: 구운 #${id} 가 비었다`);
+    assert.match(page.baked.day, /^\d{4}-\d{2}-\d{2}$/, `${spec.name}: 구운 기준일 줄에 data-updated 가 없다`);
+  }
+});
+
+test("ⓐⓒ (라) F7·F8 요청이 실패(네트워크·404·503)해도 구운 머리 문단·표와 구운 기준일 글자·data-updated 가 한 글자도 안 바뀐다 - 5장 × 한국어·영어", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    for (const lang of ["ko", "en"]) {
+      for (const mode of ["network", "404", "503"]) {
+        const { page } = await openAnalysis(spec, { lang, mode });
+        assertAnalysisKept(spec, page, `${spec.name} ${lang} ${mode}`);
+      }
+    }
+  }
+});
+
+test("ⓑⓔⓗ (라) 실패하면 알림이 보이고 [이름] + [구운 기준일 문장] + 다시 시도를 말한다 - 영어는 한국어 고지 정확히 1, 한국어는 0, 실패 이유·오늘·최신은 없다", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    for (const [lang, name, retry] of [["ko", spec.error[0], "다시 시도"], ["en", spec.error[1], "Retry"]]) {
+      for (const mode of ["network", "404", "503"]) {
+        const { page } = await openAnalysis(spec, { lang, mode });
+        const notice = page.notice();
+        const label = `${spec.name} ${lang} ${mode}`;
+        assert.ok(notice, `${label}: 알림이 안 보인다`);
+        assert.equal(notice.text, `${name} ${ANALYSIS_ASOF[lang](page.baked.day)}`, `${label}: 알림 문장`);
+        assert.equal(notice.retry, retry, `${label}: 다시 시도 단추 글자`);
+        assert.ok((notice.button.listeners.click ?? []).length > 0, `${label}: 다시 시도 단추에 누름 처리가 없다`);
+        assert.equal(countOf(notice.text, KO_ONLY), lang === "en" ? 1 : 0, `${label}: 한국어 고지 수`);
+        assert.equal(HTTP_WORDS.test(notice.html), false, `${label}: 실패 이유가 방문자에게 보인다: ${notice.text}`);
+        assert.equal(BAD_WORDS.test(notice.text), false, `${label}: 알림이 지금 값처럼 말한다: ${notice.text}`);
+      }
+    }
+  }
+});
+
+test("규칙 5 F8 (라): 404 와 빈 응답은 '준비 중'이 아니라 새로 받지 못했다고 알리고 구운 머리 문단·기준일을 남긴다", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    for (const [label, opts] of [["404", { mode: "404" }], ["빈 응답", { mode: "ok", overrides: { [spec.json]: spec.empty } }]]) {
+      const { page } = await openAnalysis(spec, opts);
+      assertAnalysisKept(spec, page, `${spec.name} ${label}`);
+      assert.ok(page.notice()?.text.startsWith(spec.error[0]), `${spec.name} ${label}: ${page.notice()?.text}`);
+      assert.equal(/아직|준비 중/.test(page.byId("lead").innerHTML + page.notice().text), false, `${spec.name} ${label}: 못 받은 것을 '아직 없음'으로 말한다`);
+    }
+  }
+});
+
+test("ⓑ (라) 실패한 뒤 언어를 바꾸면 알림 문구가 그 언어로 바뀌고 구운 표·기준일은 그대로다 - 구운 표를 비우지 않는다", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    const { page } = await openAnalysis(spec, { lang: "ko" });
+    page.byId("lang-toggle").dispatch("click");
+    await settle(10);
+    const en = page.notice();
+    assert.ok(en.text.startsWith(spec.error[1]) && countOf(en.text, KO_ONLY) === 1 && en.retry === "Retry", `${spec.name} 영어 알림: ${en.text}`);
+    assertAnalysisKept(spec, page, `${spec.name} 언어 전환 뒤`);
+    page.byId("lang-toggle").dispatch("click");
+    await settle(10);
+    assert.equal(countOf(page.notice().text, KO_ONLY), 0, `${spec.name}: 한국어로 돌아왔는데 고지가 남았다`);
+    assertAnalysisKept(spec, page, `${spec.name} 언어 되돌린 뒤`);
+  }
+});
+
+test("(라) 받는 중에 언어를 바꿔도 실패 알림이 미리 서지 않는다", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    const gate = Promise.withResolvers();
+    const server = analysisServer("ok");
+    const page = await loadAnalysisPage({ file: `${SITE}/${spec.name}.html`, fetch: async (url) => (await gate.promise, server.fetch(url)), bake: spec.bake });
+    page.byId("lang-toggle").dispatch("click");
+    await settle(5);
+    assert.equal(page.notice(), null, `${spec.name}: 받는 중인데 실패 알림이 섰다`);
+    gate.resolve();
+    await settle(30);
+    assert.equal(page.notice(), null, `${spec.name}: 받은 뒤에 알림이 남았다`);
+  }
+});
+
+test("ⓖ (라) 다시 시도가 성공하면 알림이 걷히고 구운 머리 문단이 받은 값으로 바뀐다, 또 실패하면 구운 채로 알림이 남는다", async () => {
+  for (const spec of ANALYSIS_PAGES) {
+    const data = await readJson(spec.json);
+    for (const lang of ["ko", "en"]) {
+      const { page, server } = await openAnalysis(spec, { lang });
+      const first = server.requests.length;
+      await clickAnalysisRetry(page);
+      assert.ok(server.requests.length > first, `${spec.name} ${lang}: 다시 시도가 요청을 안 보냈다`);
+      assert.ok(page.notice(), `${spec.name} ${lang}: 다시 실패했는데 알림이 걷혔다`);
+      assertAnalysisKept(spec, page, `${spec.name} ${lang} 재시도 실패`);
+
+      server.mode = "ok";
+      await clickAnalysisRetry(page);
+      assert.equal(page.notice(), null, `${spec.name} ${lang}: 성공했는데 알림이 남았다`);
+      assert.equal(page.byId("lead").textContent, spec.lead(data, lang), `${spec.name} ${lang}: 머리 문단이 받은 값으로 안 바뀌었다`);
+      assert.notEqual(page.byId("updated").textContent, page.baked.updatedText, `${spec.name} ${lang}: 기준일 줄이 받은 갱신일로 안 바뀌었다`);
+    }
+  }
+});
+
+test("ⓕ (라) 구운 자리·구운 기준일을 건드리는 그림은 받은 값이 있을 때만 돈다 - 실패 표시는 알림 함수 한 곳이고 옛 실패 줄·'준비 중'·기준일 '-' 갈래가 없다", () => {
+  for (const spec of ANALYSIS_PAGES) {
+    const { script } = analysisSources[spec.name];
+    const all = script.slice(script.indexOf("function renderAll("), script.indexOf("async function loadJson("));
+    assert.ok(/renderLoadNotice\(\);\s+if \(!cache\.data\) return;/.test(all), `${spec.name}: renderAll 이 받은 값이 없을 때 알림 뒤에서 끝나지 않는다 - 언어를 바꾸면 구운 표를 비운다`);
+    const main = script.slice(script.indexOf("async function main("), script.indexOf('document.getElementById("theme-toggle")'));
+    assert.equal(/"-"|notReady|document\.getElementById\("lead"\)\.innerHTML/.test(main), false, `${spec.name}: main 에 구운 기준일을 지우거나 머리 문단을 갈아 끼우는 옛 갈래가 남았다`);
+    assert.ok(main.includes("cache.failed = !cache.data;"), `${spec.name}: 실패 여부를 받은 값 하나로 가르지 않는다`);
+    assert.equal(script.includes("notReady"), false, `${spec.name}: 받은 것이 없을 때 '준비 중'으로 말하는 문자열이 남았다`);
+    assert.equal(countOf(script, 'id="load-retry"'), 1, `${spec.name}: 재시도 단추 마크업이 하나가 아니다`);
+    assert.equal(/insertAdjacentHTML|notifyBeside|showFailure/.test(script), false, `${spec.name}: 알림 요소를 직접 만드는 길이 있다`);
+    const fn = script.slice(script.indexOf("function renderLoadNotice("), script.indexOf("function applyLocale("));
+    assert.ok(fn.includes('document.getElementById("content").innerHTML'), `${spec.name}: 알림 자리가 #content 가 아니다`);
+    assert.ok(fn.includes('getAttribute("data-updated")'), `${spec.name}: 구운 data-updated 를 읽지 않는다`);
+    assert.equal(/new Date\(|Date\.now/.test(fn), false, `${spec.name}: 알림이 새 날짜를 계산한다`);
+  }
+});
+
+test("(라) 알림의 둘째 문장은 load-state.js 의 notifyBeside 와 같은 말이다 (한·영) - 5장 모두 문구가 두 곳에서 갈라지지 않게", () => {
+  for (const spec of ANALYSIS_PAGES) {
+    const { script } = analysisSources[spec.name];
+    assert.ok(script.includes("Shown below is what this page was built with on ${day}. Some of it is in Korean only."), `${spec.name}: 영어 문장이 load-state.js 와 다르다`);
+    assert.ok(script.includes("아래는 기준일(${day})에 만든 값입니다."), `${spec.name}: 한국어 문장이 load-state.js 와 다르다`);
+    assert.ok(script.includes(`loadError: "${spec.error[0]}"`) && script.includes(`loadError: "${spec.error[1]}"`), `${spec.name}: 실패 문구가 바뀌었다`);
+  }
+});
+
+test("변이 증빙 (라): 받은 값 가드를 지운 사본, 알림을 안 세우는 사본, 기준일을 '-'로 되돌린 사본은 위 점검이 실패시킨다", async () => {
+  const cancelled = ANALYSIS_PAGES[0];
+  const noGuard = await openAnalysis(cancelled, { mutate: mutation("if (!cache.data) return;", "") });
+  noGuard.page.byId("lang-toggle").dispatch("click");
+  await settle(10);
+  assert.throws(() => assertAnalysisKept(cancelled, noGuard.page, "변이1"), /구운 내용이 바뀌었다/, "받은 값 가드를 지워도 언어 전환 뒤 ⓐ 가 통과한다");
+
+  for (const spec of ANALYSIS_PAGES) {
+    const noNotice = await openAnalysis(spec, { mutate: mutation("cache.failed = !cache.data;", "cache.failed = false;") });
+    assert.equal(noNotice.page.notice(), null, `${spec.name}: 알림을 안 세우는 사본이 알림을 세웠다 - ⓑ 가 눈이 멀었다`);
+  }
+
+  const dash = await openAnalysis(cancelled, { mode: "404", mutate: mutation("cache.failed = !cache.data;", 'cache.failed = !cache.data; if (cache.failed) document.getElementById("updated").textContent = "-";') });
+  assert.throws(() => assertAnalysisKept(cancelled, dash.page, "변이3"), /구운 기준일 글자가 바뀌었다/, "기준일을 '-'로 되돌려도 ⓒ 가 통과한다");
+});
+
+test("S6 의도한 차이 (#296 (라)): 분석 5장 인라인 스크립트 순증가 +400B 이하 (merge-base 97ec974d), load-state.js 순증가 0B", () => {
+  for (const spec of ANALYSIS_PAGES) {
+    const added = Buffer.byteLength(analysisSources[spec.name].script) - spec.base;
+    assert.ok(added > 0 && added <= 400, `${SITE}/${spec.name}.html: 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
+  }
+  assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
+});

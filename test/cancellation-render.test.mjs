@@ -96,11 +96,15 @@ test("영어로 바꾸면 문장도 표 머리도 영어가 된다", async () =>
 });
 
 test("자료가 없으면 그렇다고 말한다", async () => {
+  // 구운 머리 문단이 있는 장이라 404 도 "준비 중"이 아니라 새로 받지 못했다고 알리고 머리 문단은 그대로 둔다(#296 규칙 5).
   const page = await loadCancellationPage({ cancellation: null });
-  assert.match(page.leadText(), /아직 해제·등기 자료가 없습니다/);
+  assert.match(page.html("content"), /해제·등기 자료를 불러오지 못했습니다/);
+  assert.doesNotMatch(page.leadText() + page.html("content"), /아직/);
+  assert.equal(page.leadText(), "", "머리 문단을 갈아 끼웠다");
 });
 
 test("불러오다 실패하면 다시 시도할 수 있다", async () => {
   const page = await loadCancellationPage({ cancellation: undefined, status: 500 });
-  assert.match(page.leadHtml(), /다시 시도/);
+  assert.match(page.html("content"), /다시 시도/);
+  assert.equal(page.leadHtml(), "", "머리 문단을 갈아 끼웠다");
 });

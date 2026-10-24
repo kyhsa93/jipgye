@@ -427,5 +427,10 @@
 #   새 이름 13(test/load-failure.test.mjs 다섯째 행: 범위·ⓐⓒ·ⓑⓔⓗ·규칙 5·H1 둘·언어 전환·받는 중 언어 전환·ⓖ·ⓕ·문장 대조·변이 증빙·S6), 없어진 시험 0(diff 의 `-test(` 줄 0), 고친 기존 시험 0.
 #   공용 도우미 test/helpers/analysis-page.mjs 는 새 파일이다(분석 6장의 인라인 스크립트를 손으로 만든 DOM 에서 돌린다 - 뉴스 틀 도우미와 같은 모양).
 #   `npm run test:site`(배포 게이트) 758 → 771(그 13개가 build/site 를 읽음), 하한은 test/COUNT-site.
-1995
-1995
+# 갱신: 2026-10-24(#296 틀 (라) 분석 5장 F7·F8), base c8592c65(틀 (가)) + 이 커밋. `npm test` → ℹ tests 1988 · pass 1988 · fail 0 · skipped 0 (1964 + 11).
+#   새 이름 11(test/load-failure.test.mjs 여섯째 행: 범위·ⓐⓒ·ⓑⓔⓗ·규칙 5·언어 전환·받는 중 언어 전환·ⓖ·ⓕ·문장 대조·변이 증빙·S6), 없어진 시험 0(diff 의 `-test(` 줄 0).
+#   고친 기존 시험 넷(이름·개수 -0 +0): test/cancellation-render.test.mjs "자료가 없으면 그렇다고 말한다"·"불러오다 실패하면 다시 시도할 수 있다", test/floor-gap.test.mjs·test/renewal-render.test.mjs "자료가 없으면 없다고 말한다" -
+#   옛 단언이 404 에서 머리 문단을 "아직 … 자료가 없습니다"로 갈아 끼우고 실패 단추를 머리 문단 안에 두는 것을 못박고 있었다(#296 F7·F8 이 고치는 바로 그 동작). 이제 #content 알림이 "불러오지 못했습니다"·"다시 시도"를 말하고 머리 문단은 그대로임을 본다.
+#   `npm run test:site`(배포 게이트) 771 → 782(그 11개가 build/site 를 읽음), 하한은 test/COUNT-site.
+2006
+2006
