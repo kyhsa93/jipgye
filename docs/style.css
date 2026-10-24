@@ -1036,7 +1036,7 @@
     gap: 6px 12px;
     font-size: var(--fs-sm);
   }
-  .district-links a, .section-links a, .card-links a, .back-link, .method-callout a, .method-toc a, .budget-nav a, .archive-link, .site-footer a {
+  .district-links a, .section-links a, .card-links a, .back-link, .rate-links a, .method-callout a, .method-toc a, .budget-nav a, .archive-link, .site-footer a {
     display: inline-flex;
     align-items: center;
     min-height: var(--tap);
@@ -1275,6 +1275,7 @@
   }
   .tab {
     flex-shrink: 0;
+    min-height: var(--tap);
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 999px;
@@ -1367,7 +1368,7 @@
   .rate-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 14px;
+    gap: 0 14px;
     margin-top: 14px;
     font-size: var(--fs-xs);
   }
@@ -1454,6 +1455,7 @@
     cursor: pointer;
     text-decoration: underline;
     font-family: inherit;
+    min-width: 24px;
   }
   .detail-row td {
     white-space: normal;
@@ -1563,11 +1565,14 @@
   .search-field input[type="text"] {
     width: 8.5rem;
   }
-  .search-field input[type="checkbox"] {
+  .search-field input[type="checkbox"], .controls label > input[type="checkbox"] {
     margin: 0;
     zoom: 1.5;
     width: 16px;
     min-height: calc(var(--tap) / 1.5);
+  }
+  .controls label > input[type="checkbox"] {
+    margin-inline-end: 2px;
   }
   .search-field.toggle label {
     cursor: pointer;

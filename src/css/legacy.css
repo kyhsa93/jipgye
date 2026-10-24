@@ -1463,6 +1463,7 @@ ul.news-list {
 .section-links a,
 .card-links a,
 .back-link,
+.rate-links a,
 .method-callout a,
 .method-toc a,
 .budget-nav a,
@@ -1765,6 +1766,9 @@ main h3 {
 
 .tab {
   flex-shrink: 0;
+  /* 상품군 탭은 높이 --tap(#403). 30px 였다. 알약 모양(999px)은 높이만 늘어 길쭉한 알약이 되고, 틀이 구운 첫 화면과
+   * 스크립트가 다시 그린 화면이 같은 이 규칙을 받는다(JS 변경 없음). 탭 줄이 14px 커져 표가 그만큼 내려간다. */
+  min-height: var(--tap);
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -1883,12 +1887,14 @@ main h3 {
 .rate-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 14px;
+  /* 줄 간격 6 -> 0: 링크가 높이 --tap(#403)이 돼 줄 사이가 이미 벌어진다. 6을 두면 두 줄일 때 +6px 더 커진다. */
+  gap: 0 14px;
   margin-top: 14px;
   font-size: var(--fs-xs);
 }
 
 .rate-links a {
+  /* flex 항목이라 inline 이 아니다(높이 19.5px 였다). 높이 --tap 은 위의 줄 단위 링크 목록 규칙(선택자에 .rate-links a 가 있다)이 준다(#403). */
   color: var(--muted);
 }
 
@@ -1988,6 +1994,8 @@ main h3 {
   cursor: pointer;
   text-decoration: underline;
   font-family: inherit;
+  /* 글자 폭이 22.5px 라 가로가 24 에 모자랐다(#403). 높이는 아래 --tap 규칙이 준다. */
+  min-width: 24px;
 }
 
 .detail-row td {
@@ -2128,12 +2136,19 @@ main h3 {
  * 높이만 늘리면 그리는 쪽이 정사각 표시를 짧은 변에 맞추는데, WebKit 은 24 짜리 상자에도 표시를 16px
  * 로만 그린다(2026-10-22 실측, Chrome 은 24px). 그래서 1.5 배로 키워 둔 상자(16 x 29.33 -> 24 x 44)를
  * 쓰면 두 엔진 모두 24px 정사각이다. 금리 틀 네 장(.controls label > input)은 #403 이 이 규칙의 선택자
- * 목록에 자기 선택자만 더한다(선언은 한 벌). */
-.search-field input[type="checkbox"] {
+ * 목록에 자기 선택자만 더했다(선언은 한 벌). 금리 장의 체크박스는 .search-field 가 아니라 .controls 라벨 안에 있다. */
+.search-field input[type="checkbox"],
+.controls label > input[type="checkbox"] {
   margin: 0;
   zoom: 1.5;
   width: 16px;
   min-height: calc(var(--tap) / 1.5);
+}
+
+/* 금리 장 체크박스는 위 규칙이 margin 을 0 으로 만들어 라벨 글자가 상자에 붙는다. 옛 기본 오른쪽 여백(3px)을
+ * 돌려준다. zoom 1.5 라 여기 적은 2px 이 화면에서는 3px 이다(#403). */
+.controls label > input[type="checkbox"] {
+  margin-inline-end: 2px;
 }
 
 .search-field.toggle label {
