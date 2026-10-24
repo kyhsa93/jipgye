@@ -402,5 +402,17 @@
 #   site-dir 1(걷어낸 복사본 → 이미 있는 디렉터리 위 재렌더, 같은 이름 아님). 새 시험: test/collector-output-paths.test.mjs 4(수집·빌더가 쓰는 곳은 docs/data·raw 뿐) · test/site-snapshot.test.mjs 8(배포본 전후 스냅샷).
 #   기존 단언을 낮춘 곳은 하나다: test/css-build.test.mjs 의 「훑는 소스 > 150」 하한을 130 으로(생성 HTML 53장이 docs/ 에서 빠져 194 → 141개, build-css.mjs --check 는 바이트 동일 확인).
 #   `npm run test:site`(배포 게이트)는 build/site 를 읽는 시험 파일 52개의 부분집합이고 하한은 test/COUNT-site 에 따로 둔다(736).
-1941
-1941
+# 갱신: 2026-10-24(#296 틀 (마) 금리 4장 + 흡수한 #323), base 5af7d1aa(= origin/main), Node v24.22.0, macOS. `npm test` → ℹ tests 1951 · pass 1951 · fail 0 · skipped 0 (기준 1941 → +10).
+#   차이 10 은 이 PR 이 test/load-failure.test.mjs 에 더한 금리 행의 새 시험 10개에서 나온다(`node --test test/load-failure.test.mjs` → 기준 70 → 후보 80):
+#   범위(4장 구운 표·구운 기준일·넉 칸 추이 격자) · ⓐⓒ #323 요청 전부 실패(네트워크·404·503 × ko·en × 4장)에도 구운 표 머리·본문·기준일 글자·data-updated 그대로, 추이 격자의 칸을 안 갈아 끼움(빈 칸 셋 유지) ·
+#   ⓑⓔⓗ 알림(금리 데이터 실패 + 구운 기준일 문장 + 다시 시도, 영어 고지 0·실패 이유·오늘·최신 0) · 규칙 3 주소로 다른 보기(?tab·term·type·q·amt)를 연 채 실패하면 구운 표를 남기지 않음(양성 대조 5) ·
+#   ⓑ 실패 뒤 언어 전환 · ⓖ 다시 시도(재실패는 구운 채 알림 유지, 성공하면 알림 걷힘·받은 값) · 규칙 5 받았는데 빈 응답은 알림 없음 · ⓕ 실패 표시는 renderFailure 한 곳 ·
+#   변이 증빙 넷(격자 통째 교체·보기 가드 삭제·renderAll 가드 삭제·알림 생략이 각각 위 점검에 걸림) · S6(금리 4장 인라인 순증가 +400B 이하, merge-base 5af7d1aa 에서 38,022·38,032·38,003·37,995B, load-state.js 불변).
+#   없어진 시험 0, 새 이름 10 (diff 의 `-test(` 줄 0). 고친 기존 시험은 둘이다: test/load-failure.test.mjs "금리 5장: rates.json 로드가 거부되면 …" 의 단언(표가 실패 문구로 바뀐다 → 구운 표가 남고 알림에 단추가 있다, 추이 단추는 안내 칸 안)과
+#   "금리 5장: 추이 구역의 재시도 단추를 누르면 …" 의 첫 단언(단추가 격자 안 → 안내 칸 안) - 이름·개수 -0 +0. test/analytics.test.mjs "로드가 실패하면 다시 시도할 수단을 준다" 의 정규식에 공용 함수를 부르는 줄(`window.loadState.showFailure(`)을 더했다
+#   (표 위 알림의 단추 id 가 공용 함수의 기본값 load-retry 라 글자로 안 남는다, 실제 단추는 load-failure 시험이 누른다). 공용 도우미 test/helpers/rates-page.mjs 에는 baked·mutate 선택지와 notice()·baked 결과, 구운 기준일 줄 시드만 더했다(기본값이면 이전과 같다).
+#   `npm run test:site`(배포 게이트) 748 → 758(금리 행 10개가 build/site 를 읽음), 하한은 test/COUNT-site.
+# 갱신: 2026-10-24(PR #531 po 변경 요청), 금리 알림의 영어 문장 끝에 "Some of it is in Korean only." 를 정확히 한 번 붙였다(영어 1·한국어 0, 다른 보기 갈래는 문장 없음). 개수 변화 없음: `npm test` → ℹ tests 1951 · pass 1951 (하한 그대로).
+#   ⓗ 단언을 「고지 0」에서 「영어 1·한국어 0」으로 바꿨고(이름의 '영어 고지' 구절만 고침, 개수 -0 +0), 규칙 3 시험에 「다른 보기 표 자리에 고지 문장 없음」을 더했다. S6 한도는 이 PR 에 한해 +430B/장(cto): 측정 +422B/장(합 1,688B), load-state.js 불변.
+1951
+1951

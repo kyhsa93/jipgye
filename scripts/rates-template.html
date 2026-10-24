@@ -194,6 +194,7 @@
       emptyRow: "조건에 맞는 상품이 없습니다.",
       retry: "다시 시도",
       loadError: "금리 데이터를 불러오지 못했습니다.",
+      asOf: (day) => `아래는 기준일(${day})에 만든 값입니다.`,
       historyLoadError: "금리 추이를 불러오지 못했습니다.",
       historyDeposit: "정기예금 12개월 최고",
       historySaving: "적금 12개월 최고",
@@ -268,6 +269,7 @@
       emptyRow: "No products match these filters.",
       retry: "Retry",
       loadError: "Could not load the rate data.",
+      asOf: (day) => `Shown below is what this page was built with on ${day}. Some of it is in Korean only.`,
       historyLoadError: "Could not load the rate trend.",
       historyDeposit: "Best 12-month deposit",
       historySaving: "Best 12-month savings",
@@ -970,14 +972,14 @@
       ? `${T[locale].disclosure(month)} · ${t("notice")}`
       : t("notice");
 
-    document.getElementById("updated").textContent = cache.rates?.updatedAt
-      ? `${t("updatedPrefix")} ${fmtUpdated(cache.rates.updatedAt)}`
-      : "-";
+    // 못 받았을 때 구운 기준일(#updated)을 "-"로 바꾸지 않는다(#296 규칙 4). 다른 보기의 "-"는 renderFailure 가 쓴다.
+    if (cache.rates?.updatedAt) document.getElementById("updated").textContent = `${t("updatedPrefix")} ${fmtUpdated(cache.rates.updatedAt)}`;
 
     window.analytics?.pageView({ site_language: locale });
   }
 
   function renderAll() {
+    if (!cache.rates) return renderFailure();
     renderMeta();
     renderTabs();
     renderControls();
@@ -1072,35 +1074,32 @@
     }
   });
 
+  // 규칙 2: 구운 표를 그대로 두고 그 위에 알림 한 줄(실패 + 구운 기준일 + 다시 시도). 규칙 3: 구운 표(기본 탭·12개월·유형 전체·검색어 없음·기본 금액)와 다른 보기를
+  // 주소(?tab·term·type·q·amt)로 열었으면 구운 표는 그 보기의 답이 아니라서 표 자리를 실패 문구 + 재시도로 바꾸고 기준일은 "-"다.
+  // 추이 구역은 구운 내용이 없는 빈 자리라 실패 문구 + 재시도(규칙 1)다. 칸을 갈아 끼우지 않고 안내 칸 하나만 바꿔야 격자가 넉 칸 높이(580px)로 남는다(#323).
+  function renderFailure() {
+    const retry = () => { window.analytics?.event("load_retry", { rate_category: state.category }); main(); };
+    const show = (id, message, wrap, retryId) => window.loadState.showFailure(document.getElementById(id), { message, retryLabel: t("retry"), wrap, retryId, onRetry: retry });
+    renderMeta();
+    show("history-placeholder", t("historyLoadError"), undefined, "load-retry-history");
+    if (state.category === DEFAULT_CATEGORY && state.term === 12 && !(state.rateType + state.query) && !initialAmount) {
+      show("content", `${t("loadError")} ${t("asOf")(document.getElementById("updated").dataset.updated)}`, (s) => `<p class="content-notice">${s}</p>`);
+    } else {
+      show("products-body", t("loadError"), (s) => `<tr class="empty-row"><td>${s}</td></tr>`);
+      document.getElementById("updated").textContent = "-";
+    }
+  }
+
   async function main() {
     try {
       cache.rates = await loadJson("rates");
     } catch (err) {
       console.error("[rates] 로드 실패:", err.message);
       reportLoadFailure("rates", err, true);
-      // 표와 추이 구역이 같은 규칙(window.loadState)으로 실패를 말한다. 추이 자리를 빼먹으면
-      // 프리렌더가 박아 둔 "불러오는 중..."이 영구히 남는다(#173).
-      const retry = () => {
-        window.analytics?.event("load_retry", { rate_category: state.category });
-        main();
-      };
-      window.loadState.showFailure(document.getElementById("products-body"), {
-        message: t("loadError"),
-        retryLabel: t("retry"),
-        retryId: "load-retry",
-        wrap: (inner) => `<tr class="empty-row"><td>${inner}</td></tr>`,
-        onRetry: retry,
-      });
-      window.loadState.showFailure(document.getElementById("history-grid"), {
-        message: t("historyLoadError"),
-        retryLabel: t("retry"),
-        retryId: "load-retry-history",
-        wrap: (inner) => `<div class="placeholder" id="history-placeholder">${inner}</div>`,
-        onRetry: retry,
-      });
-      renderMeta();
+      renderFailure();
       return;
     }
+    document.getElementById("content").textContent = "";
 
     try {
       cache.history = await loadJson("rates-history");

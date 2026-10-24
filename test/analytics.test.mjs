@@ -366,8 +366,9 @@ test("요약이 폴백된 날은 메인에도 그 사실을 표시한다", async
 test("로드가 실패하면 다시 시도할 수단을 준다", async () => {
   for (const file of [`${SITE}/index.html`, `${SITE}/deposit-rates.html`, `${SITE}/news.html`]) {
     const html = await readFile(path.join(root, file), "utf8");
-    // 금리 페이지는 단추를 공용 docs/load-state.js가 만든다(#173) - 페이지에는 id만 남는다.
-    assert.ok(/id="load-(error-)?retry"|retryId: "load-retry"/.test(html), `${file}에 재시도 버튼이 없다`);
+    // 금리 페이지는 단추를 공용 docs/load-state.js가 만든다(#173) - 페이지에는 id만 남는다. 표 위 알림의 단추 id 는 공용 함수의 기본값(load-retry)이라
+    // 페이지에 글자로 안 남으므로 공용 함수를 부르는 줄로 본다(#296 (마), 실제 단추는 test/load-failure.test.mjs 가 누른다).
+    assert.ok(/id="load-(error-)?retry"|retryId: "load-retry"|window\.loadState\.showFailure\(/.test(html), `${file}에 재시도 버튼이 없다`);
     assert.ok(html.includes('"다시 시도"') && html.includes('"Retry"'), `${file} 재시도 문구가 한쪽 언어에만 있다`);
     assert.ok(html.includes('event("load_retry"'), `${file}에서 재시도를 계측하지 않는다`);
   }
