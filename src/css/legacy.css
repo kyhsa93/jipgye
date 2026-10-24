@@ -1839,6 +1839,14 @@ main h3 {
   color: var(--muted);
 }
 
+/* 금액 칸 읽기 줄(#498). 자기 줄을 쓰고 높이를 미리 잡아 비었다 찼다 해도 아래가 안 움직인다. */
+.amount-read {
+  flex-basis: 100%;
+  min-height: 1.5em;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
 .sector-filter label {
   display: inline-flex;
   align-items: center;

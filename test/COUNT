@@ -439,5 +439,11 @@
 #   고친 기존 시험은 둘이다: "금리 5장: rates.json만 받고 rates-history가 거부되면 …"(옛 단언 '쌓이면' 문구 → 실패 문구 + 재시도, 이름을 단언에 맞춰 고침, 개수 -0 +0)와
 #   S6 (#296 (마)) 의 한도(+430 → #532 몫 +150 을 더한 +580, merge-base 5af7d1aa 기준). 없어진 시험 0, .skip·.todo 0.
 #   갱신: 2026-10-24(#403 금리 4장 누르는 크기), base 0427ba1d + 이 PR. `npm test` → ℹ tests 2013 · pass 2013 · fail 0 (2012 + 1, test/style.test.mjs 에 금리 4장 CSS 규칙 점검 1개). 없어진 시험 0, .skip·.todo 0.
-2013
-2013
+# 갱신: 2026-10-24(#498, #464 PR-2), base 0427ba1d(= origin/main). `npm test` → ℹ tests 2021 · pass 2021 · fail 0 · skipped 0 (직전 하한 2012 + 8).
+#   금리 틀의 금액 칸(`type="number"`은 쉼표를 못 보여 300000000 이 몇인지 못 읽는다) 아래에 한 줄을 적는다: 만 단위로 딱 떨어지고 10,000 이상일 때만 `3억원 기준`·`3억 5,000만원 기준`(amountHint 재사용, 새 문구 0), 아니면 빈 줄. fmtAmount 는 안 쓴다(toFixed(1) 이라 125,000,000 이 1.3억원).
+#   `node --test test/amount-read.test.mjs` → ℹ tests 7. 새 시험 7: (a) 예금·적금 탭 입력 17사례 · (a) 첫 그림·탭 전환·주소 금액 · (b) 영어 줄 0·널 안전 · (c) 대출 장의 예금 탭에서 나왔다 사라짐 ·
+#   (d) aria-describedby 가 가리키는 id·aria-live 0 · (d) 새 리스너 0·return 앞 갱신 · (e) 변이 사본(fmtAmount 로 읽으면 걸림). 그 밖에 test/load-failure.test.mjs 에 S6(#498) 하나(+600B/장 이하, base 0427ba1d).
+#   고친 기존 시험 둘은 S6 (#532)·S6 (#296 (마)) 의 절대 한도(+150 → +750, +580 → +1180: 이 PR 의 +600 을 더함, 개수 -0 +0). 없어진 시험 0, .skip·.todo 0.
+#   `npm run test:site` 788 → 796(amount-read 7 + S6 1 이 build/site 를 읽음), 하한은 test/COUNT-site.
+2021
+2021
