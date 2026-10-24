@@ -329,7 +329,7 @@ test("success 검사 - --window-hours 가 기본 창을 덮고, 기본 검사의
   assert.equal(parseArgs([]).check, "missing");
   assert.equal(parseArgs([]).windowHours, parseArgs(["--check=missing"]).windowHours, "success 창이 첫 검사의 기본 창으로 새지 않는다");
   assert.notEqual(parseArgs([]).windowHours, SUCCESS_CHECK_WINDOW_HOURS);
-  assert.throws(() => parseArgs(["--check=maybe"]), /--check 는 missing 또는 success/);
+  assert.throws(() => parseArgs(["--check=maybe"]), /--check 는 missing·success·deploy 중 하나다/);
   assert.deepEqual(successVerdict({ success: 0 }), { ok: false, counted: 0, expected: 1 });
   assert.equal(successVerdict({ success: 1 }).ok, true);
 });
@@ -351,4 +351,144 @@ test("워치독 워크플로는 success 검사 스텝을 두고, 앞 스텝이 �
   assert.match(watchdog, /run: node scripts\/check-schedule-runs\.ts --check=success\n/);
   assert.match(watchdog, /if: \$\{\{ !cancelled\(\) \}\}\n\s+env:\n\s+GITHUB_TOKEN:[^\n]*\n\s+run: node scripts\/check-schedule-runs\.ts --check=success/, "앞 스텝이 실패해도 돌아야 두 경보가 서로를 가리지 않는다");
   assert.match(watchdog, /run: node scripts\/check-schedule-runs\.ts\n/, "첫 검사 스텝은 그대로 남아 있다");
+});
+
+// ── 「배포가 조용히 멈춤」: Deploy site 의 창 안 성공이 0이면 운다 (#530, 부모 #505) ─────
+// `--check=deploy`. Daily 가 초록이어도 deploy.yml 이 멈추면 사이트가 낡아 간다. push·workflow_run 만 세고(dispatch 는 롤백 전용), 취소는 성공도 실패도 아니다.
+// 합성 입력만 읽는다(네트워크·오늘 날짜 없음).
+
+import { DEPLOY_CHECK_WINDOW_HOURS, DEPLOY_EVENTS, DEPLOY_WORKFLOW, fetchRuns } from "../scripts/check-schedule-runs.ts";
+
+const dep = (hours, conclusion = "success", event = "push", extra = {}) => run(ago(hours), conclusion, { event, ...extra });
+const callDeploy = async (runs, extra = []) => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sw-"));
+  const runsFile = path.join(dir, "runs.json");
+  await writeFile(runsFile, JSON.stringify(runs));
+  // --workflow 를 안 준다: 배포 검사는 deploy.yml 을 기본으로 안다(--runs-file 이면 읽지 않으므로 cron 이 없어도 죽지 않아야 한다).
+  return call(["--check=deploy", `--runs-file=${runsFile}`, `--now=${NOW}`, ...extra]);
+};
+
+test("deploy 검사 - 창 안에 run 은 있지만 성공이 0이면 종료 코드 1로 운다 (완료 조건 1)", async () => {
+  const r = await callDeploy([dep(40, "failure"), dep(20, "failure", "workflow_run"), dep(2, "failure")]);
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stderr, /::error::Deploy site 가 멈춘 것 같다/);
+  assert.match(r.stdout, /Deploy site 실행 3 · 그중 성공 0/);
+});
+
+test("deploy 검사 - 마지막 성공이 창을 넘기면 운다, 창 안이면 조용하다 (완료 조건 1·2)", async () => {
+  // 성공은 있지만 60h 전이고 그 뒤로는 전부 실패·취소·진행 중: 창(54h) 밖이라 운다.
+  const stale = await callDeploy([dep(60, "success"), dep(30, "failure", "workflow_run"), dep(10, "cancelled"), dep(1, null, "push", { status: "in_progress" })]);
+  assert.equal(stale.status, 1, stale.stdout + stale.stderr);
+  // 같은 모양에서 마지막 성공만 50h 전으로: 창 안이라 조용하다.
+  const fresh = await callDeploy([dep(50, "success"), dep(30, "failure", "workflow_run"), dep(10, "cancelled"), dep(1, null, "push", { status: "in_progress" })]);
+  assert.equal(fresh.status, 0, fresh.stdout + fresh.stderr);
+  assert.equal(fresh.stderr, "");
+  assert.match(fresh.stdout, /합격/);
+});
+
+test("deploy 검사 - 취소된 run 이 최신이어도 창 안 성공이 있으면 안 운다 (취소는 실패가 아니다)", async () => {
+  // deploy.yml 은 cancel-in-progress: false 라 대기 중 실행이 최신 것에 밀려 cancelled 로 끝난다 - 정상이다.
+  const r = await callDeploy([dep(5, "success"), dep(3, "cancelled", "workflow_run"), dep(1, "cancelled"), dep(0.5, "skipped", "workflow_run")]);
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.equal(r.stderr, "");
+  assert.match(r.stdout, /Deploy site 실행 4 · 그중 성공 1/);
+});
+
+test("deploy 검사 - 취소·건너뜀·진행 중뿐이면 성공 0이라 운다 (취소를 성공으로 세지 않는다)", async () => {
+  const r = await callDeploy([dep(40, "cancelled"), dep(30, "skipped", "workflow_run"), dep(2, null, "push", { status: "in_progress" })]);
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+});
+
+test("deploy 검사 - workflow_dispatch(롤백 전용)의 성공은 경보를 덮지 못한다", async () => {
+  const r = await callDeploy([dep(3, "success", "workflow_dispatch"), dep(2, "success", "workflow_dispatch")]);
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stdout, /Deploy site 실행 0 /);
+  // 자연 경로(push·workflow_run)의 성공은 각각 따로 센다.
+  assert.equal((await callDeploy([dep(3, "success", "workflow_run")])).status, 0);
+  assert.equal((await callDeploy([dep(3, "success", "push")])).status, 0);
+  assert.deepEqual(DEPLOY_EVENTS, ["push", "workflow_run"]);
+});
+
+test("deploy 검사 - schedule 이벤트는 세지 않는다 (daily-update 검사와 섞이지 않는다)", async () => {
+  const r = await callDeploy([dep(3, "success", "schedule")]);
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+});
+
+test("deploy 검사 - run 이 하나도 없어도 운다", async () => {
+  const r = await callDeploy([]);
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stdout, /Deploy site 실행 0 · 그중 성공 0/);
+});
+
+test("deploy 검사 - 창 경계: 54시간 정각 전 성공은 창 밖이라 울고, 1분 안쪽이면 안 운다", async () => {
+  assert.equal(DEPLOY_CHECK_WINDOW_HOURS, 54);
+  assert.equal((await callDeploy([dep(54, "success"), dep(6, "failure")])).status, 1);
+  assert.equal((await callDeploy([dep(54 - 1 / 60, "success"), dep(6, "failure")])).status, 0);
+});
+
+test("deploy 검사 - 기본 워크플로·창은 deploy 몫이고 다른 검사로 새지 않는다", () => {
+  const d = parseArgs(["--check=deploy"]);
+  assert.equal(d.workflow, DEPLOY_WORKFLOW);
+  assert.equal(d.workflow, ".github/workflows/deploy.yml");
+  assert.equal(d.windowHours, DEPLOY_CHECK_WINDOW_HOURS);
+  assert.equal(parseArgs(["--check=deploy", "--window-hours=30"]).windowHours, 30);
+  assert.equal(parseArgs(["--check=deploy", "--workflow=x.yml"]).workflow, "x.yml");
+  assert.equal(parseArgs([]).workflow, ".github/workflows/daily-update.yml", "기본 검사의 워크플로가 deploy 로 새지 않는다");
+  assert.equal(parseArgs(["--check=success"]).workflow, ".github/workflows/daily-update.yml");
+});
+
+test("deploy 검사 - API 조회에 event=schedule 을 걸지 않는다 (Deploy site 에는 schedule run 이 없다)", async () => {
+  const urls = [];
+  const stub = async (url) => {
+    urls.push(url);
+    return { ok: true, json: async () => ({ workflow_runs: [] }) };
+  };
+  await fetchRuns({ repo: "o/r", workflowFile: "deploy.yml", fetchImpl: stub, event: null });
+  await fetchRuns({ repo: "o/r", workflowFile: "daily-update.yml", fetchImpl: stub });
+  assert.match(urls[0], /\/workflows\/deploy\.yml\/runs\?per_page=100/);
+  assert.doesNotMatch(urls[0], /event=/);
+  assert.match(urls[1], /\/workflows\/daily-update\.yml\/runs\?event=schedule&per_page=100/, "기존 두 검사의 URL 은 그대로다");
+});
+
+test("deploy 창 54h 는 daily-update 정상 최대 간격의 두 배보다 길고 상한 62h 이하다 - cron 이 바뀌면 소리 난다 (#530)", async () => {
+  const text = await readFile(path.join(root, ".github/workflows/daily-update.yml"), "utf8");
+  const hours = [...text.matchAll(/- cron: "(\d+) (\d+) \* \* \*"/g)].map((m) => Number(m[2]) + Number(m[1]) / 60).sort((a, b) => a - b);
+  assert.equal(hours.length, countCrons(text), "하루 1회 이상 꼴(`M H * * *`)이 아닌 cron 이 있다 - 최대 간격을 못 구한다. cto 재판정");
+  const gaps = hours.map((h, i) => (i === hours.length - 1 ? hours[0] + 24 - h : hours[i + 1] - h));
+  const maxGap = Math.max(...gaps);
+  assert.ok(DEPLOY_CHECK_WINDOW_HOURS > 2 * maxGap, `창 ${DEPLOY_CHECK_WINDOW_HOURS}h 가 정상 최대 간격 ${maxGap}h 의 두 배 이하다 - 단발 실패에 운다`);
+  assert.ok(DEPLOY_CHECK_WINDOW_HOURS <= 62, "이틀 연속 실패를 둘째 점검 안에 잡는 한계 약 62h 를 넘었다");
+});
+
+test("deploy.yml 의 워크플로 이름은 Deploy site 고, 워치독은 deploy 검사 스텝을 `!cancelled()` 로 둔다", async () => {
+  const deploy = await readFile(path.join(root, ".github/workflows/deploy.yml"), "utf8");
+  assert.match(deploy, /^name: Deploy site$/m);
+  const watchdog = await readFile(path.join(root, ".github/workflows/schedule-watchdog.yml"), "utf8");
+  assert.match(watchdog, /if: \$\{\{ !cancelled\(\) \}\}\n\s+env:\n\s+GITHUB_TOKEN:[^\n]*\n\s+run: node scripts\/check-schedule-runs\.ts --check=deploy\n/, "앞 스텝이 실패해도 돌아야 세 경보가 서로를 가리지 않는다");
+  assert.match(watchdog, /run: node scripts\/check-schedule-runs\.ts --check=success\n/, "둘째 스텝은 그대로 남아 있다");
+  assert.match(watchdog, /run: node scripts\/check-schedule-runs\.ts\n/, "첫 검사 스텝은 그대로 남아 있다");
+  assert.match(watchdog, /permissions:\n  contents: read\n  actions: read\n/, "권한은 읽기 둘 그대로다");
+});
+
+test("deploy 검사 - main 이 API 경로에서 deploy.yml 을 이벤트 필터 없이 부르고, 그 결과로 판정한다", async () => {
+  const { main } = await import("../scripts/check-schedule-runs.ts");
+  const urls = [];
+  const realFetch = globalThis.fetch;
+  const body = (runs) => async (url) => {
+    urls.push(String(url));
+    return { ok: true, json: async () => ({ workflow_runs: runs }) };
+  };
+  const sink = { log: () => {}, error: () => {} };
+  try {
+    globalThis.fetch = body([dep(3, "success", "workflow_run")]);
+    assert.equal(await main(["--check=deploy", `--now=${NOW}`], sink), 0);
+    globalThis.fetch = body([dep(3, "failure", "workflow_run")]);
+    assert.equal(await main(["--check=deploy", `--now=${NOW}`], sink), 1);
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+  for (const u of urls) {
+    assert.match(u, /\/workflows\/deploy\.yml\/runs\?per_page=100/);
+    assert.doesNotMatch(u, /event=/, "event=schedule 을 걸면 Deploy site 는 늘 0 이라 영구 거짓 경보가 된다");
+  }
 });

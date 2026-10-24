@@ -1,4 +1,5 @@
 # 정기 실행 누락 탐지 (#322). `daily-update` 의 `schedule` 실행이 **통째로 빠져도** 아무도 모르던 자리를 막는다.
+# (#530 으로 Deploy site 의 마지막 성공을 보는 셋째 검사가 맨 아래 스텝에 붙었다. 아래 서술은 첫 검사 것이다.)
 # 재는 것 하나: **지난 36시간(미끄러지는 창) 안에 `daily-update` 의 schedule run 이 cron 수만큼 떴는가.**
 # 모자라면 이 워크플로가 실패로 끝난다 - 빨간 run 과 GitHub 의 실패 알림이 저장소 안에서 우는 자리다(새 서비스·계정·비용 0, #322 범위 3).
 #
@@ -78,3 +79,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/check-schedule-runs.ts --check=success
+      # 셋째 검사 (#530, 부모 #505): 「배포가 조용히 멈춤」. B4 뒤 사이트는 deploy.yml(워크플로 이름 Deploy site)이 게시한다 - 그것이 멈춰도 Daily 는 초록이라 위 두 검사로는 못 잡는다.
+      # 지난 54시간(scripts/check-schedule-runs.ts 의 `DEPLOY_CHECK_WINDOW_HOURS`)의 push·workflow_run 실행 중 성공이 0이면 이 스텝이 실패한다(workflow_dispatch 는 롤백 전용이라 안 센다).
+      # 취소된 실행은 성공도 실패도 아니다 - 창 안에 성공이 하나라도 있으면 조용하다. 알림 경로는 위와 같다. `!cancelled()` 인 이유도 같다.
+      # 허용된 잔여 위험: 배포가 완전히 멈춰도 경보는 마지막 성공 뒤 약 54~66h 에야 온다(워치독 틱 간격 12h).
+      - name: 지난 54시간에 Deploy site 성공이 있는지 본다
+        if: ${{ !cancelled() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/check-schedule-runs.ts --check=deploy

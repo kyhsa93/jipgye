@@ -52,9 +52,27 @@
  *   울어야 하므로 상한은 약 62h. 정상 최대 간격이 24h(cron 1개, #505) 라는 전제에서 **54 > 2×24** 다 - cron 이 바뀌면 cto 재판정을 받는다(시험이 표식).
  *   ⚠️ 허용된 잔여 위험: 수집이 전면 실패해도 경보는 마지막 성공 뒤 약 58~71h 에야 온다. 단발 실패는 빨간 run, 누락은 첫 검사가 맡는다.
  *
+ * 셋째 검사 — **「배포가 조용히 멈춤」** (`--check=deploy`, #530, 부모 #505):
+ *   B4 컷오버(5af7d1aa) 뒤 사이트는 수집이 아니라 `.github/workflows/deploy.yml`(워크플로 이름 `Deploy site`)이 게시한다. 이 워크플로가 조용히 멈춰도
+ *   Daily 는 초록이라 위 두 검사는 울지 않는다 - 데이터는 쌓이는데 사이트만 낡아 간다. **지난 `DEPLOY_CHECK_WINDOW_HOURS`(54시간, 미끄러지는 창) 안의
+ *   Deploy site run 중 `conclusion === "success"` 가 0이면** 종료 코드 1로 끝난다. 알림 경로는 위와 같다(워치독 run 이 빨개진다).
+ *   - 어느 run 을 보는가: 이벤트 `push`·`workflow_run`(자연 경로: main 병합, Daily·Summarize 완료)만 센다. `workflow_dispatch` 는 롤백 전용이고 수동 실행의 증빙은
+ *     자연 틱 확인에 쓰지 않는다(deploy.yml 머리 주석) - 손으로 돌린 성공이 자연 트리거가 끊긴 경보를 덮으면 안 된다. API 조회에 `event=` 필터를 **걸지 않는다**
+ *     (`event=schedule` 을 그대로 쓰면 Deploy site 에는 schedule run 이 없어 늘 0 = 영구 거짓 경보다 - 시험이 URL 을 못박는다).
+ *   - 취소·건너뜀·진행 중은 성공도 실패도 아니다: 창 안에 성공이 하나라도 있으면 조용하다(deploy.yml 은 `cancel-in-progress: false` 라 대기 중 실행이 최신 것에
+ *     밀려 `cancelled` 로 끝나는 게 정상이고, workflow_run 은 취소된 수집을 건너뛴다). 마지막 run 이 취소였다고 우는 규칙이 아니다.
+ *   - 54 의 근거(#499 의 54h 와 같은 논리): 배포는 main 푸시마다, 그리고 Daily·Summarize 가 끝날 때마다 돈다 - 정상 시 하루에 둘 이상이다. 직전 성공의 나이가
+ *     정상으로 가장 늙는 때는 수집 틱 간격이 가장 길 때다: Daily schedule run 287건 실측에서 연속 간격 최대 28.9h(지연 포함, #506)에 수집·요약·배포 체인 약 2h
+ *     (가정, 미측정)을 더한 ≈ 31h. 36h 는 여유 5h 안팎이라 지연이 겹치면 울 수 있어 기각, 54h 는 여유 23h 다. 하루 실패(단발)는 이미 빨간 run 이 울고 이쪽은
+ *     「이틀 연속 성공 0」을 잡는 2차 그물이라 **54 > 2×24** 다. 배포 쪽 이력은 컷오버 뒤 12건뿐이라(2026-10-24 gh api 실측: 11 성공·1 실패, 연속 성공 간격 최대 1.7h)
+ *     배포 자체의 지연 분포는 아직 못 쟀다 - 며칠 쌓이면 재측정한다. 수집 cron 의 정상 최대 간격이 바뀌면 cto 재판정을 받는다(시험이 daily-update.yml 의 cron 에서 간격을 구해 표식).
+ *   - ⚠️ 허용된 잔여 위험: 배포가 완전히 멈춰도 경보는 마지막 성공 뒤 54h + 워치독 틱 간격(최대 12h) ≈ 54~66h 에야 온다. 그 사이 사이트는 낡은 채다.
+ *     그리고 워치독 자신의 cron 이 버려지면 눈이 없다(워치독 머리 주석의 한계 그대로).
+ *
  * 사용:
  *   node scripts/check-schedule-runs.ts                       # GitHub API 조회, 지금 기준
  *   node scripts/check-schedule-runs.ts --check=success       # 「뜨지만 매번 실패」 - 지난 54시간에 성공이 0이면 실패
+ *   node scripts/check-schedule-runs.ts --check=deploy        # 「배포가 조용히 멈춤」 - 지난 54시간 Deploy site 성공이 0이면 실패
  *   node scripts/check-schedule-runs.ts --runs-file runs.json --now 2026-08-27T04:00:00Z
  *   node scripts/check-schedule-runs.ts --count=success --window-hours=24
  *
@@ -122,15 +140,15 @@ function at(run) {
 
 /**
  * 창 `(now - windowHours, now]` 안의 `schedule` run 을 센다.
- * 창 밖·다른 이벤트는 세지 않는다. 결과는 발화 수와 성공 수 둘 다 준다.
+ * 창 밖·다른 이벤트는 세지 않는다(`events` 기본은 `schedule` 하나 - 배포 검사만 다른 목록을 넘긴다). 결과는 발화 수와 성공 수 둘 다 준다.
  */
-export function countInWindow(runs, { now, windowHours }) {
+export function countInWindow(runs, { now, windowHours, events = ["schedule"] }: { now: number | string; windowHours: number; events?: string[] }) {
   const end = typeof now === "number" ? now : Date.parse(now);
   if (!Number.isFinite(end)) throw new Error(`--now 를 못 읽었다 (${JSON.stringify(now)})`);
   const start = end - windowHours * 3600 * 1000;
 
   const inWindow = runs.filter((r) => {
-    if (r.event && r.event !== "schedule") return false;
+    if (r.event && !events.includes(r.event)) return false;
     const t = at(r);
     return t > start && t <= end;
   });
@@ -156,8 +174,9 @@ export function verdict({ fired, success, expected, mode }) {
 }
 
 /** GitHub API 에서 schedule run 100건(하루 한 번이면 ≈100일치)을 한 번에 받는다. 창에는 넘치고도 남는다. */
-export async function fetchRuns({ repo, workflowFile, token, fetchImpl = fetch }) {
-  const url = `${API}/repos/${repo}/actions/workflows/${workflowFile}/runs?event=schedule&per_page=100&page=1`;
+export async function fetchRuns({ repo, workflowFile, token, fetchImpl = fetch, event = "schedule" }: { repo: string; workflowFile: string; token?: string; fetchImpl?: typeof fetch; event?: string | null }) {
+  // event=null 이면 이벤트 필터를 안 건다(Deploy site 는 schedule 이 없다 - #530). 하루 열 건 안팎이라 100건은 54시간 창에 넘친다.
+  const url = `${API}/repos/${repo}/actions/workflows/${workflowFile}/runs?${event ? `event=${event}&` : ""}per_page=100&page=1`;
   const headers: Record<string, string> = {
     Accept: "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28",
@@ -184,6 +203,19 @@ export function successVerdict({ success }) {
   return { ok: success >= 1, counted: success, expected: 1 };
 }
 
+/**
+ * 「배포가 조용히 멈춤」 검사 창(시간, `--check=deploy`, #530). 기본값이고 `--window-hours` 가 덮는다.
+ * 하한은 정상 시 직전 성공의 최대 나이 약 31h(Daily 간격 최대 28.9h 실측 + 체인 약 2h 가정) 위, 그리고 단발 실패 하루에 안 울 2×24h 위다.
+ * SUCCESS_CHECK_WINDOW_HOURS 와 같은 54 지만 **따로 둔 상수다** - 두 검사의 근거가 달라, 한쪽을 바꿔도 다른 쪽이 끌려가지 않게 한다.
+ */
+export const DEPLOY_CHECK_WINDOW_HOURS = 54;
+
+/** 배포 검사가 세는 이벤트. `workflow_dispatch`(롤백 전용 수동 실행)는 뺀다 - 손으로 돌린 성공이 자연 트리거 단절을 덮으면 안 된다. */
+export const DEPLOY_EVENTS = ["push", "workflow_run"];
+
+/** 배포 워크플로 파일. 이름(`name:`)은 `Deploy site` 다. */
+export const DEPLOY_WORKFLOW = ".github/workflows/deploy.yml";
+
 export function parseArgs(argv) {
   const opts = {
     workflow: ".github/workflows/daily-update.yml",
@@ -194,12 +226,16 @@ export function parseArgs(argv) {
     repo: process.env.GITHUB_REPOSITORY ?? "kyhsa93/jipgye",
     check: "missing",
     windowGiven: false,
+    workflowGiven: false,
   };
   for (const a of argv) {
     const m = a.match(/^--([a-z-]+)(?:=(.*))?$/);
     if (!m) throw new Error(`모르는 인자: ${a}`);
     const [, key, value] = m;
-    if (key === "workflow") opts.workflow = value;
+    if (key === "workflow") {
+      opts.workflow = value;
+      opts.workflowGiven = true;
+    }
     else if (key === "window-hours") {
       opts.windowHours = Number(value);
       opts.windowGiven = true;
@@ -212,8 +248,12 @@ export function parseArgs(argv) {
     else throw new Error(`모르는 옵션: --${key}`);
   }
   if (!Number.isFinite(opts.windowHours) || opts.windowHours <= 0) throw new Error(`--window-hours 가 양수가 아니다: ${opts.windowHours}`);
-  if (opts.check !== "missing" && opts.check !== "success") throw new Error(`--check 는 missing 또는 success 다: ${opts.check}`);
+  if (!["missing", "success", "deploy"].includes(opts.check)) throw new Error(`--check 는 missing·success·deploy 중 하나다: ${opts.check}`);
   if (opts.check === "success" && !opts.windowGiven) opts.windowHours = SUCCESS_CHECK_WINDOW_HOURS;
+  if (opts.check === "deploy") {
+    if (!opts.windowGiven) opts.windowHours = DEPLOY_CHECK_WINDOW_HOURS;
+    if (!opts.workflowGiven) opts.workflow = DEPLOY_WORKFLOW;
+  }
   if (opts.count !== "fired" && opts.count !== "success") throw new Error(`--count 는 fired 또는 success 다: ${opts.count}`);
   return opts;
 }
@@ -226,7 +266,31 @@ export async function main(
   const loadRuns = async () =>
     opts.runsFile
       ? JSON.parse(await readFile(opts.runsFile, "utf8"))
-      : await fetchRuns({ repo: opts.repo, workflowFile: opts.workflow.split("/").pop(), token: process.env.GITHUB_TOKEN });
+      : await fetchRuns({
+          repo: opts.repo,
+          workflowFile: opts.workflow.split("/").pop(),
+          token: process.env.GITHUB_TOKEN,
+          event: opts.check === "deploy" ? null : "schedule",
+        });
+
+  if (opts.check === "deploy") {
+    // 「배포가 조용히 멈춤」(#530): 창 안 Deploy site 성공이 0이냐만 본다. cron 수·--count 는 무관하다.
+    const w = countInWindow(await loadRuns(), { now: opts.now ?? Date.now(), windowHours: opts.windowHours, events: DEPLOY_EVENTS });
+    const sv = successVerdict({ success: w.success });
+    log(`창: ${w.start} ~ ${w.end} (${opts.windowHours}시간, created_at 축, 끝만 포함, 이벤트 ${DEPLOY_EVENTS.join("·")})`);
+    log(`창 안 Deploy site 실행 ${w.fired} · 그중 성공 ${w.success} · 문턱: 성공 ${sv.expected}회 이상`);
+    for (const r of w.runs) log(`  - ${r.created_at} ${r.event ?? "?"} ${r.conclusion ?? r.status ?? "?"} ${r.id ?? ""}`);
+    if (!sv.ok) {
+      error(
+        `::error::Deploy site 가 멈춘 것 같다 - 지난 ${opts.windowHours}시간의 push·workflow_run 실행 중 성공이 0회다(실행 ${w.fired}회). ` +
+          `Daily 가 초록이어도 사이트는 낡아 간다. Actions 에서 Deploy site 의 최근 run 과 트리거(push·Daily/Summarize 완료)를 확인한다. ` +
+          `수동 dispatch 는 롤백 전용이라 경보를 덮지 못한다(#530)`,
+      );
+      return 1;
+    }
+    log("합격 - 창 안에 성공한 배포가 있다");
+    return 0;
+  }
 
   if (opts.check === "success") {
     // 「뜨지만 매번 실패」(#499): cron 수는 필요 없다 - 창 안 성공이 0이냐만 본다. --count 는 이 검사에서 무시한다.
