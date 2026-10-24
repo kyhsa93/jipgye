@@ -690,7 +690,12 @@
     margin-top: 12px;
   }
   #history-grid > .placeholder, .history-reserve {
-    min-height: 136px;
+    min-height: 144px;
+  }
+  @media (min-width: 1044px), (min-width: 524px) and (max-width: 653px) {
+    #history-grid > .placeholder, .history-reserve {
+      min-height: 163.5px;
+    }
   }
   .history-more {
     grid-column: 1 / -1;
@@ -1306,6 +1311,10 @@
   @media (max-width: 560px) {
     .controls input[type="search"] {
       flex-basis: 100%;
+      order: 2;
+    }
+    .controls .amount-read {
+      order: 1;
     }
   }
   .sector-filter {
@@ -1331,6 +1340,35 @@
     min-height: 1.5em;
     font-size: var(--fs-sm);
     color: var(--muted);
+  }
+  html:has(meta[name="rates-category"]) .tabs:empty {
+    min-height: calc(var(--tap) + 2px);
+  }
+  html:has(meta[name="rates-category"]) .controls:empty {
+    --ctl-rows: 1;
+    --ctl-extra: -10px;
+    min-height: calc(var(--ctl-rows) * (var(--tap) + 10px) + var(--ctl-extra));
+  }
+  html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+    --ctl-extra: calc(var(--fs-sm) * 1.5);
+  }
+  @media (max-width: 692px) {
+    html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+      --ctl-rows: 2;
+    }
+  }
+  @media (max-width: 560px) {
+    html:has(meta[name="rates-category"]) .controls:empty {
+      --ctl-rows: 2;
+    }
+    html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+      --ctl-rows: 3;
+    }
+  }
+  @media (max-width: 343px) {
+    html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+      --ctl-rows: 4;
+    }
   }
   .sector-filter label {
     display: inline-flex;

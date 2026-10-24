@@ -971,9 +971,19 @@ ul.news-list {
  * 한 줄에 넉 장이 들어가는 넓은 폭에서는 상품명이 두 줄로 접혀 카드가 155px이 되므로 19px이
  * 모자라지만, 좁은 폭(한 열)과 760px 안팎(두 열)에서는 정확히 맞는다. 모자란 폭까지 맞추려면
  * 설명 줄 수를 고정해야 하는데 그건 보이는 모양을 바꾸는 일이라 이 수정에 넣지 않았다. */
+/* #542 로 다시 쟀다(2026-10-24, Chrome·WebKit 같은 값): 카드는 한 열·세 열·두 열 대부분에서 144px, 넉 열(1044px 이상)과
+ * 두 열 좁은 쪽(524~653px)에서 163.5px 이다. 136은 어느 폭에도 안 맞아 1280 에서 추이 격자가 27.5px 자라며 아래를 밀었다(CLS 0.0178,
+ * 컨트롤 예약을 끝낸 뒤 남은 유일한 이동). 카드가 들어오면 이 규칙은 풀린다(.history-reserve 는 빈 칸에만 있다). */
 #history-grid > .placeholder,
 .history-reserve {
-  min-height: 136px;
+  min-height: 144px;
+}
+
+@media (min-width: 1044px), (min-width: 524px) and (max-width: 653px) {
+  #history-grid > .placeholder,
+  .history-reserve {
+    min-height: 163.5px;
+  }
 }
 
 .history-more {
@@ -1814,6 +1824,13 @@ main h3 {
 @media (max-width: 560px) {
   .controls input[type="search"] {
     flex-basis: 100%;
+    /* 읽는 줄(#541)을 금액 칸 바로 아래로 올리려고 검색 칸을 맨 끝으로 보낸다. DOM 순서는 그대로라 Tab 순서(금액 -> 검색)는
+     * 안 바뀌고, 읽는 줄은 초점을 받지 않는다. 대출 탭에는 읽는 줄이 없어 order 만 있어도 모양이 같다. */
+    order: 2;
+  }
+
+  .controls .amount-read {
+    order: 1;
   }
 }
 
@@ -1845,6 +1862,51 @@ main h3 {
   min-height: 1.5em;
   font-size: var(--fs-sm);
   color: var(--muted);
+}
+
+/* 첫 페인트 높이 예약(#542). 틀이 구운 .controls 는 비어 있고 스크립트가 데이터를 받은 뒤에 채워서 표가 그만큼 밀렸다(1280 예금 CLS 0.035).
+ * 비어 있는 동안(:empty)만 장 첫 탭이 채울 높이를 잡는다 - 채워지면 이 규칙이 풀려 탭을 바꿔도 빈 자리가 남지 않는다.
+ * 첫 탭은 <meta name="rates-category"> 가 알려 주므로(스크립트의 initialCategory 와 같은 값) JS 변경 없이 CSS 만으로 고른다.
+ * 높이 = 줄 수 * (--tap + 간격 10px) - 10px, 금액 칸 있는 장은 거기에 읽는 줄(1.5em, 위 .amount-read)을 더한다.
+ * 줄 수는 flex-wrap 이 접히는 폭에서 정해진다(Chrome 실측, 한국어): 예금·적금 693px 이상 1줄, 561~692 2줄, 344~560 3줄, 343 이하 4줄,
+ * 주담대·전세대출 561 이상 1줄, 560 이하 2줄. 접히는 폭은 글꼴에 달려 있어 폭이 그 경계 근처면 몇 px 어긋날 수 있다.
+ * 영어는 읽는 줄이 없어(한국어만) 그 줄만큼 짧다 - 언어가 바뀌는 것도 채우는 순간이라 첫 페인트에서는 알 수 없다. */
+/* 상품군 탭 줄(.tabs)도 같은 모양이다: 구운 것은 비어 있고(0px) 스크립트가 .tab 넷(--tap)을 채워 46px 이 된다. 이 줄까지 잡아야
+ * 1280 에서 표가 0 으로 선다(컨트롤만 잡았을 때 남은 이동 CLS 0.005~0.006). 아래 padding-bottom 2px 이 더해진 값이다. */
+html:has(meta[name="rates-category"]) .tabs:empty {
+  min-height: calc(var(--tap) + 2px);
+}
+
+html:has(meta[name="rates-category"]) .controls:empty {
+  --ctl-rows: 1;
+  --ctl-extra: -10px;
+  min-height: calc(var(--ctl-rows) * (var(--tap) + 10px) + var(--ctl-extra));
+}
+
+html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+  --ctl-extra: calc(var(--fs-sm) * 1.5);
+}
+
+@media (max-width: 692px) {
+  html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+    --ctl-rows: 2;
+  }
+}
+
+@media (max-width: 560px) {
+  html:has(meta[name="rates-category"]) .controls:empty {
+    --ctl-rows: 2;
+  }
+
+  html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+    --ctl-rows: 3;
+  }
+}
+
+@media (max-width: 343px) {
+  html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+    --ctl-rows: 4;
+  }
 }
 
 .sector-filter label {
