@@ -1613,20 +1613,29 @@ test("(마) #532 틀: 추이 요청 실패는 null 로 두고(받았는데 빈 [
   assert.throws(() => assertTrendFailedKept(old.page, "ko", "변이"), /빈 칸 셋이 사라졌다|'아직 없음'으로 말한다|실패 문구가 없다/, "옛 코드(실패를 []로 둠)가 점검을 통과한다");
 });
 
-test("S6 의도한 차이 (#532): 금리 4장 인라인 스크립트 순증가 +150B 이하(cto 예상치, 기본 한도 +400B) (base 594feb68 = #531 병합 뒤 main), load-state.js 순증가 0B", () => {
+test("S6 의도한 차이 (#532): 금리 4장 인라인 스크립트 순증가 +150B 이하(cto 예상치, 기본 한도 +400B)에 #498 의 +600B 를 더한 +750B 이하 (base 594feb68 = #531 병합 뒤 main), load-state.js 순증가 0B", () => {
   const BASE = { "deposit-rates": 38_444, "saving-rates": 38_454, "mortgage-rates": 38_425, "rent-loan-rates": 38_417 };
   for (const name of RATE_PAGES) {
     const added = Buffer.byteLength(ratesSources[name]) - BASE[name];
-    assert.ok(added > 0 && added <= 150, `${SITE}/${name}.html: 인라인 증가가 ${added}B - cto 예상 +150B/장, 넘으면 PR 전에 묻는다`);
+    assert.ok(added > 0 && added <= 750, `${SITE}/${name}.html: 인라인 증가가 ${added}B - #532 의 cto 예상 +150B/장 + #498 의 +600B/장, 넘으면 PR 전에 묻는다`);
   }
   assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
 });
 
-test("S6 의도한 차이 (#296 (마)): 금리 4장 인라인 스크립트 순증가 +430B 이하(cto 가 이 PR 에 한해 +400 → +430, 영어 고지 한 문장 몫) 에 #532 의 +150B 를 더한 +580B 이하 (merge-base 5af7d1aa), load-state.js 순증가 0B", () => {
+test("S6 의도한 차이 (#296 (마)): 금리 4장 인라인 스크립트 순증가 +430B 이하(cto 가 이 PR 에 한해 +400 → +430, 영어 고지 한 문장 몫) 에 #532 의 +150B, #498 의 +600B 를 더한 +1180B 이하 (merge-base 5af7d1aa), load-state.js 순증가 0B", () => {
   const BASE = { "deposit-rates": 38_022, "saving-rates": 38_032, "mortgage-rates": 38_003, "rent-loan-rates": 37_995 };
   for (const name of RATE_PAGES) {
     const added = Buffer.byteLength(ratesSources[name]) - BASE[name];
-    assert.ok(added > 0 && added <= 580, `${SITE}/${name}.html: 인라인 증가가 ${added}B - 이 PR 의 cto 한도 +430B/장 + #532 의 +150B/장, 넘으면 PR 전에 묻는다`);
+    assert.ok(added > 0 && added <= 1180, `${SITE}/${name}.html: 인라인 증가가 ${added}B - 이 PR 의 cto 한도 +430B/장 + #532 의 +150B/장 + #498 의 +600B/장, 넘으면 PR 전에 묻는다`);
+  }
+  assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
+});
+
+test("S6 의도한 차이 (#498): 금리 4장 인라인 스크립트 순증가 +600B 이하(cto 한도, 네 장 공통 - 금액 칸 읽기 줄) (base 0427ba1d = #536 병합 뒤 main), load-state.js 순증가 0B", () => {
+  const BASE = { "deposit-rates": 38_548, "saving-rates": 38_558, "mortgage-rates": 38_529, "rent-loan-rates": 38_521 };
+  for (const name of RATE_PAGES) {
+    const added = Buffer.byteLength(ratesSources[name]) - BASE[name];
+    assert.ok(added > 0 && added <= 600, `${SITE}/${name}.html: 인라인 증가가 ${added}B - #498 cto 한도 +600B/장(넘으면 줄여서 다시 낸다)`);
   }
   assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
 });
