@@ -20,7 +20,7 @@ import path from "node:path";
 export type Manifest = Map<string, string>;
 
 const sha256 = (data: Buffer | string) => createHash("sha256").update(data).digest("hex");
-const byPath = ([a], [b]) => (a < b ? -1 : a > b ? 1 : 0); // readdir 순서는 파일시스템마다 다르고 localeCompare 는 ICU 에 기댄다
+const byPath = ([a]: [string, ...unknown[]], [b]: [string, ...unknown[]]) => (a < b ? -1 : a > b ? 1 : 0); // readdir 순서는 파일시스템마다 다르고 localeCompare 는 ICU 에 기댄다
 
 /** 디렉터리 아래 모든 파일의 상대 경로 -> sha256. 경로 글자순. */
 export function hashTree(dir: string): Manifest {

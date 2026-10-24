@@ -2,8 +2,8 @@
 
 계약을 앞둔 사람이 숫자를 확인하는 곳. 서울 아파트 실거래와 예적금·대출 금리를 매일 모아,
 전세와 월세 중 어느 쪽이 싼지·지금 갱신하는 것이 나가서 새로 구하는 것보다 싼지·중개사가
-부르는 매매가와 견줄 같은 단지 같은 평형의 최근 거래 범위까지 계산해 두는 정적 사이트. 표본이 모자라면 값을 내지 않고 모자란다고 적는다. GitHub Actions로 갱신하고 GitHub
-Pages로 배포한다.
+부르는 매매가와 견줄 같은 단지 같은 평형의 최근 거래 범위까지 계산해 두는 정적 사이트. 표본이 모자라면 값을 내지 않고 모자란다고 적는다. GitHub Actions가 데이터를 매일
+모아 커밋하고, 사이트 HTML은 배포 때 그 데이터로 만들어 GitHub Pages로 올린다.
 
 사이트: https://kyhsa93.github.io/jipgye/
 
@@ -237,7 +237,7 @@ CFO는 두지 않았다. 드는 돈이 없고(GitHub 무료, 요약은 자체 Ol
 ```
 npm install
 npm test
-npm run update        # 수집 → 빌드 → 커밋·푸시
+npm run update        # 수집 → 데이터 빌더 → docs/data·raw 만 커밋·푸시 (사이트 HTML은 만들지 않는다)
 ```
 
 `npm run update`는 인증키가 필요한 실거래(`fetch-realestate`)·금리(`fetch-rates`) 수집을 부르지
@@ -277,6 +277,19 @@ Node 24 이상이 필요하다. `npm test`는 `scripts/run-tests.mjs`를 거쳐 
 
 AI 요약은 로컬에 Ollama가 있어야 한다(`OLLAMA_THINK=false` 필요).
 
+### 사이트를 만들고 배포하는 길 (구조 B, #505)
+
+main은 **생성 HTML을 들고 있지 않다.** `docs/`에는 손으로 쓰는 틀 14장·정적 자산·`docs/data`뿐이고, 생성 53장을 포함한 67장은 배포 때
+`node scripts/render-pipeline.ts --out=build/site`가 main HEAD(코드+데이터)로 새로 만든다(`build/`는 `.gitignore`다). 로컬에서 사이트를
+보거나 `build/site`를 읽는 시험을 돌리려면 그 명령을 먼저 돌린다 — `npm test`는 `pretest`로 자동으로 한다.
+
+- `deploy.yml`(`Deploy site`)이 사이트를 만들고 Pages에 올리는 **유일한** 워크플로다. main 푸시와 `daily-update.yml`·`summarize.yml` 완료 때 돈다.
+  게이트는 렌더 폴백 없음 + `npm run test:site`(build/site를 읽는 시험만) 둘이고, 실패하면 사이트는 직전 배포에 머문다.
+- `daily-update.yml`·`summarize.yml`은 `docs/data`·`raw`만 커밋하고 렌더·시험·배포를 하지 않는다(뉴스·요약은 하루 1회). 그래서 수집은 렌더·시험 실패에
+  막히지 않고, 기능 병합은 수집이 커밋하는 파일과 겹치지 않는다.
+- `npm run health`(`tools/health`)는 데이터와 build/site가 맞는지 보는 **비차단** 점검이다. 기능 시험(틀·스크립트·워크플로 글자)은 PR의 `test.yml`이 맡는다.
+- 배포본이 같은 HEAD로 만든 build/site와 같은지는 `scripts/deploy-check.ts`, 두 시점의 배포본끼리는 `scripts/site-snapshot.ts`로 읽기 전용 대조한다.
+
 ### 렌더러 스위치 (React 빌드타임 SSG 이행 중)
 
 의존은 `fast-xml-parser`·`rss-parser` 둘이었는데 `react`·`react-dom`·`scheduler`·`esbuild`를 정확한 버전으로 더했다(#237,
@@ -297,7 +310,7 @@ react 쪽 오류는 삼키지 않고 예외로 올라온다(폴백은 워크플�
 67장 HTML이 전부 `docs/style.css` 한 장을 본다. 손으로 고치는 것은 열네 장뿐이고
 (`index` `news` `realestate` `rates` `deal-search` `jeonse-vs-wolse` `cancelled-deals`
 `renewal-vs-new` `floor-gap` `record-high` `switch-house` `price-outlook` `about` `method`)
-나머지 53장은 이 중 몇 장을 틀로 삼아 `scripts/build-*-pages.ts`가 찍어낸다. 그러니 **생성된 페이지를 직접 고치지 말고 틀과 스타일시트를 고친다.**
+나머지 53장은 이 중 몇 장을 틀로 삼아 `scripts/build-*-pages.ts`가 배포 때 찍어낸다(main에는 없다). 그러니 **생성된 페이지를 직접 고치지 말고 틀과 스타일시트를 고친다.**
 
 전에는 62장이 각자 `<style>`을 품고 있었고 그 사이에 일곱 갈래로 갈라져 있었다.
 `.data-table`이 한 장에서는 왼쪽 정렬, 나머지 61장에서는 오른쪽 정렬인 식이었다.

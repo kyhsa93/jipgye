@@ -143,7 +143,7 @@ test("sitemap 의 제3자 loc 은 요청하지 않고, 파일 없는 loc 은 이
     const site = deployedFrom(files, { [`${BASE}sitemap.xml`]: `<loc>https://evil.test/x</loc><loc>${BASE}ghost.html</loc>`, [`${BASE}ghost.html`]: `<link rel="canonical" href="${BASE}ghost.html">` });
     const r = await run(docs, site, requests);
     assert.ok(!requests.some((q) => q.url.includes("evil.test")));
-    assert.deepEqual(r.problems.map((p) => [p.kind, p.target, p.detail]), [["sitemap", `${BASE}ghost.html`, "docs/ 에 대응 파일 없음"]]);
+    assert.deepEqual(r.problems.map((p) => [p.kind, p.target, p.detail]), [["sitemap", `${BASE}ghost.html`, "대조 디렉터리에 대응 파일 없음"]]);
     assert.equal(r.counts.locNoFile, 1);
   } finally {
     rmSync(root, { recursive: true, force: true });

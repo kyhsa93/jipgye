@@ -10,21 +10,25 @@ GitHub Pages가 배포하는 **서버 없는 정적 사이트**이고, 그게 �
 
 ## 맡는 것
 
-- **구조.** `scripts/`(fetch-* 수집, build-* 빌더, 계산 모듈), `docs/`의 틀 아홉 장과 `docs/style.css`,
-  `docs/nav.js`, `scripts/update-all.mjs`. 생성 페이지 53장은 틀과 빌더로만 바뀐다.
+- **구조.** `scripts/`(fetch-* 수집, build-* 빌더, 계산 모듈), `docs/`의 손으로 쓰는 틀 열네 장과 `docs/style.css`,
+  `docs/nav.js`, `scripts/update-all.mjs`. 생성 페이지 53장은 틀과 빌더로만 바뀌고 **main 에 커밋돼 있지 않다** —
+  배포 때 `scripts/render-pipeline.ts --out=build/site` 가 main HEAD(코드+데이터)로 만든다(구조 B, #505).
 - **검사.** `test/*.test.mjs`(인증키 없이 전부 도는 것이 규칙 — 외부 API는 스텁 서버). 특히
   - 같은 계산이 빌드와 브라우저 양쪽에 있으면 드리프트 검사(체크리스트 10).
   - 새 빌더는 `update-all.mjs`와 워크플로 **양쪽에**(체크리스트 11, `test/pipeline.test.mjs`가 대조).
   - **데이터 값이나 날짜에 따라 결과가 갈리는 검사는 넣지 않는다** — 데일리 수집을 한 달 멈춘 적이
     있다(#8). 그런 것은 운영 담당의 점검 봇이 이슈로 올리게 한다.
   - 페이지 안 `<style>` 금지, 아이콘은 `build-icons.ts` 출력과 대조 같은 기존 방어선을 유지.
-- **CI.** `.github/workflows/test.yml`·`static.yml`과, 워크플로 코드로서의 `daily-update.yml`·
-  `summarize.yml`(돌아가는 상태는 운영 담당). 액션은 SHA로 고정돼 있다 — 그 관례를 지킨다.
+- **CI.** `.github/workflows/test.yml`(PR 기능 시험)·`deploy.yml`(`Deploy site`, 사이트를 만들고 게시하는 **유일한** 경로 — 게이트는
+  렌더 폴백 없음 + `npm run test:site`)과, 워크플로 코드로서의 `daily-update.yml`·`summarize.yml`(돌아가는 상태는 운영 담당). 수집·요약은
+  `docs/data`·`raw` 만 커밋하고 렌더·시험·배포를 하지 않는다 — 뉴스는 하루 1회다. 그래서 수집이 도는 중에 병합을 비우는
+  "병합 창"·`busy=0` 확인은 데이터와 같은 파일을 안 건드리는 안전 부류(기능·문서·틀)에는 필요 없다. 액션은 SHA로 고정돼 있다 — 그 관례를 지킨다.
 - **보안.** 저장소 시크릿(`MOLIT_*`·`FSS_FINLIFE_API_KEY`·`ECOS_API_KEY`)이 로그·생성물·커밋에 새지
-  않는지, 워크플로 `permissions`가 필요한 만큼인지, 의존성(`package.json`은 둘뿐 — 늘리는 데 이유가
+  않는지, 워크플로 `permissions`가 필요한 만큼인지, 의존성(`package.json`의 의존은 정확한 버전으로 고정한 몇 개뿐 — 늘리는 데 이유가
   필요하다), 페이지가 불러오는 외부 스크립트.
 - **결정성.** 같은 입력이면 같은 빌드. `Promise.all` 완료 순서가 출력 순서가 되면 빌드가 비결정적이
-  된다(실제로 있었다). 생성물이 소스와 맞는지는 `audit/HOWTO.md` 절차 4로 확인된다.
+  된다(실제로 있었다). 생성물은 커밋되지 않으므로 소스와 맞는지는 같은 HEAD 로 만든
+  build/site 를 `npm run test:site`·`npm run health`(비차단)가 본다 — 로컬은 `npm test` 의 pretest 가 build/site 를 먼저 만든다.
 
 ## 일하는 법
 

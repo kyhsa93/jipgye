@@ -1,15 +1,20 @@
 /**
- * 배포본 대조 - Pages에 올라간 것이 main의 docs/ 와 같은가 (#99).
+ * 배포본 대조 - Pages에 올라간 것이 같은 HEAD 를 지금 만든 사이트(build/site)와 같은가 (#99, B5 #511 에서 대조 대상을 docs/ → build/site 로 옮김).
+ *
+ * 컷오버(#510) 뒤 main 의 docs/ 는 손으로 쓴 틀 14장·정적 자산·data 뿐이고 생성 53장은 배포 때 build/site 로 만들어진다. 그래서 docs/ 와 대조하면 생성 장이 전부 "배포본에만 있음"으로 나온다.
+ * 이 도구는 먼저 같은 HEAD 로 build/site 를 만들어 놓고 부른다: `BUILD_NOW="$(git log -1 --format=%cI HEAD)" node scripts/render-pipeline.ts --out=build/site`
+ * (deploy.yml 과 같은 입력이다 - BUILD_NOW 를 안 맞추면 예산 장·방법 장의 건수가 하루치 어긋날 수 있다).
+ * 그 HEAD 가 배포된 HEAD 가 아니면(그 뒤 병합·수집이 있었으면) 불일치는 정상이다. 배포본끼리의 전후 대조는 site-snapshot.ts 다.
  *
  * 읽기 전용이다. 게이트가 아니고 `npm test`·워크플로 실패 조건에 넣지 않는다(#8: 네트워크·배포 시점에
  * 따라 갈리는 검사는 그날 배포를 멈춘다). 이 파일의 시험은 가짜 fetch로만 돈다. 종료 코드는 항상 0이다.
  * 합격선(N1)은 해시 불일치 0·깨진 링크 0이고, 판정은 이 출력을 읽는 사람(qa)이 한다.
  *
  * 하는 일 (모두 GET):
- * - docs/ 전 파일을 배포본에서 받아 상태 코드(200)와 SHA-256을 대조한다. index.html 은 루트 URL로 받는다.
- * - 배포본 sitemap.xml(출처 루트 먼저, 없으면 base 아래; index 면 하위까지)의 base 아래 <loc> 전수: 200인가, 그 페이지의 canonical 이 loc 과 같은가, 대응 파일이 docs/ 에 있는가.
+ * - 대조 디렉터리(기본 build/site) 전 파일을 배포본에서 받아 상태 코드(200)와 SHA-256을 대조한다. index.html 은 루트 URL로 받는다.
+ * - 배포본 sitemap.xml(출처 루트 먼저, 없으면 base 아래; index 면 하위까지)의 base 아래 <loc> 전수: 200인가, 그 페이지의 canonical 이 loc 과 같은가, 대응 파일이 대조 디렉터리에 있는가.
  *   sitemap 이 없으면(404 등) 없다고 적고 loc 0으로 센다. 있는 척하지 않는다.
- * - docs/*.html 의 내부 링크(href·src) 대상이 배포본에서 200인가. 파일 대조에서 이미 받은 URL은 다시 받지 않는다.
+ * - 대조 디렉터리 *.html 의 내부 링크(href·src) 대상이 배포본에서 200인가. 파일 대조에서 이미 받은 URL은 다시 받지 않는다.
  *
  * 요청 대상은 --base 와 같은 출처이고 그 경로 아래인 URL뿐이다(소유자 사이트 외 제3자 요청 금지). 예외는 sitemap 뿐으로,
  * 같은 출처의 루트(/sitemap.xml)와 그 index 가 가리키는 같은 출처 하위 sitemap 도 받는다.
@@ -25,11 +30,11 @@
  *
  * 사용:
  *   node scripts/deploy-check.ts
- *   node scripts/deploy-check.ts --base=https://kyhsa93.github.io/jipgye/ --docs=docs --gap=20
+ *   node scripts/deploy-check.ts --base=https://kyhsa93.github.io/jipgye/ --docs=build/site --gap=20
  */
 
 import { createHash } from "node:crypto";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, dirname, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { todayKst } from "./source-age.ts";
@@ -38,7 +43,7 @@ export const DEFAULT_BASE = "https://kyhsa93.github.io/jipgye/";
 
 const sha256 = (buf) => createHash("sha256").update(buf).digest("hex");
 
-/** docs/ 아래 모든 파일의 상대 경로(/ 구분), 이름 순. */
+/** 대조 디렉터리 아래 모든 파일의 상대 경로(/ 구분), 이름 순. */
 export function listFiles(docsDir) {
   const out = [];
   const walk = (dir) => {
@@ -173,7 +178,7 @@ export async function checkDeploy({ base = DEFAULT_BASE, docsDir, fetchImpl = fe
         const f = local.get(loc) ?? (loc === base ? local.get(base) : undefined);
         if (f && f.rel.endsWith(".html") && isNoindex(f.buf.toString("utf8"))) note("sitemap", loc, "noindex 페이지가 sitemap 에 있음", loc);
         const path = loc.slice(base.length);
-        if (!local.has(loc) && !(path === "" && local.has(base))) note("sitemap", loc, "docs/ 에 대응 파일 없음", loc);
+        if (!local.has(loc) && !(path === "" && local.has(base))) note("sitemap", loc, "대조 디렉터리에 대응 파일 없음", loc);
       }
     }
     for (const [url, pages] of linkRefs) {
@@ -279,8 +284,8 @@ export function render({ problems, counts, unchecked }, { base, today, seconds }
   );
   const bad = problems.filter((p) => p.persisted !== false).length;
   if (counts.sitemapStatus === 200) {
-    if (counts.locNoFileList.length) lines.push(`sitemap 에만 있음(docs/ 에 파일 없음) ${counts.locNoFileList.length}: ${counts.locNoFileList.join(", ")}`);
-    if (counts.htmlNotInSitemapList.length) lines.push(`docs/ html 인데 sitemap loc 에 없음 ${counts.htmlNotInSitemapList.length}: ${counts.htmlNotInSitemapList.join(", ")}`);
+    if (counts.locNoFileList.length) lines.push(`sitemap 에만 있음(대조 디렉터리에 파일 없음) ${counts.locNoFileList.length}: ${counts.locNoFileList.join(", ")}`);
+    if (counts.htmlNotInSitemapList.length) lines.push(`대조 디렉터리 html 인데 sitemap loc 에 없음 ${counts.htmlNotInSitemapList.length}: ${counts.htmlNotInSitemapList.join(", ")}`);
   }
   lines.push(bad || unchecked ? `재현된 이상 ${bad}건, 미확인 ${unchecked}건` : "이상 없음");
   return lines;
@@ -291,9 +296,14 @@ async function main(argv) {
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
   const base = (arg("base") ?? DEFAULT_BASE).replace(/\/?$/, "/");
   const t0 = Date.now();
+  const docsDir = arg("docs") ?? join(root, "build", "site");
+  if (!existsSync(docsDir)) {
+    console.error(`대조할 사이트 디렉터리가 없다: ${docsDir} - 먼저 build/site 를 만든다(이 파일 머리 주석의 render-pipeline 명령).`);
+    process.exit(2);
+  }
   const result = await checkDeploy({
     base,
-    docsDir: arg("docs") ?? join(root, "docs"),
+    docsDir,
     concurrency: Number(arg("concurrency") ?? 16),
     timeoutMs: Number(arg("timeout") ?? 15) * 1000,
     budgetMs: Number(arg("budget") ?? 240) * 1000,
