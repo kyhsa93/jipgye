@@ -1,27 +1,5 @@
-# tools/golden `npm test`의 하한 둘 (#315). 래칫은 ../../scripts/test-count-ratchet.mjs.
-# 1행 = `ℹ tests N` 하한, 2행 = `ℹ pass N` 하한.
-# 루트와 같은 CI job에서 돌지만 의존 트리가 다르고(parse5), 건너뛰는 11개까지 합쳐 숫자가 달라서
-# 하한을 따로 둔다.
-# 내리는 변경은 PR 본문에 사유를 적는다(#315 범위 4).
-# 센 법: 2026-10-14, merge-base 83bd9fb8, Node v24.16.0, macOS 26.6.2.
-#   cd tools/golden && npm ci && npm test → ℹ tests 101 · pass 90 · fail 0 · skipped 11
-#   건너뛴 11은 전부 GOLDEN_LIVE=1에서만 도는 것이라 CI에서도 같은 101·90이다.
-# 센 법: 2026-10-15, merge-base 831604af, Node v24.16.0, macOS 26.6.2 (#277).
-#   cd tools/golden && npm ci && npm test → ℹ tests 114 · pass 103 · fail 0 · skipped 11
-#   merge-base 831604af 에서 같은 명령 → ℹ tests 101 · pass 90 · skipped 11.
-#   차이 13은 #277이 더한 test/content-mode.test.mjs 하나다(내용 비교 모드의 변이표 — 통과 변이 2 ·
-#   불합격 변이 8 · id 변이 1 · 대조군 1 · 속성 목록 1). 건너뛰는 11은 그대로다.
-# 센 법: 2026-10-18, merge-base 7d77149d, Node v22.16.0, macOS 15.5 (#337).
-#   cd tools/golden && npm ci && npm test → ℹ tests 115 · pass 104 · fail 0 · skipped 11 (기준 114 · 103 · 11).
-#   차이 1 은 test/invariants.test.mjs 에 더한 "#337 검출: 색인 대상 장의 title 중복 …" 하나다(`node --test test/invariants.test.mjs` → 기준 44 · 후보 45).
-#   고친 시험 파일은 0 이고(mini() 에 title 인자를 더해 기존 한 시험의 둘째 장 title 만 달리했을 뿐 시험을 더하거나 빼지 않았다) 없어진 시험도 0 이다.
-# 센 법: 2026-10-20, merge-base ff707582, Node v24.22.0, macOS (#418, #316 0단계).
-#   cd tools/golden && npm ci && npm test → ℹ tests 118 · pass 107 · fail 0 · skipped 11 (기준 115 · 104 · 11).
-#   차이 3 은 새 시험 셋이다: test/invariants.test.mjs 의 "#418 HOOKCOUNT: …"(숫자 줄 정확히 셋·하한·--hooks-write 불변)와
-#   "#418 collectHookClasses: …"(.mjs·.ts 를 같이 고르는 합성 저장소), test/render.test.mjs 의 "#418 readWorkflowStages: …"(.ts 줄·render-pipeline.ts).
-#   없어진 시험은 0 이다. 숫자 줄은 이번에도 정확히 둘이다(쌍을 더하지 않고 두 줄을 고쳤다).
-# 센 법: 2026-10-24, merge-base 1f840130, Node v24.22.0, macOS (#544).
-#   cd tools/golden && npm ci && npm test → ℹ tests 121 · pass 110 · fail 0 · skipped 11 (기준 120 · 109 · 11).
-#   차이 1 은 test/cleanup.test.ts 에 더한 "buildShaCache: 이미 확정된(.done) 캐시는 지우지 않고 그대로 둔다 …" 하나다. 없어진 시험은 0 이다.
+# 시험 하한 둘 — 1행 tests 하한, 2행 pass 하한. 래칫: scripts/test-count-ratchet.mjs (#315).
+# PR 은 이 파일을 건드리지 않는다. 병합 담당이 하루 끝에 `npm run count:bump` 로 한 번 올린다(#548).
+# 내리는 변경만 PR 에서 직접 고치고 본문에 사유를 적는다(#315 범위 4). 설명은 PR 본문·이력에 둔다.
 121
 110

@@ -1,13 +1,5 @@
-# tools/render `npm test`의 하한 둘 (#315의 래칫을 그대로 쓴다). 래칫은 ../../scripts/test-count-ratchet.mjs.
-# 1행 = `ℹ tests N` 하한, 2행 = `ℹ pass N` 하한.
-# ⚠️ **두 수가 같다 — 이 폴더에는 정당한 skip이 없다.** `tools/golden`은 `GOLDEN_LIVE` 게이트 때문에
-# tests 101 · pass 90으로 갈리지만, 여기 변이 시험에는 **env 게이트를 달지 않는다**(#274 체인 공통 규칙
-# 1번, #325 장치 4). Chrome을 못 찾으면 건너뛰는 것이 아니라 실패다 — 건너뛴 시험은 `pass` 하한에
-# 0을 보태므로, 게이트를 달면 "브라우저가 없어서 안 돌았다"가 초록으로 끝난다.
-# 내리는 변경은 PR 본문에 사유를 적는다(#315 범위 4).
-# 센 법: 2026-10-15, merge-base 82ee67ee, Node v24.16.0, macOS 26.6.2, Chrome 155.0.8059.40, Apple M3 Pro.
-#   cd tools/render && npm test → ℹ tests 33 · pass 33 · fail 0 · skipped 0 (17.2초)
-# 갱신: 2026-10-22(#463 PR 2), base 2135dd59, Node v24.22.0, Chrome 155.0.8059.85 — 변이 「건너뛰기 목적지가 머리 안」 1개가 변이 표에서 시험 1개를 더한다.
-#   cd tools/render && npm test → ℹ tests 34 · pass 34 · fail 0 · skipped 0 (18.2초)
+# 시험 하한 둘 — 1행 tests 하한, 2행 pass 하한. 래칫: scripts/test-count-ratchet.mjs (#315).
+# PR 은 이 파일을 건드리지 않는다. 병합 담당이 하루 끝에 `npm run count:bump` 로 한 번 올린다(#548).
+# 내리는 변경만 PR 에서 직접 고치고 본문에 사유를 적는다(#315 범위 4). 설명은 PR 본문·이력에 둔다.
 34
 34
