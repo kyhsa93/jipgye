@@ -1450,6 +1450,21 @@ function notifyBeside(anchor, message, retryLabel, onRetry) {
   });
 }
 
+// 알림 한 자리의 상태. 받는 중(#410)과 실패(#296)와 언어 전환(#413)이 같은 함수 notifyBeside 하나를 같은 자리에 세운다.
+//   0 알림 없음 · 1 영어 고지만(구운 한국어가 남은 채 응답을 기다리는 중, 실패 뒤 면적을 바꾼 화면) · 2 실패 문구 + 기준일 + 다시 시도.
+// 구운 한국어(표 또는 구운 카드)가 화면에 없으면 1은 아무것도 세우지 않는다. 예산대 18장은 상태가 늘 0이라 알림 요소를 만들지 않는다(budgetKoOnly 가 상시 고지).
+let note = 0;
+function drawNote() {
+  const anchor = document.getElementById("area-controls");
+  if (note === 2) notifyBeside(anchor, t("loadError"), t("retry"), main);
+  else if (note && (bakedGrid || document.getElementById("overall-cards").innerHTML)) notifyBeside(anchor);
+  else notifyBeside.last?.remove();
+  // 받는 중(#410): 구운 표의 면적 칸은 84㎡ 값이다. 다른 면적을 보고 있으면 그 칸을 가린다(visibility 라 자리 높이는 그대로).
+  if (note === 1 && hasAreaColumn) {
+    for (const td of document.querySelectorAll("#district-grid td:nth-child(3)")) td.style.visibility = areaM2 === DEFAULT_AREA_M2 ? "" : "hidden";
+  }
+}
+
 // 실패했는데 구운 표를 남길 수 없는 자리(예산대 장은 구획이 접혀 있고, 처음부터 ?area=59 면 구운 84㎡ 표는 그 보기의 답이 아니다)와
 // 알림이 선 뒤 방문자가 면적을 바꾼 화면은 구운 표를 걷고 실패 문구 한 줄 + 재시도로 바꾼다(규칙 1·3). 아래 catch 와 change 가 같이 쓴다.
 // 면적을 바꾼 뒤에는 알림이 영어 고지만 들고 남아 있다가(구운 카드가 아직 한국어라서) 다시 시도가 성공하면 걷힌다.
@@ -1460,10 +1475,9 @@ function showGridFailure() {
     `<tr><td colspan="4">${escapeHtml(t("loadError"))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button></td></tr>`;
   document.getElementById("load-retry")?.addEventListener("click", (e) => {
     e.currentTarget.disabled = true;
-    main().then(() => {
-      if (cache.realestate) notifyBeside.last?.remove();
-    });
+    main();
   });
+  drawNote();
 }
 
 async function main() {
@@ -1472,10 +1486,14 @@ async function main() {
   renderAreaControls();
   renderDistrictSummary();
   renderHead();
+  note = budgetEnabled ? 0 : 1;
+  drawNote();
   try {
     const res = await fetch(`./data/realestate.json?_=${Date.now()}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     cache.realestate = await res.json();
+    note = 0;
+    drawNote();
     renderAll();
 
     try {
@@ -1514,7 +1532,8 @@ async function main() {
     reportLoadFailure(error);
     foldReserve();
     if (!budgetEnabled && bakedGrid && (!hasAreaColumn || areaM2 === DEFAULT_AREA_M2)) {
-      notifyBeside(document.getElementById("area-controls"), t("loadError"), t("retry"), main);
+      note = 2;
+      drawNote();
       return;
     }
     showGridFailure();
@@ -1526,11 +1545,10 @@ document.getElementById("area-controls").addEventListener("change", (e) => {
   areaM2 = normalizeArea(e.target.value);
   syncAreaUrl();
   renderAll();
-  if (notifyBeside.last?.isConnected) {
-    notifyBeside.last.remove();
+  if (note === 2) {
+    note = 1;
     showGridFailure();
-    if (document.getElementById("overall-cards").innerHTML) notifyBeside(e.currentTarget);
-  }
+  } else drawNote();
   window.analytics?.event("realestate_area", { area_m2: String(areaM2), realestate_kind: kind ?? "all" });
 });
 
@@ -1559,6 +1577,7 @@ document.getElementById("lang-toggle").addEventListener("click", () => {
   locale = locale === "ko" ? "en" : "ko";
   window.localStorage.setItem("lang", locale);
   renderAll();
+  drawNote();
   window.analytics?.event("language_switch", { site_language: locale });
 });
 

@@ -11,5 +11,6 @@
 # 갱신: 2026-10-24(#403), base 0427ba1d + 이 PR. `npm run test:site` → ℹ tests 789 · pass 789 · fail 0 (788 + 1, test/style.test.mjs 의 금리 4장 CSS 점검 1개가 이 목록에도 든다).
 # 갱신: 2026-10-24(#498), base 0427ba1d + 이 PR. `npm run test:site` → ℹ tests 797 · pass 797 · fail 0 (788 + 8, test/amount-read.test.mjs 7개와 load-failure 의 S6 #498 1개가 build/site 를 읽음).
 # 갱신: 2026-10-24(#511 B5), base 1f840130 + 이 PR. `npm run test:site` → ℹ tests 799 · pass 799 · fail 0 (797 + 2, test/site-class-ban.test.mjs 2개가 build/site 를 읽음).
-799
-799
+# 갱신: 2026-10-24(#410·#413), base 25a95470 + 이 PR. `npm run test:site` → ℹ tests 815 · pass 815 · fail 0 (799 + 16, 시세 틀 행이 build/site 를 읽음).
+815
+815

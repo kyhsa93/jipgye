@@ -108,13 +108,15 @@ function stubElement(attrs = {}, id = "", shared = null, reg = null) {
  * - `title`: 스크립트가 도는 시점의 `document.title`. 실제 문서에서는 구운 `<title>`이 이미 들어 있다(#299). 기본은 빈 글자.
  * - `baked`: 받은 HTML에 이미 들어 있던 것(`{ "budget-result": { innerHTML } }`). 스텁 요소는 빈 채로 태어나므로,
  *   스크립트가 구운 내용을 건드렸는지 보려면 여기서 채워 둔다.
+ * - `mutate(script)`: 변이 증빙용. 읽은 스크립트를 고쳐 돌린다(시험이 눈이 멀지 않았는지 보려고 일부러 망가뜨린 사본).
  * - `globals`: 스크립트가 도는 전역에 얹을 값(`innerHeight` 처럼 실제 창에만 있는 것, #338). 기본 창 높이는 823(412x823).
  *   `trend-section` 바로 뒤 형제(.trend-reserve)는 `baked["trend-section"].nextElementSibling` 으로 바꿔 끼운다. 기본은 윗변 1230 · 높이 725 인 스텁이다 -
  *   실패 경로를 타는 시험이 접는 줄(foldReserve, #338)에서 멈추지 않게 한다.
  */
-export async function loadRealestatePage({ realestate, trend, budget, complexRatio, budgetBand = null, prerenderedBudget = "", kind = null, district = null, locale = "ko", search = "", analytics, file = "docs/realestate.html", gate = null, baked = {}, title = "", globals = {} } = {}) {
+export async function loadRealestatePage({ realestate, trend, budget, complexRatio, budgetBand = null, prerenderedBudget = "", kind = null, district = null, locale = "ko", search = "", analytics, file = "docs/realestate.html", gate = null, baked = {}, title = "", globals = {}, mutate } = {}) {
   const html = await readFile(path.join(root, file), "utf8");
-  const script = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
+  const written = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
+  const script = mutate ? mutate(written) : written;
 
   const store = { lang: locale };
   const byId = new Map();
@@ -126,6 +128,17 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
     sel === ".history-chart"
       ? CHART_PREFIXES.map((prefix) => sandbox.document.getElementById(`${prefix}-chart`))
       : [];
+  // 구운 표의 면적 칸(#district-grid 의 행마다 셋째 td, #410). 표를 다시 쓰면(innerHTML 이 바뀌면) 새 칸이 된다 - 실제 DOM 과 같다.
+  let areaCellsHtml = null;
+  let areaCells = [];
+  const areaCellsOf = () => {
+    const html = String(sandbox.document.getElementById("district-grid").innerHTML);
+    if (html !== areaCellsHtml) {
+      areaCellsHtml = html;
+      areaCells = [...html.matchAll(/<tr\b[^>]*>(?:<td\b[\s\S]*?<\/td>){3}/g)].map(() => stubElement());
+    }
+    return areaCells;
+  };
   const data = { realestate, "realestate-trend": trend, "budget-deals": budget, "complex-ratio": complexRatio };
 
   function applyUrl(url) {
@@ -216,7 +229,9 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
       // 시세 요약 카드(#overall-cards)도 같은 부류다(#311) - 거기 구워져 있던 카드를 로드 때 떼어 둔다.
       // 이쪽은 `baked`로 채운 그 요소의 지금 innerHTML에서 꺼낸다. 실제 DOM처럼 스크립트가 다시 쓴 뒤에는 새 내용이 보인다.
       querySelectorAll: (sel) =>
-        sel === "#budget-result [data-prerendered]"
+        sel === "#district-grid td:nth-child(3)"
+          ? areaCellsOf()
+          : sel === "#budget-result [data-prerendered]"
           ? [...String(prerenderedBudget).matchAll(/<(p|section|div)\b[^>]*data-prerendered[^>]*>[\s\S]*?<\/\1>/g)].map((m) => ({ outerHTML: m[0] }))
           : sel === "#overall-cards .overall-card"
             ? [...String(sandbox.document.getElementById("overall-cards").innerHTML).matchAll(/<div class="overall-card">[\s\S]*?<\/div><\/div>/g)].map((m) => ({
@@ -252,6 +267,8 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
     sandbox,
     byId: (id) => sandbox.document.getElementById(id),
     tableHtml: () => sandbox.document.getElementById("district-grid").innerHTML,
+    /** 표의 면적 칸들이 지금 가려져 있나(style.visibility). 칸이 없으면 빈 배열. */
+    areaCellsHidden: () => areaCellsOf().map((td) => td.style.visibility === "hidden"),
     trendHtml: () => sandbox.document.getElementById("trend-chart").innerHTML,
     trendMeta: () => sandbox.document.getElementById("trend-meta").textContent,
     volumeHtml: () => sandbox.document.getElementById("volume-chart").innerHTML,
