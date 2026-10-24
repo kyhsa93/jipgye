@@ -5,7 +5,7 @@
 // fetch를 거부하도록 주입하고, 화면 조각의 innerHTML과 단추의 click 리스너를 본다.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile, readdir } from "node:fs/promises";
+import { readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { loadRatesPage } from "./helpers/rates-page.mjs";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
@@ -816,15 +816,6 @@ test("(바) 범위 선: complex-ratio·realestate-trend 한 가지만 실패하�
   }
 });
 
-test("S6 의도한 차이 (#410·#413): 시세 틀 인라인 스크립트 순증가 +400B 이하 (merge-base 0427ba1d, 틀 55,788B), docs/load-state.js 순증가 0B", () => {
-  const added = Buffer.byteLength(templateScript) - 55_788;
-  assert.ok(added > 0 && added <= 400, `scripts/realestate-template.html: 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
-  // 장마다 틀과 달라지는 몫(예산대 구간 값 따위)은 이 PR 과 무관하다 - 47장 모두 틀의 알림 상태 코드를 같은 글자로 실었는지만 본다.
-  const state = templateScript.slice(templateScript.indexOf("let note = 0;"), templateScript.indexOf("async function main()"));
-  for (const p of PAGES) assert.ok(p.script.includes(state), `${SITE}/${p.file}: 알림 상태 코드가 틀과 다르다`);
-  assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
-});
-
 // ============================================================================================================
 // (바) 이어받기: 받는 중(#410)·재시도 응답 대기·언어 전환(#413). 같은 함수 notifyBeside 를 상태 하나(note: 0 없음 · 1 영어 고지만 · 2 실패)로 같은 자리에 세운다.
 // 예산대 18장은 상태가 늘 0 이라 알림 요소를 만들지 않는다(budgetKoOnly 가 상시 고지). 새 문장·새 id·새 data-* 는 없다.
@@ -1386,11 +1377,6 @@ test("변이 증빙 (다): 구운 내용을 남기는 갈래를 지운 사본, �
   assert.throws(() => assertBakedKept(noStamp.page, "변이3"), /구운 기준일 글자가 바뀌었다/, "기준일을 '-'로 바꿔도 ⓒ 가 통과한다");
 });
 
-test("S6 의도한 차이 (#296 (다)): index 인라인 스크립트 순증가 +400B 이하 (merge-base 75,413B)", () => {
-  const added = Buffer.byteLength(indexScript) - 75_413;
-  assert.ok(added <= 400, `index 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
-});
-
 // ============================================================================================================
 // 셋째 행: 뉴스 틀(docs/news.html)과 그 틀로 찍은 3장(rate-news·realestate-news·stock-news), 틀 (나), F5·F6·H2. 같은 규칙 2~5 를
 // #content 안의 알림 한 줄로 지킨다 - 구운 기사 목록(#news-list)·AI 요약(#summary-box)·시세 카드(#realestate-stats)와 구운 기준일(#updated)을
@@ -1607,15 +1593,6 @@ test("변이 증빙 (나): 기사·시세·기준일 가드를 지운 사본, �
 
   const noNotice = await openNews("news", { mutate: mutation("const failed = [", "const failed = false && [") });
   assert.equal(noNotice.page.notice(), null, "알림을 안 세우는 사본이 알림을 세웠다 - ⓑ 가 눈이 멀었다");
-});
-
-test("S6 의도한 차이 (#296 (나)): 뉴스 4장 인라인 스크립트 순증가 +400B 이하 (merge-base 6521bb9c), load-state.js 순증가 0B", () => {
-  const BASE = { news: 13_647, "rate-news": 13_711, "realestate-news": 13_726, "stock-news": 13_710 };
-  for (const name of NEWS_FILES) {
-    const added = Buffer.byteLength(newsSources[name].script) - BASE[name];
-    assert.ok(added > 0 && added <= 400, `${SITE}/${name}.html: 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
-  }
-  assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
 });
 
 // ============================================================================================================
@@ -1921,33 +1898,6 @@ test("(마) #532 틀: 추이 요청 실패는 null 로 두고(받았는데 빈 [
   assert.throws(() => assertTrendFailedKept(old.page, "ko", "변이"), /빈 칸 셋이 사라졌다|'아직 없음'으로 말한다|실패 문구가 없다/, "옛 코드(실패를 []로 둠)가 점검을 통과한다");
 });
 
-test("S6 의도한 차이 (#532): 금리 4장 인라인 스크립트 순증가 +150B 이하(cto 예상치, 기본 한도 +400B)에 #498 의 +600B 를 더한 +750B 이하 (base 594feb68 = #531 병합 뒤 main), load-state.js 순증가 0B", () => {
-  const BASE = { "deposit-rates": 38_444, "saving-rates": 38_454, "mortgage-rates": 38_425, "rent-loan-rates": 38_417 };
-  for (const name of RATE_PAGES) {
-    const added = Buffer.byteLength(ratesSources[name]) - BASE[name];
-    assert.ok(added > 0 && added <= 750, `${SITE}/${name}.html: 인라인 증가가 ${added}B - #532 의 cto 예상 +150B/장 + #498 의 +600B/장, 넘으면 PR 전에 묻는다`);
-  }
-  assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
-});
-
-test("S6 의도한 차이 (#296 (마)): 금리 4장 인라인 스크립트 순증가 +430B 이하(cto 가 이 PR 에 한해 +400 → +430, 영어 고지 한 문장 몫) 에 #532 의 +150B, #498 의 +600B 를 더한 +1180B 이하 (merge-base 5af7d1aa), load-state.js 순증가 0B", () => {
-  const BASE = { "deposit-rates": 38_022, "saving-rates": 38_032, "mortgage-rates": 38_003, "rent-loan-rates": 37_995 };
-  for (const name of RATE_PAGES) {
-    const added = Buffer.byteLength(ratesSources[name]) - BASE[name];
-    assert.ok(added > 0 && added <= 1180, `${SITE}/${name}.html: 인라인 증가가 ${added}B - 이 PR 의 cto 한도 +430B/장 + #532 의 +150B/장 + #498 의 +600B/장, 넘으면 PR 전에 묻는다`);
-  }
-  assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
-});
-
-test("S6 의도한 차이 (#498): 금리 4장 인라인 스크립트 순증가 +600B 이하(cto 한도, 네 장 공통 - 금액 칸 읽기 줄) (base 0427ba1d = #536 병합 뒤 main), load-state.js 순증가 0B", () => {
-  const BASE = { "deposit-rates": 38_548, "saving-rates": 38_558, "mortgage-rates": 38_529, "rent-loan-rates": 38_521 };
-  for (const name of RATE_PAGES) {
-    const added = Buffer.byteLength(ratesSources[name]) - BASE[name];
-    assert.ok(added > 0 && added <= 600, `${SITE}/${name}.html: 인라인 증가가 ${added}B - #498 cto 한도 +600B/장(넘으면 줄여서 다시 낸다)`);
-  }
-  assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
-});
-
 // ============================================================================================================
 // 다섯째 행: 분석 6장 중 price-outlook (docs/price-outlook.html, 손으로 쓴 장), 틀 (가), H1 + F7·F8.
 // 규칙 2~5 를 outlook.json·move-in.json 이 안 올 때 구운 머리 문단(#lead)과 구운 표·문단·기준일(#updated)을 지우지·숨기지 않고,
@@ -2162,12 +2112,6 @@ test("변이 증빙 (가): 입주 예정 숨김을 되돌린 사본, 받은 값 
   assert.equal(noNotice.page.notice(), null, "알림을 안 세우는 사본이 알림을 세웠다 - ⓑ 가 눈이 멀었다");
 });
 
-test("S6 의도한 차이 (#296 (가)): price-outlook 인라인 스크립트 순증가 +400B 이하 (merge-base 97ec974d), load-state.js 순증가 0B", () => {
-  const added = Buffer.byteLength(outlookScript) - 17_095;
-  assert.ok(added > 0 && added <= 400, `${SITE}/price-outlook.html: 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
-  assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
-});
-
 // ============================================================================================================
 // 여섯째 행: 분석 나머지 5장(cancelled-deals·renewal-vs-new·floor-gap·record-high·switch-house, 손으로 쓴 장), 틀 (라), F7·F8.
 // (가) price-outlook 과 같은 길이다: 데이터 파일 하나가 안 오면(네트워크·404·빈 파일) 구운 머리 문단(#lead)·구운 표·구운 기준일(#updated)을 지우지 않고,
@@ -2179,11 +2123,11 @@ test("S6 의도한 차이 (#296 (가)): price-outlook 인라인 스크립트 순
 // ============================================================================================================
 const leadOf = (data, lang) => data.lead[lang];
 const ANALYSIS_PAGES = [
-  { name: "cancelled-deals", json: "cancellation", error: ["해제·등기 자료를 불러오지 못했습니다.", "Could not load the cancellation data."], empty: { districts: [] }, lead: (d, l) => d.seoul[l === "en" ? "leadEn" : "leadKo"], bake: ["lead", "correction-lead", "district-table", "month-lead", "month-table", "district-links", "price-lead", "price-table"], base: 15_337 },
-  { name: "renewal-vs-new", json: "renewal-facts", error: ["재계약 자료를 불러오지 못했습니다.", "Could not load the renewal data."], empty: { table: [] }, lead: (d, l) => d.lead[l], bake: ["lead", "district-table", "wolse-lead", "wolse-table", "cap-lead", "district-links"], base: 17_261 },
-  { name: "floor-gap", json: "floor-gap", error: ["층 격차 자료를 불러오지 못했습니다.", "Could not load the floor data."], empty: { districts: [] }, lead: leadOf, bake: ["lead", "top-lead", "district-lead", "district-table", "district-links"], base: 12_168 },
-  { name: "record-high", json: "record-high", error: ["신고가 자료를 불러오지 못했습니다.", "Could not load the record-high data."], empty: {}, lead: leadOf, bake: ["lead", "control-lead", "survival-lead", "robust-table"], base: 8_342 },
-  { name: "switch-house", json: "district-change", error: ["갈아타기 자료를 불러오지 못했습니다.", "Could not load the data."], empty: { rows: [] }, lead: leadOf, bake: ["lead", "district-table", "region-table"], base: 17_089 },
+  { name: "cancelled-deals", json: "cancellation", error: ["해제·등기 자료를 불러오지 못했습니다.", "Could not load the cancellation data."], empty: { districts: [] }, lead: (d, l) => d.seoul[l === "en" ? "leadEn" : "leadKo"], bake: ["lead", "correction-lead", "district-table", "month-lead", "month-table", "district-links", "price-lead", "price-table"] },
+  { name: "renewal-vs-new", json: "renewal-facts", error: ["재계약 자료를 불러오지 못했습니다.", "Could not load the renewal data."], empty: { table: [] }, lead: (d, l) => d.lead[l], bake: ["lead", "district-table", "wolse-lead", "wolse-table", "cap-lead", "district-links"] },
+  { name: "floor-gap", json: "floor-gap", error: ["층 격차 자료를 불러오지 못했습니다.", "Could not load the floor data."], empty: { districts: [] }, lead: leadOf, bake: ["lead", "top-lead", "district-lead", "district-table", "district-links"] },
+  { name: "record-high", json: "record-high", error: ["신고가 자료를 불러오지 못했습니다.", "Could not load the record-high data."], empty: {}, lead: leadOf, bake: ["lead", "control-lead", "survival-lead", "robust-table"] },
+  { name: "switch-house", json: "district-change", error: ["갈아타기 자료를 불러오지 못했습니다.", "Could not load the data."], empty: { rows: [] }, lead: leadOf, bake: ["lead", "district-table", "region-table"] },
 ];
 const analysisSources = {};
 for (const spec of ANALYSIS_PAGES) {
@@ -2340,10 +2284,38 @@ test("변이 증빙 (라): 받은 값 가드를 지운 사본, 알림을 안 세
   assert.throws(() => assertAnalysisKept(cancelled, dash.page, "변이3"), /구운 기준일 글자가 바뀌었다/, "기준일을 '-'로 되돌려도 ⓒ 가 통과한다");
 });
 
-test("S6 의도한 차이 (#296 (라)): 분석 5장 인라인 스크립트 순증가 +400B 이하 (merge-base 97ec974d), load-state.js 순증가 0B", () => {
-  for (const spec of ANALYSIS_PAGES) {
-    const added = Buffer.byteLength(analysisSources[spec.name].script) - spec.base;
-    assert.ok(added > 0 && added <= 400, `${SITE}/${spec.name}.html: 인라인 증가가 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
-  }
+// ============================================================================================================
+// S6 인라인 스크립트 바이트 한도 (#543) - 틀 행마다 따로 쌓이던 S6 시험(+150→+750, +580→+1180 …)을 롤링 기준선 하나로 모았다.
+// 정책: 장 하나의 인라인 script 는 기준선(test/s6-baseline.json = 병합 시점 build/site 의 장별 바이트)보다 한 번의 변경에 +400 B 넘게 늘지 않는다.
+//       docs/load-state.js 는 4,574 B 를 넘지 않는다(이 값은 기준선이 아니라 고정이다 - 늘리려면 PR 전에 cto 에게 묻는다).
+// 기준선 갱신: 병합 담당이 병합 뒤(count:bump 와 같은 때)에 `S6_BASELINE_UPDATE=1 node --test --test-name-pattern="S6 롤링" test/load-failure.test.mjs`
+//       로 파일을 지금 바이트로 다시 쓰고 그 diff 를 커밋한다. PR 은 기준선 파일을 건드리지 않는다 - 의도해서 +400 B 를 넘기는 PR 은 골든 S6 예외
+//       절차(cto 판정, 이유 문구)를 거치고, 그때만 기준선 파일을 본문에 사유와 함께 고친다(허용 목록 밖 파일이라 전체 판정이다).
+// 측정 대상: 전과 같다 - 시세 틀(scripts/realestate-template.html, 주석을 걷은 것)·index·뉴스 4장·금리 4장·price-outlook·분석 5장의 마지막 인라인 <script>.
+// ============================================================================================================
+test("S6 롤링 기준선: 장별 인라인 스크립트 순증가 +400B 이하(test/s6-baseline.json 기준), docs/load-state.js 4,574B 이하", async () => {
+  const S6_BASELINE_PATH = path.join(import.meta.dirname, "s6-baseline.json");
+  const measured = {
+    "realestate-template": templateScript,
+    index: indexScript,
+    ...Object.fromEntries(NEWS_FILES.map((name) => [name, newsSources[name].script])),
+    ...ratesSources,
+    "price-outlook": outlookScript,
+    ...Object.fromEntries(ANALYSIS_PAGES.map((spec) => [spec.name, analysisSources[spec.name].script])),
+  };
+  const bytes = Object.fromEntries(Object.entries(measured).map(([name, script]) => [name, Buffer.byteLength(script)]));
   assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
+  // 시세 틀의 알림 상태 코드는 47장 모두에 같은 글자로 실려 있어야 한다(장마다 달라지는 몫 - 예산대 구간 값 따위 - 은 한도와 무관하다).
+  const state = templateScript.slice(templateScript.indexOf("let note = 0;"), templateScript.indexOf("async function main()"));
+  for (const p of PAGES) assert.ok(p.script.includes(state), `${SITE}/${p.file}: 알림 상태 코드가 틀과 다르다`);
+  if (process.env.S6_BASELINE_UPDATE === "1") {
+    await writeFile(S6_BASELINE_PATH, `${JSON.stringify(bytes, null, 2)}\n`);
+    return;
+  }
+  const baseline = JSON.parse(await readFile(S6_BASELINE_PATH, "utf8"));
+  assert.deepEqual(Object.keys(baseline).sort(), Object.keys(bytes).sort(), "기준선 파일의 장 목록이 측정 대상과 다르다 - S6_BASELINE_UPDATE=1 로 다시 쓴다");
+  for (const [name, now] of Object.entries(bytes)) {
+    const added = now - baseline[name];
+    assert.ok(added <= 400, `${name}: 인라인 증가가 기준선 ${baseline[name]}B 보다 ${added}B - cto 기본 한도 +400B/장, 넘으면 PR 전에 묻는다`);
+  }
 });
