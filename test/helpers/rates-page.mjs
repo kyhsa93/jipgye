@@ -104,6 +104,20 @@ function makeDom(html = "") {
   return { document, byId };
 }
 
+const between = (html, open, close) => {
+  const a = html.indexOf(open);
+  assert.ok(a >= 0, `${open} 를 못 찾았다`);
+  return html.slice(a + open.length, html.indexOf(close, a + open.length));
+};
+
+/**
+ * 금리 틀(scripts/rates-template.html)로 찍은 장(`file`)의 인라인 스크립트를 손으로 만든 DOM 에서 돌린다.
+ *
+ * - `baked`: true 면 받은 HTML 에 구워진 자리(#products-head·#products-body·#history-grid)를 그 글자 그대로 채워 둔다. 스크립트가 구운 내용을
+ *   건드렸는지 보려면 이것이 있어야 한다(#296 틀 (마)). 구운 기준일 줄(#updated 의 글자·data-updated)은 늘 채운다.
+ * - `mutate`: 스크립트 본문을 바꿔 끼우는 함수(변이 증빙용).
+ * - `baked` 결과: 구운 글자(head·body·grid·updatedText·day). `notice()`: #content 안 알림 한 줄의 글자·단추 글자·단추, 없으면 null.
+ */
 export async function loadRatesPage({
   analytics,
   fetch: fetchImpl,
@@ -111,16 +125,44 @@ export async function loadRatesPage({
   search = "",
   rates: ratesOverride,
   locale = "ko",
+  baked = false,
+  mutate,
 } = {}) {
   const html = await readFile(path.join(root, file), "utf8");
-  const script = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
-  assert.ok(script.includes("CATEGORY_KEYS"), "금리 페이지 스크립트를 찾지 못했다");
+  const script0 = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
+  assert.ok(script0.includes("CATEGORY_KEYS"), "금리 페이지 스크립트를 찾지 못했다");
+  const script = mutate ? mutate(script0) : script0;
 
   const rates =
     ratesOverride ?? JSON.parse(await readFile(path.join(root, "docs/data/rates.json"), "utf8"));
   const history = JSON.parse(await readFile(path.join(root, "docs/data/rates-history.json"), "utf8"));
   const { document, byId } = makeDom(html);
   const store = { lang: locale };
+
+  // 구운 기준일 줄: 글자와 data-updated 는 늘 있다.
+  const stamp = /<div class="updated" id="updated" data-updated="([^"]*)">([^<]*)<\/div>/.exec(html);
+  assert.ok(stamp, `${file} 의 구운 기준일 줄을 못 찾았다`);
+  const updated = document.getElementById("updated");
+  updated.dataset.updated = stamp[1];
+  updated.getAttribute = (name) => (name === "data-updated" ? stamp[1] : null);
+  updated.textContent = stamp[2];
+  const bakedHtml = { day: stamp[1], updatedText: stamp[2] };
+  if (baked) {
+    bakedHtml.head = between(html, '<thead id="products-head">', "</thead>");
+    bakedHtml.body = between(html, '<tbody id="products-body">', "</tbody>");
+    bakedHtml.grid = between(html, '<div class="history-grid" id="history-grid">', "\n    </div>\n  </section>");
+    document.getElementById("products-head").innerHTML = bakedHtml.head;
+    document.getElementById("products-body").innerHTML = bakedHtml.body;
+    document.getElementById("history-grid").innerHTML = bakedHtml.grid;
+  }
+  // #content 는 실제 DOM 처럼 textContent = "" 가 안의 마크업을 비운다(성공한 다시 받기가 알림을 걷는 길).
+  const content = document.getElementById("content");
+  Object.defineProperty(content, "textContent", {
+    get: () => "",
+    set: () => {
+      content._html = "";
+    },
+  });
 
   const pushed = [];
   const replaced = [];
@@ -192,5 +234,12 @@ export async function loadRatesPage({
     else for (const fn of head.listeners.click ?? []) fn({ target: button });
   };
 
-  return { sandbox, byId, clickTab, clickSortHeader, rates, state: sandbox.__state, pushed, replaced };
+  const notice = () => {
+    const html = content.innerHTML;
+    if (!html) return null;
+    const button = byId.get("load-retry");
+    return { html, text: html.replace(/<button[\s\S]*<\/button>/, "").replace(/<[^>]*>/g, "").trim(), retry: /<button[^>]*>([^<]*)<\/button>/.exec(html)?.[1] ?? null, button };
+  };
+
+  return { sandbox, byId, clickTab, clickSortHeader, rates, state: sandbox.__state, pushed, replaced, baked: bakedHtml, notice };
 }
