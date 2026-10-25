@@ -206,7 +206,8 @@ export function candidatesShape(band, complexFiles) {
     .map((row) => {
       const href = `./deal-search.html?district=${encodeURIComponent(row.district)}&apt=${encodeURIComponent(row.apt)}`;
       const facts = [row.district, row.dong, `${row.area}\u33a1`, row.buildYear ? `${row.buildYear}년` : null].filter(Boolean).join(" · ");
-      const range = `${row.quartile ? "가운데 절반" : "최저~최고"} ${eokText(row.low)}~${eokText(row.high)}`;
+      // 이 폭은 지난 거래가 퍼진 모양이지 다음 거래가 들어올 범위가 아니다(#656) - 말에 「지난 거래」를 붙인다. 계산은 그대로다.
+      const range = `${row.quartile ? "지난 거래 가운데 절반" : "지난 거래 최저~최고(고침)"} ${eokText(row.low)}~${eokText(row.high)}`;
       return { href, apt: row.apt, facts, amount: eokText(row.median), meta: `${range} · ${row.n}건` };
     });
   const bandCounts = AREA_BANDS.map(([bandLabel, f]) => `${bandLabel} ${rows.filter(f).length}`).join(" · ");
