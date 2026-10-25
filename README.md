@@ -275,6 +275,11 @@ Node 24 이상이 필요하다. `npm test`는 `scripts/run-tests.mjs`를 거쳐 
 도는데 한 번에 열 건까지만 주므로, 오늘 값은 읽히고 시계열은 못 읽는다. 키는
 [ecos.bok.or.kr/api](https://ecos.bok.or.kr/api)에서 가입 즉시 무료로 나온다.
 
+평균금리 계열(`fetch-indicators.ts` → `raw/indicators/series.json`, 월별): 주택담보대출 `mortgage_rate`(121Y006
+BECBLA0302, 신규취급액 기준), 전세자금대출 `jeonse_loan_rate`(121Y015 BECBLB020210, **잔액 기준** — 신규취급액
+표에는 전세자금대출 항목이 없다), 정기예금 `deposit_rate`(121Y002 BEABAA211, 신규취급액 기준). 뒤의 둘은 전세 vs
+월세 비교가 금감원 공시 대신 읽으려고 받는다(#577).
+
 AI 요약은 로컬에 Ollama가 있어야 한다(`OLLAMA_THINK=false` 필요).
 
 ### 사이트를 만들고 배포하는 길 (구조 B, #505)
