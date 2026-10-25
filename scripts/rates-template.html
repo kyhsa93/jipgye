@@ -368,6 +368,8 @@
   };
   // 컨트롤 높이 예약(CSS :empty)은 이 meta 의 값으로 첫 탭을 고른다(#557). ?tab= 이 다른 탭이면 그 탭으로 맞춘다 - 예금·적금과 대출은 높이가 다르다.
   document.querySelector('meta[name="rates-category"]').setAttribute("content", state.category);
+  // 영어는 읽는 줄이 없고 줄 수도 다르다 - 예약 CSS 가 html[lang=en] 으로 가른다(언어를 데이터가 오기 전에 알린다). renderMeta 가 나중에 같은 값을 다시 쓴다.
+  document.documentElement.lang = locale;
 
   function isSavingCategory(key) {
     return SAVING_CATEGORIES.has(key);

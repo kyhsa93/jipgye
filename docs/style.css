@@ -1370,6 +1370,21 @@
       --ctl-rows: 4;
     }
   }
+  @media (min-width: 344px) {
+    html[lang="en"]:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+      --ctl-extra: -10px;
+    }
+  }
+  @media (min-width: 344px) and (max-width: 415px) {
+    html[lang="en"]:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+      --ctl-rows: 4;
+    }
+  }
+  @media (min-width: 693px) and (max-width: 1023px) {
+    html[lang="en"]:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+      --ctl-rows: 2;
+    }
+  }
   .sector-filter label {
     display: inline-flex;
     align-items: center;

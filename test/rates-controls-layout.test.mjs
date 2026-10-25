@@ -86,6 +86,20 @@ test("모바일(560px 이하)에서 읽는 줄은 금액 칸 바로 아래, 검�
   assert.doesNotMatch(outside, /\.controls input\[type="search"\] \{[^}]*[\s;]order:/, "데스크톱 검색 칸 배치가 바뀌면 안 된다");
 });
 
+test("영어 화면은 읽는 줄을 예약에서 빼고 줄 수 경계가 다르다 — html[lang=en] 규칙과 스크립트의 일찍 정하는 lang (#557)", async () => {
+  const css = await read("src/css/legacy.css");
+  const EN = 'html[lang="en"]:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty';
+  const block = (query) => mediaBody(css, query);
+  assert.match(block("min-width: 344px"), new RegExp(`${EN.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\{\\s*--ctl-extra: -10px;`), "영어는 읽는 줄(1.5em + 간격 10px)을 예약에서 뺀다");
+  assert.match(block("min-width: 344px) and (max-width: 415px"), /--ctl-rows: 4;/, "영어 예금·적금 344~415px 은 4줄이다");
+  assert.match(block("min-width: 693px) and (max-width: 1023px"), /--ctl-rows: 2;/, "영어 예금·적금 693~1023px 은 2줄이다(한국어는 692 까지)");
+  // 영어 규칙은 한국어 규칙보다 선택자가 무거워(속성 하나 더) 순서와 무관하게 이긴다. 343px 이하는 영어 규칙이 없다(한국어 그대로).
+  assert.ok(!css.includes("@media (max-width: 343px) {\n  html[lang=\"en\"]"), "343px 이하에는 영어 규칙이 없다");
+  const tpl = await read("scripts/rates-template.html");
+  const early = tpl.indexOf("document.documentElement.lang = locale;");
+  assert.ok(early > 0 && early < tpl.indexOf("function renderMeta"), "lang 을 데이터가 오기 전에 정하지 않으면 영어 예약 규칙이 첫 페인트에 안 걸린다");
+});
+
 test("추이 격자 빈 칸 높이는 카드 실측(144, 넉 열 163.5)이다 (#542)", async () => {
   const css = await read("src/css/legacy.css");
   assert.match(css, /#history-grid > \.placeholder,\s*\n\.history-reserve \{\s*min-height: 144px;/, "추이 빈 칸 기본 높이가 144px 이 아니다");
