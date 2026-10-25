@@ -3,18 +3,18 @@
 #
 # 쓰는 법: scripts/dev/doctor.sh [--link] [--root <저장소 루트>] [--shared <공유 폴더>]
 #   (없음)   점검만 한다. 실패마다 한 줄 이유를 stderr 에 찍고 종료 1, 모두 통과하면 ≤8줄을 찍고 종료 0.
-#   --link   node_modules·tools/golden/node_modules 심볼릭 링크가 없거나(끊긴 링크 포함) 하나도 없으면 공유 폴더 것으로 만든다.
-#            멱등이다 - 이미 있는 실제 폴더·살아 있는 링크는 건드리지 않는다. 저장소 루트 안의 그 두 경로 밖은 쓰지 않는다.
+#   --link   node_modules·tools/golden/node_modules·tools/typescript/node_modules 심볼릭 링크가 없거나(끊긴 링크 포함) 하나도 없으면 공유 폴더 것으로 만든다.
+#            멱등이다 - 이미 있는 실제 폴더·살아 있는 링크는 건드리지 않는다. 저장소 루트 안의 그 세 경로 밖은 쓰지 않는다.
 #   --root   점검할 저장소 루트(기본: 이 스크립트가 든 저장소). 시험이 쓴다.
 #   --shared 공유 도구 폴더(기본: $JIPGYE_SHARED 또는 ~/workspace/jipgye.worktrees/_shared).
 # 환경: NODE24_BIN  Node 24 바이너리 경로. 없으면 PATH 의 node, 그것도 아니면 <공유 폴더>/node24/bin/node 를 찾는다.
 #
-# 무엇을 보나: ① Node 의 process.features.typescript 가 "strip"(Node 24 타입 스트리핑) ② node_modules·tools/golden/node_modules 가 살아 있는 폴더
+# 무엇을 보나: ① Node 의 process.features.typescript 가 "strip"(Node 24 타입 스트리핑) ② node_modules·tools/golden/node_modules·tools/typescript/node_modules 가 살아 있는 폴더
 #   ③ 저장소 루트에서 react-dom 이 풀린다(없으면 렌더가 막힌다 - PR #585 로 조용한 legacy 폴백은 없고 종료 1) ④ tools/golden 에서 parse5 가 풀린다
-#   ⑤ scripts/dev/golden-run.sh·golden-expect.mjs 가 있다.
+#   ⑤ scripts/dev/golden-run.sh·golden-expect.mjs 가 있다 ⑥ tools/typescript/node_modules/.bin/tsc 가 실행 가능(CI 의 tsc 단계와 같은 도구 - gate.sh 가 쓴다).
 # 이 도구는 설치하지 않는다(npm ci 도 머신 설정도 건드리지 않는다). 공유 폴더 만드는 법은 아래 「공유 폴더」 참고.
 #
-# 공유 폴더(한 번만 만든다, 사용자 폴더 안): <공유>/node_modules (루트 npm ci 결과), <공유>/tools/golden/node_modules (tools/golden npm ci 결과),
+# 공유 폴더(한 번만 만든다, 사용자 폴더 안): <공유>/node_modules (루트 npm ci 결과), <공유>/tools/golden/node_modules (tools/golden npm ci 결과), <공유>/tools/typescript/node_modules (tools/typescript npm ci 결과. 폴더 이름이 꼭 node_modules 여야 한다 - tsc 는 링크를 실제 경로로 풀어 @types/node 의 undici-types 를 <상위>/node_modules/ 에서 찾는다),
 #   <공유>/node24/bin/node (타입 스트리핑이 켜진 Node 24 바이너리), <공유>/bin/npm (Node 24 로 Node 22 의 npm-cli.js 를 부르는 래퍼 - 고장 난 npm 우회).
 
 LINK=0; ROOT=""; SHARED="${JIPGYE_SHARED:-$HOME/workspace/jipgye.worktrees/_shared}"
@@ -50,6 +50,7 @@ if [ "$LINK" = 1 ]; then
   fi
   link_one node_modules
   link_one tools/golden/node_modules
+  link_one tools/typescript/node_modules
 fi
 
 # ① Node: NODE24_BIN → PATH 의 node → 공유 폴더의 node24. 처음으로 "strip" 인 것을 쓴다.
@@ -65,7 +66,7 @@ if [ -z "$NODE" ]; then
 fi
 
 # ② node_modules 두 곳: 살아 있는 폴더(심볼릭 링크면 가리키는 곳이 있어야 한다).
-for rel in node_modules tools/golden/node_modules; do
+for rel in node_modules tools/golden/node_modules tools/typescript/node_modules; do
   p="$ROOT/$rel"
   if [ -d "$p" ]; then :
   elif [ -L "$p" ]; then fail "$rel: 심볼릭 링크가 끊겼다($(readlink "$p")) - scripts/dev/doctor.sh --link"
@@ -87,6 +88,9 @@ fi
 [ -f "$ROOT/scripts/dev/golden-run.sh" ] && [ ! -x "$ROOT/scripts/dev/golden-run.sh" ] && fail "scripts/dev/golden-run.sh: 실행 권한이 없다(chmod +x)"
 [ -f "$ROOT/scripts/dev/golden-expect.mjs" ] || fail "scripts/dev/golden-expect.mjs: 없다"
 
+# ⑥ tsc 도구: CI 가 tools/typescript 에서 `npx tsc -p tsconfig.json` 을 돈다. 그 폴더의 node_modules/.bin/tsc 가 실행 가능해야 gate.sh 가 같은 검사를 돌린다.
+[ -d "$ROOT/tools/typescript/node_modules" ] && [ ! -x "$ROOT/tools/typescript/node_modules/.bin/tsc" ] && fail "tsc: tools/typescript/node_modules/.bin/tsc 가 없다 - 의존이 덜 설치됐다. tools/typescript 에서 npm ci(또는 공유 사본으로 다시 --link)"
+
 if [ "${#FAILS[@]}" -gt 0 ]; then
   for f in "${FAILS[@]}"; do echo "doctor 실패: $f" >&2; done
   exit 1
@@ -98,5 +102,6 @@ echo "  루트      node_modules -> $(cd "$ROOT/node_modules" && pwd -P)"
 echo "  골든      tools/golden/node_modules -> $(cd "$ROOT/tools/golden/node_modules" && pwd -P)"
 echo "  react-dom $("$NODE" -p 'require(process.argv[1]+"/node_modules/react-dom/package.json").version' "$ROOT" 2>/dev/null) 풀림, parse5 풀림"
 echo "  도구      golden-run.sh · golden-expect.mjs 있음"
+echo "  tsc       $(cd "$ROOT/tools/typescript" && "$NODE" node_modules/.bin/tsc -v 2>/dev/null || echo '실행 확인 불가')"
 [ "${#LINKED[@]}" -gt 0 ] && echo "  --link    새로 연결: ${LINKED[*]}"
 exit 0

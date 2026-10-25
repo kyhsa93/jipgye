@@ -10,8 +10,8 @@ const GATE = path.resolve(import.meta.dirname, "..", "scripts", "dev", "gate.sh"
 const put = (p, text = "") => { mkdirSync(path.dirname(p), { recursive: true }); writeFileSync(p, text); };
 
 // 가짜 단계: STUB_LOG 에 "<이름> <인자>" 를 한 줄씩 남기고, STUB_FAIL(쉼표 목록)에 이름이 있으면 30줄을 찍고 종료 1.
-// 이름: render · test(루트) · site(루트 --site) · health · golden(tools/golden 의 시험) · hooks · doctor · golden-run
-function fixture({ doctor = false } = {}) {
+// 이름: render · tsc(tools/typescript 의 .bin/tsc -p tsconfig.json) · test(루트) · site(루트 --site) · health · golden(tools/golden 의 시험) · hooks · doctor · golden-run
+function fixture({ doctor = false, tsc = true } = {}) {
   const base = mkdtempSync(path.join(os.tmpdir(), "jipgye-gate-"));
   const root = path.join(base, "repo"), log = path.join(base, "calls.log");
   const stub = (rel, name, body = "") => put(path.join(root, rel),
@@ -28,6 +28,9 @@ function fixture({ doctor = false } = {}) {
     `console.log("ℹ tests 7\\nℹ pass 6\\nℹ fail 0");\n` +
     `if ((process.env.STUB_FAIL || "").split(",").includes(name)) { for (let i = 1; i <= 30; i++) console.log("출력 줄 " + i); process.exit(1); }\n`);
   mkdirSync(path.join(root, "tools/health"), { recursive: true });
+  // tsc 도구: 있으면(기본) tools/typescript/node_modules/.bin/tsc 가짜가 있고, 없으면 gate 가 SKIP 한다.
+  if (tsc) stub("tools/typescript/node_modules/.bin/tsc", "tsc", `console.log("tsc 가짜");`);
+  else mkdirSync(path.join(root, "tools/typescript"), { recursive: true });
   stub("tools/golden/bin/invariants.ts", "hooks", `console.log("훅 클래스 목록 점검");`);
   put(path.join(root, "package.json"), '{"name":"jipgye","type":"module"}\n');
   if (doctor) {
@@ -49,9 +52,9 @@ test("전부 통과하면 종료 0, 단계 순서대로 돌고, 요약은 ≤10�
   try {
     const r = run(f);
     assert.equal(r.status, 0, r.stdout + r.stderr);
-    assert.deepEqual(names(f), ["doctor", "render", "test", "site", "health", "golden", "hooks"]);
+    assert.deepEqual(names(f), ["doctor", "render", "tsc", "test", "site", "health", "golden", "hooks"]);
     assert.ok(r.stdout.trim().split("\n").length <= 10, r.stdout);
-    assert.equal(summaryLines(r.stdout).length, 7);
+    assert.equal(summaryLines(r.stdout).length, 8);
     assert.match(r.stdout, /PASS test +tests 7 pass 6/);
     assert.match(r.stdout, /^gate 통과$/m);
     // 실제 호출 모양: 렌더 출력 위치, 건강·골든 폴더, 훅 점검 플래그
@@ -59,6 +62,8 @@ test("전부 통과하면 종료 0, 단계 순서대로 돌고, 요약은 ≤10�
     assert.ok(calls.includes("render --out=build/site"));
     assert.ok(calls.includes("site --site"));
     assert.ok(calls.includes("hooks --hooks-check --repo ../.."));
+    assert.ok(calls.includes("tsc -p tsconfig.json"), "CI 와 같은 명령: tsc -p tsconfig.json");
+    assert.match(r.stdout, /^PASS tsc /m);
     // 통과하면 로그 임시 폴더를 지운다
     assert.deepEqual(readdirSync(f.base).filter((n) => n.startsWith("jipgye-gate.")), []);
   } finally { f.done(); }
@@ -85,7 +90,7 @@ test("훅 목록 단계가 실패하면 종료 1, 그 단계의 마지막 20줄�
     assert.match(r.stdout, /출력 줄 12\b/); // 30줄 + stderr 1줄 중 끝 20줄 = 12..30 + stderr
     assert.doesNotMatch(r.stdout, /출력 줄 11\b/);
     assert.match(r.stdout, /뭔가 틀렸다 hooks/); // stderr 도 같은 로그에 들어 있다
-    assert.deepEqual(names(f), ["render", "test", "site", "health", "golden", "hooks"]);
+    assert.deepEqual(names(f), ["render", "tsc", "test", "site", "health", "golden", "hooks"]);
     // 실패하면 전체 로그를 남기고 위치를 알린다
     assert.match(r.stdout, /전체 로그: \S+\/hooks\.log/);
   } finally { f.done(); }
@@ -110,7 +115,40 @@ test("렌더가 실패하면 build/site 를 읽는 test·site·health 는 건너
     assert.match(r.stdout, /^SKIP test .*render 실패/m);
     assert.match(r.stdout, /^SKIP site /m);
     assert.match(r.stdout, /^SKIP health /m);
-    assert.deepEqual(names(f), ["render", "golden", "hooks"]);
+    assert.deepEqual(names(f), ["render", "tsc", "golden", "hooks"]); // tsc 는 렌더와 무관해서 돈다
+  } finally { f.done(); }
+});
+
+test("tsc 가 실패하면 종료 1, 그 단계의 끝 20줄이 보이고, 다른 단계는 끝까지 돈다", () => {
+  const f = fixture();
+  try {
+    const r = run(f, [], { STUB_FAIL: "tsc" });
+    assert.equal(r.status, 1);
+    assert.match(r.stdout, /^FAIL tsc /m);
+    assert.match(r.stdout, /gate 실패: 1단계 \(첫 실패: tsc\)/);
+    assert.match(r.stdout, /--- tsc 마지막 20줄 ---/);
+    assert.match(r.stdout, /뭔가 틀렸다 tsc/);
+    assert.deepEqual(names(f), ["render", "tsc", "test", "site", "health", "golden", "hooks"]);
+  } finally { f.done(); }
+});
+
+test("tsc 도구가 없으면 조용히 넘기지 않고 SKIP 한 줄에 이유와 doctor 안내를 보이며, 관문은 통과한다", () => {
+  const f = fixture({ tsc: false });
+  try {
+    const r = run(f);
+    assert.equal(r.status, 0, r.stdout);
+    assert.match(r.stdout, /^SKIP tsc +\(TypeScript 도구 없음 .*doctor\.sh --link/m);
+    assert.ok(!names(f).includes("tsc"));
+    assert.match(r.stdout, /^gate 통과$/m);
+  } finally { f.done(); }
+});
+
+test("tsc 도구가 있으면 건너뛰지 않는다(SKIP 줄이 없다)", () => {
+  const f = fixture();
+  try {
+    const r = run(f);
+    assert.doesNotMatch(r.stdout, /^SKIP tsc/m);
+    assert.ok(names(f).includes("tsc"));
   } finally { f.done(); }
 });
 
@@ -131,6 +169,7 @@ test("doctor 가 실패하면 나머지를 돌리지 않는다", () => {
     assert.equal(r.status, 1);
     assert.deepEqual(names(f), ["doctor"]);
     assert.match(r.stdout, /^SKIP render .*doctor 실패/m);
+    assert.match(r.stdout, /^SKIP tsc .*doctor 실패/m);
     assert.match(r.stdout, /doctor 실패: 가짜/);
   } finally { f.done(); }
 });
