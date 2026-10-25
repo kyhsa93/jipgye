@@ -18,3 +18,5 @@ build/
 /docs/budget-*eok.html
 /docs/district-*.html
 __pycache__/
+# 날짜별 뉴스 파일(#706): 사이트 빌드(build-news-days)가 만드는 산출물. render-pipeline 을 docs/ 제자리로 돌리면 생기는데 커밋하지 않는다.
+/docs/data/news-day/

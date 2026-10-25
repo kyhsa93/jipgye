@@ -1,6 +1,6 @@
 // 렌더 파이프라인 (#238 F1 에서 시작, #248 P1 에서 legacy 폴백을 걷었다).
 //
-// `deploy.yml`·`test.yml` 의 "사이트 생성 (build/site)" 단계(id: render)와 `npm test` 의 pretest 가 부른다. 다섯 렌더 스크립트를 순서대로 돌리고
+// `deploy.yml`·`test.yml` 의 "사이트 생성 (build/site)" 단계(id: render)와 `npm test` 의 pretest 가 부른다. 여섯 렌더 스크립트를 순서대로 돌리고
 // **첫 실패에서 멈춰 종료 1** 이다. 재시도·폴백은 없다(#248 P1, 소유자 결정 2026-10-25): 전에는 React 렌더가 실패하면 legacy 로 처음부터
 // 다시 그리고 `$GITHUB_OUTPUT` 에 `fallback=true` 를 썼지만, 그 산출물은 워크플로의 게이트가 배포·통과를 이미 막고 있었다 - 폴백은 가용성을
 // 주지 않는 진단용이었다. 이제 렌더 실패가 곧 그 단계의 실패이고, 배포가 안 나가 사이트는 직전 배포에 머문다(수집분은 daily 가 따로 커밋한다).
@@ -8,10 +8,10 @@
 // 실패하면 실패한 단계와 이유를 stderr 와 `$GITHUB_STEP_SUMMARY`(있을 때만)에 남긴다. 단계의 오류 출력은 그대로 흘린다(stdio inherit).
 //
 // 단계 목록은 인자로 주입할 수 있다(`node scripts/render-pipeline.ts a.mjs b.mjs`) - 시험이 가짜 단계로 실패를 만든다.
-// 인자가 없으면 기본 다섯이다. 상대 경로는 저장소 루트 기준이다.
+// 인자가 없으면 기본 여섯이다. 상대 경로는 저장소 루트 기준이다.
 //
 // 출력 디렉터리(#508, 구조 B-2): `--out=<디렉터리>` 인자나 환경변수 JIPGYE_SITE_DIR 이 docs/ 가 아닌 디렉터리를 가리키면, 첫 단계 전에
-// docs/ 를 그 디렉터리로 통째로 복사하고(scripts/site-dir.ts stageSite) 다섯 스크립트가 거기서 읽고 쓴다. docs/ 는 한 바이트도 안 바뀐다.
+// docs/ 를 그 디렉터리로 통째로 복사하고(scripts/site-dir.ts stageSite) 여섯 스크립트가 거기서 읽고 쓴다. docs/ 는 한 바이트도 안 바뀐다.
 // 인자도 환경변수도 없으면 docs/ 를 제자리에서 갱신한다.
 import { spawnSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
@@ -20,12 +20,13 @@ import { DOCS_DIR, SITE_DIR_ENV, shownPath, siteDir, stageSite } from "./site-di
 
 const repoRoot = path.resolve(import.meta.dirname, "..");
 
-/** 기본 단계: 지금까지 워크플로가 이 순서로 부르던 다섯 스크립트(순서가 곧 의존 순서다 - 기준일 찍기가 마지막). */
+/** 기본 단계: 지금까지 워크플로가 이 순서로 부르던 다섯 스크립트에 날짜별 뉴스 파일(#706, 사이트 빌드 단계 - 장이 아니라 data/ 에 쓴다)을 더한 여섯(순서가 곧 의존 순서다 - 기준일 찍기가 마지막). */
 export const RENDER_STEPS = [
   "scripts/prerender.ts",
   "scripts/build-news-pages.ts",
   "scripts/build-budget-pages.ts",
   "scripts/build-realestate-pages.ts",
+  "scripts/build-news-days.ts",
   "scripts/build-updated-stamp.ts",
 ];
 

@@ -414,7 +414,8 @@
   const cache = { news: null, summary: null };
 
   async function main() {
-    const load = async (name) => (date ? (await loadJson(`${name}-history`)).find((h) => h.date === date) ?? {} : loadJson(name));
+    const d = date && (await loadJson(`news-day/${encodeURIComponent(date)}`).catch(() => 0));
+    const load = async (name) => (d ? d[name] : date ? (await loadJson(`${name}-history`)).find((h) => h.date === date) ?? {} : loadJson(name));
     const [news, summary] = await Promise.allSettled([load("news"), load("summary")]);
 
     if (news.status === "fulfilled") cache.news = news.value;
