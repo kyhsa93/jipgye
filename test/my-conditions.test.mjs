@@ -9,9 +9,9 @@ import { SITE } from "./helpers/site-root.mjs";
 import { loadPage } from "./helpers/digest-page.mjs";
 import { loadConversionPage } from "./helpers/conversion-page.mjs";
 
-// 내 조건 기억 (#654 V5): search.js 끝의 작은 묶음이 화면에서 고른 구·면적·예산을 적어 두고 메인 질문 링크에 붙인다.
+// 내 조건 기억 (#654 V5, #679 에서 nav.js 끝으로 옮김): nav.js 끝의 작은 묶음이 화면에서 고른 구·면적·예산을 적어 두고 메인 질문 링크에 붙인다.
 const root = path.resolve(import.meta.dirname, "..");
-const source = () => readFile(path.join(root, "docs/search.js"), "utf8");
+const source = () => readFile(path.join(root, "docs/nav.js"), "utf8");
 const QUESTION_IDS = ["q-budget", "q-realestate", "q-search", "q-floor", "q-record", "q-outlook", "q-conversion", "q-renewal", "q-switch", "q-cancelled"];
 
 /** 구운 메인의 질문 링크 열 개(id → href). */
@@ -36,7 +36,7 @@ test("메인 질문 링크 열 개의 구운 주소는 그대로다 - 조건은 
   });
 });
 
-/** search.js 를 가짜 문서에 올린다. 검색창은 없게 해 검색 묶음은 바로 빠지고 조건 묶음만 돈다. */
+/** nav.js 를 가짜 문서에 올린다. 다른 묶음은 자리가 없어 바로 빠지고 조건 묶음만 돈다. */
 async function run({ file = "index.html", search = "", saved, storage, referrer = "https://kyhsa93.github.io/jipgye/index.html" } = {}) {
   const items = new Map(saved === undefined ? [] : [["myConditions", JSON.stringify(saved)]]);
   const localStorage = storage ?? {
@@ -59,7 +59,7 @@ async function run({ file = "index.html", search = "", saved, storage, referrer 
   const on = (type, fn) => (listeners[type] ||= []).push(fn);
   const location = { origin: "https://kyhsa93.github.io", pathname: `/jipgye/${file}`, search, href: "" };
   vm.runInNewContext(await source(), {
-    document: { referrer, querySelector: () => null, getElementById: (id) => (file === "index.html" ? links.get(id) ?? null : null), addEventListener: on },
+    document: { referrer, querySelector: () => null, querySelectorAll: () => [], documentElement: { getAttribute: () => "ko" }, getElementById: (id) => (file === "index.html" ? links.get(id) ?? null : null), addEventListener: on },
     window: { localStorage, addEventListener: on },
     location,
     URLSearchParams,
@@ -189,7 +189,7 @@ test("저장소가 막혀도 링크는 구운 그대로이고 화면은 멈추�
 test("조건 묶음의 표는 사이트 목록과 같다 - 자치구 이름·예산대 장·면적 구간 (#654)", async () => {
   const js = await source();
   const slugs = JSON.parse(JSON.stringify(vm.runInNewContext(`(${/const SLUGS = (\{[^}]+\});/.exec(js)[1]})`)));
-  assert.deepEqual(slugs, DISTRICT_SLUGS, "search.js 의 자치구 slug 가 scripts/district-slugs.ts 와 갈라졌다");
+  assert.deepEqual(slugs, DISTRICT_SLUGS, "nav.js 의 자치구 slug 가 scripts/district-slugs.ts 와 갈라졌다");
   assert.match(js, /b >= (\d+) && b <= (\d+)/);
   const [, lo, hi] = /b >= (\d+) && b <= (\d+)/.exec(js);
   assert.deepEqual([+lo, +hi], [Math.min(...BUDGET_PAGE_EOK), Math.max(...BUDGET_PAGE_EOK)], "예산대 장 범위와 다르다");
