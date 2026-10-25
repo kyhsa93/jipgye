@@ -1823,6 +1823,9 @@
   html:lang(en) #archive-section .m-ko, html:not(:lang(en)) #archive-section .m-en {
     display: none;
   }
+  html:lang(en) #kospi-section .m-ko, html:not(:lang(en)) #kospi-section .m-en {
+    display: none;
+  }
   html:not(:lang(en)) #content-notice.m-en {
     display: none;
   }

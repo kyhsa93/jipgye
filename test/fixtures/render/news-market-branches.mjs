@@ -24,6 +24,10 @@ const li = (title, link, source, { preview, ctx = "" } = {}) =>
   `<li class="news-item"><a href="${link}" target="_blank" rel="noopener">${title}</a><div class="news-meta">${source}</div>${preview === undefined ? "" : `<div class="news-preview">${preview}</div>`}${ctx}</li>`;
 const kospi = (label, value, sub) =>
   `<div class="stat-card"><span class="stat-label">${label}</span><span class="stat-value">${value}</span>${sub === undefined ? "" : `<span class="stat-sub">${sub}</span>`}</div>`;
+// 증시 뉴스 장의 원/달러 환율 카드(#639 PR-2): 라벨·보조 글은 ko·en 을 둘 다 굽고 html lang 이 가린다(m-ko·m-en).
+const bi = (ko, en) => `<span class="m-ko">${ko}</span><span class="m-en">${en}</span>`;
+const fxCard = (at, value, change) =>
+  `<div class="stat-card"><span class="stat-label">${bi(`원/달러 환율 ${at} 매매기준율`, `USD/KRW ${at} reference rate`)}</span><span class="stat-value">${value}</span>${change === undefined ? "" : `<span class="stat-sub">${bi(`전 영업일 대비 ${change}`, `vs previous business day ${change}`)}</span>`}</div>`;
 const stat = (href, label, value, note) =>
   `<a class="stat-card" href="${href}"><span class="stat-label">${label}</span><span class="stat-value">${value}</span>${note === undefined ? "" : `<span class="stat-sub">${note}</span>`}</a>`;
 
@@ -48,6 +52,9 @@ const ROWS = [
   { id: "M12", fn: "marketHtml", cond: "기준금리 값이 숫자 2.75·문자열 \"0\"(truthy)이면 남는다", args: [{ baseRate: { value: 2.75 } }, { baseRate: { value: "0" } }], expect: null, each: [base("2.75"), base("0")] },
   { id: "M13", fn: "marketHtml", cond: "둘 다 있으면 기준금리 → 환율 순, 사이는 ' · '(코스피는 무시)", args: [{ kospi: { value: "1" }, usdKrw: { value: 1380.5 }, baseRate: { value: "2.75" } }], expect: `${base("2.75")} · ${usd("1,380.50")}` },
   { id: "M14", fn: "marketHtml", cond: "환율 값 비숫자 + 기준금리 → 기준금리만", args: [{ usdKrw: { value: null }, baseRate: { value: "2.75" } }], expect: base("2.75") },
+  { id: "M17", fn: "marketHtml", cond: "환율 기준일(ECOS, 코스피와 같은 M/D 모양)이 있으면 값 뒤에 '(10/23 기준)'(#639 PR-2)", args: [{ usdKrw: { value: 1324.7, asOf: "10/23" } }, { usdKrw: { value: 1324.7, asOf: "1/5" } }], expect: null, each: [usd("1,324.70") + "(10/23 기준)", usd("1,324.70") + "(1/5 기준)"] },
+  { id: "M18", fn: "marketHtml", cond: "기준일이 없거나 M/D 모양이 아니면(옛 수집기의 RFC 날짜 글·\"\"·null·객체·숫자) 괄호를 생략한다", args: [{ usdKrw: { value: 1324.7 } }, { usdKrw: { value: 1324.7, asOf: "Fri, 23 Oct 2026 00:02:31 +0000" } }, { usdKrw: { value: 1324.7, asOf: "" } }, { usdKrw: { value: 1324.7, asOf: null } }, { usdKrw: { value: 1324.7, asOf: {} } }, { usdKrw: { value: 1324.7, asOf: 1023 } }], expect: null, each: [usd("1,324.70"), usd("1,324.70"), usd("1,324.70"), usd("1,324.70"), usd("1,324.70"), usd("1,324.70")] },
+  { id: "M19", fn: "marketHtml", cond: "기준금리와 기준일 있는 환율 → 기준금리 · 환율(기준일), 환율이 null 이면 기준금리만", args: [{ usdKrw: { value: 1324.7, asOf: "10/23" }, baseRate: { value: "3.00" } }, { usdKrw: null, baseRate: { value: "3.00" } }], expect: null, each: [`${base("3.00")} · ${usd("1,324.70")}(10/23 기준)`, base("3.00")] },
   { id: "M15", fn: "marketHtml", cond: `특수문자: 기준금리 값 & < > " ' 은 엔티티`, args: [{ baseRate: { value: SP } }], expect: base(SP_OUT) },
   { id: "M16", fn: "marketHtml", cond: "비문자열: 기준금리 값 true·{}·[1,2]", args: [{ baseRate: { value: true } }, { baseRate: { value: {} } }, { baseRate: { value: [1, 2] } }], expect: null, each: [base("true"), base("[object Object]"), base("1,2")] },
 
@@ -119,6 +126,11 @@ const ROWS = [
   { id: "K5", fn: "newsKospiHtml", cond: `특수문자 & < > " '(값·기준일·증감)`, args: [{ kospi: { value: SP, asOf: SP, change: SP } }], expect: kospi(`코스피 ${SP_OUT} 종가`, SP_OUT, `전 거래일 대비 ${SP_OUT}`) },
   { id: "K6", fn: "newsKospiHtml", cond: "비문자열: 값 숫자 6977.94·true·{}, 기준일 {}·[1,2]·5, 증감 5·{}·[1,2]", args: [{ kospi: { value: 6977.94, asOf: {}, change: 5 } }, { kospi: { value: true, asOf: [1, 2], change: {} } }, { kospi: { value: {}, asOf: 5, change: [1, 2] } }], expect: null, each: [kospi("코스피 [object Object] 종가", "6977.94", "전 거래일 대비 5"), kospi("코스피 1,2 종가", "true", "전 거래일 대비 [object Object]"), kospi("코스피 5 종가", "[object Object]", "전 거래일 대비 1,2")] },
   { id: "K7", fn: "newsKospiHtml", cond: "문자열 \"0\"은 truthy라 카드가 있다", args: [{ kospi: { value: "0" } }], expect: kospi("코스피", "0") },
+  { id: "K8", fn: "newsKospiHtml", cond: "환율(ECOS, 기준일 M/D)이 있으면 코스피 카드 옆에 환율 카드 - 라벨 '원/달러 환율 {기준일} 매매기준율', 보조 '전 영업일 대비 {증감}', 영어는 m-en(#639 PR-2)", args: [{ kospi: { value: "5,001.01", asOf: "10/21", change: "182.92" }, usdKrw: { value: 1324.7, asOf: "10/23", change: "-1.20" } }], expect: kospi("코스피 10/21 종가", "5,001.01", "전 거래일 대비 182.92") + fxCard("10/23", "1,324.70", "-1.20") },
+  { id: "K9", fn: "newsKospiHtml", cond: "환율 증감이 없으면(\"\"·null·undefined·0) 보조 줄을 내지 않는다", args: [{ usdKrw: { value: 1324.7, asOf: "10/23" } }, { usdKrw: { value: 1324.7, asOf: "10/23", change: null } }, { usdKrw: { value: 1324.7, asOf: "10/23", change: "" } }, { usdKrw: { value: 1324.7, asOf: "10/23", change: 0 } }], expect: null, each: [fxCard("10/23", "1,324.70"), fxCard("10/23", "1,324.70"), fxCard("10/23", "1,324.70"), fxCard("10/23", "1,324.70")] },
+  { id: "K10", fn: "newsKospiHtml", cond: "환율 기준일이 없거나 M/D 모양이 아니면(옛 수집기의 값) 환율 카드를 내지 않는다 - 매매기준율이라 부를 수 없다", args: [{ usdKrw: { value: 1324.7 } }, { usdKrw: { value: 1324.7, asOf: "Fri, 23 Oct 2026 00:02:31 +0000" } }, { usdKrw: { value: 1324.7, asOf: "", change: "-1.19" } }, { kospi: { value: "1" }, usdKrw: { value: 1324.7, asOf: "Fri, 23 Oct 2026 00:02:31 +0000" } }], expect: null, each: [null, null, null, kospi("코스피", "1")] },
+  { id: "K11", fn: "newsKospiHtml", cond: "환율이 null·값이 숫자가 아님이면 환율 카드는 빠지고 코스피 카드만 남는다", args: [{ kospi: { value: "1" }, usdKrw: null }, { kospi: { value: "1" }, usdKrw: { value: "1324.7", asOf: "10/23" } }, { kospi: { value: "1" }, usdKrw: { value: null, asOf: "10/23" } }], expect: null, each: [kospi("코스피", "1"), kospi("코스피", "1"), kospi("코스피", "1")] },
+  { id: "K12", fn: "newsKospiHtml", cond: "코스피 없이 환율만 있어도 환율 카드는 난다", args: [{ usdKrw: { value: 1324.7, asOf: "10/23", change: "0.50" } }], expect: fxCard("10/23", "1,324.70", "0.50") },
 
   // ================= newsRealestateStatsHtml =================
   { id: "T1a", fn: "newsRealestateStatsHtml", cond: "news가 null → null", args: [null], expect: null },

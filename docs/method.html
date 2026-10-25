@@ -248,7 +248,7 @@
     <ul>
       <li><strong>아파트 실거래</strong> — 국토교통부 아파트 매매·전월세 실거래가 공개시스템. 하루 1회 갱신. 국토부 응답 원본을 스물네 달치 그대로 보관하고, 실거래 관련 파일은 전부 그 원본에서 다시 만듭니다. 시세 화면은 그 가운데 최근 여섯 달, 추이 그래프는 최근 1년을 셉니다.</li>
       <li><strong>대출·예금 평균금리</strong> — 한국은행 경제통계시스템(ECOS Open API)의 예금은행 주택담보대출·전세자금대출·정기예금 평균금리. 월별 값이고 하루 1회 받습니다.</li>
-      <li><strong>시장 지표</strong> — 코스피, 원/달러 환율, 그리고 한국은행 기준금리(경제통계시스템 ECOS Open API). 하루 1회.</li>
+      <li><strong>시장 지표</strong> — 코스피, 원/달러 환율(매매기준율, 영업일 하루 값), 한국은행 기준금리. 모두 한국은행 경제통계시스템(ECOS) Open API, 하루 1회.</li>
       <li><strong>아파트 매매 실거래가격지수</strong> — 한국부동산원, ECOS Open API로 받습니다. 월별, 두 달 늦게 나오며 최근 열네 달은 매일 다시 받아 고쳐진 값을 반영합니다.</li>
       <li><strong>뉴스</strong> — 경제지 RSS. 하루 한 번. 제목과 링크만 싣고 본문은 원문으로 보냅니다.</li>
     </ul>
@@ -442,7 +442,7 @@
     <ul>
       <li><strong>Apartment transactions</strong> — Ministry of Land, Infrastructure and Transport open data. Daily. The ministry's raw responses are kept for twenty-four months exactly as received, and every transaction-derived file is rebuilt from them; price screens count the most recent six months, trend charts the most recent twelve.</li>
       <li><strong>Average deposit and loan rates</strong> — Bank of Korea ECOS Open API: average rates on mortgages, jeonse loans and time deposits. Monthly series, fetched daily.</li>
-      <li><strong>Market indicators</strong> — KOSPI, KRW/USD, and the Bank of Korea base rate (ECOS Open API). Daily.</li>
+      <li><strong>Market indicators</strong> — KOSPI, KRW/USD (reference rate, one value per business day) and the base rate, all from Bank of Korea ECOS Open API. Daily.</li>
       <li><strong>Apartment sale price index</strong> — Korea Real Estate Board, via the ECOS Open API. Monthly, two months behind; the last fourteen months are re-fetched daily so revisions come through.</li>
       <li><strong>News</strong> — newspaper RSS, once a day. Headlines and links only; the article itself stays at the source.</li>
     </ul>
