@@ -77,5 +77,59 @@ export function repeatSalesView(data) {
   }));
   // 표 이름에는 숫자를 넣는다(장마다 다른 caption, accessibility 시험).
   const caption: Both = { ko: `같은 집 쌍 ${rows.length}개 구`, en: `Same-home pairs, ${rows.length} districts` };
-  return { heading: REPEAT_HEADING, intro, gap, order, rows, caption };
+  return { heading: REPEAT_HEADING, intro, gap, order, rows, caption, bands: repeatBandsView(data.bands) };
+}
+
+// ---------------------------------------------------------------- 둘째 표: 앞 거래가 3분의 1 (N6, 판정 #170 6403691545)
+//
+// 문구는 판정 그대로: 표 제목, 행 「낮은 쪽·가운데·높은 쪽 3분의 1」(「싼 집·비싼 집」이라 부르지 않는다), 표 위 한 줄 「같은 칸 방식과 방향이 같다」,
+// 차이 문장은 구간이 겹치지 않는 쌍만(빌더의 say ≠ 0) 적고 바로 옆에 평균 회귀 한계(보정하지 않음)를 붙인다. 「시장 지수가 아니다·다시 팔린 집만」은 v0 문구를 다시 쓴다.
+// 접음(빌더 fold): 5-2 ② 미달·흔들림, N4 산출 없음, ⑦ 방향 불일치면 표 없이 한 줄.
+
+export const BANDS_TITLE: Both = { ko: "앞 거래가 기준 3분의 1씩 나눈 같은 집 재거래 변화", en: "Same-home resales by thirds of earlier price" };
+export const BAND_NAMES: Both[] = [
+  { ko: "낮은 쪽 3분의 1", en: "Lower third" },
+  { ko: "가운데 3분의 1", en: "Middle third" },
+  { ko: "높은 쪽 3분의 1", en: "Upper third" },
+];
+// 첫 칸은 행 이름 + 경계(언어와 무관한 기호, 만원)라 머리글 하나로 둘을 덮는다 - 렌더 HTML 예산(+1.5KB) 안에 두 언어를 굽는다.
+export const BANDS_HEAD: Both[] = [
+  { ko: "앞 거래가(만원)", en: "Earlier (₩10k)" },
+  { ko: "쌍 수", en: "Pairs" },
+  { ko: "중앙값", en: "Median" },
+  { ko: "90% 구간", en: "90% range" },
+];
+// 차이 문장의 이름. 「3분의 1」은 표에 있어 문장에서는 줄이고, 크고 작음은 언어와 무관한 부등호로 적는다(예산).
+const SHORT: Both[] = [{ ko: "낮은 쪽", en: "lower" }, { ko: "가운데", en: "middle" }, { ko: "높은 쪽", en: "upper" }];
+/** BAND_PAIRS(repeat-sales.ts)와 같은 순서: 낮은–가운데, 가운데–높은, 낮은–높은. */
+const PAIRS = [[0, 1], [1, 2], [0, 2]];
+const FOLD_WHY: Record<string, Both> = {
+  thin: { ko: "쌍이 모자라거나 값이 흔들려", en: "a third had too few pairs or was unstable" },
+  noN4: { ko: "같은 칸 방식(가격대·연식별 1년 변화)과 대조하지 못해", en: "it could not be checked against the same-unit method (1-year change by price band and building age)" },
+  n4: { ko: "같은 칸 방식(가격대·연식별 1년 변화)과 방향이 맞지 않아", en: "its direction did not match the same-unit method (1-year change by price band and building age)" },
+};
+const won = (v: number) => v.toLocaleString("en-US");
+
+export function repeatBandsView(b) {
+  if (!b?.rows?.length || !Array.isArray(b.b)) return null;
+  if (b.fold || b.rows.some((r) => r.st)) {
+    const why = FOLD_WHY[b.fold] ?? FOLD_WHY.thin;
+    return { fold: { ko: `${BANDS_TITLE.ko} 표는 ${why.ko} 사전에 정한 점검을 넘지 못해 싣지 않습니다.`, en: `The table of ${BANDS_TITLE.en.toLowerCase()} is not shown: ${why.en}, so it did not pass the pre-set checks.` } };
+  }
+  // 경계는 언어와 무관한 기호로 적는다(앞 거래가 만원, 낮은 쪽 ≤ B1 < 가운데 ≤ B2 < 높은 쪽).
+  const bounds = [`≤${won(b.b[0])}`, `≤${won(b.b[1])}`, `>${won(b.b[1])}`];
+  const rows = b.rows.map((r, k) => ({ name: BAND_NAMES[k], bound: bounds[k], cells: [won(r.n), pct(r.p[0]), `${pct(r.p[1])} ~ ${pct(r.p[2])}`] }));
+  // 「가운데 > 낮은 쪽」: 뒤 가격대(j)의 값이 앞(i)보다 크면 >. 말할 수 없는 쌍(say 0)은 적지 않는다.
+  const said = PAIRS.map(([i, j], k) => ({ i, j, dir: b.say?.[k] ?? 0 })).filter((x) => x.dir);
+  const list = (lang: keyof Both) => said.map(({ i, j, dir }) => `${SHORT[j][lang]} ${dir > 0 ? ">" : "<"} ${SHORT[i][lang]}`).join(" · ");
+  // 표 위 한 문단(판정: 표 위에 「방향이 같다」 한 줄, 차이 문장 바로 옆에 평균 회귀 한계). 말할 쌍이 없으면 차이·한계 문장 없이 첫 줄만.
+  const lead: Both = {
+    ko:
+      "같은 칸 방식(가격대·연식별 1년 변화)과 방향이 같습니다. 시장 지수가 아니고, 다시 팔린 집만 들어옵니다." +
+      (said.length ? ` 구간이 겹치지 않아 구별되는 쌍: ${list("ko")}. 양 끝의 차이는 평균 회귀로 커 보일 수 있습니다(보정하지 않음).` : ""),
+    en:
+      "Same direction as the same-unit method (1-year change by price band and age). Not a market index; resold homes only." +
+      (said.length ? ` Told apart (ranges do not overlap): ${list("en")}. Gaps at the ends can look larger through regression to the mean (not corrected).` : ""),
+  };
+  return { title: BANDS_TITLE, lead, rows };
 }

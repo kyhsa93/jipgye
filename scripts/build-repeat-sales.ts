@@ -16,13 +16,25 @@
 import { createHash } from "node:crypto";
 import { mkdir, readdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { compute, FORBIDDEN, JITTER_SEED, BOOT_SEED, loadRone, payload, REGISTERED, RONE_SOURCE, windowFor } from "./repeat-sales.ts";
+import { bandsPayload, compute, computeBands, FORBIDDEN, JITTER_SEED, BOOT_SEED, loadRone, payload, REGISTERED, RONE_SOURCE, windowFor } from "./repeat-sales.ts";
 import { DISTRICT_INDEX_FILE } from "./fetch-district-index.ts";
 import { RAW_DIR } from "./realestate-raw.ts";
 import { yearMonthOf } from "./realestate-slots.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const outFile = process.env.REPEAT_SALES_FILE ? path.resolve(process.env.REPEAT_SALES_FILE) : path.join(root, "docs/data/repeat-sales.json");
+// 가격대 3분위(N6) 5-2 ⑦ 의 대조 상대. build-district-change.ts 가 이 빌더보다 먼저 같은 실행에서 쓴다. 없거나 못 읽으면 대조를 못 해 표를 접는다.
+const N4_FILE = path.join(root, "docs/data/segment-change.json");
+
+/** segment-change.json 의 {가격대 키: change}. 파일이 없거나 모양이 다르면 null. */
+async function readN4(file: string) {
+  try {
+    const d = JSON.parse(await readFile(file, "utf8"));
+    return Object.fromEntries((d.price ?? []).filter((r) => typeof r?.change === "number").map((r) => [r.key, r.change]));
+  } catch {
+    return null;
+  }
+}
 
 const sha1 = (buf: Buffer) => createHash("sha1").update(buf).digest();
 /** `git hash-object` 와 같은 값. */
@@ -38,7 +50,7 @@ function treeId(entries: { name: string; data: Buffer }[]) {
   return sha1(Buffer.concat([Buffer.from(`tree ${body.length}\0`), body])).toString("hex");
 }
 
-export async function build({ rawDir = RAW_DIR, roneFile = DISTRICT_INDEX_FILE, window = windowFor(yearMonthOf(new Date())) } = {}) {
+export async function build({ rawDir = RAW_DIR, roneFile = DISTRICT_INDEX_FILE, n4File = N4_FILE, window = windowFor(yearMonthOf(new Date())) } = {}) {
   const dir = path.join(rawDir, "sale");
   const names = (await readdir(dir)).filter((f) => f.endsWith(".json")).sort();
   const files = await Promise.all(names.map(async (name) => ({ name, data: await readFile(path.join(dir, name)) })));
@@ -47,7 +59,8 @@ export async function build({ rawDir = RAW_DIR, roneFile = DISTRICT_INDEX_FILE, 
   const roneData = await readFile(roneFile);
   const rone = loadRone(JSON.parse(roneData.toString("utf8")));
   const roneLatest = Math.max(...[...rone.values()].flatMap((s) => [...s.keys()]));
-  return payload(compute(rows, rone, window), window, {
+  const result = compute(rows, rone, window);
+  const base = payload(result, window, {
     // 연구 폴더 이름은 경로 글자로 적지 않는다(collector-output-paths 시험: 수집이 가리키는 경로는 docs/data·raw 뿐).
     method: "repeat-sales-2026-10 DESIGN.md 5-1 (개정 2), repeat_index_v0.py",
     registered: { window: REGISTERED.window.join("-"), input: REGISTERED.input, out: "repeat_index_v0.out" },
@@ -58,6 +71,10 @@ export async function build({ rawDir = RAW_DIR, roneFile = DISTRICT_INDEX_FILE, 
     roneLatest: String(roneLatest),
     seeds: { boot: BOOT_SEED, jitter: JITTER_SEED, prng: "python random.Random (MT19937)" },
   });
+  // 가격대 3분위(N6, 판정 #170 6403691545): 같은 쌍으로 운영 창마다 5-2 ②⑤⑥⑦ 을 다시 판정한다. 대조 상대 N4 출처는 blob 으로 남긴다.
+  const n4 = await readN4(n4File);
+  const n4Blob = n4 ? blobId(await readFile(n4File)).toString("hex") : null;
+  return { ...base, provenance: { ...base.provenance, bands: "DESIGN.md 5-2 (개정 3), repeat_bands_n6.py", n4Blob }, bands: bandsPayload(computeBands(result.seoulUnits, n4)) };
 }
 
 function parseWindow(argv: string[]) {
@@ -86,7 +103,7 @@ async function writeOnce({ window = undefined, file = outFile, ...opts } = {}) {
   const c = data.checks;
   return (
     `  같은 집 쌍: 창 ${data.window.from}~${data.window.to}, 서울 ${data.seoul?.n ?? 0}쌍, 값을 낸 구 ${c.published}/25, ` +
-    `킬 스위치 ${c.kill ? "발동" : "미발동"}(스피어만 ${c.rho}), ${Buffer.byteLength(text)}B`
+    `킬 스위치 ${c.kill ? "발동" : "미발동"}(스피어만 ${c.rho}), 3분위 ${data.bands ? (data.bands.fold ?? "표시") : "없음"}, ${Buffer.byteLength(text)}B`
   );
 }
 
@@ -94,7 +111,7 @@ async function writeOnce({ window = undefined, file = outFile, ...opts } = {}) {
  * 소프트 실패 진입점(build-district-change.ts 가 부른다). 던지지 않는다 - 무엇이 잘못돼도 ::warning 을 찍고 어제 파일을 둔다.
  * 돌려주는 값: { ok, warning } (시험·로그용).
  */
-export async function runRepeatSales({ log = console.log, ...opts }: { log?: (m: string) => void; rawDir?: string; roneFile?: string; window?: [string, string]; file?: string } = {}) {
+export async function runRepeatSales({ log = console.log, ...opts }: { log?: (m: string) => void; rawDir?: string; roneFile?: string; n4File?: string; window?: [string, string]; file?: string } = {}) {
   try {
     log(await writeOnce(opts));
     return { ok: true, warning: null };
