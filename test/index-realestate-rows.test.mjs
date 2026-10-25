@@ -196,6 +196,10 @@ test("메인 화면 추이 카드는 처음부터 다 펴져 있다", async () =
   const folds = [...grid.matchAll(/<details\b[^>]*>/g)].map((m) => m[0]);
   assert.ok(folds.length > 0, "접는 단추가 사라졌다 - 아래 단언이 빈 채로 통과한다");
   assert.ok(folds.every((tag) => /\sopen(\s|>)/.test(tag)), `접힌 채로 시작하는 추이 카드가 남았다: ${folds.join(" ")}`);
+  // 펴진 채로 시작하므로 단추 글이 "더보기"이면 거짓이다 - 무엇이 있는지만 말한다.
+  assert.equal(grid.match(/<summary>([^<]*)<\/summary>/)?.[1], "그 외 지표 3개");
+  const en = await page({ trend: syntheticTrend({ pending: false }), lang: "en" });
+  assert.equal(en.byId("realestate-history-grid").innerHTML.match(/<summary>([^<]*)<\/summary>/)?.[1], "3 more indicators");
 });
 
 // 소유자 결정: 모든 추이 카드를 같은 크기로. 폭은 격자가(auto-fill — 카드 수와 상관없이 같은 칸), 키는 그래프 120px 와
