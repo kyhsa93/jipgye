@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-25T01:03:55.759Z",
+  "updatedAt": "2026-10-25T09:41:53.186Z",
   "priceLast": "202607",
   "lastMonths": {
     "kb_sale": "202609",
@@ -16,7 +16,9 @@
     "buyer_outside_seoul": "202608",
     "mort_bal": "202608",
     "mort_bal_seoul": "202608",
-    "permits_seoul": "202608"
+    "permits_seoul": "202608",
+    "jeonse_loan_rate": "202608",
+    "deposit_rate": "202608"
   },
   "rows": [
     {

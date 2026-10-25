@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-25T01:03:43.729Z",
+  "updatedAt": "2026-10-25T09:41:39.183Z",
   "window": {
     "basis": "arrival",
     "from": "2026-10-19",
@@ -70,11 +70,11 @@
         "avgPricePerM2": 15585174.32099329,
         "avgPricePerPyeong10k": 5152,
         "transactionCount": 12,
-        "change": {
-          "value10k": 237,
-          "percent": 4.821973550356053
-        },
-        "baselineDate": "2026-10-18"
+        "changeWithheld": {
+          "current": 12,
+          "baseline": 9,
+          "min": 20
+        }
       },
       "jeonse": {
         "avgDepositPerM2": 9683576.036305144,
@@ -115,11 +115,11 @@
         "avgPricePerM2": 18348729.27592371,
         "avgPricePerPyeong10k": 6066,
         "transactionCount": 15,
-        "change": {
-          "value10k": -127,
-          "percent": -2.050702405942193
-        },
-        "baselineDate": "2026-10-18"
+        "changeWithheld": {
+          "current": 15,
+          "baseline": 13,
+          "min": 20
+        }
       },
       "jeonse": {
         "avgDepositPerM2": 9474211.279493954,
@@ -160,11 +160,11 @@
         "avgPricePerM2": 24105740.891723264,
         "avgPricePerPyeong10k": 7969,
         "transactionCount": 18,
-        "change": {
-          "value10k": 0,
-          "percent": 0
-        },
-        "baselineDate": "2026-10-18"
+        "changeWithheld": {
+          "current": 18,
+          "baseline": 18,
+          "min": 20
+        }
       },
       "jeonse": {
         "avgDepositPerM2": 10265582.014904259,
