@@ -287,3 +287,53 @@ export function districtSentence(rows, seoulMedian, locale = "ko") {
     ? `Of ${total} districts, ${distinct.length} sit outside the range a district identical to Seoul could produce at their sample size — ${parts.join(", while ")}. The rest cannot be told apart from Seoul, and this page says so instead of ranking them.`
     : `자치구 ${total}곳 가운데 ${distinct.length}곳만 서울(${size(ref ?? 0)}%)과 다르다고 말할 수 있습니다 — ${parts.join(", ")}. 나머지는 서울과 갈라 볼 수 없습니다. 이 화면이 스물다섯 줄을 순위로 적지 않는 것은 그래서입니다.`;
 }
+
+/**
+ * 전세도 같은 자로 잰다(#705). 칸 맞물림·문턱(MIN_CELLS)·구간 판정(`distinct`)을 그대로 쓰고,
+ * 구간만 전세 칸 전체에서 뽑는다 - 매매 칸으로 전세를 재면 다른 분포를 잣대로 삼게 된다.
+ * 매매 표의 줄마다 붙이므로 전세 칸이 하나도 없는 구도 칸 수 0으로 남는다.
+ * json 을 줄이려고 `distinct` 는 참일 때만 싣는다(없으면 거짓).
+ */
+export function withJeonse(rows, jeonseByDistrict) {
+  const pool = [...jeonseByDistrict.values()].flat();
+  const found = new Map(
+    districtRows(jeonseByDistrict, pool).map(({ district, cells, median, band, distinct }) => [
+      district,
+      distinct ? { cells, median, band, distinct } : { cells, median, band },
+    ])
+  );
+  return rows.map((row) => ({ ...row, jeonse: found.get(row.district) ?? { cells: 0, median: null, band: null } }));
+}
+
+/**
+ * 전세 한 문장. 매매 문장처럼 서울과 다르다고 말할 수 있는 구만 이름을 적고, 순위·이유는 적지 않는다.
+ * 값을 낸 구가 없으면 그렇다고 말한다 - 말하지 않으면 "전세는 다 같다"로 읽힌다.
+ */
+export function jeonseDistrictSentence(rows, seoulMedian, locale = "ko") {
+  if (!rows?.length || typeof seoulMedian !== "number") return null;
+  const en = locale === "en";
+  const valued = rows.filter((row) => typeof row.jeonse?.median === "number");
+  if (!valued.length) {
+    return en
+      ? `For jeonse, no district reaches ${MIN_CELLS} matched cells, so none is given a figure.`
+      : `전세는 맞물린 칸이 ${MIN_CELLS}개에 이른 구가 없어 자치구 값을 내지 않습니다.`;
+  }
+  const ref = `${size(seoulMedian)}%`;
+  const distinct = valued.filter((row) => row.jeonse.distinct);
+  if (!distinct.length) {
+    return en
+      ? `For jeonse, none of the ${valued.length} districts with a figure can be told apart from Seoul (${ref}).`
+      : `전세는 값을 낸 ${valued.length}곳 모두 서울(${ref})과 갈라 볼 수 없습니다.`;
+  }
+  const list = (items) => items.map((row) => `${row.district} ${size(row.jeonse.median)}%`).join(", ");
+  const deeper = distinct.filter((row) => row.jeonse.median < seoulMedian);
+  const shallower = distinct.filter((row) => row.jeonse.median >= seoulMedian);
+  const parts = [];
+  if (deeper.length) {
+    parts.push(en ? `${list(deeper)} discount it more` : `${list(deeper)}는 더 크게 ${shallower.length ? "깎이고" : "깎입니다"}`);
+  }
+  if (shallower.length) parts.push(en ? `${list(shallower)} discount it less` : `${list(shallower)}는 덜 깎입니다`);
+  return en
+    ? `For jeonse, ${distinct.length} of the ${valued.length} districts with a figure ${distinct.length === 1 ? "differs" : "differ"} from Seoul (${ref}) — ${parts.join(", while ")}.`
+    : `전세는 값을 낸 ${valued.length}곳 가운데 ${distinct.length}곳만 서울(${ref})과 다릅니다 — ${parts.join(", ")}.`;
+}

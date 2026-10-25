@@ -1,7 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildPayload } from "../scripts/build-floor-gap.ts";
-import { cellRatio, districtRows, noiseBand, tally, toCells, topRatio } from "../scripts/floor-gap.ts";
+import {
+  cellRatio,
+  districtRows,
+  jeonseDistrictSentence,
+  MIN_CELLS,
+  noiseBand,
+  tally,
+  toCells,
+  topRatio,
+  withJeonse,
+} from "../scripts/floor-gap.ts";
 import { floorDistrictsHtml } from "../scripts/prerender.ts";
 import { loadFloorPage } from "./helpers/floor-page.mjs";
 
@@ -91,6 +101,55 @@ test("칸이 모자란 구는 값을 비우고 서울과 다르다고 말하지 
   assert.equal(gwangjin.distinct, false, "칸 셋으로 서울과 다르다고 말했다");
   assert.equal(gwangjin.median, null, "표본이 모자란데 값을 냈다 (#171)");
   assert.equal(gwangjin.cells, 3, "칸 수는 남긴다");
+});
+
+// --- 전세 열 (#705) -----------------------------------------------------------
+
+const JEONSE = new Map([
+  ["노원구", Array.from({ length: 40 }, () => -20)],
+  ["강서구", Array.from({ length: MIN_CELLS }, () => -6)],
+  ["광진구", [-20, -20, -20]],
+  // 서울 칸 대부분이 -6% 라야 구간이 -6% 둘레에 선다(표에는 없는 구 - 구간 표본에만 든다).
+  ["송파구", Array.from({ length: 400 }, () => -6)],
+]);
+const SALE_ROWS = ["노원구", "강서구", "광진구", "종로구"].map((district) => ({ district, cells: 30, median: -7, band: null, distinct: false }));
+
+test("전세 열은 매매와 같은 문턱·구간 판정을 쓰고 매매 줄마다 붙는다", () => {
+  const rows = withJeonse(SALE_ROWS, JEONSE);
+  assert.deepEqual(rows.map((row) => row.district), ["노원구", "강서구", "광진구", "종로구"], "매매 줄 순서를 바꿨다");
+  const by = Object.fromEntries(rows.map((row) => [row.district, row.jeonse]));
+  assert.equal(by["노원구"].distinct, true, "칸이 넉넉하고 한참 벗어났는데 말하지 못했다");
+  assert.equal(typeof by["강서구"].median, "number");
+  assert.ok(by["강서구"].band, "문턱을 넘은 구에 구간이 없다");
+  assert.ok(!by["강서구"].distinct, "구간 안의 구를 다르다고 했다");
+  assert.deepEqual(by["광진구"], { cells: 3, median: null, band: null }, "칸이 모자란 구가 값을 냈다");
+  assert.deepEqual(by["종로구"], { cells: 0, median: null, band: null }, "전세 칸이 없는 구는 칸 0으로 남는다");
+});
+
+test("전세 문장은 서울과 다르다고 말할 수 있는 구만 적고 순위를 말하지 않는다", () => {
+  const rows = withJeonse(SALE_ROWS, JEONSE);
+  for (const locale of ["ko", "en"]) {
+    const text = jeonseDistrictSentence(rows, -5, locale);
+    assert.match(text, /노원구 20\.0%/, `${locale}: 다른 구가 빠졌다`);
+    assert.doesNotMatch(text, /강서구|광진구|종로구/, `${locale}: 갈라 볼 수 없는 구를 적었다`);
+    assert.doesNotMatch(text, /위|번째|가장|\b(?:1st|first|rank|most)\b/i, `${locale}: 순위 말투`);
+    assert.match(text, /5\.0%/, `${locale}: 서울 전세 값이 없다`);
+  }
+  assert.match(jeonseDistrictSentence(rows, -5, "ko"), /2곳 가운데 1곳만/);
+  const none = rows.map((row) => ({ ...row, jeonse: { ...row.jeonse, distinct: false } }));
+  assert.match(jeonseDistrictSentence(none, -5, "ko"), /모두 서울\(5\.0%\)과 갈라 볼 수 없습니다/);
+  assert.doesNotMatch(jeonseDistrictSentence(none, -5, "en"), /[가-힣]/);
+  const thin = withJeonse(SALE_ROWS, new Map([["광진구", [-1]]]));
+  assert.match(jeonseDistrictSentence(thin, -5, "ko"), new RegExp(`칸이 ${MIN_CELLS}개에 이른 구가 없어`));
+  assert.equal(jeonseDistrictSentence(rows, null, "ko"), null, "서울 전세 값이 없는데 말했다");
+});
+
+test("전세 자료가 없어도 매매 표와 문장은 그대로 나온다", () => {
+  const sale = { 노원구: district("노원", 40, -12) };
+  const without = buildPayload({ sale, jeonse: undefined, now: NOW });
+  assert.ok(without.districts.length, "매매 표가 사라졌다");
+  assert.deepEqual(without.districts[0].jeonse, { cells: 0, median: null, band: null });
+  assert.match(without.districtLead.ko, /^서울 전체와 다르다고 말할 수 있는 자치구는 없습니다|^자치구/);
 });
 
 // --- 화면 -------------------------------------------------------------------
