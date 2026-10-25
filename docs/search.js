@@ -429,7 +429,8 @@
     document.addEventListener("change", () => (touched = true), true);
     document.addEventListener("click", (e) => e.target?.closest?.("[role=radio]") && (touched = true), true);
     window.addEventListener("pagehide", () => touched && save(true));
-    save(false);
+    // 바깥 공유 링크는 적지 않는다
+    if ((document.referrer || "").startsWith(location.origin + "/")) save(false);
 
     const d = district(saved.district);
     const a = area(saved.area);

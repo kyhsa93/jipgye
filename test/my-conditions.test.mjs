@@ -37,7 +37,7 @@ test("메인 질문 링크 열 개의 구운 주소는 그대로다 - 조건은 
 });
 
 /** search.js 를 가짜 문서에 올린다. 검색창은 없게 해 검색 묶음은 바로 빠지고 조건 묶음만 돈다. */
-async function run({ file = "index.html", search = "", saved, storage } = {}) {
+async function run({ file = "index.html", search = "", saved, storage, referrer = "https://kyhsa93.github.io/jipgye/index.html" } = {}) {
   const items = new Map(saved === undefined ? [] : [["myConditions", JSON.stringify(saved)]]);
   const localStorage = storage ?? {
     getItem: (k) => items.get(k) ?? null,
@@ -57,9 +57,9 @@ async function run({ file = "index.html", search = "", saved, storage } = {}) {
   );
   const listeners = {};
   const on = (type, fn) => (listeners[type] ||= []).push(fn);
-  const location = { pathname: `/jipgye/${file}`, search, href: "" };
+  const location = { origin: "https://kyhsa93.github.io", pathname: `/jipgye/${file}`, search, href: "" };
   vm.runInNewContext(await source(), {
-    document: { querySelector: () => null, getElementById: (id) => (file === "index.html" ? links.get(id) ?? null : null), addEventListener: on },
+    document: { referrer, querySelector: () => null, getElementById: (id) => (file === "index.html" ? links.get(id) ?? null : null), addEventListener: on },
     window: { localStorage, addEventListener: on },
     location,
     URLSearchParams,
@@ -118,6 +118,22 @@ test("화면에 들어온 주소의 조건을 적는다 - 검색·다른 화면�
   }
   assert.equal((await run({ file: "floor-gap.html", search: "?district=x" })).stored(), undefined, "조건이 없는 화면에서 적었다");
   assert.equal((await run({ file: "deal-search.html", search: `?district=${enc("성남시")}&budget=-1` })).stored(), undefined, "모르는 구·음수 예산을 적었다");
+});
+
+test("들어온 주소는 같은 사이트에서 왔을 때만 적는다 - 바깥 공유 링크가 내 조건을 덮지 않게 (#654)", async () => {
+  const search = `?district=${encodeURIComponent("마포구")}&budget=9`;
+  const saved = { district: "노원구", budget: 12 };
+  for (const referrer of ["https://example.com/post", "", "https://kyhsa93.github.io.evil.com/x"]) {
+    const page = await run({ file: "deal-search.html", search, saved, referrer });
+    assert.deepEqual(page.stored(), saved, `참조 「${referrer}」 에서 온 주소로 내 조건을 덮었다`);
+  }
+  const same = await run({ file: "deal-search.html", search, saved, referrer: "https://kyhsa93.github.io/jipgye/index.html" });
+  assert.deepEqual(same.stored(), { district: "마포구", budget: 9 }, "같은 사이트에서 넘긴 조건을 적지 않았다");
+  // 바깥에서 왔어도 화면에서 고르면 적는다.
+  const ext = await run({ file: "deal-search.html", search, referrer: "" });
+  ext.fire("change", { target: {} });
+  ext.fire("pagehide");
+  assert.deepEqual(ext.stored(), { district: "마포구", budget: 9 });
 });
 
 test("화면이 기본값으로 채운 주소는 사람이 고르기 전에는 적지 않는다 (#654)", async () => {
