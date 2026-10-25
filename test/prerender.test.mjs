@@ -9,7 +9,6 @@ import {
   newsHtml,
   newsListHtml,
   realestateHtml,
-  summaryHtml,
 } from "../scripts/prerender.ts";
 import { SITE } from "./helpers/site-root.mjs";
 
@@ -77,15 +76,6 @@ test("시장지표는 값이 있는 항목만 줄을 만든다", () => {
   assert.ok(!html.includes("환율"), "값이 없는 환율까지 줄을 만들었다");
 });
 
-// 마크업은 스크립트가 그리는 모양(분류 라벨 + 줄 div)이다 (#352).
-test("요약은 카테고리별 한국어 문장을 싣는다", () => {
-  assert.equal(summaryHtml({ categories: [] }), null);
-  const html = summaryHtml({ categories: [{ name: "부동산", lineKo: "서울 주택난" }, { name: "증시" }] });
-  assert.ok(html.includes('<div class="summary-category-label">부동산</div><div class="summary-category-line">서울 주택난</div>'));
-  // 문장이 없는 분류도 스크립트는 라벨과 빈 줄로 그린다 - 구운 쪽이 걸러 내면 스크립트가 다시 그릴 때 상자 높이가 달라진다.
-  assert.ok(html.includes('<div class="summary-category-label">증시</div><div class="summary-category-line"></div>'));
-});
-
 test("배포된 index.html에 자리표시 주석 세 쌍이 남아 있다", async () => {
   const html = await readIndex();
   for (const name of ["market", "realestate", "news"]) {
@@ -134,15 +124,12 @@ test("정적 마크업이 클라이언트가 그리는 구조와 같은 뼈대�
   assert.ok(realestate.includes('<span class="count">'), "거래 건수가 빠져 있다");
 });
 
-// 첫 화면 뉴스는 #575 PR2 부터 다섯 건이 아니라 뉴스 화면으로 가는 한 줄이다. indexNewsItems 는 아직 남아 있는 순수 함수라 규칙만 본다.
-test("첫 화면 뉴스는 기사 수를 단 링크 한 줄이고, 기사는 뉴스 화면으로 (#48, #575)", async () => {
-  const { indexNewsItems, INDEX_NEWS } = await import("../scripts/prerender.ts");
+// 첫 화면 뉴스는 #575 PR2 부터 다섯 건이 아니라 뉴스 화면으로 가는 한 줄이다.
+test("첫 화면 뉴스는 기사 수를 단 링크 한 줄이고, 기사는 뉴스 화면으로 (#48, #575)", () => {
   const items = [
     ...Array.from({ length: 4 }, (_, i) => ({ title: `금리${i}`, link: `https://x/r${i}`, category: "rates" })),
     ...Array.from({ length: 3 }, (_, i) => ({ title: `부동산${i}`, link: `https://x/e${i}`, category: "realestate" })),
   ];
-  assert.equal(INDEX_NEWS, 5);
-  assert.deepEqual(indexNewsItems(items).map((i) => i.title), ["부동산0", "부동산1", "부동산2", "금리0", "금리1"]);
   assert.equal(newsHtml({ items }), '<a href="./news.html" id="news-link" data-n="7">오늘 뉴스 7건·AI 요약 →</a>');
   assert.equal(newsHtml({ items: [] }), null);
 });

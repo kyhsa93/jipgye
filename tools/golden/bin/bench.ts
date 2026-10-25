@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // 렌더 단계 시간 기준선(#236 기준선 2, S4의 분모). 깨끗한 사본을 N번 새로 만들어 단계마다 시간을 재고
-// 단계별·합계의 중앙값과 상한(최댓값)을 낸다. S4는 이 값 자체가 아니라 같은 실행에서 legacy·react를 함께 잰 비율이다.
+// 단계별·합계의 중앙값과 상한(최댓값)을 낸다. S4는 이 값 자체가 아니라 컷오버 전에 같은 실행에서 legacy·react를 함께 잰 비율이었다(legacy 는 #248 P3 가 지웠다).
 //   node bin/bench.ts --repo <저장소> [--sha <SHA>] [--runs 10] [--env K=V ...]
 // 첫 실행은 파일 캐시가 덜 데워져 있을 수 있어 `--warmup 1`(기본)로 한 번 돌리고 버린다.
 import { DiskSpaceError, installSignalHandlers, isTerminating } from "../lib/cleanup.ts";

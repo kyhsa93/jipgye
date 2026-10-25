@@ -398,8 +398,9 @@ test("훅 클래스 목록(hook-classes.json)이 소스와 맞는다 — 소스�
   // 이제 이 class를 읽는 JS가 없으므로 기계 추출이 훅으로 보지 않는다(보고서의 hook-list-dropped).
   // 대신 새 nav.js의 의존은 class가 아니라 #share-button id와 data-share="page" 속성이고,
   // 그 둘은 hooks 검사가 하드로 잡는다(id·data-*·aria-* 바구니, data-*는 이름과 값을 함께 본다).
+  // summary-meta 는 #593 에서 뺐다 - 그 class 를 든 시험 마크업(메인 요약 상자 조각 summaryHtml 의 시험)을 조각과 함께 지웠다.
   // news-chip·placeholder 는 #575 PR2 에서 뺐다 - 그 class 를 읽던 메인의 뉴스 칩·요약 상자 스크립트가 뉴스 화면으로 옮기며 없어졌다.
-  const known = "table-scroll page-nav sub-nav site-search site-search-results header-actions skip-link brand marker marker-line marker-dot news-item context-chip stat-card history-more realestate-table budget-summary budget-empty empty read sorted scroll-start scroll-end on summary-meta".split(" ");
+  const known = "table-scroll page-nav sub-nav site-search site-search-results header-actions skip-link brand marker marker-line marker-dot news-item context-chip stat-card history-more realestate-table budget-summary budget-empty empty read sorted scroll-start scroll-end on".split(" ");
   assert.deepEqual(known.filter((c) => !list.js.includes(c) && !list.markup.includes(c)), []);
 });
 

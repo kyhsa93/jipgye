@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
-import { newsSummaryHtml, summaryHtml } from "../scripts/prerender.ts";
+import { newsSummaryHtml } from "../scripts/prerender.ts";
 import { FALLBACK_NOTE_KO, hasFallback } from "../scripts/summary-note.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -62,6 +62,3 @@ test("hasFallback 은 화면 스크립트와 같은 truthy 검사다 (#350)", ()
 });
 
 // (#507) "커밋된 구운 장 다섯의 안내 줄 유무가 summary.json 과 맞는다 - 데이터가 바뀌면 다시 구워야 한다 (#350)" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/summary-note.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
-// (#248 P2) 예전에는 여기에 legacy 쌍둥이(원본 함수)의 안내 줄 class 를 따로 보는 시험 둘이 있었다(#355). legacy 가 oracle 이 아니게 되면서 지웠다 -
-// 같은 단언(뉴스 조각 안내 줄 class=summary-note 가 상자 끝에, index 조각 안내 줄 class=summary-fallback-note 가 분류 줄 뒤·.summary-meta 앞에, 폴백 없는 날엔 없음)은
-// 위의 「폴백이 있는 날 뉴스 장의 구운 #summary-box …」·「폴백이 있는 날 index.html 의 구운 #summary-box …」가 기본 렌더(React) 출력에 대고 이미 한다.

@@ -1,7 +1,7 @@
 // 디자인 속성(class·style) 정규화 (#277). 비교를 "내용 비교"로 좁히는 자리는 전부 이 모듈 하나를 쓴다.
 //
-// 왜. Tailwind 도입(#276)과 디자인 개편(#279~#283)은 조각의 class를 바꾼다. 그런데 legacy↔react parity
-// 시험(test/render-parity.test.mjs)과 tools/golden의 정준 덤프(lib/canon.mjs)는 class를 포함한 모든 속성을
+// 왜. Tailwind 도입(#276)과 디자인 개편(#279~#283)은 조각의 class를 바꾼다. 그런데 조각 분기 표 시험
+// (test/render-parity.test.mjs)과 tools/golden의 정준 덤프(lib/canon.mjs)는 class를 포함한 모든 속성을
 // 글자 그대로 견준다 — 조각 JSX에 class를 하나 넣는 순간 둘 다 빨개진다. 그래서 **class와 style 두 속성만**
 // 비교에서 뺀다. 지우는 속성 목록은 DESIGN_ATTRS 하나이고, parity 시험과 tools/golden이 같은 목록을 쓴다.
 //

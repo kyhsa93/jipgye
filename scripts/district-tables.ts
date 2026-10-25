@@ -1,12 +1,12 @@
-// 표 조각 여섯(전환율·해제·미등기·재계약 둘·층 격차)의 행 모양과 글자 규칙. 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 함수를 쓴다(#242 PR 1).
+// 표 조각 여섯(전환율·해제·미등기·재계약 둘·층 격차)의 행 모양과 글자 규칙. 순수 모듈 - render/entry.jsx(JSX)가 이 함수를 쓴다(#242 PR 1).
 // 여기서 `prerender.ts`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다).
 //
 // 이 모듈은 마크업(HTML)을 만들지 않는다. 어떤 행을 어느 순서로 그리는지, 칸이 값인지 "표본 부족"인지, 칸에 들어가는 글자가 무엇인지만 정한다.
-// 마크업(`<tr>`·`<td>`·`<span class="low-sample">`)은 legacy(문자열)·JSX(요소)가 각자 입힌다 - 분기가 한 곳에만 있다(#255 `realestate-rows.mjs`와 같은 방식).
+// 마크업(`<tr>`·`<td>`·`<span class="low-sample">`)은 쓰는 쪽(JSX 요소)이 입힌다 - 분기가 한 곳에만 있다(#255 `realestate-rows.mjs`와 같은 방식).
 // 그러므로 두 구현이 같은 분기 함수를 쓰는 만큼 parity 시험만으로는 이 모듈의 분기 오류가 안 보인다 - 모든 분기에 손으로 적은 기대값을 둔다(test/fixtures/render/district-tables-branches.mjs).
 //
-// 칸 글자는 두 가지로 나뉜다. legacy가 `escapeHtml`을 거쳐 내던 칸과, 이스케이프 없이 문자열에 그대로 끼우던 칸(raw)이다. 어느 칸이 어느 쪽인지는 아래 함수마다 주석에 적었다.
-// JSX는 두 종류 모두 글자를 요소의 텍스트로 낸다 - React가 `& < > "`를 이스케이프하므로 raw 칸에 이 글자가 든 문자열이 오면 legacy와 달라진다
+// 칸 글자는 두 가지로 나뉜다. 예전 문자열 렌더가 `escapeHtml`을 거쳐 내던 칸과, 이스케이프 없이 문자열에 그대로 끼우던 칸(raw)이다. 어느 칸이 어느 쪽인지는 아래 함수마다 주석에 적었다.
+// JSX는 두 종류 모두 글자를 요소의 텍스트로 낸다 - React가 `& < > "`를 이스케이프하므로 raw 칸에 이 글자가 든 문자열이 오면 예전 문자열 렌더와 달라진다
 // (알려진 차이, test/fixtures/render/district-tables-branches.mjs의 RAW_TEXT_DIFF. 실제 입력에는 없다: 빌더가 숫자로만 만든다).
 
 export const CONVERSION_BAND = "60to85";
@@ -17,7 +17,7 @@ export const pct = (value) => (value === null || value === undefined ? "-" : `${
 /** `pct`에 양수일 때 `+`를 붙인 것(월세 재계약의 격차). */
 export const signed = (value) => (value === null || value === undefined ? "-" : `${value > 0 ? "+" : ""}${value}%`);
 
-/** 숫자 칸. `Number.prototype.toLocaleString`이라 null·undefined면 던진다(legacy와 같다). 문자열·객체는 자기 글자를 그대로 낸다. */
+/** 숫자 칸. `Number.prototype.toLocaleString`이라 null·undefined면 던진다(예전 문자열 렌더와 같다). 문자열·객체는 자기 글자를 그대로 낸다. */
 export const count = (value) => value.toLocaleString("ko-KR");
 
 const eok = (value10k) => `${(Math.round((value10k / 10000) * 100) / 100).toLocaleString("ko-KR", { maximumFractionDigits: 2 })}억`;

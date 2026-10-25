@@ -1,15 +1,15 @@
-// 실거래 시세 요약 카드(realestateOverallHtml)와 그 전용 보조 함수 `ratioBasis`가 같이 쓰는 카드 규칙. 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 함수를 쓴다(#242 PR 3).
-// 여기서 `prerender.ts`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다). 예전에 prerender.ts에 있던 `ratioBasis`와 `realestateOverallHtmlLegacy`의 분기가 여기 있다.
+// 실거래 시세 요약 카드(realestateOverallHtml)와 그 전용 보조 함수 `ratioBasis`가 같이 쓰는 카드 규칙. 순수 모듈 - render/entry.jsx(JSX)가 이 함수를 쓴다(#242 PR 3).
+// 여기서 `prerender.ts`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다). 예전에 prerender.ts에 있던 `ratioBasis`와 옛 문자열 렌더 본문의 분기가 여기 있다.
 //
-// 이 모듈은 마크업(HTML)을 만들지 않는다. 카드가 몇 장이고 어떤 라벨·값·부가 글자를 갖는지만 정하고, `<div class="overall-card">` 같은 마크업(클래스 포함)은 legacy(문자열)·JSX(요소)가 각자 입힌다
+// 이 모듈은 마크업(HTML)을 만들지 않는다. 카드가 몇 장이고 어떤 라벨·값·부가 글자를 갖는지만 정하고, `<div class="overall-card">` 같은 마크업(클래스 포함)은 쓰는 쪽(JSX 요소)이 입힌다
 // (#255 `realestate-rows.mjs`, #256 `district-tables.mjs`, #242 PR 2 `realestate-table.mjs`와 같은 방식). 클래스를 모듈이 들고 있으면 한 곳의 오타를 같은 실행 비교가 못 잡는다.
 //
-// 카드는 { label, value, sub }이다. label은 글자(상수 RE_LABELS, legacy가 이스케이프한다). value와 sub는 조각(seg)의 배열이고 sub는 없으면 null이다(없으면 `<div class="sub">`를 내지 않는다).
-// 조각 하나는 { text, esc }이다: esc는 legacy가 그 글자를 `escapeHtml`에 거치던 자리(true)와 이스케이프 없이 문자열에 끼우던 자리(false, raw)를 가른다. JSX는 어느 쪽이든 글자를 요소의 텍스트로 낸다 - React가 이스케이프한다.
-// raw 자리(esc=false)의 글자는 전부 숫자 서식 함수(formatMan·formatEok·formatPercent)와 코드 상수 구분자(" / "·" · "·"월 ")가 만든 것이라 `& < > "`가 들 수 없다 - 그래서 legacy와 React가 달라질 수 없다(PR 본문의 raw 보간 표).
+// 카드는 { label, value, sub }이다. label은 글자(상수 RE_LABELS, JSX 가 이스케이프한다). value와 sub는 조각(seg)의 배열이고 sub는 없으면 null이다(없으면 `<div class="sub">`를 내지 않는다).
+// 조각 하나는 { text, esc }이다: esc는 예전 문자열 렌더가 그 글자를 `escapeHtml`에 거치던 자리(true)와 이스케이프 없이 문자열에 끼우던 자리(false, raw)를 가른다. JSX는 어느 쪽이든 글자를 요소의 텍스트로 낸다 - React가 이스케이프한다.
+// raw 자리(esc=false)의 글자는 전부 숫자 서식 함수(formatMan·formatEok·formatPercent)와 코드 상수 구분자(" / "·" · "·"월 ")가 만든 것이라 `& < > "`가 들 수 없다 - 그래서 예전 문자열 렌더와 React가 달라질 수 없었다(PR 본문의 raw 보간 표).
 // 입력 글자(신고 건수·단지·평형 칸 수)가 닿는 자리는 전부 esc=true다.
 //
-// 표본 문턱(MIN_SAMPLE)은 여기서 정의하지도 다시 적용하지도 않는다. `resolveMetric`·`jeonseRatio`(realestate-format.mjs, `hasEnoughSample`)가 legacy와 JSX가 같이 부르는 한 곳에서 판정하고, 이 모듈은 그 결과(값 있음 / 없음)를 따른다.
+// 표본 문턱(MIN_SAMPLE)은 여기서 정의하지도 다시 적용하지도 않는다. `resolveMetric`·`jeonseRatio`(realestate-format.mjs, `hasEnoughSample`)가 한 곳에서 판정하고, 이 모듈은 그 결과(값 있음 / 없음)를 따른다.
 // 단지별 중앙값(`spread`)의 칸 수 문턱(MIN_CELLS_MEDIAN 10·MIN_CELLS 20)은 빌더(`complex-ratio.mjs`의 `spreadOf`)가 이미 적용해 문턱 미달이면 `spread`가 null로 온다 - 이 모듈은 있으면 낸다.
 // DIRECTION 해자 2: 표본이 모자라면 값을 내지 않는다 - 이 판정을 건너뛰는 변경은 방향에 어긋난다. 값을 못 낸 카드는 "-"이고(표의 `low-sample` 문구와 달리 이유를 적지 않는다 - 예전 그대로, PR 본문 "발견").
 import {
@@ -27,7 +27,7 @@ const card = (label, value, sub = null) => ({ label, value, sub });
 
 /**
  * 전세가율 카드 밑에 그 값을 낸 매매·전세 신고 건수를 적는다(#172). 값은 이 두 평균의 비다.
- * 브라우저의 renderOverall(scripts/realestate-template.html)이 같은 문자열을 만든다. 글자만 돌려준다(이스케이프는 쓰는 쪽 - legacy는 escapeHtml, JSX는 React).
+ * 브라우저의 renderOverall(scripts/realestate-template.html)이 같은 문자열을 만든다. 글자만 돌려준다(이스케이프는 쓰는 쪽 - JSX 는 React).
  * 두 지표가 모두 값을 낼 때(`jeonseRatio`가 null이 아닐 때)만 부른다 - 아니면 `resolveMetric`이 null이라 던진다(예전 그대로).
  */
 export const ratioBasis = (entry) =>

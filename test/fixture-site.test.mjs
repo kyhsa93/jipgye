@@ -48,7 +48,7 @@ const block = (html, name) => html.match(new RegExp(`<!--prerender:${name}-->([\
 // --- index.html · 요약 상자 --------------------------------------------------------------------------------------------
 
 // #575 PR2: 메인의 AI 요약 상자·뉴스 다섯 건은 뉴스 화면으로 옮겼다 - 자리표시는 셋(값 한 줄·실거래·뉴스 화면 링크)이다.
-// 옛 [summary-box] 짝(메인 요약 상자 = summaryHtml.legacy)은 상자가 없어져 지웠다. 기사 제목이 구운 HTML 에 있는지는 뉴스 화면 몫이다.
+// 옛 [summary-box] 짝(메인 요약 상자)은 상자가 없어져 지웠다. 기사 제목이 구운 HTML 에 있는지는 뉴스 화면 몫이다.
 test("[prerender] 고정 데이터로 찍은 index.html 은 세 자리표시에 그 데이터의 조각을 싣는다 - 다시 그려도 같다", async () => {
   const html = site.read("docs/index.html");
   const [market, realestate, news] = await Promise.all(["market", "realestate", "news"].map(fixtureRead));

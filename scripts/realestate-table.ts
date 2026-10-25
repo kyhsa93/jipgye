@@ -1,20 +1,20 @@
-// 실거래 시세표(realestateHeadHtml·realestateTableHtml)가 같이 쓰는 칸 규칙과 정렬. 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 함수를 쓴다(#242 PR 2).
+// 실거래 시세표(realestateHeadHtml·realestateTableHtml)가 같이 쓰는 칸 규칙과 정렬. 순수 모듈 - render/entry.jsx(JSX)가 이 함수를 쓴다(#242 PR 2).
 // 여기서 `prerender.ts`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다). 예전에 prerender.ts에 있던 `re*` 보조 함수 열여섯이 이름 그대로 여기 있다:
 // RE_LABELS·reHeadLabels·reCount·reMan·reEok·reChange·reWolseChange·reCountSpan·reLowSample·reCells·reAllCells·reStaleTag·reDistrictLink·reRow·reSorted·reDistrictRows.
 //
-// 이 모듈은 마크업(HTML)을 만들지 않는다. 칸 하나가 어떤 모양인지(없음·표본 부족·값·증감·건수)와 그 글자만 정하고, `<span>`·`<td>`는 legacy(문자열)·JSX(요소)가 각자 입힌다
-// (#255 `realestate-rows.mjs`, #256 `district-tables.mjs`와 같은 방식). 그래서 두 구현이 같은 분기 함수를 쓰고, 분기 오류는 parity 시험이 아니라 손으로 적은 기대값이 잡는다
+// 이 모듈은 마크업(HTML)을 만들지 않는다. 칸 하나가 어떤 모양인지(없음·표본 부족·값·증감·건수)와 그 글자만 정하고, `<span>`·`<td>`는 쓰는 쪽(JSX 요소)이 입힌다
+// (#255 `realestate-rows.mjs`, #256 `district-tables.mjs`와 같은 방식). 그래서 분기 오류는 같은 실행 비교가 아니라 손으로 적은 기대값이 잡는다
 // (test/fixtures/render/realestate-table-branches.mjs).
 //
 // 칸은 조각(part)의 배열이다. 조각 하나는 { type, text, title, dir, esc }이다:
 //  - type은 조각의 종류다: "text"(글자만) · "strong"(굵은 값) · "count"(작은 건수) · "ratio"(전세가율) · "change"(증감, dir이 "up"|"down") · "low"(표본 부족) · "stale"(낡음 태그).
-//    어느 종류가 어떤 마크업(`<span class="price-strong">` 등)이 되는지는 여기서 정하지 않는다 - legacy(문자열)·JSX(요소)가 각자 입힌다.
+//    어느 종류가 어떤 마크업(`<span class="price-strong">` 등)이 되는지는 여기서 정하지 않는다 - 쓰는 쪽(JSX 요소)이 입힌다.
 //  - title은 그 조각에 붙는 title 속성의 글자(없으면 null)이고 언제나 이스케이프해서 낸다.
-//  - esc는 legacy가 그 글자를 `escapeHtml`에 거치던 자리(true)와 이스케이프 없이 문자열에 끼우던 자리(false, raw)를 가른다. JSX는 어느 쪽이든 글자를 요소의 텍스트로 낸다 - React가 이스케이프한다.
+//  - esc는 예전 문자열 렌더가 그 글자를 `escapeHtml`에 거치던 자리(true)와 이스케이프 없이 문자열에 끼우던 자리(false, raw)를 가른다. JSX는 어느 쪽이든 글자를 요소의 텍스트로 낸다 - React가 이스케이프한다.
 //    raw 자리(esc=false)의 글자는 전부 숫자 서식 함수(formatMan·formatEok·formatPercent·toFixed)나 코드 상수가 만든 것이라 `& < > "`가 들 수 없다(입력 문자열이 닿지 않는다) -
-//    그래서 legacy와 React가 달라질 수 없다(PR 본문의 raw 보간 표). 입력 글자가 닿는 자리(건수·이름·표본 부족 문구·제목)는 전부 esc=true다.
+//    그래서 예전 문자열 렌더와 React가 달라질 수 없었다(PR 본문의 raw 보간 표). 입력 글자가 닿는 자리(건수·이름·표본 부족 문구·제목)는 전부 esc=true다.
 //
-// 표본 문턱(MIN_SAMPLE)은 여기서 다시 적용하지 않는다. `resolveMetric`(realestate-format.mjs, `hasEnoughSample`)이 legacy와 JSX가 같이 부르는 한 곳에서 판정하고,
+// 표본 문턱(MIN_SAMPLE)은 여기서 다시 적용하지 않는다. `resolveMetric`(realestate-format.mjs, `hasEnoughSample`)이 한 곳에서 판정하고,
 // 이 모듈은 그 결과(값 있음 / 값 없음)를 따를 뿐이다. `reLowSample`의 n은 건수 문턱이 아니라 건수 표기다(`transactionCount` 그대로, 없으면 0).
 // DIRECTION 해자 2: 표본이 모자라면 값을 내지 않고 모자란다고 적는다(`low-sample` 조각) - 이 판정을 건너뛰는 변경은 방향에 어긋난다.
 import { DISTRICT_SLUGS, districtFile } from "./district-slugs.ts";
@@ -49,7 +49,7 @@ export const RE_LABELS = {
   overall: "서울 전체",
 };
 
-/** 건수 글자 `1,234건`. null·undefined는 `toLocaleString`을 못 불러 던진다(legacy와 같다). 문자열·배열은 자기 글자를 그대로 낸다. */
+/** 건수 글자 `1,234건`. null·undefined는 `toLocaleString`을 못 불러 던진다(예전 문자열 렌더와 같다). 문자열·배열은 자기 글자를 그대로 낸다. */
 export const reCount = (n) => `${n.toLocaleString("ko-KR")}건`;
 export const reMan = (v) => formatMan(v);
 export const reEok = (v) => formatEok(v);
@@ -194,7 +194,7 @@ export function reRow(entry, label, isOverall, kind) {
 
 /**
  * 자치구 정렬: 고른 종류(없으면 매매)의 값이 높은 순, 값이 없는 곳은 뒤, 둘 다 없으면 이름순. 사본을 정렬한다(입력을 바꾸지 않는다).
- * `localeCompare`에 로케일 인자가 없어 이름순은 실행 머신의 기본 로케일에 기댄다 - 예전 그대로이고(legacy·JSX가 이 함수를 같이 써서 같은 실행 비교에는 영향이 없다) 바이트를 바꾸지 않으려고 두었다.
+ * `localeCompare`에 로케일 인자가 없어 이름순은 실행 머신의 기본 로케일에 기댄다 - 예전 그대로이고(JSX 한 곳이 이 함수를 써서 같은 실행 비교에는 영향이 없다) 바이트를 바꾸지 않으려고 두었다.
  */
 export function reSorted(districts, kind) {
   const key = kind ?? "sale";

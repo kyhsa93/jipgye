@@ -3,7 +3,6 @@ import path from "node:path";
 import { accessibleTables } from "./table-a11y.ts";
 import { createReactRenderer } from "./render/react.ts";
 import { createWriteSet } from "./render-writes.ts";
-import { INDEX_NEWS, indexNewsItems } from "./news-items.ts";
 import { escapeHtml } from "./html-escape.ts";
 import { CONVERSION_BAND } from "./district-tables.ts";
 import { budgetBandLabel } from "./budget-fragments.ts";
@@ -39,8 +38,6 @@ const fragment = (name: string) => {
   return wrapped;
 };
 
-// #575 PR2 부터 어느 장에도 꽂지 않는다(메인 요약 상자는 뉴스 화면으로 옮겼다). 조각·시험과 함께 지우는 것은 #575 PR4 몫이다.
-export const summaryHtml = fragment("summaryHtml");
 export const marketHtml = fragment("marketHtml");
 export const realestateHtml = fragment("realestateHtml");
 export const newsContextHtml = fragment("newsContextHtml");
@@ -83,8 +80,8 @@ export const renewalDistrictLinksHtml = fragment("renewalDistrictLinksHtml");
 export const floorDistrictsHtml = fragment("floorDistrictsHtml");
 export const floorDistrictLinksHtml = fragment("floorDistrictLinksHtml");
 
-// 다른 모듈이 여기서 import 하던 이름은 그대로 다시 내보낸다(첫 화면 뉴스 규칙은 news-items.ts, 예산대 이름은 budget-fragments.ts, 전환율 구간은 district-tables.ts).
-export { INDEX_NEWS, indexNewsItems, budgetBandLabel, CONVERSION_BAND };
+// 다른 모듈이 여기서 import 하던 이름은 그대로 다시 내보낸다(예산대 이름은 budget-fragments.ts, 전환율 구간은 district-tables.ts).
+export { budgetBandLabel, CONVERSION_BAND };
 
 export function applyPrerender(html, blocks) {
   let out = html;

@@ -297,14 +297,13 @@ main은 **생성 HTML을 들고 있지 않다.** `docs/`에는 손으로 쓰는 
 esbuild의 플랫폼 바이너리 `@esbuild/*`는 esbuild의 `optionalDependencies`라 OS에 맞는 것이 `npm ci`로 자동으로 깔린다). 브라우저로 나가는
 것은 없다 - 빌드 때 HTML 문자열을 만드는 데만 쓰고, 틀에 구워 넣은 결과는 전과 같은 바이트다.
 
-`JIPGYE_RENDERER=legacy|react`가 `scripts/prerender.ts`의 `*Html()` 조각 함수를 어느 쪽이 그릴지 고른다. **기본값은 react**이고(#246 컷오버,
-2026-10-12 소유자 지시), 그래서 `prerender.ts`·`build-*-pages.ts`는 `npm ci`로 `node_modules`가 깔린 곳에서만 돈다. `JIPGYE_RENDERER=legacy`를
-명시하면 esbuild·react를 불러오지 않고 legacy가 돈다(롤백·시험용; 기본값을 되돌리는 것은 `scripts/renderer.ts`의 `rendererMode` 한 줄이다).
-react 모드는 이식된 조각(`scripts/render/entry.jsx`의 `fragments`; 지금은 조각 44개 전부)을 React로 그리고, 두 모드의 출력은 같은 바이트다.
-react 쪽 오류는 삼키지 않고 예외로 올라온다(폴백은 워크플로의 일이다).
+`scripts/prerender.ts`의 `*Html()` 조각 함수는 전부 React로 그린다(#246 컷오버, 2026-10-12 소유자 지시. 문자열 legacy 본문과 렌더러 스위치는
+#248 P3 가 지웠다). 그래서 `prerender.ts`·`build-*-pages.ts`는 `npm ci`로 `node_modules`가 깔린 곳에서만 돈다. 조각의 마크업은
+`scripts/render/entry.jsx`의 `fragments`(지금은 조각 41개 전부)에 있고, `prerender.ts`의 같은 이름 함수는 그 조각을 부르는 래퍼다.
+react 쪽 오류는 삼키지 않고 예외로 올라오며, 렌더 파이프라인(`scripts/render-pipeline.ts`)은 첫 실패에서 멈춰 종료 1이다(폴백은 없다, #248 P1).
 진입점은 `scripts/render/react.ts` 한 곳이고, JSX를 읽는 로더는 esbuild로 진입 파일을 묶어 import하는 `scripts/render/load-jsx.ts`다
 (Node의 `--loader` 플래그는 쓰지 않는다). 렌더 스크립트는 전 장을 메모리에서 그린 뒤에 한꺼번에 쓴다(`scripts/render-writes.ts`) -
-도중에 던져도 일부 장만 새 출력이 되지 않는다. legacy와 react가 같은 바이트를 내는지는 `tools/golden/README.md`의 같은-실행 비교로 본다.
+도중에 던져도 일부 장만 새 출력이 되지 않는다. 렌더 출력이 바뀌지 않았는지는 `tools/golden/README.md`의 같은-실행 비교로 본다.
 
 ### 화면
 
