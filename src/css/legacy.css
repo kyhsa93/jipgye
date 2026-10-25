@@ -2846,8 +2846,10 @@ html:not(:lang(en)) .method-callout .m-en {
 }
 
 /* 상황 단추. 누를 수 있는 것으로 보이게 질문 링크와 같은 칸 모양에 굵은 글씨를 쓰고, 높이는 --tap(44px) 이상이다
- * (#406 에서 summary 가 34.5px 이던 일을 되풀이하지 않는다). 기본 삼각형은 지우고 오른쪽 끝에 ▾/▴ 를 둔다. */
-.question-group-title {
+ * (#406 에서 summary 가 34.5px 이던 일을 되풀이하지 않는다). 기본 삼각형은 지우고 오른쪽 끝에 ▾/▴ 를 둔다.
+ * 묶음 제목 h3 은 summary 안에 그대로 둔다 - HTML 이 summary 안의 제목을 허용하고, 빼면 화면 낭독기의 제목 이동에서
+ * 상황 셋이 사라진다(골든 headings 불변). */
+.question-situation {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2857,29 +2859,34 @@ html:not(:lang(en)) .method-callout .m-en {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   background: var(--card);
-  font-size: var(--fs-sm);
-  font-weight: 600;
   color: var(--fg);
   cursor: pointer;
   list-style: none;
 }
 
-.question-group-title::-webkit-details-marker {
+.question-situation::-webkit-details-marker {
   display: none;
 }
 
-.question-group-title::after {
+.question-situation::after {
   content: "\25BE";
   flex-shrink: 0;
   color: var(--accent);
 }
 
-.question-group[open] > .question-group-title::after {
+.question-group[open] > .question-situation::after {
   content: "\25B4";
 }
 
-.question-group-title:hover {
+.question-situation:hover {
   border-color: var(--accent);
+}
+
+.question-group-title {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--fg);
 }
 
 .question-nav a {
