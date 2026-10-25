@@ -77,6 +77,7 @@ jobs:
           node scripts/build-complex-ratio.ts
           node scripts/build-rent-preview.ts
           node scripts/build-search-index.ts
+          node scripts/build-repeat-sales.ts
         env:
           MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
           MOLIT_API_ENDPOINT: ${{ secrets.MOLIT_API_ENDPOINT }}

@@ -49,6 +49,8 @@ async function main() {
   run("node scripts/build-complex-ratio.ts");
   run("node scripts/build-rent-preview.ts");
   run("node scripts/build-search-index.ts");
+  // 같은 집 쌍(#170 V8): 5-1 ② 의 운영 창이 매일 옮겨 가므로 매일 다시 센다. 맨 뒤에 둔다 - 25구 밖 코드처럼 사전 기준이 멈추라는 입력이면 던지는데, 그때 앞 빌더들은 이미 끝나 있다.
+  run("node scripts/build-repeat-sales.ts");
   run("node scripts/news-context.ts");
 
   const status = execSync(`git status --porcelain -- ${DATA_PATHS.join(" ")}`, { cwd: repoRoot }).toString().trim();
