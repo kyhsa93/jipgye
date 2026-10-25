@@ -12,8 +12,8 @@
  *   - 하루 주기·시각 있는 소스(뉴스): 데이터 나이 = 실행 나이 + 수집 순간의 데이터 나이. 뒤의 것은 실측 최대 6.2h
  *     (news.json 커밋 150건, 2026-10-18~26: 커밋 시각 - 가장 새 기사 시각, 중앙 0.8h)라 NEWS_OFFSET_HOURS=6 을 더해 36h 경고·60h 실패.
  *   - 영업일 소스(코스피·환율 = ECOS 영업일 값, 실거래 원본 도착): 날짜만 있고 주말·연휴에는 값이 없다. 마지막 날짜와 오늘(KST) **사이의 평일 수**로 잰다.
- *     정상 최대 1(오늘 run 전), 단발 실패 2 - 여기까지 조용. 3 이상 경고(연속 실패, 또는 연휴 + 실패). 실패는 6 이상이다: 연휴 달력이 코드에 없고
- *     가장 긴 휴장이 평일 5일(2025-10-03~09)이라, 그보다 짧게 잡으면 명절마다 거짓 경보가 난다(일일 소음 0 조건). 그동안의 전면 정지는 #499(54h) 가 잡는다.
+ *     정상 최대 1(오늘 run 전), 단발 실패 2 - 여기까지 조용. 3 이상 경고(연속 실패, 또는 연휴 + 실패). 실패는 7 이상이다: 연휴 달력이 코드에 없고
+ *     가장 긴 휴장(2025-10-03~09, 평일 5일)에 단발 실패가 겹치면 6이라(cto, #667), 그보다 짧게 잡으면 명절마다 거짓 경보가 난다(일일 소음 0 조건). 그동안의 전면 정지는 #499(54h) 가 잡는다.
  *   - 월 주기 계열(ECOS·R-ONE, 수집기 코드의 cycle "M"·DTACYCLE_CD "MM"): 마지막 달과 이번 달(KST)의 차이(달 수)를 계열의 정상 최대 지연 L 에 견준다.
  *     L 이하 조용, L+1 경고(한 번 늦음 = 확인), L+2 이상 실패(두 번 연속 = 알림). L 은 git 이력(2026-10-01~26, 10커밋)에서 달 초에 본 최대 지연이다 - 아래 표.
  *   - 그 밖(반기 파일·사람이 dispatch 하는 월간 작업): 각 줄의 주석.
@@ -42,9 +42,9 @@ export const CHECK_HOURS = 30;
 export const ALERT_HOURS = 54;
 /** 뉴스: 수집 순간 가장 새 기사의 나이(실측 최대 6.2h). */
 export const NEWS_OFFSET_HOURS = 6;
-/** 영업일 소스: 마지막 값 날짜와 오늘 사이 평일 수. 3 이상 경고, 6 이상 실패(가장 긴 휴장 평일 5일). */
+/** 영업일 소스: 마지막 값 날짜와 오늘 사이 평일 수. 3 이상 경고, 7 이상 실패(가장 긴 휴장 평일 5일 + 단발 실패 = 6, #667). */
 export const BUSINESS_WARN_DAYS = 3;
-export const BUSINESS_FAIL_DAYS = 6;
+export const BUSINESS_FAIL_DAYS = 7;
 
 /**
  * 월 계열의 정상 최대 지연(달). 키는 scripts/fetch-indicators.ts 의 ECOS_SERIES·RONE_SERIES 와 같아야 한다(시험이 묶는다).
@@ -270,10 +270,10 @@ export function main(argv: string[], { log = console.log }: { log?: (m: string) 
 export const GAP_SINCE = "2026-10-01";
 
 /**
- * market-history.json(full 실행마다 그날 한 줄)과 공시가격 progress.json 으로 한 줄을 만든다. 데이터가 없으면 null(줄을 안 그린다).
+ * market-history.json(full 실행마다 그날 한 줄)으로 한 줄을 만든다(공시가격 진척은 화면에 싣지 않고 워치독 경고에만 둔다, #667 cpo). 데이터가 없으면 null(줄을 안 그린다).
  * 공백 = GAP_SINCE(또는 기록 첫날)부터 마지막 기록일까지 기록이 없는 날 수. 빌드 날짜를 읽지 않는다(같은 데이터면 같은 줄).
  */
-export function collectStatus(history: unknown, progress: unknown) {
+export function collectStatus(history: unknown) {
   const dates = Array.isArray(history) ? history.map((h) => String(h?.date ?? "")).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort() : [];
   if (!dates.length) return null;
   const last = dates.at(-1);
@@ -281,12 +281,10 @@ export function collectStatus(history: unknown, progress: unknown) {
   const seen = new Set(dates);
   let gaps = 0;
   for (let d = dayNum(since); d <= dayNum(last); d += 1) if (!seen.has(new Date(d * DAY_MS).toISOString().slice(0, 10))) gaps += 1;
-  const p = progress as { doneParcels?: number; targetParcels?: number } | null;
-  const pct = p && Number(p.targetParcels) > 0 ? Math.floor((100 * Number(p.doneParcels)) / Number(p.targetParcels)) : null;
   const md = (d: string) => d.slice(5);
   return {
-    ko: `<p>수집 상태: 마지막 수집 성공 ${md(last)} · ${md(since)} 이후 공백 ${gaps}일${pct === null ? "" : ` · 공시가격 수집 진척 ${pct}%`}</p>`,
-    en: `<p>Collection: last successful run ${md(last)} · ${gaps} gap day${gaps === 1 ? "" : "s"} since ${md(since)}${pct === null ? "" : ` · official-price collection ${pct}%`}</p>`,
+    ko: `<p>수집 상태: 마지막 수집 성공 ${md(last)} · ${md(since)} 이후 수집이 빠진 날 ${gaps}일</p>`,
+    en: `<p>Collection: last successful run ${md(last)} · ${gaps} day${gaps === 1 ? "" : "s"} without collection since ${md(since)}</p>`,
   };
 }
 

@@ -145,9 +145,8 @@ async function main() {
   const record = await readJson("record-high");
   const change = await readJson("district-change");
   const recordText = (key) => (record?.[key]?.ko ? escapeHtml(record[key].ko) : null);
-  // method 「수집 상태」 줄: full 실행 기록(market-history)과 공시가격 진척 상태(raw, #660). 없으면 줄을 안 그린다.
-  const progress = await readFile(path.join(root, "raw/official-price/status/progress.json"), "utf8").then(JSON.parse).catch(() => null);
-  const collect = collectStatus(await readJson("market-history"), progress);
+  // method 「수집 상태」 줄: full 실행 기록(market-history). 없으면 줄을 안 그린다.
+  const collect = collectStatus(await readJson("market-history"));
 
   const writes = createWriteSet();
   // 넷째 칸(선택)은 틀 경로다. 있으면 path_ 는 나가는 장이고, 틀을 채운 뒤 인라인 스크립트 주석을 떼어 path_ 에 쓴다(#374).

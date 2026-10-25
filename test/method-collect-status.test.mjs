@@ -9,11 +9,12 @@ import { collectStatus } from "../scripts/check-data-progress.ts";
 const root = path.resolve(import.meta.dirname, "..");
 const json = (rel) => { try { return JSON.parse(readFileSync(path.join(root, rel), "utf8")); } catch { return null; } };
 
-test("method.html 의 수집 상태 줄은 이 빌드의 market-history·공시가격 진척에서 나온 두 언어 줄이다", () => {
+test("method.html 의 수집 상태 줄은 이 빌드의 market-history 에서 나온 두 언어 줄이다", () => {
   const html = readFileSync(sitePath("method.html"), "utf8");
-  const want = collectStatus(json("docs/data/market-history.json"), json("raw/official-price/status/progress.json"));
+  const want = collectStatus(json("docs/data/market-history.json"));
   const between = (name) => html.split(`<!--prerender:${name}-->`)[1]?.split(`<!--/prerender:${name}-->`)[0];
   assert.equal(between("collectKo"), want?.ko ?? "");
   assert.equal(between("collectEn"), want?.en ?? "");
-  if (want) assert.match(want.ko, /마지막 수집 성공 \d{2}-\d{2} · \d{2}-\d{2} 이후 공백 \d+일/);
+  if (want) assert.match(want.ko, /마지막 수집 성공 \d{2}-\d{2} · \d{2}-\d{2} 이후 수집이 빠진 날 \d+일<\/p>$/);
+  assert.doesNotMatch(html, /공시가격 수집 진척|official-price collection/, "공시가격 진척은 화면에 싣지 않는다(#667 cpo)");
 });

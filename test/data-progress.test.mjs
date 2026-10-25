@@ -60,20 +60,23 @@ test("정상 사본: 2026-10-26(월) 14:29 KST 에는 전부 ok, 종료 0, 경�
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
-test("주말 지연: 금요일 값은 월·화 새벽까지 조용하고, 목요일(사이 평일 3)에 경고, 다음 주 목요일(6)에 실패", () => {
+test("주말 지연: 금요일 값은 월·화 새벽까지 조용하고, 목요일(사이 평일 3)에 경고, 다음 주 수요일(7)에 실패", () => {
   assert.equal(weekdaysBetween("2026-10-23", "2026-10-26"), 0); // 금 -> 월
   assert.equal(weekdaysBetween("2026-10-23", "2026-10-27"), 1); // 화 새벽(오늘 run 전)
   assert.equal(weekdaysBetween("2026-10-23", "2026-10-29"), BUSINESS_WARN_DAYS);
-  assert.equal(weekdaysBetween("2026-10-23", "2026-11-03"), BUSINESS_FAIL_DAYS);
+  assert.equal(weekdaysBetween("2026-10-23", "2026-11-04"), BUSINESS_FAIL_DAYS);
   const dir = fixture();
   try {
     const level = (now) => by(collectChecks({ root: dir, now: at(now) }), "market/kospi").level;
     assert.equal(level("2026-10-26T17:29:00Z"), "ok"); // 화 02:29 KST
     assert.equal(level("2026-10-28T05:29:00Z"), "ok"); // 수 14:29 - 단발 실패(평일 2)는 조용
     assert.equal(level("2026-10-29T05:29:00Z"), "warn");
-    assert.equal(level("2026-11-03T05:29:00Z"), "fail");
-    // 가장 긴 휴장(평일 5일, 2025-10-03~09)은 실패로 울지 않는다
+    assert.equal(level("2026-11-03T05:29:00Z"), "warn"); // 평일 6
+    assert.equal(level("2026-11-04T05:29:00Z"), "fail"); // 평일 7
+    // 가장 긴 휴장(평일 5일, 2025-10-03~09)에 단발 실패가 겹쳐도(6) 실패로 울지 않는다(#667 cto)
     assert.equal(weekdaysBetween("2025-10-02", "2025-10-10"), 5);
+    assert.equal(weekdaysBetween("2025-10-02", "2025-10-11"), 6);
+    assert.ok(6 < BUSINESS_FAIL_DAYS);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
@@ -131,7 +134,7 @@ test("실거래 원본: 슬롯이 빠지면 경고(감소), 도착이 멈추면 
     assert.equal(by(checks, "raw/sale").level, "warn");
     assert.match(by(checks, "raw/sale").detail, /슬롯 599\/600\(빠진 슬롯 1\)/);
     assert.equal(by(checks, "raw/rent").level, "ok");
-    assert.equal(by(collectChecks({ root: dir, now: at("2026-11-04T05:29:00Z") }), "raw/rent").level, "fail"); // 10-26 도착 뒤 평일 6일
+    assert.equal(by(collectChecks({ root: dir, now: at("2026-11-05T05:29:00Z") }), "raw/rent").level, "fail"); // 10-26 도착 뒤 평일 7일
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
@@ -168,14 +171,13 @@ test("날짜 읽기: 해 없는 M/D 는 오늘보다 늦지 않은 해, ISO·RFC
   assert.equal(dateOf("", "2026-10-26"), null);
 });
 
-test("method 수집 상태 줄: 마지막 수집 성공·10-01 이후 공백·공시가격 진척을 두 언어로, 데이터 없으면 null", () => {
+test("method 수집 상태 줄: 마지막 수집 성공·10-01 이후 수집이 빠진 날을 두 언어로(공시가격 진척 없음), 데이터 없으면 null", () => {
   const history = ["2026-09-02", "2026-10-01", "2026-10-02", "2026-10-04", "2026-10-05"].map((date) => ({ date }));
-  const s = collectStatus(history, { doneParcels: 2094, targetParcels: 6764 });
-  assert.equal(s.ko, '<p>수집 상태: 마지막 수집 성공 10-05 · 10-01 이후 공백 1일 · 공시가격 수집 진척 30%</p>');
-  assert.equal(s.en, '<p>Collection: last successful run 10-05 · 1 gap day since 10-01 · official-price collection 30%</p>');
-  assert.doesNotMatch(collectStatus(history, null).ko, /공시가격/);
-  assert.equal(collectStatus([], null), null);
-  assert.equal(collectStatus(undefined, null), null);
+  const s = collectStatus(history);
+  assert.equal(s.ko, '<p>수집 상태: 마지막 수집 성공 10-05 · 10-01 이후 수집이 빠진 날 1일</p>');
+  assert.equal(s.en, '<p>Collection: last successful run 10-05 · 1 day without collection since 10-01</p>');
+  assert.equal(collectStatus([]), null);
+  assert.equal(collectStatus(undefined), null);
 });
 
 test("워치독 워크플로는 데이터 진척 스텝을 두고, 앞 스텝이 실패해도 돈다", () => {
