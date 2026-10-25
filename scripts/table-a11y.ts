@@ -60,7 +60,8 @@ export function accessibleTables(html) {
       if (/<caption(?=[\s>])/.test(fixed)) return `${open}${fixed}</table>`;
 
       const heads = [...head.matchAll(/<th(?=[\s>])[^>]*>([\s\S]*?)<\/th>/g)].map((m) => plain(m[1])).filter(Boolean);
-      const rows = (rest.match(/<tr(?=[\s>])/g) ?? []).length;
+      // 표 꼬리(tfoot, 출처·기준일 한 줄)는 자료 행이 아니다 - 행 수에 넣지 않는다(#677).
+      const rows = (rest.replace(/<tfoot[\s\S]*?<\/tfoot>/g, "").match(/<tr(?=[\s>])/g) ?? []).length;
       const heading = plain([...html.slice(0, offset).matchAll(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/g)].at(-1)?.[1] ?? "");
       const caption = `<caption${AUTO}>${escapeText(captionText({ title, heading, rows, heads }))}</caption>`;
       return `${open}${caption}${fixed}</table>`;

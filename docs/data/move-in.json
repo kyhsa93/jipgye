@@ -190,5 +190,144 @@
   "districts": {
     "ko": "자치구별: 서초구 12,747세대(11곳) · 동작구 5,041세대(8곳) · 성동구 4,412세대(8곳) · 성북구 3,970세대(6곳) · 은평구 3,349세대(5곳) · 마포구 3,045세대(8곳) · 강서구 2,459세대(9곳) · 강동구 2,421세대(5곳) · 중랑구 2,169세대(4곳) · 용산구 1,738세대(2곳) · 서대문구 1,236세대(6곳) · 송파구 1,104세대(3곳) · 금천구 1,073세대(4곳) · 영등포구 1,058세대(4곳) · 구로구 729세대(3곳) · 강북구 686세대(3곳) · 강남구 525세대(4곳) · 동대문구 511세대(4곳) · 광진구 429세대(3곳) · 노원구 375세대(2곳) · 관악구 245세대(2곳) · 양천구 123세대(2곳) · 도봉구 121세대(1곳) · 중구 102세대(1곳)",
     "en": "By district: 서초구 12,747 (11) · 동작구 5,041 (8) · 성동구 4,412 (8) · 성북구 3,970 (6) · 은평구 3,349 (5) · 마포구 3,045 (8) · 강서구 2,459 (9) · 강동구 2,421 (5) · 중랑구 2,169 (4) · 용산구 1,738 (2) · 서대문구 1,236 (6) · 송파구 1,104 (3) · 금천구 1,073 (4) · 영등포구 1,058 (4) · 구로구 729 (3) · 강북구 686 (3) · 강남구 525 (4) · 동대문구 511 (4) · 광진구 429 (3) · 노원구 375 (2) · 관악구 245 (2) · 양천구 123 (2) · 도봉구 121 (1) · 중구 102 (1)"
+  },
+  "byDistrict": {
+    "halves": ["2026H2", "2027H1", "2027H2", "2028H1"],
+    "rows": [
+      {
+        "name": "종로구",
+        "units": [0, 0, 0, 0],
+        "rental": [0, 0, 0, 0]
+      },
+      {
+        "name": "중구",
+        "units": [0, 102, 0, 0],
+        "rental": [0, 0, 0, 0]
+      },
+      {
+        "name": "용산구",
+        "units": [0, 750, 988, 0],
+        "rental": [0, 0, 988, 0]
+      },
+      {
+        "name": "성동구",
+        "units": [1936, 0, 1001, 1475],
+        "rental": [266, 0, 609, 1403]
+      },
+      {
+        "name": "광진구",
+        "units": [389, 0, 0, 40],
+        "rental": [174, 0, 0, 0]
+      },
+      {
+        "name": "동대문구",
+        "units": [305, 0, 76, 130],
+        "rental": [305, 0, 0, 0]
+      },
+      {
+        "name": "중랑구",
+        "units": [1950, 219, 0, 0],
+        "rental": [1950, 0, 0, 0]
+      },
+      {
+        "name": "성북구",
+        "units": [441, 1891, 1638, 0],
+        "rental": [242, 254, 415, 0]
+      },
+      {
+        "name": "강북구",
+        "units": [260, 0, 426, 0],
+        "rental": [0, 0, 426, 0]
+      },
+      {
+        "name": "도봉구",
+        "units": [0, 0, 0, 121],
+        "rental": [0, 0, 0, 0]
+      },
+      {
+        "name": "노원구",
+        "units": [0, 161, 214, 0],
+        "rental": [0, 0, 0, 0]
+      },
+      {
+        "name": "은평구",
+        "units": [2713, 376, 0, 260],
+        "rental": [0, 376, 0, 0]
+      },
+      {
+        "name": "서대문구",
+        "units": [487, 382, 248, 119],
+        "rental": [288, 382, 96, 0]
+      },
+      {
+        "name": "마포구",
+        "units": [910, 1839, 296, 0],
+        "rental": [299, 499, 0, 0]
+      },
+      {
+        "name": "양천구",
+        "units": [0, 85, 0, 38],
+        "rental": [0, 0, 0, 0]
+      },
+      {
+        "name": "강서구",
+        "units": [1478, 176, 730, 75],
+        "rental": [358, 176, 0, 75]
+      },
+      {
+        "name": "구로구",
+        "units": [295, 0, 132, 0],
+        "rental": [0, 0, 132, 0]
+      },
+      {
+        "name": "금천구",
+        "units": [769, 0, 219, 85],
+        "rental": [769, 0, 0, 0]
+      },
+      {
+        "name": "영등포구",
+        "units": [0, 183, 0, 875],
+        "rental": [0, 0, 0, 281]
+      },
+      {
+        "name": "동작구",
+        "units": [1038, 0, 0, 4003],
+        "rental": [306, 0, 0, 1090]
+      },
+      {
+        "name": "관악구",
+        "units": [0, 0, 0, 245],
+        "rental": [0, 0, 0, 100]
+      },
+      {
+        "name": "서초구",
+        "units": [5231, 1300, 6056, 160],
+        "rental": [76, 1087, 342, 0]
+      },
+      {
+        "name": "강남구",
+        "units": [308, 135, 82, 0],
+        "rental": [0, 94, 0, 0]
+      },
+      {
+        "name": "송파구",
+        "units": [484, 0, 0, 620],
+        "rental": [484, 0, 0, 0]
+      },
+      {
+        "name": "강동구",
+        "units": [0, 1399, 1022, 0],
+        "rental": [0, 0, 281, 0]
+      }
+    ],
+    "undated": {
+      "units": 302,
+      "rentalUnits": 0,
+      "districts": ["구로구"]
+    }
+  },
+  "districtTable": {
+    "ko": "<thead><tr><th scope=\"col\">자치구</th><th scope=\"col\">2026년 하반기</th><th scope=\"col\">2027년 상반기</th><th scope=\"col\">2027년 하반기</th><th scope=\"col\">2028년 상반기</th></tr></thead><tbody><tr><th scope=\"row\">종로구</th><td colspan=\"4\">예정 없음</td></tr><tr><th scope=\"row\">중구</th><td>없음</td><td>102세대(임대 0)</td><td>없음</td><td>없음</td></tr><tr><th scope=\"row\">용산구</th><td>없음</td><td>750세대(임대 0)</td><td>988세대(임대 988)</td><td>없음</td></tr><tr><th scope=\"row\">성동구</th><td>1,936세대(임대 266)</td><td>없음</td><td>1,001세대(임대 609)</td><td>1,475세대(임대 1,403)</td></tr><tr><th scope=\"row\">광진구</th><td>389세대(임대 174)</td><td>없음</td><td>없음</td><td>40세대(임대 0)</td></tr><tr><th scope=\"row\">동대문구</th><td>305세대(임대 305)</td><td>없음</td><td>76세대(임대 0)</td><td>130세대(임대 0)</td></tr><tr><th scope=\"row\">중랑구</th><td>1,950세대(임대 1,950)</td><td>219세대(임대 0)</td><td>없음</td><td>없음</td></tr><tr><th scope=\"row\">성북구</th><td>441세대(임대 242)</td><td>1,891세대(임대 254)</td><td>1,638세대(임대 415)</td><td>없음</td></tr><tr><th scope=\"row\">강북구</th><td>260세대(임대 0)</td><td>없음</td><td>426세대(임대 426)</td><td>없음</td></tr><tr><th scope=\"row\">도봉구</th><td>없음</td><td>없음</td><td>없음</td><td>121세대(임대 0)</td></tr><tr><th scope=\"row\">노원구</th><td>없음</td><td>161세대(임대 0)</td><td>214세대(임대 0)</td><td>없음</td></tr><tr><th scope=\"row\">은평구</th><td>2,713세대(임대 0)</td><td>376세대(임대 376)</td><td>없음</td><td>260세대(임대 0)</td></tr><tr><th scope=\"row\">서대문구</th><td>487세대(임대 288)</td><td>382세대(임대 382)</td><td>248세대(임대 96)</td><td>119세대(임대 0)</td></tr><tr><th scope=\"row\">마포구</th><td>910세대(임대 299)</td><td>1,839세대(임대 499)</td><td>296세대(임대 0)</td><td>없음</td></tr><tr><th scope=\"row\">양천구</th><td>없음</td><td>85세대(임대 0)</td><td>없음</td><td>38세대(임대 0)</td></tr><tr><th scope=\"row\">강서구</th><td>1,478세대(임대 358)</td><td>176세대(임대 176)</td><td>730세대(임대 0)</td><td>75세대(임대 75)</td></tr><tr><th scope=\"row\">구로구</th><td>295세대(임대 0)</td><td>없음</td><td>132세대(임대 132)</td><td>없음</td></tr><tr><th scope=\"row\">금천구</th><td>769세대(임대 769)</td><td>없음</td><td>219세대(임대 0)</td><td>85세대(임대 0)</td></tr><tr><th scope=\"row\">영등포구</th><td>없음</td><td>183세대(임대 0)</td><td>없음</td><td>875세대(임대 281)</td></tr><tr><th scope=\"row\">동작구</th><td>1,038세대(임대 306)</td><td>없음</td><td>없음</td><td>4,003세대(임대 1,090)</td></tr><tr><th scope=\"row\">관악구</th><td>없음</td><td>없음</td><td>없음</td><td>245세대(임대 100)</td></tr><tr><th scope=\"row\">서초구</th><td>5,231세대(임대 76)</td><td>1,300세대(임대 1,087)</td><td>6,056세대(임대 342)</td><td>160세대(임대 0)</td></tr><tr><th scope=\"row\">강남구</th><td>308세대(임대 0)</td><td>135세대(임대 94)</td><td>82세대(임대 0)</td><td>없음</td></tr><tr><th scope=\"row\">송파구</th><td>484세대(임대 484)</td><td>없음</td><td>없음</td><td>620세대(임대 0)</td></tr><tr><th scope=\"row\">강동구</th><td>없음</td><td>1,399세대(임대 0)</td><td>1,022세대(임대 281)</td><td>없음</td></tr></tbody><tfoot><tr><td colspan=\"5\">추정치 · 기준일 2026-06-30 · 입주 예정월 기준(실제 입주 아님) · 30세대 이상 단지만 · 임대는 순수 임대(청년안심주택 등)만. 달 미정 302세대(구로구)는 표에 넣지 않았습니다. 자료: 한국부동산원·부동산114 입주예정물량정보(공공데이터포털 15111714). 이 값은 원자료를 가공한 것입니다.</td></tr></tfoot>",
+    "en": "<thead><tr><th scope=\"col\">District</th><th scope=\"col\">Jul–Dec 2026</th><th scope=\"col\">Jan–Jun 2027</th><th scope=\"col\">Jul–Dec 2027</th><th scope=\"col\">Jan–Jun 2028</th></tr></thead><tbody><tr><th scope=\"row\">종로구</th><td colspan=\"4\">None planned</td></tr><tr><th scope=\"row\">중구</th><td>None</td><td>102 homes (rental 0)</td><td>None</td><td>None</td></tr><tr><th scope=\"row\">용산구</th><td>None</td><td>750 homes (rental 0)</td><td>988 homes (rental 988)</td><td>None</td></tr><tr><th scope=\"row\">성동구</th><td>1,936 homes (rental 266)</td><td>None</td><td>1,001 homes (rental 609)</td><td>1,475 homes (rental 1,403)</td></tr><tr><th scope=\"row\">광진구</th><td>389 homes (rental 174)</td><td>None</td><td>None</td><td>40 homes (rental 0)</td></tr><tr><th scope=\"row\">동대문구</th><td>305 homes (rental 305)</td><td>None</td><td>76 homes (rental 0)</td><td>130 homes (rental 0)</td></tr><tr><th scope=\"row\">중랑구</th><td>1,950 homes (rental 1,950)</td><td>219 homes (rental 0)</td><td>None</td><td>None</td></tr><tr><th scope=\"row\">성북구</th><td>441 homes (rental 242)</td><td>1,891 homes (rental 254)</td><td>1,638 homes (rental 415)</td><td>None</td></tr><tr><th scope=\"row\">강북구</th><td>260 homes (rental 0)</td><td>None</td><td>426 homes (rental 426)</td><td>None</td></tr><tr><th scope=\"row\">도봉구</th><td>None</td><td>None</td><td>None</td><td>121 homes (rental 0)</td></tr><tr><th scope=\"row\">노원구</th><td>None</td><td>161 homes (rental 0)</td><td>214 homes (rental 0)</td><td>None</td></tr><tr><th scope=\"row\">은평구</th><td>2,713 homes (rental 0)</td><td>376 homes (rental 376)</td><td>None</td><td>260 homes (rental 0)</td></tr><tr><th scope=\"row\">서대문구</th><td>487 homes (rental 288)</td><td>382 homes (rental 382)</td><td>248 homes (rental 96)</td><td>119 homes (rental 0)</td></tr><tr><th scope=\"row\">마포구</th><td>910 homes (rental 299)</td><td>1,839 homes (rental 499)</td><td>296 homes (rental 0)</td><td>None</td></tr><tr><th scope=\"row\">양천구</th><td>None</td><td>85 homes (rental 0)</td><td>None</td><td>38 homes (rental 0)</td></tr><tr><th scope=\"row\">강서구</th><td>1,478 homes (rental 358)</td><td>176 homes (rental 176)</td><td>730 homes (rental 0)</td><td>75 homes (rental 75)</td></tr><tr><th scope=\"row\">구로구</th><td>295 homes (rental 0)</td><td>None</td><td>132 homes (rental 132)</td><td>None</td></tr><tr><th scope=\"row\">금천구</th><td>769 homes (rental 769)</td><td>None</td><td>219 homes (rental 0)</td><td>85 homes (rental 0)</td></tr><tr><th scope=\"row\">영등포구</th><td>None</td><td>183 homes (rental 0)</td><td>None</td><td>875 homes (rental 281)</td></tr><tr><th scope=\"row\">동작구</th><td>1,038 homes (rental 306)</td><td>None</td><td>None</td><td>4,003 homes (rental 1,090)</td></tr><tr><th scope=\"row\">관악구</th><td>None</td><td>None</td><td>None</td><td>245 homes (rental 100)</td></tr><tr><th scope=\"row\">서초구</th><td>5,231 homes (rental 76)</td><td>1,300 homes (rental 1,087)</td><td>6,056 homes (rental 342)</td><td>160 homes (rental 0)</td></tr><tr><th scope=\"row\">강남구</th><td>308 homes (rental 0)</td><td>135 homes (rental 94)</td><td>82 homes (rental 0)</td><td>None</td></tr><tr><th scope=\"row\">송파구</th><td>484 homes (rental 484)</td><td>None</td><td>None</td><td>620 homes (rental 0)</td></tr><tr><th scope=\"row\">강동구</th><td>None</td><td>1,399 homes (rental 0)</td><td>1,022 homes (rental 281)</td><td>None</td></tr></tbody><tfoot><tr><td colspan=\"5\">Estimate · as of 2026-06-30 · by scheduled move-in month (not actual move-ins) · complexes of 30+ homes only · rental means pure rental (youth housing and the like) only. Not in the table: 302 homes with no move-in month set (구로구). Data: Korea Real Estate Board and R114 scheduled move-in data (data.go.kr 15111714). These figures are derived from the original data.</td></tr></tfoot>"
   }
 }
