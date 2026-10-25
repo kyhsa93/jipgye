@@ -11,7 +11,7 @@
 import { candidatesInBand } from "./complex-price.ts";
 import { BASIS_DATE as CAP_DATE, capSentence } from "./loan-cap.ts";
 import { BASIS_DATE as MIN_CASH_DATE, minCash, minCashSentence } from "./min-cash.ts";
-import { apartmentOptions, loanSentence, monthlyPayment, rateSpread } from "./mortgage.ts";
+import { loanSentence, monthlyPayment } from "./mortgage.ts";
 import { BASIS_DATE as POLICY_DATE_BASIS, policySentence, policyShort } from "./policy-loan.ts";
 import { BASIS_DATE as COSTS_DATE, costsSentence, purchaseCosts } from "./purchase-costs.ts";
 import { formatEok, monthLabel } from "./realestate-format.ts";
@@ -74,35 +74,39 @@ export function costsNote(band) {
 }
 
 /**
- * "그래서 매달 얼마" 문단(scripts/mortgage.mjs). 금리가 없으면(아파트 분할상환 상품이 없으면) 문장이 없다.
+ * "그래서 매달 얼마" 문단(scripts/mortgage.mjs). basis는 mortgage.ts latestRate의 { rate, month }(한국은행 ECOS 주담대 신규취급 평균금리,
+ * #577 - 전에는 금감원 공시 상품 최저금리의 중앙값)이다. 금리가 없으면(쓸 달이 없으면) 문장이 없다.
  * 문장은 legacy가 이스케이프 없이 끼우던 자리다 - 글자는 전부 숫자 서식과 코드 상수(mortgage.mjs)라 `& < > "`가 들 수 없다(PR 본문의 raw 보간 전수표).
  * mortgageSeries(조각의 셋째 인자)는 호출부 호환으로만 남아 있다(1년 사이 변화 문장은 method.html로 갔다, #66) - 읽지 않는다.
  */
-export function loanNote(band, rates) {
-  const spread = rateSpread(apartmentOptions(rates));
-  const sentence = loanSentence(spread, { eok: eokOf(band) });
+export function loanNote(band, basis) {
+  const sentence = loanSentence(basis, { eok: eokOf(band) });
   return note(sentence, { id: "loan", text: "1억당 값과 금리 근거 →" });
 }
+
+/** "한눈에" 금리 줄의 부가 글자: 출처·금리·달("한국은행 평균 연 4.66%(2026년 8월)"). 달을 모르면 달 없이. */
+const answerBasis = (basis) =>
+  `한국은행 평균 연 ${basis.rate}%${/^\d{6}$/.test(String(basis?.month ?? "")) ? `(${String(basis.month).slice(0, 4)}년 ${Number(String(basis.month).slice(4, 6))}월)` : ""}`;
 
 /**
  * 예산대 장 맨 위 "한눈에" - 아래 문단 넷의 답만 한 줄씩(UIUX #43). 숫자는 문단과 같은 함수에서 나온다(min-cash·purchase-costs·mortgage·policy-loan).
  * 예산대가 없으면(eokOf가 null) null이다. 줄은 { label, value, note, text }: note가 ""이면 부가 글자 없음, text가 참이면 글자 값(정책대출 가격선)이다.
- * 금리가 없으면 "1억을 빌리면 매달" 줄이 빠진다.
+ * 금리가 없으면 "1억을 빌리면 매달" 줄이 빠진다. 그 줄의 부가 글자는 금리의 출처와 달을 같이 적는다(#577: 한국은행 평균금리로 바뀐 것이 장에서 보이게).
  */
-export function budgetAnswers(band, rates = null) {
+export function budgetAnswers(band, basis = null) {
   const eok = eokOf(band);
   if (eok === null) return null;
   const price = (eok + 0.5) * 10_000;
   const g = minCash(price);
   const f = minCash(price, { firstTime: true });
   const costs = purchaseCosts(price);
-  const spread = rateSpread(apartmentOptions(rates));
-  const perEok = spread ? monthlyPayment(10_000, spread.mid) : null;
+  const rate = typeof basis?.rate === "number" && Number.isFinite(basis.rate) ? basis.rate : null;
+  const perEok = rate === null ? null : monthlyPayment(10_000, rate);
   const policy = policyShort(eok);
   const line = (label, value, extra, text = false) => ({ label, value, note: extra, text });
   const lines = [
     line("자기 돈이 적어도", eokText(g.cash), f.cash < g.cash ? `생애최초면 ${eokText(f.cash)}` : ""),
-    perEok ? line("1억을 빌리면 매달", eokText(Math.round(perEok)), `30년 원리금균등, 연 ${spread.mid}%`) : null,
+    perEok ? line("1억을 빌리면 매달", eokText(Math.round(perEok)), `30년 원리금균등, ${answerBasis(basis)}`) : null,
     line("매매가 위에 더 드는 돈", eokText(costs.total), "취득세·지방교육세·중개보수 상한"),
     policy ? line("정책대출 가격선", policy, "", true) : null,
   ].filter(Boolean);

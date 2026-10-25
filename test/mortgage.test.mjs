@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { apartmentOptions, loanHeadSentence, loanSentence, monthlyPayment, rateSpread } from "../scripts/mortgage.ts";
+import { latestRate, loanHeadSentence, loanSentence, monthlyPayment } from "../scripts/mortgage.ts";
 import { budgetLoanHtml } from "../scripts/prerender.ts";
 import { SITE } from "./helpers/site-root.mjs";
 
@@ -11,25 +11,13 @@ const root = path.resolve(import.meta.dirname, "..");
 const near = (actual, expected, tolerance, message) =>
   assert.ok(Math.abs(actual - expected) <= tolerance, `${message ?? ""} ${actual} ≈ ${expected}`.trim());
 
-const RATES = {
-  mortgage: [
-    {
-      company: "가나은행",
-      options: [
-        { mortgageType: "아파트", repayType: "분할상환방식", min: 4 },
-        { mortgageType: "아파트", repayType: "만기일시상환방식", min: 3 },
-        { mortgageType: "연립·다세대", repayType: "분할상환방식", min: 3.5 },
-      ],
-    },
-    {
-      company: "다라은행",
-      options: [
-        { mortgageType: "아파트", repayType: "분할상환방식", min: 5 },
-        { mortgageType: "아파트", repayType: "분할상환방식", min: 6 },
-      ],
-    },
-  ],
-};
+// 한국은행 ECOS 121Y006(예금은행 주택담보대출 신규취급 평균금리) 계열 모양 - raw/indicators/series.json 의 mortgage_rate (#577).
+const SERIES = [
+  ["202507", 4.1],
+  ["202508", 3.96],
+  ["202607", 4.48],
+  ["202608", 4.66],
+];
 
 test("원리금균등 월 상환액을 낸다", () => {
   // 1억(10,000만원)을 30년 5.11%로 빌리면 매달 54.36만원이다.
@@ -45,56 +33,54 @@ test("금리가 0이어도 무너지지 않는다", () => {
   assert.equal(monthlyPayment(10_000, Number.NaN), null);
 });
 
-test("아파트를 나누어 갚는 상품만 고른다", () => {
-  // 일시상환은 매달 이자만 내는 것이라 월 상환액의 뜻이 아예 다르다.
-  const options = apartmentOptions(RATES);
-  assert.deepEqual(options.map((o) => o.min), [4, 5, 6]);
+test("ECOS 평균금리 계열의 가장 최근 달을 쓴다 (#577)", () => {
+  assert.deepEqual(latestRate(SERIES), { rate: 4.66, month: "202608" });
+  // 숫자 문자열도 숫자로 읽는다(수집 원본이 문자열일 수 있다).
+  assert.deepEqual(latestRate([["202608", "4.5"]]), { rate: 4.5, month: "202608" });
 });
 
-test("최저금리가 비어 있으면 0%로 세지 않고 뺀다 (#269)", () => {
-  // fetch-rates.ts의 loanOption은 min·max·avg 중 하나라도 있으면 옵션을 유지하므로
-  // lend_rate_min만 빈 날 `min: null`이 rates.json에 들어간다. Number(null)·Number("")·
-  // Number(false)·Number([])는 모두 0이라 예전 거름은 이를 연 0% 상품으로 세어 중앙값을 끌어내렸다.
-  const row = (min) => ({ mortgageType: "아파트", repayType: "분할상환방식", min });
-  const withEmpty = (empty) => ({ mortgage: [{ company: "가나은행", options: [row(empty), row(4), row(6)] }] });
-  for (const empty of [null, undefined, "", "  ", false, true, []]) {
-    const options = apartmentOptions(withEmpty(empty));
-    assert.deepEqual(options.map((o) => o.min), [4, 6], `빈 값 ${JSON.stringify(empty)}이 0%로 들어왔다`);
-    assert.equal(rateSpread(options).mid, 5, "빈 값이 중앙값을 끌어내렸다");
-    assert.equal(rateSpread(options).low, 4, "빈 값이 최저를 0으로 만들었다");
+test("비거나 0 이하인 달은 0%로 세지 않고 건너뛴다 (#269)", () => {
+  // Number(null)·Number("")·Number(false)·Number([])는 모두 0이다 - 값 없음이 0%로 흘러들면 월 상환액이 원금÷개월이 된다.
+  for (const empty of [null, undefined, "", "  ", false, true, [], 0, -1, "abc", Number.NaN]) {
+    assert.deepEqual(latestRate([["202607", 4.48], ["202608", empty]]), { rate: 4.48, month: "202607" }, `빈 값 ${JSON.stringify(empty)}을 썼다`);
   }
-  // 값이 있는 0%는 그대로 센다 - 막는 것은 "비어 있음"이지 0이 아니다(budget-leaves AN-R07).
-  assert.deepEqual(apartmentOptions(withEmpty(0)).map((o) => o.min), [0, 4, 6]);
-  assert.deepEqual(apartmentOptions(withEmpty("0")).map((o) => o.min), [0, 4, 6]);
+  // 달이 YYYYMM 이 아니면 그 줄을 쓰지 않는다.
+  assert.deepEqual(latestRate([["202607", 4.48], ["2026-08", 5]]), { rate: 4.48, month: "202607" });
 });
 
-test("최저금리가 전부 비면 옵션이 0개라 문장을 만들지 않는다 (#269)", () => {
-  const rates = { mortgage: [{ company: "가나은행", options: [{ mortgageType: "아파트", repayType: "분할상환방식", min: null, max: 6, avg: 5 }] }] };
-  assert.deepEqual(apartmentOptions(rates), []);
-  assert.equal(rateSpread(apartmentOptions(rates)), null);
-  assert.equal(loanHeadSentence(rateSpread(apartmentOptions(rates))), null);
-  assert.equal(loanSentence(rateSpread(apartmentOptions(rates)), { eok: 10 }), null);
+test("계열이 없거나 쓸 달이 없으면 문장을 만들지 않는다", () => {
+  for (const series of [null, undefined, [], {}, "x", [["202608", null]], [null, 5]]) {
+    assert.equal(latestRate(series), null, JSON.stringify(series));
+    assert.equal(loanHeadSentence(latestRate(series)), null);
+    assert.equal(loanSentence(latestRate(series), { eok: 10 }), null);
+  }
+  // 금리가 숫자가 아니면(직접 넘긴 값) 문장이 없다.
+  assert.equal(loanHeadSentence({ rate: "4.66", month: "202608" }), null);
 });
 
-test("대표 금리는 가장 낮은 것이 아니라 중앙값이다", () => {
-  // 최저 하나를 쓰면 우대조건을 다 채운 사람의 값이 모두의 값처럼 보인다.
-  const spread = rateSpread(apartmentOptions(RATES));
-  assert.equal(spread.mid, 5, "중앙값이 아니다");
-  assert.equal(spread.low, 4);
-  assert.equal(spread.high, 6);
-  assert.equal(spread.count, 3);
+test("1억당 문장은 한국은행 ECOS 평균금리와 그 달을 근거로 적는다 (#577)", () => {
+  const head = loanHeadSentence(latestRate(SERIES));
+  assert.equal(
+    head,
+    "1억을 30년 원리금균등으로 빌리면 매달 52만원입니다. 한국은행 ECOS 주택담보대출 신규취급 평균금리 2026년 8월 연 4.66% 기준입니다. " +
+      "은행이 실제로 내준 대출의 평균이라, 받는 금리는 신용·우대조건에 따라 이보다 높거나 낮을 수 있습니다."
+  );
+  // 금감원 공시 상품 근거(상품 수·최저금리 범위)는 더 쓰지 않는다.
+  assert.doesNotMatch(head, /상품|최저금리|중앙값|금융감독원/);
+  // 달을 모르면 달 없이 적는다.
+  assert.match(loanHeadSentence({ rate: 4.66 }), /평균금리 연 4\.66% 기준입니다/);
 });
 
 test("금리가 없으면 문단을 만들지 않는다", () => {
   // 금리 수집이 실패한 날에도 예산 페이지 자체는 나와야 한다.
-  assert.equal(rateSpread([]), null);
+  assert.equal(latestRate([]), null);
   assert.equal(loanSentence(null, { eok: 10 }), null);
   assert.equal(budgetLoanHtml({ min10k: 100_000 }, null), "");
 });
 
 test("한도는 가정하지 않고 1억당 값으로 말한다", () => {
-  const sentence = loanSentence(rateSpread(apartmentOptions(RATES)), { eok: 10 });
-  assert.match(loanHeadSentence(rateSpread(apartmentOptions(RATES))), /^1억을 30년 원리금균등으로/);
+  const sentence = loanSentence(latestRate(SERIES), { eok: 10 });
+  assert.match(loanHeadSentence(latestRate(SERIES)), /^1억을 30년 원리금균등으로/);
   assert.match(sentence, /1억당 값을 곱하시면/);
   // 소득에 갈리는 한도(DSR)를 하나로 정해 적으면 해마다 조용히 틀린 화면이 된다 - 갈린다고만 적는다.
   assert.match(sentence, /소득\(DSR\)에 따라 갈리므로 여기서는 정하지 않고/);
@@ -110,4 +96,7 @@ test("예산 페이지에 월 상환액 문단이 붙어 있다", async () => {
   assert.match(html, /answer-label">1억을 빌리면 매달/);
   const method = await readFile(path.join(root, `${SITE}/method.html`), "utf8");
   assert.match(method, /id="budget-rules-loan"[\s\S]*1억을 30년 원리금균등으로 빌리면 매달/, "옮겨 간 자리에 문단이 없다");
+  // 금리 근거는 한국은행 ECOS 평균금리다(#577) - 장의 한눈에 줄도 출처를 적는다.
+  assert.match(method, /id="budget-rules-loan"[\s\S]*한국은행 ECOS 주택담보대출 신규취급 평균금리/);
+  assert.match(html, /answer-note">30년 원리금균등, 한국은행 평균 연 [0-9.]+%\(\d{4}년 \d{1,2}월\)</);
 });

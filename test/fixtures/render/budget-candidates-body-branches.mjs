@@ -1082,9 +1082,8 @@ const CA = "budgetCandidatesHtml";
 const BO = "budgetBodyHtml";
 
 const leafBand = (eok) => ({ min10k: eok * 10_000, max10k: eok * 10_000 + 10_000, count: 100 });
-const opt = (min, extra = {}) => ({ mortgageType: "아파트", repayType: "분할상환방식", rateType: "변동금리", min, max: 6.9, avg: 5.2, ...extra });
-const prod = (company, ...options) => ({ id: "p", sector: "bank", company, name: "아파트론", options });
-const RATES_STD = { mortgage: [prod("가은행", opt(4.11), opt(3.0, { repayType: "만기일시상환방식" }), opt(2.0, { mortgageType: "연립" })), prod("나은행", opt(5.25)), prod("다은행", opt(6.21))] };
+// 금리 근거: 한국은행 ECOS 평균금리 { rate, month }(#577). 잎 표(budget-leaves-branches)의 BASIS_STD 와 같은 값이라 leaf()가 그 행을 찾는다.
+const RATES_STD = { rate: 5.25, month: "202608" };
 
 // ----- PR A 분기 표에서 하위 조각의 기대값 찾기 -----
 const trim = (a) => {
@@ -1301,7 +1300,7 @@ const B3 = (over = {}) => BODY({ summary: SUM("3억대"), ...P3, ...over });
   ["false", false],
 ].forEach(([cond, value], i) => add(`BO-N0${i + 1}`, BO, `예산대 없음(${cond}) → null`, [value, ["202609"], RATES_STD], null, { nullOut: true }));
 add("BO-N06", BO, "인자가 아예 없음 → null", [], null, { nullOut: true });
-add("BO-N07", BO, "예산대 없음이면 다른 인자가 이상해도(신고분 {}·금리 {mortgage: {}}) 읽지 않고 null", [null, {}, { mortgage: {} }, null, { length: 1 }, null, null], null, { nullOut: true });
+add("BO-N07", BO, "예산대 없음이면 다른 인자가 이상해도(신고분 {}·옛 금리 모양 {mortgage: {}}) 읽지 않고 null", [null, {}, { mortgage: {} }, null, { length: 1 }, null, null], null, { nullOut: true });
 
 // 신고분 기준(periodList): 없으면 span이 없다. monthLabel이 거르는 값(월이 1~12가 아니거나 읽을 수 없음)은 빠진다.
 add("BO-A01", BO, "신고분 한 달(202609) → '9월 신고분 기준', 3억대·금리·정책대출 있음, 거래 없음(빈 목록)", a3(bb(3), ["202609"]), B3({ span: "9월 신고분 기준" }));
@@ -1412,6 +1411,7 @@ add("BO-K01", BO, "16억대: 후보 단지 있음·금리 있음·상한 문단(
   BODY({ summary: SUM("16억대"), span: "9월 신고분 기준", ...P16, cands: CAND_GEN.FB16.expect }));
 add("BO-K02", BO, "10억대: 후보 없음 안내가 본문 안에 들어간다(한눈에 다음), 상한·정책대출 없음", [bb(10), null, RATES_STD, null, CAND_GEN.NB10.files, null, POLICY_COUNTS],
   BODY({ summary: SUM("10억대"), answers: leaf("budgetAnswersHtml", 10, RATES_STD), cands: CAND_GEN.NB10.expect, loan: leaf("budgetLoanHtml", 10, RATES_STD), costs: leaf("budgetCostsHtml", 10), mincash: leaf("budgetMinCashHtml", 10) }));
+add("BO-K12", BO, "옛 금감원 금리 모양({mortgage: {}})은 읽지 않는다 → 금리 줄·대출 문단만 빠진다(전에는 던졌다: BO-T19, #577)", [bb(3), null, { mortgage: {} }], B3({ answers: leaf("budgetAnswersHtml", 3), loan: "", policy: "" }));
 add("BO-K03", BO, "단지 파일이 빈 배열이면 후보 절이 없다(빈 문자열)", [bb(3), null, RATES_STD, null, [], null, POLICY_COUNTS], B3());
 add("BO-K04", BO, "3억대에 정책대출 건수가 없으면(null) 정책대출 문단만 빠진다", [bb(3), null, RATES_STD, null, null, null, null], B3({ policy: "" }));
 add("BO-K05", BO, "금리가 없으면(null) 한눈에의 1억당 줄과 대출 문단이 빠진다", [bb(3), null, null, null, null, null, POLICY_COUNTS],
@@ -1482,7 +1482,6 @@ addThrow("BO-T15", BO, "신고분이 객체({})면 던진다", [bb(3), {}]);
 addThrow("BO-T16", BO, "신고분이 0이면(`?? []`는 0을 그대로 둔다) 던진다", [bb(3), 0]);
 addThrow("BO-T17", BO, "신고분이 빈 문자열이면 던진다", [bb(3), ""]);
 addThrow("BO-T18", BO, "신고분이 true·false면 던진다", [bb(3), true]);
-addThrow("BO-T19", BO, "금리 mortgage가 객체({})면 한눈에 조각에서 던진다", [bb(3), null, { mortgage: {} }]);
 addThrow("BO-T20", BO, "단지 파일이 iterable이 아님({length: 1}) → 후보 조각에서 던진다", [bb(3), null, null, null, { length: 1 }]);
 addThrow("BO-T21", BO, "단지 파일의 칸이 null이면 던진다", [bb(3), null, null, null, [{ district: "노원구", reference: "202609", cells: { 가: null } }]]);
 addThrow("BO-T22", BO, "예산대가 true(건수 없음)면 던진다", [true]);

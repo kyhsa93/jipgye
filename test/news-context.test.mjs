@@ -2,11 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
-import { attachContext, bestRate, buildContext, findDistrict } from "../scripts/news-context.ts";
+import * as newsContext from "../scripts/news-context.ts";
+import { attachContext, buildContext, findDistrict } from "../scripts/news-context.ts";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
-import { newsContextHtml, newsListHtml, ratesHtml, realestateTableHtml } from "../scripts/prerender.ts";
+import { newsContextHtml, newsListHtml, realestateTableHtml } from "../scripts/prerender.ts";
 import { loadNewsPage } from "./helpers/news-page.mjs";
-import { readFixture } from "./helpers/fixture-data.mjs";
 import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -37,6 +37,7 @@ const REALESTATE = {
   districts: [district("중구"), district("송파구"), district("노원구")],
 };
 
+// 금감원 공시 금리 모양. 기사 맥락은 이 값을 더 읽지 않는다(#577) - 넘겨도 결과가 같은지 보려고만 둔다.
 const RATES = {
   deposit: [{ options: [{ term: 12, rate: 2.9, maxRate: 3.4 }, { term: 6, rate: 2.5, maxRate: 9.9 }] }],
   saving: [{ options: [{ term: 12, rate: 3.0, maxRate: 4.1 }] }],
@@ -44,7 +45,7 @@ const RATES = {
   rentLoan: [{ options: [{ min: 3.28, max: 4.4, avg: 3.9 }] }],
 };
 
-const DATA = { realestate: REALESTATE, rates: RATES };
+const DATA = { realestate: REALESTATE };
 const context = (title, preview = null) => buildContext({ title, preview }, DATA);
 
 test("자치구를 짚은 부동산 기사에 그 구의 평당가가 붙는다", () => {
@@ -122,37 +123,31 @@ test("자치구가 없으면 서울 기사에 서울 전체 평균을 붙인다"
   assert.deepEqual(context("수도권 아파트를 1억대로 입주?"), []);
 });
 
-test("이주비 대출은 전세자금대출이 아니라 담보대출 쪽으로 간다", () => {
-  const [first] = context("이주비 대출 완화…중소·중견사 정비사업 기회 열리나");
-  assert.equal(first.label, "주택담보대출 최저금리(상환방식 무관)");
-  assert.equal(first.href, "./mortgage-rates.html");
+// 금리 맥락(금감원 공시 최저·최고금리)은 #577 에서 뺐다. 아래 다섯은 그 맥락이 다시 붙지 않는지를 본다.
+const noRates = (found) => assert.deepEqual(found.filter((c) => c.kind === "rates"), [], `금리 칩이 붙었다: ${JSON.stringify(found)}`);
+
+test("대출 기사에도 금리 칩을 붙이지 않는다 (#577)", () => {
+  noRates(context("이주비 대출 완화…중소·중견사 정비사업 기회 열리나"));
+  noRates(buildContext({ title: "이주비 대출 완화…중소·중견사 정비사업 기회 열리나" }, { realestate: REALESTATE, rates: RATES }));
 });
 
-test("전세대출 기사는 전세자금대출 금리로 간다", () => {
-  const [first] = context('"비거주 1주택자 전세대출 막힌다"더니…반전 있었다');
-  assert.equal(first.label, "전세자금대출 최저금리");
-  assert.equal(first.value, "연 3.28%");
+test("전세대출 기사에도 금리 칩을 붙이지 않는다 (#577)", () => {
+  assert.deepEqual(context('"비거주 1주택자 전세대출 막힌다"더니…반전 있었다'), []);
 });
 
-test("한 기사에 두 개까지만 붙인다", () => {
+test("금리 맥락이 빠져 한 기사에는 실거래가 칩 하나만 붙는다 (#577)", () => {
   const many = context("서울 아파트 전세 매매 가계부채 대출 총출동");
-  assert.equal(many.length, 2);
-  assert.deepEqual(many.map((c) => c.kind), ["realestate", "rates"]);
+  assert.deepEqual(many.map((c) => c.kind), ["realestate"]);
 });
 
-// (#520) bestRate 와 ratesHtml 이 같은 기준인가는 코드 쪽 약속이라 고정 데이터로 돈다 - docs/data 의 12개월 옵션 유무 같은 모양에 기대지 않는다.
-test("금리 값이 금리 페이지 첫 줄과 같은 기준으로 뽑힌다", async () => {
-  const rates = await readFixture("rates");
+test("금리 데이터를 넘겨도 읽지 않고, 금리 뽑는 함수도 내보내지 않는다 (#577)", () => {
+  const item = { title: "서울 아파트 전세 정기예금 적금 주담대" };
+  assert.deepEqual(buildContext(item, { realestate: REALESTATE, rates: RATES }), buildContext(item, { realestate: REALESTATE }));
+  assert.ok(!("bestRate" in newsContext), "bestRate 가 아직 내보내진다");
+});
 
-  for (const [key, cell] of [
-    ["deposit", /class="rate-strong tw:font-semibold tw:text-up"[^>]*>([\d.]+)%/],
-    ["mortgage", /data-label="금리\(최저~최고\)">([\d.]+)~/],
-  ]) {
-    const top = ratesHtml(rates, { category: key, limit: 1 }).match(cell)?.[1];
-    const best = bestRate(rates, key);
-    assert.ok(typeof best === "number", `${key} 상품이 한 건도 없다`);
-    assert.equal(best.toFixed(2), top, `${key} 금리가 금리 페이지 첫 줄과 다릅니다`);
-  }
+test("붙여 쓴 '대출규제' 기사에도 금리 칩이 붙지 않는다 (#577)", () => {
+  noRates(context("청년은 입주 못하는 '반값아파트'…바뀐 대출규제에 계약포기 속출"));
 });
 
 test("84㎡ 환산가가 시세 페이지 표에 적힌 값과 같다", async () => {
@@ -183,13 +178,6 @@ test("기사에 이미 있는 숫자(지수·환율)는 붙이지 않는다", ()
   assert.deepEqual(context("[외환] 원/달러 환율 2.3원 오른 1,418.4원(15:30 기준가)"), []);
   assert.deepEqual(context("코스피, 지난주 5일 연속 상승…외국인 순매수로 지수 견인"), []);
   assert.deepEqual(context("금통위 기준금리 동결"), []);
-});
-
-test("붙여 쓴 '대출규제'도 대출 기사로 본다", () => {
-  assert.equal(
-    context("청년은 입주 못하는 '반값아파트'…바뀐 대출규제에 계약포기 속출")[0].label,
-    "주택담보대출 최저금리(상환방식 무관)"
-  );
 });
 
 test("붙일 게 없는 기사에는 context 필드를 만들지 않는다", () => {

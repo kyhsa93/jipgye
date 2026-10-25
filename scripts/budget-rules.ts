@@ -6,7 +6,7 @@
 // 상수로 내보낸 원문을 그대로 놓고, 장은 숫자만 남기고 #budget-rules-* 로 링크한다.
 // 기준일은 각 모듈의 BASIS_DATE라 규칙 문구와 확인일이 한 곳에서만 바뀐다.
 import { escapeHtml } from "./prerender.ts";
-import { apartmentOptions, loanHeadSentence, rateSpread, yearChangeSentence } from "./mortgage.ts";
+import { latestRate, loanHeadSentence, yearChangeSentence } from "./mortgage.ts";
 import { COSTS_RULES } from "./purchase-costs.ts";
 import { MIN_CASH_RULES } from "./min-cash.ts";
 import { POLICY_LINES, POLICY_TAIL, policyShareSentence } from "./policy-loan.ts";
@@ -16,10 +16,11 @@ const para = (text) => `<p>${escapeHtml(text)}</p>`;
 
 /**
  * method.html 한국어 블록의 <!--prerender:budgetRules--> 자리에 들어갈 HTML.
- * rates·mortgageSeries·policyCounts가 없으면 그 데이터에 기대는 문장만 빠진다(예산 장과 같은 규칙).
+ * mortgageSeries·policyCounts가 없으면 그 데이터에 기대는 문장만 빠진다(예산 장과 같은 규칙).
+ * 1억당 값의 금리도 mortgageSeries(한국은행 ECOS 121Y006)의 가장 최근 달이다 - 전에는 금감원 공시 금리였다(#577).
  */
-export function budgetRulesHtml({ rates = null, mortgageSeries = null, policyCounts = null } = {}) {
-  const head = loanHeadSentence(rateSpread(apartmentOptions(rates)));
+export function budgetRulesHtml({ mortgageSeries = null, policyCounts = null } = {}) {
+  const head = loanHeadSentence(latestRate(mortgageSeries));
   const year = yearChangeSentence(mortgageSeries);
   const share = policyShareSentence(policyCounts);
   return [

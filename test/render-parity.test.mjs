@@ -1293,7 +1293,8 @@ test("예산대 잎 분기 표: id가 겹치지 않고, 여덟 조각을 모두 
   const toIds = BUDGET_LEAVES_THROWS.map((b) => b.id);
   assert.equal(new Set(toIds).size, toIds.length, "던지는 입력 id가 겹친다");
   assert.ok(LEAF_ROWS.length >= 500, `분기 표가 ${LEAF_ROWS.length}행뿐이다`);
-  assert.equal(BUDGET_LEAVES_THROWS.length, 17);
+  // 금리 인자가 한국은행 평균금리 { rate, month } 로 바뀌어(#577) 옛 금리 모양에서 던지던 12행(AN-T01~05·LO-T01~07)이 "읽지 않는다" 행(AN-O·LO-O)이 됐다.
+  assert.equal(BUDGET_LEAVES_THROWS.length, 5);
 });
 
 test("예산대 잎 분기 표: 빈 결과는 null이 아니라 빈 문자열(\"\")이고 엄격 비교로 고정한다 - 조각마다 빈 문자열 행이 있다", () => {
@@ -1436,7 +1437,8 @@ test("후보 단지·본문 분기 표: id가 겹치지 않고, 두 조각을 �
   const toIds = BUDGET_CB_THROWS.map((b) => b.id);
   assert.equal(new Set(toIds).size, toIds.length, "던지는 입력 id가 겹친다");
   assert.ok(CB_ROWS.length >= 180, `분기 표가 ${CB_ROWS.length}행뿐이다`);
-  assert.equal(BUDGET_CB_THROWS.length, 34);
+  // BO-T19(옛 금리 모양에서 던짐)는 #577 에서 "읽지 않는다" 행 BO-K12 가 됐다.
+  assert.equal(BUDGET_CB_THROWS.length, 33);
 });
 
 test("후보 단지·본문 분기 표: 빈 결과 계약 - 후보 단지는 \"\"(null 아님), 본문은 예산대가 없을 때만 null(\"\" 아님)이고 엄격 비교로 고정한다", () => {
@@ -1675,25 +1677,26 @@ test("budget-fragments.mjs: 문단 모양 - 문장이 비면 null, 링크는 코
   assert.deepEqual(costsNote({ min10k: 70_000 }).link, link("costs", "중과·예외와 원문(2026-10-01 확인) →"));
   assert.equal(loanNote({ min10k: 70_000 }, null), null);
   assert.equal(loanNote(null, {}), null);
-  const rates = { mortgage: [{ options: [{ mortgageType: "아파트", repayType: "분할상환방식", min: 4 }, { mortgageType: "아파트", repayType: "분할상환방식", min: 6 }] }] };
-  assert.deepEqual(loanNote({ min10k: 70_000 }, rates).link, link("loan", "1억당 값과 금리 근거 →"));
-  assert.match(loanNote({ min10k: 70_000 }, rates).sentence, /^이 예산에서 절반인 3\.5억을 빌린다면 매달 188만원입니다 — /);
-  assert.match(loanNote(null, rates).sentence, /^1억을 30년 원리금균등으로 빌리면 매달 54만원입니다\. /, "예산대가 없으면 1억당 문장만");
-  assert.throws(() => loanNote({ min10k: 70_000 }, { mortgage: {} }), TypeError);
+  // 금리 근거는 한국은행 ECOS 평균금리 { rate, month }다(#577). 옛 금감원 상품 목록 모양은 읽지 않는다(전에는 던졌다).
+  const basis = { rate: 5, month: "202608" };
+  assert.deepEqual(loanNote({ min10k: 70_000 }, basis).link, link("loan", "1억당 값과 금리 근거 →"));
+  assert.match(loanNote({ min10k: 70_000 }, basis).sentence, /^이 예산에서 절반인 3\.5억을 빌린다면 매달 188만원입니다 — /);
+  assert.match(loanNote(null, basis).sentence, /^1억을 30년 원리금균등으로 빌리면 매달 54만원입니다\. 한국은행 ECOS 주택담보대출 신규취급 평균금리 2026년 8월 연 5% 기준입니다\. /, "예산대가 없으면 1억당 문장만");
+  assert.equal(loanNote({ min10k: 70_000 }, { mortgage: {} }), null);
 });
 
 test("budget-fragments.mjs: 한눈에 줄 모양 - 예산대 없으면 null, 줄은 셋이고 금리가 있으면 넷, 글자 값은 정책대출 줄뿐, 부가 글자는 생애최초·1억당·부대비용", () => {
   assert.equal(budgetAnswers(null), null);
-  assert.equal(budgetAnswers({ min10k: "70000" }, { mortgage: [] }), null);
+  assert.equal(budgetAnswers({ min10k: "70000" }, { rate: 5.25, month: "202608" }), null);
   const none = budgetAnswers({ min10k: 70_000 });
   assert.equal(none.heading, "7억 5,000만원짜리를 산다면 — 한눈에");
   assert.deepEqual(none.lines.map((l) => l.label), ["자기 돈이 적어도", "매매가 위에 더 드는 돈", "정책대출 가격선"]);
   assert.deepEqual(none.lines.map((l) => l.text), [false, false, true]);
   assert.deepEqual(none.lines.map((l) => l.note), ["생애최초면 2억 4,250만원", "취득세·지방교육세·중개보수 상한", ""]);
-  const rates = { mortgage: [{ options: [{ mortgageType: "아파트", repayType: "분할상환방식", min: 5.25 }] }] };
+  const rates = { rate: 5.25, month: "202608" };
   const withRates = budgetAnswers({ min10k: 70_000 }, rates);
   assert.deepEqual(withRates.lines.map((l) => l.label), ["자기 돈이 적어도", "1억을 빌리면 매달", "매매가 위에 더 드는 돈", "정책대출 가격선"]);
-  assert.deepEqual([withRates.lines[1].value, withRates.lines[1].note], ["55만원", "30년 원리금균등, 연 5.25%"]);
+  assert.deepEqual([withRates.lines[1].value, withRates.lines[1].note], ["55만원", "30년 원리금균등, 한국은행 평균 연 5.25%(2026년 8월)"]);
   assert.equal(budgetAnswers({ min10k: 160_000 }).lines[0].note, "", "15억 초과는 생애최초도 천장이 같아 부가 글자가 없다");
   assert.equal(budgetAnswers({ min10k: 160_000 }, rates).lines.length, 4);
 });
@@ -1720,7 +1723,7 @@ test("prerender.ts의 공개 export는 추출 뒤에도 같은 이름이다 - bu
 });
 
 test("budget-fragments.mjs: 이스케이프 없이 문자열에 끼우는 대출 문장(budgetLoanHtml의 ${sentence})에는 & < > \"가 들 수 없다 - 난수 입력 3만 건(고정 시드)", () => {
-  // 입력 값 자리마다 특수문자·비문자열·null·undefined를 섞는다. 금리(최저금리)·예산대 하한은 숫자로 읽혀(Number()·Number.isFinite) 숫자 서식 글자만 문장에 닿는다. 회사 이름·유형은 문장에 안 닿는다.
+  // 입력 값 자리마다 특수문자·비문자열·null·undefined를 섞는다. 금리(rate)는 typeof number 일 때만, 달(month)은 YYYYMM 일 때만 문장에 닿고 예산대 하한은 Number.isFinite로 읽혀 숫자 서식 글자만 문장에 닿는다(#577).
   let seed = 20261012;
   const rnd = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 2 ** 32);
   const pick = (a) => a[Math.floor(rnd() * a.length)];
@@ -1728,16 +1731,15 @@ test("budget-fragments.mjs: 이스케이프 없이 문자열에 끼우는 대출
   const ODD = [false, true, 0, -1, 7, 4.5, 1e21, NaN, Infinity, -Infinity, {}, [], [5], ["4.5"], null, undefined, { valueOf: () => 4, toString: () => SP_RAW }, { toString: () => SP_RAW }];
   const NUM = [0, 0.01, 1, 3.5, 4.11, 4.114, 5.25, 6.21, 12, 100, 1e-7, 123456.789];
   const v = () => (rnd() < 0.5 ? pick(NUM) : rnd() < 0.5 ? pick(STR) : pick(ODD));
-  const opt = () => ({ mortgageType: rnd() < 0.85 ? "아파트" : v(), repayType: rnd() < 0.85 ? "분할상환방식" : v(), min: v() });
-  const product = () => ({ company: v(), options: Array.from({ length: Math.floor(rnd() * 4) }, opt) });
+  const MONTHS = ["202608", "199901", "2026-08", "20268", SP_RAW, ""];
   const band = () => (rnd() < 0.1 ? v() : { min10k: rnd() < 0.5 ? Math.floor(rnd() * 25) * 10_000 : v() });
   let made = 0;
   let withHalf = 0;
   for (let i = 0; i < 30000; i++) {
-    const rates = rnd() < 0.05 ? v() : { mortgage: Array.from({ length: Math.floor(rnd() * 5) }, product) };
+    const basis = rnd() < 0.05 ? v() : { rate: v(), month: rnd() < 0.7 ? pick(MONTHS) : v(), extra: v() };
     let note;
     try {
-      note = loanNote(band(), rates);
+      note = loanNote(band(), basis);
     } catch (err) {
       assert.ok(err instanceof TypeError);
       continue;

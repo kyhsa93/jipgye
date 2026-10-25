@@ -20,45 +20,8 @@ const REALESTATE_HINTS = [
 
 const BYLINE = /[([][^)\]]{1,12}=[^)\]]{1,15}[)\]]/g;
 
-const RATE_RULES = [
-  {
-    key: "rentLoan",
-    href: "./rent-loan-rates.html",
-    words: ["전세대출", "전세 대출", "전세자금"],
-    label: "전세자금대출 최저금리",
-    labelEn: "Lowest jeonse loan rate",
-  },
-  {
-    key: "mortgage",
-    href: "./mortgage-rates.html",
-    words: [
-      "주택담보대출", "주담대", "모기지", "집단대출", "중도금", "잔금대출",
-      "보금자리론", "디딤돌", "가계대출", "가계부채", "대출여력", "대출 규제", "대출규제",
-      "대출 총량", "대출총량", "깡통대출", "이주비",
-    ],
-    // 상환방식을 가리지 않은 최저값이다 - 연결된 금리 화면 첫 줄과 같은 기준. 예산대 월 상환액은 아파트 담보·
-    // 분할상환 상품만의 중앙값이라 값이 다르다. 둘이 서로 다른 말을 하는 것처럼 보이지 않게 이름에 적는다(#34).
-    label: "주택담보대출 최저금리(상환방식 무관)",
-    labelEn: "Lowest mortgage rate (any repayment type)",
-  },
-  {
-    key: "deposit",
-    href: "./deposit-rates.html",
-    words: ["정기예금", "예금"],
-    label: "정기예금 최고금리(12개월)",
-    labelEn: "Top 12-month deposit rate",
-  },
-  {
-    key: "saving",
-    href: "./saving-rates.html",
-    words: ["적금", "저축"],
-    label: "적금 최고금리(12개월)",
-    labelEn: "Top 12-month savings rate",
-  },
-];
-
-const SAVING_TERM = 12;
-const SAVING_CATEGORIES = new Set(["deposit", "saving"]);
+// 금리 맥락(기사 옆 "전세자금대출 최저금리 연 x%" 등)은 금감원 금융상품통합비교공시 값이라 뺐다(#577, 소유자 결정 2026-10-25).
+// 남는 맥락은 국토부 실거래가 하나다. 이미 쌓인 news-history 의 kind:"rates" 맥락은 데이터 정리 PR(#577 C)이 지운다.
 
 const OVERALL_HREF = {
   sale: "./apartment-sale.html",
@@ -106,9 +69,6 @@ function noteOf(metric, change, window, locale) {
   }
   return parts.join(" · ");
 }
-
-const percentKo = (value) => `연 ${value.toFixed(2)}%`;
-const percentEn = (value) => `${value.toFixed(2)}% p.a.`;
 
 const enoughSample = (metric) => Boolean(metric) && (metric.transactionCount ?? 0) >= MIN_SAMPLE;
 
@@ -220,44 +180,11 @@ export function buildRealestateStats(realestate) {
   return entries.length === 3 ? entries : null;
 }
 
-export function bestRate(rates, key) {
-  const products = rates?.[key] ?? [];
-  const saving = SAVING_CATEGORIES.has(key);
-  let best = null;
-
-  for (const product of products) {
-    for (const option of product.options ?? []) {
-      if (saving && option.term !== SAVING_TERM) continue;
-      const value = saving ? option.maxRate ?? option.rate : option.min;
-      if (typeof value !== "number") continue;
-      if (best === null || (saving ? value > best : value < best)) best = value;
-    }
-  }
-  return best;
-}
-
-function ratesContext(text, rates) {
-  for (const rule of RATE_RULES) {
-    if (!hasAny(text, rule.words)) continue;
-    const value = bestRate(rates, rule.key);
-    if (value === null) continue;
-    return {
-      kind: "rates",
-      label: rule.label,
-      labelEn: rule.labelEn,
-      value: percentKo(value),
-      valueEn: percentEn(value),
-      href: rule.href,
-    };
-  }
-  return null;
-}
-
-export function buildContext(item, { realestate, rates }: { realestate?: unknown; rates?: unknown } = {}) {
+export function buildContext(item, { realestate }: { realestate?: unknown } = {}) {
   const text = articleText(item);
   if (!text.trim()) return [];
 
-  return [realestateContext(text, realestate), ratesContext(text, rates)]
+  return [realestateContext(text, realestate)]
     .filter(Boolean)
     .slice(0, MAX_CONTEXT);
 }
@@ -287,14 +214,13 @@ async function readJson(name) {
 
 async function main() {
   const newsFile = path.join(dataDir, "news.json");
-  const [news, realestate, rates] = await Promise.all([
+  const [news, realestate] = await Promise.all([
     readFile(newsFile, "utf8").then(JSON.parse),
     readJson("realestate"),
-    readJson("rates"),
   ]);
 
-  const next = attachContext(news, { realestate, rates });
-  const counts = { realestate: 0, rates: 0 };
+  const next = attachContext(news, { realestate });
+  const counts = { realestate: 0 };
   let matched = 0;
   for (const item of next.items) {
     if (!item.context?.length) continue;
@@ -305,7 +231,7 @@ async function main() {
   await writeFile(newsFile, JSON.stringify(next, null, 2));
   console.log(
     `  기사 ${next.items.length}건 중 ${matched}건에 수치를 붙였습니다` +
-      ` (실거래가 ${counts.realestate} · 금리 ${counts.rates})`
+      ` (실거래가 ${counts.realestate})`
   );
   if (next.items.length && !matched) {
     console.warn("  경고: 한 건도 붙지 않았습니다. 데이터 파일이 비었는지 확인해주세요");

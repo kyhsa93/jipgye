@@ -44,7 +44,7 @@ test("15억 경계에 걸친 예산대에만, LTV·DSR로 더 낮을 수 있다�
 
 test("예산대 '절반을 빌린다면' 예시는 그 가격대 상한을 넘지 않는다 (#29)", async () => {
   const { loanSentence } = await import("../scripts/mortgage.ts");
-  const spread = { low: 4, mid: 5, high: 6, count: 10 };
+  const spread = { rate: 5, month: "202608" };
   assert.match(loanSentence(spread, { eok: 10 }), /절반인 5억을 빌린다면/);
   const s16 = loanSentence(spread, { eok: 16 });
   assert.match(s16, /상한인 4억을 빌린다면/, "16억대에 8억 대출 예시를 냈다");

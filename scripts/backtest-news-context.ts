@@ -18,16 +18,14 @@ function parseArgs(argv) {
 
 async function main() {
   const { days, showMatched } = parseArgs(process.argv.slice(2));
-  const [history, realestate, rates] = await Promise.all(
-    ["news-history", "realestate", "rates"].map(readJson)
-  );
+  const [history, realestate] = await Promise.all(["news-history", "realestate"].map(readJson));
 
   if (!history?.length) {
     console.error("news-history.json이 없습니다. 뉴스를 한 번이라도 수집한 뒤 실행해주세요.");
     process.exit(1);
   }
 
-  const data = { realestate, rates };
+  const data = { realestate };
   const target = days ? history.slice(-days) : history;
 
   const byLabel = new Map();

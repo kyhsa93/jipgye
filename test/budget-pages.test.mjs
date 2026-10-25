@@ -11,7 +11,8 @@ import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
 import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
-const RATES = JSON.parse(await readFile(path.join(root, "docs/data/rates.json"), "utf8"));
+// 월 상환액의 금리 근거: 한국은행 ECOS 주담대 신규취급 평균금리(mortgage.ts latestRate 모양, #577). 데이터 날에 기대지 않게 고정값.
+const LOAN_BASIS = { rate: 4.66, month: "202608" };
 // 단지 후보 절에 쓰는 6개월 칸 요약. 8억대(page8)에 후보가 생기도록 한 칸을 둔다.
 const COMPLEX_FILES = [
   {
@@ -134,7 +135,7 @@ test("프리렌더가 심은 거래 목록을 클라이언트가 그대로 다�
   // 금리까지 넘긴다. 금리 없이 돌리면 월 상환액 문단이 애초에 없어서, 클라이언트가 그 문단을
   // 지우는 것(#26)을 이 검사가 볼 수 없었다.
   const band = BUDGET.bands.find((b) => b.min10k === page8.min10k);
-  const prerendered = budgetBodyHtml(band, BUDGET.periods, RATES, null, COMPLEX_FILES);
+  const prerendered = budgetBodyHtml(band, BUDGET.periods, LOAN_BASIS, null, COMPLEX_FILES);
   assert.match(prerendered, /budget-loan budget-costs/, "부대비용 문단이 빌드에 없다");
   assert.match(prerendered, /<section class="budget-candidates" data-prerendered(="")?>/, "단지 후보 절이 빌드에 없다");
 
@@ -282,12 +283,12 @@ test("예산대 장 머리는 본문과 같은 기간을, 건수는 직거래가
   assert.doesNotMatch(head, /2026-09-28/, "맨 아래 서울 평균 카드의 창을 머리에 적었다");
   assert.match(page.budgetHtml(), /건이 거래됐습니다\(직거래 1건 포함\)/);
   const { budgetBodyHtml: prerender } = await import("../scripts/prerender.ts");
-  assert.match(prerender({ ...band, direct: 1 }, BUDGET.periods, RATES, null, COMPLEX_FILES), /\(직거래 1건 포함\)/, "빌드와 화면이 갈렸다");
+  assert.match(prerender({ ...band, direct: 1 }, BUDGET.periods, LOAN_BASIS, null, COMPLEX_FILES), /\(직거래 1건 포함\)/, "빌드와 화면이 갈렸다");
 });
 
 test("영어 화면의 예산대 장은 한국어로만 굽는 문단이 있다고 먼저 말한다 (#41)", async () => {
   const band = BUDGET.bands.find((b) => b.min10k === page8.min10k);
-  const prerendered = budgetBodyHtml(band, BUDGET.periods, RATES, null, COMPLEX_FILES);
+  const prerendered = budgetBodyHtml(band, BUDGET.periods, LOAN_BASIS, null, COMPLEX_FILES);
   const en = await loadRealestatePage({ realestate: REALESTATE, budget: BUDGET, budgetBand: page8.min10k, prerenderedBudget: prerendered, locale: "en" });
   assert.match(en.budgetHtml(), /are in Korean only/);
   const ko = await loadRealestatePage({ realestate: REALESTATE, budget: BUDGET, budgetBand: page8.min10k, prerenderedBudget: prerendered });
@@ -296,11 +297,11 @@ test("영어 화면의 예산대 장은 한국어로만 굽는 문단이 있다�
 
 test("예산대 장 맨 위 '한눈에'는 아래 문단과 같은 함수에서 나온 값을 한 줄씩 적는다 (#43)", async () => {
   const { budgetAnswersHtml } = await import("../scripts/prerender.ts");
-  const html = budgetAnswersHtml({ min10k: 70_000 }, RATES);
+  const html = budgetAnswersHtml({ min10k: 70_000 }, LOAN_BASIS);
   assert.match(html, /7억 5,000만원짜리를 산다면/);
   assert.match(html, /자기 돈이 적어도<\/span><strong class="answer-value">4억 6,950만원<\/strong><span class="answer-note">생애최초면 2억 4,250만원/);
   assert.match(html, /매매가 위에 더 드는 돈<\/span><strong class="answer-value">1,950만원/);
-  assert.match(html, /1억을 빌리면 매달<\/span><strong class="answer-value">\d+만원/);
+  assert.match(html, /1억을 빌리면 매달<\/span><strong class="answer-value">52만원<\/strong><span class="answer-note">30년 원리금균등, 한국은행 평균 연 4\.66%\(2026년 8월\)</);
   assert.match(html, /신생아 특례 선\(9억\) 안/);
   assert.match(html, /data-prerendered/, "화면이 다시 그릴 때 지워진다");
   assert.doesNotMatch(budgetAnswersHtml({ min10k: 70_000 }, null), /1억을 빌리면/, "금리가 없는 날 상환액 줄을 지어냈다");
@@ -312,7 +313,7 @@ test("예산대 본문 순서: 요약 → 한눈에 → 지역 줄 → 어디로
   );
   const budget = { ...BUDGET, bands: mergeBands({ "202608": buildBands(many) }) };
   const band = budget.bands.find((b) => b.min10k === page8.min10k);
-  const prerendered = budgetBodyHtml(band, budget.periods, RATES, null, COMPLEX_FILES, null, null, FINDER);
+  const prerendered = budgetBodyHtml(band, budget.periods, LOAN_BASIS, null, COMPLEX_FILES, null, null, FINDER);
   const at = (needle) => prerendered.indexOf(needle);
   assert.ok(at('class="budget-where"') > 0, "전제: 지역 문단이 있어야 한다");
   assert.ok(at("budget-summary") < at("budget-answers"), "거래 요약이 한눈에보다 뒤다");
@@ -360,7 +361,7 @@ test("예산대 화면이 다시 그려도(한국어·영어) 같은 순서이�
   for (const page of BUDGET_PAGES) {
     const band = (buildBands([deal(page.min10k + 5_000, { apt: "가단지" }), deal(page.min10k + 6_000, { apt: "나단지", district: "도봉구" })]) ?? []).find((b) => b.min10k === page.min10k);
     const budget = { ...BUDGET, bands: [band] };
-    const prerendered = budgetBodyHtml(band, budget.periods, RATES, null, COMPLEX_FILES, null, null, FINDER);
+    const prerendered = budgetBodyHtml(band, budget.periods, LOAN_BASIS, null, COMPLEX_FILES, null, null, FINDER);
     for (const locale of ["ko", "en"]) {
       const view = await loadRealestatePage({ realestate: REALESTATE, budget, budgetBand: page.min10k, prerenderedBudget: prerendered, locale });
       const html = `<p class="updated cross-basis" id="cross-basis"></p>${view.budgetHtml()}`;

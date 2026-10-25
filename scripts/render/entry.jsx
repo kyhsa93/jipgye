@@ -708,8 +708,8 @@ const budgetNote = (className, note) =>
   );
 
 // "한눈에": 줄마다 라벨·값(글자 값이면 answer-text)·부가 글자(비면 줄 없음). 예산대가 없으면 legacy처럼 빈 문자열이다.
-function budgetAnswersJsx(band, rates = null) {
-  const answers = budgetAnswers(band, rates);
+function budgetAnswersJsx(band, loanBasis = null) {
+  const answers = budgetAnswers(band, loanBasis);
   if (!answers) return blank;
   return (
     <section className="budget-answers" data-prerendered="">
@@ -747,7 +747,7 @@ const budgetMinCashJsx = (band) => budgetNote("budget-loan budget-mincash", minC
 const budgetPolicyJsx = (band, policyCounts) => budgetNote("budget-loan budget-policy", policyNote(band, policyCounts));
 const budgetCapJsx = (band, capStats) => budgetNote("budget-loan budget-cap", capNote(band, capStats));
 const budgetCostsJsx = (band) => budgetNote("budget-loan budget-costs", costsNote(band));
-const budgetLoanJsx = (band, rates) => budgetNote("budget-loan", loanNote(band, rates));
+const budgetLoanJsx = (band, loanBasis) => budgetNote("budget-loan", loanNote(band, loanBasis));
 
 // 예산대 페이지가 자기 이야기를 하는 문단(ko·en 두 벌을 빌드가 굽는다). 문장 묶음 한 덩어리 - 문장이 없으면 빈 문자열(sentenceBlock).
 const budgetFacts = (band, locale = "ko") => sentenceBlock(budgetFactSentences(band?.facts, locale));
@@ -822,7 +822,7 @@ const BudgetDeal = ({ deal }) => {
 // (그래서 후보 단지가 JSX로 있어야 이 조각을 옮길 수 있었다). 순서는 prerender.ts의 budgetBodyHtmlLegacy와 같다(#460). 예산대가 없으면 null이다 - 합성 조각만 null이고 잎은 ""다(잎의 반환값이 이어 붙는 자리에 "null" 글자가 박히지 않게).
 // 하위 조각의 호출 순서는 legacy와 같다(입력이 이상할 때 던지는 자리가 같아야 한다). 거래 목록은 맨 뒤라 이상한 거래(null 등)는 하위 조각을 다 부른 뒤에 던진다.
 // finderHtml은 빌드가 만든 마크업 문자열(제목+칩)이라 그대로 낸다. 비면 이 절은 없다.
-function budgetBodyJsx(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, finderHtml = "") {
+function budgetBodyJsx(band, periodList, loanBasis = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, finderHtml = "") {
   const shape = bodyShape(band, periodList);
   if (!shape) return null;
   return (
@@ -836,7 +836,7 @@ function budgetBodyJsx(band, periodList, rates = null, mortgageSeries = null, co
           </>
         ) : null}
       </p>
-      {budgetAnswersJsx(band, rates)}
+      {budgetAnswersJsx(band, loanBasis)}
       {shape.districts.length ? (
         <div className="budget-districts">
           거래가 많은 지역: {shape.districts.flatMap((d, i) => [i ? " · " : "", str(d.name), " ", d.count])}
@@ -845,7 +845,7 @@ function budgetBodyJsx(band, periodList, rates = null, mortgageSeries = null, co
       {budgetWhereJsx(band)}
       {finderHtml ? <div data-prerendered="" dangerouslySetInnerHTML={{ __html: finderHtml }} /> : null}
       {budgetCandidatesJsx(band, complexFiles)}
-      {budgetLoanJsx(band, rates)}
+      {budgetLoanJsx(band, loanBasis)}
       {budgetCostsJsx(band)}
       {budgetMinCashJsx(band)}
       {budgetCapJsx(band, capStats)}
