@@ -1837,6 +1837,9 @@
   html:lang(en) #kospi-section .m-ko, html:not(:lang(en)) #kospi-section .m-en {
     display: none;
   }
+  html:lang(en) #repeat-sales .m-ko, html:not(:lang(en)) #repeat-sales .m-en {
+    display: none;
+  }
   html:not(:lang(en)) #content-notice.m-en {
     display: none;
   }

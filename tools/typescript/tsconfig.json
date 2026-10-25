@@ -150,6 +150,7 @@
     "../../scripts/render/load-jsx.ts",
     "../../scripts/render/react.ts",
     "../../scripts/renewal-facts.ts",
+    "../../scripts/repeat-sales-view.ts",
     "../../scripts/repeat-sales.ts",
     "../../scripts/site-dir.ts",
     "../../scripts/site-hashes.ts",

@@ -1,0 +1,81 @@
+// 갈아타기 화면 「같은 집이 다시 팔렸을 때」 절(#170 V8 R1)의 글자와 칸. 순수 모듈 - 마크업은 render/entry.jsx 의 repeatSalesHtml 이 그린다.
+//
+// 문장은 판정(#170 6402863306) 2·3번을 그대로 옮긴 것이다(문장 다듬기는 po 몫이라 여기서 고치지 않는다). 두 언어를 다 굽고 html lang 이
+// 가린다(m-ko·m-en) - 이 장의 인라인 스크립트는 S6 기준선까지 여유가 없어 번역 표를 더하지 않는다.
+// 지키는 것: '편향'이라 부르지 않는다(원인은 재지 않았다), 연율화·시장 지수는 '아니다'로만 쓴다, 순위·「더 올랐다」를 쓰지 않는다(구 코드순),
+// 5-1 ⑦ 금지어 0건. 접힘(5-1 ④·판정 5번): 킬 스위치가 발동하거나 값을 낼 수 있는 구가 13곳 미만이면 표 없이 한 줄.
+import { districtNames } from "./realestate-districts.ts";
+
+type Both = { ko: string; en: string };
+
+/** 빌더가 낸 % (소수 1자리, p 배열). 로그 값에서 다시 내지 않는다 - 6자리 로그에서는 반올림 경계가 갈린다. */
+const pct = (v: number | null) => (v == null ? "-" : `${v > 0 ? "+" : ""}${v.toFixed(1)}%`);
+const monthKo = (ym: string) => `${ym.slice(0, 4)}년 ${Number(ym.slice(4))}월`;
+const MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const monthEn = (ym: string) => `${MONTHS_EN[Number(ym.slice(4)) - 1]} ${ym.slice(0, 4)}`;
+
+export const REPEAT_HEADING: Both = { ko: "같은 집이 다시 팔렸을 때", en: "When the same home sold again" };
+export const REPEAT_LINK: Both = { ko: "어떻게 셌나 →", en: "How it was counted →" };
+export const REPEAT_HEAD: Both[] = [
+  { ko: "자치구", en: "District" },
+  { ko: "쌍 수", en: "Pairs" },
+  { ko: "중앙값", en: "Median" },
+  { ko: "90% 구간", en: "90% range" },
+  { ko: "간격 중앙값(일)", en: "Median gap (days)" },
+  { ko: "부동산원(같은 쌍)", en: "REB (same pairs)" },
+];
+
+export function repeatSalesView(data) {
+  if (!data?.rows?.length || !data.window) return null;
+  const { from, to } = data.window;
+  const span = { ko: `${monthKo(from)}~${monthKo(to)}`, en: `${monthEn(from)}–${monthEn(to)}` };
+  const c = data.checks ?? {};
+  if (c.kill || !c.enough) {
+    const fold: Both = c.kill
+      ? {
+          ko: `${REPEAT_HEADING.ko}: ${span.ko} 계약 쌍은 사전에 정한 점검(한국부동산원 조사와의 최소 정합)을 넘지 못해 값을 싣지 않습니다.`,
+          en: `${REPEAT_HEADING.en}: pairs contracted ${span.en} failed the pre-set check against the Korea Real Estate Board survey, so no figures are shown.`,
+        }
+      : {
+          ko: `${REPEAT_HEADING.ko}: ${span.ko} 계약 쌍으로 값을 낼 수 있는 구가 ${c.published ?? 0}곳이라 사전에 정한 13곳에 못 미쳐 값을 싣지 않습니다.`,
+          en: `${REPEAT_HEADING.en}: only ${c.published ?? 0} districts had enough pairs contracted ${span.en}, short of the pre-set 13, so no figures are shown.`,
+        };
+    return { fold };
+  }
+  const intro: Both = {
+    ko: `${span.ko} 계약 기준, 같은 집(단지·면적·층)이 300~730일 간격으로 두 번 중개거래된 쌍의 가격 변화 중앙값입니다. 시장 지수가 아니고 연율화하지 않았으며, 다시 팔린 집만 들어옵니다.`,
+    en: `Contracts ${span.en}: the median price change across pairs in which the same home (complex, area, floor) sold twice through a broker, 300–730 days apart. It is not a market index, it is not annualised, and only homes that sold again are included.`,
+  };
+  const s = data.seoul;
+  const all = data.compared === 25 && data.higher === 25;
+  const gap: Both | null =
+    s?.p && data.compared
+      ? {
+          ko:
+            `${all ? "모든 구에서" : `${data.compared}개 구 가운데 ${data.higher}개 구에서`} 한국부동산원 지수의 같은 기간 변화보다 큽니다` +
+            `(서울 전체 쌍 ${pct(s.p[0])}, 같은 쌍 기간의 부동산원 ${pct(s.p[1])}). 원인은 재지 않았습니다 — 다시 팔린 집의 구성, 직거래 제외, 지수 산정 방식 차이가 후보입니다.`,
+          en:
+            `${all ? "In every district" : `In ${data.higher} of ${data.compared} districts`} it is larger than the Korea Real Estate Board index change over the same periods ` +
+            `(all Seoul pairs ${pct(s.p[0])}; the Board over the same pair periods ${pct(s.p[1])}). The cause has not been measured — the mix of homes that resold, the exclusion of direct deals and differences in how the index is built are candidates.`,
+        }
+      : null;
+  // 표는 구 코드순이다. E(간격 상관 |ρ| ≥ 0.5)가 걸리면 구끼리 견주지 말라는 한 줄을 더한다 - 이 절에는 원래 구 사이 비교 문구가 없다.
+  const order: Both = c.dropCompare
+    ? { ko: "표는 구 코드 순이고 순위가 아닙니다. 구마다 쌍의 간격 구성이 값과 함께 움직여 구끼리 견주지 않습니다.", en: "Rows are in district-code order, not a ranking. Pair spacing moves with the values across districts, so districts are not compared with each other." }
+    : { ko: "표는 구 코드 순이고 순위가 아닙니다.", en: "Rows are in district-code order, not a ranking." };
+  const rows = data.rows.map((r) => ({
+    name: districtNames.get(r.gu) ?? r.gu,
+    n: r.n,
+    many: r.out === 1,
+    blank:
+      r.st === "thin"
+        ? { ko: `쌍이 모자람(${r.n}쌍)`, en: `too few pairs (${r.n})` }
+        : r.st === "shaky"
+          ? { ko: "흔들림이 커 비움", en: "too unstable, left blank" }
+          : null,
+    cells: r.st === "ok" ? [pct(r.p[0]), `${pct(r.p[1])} ~ ${pct(r.p[2])}`, String(r.gap), pct(r.p[3])] : null,
+  }));
+  // 표 이름에는 숫자를 넣는다(장마다 다른 caption, accessibility 시험).
+  const caption: Both = { ko: `같은 집 쌍 ${rows.length}개 구`, en: `Same-home pairs, ${rows.length} districts` };
+  return { heading: REPEAT_HEADING, intro, gap, order, rows, caption };
+}

@@ -82,6 +82,7 @@ export const renewalWolseDistrictsHtml = fragment("renewalWolseDistrictsHtml");
 export const renewalDistrictLinksHtml = fragment("renewalDistrictLinksHtml");
 export const floorDistrictsHtml = fragment("floorDistrictsHtml");
 export const floorDistrictLinksHtml = fragment("floorDistrictLinksHtml");
+export const repeatSalesHtml = fragment("repeatSalesHtml");
 
 // 다른 모듈이 여기서 import 하던 이름은 그대로 다시 내보낸다(예산대 이름은 budget-fragments.ts, 전환율 구간은 district-tables.ts).
 export { budgetBandLabel, CONVERSION_BAND };
@@ -144,6 +145,7 @@ async function main() {
   const outlookText = (key) => (outlook?.[key]?.ko ? escapeHtml(outlook[key].ko) : null);
   const record = await readJson("record-high");
   const change = await readJson("district-change");
+  const repeat = await readJson("repeat-sales");
   const recordText = (key) => (record?.[key]?.ko ? escapeHtml(record[key].ko) : null);
   // method 「수집 상태」 줄: full 실행 기록(market-history). 없으면 줄을 안 그린다.
   const collect = collectStatus(await readJson("market-history"));
@@ -215,6 +217,8 @@ async function main() {
         switchLead: change?.lead?.ko ? escapeHtml(change.lead.ko) : null,
         switchTable: change?.table?.ko ?? null,
         switchRegions: change?.regionTable?.ko ?? null,
+        // 같은 집 쌍 절(#170 V8): 인라인 스크립트가 아니라 구운 HTML 이다(이 장은 S6 인라인 여유가 없다). 데이터가 없으면 틀의 빈 자리를 둔다.
+        repeatSales: repeatSalesHtml(repeat),
       },
     ],
     [
