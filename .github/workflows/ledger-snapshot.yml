@@ -1,0 +1,87 @@
+# 월간 원장 스냅샷 (#482, 설계 판정 6396016952). 사람이 dispatch로만 돌린다 - cron 없음, daily-update.yml·deploy.yml 과 무관하다(사이트를 안 바꾼다).
+# 그달 1일(S, KST)의 소스 커밋 = 제목이 정확히 「chore: 데일리 데이터 갱신 <S>」인 main 의 첫 커밋을 읽어 ledger/YYYY-MM.jsonl.gz 한 파일만 커밋한다.
+# 소스 커밋이 없으면 쓰지 않고 실패한다(대체 금지). 같은 달 파일이 이미 있으면 다시 계산해 정본 해시가 같으면 아무것도 안 하고, 다르면 실패한다(덮어쓰기 금지).
+# 창 이동(#586): S=11-01 의 소스는 10-31 23:07Z Daily(2024-11 삭제 포함) 커밋이고, 스냅샷은 그 뒤에 돈다. C6 은 183일 창, C1 은 2026-10 계약부터라 2024-11 을 읽지 않는다.
+#
+# 이용허락 문자열(license_sale·license_rent)은 dispatch 하는 날 상세 페이지(data.go.kr 15126469·15126474)에서 사람이 다시 읽어 넣는다 -
+# 이전 dispatch나 댓글에서 복사하지 않는다. 「제한 없음」이 아니면 아무것도 읽기 전에 멈춘다(PREREG 8절, official-price.yml 선례).
+# dry_run=true 면 러너 임시 폴더에만 쓰고 커밋하지 않는다(크기·해시 실측용). source_commit 은 dry_run 에서만 받는다(S 전에 미리 돌려 보는 용도).
+#
+# concurrency: official-price·housing-permits 선례대로 daily-update와 같은 digest-pipeline 그룹이다. 둘 다 main에 push하고, 같은 그룹이면
+# 줄을 서서 push-docs.sh 의 「원격이 앞섬」 실패(#92)가 생기지 않는다. 대기 중 run은 그룹당 하나만 남으므로 한 번에 하나만 dispatch한다.
+name: Ledger snapshot
+
+on:
+  workflow_dispatch:
+    inputs:
+      month:
+        description: "스냅샷 달 YYYY-MM (S = 그달 1일 KST, 예 2026-11)"
+        type: string
+        required: true
+      license_sale:
+        description: "매매 상세 페이지(15126469)의 이용허락범위 문자열 (제한 없음이 아니면 멈춤)"
+        type: string
+        required: true
+      license_rent:
+        description: "전월세 상세 페이지(15126474)의 이용허락범위 문자열 (제한 없음이 아니면 멈춤)"
+        type: string
+        required: true
+      dry_run:
+        description: "참이면 커밋하지 않고 크기·해시만 남긴다"
+        type: boolean
+        required: false
+        default: false
+      source_commit:
+        description: "dry_run 전용 - 이 커밋(40자리)을 소스로 읽는다. 실제 실행에서 주면 멈춘다"
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: digest-pipeline
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    env:
+      MONTH: ${{ inputs.month }}
+      LICENSE_SALE: ${{ inputs.license_sale }}
+      LICENSE_RENT: ${{ inputs.license_rent }}
+      DRY_RUN: ${{ inputs.dry_run }}
+      SOURCE_COMMIT: ${{ inputs.source_commit }}
+    steps:
+      # 소스 커밋을 제목으로 찾고 그 커밋의 파일을 git show 로 읽으므로 전체 이력이 필요하다. blob 은 필요할 때만 받는다(raw 이력 291MB+).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          filter: blob:none
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: 입력 확인
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main" || { echo "main 에서만 돌린다(받은 ref: $GITHUB_REF)" >&2; exit 1; }
+
+      # 의존성 없는 스크립트라 npm ci·npm test 를 돌리지 않는다 - 수집 데이터 값에 따라 갈리는 시험이 11-01~03 창의 스냅샷을 막지 않게(#449).
+      # 시험은 PR CI(test.yml)가 본다. 실행 중의 방어선은 스크립트 자신이다: 허용 목록 검사(validateLedger)를 통과해야만 쓴다.
+      - name: 스냅샷
+        run: |
+          set -o pipefail
+          if [ "$DRY_RUN" = "true" ]; then
+            node scripts/ledger-snapshot.ts --month "$MONTH" --license-sale "$LICENSE_SALE" --license-rent "$LICENSE_RENT" \
+              --dry-run ${SOURCE_COMMIT:+--source-commit "$SOURCE_COMMIT"} --out-dir "$RUNNER_TEMP/ledger" | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            node scripts/ledger-snapshot.ts --month "$MONTH" --license-sale "$LICENSE_SALE" --license-rent "$LICENSE_RENT" \
+              ${SOURCE_COMMIT:+--source-commit "$SOURCE_COMMIT"} | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: 커밋 (ledger 한 파일만)
+        if: ${{ !inputs.dry_run }}
+        run: |
+          ./scripts/push-docs.sh "chore: 원장 스냅샷 ${MONTH}" ledger

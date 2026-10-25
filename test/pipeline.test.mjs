@@ -12,6 +12,9 @@ const readWorkflow = async (rel) => expandRenderPipeline(await read(rel));
 const scriptsIn = (text) =>
   [...text.matchAll(/node scripts\/([a-z-]+\.(?:mjs|ts))/g)].map((m) => m[1]);
 
+// 월간 제외 목록(한 곳): update-all 에 등록돼 있지만 매일 돌지 않고 자기 dispatch 워크플로가 부르는 스크립트 → 그 워크플로.
+const MONTHLY = { "ledger-snapshot.ts": ".github/workflows/ledger-snapshot.yml" };
+
 /**
  * 매일 도는 워크플로가 update-all이 부르는 빌더를 하나라도 빠뜨리면, 그 빌더가
  * 만드는 파일은 사람이 손으로 돌릴 때까지 그대로 멈춘다. 화면은 멀쩡하고 숫자도
@@ -28,8 +31,25 @@ test("워크플로가 update-all이 부르는 빌더를 다 부른다", async ()
   assert.ok(wanted.length >= 10, `update-all이 부르는 스크립트를 ${wanted.length}개밖에 못 읽었다`);
 
   const running = new Set(scriptsIn(workflow));
-  const missing = wanted.filter((name) => !running.has(name));
+  const missing = wanted.filter((name) => !running.has(name) && !(name in MONTHLY));
   assert.deepEqual(missing, [], `워크플로가 안 부르는 빌더: ${missing.join(", ")}`);
+});
+
+// 원장 스냅샷(#482 판정 ⑤-4): update-all 에는 `--ledger` 를 줄 때만 부르게 등록돼 있고, 자기 워크플로가 부르며, Daily 는 부르지 않는다.
+test("월간 스크립트는 update-all(--ledger 일 때만)과 자기 dispatch 워크플로 양쪽에 있고 daily-update.yml 에는 없다 (#482)", async () => {
+  const [daily, updateAll] = await Promise.all([readWorkflow(".github/workflows/daily-update.yml"), read("scripts/update-all.mjs")]);
+  const guarded = updateAll.slice(updateAll.indexOf('process.argv.includes("--ledger")'));
+  assert.ok(guarded.length < updateAll.length, "update-all 에 --ledger 분기가 없다");
+  for (const [name, file] of Object.entries(MONTHLY)) {
+    assert.ok(scriptsIn(updateAll).includes(name), `update-all 에 ${name} 이 등록돼 있지 않다`);
+    assert.ok(!scriptsIn(daily).includes(name), `daily-update.yml 이 월간 ${name} 을 부른다`);
+    const own = (await read(file)).replace(/^\s*#.*\n/gm, "");
+    assert.ok(scriptsIn(own).includes(name), `${file} 이 ${name} 을 부르지 않는다`);
+    assert.match(own, /^on:\n  workflow_dispatch:/m, `${file} 은 dispatch 전용이다`);
+    assert.doesNotMatch(own, /schedule:|cron|pull_request|push:/, `${file} 에 예약·push 트리거가 있다`);
+  }
+  assert.ok(guarded.indexOf("LEDGER.split") < guarded.indexOf("return;"), "--ledger 분기가 원장 스크립트를 부르고 끝나지 않는다");
+  assert.ok(updateAll.indexOf('const LEDGER = "node scripts/ledger-snapshot.ts"') >= 0);
 });
 
 test("파생 데이터를 만드는 빌더가 원본 수집과 같은 단계에 있다", async () => {
