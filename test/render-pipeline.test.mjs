@@ -123,13 +123,14 @@ test("존재하지 않는 단계는 실패다(조용히 건너뛰지 않는다)"
 }));
 
 // (#510, 구조 B-4) 뒤집었다: 이전에는 update-all 의 렌더 꼬리가 기본 단계와 같다고 맞댔다. 이제 update-all(수집 + 데이터 커밋)은 렌더를 안 부른다 - 렌더는 deploy.yml 의 일이다.
-test("기본 단계는 지금까지 워크플로가 부르던 다섯 스크립트의 순서 그대로이고 update-all 은 이 다섯을 부르지 않는다 (렌더는 deploy.yml 의 일)", async () => {
+test("기본 단계는 지금까지 워크플로가 부르던 다섯 스크립트의 순서 그대로에 날짜별 뉴스 파일(#706)을 더한 여섯이고 update-all 은 이 여섯을 부르지 않는다 (렌더는 deploy.yml 의 일)", async () => {
   // 금리 4장 단계(build-rate-pages)는 #577 B2 로 지웠다(여섯 -> 다섯).
   assert.deepEqual(RENDER_STEPS, [
     "scripts/prerender.ts",
     "scripts/build-news-pages.ts",
     "scripts/build-budget-pages.ts",
     "scripts/build-realestate-pages.ts",
+    "scripts/build-news-days.ts",
     "scripts/build-updated-stamp.ts",
   ]);
   const all = [...(await read("scripts/update-all.mjs")).matchAll(/run\("node (scripts\/[a-z-]+\.(?:mjs|ts))"\)/g)].map((m) => m[1]);
@@ -177,10 +178,10 @@ test("렌더 단계는 deploy.yml 에 id: render 로 하나이고 render-pipelin
   for (const file of COLLECTORS) assert.ok(!/render-pipeline/.test((await read(file)).replace(/^\s*#.*$/gm, "")), `${file}: 수집 워크플로가 렌더를 부른다 - deploy.yml 의 일이다`);
 });
 
-test("deploy.yml 은 기본 다섯 단계(인자 없음)로 그린다 - summarize 의 「일부러 다섯」(rate 4장 제외)은 없어졌고 금리 4장 단계는 #577 B2 로 지웠다", async () => {
+test("deploy.yml 은 기본 여섯 단계(인자 없음)로 그린다 - summarize 의 「일부러 다섯」(rate 4장 제외)은 없어졌고 금리 4장 단계는 #577 B2 로 지웠다", async () => {
   const step = stepOf(await read(DEPLOY), "사이트 생성 (build/site)");
-  assert.ok(!/^ {12}scripts\//m.test(step), "deploy.yml 이 단계 목록을 인자로 넘긴다 - 기본 다섯(RENDER_STEPS)이어야 생성 장이 빠지지 않는다");
-  assert.equal(RENDER_STEPS.length, 5);
+  assert.ok(!/^ {12}scripts\//m.test(step), "deploy.yml 이 단계 목록을 인자로 넘긴다 - 기본 여섯(RENDER_STEPS)이어야 생성 장이 빠지지 않는다");
+  assert.equal(RENDER_STEPS.length, 6);
   // summarize 에는 단계 인자도 render-pipeline 도 없다(위 시험). news-context 는 렌더 밖 데이터 가공이라 수집 워크플로에 남는다.
   const summarize = await read(COLLECTORS[1]);
   assert.match(summarize, /^ {8}run: node scripts\/news-context\.ts$/m, "summarize 의 news-context 단계가 사라졌다");

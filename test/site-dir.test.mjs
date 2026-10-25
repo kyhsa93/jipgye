@@ -49,6 +49,8 @@ const pipelineEnv = () => {
 
 // 렌더가 만드는 생성 페이지 49장(news 3 + budget 18 + realestate 3 + district 25 - 금리 4장은 #577 B2 로 지웠다). 나머지 18장은 docs/ 의 소스다(손으로 고치는 틀 13장 + 금리 종료 안내 5장).
 const GENERATED = /^(rate-news|realestate-news|stock-news|apartment-(sale|jeonse|rent)|budget-\d+eok|district-[a-z]+)\.html$/;
+// 날짜별 뉴스 파일(#706): build-news-days 가 출력 디렉터리 data/news-day/ 에만 만드는 산출물 - docs/ 에는 없다.
+const DAY_FILES = /^data\/news-day\/\d{4}-\d{2}-\d{2}\.json$/;
 
 test("출력 디렉터리 환경변수가 없거나 비어 있으면 docs/ 다 (기본 경로 불변)", () => {
   assert.equal(siteDir({}), DOCS_DIR);
@@ -134,12 +136,14 @@ test("render-pipeline --out: docs/ 는 한 바이트도 안 바뀌고 출력 디
   // (#510, 구조 B-4) main 의 docs/ 는 생성 49장을 안 들고 있다 - 출력 디렉터리 = docs/ 의 파일 집합(소스 18장·정적 자산·data) + 생성 49장이다.
   assert.deepEqual([...before.keys()].filter((f) => GENERATED.test(f)), [], "main 의 docs/ 에 생성 장이 있다 - 산출물은 build/site 에만 생긴다");
   assert.equal([...rendered.keys()].filter((f) => GENERATED.test(f)).length, 49, "생성 장이 49장이 아니다");
-  assert.deepEqual([...rendered.keys()].filter((f) => !GENERATED.test(f)), [...before.keys()], "파일 집합 동일 - docs/ 의 것에 생성 49장만 더해진다");
+  assert.deepEqual([...rendered.keys()].filter((f) => !GENERATED.test(f) && !DAY_FILES.test(f)), [...before.keys()], "파일 집합 동일 - docs/ 의 것에 생성 49장과 날짜별 뉴스 파일(#706)만 더해진다");
+  assert.ok([...rendered.keys()].some((f) => DAY_FILES.test(f)), "날짜별 뉴스 파일(data/news-day/)이 하나도 없다");
+  assert.deepEqual([...before.keys()].filter((f) => DAY_FILES.test(f)), [], "main 의 docs/ 에 날짜별 뉴스 파일이 있다 - 산출물은 build/site 에만 생긴다");
   const htmls = [...rendered.keys()].filter((f) => f.endsWith(".html"));
   assert.equal(htmls.length, 67);
   // 렌더가 만지지 않는 것(스타일시트·스크립트·SW·매니페스트·아이콘·데이터)은 복사 그대로 - 배포 산출물에 정적 자산이 들어 있다는 뜻이다.
   for (const f of rendered.keys()) {
-    if (f.endsWith(".html")) continue;
+    if (f.endsWith(".html") || DAY_FILES.test(f)) continue;
     assert.equal(rendered.get(f), before.get(f), `${f} 바이트`);
   }
   // docs/ 의 소스 18장(손으로 고치는 틀 13장 + 금리 종료 안내 5장, #577 B2)은 docs/ 에도 있다 - 생성 장만 출력 디렉터리에만 있다.

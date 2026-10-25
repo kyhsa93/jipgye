@@ -119,7 +119,7 @@ const conversionCalls = (text) => (code(text).match(/node scripts\/build-convers
 function violations(text) {
   const out = [];
   const c = code(text);
-  if (/render-pipeline|prerender\.ts|build-[a-z]+-pages\.ts|build-updated-stamp/.test(c)) out.push("렌더 스크립트를 부른다");
+  if (/render-pipeline|prerender\.ts|build-[a-z]+-pages\.ts|build-news-days|build-updated-stamp/.test(c)) out.push("렌더 스크립트를 부른다");
   if (/^\s*(?:- )?run: (?:npm test|npm run test|npm run health)\b/m.test(c)) out.push("시험·건강 점검을 부른다");
   if (/configure-pages|upload-pages-artifact|deploy-pages/.test(c)) out.push("Pages 배포 단계가 있다");
   if (/^\s*environment:/m.test(c)) out.push("배포 환경(environment)을 쓴다");

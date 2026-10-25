@@ -68,18 +68,18 @@ test("파생 데이터를 만드는 빌더가 원본 수집과 같은 단계에 
  * 찍기가 그 맨 끝이다. 이 시험은 (1) 수집 두 워크플로에 렌더가 없고 (2) deploy.yml 이 기본 여섯(인자 없음)을 부르며 (3) 그 순서가 기준일 찍기로 끝난다는 것을 본다.
  * 「일부러 다섯」(rate 4장 제외)은 커밋된 docs/ 에 rate 4장이 있어서만 성립하던 모양이라 없어졌다.
  */
-test("렌더는 deploy.yml 의 기본 다섯 단계 한 줄이고 기준일 찍기로 끝난다 - summarize.yml·daily-update.yml 에는 렌더가 없다", async () => {
+test("렌더는 deploy.yml 의 기본 여섯 단계 한 줄이고 기준일 찍기로 끝난다 - summarize.yml·daily-update.yml 에는 렌더가 없다", async () => {
   const [daily, summarize, deploy] = await Promise.all([
     readWorkflow(".github/workflows/daily-update.yml"),
     readWorkflow(".github/workflows/summarize.yml"),
     readWorkflow(".github/workflows/deploy.yml"),
   ]);
-  const RENDERERS = /prerender|build-(?:rate|news|budget|realestate)-pages|build-updated-stamp/;
+  const RENDERERS = /prerender|build-(?:rate|news|budget|realestate)-pages|build-news-days|build-updated-stamp/;
   for (const [name, text] of [["daily-update.yml", daily], ["summarize.yml", summarize]]) {
     assert.deepEqual(scriptsIn(text).filter((s) => RENDERERS.test(s)), [], `${name}이 렌더 스크립트를 부른다 - 렌더는 deploy.yml 의 일이다`);
   }
   const d = scriptsIn(deploy);
-  assert.deepEqual(d, ["prerender.ts", "build-news-pages.ts", "build-budget-pages.ts", "build-realestate-pages.ts", "build-updated-stamp.ts"], "deploy.yml 의 렌더 순서가 기본 다섯과 다르다");
+  assert.deepEqual(d, ["prerender.ts", "build-news-pages.ts", "build-budget-pages.ts", "build-realestate-pages.ts", "build-news-days.ts", "build-updated-stamp.ts"], "deploy.yml 의 렌더 순서가 기본 여섯과 다르다");
   assert.equal(d.at(-1), "build-updated-stamp.ts", "deploy.yml 렌더가 build-updated-stamp로 끝나지 않는다");
 });
 
