@@ -65,6 +65,9 @@ jobs:
           node scripts/build-realestate.ts
           node scripts/build-budget-deals.ts
           node scripts/build-conversion.ts
+          # 환산 월 비용 서울 한 줄(docs/data/monthly-cost.json)만 쓴다(#631). 칸(research)은 수동 전용이라 여기서 안 만든다.
+          # --soft-fail: 실패하면 경고만 남기고 기존 파일을 그대로 둔다 - 이 생성기 하나로 그날 다른 산출물이 버려지지 않게.
+          node scripts/build-monthly-cost.ts --soft-fail
           node scripts/build-cancellation.ts
           node scripts/build-renewal-facts.ts
           node scripts/build-floor-gap.ts

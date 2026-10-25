@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { LOAN_LTV, MIN_PAIRS, conversionPairs, districtRates, median, monthlyCost } from "./conversion.ts";
 import { MONTHS } from "./build-conversion.ts";
@@ -31,13 +31,17 @@ import { shiftMonth, yearMonthOf } from "./realestate-slots.ts";
  * 단지·같은 면적대의 전세·월세 묶음 — 중앙값을 내는 단위와 같다)해 중앙값을 다시 내고 1년 변화를 센다. data-analyst 가 쓴 방식이다
  * (#587 ① 댓글: 서울 전세안 95% 22.2~28.4 를 이 방식이 그대로 재현한다; 단지 이름으로 면적대를 묶어 뽑으면 아래 끝이 21~22 로
  * 조금 넓어진다). 칸 안에서는 단지 하나 = 쌍 하나라 둘이 같다. 시드 고정(mulberry32), 점·칸마다 키에서 시드를 갈라 같은 입력이면
- * 같은 바이트다. 구간 끝은 몬테카를로 값이라 시드를 바꾸면 ±1%p 안팎 흔들린다(문턱 30%p 근처 칸의 공개 여부도 그만큼 흔들린다).
+ * 같은 바이트다. 구간 끝은 몬테카를로 값이라 시드를 바꾸면 ±1%p 안팎 흔들린다(그래서 칸 공개는 10,000회·폭 ≤29%p, 29~31%p 는 보류).
  *
  * 분해: 금리 몫 = 기준 달 보증금(·월세)을 그대로 두고 금리만 m 의 것으로 바꿨을 때의 변화. 나머지(보증금 몫, 월세안은 보증금·월세
  * 수준 몫) = (1+전체)/(1+금리 몫) − 1. 둘은 곱으로 전체가 된다.
  *
- * 내보내기: docs/data/monthly-cost.json 에는 서울 전체만 담는다. 75칸 값은 research/monthly-cost/cells.json 에만 두고(판정:
- * 칸 값은 docs 로 내보내지 않음), 칸마다 구간 폭 ≤30%p 이면 public:true 를 단다(공개는 별도 이슈에서 다시 센다).
+ * 내보내기: 이 스크립트는 docs/data/monthly-cost.json(서울 전체 한 줄) 하나만 쓴다 — Daily 「실거래 수집」이 `--soft-fail` 로 부른다(#631).
+ * 75칸 값은 수동 전용 scripts/dev/build-monthly-cost-cells.mjs 가 따로 쓴다(판정: 칸 값은 docs 로 내보내지 않고 Daily 가 커밋하지 않음).
+ * 칸 public 은 10,000회·시드 587 에서 구간 폭 ≤29%p 일 때만 참이다(29~31%p 는 몬테카를로 흔들림 구간이라 보류, #630 cto 결정).
+ *
+ * 실패: 쓰기는 같은 폴더 임시 파일 → rename 이라 반쯤 쓴 파일이 남지 않는다. `--soft-fail` 이면 실패를 경고로 찍고 종료 0 — 기존 파일을
+ * 그대로 두고 Daily 를 멈추지 않는다(수집·다른 빌더 산출물이 이 생성기 하나 때문에 버려지지 않게). 손으로 돌릴 때(플래그 없음)는 종료 1.
  */
 
 export const NAME = { ko: "환산 월 비용(평균금리 가정)", en: "Estimated monthly cost (at average rates)" };
@@ -45,15 +49,15 @@ export const SCALE = 1000;
 export const ITERATIONS = 2000;
 export const SEED = 587;
 export const LEVEL = 0.95;
-export const PUBLIC_WIDTH = 30;
+/** 칸 공개 문턱(%p)과 그 판정에 필요한 최소 반복 수(#630 cto 결정). 29 초과 31 이하는 withheld(보류)로 따로 표시한다. */
+export const PUBLIC_WIDTH = 29;
+export const WITHHELD_WIDTH = 31;
+export const PUBLIC_ITERATIONS = 10_000;
 /** 1년 변화 점 하나가 원본에서 덮어야 하는 달 수: 두 창(6+6)과 그 사이 = 12 + 6 = 18 (점 수 = 원본 개월 − 17). */
 export const SPAN_MONTHS = 12 + MONTHS;
 
 const root = path.resolve(import.meta.dirname, "..");
 const outFile = process.env.MONTHLY_COST_FILE ? path.resolve(process.env.MONTHLY_COST_FILE) : path.join(root, "docs/data/monthly-cost.json");
-const cellsFile = process.env.MONTHLY_COST_CELLS_FILE
-  ? path.resolve(process.env.MONTHLY_COST_CELLS_FILE)
-  : path.join(root, "research/monthly-cost/cells.json");
 const seriesFile = process.env.SERIES_FILE ? path.resolve(process.env.SERIES_FILE) : path.join(root, "raw/indicators/series.json");
 
 const round1 = (v) => Math.round(v * 10) / 10;
@@ -248,7 +252,8 @@ export function cellPoints({ month, basePairs, pairs, baseRates, rates, iteratio
       ci,
       width,
       excludesZero: ci ? ci[0] > 0 || ci[1] < 0 : false,
-      public: width != null && width <= PUBLIC_WIDTH,
+      public: width != null && width <= PUBLIC_WIDTH && iterations >= PUBLIC_ITERATIONS && seed === SEED,
+      withheld: width != null && width > PUBLIC_WIDTH && width <= WITHHELD_WIDTH,
     });
   }
   return out;
@@ -257,8 +262,10 @@ export function cellPoints({ month, basePairs, pairs, baseRates, rates, iteratio
 /**
  * 두 파일의 내용. dealsByMonth: { "YYYYMM": 신규·정규화된 전월세 건[] } — 원본이 다 있는 달만 담는다(없는 달은 키가 없다).
  * lastClosed: 마감된 마지막 달. 점이 하나도 없으면 null(호출자는 기존 파일을 그대로 둔다).
+ * withCells: false 면 칸을 세지 않는다(cells: null) — Daily 는 서울 한 줄만 쓴다. 서울 값은 withCells 와 무관하게 같은 바이트다.
+ * cellIterations: 칸 구간의 반복 수(수동 칸 스크립트가 PUBLIC_ITERATIONS 를 준다). 서울 구간은 iterations 그대로.
  */
-export function buildPayload({ dealsByMonth, series, lastClosed, iterations = ITERATIONS, seed = SEED }) {
+export function buildPayload({ dealsByMonth, series, lastClosed, iterations = ITERATIONS, seed = SEED, withCells = true, cellIterations = iterations }) {
   const months = Object.keys(dealsByMonth ?? {}).sort();
   if (!months.length || !/^\d{6}$/.test(String(lastClosed ?? ""))) return null;
   const covered = (end) => windowOf(end).every((m) => Array.isArray(dealsByMonth[m]));
@@ -280,7 +287,7 @@ export function buildPayload({ dealsByMonth, series, lastClosed, iterations = IT
     if (!point) continue;
     const ci = bootstrapYoy({ basePairs, pairs, baseRates, rates, key: `${m}|seoul`, iterations, seed });
     seoul.push({ ...point, jeonse: { ...point.jeonse, ci: ci.jeonse }, wolse: { ...point.wolse, ci: ci.wolse } });
-    cells.push({ month: m, base, cells: cellPoints({ month: m, basePairs, pairs, baseRates, rates, iterations, seed }) });
+    if (withCells) cells.push({ month: m, base, cells: cellPoints({ month: m, basePairs, pairs, baseRates, rates, iterations: cellIterations, seed }) });
   }
   if (!seoul.length) return null;
 
@@ -296,7 +303,9 @@ export function buildPayload({ dealsByMonth, series, lastClosed, iterations = IT
   const interval = { method: "bootstrap-percentile", resample: "complex-band pair", iterations, seed, level: LEVEL };
   return {
     seoul: { name: NAME, definition, interval, points: seoul },
-    cells: { name: NAME, definition, interval, publicWidth: PUBLIC_WIDTH, points: cells },
+    cells: withCells
+      ? { name: NAME, definition, interval: { ...interval, iterations: cellIterations }, publicWidth: PUBLIC_WIDTH, withheldWidth: WITHHELD_WIDTH, publicIterations: PUBLIC_ITERATIONS, points: cells }
+      : null,
   };
 }
 
@@ -322,44 +331,64 @@ export async function readDealsByMonth(months) {
   return out;
 }
 
-async function main() {
-  const now = collectionNow("REALESTATE_NOW");
+/** 같은 폴더 임시 파일에 다 쓴 뒤 rename — 중간에 죽어도 기존 파일이 그대로다. 실패하면 임시 파일을 지운다(커밋 경로에 찌꺼기를 남기지 않는다). */
+export async function writeAtomic(file, text) {
+  await mkdir(path.dirname(file), { recursive: true });
+  const tmp = `${file}.${process.pid}.tmp`;
+  try {
+    await writeFile(tmp, text);
+    await rename(tmp, file);
+  } finally {
+    await rm(tmp, { force: true });
+  }
+}
+
+/**
+ * Daily 진입점: 서울 한 줄을 만들어 outFile 하나에만 쓴다. 쓸 값이 없으면 기존 파일을 그대로 두고 null.
+ * readDeals·write 는 시험 이음매(기본은 원본 읽기·writeAtomic).
+ */
+export async function generate({ now = new Date(), outFile: out = outFile, seriesFile: seriesPath = seriesFile, readDeals = readDealsByMonth, write = writeAtomic } = {}) {
   const lastClosed = shiftMonth(yearMonthOf(now), -1);
 
   let series = null;
   try {
-    series = JSON.parse(await readFile(seriesFile, "utf-8"))?.series ?? null;
+    series = JSON.parse(await readFile(seriesPath, "utf-8"))?.series ?? null;
   } catch {
     console.log("  지표 계열 파일이 없습니다 - 환산 월 비용 파일을 그대로 둡니다");
-    return;
+    return null;
   }
 
   // 원본 보관 한도(24개월)만큼 거슬러 본다. 그보다 오래된 달은 #586 핀에서 읽는 별도 이슈의 몫이다.
   const months = Array.from({ length: 24 }, (_, i) => shiftMonth(lastClosed, i - 23));
-  const dealsByMonth = await readDealsByMonth(months);
-  const payload = buildPayload({ dealsByMonth, series, lastClosed });
+  const dealsByMonth = await readDeals(months);
+  const payload = buildPayload({ dealsByMonth, series, lastClosed, withCells: false });
   if (!payload) {
     console.log("  1년 변화를 낼 수 있는 달이 없습니다(원본 창·두 금리 계열) - 환산 월 비용 파일을 그대로 둡니다");
-    return;
+    return null;
   }
 
-  await mkdir(path.dirname(outFile), { recursive: true });
-  await writeFile(outFile, JSON.stringify(payload.seoul));
-  await mkdir(path.dirname(cellsFile), { recursive: true });
-  await writeFile(cellsFile, JSON.stringify(payload.cells));
-
+  await write(out, JSON.stringify(payload.seoul));
   for (const p of payload.seoul.points) {
     console.log(
       `  ${p.base}→${p.month} 전세안 ${p.jeonse.baseCost10k}→${p.jeonse.cost10k} (${p.jeonse.yoy}%, 95% ${p.jeonse.ci?.join("~")}, 금리 몫 ${p.jeonse.rateShare}%)` +
         ` · 월세안 ${p.wolse.baseCost10k}→${p.wolse.cost10k} (${p.wolse.yoy}%)`
     );
   }
-  const last = payload.cells.points.at(-1);
-  console.log(`  칸(research): ${last.month} ${last.cells.length}칸 · 구간 폭 ≤${PUBLIC_WIDTH}%p ${last.cells.filter((c) => c.public).length}칸`);
+  return payload.seoul;
+}
+
+async function main() {
+  await generate({ now: collectionNow("REALESTATE_NOW") });
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
+  const soft = process.argv.includes("--soft-fail");
   main().catch((err) => {
+    if (soft) {
+      // Daily: 실패해도 기존 파일을 그대로 두고 다음 단계로 간다(GitHub Actions 경고로 남긴다).
+      console.log(`::warning::환산 월 비용 생성 실패 - 기존 docs/data/monthly-cost.json 을 그대로 둡니다: ${err.message}`);
+      return;
+    }
     console.error(`환산 월 비용 생성 실패: ${err.message}`);
     process.exit(1);
   });

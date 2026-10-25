@@ -37,6 +37,8 @@ async function main() {
   run("node scripts/build-realestate.ts");
   run("node scripts/build-budget-deals.ts");
   run("node scripts/build-conversion.ts");
+  // 서울 한 줄 docs/data/monthly-cost.json 만(#631). --soft-fail: 실패해도 기존 파일을 두고 이어 간다. 칸은 scripts/dev/build-monthly-cost-cells.mjs(수동).
+  run("node scripts/build-monthly-cost.ts --soft-fail");
   run("node scripts/build-cancellation.ts");
   run("node scripts/build-renewal-facts.ts");
   run("node scripts/build-floor-gap.ts");

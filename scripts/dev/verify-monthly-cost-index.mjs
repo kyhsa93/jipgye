@@ -9,7 +9,8 @@
 //   - series.json: jeonse_loan_rate·deposit_rate 가 202411~202608 공백 0
 //   - 점 다섯 202604~202608, 202608 점 전세안 165.2→208.8 +26.4%(금리 몫 +8.65%), 월세안 175.0→205.3 +17.3% (±0.1)
 //   - 202608 전세안 95% 구간 ≈ 22.2~28.4 (±0.5), 전세안 1년 변화 다섯: +10.3·+11.8·+16.9·+22.0·+26.4 (±0.5, 참고)
-//   - research 칸 202608: 75칸, 0 을 벗어난 칸 51 안팎, 폭 ≤30%p 25 안팎(몬테카를로 ±3 은 경고만)
+//   - research 칸 202608: 75칸, 0 을 벗어난 칸 51 안팎(몬테카를로 ±3 은 경고만). 칸은 #631 부터 scripts/dev/build-monthly-cost-cells.mjs 가
+//     10,000회로 따로 쓴다 — public(폭 ≤29%p)·withheld(29~31%p) 수는 참고로만 찍는다(분석가 25 는 2,000회·≤30%p 기준이라 비교하지 않는다).
 //   - docs 파일에 자치구 이름·면적대 키 없음, 두 번 돌린 바이트 같음
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
@@ -43,7 +44,9 @@ for (const name of ["jeonse_loan_rate", "deposit_rate"]) {
 const tmp = mkdtempSync(path.join(os.tmpdir(), "jipgye-monthly-cost-"));
 const runOnce = (tag) => {
   const env = { ...process.env, MONTHLY_COST_FILE: path.join(tmp, `${tag}.json`), MONTHLY_COST_CELLS_FILE: path.join(tmp, `${tag}-cells.json`) };
-  const log = execFileSync(process.execPath, [path.join(root, "scripts/build-monthly-cost.ts")], { cwd: root, env, encoding: "utf8" });
+  const log =
+    execFileSync(process.execPath, [path.join(root, "scripts/build-monthly-cost.ts")], { cwd: root, env, encoding: "utf8" }) +
+    execFileSync(process.execPath, [path.join(root, "scripts/dev/build-monthly-cost-cells.mjs")], { cwd: root, env, encoding: "utf8" });
   process.stdout.write(tag === "a" ? log : "");
   return { docs: readFileSync(env.MONTHLY_COST_FILE, "utf8"), cells: readFileSync(env.MONTHLY_COST_CELLS_FILE, "utf8") };
 };
@@ -76,8 +79,9 @@ try {
   ok(cells.length === 75, `research 칸 202608: ${cells.length}칸 (기대 75)`);
   const excl = cells.filter((c) => c.excludesZero).length;
   const pub = cells.filter((c) => c.public).length;
+  const held = cells.filter((c) => c.withheld).length;
   warn(Math.abs(excl - 51) <= 3, `0 을 벗어난 칸 ${excl} (분석가 51)`);
-  warn(Math.abs(pub - 25) <= 3, `구간 폭 ≤30%p 칸 ${pub} (분석가 25)`);
+  console.log(`INFO 칸 public(10,000회·폭 ≤29%p) ${pub} · withheld(29~31%p) ${held}`);
 } finally {
   rmSync(tmp, { recursive: true, force: true });
 }

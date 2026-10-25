@@ -5,7 +5,9 @@ import path from "node:path";
 import { monthlyCost } from "../scripts/conversion.ts";
 import {
   NAME,
+  PUBLIC_ITERATIONS,
   PUBLIC_WIDTH,
+  WITHHELD_WIDTH,
   buildPayload,
   bootstrapYoy,
   convertedCost,
@@ -186,7 +188,7 @@ test("구간: 백분위 분위수(R type 7)와 고정 시드 부트스트랩", (
   assert.deepEqual(out.seoul.interval, { method: "bootstrap-percentile", resample: "complex-band pair", iterations: ITER, seed: 587, level: 0.95 });
 });
 
-test("칸 값은 docs 파일로 새지 않는다 - research 쪽에만, 구간 폭 ≤30%p 일 때만 public", () => {
+test("칸 값은 docs 파일로 새지 않는다 - research 쪽에만, 10,000회·시드 587·폭 ≤29%p 일 때만 public(29~31%p 는 withheld)", () => {
   const out = run();
   const docs = JSON.stringify(out.seoul);
   assert.ok(!("cells" in out.seoul));
@@ -197,11 +199,26 @@ test("칸 값은 docs 파일로 새지 않는다 - research 쪽에만, 구간 �
   assert.equal(last.month, "202608");
   assert.equal(last.cells.length, 3, "자치구 셋 × 면적대 하나");
   assert.equal(out.cells.publicWidth, PUBLIC_WIDTH);
+  assert.equal(PUBLIC_WIDTH, 29);
+  assert.equal(WITHHELD_WIDTH, 31);
+  assert.equal(PUBLIC_ITERATIONS, 10_000);
   for (const c of last.cells) {
-    assert.equal(c.public, c.width <= PUBLIC_WIDTH, `${c.district} 폭 ${c.width}`);
+    assert.equal(c.public, false, `${ITER}회로는 public 이 될 수 없다 (${c.district} 폭 ${c.width})`);
+    assert.equal(c.withheld, c.width > PUBLIC_WIDTH && c.width <= WITHHELD_WIDTH);
     assert.equal(c.excludesZero, c.ci[0] > 0 || c.ci[1] < 0);
     assert.ok(c.pairs >= 3 && c.basePairs >= 3);
   }
+});
+
+test("칸 public 은 10,000회·시드 587 일 때 폭 ≤29%p 로 정해지고, 서울 한 줄은 칸 계산 여부와 무관하게 같은 바이트다", () => {
+  const full = run({ cellIterations: PUBLIC_ITERATIONS });
+  assert.equal(full.cells.interval.iterations, PUBLIC_ITERATIONS);
+  for (const c of full.cells.points.at(-1).cells) assert.equal(c.public, c.width <= PUBLIC_WIDTH, `${c.district} 폭 ${c.width}`);
+  const otherSeed = run({ cellIterations: PUBLIC_ITERATIONS, seed: 588 });
+  assert.ok(otherSeed.cells.points.every((p) => p.cells.every((c) => c.public === false)), "시드 587 이 아니면 public 이 아니다");
+  const seoulOnly = run({ withCells: false });
+  assert.equal(seoulOnly.cells, null);
+  assert.equal(JSON.stringify(seoulOnly.seoul), JSON.stringify(full.seoul));
 });
 
 test("ratesAt 은 그 달 두 값이 다 있을 때만 준다", () => {
