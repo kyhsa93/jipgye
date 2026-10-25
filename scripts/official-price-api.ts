@@ -72,12 +72,29 @@ export function normalizeKey(raw) {
 
 /**
  * 오류 문구(resultMsg·returnAuthMsg 등 포털 고정 코드 문자열)를 로그에 내도 되는 꼴로 줄인다(#68 V1).
- * 영숫자·밑줄·공백·마침표·하이픈·한글만 남기고 80자로 자른다. 키 앞 8자가 보이면 통째로 버린다(C1: 키 비출력).
+ * 영숫자·밑줄·공백·마침표·하이픈·한글만 남기고 80자로 자른다(C1: 키 비출력).
+ * 키 가림은 거르기 **전에** 한다: 문구의 %XX 를 풀고, 문구와 키를 둘 다 영숫자만 남긴 꼴로 맞춘 뒤
+ * 키의 8자 조각(키가 8자보다 짧으면 키 전체)과 겹치는 문구 글자를 모두 가린다. 그래서 `+ / = %2B %2F` 가 끼어도
+ * 원문·URL 인코딩 어느 꼴이든 키의 8자 이상 조각이 남지 않는다.
  */
+export const KEY_MASK = "[키 가림]";
 export function safeMsg(raw, key = "") {
-  const m = String(raw ?? "").replace(/[^A-Za-z0-9_ .가-힣-]/g, "").replace(/\s+/g, " ").trim().slice(0, 80);
-  if (key && key.length >= 8 && m.includes(key.slice(0, 8))) return "(키 의심 문자열이 있어 생략)";
-  return m;
+  let s = String(raw ?? "").replace(/%([0-9A-Fa-f]{2})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
+  const alnum = (x) => x.replace(/[^A-Za-z0-9]/g, "");
+  const keyN = alnum(normalizeKey(key));
+  if (keyN) {
+    const w = Math.min(8, keyN.length);
+    const grams = new Set();
+    for (let i = 0; i + w <= keyN.length; i += 1) grams.add(keyN.slice(i, i + w));
+    const idx = [];
+    for (let i = 0; i < s.length; i += 1) if (/[A-Za-z0-9]/.test(s[i])) idx.push(i);
+    const proj = idx.map((i) => s[i]).join("");
+    const hit = new Set();
+    for (let i = 0; i + w <= proj.length; i += 1) if (grams.has(proj.slice(i, i + w))) for (let j = i; j < i + w; j += 1) hit.add(idx[j]);
+    if (hit.size) s = s.split("").map((c, i) => (hit.has(i) ? "\u0000" : c)).join("");
+  }
+  return s.replace(/[^A-Za-z0-9_ .가-힣\u0000-]/g, "").replace(/\u0000(?:[^A-Za-z0-9가-힣]*\u0000)*/g, KEY_MASK)
+    .replace(/\s+/g, " ").trim().slice(0, 80);
 }
 
 /** 응답 본문 -> {code, msg, total, items(원본 객체), nonJson}. 포털 게이트웨이 오류는 XML이다. msg는 safeMsg 전 원문 조각이다. */

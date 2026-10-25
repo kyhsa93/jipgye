@@ -732,17 +732,40 @@ test("V1: HTTP 오류·결과코드 오류는 상태·응답 종류·바이트·
   try {
     const r = await runCollector(base({ targets: targetsOf(ts), outDir: out, baseUrl: "http://127.0.0.1:9", fetchImpl }));
     assert.equal(r.stopReason, "연속 호출 실패 5회");
-    assert.equal(r.errSamples["HTTP 502"], `getBrHsprcInfo HTTP 502, XML·HTML ${xml.length}B, 결과코드 ?, 문구 (키 의심 문자열이 있어 생략)`);
+    assert.equal(r.errSamples["HTTP 502"], `getBrHsprcInfo HTTP 502, XML·HTML ${xml.length}B, 결과코드 ?, 문구 SERVICE ERROR [키 가림]`);
     assert.equal(r.errSamples["결과코드 99"], `getBrHsprcInfo HTTP 200, JSON ${json.length}B, 결과코드 99, 문구 UNKNOWN_ERROR script`);
     assert.ok(!summaryLines(r, 1000).join("\n").includes(FAKE_KEY));
   } finally { await rm(out, { recursive: true, force: true }); }
 });
 
-test("V1: safeMsg 는 허용 문자만 남기고 80자로 자르며 키 앞 8자가 보이면 버린다", () => {
+test("V1: safeMsg 는 허용 문자만 남기고 80자로 자르며 키 조각을 가린다", () => {
   assert.equal(safeMsg("SERVICE_KEY_IS_NOT_REGISTERED_ERROR"), "SERVICE_KEY_IS_NOT_REGISTERED_ERROR");
   assert.equal(safeMsg("a\"b<c>&d 등록되지 않은 키"), "abcd 등록되지 않은 키");
   assert.equal(safeMsg("x".repeat(200)).length, 80);
-  assert.equal(safeMsg(`echo ${FAKE_KEY}`, FAKE_KEY), "(키 의심 문자열이 있어 생략)");
+  assert.equal(safeMsg(`echo ${FAKE_KEY}`, FAKE_KEY), "echo [키 가림]");
+});
+
+test("V1 (#660 판정): `+ / =` 가 든 키는 원문·%2B/%2F 인코딩·일부 조각 어느 꼴로 돌아와도 8자 이상 조각이 남지 않는다", () => {
+  const key = "Ab3dEf7h+Ij1kLm9/Op2qRs5Tu8vWx==";
+  const enc = encodeURIComponent(key); // + -> %2B, / -> %2F, = -> %3D
+  assert.match(enc, /%2B.*%2F/);
+  const keyN = key.replace(/[^A-Za-z0-9]/g, "");
+  const fragments = (m) => { const n = m.replace(/[^A-Za-z0-9]/g, ""); const bad = []; for (let i = 0; i + 8 <= keyN.length; i += 1) if (n.includes(keyN.slice(i, i + 8))) bad.push(keyN.slice(i, i + 8)); return bad; };
+  const cases = [
+    `SERVICE ERROR ${key}`, `key=${enc} denied`, `echo ${enc.replace(/%2B/g, "%2b").replace(/%2F/g, "%2f")}`, `<${key.slice(5, 20)}>`, `x ${key.slice(9)} y`,
+    `pre${key}post`, `${key.replace(/\+/g, " ").replace(/\//g, "_")}`,
+  ];
+  for (const raw of cases) {
+    for (const k of [key, enc]) { // 키 시크릿이 원문이든 인코딩된 꼴이든(normalizeKey 가 푼다)
+      const out = safeMsg(raw, k);
+      assert.deepEqual(fragments(out), [], `${raw} -> ${out}`);
+      assert.ok(out.includes("[키 가림]"), `${raw} -> ${out}`);
+    }
+  }
+  assert.equal(safeMsg(`SERVICE ERROR ${key} 끝`, key), "SERVICE ERROR [키 가림] 끝");
+  assert.equal(safeMsg(`key=${enc} denied`, enc), "key[키 가림] denied");
+  // 키와 무관한 문구는 그대로
+  assert.equal(safeMsg("LIMITED_NUMBER_OF_SERVICE_REQUESTS_EXCEEDS_ERROR", key), "LIMITED_NUMBER_OF_SERVICE_REQUESTS_EXCEEDS_ERROR");
 });
 
 test("V1: 진척 상태 - 진척이 있으면 lastProgressAt 갱신·연속 0 초기화, 없으면 이어 센다. 판정은 2일 경고·3일 실패", () => {
