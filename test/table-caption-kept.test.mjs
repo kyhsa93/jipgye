@@ -9,8 +9,8 @@ import { SITE } from "./helpers/site-root.mjs";
  * 화면 스크립트가 표를 다시 그려도 빌드가 단 caption(sr-only, data-auto)은 남는다 (#300).
  *
  * 분석 6장은 표를 `table.innerHTML = ...`로 통째로 갈아 끼웠고, `<table>`의 직접 자식인 caption이 같이 지워졌다.
- * 눈에 보이는 화면은 그대로여서 스크린리더 사용자만 표의 이름을 잃었다. 구운 caption 14개가 대상이다
- * (cancelled-deals 3 · renewal-vs-new 2 · floor-gap 1 · record-high 1 · switch-house 2 · price-outlook 5).
+ * 눈에 보이는 화면은 그대로여서 스크린리더 사용자만 표의 이름을 잃었다. 구운 caption 15개가 대상이다
+ * (cancelled-deals 3 · renewal-vs-new 2 · floor-gap 1 · record-high 1 · switch-house 2 · price-outlook 6).
  *
  * 이 저장소의 시험 환경에는 진짜 DOM이 없어서 표를 스스로 모형으로 세운다 - `innerHTML = ...`은 자식을 전부 갈아 끼우므로
  * caption도 지우고, `querySelector("caption")`·`prepend(caption)`은 caption 자리를 읽고 되돌린다. 그 위에서
@@ -105,11 +105,11 @@ const PAGES = [
   },
   {
     file: "price-outlook.html",
-    ids: ["region-table", "nowcast-table", "move-in-table", "score-table", "indicator-table"],
+    ids: ["region-table", "nowcast-table", "move-in-table", "move-in-districts", "score-table", "indicator-table"],
     data: {
       outlook: { regions: [{}], tables: { regions: T("regions"), nowcast: T("nowcast"), score: T("score") } },
       "outlook-indicators": { lead: LEAD, table: T("indicator") },
-      "move-in": { lead: LEAD, table: T("move-in"), districts: LEAD },
+      "move-in": { lead: LEAD, table: T("move-in"), districts: LEAD, districtTable: T("districts") },
     },
   },
 ];
@@ -132,9 +132,9 @@ const check = (page, tables, mode) => {
   }
 };
 
-test("시험 대상은 구운 caption 14개다(6장)", () => {
+test("시험 대상은 구운 caption 15개다(6장)", () => {
   assert.equal(PAGES.length, 6);
-  assert.equal(TOTAL, 14);
+  assert.equal(TOTAL, 15);
 });
 
 for (const page of PAGES) {

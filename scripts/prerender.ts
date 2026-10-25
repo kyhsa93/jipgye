@@ -241,7 +241,8 @@ async function main() {
         indicatorLead: indicators?.lead?.ko ? escapeHtml(indicators.lead.ko) : null,
         moveInLead: moveIn?.lead?.ko ? escapeHtml(moveIn.lead.ko) : null,
         moveInTable: moveIn?.table?.ko ?? null,
-        moveInDistricts: moveIn?.districts?.ko ? escapeHtml(moveIn.districts.ko) : null,
+        // 구×반기 표 조각(#677). 예전 자치구별 한 줄(moveIn.districts)은 json 에 남기되 화면은 표를 쓴다.
+        moveInDistricts: moveIn?.districtTable?.ko ?? null,
         indicatorTable: indicators?.table?.ko ?? null,
       },
     ],

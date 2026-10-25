@@ -58,3 +58,11 @@ test("영어 장은 영어로 쓴다", () => {
   const html = `<title>Seoul prices</title><h2>By district</h2><table><thead><tr><th>District</th></tr></thead><tbody><tr><td>x</td></tr></tbody></table>`;
   assert.match(accessibleTables(html), /Seoul prices - By district: 1 row, 1 column \(District\)/);
 });
+
+test("표 꼬리(tfoot, 출처·기준일 한 줄)는 caption 의 행 수에 넣지 않는다 (#677)", () => {
+  const withFoot =
+    `<table><thead><tr><th>자치구</th><th>세대</th></tr></thead>` +
+    `<tbody><tr><th>가구</th><td>1</td></tr><tr><th>나구</th><td>2</td></tr></tbody>` +
+    `<tfoot><tr><td colspan="2">추정치 · 출처</td></tr></tfoot></table>`;
+  assert.match(accessibleTables(PAGE(withFoot)), /<caption[^>]*>[^<]*: 2행 2열\(/);
+});

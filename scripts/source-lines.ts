@@ -158,3 +158,17 @@ export function stampSources(html: string) {
   if (left !== -1) throw new Error(`출처 자리표시 모양이 틀렸다: ${out.slice(left, left + 40)}`);
   return out;
 }
+
+/**
+ * 입주 예정 구×반기 표의 출처 줄(#677). 공공데이터포털 파일데이터 15111714(한국부동산원·부동산114, scripts/fetch-move-in.ts)는 예정월만 싣고 실제 입주는 싣지 않는다.
+ * 표 꼬리에 들어가는 한 줄이라 FOOTERS(자리표시)가 아니라 함수로 낸다 - 글자 제약은 FOOTERS 와 같다(HTML 에 그대로 들어간다).
+ * 머리는 「자료: 」「Data: 」다. 이 줄은 화면 스크립트가 json(docs/data/move-in.json)에서 통째로 꺼내 쓰므로 생성된 json·틀의 구운 조각에도 글자로 남는데,
+ * 「출처:」「Source:」 머리는 상수 모듈 밖 docs 에 없어야 한다(test/source-lines.test.mjs, #588 완료 조건 1) - 그 시험을 풀지 않으려고 머리를 바꿨다.
+ */
+export const MOVE_IN_SOURCE = { dataset: "15111714", ko: "한국부동산원·부동산114", en: "Korea Real Estate Board and R114" } as const;
+
+export function moveInSourceLine(lang: Lang) {
+  return lang === "ko"
+    ? footerLine("ko", [`${MOVE_IN_SOURCE.ko} 입주예정물량정보(공공데이터포털 ${MOVE_IN_SOURCE.dataset})`], DERIVED.ko, { label: "자료: " })
+    : footerLine("en", [`${MOVE_IN_SOURCE.en} scheduled move-in data (data.go.kr ${MOVE_IN_SOURCE.dataset})`], DERIVED.en, { label: "Data: " });
+}
