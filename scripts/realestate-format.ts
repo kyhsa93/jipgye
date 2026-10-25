@@ -79,6 +79,10 @@ export function resolveMetric(entry, kind) {
 
 // 표본이 모자라 값을 못 내는 카드에 이유를 적을 때 쓰는 건수(#264). 지표가 있고 1 <= n < 문턱이면 n, 아니면(n=0·지표 없음·건수가 정수 아님·문턱 이상) null 이라 그 카드는 「-」 그대로다.
 // 문턱 판정은 위 hasEnoughSample 한 곳이다 - 여기서 MIN_SAMPLE 을 다시 쓰지 않는다. 브라우저(scripts/realestate-template.html)의 lowOr 가 같은 조건을 쓴다.
+// 표 칸의 「신고 N건…」 문구를 적을지(#593 b). 지표가 있고 표본이 모자랄 때만 참이다 - 표본이 충분한데 값만 없는 칸에 「N건뿐」이라 적는 것은 사실이 아니다(해자 2).
+// n=0 도 표본 부족이다(lowSampleCount 와 달리 「신고 0건」을 적는다 - 요약 카드와 표의 오래된 차이). 문턱은 위 hasEnoughSample 한 곳이고, 브라우저(realestate-template.html)의 lowCell 이 같은 조건을 쓴다.
+export const isShortSample = (metric) => Boolean(metric) && !hasEnoughSample(metric);
+
 export function lowSampleCount(entry, kind) {
   const field = kindField(kind);
   const metric = field ? entry?.[field.metric] : null;

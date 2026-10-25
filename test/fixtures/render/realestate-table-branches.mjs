@@ -176,19 +176,26 @@ st("n21", "건수 특수문자 & < > \" '는 표본 부족 글자·제목 모두
 st("n22", "건수 이미 이스케이프된 &amp;는 한 번 더", val(6000, { transactionCount: "&amp;" }), { low: "&amp;amp;" }, { moat: true });
 // -- 지표는 있는데 값이 없다: 값 없음("-")이 아니라 표본 부족이 먼저다(순서)
 st("o01", "순서: 값이 없고 건수도 4건 → \"-\"가 아니라 표본 부족", (f) => ({ transactionCount: 4 }), { low: "4" }, { moat: true, order: true });
-st("o02", "순서: 건수는 충분한데 값 칸이 없으면 \"-\"가 아니라 표본 부족(건수 그대로)", (f) => ({ transactionCount: 40 }), { low: "40" }, { moat: true, order: true });
-st("o03", "순서: 값이 null이면 표본 부족", val(null), { low: "40" }, { moat: true, order: true });
-st("o04", "순서: 값이 NaN이면 표본 부족", val(NaN), { low: "40" }, { moat: true, order: true });
-st("o05", "순서: 값이 Infinity면 표본 부족", val(Infinity), { low: "40" }, { moat: true, order: true });
-st("o06", "순서: 값이 숫자 모양 문자열이면 표본 부족", val("6000"), { low: "40" }, { moat: true, order: true });
-st("o07", "순서: 값이 false면 표본 부족", val(false), { low: "40" }, { moat: true, order: true });
-st("o08", "순서: 값 undefined면 표본 부족", val(undefined), { low: "40" }, { moat: true, order: true });
+st("o02", "표본 충분(40건)인데 값 칸이 없으면 \"-\"(#593 b - 「40건뿐」이라 적지 않는다)", (f) => ({ transactionCount: 40 }), { none: true });
+st("o03", "표본 충분(40건)인데 값이 null이면 \"-\"(#593 b)", val(null), { none: true });
+st("o04", "표본 충분(40건)인데 값이 NaN이면 \"-\"(#593 b)", val(NaN), { none: true });
+st("o05", "표본 충분(40건)인데 값이 Infinity면 \"-\"(#593 b)", val(Infinity), { none: true });
+st("o06", "표본 충분(40건)인데 값이 숫자 모양 문자열이면 \"-\"(#593 b)", val("6000"), { none: true });
+st("o07", "표본 충분(40건)인데 값이 false면 \"-\"(#593 b)", val(false), { none: true });
+st("o08", "표본 충분(40건)인데 값 undefined면 \"-\"(#593 b)", val(undefined), { none: true });
 st("o09", "순서: 지표가 빈 객체 {}(truthy)면 표본 부족 0건", () => ({}), { low: "0" }, { moat: true, order: true });
 st("o10", "순서: 지표가 빈 배열 [](truthy)면 표본 부족 0건", () => [], { low: "0" }, { moat: true, order: true });
 st("o11", "순서: 지표가 숫자 5(truthy 비객체)면 표본 부족 0건", () => 5, { low: "0" }, { moat: true, order: true });
 st("o12", "순서: 지표가 문자열 \"x\"면 표본 부족 0건", () => "x", { low: "0" }, { moat: true, order: true });
 st("o13", "순서: 지표가 true면 표본 부족 0건", () => true, { low: "0" }, { moat: true, order: true });
 st("o14", "순서: 지표가 [1,2]면 표본 부족 0건", () => [1, 2], { low: "0" }, { moat: true, order: true });
+// -- 표본 문턱 경계에서 값만 없다(#593 b): 5건부터는 충분하니 "-", 4건 이하는 표본 부족(0건 포함)
+st("o15", "경계: 값 null·5건(충분) → \"-\"", val(null, { transactionCount: 5 }), { none: true });
+st("o16", "경계: 값 null·4건 → 표본 부족 4건", val(null, { transactionCount: 4 }), { low: "4" }, { moat: true, order: true });
+st("o17", "경계: 값 null·1건 → 표본 부족 1건", val(null, { transactionCount: 1 }), { low: "1" }, { moat: true, order: true });
+st("o18", "경계: 값 null·0건 → 표본 부족 0건(표는 0건도 적는다)", val(null, { transactionCount: 0 }), { low: "0" }, { moat: true, order: true });
+st("o19", "경계: 값 null·건수 문자열 \"5\"(충분) → \"-\"", val(null, { transactionCount: "5" }), { none: true });
+st("o20", "경계: 값 null·건수 문자열 \"4\" → 표본 부족 4건", val(null, { transactionCount: "4" }), { low: "4" }, { moat: true, order: true });
 // -- 지표 자체가 없다 → 값 없음("-")
 st("z01", "지표 칸이 없으면(키 없음) \"-\"", ABSENT, { none: true });
 st("z02", "지표 null이면 \"-\"", () => null, { none: true });
@@ -232,8 +239,10 @@ chg("b12", "기준일 이미 이스케이프된 &amp; → 한 번 더", { value1
 
 // 값 칸 → 세 보기의 칸 글자. kind는 sale·jeonse.
 function priceCells(kind, shape) {
-  if (shape.none) return { all: "-", kind: ["-", "-", "-"], dist: NONE3 };
-  if (shape.low !== undefined) return { all: LOW(shape.low), kind: [LOW(shape.low), "-", "-"], dist: [LOW(shape.low), "-", "-"] };
+  // 값 없는 줄의 칸 수: 머리글이 다섯 칸인 전세 표는 값 칸 넷이다(#593 a), 나머지는 셋.
+  const pad = kind === "jeonse" ? ["-"] : [];
+  if (shape.none) return { all: "-", kind: ["-", "-", "-", ...pad], dist: NONE3 };
+  if (shape.low !== undefined) return { all: LOW(shape.low), kind: [LOW(shape.low), "-", "-", ...pad], dist: [LOW(shape.low), "-", "-"] };
   const [price, area, ratio] = V[shape.v];
   const cntAll = shape.cntAll === null ? "" : ` ${COUNT(shape.cntAll)}`;
   const base = [STRONG(price) + shape.chg, STRONG(area)];
@@ -288,9 +297,13 @@ ws("n03", "건수 칸이 없으면 표본 0건", { avgDeposit10k: 20264, avgMont
 ws("n04", "건수 \"9\"는 값(한 줄 표는 건수를 뺀다)", wval({ transactionCount: "9" }), WOK({ cnt: "9건", cntAll: null }));
 ws("n05", "건수 NaN은 표본 NaN건", wval({ transactionCount: NaN }), { low: "NaN" }, { moat: true });
 ws("n06", "건수 특수문자는 이스케이프", wval({ transactionCount: `4&<>"'` }), { low: `4&amp;&lt;&gt;&quot;'` }, { moat: true });
-ws("o01", "순서: 보증금이 없으면 \"-\"가 아니라 표본 부족(건수 그대로)", { avgMonthlyRent10k: 128, transactionCount: 25 }, { low: "25" }, { moat: true, order: true });
-ws("o02", "순서: 보증금이 null이면 표본 부족", wval({ avgDeposit10k: null }), { low: "25" }, { moat: true, order: true });
-ws("o03", "순서: 보증금이 문자열이면 표본 부족", wval({ avgDeposit10k: "20264" }), { low: "25" }, { moat: true, order: true });
+ws("o01", "표본 충분(25건)인데 보증금이 없으면 \"-\"(#593 b)", { avgMonthlyRent10k: 128, transactionCount: 25 }, { none: true });
+ws("o02", "표본 충분(25건)인데 보증금이 null이면 \"-\"(#593 b)", wval({ avgDeposit10k: null }), { none: true });
+ws("o03", "표본 충분(25건)인데 보증금이 문자열이면 \"-\"(#593 b)", wval({ avgDeposit10k: "20264" }), { none: true });
+ws("o06", "경계: 보증금 null·5건(충분) → \"-\"", wval({ avgDeposit10k: null, transactionCount: 5 }), { none: true });
+ws("o07", "경계: 보증금 null·4건 → 표본 부족 4건", wval({ avgDeposit10k: null, transactionCount: 4 }), { low: "4" }, { moat: true, order: true });
+ws("o08", "경계: 보증금 null·1건 → 표본 부족 1건", wval({ avgDeposit10k: null, transactionCount: 1 }), { low: "1" }, { moat: true, order: true });
+ws("o09", "경계: 보증금 null·0건 → 표본 부족 0건", wval({ avgDeposit10k: null, transactionCount: 0 }), { low: "0" }, { moat: true, order: true });
 ws("o04", "순서: 지표가 {}(truthy)면 표본 부족 0건", {}, { low: "0" }, { moat: true, order: true });
 ws("o05", "순서: 지표가 \"x\"면 표본 부족 0건", "x", { low: "0" }, { moat: true, order: true });
 ws("z01", "지표가 없으면(키 없음) \"-\"", ABSENT, { none: true });
@@ -373,9 +386,9 @@ for (const s of WSTATES) {
   add(
     "TA-M03",
     fn,
-    "전세 표본 부족인데 매매는 값이면 전세가율은 \"-\"(전세 표)",
+    "전세 표본 부족인데 매매는 값이면 전세가율·거래건수 칸도 \"-\"(전세 표, 칸 4개 - #593 a)",
     [data([e({ sale: sale(), jeonse: jeonse({ transactionCount: 2 }) })]), "jeonse"],
-    rowTr(link("강남구", "gangnam"), [tdA("평당 보증금", LOW("2")), tdA("84㎡ 환산", "-"), tdA("전세가율", "-")]),
+    rowTr(link("강남구", "gangnam"), [tdA("평당 보증금", LOW("2")), tdA("84㎡ 환산", "-"), tdA("전세가율", "-"), tdA("거래건수", "-")]),
     { moat: true }
   );
   add(
@@ -453,7 +466,7 @@ for (const s of WSTATES) {
   add("TO-09", fn, "jeonse 표에서 서울 전체 줄(전세가율 포함)", [data([], dist("서울")), "jeonse"], rowTr("서울 전체", [tdA("평당 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", RATIO("50.0%")), tdA("거래건수", COUNT("30건"))], { overall: true }));
   add("TO-10", fn, "wolse 표에서 서울 전체 줄", [data([], dist("서울")), "wolse"], rowTr("서울 전체", [tdA("평균 보증금", STRONG("2억 264만원")), tdA("평균 월세", STRONG("월 128만원") + CHG("up", "▲", "1.8%", WOLSE_TITLE(BASE))), tdA("거래건수", COUNT("25건"))], { overall: true }));
   add("TO-11", fn, "sale 표에서 서울 전체의 매매가 표본 부족이면 [스팬, -, -]", [data([], { sale: sale({ transactionCount: 4 }) }), "sale"], rowTr("서울 전체", [tdA("평당가", LOW("4")), tdA("84㎡ 환산", "-"), tdA("거래건수", "-")], { overall: true }), { moat: true });
-  add("TO-12", fn, "jeonse 표에서 서울 전체의 전세가 표본 부족이면 칸이 세 개뿐이다(머리글은 다섯 칸)", [data([], { jeonse: jeonse({ transactionCount: 4 }) }), "jeonse"], rowTr("서울 전체", [tdA("평당 보증금", LOW("4")), tdA("84㎡ 환산", "-"), tdA("전세가율", "-")], { overall: true }), { moat: true });
+  add("TO-12", fn, "jeonse 표에서 서울 전체의 전세가 표본 부족이면 값 칸이 넷이다(머리글 다섯 칸에 맞춘다 - #593 a)", [data([], { jeonse: jeonse({ transactionCount: 4 }) }), "jeonse"], rowTr("서울 전체", [tdA("평당 보증금", LOW("4")), tdA("84㎡ 환산", "-"), tdA("전세가율", "-"), tdA("거래건수", "-")], { overall: true }), { moat: true });
 }
 
 // ================= 이름 칸 =================
@@ -580,12 +593,12 @@ for (const s of WSTATES) {
   add(
     "TR-03",
     fn,
-    "실제 모양, 전세 표: 전세 평당 보증금 순(강남 3000 > 노원 2000 > 표본 부족 종로, 종로는 칸 셋)",
+    "실제 모양, 전세 표: 전세 평당 보증금 순(강남 3000 > 노원 2000 > 표본 부족 종로, 종로는 값 칸 넷 - #593 a)",
     [REAL, "jeonse"],
     rowTr("서울 전체", [tdA("평당 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", RATIO("50.0%")), tdA("거래건수", COUNT("30건"))], { overall: true }) +
       rowTr(link("강남구", "gangnam"), [tdA("평당 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", RATIO("50.0%")), tdA("거래건수", COUNT("30건"))]) +
       rowTr(link("노원구", "nowon"), [tdA("평당 보증금", STRONG("2,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("5억 820만원")), tdA("전세가율", RATIO("66.7%")), tdA("거래건수", COUNT("30건"))]) +
-      rowTr(link("종로구", "jongno"), [tdA("평당 보증금", LOW("2")), tdA("84㎡ 환산", "-"), tdA("전세가율", "-")], { stale: PREV("10. 5.") }),
+      rowTr(link("종로구", "jongno"), [tdA("평당 보증금", LOW("2")), tdA("84㎡ 환산", "-"), tdA("전세가율", "-"), tdA("거래건수", "-")], { stale: PREV("10. 5.") }),
     { moat: true }
   );
 }

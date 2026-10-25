@@ -600,10 +600,11 @@ test("시세표 분기 표: 해자 2(표본 부족)가 세 보기(한 줄 표·�
     assert.ok(table.some((b) => pick(b) && !b.moat && !b.expect.includes("low-sample") && /6,000만원/.test(b.expect)), `${name}: 표본 부족이 아닌 값 행이 없다`);
     assert.ok(table.some((b) => pick(b) && !b.expect.includes("low-sample") && !/만원|억/.test(b.expect.replace(/만원 ?\//g, ""))), `${name}: 값 없음("-") 행이 없다`);
   }
-  // 순서: 지표가 있으면(값이 없어도) "-"가 아니라 표본 부족이다. 지표 자체가 없을 때만 "-"다.
+  // 순서: 표본이 모자란 지표는(값이 없어도) 표본 부족이다. 표본이 충분한데 값만 없거나 지표 자체가 없으면 "-"다(#593 b).
   const get = (id) => REALESTATE_TABLE_BRANCHES.find((b) => b.id === id).expect;
   assert.match(get("TA-S-o01"), /<td data-label="매매 평당가"><span class="low-sample"[^>]*>신고 4건<\/span><\/td>/);
-  assert.match(get("TA-S-o02"), /<td data-label="매매 평당가"><span class="low-sample"[^>]*>신고 40건<\/span><\/td>/);
+  assert.match(get("TA-S-o02"), /<td data-label="매매 평당가">-<\/td>/);
+  assert.doesNotMatch(get("TA-S-o02"), /low-sample/);
   assert.match(get("TA-S-z01"), /<td data-label="매매 평당가">-<\/td>/);
   assert.match(get("TA-S-z03"), /<td data-label="매매 평당가">-<\/td>/);
   // 문턱: 5건부터 값이다(4건은 값이 있어도 내지 않는다). 이 표는 건수 문턱을 따로 정하지 않고 resolveMetric이 정한 것을 따른다.
@@ -692,10 +693,15 @@ test("realestate-table.mjs: JSX가 쓰는 순수 모듈이다 - 라벨·글자 �
   const none = [sp("text", "-")];
   assert.deepEqual(reCells({}, "sale"), [none, none, none]);
   assert.deepEqual(reCells({ sale: { transactionCount: 4 } }, "sale"), [[low(4)], none, none]);
-  assert.deepEqual(reCells({ sale: { transactionCount: 40 } }, "sale"), [[low(40)], none, none]);
+  assert.deepEqual(reCells({ sale: { transactionCount: 40 } }, "sale"), [none, none, none], "표본은 충분한데 값만 없으면 \"-\"(#593 b)");
+  assert.deepEqual(reCells({ sale: { transactionCount: 5 } }, "sale"), [none, none, none]);
+  assert.deepEqual(reCells({ sale: { transactionCount: 1 } }, "sale"), [[low(1)], none, none]);
   assert.equal(reCells({ sale: { avgPricePerPyeong10k: 6000, transactionCount: 40 } }, "sale").length, 3);
   assert.equal(reCells({ sale: { avgPricePerPyeong10k: 6000, transactionCount: 40 }, jeonse: { avgDepositPerPyeong10k: 3000, transactionCount: 30 } }, "jeonse").length, 4);
-  assert.equal(reCells({ jeonse: { transactionCount: 2 } }, "jeonse").length, 3);
+  // 전세 표는 값이 없어도 머리글(다섯 칸)에 맞춰 값 칸이 넷이다(#593 a)
+  assert.deepEqual(reCells({ jeonse: { transactionCount: 2 } }, "jeonse"), [[low(2)], none, none, none]);
+  assert.deepEqual(reCells({}, "jeonse"), [none, none, none, none]);
+  assert.equal(reCells({}, "wolse").length, 3);
   assert.throws(() => reCells({}, "foo"), TypeError);
   assert.deepEqual(reAllCells({}), [none, none, none]);
   assert.deepEqual(reAllCells({ wolse: { transactionCount: 3 } }), [none, none, [low(3)]]);
