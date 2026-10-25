@@ -74,7 +74,7 @@ test("픽스처 칸 모양 확인(빌더가 만든 그대로)", () => {
 test("자리: 방법 안내 바로 아래·#lead-section 앞, 입력 다섯은 보이는 label 이 있고 답은 aria-live", async () => {
   const html = await readFile(path.join(root, SITE, "renewal-vs-new.html"), "utf8");
   const ids = [...html.matchAll(/<section id="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(ids.slice(0, 2), ["check-section", "lead-section"]);
+  assert.deepEqual(ids.slice(0, 3), ["check-section", "convert", "lead-section"]); // #convert 는 #673 N1
   assert.ok(html.indexOf("</aside>") < html.indexOf('id="check-section"'));
   for (const [id, text] of [["check-gu", "자치구"], ["check-apt", "단지"], ["check-area", "전용면적"], ["check-old", "종전 보증금(만원, 선택)"], ["check-ask", "요구 보증금(만원, 선택)"]]) {
     assert.match(html, new RegExp(`<label for="${id}" id="${id}-label">${text.replace(/[()]/g, "\\$&")}</label>`), `${id} 의 보이는 label`);
@@ -196,7 +196,7 @@ test("드리프트: 화면의 구간 판정(ckBand)이 빌더의 bandOf 와 모�
 
 test("금지어: 확인기 문구(ko/en)에 평균·전망·권유 표현이 없다", async () => {
   const html = await readFile(path.join(root, "docs/renewal-vs-new.html"), "utf8");
-  const section = html.slice(html.indexOf('<section id="check-section"'), html.indexOf('<section id="lead-section"'));
+  const section = html.slice(html.indexOf('<section id="check-section"'), html.indexOf('<section id="convert"'));
   const dict = [...html.matchAll(/^\s+ck[A-Z]\w*:[\s\S]*?(?=^\s+ck[A-Z]\w*:|^\s+},?$)/gm)].map((m) => m[0]).join("\n");
   assert.ok(dict.includes("ckLegal") && dict.includes("Check your renewal"), "사전 조각을 못 읽었다");
   for (const text of [section, dict]) {
