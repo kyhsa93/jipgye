@@ -115,7 +115,7 @@ test("표 글자는 두 언어로 - 서울 대조 행이 맨 위, 미달 행은 
   const split = breakdown(cells, END, { districts: DISTRICTS, bands: BANDS });
   const ko = breakdownTableHtml(split.districts, main, "district", "ko");
   const en = breakdownTableHtml(split.districts, main, "district", "en");
-  assert.match(ko, /<th scope="col">자치구<\/th><th scope="col">신고가 뒤 ≥<\/th>/);
+  assert.match(ko, /<th scope="col">자치구<\/th><th scope="col">신고가 뒤<br>≥<\/th>/);
   assert.match(ko, /<tbody><tr><td><strong>서울 전체<\/strong><\/td>/);
   assert.match(ko, /<td>강남구<\/td><td>25%<\/td><td>62.5%<\/td><td>1,200<\/td>/);
   assert.match(ko, /<td>종로구<\/td><td>-<\/td><td>-<\/td><td><span class="low-sample">표본 부족\(n=12\)<\/span><\/td>/);
@@ -126,6 +126,8 @@ test("표 글자는 두 언어로 - 서울 대조 행이 맨 위, 미달 행은 
   assert.match(breakdownTableHtml(split.bands, main, "band", "en"), /<th scope="col">Price band<\/th>.*<td>₩0\.9–1\.5B<\/td>/);
   assert.match(breakdownNote(split, "ko"), /100건 미만인 행은 비율을 비웁니다/);
   assert.match(breakdownNote(split, "en"), /fewer than 100 record highs/);
+  assert.match(breakdownNote(split, "ko"), /^「≥」 칸은 위 서울 전체 문장과 같은 값입니다/);
+  assert.match(breakdownNote(split, "en"), /^The ‘≥’ columns are the same measure as the Seoul figure above/);
   assert.equal(breakdownTableHtml([], main, "district", "ko"), null);
 });
 

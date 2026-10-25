@@ -286,14 +286,14 @@ const BREAKDOWN_TABLE = {
   ko: {
     district: "자치구",
     band: "가격대",
-    head: ["신고가 뒤 ≥", "아무 거래 뒤 ≥", "다음 거래 있는 신고가"],
+    head: ["신고가 뒤<br>≥", "아무 거래<br>뒤 ≥", "다음 거래<br>있는 신고가"],
     seoul: "서울 전체",
     thin: (n) => `표본 부족(n=${n})`,
   },
   en: {
     district: "District",
     band: "Price band",
-    head: ["≥ after record", "≥ after any", "Records with a next sale"],
+    head: ["≥ after<br>record", "≥ after<br>any sale", "Records<br>w/ next"],
     seoul: "All Seoul",
     thin: (n) => `too few (n=${n})`,
   },
@@ -304,8 +304,8 @@ export function breakdownNote(split, locale = "ko") {
   if (!split) return null;
   const n = split.minWithNext;
   return locale === "en"
-    ? `Same record-high definition and thresholds as above; only the rows are split. Districts group complexes by district; price bands use the price of the sale being tested. Rows with fewer than ${n} record highs with a next sale are left blank. Sample sizes differ, so the rows are not ranked against each other.`
-    : `위와 같은 신고가 정의·문턱으로 행만 나눴습니다. 자치구는 단지가 있는 구로, 가격대는 신고가인지 가르는 그 거래의 값으로 나눕니다. 다음 거래 있는 신고가가 ${n}건 미만인 행은 비율을 비웁니다. 행마다 표본 크기가 달라 행끼리 순위를 매기지 않습니다.`;
+    ? `The ‘≥’ columns are the same measure as the Seoul figure above: the share of cases where the next sale in the same complex and unit type matched or beat the sale before it (a record high, or any sale). Same record-high definition and thresholds as above; only the rows are split. Districts group complexes by district; price bands use the price of the sale being tested. Rows with fewer than ${n} record highs with a next sale are left blank. Sample sizes differ, so the rows are not ranked against each other.`
+    : `「≥」 칸은 위 서울 전체 문장과 같은 값입니다 — 신고가(또는 아무 거래) 바로 다음 같은 단지·평형 거래가 그 값 이상이었던 비율입니다. 위와 같은 신고가 정의·문턱으로 행만 나눴습니다. 자치구는 단지가 있는 구로, 가격대는 신고가인지 가르는 그 거래의 값으로 나눕니다. 다음 거래 있는 신고가가 ${n}건 미만인 행은 비율을 비웁니다. 행마다 표본 크기가 달라 행끼리 순위를 매기지 않습니다.`;
 }
 
 /** kind: "district" | "band". 첫 행은 대조로 둔 서울 전체(main). */
