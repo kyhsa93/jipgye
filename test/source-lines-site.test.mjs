@@ -27,6 +27,22 @@ test("출처 줄이 있는 장은 div·한국어 사전·영어 사전이 모두
     assert.equal(html.split(FOOTERS[id].en).length - 1, 1, `${f} 영어 한 벌`);
     checked++;
   }
-  // 손으로 쓴 틀 10장 + realestate.html + 시세 틀에서 나온 46장(예산 18·거래유형 3·자치구 25) - 장이 빠지면 여기서 드러난다.
-  assert.ok(checked >= 57, `출처 줄을 확인한 장 ${checked}장`);
+  // 손으로 쓴 틀 11장(index 포함) + realestate.html + 시세 틀에서 나온 46장(예산 18·거래유형 3·자치구 25) - 장이 빠지면 여기서 드러난다.
+  assert.ok(checked >= 58, `출처 줄을 확인한 장 ${checked}장`);
+});
+
+test("ECOS 에서 받은 값을 보이는 장은 출처 줄에 ECOS 를 적는다 - ECOS 약관 제7조② (legal #588)", async () => {
+  const footer = (html) => html.match(/<div id="footer-source">([^<]*)<\/div>/)?.[1] ?? "";
+  for (const f of ["index.html", "about.html", "method.html", "jeonse-vs-wolse.html", "price-outlook.html"]) {
+    assert.match(footer(await readFile(sitePath(f), "utf8")), /ECOS/, f);
+  }
+  let budget = 0;
+  for (const f of pages) {
+    const html = await readFile(sitePath(f), "utf8");
+    if (!html.includes('<meta name="budget-band"')) continue;
+    assert.equal(footer(html), FOOTERS.budget.ko, `${f}: 예산대 장의 출처 줄`);
+    assert.ok(html.includes(FOOTERS.budget.en), `${f}: 예산대 장의 영어 출처 줄`);
+    budget++;
+  }
+  assert.equal(budget, 18, "예산대 장 수");
 });

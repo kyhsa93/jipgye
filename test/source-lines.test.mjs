@@ -47,7 +47,7 @@ test("footerLine: 머리·구분·영어 and", () => {
 
 test("틀의 출처 줄은 자리표시다 - 장마다 한국어 두 벌(div·사전)·영어 한 벌", async () => {
   const PAGES = {
-    "docs/about.html": "about", "docs/method.html": "method", "docs/cancelled-deals.html": "cancelledDeals", "docs/deal-search.html": "dealSearch",
+    "docs/index.html": "index", "docs/about.html": "about", "docs/method.html": "method", "docs/cancelled-deals.html": "cancelledDeals", "docs/deal-search.html": "dealSearch",
     "scripts/realestate-template.html": "realestate", "docs/realestate.html": "realestate", "docs/floor-gap.html": "floorGap",
     "docs/jeonse-vs-wolse.html": "jeonseVsWolse", "docs/record-high.html": "recordHigh", "docs/renewal-vs-new.html": "renewalVsNew",
     "docs/switch-house.html": "switchHouse", "docs/price-outlook.html": "priceOutlook",

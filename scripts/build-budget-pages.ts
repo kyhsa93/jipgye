@@ -147,6 +147,11 @@ export function buildBudgetPage(baseHtml, page, budget, loanBasis = null, mortga
     "자치구 시세 섹션"
   );
 
+  // 출처 줄: 시세 틀의 줄(국토부) 대신 ECOS 를 더한 예산대 줄(scripts/source-lines.ts FOOTERS.budget). 한국어 둘·영어 하나 - applyPrerender 가 꽂는다(#588).
+  const sourceMarks = html.split("{{src:realestate.").length - 1;
+  if (sourceMarks !== 3) throw new Error(`출처 줄 자리표시({{src:realestate.…}})가 3개가 아니라 ${sourceMarks}개입니다`);
+  html = html.replaceAll("{{src:realestate.", "{{src:budget.");
+
   // 문자열 패치(replaceOnce)가 전부 끝난 뒤에, 나가는 장의 인라인 스크립트에서 주석만 뗀다(#313). 틀에는 주석이 그대로 있다.
   return stripInlineScriptComments(applyPrerender(html, {
     budgetResult: body,

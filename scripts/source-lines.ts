@@ -66,13 +66,19 @@ const LAG_EN_REPORTED = "Only reported deals are counted, and reporting can lag 
 
 /** 장별 출처 줄. 키가 곧 자리표시 id 다(`{{src:<id>.ko}}`). */
 export const FOOTERS: Record<string, Record<Lang, string>> = {
+  // ECOS 약관 제7조②(ECOS 에서 받은 정보임을 표시) - 한국은행 값은 모두 ECOS 로 받으므로 「한국은행」이 아니라 ECOS 를 적는다(legal #588, PR1 commit B).
   about: {
-    ko: ko([molitKo("매매·전월세 실거래가 공개시스템"), SOURCES.bok.ko, SOURCES.reb.ko]),
-    en: en([M.en, SOURCES.bok.en, SOURCES.reb.en], "", { label: "Sources: ", sep: "; " }),
+    ko: ko([molitKo("매매·전월세 실거래가 공개시스템"), SOURCES.ecos.ko, SOURCES.reb.ko]),
+    en: en([M.en, SOURCES.ecos.en, SOURCES.reb.en], "", { label: "Sources: ", sep: "; " }),
   },
   method: {
-    ko: ko([molitKo("매매·전월세 실거래가 공개시스템"), SOURCES.bok.ko]),
-    en: en([M.en, SOURCES.bok.en], "", { label: "Sources: ", sep: "; " }),
+    ko: ko([molitKo("매매·전월세 실거래가 공개시스템"), SOURCES.ecos.ko]),
+    en: en([M.en, SOURCES.ecos.en], "", { label: "Sources: ", sep: "; " }),
+  },
+  // 첫 화면 돈의 값 한 줄 중 기준금리만 ECOS 다(환율은 다른 출처라 이 줄에 넣지 않는다).
+  index: {
+    ko: ko([`${SOURCES.ecos.ko} 기준금리`]),
+    en: en([`${SOURCES.ecos.en} (base rate)`]),
   },
   cancelledDeals: {
     ko: ko([molitKo("매매 실거래가 공개시스템")], LAG_KO("거래", "거래는")),
@@ -85,6 +91,11 @@ export const FOOTERS: Record<string, Record<Lang, string>> = {
   realestate: {
     ko: ko([molitKo("매매·전월세 실거래가 공개시스템")], LAG_KO("거래", "거래는")),
     en: en([molitEn("real transaction price disclosure")], LAG_EN_REPORTED),
+  },
+  // 예산대 18장: 시세 틀을 쓰지만 월 상환액·1억당 값이 ECOS 주담대 평균금리라 ECOS 를 더한다(build-budget-pages 가 realestate → budget 으로 바꾼다).
+  budget: {
+    ko: ko([molitKo("매매·전월세 실거래가 공개시스템"), SOURCES.ecos.ko], LAG_KO("거래", "거래는")),
+    en: en([molitEn("real transaction price disclosure"), SOURCES.ecos.en], LAG_EN_REPORTED),
   },
   floorGap: {
     ko: ko([molitKo("매매·전월세 실거래가 공개시스템")], "신고된 거래만 집계되며 해제된 거래는 뺍니다."),
