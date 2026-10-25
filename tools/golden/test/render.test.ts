@@ -5,7 +5,7 @@ import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { compareBytes, treeHash } from "../lib/compare.ts";
-import { RETIRED_STAGES, preparePristine, readWorkflowStages, renderIsolated } from "../lib/render.ts";
+import { preparePristine, readWorkflowStages, renderIsolated } from "../lib/render.ts";
 
 // 렌더 격리와 환경 주입(#236 범위 3·4). 작은 가짜 저장소(고정 파일)를 만들어 쓴다 — 실제 docs/나 raw/는 읽지 않는다.
 //   step1은 docs/a.html을 읽어 덮어쓴다(prerender.ts와 같은 모양: 두 번 돌리면 두 번 덧칠된다).
@@ -140,31 +140,6 @@ test("#428 renderIsolated: base(.mjs)와 head(.ts 로 개명)를 같은 .mjs 목
     } finally {
       await Promise.all([b.dispose(), h.dispose()]);
     }
-  } finally {
-    await Promise.all([rm(base, { recursive: true }), rm(head, { recursive: true }), rm(cache, { recursive: true })]);
-  }
-});
-
-test("#577 B2 renderIsolated: 지운 단계(RETIRED_STAGES)는 사본에 있으면 돌고 없으면 건너뛴다 - base 는 금리 장을 찍고 head 는 단계 파일이 없어도 렌더가 끝난다", async () => {
-  const RETIRED = "scripts/build-rate-pages.mjs";
-  assert.ok(RETIRED_STAGES.has(RETIRED));
-  const base = await fakeRepo();
-  const head = await fakeRepo();
-  const cache = await mkdtemp(path.join(os.tmpdir(), "golden-cache-"));
-  try {
-    await writeFile(path.join(base, "scripts/build-rate-pages.mjs"), `import { writeFile } from "node:fs/promises";\nawait writeFile(new URL("../docs/r.html", import.meta.url), "<p>rate</p>");\n`);
-    const opt = { stages: [STAGES[0], RETIRED, STAGES[1]], mockNow: "2026-10-11T00:00:00Z" };
-    const b = await renderIsolated(await preparePristine({ srcDir: base, cacheDir: cache }), opt);
-    const h = await renderIsolated(await preparePristine({ srcDir: head, cacheDir: cache }), opt);
-    try {
-      assert.equal(await read(b.docsDir, "r.html"), "<p>rate</p>", "base 사본에 있는 지운 단계는 돈다");
-      await assert.rejects(read(h.docsDir, "r.html"), "head 사본에는 단계가 없어 장이 없다");
-      assert.deepEqual(h.timings.filter((t) => t.skipped).map((t) => t.stage), [RETIRED]);
-      assert.deepEqual(b.timings.filter((t) => t.skipped), []);
-    } finally {
-      await Promise.all([b.dispose(), h.dispose()]);
-    }
-    // 목록에 없는 단계는 여전히 모듈 없음으로 죽는다(오타를 숨기지 않는다) - 아래 #428 시험의 scripts/nope.mjs 와 같은 약속이다.
   } finally {
     await Promise.all([rm(base, { recursive: true }), rm(head, { recursive: true }), rm(cache, { recursive: true })]);
   }

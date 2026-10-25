@@ -9,5 +9,5 @@ import path from "node:path";
 
 const dir = path.resolve(import.meta.dirname, "../fixtures/site/data");
 
-/** `readFixture("rates")` → test/fixtures/site/data/rates.json 을 파싱한 값. */
+/** `readFixture("realestate")` → test/fixtures/site/data/realestate.json 을 파싱한 값. */
 export const readFixture = (name) => readFile(path.join(dir, `${name}.json`), "utf8").then(JSON.parse);
