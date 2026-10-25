@@ -1,0 +1,98 @@
+{
+ "_note": "ECOS StatisticSearch 731Y001/D/0000001 실제 응답(sample 키, 2026-10-25 조회, 20261012~20261025 요청). 줄의 열은 줄였다(#639).",
+ "StatisticSearch": {
+  "list_total_count": 10,
+  "row": [
+   {
+    "STAT_CODE": "731Y001",
+    "STAT_NAME": "3.1.1.1. 주요국 통화의 대원화환율",
+    "ITEM_CODE1": "0000001",
+    "ITEM_NAME1": "원/미국달러(매매기준율)",
+    "UNIT_NAME": "원",
+    "TIME": "20261012",
+    "DATA_VALUE": "1338"
+   },
+   {
+    "STAT_CODE": "731Y001",
+    "STAT_NAME": "3.1.1.1. 주요국 통화의 대원화환율",
+    "ITEM_CODE1": "0000001",
+    "ITEM_NAME1": "원/미국달러(매매기준율)",
+    "UNIT_NAME": "원",
+    "TIME": "20261013",
+    "DATA_VALUE": "1335.8"
+   },
+   {
+    "STAT_CODE": "731Y001",
+    "STAT_NAME": "3.1.1.1. 주요국 통화의 대원화환율",
+    "ITEM_CODE1": "0000001",
+    "ITEM_NAME1": "원/미국달러(매매기준율)",
+    "UNIT_NAME": "원",
+    "TIME": "20261014",
+    "DATA_VALUE": "1340.5"
+   },
+   {
+    "STAT_CODE": "731Y001",
+    "STAT_NAME": "3.1.1.1. 주요국 통화의 대원화환율",
+    "ITEM_CODE1": "0000001",
+    "ITEM_NAME1": "원/미국달러(매매기준율)",
+    "UNIT_NAME": "원",
+    "TIME": "20261015",
+    "DATA_VALUE": "1338.6"
+   },
+   {
+    "STAT_CODE": "731Y001",
+    "STAT_NAME": "3.1.1.1. 주요국 통화의 대원화환율",
+    "ITEM_CODE1": "0000001",
+    "ITEM_NAME1": "원/미국달러(매매기준율)",
+    "UNIT_NAME": "원",
+    "TIME": "20261016",
+    "DATA_VALUE": "1348.5"
+   },
+   {
+    "STAT_CODE": "731Y001",
+    "STAT_NAME": "3.1.1.1. 주요국 통화의 대원화환율",
+    "ITEM_CODE1": "0000001",
+    "ITEM_NAME1": "원/미국달러(매매기준율)",
+    "UNIT_NAME": "원",
+    "TIME": "20261019",
+    "DATA_VALUE": "1342.4"
+   },
+   {
+    "STAT_CODE": "731Y001",
+    "STAT_NAME": "3.1.1.1. 주요국 통화의 대원화환율",
+    "ITEM_CODE1": "0000001",
+    "ITEM_NAME1": "원/미국달러(매매기준율)",
+    "UNIT_NAME": "원",
+    "TIME": "20261020",
+    "DATA_VALUE": "1332.1"
+   },
+   {
+    "STAT_CODE": "731Y001",
+    "STAT_NAME": "3.1.1.1. 주요국 통화의 대원화환율",
+    "ITEM_CODE1": "0000001",
+    "ITEM_NAME1": "원/미국달러(매매기준율)",
+    "UNIT_NAME": "원",
+    "TIME": "20261021",
+    "DATA_VALUE": "1328"
+   },
+   {
+    "STAT_CODE": "731Y001",
+    "STAT_NAME": "3.1.1.1. 주요국 통화의 대원화환율",
+    "ITEM_CODE1": "0000001",
+    "ITEM_NAME1": "원/미국달러(매매기준율)",
+    "UNIT_NAME": "원",
+    "TIME": "20261022",
+    "DATA_VALUE": "1325.5"
+   },
+   {
+    "STAT_CODE": "731Y001",
+    "STAT_NAME": "3.1.1.1. 주요국 통화의 대원화환율",
+    "ITEM_CODE1": "0000001",
+    "ITEM_NAME1": "원/미국달러(매매기준율)",
+    "UNIT_NAME": "원",
+    "TIME": "20261023",
+    "DATA_VALUE": "1324.6"
+   }
+  ]
+ }
+}
