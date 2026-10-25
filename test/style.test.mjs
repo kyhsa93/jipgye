@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { SITE, SITE_DIR } from "./helpers/site-root.mjs";
+import { TAP_PAIRS, pairProblems, pageUses, readSitePages } from "./helpers/css-html-pairs.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const css = () => readFile(path.join(root, "src/css/legacy.css"), "utf8");
@@ -90,7 +91,8 @@ test("누르는 것은 손가락이 닿는 크기다", async () => {
     assert.ok(rule, `${sel} 규칙이 없다`);
     assert.match(rule.body, /(min-height|height): var\(--tap\)/, `${sel}이 --tap을 안 쓴다`);
   };
-  for (const sel of [".page-nav a", ".sub-nav a", ".news-chip", ".lang-toggle", ".icon-toggle"]) uses(sel);
+  // 이 다섯은 구운 HTML 이 그 class 를 쓰는지까지 짝으로 본다(#317, 아래 시험). 목록은 TAP_PAIRS 한 곳이다.
+  for (const [sel] of TAP_PAIRS) uses(sel);
   // 줄 단위 링크 목록도(#50) - 한 규칙에 묶여 있다.
   const lists = rules(text).find((r) => r.sel.includes(".district-links a") && r.sel.includes(".card-links a"));
   assert.ok(lists, "줄 단위 링크 목록 규칙이 없다");
@@ -112,6 +114,54 @@ test("누르는 것은 손가락이 닿는 크기다", async () => {
   const tableLink = rules(text).find((r) => parts(r.sel) === parts(".data-table td a"));
   assert.match(tableLink.body, /text-decoration-color: var\(--muted\)/, "표 안 링크 밑줄이 안 보인다");
   assert.doesNotMatch(tableLink.body, /var\(--border\)/, "밑줄이 1.29:1 테두리색이다");
+});
+
+test("--tap 을 주는 class 는 CSS 규칙과 구운 HTML 이 짝이다(#317)", async () => {
+  const text = await css();
+  const all = rules(text);
+  const hasRule = (sel) => all.some((r) => parts(r.sel) === parts(sel));
+  const pages = await readSitePages(SITE_DIR);
+  assert.ok(Object.keys(pages).length > 0, `${SITE} 에 구운 장이 없다`);
+  assert.deepEqual(pairProblems(hasRule, pages), []);
+});
+
+test("짝 검사가 선택자마다 두 방향과 장 수 하한에서 문다(#317 대조군)", () => {
+  // 구운 HTML 을 흉내 낸 작은 사이트: 선택자마다 쓰는 장 수(uses)를 따로 정한다. 기본은 TAP_PAIRS 의 하한 그대로다.
+  const markup = ([sel, , where]) => {
+    const cls = sel.match(/^\.([\w-]+)/)[1];
+    if (where === "script") return `<script>box.innerHTML = \`<button class="${cls}" type="button">x</button>\`;</script>`;
+    return sel.includes(" ") ? `<nav class="${cls} tw:gap-2"><a href="/">x</a></nav>` : `<button class="${cls}" type="button">x</button>`;
+  };
+  const site = (uses = {}) =>
+    Object.fromEntries(
+      Array.from({ length: Math.max(...TAP_PAIRS.map(([, n]) => n)) }, (_, i) => [
+        `p${i}.html`,
+        `<body>${TAP_PAIRS.filter((pair) => i < (uses[pair[0]] ?? pair[1])).map(markup).join("")}</body>`,
+      ]),
+    );
+  const everyRule = () => true;
+
+  assert.deepEqual(pairProblems(everyRule, site()), [], "정상 사이트가 짝 검사에 걸린다");
+  for (const [sel, floor] of TAP_PAIRS) {
+    // HTML 쪽만 지웠다(CSS 규칙은 남았다): 그 선택자 하나만 실패.
+    const htmlGone = pairProblems(everyRule, site({ [sel]: 0 }));
+    assert.equal(htmlGone.length, 1, `${sel} HTML 삭제: ${htmlGone}`);
+    assert.ok(htmlGone[0].startsWith(`${sel}: CSS 규칙은 있는데 구운 HTML 이 한 장도 안 쓴다`), htmlGone[0]);
+    // CSS 쪽만 지웠다(HTML 은 그대로): 그 선택자 하나만 실패.
+    const cssGone = pairProblems((s) => s !== sel, site());
+    assert.equal(cssGone.length, 1, `${sel} CSS 삭제: ${cssGone}`);
+    assert.ok(cssGone[0].startsWith(`${sel}: CSS 규칙이 없는데 구운 HTML ${floor}장이 쓴다`), cssGone[0]);
+    // 하한보다 한 장 적다: 실패(하한 1 이면 한 장 적음이 곧 HTML 삭제라 위에서 본다).
+    if (floor > 1) {
+      const short = pairProblems(everyRule, site({ [sel]: floor - 1 }));
+      assert.equal(short.length, 1, `${sel} 한 장 적음: ${short}`);
+      assert.ok(short[0].startsWith(`${sel}: 구운 HTML ${floor - 1}장뿐이다(하한 ${floor})`), short[0]);
+    }
+  }
+  // 태그 안 class 만 있고 안쪽 링크가 없으면 .page-nav a 는 쓰이지 않은 것이다. 마크업 선택자는 스크립트 안 문자열을 쓴 것으로 치지 않는다.
+  assert.equal(pageUses('<nav class="page-nav"><span>x</span></nav>', ".page-nav a"), false);
+  assert.equal(pageUses("<script>const s = '<button class=\"lang-toggle\">';</script>", ".lang-toggle"), false);
+  assert.equal(pageUses('<button class="icon-toggle-x">x</button>', ".icon-toggle"), false, "class 이름 앞부분만 같다");
 });
 
 test("금리 4장의 누르는 것도 손가락이 닿는 크기다(#403)", async () => {
