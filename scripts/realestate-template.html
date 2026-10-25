@@ -535,6 +535,12 @@ function lowSampleHtml(metric) {
   return `<span class="low-sample" title="${escapeHtml(t("lowSampleTitle")(n))}">${escapeHtml(t("lowSample")(n))}</span>`;
 }
 
+// 표 칸(#593 b): 값을 못 낸 칸은 지표가 있고 표본이 모자랄 때만 이유를 적고, 표본은 충분한데 값만 없으면 「-」다. 조건은 scripts/realestate-format.ts 의 isShortSample 과 같다.
+const lowCell = (entry, k) => {
+  const raw = entry?.[KIND_FIELDS[k].metric];
+  return raw && !hasEnoughSample(raw) ? lowSampleHtml(raw) : "-";
+};
+
 // 요약 카드(#264): 신고 1~4건이라 비운 카드는 「-」 대신 이유를 적는다. 표의 low-sample 과 같은 클래스, title 은 없다. 조건은 scripts/realestate-format.ts 의 lowSampleCount 와 같다.
 // n 은 정수일 때만 쓰므로(Number.isInteger) 이스케이프할 글자가 없다. 지표가 없으면 m?.transactionCount 가 undefined 라 정수가 아니다(m 검사를 따로 두지 않는다 - 인라인 JS 한도, +400 B/장).
 const lowOr = (entry, k) => {
@@ -545,10 +551,7 @@ const lowOr = (entry, k) => {
 
 function cellsFor(entry, k) {
   const resolved = resolveMetric(entry, k);
-  if (!resolved) {
-    const raw = entry?.[KIND_FIELDS[k].metric];
-    return [raw ? lowSampleHtml(raw) : "-", "-", "-"];
-  }
+  if (!resolved) return [lowCell(entry, k), "-", "-", ...(k === "jeonse" ? ["-"] : [])];
   const { metric, isPrevious } = resolved;
   const tag = prevTagHtml(isPrevious);
   const change = (c, d) => (isPrevious ? "" : changeHtml(c, d));
@@ -577,10 +580,7 @@ function cellsFor(entry, k) {
 function allCells(entry) {
   return ["sale", "jeonse", "wolse"].map((k) => {
     const resolved = resolveMetric(entry, k);
-    if (!resolved) {
-      const raw = entry?.[KIND_FIELDS[k].metric];
-      return raw ? lowSampleHtml(raw) : "-";
-    }
+    if (!resolved) return lowCell(entry, k);
     const { metric, isPrevious } = resolved;
     const tag = prevTagHtml(isPrevious);
     if (k === "wolse") {
@@ -660,8 +660,7 @@ function districtRowsHtml(entry) {
     .map((k, i) => {
       const resolved = resolveMetric(entry, k);
       if (!resolved) {
-        const raw = entry?.[KIND_FIELDS[k].metric];
-        return `<tr><td>${escapeHtml(labels[i])}</td><td data-label="${escapeHtml(t("thPerPyeong"))}">${raw ? lowSampleHtml(raw) : "-"}</td><td data-label="${escapeHtml(t("thArea")(areaM2))}">-</td><td data-label="${escapeHtml(t("thCount"))}">-</td></tr>`;
+        return `<tr><td>${escapeHtml(labels[i])}</td><td data-label="${escapeHtml(t("thPerPyeong"))}">${lowCell(entry, k)}</td><td data-label="${escapeHtml(t("thArea")(areaM2))}">-</td><td data-label="${escapeHtml(t("thCount"))}">-</td></tr>`;
       }
       const { metric, isPrevious } = resolved;
       const tag = prevTagHtml(isPrevious);

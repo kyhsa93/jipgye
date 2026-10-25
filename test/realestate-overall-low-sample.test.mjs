@@ -42,7 +42,7 @@ test("lowSampleCount: 지표가 있고 1 <= n < 5(정수)일 때만 n, 경계는
   assert.equal(lowSampleCount(e(4), "sale"), 4);
   assert.equal(lowSampleCount(e(5), "sale"), null, "5건은 값을 낸다(문턱은 hasEnoughSample 한 곳)");
   assert.equal(lowSampleCount(e(400), "sale"), null);
-  // 값이 null 이어도 건수가 1~4 면 이유를 적고(표의 lowOrNone 과 같다), 건수가 충분한데 값만 null 인 칸은 이유가 아니다.
+  // 값이 null 이어도 건수가 1~4 면 이유를 적고, 건수가 충분한데 값만 null 인 칸은 이유가 아니다(표의 lowOrNone 도 #593 b 부터 같은 조건 - n=0 만 표는 「신고 0건」을 적는다).
   assert.equal(lowSampleCount({ sale: { avgPricePerPyeong10k: null, transactionCount: 3 } }, "sale"), 3);
   assert.equal(lowSampleCount({ sale: { avgPricePerPyeong10k: null, transactionCount: 40 } }, "sale"), null);
   // 세 종류

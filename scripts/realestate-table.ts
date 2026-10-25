@@ -23,6 +23,7 @@ import {
   formatEok,
   formatMan,
   formatPercent,
+  isShortSample,
   jeonseRatio,
   kindField,
   resolveMetric,
@@ -111,17 +112,19 @@ export function reLowSample(metric) {
   return part("low", `신고 ${n}건`, { title: `이번 달 신고가 ${n}건뿐이라 평균을 내지 않았습니다.`, esc: true });
 }
 
-// 값을 못 낸 칸(resolveMetric이 null): 지표가 있었으면(raw가 참) 표본 부족, 없으면 "-".
-// 지표는 있는데 평당가 같은 값이 숫자가 아니어서 못 낸 경우도 여기로 온다(표본 부족 문구가 붙는다 - 예전 그대로).
+// 값을 못 낸 칸(resolveMetric이 null): 지표가 있고 표본이 모자라면(isShortSample) 표본 부족, 아니면 "-"(지표 없음, 또는 표본은 충분한데 값만 없음 - #593 b).
 function lowOrNone(entry, kind) {
   const raw = entry?.[kindField(kind).metric];
-  return raw ? [reLowSample(raw)] : NONE();
+  return isShortSample(raw) ? [reLowSample(raw)] : NONE();
 }
 
-/** 한 종류(kind) 표의 세 칸(전세는 네 칸). 값이 없으면 [표본 부족 또는 "-", "-", "-"]로 칸 수가 세 개다(예전 그대로 - 머리글보다 적을 수 있다). */
+/**
+ * 한 종류(kind) 표의 칸들. 값이 없으면 [표본 부족 또는 "-", "-", "-"]이고 전세는 머리글 다섯 칸에 맞춰 하나 더 "-"다(#593 a - 전에는 세 칸이라 전세가율·거래건수 라벨이
+ * 모바일 카드에서 빠졌다). colspan 은 쓰지 않는다(칸마다 data-label 이 카드 모양의 라벨이다). 틀의 cellsFor 가 같은 칸 수를 낸다.
+ */
 export function reCells(entry, kind) {
   const resolved = resolveMetric(entry, kind);
-  if (!resolved) return [lowOrNone(entry, kind), NONE(), NONE()];
+  if (!resolved) return [lowOrNone(entry, kind), NONE(), NONE(), ...(kind === "jeonse" ? [NONE()] : [])];
   const { metric } = resolved;
 
   if (kind === "wolse") {
