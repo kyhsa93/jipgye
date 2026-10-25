@@ -142,7 +142,7 @@ export function kbHistoryProblem(rows) {
 
 /** KB 두 계열의 전체 이력을 받는다(계열마다 ECOS 1호출, 인증키 기준). 하나라도 온전하지 않으면 던진다. */
 export async function fetchKbHistory(to, key, { fetchImpl = fetch } = {}) {
-  const series = {};
+  const series: Record<string, [string, number][]> = {};
   for (const [name, spec] of Object.entries(KB_SERIES)) {
     const rows = await fetchEcos(spec, KB_HISTORY_FROM, to, key, { fetchImpl });
     const problem = kbHistoryProblem(rows);
