@@ -58,10 +58,11 @@ test("고른 열의 표본이 부족하면 다른 지표로 대신 줄 세우지
   app.__realestateSort.key = "sale";
 });
 
-test("거래 건수를 모르는 과거 기록은 부족하다고 단정하지 않는다", async () => {
+test("거래 건수를 모르는 기록은 빌드(hasEnoughSample)처럼 0건으로 보아 표본 부족이다 (#290)", async () => {
   const app = await loadRenderer();
   const legacy = { avgPricePerPyeong10k: 4502, transactionCount: null };
-  assert.ok(text(app.realestateSaleCellHtml(legacy)).includes("4,502"));
+  assert.ok(!text(app.realestateSaleCellHtml(legacy)).includes("4,502"));
+  assert.ok(text(app.realestateSaleCellHtml(legacy)).includes("표본 0건"));
 });
 
 test("실제 데이터에서도 임계값 아래 구만 가려진다", async () => {

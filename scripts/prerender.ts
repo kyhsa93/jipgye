@@ -122,8 +122,8 @@ const lowSampleText = (count) =>
   `<span class="low-sample" title="신고 ${count}건이라 평균을 내기엔 표본이 부족합니다">` +
   `표본 ${count}건</span>`;
 
-const cellHtml = (kind, metric) => {
-  const cell = metricCell(kind, metric);
+const cellHtml = (kind, metric, overall) => {
+  const cell = metricCell(kind, metric, overall);
   if (cell.type === "none") return "-";
   if (cell.type === "low") return lowSampleText(cell.count);
   const change = cell.change ? ` <span class="change">${cell.change.sign}${cell.change.text}</span>` : "";
@@ -134,13 +134,13 @@ const cellHtml = (kind, metric) => {
 function realestateHtmlLegacy(realestate) {
   if (!realestate?.overall) return null;
 
-  const row = (name, data) =>
+  const row = (name, data, overall = false) =>
     `<tr><td>${escapeHtml(name)}</td>` +
-    `<td data-label="매매">${cellHtml("sale", data.sale)}</td>` +
-    `<td data-label="전세">${cellHtml("jeonse", data.jeonse)}</td>` +
-    `<td data-label="월세">${cellHtml("wolse", data.wolse)}</td></tr>`;
+    `<td data-label="매매">${cellHtml("sale", data.sale, overall)}</td>` +
+    `<td data-label="전세">${cellHtml("jeonse", data.jeonse, overall)}</td>` +
+    `<td data-label="월세">${cellHtml("wolse", data.wolse, overall)}</td></tr>`;
 
-  return [row("서울 전체", realestate.overall), ...topDistricts(realestate).map((d) => row(d.name, d))].join("");
+  return [row("서울 전체", realestate.overall, true), ...topDistricts(realestate).map((d) => row(d.name, d))].join("");
 }
 export const realestateHtml = fragment("realestateHtml", realestateHtmlLegacy);
 

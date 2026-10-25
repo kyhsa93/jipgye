@@ -27,19 +27,33 @@ export const countOf = (metric) =>
   typeof metric?.transactionCount === "number" ? `${metric.transactionCount.toLocaleString("ko-KR")}건` : null;
 
 /**
+ * 증감을 보류한 칸의 흐린 글자(#290). 현재 주 쪽이 얇으면 현재 건수, 아니면 기준 주 건수를 적는다. 브라우저(docs/index.html)의 realestateWithheld* 와 같은 문장이다.
+ * `changeWithheld` 가 없으면 null.
+ */
+export function withheldOf(metric) {
+  const w = metric?.changeWithheld;
+  if (!w) return null;
+  return w.current < w.min
+    ? `증감 보류 — 이번 주 집계 중(${w.current.toLocaleString("ko-KR")}건)`
+    : `증감 보류 — 비교 주 표본 부족(${w.baseline.toLocaleString("ko-KR")}건)`;
+}
+
+/**
  * 표 한 칸(매매·전세·월세)이 어떤 모양인가.
  *  - { type: "none" }: 지표가 없거나 값이 없다 → "-"
  *  - { type: "low", count }: 신고가 MIN_SAMPLE 건 아래라 평균을 내지 않는다 → "표본 N건". `count`는 `transactionCount` 그대로(숫자가 아니어도 그대로 적는다)
  *  - { type: "value", text, change, count }: 값. 월세는 증감을 내지 않는다(change는 null)
+ *    서울 전체 줄(`overall`)에서 증감을 보류했으면 건수 자리에 보류 문구가 온다(그 문구가 건수를 품는다). 자치구 줄은 증감만 빠지고 건수는 그대로다.
  * `kind`는 realestate-format.mjs의 KIND_FIELDS 키(sale·jeonse·wolse).
  */
-export function metricCell(kind, metric) {
+export function metricCell(kind, metric, overall = false) {
   if (!metric) return { type: "none" };
   if (!hasEnoughSample(metric)) return { type: "low", count: metric.transactionCount };
   const value = metric[KIND_FIELDS[kind].value];
   if (!value) return { type: "none" };
   if (kind === "wolse") return { type: "value", text: `${man(value)} / 월 ${man(metric.avgMonthlyRent10k)}`, change: null, count: countOf(metric) };
-  return { type: "value", text: man(value), change: changeOf(metric.change), count: countOf(metric) };
+  const withheld = overall ? withheldOf(metric) : null;
+  return { type: "value", text: man(value), change: changeOf(metric.change), count: withheld ?? countOf(metric) };
 }
 
 /**

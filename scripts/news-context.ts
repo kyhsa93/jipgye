@@ -3,6 +3,7 @@ import path from "node:path";
 import { DISTRICT_SLUGS, districtFile } from "./district-slugs.ts";
 import {
   BASE_AREA_M2,
+  CHANGE_MIN_COUNT,
   MIN_SAMPLE,
   areaPrice,
   formatEok,
@@ -73,8 +74,6 @@ const hasAny = (text, words) => words.some((word) => text.includes(word));
 const areaKo = (perPyeong10k) => formatEok(areaPrice(perPyeong10k, BASE_AREA_M2), "ko");
 const areaEn = (perPyeong10k) => formatEok(areaPrice(perPyeong10k, BASE_AREA_M2), "en");
 
-const CHANGE_MIN_SAMPLE = 20;
-
 const baselineKo = (date) => {
   const [, month, day] = String(date ?? "").split("-");
   return month && day ? `${Number(month)}/${Number(day)}` : null;
@@ -99,7 +98,8 @@ function noteOf(metric, change, window, locale) {
   ];
 
   const baseline = locale === "en" ? baselineEn(metric.baselineDate) : baselineKo(metric.baselineDate);
-  if (count >= CHANGE_MIN_SAMPLE && typeof change?.percent === "number" && baseline) {
+  // 증감은 현재·기준 양쪽 건수가 문턱 이상일 때만(#290). 빌드가 기준 쪽이 얇아 막은 값은 `change` 없이 `changeWithheld` 로 온다.
+  if (!metric.changeWithheld && count >= CHANGE_MIN_COUNT.district && typeof change?.percent === "number" && baseline) {
     parts.push(
       locale === "en" ? `${signed(change.percent)} vs ${baseline}` : `${baseline} 대비 ${signed(change.percent)}`
     );

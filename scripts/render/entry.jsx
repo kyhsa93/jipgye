@@ -289,8 +289,8 @@ function slugLinks(data) {
 // 표본 부족은 값을 내지 않고 "표본 N건"이라 적는다(DIRECTION 해자 2). 건수는 legacy가 문자열에 그대로 끼우던 것이라 템플릿으로 끼운다
 // (undefined·null·false도 "undefined"·"null"·"false"로 나온다 - React가 비워 버리지 않게).
 // 공백은 {" "}로 낸다 - JSX는 줄 끝 공백을 지운다.
-const MetricCell = ({ kind, metric }) => {
-  const cell = metricCell(kind, metric);
+const MetricCell = ({ kind, metric, overall }) => {
+  const cell = metricCell(kind, metric, overall);
   if (cell.type === "none") return "-";
   if (cell.type === "low") {
     return (
@@ -318,17 +318,17 @@ const MetricCell = ({ kind, metric }) => {
   );
 };
 
-const RealestateRow = ({ name, data }) => (
+const RealestateRow = ({ name, data, overall }) => (
   <tr>
     <td>{str(name)}</td>
     <td data-label="매매">
-      <MetricCell kind="sale" metric={data.sale} />
+      <MetricCell kind="sale" metric={data.sale} overall={overall} />
     </td>
     <td data-label="전세">
-      <MetricCell kind="jeonse" metric={data.jeonse} />
+      <MetricCell kind="jeonse" metric={data.jeonse} overall={overall} />
     </td>
     <td data-label="월세">
-      <MetricCell kind="wolse" metric={data.wolse} />
+      <MetricCell kind="wolse" metric={data.wolse} overall={overall} />
     </td>
   </tr>
 );
@@ -338,7 +338,7 @@ function realestate(data) {
   if (!data?.overall) return null;
   return (
     <>
-      <RealestateRow name="서울 전체" data={data.overall} />
+      <RealestateRow name="서울 전체" data={data.overall} overall />
       {topDistricts(data).map((d, i) => (
         <RealestateRow key={i} name={d.name} data={d} />
       ))}

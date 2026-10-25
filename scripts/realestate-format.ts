@@ -13,6 +13,13 @@ export const MIN_SAMPLE = 5;
 export const hasEnoughSample = (metric) =>
   Boolean(metric) && (metric.transactionCount ?? 0) >= MIN_SAMPLE;
 
+// 증감은 현재 값과 기준 값 양쪽의 신고 건수가 이 문턱 이상일 때만 낸다(#290). 서울 전체 100·자치구 20은 po·cpo·pm 이 먼저 선언한 임시값이다
+// (분석가 표에서 20~200 어디에 놓아도 막히는 날은 4~7일로 같았다 - 결과에 맞춰 고른 값이 아니다). 부트스트랩으로 올릴 근거가 나오면 이 한 줄을 고친다.
+// 값을 내는 문턱(MIN_SAMPLE)은 따로다. 브라우저(docs/index.html)는 계산하지 않고 빌드가 남긴 `changeWithheld` 를 그리기만 한다.
+export const CHANGE_MIN_COUNT = { seoul: 100, district: 20 };
+
+export const canShowChange = (current, baseline, min) => (current ?? 0) >= min && (baseline ?? 0) >= min;
+
 export function areaPrice(pricePerPyeong10k, areaM2 = BASE_AREA_M2) {
   if (typeof pricePerPyeong10k !== "number" || !Number.isFinite(pricePerPyeong10k)) return null;
   return Math.round(pricePerPyeong10k * pyeongOf(areaM2));

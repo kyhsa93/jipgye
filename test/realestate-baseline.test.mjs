@@ -61,8 +61,9 @@ test("월세 증감은 방 크기 구성이 바뀌어도 시세가 그대로면 
   // ㎡당 값이 같은 두 시장: 지난주는 큰 집이, 이번 주는 작은 집이 많이 신고됐다.
   const deal = (area, deposit, rent) => ({ contractType: "신규", deposit: String(deposit), monthlyRent: String(rent), excluUseAr: area });
   const big = (k) => deal(84 * k, 84 * k * 300, 84 * k);
-  const lastWeek = summarizeRent([big(1), big(1), big(1), big(0.5)]).wolse;
-  const thisWeek = summarizeRent([big(0.5), big(0.5), big(0.5), big(1)]).wolse;
+  const many = (...list) => list.flatMap((k) => Array(5).fill(big(k))); // 자치구 증감 문턱(20건, #290)을 넘기려 건수만 다섯 배로 부풀린다
+  const lastWeek = summarizeRent(many(1, 1, 1, 0.5)).wolse;
+  const thisWeek = summarizeRent(many(0.5, 0.5, 0.5, 1)).wolse;
   assert.notEqual(lastWeek.avgDeposit10k, thisWeek.avgDeposit10k, "전제: 단순평균은 달라야 한다");
   assert.equal(lastWeek.avgConvertedPerPyeong10k, thisWeek.avgConvertedPerPyeong10k);
 
