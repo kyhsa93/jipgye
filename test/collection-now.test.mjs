@@ -4,7 +4,7 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { collectionNow } from "../scripts/collection-now.ts";
 
-// #261: 수집 스크립트(fetch-realestate·build-realestate = REALESTATE_NOW, fetch-rates = RATES_NOW)의 시각을 시험이 고정하는 자리.
+// #261: 수집 스크립트(fetch-realestate·build-realestate = REALESTATE_NOW; RATES_NOW 는 지운 fetch-rates(#577 C)의 이름이지만 함수 시험의 이름 인자로만 남는다)의 시각을 시험이 고정하는 자리.
 // 고정 값만 쓴다 — 오늘 날짜에 기대지 않는다. 엄격도는 SUMMARY_NOW(summaryNow)와 같다: 시간대를 가진 ISO 8601만 받는다.
 
 const root = path.resolve(import.meta.dirname, "..");

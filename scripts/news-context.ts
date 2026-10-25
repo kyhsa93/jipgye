@@ -21,7 +21,7 @@ const REALESTATE_HINTS = [
 const BYLINE = /[([][^)\]]{1,12}=[^)\]]{1,15}[)\]]/g;
 
 // 금리 맥락(기사 옆 "전세자금대출 최저금리 연 x%" 등)은 금감원 금융상품통합비교공시 값이라 뺐다(#577, 소유자 결정 2026-10-25).
-// 남는 맥락은 국토부 실거래가 하나다. 이미 쌓인 news-history 의 kind:"rates" 맥락은 데이터 정리 PR(#577 C)이 지운다.
+// 남는 맥락은 국토부 실거래가 하나다. 이미 쌓였던 news·news-history 의 kind:"rates" 맥락 62건은 #577 C 에서 지웠다.
 
 const OVERALL_HREF = {
   sale: "./apartment-sale.html",

@@ -1,7 +1,7 @@
 const ISO_WITH_ZONE = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})$/;
 
 /**
- * 수집 스크립트(fetch-realestate·build-realestate·fetch-rates)가 이 실행의 시각을 읽는 한 자리 (#261).
+ * 수집 스크립트(fetch-realestate·build-realestate)가 이 실행의 시각을 읽는 한 자리 (#261).
  *
  * `env[name]`(시간대를 가진 ISO 8601, 예 `2026-10-31T14:59:59Z`)이 있으면 그 시각, 없으면 지금 — 미설정이면(빈 문자열 포함)
  * 전과 똑같이 `new Date()`다. 시험이 자식 프로세스의 시계를 고정하려는 자리라 production 워크플로는 이 변수를 설정하지 않는다
