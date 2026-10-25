@@ -26,7 +26,15 @@ const FILES = [
     I: { 84: cell(150000) }, // 지금 밖, 1년 전 값 없음 → 뺀 수에 안 든다
   }),
   file("라구", { J: { 84: cell(93000, 85000) } }), // 위로 나감
+  file("마구", { K: { 84: cell(85000, 95000) } }), // 위(9억대) → 안: 위에서 내려옴
 ];
+
+// 1년 전 8억대 안이던 일곱 칸의 (지금, 1년 전) - 같은 칸 변화율 가운데값을 시험이 따로 센다.
+const WAS_PAIRS = [[95000, 85000], [120000, 88000], [86000, 82000], [91000, 81000], [79000, 81000], [99000, 89000], [93000, 85000]];
+const expectedMedChange = (() => {
+  const r = WAS_PAIRS.map(([now, then]) => now / then - 1).sort((a, b) => a - b);
+  return r[(r.length - 1) / 2];
+})();
 
 test("같은 칸을 1년 전과 지금으로 견줘 나간 칸·들어온 칸·뺀 칸을 센다", () => {
   const y = budgetYearOn(FILES, 80000, 90000);
@@ -34,8 +42,13 @@ test("같은 칸을 1년 전과 지금으로 견줘 나간 칸·들어온 칸·�
   assert.equal(y.out, 6);
   assert.equal(y.up, 5);
   assert.equal(y.down, 1);
-  assert.equal(y.came, 1);
-  assert.equal(y.current, 3, "지금 8억대 안 칸(B·C·D) = 단지 후보 수와 같은 정의");
+  assert.equal(y.came, 2);
+  assert.equal(y.cameBelow, 1, "C: 아래에서 올라옴");
+  assert.equal(y.cameAbove, 1, "K: 위에서 내려옴");
+  assert.equal(y.next, 4, "한 단계 위(9억대): A59·E·H·J");
+  assert.equal(y.far, 1, "그보다 위: A84(12억)");
+  assert.ok(Math.abs(y.medChange - expectedMedChange) < 1e-12, "같은 칸 변화율 가운데값");
+  assert.equal(y.current, 4, "지금 8억대 안 칸(B·C·D·K) = 단지 후보 수와 같은 정의");
   assert.equal(y.missing, 1, "지금 안인데 1년 전 값이 없는 칸만 뺀 수로 센다");
   assert.deepEqual(y.months, ["202506", "202508"]);
   assert.equal(y.reference, "202608");
@@ -73,32 +86,44 @@ test("견줄 칸이 없으면 null, 입력이 없어도 null", () => {
 
 const yearOnText = (facts, locale) => budgetFactSentences(facts, locale).join(" ");
 
-test("완료 조건 1~3: n칸 → 밖 a칸(x%), 밖→안 b칸, 나간 칸 상위 구, 뺀 칸 수, 같은 칸 한 줄", () => {
+test("완료 조건 1~3 + #699: 방향(한 단계 위·그보다 위)·같은 칸 변화율·아래에서 올라온 칸, 나간 칸 상위 구, 뺀 칸 수", () => {
   const facts = { yearOn: budgetYearOn(FILES, 80000, 90000) };
+  const change = Math.round(expectedMedChange * 100);
   const ko = yearOnText(facts, "ko");
-  assert.match(ko, /1년 전\(2025년 6~8월 중앙값\) 이 예산 안이던 7칸 가운데 6칸\(86%\)이 지금\(2026년 8월 값으로 고친 중앙값\)은 밖으로 나갔고\(그 가운데 1칸은 아래로\), 밖에서 들어온 칸은 1칸입니다\./);
+  assert.ok(ko.startsWith("같은 단지·같은 평형끼리 1년 전(2025년 6~8월 중앙값)과 지금(2026년 8월 값으로 고친 중앙값)을 견주면, 1년 전 이 예산 안이던 7칸 가운데 5칸(71%)이 지금은 이 예산을 넘습니다(한 단계 위 예산대 4칸, 그보다 위 1칸) (1칸은 이 예산 아래로)."), ko);
+  assert.ok(ko.includes(`같은 칸 값은 가운데값으로 ${change}% 올랐고, 1년 전 이 예산 아래였다가 올라 들어온 칸이 1칸입니다(위에서 내려온 칸 1칸).`), ko);
   assert.match(ko, /나간 칸은 가구 2칸·나구 2칸·다구 1칸 순으로 많습니다\./);
-  assert.match(ko, /지금 이 예산 안 3칸 가운데 1년 전 같은 칸 거래가 3건이 안 돼 값이 없는 1칸은 뺐습니다\./);
-  assert.match(ko, /칸마다 자기 자신과 견준 것이라/);
+  assert.match(ko, /지금 4칸 가운데 1년 전 거래가 3건 미만인 1칸은 뺐습니다\./);
+  assert.doesNotMatch(ko, /착시/, "판정(#699)으로 뺀 문장이 남았다");
   const en = yearOnText(facts, "en");
-  assert.match(en, /of the 7 cells inside this budget a year ago \(Jun–Aug 2025 median\), 6 \(86%\) are now outside it \(Aug 2026-adjusted median\), 1 of them below it, and 1 moved in from outside\./);
+  assert.ok(en.startsWith("Comparing each complex-size cell with itself (Jun–Aug 2025 median vs the Aug 2026-adjusted median), 5 of the 7 cells inside this budget a year ago (71%) now cost more than it (4 in the next band up, 1 further up) (1 fell below it)."), en);
+  assert.ok(en.includes(`The typical cell rose ${change}%, and 1 cells that sat below this budget a year ago have risen into it (1 came down from above).`), en);
   assert.match(en, /mostly in 가구 \(2\), 나구 \(2\), 다구 \(1\)\./);
-  for (const apt of ["A", "B", "E", "H", "J"]) assert.doesNotMatch(ko, new RegExp(`(^|[^가-힣A-Za-z])${apt}([^A-Za-z]|$)`), `단지 이름 ${apt}을 적었다`);
+  for (const apt of ["A", "B", "E", "H", "J", "K"]) assert.doesNotMatch(ko, new RegExp(`(^|[^가-힣A-Za-z])${apt}([^A-Za-z]|$)`), `단지 이름 ${apt}을 적었다`);
+});
+
+test("아래로 간 칸·위에서 내려온 칸이 0이면 괄호가 없다, 값이 내리면 「내렸고」", () => {
+  const y = { was: 4, out: 3, up: 3, down: 0, next: 1, far: 2, medChange: -0.031, came: 2, cameBelow: 2, cameAbove: 0, current: 6, missing: 0, top: [{ name: "가구", count: 3 }], months: ["202506", "202508"], reference: "202608" };
+  const ko = yearOnText({ yearOn: y }, "ko");
+  assert.doesNotMatch(ko, /이 예산 아래로\)|위에서 내려온/);
+  assert.match(ko, /가운데값으로 3% 내렸고/);
+  assert.doesNotMatch(yearOnText({ yearOn: y }, "en"), /fell below it|came down from above/);
+  assert.match(yearOnText({ yearOn: y }, "en"), /typical cell fell 3%/);
 });
 
 test("두 언어가 같은 개수의 문장을 낸다 - 1년 전 안 칸이 없을 때·나간 칸이 없을 때·뺀 칸이 없을 때도", () => {
   const cases = [
     budgetYearOn(FILES, 80000, 90000),
-    { was: 0, out: 0, up: 0, down: 0, came: 4, current: 4, missing: 0, top: [], months: null, reference: null },
-    { was: 3, out: 0, up: 0, down: 0, came: 0, current: 5, missing: 2, top: [], months: ["202412", "202502"], reference: "202608" },
+    { was: 0, out: 0, up: 0, down: 0, next: 0, far: 0, medChange: null, came: 4, cameBelow: 3, cameAbove: 1, current: 4, missing: 0, top: [], months: null, reference: null },
+    { was: 3, out: 0, up: 0, down: 0, next: 0, far: 0, medChange: 0.05, came: 0, cameBelow: 0, cameAbove: 0, current: 5, missing: 2, top: [], months: ["202412", "202502"], reference: "202608" },
   ];
   for (const yearOn of cases) {
     const ko = budgetFactSentences({ yearOn }, "ko");
     const en = budgetFactSentences({ yearOn }, "en");
     assert.equal(ko.length, en.length);
-    assert.ok(ko.length >= 2);
+    assert.ok(ko.length >= 1);
   }
-  assert.match(yearOnText({ yearOn: cases[1] }, "ko"), /이 예산 안이던 칸은 없고 지금 밖에서 들어온 칸이 4칸입니다/);
+  assert.match(yearOnText({ yearOn: cases[1] }, "ko"), /같은 단지·같은 평형끼리 1년 전과 지금을 견주면, 1년 전 이 예산 안이던 칸은 없고, 1년 전 이 예산 아래였다가 올라 들어온 칸이 3칸입니다\(위에서 내려온 칸 1칸\)\./);
   assert.match(yearOnText({ yearOn: cases[2] }, "ko"), /2024년 12월~2025년 2월/);
   assert.match(yearOnText({ yearOn: cases[2] }, "en"), /Dec 2024–Feb 2025/);
 });
@@ -110,7 +135,7 @@ test("withYearOn: 사실 문단 끝에 붙고 원본 band 는 그대로, 견줄 
   assert.equal(next.facts.total, 3);
   assert.equal(next.facts.yearOn.was, 7);
   const sentences = budgetFactSentences(next.facts, "ko");
-  assert.match(sentences.at(-1), /착시는 섞이지 않습니다/, "1년 비교가 사실 문장 뒤가 아니다");
+  assert.match(sentences.at(-1), /3건 미만인 1칸은 뺐습니다/, "1년 비교가 사실 문장 뒤가 아니다");
   assert.equal(withYearOn(band, []), band);
   assert.equal(withYearOn(null, FILES), null);
   assert.equal(withYearOn({ min10k: 80000, max10k: 90000, facts: null }, FILES).facts.yearOn.was, 7, "facts 가 없어도 1년 비교는 낸다");

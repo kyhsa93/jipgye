@@ -15,7 +15,7 @@
  * 어느 예산대가 걸리게 할지를 보면서 정하게 되고, 그건 결과에 끼워 맞추는 것이다.
  */
 
-import { MIN_DEALS as CELL_MIN_DEALS } from "./complex-price.ts";
+import { MIN_DEALS as CELL_MIN_DEALS, quantile } from "./complex-price.ts";
 
 /** 전용 60㎡·85㎡는 청약과 세제가 쓰는 선. 준공 30년은 재건축 연한. */
 const SMALL_AREA = 60;
@@ -135,6 +135,10 @@ export const YEAR_ON_DISTRICTS = 3;
  * - 1년 전: `cell.yearAgo.median`(1년 전 같은 석 달의 고치기 전 중앙값). 빌더가 같은 칸 3건(complex-price.ts MIN_DEALS) 이상에만 붙였다.
  * yearAgo 가 없는 칸은 견줄 수 없어 뺀다. 뺀 수는 「지금 이 예산 안인데 1년 전 값이 없는 칸」으로 센다 - 장에 실린 후보 수에서 빠진 만큼이다.
  *
+ * 방향도 센다(#699 판정): 넘은 칸은 한 단계 위 예산대(next, [max, max+1억))와 그보다 위(far)로, 들어온 칸은 아래에서 올라온 것(cameBelow)과
+ * 위에서 내려온 것(cameAbove)으로. medChange 는 1년 전 이 예산 안이던 칸의 「지금 / 1년 전 - 1」 가운데값이다 - 같은 칸 값이 얼마나 움직였나.
+ * 「나간 칸이 많다」가 구간 폭(1억) 탓인지 실제 상승인지는 이 값이 답한다(2026-10 데이터: 같은 칸 +24%, 8억대 +26%).
+ *
  * `max10k`가 null 이면(맨 위 구간) 단지 후보와 같은 규칙으로 min + 1억을 쓴다(budget-fragments.ts candidatesShape).
  * 견줄 칸이 하나도 없으면(1년 전 안 0 · 들어온 칸 0) null - 말할 것이 없다.
  */
@@ -146,6 +150,9 @@ export function budgetYearOn(files, min10k, max10k) {
   let up = 0;
   let down = 0;
   let came = 0;
+  let cameBelow = 0;
+  let next = 0;
+  const changes = [];
   let current = 0;
   let missing = 0;
   let months = null;
@@ -165,11 +172,17 @@ export function budgetYearOn(files, min10k, max10k) {
         if (!months && cell.yearAgo.months?.length) months = [...cell.yearAgo.months].sort();
         if (inBand(then)) {
           was += 1;
+          changes.push(now / then - 1);
           if (nowIn) continue;
-          if (now >= max) up += 1;
-          else down += 1;
+          if (now >= max) {
+            up += 1;
+            if (now < max + 10_000) next += 1;
+          } else down += 1;
           outBy.set(file.district, (outBy.get(file.district) ?? 0) + 1);
-        } else if (nowIn) came += 1;
+        } else if (nowIn) {
+          came += 1;
+          if (then < min10k) cameBelow += 1;
+        }
       }
     }
   }
@@ -183,7 +196,12 @@ export function budgetYearOn(files, min10k, max10k) {
     out: up + down,
     up,
     down,
+    next,
+    far: up - next,
+    medChange: changes.length ? quantile([...changes].sort((a, b) => a - b), 0.5) : null,
     came,
+    cameBelow,
+    cameAbove: came - cameBelow,
     current,
     missing,
     top,
@@ -327,20 +345,32 @@ function yearOnSentences(y, en) {
   const out = [];
   const then = y.months ? monthSpan(y.months, en) : null;
   const ref = /^\d{6}$/.test(String(y.reference ?? "")) ? monthSpan([y.reference], en) : null;
-  const thenNote = then ? (en ? ` (${then} median)` : `(${then} 중앙값)`) : "";
-  const nowNote = ref ? (en ? ` (${ref}-adjusted median)` : `(${ref} 값으로 고친 중앙값)`) : "";
+  // 앞머리가 같은 칸 비교라는 한 줄을 겸한다(#699 판정 - 따로 두던 「착시」 문장은 뺐다).
+  const basis = then && ref ? ` (${then} median vs the ${ref}-adjusted median)` : "";
+  const lead = en
+    ? `Comparing each complex-size cell with itself${basis}`
+    : then && ref
+      ? `같은 단지·같은 평형끼리 1년 전(${then} 중앙값)과 지금(${ref} 값으로 고친 중앙값)을 견주면`
+      : "같은 단지·같은 평형끼리 1년 전과 지금을 견주면";
+  const cameAbove = y.cameAbove ? (en ? ` (${y.cameAbove} came down from above)` : `(위에서 내려온 칸 ${y.cameAbove}칸)`) : "";
   if (y.was) {
-    const below = y.down ? (en ? `, ${y.down} of them below it` : `(그 가운데 ${y.down}칸은 아래로)`) : "";
+    const fell = y.down ? (en ? ` (${y.down} fell below it)` : ` (${y.down}칸은 이 예산 아래로)`) : "";
+    const ratio = pct(share(y.up, y.was));
+    const change = Math.abs(Math.round((y.medChange ?? 0) * 100));
+    const rose = (y.medChange ?? 0) >= 0;
     out.push(
       en
-        ? `Comparing each complex-size cell with itself a year earlier: of the ${y.was} cells inside this budget a year ago${thenNote}, ${y.out} (${pct(share(y.out, y.was))}%) are now outside it${nowNote}${below}, and ${y.came} moved in from outside.`
-        : `같은 단지·같은 평형을 1년 전과 견주면, 1년 전${thenNote} 이 예산 안이던 ${y.was}칸 가운데 ${y.out}칸(${pct(share(y.out, y.was))}%)이 지금${nowNote}은 밖으로 나갔고${below}, 밖에서 들어온 칸은 ${y.came}칸입니다.`
+        ? `${lead}, ${y.up} of the ${y.was} cells inside this budget a year ago (${ratio}%) now cost more than it (${y.next} in the next band up, ${y.far} further up)${fell}.`
+        : `${lead}, 1년 전 이 예산 안이던 ${y.was}칸 가운데 ${y.up}칸(${ratio}%)이 지금은 이 예산을 넘습니다(한 단계 위 예산대 ${y.next}칸, 그보다 위 ${y.far}칸)${fell}.`,
+      en
+        ? `The typical cell ${rose ? "rose" : "fell"} ${change}%, and ${y.cameBelow} cells that sat below this budget a year ago have risen into it${cameAbove}.`
+        : `같은 칸 값은 가운데값으로 ${change}% ${rose ? "올랐고" : "내렸고"}, 1년 전 이 예산 아래였다가 올라 들어온 칸이 ${y.cameBelow}칸입니다${cameAbove}.`
     );
   } else {
     out.push(
       en
-        ? `Comparing each complex-size cell with itself a year earlier: none sat inside this budget a year ago${thenNote}, and ${y.came} have moved in since${nowNote}.`
-        : `같은 단지·같은 평형을 1년 전과 견주면, 1년 전${thenNote} 이 예산 안이던 칸은 없고 지금${nowNote} 밖에서 들어온 칸이 ${y.came}칸입니다.`
+        ? `${lead}, none sat inside this budget a year ago, and ${y.cameBelow} cells that sat below it have risen into it${cameAbove}.`
+        : `${lead}, 1년 전 이 예산 안이던 칸은 없고, 1년 전 이 예산 아래였다가 올라 들어온 칸이 ${y.cameBelow}칸입니다${cameAbove}.`
     );
   }
   if (y.out && y.top?.length) {
@@ -350,14 +380,9 @@ function yearOnSentences(y, en) {
   if (y.missing) {
     out.push(
       en
-        ? `${y.missing} of today's ${y.current} cells had fewer than ${CELL_MIN_DEALS} deals a year earlier and are left out.`
-        : `지금 이 예산 안 ${y.current}칸 가운데 1년 전 같은 칸 거래가 ${CELL_MIN_DEALS}건이 안 돼 값이 없는 ${y.missing}칸은 뺐습니다.`
+        ? `${y.missing} of today's ${y.current} cells had under ${CELL_MIN_DEALS} deals a year earlier and are left out.`
+        : `지금 ${y.current}칸 가운데 1년 전 거래가 ${CELL_MIN_DEALS}건 미만인 ${y.missing}칸은 뺐습니다.`
     );
   }
-  out.push(
-    en
-      ? "Because each cell is compared with itself, a shift toward pricier complexes cannot inflate the change the way an average would."
-      : "칸마다 자기 자신과 견준 것이라, 비싼 단지가 더 팔려 평균이 오르는 착시는 섞이지 않습니다."
-  );
   return out;
 }
