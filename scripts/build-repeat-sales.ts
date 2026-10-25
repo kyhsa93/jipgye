@@ -1,16 +1,20 @@
 // docs/data/repeat-sales.json 을 만든다: 갈아타기 화면 「같은 집이 다시 팔렸을 때」 절(#170 V8)의 숫자. 계산은 scripts/repeat-sales.ts.
 //
-// 매일 돈다(update-all·daily-update 양쪽): 5-1 ② 의 운영 창은 「24개월·신고 기한이 닫힌 달까지, 매일 이동」이다. 창은 이번 달(KST)에서만 정해서
+// 매일 돈다: 5-1 ② 의 운영 창은 「24개월·신고 기한이 닫힌 달까지, 매일 이동」이다. 창은 이번 달(KST)에서만 정해서
 // 같은 달 안에서는 원본이 늦은 신고로 바뀔 때만 값이 바뀐다. 2026-10 의 창(202411~202608)이 사전 등록 창이라, 그 달 출력은 repeat_index_v0.out 과 같다.
 //
-//   node scripts/build-repeat-sales.ts                       오늘 창으로 docs/data/repeat-sales.json
+// 등록(PR #684 판정 조건, #662 와 같은 모양): update-all.mjs·daily-update.yml 에 따로 줄을 두지 않고 build-district-change.ts 끝에서
+// runRepeatSales() 로 불린다 - 같은 장(갈아타기)·같은 원본(raw/sale)의 빌더다. 소프트 실패: 던지지 않고 ::warning 한 줄을 찍은 뒤 어제 파일을 둔다.
+// 파일은 임시 이름에 쓴 뒤 rename 한다(중간에 죽어도 반쯤 쓴 파일이 남지 않는다).
+//
+//   node scripts/build-repeat-sales.ts                       오늘 창으로 docs/data/repeat-sales.json (손으로 돌릴 때 - 실패하면 종료 1)
 //   node scripts/build-repeat-sales.ts --window=202411-202608  창을 고정(대조용 - scripts/dev/verify-repeat-sales-v0.mjs)
 // 환경: REPEAT_SALES_FILE(출력 경로), REALESTATE_RAW_DIR(원본 폴더, realestate-raw.ts 와 같다).
 //
 // 출처 기록(provenance)은 입력을 다시 찾을 수 있게 남긴다: raw/sale 의 git 트리 해시와 R-ONE 파일의 git blob 해시를 git 없이 같은 방법으로 낸다
 // (.out 0절의 「HEAD:raw/sale」·「R-ONE 파일 blob」과 같은 값). 시각은 적지 않는다 - 같은 입력이면 같은 바이트.
 import { createHash } from "node:crypto";
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { compute, FORBIDDEN, JITTER_SEED, BOOT_SEED, loadRone, payload, REGISTERED, RONE_SOURCE, windowFor } from "./repeat-sales.ts";
 import { DISTRICT_INDEX_FILE } from "./fetch-district-index.ts";
@@ -64,24 +68,48 @@ function parseWindow(argv: string[]) {
   return [m[1], m[2]] as [string, string];
 }
 
-async function main() {
-  const window = parseWindow(process.argv.slice(2));
-  const data = await build(window ? { window } : {});
+/** 계산하고 금지어를 본 뒤 임시 이름에 써서 rename. 실패하면 던진다(임시 파일은 지운다). */
+async function writeOnce({ window = undefined, file = outFile, ...opts } = {}) {
+  const data = await build({ ...opts, ...(window ? { window } : {}) });
   const text = `${JSON.stringify(data)}\n`;
   const hits = FORBIDDEN.filter((w) => text.includes(w));
   if (hits.length) throw new Error(`금지어가 출력에 있다: ${hits.join(", ")}`);
-  await mkdir(path.dirname(outFile), { recursive: true });
-  await writeFile(outFile, text);
+  await mkdir(path.dirname(file), { recursive: true });
+  const tmp = `${file}.tmp-${process.pid}`;
+  try {
+    await writeFile(tmp, text);
+    await rename(tmp, file);
+  } catch (err) {
+    await rm(tmp, { force: true });
+    throw err;
+  }
   const c = data.checks;
-  console.log(
+  return (
     `  같은 집 쌍: 창 ${data.window.from}~${data.window.to}, 서울 ${data.seoul?.n ?? 0}쌍, 값을 낸 구 ${c.published}/25, ` +
-      `킬 스위치 ${c.kill ? "발동" : "미발동"}(스피어만 ${c.rho}), ${text.length}B`
+    `킬 스위치 ${c.kill ? "발동" : "미발동"}(스피어만 ${c.rho}), ${Buffer.byteLength(text)}B`
   );
 }
 
+/**
+ * 소프트 실패 진입점(build-district-change.ts 가 부른다). 던지지 않는다 - 무엇이 잘못돼도 ::warning 을 찍고 어제 파일을 둔다.
+ * 돌려주는 값: { ok, warning } (시험·로그용).
+ */
+export async function runRepeatSales({ log = console.log, ...opts }: { log?: (m: string) => void; rawDir?: string; roneFile?: string; window?: [string, string]; file?: string } = {}) {
+  try {
+    log(await writeOnce(opts));
+    return { ok: true, warning: null };
+  } catch (err) {
+    const warning = `::warning::같은 집 쌍 데이터: ${err?.message ?? err} - 어제 파일을 그대로 둡니다`;
+    log(warning);
+    return { ok: false, warning };
+  }
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
-  main().catch((err) => {
-    console.error(`같은 집 쌍 빌드 실패: ${err.message}`);
-    process.exit(1);
-  });
+  writeOnce({ window: parseWindow(process.argv.slice(2)) })
+    .then((line) => console.log(line))
+    .catch((err) => {
+      console.error(`같은 집 쌍 빌드 실패: ${err.message}`);
+      process.exit(1);
+    });
 }

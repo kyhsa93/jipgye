@@ -3,8 +3,11 @@
 // scripts/dev/verify-repeat-sales-v0.mjs 가 한다(고정 커밋이 필요해 시험에 넣지 않았다). 여기서는 v0.json 이 .out 의 숫자 그대로인지를 잠근다.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import { checks, compute, FORBIDDEN, payload, PyRandom, spearman, windowFor } from "../scripts/repeat-sales.ts";
+import { runRepeatSales } from "../scripts/build-repeat-sales.ts";
 
 const V0 = JSON.parse(await readFile(new URL("./fixtures/repeat-sales/v0.json", import.meta.url), "utf8"));
 
@@ -216,4 +219,43 @@ test("payload: 91쌍 미만·흔들림 구는 값 없이 쌍 수와 사유만, �
 
 test("25구 밖 sggCd 는 파이썬처럼 멈춘다", () => {
   assert.throws(() => compute([deal("41135", "가", 2025, 1, 1, 1)], RONE([]), WIN), /25구 밖/);
+});
+
+// ---------------------------------------------------------------- 등록·소프트 실패 (PR #684 판정 조건, #662 와 같은 모양)
+
+test("등록: update-all·daily-update 에 따로 줄이 없고, build-district-change 끝에서 runRepeatSales 를 부른다", async () => {
+  const read = (rel) => readFile(new URL(`../${rel}`, import.meta.url), "utf8");
+  const [src, daily, all] = await Promise.all([read("scripts/build-district-change.ts"), read(".github/workflows/daily-update.yml"), read("scripts/update-all.mjs")]);
+  assert.match(src, /^import \{ runRepeatSales \} from "\.\/build-repeat-sales\.ts";$/m);
+  const entry = src.slice(src.lastIndexOf("if (process.argv[1]"));
+  assert.match(entry, /try \{\n\s*await main\(\);\n\s*\} finally \{\n\s*await runRepeatSales\(\);\n\s*\}/, "갈아타기 main(N4 구간 변화 포함) 뒤에, main 결과와 무관하게");
+  assert.ok(!daily.includes("build-repeat-sales") && !all.includes("build-repeat-sales"), "따로 등록하지 않는다");
+  assert.match(daily, /^\s*node scripts\/build-district-change\.ts$/m);
+  assert.match(all, /run\("node scripts\/build-district-change\.ts"\)/);
+});
+
+test("runRepeatSales: 실패는 ::warning 한 줄로 바꾸고 던지지 않으며 어제 파일을 둔다, 성공하면 rename 으로 갈아 끼운다", async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), "jipgye-repeat-"));
+  try {
+    const file = path.join(dir, "out", "repeat-sales.json");
+    await mkdir(path.dirname(file), { recursive: true });
+    await writeFile(file, "어제\n");
+    const logs = [];
+    const bad = await runRepeatSales({ rawDir: path.join(dir, "none"), file, log: (m) => logs.push(m) });
+    assert.equal(bad.ok, false);
+    assert.equal(logs.length, 1);
+    assert.match(logs[0], /^::warning::같은 집 쌍 데이터: .* - 어제 파일을 그대로 둡니다$/);
+    assert.equal(await readFile(file, "utf8"), "어제\n");
+    const raw = path.join(dir, "raw");
+    await mkdir(path.join(raw, "sale"), { recursive: true });
+    await writeFile(path.join(raw, "sale", "11110-202411.json"), JSON.stringify({ items: districtRows("11110", 5, 0.1) }));
+    const rone = path.join(dir, "rone.json");
+    await writeFile(rone, JSON.stringify({ source: "R-ONE A_2024_00045", series: { 11110: [["202411", 100], ["202511", 105]] } }));
+    const good = await runRepeatSales({ rawDir: raw, roneFile: rone, window: ["202411", "202608"], file, log: () => {} });
+    assert.equal(good.ok, true);
+    assert.equal(JSON.parse(await readFile(file, "utf8")).rows[0].n, 5);
+    assert.deepEqual(await readdir(path.dirname(file)), ["repeat-sales.json"], "임시 파일이 남지 않는다");
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 });
