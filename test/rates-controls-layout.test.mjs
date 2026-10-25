@@ -5,11 +5,13 @@
 //  (1) 구운 .controls·.tabs 가 비어 있다. 예약 규칙은 :empty 라서 구운 쪽에 공백이라도 들어가면 예약이 첫 페인트에도 안 걸린다.
 //  (2) 장마다 <meta name="rates-category"> 가 있고 스크립트의 initialCategory 가 같은 meta 를 읽는다(CSS 가 첫 탭을 고르는 근거).
 //  (3) 스크립트는 .controls 를 innerHTML 로 채운다 - 채우는 순간 :empty 가 풀려 탭을 바꿔도 빈 자리가 안 남는다.
-//  (4) 예약 규칙과 줄 수 경계(예금·적금 692/560/343, 대출 560), 모바일 order(읽는 줄 1, 검색 2)가 원문에 있다.
+//  (4) ?tab= 이 다른 탭이면 스크립트가 그 meta 값을 그 탭으로 맞춘다(#557). 데이터를 못 받으면 탭 줄·컨트롤 예약을 걷고(hidden), 받으면 푼다(#558).
+//  (5) 예약 규칙과 줄 수 경계(예금·적금 692/560/343, 대출 560), 모바일 order(읽는 줄 1, 검색 2)가 원문에 있다.
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { SITE } from "./helpers/site-root.mjs";
+import { loadRatesPage } from "./helpers/rates-page.mjs";
 
 const PAGES = [
   ["deposit-rates", "deposit"],
@@ -88,4 +90,55 @@ test("추이 격자 빈 칸 높이는 카드 실측(144, 넉 열 163.5)이다 (#
   const css = await read("src/css/legacy.css");
   assert.match(css, /#history-grid > \.placeholder,\s*\n\.history-reserve \{\s*min-height: 144px;/, "추이 빈 칸 기본 높이가 144px 이 아니다");
   assert.match(css, /@media \(min-width: 1044px\), \(min-width: 524px\) and \(max-width: 653px\) \{\s*#history-grid > \.placeholder,\s*\n\s*\.history-reserve \{\s*min-height: 163\.5px;/, "넉 열(1044px 이상) 추이 빈 칸 높이가 163.5px 이 아니다");
+});
+
+test("?tab= 이 다른 탭이면 예약이 읽는 meta 를 그 탭으로 맞춘다 (#557)", async () => {
+  const meta = (page) => page.byId.get('meta[name="rates-category"]').attrs.content;
+  const file = `${SITE}/deposit-rates.html`;
+  // 첫 탭(예금)이든 ?tab=mortgage 든 meta 는 화면이 여는 탭이다. 틀린 값(?tab=bogus)은 구운 첫 탭으로 돌아간다.
+  assert.equal(meta(await loadRatesPage({ file })), "deposit");
+  assert.equal(meta(await loadRatesPage({ file, search: "?tab=mortgage" })), "mortgage");
+  assert.equal(meta(await loadRatesPage({ file, search: "?tab=bogus" })), "deposit");
+  assert.equal(meta(await loadRatesPage({ file: `${SITE}/mortgage-rates.html`, search: "?tab=saving" })), "saving");
+});
+
+test("데이터를 못 받으면 탭 줄·컨트롤 예약을 걷고, 다시 받으면 푼다 (#558)", async () => {
+  let fail = true;
+  const page = await loadRatesPage({
+    file: `${SITE}/deposit-rates.html`,
+    fetch: async (url) => {
+      if (fail) throw new TypeError("network down");
+      return { ok: true, json: async () => (String(url).includes("rates-history") ? [] : page.rates) };
+    },
+  });
+  // hidden 이면 display:none(legacy.css 의 [hidden]) 이라 :empty 의 min-height·여백이 같이 빠진다. 실패를 비어 있음으로 말하지 않는다 - 실패 문구는 그대로다(#296).
+  assert.equal(page.byId.get("tabs").hidden, true, "실패했는데 탭 줄 예약이 남았다");
+  assert.equal(page.byId.get("controls").hidden, true, "실패했는데 컨트롤 예약이 남았다");
+  assert.ok(page.notice() || page.byId.get("products-body").innerHTML.includes("load-retry"), "실패 문구·재시도가 사라졌다");
+
+  fail = false;
+  page.byId.get("load-retry").listeners.click?.[0]({ currentTarget: {} });
+  for (let i = 0; i < 20; i += 1) await new Promise((r) => setTimeout(r, 0));
+  assert.equal(page.byId.get("tabs").hidden, false, "다시 받은 뒤에도 탭 줄이 가려져 있다");
+  assert.equal(page.byId.get("controls").hidden, false, "다시 받은 뒤에도 컨트롤이 가려져 있다");
+});
+
+test("받는 중에 언어를 바꿔 실패 문구가 먼저 그려졌어도 자료가 오면 탭 줄·컨트롤이 다시 보인다 (#558)", async () => {
+  let release;
+  const gate = new Promise((resolve) => (release = resolve));
+  let page;
+  page = await loadRatesPage({
+    file: `${SITE}/deposit-rates.html`,
+    fetch: async (url) => {
+      await gate;
+      return { ok: true, json: async () => (String(url).includes("rates-history") ? [] : page.rates) };
+    },
+  });
+  page.byId.get("lang-toggle").listeners.click[0]();
+  assert.equal(page.byId.get("controls").hidden, true, "자료가 오기 전 renderAll 이 실패 경로로 가면 예약을 걷는다");
+  release();
+  for (let i = 0; i < 20; i += 1) await new Promise((r) => setTimeout(r, 0));
+  assert.equal(page.byId.get("tabs").hidden, false, "자료가 왔는데 탭 줄이 가려진 채다");
+  assert.equal(page.byId.get("controls").hidden, false, "자료가 왔는데 컨트롤이 가려진 채다");
+  assert.ok(page.byId.get("tabs").innerHTML.includes("data-category"), "자료가 왔는데 탭이 안 그려졌다");
 });
