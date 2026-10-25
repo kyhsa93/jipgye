@@ -90,6 +90,10 @@
     <h2>연락</h2>
     <p>숫자가 틀렸거나, 계산이 이상하거나, 있으면 좋겠는 화면이 있으면 알려 주세요. 소스와 이슈 게시판은 <a href="https://github.com/kyhsa93/jipgye" target="_blank" rel="noopener">GitHub 저장소</a>에 열려 있습니다. 국토부 응답 원본을 그대로 보관하고 있어서(최대 스물네 달치), 특정 시점의 숫자를 다시 만들어 확인해 드릴 수 있습니다.</p>
 
+    <h2>이 브라우저에 저장하는 것</h2>
+    <p>화면에서 고른 구·면적·예산과 지금 사는 구를 이 브라우저에만 적어 둡니다. 어디로도 보내지 않습니다. 메인의 질문 링크에 그 조건을 붙여, 다시 와도 처음부터 고르지 않게 하려는 것입니다. 테마·언어 선택도 같은 방식으로 저장하며, 지우기는 고른 조건만 지웁니다.</p>
+    <div class="show-more"><button type="button" data-clear data-done="지웠습니다." data-fail="저장소를 쓸 수 없어 지우지 못했습니다.">지우기</button><span class="shown-count" role="status"></span></div>
+
     <h2>알아 두실 것</h2>
     <p>여기 있는 것은 이미 신고된 거래를 집계한 자료입니다. 이름이 '집계'인 것도 그래서입니다 — 세는 데까지가 이 사이트가 하는 일입니다. 투자 권유가 아닙니다. <a href="price-outlook.html">전망 화면</a>도 숫자 하나로 된 전망이 아니라, 지난 예측이 얼마나 틀렸는지를 먼저 적고 아무 생각 없이 찍는 방법보다 낫지 않은 칸은 비워 둔 것입니다. 실제 계약 전에는 반드시 원 출처와 현장을 확인하시기 바랍니다.</p>
   </div>
@@ -125,6 +129,10 @@
     <h2>Contact</h2>
     <p>If a figure is wrong, a calculation looks off, or something is missing, please say so. The source and issue tracker are open at the <a href="https://github.com/kyhsa93/jipgye" target="_blank" rel="noopener">GitHub repository</a>. The ministry's raw responses are kept as received (up to twenty-four months), so any figure can be rebuilt from a point in time and checked.</p>
 
+    <h2>What this browser stores</h2>
+    <p>The district, unit size, budget and current district you pick on a page are written to this browser only, and sent nowhere. The main page's question links carry them so you need not pick again on a return visit. Your theme and language choices are stored the same way; Clear removes only the picked conditions.</p>
+    <div class="show-more"><button type="button" data-clear data-done="Cleared." data-fail="Storage is unavailable, so nothing was cleared.">Clear</button><span class="shown-count" role="status"></span></div>
+
     <h2>Please note</h2>
     <p>What is here is an aggregation of transactions already reported. It is not investment advice. The <a href="price-outlook.html">outlook page</a> is not a single-number forecast: it shows how wrong past predictions were first, and leaves blank every cell that does not beat naive baselines. Verify against the original sources before acting on anything.</p>
   </div>
@@ -149,6 +157,12 @@
 // 저장하는 열쇠는 다른 페이지와 같은 것을 쓴다 — 여기서 영어로 바꾼 사람이 시세 페이지로
 // 넘어갔을 때 다시 한국어로 돌아가면 안 되기 때문이다.
 (function () {
+  // 조건 지우기(#654). 저장소가 막히면 아래 테마 읽기가 먼저 죽으니 맨 앞에 둔다.
+  for (const b of document.querySelectorAll("[data-clear]")) b.onclick = () => {
+    let s = "done";
+    try { localStorage.removeItem("myConditions"); } catch (e) { s = "fail"; }
+    b.nextElementSibling.textContent = b.dataset[s];
+  };
   const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
   let theme = (function () {
     const saved = window.localStorage.getItem("theme");
