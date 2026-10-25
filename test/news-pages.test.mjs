@@ -5,6 +5,7 @@ import path from "node:path";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { escapeHtml, newsListHtml, newsSummaryHtml } from "../scripts/prerender.ts";
 import { SITE } from "./helpers/site-root.mjs";
+import { RATE_NOTICE_PAGES } from "../scripts/updated-stamp.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -118,10 +119,8 @@ test("뉴스 페이지는 색인에서 빠지고, 데이터 페이지는 빠지�
   //
   // 이 검사가 지키는 것은 두 방향이다. 뉴스가 다시 색인에 들어오는 것과, 색인에서
   // 빼는 손이 미끄러져 돈이 되는 페이지까지 가져가는 것.
-  // rates.html이 여기 섞여 있는 것은 다른 이유다. 가치가 없어서가 아니라
-  // deposit-rates.html과 본문이 글자까지 같아서다 — 같은 페이지 두 장 중 한 장을
-  // 접은 것이고, 금리 표 자체는 상품군 페이지 넷으로 그대로 색인에 남는다.
-  for (const file of ["news.html", "deal-search.html", "rates.html", ...NEWS_PAGES.map((p) => p.file)]) {
+  // 금리 다섯 장(rates·상품군 넷)이 여기 있는 것은 다른 이유다 - 금감원 자료를 빼며 화면을 지우고 종료 안내만 남겼다(#577 B2).
+  for (const file of ["news.html", "deal-search.html", ...RATE_NOTICE_PAGES, ...NEWS_PAGES.map((p) => p.file)]) {
     const html = await read(`${SITE}/${file}`);
     assert.match(
       html,
@@ -130,7 +129,7 @@ test("뉴스 페이지는 색인에서 빠지고, 데이터 페이지는 빠지�
     );
   }
 
-  for (const file of ["index.html", "realestate.html", "deposit-rates.html", "district-gangnam.html", "budget-10eok.html"]) {
+  for (const file of ["index.html", "realestate.html", "district-gangnam.html", "budget-10eok.html"]) {
     const html = await read(`${SITE}/${file}`);
     assert.doesNotMatch(html, /content="noindex/, `${SITE}/${file}은 색인에서 빠지면 안 됩니다`);
   }

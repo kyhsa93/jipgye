@@ -1,8 +1,7 @@
-const CACHE_NAME = "jipgye-v15";
+const CACHE_NAME = "jipgye-v16";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
-  "./rates.html",
   "./news.html",
   "./style.css",
   "./nav.js",

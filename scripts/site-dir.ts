@@ -1,7 +1,7 @@
 // 사이트 출력 디렉터리 (#508, 구조 B-2). prerender 와 build-*-pages 가 "어느 디렉터리의 장을 읽고 쓰는가"를 한 곳에서 정한다.
 //
 // - 기본은 docs/ 다. 환경변수 JIPGYE_SITE_DIR 이 없거나 비어 있으면 전과 똑같이 docs/ 를 제자리에서 갱신한다(바이트 동일이 합격선).
-// - JIPGYE_SITE_DIR=<디렉터리>(저장소 루트 기준 상대 경로 또는 절대 경로)이면 여섯 렌더 스크립트가 그 디렉터리의 장을 읽고 쓴다. docs/ 는 손대지 않는다.
+// - JIPGYE_SITE_DIR=<디렉터리>(저장소 루트 기준 상대 경로 또는 절대 경로)이면 다섯 렌더 스크립트가 그 디렉터리의 장을 읽고 쓴다. docs/ 는 손대지 않는다.
 //
 // 왜 "docs/ 를 통째로 복사한 뒤 그 복사본을 제자리에서 렌더"인가: 렌더 스크립트는 앞 단계의 산출을 다음 단계의 입력으로 읽는다 -
 // build-news-pages 는 prerender 가 채운 news.html 을 틀로, build-budget-pages 는 method.html 을 읽어 다시 쓰고, build-updated-stamp 는

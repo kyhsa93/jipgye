@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { SITE } from "./helpers/site-root.mjs";
+import { RATE_NOTICE_PAGES } from "../scripts/updated-stamp.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const docs = path.join(root, SITE);
@@ -43,7 +44,6 @@ const INDEXABLE = [
   "budget-8eok.html",
   "budget-9eok.html",
   "cancelled-deals.html",
-  "deposit-rates.html",
   "district-dobong.html",
   "district-dongdaemun.html",
   "district-dongjak.html",
@@ -73,13 +73,10 @@ const INDEXABLE = [
   "index.html",
   "jeonse-vs-wolse.html",
   "method.html",
-  "mortgage-rates.html",
   "price-outlook.html",
   "realestate.html",
   "record-high.html",
   "renewal-vs-new.html",
-  "rent-loan-rates.html",
-  "saving-rates.html",
   "switch-house.html",
 ];
 
@@ -115,7 +112,8 @@ test("어느 페이지도 다른 페이지에서 닿지 않는 채로 있지 않
     }
   }
 
-  const orphans = [...inbound].filter(([, n]) => n === 0).map(([f]) => f);
+  // 금리 종료 안내 다섯 장(#577 B2)은 지운 주소로 바로 들어오는 사람만 보는 장이라 일부러 아무 데서도 링크하지 않는다(noindex, 2027-01-23 삭제 - #581).
+  const orphans = [...inbound].filter(([f, n]) => n === 0 && !RATE_NOTICE_PAGES.includes(f)).map(([f]) => f);
   assert.deepEqual(orphans, [], `어디서도 링크되지 않는 페이지: ${orphans.join(", ")}`);
 });
 

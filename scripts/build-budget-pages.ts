@@ -166,7 +166,7 @@ export function buildBudgetPage(baseHtml, page, budget, loanBasis = null, mortga
 
 /**
  * 렌더 시각. BUILD_NOW(ISO 8601)가 있으면 그 시각, 없으면 Date.now() — 미설정이면 전과 똑같이 돈다.
- * 이 파일이 렌더 단계 여섯 중 Date.now()를 부르는 유일한 곳이라(정책대출 `since`), 같은 입력으로 두 번 렌더해
+ * 이 파일이 렌더 단계 다섯 중 Date.now()를 부르는 유일한 곳이라(정책대출 `since`), 같은 입력으로 두 번 렌더해
  * 견주는 도구(tools/golden, #236)가 시각을 고정할 자리가 여기 하나다. 읽을 수 없는 값은 조용히 현재 시각으로
  * 넘기지 않고 멈춘다 — 고정했다고 믿은 렌더가 오늘 값으로 나가는 것이 더 나쁘다.
  */

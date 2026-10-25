@@ -44,7 +44,6 @@
   <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="섹션">
     <a href="./index.html" id="nav-digest">오늘</a>
     <a href="./realestate.html" id="nav-realestate" class="active">아파트 시세</a>
-    <a href="./rates.html" id="nav-rates">금리 비교</a>
     <a href="./news.html" id="nav-news">뉴스</a>
   </nav>
 
@@ -210,7 +209,6 @@ const T = {
     navRenewal: "재계약",
     navCancelled: "해제·등기",
     navNews: "뉴스",
-    navRates: "금리 비교",
     overallHeading: "서울 전체 평균",
     districtHeading: "자치구별 시세",
     overallHeadingDistrict: (name) => `${name} 평균`,
@@ -310,7 +308,6 @@ const T = {
     navRenewal: "Renewals",
     navCancelled: "Cancelled & registered",
     navNews: "News",
-    navRates: "Rates",
     overallHeading: "Seoul average",
     districtHeading: "By district",
     overallHeadingDistrict: (name) => `${name} average`,
@@ -1359,7 +1356,6 @@ function applyLocale() {
   document.getElementById("nav-digest").textContent = t("navDigest");
   document.getElementById("nav-news").textContent = t("navNews");
   document.getElementById("nav-realestate").textContent = t("navRealestatePrices");
-  document.getElementById("nav-rates").textContent = t("navRates");
   // 안내 둘은 거래 목록이 보이는 한 늘 같이 있어야 한다 - 첫 실행에서 붙인다(#297).
   document.getElementById("budget-note").textContent = t("budgetNote");
   paintBudgetResult();

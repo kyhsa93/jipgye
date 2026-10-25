@@ -1,7 +1,7 @@
 // 렌더 파이프라인 + legacy 폴백 (#238 F1의 최소판, 컷오버 전 안전장치).
 //
-// `daily-update.yml`·`summarize.yml`의 "정적 HTML에 오늘 내용 심기" 단계가 부른다. 여섯 렌더 스크립트를 순서대로 돌리다 하나라도
-// 실패하면 **같은 단계에서 `JIPGYE_RENDERER=legacy`를 못박고 여섯을 처음부터 다시 돌린다.** 왜:
+// `daily-update.yml`·`summarize.yml`의 "정적 HTML에 오늘 내용 심기" 단계가 부른다. 다섯 렌더 스크립트를 순서대로 돌리다 하나라도
+// 실패하면 **같은 단계에서 `JIPGYE_RENDERER=legacy`를 못박고 다섯을 처음부터 다시 돌린다.** 왜:
 //
 // - 렌더가 예외로 죽으면 뒤의 "변경사항 커밋 및 푸시"가 안 돌아, 그 실행이 이미 받은 `docs/data`의 market-history·rates-history·
 //   news-history 항목이 사라진다. 금리는 금감원의 당일 스냅숏이라 다시 받을 수도 없다.
@@ -17,10 +17,10 @@
 // 기본값은 컷오버 뒤 react이고(`renderer.mjs`), 이 스크립트는 그 기본값을 읽지 않는다(react를 import하지 않는다) - 환경변수 글자만 본다.
 //
 // 단계 목록은 인자로 주입할 수 있다(`node scripts/render-pipeline.ts a.mjs b.mjs`) - 시험이 가짜 단계로 실패를 만든다.
-// 인자가 없으면 기본 여섯이다. 상대 경로는 저장소 루트 기준이다.
+// 인자가 없으면 기본 다섯이다. 상대 경로는 저장소 루트 기준이다.
 //
 // 출력 디렉터리(#508, 구조 B-2): `--out=<디렉터리>` 인자나 환경변수 JIPGYE_SITE_DIR 이 docs/ 가 아닌 디렉터리를 가리키면, 첫 단계 전에
-// docs/ 를 그 디렉터리로 통째로 복사하고(scripts/site-dir.ts stageSite) 여섯 스크립트가 거기서 읽고 쓴다. docs/ 는 한 바이트도 안 바뀐다.
+// docs/ 를 그 디렉터리로 통째로 복사하고(scripts/site-dir.ts stageSite) 다섯 스크립트가 거기서 읽고 쓴다. docs/ 는 한 바이트도 안 바뀐다.
 // 복사는 1차 시도 전에 한 번만 한다 - legacy 재시도는 위에 적은 대로 앞 단계의 출력 위에 덮어도 처음부터 그린 것과 같다.
 // 인자도 환경변수도 없으면 전과 똑같이 docs/ 를 제자리에서 갱신한다.
 import { spawnSync } from "node:child_process";
@@ -30,10 +30,9 @@ import { DOCS_DIR, SITE_DIR_ENV, shownPath, siteDir, stageSite } from "./site-di
 
 const repoRoot = path.resolve(import.meta.dirname, "..");
 
-/** 기본 단계: 지금까지 워크플로가 이 순서로 부르던 여섯 스크립트(순서가 곧 의존 순서다 - 기준일 찍기가 마지막). */
+/** 기본 단계: 지금까지 워크플로가 이 순서로 부르던 다섯 스크립트(순서가 곧 의존 순서다 - 기준일 찍기가 마지막). */
 export const RENDER_STEPS = [
   "scripts/prerender.ts",
-  "scripts/build-rate-pages.ts",
   "scripts/build-news-pages.ts",
   "scripts/build-budget-pages.ts",
   "scripts/build-realestate-pages.ts",
@@ -98,7 +97,7 @@ export function runRenderPipeline({ steps = RENDER_STEPS, env = process.env, cwd
     return 1;
   }
 
-  console.log(`::warning::렌더 실패(${first.step}, ${first.why}) - JIPGYE_RENDERER=legacy로 여섯 단계를 처음부터 다시 렌더한다`);
+  console.log(`::warning::렌더 실패(${first.step}, ${first.why}) - JIPGYE_RENDERER=legacy로 다섯 단계를 처음부터 다시 렌더한다`);
   const retry = runAll(steps, { ...env, JIPGYE_RENDERER: "legacy" }, cwd);
   if (!retry.ok) {
     console.error(`[render-pipeline] legacy 재시도도 실패: ${retry.step} (${retry.why})`);
@@ -107,7 +106,7 @@ export function runRenderPipeline({ steps = RENDER_STEPS, env = process.env, cwd
     return 1;
   }
 
-  const warning = `React 렌더가 실패해 legacy로 폴백했다: 1차(JIPGYE_RENDERER=${modeLabel})의 \`${first.step}\`(${first.why}). legacy로 여섯 단계를 처음부터 다시 렌더해 성공했다`;
+  const warning = `React 렌더가 실패해 legacy로 폴백했다: 1차(JIPGYE_RENDERER=${modeLabel})의 \`${first.step}\`(${first.why}). legacy로 다섯 단계를 처음부터 다시 렌더해 성공했다`;
   console.error(`[render-pipeline] ${warning.replaceAll("`", "")}`);
   console.log(`::warning::${warning.replaceAll("`", "")}. 커밋·배포는 이어지고 job은 마지막 단계에서 실패로 끝난다`);
   summary(`### 렌더 폴백 발동\n\n${warning}. 사이트는 legacy 출력으로 정상 배포되고, 원인 조사가 필요하다(위 1차 시도 로그).`);

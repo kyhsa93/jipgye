@@ -214,7 +214,6 @@ test("걸러낸 결과를 소리로도 알린다", async () => {
   await has("index.html", "realestate-status");
   await has("index.html", "news-status");
   await has("deal-search.html", "search-status");
-  await has("deposit-rates.html", "show-more");
 });
 
 test("데스크톱에서 넓어지는 규칙이 있다", async () => {
@@ -378,7 +377,7 @@ test("머리 버튼은 어느 장이든 공유를 갖는다 - 구운 HTML에 들
     if (marked) self += 1;
   }
   assert.ok(seen > 60, `머리를 가진 장을 ${seen}장밖에 못 찾았다 - 검사가 헛돈다`);
-  assert.equal(self, 5, `장이 직접 거는 장이 ${self}장이다 - 첫 화면과 금리 네 장뿐이어야 한다`);
+  assert.equal(self, 1, `장이 직접 거는 장이 ${self}장이다 - 첫 화면뿐이어야 한다(금리 네 장은 #577 B2 로 지웠다)`);
 });
 
 // 장이 자기 문구로 공유하는 다섯 장(첫 화면·금리 넷)은 data-share="page"로 표시하고, 그 표시가 있는

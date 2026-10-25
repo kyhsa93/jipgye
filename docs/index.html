@@ -52,7 +52,6 @@
   <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="섹션">
     <a id="nav-digest" class="active" href="./index.html" aria-current="page">오늘</a>
     <a id="nav-realestate" href="./realestate.html">아파트 시세</a>
-    <a id="nav-rates" href="./rates.html">금리 비교</a>
     <a id="nav-news" href="./news.html">뉴스</a>
   </nav>
 
@@ -154,7 +153,6 @@
       </table>
     </div>
     <div class="history-grid" id="history-grid"></div>
-    <a class="back-link" id="rates-link" href="./rates.html">예금·적금·대출 금리 비교 →</a>
   </section>
 
   <section id="summary-section" class="tw:mb-10 tw:1024:mb-16">
@@ -242,11 +240,9 @@
       liveFxTitle: (s) => `${s} 기준 (exchangerate.fun)`,
       baseRateLabel: "한국은행 기준금리",
       baseRateSince: (s) => `${s} 부터`,
-      ratesLink: "예금·적금·대출 금리 비교 →",
       navDigest: "오늘",
       navNews: "뉴스",
       navRealestate: "아파트 시세",
-      navRates: "금리 비교",
       historyUsdKrwLabel: "원/달러 환율 (최근 추이)",
       historyBaseRateLabel: "기준금리 (최근 추이)",
       historyMinMax: (max, min) => `최고 ${max} · 최저 ${min}`,
@@ -357,11 +353,9 @@
       liveFxTitle: (s) => `as of ${s} (exchangerate.fun)`,
       baseRateLabel: "BOK Base Rate",
       baseRateSince: (s) => `since ${s}`,
-      ratesLink: "Compare deposit, savings & loan rates →",
       navDigest: "Today",
       navNews: "News",
       navRealestate: "Apartment prices",
-      navRates: "Rates",
       historyUsdKrwLabel: "USD/KRW (recent trend)",
       historyBaseRateLabel: "BOK Base Rate (recent trend)",
       historyMinMax: (max, min) => `High ${max} · Low ${min}`,
@@ -1630,11 +1624,9 @@
     document.getElementById("market-th-indicator").textContent = t("marketThIndicator");
     document.getElementById("market-th-value").textContent = t("marketThValue");
     document.getElementById("market-th-change").textContent = t("marketThChange");
-    document.getElementById("rates-link").textContent = t("ratesLink");
     document.getElementById("nav-digest").textContent = t("navDigest");
     document.getElementById("nav-news").textContent = t("navNews");
     document.getElementById("nav-realestate").textContent = t("navRealestate");
-    document.getElementById("nav-rates").textContent = t("navRates");
     document.getElementById("realestate-heading").textContent = t("realestateHeading");
     document.getElementById("realestate-unit-caption").textContent = t("realestateUnitCaption");
     document.getElementById("re-th-district").textContent = t("realestateTagDistrict");

@@ -2,7 +2,7 @@
 // 데이터가 없을 때는 legacy처럼 null을 돌려준다(그러면 자리표시가 legacy와 같은 방식으로 비게 된다). legacy가 null이 아니라 빈 문자열("")을 내는 조각(자치구 문장 묶음·예산대 잎 8개)은 빈 조각으로 ""를 낸다 - 둘은 자리표시 치환에서 다르다.
 // 여기서 `scripts/renderer.mjs`·`scripts/prerender.ts`를 불러오면 안 된다(로더가 막는다). 계산은 순수 모듈에서 가져온다.
 //
-// 이식된 것: ratesHtml·ratesHeadHtml (#240, 금리 4개 상품군), summaryHtml·marketHtml·newsContextHtml·newsHtml·newsSummaryHtml·
+// 이식된 것: (ratesHtml·ratesHeadHtml 은 #240 에서 이식했다가 금리 4장과 함께 지웠다 - #577 B2) summaryHtml·marketHtml·newsContextHtml·newsHtml·newsSummaryHtml·
 // newsListHtml·newsKospiHtml·newsRealestateStatsHtml (#241 PR 1, 문장·목록 8개), conversionLeadHtml·cancelLeadHtml·cancelMonthLeadHtml·
 // renewalLeadHtml·renewalCapLeadHtml·renewalWolseLeadHtml·conversionDistrictLinksHtml·cancelDistrictLinksHtml·renewalDistrictLinksHtml·
 // floorDistrictLinksHtml (#241 PR 2, 리드·링크 10개), realestateHtml (#241 PR 3, 첫 화면 실거래 요약),
@@ -23,77 +23,11 @@ import { SUMMARY_CATEGORIES_LABEL_KO, SUMMARY_HIGHLIGHTS_LABEL_KO, summaryMetaKo
 import { metricCell, topDistricts } from "../realestate-rows.ts";
 import { overallCards } from "../realestate-overall.ts";
 import { headLabels, realestateTable } from "../realestate-table.ts";
-import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "../rates-table.ts";
 import { renewalSentences } from "../renewal-facts.ts";
 
 // legacy `escapeHtml(value)`의 값 변환(`String(value ?? "")`). React는 문자열·숫자만 글자로 내고 false·null·객체·배열은 비우거나 다르게 내거나 던지므로,
 // legacy가 `escapeHtml`을 거치던 자리는 전부 이 함수를 거친다(비문자열 값이 "[object Object]"·"false"로 나오는 것까지 같게 맞춘다).
 const str = (value) => String(value ?? "");
-
-// legacy의 `escapeHtml(value ?? "")`는 String()으로 바꿔 쓴다 - React는 숫자 아닌 값(false·객체)을 글자로 내지 않으므로 같게 맞춘다.
-// Tailwind 유틸리티 class는 legacy 쪽(scripts/prerender.ts의 ratesHeadHtmlLegacy·ratesHtmlLegacy)과 **글자까지 같아야** 한다 -
-// tools/golden의 같은-실행 비교가 두 렌더러의 산출을 바이트로 맞댄다(#237). 왜 이 class들이고 왜 모양을 바꾸지 않는지는 그쪽 주석에 적었다(#279).
-// 이 파일도 @source 목록에 있어 주석까지 훑으므로, 주석에 유틸리티 이름을 접두사까지 적지 않는다.
-const ProductCell = ({ product }) => (
-  <td>
-    <div className="product-name tw:whitespace-normal tw:break-keep">{String(product.name ?? "-")}</div>
-    <div className="product-company tw:text-xs tw:text-muted">{String(product.company ?? "")}</div>
-  </td>
-);
-
-const TH_CLASS = "tw:text-muted tw:text-xs tw:font-semibold";
-
-function ratesHead(category = "deposit") {
-  return isSavingCategory(category) ? (
-    <tr>
-      <th scope="col" className={TH_CLASS}>상품</th>
-      <th scope="col" className={TH_CLASS}>기본금리</th>
-      <th scope="col" className={TH_CLASS}>최고금리</th>
-      <th scope="col" className={TH_CLASS}>세후 이자</th>
-    </tr>
-  ) : (
-    <tr>
-      <th scope="col" className={TH_CLASS}>상품</th>
-      <th scope="col" className={TH_CLASS}>금리 유형</th>
-      <th scope="col" className={TH_CLASS}>금리(최저~최고)</th>
-      <th scope="col" className={TH_CLASS}>평균</th>
-    </tr>
-  );
-}
-
-function ratesRows(rates, { category = "deposit", limit = RATES_ROWS } = {}) {
-  const rows = selectRateRows(rates, category, limit);
-  if (!rows) return null;
-
-  const saving = isSavingCategory(category);
-  return (
-    <>
-      {rows.map(({ product, option }, i) =>
-        saving ? (
-          <tr key={i}>
-            <ProductCell product={product} />
-            <td data-label="기본금리">{rate(option.rate)}</td>
-            <td className="rate-strong tw:font-semibold tw:text-up" data-label="최고금리">
-              {rate(option.maxRate ?? option.rate)}
-            </td>
-            <td className="net-interest tw:font-bold" data-label="세후 이자">
-              {netInterestText(option, category)}
-            </td>
-          </tr>
-        ) : (
-          <tr key={i}>
-            <ProductCell product={product} />
-            <td data-label="금리 유형">{String(option.rateType ?? "-")}</td>
-            <td data-label="금리(최저~최고)">{rateRange(option.min, option.max)}</td>
-            <td className="rate-low tw:font-semibold tw:text-down" data-label="평균">
-              {rate(option.avg)}
-            </td>
-          </tr>
-        )
-      )}
-    </>
-  );
-}
 
 // ---- 문장·목록 조각 (#241 PR 1) ----
 
@@ -861,8 +795,6 @@ function budgetBodyJsx(band, periodList, loanBasis = null, mortgageSeries = null
 }
 
 export const fragments = {
-  ratesHeadHtml: ratesHead,
-  ratesHtml: ratesRows,
   summaryHtml: summary,
   marketHtml: market,
   realestateHtml: realestate,

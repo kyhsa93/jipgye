@@ -1,7 +1,7 @@
 // 배포 게이트가 도는 시험 파일을 고른다 (#510, 구조 B-4). `npm run test:site` = `node scripts/run-tests.mjs --site` 가 이 목록만 돌린다.
 //
 // 기준은 하나다: 시험이 test/helpers/site-root.mjs(나가는 사이트 build/site 를 읽는 자리)를 부르는가. 그 헬퍼를 직접 import 하거나, 그 헬퍼를 import 하는
-// 헬퍼(예: digest-page·rates-page)를 거쳐 부르면 "build/site 기준 시험"이다. 목록 파일을 따로 두지 않는 이유: 목록과 시험이 갈라지면 새 시험이 게이트 밖에서 조용히
+// 헬퍼(예: digest-page·index-page)를 거쳐 부르면 "build/site 기준 시험"이다. 목록 파일을 따로 두지 않는 이유: 목록과 시험이 갈라지면 새 시험이 게이트 밖에서 조용히
 // 안 돈다 - import 한 줄이 곧 게이트 가입이다. 기능 시험(틀·스크립트·워크플로 글자를 읽는 것)은 이 기준에 안 걸려 PR 의 test.yml 에만 남는다(데이터 배포가 기능 시험 실패에
 // 막히지 않게, cto 판정).
 import { readFileSync, readdirSync } from "node:fs";

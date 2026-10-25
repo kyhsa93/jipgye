@@ -7,27 +7,14 @@ import {
   escapeHtml,
   marketHtml,
   newsHtml,
-  ratesHtml,
   realestateHtml,
   summaryHtml,
 } from "../scripts/prerender.ts";
-import { loadRatesPage } from "./helpers/rates-page.mjs";
-import { readFixture } from "./helpers/fixture-data.mjs";
-import { rateBridgeHtml } from "../scripts/rate-bridge.ts";
 import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readIndex = () => readFile(path.join(root, `${SITE}/index.html`), "utf8");
-// docs/rates.html은 허브(#193)라 표가 없다. 표 자리표시는 예금 페이지(틀에서 찍은 것)에서 본다.
-const readRates = () => readFile(path.join(root, `${SITE}/deposit-rates.html`), "utf8");
-const readHub = () => readFile(path.join(root, `${SITE}/rates.html`), "utf8");
 
-// 구운 조각에는 #279에서 Tailwind 유틸리티가 붙었고, 틀의 인라인 스크립트가 데이터를 받아 다시 그리는 마크업에는 붙지 않는다
-// (그 스크립트를 고치는 길은 S6와 #282로 막혀 있다 - scripts/prerender.ts의 금리 조각 주석). 이 시험은 두 쪽을 맞대므로 둘 다 받는다.
-// class를 글자 그대로 적는 이유: tools/golden의 훅 class 추출기가 이 줄의 class="…"를 읽어 hook-classes.json의 markup 쪽을 만든다 -
-// `[^"]*` 같은 조각으로 적으면 그 이름이 훅 목록에서 조용히 빠진다(실측).
-const PRODUCT_NAME = ['class="product-name tw:whitespace-normal tw:break-keep"', 'class="product-name"'];
-const productNames = (html) => [...html.matchAll(new RegExp(`(?:${PRODUCT_NAME.join("|")})>([^<]*)`, "g"))].map((m) => m[1].trim());
 const readData = async (name) =>
   JSON.parse(await readFile(path.join(root, `docs/data/${name}.json`), "utf8"));
 
@@ -107,51 +94,16 @@ test("배포된 index.html에 자리표시 주석 네 쌍이 남아 있다", asy
 
 // (#507) "커밋된 HTML이 지금 데이터로 다시 그린 결과와 같다" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/prerender.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
-// (#520) 아래 두 시험은 코드 쪽 약속(구운 조각 == 화면 스크립트, 대출 표는 안 심음)이라 고정 데이터로 돈다 - docs/data 의 12개월 옵션 유무 같은 모양에 기대지 않는다.
-test("금리 표의 정적 HTML이 실제 첫 화면과 같은 상품·순서다", async () => {
-  const rates = await readFixture("rates");
-  const { byId } = await loadRatesPage({ rates });
-
-  const rendered = productNames(byId.get("products-body").innerHTML);
-  const prerendered = productNames(ratesHtml(rates));
-
-  assert.ok(prerendered.length > 0, "정적 표가 비어 있다");
-  assert.deepEqual(prerendered, rendered.slice(0, prerendered.length));
-});
-
-test("금리 표는 첫 화면에 없는 탭까지 심지 않는다", async () => {
-  const [rates, html] = await Promise.all([readFixture("rates"), readRates()]);
-
-  const staticNames = new Set(productNames(ratesHtml(rates)));
-  for (const product of rates.mortgage ?? []) {
-    assert.ok(!staticNames.has(product.name), `대출 상품이 실렸다: ${product.name}`);
-  }
-  assert.ok(html.includes("<!--prerender:rates-->"), "deposit-rates.html에 자리표시 주석이 없다");
-});
-
-test("커밋된 rates.html(허브)이 지금 문구 원본으로 다시 그린 결과와 같다", async () => {
-  const html = await readHub();
-
-  assert.equal(
-    html,
-    applyPrerender(html, { rateBridgeKo: rateBridgeHtml("rates", "ko"), rateBridgeEn: rateBridgeHtml("rates", "en") }),
-    "docs/rates.html이 문구 원본과 어긋납니다. node scripts/prerender.ts를 실행하세요."
-  );
-});
-
 // (#507) "크롤러가 받는 HTML에 오늘 기사 제목이 실제로 들어 있다" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/prerender.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 test("좁은 화면 카드 라벨이 클라이언트 사전과 같은 글자다", async () => {
-  const [ratesHtmlSource, indexHtml] = await Promise.all([readRates(), readIndex()]);
+  const indexHtml = await readIndex();
 
   const labelsIn = (html, block) => {
     const body = new RegExp(`<!--prerender:${block}-->([\\s\\S]*?)<!--/prerender:${block}-->`).exec(html)?.[1] ?? "";
     return new Set([...body.matchAll(/data-label="([^"]+)"/g)].map((m) => m[1]));
   };
 
-  for (const label of labelsIn(ratesHtmlSource, "rates")) {
-    assert.ok(ratesHtmlSource.includes(`: "${label}"`), `금리 표 라벨이 사전에 없다: ${label}`);
-  }
   for (const label of labelsIn(indexHtml, "realestate")) {
     assert.ok(indexHtml.includes(`: "${label}"`), `부동산 표 라벨이 사전에 없다: ${label}`);
   }

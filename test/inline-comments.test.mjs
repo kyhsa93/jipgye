@@ -8,7 +8,6 @@ import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.ts";
 import { buildBudgetPage } from "../scripts/build-budget-pages.ts";
 import { REALESTATE_TEMPLATE_PATH, applyPrerender, realestateHeadHtml, realestateOverallHtml, realestateTableHtml } from "../scripts/prerender.ts";
-import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.ts";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
 import { jsInlineScripts, proveCommentsOnly, proveHtmlCommentsOnly, onlyWhitespaceAndCommentsRemoved, sameSyntax } from "./helpers/comment-proof.mjs";
@@ -17,7 +16,7 @@ import { SITE } from "./helpers/site-root.mjs";
 /**
  * 틀의 인라인 스크립트 주석은 굽는 단계에서 뗀다 (#313).
  *
- * 틀(scripts/realestate-template.html · scripts/rates-template.html)에는 "왜"를 마음껏 적는다. 그 주석이 장마다 글자 그대로 복사돼
+ * 틀(scripts/realestate-template.html)에는 "왜"를 마음껏 적는다. 그 주석이 장마다 글자 그대로 복사돼
  * 브라우저로 나가면 S6(나가는 JS를 늘리지 않는다)와 매번 부딪친다(#297: 11줄 → 5줄 → +184B). 이 파일이 지키는 것은 셋이다.
  *
  *   1. 굽는 장 전수에 인라인 스크립트 주석이 0이다(되풀이 방지 - 틀을 고치다 빌더의 마지막 단계를 빼면 여기서 걸린다).
@@ -39,7 +38,6 @@ const BAKED = [
   ...BUDGET_PAGES.map((p) => p.file),
   ...DISTRICT_PAGES.map((p) => p.file),
   ...REALESTATE_PAGES.map((p) => p.file),
-  ...RATE_PAGES.map((p) => p.file),
   ...NEWS_PAGES.map((p) => p.file),
 ];
 
@@ -48,12 +46,12 @@ const COARSE = [/^[ \t]*\/\//m, /^[ \t]*\/\*/m, /^[ \t]*\*[ \t/]/m, /\S[ \t]+\/\
 
 const commentLines = (html) => jsInlineScripts(html).flatMap((s) => s.body.split("\n").filter((l) => COARSE.some((re) => re.test(l))));
 
-test("구운 장 수: 예산대 18 · 자치구 25 · 거래유형 3 · 금리 4 · 뉴스 3 · 시세 틀이 낸 장 1", () => {
-  assert.deepEqual([BUDGET_PAGES.length, DISTRICT_PAGES.length, REALESTATE_PAGES.length, RATE_PAGES.length, NEWS_PAGES.length], [18, 25, 3, 4, 3]);
-  assert.equal(new Set(BAKED).size, 54, "장 이름이 겹친다");
+test("구운 장 수: 예산대 18 · 자치구 25 · 거래유형 3 · 뉴스 3 · 시세 틀이 낸 장 1 (금리 4장은 #577 B2 로 지웠다)", () => {
+  assert.deepEqual([BUDGET_PAGES.length, DISTRICT_PAGES.length, REALESTATE_PAGES.length, NEWS_PAGES.length], [18, 25, 3, 3]);
+  assert.equal(new Set(BAKED).size, 50, "장 이름이 겹친다");
 });
 
-test("구운 54장 전수: 인라인 스크립트에 줄 주석도 블록 주석도 없다", async () => {
+test("구운 50장 전수: 인라인 스크립트에 줄 주석도 블록 주석도 없다", async () => {
   const bad = [];
   for (const file of BAKED) {
     const html = await read(`${SITE}/${file}`);
@@ -140,11 +138,9 @@ test("stripInlineScriptComments: 스크립트 밖·JSON 섬·외부 script 태�
   );
 });
 
-test("빌더 출력: 틀에 주석이 있어도 나가는 장에는 없다(예산대·자치구·거래유형·금리)", async () => {
-  const [realestateTemplate, ratesTemplate, rates, realestate] = await Promise.all([
+test("빌더 출력: 틀에 주석이 있어도 나가는 장에는 없다(예산대·자치구·거래유형)", async () => {
+  const [realestateTemplate, realestate] = await Promise.all([
     read(TEMPLATE),
-    read("scripts/rates-template.html"),
-    read("docs/data/rates.json").then(JSON.parse),
     read("docs/data/realestate.json").then(JSON.parse),
   ]);
   const budget = {
@@ -158,7 +154,6 @@ test("빌더 출력: 틀에 주석이 있어도 나가는 장에는 없다(예�
     "예산대": buildBudgetPage(realestateTemplate, BUDGET_PAGES.find((p) => p.eok === 8), budget),
     "자치구": buildDistrictPage(realestateTemplate, DISTRICT_PAGES[0], realestate),
     "거래유형": buildRealestatePage(realestateTemplate, REALESTATE_PAGES[0], realestate),
-    "금리": buildRatePage(ratesTemplate, RATE_PAGES[0], rates),
   };
   for (const [name, html] of Object.entries(outputs)) {
     assert.ok(html, `${name}: 장이 안 찍혔다`);
@@ -167,7 +162,6 @@ test("빌더 출력: 틀에 주석이 있어도 나가는 장에는 없다(예�
   }
   // 대조군: 이 시험이 빈손으로 통과하지 않는다 - 틀 자체에는 주석이 있다.
   assert.ok(commentLines(realestateTemplate).length > 20, "시세 틀에 주석이 없다면 이 시험은 아무것도 안 본 것이다");
-  assert.ok(commentLines(ratesTemplate).length > 5, "금리 틀에 주석이 없다면 이 시험은 아무것도 안 본 것이다");
 });
 
 test("뉴스 장: 틀(news.html)에 주석이 생겨도 찍은 세 장에는 안 실린다", async () => {
@@ -180,12 +174,12 @@ test("뉴스 장: 틀(news.html)에 주석이 생겨도 찍은 세 장에는 안
   assert.ok(html.includes("<script>\nconst") || html.includes("<script>\n"), "스크립트 자체는 남았다");
 });
 
-test("주석만 바뀌었다 - 기계 증명: 주석을 가진 모든 스크립트(틀 둘 + 손으로 쓴 장 전부)", async () => {
+test("주석만 바뀌었다 - 기계 증명: 주석을 가진 모든 스크립트(시세 틀 + 손으로 쓴 장 전부)", async () => {
   // 굽는 장의 "전"은 틀이다(빌더가 틀에 문자열 패치를 한 뒤 훑개를 돌린다) - 그래서 입력은 틀 둘과, 틀이 아닌 docs 안 원본 전부다.
   // docs/realestate.html 은 이제 구운 장이라 주석이 0이다(고정점). 그 장의 "전"은 시세 틀이다 - 틀과 견준 증명은 아래 #374 시험이 선다.
   // 이미 구워진 장(주석 0)은 위 전수 시험이 고정점으로 본다. 기준 main 의 구운 장 50장과 견준 결과는 PR 본문에 있다.
   const names = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html")).sort();
-  const files = [...names.map((f) => `${SITE}/${f}`), TEMPLATE, "scripts/rates-template.html"];
+  const files = [...names.map((f) => `${SITE}/${f}`), TEMPLATE];
   assert.ok(names.length >= 67);
   let removedTotal = 0;
   let pagesWithComments = 0;
@@ -199,7 +193,7 @@ test("주석만 바뀌었다 - 기계 증명: 주석을 가진 모든 스크립�
     if (after !== before) pagesWithComments += 1;
   }
   assert.deepEqual(failures, []);
-  assert.ok(pagesWithComments >= 14 && removedTotal > 150, `증명이 빈손이다(${pagesWithComments}장 ${removedTotal}개)`);
+  assert.ok(pagesWithComments >= 12 && removedTotal > 150, `증명이 빈손이다(${pagesWithComments}장 ${removedTotal}개)`);
 });
 
 test("증명기는 주석 말고 바뀐 것을 잡는다(변이)", () => {
@@ -237,7 +231,7 @@ test("증명기는 주석 말고 바뀐 것을 잡는다(변이)", () => {
 });
 
 test("틀은 주석을 그대로 갖는다(소스가 단일 출처다) - 구운 장만 주석이 없다", async () => {
-  for (const rel of [TEMPLATE, "scripts/rates-template.html"]) {
+  for (const rel of [TEMPLATE]) {
     const html = await read(rel);
     assert.ok(findJsComments(jsInlineScripts(html)[0].body).length > 5, `${rel}: 틀에서 주석을 지우면 "왜"가 사라진다 - 지우는 곳은 굽는 단계다`);
   }
@@ -245,7 +239,7 @@ test("틀은 주석을 그대로 갖는다(소스가 단일 출처다) - 구운 
 
 test("범위 밖을 숫자로 고정한다: 손으로 쓴 제자리 장은 주석을 그대로 싣는다", async () => {
   // 이 장들은 틀에서 찍는 장이 아니라 docs 안의 원본이다(prerender.ts 가 제자리에서 채운다). 굽는 단계에서 떼면 원본이 지워진다.
-  // 이 목록이 줄면 좋은 일이다(원본을 docs 밖으로 옮겼다는 뜻) - 그때 이 시험의 숫자를 줄인다. #374 가 realestate.html 을 뺐다(13 -> 12).
+  // 이 목록이 줄면 좋은 일이다(원본을 docs 밖으로 옮겼다는 뜻) - 그때 이 시험의 숫자를 줄인다. #374 가 realestate.html 을 뺐다(13 -> 12). #577 B2 가 금리 허브를 주석 없는 종료 안내 장으로 바꿨다(12 -> 11).
   const names = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html"));
   const rest = names.filter((f) => !BAKED.includes(f)).sort();
   const withComments = [];
@@ -255,7 +249,7 @@ test("범위 밖을 숫자로 고정한다: 손으로 쓴 제자리 장은 주�
   }
   assert.deepEqual(
     withComments,
-    ["about.html", "cancelled-deals.html", "deal-search.html", "floor-gap.html", "index.html", "jeonse-vs-wolse.html", "method.html", "price-outlook.html", "rates.html", "record-high.html", "renewal-vs-new.html", "switch-house.html"],
+    ["about.html", "cancelled-deals.html", "deal-search.html", "floor-gap.html", "index.html", "jeonse-vs-wolse.html", "method.html", "price-outlook.html", "record-high.html", "renewal-vs-new.html", "switch-house.html"],
     "범위 밖 장의 목록이 바뀌었다 - 틀에서 찍는 장이 늘었거나 줄었다면 BAKED 와 이 목록을 같이 고친다"
   );
 });

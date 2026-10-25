@@ -7,25 +7,15 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
-<meta name="google-adsense-account" content="ca-pub-1195159445218373">
-<title>금리 비교 · 집계</title>
-<meta name="description" content="예금·적금·주택담보대출·전세자금대출 금리 비교 화면 네 장으로 가는 길목입니다. 상품군마다 무엇을 보는 화면인지만 적고, 표와 수치는 각 화면에 있습니다.">
-<meta name="site-group" content="digest">
-<!-- 상품군 네 장으로 가는 요약 허브다. 표와 상품군 문단은 각 장이 그리고 여기는 그리지 않으므로
-     예금 페이지와 본문이 겹치지 않는다(#193). 색인은 상품군 네 장에 맡기고 follow는 남긴다. -->
+<title>금리 비교 종료 안내 · 집계</title>
+<meta name="description" content="집계의 예금·적금·주택담보대출·전세자금대출 금리 비교는 종료했습니다. 금융상품 금리는 금융감독원 금융상품한눈에에서 비교할 수 있습니다.">
+<!-- 금리 비교 종료 안내(#577 B2, 소유자 결정 2026-10-25 - 금융감독원 자료의 저작권 약관 위험으로 금리 화면을 지웠다).
+     지운 금리 주소 다섯(rates·deposit-rates·saving-rates·mortgage-rates·rent-loan-rates)이 빈 404 대신 이유와 갈 곳을 보이게 같은 글을 둔다.
+     색인하지 않는다(noindex). meta refresh 는 두지 않는다 - 검색엔진이 soft-404 로 볼 수 있다(#577 소유자 질문 2).
+     광고·분석 로더(analytics.js)와 데이터는 싣지 않는다 - 내용 없는 안내 장이다. 인라인 스크립트는 테마·언어만 다룬다(저장 열쇠는 다른 장과 같다).
+     삭제 예정일: 2027-01-23(게시 뒤 90일). 추적: #581. 지울 때 다섯 장과 sw.js·시험의 안내 장 목록을 같이 지운다. -->
 <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="https://kyhsa93.github.io/jipgye/rates.html">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="집계">
-<meta property="og:url" content="https://kyhsa93.github.io/jipgye/rates.html">
-<meta property="og:title" content="금리 비교 · 집계">
-<meta property="og:description" content="예금·적금·주택담보대출·전세자금대출 금리 비교 화면 네 장으로 가는 길목입니다. 상품군마다 무엇을 보는 화면인지만 적고, 표와 수치는 각 화면에 있습니다.">
-<meta property="og:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
-<meta property="og:locale" content="ko_KR">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="금리 비교 · 집계">
-<meta name="twitter:description" content="예금·적금·주택담보대출·전세자금대출 금리 비교 화면 네 장으로 가는 길목입니다. 상품군마다 무엇을 보는 화면인지만 적고, 표와 수치는 각 화면에 있습니다.">
-<meta name="twitter:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
@@ -34,8 +24,8 @@
   <header class="tw:mb-2 tw:1024:mb-6">
     <div>
       <a class="brand" id="site-brand" href="./index.html" data-brand-en="Jipgye">집계</a>
-      <h1 id="page-title">금리 비교</h1>
-      <div class="page-tagline" id="tagline">상품군 네 장</div>
+      <h1 id="page-title">금리 비교 종료 안내</h1>
+      <div class="page-tagline" id="tagline">이 화면은 더 이상 운영하지 않습니다</div>
     </div>
     <div class="header-actions">
       <button class="icon-toggle" type="button" id="share-button" aria-label="공유"><span aria-hidden="true">📤</span></button>
@@ -47,7 +37,6 @@
   <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="섹션">
     <a href="./index.html" id="nav-digest">오늘</a>
     <a href="./realestate.html" id="nav-realestate">아파트 시세</a>
-    <a href="./rates.html" id="nav-rates" class="active" aria-current="page">금리 비교</a>
     <a href="./news.html" id="nav-news">뉴스</a>
   </nav>
 
@@ -61,46 +50,21 @@
   </form>
   <div id="content" tabindex="-1"></div>
 
-  <!-- 유틸리티 개편(#279). 근거는 scripts/prerender.mjs 금리 조각 주석에 모아 뒀다(주석도 배포 바이트다). -->
   <section class="method-body tw:max-w-read tw:mb-10 tw:1024:mb-16">
   <div data-lang="ko" class="on">
-    <p class="lead tw:rounded">금리 화면은 모을 때 받는 금리와 빌릴 때 내는 금리로 나뉘어 네 장입니다. 지금 풀려는 질문에 맞는 쪽을 열어 보세요.</p>
-
-    <h2>모을 때</h2>
-    <ul class="rate-hub tw:grid tw:gap-2 tw:list-none tw:p-0">
-      <li class="tw:m-0 tw:rounded tw:border tw:border-border tw:bg-card tw:p-4"><strong><a href="./deposit-rates.html">정기예금 금리 비교</a></strong> — 목돈을 정해 둔 기간 동안 묶어 두고 받는 이자를 은행과 저축은행에서 견줍니다.</li>
-      <li class="tw:m-0 tw:rounded tw:border tw:border-border tw:bg-card tw:p-4"><strong><a href="./saving-rates.html">적금 금리 비교</a></strong> — 매달 붓는 돈에 붙는 이자를 보고, 조건을 다 채워야 받는 금리와 조건 없이 받는 금리의 차이를 봅니다.</li>
-    </ul>
-
-    <h2>빌릴 때</h2>
-    <ul class="rate-hub tw:grid tw:gap-2 tw:list-none tw:p-0">
-      <li class="tw:m-0 tw:rounded tw:border tw:border-border tw:bg-card tw:p-4"><strong><a href="./mortgage-rates.html">주택담보대출 금리 비교</a></strong> — 집을 사며 빌리는 돈의 은행별 최저금리와 금리 범위를 봅니다.</li>
-      <li class="tw:m-0 tw:rounded tw:border tw:border-border tw:bg-card tw:p-4"><strong><a href="./rent-loan-rates.html">전세자금대출 금리 비교</a></strong> — 전세 보증금을 빌릴 때 내는 은행별 금리와 금리 범위를 봅니다.</li>
-    </ul>
+    <p class="lead tw:rounded">집계의 예금·적금·주택담보대출·전세자금대출 금리 비교는 종료했습니다. 이 주소에 있던 금리 표는 더 이상 보여 주지 않고 갱신하지도 않습니다.</p>
+    <p>금융상품 금리는 금융감독원 「금융상품한눈에」(<a href="https://finlife.fss.or.kr" target="_blank" rel="noopener">finlife.fss.or.kr</a>)에서 직접 비교할 수 있습니다.</p>
+    <p><a href="./index.html">집계 첫 화면으로 가기</a></p>
   </div>
   <div data-lang="en">
-    <p class="lead tw:rounded">The rate screens split into four: what you earn when you save and what you pay when you borrow. Open the one that fits the question in front of you.</p>
-
-    <h2>When you save</h2>
-    <ul class="rate-hub tw:grid tw:gap-2 tw:list-none tw:p-0">
-      <li class="tw:m-0 tw:rounded tw:border tw:border-border tw:bg-card tw:p-4"><strong><a href="./deposit-rates.html">Term deposit rates</a></strong> — the interest on a lump sum left untouched for a fixed period, compared across banks and savings banks.</li>
-      <li class="tw:m-0 tw:rounded tw:border tw:border-border tw:bg-card tw:p-4"><strong><a href="./saving-rates.html">Installment savings rates</a></strong> — the interest on what you pay in each month, and how far the rate with every condition met sits from the rate with none.</li>
-    </ul>
-
-    <h2>When you borrow</h2>
-    <ul class="rate-hub tw:grid tw:gap-2 tw:list-none tw:p-0">
-      <li class="tw:m-0 tw:rounded tw:border tw:border-border tw:bg-card tw:p-4"><strong><a href="./mortgage-rates.html">Mortgage rates</a></strong> — each bank's lowest rate and rate range on the money you borrow to buy a home.</li>
-      <li class="tw:m-0 tw:rounded tw:border tw:border-border tw:bg-card tw:p-4"><strong><a href="./rent-loan-rates.html">Jeonse loan rates</a></strong> — each bank's rate and rate range on the deposit you borrow to rent on jeonse.</li>
-    </ul>
+    <p class="lead tw:rounded">Jipgye no longer compares deposit, installment savings, mortgage or jeonse loan rates. The rate tables that used to live at this address are no longer shown or updated.</p>
+    <p>You can compare financial product rates directly on the Financial Supervisory Service's FINLIFE site (<a href="https://finlife.fss.or.kr" target="_blank" rel="noopener">finlife.fss.or.kr</a>).</p>
+    <p><a href="./index.html">Go to the Jipgye home page</a></p>
   </div>
-
-  <p class="rates-bridge" id="rates-bridge" data-lang="ko"><!--prerender:rateBridgeKo-->이 화면의 금리는 예금·적금처럼 모을 때 받는 금리와 주택담보대출·전세자금대출처럼 빌릴 때 내는 금리가 함께 있습니다. 모은 돈에 대출을 더하면 10억 원 예산 기준으로 서울 어떤 실거래가 보일까요? <a href="./budget-10eok.html">10억대 실거래</a>에서 확인하고, 전세와 월세 중 매달 덜 드는 쪽은 <a href="./jeonse-vs-wolse.html">전월세전환율</a>의 자치구 표에서 따져 봅니다.<!--/prerender:rateBridgeKo--></p>
-  <p class="rates-bridge" id="rates-bridge-en" data-lang="en" hidden><!--prerender:rateBridgeEn-->The rates on this page mix what you earn by saving (deposits, installment savings) with what you pay when you borrow (home-purchase and jeonse loans). Add a loan to your savings, and which Seoul deals come into view at a KRW 1 billion (10억) budget? Check <a href="./budget-10eok.html">the 10억 listings</a>; and for which of jeonse or monthly rent costs less each month, work through the district table in <a href="./jeonse-vs-wolse.html">the jeonse-to-monthly conversion rate</a>.<!--/prerender:rateBridgeEn--></p>
-</section>
+  </section>
 
   <footer>
-    <div id="footer-source">출처: 금융감독원 금융상품통합비교공시.</div>
-    <div style="margin-top:6px;">
+    <div>
       <a href="./about.html" id="footer-about">소개</a>
       <span aria-hidden="true"> · </span>
       <a href="./method.html" id="footer-method">숫자를 만드는 방법</a>
@@ -111,10 +75,7 @@
 </main>
 <script src="./nav.js" defer></script>
 <script src="./search.js" defer></script>
-<script src="./analytics.js"></script>
 <script>
-// 이 페이지는 데이터를 읽지 않는다. 글과 링크뿐이라 필요한 것은 테마와 언어 두 가지고, 저장하는
-// 열쇠는 다른 페이지와 같다(about.html과 같은 방식).
 (function () {
   const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
   let theme = (function () {
@@ -135,25 +96,21 @@
       digest: "오늘",
       news: "뉴스",
       realestate: "아파트 시세",
-      rates: "금리 비교",
-      title: "금리 비교",
-      tagline: "상품군 네 장",
+      title: "금리 비교 종료 안내",
+      tagline: "이 화면은 더 이상 운영하지 않습니다",
       about: "소개",
       method: "숫자를 만드는 방법",
       privacy: "개인정보처리방침",
-      source: "출처: 금융감독원 금융상품통합비교공시.",
     },
     en: {
       digest: "Today",
       news: "News",
       realestate: "Apartment prices",
-      rates: "Rates",
-      title: "Rates",
-      tagline: "Four rate screens",
+      title: "Rate comparison has ended",
+      tagline: "This page is no longer maintained",
       about: "About",
       method: "How these numbers are made",
       privacy: "Privacy policy",
-      source: "Source: Financial Supervisory Service, financial product comparison disclosure.",
     },
   };
 
@@ -166,23 +123,15 @@
     for (const block of document.querySelectorAll("[data-lang]")) {
       block.classList.toggle("on", block.getAttribute("data-lang") === locale);
     }
-    // 금리 다음에 볼 곳 문단은 빌드가 두 언어로 구워 두었다. 지금 언어 것만 보인다.
-    const bridgeKo = document.getElementById("rates-bridge");
-    const bridgeEn = document.getElementById("rates-bridge-en");
-    if (bridgeKo) bridgeKo.hidden = locale === "en";
-    if (bridgeEn) bridgeEn.hidden = locale !== "en";
     const words = NAV[locale];
     document.getElementById("nav-digest").textContent = words.digest;
     document.getElementById("nav-news").textContent = words.news;
     document.getElementById("nav-realestate").textContent = words.realestate;
-    document.getElementById("nav-rates").textContent = words.rates;
     document.getElementById("page-title").textContent = words.title;
     document.getElementById("tagline").textContent = words.tagline;
     document.getElementById("footer-about").textContent = words.about;
     document.getElementById("footer-method").textContent = words.method;
     document.getElementById("footer-privacy").textContent = words.privacy;
-    document.getElementById("footer-source").textContent = words.source;
-    window.analytics?.pageView({ site_language: locale });
   }
 
   document.getElementById("theme-toggle").addEventListener("click", function () {

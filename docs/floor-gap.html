@@ -44,7 +44,6 @@
   <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="섹션">
     <a href="./index.html" id="nav-digest">오늘</a>
     <a href="./realestate.html" id="nav-realestate" class="active">아파트 시세</a>
-    <a href="./rates.html" id="nav-rates">금리 비교</a>
     <a href="./news.html" id="nav-news">뉴스</a>
   </nav>
 
@@ -113,7 +112,6 @@ const T = {
     navDigest: "오늘",
     navNews: "뉴스",
     navRealestatePrices: "아파트 시세",
-    navRates: "금리 비교",
     methodCallout:
       "견주는 자리는 같은 단지, 같은 전용면적입니다. 그렇게 묶으면 단지가 낡았는지 역에서 먼지가 통제되고, 남는 차이가 층입니다.",
     methodCalloutLink: "숫자를 만드는 방법 →",
@@ -154,7 +152,6 @@ const T = {
     navDigest: "Today",
     navNews: "News",
     navRealestatePrices: "Apartment Prices",
-    navRates: "Rates",
     methodCallout:
       "The comparison is made inside one complex and one exclusive floor area. That holds age and location fixed, and what is left to differ is the floor.",
     methodCalloutLink: "How these numbers are made →",
@@ -311,7 +308,6 @@ function applyLocale() {
   setText("nav-digest", t("navDigest"));
   setText("nav-news", t("navNews"));
   setText("nav-realestate", t("navRealestatePrices"));
-  setText("nav-rates", t("navRates"));
   setText("footer-source", t("footerSource"));
   setText("footer-privacy", t("footerPrivacy"));
   setText("footer-method", t("footerMethod"));

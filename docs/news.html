@@ -52,7 +52,6 @@
   <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="섹션">
     <a href="./index.html" id="nav-digest">오늘</a>
     <a href="./realestate.html" id="nav-realestate">아파트 시세</a>
-    <a href="./rates.html" id="nav-rate-compare">금리 비교</a>
     <a href="./news.html" id="nav-news" class="active">뉴스</a>
   </nav>
 
@@ -122,7 +121,6 @@
       navStocks: "증시·환율",
       navRates: "금리",
       navRealestatePrices: "아파트 시세",
-      navRateCompare: "금리 비교",
       summaryHeading: "오늘의 AI 요약",
       realestateStatsHeading: "오늘의 서울 아파트 시세",
       kospiHeading: "코스피",
@@ -153,7 +151,6 @@
       navStocks: "Stocks & FX",
       navRates: "Rates",
       navRealestatePrices: "Apartment prices",
-      navRateCompare: "Rates",
       summaryHeading: "Today's AI summary",
       realestateStatsHeading: "Seoul apartment prices today",
       kospiHeading: "KOSPI",
@@ -382,7 +379,6 @@
     document.getElementById("nav-digest").textContent = t("navDigest");
     document.getElementById("nav-news").textContent = t("navNews");
     document.getElementById("nav-realestate").textContent = t("navRealestatePrices");
-    document.getElementById("nav-rate-compare").textContent = t("navRateCompare");
     for (const link of document.querySelectorAll("[data-news-page]")) {
       link.textContent = t(NAV_KEYS[link.dataset.newsPage]);
     }

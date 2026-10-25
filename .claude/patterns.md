@@ -37,7 +37,7 @@
 
 ### 허용 파일 목록
 - `docs/*.html` 중 손으로 고치는 틀(생성 장은 main 에 없다 — 사이트는 배포 때 `build/site` 에 만들어진다).
-- `scripts/*template*.html`(`realestate-template.html`, `rates-template.html`).
+- `scripts/*template*.html`(`realestate-template.html`).
 - 시험 파일(`test/*.test.mjs`, `test/helpers/*.mjs`).
 이 밖의 파일이 `gh pr diff --stat` 에 보이면 패턴이 아니라 전체 판정이다. `docs/load-state.js`·`test/COUNT*`(PR 은 하한을 건드리지 않는다, #548)·워크플로·수집기·`scripts/` 의 데이터 생성부는 목록 밖이다.
 

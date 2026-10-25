@@ -44,7 +44,6 @@
   <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="섹션">
     <a href="./index.html" id="nav-digest">오늘</a>
     <a href="./realestate.html" id="nav-realestate" class="active">아파트 시세</a>
-    <a href="./rates.html" id="nav-rates">금리 비교</a>
     <a href="./news.html" id="nav-news">뉴스</a>
   </nav>
 
@@ -139,7 +138,6 @@ const T = {
     navDigest: "오늘",
     navNews: "뉴스",
     navRealestatePrices: "아파트 시세",
-    navRates: "금리 비교",
     methodCallout:
       "자치구 평균 시세는 그 기간에 어떤 단지가 팔렸느냐에 따라 움직입니다. 그래서 같은 단지 같은 평형을 두 시기에 견주고, 그 변화의 중앙값을 그 구의 변화로 봅니다.",
     methodCalloutLink: "숫자를 만드는 방법 →",
@@ -191,7 +189,6 @@ const T = {
     navDigest: "Today",
     navNews: "News",
     navRealestatePrices: "Apartment Prices",
-    navRates: "Rates",
     methodCallout:
       "A district's average price moves with which complexes happened to sell. So the same complex and unit type is compared across two periods, and the median of those changes is the district's change.",
     methodCalloutLink: "How these numbers are made →",
@@ -396,7 +393,6 @@ function applyLocale() {
   setText("nav-digest", t("navDigest"));
   setText("nav-news", t("navNews"));
   setText("nav-realestate", t("navRealestatePrices"));
-  setText("nav-rates", t("navRates"));
   setText("footer-source", t("footerSource"));
   setText("footer-privacy", t("footerPrivacy"));
   setText("footer-method", t("footerMethod"));

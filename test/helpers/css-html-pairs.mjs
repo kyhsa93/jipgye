@@ -25,7 +25,7 @@ export const TAP_PAIRS = [
   [".page-nav a", 67],
   [".sub-nav a", 55],
   [".news-chip", 1, "script"],
-  [".lang-toggle", 5],
+  [".lang-toggle", 1], // 금리 4장이 쓰던 넷이 #577 B2 로 빠져 첫 화면 하나다(5 -> 1).
   [".icon-toggle", 62],
 ];
 

@@ -4,7 +4,6 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.ts";
-import { RATE_PAGES, buildRatePage } from "../scripts/build-rate-pages.ts";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 import { formatPercent } from "../scripts/realestate-format.ts";
 import { readDataSources } from "../scripts/source-age.ts";
@@ -32,12 +31,12 @@ import { loadRealestatePage } from "./helpers/realestate-page.mjs";
  * 고정 데이터로 렌더 스크립트를 실제로 돌려 본 결과가 데이터를 장의 제자리에 꽂는가 (#507, 구조 B-1).
  *
  * 이 파일의 시험은 저장소의 docs/data·raw 도, 오늘 날짜도 읽지 않는다. test/fixtures/site/data 의 얼린 데이터로 임시 폴더에서
- * prerender·build-rate-pages·build-news-pages·build-realestate-pages·build-updated-stamp 를 돌리고(test/helpers/fixture-site.mjs),
- * 그 출력을 본다. 아래 열네 시험은 예전에 각 시험 파일에 있던 "커밋된 docs/*.html 이 지금 docs/data 와 맞다" 시험의 짝이다 -
+ * prerender·build-news-pages·build-realestate-pages·build-updated-stamp 를 돌리고(test/helpers/fixture-site.mjs),
+ * 그 출력을 본다. 아래 열세 시험은(금리 장 짝 하나는 #577 B2 로 지웠다) 예전에 각 시험 파일에 있던 "커밋된 docs/*.html 이 지금 docs/data 와 맞다" 시험의 짝이다 -
  * 같은 단언을, 커밋된 생성물·데이터 대신 고정 데이터와 그 출력에 대고 한다. 원래 시험(커밋된 짝 검사)은 tools/health 로 옮겼다.
  * 이름 앞 꼬리표는 옮겨 간 곳이다: [파일 이름] 원래 시험 이름.
  *
- * 빌드는 한 번(약 2초)이고 열네 시험이 나눠 쓴다. 틀(docs/*.html 중 손으로 쓰는 것, scripts/*-template.html)은 저장소 것을 그대로 쓴다.
+ * 빌드는 한 번(약 2초)이고 열세 시험이 나눠 쓴다. 틀(docs/*.html 중 손으로 쓰는 것, scripts/*-template.html)은 저장소 것을 그대로 쓴다.
  */
 
 const repo = path.resolve(import.meta.dirname, "..");
@@ -123,19 +122,6 @@ test("[news-pages] 고정 데이터로 찍은 카테고리 페이지가 buildNew
   for (const page of NEWS_PAGES) {
     const built = buildNewsPage(baseHtml, page, { news, summary, market });
     assert.equal(site.read(`docs/${page.file}`), built, `docs/${page.file}이 고정 데이터와 어긋납니다. node scripts/build-news-pages.ts를 실행하세요.`);
-  }
-});
-
-test("[rate-pages] 고정 데이터로 찍은 상품군별 페이지가 buildRatePage 로 다시 찍은 결과와 같다", async () => {
-  const [baseHtml, rates] = await Promise.all([repoRead("scripts/rates-template.html"), fixtureRead("rates")]);
-
-  for (const page of RATE_PAGES) {
-    const built = buildRatePage(baseHtml, page, rates);
-    const committed = site.read(`docs/${page.file}`);
-    // 틀에는 기준일이 비어 있고 날짜는 build-updated-stamp가 나중에 찍는다. 출력본의 날짜를 같이 찍어 견준다.
-    const ymd = /data-updated="(\d{4}-\d{2}-\d{2})"/.exec(committed)?.[1];
-    assert.ok(ymd, `docs/${page.file}에 기준일이 없다`);
-    assert.equal(committed, stampHtml(built, ymd), `docs/${page.file}이 고정 데이터와 어긋납니다. node scripts/build-rate-pages.ts를 실행하세요.`);
   }
 });
 
