@@ -35,6 +35,11 @@ export const ECOS_SERIES = {
   mort_bal: { stat: "151Y005", item: "11110A0" },
   mort_bal_seoul: { stat: "151Y003", item: "11110A0/A00" },
   permits_seoul: { stat: "901Y105", item: "SEO" },
+  // #577: 전세 vs 월세 비교가 금감원 공시(rates.json) 대신 읽을 평균금리. 판정 후보가 아니다 -
+  // indicator-backtest 의 후보 목록은 그대로다.
+  // 전세자금대출은 신규취급액 표(121Y006)에 항목이 없고 잔액 기준 표(121Y015)에만 있다 - 기준이 다르다고 적어야 한다.
+  jeonse_loan_rate: { stat: "121Y015", item: "BECBLB020210" },
+  deposit_rate: { stat: "121Y002", item: "BEABAA211" },
 };
 
 /**
@@ -86,8 +91,8 @@ export async function fetchRone(spec, from, to, { fetchImpl = fetch } = {}) {
   return out;
 }
 
-export async function fetchEcos({ stat, item }, from, to, key) {
-  const rows = await searchAll({ key, stat, cycle: "M", item, from, to, rows: clampRows(key, 1000) });
+export async function fetchEcos({ stat, item }, from, to, key, { fetchImpl = fetch } = {}) {
+  const rows = await searchAll({ key, stat, cycle: "M", item, from, to, rows: clampRows(key, 1000) }, { fetchImpl });
   // 빈 값("")을 Number로 바꾸면 0이 된다 - 0을 값으로 받으면 그 달 금리가 0%가 된다.
   return rows
     .filter((row) => String(row.DATA_VALUE ?? "").trim() !== "")

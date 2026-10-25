@@ -118,6 +118,27 @@ test("R-ONE은 다섯 달씩 잘라 부르고, 받은 꼬리는 저장된 계열
   assert.deepEqual(merge([["202601", 1], ["202602", 2]], [["202602", 9]]), [["202601", 1], ["202602", 9]]);
 });
 
+test("전세자금대출·정기예금 평균금리를 ECOS에서 같은 방식으로 받는다 (#577)", async () => {
+  const { ECOS_SERIES, fetchEcos } = await import("../scripts/fetch-indicators.ts");
+  // 신규취급액 표(121Y006)에는 전세자금대출 항목이 없다 - 잔액 기준 표(121Y015)의 것을 쓴다.
+  assert.deepEqual(ECOS_SERIES.jeonse_loan_rate, { stat: "121Y015", item: "BECBLB020210" });
+  assert.deepEqual(ECOS_SERIES.deposit_rate, { stat: "121Y002", item: "BEABAA211" });
+  assert.deepEqual(ECOS_SERIES.mortgage_rate, { stat: "121Y006", item: "BECBLA0302" }, "기존 계열은 그대로");
+  const asked = [];
+  // 2026-10-25 sample 키로 받은 121Y015 응답 모양(값 둘) + 빈 값 한 줄.
+  const fetchImpl = async (url) => {
+    asked.push(url);
+    return { ok: true, json: async () => ({ StatisticSearch: { list_total_count: 3, row: [
+      { STAT_CODE: "121Y015", ITEM_CODE1: "BECBLB020210", TIME: "202607", DATA_VALUE: "4.18" },
+      { STAT_CODE: "121Y015", ITEM_CODE1: "BECBLB020210", TIME: "202608", DATA_VALUE: "4.23" },
+      { STAT_CODE: "121Y015", ITEM_CODE1: "BECBLB020210", TIME: "202609", DATA_VALUE: "" },
+    ] } }) };
+  };
+  const rows = await fetchEcos(ECOS_SERIES.jeonse_loan_rate, "202607", "202609", "k", { fetchImpl });
+  assert.deepEqual(rows, [["202607", 4.18], ["202608", 4.23]], "빈 값은 0%로 받지 않는다");
+  assert.match(asked[0], /\/StatisticSearch\/k\/json\/kr\/1\/1000\/121Y015\/M\/202607\/202609\/BECBLB020210$/);
+});
+
 test("정적 HTML이 오늘 판정 표를 싣는다", async () => {
   const [html, data] = await Promise.all([
     readFile(path.join(root, "docs/price-outlook.html"), "utf8"),
