@@ -1,8 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { kospiFrom, shortYmd, usdKrwWithChange } from "../scripts/fetch-market.ts";
+import { readFile } from "node:fs/promises";
+import { fxRowsFrom, kospiFrom, marketFiles, shortYmd, usdKrwAt } from "../scripts/fetch-market.ts";
 import { loadIndexPage } from "./helpers/index-page.mjs";
 import { sitePath } from "./helpers/site-root.mjs";
+
+// 환율은 ECOS 731Y001 실제 응답(2026-10-12~23) 으로 잰다(#639).
+const fixtureRows = JSON.parse(await readFile(new URL("./fixtures/ecos/usdkrw-731y001.json", import.meta.url), "utf8")).StatisticSearch.row;
+// 2026-10-25(일) 09:30 KST - ECOS 의 마지막 값은 금요일(10-23)이다.
+const SUNDAY = new Date("2026-10-25T00:30:00Z");
 
 const close = (time, value) => ({ TIME: time, DATA_VALUE: String(value) });
 
@@ -42,33 +48,35 @@ test("어느 장의 종가인지 남긴다", async () => {
   assert.equal(shortYmd(""), null);
 });
 
-test("환율은 전일 수집분과 견준다", async () => {
-  // 이슈 #2: 매일 값을 쌓아 두고도 증감 칸이 늘 비어 있었다.
-  const history = [
-    { date: "2026-08-27", usdKrw: { value: 1390.0 } },
-    { date: "2026-08-28", usdKrw: { value: 1381.567326 } },
-  ];
-  const fx = usdKrwWithChange({ value: 1377.942221, date: "2026-08-29" }, history);
-
-  assert.equal(fx.change, "-3.63");
-  assert.equal(fx.direction, "FALLING");
-  assert.equal(fx.prevValue, 1381.567326);
+// 환율 등락은 수집분끼리가 아니라 ECOS 계열 안에서 잰다(#639). 나머지 수집기 시험은 test/market-fx-ecos.test.mjs.
+test("환율 등락은 앞 영업일 값과 뺀다 - 주말을 건너뛰어도", () => {
+  const series = fxRowsFrom(fixtureRows);
+  const monday = usdKrwAt(series, series.findIndex(([d]) => d === "2026-10-19"));
+  assert.equal(monday.prevValue, 1348.5, "금요일(10-16) 값과 견줘야 한다");
+  assert.equal(monday.change, "-6.10");
+  assert.equal(monday.direction, "FALLING");
+  assert.equal(monday.asOf, "10/19");
 });
 
-test("같은 날 기록과는 견주지 않는다", async () => {
-  // 하루에 여러 번 도는 날 자기 자신과 빼면 늘 0.00이 된다 - 이슈 #1이 났던 방식이다.
-  const history = [
-    { date: "2026-08-28", usdKrw: { value: 1381.5 } },
-    { date: "2026-08-29", usdKrw: { value: 1377.9 } },
-  ];
-  const fx = usdKrwWithChange({ value: 1377.942221, date: "2026-08-29" }, history);
-  assert.equal(fx.prevValue, 1381.5);
+test("환율 앞 영업일 값이 없으면 지어내지 않는다", () => {
+  const series = fxRowsFrom(fixtureRows);
+  const first = usdKrwAt(series, 0);
+  assert.equal(first.change, null, "앞 값이 없으면 0.00 이 아니라 비운다");
+  assert.equal(first.direction, null);
+  assert.equal(usdKrwAt([]), null);
 });
 
-test("견줄 기록이 없으면 지어내지 않는다", async () => {
-  const fx = usdKrwWithChange({ value: 1377.9, date: "2026-08-29" }, []);
-  assert.equal(fx.change, null);
-  assert.equal(fx.direction, null);
+test("오늘 값은 받을 수 있는 마지막 영업일 값이고 그 날짜를 따로 적는다 (하루 늦음)", () => {
+  const { market, history } = marketFiles({ now: SUNDAY, fxSeries: fxRowsFrom(fixtureRows), history: [] });
+  assert.equal(typeof market.usdKrw.value, "number", "화면(prerender·entry.jsx)은 숫자를 기대한다");
+  assert.equal(market.usdKrw.value, 1324.6);
+  assert.equal(market.usdKrw.asOf, "10/23");
+  assert.equal(market.usdKrw.prevValue, 1325.5);
+  assert.equal(market.usdKrw.change, "-0.90");
+  assert.deepEqual(Object.keys(market), ["updatedAt", "kospi", "usdKrw", "baseRate", "usdKrwDaily"]);
+  const today = history.find((h) => h.date === "2026-10-25");
+  assert.ok(today, "오늘 기록이 없다");
+  assert.ok(!("usdKrw" in today), "일요일 기록에 금요일 환율을 끌어다 채웠다");
 });
 
 test("화면이 종가 날짜와 환율 증감을 함께 적는다", async () => {
