@@ -70,7 +70,17 @@ export function normalizeKey(raw) {
   return k;
 }
 
-/** 응답 본문 -> {code, total, items(원본 객체), nonJson}. 포털 게이트웨이 오류는 XML이다. */
+/**
+ * 오류 문구(resultMsg·returnAuthMsg 등 포털 고정 코드 문자열)를 로그에 내도 되는 꼴로 줄인다(#68 V1).
+ * 영숫자·밑줄·공백·마침표·하이픈·한글만 남기고 80자로 자른다. 키 앞 8자가 보이면 통째로 버린다(C1: 키 비출력).
+ */
+export function safeMsg(raw, key = "") {
+  const m = String(raw ?? "").replace(/[^A-Za-z0-9_ .가-힣-]/g, "").replace(/\s+/g, " ").trim().slice(0, 80);
+  if (key && key.length >= 8 && m.includes(key.slice(0, 8))) return "(키 의심 문자열이 있어 생략)";
+  return m;
+}
+
+/** 응답 본문 -> {code, msg, total, items(원본 객체), nonJson}. 포털 게이트웨이 오류는 XML이다. msg는 safeMsg 전 원문 조각이다. */
 export function extract(text) {
   try {
     const body = JSON.parse(text)?.response;
@@ -78,10 +88,11 @@ export function extract(text) {
       const raw = body.body?.items;
       const item = raw && typeof raw === "object" ? raw.item : undefined;
       const items = Array.isArray(item) ? item : item && typeof item === "object" ? [item] : [];
-      return { code: String(body.header.resultCode ?? ""), total: Number(body.body?.totalCount ?? 0), items };
+      return { code: String(body.header.resultCode ?? ""), msg: String(body.header.resultMsg ?? ""), total: Number(body.body?.totalCount ?? 0), items };
     }
   } catch { /* XML */ }
-  return { code: /<(?:returnReasonCode|resultCode)>\s*(\d+)\s*</.exec(text)?.[1] ?? "?", total: 0, items: [], nonJson: true };
+  const msg = /<(?:returnAuthMsg|errMsg|resultMsg)>\s*([^<]{0,200})</.exec(text)?.[1] ?? "";
+  return { code: /<(?:returnReasonCode|resultCode)>\s*(\d+)\s*</.exec(text)?.[1] ?? "?", msg, total: 0, items: [], nonJson: true };
 }
 
 /**
@@ -130,7 +141,9 @@ export function checkLicense({ license = OFFICIAL_PRICE_LICENSE, checked = OFFIC
  *  - ParcelFailed: 그 밖의 오류(연결·5xx·그 외 결과코드)
  */
 export function makeClient({ baseUrl = DEFAULT_BASE, key, budget, gapMs = MIN_GAP_MS, deadlineMs = Infinity, timeoutMs = 60000, fetchImpl = fetch, now = Date.now, wait = sleep }) {
-  const st = { calls: 0, last: 0, consecutiveFail: 0, errCodes: {}, firstLimitAt: null, perOp: {} };
+  const st = { calls: 0, last: 0, consecutiveFail: 0, errCodes: {}, errSamples: {}, firstLimitAt: null, perOp: {} };
+  /** 분류별 첫 표본 하나(#68 V1): HTTP 상태·결과코드·포털 문구·응답 종류·걸린 시간. 키·URL·본문 값은 없다. */
+  const sample = (cat, detail) => { if (!(cat in st.errSamples)) st.errSamples[cat] = detail; };
   return {
     st,
     /** 쪽 하나를 요청하되 결과코드는 해석하지 않는다. 반환 {res, text}. 연결 실패는 ParcelFailed. 탐색의 pageNo 시험과 page()가 같이 쓴다. */
@@ -146,12 +159,15 @@ export function makeClient({ baseUrl = DEFAULT_BASE, key, budget, gapMs = MIN_GA
       const qs = Object.entries(params).map(([k, v]) => `${k}=${v}`).join("&");
       let text = "";
       let res;
+      const t0 = now();
       try {
         res = await fetchImpl(`${baseUrl}/${op}?${qs}&serviceKey=${encodeURIComponent(key)}`, { signal: AbortSignal.timeout(timeoutMs) });
         text = await res.text();
       } catch (e) {
         st.consecutiveFail += 1;
-        bump(st.errCodes, `${e?.name ?? "Error"}/${e?.cause?.code ?? "-"}`); // 메시지·URL은 쓰지 않는다
+        const cat = `${e?.name ?? "Error"}/${e?.cause?.code ?? "-"}`;
+        bump(st.errCodes, cat); // 메시지·URL은 쓰지 않는다
+        sample(cat, `${op} 응답 없음(연결 단계), ${Math.max(0, now() - t0)}ms 뒤 끊김`);
         throw new ParcelFailed("호출 실패");
       }
       return { res, text };
@@ -162,14 +178,18 @@ export function makeClient({ baseUrl = DEFAULT_BASE, key, budget, gapMs = MIN_GA
       if (res.status === 401 || res.status === 403) { bump(st.errCodes, `HTTP ${res.status}`); throw new ApiFatalError(`HTTP ${res.status} 권한 오류 - 키·활용신청을 확인할 것`); }
       if (res.status === 429) { bump(st.errCodes, "HTTP 429"); st.firstLimitAt ??= { calls: st.calls, perOp: { ...st.perOp }, op, code: "429" }; throw new StopRun("HTTP 429"); }
       const r = extract(text);
+      const kind = r.nonJson ? (/^\s*</.test(text) ? "XML·HTML" : "본문 기타") : "JSON";
+      const bytes = text.length;
+      const describe = () => `${op} HTTP ${res.status}, ${kind} ${bytes}B, 결과코드 ${r.code || "?"}${r.msg ? `, 문구 ${safeMsg(r.msg, key)}` : ""}`;
       text = "";
-      if (!res.ok && r.code === "?" ) { st.consecutiveFail += 1; bump(st.errCodes, `HTTP ${res.status}`); throw new ParcelFailed("HTTP 오류"); }
+      if (!res.ok && r.code === "?" ) { st.consecutiveFail += 1; bump(st.errCodes, `HTTP ${res.status}`); sample(`HTTP ${res.status}`, describe()); throw new ParcelFailed("HTTP 오류"); }
       if (STOP_CODES.has(r.code)) {
         bump(st.errCodes, `결과코드 ${r.code}`);
+        sample(`결과코드 ${r.code}`, describe());
         st.firstLimitAt ??= { calls: st.calls, perOp: { ...st.perOp }, op, code: r.code };
         throw new StopRun(`결과코드 ${r.code}`);
       }
-      if (r.code !== "00") { st.consecutiveFail += 1; bump(st.errCodes, `결과코드 ${r.code}`); throw new ParcelFailed("결과코드 오류"); }
+      if (r.code !== "00") { st.consecutiveFail += 1; bump(st.errCodes, `결과코드 ${r.code}`); sample(`결과코드 ${r.code}`, describe()); throw new ParcelFailed("결과코드 오류"); }
       st.consecutiveFail = 0;
       return { total: r.total, items: r.items };
     },
@@ -473,6 +493,7 @@ export async function runCollector(opts) {
   }
   summary.calls = client.st.calls;
   summary.errCodes = client.st.errCodes;
+  summary.errSamples = client.st.errSamples;
   summary.finishedNow = finished.length;
   summary.stopReason = stopped;
   summary.targetParcels = order.length;
@@ -521,9 +542,64 @@ export function summaryLines(s, budget) {
   L.push(`- 대상 지번 ${s.targetParcels}, 끝난 지번 ${s.doneNow}(이번 ${s.finishedNow}, 이전 ${s.doneBefore}), 남은 지번 ${s.targetParcels - s.doneNow}`);
   L.push(`- 이번 호출 ${s.calls}회(예산 ${budget}), 지금까지 ${s.callsSoFar}회. 버린 지번(일시 오류) ${s.abandoned}, 쪽 상한(${s.maxPages ?? MAX_PAGES_PER_PARCEL}쪽) 지번 ${s.cappedParcels}(지번 수만 적는다)`);
   if (s.errCodes && Object.keys(s.errCodes).length) L.push(`- 오류 분류: ${JSON.stringify(s.errCodes)}`);
+  if (s.errSamples && Object.keys(s.errSamples).length) L.push(`- 오류 표본(분류별 첫 건): ${Object.entries(s.errSamples).map(([k, v]) => `${k} = ${v}`).join(" / ")}`);
   L.push(`- 중단: ${s.stopReason ?? "없음(남은 지번을 끝까지 돌았다)"}`);
   if (s.projection) L.push(`- 투영: 지번당 평균 ${s.projection.perParcel.toFixed(1)}회 -> 총 ${s.projection.total}회, 남은 ${s.projection.left}회 = 약 ${s.projection.days}일(하루 ${budget}회 기준)`);
   else L.push("- 투영: 끝난 지번이 없어 계산하지 못했다.");
   L.push(`- 쓴 파일 ${s.wrote.length}개${s.merged ? ", 병합 완료(부분 파일 삭제)" : ""}`);
   return L;
+}
+
+// ---- 진척 상태(#68 V1): 「run 은 초록, 진척은 0」을 보이게 한다 ----
+
+/** 진척 상태 파일(outDir 기준). 연도 폴더·<연도>.json 과 섞이지 않게 하위 폴더에 둔다(커밋된 raw/official-price/*.json 검사 대상 밖). */
+export const PROGRESS_FILE = path.join("status", "progress.json");
+/** 마지막 진척(끝난 지번 > 0)에서 이 일수 이상 지나면 실행을 실패로 끝낸다(GitHub 실패 알림 = 워치독과 같은 알림 경로). */
+export const STALL_FAIL_DAYS = 3;
+const DAY_MS = 86400000;
+
+/** 이전 진척 상태를 읽는다. 없거나 깨졌으면 null(첫 실행). */
+export async function readProgress(outDir) {
+  try {
+    const p = JSON.parse(await readFile(path.join(outDir, PROGRESS_FILE), "utf8"));
+    return p && typeof p === "object" ? p : null;
+  } catch { return null; }
+}
+
+/**
+ * 이번 실행 요약 -> 다음 진척 상태(순수 함수). 집계만 담는다(지번 키·호 값·응답 원문 없음, C1).
+ * lastProgressAt: 끝난 지번이 하나라도 생긴 마지막 실행 시각. zeroProgressRuns: 그 뒤 진척 0 인 실행 수.
+ */
+export function nextProgress(prev, s, nowIso) {
+  const progressed = (s.finishedNow ?? 0) > 0 || s.merged === true;
+  return {
+    lastRunAt: nowIso,
+    lastProgressAt: progressed ? nowIso : (prev?.lastProgressAt ?? null),
+    zeroProgressRuns: progressed ? 0 : (prev?.zeroProgressRuns ?? 0) + 1,
+    doneParcels: s.doneNow ?? null,
+    targetParcels: s.targetParcels ?? null,
+    lastFinishedNow: s.finishedNow ?? 0,
+    lastCalls: s.calls ?? 0,
+    lastStopReason: s.stopReason ?? null,
+    lastErrCodes: s.errCodes ?? {},
+  };
+}
+
+/**
+ * 진척 판정. level: ok(이번에 진척) | warning(이번 진척 0, 아직 문턱 안) | fail(마지막 진척에서 STALL_FAIL_DAYS 일 이상,
+ * 또는 마지막 진척 시각을 모르는데 진척 0 실행이 STALL_FAIL_DAYS 번 이상).
+ */
+export function stallVerdict(progress, now = new Date()) {
+  if (progress.zeroProgressRuns === 0) return { level: "ok", days: 0 };
+  const at = progress.lastProgressAt ? Date.parse(progress.lastProgressAt) : NaN;
+  const days = Number.isFinite(at) ? Math.floor((now.getTime() - at) / DAY_MS) : null;
+  const stale = days === null ? progress.zeroProgressRuns >= STALL_FAIL_DAYS : days >= STALL_FAIL_DAYS;
+  return { level: stale ? "fail" : "warning", days };
+}
+
+/** 진척 판정을 줄로(요약에 붙인다). */
+export function progressLines(progress, verdict) {
+  if (verdict.level === "ok") return [`- 진척: 이번 실행에 끝난 지번이 있다(마지막 진척 ${progress.lastProgressAt}).`];
+  const since = progress.lastProgressAt ? `마지막 진척 ${progress.lastProgressAt}(${verdict.days}일 전)` : "마지막 진척 시각 모름";
+  return [`- 진척 0: ${since}, 진척 0 실행 ${progress.zeroProgressRuns}회 연속. ${STALL_FAIL_DAYS}일 이상이면 이 워크플로가 실패로 끝난다.`];
 }
