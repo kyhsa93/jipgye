@@ -145,3 +145,11 @@ test("「실시간」 환율·LIVE 배지·exchangerate·er-api 흔적이 나가
     if (f !== "method.html") assert.ok(!text.includes("실시간"), `${f}: 「실시간」`);
   }
 });
+
+test("증시·환율 장 구획 제목은 「시장 지표」/「Market indicators」다 - 코스피·환율 두 카드를 함께 덮는다", async () => {
+  const html = await readFile(sitePath("stock-news.html"), "utf8");
+  assert.ok(html.includes('<h2 id="kospi-heading">시장 지표</h2>'));
+  assert.ok(html.includes('kospiHeading: "시장 지표",'));
+  assert.ok(html.includes('kospiHeading: "Market indicators",'));
+  assert.ok(!html.includes('kospiHeading: "KOSPI"') && !html.includes('<h2 id="kospi-heading">코스피</h2>'));
+});
