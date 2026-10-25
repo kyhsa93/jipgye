@@ -63,14 +63,23 @@ test("구 행은 칸이 MIN_CELLS 미만이면 비율 없이 칸 수만 (「표�
   const row = riskRow({ cells: MIN_CELLS, compared: 15, high: 5, highCompared: 4, highFell: 1 });
   assert.equal(row.short, undefined);
   assert.equal(row.highShare, 25);
-  assert.equal(row.fellShare, 25);
+  assert.equal(row.fellShare, null, "분모 4칸 < MIN_CELLS");
   assert.equal(riskRow({ ...base, cells: 40 }).fellShare, null, "견줄 칸이 없으면 0% 가 아니라 null");
+});
+
+test("모든 비율은 분모가 MIN_CELLS 미만이면 null (1/1=100% 가 json 에 남지 않는다, PR #701 판정)", () => {
+  const one = riskRow({ cells: 55, compared: 36, high: 1, highCompared: 1, highFell: 1 });
+  assert.equal(one.fellShare, null);
+  assert.equal(one.highFell, 1, "건수는 남긴다");
+  const edge = riskRow({ cells: 100, compared: 60, high: 30, highCompared: MIN_CELLS, highFell: 5 });
+  assert.equal(edge.fellShare, 25, "분모가 정확히 MIN_CELLS 면 낸다");
+  assert.equal(riskRow({ cells: 100, compared: 60, high: 30, highCompared: MIN_CELLS - 1, highFell: 5 }).fellShare, null);
 });
 
 test("서울 행은 미달 구까지 모두 더하고, json 에 단지명·칸 키가 없다", () => {
   const counts = (cells, high, highCompared, highFell) => ({ cells, compared: highCompared, high, highCompared, highFell });
   const payload = buildRisk({ byDistrict: { 가구: counts(30, 6, 4, 2), 나구: counts(5, 2, 2, 2) }, now: NOW, months: ["202605", "202610"] });
-  assert.deepEqual(payload.seoul, { cells: 35, compared: 6, high: 8, highShare: 22.9, highCompared: 6, highFell: 4, fellShare: 66.7 });
+  assert.deepEqual(payload.seoul, { cells: 35, compared: 6, high: 8, highShare: 22.9, highCompared: 6, highFell: 4, fellShare: null });
   assert.deepEqual(payload.districts.나구, { cells: 5, short: true });
   assert.equal(payload.min, THRESHOLDS);
   assert.equal(buildRisk({ byDistrict: {}, now: NOW }), null);

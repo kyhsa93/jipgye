@@ -17,7 +17,8 @@ export const HIGH_RATIO = 80;
 
 export const THRESHOLDS = { dealsPerSide: MIN_DEALS_PER_SIDE, cells: MIN_CELLS, highRatio: HIGH_RATIO };
 
-const share = (part, whole) => (whole > 0 ? Math.round((part / whole) * 1000) / 10 : null);
+/** 비율은 분모가 MIN_CELLS 이상일 때만 낸다(PR #701 판정) - 1/1=100% 같은 값이 json 에 남지 않게. 건수는 그대로 둔다. */
+const share = (part, whole) => (whole >= MIN_CELLS ? Math.round((part / whole) * 1000) / 10 : null);
 
 /** 단지 가격 위치 파일의 칸을 「단지\u0000면적(소수 둘째 자리)」로 찾게 편다. 묶인 면적(areas)은 하나하나 같은 칸을 가리킨다. */
 export function priceLookup(priceCells) {

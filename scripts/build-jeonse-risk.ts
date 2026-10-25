@@ -56,7 +56,7 @@ export async function runJeonseRisk({ byDistrict, months = null, now = new Date(
     await writeFile(`${file}.tmp`, body);
     await rename(`${file}.tmp`, file);
     const { seoul } = payload;
-    log(`  전세가율 80% 이상 칸: 서울 ${seoul.cells}칸 중 ${seoul.highShare}% · 그중 1년 매매 하락 ${seoul.fellShare}% (${seoul.highFell}/${seoul.highCompared}) · 1년 전 값 채움 ${seoul.compared}/${seoul.cells}`);
+    log(`  전세가율 80% 이상 칸: 서울 ${seoul.cells}칸 중 ${seoul.highShare}% · 그중 1년 매매 하락 ${seoul.fellShare ?? "-"}% (${seoul.highFell}/${seoul.highCompared}) · 1년 전 값 채움 ${seoul.compared}/${seoul.cells}`);
     return payload;
   } catch (err) {
     warn(err?.message ?? String(err));
