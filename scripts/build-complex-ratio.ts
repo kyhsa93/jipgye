@@ -5,6 +5,7 @@ import { readSlotFile } from "./realestate-raw.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { cellRatios, spreadOf } from "./complex-ratio.ts";
 import { runRenewalCells } from "./build-renewal-cells.ts";
+import { runJeonseRisk } from "./build-jeonse-risk.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -53,7 +54,8 @@ async function main() {
   // update-all.mjs·daily-update.yml 에 따로 등록하지 않은 이유는 build-renewal-cells.ts 머리 주석. 소프트 실패라 던지지 않는다 -
   // 그 실패가 전세가율 파일을 막지 않게 먼저 돌리고 결과와 무관하게 아래로 간다.
   await runRenewalCells({ now, newMonths: MONTHS });
-  const byDistrict = await readRaw(recentMonths(now, MONTHS));
+  const months = recentMonths(now, MONTHS);
+  const byDistrict = await readRaw(months);
   const payload = buildPayload({ byDistrict, now });
 
   if (!payload) {
@@ -69,6 +71,9 @@ async function main() {
     `  단지·평형 ${seoul.cells.toLocaleString("ko-KR")}칸 · 서울 중앙 ${seoul.median}% (절반이 ${seoul.q1}~${seoul.q3}%)`
   );
   console.log(`  분위를 말할 수 있는 자치구 ${Object.keys(districts).length}곳`);
+
+  // 전세가율 높은 칸(#690 N8): 방금 읽은 같은 원본으로 끝에서 만든다. 소프트 실패라 던지지 않는다(build-jeonse-risk.ts 머리 주석).
+  await runJeonseRisk({ byDistrict, months: [months[0], months.at(-1)], now });
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
