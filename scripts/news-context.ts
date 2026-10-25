@@ -180,6 +180,9 @@ const MARKET_WORDS = /코스피|코스닥|증시|주가|나스닥|다우|S&P|종
 const OTHER_REGION = /경기|인천|부산|대구|대전|광주|울산|세종|제주|전국|지방|충청|전라|경상|강원|수원|성남|분당|일산|판교|하남|과천|화성|용인|고양|김포|평택|안양|충남|충북|전남|전북|경남|경북/;
 const NOT_SEOUL = /서울\s?(도|이|가)\s?아닌|서울\s?(외|밖)|비\s?서울/;
 const PRESALE_WORDS = /분양|청약/;
+// 제목이 자기 비율을 이미 적은 기사(「서울 해제율은 7.6%」)는 정의·기간이 다른 우리 값(1.4%)을 옆에 두면 모순처럼 읽힌다(#698 판정).
+const TITLE_PERCENT = /\d(\.\d+)?\s?%/;
+const TITLE_STAT = /해제율|취소율|\d(\.\d+)?\s?%/;
 
 const THIN_NOTE_KO = " · 관련 숫자 →";
 const THIN_NOTE_EN = " · Related numbers →";
@@ -320,7 +323,8 @@ const ANSWER_RULES = [
     key: "cancellation",
     keyword: /(계약|거래)\s?(해제|취소)|(해제|취소)\s?거래|해제\s?(신고|건)/,
     // 분양·청약 계약 해제는 우리 매매 해제 데이터가 다루지 않는다.
-    requires: (text) => hasAny(text, ["아파트", "부동산", "실거래", "매매", "주택", "집값", "단지"]) && !PRESALE_WORDS.test(text),
+    requires: (text, title) =>
+      hasAny(text, ["아파트", "부동산", "실거래", "매매", "주택", "집값", "단지"]) && !PRESALE_WORDS.test(text) && !TITLE_STAT.test(title),
     names: (data) => (data?.districts ?? []).map((d) => d?.district).filter(Boolean),
     chip: cancellationChip,
   },
@@ -335,7 +339,8 @@ const ANSWER_RULES = [
     key: "conversion",
     keyword: /반전세|전월세\s?전환|월세\s?전환|월세화|전환율/,
     // '전환율'은 기업·마케팅 기사에도 쓰여 전세·월세가 같이 있을 때만 센다.
-    requires: (text) => hasAny(text, ["전세", "월세", "반전세"]),
+    // 제목이 이미 비율을 말하면(「월세 비중 50%」) 우리 정의의 값과 어긋나 보이니 붙이지 않는다.
+    requires: (text, title) => hasAny(text, ["전세", "월세", "반전세"]) && !TITLE_PERCENT.test(title),
     names: (data) => Object.keys(data?.slugs ?? {}),
     chip: conversionChip,
   },
@@ -344,7 +349,8 @@ const ANSWER_RULES = [
 // 키워드는 제목에서만 찾는다 - 미리보기 문장에 곁다리로 나온 단어(「…신고가…」「…반전세…」)는 그 기사의 주제가 아니다.
 function answerContext(rule, item, text, data) {
   const source = data?.[rule.key];
-  if (!source || !rule.keyword.test(articleTitle(item)) || !rule.requires(text)) return null;
+  const title = articleTitle(item);
+  if (!source || !rule.keyword.test(title) || !rule.requires(text, title)) return null;
   const scope = seoulScope(text, rule.names(source));
   return scope ? rule.chip(source, scope) : null;
 }

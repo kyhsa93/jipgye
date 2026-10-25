@@ -180,6 +180,22 @@ test("분양·청약 계약 해제, 무관한 '해제', 키워드만 비슷한 '
   assert.deepEqual(kinds("서울 입주 예정자 사전점검 아파트"), []);
 });
 
+test("제목이 이미 자기 비율을 적은 해제·전환 기사는 건너뛴다 (#698)", () => {
+  // 실제 표본: 정의·기간이 다른 우리 값(1.4%)을 옆에 두면 모순처럼 읽힌다.
+  assert.deepEqual(kinds("주택계약 취소 5년간 14만건…서울 해제율은 7.6%로 '껑충'"), []);
+  assert.deepEqual(kinds("서울 아파트 계약 해제율 껑충"), []);
+  assert.deepEqual(kinds("서울 아파트 거래 취소율 늘었다"), []);
+  assert.deepEqual(kinds("서울 아파트 계약 해제 3% 넘었다"), []);
+  assert.deepEqual(kinds("서울 아파트 월세 반전세 비중 50%↑"), []);
+  assert.deepEqual(kinds("서울 반전세 전환율 4.8% 돌파 월세"), []);
+
+  // 숫자·% 가 없는 같은 주제 제목에는 그대로 붙는다.
+  assert.deepEqual(kinds("서울 아파트 계약 해제 급증"), ["cancellation"]);
+  assert.deepEqual(kinds("서울 반전세 확산, 월세 부담 커진다"), ["conversion"]);
+  // % 가 해제·전환 규칙만 막는다 - 신고가·입주 물량 칩은 그대로다.
+  assert.deepEqual(kinds("서울 아파트 신고가 거래 30% 늘었다"), ["record-high"]);
+});
+
 test("키워드는 제목에서만 찾는다 - 미리보기에 곁다리로 나온 단어는 주제가 아니다", () => {
   assert.deepEqual(kinds("서울 아파트 시장 동향", "최근 일부 단지에서 신고가가 나왔지만 거래는 줄었다."), []);
   assert.deepEqual(kinds("서울 월세 부담", "반전세 비중이 늘었다."), []);
