@@ -6,22 +6,20 @@ import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
-import { FALLBACK_OUTPUT, RENDER_STEPS } from "../scripts/render-pipeline.ts";
+import { RENDER_STEPS } from "../scripts/render-pipeline.ts";
 
-// 렌더 파이프라인의 legacy 폴백 (#238 F1 최소판). 단계는 임시 폴더의 가짜 노드 스크립트로 주입하고(고정 fixture, 외부 의존 없음),
-// 호출 기록(어느 단계가 어느 JIPGYE_RENDERER로 몇 번 돌았는지)으로 재시도의 범위를 본다.
+// 렌더 파이프라인 (#238 F1 에서 시작, #248 P1 에서 legacy 폴백을 걷었다 - 첫 실패에서 멈추고 종료 1). 단계는 임시 폴더의 가짜 노드 스크립트로
+// 주입하고(고정 fixture, 외부 의존 없음), 호출 기록(어느 단계가 몇 번, 어떤 환경으로 돌았는지)으로 멈춤의 범위를 본다.
 const run = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
 const PIPELINE = path.join(root, "scripts/render-pipeline.ts");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
 
-// 가짜 단계의 행동. 호출마다 `<이름> <JIPGYE_RENDERER>` 한 줄을 기록 파일에 남기고 아래 규칙대로 끝난다.
-//   ok: 항상 성공 / reactFails: JIPGYE_RENDERER=react일 때만 실패 / needsLegacy: legacy가 아니면(미설정 포함 = 컷오버 뒤의 react 기본) 실패 / fail: 항상 실패
+// 가짜 단계의 행동. 호출마다 `<이름> <JIPGYE_RENDERER> <CARRY>` 한 줄을 기록 파일에 남기고 아래 규칙대로 끝난다.
+//   ok: 항상 성공 / fail: 항상 실패
 const BEHAVIORS = {
   ok: "",
-  reactFails: 'if (mode === "react") { console.error("boom: react 렌더 예외"); process.exit(1); }',
-  needsLegacy: 'if (mode !== "legacy") { console.error("boom: legacy가 아니면 실패"); process.exit(1); }',
-  fail: 'console.error("boom: 항상 실패"); process.exit(1);',
+  fail: 'console.error("boom: 렌더 예외"); process.exit(1);',
 };
 
 async function fixture(kinds) {
@@ -50,7 +48,7 @@ ${BEHAVIORS[kind]}
   };
 }
 
-// 환경은 통째로 새로 만든다 - 이 시험이 Actions 안에서 돌 때 진짜 $GITHUB_OUTPUT·JIPGYE_RENDERER가 새어 들어오면 안 된다.
+// 환경은 통째로 새로 만든다 - 이 시험이 Actions 안에서 돌 때 진짜 $GITHUB_OUTPUT·$GITHUB_STEP_SUMMARY 가 새어 들어오면 안 된다.
 async function pipeline(fx, { renderer, github = true, args = fx.steps } = {}) {
   const env = { PATH: process.env.PATH, CARRY: "keep" };
   if (renderer !== undefined) env.JIPGYE_RENDERER = renderer;
@@ -73,113 +71,64 @@ const withFixture = (kinds, body) => async () => {
 };
 
 const SIX = (kind) => Array(6).fill(kind);
-const legacyAll = Array.from({ length: 6 }, (_, i) => `step${i + 1} legacy keep`);
 
-test("정상: 여섯 단계가 한 번씩 돌고 재시도도 폴백도 없다", withFixture(SIX("ok"), async (fx) => {
-  const r = await pipeline(fx, { renderer: "react" });
+test("정상: 여섯 단계가 한 번씩 돌고 종료 0, $GITHUB_OUTPUT·요약에 아무것도 쓰지 않는다", withFixture(SIX("ok"), async (fx) => {
+  const r = await pipeline(fx);
   assert.equal(r.code, 0);
-  assert.deepEqual(await fx.calls(), Array.from({ length: 6 }, (_, i) => `step${i + 1} react keep`));
-  assert.equal(await fx.file("output"), `${FALLBACK_OUTPUT}=false\n`);
+  assert.deepEqual(await fx.calls(), Array.from({ length: 6 }, (_, i) => `step${i + 1} unset keep`));
+  assert.equal(await fx.file("output"), null, "출력 키(옛 fallback)를 쓰지 않는다 - 워크플로가 읽을 출력이 없다");
   assert.ok(!r.stdout.includes("::warning::"), r.stdout);
   assert.equal(await fx.file("summary"), null, "정상인 날에는 요약에 아무것도 쓰지 않는다");
 }));
 
-test("react 실패 → legacy 성공: 여섯 단계 전부 legacy로 처음부터 다시 돌고 fallback=true, 종료 0", withFixture(SIX("reactFails"), async (fx) => {
-  const r = await pipeline(fx, { renderer: "react" });
-  assert.equal(r.code, 0, "폴백이 성공하면 이 단계는 성공이다 - 커밋·배포가 이어져야 한다");
-  // 1차: 첫 단계에서 멈춘다. 2차: 여섯 전부 legacy(다른 환경변수는 그대로).
-  assert.deepEqual(await fx.calls(), ["step1 react keep", ...legacyAll]);
-  assert.equal(await fx.file("output"), `${FALLBACK_OUTPUT}=true\n`);
+test("첫 단계가 실패하면 거기서 멈추고 종료 1 - 재시도하지 않는다(폴백 없음, #248)", withFixture(SIX("fail"), async (fx) => {
+  const r = await pipeline(fx);
+  assert.equal(r.code, 1);
+  assert.deepEqual(await fx.calls(), ["step1 unset keep"], "실패한 단계를 다시 돌리거나 뒤 단계로 넘어갔다");
+  assert.equal(await fx.file("output"), null);
 }));
 
-test("중간(3번째) 단계만 react에서 실패해도 앞 두 단계까지 포함해 처음부터 legacy로 다시 돈다", withFixture(["ok", "ok", "reactFails", "ok", "ok", "ok"], async (fx) => {
-  const r = await pipeline(fx, { renderer: "react" });
-  assert.equal(r.code, 0);
-  assert.deepEqual(await fx.calls(), ["step1 react keep", "step2 react keep", "step3 react keep", ...legacyAll]);
-  assert.equal(await fx.file("output"), `${FALLBACK_OUTPUT}=true\n`);
+test("중간(3번째) 단계가 실패하면 앞 두 단계까지만 돌고 거기서 멈춘다 - 뒤 단계는 돌지 않는다", withFixture(["ok", "ok", "fail", "ok", "ok", "ok"], async (fx) => {
+  const r = await pipeline(fx);
+  assert.equal(r.code, 1);
+  assert.deepEqual(await fx.calls(), ["step1 unset keep", "step2 unset keep", "step3 unset keep"]);
 }));
 
-test("폴백이 발동하면 ::warning::(stdout)과 stderr·$GITHUB_STEP_SUMMARY에 원인 단계와 함께 남는다", withFixture(["ok", "ok", "reactFails", "ok", "ok", "ok"], async (fx) => {
-  const r = await pipeline(fx, { renderer: "react" });
+test("실패하면 stderr 와 $GITHUB_STEP_SUMMARY 에 실패한 단계와 이유가 남고, 단계의 오류 출력도 그대로 흐른다", withFixture(["ok", "ok", "fail", "ok", "ok", "ok"], async (fx) => {
+  const r = await pipeline(fx);
   const thirdStep = fx.steps[2];
-  assert.match(r.stdout, /::warning::.*legacy/, r.stdout);
-  assert.ok(r.stdout.includes(thirdStep), "::warning::에 실패한 단계가 없다");
-  assert.ok(r.stdout.split("\n").filter((l) => l.startsWith("::warning::")).every((l) => !l.includes("\r")), "경고는 한 줄이어야 한다");
-  assert.match(r.stderr, /legacy로 폴백/, r.stderr);
-  assert.match(r.stderr, /boom: react 렌더 예외/, "1차 시도의 오류 출력은 그대로 남아야 원인을 본다");
+  assert.ok(r.stderr.includes(thirdStep) && /렌더 실패/.test(r.stderr) && /종료 코드 1/.test(r.stderr), r.stderr);
+  assert.match(r.stderr, /boom: 렌더 예외/, "단계의 오류 출력은 그대로 남아야 원인을 본다");
+  assert.ok(!/legacy|폴백/.test(r.stdout + r.stderr), "폴백을 말한다 - 폴백은 지웠다");
   const summary = await fx.file("summary");
-  assert.match(summary, /렌더 폴백 발동/);
-  assert.ok(summary.includes(thirdStep) && summary.includes("JIPGYE_RENDERER=react"), summary);
+  assert.match(summary, /### 렌더 실패/);
+  assert.ok(summary.includes(thirdStep) && summary.includes("종료 코드 1"), summary);
 }));
 
-test("legacy 재시도도 실패하면 종료 1, fallback=false, 요약에 둘 다 남는다", withFixture(SIX("fail"), async (fx) => {
+test("JIPGYE_RENDERER 를 읽지도 덮지도 않는다 - 어떤 값이든 단계에 그대로 넘기고, 실패해도 다른 값으로 다시 돌리지 않는다", withFixture(SIX("fail"), async (fx) => {
   const r = await pipeline(fx, { renderer: "react" });
   assert.equal(r.code, 1);
-  assert.deepEqual(await fx.calls(), ["step1 react keep", "step1 legacy keep"]);
-  assert.equal(await fx.file("output"), `${FALLBACK_OUTPUT}=false\n`, "폴백이 성공하지 못했으니 '폴백했음'이 아니다");
-  assert.match(await fx.file("summary"), /렌더 실패/);
-  assert.match(r.stderr, /legacy 재시도도 실패/);
-}));
-
-test("legacy 재시도가 중간(5번째)에서 죽으면 거기서 멈추고 종료 1이다", async () => {
-  // 1차는 첫 단계(reactFails)에서 죽고, 재시도는 다섯째(fail)에서 죽는다.
-  const fx = await fixture(["reactFails", "ok", "ok", "ok", "fail", "ok"]);
-  try {
-    const r = await pipeline(fx, { renderer: "react" });
-    assert.equal(r.code, 1);
-    assert.deepEqual(await fx.calls(), ["step1 react keep", "step1 legacy keep", "step2 legacy keep", "step3 legacy keep", "step4 legacy keep", "step5 legacy keep"]);
-    assert.equal(await fx.file("output"), `${FALLBACK_OUTPUT}=false\n`);
-  } finally {
-    await rm(fx.dir, { recursive: true, force: true });
-  }
-});
-
-test("JIPGYE_RENDERER=legacy가 명시돼 있으면 1차 실패에도 재시도하지 않는다", withFixture(SIX("fail"), async (fx) => {
-  const r = await pipeline(fx, { renderer: "legacy" });
-  assert.equal(r.code, 1);
-  assert.deepEqual(await fx.calls(), ["step1 legacy keep"], "같은 legacy를 다시 돌리지 않는다");
-  assert.equal(await fx.file("output"), `${FALLBACK_OUTPUT}=false\n`);
+  assert.deepEqual(await fx.calls(), ["step1 react keep"]);
   assert.ok(!r.stdout.includes("::warning::"));
 }));
 
-test("JIPGYE_RENDERER 미설정은 재시도 대상이다(기본값은 컷오버 뒤 react) - 재시도는 legacy를 명시한다", withFixture(SIX("needsLegacy"), async (fx) => {
-  const r = await pipeline(fx);
-  assert.equal(r.code, 0);
-  assert.deepEqual(await fx.calls(), ["step1 unset keep", ...legacyAll]);
-  assert.equal(await fx.file("output"), `${FALLBACK_OUTPUT}=true\n`);
-}));
-
-test("빈 문자열도 미설정과 같다(재시도 대상)", withFixture(SIX("needsLegacy"), async (fx) => {
-  const r = await pipeline(fx, { renderer: "" });
-  assert.equal(r.code, 0);
-  assert.equal(await fx.file("output"), `${FALLBACK_OUTPUT}=true\n`);
-}));
-
-test("읽을 수 없는 JIPGYE_RENDERER 값으로 1차가 죽어도 legacy 재시도로 이어진다(명시된 legacy만 재시도하지 않는다)", withFixture(SIX("needsLegacy"), async (fx) => {
-  const r = await pipeline(fx, { renderer: "reakt" });
-  assert.equal(r.code, 0);
-  assert.equal(await fx.file("output"), `${FALLBACK_OUTPUT}=true\n`);
-}));
-
-test("$GITHUB_OUTPUT·$GITHUB_STEP_SUMMARY가 없으면(로컬) 기록을 건너뛰고 폴백은 그대로 돈다", withFixture(SIX("reactFails"), async (fx) => {
-  const r = await pipeline(fx, { renderer: "react", github: false });
-  assert.equal(r.code, 0);
-  assert.deepEqual(await fx.calls(), ["step1 react keep", ...legacyAll]);
-  assert.equal(await fx.file("output"), null);
-  assert.equal(await fx.file("summary"), null);
+test("$GITHUB_OUTPUT·$GITHUB_STEP_SUMMARY가 없으면(로컬) 실패해도 기록 파일을 만들지 않고 종료 1 이다", withFixture(SIX("fail"), async (fx) => {
+  const r = await pipeline(fx, { github: false });
+  assert.equal(r.code, 1);
+  assert.deepEqual(await fx.calls(), ["step1 unset keep"]);
   assert.deepEqual((await readdir(fx.dir)).filter((n) => !n.startsWith("step") && n !== "calls.log"), [], "기록 파일을 새로 만들었다");
 }));
 
-test("$GITHUB_OUTPUT에는 이어 붙인다(앞 단계가 쓴 출력을 지우지 않는다)", withFixture(SIX("ok"), async (fx) => {
+test("$GITHUB_OUTPUT 에는 손대지 않는다(앞 단계가 쓴 출력을 지우지도, 키를 덧붙이지도 않는다)", withFixture(SIX("ok"), async (fx) => {
   await writeFile(fx.out, "earlier=1\n");
-  await pipeline(fx, { renderer: "react" });
-  assert.equal(await fx.file("output"), `earlier=1\n${FALLBACK_OUTPUT}=false\n`);
+  await pipeline(fx);
+  assert.equal(await fx.file("output"), "earlier=1\n");
 }));
 
 test("존재하지 않는 단계는 실패다(조용히 건너뛰지 않는다)", withFixture(["ok"], async (fx) => {
-  const r = await pipeline(fx, { renderer: "react", args: [fx.steps[0], path.join(fx.dir, "없는-단계.mjs")] });
+  const r = await pipeline(fx, { args: [fx.steps[0], path.join(fx.dir, "없는-단계.mjs")] });
   assert.equal(r.code, 1);
-  assert.equal(await fx.file("output"), `${FALLBACK_OUTPUT}=false\n`);
+  assert.match(await fx.file("summary"), /없는-단계\.mjs/);
 }));
 
 // (#510, 구조 B-4) 뒤집었다: 이전에는 update-all 의 렌더 꼬리가 기본 단계와 같다고 맞댔다. 이제 update-all(수집 + 데이터 커밋)은 렌더를 안 부른다 - 렌더는 deploy.yml 의 일이다.
@@ -246,31 +195,17 @@ test("deploy.yml 은 기본 다섯 단계(인자 없음)로 그린다 - summariz
   assert.match(summarize, /^ {8}run: node scripts\/news-context\.ts$/m, "summarize 의 news-context 단계가 사라졌다");
 });
 
-// (#510) 뒤집었다: 전에는 폴백이 발동해도 legacy 산출물을 배포하고 맨 끝에서 빨갛게 끝냈다(커밋 뒤에 렌더했으므로). 이제 폴백은 **배포를 막는다** - 수집은 커밋으로 끝나 있어
-// 데이터가 안전하고, 사이트는 직전 배포에 머문다(cto 판정: 게이트 = 렌더 폴백 없음 + build/site 기준 시험).
-test("폴백 게이트 단계의 if가 스크립트가 쓰는 출력 키와 렌더 단계 id를 정확히 읽고, 시험·배포 앞에서 job을 실패시킨다", withFixture(SIX("reactFails"), async (fx) => {
-  await pipeline(fx, { renderer: "react" });
-  const [key, value] = (await fx.file("output")).trim().split("=");
-  assert.equal(key, FALLBACK_OUTPUT);
-  assert.equal(value, "true");
-
-  const yml = await read(DEPLOY);
-  const render = stepOf(yml, "사이트 생성 (build/site)");
-  const id = render.match(/^ {8}id: (\S+)$/m)[1];
-  const gate = stepOf(yml, "렌더 폴백이면 배포하지 않는다");
-  // 폴백일 때만 돈다. 상태 함수가 없어 앞 단계가 실패하면 건너뛰어지지만 그건 어차피 배포가 안 나가는 날이다 - 이 단계의 일은 "렌더는 성공했지만 폴백한 날"을 막는 것이다.
-  assert.ok(gate.includes(`if: \${{ steps.${id}.outputs.${key} == 'true' }}`), `${DEPLOY}: 폴백 게이트의 if가 steps.${id}.outputs.${key}를 읽지 않는다\n${gate}`);
-  assert.match(gate, /exit 1/);
-  assert.ok(gate.includes("legacy 로 폴백했다 - 배포하지 않는다"), `${DEPLOY}: 게이트 메시지가 다르다`);
-  // 시험·건강 점검·Pages 단계가 모두 이 게이트 뒤다 - 폴백한 산출물이 올라가지 않는다.
-  const at = (name) => yml.indexOf(`- name: ${name}\n`);
-  assert.ok(at("렌더 폴백이면 배포하지 않는다") > at("사이트 생성 (build/site)"));
-  for (const later of ["테스트 (build/site 기준)", "데이터 건강 점검 (비차단)", "Pages 배포", "Pages 아티팩트 업로드", "Pages에 배포"]) {
-    assert.ok(at(later) > at("렌더 폴백이면 배포하지 않는다"), `${DEPLOY}: '${later}' 가 폴백 게이트보다 앞에 있다`);
+// (#248 P1) 폴백 게이트 단계(「렌더 폴백이면 배포하지 않는다」·「렌더 폴백이면 실패」)를 지웠다. 렌더 실패는 렌더 단계의 종료 1 이 곧 job 의 실패다 -
+// 그래서 렌더 단계에 실패를 삼키는 continue-on-error 나 if 가 붙으면 안 되고, 어느 워크플로도 렌더 단계의 출력(옛 fallback 키)을 읽지 않는다.
+test("렌더 단계에는 continue-on-error·if 가 없다(실패가 곧 job 실패) - 어느 워크플로도 steps.render.outputs 를 읽지 않는다", async () => {
+  for (const file of [DEPLOY, ".github/workflows/test.yml"]) {
+    const step = stepOf(await read(file), "사이트 생성 (build/site)");
+    assert.match(step, /^ {8}id: render$/m, `${file}: 렌더 단계에 id: render가 없다`);
+    assert.ok(!/continue-on-error|^ {8}if:/m.test(step), `${file}: 렌더 단계에 조건이 붙었다 - 렌더 실패가 job 을 멈추지 않는다`);
   }
-}));
-
-test("렌더 단계 자체는 폴백이 발동해도 종료 0 이다 - 렌더 단계에 continue-on-error나 if가 붙지 않고, 막는 것은 뒤의 게이트 단계다", async () => {
-  const step = stepOf(await read(DEPLOY), "사이트 생성 (build/site)");
-  assert.ok(!/continue-on-error|^ {8}if:/m.test(step), `${DEPLOY}: 렌더 단계에 조건이 붙었다`);
+  const dir = path.join(root, ".github/workflows");
+  for (const name of await readdir(dir)) {
+    const text = await readFile(path.join(dir, name), "utf8");
+    assert.ok(!/steps\.render\.outputs/.test(text), `${name}: 렌더 단계의 출력을 읽는다 - render-pipeline 은 출력을 쓰지 않는다(폴백 없음, #248)`);
+  }
 });

@@ -11,7 +11,7 @@ import path from "node:path";
  * 뒤집힌 계약(cto 판정 2026-10-24):
  *  - 트리거: push main(경로 제한 없음) + workflow_run [Daily update, Summarize] completed(취소 제외) + workflow_dispatch(롤백 전용, inputs 없음).
  *  - 어느 이벤트든 `main` HEAD 를 체크아웃한다. 동시성 그룹은 `pages`(cancel-in-progress false)이고 digest-pipeline 과 다르다.
- *  - 게이트는 렌더 폴백 없음 + build/site 기준 시험(`npm run test:site`) 둘뿐이다. 건강 점검은 비차단. 배포 산출물은 build/site 다.
+ *  - 게이트는 렌더 성공(렌더 실패면 렌더 단계가 종료 1 - 폴백 없음, #248 P1) + build/site 기준 시험(`npm run test:site`) 둘뿐이다. 건강 점검은 비차단. 배포 산출물은 build/site 다.
  *  - 배포 경로는 이것 하나다: static.yml 은 지웠고, 수집 워크플로(daily-update·summarize)에는 배포 요소·배포 권한이 없다.
  *  - main 은 생성 HTML 53장을 들고 있지 않다(손으로 고치는 틀 14장은 남는다).
  * 워크플로 YAML 의 글자만 읽는다 - 고정 입력이고, 네트워크·날짜·데이터를 보지 않는다(#8). 마지막 시험만 `git ls-files` 로 "커밋된" 것을 센다.
@@ -77,7 +77,6 @@ function violations(text) {
   const install = at((s) => s.run.trim() === "npm ci");
   const pin = at((s) => /BUILD_NOW=/.test(s.run));
   const render = at((s) => s.id === "render");
-  const fallback = at((s) => /steps\.render\.outputs\.fallback == 'true'/.test(s.if ?? "") && s.run.includes("exit 1"));
   const gate = at((s) => s.run.trim() === "npm run test:site");
   const health = at((s) => s.id === "health");
   const configure = at((s) => s.uses?.startsWith("actions/configure-pages@"));
@@ -86,16 +85,17 @@ function violations(text) {
   if (list[render]?.run.trim() !== "node scripts/render-pipeline.ts --out=build/site") out.push("렌더가 render-pipeline --out=build/site 한 줄이 아니다");
   if (!(install >= 0 && install < pin && pin < render)) out.push("npm ci -> 렌더 시각 고정 -> 렌더 순서가 아니다");
   if (!/\$\(git log -1 --format=%cI HEAD\)/.test(list[pin]?.run ?? "") || !/>> "\$GITHUB_ENV"/.test(list[pin]?.run ?? "")) out.push("BUILD_NOW 를 HEAD 커밋 시각으로 못박지 않는다");
-  if (fallback < 0) out.push("렌더 폴백 게이트가 없다");
+  if (list[render]?.coe || list[render]?.if) out.push("렌더 단계에 continue-on-error·if 가 붙었다 - 렌더 실패가 배포를 막지 않는다");
+  if (/steps\.render\.outputs/.test(c)) out.push("렌더 단계의 출력을 읽는다 - 폴백 게이트는 지웠다(#248), render-pipeline 은 출력을 쓰지 않는다");
   if (gate < 0) out.push("배포 게이트가 npm run test:site 가 아니다");
   if (list.some((s) => s.run.trim() === "npm test")) out.push("기능 시험 전체(npm test)를 부른다 - 데이터 배포가 기능 시험에 막힌다");
-  if (!(render < fallback && fallback < gate && gate < health && health < configure && configure < upload && upload < deploy)) out.push("렌더 -> 폴백 게이트 -> build/site 시험 -> 건강 점검 -> 배포 순서가 아니다");
+  if (!(render >= 0 && render < gate && gate < health && health < configure && configure < upload && upload < deploy)) out.push("렌더 -> build/site 시험 -> 건강 점검 -> 배포 순서가 아니다");
   if (list[gate]?.coe || list[gate]?.if) out.push("배포 게이트 시험에 continue-on-error·if 가 붙었다 - 게이트가 풀린다");
   if (list[health]?.coe !== "true") out.push("건강 점검이 continue-on-error 가 아니다(비차단이어야 한다)");
   if (list[health]?.run.trim() !== "npm run health --ignore-scripts") out.push("건강 점검이 npm run health --ignore-scripts 가 아니다(pretest 가 build/site 를 다시 만든다)");
   if (!/path: "\.\/build\/site"/.test(c)) out.push("Pages 아티팩트 경로가 ./build/site 가 아니다");
 
-  const reflects = list.filter((s) => s.run.includes("exit 1") && !(s.if ?? "").includes("steps.render.outputs.fallback"));
+  const reflects = list.filter((s) => s.run.includes("exit 1"));
   if (reflects.length !== 1) out.push(`반영 단계가 하나가 아니다(${reflects.length})`);
   for (const s of reflects) if (!/^!cancelled\(\) && steps\./.test(bare(s.if))) out.push(`반영 단계 '${s.name}' 의 if 가 !cancelled() && 로 시작하지 않는다`);
   if (!list.at(-1)?.run.includes("exit 1")) out.push("반영 단계가 맨 끝이 아니다");
@@ -104,11 +104,11 @@ function violations(text) {
 
 const deploy = await read(DEPLOY);
 
-test("deploy.yml: 계약 위반이 없다 - main push·workflow_run·dispatch(롤백), 배포 권한·환경, pages 동시성, main HEAD 체크아웃, 폴백 게이트·build/site 시험, SHA 고정", () => {
+test("deploy.yml: 계약 위반이 없다 - main push·workflow_run·dispatch(롤백), 배포 권한·환경, pages 동시성, main HEAD 체크아웃, 렌더 실패 = job 실패·build/site 시험, SHA 고정", () => {
   assert.deepEqual(violations(deploy), []);
 });
 
-test("deploy.yml: 렌더는 build/site 로 한 번에, 게이트(폴백 없음 -> build/site 시험) 뒤에 건강 점검(비차단)과 배포 - 스텝 순서와 id", () => {
+test("deploy.yml: 렌더는 build/site 로 한 번에, 게이트(build/site 시험) 뒤에 건강 점검(비차단)과 배포 - 스텝 순서와 id", () => {
   const list = steps(deploy);
   const names = list.map((s) => s.name ?? s.uses ?? s.run);
   const idx = (n) => {
@@ -116,7 +116,7 @@ test("deploy.yml: 렌더는 build/site 로 한 번에, 게이트(폴백 없음 -
     assert.ok(i >= 0, `스텝 '${n}' 이 없다`);
     return i;
   };
-  const order = ["npm ci", "렌더 시각 고정", "사이트 생성", "렌더 폴백이면 배포하지 않는다", "테스트 (build/site 기준)", "데이터 건강 점검 (비차단)", "Pages 배포", "Pages 아티팩트 업로드", "Pages에 배포", "데이터 건강 점검 실패 반영"].map(idx);
+  const order = ["npm ci", "렌더 시각 고정", "사이트 생성", "테스트 (build/site 기준)", "데이터 건강 점검 (비차단)", "Pages 배포", "Pages 아티팩트 업로드", "Pages에 배포", "데이터 건강 점검 실패 반영"].map(idx);
   assert.deepEqual(order, [...order].sort((a, b) => a - b), "스텝 순서가 계약과 다르다");
   assert.equal(list[idx("사이트 생성")].id, "render");
   assert.equal(list[idx("데이터 건강 점검 (비차단)")].id, "health");
@@ -136,12 +136,8 @@ test("deploy.yml: 반영 단계는 맨 끝 하나(건강 점검)이고 배포 �
   assert.match(last.run, /::error::/);
   assert.match(last.run, /^\s*exit 1$/m);
   assert.ok(list.findIndex((s) => s.id === "deployment") < list.length - 1, "반영 단계가 배포보다 앞이다 - 점검이 배포를 막는다");
-  // 폴백 게이트는 반영이 아니라 게이트다: 렌더 직후, 폴백일 때만 돌고 exit 1 로 배포를 막는다(상태 함수 없이 success() 암묵 - 앞 단계 실패 때는 어차피 배포가 안 나간다).
-  const gate = list.find((s) => /steps\.render\.outputs\.fallback/.test(s.if ?? ""));
-  assert.ok(gate && gate.run.includes("exit 1"));
-  assert.ok(!/cancelled|always|failure/.test(gate.if), "폴백 게이트가 상태 함수를 쓴다 - 앞 단계가 실패한 날에도 돈다");
-  // render-pipeline 이 쓰는 출력 이름과 같다(워크플로가 읽는 키가 이름 바꿈으로 조용히 끊기지 않게).
-  assert.match(deploy, /steps\.render\.outputs\.fallback/);
+  // 폴백 게이트는 지웠다(#248 P1): 렌더 실패는 렌더 단계의 종료 1 로 뒤 단계(시험·배포)가 안 돈다. exit 1 로 끝나는 단계는 이 반영 단계 하나뿐이다.
+  assert.deepEqual(list.filter((s) => s.run.includes("exit 1")).map((s) => s.name), [last.name]);
 });
 
 test("대조군: 계약을 어긴 변이 사본은 위반으로 잡힌다 (검사가 항상 참이 아니다)", () => {
@@ -162,7 +158,7 @@ test("대조군: 계약을 어긴 변이 사본은 위반으로 잡힌다 (검�
     ["  workflow_run:\n    workflows: [\"Daily update\", \"Summarize\"]\n", "  workflow_run:\n    workflows: [\"Daily update\"]\n", /workflow_run/],
     ["          ref: main\n", "          ref: ${{ github.sha }}\n", /ref: main|이벤트 SHA/],
     ["        run: node scripts/render-pipeline.ts --out=build/site\n", "        run: node scripts/render-pipeline.ts\n", /build\/site/],
-    ["        if: ${{ steps.render.outputs.fallback == 'true' }}\n", "        if: ${{ steps.render.outputs.fallback == 'never' }}\n", /폴백 게이트/],
+    ["        id: render\n", "        id: render\n        continue-on-error: true\n", /렌더 단계에 continue-on-error/],
     ["        run: npm run test:site\n", "        run: npm test\n", /게이트|기능 시험/],
     ["        run: npm run test:site\n", "        run: npm run test:site\n        continue-on-error: true\n", /continue-on-error|if/],
     ["        id: health\n        continue-on-error: true\n", "        id: health\n", /continue-on-error/],
@@ -230,7 +226,7 @@ test("main 은 생성 HTML 을 들고 있지 않다: git ls-files docs 에 생�
 for (const [file, min] of [[DEPLOY, 1], [".github/workflows/daily-update.yml", 0], [".github/workflows/summarize.yml", 0]]) {
   test(`${file}: 반영 단계(${min}개 이상)는 모두 !cancelled() && 로 시작하고 steps 결과를 읽는다 (#507 cto·cpo - 앞 반영 단계가 뒤를 가리지 않는다)`, async () => {
     const text = await read(file);
-    const reflects = steps(text).filter((s) => s.run.includes("exit 1") && !(s.if ?? "").includes("outputs.fallback"));
+    const reflects = steps(text).filter((s) => s.run.includes("exit 1"));
     assert.ok(reflects.length >= min, `${file}: 반영 단계를 ${reflects.length}개밖에 못 찾았다`);
     for (const s of reflects) {
       assert.match(bare(s.if), /^!cancelled\(\) && steps\.[\w-]+\.(outcome|outputs\.[\w-]+) == '[\w]+'$/, `${s.name}: if 가 '!cancelled() && steps.… == …' 모양이 아니다: ${s.if}`);
