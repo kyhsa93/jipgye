@@ -3,13 +3,42 @@
 - 첫 줄: `.claude/agents/engineer.md` 를 읽는다. 이슈는 `gh issue view N -R kyhsa93/jipgye --comments`. 승인된 패턴이 있으면 `.claude/patterns.md` 의 해당 절을 읽고 PR 본문에 패턴 ID 를 적는다.
 - 작업 위치: 격리 워크트리, 시작 전 `git fetch origin` 후 origin/main 기준.
 - Node 24: 타입 스트리핑이 켜진 Node 24 가 PATH 앞에 있어야 한다(`node -p 'process.features.typescript'` → `strip`). 다른 곳에 있으면 `export PATH=<Node 24 의 bin 폴더>:$PATH`. 골든 도구는 `NODE24_BIN=<Node 24 바이너리 경로>` 로도 받는다(없으면 PATH 의 node).
-- 의존성: `node_modules` 는 공유 사본이 있으면 `ln -s <공유 node_modules> node_modules`(없으면 `npm ci`). `tools/golden` 은 `cd tools/golden && npm ci`(또는 다른 워크트리의 `tools/golden/node_modules` 심볼릭 링크).
+- 의존성(첫 단계): `export PATH=~/workspace/jipgye.worktrees/_shared/bin:~/workspace/jipgye.worktrees/_shared/node24/bin:$PATH; scripts/dev/doctor.sh --link`(#608 — Node 24·react-dom·`node_modules`·`tools/golden/node_modules` 점검, 없으면 공유 사본으로 링크). doctor 가 실패할 때만 `npm ci`. **`npm run test:site`·`health` 앞에는 항상 `node scripts/render-pipeline.ts --out=build/site`**(build/site 가 낡으면 헛통과·헛실패한다; `npm test` 는 pretest 가 한다).
 - 레이아웃(컷오버 B4 이후): main 에 생성 HTML 없음(docs/ 에는 손으로 고치는 틀 14장+정적 자산+docs/data), 사이트는 배포 때 `render-pipeline.ts --out=build/site`. 시험이 생성 장을 읽을 때는 `test/helpers/site-root.mjs` 의 SITE. `npm test` 는 pretest 로 build/site 를 만든다. `npm run test:site`(= build/site 를 읽는 시험 부분집합)가 배포 게이트.
 - 통과해야 할 것: `npm test`, `npm run test:site`, `npm run health`(작업이 건드린 패키지의 `tools/*` `npm test` 포함).
+- 로컬 관문(골든·훅 목록 대조·COUNT·바이트 표): `scripts/dev/gate.sh` — #601 이 병합되면(**있을 때**) PR 전에 한 번 돌리고 원문을 보고에 붙인다. 없으면 위 명령과 골든 증빙으로 대신한다.
 - **시험 하한(COUNT)은 건드리지 않는다**(내릴 때만 예외 — 본문에 사유, #315 범위 4). 올리는 것은 병합 담당이 하루 끝에 `npm run count:bump` 로 한 번 한다(#548). COUNT 파일은 고정 머리 ≤6줄 + 숫자 둘이고 설명 블록을 쓰지 않는다 — 설명은 PR 본문.
 - 골든 PR 증빙: `scripts/dev/golden-run.sh [--pattern P1] <이름>`(URL 없이). 결과의 하드 실패 id·S6 바이트를 **원문 그대로** 보고에 붙인다. 1차 출력에 「불변 비교」 줄이 없으면 도구가 `tail -5` 를 찍는다 — 그것도 그대로. expect 파일은 쓰지 않는다(판정 뒤 메인 세션이 `scripts/dev/golden-run.sh --pattern P1 <이름> <판정댓글URL>` 로 만든다). 실행 뒤 도구가 `<os.tmpdir()>/jipgye-golden`(임시 사본)을 지운다.
 - 커밋: 한국어, `Refs #N`, Co-Authored-By / Claude-Session / "Generated with Claude Code" 줄 금지. push·PR 금지(메인 세션 몫).
 - 멈추고 보고할 것: 바이트 한도(장당 +400 B) 초과, `docs/load-state.js` 변경, 새 S6 예외(인라인 바이트 외), 새 하드 실패 id, 허용 목록 밖 파일, 소유자·cto 결정이 필요한 것.
+
+## 결정 사전 위임표 (cto 서명 대기 — 서명 전까지 규칙 아님, #603)
+
+판정(pm·cto)이 **착수 전** 이슈의 「위임 범위」 칸에 한도를 적는다. 칸이 있고 범위 안이면 멈추지 않고 PR 본문 「일탈」에 적는다. 칸이 없으면 아래 「위임」 열은 없는 것으로 보고 위 「멈추고 보고할 것」을 따른다.
+
+| 항목 | 위임(보고만) | 멈춤 |
+|---|---|---|
+| 글자·문구 수치 한도 | 이슈 한도 +20% 까지, 의도한 변경 목록과 일치할 때 | +20% 초과, 빈 공간·내용 이동으로 수치만 맞추는 것 |
+| 인라인 JS 순증 | 없음(P1 +400 B/장 그대로) | 초과 즉시 |
+| CSS 순증 | 합 +2.5KB 까지(상한 합계 4KB) | 4KB 초과, 새 외부 의존 |
+| 손으로 쓴 diff 줄 | 이슈 한도 +25% 또는 ≤250줄 중 큰 쪽 | 초과, 데이터 파일 제외 계산이 모호할 때 |
+| 골든 하드 실패 | 이슈 본문이 의도로 적은 항목과 글자 그대로 일치하면 expect **후보**로 보고(expect 는 판정 뒤 메인 세션이 만든다) | 목록 밖 id 1건이라도, 새 S6 예외 종류 |
+| 파일 범위 | 같은 폴더의 시험 파일·헬퍼·픽스처 추가 | 워크플로·수집기·`docs/load-state.js`·scripts 데이터 생성부 |
+| `tools/golden/hook-classes.json` | 소스가 **늘어서** 어긋나면 `--hooks-write` 로 다시 만들고 보고 | 줄어서 어긋남(왜 줄었는지부터), `HOOKCOUNT` 하한 인하 |
+| 시험 하한(`test/COUNT*`) | 올리지 않는다(#548). 내리는 것은 **같은 PR 안에서 본문에 사유**를 적을 때만 보고 | 사유 없는 인하, 다른 PR 에서 내림 |
+| 측정 재실행 | 같은 조건 3회까지 | 4회째부터 5줄 요약 후 새 에이전트 |
+| 에이전트 재개 | 같은 PR delta 1회(SendMessage) | 2회째부터 5줄 요약을 넘기고 새로 띄움 |
+
+서명(cto): ______________________ (날짜 · 한도 조정이 있으면 이 표를 고친 뒤 서명)
+
+## 판정은 PR 하나에 한 댓글 (P1 밖 모든 PR, #603)
+
+판정 에이전트 하나가 cto·cpo·po·cmo 중 **그 PR 에 필요한 이들**의 서명 줄을 **한 댓글**에 쓴다(단일 역할 판정을 따로 띄우지 않는다). D 등급·제품 범위 변경이면 cto+cpo 둘 다 서명한다. 재판정은 마지막 판정 SHA 이후 바뀐 줄만 보고, 통과면 한 줄(`<SHA> 통과, 서명`)이다. 길이 ≤8줄은 그대로.
+
+## 모델 등급·에이전트 재사용 (메인 세션이 띄울 때, #603)
+
+- **sonnet**: 판정(패턴 해당·delta·재판정)·측정 재실행·장부(pm 기록·종결)·문서·좁은 구현. **opus(상속)**: 설계·모호한 판단·D 등급 첫 판정·새 메커니즘.
+- 앞선 맥락이 필요하면 `fork`, 아니면 새 에이전트에 브리프는 이슈·이 파일 **링크**로 짧게. 같은 PR 의 delta 는 `SendMessage` 로 이어 가되 1회, 그 뒤는 요약 5줄로 새로 띄운다.
 
 ## 최종 보고 양식 (≤10줄, PR 본문에 그대로)
 
