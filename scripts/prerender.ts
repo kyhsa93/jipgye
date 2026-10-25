@@ -17,7 +17,6 @@ import {
   renewalDistricts,
   renewalWolseDistricts,
 } from "./district-tables.ts";
-import { RATES_ROWS, isSavingCategory, netInterestText, rate, rateRange, selectRateRows } from "./rates-table.ts";
 import { BUDGET_PAGES } from "./budget-pages.ts";
 import { budgetFactSentences } from "./budget-facts.ts";
 import { DISTRICT_PAGES } from "./district-slugs.ts";
@@ -25,7 +24,6 @@ import { districtSentences } from "./district-summary.ts";
 import { factSentences } from "./district-facts.ts";
 import { renewalSentences } from "./renewal-facts.ts";
 import { BUDGET_MORE_LINKS, CANDIDATE_LIST, bodyShape, budgetAnswers, budgetBandLabel, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "./budget-fragments.ts";
-import { rateBridgeHtml } from "./rate-bridge.ts";
 import { metricCell, topDistricts } from "./realestate-rows.ts";
 import { headLabels, realestateTable } from "./realestate-table.ts";
 import { overallCards } from "./realestate-overall.ts";
@@ -34,7 +32,7 @@ import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 import { requireSite, siteLabel, sitePath } from "./site-dir.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
-// 시세 장은 틀(scripts/)과 나가는 장(docs/)으로 갈라져 있다(#374, rates-template.html 과 같은 모양). 틀에는 "왜"를 마음껏 적고,
+// 시세 장은 틀(scripts/)과 나가는 장(docs/)으로 갈라져 있다(#374). 틀에는 "왜"를 마음껏 적고,
 // 이 파일이 틀을 채운 뒤 인라인 스크립트의 주석을 떼어 docs/realestate.html 로 낸다. 두 빌더(build-realestate-pages·build-budget-pages)도
 // 같은 틀을 읽는다. docs/realestate.html 은 생성물이라 손으로 고치지 않는다.
 export const REALESTATE_TEMPLATE_PATH = path.join(root, "scripts/realestate-template.html");
@@ -550,70 +548,6 @@ function districtLinksHtmlLegacy(current = null, heading = "다른 지역") {
 }
 export const districtLinksHtml = fragment("districtLinksHtml", districtLinksHtmlLegacy);
 
-// 상수·값 모양·행 선택·정렬·세후 이자 칸은 rates-table.mjs에 있다 - JSX 쪽(render/entry.jsx)이 같은 계산을 가져다 쓴다(#240).
-//
-// Tailwind 유틸리티(#279). 이 조각이 실리는 금리 상품군 네 장은 색인 대상이다.
-//
-// ⚠️ **주석에 유틸리티 이름을 접두사까지 적지 않는다.** 이 파일은 src/css/main.css의 @source 목록에 있어 Tailwind와
-// test/css-build.test.mjs가 **주석까지 글자로 훑는다** - 설명문이 class로 잡혀 "산출물에 규칙이 없는 class"로 걸리거나,
-// 하필 `dark:` 변형을 설명하면 금지 넷 중 하나에 걸린다(실제로 한 번 걸렸다). 그래서 이름은 접두사 없이 적는다.
-//
-// ⚠️ **여기 더하는 유틸리티는 legacy.css의 같은 선언을 그대로 옮긴 것이다 - 보이는 모양을 바꾸지 않는다.** 이유:
-// 이 조각이 들어가는 `#products-head`·`#products-body`는 **틀의 인라인 스크립트가 데이터를 받으면 통째로 다시 그린다**
-// (scripts/rates-template.html의 renderProductsHead·renderProducts). 그쪽이 내는 마크업에는 이 class가 없으므로,
-// 여기서 **모양이 달라지는** 유틸리티를 쓰면 **구운 첫 화면과 스크립트가 다시 그린 화면이 서로 다르게 보인다**(깜빡임).
-// 그 스크립트를 고치는 길은 두 가지가 막혀 있다 - **S6**(인라인 스크립트 바이트가 늘면 하드)과 **틀은 #282 소관**이다.
-// 그래서 이 PR은 **배선을 색인 4장에서 실증하는 데까지만** 하고, 모양을 바꾸는 일은 틀과 함께 가는 #282·#278 PR C로 넘긴다.
-// 옮긴 짝(legacy.css):
-//   .data-table th       color: var(--muted) · font-weight: 600 · font-size: var(--fs-xs)  -> `text-muted` `font-semibold` `text-xs`
-//   .product-name        white-space: normal · word-break: keep-all                        -> `whitespace-normal` `break-keep`
-//   .product-company     font-size: var(--fs-xs) · color: var(--muted)                     -> `text-xs` `text-muted`
-//   .rate-strong         font-weight: 600 · color: var(--up)                               -> `font-semibold` `text-up`
-//   .rate-low            font-weight: 600 · color: var(--down)                             -> `font-semibold` `text-down`
-//   .net-interest        font-weight: 700                                                  -> `font-bold`
-// 글자 크기 유틸리티가 line-height: inherit을 같이 내는데, line-height는 상속 속성이라 선언이 없을 때와 계산값이 같다(#278 PR B).
-//
-// 허브(docs/rates.html)도 같은 규칙으로 고쳤고, 그쪽은 다시 그리는 스크립트가 없어서 **모양이 바뀐다**(상품군 링크 넷이 카드가 된다).
-// 거기 쓴 것 중 두 가지는 근거가 여기 있다:
-//   - 읽는 단은 `max-w-read`(= --container-read -> max-width: var(--prose))를 쓴다. Tailwind가 미리 들고 있는 65ch짜리 prose 쪽은
-//     그 값이 이겨 var(--prose)가 나오지 않는다(src/css/main.css 55~56행).
-//   - **화면 폭 변형 가운데 열린 구간(max-) 쪽은 하나도 쓰지 않았다.** 그쪽은 `(width < 480px)`로 나오고 legacy.css의
-//     `@media (max-width: 480px)`는 480px을 포함한다 - 정확히 480px 한 폭에서만 갈린다(같은 파일 52~53행).
-//     갈릴 자리를 만들지 않는 쪽을 골랐다(#279 완료 조건 3).
-//   - 주석에 유틸리티 이름을 접두사까지 적지 않는 규칙은 docs/*.html도 같다(@source 목록에 있다).
-const TH_CLASS = "tw:text-muted tw:text-xs tw:font-semibold";
-const rateTh = (label) => `<th scope="col" class="${TH_CLASS}">${label}</th>`;
-function ratesHeadHtmlLegacy(category = "deposit") {
-  return isSavingCategory(category)
-    ? `<tr>${rateTh("상품")}${rateTh("기본금리")}${rateTh("최고금리")}${rateTh("세후 이자")}</tr>`
-    : `<tr>${rateTh("상품")}${rateTh("금리 유형")}${rateTh("금리(최저~최고)")}${rateTh("평균")}</tr>`;
-}
-export const ratesHeadHtml = fragment("ratesHeadHtml", ratesHeadHtmlLegacy);
-
-function ratesHtmlLegacy(rates, { category = "deposit", limit = RATES_ROWS } = {}) {
-  const rows = selectRateRows(rates, category, limit);
-  if (!rows) return null;
-
-  const saving = isSavingCategory(category);
-  // 훅 class(product-name·rate-strong·net-interest는 tools/golden/hook-classes.json에 있다)는 지우지 않고 뒤에 더한다.
-  const productCell = (product) =>
-    `<td><div class="product-name tw:whitespace-normal tw:break-keep">${escapeHtml(product.name ?? "-")}</div>` +
-    `<div class="product-company tw:text-xs tw:text-muted">${escapeHtml(product.company ?? "")}</div></td>`;
-
-  return rows
-    .map(({ product, option }) =>
-      saving
-        ? `<tr>${productCell(product)}<td data-label="기본금리">${rate(option.rate)}</td>` +
-          `<td class="rate-strong tw:font-semibold tw:text-up" data-label="최고금리">${rate(option.maxRate ?? option.rate)}</td>` +
-          `<td class="net-interest tw:font-bold" data-label="세후 이자">${netInterestText(option, category)}</td></tr>`
-        : `<tr>${productCell(product)}<td data-label="금리 유형">${escapeHtml(option.rateType ?? "-")}</td>` +
-          `<td data-label="금리(최저~최고)">${rateRange(option.min, option.max)}</td>` +
-          `<td class="rate-low tw:font-semibold tw:text-down" data-label="평균">${rate(option.avg)}</td></tr>`
-    )
-    .join("");
-}
-export const ratesHtml = fragment("ratesHtml", ratesHtmlLegacy);
-
 export function applyPrerender(html, blocks) {
   let out = html;
   for (const [name, content] of Object.entries(blocks)) {
@@ -860,7 +794,6 @@ async function main() {
   // 넷째 칸(선택)은 틀 경로다. 있으면 path_ 는 나가는 장이고, 틀을 채운 뒤 인라인 스크립트 주석을 떼어 path_ 에 쓴다(#374).
   for (const [file, path_, fileBlocks, templatePath] of [
     [label("index.html"), at("index.html"), blocks],
-    [label("rates.html"), at("rates.html"), { rateBridgeKo: rateBridgeHtml("rates", "ko"), rateBridgeEn: rateBridgeHtml("rates", "en") }], // 허브: 표·상품군 문단은 상품군 페이지 넷이 그린다(#193)
     [
       label("news.html"),
       at("news.html"),

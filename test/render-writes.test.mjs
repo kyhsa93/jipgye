@@ -51,15 +51,14 @@ test("쓰기 묶음: commit 전에는 디스크에 아무것도 쓰지 않고, c
 
 test("prerender.ts: 마지막 장의 마커가 지워져 던지면 앞 장들도 새 출력이 되지 않는다", async () => {
   const dir = await tempRepo();
-  const files = ["index", "rates", "news", "realestate", "jeonse-vs-wolse", "renewal-vs-new", "floor-gap", "switch-house", "record-high", "price-outlook", "method", "cancelled-deals"];
+  const files = ["index", "news", "realestate", "jeonse-vs-wolse", "renewal-vs-new", "floor-gap", "switch-house", "record-high", "price-outlook", "method", "cancelled-deals"];
   const template = await readFile(TEMPLATE, "utf8");
   for (const f of files) await writeFile(path.join(dir, "docs", `${f}.html`), template);
 
-  // 대조군: 틀이 멀쩡하면 데이터 없이도 rates·realestate는 바뀐다(허브 링크·자치구 머리글) - 이 시험이 보는 "앞 장"이다.
+  // 대조군: 틀이 멀쩡하면 데이터 없이도 realestate는 바뀐다(자치구 머리글) - 이 시험이 보는 "앞 장"이다. (금리 허브는 #577 B2 로 프리렌더 대상에서 빠졌다)
   const control = run(dir, "prerender.ts");
   assert.equal(control.status, 0, control.stderr);
   const after1 = await readAll(path.join(dir, "docs"));
-  assert.notEqual(after1["rates.html"], template, "대조군에서 rates.html이 바뀌지 않았다 - 시험이 아무것도 못 본다");
   assert.notEqual(after1["realestate.html"], template);
 
   // 다시 틀로 되돌리고 마지막 장(cancelled-deals)의 닫는 마커 하나를 지운다.
@@ -74,7 +73,7 @@ test("prerender.ts: 마지막 장의 마커가 지워져 던지면 앞 장들도
 
 test("prerender.ts: 시세 장은 scripts/ 의 틀을 읽어 docs/realestate.html 로 쓰고, 그 자리에서 인라인 스크립트 주석을 뗀다 (#374)", async () => {
   const dir = await tempRepo();
-  const files = ["index", "rates", "news", "jeonse-vs-wolse", "renewal-vs-new", "floor-gap", "switch-house", "record-high", "price-outlook", "method", "cancelled-deals"];
+  const files = ["index", "news", "jeonse-vs-wolse", "renewal-vs-new", "floor-gap", "switch-house", "record-high", "price-outlook", "method", "cancelled-deals"];
   const fixture = await readFile(TEMPLATE, "utf8");
   for (const f of files) await writeFile(path.join(dir, "docs", `${f}.html`), fixture);
   // docs/realestate.html 을 일부러 만들지 않는다 - 입력이 나가는 장이면 읽다가 던진다. 틀(scripts/ 안 복사본)은 주석을 가진 채 그대로 있어야 한다.
@@ -90,24 +89,6 @@ test("prerender.ts: 시세 장은 scripts/ 의 틀을 읽어 docs/realestate.htm
   assert.deepEqual(jsInlineScripts(out).map((x) => x.body), want, "나가는 장의 스크립트가 틀에서 주석만 뗀 것과 다르다");
   assert.equal(jsInlineScripts(out).flatMap((x) => findJsComments(x.body)).length, 0, "나가는 장에 주석이 남았다");
   assert.equal(await readFile(templatePath, "utf8"), template, "틀이 덮어 써졌다 - 생성물만 쓰고 틀은 건드리지 않는다");
-});
-
-test("build-rate-pages.mjs: 뒤 상품군 장을 그리다 던지면 앞 상품군 장도 만들어지지 않는다", async () => {
-  const dir = await tempRepo();
-  const rates = (mortgage) => JSON.stringify({ deposit: [], saving: [], mortgage, rentLoan: [] });
-  // 대조군: 전부 멀쩡하면 네 장이 생긴다.
-  await writeFile(path.join(dir, "docs/data/rates.json"), rates([]));
-  const control = run(dir, "build-rate-pages.ts");
-  assert.equal(control.status, 0, control.stderr);
-  const made = (await readdir(path.join(dir, "docs"))).filter((f) => f.endsWith(".html")).sort();
-  assert.equal(made.length, 4, `상품군 장 넷이 생겨야 한다: ${made}`);
-  for (const f of made) await rm(path.join(dir, "docs", f));
-
-  // options가 배열이 아닌 상품 하나 - 주담대 장을 그릴 때만 던진다(예적금 장은 이미 그려진 뒤다).
-  await writeFile(path.join(dir, "docs/data/rates.json"), rates([{ name: "x", options: 5 }]));
-  const failed = run(dir, "build-rate-pages.ts");
-  assert.notEqual(failed.status, 0, "던져야 한다");
-  assert.deepEqual((await readdir(path.join(dir, "docs"))).filter((f) => f.endsWith(".html")), [], "앞 장이 이미 만들어졌다");
 });
 
 test("stampAll(io): 뒤 장에서 던지면 쓰기 묶음에 올린 앞 장은 디스크에 내려가지 않고, 이어받기는 올린 것을 읽는다", async () => {

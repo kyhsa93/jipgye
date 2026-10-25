@@ -1,6 +1,6 @@
 name: Deploy site
 
-# 구조 B-4(#510, 부모 #505): 사이트를 만들고 게시하는 **유일한** 워크플로다. 컷오버 이후 main 은 생성 HTML(docs/*.html 중 생성 53장)을 들고 있지 않다 -
+# 구조 B-4(#510, 부모 #505): 사이트를 만들고 게시하는 **유일한** 워크플로다. 컷오버 이후 main 은 생성 HTML(docs/*.html 중 생성 49장)을 들고 있지 않다 -
 # 이 워크플로가 main HEAD(코드 + 데이터)를 받아 build/site 로 새로 만들고(scripts/render-pipeline.ts, B2) 시험한 뒤 Pages 에 올린다. 수집(daily-update.yml)·요약(summarize.yml)은
 # 데이터(docs/data·raw)만 커밋하고 렌더·시험·배포를 하지 않는다 - 그래서 수집은 렌더·시험 실패에 막히지 않고(2026-09-02~10-01 28일 시계열 유실의 모양), 기능 병합은 데이터 커밋과
 # 같은 파일을 건드리지 않는다.
@@ -64,7 +64,7 @@ jobs:
         run: echo "BUILD_NOW=$(git log -1 --format=%cI HEAD)" >> "$GITHUB_ENV"
 
       # 출력 위치는 build/site 하나로 고정한다(사용자 입력 아님, #508 cto). render-pipeline 이 docs/(손으로 고치는 틀 14장·정적 자산·data)를 복사한 뒤
-      # 여섯 단계를 그 복사본에서 돌려 생성 53장을 만든다. React 렌더가 실패하면 legacy 로 폴백하는데, 폴백은 배포하지 않는다(아래 단계).
+      # 다섯 단계를 그 복사본에서 돌려 생성 49장을 만든다. React 렌더가 실패하면 legacy 로 폴백하는데, 폴백은 배포하지 않는다(아래 단계).
       - name: 사이트 생성 (build/site)
         id: render
         run: node scripts/render-pipeline.ts --out=build/site

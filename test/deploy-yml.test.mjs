@@ -198,21 +198,22 @@ test("배포 경로는 하나다: deploy-pages 를 쓰는 워크플로는 deploy
   }
 });
 
-test("main 은 생성 HTML 을 들고 있지 않다: git ls-files docs 에 생성 53장이 없고 손으로 고치는 틀 14장·정적 자산·data 는 있다", () => {
+test("main 은 생성 HTML 을 들고 있지 않다: git ls-files docs 에 생성 49장이 없고 손으로 고치는 틀 13장·금리 종료 안내 5장·정적 자산·data 는 있다", () => {
   let listed;
   try {
     listed = execFileSync("git", ["ls-files", "docs"], { cwd: root, encoding: "utf8" }).split("\n").filter(Boolean);
   } catch (e) {
     assert.fail(`git ls-files 를 못 돌렸다(저장소 밖에서 돌린 시험이다): ${e.message}`);
   }
-  const GENERATED = /^docs\/(deposit-rates|saving-rates|mortgage-rates|rent-loan-rates|rate-news|realestate-news|stock-news|apartment-(sale|jeonse|rent)|budget-\d+eok|district-[a-z]+)\.html$/;
+  const GENERATED = /^docs\/(rate-news|realestate-news|stock-news|apartment-(sale|jeonse|rent)|budget-\d+eok|district-[a-z]+)\.html$/;
   assert.deepEqual(listed.filter((f) => GENERATED.test(f)), [], "커밋된 생성 HTML 이 있다 - 사이트는 build/site 에만 생기고 main 은 들고 있지 않는다(#510)");
   const htmls = listed.filter((f) => /^docs\/[^/]+\.html$/.test(f));
-  assert.equal(htmls.length, 14, `손으로 고치는 틀이 14장이 아니다: ${htmls.length}`);
+  // 손으로 고치는 틀 13장 + 금리 종료 안내 5장(#577 B2 - 지운 금리 주소에 둔 noindex 장, 2027-01-23 삭제 #581).
+  assert.equal(htmls.length, 18, `docs/ 의 소스 장이 18장이 아니다: ${htmls.length}`);
   for (const f of ["docs/index.html", "docs/style.css", "docs/nav.js", "docs/sw.js", "docs/manifest.webmanifest"]) assert.ok(listed.includes(f), `${f} 가 없다 - 소스·정적 자산은 docs/ 에 남는다`);
   assert.ok(listed.some((f) => f.startsWith("docs/data/")), "docs/data 가 없다");
-  // .gitignore 는 docs/ 에서 제자리로 렌더한 생성 장이 실수로 커밋되지 않게 막는다(기본 render-pipeline 은 docs/ 를 제자리에서 고친다). 53장 이름 전부가 걸리고, 손으로 고치는 틀은 안 걸린다.
-  const sample = ["deposit-rates", "saving-rates", "mortgage-rates", "rent-loan-rates", "rate-news", "realestate-news", "stock-news", "apartment-sale", "apartment-jeonse", "apartment-rent", "budget-3eok", "budget-20eok", "district-gangnam", "district-yongsan"];
+  // .gitignore 는 docs/ 에서 제자리로 렌더한 생성 장이 실수로 커밋되지 않게 막는다(기본 render-pipeline 은 docs/ 를 제자리에서 고친다). 49장 이름 전부가 걸리고, 손으로 고치는 틀·금리 종료 안내 장은 안 걸린다.
+  const sample = ["rate-news", "realestate-news", "stock-news", "apartment-sale", "apartment-jeonse", "apartment-rent", "budget-3eok", "budget-20eok", "district-gangnam", "district-yongsan"];
   const ignored = (rel) => {
     try {
       execFileSync("git", ["check-ignore", "-q", rel], { cwd: root, stdio: "pipe" });
@@ -222,7 +223,7 @@ test("main 은 생성 HTML 을 들고 있지 않다: git ls-files docs 에 생�
     }
   };
   for (const name of sample) assert.ok(ignored(`docs/${name}.html`), `docs/${name}.html 이 .gitignore 에 안 걸린다 - 제자리 렌더가 커밋될 수 있다`);
-  for (const name of ["index", "rates", "news", "realestate", "method", "about", "deal-search", "cancelled-deals"]) assert.ok(!ignored(`docs/${name}.html`), `손으로 고치는 틀 docs/${name}.html 이 .gitignore 에 걸린다`);
+  for (const name of ["index", "rates", "deposit-rates", "saving-rates", "mortgage-rates", "rent-loan-rates", "news", "realestate", "method", "about", "deal-search", "cancelled-deals"]) assert.ok(!ignored(`docs/${name}.html`), `손으로 고치는 틀 docs/${name}.html 이 .gitignore 에 걸린다`);
 });
 
 // daily-update.yml 의 하나뿐이던 반영 단계(금리 수집 실패 반영)는 #577 A 에서 금감원 수집과 함께 빠져 0개다. 다시 생기면 같은 모양 규칙을 받는다.

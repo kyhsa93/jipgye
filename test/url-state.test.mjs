@@ -3,8 +3,6 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { loadIndexPage } from "./helpers/index-page.mjs";
-import { loadRatesPage } from "./helpers/rates-page.mjs";
-import { RATE_PAGES } from "../scripts/build-rate-pages.ts";
 import { NEWS_PAGES } from "../scripts/build-news-pages.ts";
 import { SITE } from "./helpers/site-root.mjs";
 
@@ -29,26 +27,8 @@ test("메인은 주소의 카테고리·검색어로 시작한다", async () => 
   assert.equal(filtered.q, "전세");
 });
 
-test("금리 페이지는 주소의 탭·기간·검색어로 시작한다", async () => {
-  const plain = await loadRatesPage();
-  assert.equal(plain.state.category, "deposit");
-
-  const restored = await loadRatesPage({ search: "?tab=mortgage&type=변동금리&q=카카오" });
-  assert.equal(restored.state.category, "mortgage");
-  assert.equal(restored.state.rateType, "변동금리");
-  assert.equal(restored.state.query, "카카오");
-});
-
-test("상품군별 페이지는 주소가 없어도 자기 탭으로 시작한다", async () => {
-  const page = await loadRatesPage({ file: `${SITE}/rent-loan-rates.html` });
-  assert.equal(page.state.category, "rentLoan");
-
-  const overridden = await loadRatesPage({ file: `${SITE}/rent-loan-rates.html`, search: "?tab=saving" });
-  assert.equal(overridden.state.category, "saving");
-});
-
 test("검색은 기록을 쌓지 않고 탭·필터는 쌓는다", async () => {
-  for (const file of [`${SITE}/index.html`, `${SITE}/deposit-rates.html`]) {
+  for (const file of [`${SITE}/index.html`]) { // 금리 4장(#577 B2 로 지움)도 여기 있었다
     const html = await read(file);
     assert.ok(
       /history\[push \? "pushState" : "replaceState"\]/.test(html),
@@ -57,12 +37,6 @@ test("검색은 기록을 쌓지 않고 탭·필터는 쌓는다", async () => {
     assert.ok(html.includes('syncUrl({ push: true })'), `${file}에서 되돌릴 수 있는 조작을 기록하지 않는다`);
     assert.ok(html.includes('addEventListener("popstate"'), `${file}에 뒤로가기 처리가 없다`);
   }
-});
-
-test("기본값은 주소에 남기지 않는다", async () => {
-  const html = await read(`${SITE}/deposit-rates.html`);
-  assert.ok(html.includes('["tab", state.category, DEFAULT_CATEGORY]'), "기본 탭 기준이 페이지에 맞지 않는다");
-  assert.ok(html.includes('if (value === empty) next.delete(key);'), "기본값을 지우지 않는다");
 });
 
 test("부동산 표도 머리글로 정렬한다", async () => {
@@ -215,9 +189,7 @@ test("감춰야 할 요소가 CSS 때문에 계속 보이지 않는다", async (
 
   const files = [
     `${SITE}/index.html`,
-    `${SITE}/rates.html`,
     `${SITE}/news.html`,
-    ...RATE_PAGES.map((p) => `${SITE}/${p.file}`),
     ...NEWS_PAGES.map((p) => `${SITE}/${p.file}`),
   ];
 

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { SITE } from "./helpers/site-root.mjs";
+import { RATE_NOTICE_PAGES } from "../scripts/updated-stamp.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const docs = path.join(root, SITE);
@@ -19,7 +20,8 @@ const links = (block) => [...(block ?? "").matchAll(/<a\b[^>]*>([^<]*)<\/a>/g)].
   text: m[1].trim(),
 }));
 
-const SECTION_COUNT = 4;
+// 「금리 비교」는 #577 B2(금감원 자료 제거)로 1층에서 뺐다 - 넷에서 셋.
+const SECTION_COUNT = 3;
 
 /**
  * 섹션 넷 가운데 어디에도 속하지 않는 페이지.
@@ -28,7 +30,8 @@ const SECTION_COUNT = 4;
  * 돌아간다. 1층에서 넷 중 하나를 굳이 켜 두면 거기서 왔다는 거짓말이 되고, 다섯 번째
  * 항목으로 올리면 매일 쓰는 네 곳 옆에 한 번 읽고 마는 문서가 끼는 셈이 된다.
  */
-const OUTSIDE_SECTIONS = new Set(["method.html", "about.html"]);
+// 금리 종료 안내 다섯 장(#577 B2)도 섹션이 아니다 - 지운 주소에 남긴 안내라 1층 어디도 켜지 않는다.
+const OUTSIDE_SECTIONS = new Set(["method.html", "about.html", ...RATE_NOTICE_PAGES]);
 
 test("모든 페이지의 1층 내비게이션이 섹션 넷을 넘지 않는다", async () => {
   for (const file of await pages()) {
@@ -112,8 +115,8 @@ test("시세 계열 페이지의 2층 항목이 서로 같다", async () => {
   }
 });
 
-test("모든 페이지가 네 섹션 서로에게 닿는다", async () => {
-  const targets = ["./index.html", "./news.html", "./realestate.html", "./rates.html"];
+test("모든 페이지가 세 섹션 서로에게 닿는다", async () => {
+  const targets = ["./index.html", "./news.html", "./realestate.html"];
   for (const file of await pages()) {
     const html = await readFile(path.join(docs, file), "utf8");
     const block = navBlock(html, "page-nav");
@@ -121,5 +124,15 @@ test("모든 페이지가 네 섹션 서로에게 닿는다", async () => {
     for (const target of targets) {
       assert.ok(block.includes(`href="${target}"`), `${file}: ${target} 링크가 없다`);
     }
+    assert.equal(links(block).length, SECTION_COUNT, `${file}: 1층 항목이 ${SECTION_COUNT}개가 아니다`);
+  }
+});
+
+test("어느 장의 1층에도 「금리 비교」(rates.html)가 없다 - 금감원 금리 화면을 지웠다 (#577 B2)", async () => {
+  for (const file of await pages()) {
+    const html = await readFile(path.join(docs, file), "utf8");
+    const block = navBlock(html, "page-nav") ?? "";
+    assert.ok(!block.includes("rates.html") && !block.includes("금리 비교"), `${file}: 1층에 금리 비교가 남아 있다`);
+    assert.ok(!html.includes('id="nav-rates"') && !html.includes('id="nav-rate-compare"'), `${file}: 옛 내비 id 가 남아 있다`);
   }
 });

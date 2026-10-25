@@ -6,8 +6,6 @@
 @layer theme {
   :root, :host {
     --tw-spacing: 0.25rem;
-    --tw-font-weight-semibold: 600;
-    --tw-font-weight-bold: 700;
   }
 }
 @layer components {
@@ -2520,9 +2518,6 @@
   }
 }
 @layer utilities {
-  .tw\:m-0 {
-    margin: 0px;
-  }
   .tw\:mt-0 {
     margin-top: 0px;
   }
@@ -2535,14 +2530,8 @@
   .tw\:-ml-2\.75 {
     margin-left: calc(var(--tw-spacing) * -2.75);
   }
-  .tw\:grid {
-    display: grid;
-  }
   .tw\:max-w-read {
     max-width: var(--prose);
-  }
-  .tw\:list-none {
-    list-style-type: none;
   }
   .tw\:gap-2 {
     gap: calc(var(--tw-spacing) * 2);
@@ -2553,28 +2542,12 @@
   .tw\:rounded {
     border-radius: 0.25rem;
   }
-  .tw\:border {
-    border-style: var(--tw-border-style);
-    border-width: 1px;
-  }
   .tw\:border-l-3 {
     border-left-style: var(--tw-border-style);
     border-left-width: 3px;
   }
-  .tw\:border-border {
-    border-color: var(--border);
-  }
   .tw\:border-border-strong {
     border-color: var(--border-strong);
-  }
-  .tw\:bg-card {
-    background-color: var(--card);
-  }
-  .tw\:p-0 {
-    padding: 0px;
-  }
-  .tw\:p-4 {
-    padding: calc(var(--tw-spacing) * 4);
   }
   .tw\:pl-2 {
     padding-left: calc(var(--tw-spacing) * 2);
@@ -2583,35 +2556,8 @@
     font-size: var(--fs-sm);
     line-height: var(--tw-leading, inherit);
   }
-  .tw\:text-xs {
-    font-size: var(--fs-xs);
-    line-height: var(--tw-leading, inherit);
-  }
-  .tw\:font-bold {
-    --tw-font-weight: var(--tw-font-weight-bold);
-    font-weight: var(--tw-font-weight-bold);
-  }
-  .tw\:font-semibold {
-    --tw-font-weight: var(--tw-font-weight-semibold);
-    font-weight: var(--tw-font-weight-semibold);
-  }
-  .tw\:break-keep {
-    word-break: keep-all;
-  }
-  .tw\:whitespace-normal {
-    white-space: normal;
-  }
-  .tw\:text-down {
-    color: var(--down);
-  }
   .tw\:text-fg {
     color: var(--fg);
-  }
-  .tw\:text-muted {
-    color: var(--muted);
-  }
-  .tw\:text-up {
-    color: var(--up);
   }
   :is(.tw\:\*\:rounded > *) {
     border-radius: 0.25rem;
@@ -2633,15 +2579,10 @@
   inherits: false;
   initial-value: solid;
 }
-@property --tw-font-weight {
-  syntax: "*";
-  inherits: false;
-}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
       --tw-border-style: solid;
-      --tw-font-weight: initial;
     }
   }
 }

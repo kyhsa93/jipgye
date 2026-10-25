@@ -228,8 +228,9 @@ test("저장소 docs: id=updated가 있는 장은 모두 표에 있고 정적 '�
   const sourced = Object.keys(PAGE_SOURCES);
   assert.deepEqual(withUpdated.filter((f) => !sourced.includes(f)), [], "소스 표에 없는데 #updated가 있는 장 (PAGE_SOURCES에 넣거나 #tagline로 가를 것)");
   assert.deepEqual(sourced.filter((f) => !withUpdated.includes(f)), [], "표에는 있는데 #updated가 없는 장");
-  assert.equal(withUpdated.length, 64, "#updated(기준일)를 가진 장 수");
-  assert.equal(withUpdated.length + NO_DATA_PAGES.length, files.length, "기준일 64 + 꼬리표 3 = 전체 67이어야 한다");
+  // #577 B2: 금리 4장(기준일 있음)이 종료 안내 장(꼬리표)이 됐고 허브도 안내 장이다 - 기준일 64 -> 60, 꼬리표 3 -> 7.
+  assert.equal(withUpdated.length, 60, "#updated(기준일)를 가진 장 수");
+  assert.equal(withUpdated.length + NO_DATA_PAGES.length, files.length, "기준일 60 + 꼬리표 7 = 전체 67이어야 한다");
 });
 
 /** html에서 태그 하나의 안쪽을 잘라 돌려준다. 없으면 null. */
@@ -279,20 +280,9 @@ test("저장소 docs: 기준일은 바닥글에, 낡은 자료 경고는 머리�
     if ((html.match(/id="updated-warn"/g) ?? []).length !== 1) bad.push(`${f}: #updated-warn이 한 개가 아니다`);
   }
   assert.deepEqual(bad, [], bad.join(" | "));
-  assert.equal(dated, 64, "기준일을 가진 장 수");
-  assert.equal(tagged, 3, "꼬리표만 가진 장 수");
-  assert.equal(dated + tagged, files.length, "64 + 3 = 67");
-});
-
-/** 틀(scripts/rates-template.html)도 같은 자리를 가진다 - 금리 네 장이 여기서 찍혀 나온다. */
-test("금리 틀도 기준일은 바닥글에, 경고는 머리글에 있다 (#282)", async () => {
-  const html = await readFile(path.join(root, "scripts/rates-template.html"), "utf8");
-  const header = inside(html, /<header[\s>]/, "</header>");
-  const footer = inside(html, /<footer class="site-footer"[\s>]/, "</footer>");
-  assert.ok(header?.includes('id="updated-warn"'), "경고가 머리글에 있어야 한다");
-  assert.ok(!header?.includes('id="updated"'), "기준일이 머리글에 남으면 안 된다");
-  assert.ok(footer?.includes('id="updated"'), "기준일이 바닥글에 있어야 한다");
-  assert.ok(!footer?.includes('id="updated-warn"'), "경고가 바닥글로 내려가면 안 된다");
+  assert.equal(dated, 60, "기준일을 가진 장 수");
+  assert.equal(tagged, 7, "꼬리표만 가진 장 수");
+  assert.equal(dated + tagged, files.length, "60 + 7 = 67");
 });
 
 /** 기준일 줄을 다시 찍어도 경고 줄이 늘어나지 않는다 - 옛 정규식은 경고까지 삼켜 다시 뱉었다(#282). */

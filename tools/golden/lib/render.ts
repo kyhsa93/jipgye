@@ -43,6 +43,13 @@ export const RENDER_STAGES = [
   "scripts/build-updated-stamp.mjs",
 ];
 
+/**
+ * 지운 단계: 사본에 파일이 없으면 건너뛴다(#577 B2). base(병합 전 main)는 금리 4장을 이 단계로 찍고 head 는 단계 파일이 없다 - 같은 목록으로 두 쪽을
+ * 굽되 base 의 출력은 실제 배포와 같게 둔다. 목록에 없는 단계가 사본에 없으면 지금처럼 모듈 없음으로 죽는다(오타를 숨기지 않는다).
+ * B2 병합 뒤에는 base 에도 파일이 없어 늘 건너뛴다 - 그때 RENDER_STAGES 와 여기서 같이 지운다(#581).
+ */
+export const RETIRED_STAGES = new Set(["scripts/build-rate-pages.mjs"]);
+
 const MOCK_NOW = pathToFileURL(path.join(import.meta.dirname, "mock-date-now.ts")).href;
 
 // 렌더 결과를 흔드는 환경변수는 호출자가 명시한 것만 들어가게 상속에서 뺀다.
@@ -221,10 +228,11 @@ async function statSnapshot(dir) {
  * 같은 목록으로 굽기 위해서다. stem(`withoutExt`)이 같은 `.mjs`·`.ts` 중 사본에 있는 쪽을 돌리고, 둘 다 있으면 던지고, 둘 다 없으면
  * 이름 그대로 둔다(지금처럼 모듈 없음으로 죽는다).
  */
-export function resolveStage(stage: string, workDir: string): string {
+export function resolveStage(stage: string, workDir: string): string | null {
   const stem = withoutExt(stage);
   const found = [".mjs", ".ts"].map((ext) => stem + ext).filter((f) => existsSync(path.join(workDir, f)));
   if (found.length > 1) throw new Error(`렌더 단계 ${stem} 이 .mjs 와 .ts 로 둘 다 있습니다`);
+  if (!found.length && RETIRED_STAGES.has(stage)) return null; // 지운 단계(#577 B2): 이 사본에는 없다
   return found[0] ?? stage;
 }
 
@@ -285,7 +293,12 @@ export async function renderIsolated(pristine, { env = {}, mockNow = null, stage
     const timings = [];
     for (const stage of stages) {
       assertNotTerminating();
-      const { ms } = await runStage(resolveStage(stage, workDir), workDir, full, nodeArgs);
+      const script = resolveStage(stage, workDir);
+      if (script === null) {
+        timings.push({ stage, ms: 0, skipped: true });
+        continue;
+      }
+      const { ms } = await runStage(script, workDir, full, nodeArgs);
       timings.push({ stage, ms });
     }
     const after = await statSnapshot(workDir);

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#253e81">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<title>금리 비교 종료 안내 · 집계</title>
+<meta name="description" content="집계의 예금·적금·주택담보대출·전세자금대출 금리 비교는 종료했습니다. 금융상품 금리는 금융감독원 금융상품한눈에에서 비교할 수 있습니다.">
+<!-- 금리 비교 종료 안내(#577 B2, 소유자 결정 2026-10-25 - 금융감독원 자료의 저작권 약관 위험으로 금리 화면을 지웠다).
+     지운 금리 주소 다섯(rates·deposit-rates·saving-rates·mortgage-rates·rent-loan-rates)이 빈 404 대신 이유와 갈 곳을 보이게 같은 글을 둔다.
+     색인하지 않는다(noindex). meta refresh 는 두지 않는다 - 검색엔진이 soft-404 로 볼 수 있다(#577 소유자 질문 2).
+     광고·분석 로더(analytics.js)와 데이터는 싣지 않는다 - 내용 없는 안내 장이다. 인라인 스크립트는 테마·언어만 다룬다(저장 열쇠는 다른 장과 같다).
+     삭제 예정일: 2027-01-23(게시 뒤 90일). 추적: #581. 지울 때 다섯 장과 sw.js·시험의 안내 장 목록을 같이 지운다. -->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://kyhsa93.github.io/jipgye/saving-rates.html">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<a class="skip-link" href="#content" data-skip-en="Skip to content">본문 바로가기</a>
+<main id="main">
+  <header class="tw:mb-2 tw:1024:mb-6">
+    <div>
+      <a class="brand" id="site-brand" href="./index.html" data-brand-en="Jipgye">집계</a>
+      <h1 id="page-title">금리 비교 종료 안내</h1>
+      <div class="page-tagline" id="tagline">이 화면은 더 이상 운영하지 않습니다</div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-toggle" type="button" id="share-button" aria-label="공유"><span aria-hidden="true">📤</span></button>
+      <button class="icon-toggle" type="button" id="theme-toggle" aria-label="테마 전환"><span aria-hidden="true">🌓</span></button>
+      <button class="icon-toggle" type="button" id="lang-toggle" aria-label="언어 전환"><span aria-hidden="true">🌐</span></button>
+    </div>
+  </header>
+
+  <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="섹션">
+    <a href="./index.html" id="nav-digest">오늘</a>
+    <a href="./realestate.html" id="nav-realestate">아파트 시세</a>
+    <a href="./news.html" id="nav-news">뉴스</a>
+  </nav>
+
+  <form class="site-search" role="search">
+    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
+    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off" enterkeyhint="search"
+           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
+    <div class="site-search-results" id="site-search-results" role="listbox"
+         aria-labelledby="site-search-label" hidden></div>
+  </form>
+  <div id="content" tabindex="-1"></div>
+
+  <section class="method-body tw:max-w-read tw:mb-10 tw:1024:mb-16">
+  <div data-lang="ko" class="on">
+    <p class="lead tw:rounded">집계의 예금·적금·주택담보대출·전세자금대출 금리 비교는 종료했습니다. 이 주소에 있던 금리 표는 더 이상 보여 주지 않고 갱신하지도 않습니다.</p>
+    <p>금융상품 금리는 금융감독원 「금융상품한눈에」(<a href="https://finlife.fss.or.kr" target="_blank" rel="noopener">finlife.fss.or.kr</a>)에서 직접 비교할 수 있습니다.</p>
+    <p><a href="./index.html">집계 첫 화면으로 가기</a></p>
+  </div>
+  <div data-lang="en">
+    <p class="lead tw:rounded">Jipgye no longer compares deposit, installment savings, mortgage or jeonse loan rates. The rate tables that used to live at this address are no longer shown or updated.</p>
+    <p>You can compare financial product rates directly on the Financial Supervisory Service's FINLIFE site (<a href="https://finlife.fss.or.kr" target="_blank" rel="noopener">finlife.fss.or.kr</a>).</p>
+    <p><a href="./index.html">Go to the Jipgye home page</a></p>
+  </div>
+  </section>
+
+  <footer>
+    <div>
+      <a href="./about.html" id="footer-about">소개</a>
+      <span aria-hidden="true"> · </span>
+      <a href="./method.html" id="footer-method">숫자를 만드는 방법</a>
+      <span aria-hidden="true"> · </span>
+      <a href="https://kyhsa93.github.io/privacy-policy" id="footer-privacy" target="_blank" rel="noopener">개인정보처리방침</a>
+    </div>
+  </footer>
+</main>
+<script src="./nav.js" defer></script>
+<script src="./search.js" defer></script>
+<script>
+(function () {
+  const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
+  let theme = (function () {
+    const saved = window.localStorage.getItem("theme");
+    return saved === "light" || saved === "dark" ? saved : "auto";
+  })();
+
+  function applyTheme(next) {
+    theme = next;
+    window.localStorage.setItem("theme", theme);
+    if (theme === "auto") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", theme);
+    document.querySelector("#theme-toggle span").textContent = THEME_ICONS[theme];
+  }
+
+  const NAV = {
+    ko: {
+      digest: "오늘",
+      news: "뉴스",
+      realestate: "아파트 시세",
+      title: "금리 비교 종료 안내",
+      tagline: "이 화면은 더 이상 운영하지 않습니다",
+      about: "소개",
+      method: "숫자를 만드는 방법",
+      privacy: "개인정보처리방침",
+    },
+    en: {
+      digest: "Today",
+      news: "News",
+      realestate: "Apartment prices",
+      title: "Rate comparison has ended",
+      tagline: "This page is no longer maintained",
+      about: "About",
+      method: "How these numbers are made",
+      privacy: "Privacy policy",
+    },
+  };
+
+  let locale = window.localStorage.getItem("lang") === "en" ? "en" : "ko";
+
+  function applyLocale(next) {
+    locale = next;
+    window.localStorage.setItem("lang", locale);
+    document.documentElement.setAttribute("lang", locale);
+    for (const block of document.querySelectorAll("[data-lang]")) {
+      block.classList.toggle("on", block.getAttribute("data-lang") === locale);
+    }
+    const words = NAV[locale];
+    document.getElementById("nav-digest").textContent = words.digest;
+    document.getElementById("nav-news").textContent = words.news;
+    document.getElementById("nav-realestate").textContent = words.realestate;
+    document.getElementById("page-title").textContent = words.title;
+    document.getElementById("tagline").textContent = words.tagline;
+    document.getElementById("footer-about").textContent = words.about;
+    document.getElementById("footer-method").textContent = words.method;
+    document.getElementById("footer-privacy").textContent = words.privacy;
+  }
+
+  document.getElementById("theme-toggle").addEventListener("click", function () {
+    applyTheme(theme === "auto" ? "light" : theme === "light" ? "dark" : "auto");
+  });
+  document.getElementById("lang-toggle").addEventListener("click", function () {
+    applyLocale(locale === "ko" ? "en" : "ko");
+  });
+
+  applyTheme(theme);
+  applyLocale(locale);
+})();
+</script>
+</body>
+</html>

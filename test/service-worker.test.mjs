@@ -144,11 +144,13 @@ test("다른 도메인 요청에는 끼어들지 않는다", async () => {
 
 test("새 페이지들이 설치 시 미리 받는 목록에 들어 있다", async () => {
   const source = await readFile(path.join(root, "docs/sw.js"), "utf8");
-  const shell = ["./index.html", "./rates.html", "./news.html", "./style.css", "./nav.js", "./search.js", "./analytics.js", "./load-state.js"];
+  const shell = ["./index.html", "./news.html", "./style.css", "./nav.js", "./search.js", "./analytics.js", "./load-state.js"];
   for (const asset of shell) {
     assert.ok(source.includes(`"${asset}"`), `${asset}이 셸 목록에 없다`);
   }
-  assert.ok(/CACHE_NAME = "jipgye-v15"/.test(source), "캐시 버전을 올리지 않았다");
+  assert.ok(/CACHE_NAME = "jipgye-v16"/.test(source), "캐시 버전을 올리지 않았다");
+  // #577 B2: 금리 허브는 종료 안내 장이 됐다 - 설치 때 미리 받지 않는다(v15 -> v16 으로 옛 캐시의 허브를 비운다).
+  assert.ok(!source.includes('"./rates.html"'), "종료 안내 장(rates.html)이 아직 셸 목록에 있다");
 });
 
 test("페이지 코드는 브라우저 캐시를 건너뛰고 받는다", async () => {

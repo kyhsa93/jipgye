@@ -31,7 +31,6 @@ export const FIXTURE_DATA =path.join(repo, "test/fixtures/site/data");
 /** 이 순서로 돈다: 프리렌더가 틀을 채우고, 페이지 빌더가 장을 찍고, 기준일 찍기가 마지막이다(render-pipeline.ts 의 순서와 같다). */
 export const SITE_STEPS = [
   "scripts/prerender.ts",
-  "scripts/build-rate-pages.ts",
   "scripts/build-news-pages.ts",
   "scripts/build-budget-pages.ts",
   "scripts/build-realestate-pages.ts",

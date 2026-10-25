@@ -12,7 +12,7 @@
  * 경고까지 같이 내리면 낡은 자료 고지가 첫 화면에서 사라진다(134조건 중 128 -> 1, 문서 좌표 중앙 154px -> 4,176px).
  * 그래서 기준일만 내리고 경고는 제자리에 둔다(po 6206109779 / cmo 6207405456). nav.js는 둘을 getElementById로
  * 따로 찾으므로 자리가 갈려도 JS는 한 줄도 안 바뀐다.
- * 데이터를 읽지 않는 세 장(NO_DATA_PAGES)에는 기준일 줄이 아예 없다 - 그 장의 제목 아래 한 줄은 기준일이 아니라
+ * 데이터를 읽지 않는 장(NO_DATA_PAGES - 소개·방법과 금리 종료 안내 다섯)에는 기준일 줄이 아예 없다 - 그 장의 제목 아래 한 줄은 기준일이 아니라
  * 꼬리표라서 #tagline으로 이름을 갈랐다(#282, po 6206109779 / cmo 6207405456). 한 이름이 두 뜻을 지면
  * 다음 사람이 64장 규칙을 세 장에 민다.
  *
@@ -39,10 +39,6 @@ const BUDGETS = Array.from({ length: 18 }, (_, i) => `budget-${i + 3}eok`);
 /** 장 -> 그 장이 읽는 소스 이름. 시험이 장의 loadJson/fetch 목록과 대조한다(빠뜨리면 빨강). */
 export const PAGE_SOURCES = {
   "index.html": ["market", "news", "summary", "realestate", "realestate-trend"],
-  "deposit-rates.html": ["rates"],
-  "saving-rates.html": ["rates"],
-  "mortgage-rates.html": ["rates"],
-  "rent-loan-rates.html": ["rates"],
   "news.html": ["news", "summary"],
   "rate-news.html": ["news", "summary"],
   "realestate-news.html": ["news", "summary"],
@@ -77,7 +73,9 @@ export const CROSS_PAGES = {
 };
 
 /** 데이터를 읽지 않는 장. 기준일이 없고, 제목 아래 한 줄은 #updated가 아니라 #tagline이다(#282). */
-export const NO_DATA_PAGES = ["about.html", "method.html", "rates.html"]; // rates.html은 상품군 네 장으로 가는 허브라 수치가 없다(#193)
+// 금리 종료 안내 다섯 장(#577 B2, 2027-01-23 삭제 예정 - #581)도 데이터를 읽지 않는다.
+export const RATE_NOTICE_PAGES = ["deposit-rates.html", "mortgage-rates.html", "rates.html", "rent-loan-rates.html", "saving-rates.html"];
+export const NO_DATA_PAGES = ["about.html", "method.html", ...RATE_NOTICE_PAGES];
 
 /** 소스들 중 가장 오래된 updatedAt의 KST 날짜. 소스를 못 찾으면 던진다 - 조용히 자리표시자를 남기지 않는다. */
 export function baselineFor(names, sources) {

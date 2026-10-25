@@ -46,7 +46,7 @@ jobs:
           TAILWIND_CACHE_DIR: ${{ runner.temp }}/tailwindcss
         run: node scripts/build-css.mjs --check
       - run: npm ci
-      # 사이트 생성(#510, 구조 B-4): 생성 HTML 53장은 main 에 없다. 시험은 build/site 를 읽고(test/helpers/site-root.mjs), 그 폴더는 render-pipeline 이 main 의 코드+데이터로 만든다.
+      # 사이트 생성(#510, 구조 B-4): 생성 HTML 49장은 main 에 없다. 시험은 build/site 를 읽고(test/helpers/site-root.mjs), 그 폴더는 render-pipeline 이 main 의 코드+데이터로 만든다.
       # `npm test` 는 pretest 로 같은 렌더를 한 번 더 하지만(로컬에서도 그냥 `npm test` 가 돌게), 렌더 폴백(React 렌더 실패 -> legacy)은 pretest 에서 조용히 지나간다 - 여기서 막는다.
       # deploy.yml 의 배포 게이트와 같은 규칙이다: 폴백한 산출물은 PR 에서도 병합 후에도 통과시키지 않는다.
       - name: 사이트 생성 (build/site)

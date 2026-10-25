@@ -3,7 +3,6 @@ import test from "node:test";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
-import { loadRatesPage } from "./helpers/rates-page.mjs";
 import { loadIndexPage } from "./helpers/index-page.mjs";
 import { SITE } from "./helpers/site-root.mjs";
 
@@ -237,33 +236,20 @@ test("DebugView는 ?ga_debug=1을 붙였을 때만 켜진다", async () => {
 });
 
 test("이벤트 매개변수에 GA4 예약 이름을 쓰지 않는다", async () => {
-  const [index, rates] = await Promise.all(
-    [`${SITE}/index.html`, `${SITE}/rates.html`].map((p) => readFile(path.join(root, p), "utf8"))
+  // 둘째 장은 금리 허브였다 - #577 B2 로 종료 안내 장이 되어 계측을 싣지 않아 소개 장으로 바꿨다.
+  const [index, about] = await Promise.all(
+    [`${SITE}/index.html`, `${SITE}/about.html`].map((p) => readFile(path.join(root, p), "utf8"))
   );
 
   for (const [name, html] of [
     ["index.html", index],
-    ["rates.html", rates],
+    ["about.html", about],
   ]) {
     const params = [...html.matchAll(/window\.analytics\?\.\w+\(([\s\S]*?)\);/g)].map((m) => m[1]);
     for (const block of params) {
       assert.ok(!/[{,]\s*value:/.test(block), `${name}에 예약 매개변수 value가 쓰였다: ${block}`);
     }
   }
-});
-
-test("금리 페이지는 첫 렌더에서 페이지뷰를, 탭 전환에서 이벤트를 보고한다", async () => {
-  const analytics = recorder();
-  const { clickTab } = await loadRatesPage({ analytics });
-
-  const pageViews = analytics.calls.filter(([name]) => name === "page_view");
-  assert.equal(pageViews.length, 1, "첫 렌더에서 페이지뷰가 한 번 나가야 한다");
-  assert.equal(pageViews[0][1].site_language, "ko");
-
-  clickTab("mortgage");
-  const tabEvents = analytics.calls.filter(([name]) => name === "rate_tab");
-  assert.equal(tabEvents.length, 1);
-  assert.equal(tabEvents[0][1].rate_category, "mortgage");
 });
 
 test("데이터를 못 받으면 어느 파일이 실패했는지 남는다", async () => {
@@ -282,17 +268,6 @@ test("데이터를 못 받으면 어느 파일이 실패했는지 남는다", as
 
   assert.ok(failures.some(([, params]) => params.fatal === false));
   assert.ok(failures.every(([, params]) => params.description.length <= 100));
-});
-
-test("금리 페이지도 로드 실패를 남긴다", async () => {
-  const analytics = recorder();
-  await loadRatesPage({ analytics, fetch: async () => ({ ok: false, json: async () => ({}) }) });
-
-  const failures = analytics.calls.filter(([name]) => name === "exception");
-  assert.ok(
-    failures.some(([, params]) => params.description.includes("load rates:") && params.fatal),
-    `rates 실패가 안 남았다: ${JSON.stringify(failures)}`
-  );
 });
 
 test("섹션은 화면에 들어왔을 때 한 번만 센다", async () => {
@@ -326,21 +301,17 @@ test("섹션 노출은 길이에 좌우되는 조건으로 재지 않는다", as
   );
 });
 
-test("계측 스크립트가 차단돼도 금리 페이지는 그대로 그려진다", async () => {
-  const { byId } = await loadRatesPage();
-  assert.ok(byId.get("products-body").innerHTML.includes("<tr"));
-});
-
 test("두 페이지와 서비스워커가 모두 analytics.js를 물고 있다", async () => {
-  const [index, rates, sw] = await Promise.all(
-    [`${SITE}/index.html`, `${SITE}/rates.html`, "docs/sw.js"].map((p) =>
+  // 둘째 장은 금리 허브였다 - #577 B2 로 종료 안내 장이 되어 계측을 싣지 않아 소개 장으로 바꿨다.
+  const [index, about, sw] = await Promise.all(
+    [`${SITE}/index.html`, `${SITE}/about.html`, "docs/sw.js"].map((p) =>
       readFile(path.join(root, p), "utf8")
     )
   );
 
   for (const [name, html] of [
     ["index.html", index],
-    ["rates.html", rates],
+    ["about.html", about],
   ]) {
     assert.ok(html.includes('<script src="./analytics.js"></script>'), `${name}에 로더가 없다`);
     assert.ok(html.includes('<meta name="site-group" content="digest">'), `${name}에 사이트 구분이 없다`);
@@ -364,9 +335,9 @@ test("요약이 폴백된 날은 메인에도 그 사실을 표시한다", async
 });
 
 test("로드가 실패하면 다시 시도할 수단을 준다", async () => {
-  for (const file of [`${SITE}/index.html`, `${SITE}/deposit-rates.html`, `${SITE}/news.html`]) {
+  for (const file of [`${SITE}/index.html`, `${SITE}/news.html`]) {
     const html = await readFile(path.join(root, file), "utf8");
-    // 금리 페이지는 단추를 공용 docs/load-state.js가 만든다(#173) - 페이지에는 id만 남는다. 표 위 알림의 단추 id 는 공용 함수의 기본값(load-retry)이라
+    // 단추를 공용 docs/load-state.js가 만드는 장은(#173) 페이지에 id만 남는다. 표 위 알림의 단추 id 는 공용 함수의 기본값(load-retry)이라
     // 페이지에 글자로 안 남으므로 공용 함수를 부르는 줄로 본다(#296 (마), 실제 단추는 test/load-failure.test.mjs 가 누른다).
     assert.ok(/id="load-(error-)?retry"|retryId: "load-retry"|window\.loadState\.showFailure\(/.test(html), `${file}에 재시도 버튼이 없다`);
     assert.ok(html.includes('"다시 시도"') && html.includes('"Retry"'), `${file} 재시도 문구가 한쪽 언어에만 있다`);

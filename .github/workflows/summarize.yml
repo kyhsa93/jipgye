@@ -92,7 +92,7 @@ jobs:
       # 마지막 일은 커밋이다(#510, 구조 B-4). 렌더·시험·Pages 배포는 deploy.yml 이 이 워크플로의 완료(workflow_run)를 받아 따로 한다 - 여기서 렌더하거나 시험을
       # 부르면 요약 커밋이 렌더·시험 실패에 묶인다(전에는 이 워크플로의 시험이 커밋 앞에 있어 요약이 시험 하나에 막혔다). 그래서 render-pipeline·npm test·Pages 단계가 없다
       # (test/daily-no-render.test.mjs 가 지킨다). 전에는 여기 렌더가 「일부러 다섯」 단계(rate 4장 제외)였다 - 커밋된 docs/ 에 rate 4장이 있어서만 성립하던 모양이라,
-      # 생성 HTML 을 main 에서 걷어낸 지금은 deploy.yml 이 항상 여섯 단계 전부를 한 번에 그린다.
+      # 생성 HTML 을 main 에서 걷어낸 지금은 deploy.yml 이 항상 다섯 단계 전부를 한 번에 그린다.
       - name: 변경사항 커밋 및 푸시
         run: |
           ./scripts/push-docs.sh "chore: AI 요약 갱신 $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M') KST"

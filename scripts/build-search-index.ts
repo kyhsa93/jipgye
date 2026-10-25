@@ -42,10 +42,6 @@ export const SCREENS = [
   { text: "대출 천장·최소 필요 현금", href: "./budget-10eok.html", also: ["대출 한도", "대출한도", "LTV", "DSR", "필요 현금", "자기 돈", "자기자본", "생애최초"] },
   { text: "정책대출 가격선(디딤돌·보금자리론·신생아 특례)", href: "./budget-6eok.html", also: ["신혼", "디딤돌", "보금자리론", "신생아", "신생아 특례", "정책대출"] },
   { text: "계약에서 등기·잔금까지 걸리는 날", href: "./cancelled-deals.html#month-section", also: ["잔금", "입주", "등기 기간"] },
-  { text: "정기예금 금리", href: "./deposit-rates.html", also: ["예금", "금리", "이자"] },
-  { text: "적금 금리", href: "./saving-rates.html", also: ["적금"] },
-  { text: "주택담보대출 금리", href: "./mortgage-rates.html", also: ["주담대", "담보대출", "대출"] },
-  { text: "전세자금대출 금리", href: "./rent-loan-rates.html", also: ["전세대출", "전세자금"] },
   { text: "경제·부동산 뉴스", href: "./news.html", also: ["뉴스", "기사"] },
   { text: "숫자를 만드는 방법", href: "./method.html", also: ["집계", "기준", "방법"] },
 ];
