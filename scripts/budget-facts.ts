@@ -15,6 +15,8 @@
  * 어느 예산대가 걸리게 할지를 보면서 정하게 되고, 그건 결과에 끼워 맞추는 것이다.
  */
 
+import { MIN_DEALS as CELL_MIN_DEALS } from "./complex-price.ts";
+
 /** 전용 60㎡·85㎡는 청약과 세제가 쓰는 선. 준공 30년은 재건축 연한. */
 const SMALL_AREA = 60;
 const LARGE_AREA = 85;
@@ -190,6 +192,18 @@ export function budgetYearOn(files, min10k, max10k) {
   };
 }
 
+/**
+ * 사실 문단(budgetFactsHtml)에 「내 예산, 1년 새」를 얹은 예산대. band.facts 는 budget-deals.json(최근 3개월 거래)에서 오고,
+ * yearOn 은 단지 가격 범위 파일에서 빌드 때 센다 - 두 입력을 한 문단으로 굽는 자리다(build-budget-pages.ts). 원본 band 는 바꾸지 않는다.
+ * 견줄 칸이 없거나 단지 파일이 없으면 band 그대로(문단도 전과 같다).
+ * budget-fragments.ts 가 아니라 여기 두는 것은 그 모듈의 의존 목록이 시험으로 고정돼 있어서다(test/render-parity.test.mjs).
+ */
+export function withYearOn(band, complexFiles) {
+  if (!band) return band;
+  const yearOn = budgetYearOn(complexFiles, band.min10k, band.max10k);
+  return yearOn ? { ...band, facts: { ...(band.facts ?? {}), yearOn } } : band;
+}
+
 const area = (value) => `${Number(value).toFixed(0)}㎡`;
 
 function place(deal, en) {
@@ -285,5 +299,65 @@ export function budgetFactSentences(facts, locale = "ko") {
     );
   }
 
+  if (facts.yearOn) out.push(...yearOnSentences(facts.yearOn, en));
+
+  return out;
+}
+
+const EN_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** ["202506", "202508"] → 「2025년 6~8월」·"Jun–Aug 2025". 해가 다르면 해를 둘 다 적는다. 한 달이면 한 달. */
+function monthSpan(span, en) {
+  const [ay, am] = [Number(span[0].slice(0, 4)), Number(span[0].slice(4, 6))];
+  const last = span.at(-1);
+  const [by, bm] = [Number(last.slice(0, 4)), Number(last.slice(4, 6))];
+  const ko = (y, m) => `${y}년 ${m}월`;
+  const eng = (y, m) => `${EN_MONTHS[m - 1]} ${y}`;
+  if (ay === by && am === bm) return en ? eng(ay, am) : ko(ay, am);
+  if (ay === by) return en ? `${EN_MONTHS[am - 1]}–${eng(by, bm)}` : `${ay}년 ${am}~${bm}월`;
+  return en ? `${eng(ay, am)}–${eng(by, bm)}` : `${ko(ay, am)}~${ko(by, bm)}`;
+}
+
+/**
+ * 「내 예산, 1년 새」 문장(#692). 예산대 사실 문단 끝에 붙는다 - 틀(realestate-template.html)에 새 자리를 만들지 않으려고
+ * 같은 문단의 뒷부분으로 둔다. 두 언어가 늘 같은 개수의 문장을 낸다. 단지 이름은 쓰지 않는다(구 이름만).
+ * 문장 사이 고정 글자가 길게 이어지지 않게 숫자를 사이사이 둔다 - 18장 공통 산문(scripts/prose-share.ts, 8단어 창)을 덜 늘린다.
+ */
+function yearOnSentences(y, en) {
+  const out = [];
+  const then = y.months ? monthSpan(y.months, en) : null;
+  const ref = /^\d{6}$/.test(String(y.reference ?? "")) ? monthSpan([y.reference], en) : null;
+  const thenNote = then ? (en ? ` (${then} median)` : `(${then} 중앙값)`) : "";
+  const nowNote = ref ? (en ? ` (${ref}-adjusted median)` : `(${ref} 값으로 고친 중앙값)`) : "";
+  if (y.was) {
+    const below = y.down ? (en ? `, ${y.down} of them below it` : `(그 가운데 ${y.down}칸은 아래로)`) : "";
+    out.push(
+      en
+        ? `Comparing each complex-size cell with itself a year earlier: of the ${y.was} cells inside this budget a year ago${thenNote}, ${y.out} (${pct(share(y.out, y.was))}%) are now outside it${nowNote}${below}, and ${y.came} moved in from outside.`
+        : `같은 단지·같은 평형을 1년 전과 견주면, 1년 전${thenNote} 이 예산 안이던 ${y.was}칸 가운데 ${y.out}칸(${pct(share(y.out, y.was))}%)이 지금${nowNote}은 밖으로 나갔고${below}, 밖에서 들어온 칸은 ${y.came}칸입니다.`
+    );
+  } else {
+    out.push(
+      en
+        ? `Comparing each complex-size cell with itself a year earlier: none sat inside this budget a year ago${thenNote}, and ${y.came} have moved in since${nowNote}.`
+        : `같은 단지·같은 평형을 1년 전과 견주면, 1년 전${thenNote} 이 예산 안이던 칸은 없고 지금${nowNote} 밖에서 들어온 칸이 ${y.came}칸입니다.`
+    );
+  }
+  if (y.out && y.top?.length) {
+    const names = y.top.map(({ name, count }) => (en ? `${name} (${count})` : `${name} ${count}칸`)).join(en ? ", " : "·");
+    out.push(en ? `The cells that left are mostly in ${names}.` : `나간 칸은 ${names} 순으로 많습니다.`);
+  }
+  if (y.missing) {
+    out.push(
+      en
+        ? `${y.missing} of today's ${y.current} cells had fewer than ${CELL_MIN_DEALS} deals a year earlier and are left out.`
+        : `지금 이 예산 안 ${y.current}칸 가운데 1년 전 같은 칸 거래가 ${CELL_MIN_DEALS}건이 안 돼 값이 없는 ${y.missing}칸은 뺐습니다.`
+    );
+  }
+  out.push(
+    en
+      ? "Because each cell is compared with itself, a shift toward pricier complexes cannot inflate the change the way an average would."
+      : "칸마다 자기 자신과 견준 것이라, 비싼 단지가 더 팔려 평균이 오르는 착시는 섞이지 않습니다."
+  );
   return out;
 }
