@@ -2783,6 +2783,12 @@ summary:focus-visible,
   text-decoration: underline;
 }
 
+/* 안내 링크는 한국어·영어 둘이 다 구워져 있고 html lang 이 가린다(#462) - 한국어는 #four-weeks, 영어는 #four-weeks-en 으로 바로 간다. */
+html:lang(en) .method-callout .m-ko,
+html:not(:lang(en)) .method-callout .m-en {
+  display: none;
+}
+
 /* 무엇을 알고 싶은지로 들어가는 입구.
  *
  * 1층 탭 넷은 우리가 데이터를 어디서 받는지의 목록이다 - 다이제스트·뉴스·시세·금리.

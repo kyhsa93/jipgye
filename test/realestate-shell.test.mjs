@@ -145,7 +145,10 @@ test("안내 상자(aside.method-callout)가 있는 53장은 모두 같은 모�
     n += 1;
     assert.ok(html.includes('<aside class="method-callout tw:-ml-2.75 tw:pl-2 tw:border-l-3 tw:border-border-strong">'), `${file}: 안내 상자의 모양 유틸리티가 다르다`);
     assert.ok(html.includes('<p id="method-callout-text" class="tw:text-fg">'), `${file}: 안내 문단의 글자색 유틸리티가 없다`);
-    assert.ok(/<a href="\.\/method\.html[^"]*" id="method-callout-link">/.test(html), `${file}: 안내 링크가 달라졌다`);
+    // 시세·예산대 47장은 한국어·영어 링크 쌍(#462), index·도구 장은 글자를 스크립트가 바꾸는 링크 하나다.
+    const single = /<a href="\.\/method\.html[^"]*" id="method-callout-link">/.test(html);
+    const pair = /<a href="\.\/method\.html[^"]*" class="m-ko">[^<]*<\/a>\s*<a href="\.\/method\.html[^"]*" class="m-en">[^<]*<\/a>/.test(html);
+    assert.ok(single || pair, `${file}: 안내 링크가 달라졌다`);
   }
   assert.equal(n, 53, `안내 상자가 있는 장이 ${n}장이다 - 53장(틀 47 + index + 도구 5)이어야 한다`);
 });

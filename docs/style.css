@@ -1984,6 +1984,9 @@
   .method-callout a:hover {
     text-decoration: underline;
   }
+  html:lang(en) .method-callout .m-ko, html:not(:lang(en)) .method-callout .m-en {
+    display: none;
+  }
   .question-nav {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
