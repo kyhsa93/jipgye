@@ -1843,6 +1843,9 @@
   html:not(:lang(en)) #content-notice.m-en {
     display: none;
   }
+  html:lang(en) caption .m-ko, html:not(:lang(en)) caption .m-en {
+    display: none;
+  }
   .question-nav {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
