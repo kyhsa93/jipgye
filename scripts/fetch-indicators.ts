@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { clampRows, ecosKey, searchAll } from "./ecos.ts";
 import { shiftMonth } from "./outlook.ts";
@@ -13,6 +13,13 @@ import { yearMonthOf } from "./realestate-slots.ts";
  * 처음 계열은 조사 때 받은 것을 저장소에 두었고(raw/indicators/series.json), 매일은 최근
  * REFRESH_MONTHS만 다시 받아 덮는다(늦게 고쳐지는 값 반영). 한 계열을 못 받아도 나머지와
  * 어제 값으로 간다 - 지표 하나 때문에 데일리 수집 전체가 멈추면 안 된다.
+ *
+ * KB 두 계열(KB_SERIES, ECOS 가 싣는 KB국민은행 지수)은 예외다(#588 3단계). 재배포 허락을 확인하지
+ * 못해 원값을 저장소에 더 쌓지 않는다: 매일 전체 이력을 ECOS 에서 다시 받아 커밋하지 않는 cache/ 아래
+ * 임시 파일(KB_HISTORY_FILE)에만 두고, 같은 잡의 build-indicators 가 그걸로 파생 판정표만 쓴다.
+ * 전체 이력을 못 받으면 임시 파일을 남기지 않는다 - 그날 build-indicators 는 어제 파일을 그대로 둔다
+ * (반쪽 이력으로 판정하면 롤링 오리진·12개월 차분이 비어 틀린 행이 나간다).
+ * raw/indicators/series.json 에 이미 있는 kb_* 값은 손대지 않고 더 갱신하지도 않는다(정리는 별도 PR).
  */
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -22,10 +29,22 @@ export const INDICATOR_FILE = process.env.INDICATOR_FILE
 
 export const REFRESH_MONTHS = 14;
 
-/** ECOS 계열. item은 경로에 그대로 붙는 항목 코드들. */
-export const ECOS_SERIES = {
+/** KB 전체 이력의 임시 사본. cache/ 는 .gitignore 라 커밋되지 않는다(push-docs.sh 도 docs/data·raw 만 싣는다). */
+export const KB_HISTORY_FILE = process.env.KB_HISTORY_FILE
+  ? path.resolve(process.env.KB_HISTORY_FILE)
+  : path.join(root, "cache/indicators/kb-history.json");
+
+/** KB 주택가격지수(ECOS 4.4.1.1·4.4.1.2, 아파트 서울). 원값을 저장소에 두지 않는다 - 위 설명. */
+export const KB_SERIES = {
   kb_sale: { stat: "901Y062", item: "P63ACA" },
   kb_jeonse: { stat: "901Y063", item: "P64ACA" },
+};
+
+/** KB 계열이 ECOS 에서 시작하는 달. 판정의 롤링 오리진이 여기부터 필요하다. */
+export const KB_HISTORY_FROM = "198601";
+
+/** ECOS 계열(KB 제외). item은 경로에 그대로 붙는 항목 코드들. */
+export const ECOS_SERIES = {
   base_rate: { stat: "722Y001", item: "0101000" },
   mortgage_rate: { stat: "121Y006", item: "BECBLA0302" },
   ktb3: { stat: "721Y001", item: "5020000" },
@@ -107,23 +126,57 @@ export function merge(stored = [], fresh = []) {
   return [...byMonth].sort(([a], [b]) => (a < b ? -1 : 1));
 }
 
-async function main() {
+/**
+ * KB 계열 하나의 전체 이력이 온전한지 본다. KB_HISTORY_FROM 부터 빠진 달 없이 이어져야 한다 -
+ * 아니면 이유를, 맞으면 null 을 돌려준다. 반쪽 이력을 판정에 넣지 않으려는 문(門)이다.
+ */
+export function kbHistoryProblem(rows) {
+  if (!Array.isArray(rows) || !rows.length) return "빈 이력";
+  if (!rows.every((r) => Array.isArray(r) && /^\d{6}$/.test(r[0]) && Number.isFinite(r[1]))) return "모양이 다름";
+  if (rows[0][0] !== KB_HISTORY_FROM) return `${KB_HISTORY_FROM}부터가 아님(${rows[0][0]})`;
+  for (let i = 1; i < rows.length; i += 1) {
+    if (rows[i][0] !== shiftMonth(rows[i - 1][0], 1)) return `${shiftMonth(rows[i - 1][0], 1)} 빠짐`;
+  }
+  return null;
+}
+
+/** KB 두 계열의 전체 이력을 받는다(계열마다 ECOS 1호출, 인증키 기준). 하나라도 온전하지 않으면 던진다. */
+export async function fetchKbHistory(to, key, { fetchImpl = fetch } = {}) {
+  const series: Record<string, [string, number][]> = {};
+  for (const [name, spec] of Object.entries(KB_SERIES)) {
+    const rows = await fetchEcos(spec, KB_HISTORY_FROM, to, key, { fetchImpl });
+    const problem = kbHistoryProblem(rows);
+    if (problem) throw new Error(`${name} ${problem}`);
+    series[name] = rows;
+  }
+  return series;
+}
+
+export async function collect({
+  now = new Date(),
+  key = ecosKey(),
+  fetchImpl = fetch,
+  indicatorFile = INDICATOR_FILE,
+  kbFile = KB_HISTORY_FILE,
+  log = console.log,
+} = {}) {
+  // 어제(로컬이면 지난 실행)의 임시 사본을 먼저 지운다. 오늘 못 받았는데 낡은 사본으로 판정하면 안 된다.
+  await rm(kbFile, { force: true });
   let stored;
   try {
-    stored = JSON.parse(await readFile(INDICATOR_FILE, "utf8"));
+    stored = JSON.parse(await readFile(indicatorFile, "utf8"));
   } catch {
     stored = { series: {} };
   }
-  const now = new Date();
   const to = yearMonthOf(now);
   const from = shiftMonth(to, -REFRESH_MONTHS);
-  const key = ecosKey();
+  // 저장분에 이미 있는 kb_* 는 그대로 옮기기만 한다(정리 PR 전까지). 새 값은 여기 들어오지 않는다.
   const series = { ...stored.series };
   const failed = [];
 
   const jobs = [
-    ...Object.entries(ECOS_SERIES).map(([name, spec]) => [name, () => fetchEcos(spec, from, to, key)] as const),
-    ...Object.entries(RONE_SERIES).map(([name, spec]) => [name, () => fetchRone(spec, from, to)] as const),
+    ...Object.entries(ECOS_SERIES).map(([name, spec]) => [name, () => fetchEcos(spec, from, to, key, { fetchImpl })] as const),
+    ...Object.entries(RONE_SERIES).map(([name, spec]) => [name, () => fetchRone(spec, from, to, { fetchImpl })] as const),
   ];
   // 하나씩 부른다 - 두 기관 모두 키 없는 호출이라 몰아서 부르면 막힐 수 있다.
   for (const [name, job] of jobs) {
@@ -138,15 +191,27 @@ async function main() {
 
   const changed = JSON.stringify(series) !== JSON.stringify(stored.series);
   if (changed) {
-    await mkdir(path.dirname(INDICATOR_FILE), { recursive: true });
-    await writeFile(INDICATOR_FILE, `${JSON.stringify({ source: "ECOS + R-ONE OpenAPI", series })}\n`);
+    await mkdir(path.dirname(indicatorFile), { recursive: true });
+    await writeFile(indicatorFile, `${JSON.stringify({ source: "ECOS + R-ONE OpenAPI", series })}\n`);
   }
-  console.log(
+  log(
     `  지표 계열: ${jobs.length - failed.length}/${jobs.length} 갱신${changed ? "" : "(변경 없음)"}` +
       (failed.length ? ` · 못 받음(어제 값으로): ${failed.join(", ")}` : "")
   );
+
+  let kbOk = false;
+  try {
+    const kb = await fetchKbHistory(to, key, { fetchImpl });
+    await mkdir(path.dirname(kbFile), { recursive: true });
+    await writeFile(kbFile, `${JSON.stringify({ source: "ECOS(KB국민은행) 전체 이력 - 커밋하지 않는 임시 사본(#588)", to, series: kb })}\n`);
+    kbOk = true;
+    log(`  KB 계열 전체 이력: ${Object.entries(kb).map(([k, v]) => `${k} ${v.length}개월`).join(", ")} (임시 사본, 커밋 안 함)`);
+  } catch (error) {
+    log(`::warning::KB 계열 전체 이력을 못 받았다(${error.message}) - 앞서지 않은 지표 판정은 어제 파일을 유지한다`);
+  }
+  return { failed, changed, kbOk };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
-  main().catch((error) => console.error(`  지표 계열 수집 실패(어제 값으로 간다): ${error.message}`));
+  collect().catch((error) => console.error(`  지표 계열 수집 실패(어제 값으로 간다): ${error.message}`));
 }
