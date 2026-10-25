@@ -17,6 +17,7 @@ import {
   toDeal,
 } from "./record-high.ts";
 import { RAW_DIR } from "./realestate-raw.ts";
+import { buildWeekDigest } from "./build-week-digest.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const outFile = process.env.RECORD_HIGH_FILE
@@ -74,6 +75,7 @@ async function readAll() {
 }
 
 async function main() {
+  await weekDigestSoft();
   const payload = buildPayload({ items: await readAll(), now: new Date() });
   if (!payload) {
     console.log("  신고가 다음 거래: 원본이 없어 건너뜀");
@@ -86,6 +88,18 @@ async function main() {
     `  신고가 다음 거래: 신고가 ${m.records}건(다음 거래 없음 ${m.none}%), 다음 ≥ 신고가 ${m.record}% vs 아무 거래 ${m.all}%, ` +
       `문턱 조합 ${payload.robust.filter((r) => r.counted && r.holds).length}/${payload.robust.filter((r) => r.counted).length} 유지`
   );
+}
+
+/**
+ * 이번 주 새 신고(#703 W1)를 같은 단계에서 만든다 - 따로 등록하지 않는다(판정: update-all.mjs·daily-update.yml 무수정).
+ * soft-fail: 던지면 경고만 남기고 신고가 산출물은 그대로 만든다. 이 파일의 산출물이 W1 때문에 빠지면 안 된다.
+ */
+async function weekDigestSoft() {
+  try {
+    await buildWeekDigest();
+  } catch (err) {
+    console.warn(`  이번 주 새 신고: 실패해 건너뜀(신고가는 계속) - ${(err as Error).message}`);
+  }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
