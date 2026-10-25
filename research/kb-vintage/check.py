@@ -5,12 +5,17 @@
   15일~: 공식은 M-2까지, KB는 M-1까지 → KB가 한 달 앞선다
 오리진을 매달 5일·20일로 잡아, 그날 실제로 볼 수 있었던 것만으로 '공식 마지막 달 + 3개월'을 예측한다.
 값은 최종본이다(고쳐지기 전 값은 없다) - 실거래가격지수는 고쳐지므로 이 결과도 실제보다 좋게 나온다.
-저장소 루트에서: python3 research/kb-vintage/check.py
+저장소 루트에서: python3 research/kb-vintage/check.py (KB 임시 사본 필요 - 아래 KB_FILE 주석)
 """
 import os, json, numpy as np
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 IDX = json.load(open(f'{REPO}/raw/ecos/apt-price-index.json'))['series']['200']
-KB = dict(json.load(open(f'{REPO}/raw/indicators/series.json'))['series']['kb_sale'])
+# KB 원값은 저장소에 없다(#588, 재배포 허락 미확인). 매 Daily 의 scripts/fetch-indicators.ts 가 쓰는 임시 사본(.gitignore)에서 읽는다.
+# 없으면: python3 research/buyer-search-timing-2026-10/fetch_series.py --kb-only  (ECOS sample 키, 1986-01~2026-09)
+KB_FILE = f'{REPO}/cache/indicators/kb-history.json'
+if not os.path.exists(KB_FILE):
+    raise SystemExit(f'KB 임시 사본이 없다({KB_FILE}) - 받으려면: python3 research/buyer-search-timing-2026-10/fetch_series.py --kb-only')
+KB = dict(json.load(open(KB_FILE))['series']['kb_sale'])
 ymi = lambda m: int(m[:4]) * 12 + int(m[4:]) - 1
 iym = lambda i: f"{i // 12}{i % 12 + 1:02d}"
 P = {ymi(m): np.log(v) for m, v in IDX}

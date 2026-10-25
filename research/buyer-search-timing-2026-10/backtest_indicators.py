@@ -13,7 +13,9 @@ import numpy as np
 
 REPO = os.environ.get("REPO", os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 HERE = os.path.dirname(os.path.abspath(__file__))
-S = json.load(open(os.path.join(HERE, "cache", "series.json")))
+sys.path.insert(0, HERE)
+from series_io import load_series  # cache/series.json + KB 임시 사본(저장소에 없음, series_io.py 설명)
+S = load_series()
 IDX = json.load(open(os.path.join(REPO, "raw/ecos/apt-price-index.json")))["series"]
 
 def ymi(ym): return int(ym[:4]) * 12 + int(ym[4:]) - 1

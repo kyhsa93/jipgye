@@ -1,4 +1,4 @@
-"""시장 온도 후보 지표를 받아 cache/series.json에 모은다.
+"""시장 온도 후보 지표를 받아 cache/series.json(.gitignore)에 모은다. KB 두 계열은 cache/indicators/kb-history.json 에 따로(아래).
 
 - ECOS: sample 키, 10줄씩 start를 넘겨 받는다.
 - R-ONE(한국부동산원 부동산통계정보 OpenAPI): 키 없이 부르면 5줄만 주고 pIndex를 무시한다.
@@ -7,7 +7,7 @@
 """
 import json, os, time, urllib.request
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "cache", "series.json")
+OUT = os.path.join(HERE, "cache", "series.json")  # .gitignore
 
 def get(url):
     for a in range(6):
@@ -47,9 +47,25 @@ def rone(statbl, cls, itm, frm, to):
         m = ym_add(end, 1)
     return sorted(out.items())
 
+import sys
+sys.path.insert(0, HERE)
+from series_io import KB_FILE
+
+# KB 두 계열은 저장소에 두지 않는다(#588, 재배포 허락 미확인) - 저장소 루트 cache/indicators/kb-history.json(.gitignore)에만 쓴다.
+# 매 Daily 의 scripts/fetch-indicators.ts 가 쓰는 파일과 같은 모양이다. `--kb-only` 는 이것만 받는다.
+KB = {
+    "kb_sale": ecos("901Y062", "M", "198601", "202609", "P63ACA"),
+    "kb_jeonse": ecos("901Y063", "M", "198601", "202609", "P64ACA"),
+}
+os.makedirs(os.path.dirname(KB_FILE), exist_ok=True)
+json.dump({"source": "ECOS(KB국민은행) 전체 이력 - 커밋하지 않는 임시 사본(#588)", "to": "202609", "series": KB}, open(KB_FILE, "w"))
+for k, v in KB.items():
+    print(k, len(v), v[0], v[-1], "->", KB_FILE)
+if "--kb-only" in sys.argv:
+    sys.exit(0)
+
+# cache/series.json 도 .gitignore - 일반 계열만 담는다.
 S = {}
-S["kb_sale"] = ecos("901Y062", "M", "198601", "202609", "P63ACA")
-S["kb_jeonse"] = ecos("901Y063", "M", "198601", "202609", "P64ACA")
 S["base_rate"] = ecos("722Y001", "M", "199905", "202609", "0101000")
 S["mortgage_rate"] = ecos("121Y006", "M", "200109", "202608", "BECBLA0302")
 S["ktb3"] = ecos("721Y001", "M", "199505", "202609", "5020000")
@@ -58,6 +74,7 @@ S["csi_house_seoul"] = ecos("511Y002", "M", "201301", "202609", "FMFB", "F0001")
 S["vol_seoul"] = rone("A_2024_00554", 500002, 100001, "200601", "202609")
 S["jratio_seoul"] = rone("A_2024_00072", 500008, 100001, "201201", "202609")
 S["supply_demand_seoul"] = rone("A_2024_00076", 500008, 100001, "201201", "202609")
+os.makedirs(os.path.dirname(OUT), exist_ok=True)
 json.dump(S, open(OUT, "w"))
 for k, v in S.items():
     print(k, len(v), v[0], v[-1])

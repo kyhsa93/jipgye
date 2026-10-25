@@ -1,6 +1,7 @@
 """backtest_indicators.py에서 부트스트랩 0.9를 넘은 것(주담대 금리 수준, KB 1개월 lag2, 계절)과
 거래량을 다시 흔든다: ① 기간을 반으로 나눠 ② 5개 권역에 그대로 ③ 계수 부호가 시간에 따라 유지되나
-④ 거래량은 학습을 2009년부터로 잘라서도."""
+④ 거래량은 학습을 2009년부터로 잘라서도.
+KB 계열은 저장소에 없다 - cache/series.json 과 KB 임시 사본이 먼저 있어야 한다(series_io.py)."""
 import os, json, numpy as np, importlib.util, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 def load(region):

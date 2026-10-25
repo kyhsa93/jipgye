@@ -3,11 +3,13 @@
 ② 계절: 거래량(R-ONE 아파트매매거래현황 서울, 2007~2025)의 달별 몫
 ③ 계약 → 등기 걸린 날: rgstDate가 있는 거래, 계약월이 충분히 익은 것만(검사 7)
 REPO만 바꾸면 된다."""
-import os, json, glob, collections, datetime as dt, numpy as np
+import os, sys, json, glob, collections, datetime as dt, numpy as np
 REPO = os.environ.get("REPO", os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 HERE = os.path.dirname(os.path.abspath(__file__))
 IDX = json.load(open(os.path.join(REPO, "raw/ecos/apt-price-index.json")))["series"]["200"]
-S = json.load(open(os.path.join(HERE, "cache", "series.json")))
+sys.path.insert(0, HERE)
+from series_io import load_series  # cache/series.json(.gitignore - fetch_series.py 가 만든다)
+S = load_series(with_kb=False)
 
 # ① 가격 계절
 v = dict(IDX); ms = sorted(v)
