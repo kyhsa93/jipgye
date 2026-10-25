@@ -8,7 +8,7 @@ import { pathToFileURL } from "node:url";
 import * as prerender from "../scripts/prerender.ts";
 import { INDEX_NEWS, indexNewsItems } from "../scripts/news-items.ts";
 import { escapeHtml } from "../scripts/html-escape.ts";
-import { linksBlockHtml, linksBlockShape, slugLinkEntries, slugLinkHref, slugLinksHtml } from "../scripts/district-links.ts";
+import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../scripts/district-links.ts";
 import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 import { CONVERSION_BAND, cancelDistricts, cancelMonths, conversionTable, count, floorDistricts, pct, renewalDistricts, renewalWolseDistricts, signed } from "../scripts/district-tables.ts";
 import { MAX_DISTRICTS, changeOf, countOf, man, metricCell, topDistricts } from "../scripts/realestate-rows.ts";
@@ -16,7 +16,6 @@ import { MIN_SAMPLE, hasEnoughSample } from "../scripts/realestate-format.ts";
 import { RE_LABELS, headLabels, reAllCells, reCells, reChange, reCount, reCountSpan, reDistrictLink, reDistrictRows, reEok, reHeadLabels, reLowSample, reMan, reRow, reSorted, reStaleTag, reWolseChange, realestateTable } from "../scripts/realestate-table.ts";
 import { overallCards, ratioBasis } from "../scripts/realestate-overall.ts";
 import { BUDGET_MORE_LINKS, CANDIDATE_LIST, bodyShape, budgetAnswers, budgetBandLabel, budgetRuleHref, budgetWhen, candidatesShape, capNote, costsNote, dealShape, eokOf, eokText, loanNote, minCashNote, policyNote, whereText } from "../scripts/budget-fragments.ts";
-import { makeFragment } from "../scripts/renderer.ts";
 import { DESIGN_ATTRS, stripDesignAttrs } from "../scripts/design-attrs.ts";
 import { createReactRenderer } from "../scripts/render/react.ts";
 import { SUMMARY_BASIC, SUMMARY_TWIN_CASES } from "./fixtures/render/summary-expected.mjs";
@@ -89,32 +88,10 @@ test("기본값(react): prerender.ts 래퍼의 출력이 고정 기대 문자열
   assert.equal(prerender.marketHtml(null), null);
 });
 
-test("래퍼: 이식된 조각만 React로 그리고 나머지는 원본 함수에 맡긴다", async () => {
-  const renderer = await createReactRenderer({ entry: fixture("fragments.jsx") });
-  const fragment = makeFragment(renderer);
-  const calls = [];
-  const summary = fragment("summaryHtml", (s) => (calls.push("fallback-summary"), `원본:${s}`));
-  const other = fragment("ratesHtml", (r) => (calls.push("fallback-other"), `원본:${r}`)); // 이식 목록에 없다
-  assert.equal(other("x"), "원본:x");
-  assert.deepEqual(calls, ["fallback-other"]);
-  assert.ok(summary({ categories: [{ name: "a", lineKo: "b" }] }).includes('<div class="summary-category-label">a</div>'));
-  assert.deepEqual(calls, ["fallback-other"], "이식된 조각을 그리면서 원본 함수를 부르면 안 된다");
-  assert.equal(summary.name, "summaryHtml");
-});
-
-test("래퍼: react 조각이 던지면 원본 함수로 넘기지 않고 그대로 던진다(폴백은 #238)", async () => {
-  const fragment = makeFragment(await createReactRenderer({ entry: fixture("fragments.jsx") }));
-  let fallbackCalled = false;
-  const news = fragment("newsHtml", () => ((fallbackCalled = true), "fallback"));
-  assert.throws(() => news({}), /의도한 조각 실패/);
-  assert.equal(fallbackCalled, false);
-});
-
 test("fixture 쌍둥이 골격: 같은 입력에서 fixtures/fragments.jsx(summaryHtml 쌍둥이)의 출력이 고정 기대 문자열과 같다", async () => {
-  const fragment = makeFragment(await createReactRenderer({ entry: fixture("fragments.jsx") }));
-  const react = fragment("summaryHtml", () => assert.fail("이식된 조각이라 원본 함수가 불리면 안 된다"));
+  const twin = await createReactRenderer({ entry: fixture("fragments.jsx") });
   for (const [input, expected] of SUMMARY_TWIN_CASES) {
-    const out = react(input);
+    const out = twin.render("summaryHtml", [input]);
     assert.equal(out === null ? null : noMeta(out), expected, JSON.stringify(input));
   }
 });
@@ -328,18 +305,8 @@ test("리드·링크 조각: 데이터 없음은 null, 빈 배열 글은 빈 문
   assert.equal(draw("conversionLeadHtml", { seoul: { leadKo: [] } }), "");
 });
 
-test("district-links.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, linksBlockHtml 추출 뒤에도 districtLinksHtml(React)의 글자가 그대로다", () => {
-  // linksBlockHtml: 링크가 없으면 머리글도 없다(빈 문자열), 머리글은 이스케이프하고 id는 그대로.
-  for (const none of ["", null, undefined, 0, false]) assert.equal(linksBlockHtml("x", "머리", none), "", String(none));
-  assert.equal(
-    linksBlockHtml("district-links", "다른 지역", "<a>1</a>"),
-    '<h3 class="district-links-heading" id="district-links-heading">다른 지역</h3><div class="district-links" id="district-links"><a>1</a></div>'
-  );
-  assert.equal(linksBlockHtml("i", `a&<"'`, "L"), `<h3 class="district-links-heading" id="i-heading">a&amp;&lt;&quot;'</h3><div class="district-links" id="i">L</div>`);
-  assert.equal(linksBlockHtml("i", false, "L"), '<h3 class="district-links-heading" id="i-heading">false</h3><div class="district-links" id="i">L</div>');
-  assert.equal(linksBlockHtml("i", null, "L"), '<h3 class="district-links-heading" id="i-heading"></h3><div class="district-links" id="i">L</div>');
-  assert.equal(linksBlockHtml("i", undefined, "L"), '<h3 class="district-links-heading" id="i-heading"></h3><div class="district-links" id="i">L</div>');
-  // slug 항목·경로·묶음
+test("district-links.mjs: JSX가 쓰는 순수 모듈이고, helper 추출 뒤에도 districtLinksHtml(React)의 글자가 그대로다", () => {
+  // slug 항목·경로
   assert.deepEqual(slugLinkEntries(null), []);
   assert.deepEqual(slugLinkEntries(undefined), []);
   assert.deepEqual(slugLinkEntries({}), []);
@@ -349,8 +316,6 @@ test("district-links.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, link
   assert.equal(slugLinkHref(null), "./district-.html");
   assert.equal(slugLinkHref(undefined), "./district-.html");
   assert.equal(slugLinkHref(false), "./district-false.html");
-  assert.equal(slugLinksHtml({}), null);
-  assert.equal(slugLinksHtml({ slugs: { 종로구: "jongno" } }), '<a href="./district-jongno.html">종로구</a>');
   // districtLinksHtml(React): helper를 뽑은 뒤에도 글자가 같다(#242 PR 1이 JSX 쪽도 이 모듈로 이식했다).
   const all = draw("districtLinksHtml");
   assert.ok(all.startsWith('<h3 class="district-links-heading" id="district-links-heading">다른 지역</h3><div class="district-links" id="district-links"><a href="./district-jongno.html">종로구</a><a href="./district-jung.html">중구</a>'));
@@ -596,14 +561,14 @@ test("district-tables.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - �
   // 같은 모듈을 쓰므로 prerender.ts가 이 이름을 다시 내보내는 것은 CONVERSION_BAND 하나뿐이다(다른 이름은 밖에서 쓰지 않는다)
 });
 
-test("district-links.mjs: linksBlockShape는 JSX가 쓰는 분기이고 linksBlockHtml(legacy)이 같은 분기를 쓴다", () => {
+test("district-links.mjs: linksBlockShape는 JSX가 쓰는 분기다", () => {
   for (const none of ["", null, undefined, 0, false, NaN]) assert.equal(linksBlockShape("x", "머리", none), null, String(none));
   assert.deepEqual(linksBlockShape("district-links", "다른 지역", "<a>1</a>"), { headingId: "district-links-heading", boxId: "district-links", heading: "다른 지역" });
   assert.deepEqual(linksBlockShape("i", false, 25), { headingId: "i-heading", boxId: "i", heading: false });
   // 링크가 있으면 어떤 값이든 같은 모양(개수 0은 없음)
   assert.equal(linksBlockShape("i", "h", 0), null);
   assert.notEqual(linksBlockShape("i", "h", 1), null);
-  // JSX가 쓰는 경로 규칙은 코드가 정한 `./district-<slug>.html` 하나다: legacy의 `./${file}`과 25곳 모두 같다
+  // JSX가 쓰는 경로 규칙은 코드가 정한 `./district-<slug>.html` 하나다: DISTRICT_PAGES 의 `./${file}`과 25곳 모두 같다
   for (const { slug, file } of DISTRICT_PAGES) assert.equal(slugLinkHref(slug), `./${file}`);
   for (const { slug } of DISTRICT_PAGES) assert.match(slugLinkHref(slug), /^\.\/district-[a-z]+\.html$/, "javascript: 등 다른 스킴이 들어갈 자리가 없다");
 });
@@ -1384,8 +1349,8 @@ test("budget-fragments.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - �
   for (const bad of [null, undefined, 0, "", "x", true, {}, [], [5], { min10k: "50000" }, { min10k: null }, { min10k: NaN }, { min10k: Infinity }, { min10k: [] }]) assert.equal(eokOf(bad), null, JSON.stringify(bad));
   // 규칙 주소: 코드가 정한 상대 경로
   for (const id of ["mincash", "policy", "cap", "costs", "loan"]) assert.equal(budgetRuleHref(id), `./method.html#budget-rules-${id}`);
-  assert.equal(prerender.budgetRuleLink("loan", "글"), ' <a class="budget-rule-link" href="./method.html#budget-rules-loan">글</a>');
-  assert.equal(prerender.budgetRuleLink("x", SPECIAL_TEXT), ` <a class="budget-rule-link" href="./method.html#budget-rules-x">A&amp;B &lt;i&gt; &quot;q&quot; it's</a>`, "글자는 이스케이프된다");
+  // 규칙 링크 마크업(앞 공백 하나 + a.budget-rule-link)은 JSX 의 RuleLink 가 낸다 - 옛 legacy budgetRuleLink 단언을 React 출력으로 옮겼다(#248 P3).
+  assert.ok(draw("budgetCostsHtml", { min10k: 70_000 }).endsWith(' <a class="budget-rule-link" href="./method.html#budget-rules-costs">중과·예외와 원문(2026-10-01 확인) →</a></p>'));
   // 다음 질문 링크: 다섯, 전부 상대 경로(javascript: 불가), 얼려 있다
   assert.equal(BUDGET_MORE_LINKS.length, 5);
   for (const [href, text] of BUDGET_MORE_LINKS) {
@@ -1394,7 +1359,6 @@ test("budget-fragments.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - �
   }
   assert.ok(Object.isFrozen(BUDGET_MORE_LINKS) && BUDGET_MORE_LINKS.every((pair) => Object.isFrozen(pair)));
 });
-const SPECIAL_TEXT = `A&B <i> "q" it's`;
 
 test("budget-fragments.mjs: 문단 모양 - 문장이 비면 null, 링크는 코드가 정한 id와 글자, 상한은 16~24억대에만 링크", () => {
   const link = (id, text) => ({ id, text });
@@ -1453,14 +1417,12 @@ test("budget-fragments.mjs: 표본 문턱을 정의하거나 부르지 않고, �
   assert.deepEqual(imports, ["./complex-price.ts", "./loan-cap.ts", "./min-cash.ts", "./mortgage.ts", "./policy-loan.ts", "./purchase-costs.ts", "./realestate-format.ts"]);
 });
 
-test("prerender.ts의 공개 export는 추출 뒤에도 같은 이름이다 - budgetRuleLink·budgetBandLabel·CANDIDATE_LIST(PR B에서 옮겼다)·MIN_SAMPLE·escapeHtml", () => {
-  assert.equal(typeof prerender.budgetRuleLink, "function");
+test("prerender.ts의 공개 export는 추출 뒤에도 같은 이름이다 - budgetBandLabel·MIN_SAMPLE·escapeHtml(legacy 마크업 도구 budgetRuleLink·CANDIDATE_LIST 재수출은 #248 P3 가 지웠다)", () => {
   assert.equal(prerender.budgetBandLabel, budgetBandLabel);
-  assert.equal(prerender.CANDIDATE_LIST, 12);
-  assert.equal(prerender.CANDIDATE_LIST, CANDIDATE_LIST, "순수 모듈로 옮긴 CANDIDATE_LIST를 prerender.ts가 같은 이름으로 다시 내보낸다(test/complex-candidates.test.mjs가 === 12를 확인한다)");
   assert.equal(prerender.MIN_SAMPLE, MIN_SAMPLE);
   assert.equal(prerender.escapeHtml, escapeHtml);
-  assert.equal(prerender.budgetRuleLink("costs", "x"), prerender.budgetRuleLink("costs", "x"));
+  assert.equal(prerender.budgetRuleLink, undefined);
+  assert.equal(prerender.CANDIDATE_LIST, undefined);
 });
 
 test("budget-fragments.mjs: 이스케이프 없이 문자열에 끼우는 대출 문장(budgetLoanHtml의 ${sentence})에는 & < > \"가 들 수 없다 - 난수 입력 3만 건(고정 시드)", () => {

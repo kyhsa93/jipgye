@@ -7,15 +7,15 @@
 //   그래야 렌더가 도는 react가 하나다. 상대경로 import(우리 코드)는 묶여 들어간다 - 그래서 JSX가 부르는 파일은 순수해야 한다.
 // - 산출물은 `node_modules/.cache/` 아래 임시 폴더에 쓰고 import한 뒤 지운다. bare import를 풀려면 node_modules 안쪽이어야 하고,
 //   docs/ 밖이라 배포로 나가지 않는다(S6).
-// - 실패는 삼키지 않는다. 컴파일 오류·import 오류는 그대로 던진다(폴백은 #238의 일).
+// - 실패는 삼키지 않는다. 컴파일 오류·import 오류는 그대로 던진다(폴백은 없다, #248 P1).
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 const root = path.resolve(import.meta.dirname, "../..");
 const CACHE_DIR = path.join(root, "node_modules/.cache/jipgye-render");
-// JSX가 이 둘을 (간접으로라도) 부르면 묶인 사본이 렌더러를 또 만들어 끝없이 돈다.
-const FORBIDDEN = ["scripts/renderer.ts", "scripts/prerender.ts"];
+// JSX가 렌더러를 만드는 모듈(prerender.ts)을 (간접으로라도) 부르면 묶인 사본이 렌더러를 또 만들어 끝없이 돈다.
+const FORBIDDEN = ["scripts/prerender.ts"];
 
 export async function loadJsxModule(entry, { cacheDir = CACHE_DIR } = {}) {
   const { build } = await import("esbuild");
@@ -36,7 +36,7 @@ export async function loadJsxModule(entry, { cacheDir = CACHE_DIR } = {}) {
       logLevel: "silent",
     });
     const bad = Object.keys(metafile.inputs).filter((f) => FORBIDDEN.some((x) => f.endsWith(x)));
-    if (bad.length) throw new Error(`JSX 진입 파일이 렌더러 스위치를 불러옵니다(${bad.join(", ")}). 공용 함수는 따로 뺀 파일에서 가져오세요.`);
+    if (bad.length) throw new Error(`JSX 진입 파일이 렌더러를 만드는 모듈을 불러옵니다(${bad.join(", ")}). 공용 함수는 따로 뺀 파일에서 가져오세요.`);
     return await import(pathToFileURL(outfile).href);
   } finally {
     await rm(dir, { recursive: true, force: true });

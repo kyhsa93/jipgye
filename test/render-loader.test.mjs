@@ -28,8 +28,8 @@ test("로더: 컴파일 오류는 던진다(삼키지 않고 임시 산출물도
   assert.deepEqual(await leftovers(), before);
 });
 
-test("로더: 진입 파일이 렌더러 스위치를 불러오면 거부한다(묶인 사본이 렌더러를 또 만들어 도는 것을 막는다)", async () => {
-  await assert.rejects(loadJsxModule(fixture("imports-renderer.jsx"), { cacheDir: CACHE }), /렌더러 스위치/);
+test("로더: 진입 파일이 렌더러를 만드는 모듈(prerender.ts)을 불러오면 거부한다(묶인 사본이 렌더러를 또 만들어 도는 것을 막는다)", async () => {
+  await assert.rejects(loadJsxModule(fixture("imports-prerender.jsx"), { cacheDir: CACHE }), /렌더러를 만드는 모듈/);
   assert.deepEqual(await leftovers(), []);
 });
 

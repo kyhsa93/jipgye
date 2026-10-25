@@ -23,7 +23,7 @@ async function tempRepo() {
   tmpDirs.push(dir);
   await cp(path.join(root, "scripts"), path.join(dir, "scripts"), { recursive: true });
   await mkdir(path.join(dir, "docs/data"), { recursive: true });
-  // react 렌더 경로가 esbuild·react 를 읽을 수 있게 저장소의 node_modules 를 잇는다(#248 P2: 예전에는 JIPGYE_RENDERER=legacy 로 이 의존 없이 돌렸다).
+  // react 렌더 경로가 esbuild·react 를 읽을 수 있게 저장소의 node_modules 를 잇는다(#248 P2 부터 렌더 경로는 react 하나다).
   await symlink(path.join(root, "node_modules"), path.join(dir, "node_modules"), "dir");
   return dir;
 }

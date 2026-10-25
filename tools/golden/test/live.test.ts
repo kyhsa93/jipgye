@@ -67,7 +67,7 @@ test("렌더 단계 목록이 daily-update.yml과 같다", opts, async () => {
 });
 
 for (const tz of ["UTC", "Asia/Seoul"]) {
-  test(`같은 SHA legacy 2회 자기 비교 diff 0 (TZ=${tz}, BUILD_NOW 고정)`, opts, async () => {
+  test(`같은 SHA 2회 자기 비교 diff 0 (TZ=${tz}, BUILD_NOW 고정)`, opts, async () => {
     const docsBefore = await treeHash(path.join(REPO, "docs"));
     const r = await pair({ TZ: tz, BUILD_NOW: NOW });
     say(`TZ=${tz} BUILD_NOW=${NOW}`, `정준 ${r.cmp.equal}/${r.cmp.total}장 일치`, `바이트 ${r.bytes.same}/${r.bytes.total}개 일치`, `렌더 ${Math.round(r.one.totalMs)}ms·${Math.round(r.two.totalMs)}ms`);

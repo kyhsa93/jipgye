@@ -15,7 +15,7 @@ const root = path.resolve(import.meta.dirname, "..");
 const PIPELINE = path.join(root, "scripts/render-pipeline.ts");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
 
-// 가짜 단계의 행동. 호출마다 `<이름> <JIPGYE_RENDERER> <CARRY>` 한 줄을 기록 파일에 남기고 아래 규칙대로 끝난다.
+// 가짜 단계의 행동. 호출마다 `<이름> <CARRY>` 한 줄을 기록 파일에 남기고 아래 규칙대로 끝난다.
 //   ok: 항상 성공 / fail: 항상 실패
 const BEHAVIORS = {
   ok: "",
@@ -31,8 +31,7 @@ async function fixture(kinds) {
     await writeFile(
       file,
       `import { appendFileSync } from "node:fs";
-const mode = process.env.JIPGYE_RENDERER;
-appendFileSync(${JSON.stringify(log)}, "step${i + 1} " + (mode ?? "unset") + " " + (process.env.CARRY ?? "-") + "\\n");
+appendFileSync(${JSON.stringify(log)}, "step${i + 1} " + (process.env.CARRY ?? "-") + "\\n");
 ${BEHAVIORS[kind]}
 `
     );
@@ -49,9 +48,8 @@ ${BEHAVIORS[kind]}
 }
 
 // 환경은 통째로 새로 만든다 - 이 시험이 Actions 안에서 돌 때 진짜 $GITHUB_OUTPUT·$GITHUB_STEP_SUMMARY 가 새어 들어오면 안 된다.
-async function pipeline(fx, { renderer, github = true, args = fx.steps } = {}) {
+async function pipeline(fx, { github = true, args = fx.steps } = {}) {
   const env = { PATH: process.env.PATH, CARRY: "keep" };
-  if (renderer !== undefined) env.JIPGYE_RENDERER = renderer;
   if (github) Object.assign(env, { GITHUB_OUTPUT: fx.out, GITHUB_STEP_SUMMARY: fx.summary });
   try {
     const r = await run(process.execPath, [PIPELINE, ...args], { cwd: root, env });
@@ -75,7 +73,7 @@ const SIX = (kind) => Array(6).fill(kind);
 test("정상: 여섯 단계가 한 번씩 돌고 종료 0, $GITHUB_OUTPUT·요약에 아무것도 쓰지 않는다", withFixture(SIX("ok"), async (fx) => {
   const r = await pipeline(fx);
   assert.equal(r.code, 0);
-  assert.deepEqual(await fx.calls(), Array.from({ length: 6 }, (_, i) => `step${i + 1} unset keep`));
+  assert.deepEqual(await fx.calls(), Array.from({ length: 6 }, (_, i) => `step${i + 1} keep`));
   assert.equal(await fx.file("output"), null, "출력 키(옛 fallback)를 쓰지 않는다 - 워크플로가 읽을 출력이 없다");
   assert.ok(!r.stdout.includes("::warning::"), r.stdout);
   assert.equal(await fx.file("summary"), null, "정상인 날에는 요약에 아무것도 쓰지 않는다");
@@ -84,14 +82,14 @@ test("정상: 여섯 단계가 한 번씩 돌고 종료 0, $GITHUB_OUTPUT·요�
 test("첫 단계가 실패하면 거기서 멈추고 종료 1 - 재시도하지 않는다(폴백 없음, #248)", withFixture(SIX("fail"), async (fx) => {
   const r = await pipeline(fx);
   assert.equal(r.code, 1);
-  assert.deepEqual(await fx.calls(), ["step1 unset keep"], "실패한 단계를 다시 돌리거나 뒤 단계로 넘어갔다");
+  assert.deepEqual(await fx.calls(), ["step1 keep"], "실패한 단계를 다시 돌리거나 뒤 단계로 넘어갔다");
   assert.equal(await fx.file("output"), null);
 }));
 
 test("중간(3번째) 단계가 실패하면 앞 두 단계까지만 돌고 거기서 멈춘다 - 뒤 단계는 돌지 않는다", withFixture(["ok", "ok", "fail", "ok", "ok", "ok"], async (fx) => {
   const r = await pipeline(fx);
   assert.equal(r.code, 1);
-  assert.deepEqual(await fx.calls(), ["step1 unset keep", "step2 unset keep", "step3 unset keep"]);
+  assert.deepEqual(await fx.calls(), ["step1 keep", "step2 keep", "step3 keep"]);
 }));
 
 test("실패하면 stderr 와 $GITHUB_STEP_SUMMARY 에 실패한 단계와 이유가 남고, 단계의 오류 출력도 그대로 흐른다", withFixture(["ok", "ok", "fail", "ok", "ok", "ok"], async (fx) => {
@@ -105,17 +103,10 @@ test("실패하면 stderr 와 $GITHUB_STEP_SUMMARY 에 실패한 단계와 이�
   assert.ok(summary.includes(thirdStep) && summary.includes("종료 코드 1"), summary);
 }));
 
-test("JIPGYE_RENDERER 를 읽지도 덮지도 않는다 - 어떤 값이든 단계에 그대로 넘기고, 실패해도 다른 값으로 다시 돌리지 않는다", withFixture(SIX("fail"), async (fx) => {
-  const r = await pipeline(fx, { renderer: "react" });
-  assert.equal(r.code, 1);
-  assert.deepEqual(await fx.calls(), ["step1 react keep"]);
-  assert.ok(!r.stdout.includes("::warning::"));
-}));
-
 test("$GITHUB_OUTPUT·$GITHUB_STEP_SUMMARY가 없으면(로컬) 실패해도 기록 파일을 만들지 않고 종료 1 이다", withFixture(SIX("fail"), async (fx) => {
   const r = await pipeline(fx, { github: false });
   assert.equal(r.code, 1);
-  assert.deepEqual(await fx.calls(), ["step1 unset keep"]);
+  assert.deepEqual(await fx.calls(), ["step1 keep"]);
   assert.deepEqual((await readdir(fx.dir)).filter((n) => !n.startsWith("step") && n !== "calls.log"), [], "기록 파일을 새로 만들었다");
 }));
 
