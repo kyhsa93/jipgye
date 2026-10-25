@@ -956,9 +956,11 @@ ul.news-list {
   font-size: var(--fs-md);
 }
 
+/* 추이 카드는 첫 화면·시세 47장 어디서나 같은 크기다(소유자 결정). auto-fill 이라 카드가 둘뿐인 격자도 빈 칸을
+ * 남기고 같은 폭을 쓴다(auto-fit 은 남은 칸을 접어 두 장이 반씩 늘어났다). 300px: 1280 에서 세 칸, 600~1023 에서 두 칸. */
 .history-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
   gap: 12px;
   margin-top: 12px;
 }
@@ -1052,12 +1054,12 @@ ul.news-list {
  * 데이터에서 온다 - 320폭에서 용기는 258px인데 강남 자치구의 최소 내용 폭이 301px이라
  * 문서가 통째로 가로로 밀렸다(측정 ede9f6ce: #trend-minmax의 right 332.3, scrollWidth 332).
  * wrap이 없으면 flex 줄은 내용 폭 아래로 줄지 않는다 - 좁아지면 줄을 바꾸게 둔다. */
+/* 현재값 아래에 최고·최저를 한 줄로 둔다(소유자 결정 — 카드 높이를 하나로). 옆에 두면 폭과 글자 수에 따라
+ * 줄이 바뀌어 카드마다 높이가 달랐다(1280 실측 206/233px). .trend-reserve-card::before 가 이 한 줄을 같이 잡는다. */
 .history-stats {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-start;
   margin-bottom: 4px;
 }
 
@@ -1424,7 +1426,8 @@ ul.news-list {
 }
 
 .trend-reserve-card::before {
-  content: "\00a0";
+  content: "\00a0\A\00a0";
+  white-space: pre;
   display: block;
   font-size: var(--fs-xs);
   margin-bottom: 6px;

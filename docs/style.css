@@ -683,7 +683,7 @@
   }
   .history-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
     gap: 12px;
     margin-top: 12px;
   }
@@ -748,10 +748,8 @@
   }
   .history-stats {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
     margin-bottom: 4px;
   }
   .history-current {
@@ -1004,7 +1002,8 @@
     padding: 12px 14px;
   }
   .trend-reserve-card::before {
-    content: "\00a0";
+    content: "\00a0\A\00a0";
+    white-space: pre;
     display: block;
     font-size: var(--fs-xs);
     margin-bottom: 6px;

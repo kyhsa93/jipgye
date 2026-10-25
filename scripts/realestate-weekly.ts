@@ -2,7 +2,7 @@ import { kstDateParts } from "./realestate-slots.ts";
 
 const PYEONG_M2 = 3.3058;
 export const MOVING_WEEKS = 4;
-export const WEEKS_KEPT = 26;
+export const WEEKS_KEPT = 52;
 export const TREND_MIN_SAMPLE = 5;
 export const REPRESENT_WEEKS = 4;
 export const FILING_GRACE_DAYS = 30;
