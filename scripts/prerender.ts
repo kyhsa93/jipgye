@@ -1,6 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { accessibleTables } from "./table-a11y.ts";
+import { bilingualCells } from "./bilingual-cell.ts";
+import { moveInDistrictTableHtml } from "./move-in.ts";
 import { createReactRenderer } from "./render/react.ts";
 import { createWriteSet } from "./render-writes.ts";
 import { escapeHtml } from "./html-escape.ts";
@@ -148,6 +150,17 @@ async function main() {
   const change = await readJson("district-change");
   const repeat = await readJson("repeat-sales");
   const recordText = (key) => (record?.[key]?.ko ? escapeHtml(record[key].ko) : null);
+  // 표 칸은 한국어·영어 두 벌로 굽는다(#708) — 데이터를 받기 전·못 받았을 때 영어 화면에 한국어 표가 남지 않게. 바이트 때문에 칸을 고른다(장당 +4KB).
+  const both = (table, pick?) => bilingualCells(table?.ko, table?.en, pick);
+  // 구×반기 입주 표: json 의 영어 조각은 자치구 이름이 아직 한글인 채 구워진 것(다음 데일리가 새로 굽는다)이라, 숫자(byDistrict)로 두 벌을 지금 다시 만든다.
+  const moveInDistrictsHtml = (m) =>
+    m?.byDistrict?.rows?.length
+      ? bilingualCells(
+          moveInDistrictTableHtml(m.byDistrict, m.basis, "ko"),
+          moveInDistrictTableHtml(m.byDistrict, m.basis, "en"),
+          (c) => c.section === "thead" || (c.section === "tbody" && c.col === 0)
+        )
+      : (m?.districtTable?.ko ?? null);
   // method 「수집 상태」 줄: full 실행 기록(market-history). 없으면 줄을 안 그린다.
   const collect = collectStatus(await readJson("market-history"));
 
@@ -231,9 +244,9 @@ async function main() {
         recordLead: recordText("lead"),
         recordControl: recordText("control"),
         recordSurvival: recordText("survival"),
-        recordRobust: record?.tables?.robust?.ko ?? null,
-        recordDistricts: record?.tables?.districts?.ko ?? null,
-        recordBands: record?.tables?.bands?.ko ?? null,
+        recordRobust: both(record?.tables?.robust, (c) => c.section === "thead" || c.col === 8),
+        recordDistricts: both(record?.tables?.districts),
+        recordBands: both(record?.tables?.bands, (c) => c.section !== "thead"),
         recordBreakdownNote: recordText("breakdownNote"),
       },
     ],
@@ -242,17 +255,17 @@ async function main() {
       at("price-outlook.html"),
       {
         outlookLead: outlookText("lead"),
-        outlookRegions: outlook?.tables?.regions?.ko ?? null,
+        outlookRegions: both(outlook?.tables?.regions, (c) => c.section === "thead" || c.col === 0),
         outlookLongLead: outlookText("longLead"),
         outlookNowcastLead: outlookText("nowcastLead"),
-        outlookNowcast: outlook?.tables?.nowcast?.ko ?? null,
+        outlookNowcast: both(outlook?.tables?.nowcast),
         outlookScore: outlook?.tables?.score?.ko ?? null,
         outlookRecordLead: outlookText("recordLead"),
         indicatorLead: indicators?.lead?.ko ? escapeHtml(indicators.lead.ko) : null,
         moveInLead: moveIn?.lead?.ko ? escapeHtml(moveIn.lead.ko) : null,
         moveInTable: moveIn?.table?.ko ?? null,
         // 구×반기 표 조각(#677). 예전 자치구별 한 줄(moveIn.districts)은 json 에 남기되 화면은 표를 쓴다.
-        moveInDistricts: moveIn?.districtTable?.ko ?? null,
+        moveInDistricts: moveInDistrictsHtml(moveIn),
         indicatorTable: indicators?.table?.ko ?? null,
       },
     ],

@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { SITE } from "../../../test/helpers/site-root.mjs";
+import { koOnly } from "../../../scripts/bilingual-cell.ts";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
 
@@ -14,9 +15,11 @@ test("정적 HTML이 오늘 데이터의 문장과 표를 싣는다", async () =
     readFile(path.join(root, "docs/data/record-high.json"), "utf8").then(JSON.parse),
   ]);
   const block = (name) => html.match(new RegExp(`<!--prerender:${name}-->([\\s\\S]*?)<!--/prerender:${name}-->`))?.[1];
-  assert.equal(block("recordRobust"), data.tables.robust.ko);
-  assert.equal(block("recordDistricts"), data.tables.districts.ko);
-  assert.equal(block("recordBands"), data.tables.bands.ko);
+  // #708: 표 칸은 한국어·영어 두 벌(m-ko·m-en)로 굽는다 - 영어 스팬을 걷고 한국어 스팬을 벗기면 json 의 한국어 조각이다.
+  const ko = (name) => koOnly(block(name)).replace(/<span class="m-ko">([\s\S]*?)<\/span>/g, "$1");
+  assert.equal(ko("recordRobust"), data.tables.robust.ko);
+  assert.equal(ko("recordDistricts"), data.tables.districts.ko);
+  assert.equal(ko("recordBands"), data.tables.bands.ko);
   assert.ok(block("recordLead")?.includes(String(data.main.record)), "첫 문장이 오늘 숫자를 싣지 않는다");
   assert.ok(data.lead.en && data.tables.robust.en);
 });

@@ -2,6 +2,7 @@ import test, { after } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { koOnly } from "../scripts/bilingual-cell.ts";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.ts";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
@@ -222,7 +223,8 @@ test("[complex-ratio] 고정 분포로 찍은 노원구 페이지의 정적 카�
 test("[record-high] 고정 데이터로 찍은 record-high.html 이 그 데이터의 문장과 표를 싣는다", async () => {
   const html = site.read("docs/record-high.html");
   const data = await fixtureRead("record-high");
-  assert.equal(block(html, "recordRobust"), data.tables.robust.ko);
+  // 문턱 표는 머리글·결론 칸을 한국어·영어 두 벌로 굽는다(#708) - 영어 스팬을 걷고 한국어 스팬을 벗기면 json 의 한국어 조각이다.
+  assert.equal(koOnly(block(html, "recordRobust")).replace(/<span class="m-ko">([\s\S]*?)<\/span>/g, "$1"), data.tables.robust.ko);
   assert.ok(block(html, "recordLead")?.includes(String(data.main.record)), "첫 문장이 고정 숫자를 싣지 않는다");
   assert.ok(data.lead.en && data.tables.robust.en);
 });
