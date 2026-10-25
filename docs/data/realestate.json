@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-10-24T02:43:35.208Z",
+  "updatedAt": "2026-10-25T01:03:43.729Z",
   "window": {
     "basis": "arrival",
     "from": "2026-10-19",
-    "to": "2026-10-24",
+    "to": "2026-10-25",
     "until": "2026-10-26",
     "weeks": 1,
     "districtFrom": "2026-09-28",
@@ -11,34 +11,34 @@
   },
   "overall": {
     "sale": {
-      "avgPricePerM2": 15659911.325515851,
-      "avgPricePerPyeong10k": 5177,
-      "transactionCount": 1236,
+      "avgPricePerM2": 15680118.881593317,
+      "avgPricePerPyeong10k": 5184,
+      "transactionCount": 1250,
       "change": {
-        "value10k": -301,
-        "percent": -5.494706097115736
+        "value10k": -294,
+        "percent": -5.3669222343921135
       },
-      "baselineDate": "2026-10-17"
+      "baselineDate": "2026-10-18"
     },
     "saleNational84": {
-      "avgPricePerM2": 15560361.505032748,
-      "avgPricePerPyeong10k": 5144,
-      "transactionCount": 288,
+      "avgPricePerM2": 15523212.261118203,
+      "avgPricePerPyeong10k": 5132,
+      "transactionCount": 291,
       "change": {
-        "value10k": 201,
-        "percent": 4.066356463686021
+        "value10k": 187,
+        "percent": 3.78159757330637
       },
-      "baselineDate": "2026-10-17"
+      "baselineDate": "2026-10-18"
     },
     "jeonse": {
-      "avgDepositPerM2": 9583260.08321539,
-      "avgDepositPerPyeong10k": 3168,
-      "transactionCount": 1100,
+      "avgDepositPerM2": 9575095.443413183,
+      "avgDepositPerPyeong10k": 3165,
+      "transactionCount": 1104,
       "change": {
-        "value10k": -61,
-        "percent": -1.8891297615360791
+        "value10k": -64,
+        "percent": -1.9820377825952307
       },
-      "baselineDate": "2026-10-17"
+      "baselineDate": "2026-10-18"
     },
     "wolse": {
       "avgConvertedPerPyeong10k": 3176,
@@ -49,7 +49,7 @@
         "value10k": -82,
         "percent": -2.5168815224063845
       },
-      "baselineDate": "2026-10-17"
+      "baselineDate": "2026-10-18"
     }
   },
   "districts": [
@@ -64,7 +64,7 @@
           "value10k": 153,
           "percent": 3.1371744925158906
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 15585174.32099329,
@@ -74,7 +74,7 @@
           "value10k": 237,
           "percent": 4.821973550356053
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 9683576.036305144,
@@ -84,7 +84,7 @@
           "value10k": 88,
           "percent": 2.8268551236749118
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 3670,
@@ -95,7 +95,7 @@
           "value10k": 32,
           "percent": 0.8796041781198461
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -106,20 +106,20 @@
         "avgPricePerPyeong10k": 5783,
         "transactionCount": 63,
         "change": {
-          "value10k": -82,
-          "percent": -1.3981244671781756
+          "value10k": -116,
+          "percent": -1.9664349889811832
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 18348729.27592371,
         "avgPricePerPyeong10k": 6066,
         "transactionCount": 15,
         "change": {
-          "value10k": -20,
-          "percent": -0.3286230693394676
+          "value10k": -127,
+          "percent": -2.050702405942193
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 9474211.279493954,
@@ -129,7 +129,7 @@
           "value10k": -9,
           "percent": -0.28653295128939826
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 3638,
@@ -140,7 +140,7 @@
           "value10k": -27,
           "percent": -0.7366984993178717
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -154,7 +154,7 @@
           "value10k": -422,
           "percent": -3.5393776734043447
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 24105740.891723264,
@@ -164,7 +164,7 @@
           "value10k": 0,
           "percent": 0
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 10265582.014904259,
@@ -174,7 +174,7 @@
           "value10k": 59,
           "percent": 1.7691154422788606
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 3987,
@@ -185,7 +185,7 @@
           "value10k": -89,
           "percent": -2.18351324828263
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -199,7 +199,7 @@
           "value10k": -127,
           "percent": -1.5484028285783955
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 22190817.1146677,
@@ -209,7 +209,7 @@
           "value10k": -204,
           "percent": -2.7055702917771884
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 10952892.200061321,
@@ -219,7 +219,7 @@
           "value10k": 131,
           "percent": 3.753581661891117
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 4063,
@@ -230,7 +230,7 @@
           "value10k": 144,
           "percent": 3.67440673641235
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -244,7 +244,7 @@
           "value10k": 145,
           "percent": 2.308549594013692
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 21405072.16369652,
@@ -254,7 +254,7 @@
           "value10k": 120,
           "percent": 1.7251293847038527
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 9390948.598559836,
@@ -264,7 +264,7 @@
           "value10k": 24,
           "percent": 0.7792207792207793
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 3526,
@@ -275,7 +275,7 @@
           "value10k": 0,
           "percent": 0
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -289,7 +289,7 @@
           "value10k": 38,
           "percent": 0.81702859600086
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 14746868.804358734,
@@ -299,7 +299,7 @@
           "value10k": -81,
           "percent": -1.6343825665859564
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 8611492.179852428,
@@ -309,7 +309,7 @@
           "value10k": -43,
           "percent": -1.4878892733564015
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 2824,
@@ -320,7 +320,7 @@
           "value10k": 77,
           "percent": 2.8030578813250817
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -334,7 +334,7 @@
           "value10k": 25,
           "percent": 0.7242178447276941
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 10075045.071033355,
@@ -344,7 +344,7 @@
           "value10k": 58,
           "percent": 1.7720745493431105
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 6574556.140729148,
@@ -354,7 +354,7 @@
           "value10k": 33,
           "percent": 1.542056074766355
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 2110,
@@ -365,7 +365,7 @@
           "value10k": -11,
           "percent": -0.5186232909005186
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -376,10 +376,10 @@
         "avgPricePerPyeong10k": 4255,
         "transactionCount": 303,
         "change": {
-          "value10k": 17,
-          "percent": 0.4011326097215668
+          "value10k": 15,
+          "percent": 0.3537735849056604
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 11735037.502682975,
@@ -389,7 +389,7 @@
           "value10k": 35,
           "percent": 0.9105098855359002
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 8260396.806106553,
@@ -399,7 +399,7 @@
           "value10k": 47,
           "percent": 1.751117734724292
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 2811,
@@ -410,7 +410,7 @@
           "value10k": 29,
           "percent": 1.0424155283968368
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -424,7 +424,7 @@
           "value10k": 32,
           "percent": 0.9478672985781991
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 10236577.542323831,
@@ -434,17 +434,17 @@
           "value10k": 31,
           "percent": 0.9245451834178348
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
-        "avgDepositPerM2": 7222937.614865207,
-        "avgDepositPerPyeong10k": 2388,
-        "transactionCount": 86,
+        "avgDepositPerM2": 7244020.443422368,
+        "avgDepositPerPyeong10k": 2395,
+        "transactionCount": 88,
         "change": {
-          "value10k": 59,
-          "percent": 2.5332760841562902
+          "value10k": 66,
+          "percent": 2.8338342636324603
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 2565,
@@ -455,7 +455,7 @@
           "value10k": -21,
           "percent": -0.8120649651972157
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -469,7 +469,7 @@
           "value10k": 25,
           "percent": 0.9005763688760807
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 7817475.5512345275,
@@ -479,7 +479,7 @@
           "value10k": -4,
           "percent": -0.1545595054095827
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 5604773.107478899,
@@ -489,7 +489,7 @@
           "value10k": 22,
           "percent": 1.2015292190060076
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 1911,
@@ -500,21 +500,21 @@
           "value10k": 11,
           "percent": 0.5789473684210527
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
       "code": "11350",
       "name": "노원구",
       "sale": {
-        "avgPricePerM2": 11021972.809590178,
-        "avgPricePerPyeong10k": 3644,
-        "transactionCount": 753,
+        "avgPricePerM2": 11025226.887575036,
+        "avgPricePerPyeong10k": 3645,
+        "transactionCount": 754,
         "change": {
-          "value10k": 3,
-          "percent": 0.08239494644328481
+          "value10k": 4,
+          "percent": 0.10985992859104642
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 10187418.937127745,
@@ -524,7 +524,7 @@
           "value10k": 30,
           "percent": 0.8987417615338525
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 6476102.261547666,
@@ -534,7 +534,7 @@
           "value10k": -6,
           "percent": -0.2794597112249651
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 2086,
@@ -545,7 +545,7 @@
           "value10k": 34,
           "percent": 1.6569200779727096
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -559,17 +559,17 @@
           "value10k": 16,
           "percent": 0.4240657301881791
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
-        "avgPricePerM2": 11101246.868467048,
+        "avgPricePerM2": 11101246.868467044,
         "avgPricePerPyeong10k": 3670,
         "transactionCount": 127,
         "change": {
           "value10k": 35,
           "percent": 0.9628610729023385
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 7690311.981984387,
@@ -579,7 +579,7 @@
           "value10k": -18,
           "percent": -0.703125
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 2432,
@@ -590,7 +590,7 @@
           "value10k": -26,
           "percent": -1.0577705451586654
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -604,7 +604,7 @@
           "value10k": 94,
           "percent": 2.0184668241357095
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 13882102.003562465,
@@ -614,7 +614,7 @@
           "value10k": 77,
           "percent": 1.7065602836879432
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 8662308.349675182,
@@ -624,7 +624,7 @@
           "value10k": -22,
           "percent": -0.7623007623007623
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 3090,
@@ -635,7 +635,7 @@
           "value10k": 5,
           "percent": 0.1620745542949757
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -646,20 +646,20 @@
         "avgPricePerPyeong10k": 6707,
         "transactionCount": 188,
         "change": {
-          "value10k": 46,
-          "percent": 0.6905869989491067
+          "value10k": 45,
+          "percent": 0.6754728309816872
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
-        "avgPricePerM2": 20618633.95426113,
+        "avgPricePerM2": 20618633.954261128,
         "avgPricePerPyeong10k": 6816,
         "transactionCount": 75,
         "change": {
           "value10k": 65,
           "percent": 0.9628203229151236
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 10611695.78034806,
@@ -669,7 +669,7 @@
           "value10k": -5,
           "percent": -0.14232849416453175
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 3402,
@@ -680,7 +680,7 @@
           "value10k": 23,
           "percent": 0.6806747558449245
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -694,7 +694,7 @@
           "value10k": -143,
           "percent": -2.7713178294573644
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 14243572.23786365,
@@ -704,7 +704,7 @@
           "value10k": -57,
           "percent": -1.195971464540495
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 8835358.094964048,
@@ -714,7 +714,7 @@
           "value10k": -22,
           "percent": -0.7475365273530411
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 2679,
@@ -725,7 +725,7 @@
           "value10k": 11,
           "percent": 0.4122938530734633
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -739,7 +739,7 @@
           "value10k": 63,
           "percent": 1.361573373676248
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 14055374.039266786,
@@ -749,7 +749,7 @@
           "value10k": 36,
           "percent": 0.7809110629067245
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 7980451.363050072,
@@ -759,7 +759,7 @@
           "value10k": -3,
           "percent": -0.1135933358576297
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 2511,
@@ -770,7 +770,7 @@
           "value10k": 35,
           "percent": 1.4135702746365104
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -784,7 +784,7 @@
           "value10k": 20,
           "percent": 0.5521811154058531
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 10581010.131315995,
@@ -794,17 +794,17 @@
           "value10k": 11,
           "percent": 0.31545741324921134
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
-        "avgDepositPerM2": 6673339.372733739,
-        "avgDepositPerPyeong10k": 2206,
-        "transactionCount": 204,
+        "avgDepositPerM2": 6670207.47714616,
+        "avgDepositPerPyeong10k": 2205,
+        "transactionCount": 206,
         "change": {
-          "value10k": 13,
-          "percent": 0.5927952576379389
+          "value10k": 12,
+          "percent": 0.5471956224350205
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 2120,
@@ -815,7 +815,7 @@
           "value10k": 3,
           "percent": 0.14170996693434107
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -829,7 +829,7 @@
           "value10k": 78,
           "percent": 2.529182879377432
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 9597722.7690244,
@@ -839,7 +839,7 @@
           "value10k": -42,
           "percent": -1.3063763608087091
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 5839637.154314983,
@@ -849,7 +849,7 @@
           "value10k": 52,
           "percent": 2.768903088391906
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 2316,
@@ -860,31 +860,31 @@
           "value10k": -12,
           "percent": -0.5154639175257731
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
       "code": "11560",
       "name": "영등포구",
       "sale": {
-        "avgPricePerM2": 18240299.36477444,
-        "avgPricePerPyeong10k": 6030,
+        "avgPricePerM2": 18266121.305685848,
+        "avgPricePerPyeong10k": 6038,
         "transactionCount": 242,
         "change": {
-          "value10k": 19,
-          "percent": 0.3160871735152221
+          "value10k": 16,
+          "percent": 0.2656924609764198
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 17000954.968494423,
         "avgPricePerPyeong10k": 5620,
         "transactionCount": 75,
         "change": {
-          "value10k": 44,
-          "percent": 0.7890961262553802
+          "value10k": 35,
+          "percent": 0.6266786034019696
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 9250306.558620928,
@@ -894,7 +894,7 @@
           "value10k": 32,
           "percent": 1.0575016523463316
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 3060,
@@ -905,7 +905,7 @@
           "value10k": -31,
           "percent": -1.0029116790682626
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -919,7 +919,7 @@
           "value10k": 72,
           "percent": 1.1637304024567643
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 18789320.965665925,
@@ -929,7 +929,7 @@
           "value10k": 18,
           "percent": 0.29065073470046826
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 9334959.948247237,
@@ -939,7 +939,7 @@
           "value10k": 13,
           "percent": 0.4230393752033843
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 3204,
@@ -950,7 +950,7 @@
           "value10k": 73,
           "percent": 2.331523474928138
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -964,7 +964,7 @@
           "value10k": 47,
           "percent": 1.2536676447052548
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 11160217.582463428,
@@ -974,7 +974,7 @@
           "value10k": 6,
           "percent": 0.1629106706489275
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 7573766.86498812,
@@ -984,7 +984,7 @@
           "value10k": -32,
           "percent": -1.2618296529968454
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 2555,
@@ -995,7 +995,7 @@
           "value10k": 20,
           "percent": 0.7889546351084813
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -1009,7 +1009,7 @@
           "value10k": -54,
           "percent": -0.5238141429818605
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 34794329.46678458,
@@ -1019,7 +1019,7 @@
           "value10k": -67,
           "percent": -0.5791338922983836
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 13283350.547573384,
@@ -1029,7 +1029,7 @@
           "value10k": -62,
           "percent": -1.3923197844150013
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 4438,
@@ -1040,7 +1040,7 @@
           "value10k": -18,
           "percent": -0.4039497307001795
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -1054,7 +1054,7 @@
           "value10k": 184,
           "percent": 1.6361372932598257
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 33513327.483986583,
@@ -1064,7 +1064,7 @@
           "value10k": 205,
           "percent": 1.8852308258230643
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 13089450.534731563,
@@ -1074,7 +1074,7 @@
           "value10k": -119,
           "percent": -2.676563202878992
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 4539,
@@ -1085,7 +1085,7 @@
           "value10k": 31,
           "percent": 0.6876663708961845
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -1099,7 +1099,7 @@
           "value10k": 16,
           "percent": 0.1897083234526915
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 26753354.461141486,
@@ -1109,7 +1109,7 @@
           "value10k": 220,
           "percent": 2.5510204081632653
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 10944682.754151184,
@@ -1119,7 +1119,7 @@
           "value10k": 17,
           "percent": 0.4720910858094974
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 3884,
@@ -1130,7 +1130,7 @@
           "value10k": 26,
           "percent": 0.673924313115604
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     },
     {
@@ -1144,7 +1144,7 @@
           "value10k": 47,
           "percent": 0.8138528138528139
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "saleNational84": {
         "avgPricePerM2": 17194381.341281094,
@@ -1154,7 +1154,7 @@
           "value10k": 6,
           "percent": 0.10567101091933778
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "jeonse": {
         "avgDepositPerM2": 10084229.244766124,
@@ -1164,7 +1164,7 @@
           "value10k": -7,
           "percent": -0.20951810835079318
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       },
       "wolse": {
         "avgConvertedPerPyeong10k": 3692,
@@ -1175,7 +1175,7 @@
           "value10k": 51,
           "percent": 1.4007140895358419
         },
-        "baselineDate": "2026-10-17"
+        "baselineDate": "2026-10-18"
       }
     }
   ]

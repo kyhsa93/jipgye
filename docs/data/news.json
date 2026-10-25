@@ -1,118 +1,15 @@
 {
-  "updatedAt": "2026-10-24T02:42:30.457Z",
-  "date": "2026-10-24",
+  "updatedAt": "2026-10-25T01:02:34.427Z",
+  "date": "2026-10-25",
   "items": [
     {
-      "title": "[다음주 경제] 3분기 성장률은…9월 산업동향도 주목",
-      "link": "https://www.yna.co.kr/view/AKR20261023183500002",
-      "publishedAt": "2026-10-24T00:21:26.000Z",
-      "source": "연합뉴스 경제",
-      "category": "other",
-      "preview": "(서울=연합뉴스) 이세원 한지훈 배영경 기자 = 다음 주(26∼30일)에는 한국은행이 올해 3분기 실질 국내총생산(GDP) 성장률을 발표한다.",
-      "dupes": [],
-      "titleEn": "[Next Week's Economy] 3rd Quarter Growth Rate...September Industrial Trends Also Watched"
-    },
-    {
-      "title": "\"집값 2035년까지 오른다…지금이라도 내집마련 해야\" 대학교수의 조언",
-      "link": "https://www.newsis.com/view/NISX20261023_0003838086",
-      "publishedAt": "2026-10-23T23:30:00.000Z",
-      "source": "뉴시스 경제",
-      "category": "other",
-      "preview": "[서울=뉴시스]김성은 인턴 기자 = 수도권 전월세 시장 불안이 공급 부족과 규제 여파로 오는 2035년까지 이어질 수 있어 실거주 목적의 매수 전환을 적극 검토해야 한다는 전문가 지적이 나왔다. 지난 21일 구독자…",
-      "dupes": [],
-      "titleEn": "House prices to rise until 2035... Still need to prepare for homeownership now, says university professor"
-    },
-    {
-      "title": "\"태국서만 月 1억씩 번다\"…전세계서 난리 난 한국 식당 [권용훈의 트렌드워치]",
-      "link": "https://www.hankyung.com/article/202610217150i",
-      "publishedAt": "2026-10-23T22:00:02.000Z",
-      "source": "한국경제 경제",
-      "category": "realestate",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "Making 100,000,000 won a month only in Thailand\"…Korean restaurants cause a stir worldwide [Trend Watch by Kwon Yong-hoon]"
-    },
-    {
-      "title": "뉴욕증시, 유가 급등 속 하락 마감…다우 1.23%↓",
-      "link": "https://www.newsis.com/view/NISX20261024_0003839365",
-      "publishedAt": "2026-10-23T21:16:25.000Z",
-      "source": "뉴시스 경제",
-      "category": "stocks",
-      "preview": "[서울=뉴시스] 김예진 기자 = 미국과 이란 간 전쟁이 다시 격화할 수 있다는 우려로 국제유가가 급등하면서 23일(현지시간) 뉴욕증시 주요 지수가 일제히 하락했다. 이날 CNBC, 마켓워치 등에 따르면 뉴욕증권거래소…",
-      "dupes": [],
-      "titleEn": "New York Stock Market Closes Lower Amid Sharp Rise in Oil Prices... Dow Down 1.23%"
-    },
-    {
-      "title": "[부동산캘린더] 내주 전국 5천555가구 분양…수도권·부산 중심",
-      "link": "https://www.yna.co.kr/view/AKR20261023165700003",
-      "publishedAt": "2026-10-23T21:05:00.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(세종=연합뉴스) 오진송 기자 = 다음 주에는 전국 8곳에서 5천500여 가구가 청약 신청을 받는다.",
-      "dupes": [],
-      "titleEn": "Real Estate Calendar: 5,555 Units to be Sold Nationwide Next Week, Focused on Seoul Metropolitan Area and Busan"
-    },
-    {
-      "title": "[유럽의 분노②] 치솟는 물가·눈덩이 나랏빚…경제 뇌관 되나",
-      "link": "https://www.newsis.com/view/NISX20261023_0003838580",
-      "publishedAt": "2026-10-23T21:02:00.000Z",
-      "source": "뉴시스 경제",
-      "category": "other",
-      "preview": "[서울=뉴시스] 신효령 기자 = 유럽 각국에서 생활비 부담에 항의하는 시위가 잇따르고 있다. 학생들은 교육 여건 개선을, 노동자들은 임금 인상을, 세입자들은 주거 안정을 요구했다. 나라별 요구는 다르지만 소득으로 생…",
-      "dupes": [],
-      "titleEn": "Europe's Anger②: Soaring Prices, Piling-Up National Debt... Could It Become an Economic Brain?"
-    },
-    {
-      "title": "강남 수억 내리고, 강북은 신고가…서울 집값 상승축 이동[부동산 머니무브①]",
-      "link": "https://www.newsis.com/view/NISX20261023_0003838638",
-      "publishedAt": "2026-10-23T21:00:00.000Z",
-      "source": "뉴시스 경제",
-      "category": "realestate",
-      "preview": "[서울=뉴시스] 박성환 기자 = 서울 집값 상승의 무게중심이 강남권에서 상대적으로 가격 부담이 낮은 강북 지역으로 옮겨가는 모습이 뚜렷해지고 있다. 강남3구(강남·서초·송파)와 용산 등 고가 주택 밀집 지역의 매수세…",
-      "dupes": [],
-      "titleEn": "Prices Fall in Gangnam, Rise in Gangbuk as Seoul Housing Price Growth Shifts [Real Estate Money Move ①]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-yongsan.html",
-          "label": "용산구 아파트 84㎡ 매매",
-          "labelEn": "용산구 apartment 84㎡ sale",
-          "value": "29억 2,239만원",
-          "valueEn": "₩2,922M",
-          "note": "최근 1주 계약 66건 · 10/17 대비 -3.5%",
-          "noteEn": "66 deals in the last 1 weeks · -3.5% vs Oct 17"
-        }
-      ]
-    },
-    {
-      "title": "[속보]뉴욕증시, 유가 상승 등에 하락 마감…다우 1.23%↓",
-      "link": "https://www.newsis.com/view/NISX20261024_0003839364",
-      "publishedAt": "2026-10-23T20:40:50.000Z",
-      "source": "뉴시스 경제",
-      "category": "stocks",
-      "preview": "후속기사가 이어집니다 ◎공감언론 뉴시스 aci27@newsis.com",
-      "dupes": [],
-      "titleEn": "[Breaking News] NY Stock Market Closes Lower Amid Rising Oil Prices... Dow Down 1.23%"
-    },
-    {
-      "title": "[매경플러스 리바이벌] 오세훈 시대 서울 부동산 다시 읽기",
-      "link": "https://www.mk.co.kr/news/realestate/12184196",
-      "publishedAt": "2026-10-23T20:00:00.000Z",
+      "title": "“부담금 누가 낼 건데?”…반포 신축 아파트값 갈라놓은 ‘7억 변수’",
+      "link": "https://www.mk.co.kr/news/realestate/12184948",
+      "publishedAt": "2026-10-25T00:47:10.000Z",
       "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": "‘오세훈 시대 서울 부동산’ 3회 시리즈오세훈 서울시장이 23일 ‘명태균 여론조사비 대납 의혹’ 항소심에서 무죄를 선고받았다. 앞서 1심은 벌금 1000만원과 추징금 2100만원을..",
+      "preview": "재건축 초과이익환수 부담금(재초환)이 재건축 시장의 새로운 변수로 떠오르고 있다. 서울 서초구가 강남권 재초환 첫 부과 사례로 꼽히는 반포 현대의 부담금을 연내 부과하겠다는 방침을..",
       "dupes": [],
-      "titleEn": "[Maekyung Plus Revival] Reading Seoul Real Estate Again in the Oh Sehun Era"
-    },
-    {
-      "title": "무주택자 눈 빠지게 기다린 '30억 로또'…반포124 12월8일 청약",
-      "link": "https://www.newsis.com/view/NISX20261020_0003833084",
-      "publishedAt": "2026-10-23T20:00:00.000Z",
-      "source": "뉴시스 경제",
-      "category": "realestate",
-      "preview": "[서울=뉴시스] 강세훈 기자, 주다영 인턴기자 = 올해 청약시장 최대어로 꼽히는 서울 서초구 반포동 '디에이치 반포124'의 분양 일정이 오는 12월로 확정됐다. 분양가상한제 적용으로 전용면적 84㎡의 예상 분양가가…",
-      "dupes": [],
-      "titleEn": "Homeless buyers wait eagerly for the \"3,000,000,000 lotto\"... Banpo 124 on December 8th applies for housing subscription",
       "context": [
         {
           "kind": "realestate",
@@ -121,186 +18,375 @@
           "labelEn": "서초구 apartment 84㎡ sale",
           "value": "26억 578만원",
           "valueEn": "₩2,606M",
-          "note": "최근 1주 계약 195건 · 10/17 대비 -0.5%",
-          "noteEn": "195 deals in the last 1 weeks · -0.5% vs Oct 17"
+          "note": "최근 1주 계약 195건 · 10/18 대비 -0.5%",
+          "noteEn": "195 deals in the last 1 weeks · -0.5% vs Oct 18"
         }
       ]
     },
     {
-      "title": "\"거래량 뚝 떨어졌다\"…서울 아파트값 속 확산하는 '위험 신호'",
-      "link": "https://www.newsis.com/view/NISX20261023_0003838988",
-      "publishedAt": "2026-10-23T15:30:00.000Z",
-      "source": "뉴시스 경제",
+      "title": "올해 아파트 관리비 ‘비리 경보’ 7851곳… 처분 결과는 정부도 몰라",
+      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/25/32WMCOFCCZFXXEGQDPFEOJKP3M/",
+      "publishedAt": "2026-10-25T00:14:04.000Z",
+      "source": "조선비즈 부동산",
       "category": "realestate",
-      "preview": "[서울=뉴시스]김성은 인턴 기자 = 서울 아파트값 상승세가 이어지고 있지만 거래량이 급감하면서 향후 시장의 방향을 가를 위험 신호가 나타나고 있다는 분석이 나왔다. 금리 인상과 정부 정책 변화가 본격화될 경우 중저가…",
+      "preview": "정부가 아파트 관리비 비리 차단을 위해 도입한 ‘조기경보시스템’이 올해 8000개 가까운 단지에 대해 의심 경보를 내린 것으로 나타났다. 그러나 관계기관은 후속 조치 여부를 파악하지 못해 제도 보완이 필요하다는 지적…",
+      "dupes": [
+        {
+          "title": "올해 아파트 관리비 '비리 경보' 7천851곳…처분 결과는 '모름'",
+          "link": "https://www.yna.co.kr/view/AKR20261024041400003",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "title": "'강남 1호' 재건축초과이익 부담금 연내 부과 예고…시장 긴장",
+      "link": "https://www.yna.co.kr/view/AKR20261025010700003",
+      "publishedAt": "2026-10-25T00:03:15.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(서울=연합뉴스) 서미숙 기자 = 재건축 시장에 큰 파장을 몰고 올 재건축 초과이익환수 부담금 부과가 연내 본격화될 전망이다.",
       "dupes": [],
-      "titleEn": "Trading volume sharply dropped\"…Dangerous signals spreading in Seoul apartment prices",
       "context": [
         {
           "kind": "realestate",
-          "href": "./apartment-sale.html",
-          "label": "서울 전체 아파트 84㎡ 매매",
-          "labelEn": "Seoul apartment 84㎡ sale",
-          "value": "13억 1,547만원",
-          "valueEn": "₩1,315M",
-          "note": "최근 1주 계약 1,236건 · 10/17 대비 -5.5%",
-          "noteEn": "1,236 deals in the last 1 weeks · -5.5% vs Oct 17"
+          "href": "./district-gangnam.html",
+          "label": "강남구 아파트 84㎡ 매매",
+          "labelEn": "강남구 apartment 84㎡ sale",
+          "value": "29억 435만원",
+          "valueEn": "₩2,904M",
+          "note": "최근 1주 계약 201건 · 10/18 대비 +1.6%",
+          "noteEn": "201 deals in the last 1 weeks · +1.6% vs Oct 18"
         }
       ]
     },
     {
-      "title": "[속보]뉴욕증시, 유가 상승 속 하락 출발",
-      "link": "https://www.newsis.com/view/NISX20261023_0003839347",
-      "publishedAt": "2026-10-23T14:25:44.000Z",
+      "title": "\"서울 아파트 월세 거래 비중 50%↑…낙관 말고 '내 집 마련' 결단할 때\"",
+      "link": "https://www.newsis.com/view/NISX20261023_0003837970",
+      "publishedAt": "2026-10-24T23:00:00.000Z",
       "source": "뉴시스 경제",
-      "category": "stocks",
-      "preview": "후속기사가 이어집니다 ◎공감언론 뉴시스 aci27@newsis.com",
-      "dupes": [],
-      "titleEn": "[Breaking News] NY Stock Market Opens Lower Amid Rising Oil Prices"
-    },
-    {
-      "title": "LH 사장 “전 정부, 집값 폭등 시한폭탄 설치”",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/23/6YHFYKF5BRAMDLXK6P2FA7TUFQ/",
-      "publishedAt": "2026-10-23T12:36:45.000Z",
-      "source": "조선비즈 부동산",
-      "category": "other",
-      "preview": "이성훈 한국토지주택공사(LH) 사장이 23일 주택 가격 상승의 원인을 윤석열 정부에 돌리며 “공사 기간이 3년인데, 3년짜리 집값 폭등 시한폭탄을 설치한 것과 같다”고 했다. 이 사장은 이날 국회 국토교통위원회의 국…",
-      "dupes": [],
-      "titleEn": "LH President Says Previous Government Planted a Time Bomb for Skyrocketing Housing Prices"
-    },
-    {
-      "title": "LH 사장 “집값 상승은 前정부 공급부족 탓…공급 본격화하면 폭락”",
-      "link": "https://www.mk.co.kr/news/realestate/12184564",
-      "publishedAt": "2026-10-23T12:34:18.000Z",
-      "source": "매일경제 부동산",
-      "category": "other",
-      "preview": "이성훈 한국토지주택공사(LH) 사장이 최근 집값 상승의 원인으로 주택 공급 부족을 지목하며 지난 정부가 ‘3년짜리 집값 폭등 시한폭탄’을 설치했다고 주장했다. 향후 3년간 주택 공..",
-      "dupes": [],
-      "titleEn": "LH CEO: Rising home prices due to previous government's supply shortage... Prices will crash once supply increases"
-    },
-    {
-      "title": "LH 사장 \"집값 상승은 공급부족 탓…前정부 폭등 시한폭탄 설치\"",
-      "link": "https://www.yna.co.kr/view/AKR20261023181200003",
-      "publishedAt": "2026-10-23T11:39:20.000Z",
-      "source": "연합뉴스 경제",
-      "category": "other",
-      "preview": "(세종=연합뉴스) 오진송 기자 = 이성훈 한국토지주택공사(LH) 사장은 최근 집값 상승의 원인으로 주택 공급 부족을 지목하며 지난 정부가 '3년...",
-      "dupes": [],
-      "titleEn": "LH CEO: Rising housing prices due to supply shortage... Previous government planted a time bomb with sharp increase"
-    },
-    {
-      "title": "83세 거장이 짓고, 30대 창업자가 샀다…218억 아파트의 비밀 [슈퍼리치의 아파트]",
-      "link": "https://www.mk.co.kr/news/realestate/12184498",
-      "publishedAt": "2026-10-23T10:35:04.000Z",
-      "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": "②공시지가 1위, 에테르노 청담코로나19 팬데믹 시기인 2020년 2월, 83세의 스페인의 건축 거장 라파엘 모네오는 한국행을 택했다. 창호 구성과 펜트하우스 형태, 건물 외벽의 ..",
+      "preview": "[서울=뉴시스]이준형 인턴 기자 = 서울 아파트 임대차 시장에서 월세 거래 비중이 사상 처음으로 50%를 돌파한 가운데, 금리 인상과 극심한 공급 부족이 맞물려 전세의 월세화 현상이 더욱 가속화될 것이라는 부동산 전…",
       "dupes": [],
-      "titleEn": "83-Year-Old Mastermind Built It, 30-Year-Old Entrepreneur Bought It... The Secret Behind the 21,800,000,000-Won Apartment [The Super Rich's Apartment]"
-    },
-    {
-      "title": "경제계 \"초광역특구 추진 환영\"…신속한 입법 요구",
-      "link": "https://www.yna.co.kr/view/AKR20261023167000003",
-      "publishedAt": "2026-10-23T09:11:14.000Z",
-      "source": "연합뉴스 경제",
-      "category": "other",
-      "preview": "(서울=연합뉴스) 장하나 박초롱 기자 = 경제계가 정부의 초광역특구 규제 합리화 방안을 환영하며 신속한 입법을 촉구했다.",
-      "dupes": [],
-      "titleEn": "Economy sector welcomes push for super metropolitan special zone...calls for swift legislation"
-    },
-    {
-      "title": "사모대출? 증자?…하이닉스, 美 낸드공장 자금줄 새로 찾는다",
-      "link": "https://www.hankyung.com/article/2026102318411",
-      "publishedAt": "2026-10-23T09:02:44.000Z",
-      "source": "한국경제 경제",
-      "category": "other",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "Hyundai Electronics Seeks New Funding Sources for U.S. NAND Plant"
-    },
-    {
-      "title": "여야 “실거주 규제로 전세난 가중” 지적에… 홍지선 국토장관 “공급이 해결책” (종합)",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/23/AS4KXQEMOZDPNAR6CQJLBIUWYA/",
-      "publishedAt": "2026-10-23T08:41:44.000Z",
-      "source": "조선비즈 부동산",
-      "category": "realestate",
-      "preview": "23일 열린 국회 국토교통위원회의 국토교통부 종합감사에서는 실거주 의무 강화 중심의 주택 정책이 전월세난을 부추기고 있다는 지적이 쏟아졌다. 홍지선 국토부 장관은 규제의 일부 영향을 인정하면서도 주택 공급 부족을 근…",
-      "dupes": [],
-      "titleEn": "Opposition and ruling parties criticize rent control measures for worsening housing crisis... Hong Jisun, Minister of Land, says supply is the solution (comprehensive)"
-    },
-    {
-      "title": "국토장관 \"집값 상승폭 둔화…연말 금리 상향 시 시장 안정화\"(종합)",
-      "link": "https://www.yna.co.kr/view/AKR20261023088651003",
-      "publishedAt": "2026-10-23T08:39:23.000Z",
-      "source": "연합뉴스 경제",
-      "category": "rates",
-      "preview": "(서울·세종=연합뉴스) 오예진 오진송 기자 = 홍지선 국토교통부 장관은 최근 주택 가격 상승폭이 둔화하고 있다며 연말 금리가 오르면 주택시장이 ...",
-      "dupes": [],
-      "titleEn": "Land Minister: \"Slowing pace of housing price increases... market stabilization expected if interest rates are raised by year-end\" (Comprehensive)"
-    },
-    {
-      "title": "재건축·재개발로 2~3년 내 사라지는 집, ‘4만8249가구’… 용산구 8336가구로 ‘최다’",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/23/DQMH64WHLNHGRMVGF7ELGXEYQA/",
-      "publishedAt": "2026-10-23T08:18:45.000Z",
-      "source": "조선비즈 부동산",
-      "category": "realestate",
-      "preview": "재건축·재개발 등 정비사업으로 2~3년 내 사라지는 집이 4만8000가구가 넘는 것으로 분석됐다. 용산구에서만 8300가구의 멸실이 발생할 전망이다. 집의 멸실 속도와 새 집 건축 속도가 다르기에 이주 관리를 촘촘히…",
-      "dupes": [],
-      "titleEn": "Homes to disappear within 2-3 years due to reconstruction and redevelopment: 40,0008249 households... Yongsan District with 8,336 households is the highest",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-yongsan.html",
-          "label": "용산구 아파트 84㎡ 매매",
-          "labelEn": "용산구 apartment 84㎡ sale",
-          "value": "29억 2,239만원",
-          "valueEn": "₩2,922M",
-          "note": "최근 1주 계약 66건 · 10/17 대비 -3.5%",
-          "noteEn": "66 deals in the last 1 weeks · -3.5% vs Oct 17"
-        }
-      ]
-    },
-    {
-      "title": "서울도 아닌데 전세 8억?…세입자들 비명 터진 '이 도시'",
-      "link": "https://www.hankyung.com/article/2026102316841",
-      "publishedAt": "2026-10-23T08:15:23.000Z",
-      "source": "한국경제 부동산",
-      "category": "realestate",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "Not even Seoul, yet rent is 800,000,000? Tenants scream over this city",
       "context": [
         {
           "kind": "realestate",
           "href": "./apartment-jeonse.html",
           "label": "서울 전체 아파트 84㎡ 전세",
           "labelEn": "Seoul apartment 84㎡ jeonse",
-          "value": "8억 499만원",
-          "valueEn": "₩805M",
-          "note": "최근 1주 계약 1,100건 · 10/17 대비 -1.9%",
-          "noteEn": "1,100 deals in the last 1 weeks · -1.9% vs Oct 17"
+          "value": "8억 422만원",
+          "valueEn": "₩804M",
+          "note": "최근 1주 계약 1,104건 · 10/18 대비 -2.0%",
+          "noteEn": "1,104 deals in the last 1 weeks · -2.0% vs Oct 18"
         }
       ]
     },
     {
-      "title": "홍지선 \"주택 인허가·착공 감소가 전세난 원인\"",
-      "link": "https://www.hankyung.com/article/2026102316861",
-      "publishedAt": "2026-10-23T08:13:19.000Z",
-      "source": "한국경제 부동산",
+      "title": "밀렸던 전세보증 사고 물량 쏟아져…수도권 빌라 경매 70%↑",
+      "link": "https://www.newsis.com/view/NISX20261023_0003838973",
+      "publishedAt": "2026-10-24T23:00:00.000Z",
+      "source": "뉴시스 경제",
       "category": "realestate",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "Hong Jisun \"Decline in housing permits and starts causes rental crisis"
+      "preview": "[서울=뉴시스]정유선 기자 = 올해 수도권 빌라와 오피스텔이 경매시장에 대거 쏟아지고 있다. 전세 보증 사고가 집중됐던 2023~2024년 주택도시보증공사(HUG)가 대위변제한 물량이 뒤늦게 경매시장으로 넘어온 영향…",
+      "dupes": []
     },
     {
-      "title": "원주시, 웰니스 관광 활성화 업무협약…지역경제 활력 모색",
-      "link": "https://www.yna.co.kr/view/AKR20261023152100062",
-      "publishedAt": "2026-10-23T08:03:19.000Z",
+      "title": "삼성 대출에 성과급 기대까지…경기 남부 집값 불붙었다[부동산 머니무브②]",
+      "link": "https://www.newsis.com/view/NISX20261023_0003839212",
+      "publishedAt": "2026-10-24T22:00:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "realestate",
+      "preview": "[서울=뉴시스]이종성 기자 = 반도체 기업의 사내 주택구입 대출과 내년 성과급 지급 기대 속에 동탄·영통을 중심으로 한 경기 남부 집값 상승세가 주변 지역으로 번지고 있다. 분당·수지 등 선호 주거지로 향하는 매수도…",
+      "dupes": []
+    },
+    {
+      "title": "코스피 급락에…10대그룹 시총, 한달새 1천100조원 증발",
+      "link": "https://www.yna.co.kr/view/AKR20261024028000008",
+      "publishedAt": "2026-10-24T21:15:00.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": "(서울=연합뉴스) 곽윤아 기자 = 코스피 급락에 국내 10대 그룹의 시가총액이 이달에만 1천100조원 넘게 증발했다.",
+      "dupes": []
+    },
+    {
+      "title": "1인 가구 늘어서?…서울 아파트 '전세→월세' 중형평형서 껑충",
+      "link": "https://www.yna.co.kr/view/AKR20261024051800003",
+      "publishedAt": "2026-10-24T21:07:01.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(세종=연합뉴스) 오진송 기자 = 서울 아파트 임대차 시장에서 초소형을 중심으로 진행되던 전세의 월세화가 최근에는 중형 면적대에서 두드러지는 것...",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./apartment-jeonse.html",
+          "label": "서울 전체 아파트 84㎡ 전세",
+          "labelEn": "Seoul apartment 84㎡ jeonse",
+          "value": "8억 422만원",
+          "valueEn": "₩804M",
+          "note": "최근 1주 계약 1,104건 · 10/18 대비 -2.0%",
+          "noteEn": "1,104 deals in the last 1 weeks · -2.0% vs Oct 18"
+        }
+      ]
+    },
+    {
+      "title": "[마켓인사이트] 솔리다임 상장중단에 반전한 코스피…금주 향방은",
+      "link": "https://www.yna.co.kr/view/AKR20261024024500008",
+      "publishedAt": "2026-10-24T21:00:07.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": "(서울=연합뉴스) 황철환 기자 = 지난 한 주 국내 주식시장은 잦아들지 않는 인공지능(AI) 수익성 논란과 중동 무력충돌 재격화의 영향 속에 급...",
+      "dupes": []
+    },
+    {
+      "title": "가계대출 다시 들썩, 5대은행 이달 2.6조↑…은행 예금 11조↑",
+      "link": "https://www.yna.co.kr/view/AKR20261024042900002",
+      "publishedAt": "2026-10-24T20:49:01.000Z",
+      "source": "연합뉴스 경제",
+      "category": "rates",
+      "preview": "(서울=연합뉴스) 한지훈 채새롬 이도흔 기자 = 서울 외곽과 경기 남부 등을 중심으로 수도권 집값 상승세가 계속되면서 시중은행에서 가계대출이 다...",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./apartment-sale.html",
+          "label": "서울 전체 아파트 84㎡ 매매",
+          "labelEn": "Seoul apartment 84㎡ sale",
+          "value": "13억 1,725만원",
+          "valueEn": "₩1,317M",
+          "note": "최근 1주 계약 1,250건 · 10/18 대비 -5.4%",
+          "noteEn": "1,250 deals in the last 1 weeks · -5.4% vs Oct 18"
+        },
+        {
+          "kind": "rates",
+          "label": "주택담보대출 최저금리(상환방식 무관)",
+          "labelEn": "Lowest mortgage rate (any repayment type)",
+          "value": "연 3.95%",
+          "valueEn": "3.95% p.a.",
+          "href": "./mortgage-rates.html"
+        }
+      ]
+    },
+    {
+      "title": "재경위 \"주택 종부세율 올리면 임차인에 稅부담 전가 가능성\"",
+      "link": "https://www.yna.co.kr/view/AKR20261024040700002",
+      "publishedAt": "2026-10-24T20:47:02.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(세종=연합뉴스) 이세원 송정은 기자 = 종합부동산세 세율을 높이면 주택 임대료가 올라 임차인에게 세금 부담이 전가될 가능성이 있다고 국회 재정...",
+      "dupes": []
+    },
+    {
+      "title": "\"AI 투자는 뜨거운데 체감경기는 차갑다… 2027년 경제 역설 국면 진입\"",
+      "link": "https://www.newsis.com/view/NISX20261021_0003834303",
+      "publishedAt": "2026-10-24T15:00:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "other",
+      "preview": "[서울=뉴시스]허준희 인턴 기자 = 2027년에도 인공지능(AI) 산업을 중심으로 투자가 이어지겠지만, 세계 경제 전반의 성장세는 제한적일 것이라는 전망이 나왔다. KB국민은행 WM스타자문단 수석 이코노미스트 유신익…",
+      "dupes": []
+    },
+    {
+      "title": "[집코노미2026 다시보기 영상] 김용남 \"일본 집값 고공행진…수요 더 몰릴 것\"",
+      "link": "https://www.hankyung.com/article/202610231925i",
+      "publishedAt": "2026-10-24T09:01:21.000Z",
+      "source": "한국경제 부동산",
+      "category": "other",
+      "preview": null,
+      "dupes": []
+    },
+    {
+      "title": "서울 중저가 아파트 초강세…부동산 전문가 \"금리 오르면 꺾일 수도\"",
+      "link": "https://www.newsis.com/view/NISX20261024_0003839607",
+      "publishedAt": "2026-10-24T08:55:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "rates",
+      "preview": "[서울=뉴시스]김성은 인턴 기자 = 서울 중저가 아파트가 강한 상승세를 이어가고 있지만 대출 금리가 다시 오르면 상승세가 급격히 꺾일 수 있다는 분석이 나왔다. 대출과 레버리지에 의존한 수요가 중저가 주택 가격을 끌…",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./apartment-sale.html",
+          "label": "서울 전체 아파트 84㎡ 매매",
+          "labelEn": "Seoul apartment 84㎡ sale",
+          "value": "13억 1,725만원",
+          "valueEn": "₩1,317M",
+          "note": "최근 1주 계약 1,250건 · 10/18 대비 -5.4%",
+          "noteEn": "1,250 deals in the last 1 weeks · -5.4% vs Oct 18"
+        }
+      ]
+    },
+    {
+      "title": "청년층이 '집값 심리'에 더 민감…중장년층은 시장 지표 살핀다",
+      "link": "https://www.newsis.com/view/NISX20261023_0003838265",
+      "publishedAt": "2026-10-24T08:30:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "other",
+      "preview": "[서울=뉴시스] 변해정 기자 = 같은 부동산 시장 환경에서도 30대 이하 청년층은 '심리'에, 50대 이상 중장년층은 '객관적 지표'에 더 민감하게 반응한다는 분석이 나왔다. 한국토지주택공사(LH) 토지주택연구원이…",
+      "dupes": []
+    },
+    {
+      "title": "강북구 미아동 삼성래미안트리베라2단지 58.99㎡ 10억 3300만원… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12184783",
+      "publishedAt": "2026-10-24T04:14:19.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "MAI 부동산 2026년 10월 23일 국토부 실거래가 시스템에 신규 등록된 서울 강북구 미아동 삼성래미안트리베라2단지 전용 58.99㎡ 거래가 10억 3,300만 원에 체결돼 최..",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-gangbuk.html",
+          "label": "강북구 아파트 84㎡ 매매",
+          "labelEn": "강북구 apartment 84㎡ sale",
+          "value": "8억 6,597만원",
+          "valueEn": "₩866M",
+          "note": "최근 1주 계약 154건 · 10/18 대비 +0.9%",
+          "noteEn": "154 deals in the last 1 weeks · +0.9% vs Oct 18"
+        }
+      ]
+    },
+    {
+      "title": "노원구 상계주공11단지 41.3㎡ 6억 1천만원… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12184784",
+      "publishedAt": "2026-10-24T04:14:19.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "MAI 부동산 2026년 10월 23일 국토부 실거래가 시스템에 신규 등록된 서울 노원구 상계동 상계주공11(고층) 전용 41.3㎡가 6억 1천만원에 거래되며 최근 3년 내 신고가..",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-nowon.html",
+          "label": "노원구 아파트 84㎡ 매매",
+          "labelEn": "노원구 apartment 84㎡ sale",
+          "value": "9억 2,619만원",
+          "valueEn": "₩926M",
+          "note": "최근 1주 계약 754건 · 10/18 대비 +0.1%",
+          "noteEn": "754 deals in the last 1 weeks · +0.1% vs Oct 18"
+        }
+      ]
+    },
+    {
+      "title": "노원구 중계동 주공5 44.52㎡ 5억 7500만원… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12184785",
+      "publishedAt": "2026-10-24T04:14:19.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "MAI 부동산 2026년 10월 23일 국토부 실거래가 시스템에 신규 등록된 서울 노원구 중계동 주공5단지 전용 44.52㎡가 5억 7500만원에 거래되며 해당 단지·면적 기준 최..",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-nowon.html",
+          "label": "노원구 아파트 84㎡ 매매",
+          "labelEn": "노원구 apartment 84㎡ sale",
+          "value": "9억 2,619만원",
+          "valueEn": "₩926M",
+          "note": "최근 1주 계약 754건 · 10/18 대비 +0.1%",
+          "noteEn": "754 deals in the last 1 weeks · +0.1% vs Oct 18"
+        }
+      ]
+    },
+    {
+      "title": "노원구 중계동 주공5 44.94㎡ 6억원 거래… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12184786",
+      "publishedAt": "2026-10-24T04:14:19.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "MAI 부동산 2026년 10월 23일 국토부 실거래가 시스템에 신규 등록된 서울 노원구 중계동 주공5단지 전용 44.94㎡가 6억원에 거래되며 해당 면적 기준 최근 3년 내 신고..",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-nowon.html",
+          "label": "노원구 아파트 84㎡ 매매",
+          "labelEn": "노원구 apartment 84㎡ sale",
+          "value": "9억 2,619만원",
+          "valueEn": "₩926M",
+          "note": "최근 1주 계약 754건 · 10/18 대비 +0.1%",
+          "noteEn": "754 deals in the last 1 weeks · +0.1% vs Oct 18"
+        }
+      ]
+    },
+    {
+      "title": "은평구 불광동 북한산힐스테이트1차 59.817㎡ 10억 1500만원… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12184787",
+      "publishedAt": "2026-10-24T04:14:19.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "MAI 부동산 2026년 10월 23일 국토부 실거래가 시스템에 신규 등록된 서울 은평구 불광동 북한산힐스테이트1차아파트 전용 59.817㎡가 10억 1,500만 원에 거래되며 해..",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-eunpyeong.html",
+          "label": "은평구 아파트 84㎡ 매매",
+          "labelEn": "은평구 apartment 84㎡ sale",
+          "value": "9억 6,278만원",
+          "valueEn": "₩963M",
+          "note": "최근 1주 계약 347건 · 10/18 대비 +0.4%",
+          "noteEn": "347 deals in the last 1 weeks · +0.4% vs Oct 18"
+        }
+      ]
+    },
+    {
+      "title": "은평구 백련산에스케이뷰아이파크 59.85㎡ 11억 1천만원 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12184788",
+      "publishedAt": "2026-10-24T04:14:19.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "MAI 부동산 2026년 10월 23일 국토부 실거래가 시스템에 신규 등록된 서울 은평구 응암동 백련산에스케이뷰아이파크 전용 59.8545㎡가 11억 1,000만 원에 거래되며 최..",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-eunpyeong.html",
+          "label": "은평구 아파트 84㎡ 매매",
+          "labelEn": "은평구 apartment 84㎡ sale",
+          "value": "9억 6,278만원",
+          "valueEn": "₩963M",
+          "note": "최근 1주 계약 347건 · 10/18 대비 +0.4%",
+          "noteEn": "347 deals in the last 1 weeks · +0.4% vs Oct 18"
+        }
+      ]
+    },
+    {
+      "title": "양천구 목동파크자이 84.977㎡ 21억 2천만원… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12184789",
+      "publishedAt": "2026-10-24T04:14:19.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "MAI 부동산 2026년 10월 23일 국토부 실거래가 시스템에 신규 등록된 서울 양천구 신정동 목동파크자이(101동~108동) 전용 84.977㎡가 21억 2,000만원에 거래되..",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-yangcheon.html",
+          "label": "양천구 아파트 84㎡ 매매",
+          "labelEn": "양천구 apartment 84㎡ sale",
+          "value": "12억 7,481만원",
+          "valueEn": "₩1,275M",
+          "note": "최근 1주 계약 194건 · 10/18 대비 -2.8%",
+          "noteEn": "194 deals in the last 1 weeks · -2.8% vs Oct 18"
+        }
+      ]
+    },
+    {
+      "title": "[다음주 경제] 3분기 성장률은…9월 산업동향도 주목",
+      "link": "https://www.yna.co.kr/view/AKR20261023183500002",
+      "publishedAt": "2026-10-24T00:21:26.000Z",
       "source": "연합뉴스 경제",
       "category": "other",
-      "preview": "(원주=연합뉴스) 류호준 기자 = 강원 원주시가 지역 대학의 의료·헬스케어 역량을 활용해 수면과 휴식을 주제로 한 웰니스 관광 활성화에 나선다.",
-      "dupes": [],
-      "titleEn": "Wonju City Signs Wellness Tourism Promotion Agreement to Boost Local Economy"
+      "preview": "(서울=연합뉴스) 이세원 한지훈 배영경 기자 = 다음 주(26∼30일)에는 한국은행이 올해 3분기 실질 국내총생산(GDP) 성장률을 발표한다.",
+      "dupes": []
+    },
+    {
+      "title": "\"집값 2035년까지 오른다…지금이라도 내집마련 해야\" 대학교수의 조언",
+      "link": "https://www.newsis.com/view/NISX20261023_0003838086",
+      "publishedAt": "2026-10-23T23:30:00.000Z",
+      "source": "뉴시스 경제",
+      "category": "other",
+      "preview": "[서울=뉴시스]김성은 인턴 기자 = 수도권 전월세 시장 불안이 공급 부족과 규제 여파로 오는 2035년까지 이어질 수 있어 실거주 목적의 매수 전환을 적극 검토해야 한다는 전문가 지적이 나왔다. 지난 21일 구독자…",
+      "dupes": []
     }
   ],
   "realestateStats": [
@@ -309,20 +395,20 @@
       "href": "./apartment-sale.html",
       "label": "서울 아파트 84㎡ 매매",
       "labelEn": "Seoul apartment 84㎡ sale",
-      "value": "13억 1,547만원",
-      "valueEn": "₩1,315M",
-      "note": "최근 1주 계약 1,236건 · 10/17 대비 -5.5%",
-      "noteEn": "1,236 deals in the last 1 weeks · -5.5% vs Oct 17"
+      "value": "13억 1,725만원",
+      "valueEn": "₩1,317M",
+      "note": "최근 1주 계약 1,250건 · 10/18 대비 -5.4%",
+      "noteEn": "1,250 deals in the last 1 weeks · -5.4% vs Oct 18"
     },
     {
       "kind": "realestate",
       "href": "./apartment-jeonse.html",
       "label": "서울 아파트 84㎡ 전세",
       "labelEn": "Seoul apartment 84㎡ jeonse",
-      "value": "8억 499만원",
-      "valueEn": "₩805M",
-      "note": "최근 1주 계약 1,100건 · 10/17 대비 -1.9%",
-      "noteEn": "1,100 deals in the last 1 weeks · -1.9% vs Oct 17"
+      "value": "8억 422만원",
+      "valueEn": "₩804M",
+      "note": "최근 1주 계약 1,104건 · 10/18 대비 -2.0%",
+      "noteEn": "1,104 deals in the last 1 weeks · -2.0% vs Oct 18"
     },
     {
       "kind": "realestate",
@@ -331,8 +417,8 @@
       "labelEn": "Seoul apartment rent",
       "value": "보증금 21,344만원 / 월 132만원",
       "valueEn": "₩213.4M + ₩1.32M/mo",
-      "note": "최근 1주 계약 1,189건 · 10/17 대비 -2.5%",
-      "noteEn": "1,189 deals in the last 1 weeks · -2.5% vs Oct 17"
+      "note": "최근 1주 계약 1,189건 · 10/18 대비 -2.5%",
+      "noteEn": "1,189 deals in the last 1 weeks · -2.5% vs Oct 18"
     }
   ]
 }
