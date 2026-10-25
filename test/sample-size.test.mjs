@@ -133,20 +133,20 @@ test("서울 전체 전세가율 카드: 값이 있으면 % 옆에 건수, 값�
 
 // --- 2. jeonse-vs-wolse 대출 금리 ---------------------------------------------------
 
-// (#507) "jeonse-vs-wolse: 대출 금리 문장의 상품·옵션 수가 conversion.json·rates.json과 같고 '평균'이라 쓰지 않는다" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/sample-size.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
+// (#507) "jeonse-vs-wolse: 대출 금리 문장이 conversion.json·ECOS 계열과 같다" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/sample-size.test.mjs 에 있다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
-test("conversion 문장: 상품·옵션 수를 받으면 영어도 같은 문장에 적는다", () => {
-  const input = { rate: 4.8, loanRate: 4.5, loanProducts: 41, loanProductsWithAvg: 34, loanOptions: 49, pairs: 3166, months: ["202605", "202610"] };
-  assert.match(conversionLead(input, "ko"), /평균 금리의 중앙값은 4\.5%\(41개 상품 중 평균 금리가 있는 34개 상품의 49개 옵션 기준\)입니다/);
-  assert.match(conversionLead(input, "en"), /median of the per-option average jeonse loan rates is 4\.5% \(49 options from 34 of 41 loan products\)\./);
-  assert.doesNotMatch(conversionLead(input, "ko"), /평균 금리는/);
-  assert.doesNotMatch(conversionLead(input, "en"), /The average jeonse loan rate/);
-  // avg 있는 상품 수를 모르면 상품 수를 입력처럼 쓰지 않고 옵션 수만, 옵션 수도 모르면 아는 상품 수만 적는다.
-  const noWithAvg = conversionLead({ ...input, loanProductsWithAvg: undefined }, "ko");
-  assert.match(noWithAvg, /\(49개 옵션 기준\)/);
-  assert.doesNotMatch(noWithAvg, /41개 상품/);
-  assert.match(conversionLead({ ...input, loanProductsWithAvg: undefined }, "en"), /\(49 options\)/);
-  assert.match(conversionLead({ ...input, loanOptions: undefined }, "ko"), /\(41개 상품 기준\)/);
+test("conversion 문장 (#577 B1b): 한국은행 평균금리와 그 기준(잔액 기준·달)을 두 언어로 적고, 금감원 상품·옵션 수는 적지 않는다", () => {
+  const input = { rate: 4.8, loanRate: 4.23, loanMonth: "202608", pairs: 3166, months: ["202605", "202610"] };
+  const ko = conversionLead(input, "ko");
+  const en = conversionLead(input, "en");
+  assert.match(ko, /전세자금대출 평균금리는 4\.23%입니다\./);
+  assert.ok(ko.endsWith("전세대출 금리: 한국은행 집계 은행 전세자금대출 평균금리(기존 대출 잔액 기준, 2026년 8월) — 지금 새로 받는 금리와 다를 수 있습니다. 예금 금리: 정기예금 신규취급 평균금리(같은 달)."), ko);
+  assert.match(en, /The average jeonse loan rate is 4\.23%\./);
+  assert.ok(en.endsWith("Jeonse-loan rate: Bank of Korea average on outstanding bank jeonse loans (balance basis, Aug 2026), which can differ from rates on new loans. Deposit rate: new time-deposit average (same month)."), en);
+  for (const s of [ko, en]) assert.doesNotMatch(s, /중앙값|median|옵션|options|상품|products/);
+  // 달을 모르면(직접 넘긴 값) 근거 줄을 지어 붙이지 않는다.
+  assert.doesNotMatch(conversionLead({ ...input, loanMonth: undefined }, "ko"), /잔액 기준/);
+  assert.doesNotMatch(conversionLead({ ...input, loanMonth: "202613" }, "en"), /balance basis/);
 });
 
 // --- 3. switch-house 권역표 ---------------------------------------------------------

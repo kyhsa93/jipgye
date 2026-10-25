@@ -177,9 +177,11 @@ test("교차 입력의 소스는 그 화면이 읽는 소스 또는 금리다 (�
   const { PAGE_SOURCES } = await import("../scripts/updated-stamp.ts");
   for (const [file, inputs] of Object.entries(CROSS_PAGES)) {
     for (const n of inputs.deals) assert.ok(PAGE_SOURCES[file].includes(n), `${file}: 실거래 소스 ${n}이 화면 소스 표에 없다`);
-    // 금리 소스는 하나다: 전환율 장은 금감원 공시 금리 파일, 예산대 장은 한국은행 ECOS 평균금리를 매일 다시 쓰는 outlook-indicators(#577).
-    const expected = file === "jeonse-vs-wolse.html" ? ["rates"] : ["outlook-indicators"];
-    assert.deepEqual(inputs.rates, expected, `${file}: 금리 소스가 ${expected[0]} 하나가 아니다`);
+    // 금리 소스: 예산대 장은 한국은행 ECOS 평균금리를 매일 다시 쓰는 outlook-indicators(#577). 전환율 장은 금리를 구워 넣은 conversion 과
+    // 그 계열 날짜(outlook-indicators) 중 오래된 쪽이다(#577 B1b) - 금감원 공시 파일(rates)은 어느 교차 화면도 읽지 않는다.
+    const expected = file === "jeonse-vs-wolse.html" ? ["conversion", "outlook-indicators"] : ["outlook-indicators"];
+    assert.deepEqual(inputs.rates, expected, `${file}: 금리 소스가 ${expected.join("+")} 가 아니다`);
+    assert.ok(!inputs.rates.includes("rates"), `${file}: 금감원 rates 를 금리 소스로 읽는다`);
   }
 });
 
