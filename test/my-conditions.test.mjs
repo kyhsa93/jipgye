@@ -110,8 +110,7 @@ test("화면에 들어온 주소의 조건을 적는다 - 검색·다른 화면�
     ["deal-search.html", `?district=${enc("강남구")}&budget=12&area=85-135&kind=jeonse`, { district: "강남구", area: "85-135", budget: 12 }],
     ["jeonse-vs-wolse.html", `?district=${enc("노원구")}&band=60to85&cash=2`, { district: "노원구", area: "60-85" }],
     ["switch-house.html", `?from=${enc("노원구")}&to=${enc("송파구")}`, { district: "송파구", home: "노원구" }],
-    ["budget-7eok.html", "", { budget: 7 }],
-    ["district-gangnam.html", "?area=114", { district: "강남구", area: "85-135" }],
+    ["district-gangnam.html", "?area=114", { area: "85-135" }],
     ["realestate.html", "?area=59", { area: "60" }],
   ];
   for (const [file, search, want] of cases) {
@@ -137,10 +136,36 @@ test("화면이 기본값으로 채운 주소는 사람이 고르기 전에는 �
   assert.deepEqual(chips.stored(), { area: "60-85" }, "칩을 눌러 고른 면적을 적지 않았다");
 });
 
+test("들어온 것만으로는 기본값을 적지 않는다 - 장 종류마다, 예산대 장은 주소가 없어도 (#654)", async () => {
+  for (const file of ["index.html", "deal-search.html", "jeonse-vs-wolse.html", "switch-house.html", "realestate.html", "district-gangnam.html", "budget-10eok.html", "budget-7eok.html", "floor-gap.html"]) {
+    const page = await run({ file });
+    page.fire("pagehide");
+    assert.equal(page.stored(), undefined, `${file}: 연 것만으로 적었다`);
+  }
+  // 저장 없는 첫 방문자가 메인 기본 링크(budget-10eok)로 갔다 와도 실거래 찾기가 좁혀지지 않는다.
+  const first = await run({ file: "budget-10eok.html" });
+  assert.equal(first.stored(), undefined, "메인 기본 예산대 링크를 내 예산으로 적었다");
+  assert.deepEqual((await run({ saved: first.stored() })).hrefs, {});
+  // 예산대 장에서 무언가 고른 뒤에는 적는다.
+  const chose = await run({ file: "budget-7eok.html" });
+  chose.fire("change", { target: {} });
+  chose.fire("pagehide");
+  assert.deepEqual(chose.stored(), { budget: 7 });
+  const gu = await run({ file: "district-gangnam.html" });
+  gu.location.search = "?area=59";
+  gu.fire("change", { target: {} });
+  gu.fire("pagehide");
+  assert.deepEqual(gu.stored(), { district: "강남구", area: "60" });
+});
+
 test("저장소가 막혀도 링크는 구운 그대로이고 화면은 멈추지 않는다 (#654)", async () => {
   const blocked = { getItem: () => { throw new Error("blocked"); }, setItem: () => { throw new Error("blocked"); } };
   assert.deepEqual((await run({ storage: blocked })).hrefs, {});
   await run({ file: "deal-search.html", search: "?budget=9", storage: blocked });
+  const quota = { getItem: () => null, setItem: () => { throw new Error("QuotaExceededError"); } };
+  const page = await run({ file: "jeonse-vs-wolse.html", search: "?band=under60", storage: quota });
+  page.fire("change", { target: {} });
+  assert.doesNotThrow(() => page.fire("pagehide"), "저장 실패가 pagehide 밖으로 샜다");
   const broken = { getItem: () => "{not json", setItem() {} };
   assert.deepEqual((await run({ storage: broken })).hrefs, {});
 });

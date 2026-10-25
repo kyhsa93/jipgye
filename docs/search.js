@@ -403,7 +403,7 @@
     } catch (e) {}
 
     const file = location.pathname.split("/").pop() || "index.html";
-    const read = () => {
+    const read = (chose) => {
       const p = new URLSearchParams(location.search);
       const page = /^district-([a-z]+)\.html$/.exec(file);
       const budget = /^budget-(\d+)eok\.html$/.exec(file);
@@ -413,21 +413,23 @@
       }
       if (file === "jeonse-vs-wolse.html") return { district: district(p.get("district")), area: areaOf(p.get("band")) };
       if (file === "switch-house.html") return { district: district(p.get("to")), home: district(p.get("from")) };
-      if (budget) return { budget: +budget[1] };
-      if (page || file === "realestate.html") return { district: page ? pick(SLUGS, page[1]) : undefined, area: areaOf(p.get("area")) };
+      if (budget) return { budget: chose ? +budget[1] : undefined };
+      if (page || file === "realestate.html") return { district: page && chose ? pick(SLUGS, page[1]) : undefined, area: areaOf(p.get("area")) };
       return {};
     };
-    const save = () => {
+    const save = (chose) => {
       let changed = false;
-      for (const [k, v] of Object.entries(read())) if (v !== undefined && saved[k] !== v) (saved[k] = v), (changed = true);
-      if (changed) store.setItem(KEY, JSON.stringify(saved));
+      for (const [k, v] of Object.entries(read(chose))) if (v !== undefined && saved[k] !== v) (saved[k] = v), (changed = true);
+      try {
+        if (changed) store.setItem(KEY, JSON.stringify(saved));
+      } catch (e) {}
     };
-    // 들어온 주소는 바로, 화면이 기본값으로 채운 주소는 사람이 고른 뒤에만 적는다.
+    // 들어온 주소는 바로, 기본값·장 이름(예산대·자치구)은 고른 뒤에만 적는다.
     let touched = false;
     document.addEventListener("change", () => (touched = true), true);
     document.addEventListener("click", (e) => e.target?.closest?.("[role=radio]") && (touched = true), true);
-    window.addEventListener("pagehide", () => touched && save());
-    save();
+    window.addEventListener("pagehide", () => touched && save(true));
+    save(false);
 
     const d = district(saved.district);
     const a = area(saved.area);
