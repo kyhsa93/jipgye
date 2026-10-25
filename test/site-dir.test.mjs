@@ -41,7 +41,6 @@ function tree(dir) {
 
 const pipelineEnv = () => {
   const env = { ...process.env, BUILD_NOW };
-  delete env.JIPGYE_RENDERER;
   delete env.GITHUB_OUTPUT;
   delete env.GITHUB_STEP_SUMMARY;
   delete env[SITE_DIR_ENV];

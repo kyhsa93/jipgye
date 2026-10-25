@@ -1,7 +1,7 @@
 // 렌더 단계 전체를 "깨끗한 작업 사본"에서 한 번 돌린다 (#236 범위 3).
 //
-// 왜 사본인가: prerender.ts는 docs HTML을 읽어 같은 파일 위에 덮어쓴다. 같은 SHA에서 두 번 렌더하거나 legacy와
-// react를 나란히 렌더하려면 매번 같은 출발점이 있어야 하고, 저장소 작업 트리의 docs/는 바뀌면 안 된다.
+// 왜 사본인가: prerender.ts는 docs HTML을 읽어 같은 파일 위에 덮어쓴다. 같은 SHA에서 두 번 렌더하거나 두 SHA를
+// 나란히 렌더하려면 매번 같은 출발점이 있어야 하고, 저장소 작업 트리의 docs/는 바뀌면 안 된다.
 //   1. 출발점(pristine)을 한 번 만든다: `git archive <sha>`(커밋된 상태) 또는 작업 트리 스냅숏(미커밋 상태, rsync).
 //   2. 렌더마다 pristine을 새 디렉터리로 복제한다(macOS는 APFS clone, Linux는 reflink → 비용이 거의 없다).
 //   3. 복제본 안에서 렌더 단계를 순서대로 돌리고, 끝나면 docs/를 돌려준다. 저장소는 건드리지 않는다.
@@ -46,7 +46,7 @@ export const RENDER_STAGES = [
 const MOCK_NOW = pathToFileURL(path.join(import.meta.dirname, "mock-date-now.ts")).href;
 
 // 렌더 결과를 흔드는 환경변수는 호출자가 명시한 것만 들어가게 상속에서 뺀다.
-const SCRUB = ["BUILD_NOW", "JIPGYE_RENDERER", "GOLDEN_MOCK_NOW", "NODE_OPTIONS"];
+const SCRUB = ["BUILD_NOW", "GOLDEN_MOCK_NOW", "NODE_OPTIONS"];
 
 // 워크플로 줄의 스크립트 확장자는 .mjs 한 가지로 박지 않는다(#418, #316 0단계). 박아 두면 개명 순간 줄이 안 잡혀 단계 수가
 // 예외 없이 줄어든다(render-pipeline을 .ts로 바꾸면 빈 배열).
@@ -352,7 +352,7 @@ function runStage(script, cwd, env, nodeArgs) {
 
 /**
  * pristine을 새 작업 사본으로 복제해 렌더 단계를 돌린다.
- *   env      — 이 렌더에 줄 환경변수(TZ·BUILD_NOW·JIPGYE_RENDERER 등). 상속된 같은 이름은 먼저 지운다.
+ *   env      — 이 렌더에 줄 환경변수(TZ·BUILD_NOW 등). 상속된 같은 이름은 먼저 지운다.
  *   mockNow  — Date.now를 이 ISO 값으로 고정(--import로 미리 읽는다). BUILD_NOW 이전 코드와 견줄 때 쓴다.
  *   stages   — 기본 RENDER_STAGES.
  *   tmpRoot  — 작업 사본을 만들 폴더(기본 os.tmpdir()). minFreeBytes·statfsFn은 시작 전 디스크 점검의 문턱·시험용 주입(cleanup.ts).

@@ -148,7 +148,6 @@
     "../../scripts/render-writes.ts",
     "../../scripts/render/load-jsx.ts",
     "../../scripts/render/react.ts",
-    "../../scripts/renderer.ts",
     "../../scripts/renewal-facts.ts",
     "../../scripts/site-dir.ts",
     "../../scripts/site-hashes.ts",

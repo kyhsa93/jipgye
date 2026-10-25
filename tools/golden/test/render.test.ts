@@ -9,7 +9,7 @@ import { preparePristine, readWorkflowStages, renderIsolated } from "../lib/rend
 
 // 렌더 격리와 환경 주입(#236 범위 3·4). 작은 가짜 저장소(고정 파일)를 만들어 쓴다 — 실제 docs/나 raw/는 읽지 않는다.
 //   step1은 docs/a.html을 읽어 덮어쓴다(prerender.ts와 같은 모양: 두 번 돌리면 두 번 덧칠된다).
-//   step2는 환경(TZ·BUILD_NOW·JIPGYE_RENDERER)과 Date.now()를 docs/env.html에 적는다.
+//   step2는 환경(TZ·BUILD_NOW)과 Date.now()를 docs/env.html에 적는다.
 const STEP1 = `import { readFile, writeFile } from "node:fs/promises";
 const f = new URL("../docs/a.html", import.meta.url);
 const n = Number((await readFile(f, "utf8")).match(/count=(\\d+)/)[1]);
@@ -19,7 +19,7 @@ const STEP2 = `import { writeFile } from "node:fs/promises";
 const e = process.env;
 const tz = new Date(Date.UTC(2026, 0, 1, 20, 0)).toLocaleString("en-US", { hour: "numeric", hour12: false });
 await writeFile(new URL("../docs/env.html", import.meta.url),
-  \`<p>TZ=\${e.TZ}|hour=\${tz}|BUILD_NOW=\${e.BUILD_NOW ?? "-"}|R=\${e.JIPGYE_RENDERER ?? "-"}|now=\${new Date(Date.now()).toISOString()}</p>\`);
+  \`<p>TZ=\${e.TZ}|hour=\${tz}|BUILD_NOW=\${e.BUILD_NOW ?? "-"}|now=\${new Date(Date.now()).toISOString()}</p>\`);
 `;
 const STAGES = ["scripts/step1.mjs", "scripts/step2.mjs"];
 
@@ -83,21 +83,20 @@ test("격리: 커밋 뒤에 생긴 미커밋 변경은 sha 모드에 들어가�
   }
 });
 
-test("환경 주입: TZ·BUILD_NOW·JIPGYE_RENDERER는 준 것만 들어가고, 상속된 값은 지운다", async () => {
+test("환경 주입: TZ·BUILD_NOW는 준 것만 들어가고, 상속된 값은 지운다", async () => {
   const repo = await fakeRepo();
   const cache = await mkdtemp(path.join(os.tmpdir(), "golden-cache-"));
-  const saved = { BUILD_NOW: process.env.BUILD_NOW, JIPGYE_RENDERER: process.env.JIPGYE_RENDERER };
+  const saved = { BUILD_NOW: process.env.BUILD_NOW };
   process.env.BUILD_NOW = "2000-01-01T00:00:00Z"; // 호출자 환경에 새어 있는 값
-  process.env.JIPGYE_RENDERER = "react";
   try {
     const pristine = await preparePristine({ repo, sha: "HEAD", cacheDir: cache });
     const plain = await renderIsolated(pristine, { stages: STAGES });
-    const seoul = await renderIsolated(pristine, { stages: STAGES, env: { TZ: "Asia/Seoul", BUILD_NOW: "2026-10-11T00:00:00Z", JIPGYE_RENDERER: "legacy" } });
+    const seoul = await renderIsolated(pristine, { stages: STAGES, env: { TZ: "Asia/Seoul", BUILD_NOW: "2026-10-11T00:00:00Z" } });
     const mocked = await renderIsolated(pristine, { stages: STAGES, mockNow: "2026-03-04T05:06:07.000Z" });
     try {
       const t = await read(plain.docsDir, "env.html");
-      assert.match(t, /TZ=UTC\|hour=20\|BUILD_NOW=-\|R=-\|/, "기본은 TZ=UTC이고 상속된 BUILD_NOW·JIPGYE_RENDERER는 없다");
-      assert.match(await read(seoul.docsDir, "env.html"), /TZ=Asia\/Seoul\|hour=05\|BUILD_NOW=2026-10-11T00:00:00Z\|R=legacy\|/, "Asia/Seoul이면 UTC 20시가 5시");
+      assert.match(t, /TZ=UTC\|hour=20\|BUILD_NOW=-\|now=/, "기본은 TZ=UTC이고 상속된 BUILD_NOW는 없다");
+      assert.match(await read(seoul.docsDir, "env.html"), /TZ=Asia\/Seoul\|hour=05\|BUILD_NOW=2026-10-11T00:00:00Z\|now=/, "Asia/Seoul이면 UTC 20시가 5시");
       assert.match(await read(mocked.docsDir, "env.html"), /now=2026-03-04T05:06:07\.000Z/, "mockNow는 Date.now를 고정한다");
       assert.doesNotMatch(t, /now=2026-03-04/);
     } finally {

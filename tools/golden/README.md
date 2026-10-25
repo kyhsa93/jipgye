@@ -14,7 +14,7 @@ npm test                       # 고정 fixture만 읽는 시험(정준 덤프·
 npm run test:live              # 실제 저장소로: 자기 비교(TZ=UTC·Asia/Seoul), BUILD_NOW 시각 의존, invariants 자기 비교·실제 67장 변이(#274 셋, #289 여섯), (GOLDEN_BASE_SHA가 있으면) 미설정 바이트 동일
 
 node bin/render.ts  --repo ../.. --sha HEAD --out /tmp/a  --env TZ=UTC --env BUILD_NOW=2026-10-11T00:00:00Z
-node bin/render.ts  --repo ../.. --sha HEAD --out /tmp/b  --env JIPGYE_RENDERER=react --env BUILD_NOW=2026-10-11T00:00:00Z
+node bin/render.ts  --repo ../.. --sha HEAD --out /tmp/b  --env TZ=Asia/Seoul --env BUILD_NOW=2026-10-11T00:00:00Z
 node bin/render.ts  --repo ../.. --src ../.. --out /tmp/c --keep   # 미커밋 작업 트리 스냅숏으로 렌더. 스냅숏은 끝나면 지운다(--keep이면 남기고 경로를 출력)
 node bin/compare.ts /tmp/a /tmp/b [--bytes]     # 정준 비교(+ 바이트). 같으면 종료 0
 node bin/bench.ts   --repo ../.. --sha HEAD --runs 10   # 렌더 단계 시간 중앙값·상한
@@ -30,7 +30,7 @@ node bin/invariants.ts --hooks-check --repo ../..      # 훅 클래스 목록이
 - `lib/render.ts` — 렌더 단계 여섯(`daily-update.yml`의 "정적 HTML에 오늘 내용 심기")을 **깨끗한 작업 사본**에서 돌린다.
   출발점(pristine)은 `git archive <SHA>`(커밋된 상태) 또는 `--src <디렉터리>`(작업 트리 스냅숏 — #238의 shadow가 "같은 렌더
   전 스냅숏"을 만들 때 쓰는 모양)이고, 렌더마다 복제해 쓰므로 저장소 `docs/`는 바뀌지 않고 두 렌더가 같은 출발점을 갖는다.
-  호출자가 준 환경변수(`TZ`·`BUILD_NOW`·`JIPGYE_RENDERER`)만 들어간다.
+  호출자가 준 환경변수(`TZ`·`BUILD_NOW`)만 들어간다.
 - `lib/cleanup.ts` — 임시 사본·캐시 정리(#263): 시작 전 디스크 점검, 신호·예외 때 정리 목록, 24시간 넘은 고아 정리, SHA 캐시 상한, 동시 실행용 rename 확정.
   아래 "임시 사본과 정리".
 - `lib/canon.ts` — 정준 덤프. 허용 차이는 주석·속성 순서·엔티티 표기·공백 줄이기(없애기는 불허)·인라인 script 줄바꿈뿐이다.

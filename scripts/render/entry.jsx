@@ -1,6 +1,6 @@
 // 이식된 조각의 목록 (#237). 이름은 prerender.ts의 `*Html()` 함수 이름 그대로, 값은 같은 인자를 받아 React 요소를 돌려주는 함수다.
 // 데이터가 없을 때는 legacy처럼 null을 돌려준다(그러면 자리표시가 legacy와 같은 방식으로 비게 된다). legacy가 null이 아니라 빈 문자열("")을 내는 조각(자치구 문장 묶음·예산대 잎 8개)은 빈 조각으로 ""를 낸다 - 둘은 자리표시 치환에서 다르다.
-// 여기서 `scripts/renderer.mjs`·`scripts/prerender.ts`를 불러오면 안 된다(로더가 막는다). 계산은 순수 모듈에서 가져온다.
+// 여기서 `scripts/prerender.ts`를 불러오면 안 된다(로더가 막는다). 계산은 순수 모듈에서 가져온다.
 //
 // 이식된 것: (ratesHtml·ratesHeadHtml 은 #240 에서 이식했다가 금리 4장과 함께 지웠다 - #577 B2) summaryHtml·marketHtml·newsContextHtml·newsHtml·newsSummaryHtml·
 // newsListHtml·newsKospiHtml·newsRealestateStatsHtml (#241 PR 1, 문장·목록 8개), conversionLeadHtml·cancelLeadHtml·cancelMonthLeadHtml·
@@ -272,7 +272,7 @@ function districtSummary(realestate, district, locale = "ko", spread = null) {
 const districtRenewal = (facts, locale = "ko") => sentenceBlock(renewalSentences(facts, locale));
 const districtFacts = (facts, locale = "ko") => sentenceBlock(factSentences(facts, locale));
 
-// 다른 자치구 링크 묶음. 머리글·상자의 분기와 id는 linksBlockShape(legacy의 linksBlockHtml과 같은 규칙), 경로는 slugLinkHref다.
+// 다른 자치구 링크 묶음. 머리글·상자의 분기와 id는 linksBlockShape, 경로는 slugLinkHref다.
 // 경로는 DISTRICT_PAGES(코드가 정한 slug)로 만든 `./district-<slug>.html`이라 `javascript:`로 시작할 수 없다(React 19 차단 차이의 대상이 아니다).
 // 링크가 하나도 없는 분기(block이 null)는 DISTRICT_PAGES가 상수라 지금은 닿지 않는 방어 코드다.
 function districtLinks(current = null, heading = "다른 지역") {
@@ -595,7 +595,7 @@ function realestateOverallJsx(realestate, kind = null, district = null, spread =
 // 빈 결과는 빈 조각 하나(<>{""}</>)로 그려 react.mjs가 ""로 낸다(sentenceBlock([])과 같다).
 const blank = <>{""}</>;
 
-// 문단 끝의 규칙 링크(#66). 앞 공백은 legacy의 budgetRuleLink가 글자로 들고 있다 - JSX는 {" "}로 낸다. 주소는 모듈(budgetRuleHref)이 정한 `./method.html#budget-rules-<id>`이고
+// 문단 끝의 규칙 링크(#66). 앞 공백은 옛 legacy budgetRuleLink가 글자로 들고 있던 것이다 - JSX는 {" "}로 낸다. 주소는 모듈(budgetRuleHref)이 정한 `./method.html#budget-rules-<id>`이고
 // id는 코드가 정한 상수 다섯이라 `javascript:`가 될 수 없다(React 19 차단 차이의 대상이 아니다, #244).
 const RuleLink = ({ link }) => (
   <>
