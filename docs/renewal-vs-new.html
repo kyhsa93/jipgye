@@ -105,6 +105,19 @@
     <p class="updated" id="cv-source" data-en="{{src:renewalConvert.en}}">{{src:renewalConvert.ko}}</p>
   </section>
 
+  <section id="expiry" class="tw:mb-10 tw:1024:mb-16">
+    <h2 id="ex-heading" data-en="When leases end — the next 12 months">전월세 계약은 언제 끝나나</h2>
+    <div class="search-controls">
+      <div class="search-field"><label for="ex-gu" id="ex-gu-label" data-en="District">자치구</label><select id="ex-gu"></select></div>
+    </div>
+    <p class="lead" id="ex-answer" aria-live="polite" data-msg="서울 전체|만기 달|전체|전세|월세|요구권 사용|일부만 집계|만기 자료를 불러오지 못했습니다.|{0}: {1}~{2}에 계약기간이 끝나는 신고 계약 {3}건. 다 잡힌 달 가운데 가장 많은 달은 {4}({5}건)입니다.|{0}은 일부만 집계했습니다 — 원본이 최근 24개월 신고분뿐이라 이 달들에 끝나는 계약 가운데 약 {1}만 잡혔습니다(2년 계약은 끝나기 24~27개월 전에 신고됩니다). 실제는 표보다 많습니다.| 원본 신고월 {0}개가 비어 실제보다 적게 셌습니다.| 「-」는 5건 미만이라 내지 않은 칸입니다." data-msg-en="All Seoul|Ends|All|Jeonse|Rent|Right used|Partial|Could not load the lease-end data.|{0}: {3} filed leases end between {1} and {2}; among fully counted months, the most end in {4} ({5}).|{0} are partly counted: we hold only the last 24 months of filings, so only about {1} of the leases ending then are captured (two-year leases are filed 24–27 months before they end). The real numbers are higher.| {0} filing months are missing, so the counts run low.| “-” marks cells under 5 leases, not shown."></p>
+    <div class="table-scroll"><table class="rate-table" id="ex-table"><caption class="sr-only">전월세 만기 달력 - 앞으로 12개월 달별 만기 건수</caption></table></div>
+    <p class="content-notice" id="ex-partial"></p>
+    <p class="content-notice" id="ex-note" data-en="Only filed leases are counted — unfiled leases and filings with no lease term (about 3%) are left out. Jeonse means no monthly rent; semi-jeonse is counted as monthly rent. A lease ending is not a move or a listing: many are renewed (with the renewal right, by agreement or automatically) and some end early, so this counts leases that end, not homes that come up. Later months may also run a little low because short leases ending then are not filed yet.">신고된 계약만 셉니다 — 미신고 계약과 계약기간이 비어 있는 신고(약 3%)는 빠집니다. 전세는 월세가 0원인 계약이고, 반전세는 월세에 넣었습니다. 만기는 이사나 매물과 같지 않습니다: 갱신(요구권·합의)이나 묵시적 갱신으로 그대로 살거나 중도에 해지하는 경우가 있어, 이 숫자는 끝나는 계약 수이지 나오는 집 수가 아닙니다. 뒤쪽 달도 아직 신고되지 않은 짧은 계약만큼 조금 적을 수 있습니다.</p>
+    <p class="content-notice" id="ex-legal" data-en="“Right used” means the filing is marked as renewed with the tenant’s contract renewal right. The right can be used once (Housing Lease Protection Act, Article 6-3). An unmarked renewal does not mean the right was not used, and this page does not judge what applies to any lease. It is not legal advice — contact the Korea Legal Aid Corporation or a Housing Lease Dispute Mediation Committee.">「요구권 사용」은 신고에 계약갱신요구권 사용 표시가 있는 계약, 곧 요구권으로 갱신한 계약입니다. 요구권은 한 번 쓸 수 있습니다(주택임대차보호법 제6조의3). 표시가 없다고 요구권을 쓰지 않았다는 뜻은 아니며, 개별 계약에 무엇이 적용되는지는 이 화면이 판단하지 않습니다. 법률 판단이 아니니 대한법률구조공단·주택임대차분쟁조정위원회에서 상담하세요.</p>
+    <p class="updated" id="ex-source" data-en="{{src:leaseExpiry.en}}">{{src:leaseExpiry.ko}}</p>
+  </section>
+
   <section id="lead-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="lead-heading">갱신과 신규의 차이</h2>
     <p class="lead" id="lead"><!--prerender:renewalLead-->서울에서 재계약하는 세입자는 같은 단지 같은 평형에 그달 새로 맺어진 전세보다 보증금을 11.0% 적게 냅니다. 맞물린 계약 1,706건 가운데 79.8%가 시세보다 싸게 맺어졌습니다 — 나가서 다시 구하면 그 차이만큼을 더 내야 한다는 뜻입니다.<!--/prerender:renewalLead--></p>
@@ -151,6 +164,7 @@
 <script src="./nav.js" defer></script>
 <script src="./search.js" defer></script>
 <script src="./renewal-convert.js" defer></script>
+<script src="./lease-expiry.js" defer></script>
 <script src="./analytics.js"></script>
 <script>
 const T = {

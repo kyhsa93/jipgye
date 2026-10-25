@@ -131,6 +131,11 @@ export const FOOTERS: Record<string, Record<Lang, string>> = {
     ko: ko([molitKo("전월세 실거래가 공개시스템"), `${SOURCES.ecos.ko} 기준금리`], DERIVED.ko),
     en: en([molitEn("apartment jeonse and monthly rent filings"), `${SOURCES.ecos.en} (base rate)`], DERIVED.en),
   },
+  // 전월세 만기 달력 절(#674 N2): 국토부 전월세 신고 24개월의 계약기간 끝 달을 센다 - 창과 범위를 꼬리에.
+  leaseExpiry: {
+    ko: ko([molitKo("전월세 실거래가 공개시스템")], "최근 24개월 전월세 신고의 계약기간 끝 달을 자치구·달별로 셉니다. 이 값은 원자료를 집계·가공한 것입니다."),
+    en: en([molitEn("apartment jeonse and monthly rent filings")], "Lease end months from jeonse and monthly-rent filings of the last 24 months, counted by district and month. These are aggregated and processed values."),
+  },
   // 실거래가격지수는 ECOS 901Y089(build-district-change.ts)라 ECOS 를 적는다(제7조②). 주택가격동향조사는 R-ONE 직접 수집이라 R-ONE 을 적는다(#588 단계 C).
   switchHouse: {
     ko: ko([molitKo("매매 실거래가 공개시스템(중개거래, 해제 제외)"), `${SOURCES.reb.ko} 실거래가격지수·주택가격동향조사(R-ONE)`, SOURCES.ecos.ko], DERIVED.ko),
