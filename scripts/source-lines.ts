@@ -59,6 +59,9 @@ const molitEn = (what: string) => `${M.abbr} ${what}`;
 const ko = (names: readonly string[], tail = "") => footerLine("ko", names, tail);
 const en = (names: readonly string[], tail = "", opts: LineOpts = {}) => footerLine("en", names, tail, opts);
 
+// 가공 꼬리(#588 단계 C, cpo·legal·cmo 판정): ECOS 값으로 월 상환액·전환 비교를 계산해 보이는 장과 price-outlook 이 같은 글자를 쓴다.
+export const DERIVED = { ko: "이 값은 원자료를 가공한 것입니다.", en: "These figures are derived from the original data." } as const;
+
 // 신고 기한 꼬리. 조사(은/는)까지 받는다 - 「거래는」·「계약은」.
 const LAG_KO = (what: string, topic: string) => `신고된 ${what}만 집계되며 신고 기한(계약 후 30일)이 있어 최근 ${topic} 나중에 반영됩니다.`;
 const LAG_EN_FILED = (counted: string, recent: string) => `Only filed ${counted} are counted, and the 30-day filing window means recent ${recent} arrive later.`;
@@ -99,16 +102,16 @@ export const FOOTERS: Record<string, Record<Lang, string>> = {
   },
   // 예산대 18장: 시세 틀을 쓰지만 월 상환액·1억당 값이 ECOS 주담대 평균금리라 ECOS 를 더한다(build-budget-pages 가 realestate → budget 으로 바꾼다).
   budget: {
-    ko: ko([molitKo("매매·전월세 실거래가 공개시스템"), SOURCES.ecos.ko], LAG_KO("거래", "거래는")),
-    en: en([molitEn("real transaction price disclosure"), SOURCES.ecos.en], LAG_EN_REPORTED),
+    ko: ko([molitKo("매매·전월세 실거래가 공개시스템"), SOURCES.ecos.ko], `${DERIVED.ko} ${LAG_KO("거래", "거래는")}`),
+    en: en([molitEn("real transaction price disclosure"), SOURCES.ecos.en], `${DERIVED.en} ${LAG_EN_REPORTED}`),
   },
   floorGap: {
     ko: ko([molitKo("매매·전월세 실거래가 공개시스템")], "신고된 거래만 집계되며 해제된 거래는 뺍니다."),
     en: en([molitEn("apartment sale and lease filings")], "Only filed transactions are counted, and cancelled deals are removed."),
   },
   jeonseVsWolse: {
-    ko: ko([molitKo("전월세 실거래가"), SOURCES.ecos.ko], LAG_KO("거래", "계약은")),
-    en: en([molitEn("apartment rent filings"), SOURCES.ecos.en], LAG_EN_FILED("contracts", "contracts")),
+    ko: ko([molitKo("전월세 실거래가"), SOURCES.ecos.ko], `${DERIVED.ko} ${LAG_KO("거래", "계약은")}`),
+    en: en([molitEn("apartment rent filings"), SOURCES.ecos.en], `${DERIVED.en} ${LAG_EN_FILED("contracts", "contracts")}`),
   },
   recordHigh: {
     ko: ko([molitKo("매매 실거래가 공개시스템")], "중개거래만 세고 해제된 거래와 직거래는 뺍니다."),
@@ -118,18 +121,19 @@ export const FOOTERS: Record<string, Record<Lang, string>> = {
     ko: ko([molitKo("전월세 실거래가 공개시스템")], "신고된 계약만 집계되며 신고 기한(계약 후 30일)이 지나 마감된 달만 셉니다."),
     en: en([molitEn("apartment jeonse and monthly rent filings")], "Only filed contracts are counted, and only months whose 30-day filing window has closed."),
   },
+  // 실거래가격지수는 ECOS 901Y089(build-district-change.ts)라 ECOS 를 적는다(제7조②). 주택가격동향조사는 R-ONE 직접 수집이라 R-ONE 을 적는다(#588 단계 C).
   switchHouse: {
-    ko: ko([molitKo("매매 실거래가 공개시스템(중개거래, 해제 제외)"), `${SOURCES.reb.ko} 실거래가격지수·주택가격동향조사`]),
-    en: en([molitEn("apartment sale filings (brokered, cancelled excluded)"), `${SOURCES.reb.en} transaction index and price survey`], "", { sep: "; " }),
+    ko: ko([molitKo("매매 실거래가 공개시스템(중개거래, 해제 제외)"), `${SOURCES.reb.ko} 실거래가격지수·주택가격동향조사(R-ONE)`, SOURCES.ecos.ko], DERIVED.ko),
+    en: en([molitEn("apartment sale filings (brokered, cancelled excluded)"), `${SOURCES.reb.en} transaction index and price survey (R-ONE)`, SOURCES.ecos.en], DERIVED.en, { sep: "; " }),
   },
   priceOutlook: {
     ko: ko(
       [`${SOURCES.reb.ko} 아파트 매매 실거래가격지수(한국은행 ECOS)`, molitKo("매매 실거래가 공개시스템"), `${SOURCES.kb.ko}(한국은행 ECOS 경제통계시스템 경유)`],
-      "이 값은 원자료를 가공한 것입니다. 투자 판단을 대신하지 않습니다."
+      `${DERIVED.ko} 투자 판단을 대신하지 않습니다.`
     ),
     en: en(
       [`${SOURCES.reb.en} apartment sale price index (${SOURCES.ecos.en})`, molitEn("apartment sale filings"), `${SOURCES.kb.en} (via ${SOURCES.ecos.en})`],
-      "These figures are derived from the original data. Not investment advice.",
+      `${DERIVED.en} Not investment advice.`,
       { and: true }
     ),
   },
