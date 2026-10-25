@@ -214,6 +214,7 @@ const T = {
       "지수는 권역 단위라 같은 권역 안 자치구 차이(±2%p 안팎)는 고쳐지지 않습니다 — 고치기 전 중앙값을 옆에 둡니다. " +
       "5건 이상이면 가운데 절반, 3~4건이면 최저~최고를 적고, 2건 이하면 범위를 내지 않습니다.",
     ratioHeading: "최근 두 달 매매·전세와 전세가율",
+    recentRents: (n) => `최근 전월세 (신고 ${n}건, 최신순)`,
     priceYearAgo: "1년 전 중앙값",
     priceTopShort: "실제 최고 신고",
     priceNow: (month) => `${month} 기준 시세`,
@@ -356,6 +357,7 @@ const T = {
       "The index is regional, so differences between districts within a region (around ±2pp) are not corrected — the unadjusted median is shown alongside. " +
       "Five or more deals give the middle half; three or four give low–high; two or fewer give no range.",
     ratioHeading: "Last two months: sale, jeonse and jeonse ratio",
+    recentRents: (n) => `Latest rentals (${n} filed)`,
     priceYearAgo: "Median a year ago",
     priceTopShort: "Highest filing",
     priceNow: (month) => `Now (${month} terms)`,
@@ -1286,12 +1288,14 @@ function complexCardHtml() {
         : "")
     : "";
 
+  const mine = (fullRents.get(district) ?? []).filter((d) => squash(d?.apt) === squash(apt));
   // 범위를 먼저 둔다. 매물을 앞에 둔 사람이 먼저 묻는 것은 "이 값이 어디쯤인가"다.
   return (
     `<section class="complex-card">` +
     `<h2>${escapeHtml(t("complexHeading")(apt))}</h2>` +
     priceHtml +
     ratioHtml +
+    (mine.length ? `<h3>${t("recentRents")(mine.length)}</h3><ul class="budget-deals">${mine.slice(0, 3).map((d) => rentHtml(d, district)).join("")}</ul>` : "") +
     `</section>`
   );
 }
