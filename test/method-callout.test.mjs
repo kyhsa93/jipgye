@@ -51,8 +51,60 @@ test("시세 계열 전부가 같은 안내를 갖는다", async () => {
     const firstData = html.search(/<section id="(market|overall)-section"/);
     assert.notEqual(callout, -1, `${SITE}/${file}에 집계 기준 안내가 없다`);
     assert.ok(callout < firstData, `${SITE}/${file}: 안내가 첫 데이터 섹션보다 뒤에 있다`);
-    assert.match(html.slice(callout, firstData), /href="\.\/method\.html"/, `${SITE}/${file}: method.html로 가지 않는다`);
+    assert.match(html.slice(callout, firstData), /href="\.\/method\.html(#four-weeks(-en)?)?"/, `${SITE}/${file}: method.html로 가지 않는다`);
   }
+});
+
+// 안내 링크의 목적지는 이 셋뿐이다(#462). 시세 29장은 한국어 #four-weeks·영어 #four-weeks-en 으로 바로 가고,
+// 예산대 18장과 index 는 method.html 맨 위다. 링크는 아래 calloutLinks 한 곳에서 읽는다.
+const ALLOWED_HREFS = new Set(["./method.html", "./method.html#four-weeks", "./method.html#four-weeks-en"]);
+const calloutLinks = (html) => {
+  const start = html.indexOf('class="method-callout');
+  const block = html.slice(start, html.indexOf("</aside>", start));
+  return [...block.matchAll(/<a href="([^"]*)"([^>]*)>([^<]*)<\/a>/g)].map((m) => ({ href: m[1], attrs: m[2].trim(), text: m[3] }));
+};
+
+test("안내 링크의 href 는 허용 집합 셋뿐이고 시세 29장만 4주 문단으로 바로 간다 (#462)", async () => {
+  const pages = await CALLOUT_PAGES();
+  let sise = 0;
+  let budget = 0;
+  for (const file of pages) {
+    const links = calloutLinks(await readFile(path.join(root, SITE, file), "utf8"));
+    for (const l of links) assert.ok(ALLOWED_HREFS.has(l.href), `${SITE}/${file}: 허용 밖 href ${l.href}`);
+    if (file === "index.html") {
+      assert.deepEqual(links.map((l) => l.href), ["./method.html"], `${file}: index 는 링크 하나, 맨 위`);
+    } else if (file.startsWith("budget-")) {
+      budget += 1;
+      assert.deepEqual(links.map((l) => [l.href, l.attrs]), [["./method.html", 'class="m-ko"'], ["./method.html", 'class="m-en"']], `${file}: 예산대는 두 링크 모두 맨 위`);
+    } else {
+      sise += 1;
+      assert.deepEqual(
+        links.map((l) => [l.href, l.attrs, l.text]),
+        [
+          ["./method.html#four-weeks", 'class="m-ko"', "숫자를 만드는 방법 →"],
+          ["./method.html#four-weeks-en", 'class="m-en"', "How these numbers are made →"],
+        ],
+        `${file}: 시세 장은 한국어 #four-weeks · 영어 #four-weeks-en 쌍이어야 한다`
+      );
+    }
+  }
+  assert.equal(sise, 29, `시세 장이 ${sise}장이다 - 29장이어야 한다`);
+  assert.equal(budget, 18, `예산대 장이 ${budget}장이다 - 18장이어야 한다`);
+});
+
+test("안내 링크가 가리키는 앵커가 method.html 에 있다 (#462)", async () => {
+  const method = await readFile(path.join(root, SITE, "method.html"), "utf8");
+  for (const id of ["four-weeks", "four-weeks-en"]) assert.match(method, new RegExp(`id="${id}"`), `method.html 에 #${id} 가 없다`);
+});
+
+test("시세·예산대 장은 안내 링크 글자를 스크립트가 쓰지 않는다 - 쌍이 구워져 있고 html lang 이 가린다 (#462)", async () => {
+  for (const file of await CALLOUT_PAGES()) {
+    if (file === "index.html") continue;
+    const html = await readFile(path.join(root, SITE, file), "utf8");
+    assert.ok(!html.includes("method-callout-link") && !html.includes("methodCalloutLink"), `${file}: 안내 링크 갱신 스크립트가 남았다`);
+  }
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
+  assert.match(css, /html:lang\(en\) \.method-callout \.m-ko,\s*html:not\(:lang\(en\)\) \.method-callout \.m-en \{\s*display: none;/, "언어별 링크 가림 규칙이 없다");
 });
 
 test("시세 화면은 빈칸이 왜 비었는지를 먼저 말한다", async () => {

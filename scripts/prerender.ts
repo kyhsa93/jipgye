@@ -626,6 +626,8 @@ export function applyPrerender(html, blocks) {
     if (content == null) continue;
     out = `${out.slice(0, start + open.length)}${content}${out.slice(end)}`;
   }
+  // 안내 링크 쌍(#462)은 시세 장만 4주 문단 앵커로 간다. 예산대 장(<meta name="budget-band">)은 두 링크 모두 맨 위(method.html)로 둔다.
+  if (out.includes('<meta name="budget-band"')) out = out.replace(/(href="\.\/method\.html)#four-weeks(?:-en)?"/g, '$1"');
   // 틀에 손으로 쓴 표와 빌더가 채운 표가 모두 이 길을 지나므로 머리글 방향·표 이름은 여기서 한 번에 단다.
   return accessibleTables(out);
 }
