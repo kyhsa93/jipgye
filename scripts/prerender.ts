@@ -87,6 +87,7 @@ export const renewalDistrictLinksHtml = fragment("renewalDistrictLinksHtml");
 export const floorDistrictsHtml = fragment("floorDistrictsHtml");
 export const floorDistrictLinksHtml = fragment("floorDistrictLinksHtml");
 export const repeatSalesHtml = fragment("repeatSalesHtml");
+export const segmentChangeHtml = fragment("segmentChangeHtml");
 
 // 다른 모듈이 여기서 import 하던 이름은 그대로 다시 내보낸다(예산대 이름은 budget-fragments.ts, 전환율 구간은 district-tables.ts).
 export { budgetBandLabel, CONVERSION_BAND };
@@ -150,6 +151,7 @@ async function main() {
   const record = await readJson("record-high");
   const change = await readJson("district-change");
   const repeat = await readJson("repeat-sales");
+  const segment = await readJson("segment-change");
   const recordText = (key) => (record?.[key]?.ko ? escapeHtml(record[key].ko) : null);
   // 표 칸은 한국어·영어 두 벌로 굽는다(#708) — 데이터를 받기 전·못 받았을 때 영어 화면에 한국어 표가 남지 않게. 바이트 때문에 칸을 고른다(장당 +4KB).
   const both = (table, pick?) => bilingualCells(table?.ko, table?.en, pick);
@@ -242,6 +244,8 @@ async function main() {
         switchRegions: change?.regionTable?.ko ?? null,
         // 같은 집 쌍 절(#170 V8): 인라인 스크립트가 아니라 구운 HTML 이다(이 장은 S6 인라인 여유가 없다). 데이터가 없으면 틀의 빈 자리를 둔다.
         repeatSales: repeatSalesHtml(repeat),
+        // 가격대·연식별 1년 변화(N4 화면, #676): 같은 방식으로 구운 HTML(인라인 스크립트 0 B). 데이터가 없으면 틀의 빈 자리를 둔다.
+        segmentChange: segmentChangeHtml(segment),
       },
     ],
     [

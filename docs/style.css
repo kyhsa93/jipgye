@@ -1853,6 +1853,9 @@
   html:lang(en) #repeat-sales .m-ko, html:not(:lang(en)) #repeat-sales .m-en {
     display: none;
   }
+  html:lang(en) #segment-change .m-ko, html:not(:lang(en)) #segment-change .m-en {
+    display: none;
+  }
   #repeat-sales caption:not(.sr-only) {
     text-align: left;
     padding-bottom: 0.5rem;

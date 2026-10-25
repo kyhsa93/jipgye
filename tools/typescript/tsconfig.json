@@ -152,6 +152,7 @@
     "../../scripts/renewal-facts.ts",
     "../../scripts/repeat-sales-view.ts",
     "../../scripts/repeat-sales.ts",
+    "../../scripts/segment-change-view.ts",
     "../../scripts/site-dir.ts",
     "../../scripts/site-hashes.ts",
     "../../scripts/site-snapshot.ts",

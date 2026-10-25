@@ -1,0 +1,149 @@
+{
+  "updatedAt": "2026-10-25T21:01:56.598Z",
+  "periods": {
+    "base": [
+      "202506",
+      "202507",
+      "202508"
+    ],
+    "recent": [
+      "202606",
+      "202607",
+      "202608"
+    ],
+    "months": 12
+  },
+  "minCells": 30,
+  "ageRefYear": 2025,
+  "cells": 3793,
+  "noBuildYear": 0,
+  "price": [
+    {
+      "key": "upTo6",
+      "ko": "6억 이하",
+      "en": "up to ₩600M",
+      "cells": 775,
+      "change": 10.2,
+      "low": 9.1,
+      "high": 11.3
+    },
+    {
+      "key": "upTo9",
+      "ko": "6억~9억",
+      "en": "₩600–900M",
+      "cells": 1110,
+      "change": 17.7,
+      "low": 16.7,
+      "high": 18.6
+    },
+    {
+      "key": "upTo15",
+      "ko": "9억~15억",
+      "en": "₩0.9–1.5B",
+      "cells": 1185,
+      "change": 24.5,
+      "low": 23.8,
+      "high": 25.4
+    },
+    {
+      "key": "upTo25",
+      "ko": "15억~25억",
+      "en": "₩1.5–2.5B",
+      "cells": 471,
+      "change": 17.7,
+      "low": 17.1,
+      "high": 18.4
+    },
+    {
+      "key": "over25",
+      "ko": "25억 초과",
+      "en": "above ₩2.5B",
+      "cells": 252,
+      "change": 4.1,
+      "low": 2.4,
+      "high": 5.1
+    }
+  ],
+  "age": [
+    {
+      "key": "under10",
+      "ko": "10년 미만",
+      "en": "under 10 years",
+      "cells": 595,
+      "change": 17.3,
+      "low": 16.4,
+      "high": 18.2
+    },
+    {
+      "key": "y10to29",
+      "ko": "10~29년",
+      "en": "10–29 years",
+      "cells": 2179,
+      "change": 17.9,
+      "low": 17.3,
+      "high": 18.4
+    },
+    {
+      "key": "over30",
+      "ko": "30년 이상",
+      "en": "30 years or more",
+      "cells": 1019,
+      "change": 19.2,
+      "low": 18.3,
+      "high": 20.3
+    }
+  ],
+  "pairs": {
+    "price": {
+      "upTo6-upTo9": true,
+      "upTo6-upTo15": true,
+      "upTo6-upTo25": true,
+      "upTo6-over25": true,
+      "upTo9-upTo15": true,
+      "upTo9-upTo25": false,
+      "upTo9-over25": true,
+      "upTo15-upTo25": true,
+      "upTo15-over25": true,
+      "upTo25-over25": true
+    },
+    "age": {
+      "under10-y10to29": false,
+      "under10-over30": true,
+      "y10to29-over30": false
+    }
+  },
+  "grid": {
+    "ages": [
+      "under10",
+      "y10to29",
+      "over30"
+    ],
+    "rows": {
+      "upTo6": [
+        57,
+        363,
+        355
+      ],
+      "upTo9": [
+        84,
+        761,
+        265
+      ],
+      "upTo15": [
+        255,
+        726,
+        204
+      ],
+      "upTo25": [
+        143,
+        237,
+        91
+      ],
+      "over25": [
+        56,
+        92,
+        104
+      ]
+    }
+  }
+}
