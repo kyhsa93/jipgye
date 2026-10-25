@@ -1,6 +1,6 @@
 // 이번 주 새로 신고된 거래(#703 W1) → docs/data/week-digest.json. 계산은 week-digest.ts(순수), 여기는 원본을 읽고 쓰기만 한다.
 //
-// 따로 등록하지 않는다: Daily 「실거래 수집」 단계의 build-record-high.ts 가 끝에서 이 함수를 soft-fail 로 부른다(#703 판정 -
+// 따로 등록하지 않는다: Daily 「실거래 수집」 단계의 build-record-high.ts 가 main() 맨 앞에서 이 함수를 soft-fail 로 부른다(#703 판정 -
 // update-all.mjs·daily-update.yml 무수정, #644 와 등록 경로가 겹치지 않게). 여기서 던져도 신고가 산출물과 수집 커밋은 그대로 나간다.
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";

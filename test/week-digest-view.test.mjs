@@ -26,25 +26,33 @@ test("공백 없는 두 주: 늘었다·줄었다·같다를 쓰고 공백 문�
   assert.deepEqual(en.cards.map((c) => c.sub), ["up 1 from 1,010 the 7 days before", "unchanged from 2,142 the 7 days before", "down 80 from 2,100 the 7 days before"]);
 });
 
-test("수집 공백: 증감 낱말 0, 「수집 공백 n일」과 날짜 (ko/en)", () => {
+test("수집 공백: 증감 낱말 0, 빠진 날짜를 평어로 (ko/en, #713 판정 문구)", () => {
   const ko = digestText(gapped, "ko");
   assert.doesNotMatch(all(ko).replace(ko.gap, ""), /늘었|줄었|같다/);
-  assert.equal(ko.gap, "수집 공백 2일(10/11·10/23) — 공백 다음 날 신고가 몰려 늘었다·줄었다를 말하지 않는다.");
+  assert.equal(ko.gap, "10/11·10/23은 수집하지 못한 날이다. 빠진 날의 신고가 다음 날 한꺼번에 잡히므로, 지난 7일과 늘고 준 것은 비교하지 않는다.");
+  assert.match(digestText({ ...gapped, gaps: ["2026-10-22"] }, "ko").gap, /^10\/22는 수집하지 못한 날이다/);
   assert.equal(ko.cards[0].sub, "직전 7일 1,010건");
   const en = digestText(gapped, "en");
   assert.doesNotMatch(all(en).replace(en.gap, ""), /\b(up|down|unchanged)\b/);
-  assert.match(en.gap, /^Collection gap: 2 days \(Oct 11, Oct 23\)/);
-  assert.match(digestText({ ...gapped, gaps: ["2026-10-23"] }, "en").gap, /1 day \(Oct 23\)/);
+  assert.equal(en.gap, "We couldn't collect on Oct 11 and Oct 23. Filings missed on a gap day show up in a lump the next day, so we don't compare with the previous 7 days.");
+  assert.match(digestText({ ...gapped, gaps: ["2026-10-23"] }, "en").gap, /^We couldn't collect on Oct 23\. /);
+  assert.match(digestText({ ...gapped, gaps: ["2026-10-02", "2026-10-03", "2026-10-11"] }, "en").gap, /on Oct 2, Oct 3 and Oct 11\./);
 });
 
 test("신고가·해제·직거래·많은 구·계약월 문장, 수집일≠계약일 명시", () => {
   const ko = digestText(digest(), "ko");
-  assert.equal(ko.facts, "매매 새 신고 중 신고가 279건(같은 단지·면적 이전 최고가 초과, 판정 가능 752건 중) · 해제일이 이 7일인 해제 18건 · 직거래 9.4%");
+  assert.equal(ko.facts, "새로 들어온 매매 중 역대 최고가를 넘은 건 279건(판단할 수 있던 752건 중) · 이 7일에 해제된 18건 · 직거래 9.4%");
+  assert.doesNotMatch(ko.facts, /신고가/, "신고(filing)와 신고가(record high)가 겹쳐 읽힌다");
   assert.equal(ko.districts, "매매 새 신고가 많았던 구: 노원구·강서구·구로구");
-  assert.equal(ko.months, "신고일은 계약일과 다르다 — 새 신고의 계약월: 매매 10월 701·9월 286 / 전월세 10월 3,624");
+  assert.equal(ko.months, "신고일은 계약일과 다르다 — 새로 들어온 매매는 대부분 10월 계약이다: 9월 286·10월 701 (전월세 10월 3,624)");
+  // 「대부분」은 절반을 넘을 때만 - 고르면 섞였다고 쓴다.
+  const even = digest({ current: win("2026-10-19", "2026-10-25", { months: { sale: { "202609": 500, "202610": 500 }, rent: {} } }) });
+  assert.match(digestText(even, "ko").months, /여러 달 계약이 섞여 있다: 9월 500·10월 500/);
+  assert.match(digestText(even, "en").months, /mix contracts from several months: Sep 500, Oct 500/);
   assert.match(ko.note, /^10\/19~10\/25 수집에 새로 보인 신고\(수집일 기준/);
   const en = digestText(digest(), "en");
-  assert.match(en.facts, /^Of new sales: 279 record highs .* of 752 that can be judged\) · 18 cancellations dated in these 7 days · 9\.4% direct deals$/);
+  assert.equal(en.facts, "New sales above the previous high: 279 of the 752 we could judge · 18 cancelled in these 7 days · 9.4% direct deals");
+  assert.equal(en.months, "Filing date is not contract date — most new sales were signed in Oct: Sep 286, Oct 701 (rentals Oct 3,624)");
   assert.equal(en.districts, "Districts with many new sales filings: Nowon-gu, Gangseo-gu, Guro-gu");
   assert.match(en.note, /Oct 19–Oct 25/);
 });

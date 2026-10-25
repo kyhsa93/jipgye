@@ -19,6 +19,8 @@ const md = (day, lang) => {
 };
 const span = (w, lang) => `${md(w.from, lang)}${lang === "ko" ? "~" : "–"}${md(w.to, lang)}`;
 const num = (n) => n.toLocaleString("en-US");
+/** 날짜 끝자리의 읽는 소리로 은/는(2이·4사·5오·9구는 받침이 없다). */
+const topic = (text) => ("2459".includes(text.at(-1)) ? "는" : "은");
 
 /** 증감 낱말. 공백이 있으면 부르지 않는다. */
 export function direction(now, before, lang) {
@@ -47,30 +49,39 @@ export function digestText(d, lang) {
         ? `직전 7일 ${num(p[k])}건`
         : `${num(p[k])} the 7 days before`,
   }));
-  const gapList = d.gaps.map((g) => md(g, lang)).join(ko ? "·" : ", ");
+  // 날짜 목록은 gaps 그대로. 영어는 「A and B」「A, B and C」.
+  const gapDates = d.gaps.map((g) => md(g, lang));
+  const gapList = ko ? gapDates.join("·") : gapDates.length > 1 ? `${gapDates.slice(0, -1).join(", ")} and ${gapDates.at(-1)}` : gapDates[0];
   const gap = d.comparable
     ? null
     : ko
-      ? `수집 공백 ${d.gaps.length}일(${gapList}) — 공백 다음 날 신고가 몰려 늘었다·줄었다를 말하지 않는다.`
-      : `Collection gap: ${d.gaps.length} day${d.gaps.length === 1 ? "" : "s"} (${gapList}). Filings pile up the day after a gap, so no up/down comparison.`;
+      ? `${gapList}${topic(gapList)} 수집하지 못한 날이다. 빠진 날의 신고가 다음 날 한꺼번에 잡히므로, 지난 7일과 늘고 준 것은 비교하지 않는다.`
+      : `We couldn't collect on ${gapList}. Filings missed on a gap day show up in a lump the next day, so we don't compare with the previous 7 days.`;
   const share = c.directShare == null ? null : `${c.directShare}%`;
+  // 「신고」(filing)와 「신고가」(record high)가 겹쳐 읽히지 않게 「역대 최고가를 넘은 건」으로 쓴다(#713 판정). k/n 그대로.
   const facts = ko
-    ? `매매 새 신고 중 신고가 ${num(c.records)}건(같은 단지·면적 이전 최고가 초과, 판정 가능 ${num(c.judged)}건 중) · 해제일이 이 7일인 해제 ${num(c.cancelDated)}건${share ? ` · 직거래 ${share}` : ""}`
-    : `Of new sales: ${num(c.records)} record highs (above the prior high for the same complex and size, of ${num(c.judged)} that can be judged) · ${num(c.cancelDated)} cancellations dated in these 7 days${share ? ` · ${share} direct deals` : ""}`;
+    ? `새로 들어온 매매 중 역대 최고가를 넘은 건 ${num(c.records)}건(판단할 수 있던 ${num(c.judged)}건 중) · 이 7일에 해제된 ${num(c.cancelDated)}건${share ? ` · 직거래 ${share}` : ""}`
+    : `New sales above the previous high: ${num(c.records)} of the ${num(c.judged)} we could judge · ${num(c.cancelDated)} cancelled in these 7 days${share ? ` · ${share} direct deals` : ""}`;
   const districts = c.districts.length
     ? ko
       ? `매매 새 신고가 많았던 구: ${c.districts.map((x) => NAME.get(x) ?? x).join("·")}`
       : `Districts with many new sales filings: ${c.districts.map(enDistrict).join(", ")}`
     : null;
+  // 계약월은 오래된 달부터(「9월 286·10월 701」). 머리말 뒤는 가장 많은 달을 말한다 - 「대부분」은 절반을 넘을 때만 쓴다(숫자가 바뀌어도 거짓이 되지 않게).
+  const monthName = (m) => (ko ? `${Number(m.slice(4))}월` : EN_MONTH[Number(m.slice(4)) - 1]);
   const monthText = (counts) =>
     Object.entries(counts)
-      .sort((a, b) => (a[0] < b[0] ? 1 : -1))
-      .slice(0, 3)
-      .map(([m, n]) => (ko ? `${Number(m.slice(4))}월 ${num(n)}` : `${EN_MONTH[Number(m.slice(4)) - 1]} ${num(n)}`))
+      .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+      .slice(-3)
+      .map(([m, n]) => `${monthName(m)} ${num(n)}`)
       .join(ko ? "·" : ", ");
+  const sm = Object.entries(c.months.sale as Record<string, number>);
+  const total = sm.reduce((t, [, n]) => t + n, 0);
+  const [topMonth, topCount] = sm.reduce((a, b) => (b[1] > a[1] ? b : a), ["", -1]);
+  const most = total > 0 && topCount * 2 > total;
   const months = ko
-    ? `신고일은 계약일과 다르다 — 새 신고의 계약월: 매매 ${monthText(c.months.sale)} / 전월세 ${monthText(c.months.rent)}`
-    : `Filing date is not contract date — contract months of new filings: sales ${monthText(c.months.sale)} / rentals ${monthText(c.months.rent)}`;
+    ? `신고일은 계약일과 다르다 — ${most ? `새로 들어온 매매는 대부분 ${monthName(topMonth)} 계약이다` : "새로 들어온 매매는 여러 달 계약이 섞여 있다"}: ${monthText(c.months.sale)} (전월세 ${monthText(c.months.rent)})`
+    : `Filing date is not contract date — ${most ? `most new sales were signed in ${monthName(topMonth)}` : "new sales mix contracts from several months"}: ${monthText(c.months.sale)} (rentals ${monthText(c.months.rent)})`;
   const note = ko
     ? `${span(c, lang)} 수집에 새로 보인 신고(수집일 기준, 같은 내용 줄은 1건) · 직전 7일 ${span(p, lang)}`
     : `Filings first seen in collections ${span(c, lang)} (by collection date; identical rows count once) · previous 7 days ${span(p, lang)}`;
