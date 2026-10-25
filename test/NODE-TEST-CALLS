@@ -4,5 +4,7 @@
 # 세는 것은 명령 위치뿐이다: YAML은 `#` 줄, .mjs는 `//`·`/*`·`*` 줄을 뺀다.
 # 늘리는 변경은 이 파일의 diff에 걸린다 — PR 본문에 사유를 적는다. 목록에 있는데 파일에서 사라진 줄도 실패다(썩지 않게).
 scripts/run-tests.mjs | ["--test", "--test-reporter=spec", "--test-reporter-destination=stdout", ...runnerArgs, ...targets],
+# count:bump 의 S6 기준선 갱신(#561)은 시험 하나만 S6_BASELINE_UPDATE=1 로 돌려야 해서 래퍼(개수 래칫)를 못 지난다 - 루트 시험이 초록일 때만 부른다.
+scripts/count-bump.mjs | cmd: ["node", "--test", "--test-name-pattern=S6 롤링", "test/load-failure.test.mjs"],
 # test:live는 단일 파일 지명이라 글롭 구멍이 없다. 빼면 그 줄이 거짓 실패를 낸다.
 tools/golden/package.json | "test:live": "GOLDEN_LIVE=1 node --test test/live.test.ts"

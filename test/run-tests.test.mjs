@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, 
 import os from "node:os";
 import path from "node:path";
 import { checkRatchet, parseTotals, readFloors } from "../scripts/test-count-ratchet.mjs";
-import { COUNT_HEADER, SUITES, bumpFloor, decideBump, renderCount } from "../scripts/count-bump.mjs";
+import { COUNT_HEADER, S6_UPDATE, SUITES, bumpFloor, decideBump, renderCount } from "../scripts/count-bump.mjs";
 
 // `npm test` 안의 시험 개수 래칫(#319). 래퍼(scripts/run-tests.mjs)를 가짜 패키지(임시 폴더의 test/*.test.mjs +
 // test/COUNT)에서 돌려, 대조군마다 종료 코드와 **어느 가드가 물었는지**(메시지의 `[...]`)를 본다.
@@ -356,6 +356,15 @@ test("count-bump 배선: SUITES 의 하한 파일이 COUNT 파일 목록과 같�
   assert.deepEqual(SUITES.map((s) => s.floor).sort(), [...COUNT_FILES].sort(), "COUNT 파일마다 그것을 갱신하는 패키지 시험이 하나씩");
   for (const s of SUITES) assert.ok(existsSync(path.join(root, s.cwd)), `${s.name}: cwd ${s.cwd}`);
   assert.equal(JSON.parse(readFileSync(path.join(root, "package.json"), "utf8")).scripts["count:bump"], "node scripts/count-bump.mjs");
+});
+
+test("count-bump S6 기준선 갱신 배선(#561): 기준선 파일·시험 파일이 있고 이름 패턴이 시험 하나를 가리키며 갱신 환경변수가 1이다", () => {
+  assert.ok(existsSync(path.join(root, S6_UPDATE.file)));
+  const file = S6_UPDATE.cmd[S6_UPDATE.cmd.length - 1];
+  const pattern = S6_UPDATE.cmd.find((a) => a.startsWith("--test-name-pattern=")).slice("--test-name-pattern=".length);
+  const names = [...readFileSync(path.join(root, file), "utf8").matchAll(/^test\("([^"]+)"/gm)].map((m) => m[1]).filter((n) => n.includes(pattern));
+  assert.equal(names.length, 1, `패턴 "${pattern}" 이 ${file} 의 시험 ${names.length}개를 가리킨다 - 정확히 하나여야 한다`);
+  assert.equal(S6_UPDATE.env.S6_BASELINE_UPDATE, "1");
 });
 
 // ---- 호출 불변: `node --test`를 적은 곳이 허용 목록(test/NODE-TEST-CALLS)뿐이다 (#319 범위 9) ----

@@ -2423,21 +2423,17 @@ test("#538 변이 대조군: 실패 분기를 지운 사본, 옵션을 비우는
 // S6 인라인 스크립트 바이트 한도 (#543) - 틀 행마다 따로 쌓이던 S6 시험(+150→+750, +580→+1180 …)을 롤링 기준선 하나로 모았다.
 // 정책: 장 하나의 인라인 script 는 기준선(test/s6-baseline.json = 병합 시점 build/site 의 장별 바이트)보다 한 번의 변경에 +400 B 넘게 늘지 않는다.
 //       docs/load-state.js 는 4,574 B 를 넘지 않는다(이 값은 기준선이 아니라 고정이다 - 늘리려면 PR 전에 cto 에게 묻는다).
-// 기준선 갱신: 병합 담당이 병합 뒤(count:bump 와 같은 때)에 `S6_BASELINE_UPDATE=1 node --test --test-name-pattern="S6 롤링" test/load-failure.test.mjs`
-//       로 파일을 지금 바이트로 다시 쓰고 그 diff 를 커밋한다. PR 은 기준선 파일을 건드리지 않는다 - 의도해서 +400 B 를 넘기는 PR 은 골든 S6 예외
+// 기준선 갱신: 병합 담당이 병합 뒤 `npm run count:bump` 를 돌리면 루트 시험이 초록일 때 이어서 `S6_BASELINE_UPDATE=1 node --test --test-name-pattern="S6 롤링" test/load-failure.test.mjs`
+//       가 돌아 파일을 지금 바이트로 다시 쓰고 diff 를 찍는다(#561) - 그 diff 를 커밋한다. PR 은 기준선 파일을 건드리지 않는다 - 의도해서 +400 B 를 넘기는 PR 은 골든 S6 예외
 //       절차(cto 판정, 이유 문구)를 거치고, 그때만 기준선 파일을 본문에 사유와 함께 고친다(허용 목록 밖 파일이라 전체 판정이다).
-// 측정 대상: 전과 같다 - 시세 틀(scripts/realestate-template.html, 주석을 걷은 것)·index·뉴스 4장·금리 4장·price-outlook·분석 5장의 마지막 인라인 <script>.
+// 측정 대상: 시세 틀(scripts/realestate-template.html, 주석을 걷은 것)과 build/site 의 모든 장(#561)의 마지막 인라인 <script>. 시세 틀 47장의 접는 줄(#338, 옛 장당 +360 B·합 16,920 B)도 이 기준선이 지킨다(#560).
 // ============================================================================================================
 test("S6 롤링 기준선: 장별 인라인 스크립트 순증가 +400B 이하(test/s6-baseline.json 기준), docs/load-state.js 4,574B 이하", async () => {
   const S6_BASELINE_PATH = path.join(import.meta.dirname, "s6-baseline.json");
-  const measured = {
-    "realestate-template": templateScript,
-    index: indexScript,
-    ...Object.fromEntries(NEWS_FILES.map((name) => [name, newsSources[name].script])),
-    ...ratesSources,
-    "price-outlook": outlookScript,
-    ...Object.fromEntries(ANALYSIS_PAGES.map((spec) => [spec.name, analysisSources[spec.name].script])),
-  };
+  // 측정 대상은 build/site 의 모든 장(.html)과 시세 틀이다 - 장이 늘면 기준선 파일의 장 목록도 같이 늘어야 해서 아래 키 비교가 먼저 말해 준다(#561).
+  const siteFiles = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html")).sort();
+  const measured = { "realestate-template": templateScript };
+  for (const f of siteFiles) measured[f.replace(/\.html$/, "")] = scriptOf(await readFile(path.join(root, SITE, f), "utf8")) ?? "";
   const bytes = Object.fromEntries(Object.entries(measured).map(([name, script]) => [name, Buffer.byteLength(script)]));
   assert.ok(Buffer.byteLength(loadStateSource) <= 4_574, "docs/load-state.js 가 늘었다 - cto 기본값은 순증가 0B, 필요하면 PR 전에 묻는다");
   // 시세 틀의 알림 상태 코드는 47장 모두에 같은 글자로 실려 있어야 한다(장마다 달라지는 몫 - 예산대 구간 값 따위 - 은 한도와 무관하다).
