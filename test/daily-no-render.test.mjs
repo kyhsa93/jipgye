@@ -12,6 +12,7 @@ import path from "node:path";
  *  - 두 워크플로에는 `npm test`·`npm run test:site`·`npm run health`·render-pipeline·Pages 단계·배포 환경이 없다(아래 `violations`).
  *  - 권한은 `contents: write` 하나다(pages·id-token 이 있으면 배포 단계가 돌아올 자리가 생긴다).
  *  - 커밋은 push-docs.sh 만 하고, 그 기본 경로가 docs/data·raw 로 한정돼 있다(test/push-docs.test.mjs).
+ *  - 금감원(FSS finlife) 금리 수집과 그 실패 반영 단계는 없다(2026-10-25 소유자 결정, #577 A). 그래서 Daily 의 맨 끝 스텝은 커밋이다.
  *
  * 이 파일은 워크플로 YAML 을 읽어 GitHub Actions 의 스텝 실행 규칙(앞 스텝이 실패하면 상태 함수 없는 if 는 건너뛴다, continue-on-error 스텝의 실패는 job 을 실패시키지 않는다)을
  * **그 파일에 대고** 흉내 낸다. 고정 입력만 읽는다 - 네트워크도 날짜도 데이터도 보지 않는다(#8).
@@ -24,11 +25,9 @@ const SUMMARIZE = ".github/workflows/summarize.yml";
 const yml = await read(DAILY);
 const summarizeYml = await read(SUMMARIZE);
 
-const REFLECT = "금리 수집 실패 반영";
 const COMMIT = "변경사항 커밋 및 푸시";
 const COLLECT = "실거래 수집";
 const NEWS = "뉴스 수집";
-const RATES = "예·적금·대출 금리 수집";
 const CONVERT = "전환율 다시 만들기 (금리 반영)";
 
 /** 주석을 걷어 낸다(전체 줄 주석과 `uses: … # v7.0.1` 꼬리). 주석에는 일부러 render-pipeline·npm test 같은 낱말이 쓰인다. */
@@ -125,6 +124,8 @@ function violations(text) {
   if (/^\s*(?:- )?run: .*git (?:push|commit|add)\b/m.test(c)) out.push("push-docs.sh 밖에서 직접 커밋·푸시한다");
   // 반영 단계의 말: 배포는 이 워크플로 밖이다. "배포는 끝났다"류 문장은 그날 해당 없는 거짓이 된다(#510 cpo 조건 A: 문구를 고치거나 없앤다).
   for (const m of c.matchAll(/::error::([^\n]*)/g)) if (/(?:커밋·)?배포(?:는|도)?\s*(?:끝났|나갔)/.test(m[1])) out.push(`반영 문구가 배포가 끝났다고 말한다: ${m[1].slice(0, 40)}`);
+  // #577 A: 금감원 자료는 저작권 약관 위험으로 프로젝트에서 뺐다(소유자 결정 2026-10-25). 수집기·키·그 결과를 읽는 반영 단계가 돌아오지 않게 한다.
+  if (/fetch-rates|FSS_FINLIFE|steps\.rates\b/.test(c)) out.push("금감원 금리 수집(fetch-rates·FSS_FINLIFE_API_KEY·steps.rates)이 있다 (#577)");
   return out;
 }
 
@@ -150,60 +151,42 @@ test("summarize.yml: 요약도 시험·렌더·건강 점검·Pages 배포를 �
   assert.equal(names.at(-1), COMMIT, "맨 끝 스텝이 커밋이 아니다");
 });
 
-test("커밋 스텝은 둘 다 push-docs.sh 만 부르고 그 뒤에 수집 워크플로의 일이 없다 (Daily 는 금리 반영 하나만 뒤에 있다)", () => {
+test("커밋 스텝은 둘 다 push-docs.sh 만 부르고 그 뒤에 수집 워크플로의 일이 없다 - 둘 다 커밋이 맨 끝이다 (#577 A 로 Daily 의 금리 반영이 빠졌다)", () => {
   for (const [file, text] of [[DAILY, yml], [SUMMARIZE, summarizeYml]]) {
     const list = parseSteps(text);
     const commit = list.find((s) => nameOf(s) === COMMIT);
     assert.ok(commit, `${file}: 커밋 스텝이 없다`);
     assert.match(commit.run, /\.\/scripts\/push-docs\.sh "/, `${file}: 커밋이 push-docs.sh 가 아니다`);
     assert.ok(!/push-docs\.sh[^\n]*\b(docs|\.)\s*$/m.test(commit.run), `${file}: push-docs.sh 에 경로 인자를 줬다 - 기본(docs/data·raw)이 계약이다`);
+    assert.equal(nameOf(list.at(-1)), COMMIT, `${file}: 맨 끝 스텝이 커밋이 아니다`);
   }
-  assert.equal(steps.at(-1) && nameOf(steps.at(-1)), REFLECT, "Daily 의 맨 끝 스텝이 금리 반영이 아니다");
-  assert.equal(nameOf(steps.at(-2)), COMMIT, "금리 반영 바로 앞이 커밋이 아니다");
 });
 
-test("금리 반영 단계는 맨 끝이고 steps.rates.outcome == 'failure' 일 때 ::error:: 를 쓰고 exit 1 로 끝낸다 - 배포가 끝났다고 말하지 않는다", () => {
-  const last = steps.at(-1);
-  assert.equal(nameOf(last), REFLECT);
-  assert.equal(last.if.replace(/^\$\{\{\s*|\s*\}\}$/g, ""), "!cancelled() && steps.rates.outcome == 'failure'"); // `!cancelled() &&` 는 #509
-  assert.match(last.run, /::error::/);
-  assert.match(last.run, /^exit 1$/m);
-  assert.equal(last["continue-on-error"], undefined);
-  // #510 cpo 조건 A: 「커밋·배포는 끝났다」 문구를 고쳤다 - 이 워크플로 밖의 배포를 단정하지 않고, 어디서 사이트 갱신을 볼지 말한다.
-  assert.ok(!/배포는 끝났|커밋·배포/.test(last.run), "반영 문구가 배포가 끝났다고 말한다");
-  assert.match(last.run, /Deploy site/);
-  for (const n of [NEWS, COLLECT, RATES, COMMIT]) assert.ok(at(n) >= 0 && at(n) < at(REFLECT), `${n} 이 반영 단계보다 뒤에 있다`);
-  assert.equal(steps.filter((s) => s.if?.includes("steps.rates")).length, 1, "rates 를 읽는 스텝이 하나가 아니다");
+test("금감원 금리 수집·실패 반영 단계가 없다 (#577 A) - 스텝 이름도, id: rates 도, 그 outcome 을 읽는 if 도 없다", () => {
+  assert.equal(byName("예·적금·대출 금리 수집"), undefined, "금리 수집 스텝이 남았다");
+  assert.equal(byName("금리 수집 실패 반영"), undefined, "금리 수집 실패 반영 스텝이 남았다");
+  assert.equal(steps.filter((s) => s.id === "rates" || s.if?.includes("steps.rates")).length, 0, "rates 스텝이나 그 결과를 읽는 스텝이 남았다");
+  assert.ok(!/fetch-rates|FSS_FINLIFE/.test(code(yml)), "fetch-rates 호출이나 FSS 키가 남았다");
+  for (const n of [NEWS, "시장 지표 수집", COLLECT, CONVERT, COMMIT]) assert.ok(at(n) >= 0, `${n} 스텝이 없다 - 다른 단계까지 지웠다`);
 });
 
-test("금리 수집은 id: rates + continue-on-error 이고 full 에서만 돈다 - 실패해도 수집·커밋이 이어진다 (#62·#107)", () => {
-  const rates = byName(RATES);
-  assert.ok(rates, `"${RATES}" 스텝이 없다`);
-  assert.equal(rates.id, "rates");
-  assert.equal(rates["continue-on-error"], "true");
-  assert.equal(rates.if, "env.MODE == 'full'");
+test("전환율 다시 만들기는 continue-on-error 이고 full 에서만 돈다 - 실패해도 수집·커밋이 이어진다 (#62. #577 B1 이 정리할 때까지 멈춘 rates.json 을 읽는다)", () => {
   const convert = byName(CONVERT);
+  assert.ok(convert, `"${CONVERT}" 스텝이 없다`);
   assert.equal(convert["continue-on-error"], "true", "전환율 다시 만들기가 job 을 멈춘다 - 같은 실행의 수집분 커밋이 안 돈다");
+  assert.equal(convert.if, "env.MODE == 'full'");
 });
 
 // ── 실행 흉내 ───────────────────────────────────────────────────────────────
 
-const COLLECTION = [NEWS, "시장 지표 수집", COLLECT, RATES, COMMIT];
+const COLLECTION = [NEWS, "시장 지표 수집", COLLECT, CONVERT, COMMIT];
 
-test("흉내 자체: 실패가 없으면 반영 단계는 건너뛰고 job 은 성공이다 - 시험·렌더·배포 스텝은 애초에 없다", () => {
+test("흉내 자체: 실패가 없으면 job 은 성공이고 커밋이 맨 끝에 돈다 - 시험·렌더·배포 스텝은 애초에 없다", () => {
   const r = simulate(yml);
   assert.equal(r.jobFailed, false);
-  assert.ok(r.skipped.includes(REFLECT));
+  assert.equal(r.ran.at(-1), COMMIT);
   for (const n of COLLECTION) assert.ok(r.ran.includes(n), `${n} 이 안 돌았다`);
   assert.ok(!r.ran.some((n) => /테스트|정적 HTML|Pages|건강 점검/.test(n)), `수집 워크플로에 시험·렌더·배포류 스텝이 돈다: ${r.ran}`);
-});
-
-test("(가) 금리 수집이 실패해도 수집·커밋이 돌고 run 최종 상태는 failure 다", () => {
-  const r = simulate(yml, { failNames: [RATES] });
-  for (const n of COLLECTION) assert.ok(r.ran.includes(n), `${n} 이 안 돌았다 - 수집분이 사라진다`);
-  assert.equal(r.jobFailed, true, "run 이 초록으로 끝난다 - 금리 수집 실패가 가려진다");
-  assert.equal(r.ran.at(-1), REFLECT, "실패 반영이 맨 끝에서 돌지 않았다");
-  assert.ok(r.ran.indexOf(COMMIT) < r.ran.indexOf(REFLECT), "커밋이 실패 반영보다 뒤다");
 });
 
 test("전환율 다시 만들기가 실패해도 커밋은 돈다 (#62) - run 은 초록이다(낡은 conversion 은 deploy.yml 의 build/site 시험이 그 배포를 막는다)", () => {
@@ -212,19 +195,19 @@ test("전환율 다시 만들기가 실패해도 커밋은 돈다 (#62) - run �
   assert.equal(r.jobFailed, false);
 });
 
-test("news 모드에서는 뉴스 수집·커밋이 돌고 실거래·금리는 건너뛴다 - 금리 반영도 건너뛴다", () => {
-  const r = simulate(yml, { mode: "news", failNames: [RATES] });
+test("news 모드에서는 뉴스 수집·커밋이 돌고 실거래·전환율 다시 만들기는 건너뛴다", () => {
+  const r = simulate(yml, { mode: "news" });
   for (const n of [NEWS, COMMIT]) assert.ok(r.ran.includes(n), `${n} 이 안 돌았다`);
-  for (const n of [COLLECT, RATES, CONVERT, REFLECT]) assert.ok(r.skipped.includes(n), `${n} 이 news 모드에서 돌았다`);
+  for (const n of [COLLECT, CONVERT]) assert.ok(r.skipped.includes(n), `${n} 이 news 모드에서 돌았다`);
   assert.equal(r.jobFailed, false);
 });
 
 // ── 대조군 ──────────────────────────────────────────────────────────────────
 
-test("대조군: 금리 수집에서 continue-on-error 만 빠져도 (가)가 빨개진다 - 커밋이 안 돈다", () => {
-  const partial = yml.replace("        id: rates\n        if: env.MODE == 'full'\n        continue-on-error: true\n", "        id: rates\n        if: env.MODE == 'full'\n");
+test("대조군: 전환율 다시 만들기에서 continue-on-error 만 빠져도 그 실패가 커밋을 막는다 - 흉내가 무는지", () => {
+  const partial = yml.replace("        if: env.MODE == 'full'\n        continue-on-error: true\n        run: node scripts/build-conversion.ts\n", "        if: env.MODE == 'full'\n        run: node scripts/build-conversion.ts\n");
   assert.notEqual(partial, yml);
-  const r = simulate(partial, { failNames: [RATES] });
+  const r = simulate(partial, { failNames: [CONVERT] });
   assert.ok(!r.ran.includes(COMMIT), "가림이 재현되지 않는다 - 대조가 무력하다");
 });
 
@@ -239,7 +222,7 @@ test("대조군: 시험·렌더·건강 점검·Pages 단계를 도로 넣은 �
     [yml.replace("jobs:\n  update:\n    runs-on: ubuntu-latest\n", "jobs:\n  update:\n    runs-on: ubuntu-latest\n    environment:\n      name: github-pages\n"), /environment/],
     [yml.replace("  contents: write\n", "  contents: write\n  pages: write\n  id-token: write\n"), /배포 권한|permissions/],
     [yml.replace("  contents: write\n", "  contents: read\n"), /permissions/],
-    [yml.replace("원본 커밋은 이 단계 전에 끝났다", "원본 커밋·배포는 끝났다"), /반영 문구/],
+    [add(yml, '      - name: 반영\n        run: echo "::error::원본 커밋·배포는 끝났다"\n'), /반영 문구/],
   ];
   for (const [mutated, expect] of cases) {
     assert.notEqual(mutated, yml, "변이가 안 먹었다");
@@ -248,21 +231,30 @@ test("대조군: 시험·렌더·건강 점검·Pages 단계를 도로 넣은 �
   }
 });
 
+test("대조군: 금감원 금리 수집·FSS 키·그 결과를 읽는 반영 단계를 도로 넣은 사본은 #577 위반으로 잡힌다", () => {
+  const add = (src, stepText) => src.replace(/(\n {6}- name: 변경사항 커밋 및 푸시)/, `\n${stepText}$1`);
+  const cases = [
+    add(yml, "      - name: 예·적금·대출 금리 수집\n        id: rates\n        run: node scripts/fetch-rates.ts\n"),
+    add(yml, "      - name: 금리\n        run: echo\n        env:\n          FSS_FINLIFE_API_KEY: x\n"),
+    `${yml}\n      - name: 금리 수집 실패 반영\n        if: \${{ !cancelled() && steps.rates.outcome == 'failure' }}\n        run: exit 1\n`,
+  ];
+  for (const mutated of cases) {
+    assert.notEqual(mutated, yml, "변이가 안 먹었다");
+    assert.ok(violations(mutated).some((v) => /#577/.test(v)), `변이가 안 잡혔다: ${JSON.stringify(violations(mutated))}`);
+  }
+});
+
+test("Daily 의 스텝 순서는 금리 두 단계만 빠진 그대로다 (#577 A 가 다른 단계를 건드리지 않았다)", () => {
+  const named = steps.filter((s) => s.name).map((s) => s.name);
+  assert.deepEqual(named, [NEWS, "시장 지표 수집", COLLECT, CONVERT, "기사에 실거래가·금리 수치 붙이기", COMMIT]);
+  assert.match(byName(COLLECT).run, /node scripts\/build-conversion\.ts/, "실거래 수집 안의 첫 build-conversion 이 빠졌다");
+  assert.match(byName("시장 지표 수집").run, /fetch-market\.ts[\s\S]*fetch-move-in\.ts/, "ECOS·지표 수집이 바뀌었다");
+});
+
 test("대조군: 요약 워크플로에 같은 것을 도로 넣어도 잡힌다", () => {
   const mutated = summarizeYml.replace(/(\n {6}- name: 변경사항 커밋 및 푸시)/, "\n      - name: 테스트\n        run: npm test$1");
   assert.notEqual(mutated, summarizeYml);
   assert.ok(violations(mutated).some((v) => /시험/.test(v)));
-});
-
-// ── 반영 단계끼리 가리지 않는다 (#509: #507 cto·cpo 조건. 수집 쪽 반영은 하나뿐이라 deploy.yml 의 반영과 짝으로 본다) ──────────────────
-
-test("대조군: `!cancelled() && ` 를 걷어낸 금리 반영은 앞 단계(커밋)가 실패한 날 건너뛰어진다 - 가림이 재현된다", () => {
-  const plain = yml.replace("${{ !cancelled() && steps.rates.outcome == 'failure' }}", "steps.rates.outcome == 'failure'");
-  assert.notEqual(plain, yml);
-  const r = simulate(plain, { failNames: [RATES, COMMIT] });
-  assert.ok(r.skipped.includes(REFLECT), "가림이 재현되지 않는다 - 대조가 무력하다");
-  const kept = simulate(yml, { failNames: [RATES, COMMIT] });
-  assert.ok(kept.ran.includes(REFLECT), "`!cancelled() &&` 가 있는데도 금리 반영이 건너뛰어졌다");
 });
 
 test("어느 워크플로의 반영 문구도 「커밋·배포는 끝났다」 로 단정하지 않는다 (#510 cpo 조건 A) - 배포 여부는 deploy.yml 의 run 이 말한다", async () => {

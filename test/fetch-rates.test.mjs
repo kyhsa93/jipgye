@@ -536,19 +536,15 @@ test("키가 본문 195자 근처에서 잘려도 키의 일부가 남지 않는
   }
 });
 
-test("워크플로는 금리 단계를 막지 않고 끝에서 실패로 반영한다 (#62 순서 + #107)", async () => {
+// #577 A(2026-10-25 소유자 결정): 금감원 자료는 저작권 약관 위험으로 뺀다. Daily 는 이 수집기를 더 부르지 않는다(수집기·시험 파일은 #577 C 에서 지운다).
+// 옛 시험(#62 순서 + #107: 금리 단계 continue-on-error·끝의 실패 반영)은 그 단계와 함께 사라졌다 - 대신 다시 붙지 않았는지 본다.
+test("워크플로는 금리 수집기를 부르지 않고 FSS 키도 넘기지 않는다 (#577 A)", async () => {
   const yml = await readFile(path.resolve(import.meta.dirname, "../.github/workflows/daily-update.yml"), "utf-8");
-  const ratesStep = yml.split("- name: 예·적금·대출 금리 수집")[1]?.split("- name:")[0] ?? "";
-  assert.match(ratesStep, /id: rates/);
-  assert.match(ratesStep, /continue-on-error: true/);
-  const commitAt = yml.indexOf("- name: 변경사항 커밋 및 푸시");
-  const failAt = yml.indexOf("- name: 금리 수집 실패 반영");
-  // (#510) 배포 단계는 deploy.yml 로 갔다 - 수집 워크플로의 마지막 두 단계는 커밋 -> 실패 반영이다. 실패 반영은 커밋 뒤라 수집분(원본·데이터)이 먼저 남는다.
-  assert.ok(commitAt > 0 && failAt > commitAt, "실패 반영 단계가 커밋 뒤에 있어야 한다");
+  const code = yml.replace(/^\s*#.*$/gm, "");
+  assert.ok(!code.includes("scripts/fetch-rates.ts"), "Daily 가 fetch-rates.ts 를 부른다");
+  assert.ok(!code.includes("FSS_FINLIFE_API_KEY"), "Daily 가 FSS 키를 넘긴다");
+  assert.ok(!code.includes("steps.rates"), "Daily 에 금리 수집 결과를 읽는 반영 단계가 남았다");
   assert.ok(!yml.includes("- name: Pages에 배포"), "수집 워크플로에 배포 단계가 남았다 - 배포는 deploy.yml 의 일이다");
-  const failStep = yml.slice(failAt);
-  assert.match(failStep, /steps\.rates\.outcome == 'failure'/);
-  assert.match(failStep, /exit 1/);
 });
 
 test("연결이 안 되면 원인 코드를 남기고 코드 3으로 끝낸다", async () => {
