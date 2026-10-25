@@ -15,6 +15,8 @@
  * 어느 예산대가 걸리게 할지를 보면서 정하게 되고, 그건 결과에 끼워 맞추는 것이다.
  */
 
+import { MIN_DEALS as CELL_MIN_DEALS, quantile } from "./complex-price.ts";
+
 /** 전용 60㎡·85㎡는 청약과 세제가 쓰는 선. 준공 30년은 재건축 연한. */
 const SMALL_AREA = 60;
 const LARGE_AREA = 85;
@@ -117,6 +119,109 @@ export function budgetFacts(deals, { year }: { year?: number } = {}) {
   return facts;
 }
 
+/** 나간 칸이 많은 구를 몇 개까지 적나(#692 완료 조건 1). 구 이름만 - 단지 이름은 적지 않는다. */
+export const YEAR_ON_DISTRICTS = 3;
+
+/**
+ * 내 예산, 1년 새 — 같은 칸(단지·평형)을 1년 전과 지금으로 견준다(#692, N10).
+ *
+ * 예산대 장의 다른 숫자는 최근 거래만 본다. 「1년 전 이 돈으로 살 수 있던 칸이 지금은 몇이나 밖으로 나갔나」는
+ * 평균 두 개를 견주면 거래 구성이 바뀐 만큼 틀린다 — 비싼 단지가 더 팔린 해에는 아무 칸도 오르지 않아도 평균이 오른다.
+ * 그래서 칸마다 자기 자신과 견준다.
+ *
+ * 값은 단지 가격 범위 파일(complex-price-*.json)에 이미 있는 두 숫자뿐이다 - 새 문턱이 없다.
+ * - 지금: `cell.median`(기준 달 값으로 고친 6개월 중앙값). 단지 후보(candidatesInBand)가 「이 예산 안」을 가르는 값과 같은 값이라
+ *   장 안의 후보 수와 이 문단의 수가 같은 정의로 맞는다.
+ * - 1년 전: `cell.yearAgo.median`(1년 전 같은 석 달의 고치기 전 중앙값). 빌더가 같은 칸 3건(complex-price.ts MIN_DEALS) 이상에만 붙였다.
+ * yearAgo 가 없는 칸은 견줄 수 없어 뺀다. 뺀 수는 「지금 이 예산 안인데 1년 전 값이 없는 칸」으로 센다 - 장에 실린 후보 수에서 빠진 만큼이다.
+ *
+ * 방향도 센다(#699 판정): 넘은 칸은 한 단계 위 예산대(next, [max, max+1억))와 그보다 위(far)로, 들어온 칸은 아래에서 올라온 것(cameBelow)과
+ * 위에서 내려온 것(cameAbove)으로. medChange 는 1년 전 이 예산 안이던 칸의 「지금 / 1년 전 - 1」 가운데값이다 - 같은 칸 값이 얼마나 움직였나.
+ * 「나간 칸이 많다」가 구간 폭(1억) 탓인지 실제 상승인지는 이 값이 답한다(2026-10 데이터: 같은 칸 +24%, 8억대 +26%).
+ *
+ * `max10k`가 null 이면(맨 위 구간) 단지 후보와 같은 규칙으로 min + 1억을 쓴다(budget-fragments.ts candidatesShape).
+ * 견줄 칸이 하나도 없으면(1년 전 안 0 · 들어온 칸 0) null - 말할 것이 없다.
+ */
+export function budgetYearOn(files, min10k, max10k) {
+  if (!files?.length || !Number.isFinite(min10k)) return null;
+  const max = max10k ?? min10k + 10_000;
+  const inBand = (v) => v >= min10k && v < max;
+  let was = 0;
+  let up = 0;
+  let down = 0;
+  let came = 0;
+  let cameBelow = 0;
+  let next = 0;
+  const changes = [];
+  let current = 0;
+  let missing = 0;
+  let months = null;
+  const outBy = new Map();
+  for (const file of files) {
+    for (const areas of Object.values(file?.cells ?? {})) {
+      for (const cell of Object.values(areas ?? {}) as any[]) {
+        const now = cell?.median;
+        if (!(now > 0)) continue;
+        const nowIn = inBand(now);
+        if (nowIn) current += 1;
+        const then = cell.yearAgo?.median;
+        if (!(then > 0)) {
+          if (nowIn) missing += 1;
+          continue;
+        }
+        if (!months && cell.yearAgo.months?.length) months = [...cell.yearAgo.months].sort();
+        if (inBand(then)) {
+          was += 1;
+          changes.push(now / then - 1);
+          if (nowIn) continue;
+          if (now >= max) {
+            up += 1;
+            if (now < max + 10_000) next += 1;
+          } else down += 1;
+          outBy.set(file.district, (outBy.get(file.district) ?? 0) + 1);
+        } else if (nowIn) {
+          came += 1;
+          if (then < min10k) cameBelow += 1;
+        }
+      }
+    }
+  }
+  if (!was && !came) return null;
+  const top = [...outBy]
+    .sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0]), "ko"))
+    .slice(0, YEAR_ON_DISTRICTS)
+    .map(([name, count]) => ({ name, count }));
+  return {
+    was,
+    out: up + down,
+    up,
+    down,
+    next,
+    far: up - next,
+    medChange: changes.length ? quantile([...changes].sort((a, b) => a - b), 0.5) : null,
+    came,
+    cameBelow,
+    cameAbove: came - cameBelow,
+    current,
+    missing,
+    top,
+    months: months ? [months[0], months.at(-1)] : null,
+    reference: files.find((f) => f?.reference)?.reference ?? null,
+  };
+}
+
+/**
+ * 사실 문단(budgetFactsHtml)에 「내 예산, 1년 새」를 얹은 예산대. band.facts 는 budget-deals.json(최근 3개월 거래)에서 오고,
+ * yearOn 은 단지 가격 범위 파일에서 빌드 때 센다 - 두 입력을 한 문단으로 굽는 자리다(build-budget-pages.ts). 원본 band 는 바꾸지 않는다.
+ * 견줄 칸이 없거나 단지 파일이 없으면 band 그대로(문단도 전과 같다).
+ * budget-fragments.ts 가 아니라 여기 두는 것은 그 모듈의 의존 목록이 시험으로 고정돼 있어서다(test/render-parity.test.mjs).
+ */
+export function withYearOn(band, complexFiles) {
+  if (!band) return band;
+  const yearOn = budgetYearOn(complexFiles, band.min10k, band.max10k);
+  return yearOn ? { ...band, facts: { ...(band.facts ?? {}), yearOn } } : band;
+}
+
 const area = (value) => `${Number(value).toFixed(0)}㎡`;
 
 function place(deal, en) {
@@ -212,5 +317,72 @@ export function budgetFactSentences(facts, locale = "ko") {
     );
   }
 
+  if (facts.yearOn) out.push(...yearOnSentences(facts.yearOn, en));
+
+  return out;
+}
+
+const EN_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** ["202506", "202508"] → 「2025년 6~8월」·"Jun–Aug 2025". 해가 다르면 해를 둘 다 적는다. 한 달이면 한 달. */
+function monthSpan(span, en) {
+  const [ay, am] = [Number(span[0].slice(0, 4)), Number(span[0].slice(4, 6))];
+  const last = span.at(-1);
+  const [by, bm] = [Number(last.slice(0, 4)), Number(last.slice(4, 6))];
+  const ko = (y, m) => `${y}년 ${m}월`;
+  const eng = (y, m) => `${EN_MONTHS[m - 1]} ${y}`;
+  if (ay === by && am === bm) return en ? eng(ay, am) : ko(ay, am);
+  if (ay === by) return en ? `${EN_MONTHS[am - 1]}–${eng(by, bm)}` : `${ay}년 ${am}~${bm}월`;
+  return en ? `${eng(ay, am)}–${eng(by, bm)}` : `${ko(ay, am)}~${ko(by, bm)}`;
+}
+
+/**
+ * 「내 예산, 1년 새」 문장(#692). 예산대 사실 문단 끝에 붙는다 - 틀(realestate-template.html)에 새 자리를 만들지 않으려고
+ * 같은 문단의 뒷부분으로 둔다. 두 언어가 늘 같은 개수의 문장을 낸다. 단지 이름은 쓰지 않는다(구 이름만).
+ * 문장 사이 고정 글자가 길게 이어지지 않게 숫자를 사이사이 둔다 - 18장 공통 산문(scripts/prose-share.ts, 8단어 창)을 덜 늘린다.
+ */
+function yearOnSentences(y, en) {
+  const out = [];
+  const then = y.months ? monthSpan(y.months, en) : null;
+  const ref = /^\d{6}$/.test(String(y.reference ?? "")) ? monthSpan([y.reference], en) : null;
+  // 앞머리가 같은 칸 비교라는 한 줄을 겸한다(#699 판정 - 따로 두던 「착시」 문장은 뺐다).
+  const basis = then && ref ? ` (${then} median vs the ${ref}-adjusted median)` : "";
+  const lead = en
+    ? `Comparing each complex-size cell with itself${basis}`
+    : then && ref
+      ? `같은 단지·같은 평형끼리 1년 전(${then} 중앙값)과 지금(${ref} 값으로 고친 중앙값)을 견주면`
+      : "같은 단지·같은 평형끼리 1년 전과 지금을 견주면";
+  const cameAbove = y.cameAbove ? (en ? ` (${y.cameAbove} came down from above)` : `(위에서 내려온 칸 ${y.cameAbove}칸)`) : "";
+  if (y.was) {
+    const fell = y.down ? (en ? ` (${y.down} fell below it)` : ` (${y.down}칸은 이 예산 아래로)`) : "";
+    const ratio = pct(share(y.up, y.was));
+    const change = Math.abs(Math.round((y.medChange ?? 0) * 100));
+    const rose = (y.medChange ?? 0) >= 0;
+    out.push(
+      en
+        ? `${lead}, ${y.up} of the ${y.was} cells inside this budget a year ago (${ratio}%) now cost more than it (${y.next} in the next band up, ${y.far} further up)${fell}.`
+        : `${lead}, 1년 전 이 예산 안이던 ${y.was}칸 가운데 ${y.up}칸(${ratio}%)이 지금은 이 예산을 넘습니다(한 단계 위 예산대 ${y.next}칸, 그보다 위 ${y.far}칸)${fell}.`,
+      en
+        ? `The typical cell ${rose ? "rose" : "fell"} ${change}%, and ${y.cameBelow} cells that sat below this budget a year ago have risen into it${cameAbove}.`
+        : `같은 칸 값은 가운데값으로 ${change}% ${rose ? "올랐고" : "내렸고"}, 1년 전 이 예산 아래였다가 올라 들어온 칸이 ${y.cameBelow}칸입니다${cameAbove}.`
+    );
+  } else {
+    out.push(
+      en
+        ? `${lead}, none sat inside this budget a year ago, and ${y.cameBelow} cells that sat below it have risen into it${cameAbove}.`
+        : `${lead}, 1년 전 이 예산 안이던 칸은 없고, 1년 전 이 예산 아래였다가 올라 들어온 칸이 ${y.cameBelow}칸입니다${cameAbove}.`
+    );
+  }
+  if (y.out && y.top?.length) {
+    const names = y.top.map(({ name, count }) => (en ? `${name} (${count})` : `${name} ${count}칸`)).join(en ? ", " : "·");
+    out.push(en ? `The cells that left are mostly in ${names}.` : `나간 칸은 ${names} 순으로 많습니다.`);
+  }
+  if (y.missing) {
+    out.push(
+      en
+        ? `${y.missing} of today's ${y.current} cells had under ${CELL_MIN_DEALS} deals a year earlier and are left out.`
+        : `지금 ${y.current}칸 가운데 1년 전 거래가 ${CELL_MIN_DEALS}건 미만인 ${y.missing}칸은 뺐습니다.`
+    );
+  }
   return out;
 }

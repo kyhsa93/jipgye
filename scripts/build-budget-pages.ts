@@ -2,6 +2,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetDescription, budgetPageFile } from "./budget-pages.ts";
 import { areaLine, areasShape, budgetLeadText, districtOrder } from "./budget-fragments.ts";
+import { withYearOn } from "./budget-facts.ts";
 import { candidatesInBand } from "./complex-price.ts";
 import { REALESTATE_TEMPLATE_PATH, applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml, realestateOverallHtml } from "./prerender.ts";
 import { clustering } from "./loan-cap.ts";
@@ -183,8 +184,9 @@ export function buildBudgetPage(baseHtml, page, budget, loanBasis = null, mortga
     // 서울 전체 평균 카드. 틀의 표지가 비어 있어(#374) 여기서 채운다 - 전에는 prerender.ts 가 제자리에서 채운 장을 틀로 읽어 그대로 물려받았다.
     // 시세 장(docs/realestate.html)과 같은 호출(realestateOverallHtml(realestate))이라 글자까지 같다. 데이터가 없으면 null 이라 비운 채로 둔다.
     realestateOverall: realestateOverallHtml(realestate),
-    budgetFactsKo: budgetFactsHtml(band, "ko"),
-    budgetFactsEn: budgetFactsHtml(band, "en"),
+    // 사실 문단 끝에 같은 칸 1년 비교(#692) - 단지 가격 범위 파일에서 빌드 때 센다. 런타임 JS 는 늘지 않는다.
+    budgetFactsKo: budgetFactsHtml(withYearOn(band, complexFiles), "ko"),
+    budgetFactsEn: budgetFactsHtml(withYearOn(band, complexFiles), "en"),
     budgetPageNav: navHtml(page),
     // 섹션을 접는 것만으로는 부족하다. hidden은 눈에만 안 보일 뿐 스물다섯 줄이
     // HTML에는 그대로 실려 나가고, 중복을 재면 접기 전과 같은 값이 나온다.
