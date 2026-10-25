@@ -37,16 +37,20 @@ const SUB_NAV = ["all", "sale", "jeonse", "wolse", "search", "conversion", "rene
 const open = (data = { "direct-deals": STATS }) => loadPage({ file: "cancelled-deals.html", data, subNav: SUB_NAV });
 
 test("문장: 격차는 중앙값·90% 구간·칸 수를 함께 적고, 사유는 모른다고 하며 특수관계라 단정하지 않는다", () => {
-  assert.match(STATS.lead.ko, /중앙값 10% 낮게/);
+  assert.match(STATS.lead.ko, /중앙값 10% 낮았습니다\(/);
   assert.match(STATS.lead.ko, /90% 구간 -10~-10%/);
   assert.match(STATS.lead.ko, /\d+칸/);
   assert.match(STATS.lead.en, /median 10% below/);
   assert.match(STATS.note.ko, /알 수 없습니다/);
-  assert.match(STATS.note.ko, /특수관계 거래라거나 부당했다고 말할 수 없습니다/);
+  assert.match(STATS.note.ko, /특수관계 거래라거나, 부당했다거나, 신고가 사실과 다르다고 말할 수 없습니다/);
+  assert.match(STATS.note.ko, /달마다의 시세 변화를 걸러 다시 재도 격차는 줄지 않았습니다\(2026-10-26 확인\)/);
+  // 「낮게 신고」는 거짓·다운 신고로 읽힐 수 있어 어느 글자에도 없다(#702 legal).
+  for (const text of [STATS.heading.ko, STATS.lead.ko, STATS.note.ko]) assert.ok(!/낮게 신고/.test(text), text);
+  for (const text of [STATS.heading.en, STATS.lead.en, STATS.note.en]) assert.ok(!/filed (a median|at)|How low/.test(text), text);
   assert.match(STATS.note.en, /unknown/);
   assert.match(STATS.note.ko, /2026년 9월·2026년 10월은 .*덜 찬 달/);
   assert.equal(directLead({ months: [] }), null);
-  assert.ok(directNote(STATS, "en").includes("left blank"));
+  assert.ok(directNote(STATS, "ko").includes("자치구별 격차는 칸이 모자라 적지 않습니다."));
 });
 
 test("자치구가 하나도 문턱을 못 넘으면 왜 비었는지 문장에 적는다", () => {
@@ -57,15 +61,26 @@ test("자치구가 하나도 문턱을 못 넘으면 왜 비었는지 문장에 
     months: MONTHS,
     now: new Date("2026-10-26T00:00:00Z"),
   });
-  assert.match(enough.lead.ko, new RegExp(`가장 많은 구도 ${MIN_CELLS - 1}칸이라\\(문턱 ${MIN_CELLS}칸\\)`));
+  assert.match(enough.lead.ko, new RegExp(`가장 많은 구도 ${MIN_CELLS - 1}칸이라\\(문턱 ${MIN_CELLS}칸\\) 구별로는 직거래 비중만 적습니다`));
 });
 
-test("표: 서울 줄 먼저, 미달 구는 「-」, 덜 찬 달 표시, 빈 달은 0%가 아니라 「-」", () => {
+test("표: 구 표는 자치구·직거래 2열(서울 줄 먼저), 덜 찬 달 표시, 빈 달은 0%가 아니라 「-」", () => {
   assert.match(STATS.table.ko, /<tbody><tr><td>서울<\/td>/);
-  assert.match(STATS.table.ko, /<tr><td>강남구<\/td><td>[\d.]+%<\/td><td>-<\/td><td>-<\/td><td>2<\/td><\/tr>/);
+  assert.match(STATS.table.ko, /^<thead><tr><th scope="col">자치구<\/th><th scope="col">직거래<\/th><\/tr><\/thead>/);
+  assert.match(STATS.table.ko, /<tr><td>강남구<\/td><td>[\d.]+%<\/td><\/tr>/);
+  assert.ok(!/격차|90%/.test(STATS.table.ko) && !/Gap|90%/.test(STATS.table.en), "구별 격차 열은 두지 않는다(#702)");
   assert.match(STATS.monthTable.ko, /2026-10 \(덜 참\)/);
   assert.match(STATS.monthTable.en, /2026-10 \(filling\)/);
   assert.match(STATS.monthTable.ko, /<td>2026-09 \(덜 참\)<\/td><td>0<\/td><td>0<\/td><td>-<\/td>/);
+});
+
+test("덜 찬 달은 거래가 있어도 비중을 「-」로 둔다 - 건수는 남긴다(#702)", () => {
+  const items = [deal({ dealMonth: 8 }), deal({ dealMonth: 10 }), direct({ dealMonth: 10 }), direct({ dealMonth: 9 })];
+  const p = buildPayload({ byDistrict: { 노원구: items }, months: MONTHS, now: new Date("2026-10-26T00:00:00Z") });
+  assert.deepEqual(p.seoul.share, [0, 100, 50], "JSON 의 원값은 둔다");
+  assert.match(p.monthTable.ko, /<td>2026-09 \(덜 참\)<\/td><td>1<\/td><td>1<\/td><td>-<\/td>/);
+  assert.match(p.monthTable.ko, /<td>2026-10 \(덜 참\)<\/td><td>2<\/td><td>1<\/td><td>-<\/td>/);
+  assert.match(p.monthTable.ko, /<td>2026-08<\/td><td>1<\/td><td>0<\/td><td>0%<\/td>/);
 });
 
 test("장: 구운 제목은 빌더 제목과 같고, 언어를 바꾸면 빌더가 만든 영어로 바뀐다", async () => {

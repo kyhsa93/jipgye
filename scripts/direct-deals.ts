@@ -14,7 +14,10 @@
  *
  * 창은 원본 24개월 전체다(RETENTION_MONTHS). 직거래가 한 칸에 세 건 모이려면 그만큼 길어야 한다. 그래서 칸
  * 안의 시점 차이는 통제되지 않는다 - 화면 단서에 적는다. 만들 때 재 보니(2026-10-26, 맞물린 115칸) 직거래의
- * 중앙 계약월이 중개거래보다 칸마다 중앙값 1개월(평균 0.68개월) 일렀다.
+ * 중앙 계약월이 중개거래보다 칸마다 중앙값 1개월(평균 0.68개월) 일렀다. 그래서 시점 교란을 따로 쟀다(#702 data-analyst,
+ * raw 600파일·115칸): 중개거래로 만든 칸 고정·월 효과 지수는 24개월 +30.4%(월 ~1.2%)이고, 그 지수로 값을 고르면 격차는
+ * -14.1%(오히려 커짐), 칸별 계약월 차이가 설명하는 몫은 평균 -0.8%p다. 칸×6개월(양쪽 3건 이상, 20칸) -13.3%,
+ * 칸×분기(2건 이상, 87칸) -17.3%. 시점 차이는 -12.3%를 설명하지 못한다 - 숫자는 고치지 않고 단서 문장만 그렇게 적는다.
  *
  * 직거래 표시(dealingGbn)는 24개월 원본 전부에서 빈칸 0건이었다(2026-10-26 raw/sale 600파일 계수: 해제 뺀
  * 137,712건 모두 「직거래」 또는 「중개거래」). 그래도 비거나 다른 값이면 비중의 분모에서 뺀다 - 0으로 세지 않는다.
@@ -155,10 +158,10 @@ export function directDealStats(byDistrict, months, districts) {
 }
 
 /** 절 제목. 화면(cancelled-deals.html)에 구운 한국어와 같아야 한다 - 시험이 대조한다. */
-export const DIRECT_HEADING = { ko: "직거래는 얼마나 낮게 신고되나", en: "How low are direct deals filed?" };
+// 「낮게 신고」는 거짓·다운 신고(부동산 거래신고법)로 읽힐 수 있어 쓰지 않는다(#702 legal 판정).
+export const DIRECT_HEADING = { ko: "직거래는 중개거래보다 얼마에 거래되나", en: "How do direct-deal prices compare?" };
 
 const signed = (v) => `${v > 0 ? "+" : ""}${v}`;
-const signedPct = (v) => `${signed(v)}%`;
 /** 구간은 끝에만 % 를 붙인다 - 「-14.3%~-10.7%」는 375폭 표에서 넘치고 물결과 빼기가 붙어 읽힌다. */
 const range = (g) => `${signed(g.low)}~${signed(g.high)}%`;
 const ym = (m, en) =>
@@ -185,18 +188,18 @@ export function directLead(stats, locale = "ko") {
   if (gap?.median === null || !gap?.cells) return share;
   const cells = gap.cells.toLocaleString(tag);
   const size = Math.abs(gap.median);
-  const dir = en ? (gap.median < 0 ? "below" : "above") : gap.median < 0 ? "낮게" : "높게";
+  const dir = en ? (gap.median < 0 ? "below" : "above") : gap.median < 0 ? "낮았습니다" : "높았습니다";
   const body = en
-    ? ` Within the same complex and unit size, direct deals were filed a median ${size}% ${dir} agent-brokered ones (90% range ${range(gap)}, across ${cells} unit types with at least ${stats.minDeals} of each), and came in lower in ${gap.lowerShare}% of those unit types.`
-    : ` 같은 단지·같은 전용면적에서 견주면 직거래는 중개거래보다 중앙값 ${size}% ${dir} 신고됐습니다(90% 구간 ${range(gap)}, 양쪽 모두 ${stats.minDeals}건 이상인 ${cells}칸). 그 칸의 ${gap.lowerShare}%에서 직거래가 더 낮았습니다.`;
+    ? ` Within the same complex and unit size, direct deals were a median ${size}% ${dir} agent-brokered ones (90% range ${range(gap)}, across ${cells} unit types with at least ${stats.minDeals} of each), and came in lower in ${gap.lowerShare}% of those unit types.`
+    : ` 같은 단지·같은 전용면적에서 견주면 직거래는 중개거래보다 중앙값 ${size}% ${dir}(90% 구간 ${range(gap)}, 양쪽 모두 ${stats.minDeals}건 이상인 ${cells}칸). 그 칸의 ${gap.lowerShare}%에서 직거래가 더 낮았습니다.`;
 
   // 자치구가 하나도 문턱을 못 넘으면 표의 빈칸이 왜 비었는지 문장으로 적는다.
   const rows = Object.values(stats.districts ?? {}) as any[];
   if (!rows.length || rows.some((r) => r.gap.median !== null)) return share + body;
   const most = Math.max(...rows.map((r) => r.gap.cells));
   const tail = en
-    ? ` Split by district, even the best-covered district has only ${most} such unit types (the floor is ${stats.minCells}), so district gaps are left blank.`
-    : ` 자치구로 나누면 맞물린 칸이 가장 많은 구도 ${most}칸이라(문턱 ${stats.minCells}칸) 구별 격차는 비웁니다.`;
+    ? ` Split by district, even the best-covered district has only ${most} such unit types (the floor is ${stats.minCells}), so districts show only the direct-deal share.`
+    : ` 자치구로 나누면 맞물린 칸이 가장 많은 구도 ${most}칸이라(문턱 ${stats.minCells}칸) 구별로는 직거래 비중만 적습니다.`;
   return share + body + tail;
 }
 
@@ -207,12 +210,12 @@ export function directNote(stats, locale = "ko") {
   const minDeals = stats?.minDeals ?? MIN_DEALS;
   const minCells = stats?.minCells ?? MIN_CELLS;
   return en
-    ? `A direct deal is one the parties filed without a licensed agent. Transfers within a family, settlements with a developer or redevelopment association and ordinary sales between strangers all carry the same mark, and the filing gives no reason, so why they come in lower is unknown. This gap does not show that any one deal was between related parties or improper. ` +
-        `A unit type counts only when it has at least ${minDeals} direct and ${minDeals} brokered deals (the same floor as the price screens), and a district gets a gap only with ${minCells} or more unit types (the same as the floor-gap screen); the rest are left blank. ` +
-        `The two years go into one comparison, so price movement within that time is not controlled. ${partial.length ? `${partial.join(" and ")} are still filling up — filings arrive for 30 days after a contract — so they are marked and left out of the shares.` : ""}`
-    : `직거래는 공인중개사 없이 당사자끼리 신고한 거래입니다. 가족 간 거래, 분양·조합 정산, 모르는 사람끼리 시세대로 한 거래가 모두 같은 표시로 들어오고, 신고 자료에는 사유가 없어 왜 낮은지는 알 수 없습니다. 이 격차로 어느 한 거래가 특수관계 거래라거나 부당했다고 말할 수 없습니다. ` +
-        `칸은 직거래·중개거래가 각각 ${minDeals}건 이상인 같은 구·단지·전용면적만 세고(시세 화면의 칸 문턱), 자치구는 칸이 ${minCells}개 이상일 때만 격차를 적습니다(층 격차 화면과 같은 문턱). 못 미치면 비웁니다. ` +
-        `두 해를 한 칸에 담아 그 사이 시세 변화는 통제되지 않습니다. ${partial.length ? `${partial.join("·")}은 계약 뒤 30일까지 신고가 들어오는 덜 찬 달이라 표시만 하고 비중 합계에서 뺍니다.` : ""}`;
+    ? `A direct deal is one the parties filed without a licensed agent. Transfers within a family, settlements with a developer or redevelopment association and ordinary sales between strangers all carry the same mark, and the filing gives no reason, so why they come in lower is unknown. This gap does not show that any one deal was between related parties, improper, or filed with false details. ` +
+        `A unit type counts only when it has at least ${minDeals} direct and ${minDeals} brokered deals (the same floor as the price screens); districts have too few unit types for a gap of their own, so none is given. ` +
+        `The two years go into one comparison. Direct deals were usually signed about a month earlier, but re-measuring with month-to-month price movement removed did not shrink the gap (checked 2026-10-26). ${partial.length ? `${partial.join(" and ")} are still filling up — filings arrive for 30 days after a contract — so they are marked, their share is not shown, and they are left out of the totals.` : ""}`
+    : `직거래는 공인중개사 없이 당사자끼리 신고한 거래입니다. 가족 간 거래, 분양·조합 정산, 모르는 사람끼리 시세대로 한 거래가 모두 같은 표시로 들어오고, 신고 자료에는 사유가 없어 왜 낮은지는 알 수 없습니다. 이 격차로 어느 한 거래가 특수관계 거래라거나, 부당했다거나, 신고가 사실과 다르다고 말할 수 없습니다. ` +
+        `칸은 직거래·중개거래가 각각 ${minDeals}건 이상인 같은 구·단지·전용면적만 세고(시세 화면의 칸 문턱), 자치구별 격차는 칸이 모자라 적지 않습니다. ` +
+        `두 해를 한 칸에 담았습니다. 직거래가 대체로 한 달쯤 먼저 계약됐지만, 달마다의 시세 변화를 걸러 다시 재도 격차는 줄지 않았습니다(2026-10-26 확인). ${partial.length ? `${partial.join("·")}은 계약 뒤 30일까지 신고가 들어오는 덜 찬 달이라 건수만 적고 비중은 적지 않으며 합계에서도 뺍니다.` : ""}`;
 }
 
 const esc = (value) =>
@@ -222,22 +225,17 @@ const esc = (value) =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
-/** 자치구 표(서울 줄 먼저). 빈 값은 「-」. */
+/** 자치구 표(서울 줄 먼저). 구별 격차 열은 칸이 모자라 두지 않는다 - 문턱 넘는 구가 생겨도 열 복귀는 별도 판정(#702). JSON 의 gap 은 둔다. */
 export function directTableHtml(stats, locale = "ko") {
   const en = locale === "en";
-  const tag = en ? "en-US" : "ko-KR";
-  const head = en ? ["District", "Direct", "Gap", "90% range", "Types"] : ["자치구", "직거래", "격차", "90% 구간", "칸"];
-  const cell = (v) => (v === null || v === undefined ? "-" : v);
+  const head = en ? ["District", "Direct deals"] : ["자치구", "직거래"];
   const tr = (name, r) =>
-    `<tr><td>${esc(name)}</td><td>${cell(r.closedShare === null ? null : `${r.closedShare}%`)}</td>` +
-    `<td>${cell(r.gap.median === null ? null : signedPct(r.gap.median))}</td>` +
-    `<td>${cell(r.gap.median === null ? null : range(r.gap))}</td>` +
-    `<td>${r.gap.cells.toLocaleString(tag)}</td></tr>`;
+    `<tr><td>${esc(name)}</td><td>${r.closedShare === null ? "-" : `${r.closedShare}%`}</td></tr>`;
   const rows = [tr(en ? "Seoul" : "서울", stats.seoul), ...Object.entries(stats.districts).map(([name, r]) => tr(name, r))];
   return `<thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody>`;
 }
 
-/** 서울 월별 표. 덜 찬 달은 표시를 붙인다. */
+/** 서울 월별 표. 덜 찬 달은 표시를 붙이고 비중은 「-」다 - 신고 지연이 거래 형태마다 달라 치우친 값이 헤드라인처럼 읽힌다(#702). */
 export function directMonthsHtml(stats, locale = "ko") {
   const en = locale === "en";
   const tag = en ? "en-US" : "ko-KR";
@@ -247,7 +245,7 @@ export function directMonthsHtml(stats, locale = "ko") {
   const rows = stats.months.map(
     (m, i) =>
       `<tr><td>${m.slice(0, 4)}-${m.slice(4)}${stats.partial[i] ? mark : ""}</td><td>${s.deals[i].toLocaleString(tag)}</td>` +
-      `<td>${s.direct[i].toLocaleString(tag)}</td><td>${s.share[i] === null ? "-" : `${s.share[i]}%`}</td></tr>`
+      `<td>${s.direct[i].toLocaleString(tag)}</td><td>${stats.partial[i] || s.share[i] === null ? "-" : `${s.share[i]}%`}</td></tr>`
   );
   return `<thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody>`;
 }
