@@ -107,14 +107,14 @@ test("구×반기 표: 칸은 「n세대(임대 m)」 또는 「없음」, 어�
   assert.doesNotMatch(ko, /data-label/, "이 표에는 카드 모양이 없다 - 속성만 늘리지 않는다");
 });
 
-test("구×반기 표(영어): 구 이름 말고는 한글이 없고, 같은 표를 영어로 말한다", () => {
+test("구×반기 표(영어): 한글이 없고(구 이름은 로마자, #708), 같은 표를 영어로 말한다", () => {
   const d = districtByHalf(parseCsv(CSV));
   const en = moveInDistrictTableHtml(d, "2026-06-30", "en");
-  assert.doesNotMatch(en.replace(/<th scope="row">[^<]*<\/th>/g, "").replace(/\(강서구\)/, ""), HANGUL);
-  assert.match(en, /<th scope="row">종로구<\/th><td colspan="2">None planned<\/td>/);
+  assert.doesNotMatch(en, HANGUL);
+  assert.match(en, /<th scope="row">Jongno-gu<\/th><td colspan="2">None planned<\/td>/);
   assert.match(en, /<td>5,000 homes \(rental 0\)<\/td><td>None<\/td>/);
   assert.match(en, /Estimate · as of 2026-06-30 · by scheduled move-in month \(not actual move-ins\)/);
-  assert.match(en, /Not in the table: 300 homes with no move-in month set \(강서구\)/);
+  assert.match(en, /Not in the table: 300 homes with no move-in month set \(Gangseo-gu\)/);
   assert.ok(en.includes(moveInSourceLine("en")));
   assert.doesNotMatch(en, CAUSAL);
   assert.equal(moveInDistrictTableHtml(null, "2026-06-30", "ko"), null);

@@ -1843,7 +1843,7 @@
   html:not(:lang(en)) #content-notice.m-en {
     display: none;
   }
-  html:lang(en) caption .m-ko, html:not(:lang(en)) caption .m-en {
+  html:lang(en) table .m-ko, html:not(:lang(en)) table .m-en {
     display: none;
   }
   .question-nav {

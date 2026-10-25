@@ -6,6 +6,7 @@
  * 사업유형: "분양임대"는 임대 단지가 아니라 분양과 임대분이 섞인 단지다(반포디에이치클래스트 5,007세대,
  * 디에이치 방배 등 재건축·재개발). 순수 임대는 "임대"(청년안심주택 등)뿐이라, 그것만 따로 떼어 적는다.
  */
+import { districtNameEn } from "./district-slugs.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { moveInSourceLine } from "./source-lines.ts";
 
@@ -200,7 +201,7 @@ export function moveInDistrictTableHtml(d, basis, locale = "ko") {
   const body = d.rows.map((row) => {
     const empty = row.units.every((u) => !u) && !d.undated?.districts.includes(row.name);
     const tds = empty ? `<td colspan="${d.halves.length}">${noPlan}</td>` : row.units.map((u, i) => `<td>${cell(u, row.rental[i])}</td>`).join("");
-    return `<tr><th scope="row">${row.name}</th>${tds}</tr>`;
+    return `<tr><th scope="row">${en ? districtNameEn(row.name) : row.name}</th>${tds}</tr>`;
   });
   const note = en
     ? [
@@ -213,7 +214,7 @@ export function moveInDistrictTableHtml(d, basis, locale = "ko") {
     : ["추정치", basis ? `기준일 ${basis}` : null, "입주 예정월 기준(실제 입주 아님)", "30세대 이상 단지만", "임대는 순수 임대(청년안심주택 등)만"];
   const undated = d.undated
     ? en
-      ? ` Not in the table: ${num(d.undated.units, true)} homes with no move-in month set (${d.undated.districts.join(", ")}).`
+      ? ` Not in the table: ${num(d.undated.units, true)} homes with no move-in month set (${d.undated.districts.map(districtNameEn).join(", ")}).`
       : ` 달 미정 ${num(d.undated.units)}세대(${d.undated.districts.join("·")})는 표에 넣지 않았습니다.`
     : "";
   const foot = `${note.filter(Boolean).join(" · ")}.${undated} ${moveInSourceLine(en ? "en" : "ko")}`;

@@ -36,3 +36,9 @@ export const DISTRICT_PAGES = Object.entries(DISTRICT_SLUGS).map(([name, slug]) 
   slug,
   file: districtFile(slug),
 }));
+
+/** 영어 화면의 자치구 이름 — 슬러그를 첫 글자만 대문자로 하고 「-gu」(예: 강남구 → Gangnam-gu). 목록에 없는 이름은 그대로(#708). */
+export const districtNameEn = (name) => {
+  const slug = DISTRICT_SLUGS[name];
+  return slug ? `${slug[0].toUpperCase()}${slug.slice(1)}-gu` : name;
+};

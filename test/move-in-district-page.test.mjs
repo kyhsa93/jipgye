@@ -8,6 +8,7 @@ import { SITE } from "./helpers/site-root.mjs";
 import { DISTRICTS } from "../scripts/realestate-districts.ts";
 import { moveInSourceLine } from "../scripts/source-lines.ts";
 import { districtMoveInSentence } from "../scripts/move-in.ts";
+import { koOnly } from "../scripts/bilingual-cell.ts";
 import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.ts";
 
@@ -17,8 +18,11 @@ const json = async () => JSON.parse(await readFile(path.join(root, "docs/data/mo
 const fragment = (html) => new RegExp("<!--prerender:moveInDistricts-->([\\s\\S]*?)<!--/prerender:moveInDistricts-->").exec(html)?.[1];
 
 test("나가는 전망 장: 25구가 모두 한 줄씩 「n세대(임대 m)」·「없음」·「예정 없음」으로, 꼬리에 추정치·기준일·출처 (#677)", async () => {
-  const frag = fragment(await page());
-  assert.ok(frag, "구운 조각이 없다");
+  const raw = fragment(await page());
+  assert.ok(raw, "구운 조각이 없다");
+  // 머리글·구 이름은 두 벌(m-ko·m-en)로 구워진다(#708): 25구 모두 영어 이름이 따로 있고, 한국어 보기(영어 스팬을 걷고 한국어 스팬을 벗김)는 전과 같은 모양이다.
+  assert.equal([...raw.matchAll(/<th scope="row"><span class="m-ko">[^<]+<\/span><span class="m-en">[A-Z][a-z]+-gu<\/span><\/th>/g)].length, 25);
+  const frag = koOnly(raw).replace(/<span class="m-ko">([^<]*)<\/span>/g, "$1");
   const rows = [...frag.matchAll(/<tr><th scope="row">([^<]+)<\/th>([\s\S]*?)<\/tr>/g)];
   assert.deepEqual(rows.map((m) => m[1]), DISTRICTS.map((d) => d.name), "25구가 구 코드 순으로 모두 있어야 한다");
   const halves = [...frag.matchAll(/<th scope="col">/g)].length - 1;
@@ -41,12 +45,13 @@ test("나가는 전망 장: 25구가 모두 한 줄씩 「n세대(임대 m)」·
 
 test("구운 조각은 json 의 districtTable.ko 와 같고 영어는 같은 키에 있다 - 화면 스크립트가 같은 키를 고른다 (#677)", async () => {
   const [html, j] = [await page(), await json()];
-  assert.equal(fragment(html), j.districtTable.ko);
+  // 구운 조각은 머리글·구 이름을 두 벌(m-ko·m-en)로 굽는다(#708) - 영어 스팬을 걷고 한국어 스팬을 벗기면 json 의 한국어 조각이다.
+  assert.equal(koOnly(fragment(html)).replace(/<span class="m-ko">([^<]*)<\/span>/g, "$1"), j.districtTable.ko);
   assert.ok(j.districtTable.en?.includes("None planned") && j.districtTable.en.includes(moveInSourceLine("en")));
   assert.equal(j.byDistrict.rows.length, 25);
   const tpl = await readFile(path.join(root, "docs/price-outlook.html"), "utf8");
   assert.ok(tpl.includes('setTable("move-in-districts", mi.districtTable?.[locale] ?? "");'), "스크립트가 districtTable 을 안 고른다 - 영어로 바꿀 때 표가 안 바뀐다");
-  assert.match(tpl, /<table class="rate-table" id="move-in-districts">/, "표 요소 id 가 스크립트가 쓰는 move-in-districts 가 아니다");
+  assert.match(tpl, /<table class="rate-table" id="move-in-districts"[ >]/, "표 요소 id 가 스크립트가 쓰는 move-in-districts 가 아니다");
 });
 
 test("전망 장 인라인 스크립트는 구×반기 표 때문에 늘지 않는다 - origin/main 17367 B 이하 (#677, S6 인라인 바이트)", async () => {

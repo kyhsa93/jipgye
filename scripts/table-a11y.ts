@@ -22,9 +22,11 @@
  *   data-caption-en="..."   영어 제목(영어 쪽에는 요약한 열을 이 제목에 적는다). 있으면 caption 을 `<span class="m-ko">`·`<span class="m-en">`
  *                           두 벌로 굽고 영어 쪽에는 한글이 없다(CSS 가 쓰는 말 아닌 쪽을 숨긴다). 바이트를 아끼려고 나가는 표에서는 이 속성을
  *                           떼고, 이미 두 벌로 구운 caption 은 다시 돌려도 그대로 둔다.
+ *   칸 두 벌(#708)         칸이 `<span class="m-ko">`·`<span class="m-en">` 로 구워져 있으면(scripts/bilingual-cell.ts) 머리글·행 이름·요약은 한국어 쪽만 읽는다 - 두 말이 이어 붙지 않게.
  *   lang="en"               영어 구역 안의 표. 한국어 장 제목을 빼고 영어 소제목·영어 머리글로만 한 문안을 쓴다.
  */
 
+import { koOnly } from "./bilingual-cell.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { REGIONS } from "./outlook.ts";
 
@@ -143,7 +145,7 @@ export function accessibleTables(html) {
 
       if (/<caption(?=[\s>])/.test(fixed)) return `${open}${fixed}</table>`;
 
-      const heads = [...head.matchAll(/<th(?=[\s>])[^>]*>([\s\S]*?)<\/th>/g)].map((m) => plain(m[1])).filter(Boolean);
+      const heads = [...koOnly(head).matchAll(/<th(?=[\s>])[^>]*>([\s\S]*?)<\/th>/g)].map((m) => plain(m[1])).filter(Boolean);
       // 표 꼬리(tfoot, 출처·기준일 한 줄)는 자료 행이 아니다 - 행 수에 넣지 않는다(#677).
       const rows = (rest.replace(/<tfoot[\s\S]*?<\/tfoot>/g, "").match(/<tr(?=[\s>])/g) ?? []).length;
       const heading = plain([...html.slice(0, offset).matchAll(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/g)].at(-1)?.[1] ?? "");
@@ -152,7 +154,7 @@ export function accessibleTables(html) {
       const captionEn = attrOf(open, "data-caption-en");
       const column = attrOf(open, "data-summary");
       const found = column
-        ? summaryParts({ rest, heads, column, labelCells: Math.max(1, Number(attrOf(open, "data-summary-label")) || 1) })
+        ? summaryParts({ rest: koOnly(rest), heads, column, labelCells: Math.max(1, Number(attrOf(open, "data-summary-label")) || 1) })
         : null;
       // 영어 구역의 표는 한국어 장 제목을 빼고 영어 소제목·머리글만으로 쓴다(영어 caption 에 한글 0자).
       const used = english && HANGUL.test(title) ? "" : title;
