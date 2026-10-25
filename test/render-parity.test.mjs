@@ -1300,7 +1300,7 @@ test("budget-fragments.mjs: 후보 단지·본문 모양 - 거래 한 줄·월/�
   const one = candidatesShape({ min10k: 70_000, max10k: 80_000 }, [{ district: "노원구", reference: "202609", cells: { 가: { 84: cell(72_000) } } }]);
   assert.deepEqual(Object.keys(one), ["intro", "bandCounts", "districts", "rows", "moreHref", "moreText"]);
   assert.equal(one.moreHref, "./deal-search.html?budget=7&group=1", "& 는 그대로(legacy는 &amp;로 적고 React는 속성값에서 &amp;로 낸다)");
-  assert.deepEqual(one.rows, [{ href: "./deal-search.html?district=%EB%85%B8%EC%9B%90%EA%B5%AC&apt=%EA%B0%80", apt: "가", facts: "노원구 · 84㎡", amount: "7억 2,000만원", meta: "가운데 절반 7억 1,000만원~7억 3,000만원 · 5건" }]);
+  assert.deepEqual(one.rows, [{ href: "./deal-search.html?district=%EB%85%B8%EC%9B%90%EA%B5%AC&apt=%EA%B0%80", apt: "가", facts: "노원구 · 84㎡", amount: "7억 2,000만원", meta: "지난 거래 가운데 절반 7억 1,000만원~7억 3,000만원 · 5건" }]);
   for (const row of one.rows) for (const key of ["href", "facts", "amount", "meta"]) assert.equal(typeof row[key], "string");
   assert.ok(one.rows[0].href.startsWith("./deal-search.html?"), "주소는 코드가 정한 상대 경로다(javascript: 불가)");
   // 12곳 상한: 13곳이어도 12곳만
