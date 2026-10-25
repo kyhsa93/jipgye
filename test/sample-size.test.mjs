@@ -140,9 +140,9 @@ test("conversion 문장 (#577 B1b): 한국은행 평균금리와 그 기준(잔�
   const ko = conversionLead(input, "ko");
   const en = conversionLead(input, "en");
   assert.match(ko, /전세자금대출 평균금리는 4\.23%입니다\./);
-  assert.ok(ko.endsWith("전세대출 금리: 한국은행 집계 은행 전세자금대출 평균금리(기존 대출 잔액 기준, 2026년 8월) — 지금 새로 받는 금리와 다를 수 있습니다. 예금 금리: 정기예금 신규취급 평균금리(같은 달)."), ko);
+  assert.ok(ko.endsWith("전세대출 금리: 한국은행 집계 은행 전세자금대출 평균금리(기존 대출 잔액 기준, 2026년 8월) — 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. 예금 금리: 정기예금 신규취급 평균금리(같은 달)."), ko);
   assert.match(en, /The average jeonse loan rate is 4\.23%\./);
-  assert.ok(en.endsWith("Jeonse-loan rate: Bank of Korea average on outstanding bank jeonse loans (balance basis, Aug 2026), which can differ from rates on new loans. Deposit rate: new time-deposit average (same month)."), en);
+  assert.ok(en.endsWith("Jeonse-loan rate: Bank of Korea average on outstanding bank jeonse loans (balance basis, Aug 2026), a market average, not the rate you would get on a new loan. Deposit rate: new time-deposit average (same month)."), en);
   for (const s of [ko, en]) assert.doesNotMatch(s, /중앙값|median|옵션|options|상품|products/);
   // 달을 모르면(직접 넘긴 값) 근거 줄을 지어 붙이지 않는다.
   assert.doesNotMatch(conversionLead({ ...input, loanMonth: undefined }, "ko"), /잔액 기준/);

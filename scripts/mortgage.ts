@@ -84,7 +84,7 @@ export function loanHeadSentence(basis, years = YEARS) {
   return (
     `1억을 ${years}년 원리금균등으로 빌리면 매달 ${man(perEok)}입니다. ` +
     `${basisLabel(basis)} 기준입니다. ` +
-    `은행이 실제로 내준 대출의 평균이라, 받는 금리는 신용·우대조건에 따라 이보다 높거나 낮을 수 있습니다.`
+    `시장 평균 금리라, 개인이 받는 금리는 신용·우대조건에 따라 이와 다릅니다.`
   );
 }
 
