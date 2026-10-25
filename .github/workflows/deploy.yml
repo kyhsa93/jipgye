@@ -11,9 +11,9 @@ name: Deploy site
 #  - workflow_dispatch: **롤백 전용**이다. 평소에 손으로 돌리지 않는다(실행 전 알림). 수동 실행의 증빙은 자연 틱 확인에 쓰지 않는다.
 # 어느 이벤트든 `main` 의 지금 HEAD 를 체크아웃한다(이벤트 SHA 가 아니다): 늦게 도는 실행도 가장 새 코드+데이터로 한 번에 만든다.
 #
-# 게이트 = 렌더 폴백 없음 + build/site 기준 시험(`npm run test:site`) 둘뿐이다. 기능 시험(틀·스크립트·워크플로 글자)은 PR 의 test.yml 에 남는다 - 데이터 배포가 기능 시험
+# 게이트 = 렌더 성공(실패하면 렌더 단계가 종료 1, 폴백 없음 #248) + build/site 기준 시험(`npm run test:site`) 둘뿐이다. 기능 시험(틀·스크립트·워크플로 글자)은 PR 의 test.yml 에 남는다 - 데이터 배포가 기능 시험
 # 실패에 막히지 않게 한다(cto). 배포 전 별도 정합 점검은 두지 않는다(#510 cpo 조건 A 결정): 사이트는 한 체크아웃의 코드+데이터에서만 나오므로 "커밋된 HTML 과 데이터가 어긋남"이라는
-# 상태가 존재하지 않고(B1 이 그 짝 검사를 tools/health 로 옮긴 이유), 모양 검사는 위 시험이, 렌더 실패는 폴백 차단이 맡는다.
+# 상태가 존재하지 않고(B1 이 그 짝 검사를 tools/health 로 옮긴 이유), 모양 검사는 위 시험이, 렌더 실패는 렌더 단계의 종료 1 이 맡는다.
 #
 # 롤백 (되돌리기): main 에서 이 컷오버 커밋을 revert 1건으로 되돌린다 - 생성 HTML·static.yml·옛 daily-update/summarize·옛 deploy.yml(비배포 병행판)이 복원된다. 그 revert 푸시가
 # 옛 static.yml 을 돌려 docs/ 를 게시하는데, 복원된 docs/ 의 생성 장은 컷오버 시점의 낡은 것이다 - 그래서 이어서 Daily update 를 한 번 수동 실행해(옛 파이프라인이 다시 렌더·커밋·배포)
@@ -64,20 +64,12 @@ jobs:
         run: echo "BUILD_NOW=$(git log -1 --format=%cI HEAD)" >> "$GITHUB_ENV"
 
       # 출력 위치는 build/site 하나로 고정한다(사용자 입력 아님, #508 cto). render-pipeline 이 docs/(손으로 고치는 틀 14장·정적 자산·data)를 복사한 뒤
-      # 다섯 단계를 그 복사본에서 돌려 생성 49장을 만든다. React 렌더가 실패하면 legacy 로 폴백하는데, 폴백은 배포하지 않는다(아래 단계).
+      # 다섯 단계를 그 복사본에서 돌려 생성 49장을 만든다. 렌더가 실패하면 이 단계가 종료 1 로 job 을 멈춘다 - 배포가 안 나가 사이트는 직전 배포에 머문다(폴백 없음, #248).
       - name: 사이트 생성 (build/site)
         id: render
         run: node scripts/render-pipeline.ts --out=build/site
 
-      # 게이트 1: 렌더 폴백이면 배포하지 않는다. 전에는 폴백 산출물을 배포하고 맨 끝에서 빨갛게 끝냈다(수집 job 이 커밋 뒤에 렌더했기 때문 - 커밋은 이미 끝나 있었다).
-      # 이제 수집은 커밋으로 끝나 있으므로 막아도 데이터는 안전하고, 사이트는 직전 배포에 머문다. 원인은 위 '사이트 생성' 단계의 1차 시도 로그에 있다.
-      - name: 렌더 폴백이면 배포하지 않는다
-        if: ${{ steps.render.outputs.fallback == 'true' }}
-        run: |
-          echo "::error::React 렌더 실패 → legacy 로 폴백했다 - 배포하지 않는다(사이트는 직전 배포에 머문다). 위 '사이트 생성 (build/site)' 단계의 1차 시도 로그를 본다"
-          exit 1
-
-      # 게이트 2: build/site 기준 시험. test/helpers/site-root.mjs 를 부르는 시험 파일만 돈다(scripts/site-test-files.mjs) - 나가는 사이트 67장이 읽히는 모양인지 본다.
+      # 게이트: build/site 기준 시험. test/helpers/site-root.mjs 를 부르는 시험 파일만 돈다(scripts/site-test-files.mjs) - 나가는 사이트 67장이 읽히는 모양인지 본다.
       # 하한은 test/COUNT-site 다(개수 래칫). 기능 시험 전체(`npm test`)는 여기서 돌지 않는다.
       - name: 테스트 (build/site 기준)
         run: npm run test:site

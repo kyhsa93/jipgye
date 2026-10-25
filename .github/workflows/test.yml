@@ -47,16 +47,10 @@ jobs:
         run: node scripts/build-css.mjs --check
       - run: npm ci
       # 사이트 생성(#510, 구조 B-4): 생성 HTML 49장은 main 에 없다. 시험은 build/site 를 읽고(test/helpers/site-root.mjs), 그 폴더는 render-pipeline 이 main 의 코드+데이터로 만든다.
-      # `npm test` 는 pretest 로 같은 렌더를 한 번 더 하지만(로컬에서도 그냥 `npm test` 가 돌게), 렌더 폴백(React 렌더 실패 -> legacy)은 pretest 에서 조용히 지나간다 - 여기서 막는다.
-      # deploy.yml 의 배포 게이트와 같은 규칙이다: 폴백한 산출물은 PR 에서도 병합 후에도 통과시키지 않는다.
+      # `npm test` 는 pretest 로 같은 렌더를 한 번 더 한다(로컬에서도 그냥 `npm test` 가 돌게). 렌더가 실패하면 이 단계가 종료 1 로 멈춘다(폴백 없음, #248).
       - name: 사이트 생성 (build/site)
         id: render
         run: node scripts/render-pipeline.ts --out=build/site
-      - name: 렌더 폴백이면 실패
-        if: ${{ steps.render.outputs.fallback == 'true' }}
-        run: |
-          echo "::error::React 렌더 실패 → legacy 로 폴백했다 - 위 '사이트 생성 (build/site)' 단계의 1차 시도 로그를 본다. 병합되면 deploy.yml 이 같은 이유로 배포를 막는다"
-          exit 1
       # 시험 개수 래칫(#315). `npm test`만으로는 두 구멍이 안 막힌다 —
       # (1) 따옴표 없는 글롭은 셸이 먼저 펼쳐, 안 맞는 파일이 Node에 **인자로 전달조차 되지 않는다**
       #     (package.json에서 따옴표로 묶어 Node가 펼치게 바꿨다. bash는 `{mjs,ts}`를 펼치고 dash는 안 펼쳐
