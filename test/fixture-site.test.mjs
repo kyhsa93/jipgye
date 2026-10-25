@@ -14,17 +14,14 @@ import {
   REALESTATE_TEMPLATE_PATH,
   applyPrerender,
   escapeHtml,
-  indexNewsItems,
   marketHtml,
   newsHtml,
   realestateHeadHtml,
   realestateHtml,
   realestateOverallHtml,
   realestateTableHtml,
-  summaryHtml,
 } from "../scripts/prerender.ts";
 import { jsInlineScripts, proveCommentsOnly } from "./helpers/comment-proof.mjs";
-import { fixtureSiteSummaryBox } from "./fixtures/render/summary-expected.mjs";
 import { buildFixtureSite } from "./helpers/fixture-site.mjs";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 
@@ -50,42 +47,32 @@ const block = (html, name) => html.match(new RegExp(`<!--prerender:${name}-->([\
 
 // --- index.html · 요약 상자 --------------------------------------------------------------------------------------------
 
-test("[prerender] 고정 데이터로 찍은 index.html 은 네 자리표시에 그 데이터의 조각을 싣는다 - 다시 그려도 같다", async () => {
+// #575 PR2: 메인의 AI 요약 상자·뉴스 다섯 건은 뉴스 화면으로 옮겼다 - 자리표시는 셋(값 한 줄·실거래·뉴스 화면 링크)이다.
+// 옛 [summary-box] 짝(메인 요약 상자 = summaryHtml.legacy)은 상자가 없어져 지웠다. 기사 제목이 구운 HTML 에 있는지는 뉴스 화면 몫이다.
+test("[prerender] 고정 데이터로 찍은 index.html 은 세 자리표시에 그 데이터의 조각을 싣는다 - 다시 그려도 같다", async () => {
   const html = site.read("docs/index.html");
-  const [summary, market, realestate, news] = await Promise.all(["summary", "market", "realestate", "news"].map(fixtureRead));
+  const [market, realestate, news] = await Promise.all(["market", "realestate", "news"].map(fixtureRead));
 
   const expected = applyPrerender(html, {
-    summary: summaryHtml(summary),
     market: marketHtml(market),
     realestate: realestateHtml(realestate),
     news: newsHtml(news),
   });
 
   assert.equal(html, expected, "docs/index.html 이 고정 데이터와 어긋난다. node scripts/prerender.ts 가 데이터를 자리표시에 못 꽂았다.");
-  assert.ok(block(html, "summary")?.includes("합성 핵심"), "요약 자리표시에 고정 데이터가 없다 - 틀에 구워 둔 옛 내용이 남았다");
+  assert.equal(block(html, "news"), `<a href="./news.html" id="news-link" data-n="${news.items.length}">오늘 뉴스 ${news.items.length}건·AI 요약 →</a>`, "뉴스 자리에 고정 데이터 건수가 없다");
+  assert.ok(!html.includes("<!--prerender:summary-->"), "메인에 요약 자리표시가 남았다");
 });
 
-test("[prerender] 고정 데이터로 찍은 index.html 에 첫 기사 제목·링크가 이스케이프되어 실제로 들어 있다", async () => {
-  const html = site.read("docs/index.html");
+test("[prerender] 고정 데이터로 찍은 news.html 에 첫 기사 제목·링크가 이스케이프되어 실제로 들어 있다", async () => {
+  const html = site.read("docs/news.html");
   const news = await fixtureRead("news");
-  // 첫 화면은 다섯 건만, 부동산 먼저 싣는다(#48) - 그 첫 건이 실려 있어야 한다.
-  const first = indexNewsItems(news.items)[0];
+  const first = news.items[0];
   assert.ok(first, "기사가 한 건도 없다 - 고정 데이터가 비었다");
   assert.ok(html.includes(escapeHtml(first.title)), "첫 기사 제목이 정적 HTML에 없다");
   assert.ok(html.includes(escapeHtml(first.link)), "첫 기사 링크가 정적 HTML에 없다");
   // 고정 기사 제목에는 & < > " 가 들어 있다. 날것으로 들어갔다면 마크업이 깨진다.
   assert.ok(!html.includes("<b>\"따옴표\"</b>"), "제목의 마크업이 이스케이프되지 않았다");
-});
-
-test("[summary-box] 고정 요약으로 찍은 index.html 의 상자가 손으로 적은 기대 마크업과 같다 (#352, #248 P2: legacy 재렌더 대신 고정 기대 문자열)", async () => {
-  const html = site.read("docs/index.html");
-  const a = html.indexOf("<!--prerender:summary-->") + "<!--prerender:summary-->".length;
-  const baked = html.slice(a, html.indexOf("<!--/prerender:summary-->"));
-  const strip = (h) => h.replace(/<span class="summary-meta">[^<]*<\/span>$/, "");
-  assert.equal(strip(baked), fixtureSiteSummaryBox(FALLBACK_NOTE_KO), "docs/index.html 의 구운 상자가 고정 summary.json 과 어긋난다. node scripts/prerender.ts 를 실행하세요.");
-  // 날짜 글자는 ICU 판에 따라 달라질 수 있어 형태만 본다(같은 판 안의 정확한 글자는 test/summary-box.test.mjs 의 스크립트 대조가 본다).
-  const meta = baked.match(/<span class="summary-meta">([^<]*)<\/span>$/)?.[1];
-  assert.match(meta ?? "", /^.+ 생성 · \d{4}\. \d{1,2}\. \d{1,2}\. (오전|오후) \d{1,2}:\d{2} KST$/, ".summary-meta 의 형태가 다르다");
 });
 
 test("[summary-note] 고정 요약의 검증 폴백 유무가 구운 장 다섯의 안내 줄 유무와 맞는다 (#350)", async () => {
@@ -100,9 +87,7 @@ test("[summary-note] 고정 요약의 검증 폴백 유무가 구운 장 다섯�
     assert.ok(a > 0 && b > a, `${marker} 자리표시를 찾지 못했다`);
     return html.slice(a + open.length, b);
   };
-
-  const index = boxOf(site.read("docs/index.html"), "summary");
-  assert.equal(noteOf(index, "summary-fallback-note"), hasFallback(summary.categories), "docs/index.html 의 안내 줄이 고정 summary.json 과 어긋난다. node scripts/prerender.ts 를 실행하세요.");
+  // 메인 요약 상자는 #575 PR2 에서 뉴스 화면으로 옮겼다 - 안내 줄은 뉴스 장 다섯만 본다.
 
   const hub = boxOf(site.read("docs/news.html"), "newsSummary");
   assert.equal(noteOf(hub, "summary-note"), hasFallback(summary.categories.filter((c) => c.lineKo)), "docs/news.html 의 안내 줄이 고정 summary.json 과 어긋난다.");

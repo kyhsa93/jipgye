@@ -17,7 +17,6 @@ import { districtSentences } from "../district-summary.ts";
 import { factSentences } from "../district-facts.ts";
 import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-links.ts";
 import { cancelDistricts, cancelMonths, conversionTable, floorDistricts, renewalDistricts, renewalWolseDistricts } from "../district-tables.ts";
-import { indexNewsItems } from "../news-items.ts";
 import { FALLBACK_NOTE_KO, hasFallback } from "../summary-note.ts";
 import { SUMMARY_CATEGORIES_LABEL_KO, SUMMARY_HIGHLIGHTS_LABEL_KO, summaryMetaKo } from "../summary-box.ts";
 import { metricCell, topDistricts } from "../realestate-rows.ts";
@@ -68,29 +67,15 @@ function summary(data) {
   );
 }
 
-// 시장 지표 표: 환율 → 기준금리. 셀 값은 legacy에서 마크업 조각 문자열이었던 것(증감의 <span>)까지 JSX 요소로 쓴다.
+// 첫 화면 돈의 값 한 줄(#575 PR2): legacy marketHtmlLegacy 와 같은 글 - 기준금리 → 환율, " · " 로 잇는다.
 function market(data) {
   if (!data) return null;
-  const rows = [];
+  const parts = [];
+  if (data.baseRate?.value) parts.push(`한국은행 기준금리 ${str(data.baseRate.value)}%`);
   if (typeof data.usdKrw?.value === "number") {
-    const change = data.usdKrw.change ? <span title="전일 수집분 대비">{str(data.usdKrw.change)}</span> : "-";
-    rows.push(["원/달러 환율", `${data.usdKrw.value.toFixed(2)}원`, change]);
+    parts.push(`원/달러 환율 ${data.usdKrw.value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}원`);
   }
-  if (data.baseRate?.value) {
-    rows.push(["기준금리", `${str(data.baseRate.value)}%`, str(data.baseRate.effectiveFrom ?? "-")]);
-  }
-  if (!rows.length) return null;
-  return (
-    <>
-      {rows.map(([name, value, change]) => (
-        <tr key={name}>
-          <td>{name}</td>
-          <td data-label="값">{value}</td>
-          <td data-label="증감">{change}</td>
-        </tr>
-      ))}
-    </>
-  );
+  return parts.length ? <>{parts.join(" · ")}</> : null;
 }
 
 // 기사 아래 맥락 칩. 칩이 없으면 legacy는 null이 아니라 빈 문자열을 내므로(자리표시가 빈다) 컴포넌트가 null을 그려 ""가 되게 한다.
@@ -107,33 +92,25 @@ const NewsContext = ({ context }) =>
     </div>
   );
 
-// 뉴스 한 건. 첫 화면(newsHtml)만 미리보기 줄을 더 싣는다.
-const NewsItem = ({ item, preview = false }) => (
+// 뉴스 한 건(뉴스 화면 목록). 미리보기 줄을 싣던 첫 화면 다섯 건은 뉴스 화면으로 옮겼다(#575 PR2).
+const NewsItem = ({ item }) => (
   <li className="news-item">
     <a href={str(item.link)} target="_blank" rel="noopener">
       {str(item.title)}
     </a>
     <div className="news-meta">{str(item.source)}</div>
-    {preview && item.preview ? <div className="news-preview">{str(item.preview)}</div> : null}
     <NewsContext context={item.context} />
   </li>
 );
 
+// 첫 화면 뉴스 자리: 뉴스 화면으로 가는 한 줄(#575 PR2). legacy newsHtmlLegacy 와 같은 마크업.
 function newsIndex(news) {
-  const all = news?.items ?? [];
-  if (!all.length) return null;
-  const items = indexNewsItems(all);
+  const n = Array.isArray(news?.items) ? news.items.length : 0;
+  if (!n) return null;
   return (
-    <>
-      {items.map((item, i) => (
-        <NewsItem key={i} item={item} preview />
-      ))}
-      {all.length > items.length ? (
-        <li className="news-more">
-          <a href="./news.html">뉴스 전체 {all.length}건 보기 →</a>
-        </li>
-      ) : null}
-    </>
+    <a href="./news.html" id="news-link" data-n={String(n)}>
+      {`오늘 뉴스 ${n}건·AI 요약 →`}
+    </a>
   );
 }
 

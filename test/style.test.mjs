@@ -212,7 +212,7 @@ test("걸러낸 결과를 소리로도 알린다", async () => {
     assert.match(tag, /role="status"/, `${SITE}/${file}의 #${id}가 알림 영역이 아니다`);
   };
   await has("index.html", "realestate-status");
-  await has("index.html", "news-status");
+  // 메인의 뉴스 건수 알림(#news-status)은 뉴스 칸과 함께 뉴스 화면으로 옮겼다(#575 PR2 - 뉴스 화면은 거르기가 없어 알릴 것이 없다).
   await has("deal-search.html", "search-status");
 });
 

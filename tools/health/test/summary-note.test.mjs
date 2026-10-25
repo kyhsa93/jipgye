@@ -24,9 +24,7 @@ const boxOf = (html, marker) => {
 test("커밋된 구운 장 다섯의 안내 줄 유무가 summary.json 과 맞는다 - 데이터가 바뀌면 다시 구워야 한다 (#350)", async () => {
   const summary = await readJson("summary");
   const noteOf = (html, cls) => html.includes(`<div class="${cls}">${FALLBACK_NOTE_KO}</div>`);
-
-  const index = boxOf(await read(`${SITE}/index.html`), "summary");
-  assert.equal(noteOf(index, "summary-fallback-note"), hasFallback(summary.categories), "docs/index.html 의 안내 줄이 summary.json 과 어긋난다. node scripts/prerender.ts 를 실행하세요.");
+  // 메인 요약 상자는 #575 PR2 에서 뉴스 화면으로 옮겼다 - 장 다섯은 뉴스 장 넷(허브 포함)이다.
 
   const hub = boxOf(await read(`${SITE}/news.html`), "newsSummary");
   assert.equal(noteOf(hub, "summary-note"), hasFallback(summary.categories.filter((c) => c.lineKo)), "docs/news.html 의 안내 줄이 summary.json 과 어긋난다.");

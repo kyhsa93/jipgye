@@ -238,6 +238,8 @@ test("문장·목록 분기 표: id가 겹치지 않고, 여덟 조각을 모두
   }
   // 값 종류별 행이 조각마다 있다: 비문자열(false·{})·null·특수문자(&amp;)·빈 값(데이터 없음 null 또는 빈 문자열).
   for (const fn of NEWS_MARKET_FNS) {
+    // 메인 뉴스 자리(newsHtml)는 #575 PR2 부터 건수만 싣는 링크 한 줄이라 입력 글자가 출력에 나오지 않는다 - 값 종류 행을 셀 것이 없다.
+    if (fn === "newsHtml") continue;
     const outs = NEWS_MARKET_BRANCHES.filter((b) => b.fn === fn).map((b) => (typeof b.expect === "string" ? b.expect : ""));
     assert.ok(outs.some((o) => o.includes("&amp;") && o.includes("&lt;") && o.includes("&quot;")), `${fn}: 특수문자 행이 없다`);
     if (fn !== "marketHtml") assert.ok(outs.some((o) => /false|\[object Object\]/.test(o)), `${fn}: 비문자열(false·{}) 행이 없다`);

@@ -14,10 +14,9 @@ const SP = `A&B <i> "q" it's`;
 const SP_OUT = `A&amp;B &lt;i&gt; &quot;q&quot; it's`;
 
 const p = (name, text) => `<p><strong>${name}</strong> ${text}</p>`;
-const tr = (name, value, change) => `<tr><td>${name}</td><td data-label="값">${value}</td><td data-label="증감">${change}</td></tr>`;
-const usd = (value, change) => tr("원/달러 환율", value, change);
-const base = (value, from) => tr("기준금리", value, from);
-const CHANGE = (text) => `<span title="전일 수집분 대비">${text}</span>`;
+// 메인 돈의 값 한 줄(#575 PR2): 기준금리 → 환율, " · " 로 잇는다.
+const base = (value) => `한국은행 기준금리 ${value}%`;
+const usd = (value) => `원/달러 환율 ${value}원`;
 const chip = (href, label, value, note) =>
   `<a class="context-chip" href="${href}"><span class="context-label">${label}</span><span class="context-value">${value}</span>${note === undefined ? "" : `<span class="context-note">${note}</span>`}</a>`;
 const box = (...chips) => `<div class="news-context">${chips.join("")}</div>`;
@@ -40,7 +39,7 @@ const hl = (title, link, source, text) =>
 const hls = (...items) => `<div class="summary-highlights"><div class="summary-section-label">오늘의 핵심</div>${items.join("")}</div><div class="summary-section-label">분야별 요약</div>`;
 const meta = (text) => `<span class="summary-meta">${text}</span>`;
 const META0 = meta("AI 생성 · -");
-const MORE = '<li class="news-more"><a href="./news.html">뉴스 전체 ';
+const newsLink = (n) => `<a href="./news.html" id="news-link" data-n="${n}">오늘 뉴스 ${n}건·AI 요약 →</a>`;
 
 const ROWS = [
   // ================= summaryHtml =================
@@ -94,35 +93,22 @@ const ROWS = [
   { id: "S22", fn: "summaryHtml", cond: ".summary-meta: UTC 날짜와 한국 날짜가 갈리는 시각(15:30Z → 다음 날 00:30 KST)", args: [{ model: "m", updatedAt: "2026-10-17T15:30:00Z", categories: [{ name: "a", lineKo: "b" }] }], expect: cat("a", "b") + meta("m 생성 · 2026. 10. 18. 오전 12:30 KST") },
   { id: "S23", fn: "summaryHtml", cond: ".summary-meta: 모델이 null이면 'AI', updatedAt이 없으면 '-'", args: [{ model: null, categories: [{ name: "a", lineKo: "b" }] }], expect: cat("a", "b") + META0 },
 
-  // ================= marketHtml =================
+  // ================= marketHtml (메인 돈의 값 한 줄, #575 PR2) =================
   { id: "M1", fn: "marketHtml", cond: "market이 null → null", args: [null], expect: null },
   { id: "M2", fn: "marketHtml", cond: "market이 undefined → null", args: [undefined], expect: null },
   { id: "M3", fn: "marketHtml", cond: "빈 객체 → null", args: [{}], expect: null },
-  { id: "M4", fn: "marketHtml", cond: "코스피만 있다 → 이 표엔 코스피 행이 없어 null", args: [{ kospi: { value: "6,977.94", change: "164.60" } }], expect: null },
-  { id: "M5", fn: "marketHtml", cond: "환율 증감이 있다 → 값 칸 N.NN원, 증감 칸에 title이 붙은 span(HTML 조각을 칸에 섞는 분기)", args: [{ usdKrw: { value: 1380.5, change: "+2.30" } }], expect: usd("1380.50원", CHANGE("+2.30")) },
-  { id: "M6a", fn: "marketHtml", cond: "환율 증감이 없다(undefined) → 증감 칸 '-'(span 없음)", args: [{ usdKrw: { value: 1380.5 } }], expect: usd("1380.50원", "-") },
-  { id: "M6b", fn: "marketHtml", cond: "환율 증감이 \"\" → '-'", args: [{ usdKrw: { value: 1380.5, change: "" } }], expect: usd("1380.50원", "-") },
-  { id: "M6c", fn: "marketHtml", cond: "환율 증감이 null → '-'", args: [{ usdKrw: { value: 1380.5, change: null } }], expect: usd("1380.50원", "-") },
-  { id: "M6d", fn: "marketHtml", cond: "환율 증감이 0·false(falsy) → '-'", args: [{ usdKrw: { value: 1380.5, change: 0 } }, { usdKrw: { value: 1, change: false } }], expect: null, each: [usd("1380.50원", "-"), usd("1.00원", "-")] },
-  { id: "M7", fn: "marketHtml", cond: "환율 값이 숫자가 아니면(문자열·null·undefined) 행이 없다 → null", args: [{ usdKrw: { value: "1380.5", change: "+1" } }], expect: null },
-  { id: "M8", fn: "marketHtml", cond: "환율 값 0은 숫자다(0.00원, 행이 있다)·소수 둘째 자리 반올림", args: [{ usdKrw: { value: 0 } }], expect: usd("0.00원", "-") },
-  { id: "M8b", fn: "marketHtml", cond: "환율 값 소수 셋째 자리 이상은 toFixed(2)로 반올림", args: [{ usdKrw: { value: 1380.456, change: "x" } }], expect: usd("1380.46원", CHANGE("x")) },
-  { id: "M8c", fn: "marketHtml", cond: "환율 값이 NaN이어도 typeof는 number라 행이 있다(NaN원)", args: [{ usdKrw: { value: NaN } }], expect: usd("NaN원", "-") },
-  { id: "M9", fn: "marketHtml", cond: "기준금리만(적용일 있음) → 값 N%, 증감 칸에 적용일 글자", args: [{ baseRate: { value: "2.75", effectiveFrom: "2026-08-28" } }], expect: base("2.75%", "2026-08-28") },
-  { id: "M10a", fn: "marketHtml", cond: "기준금리 적용일(effectiveFrom)이 없다(undefined) → '-'", args: [{ baseRate: { value: "2.75" } }], expect: base("2.75%", "-") },
-  { id: "M10b", fn: "marketHtml", cond: "기준금리 적용일이 null → '-'(?? 경로)", args: [{ baseRate: { value: "2.75", effectiveFrom: null } }], expect: base("2.75%", "-") },
-  { id: "M10c", fn: "marketHtml", cond: "기준금리 적용일이 \"\"이면 '-'가 아니라 빈 칸 그대로(?? 는 \"\"를 통과)", args: [{ baseRate: { value: "2.75", effectiveFrom: "" } }], expect: base("2.75%", "") },
-  { id: "M10d", fn: "marketHtml", cond: "기준금리 적용일이 false·0이면 \"false\"·\"0\"(비문자열)", args: [{ baseRate: { value: "2.75", effectiveFrom: false } }, { baseRate: { value: "2.75", effectiveFrom: 0 } }], expect: null, each: [base("2.75%", "false"), base("2.75%", "0")] },
-  { id: "M11", fn: "marketHtml", cond: "기준금리 값이 falsy(\"\"·0·null·undefined)면 행이 없다 → null", args: [{ baseRate: { value: "", effectiveFrom: "x" } }, { baseRate: { value: 0 } }, { baseRate: { value: null } }, { baseRate: {} }], expect: null, each: [null, null, null, null] },
-  { id: "M12", fn: "marketHtml", cond: "기준금리 값이 숫자 2.75·문자열 \"0\"(truthy)이면 행이 있다", args: [{ baseRate: { value: 2.75 } }, { baseRate: { value: "0" } }], expect: null, each: [base("2.75%", "-"), base("0%", "-")] },
-  {
-    id: "M13", fn: "marketHtml", cond: "둘 다 있으면 환율 → 기준금리 순(코스피는 무시)",
-    args: [{ kospi: { value: "1" }, baseRate: { value: "2.75", effectiveFrom: "2026-08-28" }, usdKrw: { value: 1380.5, change: "+2.30" } }],
-    expect: usd("1380.50원", CHANGE("+2.30")) + base("2.75%", "2026-08-28"),
-  },
-  { id: "M14", fn: "marketHtml", cond: "환율 행은 없고 기준금리만 있다(환율 값 비숫자 + 기준금리)", args: [{ usdKrw: { value: null }, baseRate: { value: "2.75" } }], expect: base("2.75%", "-") },
-  { id: "M15", fn: "marketHtml", cond: `특수문자: 환율 증감 <b>&"' 은 span 안에서 엔티티, 기준금리 값·적용일도`, args: [{ usdKrw: { value: 1, change: `<b>&"'` }, baseRate: { value: `2.7<5>"'`, effectiveFrom: SP } }], expect: usd("1.00원", CHANGE(`&lt;b&gt;&amp;&quot;'`)) + base(`2.7&lt;5&gt;&quot;'%`, SP_OUT) },
-  { id: "M16", fn: "marketHtml", cond: "비문자열: 환율 증감 {}·5·[1,2](truthy)·기준금리 값 true·적용일 {}", args: [{ usdKrw: { value: 1, change: {} } }, { usdKrw: { value: 1, change: 5 } }, { usdKrw: { value: 1, change: [1, 2] } }, { baseRate: { value: true, effectiveFrom: {} } }], expect: null, each: [usd("1.00원", CHANGE("[object Object]")), usd("1.00원", CHANGE("5")), usd("1.00원", CHANGE("1,2")), base("true%", "[object Object]")] },
+  { id: "M4", fn: "marketHtml", cond: "코스피만 있다 → 한 줄에 코스피가 없어 null", args: [{ kospi: { value: "6,977.94", change: "164.60" } }], expect: null },
+  { id: "M5", fn: "marketHtml", cond: "환율만 → 천 단위 쉼표·소수 둘째 자리, 끝에 원(증감은 싣지 않는다)", args: [{ usdKrw: { value: 1380.5, change: "+2.30" } }], expect: usd("1,380.50") },
+  { id: "M7", fn: "marketHtml", cond: "환율 값이 숫자가 아니면(문자열·null·undefined) 환율은 빠진다 → null", args: [{ usdKrw: { value: "1380.5" } }, { usdKrw: { value: null } }, { usdKrw: {} }], expect: null, each: [null, null, null] },
+  { id: "M8", fn: "marketHtml", cond: "환율 0은 숫자다(0.00원)·소수 셋째 자리는 반올림·큰 수도 쉼표", args: [{ usdKrw: { value: 0 } }, { usdKrw: { value: 1380.456 } }, { usdKrw: { value: 1234567.891 } }], expect: null, each: [usd("0.00"), usd("1,380.46"), usd("1,234,567.89")] },
+  { id: "M8c", fn: "marketHtml", cond: "환율 값이 NaN이어도 typeof는 number라 남는다(NaN원)", args: [{ usdKrw: { value: NaN } }], expect: usd("NaN") },
+  { id: "M9", fn: "marketHtml", cond: "기준금리만 → 값 N%(시행일은 싣지 않는다)", args: [{ baseRate: { value: "2.75", effectiveFrom: "2026-08-28" } }], expect: base("2.75") },
+  { id: "M11", fn: "marketHtml", cond: "기준금리 값이 falsy(\"\"·0·null·undefined)면 빠진다 → null", args: [{ baseRate: { value: "", effectiveFrom: "x" } }, { baseRate: { value: 0 } }, { baseRate: { value: null } }, { baseRate: {} }], expect: null, each: [null, null, null, null] },
+  { id: "M12", fn: "marketHtml", cond: "기준금리 값이 숫자 2.75·문자열 \"0\"(truthy)이면 남는다", args: [{ baseRate: { value: 2.75 } }, { baseRate: { value: "0" } }], expect: null, each: [base("2.75"), base("0")] },
+  { id: "M13", fn: "marketHtml", cond: "둘 다 있으면 기준금리 → 환율 순, 사이는 ' · '(코스피는 무시)", args: [{ kospi: { value: "1" }, usdKrw: { value: 1380.5 }, baseRate: { value: "2.75" } }], expect: `${base("2.75")} · ${usd("1,380.50")}` },
+  { id: "M14", fn: "marketHtml", cond: "환율 값 비숫자 + 기준금리 → 기준금리만", args: [{ usdKrw: { value: null }, baseRate: { value: "2.75" } }], expect: base("2.75") },
+  { id: "M15", fn: "marketHtml", cond: `특수문자: 기준금리 값 & < > " ' 은 엔티티`, args: [{ baseRate: { value: SP } }], expect: base(SP_OUT) },
+  { id: "M16", fn: "marketHtml", cond: "비문자열: 기준금리 값 true·{}·[1,2]", args: [{ baseRate: { value: true } }, { baseRate: { value: {} } }, { baseRate: { value: [1, 2] } }], expect: null, each: [base("true"), base("[object Object]"), base("1,2")] },
 
   // ================= newsContextHtml (칩이 없으면 null이 아니라 빈 문자열) =================
   { id: "C1", fn: "newsContextHtml", cond: "context가 undefined → 빈 문자열(null이 아니다)", args: [undefined], expect: "" },
@@ -137,29 +123,14 @@ const ROWS = [
   { id: "C10", fn: "newsContextHtml", cond: "비문자열: 라벨 {}, 값 [1,2], 노트 true", args: [[{ href: 7, label: {}, value: [1, 2], note: true }]], expect: box(chip("7", "[object Object]", "1,2", "true")) },
   { id: "C11", fn: "newsContextHtml", cond: "필드가 전부 없는 칩({}): href=\"\"와 빈 라벨·빈 값", args: [[{}]], expect: box(chip("", "", "")) },
 
-  // ================= newsHtml (첫 화면: 부동산 먼저·다섯 건·미리보기·맥락·더 보기) =================
+  // ================= newsHtml (메인 뉴스 자리: 뉴스 화면으로 가는 한 줄, #575 PR2) =================
   { id: "N1a", fn: "newsHtml", cond: "news가 null → null", args: [null], expect: null },
   { id: "N1b", fn: "newsHtml", cond: "빈 객체·items 없음 → null", args: [{}], expect: null },
   { id: "N1c", fn: "newsHtml", cond: "items가 빈 배열 → null", args: [{ items: [] }], expect: null },
   { id: "N1d", fn: "newsHtml", cond: "news가 undefined → null", args: [undefined], expect: null },
-  { id: "N2", fn: "newsHtml", cond: "기사 하나(미리보기·맥락 없음): 링크는 새 창, 출처 줄", args: [{ items: [{ title: "T", link: "https://e.com/1", source: "S", category: "economy" }] }], expect: li("T", "https://e.com/1", "S") },
-  { id: "N3", fn: "newsHtml", cond: "미리보기 + 맥락 칩이 있으면 출처 줄 뒤에 미리보기, 그 뒤에 칩 상자", args: [{ items: [{ title: "T", link: "L", source: "S", preview: "P", context: [{ href: "./r.html", label: "l", value: "v", note: "n" }] }] }], expect: li("T", "L", "S", { preview: "P", ctx: box(chip("./r.html", "l", "v", "n")) }) },
-  { id: "N4", fn: "newsHtml", cond: "미리보기가 \"\"·null·undefined·0·false(falsy)면 미리보기 div가 없다", args: [{ items: [{ title: "a", link: "L", source: "S", preview: "" }, { title: "b", link: "L", source: "S", preview: null }, { title: "c", link: "L", source: "S" }, { title: "d", link: "L", source: "S", preview: 0 }, { title: "e", link: "L", source: "S", preview: false }] }], expect: ["a", "b", "c", "d", "e"].map((t) => li(t, "L", "S")).join("") },
-  { id: "N5", fn: "newsHtml", cond: "출처가 없다(undefined·null)면 빈 출처 div(남는다)", args: [{ items: [{ title: "a", link: "L" }, { title: "b", link: "L", source: null }] }], expect: li("a", "L", "") + li("b", "L", "") },
-  { id: "N6", fn: "newsHtml", cond: "context가 빈 배열이면 칩 상자를 내지 않는다(빈 문자열)", args: [{ items: [{ title: "T", link: "L", source: "S", context: [] }] }], expect: li("T", "L", "S") },
-  {
-    id: "N7", fn: "newsHtml", cond: "6건: 부동산(category=realestate) 먼저 → 나머지, 앞 다섯 건만, 끝에 '뉴스 전체 6건 보기'(입력은 일반 3건 뒤 부동산 3건)",
-    args: [{ items: [n("e0"), n("e1"), n("e2"), n("r0", "realestate"), n("r1", "realestate"), n("r2", "realestate")] }],
-    expect: ["r0", "r1", "r2", "e0", "e1"].map((t) => li(t, `https://e.com/${t}`, "S")).join("") + `${MORE}6건 보기 →</a></li>`,
-  },
-  { id: "N8", fn: "newsHtml", cond: "정확히 다섯 건이면 '더 보기' 줄이 없다(5 > 5가 거짓)", args: [{ items: [n("a"), n("b"), n("c"), n("d"), n("e")] }], order: ["a", "b", "c", "d", "e"], noMore: true },
-  { id: "N9", fn: "newsHtml", cond: "일곱 건이면 다섯 건 + '뉴스 전체 7건 보기'(부동산이 없으면 입력 순서)", args: [{ items: [n("a"), n("b"), n("c"), n("d"), n("e"), n("f"), n("g")] }], order: ["a", "b", "c", "d", "e"], more: "7" },
-  { id: "N10", fn: "newsHtml", cond: "부동산이 다섯 건을 넘으면 부동산만 다섯(앞에서부터), 나머지는 밀린다", args: [{ items: [n("e0"), ...Array.from({ length: 6 }, (_, i) => n(`r${i}`, "realestate"))] }], order: ["r0", "r1", "r2", "r3", "r4"], more: "7" },
-  { id: "N11", fn: "newsHtml", cond: "category가 없는 기사는 부동산이 아닌 쪽(입력 순서로 부동산 뒤)", args: [{ items: [{ title: "x", link: "L", source: "S" }, n("r", "realestate")] }], order: ["r", "x"] },
-  { id: "N12", fn: "newsHtml", cond: `특수문자 & < > " '(제목·링크·출처·미리보기·맥락)`, args: [{ items: [{ title: SP, link: `https://e.com/?a=1&b="2"'`, source: SP, preview: SP, context: [{ href: SP, label: SP, value: SP, note: SP }] }] }], expect: li(SP_OUT, `https://e.com/?a=1&amp;b=&quot;2&quot;'`, SP_OUT, { preview: SP_OUT, ctx: box(chip(SP_OUT, SP_OUT, SP_OUT, SP_OUT)) }) },
-  { id: "N13", fn: "newsHtml", cond: "비문자열: 제목 false·{}, 링크 null·7, 출처 0·[1,2], 미리보기 5·true", args: [{ items: [{ title: false, link: null, source: 0, preview: 5 }, { title: {}, link: 7, source: [1, 2], preview: true }] }], expect: li("false", "", "0", { preview: "5" }) + li("[object Object]", "7", "1,2", { preview: "true" }) },
-  { id: "N14", fn: "newsHtml", cond: "제목·링크 누락: 빈 제목·href=\"\"(속성은 남는다)", args: [{ items: [{ source: "S" }] }], expect: li("", "", "S") },
-  { id: "N15", fn: "newsHtml", cond: "맥락 칩이 여럿인 기사와 없는 기사가 섞인 한 번의 목록(칩은 해당 기사 안에만)", args: [{ items: [{ title: "a", link: "L", source: "S", context: [{ href: "h", label: "l", value: "v" }] }, { title: "b", link: "L", source: "S" }] }], expect: li("a", "L", "S", { ctx: box(chip("h", "l", "v")) }) + li("b", "L", "S") },
+  { id: "N1e", fn: "newsHtml", cond: "items가 배열이 아니면(문자열·객체) → null", args: [{ items: "abc" }, { items: { length: 3 } }], expect: null, each: [null, null] },
+  { id: "N2", fn: "newsHtml", cond: "기사 하나 → 건수 1, 기사 글자는 싣지 않는다", args: [{ items: [{ title: SP, link: "https://e.com/1", source: "S" }] }], expect: newsLink(1) },
+  { id: "N3", fn: "newsHtml", cond: "기사 스물넷 → data-n 과 글자에 같은 건수", args: [{ items: Array.from({ length: 24 }, (_, i) => n(`t${i}`)) }], expect: newsLink(24) },
 
   // ================= newsSummaryHtml(summary, category) =================
   { id: "Y1", fn: "newsSummaryHtml", cond: "summary가 null → null", args: [null], expect: null },

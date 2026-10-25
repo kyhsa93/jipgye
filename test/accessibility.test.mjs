@@ -46,7 +46,8 @@ test("모든 <table>이 <caption>을 가진다", async () => {
       if (!/<caption(?=[\s>])/.test(m[0])) bad.push(`${file}: ${m[0].slice(0, 70).replace(/\s+/g, " ")}`);
     }
   }
-  assert.ok(tables >= 70, `<table>을 ${tables}개밖에 못 찾았다`);
+  // 하한 70 → 69: 메인의 시장 지표 표를 한 줄 값으로 바꿨다(#575 PR2).
+  assert.ok(tables >= 69, `<table>을 ${tables}개밖에 못 찾았다`);
   assert.equal(bad.length, 0, `caption 없는 표 ${bad.length}개: ${bad.slice(0, 4).join(" | ")}`);
 });
 

@@ -113,10 +113,11 @@ test("포털까지 막히면 시행일 없이 값만 낸다", async () => {
     },
   });
   assert.deepEqual(got, { value: "3.00", effectiveFrom: null });
-  // 화면은 시행일이 없으면 그 칸을 비운다 - "null 부터"라고 적지 않는다.
+  // 메인은 값 한 줄만 적는다(#575 PR2) - 시행일을 화면에 쓰지 않으니 "null 부터"가 나올 자리도 없다.
   const { readFile } = await import("node:fs/promises");
   const html = await readFile(new URL("../docs/index.html", import.meta.url), "utf8");
-  assert.match(html, /market\.baseRate\.effectiveFrom \? t\("baseRateSince"\)/);
+  assert.match(html, /if \(market\?\.baseRate\?\.value\) parts\.push/);
+  assert.doesNotMatch(html, /effectiveFrom/);
 });
 
 test("응답이 비면 어제 값을 그대로 쓰지 않고 실패로 넘긴다", async () => {

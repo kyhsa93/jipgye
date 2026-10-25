@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import Parser from "rss-parser";
 import { normalizeFeedTitle } from "../scripts/article-body.ts";
 import { newsListHtml } from "../scripts/prerender.ts";
-import { loadIndexPage } from "./helpers/index-page.mjs";
+import { loadNewsPage } from "./helpers/news-page.mjs";
 
 // #354: 뉴시스 RSS 제목은 `<![CDATA[...S&amp;P...]]>`로 온다. rss-parser는 CDATA 안을 풀지 않아 저장값에 `&amp;`가 남았고,
 // 굽는 쪽 escapeHtml이 한 번 더 감싸 구운 HTML에 `S&amp;amp;P`가 실렸다(브라우저는 `S&amp;P` 글자 그대로 그린다).
@@ -47,20 +47,16 @@ test("fetch-news.ts가 피드 제목을 normalizeFeedTitle로 거친다 (#354)",
   assert.match(src, /const title = normalizeFeedTitle\(item\.title\);/);
 });
 
-// 저장값이 엔티티가 풀린 순수 글자가 되면(위) 소비자마다 자기 몫의 이스케이프를 해야 한다. index.html 의 오늘 뉴스 칸은
-// newsItemHtml 이 제목을 innerHTML 에 넣는다 — 여기서 한 번 감싸지 않으면 제목의 `<`·`>` 가 태그로 읽힌다.
-// 인라인 스크립트를 helpers/index-page.mjs 의 vm 샌드박스에서 돌려 renderNews 가 쓴 #news-list 를 본다.
-test("index.html 오늘 뉴스 칸은 제목·출처의 `<`·`>`·`&` 를 정확히 한 번 이스케이프한다 (#354)", async () => {
+// 저장값이 엔티티가 풀린 순수 글자가 되면(위) 소비자마다 자기 몫의 이스케이프를 해야 한다. 기사 목록은 news.html 의
+// renderNews 가 제목을 innerHTML 에 넣는다 — 여기서 한 번 감싸지 않으면 제목의 `<`·`>` 가 태그로 읽힌다.
+// (전에는 index.html 의 오늘 뉴스 칸을 봤다 - 그 칸은 #575 PR2 에서 뉴스 화면으로 옮겼다.)
+// 인라인 스크립트를 helpers/news-page.mjs 의 vm 샌드박스에서 돌려 renderNews 가 쓴 #news-list 를 본다.
+test("news.html 기사 목록은 제목·출처의 `<`·`>`·`&` 를 정확히 한 번 이스케이프한다 (#354)", async () => {
   const hostile = { title: "<img src=x onerror=1> S&P <ESG 경영>", source: "A&B <b>", link: "https://example.test/h", category: "stocks" };
-  const page = await loadIndexPage({
-    fetch: async (url) => {
-      const ok = String(url).includes("/data/news.json");
-      return { ok, json: async () => (ok ? { items: [hostile] } : {}) };
-    },
-  });
+  const page = await loadNewsPage({ news: { items: [hostile] }, summary: { categories: [] } });
   for (let i = 0; i < 200 && !String(page.byId("news-list").innerHTML).includes("news-item"); i += 1) await new Promise((r) => setTimeout(r, 5));
   const html = String(page.byId("news-list").innerHTML);
-  assert.ok(html.includes("news-item"), "오늘 뉴스 칸이 그려지지 않았다");
+  assert.ok(html.includes("news-item"), "기사 목록이 그려지지 않았다");
   assert.ok(!html.includes("<img"), "제목의 <img 가 태그로 실렸다");
   assert.ok(!html.includes("<b>"), "출처의 <b> 가 태그로 실렸다");
   assert.ok(html.includes("&lt;img src=x onerror=1&gt; S&amp;P &lt;ESG 경영&gt;"), "제목이 한 겹 이스케이프로 실리지 않았다");

@@ -144,13 +144,24 @@ test("첫 화면에 먼저 오는 것은 우리가 만든 데이터다", async (
   // 원칙("처음 보는 것이 우리가 만든 데이터")을 그대로 적용하면 실거래가 맨 위다.
   const html = await read(`${SITE}/index.html`);
   const at = (id) => html.indexOf(`<section id="${id}"`); // `>` 를 뺀 접두사: 유틸리티 class 가 붙어도 같은 구획이다(#398)
-  assert.ok(at("market-section") > 0 && at("realestate-section") > 0 && at("summary-section") > 0);
+  //
+  // #575 PR2 부터 AI 요약·뉴스는 메인에 없고(뉴스 화면으로), 기준금리·환율은 실거래 표 아래 값 한 줄이다.
+  assert.ok(at("realestate-section") > 0);
+  assert.equal(at("summary-section"), -1, "AI 요약이 메인에 다시 생겼습니다 - 뉴스 화면에만 둡니다");
   assert.ok(
-    at("summary-section") > at("realestate-section"),
-    "AI 요약이 실거래 시세보다 위에 있습니다"
+    html.indexOf('id="market-line"') > at("realestate-section"),
+    "받아 옮기기만 하는 기준금리·환율이 우리가 계산한 실거래보다 위에 있습니다"
   );
-  assert.ok(
-    at("market-section") > at("realestate-section"),
-    "받아 옮기기만 하는 코스피·환율이 우리가 계산한 실거래보다 위에 있습니다"
-  );
+});
+
+// #575 PR2 판정: 기사 제목·요약이 메인에서 뉴스 화면으로 옮겨 오면서 영어 기계번역 안내도 뉴스 장 넷에 둔다 - 메인 문자열표와 같은 글자,
+// 구워 둔 채 html lang 이 가린다(m-en). 자리는 바닥글 바로 위다(위에 두면 영어에서 펴질 때 목록이 밀린다 - 틀 주석의 실측).
+test("영어 기계번역 안내가 뉴스 장 넷에 메인과 같은 글자로 구워져 있고 한국어 화면에서는 가린다 (#575)", async () => {
+  const notice = (await read("docs/index.html")).match(/contentNotice: "(News headlines[^"]+)"/)?.[1];
+  assert.ok(notice, "메인 문자열표의 영어 안내를 못 찾았다");
+  for (const file of ["news.html", ...NEWS_PAGES.map((p) => p.file)]) {
+    const html = await read(`${SITE}/${file}`);
+    assert.ok(html.includes(`<p class="content-notice m-en" id="content-notice">${notice}</p>\n  <footer class="site-footer">`), `${file}: 안내가 없거나 바닥글 바로 위가 아니다`);
+  }
+  assert.match(await read("src/css/legacy.css"), /html:not\(:lang\(en\)\) #content-notice\.m-en \{\s*display: none;/, "한국어 화면에서 안내를 가리는 규칙이 없다");
 });

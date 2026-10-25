@@ -87,30 +87,18 @@ function summaryHtmlLegacy(summary) {
     `<span class="summary-meta">${escapeHtml(summaryMetaKo(summary))}</span>`
   );
 }
+// #575 PR2 부터 어느 장에도 꽂지 않는다(메인 요약 상자는 뉴스 화면으로 옮겼다). 조각·parity 시험과 함께 지우는 것은 #575 PR4 몫이다.
 export const summaryHtml = fragment("summaryHtml", summaryHtmlLegacy);
 
+// 첫 화면 돈의 값 한 줄(#575 PR2): 기준금리 → 환율. 표·차트·실시간 환율은 뺐다. index.html renderMarket 이 같은 순서·같은 글로 다시 쓴다.
 function marketHtmlLegacy(market) {
   if (!market) return null;
-  const rows = [];
-
-  // 코스피는 첫 화면에서 증시 뉴스 장으로 옮겼다(UIUX #56, newsKospiHtml).
+  const parts = [];
+  if (market.baseRate?.value) parts.push(`한국은행 기준금리 ${escapeHtml(market.baseRate.value)}%`);
   if (typeof market.usdKrw?.value === "number") {
-    const change = market.usdKrw.change
-      ? `<span title="전일 수집분 대비">${escapeHtml(market.usdKrw.change)}</span>`
-      : "-";
-    rows.push(["원/달러 환율", `${market.usdKrw.value.toFixed(2)}원`, change]);
+    parts.push(`원/달러 환율 ${market.usdKrw.value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}원`);
   }
-  if (market.baseRate?.value) {
-    rows.push(["기준금리", `${escapeHtml(market.baseRate.value)}%`, escapeHtml(market.baseRate.effectiveFrom ?? "-")]);
-  }
-
-  if (!rows.length) return null;
-  return rows
-    .map(
-      ([name, value, change]) =>
-        `<tr><td>${name}</td><td data-label="값">${value}</td><td data-label="증감">${change}</td></tr>`
-    )
-    .join("");
+  return parts.length ? parts.join(" · ") : null;
 }
 export const marketHtml = fragment("marketHtml", marketHtmlLegacy);
 
@@ -164,22 +152,12 @@ export const newsContextHtml = fragment("newsContextHtml", newsContextHtmlLegacy
 // 첫 화면 뉴스 선택 규칙은 news-items.mjs에 있다 - JSX 쪽(render/entry.jsx)이 같은 함수를 가져다 쓴다(#241). 호출자 호환으로 다시 내보낸다.
 export { INDEX_NEWS, indexNewsItems };
 
+// 첫 화면 뉴스 자리는 뉴스 화면으로 가는 한 줄이다(#575 PR2). 기사·AI 요약은 news.html 에만 싣는다.
+// 건수는 data-n 에도 적는다 - index.html renderNewsLink 가 언어를 바꿀 때 이 값을 쓴다(뉴스 JSON 을 다시 받지 않는다).
 function newsHtmlLegacy(news) {
-  const all = news?.items ?? [];
-  if (!all.length) return null;
-  const items = indexNewsItems(all);
-  const more = all.length > items.length ? `<li class="news-more"><a href="./news.html">뉴스 전체 ${all.length}건 보기 →</a></li>` : "";
-  return items
-    .map(
-      (item) =>
-        `<li class="news-item">` +
-        `<a href="${escapeHtml(item.link)}" target="_blank" rel="noopener">${escapeHtml(item.title)}</a>` +
-        `<div class="news-meta">${escapeHtml(item.source ?? "")}</div>` +
-        (item.preview ? `<div class="news-preview">${escapeHtml(item.preview)}</div>` : "") +
-        newsContextHtml(item.context) +
-        `</li>`
-    )
-    .join("") + more;
+  const n = Array.isArray(news?.items) ? news.items.length : 0;
+  if (!n) return null;
+  return `<a href="./news.html" id="news-link" data-n="${n}">오늘 뉴스 ${n}건·AI 요약 →</a>`;
 }
 export const newsHtml = fragment("newsHtml", newsHtmlLegacy);
 
@@ -771,7 +749,6 @@ async function main() {
   );
 
   const blocks = {
-    summary: summaryHtml(summary),
     market: marketHtml(market),
     realestate: realestateHtml(realestate),
     news: newsHtml(news),
