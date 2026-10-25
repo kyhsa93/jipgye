@@ -5,6 +5,7 @@ import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { readSlotFile } from "./realestate-raw.ts";
 import { recentMonths } from "./realestate-source.ts";
+import { RENT_FLOW_MONTHS, buildRentFlow, writeRentFlowFile } from "./rent-flow.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -14,6 +15,42 @@ export const MONTHS = 6;
 const outFile = process.env.RENEWAL_FACTS_FILE
   ? path.resolve(process.env.RENEWAL_FACTS_FILE)
   : path.join(root, "docs/data/renewal-facts.json");
+
+// 자치구별 월세화 흐름 24개월(V7). 같은 원본(raw/rent)을 읽는 이 빌더가 같이 만든다 - Daily 에 새 줄을 넣지 않는다.
+export const rentFlowFile = process.env.RENT_FLOW_FILE
+  ? path.resolve(process.env.RENT_FLOW_FILE)
+  : path.join(root, "docs/data/rent-flow.json");
+
+/** 자치구 → 달 → 신고 목록. 그 달 파일이 없거나 ok:false 면 null 로 둔다(그 달은 0건이 아니라 모름이다). DISTRICTS 순서. */
+export async function readRentsByMonth(months, dir?) {
+  const out = {};
+  for (const { code, name } of DISTRICTS) {
+    const files = await Promise.all(months.map((m) => readSlotFile("rent", code, m, dir)));
+    out[name] = Object.fromEntries(
+      months.map((m, i) => [m, files[i]?.ok !== false && Array.isArray(files[i]?.items) ? files[i].items : null])
+    );
+  }
+  return out;
+}
+
+/**
+ * 월세화 흐름을 만들어 쓴다. 실패는 경고 한 줄로 끝나고 이전 파일이 그대로 남는다(soft-fail, #644 와 같은 모양) -
+ * 재계약 관찰(이 빌더의 본업)과 Daily 의 나머지 단계를 막지 않는다.
+ */
+export async function writeRentFlowSoft(now, { dir = undefined, file = rentFlowFile } = {}) {
+  try {
+    const months = recentMonths(now, RENT_FLOW_MONTHS);
+    const payload = buildRentFlow({ byDistrict: await readRentsByMonth(months, dir), months, now });
+    await mkdir(path.dirname(file), { recursive: true });
+    await writeRentFlowFile(file, payload);
+    const shown = Object.values(payload.districts).filter((d: any) => d.compare?.recent?.wolseShare != null).length;
+    console.log(`  월세화 흐름: ${months[0]}~${months.at(-1)} · 비중을 낸 구 ${shown}/${Object.keys(payload.districts).length}`);
+    return true;
+  } catch (err) {
+    console.log(`::warning::월세화 흐름 생성 실패 - 이전 파일을 그대로 둡니다: ${err.message}`);
+    return false;
+  }
+}
 
 /**
  * 자치구를 DISTRICTS 순서로 담는다 - 완료되는 대로 담으면 출력 순서가 그날그날
@@ -80,6 +117,7 @@ export function buildPayload({ byDistrict, now, wolseRate = null }) {
 
 async function main() {
   const now = new Date();
+  await writeRentFlowSoft(now);
   const byDistrict = await readRawRents(recentMonths(now, MONTHS));
   const payload = buildPayload({ byDistrict, now, wolseRate: await readWolseRate() });
 

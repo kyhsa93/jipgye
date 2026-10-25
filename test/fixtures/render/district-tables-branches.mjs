@@ -558,6 +558,34 @@ const SUM_EN = "Apartments in 종로구 trade at ₩50M per pyeong. For an 84m²
   add("DR-11", fn, "이미 이스케이프된 &amp;·&#x27;은 한 번 더 이스케이프된다", [{ toWolseLight: { share: "&amp;", seoul: "&#x27;" } }], "전세로 살던 세입자가 재계약 때 월세로 바꾼 비율이 &amp;amp;%로, 서울 전체 &amp;#x27;%보다 낮습니다 — 이 동네는 아직 전세가 전세로 남습니다.");
 }
 
+{
+  // 월세화 흐름 24개월(V7). 문장은 scripts/rent-flow.ts 가 만들고 조각은 공백으로 잇기만 한다. 문턱(hasEnoughSample)은 빌더가 적용해 값이 null 로 온다.
+  // 인자는 (자치구 이름, 산출물 전체, locale) - 이름이 문장마다 들어간다.
+  const fn = "districtRentFlowHtml";
+  const SEOUL = { compare: { base: { n: 65345, wolseShare: 44 }, recent: { n: 51410, wolseShare: 52.2 } }, renewals: { toWolseShare: 7.5 } };
+  const RF = (districts, extra = {}) => ({ compare: { base: ["202506", "202507", "202508"], recent: ["202606", "202607", "202608"] }, closedSpan: ["202411", "202608"], partial: ["202609", "202610"], seoul: SEOUL, districts, ...extra });
+  const RFD = (b = {}, r = {}, renewals = { fromJeonse: 783, toWolseShare: 11.5 }) => ({ compare: { base: { n: 605, wolseShare: 59.2, jn: 139, jmed: 69000, ...b }, recent: { n: 491, wolseShare: 67, jn: 88, jmed: 63000, ...r } }, renewals });
+  const PARTIAL_KO = "2026년 9월·10월 계약은 신고 기한(30일)이 남은 덜 찬 달이라 세지 않았습니다.";
+  const share = (name, a, b, n0, n1, move) => `전월세 흐름(국토교통부 신고): ${name} 전월세 신고 중 월세·반전세 비중은 2025년 6~8월 ${a}%(${n0}건)에서 2026년 6~8월 ${b}%(${n1}건)로 ${move}.`;
+  const rest = (name) => `${name} 신규 전세 보증금 중앙값(면적 구분 없음)은 6.9억원(139건) → 6.3억원(88건)입니다. 2024년 11월~2026년 8월 ${name}에서 전세를 갱신한 783건 중 11.5%가 월세를 끼고 다시 계약했습니다(서울 7.5%). ${PARTIAL_KO}`;
+  const SIMILAR = "서울(44.0% → 52.2%)과의 차이는 표본 오차 안이라 비슷한 흐름으로 봅니다.";
+  const full = (name, n0 = "605", n1 = "491") => `${share(name, "59.2", "67.0", n0, n1, "7.8%p 올랐습니다")} ${SIMILAR} ${rest(name)}`;
+  add("RF-01", fn, "이름이 없으면(null) 빈 문자열", [null, RF({ 종로구: RFD() })], "");
+  add("RF-02", fn, "이름이 undefined → 빈 문자열", [undefined, RF({ 종로구: RFD() })], "");
+  add("RF-03", fn, "견줄 창이 없는 산출물(compare 없음) → 빈 문자열", ["종로구", { districts: { 종로구: RFD() } }], "");
+  add("RF-03b", fn, "산출물에 없는 구 → 빈 문자열", ["중구", RF({ 종로구: RFD() })], "");
+  add("RF-04", fn, "비중·서울 비교·중앙값·갱신 전환·덜 찬 달", ["종로구", RF({ 종로구: RFD() })], full("종로구"));
+  add("RF-05", fn, "locale \"ko\"를 주어도 같다", ["종로구", RF({ 종로구: RFD() }), "ko"], full("종로구"));
+  add("RF-06", fn, "locale \"en\"", ["종로구", RF({ 종로구: RFD() }), "en"], "Rent flow (MOLIT lease filings): in 종로구, monthly-rent and semi-jeonse leases went from 59.2% of filings in Jun–Aug 2025 (n=605) to 67.0% in Jun–Aug 2026 (n=491), up 7.8pp. The gap from Seoul (44.0% → 52.2%) is within sampling error, so read it as the same trend. The median new-jeonse deposit in 종로구, all sizes, went from ₩690M (n=139) to ₩630M (n=88). Of 783 jeonse leases renewed in 종로구 in Nov 2024–Aug 2026, 11.5% came back with monthly rent (Seoul 7.5%). Sep 2026 and Oct 2026 are still filling (30-day filing window) and not counted.");
+  add("RF-07", fn, "해자 2: 문턱을 못 넘은 값(null)은 숫자 대신 건수와 「내지 않는다」, 갱신 문장은 빠진다", ["종로구", RF({ 종로구: RFD({ n: 3, wolseShare: null, jn: 2, jmed: null }, { n: 4, wolseShare: null, jn: 1, jmed: null }, null) })], `전월세 흐름(국토교통부 신고): 종로구는 신고가 모자라 월세 비중을 내지 않습니다(2025년 6~8월 3건, 2026년 6~8월 4건). 종로구 신규 전세가 2건 → 1건뿐이라 보증금 중앙값을 내지 않습니다. ${PARTIAL_KO}`, { moat: true });
+  add("RF-08", fn, `이름의 특수문자 & < > " '는 이스케이프(문장 전체를 한 번에)`, [SP, RF({ [SP]: RFD() })], full(SP_OUT));
+  add("RF-09", fn, "이름·건수 자리가 비문자열(false·{})이면 \"false\"·\"[object Object]\"", [false, RF({ false: RFD({ n: false }, { n: {} }) })], full("false", "false", "[object Object]"));
+  add("RF-10", fn, "표본 오차 밖으로 서울보다 더 오른 구", ["관악구", RF({ 관악구: RFD({ n: 5000, wolseShare: 40 }, { n: 5000, wolseShare: 60 }) })], `${share("관악구", "40.0", "60.0", "5,000", "5,000", "20.0%p 올랐습니다")} 서울(44.0% → 52.2%)보다 더 많이 올랐습니다. ${rest("관악구")}`);
+  add("RF-11", fn, "표본 오차 밖으로 서울보다 덜 오른 구", ["서초구", RF({ 서초구: RFD({ n: 5000, wolseShare: 40 }, { n: 5000, wolseShare: 41 }) })], `${share("서초구", "40.0", "41.0", "5,000", "5,000", "1.0%p 올랐습니다")} 서울(44.0% → 52.2%)보다 덜 올랐습니다. ${rest("서초구")}`);
+  add("RF-12", fn, "서울과 반대 방향(en)", ["강서구", RF({ 강서구: RFD({ n: 5000, wolseShare: 49.2 }, { n: 5000, wolseShare: 42.4 }) }), "en"], "Rent flow (MOLIT lease filings): in 강서구, monthly-rent and semi-jeonse leases went from 49.2% of filings in Jun–Aug 2025 (n=5,000) to 42.4% in Jun–Aug 2026 (n=5,000), down 6.8pp. Seoul moved the other way (44.0% → 52.2%). The median new-jeonse deposit in 강서구, all sizes, went from ₩690M (n=139) to ₩630M (n=88). Of 783 jeonse leases renewed in 강서구 in Nov 2024–Aug 2026, 11.5% came back with monthly rent (Seoul 7.5%). Sep 2026 and Oct 2026 are still filling (30-day filing window) and not counted.");
+  add("RF-13", fn, "비중이 같으면 「그대로」, 서울 값이 없으면 비교 문장과 괄호를 빼고, 덜 찬 달이 해를 넘기면 해를 다시 적는다", ["중구", RF({ 중구: RFD({ wolseShare: 60 }, { wolseShare: 60 }) }, { partial: ["202612", "202701"], seoul: {} })], "전월세 흐름(국토교통부 신고): 중구 전월세 신고 중 월세·반전세 비중은 2025년 6~8월 60.0%(605건)에서 2026년 6~8월 60.0%(491건)로 그대로입니다. 중구 신규 전세 보증금 중앙값(면적 구분 없음)은 6.9억원(139건) → 6.3억원(88건)입니다. 2024년 11월~2026년 8월 중구에서 전세를 갱신한 783건 중 11.5%가 월세를 끼고 다시 계약했습니다. 2026년 12월·2027년 1월 계약은 신고 기한(30일)이 남은 덜 찬 달이라 세지 않았습니다.");
+}
+
 // 이스케이프 없이 문자열에 끼우던 칸(raw)에 `& < > "`가 든 문자열이 오면 React는 이스케이프해서 낸다(고정할 출력; 옛 legacy는 그대로 냈다).
 // React가 내는 글자를 적는다. 실제 입력에는 없다 - 빌더가 숫자로만 만든다(PR 본문의 칸별 근거).
 // `site`는 옛 legacy 코드에서 이스케이프 없이 끼우던 자리의 이름(참고용), `react`는 그 칸이 낸 전체 출력이다.
@@ -616,7 +644,7 @@ export const DISTRICT_TABLES_THROWS = [];
 
 export const DISTRICT_TABLES_BRANCHES = rows;
 
-// 이 표가 덮는 조각 열 개의 이름(시험이 표가 열 개를 다 덮는지 본다).
+// 이 표가 덮는 조각 열한 개의 이름(시험이 표가 열한 개를 다 덮는지 본다). 열한째(districtRentFlowHtml)는 V7 이 더했다.
 export const DISTRICT_TABLES_FNS = [
   "cancelDistrictsHtml",
   "cancelMonthsHtml",
@@ -624,6 +652,7 @@ export const DISTRICT_TABLES_FNS = [
   "districtFactsHtml",
   "districtLinksHtml",
   "districtRenewalHtml",
+  "districtRentFlowHtml",
   "districtSummaryHtml",
   "floorDistrictsHtml",
   "renewalDistrictsHtml",

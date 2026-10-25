@@ -14,6 +14,7 @@ import {
   applyPrerender,
   districtFactsHtml,
   districtRenewalHtml,
+  districtRentFlowHtml,
   districtLinksHtml,
   districtSummaryHtml,
   realestateHeadHtml,
@@ -128,6 +129,8 @@ export function buildRealestatePage(baseHtml, page, realestate, spread = null) {
     districtFactsEn: "",
     districtRenewalKo: "",
     districtRenewalEn: "",
+    districtRentFlowKo: "",
+    districtRentFlowEn: "",
   }));
 }
 
@@ -149,7 +152,7 @@ export function districtHereHtml(name, realestate) {
   return `<p class="card-links district-here">${links.map(([href, text]) => `<a href="${href}">${text} →</a>`).join(" · ")}</p>`;
 }
 
-export function buildDistrictPage(baseHtml, district, realestate, deals = null, renewal = null, spread = null) {
+export function buildDistrictPage(baseHtml, district, realestate, deals = null, renewal = null, spread = null, rentFlow = null) {
   const title = `${district.name} 아파트 시세 - 매매·전세·월세 실거래가`;
   const description =
     `${district.name} 아파트 매매·전세·월세 실거래가를 평당가와 84㎡ 환산가로 보여줍니다. ` +
@@ -175,8 +178,8 @@ export function buildDistrictPage(baseHtml, district, realestate, deals = null, 
   );
   html = replaceOnce(
     html,
-    '<!--/prerender:districtRenewalEn--></p>\n  </section>',
-    `<!--/prerender:districtRenewalEn--></p>\n    ${districtHereHtml(district.name, realestate)}\n  </section>`,
+    '<!--/prerender:districtRentFlowEn--></p>\n  </section>',
+    `<!--/prerender:districtRentFlowEn--></p>\n    ${districtHereHtml(district.name, realestate)}\n  </section>`,
     "자치구 요약 절 끝"
   );
   // 시세 템플릿의 제목은 서울 전체를 말한다. 자치구 장은 그 구의 숫자를 싣는다(UIUX #42).
@@ -204,12 +207,15 @@ export function buildDistrictPage(baseHtml, district, realestate, deals = null, 
     districtFactsEn: districtFactsHtml(districtFacts(deals), "en"),
     districtRenewalKo: districtRenewalHtml(renewal, "ko"),
     districtRenewalEn: districtRenewalHtml(renewal, "en"),
+    // 월세화 흐름 24개월(V7) - docs/data/rent-flow.json(build-renewal-facts 가 만든다). 없으면 이 문단만 빈다.
+    districtRentFlowKo: districtRentFlowHtml(district.name, rentFlow, "ko"),
+    districtRentFlowEn: districtRentFlowHtml(district.name, rentFlow, "en"),
   }));
 }
 
 async function main() {
   requireSite(); // 출력 디렉터리가 docs/ 가 아니면 docs/ 복사본이 먼저 있어야 한다(#508)
-  const [baseHtml, realestate, renewalFacts, complexRatio] = await Promise.all([
+  const [baseHtml, realestate, renewalFacts, complexRatio, rentFlow] = await Promise.all([
     readFile(SOURCE_PATH, "utf8"),
     readFile(path.join(root, "docs/data/realestate.json"), "utf8").then(JSON.parse),
     // 재계약 관찰은 없을 수 있다 - 그러면 그 문단만 비고 나머지는 그대로 나간다.
@@ -218,6 +224,9 @@ async function main() {
       .catch(() => null),
     // 단지별 전세가율 분포도 마찬가지다. 칸이 모자라는 구는 이 문장을 갖지 않는다.
     readFile(path.join(root, "docs/data/complex-ratio.json"), "utf8")
+      .then(JSON.parse)
+      .catch(() => null),
+    readFile(path.join(root, "docs/data/rent-flow.json"), "utf8")
       .then(JSON.parse)
       .catch(() => null),
   ]);
@@ -247,7 +256,8 @@ async function main() {
         realestate,
         deals,
         renewalFacts?.districts?.[district.name] ?? null,
-        complexRatio?.districts?.[district.name] ?? null
+        complexRatio?.districts?.[district.name] ?? null,
+        rentFlow
       ),
       true
     );

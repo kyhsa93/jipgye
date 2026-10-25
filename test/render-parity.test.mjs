@@ -30,7 +30,7 @@ import { BUDGET_BODY_KNOWN_DIFFS, BUDGET_CB_BRANCHES, BUDGET_CB_FNS, BUDGET_CB_T
 // #241 PR 1이 문장·목록 8개(summaryHtml·marketHtml·뉴스 6개 - summaryHtml 은 #593 에서 지웠다)를, PR 2가 리드·링크 10개(*LeadHtml 6·*DistrictLinksHtml 4)를,
 // PR 3이 첫 화면 실거래 요약(realestateHtml)을, #242 PR 1이 자치구 문장·링크 4개와 표 6개를, PR 2가 시세표 머리글·표(realestateHeadHtml·realestateTableHtml)를, PR 3이 시세 요약 카드(realestateOverallHtml)를,
 // #243 PR A가 예산대 잎 조각 8개(budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml)를, PR B가 후보 단지와 합성(budgetCandidatesHtml·budgetBodyHtml)을
-// 더해 prerender.ts의 조각 44개(지금은 41개)가 모두 이식됐다(서브프로세스 시험이 "이식 완료 상태"를 검증한다).
+// 더해 prerender.ts의 조각 44개(지금은 42개 - V7 이 하나 더했다)가 모두 이식됐다(서브프로세스 시험이 "이식 완료 상태"를 검증한다).
 // 입력은 이 파일 안의 값과 test/fixtures/render/의 고정 파일뿐이다(R3): 저장소의 docs/·docs/data는 읽지 않는다.
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -66,7 +66,7 @@ test("내용 비교의 정규화는 class·style 둘만 지운다(셋째가 생�
   assert.equal(norm('<p>class="tw:p-2" style="y"</p>'), '<p>class="tw:p-2" style="y"</p>');
 });
 
-test("prerender.ts의 *Html() 조각은 이식 목록(PORTED) 41개와 같은 이름 전부이고 함수 이름이 그대로다", () => {
+test("prerender.ts의 *Html() 조각은 이식 목록(PORTED) 42개와 같은 이름 전부이고 함수 이름이 그대로다", () => {
   const names = Object.keys(prerender).filter((k) => k.endsWith("Html") && k !== "escapeHtml").sort();
   assert.deepEqual(names, PORTED, "prerender.ts의 조각 이름이 이식 목록과 다르다");
   for (const name of names) {
@@ -123,6 +123,7 @@ const PORTED = [
   "districtFactsHtml",
   "districtLinksHtml",
   "districtRenewalHtml",
+  "districtRentFlowHtml",
   "districtSummaryHtml",
   "floorDistrictLinksHtml",
   "floorDistrictsHtml",
@@ -154,8 +155,8 @@ test("react 모드: 이식된 조각 목록이 PORTED와 같고, 그 이름은 �
   }
 });
 
-test("prerender.ts 래퍼(기본값 react): 이식 완료 상태(조각 41개 전부 React - 금리 조각 둘은 #577 B2 로 지웠다)이고, 모든 분기 표에서 래퍼 출력이 기대값과 같고 React 경고가 없다", () => {
-  assert.equal(PORTED.length, 41);
+test("prerender.ts 래퍼(기본값 react): 이식 완료 상태(조각 42개 전부 React - 금리 조각 둘은 #577 B2 로 지웠고 V7 이 districtRentFlowHtml 을 더했다)이고, 모든 분기 표에서 래퍼 출력이 기대값과 같고 React 경고가 없다", () => {
+  assert.equal(PORTED.length, 42);
   assert.deepEqual(renderer.names(), PORTED, "entry.jsx 의 조각이 이식 목록과 다르다");
   const tables = [
     ["문장·목록", NEWS_MARKET_BRANCHES],
@@ -402,7 +403,7 @@ test("자치구 분기 표: id가 겹치지 않고, 열 조각을 모두 덮고,
   const ids = DISTRICT_TABLES_BRANCHES.map((b) => b.id);
   assert.equal(new Set(ids).size, ids.length, "분기 id가 겹친다");
   assert.deepEqual([...new Set(DISTRICT_TABLES_BRANCHES.map((b) => b.fn))].sort(), DISTRICT_TABLES_FNS);
-  assert.equal(DISTRICT_TABLES_FNS.length, 10);
+  assert.equal(DISTRICT_TABLES_FNS.length, 11);
   for (const b of DISTRICT_TABLES_BRANCHES) {
     assert.ok("expect" in b, `${b.id}: 기대값(expect)이 없다`);
     assert.ok(PORTED.includes(b.fn), `${b.id}: 이식 목록에 없는 조각(${b.fn})`);
@@ -475,6 +476,7 @@ test("자치구 조각: 데이터 없음은 null, 문장·링크는 빈 문자�
   assert.equal(draw("districtSummaryHtml", {}, null), "");
   assert.equal(draw("districtRenewalHtml", null), "");
   assert.equal(draw("districtFactsHtml", undefined), "");
+  assert.equal(draw("districtRentFlowHtml", null, null), "");
   assert.ok(draw("districtLinksHtml").startsWith('<h3 class="district-links-heading"'));
 });
 

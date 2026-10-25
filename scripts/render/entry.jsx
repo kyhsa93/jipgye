@@ -15,6 +15,7 @@ import { BUDGET_MORE_LINKS, bodyShape, budgetAnswers, budgetRuleHref, candidates
 import { budgetFactSentences } from "../budget-facts.ts";
 import { districtSentences } from "../district-summary.ts";
 import { factSentences } from "../district-facts.ts";
+import { rentFlowSentences } from "../rent-flow.ts";
 import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-links.ts";
 import { cancelDistricts, cancelMonths, conversionTable, floorDistricts, renewalDistricts, renewalWolseDistricts } from "../district-tables.ts";
 import { FALLBACK_NOTE_KO, hasFallback } from "../summary-note.ts";
@@ -266,6 +267,7 @@ function districtSummary(realestate, district, locale = "ko", spread = null) {
 
 const districtRenewal = (facts, locale = "ko") => sentenceBlock(renewalSentences(facts, locale));
 const districtFacts = (facts, locale = "ko") => sentenceBlock(factSentences(facts, locale));
+const districtRentFlow = (name, flow, locale = "ko") => sentenceBlock(rentFlowSentences(name, flow, locale));
 
 // 다른 자치구 링크 묶음. 머리글·상자의 분기와 id는 linksBlockShape, 경로는 slugLinkHref다.
 // 경로는 DISTRICT_PAGES(코드가 정한 slug)로 만든 `./district-<slug>.html`이라 `javascript:`로 시작할 수 없다(React 19 차단 차이의 대상이 아니다).
@@ -800,6 +802,7 @@ export const fragments = {
   districtSummaryHtml: districtSummary,
   districtRenewalHtml: districtRenewal,
   districtFactsHtml: districtFacts,
+  districtRentFlowHtml: districtRentFlow,
   districtLinksHtml: districtLinks,
   conversionTableHtml: conversionTableJsx,
   cancelDistrictsHtml: cancelDistrictsJsx,
