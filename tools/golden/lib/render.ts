@@ -10,8 +10,9 @@
 // 만든 사본은 지우는 길이 하나씩 있다(#263): pristine.dispose()·render.dispose(). `--src` 스냅숏(snap-*)은 dispose가 지우고,
 // SHA 캐시(sha-*)는 개수 상한으로 정리한다. 신호·예외 때는 cleanup.ts의 등록 목록이 같은 dispose를 대신 부른다.
 import { spawn, spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { mkdir, mkdtemp, readFile, rm, stat, symlink } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rm, stat, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -87,9 +88,32 @@ export interface PristineOptions extends Partial<Limits> {
   repo?: string;
   sha?: string;
   srcDir?: string;
+  /** 이 실행의 작업 폴더(snap-*). 기본: GOLDEN_CACHE_DIR, 없으면 <tmp>/jipgye-golden. */
   cacheDir?: string;
+  /** SHA 캐시(sha-<전체 SHA>) 폴더. 기본: cacheDir 를 명시했으면 그것, 아니면 GOLDEN_SHA_CACHE_DIR, 없으면 cacheDir. 여러 실행이 나눠 쓰는 공유 캐시를 켜는 자리다. */
+  shaCacheDir?: string;
   tmpRoot?: string;
   statfsFn?: StatfsFn;
+  /** true 면 이 SHA 의 렌더 결과(docs/)도 shaCacheDir 에 둔다. 기본: 공유 SHA 캐시를 켰을 때(shaCacheDir ≠ cacheDir)만. */
+  cacheRenders?: boolean;
+}
+
+/**
+ * 캐시 폴더 둘을 정한다(#605). 작업 폴더(snap-*)는 실행마다 따로 쓰는 것이 안전하고(다른 실행이 폴더째 지우면 도중에 rc=2 로 깨졌다),
+ * SHA 캐시는 키가 전체 SHA 라 내용이 불변이므로 여러 실행이 나눠 써도 된다(원자적 rename 확정 — buildShaCache).
+ *   cacheDir    명시 > GOLDEN_CACHE_DIR > <tmp>/jipgye-golden(예전 기본, CI 와 시험이 쓰는 모양 그대로)
+ *   shaCacheDir 명시 > (cacheDir 를 명시했으면 cacheDir) > GOLDEN_SHA_CACHE_DIR > 작업 폴더
+ */
+export function resolveCacheDirs({ cacheDir, shaCacheDir }: { cacheDir?: string; shaCacheDir?: string } = {}, env: NodeJS.ProcessEnv = process.env, tmp = os.tmpdir()) {
+  const work = path.resolve(cacheDir ?? (env.GOLDEN_CACHE_DIR || path.join(tmp, "jipgye-golden")));
+  const sha = path.resolve(shaCacheDir ?? (cacheDir ? work : env.GOLDEN_SHA_CACHE_DIR || work));
+  return { cacheDir: work, shaCacheDir: sha };
+}
+
+/** SHA 캐시 폴더 이름. 키는 **전체** SHA(40~64자 16진)뿐이다 — 줄임·ref 는 rev-parse 로 풀어 온 뒤에만 쓴다. */
+export function shaCacheName(full: string): string {
+  if (!/^[0-9a-f]{40,64}$/.test(full)) throw new Error(`SHA 캐시 키는 전체 SHA 여야 합니다: ${full}`);
+  return `sha-${full}`;
 }
 
 /** `renderIsolated` 의 인자. */
@@ -112,15 +136,20 @@ export interface RenderOptions {
  * 시작 때 하는 일(#263): 디스크 여유 점검(cacheDir·tmpRoot 둘, 문턱 미만이면 DiskSpaceError), 24시간 넘은 고아 정리.
  * 문턱·상한은 옵션(minFreeBytes·maxShaCaches·graceMs·orphanMs)이나 GOLDEN_* 환경변수로 준다(cleanup.ts).
  */
-export async function preparePristine({ repo, sha, srcDir, cacheDir = path.join(os.tmpdir(), "jipgye-golden"), tmpRoot = os.tmpdir(), statfsFn, ...limitOpts }: PristineOptions) {
+export async function preparePristine({ repo, sha, srcDir, cacheDir: cacheDirOpt, shaCacheDir: shaCacheDirOpt, cacheRenders: cacheRendersOpt, tmpRoot = os.tmpdir(), statfsFn, ...limitOpts }: PristineOptions) {
+  const { cacheDir, shaCacheDir } = resolveCacheDirs({ cacheDir: cacheDirOpt, shaCacheDir: shaCacheDirOpt });
   // 상대경로(README 예: --repo ../..)로 받아도 node_modules 링크가 렌더 사본 안에서 끊기지 않게 절대경로로 바꾼다(#237: react 모드가 처음 읽었다).
   if (repo) repo = path.resolve(repo);
   if (srcDir) srcDir = path.resolve(srcDir);
   assertNotTerminating();
   const limits = resolveLimits(limitOpts);
-  await assertDiskSpace([cacheDir, tmpRoot], { minFreeBytes: limits.minFreeBytes, statfsFn });
+  await assertDiskSpace([cacheDir, shaCacheDir, tmpRoot], { minFreeBytes: limits.minFreeBytes, statfsFn });
   await mkdir(cacheDir, { recursive: true });
   await sweepOrphans({ cacheDir, tmpRoot, orphanMs: limits.orphanMs });
+  if (shaCacheDir !== cacheDir) {
+    await mkdir(shaCacheDir, { recursive: true });
+    await sweepOrphans({ cacheDir: shaCacheDir, tmpRoot: shaCacheDir, orphanMs: limits.orphanMs }); // 공유 캐시의 만들다 만 sha-*.tmp-*(주인이 죽은 것만)
+  }
   if (srcDir) {
     const dir = await mkdtemp(path.join(cacheDir, "snap-"));
     let kept = false;
@@ -151,13 +180,15 @@ export async function preparePristine({ repo, sha, srcDir, cacheDir = path.join(
     };
   }
   const full = run("git", ["-C", repo, "rev-parse", sha ?? "HEAD"]).trim();
-  const dir = path.join(cacheDir, `sha-${full}`);
+  const dir = path.join(shaCacheDir, shaCacheName(full));
   if (existsSync(path.join(dir, ".done"))) {
     await touchCache(dir);
   } else {
     await buildShaCache({ repo, full, dir });
   }
-  await pruneShaCaches(cacheDir, { keep: dir, ...limits });
+  await pruneShaCaches(shaCacheDir, { keep: dir, ...limits });
+  const cacheRenders = cacheRendersOpt ?? shaCacheDir !== cacheDir;
+  if (cacheRenders) await pruneRenderCaches(shaCacheDir, { graceMs: limits.graceMs });
   const nm = path.join(repo, "node_modules");
   return {
     dir,
@@ -165,6 +196,7 @@ export async function preparePristine({ repo, sha, srcDir, cacheDir = path.join(
     nodeModules: existsSync(nm) ? nm : null,
     temporary: false,
     touch: () => touchCache(dir),
+    renderCache: cacheRenders ? { dir: shaCacheDir, sha: full } : null,
     keep: async () => {},
     dispose: async () => {},
   };
@@ -195,6 +227,80 @@ export async function buildShaCache({ repo, full, dir }) {
     untrack();
   }
   if (!existsSync(path.join(dir, ".done"))) throw new Error(`SHA 캐시를 만들지 못했습니다: ${dir}`);
+}
+
+// ---------------------------------------------------------------- 렌더 결과 캐시(opt-in, #605)
+// 기준(base) 렌더는 "기준 SHA + 같은 입력"이면 결과(docs/)가 같다(TZ=UTC·BUILD_NOW 고정). 공유 SHA 캐시를 켰을 때만 그 docs/ 를
+// <shaCacheDir>/render-<전체 SHA>-<입력 지문16>/ 에 두고 다음 실행이 렌더 단계 없이 쓴다(렌더 약 10초 + 사본 복제를 아낀다).
+// 지문 = 단계 목록·호출자가 준 환경·mockNow·고정되는 환경변수(JIPGYE_*·BUILD_*·TZ·LANG·LC_*)·Node 버전·플랫폼·그 SHA 의 package-lock.json.
+// 한계: 지문에 없는 입력(예: 렌더가 읽는 저장소 밖 파일, 링크된 node_modules 의 실제 버전)이 바뀌면 낡은 결과를 줄 수 있다 — 그래서 opt-in 이다.
+// 읽는 쪽은 docsDir 를 **읽기만** 해야 한다(쓰면 공유 캐시가 망가진다). 만들 때는 임시 이름(sha-<SHA>.tmp-render-*, 고아 정리가 치운다)에
+// 다 만들고 `.done` 을 찍은 뒤 rename 으로 확정한다(동시에 만들면 먼저 확정한 쪽이 이긴다).
+const RENDER_ENTRY = /^render-[0-9a-f]{40,64}-[0-9a-f]{16}$/;
+const FIXED_ENV = /^(JIPGYE_|BUILD_|TZ$|LANG$|LC_)/;
+
+/** 렌더 결과 캐시 폴더 이름(순수 함수 — 시험이 키를 본다). `inputs` 가 달라지면 이름이 달라진다. */
+export function renderCacheName(full: string, inputs: unknown): string {
+  shaCacheName(full); // 전체 SHA 검증
+  const h = createHash("sha256").update(JSON.stringify(inputs)).digest("hex").slice(0, 16);
+  return `render-${full}-${h}`;
+}
+
+async function renderInputs(pristine, { stages, mockNow, env }: { stages: string[]; mockNow: string | null; env: Record<string, string> }, merged: NodeJS.ProcessEnv) {
+  let lock = "";
+  try {
+    lock = createHash("sha256").update(await readFile(path.join(pristine.dir, "package-lock.json"))).digest("hex");
+  } catch {}
+  const fixed = Object.fromEntries(Object.entries(merged).filter(([k]) => FIXED_ENV.test(k)).sort(([a], [b]) => (a < b ? -1 : 1)));
+  return { stages, mockNow, env: Object.fromEntries(Object.entries(env).sort(([a], [b]) => (a < b ? -1 : 1))), fixed, node: process.version, platform: process.platform, lock };
+}
+
+/** 완성된 렌더 결과 캐시가 maxRenders(GOLDEN_CACHE_MAX_RENDER, 기본 16 ≈ 300MB)개를 넘으면 `.done` mtime 이 오래된 것부터 지운다(graceMs 안에 쓴 것은 남긴다). */
+export async function pruneRenderCaches(cacheDir: string, { graceMs, maxRenders = Number(process.env.GOLDEN_CACHE_MAX_RENDER ?? 16), now = Date.now() }: { graceMs: number; maxRenders?: number; now?: number }) {
+  let names: string[];
+  try {
+    names = await readdir(cacheDir);
+  } catch {
+    return [];
+  }
+  const entries = [];
+  for (const name of names) {
+    if (!RENDER_ENTRY.test(name)) continue;
+    try {
+      entries.push({ dir: path.join(cacheDir, name), mtime: (await stat(path.join(cacheDir, name, ".done"))).mtimeMs });
+    } catch {}
+  }
+  const removed = [];
+  for (const e of entries.sort((a, b) => b.mtime - a.mtime).slice(Math.max(1, maxRenders))) {
+    if (now - e.mtime < graceMs) continue;
+    await removeDir(e.dir).catch(() => {});
+    removed.push(e.dir);
+  }
+  return removed;
+}
+
+async function storeRender(entry: string, docsDir: string, touched: string[], sha: string) {
+  await mkdir(path.dirname(entry), { recursive: true });
+  const tmp = await mkdtemp(path.join(path.dirname(entry), `sha-${sha}.tmp-render-`));
+  const dispose = () => rm(tmp, { recursive: true, force: true });
+  const untrack = track(dispose);
+  try {
+    await writeOwner(tmp);
+    await clone(docsDir, path.join(tmp, "docs"));
+    await writeFile(path.join(tmp, "meta.json"), JSON.stringify({ touched, createdAt: Date.now() }));
+    await rm(path.join(tmp, OWNER), { force: true });
+    await mkdir(path.join(tmp, ".done"));
+    if (existsSync(path.join(entry, ".done"))) await dispose(); // 깨진 항목이 아니라 남이 먼저 확정한 것이면 그쪽을 쓴다
+    else {
+      if (existsSync(entry)) await removeDir(entry); // .done 없는/깨진 옛 항목을 치운다
+      await commitDir(tmp, entry);
+    }
+  } catch (e) {
+    await dispose();
+    throw e;
+  } finally {
+    untrack();
+  }
 }
 
 async function clone(from, to) {
@@ -259,6 +365,23 @@ export async function renderIsolated(pristine, { env = {}, mockNow = null, stage
   const base = tmpRoot ?? os.tmpdir();
   await assertDiskSpace([base], { minFreeBytes: resolveLimits({ minFreeBytes }).minFreeBytes, statfsFn });
   await pristine.touch?.(); // 쓸 때마다 SHA 캐시의 최근 사용 시각을 올린다(오래 안 쓴 것부터 정리하려고)
+  // 환경은 사본을 만들기 전에 정한다(렌더 결과 캐시의 지문이 이것을 본다).
+  const full = { ...process.env };
+  for (const k of SCRUB) delete full[k];
+  Object.assign(full, { TZ: "UTC" }, env);
+  let entry: string | null = null;
+  if (pristine.renderCache) {
+    entry = path.join(pristine.renderCache.dir, renderCacheName(pristine.renderCache.sha, await renderInputs(pristine, { stages, mockNow, env }, full)));
+    if (existsSync(path.join(entry, ".done"))) {
+      try {
+        const meta = JSON.parse(await readFile(path.join(entry, "meta.json"), "utf8"));
+        await touchCache(entry);
+        return { workDir: entry, docsDir: path.join(entry, "docs"), timings: [] as { stage: string; ms: number }[], totalMs: 0, touched: meta.touched as string[], cached: true, dispose: async () => {} };
+      } catch {
+        await removeDir(entry).catch(() => {}); // 깨진 항목(meta 없음 등)은 쓰지 않고 치운 뒤 새로 렌더해 채운다
+      }
+    }
+  }
   const root = await mkdtemp(path.join(base, "jipgye-render-"));
   const workDir = path.join(root, "work");
   const dispose = async () => {
@@ -272,9 +395,6 @@ export async function renderIsolated(pristine, { env = {}, mockNow = null, stage
     if (pristine.nodeModules && !existsSync(path.join(workDir, "node_modules"))) {
       await symlink(pristine.nodeModules, path.join(workDir, "node_modules"));
     }
-    const full = { ...process.env };
-    for (const k of SCRUB) delete full[k];
-    Object.assign(full, { TZ: "UTC" }, env);
     const nodeArgs = [];
     if (mockNow) {
       full.GOLDEN_MOCK_NOW = mockNow;
@@ -290,12 +410,14 @@ export async function renderIsolated(pristine, { env = {}, mockNow = null, stage
     }
     const after = await statSnapshot(workDir);
     const touched = [...new Set([...before.keys(), ...after.keys()])].filter((f) => before.get(f) !== after.get(f)).sort();
+    if (entry) await storeRender(entry, path.join(workDir, "docs"), touched, pristine.renderCache.sha).catch(() => {}); // 캐시는 최선 — 못 만들어도 렌더 결과는 그대로 돌려준다
     return {
       workDir,
       docsDir: path.join(workDir, "docs"),
       timings,
       totalMs: timings.reduce((s, t) => s + t.ms, 0),
       touched,
+      cached: false,
       dispose,
     };
   } catch (e) {
