@@ -11,7 +11,7 @@ import {
   monthlyCost,
   verdictOf,
 } from "../scripts/conversion.ts";
-import { buildPayload, depositRateOf, loanRateOf } from "../scripts/build-conversion.ts";
+import { buildPayload, ratesOf } from "../scripts/build-conversion.ts";
 
 const NOW = new Date("2026-08-26T00:00:00Z");
 
@@ -185,35 +185,32 @@ test("전환율이 대출금리보다 높으면 빌려서 전세로 가는 쪽�
   assert.equal(verdictOf(NaN, 4), null);
 });
 
-test("예금은 우대조건이 필요한 최고금리 대신 기본금리로 센다", () => {
-  const rates = {
-    deposit: [
-      { options: [{ term: 12, rate: 3.0, maxRate: 5.0 }, { term: 24, rate: 9.9 }] },
-      { options: [{ term: 12, rate: 4.0, maxRate: 6.0 }] },
-    ],
+test("금리는 ECOS 전세자금대출(잔액)·정기예금 두 계열이 둘 다 값을 가진 가장 최근 달의 값이다 (#577 B1b)", () => {
+  const series = {
+    jeonse_loan_rate: [["202606", 4.3], ["202607", 4.25], ["202608", 4.23], ["202609", 4.2]],
+    deposit_rate: [["202606", 3.2], ["202607", 3.1], ["202608", 3.14]],
   };
-  assert.equal(depositRateOf(rates).rate, 3.5);
+  // 대출 쪽이 한 달 앞서 있으면(202609) 예금이 있는 202608 로 맞춘다 - 화면이 "같은 달"이라고 적는다.
+  assert.deepEqual(ratesOf(series), { loan: { rate: 4.23, month: "202608", basis: "balance" }, deposit: { rate: 3.14, month: "202608" } });
 });
 
-test("전세자금대출은 대표값과 함께 구간의 폭도 같이 낸다", () => {
-  const rates = {
-    rentLoan: [
-      { options: [{ min: 3.3, max: 5.0, avg: 4.0 }] },
-      { options: [{ min: 4.0, max: 6.5, avg: 5.0 }] },
-    ],
+test("빈 값·0 이하·형식이 틀린 달은 금리로 쓰지 않는다 - 맞는 달이 없으면 null (지어낸 금리 금지)", () => {
+  const series = {
+    jeonse_loan_rate: [["202607", 4.25], ["202608", ""], ["202609", 0], ["2026-10", 4.1]],
+    deposit_rate: [["202607", 3.1], ["202608", 3.14], ["202609", 3.0], ["2026-10", 3.0]],
   };
-  const loan = loanRateOf(rates);
-  assert.equal(loan.rate, 4.5);
-  assert.equal(loan.min, 3.3);
-  assert.equal(loan.max, 6.5);
-  assert.equal(loan.products, 2);
-  assert.equal(loan.options, 2);
-  assert.equal(loan.productsWithAvg, 2);
+  assert.deepEqual(ratesOf(series), { loan: { rate: 4.25, month: "202607", basis: "balance" }, deposit: { rate: 3.1, month: "202607" } });
+  assert.equal(ratesOf({ jeonse_loan_rate: [["202608", 4.23]] }), null, "예금 계열이 없다");
+  assert.equal(ratesOf({ deposit_rate: [["202608", 3.14]] }), null, "대출 계열이 없다");
+  assert.equal(ratesOf({ jeonse_loan_rate: [["202608", 4.23]], deposit_rate: [["202607", 3.1]] }), null, "같은 달이 없다");
+  assert.equal(ratesOf(null), null);
+  assert.equal(ratesOf({ mortgage_rate: [["202608", 4.66]] }), null, "주담대 계열로 대신하지 않는다");
 });
 
 test("금리가 없으면 화면을 만들지 않는다", () => {
   const deals = [jeonse(50_000), wolse(20_000, 125)];
-  assert.equal(buildPayload({ deals, rates: { rentLoan: [], deposit: [] }, months: ["202608"], now: NOW }), null);
+  assert.equal(buildPayload({ deals, series: { jeonse_loan_rate: [], deposit_rate: [] }, months: ["202608"], now: NOW }), null);
+  assert.equal(buildPayload({ deals, series: undefined, months: ["202608"], now: NOW }), null);
 });
 
 test("빌드 결과에는 화면이 고르는 칸과 금리가 함께 들어간다", () => {
@@ -225,18 +222,16 @@ test("빌드 결과에는 화면이 고르는 칸과 금리가 함께 들어간�
     wolse(20_000, 125, { apt: "두번째" }),
     wolse(20_000, 125, { apt: "세번째" }),
   ];
-  const rates = {
-    rentLoan: [{ options: [{ min: 3.3, max: 5.0, avg: 4.0 }] }],
-    deposit: [{ options: [{ term: 12, rate: 3.8 }] }],
-  };
+  const series = { jeonse_loan_rate: [["202608", 4]], deposit_rate: [["202608", 3.8]] };
 
-  const payload = buildPayload({ deals, rates, months: ["202608"], now: NOW });
+  const payload = buildPayload({ deals, series, months: ["202608"], now: NOW });
 
   assert.equal(payload.cells.length, 1);
   assert.equal(payload.seoul.rate, 5);
   assert.equal(payload.seoul.verdict.side, "jeonse");
   assert.equal(payload.loan.rate, 4);
   assert.equal(payload.deposit.rate, 3.8);
+  assert.equal(payload.loan.month, "202608");
   assert.equal(payload.ltv, LOAN_LTV);
   assert.equal(payload.slugs["노원구"], "nowon");
 });

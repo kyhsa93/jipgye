@@ -87,7 +87,7 @@ test("화면이 대출 한도를 빌드와 같은 값으로 넘긴다", async ()
 
   const payload = buildPayload({
     deals,
-    rates: { rentLoan: [{ options: [{ min: 3, max: 5, avg: 4 }] }], deposit: [{ options: [{ term: 12, rate: 3.8 }] }] },
+    series: { jeonse_loan_rate: [["202607", 4]], deposit_rate: [["202607", 3.8]] },
     months: ["202608"],
     now: new Date("2026-08-26T00:00:00Z"),
   });

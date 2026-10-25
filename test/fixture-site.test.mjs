@@ -240,29 +240,21 @@ test("[record-high] 고정 데이터로 찍은 record-high.html 이 그 데이�
   assert.ok(data.lead.en && data.tables.robust.en);
 });
 
-test("[sample-size] 고정 데이터로 찍은 jeonse-vs-wolse 대출 금리 문장의 상품·옵션 수가 conversion.json·rates.json과 같고 '평균'이라 쓰지 않는다", async () => {
-  const sentencesOf = (text) => text.split(/(?<=[다요)])\.\s+/).map((s) => s.trim()).filter(Boolean);
+test("[sample-size] 고정 데이터로 찍은 jeonse-vs-wolse 대출 금리 문장이 conversion.json 의 값·달과 같고 잔액 기준이라고 밝힌다 (#577 B1b)", async () => {
   const textOf = (html) => html.replace(/<[^>]+>/g, "");
-  const [html, data, rates] = await Promise.all([Promise.resolve(site.read("docs/jeonse-vs-wolse.html")), fixtureRead("conversion"), fixtureRead("rates")]);
+  const { rateBasisLine } = await import("../scripts/conversion.ts");
+  const [html, data] = await Promise.all([Promise.resolve(site.read("docs/jeonse-vs-wolse.html")), fixtureRead("conversion")]);
   const lead = textOf(block(html, "conversionLead") ?? "");
-  assert.ok(!lead.includes("평균 금리는"), "중앙값을 '평균 금리는'이라고 쓴다(#183)");
-  const sentence = sentencesOf(lead).find((s) => s.includes("전세자금대출의 옵션별 평균 금리의 중앙값은"));
-  assert.ok(sentence, "대출 금리(중앙값) 문장이 없다");
-  const rate = sentence.match(/중앙값은 (\d+(\.\d+)?)%/);
+  // 금감원 공시 옵션별 중앙값(#183)은 끝났다 - 한국은행 평균금리 한 값이다.
+  assert.ok(!lead.includes("중앙값은") && !/개 옵션 기준/.test(lead), `금감원 중앙값 문장이 남았다: ${lead}`);
+  const rate = lead.match(/전세자금대출 평균금리는 (\d+(\.\d+)?)%/);
   assert.equal(Number(rate?.[1]), data.loan.rate);
-  const n = sentence.match(/\(([0-9,]+)개 상품 중 평균 금리가 있는 ([0-9,]+)개 상품의 ([0-9,]+)개 옵션 기준\)/);
-  assert.ok(n, `같은 문장에 상품·옵션 수가 없다: ${sentence}`);
-  const num = (t) => Number(t.replaceAll(",", ""));
-  assert.equal(num(n[1]), data.loan.products);
-  assert.equal(num(n[2]), data.loan.productsWithAvg);
-  assert.equal(num(n[3]), data.loan.options);
-  // 옵션 수는 JSON 필드만 믿지 않고 원자료에서 다시 센다: 중앙값을 낸 입력 = avg가 숫자인 옵션.
-  const avgOptions = rates.rentLoan.flatMap((p) => p.options ?? []).filter((o) => Number.isFinite(o?.avg)).length;
-  assert.equal(data.loan.options, avgOptions);
-  assert.equal(data.loan.products, rates.rentLoan.length);
-  const withAvg = rates.rentLoan.filter((p) => (p.options ?? []).some((o) => Number.isFinite(o?.avg))).length;
-  assert.equal(data.loan.productsWithAvg, withAvg);
-  assert.ok(withAvg <= rates.rentLoan.length && avgOptions >= withAvg, "상품·옵션 수의 포함 관계가 맞지 않는다");
+  assert.equal(data.loan.basis, "balance");
+  assert.match(data.loan.month, /^\d{6}$/);
+  assert.equal(data.deposit.month, data.loan.month, "예금 금리가 '같은 달'이 아니다");
+  assert.ok(lead.endsWith(rateBasisLine(data.loan.month, "ko")), `리드 끝에 금리 근거 줄(잔액 기준·달)이 없다: ${lead}`);
+  assert.ok(lead.includes("기존 대출 잔액 기준"));
+  assert.ok(data.seoul.leadEn.endsWith(rateBasisLine(data.loan.month, "en")));
   assert.equal(lead, data.seoul.leadKo, "화면 문장이 JSON의 문장과 다르다");
 });
 

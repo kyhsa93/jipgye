@@ -30,12 +30,9 @@ const DEALS = [
   ...dealsFor("노원구", { jeonse10k: 30_000, deposit10k: 10_000, monthly10k: 70, area: 45 }),
 ];
 
-const RATES = {
-  rentLoan: [{ options: [{ min: 3.3, max: 5.5, avg: 4 }] }],
-  deposit: [{ options: [{ term: 12, rate: 3.8 }] }],
-};
+const SERIES = { jeonse_loan_rate: [["202607", 4]], deposit_rate: [["202607", 3.8]] };
 
-const CONVERSION = buildPayload({ deals: DEALS, rates: RATES, months: ["202603", "202608"], now: NOW });
+const CONVERSION = buildPayload({ deals: DEALS, series: SERIES, months: ["202603", "202608"], now: NOW });
 
 /** `#id { min-height: Nlh; }` 하나. 선언이 이것 하나가 아니면 던진다(px 로 베끼거나 height·overflow 를 두면 자동 광고가 깨진다 - 체인 규칙 3). */
 function reservation(css, id) {

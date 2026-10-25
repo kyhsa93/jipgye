@@ -61,14 +61,16 @@ export const PAGE_SOURCES = {
 
 /**
  * 교차값(금리로 계산한 값이 실거래 값과 같은 문장·같은 계산에 나오는) 화면 전수 -> 두 입력의 소스 이름.
- * deals는 그 화면이 읽는 파일(PAGE_SOURCES의 부분집합), rates는 빌드가 구워 넣은 금리의 소스다 - 전환율 장은 금감원 공시 금리 파일,
- * 예산대 장은 한국은행 ECOS 주담대 평균금리(#577)다. ECOS 계열은 raw/indicators/series.json 이라 docs/data 소스가 아니어서, 같은 수집 단계가
+ * deals는 그 화면이 읽는 파일(PAGE_SOURCES의 부분집합), rates는 빌드가 구워 넣은 금리의 소스다 - 예산대 장은 한국은행 ECOS 주담대 평균금리,
+ * 전환율 장은 ECOS 전세자금대출·정기예금 평균금리다(#577 B1·B1b). ECOS 계열은 raw/indicators/series.json 이라 docs/data 소스가 아니어서, 같은 수집 단계가
  * 매일 그 계열로 다시 쓰는 outlook-indicators.json(build-indicators)의 updatedAt 을 금리 날짜로 쓴다.
  * 소스 이름과 가장 오래된 값 규칙은 baselineFor와 같다. 시험이 docs의 표지(budget-answers·전환율 리드)와 대조해
  * 여기 없는 교차값 화면이 생기면 빨강이 된다.
  */
 export const CROSS_PAGES = {
-  "jeonse-vs-wolse.html": { deals: ["conversion"], rates: ["rates"] },
+  // 전환율 장의 금리는 build-conversion 이 conversion.json 에 구워 넣는다 - 계열이 없어 conversion 을 그대로 둔 날 금리 날짜가
+  // 계열 날짜만 따라 새것처럼 보이지 않게, 두 소스 중 오래된 쪽을 금리 날짜로 쓴다(#577 B1b).
+  "jeonse-vs-wolse.html": { deals: ["conversion"], rates: ["conversion", "outlook-indicators"] },
   ...Object.fromEntries(BUDGETS.map((b) => [`${b}.html`, { deals: ["budget-deals"], rates: ["outlook-indicators"] }])),
 };
 

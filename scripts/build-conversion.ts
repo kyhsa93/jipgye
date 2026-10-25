@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { AREA_BANDS, LOAN_LTV, cellNote, conversionPairs, districtRates, leadSentence, median, verdictOf } from "./conversion.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
+import { latestRate } from "./mortgage.ts";
 import { readRentSource, recentMonths } from "./realestate-source.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -15,58 +16,38 @@ const outFile = process.env.CONVERSION_FILE
   ? path.resolve(process.env.CONVERSION_FILE)
   : path.join(root, "docs/data/conversion.json");
 
-const ratesFile = process.env.RATES_FILE
-  ? path.resolve(process.env.RATES_FILE)
-  : path.join(root, "docs/data/rates.json");
+// 대출·예금 금리는 지표 수집(fetch-indicators)이 매일 받는 한국은행 ECOS 계열이다(#577 B1b). 전에는 금감원 공시(docs/data/rates.json)였다.
+const seriesFile = process.env.SERIES_FILE
+  ? path.resolve(process.env.SERIES_FILE)
+  : path.join(root, "raw/indicators/series.json");
 
 /**
- * 전세자금대출 금리. 표에 있는 그대로 구간이라 대표값과 함께 폭도 같이 낸다.
- * rate는 평균이 아니라 옵션별 avg(금융감독원 표의 평균금리)를 모아 낸 중앙값이다(#183).
- * products는 rentLoan 상품 수 전체, options는 중앙값을 낸 입력(avg가 있는 옵션) 개수로
- * 단위가 다르다 - 상품 중에는 avg 있는 옵션이 하나도 없어 입력에 못 든 것도 있다.
- * productsWithAvg는 그 입력 옵션을 1개 이상 가진 상품 수라, 문장이 "전체 중 몇 개의 상품에서
- * 나온 옵션인가"를 밝힐 수 있다.
+ * 대출·예금 금리: ECOS 두 계열이 **둘 다 값을 가진 가장 최근 달**의 값.
+ * - loan: jeonse_loan_rate(121Y015 BECBLB020210) 예금은행 전세자금대출 평균금리, **잔액 기준**(신규취급액 표에 항목이 없다, #580).
+ * - deposit: deposit_rate(121Y002 BEABAA211) 정기예금 신규취급 평균금리.
+ * 화면이 "예금 금리(같은 달)"라고 적으므로 두 계열의 달을 맞춘다 - 한쪽이 한 달 앞서 있으면 그 달은 건너뛴다.
+ * 비거나 0 이하인 달은 쓰지 않는다(latestRate 와 같은 규칙, #269). 맞는 달이 없으면 null - 지어낸 금리로 판정하지 않는다.
  */
-export function loanRateOf(rates) {
-  const hasAvg = (o) => Number.isFinite(o?.avg);
-  const options = (rates?.rentLoan ?? []).flatMap((product) => product?.options ?? []);
-  const avgs = options.map((o) => o?.avg).filter((v) => Number.isFinite(v));
-  if (!avgs.length) return null;
-
-  const mins = options.map((o) => o?.min).filter((v) => Number.isFinite(v));
-  const maxes = options.map((o) => o?.max).filter((v) => Number.isFinite(v));
-
+export function ratesOf(series) {
+  const valid = (rows) => (Array.isArray(rows) ? rows.filter((row) => latestRate([row])) : []);
+  const deposits = new Map(valid(series?.deposit_rate).map((row) => [String(row[0]), Number(row[1])]));
+  const loanRow = valid(series?.jeonse_loan_rate).filter((row) => deposits.has(String(row[0]))).at(-1);
+  if (!loanRow) return null;
+  const month = String(loanRow[0]);
   return {
-    rate: Math.round(median(avgs) * 100) / 100,
-    min: mins.length ? Math.min(...mins) : null,
-    max: maxes.length ? Math.max(...maxes) : null,
-    products: (rates?.rentLoan ?? []).length,
-    productsWithAvg: (rates?.rentLoan ?? []).filter((product) => (product?.options ?? []).some(hasAvg)).length,
-    options: avgs.length,
+    loan: { rate: Number(loanRow[1]), month, basis: "balance" },
+    deposit: { rate: deposits.get(month), month },
   };
 }
 
-/**
- * 예금 금리는 기본금리로 센다. 최고금리는 우대조건을 다 채웠을 때의 값이라
- * 보증금으로 쓰고 남은 목돈을 그냥 넣어두는 이 계산과는 전제가 다르다.
- */
-export function depositRateOf(rates) {
-  const twelve = (rates?.deposit ?? [])
-    .flatMap((product) => product?.options ?? [])
-    .filter((o) => o?.term === 12 && Number.isFinite(o?.rate))
-    .map((o) => o.rate);
-  if (!twelve.length) return null;
-  return { rate: Math.round(median(twelve) * 100) / 100, products: twelve.length };
-}
-
-export function buildPayload({ deals, rates, months, now }) {
+export function buildPayload({ deals, series, months, now }) {
   const pairs = conversionPairs(deals);
   const cells = districtRates(pairs);
   if (!cells.length) return null;
 
-  const loan = loanRateOf(rates);
-  const deposit = depositRateOf(rates);
-  if (!loan || !deposit) return null;
+  const rates = ratesOf(series);
+  if (!rates) return null;
+  const { loan, deposit } = rates;
 
   const seoulRate = Math.round(median(pairs.map((p) => p.rate)) * 100) / 100;
   const labelOf = (key) => AREA_BANDS.find((b) => b.key === key)?.label ?? key;
@@ -78,6 +59,7 @@ export function buildPayload({ deals, rates, months, now }) {
     noteEn: cellNote(cell, loan.rate, labelEnOf(cell.band), "en"),
   }));
 
+  const lead = { rate: seoulRate, loanRate: loan.rate, loanMonth: loan.month, pairs: pairs.length, months };
   return {
     updatedAt: now.toISOString(),
     months,
@@ -90,8 +72,8 @@ export function buildPayload({ deals, rates, months, now }) {
       rate: seoulRate,
       pairs: pairs.length,
       verdict: verdictOf(seoulRate, loan.rate),
-      leadKo: leadSentence({ rate: seoulRate, loanRate: loan.rate, loanProducts: loan.products, loanProductsWithAvg: loan.productsWithAvg, loanOptions: loan.options, pairs: pairs.length, months }, "ko"),
-      leadEn: leadSentence({ rate: seoulRate, loanRate: loan.rate, loanProducts: loan.products, loanProductsWithAvg: loan.productsWithAvg, loanOptions: loan.options, pairs: pairs.length, months }, "en"),
+      leadKo: leadSentence(lead, "ko"),
+      leadEn: leadSentence(lead, "en"),
     },
     loan,
     deposit,
@@ -110,15 +92,22 @@ async function main() {
     return;
   }
 
-  let rates = null;
+  let series = null;
   try {
-    rates = JSON.parse(await readFile(ratesFile, "utf-8"));
+    series = JSON.parse(await readFile(seriesFile, "utf-8"))?.series ?? null;
   } catch {
-    console.log("  금리 데이터가 없습니다 - 기존 전환율 데이터를 그대로 둡니다");
+    console.log("  지표 계열 파일이 없습니다 - 기존 전환율 데이터를 그대로 둡니다");
     return;
   }
 
-  const payload = buildPayload({ deals, rates, months, now });
+  // 두 금리 계열이 아직 없거나(수집 전) 같은 달 값이 없으면 기존 conversion.json 을 그대로 둔다 - 화면은 마지막으로 만든 값을
+  // 그 값의 금리 날짜와 함께 계속 보이고(교차 기준일 줄이 낡음을 알린다), 비거나 지어낸 금리를 내보내지 않는다.
+  if (!ratesOf(series)) {
+    console.log("  ECOS 전세자금대출·정기예금 금리(같은 달)가 없습니다 - 기존 전환율 데이터를 그대로 둡니다");
+    return;
+  }
+
+  const payload = buildPayload({ deals, series, months, now });
   if (!payload) {
     console.log("  전환율을 낼 수 있는 단지가 없습니다 - 기존 전환율 데이터를 그대로 둡니다");
     return;
@@ -132,7 +121,7 @@ async function main() {
       ` (${months[0]}~${months[months.length - 1]} 신규계약)`
   );
   console.log(
-    `  서울 중앙 전환율 ${payload.seoul.rate}% · 전세자금대출 ${payload.loan.rate}% · 예금 ${payload.deposit.rate}%`
+    `  서울 중앙 전환율 ${payload.seoul.rate}% · 전세자금대출(잔액) ${payload.loan.rate}% · 정기예금 ${payload.deposit.rate}% (${payload.loan.month})`
   );
 }
 
