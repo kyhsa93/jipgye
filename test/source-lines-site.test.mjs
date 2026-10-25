@@ -3,7 +3,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import { SITE_DIR, sitePath } from "./helpers/site-root.mjs";
-import { FOOTERS } from "../scripts/source-lines.ts";
+import { DERIVED, FOOTERS } from "../scripts/source-lines.ts";
 
 const pages = (await readdir(SITE_DIR)).filter((f) => f.endsWith(".html")).sort();
 // 한국어가 같고 영어만 다른 장이 있다(cancelledDeals·dealSearch) - 한국어로 후보를 고르고 영어로 가린다.
@@ -45,4 +45,26 @@ test("ECOS 에서 받은 값을 보이는 장은 출처 줄에 ECOS 를 적는�
     budget++;
   }
   assert.equal(budget, 18, "예산대 장 수");
+});
+
+// #588 단계 C: 가공 꼬리·ECOS·R-ONE 표시가 나가는 장(build/site)에 들어간다 - 장 종류별 ko 두 벌(div·사전)·en 한 벌.
+test("가공 꼬리 장: 예산 18·jeonse-vs-wolse·switch-house·price-outlook 의 출처 줄 (#588 단계 C)", async () => {
+  const footer = (html) => html.match(/<div id="footer-source">([^<]*)<\/div>/)?.[1] ?? "";
+  const classes = { budget: [], jeonseVsWolse: ["jeonse-vs-wolse.html"], switchHouse: ["switch-house.html"], priceOutlook: ["price-outlook.html"] };
+  for (const f of pages) {
+    if ((await readFile(sitePath(f), "utf8")).includes('<meta name="budget-band"')) classes.budget.push(f);
+  }
+  assert.equal(classes.budget.length, 18);
+  for (const [id, files] of Object.entries(classes)) {
+    for (const f of files) {
+      const html = await readFile(sitePath(f), "utf8");
+      assert.equal(footer(html), FOOTERS[id].ko, `${f}: div`);
+      assert.equal(html.split(FOOTERS[id].ko).length - 1, 2, `${f}: ko 두 벌`);
+      assert.equal(html.split(FOOTERS[id].en).length - 1, 1, `${f}: en 한 벌`);
+      assert.ok(FOOTERS[id].ko.includes(DERIVED.ko) && FOOTERS[id].en.includes(DERIVED.en), `${f}: 가공 꼬리`);
+    }
+  }
+  const sh = await readFile(sitePath("switch-house.html"), "utf8");
+  assert.ok(footer(sh).includes("한국은행 경제통계시스템(ECOS)") && footer(sh).includes("(R-ONE)"));
+  assert.ok(sh.includes("Bank of Korea ECOS") && sh.includes("price survey (R-ONE)"));
 });

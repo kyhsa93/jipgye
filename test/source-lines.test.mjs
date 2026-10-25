@@ -6,7 +6,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { ATTRIBUTION, FOOTERS, SOURCES, footerLine, stampSources } from "../scripts/source-lines.ts";
+import { ATTRIBUTION, DERIVED, FOOTERS, SOURCES, footerLine, stampSources } from "../scripts/source-lines.ts";
 import { buildFigures, buildRelease, readSales, renderBody } from "../scripts/build-correction-release.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -60,6 +60,55 @@ test("틀의 출처 줄은 자리표시다 - 장마다 한국어 두 벌(div·�
     assert.equal(html.split(`{{src:${id}.ko}}`).length - 1, 2, `${file} ko`);
     assert.equal(html.split(`{{src:${id}.en}}`).length - 1, 1, `${file} en`);
   }
+});
+
+// #588 단계 C(cpo·legal·cmo 판정): 글자를 그대로 고정한다 - 고치려면 판정이 먼저다.
+test("가공 꼬리 글자와 장별 출처 줄 (#588 단계 C)", () => {
+  assert.deepEqual({ ...DERIVED }, { ko: "이 값은 원자료를 가공한 것입니다.", en: "These figures are derived from the original data." });
+  const lag = {
+    budget: { ko: "신고된 거래만 집계되며 신고 기한(계약 후 30일)이 있어 최근 거래는 나중에 반영됩니다.", en: "Only reported deals are counted, and reporting can lag up to 30 days after contract." },
+    jeonseVsWolse: { ko: "신고된 거래만 집계되며 신고 기한(계약 후 30일)이 있어 최근 계약은 나중에 반영됩니다.", en: "Only filed contracts are counted, and the 30-day filing window means recent contracts arrive later." },
+  };
+  for (const id of ["budget", "jeonseVsWolse"]) {
+    for (const lang of ["ko", "en"]) {
+      const line = FOOTERS[id][lang];
+      assert.ok(line.endsWith(`. ${DERIVED[lang]} ${lag[id][lang]}`), `${id}.${lang}: 가공 꼬리가 신고 기한 꼬리 앞`);
+      assert.ok(line.includes(SOURCES.ecos[lang]), `${id}.${lang}: ECOS`);
+    }
+  }
+  assert.equal(
+    FOOTERS.switchHouse.ko,
+    "출처: 국토교통부 아파트 매매 실거래가 공개시스템(중개거래, 해제 제외), 한국부동산원 실거래가격지수·주택가격동향조사(R-ONE), 한국은행 경제통계시스템(ECOS). 이 값은 원자료를 가공한 것입니다."
+  );
+  assert.equal(
+    FOOTERS.switchHouse.en,
+    "Source: MOLIT apartment sale filings (brokered, cancelled excluded); Korea Real Estate Board transaction index and price survey (R-ONE); Bank of Korea ECOS. These figures are derived from the original data."
+  );
+  // price-outlook 은 같은 상수를 쓰고 출력은 그대로다.
+  assert.ok(FOOTERS.priceOutlook.ko.includes(`${DERIVED.ko} 투자 판단을 대신하지 않습니다.`));
+  assert.ok(FOOTERS.priceOutlook.en.endsWith(`${DERIVED.en} Not investment advice.`));
+});
+
+// ECOS 값을 화면에 싣는 장 종류(출처 줄 id). 새 ECOS 장이 생기면 여기에 더한다 - ECOS 약관 제7조②.
+const ECOS_IDS = ["about", "method", "index", "stocks", "budget", "jeonseVsWolse", "switchHouse", "priceOutlook"];
+// ECOS 값으로 계산해 보이는 장 종류 - 가공 꼬리가 있어야 한다. 값을 받은 그대로 보이는 장(index·stocks)과 설명 장(about·method)은 아니다.
+const DERIVED_IDS = ["budget", "jeonseVsWolse", "switchHouse", "priceOutlook"];
+
+test("ECOS 값을 싣는 장 종류는 출처 줄에 ECOS 를, 계산해 보이는 장은 가공 꼬리를 ko·en 모두 가진다 (#588 단계 C)", () => {
+  for (const id of ECOS_IDS) {
+    assert.ok(FOOTERS[id], id);
+    assert.match(FOOTERS[id].ko, /ECOS/, `${id}.ko`);
+    assert.match(FOOTERS[id].en, /ECOS/, `${id}.en`);
+  }
+  for (const id of Object.keys(FOOTERS)) {
+    for (const lang of ["ko", "en"]) {
+      assert.equal(FOOTERS[id][lang].includes(DERIVED[lang]), DERIVED_IDS.includes(id), `${id}.${lang}: 가공 꼬리`);
+    }
+    // ko·en 짝: 같은 장은 ECOS·R-ONE 표시도 양쪽이 같다.
+    for (const word of [/ECOS/, /R-ONE/]) assert.equal(word.test(FOOTERS[id].ko), word.test(FOOTERS[id].en), `${id}: ${word} ko·en 짝`);
+  }
+  assert.match(FOOTERS.switchHouse.ko, /주택가격동향조사\(R-ONE\)/);
+  assert.match(FOOTERS.switchHouse.en, /price survey \(R-ONE\)/);
 });
 
 test("Release 출처 문장은 legal 표 원문 상수(ATTRIBUTION.molitSale)와 글자까지 같다", async () => {
