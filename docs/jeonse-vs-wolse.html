@@ -71,6 +71,7 @@
   <section id="calc-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="calc-heading">가진 돈을 넣고 견줘 보기</h2>
     <p class="lead" id="lead"><!--prerender:conversionLead-->같은 단지에서 전세와 월세가 함께 신고된 3,366개 조합으로 낸 서울의 전월세전환율은 4.8%입니다. 전세자금대출 평균금리는 4.23%입니다. 전환율이 대출금리보다 0.57%p 높으니, 보증금을 빌려 전세로 가는 쪽이 평균적으로 쌉니다. 2026.05~2026.10 신규 계약 기준입니다. 전세대출 금리: 한국은행 집계 은행 전세자금대출 평균금리(기존 대출 잔액 기준, 2026년 8월) — 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. 예금 금리: 정기예금 신규취급 평균금리(같은 달).<!--/prerender:conversionLead--></p>
+    <!--prerender:monthlyCostLine--><!--/prerender:monthlyCostLine-->
     <p class="updated cross-basis" id="cross-basis" data-deals="2026-10-24" data-rates="2026-10-24">실거래 10-24 x 금리 10-24</p>
     <p class="updated updated-warn" id="cross-warn" role="status" hidden></p>
     <div class="search-controls" id="calc-controls">
@@ -536,6 +537,7 @@ function applyLocale() {
   for (const link of document.querySelectorAll("[data-re-page]")) {
     link.textContent = t(NAV_KEYS[link.getAttribute("data-re-page")]);
   }
+  for (const p of document.querySelectorAll("[data-mc]")) p.hidden = p.dataset.mc !== locale;
   document.documentElement.setAttribute("lang", locale);
 }
 
