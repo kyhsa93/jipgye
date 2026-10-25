@@ -7,6 +7,7 @@ import path from "node:path";
 import { stripJsComments, stripInlineScriptComments } from "../../../scripts/strip-inline-comments.ts";
 import { REALESTATE_TEMPLATE_PATH, applyPrerender, realestateHeadHtml, realestateOverallHtml, realestateTableHtml } from "../../../scripts/prerender.ts";
 import { jsInlineScripts, proveCommentsOnly } from "../../../test/helpers/comment-proof.mjs";
+import { stampSources } from "../../../scripts/source-lines.ts";
 import { SITE } from "../../../test/helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
@@ -14,7 +15,8 @@ const read = (rel) => readFile(path.join(root, rel), "utf8");
 const TEMPLATE = "scripts/realestate-template.html";
 
 test("나가는 docs/realestate.html 은 틀을 채우고 훑개를 건 것뿐이다 - 스크립트는 주석만, 마크업은 표지 안과 기준일만 다르다 (#374)", async () => {
-  const template = await read(TEMPLATE);
+  // 출처 줄 자리표시({{src:…}}, #588)는 틀 채우기와 같은 길(applyPrerender)에서 꽂히므로 틀을 꽂은 글자로 견준다.
+  const template = stampSources(await read(TEMPLATE));
   const baked = await read(`${SITE}/realestate.html`);
 
   // 스크립트: 나가는 장의 인라인 스크립트는 틀의 것에서 훑개가 주석을 뗀 글자와 같고, 증명기(구문 + 지운 글자)도 통과한다.

@@ -152,6 +152,7 @@
     "../../scripts/site-hashes.ts",
     "../../scripts/site-snapshot.ts",
     "../../scripts/source-age.ts",
+    "../../scripts/source-lines.ts",
     "../../scripts/stage-site.ts",
     "../../scripts/strip-inline-comments.ts",
     "../../scripts/summarize-news.ts",

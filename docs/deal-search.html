@@ -128,7 +128,7 @@
 
   <footer class="site-footer">
     <div class="updated" id="updated" data-updated="2026-10-24">기준일 2026-10-24</div>
-    <div id="footer-source">출처: 국토교통부 아파트 매매 실거래가 공개시스템. 신고된 거래만 집계되며 신고 기한(계약 후 30일)이 있어 최근 거래는 나중에 반영됩니다.</div>
+    <div id="footer-source">{{src:dealSearch.ko}}</div>
     <div style="margin-top:6px;">
       <a href="./about.html" id="footer-about">소개</a>
       <span aria-hidden="true"> · </span>
@@ -278,7 +278,7 @@ const T = {
       "국토교통부에 신고된 아파트 매매 실거래 기록입니다. 지금 살 수 있는 매물이 아니며, 같은 단지라도 층·향·동에 따라 값이 크게 다릅니다. 계약 후 30일인 신고 기한 때문에 최근 거래는 나중에 반영됩니다. 목록은 최근 거래부터 일부만 보여주며, 건수는 조건에 맞는 신고 거래를 전부 셉니다. 연식은 준공연도가 신고된 거래에만, 직거래 표시는 거래 형태가 신고된 거래에만 걸립니다.",
     dataThrough: (m) => `${m} 신고분까지`,
     updatedWord: "갱신",
-    footerSource: "출처: 국토교통부 아파트 매매 실거래가 공개시스템. 신고된 거래만 집계되며 신고 기한(계약 후 30일)이 있어 최근 거래는 나중에 반영됩니다.",
+    footerSource: "{{src:dealSearch.ko}}",
     footerPrivacy: "개인정보처리방침",
     footerMethod: "숫자를 만드는 방법",
     footerAbout: "소개",
@@ -424,7 +424,7 @@ const T = {
       "Apartment sale transactions reported to Korea's MOLIT. These are filed deals, not listings for sale, and prices vary widely by floor, aspect and building within the same complex. Filings can lag up to 30 days after contract. The list shows the most recent matches only; the count covers every filing that matches. Age filters apply only where a build year was filed, and the direct-deal tag only where a deal type was filed.",
     dataThrough: (m) => `Filings through ${m}`,
     updatedWord: "updated",
-    footerSource: "Source: MOLIT real transaction price disclosure. Only reported deals are counted, and reporting can lag up to 30 days after contract.",
+    footerSource: "{{src:dealSearch.en}}",
     footerPrivacy: "Privacy Policy",
     footerMethod: "How these numbers are made",
     footerAbout: "About",
