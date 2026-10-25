@@ -24,6 +24,7 @@ import {
   summaryHtml,
 } from "../scripts/prerender.ts";
 import { jsInlineScripts, proveCommentsOnly } from "./helpers/comment-proof.mjs";
+import { fixtureSiteSummaryBox } from "./fixtures/render/summary-expected.mjs";
 import { buildFixtureSite } from "./helpers/fixture-site.mjs";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 
@@ -76,13 +77,12 @@ test("[prerender] 고정 데이터로 찍은 index.html 에 첫 기사 제목·�
   assert.ok(!html.includes("<b>\"따옴표\"</b>"), "제목의 마크업이 이스케이프되지 않았다");
 });
 
-test("[summary-box] 고정 요약으로 찍은 index.html 의 상자가 summaryHtml.legacy 로 다시 찍은 것과 같다 (#352)", async () => {
+test("[summary-box] 고정 요약으로 찍은 index.html 의 상자가 손으로 적은 기대 마크업과 같다 (#352, #248 P2: legacy 재렌더 대신 고정 기대 문자열)", async () => {
   const html = site.read("docs/index.html");
-  const summary = await fixtureRead("summary");
   const a = html.indexOf("<!--prerender:summary-->") + "<!--prerender:summary-->".length;
   const baked = html.slice(a, html.indexOf("<!--/prerender:summary-->"));
   const strip = (h) => h.replace(/<span class="summary-meta">[^<]*<\/span>$/, "");
-  assert.equal(strip(baked), strip(summaryHtml.legacy(summary)), "docs/index.html 의 구운 상자가 고정 summary.json 과 어긋난다. node scripts/prerender.ts 를 실행하세요.");
+  assert.equal(strip(baked), fixtureSiteSummaryBox(FALLBACK_NOTE_KO), "docs/index.html 의 구운 상자가 고정 summary.json 과 어긋난다. node scripts/prerender.ts 를 실행하세요.");
   // 날짜 글자는 ICU 판에 따라 달라질 수 있어 형태만 본다(같은 판 안의 정확한 글자는 test/summary-box.test.mjs 의 스크립트 대조가 본다).
   const meta = baked.match(/<span class="summary-meta">([^<]*)<\/span>$/)?.[1];
   assert.match(meta ?? "", /^.+ 생성 · \d{4}\. \d{1,2}\. \d{1,2}\. (오전|오후) \d{1,2}:\d{2} KST$/, ".summary-meta 의 형태가 다르다");

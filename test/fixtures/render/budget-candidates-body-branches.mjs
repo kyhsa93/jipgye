@@ -1,7 +1,7 @@
 // 예산대 후보 단지·본문 합성 조각의 분기별 고정 fixture (#243 PR B): budgetCandidatesHtml(band, complexFiles)·budgetBodyHtml(band, periodList, rates, mortgageSeries, complexFiles, capStats, policyCounts)
 // (그리고 이 둘 안에서만 쓰이는 helper budgetWhereHtml·budgetDealHtml·budgetWhen은 본문 행으로 닫는다 - fragment가 아니라 prerender.ts 밖으로 안 나온다).
 // 데이터 값이나 날짜에 따라 결과가 갈리지 않는다(R3): 저장소의 docs/·raw/를 읽지 않고 코드(budget-fragments.mjs 등)도 부르지 않는다.
-// 한 줄이 한 분기다. `args`는 legacy 함수에 그대로 넘기는 인자이고, `expect`는 legacy가 내야 하는 글자다(본문은 합성 조각이라 예산대가 없으면 `null`, 그 밖에는 문자열).
+// 한 줄이 한 분기다. `args`는 조각 함수에 그대로 넘기는 인자이고, `expect`는 React 조각이 내야 하는 글자다(본문은 합성 조각이라 예산대가 없으면 `null`, 그 밖에는 문자열).
 //
 // 기대값의 출처 셋(입력을 가공해 만들지 않았다):
 //  1) 후보 단지(CAND_GEN): 모듈을 부르지 않고 **파이썬으로 같은 규칙을 다시 짠 계산**이 낸 글자다(후보 고르기·평형대·정렬·한글 구 순서·`encodeURIComponent`·억 글자). 정상 입력만 다룬다.
@@ -1490,14 +1490,14 @@ addThrow("BO-T24", BO, "예산대가 숫자(5)면 던진다", [5]);
 addThrow("BO-T25", BO, "예산대가 배열이면 건수가 없어 던진다", [[]]);
 addThrow("BO-T26", BO, "구 이름이 있고 건수가 객체지만 toLocaleString이 없는(Object.create(null)) 값이면 던진다", [bb(3, { districts: [{ name: "가구", count: Object.create(null) }] })]);
 
-// 알려진 차이(허용 변환이 아니다, 허용 변환은 &#x27;→' 하나뿐): 구 건수(count)가 숫자가 아니라 & < > " 가 든 문자열일 때만 legacy와 React 글자가 다르다.
-// legacy는 지역 줄의 건수를 이스케이프 없이 끼우고(`${districts}`의 raw 자리, 건수는 toLocaleString 결과라 문자열은 그대로) React는 텍스트로 낸다.
+// 고정할 출력: 구 건수(count)가 숫자가 아니라 & < > " 가 든 문자열이면 React는 지역 줄의 건수를 텍스트로(이스케이프해서) 낸다.
+// (옛 legacy는 이 건수를 이스케이프 없이 끼웠다 - `${districts}`의 raw 자리.)
 // 실데이터(docs/data)의 구 건수는 전부 숫자라 닿지 않는다(PR 본문의 직접 센 값).
 export const BUDGET_BODY_KNOWN_DIFFS = [
-  { id: "KD-01", fn: BO, cond: "구 건수가 문자열 '<b>'", args: a3(bb(3, { districts: [{ name: "가구", count: "<b>" }] })), legacy: `<div class="budget-districts">거래가 많은 지역: 가구 <b></div>`, react: `<div class="budget-districts">거래가 많은 지역: 가구 &lt;b&gt;</div>` },
-  { id: "KD-02", fn: BO, cond: "구 건수가 문자열 'A&B'", args: a3(bb(3, { districts: [{ name: "가구", count: "A&B" }] })), legacy: `<div class="budget-districts">거래가 많은 지역: 가구 A&B</div>`, react: `<div class="budget-districts">거래가 많은 지역: 가구 A&amp;B</div>` },
-  { id: "KD-03", fn: BO, cond: "구 건수가 문자열 '\"q\"'", args: a3(bb(3, { districts: [{ name: "가구", count: '"q"' }] })), legacy: `<div class="budget-districts">거래가 많은 지역: 가구 "q"</div>`, react: `<div class="budget-districts">거래가 많은 지역: 가구 &quot;q&quot;</div>` },
-  { id: "KD-04", fn: BO, cond: "구 건수가 객체이고 toLocaleString이 '<i>'를 돌려줌", args: a3(bb(3, { districts: [{ name: "가구", count: { toLocaleString: () => "<i>" } }] })), legacy: `<div class="budget-districts">거래가 많은 지역: 가구 <i></div>`, react: `<div class="budget-districts">거래가 많은 지역: 가구 &lt;i&gt;</div>` },
+  { id: "KD-01", fn: BO, cond: "구 건수가 문자열 '<b>'", args: a3(bb(3, { districts: [{ name: "가구", count: "<b>" }] })), react: `<div class="budget-districts">거래가 많은 지역: 가구 &lt;b&gt;</div>` },
+  { id: "KD-02", fn: BO, cond: "구 건수가 문자열 'A&B'", args: a3(bb(3, { districts: [{ name: "가구", count: "A&B" }] })), react: `<div class="budget-districts">거래가 많은 지역: 가구 A&amp;B</div>` },
+  { id: "KD-03", fn: BO, cond: "구 건수가 문자열 '\"q\"'", args: a3(bb(3, { districts: [{ name: "가구", count: '"q"' }] })), react: `<div class="budget-districts">거래가 많은 지역: 가구 &quot;q&quot;</div>` },
+  { id: "KD-04", fn: BO, cond: "구 건수가 객체이고 toLocaleString이 '<i>'를 돌려줌", args: a3(bb(3, { districts: [{ name: "가구", count: { toLocaleString: () => "<i>" } }] })), react: `<div class="budget-districts">거래가 많은 지역: 가구 &lt;i&gt;</div>` },
 ];
 
 // ================= 내보내기 =================

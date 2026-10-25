@@ -4,8 +4,8 @@
 // 이 파일의 시험은 데이터 값에 좌우되지 않는다: 고정 fixture 를 실제 index.html 스크립트(test/helpers/index-page.mjs)에 먹여 나온 상자와
 // 구운 조각(summaryHtml)을 글자까지 맞댄다. 저장소 docs/ 가 "원본·데이터로 다시 찍은 것과 같은가"는 tools/health 가 비차단으로 보고(#507), 고정 데이터로 찍은 출력은 test/fixture-site.test.mjs 가 본다.
 //
-// 주의: test/render-parity.test.mjs 의 sameHtml 은 class 를 지우고 비교한다(#277). 그래서 여기서는 래퍼(React)·legacy 쌍둥이를 가리지 않고
-// **정규화 없이** 문자열을 맞대고, legacy 쌍둥이(summaryHtml.legacy)를 래퍼를 거치지 않고 직접 불러 JIPGYE_RENDERER 와 무관하게 본다(#355 와 같은 이유).
+// 주의: test/render-parity.test.mjs 의 sameHtml 은 class 를 지우고 비교한다(#277). 그래서 여기서는 래퍼(React) 출력을
+// **정규화 없이** 문자열로 맞댄다(#355 와 같은 이유: class 가 스크립트와 같아야 스타일이 붙는다).
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -59,19 +59,17 @@ async function scriptBox(summary) {
 const asScript = (html) => html.replaceAll("&quot;", '"').replace(/href="([^"]*)"/g, (_, h) => `href="${h.replaceAll("&amp;", "&")}"`);
 
 for (const [label, summary] of Object.entries(CASES)) {
-  test(`구운 요약 상자(React 래퍼·legacy 쌍둥이)가 스크립트가 그리는 상자와 글자까지 같다: ${label} (#352)`, async () => {
+  test(`구운 요약 상자(React 래퍼)가 스크립트가 그리는 상자와 글자까지 같다: ${label} (#352)`, async () => {
     const drawn = await scriptBox(summary);
-    // 정규화 없음: class·구조·글이 모두 같아야 한다. 래퍼는 기본 모드(React)이고 .legacy 는 모드와 무관한 원본이다.
+    // 정규화 없음: class·구조·글이 모두 같아야 한다.
     assert.equal(asScript(summaryHtml(summary)), drawn, "React 쪽 구운 상자가 스크립트 상자와 다르다");
-    assert.equal(asScript(summaryHtml.legacy(summary)), drawn, "legacy 쪽 구운 상자가 스크립트 상자와 다르다");
   });
 }
 
 test("구운 상자의 뼈대 class 는 스크립트와 같은 이름이다 - 분류 라벨 + 줄 div, 끝에 .summary-meta, `<p>` 목록이 아니다 (#352)", () => {
-  const html = summaryHtml.legacy(CASES["하이라이트 하나 · 폴백 있음"]);
+  const html = summaryHtml(CASES["하이라이트 하나 · 폴백 있음"]);
   for (const cls of ["summary-highlights", "summary-section-label", "summary-highlight", "summary-link-source", "summary-highlight-text", "summary-category", "summary-category-label", "summary-category-line", "summary-fallback-note", "summary-meta"]) {
-    assert.ok(html.includes(`class="${cls}"`), `legacy 구운 상자에 class="${cls}" 가 없다`);
-    assert.ok(summaryHtml(CASES["하이라이트 하나 · 폴백 있음"]).includes(`class="${cls}"`), `React 구운 상자에 class="${cls}" 가 없다`);
+    assert.ok(html.includes(`class="${cls}"`), `React 구운 상자에 class="${cls}" 가 없다`);
   }
   assert.ok(!html.includes("<p>"), "구운 상자에 `<p>` 목록이 남았다");
   assert.ok(html.endsWith("</span>") && html.includes('<span class="summary-meta">'), ".summary-meta 가 상자 끝에 없다");
@@ -80,7 +78,6 @@ test("구운 상자의 뼈대 class 는 스크립트와 같은 이름이다 - �
 test("분류가 없으면 굽지 않는다 - 스크립트도 분류 없이는 구획을 그리지 않는다 (#352)", () => {
   for (const s of [null, {}, { categories: [] }, { highlights: [highlight(1)], categories: [] }]) {
     assert.equal(summaryHtml(s), null);
-    assert.equal(summaryHtml.legacy(s), null);
   }
 });
 

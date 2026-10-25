@@ -43,7 +43,7 @@ test("react 진입점: 이식된 조각 목록을 조회하고 React 요소를 �
   assert.ok(html.includes("<a href=\"u\" target=\"_blank\" rel=\"noopener\">제목</a>"), html);
 });
 
-test("react 진입점: `'`는 legacy와 같이 그대로 두고 &, <, >, \"는 React가 낸 대로 이스케이프한다", async () => {
+test("react 진입점: `'`는 그대로 두고(옛 legacy escapeHtml 과 같은 글자) &, <, >, \"는 React가 낸 대로 이스케이프한다", async () => {
   const r = await createReactRenderer({ entry: fixture("fragments.jsx") });
   const html = r.render("summaryHtml", [{ highlights: [{ title: `it's <b> & "q"`, link: "u", source: "S", textKo: "x" }], categories: [{ name: "c", lineKo: "l" }] }]);
   assert.ok(html.includes(`>it's &lt;b&gt; &amp; &quot;q&quot;</a>`), html);
@@ -66,6 +66,7 @@ test("react 진입점: 저장소의 진입 파일(scripts/render/entry.jsx)이 �
   const r = await createReactRenderer();
   const prerender = await import("../scripts/prerender.ts");
   for (const name of r.names()) {
-    assert.equal(typeof prerender[name]?.legacy, "function", `${name}은 prerender.ts의 *Html() 조각이 아니다`);
+    assert.equal(typeof prerender[name], "function", `${name}은 prerender.ts의 *Html() 조각이 아니다`);
+    assert.equal(prerender[name].name, name);
   }
 });

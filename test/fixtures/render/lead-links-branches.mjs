@@ -1,9 +1,9 @@
 // 리드·링크 10개 조각의 분기별 고정 fixture (#241 PR 2): conversionLeadHtml·cancelLeadHtml·cancelMonthLeadHtml·renewalLeadHtml·renewalCapLeadHtml·
 // renewalWolseLeadHtml·conversionDistrictLinksHtml·cancelDistrictLinksHtml·renewalDistrictLinksHtml·floorDistrictLinksHtml.
 // 데이터 값이나 날짜에 따라 결과가 갈리지 않는다(R3): 저장소의 docs/·raw/를 읽지 않고 코드(district-slugs.mjs 등)도 부르지 않는다.
-// 한 줄이 한 분기다. `args`는 legacy 함수에 그대로 넘기는 인자이고, `expect`는 legacy가 내야 하는 글자다 - 아래 값 표(LEAD_VALUES·SLUG_VALUES)의
+// 한 줄이 한 분기다. `args`는 조각 함수에 그대로 넘기는 인자이고, `expect`는 React 조각이 내야 하는 글자다 - 아래 값 표(LEAD_VALUES·SLUG_VALUES)의
 // 기대값은 입력을 가공하지 않고 손으로 적었다. `wrap`은 값을 조각이 읽는 자리에 넣을 뿐이고 기대값을 만들지 않는다.
-// test/render-parity.test.mjs가 이 표로 (1) legacy 출력이 expect와 같은지, (2) React 조각이 legacy와 바이트까지 같은지 견준다.
+// test/render-parity.test.mjs가 이 표로 React 조각 출력이 expect와 같은지 견준다.
 //
 // 모든 조각에 같은 종류의 값 행을 넣었다(#240·#241 PR 1 교훈 - `str()`을 빼도 시험이 통과하는 자리를 닫는다):
 //  - 비문자열: true·5·{}·[1,2]·[]·["a&b"] (legacy `escapeHtml`은 `String(value ?? "")`이라 "true"·"5"·"[object Object]"·"1,2"·""·"a&amp;b"로 낸다)
