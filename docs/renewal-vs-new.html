@@ -73,6 +73,23 @@
     <a href="./method.html" id="method-callout-link">숫자를 만드는 방법 →</a>
   </aside>
 
+  <section id="check-section" class="tw:mb-10 tw:1024:mb-16">
+    <h2 id="check-heading">우리 단지 재계약 확인</h2>
+    <div class="search-controls" id="check-controls">
+      <div class="search-field"><label for="check-gu" id="check-gu-label">자치구</label><select id="check-gu"></select></div>
+      <div class="search-field"><label for="check-apt" id="check-apt-label">단지</label><input type="text" id="check-apt" list="check-apt-list" autocomplete="off" spellcheck="false"><datalist id="check-apt-list"></datalist></div>
+      <div class="search-field"><label for="check-area" id="check-area-label">전용면적</label><select id="check-area"></select></div>
+      <div class="search-field"><label for="check-old" id="check-old-label">종전 보증금(만원, 선택)</label><input type="number" id="check-old" min="1" inputmode="numeric"></div>
+      <div class="search-field"><label for="check-ask" id="check-ask-label">요구 보증금(만원, 선택)</label><input type="number" id="check-ask" min="1" inputmode="numeric"></div>
+    </div>
+    <p class="lead" id="check-answer" aria-live="polite"></p>
+    <div class="table-scroll"><table class="rate-table" id="check-table"><caption class="sr-only">갱신 인상률 5구간별 건수 - 갱신요구권 사용과 표시 없음 두 줄</caption></table></div>
+    <p class="content-notice" id="check-new"></p>
+    <p class="content-notice" id="check-scope">전세 갱신만 셉니다(반전세·월세 섞인 갱신, 갱신 여부 미기재 제외).</p>
+    <p class="content-notice" id="check-legal">5% 상한은 세입자가 계약갱신요구권을 쓴 갱신에 적용됩니다(주택임대차보호법 제6조의3·제7조). 요구권은 한 번 쓸 수 있고, 집주인이 거절할 수 있는 사유가 법에 따로 있습니다. '표시 없음'은 신고에 사용 표시가 없다는 뜻이지 요구권을 못 쓴다는 뜻이 아닙니다. 이 화면은 신고된 계약을 센 것이며 법률 판단이 아닙니다 — 대한법률구조공단·주택임대차분쟁조정위원회에서 상담하세요.</p>
+    <p class="updated" id="check-source">{{src:renewalCheck.ko}}</p>
+  </section>
+
   <section id="lead-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="lead-heading">갱신과 신규의 차이</h2>
     <p class="lead" id="lead"><!--prerender:renewalLead-->서울에서 재계약하는 세입자는 같은 단지 같은 평형에 그달 새로 맺어진 전세보다 보증금을 11.0% 적게 냅니다. 맞물린 계약 1,706건 가운데 79.8%가 시세보다 싸게 맺어졌습니다 — 나가서 다시 구하면 그 차이만큼을 더 내야 한다는 뜻입니다.<!--/prerender:renewalLead--></p>
@@ -173,6 +190,26 @@ const T = {
     loadError: "재계약 자료를 불러오지 못했습니다.",
     asOf: (day) => `아래는 기준일(${day})에 만든 값입니다.`,
     retry: "다시 시도",
+    ckHeading: "우리 단지 재계약 확인",
+    ckLabels: ["자치구", "단지", "전용면적", "종전 보증금(만원, 선택)", "요구 보증금(만원, 선택)"],
+    ckPick: "고르기",
+    ckBands: { under60: "60㎡ 미만", "60to85": "60~85㎡", over85: "85㎡ 이상" },
+    ckRest: "목록에 없는 평형(구 전체)",
+    ckCols: ["인하", "동결", "0~4.5%", "4.5~5%", "5% 초과", "계"],
+    ckRows: ["갱신요구권 사용", "표시 없음"],
+    ckFew: (n) => `표본 부족(${n}건)`,
+    ckUnit: "이 평형",
+    ckFall: (s, u) => `이 평형은 갱신이 ${s}건이 안 돼 ${u} 값입니다. `,
+    ckHead: (u, n) => `${u} 전세 재계약 ${n}건(최근 24개월) 가운데 `,
+    ckX: (k, p) => (p === null ? ` 가운데 ${k}건이` : `은 ${p}%가`),
+    ckRr: (a, x, b) => (x ? `갱신요구권을 쓴 ${a}건${x} 5% 언저리(4.5~5%)에서 맺어졌고, 5%를 넘은 것은 ${b}건입니다. ` : `갱신요구권을 쓴 갱신은 표본 부족(${a}건)입니다. `),
+    ckOt: (c, x) => (x ? `요구권 표시가 없는 ${c}건${x} 5%를 넘었습니다.` : `요구권 표시가 없는 갱신은 표본 부족(${c}건)입니다.`),
+    ckAsk: (x, u, e, k) => ` 요구액은 종전보다 ${x}% — ${u} 재계약 가운데 ${e}%보다 많이 올린 것은 ${k}건입니다.`,
+    ckNew: (m, n) => (m === null ? `같은 평형 신규 전세 ${n}건(최근 6개월) — 중앙값을 내기엔 적습니다.` : `같은 평형 신규 전세 중앙값 ${m}만원(최근 6개월 ${n}건).`),
+    ckScope: "전세 갱신만 셉니다(반전세·월세 섞인 갱신, 갱신 여부 미기재 제외).",
+    ckLegal:
+      "5% 상한은 세입자가 계약갱신요구권을 쓴 갱신에 적용됩니다(주택임대차보호법 제6조의3·제7조). 요구권은 한 번 쓸 수 있고, 집주인이 거절할 수 있는 사유가 법에 따로 있습니다. '표시 없음'은 신고에 사용 표시가 없다는 뜻이지 요구권을 못 쓴다는 뜻이 아닙니다. 이 화면은 신고된 계약을 센 것이며 법률 판단이 아닙니다 — 대한법률구조공단·주택임대차분쟁조정위원회에서 상담하세요.",
+    ckSource: "{{src:renewalCheck.ko}}",
   },
   en: {
     title: "Is renewing cheaper than moving?",
@@ -226,6 +263,26 @@ const T = {
     loadError: "Could not load the renewal data.",
     asOf: (day) => `Shown below is what this page was built with on ${day}. Some of it is in Korean only.`,
     retry: "Retry",
+    ckHeading: "Check your renewal",
+    ckLabels: ["District", "Complex", "Floor area", "Old deposit (10k won, opt.)", "Asked deposit (10k won, opt.)"],
+    ckPick: "Choose",
+    ckBands: { under60: "under 60m²", "60to85": "60–85m²", over85: "85m² and up" },
+    ckRest: "unit type not listed (whole district)",
+    ckCols: ["Down", "Same", "0–4.5%", "4.5–5%", "Over 5%", "Total"],
+    ckRows: ["Renewal right used", "No mark"],
+    ckFew: (n) => `Too few (${n})`,
+    ckUnit: "for this unit type",
+    ckFall: (s, u) => `This unit type has fewer than ${s} renewals, so these are figures ${u}. `,
+    ckHead: (u, n) => `Of ${n} jeonse renewals ${u} (last 24 months), `,
+    ckX: (k, p) => (p === null ? `${k}` : `${p}%`),
+    ckRr: (a, x, b) => (x ? `${x} of the ${a} that used the renewal right settled near the 5% cap (4.5–5%), and ${b} went above 5%. ` : `those that used the renewal right are too few (${a}). `),
+    ckOt: (c, x) => (x ? `Of the ${c} without that mark, ${x} went above 5%.` : `Those without that mark are too few (${c}).`),
+    ckAsk: (x, u, e, k) => ` Your ask is ${x}% over the previous deposit — ${k} renewals here rose by more than ${e}%.`,
+    ckNew: (m, n) => (m === null ? `${n} new jeonse leases for the same unit type (last 6 months) — too few for a median.` : `Median new jeonse for the same unit type: ${m} (10k won, last 6 months, ${n} leases).`),
+    ckScope: "Only jeonse renewals are counted (renewals mixed with monthly rent, and filings that do not say whether they are renewals, are excluded).",
+    ckLegal:
+      "The 5% cap applies to renewals where the tenant used the statutory renewal right (Housing Lease Protection Act, Articles 6-3 and 7). The right can be used once, and the law separately sets out grounds on which a landlord may refuse. 'No mark' means the filing does not mark the right as used, not that the right cannot be used. This screen counts filed contracts and is not a legal judgment — for advice, contact the Korea Legal Aid Corporation or the Housing Lease Dispute Mediation Committee.",
+    ckSource: "{{src:renewalCheck.en}}",
   },
 };
 
@@ -345,6 +402,77 @@ function renderDistrictLinks() {
     .join("");
 }
 
+// 재계약 확인기(#652 V3): 고른 구의 renewal-cells-{slug}.json 칸을 그린다. 문턱(min.show·min.ratio)은 빌드가 싣는 기존 상수다.
+const ck = { files: {}, slug: "", want: "", q: new URLSearchParams(location.search) };
+const $ = (id) => document.getElementById(id);
+const ckSum = (a) => a.reduce((x, y) => x + y, 0);
+const ckPct = (k, m) => Math.round((k / m) * 1000) / 10;
+// 구간 경계(정수 비교) - scripts/renewal-cells.ts 의 bandOf 와 같다(test/renewal-check.test.mjs 가 대조).
+const ckBand = (d, p) => (d < p ? 0 : d === p ? 1 : d * 1000 <= p * 1045 ? 2 : d * 1000 <= p * 1050 ? 3 : 4);
+
+function ckFill(id, opts, prev) {
+  const el = $(id);
+  el.innerHTML = opts.map(([v, label]) => `<option value="${escapeHtml(v)}">${escapeHtml(label)}</option>`).join("");
+  el.value = opts.some(([v]) => v === prev) ? prev : opts[0][0];
+  return el.value;
+}
+
+async function ckLoad(slug) {
+  ck.slug = slug;
+  if (slug && !(slug in ck.files)) ck.files[slug] = await loadJson(`renewal-cells-${slug}`).catch(() => null);
+  renderCheck(true);
+}
+
+function renderCheck(full) {
+  const slugs = cache.data?.slugs ?? {};
+  const f = ck.files[ck.slug];
+  const cells = f?.cells ?? {};
+  if (full === true) {
+    ckFill("check-gu", [["", t("ckPick")], ...Object.entries(slugs).map(([n, s]) => [s, n])], ck.slug);
+    $("check-apt-list").innerHTML = Object.keys(cells).map((a) => `<option value="${escapeHtml(a)}">`).join("");
+  }
+  const apt = $("check-apt").value;
+  const areas = cells[apt] ?? {};
+  const bands = t("ckBands");
+  const own = Object.keys(areas).map((k) => [k, `${k}㎡`]);
+  const area = ckFill("check-area", [...(own.length ? own : [["", t("ckPick")]]), ...Object.entries(bands).map(([k, l]) => [`b:${k}`, `${l} — ${t("ckRest")}`])], ck.want || $("check-area").value);
+  if (f) ck.want = "";
+  if (ck.slug) history.replaceState(null, "", `?${new URLSearchParams({ gu: ck.slug, apt, area })}`);
+  const gu = Object.keys(slugs).find((n) => slugs[n] === ck.slug);
+  let unit = t("ckUnit");
+  let text = "";
+  let row = areas[area];
+  if (area.startsWith("b:")) {
+    row = f?.fallback?.[area.slice(2)];
+    unit = `${locale === "en" ? "in " : ""}${gu} ${bands[area.slice(2)]}`;
+    text = t("ckFall")(f?.min.show, unit);
+  }
+  setTable("check-table", "");
+  setText("check-answer", "");
+  setText("check-new", "");
+  if (!row) return;
+  const { show, ratio } = f.min;
+  const rr = row.slice(0, 5);
+  const ot = row.slice(5, 10);
+  const x = (line, k) => (ckSum(line) < show ? "" : t("ckX")(num(k), ckSum(line) < ratio ? null : ckPct(k, ckSum(line))));
+  text += t("ckHead")(unit, num(ckSum(rr) + ckSum(ot))) + t("ckRr")(num(ckSum(rr)), x(rr, rr[3]), num(rr[4])) + t("ckOt")(num(ckSum(ot)), x(ot, ot[4]));
+  const old = Math.round(+$("check-old").value);
+  const ask = Math.round(+$("check-ask").value);
+  if (old > 0 && ask > 0) {
+    const b = ckBand(ask, old);
+    const above = rr.map((v, i) => v + ot[i]).slice(b < 2 ? 2 : b + (b < 4));
+    text += t("ckAsk")(ckPct(ask - old, old), unit, [0, 0, 4.5, 5, 5][b], num(ckSum(above)));
+  }
+  setText("check-answer", text);
+  const tr = (label, line) => {
+    const m = ckSum(line);
+    const tds = m < show ? `<td colspan="6"><span class="low-sample">${escapeHtml(t("ckFew")(num(m)))}</span></td>` : line.map((v) => `<td>${num(v)}${m < ratio ? "" : ` (${ckPct(v, m)}%)`}</td>`).join("") + `<td>${num(m)}</td>`;
+    return `<tr><th scope="row">${escapeHtml(label)}</th>${tds}</tr>`;
+  };
+  setTable("check-table", `<thead><tr><td></td>${t("ckCols").map((h) => `<th scope="col">${escapeHtml(h)}</th>`).join("")}</tr></thead><tbody>${tr(t("ckRows")[0], rr)}${tr(t("ckRows")[1], ot)}</tbody>`);
+  if (row.length > 10) setText("check-new", t("ckNew")(row[11] === null ? null : num(row[11]), num(row[10])));
+}
+
 function renderUpdated() {
   const updatedAt = cache.data?.updatedAt;
   if (!updatedAt) {
@@ -392,6 +520,11 @@ function applyLocale() {
   setText("district-note", t("districtNote"));
   setText("cap-note", t("capNote"));
   setText("district-links-heading", t("districtLinksHeading"));
+  setText("check-heading", t("ckHeading"));
+  ["gu", "apt", "area", "old", "ask"].forEach((k, i) => setText(`check-${k}-label`, t("ckLabels")[i]));
+  setText("check-scope", t("ckScope"));
+  setText("check-legal", t("ckLegal"));
+  setText("check-source", t("ckSource"));
   setText("nav-digest", t("navDigest"));
   setText("nav-news", t("navNews"));
   setText("nav-realestate", t("navRealestatePrices"));
@@ -416,6 +549,7 @@ function renderAll() {
   renderDistrictTable();
   renderWolse();
   renderDistrictLinks();
+  renderCheck(true);
   renderUpdated();
 }
 
@@ -435,6 +569,12 @@ async function main() {
     if (data?.table?.length) {
       cache.data = data;
       renderAll();
+      const gu = ck.q.get("gu");
+      if (Object.values(data.slugs ?? {}).includes(gu)) {
+        $("check-apt").value = ck.q.get("apt") ?? "";
+        ck.want = ck.q.get("area") ?? "";
+        ckLoad(gu);
+      }
     }
   } catch (error) {
     window.analytics?.event("exception", {
@@ -457,6 +597,12 @@ document.getElementById("lang-toggle").addEventListener("click", () => {
   renderAll();
   window.analytics?.event("language_switch", { site_language: locale });
 });
+
+$("check-gu").addEventListener("change", (e) => {
+  $("check-apt").value = "";
+  ckLoad(e.target.value);
+});
+for (const id of ["check-apt", "check-area", "check-old", "check-ask"]) $(id).addEventListener(id === "check-area" ? "change" : "input", renderCheck);
 
 main();
 </script>
