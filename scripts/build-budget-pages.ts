@@ -11,6 +11,7 @@ import { createWriteSet } from "./render-writes.ts";
 import { escapeHtml } from "./html-escape.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 import { requireSite, sitePath } from "./site-dir.ts";
+import { collectionNow } from "./collection-now.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const REALESTATE_PATH = REALESTATE_TEMPLATE_PATH; // 빈 표지가 있는 틀(scripts/realestate-template.html). 나가는 docs/realestate.html 이 아니다(#374).
@@ -170,16 +171,16 @@ export function buildBudgetPage(baseHtml, page, budget, loanBasis = null, mortga
 }
 
 /**
- * 렌더 시각. BUILD_NOW(ISO 8601)가 있으면 그 시각, 없으면 Date.now() — 미설정이면 전과 똑같이 돈다.
+ * 렌더 시각. BUILD_NOW(시간대를 가진 ISO 8601)가 있으면 그 시각, 없으면 Date.now() — 미설정이면 전과 똑같이 돈다.
  * 이 파일이 렌더 단계 다섯 중 Date.now()를 부르는 유일한 곳이라(정책대출 `since`), 같은 입력으로 두 번 렌더해
  * 견주는 도구(tools/golden, #236)가 시각을 고정할 자리가 여기 하나다. 읽을 수 없는 값은 조용히 현재 시각으로
  * 넘기지 않고 멈춘다 — 고정했다고 믿은 렌더가 오늘 값으로 나가는 것이 더 나쁘다.
+ * 파서는 수집 스크립트 시계 변수와 같은 하나다(`collectionNow`, #248 f) — 시간대 없는 값·날짜만·달력에 없는 날도 멈춘다.
+ * deploy.yml 이 넣는 `git log -1 --format=%cI`(오프셋을 가진 ISO)와 골든의 `…Z` 값은 그대로 읽힌다.
  */
 export function buildNowMs(env = process.env) {
-  if (!env.BUILD_NOW) return Date.now();
-  const t = Date.parse(env.BUILD_NOW);
-  if (Number.isNaN(t)) throw new Error(`BUILD_NOW를 읽을 수 없습니다: ${env.BUILD_NOW}`);
-  return t;
+  // 미설정은 `Date.now()` 그대로다 - `collectionNow` 의 `new Date()` 는 Date.now 모킹(tools/golden/lib/mock-date-now.ts, 시험)을 안 따른다.
+  return env.BUILD_NOW ? collectionNow("BUILD_NOW", env).getTime() : Date.now();
 }
 
 async function readCapDeals() {

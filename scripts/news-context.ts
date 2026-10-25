@@ -4,9 +4,9 @@ import { DISTRICT_SLUGS, districtFile } from "./district-slugs.ts";
 import {
   BASE_AREA_M2,
   CHANGE_MIN_COUNT,
-  MIN_SAMPLE,
   areaPrice,
   formatEok,
+  hasEnoughSample,
   monthLabel,
 } from "./realestate-format.ts";
 
@@ -70,8 +70,6 @@ function noteOf(metric, change, window, locale) {
   return parts.join(" · ");
 }
 
-const enoughSample = (metric) => Boolean(metric) && (metric.transactionCount ?? 0) >= MIN_SAMPLE;
-
 export function articleText(item) {
   return `${item?.title ?? ""} ${item?.preview ?? ""}`.replace(BYLINE, " ");
 }
@@ -93,7 +91,7 @@ type MetricOptions = { name?: string; nameEn?: string; slug?: string | null; win
 
 export function metricEntry(entry, kind, { name, nameEn, slug = null, window }: MetricOptions = {}) {
   const metric = entry?.[kind];
-  if (!enoughSample(metric)) return null;
+  if (!hasEnoughSample(metric)) return null;
 
   const common = { kind: "realestate", href: hrefFor(slug, kind) };
 

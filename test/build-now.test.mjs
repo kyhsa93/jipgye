@@ -23,3 +23,11 @@ test("BUILD_NOW가 있으면 Date.now()와 무관하게 그 시각이다", (t) =
 test("읽을 수 없는 BUILD_NOW는 현재 시각으로 넘기지 않고 멈춘다", () => {
   assert.throws(() => buildNowMs({ BUILD_NOW: "어제" }), /BUILD_NOW를 읽을 수 없습니다/);
 });
+
+test("BUILD_NOW도 수집 시계 변수와 같은 엄격도다: 시간대 없음·날짜만·달력에 없는 날은 멈추고, 오프셋 ISO(커밋 시각 %cI)는 그 시각이다 (#248 f)", () => {
+  for (const bad of ["2026-10-11T00:00:00", "2026-10-11", "2026-02-30T00:00:00Z", "2026-10-11 00:00:00Z"]) {
+    assert.throws(() => buildNowMs({ BUILD_NOW: bad }), /BUILD_NOW를 읽을 수 없습니다/, bad);
+  }
+  assert.equal(buildNowMs({ BUILD_NOW: "2026-10-26T00:17:30+09:00" }), Date.UTC(2026, 9, 25, 15, 17, 30));
+  assert.equal(buildNowMs({ BUILD_NOW: "2026-10-11T14:59Z" }), Date.UTC(2026, 9, 11, 14, 59));
+});

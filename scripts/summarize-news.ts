@@ -1,6 +1,7 @@
 import { writeFile, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { FALLBACK_CATEGORY, categoryOf } from "./categories.ts";
+import { collectionNow } from "./collection-now.ts";
 
 const dataDir = process.env.SUMMARY_DATA_DIR
   ? path.resolve(process.env.SUMMARY_DATA_DIR)
@@ -72,32 +73,16 @@ function kstDateString(date) {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(date);
 }
 
-const ISO_WITH_ZONE = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})$/;
-
 /**
  * 이 실행의 시각. 스크립트는 시계를 여기서 한 번만 읽고 `main()`의 날짜 비교(오늘 것인가)·저장 시각(`updatedAt`)·
  * 기록(`appendHistory`)이 같은 값을 쓴다 — 시계를 나눠 읽으면 자정(KST, UTC 15:00)에서 한 실행 안의 "오늘"이 갈린다(#258).
  * SUMMARY_NOW(시간대를 가진 ISO 8601, 예 `2026-10-11T14:59:59Z`)가 있으면 그 시각, 없으면 지금 — 미설정이면(빈 문자열 포함)
  * 전과 똑같이 돈다. 시험이 시각을 고정하려는 자리라 production 워크플로는 이 값을 설정하지 않는다.
  * 읽을 수 없는 값(시간대 없음·날짜만·달력에 없는 날)은 지금으로 넘기지 않고 멈춘다 — 고정했다고 믿은 실행이
- * 오늘 시각으로 돌면 시험이 조용히 시각에 의존하게 된다(`buildNowMs`와 같은 원칙, 다만 시간대 없는 값은 받지 않는다).
+ * 오늘 시각으로 돌면 시험이 조용히 시각에 의존하게 된다. 파서는 `collectionNow`(수집 스크립트·`BUILD_NOW`와 같은 하나, #248 f)다.
  */
 export function summaryNow(env = process.env) {
-  const raw = env.SUMMARY_NOW;
-  if (!raw) return new Date();
-  const m = ISO_WITH_ZONE.exec(raw);
-  const t = m ? Date.parse(raw) : NaN;
-  // Date.parse는 2월 30일을 3월 2일로 굴린다 — 달력에 없는 날은 오타이므로 구성 요소를 되짚어 막는다.
-  const [y, mo, d, h, mi, s] = m ? m.slice(1, 7).map((v) => Number(v ?? 0)) : [];
-  const roll = m ? new Date(Date.UTC(y, mo - 1, d, h, mi, s)) : null;
-  if (
-    Number.isNaN(t) ||
-    roll.getUTCFullYear() !== y || roll.getUTCMonth() !== mo - 1 || roll.getUTCDate() !== d ||
-    roll.getUTCHours() !== h || roll.getUTCMinutes() !== mi || roll.getUTCSeconds() !== s
-  ) {
-    throw new Error(`SUMMARY_NOW를 읽을 수 없습니다(시간대를 가진 ISO 8601만 받는다, 예 2026-10-11T14:59:59Z): ${raw}`);
-  }
-  return new Date(t);
+  return collectionNow("SUMMARY_NOW", env);
 }
 
 async function readJson(name) {
