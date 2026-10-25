@@ -41,7 +41,8 @@ function stubElement(faithful = false) {
 }
 
 // 구운 조각이 든 자리(#296). 빌드가 docs/index.html 에 구운 글자를 그대로 심어, 실패해도 그 글자가 남는지 본다.
-const BAKED_SPOTS = { "market-grid": "market", "realestate-grid": "realestate", "summary-box": "summary", "news-list": "news" };
+// #575 PR2: 시장 지표 표 → 값 한 줄(market-line), 요약·뉴스 다섯 건 → 뉴스 화면으로 가는 한 줄(news-link-row).
+const BAKED_SPOTS = { "market-line": "market", "realestate-grid": "realestate", "news-link-row": "news" };
 
 export async function loadIndexPage({ analytics, fetch: fetchImpl, search = "", serviceWorker, storage, baked = false, mutate } = {}) {
   const html = await readFile(path.join(root, "docs/index.html"), "utf8");
@@ -71,6 +72,7 @@ export async function loadIndexPage({ analytics, fetch: fetchImpl, search = "", 
   }
   const listeners = { window: {}, document: {} };
   const reloads = [];
+  const replaced = [];
 
   const listen = (where) => (type, fn) => (listeners[where][type] ||= []).push(fn);
   const fire = (where, type, event = {}) => {
@@ -96,6 +98,7 @@ export async function loadIndexPage({ analytics, fetch: fetchImpl, search = "", 
       pathname: "/",
       href: "https://x/",
       reload: () => reloads.push(true),
+      replace: (url) => replaced.push(url),
     },
     matchMedia: () => ({ matches: false, addEventListener() {} }),
     addEventListener: listen("window"),
@@ -162,7 +165,7 @@ export async function loadIndexPage({ analytics, fetch: fetchImpl, search = "", 
   sandbox.self = sandbox;
   sandbox.globalThis = sandbox;
   vm.createContext(sandbox);
-  new vm.Script(script + "\nglobalThis.__cache = cache; globalThis.__realestateSort = realestateSort; globalThis.__newsState = () => ({ cat: newsCategoryFilter, q: newsQuery });", { filename: "docs/index.html:inline" }).runInContext(sandbox);
+  new vm.Script(script + "\nglobalThis.__cache = cache; globalThis.__realestateSort = realestateSort;", { filename: "docs/index.html:inline" }).runInContext(sandbox);
 
   await new Promise((resolve) => setTimeout(resolve, 0));
   await new Promise((resolve) => setTimeout(resolve, 0));
@@ -172,6 +175,7 @@ export async function loadIndexPage({ analytics, fetch: fetchImpl, search = "", 
     baked: bakedHtml,
     fire,
     reloads: () => reloads.length,
+    replaced: () => [...replaced],
     byId: (id) => sandbox.document.getElementById(id),
     scrollTo: (index) => {
       const observer = observed[0];

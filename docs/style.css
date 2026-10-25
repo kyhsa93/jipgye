@@ -418,34 +418,6 @@
     font-size: var(--fs-xs);
     margin-top: 2px;
   }
-  .news-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 10px;
-  }
-  .news-chip {
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--tap);
-    background: var(--card);
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 4px 14px;
-    font-size: var(--fs-xs);
-    font-family: inherit;
-    cursor: pointer;
-  }
-  .news-chip[aria-pressed="true"] {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--accent-on);
-  }
-  .news-chip-count {
-    opacity: 0.7;
-    margin-left: 4px;
-  }
   .news-preview {
     color: var(--muted);
     font-size: var(--fs-sm);
@@ -1984,6 +1956,12 @@
   html:lang(en) .method-callout .m-ko, html:not(:lang(en)) .method-callout .m-en {
     display: none;
   }
+  html:lang(en) #archive-section .m-ko, html:not(:lang(en)) #archive-section .m-en {
+    display: none;
+  }
+  html:not(:lang(en)) #content-notice.m-en {
+    display: none;
+  }
   .question-nav {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -2514,6 +2492,20 @@
     .complex-price-table .as-filed .sub + .sub::before {
       content: " · ";
     }
+  }
+  .market-line {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--fs-sm);
+    font-variant-numeric: tabular-nums;
+  }
+  .news-link-row {
+    margin: 4px 0 0;
+  }
+  .news-link-row a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
   }
 }
 @layer utilities {

@@ -46,14 +46,14 @@ const between = (html, open, close) => {
  * - `mutate`: 스크립트 본문을 바꿔 끼우는 함수(변이 증빙용).
  * - `notice()`: 실패 알림(#content 안 한 줄)의 글자·단추 글자·단추. 없으면 null.
  */
-export async function loadNewsPage({ news, summary, category = null, locale = "ko", analytics, file = "docs/news.html", fetch: fetchImpl, baked = false, mutate } = {}) {
+export async function loadNewsPage({ news, summary, category = null, locale = "ko", analytics, file = "docs/news.html", fetch: fetchImpl, baked = false, mutate, search = "", history } = {}) {
   const html = await readFile(path.join(root, file), "utf8");
   const script0 = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
   const script = mutate ? mutate(script0) : script0;
 
   const store = { lang: locale };
   const byId = new Map();
-  const data = { news, summary };
+  const data = { news, summary, "news-history": history?.news, "summary-history": history?.summary };
   const bakedHtml = {};
   if (baked) {
     const spots = {
@@ -112,7 +112,7 @@ export async function loadNewsPage({ news, summary, category = null, locale = "k
       removeItem: (k) => delete store[k],
     },
     navigator: { language: locale },
-    location: { search: "", origin: "https://x", pathname: "/", href: "https://x/" },
+    location: { search, origin: "https://x", pathname: "/", href: "https://x/" },
     matchMedia: () => ({ matches: false, addEventListener() {} }),
     addEventListener() {},
     removeEventListener() {},

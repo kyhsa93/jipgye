@@ -48,7 +48,8 @@ test("시세 계열 전부가 같은 안내를 갖는다", async () => {
   for (const file of pages) {
     const html = await readFile(path.join(root, SITE, file), "utf8");
     const callout = html.indexOf('class="method-callout');
-    const firstData = html.search(/<section id="(market|overall)-section"/);
+    // index 의 첫 데이터 구획은 실거래 표다 - 시장 지표 구획은 한 줄 값으로 바꿨다(#575 PR2).
+    const firstData = html.search(/<section id="(market|overall|realestate)-section"/);
     assert.notEqual(callout, -1, `${SITE}/${file}에 집계 기준 안내가 없다`);
     assert.ok(callout < firstData, `${SITE}/${file}: 안내가 첫 데이터 섹션보다 뒤에 있다`);
     assert.match(html.slice(callout, firstData), /href="\.\/method\.html(#four-weeks(-en)?)?"/, `${SITE}/${file}: method.html로 가지 않는다`);

@@ -24,7 +24,7 @@ import path from "node:path";
 export const TAP_PAIRS = [
   [".page-nav a", 67],
   [".sub-nav a", 55],
-  [".news-chip", 1, "script"],
+  // .news-chip(메인 스크립트가 그리던 뉴스 칩, 하한 1·"script")은 메인 뉴스 칸과 함께 칩도 CSS 규칙도 지웠다(#575 PR2).
   [".lang-toggle", 1], // 금리 4장이 쓰던 넷이 #577 B2 로 빠져 첫 화면 하나다(5 -> 1).
   [".icon-toggle", 62],
 ];

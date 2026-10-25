@@ -8,14 +8,7 @@
 // **정규화 없이** 문자열로 맞댄다(#355 와 같은 이유: class 가 스크립트와 같아야 스타일이 붙는다).
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import path from "node:path";
-import { loadIndexPage } from "./helpers/index-page.mjs";
-import { applyPrerender, summaryHtml } from "../scripts/prerender.ts";
-
-const root = path.resolve(import.meta.dirname, "..");
-const read = (rel) => readFile(path.join(root, rel), "utf8");
-const readJson = (name) => read(`docs/data/${name}.json`).then(JSON.parse);
+import { summaryHtml } from "../scripts/prerender.ts";
 
 const cat = (key, name, extra = {}) => ({ key, name, nameEn: key, lineKo: `${name} 한 줄`, lineEn: `${key} line`, fallbackReason: null, ...extra });
 const highlight = (n, extra = {}) => ({ title: `핵심 ${n}`, link: `https://e.com/${n}`, source: `출처${n}`, textKo: `핵심 ${n} 본문`, textEn: `top ${n}`, ...extra });
@@ -31,40 +24,8 @@ const CASES = {
   "한국 날짜가 UTC 와 다른 시각": { ...BASE, updatedAt: "2026-10-17T15:30:00Z", highlights: [], categories: [cat("realestate", "부동산")] },
 };
 
-/** 실제 index.html 스크립트에 요약 JSON 을 먹여 #summary-box 에 들어간 마크업을 꺼낸다(안쪽 + 끝에 붙는 .summary-meta). */
-async function scriptBox(summary) {
-  let release;
-  const gate = new Promise((r) => (release = r));
-  const page = await loadIndexPage({
-    fetch: async (url) => {
-      const name = String(url).split("/data/")[1].split(".json")[0];
-      if (name !== "summary") return { ok: false, json: async () => ({}) };
-      await gate; // 상자에 appendChild 를 걸 때까지 요약 응답을 붙들어 둔다
-      return { ok: true, json: async () => summary };
-    },
-  });
-  const box = page.byId("summary-box");
-  let meta = null;
-  box.appendChild = (el) => (meta = el);
-  release();
-  for (let i = 0; i < 400 && !(String(box.innerHTML).trim() && meta); i += 1) await new Promise((r) => setTimeout(r, 5));
-  assert.ok(String(box.innerHTML).trim(), "스크립트가 상자를 그리지 않았다");
-  assert.ok(meta, "스크립트가 .summary-meta 를 붙이지 않았다");
-  // appendChild 된 노드를 마크업 글자로 옮긴다: textContent 는 직렬화기가 & < > 를 이스케이프한다.
-  const esc = (s) => String(s).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-  return `${box.innerHTML}<span class="${meta.className}">${esc(meta.textContent)}</span>`;
-}
-
-/** 구운 쪽 글자를 스크립트 글자와 맞춘다: " 는 텍스트 노드에서 &quot; 든 " 든 같은 DOM 이므로 스크립트 쪽 표기로, href 의 & 도 마찬가지. */
-const asScript = (html) => html.replaceAll("&quot;", '"').replace(/href="([^"]*)"/g, (_, h) => `href="${h.replaceAll("&amp;", "&")}"`);
-
-for (const [label, summary] of Object.entries(CASES)) {
-  test(`구운 요약 상자(React 래퍼)가 스크립트가 그리는 상자와 글자까지 같다: ${label} (#352)`, async () => {
-    const drawn = await scriptBox(summary);
-    // 정규화 없음: class·구조·글이 모두 같아야 한다.
-    assert.equal(asScript(summaryHtml(summary)), drawn, "React 쪽 구운 상자가 스크립트 상자와 다르다");
-  });
-}
+// #575 PR2: 메인의 요약 상자와 그 스크립트(renderSummary)를 뉴스 화면으로 옮기며 지웠다 - 구운 상자 = 스크립트 상자 대조(케이스 일곱)와
+// "index.html 상자 틀에 placeholder 가 없다" 시험은 맞댈 상대가 없어져 지웠다. summaryHtml 조각은 어느 장에도 꽂지 않고 남아 있다(정리는 #575 PR4).
 
 test("구운 상자의 뼈대 class 는 스크립트와 같은 이름이다 - 분류 라벨 + 줄 div, 끝에 .summary-meta, `<p>` 목록이 아니다 (#352)", () => {
   const html = summaryHtml(CASES["하이라이트 하나 · 폴백 있음"]);
@@ -81,14 +42,4 @@ test("분류가 없으면 굽지 않는다 - 스크립트도 분류 없이는 �
   }
 });
 
-test("index.html 의 상자 틀은 placeholder class 없이 구워진다 - 스크립트가 떼는 class 가 구운 쪽에 남으면 폭이 달라진다 (#352)", async () => {
-  const html = await read("docs/index.html");
-  const open = html.match(/<div[^>]*id="summary-box"[^>]*>/)?.[0];
-  assert.ok(open, "#summary-box 를 찾지 못했다");
-  assert.ok(!/class="[^"]*\bplaceholder\b/.test(open), `구운 상자 틀에 placeholder class 가 있다: ${open}`);
-  // 상자에 구운 내용이 없을 때(요약이 아직 없을 때)에만 placeholder 가 맞다. 구운 내용이 있는 틀에는 없어야 한다.
-  assert.ok(html.indexOf("<!--prerender:summary-->") > 0 && html.includes("summary-category"), "구운 상자가 비어 있다");
-  assert.ok(applyPrerender(html, { summary: summaryHtml(CASES["하이라이트 없음 · 폴백 없음"]) }).includes('id="summary-box"><!--prerender:summary--><div class="summary-category">'), "상자 틀 바로 안쪽이 분류 div 로 시작하지 않는다");
-});
-
-// (#507) "커밋된 구운 index.html 의 상자가 summary.json 으로 다시 찍은 것과 같다 - 데이터가 바뀌면 다시 구워야 한다 (#352)" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/summary-box.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
+// (#507) "커밋된 구운 index.html 의 상자가 summary.json 으로 다시 찍은 것과 같다 - 데이터가 바뀌면 다시 구워야 한다 (#352)" 는 tools/health 로 옮겼다가, 메인 요약 상자가 없어져(#575 PR2) 그 짝과 test/fixture-site.test.mjs 의 고정 데이터 짝을 함께 지웠다.

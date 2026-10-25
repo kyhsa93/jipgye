@@ -258,8 +258,9 @@ test("데이터를 못 받으면 어느 파일이 실패했는지 남는다", as
 
   const failures = analytics.calls.filter(([name]) => name === "exception");
   const fatal = failures.filter(([, params]) => params.fatal);
-  assert.equal(fatal.length, 4, `fatal 4건이어야 한다: ${JSON.stringify(failures)}`);
-  for (const key of ["market", "news", "summary", "realestate"]) {
+  // 메인이 받는 오늘 자료는 둘이다 - 뉴스·AI 요약은 뉴스 화면으로 옮겼다(#575 PR2).
+  assert.equal(fatal.length, 2, `fatal 2건이어야 한다: ${JSON.stringify(failures)}`);
+  for (const key of ["market", "realestate"]) {
     assert.ok(
       fatal.some(([, params]) => params.description.includes(`load ${key}:`)),
       `${key} 실패가 안 남았다`
@@ -274,7 +275,8 @@ test("섹션은 화면에 들어왔을 때 한 번만 센다", async () => {
   const analytics = recorder();
   const page = await loadIndexPage({ analytics });
 
-  assert.equal(page.observedCount(), 5, "다섯 섹션 모두 관찰이 걸려야 한다");
+  // 실거래 표와 돈의 값 한 줄 둘이다 - 요약·뉴스·지난 기록은 뉴스 화면으로 옮겼다(#575 PR2).
+  assert.equal(page.observedCount(), 2, "두 섹션 모두 관찰이 걸려야 한다");
   assert.equal(analytics.calls.filter(([n]) => n === "section_view").length, 0, "보기 전엔 안 센다");
 
   page.scrollTo(0);
@@ -285,7 +287,7 @@ test("섹션은 화면에 들어왔을 때 한 번만 센다", async () => {
   assert.equal(views.length, 2, "같은 섹션을 다시 봐도 한 번이다");
   assert.deepEqual(
     views.map(([, params]) => params.section_name),
-    ["market", "realestate"]
+    ["realestate", "market"]
   );
   assert.equal(views[0][1].view_type, "today");
 });
@@ -322,11 +324,12 @@ test("두 페이지와 서비스워커가 모두 analytics.js를 물고 있다",
   assert.ok(sw.includes('"./analytics.js"'), "서비스워커 셸에 analytics.js가 빠졌다");
 });
 
-test("요약이 폴백된 날은 메인에도 그 사실을 표시한다", async () => {
-  const html = await readFile(path.join(root, `${SITE}/index.html`), "utf8");
-  assert.ok(html.includes("summaryFallbackNote"), "안내 문구 사전 항목이 없다");
+// AI 요약은 뉴스 화면에만 있다(#575 PR2) - 폴백 안내도 그 화면이 지킨다.
+test("요약이 폴백된 날은 뉴스 화면에 그 사실을 표시한다", async () => {
+  const html = await readFile(path.join(root, `${SITE}/news.html`), "utf8");
+  assert.ok(html.includes("fallbackNote"), "안내 문구 사전 항목이 없다");
   assert.ok(
-    html.includes("categories.some((c) => c.fallbackReason)"),
+    html.includes("shown.some((c) => c.fallbackReason)"),
     "fallbackReason을 화면 표시에 쓰지 않는다"
   );
   for (const dict of ["일부 항목은 검증에서", "Some summaries failed verification"]) {

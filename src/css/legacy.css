@@ -640,37 +640,7 @@ ul.news-list {
   margin-top: 2px;
 }
 
-.news-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.news-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap);
-  background: var(--card);
-  color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 4px 14px;
-  font-size: var(--fs-xs);
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.news-chip[aria-pressed="true"] {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-on);
-}
-
-.news-chip-count {
-  opacity: 0.7;
-  margin-left: 4px;
-}
+/* 분야 거르기 칩(.news-filters·.news-chip)은 메인 뉴스 칸과 함께 지웠다(#575 PR2) - 분야는 뉴스 화면의 2층 탭이 가른다. */
 
 .news-preview {
   color: var(--muted);
@@ -2792,6 +2762,17 @@ html:not(:lang(en)) .method-callout .m-en {
   display: none;
 }
 
+/* 뉴스 화면의 지난 기록 폼(#575 PR2, 메인에서 옮겨 왔다)도 같은 방식이다 - 그 장의 인라인 스크립트에 번역 표를 더하지 않는다. */
+html:lang(en) #archive-section .m-ko,
+html:not(:lang(en)) #archive-section .m-en {
+  display: none;
+}
+
+/* 뉴스 화면의 영어 기계번역 안내(#575 PR2)도 구워 둔 채 한국어 화면에서는 가린다. */
+html:not(:lang(en)) #content-notice.m-en {
+  display: none;
+}
+
 /* 무엇을 알고 싶은지로 들어가는 입구.
  *
  * 1층 탭 넷은 우리가 데이터를 어디서 받는지의 목록이다 - 다이제스트·뉴스·시세·금리.
@@ -3556,4 +3537,23 @@ details.fold > summary {
   .complex-price-table .as-filed .sub + .sub::before {
     content: " · ";
   }
+}
+
+/* 돈의 값 한 줄과 뉴스 화면으로 가는 한 줄(#575 PR2). 메인은 질문 입구라 이 둘은 보조 정보다 - 표·차트 대신
+ * 값만 작은 글씨로 두고, 뉴스·AI 요약은 링크 한 줄로 뉴스 화면에 보낸다. 링크 높이는 --tap(44px) 이상이다. */
+.market-line {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.news-link-row {
+  margin: 4px 0 0;
+}
+
+.news-link-row a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
 }

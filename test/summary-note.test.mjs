@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
-import { applyPrerender, newsSummaryHtml, summaryHtml } from "../scripts/prerender.ts";
+import { newsSummaryHtml, summaryHtml } from "../scripts/prerender.ts";
 import { FALLBACK_NOTE_KO, hasFallback } from "../scripts/summary-note.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -26,15 +26,15 @@ const boxOf = (html, marker) => {
   return html.slice(a + open.length, b);
 };
 
-test("안내 줄의 한국어 글자는 두 틀(뉴스 틀 fallbackNote · index.html summaryFallbackNote)의 한국어 표와 글자까지 같다 (#350)", async () => {
-  const [news, index] = await Promise.all([read("docs/news.html"), read("docs/index.html")]);
+// 메인(index.html)의 요약 상자·summaryFallbackNote 는 #575 PR2 에서 뉴스 화면으로 옮기며 지웠다 - 틀은 뉴스 틀 하나다.
+test("안내 줄의 한국어 글자는 뉴스 틀 fallbackNote 의 한국어 표와 글자까지 같다 (#350)", async () => {
+  const news = await read("docs/news.html");
   // 표는 한국어(ko) 다음 영어(en) 순서다 - 첫 번째가 한국어.
   const ko = (html, key) => html.match(new RegExp(`${key}: "([^"]+)"`))?.[1];
   assert.equal(ko(news, "fallbackNote"), FALLBACK_NOTE_KO, "뉴스 틀의 한국어 안내 문구가 구운 문구와 다르다");
-  assert.equal(ko(index, "summaryFallbackNote"), FALLBACK_NOTE_KO, "index.html 의 한국어 안내 문구가 구운 문구와 다르다");
   // 마크업(class)도 화면 스크립트와 같아야 한다 - 스타일이 class 로 붙는다.
   assert.ok(news.includes('<div class="summary-note">${escapeHtml(t("fallbackNote"))}</div>'), "뉴스 틀 renderSummary 의 안내 마크업이 바뀌었다");
-  assert.ok(index.includes('<div class="summary-fallback-note">${t("summaryFallbackNote")}</div>'), "index.html renderSummary 의 안내 마크업이 바뀌었다");
+  assert.ok(!(await read("docs/index.html")).includes("summaryFallbackNote"), "메인에 요약 안내 문구가 다시 생겼다");
 });
 
 test("폴백이 있는 날 뉴스 장의 구운 #summary-box 에 안내 줄이 있고, 없는 날엔 없다 (#350)", async () => {
@@ -52,16 +52,6 @@ test("폴백이 있는 날 뉴스 장의 구운 #summary-box 에 안내 줄이 �
   // 분야 필터 없는 허브(news.html)는 보이는 분류 전부를 보므로 하나라도 폴백이면 줄이 있다.
   assert.ok(newsSummaryHtml(WITH).endsWith(note));
   assert.ok(!newsSummaryHtml(WITHOUT).includes("summary-note"));
-});
-
-test("폴백이 있는 날 index.html 의 구운 #summary-box 에 안내 줄이 있고, 없는 날엔 없다 (#350)", async () => {
-  const base = await read("docs/index.html");
-  const note = `<div class="summary-fallback-note">${FALLBACK_NOTE_KO}</div>`;
-  const withNote = boxOf(applyPrerender(base, { summary: summaryHtml(WITH) }), "summary");
-  const without = boxOf(applyPrerender(base, { summary: summaryHtml(WITHOUT) }), "summary");
-  // 안내 줄은 분류 줄 뒤, `.summary-meta`(#352) 앞이다 - 화면 스크립트가 안내를 붙인 뒤 meta 를 붙이는 순서.
-  assert.ok(withNote.includes(`${note}<span class="summary-meta">`) && withNote.endsWith("</span>"), "index 의 안내 줄이 분류 줄 뒤·.summary-meta 앞에 없다");
-  assert.ok(!without.includes("fallback-note"), "폴백 없는 날에 안내 줄이 구워졌다");
 });
 
 test("hasFallback 은 화면 스크립트와 같은 truthy 검사다 (#350)", () => {

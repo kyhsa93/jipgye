@@ -139,8 +139,7 @@ test("몇 개가 남았는지 소리로도 알린다", async () => {
   input.value = "강남";
   input.dispatch("input");
   assert.match(p.byId("realestate-status").textContent, /1/, "검색 결과 건수를 안 알린다");
-
-  assert.ok(p.byId("news-status").textContent.length > 0, "뉴스 건수를 안 알린다");
+  // 뉴스 건수 알림(news-status)은 뉴스 칸과 함께 뉴스 화면으로 옮겼다(#575 PR2).
 });
 
 test("메인 화면 추이 카드에도 양 축 눈금과 짚을 자리를 둔다", async () => {
@@ -239,18 +238,9 @@ test("메인 화면은 잠정 주가 없으면 점선을 긋지 않고 안내도
   assert.equal(p.byId("realestate-history-note").textContent, "", "잠정 주가 없는데 점선 안내가 남았다");
 });
 
-test("시장 지표에는 잠정 구간이 없다", async () => {
+// 시장 지표(환율·기준금리) 추이 차트는 메인에서 뺐다 - 값 한 줄만 남는다(#575 PR2). 차트를 그리는 함수는 실거래 추이가 계속 쓴다.
+test("메인에는 시장 지표 추이 격자가 없다", async () => {
   const p = await page();
-  const grid = p.byId("history-grid").innerHTML;
-
-  assert.ok(!grid.includes('spark pending'), "신고 기한과 무관한 지표에 점선을 그었다");
-});
-
-test("시장 지표 추이도 같은 모양으로 그린다", async () => {
-  const p = await page();
-  const grid = p.byId("history-grid").innerHTML;
-
-  assert.ok(grid.includes("polyline"), "시장 지표 추이가 그려지지 않았다");
-  assert.match(grid, /class="axis y"/);
-  assert.match(grid, /class="axis x[^"]*"/);
+  assert.equal(p.byId("history-grid").innerHTML, "", "시장 지표 추이를 다시 그렸다");
+  assert.doesNotMatch(await readFile(path.join(root, "docs/index.html"), "utf8"), /id="history-grid"|market-history/);
 });

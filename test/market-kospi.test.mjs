@@ -71,7 +71,8 @@ test("견줄 기록이 없으면 지어내지 않는다", async () => {
   assert.equal(fx.direction, null);
 });
 
-test("화면이 종가 날짜와 환율 증감을 함께 적는다", async () => {
+// 메인의 돈의 값은 표·차트가 아니라 값 한 줄이다(#575 PR2) - 증감·시행일 칸은 뺐다.
+test("화면이 기준금리·환율을 한 줄로 적고 코스피는 싣지 않는다", async () => {
   const page = await loadIndexPage({ fetch: async () => ({ ok: false, json: async () => ({}) }) });
   page.app.renderMarket({
     kospi: { value: "6,788.88", change: "-123.49", direction: "FALLING", asOf: "8/28" },
@@ -79,10 +80,9 @@ test("화면이 종가 날짜와 환율 증감을 함께 적는다", async () =>
     baseRate: { value: "3.00", effectiveFrom: "2026년 08월 27일" },
   });
 
-  const html = page.byId("market-grid").innerHTML;
-  assert.doesNotMatch(html, /6,788\.88/, "코스피가 첫 화면에 남았다 - 증시 뉴스 장으로 옮겼다(#56)");
-  assert.match(html, /-3\.63/, "환율 증감 칸이 비어 있다");
-  assert.match(html, /전일 수집분 대비/, "환율 증감의 기준을 안 적었다");
+  const text = page.byId("market-line").textContent;
+  assert.doesNotMatch(text, /6,788\.88/, "코스피가 첫 화면에 남았다 - 증시 뉴스 장으로 옮겼다(#56)");
+  assert.equal(text, "한국은행 기준금리 3.00% · 원/달러 환율 1,377.94원");
 });
 
 test("코스피는 증시 뉴스 장에 종가 날짜와 함께 실린다 (#56)", async () => {
