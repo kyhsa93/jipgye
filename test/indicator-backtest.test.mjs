@@ -121,8 +121,8 @@ test("R-ONE은 다섯 달씩 잘라 부르고, 받은 꼬리는 저장된 계열
 test("전세자금대출·정기예금 평균금리를 ECOS에서 같은 방식으로 받는다 (#577)", async () => {
   const { ECOS_SERIES, fetchEcos } = await import("../scripts/fetch-indicators.ts");
   // 신규취급액 표(121Y006)에는 전세자금대출 항목이 없다 - 잔액 기준 표(121Y015)의 것을 쓴다.
-  assert.deepEqual(ECOS_SERIES.jeonse_loan_rate, { stat: "121Y015", item: "BECBLB020210" });
-  assert.deepEqual(ECOS_SERIES.deposit_rate, { stat: "121Y002", item: "BEABAA211" });
+  assert.deepEqual(ECOS_SERIES.jeonse_loan_rate, { stat: "121Y015", item: "BECBLB020210", since: "201501" });
+  assert.deepEqual(ECOS_SERIES.deposit_rate, { stat: "121Y002", item: "BEABAA211", since: "200001" });
   assert.deepEqual(ECOS_SERIES.mortgage_rate, { stat: "121Y006", item: "BECBLA0302" }, "기존 계열은 그대로");
   const asked = [];
   // 2026-10-25 sample 키로 받은 121Y015 응답 모양(값 둘) + 빈 값 한 줄.

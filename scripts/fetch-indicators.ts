@@ -13,6 +13,8 @@ import { yearMonthOf } from "./realestate-slots.ts";
  * 처음 계열은 조사 때 받은 것을 저장소에 두었고(raw/indicators/series.json), 매일은 최근
  * REFRESH_MONTHS만 다시 받아 덮는다(늦게 고쳐지는 값 반영). 한 계열을 못 받아도 나머지와
  * 어제 값으로 간다 - 지표 하나 때문에 데일리 수집 전체가 멈추면 안 된다.
+ * since 가 있는 계열은 저장된 첫 달이 since 보다 늦으면 since 부터 한 번 받아 메운다(#587).
+ * 창(REFRESH_MONTHS)보다 오래된 달은 없는 달만 더하고 저장된 값을 바꾸지 않는다.
  *
  * KB 두 계열(KB_SERIES, ECOS 가 싣는 KB국민은행 지수)은 예외다(#588 3단계). 재배포 허락을 확인하지
  * 못해 원값을 저장소에 더 쌓지 않는다: 매일 전체 이력을 ECOS 에서 다시 받아 커밋하지 않는 cache/ 아래
@@ -44,7 +46,7 @@ export const KB_SERIES = {
 export const KB_HISTORY_FROM = "198601";
 
 /** ECOS 계열(KB 제외). item은 경로에 그대로 붙는 항목 코드들. */
-export const ECOS_SERIES = {
+export const ECOS_SERIES: Record<string, { stat: string; item: string; since?: string }> = {
   base_rate: { stat: "722Y001", item: "0101000" },
   mortgage_rate: { stat: "121Y006", item: "BECBLA0302" },
   ktb3: { stat: "721Y001", item: "5020000" },
@@ -57,8 +59,8 @@ export const ECOS_SERIES = {
   // #577: 전세 vs 월세 비교가 금감원 공시(rates.json) 대신 읽을 평균금리. 판정 후보가 아니다 -
   // indicator-backtest 의 후보 목록은 그대로다.
   // 전세자금대출은 신규취급액 표(121Y006)에 항목이 없고 잔액 기준 표(121Y015)에만 있다 - 기준이 다르다고 적어야 한다.
-  jeonse_loan_rate: { stat: "121Y015", item: "BECBLB020210" },
-  deposit_rate: { stat: "121Y002", item: "BEABAA211" },
+  jeonse_loan_rate: { stat: "121Y015", item: "BECBLB020210", since: "201501" },
+  deposit_rate: { stat: "121Y002", item: "BEABAA211", since: "200001" },
 };
 
 /**
@@ -119,10 +121,15 @@ export async function fetchEcos({ stat, item }, from, to, key, { fetchImpl = fet
     .filter(([month, value]) => /^\d{6}$/.test(month) && Number.isFinite(value));
 }
 
-/** 받은 꼬리를 저장된 계열 위에 덮는다. 고쳐진 달은 새 값이 이긴다. */
-export function merge(stored = [], fresh = []) {
+/** 저장된 첫 달이 since 보다 늦으면 since 부터, 아니면 최근 REFRESH_MONTHS 만 받는다. */
+export function ecosFrom(spec: { since?: string }, firstStored: string | undefined, to: string) {
+  return spec.since && (!firstStored || firstStored > spec.since) ? spec.since : shiftMonth(to, -REFRESH_MONTHS);
+}
+
+/** 받은 꼬리를 저장된 계열 위에 덮는다. 창(windowStart) 안의 고쳐진 달은 새 값이 이기고, 창 밖은 없는 달만 더한다. */
+export function merge(stored = [], fresh = [], windowStart = "") {
   const byMonth = new Map(stored);
-  for (const [month, value] of fresh) byMonth.set(month, value);
+  for (const [month, value] of fresh) if (month >= windowStart || !byMonth.has(month)) byMonth.set(month, value);
   return [...byMonth].sort(([a], [b]) => (a < b ? -1 : 1));
 }
 
@@ -170,12 +177,13 @@ export async function collect({
   }
   const to = yearMonthOf(now);
   const from = shiftMonth(to, -REFRESH_MONTHS);
+  const firstOf = (name: string) => stored.series?.[name]?.[0]?.[0];
   // 저장분에 이미 있는 kb_* 는 그대로 옮기기만 한다(정리 PR 전까지). 새 값은 여기 들어오지 않는다.
   const series = { ...stored.series };
   const failed = [];
 
   const jobs = [
-    ...Object.entries(ECOS_SERIES).map(([name, spec]) => [name, () => fetchEcos(spec, from, to, key, { fetchImpl })] as const),
+    ...Object.entries(ECOS_SERIES).map(([name, spec]) => [name, () => fetchEcos(spec, ecosFrom(spec, firstOf(name), to), to, key, { fetchImpl })] as const),
     ...Object.entries(RONE_SERIES).map(([name, spec]) => [name, () => fetchRone(spec, from, to, { fetchImpl })] as const),
   ];
   // 하나씩 부른다 - 두 기관 모두 키 없는 호출이라 몰아서 부르면 막힐 수 있다.
@@ -183,7 +191,7 @@ export async function collect({
     try {
       const fresh = await job();
       if (!fresh.length) throw new Error("빈 응답");
-      series[name] = merge(stored.series?.[name], fresh);
+      series[name] = merge(stored.series?.[name], fresh, from);
     } catch (error) {
       failed.push(`${name}(${error.message})`);
     }
