@@ -235,6 +235,12 @@ export function readSource(sourceCommit, cwd, prereg = PREREG_COMMIT) {
   return { complexFiles: complex.map((p) => ({ json: show(p) })), rawSlots };
 }
 
+/** 크기 문턱: 5MB 를 넘으면 실패(정확히 5MB 는 통과), 1MB 를 넘으면 경고. */
+export function checkSize(len, log = console.log) {
+  if (len > SIZE_FAIL) fail(`gz 가 ${len}B 로 5MB 를 넘는다 - 쓰지 않는다`);
+  if (len > SIZE_WARN) log(`::warning::원장 gz 가 ${len}B 로 1MB 를 넘었다(예상 ≤0.5MB)`);
+}
+
 const kstToday = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
 
 /** 한 번의 실행. 반환값의 status: written | unchanged | dry-run. 실패는 예외. prereg 는 시험이 임시 저장소에서만 바꾼다. */
@@ -258,8 +264,7 @@ export function run({ month, licenseSale, licenseRent, dryRun = false, sourceCom
   const hash = canonicalHash(jsonl);
   const meta = JSON.parse(jsonl.slice(0, jsonl.indexOf("\n"))).meta;
   log(`[ledger] S=${s} source=${commit} 정본 sha256=${hash} gz=${gz.length}B counts=${JSON.stringify(meta.counts)}`);
-  if (gz.length > SIZE_FAIL) fail(`gz 가 ${gz.length}B 로 5MB 를 넘는다 - 쓰지 않는다`);
-  if (gz.length > SIZE_WARN) log(`::warning::원장 gz 가 ${gz.length}B 로 1MB 를 넘었다(예상 ≤0.5MB)`);
+  checkSize(gz.length, log);
 
   if (existing) {
     const before = canonicalHash(existing);

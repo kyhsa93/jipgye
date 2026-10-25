@@ -5,7 +5,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { gunzipSync } from "node:zlib";
-import { band, bucketOf, buildLedger, canonicalHash, gzipLedger, run, validateLedger } from "../scripts/ledger-snapshot.ts";
+import { band, bucketOf, buildLedger, canonicalHash, checkSize, gzipLedger, run, validateLedger } from "../scripts/ledger-snapshot.ts";
 import { complexFiles, rawSlots } from "./ledger-fixtures/source.mjs";
 
 // 월간 원장 스냅샷 (#482, 설계 판정 6396016952 ⑤ 합격선 1·2). 픽스처와 임시 git 저장소로만 돈다 - 데이터 값·날짜에 따라 갈리지 않는다.
@@ -153,6 +153,21 @@ test("재실행: 11-02·03 에 돌려도 같은 커밋·같은 해시라 아무�
   writeFileSync(file, tampered);
   assert.throws(() => go(r), /정본 해시가 다르다/);
   assert.ok(readFileSync(file).equals(tampered), "실패할 때 파일을 건드리지 않는다");
+});
+
+test("멈춤: PREREG 커밋이 소스의 조상이 아니면, complex-price 가 25개가 아니면 실패한다. 크기는 5MB 초과 실패·1MB 초과 경고", () => {
+  const r = repo();
+  const files = sourceFiles();
+  commit(r.dir, files, "chore: 데일리 데이터 갱신 2026-11-01");
+  assert.throws(() => go(r, { prereg: commit(r.dir, {}, "docs: 사전 등록 v2") }), /조상이 아니다/);
+  const r2 = repo();
+  delete files["docs/data/complex-price-da.json"];
+  commit(r2.dir, files, "chore: 데일리 데이터 갱신 2026-11-01");
+  assert.throws(() => go(r2), /complex-price 파일이 24개다/);
+  const [warned, MB] = [[], 1024 * 1024];
+  for (const len of [MB, MB + 1, 5 * MB]) checkSize(len, (m) => warned.push(m));
+  assert.equal(warned.length, 2);
+  assert.throws(() => checkSize(5 * MB + 1, quiet), /5MB 를 넘는다/);
 });
 
 test("dry_run: source_commit 은 dry_run 에서만 받고 40자리 전체여야 한다. 결과는 out-dir 에만 쓴다", () => {
