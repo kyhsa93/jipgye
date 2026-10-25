@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import path from "node:path";
 
@@ -19,7 +19,16 @@ function trackedPaths() {
 // 있어야 하고 fetch-rates는 키가 없으면 예외로 끝나서, 키 없이 도는 이 로컬 갱신 전체를
 // 멈춘다. 그 둘은 daily-update.yml의 full 실행이 시크릿을 넣어 부른다. 빌더는
 // 커밋돼 있는 실거래 원본(raw/)으로 다시 계산하므로 여기서도 그대로 돈다.
+// 월간 원장 스냅샷(#482)은 매일 돌지 않는다 - `--ledger` 를 줄 때만 부르고, 그때는 수집·빌드·커밋 없이 그것만 돈다.
+// 나머지 인자(--month·--license-sale·--license-rent·--dry-run …)는 그대로 넘긴다. 실제 스냅샷은 ledger-snapshot.yml 이 dispatch로 만든다.
+const LEDGER = "node scripts/ledger-snapshot.ts";
+
 async function main() {
+  if (process.argv.includes("--ledger")) {
+    const [cmd, script] = LEDGER.split(" ");
+    execFileSync(cmd, [script, ...process.argv.slice(2).filter((a) => a !== "--ledger")], { cwd: repoRoot, stdio: "inherit" });
+    return;
+  }
   run("node scripts/fetch-news.ts");
   run("node scripts/fetch-market.ts");
   run("node scripts/fetch-price-index.ts");
