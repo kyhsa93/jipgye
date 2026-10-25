@@ -1,5 +1,5 @@
 # 정기 실행 누락 탐지 (#322). `daily-update` 의 `schedule` 실행이 **통째로 빠져도** 아무도 모르던 자리를 막는다.
-# (#530 으로 Deploy site 의 마지막 성공을 보는 셋째 검사가 맨 아래 스텝에 붙었다. 아래 서술은 첫 검사 것이다.)
+# (#530 으로 Deploy site 의 마지막 성공을 보는 셋째 검사, #657 로 데이터 진척을 보는 넷째 검사가 아래 스텝에 붙었다. 아래 서술은 첫 검사 것이다.)
 # 재는 것 하나: **지난 36시간(미끄러지는 창) 안에 `daily-update` 의 schedule run 이 cron 수만큼 떴는가.**
 # 모자라면 이 워크플로가 실패로 끝난다 - 빨간 run 과 GitHub 의 실패 알림이 저장소 안에서 우는 자리다(새 서비스·계정·비용 0, #322 범위 3).
 #
@@ -88,3 +88,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/check-schedule-runs.ts --check=deploy
+      # 넷째 검사 (#657 V11): 「run 은 초록, 진척은 0」. 위 셋은 실행을 보고, 이것은 체크아웃한 main 의 데이터를 본다(수집기는 못 받으면 어제 값으로 간다).
+      # 소스마다 주기(하루·영업일·월·반기·수동 월간)에 맞춘 문턱 - 확인 단계는 ::warning:: 만(run 초록), 알림 단계를 넘은 소스가 있으면 실패한다. 문턱과 근거는 그 스크립트 머리 주석.
+      # API·토큰이 필요 없다(파일만 읽는다). `!cancelled()` 인 이유는 위와 같다.
+      - name: 데이터가 소스 주기대로 앞으로 나가는지 본다
+        if: ${{ !cancelled() }}
+        run: node scripts/check-data-progress.ts

@@ -10,6 +10,7 @@ import { MIN_SAMPLE } from "./realestate-format.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 import { stampSources } from "./source-lines.ts";
 import { requireSite, siteLabel, sitePath } from "./site-dir.ts";
+import { collectStatus } from "./check-data-progress.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -144,6 +145,9 @@ async function main() {
   const record = await readJson("record-high");
   const change = await readJson("district-change");
   const recordText = (key) => (record?.[key]?.ko ? escapeHtml(record[key].ko) : null);
+  // method 「수집 상태」 줄: full 실행 기록(market-history)과 공시가격 진척 상태(raw, #660). 없으면 줄을 안 그린다.
+  const progress = await readFile(path.join(root, "raw/official-price/status/progress.json"), "utf8").then(JSON.parse).catch(() => null);
+  const collect = collectStatus(await readJson("market-history"), progress);
 
   const writes = createWriteSet();
   // 넷째 칸(선택)은 틀 경로다. 있으면 path_ 는 나가는 장이고, 틀을 채운 뒤 인라인 스크립트 주석을 떼어 path_ 에 쓴다(#374).
@@ -242,8 +246,8 @@ async function main() {
         indicatorTable: indicators?.table?.ko ?? null,
       },
     ],
-    // 손으로 쓴 장이라 채울 자리는 없다. 표의 머리글 방향·이름만 같은 길로 단다.
-    [label("method.html"), at("method.html"), {}],
+    // 손으로 쓴 장이다. 채울 자리는 「수집 상태」 줄 하나(#657 V11, 빌드 때 데이터에서)이고, 표의 머리글 방향·이름은 같은 길로 단다.
+    [label("method.html"), at("method.html"), { collectKo: collect?.ko ?? null, collectEn: collect?.en ?? null }],
     [
       label("cancelled-deals.html"),
       at("cancelled-deals.html"),
