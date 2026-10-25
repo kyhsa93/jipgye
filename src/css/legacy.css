@@ -1909,6 +1909,27 @@ html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-catego
   }
 }
 
+/* 영어 화면(#557 후속): 읽는 줄이 없어(한국어만) 그만큼(1.5em + 간격 10px) 짧고, 영어 라벨이 길어 줄이 접히는 폭도 다르다(Chrome 실측, 예금·적금):
+ * 4줄 344~415, 3줄 416~560, 2줄 561~1023, 1줄 1024 이상. 343 이하는 한국어 규칙 그대로다(예금 4줄 206 · 적금 238.5 로 장마다 달라 한 값으로 못 잡는다).
+ * 스크립트가 html lang 을 데이터가 오기 전에 정한다. 선택자가 속성 하나 더 무거워 한국어 규칙 뒤·앞 순서와 무관하게 이긴다. */
+@media (min-width: 344px) {
+  html[lang="en"]:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+    --ctl-extra: -10px;
+  }
+}
+
+@media (min-width: 344px) and (max-width: 415px) {
+  html[lang="en"]:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+    --ctl-rows: 4;
+  }
+}
+
+@media (min-width: 693px) and (max-width: 1023px) {
+  html[lang="en"]:has(meta[name="rates-category"][content="deposit"], meta[name="rates-category"][content="saving"]) .controls:empty {
+    --ctl-rows: 2;
+  }
+}
+
 .sector-filter label {
   display: inline-flex;
   align-items: center;

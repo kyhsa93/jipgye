@@ -366,6 +366,10 @@
       loan: { key: "min", dir: "asc" },
     },
   };
+  // 컨트롤 높이 예약(CSS :empty)은 이 meta 의 값으로 첫 탭을 고른다(#557). ?tab= 이 다른 탭이면 그 탭으로 맞춘다 - 예금·적금과 대출은 높이가 다르다.
+  document.querySelector('meta[name="rates-category"]').setAttribute("content", state.category);
+  // 영어는 읽는 줄이 없고 줄 수도 다르다 - 예약 CSS 가 html[lang=en] 으로 가른다(언어를 데이터가 오기 전에 알린다). renderMeta 가 나중에 같은 값을 다시 쓴다.
+  document.documentElement.lang = locale;
 
   function isSavingCategory(key) {
     return SAVING_CATEGORIES.has(key);
@@ -993,6 +997,7 @@
 
   function renderAll() {
     if (!cache.rates) return renderFailure();
+    reserveHidden(false);
     renderMeta();
     renderTabs();
     renderControls();
@@ -1090,10 +1095,13 @@
   // 규칙 2: 구운 표를 그대로 두고 그 위에 알림 한 줄(실패 + 구운 기준일 + 다시 시도). 규칙 3: 구운 표(기본 탭·12개월·유형 전체·검색어 없음·기본 금액)와 다른 보기를
   // 주소(?tab·term·type·q·amt)로 열었으면 구운 표는 그 보기의 답이 아니라서 표 자리를 실패 문구 + 재시도로 바꾸고 기준일은 "-"다.
   // 추이 구역은 구운 내용이 없는 빈 자리라 실패 문구 + 재시도(규칙 1)다. 칸을 갈아 끼우지 않고 안내 칸 하나만 바꿔야 격자가 넉 칸 높이(580px)로 남는다(#323).
-  const retry = () => { window.analytics?.event("load_retry", { rate_category: state.category }); main(); };
+  const retry = () => { window.analytics?.event("load_retry", { rate_category: state.category }); reserveHidden(false); main(); };
   const show = (id, message, wrap, retryId) => window.loadState.showFailure(document.getElementById(id), { message, retryLabel: t("retry"), wrap, retryId, onRetry: retry });
   const showTrendFailure = () => show("history-placeholder", t("historyLoadError"), undefined, "load-retry-history");
+  // 탭 줄·컨트롤은 받은 데이터로 채운다(#542 의 :empty 높이 예약이 그 자리를 미리 잡는다). 못 받으면 채울 것이 없으니 예약을 걷는다(#558) - hidden 이면 min-height·여백이 같이 빠진다. 다시 시도를 누르면 예약을 되돌려(눌렀을 때의 이동은 입력 직후라 CLS 에서 빠진다) 채울 때 밀리지 않게 한다.
+  const reserveHidden = (hidden) => { for (const id of ["tabs", "controls"]) document.getElementById(id).hidden = hidden; };
   function renderFailure() {
+    reserveHidden(true);
     renderMeta();
     showTrendFailure();
     if (state.category === DEFAULT_CATEGORY && state.term === 12 && !(state.rateType + state.query) && !initialAmount) {
