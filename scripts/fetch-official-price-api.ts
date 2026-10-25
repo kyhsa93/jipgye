@@ -10,9 +10,13 @@
  * 출력(stdout·GITHUB_STEP_SUMMARY)은 집계뿐이다 - 키·URL·응답 원문·호 단위 값·지번 키가 없다(C1).
  */
 import { appendFileSync } from "node:fs";
-import { readFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
 import { parseArgs } from "node:util";
-import { ApiFatalError, ApiValidationError, DEFAULT_BASE, DEFAULT_DAILY_BUDGET, DEFAULT_END_DATE, DEFAULT_START_DATE, MIN_GAP_MS, normalizeKey, runCollector, summaryLines } from "./official-price-api.ts";
+import {
+  ApiFatalError, ApiValidationError, DEFAULT_BASE, DEFAULT_DAILY_BUDGET, DEFAULT_END_DATE, DEFAULT_START_DATE, MIN_GAP_MS, PROGRESS_FILE, STALL_FAIL_DAYS,
+  nextProgress, normalizeKey, progressLines, readProgress, runCollector, stallVerdict, summaryLines,
+} from "./official-price-api.ts";
 import { runExplore } from "./official-price-explore.ts";
 import { loadTargets } from "./official-price-targets.ts";
 
@@ -76,8 +80,26 @@ async function main() {
     softDeadlineMs: startedAt + runtimeMin * 60000, deadlineMs: startedAt + (runtimeMin + 15) * 60000,
   });
   const lines = summaryLines(summary, budget);
-  emit(lines);
-  if (summary.stopReason) console.log(`::notice::공시가격 수집 중단(정상 종료): ${summary.stopReason}`);
+  if (summary.status === "complete") { emit(lines); return; }
+
+  // 진척 상태(#68 V1): 끝난 지번이 0인 실행을 ::warning 으로 올리고, 마지막 진척에서 STALL_FAIL_DAYS 일이 지나면
+  // GITHUB_OUTPUT stall=1 을 낸다 - 워크플로의 마지막 스텝이 그것을 보고 실패한다(커밋 스텝은 이미 상태 파일을 올린 뒤).
+  const outDir = v["out-dir"];
+  const nowDate = env.OFFICIAL_PRICE_NOW ? new Date(env.OFFICIAL_PRICE_NOW) : new Date(); // 시험만 시각을 준다
+  const progress = nextProgress(await readProgress(outDir), summary, nowDate.toISOString());
+  const verdict = stallVerdict(progress, nowDate);
+  await mkdir(path.dirname(path.join(outDir, PROGRESS_FILE)), { recursive: true });
+  await writeFile(path.join(outDir, PROGRESS_FILE), JSON.stringify(progress, null, 2) + "\n");
+  emit([...lines, ...progressLines(progress, verdict)]);
+  const errs = Object.keys(summary.errCodes ?? {}).join(", ") || "없음";
+  if (verdict.level === "ok") {
+    if (summary.stopReason) console.log(`::notice::공시가격 수집 중단(정상 종료): ${summary.stopReason}`);
+  } else {
+    const since = progress.lastProgressAt ? `마지막 진척 ${verdict.days}일 전` : `진척 0 실행 ${progress.zeroProgressRuns}회`;
+    console.log(`::warning::공시가격 수집 진척 0(${since}): 중단 ${summary.stopReason ?? "없음"}, 오류 분류 ${errs}`);
+  }
+  if (verdict.level === "fail" && env.GITHUB_OUTPUT) appendFileSync(env.GITHUB_OUTPUT, "stall=1\n");
+  if (verdict.level === "fail") console.log(`공시가격 수집 정지: 마지막 진척에서 ${STALL_FAIL_DAYS}일 이상(이 실행은 상태 파일을 커밋한 뒤 실패로 끝난다).`);
 }
 
 main().catch((e) => {

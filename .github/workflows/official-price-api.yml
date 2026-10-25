@@ -12,6 +12,9 @@
 # (digest-pipeline을 3시간 넘게 잡으면 일일 수집이 막힌다) - 대신 푸시 경합은 scripts/push-docs.sh의 rebase 재시도가 받는다.
 # collect 모드의 호출 예산 입력은 9,000으로 자른다(scripts/fetch-official-price-api.ts, explore는 기존대로).
 # 일일 수집(UTC 23:07·03:07·07:07·11:07) 뒤인 14:17 UTC(한국 23:17)에 돈다.
+# 진척 감시(#68 V1): 수집기가 raw/official-price/status/progress.json 에 lastProgressAt(끝난 지번이 생긴 마지막 실행 시각)을 남긴다.
+# 진척 0 실행은 ::warning(요약에 오류 분류·표본), 마지막 진척에서 3일 이상이면 커밋 뒤 마지막 스텝이 실패한다(GitHub 실패 알림 - 워치독과 같은 경로).
+# 2026-10-23~25 처럼 「run 초록, 진척 0」이 조용히 사흘 가는 것을 막는다. 원인이 바깥(포털·망)이어도 매일 울리는 것은 3일 뒤부터다.
 name: Official price API
 
 on:
@@ -79,6 +82,7 @@ jobs:
           test "$(git -C raw-at-commit rev-parse HEAD)" = "$RAW_COMMIT" || { echo "raw-at-commit이 입력 커밋과 다르다" >&2; exit 1; }
 
       - name: 수집 (시크릿은 이 스텝에서만, 집계만 출력)
+        id: collect
         env:
           PUBLIC_DATA_PORTAL_API_KEY: ${{ secrets.PUBLIC_DATA_PORTAL_API_KEY }}
           RAW_COMMIT: ${{ inputs.raw_commit || '3a921516fac7ad3a275a9e64e1865b594b650a43' }}
@@ -102,3 +106,9 @@ jobs:
         run: |
           if [ "$MODE" = "explore" ]; then echo "탐색 모드: 커밋하지 않음"; exit 0; fi
           ./scripts/push-docs.sh "chore: 공시가격 API 수집" raw/official-price
+
+      - name: 진척 정지 판정 (마지막 진척에서 3일 이상이면 실패)
+        if: ${{ steps.collect.outputs.stall == '1' }}
+        run: |
+          echo "::error::공시가격 수집이 3일 이상 진척 0이다 - 요약의 오류 분류·표본을 보고 #68 에 올릴 것"
+          exit 1

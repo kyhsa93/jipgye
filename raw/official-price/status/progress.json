@@ -1,0 +1,13 @@
+{
+  "lastRunAt": "2026-10-25T17:40:38.000Z",
+  "lastProgressAt": "2026-10-22T21:53:51.000Z",
+  "zeroProgressRuns": 3,
+  "doneParcels": 2094,
+  "targetParcels": 6764,
+  "lastFinishedNow": 0,
+  "lastCalls": 5,
+  "lastStopReason": "연속 호출 실패 5회",
+  "lastErrCodes": {
+    "TypeError/UND_ERR_CONNECT_TIMEOUT": 5
+  }
+}

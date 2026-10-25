@@ -7,7 +7,8 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { OFFICIAL_PRICE_LICENSE, OFFICIAL_PRICE_LICENSE_CHECKED } from "../scripts/official-price-license.ts";
 import {
-  ApiFatalError, ApiValidationError, MAX_PAGES_PER_PARCEL, OWNER_KEY_RE, buildPart, checkLicense, foldParcel, loadState, mergeParts, projectItem, runCollector, summaryLines,
+  ApiFatalError, ApiValidationError, MAX_PAGES_PER_PARCEL, OWNER_KEY_RE, PROGRESS_FILE, STALL_FAIL_DAYS, buildPart, checkLicense, foldParcel, loadState, mergeParts, nextProgress,
+  progressLines, projectItem, readProgress, runCollector, safeMsg, stallVerdict, summaryLines,
 } from "../scripts/official-price-api.ts";
 import { assertDerived } from "../scripts/official-price-fold.ts";
 import { loadTargets, orderTargets } from "../scripts/official-price-targets.ts";
@@ -562,10 +563,10 @@ test("기본 이용허락 상수(코드): 문자열이 제한 없음이고 확�
   assert.throws(() => checkLicense({ now: new Date(at.getTime() + 366 * 86400000) }), /365일/);
 });
 
-test("워크플로: 건너뛰기 스텝과 이용허락 저장소 변수가 없다(상수로 옮김) - schedule은 바로 수집한다, 스텝은 6개", async () => {
+test("워크플로: 건너뛰기 스텝과 이용허락 저장소 변수가 없다(상수로 옮김) - schedule은 바로 수집한다, 스텝은 7개(#68 V1 진척 정지 판정 포함)", async () => {
   const text = await readFile(path.join(root, ".github/workflows/official-price-api.yml"), "utf8");
   const steps = text.split(/\n    steps:\n/)[1].split(/\n      - /);
-  assert.equal(steps.length, 6);
+  assert.equal(steps.length, 7);
   assert.doesNotMatch(text, /id: gate|steps\.gate|github\.event_name|vars\./);
   assert.doesNotMatch(text, /OFFICIAL_PRICE_LICENSE[A-Z_]*:/, "이용허락 값을 env로 받지 않는다");
   assert.ok(steps.findIndex((x) => /secrets\./.test(x)) > 0);
@@ -697,4 +698,167 @@ test("워크플로: official-price-api.yml은 dispatch+schedule, 별도 concurre
   // daily-update는 건드리지 않았다: 이 워크플로의 이름이 거기 없다
   const daily = await readFile(path.join(root, ".github/workflows/daily-update.yml"), "utf8");
   assert.doesNotMatch(daily, /official-price-api/);
+});
+
+// ---- 진척 감시(#68 V1): 「run 초록, 진척 0」 ----
+
+const connectTimeout = async () => { const e = new TypeError("fetch failed"); e.cause = { code: "UND_ERR_CONNECT_TIMEOUT" }; throw e; };
+
+test("V1: 연결 단계 실패(UND_ERR_CONNECT_TIMEOUT) 5회 연속이면 정상 종료하되 요약에 분류·표본(응답 없음·걸린 시간)이 남는다, 쓰기 없음", async () => {
+  const ts = [1, 2, 3, 4, 5, 6, 7].map((n) => target(n));
+  const out = await tmp();
+  try {
+    const r = await runCollector(base({ targets: targetsOf(ts), outDir: out, baseUrl: "http://127.0.0.1:9", fetchImpl: connectTimeout }));
+    assert.equal(r.status, "stopped");
+    assert.equal(r.stopReason, "연속 호출 실패 5회");
+    assert.equal(r.calls, 5);
+    assert.equal(r.finishedNow, 0);
+    assert.deepEqual(r.errCodes, { "TypeError/UND_ERR_CONNECT_TIMEOUT": 5 });
+    assert.match(r.errSamples["TypeError/UND_ERR_CONNECT_TIMEOUT"], /^getBrHsprcInfo 응답 없음\(연결 단계\), \d+ms 뒤 끊김$/);
+    const text = summaryLines(r, 1000).join("\n");
+    assert.match(text, /오류 표본\(분류별 첫 건\): TypeError\/UND_ERR_CONNECT_TIMEOUT = getBrHsprcInfo 응답 없음/);
+    assert.ok(!text.includes(FAKE_KEY));
+    assert.deepEqual(await listFiles(out), []);
+  } finally { await rm(out, { recursive: true, force: true }); }
+});
+
+test("V1: HTTP 오류·결과코드 오류는 상태·응답 종류·바이트·결과코드·포털 문구를 표본으로 남기고, 키는 문구에서 지운다", async () => {
+  const ts = [1, 2, 3, 4, 5].map((n) => target(n));
+  const xml = `<OpenAPI_ServiceResponse><cmmMsgHeader><returnAuthMsg>SERVICE ERROR ${FAKE_KEY}</returnAuthMsg></cmmMsgHeader></OpenAPI_ServiceResponse>`;
+  const json = JSON.stringify({ response: { header: { resultCode: "99", resultMsg: "UNKNOWN_ERROR <script>" }, body: {} } });
+  let n = 0;
+  const fetchImpl = async () => { n += 1; return n % 2 ? new Response(xml, { status: 502 }) : new Response(json, { status: 200 }); };
+  const out = await tmp();
+  try {
+    const r = await runCollector(base({ targets: targetsOf(ts), outDir: out, baseUrl: "http://127.0.0.1:9", fetchImpl }));
+    assert.equal(r.stopReason, "연속 호출 실패 5회");
+    assert.equal(r.errSamples["HTTP 502"], `getBrHsprcInfo HTTP 502, XML·HTML ${xml.length}B, 결과코드 ?, 문구 SERVICE ERROR [키 가림]`);
+    assert.equal(r.errSamples["결과코드 99"], `getBrHsprcInfo HTTP 200, JSON ${json.length}B, 결과코드 99, 문구 UNKNOWN_ERROR script`);
+    assert.ok(!summaryLines(r, 1000).join("\n").includes(FAKE_KEY));
+  } finally { await rm(out, { recursive: true, force: true }); }
+});
+
+test("V1: safeMsg 는 허용 문자만 남기고 80자로 자르며 키 조각을 가린다", () => {
+  assert.equal(safeMsg("SERVICE_KEY_IS_NOT_REGISTERED_ERROR"), "SERVICE_KEY_IS_NOT_REGISTERED_ERROR");
+  assert.equal(safeMsg("a\"b<c>&d 등록되지 않은 키"), "abcd 등록되지 않은 키");
+  assert.equal(safeMsg("x".repeat(200)).length, 80);
+  assert.equal(safeMsg(`echo ${FAKE_KEY}`, FAKE_KEY), "echo [키 가림]");
+});
+
+test("V1 (#660 판정): `+ / =` 가 든 키는 원문·%2B/%2F 인코딩·일부 조각 어느 꼴로 돌아와도 8자 이상 조각이 남지 않는다", () => {
+  const key = "Ab3dEf7h+Ij1kLm9/Op2qRs5Tu8vWx==";
+  const enc = encodeURIComponent(key); // + -> %2B, / -> %2F, = -> %3D
+  assert.match(enc, /%2B.*%2F/);
+  const keyN = key.replace(/[^A-Za-z0-9]/g, "");
+  const fragments = (m) => { const n = m.replace(/[^A-Za-z0-9]/g, ""); const bad = []; for (let i = 0; i + 8 <= keyN.length; i += 1) if (n.includes(keyN.slice(i, i + 8))) bad.push(keyN.slice(i, i + 8)); return bad; };
+  const cases = [
+    `SERVICE ERROR ${key}`, `key=${enc} denied`, `echo ${enc.replace(/%2B/g, "%2b").replace(/%2F/g, "%2f")}`, `<${key.slice(5, 20)}>`, `x ${key.slice(9)} y`,
+    `pre${key}post`, `${key.replace(/\+/g, " ").replace(/\//g, "_")}`,
+  ];
+  for (const raw of cases) {
+    for (const k of [key, enc]) { // 키 시크릿이 원문이든 인코딩된 꼴이든(normalizeKey 가 푼다)
+      const out = safeMsg(raw, k);
+      assert.deepEqual(fragments(out), [], `${raw} -> ${out}`);
+      assert.ok(out.includes("[키 가림]"), `${raw} -> ${out}`);
+    }
+  }
+  assert.equal(safeMsg(`SERVICE ERROR ${key} 끝`, key), "SERVICE ERROR [키 가림] 끝");
+  assert.equal(safeMsg(`key=${enc} denied`, enc), "key[키 가림] denied");
+  // 키와 무관한 문구는 그대로
+  assert.equal(safeMsg("LIMITED_NUMBER_OF_SERVICE_REQUESTS_EXCEEDS_ERROR", key), "LIMITED_NUMBER_OF_SERVICE_REQUESTS_EXCEEDS_ERROR");
+});
+
+test("V1: 진척 상태 - 진척이 있으면 lastProgressAt 갱신·연속 0 초기화, 없으면 이어 센다. 판정은 2일 경고·3일 실패", () => {
+  const t0 = "2026-10-22T21:53:51.000Z";
+  const ok = nextProgress(null, { finishedNow: 335, doneNow: 2094, targetParcels: 6764, calls: 8997, stopReason: "호출 예산 소진", errCodes: {} }, t0);
+  assert.equal(ok.lastProgressAt, t0);
+  assert.equal(ok.zeroProgressRuns, 0);
+  assert.equal(stallVerdict(ok, new Date(t0)).level, "ok");
+  let p = ok;
+  const zero = { finishedNow: 0, doneNow: 2094, targetParcels: 6764, calls: 5, stopReason: "연속 호출 실패 5회", errCodes: { "TypeError/UND_ERR_CONNECT_TIMEOUT": 5 } };
+  const at = (d) => new Date(Date.parse(t0) + d * 86400000);
+  p = nextProgress(p, zero, at(1).toISOString());
+  assert.deepEqual([p.lastProgressAt, p.zeroProgressRuns, p.lastStopReason], [t0, 1, "연속 호출 실패 5회"]);
+  assert.deepEqual(stallVerdict(p, at(1)), { level: "warning", days: 1 });
+  p = nextProgress(p, zero, at(2).toISOString());
+  assert.deepEqual(stallVerdict(p, at(2)), { level: "warning", days: 2 });
+  p = nextProgress(p, zero, at(3).toISOString());
+  assert.equal(STALL_FAIL_DAYS, 3);
+  assert.deepEqual(stallVerdict(p, at(3)), { level: "fail", days: 3 });
+  assert.match(progressLines(p, stallVerdict(p, at(3)))[0], /진척 0: 마지막 진척 2026-10-22T21:53:51.000Z\(3일 전\), 진척 0 실행 3회 연속/);
+  // 다시 진척하면 바로 ok
+  const back = nextProgress(p, { ...zero, finishedNow: 1 }, at(4).toISOString());
+  assert.deepEqual([back.zeroProgressRuns, stallVerdict(back, at(4)).level], [0, "ok"]);
+  // 마지막 진척 시각을 모르면 진척 0 실행 횟수로 판정한다
+  let u = nextProgress(null, zero, at(0).toISOString());
+  assert.equal(u.lastProgressAt, null);
+  assert.equal(stallVerdict(u, at(0)).level, "warning");
+  u = nextProgress(nextProgress(u, zero, at(1).toISOString()), zero, at(2).toISOString());
+  assert.deepEqual(stallVerdict(u, at(2)), { level: "fail", days: null });
+});
+
+test("CLI V1: 진척 0 실행은 ::warning 과 상태 파일을 남기고 종료 코드 0, 마지막 진척 3일 이상이면 GITHUB_OUTPUT stall=1", async () => {
+  const { dir, uni } = await cliWorld();
+  const mock = await startMock(uni, { failKeys: new Set(uni.keys()) });
+  const ghOut = path.join(dir, "gh-output");
+  try {
+    // 2일 전 진척: 경고만
+    await mkdir(path.join(dir, "out", "status"), { recursive: true });
+    await writeFile(path.join(dir, "out", PROGRESS_FILE), JSON.stringify({ lastProgressAt: "2026-10-24T00:00:00.000Z", zeroProgressRuns: 1 }));
+    const w = await runCli(dir, mock.base, [], { GITHUB_OUTPUT: ghOut, OFFICIAL_PRICE_NOW: "2026-10-26T12:00:00Z" });
+    assert.equal(w.code, 0, w.stderr);
+    assert.match(w.stdout, /::warning::공시가격 수집 진척 0\(마지막 진척 2일 전\): 중단 없음, 오류 분류 결과코드 99/);
+    assert.doesNotMatch(w.stdout, /::notice::공시가격 수집 중단/);
+    assert.match(w.summary, /오류 표본\(분류별 첫 건\): 결과코드 99 = getBrHsprcInfo HTTP 200, JSON \d+B, 결과코드 99, 문구 OK/);
+    assert.match(w.summary, /진척 0 실행 2회 연속/);
+    assert.equal(await readFile(ghOut, "utf8").catch(() => ""), "");
+    const p1 = await readProgress(path.join(dir, "out"));
+    assert.deepEqual([p1.lastProgressAt, p1.zeroProgressRuns, p1.lastFinishedNow, p1.lastRunAt], ["2026-10-24T00:00:00.000Z", 2, 0, "2026-10-26T12:00:00.000Z"]);
+    // 하루 더: 마지막 진척 3일 전 -> stall=1 (실패는 워크플로 마지막 스텝이 낸다)
+    const f = await runCli(dir, mock.base, [], { GITHUB_OUTPUT: ghOut, OFFICIAL_PRICE_NOW: "2026-10-27T12:00:00Z" });
+    assert.equal(f.code, 0, f.stderr);
+    assert.match(f.stdout, /::warning::공시가격 수집 진척 0\(마지막 진척 3일 전\)/);
+    assert.equal(await readFile(ghOut, "utf8"), "stall=1\n");
+    assert.equal((await readProgress(path.join(dir, "out"))).zeroProgressRuns, 3);
+    for (const r of [w, f]) assert.ok(![r.stdout, r.stderr, r.summary].join("\n").includes(FAKE_KEY));
+    // 상태 파일은 집계만: 지번 키·호 값이 없다
+    const raw = await readFile(path.join(dir, "out", PROGRESS_FILE), "utf8");
+    for (const needle of ["11110", "FAKEPK", "가짜", FAKE_KEY]) assert.ok(!raw.includes(needle), needle);
+  } finally { await mock.close(); await rm(dir, { recursive: true, force: true }); }
+});
+
+test("CLI V1: 진척이 있는 실행은 lastProgressAt 을 그 시각으로 고치고 경고·stall 이 없다", async () => {
+  const { dir, uni } = await cliWorld();
+  const mock = await startMock(uni, { limitAfter: 3 });
+  const ghOut = path.join(dir, "gh-output");
+  try {
+    await mkdir(path.join(dir, "out", "status"), { recursive: true });
+    await writeFile(path.join(dir, "out", PROGRESS_FILE), JSON.stringify({ lastProgressAt: "2026-10-01T00:00:00.000Z", zeroProgressRuns: 9 }));
+    const r = await runCli(dir, mock.base, [], { GITHUB_OUTPUT: ghOut, OFFICIAL_PRICE_NOW: "2026-10-26T12:00:00Z" });
+    assert.equal(r.code, 0, r.stderr);
+    assert.doesNotMatch(r.stdout, /::warning::/);
+    assert.match(r.stdout, /::notice::공시가격 수집 중단\(정상 종료\): 결과코드 22/);
+    assert.equal(await readFile(ghOut, "utf8").catch(() => ""), "");
+    const p = await readProgress(path.join(dir, "out"));
+    assert.deepEqual([p.lastProgressAt, p.zeroProgressRuns, p.lastFinishedNow], ["2026-10-26T12:00:00.000Z", 0, 1]);
+  } finally { await mock.close(); await rm(dir, { recursive: true, force: true }); }
+});
+
+test("워크플로 V1: 수집 스텝 id=collect, 마지막 스텝이 stall 출력을 보고 실패한다(시크릿·입력 보간 없음), 커밋 스텝 뒤에 있다", async () => {
+  const text = await readFile(path.join(root, ".github/workflows/official-price-api.yml"), "utf8");
+  const steps = text.split(/\n    steps:\n/)[1].split(/\n      - /);
+  assert.match(steps[4], /id: collect\n/);
+  assert.match(steps[5], /push-docs\.sh/);
+  const last = steps[6];
+  assert.match(last, /if: \$\{\{ steps\.collect\.outputs\.stall == '1' \}\}/);
+  assert.match(last, /exit 1/);
+  assert.doesNotMatch(last, /secrets\.|inputs\./);
+});
+
+test("커밋된 진척 상태 파일(있으면)은 집계 필드만 가진다", async () => {
+  const p = await readProgress(path.join(root, "raw", "official-price"));
+  if (!p) return;
+  const allowed = new Set(["lastRunAt", "lastProgressAt", "zeroProgressRuns", "doneParcels", "targetParcels", "lastFinishedNow", "lastCalls", "lastStopReason", "lastErrCodes"]);
+  for (const k of Object.keys(p)) assert.ok(allowed.has(k), k);
+  assert.ok(p.lastProgressAt === null || !Number.isNaN(Date.parse(p.lastProgressAt)));
 });
