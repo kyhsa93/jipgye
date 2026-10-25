@@ -6,6 +6,7 @@ import { DISTRICTS } from "./realestate-districts.ts";
 import { readSlotFile } from "./realestate-raw.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { RENT_FLOW_MONTHS, buildRentFlow, writeRentFlowFile } from "./rent-flow.ts";
+import { buildLeaseExpiry, writeLeaseExpiryFile } from "./lease-expiry.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -20,6 +21,11 @@ const outFile = process.env.RENEWAL_FACTS_FILE
 export const rentFlowFile = process.env.RENT_FLOW_FILE
   ? path.resolve(process.env.RENT_FLOW_FILE)
   : path.join(root, "docs/data/rent-flow.json");
+
+// 전월세 만기 달력(N2, #674). 같은 원본(raw/rent 24개월)의 contractTerm - 이 빌더가 같이 만든다, Daily 에 새 줄을 넣지 않는다.
+export const leaseExpiryFile = process.env.LEASE_EXPIRY_FILE
+  ? path.resolve(process.env.LEASE_EXPIRY_FILE)
+  : path.join(root, "docs/data/lease-expiry.json");
 
 /** 자치구 → 달 → 신고 목록. 그 달 파일이 없거나 ok:false 면 null 로 둔다(그 달은 0건이 아니라 모름이다). DISTRICTS 순서. */
 export async function readRentsByMonth(months, dir?) {
@@ -48,6 +54,25 @@ export async function writeRentFlowSoft(now, { dir = undefined, file = rentFlowF
     return true;
   } catch (err) {
     console.log(`::warning::월세화 흐름 생성 실패 - 이전 파일을 그대로 둡니다: ${err.message}`);
+    return false;
+  }
+}
+
+/** 만기 달력을 만들어 쓴다. 월세화 흐름과 같은 soft-fail - 실패는 경고 한 줄, 이전 파일이 그대로 남는다. */
+export async function writeLeaseExpirySoft(now, { dir = undefined, file = leaseExpiryFile } = {}) {
+  try {
+    const filed = recentMonths(now, RENT_FLOW_MONTHS);
+    const payload = buildLeaseExpiry({ byDistrict: await readRentsByMonth(filed, dir), filed, now });
+    await mkdir(path.dirname(file), { recursive: true });
+    await writeLeaseExpiryFile(file, payload);
+    const sum = (a) => a.reduce((x, y) => x + (y ?? 0), 0);
+    console.log(
+      `  만기 달력: ${payload.months[0]}~${payload.months.at(-1)} 서울 ${sum(payload.seoul.t).toLocaleString("ko-KR")}건 · ` +
+        `앞 ${payload.partial.length}달 잡힌 몫 ${payload.capture.map((c) => `${c}%`).join("·")}`
+    );
+    return true;
+  } catch (err) {
+    console.log(`::warning::만기 달력 생성 실패 - 이전 파일을 그대로 둡니다: ${err.message}`);
     return false;
   }
 }
@@ -118,6 +143,7 @@ export function buildPayload({ byDistrict, now, wolseRate = null }) {
 async function main() {
   const now = new Date();
   await writeRentFlowSoft(now);
+  await writeLeaseExpirySoft(now);
   const byDistrict = await readRawRents(recentMonths(now, MONTHS));
   const payload = buildPayload({ byDistrict, now, wolseRate: await readWolseRate() });
 
