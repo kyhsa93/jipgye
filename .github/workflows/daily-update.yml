@@ -84,16 +84,9 @@ jobs:
           MOLIT_RENT_API_ENDPOINT: ${{ secrets.MOLIT_RENT_API_ENDPOINT }}
           MOLIT_BACKFILL_LIMIT: ${{ inputs.backfill }}
 
-      # 금감원(FSS finlife) 금리 수집은 소유자 결정으로 뺐다(2026-10-25, #577 A - 저작권 약관 위험). rates*.json 은 더 갱신되지 않고 B·C 에서 지운다.
-      # 아래 두 번째 build-conversion 은 원래 금리 수집 뒤에 돌던 것이다(#467). 이제 멈춘 rates.json 을 읽어 첫 번째와 같은 값을 낸다 -
-      # #577 B1(대출·예금 비교 금리를 FSS 에서 끊기)이 이 단계를 정리한다. 이 단계가 실패해도 job을 멈추지 않는다: 멈추면 같은 실행의 수집분
-      # 커밋이 안 돌아 데이터가 사라진다(#62). conversion이 낡은 채 남으면 deploy.yml 의 build/site 시험(sample-size)이 그 배포를 막는다.
-      - name: 전환율 다시 만들기 (금리 반영)
-        if: env.MODE == 'full'
-        continue-on-error: true
-        run: node scripts/build-conversion.ts
-
-      - name: 기사에 실거래가·금리 수치 붙이기
+      # 전환율(build-conversion)은 위 "실거래 수집" 안에서 한 번만 만든다. ECOS 금리 계열은 같은 실행의 "시장 지표 수집"(fetch-indicators)이 raw/indicators/series.json 에 먼저 써 두므로
+      # 실거래 수집 뒤에 다시 만들 일이 없다(#577 B1b·#607). 금감원 금리 수집은 소유자 결정으로 뺐다(2026-10-25, #577 A). conversion 이 낡은 채 남으면 deploy.yml 의 build/site 시험(sample-size)이 그 배포를 막는다.
+      - name: 기사에 실거래가 수치 붙이기
         run: node scripts/news-context.ts
 
       # 이 워크플로의 마지막 일은 커밋이다(#510, 구조 B-4). 렌더·시험·Pages 배포는 deploy.yml 이 이 워크플로의 완료(workflow_run)와 main 푸시를 받아 따로 한다 -

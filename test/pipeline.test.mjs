@@ -84,16 +84,14 @@ test("렌더는 deploy.yml 의 기본 다섯 단계 한 줄이고 기준일 찍�
 });
 
 /**
- * conversion.json은 rates.json의 대출 금리·옵션 수를 읽는다. 첫 build-conversion은 "실거래 수집"
- * 단계 안에서 금리 수집보다 먼저 돌아서, 금감원 공시월이 바뀐 날(2026-10-22) rates만 새것이 되고
- * conversion은 어제 금리로 남아 수집 후 테스트(sample-size 154행)가 빨개졌다(#467).
- * 이 시험은 워크플로 스텝 순서를 읽어, 마지막 build-conversion이 fetch-rates 뒤 · 이 conversion을
- * 읽는 news-context·커밋 앞에서 돈다고 단언한다. 같은 호출이 앞 단계에만 있으면(옛 워크플로) 실패한다.
- * (#510) 렌더와 시험은 deploy.yml 로 갔으므로 "렌더·수집 후 테스트 앞" 대신 "커밋 앞"이 기준이다 - 커밋 뒤에 다시 만들면 낡은 conversion 이 커밋된다.
- * (#577 A) 금감원 금리 수집(fetch-rates)은 소유자 결정으로 워크플로에서 뺐다. 두 번째 build-conversion 은 B1 까지 남아 멈춘 rates.json 을 읽고,
- * 이 시험은 그것이 여전히 실거래 수집 뒤 · news-context·커밋 앞에 있고 fetch-rates 가 돌아오지 않았다고 단언한다.
+ * conversion.json 은 ECOS 금리 계열(raw/indicators/series.json)과 실거래 원본을 읽는다. build-conversion 은 "실거래 수집" 단계 안에서 한 번만 돈다: 같은 Daily 의 "시장 지표 수집"
+ * (fetch-indicators)이 series.json 을 먼저 써 두고 그 뒤에 실거래 수집이 오므로 다시 만들 일이 없다(#580·#607). 옛날에는 금감원 공시 rates.json 을 읽어서, 금리 수집이 실거래 수집 뒤에 있던
+ * 날(2026-10-22)에 conversion 만 어제 금리로 남아 수집 후 테스트(sample-size 154행)가 빨개졌다(#467) - 그래서 금리 뒤에 한 번 더 만드는 단계가 있었다.
+ * (#577 A·B1b·C2) 금감원 금리 수집과 rates.json 읽기가 없어져 그 두 번째 단계도 지웠다. 이 시험은 build-conversion 호출이 하나뿐이고, 시장 지표 수집(fetch-indicators) 뒤 ·
+ * 실거래 수집 안 · news-context·커밋 앞이며 fetch-rates 가 돌아오지 않았다고 단언한다.
+ * (#510) 렌더와 시험은 deploy.yml 로 갔으므로 "커밋 앞"이 기준이다 - 커밋 뒤에 만들면 낡은 conversion 이 커밋된다.
  */
-test("full 모드에서 마지막 build-conversion이 실거래 수집 뒤 · news-context·커밋 앞에서 돌고 fetch-rates 는 없다 (#467·#577)", async () => {
+test("full 모드에서 build-conversion 은 시장 지표 수집 뒤 실거래 수집 안에서 한 번만 돌고 news-context·커밋 앞이다 - fetch-rates 는 없다 (#467·#577)", async () => {
   const workflow = await read(".github/workflows/daily-update.yml");
   // 스텝 머리는 6칸 들여쓴 `- ` 다. 스텝마다 그 본문(주석 포함)까지 한 덩어리로 자른다.
   const steps = workflow.split(/\n(?=      - )/).filter((s) => s.startsWith("      - "));
@@ -106,21 +104,19 @@ test("full 모드에서 마지막 build-conversion이 실거래 수집 뒤 · ne
 
   assert.deepEqual(indexesOf("node scripts/fetch-rates.ts"), [], "daily-update.yml 이 fetch-rates 를 부른다 - 금감원 수집은 뺐다(#577 A)");
   assert.ok(!/FSS_FINLIFE_API_KEY/.test(workflow.replace(/^\s*#.*$/gm, "")), "daily-update.yml 이 FSS 키를 넘긴다(#577 A)");
+  const indicators = only("node scripts/fetch-indicators.ts");
   const realestate = only("node scripts/fetch-realestate.ts");
   const context = only("node scripts/news-context.ts");
   const commit = only("./scripts/push-docs.sh \"chore: 데일리 데이터 갱신");
-  const conversions = indexesOf("node scripts/build-conversion.ts");
+  const conversion = only("node scripts/build-conversion.ts");
 
-  assert.ok(conversions.length >= 1, "build-conversion을 부르는 스텝이 없다");
-  const last = conversions.at(-1);
-  assert.ok(last >= realestate, "마지막 build-conversion이 실거래 수집보다 앞이다 - conversion이 어제 실거래로 남는다");
-  assert.ok(last < context, "마지막 build-conversion이 news-context보다 뒤다 - 기사에 붙는 수치가 낡은 conversion을 읽는다");
-  assert.ok(last < commit, "마지막 build-conversion이 커밋보다 뒤다 - 낡은 conversion이 커밋된다");
+  assert.equal(conversion, realestate, "build-conversion 이 실거래 수집 단계 밖에 있다 - 두 번째 전환율 단계를 도로 만들지 않는다(#577 C2)");
+  assert.ok(indicators < conversion, "conversion 이 시장 지표 수집(ECOS series.json)보다 앞이다 - conversion 이 어제 금리 계열로 남는다");
+  assert.ok(conversion < context, "build-conversion이 news-context보다 뒤다 - 기사에 붙는 수치가 낡은 conversion을 읽는다");
+  assert.ok(conversion < commit, "build-conversion이 커밋보다 뒤다 - 낡은 conversion이 커밋된다");
   assert.ok(!workflow.replace(/^\s*#.*$/gm, "").includes("render-pipeline"), "수집 워크플로가 렌더를 부른다(#510)");
 
-  // 실거래 수집이 full에서만 돌므로 다시 만들기도 full에서만 돈다.
+  // 시장 지표 수집·실거래 수집이 full에서만 돌므로 conversion 도 full에서만 돈다.
+  assert.match(steps[indicators], /if: env\.MODE == 'full'/);
   assert.match(steps[realestate], /if: env\.MODE == 'full'/);
-  assert.match(steps[last], /if: env\.MODE == 'full'/);
-  // 이 단계 실패가 job을 멈추면 같은 실행의 수집분 커밋이 안 돌아 데이터가 사라진다(#62) - 멈추지 않는다.
-  assert.match(steps[last], /continue-on-error: true/);
 });
