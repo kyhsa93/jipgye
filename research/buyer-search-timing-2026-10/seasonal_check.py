@@ -1,8 +1,10 @@
 """계절 관찰(11·12월이 덜 오른다)이 지수 하나의 버릇인지: ① 기간을 반으로 ② 다른 조사(KB 서울 아파트, 1987~)로 ③ 5권역으로."""
-import os, json, numpy as np
+import os, sys, json, numpy as np
 REPO = os.environ.get("REPO", os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 HERE = os.path.dirname(os.path.abspath(__file__))
-S = json.load(open(os.path.join(HERE, "cache", "series.json")))
+sys.path.insert(0, HERE)
+from series_io import load_series  # cache/series.json + KB 임시 사본(저장소에 없음, series_io.py 설명)
+S = load_series()
 IDX = json.load(open(os.path.join(REPO, "raw/ecos/apt-price-index.json")))["series"]
 def season(pairs, y0, y1):
     v = dict(pairs); ms = sorted(v)

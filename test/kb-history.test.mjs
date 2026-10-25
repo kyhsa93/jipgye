@@ -165,3 +165,29 @@ test("빌더: KB 사본이 없으면 어제 파일을 그대로 두고 알린다
   assert.equal(a.includes(String(kb.kb_sale[100][1])), false, "판정표에 KB 원값이 실렸다");
   await rm(dir, { recursive: true, force: true });
 });
+
+// ---- 정리(#588 3b): 추적 파일에 KB 원값이 없다 ----
+
+test("정리: 추적되는 raw/indicators/series.json 에 kb_* 계열이 없다 (원값 재커밋 방지)", async () => {
+  const root = path.resolve(import.meta.dirname, "..");
+  const text = await readFile(path.join(root, "raw/indicators/series.json"), "utf8");
+  const raw = JSON.parse(text);
+  for (const name of Object.keys(KB_SERIES)) assert.equal(name in raw.series, false, `raw 에 ${name} 이 다시 생겼다 - KB 원값은 cache/indicators/kb-history.json(gitignore)에만 둔다`);
+  assert.equal(/"kb_/.test(text), false, "raw 에 kb_ 키가 남아 있다");
+  // 나머지 지표 계열은 그대로 있다(11행 판정에 쓰이는 입력이 같이 지워지지 않았다).
+  for (const name of ["base_rate", "mortgage_rate", "ktb3", "vol_seoul", "jratio_seoul"]) assert.ok(raw.series[name]?.length > 100, `${name} 이 비었다`);
+});
+
+test("정리: .gitignore 가 KB 사본 경로를 막고, 연구 스크립트는 raw 가 아니라 임시 사본을 읽는다", async () => {
+  const root = path.resolve(import.meta.dirname, "..");
+  const ignore = (await readFile(path.join(root, ".gitignore"), "utf8")).split("\n").map((l) => l.trim());
+  for (const line of ["cache/", "research/buyer-search-timing-2026-10/cache/series.json", "research/*/cache/kb-history.json"]) {
+    assert.ok(ignore.includes(line), `.gitignore 에 ${line} 가 없다 - KB 원값이 다시 커밋될 수 있다`);
+  }
+  assert.ok(ignore.indexOf("research/buyer-search-timing-2026-10/cache/series.json") > ignore.indexOf("!research/*/cache/"), "연구 cache 예외(!) 보다 앞에 있으면 무시가 안 된다");
+  for (const rel of ["research/kb-vintage/check.py", "research/buyer-search-timing-2026-10/series_io.py", "research/buyer-search-timing-2026-10/fetch_series.py"]) {
+    const src = await readFile(path.join(root, rel), "utf8");
+    assert.equal(src.includes("raw/indicators/series.json"), false, `${rel} 가 raw 의 KB 계열을 읽는다`);
+    assert.ok(src.includes("kb-history.json"), `${rel} 가 KB 임시 사본 경로를 쓰지 않는다`);
+  }
+});

@@ -3,6 +3,10 @@ node_modules/
 cache/
 # 연구 폴더의 cache/는 결과를 다시 만드는 입력이라 커밋한다(외부에서 받은 계열). 위 cache/는 뉴스 본문 캐시용.
 !research/*/cache/
+# 단, 외부에서 받은 KB국민은행 지수(재배포 허락 미확인, #588)는 연구 cache/ 에도 커밋하지 않는다. 연구 스크립트는
+# 저장소 루트 cache/indicators/kb-history.json(위 cache/)에서 읽고, cache/series.json 은 fetch_series.py 가 다시 만든다.
+research/buyer-search-timing-2026-10/cache/series.json
+research/*/cache/kb-history.json
 # 렌더 출력 디렉터리의 관례 위치(JIPGYE_SITE_DIR=build/site, #508). 산출물이라 커밋하지 않는다.
 build/
 # 생성 HTML 49장(#510, 구조 B-4): main 은 이 장들을 들고 있지 않는다 - 사이트는 build/site 에 만들고 deploy.yml 이 거기서 게시한다.
@@ -13,3 +17,4 @@ build/
 /docs/apartment-*.html
 /docs/budget-*eok.html
 /docs/district-*.html
+__pycache__/
