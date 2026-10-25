@@ -66,9 +66,9 @@ const rows = (page) => page.html("ex-table").split("<tr>").slice(2);
 const NOTE_KO =
   "신고된 계약만 셉니다 — 미신고 계약과 계약기간이 비어 있는 신고(약 3%)는 빠집니다. 전세는 월세가 0원인 계약이고, 반전세는 월세에 넣었습니다. 만기는 이사나 매물과 같지 않습니다: 갱신(요구권·합의)이나 묵시적 갱신으로 그대로 살거나 중도에 해지하는 경우가 있어, 이 숫자는 끝나는 계약 수이지 나오는 집 수가 아닙니다. 뒤쪽 달도 아직 신고되지 않은 짧은 계약만큼 조금 적을 수 있습니다.";
 const LEGAL_KO =
-  "「요구권 사용」은 신고에 계약갱신요구권 사용 표시가 있는 계약, 곧 요구권으로 갱신한 계약입니다. 요구권은 한 번 쓸 수 있습니다(주택임대차보호법 제6조의3). 표시가 없다고 요구권을 쓰지 않았다는 뜻은 아니며, 개별 계약에 무엇이 적용되는지는 이 화면이 판단하지 않습니다. 법률 판단이 아니니 대한법률구조공단·주택임대차분쟁조정위원회에서 상담하세요.";
+  "「요구권 사용」은 신고에 계약갱신요구권 사용 표시가 있는 계약입니다. 요구권은 한 번만 쓸 수 있습니다(주택임대차보호법 제6조의3). 표시가 없다고 요구권을 쓰지 않았다는 뜻은 아니며, 개별 계약에 무엇이 적용되는지는 이 화면이 판단하지 않습니다. 법률 판단이 아니니 대한법률구조공단·주택임대차분쟁조정위원회에서 상담하세요.";
 const LEGAL_EN =
-  "“Right used” means the filing is marked as renewed with the tenant’s contract renewal right. The right can be used once (Housing Lease Protection Act, Article 6-3). An unmarked renewal does not mean the right was not used, and this page does not judge what applies to any lease. It is not legal advice — contact the Korea Legal Aid Corporation or a Housing Lease Dispute Mediation Committee.";
+  "“Right used” means the filing is marked as renewed with the tenant’s contract renewal right. The right can be used only once (Housing Lease Protection Act, Article 6-3). An unmarked renewal does not mean the right was not used, and this page does not judge what applies to any lease. It is not legal advice — contact the Korea Legal Aid Corporation or a Housing Lease Dispute Mediation Committee.";
 const PARTIAL_KO =
   "2026.11·2026.12·2027.01은 일부만 집계했습니다 — 원본이 최근 24개월 신고분뿐이라 이 달들에 끝나는 계약 가운데 약 28%·56%·84%만 잡혔습니다(2년 계약은 끝나기 24~27개월 전에 신고됩니다). 실제는 표보다 많습니다.";
 
@@ -161,4 +161,8 @@ test("금지어: 전망·권유·평균 표현이 없고, 만기 ≠ 이사·매
   assert.match(SECTION, /Only filed leases are counted/);
   assert.match(SECTION, /법률 판단이 아니니/);
   assert.match(SECTION, /It is not legal advice/);
+  // #696 legal: 제6조의3② 「1회에 한하여」 - 한도를 분명히, 신고 표시를 사실로 단정하지 않는다
+  assert.match(SECTION, /한 번만 쓸 수 있습니다/);
+  assert.match(SECTION, /can be used only once/);
+  assert.doesNotMatch(SECTION, /곧 요구권으로 갱신한 계약/);
 });
