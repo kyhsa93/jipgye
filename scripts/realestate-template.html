@@ -263,6 +263,7 @@ const T = {
     countUnit: (n) => `${n.toLocaleString("ko-KR")}건`,
     lowSample: (n) => `신고 ${n}건`,
     lowSampleTitle: (n) => `이번 달 신고가 ${n}건뿐이라 평균을 내지 않았습니다.`,
+    blank: (n) => `신고 ${n}건이라 비움`,
     changeVs: (d) => `${d} 대비`,
     wolseChangeVs: (d) => `${d} 대비 · 보증금과 월세를 묶은 ㎡당 값(보증금 + 월세×12÷4.8%)의 증감 — 그 주에 신고된 방 크기가 달라서 생기는 흔들림을 덜어 낸 값입니다`,
     prevTagTitle: "이번 달 신고가 아직 적어 지난달 기준으로 보여줍니다.",
@@ -361,6 +362,7 @@ const T = {
     countUnit: (n) => `${n.toLocaleString("en-US")}`,
     lowSample: (n) => `${n} reported`,
     lowSampleTitle: (n) => `Only ${n} transactions reported this month, so no average is shown.`,
+    blank: (n) => `Blank: only ${n} reported`,
     changeVs: (d) => `vs ${d}`,
     wolseChangeVs: (d) => `vs ${d} · change in deposit and rent combined per ㎡ (deposit + rent×12÷4.8%), which strips out the swing from the mix of flat sizes filed that week`,
     prevTagTitle: "Too few filings this month, so last month\u2019s figure is shown.",
@@ -532,6 +534,14 @@ function lowSampleHtml(metric) {
   const n = metric?.transactionCount ?? 0;
   return `<span class="low-sample" title="${escapeHtml(t("lowSampleTitle")(n))}">${escapeHtml(t("lowSample")(n))}</span>`;
 }
+
+// 요약 카드(#264): 신고 1~4건이라 비운 카드는 「-」 대신 이유를 적는다. 표의 low-sample 과 같은 클래스, title 은 없다. 조건은 scripts/realestate-format.ts 의 lowSampleCount 와 같다.
+// n 은 정수일 때만 쓰므로(Number.isInteger) 이스케이프할 글자가 없다. 지표가 없으면 m?.transactionCount 가 undefined 라 정수가 아니다(m 검사를 따로 두지 않는다 - 인라인 JS 한도, +400 B/장).
+const lowOr = (entry, k) => {
+  const m = entry?.[KIND_FIELDS[k].metric];
+  const n = m?.transactionCount;
+  return !hasEnoughSample(m) && Number.isInteger(n) && n >= 1 ? `<span class="low-sample">${t("blank")(n)}</span>` : "-";
+};
 
 function cellsFor(entry, k) {
   const resolved = resolveMetric(entry, k);
@@ -716,7 +726,7 @@ function renderOverall(realestate) {
         ? card(t("thPerPyeong"), formatMan(valueOf(sale, "sale")), "") +
           card(t("thArea")(areaM2), formatEok(areaPrice(valueOf(sale, "sale"))), "") +
           card(t("thCount"), escapeHtml(t("countUnit")(sale.transactionCount)), "")
-        : card(t("thSale"), "-", "")) +
+        : card(t("thSale"), lowOr(overall, "sale"), "")) +
       (ratio
         ? card(
             t("thRatio"),
@@ -737,7 +747,7 @@ function renderOverall(realestate) {
       .map((k) => {
         const metric = resolveMetric(overall, k)?.metric;
         const label = k === "sale" ? t("colSale") : k === "jeonse" ? t("colJeonse") : t("colWolse");
-        if (!metric) return card(label, "-", "");
+        if (!metric) return card(label, lowOr(overall, k), "");
         if (k === "wolse") {
           return card(
             label,
@@ -757,7 +767,7 @@ function renderOverall(realestate) {
 
   const metric = resolveMetric(overall, kind)?.metric;
   if (!metric) {
-    box.innerHTML = card(t("overall"), "-", "");
+    box.innerHTML = card(t("overall"), lowOr(overall, kind), "");
     return;
   }
   if (kind === "wolse") {

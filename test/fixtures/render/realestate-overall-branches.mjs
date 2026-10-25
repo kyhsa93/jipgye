@@ -4,7 +4,8 @@
 // 평당가 6000 → "6,000만원"·"15억 2,459만원")를 손으로 적어 이은 것이고, 입력을 가공해 만들지 않는다. 값 글자는 모듈을 부르지 않고 내장 함수로 따로 셌다(PR 본문).
 // test/render-parity.test.mjs가 이 표로 React 조각 출력이 expect와 같은지 견준다.
 //
-// 이 조각에는 `low-sample` 스팬이 없다. 값을 못 낸 카드(표본 부족이든 값 없음이든)는 모두 "-"다 - 문턱은 렌더 때 resolveMetric(MIN_SAMPLE 5)이 한 곳에서 정한다.
+// `low-sample` 스팬은 신고가 1~4건(정수)이라 값을 비운 카드의 값 자리에만 있다(#264: `<span class="low-sample">신고 {n}건이라 비움</span>`, title 없음). 그 밖에 값을 못 낸 카드(n=0·건수 없음·정수 아님·값 없음·지표 없음)는 "-"다 -
+// 문턱은 렌더 때 resolveMetric·lowSampleCount(MIN_SAMPLE 5, hasEnoughSample)가 한 곳에서 정한다.
 // 그래서 해자 2 행은 두 가지다: 표본 부족(값은 있는데 건수가 모자람) → 값을 내지 않는다({ held: "sample" }, 기대 글자에 그 값이 나오지 않는다),
 // 값 없음(건수는 충분한데 값 칸이 비었다) → 역시 "-"({ held: "value" }). 지표 칸 자체가 없으면({ held: "absent" }) 역시 "-"다.
 //
@@ -84,7 +85,10 @@ const val = (v, extra = {}) => (f) => ({ [f]: v, transactionCount: 40, change: {
 const STATES = [];
 const st = (id, cond, metric, shape) => STATES.push({ id, cond, metric, shape });
 const OK = (v, cnt = "40건") => ({ v, cnt });
-const HELD = (held) => ({ held });
+const HELD = (held, low) => (low === undefined ? { held } : { held, low });
+// #264: 신고가 1~4건(정수)이라 값을 비운 카드는 「-」 대신 이유를 적는다(`low-sample` 스팬, title 없음). n=0·지표 없음·정수가 아닌 건수는 「-」 그대로다.
+const LOW = (n) => `<span class="low-sample">신고 ${n}건이라 비움</span>`;
+const dashOf = (shape) => (shape.low === undefined ? "-" : LOW(shape.low));
 
 // -- 값이 있는 칸
 st("v01", "보통 값(평당가 6000·40건)", val(6000), OK(6000));
@@ -96,7 +100,10 @@ st("v06", "소수 값 반올림(123.5 → 124만원)", val(123.5), OK(123.5));
 st("v07", "음수 값(-5)", val(-5), OK("-5"));
 // -- 표본 부족: 건수 문턱은 resolveMetric이 정한다(5건부터 값). 이 조각은 문턱을 다시 적용하지 않는다. 값(6000)이 있어도 내지 않는다.
 st("n01", "건수 5건(경계)는 값", val(6000, { transactionCount: 5 }), OK(6000, "5건"));
-st("n02", "건수 4건은 값이 있어도 내지 않는다", val(6000, { transactionCount: 4 }), HELD("sample"));
+st("n02", "건수 4건은 값이 있어도 내지 않고 이유를 적는다", val(6000, { transactionCount: 4 }), HELD("sample", 4));
+st("n26", "건수 1건(하한)도 이유를 적는다", val(6000, { transactionCount: 1 }), HELD("sample", 1));
+st("n27", "건수 3건은 값 대신 이유", val(6000, { transactionCount: 3 }), HELD("sample", 3));
+st("n28", "건수 4.5건은 정수가 아니라 이유 없이 「-」", val(6000, { transactionCount: 4.5 }), HELD("sample"));
 st("n03", "건수 0건은 내지 않는다", val(6000, { transactionCount: 0 }), HELD("sample"));
 st("n04", "건수 칸이 없으면 0건이라 내지 않는다", (f) => ({ [f]: 6000, change: { value10k: 120 }, baselineDate: "2026-10-04" }), HELD("sample"));
 st("n05", "건수 null이면 0건(?? 0)이라 내지 않는다", val(6000, { transactionCount: null }), HELD("sample"));
@@ -123,7 +130,7 @@ st("n23", "건수 객체의 글자가 특수문자 & < > \" '(값은 9) → 글�
 st("n24", "건수 객체의 글자가 이미 이스케이프된 &amp;(값은 9) → 한 번 더", val(6000, { transactionCount: { valueOf: () => 9, toLocaleString: () => "&amp;" } }), OK(6000, "&amp;amp;건"));
 st("n25", "건수 객체의 글자가 빈 문자열(값은 9) → \"건\"", val(6000, { transactionCount: { valueOf: () => 9, toLocaleString: () => "" } }), OK(6000, "건"));
 // -- 지표는 있는데 값이 없다(건수는 충분하다): 역시 "-"
-st("o01", "값 없음: 값 칸이 없고 건수도 4건", () => ({ transactionCount: 4 }), HELD("value"));
+st("o01", "값 없음: 값 칸이 없고 건수도 4건이면 이유는 적는다(값 칸 유무가 아니라 건수가 기준)", () => ({ transactionCount: 4 }), HELD("value", 4));
 st("o02", "값 없음: 건수는 충분한데 값 칸이 없다", () => ({ transactionCount: 40 }), HELD("value"));
 st("o03", "값 없음: 값이 null", val(null), HELD("value"));
 st("o04", "값 없음: 값이 NaN", val(NaN), HELD("value"));
@@ -160,12 +167,12 @@ for (const kind of ["sale", "jeonse"]) {
     // (1) 세 종류를 한 줄에 놓는 서울 전체 카드(kind 없음): 이 종류만 상태, 나머지는 지표 없음("-")
     const entryAll = {};
     if (s.metric !== ABSENT) entryAll[kind] = metric;
-    const mid = (k) => (k === kind ? (heldOut(s) ? CARD(COL[k], "-") : CARD(COL[k], price, `84㎡ 환산 ${area} · ${s.shape.cnt}`)) : CARD(COL[k], "-"));
+    const mid = (k) => (k === kind ? (heldOut(s) ? CARD(COL[k], dashOf(s.shape)) : CARD(COL[k], price, `84㎡ 환산 ${area} · ${s.shape.cnt}`)) : CARD(COL[k], "-"));
     add(`OA-${P}-${s.id}`, `서울 전체 세 카드(${kind} 칸): ${s.cond}`, [{ overall: entryAll, districts: [] }], mid("sale") + mid("jeonse") + CARD(COL.wolse, "-"), flags);
     // (2) 종류 하나의 서울 전체 카드: 전세는 전세가율이 매매에 기대므로 매매 6000(40건)을 같이 둔다
     const kEntry = kind === "jeonse" ? { sale: sale(), ...(s.metric === ABSENT ? {} : { jeonse: metric }) } : entryAll;
     let kExpect;
-    if (heldOut(s)) kExpect = kind === "sale" ? CARD("서울 전체", "-") : CARD("서울 전체", "-");
+    if (heldOut(s)) kExpect = CARD("서울 전체", dashOf(s.shape));
     else if (kind === "sale") kExpect = CARD(label, price) + CARD("84㎡ 환산", area) + CARD("거래건수", s.shape.cnt);
     else kExpect = CARD(label, price) + CARD("84㎡ 환산", area) + (ratio === "-" ? "" : CARD("전세가율", ratio, `매매 40건 · 전세 ${s.shape.cnt}`)) + CARD("거래건수", s.shape.cnt);
     add(`OK-${P}-${s.id}`, `${kind} 카드: ${s.cond}`, [{ overall: kEntry, districts: [] }, kind], kExpect, flags);
@@ -173,7 +180,7 @@ for (const kind of ["sale", "jeonse"]) {
     const dEntry = kind === "sale" ? { name: "강남구", ...(s.metric === ABSENT ? {} : { sale: metric }) } : { name: "강남구", sale: sale(), ...(s.metric === ABSENT ? {} : { jeonse: metric }) };
     let dExpect;
     if (kind === "sale") {
-      dExpect = heldOut(s) ? CARD("매매", "-") : CARD("평당가", price) + CARD("84㎡ 환산", area) + CARD("거래건수", s.shape.cnt);
+      dExpect = heldOut(s) ? CARD("매매", dashOf(s.shape)) : CARD("평당가", price) + CARD("84㎡ 환산", area) + CARD("거래건수", s.shape.cnt);
     } else {
       dExpect = CARD("평당가", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래건수", "40건") + (heldOut(s) || ratio === "-" ? "" : CARD("전세가율", ratio, `매매 40건 · 전세 ${s.shape.cnt}`));
     }
@@ -196,7 +203,8 @@ ws("v07", "월세가 null이면 \"월 -\"", wolse({ avgMonthlyRent10k: null }), 
 ws("v08", "보증금 0은 값이다(0만원)", wolse({ avgDeposit10k: 0 }), WOK({ dep: "0만원" }));
 ws("v09", "보증금 123.5 → 124만원", wolse({ avgDeposit10k: 123.5 }), WOK({ dep: "124만원" }));
 ws("n01", "건수 5건(경계)는 값", wolse({ transactionCount: 5 }), WOK({ cnt: "5건" }));
-ws("n02", "건수 4건은 값이 있어도 내지 않는다", wolse({ transactionCount: 4 }), { held: "sample" });
+ws("n02", "건수 4건은 값이 있어도 내지 않고 이유를 적는다", wolse({ transactionCount: 4 }), { held: "sample", low: 4 });
+ws("n08", "건수 1건(하한)도 이유를 적는다", wolse({ transactionCount: 1 }), { held: "sample", low: 1 });
 ws("n03", "건수 칸이 없으면 내지 않는다", { avgDeposit10k: 20264, avgMonthlyRent10k: 128 }, { held: "sample" });
 ws("n04", "건수 \"9\"는 값(글자 그대로)", wolse({ transactionCount: "9" }), WOK({ cnt: "9건" }));
 ws("n05", "건수 NaN은 내지 않는다", wolse({ transactionCount: NaN }), { held: "sample" });
@@ -217,12 +225,12 @@ for (const s of WSTATES) {
   const flags = { held: s.shape.held ?? null };
   const entry = s.metric === ABSENT ? {} : { wolse: s.metric };
   const held = Boolean(s.shape.held);
-  add(`OA-W-${s.id}`, `서울 전체 세 카드(월세 칸): ${s.cond}`, [{ overall: entry, districts: [] }], CARD(COL.sale, "-") + CARD(COL.jeonse, "-") + (held ? CARD(COL.wolse, "-") : CARD(COL.wolse, `${s.shape.dep} / 월 ${s.shape.rent}`, s.shape.cnt)), flags);
+  add(`OA-W-${s.id}`, `서울 전체 세 카드(월세 칸): ${s.cond}`, [{ overall: entry, districts: [] }], CARD(COL.sale, "-") + CARD(COL.jeonse, "-") + (held ? CARD(COL.wolse, dashOf(s.shape)) : CARD(COL.wolse, `${s.shape.dep} / 월 ${s.shape.rent}`, s.shape.cnt)), flags);
   add(
     `OK-W-${s.id}`,
     `월세 카드: ${s.cond}`,
     [{ overall: entry, districts: [] }, "wolse"],
-    held ? CARD("서울 전체", "-") : CARD("평균 보증금", s.shape.dep) + CARD("평균 월세", `월 ${s.shape.rent}`) + CARD("거래건수", s.shape.cnt),
+    held ? CARD("서울 전체", dashOf(s.shape)) : CARD("평균 보증금", s.shape.dep) + CARD("평균 월세", `월 ${s.shape.rent}`) + CARD("거래건수", s.shape.cnt),
     flags
   );
   add(`OD-W-${s.id}`, `자치구 페이지: 월세 칸은 카드에 나오지 않는다(${s.cond})`, [{ districts: [{ name: "강남구", sale: sale(), ...(s.metric === ABSENT ? {} : { wolse: s.metric }) }] }, null, "강남구"], CARD("평당가", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래건수", "40건"), flags);
@@ -236,10 +244,10 @@ for (const s of WSTATES) {
   add("OM-02", "kind 빈 문자열(falsy)도 세 종류", [{ overall: full }, ""], ALL3);
   add("OM-03", "kind 0·false·NaN(falsy)도 세 종류", [{ overall: full }, 0], ALL3);
   add("OM-04", "세 종류 카드는 spread를 읽지 않는다(spread가 와도 같다)", [{ overall: full }, null, null, { median: 46.7, cells: 13 }], ALL3);
-  add("OM-05", "매매만 표본 부족(4건)이면 매매 카드만 \"-\"", [{ overall: { ...full, sale: sale({ transactionCount: 4 }) } }], CARD(COL.sale, "-") + CARD(COL.jeonse, "3,000만원", "84㎡ 환산 7억 6,230만원 · 30건") + CARD(COL.wolse, "2억 264만원 / 월 128만원", "25건"), { held: "sample" });
+  add("OM-05", "매매만 표본 부족(4건)이면 매매 카드만 이유(신고 4건이라 비움)", [{ overall: { ...full, sale: sale({ transactionCount: 4 }) } }], CARD(COL.sale, LOW(4)) + CARD(COL.jeonse, "3,000만원", "84㎡ 환산 7억 6,230만원 · 30건") + CARD(COL.wolse, "2억 264만원 / 월 128만원", "25건"), { held: "sample" });
   add("OM-06", "전세만 값 없음이면 전세 카드만 \"-\"", [{ overall: { ...full, jeonse: jeonse({ avgDepositPerPyeong10k: null }) } }], CARD(COL.sale, "6,000만원", "84㎡ 환산 15억 2,459만원 · 40건") + CARD(COL.jeonse, "-") + CARD(COL.wolse, "2억 264만원 / 월 128만원", "25건"), { held: "value" });
-  add("OM-07", "월세만 표본 부족이면 월세 카드만 \"-\"", [{ overall: { ...full, wolse: wolse({ transactionCount: 4 }) } }], CARD(COL.sale, "6,000만원", "84㎡ 환산 15억 2,459만원 · 40건") + CARD(COL.jeonse, "3,000만원", "84㎡ 환산 7억 6,230만원 · 30건") + CARD(COL.wolse, "-"), { held: "sample" });
-  add("OM-08", "세 종류 모두 표본 부족이면 \"-\" 세 장", [{ overall: { sale: sale({ transactionCount: 4 }), jeonse: jeonse({ transactionCount: 4 }), wolse: wolse({ transactionCount: 4 }) } }], CARD(COL.sale, "-") + CARD(COL.jeonse, "-") + CARD(COL.wolse, "-"), { held: "sample" });
+  add("OM-07", "월세만 표본 부족이면 월세 카드만 이유", [{ overall: { ...full, wolse: wolse({ transactionCount: 4 }) } }], CARD(COL.sale, "6,000만원", "84㎡ 환산 15억 2,459만원 · 40건") + CARD(COL.jeonse, "3,000만원", "84㎡ 환산 7억 6,230만원 · 30건") + CARD(COL.wolse, LOW(4)), { held: "sample" });
+  add("OM-08", "세 종류 모두 표본 부족이면 이유 세 장(건수마다 자기 글자)", [{ overall: { sale: sale({ transactionCount: 4 }), jeonse: jeonse({ transactionCount: 1 }), wolse: wolse({ transactionCount: 0 }) } }], CARD(COL.sale, LOW(4)) + CARD(COL.jeonse, LOW(1)) + CARD(COL.wolse, "-"), { held: "sample" });
   add("OM-09", "서울 전체가 빈 객체 {}(truthy)면 \"-\" 세 장", [{ overall: {} }], CARD(COL.sale, "-") + CARD(COL.jeonse, "-") + CARD(COL.wolse, "-"));
   for (const [i, v] of [5, "x", true, [], [1, 2]].entries()) add(`OM-1${i}`, `서울 전체가 비객체(${JSON.stringify(v)})면 \"-\" 세 장`, [{ overall: v }], CARD(COL.sale, "-") + CARD(COL.jeonse, "-") + CARD(COL.wolse, "-"));
   add("OM-20", "서울 전체가 있고 district가 없으면 자치구 목록은 읽지 않는다(districts가 이상한 값이어도)", [{ overall: full, districts: "ab" }], ALL3);
@@ -277,7 +285,7 @@ for (const s of WSTATES) {
   add("OR-03", "자치구: 매매 10000·전세 3000 → 30.0%", mkD(sale({ avgPricePerPyeong10k: 10000 }), jeonse()), SALE3("1억원", "25억 4,099만원", "40건") + R("30.0%", "40건", "30건"));
   add("OR-04", "자치구: 전세가 매매보다 비싸면(전세 6000·매매 3000) 200.0%", mkD(sale({ avgPricePerPyeong10k: 3000 }), jeonse({ avgDepositPerPyeong10k: 6000 })), SALE3("3,000만원", "7억 6,230만원", "40건") + R("200.0%", "40건", "30건"));
   add("OR-05", "자치구: 두 건수가 모두 경계(5건)면 전세가율이 나온다", mkD(sale({ transactionCount: 5 }), jeonse({ transactionCount: 5 })), SALE3("6,000만원", "15억 2,459만원", "5건") + R("50.0%", "5건", "5건"));
-  add("OR-06", "자치구: 매매가 표본 부족(4건)이면 매매 카드는 \"-\"이고 전세가율도 없다", mkD(sale({ transactionCount: 4 }), jeonse()), CARD("매매", "-"), { held: "sample" });
+  add("OR-06", "자치구: 매매가 표본 부족(4건)이면 매매 카드는 이유이고 전세가율도 없다", mkD(sale({ transactionCount: 4 }), jeonse()), CARD("매매", LOW(4)), { held: "sample" });
   add("OR-07", "자치구: 전세가 표본 부족(4건)이면 매매 카드 셋만 있고 전세가율이 없다(전세 값은 내지 않는다)", mkD(sale(), jeonse({ transactionCount: 4 })), SALE3("6,000만원", "15억 2,459만원", "40건"), { held: "sample" });
   add("OR-08", "자치구: 전세 값이 없으면(건수는 충분) 전세가율이 없다", mkD(sale(), jeonse({ avgDepositPerPyeong10k: undefined })), SALE3("6,000만원", "15억 2,459만원", "40건"), { held: "value" });
   add("OR-09", "자치구: 전세 값이 0이면 비를 내지 않는다(0은 값이지만 나눌 수 없다)", mkD(sale(), jeonse({ avgDepositPerPyeong10k: 0 })), SALE3("6,000만원", "15억 2,459만원", "40건"), { held: "value" });
@@ -352,9 +360,9 @@ for (const s of WSTATES) {
   add("OS-22", "spread가 이상해도(cells 없음) 읽지 않는 곳은 던지지 않는다(kind sale)", [{ overall: full }, "sale", null, {}], SALE3);
   // 자치구 카드의 순서: 매매 셋 → 전세가율 → 단지별(전세가율이 없어도 단지별은 붙는다)
   add("OS-30", "자치구: 전세가율이 없어도 단지별 카드는 붙는다(전세 지표 없음)", [{ districts: [{ name: "종로구", sale: sale() }] }, null, "종로구", { median: 46.7, cells: 13 }], SALE3 + CX("46.7%", "13"));
-  add("OS-31", "자치구: 매매가 표본 부족이어도 단지별 카드는 붙는다(\"매매 -\" 뒤)", [{ districts: [{ name: "종로구", sale: sale({ transactionCount: 4 }) }] }, null, "종로구", { median: 46.7, cells: 13 }], CARD("매매", "-") + CX("46.7%", "13"), { held: "sample" });
+  add("OS-31", "자치구: 매매가 표본 부족이어도 단지별 카드는 붙는다(\"매매 -\" 뒤)", [{ districts: [{ name: "종로구", sale: sale({ transactionCount: 4 }) }] }, null, "종로구", { median: 46.7, cells: 13 }], CARD("매매", LOW(4)) + CX("46.7%", "13"), { held: "sample" });
   add("OS-32", "전세 카드: 전세가율이 없어도(매매 없음) 단지별 카드는 건수 카드 앞에 붙는다", [{ overall: { jeonse: jeonse() } }, "jeonse", null, { median: 46.7, cells: 13 }], JEONSE3(CX("46.7%", "13") + CARD("거래건수", "30건")), { held: "absent" });
-  add("OS-33", "전세 카드: 전세가 표본 부족이면 \"서울 전체 -\" 한 장뿐(단지별 카드도 없다)", [{ overall: { sale: sale(), jeonse: jeonse({ transactionCount: 4 }) } }, "jeonse", null, { median: 46.7, cells: 13 }], CARD("서울 전체", "-"), { held: "sample" });
+  add("OS-33", "전세 카드: 전세가 표본 부족이면 \"서울 전체 -\" 한 장뿐(단지별 카드도 없다)", [{ overall: { sale: sale(), jeonse: jeonse({ transactionCount: 4 }) } }, "jeonse", null, { median: 46.7, cells: 13 }], CARD("서울 전체", LOW(4)), { held: "sample" });
   add("OS-34", "서울 전체 세 카드(kind 없음)도 spread를 읽지 않는다", [{ overall: full }, null, null, { median: 46.7, cells: 13 }], CARD(COL.sale, "6,000만원", "84㎡ 환산 15억 2,459만원 · 40건") + CARD(COL.jeonse, "3,000만원", "84㎡ 환산 7억 6,230만원 · 30건") + CARD(COL.wolse, "-"));
 }
 
@@ -388,9 +396,9 @@ for (const s of WSTATES) {
   );
   add(
     "OT-04",
-    "실제 모양, 종로구 페이지(매매·전세 둘 다 표본 부족: \"매매 -\"뿐이고 전세가율은 없다)",
+    "실제 모양, 종로구 페이지(매매 3건·전세 2건 표본 부족: 매매 카드는 이유(신고 3건이라 비움)뿐이고 전세가율은 없다)",
     [REAL, null, "종로구", null],
-    CARD("매매", "-"),
+    CARD("매매", LOW(3)),
     { held: "sample" }
   );
   add(
