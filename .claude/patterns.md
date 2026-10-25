@@ -58,4 +58,4 @@
 - inline-script: {refs} 패턴 P1 — 승인된 틀 고지 메커니즘의 인라인 script 줄 변경(장 동일 항목)
 - s6-inline-bytes: {refs} 패턴 P1 — 틀 인라인 +{bytes} B/장 ≤ 기준+400 B(cto 판정 #548)
 
-**S6 예외 종류 — 장 전용 외부 JS**(cto 승인 #681 https://github.com/kyhsa93/jipgye/pull/681#issuecomment-6403354947): 한 장만 `defer` 로 참조하고 sw.js 사전캐시에 넣지 않는 `docs/*.js` 는 gzip ≤2 KB 까지 `s6-js-total`·`s6-scripts`·`s6-external-bytes` 를 예외로 받는다(첫 사례 `renewal-convert.js`, 시험이 gzip·참조 장·사전캐시를 지킨다). 그 밖은 전체 판정.
+**S6 예외 종류 — 장 전용 외부 JS**(cto 승인 #681 https://github.com/kyhsa93/jipgye/pull/681#issuecomment-6403354947): 한 장만 `defer` 로 참조하고 sw.js 사전캐시에 넣지 않는 `docs/*.js` 는 gzip ≤2 KB 까지 `s6-js-total`·`s6-scripts`·`s6-external-bytes` 를 예외로 받는다(문구를 그 장의 `data-*` 속성으로 옮겨 생기는 `attr-text` 도 같이 받는다 — #681 재판정 6403575944; 첫 사례 `renewal-convert.js`, 시험이 gzip·참조 장·사전캐시를 지킨다). 그 밖은 전체 판정.
