@@ -174,3 +174,110 @@ test("카드의 최근 두 달 표가 묶인 면적 폭을 적는다", async () 
   assert.ok(ratioTable.includes(`${target.area}~${twin}`), "묶인 면적 폭이 없다");
   assert.ok(!ratioTable.includes(`<td>${twin}㎡`), "묶인 면적이 따로 줄을 차지했다");
 });
+
+// --- V4: 단지 카드의 최근 전월세 셋 ------------------------------------------------
+
+// 가상 단지 하나의 고정 픽스처. 실데이터 하루치에 기대지 않는다. rents-* 는 빌드(deal-files.ts)가 최신순으로 둔다.
+const V4_APT = "가상V4단지";
+const v4Fixture = () => ({
+  deals: {
+    district: "노원구",
+    periods: ["202609", "202610"],
+    deals: [59.9, 59.9, 59.9, 84.9].map((area, i) => ({ dong: "상계동", apt: V4_APT, area, floor: 3, amount10k: 60000 + i * 1000, date: `2026-10-0${i + 1}` })),
+  },
+  rents: {
+    district: "노원구",
+    periods: ["202609", "202610"],
+    deals: [
+      { dong: "상계동", apt: V4_APT, area: 59.9, floor: 7, deposit10k: 41000, date: "2026-10-20", renewal: false },
+      { dong: "상계동", apt: "다른단지", area: 59.9, floor: 2, deposit10k: 99000, date: "2026-10-19", renewal: false },
+      { dong: "상계동", apt: V4_APT, area: 59.9, floor: 5, deposit10k: 10000, monthlyRent10k: 90, date: "2026-10-15", renewal: false },
+      { dong: "상계동", apt: V4_APT, area: 84.9, floor: 9, deposit10k: 52000, date: "2026-10-11", renewal: true },
+      { dong: "상계동", apt: V4_APT, area: 59.9, floor: 1, deposit10k: 39000, date: "2026-09-30", renewal: false },
+      { dong: "상계동", apt: V4_APT, area: 59.9, floor: 4, deposit10k: 40000, date: "2026-09-02", renewal: false },
+    ],
+  },
+  // 59.9 형은 범위를 낼 만큼, 84.9 형은 두 건뿐이라 범위를 내지 않는다(문턱은 빌드가 정한다).
+  complexPrice: {
+    reference: "202610",
+    cells: {
+      [V4_APT]: {
+        "59.9": { n: 5, median: 61000, low: 60000, high: 62500, quartile: true, raw: 60500 },
+        "84.9": { n: 2 },
+      },
+    },
+  },
+});
+
+async function v4Page(locale = "ko", network) {
+  const f = v4Fixture();
+  const p = await loadDealSearchPage({
+    budget: await readJson("budget-deals"),
+    search: await readJson("deal-search"),
+    deals: { 노원구: f.deals },
+    rents: { 노원구: f.rents },
+    complexPrices: { 노원구: f.complexPrice },
+    status: 200,
+    locale,
+    network,
+    query: `?district=노원구&apt=${encodeURIComponent(V4_APT)}`,
+  });
+  await settle();
+  return p.byId("complex-card").innerHTML;
+}
+
+const recentBlock = (html) => html.slice(html.lastIndexOf("<h3>"));
+const whens = (block) => [...block.matchAll(/<span class="when">([^<]*)<\/span>/g)].map((m) => m[1]);
+
+test("V4 카드: 같은 단지 최근 전월세를 최신순 셋까지, 전체 신고 수와 함께 적는다", async () => {
+  const html = await v4Page();
+  const block = recentBlock(html);
+  assert.match(block, /^<h3>최근 전월세 \(신고 5건, 최신순\)<\/h3>/, "제목에 n 이 없다");
+  assert.equal((block.match(/<li class="budget-deal">/g) ?? []).length, 3, "셋을 넘게(또는 덜) 그렸다");
+  // 날짜 표시가 붙고 최신이 먼저다. 다른 단지 행은 섞이지 않는다.
+  assert.deepEqual(whens(block), ["10/20", "10/15", "10/11"]);
+  assert.doesNotMatch(block, /다른단지/);
+  assert.match(block, /갱신/, "갱신 계약 표시가 빠졌다");
+  // 카드 안 순서: 범위 → 전세가율 → 최근 전월세(B3).
+  assert.ok(html.indexOf("가운데 절반") < html.indexOf("전세가율"));
+  assert.ok(html.indexOf("전세가율") < html.indexOf("최근 전월세"));
+});
+
+test("V4 카드: 표본이 모자란 평형은 범위 대신 n 을 적는다(ko/en)", async () => {
+  const ko = await v4Page();
+  assert.match(ko, /가운데 절반 6억원 ~ 6억 2,500만원 · 5건/);
+  assert.match(ko, /<span class="low-sample">신고 2건 — 범위를 내지 않습니다<\/span>/);
+  const en = await v4Page("en");
+  assert.match(en, /<span class="low-sample">2 filed — no range<\/span>/);
+});
+
+test("범위 말은 지난 거래의 폭이고 다음 거래 범위가 아니라고 표 바로 아래(접지 않고) 적는다 (#656 판정)", async () => {
+  const ko = await v4Page();
+  assert.doesNotMatch(ko, /기준 시세/);
+  assert.match(ko, /<th scope="col">2026년 10월 값으로 고친 중앙값<\/th>/);
+  assert.match(ko, /<h3>지난 6개월 거래의 폭 — 2026년 10월 값으로 고침<\/h3>/);
+  assert.match(ko, /<caption class="sr-only">가상V4단지 - 지난 6개월 거래의 폭 — 2026년 10월 값으로 고침 \(2\)<\/caption>/);
+  assert.match(ko, /지난 거래 가운데 절반 6억원 ~ /);
+  const note = '<p class="content-notice">이 폭은 지난 거래가 퍼진 모양이지 다음 거래가 들어올 범위가 아닙니다.';
+  assert.ok(ko.includes(`</table></div>${note}`), "설명이 표 바로 아래에 없다");
+  assert.ok(ko.indexOf(note) < ko.indexOf("<details"), "설명이 접힌 곳 안에 들어갔다");
+  assert.doesNotMatch(ko, /28\.5/, "소급 숫자는 화면에 싣지 않는다");
+
+  const en = await v4Page("en");
+  assert.match(en, /<th scope="col">Median \([^)]* terms\)<\/th>/);
+  assert.match(en, /<h3>Spread of the last 6 months' deals — adjusted to [^<]*<\/h3>/);
+  assert.match(en, /middle half of past deals /);
+  assert.match(en, /<\/table><\/div><p class="content-notice">This is how past deals spread, not where the next deal will land\./);
+});
+
+test("V4 카드: 영어 화면은 영어 제목과 영어 날짜로 같은 셋을 그린다", async () => {
+  const block = recentBlock(await v4Page("en"));
+  assert.match(block, /^<h3>Latest rentals \(5 filed\)<\/h3>/);
+  assert.deepEqual(whens(block), ["Oct 20", "Oct 15", "Oct 11"]);
+});
+
+test("V4 카드: 전월세 파일을 못 받으면 최근 전월세 칸 없이 실패 자리만 남긴다", async () => {
+  const html = await v4Page("ko", { failComplexPrice: false, failDeals: false, failRents: true });
+  assert.doesNotMatch(html, /최근 전월세/, "받지 못한 파일로 목록을 그렸다");
+  assert.match(html, /id="complex-rents-status"/);
+});
