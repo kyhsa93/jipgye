@@ -118,7 +118,7 @@ test("목록에 없는 단지·평형은 자치구×면적대로 내리고 답 �
   // 60~85㎡ 짝: 상계주공 11 + 얇은단지 2 = 13 (요구권 6 · 표시 없음 7). 작은단지(59.9)는 60㎡ 미만.
   assert.equal(
     answer(page),
-    "이 평형은 갱신이 3건이 안 돼 노원구 60~85㎡ 값입니다. 노원구 60~85㎡ 전세 재계약 13건(최근 24개월) 가운데 갱신요구권을 쓴 6건은 66.7%가 5% 언저리(4.5~5%)에서 맺어졌고, 5%를 넘은 것은 0건입니다. 요구권 표시가 없는 7건은 57.1%가 5%를 넘었습니다."
+    "갱신이 3건 미만인 단지·평형은 목록에 없습니다 — 아래는 노원구 60~85㎡ 전체 값입니다. 노원구 60~85㎡ 전세 재계약 13건(최근 24개월) 가운데 갱신요구권을 쓴 6건은 66.7%가 5% 언저리(4.5~5%)에서 맺어졌고, 5%를 넘은 것은 0건입니다. 요구권 표시가 없는 7건은 57.1%가 5%를 넘었습니다."
   );
   assert.equal(page.text("check-new"), "", "fallback 에 신규 중앙값을 붙였다");
   assert.match(page.search(), /gu=nowon&apt=%EC%96%87%EC%9D%80%EB%8B%A8%EC%A7%80&area=b%3A60to85/);
@@ -161,7 +161,7 @@ test("영어: 판정 5 영어 문구, 표·라벨·법무 문구에 한국어가
   await setValue(page, "check-area", "59.9", "change");
   assert.equal(answer(page), "Of 6 jeonse renewals for this unit type (last 24 months), 3 of the 4 that used the renewal right settled near the 5% cap (4.5–5%), and 0 went above 5%. Those without that mark are too few (2).");
   await setValue(page, "check-area", "b:under60", "change");
-  assert.match(answer(page), /^This unit type has fewer than 3 renewals, so these are figures in 노원구 under 60m²\. Of 6 jeonse renewals in 노원구 under 60m² \(last 24 months\), /);
+  assert.match(answer(page), /^Unit types with fewer than 3 renewals are not listed — figures below are district-wide, in 노원구 under 60m²\. Of 6 jeonse renewals in 노원구 under 60m² \(last 24 months\), /);
   await page.click("lang-toggle");
   assert.equal(page.text("check-heading"), "우리 단지 재계약 확인", "한국어로 돌아오지 않았다");
 });

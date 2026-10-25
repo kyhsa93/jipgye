@@ -79,10 +79,12 @@
       <div class="search-field"><label for="check-gu" id="check-gu-label">자치구</label><select id="check-gu"></select></div>
       <div class="search-field"><label for="check-apt" id="check-apt-label">단지</label><input type="text" id="check-apt" list="check-apt-list" autocomplete="off" spellcheck="false"><datalist id="check-apt-list"></datalist></div>
       <div class="search-field"><label for="check-area" id="check-area-label">전용면적</label><select id="check-area"></select></div>
+    </div>
+    <p class="lead" id="check-answer" aria-live="polite"></p>
+    <div class="search-controls" id="check-optional">
       <div class="search-field"><label for="check-old" id="check-old-label">종전 보증금(만원, 선택)</label><input type="number" id="check-old" min="1" inputmode="numeric"></div>
       <div class="search-field"><label for="check-ask" id="check-ask-label">요구 보증금(만원, 선택)</label><input type="number" id="check-ask" min="1" inputmode="numeric"></div>
     </div>
-    <p class="lead" id="check-answer" aria-live="polite"></p>
     <div class="table-scroll"><table class="rate-table" id="check-table"><caption class="sr-only">갱신 인상률 5구간별 건수 - 갱신요구권 사용과 표시 없음 두 줄</caption></table></div>
     <p class="content-notice" id="check-new"></p>
     <p class="content-notice" id="check-scope">전세 갱신만 셉니다(반전세·월세 섞인 갱신, 갱신 여부 미기재 제외).</p>
@@ -199,7 +201,7 @@ const T = {
     ckRows: ["갱신요구권 사용", "표시 없음"],
     ckFew: (n) => `표본 부족(${n}건)`,
     ckUnit: "이 평형",
-    ckFall: (s, u) => `이 평형은 갱신이 ${s}건이 안 돼 ${u} 값입니다. `,
+    ckFall: (s, u) => `갱신이 ${s}건 미만인 단지·평형은 목록에 없습니다 — 아래는 ${u} 전체 값입니다. `,
     ckHead: (u, n) => `${u} 전세 재계약 ${n}건(최근 24개월) 가운데 `,
     ckX: (k, p) => (p === null ? ` 가운데 ${k}건이` : `은 ${p}%가`),
     ckRr: (a, x, b) => (x ? `갱신요구권을 쓴 ${a}건${x} 5% 언저리(4.5~5%)에서 맺어졌고, 5%를 넘은 것은 ${b}건입니다. ` : `갱신요구권을 쓴 갱신은 표본 부족(${a}건)입니다. `),
@@ -272,7 +274,7 @@ const T = {
     ckRows: ["Renewal right used", "No mark"],
     ckFew: (n) => `Too few (${n})`,
     ckUnit: "for this unit type",
-    ckFall: (s, u) => `This unit type has fewer than ${s} renewals, so these are figures ${u}. `,
+    ckFall: (s, u) => `Unit types with fewer than ${s} renewals are not listed — figures below are district-wide, ${u}. `,
     ckHead: (u, n) => `Of ${n} jeonse renewals ${u} (last 24 months), `,
     ckX: (k, p) => (p === null ? `${k}` : `${p}%`),
     ckRr: (a, x, b) => (x ? `${x} of the ${a} that used the renewal right settled near the 5% cap (4.5–5%), and ${b} went above 5%. ` : `those that used the renewal right are too few (${a}). `),
@@ -281,7 +283,7 @@ const T = {
     ckNew: (m, n) => (m === null ? `${n} new jeonse leases for the same unit type (last 6 months) — too few for a median.` : `Median new jeonse for the same unit type: ${m} (10k won, last 6 months, ${n} leases).`),
     ckScope: "Only jeonse renewals are counted (renewals mixed with monthly rent, and filings that do not say whether they are renewals, are excluded).",
     ckLegal:
-      "The 5% cap applies to renewals where the tenant used the statutory renewal right (Housing Lease Protection Act, Articles 6-3 and 7). The right can be used once, and the law separately sets out grounds on which a landlord may refuse. 'No mark' means the filing does not mark the right as used, not that the right cannot be used. This screen counts filed contracts and is not a legal judgment — for advice, contact the Korea Legal Aid Corporation or the Housing Lease Dispute Mediation Committee.",
+      "The 5% cap applies to renewals where the tenant used the statutory renewal right (Housing Lease Protection Act, Articles 6-3 and 7). The right can be used once, and the law separately sets out grounds on which a landlord may refuse. 'No mark' means the filing does not mark the right as used, not that the right cannot be used. This screen counts filed contracts and is not a legal judgment — for consultation or mediation, contact the Korea Legal Aid Corporation or a Housing Lease Dispute Mediation Committee.",
     ckSource: "{{src:renewalCheck.en}}",
   },
 };
