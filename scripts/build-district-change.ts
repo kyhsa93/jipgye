@@ -18,6 +18,7 @@ import { INDEX_FILE } from "./fetch-price-index.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { shiftMonth } from "./outlook.ts";
 import { RAW_DIR } from "./realestate-raw.ts";
+import { writeSegmentChangeSoft } from "./segment-change.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { yearMonthOf } from "./realestate-slots.ts";
 
@@ -116,7 +117,8 @@ async function readAll() {
 
 async function main() {
   const [items, official, survey] = await Promise.all([readAll(), readJson(INDEX_FILE), readJson(DISTRICT_INDEX_FILE)]);
-  const payload = buildPayload({ items, now: new Date(), official, survey });
+  const now = new Date();
+  const payload = buildPayload({ items, now, official, survey });
   if (!payload) {
     console.log("  갈아타기: 두 시기를 정할 원본이 모자라 건너뜀");
     return;
@@ -130,6 +132,8 @@ async function main() {
       `값을 낸 구 ${ok}/25, 갈라 볼 수 있는 쌍 ${distinct}/${Object.keys(payload.pairs).length}, ` +
       `권역 대조 ${payload.regions.map((r) => `${r.name.ko} ${r.ours}/${r.official}`).join(" ")}`
   );
+  // 가격대·연식 구간 변화(N4, #676). 같은 원본·같은 두 시기. soft-fail - 위 갈아타기 파일은 이미 다 썼다.
+  await writeSegmentChangeSoft({ items, now });
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
