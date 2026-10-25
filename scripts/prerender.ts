@@ -225,6 +225,9 @@ async function main() {
         recordControl: recordText("control"),
         recordSurvival: recordText("survival"),
         recordRobust: record?.tables?.robust?.ko ?? null,
+        recordDistricts: record?.tables?.districts?.ko ?? null,
+        recordBands: record?.tables?.bands?.ko ?? null,
+        recordBreakdownNote: recordText("breakdownNote"),
       },
     ],
     [

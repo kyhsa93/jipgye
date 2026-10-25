@@ -1,10 +1,13 @@
 // 신고가 다음 거래 - 자치구·가격대별 행(N3). 신고가의 뜻(선행 3건·180일·90일)은 서울 전체와 같고 행만 나눈다.
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { BANDS } from "../scripts/cancel-by-price.ts";
 import { buildPayload } from "../scripts/build-record-high.ts";
 import { MIN_ROW, breakdown, breakdownNote, breakdownTableHtml, byCell, measure } from "../scripts/record-high.ts";
 
+const root = path.resolve(import.meta.dirname, "..");
 const DAY = 86400000;
 const t0 = Date.UTC(2025, 0, 1);
 const END = t0 + 1000 * DAY;
@@ -126,3 +129,13 @@ test("표 글자는 두 언어로 - 서울 대조 행이 맨 위, 미달 행은 
   assert.equal(breakdownTableHtml([], main, "district", "ko"), null);
 });
 
+test("record-high.html 이 자치구·가격대별 절을 굽고 두 언어 제목을 갖는다", async () => {
+  const html = await readFile(path.join(root, "docs/record-high.html"), "utf8");
+  for (const name of ["recordDistricts", "recordBands", "recordBreakdownNote"]) {
+    assert.ok(html.includes(`<!--prerender:${name}-->`) && html.includes(`<!--/prerender:${name}-->`), `${name} 자리가 없다`);
+  }
+  assert.match(html, /<h2 id="breakdown-heading">자치구·가격대별<\/h2>/);
+  assert.match(html, /breakdownHeading: "자치구·가격대별"/);
+  assert.match(html, /breakdownHeading: "By district and price band"/);
+  assert.match(html, /\["district-table", "districts"\], \["band-table", "bands"\]/);
+});

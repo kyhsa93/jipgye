@@ -15,6 +15,8 @@ test("정적 HTML이 오늘 데이터의 문장과 표를 싣는다", async () =
   ]);
   const block = (name) => html.match(new RegExp(`<!--prerender:${name}-->([\\s\\S]*?)<!--/prerender:${name}-->`))?.[1];
   assert.equal(block("recordRobust"), data.tables.robust.ko);
+  assert.equal(block("recordDistricts"), data.tables.districts.ko);
+  assert.equal(block("recordBands"), data.tables.bands.ko);
   assert.ok(block("recordLead")?.includes(String(data.main.record)), "첫 문장이 오늘 숫자를 싣지 않는다");
   assert.ok(data.lead.en && data.tables.robust.en);
 });
