@@ -226,6 +226,72 @@ export function candidatesShape(band, complexFiles) {
   };
 }
 
+// ---- 이 예산대가 어디로 가는가: 자치구별 한 줄·안내 첫 문장 (V12 #658) ----
+
+/** 「후보가 많은 구」에 한 줄씩 적는 자치구 수. */
+export const AREA_DISTRICTS = 5;
+
+/**
+ * 후보 단지·평형(candidatesInBand 전부, 목록 12곳이 아니다)을 자치구로 묶어 후보가 많은 순서로 다섯 구까지.
+ * 구마다 { district, count, dongs(후보가 많은 동 셋까지), years([처음, 끝] 준공 연도 또는 null), area(전용 가운데값, 반올림 ㎡), apts(거래가 많은 단지 둘) }.
+ * 18장이 같은 틀 문장을 싣던 자리를 그 예산대의 동·연식·평형으로 바꾸는 것이라(#66 공통 산문), 값은 전부 같은 데이터 칸에서 센다 - 새 문턱은 없다.
+ */
+export function areasShape(band, complexFiles) {
+  if (!band || !complexFiles?.length) return [];
+  const min = band.min10k;
+  const rows = candidatesInBand(complexFiles, min, band.max10k ?? min + 10_000);
+  const byDistrict = new Map();
+  for (const row of rows) {
+    if (!byDistrict.has(row.district)) byDistrict.set(row.district, []);
+    byDistrict.get(row.district).push(row);
+  }
+  const top = (map, n) => [...map].sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0]), "ko")).slice(0, n).map(([k]) => k);
+  return [...byDistrict]
+    .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0], "ko"))
+    .slice(0, AREA_DISTRICTS)
+    .map(([district, list]) => {
+      const dongs = new Map();
+      for (const row of list) if (row.dong) dongs.set(row.dong, (dongs.get(row.dong) ?? 0) + 1);
+      const years = list.map((r) => Number(r.buildYear)).filter((y) => y > 0).sort((a, b) => a - b);
+      const areas = list.map((r) => r.area).sort((a, b) => a - b);
+      // candidatesInBand 는 거래 수가 많은 순이다 - 앞의 둘이 「거래가 많은 곳」이다(이름이 같은 평형 둘이면 한 번만).
+      const apts = [...new Set(list.map((r) => String(r.apt ?? "")).filter(Boolean))].slice(0, 2);
+      return {
+        district,
+        count: list.length,
+        dongs: top(dongs, 3),
+        years: years.length ? [years[0], years.at(-1)] : null,
+        area: Math.floor(areas[Math.floor(areas.length / 2)]), // 84.9㎡ 를 「84㎡」라 부르는 관례대로 버린다
+        apts,
+      };
+    });
+}
+
+/**
+ * areasShape 한 칸 → 한 줄 글자. 「노원구 69곳 — 1987~2009년 준공, 전용 가운데값 59㎡, 상계동·공릉동·중계동. 거래가 많은 곳: A·B」
+ * 동 이름을 가운데 두는 것은 순서 취향이 아니다: 고정 글자가 일곱 단어를 넘게 이어지지 않게 해야 18장 공통 산문(scripts/prose-share.ts, 8단어 창)이 다시 늘지 않는다 -
+ * 단지 이름에 숫자가 있으면 그 이름도 가려져(#) 고정 글자로 센다.
+ */
+export function areaLine(a) {
+  const years = a.years ? (a.years[0] === a.years[1] ? `${a.years[0]}년 준공` : `${a.years[0]}~${a.years[1]}년 준공`) : null;
+  const parts = [years, `전용 가운데값 ${a.area}㎡`, a.dongs.join("·")].filter(Boolean).join(", ");
+  return `${a.district} ${a.count.toLocaleString("ko-KR")}곳 — ${parts}.${a.apts.length ? ` 거래가 많은 곳: ${a.apts.join("·")}` : ""}`;
+}
+
+/**
+ * 예산대 장 맨 위 안내(#method-callout-text)의 한국어 첫 문장. 시세 틀의 안내는 자치구 4주 평균을 말해 예산대 장(자치구 표를 접었다)과 맞지 않았다.
+ * 후보가 많은 세 구와 그 구에서 가장 많은 동을 적는다. 후보가 없으면 null(틀 문장을 그대로 둔다). 안내 길이 상한(120자, test/method-callout)을 넘지 않게 세 구까지.
+ */
+export function budgetLeadText(band, complexFiles) {
+  const areas = areasShape(band, complexFiles).slice(0, 3);
+  if (!areas.length) return null;
+  const places = areas.map((a) => (a.dongs[0] ? `${a.district}(${a.dongs[0]})` : a.district)).join("·");
+  return `${budgetBandLabel(band)}로 살 수 있는 단지·평형은 ${places}에 가장 많습니다. 매물 호가가 아니라 국토교통부에 신고된 실거래입니다.`;
+}
+
+/** 자치구 링크 순서: 이 예산대 거래가 많은 구부터(band.districts 순서), 거래가 없는 구는 원래 순서대로 뒤에. 이름 배열이다. */
+export const districtOrder = (band) => (band?.districts ?? []).map((d) => d.name);
+
 /**
  * 예산대 본문 맨 앞(거래 요약·신고분 기준·거래가 많은 지역)의 모양. 예산대가 없으면 null(조각도 null - 합성 조각 가운데 이것만 빈 결과가 null이다).
  * { summary, periods, districts }: periods는 "" 또는 "9월, 8월 신고분 기준", districts는 [{ name(입력 그대로 - JSX가 str()), count(숫자 서식 글자) }].

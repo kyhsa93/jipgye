@@ -1,6 +1,8 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.ts";
+import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetDescription, budgetPageFile } from "./budget-pages.ts";
+import { areaLine, areasShape, budgetLeadText, districtOrder } from "./budget-fragments.ts";
+import { candidatesInBand } from "./complex-price.ts";
 import { REALESTATE_TEMPLATE_PATH, applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml, realestateOverallHtml } from "./prerender.ts";
 import { clustering } from "./loan-cap.ts";
 import { latestRate } from "./mortgage.ts";
@@ -17,13 +19,14 @@ const root = path.resolve(import.meta.dirname, "..");
 const REALESTATE_PATH = REALESTATE_TEMPLATE_PATH; // 빈 표지가 있는 틀(scripts/realestate-template.html). 나가는 docs/realestate.html 이 아니다(#374).
 const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 
-const BASE_TITLE = "서울 아파트 시세 - 25개 자치구 실거래가";
+const BASE_TITLE = "서울 아파트 시세, 자치구별로 얼마인가 - 25개 자치구 실거래가";
 const BASE_DESCRIPTION =
   "국토교통부 실거래 신고 자료로 서울 25개 자치구의 아파트 매매·전세·월세 시세를 평당가와 84㎡ 환산가로 함께 보여줍니다. 매일 갱신합니다.";
 const BASE_TITLE_KEY = 'title: "서울 아파트 시세",';
 const BASE_TITLE_KEY_EN = 'title: "Seoul Apartment Prices",';
 
 // 틀의 예산 섹션 제목. 장에서는 본문 칸으로 옮겨 가므로(buildBudgetPage) 틀 자리에서 떼는 글자와 본문에 넣는 글자가 같은 상수 하나다.
+const DISTRICT_LINKS_HEADING = "자치구별 시세 보기 (이 예산대 거래가 많은 구부터)";
 const BUDGET_HEADING_HTML = '<h2 id="budget-heading">예산으로 찾기</h2>';
 
 function replaceOnce(html, needle, replacement, what) {
@@ -84,13 +87,21 @@ function navHtml(page) {
 export function buildBudgetPage(baseHtml, page, budget, loanBasis = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, realestate = null) {
   const band = (budget?.bands ?? []).find((b) => b.min10k === page.min10k) ?? null;
   // 제목과 칩 줄은 본문 칸 안, 어디로 가는가 문장 뒤 후보 앞에 놓인다(#460) - 틀의 제목 자리는 비우고 본문이 들고 간다.
-  const body = budgetBodyHtml(band, budget?.periods, loanBasis, mortgageSeries, complexFiles, capStats, policyCounts, `${BUDGET_HEADING_HTML}${chipsHtml(page)}`);
+  // 단지 후보가 많은 구마다 한 줄(동·연식·평형, V12 #658) - 18장이 같은 틀 문장을 싣던 자리에 그 예산대의 데이터를 놓는다.
+  const areaLines = areasShape(band, complexFiles).map(areaLine);
+  const body = budgetBodyHtml(band, budget?.periods, loanBasis, mortgageSeries, complexFiles, capStats, policyCounts, `${BUDGET_HEADING_HTML}${chipsHtml(page)}`, areaLines);
   if (!body) return null;
 
   let html = baseHtml;
 
+  // description 은 그 예산대의 답(후보가 많은 구·후보 수·거래 수)으로 굽는다(V12 #658). 값이 없으면 고정 문장.
+  const description = budgetDescription(page, {
+    deals: band?.count ?? 0,
+    candidates: band && complexFiles?.length ? candidatesInBand(complexFiles, band.min10k, band.max10k ?? band.min10k + 10_000).length : 0,
+    places: areasShape(band, complexFiles).slice(0, 3).map((a) => a.district),
+  });
   html = html.replaceAll(BASE_TITLE, page.title);
-  html = html.replaceAll(BASE_DESCRIPTION, page.description);
+  html = html.replaceAll(BASE_DESCRIPTION, description);
   html = html.replaceAll(`${BASE_URL}realestate.html`, `${BASE_URL}${page.file}`);
   html = replaceOnce(html, BASE_TITLE_KEY, `title: ${JSON.stringify(page.title)},`, "한국어 제목 사전");
   html = replaceOnce(html, BASE_TITLE_KEY_EN, `title: ${JSON.stringify(page.titleEn)},`, "영어 제목 사전");
@@ -113,6 +124,19 @@ export function buildBudgetPage(baseHtml, page, budget, loanBasis = null, mortga
     '<section id="budget-section" class="tw:mb-10 tw:1024:mb-16">',
     "예산 섹션"
   );
+
+  // 맨 위 안내의 한국어 문장: 시세 틀의 자치구 4주 평균 이야기 대신 이 예산대가 가는 곳(V12 #658). 구운 글자와 한국어 사전(화면 스크립트가 다시 쓰는 값)을
+  // 같이 바꾼다 - 하나만 바꾸면 스크립트가 틀 문장으로 되돌린다. 영어 사전은 그대로다. 후보가 없으면 틀 문장 그대로.
+  const lead = budgetLeadText(band, complexFiles);
+  if (lead) {
+    const baked = /<p id="method-callout-text" class="tw:text-fg">([^<]*)<\/p>/.exec(html)?.[1];
+    if (!baked) throw new Error("맨 위 안내 문장을 찾지 못했습니다");
+    html = replaceOnce(html, `<p id="method-callout-text" class="tw:text-fg">${baked}</p>`, `<p id="method-callout-text" class="tw:text-fg">${escapeHtml(lead)}</p>`, "맨 위 안내");
+    html = replaceOnce(html, `methodCalloutText:\n      ${JSON.stringify(baked)},`, `methodCalloutText:\n      ${JSON.stringify(lead)},`, "한국어 안내 사전");
+  }
+
+  // 자치구 링크 머리글: 화면 스크립트가 한국어 사전의 otherDistricts 로 다시 쓰므로 사전도 같은 글자로(전에는 구운 「자치구별 시세 보기」가 「다른 지역」으로 바뀌었다).
+  html = replaceOnce(html, 'otherDistricts: "다른 지역",', `otherDistricts: ${JSON.stringify(DISTRICT_LINKS_HEADING)},`, "한국어 자치구 링크 머리글 사전");
 
   html = replaceOnce(
     html,
@@ -166,7 +190,8 @@ export function buildBudgetPage(baseHtml, page, budget, loanBasis = null, mortga
     // HTML에는 그대로 실려 나가고, 중복을 재면 접기 전과 같은 값이 나온다.
     realestateHead: "",
     realestateTable: "",
-    districtLinks: districtLinksHtml(null, "자치구별 시세 보기"),
+    // 이 예산대 거래가 많은 구부터(V12 #658). 25개 이름이 18장에서 같은 순서로 실리던 자리다. 머리글은 위에서 사전 값과 같이 바꿨다.
+    districtLinks: districtLinksHtml(null, DISTRICT_LINKS_HEADING, districtOrder(band)),
   }));
 }
 

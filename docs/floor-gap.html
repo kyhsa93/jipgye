@@ -8,19 +8,19 @@
 <link rel="icon" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <meta name="google-adsense-account" content="ca-pub-1195159445218373">
-<title>아파트 1층은 얼마나 싼가 - 서울 실거래로 잰 층별 가격 차이</title>
+<title>아파트 1층은 얼마나 싸야 하나 - 서울 실거래로 잰 층별 가격 차이</title>
 <meta name="description" content="같은 단지 같은 평형에서 1층이 3층 이상보다 얼마나 싸게 거래되는지를 서울 실거래로 셉니다. 매매와 전세를 따로 재고, 최상층에 웃돈이 붙는지도 함께 봅니다.">
 <meta name="site-group" content="digest">
 <link rel="canonical" href="https://kyhsa93.github.io/jipgye/floor-gap.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="집계">
 <meta property="og:url" content="https://kyhsa93.github.io/jipgye/floor-gap.html">
-<meta property="og:title" content="아파트 1층은 얼마나 싼가 - 서울 실거래로 잰 층별 가격 차이">
+<meta property="og:title" content="아파트 1층은 얼마나 싸야 하나 - 서울 실거래로 잰 층별 가격 차이">
 <meta property="og:description" content="같은 단지 같은 평형에서 1층이 3층 이상보다 얼마나 싸게 거래되는지를 서울 실거래로 셉니다.">
 <meta property="og:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="아파트 1층은 얼마나 싼가 - 서울 실거래로 잰 층별 가격 차이">
+<meta name="twitter:title" content="아파트 1층은 얼마나 싸야 하나 - 서울 실거래로 잰 층별 가격 차이">
 <meta name="twitter:description" content="같은 단지 같은 평형에서 1층이 얼마나 싸게 거래되는지를 실거래로 셉니다.">
 <meta name="twitter:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <link rel="stylesheet" href="./style.css">
@@ -291,8 +291,9 @@ function renderLoadNotice() {
   });
 }
 
+const BAKED_TITLE = document.title;
 function applyLocale() {
-  document.title = t("title");
+  document.title = locale === "en" ? t("title") : BAKED_TITLE;
   setText("page-title", t("title"));
   setText("next-search", t("nextSearch"));
   setText("next-budget", t("nextBudget"));

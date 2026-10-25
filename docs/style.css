@@ -971,6 +971,17 @@
     font-size: var(--fs-sm);
     margin-top: 4px;
   }
+  .budget-areas {
+    max-width: var(--prose);
+    margin-top: 8px;
+  }
+  .budget-areas ul {
+    margin: 4px 0 0;
+    padding-left: 18px;
+  }
+  .budget-areas li {
+    margin: 4px 0;
+  }
   .budget-deals {
     list-style: none;
     padding: 0;
