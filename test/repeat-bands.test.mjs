@@ -183,9 +183,12 @@ test("표: 행 셋 「낮은 쪽·가운데·높은 쪽 3분의 1」, 경계(만
   assert.match(h, /<tr class="m-ko"><th scope="col">앞 거래가\(만원\)<\/th><th scope="col">쌍 수<\/th><th scope="col">중앙값<\/th><th scope="col">90% 구간<\/th><\/tr>/);
 });
 
-test("차이: 말할 수 없는 쌍은 빼고, 하나도 없으면 차이 문장과 한계 문장을 모두 뺀다(첫 줄은 남는다)", () => {
+test("차이: 말할 수 없는 쌍은 빼고, 한계 문장은 양 끝을 말할 때만, 하나도 없으면 차이 문장과 한계 문장을 모두 뺀다(첫 줄은 남는다)", () => {
   const some = textOf(bandsPart(withBands({ say: [0, -1, 0] })), "ko");
-  assert.ok(some.includes(`구별되는 쌍: 높은 쪽 < 가운데. ${MR_KO}`));
+  // 평균 회귀 한계는 양 끝(낮은 쪽–높은 쪽)을 말할 때만(#697 판정)
+  assert.ok(some.includes("구별되는 쌍: 높은 쪽 < 가운데.") && !some.includes("평균 회귀"), some);
+  const ends = textOf(bandsPart(withBands({ say: [0, 0, 1] })), "ko");
+  assert.ok(ends.includes(`구별되는 쌍: 높은 쪽 > 낮은 쪽. ${MR_KO}`), ends);
   const none = bandsPart(withBands({ say: [0, 0, 0] }));
   assert.ok(textOf(none, "ko").includes(LEAD_KO));
   assert.ok(!textOf(none, "ko").includes("구별") && !textOf(none, "ko").includes("평균 회귀"));

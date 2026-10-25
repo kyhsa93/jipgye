@@ -112,3 +112,14 @@ test("틀: 「25개 구」 표 아래 자리표시 하나, 인라인 스크립�
   const script = tpl.slice(tpl.lastIndexOf("<script>"));
   assert.ok(!/segment-change|segmentChange/.test(script), "인라인 스크립트에 이 표의 글자가 없다(S6 여유 0)");
 });
+
+test("조각 바이트: 4,000 B 이하(두 언어, #697 판정)", () => {
+  const n = Buffer.byteLength(html(N4));
+  assert.ok(n <= 4000, `${n}B`);
+});
+
+test("영어 줄 이름은 375px 에 맞춘 짧은 이름, 문장 속 이름은 json 의 en 그대로", () => {
+  const h = html(N4);
+  for (const s of ["≤₩600M", "&gt;₩2.5B", "&lt;10 yrs", "10–29 yrs", "30+ yrs"]) assert.ok(h.includes(`<span class="m-en">${s}</span>`), s);
+  assert.ok(textOf(h, "en").includes("only under 10 years and 30 years or more can be told apart"));
+});

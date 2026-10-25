@@ -13,7 +13,7 @@ type Row = { key: string; ko: string; en: string; cells: number; change: number 
 export const SEGMENT_HEADING: Both = { ko: "가격대·연식별 1년 변화", en: "1-year change by price band and building age" };
 export const SEGMENT_HEAD: Both[] = [
   { ko: "구분", en: "Group" },
-  { ko: "1년 변화", en: "1-yr change" },
+  { ko: "1년 변화", en: "Change" },
   { ko: "90% 구간", en: "90% range" },
   { ko: "칸 수", en: "Units" },
 ];
@@ -59,6 +59,9 @@ function pairLine(dim: Both, rows: Row[], verdicts: Record<string, boolean> | un
   };
 }
 
+// 375px 에서 영어 표가 상자를 넘지 않게 줄 이름을 줄여 쓴다(json 의 en 은 문장 속 이름으로 그대로 쓴다). 키가 없으면 json 의 en.
+const EN_SHORT: Record<string, string> = { upTo6: "≤₩600M", over25: ">₩2.5B", under10: "<10 yrs", y10to29: "10–29 yrs", over30: "30+ yrs" };
+
 const PRICE_DIM: Both = { ko: "가격대", en: "Price bands" };
 const AGE_DIM: Both = { ko: "연식", en: "Building age" };
 
@@ -66,7 +69,7 @@ export function segmentChangeView(data) {
   if (!Array.isArray(data?.price) || !Array.isArray(data?.age) || !data.periods?.base?.length) return null;
   const rowsOf = (list: Row[]) =>
     list.map((r) => ({
-      name: { ko: r.ko, en: r.en },
+      name: { ko: r.ko, en: EN_SHORT[r.key] ?? r.en },
       cells: r.change === null ? null : [pct(r.change), `${pct(r.low)} ~ ${pct(r.high)}`, num(r.cells)],
       blank: r.change === null ? { ko: `칸이 모자람(${num(r.cells)}칸)`, en: `too few units (${num(r.cells)})` } : null,
     }));

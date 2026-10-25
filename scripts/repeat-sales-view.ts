@@ -121,15 +121,17 @@ export function repeatBandsView(b) {
   const rows = b.rows.map((r, k) => ({ name: BAND_NAMES[k], bound: bounds[k], cells: [won(r.n), pct(r.p[0]), `${pct(r.p[1])} ~ ${pct(r.p[2])}`] }));
   // 「가운데 > 낮은 쪽」: 뒤 가격대(j)의 값이 앞(i)보다 크면 >. 말할 수 없는 쌍(say 0)은 적지 않는다.
   const said = PAIRS.map(([i, j], k) => ({ i, j, dir: b.say?.[k] ?? 0 })).filter((x) => x.dir);
+  // 평균 회귀 한계는 양 끝(낮은 쪽–높은 쪽, say[2])의 차이를 말할 때만 붙인다(#697 판정).
+  const ends = (b.say?.[2] ?? 0) !== 0;
   const list = (lang: keyof Both) => said.map(({ i, j, dir }) => `${SHORT[j][lang]} ${dir > 0 ? ">" : "<"} ${SHORT[i][lang]}`).join(" · ");
   // 표 위 한 문단(판정: 표 위에 「방향이 같다」 한 줄, 차이 문장 바로 옆에 평균 회귀 한계). 말할 쌍이 없으면 차이·한계 문장 없이 첫 줄만.
   const lead: Both = {
     ko:
       "같은 칸 방식(가격대·연식별 1년 변화)과 방향이 같습니다. 시장 지수가 아니고, 다시 팔린 집만 들어옵니다." +
-      (said.length ? ` 구간이 겹치지 않아 구별되는 쌍: ${list("ko")}. 양 끝의 차이는 평균 회귀로 커 보일 수 있습니다(보정하지 않음).` : ""),
+      (said.length ? ` 구간이 겹치지 않아 구별되는 쌍: ${list("ko")}.${ends ? " 양 끝의 차이는 평균 회귀로 커 보일 수 있습니다(보정하지 않음)." : ""}` : ""),
     en:
       "Same direction as the same-unit method (1-year change by price band and age). Not a market index; resold homes only." +
-      (said.length ? ` Told apart (ranges do not overlap): ${list("en")}. Gaps at the ends can look larger through regression to the mean (not corrected).` : ""),
+      (said.length ? ` Told apart (ranges do not overlap): ${list("en")}.${ends ? " Gaps at the ends can look larger through regression to the mean (not corrected)." : ""}` : ""),
   };
   return { title: BANDS_TITLE, lead, rows };
 }
