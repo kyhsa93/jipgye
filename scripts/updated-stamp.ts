@@ -45,7 +45,7 @@ export const PAGE_SOURCES = {
   "stock-news.html": ["news", "summary"],
   "jeonse-vs-wolse.html": ["conversion"],
   "cancelled-deals.html": ["cancellation"],
-  "renewal-vs-new.html": ["renewal-facts"],
+  "renewal-vs-new.html": ["renewal-facts", "renewal-cells"],
   "floor-gap.html": ["floor-gap"],
   "price-outlook.html": ["outlook", "outlook-indicators", "move-in"],
   "record-high.html": ["record-high"],

@@ -4,6 +4,7 @@ import { DISTRICTS } from "./realestate-districts.ts";
 import { readSlotFile } from "./realestate-raw.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { cellRatios, spreadOf } from "./complex-ratio.ts";
+import { runRenewalCells } from "./build-renewal-cells.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -48,6 +49,10 @@ export function buildPayload({ byDistrict, now }) {
 
 async function main() {
   const now = new Date();
+  // 재계약 확인기 데이터(#652 V3)를 여기서 함께 만든다 - 같은 원본(raw/rent)을 읽는 같은 단계이고, 신규 쪽이 이 화면의 창(MONTHS)을 쓴다.
+  // update-all.mjs·daily-update.yml 에 따로 등록하지 않은 이유는 build-renewal-cells.ts 머리 주석. 소프트 실패라 던지지 않는다 -
+  // 그 실패가 전세가율 파일을 막지 않게 먼저 돌리고 결과와 무관하게 아래로 간다.
+  await runRenewalCells({ now, newMonths: MONTHS });
   const byDistrict = await readRaw(recentMonths(now, MONTHS));
   const payload = buildPayload({ byDistrict, now });
 
