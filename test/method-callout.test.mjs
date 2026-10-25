@@ -134,14 +134,15 @@ const load = (storage) =>
 
 test("한국어 화면은 한국어로, 영어 화면은 영어로 말한다", async () => {
   const ko = await load();
-  assert.match(ko.byId("method-callout-text").textContent, /신고된 실거래/);
+  // #575: 태그라인과 겹치던 첫 문장(신고된 실거래)을 지웠다 - 남은 표본·신고 기한 문장으로 언어를 본다.
+  assert.match(ko.byId("method-callout-text").textContent, /신고 기한이 30일/);
   assert.match(ko.byId("method-callout-link").textContent, /숫자를 만드는 방법/);
 
   const en = await load({ lang: "en" });
-  assert.match(en.byId("method-callout-text").textContent, /reported to the Ministry of Land/);
+  assert.match(en.byId("method-callout-text").textContent, /30-day window/);
   assert.match(en.byId("method-callout-link").textContent, /How these numbers are made/);
   assert.ok(
-    !/신고된 실거래/.test(en.byId("method-callout-text").textContent),
+    !/신고 기한/.test(en.byId("method-callout-text").textContent),
     "영어 화면에 한국어가 남았다"
   );
 });

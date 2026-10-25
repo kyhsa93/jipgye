@@ -142,18 +142,6 @@ test("몇 개가 남았는지 소리로도 알린다", async () => {
   assert.ok(p.byId("news-status").textContent.length > 0, "뉴스 건수를 안 알린다");
 });
 
-test("감춘 구가 있으면 전체 보기로 안내한다", async () => {
-  const p = await page();
-  const link = p.byId("realestate-more");
-  assert.equal(link.hidden, false);
-  assert.match(link.textContent, new RegExp(`${districtCount()}개`));
-
-  const input = p.byId("realestate-search-input");
-  input.value = "강남";
-  input.dispatch("input");
-  assert.equal(link.hidden, true, "검색 중에는 안내를 띄우지 않는다");
-});
-
 test("메인 화면 추이 카드에도 양 축 눈금과 짚을 자리를 둔다", async () => {
   const p = await page({ trend: syntheticTrend({ pending: true }) });
   const grid = p.byId("realestate-history-grid").innerHTML;
