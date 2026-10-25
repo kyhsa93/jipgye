@@ -117,6 +117,79 @@ export function budgetFacts(deals, { year }: { year?: number } = {}) {
   return facts;
 }
 
+/** 나간 칸이 많은 구를 몇 개까지 적나(#692 완료 조건 1). 구 이름만 - 단지 이름은 적지 않는다. */
+export const YEAR_ON_DISTRICTS = 3;
+
+/**
+ * 내 예산, 1년 새 — 같은 칸(단지·평형)을 1년 전과 지금으로 견준다(#692, N10).
+ *
+ * 예산대 장의 다른 숫자는 최근 거래만 본다. 「1년 전 이 돈으로 살 수 있던 칸이 지금은 몇이나 밖으로 나갔나」는
+ * 평균 두 개를 견주면 거래 구성이 바뀐 만큼 틀린다 — 비싼 단지가 더 팔린 해에는 아무 칸도 오르지 않아도 평균이 오른다.
+ * 그래서 칸마다 자기 자신과 견준다.
+ *
+ * 값은 단지 가격 범위 파일(complex-price-*.json)에 이미 있는 두 숫자뿐이다 - 새 문턱이 없다.
+ * - 지금: `cell.median`(기준 달 값으로 고친 6개월 중앙값). 단지 후보(candidatesInBand)가 「이 예산 안」을 가르는 값과 같은 값이라
+ *   장 안의 후보 수와 이 문단의 수가 같은 정의로 맞는다.
+ * - 1년 전: `cell.yearAgo.median`(1년 전 같은 석 달의 고치기 전 중앙값). 빌더가 같은 칸 3건(complex-price.ts MIN_DEALS) 이상에만 붙였다.
+ * yearAgo 가 없는 칸은 견줄 수 없어 뺀다. 뺀 수는 「지금 이 예산 안인데 1년 전 값이 없는 칸」으로 센다 - 장에 실린 후보 수에서 빠진 만큼이다.
+ *
+ * `max10k`가 null 이면(맨 위 구간) 단지 후보와 같은 규칙으로 min + 1억을 쓴다(budget-fragments.ts candidatesShape).
+ * 견줄 칸이 하나도 없으면(1년 전 안 0 · 들어온 칸 0) null - 말할 것이 없다.
+ */
+export function budgetYearOn(files, min10k, max10k) {
+  if (!files?.length || !Number.isFinite(min10k)) return null;
+  const max = max10k ?? min10k + 10_000;
+  const inBand = (v) => v >= min10k && v < max;
+  let was = 0;
+  let up = 0;
+  let down = 0;
+  let came = 0;
+  let current = 0;
+  let missing = 0;
+  let months = null;
+  const outBy = new Map();
+  for (const file of files) {
+    for (const areas of Object.values(file?.cells ?? {})) {
+      for (const cell of Object.values(areas ?? {}) as any[]) {
+        const now = cell?.median;
+        if (!(now > 0)) continue;
+        const nowIn = inBand(now);
+        if (nowIn) current += 1;
+        const then = cell.yearAgo?.median;
+        if (!(then > 0)) {
+          if (nowIn) missing += 1;
+          continue;
+        }
+        if (!months && cell.yearAgo.months?.length) months = [...cell.yearAgo.months].sort();
+        if (inBand(then)) {
+          was += 1;
+          if (nowIn) continue;
+          if (now >= max) up += 1;
+          else down += 1;
+          outBy.set(file.district, (outBy.get(file.district) ?? 0) + 1);
+        } else if (nowIn) came += 1;
+      }
+    }
+  }
+  if (!was && !came) return null;
+  const top = [...outBy]
+    .sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0]), "ko"))
+    .slice(0, YEAR_ON_DISTRICTS)
+    .map(([name, count]) => ({ name, count }));
+  return {
+    was,
+    out: up + down,
+    up,
+    down,
+    came,
+    current,
+    missing,
+    top,
+    months: months ? [months[0], months.at(-1)] : null,
+    reference: files.find((f) => f?.reference)?.reference ?? null,
+  };
+}
+
 const area = (value) => `${Number(value).toFixed(0)}㎡`;
 
 function place(deal, en) {
