@@ -6,6 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import { createWriteSet } from "../scripts/render-writes.ts";
 import { findJsComments, stripInlineScriptComments } from "../scripts/strip-inline-comments.ts";
+import { stampSources } from "../scripts/source-lines.ts";
 import { jsInlineScripts } from "./helpers/comment-proof.mjs";
 
 // #237: 한 렌더 스크립트는 전부 메모리에서 렌더에 성공한 뒤에 쓴다 - 중간에서 던지면 어느 파일도 바뀌지 않는다.
@@ -87,7 +88,8 @@ test("prerender.ts: 시세 장은 scripts/ 의 틀을 읽어 docs/realestate.htm
   assert.equal(r.status, 0, r.stderr);
   const out = await readFile(path.join(dir, "docs/realestate.html"), "utf8");
   // 표지 안쪽과 표 캡션(채워진 행 수를 센다)은 데이터에 따라 달라서 마크업은 견주지 않는다 - 스크립트가 틀에서 주석만 뗀 것과 같은지 본다.
-  const want = jsInlineScripts(stripInlineScriptComments(template)).map((x) => x.body);
+  // 출처 줄 자리표시({{src:…}}, #588)는 같은 길에서 꽂히므로 틀 쪽도 꽂은 글자로 견준다.
+  const want = jsInlineScripts(stripInlineScriptComments(stampSources(template))).map((x) => x.body);
   assert.deepEqual(jsInlineScripts(out).map((x) => x.body), want, "나가는 장의 스크립트가 틀에서 주석만 뗀 것과 다르다");
   assert.equal(jsInlineScripts(out).flatMap((x) => findJsComments(x.body)).length, 0, "나가는 장에 주석이 남았다");
   assert.equal(await readFile(templatePath, "utf8"), template, "틀이 덮어 써졌다 - 생성물만 쓰고 틀은 건드리지 않는다");

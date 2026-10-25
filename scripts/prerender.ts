@@ -8,6 +8,7 @@ import { CONVERSION_BAND } from "./district-tables.ts";
 import { budgetBandLabel } from "./budget-fragments.ts";
 import { MIN_SAMPLE } from "./realestate-format.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
+import { stampSources } from "./source-lines.ts";
 import { requireSite, siteLabel, sitePath } from "./site-dir.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -83,6 +84,9 @@ export const floorDistrictLinksHtml = fragment("floorDistrictLinksHtml");
 // 다른 모듈이 여기서 import 하던 이름은 그대로 다시 내보낸다(예산대 이름은 budget-fragments.ts, 전환율 구간은 district-tables.ts).
 export { budgetBandLabel, CONVERSION_BAND };
 
+/** applyPrerender 를 안 지나는 장 중 출처 줄 자리표시가 있는 장(#588). 표를 손대지 않으려고 accessibleTables 길에 넣지 않는다. */
+export const SOURCE_ONLY_PAGES = ["about.html", "deal-search.html"];
+
 export function applyPrerender(html, blocks) {
   let out = html;
   for (const [name, content] of Object.entries(blocks)) {
@@ -98,6 +102,8 @@ export function applyPrerender(html, blocks) {
   }
   // 안내 링크 쌍(#462)은 시세 장만 4주 문단 앵커로 간다. 예산대 장(<meta name="budget-band">)은 두 링크 모두 맨 위(method.html)로 둔다.
   if (out.includes('<meta name="budget-band"')) out = out.replace(/(href="\.\/method\.html)#four-weeks(?:-en)?"/g, '$1"');
+  // 출처 줄 자리표시({{src:<id>.ko|en}}, #588)는 모든 장이 지나는 여기서 한 번에 꽂는다. 글자는 scripts/source-lines.ts 한 곳이다.
+  out = stampSources(out);
   // 틀에 손으로 쓴 표와 빌더가 채운 표가 모두 이 길을 지나므로 머리글 방향·표 이름은 여기서 한 번에 단다.
   return accessibleTables(out);
 }
@@ -265,6 +271,14 @@ async function main() {
       continue;
     }
     writes.stage(path_, next, `  ${file} 갱신`);
+  }
+  // 채울 자리도 표도 없어 위 길을 안 지나는 장은 출처 줄 자리표시만 꽂는다(#588). 그 장이 없는 출력(시험의 축소 사본)은 건너뛴다.
+  for (const rel of SOURCE_ONLY_PAGES) {
+    const html = await readFile(at(rel), "utf8").catch(() => null);
+    if (html == null) continue;
+    const next = stampSources(html);
+    if (next === html) continue;
+    writes.stage(at(rel), next, `  ${label(rel)} 출처 줄`);
   }
   // 열한 장이 전부 렌더에 성공한 뒤에야 쓴다(#237) - 중간 장에서 던지면 어느 파일도 바뀌지 않는다.
   writes.commit();

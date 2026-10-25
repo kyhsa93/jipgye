@@ -7,6 +7,7 @@ import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scr
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 import { formatPercent } from "../scripts/realestate-format.ts";
 import { readDataSources } from "../scripts/source-age.ts";
+import { stampSources } from "../scripts/source-lines.ts";
 import { stripInlineScriptComments, stripJsComments } from "../scripts/strip-inline-comments.ts";
 import { FALLBACK_NOTE_KO, hasFallback } from "../scripts/summary-note.ts";
 import { CROSS_PAGES, PAGE_SOURCES, baselineFor, stampHtml } from "../scripts/updated-stamp.ts";
@@ -154,7 +155,8 @@ test("[realestate-pages] 고정 데이터로 찍은 자치구 페이지 25개가
 });
 
 test("[inline-comments] 고정 데이터로 나가는 docs/realestate.html 은 틀을 채우고 훑개를 건 것뿐이다 (#374)", async () => {
-  const template = await repoRead("scripts/realestate-template.html");
+  // 출처 줄 자리표시({{src:…}}, #588)는 틀 채우기와 같은 길(applyPrerender)에서 꽂히므로 틀을 꽂은 글자로 견준다.
+  const template = stampSources(await repoRead("scripts/realestate-template.html"));
   const baked = site.read("docs/realestate.html");
 
   // 스크립트: 나가는 장의 인라인 스크립트는 틀의 것에서 훑개가 주석을 뗀 글자와 같고, 증명기(구문 + 지운 글자)도 통과한다.

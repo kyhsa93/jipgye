@@ -145,6 +145,7 @@
   <footer class="site-footer">
     <div class="update-schedule tw:text-sm tw:mb-2" id="update-schedule"></div>
     <div class="updated" id="updated" data-updated="2026-10-24">기준일 2026-10-24</div>
+    <div id="footer-source">{{src:index.ko}}</div>
     <a href="./about.html" id="footer-about">소개</a>
     <span aria-hidden="true"> · </span>
     <a href="./method.html" id="footer-method">숫자를 만드는 방법</a>
@@ -238,6 +239,7 @@
       qg_rent: "전월세를 구하는 사람",
       qg_move: "옮기거나 파는 사람",
       footerAbout: "소개",
+      footerSource: "{{src:index.ko}}",
     },
     en: {
       title: "Jipgye",
@@ -311,6 +313,7 @@
       qg_rent: "Renting",
       qg_move: "Moving or selling",
       footerAbout: "About",
+      footerSource: "{{src:index.en}}",
     },
   };
 
@@ -1078,6 +1081,7 @@
     document.getElementById("qg-move").textContent = t("qg_move");
     document.getElementById("q-search").textContent = t("q_search");
     document.getElementById("footer-about").textContent = t("footerAbout");
+    document.getElementById("footer-source").textContent = t("footerSource");
     const missing = ["market", "realestate"].filter((key) => !cache[key]);
     const failedNames = missing.map((key) => t("loadFailedNames")[key] ?? key).join(", ");
     const loadErrorText = t("loadFailedNotice")(failedNames, document.getElementById("updated").getAttribute("data-updated"));
