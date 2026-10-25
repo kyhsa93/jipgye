@@ -35,7 +35,8 @@ test("method.html: 중앙값 치우침·지난 거래 폭 문단(ko)과 같은 �
   assert.ok(!html.includes("이렇게 고친 범위가 맞는지는"));
   assert.ok(html.includes("5건 이상이면 지난 거래 가운데 절반(사분위), 3~4건이면 지난 거래 최저~최고(고침)를 적습니다."));
   assert.ok(html.includes("이 폭은 지난 거래가 퍼진 모양이지 다음 거래가 들어올 범위가 아닙니다. 거래 5건의 가운데 절반은 시장이 그대로여도 다음 거래를 셋에 하나꼴로만 담고(건수가 많을수록 절반에 가까워짐), 값이 오르는 동안에는 다음 거래가 폭 위에 놓이기 쉽습니다."));
-  assert.ok(html.includes("이 폭이 다음 거래를 실제로 얼마나 담았는지는 2026-11 부터 얼려 두고 채점합니다."));
+  assert.ok(html.includes("이 폭이 다음 거래를 실제로 얼마나 담았는지는 2026-11 부터 매달 얼려 두었다가, 2027-01 부터 채점해 서울 단위로 싣습니다."));
+  assert.ok(html.includes("How much of the next deals this spread actually caught is frozen monthly from 2026-11 and scored from 2027-01, reported at Seoul level."));
   assert.ok(html.includes("Whether the adjusted <strong>median</strong> leans one way was checked on deals already done:"));
   assert.ok(!html.includes("The adjustment was checked on deals already done"));
   assert.ok(html.includes("Five or more deals give the middle half of past deals (quartiles), three or four give past deals low&ndash;high (adjusted),"));
