@@ -223,3 +223,40 @@ export function moveInDistrictTableHtml(d, basis, locale = "ko") {
     `<tfoot><tr><td colspan="${head.length}">${foot}</td></tr></tfoot>`
   );
 }
+
+/** 자치구 장 한 줄이 가리키는 price-outlook 의 구×반기 표(#677). 표 id 는 docs/price-outlook.html 의 move-in-districts. */
+export const MOVE_IN_DISTRICT_LINK = {
+  href: "./price-outlook.html#move-in-districts",
+  ko: "자치구별 표 →",
+  en: "District table →",
+} as const;
+
+/**
+ * 자치구 장 한 줄(#677, React SSG 조각 districtMoveInHtml 이 부른다). 구×반기 집계(byDistrict)에서 그 구 칸만 꺼내
+ * 「입주 예정(추정): 2026년 하반기 n세대, 2027년 상반기 m세대 · 기준일 · 예정월 기준(실제 입주 아님)」 한 문장과 출처 줄을 낸다.
+ * 세대수가 0인 반기는 적지 않고(다 적으면 이 줄이 표가 된다) 일부만 빠졌으면 「나머지 반기 없음」을 붙인다. 어느 반기에도 없으면 「예정 없음」.
+ * 달 미정 단지(표 꼬리가 말하는 것)가 있는 구는 「없음」이라 하지 않고 그 단지가 있다고 적는다 - 구별 달 미정 세대수는 json 에 없어 숫자는 내지 않는다.
+ * 해석(「입주가 많으니 …」)은 쓰지 않는다. 집계가 없거나 그 구가 없으면 null.
+ */
+export function districtMoveInSentence(name, moveIn, locale = "ko") {
+  const d = moveIn?.byDistrict;
+  const row = name == null ? null : d?.rows?.find((r) => r.name === name);
+  if (!row || !d.halves?.length) return null;
+  const en = locale === "en";
+  const listed = d.halves.map((h, i) => [h, row.units[i]]).filter(([, u]) => u > 0);
+  const hasUndated = !!d.undated?.districts?.includes(name);
+  let body;
+  if (listed.length) {
+    const items = listed.map(([h, u]) => (en ? `${halfText(h, true)} ${num(u, true)} homes` : `${halfText(h, false)} ${num(u)}세대`));
+    const rest = listed.length < d.halves.length ? (en ? ", none in the other half-years" : ", 나머지 반기 없음") : "";
+    const undated = hasUndated ? (en ? ", plus complexes with no month set" : ", 달 미정 단지 따로 있음") : "";
+    body = items.join(", ") + rest + undated;
+  } else if (hasUndated) {
+    body = en ? "none with a set month; complexes with no month set exist" : "달이 정해진 예정 없음, 달 미정 단지 있음";
+  } else {
+    body = en ? "none planned" : "예정 없음";
+  }
+  const basis = moveIn.basis ? (en ? ` · as of ${moveIn.basis}` : ` · 기준일 ${moveIn.basis}`) : "";
+  const meta = en ? `${basis} · by scheduled move-in month (not actual move-ins).` : `${basis} · 예정월 기준(실제 입주 아님).`;
+  return `${en ? "Scheduled move-ins (estimate): " : "입주 예정(추정): "}${body}${meta} ${moveInSourceLine(en ? "en" : "ko")}`;
+}

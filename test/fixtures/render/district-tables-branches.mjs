@@ -590,6 +590,42 @@ const SUM_EN = "Apartments in 종로구 trade at ₩50M per pyeong. For an 84m²
   add("RF-13", fn, "비중이 같으면 「그대로」, 서울 값이 없으면 비교 문장과 괄호를 빼고, 덜 찬 달이 해를 넘기면 해를 다시 적는다", ["중구", RF({ 중구: RFD({ wolseShare: 60 }, { wolseShare: 60 }) }, { partial: ["202612", "202701"], seoul: {} })], "전월세 흐름(국토교통부 신고): 중구 월세·반전세 비중은 2025년 6~8월 60.0%(605건)에서 2026년 6~8월 60.0%(491건)로 그대로입니다. 중구 신규 전세 보증금 중앙값(면적 구분 없음)은 6.9억원(139건) → 6.3억원(88건)입니다. 2024년 11월~2026년 8월 중구에서 전세를 갱신한 783건 중 11.5%가 월세를 끼고 다시 계약했습니다. 2026년 12월·2027년 1월은 신고 기한이 남은 덜 찬 달이라 세지 않았습니다.");
 }
 
+{
+  // 입주 예정 한 줄(#677). 문장은 scripts/move-in.ts 가 만들고 조각은 끝에 price-outlook 표 링크 하나를 붙인다. 인자는 (자치구 이름, move-in.json 전체, locale).
+  const fn = "districtMoveInHtml";
+  const MI = (rows, extra = {}) => ({ basis: "2026-06-30", byDistrict: { halves: ["2026H2", "2027H1", "2027H2", "2028H1"], rows, undated: null, ...extra } });
+  const R = (name, units) => ({ name, units, rental: units.map(() => 0) });
+  const KO_SRC = "자료: 한국부동산원·부동산114 입주예정물량정보(공공데이터포털 15111714). 이 값은 원자료를 가공한 것입니다.";
+  const EN_SRC = "Data: Korea Real Estate Board and R114 scheduled move-in data (data.go.kr 15111714). These figures are derived from the original data.";
+  const KO_META = " · 기준일 2026-06-30 · 예정월 기준(실제 입주 아님).";
+  const EN_META = " · as of 2026-06-30 · by scheduled move-in month (not actual move-ins).";
+  const LINK_KO = '<a href="./price-outlook.html#move-in-districts">자치구별 표 →</a>';
+  const LINK_EN = '<a href="./price-outlook.html#move-in-districts">District table →</a>';
+  const ko = (body) => `입주 예정(추정): ${body}${KO_META} ${KO_SRC} ${LINK_KO}`;
+  const en = (body) => `Scheduled move-ins (estimate): ${body}${EN_META} ${EN_SRC} ${LINK_EN}`;
+  const FULL = MI([R("서초구", [5231, 1300, 6056, 160])]);
+  add("MI-01", fn, "이름이 null → 빈 문자열", [null, FULL], "");
+  add("MI-02", fn, "집계가 없으면(null) 빈 문자열", ["서초구", null], "");
+  add("MI-03", fn, "집계 표에 없는 구 → 빈 문자열", ["중구", FULL], "");
+  add("MI-04", fn, "반기 열이 비면 빈 문자열", ["서초구", MI([R("서초구", [])], { halves: [] })], "");
+  add("MI-05", fn, "네 반기 모두 있음(ko, 쉼표로 잇고 끝에 표 링크)", ["서초구", FULL], ko("2026년 하반기 5,231세대, 2027년 상반기 1,300세대, 2027년 하반기 6,056세대, 2028년 상반기 160세대"));
+  add("MI-06", fn, "locale \"en\"", ["서초구", FULL, "en"], en("Jul–Dec 2026 5,231 homes, Jan–Jun 2027 1,300 homes, Jul–Dec 2027 6,056 homes, Jan–Jun 2028 160 homes"));
+  add("MI-07", fn, "일부 반기만 있으면 0 인 반기는 적지 않고 「나머지 반기 없음」", ["중구", MI([R("중구", [0, 102, 0, 0])])], ko("2027년 상반기 102세대, 나머지 반기 없음"));
+  add("MI-08", fn, "일부 반기만(en)", ["중구", MI([R("중구", [0, 102, 0, 0])]), "en"], en("Jan–Jun 2027 102 homes, none in the other half-years"));
+  add("MI-09", fn, "어느 반기에도 없음 → 「예정 없음」", ["종로구", MI([R("종로구", [0, 0, 0, 0])])], ko("예정 없음"));
+  add("MI-10", fn, "어느 반기에도 없음(en)", ["종로구", MI([R("종로구", [0, 0, 0, 0])]), "en"], en("none planned"));
+  add("MI-11", fn, "달 미정 단지가 있는 구는 「달 미정 단지 따로 있음」(세대수는 내지 않는다)", ["구로구", MI([R("구로구", [295, 0, 132, 0])], { undated: { units: 302, rentalUnits: 0, districts: ["구로구"] } })], ko("2026년 하반기 295세대, 2027년 하반기 132세대, 나머지 반기 없음, 달 미정 단지 따로 있음"));
+  add("MI-12", fn, "달 미정만 있는 구는 「없음」이라 하지 않는다", ["구로구", MI([R("구로구", [0, 0, 0, 0])], { undated: { units: 302, rentalUnits: 0, districts: ["구로구"] } })], ko("달이 정해진 예정 없음, 달 미정 단지 있음"));
+  add("MI-13", fn, "달 미정만 있는 구(en)", ["구로구", MI([R("구로구", [0, 0, 0, 0])], { undated: { units: 302, rentalUnits: 0, districts: ["구로구"] } }), "en"], en("none with a set month; complexes with no month set exist"));
+  // 기준일 칸은 문자열로 이어 붙이므로(json 에서 온 날짜) 특수문자는 이스케이프되고 비문자열은 String() 으로 나온다 - 실제 입력에는 없다(빌더가 쓴 날짜 문자열).
+  const ZERO = [R("종로구", [0, 0, 0, 0])];
+  add("MI-15", fn, "기준일의 특수문자 & < > \" ' 는 이스케이프", ["종로구", { ...MI(ZERO), basis: SP }], `입주 예정(추정): 예정 없음 · 기준일 ${SP_OUT} · 예정월 기준(실제 입주 아님). ${KO_SRC} ${LINK_KO}`);
+  add("MI-16", fn, "기준일이 비문자열 true → \"true\", {} → \"[object Object]\"", ["종로구", { ...MI(ZERO), basis: true }], `입주 예정(추정): 예정 없음 · 기준일 true · 예정월 기준(실제 입주 아님). ${KO_SRC} ${LINK_KO}`);
+  add("MI-17", fn, "기준일이 {}", ["종로구", { ...MI(ZERO), basis: {} }], `입주 예정(추정): 예정 없음 · 기준일 [object Object] · 예정월 기준(실제 입주 아님). ${KO_SRC} ${LINK_KO}`);
+  add("MI-18", fn, "이름이 undefined → 빈 문자열", [undefined, FULL], "");
+  add("MI-14", fn, "기준일이 없으면 그 칸만 빠진다", ["종로구", { byDistrict: MI([R("종로구", [0, 0, 0, 0])]).byDistrict }], `입주 예정(추정): 예정 없음 · 예정월 기준(실제 입주 아님). ${KO_SRC} ${LINK_KO}`);
+}
+
 // 이스케이프 없이 문자열에 끼우던 칸(raw)에 `& < > "`가 든 문자열이 오면 React는 이스케이프해서 낸다(고정할 출력; 옛 legacy는 그대로 냈다).
 // React가 내는 글자를 적는다. 실제 입력에는 없다 - 빌더가 숫자로만 만든다(PR 본문의 칸별 근거).
 // `site`는 옛 legacy 코드에서 이스케이프 없이 끼우던 자리의 이름(참고용), `react`는 그 칸이 낸 전체 출력이다.
@@ -648,13 +684,14 @@ export const DISTRICT_TABLES_THROWS = [];
 
 export const DISTRICT_TABLES_BRANCHES = rows;
 
-// 이 표가 덮는 조각 열한 개의 이름(시험이 표가 열한 개를 다 덮는지 본다). 열한째(districtRentFlowHtml)는 V7 이 더했다.
+// 이 표가 덮는 조각 열두 개의 이름(시험이 표가 열두 개를 다 덮는지 본다). 열한째(districtRentFlowHtml)는 V7 이, 열두째(districtMoveInHtml)는 N5(#677)가 더했다.
 export const DISTRICT_TABLES_FNS = [
   "cancelDistrictsHtml",
   "cancelMonthsHtml",
   "conversionTableHtml",
   "districtFactsHtml",
   "districtLinksHtml",
+  "districtMoveInHtml",
   "districtRenewalHtml",
   "districtRentFlowHtml",
   "districtSummaryHtml",

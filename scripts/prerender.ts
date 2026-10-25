@@ -65,6 +65,7 @@ export const districtSummaryHtml = fragment("districtSummaryHtml");
 export const districtRenewalHtml = fragment("districtRenewalHtml");
 export const districtFactsHtml = fragment("districtFactsHtml");
 export const districtRentFlowHtml = fragment("districtRentFlowHtml");
+export const districtMoveInHtml = fragment("districtMoveInHtml");
 export const districtLinksHtml = fragment("districtLinksHtml");
 export const conversionLeadHtml = fragment("conversionLeadHtml");
 export const conversionTableHtml = fragment("conversionTableHtml");
@@ -175,6 +176,8 @@ async function main() {
         districtRenewalEn: "",
         districtRentFlowKo: "",
         districtRentFlowEn: "",
+        districtMoveInKo: "",
+        districtMoveInEn: "",
       },
       REALESTATE_TEMPLATE_PATH,
     ],
