@@ -1861,6 +1861,9 @@
     padding-bottom: 0.5rem;
     line-height: 1.6;
   }
+  html:lang(en) #week-digest-section .m-ko, html:not(:lang(en)) #week-digest-section .m-en {
+    display: none;
+  }
   html:not(:lang(en)) #content-notice.m-en {
     display: none;
   }
