@@ -129,15 +129,22 @@ export function renewalWolseDistricts(renewal) {
  * 아니면 표본 부족 칸이고 이유 글자가 `lowText`다 - 가른 범위(`band`)가 있는데 서울과 안 갈리면 "갈라 볼 수 없음", 범위조차 못 냈으면 "칸이 모자람".
  * 표본 부족(`distinct` 거짓)은 중앙값이 비었는지와 따로 정해진다: 중앙값 칸("-")과 판정 칸은 서로 영향을 주지 않는다.
  * 이스케이프하던 칸: district / raw: median(`-9.1%`, 값이 null이면 "-")·cells.
+ * 전세 칸(#705): 중앙값 옆에 칸 수와 구간을 늘 같이 적는다(`-4.2% (n=30, -9~0%)`). 문턱 미달은 `jeonseLow`
+ * 「표본 부족(n=…)」, 전세 값이 아예 없으면(빌더 soft-fail) "-".
  */
 export function floorDistricts(floor) {
   const rows = floor?.districts ?? [];
   if (!rows.length) return null;
 
-  return rows.map((row) => ({
-    district: row.district,
-    median: row.median === null ? "-" : `${row.median}%`,
-    cells: count(row.cells),
-    lowText: row.distinct ? null : row.band ? "갈라 볼 수 없음" : "칸이 모자람",
-  }));
+  return rows.map((row) => {
+    const j = row.jeonse;
+    return {
+      district: row.district,
+      median: row.median === null ? "-" : `${row.median}%`,
+      cells: count(row.cells),
+      lowText: row.distinct ? null : row.band ? "갈라 볼 수 없음" : "칸이 모자람",
+      jeonse: !j ? "-" : j.band ? `${j.median}% (n=${count(j.cells)}, ${j.band.low}~${j.band.high}%)` : null,
+      jeonseLow: j && !j.band ? `표본 부족(n=${count(j.cells)})` : null,
+    };
+  });
 }

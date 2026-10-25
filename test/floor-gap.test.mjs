@@ -203,6 +203,30 @@ test("칸이 문턱에 못 미친 구는 값을 비우고 칸 수만 남긴다 (
   assert.doesNotMatch(floorDistrictsHtml(PAYLOAD).match(/<tr><td>광진구<\/td>.*?<\/tr>/)[0], /%/);
 });
 
+test("전세 열은 중앙값 옆에 칸 수·구간을 적고, 문턱 미달은 표본 부족(n=…)이다 - ko/en (#705)", async () => {
+  const nowon = PAYLOAD.districts.find((row) => row.district === "노원구").jeonse;
+  assert.ok(nowon.band, "전제: 노원구 전세는 문턱을 넘는다");
+  const cell = `<td>${nowon.median}% (n=30, ${nowon.band.low}~${nowon.band.high}%)</td></tr>`;
+  const baked = floorDistrictsHtml(PAYLOAD);
+  assert.match(baked, /<th scope="col">전세 \(n, 서울 구간\)<\/th>/);
+  for (const lang of ["ko", "en"]) {
+    const page = await loadFloorPage({ floor: PAYLOAD });
+    if (lang === "en") page.toggleLang();
+    const table = page.districtTable();
+    const row = (name) => table.match(new RegExp(`<tr><td>${name}</td>.*?</tr>`))[0];
+    assert.ok(row("노원구").endsWith(cell), `${lang}: 전세 칸에 칸 수·구간이 없다 ${row("노원구")}`);
+    const thin = lang === "en" ? "too few (n=0)" : "표본 부족(n=0)";
+    assert.ok(row("광진구").endsWith(`<td><span class="low-sample">${thin}</span></td></tr>`), `${lang}: 표본 부족 칸 ${row("광진구")}`);
+    assert.match(table, lang === "en" ? /Jeonse \(n, Seoul range\)/ : /전세 \(n, 서울 구간\)/);
+    assert.doesNotMatch(table, /\d+위|순위|rank/i, `${lang}: 순위 표기`);
+  }
+  // 전세 값이 아예 없으면(빌더 soft-fail) 칸을 "-"로 두고 깨지지 않는다.
+  const bare = { ...PAYLOAD, districts: PAYLOAD.districts.map(({ jeonse, ...row }) => row) };
+  const page = await loadFloorPage({ floor: bare });
+  assert.equal(page.districtTable(), floorDistrictsHtml(bare));
+  assert.match(page.districtTable(), /<td>-<\/td><\/tr>/);
+});
+
 test("빌드가 그린 표와 화면이 그린 표가 같다", async () => {
   const page = await loadFloorPage({ floor: PAYLOAD });
   assert.equal(page.districtTable(), floorDistrictsHtml(PAYLOAD));

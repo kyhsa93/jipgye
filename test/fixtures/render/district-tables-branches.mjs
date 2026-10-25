@@ -366,8 +366,10 @@ const rwData = (tableRows, wolse = wolseOf()) => ({ wolseTable: tableRows, seoul
 }
 
 // ================= 층 격차 자치구 표 floorDistrictsHtml =================
-const FD_HEAD = frameHead(["자치구", "1층 − 3층 이상", "맞물린 칸", "서울과 다른가"]);
-const fdTable = (bodyRows) => FD_HEAD + tbody(bodyRows);
+const FD_HEAD = frameHead(["자치구", "1층 − 3층 이상", "맞물린 칸", "서울과 다른가", "전세 (n, 서울 구간)"]);
+// 전세 열(#705): 기존 분기 행은 jeonse 가 없어 다섯째 칸이 "-"다. jeonse 를 준 행은 fdJTable 로 칸을 직접 적는다.
+const fdTable = (bodyRows) => FD_HEAD + tbody(bodyRows.map((row) => row.replace(/<\/tr>$/, "<td>-</td></tr>")));
+const fdJTable = (bodyRows) => FD_HEAD + tbody(bodyRows);
 const fd = (o = {}) => ({ district: "강서구", cells: 35, median: -9.1, band: { low: -9.1, high: -5.6 }, distinct: false, ...o });
 const FD_BASE = ["강서구", "-9.1%", "35", LOW("갈라 볼 수 없음")];
 {
@@ -390,6 +392,10 @@ const FD_BASE = ["강서구", "-9.1%", "35", LOW("갈라 볼 수 없음")];
   add("FD-L06", fn, "해자 2: 표 안의 줄마다 따로 정한다(다르다·갈라 볼 수 없음·칸이 모자람)", [{ districts: [fd({ district: "가", distinct: true }), fd({ district: "나" }), fd({ district: "다", band: null, median: null })] }], fdTable([tr("가", "-9.1%", "35", "다르다"), tr(...swap(FD_BASE, 0, "나")), tr("다", "-", "35", LOW("칸이 모자람"))]), { moat: true });
   add("FD-L07", fn, "해자 2: 스팬은 title 없이 class만 있다(문구 두 가지 고정)", [{ districts: [fd(), fd({ band: null })] }], fdTable([tr(...swap(FD_BASE, 3, '<span class="low-sample">갈라 볼 수 없음</span>')), tr(...swap(FD_BASE, 3, '<span class="low-sample">칸이 모자람</span>'))]), { moat: true });
   add("FD-L08", fn, "해자 2·문턱: 맞물린 칸이 적어도(cells 0·12) distinct가 참이면 \"다르다\" - 이 함수는 칸 수 문턱을 다시 적용하지 않는다", [{ districts: [fd({ cells: 0, distinct: true }), fd({ cells: 12, distinct: true })] }], fdTable([tr("강서구", "-9.1%", "0", "다르다"), tr("강서구", "-9.1%", "12", "다르다")]), { moat: true });
+  // 전세 열(#705): 값이 있으면 중앙값 옆에 칸 수·구간, 구간이 없으면(문턱 미달) 표본 부족(n=…) 스팬
+  add("FD-J01", fn, "전세 값 → 중앙값 (n=칸, 구간%)", [{ districts: [fd({ jeonse: { cells: 1234, median: -4.2, band: { low: -9, high: 0 } } })] }], fdJTable([tr(...FD_BASE, "-4.2% (n=1,234, -9~0%)")]));
+  add("FD-J02", fn, "해자 2: 전세 문턱 미달(band null) → 「표본 부족(n=…)」 스팬", [{ districts: [fd({ jeonse: { cells: 18, median: null, band: null } })] }], fdJTable([tr(...FD_BASE, LOW("표본 부족(n=18)"))]), { moat: true });
+  add("FD-J03", fn, "전세 칸 0 → 표본 부족(n=0), 매매 판정과 따로", [{ districts: [fd({ distinct: true, jeonse: { cells: 0, median: null, band: null } })] }], fdJTable([tr("강서구", "-9.1%", "35", "다르다", LOW("표본 부족(n=0)"))]));
   // distinct 값 종류(참/거짓 판정은 truthy 검사)
   const distinctCases = [
     ["d01", "true", true, true],
