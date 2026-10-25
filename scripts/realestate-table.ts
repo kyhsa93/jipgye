@@ -19,12 +19,12 @@
 // DIRECTION 해자 2: 표본이 모자라면 값을 내지 않고 모자란다고 적는다(`low-sample` 조각) - 이 판정을 건너뛰는 변경은 방향에 어긋난다.
 import { DISTRICT_SLUGS, districtFile } from "./district-slugs.ts";
 import {
-  KIND_FIELDS,
   areaPrice,
   formatEok,
   formatMan,
   formatPercent,
   jeonseRatio,
+  kindField,
   resolveMetric,
   valueOf,
 } from "./realestate-format.ts";
@@ -114,7 +114,7 @@ export function reLowSample(metric) {
 // 값을 못 낸 칸(resolveMetric이 null): 지표가 있었으면(raw가 참) 표본 부족, 없으면 "-".
 // 지표는 있는데 평당가 같은 값이 숫자가 아니어서 못 낸 경우도 여기로 온다(표본 부족 문구가 붙는다 - 예전 그대로).
 function lowOrNone(entry, kind) {
-  const raw = entry?.[KIND_FIELDS[kind].metric];
+  const raw = entry?.[kindField(kind).metric];
   return raw ? [reLowSample(raw)] : NONE();
 }
 
@@ -171,11 +171,11 @@ export function reStaleTag(entry) {
 
 /**
  * 지역 이름 칸. 자치구면 그 자치구 페이지로 가는 상대 경로를 준다(`./district-<slug>.html`). 경로는 DISTRICT_SLUGS 상수 25개가 만들고 `./`로 시작하므로 `javascript:`가 될 수 없다.
- * 이름이 객체의 기본 키(constructor·toString 등)면 상수가 아닌 값이 걸려 `./district-function …`이 되는 것도 예전 그대로다(글자에 `& < > "`는 없다).
+ * 이름이 객체의 기본 키(constructor·toString·__proto__ 등)여도 DISTRICT_SLUGS 자기 키만 보므로 링크 없는 글자다(#248 c, #593 - 전에는 `./district-function …`이 됐다).
  * text는 받은 값 그대로다(이스케이프·글자 바꿈은 쓰는 쪽).
  */
 export function reDistrictLink(label) {
-  const slug = DISTRICT_SLUGS[label];
+  const slug = Object.hasOwn(DISTRICT_SLUGS, label) ? DISTRICT_SLUGS[label] : null;
   return { text: label, href: slug ? `./${districtFile(slug)}` : null };
 }
 
@@ -194,14 +194,14 @@ export function reRow(entry, label, isOverall, kind) {
 
 /**
  * 자치구 정렬: 고른 종류(없으면 매매)의 값이 높은 순, 값이 없는 곳은 뒤, 둘 다 없으면 이름순. 사본을 정렬한다(입력을 바꾸지 않는다).
- * `localeCompare`에 로케일 인자가 없어 이름순은 실행 머신의 기본 로케일에 기댄다 - 예전 그대로이고(JSX 한 곳이 이 함수를 써서 같은 실행 비교에는 영향이 없다) 바이트를 바꾸지 않으려고 두었다.
+ * 이름순은 `localeCompare(…, "ko")`로 로케일을 고정한다(#248 d, #593). 자치구 25곳의 이름순은 여덟 로케일에서 같고 라틴·자모 혼합만 갈렸으므로 실제 출력은 그대로다.
  */
 export function reSorted(districts, kind) {
   const key = kind ?? "sale";
   return [...districts].sort((a, b) => {
     const av = valueOf(resolveMetric(a, key)?.metric, key);
     const bv = valueOf(resolveMetric(b, key)?.metric, key);
-    if (av === null && bv === null) return (a.name ?? "").localeCompare(b.name ?? "");
+    if (av === null && bv === null) return (a.name ?? "").localeCompare(b.name ?? "", "ko");
     if (av === null) return 1;
     if (bv === null) return -1;
     return bv - av;

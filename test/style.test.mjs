@@ -97,7 +97,7 @@ test("누르는 것은 손가락이 닿는 크기다", async () => {
   const lists = rules(text).find((r) => r.sel.includes(".district-links a") && r.sel.includes(".card-links a"));
   assert.ok(lists, "줄 단위 링크 목록 규칙이 없다");
   assert.match(lists.body, /min-height: var\(--tap\)/);
-  for (const sel of [".section-links a", ".back-link", ".method-callout a"]) assert.ok(lists.sel.includes(sel), `${sel}이 빠졌다`);
+  for (const sel of [".section-links a", ".method-callout a"]) assert.ok(lists.sel.includes(sel), `${sel}이 빠졌다`);
   // 예산대 후보 카드의 단지 이름 링크(a.apt)는 flex 항목이라 inline 이 아니다 - 자기 상자가 --tap 이어야 한다(#459).
   uses(".budget-candidates .budget-deal > a.apt");
   const apt = rules(text).find((r) => parts(r.sel) === parts(".budget-candidates .budget-deal > a.apt"));

@@ -266,18 +266,13 @@ function districtLinks(current = null, heading = "다른 지역") {
 const LowSample = ({ children }) => <span className="low-sample">{children}</span>;
 const GapCell = ({ gap }) => (gap.low ? <LowSample>표본 부족</LowSample> : gap.text);
 
-// legacy의 caption은 `style="caption-side:top;text-align:left;padding-bottom:8px;"`로 끝에 `;`가 있다(틀의 화면 스크립트가 만드는 글자와 같다). React는 style 객체를 `;`로 이어 쓰기만 하고
-// 끝에 `;`를 달지 못하며, 값 문자열에 `;`를 달면 개발 빌드가 stderr로 경고한다(`/;\s*$/` 검사, react-dom 19.3.0). 경고 검사는 값을 문자열로 읽고(hint "string") 출력은 `"" + 값`(hint "default")으로
-// 이어 붙이므로, 두 읽기를 달리 돌려주는 값으로 경고 없이 같은 글자를 낸다. React를 올려 이 동작이 바뀌면 caption 바이트나 stderr가 달라져 parity 시험이 바로 실패한다.
-const withTrailingSemicolon = (text) => ({ [Symbol.toPrimitive]: (hint) => (hint === "string" ? text : `${text};`) });
-
 // 전환율 표.
 function conversionTableJsx(conversion, band) {
   const table = conversionTable(conversion, band);
   if (!table) return null;
   return (
     <>
-      <caption className="cost-label" style={{ captionSide: "top", textAlign: "left", paddingBottom: withTrailingSemicolon("8px") }}>
+      <caption className="cost-label" style={{ captionSide: "top", textAlign: "left", paddingBottom: "8px" }}>
         {table.caption}
       </caption>
       <thead>

@@ -330,17 +330,6 @@ h1 {
   min-height: 1lh;
 }
 
-.back-link {
-  margin-top: 4px;
-  color: var(--muted);
-  font-size: var(--fs-xs);
-  text-decoration: none;
-}
-
-.back-link:hover {
-  text-decoration: underline;
-}
-
 .page-nav {
   display: flex;
   gap: 6px;
@@ -356,7 +345,7 @@ h1 {
  *
  * 그래서 --fs-sm -> --fs-xs로 옮긴 자리(열넷): .page-nav a · .sub-nav a · .question-nav a · .tab ·
  * .chip · .budget-chips a · .rate-links · .district-links-heading · .section-links · .card-links ·
- * .back-link · .archive-link · .budget-more-links ul · .history-card .axis.
+ * .budget-more-links ul · .history-card .axis.
  * 옮기지 않은 자리: 표 칸(.data-table·.rate-table)·기준일(.updated)·단서(.content-notice·
  * .method-callout p) - 전부 C가 "15px 이상"으로 이름 붙인 것들이다.
  *
@@ -522,19 +511,6 @@ h2::after {
   color: var(--down);
 }
 
-.live-badge {
-  display: inline-block;
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  color: var(--up);
-  border: 1px solid currentColor;
-  border-radius: var(--radius);
-  padding: 1px 4px;
-  margin-left: 4px;
-  vertical-align: middle;
-  cursor: default;
-}
-
 .table-wrap {
   overflow-x: auto;
   margin-top: 4px;
@@ -592,13 +568,11 @@ h2::after {
   vertical-align: top;
 }
 
-.realestate-search,
-.news-search {
+.realestate-search {
   margin: 10px 0 4px;
 }
 
-.realestate-search input,
-.news-search input {
+.realestate-search input {
   width: 100%;
   background: var(--card);
   color: var(--fg);
@@ -641,13 +615,6 @@ ul.news-list {
 }
 
 /* 분야 거르기 칩(.news-filters·.news-chip)은 메인 뉴스 칸과 함께 지웠다(#575 PR2) - 분야는 뉴스 화면의 2층 탭이 가른다. */
-
-.news-preview {
-  color: var(--muted);
-  font-size: var(--fs-sm);
-  line-height: 1.45;
-  margin-top: 3px;
-}
 
 .news-context {
   display: flex;
@@ -693,66 +660,6 @@ ul.news-list {
 
 .news-item.read > a {
   color: var(--muted);
-}
-
-.news-dupes {
-  margin-top: 4px;
-  font-size: var(--fs-xs);
-}
-
-.news-dupes summary {
-  cursor: pointer;
-  color: var(--muted);
-  list-style: none;
-}
-
-.news-dupes summary::-webkit-details-marker {
-  display: none;
-}
-
-.news-dupes summary::before {
-  content: "▸ ";
-}
-
-.news-dupes[open] summary::before {
-  content: "▾ ";
-}
-
-.news-dupes ul {
-  list-style: none;
-  margin: 4px 0 0;
-  padding: 0;
-}
-
-.news-dupes li {
-  margin-top: 3px;
-}
-
-.news-dupes a {
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.news-dupes a:hover {
-  text-decoration: underline;
-}
-
-.news-empty {
-  color: var(--muted);
-  font-size: var(--fs-sm);
-  padding: 10px 0;
-}
-
-.archive-link {
-  display: inline-block;
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: var(--fs-xs);
-  text-decoration: none;
-}
-
-.archive-link:hover {
-  text-decoration: underline;
 }
 
 .placeholder {
@@ -822,70 +729,6 @@ ul.news-list {
   cursor: pointer;
 }
 
-.summary-fallback-note {
-  color: var(--muted);
-  font-size: var(--fs-xs);
-  margin-top: 10px;
-}
-
-.summary-highlights {
-  margin-bottom: 18px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border);
-}
-
-.summary-section-label {
-  font-weight: 600;
-  font-size: var(--fs-sm);
-  color: var(--muted);
-  letter-spacing: 0.02em;
-  margin-bottom: 8px;
-}
-
-.summary-highlight {
-  margin-bottom: 12px;
-}
-
-.summary-highlight:last-child {
-  margin-bottom: 0;
-}
-
-.summary-highlight a {
-  font-weight: 600;
-  font-size: var(--fs-md);
-  color: var(--fg);
-  text-decoration: none;
-}
-
-.summary-highlight a:hover {
-  text-decoration: underline;
-}
-
-.summary-highlight-text {
-  font-size: var(--fs-lg);
-  line-height: 1.65;
-  margin-top: 3px;
-}
-
-.summary-category {
-  margin-bottom: 14px;
-}
-
-.summary-category:last-child {
-  margin-bottom: 0;
-}
-
-.summary-category-label {
-  font-weight: 600;
-  font-size: var(--fs-sm);
-  margin-bottom: 2px;
-}
-
-.summary-category-line {
-  font-size: var(--fs-lg);
-  line-height: 1.65;
-}
-
 .summary-links {
   list-style: none;
   margin: 6px 0 0;
@@ -904,14 +747,6 @@ ul.news-list {
 
 .summary-links a:hover {
   text-decoration: underline;
-}
-
-.summary-link-source {
-  color: var(--muted);
-}
-
-.summary-plain-label {
-  font-weight: 600;
 }
 
 .summary-meta {
@@ -1445,12 +1280,10 @@ ul.news-list {
 .district-links a,
 .section-links a,
 .card-links a,
-.back-link,
 .rate-links a,
 .method-callout a,
 .method-toc a,
 .budget-nav a,
-.archive-link,
 .site-footer a {
   display: inline-flex;
   align-items: center;
@@ -2623,11 +2456,6 @@ html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-catego
   text-decoration: none;
 }
 
-/* .back-link이 혼자 4px 내려가 있어 같은 줄의 다른 링크와 밑줄이 어긋난다. */
-.section-links .back-link {
-  margin-top: 0;
-}
-
 .section-links a:hover {
   color: var(--fg);
   text-decoration: underline;
@@ -2655,7 +2483,6 @@ html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-catego
 .search-field input[type="text"],
 .search-field input[type="number"],
 .realestate-search input,
-.news-search input,
 .realestate-history-controls select,
 .amount-field input {
   min-height: var(--tap);
