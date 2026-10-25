@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { AREA_BANDS, LOAN_LTV, cellNote, conversionPairs, districtRates, leadSentence, median, verdictOf } from "./conversion.ts";
+import { trySeries } from "./conversion-series.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { latestRate } from "./mortgage.ts";
 import { readRentSource, recentMonths } from "./realestate-source.ts";
@@ -11,6 +12,9 @@ const root = path.resolve(import.meta.dirname, "..");
 // 75칸 중 두 칸이 비어서, 여기서만 여섯 달을 본다. 전환율은 주 단위로 움직이는
 // 값이 아니라 길게 봐도 무디어지지 않는다.
 export const MONTHS = 6;
+
+// 월별 추이(series, #678)는 cells 와 따로 24개월을 달 하나씩 읽는다. cells 의 입력(위 6개월 묶음)은 건드리지 않는다.
+export const SERIES_MONTHS = 24;
 
 const outFile = process.env.CONVERSION_FILE
   ? path.resolve(process.env.CONVERSION_FILE)
@@ -40,7 +44,8 @@ export function ratesOf(series) {
   };
 }
 
-export function buildPayload({ deals, series, months, now }) {
+// dealsByMonth·seriesMonths 가 있으면 월별 추이 series 를 cells 뒤에 붙인다(소프트 실패: 못 만들면 키 없이 기존 모양 그대로).
+export function buildPayload({ deals, series, months, now, dealsByMonth, seriesMonths }) {
   const pairs = conversionPairs(deals);
   const cells = districtRates(pairs);
   if (!cells.length) return null;
@@ -60,6 +65,8 @@ export function buildPayload({ deals, series, months, now }) {
   }));
 
   const lead = { rate: seoulRate, loanRate: loan.rate, loanMonth: loan.month, pairs: pairs.length, months };
+  const trend = dealsByMonth ? trySeries(dealsByMonth, seriesMonths) : null;
+
   return {
     updatedAt: now.toISOString(),
     months,
@@ -78,7 +85,23 @@ export function buildPayload({ deals, series, months, now }) {
     loan,
     deposit,
     cells: noted,
+    ...(trend ? { series: trend } : {}),
   };
+}
+
+// 24개월을 달 하나씩 읽는다. 어떤 이유로든 실패하면 null - series 만 빠지고 나머지 산출은 그대로다.
+async function readMonthlyDeals(now, seriesMonths) {
+  try {
+    const dealsByMonth = [];
+    for (const month of seriesMonths) {
+      const source = await readRentSource(now, [month]);
+      dealsByMonth.push(Object.values(source.districts ?? {}).flat());
+    }
+    return dealsByMonth;
+  } catch (err) {
+    console.log(`  24개월 전월세 원본을 읽지 못했습니다 - 월별 추이 없이 냅니다: ${err?.message ?? err}`);
+    return null;
+  }
 }
 
 async function main() {
@@ -107,7 +130,10 @@ async function main() {
     return;
   }
 
-  const payload = buildPayload({ deals, series, months, now });
+  const seriesMonths = recentMonths(now, SERIES_MONTHS);
+  const dealsByMonth = await readMonthlyDeals(now, seriesMonths);
+
+  const payload = buildPayload({ deals, series, months, now, dealsByMonth, seriesMonths });
   if (!payload) {
     console.log("  전환율을 낼 수 있는 단지가 없습니다 - 기존 전환율 데이터를 그대로 둡니다");
     return;
@@ -120,6 +146,11 @@ async function main() {
     `  전월세 전환율 ${payload.cells.length}칸 · 단지쌍 ${payload.seoul.pairs.toLocaleString("ko-KR")}개` +
       ` (${months[0]}~${months[months.length - 1]} 신규계약)`
   );
+  if (payload.series) {
+    const { seoul, partial } = payload.series;
+    const full = seoul.rate.filter((_, i) => !partial[i]);
+    console.log(`  월별 추이 ${payload.series.months.length}개월 · 서울 ${full.at(-1) ?? "-"}% (마지막 찬 달) · 문턱 ${payload.series.minPairs}`);
+  }
   console.log(
     `  서울 중앙 전환율 ${payload.seoul.rate}% · 전세자금대출(잔액) ${payload.loan.rate}% · 정기예금 ${payload.deposit.rate}% (${payload.loan.month})`
   );
