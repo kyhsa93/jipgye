@@ -52,7 +52,7 @@ test("자치구 링크 순서는 이 예산대 거래가 많은 구부터", () =
 test("예산대 description: 데이터가 있으면 답(구·후보 수·거래 수)을 앞에, 없으면 고정 문장", () => {
   const page = BUDGET_PAGES.find((p) => p.eok === 6);
   const text = budgetDescription(page, { deals: 1234, candidates: 257, places: ["노원구", "구로구"] });
-  assert.match(text, /^6억대\(6억~7억\)로 살 수 있는 서울 아파트는 노원구·구로구에 많습니다\./);
+  assert.match(text, /^6억대\(6억~7억\)로 살 수 있는 단지·평형은 노원구·구로구에 가장 많습니다\./);
   assert.match(text, /단지·평형 257곳과 최근 신고된 매매 1,234건/);
   assert.equal(budgetDescription(page, { deals: 0, candidates: 0, places: [] }), page.description);
 });
@@ -70,7 +70,7 @@ test("구운 예산대 장: 안내·사전·자치구 링크 머리글이 같은
   assert.ok(baked && baked.startsWith("6억대로 살 수 있는 단지·평형은 "), "맨 위 안내가 예산대 문장이 아니다");
   assert.ok(html.includes(`methodCalloutText:\n      ${JSON.stringify(baked)},`), "한국어 사전이 구운 안내와 다르다 - 화면 스크립트가 되돌린다");
   assert.ok(html.includes('otherDistricts: "자치구별 시세 보기 (이 예산대 거래가 많은 구부터)",'), "자치구 링크 머리글 사전");
-  assert.match(html, /<meta name="description" content="6억대\(6억~7억\)로 살 수 있는 서울 아파트는 /);
+  assert.match(html, /<meta name="description" content="6억대\(6억~7억\)로 살 수 있는 단지·평형은 /);
   assert.match(html, /<div class="budget-areas" data-prerendered=""><p>단지 후보가 많은 구:<\/p><ul><li>/);
 });
 
