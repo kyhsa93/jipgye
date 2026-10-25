@@ -74,7 +74,8 @@ const sources = await closure(entry, (n) => read(`scripts/${n}`));
 
 test("수집·요약 워크플로가 부르는 스크립트와 그 import 닫힘이 충분히 잡힌다 (검사가 헛돌지 않는다)", () => {
   assert.ok(entry.length >= 25, `워크플로가 부르는 스크립트를 ${entry.length}개밖에 못 읽었다`);
-  for (const must of ["fetch-news.ts", "fetch-realestate.ts", "fetch-rates.ts", "build-realestate.ts", "build-search-index.ts", "news-context.ts", "summarize-news.ts", "translate-news.ts", "summary-needed.ts"]) {
+  // fetch-rates.ts 는 #577 A(금감원 수집 중단)로 Daily 에서 빠졌다 - 이 목록에서도 뺀다.
+  for (const must of ["fetch-news.ts", "fetch-realestate.ts", "build-realestate.ts", "build-search-index.ts", "news-context.ts", "summarize-news.ts", "translate-news.ts", "summary-needed.ts"]) {
     assert.ok(entry.includes(must), `${must} 가 워크플로 호출에서 빠졌다`);
   }
   assert.ok(sources.size >= 50, `import 닫힘이 ${sources.size}개뿐이다 - import 를 못 따라갔다`);

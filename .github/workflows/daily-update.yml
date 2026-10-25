@@ -84,22 +84,9 @@ jobs:
           MOLIT_RENT_API_ENDPOINT: ${{ secrets.MOLIT_RENT_API_ENDPOINT }}
           MOLIT_BACKFILL_LIMIT: ${{ inputs.backfill }}
 
-      # 실패해도 여기서 job을 멈추지 않는다 - 뒤의 원본 커밋·배포가 먼저다(#62).
-      # 네 상품군이 전부 실패했거나 키가 없으면 맨 끝 "금리 수집 실패 반영" 단계가 job을 실패로 끝낸다(#107).
-      - name: 예·적금·대출 금리 수집
-        id: rates
-        if: env.MODE == 'full'
-        continue-on-error: true
-        run: node scripts/fetch-rates.ts
-        env:
-          FSS_FINLIFE_API_KEY: ${{ secrets.FSS_FINLIFE_API_KEY }}
-
-      # conversion.json은 rates.json의 대출 금리 중앙값·옵션 수를 읽는데, 첫 build-conversion은
-      # 위 "실거래 수집" 단계 안에서 금리 수집보다 먼저 돈다. 금감원 공시월이 바뀐 날
-      # (2026-10-22, 202609→202610) rates만 새것이고 conversion은 어제 금리로 남아 수집 후 테스트가
-      # 빨개지고 배포가 막혔다(#467). 그래서 금리 수집 뒤에 한 번 더 돌린다 - API 호출 없이 raw와
-      # rates.json을 읽을 뿐이라 몇 초다. 금리 수집이 실패했으면 rates.json이 그대로라 같은 값이
-      # 다시 나온다(일관). 이 단계가 실패해도 job을 멈추지 않는다: 멈추면 같은 실행의 수집분
+      # 금감원(FSS finlife) 금리 수집은 소유자 결정으로 뺐다(2026-10-25, #577 A - 저작권 약관 위험). rates*.json 은 더 갱신되지 않고 B·C 에서 지운다.
+      # 아래 두 번째 build-conversion 은 원래 금리 수집 뒤에 돌던 것이다(#467). 이제 멈춘 rates.json 을 읽어 첫 번째와 같은 값을 낸다 -
+      # #577 B1(대출·예금 비교 금리를 FSS 에서 끊기)이 이 단계를 정리한다. 이 단계가 실패해도 job을 멈추지 않는다: 멈추면 같은 실행의 수집분
       # 커밋이 안 돌아 데이터가 사라진다(#62). conversion이 낡은 채 남으면 deploy.yml 의 build/site 시험(sample-size)이 그 배포를 막는다.
       - name: 전환율 다시 만들기 (금리 반영)
         if: env.MODE == 'full'
@@ -120,11 +107,3 @@ jobs:
           else
             ./scripts/push-docs.sh "chore: 뉴스 갱신 $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M') KST"
           fi
-
-      # 맨 끝 반영 단계다. 원본·수집분 커밋이 모두 끝난 뒤에야 run 을 빨갛게 끝낸다. `!cancelled() &&` 로 시작한다(#509): 상태 함수 없는 `if` 는 앞 단계가 실패하면
-      # 건너뛰어진다. 배포는 이 워크플로 밖(deploy.yml)이라 이 메시지가 배포를 말하지 않는다 - 사이트가 갱신됐는지는 이어서 도는 Deploy site 의 run 이 말한다.
-      - name: 금리 수집 실패 반영
-        if: ${{ !cancelled() && steps.rates.outcome == 'failure' }}
-        run: |
-          echo "::error::금리 수집(금감원 finlife)이 실패했다 - 위 '예·적금·대출 금리 수집' 단계의 진단 로그와 docs/data/rates-meta.json의 failCause를 본다. 수집분·원본 커밋은 이 단계 전에 끝났다(사이트 갱신은 Deploy site 가 따로 한다)"
-          exit 1

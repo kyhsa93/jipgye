@@ -225,7 +225,8 @@ test("main 은 생성 HTML 을 들고 있지 않다: git ls-files docs 에 생�
   for (const name of ["index", "rates", "news", "realestate", "method", "about", "deal-search", "cancelled-deals"]) assert.ok(!ignored(`docs/${name}.html`), `손으로 고치는 틀 docs/${name}.html 이 .gitignore 에 걸린다`);
 });
 
-for (const [file, min] of [[DEPLOY, 1], [".github/workflows/daily-update.yml", 1], [".github/workflows/summarize.yml", 0]]) {
+// daily-update.yml 의 하나뿐이던 반영 단계(금리 수집 실패 반영)는 #577 A 에서 금감원 수집과 함께 빠져 0개다. 다시 생기면 같은 모양 규칙을 받는다.
+for (const [file, min] of [[DEPLOY, 1], [".github/workflows/daily-update.yml", 0], [".github/workflows/summarize.yml", 0]]) {
   test(`${file}: 반영 단계(${min}개 이상)는 모두 !cancelled() && 로 시작하고 steps 결과를 읽는다 (#507 cto·cpo - 앞 반영 단계가 뒤를 가리지 않는다)`, async () => {
     const text = await read(file);
     const reflects = steps(text).filter((s) => s.run.includes("exit 1") && !(s.if ?? "").includes("outputs.fallback"));
