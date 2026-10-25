@@ -28,7 +28,8 @@ const summarizeYml = await read(SUMMARIZE);
 const COMMIT = "변경사항 커밋 및 푸시";
 const COLLECT = "실거래 수집";
 const NEWS = "뉴스 수집";
-const CONVERT = "전환율 다시 만들기 (금리 반영)";
+const NEWS_CONTEXT = "기사에 실거래가 수치 붙이기";
+const MARKET = "시장 지표 수집";
 
 /** 주석을 걷어 낸다(전체 줄 주석과 `uses: … # v7.0.1` 꼬리). 주석에는 일부러 render-pipeline·npm test 같은 낱말이 쓰인다. */
 const code = (text) => text.replace(/^\s*#.*\n/gm, "").replace(/(\S)[ \t]+#[ \t].*$/gm, "$1");
@@ -111,6 +112,9 @@ function simulate(text, { mode = "full", failNames = [] } = {}) {
   return { ran, skipped, jobFailed: ctx.jobFailed };
 }
 
+/** 주석을 뺀 워크플로에서 build-conversion 을 부르는 줄 수. */
+const conversionCalls = (text) => (code(text).match(/node scripts\/build-conversion\.ts/g) ?? []).length;
+
 /** 수집 워크플로가 지킬 것의 위반 목록. 대조군이 같은 함수에 변이 사본을 넣어, 이 검사가 무는지(항상 참이 아닌지) 본다. */
 function violations(text) {
   const out = [];
@@ -146,7 +150,7 @@ test("summarize.yml: 요약도 시험·렌더·건강 점검·Pages 배포를 �
   assert.equal(list.filter((s) => /\bnpm (?:run )?(?:test|health)/.test(s.run)).length, 0, "시험·건강 점검 스텝이 남았다");
   // 요약 -> 번역 -> 수치 붙이기 -> 커밋 순서가 맨 끝이다. 시험이 커밋 앞에 있던 옛 모양(요약이 시험 하나에 막혔다)으로 돌아가지 않는다.
   const names = list.map(nameOf);
-  const order = ["AI 요약 생성", "뉴스 제목 영어 번역", "기사에 실거래가·금리 수치 붙이기", COMMIT].map((n) => names.indexOf(n));
+  const order = ["AI 요약 생성", "뉴스 제목 영어 번역", "기사에 실거래가·금리 수치 붙이기", COMMIT].map((n) => names.indexOf(n)); // summarize.yml 의 단계 이름(이 PR 범위 밖)
   assert.ok(order.every((i) => i >= 0) && order.every((v, i) => i === 0 || order[i - 1] < v), `요약 단계 순서가 다르다: ${order}`);
   assert.equal(names.at(-1), COMMIT, "맨 끝 스텝이 커밋이 아니다");
 });
@@ -167,19 +171,22 @@ test("금감원 금리 수집·실패 반영 단계가 없다 (#577 A) - 스텝 
   assert.equal(byName("금리 수집 실패 반영"), undefined, "금리 수집 실패 반영 스텝이 남았다");
   assert.equal(steps.filter((s) => s.id === "rates" || s.if?.includes("steps.rates")).length, 0, "rates 스텝이나 그 결과를 읽는 스텝이 남았다");
   assert.ok(!/fetch-rates|FSS_FINLIFE/.test(code(yml)), "fetch-rates 호출이나 FSS 키가 남았다");
-  for (const n of [NEWS, "시장 지표 수집", COLLECT, CONVERT, COMMIT]) assert.ok(at(n) >= 0, `${n} 스텝이 없다 - 다른 단계까지 지웠다`);
+  for (const n of [NEWS, MARKET, COLLECT, NEWS_CONTEXT, COMMIT]) assert.ok(at(n) >= 0, `${n} 스텝이 없다 - 다른 단계까지 지웠다`);
 });
 
-test("전환율 다시 만들기는 continue-on-error 이고 full 에서만 돈다 - 실패해도 수집·커밋이 이어진다 (#62. #577 B1 이 정리할 때까지 멈춘 rates.json 을 읽는다)", () => {
-  const convert = byName(CONVERT);
-  assert.ok(convert, `"${CONVERT}" 스텝이 없다`);
-  assert.equal(convert["continue-on-error"], "true", "전환율 다시 만들기가 job 을 멈춘다 - 같은 실행의 수집분 커밋이 안 돈다");
-  assert.equal(convert.if, "env.MODE == 'full'");
+test("전환율(build-conversion)은 Daily 에 한 번만 있다 - 실거래 수집 안, 시장 지표 수집(ECOS series.json) 뒤다 (#577 C2. 두 번째 「전환율 다시 만들기」 단계는 없어졌다)", () => {
+  assert.equal(steps.filter((s) => /전환율/.test(nameOf(s) ?? "")).length, 0, "별도 전환율 스텝이 남았다 - conversion 은 실거래 수집 안의 한 번뿐이다");
+  assert.equal(conversionCalls(yml), 1, "build-conversion 호출이 한 번이 아니다");
+  assert.match(byName(COLLECT).run, /node scripts\/build-conversion\.ts/, "실거래 수집 안의 build-conversion 이 빠졌다");
+  assert.ok(at(MARKET) >= 0 && at(MARKET) < at(COLLECT), "시장 지표 수집이 실거래 수집 앞이 아니다 - conversion 이 어제 ECOS series.json 을 읽는다");
+  assert.match(byName(MARKET).run, /fetch-indicators\.ts/, "ECOS series.json 을 쓰는 fetch-indicators 가 시장 지표 수집에 없다");
+  assert.equal(byName(COLLECT).if, "env.MODE == 'full'");
+  assert.ok(at(COLLECT) < at(NEWS_CONTEXT), "news-context 가 conversion 을 만드는 실거래 수집보다 앞이다");
 });
 
 // ── 실행 흉내 ───────────────────────────────────────────────────────────────
 
-const COLLECTION = [NEWS, "시장 지표 수집", COLLECT, CONVERT, COMMIT];
+const COLLECTION = [NEWS, MARKET, COLLECT, NEWS_CONTEXT, COMMIT];
 
 test("흉내 자체: 실패가 없으면 job 은 성공이고 커밋이 맨 끝에 돈다 - 시험·렌더·배포 스텝은 애초에 없다", () => {
   const r = simulate(yml);
@@ -189,26 +196,25 @@ test("흉내 자체: 실패가 없으면 job 은 성공이고 커밋이 맨 끝�
   assert.ok(!r.ran.some((n) => /테스트|정적 HTML|Pages|건강 점검/.test(n)), `수집 워크플로에 시험·렌더·배포류 스텝이 돈다: ${r.ran}`);
 });
 
-test("전환율 다시 만들기가 실패해도 커밋은 돈다 (#62) - run 은 초록이다(낡은 conversion 은 deploy.yml 의 build/site 시험이 그 배포를 막는다)", () => {
-  const r = simulate(yml, { failNames: [CONVERT] });
-  assert.ok(r.ran.includes(COMMIT), "커밋이 안 돌았다 - 수집분이 사라진다");
-  assert.equal(r.jobFailed, false);
+test("시장 지표 수집이 실패하면 conversion 을 만드는 실거래 수집은 건너뛴다 - 어제 ECOS series.json 으로 오늘 conversion 을 만들지 않는다", () => {
+  const r = simulate(yml, { failNames: [MARKET] });
+  assert.ok(r.skipped.includes(COLLECT), "시장 지표 수집이 실패했는데 실거래 수집이 돌았다");
+  assert.equal(r.jobFailed, true);
 });
 
-test("news 모드에서는 뉴스 수집·커밋이 돌고 실거래·전환율 다시 만들기는 건너뛴다", () => {
+test("news 모드에서는 뉴스 수집·커밋이 돌고 시장 지표·실거래(conversion 포함)는 건너뛴다", () => {
   const r = simulate(yml, { mode: "news" });
   for (const n of [NEWS, COMMIT]) assert.ok(r.ran.includes(n), `${n} 이 안 돌았다`);
-  for (const n of [COLLECT, CONVERT]) assert.ok(r.skipped.includes(n), `${n} 이 news 모드에서 돌았다`);
+  for (const n of [MARKET, COLLECT]) assert.ok(r.skipped.includes(n), `${n} 이 news 모드에서 돌았다`);
   assert.equal(r.jobFailed, false);
 });
 
 // ── 대조군 ──────────────────────────────────────────────────────────────────
 
-test("대조군: 전환율 다시 만들기에서 continue-on-error 만 빠져도 그 실패가 커밋을 막는다 - 흉내가 무는지", () => {
-  const partial = yml.replace("        if: env.MODE == 'full'\n        continue-on-error: true\n        run: node scripts/build-conversion.ts\n", "        if: env.MODE == 'full'\n        run: node scripts/build-conversion.ts\n");
-  assert.notEqual(partial, yml);
-  const r = simulate(partial, { failNames: [CONVERT] });
-  assert.ok(!r.ran.includes(COMMIT), "가림이 재현되지 않는다 - 대조가 무력하다");
+test("대조군: 두 번째 build-conversion 스텝을 도로 넣은 사본은 한 번이 아니라고 잡힌다 - 세는 검사가 무는지", () => {
+  const readded = yml.replace(/(\n {6}- name: 기사에 실거래가 수치 붙이기)/, "\n      - name: 전환율 다시 만들기 (금리 반영)\n        if: env.MODE == 'full'\n        continue-on-error: true\n        run: node scripts/build-conversion.ts\n$1");
+  assert.notEqual(readded, yml);
+  assert.equal(conversionCalls(readded), 2, "도로 넣은 호출을 못 센다 - 대조가 무력하다");
 });
 
 test("대조군: 시험·렌더·건강 점검·Pages 단계를 도로 넣은 사본은 위반으로 잡힌다 (검사가 항상 참이 아니다)", () => {
@@ -244,11 +250,11 @@ test("대조군: 금감원 금리 수집·FSS 키·그 결과를 읽는 반영 �
   }
 });
 
-test("Daily 의 스텝 순서는 금리 두 단계만 빠진 그대로다 (#577 A 가 다른 단계를 건드리지 않았다)", () => {
+test("Daily 의 스텝은 뉴스 수집 → 시장 지표 수집 → 실거래 수집 → 기사 수치 붙이기 → 커밋 다섯이다 (#577 A·C2 가 금리 단계와 두 번째 전환율 단계만 뺐다)", () => {
   const named = steps.filter((s) => s.name).map((s) => s.name);
-  assert.deepEqual(named, [NEWS, "시장 지표 수집", COLLECT, CONVERT, "기사에 실거래가·금리 수치 붙이기", COMMIT]);
+  assert.deepEqual(named, [NEWS, MARKET, COLLECT, NEWS_CONTEXT, COMMIT]);
   assert.match(byName(COLLECT).run, /node scripts\/build-conversion\.ts/, "실거래 수집 안의 첫 build-conversion 이 빠졌다");
-  assert.match(byName("시장 지표 수집").run, /fetch-market\.ts[\s\S]*fetch-move-in\.ts/, "ECOS·지표 수집이 바뀌었다");
+  assert.match(byName(MARKET).run, /fetch-market\.ts[\s\S]*fetch-move-in\.ts/, "ECOS·지표 수집이 바뀌었다");
 });
 
 test("대조군: 요약 워크플로에 같은 것을 도로 넣어도 잡힌다", () => {
