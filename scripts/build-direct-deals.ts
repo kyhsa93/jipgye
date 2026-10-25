@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { directDealStats } from "./direct-deals.ts";
+import { DIRECT_HEADING, directDealStats, directLead, directMonthsHtml, directNote, directTableHtml } from "./direct-deals.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -11,7 +11,18 @@ const outFile = () =>
 /** 서울 거래가 한 건도 없으면 null - 호출자는 기존 파일을 그대로 둔다. */
 export function buildPayload({ byDistrict, months, now }) {
   if (!Object.values(byDistrict ?? {}).flat().length) return null;
-  return { updatedAt: now.toISOString(), ...directDealStats(byDistrict, months, DISTRICTS) };
+  const stats = directDealStats(byDistrict, months, DISTRICTS);
+  // 문장과 표는 두 언어로 여기서 만든다 - 화면은 고르기만 한다(체크리스트 10, 해제 빌더의 priceBands 와 같은 방식).
+  const both = (fn) => ({ ko: fn(stats, "ko"), en: fn(stats, "en") });
+  return {
+    updatedAt: now.toISOString(),
+    ...stats,
+    heading: DIRECT_HEADING,
+    lead: both(directLead),
+    note: both(directNote),
+    table: both(directTableHtml),
+    monthTable: both(directMonthsHtml),
+  };
 }
 
 /**

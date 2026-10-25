@@ -16,6 +16,8 @@
 // (#524) budget-deals.json 은 기준일만 있던 소스에 예산 밴드 18개(3억대~20억대)를 더했다 - 오늘 docs/data/budget-deals.json(origin/main 136dcf7d)에서 밴드별 거래를 앞 3건으로 줄여 얼린 것이다.
 // build-budget-pages 가 이 밴드로 예산 18장을 만든다(site-dir 시험이 53장 전부를 걷어내고 다시 그리는 데 쓴다). B4(#510)부터 SITE_STEPS 에도 그 단계가 있어 모든 고정 데이터 작업 폴더가 이 밴드로 예산 18장을 찍는다.
 //
+// (#691) direct-deals.json 은 합성 20칸(노원구, 2026-08)을 build-direct-deals 의 buildPayload 로 만든 것이다. 기준일은 cancellation.json 과 같게 둬 해제·등기 장 기준일이 안 바뀐다.
+//
 // 복사하는 docs/*.html 은 손으로 고치는 틀 14장뿐이다(#510, 구조 B-4: 생성 53장은 main 에서 걷혔다). 생성 장은 아래 SITE_STEPS 가 이 작업 폴더에서 새로 찍는다 -
 // 예산 장(build-budget-pages)도 이제 그 단계에 든다(기준일 찍기가 예산 18장을 읽는다). 렌더 시각은 BUILD_NOW 로 못박아 날짜에 기대지 않는다(#8).
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync } from "node:fs";

@@ -153,3 +153,101 @@ export function directDealStats(byDistrict, months, districts) {
   }
   return out;
 }
+
+/** 절 제목. 화면(cancelled-deals.html)에 구운 한국어와 같아야 한다 - 시험이 대조한다. */
+export const DIRECT_HEADING = { ko: "직거래는 얼마나 낮게 신고되나", en: "How low are direct deals filed?" };
+
+const signed = (v) => `${v > 0 ? "+" : ""}${v}`;
+const signedPct = (v) => `${signed(v)}%`;
+/** 구간은 끝에만 % 를 붙인다 - 「-14.3%~-10.7%」는 375폭 표에서 넘치고 물결과 빼기가 붙어 읽힌다. */
+const range = (g) => `${signed(g.low)}~${signed(g.high)}%`;
+const ym = (m, en) =>
+  en
+    ? `${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Number(m.slice(4)) - 1]} ${m.slice(0, 4)}`
+    : `${m.slice(0, 4)}년 ${Number(m.slice(4))}월`;
+
+/** 화면 첫 문단. 격차가 없으면(칸 미달) 비중만 말한다. */
+export function directLead(stats, locale = "ko") {
+  if (!stats?.months?.length) return null;
+  const en = locale === "en";
+  const tag = en ? "en-US" : "ko-KR";
+  const closed = stats.months.filter((_, i) => !stats.partial[i]);
+  const shares = stats.seoul.share.filter((v, i) => !stats.partial[i] && v !== null);
+  if (!closed.length || !shares.length) return null;
+  const span = `${ym(closed[0], en)}~${ym(closed.at(-1), en)}`;
+  const lo = Math.min(...shares);
+  const hi = Math.max(...shares);
+  const share = en
+    ? `From ${span}, direct deals — filed without an agent — were ${stats.seoul.closedShare}% of Seoul apartment sales, between ${lo}% and ${hi}% in any one month.`
+    : `${span} 서울 아파트 매매 가운데 중개사 없이 신고된 직거래는 ${stats.seoul.closedShare}%였습니다. 달마다 ${lo}~${hi}% 사이였습니다.`;
+
+  const gap = stats.seoul.gap;
+  if (gap?.median === null || !gap?.cells) return share;
+  const cells = gap.cells.toLocaleString(tag);
+  const size = Math.abs(gap.median);
+  const dir = en ? (gap.median < 0 ? "below" : "above") : gap.median < 0 ? "낮게" : "높게";
+  const body = en
+    ? ` Within the same complex and unit size, direct deals were filed a median ${size}% ${dir} agent-brokered ones (90% range ${range(gap)}, across ${cells} unit types with at least ${stats.minDeals} of each), and came in lower in ${gap.lowerShare}% of those unit types.`
+    : ` 같은 단지·같은 전용면적에서 견주면 직거래는 중개거래보다 중앙값 ${size}% ${dir} 신고됐습니다(90% 구간 ${range(gap)}, 양쪽 모두 ${stats.minDeals}건 이상인 ${cells}칸). 그 칸의 ${gap.lowerShare}%에서 직거래가 더 낮았습니다.`;
+
+  // 자치구가 하나도 문턱을 못 넘으면 표의 빈칸이 왜 비었는지 문장으로 적는다.
+  const rows = Object.values(stats.districts ?? {}) as any[];
+  if (!rows.length || rows.some((r) => r.gap.median !== null)) return share + body;
+  const most = Math.max(...rows.map((r) => r.gap.cells));
+  const tail = en
+    ? ` Split by district, even the best-covered district has only ${most} such unit types (the floor is ${stats.minCells}), so district gaps are left blank.`
+    : ` 자치구로 나누면 맞물린 칸이 가장 많은 구도 ${most}칸이라(문턱 ${stats.minCells}칸) 구별 격차는 비웁니다.`;
+  return share + body + tail;
+}
+
+/** 표 아래 단서. 사유를 모른다는 것과 무엇을 통제하지 못했는지. */
+export function directNote(stats, locale = "ko") {
+  const en = locale === "en";
+  const partial = (stats?.months ?? []).filter((_, i) => stats.partial[i]).map((m) => ym(m, en));
+  const minDeals = stats?.minDeals ?? MIN_DEALS;
+  const minCells = stats?.minCells ?? MIN_CELLS;
+  return en
+    ? `A direct deal is one the parties filed without a licensed agent. Transfers within a family, settlements with a developer or redevelopment association and ordinary sales between strangers all carry the same mark, and the filing gives no reason, so why they come in lower is unknown. This gap does not show that any one deal was between related parties or improper. ` +
+        `A unit type counts only when it has at least ${minDeals} direct and ${minDeals} brokered deals (the same floor as the price screens), and a district gets a gap only with ${minCells} or more unit types (the same as the floor-gap screen); the rest are left blank. ` +
+        `The two years go into one comparison, so price movement within that time is not controlled. ${partial.length ? `${partial.join(" and ")} are still filling up — filings arrive for 30 days after a contract — so they are marked and left out of the shares.` : ""}`
+    : `직거래는 공인중개사 없이 당사자끼리 신고한 거래입니다. 가족 간 거래, 분양·조합 정산, 모르는 사람끼리 시세대로 한 거래가 모두 같은 표시로 들어오고, 신고 자료에는 사유가 없어 왜 낮은지는 알 수 없습니다. 이 격차로 어느 한 거래가 특수관계 거래라거나 부당했다고 말할 수 없습니다. ` +
+        `칸은 직거래·중개거래가 각각 ${minDeals}건 이상인 같은 구·단지·전용면적만 세고(시세 화면의 칸 문턱), 자치구는 칸이 ${minCells}개 이상일 때만 격차를 적습니다(층 격차 화면과 같은 문턱). 못 미치면 비웁니다. ` +
+        `두 해를 한 칸에 담아 그 사이 시세 변화는 통제되지 않습니다. ${partial.length ? `${partial.join("·")}은 계약 뒤 30일까지 신고가 들어오는 덜 찬 달이라 표시만 하고 비중 합계에서 뺍니다.` : ""}`;
+}
+
+const esc = (value) =>
+  String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+
+/** 자치구 표(서울 줄 먼저). 빈 값은 「-」. */
+export function directTableHtml(stats, locale = "ko") {
+  const en = locale === "en";
+  const tag = en ? "en-US" : "ko-KR";
+  const head = en ? ["District", "Direct", "Gap", "90% range", "Types"] : ["자치구", "직거래", "격차", "90% 구간", "칸"];
+  const cell = (v) => (v === null || v === undefined ? "-" : v);
+  const tr = (name, r) =>
+    `<tr><td>${esc(name)}</td><td>${cell(r.closedShare === null ? null : `${r.closedShare}%`)}</td>` +
+    `<td>${cell(r.gap.median === null ? null : signedPct(r.gap.median))}</td>` +
+    `<td>${cell(r.gap.median === null ? null : range(r.gap))}</td>` +
+    `<td>${r.gap.cells.toLocaleString(tag)}</td></tr>`;
+  const rows = [tr(en ? "Seoul" : "서울", stats.seoul), ...Object.entries(stats.districts).map(([name, r]) => tr(name, r))];
+  return `<thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody>`;
+}
+
+/** 서울 월별 표. 덜 찬 달은 표시를 붙인다. */
+export function directMonthsHtml(stats, locale = "ko") {
+  const en = locale === "en";
+  const tag = en ? "en-US" : "ko-KR";
+  const head = en ? ["Contract month", "Deals", "Direct", "Share"] : ["계약월", "거래", "직거래", "비중"];
+  const mark = en ? " (filling)" : " (덜 참)";
+  const s = stats.seoul;
+  const rows = stats.months.map(
+    (m, i) =>
+      `<tr><td>${m.slice(0, 4)}-${m.slice(4)}${stats.partial[i] ? mark : ""}</td><td>${s.deals[i].toLocaleString(tag)}</td>` +
+      `<td>${s.direct[i].toLocaleString(tag)}</td><td>${s.share[i] === null ? "-" : `${s.share[i]}%`}</td></tr>`
+  );
+  return `<thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody>`;
+}
