@@ -14,6 +14,7 @@ import {
   toDeal,
 } from "./district-change.ts";
 import { DISTRICT_INDEX_FILE } from "./fetch-district-index.ts";
+import { runRepeatSales } from "./build-repeat-sales.ts";
 import { INDEX_FILE } from "./fetch-price-index.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { shiftMonth } from "./outlook.ts";
@@ -137,5 +138,12 @@ async function main() {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
-  main();
+  // ---- #170 V8 같은 집 쌍 (PR #684): 같은 장·같은 원본의 빌더를 여기서 부른다. 소프트 실패라 던지지 않는다(build-repeat-sales.ts 머리 주석).
+  // finally: main(갈아타기 + N4 구간 변화)이 던지거나 일찍 끝나도 돈다. main 의 오류는 그대로 올라간다 ----
+  try {
+    await main();
+  } finally {
+    await runRepeatSales();
+  }
+  // ---- /#170 V8 ----
 }

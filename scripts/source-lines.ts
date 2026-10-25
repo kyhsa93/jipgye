@@ -136,6 +136,12 @@ export const FOOTERS: Record<string, Record<Lang, string>> = {
     ko: ko([molitKo("매매 실거래가 공개시스템(중개거래, 해제 제외)"), `${SOURCES.reb.ko} 실거래가격지수·주택가격동향조사(R-ONE)`, SOURCES.ecos.ko], DERIVED.ko),
     en: en([molitEn("apartment sale filings (brokered, cancelled excluded)"), `${SOURCES.reb.en} transaction index and price survey (R-ONE)`, SOURCES.ecos.en], DERIVED.en, { sep: "; " }),
   },
+  // 갈아타기의 같은 집 쌍 절(#170 V8): 쌍은 실거래, 견주는 값은 R-ONE 에서 직접 받은 주택가격동향조사(ECOS 경유 아님)라 R-ONE 을 적는다.
+  repeatSales: {
+    // 가공 꼬리(DERIVED)는 ECOS 값으로 계산한 장의 것이라(시험이 지킨다) 쓰지 않고, R-ONE 출처 문구(ATTRIBUTION.rone)의 가공 문장을 쓴다.
+    ko: ko([molitKo("매매 실거래가 공개시스템(중개거래, 해제·직거래 제외)"), `${SOURCES.reb.ko} 주택가격동향조사(R-ONE)`], "이 값은 원자료를 집계·가공한 것이며 원자료 값을 바꾸지 않았습니다."),
+    en: en([molitEn("apartment sale filings (brokered; cancelled and direct deals excluded)"), `${SOURCES.reb.en} price survey (R-ONE)`], "These are aggregated and processed values; the source values were not changed.", { sep: "; " }),
+  },
   priceOutlook: {
     ko: ko(
       [`${SOURCES.reb.ko} 아파트 매매 실거래가격지수(한국은행 ECOS)`, molitKo("매매 실거래가 공개시스템"), `${SOURCES.kb.ko}(한국은행 ECOS 경제통계시스템 경유)`],

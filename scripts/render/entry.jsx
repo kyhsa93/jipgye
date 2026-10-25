@@ -23,6 +23,7 @@ import { metricCell, topDistricts } from "../realestate-rows.ts";
 import { overallCards } from "../realestate-overall.ts";
 import { headLabels, realestateTable } from "../realestate-table.ts";
 import { renewalSentences } from "../renewal-facts.ts";
+import { REPEAT_HEAD, REPEAT_LINK, repeatSalesView } from "../repeat-sales-view.ts";
 
 // 옛 문자열 렌더의 `escapeHtml(value)`가 하던 값 변환(`String(value ?? "")`). React는 문자열·숫자만 글자로 내고 false·null·객체·배열은 비우거나 다르게 내거나 던지므로,
 // 옛 문자열 렌더가 `escapeHtml`을 거치던 자리는 전부 이 함수를 거친다(비문자열 값이 "[object Object]"·"false"로 나오는 것까지 같게 맞춘다).
@@ -784,6 +785,82 @@ function budgetBodyJsx(band, periodList, loanBasis = null, mortgageSeries = null
   );
 }
 
+// 갈아타기 「다른 자와 견주면」 안의 같은 집 쌍 절(#170 V8 R1). 글자·칸은 repeat-sales-view.ts, 두 언어를 굽고 html lang 이 가린다(Bi).
+// 표 이름은 손으로 단다(sr-only) - 자동 caption 은 m-ko·m-en 머리글을 이어 붙여 읽는다. 출처 줄은 자리표시로 두고 applyPrerender 가 꽂는다.
+function repeatSalesJsx(data) {
+  const v = repeatSalesView(data);
+  if (!v) return null;
+  const more = (
+    <>
+      <a className="m-ko" href="./method.html#repeat-sales">{REPEAT_LINK.ko}</a>
+      <a className="m-en" href="./method.html#repeat-sales-en">{REPEAT_LINK.en}</a>
+    </>
+  );
+  if (v.fold) {
+    return (
+      <p className="lead" id="repeat-fold">
+        <Bi ko={v.fold.ko} en={v.fold.en} /> {more}
+      </p>
+    );
+  }
+  return (
+    <>
+      <h3>
+        <Bi ko={v.heading.ko} en={v.heading.en} />
+      </h3>
+      <p className="lead">
+        <Bi ko={v.intro.ko} en={v.intro.en} />
+      </p>
+      <div className="table-scroll">
+        <table className="rate-table outlook-table">
+          <caption className="sr-only">
+            <Bi ko={v.caption.ko} en={v.caption.en} />
+          </caption>
+          <thead>
+            <tr>
+              {REPEAT_HEAD.map((h, i) => (
+                <th key={i} scope="col">
+                  <Bi ko={h.ko} en={h.en} />
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {v.rows.map((r, i) => (
+              <tr key={i}>
+                <td>{r.name}</td>
+                <td>
+                  {r.n}
+                  {r.many ? <LowSample><Bi ko=" 이상치 많음" en=" many outliers" /></LowSample> : null}
+                </td>
+                {r.cells ? (
+                  r.cells.map((c, k) => <td key={k}>{c}</td>)
+                ) : (
+                  <td colSpan={4}>
+                    <LowSample>
+                      <Bi ko={r.blank.ko} en={r.blank.en} />
+                    </LowSample>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {v.gap ? (
+        <p className="content-notice">
+          <Bi ko={v.gap.ko} en={v.gap.en} />
+        </p>
+      ) : null}
+      <p className="content-notice">
+        <Bi ko={v.order.ko} en={v.order.en} /> {more}
+        <br />
+        <Bi ko="{{src:repeatSales.ko}}" en="{{src:repeatSales.en}}" />
+      </p>
+    </>
+  );
+}
+
 export const fragments = {
   marketHtml: market,
   realestateHtml: realestate,
@@ -827,4 +904,5 @@ export const fragments = {
   renewalDistrictsHtml: renewalDistrictsJsx,
   renewalWolseDistrictsHtml: renewalWolseDistrictsJsx,
   floorDistrictsHtml: floorDistrictsJsx,
+  repeatSalesHtml: repeatSalesJsx,
 };
