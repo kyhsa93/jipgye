@@ -187,6 +187,32 @@ test("메인 화면 한 해 안의 추이는 눈금에 해를 붙이지 않는�
   assert.ok(xLabels.every((label) => /^\d{1,2}\/\d{1,2}$/.test(label)), `한 해 안인데 해를 붙였다: ${xLabels.join(" | ")}`);
 });
 
+// 소유자 결정: 접혀 있던 추이 카드(84㎡·전세 거래량·월세 거래량)를 처음부터 펴 둔다. 접는 단추(details)는 남겨 사람이 접을 수는 있다.
+test("메인 화면 추이 카드는 처음부터 다 펴져 있다", async () => {
+  const p = await page({ trend: syntheticTrend({ pending: false }) });
+  const grid = p.byId("realestate-history-grid").innerHTML;
+
+  assert.equal((grid.match(/class="history-card"/g) ?? []).length, 5, "추이 카드 다섯 장이 다 그려지지 않았다");
+  const folds = [...grid.matchAll(/<details\b[^>]*>/g)].map((m) => m[0]);
+  assert.ok(folds.length > 0, "접는 단추가 사라졌다 - 아래 단언이 빈 채로 통과한다");
+  assert.ok(folds.every((tag) => /\sopen(\s|>)/.test(tag)), `접힌 채로 시작하는 추이 카드가 남았다: ${folds.join(" ")}`);
+});
+
+// 소유자 결정: 모든 추이 카드를 같은 크기로. 폭은 격자가(auto-fill — 카드 수와 상관없이 같은 칸), 키는 그래프 120px 와
+// 값 두 줄(현재값 아래 최고·최저)이 정한다. 자리 예약(.trend-reserve-card)이 그 두 줄을 같이 잡아야 데이터가 올 때 안 밀린다.
+test("추이 카드 크기 규칙: 같은 칸 폭, 값 두 줄, 예약도 두 줄", async () => {
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
+  const rule = (sel) => css.match(new RegExp(`(?:^|\\n)${sel.replace(/[.:()]/g, "\\$&")} \\{([^}]*)\\}`))?.[1] ?? "";
+
+  assert.match(rule(".history-grid"), /grid-template-columns: repeat\(auto-fill, minmax\(min\(100%, 300px\), 1fr\)\)/, "카드 수에 따라 폭이 달라진다");
+  assert.match(rule(".history-stats"), /flex-direction: column/, "값 줄이 폭에 따라 한 줄·두 줄로 갈린다");
+  assert.match(rule(".trend-reserve-card::before"), /content: "\\00a0\\A\\00a0";[\s\S]*white-space: pre/, "예약 카드가 라벨·최고최저 두 줄을 잡지 않는다");
+
+  const index = await readFile(path.join(root, "docs/index.html"), "utf8");
+  assert.match(index, /h: 120,/, "그래프 높이가 120px 하나가 아니다");
+  assert.match(index, /const h = CHART\.h;/, "그래프 높이가 폭을 따라간다");
+});
+
 test("메인 화면도 덜 찬 주를 점선으로 잇는다", async () => {
   const p = await page({ trend: syntheticTrend({ pending: true }) });
   const grid = p.byId("realestate-history-grid").innerHTML;

@@ -826,8 +826,7 @@ function syncAreaUrl() {
 // 축 글자는 스타일시트에 적은 크기(시세 표와 같은 0.85rem)로 그대로 보인다.
 const CHART = {
   fallbackW: 320,
-  heightRatio: 0.289,
-  minH: 120,
+  h: 120,
   minLeft: 44,
   right: 10,
   top: 16,
@@ -848,7 +847,7 @@ function axisTextWidth(text) {
 
 function chartBox(width, yLabels = []) {
   const w = Math.round(typeof width === "number" && width > 0 ? width : CHART.fallbackW);
-  const h = Math.round(Math.max(CHART.minH, w * CHART.heightRatio));
+  const h = CHART.h;
   const widest = yLabels.reduce((max, label) => Math.max(max, axisTextWidth(label)), 0);
   const left = Math.round(Math.min(w * 0.42, Math.max(CHART.minLeft, widest + CHART.gap)));
   return { w, h, left, right: CHART.right, top: CHART.top, bottom: CHART.bottom };

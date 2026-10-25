@@ -658,8 +658,7 @@
   // 칸이 화면 1픽셀이고, 축 글자는 스타일시트에 적은 크기(표와 같은 0.85rem)로 보인다.
   const CHART = {
     fallbackW: 320,
-    heightRatio: 0.289,
-    minH: 120,
+    h: 120,
     minLeft: 44,
     right: 10,
     top: 16,
@@ -680,7 +679,7 @@
 
   function chartBox(width, yLabels = []) {
     const w = Math.round(typeof width === "number" && width > 0 ? width : CHART.fallbackW);
-    const h = Math.round(Math.max(CHART.minH, w * CHART.heightRatio));
+    const h = CHART.h;
     const widest = yLabels.reduce((max, label) => Math.max(max, axisTextWidth(label)), 0);
     const left = Math.round(Math.min(w * 0.42, Math.max(CHART.minLeft, widest + CHART.gap)));
     return { w, h, left, right: CHART.right, top: CHART.top, bottom: CHART.bottom };
@@ -762,7 +761,8 @@
     const xTicks = xIdx
       .map((i, n) => {
         const cue = yr(0) !== yr(series.length - 1) && (n === 0 || yr(i) !== yr(xIdx[n - 1])) ? `'${yr(i)} ` : "";
-        return `<text x="${scale.x(i).toFixed(1)}" y="${box.h - 9}" class="axis x">${escapeHtml(cue + shortDate(series[i].date))}</text>`;
+        const edge = n === 0 ? " first" : n === xIdx.length - 1 ? " last" : "";
+        return `<text x="${scale.x(i).toFixed(1)}" y="${box.h - 9}" class="axis x${edge}">${escapeHtml(cue + shortDate(series[i].date))}</text>`;
       })
       .join("");
 
@@ -1240,7 +1240,7 @@
     let html = primary.join("");
     if (secondary.length > 0) {
       html += `
-        <details class="history-more">
+        <details class="history-more" open>
           <summary>${t("historyMoreToggle")(secondary.length)}</summary>
           <div class="history-grid history-grid-nested">${secondary.join("")}</div>
         </details>`;
@@ -1248,7 +1248,7 @@
     grid.innerHTML = html;
     note.textContent = pendingShown ? t("historyPendingNote") : "";
     repaintCharts();
-    // 접힌 카드는 너비가 0이라 어림한 크기 그대로다. 펼칠 때 다시 잰다.
+    // 처음부터 펴 둔다(소유자 결정). 접었다 펴면 너비가 바뀔 수 있어 다시 잰다.
     grid.querySelector(".history-more")?.addEventListener("toggle", repaintCharts);
   }
 

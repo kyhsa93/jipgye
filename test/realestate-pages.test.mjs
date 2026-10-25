@@ -794,12 +794,14 @@ test("두 화면의 그래프가 같은 좌표계로 그려진다", async () => 
   assert.equal(chartConst(realestate), chartConst(index), "두 화면의 그래프 크기 규칙이 갈라졌다");
 });
 
-test("그래프 좌표계를 그려질 자리의 픽셀과 1:1로 잡는다", async () => {
-  const page = await loadRealestatePage({ realestate: trendRealestate(), trend: trendData(), kind: "sale" });
+// 그래프 높이는 폭과 상관없이 120px 하나다(소유자 결정 — 모든 추이 카드를 같은 크기로). 예전에는 폭 × 0.289(최소 120)라
+// 폭이 415px 을 넘는 카드(1280 의 두 칸짜리 격자, 432~599 폭의 한 칸)만 키가 커져 카드마다 높이가 달랐고, 120px 로 잡아 둔 자리 예약과도 어긋났다.
+test("그래프 좌표계를 그려질 자리의 픽셀과 1:1로 잡고 높이는 폭과 상관없이 120px 이다", async () => {
+  const page = await loadRealestatePage({ realestate: trendRealestate(), trend: trendData(), kind: "sale", file: `${SITE}/realestate.html` });
   const box = page.app.chartBox(700, ["11,607만원", "9,983만원", "8,360만원"]);
 
   assert.equal(box.w, 700, "가로 좌표가 그려질 자리 너비와 어긋나면 글자가 확대된다");
-  assert.equal(box.h, Math.round(700 * 0.7 * (132 / 320)), "예전 높이의 70%가 아니다");
+  for (const width of [300, 343, 415, 538, 700, 1200]) assert.equal(page.app.chartBox(width).h, 120, `폭 ${width} 에서 높이가 120 이 아니다`);
   assert.ok(box.left >= page.app.axisTextWidth("11,607만원"), `세로 눈금 글자가 잘린다: ${box.left}`);
 });
 
@@ -945,7 +947,8 @@ test("추이 구획이 hidden인 동안 같은 높이의 빈 자리가 대신 �
     /#trend-section\[hidden\] \+ \.trend-reserve \{[^}]*display: block;[^}]*visibility: hidden;/,
     /\.trend-reserve::before \{\s*content: "\\00a0";/,
     /\.trend-reserve-card \{[^}]*padding: 12px 14px;/,
-    /\.trend-reserve-card::before \{\s*content: "\\00a0";/,
+    // 라벨 한 줄 + 최고·최저 한 줄(현재값 아래로 내린 값 줄, 소유자 결정 — 카드 높이를 하나로).
+    /\.trend-reserve-card::before \{\s*content: "\\00a0\\A\\00a0";\s*white-space: pre;/,
     /\.trend-reserve-card::after \{\s*content: "\\00a0";[^}]*padding-bottom: 124px;/,
     /\.trend-reserve::after \{\s*content: "\\00a0\\A\\00a0";/,
   ]) {
