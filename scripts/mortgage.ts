@@ -19,63 +19,37 @@ export const MAN_PER_EOK = 10_000;
 export const YEARS = 30;
 
 /**
- * 아파트를 담보로 나누어 갚는 상품만 본다.
+ * 월 상환액에 쓰는 금리: 한국은행 ECOS 예금은행 주택담보대출 신규취급 평균금리(121Y006 BECBLA0302)의 가장 최근 달.
  *
- * 공시에는 주택 유형(아파트/연립/단독)과 상환 방식(분할/일시)이 섞여 있다. 일시상환은
- * 매달 이자만 내다가 만기에 원금을 갚는 것이라 월 상환액의 뜻이 아예 다르다.
+ * 전에는 금융감독원 공시 상품의 최저금리 중앙값이었다. FSS 자료는 수익 사이트에서 쓰려면 사전 협의가 필요해
+ * 빼기로 했고(#577, 소유자 결정 2026-10-25), 지표 수집(fetch-indicators)이 이미 매일 받는 이 계열로 바꿨다.
+ * 은행이 그 달 실제로 내준 대출의 평균이라 상품별 폭(최저~최고)은 없다 - 그래서 문장도 범위 대신 "평균"이라고만 적는다.
+ * 비거나 0 이하인 달은 건너뛴다 - "값 없음"을 0%로 만들지 않는다(#269, 기준금리 0.00% 사건과 같은 이유).
+ * 돌려주는 것은 { rate, month }(month는 "YYYYMM")이고, 쓸 달이 없으면 null이다.
  */
-export const APARTMENT = { mortgageType: "아파트", repayType: "분할상환방식" };
-
-/**
- * 최저금리를 숫자로 읽는다. 비어 있으면 NaN - "값 없음"을 0%로 만들지 않는다(#269).
- *
- * Number(null)·Number("")·Number(false)·Number([])는 모두 0이다. fetch-rates.ts의 loanOption은
- * 최저·최고·평균 중 하나라도 있으면 옵션을 남기므로 lend_rate_min만 빈 날 `min: null`이
- * rates.json에 들어가는데, 예전 거름은 이를 연 0% 상품으로 세어 중앙값과 최저를 끌어내렸다.
- * 값이 있는 0과 숫자 문자열("4.5")은 그대로 읽는다 - 막는 것은 "비어 있음"이다.
- */
-function minRate(value) {
-  if (value == null || typeof value === "boolean") return Number.NaN;
-  if (String(value).trim() === "") return Number.NaN;
-  return Number(value);
-}
-
-export function apartmentOptions(rates) {
-  return (rates?.mortgage ?? []).flatMap((product) =>
-    (product.options ?? [])
-      .filter(
-        (option) =>
-          option?.mortgageType === APARTMENT.mortgageType &&
-          option?.repayType === APARTMENT.repayType &&
-          Number.isFinite(minRate(option?.min))
-      )
-      .map((option) => ({ company: product.company, min: minRate(option.min) }))
+export function latestRate(mortgageSeries) {
+  if (!Array.isArray(mortgageSeries)) return null;
+  const rows = mortgageSeries.filter(
+    (row) =>
+      Array.isArray(row) &&
+      /^\d{6}$/.test(String(row[0])) &&
+      (typeof row[1] === "number" || (typeof row[1] === "string" && row[1].trim() !== "")) &&
+      Number.isFinite(Number(row[1])) &&
+      Number(row[1]) > 0
   );
+  if (!rows.length) return null;
+  const [month, rate] = rows.at(-1);
+  return { rate: Number(rate), month: String(month) };
 }
 
-const median = (values) => {
-  const sorted = [...values].sort((a, b) => a - b);
-  const mid = sorted.length >> 1;
-  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-};
+const monthLabel = (ym) => `${ym.slice(0, 4)}년 ${Number(ym.slice(4, 6))}월`;
 
-/**
- * 대표 금리는 최저금리의 <strong>중앙값</strong>이다.
- *
- * 가장 낮은 하나를 쓰면 우대조건을 다 채운 사람의 값이 모두의 값처럼 보인다. 금리 화면이
- * 기본금리와 최고금리를 나란히 두고 그 격차가 우대조건에 달렸다고 적는 것과 같은 이유다.
- * 대신 상품마다 얼마나 벌어져 있는지를 같이 낸다 - 그 폭이 이 숫자의 오차다.
- */
-export function rateSpread(options) {
-  if (!options?.length) return null;
-  const mins = options.map((option) => option.min);
-  return {
-    count: options.length,
-    low: Math.min(...mins),
-    mid: Math.round(median(mins) * 100) / 100,
-    high: Math.max(...mins),
-  };
-}
+/** 문장에 적는 금리 근거. 달을 모르면(직접 넘긴 값) 달 없이 적는다. */
+const basisLabel = (basis) =>
+  `한국은행 ECOS 주택담보대출 신규취급 평균금리${/^\d{6}$/.test(String(basis?.month ?? "")) ? ` ${monthLabel(String(basis.month))}` : ""} 연 ${basis.rate}%`;
+
+/** 금리 근거가 쓸 수 있는 값인가. 숫자가 아니면(없음·문자열·NaN) 문장을 만들지 않는다. */
+const usable = (basis) => typeof basis?.rate === "number" && Number.isFinite(basis.rate);
 
 /**
  * 원리금균등 월 상환액. 원금과 결과 모두 만원 단위다.
@@ -96,35 +70,31 @@ export function monthlyPayment(principal, annualPercent, years = YEARS) {
 const man = (value) => `${Math.round(value).toLocaleString("ko-KR")}만원`;
 
 /**
- * 예산대 한 문단. 1억당 값이 먼저고, 그 예산에서 절반을 빌리는 경우를 하나 붙인다.
+ * 1억당 매달 얼마(method.html #budget-rules-loan). basis는 latestRate의 { rate, month }다.
  *
- * 절반은 규제가 정한 값이 아니라 읽는 사람이 곱셈을 시작할 자리다. 그래서 "절반을
- * 빌린다면"이라고 조건으로 적는다.
+ * 평균금리는 사람마다 받는 금리가 아니다 - 그래서 "평균"이라고 적고, 신용·우대조건에 따라 갈린다는 단서를 같은 문단에 둔다.
+ * 전의 상품 최저금리 범위(최저~최고)는 평균 계열에 없는 값이라 지웠다(#577).
  */
-export function loanHeadSentence(spread, years = YEARS) {
-  if (!spread) return null;
+export function loanHeadSentence(basis, years = YEARS) {
+  if (!usable(basis)) return null;
 
-  const perEok = monthlyPayment(MAN_PER_EOK, spread.mid, years);
+  const perEok = monthlyPayment(MAN_PER_EOK, basis.rate, years);
   if (!perEok) return null;
-
-  const lowPay = monthlyPayment(MAN_PER_EOK, spread.low, years);
-  const highPay = monthlyPayment(MAN_PER_EOK, spread.high, years);
 
   return (
     `1억을 ${years}년 원리금균등으로 빌리면 매달 ${man(perEok)}입니다. ` +
-    `아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 ${spread.mid}% 기준이고, 상품 ${spread.count}개가 ` +
-    `연 ${spread.low}%에서 ${spread.high}%까지 벌어져 있어 같은 1억이 ` +
-    `매달 ${man(lowPay)}에서 ${man(highPay)} 사이가 됩니다.`
+    `${basisLabel(basis)} 기준입니다. ` +
+    `은행이 실제로 내준 대출의 평균이라, 받는 금리는 신용·우대조건에 따라 이보다 높거나 낮을 수 있습니다.`
   );
 }
 
 /**
- * 예산대 한 문단(그 예산에서 절반을 빌리는 경우만). 1억당 값·금리 범위(loanHeadSentence)와 1년 사이 변화
+ * 예산대 한 문단(그 예산에서 절반을 빌리는 경우만). 1억당 값·금리 근거(loanHeadSentence)와 1년 사이 변화
  * (yearChangeSentence)는 열여덟 장에서 똑같은 값이라 method.html 한 자리로 옮겼다(#66). 1억당 값은 장 맨 위
  * "한눈에"에도 있다. "한도는 가정하지 않는다"는 단서(소득·DSR)는 이 화면의 원칙이라 장에 남긴다.
  */
-export function loanSentence(spread, { eok, years = YEARS }: { eok?: number; years?: number } = {}) {
-  const head = loanHeadSentence(spread, years);
+export function loanSentence(basis, { eok, years = YEARS }: { eok?: number; years?: number } = {}) {
+  const head = loanHeadSentence(basis, years);
   if (!head || !Number.isFinite(eok)) return head;
 
   // 예시 대출액은 예산의 절반이되, 그 예산대 집값의 주담대 구간 상한(소득과 무관한 천장)을 넘지 않는다.
@@ -133,7 +103,7 @@ export function loanSentence(spread, { eok, years = YEARS }: { eok?: number; yea
   const cap = capFor((eok + 0.5) * MAN_PER_EOK);
   const capped = halfMan > cap;
   const borrow = capped ? cap : halfMan;
-  const pay = monthlyPayment(borrow, spread.mid, years);
+  const pay = monthlyPayment(borrow, basis.rate, years);
   if (!pay) return head;
   const amount = `${(borrow / MAN_PER_EOK).toLocaleString("ko-KR")}억`;
 
@@ -145,15 +115,12 @@ export function loanSentence(spread, { eok, years = YEARS }: { eok?: number; yea
   );
 }
 
-const monthLabel = (ym) => `${ym.slice(0, 4)}년 ${Number(ym.slice(4, 6))}월`;
-
 /**
  * 1년 사이 같은 1억의 매달 상환액이 얼마나 바뀌었나. "지금 사야 하나"는 이 사이트가 답하지 않지만,
  * "1년 전보다 매달 얼마 더 드나"는 숫자로 답할 수 있다.
  *
- * 금리는 위 문단(금감원 공시 상품 최저금리의 중앙값)과 <strong>다른 자</strong>다 - 한국은행이 모은
- * 예금은행 주택담보대출 신규취급 평균금리(ECOS 121Y006)다. 공시 최저금리는 1년 전 값을 들고 있지
- * 않아서, 1년 사이 변화는 실제로 나간 대출의 평균으로 잰다. 두 자를 섞지 않게 문장에 적는다.
+ * 금리는 위 문단과 같은 자(ECOS 121Y006 예금은행 주택담보대출 신규취급 평균금리)다. 전에는 위 문단이 금감원 공시
+ * 상품 최저금리라 "다른 자"라는 단서를 붙였는데, 위 문단도 이 계열로 바뀌어(#577) 그 단서를 지웠다.
  */
 export function yearChangeSentence(mortgageSeries, years = YEARS) {
   const rows = (mortgageSeries ?? []).filter(([, v]) => Number.isFinite(Number(v)) && Number(v) > 0);
@@ -168,8 +135,7 @@ export function yearChangeSentence(mortgageSeries, years = YEARS) {
   const diff = Math.round(now) - Math.round(then);
   const move = diff === 0 ? "같습니다" : diff > 0 ? `${man(diff)} 늘었습니다` : `${man(-diff)} 줄었습니다`;
   return (
-    `1년 사이로 보면, 은행이 실제로 내준 주택담보대출의 평균 금리(한국은행 집계)가 ${monthLabel(prevMonth)} 연 ${Number(prev[1])}%에서 ` +
-    `${monthLabel(lastMonth)} 연 ${Number(lastRate)}%가 되어, 같은 1억의 매달 상환액이 ${man(then)}에서 ${man(now)}으로 ${move}. ` +
-    `이 평균 금리는 앞의 상품 최저금리와 다른 자입니다.`
+    `1년 사이로 보면, 같은 평균 금리가 ${monthLabel(prevMonth)} 연 ${Number(prev[1])}%에서 ` +
+    `${monthLabel(lastMonth)} 연 ${Number(lastRate)}%가 되어, 같은 1억의 매달 상환액이 ${man(then)}에서 ${man(now)}으로 ${move}.`
   );
 }

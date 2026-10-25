@@ -209,7 +209,7 @@ function budgetWhereHtml(band) {
   return text ? `<p class="budget-where" data-prerendered="">${escapeHtml(text)}</p>` : "";
 }
 
-function budgetBodyHtmlLegacy(band, periodList, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, finderHtml = "") {
+function budgetBodyHtmlLegacy(band, periodList, loanBasis = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, finderHtml = "") {
   const shape = bodyShape(band, periodList);
   if (!shape) return null;
 
@@ -226,12 +226,12 @@ function budgetBodyHtmlLegacy(band, periodList, rates = null, mortgageSeries = n
     `<p class="budget-summary">${escapeHtml(shape.summary)}` +
     (shape.periods ? ` <span class="when">${escapeHtml(shape.periods)}</span>` : "") +
     `</p>` +
-    budgetAnswersHtml(band, rates) +
+    budgetAnswersHtml(band, loanBasis) +
     (districts ? `<div class="budget-districts">거래가 많은 지역: ${districts}</div>` : "") +
     budgetWhereHtml(band) +
     (finderHtml ? `<div data-prerendered="">${finderHtml}</div>` : "") +
     budgetCandidatesHtml(band, complexFiles) +
-    budgetLoanHtml(band, rates, mortgageSeries) +
+    budgetLoanHtml(band, loanBasis, mortgageSeries) +
     budgetCostsHtml(band) +
     budgetMinCashHtml(band) +
     budgetCapHtml(band, capStats) +
@@ -246,8 +246,8 @@ export const budgetBodyHtml = fragment("budgetBodyHtml", budgetBodyHtmlLegacy);
  * 예산대 장 맨 위의 "한눈에" — 아래 문단 넷의 답만 한 줄씩(UIUX #43). 숫자는 문단과 같은 함수에서 나온다
  * (min-cash·purchase-costs·mortgage·policy-loan). 숫자 하나만 덩그러니 두지 않고 무엇의 값인지 앞에 적는다.
  */
-function budgetAnswersHtmlLegacy(band, rates = null) {
-  const answers = budgetAnswers(band, rates);
+function budgetAnswersHtmlLegacy(band, loanBasis = null) {
+  const answers = budgetAnswers(band, loanBasis);
   if (!answers) return "";
   const lines = answers.lines
     .map(
@@ -369,11 +369,12 @@ export const budgetFactsHtml = fragment("budgetFactsHtml", budgetFactsHtmlLegacy
 /**
  * "그래서 매달 얼마"를 붙인다. 이 화면은 예산에 답하면서 정작 그 예산이 매달 얼마가
  * 되는지는 말하지 않고 있었다 - 실거래와 금리를 같이 받는 곳이라야 자동으로 물릴 수 있다.
+ * loanBasis는 mortgage.ts latestRate의 { rate, month }(한국은행 ECOS 주담대 신규취급 평균금리, #577)다.
  */
-function budgetLoanHtmlLegacy(band, rates, mortgageSeries = null) {
-  const note = loanNote(band, rates);
+function budgetLoanHtmlLegacy(band, loanBasis, mortgageSeries = null) {
+  const note = loanNote(band, loanBasis);
   if (!note) return "";
-  // 1억당 값·금리 범위와 1년 사이 변화(mortgageSeries로 만든 문장)는 열여덟 장에서 같은 값이라
+  // 1억당 값·금리 근거와 1년 사이 변화(mortgageSeries로 만든 문장)는 열여덟 장에서 같은 값이라
   // method.html로 갔다(scripts/budget-rules.mjs, #66). mortgageSeries 인자는 호출부 호환으로 남긴다.
   // 문장은 이스케이프하지 않고 끼운다 - 글자가 숫자 서식과 코드 상수뿐이다(mortgage.mjs, PR 본문의 raw 보간 전수표).
   return `<p class="budget-loan" data-prerendered="">${note.sentence}${budgetRuleLink(note.link.id, note.link.text)}</p>`;
@@ -842,7 +843,6 @@ async function main() {
     news: newsHtml(news),
   };
 
-  const rates = await readJson("rates");
   const conversion = await readJson("conversion");
   const cancellation = await readJson("cancellation");
   const renewal = await readJson("renewal-facts");

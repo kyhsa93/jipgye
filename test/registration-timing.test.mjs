@@ -63,12 +63,14 @@ test("가격대별 걸린 날은 그 대에 계약이 충분할 때만 낸다", 
   assert.match(registrationSentence(registrationStats(items), "ko"), /6억 이하 60일/);
 });
 
-test("1억당 상환액의 1년 변화는 같은 달 1년 전과 견주고, 다른 자라고 적는다", () => {
+test("1억당 상환액의 1년 변화는 같은 달 1년 전과 견주고, 위 문단과 같은 평균 금리라고 적는다", () => {
   const series = [["202508", 3.96], ["202607", 4.6], ["202608", 4.66]];
   const text = yearChangeSentence(series);
   assert.match(text, /2025년 8월 연 3.96%에서 2026년 8월 연 4.66%/);
   assert.match(text, /48만원에서 52만원으로 4만원 늘었습니다/);
-  assert.match(text, /다른 자/);
+  // 위 문단(1억당 값)도 같은 ECOS 평균금리로 바뀌어(#577) "다른 자" 단서는 지웠다.
+  assert.match(text, /^1년 사이로 보면, 같은 평균 금리가 /);
+  assert.doesNotMatch(text, /다른 자|최저금리/);
   assert.equal(yearChangeSentence([["202607", 4.6], ["202608", 4.66]]), null, "1년 전 값이 없는데 문장을 만들었다");
 });
 

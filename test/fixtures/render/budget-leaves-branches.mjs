@@ -1,5 +1,5 @@
-// 예산대 잎 조각 여덟 개의 분기별 고정 fixture (#243 PR A): budgetAnswersHtml(band, rates)·budgetMoreHtml()·budgetMinCashHtml(band)·budgetPolicyHtml(band, policyCounts)·
-// budgetCapHtml(band, capStats)·budgetCostsHtml(band)·budgetFactsHtml(band, locale)·budgetLoanHtml(band, rates, mortgageSeries).
+// 예산대 잎 조각 여덟 개의 분기별 고정 fixture (#243 PR A): budgetAnswersHtml(band, loanBasis)·budgetMoreHtml()·budgetMinCashHtml(band)·budgetPolicyHtml(band, policyCounts)·
+// budgetCapHtml(band, capStats)·budgetCostsHtml(band)·budgetFactsHtml(band, locale)·budgetLoanHtml(band, loanBasis, mortgageSeries). loanBasis는 한국은행 ECOS 평균금리 { rate, month }다(#577).
 // 데이터 값이나 날짜에 따라 결과가 갈리지 않는다(R3): 저장소의 docs/·raw/를 읽지 않고 코드(budget-fragments.mjs·min-cash.mjs 등)도 부르지 않는다.
 // 한 줄이 한 분기다. `args`는 legacy 함수에 그대로 넘기는 인자이고, `expect`는 legacy가 내야 하는 글자다. 기대값은 아래 글자 틀(`P`·`LI`·`ANSWER` 등)과 문장 값 표를 손으로 이은 것이고
 // 입력을 가공해 만들지 않는다. 값 표(ANSWERS_T·COSTS_S·MINCASH_S·LOAN_S·LINE2_T)는 모듈을 부르지 않고 파이썬으로 지방세법·공인중개사법 시행규칙·10·15 대책 구간표를 따로 옮겨 센 값이다(PR 본문).
@@ -82,24 +82,22 @@ const MINCASH_S = {
   "25": "25억 5,000만원짜리를 산다면, 대출이 아무리 잘 나와도 빌릴 수 있는 천장은 가격 구간 상한 2억원이라 자기 돈이 적어도 24억 5,200만원 필요합니다(부대비용 1억 200만원 포함). 생애최초여도 이 가격대는 천장이 같아 차이가 없습니다. 소득(DSR)에 따라 더 필요할 수 있고, 이미 집이 있으면 이 계산이 맞지 않습니다.",
 };
 const LOAN_S = {
-  "STD": {"head": "1억을 30년 원리금균등으로 빌리면 매달 55만원입니다. 아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 5.25% 기준이고, 상품 3개가 연 4.11%에서 6.21%까지 벌어져 있어 같은 1억이 매달 48만원에서 61만원 사이가 됩니다.", "-2": "1억을 30년 원리금균등으로 빌리면 매달 55만원입니다. 아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 5.25% 기준이고, 상품 3개가 연 4.11%에서 6.21%까지 벌어져 있어 같은 1억이 매달 48만원에서 61만원 사이가 됩니다.", "0": "1억을 30년 원리금균등으로 빌리면 매달 55만원입니다. 아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 5.25% 기준이고, 상품 3개가 연 4.11%에서 6.21%까지 벌어져 있어 같은 1억이 매달 48만원에서 61만원 사이가 됩니다.", "0.5": "이 예산에서 절반인 0.25억을 빌린다면 매달 14만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "3": "이 예산에서 절반인 1.5억을 빌린다면 매달 83만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "5": "이 예산에서 절반인 2.5억을 빌린다면 매달 138만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 193만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "10": "이 예산에서 절반인 5억을 빌린다면 매달 276만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "11": "이 예산에서 절반인 5.5억을 빌린다면 매달 304만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "12": "이 예산에서 절반인 6억을 빌린다면 매달 331만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "13": "이 예산의 절반(6.5억)은 이 가격대 주담대 상한 6억을 넘어, 상한인 6억을 빌린다면 매달 331만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "16": "이 예산의 절반(8억)은 이 가격대 주담대 상한 4억을 넘어, 상한인 4억을 빌린다면 매달 221만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "24": "이 예산의 절반(12억)은 이 가격대 주담대 상한 4억을 넘어, 상한인 4억을 빌린다면 매달 221만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
-  "EVEN": {"head": "1억을 30년 원리금균등으로 빌리면 매달 54만원입니다. 아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 5% 기준이고, 상품 2개가 연 4%에서 6%까지 벌어져 있어 같은 1억이 매달 48만원에서 60만원 사이가 됩니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 188만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
-  "ROUND": {"head": "1억을 30년 원리금균등으로 빌리면 매달 48만원입니다. 아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 4.12% 기준이고, 상품 3개가 연 4.114%에서 4.118%까지 벌어져 있어 같은 1억이 매달 48만원에서 48만원 사이가 됩니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 170만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
-  "ZERO": {"head": "1억을 30년 원리금균등으로 빌리면 매달 28만원입니다. 아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 0% 기준이고, 상품 1개가 연 0%에서 0%까지 벌어져 있어 같은 1억이 매달 28만원에서 28만원 사이가 됩니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 97만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
-  "NEG": {"head": "1억을 30년 원리금균등으로 빌리면 매달 28만원입니다. 아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 -1% 기준이고, 상품 1개가 연 -1%에서 -1%까지 벌어져 있어 같은 1억이 매달 28만원에서 28만원 사이가 됩니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 97만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
-  "ONE": {"head": "1억을 30년 원리금균등으로 빌리면 매달 45만원입니다. 아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 3.5% 기준이고, 상품 1개가 연 3.5%에서 3.5%까지 벌어져 있어 같은 1억이 매달 45만원에서 45만원 사이가 됩니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 157만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
-  "S45": {"head": "1억을 30년 원리금균등으로 빌리면 매달 51만원입니다. 아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 4.5% 기준이고, 상품 1개가 연 4.5%에서 4.5%까지 벌어져 있어 같은 1억이 매달 51만원에서 51만원 사이가 됩니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 177만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
-  "NULLMIN": {"head": "1억을 30년 원리금균등으로 빌리면 매달 48만원입니다. 아파트 담보·분할상환 상품(만기일시상환 제외) 최저금리의 중앙값 연 4% 기준이고, 상품 1개가 연 4%에서 4%까지 벌어져 있어 같은 1억이 매달 48만원에서 48만원 사이가 됩니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 167만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
+  "STD": {"head": "1억을 30년 원리금균등으로 빌리면 매달 55만원입니다. 한국은행 ECOS 주택담보대출 신규취급 평균금리 2026년 8월 연 5.25% 기준입니다. 은행이 실제로 내준 대출의 평균이라, 받는 금리는 신용·우대조건에 따라 이보다 높거나 낮을 수 있습니다.", "-2": "1억을 30년 원리금균등으로 빌리면 매달 55만원입니다. 한국은행 ECOS 주택담보대출 신규취급 평균금리 2026년 8월 연 5.25% 기준입니다. 은행이 실제로 내준 대출의 평균이라, 받는 금리는 신용·우대조건에 따라 이보다 높거나 낮을 수 있습니다.", "0": "1억을 30년 원리금균등으로 빌리면 매달 55만원입니다. 한국은행 ECOS 주택담보대출 신규취급 평균금리 2026년 8월 연 5.25% 기준입니다. 은행이 실제로 내준 대출의 평균이라, 받는 금리는 신용·우대조건에 따라 이보다 높거나 낮을 수 있습니다.", "0.5": "이 예산에서 절반인 0.25억을 빌린다면 매달 14만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "3": "이 예산에서 절반인 1.5억을 빌린다면 매달 83만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "5": "이 예산에서 절반인 2.5억을 빌린다면 매달 138만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 193만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "10": "이 예산에서 절반인 5억을 빌린다면 매달 276만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "11": "이 예산에서 절반인 5.5억을 빌린다면 매달 304만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "12": "이 예산에서 절반인 6억을 빌린다면 매달 331만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "13": "이 예산의 절반(6.5억)은 이 가격대 주담대 상한 6억을 넘어, 상한인 6억을 빌린다면 매달 331만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "16": "이 예산의 절반(8억)은 이 가격대 주담대 상한 4억을 넘어, 상한인 4억을 빌린다면 매달 221만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다.", "24": "이 예산의 절반(12억)은 이 가격대 주담대 상한 4억을 넘어, 상한인 4억을 빌린다면 매달 221만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
+  "FIVE": {"head": "1억을 30년 원리금균등으로 빌리면 매달 54만원입니다. 한국은행 ECOS 주택담보대출 신규취급 평균금리 2026년 8월 연 5% 기준입니다. 은행이 실제로 내준 대출의 평균이라, 받는 금리는 신용·우대조건에 따라 이보다 높거나 낮을 수 있습니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 188만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
+  "RAW": {"head": "1억을 30년 원리금균등으로 빌리면 매달 48만원입니다. 한국은행 ECOS 주택담보대출 신규취급 평균금리 2026년 8월 연 4.116% 기준입니다. 은행이 실제로 내준 대출의 평균이라, 받는 금리는 신용·우대조건에 따라 이보다 높거나 낮을 수 있습니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 169만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
+  "ZERO": {"head": "1억을 30년 원리금균등으로 빌리면 매달 28만원입니다. 한국은행 ECOS 주택담보대출 신규취급 평균금리 2026년 8월 연 0% 기준입니다. 은행이 실제로 내준 대출의 평균이라, 받는 금리는 신용·우대조건에 따라 이보다 높거나 낮을 수 있습니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 97만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
+  "NEG": {"head": "1억을 30년 원리금균등으로 빌리면 매달 28만원입니다. 한국은행 ECOS 주택담보대출 신규취급 평균금리 2026년 8월 연 -1% 기준입니다. 은행이 실제로 내준 대출의 평균이라, 받는 금리는 신용·우대조건에 따라 이보다 높거나 낮을 수 있습니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 97만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
+  "ONE": {"head": "1억을 30년 원리금균등으로 빌리면 매달 45만원입니다. 한국은행 ECOS 주택담보대출 신규취급 평균금리 2026년 8월 연 3.5% 기준입니다. 은행이 실제로 내준 대출의 평균이라, 받는 금리는 신용·우대조건에 따라 이보다 높거나 낮을 수 있습니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 157만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
+  "NOMONTH": {"head": "1억을 30년 원리금균등으로 빌리면 매달 48만원입니다. 한국은행 ECOS 주택담보대출 신규취급 평균금리 연 4% 기준입니다. 은행이 실제로 내준 대출의 평균이라, 받는 금리는 신용·우대조건에 따라 이보다 높거나 낮을 수 있습니다.", "7": "이 예산에서 절반인 3.5억을 빌린다면 매달 167만원입니다 — 실제로 얼마를 빌릴 수 있는지는 소득(DSR)에 따라 갈리므로 여기서는 정하지 않고, 1억당 값을 곱하시면 됩니다."},
 };
 const LINE2_T = {
-  "STD": ["55만원", "30년 원리금균등, 연 5.25%"],
-  "EVEN": ["54만원", "30년 원리금균등, 연 5%"],
-  "ROUND": ["48만원", "30년 원리금균등, 연 4.12%"],
-  "ZERO": ["28만원", "30년 원리금균등, 연 0%"],
-  "NEG": ["28만원", "30년 원리금균등, 연 -1%"],
-  "ONE": ["45만원", "30년 원리금균등, 연 3.5%"],
-  "S45": ["51만원", "30년 원리금균등, 연 4.5%"],
-  "NULLMIN": ["48만원", "30년 원리금균등, 연 4%"],
+  "STD": ["55만원", "30년 원리금균등, 한국은행 평균 연 5.25%(2026년 8월)"],
+  "FIVE": ["54만원", "30년 원리금균등, 한국은행 평균 연 5%(2026년 8월)"],
+  "RAW": ["48만원", "30년 원리금균등, 한국은행 평균 연 4.116%(2026년 8월)"],
+  "ZERO": ["28만원", "30년 원리금균등, 한국은행 평균 연 0%(2026년 8월)"],
+  "NEG": ["28만원", "30년 원리금균등, 한국은행 평균 연 -1%(2026년 8월)"],
+  "ONE": ["45만원", "30년 원리금균등, 한국은행 평균 연 3.5%(2026년 8월)"],
+  "NOMONTH": ["48만원", "30년 원리금균등, 한국은행 평균 연 4%"],
 };
 
 const SP = `A&B <i> "q" it's`;
@@ -141,11 +139,41 @@ const MORE =
 
 // ================= 입력 틀 =================
 const band = (eok, extra = {}) => ({ min10k: eok * 10_000, max10k: eok * 10_000 + 10_000, count: 100, ...extra });
-const opt = (min, extra = {}) => ({ mortgageType: "아파트", repayType: "분할상환방식", rateType: "변동금리", min, max: 6.9, avg: 5.2, ...extra });
-const prod = (company, ...options) => ({ id: "p", sector: "bank", company, name: "아파트론", options });
-// 최저금리 4.11·5.25·6.21(+ 제외 대상: 만기일시상환·연립)
-const RATES_STD = { mortgage: [prod("가은행", opt(4.11), opt(3.0, { repayType: "만기일시상환방식" }), opt(2.0, { mortgageType: "연립" })), prod("나은행", opt(5.25)), prod("다은행", opt(6.21))] };
-const ratesOf = (...mins) => ({ mortgage: [prod("가은행", ...mins.map((m) => opt(m)))] });
+// 금리 근거: mortgage.ts latestRate 의 { rate, month }(한국은행 ECOS 주담대 신규취급 평균금리, #577). 전에는 금감원 공시 상품 목록(mortgage[])이었다.
+const basisOf = (rate, month = "202608") => ({ rate, month });
+const BASIS_STD = basisOf(5.25);
+// 옛 금감원 금리 모양 - 이제는 읽지 않는다(던지지도 않고 금리 줄·문단만 빠진다).
+const OLD_SHAPES = [
+  ["mortgage가 객체({})", { mortgage: {} }],
+  ["mortgage가 숫자(5)", { mortgage: 5 }],
+  ["mortgage가 문자열", { mortgage: "ab" }],
+  ["상품이 null", { mortgage: [null] }],
+  ["options가 객체({})", { mortgage: [{ options: {} }] }],
+  ["options가 숫자", { mortgage: [{ options: 5 }] }],
+  ["정상 상품 목록(최저금리 5.25)", { mortgage: [{ company: "가은행", options: [{ mortgageType: "아파트", repayType: "분할상환방식", min: 5.25 }] }] }],
+];
+// 금리를 못 읽는 값(숫자가 아닌 rate·모양이 다른 인자)
+const BAD_BASES = [
+  ["null", null],
+  ["0", 0],
+  ["빈 문자열", ""],
+  ["false", false],
+  ["true", true],
+  ["빈 객체", {}],
+  ["빈 배열", []],
+  ["rate null", { rate: null, month: "202608" }],
+  ["rate undefined", { rate: undefined, month: "202608" }],
+  ['rate "abc"', { rate: "abc", month: "202608" }],
+  ["rate NaN", { rate: NaN, month: "202608" }],
+  ["rate Infinity", { rate: Infinity, month: "202608" }],
+  ["rate -Infinity", { rate: -Infinity, month: "202608" }],
+  ["rate {}", { rate: {}, month: "202608" }],
+  ["rate []", { rate: [], month: "202608" }],
+  ["달만 있음", { month: "202608" }],
+  ["배열 [5.25]", [5.25]],
+  ['숫자 문자열 "5.25"', "5.25"],
+  ["숫자 5.25 그대로", 5.25],
+];
 
 const rows = [];
 const add = (id, fn, cond, args, expect, extra = {}) => rows.push({ id, fn, cond, args, expect, ...extra });
@@ -193,7 +221,7 @@ const BAD_BANDS = [
 // ================= 한눈에 (budgetAnswersHtml) =================
 BAD_BANDS.forEach(([cond, value], i) => {
   const n = String(i + 1).padStart(2, "0");
-  add(`AN-E${n}`, AN, `예산대 없음(${cond}) → 빈 문자열`, [value, RATES_STD], "", { empty: "" });
+  add(`AN-E${n}`, AN, `예산대 없음(${cond}) → 빈 문자열`, [value, BASIS_STD], "", { empty: "" });
 });
 add("AN-E90", AN, "예산대 없음 + 금리 인자 없음 → 빈 문자열", [null], "", { empty: "" });
 // 예산대마다: 첫 줄의 "생애최초면" 부가 글자(15억 초과는 천장이 같아 부가 글자 없음), 정책대출 가격선 줄의 다섯 문구, 금리 없음(둘째 줄 빠짐)
@@ -203,52 +231,32 @@ for (const e of ["-1", "0", "0.5", "3", "4", "5", "5.5", "6", "7", "8", "9", "10
 }
 add("AN-B-u", AN, "금리 인자가 아예 없음(undefined) → 기본값 null과 같다", [band(7)], ANSWER("7"));
 // 금리가 있는 날: 둘째 줄 "1억을 빌리면 매달"
-add("AN-R01", AN, "금리 있음(최저 4.11·5.25·6.21, 제외 대상 섞임) 3억대 → 둘째 줄 55만원·연 5.25%", [band(3), RATES_STD], ANSWER("3", LINE2("STD")));
-add("AN-R02", AN, "금리 있음 7억대", [band(7), RATES_STD], ANSWER("7", LINE2("STD")));
-add("AN-R03", AN, "금리 있음 10억대(정책대출 가격선 모두 넘음)", [band(10), RATES_STD], ANSWER("10", LINE2("STD")));
-add("AN-R04", AN, "금리 있음 16억대(생애최초 부가 글자 없음)", [band(16), RATES_STD], ANSWER("16", LINE2("STD")));
-add("AN-R05", AN, "금리 상품이 둘(짝수 개): 중앙값은 두 값의 평균 5% → 연 5%", [band(7), ratesOf(4, 6)], ANSWER("7", LINE2("EVEN")));
-add("AN-R06", AN, "중앙값을 소수 둘째 자리로 반올림(4.116 → 4.12)", [band(7), ratesOf(4.114, 4.116, 4.118)], ANSWER("7", LINE2("ROUND")));
-add("AN-R07", AN, "최저금리 0이면 0으로 나누지 않는다(원금÷개월) → 28만원·연 0%", [band(7), ratesOf(0)], ANSWER("7", LINE2("ZERO")));
-add("AN-R08", AN, "최저금리 음수도 0 이하라 원금÷개월 → 연 -1%", [band(7), ratesOf(-1)], ANSWER("7", LINE2("NEG")));
-add("AN-R09", AN, "최저금리 3.5 한 개", [band(7), ratesOf(3.5)], ANSWER("7", LINE2("ONE")));
-add("AN-R10", AN, '최저금리가 숫자 문자열 "4.5"도 숫자로 읽는다', [band(7), ratesOf("4.5")], ANSWER("7", LINE2("S45")));
-add("AN-R11", AN, '최저금리가 ["4.5"](배열)도 Number()로 4.5', [band(7), ratesOf(["4.5"])], ANSWER("7", LINE2("S45")));
-// #269: 예전에는 Number(null)=0이라 null을 0%로 세어 중앙값 2%(37만원)로 나왔다. 값 없음은 빼고 4%만 남는다.
-add("AN-R12", AN, "최저금리 null은 값 없음이라 뺀다(상품 2개: null·4 → 4%만 남아 중앙값 4%)", [band(7), ratesOf(null, 4.0)], ANSWER("7", LINE2("NULLMIN")));
-add("AN-R13", AN, '최저금리 빈 문자열 ""도 값 없음 → 옵션 0개라 둘째 줄이 빠진다(#269: 예전에는 0%)', [band(7), ratesOf("")], ANSWER("7"));
-add("AN-R14", AN, "최저금리 false도 값 없음 → 둘째 줄이 빠진다(#269: 예전에는 0%)", [band(7), ratesOf(false)], ANSWER("7"));
-add("AN-R16", AN, '최저금리 공백 문자열 " "·빈 배열 []·true도 값 없음 → 둘째 줄이 빠진다(#269)', [band(7), ratesOf(" ", [], true)], ANSWER("7"));
-add("AN-R15", AN, "회사 이름의 특수문자는 글자로 나오지 않는다(금리 문장에 회사가 없다)", [band(7), { mortgage: [prod(SP, opt(4.11)), prod("&amp;", opt(5.25)), prod(false, opt(6.21))] }], ANSWER("7", LINE2("STD")));
+add("AN-R01", AN, "금리 있음(한국은행 평균 5.25%, 2026년 8월) 3억대 → 둘째 줄 55만원·출처와 달", [band(3), BASIS_STD], ANSWER("3", LINE2("STD")));
+add("AN-R02", AN, "금리 있음 7억대", [band(7), BASIS_STD], ANSWER("7", LINE2("STD")));
+add("AN-R03", AN, "금리 있음 10억대(정책대출 가격선 모두 넘음)", [band(10), BASIS_STD], ANSWER("10", LINE2("STD")));
+add("AN-R04", AN, "금리 있음 16억대(생애최초 부가 글자 없음)", [band(16), BASIS_STD], ANSWER("16", LINE2("STD")));
+add("AN-R05", AN, "금리 5(정수) → 연 5%", [band(7), basisOf(5)], ANSWER("7", LINE2("FIVE")));
+add("AN-R06", AN, "금리 글자는 반올림하지 않고 받은 그대로(4.116%)", [band(7), basisOf(4.116)], ANSWER("7", LINE2("RAW")));
+add("AN-R07", AN, "금리 0이면 0으로 나누지 않는다(원금÷개월) → 28만원·연 0%", [band(7), basisOf(0)], ANSWER("7", LINE2("ZERO")));
+add("AN-R08", AN, "금리 음수도 0 이하라 원금÷개월 → 연 -1%", [band(7), basisOf(-1)], ANSWER("7", LINE2("NEG")));
+add("AN-R09", AN, "금리 3.5", [band(7), basisOf(3.5)], ANSWER("7", LINE2("ONE")));
+add("AN-R10", AN, '금리가 숫자 문자열 "4.5"면 쓰지 않는다(숫자로 바꾸는 것은 latestRate 몫) → 둘째 줄 빠짐', [band(7), basisOf("4.5")], ANSWER("7"));
+add("AN-R11", AN, '금리가 ["4.5"](배열)면 쓰지 않는다 → 둘째 줄 빠짐', [band(7), basisOf(["4.5"])], ANSWER("7"));
+add("AN-R12", AN, "달이 없으면 달 없이 출처와 금리만", [band(7), { rate: 4 }], ANSWER("7", LINE2("NOMONTH")));
+add("AN-R13", AN, '금리 빈 문자열 ""도 값 없음 → 둘째 줄이 빠진다(#269: 0%로 세지 않는다)', [band(7), basisOf("")], ANSWER("7"));
+add("AN-R14", AN, "금리 false도 값 없음 → 둘째 줄이 빠진다(#269)", [band(7), basisOf(false)], ANSWER("7"));
+add("AN-R16", AN, "금리 true도 값 없음 → 둘째 줄이 빠진다(#269)", [band(7), basisOf(true)], ANSWER("7"));
+add("AN-R15", AN, "근거 객체의 다른 필드(특수문자)는 글자로 나오지 않는다", [band(7), { rate: 5.25, month: "202608", company: SP, extra: "&amp;" }], ANSWER("7", LINE2("STD")));
+add("AN-R17", AN, "달이 특수문자면 달을 적지 않는다(이스케이프 없이 끼우는 자리라 YYYYMM 만 쓴다)", [band(7), { rate: 4, month: SP }], ANSWER("7", LINE2("NOMONTH")));
+add("AN-R18", AN, '달이 "2026-08"(YYYYMM 아님)이면 달을 적지 않는다', [band(7), { rate: 4, month: "2026-08" }], ANSWER("7", LINE2("NOMONTH")));
 // 금리를 못 읽는 날: 둘째 줄이 빠진다(나머지 줄은 그대로)
-for (const [i, [cond, rates]] of [
-  ["null", null],
-  ["0", 0],
-  ["빈 문자열", ""],
-  ["false", false],
-  ["빈 객체", {}],
-  ["mortgage 빈 목록", { mortgage: [] }],
-  ["mortgage null", { mortgage: null }],
-  ["mortgage undefined", { mortgage: undefined }],
-  ["상품에 options 없음", { mortgage: [{ company: "가은행" }] }],
-  ["options가 빈 목록", { mortgage: [prod("가은행")] }],
-  ["만기일시상환만", { mortgage: [prod("가은행", opt(3.0, { repayType: "만기일시상환방식" }))] }],
-  ["연립만", { mortgage: [prod("가은행", opt(3.0, { mortgageType: "연립" }))] }],
-  ["유형 특수문자", { mortgage: [prod("가은행", opt(3.0, { mortgageType: SP, repayType: SP }))] }],
-  ["최저금리 없음(undefined)", { mortgage: [prod("가은행", opt(undefined))] }],
-  ['최저금리 "abc"', { mortgage: [prod("가은행", opt("abc"))] }],
-  ["최저금리 NaN", { mortgage: [prod("가은행", opt(NaN))] }],
-  ["최저금리 Infinity", { mortgage: [prod("가은행", opt(Infinity))] }],
-  ["최저금리 {}", { mortgage: [prod("가은행", opt({}))] }],
-  ["options 항목이 null", { mortgage: [{ company: "가은행", options: [null, undefined, 5, "x"] }] }],
-].entries()) {
-  add(`AN-N${String(i + 1).padStart(2, "0")}`, AN, `금리를 못 읽음(${cond}) → 둘째 줄만 빠짐`, [band(7), rates], ANSWER("7"));
+for (const [i, [cond, basis]] of BAD_BASES.entries()) {
+  add(`AN-N${String(i + 1).padStart(2, "0")}`, AN, `금리를 못 읽음(${cond}) → 둘째 줄만 빠짐`, [band(7), basis], ANSWER("7"));
 }
-addThrow("AN-T01", AN, "금리 mortgage가 객체({})면 flatMap이 없어 던진다", [band(7), { mortgage: {} }]);
-addThrow("AN-T02", AN, "금리 mortgage가 숫자(5)면 던진다", [band(7), { mortgage: 5 }]);
-addThrow("AN-T03", AN, "금리 mortgage가 문자열이면 던진다", [band(7), { mortgage: "ab" }]);
-addThrow("AN-T04", AN, "상품이 null이면 던진다", [band(7), { mortgage: [null] }]);
-addThrow("AN-T05", AN, "options가 객체({})면 filter가 없어 던진다", [band(7), { mortgage: [{ options: {} }] }]);
+// 옛 금감원 금리 모양(#577 전의 인자): 읽지 않는다 - 전에는 일부가 던졌다(AN-T01~T05)
+for (const [i, [cond, rates]] of OLD_SHAPES.entries()) {
+  add(`AN-O${String(i + 1).padStart(2, "0")}`, AN, `옛 금리 모양(${cond})은 읽지 않는다 → 둘째 줄만 빠짐`, [band(7), rates], ANSWER("7"));
+}
 add("AN-X01", AN, "예산대가 없으면 금리가 이상해도 읽기 전에 빈 문자열(던지지 않는다)", [null, { mortgage: {} }], "", { empty: "" });
 
 // ================= 다음 질문 (budgetMoreHtml) =================
@@ -535,64 +543,43 @@ const LOANP = (sentence) => P("budget-loan", sentence, L.loan);
 BAD_BANDS.forEach(([cond, value], i) => {
   const n = String(i + 1).padStart(2, "0");
   add(`LO-E${n}`, LO, `예산대 없음(${cond}), 금리 없음(null) → 빈 문자열`, [value, null], "", { empty: "" });
-  add(`LO-H${n}`, LO, `예산대 없음(${cond}), 금리 있음 → 1억당 문장(절반 문장 없이)만`, [value, RATES_STD], LOANP(LOAN_S.STD.head));
+  add(`LO-H${n}`, LO, `예산대 없음(${cond}), 금리 있음 → 1억당 문장(절반 문장 없이)만`, [value, BASIS_STD], LOANP(LOAN_S.STD.head));
 });
-for (const [i, [cond, rates]] of [
-  ["null", null],
-  ["undefined", undefined],
-  ["0", 0],
-  ["빈 문자열", ""],
-  ["false", false],
-  ["빈 객체", {}],
-  ["mortgage 빈 목록", { mortgage: [] }],
-  ["mortgage null", { mortgage: null }],
-  ["상품에 options 없음", { mortgage: [{ company: "가은행" }] }],
-  ["options가 빈 목록", { mortgage: [prod("가은행")] }],
-  ["만기일시상환만", { mortgage: [prod("가은행", opt(3.0, { repayType: "만기일시상환방식" }))] }],
-  ["연립만", { mortgage: [prod("가은행", opt(3.0, { mortgageType: "연립" }))] }],
-  ["최저금리 없음(undefined)", { mortgage: [prod("가은행", opt(undefined))] }],
-  ['최저금리 "abc"', { mortgage: [prod("가은행", opt("abc"))] }],
-  ["최저금리 NaN", { mortgage: [prod("가은행", opt(NaN))] }],
-  ["최저금리 Infinity", { mortgage: [prod("가은행", opt(Infinity))] }],
-  ["최저금리 {}", { mortgage: [prod("가은행", opt({}))] }],
-  ["options 항목이 null·undefined·5·\"x\"", { mortgage: [{ company: "가은행", options: [null, undefined, 5, "x"] }] }],
-].entries()) {
-  add(`LO-N${String(i + 1).padStart(2, "0")}`, LO, `금리를 못 읽음(${cond}), 7억대 → 빈 문자열`, [band(7), rates], "", { empty: "" });
+for (const [i, [cond, basis]] of [["undefined", undefined], ...BAD_BASES].entries()) {
+  add(`LO-N${String(i + 1).padStart(2, "0")}`, LO, `금리를 못 읽음(${cond}), 7억대 → 빈 문자열`, [band(7), basis], "", { empty: "" });
 }
+for (const [i, [cond, rates]] of OLD_SHAPES.entries()) {
+  add(`LO-O${String(i + 1).padStart(2, "0")}`, LO, `옛 금리 모양(${cond})은 읽지 않는다, 7억대 → 빈 문자열(전에는 일부가 던졌다: LO-T01~T06)`, [band(7), rates], "", { empty: "" });
+}
+add("LO-O99", LO, "예산대 없음 + 옛 금리 모양 → 빈 문자열(전에는 금리를 먼저 읽어 던졌다: LO-T07)", [null, { mortgage: {} }], "", { empty: "" });
 add("LO-N99", LO, "금리 인자가 아예 없음(undefined) → 빈 문자열", [band(7)], "", { empty: "" });
 // 절반 문장: 예시 대출액은 예산의 절반이되 그 예산대 주담대 상한을 넘지 않는다(12억대는 정확히 상한과 같아 넘지 않는다, 13억대부터 넘는다)
 for (const [e, cond] of [["0.5", "예산 1억(0.5억대)"], ["3", "3억대"], ["5", "5억대"], ["10", "10억대(절반 5억)"], ["11", "11억대(절반 5.5억)"], ["12", "12억대(절반 6억 = 상한 6억, 넘지 않음)"], ["13", "13억대(절반 6.5억 > 상한 6억) → 상한 문구"], ["16", "16억대(절반 8억 > 상한 4억)"], ["24", "24억대(절반 12억 > 상한 4억)"]]) {
-  add(`LO-B${e}`, LO, `금리 있음, ${cond}`, [band(Number(e)), RATES_STD], LOANP(LOAN_S.STD[e]));
+  add(`LO-B${e}`, LO, `금리 있음, ${cond}`, [band(Number(e)), BASIS_STD], LOANP(LOAN_S.STD[e]));
 }
-for (const e of ["-2", "0"]) add(`LO-B${e}`, LO, `예산이 0 이하(${e}억대): 빌릴 돈이 0 이하라 월 상환액을 못 낸다 → 1억당 문장만`, [band(Number(e)), RATES_STD], LOANP(LOAN_S.STD.head));
-add("LO-R01", LO, "금리 상품이 둘(중앙값은 평균 5%), 7억대", [band(7), ratesOf(4, 6)], LOANP(LOAN_S.EVEN["7"]));
-add("LO-R02", LO, "1억당 문장(예산대 없음), 금리 상품이 둘", [null, ratesOf(4, 6)], LOANP(LOAN_S.EVEN.head));
-add("LO-R03", LO, "중앙값 반올림(4.116 → 4.12), 7억대", [band(7), ratesOf(4.114, 4.116, 4.118)], LOANP(LOAN_S.ROUND["7"]));
-add("LO-R04", LO, "1억당 문장: 상한·하한 글자는 반올림하지 않는다(4.114%·4.118%)", [null, ratesOf(4.114, 4.116, 4.118)], LOANP(LOAN_S.ROUND.head));
-add("LO-R05", LO, "최저금리 0(0으로 나누지 않는다), 7억대", [band(7), ratesOf(0)], LOANP(LOAN_S.ZERO["7"]));
-add("LO-R06", LO, "1억당 문장, 최저금리 0", [null, ratesOf(0)], LOANP(LOAN_S.ZERO.head));
-add("LO-R07", LO, "최저금리 음수(-1)", [band(7), ratesOf(-1)], LOANP(LOAN_S.NEG["7"]));
-add("LO-R08", LO, "1억당 문장, 최저금리 음수", [null, ratesOf(-1)], LOANP(LOAN_S.NEG.head));
-add("LO-R09", LO, "최저금리 3.5 한 개", [band(7), ratesOf(3.5)], LOANP(LOAN_S.ONE["7"]));
-add("LO-R10", LO, "1억당 문장, 3.5 한 개", [null, ratesOf(3.5)], LOANP(LOAN_S.ONE.head));
-add("LO-R11", LO, '최저금리가 숫자 문자열 "4.5"', [band(7), ratesOf("4.5")], LOANP(LOAN_S.S45["7"]));
-add("LO-R12", LO, "1억당 문장, \"4.5\"", [null, ratesOf("4.5")], LOANP(LOAN_S.S45.head));
-add("LO-R13", LO, "최저금리 null은 값 없음이라 뺀다(null·4 → 4%만 남아 중앙값 4%, #269), 7억대", [band(7), ratesOf(null, 4.0)], LOANP(LOAN_S.NULLMIN["7"]));
-add("LO-R14", LO, "1억당 문장, null·4", [null, ratesOf(null, 4.0)], LOANP(LOAN_S.NULLMIN.head));
-add("LO-R16", LO, '최저금리가 "" · false · " " · [] · true뿐이면 값 없음 → 옵션 0개라 빈 문자열(#269: 예전에는 0%로 문장이 나왔다), 7억대', [band(7), ratesOf("", false, " ", [], true)], "", { empty: "" });
-add("LO-R15", LO, "회사 이름의 특수문자는 글자로 나오지 않는다", [band(7), { mortgage: [prod(SP, opt(4.11)), prod("&amp;", opt(5.25)), prod(false, opt(6.21))] }], LOANP(LOAN_S.STD["7"]));
+for (const e of ["-2", "0"]) add(`LO-B${e}`, LO, `예산이 0 이하(${e}억대): 빌릴 돈이 0 이하라 월 상환액을 못 낸다 → 1억당 문장만`, [band(Number(e)), BASIS_STD], LOANP(LOAN_S.STD.head));
+add("LO-R01", LO, "금리 5(정수), 7억대", [band(7), basisOf(5)], LOANP(LOAN_S.FIVE["7"]));
+add("LO-R02", LO, "1억당 문장(예산대 없음), 금리 5", [null, basisOf(5)], LOANP(LOAN_S.FIVE.head));
+add("LO-R03", LO, "금리 글자는 반올림하지 않는다(4.116), 7억대", [band(7), basisOf(4.116)], LOANP(LOAN_S.RAW["7"]));
+add("LO-R04", LO, "1억당 문장: 금리 4.116% 그대로", [null, basisOf(4.116)], LOANP(LOAN_S.RAW.head));
+add("LO-R05", LO, "금리 0(0으로 나누지 않는다), 7억대", [band(7), basisOf(0)], LOANP(LOAN_S.ZERO["7"]));
+add("LO-R06", LO, "1억당 문장, 금리 0", [null, basisOf(0)], LOANP(LOAN_S.ZERO.head));
+add("LO-R07", LO, "금리 음수(-1)", [band(7), basisOf(-1)], LOANP(LOAN_S.NEG["7"]));
+add("LO-R08", LO, "1억당 문장, 금리 음수", [null, basisOf(-1)], LOANP(LOAN_S.NEG.head));
+add("LO-R09", LO, "금리 3.5", [band(7), basisOf(3.5)], LOANP(LOAN_S.ONE["7"]));
+add("LO-R10", LO, "1억당 문장, 3.5", [null, basisOf(3.5)], LOANP(LOAN_S.ONE.head));
+add("LO-R11", LO, '금리가 숫자 문자열 "4.5"면 쓰지 않는다, 7억대 → 빈 문자열', [band(7), basisOf("4.5")], "", { empty: "" });
+add("LO-R12", LO, '1억당 문장 자리, "4.5" → 빈 문자열', [null, basisOf("4.5")], "", { empty: "" });
+add("LO-R13", LO, "달이 없으면 달 없이, 7억대", [band(7), { rate: 4 }], LOANP(LOAN_S.NOMONTH["7"]));
+add("LO-R14", LO, "1억당 문장, 달 없음", [null, { rate: 4 }], LOANP(LOAN_S.NOMONTH.head));
+add("LO-R16", LO, '금리가 "" · false · " " · [] · true면 값 없음 → 빈 문자열(#269: 0%로 세지 않는다), 7억대', [band(7), basisOf(" ")], "", { empty: "" });
+add("LO-R15", LO, "근거 객체의 다른 필드(특수문자)는 글자로 나오지 않는다", [band(7), { rate: 5.25, month: "202608", company: SP, extra: "&amp;" }], LOANP(LOAN_S.STD["7"]));
+add("LO-R17", LO, "1억당 문장: 달이 특수문자면 달을 적지 않는다", [null, { rate: 4, month: SP }], LOANP(LOAN_S.NOMONTH.head));
 // 셋째 인자(mortgageSeries)는 읽지 않는다
 for (const [i, series] of [null, undefined, [], [["202509", 4.2], ["202609", 4.0]], "x", {}, SP, false, 5].entries()) {
-  add(`LO-S${i + 1}`, LO, `셋째 인자(mortgageSeries)는 읽지 않는다: ${JSON.stringify(series) ?? "undefined"}`, [band(10), RATES_STD, series], LOANP(LOAN_S.STD["10"]));
+  add(`LO-S${i + 1}`, LO, `셋째 인자(mortgageSeries)는 읽지 않는다: ${JSON.stringify(series) ?? "undefined"}`, [band(10), BASIS_STD, series], LOANP(LOAN_S.STD["10"]));
 }
-add("LO-X01", LO, "예산대에 다른 값이 있어도 min10k만 읽는다", [{ min10k: 100_000, max10k: SP, count: {}, facts: false }, RATES_STD], LOANP(LOAN_S.STD["10"]));
-addThrow("LO-T01", LO, "금리 mortgage가 객체({})면 던진다", [band(7), { mortgage: {} }]);
-addThrow("LO-T02", LO, "금리 mortgage가 숫자(5)면 던진다", [band(7), { mortgage: 5 }]);
-addThrow("LO-T03", LO, "금리 mortgage가 문자열이면 던진다", [band(7), { mortgage: "ab" }]);
-addThrow("LO-T04", LO, "상품이 null이면 던진다", [band(7), { mortgage: [null] }]);
-addThrow("LO-T05", LO, "options가 객체({})면 던진다", [band(7), { mortgage: [{ options: {} }] }]);
-addThrow("LO-T06", LO, "options가 숫자·문자열이면 던진다", [band(7), { mortgage: [{ options: 5 }] }]);
-addThrow("LO-T07", LO, "예산대 없음이어도 금리를 먼저 읽는다(legacy 순서): mortgage가 이상하면 던진다", [null, { mortgage: {} }]);
+add("LO-X01", LO, "예산대에 다른 값이 있어도 min10k만 읽는다", [{ min10k: 100_000, max10k: SP, count: {}, facts: false }, BASIS_STD], LOANP(LOAN_S.STD["10"]));
 
 // ================= 내보내기 =================
 export const BUDGET_LEAVES_BRANCHES = rows;

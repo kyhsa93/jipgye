@@ -3,6 +3,7 @@ import path from "node:path";
 import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.ts";
 import { REALESTATE_TEMPLATE_PATH, applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml, realestateOverallHtml } from "./prerender.ts";
 import { clustering } from "./loan-cap.ts";
+import { latestRate } from "./mortgage.ts";
 import { lineCounts } from "./policy-loan.ts";
 import { budgetRulesHtml } from "./budget-rules.ts";
 import { bakeKoHeading } from "./page-heading.ts";
@@ -79,10 +80,10 @@ function navHtml(page) {
   return links.join("");
 }
 
-export function buildBudgetPage(baseHtml, page, budget, rates = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, realestate = null) {
+export function buildBudgetPage(baseHtml, page, budget, loanBasis = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, realestate = null) {
   const band = (budget?.bands ?? []).find((b) => b.min10k === page.min10k) ?? null;
   // 제목과 칩 줄은 본문 칸 안, 어디로 가는가 문장 뒤 후보 앞에 놓인다(#460) - 틀의 제목 자리는 비우고 본문이 들고 간다.
-  const body = budgetBodyHtml(band, budget?.periods, rates, mortgageSeries, complexFiles, capStats, policyCounts, `${BUDGET_HEADING_HTML}${chipsHtml(page)}`);
+  const body = budgetBodyHtml(band, budget?.periods, loanBasis, mortgageSeries, complexFiles, capStats, policyCounts, `${BUDGET_HEADING_HTML}${chipsHtml(page)}`);
   if (!body) return null;
 
   let html = baseHtml;
@@ -205,10 +206,11 @@ async function main() {
   requireSite(); // 출력 디렉터리가 docs/ 가 아니면 docs/ 복사본이 먼저 있어야 한다(#508)
   const METHOD_PATH = sitePath("method.html");
   const budget = await readJson(path.join(root, "docs/data/budget-deals.json"));
-  // 금리가 아직 없는 날에도 예산 페이지는 나와야 한다. 월 상환액 문단만 빠진다.
-  const rates = await readJson(path.join(root, "docs/data/rates.json"));
-  // 1년 사이 상환액 변화에 쓰는 한국은행 주담대 평균 금리(지표 수집이 받는 계열). 없으면 그 문장만 빠진다.
+  // 월 상환액과 1년 사이 변화에 쓰는 한국은행 ECOS 주담대 신규취급 평균금리(지표 수집이 받는 계열 121Y006). 전에는 월 상환액이
+  // 금감원 공시 금리 파일의 상품 최저금리였다 - FSS 자료를 빼면서 이 계열 하나로 바꿨다(#577).
+  // 계열이 없는 날에도 예산 페이지는 나와야 한다. 월 상환액 문단과 한눈에 금리 줄만 빠진다.
   const mortgageSeries = (await readJson(path.join(root, "raw/indicators/series.json")))?.series?.mortgage_rate ?? null;
+  const loanBasis = latestRate(mortgageSeries);
   // 단지 후보는 단지 가격 범위(build-complex-price)의 자치구 파일들에서 고른다. 없으면 그 절만 빠진다.
   const dataDir = path.join(root, "docs/data");
   const complexFiles = (
@@ -239,7 +241,7 @@ async function main() {
   const skipped = [];
 
   for (const page of BUDGET_PAGES) {
-    const html = buildBudgetPage(baseHtml, page, budget, rates, mortgageSeries, complexFiles, capStats, policyCounts, realestate);
+    const html = buildBudgetPage(baseHtml, page, budget, loanBasis, mortgageSeries, complexFiles, capStats, policyCounts, realestate);
     if (!html) {
       skipped.push(`${page.eok}억대`);
       continue;
@@ -256,7 +258,7 @@ async function main() {
   // 장마다 똑같던 규칙 문단이 옮겨 간 자리(#66). 장과 같은 입력(금리·정책대출 거래 수)에서 같은 빌드에 굽는다.
   const method = await readFile(METHOD_PATH, "utf8");
   const methodNext = applyPrerender(method, {
-    budgetRules: budgetRulesHtml({ rates, mortgageSeries, policyCounts }),
+    budgetRules: budgetRulesHtml({ mortgageSeries, policyCounts }),
   });
   if (methodNext !== method) writes.stage(METHOD_PATH, methodNext);
   writes.commit();
