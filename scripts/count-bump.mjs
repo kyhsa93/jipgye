@@ -9,11 +9,14 @@
 //   - 러너 종료 코드 0, fail 0, cancelled 0 (tests·pass 합계 줄이 둘 다 있다)
 //   - skipped 가 늘지 않았다: 현재 하한이 말하는 skipped(= tests 하한 - pass 하한)보다 크지 않다
 //   - tests·pass 가 현재 하한 이상이다(내리는 쓰기는 `--allow-lower` 없이는 거부)
+// 이어서(#561) 루트 시험이 이 실행에서 초록으로 끝났을 때만 S6 기준선(test/s6-baseline.json)을 지금 build/site 바이트로 다시 쓰고 그 diff 를 찍는다 —
+// 수동 `S6_BASELINE_UPDATE=1 node --test ...` 가 필요 없다. 장당 +400 B 한도는 루트 시험이 옛 기준선 대비로 이미 지켰다(초록이 아니면 이 단계는 건너뛴다).
 // 쓰는 내용은 고정 머리 주석(COUNT_HEADER, ≤6줄)과 숫자 둘뿐이다. 설명은 PR 본문·이력에 둔다(test/run-tests.test.mjs 가 ≤6줄을 단언).
 //
 // 쓰는 법:
 //   npm run count:bump                    # 다섯 패키지 전부(root·site·golden·health·render 순서 — root 의 pretest 가 build/site 를 만든다)
 //   npm run count:bump -- --only root,site
+//   npm run count:bump -- --only root,s6  # s6 = S6 기준선 갱신(root 와 같이만 고를 수 있다)
 //   npm run count:bump -- --dry-run       # 무엇을 쓸지만 찍는다
 //   npm run count:bump -- --allow-lower   # 의도해서 내릴 때만. 이때는 러너가 래칫([개수])으로만 빨간 것도 받는다
 //   node scripts/count-bump.mjs --floor <하한파일> --log <러너 로그> [--exit <코드>]   # 시험을 돌리지 않고 로그 하나로 한 파일만(대조군용)
@@ -101,6 +104,25 @@ export const SUITES = [
   { name: "render", cwd: "tools/render", cmd: ["npm", "test"], floor: "tools/render/test/COUNT" },
 ];
 
+// S6 기준선 갱신(#561): 시험 파일의 "S6 롤링" 시험을 S6_BASELINE_UPDATE=1 로 돌리면 test/s6-baseline.json 을 다시 쓴다(한도 단언은 건너뛴다).
+export const S6_UPDATE = {
+  file: "test/s6-baseline.json",
+  cmd: ["node", "--test", "--test-name-pattern=S6 롤링", "test/load-failure.test.mjs"],
+  env: { S6_BASELINE_UPDATE: "1" },
+};
+
+function runS6Update() {
+  const env = { ...process.env, ...S6_UPDATE.env };
+  delete env.NODE_TEST_CONTEXT;
+  const r = spawnSync(S6_UPDATE.cmd[0], S6_UPDATE.cmd.slice(1), { cwd: ROOT, env, encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
+  const log = `${r.stdout ?? ""}\n${r.stderr ?? ""}`;
+  const t = parseTotals(log);
+  // 시험이 하나도 안 돈 경우(이름이 바뀜)와 실패는 거부 — 파일을 쓰지 못했거나 낡은 채일 수 있다.
+  if (r.status !== 0 || t.pass !== 1 || t.fail !== 0) return { ok: false, log };
+  const diff = spawnSync("git", ["diff", "--no-color", "-U0", "--", S6_UPDATE.file], { cwd: ROOT, encoding: "utf8" }).stdout ?? "";
+  return { ok: true, log, diff };
+}
+
 function runSuite(s) {
   const env = { ...process.env };
   delete env.NODE_TEST_CONTEXT; // 바깥 러너가 물려 준 값이 있으면 안쪽 러너가 리포터를 못 쓴다
@@ -110,7 +132,7 @@ function runSuite(s) {
 
 function usage(msg) {
   if (msg) console.error(msg);
-  console.error("사용법: node scripts/count-bump.mjs [--only root,site,golden,health,render] [--dry-run] [--allow-lower]\n        node scripts/count-bump.mjs --floor <하한파일> --log <러너 로그> [--exit <코드>] [--dry-run] [--allow-lower]");
+  console.error("사용법: node scripts/count-bump.mjs [--only root,site,golden,health,render,s6] [--dry-run] [--allow-lower]\n        node scripts/count-bump.mjs --floor <하한파일> --log <러너 로그> [--exit <코드>] [--dry-run] [--allow-lower]");
   process.exit(2);
 }
 
@@ -140,11 +162,14 @@ function main(argv) {
     console.error(`count-bump 실패[Node]: 타입 스트리핑이 켜진 Node 24 이상이 필요하다. 찾은 Node: ${process.version}.`);
     process.exit(1);
   }
-  const names = SUITES.map((s) => s.name);
+  const names = [...SUITES.map((s) => s.name), "s6"];
   if (opts.only && (opts.only.length === 0 || opts.only.some((n) => !names.includes(n)))) usage(`--only 는 ${names.join(",")} 중에서 고른다.`);
+  if (opts.only?.includes("s6") && !opts.only.includes("root")) usage("s6 는 root 와 같이만 고를 수 있다(기준선은 초록인 루트 시험 뒤에만 다시 쓴다).");
   const suites = SUITES.filter((s) => !opts.only || opts.only.includes(s.name));
+  const withS6 = !opts.only || opts.only.includes("s6");
 
   let refused = 0;
+  let rootGreen = false;
   for (const s of suites) {
     const floorPath = path.join(ROOT, s.floor);
     console.log(`[${s.name}] ${s.cmd.join(" ")} (cwd ${s.cwd})`);
@@ -161,9 +186,26 @@ function main(argv) {
       d = { ok: false, lines: [e.message] };
     }
     for (const l of d.lines) (d.ok ? console.log : console.error)(`[${s.name}] ${s.floor}: ${l}`);
+    if (s.name === "root" && d.ok) rootGreen = true;
     if (!d.ok) {
       refused++;
       console.error(run.log.trim().split("\n").slice(-5).join("\n"));
+    }
+  }
+  if (withS6) {
+    if (!rootGreen) {
+      console.error("[s6] 건너뜀: 루트 시험이 이 실행에서 초록이 아니다 - 기준선을 쓰지 않는다.");
+    } else if (opts.dryRun) {
+      console.log(`[s6] ${S6_UPDATE.file}: --dry-run 이라 다시 쓰지 않는다(쓰면 ${S6_UPDATE.cmd.join(" ")})`);
+    } else {
+      const r = runS6Update();
+      if (r.ok) {
+        console.log(`[s6] ${S6_UPDATE.file}: ${r.diff.trim() ? "갱신 - diff 를 커밋한다" : "그대로"}`);
+        if (r.diff.trim()) console.log(r.diff.trimEnd());
+      } else {
+        refused++;
+        console.error(`[s6] 거부: 기준선 갱신 시험이 초록으로 끝나지 않았다.\n${r.log.trim().split("\n").slice(-5).join("\n")}`);
+      }
     }
   }
   if (opts.dryRun) console.log("(--dry-run: 파일을 쓰지 않았다)");

@@ -26,13 +26,6 @@ for (const f of files) {
 const DEF = /function foldReserve\(\) \{\n {2}const box = trendSection\.nextElementSibling;\n {2}const room = innerHeight - box\.getBoundingClientRect\(\)\.top;\n {2}if \(room < box\.offsetHeight\) box\.style\.cssText = `height:\$\{Math\.max\(room, 0\)\}px;overflow:hidden`;\n\}\n\n/;
 const OUTER = "  } catch (error) {\n    reportLoadFailure(error);\n    foldReserve();\n";
 const TREND_SITES = "        renderTrend();\n      } else {\n        foldReserve();\n      }\n    } catch {\n      foldReserve();\n    }\n";
-// 접는 줄을 걷어 낸 모양 - 이 PR 이 스크립트에 더한 바이트를 되재는 데 쓴다.
-const withoutFold = (script) =>
-  script
-    .replace(DEF, "")
-    .replace("      } else {\n        foldReserve();\n      }\n", "      }\n")
-    .replace("    } catch {\n      foldReserve();\n    }\n", "    } catch {\n    }\n")
-    .replace("    reportLoadFailure(error);\n    foldReserve();\n", "    reportLoadFailure(error);\n");
 
 test("추이 구획이 있는 장은 47장이고 전부 foldReserve 를 4번(정의 1 + 호출 3) 갖는다 (#338)", () => {
   assert.equal(pages.length, 47, `추이 구획이 있는 장이 ${pages.length}장이다 - 47장이어야 이 PR 의 범위와 같다`);
@@ -75,16 +68,10 @@ test("새 훅을 만들지 않는다: dataset·id·data-*·class 를 쓰지 않�
   }
 });
 
-test("S6 의도한 차이: 장당 +360B 이하, 47장 합 16,920B 이하, 외부 JS 0 (#338)", () => {
-  let total = 0;
-  for (const { file, script } of pages) {
-    const added = Buffer.byteLength(script) - Buffer.byteLength(withoutFold(script));
-    assert.ok(added > 0, `${SITE}/${file}: 접는 줄을 걷어 냈는데 바이트가 안 줄었다 - 걷는 모양이 틀렸다`);
-    assert.ok(added <= 360, `${SITE}/${file}: 접는 줄이 ${added}B - cto 한도 360B/장을 넘었다(넘으면 병합 전에 cto 가 다시 판정한다)`);
-    assert.doesNotMatch(script, /\/\/|\/\*/, `${SITE}/${file}: 접는 줄에 주석이 구워져 나갔다`);
-    total += added;
-  }
-  assert.ok(total <= 16_920, `47장 합 ${total}B - cto 한도 16,920B 를 넘었다`);
+// 옛 "S6 의도한 차이"(장당 +360B, 47장 합 16,920B)의 바이트 한도는 test/load-failure.test.mjs 의 S6 롤링 기준선이 지킨다(#560): 접는 줄의 글자는 위 DEF·OUTER·TREND_SITES 와
+// 아래 "한 글자도 다르지 않게" 시험이 못 박아 바이트가 정해져 있고, 장 전체의 증가는 기준선이 장당 +400B 로 막는다. 여기에는 바이트와 무관한 것만 남긴다.
+test("접는 줄에 주석이 구워져 나가지 않는다 (#338)", () => {
+  for (const { file, script } of pages) assert.doesNotMatch(script, /\/\/|\/\*/, `${SITE}/${file}: 접는 줄에 주석이 구워져 나갔다`);
 });
 
 test("틀의 foldReserve 는 구운 47장에 한 글자도 다르지 않게 실려 있다 (#338)", async () => {
