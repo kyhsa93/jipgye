@@ -2319,6 +2319,24 @@
       min-height: 3lh;
     }
   }
+  main:has(> #question-nav) .content-notice.page-notice {
+    min-height: 4lh;
+  }
+  @media (min-width: 720px) {
+    main:has(> #question-nav) .content-notice.page-notice {
+      min-height: 3lh;
+    }
+  }
+  @media (max-width: 480px) {
+    main:has(> #question-nav) .content-notice.page-notice {
+      min-height: 5lh;
+    }
+  }
+  @media (max-width: 360px) {
+    main:has(> #question-nav) .content-notice.page-notice {
+      min-height: 6lh;
+    }
+  }
   @media (max-width: 400px) {
     main:has(> #top-section) #lead-note {
       min-height: 8lh;

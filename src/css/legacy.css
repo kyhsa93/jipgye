@@ -3307,6 +3307,23 @@ html:not(:lang(en)) .method-callout .m-en {
   .content-notice.page-notice { min-height: 3lh; }
 }
 
+/* index 의 영어 기계번역 안내는 다른 장보다 길다(#575). 영어 화면에서만 스크립트가 첫 await 전에 이 칸을 펴고 글은
+ * 데이터가 온 뒤 넣으므로, 들어올 줄 수를 여기서 잡아야 채울 때 밑이 안 밀린다. 줄 수는 2026-10-25 Chrome 실측:
+ * 폭 320~360 6줄 · 361~480 5줄 · 481~719 4줄 · 720 이상 3줄. 한국어 화면에서는 hidden 이라 자리를 먹지 않는다. */
+main:has(> #question-nav) .content-notice.page-notice { min-height: 4lh; }
+
+@media (min-width: 720px) {
+  main:has(> #question-nav) .content-notice.page-notice { min-height: 3lh; }
+}
+
+@media (max-width: 480px) {
+  main:has(> #question-nav) .content-notice.page-notice { min-height: 5lh; }
+}
+
+@media (max-width: 360px) {
+  main:has(> #question-nav) .content-notice.page-notice { min-height: 6lh; }
+}
+
 /* 늦게 채워지는 글 네 자리의 줄 수를 미리 잡아 둔다(#341). 아래 자리는 구운 HTML 에서 비어 있고 스크립트가 글을 넣는다.
  * 채워지는 순간 그 밑이 통째로 밀리는데, PR #340 이 머리글을 장마다 20.4px 줄이고(기준일을 바닥글로 내렸다) 그 줄이 바닥글로
  * 가면서 같은 채움이 접힌 선(812px) 안으로 들어와 이동이 새로 잡혔다. 바닥글의 두 줄은 처음부터 늘 보여 hidden → 펴짐
