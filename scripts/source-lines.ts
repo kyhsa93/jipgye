@@ -75,10 +75,15 @@ export const FOOTERS: Record<string, Record<Lang, string>> = {
     ko: ko([molitKo("매매·전월세 실거래가 공개시스템"), SOURCES.ecos.ko]),
     en: en([M.en, SOURCES.ecos.en], "", { label: "Sources: ", sep: "; " }),
   },
-  // 첫 화면 돈의 값 한 줄 중 기준금리만 ECOS 다(환율은 다른 출처라 이 줄에 넣지 않는다).
+  // 첫 화면 돈의 값 한 줄: 기준금리와 원/달러 환율 모두 ECOS 다(환율은 일 계열 731Y001 의 매매기준율, #639).
   index: {
-    ko: ko([`${SOURCES.ecos.ko} 기준금리`]),
-    en: en([`${SOURCES.ecos.en} (base rate)`]),
+    ko: ko([`${SOURCES.ecos.ko} 기준금리·원/달러 환율(매매기준율)`]),
+    en: en([`${SOURCES.ecos.en} (base rate, KRW/USD reference rate)`]),
+  },
+  // 증시·환율 뉴스 장: 코스피·환율 카드의 출처. 기사 RSS 줄은 build-news-pages.ts 가 이 줄 뒤에 잇는다(#639).
+  stocks: {
+    ko: ko([SOURCES.ecos.ko]),
+    en: en([SOURCES.ecos.en]),
   },
   cancelledDeals: {
     ko: ko([molitKo("매매 실거래가 공개시스템")], LAG_KO("거래", "거래는")),

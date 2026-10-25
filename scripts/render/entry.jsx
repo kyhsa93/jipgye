@@ -29,13 +29,19 @@ const str = (value) => String(value ?? "");
 
 // ---- 문장·목록 조각 (#241 PR 1) ----
 
-// 첫 화면 돈의 값 한 줄(#575 PR2): 기준금리 → 환율, " · " 로 잇는다.
+// 환율 값·기준일(#639 PR-2). 환율은 ECOS 일 계열(731Y001)이고 asOf 는 코스피와 같은 "10/23" 모양이다. 옛 수집기가 쓴 asOf 는
+// RFC 날짜 글("Fri, 23 Oct …")이라 이 모양이 아니면 기준일이 없는 것으로 본다(옛 값에 「기준」을 붙이거나 매매기준율이라 부르지 않는다).
+const fxNum = (value) => value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fxAsOf = (fx) => (typeof fx?.asOf === "string" && /^\d{1,2}\/\d{1,2}$/.test(fx.asOf) ? fx.asOf : null);
+
+// 첫 화면 돈의 값 한 줄(#575 PR2): 기준금리 → 환율, " · " 로 잇는다. 환율에는 기준일을 붙인다(#639 PR-2).
 function market(data) {
   if (!data) return null;
   const parts = [];
   if (data.baseRate?.value) parts.push(`한국은행 기준금리 ${str(data.baseRate.value)}%`);
   if (typeof data.usdKrw?.value === "number") {
-    parts.push(`원/달러 환율 ${data.usdKrw.value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}원`);
+    const at = fxAsOf(data.usdKrw);
+    parts.push(`원/달러 환율 ${fxNum(data.usdKrw.value)}원${at ? `(${at} 기준)` : ""}`);
   }
   return parts.length ? <>{parts.join(" · ")}</> : null;
 }
@@ -105,16 +111,43 @@ function newsList(news, category = null) {
   );
 }
 
-// 증시 뉴스 장의 코스피 카드. 종가 기준일이 있으면 라벨에 적는다.
+// 증시 뉴스 장의 시장 카드. 코스피 카드(종가 기준일이 있으면 라벨에 적는다) 옆에 원/달러 환율 카드(#639 PR-2).
+// 환율 카드는 ECOS 매매기준율이라 기준일이 "10/23" 모양일 때만 낸다(옛 수집기의 값에는 「매매기준율」이라 부를 수 없다). 영어는 m-en 으로 같이 굽고 html lang 이 가린다.
+const Bi = ({ ko, en }) => (
+  <>
+    <span className="m-ko">{ko}</span>
+    <span className="m-en">{en}</span>
+  </>
+);
+
 function newsKospi(data) {
   const k = data?.kospi;
-  if (!k?.value) return null;
+  const fx = data?.usdKrw;
+  const at = typeof fx?.value === "number" ? fxAsOf(fx) : null;
+  if (!k?.value && !at) return null;
   return (
-    <div className="stat-card">
-      <span className="stat-label">{str(k.asOf ? `코스피 ${k.asOf} 종가` : "코스피")}</span>
-      <span className="stat-value">{str(k.value)}</span>
-      {k.change ? <span className="stat-sub">{str(`전 거래일 대비 ${k.change}`)}</span> : null}
-    </div>
+    <>
+      {k?.value ? (
+        <div className="stat-card">
+          <span className="stat-label">{str(k.asOf ? `코스피 ${k.asOf} 종가` : "코스피")}</span>
+          <span className="stat-value">{str(k.value)}</span>
+          {k.change ? <span className="stat-sub">{str(`전 거래일 대비 ${k.change}`)}</span> : null}
+        </div>
+      ) : null}
+      {at ? (
+        <div className="stat-card">
+          <span className="stat-label">
+            <Bi ko={`원/달러 환율 ${at} 매매기준율`} en={`USD/KRW ${at} reference rate`} />
+          </span>
+          <span className="stat-value">{fxNum(fx.value)}</span>
+          {fx.change ? (
+            <span className="stat-sub">
+              <Bi ko={`전 영업일 대비 ${str(fx.change)}`} en={`vs previous business day ${str(fx.change)}`} />
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+    </>
   );
 }
 

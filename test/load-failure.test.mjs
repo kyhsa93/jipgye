@@ -1027,7 +1027,8 @@ const indexSource = await readFile(path.join(root, `${SITE}/index.html`), "utf8"
 const indexScript = scriptOf(indexSource);
 const HTTP_WORDS = /HTTP|\b(?:404|503)\b/;
 // 받은 market.json 으로 화면이 쓰는 한 줄(renderMarket 과 같은 식) - 데이터 값과 무관하게 "받은 값으로 바뀌었다"를 글자로 맞댄다.
-const marketLine = (m) => `한국은행 기준금리 ${m.baseRate.value}% · 원/달러 환율 ${Number(m.usdKrw.value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}원`;
+const marketLine = (m) =>
+  `한국은행 기준금리 ${m.baseRate.value}% · 원/달러 환율 ${Number(m.usdKrw.value).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}원${/^\d{1,2}\/\d{1,2}$/.test(m.usdKrw.asOf) ? `(${m.usdKrw.asOf} 기준)` : ""}`;
 
 // 데이터 요청을 막는 서버. mode 는 바꿔 끼울 수 있다(재시도 시험). only 가 있으면 그 파일만 실패한다.
 function indexServer(mode, only = null) {
@@ -1154,7 +1155,7 @@ test("ⓖ (다) 다시 시도가 성공하면 배너가 걷히고 구운 자리�
     assert.equal(banner.text, "", `${lang}: 걷힌 배너에 글자가 남았다`);
     assert.notEqual(page.byId("realestate-grid").innerHTML, page.baked["realestate-grid"], `${lang}: #realestate-grid 가 받은 값으로 안 바뀌었다`);
     if (lang === "ko") assert.equal(page.byId("market-line").textContent, marketLine(market), "ko: 돈의 값 줄이 받은 값으로 안 바뀌었다");
-    else assert.match(String(page.byId("market-line").textContent), /^BOK Base Rate .+% · USD\/KRW [\d,.]+$/, "en: 돈의 값 줄이 영어로 안 바뀌었다");
+    else assert.match(String(page.byId("market-line").textContent), /^BOK Base Rate .+% · USD\/KRW [\d,.]+(?: \(as of \d{1,2}\/\d{1,2}\))?$/, "en: 돈의 값 줄이 영어로 안 바뀌었다");
   }
 });
 
