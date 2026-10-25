@@ -5,17 +5,18 @@
 // (#255 `realestate-rows.mjs`, #256 `district-tables.mjs`, #242 PR 2 `realestate-table.mjs`와 같은 방식). 클래스를 모듈이 들고 있으면 한 곳의 오타를 같은 실행 비교가 못 잡는다.
 //
 // 카드는 { label, value, sub }이다. label은 글자(상수 RE_LABELS, JSX 가 이스케이프한다). value와 sub는 조각(seg)의 배열이고 sub는 없으면 null이다(없으면 `<div class="sub">`를 내지 않는다).
-// 조각 하나는 { text, esc }이다: esc는 예전 문자열 렌더가 그 글자를 `escapeHtml`에 거치던 자리(true)와 이스케이프 없이 문자열에 끼우던 자리(false, raw)를 가른다. JSX는 어느 쪽이든 글자를 요소의 텍스트로 낸다 - React가 이스케이프한다.
+// 조각 하나는 { text, esc }이다(표본 부족 이유 조각만 low: true 가 더 붙는다): esc는 예전 문자열 렌더가 그 글자를 `escapeHtml`에 거치던 자리(true)와 이스케이프 없이 문자열에 끼우던 자리(false, raw)를 가른다. JSX는 어느 쪽이든 글자를 요소의 텍스트로 낸다 - React가 이스케이프한다.
 // raw 자리(esc=false)의 글자는 전부 숫자 서식 함수(formatMan·formatEok·formatPercent)와 코드 상수 구분자(" / "·" · "·"월 ")가 만든 것이라 `& < > "`가 들 수 없다 - 그래서 예전 문자열 렌더와 React가 달라질 수 없었다(PR 본문의 raw 보간 표).
 // 입력 글자(신고 건수·단지·평형 칸 수)가 닿는 자리는 전부 esc=true다.
 //
 // 표본 문턱(MIN_SAMPLE)은 여기서 정의하지도 다시 적용하지도 않는다. `resolveMetric`·`jeonseRatio`(realestate-format.mjs, `hasEnoughSample`)가 한 곳에서 판정하고, 이 모듈은 그 결과(값 있음 / 없음)를 따른다.
 // 단지별 중앙값(`spread`)의 칸 수 문턱(MIN_CELLS_MEDIAN 10·MIN_CELLS 20)은 빌더(`complex-ratio.mjs`의 `spreadOf`)가 이미 적용해 문턱 미달이면 `spread`가 null로 온다 - 이 모듈은 있으면 낸다.
-// DIRECTION 해자 2: 표본이 모자라면 값을 내지 않는다 - 이 판정을 건너뛰는 변경은 방향에 어긋난다. 값을 못 낸 카드는 "-"이고(표의 `low-sample` 문구와 달리 이유를 적지 않는다 - 예전 그대로, PR 본문 "발견").
+// DIRECTION 해자 2: 표본이 모자라면 값을 내지 않는다 - 이 판정을 건너뛰는 변경은 방향에 어긋난다. 값을 못 낸 카드는 「-」이되, 신고가 1~4건이라 비운 카드만 이유를 적는다(#264 - lowSampleCount). n=0·지표 없음·값 null 은 「-」 그대로다.
 import {
   areaPrice,
   formatPercent,
   jeonseRatio,
+  lowSampleCount,
   resolveMetric,
   valueOf,
 } from "./realestate-format.ts";
@@ -24,6 +25,14 @@ import { RE_LABELS, reCount, reEok, reMan } from "./realestate-table.ts";
 const raw = (text) => ({ text, esc: false });
 const esc = (text) => ({ text, esc: true });
 const card = (label, value, sub = null) => ({ label, value, sub });
+
+// 신고가 1~4건이라 값을 비운 카드는 「-」 대신 이유를 적는다(#264, DIRECTION 해자 2). `low` 조각은 쓰는 쪽(JSX)이 `<span class="low-sample">`로 입힌다(표의 low 조각과 같은 클래스, title 은 붙이지 않는다 - 이유는 보이는 글자가 맡는다).
+// n=0·지표 없음·값 null 은 lowSampleCount 가 null 을 줘서 「-」 그대로다. 브라우저의 renderOverall(lowOr)이 같은 글자를 만든다.
+export const lowSampleReason = (n) => `신고 ${n}건이라 비움`;
+const dashOrLow = (entry, kind) => {
+  const n = lowSampleCount(entry, kind);
+  return n === null ? [raw("-")] : [{ text: lowSampleReason(n), esc: true, low: true }];
+};
 
 /**
  * 전세가율 카드 밑에 그 값을 낸 매매·전세 신고 건수를 적는다(#172). 값은 이 두 평균의 비다.
@@ -61,7 +70,7 @@ export function overallCards(realestate, kind = null, district = null, spread = 
             card(RE_LABELS.area, [raw(reEok(areaPrice(valueOf(sale, "sale"))))]),
             card(RE_LABELS.count, [esc(reCount(sale.transactionCount))]),
           ]
-        : [card(RE_LABELS.sale, [raw("-")])]),
+        : [card(RE_LABELS.sale, dashOrLow(overall, "sale"))]),
       ...(ratio ? [card(RE_LABELS.ratio, [raw(formatPercent(ratio.ratio))], [esc(ratioBasis(overall))])] : []),
       ...complexCard(),
     ];
@@ -71,7 +80,7 @@ export function overallCards(realestate, kind = null, district = null, spread = 
     return ["sale", "jeonse", "wolse"].map((k) => {
       const metric = resolveMetric(overall, k)?.metric;
       const label = RE_LABELS[k === "sale" ? "colSale" : k === "jeonse" ? "colJeonse" : "colWolse"];
-      if (!metric) return card(label, [raw("-")]);
+      if (!metric) return card(label, dashOrLow(overall, k));
       if (k === "wolse") {
         return card(label, [raw(`${reMan(metric.avgDeposit10k)} / 월 ${reMan(metric.avgMonthlyRent10k)}`)], [esc(reCount(metric.transactionCount))]);
       }
@@ -80,7 +89,7 @@ export function overallCards(realestate, kind = null, district = null, spread = 
   }
 
   const metric = resolveMetric(overall, kind)?.metric;
-  if (!metric) return [card(RE_LABELS.overall, [raw("-")])];
+  if (!metric) return [card(RE_LABELS.overall, dashOrLow(overall, kind))];
   if (kind === "wolse") {
     return [
       card(RE_LABELS.deposit, [raw(reMan(metric.avgDeposit10k))]),

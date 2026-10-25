@@ -525,10 +525,14 @@ function realestateTableJsx(realestate, kind = null, district = null) {
 // 조각(seg)마다 legacy가 이스케이프하던 자리(esc)와 그대로 끼우던 자리가 있지만, React는 어느 쪽이든 텍스트로 낸다(raw 자리에는 `& < > "`가 들 수 없다 - 숫자 서식 글자뿐이다).
 // 값·부가 글자는 조각을 한 문자열로 이어서 내 텍스트 노드 하나로 둔다(legacy가 한 덩어리로 이어 붙이는 것과 같다).
 const segsText = (segs) => segs.map((seg) => seg.text).join("");
+// 값 칸만 표본 부족 이유(`low` 조각, #264)를 `<span class="low-sample">`로 입힌다. 이유 조각은 값 칸의 유일한 조각이다(title 없음).
+const OverallValue = ({ segs }) => (segs[0].low ? <span className="low-sample">{segsText(segs)}</span> : segsText(segs));
 const OverallCard = ({ card }) => (
   <div className="overall-card">
     <div className="label">{card.label}</div>
-    <div className="value">{segsText(card.value)}</div>
+    <div className="value">
+      <OverallValue segs={card.value} />
+    </div>
     {card.sub ? <div className="sub">{segsText(card.sub)}</div> : null}
   </div>
 );

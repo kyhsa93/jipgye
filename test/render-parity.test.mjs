@@ -826,7 +826,7 @@ test("시세 요약 분기 표: 값 종류별 행이 있다 - 데이터 없음(n
   assert.ok(OVERALL_ROWS.some((b) => b.id === "OM-21") && OVERALL_ROWS.some((b) => b.id === "OM-22"));
 });
 
-test("시세 요약 분기 표: 해자 2(표본이 모자라면 값을 내지 않는다) - 건수 4건은 값이 있어도 \"-\", 5건부터 값, 전세가율은 두 쪽이 다 5건 이상일 때만; 이 조각에는 low-sample 스팬이 없다", () => {
+test("시세 요약 분기 표: 해자 2(표본이 모자라면 값을 내지 않는다) - 건수 4건은 값이 있어도 값 대신 이유(#264), 5건부터 값, 전세가율은 두 쪽이 다 5건 이상일 때만", () => {
   const byId = (id) => OVERALL_ROWS.find((b) => b.id === id);
   const held = (kind) => OVERALL_ROWS.filter((b) => b.held === kind);
   assert.ok(held("sample").length >= 60 && held("value").length >= 40 && held("absent").length >= 30, `held 행이 모자란다: ${held("sample").length}·${held("value").length}·${held("absent").length}`);
@@ -835,7 +835,7 @@ test("시세 요약 분기 표: 해자 2(표본이 모자라면 값을 내지 �
   assert.ok(sampleRows.length >= 60, `표본 부족 행 ${sampleRows.length}`);
   for (const b of sampleRows) {
     assert.ok(!b.expect.includes("6,000만원") && !b.expect.includes("2억 264만원"), `${b.id}: 표본 부족인데 값이 나왔다 ${b.cond}`);
-    assert.ok(b.expect.includes(">-</div>"), `${b.id}: "-" 카드가 없다`);
+    assert.ok(b.expect.includes(">-</div>") || b.expect.includes('class="low-sample"'), `${b.id}: "-" 이든 이유든 값을 비운 카드가 없다`);
   }
   // 문턱: 5건이 경계(n01은 값, n02는 값 없이 "-"), "5" 문자열도 같다
   assert.match(byId("OK-S-n01").expect, /6,000만원/);
@@ -857,7 +857,26 @@ test("시세 요약 분기 표: 해자 2(표본이 모자라면 값을 내지 �
   assert.doesNotMatch(byId("OR-07").expect, /전세가율/);
   assert.doesNotMatch(byId("OR-08").expect, /전세가율/);
   assert.doesNotMatch(byId("OR-17").expect, /전세가율/);
-  for (const b of OVERALL_ROWS) assert.ok(typeof b.expect !== "string" || !b.expect.includes("low-sample"), `${b.id}: 이 조각에는 low-sample 스팬이 없다`);
+  // #264: low-sample 스팬은 1~4건(정수)이라 비운 카드의 값 자리에만, 그 한 가지 모양으로만 있다(title 없음). n=0·건수 없음·null·NaN·음수·소수·문자열·값 null 은 「-」 그대로다.
+  const LOW_SPAN = /<div class="value"><span class="low-sample">신고 [1-4]건이라 비움<\/span><\/div>/g;
+  for (const b of OVERALL_ROWS) {
+    if (typeof b.expect !== "string") continue;
+    assert.equal((b.expect.match(/low-sample/g) ?? []).length, (b.expect.match(LOW_SPAN) ?? []).length, `${b.id}: low-sample 스팬이 값 자리의 정해진 모양이 아니다`);
+    assert.doesNotMatch(b.expect, /low-sample[^>]*title=/, `${b.id}: 요약 카드의 low-sample 에는 title 이 없다`);
+  }
+  const lows = (id) => (byId(id).expect.match(/신고 \d+건이라 비움/g) ?? []).length;
+  for (const id of ["OA-S-n02", "OK-S-n02", "OD-S-n02", "OA-J-n02", "OK-J-n02", "OA-W-n02", "OK-W-n02", "OA-S-n26", "OK-S-n26", "OD-S-n26", "OK-S-n27", "OA-W-n08", "OK-W-n08", "OA-S-o01", "OK-J-o01"]) assert.equal(lows(id), 1, `${id}: 이유가 한 번 나와야 한다`);
+  assert.match(byId("OK-S-n26").expect, /신고 1건이라 비움/);
+  assert.match(byId("OK-S-n27").expect, /신고 3건이라 비움/);
+  assert.match(byId("OK-S-n02").expect, /신고 4건이라 비움/);
+  // 경계 밖: 0건·칸 없음·null·undefined·"4" 문자열·NaN·false·true·{}·[]·-1·4.5·"x"·특수문자·5건·문자열 "5" 는 이유가 없다
+  for (const n of ["n01", "n03", "n04", "n05", "n06", "n07", "n08", "n09", "n10", "n11", "n12", "n13", "n15", "n17", "n20", "n21", "n22", "n28"]) {
+    for (const p of ["OA-S", "OK-S", "OD-S", "OA-J", "OK-J"]) assert.equal(lows(`${p}-${n}`), 0, `${p}-${n}: 이유가 나오면 안 된다`);
+  }
+  for (const id of ["OA-W-n01", "OK-W-n03", "OA-W-n05", "OK-W-n06", "OA-W-z01", "OK-W-o01", "OK-S-z01", "OK-S-o03", "OA-S-o04"]) assert.equal(lows(id), 0, `${id}: 이유가 나오면 안 된다`);
+  // 값 없음이라도(지표가 {}·값 null) 건수가 없거나 충분하면 「-」: 값 null 인 40건은 이유가 아니다
+  assert.equal(lows("OK-S-o02"), 0);
+  assert.equal(lows("OK-S-o03"), 0);
 });
 
 test("시세 요약 분기 표: React 출력이 손으로 적은 기대값과 같다(분기마다, 허용 변환은 렌더러의 &#x27; 되돌림 하나)", () => {

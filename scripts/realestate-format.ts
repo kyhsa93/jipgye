@@ -77,6 +77,15 @@ export function resolveMetric(entry, kind) {
   return metric ? { metric } : null;
 }
 
+// 표본이 모자라 값을 못 내는 카드에 이유를 적을 때 쓰는 건수(#264). 지표가 있고 1 <= n < 문턱이면 n, 아니면(n=0·지표 없음·건수가 정수 아님·문턱 이상) null 이라 그 카드는 「-」 그대로다.
+// 문턱 판정은 위 hasEnoughSample 한 곳이다 - 여기서 MIN_SAMPLE 을 다시 쓰지 않는다. 브라우저(scripts/realestate-template.html)의 lowOr 가 같은 조건을 쓴다.
+export function lowSampleCount(entry, kind) {
+  const field = kindField(kind);
+  const metric = field ? entry?.[field.metric] : null;
+  const n = metric?.transactionCount;
+  return !hasEnoughSample(metric) && Number.isInteger(n) && n >= 1 ? n : null;
+}
+
 export function jeonseRatio(entry) {
   const sale = resolveMetric(entry, "sale");
   const jeonse = resolveMetric(entry, "jeonse");
