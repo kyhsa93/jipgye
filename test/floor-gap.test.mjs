@@ -144,6 +144,17 @@ test("전세 문장은 서울과 다르다고 말할 수 있는 구만 적고 �
   assert.equal(jeonseDistrictSentence(rows, null, "ko"), null, "서울 전세 값이 없는데 말했다");
 });
 
+test("전세 영어 문장은 이름이 하나면 단수, 둘 이상이면 복수 동사다 (#711)", () => {
+  const j = (district, median) => ({ district, jeonse: { cells: 30, median, band: { low: -6, high: -4 }, distinct: true } });
+  const one = jeonseDistrictSentence([j("노원구", -8.1), j("서초구", -1)], -4.8, "en");
+  assert.match(one, /노원구 8\.1% discounts it more/);
+  assert.match(one, /서초구 1\.0% discounts it less/);
+  assert.match(one, /2 of the 2 districts with a figure differ from/);
+  const two = jeonseDistrictSentence([j("노원구", -8.1), j("구로구", -9)], -4.8, "en");
+  assert.match(two, /노원구 8\.1%, 구로구 9\.0% discount it more\./);
+  assert.match(jeonseDistrictSentence([j("노원구", -8.1)], -4.8, "en"), /1 of the 1 districts with a figure differs from .* discounts it more\./);
+});
+
 test("전세 자료가 없어도 매매 표와 문장은 그대로 나온다", () => {
   const sale = { 노원구: district("노원", 40, -12) };
   const without = buildPayload({ sale, jeonse: undefined, now: NOW });

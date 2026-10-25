@@ -328,11 +328,13 @@ export function jeonseDistrictSentence(rows, seoulMedian, locale = "ko") {
   const list = (items) => items.map((row) => `${row.district} ${size(row.jeonse.median)}%`).join(", ");
   const deeper = distinct.filter((row) => row.jeonse.median < seoulMedian);
   const shallower = distinct.filter((row) => row.jeonse.median >= seoulMedian);
+  // 영어는 이름이 하나면 단수 동사다(discounts), 둘 이상이면 복수(discount).
+  const verb = (items) => (items.length === 1 ? "discounts" : "discount");
   const parts = [];
   if (deeper.length) {
-    parts.push(en ? `${list(deeper)} discount it more` : `${list(deeper)}는 더 크게 ${shallower.length ? "깎이고" : "깎입니다"}`);
+    parts.push(en ? `${list(deeper)} ${verb(deeper)} it more` : `${list(deeper)}는 더 크게 ${shallower.length ? "깎이고" : "깎입니다"}`);
   }
-  if (shallower.length) parts.push(en ? `${list(shallower)} discount it less` : `${list(shallower)}는 덜 깎입니다`);
+  if (shallower.length) parts.push(en ? `${list(shallower)} ${verb(shallower)} it less` : `${list(shallower)}는 덜 깎입니다`);
   return en
     ? `For jeonse, ${distinct.length} of the ${valued.length} districts with a figure ${distinct.length === 1 ? "differs" : "differ"} from Seoul (${ref}) — ${parts.join(", while ")}.`
     : `전세는 값을 낸 ${valued.length}곳 가운데 ${distinct.length}곳만 서울(${ref})과 다릅니다 — ${parts.join(", ")}.`;
