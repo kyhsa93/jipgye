@@ -32,7 +32,7 @@ const syntheticTrend = ({ pending }) => {
   };
 };
 
-async function page({ trend } = {}) {
+async function page({ trend, lang } = {}) {
   const names = [
     "summary", "market", "realestate", "news",
     "realestate-trend", "market-history", "summary-history", "news-history",
@@ -41,6 +41,7 @@ async function page({ trend } = {}) {
   for (const name of names) data[name] = name === "realestate-trend" && trend ? trend : await readJson(name);
   loaded = data.realestate;
   return loadIndexPage({
+    ...(lang ? { storage: { lang } } : {}),
     fetch: async (url) => {
       const name = String(url).match(/\/([a-z-]+)\.json/)?.[1];
       return data[name] ? { ok: true, json: async () => data[name] } : { ok: false, json: async () => ({}) };
@@ -156,6 +157,36 @@ test("메인 화면 추이 카드에도 양 축 눈금과 짚을 자리를 둔�
 
 // (#520) 예전에는 실제 파일의 pendingWeeks 가 비었는지에 따라 단언이 갈렸고, 비면 점선 없음만 보고 조용히 끝났다(데이터가 한쪽 갈래로 굳으면 점선 단언이 안 돈다).
 // 이제 두 갈래를 합성 추이로 각각 항상 돈다.
+// 1년 그림(합성 60주 = 확정 56 + 잠정 4, 2025-08-25 ~ 2026-10-12). 해가 바뀌므로 첫 눈금과 해가 바뀐 가운데 눈금에 두 자리 해가 붙는다 -
+// 그러지 않으면 첫 눈금(8/25)과 끝 눈금이 한 해 차이인데도 같은 철로 읽힌다. 끝 눈금은 가운데와 같은 해라 짧게 둔다.
+const YEAR_MONDAYS = Array.from({ length: 60 }, (_, i) => new Date(Date.parse("2025-08-25T00:00:00Z") + i * 7 * 86_400_000).toISOString().slice(0, 10));
+const yearTrend = () => {
+  const base = syntheticTrend({ pending: false });
+  const entry = base.overall[MONDAYS[0]];
+  return { ...base, weeks: YEAR_MONDAYS.slice(0, 56), pendingWeeks: YEAR_MONDAYS.slice(56), overall: Object.fromEntries(YEAR_MONDAYS.map((w) => [w, entry])) };
+};
+
+for (const lang of ["ko", "en"]) {
+  test(`메인 화면 1년 추이는 60주를 다 그리고 첫·끝 눈금을 해로 가른다 (${lang})`, async () => {
+    const p = await page({ trend: yearTrend(), lang });
+    const grid = p.byId("realestate-history-grid").innerHTML;
+    const first = grid.match(/<svg[\s\S]*?<\/svg>/)?.[0] ?? "";
+
+    const [firm, pending] = [...first.matchAll(/points="([^"]+)"/g)].map((m) => m[1].split(" "));
+    assert.equal(firm?.length, 56, "확정 구간을 다 그리지 않았다");
+    assert.equal(pending?.length, 5, "잠정 구간이 마지막 확정 지점에서 이어지지 않는다");
+    const xLabels = [...first.matchAll(/class="axis x[^"]*">([^<]+)</g)].map((m) => m[1]);
+    assert.deepEqual(xLabels, ["'25 8/25", "'26 3/16", "10/12"], `해 표시가 없거나 어긋났다: ${xLabels.join(" | ")}`);
+  });
+}
+
+test("메인 화면 한 해 안의 추이는 눈금에 해를 붙이지 않는다", async () => {
+  const p = await page({ trend: syntheticTrend({ pending: true }) });
+  const xLabels = [...p.byId("realestate-history-grid").innerHTML.matchAll(/class="axis x[^"]*">([^<]+)</g)].map((m) => m[1]);
+  assert.ok(xLabels.length >= 3, "가로 눈금이 그려지지 않았다");
+  assert.ok(xLabels.every((label) => /^\d{1,2}\/\d{1,2}$/.test(label)), `한 해 안인데 해를 붙였다: ${xLabels.join(" | ")}`);
+});
+
 test("메인 화면도 덜 찬 주를 점선으로 잇는다", async () => {
   const p = await page({ trend: syntheticTrend({ pending: true }) });
   const grid = p.byId("realestate-history-grid").innerHTML;

@@ -935,9 +935,13 @@ function sparklineSvg(series, format, box, label) {
   // 양 끝 눈금은 그림의 왼쪽·오른쪽 경계에 찍힌다. 가운데 정렬로 두면 글자 절반이
   // 밖으로 나가 잘리므로(오른쪽 끝에서 4~5px), 끝의 둘만 안쪽으로 붙인다.
   const xIdx = [...new Set(xAt)];
+  // 1년을 그리면 첫 눈금과 끝 눈금이 같은 월·일로 보인다. 해가 바뀌는 그림이면 첫 눈금과
+  // 해가 바뀐 눈금 앞에 '25 처럼 두 자리 해를 붙인다. 한 해 안의 그림은 전과 같다.
+  const yr = (i) => String(series[i].date).slice(2, 4);
   const xTicks = xIdx.map((i, n) => {
     const edge = n === 0 ? " first" : n === xIdx.length - 1 ? " last" : "";
-    return `<text x="${scale.x(i).toFixed(1)}" y="${box.h - 9}" class="axis x${edge}">${escapeHtml(shortDate(series[i].date))}</text>`;
+    const cue = yr(0) !== yr(series.length - 1) && (n === 0 || yr(i) !== yr(xIdx[n - 1])) ? `'${yr(i)} ` : "";
+    return `<text x="${scale.x(i).toFixed(1)}" y="${box.h - 9}" class="axis x${edge}">${escapeHtml(cue + shortDate(series[i].date))}</text>`;
   }).join("");
 
   return `<svg viewBox="0 0 ${box.w} ${box.h}" role="img" aria-label="${escapeHtml(chartAlt(series, format, label))}">

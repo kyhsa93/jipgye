@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  WEEKS_KEPT,
   buildWeekly,
   firstFullWeek,
   nextWeek,
@@ -10,6 +11,7 @@ import {
 import { arrivalShortfall, arrivalWindowReady, contractRows, readWindowItems, representWindow } from "../scripts/build-realestate.ts";
 import { DISTRICTS } from "../scripts/realestate-districts.ts";
 import { MIN_SAMPLE } from "../scripts/realestate-format.ts";
+import { RETENTION_MONTHS, TREND_MONTHS, WINDOW_MONTHS, windowMonths } from "../scripts/realestate-slots.ts";
 
 const NOW = new Date("2026-09-07T00:00:00Z");
 
@@ -148,6 +150,35 @@ test("보관 주 수를 넘기면 오래된 주부터 떨어뜨린다", () => {
   const weekly = buildWeekly(arrivals, NOW, { weeksKept: 26 });
   assert.equal(weekly.weeks.length, 26);
   assert.equal(weekly.weeks.at(-1), "2026-08-24");
+});
+
+test("기본 보관 주 수는 1년(52주)이다 - 60주를 주면 최근 52주만 남긴다", () => {
+  assert.equal(WEEKS_KEPT, 52);
+  const arrivals = [];
+  for (let i = 0; i < 60; i += 1) arrivals.push(sale(nextWeek("2025-07-07", i)));
+
+  const weekly = buildWeekly(arrivals, NOW);
+  assert.equal(weekly.weeks.length, 52, `기본값이 52주가 아니다: ${weekly.weeks.length}`);
+  assert.equal(weekly.weeks.at(-1), "2026-08-24");
+  assert.equal(weekly.weeks[0], nextWeek("2026-08-24", -51));
+});
+
+// 추이 창(TREND_MONTHS)은 시세 표 창(WINDOW_MONTHS)과 따로 움직인다. writeTrend 와 같은 셈(첫 달의 첫 온전한 주 ~ 신고 기한 30일이 지난 주)으로
+// 한 해의 모든 날을 돌려, 그 창이 확정 주를 거의 늘 52주 채우는지(달 초 며칠만 51주) 본다. 원본 보관 창 안에 있어야 다시 만들 수 있다.
+test("추이 창은 시세 표 창과 따로이고 한 해 내내 확정 주를 51~52주 채운다", () => {
+  assert.equal(WINDOW_MONTHS, 6, "추이를 넓히려고 시세 표 창을 건드렸다");
+  assert.ok(TREND_MONTHS > WINDOW_MONTHS && TREND_MONTHS <= RETENTION_MONTHS);
+  const counts = new Set();
+  for (let day = 0; day < 366; day += 1) {
+    const now = new Date(Date.UTC(2026, 0, 1) + day * 86_400_000);
+    const oldest = windowMonths(now, TREND_MONTHS).at(-1);
+    const from = firstFullWeek(`${oldest.slice(0, 4)}-${oldest.slice(4, 6)}-01`);
+    const settled = settledWeek(now, 30);
+    let weeks = 0;
+    for (let week = from; week <= settled; week = nextWeek(week, 1)) weeks += 1;
+    counts.add(Math.min(weeks, WEEKS_KEPT));
+  }
+  assert.deepEqual([...counts].sort(), [51, 52], `확정 주 수가 1년에 못 미치는 날이 있다: ${[...counts].join(",")}`);
 });
 
 const rawFile = (kind, items) => ({ kind, items });

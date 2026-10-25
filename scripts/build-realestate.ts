@@ -16,7 +16,7 @@ import {
 } from "./realestate-metrics.ts";
 import { MIN_SAMPLE, hasEnoughSample } from "./realestate-format.ts";
 import { itemKey, readSlotFile } from "./realestate-raw.ts";
-import { windowMonths } from "./realestate-slots.ts";
+import { TREND_MONTHS, windowMonths } from "./realestate-slots.ts";
 import {
   FILING_GRACE_DAYS,
   REPRESENT_WEEKS,
@@ -204,7 +204,7 @@ export function contractRows(file, districtName) {
 }
 
 async function readContractRows(now) {
-  const months = windowMonths(now);
+  const months = windowMonths(now, TREND_MONTHS);
   const perSlot = await Promise.all(
     months.flatMap((yearMonth) =>
       DISTRICTS.flatMap(({ code, name }) =>
@@ -216,7 +216,7 @@ async function readContractRows(now) {
 }
 
 async function writeTrend(now) {
-  const oldest = windowMonths(now).at(-1);
+  const oldest = windowMonths(now, TREND_MONTHS).at(-1);
   const trend = buildWeekly(await readContractRows(now), now, {
     minSample: TREND_MIN_SAMPLE,
     graceDays: FILING_GRACE_DAYS,

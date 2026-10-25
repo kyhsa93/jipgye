@@ -756,11 +756,14 @@
       })
       .join("");
 
-    const xTicks = [...new Set([0, Math.floor((series.length - 1) / 2), series.length - 1])]
-      .map(
-        (i) =>
-          `<text x="${scale.x(i).toFixed(1)}" y="${box.h - 9}" class="axis x">${escapeHtml(shortDate(series[i].date))}</text>`
-      )
+    // 해를 넘는 그림(1년)은 첫 눈금과 해가 바뀐 눈금에 '25 를 붙인다
+    const yr = (i) => String(series[i].date).slice(2, 4);
+    const xIdx = [...new Set([0, Math.floor((series.length - 1) / 2), series.length - 1])];
+    const xTicks = xIdx
+      .map((i, n) => {
+        const cue = yr(0) !== yr(series.length - 1) && (n === 0 || yr(i) !== yr(xIdx[n - 1])) ? `'${yr(i)} ` : "";
+        return `<text x="${scale.x(i).toFixed(1)}" y="${box.h - 9}" class="axis x">${escapeHtml(cue + shortDate(series[i].date))}</text>`;
+      })
       .join("");
 
     return `<svg viewBox="0 0 ${box.w} ${box.h}" role="img" aria-label="${escapeHtml(chartAlt(series, format, label))}">

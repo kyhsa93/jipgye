@@ -677,6 +677,30 @@ test("추이 그래프에 양 축 눈금을 적는다", async () => {
   assert.ok(!svg.includes('preserveAspectRatio="none"'), "가로로 늘어나 글자가 찌그러진다");
 });
 
+// 1년 그림(합성 60주 = 확정 56 + 잠정 4, 2025-08-25 ~ 2026-10-12). 확정 주 수가 보관 상한(52)을 넘어도 화면은 받은 대로 다 그린다 -
+// 자르는 것은 buildWeekly 의 몫이다. 해가 바뀌므로 첫 눈금과 해가 바뀐 가운데 눈금에 두 자리 해가 붙고, 끝 눈금은 가운데와 같은 해라 안 붙는다.
+const YEAR_WEEKS = Array.from({ length: 60 }, (_, i) => new Date(Date.parse("2025-08-25T00:00:00Z") + i * 7 * 86_400_000).toISOString().slice(0, 10));
+const yearTrend = () => ({
+  weeks: YEAR_WEEKS.slice(0, 56),
+  pendingWeeks: YEAR_WEEKS.slice(56),
+  overall: Object.fromEntries(YEAR_WEEKS.map((week, i) => [week, metrics(i * 5)])),
+  districts: { [TREND_DISTRICT.name]: Object.fromEntries(YEAR_WEEKS.map((week, i) => [week, metrics(400 + i * 5)])) },
+});
+
+for (const locale of ["ko", "en"]) {
+  test(`1년 추이는 60주를 다 그리고 첫·끝 눈금을 해로 가른다 (${locale})`, async () => {
+    const page = await loadRealestatePage({ realestate: trendRealestate(), trend: yearTrend(), kind: "sale", locale, file: `${SITE}/realestate.html` });
+    const svg = page.trendHtml();
+
+    const [firm, pending] = [...svg.matchAll(/points="([^"]+)"/g)].map((m) => m[1].split(" "));
+    assert.equal(firm.length, 56, "확정 구간을 다 그리지 않았다");
+    assert.equal(pending.length, 5, "잠정 구간이 마지막 확정 지점에서 이어지지 않는다");
+
+    const xLabels = [...svg.matchAll(/class="axis x[^"]*">([^<]+)</g)].map((m) => m[1]);
+    assert.deepEqual(xLabels, ["'25 8/25", "'26 3/16", "10/12"], `해 표시가 없거나 어긋났다: ${xLabels.join(" | ")}`);
+  });
+}
+
 test("눈금 위아래로 값의 범위를 담는다", async () => {
   const page = await loadRealestatePage({ realestate: trendRealestate(), trend: trendData(), kind: "sale" });
   const yLabels = [...page.trendHtml().matchAll(/class="axis y[^"]*">([^<]+)</g)].map((m) => m[1]);
