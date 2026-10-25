@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
   buildDistrictBands,
@@ -7,8 +7,9 @@ import {
   mergeDistrictMonths,
 } from "./budget-bands.ts";
 import { budgetFacts } from "./budget-facts.ts";
-import { buildDealFiles, dealFileName, periodOf } from "./deal-files.ts";
+import { buildDealFiles, dealFileName, periodOf, recordHighKeys } from "./deal-files.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
+import { RAW_DIR } from "./realestate-raw.ts";
 import { readDealSource } from "./realestate-source.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -96,8 +97,20 @@ function withFacts(bands, deals, now) {
   });
 }
 
+/** 원본 매매 전부 - 신고가 표지는 그 칸의 지난 거래가 길게 있어야 한다(build-record-high.ts readAll 과 같은 읽기). */
+async function readAllSales() {
+  const dir = path.join(RAW_DIR, "sale");
+  const files = (await readdir(dir).catch(() => [])).filter((f) => f.endsWith(".json")).sort();
+  const items = [];
+  for (const name of files) {
+    const file = JSON.parse(await readFile(path.join(dir, name), "utf8"));
+    if (file?.ok !== false && Array.isArray(file?.items)) items.push(...file.items);
+  }
+  return items;
+}
+
 async function writeDealFiles(source, now) {
-  const files = buildDealFiles(source, now);
+  const files = buildDealFiles(source, now, undefined, undefined, recordHighKeys(await readAllSales()));
   if (!files) return;
 
   await mkdir(dealFilesDir, { recursive: true });
@@ -110,9 +123,10 @@ async function writeDealFiles(source, now) {
   const all = (Object.values(files) as { deals: Record<string, unknown>[] }[]).flatMap((file) => file.deals);
   const direct = all.filter((deal) => deal.direct === true).length;
   const unknown = all.filter((deal) => !("direct" in deal)).length;
+  const records = all.filter((deal) => deal.recordHigh === true).length;
   console.log(
     `  자치구별 전수 ${Object.keys(files).length}개 파일 · 거래 ${all.length.toLocaleString("ko-KR")}건` +
-      ` (직거래 ${direct.toLocaleString("ko-KR")}건 · 거래형태 미상 ${unknown.toLocaleString("ko-KR")}건)`
+      ` (직거래 ${direct.toLocaleString("ko-KR")}건 · 거래형태 미상 ${unknown.toLocaleString("ko-KR")}건 · 신고가 ${records.toLocaleString("ko-KR")}건)`
   );
 }
 

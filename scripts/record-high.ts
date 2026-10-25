@@ -61,6 +61,17 @@ export function byCell(deals) {
   return cells;
 }
 
+/**
+ * 거래 한 건이 그 칸의 신고가였나(D1, #704 - 단지 검색 카드 표지). measure()가 세는 신고가와 같은 정의다: 같은 날 거래는
+ * 선행으로 치지 않고, 선행 prior 건 이상·첫 선행부터 span 일 이상일 때만 그 전 최고가를 넘었는지 본다. 선행이 모자라면
+ * null(판단 불가) - 카드는 표지를 비운다. list 는 byCell() 의 한 칸(계약일 순), deal 은 그 칸의 한 건.
+ */
+export function recordHighOf(list, deal, { prior = MIN_PRIOR, span = MIN_SPAN_DAYS } = {}): boolean | null {
+  const before = list.filter((x) => x.time < deal.time);
+  if (before.length < prior || deal.time - before[0].time < span * DAY) return null;
+  return deal.amount > before.reduce((m, x) => Math.max(m, x.amount), -Infinity);
+}
+
 const share = (values) => (values.length ? values.filter((v) => v >= 0).length / values.length : null);
 
 /**
