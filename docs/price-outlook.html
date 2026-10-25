@@ -8,19 +8,19 @@
 <link rel="icon" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <meta name="google-adsense-account" content="ca-pub-1195159445218373">
-<title>서울 아파트값 3개월 뒤 - 예측과 그 예측이 틀린 만큼</title>
+<title>서울 아파트값 3개월 뒤 얼마일까 - 예측과 그 예측이 틀린 만큼</title>
 <meta name="description" content="한국부동산원 실거래가격지수로 서울과 5개 권역 아파트값의 3·6·12개월 뒤를 짐작하고, 같은 방식의 지난 예측이 얼마나 빗나갔는지를 같이 적습니다. 기준선을 못 이기는 칸은 비워 둡니다.">
 <meta name="site-group" content="digest">
 <link rel="canonical" href="https://kyhsa93.github.io/jipgye/price-outlook.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="집계">
 <meta property="og:url" content="https://kyhsa93.github.io/jipgye/price-outlook.html">
-<meta property="og:title" content="서울 아파트값 3개월 뒤 - 예측과 그 예측이 틀린 만큼">
+<meta property="og:title" content="서울 아파트값 3개월 뒤 얼마일까 - 예측과 그 예측이 틀린 만큼">
 <meta property="og:description" content="서울 아파트값의 몇 달 뒤를 짐작하고, 같은 방식의 지난 예측이 얼마나 빗나갔는지를 같이 적습니다.">
 <meta property="og:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="서울 아파트값 3개월 뒤 - 예측과 그 예측이 틀린 만큼">
+<meta name="twitter:title" content="서울 아파트값 3개월 뒤 얼마일까 - 예측과 그 예측이 틀린 만큼">
 <meta name="twitter:description" content="서울 아파트값의 몇 달 뒤를 짐작하고, 지난 예측이 얼마나 빗나갔는지를 같이 적습니다.">
 <meta name="twitter:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <link rel="stylesheet" href="./style.css">
@@ -298,8 +298,9 @@ function renderLoadNotice() {
   });
 }
 
+const BAKED_TITLE = document.title;
 function applyLocale() {
-  document.title = t("title");
+  document.title = locale === "en" ? t("title") : BAKED_TITLE;
   setText("page-title", t("title"));
   setText("next-search", t("nextSearch"));
   setText("next-budget", t("nextBudget"));

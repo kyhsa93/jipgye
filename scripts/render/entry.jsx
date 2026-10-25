@@ -11,7 +11,7 @@
 // realestateOverallHtml (#242 PR 3, 시세 요약 카드), budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml
 // (#243 PR A, 예산대 잎 조각 8개), budgetCandidatesHtml·budgetBodyHtml (#243 PR B, 후보 단지와 합성 - 이것으로 prerender.ts의 조각 44개가 모두 이식됐다).
 import { DISTRICT_PAGES } from "../district-slugs.ts";
-import { BUDGET_MORE_LINKS, bodyShape, budgetAnswers, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "../budget-fragments.ts";
+import { BUDGET_MORE_LINKS, areaLine, areasShape, bodyShape,budgetAnswers, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "../budget-fragments.ts";
 import { budgetFactSentences } from "../budget-facts.ts";
 import { districtSentences } from "../district-summary.ts";
 import { factSentences } from "../district-facts.ts";
@@ -272,16 +272,22 @@ const districtRentFlow = (name, flow, locale = "ko") => sentenceBlock(rentFlowSe
 // 다른 자치구 링크 묶음. 머리글·상자의 분기와 id는 linksBlockShape, 경로는 slugLinkHref다.
 // 경로는 DISTRICT_PAGES(코드가 정한 slug)로 만든 `./district-<slug>.html`이라 `javascript:`로 시작할 수 없다(React 19 차단 차이의 대상이 아니다).
 // 링크가 하나도 없는 분기(block이 null)는 DISTRICT_PAGES가 상수라 지금은 닿지 않는 방어 코드다.
-function districtLinks(current = null, heading = "다른 지역") {
+// order(자치구 이름 배열)가 있으면 그 순서가 먼저이고 나머지는 원래 순서로 뒤에 선다 - 예산대 장이 그 예산대 거래가 많은 구부터 놓는다(V12 #658).
+function districtLinks(current = null, heading = "다른 지역", order = null) {
   const block = linksBlockShape("district-links", heading, DISTRICT_PAGES.length);
   if (!block) return sentenceBlock([]);
+  const rank = (name) => {
+    const i = order ? order.indexOf(name) : -1;
+    return i < 0 ? Infinity : i;
+  };
+  const pages = order ? [...DISTRICT_PAGES].sort((a, b) => rank(a.name) - rank(b.name)) : DISTRICT_PAGES;
   return (
     <>
       <h3 className="district-links-heading" id={block.headingId}>
         {str(block.heading)}
       </h3>
       <div className="district-links" id={block.boxId}>
-        {DISTRICT_PAGES.map(({ name, slug }) =>
+        {pages.map(({ name, slug }) =>
           name === current ? (
             <a key={name} href={slugLinkHref(slug)} aria-current="page">
               {name}
@@ -729,7 +735,8 @@ const BudgetDeal = ({ deal }) => {
 // (그래서 후보 단지가 JSX로 있어야 이 조각을 옮길 수 있었다). 순서는 prerender.ts의 budgetBodyHtmlLegacy와 같다(#460). 예산대가 없으면 null이다 - 합성 조각만 null이고 잎은 ""다(잎의 반환값이 이어 붙는 자리에 "null" 글자가 박히지 않게).
 // 하위 조각의 호출 순서는 legacy와 같다(입력이 이상할 때 던지는 자리가 같아야 한다). 거래 목록은 맨 뒤라 이상한 거래(null 등)는 하위 조각을 다 부른 뒤에 던진다.
 // finderHtml은 빌드가 만든 마크업 문자열(제목+칩)이라 그대로 낸다. 비면 이 절은 없다.
-function budgetBodyJsx(band, periodList, loanBasis = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, finderHtml = "") {
+// areaLines(V12 #658)는 빌드가 areasShape·areaLine(budget-fragments.ts)으로 만든 글자 배열이다 - 「단지 후보가 많은 구」 한 줄씩. 비면 이 절은 없다(인자를 안 넘기던 호출은 전과 같다).
+function budgetBodyJsx(band, periodList, loanBasis = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, finderHtml = "", areaLines = []) {
   const shape = bodyShape(band, periodList);
   if (!shape) return null;
   return (
@@ -750,6 +757,16 @@ function budgetBodyJsx(band, periodList, loanBasis = null, mortgageSeries = null
         </div>
       ) : null}
       {budgetWhereJsx(band)}
+      {areaLines?.length ? (
+        <div className="budget-areas" data-prerendered="">
+          <p>단지 후보가 많은 구:</p>
+          <ul>
+            {areaLines.map((line, i) => (
+              <li key={i}>{str(line)}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
       {finderHtml ? <div data-prerendered="" dangerouslySetInnerHTML={{ __html: finderHtml }} /> : null}
       {budgetCandidatesJsx(band, complexFiles)}
       {budgetLoanJsx(band, loanBasis)}

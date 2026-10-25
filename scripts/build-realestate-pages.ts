@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "./district-slugs.ts";
 import { BUDGET_PAGE_EOK, budgetPageFile } from "./budget-pages.ts";
-import { areaPrice } from "./realestate-format.ts";
+import { areaPrice, formatEok, resolveMetric, valueOf } from "./realestate-format.ts";
 import { dealFileName } from "./deal-files.ts";
 import { createWriteSet } from "./render-writes.ts";
 import { districtFacts } from "./district-facts.ts";
@@ -34,7 +34,7 @@ const root = path.resolve(import.meta.dirname, "..");
 const SOURCE_PATH = REALESTATE_TEMPLATE_PATH;
 const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 
-const BASE_TITLE = "서울 아파트 시세 - 25개 자치구 실거래가";
+const BASE_TITLE = "서울 아파트 시세, 자치구별로 얼마인가 - 25개 자치구 실거래가";
 const BASE_DESCRIPTION =
   "국토교통부 실거래 신고 자료로 서울 25개 자치구의 아파트 매매·전세·월세 시세를 평당가와 84㎡ 환산가로 함께 보여줍니다. 매일 갱신합니다.";
 
@@ -152,11 +152,27 @@ export function districtHereHtml(name, realestate) {
   return `<p class="card-links district-here">${links.map(([href, text]) => `<a href="${href}">${text} →</a>`).join(" · ")}</p>`;
 }
 
+/**
+ * 자치구 장 meta description(V12 #658): 「그 구 아파트값은 얼마인가」의 답(매매 84㎡ 환산가와 값을 낸 구 가운데 순서)을 앞에 둔다.
+ * 값은 장 본문 시세 문장(district-summary.ts)과 같은 resolveMetric·valueOf 에서 온다. 매매 값이 없으면 전과 같은 고정 문장이다.
+ */
+export function districtDescription(name, realestate) {
+  const tail = "국토교통부 신고 자료를 매일 갱신하며, 신고 건수가 적으면 지난달 기준으로 표시합니다.";
+  const districts = realestate?.districts ?? [];
+  const value = valueOf(resolveMetric(districts.find((d) => d.name === name), "sale")?.metric, "sale");
+  const priced = districts.map((d) => valueOf(resolveMetric(d, "sale")?.metric, "sale")).filter((v) => typeof v === "number");
+  if (typeof value !== "number" || priced.length < 2) return `${name} 아파트 매매·전세·월세 실거래가를 평당가와 84㎡ 환산가로 보여줍니다. ${tail}`;
+  const rank = priced.filter((v) => v > value).length + 1;
+  // formatEok 은 늘 「…원」으로 끝나 조사는 「으로」다.
+  return (
+    `${name} 아파트값은 얼마인가 - 매매 84㎡ 환산 ${formatEok(areaPrice(value))}으로 값을 낸 서울 ${priced.length}개 구 가운데 비싼 순 ${rank}번째. ` +
+    `매매·전세·월세 실거래가를 평당가와 84㎡ 환산가로 보여주며, 신고 건수가 적으면 지난달 기준으로 표시합니다.`
+  );
+}
+
 export function buildDistrictPage(baseHtml, district, realestate, deals = null, renewal = null, spread = null, rentFlow = null) {
   const title = `${district.name} 아파트 시세 - 매매·전세·월세 실거래가`;
-  const description =
-    `${district.name} 아파트 매매·전세·월세 실거래가를 평당가와 84㎡ 환산가로 보여줍니다. ` +
-    "국토교통부 신고 자료를 매일 갱신하며, 신고 건수가 적으면 지난달 기준으로 표시합니다.";
+  const description = districtDescription(district.name, realestate);
   const titleEn = `${district.name} Apartment Prices - Sale, Jeonse & Rent`;
 
   let html = baseHtml;

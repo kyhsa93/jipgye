@@ -8,19 +8,19 @@
 <link rel="icon" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <meta name="google-adsense-account" content="ca-pub-1195159445218373">
-<title>전세 vs 월세 - 서울 자치구별 전월세전환율과 실제 월 비용</title>
+<title>전세와 월세 중 어느 쪽이 쌀까 - 서울 자치구별 전월세전환율과 월 비용</title>
 <meta name="description" content="같은 단지에서 전세와 월세가 함께 신고된 실거래로 서울 25개 자치구의 전월세전환율을 내고, 전세자금대출·예금 금리를 넣어 어느 쪽이 월에 얼마나 싼지 계산합니다. 매일 갱신합니다.">
 <meta name="site-group" content="digest">
 <link rel="canonical" href="https://kyhsa93.github.io/jipgye/jeonse-vs-wolse.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="집계">
 <meta property="og:url" content="https://kyhsa93.github.io/jipgye/jeonse-vs-wolse.html">
-<meta property="og:title" content="전세 vs 월세 - 서울 자치구별 전월세전환율과 실제 월 비용">
+<meta property="og:title" content="전세와 월세 중 어느 쪽이 쌀까 - 서울 자치구별 전월세전환율과 월 비용">
 <meta property="og:description" content="같은 단지에서 전세와 월세가 함께 신고된 실거래로 서울 25개 자치구의 전월세전환율을 내고, 전세자금대출·예금 금리를 넣어 어느 쪽이 월에 얼마나 싼지 계산합니다.">
 <meta property="og:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="전세 vs 월세 - 서울 자치구별 전월세전환율과 실제 월 비용">
+<meta name="twitter:title" content="전세와 월세 중 어느 쪽이 쌀까 - 서울 자치구별 전월세전환율과 월 비용">
 <meta name="twitter:description" content="같은 단지에서 전세와 월세가 함께 신고된 실거래로 낸 서울 25개 자치구의 전월세전환율.">
 <meta name="twitter:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <link rel="stylesheet" href="./style.css">
@@ -514,8 +514,9 @@ const NAV_KEYS = {
   cancelled: "navCancelled",
 };
 
+const BAKED_TITLE = document.title;
 function applyLocale() {
-  document.title = t("title");
+  document.title = locale === "en" ? t("title") : BAKED_TITLE;
   setText("page-title", t("title"));
   setText("calc-heading", t("calcHeading"));
   setText("rate-heading", t("rateHeading"));

@@ -1406,6 +1406,21 @@ ul.news-list {
   margin-top: 4px;
 }
 
+/* 단지 후보가 많은 구마다 한 줄(동·연식·평형, V12 #658). */
+.budget-areas {
+  max-width: var(--prose);
+  margin-top: 8px;
+}
+
+.budget-areas ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+.budget-areas li {
+  margin: 4px 0;
+}
+
 .budget-deals {
   list-style: none;
   padding: 0;
