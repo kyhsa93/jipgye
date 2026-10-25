@@ -1,6 +1,12 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { BANDS } from "./cancel-by-price.ts";
+import { DISTRICT_SLUGS } from "./district-slugs.ts";
+import { DISTRICTS } from "./realestate-districts.ts";
 import {
+  breakdown,
+  breakdownNote,
+  breakdownTableHtml,
   byCell,
   controlSentence,
   grid,
@@ -27,6 +33,8 @@ export function buildPayload({ items, now }) {
   const main = measure(cells, end);
   const robust = grid(cells, end);
   const both = (fn) => ({ ko: fn("ko"), en: fn("en") });
+  // 자치구·가격대별(N3). 서울 칸(main·robust·문장)은 위 그대로이고 여기서는 키만 더한다.
+  const split = breakdown(cells, end, { districts: DISTRICT_ROWS, bands: BANDS });
 
   return {
     updatedAt: now.toISOString(),
@@ -37,9 +45,21 @@ export function buildPayload({ items, now }) {
     lead: both((l) => leadSentence(main, robust, l)),
     control: both((l) => controlSentence(main, l)),
     survival: both((l) => survivalSentence(main, l)),
-    tables: { robust: both((l) => gridTableHtml(robust, l)) },
+    breakdownNote: both((l) => breakdownNote(split, l)),
+    tables: {
+      robust: both((l) => gridTableHtml(robust, l)),
+      districts: both((l) => breakdownTableHtml(split.districts, main, "district", l)),
+      bands: both((l) => breakdownTableHtml(split.bands, main, "band", l)),
+    },
+    breakdown: split,
   };
 }
+
+/** 자치구 행 이름. 영어는 슬러그를 「Gangnam-gu」 꼴로. */
+const DISTRICT_ROWS = DISTRICTS.map(({ code, name }) => {
+  const slug = DISTRICT_SLUGS[name] ?? code;
+  return { code, ko: name, en: `${slug[0].toUpperCase()}${slug.slice(1)}-gu` };
+});
 
 /** 원본 전부. 신고가를 가르려면 그 칸의 지난 거래가 길게 있어야 한다 - 창을 자르지 않는다. */
 async function readAll() {

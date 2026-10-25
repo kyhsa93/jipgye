@@ -67,7 +67,11 @@ const share = (values) => (values.length ? values.filter((v) => v >= 0).length /
  * 문턱 한 벌로 센다. 같은 날 거래는 선행으로도 다음으로도 치지 않는다 - 같은 날 두 건 중
  * 어느 것이 먼저인지 원본은 모른다.
  */
-export function measure(cells, end, { prior = MIN_PRIOR, span = MIN_SPAN_DAYS, wait = WAIT_DAYS } = {}) {
+export function measure(
+  cells,
+  end,
+  { prior = MIN_PRIOR, span = MIN_SPAN_DAYS, wait = WAIT_DAYS, pick = null }: { prior?: number; span?: number; wait?: number; pick?: ((deal: any) => boolean) | null } = {}
+) {
   const cut = end - wait * DAY;
   const out = { record: [], recordNone: 0, all: [], near: [], aboveOld: [], recordSameFloor: [], allSameFloor: [] };
 
@@ -75,6 +79,9 @@ export function measure(cells, end, { prior = MIN_PRIOR, span = MIN_SPAN_DAYS, w
     for (let i = 0; i < list.length; i += 1) {
       const deal = list[i];
       if (deal.time > cut) continue;
+      // pick 은 세는 거래(신고가인지 가르는 쪽)만 고른다. 선행·다음 거래는 칸 전체에서 그대로 찾는다 - 가격대 행(N3)이
+      // "그 전 최고가"를 같은 가격대 거래로만 잡으면 신고가의 뜻이 바뀐다.
+      if (pick && !pick(deal)) continue;
       const before = list.filter((x) => x.time < deal.time);
       if (before.length < prior || deal.time - before[0].time < span * DAY) continue;
       const next = list.find((x) => x.time > deal.time && x.time <= deal.time + wait * DAY);
@@ -225,4 +232,94 @@ export function gridTableHtml(rows, locale = "ko") {
     })
     .join("");
   return `${head}<tbody>${body}</tbody>`;
+}
+
+// --- 자치구·가격대별(N3) ------------------------------------------------------------------
+//
+// 서울 전체 문장의 비율이 우리 구·내 가격대에서도 같은가. 신고가의 뜻과 문턱은 위 main 그대로(선행 3건·180일·90일)이고,
+// 행만 나눈다. 자치구는 칸(구·단지·면적)을 구로 묶고, 가격대는 세는 거래(신고가인지 가르는 쪽)의 값으로 가른다.
+// 가격대 구간은 해제율 화면(cancel-by-price.ts BANDS)과 같은 다섯 칸이다.
+// 행 문턱은 다음 거래 있는 신고가 MIN_ROW 건 - 계산 전에 고정했다. 미달 행은 비율을 비우고 n 만 보인다.
+// 행끼리 순위를 매기는 문장은 쓰지 않는다(표본 크기가 달라 구간이 겹칠 수 있다).
+
+export const MIN_ROW = MIN_RECORDS;
+
+/** 행 하나. 문턱 미달이면 비율을 null 로 둔다 - 화면도 JSON 을 읽는 쪽도 작은 표본의 비율을 쓰지 못하게. */
+export function breakdownRow(m, { key, ko, en }) {
+  const enough = m.withNext >= MIN_ROW;
+  return {
+    key,
+    ko,
+    en,
+    records: m.records,
+    withNext: m.withNext,
+    allCount: m.allCount,
+    record: enough ? m.record : null,
+    all: enough ? m.all : null,
+    enough,
+  };
+}
+
+const districtCode = (cellKey) => String(cellKey).split("|")[0];
+
+/**
+ * districts: [{ code, ko, en }], bands: [{ key, lo, hi, ko, en }](값은 만원, lo 초과 hi 이하).
+ * 자치구 행은 가나다순, 가격대 행은 싼 쪽부터. 구 목록에 없는 코드의 칸은 서울 행(main)에만 들어간다.
+ */
+export function breakdown(cells, end, { districts, bands }) {
+  const byDistrict = new Map();
+  for (const [key, list] of cells) {
+    const code = districtCode(key);
+    if (!byDistrict.has(code)) byDistrict.set(code, new Map());
+    byDistrict.get(code).set(key, list);
+  }
+  const districtRows = districts
+    .map((d) => breakdownRow(measure(byDistrict.get(d.code) ?? new Map(), end), { key: d.code, ko: d.ko, en: d.en }))
+    .sort((a, b) => a.ko.localeCompare(b.ko, "ko"));
+  const bandRows = bands.map((b) =>
+    breakdownRow(measure(cells, end, { pick: (deal) => deal.amount > b.lo && deal.amount <= b.hi }), b)
+  );
+  return { minWithNext: MIN_ROW, districts: districtRows, bands: bandRows };
+}
+
+const BREAKDOWN_TABLE = {
+  ko: {
+    district: "자치구",
+    band: "가격대",
+    head: ["신고가 뒤<br>≥", "아무 거래<br>뒤 ≥", "다음 거래<br>있는 신고가"],
+    seoul: "서울 전체",
+    thin: (n) => `표본 부족(n=${n})`,
+  },
+  en: {
+    district: "District",
+    band: "Price band",
+    head: ["≥ after<br>record", "≥ after<br>any sale", "Records<br>w/ next"],
+    seoul: "All Seoul",
+    thin: (n) => `too few (n=${n})`,
+  },
+};
+
+/** 표 아래 안내. 문턱 숫자는 데이터에서 읽는다(화면 스크립트에 문장을 두지 않는다 - 인라인 바이트). */
+export function breakdownNote(split, locale = "ko") {
+  if (!split) return null;
+  const n = split.minWithNext;
+  return locale === "en"
+    ? `The ‘≥’ columns are the same measure as the Seoul figure above: the share of cases where the next sale in the same complex and unit type matched or beat the sale before it (a record high, or any sale). Same record-high definition and thresholds as above; only the rows are split. Districts group complexes by district; price bands use the price of the sale being tested. Rows with fewer than ${n} record highs with a next sale are left blank. Sample sizes differ, so the rows are not ranked against each other.`
+    : `「≥」 칸은 위 서울 전체 문장과 같은 값입니다 — 신고가(또는 아무 거래) 바로 다음 같은 단지·평형 거래가 그 값 이상이었던 비율입니다. 위와 같은 신고가 정의·문턱으로 행만 나눴습니다. 자치구는 단지가 있는 구로, 가격대는 신고가인지 가르는 그 거래의 값으로 나눕니다. 다음 거래 있는 신고가가 ${n}건 미만인 행은 비율을 비웁니다. 행마다 표본 크기가 달라 행끼리 순위를 매기지 않습니다.`;
+}
+
+/** kind: "district" | "band". 첫 행은 대조로 둔 서울 전체(main). */
+export function breakdownTableHtml(rows, main, kind, locale = "ko") {
+  if (!rows?.length || !main) return null;
+  const t = BREAKDOWN_TABLE[locale];
+  const tag = locale === "en" ? "en-US" : "ko-KR";
+  const pct = (v) => (v === null || v === undefined ? "-" : `${v}%`);
+  const tr = (label, r) =>
+    r.enough
+      ? `<tr><td>${label}</td><td>${pct(r.record)}</td><td>${pct(r.all)}</td><td>${r.withNext.toLocaleString(tag)}</td></tr>`
+      : `<tr><td>${label}</td><td>-</td><td>-</td><td><span class="low-sample">${t.thin(r.withNext.toLocaleString(tag))}</span></td></tr>`;
+  const head = `<thead><tr>${[t[kind], ...t.head].map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead>`;
+  const seoul = tr(`<strong>${t.seoul}</strong>`, breakdownRow(main, { key: "seoul", ko: t.seoul, en: t.seoul }));
+  const body = rows.map((r) => tr(locale === "en" ? r.en : r.ko, r)).join("");
+  return `${head}<tbody>${seoul}${body}</tbody>`;
 }
