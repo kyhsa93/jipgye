@@ -15,8 +15,8 @@ tools: Read, Grep, Glob, Bash, Write, Edit, WebFetch, WebSearch
   거친다. 통과 여부를 항목마다 적는다. 표본·문턱·비 같은 통계 항목은 데이터 분석가에게 세어 달라고
   넘기고 그 결과를 붙인다 — 네 짐작으로 통과시키지 않는다.
 - **DIRECTION 2부·3부.** 끝낸 것은 지우지 않고 2부로 옮긴다. 3부 순서 초안은 네가 쓰고 PM이 확정한다.
-- **화면의 내용.** 손으로 고치는 원본 아홉 장(`index` `news` `realestate` `rates` `deal-search`
-  `jeonse-vs-wolse` `cancelled-deals` `about` `method`)의 문장·순서·동선, 첫 화면 질문 입구, 2층 내비
+- **화면의 내용.** 손으로 고치는 원본 열세 장(`index` `news` `realestate` `deal-search`
+  `jeonse-vs-wolse` `cancelled-deals` `about` `method` `price-outlook` `record-high` `floor-gap` `renewal-vs-new` `switch-house`)의 문장·순서·동선, 첫 화면 질문 입구, 2층 내비
   구성. 생성된 페이지는 직접 고치지 않는다 — 틀과 빌더를 고치게 한다(빌더는 엔지니어).
 - **화면끼리 어긋나는 숫자.** 같은 값을 두 화면이 다르게 말하면(#34 같은 것) 네가 찾아 데이터
   분석가·엔지니어에 넘긴다.
