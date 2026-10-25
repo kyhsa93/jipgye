@@ -10,7 +10,7 @@
 # 환경: NODE24_BIN  Node 24 바이너리 경로. 없으면 PATH 의 node, 그것도 아니면 <공유 폴더>/node24/bin/node 를 찾는다.
 #
 # 무엇을 보나: ① Node 의 process.features.typescript 가 "strip"(Node 24 타입 스트리핑) ② node_modules·tools/golden/node_modules·tools/typescript/node_modules 가 살아 있는 폴더
-#   ③ 저장소 루트에서 react-dom 이 풀린다(없으면 렌더가 막힌다 - PR #585 로 조용한 legacy 폴백은 없고 종료 1) ④ tools/golden 에서 parse5 가 풀린다
+#   ③ 저장소 루트에서 react-dom 이 풀린다(없으면 렌더가 막힌다 - PR #585 로 조용한 폴백은 없고 종료 1) ④ tools/golden 에서 parse5 가 풀린다
 #   ⑤ scripts/dev/golden-run.sh·golden-expect.mjs 가 있다 ⑥ tools/typescript/node_modules/.bin/tsc 가 실행 가능(CI 의 tsc 단계와 같은 도구 - gate.sh 가 쓴다).
 # 이 도구는 설치하지 않는다(npm ci 도 머신 설정도 건드리지 않는다). 공유 폴더 만드는 법은 아래 「공유 폴더」 참고.
 #

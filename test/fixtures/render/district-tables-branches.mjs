@@ -99,7 +99,7 @@ const add = (id, fn, cond, args, expect, extra = {}) => rows.push({ id, fn, cond
 // ================= 전환율 표 conversionTableHtml =================
 const CV_COLS = ["자치구", "전환율", "전세", "월세", "단지"];
 const CV_HEAD = frameHead(CV_COLS);
-const cvCaption = (text) => `<caption class="cost-label" style="caption-side:top;text-align:left;padding-bottom:8px;">${text}</caption>`;
+const cvCaption = (text) => `<caption class="cost-label" style="caption-side:top;text-align:left;padding-bottom:8px">${text}</caption>`;
 const cvTable = (label, bodyRows) => cvCaption(label) + CV_HEAD + tbody(bodyRows);
 const BANDS = [
   { key: "under60", label: "60㎡ 미만" },

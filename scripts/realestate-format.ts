@@ -57,8 +57,12 @@ export const KIND_FIELDS = {
   wolse: { metric: "wolse", value: "avgDeposit10k" },
 };
 
+// kind 는 KIND_FIELDS 의 자기 키(sale·jeonse·wolse)인 문자열만 받는다(#248 g, #593). 배열 ["jeonse"] 는 객체 키로 `"jeonse"` 가 되어 값은 찾으면서
+// `kind === "jeonse"` 판정은 거짓이라 라벨·규칙이 어긋났다. 모르는 kind 는 undefined 라 metricOf 는 null, valueOf 는 던진다(예전 그대로).
+export const kindField = (kind) => (typeof kind === "string" && Object.hasOwn(KIND_FIELDS, kind) ? KIND_FIELDS[kind] : undefined);
+
 export function metricOf(entry, kind) {
-  const field = KIND_FIELDS[kind];
+  const field = kindField(kind);
   if (!field) return null;
   const metric = entry?.[field.metric];
   if (!hasEnoughSample(metric)) return null;
@@ -66,7 +70,7 @@ export function metricOf(entry, kind) {
   return typeof value === "number" && Number.isFinite(value) ? metric : null;
 }
 
-export const valueOf = (metric, kind) => metric?.[KIND_FIELDS[kind].value] ?? null;
+export const valueOf = (metric, kind) => metric?.[kindField(kind).value] ?? null;
 
 export function resolveMetric(entry, kind) {
   const metric = metricOf(entry, kind);

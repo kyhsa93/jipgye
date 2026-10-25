@@ -601,7 +601,7 @@ function sortedDistricts(districts) {
   return [...districts].sort((a, b) => {
     const av = valueOf(resolveMetric(a, key)?.metric, key);
     const bv = valueOf(resolveMetric(b, key)?.metric, key);
-    if (av === null && bv === null) return (a.name ?? "").localeCompare(b.name ?? "");
+    if (av === null && bv === null) return (a.name ?? "").localeCompare(b.name ?? "", "ko");
     if (av === null) return 1;
     if (bv === null) return -1;
     return bv - av;

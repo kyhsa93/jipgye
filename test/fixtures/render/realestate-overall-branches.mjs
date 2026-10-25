@@ -262,9 +262,9 @@ for (const s of WSTATES) {
   add("OKN-07", "kind가 참인 비문자열(true) → \"서울 전체 -\"", [o, true], DASH, { held: "absent" });
   add("OKN-08", "kind 5 → \"서울 전체 -\"", [o, 5], DASH, { held: "absent" });
   add("OKN-09", "kind [] → \"서울 전체 -\"", [o, []], DASH, { held: "absent" });
-  add("OKN-10", "kind [\"sale\"]는 객체 키로 읽혀 매매를 찾는다(전세 카드 규칙은 아니다)", [o, ["sale"]], CARD("평당가", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래건수", "40건"));
-  add("OKN-11", "kind [\"jeonse\"]는 전세 값을 찾지만 === \"jeonse\"가 아니라 평당가 라벨·전세가율·단지별 카드 없음", [o, ["jeonse"], null, { median: 46.7, cells: 13 }], CARD("평당가", "3,000만원") + CARD("84㎡ 환산", "7억 6,230만원") + CARD("거래건수", "30건"));
-  add("OKN-12", "kind [\"wolse\"]는 월세 값을 찾지만 === \"wolse\"가 아니라 평당가 라벨(값은 월세의 평균 보증금)", [o, ["wolse"]], CARD("평당가", "2억 264만원") + CARD("84㎡ 환산", "51억 4,906만원") + CARD("거래건수", "25건"));
+  add("OKN-10", "kind [\"sale\"]는 문자열이 아니라 모르는 kind → \"서울 전체 -\" (#248 g: 전에는 객체 키로 읽혀 매매를 찾았다)", [o, ["sale"]], DASH, { held: "absent" });
+  add("OKN-11", "kind [\"jeonse\"]도 문자열이 아니라 모르는 kind → \"서울 전체 -\" (#248 g: 전에는 전세 값을 찾으면서 === \"jeonse\" 가 아니라 평당가 라벨·전세가율·단지별 카드가 빠졌다)", [o, ["jeonse"], null, { median: 46.7, cells: 13 }], DASH, { held: "absent" });
+  add("OKN-12", "kind [\"wolse\"]도 문자열이 아니라 모르는 kind → \"서울 전체 -\" (#248 g: 전에는 월세 값을 찾으면서 평당가 라벨로 낸다)", [o, ["wolse"]], DASH, { held: "absent" });
 }
 
 // ================= 전세가율 카드와 그 밑 건수(ratioBasis) =================

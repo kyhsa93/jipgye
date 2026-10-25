@@ -1,10 +1,10 @@
-// 첫 화면 실거래 요약 표(realestateHtml)가 같이 쓰는 것. 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 칸 규칙·같은 정렬을 쓴다(#241 PR 3).
+// 첫 화면 실거래 요약 표(realestateHtml)가 같이 쓰는 것. 순수 모듈 - render/entry.jsx(JSX)가 이 칸 규칙·정렬을 쓴다(#241 PR 3).
 // 여기서 `prerender.ts`·`renderer.mjs`를 불러오면 안 된다(로더가 막는다). 글자(HTML)는 만들지 않는다 - 칸 하나가 어떤 모양인지(없음·표본 부족·값)와
-// 그 값의 글자만 정하고, 마크업은 쓰는 쪽(legacy 문자열, JSX 요소)이 입힌다. 그래야 분기가 한 곳에만 있다.
+// 그 값의 글자만 정하고, 마크업은 쓰는 쪽(JSX 요소)이 입힌다. 그래야 분기가 한 곳에만 있다.
 //
 // 표본 문턱(MIN_SAMPLE)과 그 판정(hasEnoughSample)은 realestate-format.mjs의 것을 쓴다 - 둘이던 것(prerender.ts 49행)을 하나로 했다.
 // DIRECTION 해자 2: 표본이 모자라면 값을 내지 않고 모자란다고 적는다(`low`) - 이 판정을 건너뛰는 변경은 방향에 어긋난다.
-import { KIND_FIELDS, hasEnoughSample } from "./realestate-format.ts";
+import { hasEnoughSample, kindField } from "./realestate-format.ts";
 
 // 첫 화면에 그리는 자치구 수. 모바일에서 표는 행마다 카드로 펼쳐지므로
 // 열한 행이면 요약까지 1,500px을 내려야 한다. 나머지는 표 밑 '더 보기'로 편다.
@@ -44,12 +44,12 @@ export function withheldOf(metric) {
  *  - { type: "low", count }: 신고가 MIN_SAMPLE 건 아래라 평균을 내지 않는다 → "표본 N건". `count`는 `transactionCount` 그대로(숫자가 아니어도 그대로 적는다)
  *  - { type: "value", text, change, count }: 값. 월세는 증감을 내지 않는다(change는 null)
  *    서울 전체 줄(`overall`)에서 증감을 보류했으면 건수 자리에 보류 문구가 온다(그 문구가 건수를 품는다). 자치구 줄은 증감만 빠지고 건수는 그대로다.
- * `kind`는 realestate-format.mjs의 KIND_FIELDS 키(sale·jeonse·wolse).
+ * `kind`는 realestate-format.mjs의 KIND_FIELDS 키인 문자열(sale·jeonse·wolse)이다 - 배열 등 다른 값은 던진다.
  */
 export function metricCell(kind, metric, overall = false) {
   if (!metric) return { type: "none" };
   if (!hasEnoughSample(metric)) return { type: "low", count: metric.transactionCount };
-  const value = metric[KIND_FIELDS[kind].value];
+  const value = metric[kindField(kind).value];
   if (!value) return { type: "none" };
   if (kind === "wolse") return { type: "value", text: `${man(value)} / 월 ${man(metric.avgMonthlyRent10k)}`, change: null, count: countOf(metric) };
   const withheld = overall ? withheldOf(metric) : null;

@@ -1,9 +1,9 @@
 // 예산대 장 조각의 모양과 값 글자 (#243 PR A: 잎 조각 여덟 개 budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·
 // budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml, PR B: 후보 단지 budgetCandidatesHtml·합성 budgetBodyHtml과 helper budgetDealHtml·budgetWhereHtml·budgetWhen).
-// 순수 모듈 - prerender.ts(legacy)와 render/entry.jsx(JSX)가 같은 규칙을 쓴다.
+// 순수 모듈 - render/entry.jsx(JSX)가 이 규칙을 쓴다.
 //
 // 이 모듈은 HTML을 만들지 않는다: 어느 문단이 나오는지·어떤 줄이 있는지·글자가 무엇인지만 정하고, 클래스·태그·`data-prerendered`·이스케이프는
-// 쓰는 쪽(legacy 문자열·JSX 요소)이 각자 입힌다. 모듈이 마크업을 들고 있으면 한 곳의 오타를 같은 실행 비교가 못 잡는다(#255~#257·#242 PR 3과 같은 방식).
+// 쓰는 쪽(JSX 요소)이 입힌다. 모듈이 마크업을 들고 있으면 한 곳의 오타를 같은 실행 비교가 못 잡는다(#255~#257·#242 PR 3과 같은 방식).
 // 표본 문턱·해자 `low-sample` 분기는 없다 - 이 조각들은 값을 못 낸 자리를 비우거나 줄을 빼기만 하고, 후보 단지의 "같은 평형 6개월 3번 이상" 문턱은
 // 렌더 때가 아니라 빌더가 만든 데이터 칸(`cell.n`, complex-price.mjs MIN_DEALS)에 이미 반영돼 있다(candidatesInBand는 거르지 않는다). 정책대출 건수가 없으면 문장 자체가 빠진다(policySentence).
 // budgetWhereHtml의 0.5·10개 구는 표본 문턱이 아니라 문장 선택 문턱이다(상위 세 구가 절반을 넘으면 "몰렸다", 아니면 열 개 구 이상일 때만 "흩어졌다").
@@ -36,7 +36,7 @@ export const eokText = (value10k) => {
 
 /**
  * 예산대 하한(억). 유한한 숫자가 아니면(없음·문자열·NaN·Infinity) null이고, 조각은 문단을 내지 않는다.
- * 문자열 "50000"도 null이다 - Number.isFinite는 엄격하다(legacy 그대로).
+ * 문자열 "50000"도 null이다 - Number.isFinite는 엄격하다(예전 문자열 렌더 그대로).
  */
 export const eokOf = (band) => (Number.isFinite(band?.min10k) ? band.min10k / 10_000 : null);
 
@@ -76,7 +76,7 @@ export function costsNote(band) {
 /**
  * "그래서 매달 얼마" 문단(scripts/mortgage.mjs). basis는 mortgage.ts latestRate의 { rate, month }(한국은행 ECOS 주담대 신규취급 평균금리,
  * #577 - 전에는 금감원 공시 상품 최저금리의 중앙값)이다. 금리가 없으면(쓸 달이 없으면) 문장이 없다.
- * 문장은 legacy가 이스케이프 없이 끼우던 자리다 - 글자는 전부 숫자 서식과 코드 상수(mortgage.mjs)라 `& < > "`가 들 수 없다(PR 본문의 raw 보간 전수표).
+ * 문장은 예전 문자열 렌더가 이스케이프 없이 끼우던 자리다 - 글자는 전부 숫자 서식과 코드 상수(mortgage.mjs)라 `& < > "`가 들 수 없다(PR 본문의 raw 보간 전수표).
  * mortgageSeries(조각의 셋째 인자)는 호출부 호환으로만 남아 있다(1년 사이 변화 문장은 method.html로 갔다, #66) - 읽지 않는다.
  */
 export function loanNote(band, basis) {
@@ -134,7 +134,7 @@ export const budgetWhen = (date) => {
 };
 
 /**
- * 거래 한 줄의 네 칸 글자({ place, spec, when, price }). 전부 문자열이다(legacy가 escapeHtml에 넘기던 값 - 입력 글자는 `join`·템플릿을 거쳐 이미 문자열).
+ * 거래 한 줄의 네 칸 글자({ place, spec, when, price }). 전부 문자열이다(예전 문자열 렌더가 escapeHtml에 넘기던 값 - 입력 글자는 `join`·템플릿을 거쳐 이미 문자열).
  * 장소는 구·동·단지 중 있는 것만 공백으로 잇고, 규격은 "면적㎡ · N층"이다.
  */
 export function dealShape(deal) {
@@ -181,7 +181,7 @@ const AREA_BANDS: [string, (r: { area: number }) => boolean][] = [
  *
  * 예산대나 단지 파일이 없으면 null(조각은 빈 문자열). 후보가 없으면 { empty: 문장 }, 있으면 { intro, bandCounts, districts, rows, moreHref, moreText }.
  * 문턱("같은 평형이 6개월에 3번 이상")은 여기서 정하지 않는다 - 빌더가 이미 칸(`cell.n`)에 반영했고 candidatesInBand는 거르지 않는다.
- * rows[].apt은 입력 그대로(legacy가 escapeHtml(값 ?? "")하던 자리라 JSX가 str()로 바꾼다), 나머지 글자는 전부 문자열이다. moreHref는 `&`를 그대로 쓴다(legacy는 `&amp;`로 적고 React는 속성값의 `&`를 `&amp;`로 낸다).
+ * rows[].apt은 입력 그대로(예전 문자열 렌더가 escapeHtml(값 ?? "")하던 자리라 JSX가 str()로 바꾼다), 나머지 글자는 전부 문자열이다. moreHref는 `&`를 그대로 쓴다(예전 문자열 렌더는 `&amp;`로 적었고 React는 속성값의 `&`를 `&amp;`로 낸다).
  */
 export function candidatesShape(band, complexFiles) {
   if (!band || !complexFiles?.length) return null;
@@ -228,7 +228,7 @@ export function candidatesShape(band, complexFiles) {
 /**
  * 예산대 본문 맨 앞(거래 요약·신고분 기준·거래가 많은 지역)의 모양. 예산대가 없으면 null(조각도 null - 합성 조각 가운데 이것만 빈 결과가 null이다).
  * { summary, periods, districts }: periods는 "" 또는 "9월, 8월 신고분 기준", districts는 [{ name(입력 그대로 - JSX가 str()), count(숫자 서식 글자) }].
- * 읽는 순서(신고분 → 지역 → 요약)는 legacy 그대로다 - 입력이 이상할 때 던지는 자리가 같아야 한다.
+ * 읽는 순서(신고분 → 지역 → 요약)는 예전 그대로다 - 입력이 이상할 때 던지는 자리가 같아야 한다.
  */
 export function bodyShape(band, periodList) {
   if (!band) return null;

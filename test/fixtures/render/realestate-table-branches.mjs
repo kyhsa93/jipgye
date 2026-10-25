@@ -478,9 +478,9 @@ for (const s of WSTATES) {
   add("NM-14", fn, "이름 [] → 빈 글자", [data([nm([])])], SALE_ROW(""));
   add("NM-15", fn, "이름이 [\"종로구\"]면 객체 키로 읽혀 종로구 링크(글자는 \"종로구\") - 예전 그대로", [data([nm(["종로구"])])], SALE_ROW(link("종로구", "jongno")));
   add("NM-16", fn, "이름 \"서울 전체\"인 자치구 줄은 링크 없는 글자·class 비어 있음", [data([nm("서울 전체")])], SALE_ROW("서울 전체"));
-  add("NM-17", fn, "이름 \"constructor\"는 객체 기본 키라 링크 경로가 함수 글자가 된다(& < > \"가 없다) - 예전 그대로", [data([nm("constructor")])], SALE_ROW(`<a href="./district-function Object() { [native code] }.html">constructor</a>`));
-  add("NM-18", fn, "이름 \"__proto__\"는 객체 글자 [object Object]가 경로가 된다 - 예전 그대로", [data([nm("__proto__")])], SALE_ROW(`<a href="./district-[object Object].html">__proto__</a>`));
-  add("NM-19", fn, "이름 \"toString\"", [data([nm("toString")])], SALE_ROW(`<a href="./district-function toString() { [native code] }.html">toString</a>`));
+  add("NM-17", fn, "이름 \"constructor\"는 객체 기본 키지만 DISTRICT_SLUGS 자기 키가 아니라 링크 없는 글자(#248 c)", [data([nm("constructor")])], SALE_ROW("constructor"));
+  add("NM-18", fn, "이름 \"__proto__\"도 링크 없는 글자(#248 c)", [data([nm("__proto__")])], SALE_ROW("__proto__"));
+  add("NM-19", fn, "이름 \"toString\"도 링크 없는 글자(#248 c)", [data([nm("toString")])], SALE_ROW("toString"));
   add("NM-20", fn, "이름 개행·한글·이모지는 그대로", [data([nm("a\n한글 😀")])], SALE_ROW("a\n한글 😀"));
   add("NM-21", fn, "서울 전체 줄의 이름은 입력과 무관하게 고정(overall.name 특수문자)", [data([], { name: SP, sale: sale() }), "sale"], rowTr("서울 전체", [tdA("평당가", STRONG("6,000만원") + UP("120만원")), tdA("84㎡ 환산", STRONG("15억 2,459만원")), tdA("거래건수", COUNT("40건"))], { overall: true }));
   add("NM-22", fn, "이름이 toString()으로 자치구 이름을 돌려주는 객체면 링크(글자도 그 이름) - 객체를 React 자식으로 넘기면 던지므로 글자로 바꿔 낸다", [data([nm({ toString: () => "종로구" })])], SALE_ROW(link("종로구", "jongno")));

@@ -1,5 +1,5 @@
 // 이식된 조각의 목록 (#237). 이름은 prerender.ts의 `*Html()` 함수 이름 그대로, 값은 같은 인자를 받아 React 요소를 돌려주는 함수다.
-// 데이터가 없을 때는 legacy처럼 null을 돌려준다(그러면 자리표시가 legacy와 같은 방식으로 비게 된다). legacy가 null이 아니라 빈 문자열("")을 내는 조각(자치구 문장 묶음·예산대 잎 8개)은 빈 조각으로 ""를 낸다 - 둘은 자리표시 치환에서 다르다.
+// 데이터가 없을 때는 null을 돌려준다(그러면 자리표시가 비게 된다). 말할 것이 없어도 null이 아니라 빈 문자열("")을 내는 조각(자치구 문장 묶음·예산대 잎 8개)은 빈 조각으로 ""를 낸다 - 둘은 자리표시 치환에서 다르다.
 // 여기서 `scripts/prerender.ts`를 불러오면 안 된다(로더가 막는다). 계산은 순수 모듈에서 가져온다.
 //
 // 이식된 것: (ratesHtml·ratesHeadHtml 은 #240 에서 이식했다가 금리 4장과 함께 지웠다 - #577 B2) summaryHtml·marketHtml·newsContextHtml·newsHtml·newsSummaryHtml·
@@ -18,56 +18,18 @@ import { factSentences } from "../district-facts.ts";
 import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-links.ts";
 import { cancelDistricts, cancelMonths, conversionTable, floorDistricts, renewalDistricts, renewalWolseDistricts } from "../district-tables.ts";
 import { FALLBACK_NOTE_KO, hasFallback } from "../summary-note.ts";
-import { SUMMARY_CATEGORIES_LABEL_KO, SUMMARY_HIGHLIGHTS_LABEL_KO, summaryMetaKo } from "../summary-box.ts";
 import { metricCell, topDistricts } from "../realestate-rows.ts";
 import { overallCards } from "../realestate-overall.ts";
 import { headLabels, realestateTable } from "../realestate-table.ts";
 import { renewalSentences } from "../renewal-facts.ts";
 
-// legacy `escapeHtml(value)`의 값 변환(`String(value ?? "")`). React는 문자열·숫자만 글자로 내고 false·null·객체·배열은 비우거나 다르게 내거나 던지므로,
-// legacy가 `escapeHtml`을 거치던 자리는 전부 이 함수를 거친다(비문자열 값이 "[object Object]"·"false"로 나오는 것까지 같게 맞춘다).
+// 옛 문자열 렌더의 `escapeHtml(value)`가 하던 값 변환(`String(value ?? "")`). React는 문자열·숫자만 글자로 내고 false·null·객체·배열은 비우거나 다르게 내거나 던지므로,
+// 옛 문자열 렌더가 `escapeHtml`을 거치던 자리는 전부 이 함수를 거친다(비문자열 값이 "[object Object]"·"false"로 나오는 것까지 같게 맞춘다).
 const str = (value) => String(value ?? "");
 
 // ---- 문장·목록 조각 (#241 PR 1) ----
 
-// 첫 화면 AI 요약 상자: legacy summaryHtmlLegacy 와 같은 마크업·구조·글(index.html renderSummary 가 그리는 모양, #352).
-// 하이라이트 구획(있을 때) → 분류 라벨 + 줄 div → 검증 폴백 안내(#350) → `.summary-meta`. 분류가 없으면 legacy 처럼 null.
-function summary(data) {
-  const categories = Array.isArray(data?.categories) ? data.categories : [];
-  if (!categories.length) return null;
-  const highlights = Array.isArray(data?.highlights) ? data.highlights : [];
-  return (
-    <>
-      {highlights.length ? (
-        <>
-          <div className="summary-highlights">
-            <div className="summary-section-label">{SUMMARY_HIGHLIGHTS_LABEL_KO}</div>
-            {highlights.map((h, i) => (
-              <div className="summary-highlight" key={`h${i}`}>
-                <a href={str(h.link)} target="_blank" rel="noopener">
-                  {str(h.title)}
-                </a>
-                <span className="summary-link-source">{` · ${str(h.source)}`}</span>
-                <div className="summary-highlight-text">{str(h.textKo)}</div>
-              </div>
-            ))}
-          </div>
-          <div className="summary-section-label">{SUMMARY_CATEGORIES_LABEL_KO}</div>
-        </>
-      ) : null}
-      {categories.map((c, i) => (
-        <div className="summary-category" key={`c${i}`}>
-          <div className="summary-category-label">{str(c.name)}</div>
-          <div className="summary-category-line">{str(c.lineKo)}</div>
-        </div>
-      ))}
-      {hasFallback(categories) ? <div className="summary-fallback-note">{FALLBACK_NOTE_KO}</div> : null}
-      <span className="summary-meta">{summaryMetaKo(data)}</span>
-    </>
-  );
-}
-
-// 첫 화면 돈의 값 한 줄(#575 PR2): legacy marketHtmlLegacy 와 같은 글 - 기준금리 → 환율, " · " 로 잇는다.
+// 첫 화면 돈의 값 한 줄(#575 PR2): 기준금리 → 환율, " · " 로 잇는다.
 function market(data) {
   if (!data) return null;
   const parts = [];
@@ -103,7 +65,7 @@ const NewsItem = ({ item }) => (
   </li>
 );
 
-// 첫 화면 뉴스 자리: 뉴스 화면으로 가는 한 줄(#575 PR2). legacy newsHtmlLegacy 와 같은 마크업.
+// 첫 화면 뉴스 자리: 뉴스 화면으로 가는 한 줄(#575 PR2).
 function newsIndex(news) {
   const n = Array.isArray(news?.items) ? news.items.length : 0;
   if (!n) return null;
@@ -304,18 +266,13 @@ function districtLinks(current = null, heading = "다른 지역") {
 const LowSample = ({ children }) => <span className="low-sample">{children}</span>;
 const GapCell = ({ gap }) => (gap.low ? <LowSample>표본 부족</LowSample> : gap.text);
 
-// legacy의 caption은 `style="caption-side:top;text-align:left;padding-bottom:8px;"`로 끝에 `;`가 있다(틀의 화면 스크립트가 만드는 글자와 같다). React는 style 객체를 `;`로 이어 쓰기만 하고
-// 끝에 `;`를 달지 못하며, 값 문자열에 `;`를 달면 개발 빌드가 stderr로 경고한다(`/;\s*$/` 검사, react-dom 19.3.0). 경고 검사는 값을 문자열로 읽고(hint "string") 출력은 `"" + 값`(hint "default")으로
-// 이어 붙이므로, 두 읽기를 달리 돌려주는 값으로 경고 없이 같은 글자를 낸다. React를 올려 이 동작이 바뀌면 caption 바이트나 stderr가 달라져 parity 시험이 바로 실패한다.
-const withTrailingSemicolon = (text) => ({ [Symbol.toPrimitive]: (hint) => (hint === "string" ? text : `${text};`) });
-
 // 전환율 표.
 function conversionTableJsx(conversion, band) {
   const table = conversionTable(conversion, band);
   if (!table) return null;
   return (
     <>
-      <caption className="cost-label" style={{ captionSide: "top", textAlign: "left", paddingBottom: withTrailingSemicolon("8px") }}>
+      <caption className="cost-label" style={{ captionSide: "top", textAlign: "left", paddingBottom: "8px" }}>
         {table.caption}
       </caption>
       <thead>
@@ -772,7 +729,6 @@ function budgetBodyJsx(band, periodList, loanBasis = null, mortgageSeries = null
 }
 
 export const fragments = {
-  summaryHtml: summary,
   marketHtml: market,
   realestateHtml: realestate,
   realestateHeadHtml: realestateHead,

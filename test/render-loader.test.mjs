@@ -18,7 +18,7 @@ after(() => rm(CACHE, { recursive: true, force: true }));
 test("로더: JSX를 컴파일해 모듈로 돌려주고 임시 산출물을 남기지 않는다", async () => {
   const before = await leftovers();
   const mod = await loadJsxModule(fixture("fragments.jsx"), { cacheDir: CACHE });
-  assert.deepEqual(Object.keys(mod.fragments).sort(), ["marketHtml", "newsHtml", "summaryHtml"]);
+  assert.deepEqual(Object.keys(mod.fragments).sort(), ["listHtml", "marketHtml", "newsHtml"]);
   assert.deepEqual(await leftovers(), before, "node_modules/.cache/jipgye-render에 임시 폴더가 남았다");
 });
 
@@ -35,17 +35,16 @@ test("로더: 진입 파일이 렌더러를 만드는 모듈(prerender.ts)을 �
 
 test("react 진입점: 이식된 조각 목록을 조회하고 React 요소를 문자열로 그린다", async () => {
   const r = await createReactRenderer({ entry: fixture("fragments.jsx") });
-  assert.deepEqual(r.names(), ["marketHtml", "newsHtml", "summaryHtml"]);
-  assert.equal(r.has("summaryHtml"), true);
+  assert.deepEqual(r.names(), ["listHtml", "marketHtml", "newsHtml"]);
+  assert.equal(r.has("listHtml"), true);
   assert.equal(r.has("ratesHtml"), false);
-  const html = r.render("summaryHtml", [{ highlights: [{ title: "제목", link: "u", source: "S", textKo: "본문" }], categories: [{ name: "분야", lineKo: "한 줄" }] }]);
-  assert.ok(html.includes("<div class=\"summary-category-label\">분야</div><div class=\"summary-category-line\">한 줄</div>"), html);
+  const html = r.render("listHtml", [{ items: [{ title: "제목", link: "u" }] }]);
   assert.ok(html.includes("<a href=\"u\" target=\"_blank\" rel=\"noopener\">제목</a>"), html);
 });
 
-test("react 진입점: `'`는 그대로 두고(옛 legacy escapeHtml 과 같은 글자) &, <, >, \"는 React가 낸 대로 이스케이프한다", async () => {
+test("react 진입점: `'`는 그대로 두고(옛 문자열 렌더의 escapeHtml 과 같은 글자) &, <, >, \"는 React가 낸 대로 이스케이프한다", async () => {
   const r = await createReactRenderer({ entry: fixture("fragments.jsx") });
-  const html = r.render("summaryHtml", [{ highlights: [{ title: `it's <b> & "q"`, link: "u", source: "S", textKo: "x" }], categories: [{ name: "c", lineKo: "l" }] }]);
+  const html = r.render("listHtml", [{ items: [{ title: `it's <b> & "q"`, link: "u" }] }]);
   assert.ok(html.includes(`>it's &lt;b&gt; &amp; &quot;q&quot;</a>`), html);
   assert.ok(!html.includes("&#x27;"));
 });
@@ -53,7 +52,7 @@ test("react 진입점: `'`는 그대로 두고(옛 legacy escapeHtml 과 같은 
 test("react 진입점: 조각이 null을 주면(데이터 없음) null이고, 던지면 그 오류가 그대로 올라온다", async () => {
   const r = await createReactRenderer({ entry: fixture("fragments.jsx") });
   assert.equal(r.render("marketHtml", [null]), null);
-  assert.equal(r.render("summaryHtml", [null]), null);
+  assert.equal(r.render("listHtml", [null]), null);
   assert.throws(() => r.render("newsHtml", [null]), /의도한 조각 실패/);
 });
 

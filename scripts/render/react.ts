@@ -1,7 +1,7 @@
 // React 렌더러의 진입점 한 곳 (#237). 조각 함수는 각자 로더를 부르지 않고, 이 파일이 만든 렌더러를 `scripts/prerender.ts`의 래퍼를 거쳐 쓴다.
 //
 // 이식된 조각의 목록은 진입 JSX(`entry.jsx`)의 `fragments`다. 이름은 `prerender.ts`의 `*Html()` 함수 이름이고,
-// 값은 그 함수와 같은 인자를 받아 React 요소를 돌려주는 함수다. 조각 42개가 모두 여기 있다(문자열 legacy 본문은 #248 P3 가 지웠다).
+// 값은 그 함수와 같은 인자를 받아 React 요소를 돌려주는 함수다. 조각 41개가 모두 여기 있다(문자열 legacy 본문은 #248 P3 가 지웠다).
 //
 // 실패는 예외로 올라간다: 로더 오류, 진입 모듈 모양 오류, 조각을 그리다 난 오류 모두 삼키지 않는다(폴백은 없다, #248 P1).
 import path from "node:path";
@@ -10,8 +10,8 @@ import { loadJsxModule } from "./load-jsx.ts";
 
 export const DEFAULT_ENTRY = path.join(import.meta.dirname, "entry.jsx");
 
-// React는 텍스트와 속성값의 `'`를 `&#x27;`로 낸다. 옛 legacy `escapeHtml`은 그대로 두었고 나가는 바이트는 그 꼴로 굳어 있으므로(뜻은 같다) 여기서 한 줄로 맞춘다.
-const toLegacyApostrophe = (html) => html.replaceAll("&#x27;", "'");
+// React는 텍스트와 속성값의 `'`를 `&#x27;`로 낸다. 나가는 바이트는 문자열 렌더 시절부터 `'` 그대로 굳어 있으므로(뜻은 같다) 여기서 한 줄로 맞춘다.
+const keepApostrophe = (html) => html.replaceAll("&#x27;", "'");
 
 export async function createReactRenderer({ entry = DEFAULT_ENTRY } = {}) {
   const { fragments } = await loadJsxModule(entry);
@@ -29,7 +29,7 @@ export async function createReactRenderer({ entry = DEFAULT_ENTRY } = {}) {
     /** 자리표시에 꽂는 문자열. 조각이 null을 주면(데이터 없음) 그대로 null이다. */
     render(name, args) {
       const element = table.get(name)(...args);
-      return element == null ? null : toLegacyApostrophe(renderToStaticMarkup(element));
+      return element == null ? null : keepApostrophe(renderToStaticMarkup(element));
     },
   };
 }

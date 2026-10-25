@@ -6,7 +6,6 @@ import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import * as prerender from "../scripts/prerender.ts";
-import { INDEX_NEWS, indexNewsItems } from "../scripts/news-items.ts";
 import { escapeHtml } from "../scripts/html-escape.ts";
 import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../scripts/district-links.ts";
 import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
@@ -18,7 +17,6 @@ import { overallCards, ratioBasis } from "../scripts/realestate-overall.ts";
 import { BUDGET_MORE_LINKS, CANDIDATE_LIST, bodyShape, budgetAnswers, budgetBandLabel, budgetRuleHref, budgetWhen, candidatesShape, capNote, costsNote, dealShape, eokOf, eokText, loanNote, minCashNote, policyNote, whereText } from "../scripts/budget-fragments.ts";
 import { DESIGN_ATTRS, stripDesignAttrs } from "../scripts/design-attrs.ts";
 import { createReactRenderer } from "../scripts/render/react.ts";
-import { SUMMARY_BASIC, SUMMARY_TWIN_CASES } from "./fixtures/render/summary-expected.mjs";
 import { JAVASCRIPT_URL_DIFF, NEWS_MARKET_BRANCHES } from "./fixtures/render/news-market-branches.mjs";
 import { LEAD_LINKS_BRANCHES, LEAD_LINKS_FNS } from "./fixtures/render/lead-links-branches.mjs";
 import { RAW_COUNT_DIFF, REALESTATE_BRANCHES } from "./fixtures/render/realestate-branches.mjs";
@@ -29,10 +27,10 @@ import { BUDGET_LEAVES_BRANCHES, BUDGET_LEAVES_FNS, BUDGET_LEAVES_THROWS } from 
 import { BUDGET_BODY_KNOWN_DIFFS, BUDGET_CB_BRANCHES, BUDGET_CB_FNS, BUDGET_CB_THROWS } from "./fixtures/render/budget-candidates-body-branches.mjs";
 
 // #237: 렌더러와 조각 분기 표 시험의 골격(#248 P2 이전에는 legacy↔react parity 시험이었다: 기준을 legacy 출력에서 손으로 적은 기대값으로 옮겼다). #240이 금리 조각(ratesHtml·ratesHeadHtml)의 분기별 케이스를 더했고(#577 B2 로 금리 4장과 함께 지웠다)
-// #241 PR 1이 문장·목록 8개(summaryHtml·marketHtml·뉴스 6개)를, PR 2가 리드·링크 10개(*LeadHtml 6·*DistrictLinksHtml 4)를,
+// #241 PR 1이 문장·목록 8개(summaryHtml·marketHtml·뉴스 6개 - summaryHtml 은 #593 에서 지웠다)를, PR 2가 리드·링크 10개(*LeadHtml 6·*DistrictLinksHtml 4)를,
 // PR 3이 첫 화면 실거래 요약(realestateHtml)을, #242 PR 1이 자치구 문장·링크 4개와 표 6개를, PR 2가 시세표 머리글·표(realestateHeadHtml·realestateTableHtml)를, PR 3이 시세 요약 카드(realestateOverallHtml)를,
 // #243 PR A가 예산대 잎 조각 8개(budgetAnswersHtml·budgetMoreHtml·budgetMinCashHtml·budgetPolicyHtml·budgetCapHtml·budgetCostsHtml·budgetFactsHtml·budgetLoanHtml)를, PR B가 후보 단지와 합성(budgetCandidatesHtml·budgetBodyHtml)을
-// 더해 prerender.ts의 조각 44개(지금은 42개)가 모두 이식됐다(서브프로세스 시험이 "이식 완료 상태"를 검증한다).
+// 더해 prerender.ts의 조각 44개(지금은 41개)가 모두 이식됐다(서브프로세스 시험이 "이식 완료 상태"를 검증한다).
 // 입력은 이 파일 안의 값과 test/fixtures/render/의 고정 파일뿐이다(R3): 저장소의 docs/·docs/data는 읽지 않는다.
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -53,8 +51,6 @@ const sameHtmlStrict = (actual, expected, msg) => assert.strictEqual(norm(actual
 // scripts/render/react.ts 의 렌더러를 직접 불러(prerender.ts 래퍼가 쓰는 것과 같은 render(), `'` 되돌림 포함) 조각 이름과 인자로 그린다.
 const renderer = await createReactRenderer();
 const draw = (fn, ...args) => renderer.render(fn, args);
-// 요약 상자의 .summary-meta 안쪽(날짜 글자)은 ICU 판에 따라 달라질 수 있어 자리표시로 바꿔 맞댄다.
-const noMeta = (html) => html.replace(/<span class="summary-meta">[^<]*<\/span>$/, '<span class="summary-meta">META</span>');
 // 입력을 바꾸지 않는지 보려고 인자를 글자로 뜬다(undefined·비유한 수·함수도 구별한다).
 const snap = (args) => JSON.stringify(args, (_, v) => (v === undefined ? "(undefined)" : typeof v === "number" && !Number.isFinite(v) ? String(v) : typeof v === "function" ? "(fn)" : v));
 
@@ -70,7 +66,7 @@ test("내용 비교의 정규화는 class·style 둘만 지운다(셋째가 생�
   assert.equal(norm('<p>class="tw:p-2" style="y"</p>'), '<p>class="tw:p-2" style="y"</p>');
 });
 
-test("prerender.ts의 *Html() 조각은 이식 목록(PORTED) 42개와 같은 이름 전부이고 함수 이름이 그대로다", () => {
+test("prerender.ts의 *Html() 조각은 이식 목록(PORTED) 41개와 같은 이름 전부이고 함수 이름이 그대로다", () => {
   const names = Object.keys(prerender).filter((k) => k.endsWith("Html") && k !== "escapeHtml").sort();
   assert.deepEqual(names, PORTED, "prerender.ts의 조각 이름이 이식 목록과 다르다");
   for (const name of names) {
@@ -82,18 +78,7 @@ test("prerender.ts의 *Html() 조각은 이식 목록(PORTED) 42개와 같은 �
 });
 
 test("기본값(react): prerender.ts 래퍼의 출력이 고정 기대 문자열과 같다", () => {
-  // 날짜 글자는 ICU 판에 따라 달라질 수 있어 .summary-meta 안쪽은 자리표시로 바꿔 비교한다(그 글자는 summary-box.test.mjs 가 본다).
-  assert.equal(noMeta(prerender.summaryHtml(SUMMARY_BASIC.input)), SUMMARY_BASIC.expect);
-  assert.equal(prerender.summaryHtml(null), null);
   assert.equal(prerender.marketHtml(null), null);
-});
-
-test("fixture 쌍둥이 골격: 같은 입력에서 fixtures/fragments.jsx(summaryHtml 쌍둥이)의 출력이 고정 기대 문자열과 같다", async () => {
-  const twin = await createReactRenderer({ entry: fixture("fragments.jsx") });
-  for (const [input, expected] of SUMMARY_TWIN_CASES) {
-    const out = twin.render("summaryHtml", [input]);
-    assert.equal(out === null ? null : noMeta(out), expected, JSON.stringify(input));
-  }
 });
 
 // react 렌더 실패가 삼켜지지 않는다는 것을 본다(#248 P2: legacy 모드 갈래는 지웠다 - 지금 렌더 경로는 react 하나다):
@@ -158,9 +143,8 @@ const PORTED = [
   "renewalLeadHtml",
   "renewalWolseDistrictsHtml",
   "renewalWolseLeadHtml",
-  "summaryHtml",
 ];
-const NEWS_MARKET_FNS = ["marketHtml", "newsContextHtml", "newsHtml", "newsKospiHtml", "newsListHtml", "newsRealestateStatsHtml", "newsSummaryHtml", "summaryHtml"];
+const NEWS_MARKET_FNS = ["marketHtml", "newsContextHtml", "newsHtml", "newsKospiHtml", "newsListHtml", "newsRealestateStatsHtml", "newsSummaryHtml"];
 
 test("react 모드: 이식된 조각 목록이 PORTED와 같고, 그 이름은 전부 prerender.ts의 *Html() 조각이다(오타·없는 조각을 막는다)", () => {
   assert.deepEqual(renderer.names(), PORTED);
@@ -170,8 +154,8 @@ test("react 모드: 이식된 조각 목록이 PORTED와 같고, 그 이름은 �
   }
 });
 
-test("prerender.ts 래퍼(기본값 react): 이식 완료 상태(조각 42개 전부 React - 금리 조각 둘은 #577 B2 로 지웠다)이고, 모든 분기 표에서 래퍼 출력이 기대값과 같고 React 경고가 없다", () => {
-  assert.equal(PORTED.length, 42);
+test("prerender.ts 래퍼(기본값 react): 이식 완료 상태(조각 41개 전부 React - 금리 조각 둘은 #577 B2 로 지웠다)이고, 모든 분기 표에서 래퍼 출력이 기대값과 같고 React 경고가 없다", () => {
+  assert.equal(PORTED.length, 41);
   assert.deepEqual(renderer.names(), PORTED, "entry.jsx 의 조각이 이식 목록과 다르다");
   const tables = [
     ["문장·목록", NEWS_MARKET_BRANCHES],
@@ -205,7 +189,7 @@ test("prerender.ts 래퍼(기본값 react): 이식 완료 상태(조각 42개 �
 
 const newsTitles = (html) => [...html.matchAll(/target="_blank" rel="noopener">([^<]*)</g)].map((m) => m[1]);
 
-test("문장·목록 분기 표: id가 겹치지 않고, 여덟 조각을 모두 덮고, 모든 행에 기대값이 있다", () => {
+test("문장·목록 분기 표: id가 겹치지 않고, 일곱 조각을 모두 덮고, 모든 행에 기대값이 있다", () => {
   const ids = NEWS_MARKET_BRANCHES.map((b) => b.id);
   assert.equal(new Set(ids).size, ids.length, "분기 id가 겹친다");
   assert.deepEqual([...new Set(NEWS_MARKET_BRANCHES.map((b) => b.fn))].sort(), NEWS_MARKET_FNS);
@@ -235,7 +219,6 @@ test("문장·목록 분기 표: React 출력이 손으로 적은 기대값과 �
 });
 
 test("문장·목록 조각: 데이터 없음은 null, 맥락 칩이 없으면 빈 문자열 그대로", () => {
-  assert.equal(draw("summaryHtml", null), null);
   assert.equal(draw("marketHtml", {}), null);
   assert.equal(draw("newsHtml", { items: [] }), null);
   assert.equal(draw("newsListHtml", null), null);
@@ -250,17 +233,6 @@ test("문장·목록 조각: 데이터 없음은 null, 맥락 칩이 없으면 �
 test("문장·목록 조각: React 19는 javascript: URL을 막는다(고정할 출력 — 실제 입력에는 나오지 않는다)", () => {
   const { fn, args, react } = JAVASCRIPT_URL_DIFF;
   sameHtml(draw(fn, ...args), react);
-});
-
-test("news-items.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, prerender.ts가 같은 함수를 다시 내보낸다", () => {
-  assert.equal(INDEX_NEWS, 5);
-  assert.equal(prerender.INDEX_NEWS, INDEX_NEWS);
-  assert.equal(prerender.indexNewsItems, indexNewsItems);
-  // 입력이 없으면 빈 목록(방어: 조각이 먼저 거르므로 조각 경로로는 닿지 않는다).
-  assert.deepEqual(indexNewsItems(undefined), []);
-  assert.deepEqual(indexNewsItems(null), []);
-  const items = ["e0", "e1", "r0", "e2", "r1", "e3", "e4"].map((title) => ({ title, category: title[0] === "r" ? "realestate" : "economy" }));
-  assert.deepEqual(indexNewsItems(items).map((i) => i.title), ["r0", "r1", "e0", "e1", "e2"]);
 });
 
 // ---- 리드·링크 10개 조각(#241 PR 2): 분기마다 fixture, 분기마다 손으로 적은 기대값과 React 출력 일치 ----
@@ -379,7 +351,7 @@ test("실거래 요약 조각: 표본 부족 칸의 건수가 문자열이면 Re
   }
 });
 
-test("realestate-rows.mjs: legacy·JSX가 같이 쓰는 순수 모듈이고, 표본 문턱은 realestate-format.mjs의 하나만 쓴다", async () => {
+test("realestate-rows.mjs: JSX가 쓰는 순수 모듈이고, 표본 문턱은 realestate-format.mjs의 하나만 쓴다", async () => {
   // 문턱은 하나다: prerender.ts는 다시 내보낼 뿐이고(이 모듈에서 import하던 쪽의 호환), 값은 realestate-format.mjs의 것이다.
   assert.equal(MIN_SAMPLE, 5);
   assert.equal(prerender.MIN_SAMPLE, MIN_SAMPLE);
@@ -514,7 +486,7 @@ test("자치구 표: 옛 코드가 이스케이프 없이 문자열에 끼우던
   }
 });
 
-test("district-tables.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - 글자 규칙·행 선택·표본 부족 판정", () => {
+test("district-tables.mjs: JSX가 쓰는 순수 모듈이다 - 글자 규칙·행 선택·표본 부족 판정", () => {
   assert.equal(CONVERSION_BAND, "60to85");
   assert.equal(prerender.CONVERSION_BAND, CONVERSION_BAND);
   // pct·signed: null·undefined만 "-"
@@ -670,7 +642,7 @@ test("시세표 조각: 데이터 없음은 null, 머리글은 언제나 한 줄
   assert.ok(draw("realestateHeadHtml", null, "종로구").startsWith('<tr><th scope="col">구분</th>'));
 });
 
-test("realestate-table.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - 라벨·글자 규칙·칸 모양·정렬", () => {
+test("realestate-table.mjs: JSX가 쓰는 순수 모듈이다 - 라벨·글자 규칙·칸 모양·정렬", () => {
   // 라벨(손으로 적은 값)
   assert.deepEqual(RE_LABELS, {
     district: "지역", sale: "매매", jeonse: "전세", wolse: "월세", colSale: "매매 평당가", colJeonse: "전세 평당 보증금", colWolse: "월세 보증금 / 월세",
@@ -913,7 +885,7 @@ test("시세 요약 조각: 데이터 없음은 null", () => {
   assert.ok(draw("realestateOverallHtml", { overall: {} }).startsWith('<div class="overall-card">'));
 });
 
-test("realestate-overall.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - 카드 모양·글자 규칙·ratioBasis", () => {
+test("realestate-overall.mjs: JSX가 쓰는 순수 모듈이다 - 카드 모양·글자 규칙·ratioBasis", () => {
   const sale = { avgPricePerPyeong10k: 6000, transactionCount: 40 };
   const jeonse = { avgDepositPerPyeong10k: 3000, transactionCount: 30 };
   const seg = (text, esc) => ({ text, esc });
@@ -944,7 +916,7 @@ test("realestate-overall.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 -
     value: [seg("46.7%", false)],
     sub: [seg("단지·평형 1,234칸", true)],
   });
-  // 마크업은 만들지 않는다: 클래스·태그는 쓰는 쪽(legacy·JSX)이 각자 입힌다
+  // 마크업은 만들지 않는다: 클래스·태그는 쓰는 쪽(JSX)이 입힌다
   const json = JSON.stringify(overallCards({ overall: { sale, jeonse } }, "jeonse", null, { median: 46.7, cells: 13 }));
   assert.doesNotMatch(json, /overall-card|class|<div|<span/);
   // ratioBasis: 두 지표가 값을 낼 때 두 건수를 한 줄로(이스케이프하지 않은 글자)
@@ -1319,7 +1291,7 @@ test("budget-fragments.mjs: 후보 단지·본문 모양 - 거래 한 줄·월/�
   assert.throws(() => bodyShape({ min10k: 30_000, count: 1 }, "x"), TypeError, "신고분이 배열이 아니면 던진다");
 });
 
-test("budget-fragments.mjs: legacy·JSX가 같이 쓰는 순수 모듈이다 - 예산대 이름·억 글자·예산대 하한·규칙 주소·다음 질문 링크", () => {
+test("budget-fragments.mjs: JSX가 쓰는 순수 모듈이다 - 예산대 이름·억 글자·예산대 하한·규칙 주소·다음 질문 링크", () => {
   // budgetBandLabel: 억 단위 반올림, 위가 비면 이상, 아래가 0이면 미만
   assert.equal(budgetBandLabel({ min10k: 50_000, max10k: 60_000 }), "5억대");
   assert.equal(budgetBandLabel({ min10k: 0, max10k: 30_000 }), "3억 미만");
@@ -1406,7 +1378,7 @@ test("budget-fragments.mjs: 한눈에 줄 모양 - 예산대 없으면 null, 줄
   assert.equal(budgetAnswers({ min10k: 160_000 }, rates).lines.length, 4);
 });
 
-test("budget-fragments.mjs: 표본 문턱을 정의하거나 부르지 않고, 클래스·마크업·이스케이프를 들고 있지 않다 - 마크업은 legacy(prerender.ts)·JSX(entry.jsx)가 각자 입힌다", async () => {
+test("budget-fragments.mjs: 표본 문턱을 정의하거나 부르지 않고, 클래스·마크업·이스케이프를 들고 있지 않다 - 마크업은 JSX(entry.jsx)가 입힌다", async () => {
   const source = await readFile(path.join(root, "scripts/budget-fragments.ts"), "utf8");
   const code = source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
   assert.doesNotMatch(code, /MIN_SAMPLE|hasEnoughSample|metricOf|low-sample/, "표본 문턱이 이 모듈에 있다");
