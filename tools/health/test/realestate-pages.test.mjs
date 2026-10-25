@@ -34,11 +34,12 @@ test("커밋된 거래 유형별 페이지가 지금 원본·데이터로 찍은
 });
 
 test("커밋된 자치구 페이지 25개가 지금 원본·데이터로 찍은 결과와 같다", async () => {
-  const [baseHtml, realestate, renewal, complexRatio] = await Promise.all([
+  const [baseHtml, realestate, renewal, complexRatio, rentFlow] = await Promise.all([
     read("scripts/realestate-template.html"),
     readJson("realestate"),
     readJson("renewal-facts").catch(() => null),
     readJson("complex-ratio").catch(() => null),
+    readJson("rent-flow").catch(() => null),
   ]);
 
   assert.equal(DISTRICT_PAGES.length, 25);
@@ -59,7 +60,8 @@ test("커밋된 자치구 페이지 25개가 지금 원본·데이터로 찍은 
           realestate,
           deals,
           renewal?.districts?.[district.name] ?? null,
-          complexRatio?.districts?.[district.name] ?? null
+          complexRatio?.districts?.[district.name] ?? null,
+          rentFlow
         ),
         ymd
       ),

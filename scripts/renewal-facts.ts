@@ -93,7 +93,7 @@ const number = (value) => {
   return Number(text);
 };
 
-const isRenewal = (item) =>
+export const isRenewal = (item) =>
   String(item?.contractType ?? "").trim() === "갱신" && String(item?.preDeposit ?? "").trim().length > 0;
 
 const usedRight = (item) => String(item?.useRRRight ?? "").trim() === "사용";
