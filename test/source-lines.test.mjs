@@ -2,20 +2,22 @@
 // 나가는 장(build/site)의 출처 줄이 상수와 같은지는 source-lines-site.test.mjs(배포 게이트)가 본다.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { ATTRIBUTION, FOOTERS, SOURCES, footerLine, stampSources } from "../scripts/source-lines.ts";
-import { buildFigures, readSales, renderBody } from "../scripts/build-correction-release.ts";
+import { buildFigures, buildRelease, readSales, renderBody } from "../scripts/build-correction-release.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
+const hasPython = spawnSync("python3", ["--version"]).status === 0;
 
 // 출처 머리(「출처:」「Source:」「Sources:」, 사전 키 footerSource: 는 빼고)를 글자로 적어도 되는 파일. 그 밖에 나오면 상수를 거치지 않은 출처 문구다.
-// build-correction-release.ts 는 Release 본문 - 상수 import 는 #588 PR2(Release 경로)에서 한다. 그때 이 줄을 지운다.
-const ALLOW = new Set(["scripts/source-lines.ts", "scripts/build-correction-release.ts"]);
+// Release 본문(scripts/build-correction-release.ts)도 상수를 import 한다(#588 PR2) - 허용 파일은 상수 모듈 하나다. test/ 의 글자 고정(legal 원문 바이트 핀)은 grep 범위 밖이다.
+const ALLOW = new Set(["scripts/source-lines.ts"]);
 
-test("출처 머리 글자는 상수 모듈(과 PR2 대기 Release 본문) 밖의 docs·scripts 에 없다 (#588 완료 조건 1)", () => {
+test("출처 머리 글자는 상수 모듈 밖의 docs·scripts 에 없다 (#588 완료 조건 1)", () => {
   const out = execFileSync("git", ["grep", "-lE", "출처:|(^|[^[:alnum:]])Sources?:", "--", "docs", "scripts"], { cwd: root, encoding: "utf8" }).trim();
   const stray = out.split("\n").filter((f) => f && !ALLOW.has(f));
   assert.deepEqual(stray, [], `상수를 거치지 않은 출처 문구: ${stray.join(", ")}`);
@@ -68,11 +70,43 @@ test("Release 출처 문장은 legal 표 원문 상수(ATTRIBUTION.molitSale)와
   assert.equal(SOURCES.molitSale.dataset, "15126469");
 });
 
-test("Release 는 KB 계열(901Y062·901Y063, kb_sale·kb_jeonse)을 싣지 않는다 - raw/sale 만 읽는다 (legal #588)", async () => {
+test("Release 본문 산출 코드는 출처·기관·데이터셋 번호를 글자로 적지 않고 상수를 import 한다 (#588 PR2)", async () => {
   const src = await read("scripts/build-correction-release.ts");
-  assert.doesNotMatch(src, /kb_sale|kb_jeonse|901Y06[23]|KB국민|series\.json|raw\/indicators/);
+  assert.match(src, /import \{ ATTRIBUTION, SOURCES \} from "\.\/source-lines\.ts"/);
+  assert.doesNotMatch(src, /15126469|15126474|국토교통부|Ministry of Land|공공데이터포털|data\.go\.kr/);
+  const body = renderBody(buildFigures(await readSales(path.join(root, "test/fixtures/correction-twins/raw"))));
+  const [ko, en] = body.split("\n---\n");
+  assert.ok(ko.includes(`(${SOURCES.molit.ko})이 기록을`));
+  assert.ok(en.includes(`(${SOURCES.molit.en}) amends`));
+});
+
+const KB = /kb_sale|kb_jeonse|901Y06[23]|KB국민|KB Kookmin|raw\/indicators|series\.json/i;
+
+test("Release 는 KB 계열(901Y062·901Y063, kb_sale·kb_jeonse)을 싣지 않는다 - 소스·워크플로가 raw/sale 만 읽는다 (legal #588)", async () => {
+  const src = await read("scripts/build-correction-release.ts");
+  assert.doesNotMatch(src, KB);
   const figures = buildFigures(await readSales(path.join(root, "test/fixtures/correction-twins/raw")));
   assert.deepEqual(figures.source, { datasetId: SOURCES.molitSale.dataset });
   const wf = await read(".github/workflows/correction-release.yml");
-  assert.doesNotMatch(wf, /kb_sale|kb_jeonse|901Y06[23]|raw\/indicators/);
+  assert.doesNotMatch(wf, KB);
+});
+
+test("Release 자산: 실제로 산출한 폴더의 모든 파일에 KB 계열 이름·값이 없고, 워크플로가 올리는 파일은 전부 그 산출물이다 (legal #588)", { skip: !hasPython && "python3 없음" }, async () => {
+  const outDir = await mkdtemp(path.join(tmpdir(), "ct-kb-"));
+  try {
+    const { tag } = await buildRelease({ rawDir: path.join(root, "test/fixtures/correction-twins/raw"), outDir });
+    const produced = (await readdir(outDir)).sort();
+    for (const name of produced) {
+      assert.doesNotMatch(name, KB, name);
+      assert.doesNotMatch(await readFile(path.join(outDir, name), "utf8"), KB, name);
+    }
+    const lines = (await read(".github/workflows/correction-release.yml")).split("\n");
+    const at = lines.findIndex((l) => l.includes("gh release create"));
+    // 첫 줄은 --title·--notes-file, 다음 줄(\ 이어짐)이 자산 목록이다.
+    const uploaded = [...lines[at + 1].matchAll(/"\$out\/([^"]+)"/g)].map((m) => m[1].replaceAll("$tag", tag)).sort();
+    for (const name of uploaded) assert.ok(produced.includes(name), `워크플로가 산출물이 아닌 파일을 올린다: ${name}`);
+    assert.deepEqual(uploaded, [`${tag}.csv`, `${tag}.json`, "README.md", "check.out", "check.py"].sort());
+  } finally {
+    await rm(outDir, { recursive: true, force: true });
+  }
 });

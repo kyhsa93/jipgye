@@ -34,6 +34,8 @@ import {
 } from "./cancellation.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { RAW_DIR, readSlotFile } from "./realestate-raw.ts";
+// 출처 문구는 scripts/source-lines.ts 한 곳이다(#588 PR2) - 이 파일에 출처·기관 이름을 글자로 적지 않는다(test/source-lines.test.mjs 가 막는다).
+import { ATTRIBUTION, SOURCES } from "./source-lines.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -227,7 +229,7 @@ export function buildFigures({ byDistrict, observedAt, firstObservedAt = observe
     collectedAt,
     collectedFrom: kstDay(firstObservedAt),
     collectedTo: collectedAt,
-    source: { datasetId: "15126469" },
+    source: { datasetId: SOURCES.molitSale.dataset },
     sample: { ...computed.sample, districtFiles: files },
     seoul: computed.seoul,
     districts: computed.districts,
@@ -326,11 +328,11 @@ export function renderBody(figures, { tag }: { tag?: string } = {}) {
 
 - 월 1회 다시 세도록 설정돼 있습니다(수동 실행도 가능). 일정이나 지속을 약속하지 않으며, 중단·변경될 수 있고 늦어질 수 있습니다. 숫자가 달라지면 새 Release를 올리고 이전 Release 본문 맨 위에 "${SUPERSEDED_MARK}" 표시와 새 Release 링크를 남기도록 되어 있습니다. 숫자가 같으면 새로 올리지 않습니다. 현재 값은 가장 늦은 기준일의 Release이고, 이 Release를 인용할 때는 기준일을 함께 적어 주십시오.
 - 이 표시는 새 데이터나 원천 기록의 수정으로 숫자가 달라져 새 기준일로 다시 센 값이 있다는 뜻이며, 그것만으로 이전 값에 셈의 오류가 있었다는 뜻은 아닙니다. 셈 자체에 오류가 있어 숫자를 바꿀 때는 표시 옆에 그 이유를 적습니다.
-- 원천(국토교통부)이 기록을 수정하면 숫자가 달라질 수 있습니다. 이 Release의 이름 \`${name}\`의 날짜가 기준일입니다.
+- 원천(${SOURCES.molit.ko})이 기록을 수정하면 숫자가 달라질 수 있습니다. 이 Release의 이름 \`${name}\`의 날짜가 기준일입니다.
 
 ## 출처
 
-출처: 국토교통부 아파트 매매 실거래가 자료(공공데이터포털 15126469), ${collectedKo}. 이 자료는 원천을 집계·가공한 값이며 국토교통부가 후원·보증하지 않습니다. 이 자료의 숫자는 가공값이고 원천의 원값이 아닙니다.
+${ATTRIBUTION.molitSale.ko(collectedKo)} 이 자료의 숫자는 가공값이고 원천의 원값이 아닙니다.
 `;
 
   const enSection = `# Seoul apartment sale cancellation records that also appear without a cancellation mark — aggregate (as of ${figures.asOf})
@@ -363,11 +365,11 @@ These figures count records that match each other. The reason for a filing is no
 
 - This is set up to be recounted once a month (a manual run is also possible). No schedule or continuation is promised; it may be paused, changed or delayed. If the figures change, a new release is published and the previous release body is set to get a "${SUPERSEDED_MARK}" notice with a link to the new one at the top. If the figures are the same, no new release is made. The current figures are those of the release with the latest as-of date; please cite the as-of date with any figure.
 - The notice means that new data or amended source records produced a recount with a new as-of date; it does not by itself mean the earlier figures contained a counting error. If figures are changed because of a counting error, the reason is stated next to the notice.
-- If the source agency (Ministry of Land, Infrastructure and Transport) amends its records, the figures can change. The date in this release's name \`${name}\` is the as-of date.
+- If the source agency (${SOURCES.molit.en}) amends its records, the figures can change. The date in this release's name \`${name}\` is the as-of date.
 
 ## Source
 
-Source: Ministry of Land, Infrastructure and Transport apartment sale transaction data (data.go.kr 15126469), ${collectedEn}. These are aggregated and processed values derived from the source and are not endorsed or guaranteed by the Ministry. The numbers here are processed values, not the source's original values.
+${ATTRIBUTION.molitSale.en(collectedEn)} The numbers here are processed values, not the source's original values.
 `;
 
   return `${koSection}\n---\n\n${enSection}`;
