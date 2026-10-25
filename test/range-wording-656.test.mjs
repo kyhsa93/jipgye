@@ -18,7 +18,7 @@ test("예산대 단지 후보 줄: 새 라벨만 쓰고 옛 라벨(기준 시세
   for (const f of budgetFiles) {
     const html = read(f);
     assert.doesNotMatch(html, /기준 시세/, `${f}: 「기준 시세」`);
-    for (const m of html.matchAll(/<span class="meta">([^<]*)<\/span>/g)) {
+    for (const m of html.matchAll(/<span class=["']meta["']>([^<]*)<\/span>/g)) {
       if (!/ · \d+건$/.test(m[1])) continue;
       lines += 1;
       assert.match(m[1], /^지난 거래 (가운데 절반|최저~최고\(고침\)) [^~]+~[^·]+ · \d+건$/, `${f}: ${m[1]}`);
