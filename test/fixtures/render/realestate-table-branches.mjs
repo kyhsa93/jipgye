@@ -1,8 +1,8 @@
 // 실거래 시세표 머리글·표 조각 둘의 분기별 고정 fixture (#242 PR 2): realestateHeadHtml·realestateTableHtml.
 // 데이터 값이나 날짜에 따라 결과가 갈리지 않는다(R3): 저장소의 docs/·raw/를 읽지 않고 코드(district-slugs.mjs·realestate-table.mjs 등)도 부르지 않는다 - 자치구 25곳의 slug도 여기에 손으로 적었다.
-// 한 줄이 한 분기다. `args`는 legacy 함수에 그대로 넘기는 인자이고, `expect`는 legacy가 내야 하는 글자다. 기대값은 글자 틀(`STRONG`·`CHG`·`LOW`·`rowTr` 등 감싸는 마크업)과
+// 한 줄이 한 분기다. `args`는 조각 함수에 그대로 넘기는 인자이고, `expect`는 React 조각이 내야 하는 글자다. 기대값은 글자 틀(`STRONG`·`CHG`·`LOW`·`rowTr` 등 감싸는 마크업)과
 // 아래 값 표(값 → 칸에 나오는 글자: 평당가 6000 → "6,000만원"·"15억 2,459만원")를 손으로 적어 이은 것이고, 입력을 가공해 만들지 않는다. 값 글자는 모듈을 부르지 않고 내장 함수로 따로 셌다(PR 본문).
-// test/render-parity.test.mjs가 이 표로 (1) legacy 출력이 expect와 같은지, (2) React 조각이 legacy와 바이트까지 같은지 견준다.
+// test/render-parity.test.mjs가 이 표로 React 조각 출력이 expect와 같은지 견준다.
 //
 // 칸마다 같은 상태 표(STATES)를 세 보기로 돌린다: 세 종류를 한 줄에 놓는 표(보기 all)·종류 하나의 표(보기 kind)·자치구 페이지의 표(보기 district).
 // 표본 부족(`low-sample`)이 나오는 곳은 이 세 보기가 서로 다른 코드 자리(reAllCells·reCells·reDistrictRows)이므로 세 곳을 모두 같은 상태로 닫는다(해자 2).

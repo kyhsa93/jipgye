@@ -1,15 +1,15 @@
 // 문장·목록 8개 조각의 분기별 고정 fixture (#241 PR 1): summaryHtml·marketHtml·newsContextHtml·newsHtml·newsSummaryHtml·newsListHtml·
 // newsKospiHtml·newsRealestateStatsHtml. 데이터 값이나 날짜에 따라 결과가 갈리지 않는다(R3): 저장소의 docs/·raw/를 읽지 않는다.
-// 한 줄이 한 분기다. `args`는 legacy 함수에 그대로 넘기는 인자이고, `expect`는 legacy가 내야 하는 글자다. 마크업은 일부러 손으로 적었다
+// 한 줄이 한 분기다. `args`는 조각 함수에 그대로 넘기는 인자이고, `expect`는 React 조각이 내야 하는 글자다. 마크업은 일부러 손으로 적었다
 // (아래 `li`·`chip`·`stat` 같은 도우미는 태그를 글자로 적을 뿐 입력을 가공하지 않는다 - 입력의 엔티티 변환은 기대값에 직접 적었다).
-// 그래서 legacy·JSX가 같이 틀려도 걸린다. `order`는 기사 제목 순서만 보는 분기(정렬·자름)다. 데이터가 없으면 null, 칩이 없으면 빈 문자열.
-// test/render-parity.test.mjs가 이 표로 (1) legacy 출력이 expect·order와 같은지, (2) React 조각이 legacy와 바이트까지 같은지 견준다.
+// 그래서 JSX 조각과 그 도우미가 같이 틀려도 걸린다. `order`는 기사 제목 순서만 보는 분기(정렬·자름)다. 데이터가 없으면 null, 칩이 없으면 빈 문자열.
+// test/render-parity.test.mjs가 이 표로 React 조각 출력이 expect·order와 같은지 견준다(#248 P2: legacy 출력은 더 이상 기준이 아니다).
 //
 // 모든 조각에 같은 종류의 값 행을 넣었다(#240에서 `String(product.name ?? "-")`가 fixture 부재로 시험을 빠져나간 사례를 닫는다):
 //  - 비문자열: false·0·숫자·{}·[]·true  - 비어 있음: null·undefined·""  - 특수문자: & < > " '
-// legacy `escapeHtml`은 `String(value ?? "")`이라 false는 "false", {}는 "[object Object]", [1,2]는 "1,2", 0은 "0", null은 ""로 나온다.
+// 문자열 값은 `String(value ?? "")`을 거쳐 글자로 나가므로 false는 "false", {}는 "[object Object]", [1,2]는 "1,2", 0은 "0", null은 ""로 나온다.
 
-// 특수문자 입력과 legacy가 내는 글자(& < > "는 엔티티, '는 그대로 - React의 &#x27;은 래퍼가 되돌린다).
+// 특수문자 입력과 조각이 내는 글자(& < > "는 엔티티, '는 그대로 - React의 &#x27;은 렌더러가 되돌린다).
 const SP = `A&B <i> "q" it's`;
 const SP_OUT = `A&amp;B &lt;i&gt; &quot;q&quot; it's`;
 
@@ -228,11 +228,10 @@ export const NEWS_MARKET_BRANCHES = ROWS.flatMap((row) =>
 );
 
 // 알려진 차이(허용 변환 밖): React 19는 href가 `javascript:` 로 시작하면(대소문자·앞 공백 무시) 그 URL을 막고 오류를 던지는 자리표시로 바꿔 낸다.
-// legacy는 값을 그대로 낸다. 뉴스 링크는 RSS(https)에서 오고 맥락·통계 href는 코드가 정한 상대 경로라 실제 입력에서는 나오지 않는다.
-// fixture 표에 넣지 않고(바이트 일치가 아니다) 별도 시험이 이 차이가 지금 이대로인지 고정한다.
+// (옛 legacy는 값을 그대로 냈다.) 뉴스 링크는 RSS(https)에서 오고 맥락·통계 href는 코드가 정한 상대 경로라 실제 입력에서는 나오지 않는다.
+// fixture 표에 넣지 않고 별도 시험이 이 출력이 지금 이대로인지 고정한다.
 export const JAVASCRIPT_URL_DIFF = {
   fn: "newsListHtml",
   args: [{ items: [{ title: "t", link: "javascript:alert(1)", source: "s" }] }],
-  legacy: li("t", "javascript:alert(1)", "s"),
   react: li("t", "javascript:throw new Error('React has blocked a javascript: URL as a security precaution.')", "s"),
 };

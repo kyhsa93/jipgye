@@ -40,7 +40,7 @@ export const SITE_STEPS = [
 /**
  * 작업 폴더를 만들고 렌더 스크립트를 돌린다. 돌려주는 객체의 `root`는 작업 폴더, `read`·`json`은 그 안의 파일을 읽는다.
  * 스크립트가 하나라도 실패하면 던진다(stderr 를 메시지에 싣는다). 다 쓰면 `cleanup()`.
- * `env` 로 JIPGYE_RENDERER 같은 것을 넘길 수 있다.
+ * `env` 로 스크립트에 환경변수를 더 넘길 수 있다.
  */
 export function buildFixtureSite({ steps = SITE_STEPS, env = {} } = {}) {
   // realpath: macOS 의 tmpdir 은 /var -> /private/var 심볼릭 링크다. 스크립트는 `process.argv[1]` 과 `import.meta.filename`(실경로)이 같을 때만 main 을 돌려서,

@@ -1,16 +1,16 @@
 // 자치구 문장·링크 4개와 표 6개 조각의 분기별 고정 fixture (#242 PR 1): districtSummaryHtml·districtRenewalHtml·districtFactsHtml·districtLinksHtml·
 // conversionTableHtml·cancelDistrictsHtml·cancelMonthsHtml·renewalDistrictsHtml·renewalWolseDistrictsHtml·floorDistrictsHtml.
 // 데이터 값이나 날짜에 따라 결과가 갈리지 않는다(R3): 저장소의 docs/·raw/를 읽지 않고 코드(district-slugs.mjs 등)도 부르지 않는다 - 자치구 25곳과 slug도 여기에 손으로 적었다.
-// 한 줄이 한 분기다. `args`는 legacy 함수에 그대로 넘기는 인자이고, `expect`는 legacy가 내야 하는 글자다. 기대값은 글자 틀(`cvRow`·`LOW()` 등 감싸는 마크업)과
+// 한 줄이 한 분기다. `args`는 조각 함수에 그대로 넘기는 인자이고, `expect`는 React 조각이 내야 하는 글자다. 기대값은 글자 틀(`cvRow`·`LOW()` 등 감싸는 마크업)과
 // 아래 값 표(값 → 칸에 나오는 글자)를 손으로 적어 이은 것이고, 입력을 가공해 만들지 않는다.
-// test/render-parity.test.mjs가 이 표로 (1) legacy 출력이 expect와 같은지, (2) React 조각이 legacy와 바이트까지 같은지 견준다.
+// test/render-parity.test.mjs가 이 표로 React 조각 출력이 expect와 같은지 견준다.
 //
 // 모든 조각에 같은 종류의 값 행을 넣었다(#240·#241 교훈 - `str()`을 빼도 시험이 통과하는 자리를 닫는다):
 //  - 비문자열: true·false·0·NaN·{}·[1,2]·[] (이스케이프하던 칸은 `String(value ?? "")`이라 "true"·"false"·"0"·"NaN"·"[object Object]"·"1,2"·""로 나온다)
 //  - null·undefined(이름 칸은 빈 글자, 값 칸은 "-" 또는 "null%"·"undefined%"처럼 legacy가 문자열에 끼우던 그대로)
 //  - 특수문자 & < > " ' (이스케이프하던 칸은 `&amp;`·`&lt;`·`&gt;`·`&quot;`, `'`는 그대로)와 이미 이스케이프된 &amp;·&#x27;(한 번 더 이스케이프된다)
 //  - 빈 값 행: 데이터 없음 null·undefined·{}·빈 목록 → null(자리표시를 비운다)
-// 이스케이프 없이 문자열에 끼우던 칸(raw)에 특수문자가 든 문자열이 오면 legacy와 React가 달라진다 - 그 입력은 이 표가 아니라 RAW_TEXT_DIFF가 두 글자를 모두 적어 고정한다.
+// 이스케이프 없이 문자열에 끼우던 칸(raw)에 특수문자가 든 문자열이 오면 React는 이스케이프해서 낸다(옛 legacy는 그대로 냈다) - 그 입력은 이 표가 아니라 RAW_TEXT_DIFF가 React의 글자를 적어 고정한다.
 
 const SP = `A&B <i> "q" it's`;
 const SP_OUT = `A&amp;B &lt;i&gt; &quot;q&quot; it's`;
@@ -558,15 +558,15 @@ const SUM_EN = "Apartments in 종로구 trade at ₩50M per pyeong. For an 84m²
   add("DR-11", fn, "이미 이스케이프된 &amp;·&#x27;은 한 번 더 이스케이프된다", [{ toWolseLight: { share: "&amp;", seoul: "&#x27;" } }], "전세로 살던 세입자가 재계약 때 월세로 바꾼 비율이 &amp;amp;%로, 서울 전체 &amp;#x27;%보다 낮습니다 — 이 동네는 아직 전세가 전세로 남습니다.");
 }
 
-// 이스케이프 없이 문자열에 끼우던 칸(raw)에 `& < > "`가 든 문자열이 오면 legacy는 그대로, React는 이스케이프해서 낸다(알려진 차이).
-// 두 글자를 모두 적는다: legacy 칸 글자와 React 칸 글자. 실제 입력에는 없다 - 빌더가 숫자로만 만든다(PR 본문의 칸별 근거).
-// `site`는 legacy 코드에서 이스케이프 없이 끼우는 자리의 이름, `cell`은 칸 하나의 모양(앞뒤 마크업 없이), `legacy`·`react`는 그 칸 안의 글자다.
-const RAWX = `a&b<c>"d'`; // legacy가 그대로 낸 글자. React는 & < > "를 이스케이프하고 `'`는 &#x27;로 내지만 래퍼가 되돌려 같다 - 차이는 & < > "뿐이다
+// 이스케이프 없이 문자열에 끼우던 칸(raw)에 `& < > "`가 든 문자열이 오면 React는 이스케이프해서 낸다(고정할 출력; 옛 legacy는 그대로 냈다).
+// React가 내는 글자를 적는다. 실제 입력에는 없다 - 빌더가 숫자로만 만든다(PR 본문의 칸별 근거).
+// `site`는 옛 legacy 코드에서 이스케이프 없이 끼우던 자리의 이름(참고용), `react`는 그 칸이 낸 전체 출력이다.
+const RAWX = `a&b<c>"d'`; // 넣는 글자(옛 legacy는 그대로 냈다). React는 & < > "를 이스케이프하고 `'`는 &#x27;로 내지만 렌더러가 되돌린다 - 바뀌는 것은 & < > "뿐이다
 const RAWX_REACT = "a&amp;b&lt;c&gt;&quot;d'"; // React가 낸 글자
-// `fn`·`args`는 조각과 인자, `site`는 legacy 코드에서 이스케이프 없이 끼우는 자리, `cell`은 그 자리의 글자를 넣어 줄 전체 출력을 만드는 함수다(손으로 적은 틀).
+// `fn`·`args`는 조각과 인자, `site`는 옛 legacy 코드에서 이스케이프 없이 끼우던 자리, `cell`은 그 자리의 글자를 넣어 줄 전체 출력을 만드는 함수다(손으로 적은 틀).
 export const RAW_TEXT_DIFF = [];
 {
-  const diff = (id, fn, site, args, whole) => RAW_TEXT_DIFF.push({ id, fn, site, args, legacy: whole(RAWX), react: whole(RAWX_REACT) });
+  const diff = (id, fn, site, args, whole) => RAW_TEXT_DIFF.push({ id, fn, site, args, react: whole(RAWX_REACT) });
   diff("X-CV-rate", "conversionTableHtml", "`${cell.rate}%`", [{ bands: BANDS, cells: [cell({ rate: RAWX })] }], (t) => cvTable("60~85㎡ 기준", [tr("강남구", `${t}%`, "9.5억", "4억 / 215만원", "103")]));
   diff("X-CV-pairs", "conversionTableHtml", "cell.pairs.toLocaleString", [{ bands: BANDS, cells: [cell({ pairs: RAWX })] }], (t) => cvTable("60~85㎡ 기준", [tr("강남구", "4.97%", "9.5억", "4억 / 215만원", t)]));
   for (const [key, index, site] of [["deals", 1, "row.deals.toLocaleString"], ["cancelled", 2, "row.cancelled.toLocaleString"], ["stale", 4, "row.stale.toLocaleString"]])

@@ -1,8 +1,8 @@
 // 실거래 시세 요약 카드 조각 하나의 분기별 고정 fixture (#242 PR 3): realestateOverallHtml(realestate, kind, district, spread).
 // 데이터 값이나 날짜에 따라 결과가 갈리지 않는다(R3): 저장소의 docs/·raw/를 읽지 않고 코드(realestate-overall.mjs·realestate-format.mjs 등)도 부르지 않는다.
-// 한 줄이 한 분기다. `args`는 legacy 함수에 그대로 넘기는 인자이고, `expect`는 legacy가 내야 하는 글자다. 기대값은 글자 틀(`CARD`)과 아래 값 표(값 → 카드에 나오는 글자:
+// 한 줄이 한 분기다. `args`는 조각 함수에 그대로 넘기는 인자이고, `expect`는 React 조각이 내야 하는 글자다. 기대값은 글자 틀(`CARD`)과 아래 값 표(값 → 카드에 나오는 글자:
 // 평당가 6000 → "6,000만원"·"15억 2,459만원")를 손으로 적어 이은 것이고, 입력을 가공해 만들지 않는다. 값 글자는 모듈을 부르지 않고 내장 함수로 따로 셌다(PR 본문).
-// test/render-parity.test.mjs가 이 표로 (1) legacy 출력이 expect와 같은지, (2) React 조각이 legacy와 바이트까지 같은지 견준다.
+// test/render-parity.test.mjs가 이 표로 React 조각 출력이 expect와 같은지 견준다.
 //
 // 이 조각에는 `low-sample` 스팬이 없다. 값을 못 낸 카드(표본 부족이든 값 없음이든)는 모두 "-"다 - 문턱은 렌더 때 resolveMetric(MIN_SAMPLE 5)이 한 곳에서 정한다.
 // 그래서 해자 2 행은 두 가지다: 표본 부족(값은 있는데 건수가 모자람) → 값을 내지 않는다({ held: "sample" }, 기대 글자에 그 값이 나오지 않는다),

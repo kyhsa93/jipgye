@@ -1,10 +1,10 @@
 // 예산대 잎 조각 여덟 개의 분기별 고정 fixture (#243 PR A): budgetAnswersHtml(band, loanBasis)·budgetMoreHtml()·budgetMinCashHtml(band)·budgetPolicyHtml(band, policyCounts)·
 // budgetCapHtml(band, capStats)·budgetCostsHtml(band)·budgetFactsHtml(band, locale)·budgetLoanHtml(band, loanBasis, mortgageSeries). loanBasis는 한국은행 ECOS 평균금리 { rate, month }다(#577).
 // 데이터 값이나 날짜에 따라 결과가 갈리지 않는다(R3): 저장소의 docs/·raw/를 읽지 않고 코드(budget-fragments.mjs·min-cash.mjs 등)도 부르지 않는다.
-// 한 줄이 한 분기다. `args`는 legacy 함수에 그대로 넘기는 인자이고, `expect`는 legacy가 내야 하는 글자다. 기대값은 아래 글자 틀(`P`·`LI`·`ANSWER` 등)과 문장 값 표를 손으로 이은 것이고
+// 한 줄이 한 분기다. `args`는 조각 함수에 그대로 넘기는 인자이고, `expect`는 React 조각이 내야 하는 글자다. 기대값은 아래 글자 틀(`P`·`LI`·`ANSWER` 등)과 문장 값 표를 손으로 이은 것이고
 // 입력을 가공해 만들지 않는다. 값 표(ANSWERS_T·COSTS_S·MINCASH_S·LOAN_S·LINE2_T)는 모듈을 부르지 않고 파이썬으로 지방세법·공인중개사법 시행규칙·10·15 대책 구간표를 따로 옮겨 센 값이다(PR 본문).
 // 정책대출·상한·한눈에 문장의 틀(`POLICY_HERE`·`CAP_*`·`FACT_*`)은 소스의 문장을 손으로 옮겨 적었다.
-// test/render-parity.test.mjs가 이 표로 (1) legacy 출력이 expect와 같은지(엄격 비교 - 빈 결과는 null이 아니라 ""다), (2) React 조각이 legacy와 바이트까지 같은지 견준다.
+// test/render-parity.test.mjs가 이 표로 React 조각 출력이 expect와 같은지 견준다(엄격 비교 - 빈 결과는 null이 아니라 ""다).
 //
 // 이 조각들에는 표본 문턱·`low-sample` 스팬이 없다. 문턱은 렌더 때가 아니라 빌더가 이미 적용한 데이터 칸에 있다 - band.facts의 문턱(budget-facts.mjs MIN_DEALS 120·STANDARD_MIN_DEALS 30)은 build-budget-deals.mjs가,
 // 15억 경계 몰림(capStats)의 표본 문턱(clustering minEach 100)과 정책대출 건수(policyCounts)는 build-budget-pages.ts가 정한다. 조각은 있는 것만 말한다: capStats가 없으면 몰림 문장이 빠지고

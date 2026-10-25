@@ -1,7 +1,7 @@
 import test, { after } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { cp, mkdir, mkdtemp, readdir, readFile, realpath, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readdir, readFile, realpath, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { createWriteSet } from "../scripts/render-writes.ts";
@@ -23,9 +23,11 @@ async function tempRepo() {
   tmpDirs.push(dir);
   await cp(path.join(root, "scripts"), path.join(dir, "scripts"), { recursive: true });
   await mkdir(path.join(dir, "docs/data"), { recursive: true });
+  // react 렌더 경로가 esbuild·react 를 읽을 수 있게 저장소의 node_modules 를 잇는다(#248 P2: 예전에는 JIPGYE_RENDERER=legacy 로 이 의존 없이 돌렸다).
+  await symlink(path.join(root, "node_modules"), path.join(dir, "node_modules"), "dir");
   return dir;
 }
-const run = (dir, script) => spawnSync(process.execPath, [path.join(dir, "scripts", script)], { cwd: dir, encoding: "utf8", env: { ...process.env, JIPGYE_RENDERER: "legacy" } });
+const run = (dir, script) => spawnSync(process.execPath, [path.join(dir, "scripts", script)], { cwd: dir, encoding: "utf8" });
 const readAll = async (dir) =>
   Object.fromEntries(await Promise.all((await readdir(dir)).filter((f) => f.endsWith(".html")).sort().map(async (f) => [f, await readFile(path.join(dir, f), "utf8")])));
 

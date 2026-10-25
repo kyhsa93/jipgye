@@ -1,8 +1,8 @@
 // 첫 화면 실거래 요약 표(realestateHtml)의 분기별 고정 fixture (#241 PR 3). 데이터 값이나 날짜에 따라 결과가 갈리지 않는다(R3):
 // 저장소의 docs/·docs/data를 읽지 않고, 코드(realestate-rows.mjs 등)도 부르지 않는다.
-// 한 줄이 한 분기다. `args`는 legacy 함수에 그대로 넘기는 인자이고, `expect`는 legacy가 내야 하는 글자다.
+// 한 줄이 한 분기다. `args`는 조각 함수에 그대로 넘기는 인자이고, `expect`는 React 조각이 내야 하는 글자다.
 // 기대값은 손으로 적었다 - 아래 `tr`·`CELL`은 기대 글자를 앞뒤로 감쌀 뿐 입력을 읽거나 계산하지 않는다.
-// test/render-parity.test.mjs가 이 표로 (1) legacy 출력이 expect와 같은지, (2) React 조각이 legacy와 바이트까지 같은지 견준다.
+// test/render-parity.test.mjs가 이 표로 React 조각 출력이 expect와 같은지 견준다.
 //
 // DIRECTION 해자 2의 분기(표본이 모자라면 값을 내지 않고 "표본 N건"이라 적는다)가 이 표의 `l`행이다. 전부 같은 모양의 값 행을 가진다
 // (#240·#241 PR 1·2 교훈 - `String()`을 빼도 시험이 통과하는 자리를 닫는다):
@@ -400,20 +400,17 @@ export const REALESTATE_BRANCHES = [
   ...NAME_ROWS.map((r) => ({ fn: "realestateHtml", ...r })),
 ];
 
-// 알려진 차이(허용 변환 밖): 표본 부족 칸의 건수(`transactionCount`)는 legacy가 이스케이프 없이 문자열에 끼운다(title 속성과 본문 두 곳).
-// 건수가 숫자가 아니라 `& < > "` 가 든 문자열이면(실제 입력에는 없다: docs/data/realestate.json의 건수는 전부 숫자) legacy는 그대로 내고
-// React는 이스케이프해서 내므로 글자가 달라진다. 이 표는 legacy의 글자와 React의 글자를 둘 다 적어 지금 이대로인지 고정한다(fixture 표에 넣지 않는다 - 바이트 일치가 아니다).
+// 고정할 출력: 표본 부족 칸의 건수(`transactionCount`)가 숫자가 아니라 `& < > "` 가 든 문자열이면(실제 입력에는 없다: docs/data/realestate.json의 건수는 전부 숫자)
+// React는 title 속성과 본문 두 곳 모두 이스케이프해서 낸다(옛 legacy는 이스케이프 없이 끼웠다). 이 표는 React의 글자를 적어 지금 이대로인지 고정한다(#248 P2).
 export const RAW_COUNT_DIFF = [
   {
     id: "Z-01",
     count: "<b>x</b>",
-    legacy: `<span class="low-sample" title="신고 <b>x</b>건이라 평균을 내기엔 표본이 부족합니다">표본 <b>x</b>건</span>`,
     react: `<span class="low-sample" title="신고 &lt;b&gt;x&lt;/b&gt;건이라 평균을 내기엔 표본이 부족합니다">표본 &lt;b&gt;x&lt;/b&gt;건</span>`,
   },
   {
     id: "Z-02",
     count: `3"&4`,
-    legacy: `<span class="low-sample" title="신고 3"&4건이라 평균을 내기엔 표본이 부족합니다">표본 3"&4건</span>`,
     react: `<span class="low-sample" title="신고 3&quot;&amp;4건이라 평균을 내기엔 표본이 부족합니다">표본 3&quot;&amp;4건</span>`,
   },
 ];
