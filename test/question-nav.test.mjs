@@ -77,18 +77,37 @@ test("영어 화면에서는 질문도 영어다", async () => {
 });
 
 test("질문 입구는 장면별 세 묶음이고, 사는 사람 묶음의 첫 질문이 예산이다 (#44)", async () => {
+  // #575 안 B 1단계: 묶음은 <div>+<h3> 에서 <details>+<summary>(상황 단추)로 바뀌었다. 묶음 셋·순서·예산이 첫 질문인 것은 그대로다.
   const html = await indexHtml();
   const block = /<nav class="question-nav(?: [^"]*)?"[\s\S]*?<\/nav>/.exec(html)?.[0] ?? "";
-  const groups = [...block.matchAll(/<div class="question-group">([\s\S]*?)<\/div>/g)].map((m) => m[1]);
+  const groups = [...block.matchAll(/<details class="question-group"[^>]*>([\s\S]*?)<\/details>/g)].map((m) => m[1]);
   assert.equal(groups.length, 3, "묶음이 셋이 아니다");
-  assert.match(groups[0], /집을 사려는 사람<\/h3>\s*<a id="q-budget"/, "예산 질문이 맨 앞이 아니다");
+  assert.match(groups[0], /집을 사려는 사람<\/summary>\s*<div class="question-links">\s*<a id="q-budget"/, "예산 질문이 맨 앞이 아니다");
   assert.match(groups[1], /전월세/);
   assert.match(groups[2], /옮기거나 파는/);
   assert.ok(!block.includes("deposit-rates"), "예금 질문은 금리 탭에 있다 - 질문 입구에서 뺐다");
 
   const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
-  const group = /\.question-group \{([^}]*)\}/.exec(css)?.[1] ?? "";
-  assert.match(group, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/, "모바일에서 한 줄씩 늘어선다");
+  const links = /\.question-links \{([^}]*)\}/.exec(css)?.[1] ?? "";
+  assert.match(links, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/, "펼친 질문이 모바일에서 한 줄씩 늘어선다");
+});
+
+test("첫 화면은 질문 하나와 상황 단추 셋이다 - 질문 열은 접힌 <details> 안에 JS 없이 (#575 안 B 1단계)", async () => {
+  // 소유자 지시(2026-10-25): 메인에 글과 메뉴가 너무 많다. 질문 열 개가 같은 무게로 늘어선 것이 첫 화면 선택지 17개 중 10개였다.
+  // 처음에는 셋 다 닫혀 있어야 하고(open 이 붙으면 첫 화면에 다시 질문이 깔린다), 여닫기는 브라우저 기본 동작이다.
+  const html = await indexHtml();
+  const block = /<nav class="question-nav(?: [^"]*)?"[\s\S]*?<\/nav>/.exec(html)?.[0] ?? "";
+  const opens = [...block.matchAll(/<details\b([^>]*)>/g)].map((m) => m[1]);
+  assert.equal(opens.length, 3, "상황이 셋이 아니다");
+  for (const attrs of opens) assert.doesNotMatch(attrs, /\bopen\b/, "상황 하나가 처음부터 열려 있다");
+  const summaries = [...block.matchAll(/<summary class="question-group-title" id="(qg-[a-z]+)">/g)].map((m) => m[1]);
+  assert.deepEqual(summaries, ["qg-buy", "qg-rent", "qg-move"], "상황 단추(summary)가 언어 전환이 찾는 id 를 잃었다");
+  assert.equal((block.match(/<a id="q-/g) ?? []).length, 10, "질문 링크 열이 DOM 에 다 있지 않다 - 접어도 지우지 않는다(색인·내부 링크)");
+
+  // 상황 단추의 누르는 높이는 44px(--tap) 이상이다 - #406 에서 summary 가 34.5px 이던 일.
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
+  const title = /\.question-group-title \{([^}]*)\}/.exec(css)?.[1] ?? "";
+  assert.match(title, /min-height: var\(--tap\)/, "상황 단추 높이가 --tap 아래일 수 있다");
 });
 
 test("묶음 제목도 영어로 바뀐다", async () => {
