@@ -74,7 +74,7 @@
           <li><a href="#direct-deals">직거래를 따로 셉니다</a></li>
           <li><a href="#share-sample">비중은 표본이 충분할 때만 말합니다</a></li>
           <li><a href="#jeonse-wolse-yardstick">전세와 월세를 견줄 때 쓰는 자</a></li>
-          <li><a href="#monthly-cost">환산 월 비용은 평균금리로 환산한 1년 변화입니다</a></li>
+          <li><a href="#monthly-cost">환산 월 비용은 평균금리와 80% 대출을 가정해 잰 1년 변화입니다</a></li>
           <li><a href="#jeonse-ratio">전세가율은 평균 둘을 나눈 값이라 어느 단지의 것도 아닐 수 있습니다</a></li>
           <li><a href="#cancelled-unregistered">해제된 거래와 아직 등기가 안 된 거래</a></li>
           <li><a href="#renewal-cap">재계약에서만 보이는 것, 그리고 5% 상한이 가리는 것</a></li>
@@ -135,10 +135,10 @@
     <p>월 실부담은 양쪽을 같은 식으로 잽니다 &mdash; (보증금에 모자란 만큼 빌린 이자) &minus; (쓰고 남은 돈을 예금에 넣어 받는 세후 이자), 월세 쪽은 거기에 월세를 더합니다. 전세자금대출은 보증금의 80%까지 빌릴 수 있다고 <strong>가정</strong>했습니다. 상품마다 한도가 다르고 보증기관 심사에 달렸으니 그대로 믿을 값이 아닙니다. 중도상환수수료와 보증료, 이사비용, 대출이자 소득공제는 넣지 않았습니다. 어느 쪽이 싸다는 말은 이 가정 안에서만 성립합니다.</p>
     <p>전세대출 금리: 한국은행 집계 은행 전세자금대출 평균금리(기존 대출 잔액 기준, 화면에 적힌 달) &mdash; 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. 예금 금리: 정기예금 신규취급 평균금리(같은 달).</p>
 
-    <h2 id="monthly-cost">환산 월 비용은 평균금리로 환산한 1년 변화입니다</h2>
-    <p>전세 vs 월세 화면의 서울 전체 한 줄, 환산 월 비용(평균금리 가정)은 1년 전과 지금의 월 비용을 한 가지 가정으로 환산해 견줍니다. 보증금의 80%는 전세자금대출 평균금리(한국은행 ECOS, 기존 대출 잔액 기준)로 빌리고, 나머지 20%는 자기 돈이라 정기예금 신규취급 평균금리의 세후(15.4% 과세) 이자만큼을 포기한 것으로 봅니다. 월세안은 월세에 같은 금융비를 더합니다. 식은 전세 vs 월세 계산기와 같은 한 벌입니다.</p>
+    <h2 id="monthly-cost">환산 월 비용은 평균금리와 80% 대출을 가정해 잰 1년 변화입니다</h2>
+    <p>전세 vs 월세 화면의 서울 전체 한 줄, 환산 월 비용(평균금리 가정)은 1년 전과 지금의 월 비용을 같은 가정으로 환산해 견줍니다. 보증금의 80%는 전세자금대출 평균금리(한국은행 ECOS, 기존 대출 잔액 기준)로 빌리고, 나머지 20%는 자기 돈이라 정기예금 신규취급 평균금리의 세후(15.4% 과세) 이자만큼을 포기한 것으로 봅니다. 80%는 전세대출 보증 상품이 흔히 두는 한도 비율이라 고른 <strong>가정</strong>입니다. 월세안은 월세에 같은 금융비를 더합니다. 식은 전세 vs 월세 계산기와 같은 한 벌이며, 지난 변화를 적을 뿐 전망이 아닙니다.</p>
     <p>보증금과 월세는 각 달까지 여섯 달의 신규 계약에서 같은 단지&middot;면적대의 전세&middot;월세 쌍을 모아 낸 서울 전체 중앙값이고, 금리는 그 달 값입니다. 1년 전 같은 창과 견준 변화 옆에는 95% 구간(단지쌍을 다시 뽑는 부트스트랩 2,000회, 시드 고정)과 두 몫을 늘 같이 적습니다. 금리 몫은 1년 전 보증금&middot;월세를 그대로 두고 금리만 바꿨을 때의 변화이고, 보증금 몫(월세안은 보증금&middot;월세 몫)은 나머지입니다. 두 몫은 더하지 않고 곱해서 전체 변화가 됩니다.</p>
-    <p>한계가 있습니다. 대출&middot;예금 금리는 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. 80% 대출은 <strong>가정</strong>이고 한도는 상품과 심사에 달렸습니다. 구간 끝은 무작위 재표집 값이라 시드를 바꾸면 1%p 안팎 흔들립니다. 처음에는 1년 변화 점 다섯 개(2026년 4월~8월)로 시작하고, 원본 29개월(2024년 11월~2027년 3월)이 쌓여 12점이 되기 전에는 &lsquo;계열&rsquo;이라 부르지 않습니다. 자치구&middot;면적대 칸 값은 구간이 넓어 싣지 않습니다. 파일이 없거나 마지막 점이 전환율 창 끝 달보다 넉 달 넘게 낡으면 그 줄을 싣지 않습니다.</p>
+    <p>한계가 있습니다. 대출&middot;예금 금리는 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. 대출 금리는 이미 나간 전세대출의 잔액 기준 평균이고 예금 금리는 신규취급 평균이라 가리키는 시점이 서로 다릅니다. 실제 대출 한도와 비율은 상품과 심사에 달렸습니다. 구간 끝은 무작위 재표집 값이라 시드를 바꾸면 1%p 안팎 흔들립니다. 1년 변화 점이 12개가 되기 전(원본이 2027년 3월까지 쌓이기 전)에는 &lsquo;계열&rsquo;이라 부르지 않고, 줄에 몇 개 가운데 마지막 점인지 적습니다. 서울 전체 한 줄만 싣고, 자치구&middot;면적대 칸 값은 구간이 넓어 싣지 않습니다. 파일이 없거나 마지막 점이 전환율 창 끝 달보다 넉 달 넘게 낡으면 그 줄을 싣지 않습니다.</p>
 
     <h2 id="jeonse-ratio">전세가율은 평균 둘을 나눈 값이라 어느 단지의 것도 아닐 수 있습니다</h2>
     <p>시세표의 전세가율은 그 자치구의 <strong>전세 평당 보증금 &divide; 매매 평당가</strong>입니다. 둘 다 평당으로 맞춰져 있으니 넓이는 정규화되지만, 두 평균이 <strong>서로 다른 단지들</strong>에서 나온다는 문제가 남습니다. 전세 신고가 어떤 단지에 몰리고 매매 신고가 다른 단지에 몰리면, 그 비율은 어느 단지의 전세가율도 아니게 됩니다.</p>
@@ -292,7 +292,7 @@
           <li><a href="#direct-deals-en">Direct deals are counted separately</a></li>
           <li><a href="#share-sample-en">Shares are only stated when the sample supports them</a></li>
           <li><a href="#jeonse-wolse-yardstick-en">The yardstick for comparing jeonse and monthly rent</a></li>
-          <li><a href="#monthly-cost-en">The estimated monthly cost is a year-over-year change at average rates</a></li>
+          <li><a href="#monthly-cost-en">The estimated monthly cost is a year-over-year change, assuming average rates and an 80% loan</a></li>
           <li><a href="#jeonse-ratio-en">The jeonse ratio divides one average by another, so it may belong to no actual complex</a></li>
           <li><a href="#cancelled-unregistered-en">Cancelled deals and deals not yet registered</a></li>
           <li><a href="#renewal-cap-en">What renewals show, and what the 5% cap hides</a></li>
@@ -352,10 +352,10 @@
     <p>The real monthly cost is measured the same way on both sides &mdash; (interest on what must be borrowed to cover the deposit) &minus; (after-tax interest on what is left in a deposit account), with rent added on the monthly-rent side. The jeonse loan is <strong>assumed</strong> to cover up to 80% of the deposit; limits differ by product and rest on the guarantor's review, so it is not a figure to take as given. Early-repayment fees, guarantee fees, moving costs and the income-tax deduction on loan interest are left out. Any claim that one side is cheaper holds only inside these assumptions.</p>
     <p>Jeonse-loan rate: Bank of Korea average on outstanding bank jeonse loans (balance basis, the month shown on the screen), a market average, not the rate you would get on a new loan. Deposit rate: new time-deposit average (same month).</p>
 
-    <h2 id="monthly-cost-en">The estimated monthly cost is a year-over-year change at average rates</h2>
-    <p>The all-Seoul line on the jeonse vs monthly rent screen, the estimated monthly cost (at average rates), converts the monthly cost a year ago and now under one assumption and compares them. 80% of the deposit is borrowed at the average jeonse-loan rate (Bank of Korea ECOS, balance basis); the other 20% is your own money, so it gives up the after-tax (15.4% tax) interest of the new time-deposit average. The monthly-rent option adds rent to the same financing cost. It uses the same formula as the jeonse vs monthly rent calculator.</p>
+    <h2 id="monthly-cost-en">The estimated monthly cost is a year-over-year change, assuming average rates and an 80% loan</h2>
+    <p>The all-Seoul line on the jeonse vs monthly rent screen, the estimated monthly cost (at average rates), converts the monthly cost a year ago and now under the same assumptions and compares them. 80% of the deposit is borrowed at the average jeonse-loan rate (Bank of Korea ECOS, balance basis); the other 20% is your own money, so it gives up the after-tax (15.4% tax) interest at the average rate on new time deposits. The 80% is an <strong>assumption</strong>, chosen because it is a common limit on jeonse-loan guarantees. The monthly-rent option adds rent to the same financing cost. It uses the same formula as the jeonse vs monthly rent calculator, and it describes past change, not a forecast.</p>
     <p>Deposits and rent are all-Seoul medians of jeonse and monthly-rent pairs in the same complex and size band, from new contracts over the six months to each month; rates are that month's. The year-over-year change always comes with a 95% interval (bootstrap resampling complex pairs, 2,000 draws, fixed seed) and two shares. The rate share is the change when last year's deposit and rent stay put and only rates move; the deposit share (deposit-and-rent share for monthly rent) is the rest. The two shares multiply, not add, to the total change.</p>
-    <p>The limits: loan and deposit rates are market averages, not the rate you would get on a new loan. The 80% loan is an <strong>assumption</strong>; limits depend on the product and the review. Interval ends come from random resampling and move by about 1pp with another seed. It starts with five year-over-year points (April to August 2026) and is not called a series until 29 months of raw data (November 2024 to March 2027) give twelve points. District and size-band cells are not published because their intervals are wide. If the file is missing or its last point is more than four months older than the end of the conversion window, the line is not shown.</p>
+    <p>The limits: loan and deposit rates are market averages, not the rate you would get on a new loan. The loan rate averages outstanding jeonse loans while the deposit rate averages new deposits, so they describe different moments. Actual loan limits and ratios depend on the product and the review. Interval ends come from random resampling and move by about 1pp with another seed. Until there are twelve year-over-year points (raw data through March 2027), it is not called a series, and the line says how many points it is the last of. Only the all-Seoul line is shown; district and size-band cells are not published because their intervals are wide. If the file is missing or its last point is more than four months older than the end of the conversion window, the line is not shown.</p>
 
     <h2 id="jeonse-ratio-en">The jeonse ratio divides one average by another, so it may belong to no actual complex</h2>
     <p>The jeonse ratio on the price tables is that district's <strong>jeonse deposit per pyeong &divide; sale price per pyeong</strong>. Both sides are normalised for size, but the two averages are drawn from <strong>different sets of complexes</strong>. When jeonse filings cluster in one set of buildings and sales in another, the ratio between the two averages is nobody's actual ratio.</p>
