@@ -16,6 +16,7 @@ import { budgetFactSentences } from "../budget-facts.ts";
 import { districtSentences } from "../district-summary.ts";
 import { factSentences } from "../district-facts.ts";
 import { rentFlowSentences } from "../rent-flow.ts";
+import { MOVE_IN_DISTRICT_LINK, districtMoveInSentence } from "../move-in.ts";
 import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-links.ts";
 import { cancelDistricts, cancelMonths, conversionTable, floorDistricts, renewalDistricts, renewalWolseDistricts } from "../district-tables.ts";
 import { FALLBACK_NOTE_KO, hasFallback } from "../summary-note.ts";
@@ -269,6 +270,16 @@ function districtSummary(realestate, district, locale = "ko", spread = null) {
 const districtRenewal = (facts, locale = "ko") => sentenceBlock(renewalSentences(facts, locale));
 const districtFacts = (facts, locale = "ko") => sentenceBlock(factSentences(facts, locale));
 const districtRentFlow = (name, flow, locale = "ko") => sentenceBlock(rentFlowSentences(name, flow, locale));
+// 입주 예정 한 줄(#677): 문장은 move-in.ts, 끝에 price-outlook 구×반기 표로 가는 링크 하나. 구·집계가 없으면 빈 조각.
+const districtMoveIn = (name, moveIn, locale = "ko") => {
+  const text = districtMoveInSentence(name, moveIn, locale);
+  if (!text) return <></>;
+  return (
+    <>
+      {text} <a href={MOVE_IN_DISTRICT_LINK.href}>{MOVE_IN_DISTRICT_LINK[locale === "en" ? "en" : "ko"]}</a>
+    </>
+  );
+};
 
 // 다른 자치구 링크 묶음. 머리글·상자의 분기와 id는 linksBlockShape, 경로는 slugLinkHref다.
 // 경로는 DISTRICT_PAGES(코드가 정한 slug)로 만든 `./district-<slug>.html`이라 `javascript:`로 시작할 수 없다(React 19 차단 차이의 대상이 아니다).
@@ -897,6 +908,7 @@ export const fragments = {
   districtRenewalHtml: districtRenewal,
   districtFactsHtml: districtFacts,
   districtRentFlowHtml: districtRentFlow,
+  districtMoveInHtml: districtMoveIn,
   districtLinksHtml: districtLinks,
   conversionTableHtml: conversionTableJsx,
   cancelDistrictsHtml: cancelDistrictsJsx,
