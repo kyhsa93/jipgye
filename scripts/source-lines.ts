@@ -22,7 +22,7 @@ export const SOURCES = {
 
 /**
  * legal 이 권한 출처 문구 원문(#450 legal Q4 표, 2026-10-25). 바이트를 고정한다 - 고치려면 legal 판정이 먼저다.
- * molitSale 은 Release 본문(scripts/build-correction-release.ts)이 수집 시각을 끼워 쓰는 문장이다. Release 가 이 상수를 import 하는 것은 #588 PR2(Release 경로).
+ * molitSale 은 Release 본문(scripts/build-correction-release.ts)이 수집 시각을 끼워 쓰는 문장이다. Release 는 이 상수를 import 한다(#588 PR2) - 수집 시각은 Release 가 끼운다.
  * ecos·rone 은 legal 이 한국어만 권했다 - 영어는 legal 판정 없이 만들지 않는다.
  */
 export const ATTRIBUTION = {
