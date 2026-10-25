@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { copyFileSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
-import { NAME, STALE_MONTHS, latestPoint, monthlyCostLineHtml, monthlyCostText } from "../scripts/monthly-cost-line.ts";
+import { NAME, SERIES_POINTS, STALE_MONTHS, latestPoint, monthlyCostLineHtml, monthlyCostText } from "../scripts/monthly-cost-line.ts";
 import { NAME as GENERATOR_NAME } from "../scripts/build-monthly-cost.ts";
 import { FIXTURE_NOW, buildFixtureSite } from "./helpers/fixture-site.mjs";
 
@@ -14,15 +14,15 @@ const data = JSON.parse(readFileSync(FIXTURE, "utf8"));
 const REF = "202610";
 
 const KO =
-  "환산 월 비용(평균금리 가정) · 서울 전체, 2025.08→2026.08: 전세안 월 165.2만원 → 208.8만원, +26.39%(95% 구간 +22.21~+28.43%) — 금리 몫 +8.65%, 보증금 몫 +16.33%. " +
-  "월세안 월 175만원 → 205.3만원, +17.31%(95% 구간 +14.02~+20.64%) — 금리 몫 +4.68%, 보증금·월세 몫 +12.06%. " +
-  "각 달까지 6개월 신규 계약의 중앙값이고, 보증금의 80%는 전세대출, 20%는 자기 돈(포기한 세후 예금이자)으로 가정했습니다. " +
-  "대출·예금 금리는 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. 1년 변화 점 5개 가운데 마지막 점이며 아직 계열이 아닙니다.";
+  "환산 월 비용(평균금리 가정) · 서울 전체, 2025.08→2026.08: 전세안 월 165.2만원 → 208.8만원, +26.39%(95% 구간 +22.21~+28.43%; 금리 몫 +8.65%, 보증금 몫 +16.33%). " +
+  "월세안 월 175만원 → 205.3만원, +17.31%(95% 구간 +14.02~+20.64%; 금리 몫 +4.68%, 보증금·월세 몫 +12.06%). " +
+  "6개월 신규 계약 중앙값에 보증금 80% 대출·20% 자기 돈을 가정한 환산입니다. " +
+  "대출·예금 금리는 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. 1년 변화 점 5개 가운데 마지막 점이며 아직 계열이 아니고, 전망이 아닙니다.";
 const EN =
-  "Estimated monthly cost (at average rates), all of Seoul, 2025.08→2026.08: jeonse 165.2 → 208.8 (10k KRW a month), +26.39% (95% interval +22.21~+28.43%) — rate share +8.65%, deposit share +16.33%. " +
-  "Monthly rent 175 → 205.3, +17.31% (95% interval +14.02~+20.64%) — rate share +4.68%, deposit-and-rent share +12.06%. " +
-  "Medians of new contracts over the six months to each month; assumes 80% of the deposit is a jeonse loan and 20% your own money (forgone after-tax deposit interest). " +
-  "Loan and deposit rates are market averages, not the rate you would get on a new loan. The last of 5 year-over-year points, not yet a series.";
+  "Estimated monthly cost (at average rates), all of Seoul, 2025.08→2026.08: jeonse 165.2 → 208.8 (10k KRW a month), +26.39% (95% interval +22.21~+28.43%; rate share +8.65%, deposit share +16.33%). " +
+  "Monthly rent 175 → 205.3, +17.31% (95% interval +14.02~+20.64%; rate share +4.68%, deposit-and-rent share +12.06%). " +
+  "Medians of six months of new contracts, assuming 80% of the deposit is borrowed and 20% is your own money. " +
+  "Loan and deposit rates are market averages, not the rate you would get on a new loan. The last of 5 year-over-year points, not yet a series; not a forecast.";
 
 const clone = () => JSON.parse(JSON.stringify(data));
 
@@ -40,9 +40,23 @@ test("파일이 있으면 마지막 점을 글자 그대로 적는다(ko/en)", (
 
 test("정직성 문구: 평균금리 가정·#589 표현·80% 가정·점(계열 아님)·구간·두 몫", () => {
   const { ko, en } = monthlyCostText(data, REF);
-  for (const s of ["평균금리 가정", "시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다", "80%", "아직 계열이 아닙니다", "95% 구간", "금리 몫", "보증금 몫"]) assert.ok(ko.includes(s), s);
-  for (const s of ["at average rates", "market averages", "not the rate you would get on a new loan", "80%", "not yet a series", "95% interval", "rate share", "deposit share"])
+  for (const s of ["평균금리 가정", "시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다", "80%", "아직 계열이 아니고", "전망이 아닙니다", "95% 구간", "금리 몫", "보증금 몫"]) assert.ok(ko.includes(s), s);
+  for (const s of ["at average rates", "market averages", "not the rate you would get on a new loan", "80%", "not yet a series", "not a forecast", "95% interval", "rate share", "deposit share"])
     assert.ok(en.includes(s), s);
+});
+
+test("점이 12개(계열)가 되면 「아직 계열이 아니」 구절만 빠지고 나머지는 같다", () => {
+  // 12점 픽스처: 같은 픽스처 앞에 202509~202603 일곱 점(합성, 값은 첫 점 복제)을 더해 202509~202608 열두 점으로 만든다.
+  const d = clone();
+  const extra = ["202509", "202510", "202511", "202512", "202601", "202602", "202603"].map((month) => ({ ...JSON.parse(JSON.stringify(d.points[0])), month }));
+  d.points = [...extra, ...d.points];
+  assert.equal(d.points.length, SERIES_POINTS);
+  const { ko, en } = monthlyCostText(d, REF);
+  assert.equal(ko, KO.replace("1년 변화 점 5개 가운데 마지막 점이며 아직 계열이 아니고, 전망이 아닙니다.", "1년 변화 점 12개 가운데 마지막 점이며, 전망이 아닙니다."));
+  assert.equal(en, EN.replace("The last of 5 year-over-year points, not yet a series; not a forecast.", "The last of 12 year-over-year points; not a forecast."));
+  assert.ok(!ko.includes("계열") && !en.includes("series"));
+  d.points = d.points.slice(1);
+  assert.ok(monthlyCostText(d, REF).ko.includes("11개 가운데 마지막 점이며 아직 계열이 아니고, 전망이 아닙니다."));
 });
 
 test("보이는 숫자는 파일 숫자 그대로이고 칸·중앙 보증금 원값은 싣지 않는다", () => {

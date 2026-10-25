@@ -11,13 +11,15 @@ import { shiftMonth } from "./realestate-slots.ts";
  * 안전 폴백: 파일이 없거나, 모양이 어긋나거나(숫자가 아니거나 0 이하 비용·구간 없음), 마지막 점이 전환율 창 끝 달보다
  * STALE_MONTHS 넘게 오래됐으면 null — 줄을 아예 그리지 않는다(지어낸 값이나 0 을 내지 않는다).
  *
- * 문구(ko/en): 이름과 「시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다」(#589 표현)만 판정 원문이다. 나머지 문장 틀은 초안이며
- * po/cmo 판정 뒤 LINE 만 바꾸면 된다.
+ * 문구(ko/en): po·cmo·cpo 판정 원문 그대로(https://github.com/kyhsa93/jipgye/pull/634#issuecomment-6398156677).
+ * 「아직 계열이 아니」 구절은 점이 SERIES_POINTS 개 미만일 때만 붙인다.
  */
 
 export const NAME = { ko: "환산 월 비용(평균금리 가정)", en: "Estimated monthly cost (at average rates)" };
 /** 전환율 창 끝 달(conversion.json months 의 마지막)보다 이만큼 넘게 오래된 점은 낡은 것으로 본다. ECOS 두 계열은 1~2달 늦게 나온다. */
 export const STALE_MONTHS = 4;
+/** 1년 변화 점이 이만큼 모이면 「계열」이다(#586: 원본 29개월 = 202411~202703). */
+export const SERIES_POINTS = 12;
 
 const num = (v) => typeof v === "number" && Number.isFinite(v);
 const ym = (v) => typeof v === "string" && /^\d{6}$/.test(v);
@@ -47,20 +49,22 @@ export function latestPoint(data, refMonth) {
 const LINE = {
   ko: ({ point: p, count }) =>
     `${NAME.ko} · 서울 전체, ${dot(p.base)}→${dot(p.month)}: ` +
-    `전세안 월 ${p.jeonse.baseCost10k}만원 → ${p.jeonse.cost10k}만원, ${signed(p.jeonse.yoy)}%(95% 구간 ${signed(p.jeonse.ci[0])}~${signed(p.jeonse.ci[1])}%) — ` +
-    `금리 몫 ${signed(p.jeonse.rateShare)}%, 보증금 몫 ${signed(p.jeonse.depositShare)}%. ` +
-    `월세안 월 ${p.wolse.baseCost10k}만원 → ${p.wolse.cost10k}만원, ${signed(p.wolse.yoy)}%(95% 구간 ${signed(p.wolse.ci[0])}~${signed(p.wolse.ci[1])}%) — ` +
-    `금리 몫 ${signed(p.wolse.rateShare)}%, 보증금·월세 몫 ${signed(p.wolse.levelShare)}%. ` +
-    `각 달까지 6개월 신규 계약의 중앙값이고, 보증금의 80%는 전세대출, 20%는 자기 돈(포기한 세후 예금이자)으로 가정했습니다. ` +
-    `대출·예금 금리는 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. 1년 변화 점 ${count}개 가운데 마지막 점이며 아직 계열이 아닙니다.`,
+    `전세안 월 ${p.jeonse.baseCost10k}만원 → ${p.jeonse.cost10k}만원, ${signed(p.jeonse.yoy)}%(95% 구간 ${signed(p.jeonse.ci[0])}~${signed(p.jeonse.ci[1])}%; ` +
+    `금리 몫 ${signed(p.jeonse.rateShare)}%, 보증금 몫 ${signed(p.jeonse.depositShare)}%). ` +
+    `월세안 월 ${p.wolse.baseCost10k}만원 → ${p.wolse.cost10k}만원, ${signed(p.wolse.yoy)}%(95% 구간 ${signed(p.wolse.ci[0])}~${signed(p.wolse.ci[1])}%; ` +
+    `금리 몫 ${signed(p.wolse.rateShare)}%, 보증금·월세 몫 ${signed(p.wolse.levelShare)}%). ` +
+    `6개월 신규 계약 중앙값에 보증금 80% 대출·20% 자기 돈을 가정한 환산입니다. ` +
+    `대출·예금 금리는 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. ` +
+    `1년 변화 점 ${count}개 가운데 마지막 점이며${count < SERIES_POINTS ? " 아직 계열이 아니고" : ""}, 전망이 아닙니다.`,
   en: ({ point: p, count }) =>
     `${NAME.en}, all of Seoul, ${dot(p.base)}→${dot(p.month)}: ` +
-    `jeonse ${p.jeonse.baseCost10k} → ${p.jeonse.cost10k} (10k KRW a month), ${signed(p.jeonse.yoy)}% (95% interval ${signed(p.jeonse.ci[0])}~${signed(p.jeonse.ci[1])}%) — ` +
-    `rate share ${signed(p.jeonse.rateShare)}%, deposit share ${signed(p.jeonse.depositShare)}%. ` +
-    `Monthly rent ${p.wolse.baseCost10k} → ${p.wolse.cost10k}, ${signed(p.wolse.yoy)}% (95% interval ${signed(p.wolse.ci[0])}~${signed(p.wolse.ci[1])}%) — ` +
-    `rate share ${signed(p.wolse.rateShare)}%, deposit-and-rent share ${signed(p.wolse.levelShare)}%. ` +
-    `Medians of new contracts over the six months to each month; assumes 80% of the deposit is a jeonse loan and 20% your own money (forgone after-tax deposit interest). ` +
-    `Loan and deposit rates are market averages, not the rate you would get on a new loan. The last of ${count} year-over-year points, not yet a series.`,
+    `jeonse ${p.jeonse.baseCost10k} → ${p.jeonse.cost10k} (10k KRW a month), ${signed(p.jeonse.yoy)}% (95% interval ${signed(p.jeonse.ci[0])}~${signed(p.jeonse.ci[1])}%; ` +
+    `rate share ${signed(p.jeonse.rateShare)}%, deposit share ${signed(p.jeonse.depositShare)}%). ` +
+    `Monthly rent ${p.wolse.baseCost10k} → ${p.wolse.cost10k}, ${signed(p.wolse.yoy)}% (95% interval ${signed(p.wolse.ci[0])}~${signed(p.wolse.ci[1])}%; ` +
+    `rate share ${signed(p.wolse.rateShare)}%, deposit-and-rent share ${signed(p.wolse.levelShare)}%). ` +
+    `Medians of six months of new contracts, assuming 80% of the deposit is borrowed and 20% is your own money. ` +
+    `Loan and deposit rates are market averages, not the rate you would get on a new loan. ` +
+    `The last of ${count} year-over-year points${count < SERIES_POINTS ? ", not yet a series" : ""}; not a forecast.`,
 };
 
 /** 한 줄의 글(ko/en). 못 그리면 null. */
