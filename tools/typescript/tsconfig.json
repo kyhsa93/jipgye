@@ -64,6 +64,7 @@
     "../../scripts/build-floor-gap.ts",
     "../../scripts/build-icons.ts",
     "../../scripts/build-indicators.ts",
+    "../../scripts/build-monthly-cost.ts",
     "../../scripts/build-move-in.ts",
     "../../scripts/build-news-pages.ts",
     "../../scripts/build-outlook.ts",
