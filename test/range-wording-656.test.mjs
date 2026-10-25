@@ -33,16 +33,16 @@ test("method.html: 중앙값 치우침·지난 거래 폭 문단(ko)과 같은 �
   const html = read("method.html");
   assert.ok(html.includes("이렇게 고친 <strong>중앙값</strong>이 한쪽으로 치우쳤는지는 이미 지난 거래로 쟀습니다."));
   assert.ok(!html.includes("이렇게 고친 범위가 맞는지는"));
-  assert.ok(html.includes("5건 이상이면 지난 거래의 가운데 절반(사분위), 3~4건이면 최저~최고를 적습니다."));
+  assert.ok(html.includes("5건 이상이면 지난 거래 가운데 절반(사분위), 3~4건이면 지난 거래 최저~최고(고침)를 적습니다."));
   assert.ok(html.includes("이 폭은 지난 거래가 퍼진 모양이지 다음 거래가 들어올 범위가 아닙니다. 거래 5건의 가운데 절반은 시장이 그대로여도 다음 거래를 셋에 하나꼴로만 담고(건수가 많을수록 절반에 가까워짐), 값이 오르는 동안에는 다음 거래가 폭 위에 놓이기 쉽습니다."));
   assert.ok(html.includes("이 폭이 다음 거래를 실제로 얼마나 담았는지는 2026-11 부터 얼려 두고 채점합니다."));
   assert.ok(html.includes("Whether the adjusted <strong>median</strong> leans one way was checked on deals already done:"));
   assert.ok(!html.includes("The adjustment was checked on deals already done"));
-  assert.ok(html.includes("Five or more deals give the middle half of past deals (quartiles), three or four give their low&ndash;high,"));
+  assert.ok(html.includes("Five or more deals give the middle half of past deals (quartiles), three or four give past deals low&ndash;high (adjusted),"));
   assert.ok(html.includes("This is how past deals spread, not where the next deal will land. The middle half of five deals catches the next one only about one time in three even in a flat market (closer to half with more deals), and in a rising market the next deal tends to land above it."));
   assert.doesNotMatch(html, /기준 시세/);
   // 바닥 「가운데 절반」(앞에 지난 거래의·거래 5건의 가 없는 것)·「middle half」(of past/five deals 가 없는 것)은 남지 않는다.
-  assert.doesNotMatch(html.replace(/지난 거래의 가운데 절반|거래 5건의 가운데 절반/g, ""), /가운데 절반/);
+  assert.doesNotMatch(html.replace(/지난 거래 가운데 절반|거래 5건의 가운데 절반/g, ""), /가운데 절반/);
   assert.doesNotMatch(html.replace(/middle half of (past|five) deals/g, ""), /middle half/);
 });
 
