@@ -126,6 +126,11 @@ export const FOOTERS: Record<string, Record<Lang, string>> = {
     ko: ko([molitKo("전월세 실거래가 공개시스템")], "최근 24개월 순수 전세 갱신 신고를 단지·평형별로 셉니다. 이 값은 원자료를 집계·가공한 것입니다."),
     en: en([molitEn("apartment jeonse and monthly rent filings")], "Pure jeonse renewals filed in the last 24 months, counted by complex and unit type. These are aggregated and processed values."),
   },
+  // 반전세 전환 계산기 절(#673 N1): 시장 전환율은 국토부 전월세, 법정 상한은 ECOS 기준금리(722Y001, fetch-market.ts)로 계산한다 - ECOS 제7조②·가공 꼬리.
+  renewalConvert: {
+    ko: ko([molitKo("전월세 실거래가 공개시스템"), `${SOURCES.ecos.ko} 기준금리`], DERIVED.ko),
+    en: en([molitEn("apartment jeonse and monthly rent filings"), `${SOURCES.ecos.en} (base rate)`], DERIVED.en),
+  },
   // 실거래가격지수는 ECOS 901Y089(build-district-change.ts)라 ECOS 를 적는다(제7조②). 주택가격동향조사는 R-ONE 직접 수집이라 R-ONE 을 적는다(#588 단계 C).
   switchHouse: {
     ko: ko([molitKo("매매 실거래가 공개시스템(중개거래, 해제 제외)"), `${SOURCES.reb.ko} 실거래가격지수·주택가격동향조사(R-ONE)`, SOURCES.ecos.ko], DERIVED.ko),

@@ -90,9 +90,9 @@ test("가공 꼬리 글자와 장별 출처 줄 (#588 단계 C)", () => {
 });
 
 // ECOS 값을 화면에 싣는 장 종류(출처 줄 id). 새 ECOS 장이 생기면 여기에 더한다 - ECOS 약관 제7조②.
-const ECOS_IDS = ["about", "method", "index", "stocks", "budget", "jeonseVsWolse", "switchHouse", "priceOutlook"];
+const ECOS_IDS = ["about", "method", "index", "stocks", "budget", "jeonseVsWolse", "switchHouse", "priceOutlook", "renewalConvert"];
 // ECOS 값으로 계산해 보이는 장 종류 - 가공 꼬리가 있어야 한다. 값을 받은 그대로 보이는 장(index·stocks)과 설명 장(about·method)은 아니다.
-const DERIVED_IDS = ["budget", "jeonseVsWolse", "switchHouse", "priceOutlook"];
+const DERIVED_IDS = ["budget", "jeonseVsWolse", "switchHouse", "priceOutlook", "renewalConvert"];
 
 test("ECOS 값을 싣는 장 종류는 출처 줄에 ECOS 를, 계산해 보이는 장은 가공 꼬리를 ko·en 모두 가진다 (#588 단계 C)", () => {
   for (const id of ECOS_IDS) {
