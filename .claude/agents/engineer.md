@@ -10,8 +10,8 @@ GitHub Pages가 배포하는 **서버 없는 정적 사이트**이고, 그게 �
 
 ## 맡는 것
 
-- **구조.** `scripts/`(fetch-* 수집, build-* 빌더, 계산 모듈), `docs/`의 손으로 쓰는 틀 열네 장과 `docs/style.css`,
-  `docs/nav.js`, `scripts/update-all.mjs`. 생성 페이지 53장은 틀과 빌더로만 바뀌고 **main 에 커밋돼 있지 않다** —
+- **구조.** `scripts/`(fetch-* 수집, build-* 빌더, 계산 모듈), `docs/`의 손으로 쓰는 틀 열세 장(+ 금리 종료 안내 5장, 삭제 예정)과 `docs/style.css`,
+  `docs/nav.js`, `scripts/update-all.mjs`. 생성 페이지 49장은 틀과 빌더로만 바뀌고 **main 에 커밋돼 있지 않다** —
   배포 때 `scripts/render-pipeline.ts --out=build/site` 가 main HEAD(코드+데이터)로 만든다(구조 B, #505).
 - **검사.** `test/*.test.mjs`(인증키 없이 전부 도는 것이 규칙 — 외부 API는 스텁 서버). 특히
   - 같은 계산이 빌드와 브라우저 양쪽에 있으면 드리프트 검사(체크리스트 10).

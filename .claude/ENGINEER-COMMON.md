@@ -4,7 +4,7 @@
 - 작업 위치: 격리 워크트리, 시작 전 `git fetch origin` 후 origin/main 기준.
 - Node 24: 타입 스트리핑이 켜진 Node 24 가 PATH 앞에 있어야 한다(`node -p 'process.features.typescript'` → `strip`). 다른 곳에 있으면 `export PATH=<Node 24 의 bin 폴더>:$PATH`. 골든 도구는 `NODE24_BIN=<Node 24 바이너리 경로>` 로도 받는다(없으면 PATH 의 node).
 - 의존성(첫 단계): `export PATH=~/workspace/jipgye.worktrees/_shared/bin:~/workspace/jipgye.worktrees/_shared/node24/bin:$PATH; scripts/dev/doctor.sh --link`(#608 — Node 24·react-dom·`node_modules`·`tools/golden/node_modules`·`tools/typescript/node_modules`(tsc) 점검, 없으면 공유 사본으로 링크). doctor 가 실패할 때만 `npm ci`. **`npm run test:site`·`health` 앞에는 항상 `node scripts/render-pipeline.ts --out=build/site`**(build/site 가 낡으면 헛통과·헛실패한다; `npm test` 는 pretest 가 한다).
-- 레이아웃(컷오버 B4 이후): main 에 생성 HTML 없음(docs/ 에는 손으로 고치는 틀 14장+정적 자산+docs/data), 사이트는 배포 때 `render-pipeline.ts --out=build/site`. 시험이 생성 장을 읽을 때는 `test/helpers/site-root.mjs` 의 SITE. `npm test` 는 pretest 로 build/site 를 만든다. `npm run test:site`(= build/site 를 읽는 시험 부분집합)가 배포 게이트.
+- 레이아웃(컷오버 B4 이후): main 에 생성 HTML 없음(docs/ 에는 손으로 고치는 틀 13장+금리 종료 안내 5장+정적 자산+docs/data), 사이트는 배포 때 `render-pipeline.ts --out=build/site`. 시험이 생성 장을 읽을 때는 `test/helpers/site-root.mjs` 의 SITE. `npm test` 는 pretest 로 build/site 를 만든다. `npm run test:site`(= build/site 를 읽는 시험 부분집합)가 배포 게이트.
 - 통과해야 할 것: `npm test`, `npm run test:site`, `npm run health`(작업이 건드린 패키지의 `tools/*` `npm test` 포함).
 - 로컬 관문(골든·훅 목록 대조·COUNT·바이트 표): `scripts/dev/gate.sh` — #601 이 병합되면(**있을 때**) PR 전에 한 번 돌리고 원문을 보고에 붙인다. 없으면 위 명령과 골든 증빙으로 대신한다.
 - tsc 도 로컬에서 gate.sh 로 돌린다(CI 와 같은 명령 — tools/typescript 에서 `tsc -p tsconfig.json`; 도구는 `doctor.sh --link` 가 잇는다). 「tsc 가 로컬에 없다」며 건너뛰지 않는다 — gate 의 tsc 줄이 SKIP 이면 doctor 를 먼저 고친다.
