@@ -255,7 +255,8 @@ test("범위 말은 지난 거래의 폭이고 다음 거래 범위가 아니라
   const ko = await v4Page();
   assert.doesNotMatch(ko, /기준 시세/);
   assert.match(ko, /<th scope="col">2026년 10월 값으로 고친 중앙값<\/th>/);
-  assert.match(ko, /<h3>지난 6개월 거래의 폭 — /);
+  assert.match(ko, /<h3>지난 6개월 거래의 폭 — 2026년 10월 값으로 고침<\/h3>/);
+  assert.match(ko, /<caption class="sr-only">가상V4단지 - 지난 6개월 거래의 폭 — 2026년 10월 값으로 고침 \(2\)<\/caption>/);
   assert.match(ko, /지난 거래 가운데 절반 6억원 ~ /);
   const note = '<p class="content-notice">이 폭은 지난 거래가 퍼진 모양이지 다음 거래가 들어올 범위가 아닙니다.';
   assert.ok(ko.includes(`</table></div>${note}`), "설명이 표 바로 아래에 없다");
@@ -264,7 +265,7 @@ test("범위 말은 지난 거래의 폭이고 다음 거래 범위가 아니라
 
   const en = await v4Page("en");
   assert.match(en, /<th scope="col">Median \([^)]* terms\)<\/th>/);
-  assert.match(en, /<h3>Spread of the last 6 months' deals — /);
+  assert.match(en, /<h3>Spread of the last 6 months' deals — adjusted to [^<]*<\/h3>/);
   assert.match(en, /middle half of past deals /);
   assert.match(en, /<\/table><\/div><p class="content-notice">This is how past deals spread, not where the next deal will land\./);
 });
