@@ -9,6 +9,7 @@
 # 단계(순서대로, 이 이름이 요약 줄 앞머리다):
 #   doctor  scripts/dev/doctor.sh 가 있으면 먼저. 실패하면 환경이 깨진 것이라 나머지를 돌리지 않는다.
 #   render  node scripts/render-pipeline.ts --out=build/site  (React 렌더. 폴백 없음 - 실패하거나 폴백 표시가 나오면 실패. 실패하면 build/site 를 읽는 test·site·health 는 건너뛴다)
+#   tsc     tools/typescript: node_modules/.bin/tsc -p tsconfig.json  (CI test.yml 의 「tsc --noEmit」 스텝 `npx tsc -p tsconfig.json` 과 같은 명령 - npx 는 이 .bin/tsc 를 찾아 부를 뿐이다. 도구가 없으면 SKIP + doctor 안내, 있으면 반드시 돈다. render 와 무관해서 render 가 실패해도 돈다)
 #   test    루트: node scripts/run-tests.mjs          (래칫 포함 - test/COUNT)
 #   site    루트: node scripts/run-tests.mjs --site   (배포 게이트 부분집합 - test/COUNT-site)
 #   health  tools/health: node ../../scripts/run-tests.mjs  (CI 에서는 비차단이지만 여기서는 결과를 그대로 알린다)
@@ -70,7 +71,7 @@ else
 fi
 
 if [ "$DOCTOR_OK" = 0 ]; then
-  for n in render test site health golden hooks; do skip "$n" "(doctor 실패로 건너뜀)"; done
+  for n in render tsc test site health golden hooks; do skip "$n" "(doctor 실패로 건너뜀)"; done
   [ -n "$GOLDEN" ] && skip golden-run "(doctor 실패로 건너뜀)"
 else
   # ── render: 실패하거나 폴백 표시(fallback=true)가 나오면 실패 ───────────────────────
@@ -78,6 +79,13 @@ else
   stage render . "$NODE" scripts/render-pipeline.ts --out=build/site || RENDER_OK=0
   if [ "$RENDER_OK" = 1 ] && grep -qE 'fallback=true|legacy 로 (폴백|다시)' "$LOG/render.log"; then
     RES[$((${#RES[@]} - 1))]=FAIL; DETAIL[$((${#DETAIL[@]} - 1))]="폴백 표시가 나왔다"; FIRST_FAIL="${FIRST_FAIL:-render}"; RENDER_OK=0
+  fi
+
+  # ── tsc: CI 와 같은 검사. 도구(tools/typescript/node_modules/.bin/tsc)가 없을 때만 SKIP - 있으면 건너뛰지 않는다 ─────────
+  if [ -e "$ROOT/tools/typescript/node_modules/.bin/tsc" ]; then
+    stage tsc tools/typescript "$NODE" node_modules/.bin/tsc -p tsconfig.json
+  else
+    skip tsc "(TypeScript 도구 없음 - scripts/dev/doctor.sh --link 로 tools/typescript/node_modules 를 잇는다)"
   fi
 
   if [ "$RENDER_OK" = 1 ]; then
