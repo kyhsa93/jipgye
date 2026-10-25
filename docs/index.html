@@ -266,6 +266,7 @@
       realestateShownCount: (shown, total) => `${total}개 중 ${shown}개`,
       realestateUnitCaption: "매매·전세는 전용면적 기준 평당가(3.3㎡), 월세는 거래 1건당 단순평균 보증금 / 월세(면적 보정 없음)입니다. 국토교통부 아파트매매·전월세 실거래가 (서울 25개 자치구 전체). 공급면적(공용면적 포함) 기준 시세보다 높게 나올 수 있습니다. 신고 5건 미만인 구는 한두 건에 좌우돼 값을 내지 않습니다(월초에 잦음).",
       realestateCountSuffix: (n) => `${n}건`,
+      realestateWithheld: (n, now) => `증감 보류 — ${now ? "이번 주 집계 중" : "비교 주 표본 부족"}(${n}건)`,
       realestateLowSample: (n) => `표본 ${n}건`,
       realestateLowSampleTitle: (n) => `신고 ${n}건이라 평균을 내기엔 표본이 부족합니다`,
       realestatePeriodLabel: (basis, span) => `${basis} 기준 ${span}`,
@@ -383,6 +384,7 @@
       realestateShownCount: (shown, total) => `${shown} of ${total}`,
       realestateUnitCaption: "Sale and jeonse are per pyeong of exclusive area (3.3㎡); the monthly-rent column is the per-transaction simple average deposit / rent, with no area adjustment. Based on MOLIT apartment sale & lease transactions (all 25 Seoul districts). May read higher than prices quoted by supply area (which includes shared space). Districts with fewer than 5 reported transactions are left blank, since one or two sales would decide the average (common early in the month).",
       realestateCountSuffix: (n) => `${n} txns`,
+      realestateWithheld: (n, now) => `Change withheld — ${now ? "week still filling" : "comparison week too thin"} (${n} deals)`,
       realestateLowSample: (n) => `${n} txns only`,
       realestateLowSampleTitle: (n) => `${n} reported transaction(s) — too few to average`,
       realestatePeriodLabel: (basis, span) => `${basis} ${span}`,
@@ -1004,13 +1006,19 @@
   const MIN_REPORTED_TRANSACTIONS = 5;
 
   function hasEnoughSample(metric) {
-    if (!metric || metric.transactionCount == null) return true;
-    return metric.transactionCount >= MIN_REPORTED_TRANSACTIONS;
+    return Boolean(metric) && (metric.transactionCount ?? 0) >= MIN_REPORTED_TRANSACTIONS;
   }
 
   function realestateLowSampleHtml(metric) {
-    const n = metric.transactionCount;
+    const n = metric.transactionCount ?? 0;
     return `<span class="low-sample" title="${t("realestateLowSampleTitle")(n)}">${t("realestateLowSample")(n)}</span>`;
+  }
+
+  function realestateTailHtml(m, isOverall) {
+    const w = isOverall && m.changeWithheld;
+    if (!w) return `${realestateChangeHtml(m.change)} ${realestateCountHtml(m)}`;
+    const now = w.current < w.min;
+    return `<span class="tx-count">${t("realestateWithheld")(now ? w.current : w.baseline, now)}</span>`;
   }
 
   function realestateDateHintAttr(metric) {
@@ -1018,16 +1026,16 @@
     return ` title="${t("realestateChangeVs")(metric.baselineDate)}"`;
   }
 
-  function realestateSaleCellHtml(sale) {
+  function realestateSaleCellHtml(sale, isOverall) {
     if (!sale) return "-";
     if (!hasEnoughSample(sale)) return realestateLowSampleHtml(sale);
-    return `<span${realestateDateHintAttr(sale)}>${formatPyeongPrice(sale.avgPricePerPyeong10k)}</span> ${realestateChangeHtml(sale.change)} ${realestateCountHtml(sale)}`;
+    return `<span${realestateDateHintAttr(sale)}>${formatPyeongPrice(sale.avgPricePerPyeong10k)}</span> ${realestateTailHtml(sale, isOverall)}`;
   }
 
-  function realestateJeonseCellHtml(jeonse) {
+  function realestateJeonseCellHtml(jeonse, isOverall) {
     if (!jeonse) return "-";
     if (!hasEnoughSample(jeonse)) return realestateLowSampleHtml(jeonse);
-    return `<span${realestateDateHintAttr(jeonse)}>${formatPyeongPrice(jeonse.avgDepositPerPyeong10k)}</span> ${realestateChangeHtml(jeonse.change)} ${realestateCountHtml(jeonse)}`;
+    return `<span${realestateDateHintAttr(jeonse)}>${formatPyeongPrice(jeonse.avgDepositPerPyeong10k)}</span> ${realestateTailHtml(jeonse, isOverall)}`;
   }
 
   function realestateWolseCellHtml(wolse) {
@@ -1042,8 +1050,8 @@
     return `
       <tr class="${isOverall ? "overall-row" : ""}"${searchAttr}>
         <td>${label}</td>
-        <td data-label="${t("realestateTagSale")}">${realestateSaleCellHtml(entry.sale)}</td>
-        <td data-label="${t("realestateTagJeonse")}">${realestateJeonseCellHtml(entry.jeonse)}</td>
+        <td data-label="${t("realestateTagSale")}">${realestateSaleCellHtml(entry.sale, isOverall)}</td>
+        <td data-label="${t("realestateTagJeonse")}">${realestateJeonseCellHtml(entry.jeonse, isOverall)}</td>
         <td data-label="${t("realestateTagWolse")}">${realestateWolseCellHtml(entry.wolse)}</td>
       </tr>`;
   }

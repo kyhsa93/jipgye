@@ -1,3 +1,5 @@
+import { CHANGE_MIN_COUNT, canShowChange } from "./realestate-format.ts";
+
 const PYEONG_M2 = 3.3058;
 
 /**
@@ -308,43 +310,44 @@ function computeChange(currentValue, baselineValue) {
   return { value10k: value10kDiff, percent };
 }
 
-function withSaleChange(sale, baselineSale, baselineDate) {
-  if (!sale) return sale;
-  const change = computeChange(sale.avgPricePerPyeong10k, baselineSale?.avgPricePerPyeong10k);
-  return change ? { ...sale, change, baselineDate } : sale;
-}
-
-function withJeonseChange(jeonse, baselineJeonse, baselineDate) {
-  if (!jeonse) return jeonse;
-  const change = computeChange(jeonse.avgDepositPerPyeong10k, baselineJeonse?.avgDepositPerPyeong10k);
-  return change ? { ...jeonse, change, baselineDate } : jeonse;
-}
-
-function withWolseChange(wolse, baselineWolse, baselineDate) {
-  if (!wolse) return wolse;
-  const change = computeChange(wolse.avgConvertedPerPyeong10k, baselineWolse?.avgConvertedPerPyeong10k);
-  return change ? { ...wolse, change, baselineDate } : wolse;
+// 두 건수가 문턱(min) 아래면 증감을 내지 않고 이유만 남긴다(`changeWithheld`, #290) - 값 자체는 그대로다.
+function withChange(valueKey, metric, baselineMetric, baselineDate, min) {
+  if (!metric) return metric;
+  const change = computeChange(metric[valueKey], baselineMetric?.[valueKey]);
+  if (!change) return metric;
+  const [current, baseline] = [metric.transactionCount, baselineMetric.transactionCount];
+  // 지난번 값으로 채운 구(carryForward)는 옛 증감을 들고 오므로 보류할 때는 그것도 걷는다.
+  if (!canShowChange(current, baseline, min)) {
+    const { change: _old, baselineDate: _oldDate, ...rest } = metric;
+    return { ...rest, changeWithheld: { current: current ?? 0, baseline: baseline ?? 0, min } };
+  }
+  return { ...metric, change, baselineDate };
 }
 
 export function attachChanges(overall, districts, baseline) {
   const baselineDate = baseline?.date;
   const findBaselineDistrict = (code) => baseline?.districts?.find((d) => d.code === code);
+  const sale = (m, b, min) => withChange("avgPricePerPyeong10k", m, b, baselineDate, min);
+  const jeonse = (m, b, min) => withChange("avgDepositPerPyeong10k", m, b, baselineDate, min);
+  const wolse = (m, b, min) => withChange("avgConvertedPerPyeong10k", m, b, baselineDate, min);
+  const { seoul, district } = CHANGE_MIN_COUNT;
+  const o = baseline?.overall;
 
   return {
     overall: {
-      sale: withSaleChange(overall.sale, baseline?.overall?.sale, baselineDate),
-      saleNational84: withSaleChange(overall.saleNational84, baseline?.overall?.saleNational84, baselineDate),
-      jeonse: withJeonseChange(overall.jeonse, baseline?.overall?.jeonse, baselineDate),
-      wolse: withWolseChange(overall.wolse, baseline?.overall?.wolse, baselineDate),
+      sale: sale(overall.sale, o?.sale, seoul),
+      saleNational84: sale(overall.saleNational84, o?.saleNational84, seoul),
+      jeonse: jeonse(overall.jeonse, o?.jeonse, seoul),
+      wolse: wolse(overall.wolse, o?.wolse, seoul),
     },
     districts: districts.map((d) => {
       const b = findBaselineDistrict(d.code);
       return {
         ...d,
-        sale: withSaleChange(d.sale, b?.sale, baselineDate),
-        saleNational84: withSaleChange(d.saleNational84, b?.saleNational84, baselineDate),
-        jeonse: withJeonseChange(d.jeonse, b?.jeonse, baselineDate),
-        wolse: withWolseChange(d.wolse, b?.wolse, baselineDate),
+        sale: sale(d.sale, b?.sale, district),
+        saleNational84: sale(d.saleNational84, b?.saleNational84, district),
+        jeonse: jeonse(d.jeonse, b?.jeonse, district),
+        wolse: wolse(d.wolse, b?.wolse, district),
       };
     }),
   };
