@@ -74,7 +74,10 @@ test("buildRentFlow: 견줄 달의 파일이 없으면(null) 그 창은 0건이 
   assert.equal(flow.districts["가구"].compare.base, null);
   assert.equal(flow.seoul.compare.base, null);
   assert.equal(flow.districts["가구"].series[MONTHS.indexOf("202507")], null);
-  assert.deepEqual(rentFlowSentences("가구", flow, "ko"), []);
+  // 문단을 지우지 않는다 - 「자료가 비어」 한 줄
+  assert.deepEqual(rentFlowSentences("가구", flow, "ko"), ["전월세 흐름(국토교통부 신고): 가구 견줄 달(2025년 6~8월·2026년 6~8월)의 신고 자료가 비어 내지 않습니다."]);
+  assert.match(rentFlowSentences("가구", flow, "en")[0], /is missing, so no figures are given\.$/);
+  assert.deepEqual(rentFlowSentences("없는구", flow, "ko"), []);
 });
 
 test("versusSeoul: 서울과의 차이가 표본 오차(2배) 안이면 비슷하다고만 한다 - 얇은 구는 같은 차이라도 비슷함이다", () => {
@@ -83,7 +86,11 @@ test("versusSeoul: 서울과의 차이가 표본 오차(2배) 안이면 비슷�
   const thin = (a, b) => versusSeoul({ n: 60, wolseShare: a }, { n: 60, wolseShare: b }, seoul);
   assert.equal(big(40, 60).kind, "more");
   assert.equal(thin(40, 60).kind, "similar");
-  assert.equal(big(40, 41).kind, "less");
+  assert.equal(big(40, 44).kind, "less");
+  // 구 자신의 변화가 제 오차 안이면(d=0 포함) 서울과 부호가 달라도 「반대」가 아니다
+  assert.equal(big(40, 41).kind, "flat");
+  assert.equal(big(40, 40).kind, "flat");
+  assert.equal(big(40, 39.5).kind, "flat");
   assert.equal(big(50, 45).kind, "opposite");
   assert.equal(big(40, 48.3).kind, "similar");
   assert.equal(versusSeoul({ n: 10, wolseShare: 1 }, { n: 10, wolseShare: 2 }, {}), null);
@@ -161,6 +168,11 @@ test("커밋된 산출물: 25구 모두 문장이 나오고(값 또는 표본 �
     const ko = rentFlowSentences(name, flow, "ko").join(" ");
     const en = rentFlowSentences(name, flow, "en").join(" ");
     assert.match(ko, /^전월세 흐름\(국토교통부 신고\): /, name);
+    // 원본 달이 비는 날(수집 공백)에는 「자료가 비어」 한 줄이 정상이다 - 그날 데이터로 다른 PR 의 관문이 깨지지 않게 그 경우는 모양만 본다.
+    if (/자료가 비어 내지 않습니다/.test(ko)) {
+      assert.match(en, /is missing, so no figures are given/, name);
+      continue;
+    }
     assert.match(ko, /\d{4}년 \d+~\d+월|\d{4}년 \d+월~\d{4}년 \d+월/, `${name}: 날짜 라벨이 없다`);
     assert.match(ko, /\d건/, `${name}: 건수가 없다`);
     assert.ok(ko.split(name).length - 1 >= 2, `${name}: 구 이름이 문장에 없다`);

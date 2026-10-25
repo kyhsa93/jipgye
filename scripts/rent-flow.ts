@@ -177,15 +177,20 @@ const money = (amount10k, en) => {
 /**
  * 서울과 견준 한마디. 구의 비중 변화(d)와 서울 변화(dS)의 차이가 표본 오차(두 창 비율의 표준오차 합성, 2배) 안이면
  * 「비슷하다」고만 한다 - 얇은 구가 우연으로 「서울보다 빠르다」로 찍히지 않게. 문턱을 새로 고르지 않으려고 숫자 대신 오차로 가른다.
+ * 서울과 갈리더라도 구 자신의 변화가 제 표본 오차(2배) 안이면(d=0 포함) 「반대」가 아니라 「거의 그대로(flat)」다 - 반대는 구가
+ * 오차 밖으로 서울과 다른 쪽으로 움직였을 때만 말한다.
  */
 export function versusSeoul(b, r, s) {
   if (s?.base?.wolseShare == null || s?.recent?.wolseShare == null) return null;
   const d = r.wolseShare - b.wolseShare;
   const dS = s.recent.wolseShare - s.base.wolseShare;
   const v = (p, n) => ((p / 100) * (1 - p / 100)) / n;
-  const se = 100 * Math.sqrt(v(b.wolseShare, b.n) + v(r.wolseShare, r.n) + v(s.base.wolseShare, s.base.n) + v(s.recent.wolseShare, s.recent.n));
+  const own = v(b.wolseShare, b.n) + v(r.wolseShare, r.n);
+  const se = 100 * Math.sqrt(own + v(s.base.wolseShare, s.base.n) + v(s.recent.wolseShare, s.recent.n));
+  const seOwn = 100 * Math.sqrt(own);
   const seoul = [s.base.wolseShare, s.recent.wolseShare];
   if (!(Math.abs(d - dS) > 2 * se)) return { kind: "similar", seoul };
+  if (!(Math.abs(d) > 2 * seOwn)) return { kind: "flat", seoul };
   if (Math.sign(d) !== Math.sign(dS)) return { kind: "opposite", seoul };
   return { kind: Math.abs(d) > Math.abs(dS) ? "more" : "less", up: d > 0, seoul };
 }
@@ -194,12 +199,14 @@ const VS = {
   ko: {
     similar: (s) => `서울(${s})과의 차이는 표본 오차 안이라 비슷한 흐름으로 봅니다.`,
     opposite: (s) => `서울(${s})과 반대 방향입니다.`,
+    flat: (s) => `서울(${s})은 움직였지만 이 구의 변화는 표본 오차 안이라 거의 그대로로 봅니다.`,
     more: (s, up) => `서울(${s})보다 더 ${up ? "많이 올랐" : "많이 내렸"}습니다.`,
     less: (s, up) => `서울(${s})보다 덜 ${up ? "올랐" : "내렸"}습니다.`,
   },
   en: {
-    similar: (s) => `The gap from Seoul (${s}) is within sampling error, so read it as the same trend.`,
+    similar: (s) => `The gap from Seoul (${s}) is within sampling error, so we treat it as the same trend.`,
     opposite: (s) => `Seoul moved the other way (${s}).`,
+    flat: (s) => `Seoul moved (${s}), but this district's change is within sampling error, so we treat it as roughly flat.`,
     more: (s, up) => `That is a bigger ${up ? "rise" : "fall"} than Seoul's (${s}).`,
     less: (s, up) => `That is a smaller ${up ? "rise" : "fall"} than Seoul's (${s}).`,
   },
@@ -209,11 +216,22 @@ const VS = {
  * 자치구 한 곳의 문장. name 은 자치구 이름(산출물 districts 의 키), flow 는 산출물 전체(달·서울 값).
  * 문장마다 구 이름을 넣는다 - 스물다섯 장이 숫자만 바뀐 같은 문단이 되지 않게(prose-share 고유율, V7 완료 조건).
  * 문턱을 못 넘은 값은 숫자 대신 건수와 함께 「내지 않는다」고 적는다 - 빈칸으로 두지 않는다.
+ * 견줄 달의 원본 파일이 비어(없거나 ok:false) 창을 못 세면 문단을 지우지 않고 「자료가 비어 내지 않는다」 한 줄을 낸다.
  */
 export function rentFlowSentences(name, flow, locale = "ko") {
   const district = name == null ? null : flow?.districts?.[name];
-  if (!district || !flow?.compare || !district.compare?.base || !district.compare?.recent) return [];
+  if (!district) return [];
   const en = locale === "en";
+  const src0 = en ? SOURCES.molit.abbr : SOURCES.molit.ko;
+  if (!flow?.compare || !district.compare?.base || !district.compare?.recent) {
+    const c = flow?.compare;
+    const span = c ? (en ? ` (${spanLabel(c.base[0], c.base.at(-1), "en")} vs ${spanLabel(c.recent[0], c.recent.at(-1), "en")})` : `(${spanLabel(c.base[0], c.base.at(-1))}·${spanLabel(c.recent[0], c.recent.at(-1))})`) : "";
+    return [
+      en
+        ? `Rent flow (${src0} lease filings): filing data for ${name}'s comparison months${span} is missing, so no figures are given.`
+        : `전월세 흐름(${src0} 신고): ${name} 견줄 달${span}의 신고 자료가 비어 내지 않습니다.`,
+    ];
+  }
   const tag = en ? "en-US" : "ko-KR";
   const n = (v) => v.toLocaleString(tag);
   const { base, recent } = flow.compare;
@@ -232,7 +250,7 @@ export function rentFlowSentences(name, flow, locale = "ko") {
     out.push(
       en
         ? `Rent flow (${src} lease filings): in ${name}, monthly-rent and semi-jeonse leases went from ${p1(b.wolseShare)}% of filings in ${baseL} (n=${n(b.n)}) to ${p1(r.wolseShare)}% in ${recentL} (n=${n(r.n)}), ${move}.`
-        : `전월세 흐름(${src} 신고): ${name} 전월세 신고 중 월세·반전세 비중은 ${baseL} ${p1(b.wolseShare)}%(${n(b.n)}건)에서 ${recentL} ${p1(r.wolseShare)}%(${n(r.n)}건)로 ${move}.`
+        : `전월세 흐름(${src} 신고): ${name} 월세·반전세 비중은 ${baseL} ${p1(b.wolseShare)}%(${n(b.n)}건)에서 ${recentL} ${p1(r.wolseShare)}%(${n(r.n)}건)로 ${move}.`
     );
     const vs = versusSeoul(b, r, flow.seoul?.compare);
     if (vs) out.push(VS[en ? "en" : "ko"][vs.kind](`${p1(vs.seoul[0])}% → ${p1(vs.seoul[1])}%`, vs.up));
@@ -273,8 +291,8 @@ export function rentFlowSentences(name, flow, locale = "ko") {
     const p = flow.partial.map(ym);
     out.push(
       en
-        ? `${p.map((x) => `${EN_MON[x.mo - 1]} ${x.y}`).join(" and ")} ${p.length > 1 ? "are" : "is"} still filling (30-day filing window) and not counted.`
-        : `${p.map((x, i) => (i && x.y === p[i - 1].y ? `${x.mo}월` : `${x.y}년 ${x.mo}월`)).join("·")} 계약은 신고 기한(30일)이 남은 덜 찬 달이라 세지 않았습니다.`
+        ? `${p.map((x) => `${EN_MON[x.mo - 1]} ${x.y}`).join(" and ")} not counted (filing window still open).`
+        : `${p.map((x, i) => (i && x.y === p[i - 1].y ? `${x.mo}월` : `${x.y}년 ${x.mo}월`)).join("·")}은 신고 기한이 남은 덜 찬 달이라 세지 않았습니다.`
     );
   }
   return out;
