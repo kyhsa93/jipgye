@@ -8,6 +8,7 @@ import { BUDGET_PAGE_EOK } from "../scripts/budget-pages.ts";
 import { SITE } from "./helpers/site-root.mjs";
 import { loadPage } from "./helpers/digest-page.mjs";
 import { loadConversionPage } from "./helpers/conversion-page.mjs";
+import { loadIndexPage } from "./helpers/index-page.mjs";
 
 // 내 조건 기억 (#654 V5, #679 에서 nav.js 끝으로 옮김): nav.js 끝의 작은 묶음이 화면에서 고른 구·면적·예산을 적어 두고 메인 질문 링크에 붙인다.
 const root = path.resolve(import.meta.dirname, "..");
@@ -239,4 +240,100 @@ test("전세 vs 월세 링크는 넘긴 구·면적으로 답을 낸다 (#654)",
   const params = new URLSearchParams(page.sandbox.location.search);
   assert.deepEqual([params.get("district"), params.get("band")], [district, band], `넘긴 조건을 기본값으로 덮었다 (${href})`);
   assert.match(String(page.resultHtml()), /월/, "답이 비었다");
+});
+
+// 메인 「이번 주 신고된 값」 표의 내 구 (#718 K1): 적어 둔 구가 접힌 표 밖이면 마지막 줄 자리에 바꿔 보이고 「내 구」 표지가 붙는다.
+// 합성 표(구 일곱, 매매 평당가 내림차순 = 처음 보이는 네 구가 정해져 있다)로 돈다 - 실제 데이터의 순위에 기대지 않는다.
+const SEVEN = ["종로구", "중구", "용산구", "성동구", "광진구", "동대문구", "중랑구"];
+const TOP4 = SEVEN.slice(0, 4);
+const metric = (n) => ({ sale: { avgPricePerPyeong10k: n, transactionCount: 30 }, jeonse: { avgDepositPerPyeong10k: n / 2, transactionCount: 30 }, wolse: { avgDeposit10k: n, avgMonthlyRent10k: 100, transactionCount: 30 } });
+const synthetic = () => ({
+  updatedAt: "2026-10-26T00:00:00.000Z",
+  window: { basis: "contract", from: "2026-09-28", to: "2026-10-25", districtFrom: "2026-09-28", weeks: 4 },
+  overall: metric(5000),
+  districts: SEVEN.map((name, i) => ({ code: String(11110 + i), name, ...metric(9000 - i * 500) })),
+});
+
+async function mainTable({ saved, lang, mutate } = {}) {
+  const storage = { ...(saved === undefined ? {} : { myConditions: typeof saved === "string" ? saved : JSON.stringify(saved) }), ...(lang ? { lang } : {}) };
+  const p = await loadIndexPage({
+    storage,
+    mutate,
+    fetch: async (url) => (/\/realestate\.json/.test(String(url)) ? { ok: true, json: async () => synthetic() } : { ok: false, json: async () => ({}) }),
+  });
+  const rows = () => p.app.document.querySelectorAll("#realestate-grid tr[data-district-name]");
+  const names = () => rows().filter((r) => !r.hidden).map((r) => r.getAttribute("data-district-name"));
+  const labelled = () => [...String(p.byId("realestate-grid").innerHTML).matchAll(/<tr[^>]*data-district-name="([^"]*)"[^>]*>\s*<td>[^<]*<span class="tx-count">([^<]*)<\/span>/g)].map((m) => [m[1], m[2]]);
+  const showMore = () => p.byId("realestate-show-more").dispatch("click", { target: { id: "realestate-show-more-button" } });
+  return { p, names, labelled, showMore, count: () => rows().length };
+}
+
+test("적어 둔 구가 없거나 이상한 값이면 표는 지금 그대로다 - 위 네 구, 표지 없음 (#718)", async () => {
+  for (const saved of [undefined, {}, { district: 7 }, { district: "" }, { district: "성남시" }, { district: "constructor" }, [1, 2], "{not json", "null", { area: "60" }]) {
+    const t = await mainTable({ saved });
+    assert.deepEqual(t.names(), TOP4, `저장값 ${JSON.stringify(saved)} 에서 표가 바뀌었다`);
+    assert.deepEqual(t.labelled(), [], `저장값 ${JSON.stringify(saved)} 에서 표지가 붙었다`);
+  }
+});
+
+test("접힌 표 밖의 구는 마지막 줄 자리에 바뀌어 보이고 「내 구」 표지가 붙는다 - 줄 수는 그대로 (#718)", async () => {
+  const t = await mainTable({ saved: { district: "중랑구" } });
+  assert.deepEqual(t.names(), ["종로구", "중구", "용산구", "중랑구"], "넷째 줄이 내 구로 바뀌지 않았다");
+  assert.equal(t.names().length, TOP4.length, "줄 수가 바뀌었다(CLS)");
+  assert.deepEqual(t.labelled(), [["중랑구", "내 구"]]);
+  // 더 보기 문구는 그대로: 보이는 수가 같으니 남은 수도 같다.
+  assert.match(t.p.byId("realestate-show-more").innerHTML, new RegExp(`${SEVEN.length - 4}`));
+  assert.deepEqual((await mainTable({ saved: { district: "광진구" } })).names(), ["종로구", "중구", "용산구", "광진구"]);
+});
+
+test("내 구가 이미 위 네 구에 있으면 줄은 그대로고 표지만 붙는다 (#718)", async () => {
+  const t = await mainTable({ saved: { district: "중구" } });
+  assert.deepEqual(t.names(), TOP4);
+  assert.deepEqual(t.labelled(), [["중구", "내 구"]]);
+});
+
+test("더 보기·검색·정렬은 그대로다 - 펼치면 전부, 검색하면 일치만, 접으면 다시 바꿔 보인다 (#718)", async () => {
+  const t = await mainTable({ saved: { district: "중랑구" } });
+  t.showMore();
+  assert.deepEqual(t.names(), SEVEN, "펼쳤는데 전부 보이지 않는다");
+  t.showMore();
+  assert.deepEqual(t.names(), ["종로구", "중구", "용산구", "중랑구"], "접었는데 내 구 자리가 돌아오지 않았다");
+
+  const input = t.p.byId("realestate-search-input");
+  input.value = "성동";
+  input.dispatch("input");
+  assert.deepEqual(t.names(), ["성동구"], "검색이 내 구 때문에 흐트러졌다");
+  input.value = "";
+  input.dispatch("input");
+  assert.deepEqual(t.names(), ["종로구", "중구", "용산구", "중랑구"]);
+  assert.equal(t.count(), SEVEN.length, "받은 구가 DOM에 다 있어야 검색이 된다");
+
+  // 매매 열을 한 번 더 누르면 오름차순(중랑·동대문·광진·성동·용산·중·종로): 위 넷은 바뀌고, 내 구(중랑구)는 이미 그 안이라 표지만.
+  const sortSale = (page) => page.p.app.document.querySelector(".realestate-table thead").dispatch("click", { target: { closest: () => ({ dataset: { reSort: "sale" } }) } });
+  sortSale(t);
+  assert.deepEqual(t.names(), ["중랑구", "동대문구", "광진구", "성동구"]);
+  assert.deepEqual(t.labelled(), [["중랑구", "내 구"]]);
+  const other = await mainTable({ saved: { district: "중구" } });
+  sortSale(other);
+  assert.deepEqual(other.names(),["중랑구", "동대문구", "광진구", "중구"], "정렬이 바뀐 뒤에도 마지막 줄 자리에 바꿔 보여야 한다");
+});
+
+test("영어 화면도 같다 - 표지만 영어다 (#718)", async () => {
+  const t = await mainTable({ saved: { district: "중랑구" }, lang: "en" });
+  assert.equal(t.names().at(-1), "중랑구");
+  assert.deepEqual(t.labelled(), [["중랑구", "My district"]]);
+});
+
+test("저장소가 막혀도 표는 그대로 그려지고, 메인은 저장값을 적지 않는다 (#718)", async () => {
+  // 메인의 다른 코드(테마)는 막힌 저장소를 따로 다루지 않으므로 내 조건 키만 던지게 한다.
+  const blocked = (script) => `const __ls = globalThis.localStorage; globalThis.localStorage = { ...__ls, getItem: (k) => { if (k === "myConditions") throw new Error("blocked"); return __ls.getItem(k); } };\n${script}`;
+  const t = await mainTable({ mutate: blocked, saved: { district: "중랑구" } });
+  assert.deepEqual(t.names(), TOP4);
+  assert.deepEqual(t.labelled(), []);
+  // 읽기만 한다 - 열고 떠나도 저장값은 그대로다(들어온 것만으로는 적지 않는다, #654).
+  const html = await readFile(path.join(root, "docs/index.html"), "utf8");
+  assert.ok(!/setItem\(\s*["']myConditions/.test(html), "메인이 myConditions 를 적는다");
+  const same = await mainTable({ saved: { district: "중랑구", area: "60" } });
+  same.p.fire("window", "pagehide");
+  assert.deepEqual(JSON.parse(same.p.app.localStorage.getItem("myConditions")), { district: "중랑구", area: "60" }, "메인이 저장값을 바꿨다");
 });

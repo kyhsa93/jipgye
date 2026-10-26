@@ -802,12 +802,16 @@
     return `${formatPyeongPrice(wolse.avgDeposit10k)} / ${t("realestateMonthlyPrefix")}${formatPyeongPrice(wolse.avgMonthlyRent10k)} ${realestateCountHtml(wolse)}`;
   }
 
+  // 내 구(#718): 읽기만, 마지막 줄 자리에
+  let MY;
+  try { MY = JSON.parse(localStorage.getItem("myConditions")).district; } catch {}
+
   function realestateRowHtml(rawEntry, label, isOverall) {
     const entry = normalizeRealestateEntry(rawEntry);
     const searchAttr = isOverall ? "" : ` data-district-name="${label}"`;
     return `
       <tr class="${isOverall ? "overall-row" : ""}"${searchAttr}>
-        <td>${label}</td>
+        <td>${label}${label === MY ? ` <span class="tx-count">${locale === "en" ? "My district" : "내 구"}</span>` : ""}</td>
         <td data-label="${t("realestateTagSale")}">${realestateSaleCellHtml(entry.sale, isOverall)}</td>
         <td data-label="${t("realestateTagJeonse")}">${realestateJeonseCellHtml(entry.jeonse, isOverall)}</td>
         <td data-label="${t("realestateTagWolse")}">${realestateWolseCellHtml(entry.wolse)}</td>
@@ -840,9 +844,10 @@
     const query = input.value.trim().toLowerCase();
     const rows = document.querySelectorAll("#realestate-grid tr[data-district-name]");
     const limit = realestateExpanded ? rows.length : MAX_VISIBLE_DISTRICTS;
+    const mine = [...rows].findIndex((tr) => tr.getAttribute("data-district-name") === MY);
     rows.forEach((tr, index) => {
       const name = (tr.getAttribute("data-district-name") || "").toLowerCase();
-      tr.hidden = query.length > 0 ? !name.includes(query) : index >= limit;
+      tr.hidden = query.length > 0 ? !name.includes(query) : index >= limit - (mine >= limit) && index !== mine;
     });
 
     // 검색 중에는 몇 개를 접었다는 말이 뜻을 잃는다. 조건에 맞는 것이 전부다.
