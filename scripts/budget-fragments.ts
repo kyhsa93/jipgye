@@ -215,7 +215,7 @@ export function candidatesShape(band, complexFiles) {
   const month = reference ? `${reference.slice(0, 4)}년 ${Number(reference.slice(4))}월` : "기준 달";
   const label = `${min / 10_000}억대`;
   if (!rows.length) {
-    return { empty: `${month} 값으로 고친 중앙값이 ${label}인 단지·평형이 없습니다. 같은 평형이 6개월 동안 3번 이상 거래돼야 범위를 낼 수 있습니다.` };
+    return { empty: `${month} 값으로 고친 중간값이 ${label}인 단지·평형이 없습니다. 같은 평형이 6개월 동안 3번 이상 거래돼야 범위를 낼 수 있습니다.` };
   }
   const byDistrict = new Map();
   for (const row of rows) byDistrict.set(row.district, (byDistrict.get(row.district) ?? 0) + 1);
@@ -236,7 +236,7 @@ export function candidatesShape(band, complexFiles) {
   const bandCounts = AREA_BANDS.map(([bandLabel, f]) => `${bandLabel} ${rows.filter(f).length}`).join(" · ");
   return {
     intro:
-      `${month} 값으로 고친 중앙값이 ${label}인 단지·평형은 서울에 ${rows.length.toLocaleString("ko-KR")}곳입니다. ` +
+      `${month} 값으로 고친 중간값이 ${label}인 단지·평형은 서울에 ${rows.length.toLocaleString("ko-KR")}곳입니다. ` +
       `같은 평형이 최근 6개월에 3번 이상 거래돼 범위를 낼 수 있었던 곳만 셉니다 — 거래가 드문 단지는 빠집니다.`,
     bandCounts: `평형대별: ${bandCounts}`,
     districts: `자치구별: ${districts.map(([d, n]) => `${d} ${n}`).join(" · ")}`,

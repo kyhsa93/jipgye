@@ -73,9 +73,9 @@ export function candidates(series) {
   const level = (map, t) => (map.has(t) ? [map.get(t)] : null);
 
   return [
-    { id: "vol_norm", ko: "거래량: 최근 3개월 / 그 전 24개월", en: "Volume: last 3 months vs prior 24", lags: [0, 1],
+    { id: "vol_norm", ko: "거래 건수: 최근 3개월 / 그 전 24개월", en: "Volume: last 3 months vs prior 24", lags: [0, 1],
       fn: (t) => { const a = avg(vol, t, 3); const b = avg(vol, t - 3, 24); return a === null || b === null ? null : [a - b]; } },
-    { id: "vol_yoy", ko: "거래량: 3개월 전년 대비", en: "Volume: 3-month, year on year", lags: [0, 1],
+    { id: "vol_yoy", ko: "거래 건수: 3개월 전년 대비", en: "Volume: 3-month, year on year", lags: [0, 1],
       fn: (t) => { const a = avg(vol, t, 3); const b = avg(vol, t - 12, 3); return a === null || b === null ? null : [a - b]; } },
     { id: "jr_kb", ko: "전세가율(KB 지수비) 수준", en: "Jeonse ratio (KB index ratio), level", lags: [0, 1],
       fn: (t) => (has([kbs, t], [kbj, t]) ? [kbj.get(t) - kbs.get(t)] : null) },
@@ -261,7 +261,7 @@ export function leadSentence(rows, locale = "ko") {
       vol && vol.gain < 0
         ? locale === "en"
           ? ` Volume, the usual suspect, made the three-month forecast worse (${vol.base}pp → ${vol.with}pp).`
-          : ` 흔히 먼저 움직인다고 하는 거래량은 넣으면 3개월 오차가 오히려 ${vol.base}%p에서 ${vol.with}%p로 커졌습니다.`
+          : ` 흔히 먼저 움직인다고 하는 거래 건수는 넣으면 3개월 오차가 오히려 ${vol.base}%p에서 ${vol.with}%p로 커졌습니다.`
         : "";
     return locale === "en"
       ? `Of the ${tried} indicators tried, none consistently beat the price-only model three or six months out — in Seoul and in at least four of the five regions.` + volText

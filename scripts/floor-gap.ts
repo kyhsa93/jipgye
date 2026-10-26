@@ -212,7 +212,7 @@ export function leadSentence(sale, jeonse, locale = "ko") {
 
   const head = en
     ? `In the same complex and the same unit type, a first-floor apartment sells for ${size(sale.low.median)}% less than the third floor and up — the median across ${cells} matched unit types, and it comes out cheaper in ${sale.low.cheaperShare}% of them.`
-    : `같은 단지 같은 평형에서 1층은 3층 이상보다 ${size(sale.low.median)}% 싸게 팔립니다. 맞물린 ${cells}칸의 중앙값이고, 그 가운데 ${sale.low.cheaperShare}%에서 1층이 더 쌌습니다.`;
+    : `같은 단지 같은 평형에서 1층은 3층 이상보다 ${size(sale.low.median)}% 싸게 팔립니다. 맞물린 ${cells}칸의 중간값이고, 그 가운데 ${sale.low.cheaperShare}%에서 1층이 더 쌌습니다.`;
 
   if (!jeonseText) return head;
 
@@ -243,7 +243,7 @@ export function topSentence(sale, locale = "ko") {
 
   const body = en
     ? `Against the floors below it in the same unit type, the top floor differs by a median ${signed} across ${cells} matched unit types, and ${sale.top.cheaperShare}% of them came in cheaper.`
-    : `같은 평형의 아래층들과 견주면 최상층은 중앙값 ${signed} 차이입니다. 맞물린 ${cells}칸이고, 그 가운데 ${sale.top.cheaperShare}%는 오히려 더 쌌습니다.`;
+    : `같은 평형의 아래층들과 견주면 최상층은 중간값 ${signed} 차이입니다. 맞물린 ${cells}칸이고, 그 가운데 ${sale.top.cheaperShare}%는 오히려 더 쌌습니다.`;
 
   if (!flat) return body;
 

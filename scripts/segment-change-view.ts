@@ -77,11 +77,11 @@ export function segmentChangeView(data) {
   const recent = span(data.periods.recent);
   const ref = data.ageRefYear;
   const intro: Both = {
-    ko: `같은 칸(구·단지·전용면적)이 ${base.ko}${wa(base.ko)} ${recent.ko}에 모두 거래된 ${num(data.cells)}칸을 기준 시기 중앙값의 가격대와 ${ref}년 기준 연식으로 나눠, 칸마다 잰 변화의 중앙값입니다.`,
+    ko: `같은 칸(구·단지·전용면적)이 ${base.ko}${wa(base.ko)} ${recent.ko}에 모두 거래된 ${num(data.cells)}칸을 기준 시기 중간값의 가격대와 ${ref}년 기준 연식으로 나눠, 칸마다 잰 변화의 중간값입니다.`,
     en: `Units (same district, complex and exclusive area) traded in both ${base.en} and ${recent.en}, ${num(data.cells)} in all, grouped by the price band of their base-period median and by building age as of ${ref}: the median of each unit's change.`,
   };
   const groups = [
-    { label: { ko: "가격대(기준 시기 중앙값)", en: "Price band (base-period median)" }, rows: rowsOf(data.price) },
+    { label: { ko: "가격대(기준 시기 중간값)", en: "Price band (base-period median)" }, rows: rowsOf(data.price) },
     { label: { ko: `연식(${ref}년 기준)`, en: `Building age (as of ${ref})` }, rows: rowsOf(data.age) },
   ];
   const lines = [pairLine(PRICE_DIM, data.price, data.pairs?.price), pairLine(AGE_DIM, data.age, data.pairs?.age)].filter(Boolean);
@@ -93,7 +93,7 @@ export function segmentChangeView(data) {
     : null;
   // #685 판정: 화면 PR 은 평균 회귀 한계를 표 옆에 적는다.
   const caveat: Both = {
-    ko: "칸을 기준 시기 중앙값으로 가격대에 넣어, 기준값이 우연히 높거나 낮았던 칸이 양 끝 가격대에 모입니다(평균 회귀). 그래서 양 끝 가격대의 변화는 그만큼 어긋날 수 있고, 이를 보정하지 않았습니다.",
+    ko: "칸을 기준 시기 중간값으로 가격대에 넣어, 기준값이 우연히 높거나 낮았던 칸이 양 끝 가격대에 모입니다(평균 회귀). 그래서 양 끝 가격대의 변화는 그만큼 어긋날 수 있고, 이를 보정하지 않았습니다.",
     en: "Units are banded by their base-period median, so units whose base value was by chance high or low gather in the end bands (regression to the mean). Changes in the end bands can be off for that reason; this is not corrected.",
   };
   const noYear: Both | null = data.noBuildYear

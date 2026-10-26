@@ -312,7 +312,7 @@
       realestateShowMore: (n) => `Show ${n} more districts`,
       realestateShowLess: "Show less",
       realestateShownCount: (shown, total) => `${shown} of ${total}`,
-      realestateUnitCaption: "Sale and jeonse: average price per 3.3㎡ of exclusive (living) area; the monthly-rent column is the per-transaction simple average deposit / rent, with no area adjustment. Based on MOLIT apartment sale & lease transactions (all 25 Seoul districts). May read higher than prices quoted by supply area (which includes shared space). Districts with fewer than 5 reported transactions are left blank, since one or two sales would decide the average (common early in the month).",
+      realestateUnitCaption: "Sale and jeonse: average price per 3.3㎡ of exclusive (living) area; the monthly-rent column is the per-transaction simple average deposit / rent, with no area adjustment. Based on MOLIT apartment sale & lease transactions (all 25 Seoul districts). May read higher than prices quoted by supply area (which includes shared space). Districts with fewer than 5 reported transactions show \"No data\", since one or two sales would decide the average (common early in the month).",
       realestateCountSuffix: (n) => `${n} txns`,
       realestateWithheld: (n, now) => `Change withheld — ${now ? "week still filling" : "comparison week too thin"} (${n} deals)`,
       realestateLowSample: (n) => `${n} txns only`,
@@ -335,7 +335,7 @@
       footerPrivacyLink: "Privacy Policy",
       footerMethod: "How these numbers are made",
       methodCalloutText:
-        "Reporting runs on a 30-day window, so the most recent weeks are always still filling in, and districts with too few transactions are left blank rather than averaged.",
+        "Reporting runs on a 30-day window, so the most recent weeks are always still filling in, and districts with too few transactions show \"No data\" rather than an average.",
       methodCalloutLink: "How these numbers are made →",
       questionHeading: "More questions",
       homeGoals: "What to do",

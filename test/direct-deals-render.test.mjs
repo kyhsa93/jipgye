@@ -36,8 +36,8 @@ const STATS = buildPayload({
 const SUB_NAV = ["all", "sale", "jeonse", "wolse", "search", "conversion", "renewal", "cancelled"];
 const open = (data = { "direct-deals": STATS }) => loadPage({ file: "cancelled-deals.html", data, subNav: SUB_NAV });
 
-test("문장: 격차는 중앙값·90% 구간·칸 수를 함께 적고, 사유는 모른다고 하며 특수관계라 단정하지 않는다", () => {
-  assert.match(STATS.lead.ko, /중앙값 10% 낮았습니다\(/);
+test("문장: 격차는 중간값·90% 구간·칸 수를 함께 적고, 사유는 모른다고 하며 특수관계라 단정하지 않는다", () => {
+  assert.match(STATS.lead.ko, /중간값 10% 낮았습니다\(/);
   assert.match(STATS.lead.ko, /90% 구간 -10~-10%/);
   assert.match(STATS.lead.ko, /\d+칸/);
   assert.match(STATS.lead.en, /median 10% below/);

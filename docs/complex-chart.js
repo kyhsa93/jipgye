@@ -14,7 +14,7 @@
     const p = ok(s ?? []);
     const v = p.map((x) => x[1]);
     const lo = Math.min(...v);
-    const m = locale === "en" ? ["24-month sale trend", "monthly median", "months", "blank"] : ["24개월 매매 추이", "월 중앙값", "달", "비움"];
+    const m = locale === "en" ? ["24-month sale trend", "monthly median", "months", "blank"] : ["24개월 매매 추이", "월 중간값", "달", "비움"];
     el.innerHTML = s
       ? `<h3>${m[0]}</h3>` +
         (p[1]

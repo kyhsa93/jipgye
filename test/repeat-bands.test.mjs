@@ -38,7 +38,7 @@ const withBands = (patch) => ({ ...V0, bands: { ...N6, ...patch } });
 
 // ---------------------------------------------------------------- 값 = .out
 
-test("n6-bands.json 은 repeat_bands_n6.out 1~5절 숫자 그대로다 (경계·쌍 수·중앙값·구간·간격·앞 거래가 중앙값·차이·N4 대응)", () => {
+test("n6-bands.json 은 repeat_bands_n6.out 1~5절 숫자 그대로다 (경계·쌍 수·중간값·구간·간격·앞 거래가 중간값·차이·N4 대응)", () => {
   const m = OUT.match(/B1 = (\d+), B2 = (\d+)/);
   assert.deepEqual(N6.b, [Number(m[1]), Number(m[2])]);
   const lines = OUT.split("\n");
@@ -47,12 +47,12 @@ test("n6-bands.json 은 repeat_bands_n6.out 1~5절 숫자 그대로다 (경계·
     const c = lines[head + 1 + k].split(" | ");
     const r = N6.rows[k];
     assert.equal(r.n, Number(c[1]), `${c[0]} 쌍 수`);
-    assert.equal(r.f, Number(c[5]), `${c[0]} 앞 거래가 중앙값`);
+    assert.equal(r.f, Number(c[5]), `${c[0]} 앞 거래가 중간값`);
     assert.deepEqual([r.m, r.lo, r.hi], [Number(c[6]), Number(c[8]), Number(c[9])], `${c[0]} 로그 값`);
     const pct = (v) => `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`;
     assert.equal(pct(r.p[0]), c[7], `${c[0]} %`);
     assert.equal(`${pct(r.p[1])}~${pct(r.p[2])}`, c[10], `${c[0]} 구간 %`);
-    assert.equal(r.gap, Number(c[12]), `${c[0]} 간격 중앙값`);
+    assert.equal(r.gap, Number(c[12]), `${c[0]} 간격 중간값`);
     assert.equal(c[14], "", "표시 칸에 값 비움 표시가 없다");
   }
   // 3절: 셋 다 말할 수 있음, 방향은 큼·작음·큼 → say [+1, -1, +1]
@@ -108,7 +108,7 @@ test("판정 통과: 셋 다 91쌍 이상·구간이 안 겹치고 N4 와 방향
   const p = bandsPayload(computeBands(units(), N4_OK));
   assert.equal(p.fold, null);
   assert.deepEqual(p.say, [1, 1, 1]);
-  assert.deepEqual(p.n4, { map: ["upTo6", "upTo15", "upTo25"], cmp: 3, agree: 3 }); // 앞 거래가 중앙값 50,049.5·100,049.5·150,049.5
+  assert.deepEqual(p.n4, { map: ["upTo6", "upTo15", "upTo25"], cmp: 3, agree: 3 }); // 앞 거래가 중간값 50,049.5·100,049.5·150,049.5
 });
 
 test("② 91쌍 미만 가격대가 있으면 접는다(thin), 그 가격대는 값 없이 쌍 수만", () => {
@@ -126,7 +126,7 @@ test("⑤ 구간이 겹치는 쌍은 차이를 싣지 않는다(say 0)", () => {
   assert.deepEqual(p.say.slice(1), [1, 1]);
 });
 
-test("⑥ E: 간격 중앙값 폭이 90일 이상이면 차이 문장을 모두 지운다, 89일이면 둔다", () => {
+test("⑥ E: 간격 중간값 폭이 90일 이상이면 차이 문장을 모두 지운다, 89일이면 둔다", () => {
   assert.deepEqual(bandsPayload(computeBands(units({ gaps: [340, 370, 430] }), N4_OK)).say, [0, 0, 0]);
   const keep = bandsPayload(computeBands(units({ gaps: [341, 370, 430] }), N4_OK));
   assert.deepEqual([keep.spread, keep.say], [89, [1, 1, 1]]);
@@ -171,7 +171,7 @@ test("표: 제목·표 위 문단(방향이 같다·v0 문구)·차이 문장 �
   assert.ok(!/[가-힣]/.test(en), "영어 화면에 한국어가 남지 않는다");
 });
 
-test("표: 행 셋 「낮은 쪽·가운데·높은 쪽 3분의 1」, 경계(만원)·쌍 수·중앙값·90% 구간이 .out 값", () => {
+test("표: 행 셋 「낮은 쪽·가운데·높은 쪽 3분의 1」, 경계(만원)·쌍 수·중간값·90% 구간이 .out 값", () => {
   const h = bandsPart(withBands({}));
   const rows = [...h.matchAll(/<tbody>([\s\S]*?)<\/tbody>/g)][0][1].split("</tr>").filter(Boolean);
   assert.equal(rows.length, 3);
@@ -180,7 +180,7 @@ test("표: 행 셋 「낮은 쪽·가운데·높은 쪽 3분의 1」, 경계(만
   assert.deepEqual(cells(rows[1], "ko"), ["가운데 3분의 1 ≤117,500", "2,109", "+24.1%", "+23.5% ~ +25.0%"]);
   assert.deepEqual(cells(rows[2], "ko"), ["높은 쪽 3분의 1 >117,500", "2,107", "+21.2%", "+20.8% ~ +21.7%"]);
   assert.deepEqual(cells(rows[2], "en"), ["Upper third >117,500", "2,107", "+21.2%", "+20.8% ~ +21.7%"]);
-  assert.match(h, /<tr class="m-ko"><th scope="col">앞 거래가\(만원\)<\/th><th scope="col">쌍 수<\/th><th scope="col">중앙값<\/th><th scope="col">90% 구간<\/th><\/tr>/);
+  assert.match(h, /<tr class="m-ko"><th scope="col">앞 거래가\(만원\)<\/th><th scope="col">쌍 수<\/th><th scope="col">중간값<\/th><th scope="col">90% 구간<\/th><\/tr>/);
 });
 
 test("차이: 말할 수 없는 쌍은 빼고, 한계 문장은 양 끝을 말할 때만, 하나도 없으면 차이 문장과 한계 문장을 모두 뺀다(첫 줄은 남는다)", () => {

@@ -19,9 +19,9 @@ export const REPEAT_LINK: Both = { ko: "어떻게 셌나 →", en: "How it was c
 export const REPEAT_HEAD: Both[] = [
   { ko: "자치구", en: "District" },
   { ko: "쌍 수", en: "Pairs" },
-  { ko: "중앙값", en: "Median" },
+  { ko: "중간값", en: "Median" },
   { ko: "90% 구간", en: "90% range" },
-  { ko: "간격 중앙값(일)", en: "Median gap (days)" },
+  { ko: "간격 중간값(일)", en: "Median gap (days)" },
   { ko: "부동산원(같은 쌍)", en: "REB (same pairs)" },
 ];
 
@@ -43,7 +43,7 @@ export function repeatSalesView(data) {
     return { fold };
   }
   const intro: Both = {
-    ko: `${span.ko} 계약 기준, 같은 집(단지·면적·층)이 300~730일 간격으로 두 번 중개거래된 쌍의 가격 변화 중앙값입니다. 시장 지수가 아니고 연율화하지 않았으며, 다시 팔린 집만 들어옵니다.`,
+    ko: `${span.ko} 계약 기준, 같은 집(단지·면적·층)이 300~730일 간격으로 두 번 중개거래된 쌍의 가격 변화 중간값입니다. 시장 지수가 아니고 연율화하지 않았으며, 다시 팔린 집만 들어옵니다.`,
     en: `Contracts ${span.en}: the median price change across pairs in which the same home (complex, area, floor) sold twice through a broker, 300–730 days apart. It is not a market index, it is not annualised, and only homes that sold again are included.`,
   };
   const s = data.seoul;
@@ -96,7 +96,7 @@ export const BAND_NAMES: Both[] = [
 export const BANDS_HEAD: Both[] = [
   { ko: "앞 거래가(만원)", en: "Earlier (₩10k)" },
   { ko: "쌍 수", en: "Pairs" },
-  { ko: "중앙값", en: "Median" },
+  { ko: "중간값", en: "Median" },
   { ko: "90% 구간", en: "90% range" },
 ];
 // 차이 문장의 이름. 「3분의 1」은 표에 있어 문장에서는 줄이고, 크고 작음은 언어와 무관한 부등호로 적는다(예산).

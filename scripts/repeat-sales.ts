@@ -499,7 +499,7 @@ export const N4_BANDS = [
   ["over25", 250000, Infinity],
 ] as const;
 const BAND_MIN_COUNT = 3; // 5-2 ② 공개 최소 가격대 수
-const GAP_SPREAD_MAX = 90; // 5-2 ⑥ E: 간격 중앙값의 최대 - 최소가 90일 이상이면 차이 문장을 지운다
+const GAP_SPREAD_MAX = 90; // 5-2 ⑥ E: 간격 중간값의 최대 - 최소가 90일 이상이면 차이 문장을 지운다
 /** 낮은–가운데, 가운데–높은, 낮은–높은 (repeat_bands_n6.diff_verdicts 순서). */
 export const BAND_PAIRS = [[0, 1], [1, 2], [0, 2]] as const;
 

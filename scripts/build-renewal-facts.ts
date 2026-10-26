@@ -162,13 +162,13 @@ async function main() {
   );
   if (seoul.gapMatched) {
     console.log(
-      `  갱신 vs 신규 전세: 맞물린 ${seoul.gapMatched.toLocaleString("ko-KR")}건 중앙값 ${seoul.gapMedian}% ·` +
+      `  갱신 vs 신규 전세: 맞물린 ${seoul.gapMatched.toLocaleString("ko-KR")}건 중간값 ${seoul.gapMedian}% ·` +
         ` 시세보다 싸게 맺어진 재계약 ${seoul.gapCheaperShare}%`
     );
   }
   if (seoul.wolse?.matched) {
     console.log(
-      `  월세 갱신 vs 신규(전환율 ${seoul.wolse.rate}%): 맞물린 ${seoul.wolse.matched.toLocaleString("ko-KR")}건 중앙값 ${seoul.wolse.median}%` +
+      `  월세 갱신 vs 신규(전환율 ${seoul.wolse.rate}%): 맞물린 ${seoul.wolse.matched.toLocaleString("ko-KR")}건 중간값 ${seoul.wolse.median}%` +
         ` · ${seoul.wolse.range.map((r) => `${r.rate}%에서 ${r.median}%`).join(" · ")}`
     );
   }

@@ -153,7 +153,7 @@ export function assertDerived(out, { allowEmptyParcels = false } = {}) {
   for (const c of out.cells) {
     exactKeys(c, ALLOWED_KEYS.cell, "cells[]");
     if (!isInt(c.n) || c.n < MIN_HOUSEHOLDS) throw new Error(`칸 호수 ${c.n} < ${MIN_HOUSEHOLDS}`);
-    if (!isInt(c.m)) throw new Error("칸 중앙값이 정수가 아니다");
+    if (!isInt(c.m)) throw new Error("칸 중간값이 정수가 아니다");
     for (const k of ["s", "d", "j", "a"]) if (typeof c[k] !== "string") throw new Error(`칸 ${k}가 문자열이 아니다`);
     for (const f of c.f ?? []) {
       exactKeys(f, ALLOWED_KEYS.floor, "cells[].f[]");

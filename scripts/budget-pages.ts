@@ -30,6 +30,6 @@ export function budgetDescription(page, { deals = 0, candidates = 0, places = []
   if (!deals || !candidates || !places.length) return page.description;
   return (
     `${page.eok}억대(${page.eok}억~${page.eok + 1}억)로 살 수 있는 단지·평형은 ${places.join("·")}에 가장 많습니다. ` +
-    `중앙값이 이 범위인 단지·평형 ${candidates.toLocaleString("ko-KR")}곳과 최근 신고된 매매 ${deals.toLocaleString("ko-KR")}건을 국토교통부 실거래로 모으고, 자기 돈·대출·취득세를 함께 셉니다.`
+    `중간값이 이 범위인 단지·평형 ${candidates.toLocaleString("ko-KR")}곳과 최근 신고된 매매 ${deals.toLocaleString("ko-KR")}건을 국토교통부 실거래로 모으고, 자기 돈·대출·취득세를 함께 셉니다.`
   );
 }

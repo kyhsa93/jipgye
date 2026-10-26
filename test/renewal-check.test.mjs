@@ -92,7 +92,7 @@ test("URL 로 들어온 칸: 답 문장(ko)이 판정 5 문구 그대로, 줄 n�
   const html = table(page);
   assert.match(html, /<th scope="row">갱신요구권 사용<\/th><td>0 \(0%\)<\/td><td>1 \(16\.7%\)<\/td><td>1 \(16\.7%\)<\/td><td>4 \(66\.7%\)<\/td><td>0 \(0%\)<\/td><td>6<\/td>/);
   assert.match(html, /<th scope="row">표시 없음<\/th><td>0 \(0%\)<\/td><td>0 \(0%\)<\/td><td>3 \(60%\)<\/td><td>0 \(0%\)<\/td><td>2 \(40%\)<\/td><td>5<\/td>/);
-  assert.equal(page.text("check-new"), "같은 평형 신규 전세 중앙값 95,000만원(최근 6개월 3건).");
+  assert.equal(page.text("check-new"), "같은 평형 신규 전세 중간값 95,000만원(최근 6개월 3건).");
   assert.doesNotMatch(answer(page) + html, /중앙값|평균|전망/, "답·표에 중앙값·평균·전망");
 });
 
@@ -105,7 +105,7 @@ test("줄 문턱: 3~4건은 「n건 가운데 k건」·비율 없음, 3건 미�
   const html = table(page);
   assert.match(html, /<th scope="row">갱신요구권 사용<\/th><td>0<\/td><td>0<\/td><td>1<\/td><td>3<\/td><td>0<\/td><td>4<\/td>/);
   assert.match(html, /<th scope="row">표시 없음<\/th><td colspan="6"><span class="low-sample">표본 부족\(2건\)<\/span><\/td>/);
-  assert.equal(page.text("check-new"), "같은 평형 신규 전세 0건(최근 6개월) — 중앙값을 내기엔 적습니다.");
+  assert.equal(page.text("check-new"), "같은 평형 신규 전세 0건(최근 6개월) — 중간값을 내기엔 적습니다.");
 });
 
 test("목록에 없는 단지·평형은 자치구×면적대로 내리고 답 첫머리에 그렇다고 적는다", async () => {
@@ -120,7 +120,7 @@ test("목록에 없는 단지·평형은 자치구×면적대로 내리고 답 �
     answer(page),
     "갱신이 3건 미만인 단지·평형은 목록에 없습니다 — 아래는 노원구 60~85㎡ 전체 값입니다. 노원구 60~85㎡ 전세 재계약 13건(최근 24개월) 가운데 갱신요구권을 쓴 6건은 66.7%가 5% 언저리(4.5~5%)에서 맺어졌고, 5%를 넘은 것은 0건입니다. 요구권 표시가 없는 7건은 57.1%가 5%를 넘었습니다."
   );
-  assert.equal(page.text("check-new"), "", "fallback 에 신규 중앙값을 붙였다");
+  assert.equal(page.text("check-new"), "", "fallback 에 신규 중간값을 붙였다");
   assert.match(page.search(), /gu=nowon&apt=%EC%96%87%EC%9D%80%EB%8B%A8%EC%A7%80&area=b%3A60to85/);
 });
 

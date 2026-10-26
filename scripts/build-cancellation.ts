@@ -146,10 +146,10 @@ async function main() {
   const { seoul } = payload;
   console.log(
     `  해제 ${seoul.cancelled.toLocaleString("ko-KR")}건 / 신고 ${seoul.deals.toLocaleString("ko-KR")}건 (${seoul.cancelledShare}%)` +
-      ` · 계약→해제 중앙값 ${seoul.timing?.medianDays ?? "-"}일`
+      ` · 계약→해제 중간값 ${seoul.timing?.medianDays ?? "-"}일`
   );
   console.log(
-    `  등기 중앙값 ${seoul.registration?.medianDays ?? "-"}일 · 익은 달 ${(seoul.registration?.matureMonths ?? []).join(", ") || "-"}` +
+    `  등기 중간값 ${seoul.registration?.medianDays ?? "-"}일 · 익은 달 ${(seoul.registration?.matureMonths ?? []).join(", ") || "-"}` +
       ` 계약 ${seoul.registration?.matured?.toLocaleString("ko-KR") ?? "-"}건 중 미등기` +
       ` ${seoul.registration?.stale?.toLocaleString("ko-KR") ?? "-"}건 (${seoul.registration?.staleShare ?? "-"}%)`
   );

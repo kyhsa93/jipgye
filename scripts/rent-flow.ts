@@ -266,13 +266,13 @@ export function rentFlowSentences(name, flow, locale = "ko") {
     out.push(
       en
         ? `The median new-jeonse deposit in ${name}, all sizes, went from ${money(b.jmed, en)} (n=${n(b.jn)}) to ${money(r.jmed, en)} (n=${n(r.jn)}).`
-        : `${name} 신규 전세 보증금 중앙값(면적 구분 없음)은 ${money(b.jmed, en)}(${n(b.jn)}건) → ${money(r.jmed, en)}(${n(r.jn)}건)입니다.`
+        : `${name} 신규 전세 보증금 중간값(면적 구분 없음)은 ${money(b.jmed, en)}(${n(b.jn)}건) → ${money(r.jmed, en)}(${n(r.jn)}건)입니다.`
     );
   } else {
     out.push(
       en
         ? `${name} has too few new jeonse leases for a median deposit (n=${n(b.jn)} → ${n(r.jn)}).`
-        : `${name} 신규 전세가 ${n(b.jn)}건 → ${n(r.jn)}건뿐이라 보증금 중앙값을 내지 않습니다.`
+        : `${name} 신규 전세가 ${n(b.jn)}건 → ${n(r.jn)}건뿐이라 보증금 중간값을 내지 않습니다.`
     );
   }
 

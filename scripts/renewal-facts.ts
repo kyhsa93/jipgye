@@ -559,7 +559,7 @@ export function wolseLead(seoul, locale = "ko") {
     : `재계약 ${seoul.renewals.toLocaleString(tag)}건 가운데 전세에서 전세로 간 것이 ${share(jeonseKept)}%, 월세에서 월세로 간 것이 ${share(seoul.wolseKept)}%, 유형이 바뀐 것이 ${share(switched)}%입니다. 위의 비교는 첫째 몫만 셉니다.`;
   const head = en
     ? `Tenants renewing on monthly rent pay ${gapWords(wolse.median, "en")} than the median new monthly lease for the same unit type in the same complex that month, counting deposit and rent together at Seoul's measured conversion rate of ${rateText(wolse.rate)} (${matched} matched leases; ${wolse.cheaperShare}% came in under the market).`
-    : `월세로 재계약한 세입자가 내는 값은 같은 단지 같은 평형에 그달 새로 맺어진 월세의 중앙값보다 ${gapWords(wolse.median, "ko")}. 보증금과 월세를 서울 실측 전월세전환율 ${rateText(wolse.rate)}로 묶어 견준 값이고, 맞물린 계약 ${matched}건 가운데 ${wolse.cheaperShare}%가 시세보다 싸게 맺어졌습니다.`;
+    : `월세로 재계약한 세입자가 내는 값은 같은 단지 같은 평형에 그달 새로 맺어진 월세의 중간값보다 ${gapWords(wolse.median, "ko")}. 보증금과 월세를 서울 실측 전월세전환율 ${rateText(wolse.rate)}로 묶어 견준 값이고, 맞물린 계약 ${matched}건 가운데 ${wolse.cheaperShare}%가 시세보다 싸게 맺어졌습니다.`;
   const depends = range.length
     ? en
       ? ` The size depends on that rate — ${range.join(", ")}${jeonseSize ? `; do not read it as large as jeonse's ${jeonseSize}%` : ""}.`
