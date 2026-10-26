@@ -71,7 +71,7 @@ test("예산만 고르면 서울 전체에서 그 구간을 보여준다", async
 
   const html = page.resultHtml();
   assert.match(html, /서울 전체 8억대에서 3건이 거래됐습니다/);
-  assert.match(html, /도봉구 창동 도봉팔억/);
+  assert.match(html, /<strong class="apt">도봉팔억<\/strong><span class="place">도봉구 창동<\/span>/);
   assert.ok(!html.includes("강남십이억"), "다른 예산대 거래가 섞였다");
 });
 
@@ -93,7 +93,7 @@ test("거래마다 단지·면적·층·거래일·거래가를 적는다", asyn
   await page.chooseBudget("8");
 
   const html = page.resultHtml();
-  assert.match(html, /도봉구 창동 도봉팔억/);
+  assert.match(html, /<strong class="apt">도봉팔억<\/strong><span class="place">도봉구 창동<\/span>/);
   assert.match(html, /55\.72㎡ · 12층/);
   assert.match(html, /8\/16/);
   assert.match(html, /8억 5,500만원/);
@@ -102,7 +102,7 @@ test("거래마다 단지·면적·층·거래일·거래가를 적는다", asyn
 test("지역 이름이 빠진 자료에도 고른 지역을 붙여 적는다", async () => {
   const page = await open();
   await page.chooseDistrict("도봉구");
-  assert.match(page.resultHtml(), /도봉구 창동 도봉팔억/);
+  assert.match(page.resultHtml(), /<strong class="apt">도봉팔억<\/strong><span class="place">도봉구 창동<\/span>/);
 });
 
 test("조건에 맞는 거래가 없으면 빈 상태로 알린다", async () => {
@@ -215,7 +215,7 @@ test("단지명으로 서울 전체를 훑는다", async () => {
 
   const html = page.resultHtml();
   assert.match(html, /3건이 거래됐습니다/);
-  assert.match(html, /도봉구 창동 도봉팔억/, "다른 지역 파일까지 훑지 않았다");
+  assert.match(html, /<strong class="apt">도봉팔억<\/strong><span class="place">도봉구 창동<\/span>/, "다른 지역 파일까지 훑지 않았다");
   assert.ok(!html.includes("노원구억"), "단지명이 안 맞는 거래가 섞였다");
 });
 
@@ -580,6 +580,130 @@ test("deal-filters.js 는 gzip ≤2,048B, deal-search 만 defer 로 한 번 읽�
   const users = [];
   for (const f of (await readdir(at(SITE))).filter((x) => x.endsWith(".html")).sort()) {
     if ((await readFile(at(`${SITE}/${f}`), "utf8")).includes("deal-filters.js")) users.push(f);
+  }
+  assert.deepEqual(users, ["deal-search.html"]);
+});
+
+// #745 PR3: 결과 위 적용 조건 칩(× 로 하나씩)·전체 초기화·정렬·빈 결과 풀기 링크·오류 상자. 결과 칸 보조는 쪽 전용 docs/deal-results.js.
+const barHtml = (page) => page.byId("result-bar").innerHTML;
+const press = async (page, id, drop) => {
+  const target = { dataset: { drop }, closest: () => target };
+  page.byId(id).dispatch("click", { target });
+  await page.settle();
+};
+const sortBy = async (page, value) => {
+  page.byId("result-bar").dispatch("change", { target: { id: "sort-select", value } });
+  await page.settle();
+};
+const prices = (html) => [...html.matchAll(/<span class="price">([^<]+)<\/span>/g)].map((m) => m[1]);
+
+test("적용 조건이 결과 위에 칩으로 서고, × 하나가 그 조건만 주소에서 뺀다 (#745 PR3)", async () => {
+  const page = await open({ query: `?${new URLSearchParams({ district: "노원구", max: "9", area: "60-85" })}` });
+  const bar = barHtml(page);
+  for (const name of ["노원구", "9억 이하", "60~85㎡"]) {
+    assert.match(bar, new RegExp(`<li class="c-filter-chip">${name}[^<]*<button type="button" class="c-filter-chip__x" data-drop="[a-z]+" aria-label="[^"]*해제">×</button>`), `${name} 칩이 없다`);
+  }
+  assert.match(bar, /<ul class="c-chips" aria-label="적용 조건">/);
+  await press(page, "result-bar", "max");
+  assert.equal(page.sandbox.location.search, `?${new URLSearchParams({ district: "노원구", area: "60-85" })}`);
+  assert.ok(!barHtml(page).includes("9억 이하"), "지운 조건 칩이 남았다");
+  assert.match(page.resultHtml(), /노원팔억나/);
+  await press(page, "result-bar", "district");
+  assert.equal(page.sandbox.location.search, "?area=60-85");
+  assert.ok(!barHtml(page).includes(">노원구<"), "지운 지역 칩이 남았다");
+});
+
+test("전체 초기화는 조건을 모두 지우고 칩 줄을 비운다 (#745 PR3)", async () => {
+  const page = await open({ query: `?${new URLSearchParams({ district: "노원구", budget: "8", apt: "팔억", direct: "exclude" })}` });
+  assert.match(barHtml(page), /data-drop="all">전체 초기화<\/button>/);
+  await press(page, "result-bar", "all");
+  assert.equal(page.sandbox.location.search, "");
+  assert.ok(!barHtml(page).includes("c-filter-chip"), "초기화 뒤 칩이 남았다");
+  assert.match(page.resultHtml(), /서울 전체에서 \d+건이 거래됐습니다/);
+});
+
+test("정렬: 자치구를 고르면 가격 낮은/높은 순으로 30건 자르기 전에 줄 세우고, 서울 전체에서는 이유와 함께 잠근다 (#745 PR3)", async () => {
+  const page = await open({ query: "?district=%EB%85%B8%EC%9B%90%EA%B5%AC" });
+  assert.deepEqual(prices(page.resultHtml()), ["8억 6,000만원", "9억 5,000만원", "8억 5,000만원"], "기본은 최근 거래순(같은 날은 비싼 것 먼저)");
+  await sortBy(page, "low");
+  assert.deepEqual(prices(page.resultHtml()), ["8억 5,000만원", "8억 6,000만원", "9억 5,000만원"]);
+  assert.match(page.sandbox.location.search, /sort=low/);
+  assert.match(barHtml(page), /<option value="low" selected>가격 낮은 순<\/option>/);
+  await sortBy(page, "high");
+  assert.deepEqual(prices(page.resultHtml()), ["9억 5,000만원", "8억 6,000만원", "8억 5,000만원"]);
+  // 서울 전체 목록은 표본이라 가격순을 켜지 않는다 - 주소에 sort 가 와도 무시하고 지운다.
+  const seoul = await open({ query: "?budget=8&sort=high" });
+  assert.equal(seoul.sandbox.location.search, "?budget=8");
+  assert.match(barHtml(seoul), /<option value="low" disabled>가격 낮은 순<\/option>/);
+  assert.match(barHtml(seoul), /class="result-note">가격순은 자치구를 고르면 켜집니다/);
+  // 정렬 칸은 거래 목록이 있을 때만(단지로 묶어 보기·빈 결과에는 없다).
+  const empty = await open({ query: "?district=%EB%85%B8%EC%9B%90%EA%B5%AC&max=3" });
+  assert.ok(!barHtml(empty).includes("sort-select"));
+});
+
+test("빈 결과는 상태 상자 안에 조건마다 「그것만 뺀 주소」 링크를 준다 (#745 PR3)", async () => {
+  const page = await open({ query: `?${new URLSearchParams({ district: "노원구", max: "3", age: "5" })}` });
+  const html = page.resultHtml();
+  assert.match(html, /^<div class="c-state c-state--empty"><p class="budget-empty">조건에 맞는 신고 거래가 없습니다/);
+  assert.match(html, /<p class="c-state__body">조건을 하나씩 풀어 보세요\.<\/p>/);
+  const links = [...html.matchAll(/<a class="c-chip" href="([^"]+)" data-drop="([a-z]+)">([^<]+)<\/a>/g)].map((m) => [m[2], m[1].replaceAll("&amp;", "&"), m[3]]);
+  assert.deepEqual(links.map(([k]) => k), ["district", "max", "age"]);
+  assert.equal(links[1][1], `/deal-search.html?${new URLSearchParams({ district: "노원구", age: "5" })}`, "max 풀기 링크가 다른 조건까지 지웠다");
+  assert.equal(links[1][2], "「3억 이하」 풀기");
+  // 링크를 눌러도(JS) 주소와 같은 결과로 간다.
+  await press(page, "search-result", "max");
+  assert.equal(page.sandbox.location.search, `?${new URLSearchParams({ district: "노원구", age: "5" })}`);
+});
+
+test("오류 상자는 「오류」 낱말 + role=\"alert\" + 다시 시도 단추다 (#745 PR3)", async () => {
+  const failed = await open({ query: "?district=%EB%85%B8%EC%9B%90%EA%B5%AC", network: { failDeals: true } });
+  await failed.settle();
+  assert.match(failed.resultHtml(), /^<div class="c-state c-state--error" role="alert"><p class="c-state__title">오류<\/p><p class="empty">실거래를 불러오지 못했습니다\. <button type="button" id="load-retry-deals">다시 시도<\/button><\/p><\/div>$/);
+  const boot = await loadDealSearchPage({ status: 500, locale: "en" });
+  assert.match(boot.resultHtml(), /^<div class="c-state c-state--error" role="alert"><p class="c-state__title">Error<\/p>.*id="load-retry">Retry<\/button>/);
+});
+
+test("#747 후속: 전월세에서 숨은 max 는 주소·조건 지우기에 남지 않고, budget+max 는 max 하나로, 목록 밖 max 는 숫자 순 자리에 (#745 PR3)", async () => {
+  const page = await open({ query: "?district=%EB%85%B8%EC%9B%90%EA%B5%AC&max=9" });
+  await page.chooseKind("jeonse");
+  assert.ok(!page.sandbox.location.search.includes("max="), "전세로 바꿨는데 숨은 max 가 주소에 남았다");
+  await page.chooseDistrict("all");
+  assert.equal(page.fieldHidden("reset-field"), true, "숨은 max 만으로 「조건 지우기」가 떴다");
+  await page.chooseKind("sale");
+  assert.match(page.sandbox.location.search, /max=9/, "매매로 돌아오면 max 가 되살아나야 한다");
+
+  const both = await open({ query: "?budget=8&max=9" });
+  assert.equal(both.sandbox.location.search, "?max=9", "budget 과 max 를 함께 적용했다");
+  assert.match(both.resultHtml(), /서울 전체 9억 이하에서/);
+
+  const odd = await open({ query: "?max=7" });
+  const order = [...odd.budgetOptions().matchAll(/value="m(\d+)"/g)].map((m) => +m[1]);
+  assert.deepEqual(order, [3, 5, 7, 8, 10, 15, 20]);
+});
+
+test("결과 줄은 단지명(굵게) → 위치 → 가격(단위) → 전용면적·층·거래일 순이다 (#745 PR3)", async () => {
+  const page = await open({ query: "?district=%EB%8F%84%EB%B4%89%EA%B5%AC" });
+  assert.match(page.resultHtml(), /<li class="budget-deal"><strong class="apt">도봉팔억<\/strong><span class="place">도봉구 창동<\/span><span class="price">8억 5,500만원<\/span><span class="spec">전용 55\.72㎡ · 12층 · <span class="when">8\/16<\/span><\/span><\/li>/);
+  const { readFile } = await import("node:fs/promises");
+  const css = await readFile(new URL("../src/css/c-search.css", import.meta.url), "utf8");
+  assert.match(css, /\.budget-deal > strong\.apt \{[^}]*font-weight: 700;/);
+  assert.match(css, /\.budget-deal > strong\.apt ~ \.spec \{[^}]*flex-basis: 100%;/, "전용·층·거래일이 둘째 줄로 안 내려간다");
+});
+
+test("deal-results.js 는 gzip ≤2,048B, deal-search 만 deal-filters.js 다음에 defer 로 한 번 읽고 서비스워커 사전캐시에 없다 (#681 예외 확장, #745 PR3)", async () => {
+  const { readFile, readdir } = await import("node:fs/promises");
+  const { gzipSync } = await import("node:zlib");
+  const { SITE } = await import("./helpers/site-root.mjs");
+  const at = (p) => new URL(`../${p}`, import.meta.url);
+  const size = gzipSync(await readFile(at("docs/deal-results.js")), { level: 9 }).length;
+  assert.ok(size <= 2048, `docs/deal-results.js gzip ${size}B`);
+  const html = await readFile(at("docs/deal-search.html"), "utf8");
+  assert.equal(html.split('<script src="./deal-results.js" defer></script>').length, 2);
+  assert.ok(html.indexOf("./deal-filters.js") < html.indexOf("./deal-results.js"), "deal-results.js 가 deal-filters.js(조건 목록·정렬) 보다 먼저 돈다");
+  assert.ok(!(await readFile(at("docs/sw.js"), "utf8")).includes("deal-results"), "sw.js 사전캐시에 들어갔다");
+  const users = [];
+  for (const f of (await readdir(at(SITE))).filter((x) => x.endsWith(".html")).sort()) {
+    if ((await readFile(at(`${SITE}/${f}`), "utf8")).includes("deal-results.js")) users.push(f);
   }
   assert.deepEqual(users, ["deal-search.html"]);
 });

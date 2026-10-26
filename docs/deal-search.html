@@ -126,6 +126,7 @@
     <p class="sr-only" role="status" id="search-status"></p>
     <div id="watch-list"></div>
     <div id="complex-card"></div>
+    <div id="result-bar"></div>
     <div id="search-result"></div>
     <div class="content-notice" id="search-note"></div>
   </section>
@@ -147,6 +148,7 @@
 <script src="./watchlist.js" defer></script>
 <script src="./card-renewal.js" defer></script>
 <script src="./deal-filters.js" defer></script>
+<script src="./deal-results.js" defer></script>
 <script src="./complex-card.js" defer></script>
 <script src="./complex-chart.js" defer></script>
 <script src="./analytics.js"></script>
@@ -874,6 +876,7 @@ function renderRent(box) {
   }
 
   const matched = rows.filter(matchesRent);
+  self.sortDeals?.(matched);
   if (!matched.length) {
     box.innerHTML = `<p class="budget-empty">${escapeHtml(t("empty"))}</p>`;
     return;
@@ -980,6 +983,7 @@ function renderFull(box, deals) {
   const matched = deals.filter(
     (deal) => (band10k === null || bandStartOf(deal.amount10k) === band10k) && !(deal.amount10k > self.maxTo) && matchesDetail(deal)
   );
+  self.sortDeals?.(matched);
 
   if (!matched.length) {
     box.innerHTML = `<p class="budget-empty">${escapeHtml(t("empty"))}</p>`;
@@ -1515,7 +1519,7 @@ function syncUrl() {
 
   put("district", district === ALL ? null : district);
   put("budget", band10k === null ? null : String(Math.round(band10k / EOK)));
-  put("max", self.maxTo / EOK || null);
+  put("max", isRent() ? null : self.maxTo / EOK || null);
   put("area", areaKey === ALL ? null : areaKey);
   put("age", ageKey === ALL ? null : ageKey);
   put("apt", aptTerm() || null);
@@ -1686,11 +1690,11 @@ async function main() {
       description: `load deal-search: ${error?.message ?? error}`.slice(0, 100),
       fatal: true,
     });
-    document.getElementById("search-result").innerHTML =
-      `<p class="empty">${escapeHtml(t("loadError"))} <button type="button" id="load-retry">${escapeHtml(t("retry"))}</button></p>`;
-    document.getElementById("load-retry")?.addEventListener("click", (e) => {
-      e.currentTarget.disabled = true;
-      main();
+    window.loadState.showFailure(document.getElementById("search-result"), {
+      message: t("loadError"),
+      retryLabel: t("retry"),
+      wrap: (inner) => `<p class="empty">${inner}</p>`,
+      onRetry: main,
     });
   }
 }

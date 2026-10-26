@@ -55,7 +55,9 @@ const FIXTURE = (() => {
 
 const open = (options = {}) => loadDealSearchPage({ ...FIXTURE, ...options });
 
-const names = (html) => [...html.matchAll(/<span class="place">([^<]+)<\/span>/g)].map((m) => m[1]);
+// 줄 계층(#745 PR3): 단지명(strong.apt) → [표시] → 위치(.place). 「위치 단지명」으로 읽는다.
+const names = (html) =>
+  [...html.matchAll(/<strong class="apt">([^<]*)<\/strong>(?:<span class="tag">[^<]*<\/span>)?<span class="place">([^<]+)<\/span>/g)].map((m) => `${m[2]} ${m[1]}`);
 
 test("전세를 고르고 지역을 고르면 그 지역 전세만 나온다", async () => {
   const page = await open();
