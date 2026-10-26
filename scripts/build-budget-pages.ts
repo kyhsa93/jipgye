@@ -38,6 +38,7 @@ function replaceOnce(html, needle, replacement, what) {
 /**
  * 예산 칩 줄 - 열여덟 장 어디서든 다른 예산대로 한 번에 간다(UIUX #43). 전에는 맨 아래 이웃 두 링크뿐이라
  * 10억 → 7억이 세 장을 거쳤다. 가로 스크롤 없이 격자로 둔다(질문 입구와 같은 원칙).
+ * #745 PR7부터는 아래 선택 컨트롤(budgetGoHtml)이 앞에 서고, 이 줄은 그 뒤 접기(c-fold) 안에 남는다 - JS 없이도 각 장 주소로 가는 링크다.
  */
 export function chipsHtml(page) {
   return (
@@ -48,6 +49,22 @@ export function chipsHtml(page) {
         : `<a href="./${budgetPageFile(eok)}">${eok}억</a>`
     ).join("") +
     `</nav>`
+  );
+}
+
+/**
+ * 예산 선택 컨트롤(#745 PR7): 열여덟 링크를 늘어놓는 대신 select 하나와 이동 단추. 폼은 GET 이다 -
+ * nav.js 가 있으면 고른 예산대의 장(budget-Neok.html, 각 장 주소 그대로)으로 가고, JS 가 없으면 같은 값이 실거래 검색(?budget=N)으로 간다
+ * (메인 질문 입구의 폼과 같은 길). JS 없이 장으로 바로 가는 길은 그 아래 접은 칩 줄(chipsHtml)이다.
+ */
+export function budgetGoHtml(page) {
+  return (
+    `<form class="budget-go" action="./deal-search.html" method="get" data-budget-go="">` +
+    `<label class="c-label" for="budget-go-select">다른 예산대</label>` +
+    `<select class="c-select" id="budget-go-select" name="budget">` +
+    BUDGET_PAGE_EOK.map((eok) => `<option value="${eok}"${eok === page.eok ? " selected" : ""}>${eok}억대</option>`).join("") +
+    `</select><button class="c-btn" type="submit">이동</button></form>` +
+    `<details class="c-fold budget-chips-fold"><summary>예산대 ${BUDGET_PAGE_EOK.length}개 모두 보기</summary>${chipsHtml(page).replace('<nav class="budget-chips"', '<nav class="budget-chips c-fold__body"')}</details>`
   );
 }
 
@@ -87,10 +104,10 @@ function navHtml(page) {
 
 export function buildBudgetPage(baseHtml, page, budget, loanBasis = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, realestate = null) {
   const band = (budget?.bands ?? []).find((b) => b.min10k === page.min10k) ?? null;
-  // 제목과 칩 줄은 본문 칸 안, 어디로 가는가 문장 뒤 후보 앞에 놓인다(#460) - 틀의 제목 자리는 비우고 본문이 들고 간다.
+  // 제목과 예산 선택 컨트롤(+접은 칩 줄)은 본문 칸 안, 어디로 가는가 문장 뒤 단지 목록 앞에 놓인다(#460, #745 PR7) - 틀의 제목 자리는 비우고 본문이 들고 간다.
   // 단지 후보가 많은 구마다 한 줄(동·연식·평형, V12 #658) - 18장이 같은 틀 문장을 싣던 자리에 그 예산대의 데이터를 놓는다.
   const areaLines = areasShape(band, complexFiles).map(areaLine);
-  const body = budgetBodyHtml(band, budget?.periods, loanBasis, mortgageSeries, complexFiles, capStats, policyCounts, `${BUDGET_HEADING_HTML}${chipsHtml(page)}`, areaLines);
+  const body = budgetBodyHtml(band, budget?.periods, loanBasis, mortgageSeries, complexFiles, capStats, policyCounts, `${BUDGET_HEADING_HTML}${budgetGoHtml(page)}`, areaLines);
   if (!body) return null;
 
   let html = baseHtml;

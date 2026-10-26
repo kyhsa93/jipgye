@@ -1268,7 +1268,7 @@ function renderBudget() {
   const band = bandFor(budgetEok * EOK);
 
   budgetResultHtml = band
-    ? budgetHeadHtml(band, cache.budget.periods) + budgetDealsHtml(band)
+    ? budgetHeadHtml(band, cache.budget.periods).replace(/<ul class="budget-deals">.*?<\/ul>/, () => budgetDealsHtml(band))
     : `<p class="budget-empty">${escapeHtml(t("budgetEmpty"))}</p>`;
   paintBudgetResult();
 }
@@ -1290,7 +1290,7 @@ function budgetHeadHtml(band, periodList) {
     `<p class="budget-summary">${escapeHtml(t("budgetSummary")(bandLabel(band), band.count, band.direct))}` +
     (periods ? ` <span class="when">${escapeHtml(t("budgetPeriods")(periods))}</span>` : "") +
     `</p>` +
-    prerenderedBudgetExtras.replace("</section>", (end) => end + (districts ? `<div class="budget-districts">${escapeHtml(t("budgetDistricts"))}: ${districts}</div>` : ""))
+    prerenderedBudgetExtras.replace(/<div class="budget-districts budget-top">.*?<\/div>/, () => (districts ? `<div class="budget-districts budget-top">${escapeHtml(t("budgetDistricts"))}: ${districts}</div>` : ""))
   );
 }
 

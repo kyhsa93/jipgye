@@ -71,7 +71,7 @@ test("구운 예산대 장: 안내·사전·자치구 링크 머리글이 같은
   assert.ok(html.includes(`methodCalloutText:\n      ${JSON.stringify(baked)},`), "한국어 사전이 구운 안내와 다르다 - 화면 스크립트가 되돌린다");
   assert.ok(html.includes('otherDistricts: "자치구별 시세 보기 (이 예산대 거래가 많은 구부터)",'), "자치구 링크 머리글 사전");
   assert.match(html, /<meta name="description" content="6억대\(6억~7억\)로 살 수 있는 단지·평형은 /);
-  assert.match(html, /<div class="budget-areas" data-prerendered=""><p>단지 후보가 많은 구:<\/p><ul><li>/);
+  assert.match(html, /<section class="budget-dist" data-prerendered=""><h3>구별 분포<\/h3>[^]*?<div class="budget-areas"><p>단지 후보가 많은 구:<\/p><ul><li>/); // #745 PR7: 구별 분포 절 안
 });
 
 test("색인 손 틀 제목은 서로 다르고, 메인 제목에 「금리」가 없다", async () => {

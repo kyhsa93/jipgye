@@ -228,16 +228,20 @@ export function candidatesShape(band, complexFiles) {
     .sort((a, b) => a.area - b.area || b.n - a.n)
     .map((row) => {
       const href = `./deal-search.html?district=${encodeURIComponent(row.district)}&apt=${encodeURIComponent(row.apt)}`;
-      const facts = [row.district, row.dong, `${row.area}\u33a1`, row.buildYear ? `${row.buildYear}년` : null].filter(Boolean).join(" · ");
+      // 표의 열(#745 PR7): 단지명·위치(구 동)·중간값(+지난 거래 폭)·전용·준공연도·거래 건수. 준공연도가 없으면 ""(표가 「데이터 없음」으로 적는다).
+      // 마지막 거래일 열은 없다 - 단지 칸(complex-price)에 그 값이 없어 지어내지 않는다.
+      const place = [row.district, row.dong].filter(Boolean).join(" ");
       // 이 폭은 지난 거래가 퍼진 모양이지 다음 거래가 들어올 범위가 아니다(#656) - 말에 「지난 거래」를 붙인다. 계산은 그대로다.
       const range = `${row.quartile ? "지난 거래 가운데 절반" : "지난 거래 최저~최고(고침)"} ${eokText(row.low)}~${eokText(row.high)}`;
-      return { href, apt: row.apt, facts, amount: eokText(row.median), meta: `${range} · ${row.n}건` };
+      return { href, apt: row.apt, place, amount: eokText(row.median), range, area: `${row.area}\u33a1`, year: row.buildYear ? `${row.buildYear}년` : "", count: `${row.n}건` };
     });
   const bandCounts = AREA_BANDS.map(([bandLabel, f]) => `${bandLabel} ${rows.filter(f).length}`).join(" · ");
   return {
     intro:
       `${month} 값으로 고친 중간값이 ${label}인 단지·평형은 서울에 ${rows.length.toLocaleString("ko-KR")}곳입니다. ` +
       `같은 평형이 최근 6개월에 3번 이상 거래돼 범위를 낼 수 있었던 곳만 셉니다 — 거래가 드문 단지는 빠집니다.`,
+    // 표 이름(sr-only caption). 장마다 다르고 숫자를 품는다 - 18장이 같은 문장으로 굳지 않게(test/accessibility).
+    caption: `${label} 단지·평형 ${rows.length.toLocaleString("ko-KR")}곳 가운데 ${picked.length}곳: 단지명·위치·중간값·전용·준공연도·거래 건수`,
     bandCounts: `평형대별: ${bandCounts}`,
     districts: `자치구별: ${districts.map(([d, n]) => `${d} ${n}`).join(" · ")}`,
     rows: list,

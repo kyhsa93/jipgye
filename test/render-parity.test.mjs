@@ -1230,7 +1230,7 @@ test("후보 단지·본문 분기 표: 값 종류별 행이 있다 - 비문자�
 test("후보 단지·본문 분기 표: 해자 2 - 표본 문턱·low-sample 스팬이 이 조각들에는 없다(문턱은 빌더가 데이터 칸에 이미 반영, 어디로 가는가의 0.5·10개 구는 문장 선택 문턱)", () => {
   for (const b of CB_ROWS.filter((r) => typeof r.expect === "string")) assert.ok(!b.expect.includes("low-sample") && !b.expect.includes("표본 부족"), `${b.id}: 이 조각에는 low-sample 스팬이 없다`);
   // 렌더 때 n(같은 평형 거래 수)을 거르지 않는다: n이 1이어도 중앙값이 범위에 들면 후보다(빌더가 이미 3 미만 칸을 만들지 않는다)
-  assert.ok(CB_ROWS.find((b) => b.id === "CA-W12").expect.includes("· 1건"));
+  assert.ok(CB_ROWS.find((b) => b.id === "CA-W12").expect.includes('<td class="c-num">1건</td>'));
   // 어디로 가는가: 정확히 0.5는 몰렸다, 0.49는 구 10개 이상일 때만 흩어졌다
   assert.ok(CB_ROWS.find((b) => b.id === "BO-G02").expect.includes("거래의 50%가"));
   assert.ok(CB_ROWS.find((b) => b.id === "BO-G03").expect.includes("10개 구에 흩어져"));
@@ -1271,7 +1271,9 @@ test("후보 단지·본문: 구 건수가 & < > \" 가 든 문자열이면 Reac
     // 이 한 자리(지역 줄의 건수) 말고는 그대로다: 같은 입력에서 지역 줄만 뺀 출력은 지역 목록이 빈 입력의 출력과 같다.
     const [band, ...rest] = d.args;
     const without = draw(d.fn, { ...band, districts: [] }, ...rest);
-    assert.equal(norm(out).replace(norm(d.react), ""), norm(without), `${d.id}: 다른 자리도 다르다`);
+    // 지역 줄이 구별 분포 절의 유일한 줄이면 빈 절 껍데기가 남는다(#745 PR7) - 그것도 뗀다.
+    const shell = norm('<section class="budget-dist" data-prerendered=""><h3>구별 분포</h3></section>');
+    assert.equal(norm(out).replace(norm(d.react), "").replace(shell, ""), norm(without), `${d.id}: 다른 자리도 다르다`);
   }
 });
 
@@ -1304,10 +1306,12 @@ test("budget-fragments.mjs: 후보 단지·본문 모양 - 거래 한 줄·월/�
   assert.equal(candidatesShape({ min10k: 70_000 }, []), null);
   assert.deepEqual(Object.keys(candidatesShape({ min10k: 70_000 }, [{ reference: "202609" }])), ["empty"]);
   const one = candidatesShape({ min10k: 70_000, max10k: 80_000 }, [{ district: "노원구", reference: "202609", cells: { 가: { 84: cell(72_000) } } }]);
-  assert.deepEqual(Object.keys(one), ["intro", "bandCounts", "districts", "rows", "moreHref", "moreText"]);
+  assert.deepEqual(Object.keys(one), ["intro", "caption", "bandCounts", "districts", "rows", "moreHref", "moreText"]);
   assert.equal(one.moreHref, "./deal-search.html?budget=7&group=1", "& 는 그대로(legacy는 &amp;로 적고 React는 속성값에서 &amp;로 낸다)");
-  assert.deepEqual(one.rows, [{ href: "./deal-search.html?district=%EB%85%B8%EC%9B%90%EA%B5%AC&apt=%EA%B0%80", apt: "가", facts: "노원구 · 84㎡", amount: "7억 2,000만원", meta: "지난 거래 가운데 절반 7억 1,000만원~7억 3,000만원 · 5건" }]);
-  for (const row of one.rows) for (const key of ["href", "facts", "amount", "meta"]) assert.equal(typeof row[key], "string");
+  // 표의 열(#745 PR7): 위치·중간값·폭·전용·준공연도(없으면 "")·거래 건수. 마지막 거래일 칸은 없다(데이터에 없다).
+  assert.deepEqual(one.rows, [{ href: "./deal-search.html?district=%EB%85%B8%EC%9B%90%EA%B5%AC&apt=%EA%B0%80", apt: "가", place: "노원구", amount: "7억 2,000만원", range: "지난 거래 가운데 절반 7억 1,000만원~7억 3,000만원", area: "84㎡", year: "", count: "5건" }]);
+  for (const row of one.rows) for (const key of ["href", "place", "amount", "range", "area", "year", "count"]) assert.equal(typeof row[key], "string");
+  assert.ok(!Object.keys(one.rows[0]).some((k) => /date|last/i.test(k)), "마지막 거래일은 지어내지 않는다");
   assert.ok(one.rows[0].href.startsWith("./deal-search.html?"), "주소는 코드가 정한 상대 경로다(javascript: 불가)");
   // 12곳 상한: 13곳이어도 12곳만
   const many = (k) => [{ district: "노원구", reference: "202609", cells: Object.fromEntries(Array.from({ length: k }, (_, i) => [`단지${i}`, { 84: cell(72_000 + i, 30 - i) }])) }];

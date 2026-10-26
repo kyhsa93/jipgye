@@ -76,4 +76,31 @@ html:not(:lang(en)) .dbars [lang="en"] {
 .dbars-more {
   margin: 0;
   font-size: var(--c-fs-meta);
+
+/* 예산 장(#745 PR7): 예산 선택 컨트롤 한 줄, 접은 칩 줄, 단지 목록 표 */
+.budget-go {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--c-space-2) var(--c-space-3);
+  margin: var(--c-space-3) 0;
+}
+.budget-go .c-select {
+  width: auto;
+  min-width: 8rem;
+}
+.budget-chips-fold,
+.budget-deals-fold {
+  margin: var(--c-space-3) 0;
+}
+.budget-cand-table th[scope="row"] a {
+  font-weight: 600;
+}
+.budget-cand-table td.c-num {
+  white-space: nowrap;
+}
+.budget-cand-table td.c-num .meta {
+  display: block;
+  color: var(--muted);
+  white-space: normal;
 }

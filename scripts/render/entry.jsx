@@ -726,32 +726,87 @@ function budgetCandidatesJsx(band, complexFiles) {
   if (shape.empty !== undefined) {
     return (
       <section className="budget-candidates" data-prerendered="">
-        <h3>이 예산대의 단지 후보</h3>
+        <h3>{CANDIDATES_HEADING}</h3>
         <p>{shape.empty}</p>
       </section>
     );
   }
+  // 목록은 표다(#745 PR7): 열마다 같은 값이 같은 자리에 와서 단지끼리 견주기 쉽다. 좁은 화면은 표 상자가 가로로 밀린다 - .table-scroll 이라 넘칠 때만 nav.js 가 페이드와 키보드 초점(tabindex)을 단다(#178, 정적 tabindex 금지).
+  // 평형대별·자치구별 줄은 「구별 분포」 절(budgetDistJsx)로 갔다.
   return (
     <section className="budget-candidates" data-prerendered="">
-      <h3>이 예산대의 단지 후보</h3>
+      <h3>{CANDIDATES_HEADING}</h3>
       <p>{shape.intro}</p>
-      <div className="budget-districts">{shape.bandCounts}</div>
-      <div className="budget-districts">{shape.districts}</div>
-      <ul className="budget-deals">
-        {shape.rows.map((row, i) => (
-          <li key={i} className="budget-deal">
-            <a className="apt" href={row.href}>
-              {str(row.apt)}
-            </a>
-            <span className="meta">{row.facts}</span>
-            <span className="amount">{row.amount}</span>
-            <span className="meta">{row.meta}</span>
-          </li>
-        ))}
-      </ul>
+      <div className="c-table-scroll table-scroll">
+        <table className="c-table budget-cand-table">
+          <caption className="sr-only">{shape.caption}</caption>
+          <thead>
+            <tr>
+              {CANDIDATE_COLUMNS.map(([label, num]) => (
+                <th key={label} scope="col" className={num ? "c-num" : undefined}>
+                  {label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {shape.rows.map((row, i) => (
+              <tr key={i}>
+                <th scope="row">
+                  <a className="apt" href={row.href}>
+                    {str(row.apt)}
+                  </a>
+                </th>
+                <td>{row.place}</td>
+                <td className="c-num">
+                  <strong>{row.amount}</strong>
+                  <span className="meta">{row.range}</span>
+                </td>
+                <td className="c-num">{row.area}</td>
+                <td className="c-num">{row.year || "데이터 없음"}</td>
+                <td className="c-num">{row.count}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <p className="budget-more">
         <a href={shape.moreHref}>{shape.moreText}</a>
       </p>
+    </section>
+  );
+}
+
+const CANDIDATES_HEADING = "조건 맞는 단지 목록";
+// [머리글, 숫자 열인가]. 마지막 거래일 열은 단지 칸에 값이 없어 두지 않는다(없는 항목을 만들지 않는다).
+const CANDIDATE_COLUMNS = [["단지명"], ["위치"], ["중간값", 1], ["전용", 1], ["준공연도", 1], ["거래 건수", 1]];
+
+// 「구별 분포」 절(#745 PR7): 거래가 많은 지역 줄 → 후보의 평형대별·자치구별 줄 → 후보가 많은 구 한 줄씩. 셋 다 없으면 절이 없다.
+// 거래가 많은 지역 줄(budget-top)은 화면 스크립트가 그 언어 글자로 갈아 끼운다(한국어는 같은 글자). 안쪽에는 data-prerendered 를 두지 않는다 -
+// 화면 스크립트가 [data-prerendered] 를 모두 떼어 다시 붙이므로 겹치면 두 번 붙는다.
+function budgetDistJsx(shape, cands, areaLines) {
+  const lists = cands && cands.empty === undefined;
+  if (!shape.districts.length && !lists && !areaLines?.length) return null;
+  return (
+    <section className="budget-dist" data-prerendered="">
+      <h3>구별 분포</h3>
+      {shape.districts.length ? (
+        <div className="budget-districts budget-top">
+          거래가 많은 지역: {shape.districts.flatMap((d, i) => [i ? " · " : "", str(d.name), " ", d.count])}
+        </div>
+      ) : null}
+      {lists ? <div className="budget-districts">{cands.bandCounts}</div> : null}
+      {lists ? <div className="budget-districts">{cands.districts}</div> : null}
+      {areaLines?.length ? (
+        <div className="budget-areas">
+          <p>단지 후보가 많은 구:</p>
+          <ul>
+            {areaLines.map((line, i) => (
+              <li key={i}>{str(line)}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -769,14 +824,15 @@ const BudgetDeal = ({ deal }) => {
   );
 };
 
-// 예산대 본문 합성: 거래 요약 → 한눈에 → 지역 줄 → 어디로 가는가 → 예산으로 찾기(제목+칩) → 후보 단지 → 돈 문단(근거) → 다음 질문 → 거래 목록. JSX는 prerender.ts의 래퍼를 부를 수 없으므로 하위 조각을 JSX 함수로 직접 잇는다
-// (그래서 후보 단지가 JSX로 있어야 이 조각을 옮길 수 있었다). 순서는 prerender.ts의 budgetBodyHtmlLegacy와 같다(#460). 예산대가 없으면 null이다 - 합성 조각만 null이고 잎은 ""다(잎의 반환값이 이어 붙는 자리에 "null" 글자가 박히지 않게).
+// 예산대 본문 합성(#745 PR7 탐색 순서): 핵심 요약(거래 요약 → 한눈에 → 어디로 가는가) → 예산으로 찾기(제목+선택 컨트롤) → 조건 맞는 단지 목록(표) → 구별 분포 → 구매 비용·대출(근거 문단) → 다음 질문 → 상세 거래 목록(접기). JSX는 prerender.ts의 래퍼를 부를 수 없으므로 하위 조각을 JSX 함수로 직접 잇는다
+// (그래서 후보 단지가 JSX로 있어야 이 조각을 옮길 수 있었다). 순서는 #460의 것을 #745 PR7이 바꿨다. 예산대가 없으면 null이다 - 합성 조각만 null이고 잎은 ""다(잎의 반환값이 이어 붙는 자리에 "null" 글자가 박히지 않게).
 // 하위 조각의 호출 순서는 legacy와 같다(입력이 이상할 때 던지는 자리가 같아야 한다). 거래 목록은 맨 뒤라 이상한 거래(null 등)는 하위 조각을 다 부른 뒤에 던진다.
-// finderHtml은 빌드가 만든 마크업 문자열(제목+칩)이라 그대로 낸다. 비면 이 절은 없다.
+// finderHtml은 빌드가 만든 마크업 문자열(제목+예산 선택 컨트롤+접은 칩)이라 그대로 낸다. 비면 이 절은 없다.
 // areaLines(V12 #658)는 빌드가 areasShape·areaLine(budget-fragments.ts)으로 만든 글자 배열이다 - 「단지 후보가 많은 구」 한 줄씩. 비면 이 절은 없다(인자를 안 넘기던 호출은 전과 같다).
 function budgetBodyJsx(band, periodList, loanBasis = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, finderHtml = "", areaLines = []) {
   const shape = bodyShape(band, periodList);
   if (!shape) return null;
+  const cands = candidatesShape(band, complexFiles);
   return (
     <>
       <p className="budget-summary">
@@ -789,35 +845,31 @@ function budgetBodyJsx(band, periodList, loanBasis = null, mortgageSeries = null
         ) : null}
       </p>
       {budgetAnswersJsx(band, loanBasis, { periodList, complexFiles })}
-      {shape.districts.length ? (
-        <div className="budget-districts">
-          거래가 많은 지역: {shape.districts.flatMap((d, i) => [i ? " · " : "", str(d.name), " ", d.count])}
-        </div>
-      ) : null}
       {budgetWhereJsx(band)}
-      {areaLines?.length ? (
-        <div className="budget-areas" data-prerendered="">
-          <p>단지 후보가 많은 구:</p>
-          <ul>
-            {areaLines.map((line, i) => (
-              <li key={i}>{str(line)}</li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
       {finderHtml ? <div data-prerendered="" dangerouslySetInnerHTML={{ __html: finderHtml }} /> : null}
       {budgetCandidatesJsx(band, complexFiles)}
+      {budgetDistJsx(shape, cands, areaLines)}
+      {costsNote(band) ? (
+        <h3 className="budget-money" data-prerendered="">
+          구매 비용·대출
+        </h3>
+      ) : null}
       {budgetLoanJsx(band, loanBasis)}
       {budgetCostsJsx(band)}
       {budgetMinCashJsx(band)}
       {budgetCapJsx(band, capStats)}
       {budgetPolicyJsx(band, policyCounts)}
       {budgetMoreJsx()}
-      <ul className="budget-deals">
-        {band.deals.map((deal, i) => (
-          <BudgetDeal key={i} deal={deal} />
-        ))}
-      </ul>
+      <details className="c-fold budget-deals-fold" data-prerendered="">
+        <summary>{`최근 거래 ${band.deals.length.toLocaleString("ko-KR")}건 — 상세 목록`}</summary>
+        <div className="c-fold__body">
+          <ul className="budget-deals">
+            {band.deals.map((deal, i) => (
+              <BudgetDeal key={i} deal={deal} />
+            ))}
+          </ul>
+        </div>
+      </details>
     </>
   );
 }

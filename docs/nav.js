@@ -334,3 +334,15 @@
     }
   } catch (e) {}
 })();
+
+// 예산 장 선택 컨트롤(#745 PR7): 고른 예산대의 장(budget-Neok.html)으로 간다. 이 스크립트가 없으면 폼이 그대로 GET 해 실거래 검색(?budget=N)으로 간다.
+document.addEventListener?.("submit", (e) => {
+  try {
+    const form = e.target;
+    if (!form?.matches?.("form[data-budget-go]")) return;
+    const eok = String(new FormData(form).get("budget") ?? "");
+    if (!/^\d{1,2}$/.test(eok) || !form.querySelector(`option[value="${eok}"]`)) return;
+    e.preventDefault();
+    location.href = `./budget-${eok}eok.html`;
+  } catch (err) {}
+});

@@ -735,54 +735,10 @@
   .summary-box p:last-child {
     margin-bottom: 0;
   }
-  .summary-src {
-    margin: -6px 0 12px;
+  .summary-note {
+    color: var(--muted);
     font-size: var(--fs-xs);
-  }
-  .summary-src summary {
-    color: var(--muted);
-    cursor: pointer;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-  }
-  .summary-src ul {
-    margin: 4px 0 0;
-    padding-left: 1.2em;
-  }
-  .summary-src li {
-    margin-bottom: 6px;
-    overflow-wrap: anywhere;
-  }
-  .news-filter {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    font-size: var(--fs-md);
-  }
-  .news-filter input {
-    flex: 1 1 12rem;
-    min-width: 0;
-    min-height: 44px;
-    padding: 0 12px;
-    font: inherit;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
-    color: inherit;
-  }
-  html:lang(en) #news-filter .m-ko, html:not(:lang(en)) #news-filter .m-en {
-    display: none;
-  }
-  #news-list:has(> .news-item):not(:has(> .news-item:not([hidden])))::after {
-    content: "제목이 맞는 기사가 없습니다. 검색어를 줄여 보세요.";
-    color: var(--muted);
-    font-size: var(--fs-md);
-  }
-  html:lang(en) #news-list:has(> .news-item):not(:has(> .news-item:not([hidden])))::after {
-    content: "No headlines match. Try a shorter word.";
+    margin-top: 10px;
   }
   .empty {
     color: var(--muted);
@@ -2859,74 +2815,30 @@
   .budget-deal > strong.apt ~ .spec {
     flex-basis: 100%;
   }
-  html:lang(en) .dbars [lang="ko"], html:not(:lang(en)) .dbars [lang="en"] {
-    display: none;
+  .budget-go {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--c-space-2) var(--c-space-3);
+    margin: var(--c-space-3) 0;
   }
-  .dbars-meta, .dbars-unit {
-    margin: 0 0 var(--c-space-2);
-    color: var(--muted);
-    font-size: var(--c-fs-meta);
+  .budget-go .c-select {
+    width: auto;
+    min-width: 8rem;
   }
-  .dbars-tabs {
-    margin: 0 0 var(--c-space-3);
-    padding: 0;
-    border: 0;
+  .budget-chips-fold, .budget-deals-fold {
+    margin: var(--c-space-3) 0;
   }
-  .dbars-tabs .c-chip:has(:checked) {
-    background: var(--c-action);
-    border-color: var(--c-action);
-    color: var(--c-action-on);
+  .budget-cand-table th[scope="row"] a {
     font-weight: 600;
   }
-  .dbars-tabs .c-chip:has(:focus-visible) {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
+  .budget-cand-table td.c-num {
+    white-space: nowrap;
   }
-  .dbars-panel:not([data-kind="sale"]), .dbars:has(#dbars-jeonse:checked) [data-kind="sale"], .dbars:has(#dbars-wolse:checked) [data-kind="sale"] {
-    display: none;
-  }
-  .dbars:has(#dbars-jeonse:checked) [data-kind="jeonse"], .dbars:has(#dbars-wolse:checked) [data-kind="wolse"] {
+  .budget-cand-table td.c-num .meta {
     display: block;
-  }
-  .dbars-list {
-    margin: 0 0 var(--c-space-3);
-    padding: 0;
-    list-style: none;
-  }
-  .dbars-row a {
-    display: grid;
-    grid-template-columns: 5.5em minmax(0, 1fr);
-    align-items: center;
-    column-gap: var(--c-space-2);
-    min-height: var(--tap);
-    color: var(--fg);
-    text-decoration: none;
-    font-size: var(--c-fs-meta);
-  }
-  .dbars-row a:hover .dbars-name, .dbars-row a:focus-visible .dbars-name {
-    text-decoration: underline;
-  }
-  .dbars-track {
-    display: block;
-    height: 0.875rem;
-  }
-  .dbars-bar {
-    display: block;
-    height: 100%;
-    min-width: 2px;
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    background: var(--accent);
-  }
-  .dbars-val {
-    grid-column: 2;
-    font-variant-numeric: tabular-nums;
-  }
-  .dbars-thin {
     color: var(--muted);
-  }
-  .dbars-more {
-    margin: 0;
-    font-size: var(--c-fs-meta);
+    white-space: normal;
   }
 }
 @layer utilities {
