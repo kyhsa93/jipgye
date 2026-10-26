@@ -76,6 +76,7 @@ html:not(:lang(en)) .dbars [lang="en"] {
 .dbars-more {
   margin: 0;
   font-size: var(--c-fs-meta);
+}
 
 /* 예산 장(#745 PR7): 예산 선택 컨트롤 한 줄, 접은 칩 줄, 단지 목록 표 */
 .budget-go {
