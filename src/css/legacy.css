@@ -3021,6 +3021,25 @@ html:not(:lang(en)) .question-form [lang="en"] {
   flex-basis: calc(50% - var(--controls-gap-x) / 2);
 }
 
+/* 상세 조건 접기(#745 PR2): 한 줄을 다 쓰고, 펼치면 안의 칸이 바깥과 같은 규칙으로 묶인다. 손가락 자리 44px. */
+.more-filters {
+  flex-basis: 100%;
+}
+
+.more-filters[open] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px var(--controls-gap-x);
+}
+
+.more-filters > summary {
+  flex-basis: 100%;
+  min-height: 44px;
+  padding: 10px 0;
+  cursor: pointer;
+  font-size: var(--fs-sm);
+}
+
 .chip-group:empty::before,
 .chip-group:empty::after {
   content: "\00a0";

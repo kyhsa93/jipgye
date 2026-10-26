@@ -493,3 +493,93 @@ test("자료에 없는 자유 입력 자치구는 서울 전체로 연다 (#733)
     assert.equal(page.sandbox.location.search, "");
   }
 });
+
+// #745 PR2: 기본은 거래 유형·지역·예산 셋, 나머지는 「상세 조건 더 보기」(<details>, JS 없이 접고 편다) 안.
+test("기본 조건은 유형·지역·예산 셋이고 나머지는 상세 조건 접기 안에 있다 (#745)", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const html = await readFile(new URL("../docs/deal-search.html", import.meta.url), "utf8");
+  const controls = /<div class="search-controls" id="search-controls">([\s\S]*?)\n    <\/div>\n    <p class="sr-only"/.exec(html)?.[1] ?? "";
+  const details = /<details class="more-filters" id="more-filters">([\s\S]*?)<\/details>/.exec(controls)?.[1];
+  assert.ok(details, "상세 조건 접기(<details>)가 없거나 조건 칸 밖에 있다");
+  assert.match(details, /^\s*<summary id="more-label">상세 조건 더 보기<\/summary>/, "접기 머리(summary)가 맨 앞에 없다");
+  const basic = controls.replace(details, "");
+  for (const id of ["kind-chips", "district-select", "budget-select"]) {
+    assert.ok(basic.includes(`id="${id}"`), `#${id} 가 기본 줄에 없다`);
+    assert.ok(!details.includes(`id="${id}"`), `#${id} 가 접기 안에 들어갔다`);
+  }
+  for (const id of ["area-chips", "age-chips", "apt-input", "direct-check", "group-check"]) {
+    assert.ok(details.includes(`id="${id}"`), `#${id} 가 상세 조건 접기 밖에 있다`);
+  }
+  // 이름표 연결: 입력 칸은 label for, 칩 묶음은 aria-labelledby.
+  for (const id of ["district-select", "budget-select", "apt-input", "direct-check", "group-check"]) {
+    assert.ok(controls.includes(`<label for="${id}"`), `#${id} 에 label 이 안 붙었다`);
+  }
+  assert.doesNotMatch(html, /<details class="more-filters"[^>]*\sopen/, "구운 장이 펼친 채로 태어난다 - 기본은 접힘");
+  const css = await readFile(new URL("../src/css/legacy.css", import.meta.url), "utf8");
+  assert.match(css, /\.more-filters > summary \{[^}]*min-height: 44px;/, "접기 머리의 손가락 자리 44px 이 없다");
+});
+
+test("상세 조건은 기본으로 접히고, 값이 걸린 주소로 들어오면 펼친 채 시작한다 (#745)", async () => {
+  const closed = await open({ query: "?budget=8&district=%EB%85%B8%EC%9B%90%EA%B5%AC" });
+  assert.equal(closed.byId("more-filters").open, false, "기본 조건만 있는데 펼쳐졌다");
+  assert.equal(closed.byId("more-label").textContent, "상세 조건 더 보기");
+  for (const query of ["?area=60-85", "?apt=%ED%8C%94%EC%96%B5", "?direct=exclude", "?group=1"]) {
+    const page = await open({ query });
+    assert.equal(page.byId("more-filters").open, true, `${query}: 상세 조건이 걸렸는데 접힌 채 시작한다`);
+    assert.equal(page.byId("more-label").textContent, "상세 조건 더 보기 (1개 적용)", `${query}: 적용 개수가 안 보인다`);
+  }
+  // 접어도 값과 주소는 그대로다 - 접기는 보이는 것만 바꾼다.
+  const page = await open({ query: "?district=%EB%85%B8%EC%9B%90%EA%B5%AC&area=60-85" });
+  page.byId("more-filters").open = false;
+  await page.chooseBudget("8");
+  assert.match(page.sandbox.location.search, /area=60-85/, "접은 뒤 다른 조건을 바꾸니 상세 조건이 주소에서 빠졌다");
+  assert.match(page.resultHtml(), /노원팔억나/);
+  assert.ok(!page.resultHtml().includes("노원팔억가"), "접은 뒤 면적 조건이 풀렸다");
+});
+
+test("예산 이하(max)는 그 금액 이하 거래만 남기고 주소에 남는다 - 시나리오 B (#745)", async () => {
+  // 구를 고르면 전수 파일로 정확히 거른다(9억 이하: 8.5·8.6억은 남고 9.5억은 빠진다).
+  const nowon = await open({ query: `?${new URLSearchParams({ district: "노원구", max: "9" })}` });
+  assert.match(nowon.resultHtml(), /노원팔억가/);
+  assert.match(nowon.resultHtml(), /노원팔억나/);
+  assert.ok(!nowon.resultHtml().includes("노원구억"), "9억 넘는 거래가 섞였다");
+  assert.match(nowon.resultHtml(), /9억 이하/, "결과 문장에 예산 이하 조건이 안 적힌다");
+  assert.match(nowon.byId("budget-select").innerHTML, /<option value="m9" selected>9억 이하<\/option>/, "주소의 max 가 선택지에 안 보인다");
+
+  // 서울 전체도 전수 파일로 거른다 - 경계 금액(정확히 8억)은 들고, 8억대 나머지는 빠진다(시나리오 B 「서울 8억 이하 매매」).
+  const seoul = await open({ ...fixtureOf([...DEALS, deal(80_000, { district: "도봉구", dong: "창동", apt: "도봉딱팔억" }), deal(79_000, { apt: "노원칠억" })]), query: "?max=8" });
+  assert.match(seoul.resultHtml(), /서울 전체 8억 이하에서 2건이 거래됐습니다/);
+  assert.match(seoul.resultHtml(), /도봉딱팔억/, "정확히 8억인 거래가 빠졌다");
+  assert.match(seoul.resultHtml(), /노원칠억/);
+  assert.ok(!seoul.resultHtml().includes("노원팔억가"), "8억 넘는 거래가 섞였다");
+
+  // 선택지로 고르면 max 만 남고 budget(구간)은 지워진다. 다시 구간을 고르면 반대.
+  const page = await open({ query: "?district=%EB%85%B8%EC%9B%90%EA%B5%AC&budget=9" });
+  await page.chooseBudget("m10");
+  assert.equal(page.sandbox.location.search, "?district=%EB%85%B8%EC%9B%90%EA%B5%AC&max=10");
+  assert.match(page.resultHtml(), /노원구억/);
+  await page.chooseBudget("8");
+  assert.equal(page.sandbox.location.search, "?district=%EB%85%B8%EC%9B%90%EA%B5%AC&budget=8");
+  // 엉터리 값은 무시한다.
+  for (const bad of ["abc", "-3", "0"]) {
+    const odd = await open({ query: `?max=${bad}` });
+    assert.equal(odd.sandbox.location.search, "", `max=${bad} 가 주소에 남았다`);
+  }
+});
+
+test("deal-filters.js 는 gzip ≤2,048B, deal-search 만 defer 로 한 번 읽고 서비스워커 사전캐시에 없다 (#681 예외 확장, #745)", async () => {
+  const { readFile, readdir } = await import("node:fs/promises");
+  const { gzipSync } = await import("node:zlib");
+  const { SITE } = await import("./helpers/site-root.mjs");
+  const at = (p) => new URL(`../${p}`, import.meta.url);
+  const size = gzipSync(await readFile(at("docs/deal-filters.js")), { level: 9 }).length;
+  assert.ok(size <= 2048, `docs/deal-filters.js gzip ${size}B`);
+  const html = await readFile(at("docs/deal-search.html"), "utf8");
+  assert.equal(html.split('<script src="./deal-filters.js" defer></script>').length, 2);
+  assert.ok(!(await readFile(at("docs/sw.js"), "utf8")).includes("deal-filters"), "sw.js 사전캐시에 들어갔다");
+  const users = [];
+  for (const f of (await readdir(at(SITE))).filter((x) => x.endsWith(".html")).sort()) {
+    if ((await readFile(at(`${SITE}/${f}`), "utf8")).includes("deal-filters.js")) users.push(f);
+  }
+  assert.deepEqual(users, ["deal-search.html"]);
+});

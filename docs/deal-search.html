@@ -96,28 +96,31 @@
         <span class="field-label" id="rent-label">월세</span>
         <div class="chip-group" id="rent-chips" role="radiogroup" aria-labelledby="rent-label"></div>
       </div>
-      <div class="search-field">
-        <span class="field-label" id="area-label">면적</span>
-        <div class="chip-group" id="area-chips" role="radiogroup" aria-labelledby="area-label"></div>
-      </div>
-      <div class="search-field">
-        <span class="field-label" id="age-label">연식</span>
-        <div class="chip-group" id="age-chips" role="radiogroup" aria-labelledby="age-label"></div>
-      </div>
-      <div class="search-field">
-        <label for="apt-input" id="apt-label">단지명</label>
-        <input type="text" id="apt-input" autocomplete="off" spellcheck="false">
-      </div>
+      <details class="more-filters" id="more-filters">
+        <summary id="more-label">상세 조건 더 보기</summary>
+        <div class="search-field">
+          <span class="field-label" id="area-label">면적</span>
+          <div class="chip-group" id="area-chips" role="radiogroup" aria-labelledby="area-label"></div>
+        </div>
+        <div class="search-field">
+          <span class="field-label" id="age-label">연식</span>
+          <div class="chip-group" id="age-chips" role="radiogroup" aria-labelledby="age-label"></div>
+        </div>
+        <div class="search-field">
+          <label for="apt-input" id="apt-label">단지명</label>
+          <input type="text" id="apt-input" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="search-field toggle" id="direct-field">
+          <input type="checkbox" id="direct-check">
+          <label for="direct-check" id="direct-label">직거래 제외</label>
+        </div>
+        <div class="search-field toggle" id="group-field">
+          <input type="checkbox" id="group-check">
+          <label for="group-check" id="group-label">단지로 묶어 보기</label>
+        </div>
+      </details>
       <div class="search-field" id="reset-field" hidden>
         <button type="button" id="reset-filters"></button>
-      </div>
-      <div class="search-field toggle" id="direct-field">
-        <input type="checkbox" id="direct-check">
-        <label for="direct-check" id="direct-label">직거래 제외</label>
-      </div>
-      <div class="search-field toggle" id="group-field">
-        <input type="checkbox" id="group-check">
-        <label for="group-check" id="group-label">단지로 묶어 보기</label>
       </div>
     </div>
     <p class="sr-only" role="status" id="search-status"></p>
@@ -143,6 +146,7 @@
 <script src="./search.js" defer></script>
 <script src="./watchlist.js" defer></script>
 <script src="./card-renewal.js" defer></script>
+<script src="./deal-filters.js" defer></script>
 <script src="./complex-card.js" defer></script>
 <script src="./complex-chart.js" defer></script>
 <script src="./analytics.js"></script>
@@ -654,7 +658,7 @@ function matchesDetail(deal) {
 
 const scopeNames = () => (district === ALL ? districtNames() : [district]);
 
-const needFull = () => district !== ALL || detailActive();
+const needFull = () => district !== ALL || detailActive() || self.maxTo;
 
 function fullDealsOf() {
   const names = scopeNames();
@@ -811,12 +815,14 @@ function renderControls() {
     names.map((name) => optionHtml(name, name, name === district)).join("");
 
   document.getElementById("budget-select").innerHTML =
-    optionHtml(ALL, t("allBudgets"), band10k === null) +
+    optionHtml(ALL, t("allBudgets"), band10k === null && !self.maxTo) +
+    (self.maxOpts?.() ?? "") +
     bandOptions()
       .map((band) =>
         optionHtml(String(Math.round(band.min10k / EOK)), bandLabel(band), band.min10k === band10k)
       )
       .join("");
+  self.moreCount?.();
 
   chips("area", [
     { value: ALL, label: t("allAreas"), on: areaKey === ALL },
@@ -941,6 +947,7 @@ function bandOf(min10k) {
 function scopeLabel(band) {
   const parts = [district === ALL ? t("allDistricts") : district];
   if (band) parts.push(bandLabel(band));
+  if (self.maxTo) parts.push(maxLabel());
   if (areaKey !== ALL) parts.push(t("areaOption")(bucketOf(AREA_BUCKETS, areaKey)));
   if (ageKey !== ALL) parts.push(t("ageOption")(bucketOf(AGE_BUCKETS, ageKey)));
   if (dongTerm()) parts.push(dongTerm());
@@ -971,7 +978,7 @@ function resultHtml(scope, count, rows, top, band) {
 function renderFull(box, deals) {
   const band = bandOf(band10k);
   const matched = deals.filter(
-    (deal) => (band10k === null || bandStartOf(deal.amount10k) === band10k) && matchesDetail(deal)
+    (deal) => (band10k === null || bandStartOf(deal.amount10k) === band10k) && !(deal.amount10k > self.maxTo) && matchesDetail(deal)
   );
 
   if (!matched.length) {
@@ -1332,7 +1339,7 @@ const GROUP_LIMIT = 100;
 
 /** 칸 하나가 조건에 맞는가. skip에 든 조건은 보지 않는다(빈 결과에서 "이 조건을 풀면"을 셀 때). */
 function groupMatches(row, skip = new Set()) {
-  if (!skip.has("budget") && band10k !== null && !(row.median >= band10k && row.median < band10k + EOK)) return false;
+  if (!skip.has("budget") && ((band10k !== null && !(row.median >= band10k && row.median < band10k + EOK)) || row.median > self.maxTo)) return false;
   if (!skip.has("area") && areaKey !== ALL) {
     const bucket = bucketOf(AREA_BUCKETS, areaKey);
     if (!bucket) return false;
@@ -1410,7 +1417,7 @@ function renderGroups(box) {
   if (!rows.length) {
     // 조건 하나씩을 풀면 몇 곳이 되는가. 빈 화면에서 막히지 않게 다음 걸음을 숫자로 준다.
     const active = [
-      ["budget", band10k !== null],
+      ["budget", band10k !== null || self.maxTo],
       ["area", areaKey !== ALL],
       ["age", ageKey !== ALL],
       ["apt", Boolean(aptTerm())],
@@ -1494,7 +1501,7 @@ function renderResultBody() {
     return;
   }
 
-  if (detailActive()) {
+  if (detailActive() || self.maxTo) {
     box.innerHTML = `<p class="budget-empty">${escapeHtml(t("detailNotReady"))}</p>`;
     return;
   }
@@ -1508,6 +1515,7 @@ function syncUrl() {
 
   put("district", district === ALL ? null : district);
   put("budget", band10k === null ? null : String(Math.round(band10k / EOK)));
+  put("max", self.maxTo / EOK || null);
   put("area", areaKey === ALL ? null : areaKey);
   put("age", ageKey === ALL ? null : ageKey);
   put("apt", aptTerm() || null);
@@ -1779,7 +1787,7 @@ function onControlChange(e) {
   else if (id === "district-select") district = e.target.value || ALL;
   else if (id === "budget-select") {
     const raw = e.target.value;
-    band10k = raw === ALL ? null : Number(raw) * EOK;
+    band10k = self.maxPick?.(raw) || raw === ALL ? null : Number(raw) * EOK;
   } else if (id === "area-select") areaKey = e.target.value || ALL;
   else if (id === "age-select") ageKey = e.target.value || ALL;
   else if (id === "apt-input") aptQuery = String(e.target.value ?? "");
