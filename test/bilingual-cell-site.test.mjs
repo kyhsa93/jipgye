@@ -37,31 +37,42 @@ test("record-high: 자치구 표는 영어 화면에 한글 0자 — 모든 행 
   for (const n of names.slice(1)) assert.match(n, /^[A-Z][a-z]+-gu$/, n);
 });
 
-test("record-high: 문턱 표 — 머리글 줄·결론 칸(마지막 칸)은 영어, 결론은 yes/no 형 영어 낱말이다", async () => {
+test("record-high: 문턱 표 — 비교 기간 열(col 1)만 빼고 머리글·본문 모든 칸이 영어 화면에 한글 0자, 결론은 yes/no 형 영어 낱말이다", async () => {
   const table = bodyOf(await tableOf("record-high", "robust-table"));
   const cells = cellsOf(enOnly(table));
   const head = cells.filter((c) => c.section === "thead");
-  const last = cells.filter((c) => c.section === "tbody" && c.col === 8);
+  const body = cells.filter((c) => c.section === "tbody");
+  const last = body.filter((c) => c.col === 8);
   assert.equal(head.length, 9);
   assert.ok(last.length >= 6, `결론 칸 ${last.length}`);
-  for (const c of [...head, ...last]) assert.equal(hangul(c.inner), 0, c.inner);
+  for (const c of [...head, ...body.filter((x) => x.col !== 1)]) assert.equal(hangul(c.inner), 0, c.inner);
   for (const c of last) assert.match(c.inner.replace(/<[^>]+>/g, ""), /^[A-Za-z][A-Za-z ]*$/, `결론 칸 영어 낱말: ${c.inner}`);
+  // 남은 한글: 비교 기간 열의 「90일」·「180일」뿐이다(칸당 한글 1~2자 · 예산 +2 KB 안에서 가장 값이 낮은 열 - #708 E1b ②).
+  const rest = body.filter((c) => hangul(c.inner));
+  assert.ok(rest.length >= 6 && rest.every((c) => c.col === 1 && /^\d+일$/.test(c.inner)), `남은 칸 ${rest.map((c) => `${c.col}:${c.inner}`)}`);
   // 한국어 쪽 결론 칸은 그대로 한글이다(영어 낱말이 새지 않는다).
   for (const c of cellsOf(koOnly(table)).filter((x) => x.section === "tbody" && x.col === 8)) assert.match(c.inner, /^<span class="m-ko">[가-힣]+<\/span>$|^[가-힣]+$/);
+  // 숫자·% 칸은 두 벌로 갈리지 않는다(바이트).
+  for (const c of cellsOf(table).filter((x) => x.section === "tbody" && x.col >= 3 && x.col <= 7)) assert.ok(!/m-ko|m-en/.test(c.inner), c.inner);
 });
 
-test("record-high: 가격대 표 — 첫 칸(가격대 이름)은 영어, 영어 쪽 가격은 ₩ 단위", async () => {
+test("record-high: 가격대 표 — 머리글 줄과 첫 칸(가격대 이름)은 영어, 영어 쪽 가격은 ₩ 단위, 표 전체가 영어 화면에 한글 0자", async () => {
   const table = bodyOf(await tableOf("record-high", "band-table"));
-  const names = cellsOf(enOnly(table)).filter((c) => c.section === "tbody" && c.col === 0);
+  const en = enOnly(table);
+  const names = cellsOf(en).filter((c) => c.section === "tbody" && c.col === 0);
   assert.ok(names.length >= 4);
   for (const c of names) assert.equal(hangul(c.inner), 0, c.inner);
   assert.ok(names.some((c) => /₩/.test(c.inner)), "원화 기호 가격대");
+  const head = cellsOf(en).filter((c) => c.section === "thead");
+  assert.equal(head.length, 4);
+  assert.equal(hangul(en), 0);
 });
 
-test("record-high 영어 화면 한글 상한 — 세 표 합계 (기준선 238자 → 남은 것은 문턱 표 단위 칸·가격대 표 머리글)", async () => {
+test("record-high 영어 화면 한글 상한 — 세 표 합계 (기준선 238자 → 12자 이하, −95% 이상: 남은 것은 문턱 표 비교 기간 열 12칸)", async () => {
   let total = 0;
   for (const id of ["robust-table", "district-table", "band-table"]) total += hangul(enOnly(bodyOf(await tableOf("record-high", id))));
-  assert.ok(total <= 60, `영어 쪽 한글 ${total}자`);
+  assert.ok(total <= 12, `영어 쪽 한글 ${total}자`);
+  assert.ok(total <= 238 * 0.15, `기준선 대비 -85% 이상이어야 한다: ${total}자`);
 });
 
 test("price-outlook: 권역·월 칸 — 권역 표·직전 달 표·구×반기 입주 표의 머리글 줄과 첫 칸은 영어 화면에 한글 0자", async () => {
