@@ -88,12 +88,35 @@ export function loanNote(band, basis) {
 const answerBasis = (basis) =>
   `한국은행 평균 연 ${basis.rate}%${/^\d{6}$/.test(String(basis?.month ?? "")) ? `(${String(basis.month).slice(0, 4)}년 ${Number(String(basis.month).slice(4, 6))}월)` : ""}`;
 
+// 규정 문장 넷(자기 돈·정책대출·주담대 상한·부대비용)의 원문 확인일 가운데 가장 오래된 날 - 칩 하나가 넷을 대신하므로 낡은 쪽을 말한다.
+const RULES_DATE = [MIN_CASH_DATE, POLICY_DATE_BASIS, CAP_DATE, COSTS_DATE].sort()[0];
+const YM = /^\d{6}$/;
+
+/**
+ * "한눈에" 숫자의 기준 칩 넷(#411 확장): 거래 기간 · 보정 기준월 · 금리 월 · 규정 확인일. 달은 전부 입력에서 읽는다(하드코딩 없음) -
+ * 거래 기간은 budget-deals.json periods, 보정 기준월은 단지 가격 파일의 reference(후보 절과 같은 칸), 금리 월은 latestRate의 month.
+ * 못 읽은 칸의 칩은 빠진다(지어내지 않는다). 규정 확인일은 문장 모듈의 BASIS_DATE라 늘 있다.
+ * 칩은 { kind, text, month? }: month는 금리 칩에만 있고 머리 도장(updated-stamp.ts)이 같은 값을 읽는다.
+ */
+export function basisChips(basis = null, { periodList = null, complexFiles = null } = {}) {
+  const months = [...new Set((periodList ?? []).map(String).filter((p) => YM.test(p) && monthLabel(p)))].sort();
+  const reference = String(complexFiles?.[0]?.reference ?? "");
+  const rateMonth = String(basis?.month ?? "");
+  return [
+    months.length ? { kind: "deals", text: `거래 ${months.map((p) => Number(String(p).slice(4))).join("·")}월 신고분` } : null,
+    YM.test(reference) && monthLabel(reference) ? { kind: "adjust", text: `보정 ${monthLabel(reference)} 값 기준` } : null,
+    YM.test(rateMonth) && monthLabel(rateMonth) ? { kind: "rate", text: `금리 ${monthLabel(rateMonth)}분`, month: rateMonth } : null,
+    { kind: "rules", text: `규정 ${RULES_DATE.slice(5)} 확인` },
+  ].filter(Boolean);
+}
+
 /**
  * 예산대 장 맨 위 "한눈에" - 아래 문단 넷의 답만 한 줄씩(UIUX #43). 숫자는 문단과 같은 함수에서 나온다(min-cash·purchase-costs·mortgage·policy-loan).
  * 예산대가 없으면(eokOf가 null) null이다. 줄은 { label, value, note, text }: note가 ""이면 부가 글자 없음, text가 참이면 글자 값(정책대출 가격선)이다.
  * 금리가 없으면 "1억을 빌리면 매달" 줄이 빠진다. 그 줄의 부가 글자는 금리의 출처와 달을 같이 적는다(#577: 한국은행 평균금리로 바뀐 것이 장에서 보이게).
+ * chips는 basisChips(셋째 인자 { periodList, complexFiles })다 - 인자가 없으면 금리·규정 칩만.
  */
-export function budgetAnswers(band, basis = null) {
+export function budgetAnswers(band, basis = null, context = {}) {
   const eok = eokOf(band);
   if (eok === null) return null;
   const price = (eok + 0.5) * 10_000;
@@ -110,7 +133,7 @@ export function budgetAnswers(band, basis = null) {
     line("매매가 위에 더 드는 돈", eokText(costs.total), "취득세·지방교육세·중개보수 상한"),
     policy ? line("정책대출 가격선", policy, "", true) : null,
   ].filter(Boolean);
-  return { heading: `${eokText(price)}짜리를 산다면 — 한눈에`, lines };
+  return { heading: `${eokText(price)}짜리를 산다면 — 한눈에`, lines, chips: basisChips(perEok ? basis : null, context) };
 }
 
 /** 예산을 정한 사람이 다음에 묻는 것들로 가는 길(PO 검토 #33 - 예산대에서 이 화면들로 가는 링크가 0개였다). 주소는 코드가 정한 상대 경로뿐이다. */

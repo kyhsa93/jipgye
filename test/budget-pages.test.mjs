@@ -387,3 +387,59 @@ test("예산대 열여덟 장 모두 한눈에 뒤에 예산 칩 줄이 있고 �
     assert.ok(html.indexOf('class="budget-answers"') < html.indexOf("budget-chips"), `${page.file}: 칩이 한눈에 앞이다`);
   }
 });
+
+// ---- 기준 칩 넷과 머리 도장 「금리(8월분) MM-DD 갱신」 (#411 확장) ----
+
+test("기준 칩 넷은 입력에서 달을 읽는다 - 거래 기간·보정 기준월·금리 월이 입력을 따라 바뀌고, 못 읽은 칸의 칩은 빠진다 (#411)", async () => {
+  const { basisChips } = await import("../scripts/budget-fragments.ts");
+  const texts = (...a) => basisChips(...a).map((c) => c.text);
+  const ctx = { periodList: ["202610", "202608", "202609", "202609"], complexFiles: [{ reference: "202607" }] };
+  assert.deepEqual(texts({ rate: 4.66, month: "202608" }, ctx), ["거래 8·9·10월 신고분", "보정 7월 값 기준", "금리 8월분", "규정 10-01 확인"]);
+  // 같은 코드, 다른 입력 → 다른 달(하드코딩이면 여기서 빨강)
+  assert.deepEqual(
+    texts({ rate: 3.9, month: "202611" }, { periodList: ["202612", "202701"], complexFiles: [{ reference: "202611" }] }),
+    ["거래 12·1월 신고분", "보정 11월 값 기준", "금리 11월분", "규정 10-01 확인"]
+  );
+  assert.equal(basisChips({ rate: 4.66, month: "202608" }, ctx).find((c) => c.kind === "rate").month, "202608", "도장이 읽는 달");
+  // 못 읽으면 지어내지 않는다
+  assert.deepEqual(texts(null), ["규정 10-01 확인"]);
+  assert.deepEqual(texts({ rate: 4, month: "2026-08" }, { periodList: ["x", "202613"], complexFiles: [{ reference: "" }] }), ["규정 10-01 확인"]);
+});
+
+test("한눈에: 제목 바로 아래 기준 칩 줄, 금리 칩은 금리 줄이 있을 때만이고 data-rate-month 를 진다 (#411)", async () => {
+  const { budgetAnswersHtml } = await import("../scripts/prerender.ts");
+  const html = budgetAnswersHtml({ min10k: 70_000 }, LOAN_BASIS, { periodList: ["202609", "202608"], complexFiles: COMPLEX_FILES });
+  assert.match(
+    html,
+    /<\/h2><p class="answer-basis"><span>거래 8·9월 신고분<\/span> <span>보정 8월 값 기준<\/span> <span data-rate-month="202608">금리 8월분<\/span> <span>규정 10-01 확인<\/span><\/p><ul>/
+  );
+  assert.doesNotMatch(budgetAnswersHtml({ min10k: 70_000 }, { rate: "4.5", month: "202608" }), /data-rate-month/, "금리 줄이 없는데 금리 칩이 섰다");
+});
+
+test("머리 도장 금리 칸: 「금리(8월분) 10-26 갱신」, 달을 못 읽으면 「금리 10-26 갱신」 (#411)", async () => {
+  const { rateStampText } = await import("../scripts/budget-pages.ts");
+  assert.equal(rateStampText("2026-10-26", "202608"), "금리(8월분) 10-26 갱신");
+  assert.equal(rateStampText("2026-10-26", "202612"), "금리(12월분) 10-26 갱신");
+  for (const bad of [null, undefined, "", "2026-08", "202600", "202613"]) assert.equal(rateStampText("2026-10-26", bad), "금리 10-26 갱신", String(bad));
+});
+
+test("예산대 18장 모두: 한눈에 기준 칩 넷과 새 도장 「실거래 MM-DD x 금리(N월분) MM-DD 갱신」, 칩 줄은 장당 400 B 안 (#411)", async () => {
+  const { crossStampHtml } = await import("../scripts/updated-stamp.ts");
+  const template = await baseHtml();
+  const budget = {
+    updatedAt: "2026-10-26T00:00:00.000Z",
+    periods: ["202610", "202609", "202608"],
+    bands: mergeBands({ "202609": buildBands(BUDGET_PAGES.map((p) => deal(p.min10k + 5_000, { apt: `${p.eok}억단지` }))) }),
+  };
+  assert.equal(BUDGET_PAGES.length, 18);
+  for (const page of BUDGET_PAGES) {
+    const built = buildBudgetPage(template, page, budget, LOAN_BASIS, null, COMPLEX_FILES);
+    assert.ok(built, `${page.file}: 장이 안 나왔다`);
+    const html = crossStampHtml(built, page.file, "2026-10-26", "2026-10-26");
+    const row = html.match(/<p class="answer-basis">([\s\S]*?)<\/p>/);
+    assert.ok(row, `${page.file}: 칩 줄이 없다`);
+    assert.deepEqual([...row[1].matchAll(/<span[^>]*>([^<]*)<\/span>/g)].map((m) => m[1]), ["거래 8·9·10월 신고분", "보정 8월 값 기준", "금리 8월분", "규정 10-01 확인"], page.file);
+    assert.ok(Buffer.byteLength(row[0]) <= 400, `${page.file}: 칩 줄 ${Buffer.byteLength(row[0])} B`);
+    assert.match(html, />실거래 10-26 x 금리\(8월분\) 10-26 갱신<\/p>/, `${page.file}: 새 도장 문구`);
+  }
+});

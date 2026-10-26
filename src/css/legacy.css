@@ -1581,6 +1581,21 @@ main h3 {
   color: var(--muted);
 }
 
+.budget-answers .answer-basis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin: 0 0 8px;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+
+.budget-answers .answer-basis span {
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
 .budget-answers .answer-more {
   margin: 10px 0 0;
   font-size: var(--fs-xs);

@@ -12,6 +12,7 @@ import { stampSources } from "../scripts/source-lines.ts";
 import { stripInlineScriptComments, stripJsComments } from "../scripts/strip-inline-comments.ts";
 import { FALLBACK_NOTE_KO, hasFallback } from "../scripts/summary-note.ts";
 import { CROSS_PAGES, PAGE_SOURCES, baselineFor, stampHtml } from "../scripts/updated-stamp.ts";
+import { rateStampText } from "../scripts/budget-pages.ts";
 import {
   REALESTATE_TEMPLATE_PATH,
   applyPrerender,
@@ -279,7 +280,9 @@ test("[cross-input-dates] 고정 소스로 찍은 교차값 화면 전부에 입
     const html = site.read(`docs/${file}`);
     const deals = baselineFor(inputs.deals, sources);
     const rates = baselineFor(inputs.rates, sources);
-    const line = `<p class="updated cross-basis" id="cross-basis" data-deals="${deals}" data-rates="${rates}">실거래 ${deals.slice(5)} x 금리 ${rates.slice(5)}</p>`;
+    // 예산대 장은 「금리(N월분) MM-DD 갱신」 - 달은 장에 구운 금리 칩(data-rate-month)이다(#411 확장). 전환율 장은 틀 그대로.
+    const rateText = file === "jeonse-vs-wolse.html" ? `금리 ${rates.slice(5)}` : rateStampText(rates, html.match(/data-rate-month="(\d{6})"/)?.[1]);
+    const line = `<p class="updated cross-basis" id="cross-basis" data-deals="${deals}" data-rates="${rates}">실거래 ${deals.slice(5)} x ${rateText}</p>`;
     assert.ok(html.includes(line), `docs/${file}: 기준일 줄이 ${line} 이어야 한다 (node scripts/build-updated-stamp.ts)`);
     assert.equal([...html.matchAll(/id="cross-basis"/g)].length, 1, `docs/${file}: 기준일 줄이 한 번이어야 한다`);
     assert.match(html, /<p class="updated updated-warn" id="cross-warn" role="status" hidden><\/p>/, `docs/${file}: 경고 자리`);

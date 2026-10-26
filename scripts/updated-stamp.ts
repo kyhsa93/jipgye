@@ -29,6 +29,7 @@
 
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { rateStampText } from "./budget-pages.ts";
 import { kstDateOf, readDataSources } from "./source-age.ts";
 
 // 구 25곳·예산 18곳·아파트 3곳 + 부동산 첫 장이 같은 틀(realestate.html)에서 나오고 같은 네 파일을 읽는다.
@@ -134,24 +135,27 @@ const CROSS_ANCHORS = [
 ];
 
 /** 기준일 줄 HTML. 글자는 "실거래 MM-DD x 금리 MM-DD" 한 줄이고, 틀은 모든 장이 같다(숫자만 다르다, #66).
- * 줄의 "실거래" 날짜는 소스 json의 updatedAt, 곧 수집·집계 시각이지 거래 신고일이 아니다(#200). */
-export function crossLineHtml(dealsYmd, ratesYmd, indent = "") {
+ * 줄의 "실거래" 날짜는 소스 json의 updatedAt, 곧 수집·집계 시각이지 거래 신고일이 아니다(#200).
+ * rateText 를 주면 금리 칸을 그 글자로 쓴다 - 예산대 장의 「금리(8월분) 10-26 갱신」(#411 확장, budget-pages.ts rateStampText). */
+export function crossLineHtml(dealsYmd, ratesYmd, indent = "", rateText = null) {
   return (
-    `<p class="updated cross-basis" id="cross-basis" data-deals="${dealsYmd}" data-rates="${ratesYmd}">실거래 ${dealsYmd.slice(5)} x 금리 ${ratesYmd.slice(5)}</p>\n` +
+    `<p class="updated cross-basis" id="cross-basis" data-deals="${dealsYmd}" data-rates="${ratesYmd}">실거래 ${dealsYmd.slice(5)} x ${rateText ?? `금리 ${ratesYmd.slice(5)}`}</p>\n` +
     `${indent}<p class="updated updated-warn" id="cross-warn" role="status" hidden></p>`
   );
 }
 
 /** 교차값 화면에 입력별 기준일 줄을 찍는다. 이미 있으면 바꾸고, 자리를 못 찾으면 던진다(조용히 빠지지 않게). */
 export function crossStampHtml(html, file, dealsYmd, ratesYmd) {
+  // 예산대 장은 금리 값의 기준월을 장에 구운 금리 칩(data-rate-month)에서 읽는다 - 한눈에 금리 줄과 같은 값이다(#411 확장).
+  const rateText = file === "jeonse-vs-wolse.html" ? null : rateStampText(ratesYmd, html.match(/data-rate-month="(\d{6})"/)?.[1]);
   if (CROSS_LINE.test(html)) {
     const indent = html.match(/([ \t]*)<p class="updated cross-basis"/)?.[1] ?? "";
-    return html.replace(CROSS_LINE, () => crossLineHtml(dealsYmd, ratesYmd, indent));
+    return html.replace(CROSS_LINE, () => crossLineHtml(dealsYmd, ratesYmd, indent, rateText));
   }
   const { re, before } = file === "jeonse-vs-wolse.html" ? CROSS_ANCHORS[1] : CROSS_ANCHORS[0];
   const m = re.exec(html);
   if (!m) throw new Error(`${file}: 입력별 기준일 줄을 놓을 자리를 찾지 못했다`);
-  const line = `${m[1]}${crossLineHtml(dealsYmd, ratesYmd, m[1])}`;
+  const line = `${m[1]}${crossLineHtml(dealsYmd, ratesYmd, m[1], rateText)}`;
   const end = m.index + m[0].length;
   return before ? `${html.slice(0, m.index)}${line}\n${html.slice(m.index)}` : `${html.slice(0, end)}\n${line}${html.slice(end)}`;
 }
