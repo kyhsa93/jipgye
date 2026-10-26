@@ -109,7 +109,7 @@ export const reCountSpan = (metric) =>
  */
 export function reLowSample(metric) {
   const n = metric?.transactionCount ?? 0;
-  return part("low", `신고 ${n}건`, { title: `이번 달 신고가 ${n}건뿐이라 평균을 내지 않았습니다.`, esc: true });
+  return part("low", `신고 ${n}건`, { title: `최근 4주 신고가 ${n}건뿐이라 평균을 내지 않았습니다.`, esc: true });
 }
 
 // 값을 못 낸 칸(resolveMetric이 null): 지표가 있고 표본이 모자라면(isShortSample) 표본 부족, 아니면 "-"(지표 없음, 또는 표본은 충분한데 값만 없음 - #593 b).

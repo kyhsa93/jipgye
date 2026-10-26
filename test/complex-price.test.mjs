@@ -199,7 +199,7 @@ test("칸에 창 안 최고 한 건(층)과 1년 전 같은 칸 중앙값을 남
   const cells = districtCells(deals, levels, "202607", { yearAgo: old, yearAgoMonths: ["202506", "202507", "202508"] });
   const c = cells["가단지"]["84.99"];
   assert.deepEqual(c.top, { amount: 104000, floor: 11, date: "2026-06-15" });
-  assert.equal(c.yearAgo.median, 91000, "1년 전 중앙값이 고치기 전 값이 아니다");
+  assert.equal(c.yearAgo.median, 91000, "1년 전 중간값이 고치기 전 값이 아니다");
   assert.equal(c.yearAgo.n, 4);
   assert.deepEqual(c.yearAgo.months, ["202506", "202507", "202508"]);
 });
@@ -227,7 +227,7 @@ test("카드가 1년 전 중앙값과 6개월 최고(층)를 그린다 (#35)", a
   };
   const p = await page("?district=노원구&apt=비교단지", file);
   const html = p.byId("complex-card").innerHTML;
-  assert.match(html, /1년 전 중앙값/);
+  assert.match(html, /1년 전 중간값/);
   assert.match(html, /7억 2,000만원/);
   assert.match(html, /8억 5,000만원/);
   assert.match(html, /15층/);
@@ -247,10 +247,10 @@ test("고친 범위와 고치지 않은 실제 최고 신고를 머리글에서 
   const p = await page("?district=노원구&apt=오른단지", file);
   const html = p.byId("complex-card").innerHTML;
   // #51부터 고친 값과 신고된 그대로의 값을 열 둘로 가른다.
-  assert.match(html, /<th scope="col">2026년 8월 값으로 고친 중앙값<\/th>/);
+  assert.match(html, /<th scope="col">2026년 8월 값으로 고친 중간값<\/th>/);
   assert.match(html, /<th scope="col">신고된 그대로 \(고치기 전\)<\/th>/);
   assert.match(html, /지난 거래 최저~최고\(고침\)/);
-  assert.match(html, /class="as-filed"><div class="sub">고치기 전 중앙값 36억 5,000만원<\/div><div class="sub">실제 최고 신고 36억 8,000만원 12층/);
+  assert.match(html, /class="as-filed"><div class="sub">고치기 전 중간값 36억 5,000만원<\/div><div class="sub">실제 최고 신고 36억 8,000만원 12층/);
   assert.match(html, /실제 최고가 고친 범위보다 낮게 나올 수 있습니다/, "1년 전 값이 없어도 실제 최고 설명이 나와야 한다");
   assert.doesNotMatch(html, /6개월 최고/);
 });
@@ -283,7 +283,7 @@ test("단지 카드는 평형마다 지금 시세 한 칸 + 신고된 그대로 
   const price = html.slice(html.indexOf("complex-price-table"), html.indexOf("</table>", html.indexOf("complex-price-table")));
   assert.equal((price.match(/<th scope="col">/g) ?? []).length, 3, "열이 셋이 아니다");
   assert.match(price, /<strong class="price-strong">8억원<\/strong><div class="sub">지난 거래 가운데 절반 7억 8,000만원 ~ 8억 2,000만원 · 6건<\/div>/);
-  assert.match(price, /1년 전 중앙값 7억 2,000만원\(5건\)/);
+  assert.match(price, /1년 전 중간값 7억 2,000만원\(5건\)/);
   assert.doesNotMatch(price, />-</, "빈 값을 '-'로 적었다 - 없는 줄은 빼야 한다");
   assert.match(html, /<details class="fold"><summary>이 숫자 읽는 법<\/summary><p class="content-notice">/, "설명이 접혀 있지 않다");
 });
