@@ -477,3 +477,19 @@ test("메인 폼의 세 조건으로 실거래 검색이 열린다 (#733)", asyn
   const blank = await open({ query: "?budget=&district=&area=" });
   assert.match(blank.resultHtml(), /서울 전체에서 5건이 거래됐습니다/);
 });
+
+test("자유 입력 자치구는 앞뒤 공백을 다듬고 빠진 「구」를 붙여 연다 (#733)", async () => {
+  for (const typed of ["노원", " 노원 ", "노원구 "]) {
+    const page = await open({ query: `?${new URLSearchParams({ district: typed })}` });
+    assert.match(page.resultHtml(), /노원구에서 3건이 거래됐습니다/, `「${typed}」가 노원구로 열리지 않는다`);
+    assert.equal(page.sandbox.location.search, "?district=%EB%85%B8%EC%9B%90%EA%B5%AC", "주소가 다듬은 이름으로 남지 않는다");
+  }
+});
+
+test("자료에 없는 자유 입력 자치구는 서울 전체로 연다 (#733)", async () => {
+  for (const typed of ["노원동", "분당", "  "]) {
+    const page = await open({ query: `?${new URLSearchParams({ district: typed })}` });
+    assert.match(page.resultHtml(), /서울 전체에서 5건이 거래됐습니다/, `「${typed}」가 서울 전체로 돌아가지 않는다`);
+    assert.equal(page.sandbox.location.search, "");
+  }
+});
