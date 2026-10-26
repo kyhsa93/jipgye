@@ -141,6 +141,7 @@ async function main() {
 
   const conversion = await readJson("conversion");
   const cancellation = await readJson("cancellation");
+  const direct = await readJson("direct-deals");
   const renewal = await readJson("renewal-facts");
   const floor = await readJson("floor-gap");
   const moveIn = await readJson("move-in");
@@ -295,6 +296,11 @@ async function main() {
         cancelPriceLead: cancellation?.priceBands?.lead?.ko ? escapeHtml(cancellation.priceBands.lead.ko) : null,
         cancelPriceTable: cancellation?.priceBands?.table?.ko ?? null,
         cancelDistrictLinks: cancelDistrictLinksHtml(cancellation),
+        // 직거래 절(#691). 문장·표는 빌더(build-direct-deals.ts)가 두 언어로 만든 글자를 그대로 꽂는다(priceBands 와 같은 길).
+        directLead: direct?.lead?.ko ? escapeHtml(direct.lead.ko) : null,
+        directTable: direct?.table?.ko ?? null,
+        directMonths: direct?.monthTable?.ko ?? null,
+        directNote: direct?.note?.ko ? escapeHtml(direct.note.ko) : null,
       },
     ],
   ]) {

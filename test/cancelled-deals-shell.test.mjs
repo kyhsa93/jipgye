@@ -20,7 +20,7 @@ const SHELL = [
   { name: "머리글", pattern: /<header(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-2", "tw:1024:mb-6"] },
   { name: "1층 내비", pattern: /<nav class="([^"]*)" aria-label="섹션">/, hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:1024:mb-4", "tw:*:rounded"] },
   { name: "2층 내비", pattern: /<nav class="([^"]*)" aria-label="거래 유형">/, hooks: ["sub-nav"], utilities: ["tw:gap-2", "tw:mt-0", "tw:mb-2", "tw:1024:mb-4", "tw:*:rounded"] },
-  ...["lead", "district", "month", "price"].map((id) => ({
+  ...["lead", "district", "month", "price", "direct"].map((id) => ({
     name: `${id} 구획`,
     pattern: new RegExp(`<section id="${id}-section"(?: class="([^"]*)")?>`),
     hooks: [],
@@ -37,9 +37,9 @@ test("해제·등기 장의 껍데기는 같은 유틸리티를 갖고 훅 class
     assert.deepEqual(have.filter((t) => !t.startsWith("tw:")), hooks, `${FILE}: ${name}의 훅 class가 바뀌었다`);
     assert.deepEqual(have.filter((t) => t.startsWith("tw:")).sort(), [...utilities].sort(), `${FILE}: ${name}의 유틸리티가 다르다 - 높이 예산(첫 h2 ≤ merge-base)을 다시 재야 한다`);
   }
-  // 구획 id 가 바뀌어도 이 시험이 눈먼 채 통과하지 않게: 구획 넷은 이 순서로 한 번씩, 다섯째(질문 입구)는 스크립트가 채우므로 유틸리티가 없다.
+  // 구획 id 가 바뀌어도 이 시험이 눈먼 채 통과하지 않게: 구획 다섯(직거래 #691 포함)은 이 순서로 한 번씩, 여섯째(질문 입구)는 스크립트가 채우므로 유틸리티가 없다.
   const ids = [...html.matchAll(/<section id="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(ids, ["lead-section", "district-section", "month-section", "price-section", "other-questions"], `${FILE}: 구획이 달라졌다`);
+  assert.deepEqual(ids, ["lead-section", "district-section", "month-section", "price-section", "direct-section", "other-questions"], `${FILE}: 구획이 달라졌다`);
   const entry = html.match(/<section id="other-questions"[^>]*>/)?.[0];
   assert.ok(entry && !entry.includes("tw:"), `${FILE}: 질문 입구 구획에 유틸리티가 붙었다: ${entry}`);
 });
@@ -56,7 +56,7 @@ test("굽는 조각 여덟·다시 그려지는 링크·인라인 스크립트�
   // 조각은 scripts/prerender.ts 와 scripts/render/entry.jsx 두 렌더러가 같은 글자로 내고, 표·링크는 스크립트가 데이터를 받으면 통째로 다시 그린다.
   // 여기에 모양이 바뀌는 유틸리티를 두면 구운 첫 화면과 다시 그린 화면이 어긋난다.
   const html = await read();
-  const names = ["cancelCorrectionLead", "cancelLead", "cancelDistricts", "cancelMonthLead", "cancelMonths", "cancelDistrictLinks", "cancelPriceLead", "cancelPriceTable"];
+  const names = ["cancelCorrectionLead", "cancelLead", "cancelDistricts", "cancelMonthLead", "cancelMonths", "cancelDistrictLinks", "cancelPriceLead", "cancelPriceTable", "directLead", "directTable", "directMonths", "directNote"];
   for (const name of names) {
     const frag = html.match(new RegExp(`<!--prerender:${name}-->([\\s\\S]*?)<!--/prerender:${name}-->`))?.[1];
     assert.ok(frag && frag.length > 30, `전제: ${name} 조각이 비었다 - 이 시험이 아무것도 안 본 것이다`);
@@ -78,5 +78,5 @@ test("이 장은 색인 대상으로 남는다 - 캐노니컬은 자기 자신, 
   assert.equal(levels.filter((n) => n === 1).length, 1, `${FILE}: h1이 하나가 아니다`);
   assert.equal(levels[0], 1, `${FILE}: 첫 제목이 h1이 아니다`);
   for (let i = 1; i < levels.length; i += 1) assert.ok(levels[i] - levels[i - 1] <= 1, `${FILE}: 제목 단계를 건너뛴다(h${levels[i - 1]} → h${levels[i]})`);
-  assert.equal(levels.filter((n) => n === 2).length, 4, `${FILE}: h2가 넷이 아니다 - 본문 제목이 지워졌거나 늘었다`);
+  assert.equal(levels.filter((n) => n === 2).length, 5, `${FILE}: h2가 다섯이 아니다(직거래 절 #691 포함) - 본문 제목이 지워졌거나 늘었다`);
 });
