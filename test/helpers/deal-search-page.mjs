@@ -143,6 +143,9 @@ export async function loadDealSearchPage({
   const loadState = await readFile(path.join(root, "docs/load-state.js"), "utf8");
   new vm.Script(loadState, { filename: "docs/load-state.js" }).runInContext(sandbox);
   new vm.Script(script, { filename: "docs/deal-search.html:inline" }).runInContext(sandbox);
+  // 브라우저 순서 그대로: defer 인 쪽 전용 docs/deal-filters.js(#745)는 인라인 다음, 데이터가 오기 전에 돈다.
+  const filters = await readFile(path.join(root, "docs/deal-filters.js"), "utf8");
+  new vm.Script(filters, { filename: "docs/deal-filters.js" }).runInContext(sandbox);
 
   await settle();
 
