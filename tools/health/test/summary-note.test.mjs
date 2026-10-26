@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NEWS_PAGES } from "../../../scripts/build-news-pages.ts";
-import { FALLBACK_NOTE_KO, hasFallback } from "../../../scripts/summary-note.ts";
+import { failedLineKo } from "../../../scripts/summary-note.ts";
 import { SITE } from "../../../test/helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
@@ -21,16 +21,16 @@ const boxOf = (html, marker) => {
   return html.slice(a + open.length, b);
 };
 
-test("커밋된 구운 장 다섯의 안내 줄 유무가 summary.json 과 맞는다 - 데이터가 바뀌면 다시 구워야 한다 (#350)", async () => {
+test("커밋된 구운 장 다섯에서 검증 폴백 분야는 실패 줄로 나온다 - 데이터가 바뀌면 다시 구워야 한다 (#350 → #745 PR6)", async () => {
   const summary = await readJson("summary");
-  const noteOf = (html, cls) => html.includes(`<div class="${cls}">${FALLBACK_NOTE_KO}</div>`);
+  const check = (box, shown, where) => {
+    for (const c of shown) {
+      assert.equal(box.includes(failedLineKo(c.fallbackReason)), Boolean(c.fallbackReason), `${where}: ${c.key} 의 실패 줄 유무가 summary.json 과 어긋난다. node scripts/build-news-pages.ts 를 실행하세요.`);
+    }
+  };
   // 메인 요약 상자는 #575 PR2 에서 뉴스 화면으로 옮겼다 - 장 다섯은 뉴스 장 넷(허브 포함)이다.
-
-  const hub = boxOf(await read(`${SITE}/news.html`), "newsSummary");
-  assert.equal(noteOf(hub, "summary-note"), hasFallback(summary.categories.filter((c) => c.lineKo)), "docs/news.html 의 안내 줄이 summary.json 과 어긋난다.");
+  check(boxOf(await read(`${SITE}/news.html`), "newsSummary"), summary.categories.filter((c) => c.lineKo), `${SITE}/news.html`);
   for (const page of NEWS_PAGES) {
-    const box = boxOf(await read(`${SITE}/${page.file}`), "newsSummary");
-    const shown = summary.categories.filter((c) => c.key === page.category && c.lineKo);
-    assert.equal(noteOf(box, "summary-note"), hasFallback(shown), `${SITE}/${page.file} 의 안내 줄이 summary.json 과 어긋난다. node scripts/build-news-pages.ts 를 실행하세요.`);
+    check(boxOf(await read(`${SITE}/${page.file}`), "newsSummary"), summary.categories.filter((c) => c.key === page.category && c.lineKo), `${SITE}/${page.file}`);
   }
 });
