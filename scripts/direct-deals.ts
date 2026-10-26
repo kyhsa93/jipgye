@@ -191,7 +191,7 @@ export function directLead(stats, locale = "ko") {
   const dir = en ? (gap.median < 0 ? "below" : "above") : gap.median < 0 ? "낮았습니다" : "높았습니다";
   const body = en
     ? ` Within the same complex and unit size, direct deals were a median ${size}% ${dir} agent-brokered ones (90% range ${range(gap)}, across ${cells} unit types with at least ${stats.minDeals} of each), and came in lower in ${gap.lowerShare}% of those unit types.`
-    : ` 같은 단지·같은 전용면적에서 견주면 직거래는 중개거래보다 중앙값 ${size}% ${dir}(90% 구간 ${range(gap)}, 양쪽 모두 ${stats.minDeals}건 이상인 ${cells}칸). 그 칸의 ${gap.lowerShare}%에서 직거래가 더 낮았습니다.`;
+    : ` 같은 단지·같은 전용면적에서 견주면 직거래는 중개거래보다 중간값 ${size}% ${dir}(90% 구간 ${range(gap)}, 양쪽 모두 ${stats.minDeals}건 이상인 ${cells}칸). 그 칸의 ${gap.lowerShare}%에서 직거래가 더 낮았습니다.`;
 
   // 자치구가 하나도 문턱을 못 넘으면 표의 빈칸이 왜 비었는지 문장으로 적는다.
   const rows = Object.values(stats.districts ?? {}) as any[];

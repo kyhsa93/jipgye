@@ -18,7 +18,7 @@ const sale = (amount, extra = {}) => ({ aptNm: "가상아파트", excluUseAr: 59
 const rent = (deposit, extra = {}) => ({ aptNm: "가상아파트", excluUseAr: 59.94, deposit, monthlyRent: 0, contractType: "신규", ...extra });
 const many = (n, make) => Array.from({ length: n }, () => make());
 
-test("같은 단지 같은 평형에서 각각 중앙값을 내어 나눈다", () => {
+test("같은 단지 같은 평형에서 각각 중간값을 내어 나눈다", () => {
   const ratios = cellRatios(many(3, () => sale("100,000")), many(3, () => rent("60,000")));
   assert.deepEqual(ratios, [60]);
 });
@@ -58,7 +58,7 @@ test("견줄 값이 잘못 붙은 칸은 버린다", () => {
 });
 
 test("칸 수에 따라 말하는 것이 달라진다", () => {
-  assert.ok(MIN_CELLS_MEDIAN < MIN_CELLS, "중앙값 문턱이 분위 문턱보다 낮아야 한다");
+  assert.ok(MIN_CELLS_MEDIAN < MIN_CELLS, "중간값 문턱이 분위 문턱보다 낮아야 한다");
   const ratios = (n) => Array.from({ length: n }, (_, i) => 40 + i);
 
   assert.equal(spreadOf(ratios(MIN_CELLS_MEDIAN - 1)), null, "열 칸도 안 되는데 말을 했다");
@@ -83,10 +83,10 @@ test("자치구 값과 크게 어긋날 때만 왜 어긋나는지까지 적는�
   assert.match(far, /매매가 신고된 단지와 전세가 신고된 단지가 서로 달라/);
 });
 
-test("칸이 모자란 구는 범위 없이 중앙값만 말한다", () => {
+test("칸이 모자란 구는 범위 없이 중간값만 말한다", () => {
   const line = spreadSentence({ cells: 18, median: 55.6 }, 83.7);
   assert.match(line, /18칸/);
-  assert.match(line, /중앙값이 55\.6%/);
+  assert.match(line, /중간값이 55\.6%/);
   assert.ok(!/절반이/.test(line), "사분위가 없는데 범위를 말했다");
   // 28%p나 어긋나는 구다 - 이유를 적지 않으면 그냥 모순되는 값 둘이다
   assert.match(line, /서로 달라/);

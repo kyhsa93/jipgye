@@ -386,14 +386,14 @@ const FD_BASE = ["강서구", "-9.1%", "35", LOW("갈라 볼 수 없음")];
   // 해자 2
   add("FD-L01", fn, "해자 2: 서울과 안 갈리고 가른 범위(band)는 있으면 \"갈라 볼 수 없음\" 스팬", [{ districts: [fd()] }], fdTable([tr(...FD_BASE)]), { moat: true });
   add("FD-L02", fn, "해자 2: 범위(band)조차 못 냈으면(null) \"칸이 모자람\" 스팬", [{ districts: [fd({ band: null, median: null })] }], fdTable([tr("강서구", "-", "35", LOW("칸이 모자람"))]), { moat: true });
-  add("FD-L03", fn, "해자 2·순서: 중앙값이 비어 \"-\"인 칸과 표본 부족 스팬이 한 줄에 같이 나온다 - 중앙값 칸과 판정 칸은 서로 영향을 주지 않는다", [{ districts: [fd({ median: null })] }], fdTable([tr("강서구", "-", "35", LOW("갈라 볼 수 없음"))]), { moat: true, order: true });
-  add("FD-L04", fn, "해자 2·순서: distinct가 참이면 범위·중앙값이 비어도 표본 부족이 아니라 \"다르다\"가 먼저다", [{ districts: [fd({ distinct: true, band: null, median: null })] }], fdTable([tr("강서구", "-", "35", "다르다")]), { moat: true, order: true });
+  add("FD-L03", fn, "해자 2·순서: 중간값이 비어 \"-\"인 칸과 표본 부족 스팬이 한 줄에 같이 나온다 - 중간값 칸과 판정 칸은 서로 영향을 주지 않는다", [{ districts: [fd({ median: null })] }], fdTable([tr("강서구", "-", "35", LOW("갈라 볼 수 없음"))]), { moat: true, order: true });
+  add("FD-L04", fn, "해자 2·순서: distinct가 참이면 범위·중간값이 비어도 표본 부족이 아니라 \"다르다\"가 먼저다", [{ districts: [fd({ distinct: true, band: null, median: null })] }], fdTable([tr("강서구", "-", "35", "다르다")]), { moat: true, order: true });
   add("FD-L05", fn, "해자 2: distinct 키가 아예 없으면(undefined) 표본 부족", [{ districts: [{ district: "강서구", cells: 35, median: -9.1, band: { low: 1 } }] }], fdTable([tr(...FD_BASE)]), { moat: true });
   add("FD-L06", fn, "해자 2: 표 안의 줄마다 따로 정한다(다르다·갈라 볼 수 없음·칸이 모자람)", [{ districts: [fd({ district: "가", distinct: true }), fd({ district: "나" }), fd({ district: "다", band: null, median: null })] }], fdTable([tr("가", "-9.1%", "35", "다르다"), tr(...swap(FD_BASE, 0, "나")), tr("다", "-", "35", LOW("칸이 모자람"))]), { moat: true });
   add("FD-L07", fn, "해자 2: 스팬은 title 없이 class만 있다(문구 두 가지 고정)", [{ districts: [fd(), fd({ band: null })] }], fdTable([tr(...swap(FD_BASE, 3, '<span class="low-sample">갈라 볼 수 없음</span>')), tr(...swap(FD_BASE, 3, '<span class="low-sample">칸이 모자람</span>'))]), { moat: true });
   add("FD-L08", fn, "해자 2·문턱: 맞물린 칸이 적어도(cells 0·12) distinct가 참이면 \"다르다\" - 이 함수는 칸 수 문턱을 다시 적용하지 않는다", [{ districts: [fd({ cells: 0, distinct: true }), fd({ cells: 12, distinct: true })] }], fdTable([tr("강서구", "-9.1%", "0", "다르다"), tr("강서구", "-9.1%", "12", "다르다")]), { moat: true });
   // 전세 열(#705): 값이 있으면 중앙값 옆에 칸 수·구간, 구간이 없으면(문턱 미달) 표본 부족(n=…) 스팬
-  add("FD-J01", fn, "전세 값 → 중앙값 (n=칸, 구간%)", [{ districts: [fd({ jeonse: { cells: 1234, median: -4.2, band: { low: -9, high: 0 } } })] }], fdJTable([tr(...FD_BASE, "-4.2% (n=1,234, -9~0%)")]));
+  add("FD-J01", fn, "전세 값 → 중간값 (n=칸, 구간%)", [{ districts: [fd({ jeonse: { cells: 1234, median: -4.2, band: { low: -9, high: 0 } } })] }], fdJTable([tr(...FD_BASE, "-4.2% (n=1,234, -9~0%)")]));
   add("FD-J02", fn, "해자 2: 전세 문턱 미달(band null) → 「표본 부족(n=…)」 스팬", [{ districts: [fd({ jeonse: { cells: 18, median: null, band: null } })] }], fdJTable([tr(...FD_BASE, LOW("표본 부족(n=18)"))]), { moat: true });
   add("FD-J03", fn, "전세 칸 0 → 표본 부족(n=0), 매매 판정과 따로", [{ districts: [fd({ distinct: true, jeonse: { cells: 0, median: null, band: null } })] }], fdJTable([tr("강서구", "-9.1%", "35", "다르다", LOW("표본 부족(n=0)"))]));
   // distinct 값 종류(참/거짓 판정은 truthy 검사)
@@ -437,7 +437,7 @@ const FD_BASE = ["강서구", "-9.1%", "35", LOW("갈라 볼 수 없음")];
     ["m09", "{}", {}, "[object Object]%"],
     ["m10", "[1,2]", [1, 2], "1,2%"],
   ];
-  for (const [no, cond, value, out] of medianCases) add(`FD-med-${no}`, fn, `중앙값 칸(이스케이프 없이): ${cond}`, [{ districts: [fd({ median: value })] }], fdTable([tr(...swap(FD_BASE, 1, out))]));
+  for (const [no, cond, value, out] of medianCases) add(`FD-med-${no}`, fn, `중간값 칸(이스케이프 없이): ${cond}`, [{ districts: [fd({ median: value })] }], fdTable([tr(...swap(FD_BASE, 1, out))]));
   for (const [no, cond, value, out] of COUNT_VALUES) add(`FD-cells-${no}`, fn, `맞물린 칸 칸(이스케이프 없이 toLocaleString): ${cond}`, [{ districts: [fd({ cells: value })] }], fdTable([tr(...swap(FD_BASE, 2, out))]));
 }
 
@@ -573,7 +573,7 @@ const SUM_EN = "Apartments in 종로구 trade at ₩50M per pyeong. For an 84m²
   const RFD = (b = {}, r = {}, renewals = { fromJeonse: 783, toWolseShare: 11.5 }) => ({ compare: { base: { n: 605, wolseShare: 59.2, jn: 139, jmed: 69000, ...b }, recent: { n: 491, wolseShare: 67, jn: 88, jmed: 63000, ...r } }, renewals });
   const PARTIAL_KO = "2026년 9월·10월은 신고 기한이 남은 덜 찬 달이라 세지 않았습니다.";
   const share = (name, a, b, n0, n1, move) => `전월세 흐름(국토교통부 신고): ${name} 월세·반전세 비중은 2025년 6~8월 ${a}%(${n0}건)에서 2026년 6~8월 ${b}%(${n1}건)로 ${move}.`;
-  const rest = (name) => `${name} 신규 전세 보증금 중앙값(면적 구분 없음)은 6.9억원(139건) → 6.3억원(88건)입니다. 2024년 11월~2026년 8월 ${name}에서 전세를 갱신한 783건 중 11.5%가 월세를 끼고 다시 계약했습니다(서울 7.5%). ${PARTIAL_KO}`;
+  const rest = (name) => `${name} 신규 전세 보증금 중간값(면적 구분 없음)은 6.9억원(139건) → 6.3억원(88건)입니다. 2024년 11월~2026년 8월 ${name}에서 전세를 갱신한 783건 중 11.5%가 월세를 끼고 다시 계약했습니다(서울 7.5%). ${PARTIAL_KO}`;
   const SIMILAR = "서울(44.0% → 52.2%)과의 차이는 표본 오차 안이라 비슷한 흐름으로 봅니다.";
   const full = (name, n0 = "605", n1 = "491") => `${share(name, "59.2", "67.0", n0, n1, "7.8%p 올랐습니다")} ${SIMILAR} ${rest(name)}`;
   add("RF-01", fn, "이름이 없으면(null) 빈 문자열", [null, RF({ 종로구: RFD() })], "");
@@ -582,10 +582,10 @@ const SUM_EN = "Apartments in 종로구 trade at ₩50M per pyeong. For an 84m²
   add("RF-03c", fn, "견줄 달 파일이 비어 구의 창이 null → 달 라벨과 함께 「자료가 비어」 한 줄", ["종로구", RF({ 종로구: { compare: { base: null, recent: RFD().compare.recent }, renewals: null } })], "전월세 흐름(국토교통부 신고): 종로구 견줄 달(2025년 6~8월·2026년 6~8월)의 신고 자료가 비어 내지 않습니다.");
   add("RF-03d", fn, "같은 경우 en", ["종로구", RF({ 종로구: { compare: null, renewals: null } }), "en"], "Rent flow (MOLIT lease filings): filing data for 종로구's comparison months (Jun–Aug 2025 vs Jun–Aug 2026) is missing, so no figures are given.");
   add("RF-03b", fn, "산출물에 없는 구 → 빈 문자열", ["중구", RF({ 종로구: RFD() })], "");
-  add("RF-04", fn, "비중·서울 비교·중앙값·갱신 전환·덜 찬 달", ["종로구", RF({ 종로구: RFD() })], full("종로구"));
+  add("RF-04", fn, "비중·서울 비교·중간값·갱신 전환·덜 찬 달", ["종로구", RF({ 종로구: RFD() })], full("종로구"));
   add("RF-05", fn, "locale \"ko\"를 주어도 같다", ["종로구", RF({ 종로구: RFD() }), "ko"], full("종로구"));
   add("RF-06", fn, "locale \"en\"", ["종로구", RF({ 종로구: RFD() }), "en"], "Rent flow (MOLIT lease filings): in 종로구, monthly-rent and semi-jeonse leases went from 59.2% of filings in Jun–Aug 2025 (n=605) to 67.0% in Jun–Aug 2026 (n=491), up 7.8pp. The gap from Seoul (44.0% → 52.2%) is within sampling error, so we treat it as the same trend. The median new-jeonse deposit in 종로구, all sizes, went from ₩690M (n=139) to ₩630M (n=88). Of 783 jeonse leases renewed in 종로구 in Nov 2024–Aug 2026, 11.5% came back with monthly rent (Seoul 7.5%). Sep 2026 and Oct 2026 not counted (filing window still open).");
-  add("RF-07", fn, "해자 2: 문턱을 못 넘은 값(null)은 숫자 대신 건수와 「내지 않는다」, 갱신 문장은 빠진다", ["종로구", RF({ 종로구: RFD({ n: 3, wolseShare: null, jn: 2, jmed: null }, { n: 4, wolseShare: null, jn: 1, jmed: null }, null) })], `전월세 흐름(국토교통부 신고): 종로구는 신고가 모자라 월세 비중을 내지 않습니다(2025년 6~8월 3건, 2026년 6~8월 4건). 종로구 신규 전세가 2건 → 1건뿐이라 보증금 중앙값을 내지 않습니다. ${PARTIAL_KO}`, { moat: true });
+  add("RF-07", fn, "해자 2: 문턱을 못 넘은 값(null)은 숫자 대신 건수와 「내지 않는다」, 갱신 문장은 빠진다", ["종로구", RF({ 종로구: RFD({ n: 3, wolseShare: null, jn: 2, jmed: null }, { n: 4, wolseShare: null, jn: 1, jmed: null }, null) })], `전월세 흐름(국토교통부 신고): 종로구는 신고가 모자라 월세 비중을 내지 않습니다(2025년 6~8월 3건, 2026년 6~8월 4건). 종로구 신규 전세가 2건 → 1건뿐이라 보증금 중간값을 내지 않습니다. ${PARTIAL_KO}`, { moat: true });
   add("RF-08", fn, `이름의 특수문자 & < > " '는 이스케이프(문장 전체를 한 번에)`, [SP, RF({ [SP]: RFD() })], full(SP_OUT));
   add("RF-09", fn, "이름·건수 자리가 비문자열(false·{})이면 \"false\"·\"[object Object]\"", [false, RF({ false: RFD({ n: false }, { n: {} }) })], full("false", "false", "[object Object]"));
   add("RF-10", fn, "표본 오차 밖으로 서울보다 더 오른 구", ["관악구", RF({ 관악구: RFD({ n: 5000, wolseShare: 40 }, { n: 5000, wolseShare: 60 }) })], `${share("관악구", "40.0", "60.0", "5,000", "5,000", "20.0%p 올랐습니다")} 서울(44.0% → 52.2%)보다 더 많이 올랐습니다. ${rest("관악구")}`);
@@ -593,7 +593,7 @@ const SUM_EN = "Apartments in 종로구 trade at ₩50M per pyeong. For an 84m²
   add("RF-11b", fn, "서울과 갈려도 구 변화가 0이면 「반대」가 아니라 거의 그대로(flat)", ["성북구", RF({ 성북구: RFD({ n: 5000, wolseShare: 40 }, { n: 5000, wolseShare: 40 }) })], `${share("성북구", "40.0", "40.0", "5,000", "5,000", "그대로입니다")} 서울(44.0% → 52.2%)은 움직였지만 이 구의 변화는 표본 오차 안이라 거의 그대로로 봅니다. ${rest("성북구")}`);
   add("RF-11c", fn, "구 변화가 제 표본 오차 안이면(서울과 부호가 달라도) flat - en", ["성북구", RF({ 성북구: RFD({ n: 5000, wolseShare: 40 }, { n: 5000, wolseShare: 39.5 }) }), "en"], "Rent flow (MOLIT lease filings): in 성북구, monthly-rent and semi-jeonse leases went from 40.0% of filings in Jun–Aug 2025 (n=5,000) to 39.5% in Jun–Aug 2026 (n=5,000), down 0.5pp. Seoul moved (44.0% → 52.2%), but this district's change is within sampling error, so we treat it as roughly flat. The median new-jeonse deposit in 성북구, all sizes, went from ₩690M (n=139) to ₩630M (n=88). Of 783 jeonse leases renewed in 성북구 in Nov 2024–Aug 2026, 11.5% came back with monthly rent (Seoul 7.5%). Sep 2026 and Oct 2026 not counted (filing window still open).");
   add("RF-12", fn, "서울과 반대 방향(en)", ["강서구", RF({ 강서구: RFD({ n: 5000, wolseShare: 49.2 }, { n: 5000, wolseShare: 42.4 }) }), "en"], "Rent flow (MOLIT lease filings): in 강서구, monthly-rent and semi-jeonse leases went from 49.2% of filings in Jun–Aug 2025 (n=5,000) to 42.4% in Jun–Aug 2026 (n=5,000), down 6.8pp. Seoul moved the other way (44.0% → 52.2%). The median new-jeonse deposit in 강서구, all sizes, went from ₩690M (n=139) to ₩630M (n=88). Of 783 jeonse leases renewed in 강서구 in Nov 2024–Aug 2026, 11.5% came back with monthly rent (Seoul 7.5%). Sep 2026 and Oct 2026 not counted (filing window still open).");
-  add("RF-13", fn, "비중이 같으면 「그대로」, 서울 값이 없으면 비교 문장과 괄호를 빼고, 덜 찬 달이 해를 넘기면 해를 다시 적는다", ["중구", RF({ 중구: RFD({ wolseShare: 60 }, { wolseShare: 60 }) }, { partial: ["202612", "202701"], seoul: {} })], "전월세 흐름(국토교통부 신고): 중구 월세·반전세 비중은 2025년 6~8월 60.0%(605건)에서 2026년 6~8월 60.0%(491건)로 그대로입니다. 중구 신규 전세 보증금 중앙값(면적 구분 없음)은 6.9억원(139건) → 6.3억원(88건)입니다. 2024년 11월~2026년 8월 중구에서 전세를 갱신한 783건 중 11.5%가 월세를 끼고 다시 계약했습니다. 2026년 12월·2027년 1월은 신고 기한이 남은 덜 찬 달이라 세지 않았습니다.");
+  add("RF-13", fn, "비중이 같으면 「그대로」, 서울 값이 없으면 비교 문장과 괄호를 빼고, 덜 찬 달이 해를 넘기면 해를 다시 적는다", ["중구", RF({ 중구: RFD({ wolseShare: 60 }, { wolseShare: 60 }) }, { partial: ["202612", "202701"], seoul: {} })], "전월세 흐름(국토교통부 신고): 중구 월세·반전세 비중은 2025년 6~8월 60.0%(605건)에서 2026년 6~8월 60.0%(491건)로 그대로입니다. 중구 신규 전세 보증금 중간값(면적 구분 없음)은 6.9억원(139건) → 6.3억원(88건)입니다. 2024년 11월~2026년 8월 중구에서 전세를 갱신한 783건 중 11.5%가 월세를 끼고 다시 계약했습니다. 2026년 12월·2027년 1월은 신고 기한이 남은 덜 찬 달이라 세지 않았습니다.");
 }
 
 {
@@ -644,14 +644,14 @@ const SUM_EN = "Apartments in 종로구 trade at ₩50M per pyeong. For an 84m²
   const OK = { gu: "11170", n: 119, st: "ok", gap: 378, p: [19.5, 15.2, 23.3, 13.6] };
   const LINK_KO = '<a href="./switch-house.html#repeat-sales">같은 집 쌍 표 →</a>';
   const LINK_EN = '<a href="./switch-house.html#repeat-sales">Pairs table →</a>';
-  const KO_OK = "같은 집이 다시 팔렸을 때(2024년 11월~2026년 8월 계약 쌍) 가격 변화 중앙값 +19.5%(90% 구간 +15.2% ~ +23.3%, 119쌍, 보유 중앙 378일). 같은 쌍 기간에 맞춰 가공한 한국부동산원 R-ONE 값은 +13.6%, 차이의 원인은 재지 않았습니다. 시장 지수·구 시세 상승률이 아니며 연율화하지 않았습니다.";
+  const KO_OK = "같은 집이 다시 팔렸을 때(2024년 11월~2026년 8월 계약 쌍) 가격 변화 중간값 +19.5%(90% 구간 +15.2% ~ +23.3%, 119쌍, 보유 중앙 378일). 같은 쌍 기간에 맞춰 가공한 한국부동산원 R-ONE 값은 +13.6%, 차이의 원인은 재지 않았습니다. 시장 지수·구 시세 상승률이 아니며 연율화하지 않았습니다.";
   const EN_OK = "When the same home sold again (pairs contracted Nov 2024–Aug 2026): median price change +19.5% (90% range +15.2% to +23.3%, 119 pairs, median hold 378 days). Korea Real Estate Board R-ONE data, processed to the same pair periods: +13.6%; the cause of the gap was not measured. Not a market index or district price growth, not annualised.";
   add("RS-01", fn, "이름이 null → 빈 문자열", [null, D([OK])], "");
   add("RS-02", fn, "집계가 없으면(null) 빈 문자열", ["용산구", null], "");
   add("RS-03", fn, "표에 없는 구 → 빈 문자열", ["강남구", D([OK])], "");
   add("RS-04", fn, "킬 스위치가 걸렸으면(갈아타기 절이 접힐 때) 줄이 없다", ["용산구", D([OK], { checks: { kill: true, enough: true } })], "");
   add("RS-05", fn, "값을 낼 수 있는 구가 모자라면(enough 거짓) 줄이 없다", ["용산구", D([OK], { checks: { kill: false, enough: false } })], "");
-  add("RS-06", fn, "ok 구(ko): 중앙값·90% 구간·쌍·보유 중앙·같은 쌍 R-ONE, 차이 원인 미측정, 시장 지수 아님·연율화 안 함, 끝에 쌍 표 링크", ["용산구", D([OK])], `${KO_OK} ${LINK_KO}`);
+  add("RS-06", fn, "ok 구(ko): 중간값·90% 구간·쌍·보유 중앙·같은 쌍 R-ONE, 차이 원인 미측정, 시장 지수 아님·연율화 안 함, 끝에 쌍 표 링크", ["용산구", D([OK])], `${KO_OK} ${LINK_KO}`);
   add("RS-07", fn, "ok 구(en)", ["용산구", D([OK]), "en"], `${EN_OK} ${LINK_EN}`);
   add("RS-08", fn, "이상치 많은 구는 칸 안에 그 말을 더한다", ["용산구", D([{ ...OK, out: 1 }])], `${KO_OK.replace("보유 중앙 378일", "보유 중앙 378일, 이상치 많음")} ${LINK_KO}`);
   add("RS-09", fn, "thin 구(ko): 숫자 없이 표본 부족", ["종로구", D([{ gu: "11110", n: 53, st: "thin" }])], `같은 집이 다시 팔렸을 때: 표본 부족(n=53쌍)이라 값을 싣지 않습니다. ${LINK_KO}`);

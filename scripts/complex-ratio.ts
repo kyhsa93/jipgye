@@ -138,7 +138,7 @@ export function spreadSentence(spread, districtRatio, locale = "ko") {
       : `매매와 전세가 함께 신고된 단지·평형 ${n}칸에서 하나씩 내면 절반이 ${q1}~${q3}%에 들어옵니다`
     : en
       ? `Measured one unit type at a time across the ${n} unit types where both a sale and a jeonse were reported, the median is ${spread.median}%`
-      : `매매와 전세가 함께 신고된 단지·평형 ${n}칸에서 하나씩 내면 중앙값이 ${spread.median}%입니다`;
+      : `매매와 전세가 함께 신고된 단지·평형 ${n}칸에서 하나씩 내면 중간값이 ${spread.median}%입니다`;
 
   const gap = typeof districtRatio === "number" ? Math.abs(spread.median - districtRatio) : 0;
   if (gap < GAP_EXPLAIN) return `${head}.`;

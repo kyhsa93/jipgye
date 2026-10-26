@@ -70,7 +70,7 @@ test("n≥3 달이 가장 많은 평형의 n≥3 달만 선으로 잇고 얇은 
   const pts = points(html);
   assert.deepEqual(pts.map(([x]) => x), [2, 62, 232], "n<3 달(202501·202508)이 선에 들어갔거나 달 위치가 틀렸다");
   assert.deepEqual(pts.map(([, y]) => y), [58, 39, 2], "최저가 아래·최고가 위가 아니다");
-  assert.match(html, /<p class="content-notice">59\.39㎡ 월 중앙값, n≥3 달 3: 2024\.11 5억원 → 2026\.10 5억 6,000만원<\/p>$/);
+  assert.match(html, /<p class="content-notice">59\.39㎡ 월 중간값, n≥3 달 3: 2024\.11 5억원 → 2026\.10 5억 6,000만원<\/p>$/);
   assert.doesNotMatch(html, /9억|1,000만원/, "얇은 달 값이 글에 섞였다");
   // 카드의 나머지는 그대로이고 자리 하나만 더했다.
   assert.match(p.byId("complex-card").innerHTML, /<div id="card-chart"><\/div><p id="card-rank"><\/p><div id="card-renewal">/);
@@ -125,7 +125,7 @@ test("실데이터: 노원구 파일로 실제 단지 추이가 그려진다", a
   const pts = points(p.box());
   assert.ok(pts.length >= 2, "실데이터 단지에서 선이 안 그려졌다");
   assert.ok(pts.every(([x, y]) => x >= 2 && x <= 232 && y >= 2 && y <= 58));
-  assert.match(p.box(), /㎡ 월 중앙값, n≥3 달 \d+: \d{4}\.\d{2} /);
+  assert.match(p.box(), /㎡ 월 중간값, n≥3 달 \d+: \d{4}\.\d{2} /);
 });
 
 test("외부 JS 는 deal-search 만 defer 로 읽고 sw.js 사전캐시 밖, gzip ≤900B", async () => {

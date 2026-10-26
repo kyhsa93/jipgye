@@ -350,7 +350,7 @@ function yearOnSentences(y, en) {
   const lead = en
     ? `Comparing each complex-size cell with itself${basis}`
     : then && ref
-      ? `같은 단지·같은 평형끼리 1년 전(${then} 중앙값)과 지금(${ref} 값으로 고친 중앙값)을 견주면`
+      ? `같은 단지·같은 평형끼리 1년 전(${then} 중간값)과 지금(${ref} 값으로 고친 중간값)을 견주면`
       : "같은 단지·같은 평형끼리 1년 전과 지금을 견주면";
   const cameAbove = y.cameAbove ? (en ? ` (${y.cameAbove} came down from above)` : `(위에서 내려온 칸 ${y.cameAbove}칸)`) : "";
   if (y.was) {

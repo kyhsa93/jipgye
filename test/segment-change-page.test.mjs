@@ -22,7 +22,7 @@ const textOf = (h, lang) => {
 const rowsOf = (h) => [...h.matchAll(/<tr><td><span class="m-ko">([^<]+)<\/span><span class="m-en">[^<]+<\/span><\/td>([\s\S]*?)<\/tr>/g)].map((m) => [m[1], m[2]]);
 const pct = (v) => `${v > 0 ? "+" : ""}${v.toFixed(1)}%`;
 
-const CAVEAT_KO = "칸을 기준 시기 중앙값으로 가격대에 넣어, 기준값이 우연히 높거나 낮았던 칸이 양 끝 가격대에 모입니다(평균 회귀). 그래서 양 끝 가격대의 변화는 그만큼 어긋날 수 있고, 이를 보정하지 않았습니다.";
+const CAVEAT_KO = "칸을 기준 시기 중간값으로 가격대에 넣어, 기준값이 우연히 높거나 낮았던 칸이 양 끝 가격대에 모입니다(평균 회귀). 그래서 양 끝 가격대의 변화는 그만큼 어긋날 수 있고, 이를 보정하지 않았습니다.";
 const CAVEAT_EN = "Units are banded by their base-period median, so units whose base value was by chance high or low gather in the end bands (regression to the mean). Changes in the end bands can be off for that reason; this is not corrected.";
 
 test("표: 가격대 5줄·연식 3줄, 변화·90% 구간·칸 수가 segment-change.json 그대로다", () => {
@@ -38,13 +38,13 @@ test("표: 가격대 5줄·연식 3줄, 변화·90% 구간·칸 수가 segment-c
   assert.equal(N4.price.reduce((a, r) => a + r.cells, 0), N4.cells);
   assert.equal(N4.age.reduce((a, r) => a + r.cells, 0) + N4.noBuildYear, N4.cells);
   const h = html(N4);
-  assert.match(h, /<th scope="rowgroup" colSpan="4"><span class="m-ko">가격대\(기준 시기 중앙값\)<\/span>/i);
+  assert.match(h, /<th scope="rowgroup" colSpan="4"><span class="m-ko">가격대\(기준 시기 중간값\)<\/span>/i);
   assert.match(h, /<th scope="rowgroup" colSpan="4"><span class="m-ko">연식\(2025년 기준\)<\/span>/i);
 });
 
-test("첫 줄: 두 시기·칸 수·가격대 기준(기준 시기 중앙값)·연식 기준 해 (ko/en)", () => {
+test("첫 줄: 두 시기·칸 수·가격대 기준(기준 시기 중간값)·연식 기준 해 (ko/en)", () => {
   const h = html(N4);
-  assert.ok(textOf(h, "ko").includes("같은 칸(구·단지·전용면적)이 2025년 6~8월과 2026년 6~8월에 모두 거래된 3,793칸을 기준 시기 중앙값의 가격대와 2025년 기준 연식으로 나눠, 칸마다 잰 변화의 중앙값입니다."));
+  assert.ok(textOf(h, "ko").includes("같은 칸(구·단지·전용면적)이 2025년 6~8월과 2026년 6~8월에 모두 거래된 3,793칸을 기준 시기 중간값의 가격대와 2025년 기준 연식으로 나눠, 칸마다 잰 변화의 중간값입니다."));
   assert.ok(textOf(h, "en").includes("traded in both Jun–Aug 2025 and Jun–Aug 2026, 3,793 in all, grouped by the price band of their base-period median and by building age as of 2025"));
 });
 

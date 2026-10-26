@@ -348,8 +348,8 @@ export function leadSentence({ deals, cancelled, timing, standing, months }, loc
   const verdict = !standing
     ? ""
     : standing.higherShare > standing.lowerShare + 10
-      ? ` 해제된 거래는 실제로 비싼 축이다 — 같은 단지 같은 면적에 남은 거래의 중앙값보다 높았던 것이 ${standing.higherShare}%, 낮았던 것이 ${standing.lowerShare}%다.`
-      : ` 흔히 말하는 것과 달리 해제 거래가 그 단지 최고가인 것은 아니다 — 같은 단지 같은 면적에 남은 거래의 중앙값보다 높았던 것이 ${standing.higherShare}%인 반면, 낮았던 것이 ${standing.lowerShare}%로 오히려 더 많다.`;
+      ? ` 해제된 거래는 실제로 비싼 축이다 — 같은 단지 같은 면적에 남은 거래의 중간값보다 높았던 것이 ${standing.higherShare}%, 낮았던 것이 ${standing.lowerShare}%다.`
+      : ` 흔히 말하는 것과 달리 해제 거래가 그 단지 최고가인 것은 아니다 — 같은 단지 같은 면적에 남은 거래의 중간값보다 높았던 것이 ${standing.higherShare}%인 반면, 낮았던 것이 ${standing.lowerShare}%로 오히려 더 많다.`;
 
   return (
     `${span ? `${span} ` : ""}신고된 매매 ${deals.toLocaleString("ko-KR")}건 가운데 ${cancelled.toLocaleString("ko-KR")}건이 나중에 해제됐다. ${share}%다.` +
