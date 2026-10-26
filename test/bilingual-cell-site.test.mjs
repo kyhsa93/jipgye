@@ -109,6 +109,9 @@ test("한국어 쪽은 그대로다 — 영어 스팬을 걷은 칸의 글자가
     ["record-high", "robust-table", record.tables.robust.ko],
     ["price-outlook", "region-table", outlook.tables.regions.ko],
     ["price-outlook", "nowcast-table", outlook.tables.nowcast.ko],
+    ["price-outlook", "score-table", outlook.tables.score.ko],
+    ["price-outlook", "move-in-table", JSON.parse(await read("docs/data/move-in.json")).table.ko],
+    ["price-outlook", "indicator-table", JSON.parse(await read("docs/data/outlook-indicators.json")).table.ko],
   ];
   for (const [page, id, ko] of cases) {
     const baked = texts(koOnly(bodyOf(await tableOf(page, id))));
@@ -122,4 +125,38 @@ test("영어 화면 한글 상한 — price-outlook 의 이 PR 대상 표(권역
   for (const id of ["region-table", "nowcast-table", "move-in-districts"]) total += hangul(enOnly(bodyOf(await tableOf("price-outlook", id))));
   // 남는 것: 권역 표 「비움」 칸, 구×반기 표 본문 칸의 「n세대(임대 m)」·「없음」·「예정 없음」, 꼬리(출처·기준일 문장).
   assert.ok(total <= 520, `영어 쪽 한글 ${total}자`);
+});
+
+test("E1b ① price-outlook: 점수 표·입주 기간 표·지표 표의 머리글 줄은 영어 화면에 한글 0자, 영어 낱말이다", async () => {
+  const want = { "score-table": ["Horizon", "Model", "Published?"], "move-in-table": ["Period"], "indicator-table": ["Indicator added", "3 months", "Verdict"] };
+  for (const [id, words] of Object.entries(want)) {
+    const heads = cellsOf(enOnly(bodyOf(await tableOf("price-outlook", id)))).filter((c) => c.section === "thead");
+    assert.ok(heads.length >= 4, `${id}: 머리글 ${heads.length}`);
+    for (const c of heads) assert.equal(hangul(c.inner), 0, `${id}: ${c.inner}`);
+    const texts = heads.map((c) => c.inner.replace(/<[^>]+>/g, ""));
+    for (const w of words) assert.ok(texts.some((t) => t.startsWith(w)), `${id}: 「${w}」 머리글이 없다 (${texts.join("|")})`);
+  }
+});
+
+test("E1b ① price-outlook: 지표 표 — 한글이 긴 칸(이름 ≥10자·판정 ≥12자)은 영어 화면에 한글 0자", async () => {
+  const table = bodyOf(await tableOf("price-outlook", "indicator-table"));
+  const ko = cellsOf(koOnly(table)).filter((c) => c.section === "tbody");
+  const en = cellsOf(enOnly(table)).filter((c) => c.section === "tbody");
+  assert.equal(ko.length, en.length);
+  assert.ok(ko.length >= 40 * 4, `칸 ${ko.length}`);
+  let long = 0;
+  ko.forEach((k, i) => {
+    // 한국어 쪽 칸 글자 수로 가른다 - 영어 쪽 칸은 한글이 0 이어야 하는 칸이다.
+    if (!((k.col === 0 && hangul(k.inner) >= 10) || (k.col === 3 && hangul(k.inner) >= 12))) return;
+    long += 1;
+    assert.equal(hangul(en[i].inner), 0, `${k.inner} → ${en[i].inner}`);
+  });
+  assert.ok(long >= 20, `영어로 굽힌 긴 칸 ${long}`);
+});
+
+test("E1b ① price-outlook 영어 화면 한글 상한 — 여섯 표 합계(#714 직전 1,557자 → ① 뒤 ≤1,010자). 남는 것: 「비움」·입주 본문 칸(③)·지표 표 짧은 칸·꼬리", async () => {
+  let total = 0;
+  for (const id of ["region-table", "nowcast-table", "move-in-table", "move-in-districts", "score-table", "indicator-table"]) total += hangul(enOnly(bodyOf(await tableOf("price-outlook", id))));
+  assert.ok(total <= 1010, `영어 쪽 한글 ${total}자`);
+  assert.ok(total >= 700, `하한 점검 — 표 구조가 바뀌었는지 보라: ${total}자`);
 });

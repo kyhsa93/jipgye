@@ -12,6 +12,9 @@ export type Cell = { tag: string; attrs: string; inner: string; start: number; e
 
 export const HANGUL = /[가-힣]/;
 
+/** 칸 안의 한글 글자 수(태그 뺀 글자). 바이트 대비 한글이 많은 칸만 두 벌로 굽는 `pick` 이 쓴다. */
+export const hangulCount = (html: string) => (html.replace(/<[^>]+>/g, "").match(/[가-힣]/g) ?? []).length;
+
 const CELL = /<(t[hd])((?:\s[^>]*)?)>([\s\S]*?)<\/\1>/g;
 const MARK = /<(thead|tbody|tfoot|tr)(?=[\s>])/g;
 const TOKEN = /(<[^>]+>)/;

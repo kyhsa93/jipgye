@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { accessibleTables } from "./table-a11y.ts";
-import { bilingualCells } from "./bilingual-cell.ts";
+import { bilingualCells, hangulCount } from "./bilingual-cell.ts";
 import { moveInDistrictTableHtml } from "./move-in.ts";
 import { createReactRenderer } from "./render/react.ts";
 import { createWriteSet } from "./render-writes.ts";
@@ -152,6 +152,10 @@ async function main() {
   const recordText = (key) => (record?.[key]?.ko ? escapeHtml(record[key].ko) : null);
   // 표 칸은 한국어·영어 두 벌로 굽는다(#708) — 데이터를 받기 전·못 받았을 때 영어 화면에 한국어 표가 남지 않게. 바이트 때문에 칸을 고른다(장당 +4KB).
   const both = (table, pick?) => bilingualCells(table?.ko, table?.en, pick);
+  // E1b ①(#708): 칸마다 두 벌 껍데기(약 52 B)가 들어 한글이 적은 칸은 글자당 비싸다 — 지표 표는 한글이 긴 칸(이름 ≥10자·판정 ≥12자)만 굽는다.
+  const wide = (c, min) => hangulCount(c.inner) >= min;
+  const indicatorPick = (c) => c.section === "thead" || (c.col === 0 && wide(c, 10)) || (c.col === 3 && wide(c, 12));
+  const headOnly = (c) => c.section === "thead";
   // 구×반기 입주 표: json 의 영어 조각은 자치구 이름이 아직 한글인 채 구워진 것(다음 데일리가 새로 굽는다)이라, 숫자(byDistrict)로 두 벌을 지금 다시 만든다.
   const moveInDistrictsHtml = (m) =>
     m?.byDistrict?.rows?.length
@@ -259,14 +263,14 @@ async function main() {
         outlookLongLead: outlookText("longLead"),
         outlookNowcastLead: outlookText("nowcastLead"),
         outlookNowcast: both(outlook?.tables?.nowcast),
-        outlookScore: outlook?.tables?.score?.ko ?? null,
+        outlookScore: both(outlook?.tables?.score, headOnly),
         outlookRecordLead: outlookText("recordLead"),
         indicatorLead: indicators?.lead?.ko ? escapeHtml(indicators.lead.ko) : null,
         moveInLead: moveIn?.lead?.ko ? escapeHtml(moveIn.lead.ko) : null,
-        moveInTable: moveIn?.table?.ko ?? null,
+        moveInTable: both(moveIn?.table, headOnly),
         // 구×반기 표 조각(#677). 예전 자치구별 한 줄(moveIn.districts)은 json 에 남기되 화면은 표를 쓴다.
         moveInDistricts: moveInDistrictsHtml(moveIn),
-        indicatorTable: indicators?.table?.ko ?? null,
+        indicatorTable: both(indicators?.table, indicatorPick),
       },
     ],
     // 손으로 쓴 장이다. 채울 자리는 「수집 상태」 줄 하나(#657 V11, 빌드 때 데이터에서)이고, 표의 머리글 방향·이름은 같은 길로 단다.
