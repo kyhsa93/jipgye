@@ -19,6 +19,7 @@ import { INDEX_FILE } from "./fetch-price-index.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { shiftMonth } from "./outlook.ts";
 import { RAW_DIR } from "./realestate-raw.ts";
+import { writeRegistrationSoft } from "./registration.ts";
 import { writeSegmentChangeSoft } from "./segment-change.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { yearMonthOf } from "./realestate-slots.ts";
@@ -119,6 +120,8 @@ async function readAll() {
 async function main() {
   const [items, official, survey] = await Promise.all([readAll(), readJson(INDEX_FILE), readJson(DISTRICT_INDEX_FILE)]);
   const now = new Date();
+  // 등기·해제 비율(R1, #715). 같은 원본. soft-fail 이라 던지지 않고, 갈아타기 결과와 상관없이 먼저 부른다.
+  await writeRegistrationSoft({ items, now });
   const payload = buildPayload({ items, now, official, survey });
   if (!payload) {
     console.log("  갈아타기: 두 시기를 정할 원본이 모자라 건너뜀");
