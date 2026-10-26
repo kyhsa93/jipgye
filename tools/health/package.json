@@ -2,7 +2,7 @@
   "name": "jipgye-health",
   "private": true,
   "type": "module",
-  "description": "데이터 건강 점검(#507 = 구조 B-1): 커밋된 데이터(docs/data·raw)와 그 데이터로 찍은 생성물(docs/*.html)이 서로 맞는지 보는 검사 모음. 의존은 0이다 — 루트 `npm ci`로 충분하고, 이 파일이 있는 이유는 `npm test`의 **실행 단위**다(tools/render와 같은 이유). 이 검사를 루트 test/에 두면 데이터가 하루에 한 번 바뀌는 구조(B)에서 기능 PR의 `npm test`가 그날 데이터에 기댄다 - 2026-09-02~10-01에 검사 하나가 매 run을 막아 수집이 통째로 사라진 모양이다(#8, #449). 여기 검사는 워크플로에서 **비차단**으로 돌고(실패해도 배포·병합을 막지 않고 맨 끝 단계가 run을 빨갛게 끝낸다), 루트 `npm test`에는 들어가지 않는다.",
+  "description": "데이터 건강 점검(#507 = 구조 B-1): 커밋된 데이터(docs/data·raw)와 같은 HEAD 로 배포 때 만드는 생성물(build/site, 구조 B 컷오버 #510 뒤)이 서로 맞는지 보는 검사 모음. 의존은 0이다 — 루트 `npm ci`로 충분하고, 이 파일이 있는 이유는 `npm test`의 **실행 단위**다(tools/render와 같은 이유). 이 검사를 루트 test/에 두면 데이터가 하루에 한 번 바뀌는 구조(B)에서 기능 PR의 `npm test`가 그날 데이터에 기댄다 - 2026-09-02~10-01에 검사 하나가 매 run을 막아 수집이 통째로 사라진 모양이다(#8, #449). 여기 검사는 워크플로에서 **비차단**으로 돌고(실패해도 배포·병합을 막지 않고 맨 끝 단계가 run을 빨갛게 끝낸다), 루트 `npm test`에는 들어가지 않는다.",
   "scripts": {
     "pretest": "node ../../scripts/render-pipeline.ts --out=build/site",
     "test": "node ../../scripts/run-tests.mjs"
