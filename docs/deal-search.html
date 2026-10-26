@@ -141,6 +141,7 @@
 <script src="./nav.js" defer></script>
 <script src="./search.js" defer></script>
 <script src="./card-renewal.js" defer></script>
+<script src="./complex-card.js" defer></script>
 <script src="./analytics.js"></script>
 <script src="./load-state.js"></script>
 <script>
@@ -1024,6 +1025,7 @@ function renderResult() {
     renderComplexPriceFailure();
     renderComplexRentsFailure();
     window.cardRenewal?.(); // 갱신 구간(#717, card-renewal.js)
+    window.complexCard?.(); // 가격 위치(#731)
   }
   announceResult();
 }
@@ -1304,7 +1306,7 @@ function complexCardHtml() {
     `<h2>${escapeHtml(t("complexHeading")(apt))}</h2>` +
     priceHtml +
     ratioHtml +
-    `<div id="card-renewal"></div>` +
+    `<p id="card-rank"></p><div id="card-renewal"></div>` +
     (mine.length ? `<h3>${t("recentRents")(mine.length)}</h3><ul class="budget-deals">${mine.slice(0, 3).map((d) => rentHtml(d, district)).join("")}</ul>` : "") +
     `</section>`
   );
