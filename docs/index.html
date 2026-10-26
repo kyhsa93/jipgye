@@ -31,8 +31,7 @@
 <main id="main">
   <header class="tw:mb-2 tw:1024:mb-6">
     <div>
-      <h1 class="wordmark" id="page-title">집계</h1>
-      <p class="tagline" id="tagline">서울 아파트, 신고된 거래만 세어서 말합니다</p>
+      <p class="wordmark" id="page-title">집계</p>
       <div class="updated updated-warn" id="updated-warn" role="status" hidden></div>
     </div>
     <div class="header-actions">
@@ -71,12 +70,37 @@
     <button type="button" id="load-error-retry"></button>
   </div>
 
-  <aside class="method-callout tw:-ml-2.75 tw:pl-2 tw:border-l-3 tw:border-border-strong">
-    <p id="method-callout-text" class="tw:text-fg">신고 기한이 30일이라 최근 주는 늘 덜 차 있고, 표본이 모자란 자치구는 평균을 내지 않습니다.</p>
-    <a href="./method.html" id="method-callout-link">숫자를 만드는 방법 →</a>
-  </aside>
+  <!-- 첫 화면 = 가치 제안 + 대표 검색(#745 PR4, 소유자 지시 2026-10-26 - #575 안 B 를 대체). 폼은 JS 없이 GET 으로 deal-search 에 조건을 넘긴다.
+       예산은 deal-search 의 max(억, 이하)다. 전세·월세에는 deal-search 가 보증금·월세 칸을 쓰므로 예산 칸을 CSS 로 감추고, 보낼 때 비운다(스크립트 끝). -->
+  <div class="home-hero" id="home-hero">
+    <h1 class="home-title"><span lang="ko">내 예산에 맞는 서울 아파트를 찾아보세요</span><span lang="en">Find a Seoul apartment that fits your budget</span></h1>
+    <p class="home-value"><span lang="ko">실제 거래된 가격을 기준으로 원하는 지역의 아파트를 비교해 보세요.</span><span lang="en">Compare apartments in the area you want, based on prices actually paid.</span></p>
+    <p class="tagline" id="tagline">서울 아파트, 신고된 거래만 세어서 말합니다</p>
+    <form class="home-search" id="home-search" action="./deal-search.html" method="get">
+      <fieldset class="home-kind">
+        <legend class="c-label"><span lang="ko">거래 유형</span><span lang="en">Deal type</span></legend>
+        <div class="c-chips">
+        <label class="c-chip"><input type="radio" name="kind" value="sale" checked><span lang="ko">매매</span><span lang="en">Sale</span></label>
+        <label class="c-chip"><input type="radio" name="kind" value="jeonse"><span lang="ko">전세</span><span lang="en">Jeonse</span></label>
+        <label class="c-chip"><input type="radio" name="kind" value="wolse"><span lang="ko">월세</span><span lang="en">Monthly rent</span></label>
+        </div>
+      </fieldset>
+      <label class="c-field"><span class="c-label"><span lang="ko">지역</span><span lang="en">District</span></span>
+        <select class="c-select" name="district"><option value="">서울 전체<option>강남구<option>강동구<option>강북구<option>강서구<option>관악구<option>광진구<option>구로구<option>금천구<option>노원구<option>도봉구<option>동대문구<option>동작구<option>마포구<option>서대문구<option>서초구<option>성동구<option>성북구<option>송파구<option>양천구<option>영등포구<option>용산구<option>은평구<option>종로구<option>중구<option>중랑구</select></label>
+      <label class="c-field home-budget"><span class="c-label"><span lang="ko">매매 예산</span><span lang="en">Sale budget (₩100M)</span></span>
+        <select class="c-select" name="max"><option value="">전체<option value="3">3억 이하<option value="5">5억 이하<option value="8">8억 이하<option value="10">10억 이하<option value="15">15억 이하<option value="20">20억 이하</select></label>
+      <button class="c-btn" type="submit"><span lang="ko">실거래 검색</span><span lang="en">Search deals</span></button>
+    </form>
+  </div>
 
-  <h2 class="question-heading" id="question-heading">무엇을 알아보러 오셨나요</h2>
+  <nav class="home-goals" id="home-goals" aria-label="무엇을 할까요">
+    <div class="c-card"><p class="c-card__title"><a href="./deal-search.html"><span lang="ko">아파트 찾기</span><span lang="en">Find an apartment</span></a></p><p class="c-hint"><span lang="ko">지역·예산·면적으로 실거래 찾기</span><span lang="en">Search deals by district, budget and size</span></p></div>
+    <div class="c-card"><p class="c-card__title"><a href="./realestate.html"><span lang="ko">지역 시세 확인</span><span lang="en">Check local prices</span></a></p><p class="c-hint"><span lang="ko">자치구별 이번 주 신고된 값</span><span lang="en">This week's reported prices by district</span></p></div>
+    <div class="c-card"><p class="c-card__title"><a href="./switch-house.html"><span lang="ko">아파트·지역 비교</span><span lang="en">Compare areas</span></a></p><p class="c-hint"><span lang="ko">갈 동네와 지금 동네 오른 폭</span><span lang="en">How much your next area rose vs. yours</span></p></div>
+    <div class="c-card"><p class="c-card__title"><a href="./price-outlook.html"><span lang="ko">시장 동향</span><span lang="en">Market trends</span></a></p><p class="c-hint"><a href="./price-outlook.html"><span lang="ko">3개월 뒤 값</span><span lang="en">3-month outlook</span></a> · <a href="./news.html"><span lang="ko">뉴스</span><span lang="en">News</span></a></p></div>
+  </nav>
+
+  <h2 class="question-heading" id="question-heading">더 알아보기</h2>
   <nav class="question-nav tw:gap-6 tw:mb-10" id="question-nav" aria-labelledby="question-heading">
     <details class="question-group" name="question-situation">
       <summary class="question-situation"><h3 class="question-group-title" id="qg-buy">집을 사려는 사람</h3></summary>
@@ -110,6 +134,11 @@
       </div>
     </details>
   </nav>
+
+  <aside class="method-callout tw:-ml-2.75 tw:pl-2 tw:border-l-3 tw:border-border-strong">
+    <p id="method-callout-text" class="tw:text-fg">신고 기한이 30일이라 최근 주는 늘 덜 차 있고, 표본이 모자란 자치구는 평균을 내지 않습니다.</p>
+    <a href="./method.html" id="method-callout-link">숫자를 만드는 방법 →</a>
+  </aside>
 
   <section id="realestate-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="realestate-heading">서울 아파트, 이번 주 신고된 값</h2>
@@ -231,7 +260,7 @@
       methodCalloutText:
         "신고 기한이 30일이라 최근 주는 늘 덜 차 있고, 표본이 모자란 자치구는 평균을 내지 않습니다.",
       methodCalloutLink: "숫자를 만드는 방법 →",
-      questionHeading: "무엇을 알아보러 오셨나요",
+      questionHeading: "더 알아보기",
       q_realestate: "우리 동네는 얼마에 팔렸나",
       q_conversion: "전세가 쌀까, 월세가 쌀까",
       q_renewal: "재계약이 새로 구하는 것보다 싼가",
@@ -306,7 +335,7 @@
       methodCalloutText:
         "Reporting runs on a 30-day window, so the most recent weeks are always still filling in, and districts with too few transactions are left blank rather than averaged.",
       methodCalloutLink: "How these numbers are made →",
-      questionHeading: "What brought you here?",
+      questionHeading: "More questions",
       q_realestate: "What did homes near me sell for?",
       q_conversion: "Is jeonse or monthly rent cheaper?",
       q_renewal: "Is renewing cheaper than moving?",
@@ -1273,6 +1302,11 @@
         .catch(() => {});
     });
   }
+  // 전세·월세에는 매매 예산(max)을 넘기지 않는다(#745 PR4).
+  document.getElementById("home-search").addEventListener("submit", (e) => {
+    const f = e.currentTarget;
+    if (f.kind.value !== "sale") f.max.value = "";
+  });
 </script>
 </body>
 </html>
