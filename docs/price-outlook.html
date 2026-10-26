@@ -233,20 +233,22 @@ const T = {
 };
 
 let locale = (() => {
-  const saved = window.localStorage.getItem("lang");
+  let saved;
+  try { saved = window.localStorage.getItem("lang"); } catch {}
   return saved === "en" || saved === "ko" ? saved : "ko";
 })();
 const t = (key) => T[locale][key];
 
 const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
 let theme = (() => {
-  const saved = window.localStorage.getItem("theme");
+  let saved;
+  try { saved = window.localStorage.getItem("theme"); } catch {}
   return saved === "light" || saved === "dark" ? saved : "auto";
 })();
 
 function applyTheme(next) {
   theme = next;
-  window.localStorage.setItem("theme", theme);
+  try { window.localStorage.setItem("theme", theme); } catch {}
   if (theme === "auto") document.documentElement.removeAttribute("data-theme");
   else document.documentElement.setAttribute("data-theme", theme);
   document.querySelector("#theme-toggle span").textContent = THEME_ICONS[theme];
@@ -407,7 +409,7 @@ document.getElementById("theme-toggle").addEventListener("click", () => {
 
 document.getElementById("lang-toggle").addEventListener("click", () => {
   locale = locale === "ko" ? "en" : "ko";
-  window.localStorage.setItem("lang", locale);
+  try { window.localStorage.setItem("lang", locale); } catch {}
   renderAll();
   window.analytics?.event("language_switch", { site_language: locale });
 });

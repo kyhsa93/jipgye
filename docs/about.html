@@ -165,13 +165,14 @@
   };
   const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
   let theme = (function () {
-    const saved = window.localStorage.getItem("theme");
+    let saved;
+    try { saved = window.localStorage.getItem("theme"); } catch {}
     return saved === "light" || saved === "dark" ? saved : "auto";
   })();
 
   function applyTheme(next) {
     theme = next;
-    window.localStorage.setItem("theme", theme);
+    try { window.localStorage.setItem("theme", theme); } catch {}
     if (theme === "auto") document.documentElement.removeAttribute("data-theme");
     else document.documentElement.setAttribute("data-theme", theme);
     document.querySelector("#theme-toggle span").textContent = THEME_ICONS[theme];
@@ -202,11 +203,12 @@
     },
   };
 
-  let locale = window.localStorage.getItem("lang") === "en" ? "en" : "ko";
+  let locale = "ko";
+  try { if (window.localStorage.getItem("lang") === "en") locale = "en"; } catch {}
 
   function applyLocale(next) {
     locale = next;
-    window.localStorage.setItem("lang", locale);
+    try { window.localStorage.setItem("lang", locale); } catch {}
     document.documentElement.setAttribute("lang", locale);
     for (const block of document.querySelectorAll("[data-lang]")) {
       block.classList.toggle("on", block.getAttribute("data-lang") === locale);

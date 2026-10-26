@@ -54,10 +54,10 @@ test("구운 조각은 json 의 districtTable.ko 와 같고 영어는 같은 키
   assert.match(tpl, /<table class="rate-table" id="move-in-districts"[ >]/, "표 요소 id 가 스크립트가 쓰는 move-in-districts 가 아니다");
 });
 
-test("전망 장 인라인 스크립트는 구×반기 표 때문에 늘지 않는다 - origin/main 17367 B 이하 (#677, S6 인라인 바이트)", async () => {
+test("전망 장 인라인 스크립트는 구×반기 표 때문에 늘지 않는다 - origin/main 17432 B 이하 (#677, S6 인라인 바이트 - #726 저장소 예외 처리 +65 B 반영)", async () => {
   const tpl = await readFile(path.join(root, "docs/price-outlook.html"), "utf8");
   const script = [...tpl.matchAll(/<script>\n([\s\S]*?)<\/script>/g)].map((m) => m[1]).join("");
-  assert.ok(Buffer.byteLength(script) <= 17367, `인라인 스크립트 ${Buffer.byteLength(script)} B`);
+  assert.ok(Buffer.byteLength(script) <= 17432, `인라인 스크립트 ${Buffer.byteLength(script)} B`);
 });
 
 // ---- 자치구 장 입주 예정 한 줄(#677 PR2) ----

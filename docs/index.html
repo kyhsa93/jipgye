@@ -325,7 +325,8 @@
   }
 
   function getInitialLocale() {
-    const saved = window.localStorage.getItem("lang");
+    let saved;
+    try { saved = window.localStorage.getItem("lang"); } catch {}
     return saved === "en" || saved === "ko" ? saved : "ko";
   }
 
@@ -333,13 +334,14 @@
   let theme = "auto";
 
   function getInitialTheme() {
-    const saved = window.localStorage.getItem("theme");
+    let saved;
+    try { saved = window.localStorage.getItem("theme"); } catch {}
     return saved === "light" || saved === "dark" ? saved : "auto";
   }
 
   function applyTheme(next) {
     theme = next;
-    window.localStorage.setItem("theme", theme);
+    try { window.localStorage.setItem("theme", theme); } catch {}
     if (theme === "auto") {
       document.documentElement.removeAttribute("data-theme");
     } else {
@@ -1048,7 +1050,7 @@
 
   function applyLocale(next) {
     locale = next;
-    window.localStorage.setItem("lang", locale);
+    try { window.localStorage.setItem("lang", locale); } catch {}
     document.documentElement.setAttribute("lang", locale);
     document.title = t("docTitle");
     setMetaContent('meta[name="description"]', t("description"));

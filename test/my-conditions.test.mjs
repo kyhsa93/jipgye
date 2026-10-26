@@ -318,6 +318,26 @@ test("더 보기·검색·정렬은 그대로다 - 펼치면 전부, 검색하�
   assert.deepEqual(other.names(),["중랑구", "동대문구", "광진구", "중구"], "정렬이 바뀐 뒤에도 마지막 줄 자리에 바꿔 보여야 한다");
 });
 
+test("저장소 접근 자체가 던져도(사생활 보호 창·사이트 데이터 차단) 메인 스크립트가 끝까지 돌아 표를 그린다 (#726)", async () => {
+  const blocked = (script) => `Object.defineProperty(globalThis, "localStorage", { get() { throw new Error("SecurityError"); } });\n${script}`;
+  const t = await mainTable({ mutate: blocked, saved: { district: "중랑구" } });
+  assert.deepEqual(t.names(), TOP4, "저장소가 던질 때 표가 그려지지 않았다");
+  assert.deepEqual(t.labelled(), []);
+  // 테마 단추를 눌러도(쓰기) 멈추지 않는다.
+  t.p.byId("theme-toggle").dispatch("click");
+});
+
+test("모든 장·nav.js·시세 틀의 localStorage 접근은 try 안에 있다 - 저장소가 던져도 다른 장 스크립트가 끝까지 돈다 (#726)", async () => {
+  const files = [...(await readdir(path.join(root, "docs"))).filter((f) => /\.(html|js)$/.test(f)).map((f) => `docs/${f}`), "scripts/realestate-template.html"];
+  for (const f of files) {
+    const lines = (await readFile(path.join(root, f), "utf8")).split("\n");
+    lines.forEach((line, i) => {
+      if (!/localStorage\.|=\s*(window\.)?localStorage\s*;/.test(line) || /^\s*(\/\/|\*)/.test(line)) return;
+      assert.ok(/try \{/.test(line) || /try \{\s*$/.test(lines[i - 1] ?? ""), `${f}:${i + 1}: try 밖의 localStorage 접근 - ${line.trim()}`);
+    });
+  }
+});
+
 test("영어 화면도 같다 - 표지만 영어다 (#718)", async () => {
   const t = await mainTable({ saved: { district: "중랑구" }, lang: "en" });
   assert.equal(t.names().at(-1), "중랑구");
@@ -325,7 +345,7 @@ test("영어 화면도 같다 - 표지만 영어다 (#718)", async () => {
 });
 
 test("저장소가 막혀도 표는 그대로 그려지고, 메인은 저장값을 적지 않는다 (#718)", async () => {
-  // 메인의 다른 코드(테마)는 막힌 저장소를 따로 다루지 않으므로 내 조건 키만 던지게 한다.
+  // 내 조건 키만 던지게 한다(저장소 전체가 던지는 경우는 아래 #726 시험).
   const blocked = (script) => `const __ls = globalThis.localStorage; globalThis.localStorage = { ...__ls, getItem: (k) => { if (k === "myConditions") throw new Error("blocked"); return __ls.getItem(k); } };\n${script}`;
   const t = await mainTable({ mutate: blocked, saved: { district: "중랑구" } });
   assert.deepEqual(t.names(), TOP4);
