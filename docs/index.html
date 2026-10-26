@@ -88,6 +88,12 @@
         <a id="q-record" href="./record-high.html">신고가, 이제 그 값인가</a>
         <a id="q-outlook" href="./price-outlook.html">3개월 뒤 값과 그 오차</a>
       </div>
+      <form class="question-form" action="./deal-search.html">
+        <label><span lang="ko">예산(억)</span><span lang="en">Budget (₩100M)</span><input name="budget" type="number" min="1"></label>
+        <label><span lang="ko">자치구</span><span lang="en">District</span><input name="district" placeholder="강남구"></label>
+        <label><span lang="ko">면적(㎡)</span><span lang="en">Size (㎡)</span><select name="area"><option value=""><option value="60">~60<option>60-85<option>85-135<option value="135">135~</select></label>
+        <button><span lang="ko">찾기</span><span lang="en">Search</span></button>
+      </form>
     </details>
     <details class="question-group" name="question-situation">
       <summary class="question-situation"><h3 class="question-group-title" id="qg-rent">전월세를 구하는 사람</h3></summary>

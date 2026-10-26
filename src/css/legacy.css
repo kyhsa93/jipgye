@@ -2774,6 +2774,45 @@ html:lang(en) table .m-ko, html:not(:lang(en)) table .m-en {
   border-color: var(--accent);
 }
 
+/* 사는 사람 묶음 안의 조건 칸(#733). JS 없는 GET 폼이라 실거래 검색이 이미 읽는 budget·district·area 로 그대로 연다.
+ * 닫힌 <details> 안이라 첫 화면 선택지 수(#575 안 B ≤9)는 그대로다. 글자는 lang 이 붙은 span 둘 중 화면 언어 쪽만 보인다. */
+.question-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.question-form label {
+  display: grid;
+  flex: 1 1 7em;
+  gap: 2px;
+  font-size: var(--fs-xs);
+}
+
+.question-form input,
+.question-form select,
+.question-form button {
+  min-height: var(--tap);
+  padding: 0 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--fg);
+}
+
+.question-form button {
+  padding: 0 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+html:lang(en) .question-form [lang="ko"],
+html:not(:lang(en)) .question-form [lang="en"] {
+  display: none;
+}
+
 .question-heading {
   margin-top: 0;
 }

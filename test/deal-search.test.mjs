@@ -431,3 +431,49 @@ test("조건 칸과 결과 자리는 데이터가 오기 전에도 자리를 잡
     "src/css/legacy.css: --controls-gap-x가 없어졌거나 gap이 그 토큰을 안 쓴다"
   );
 });
+
+// 메인 「집을 사려는 사람」 묶음 안의 JS 없는 GET 폼(#733). 브라우저가 보내는 주소를 그대로 만들어 이 화면이 그 조건으로 열리는지 본다.
+const mainForm = async () => {
+  const { readFile } = await import("node:fs/promises");
+  const docs = new URL("../docs/", import.meta.url);
+  const index = await readFile(new URL("index.html", docs), "utf8");
+  const search = await readFile(new URL("deal-search.html", docs), "utf8");
+  const form = /<form class="question-form"[^>]*>[\s\S]*?<\/form>/.exec(index)?.[0] ?? "";
+  return { search, form };
+};
+
+test("메인 사는 사람 폼은 실거래 검색이 읽는 이름·값으로 보낸다 (#733)", async () => {
+  const { search, form } = await mainForm();
+  const tag = /<form[^>]*>/.exec(form)?.[0] ?? "";
+  assert.match(tag, /action="\.\/deal-search\.html"/, "폼이 실거래 검색으로 가지 않는다");
+  assert.doesNotMatch(tag, /method="post"/i, "GET 이 아니면 주소에 조건이 남지 않는다");
+  assert.doesNotMatch(form, /<script|\son[a-z]+=/i, "폼에 JS 가 붙었다");
+  const names = [...form.matchAll(/<(?:input|select)[^>]*\bname="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(names, ["budget", "district", "area"]);
+  for (const name of names) assert.ok(search.includes(`params.get("${name}")`), `실거래 검색이 ${name} 을 읽지 않는다`);
+  // 칸마다 label 로 감싸 이름이 붙고, 한국어·영어 글자가 하나씩 있다(화면 언어 쪽만 CSS 로 보인다).
+  const labels = [...form.matchAll(/<label>([\s\S]*?)<\/label>/g)].map((m) => m[1]);
+  assert.equal(labels.length, 3);
+  for (const label of labels) {
+    assert.match(label, /^<span lang="ko">[^<]*[가-힣][^<]*<\/span><span lang="en">[\x20-\x7E㎡₩]+<\/span><(?:input|select)/);
+  }
+  // 면적 값은 실거래 검색이 아는 구간 키만(모르는 값은 조용히 무시돼 조건이 사라진다).
+  const keys = [...(/const AREA_BUCKETS = \[([\s\S]*?)\];/.exec(search)?.[1] ?? "").matchAll(/key: "([^"]+)"/g)].map((m) => m[1]);
+  const select = /<select name="area">([\s\S]*?)<\/select>/.exec(form)?.[1] ?? "";
+  const values = [...select.matchAll(/<option(?: value="([^"]*)")?>([^<]*)/g)].map((m) => m[1] ?? m[2]);
+  assert.deepEqual(values, ["", ...keys]);
+});
+
+test("메인 폼의 세 조건으로 실거래 검색이 열린다 (#733)", async () => {
+  const query = `?${new URLSearchParams({ budget: "8", district: "노원구", area: "60-85" })}`;
+  const page = await open({ query });
+  const html = page.resultHtml();
+  assert.match(html, /노원팔억나/);
+  assert.ok(!html.includes("노원팔억가"), "면적 조건이 빠졌다");
+  assert.ok(!html.includes("도봉팔억"), "지역 조건이 빠졌다");
+  assert.match(html, /1건이 거래됐습니다/);
+
+  // 빈 칸으로 보내면(budget=&district=&area=) 기본 조건 그대로 서울 전체다.
+  const blank = await open({ query: "?budget=&district=&area=" });
+  assert.match(blank.resultHtml(), /서울 전체에서 5건이 거래됐습니다/);
+});
