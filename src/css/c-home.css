@@ -1,1 +1,93 @@
 /* home 화면 전용 규칙 자리 (#745). 공통 모양은 c-base.css에서 가져다 쓰고, 이 화면에만 필요한 규칙만 여기에 더한다. */
+
+/* 첫 화면 = 가치 제안 + 대표 검색 + 4목적(#745 PR4). 글자는 한·영 두 벌을 마크업에 두고 화면 언어 하나만 보인다 - 인라인 스크립트(S6)를 늘리지 않는다. */
+html:lang(en) .home-hero [lang="ko"],
+html:not(:lang(en)) .home-hero [lang="en"],
+html:lang(en) .home-goals [lang="ko"],
+html:not(:lang(en)) .home-goals [lang="en"] {
+  display: none;
+}
+
+/* 워드마크는 머리글의 이름 줄로 남고, 장의 h1 은 헤드라인이 진다. */
+p.wordmark {
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.home-hero {
+  margin: var(--c-space-4) 0 var(--c-space-6);
+}
+.home-title {
+  margin: 0 0 var(--c-space-2);
+}
+.home-value {
+  margin: 0 0 var(--c-space-1);
+  font-size: var(--c-fs-body);
+}
+
+/* 320px 에서도 가로로 넘치지 않게: 칸은 minmax(0, 1fr) 두 줄, 넓이를 고정한 것이 없다. */
+.home-search {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--c-space-3);
+  margin-top: var(--c-space-4);
+}
+.home-kind,
+.home-search .c-btn {
+  grid-column: 1 / -1;
+}
+.home-kind {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.home-kind legend {
+  margin-bottom: var(--c-space-1);
+  padding: 0;
+}
+/* 라디오는 눈에서만 감추고(키보드·화면 낭독기는 그대로 쓴다) 칩 전체가 누르는 자리다. */
+.home-kind input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+.home-kind .c-chip {
+  position: relative;
+}
+.home-kind .c-chip:has(:checked) {
+  background: var(--c-action);
+  border-color: var(--c-action);
+  color: var(--c-action-on);
+  font-weight: 600;
+}
+.home-kind .c-chip:has(:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.home-goals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--c-space-3);
+  margin-bottom: var(--c-space-6);
+}
+.home-goals .c-card__title {
+  font-size: var(--c-fs-body);
+}
+.home-goals .c-card__title a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+}
+.home-goals .c-hint a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+}
+@media (min-width: 1024px) {
+  .home-goals {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

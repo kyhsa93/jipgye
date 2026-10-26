@@ -92,10 +92,29 @@ test("질문 입구는 장면별 세 묶음이고, 사는 사람 묶음의 첫 �
   assert.match(links, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/, "펼친 질문이 모바일에서 한 줄씩 늘어선다");
 });
 
-test("첫 화면은 질문 하나와 상황 단추 셋이다 - 질문 열은 접힌 <details> 안에 JS 없이 (#575 안 B 1단계)", async () => {
-  // 소유자 지시(2026-10-25): 메인에 글과 메뉴가 너무 많다. 질문 열 개가 같은 무게로 늘어선 것이 첫 화면 선택지 17개 중 10개였다.
-  // 처음에는 셋 다 닫혀 있어야 하고(open 이 붙으면 첫 화면에 다시 질문이 깔린다), 여닫기는 브라우저 기본 동작이다.
+const homeForm = (html) => /<form class="home-search"[^>]*>[\s\S]*?<\/form>/.exec(html)?.[0] ?? "";
+
+test("대표 검색이 첫 화면에 보이고 JS 없이 GET 으로 deal-search 에 조건을 넘긴다 (#745 PR4 - #575 안 B 지표를 대체)", async () => {
+  // 소유자 지시(2026-10-26, O-A=예): 메인은 질문 입구가 아니라 대표 검색이 먼저다. #575 안 B 의 「첫 화면 선택지 ≤9」 대신
+  // 헤드라인 h1 → 가치 문구 → 출처 한 줄(태그라인, 지우지 않는다) → 폼(유형·지역·예산·검색)이 질문 입구·데이터 구획보다 앞에 있는지 본다.
   const html = await indexHtml();
+  const hero = /<div class="home-hero"[\s\S]*?<\/form>\n {2}<\/div>/.exec(html)?.[0] ?? "";
+  assert.ok(hero, "대표 검색 블록이 없다");
+  assert.match(hero, /<h1 class="home-title"><span lang="ko">내 예산에 맞는 서울 아파트를 찾아보세요<\/span><span lang="en">[\x20-\x7E]+<\/span><\/h1>/, "헤드라인 h1 이 한·영 두 벌이 아니다");
+  assert.match(hero, /<p class="home-value"><span lang="ko">실제 거래된 가격을 기준으로[^<]+<\/span><span lang="en">[\x20-\x7E]+<\/span><\/p>/);
+  assert.ok(hero.indexOf('class="home-value"') < hero.indexOf('id="tagline"'), "태그라인(출처 한 줄)이 가치 문구 아래가 아니다");
+  assert.ok(hero.includes("신고된 거래만 세어서 말합니다"), "태그라인이 지워졌다(소유자 결정 2026-10-26: 유지)");
+  const at = html.indexOf('class="home-hero"');
+  assert.ok(at < html.indexOf('class="question-nav') && at < html.search(/<section id="/), "대표 검색이 질문 입구·데이터 구획보다 뒤에 있다");
+  assert.ok(html.indexOf('class="home-goals"') < html.indexOf('class="question-nav'), "4목적이 질문 입구보다 뒤에 있다");
+
+  const form = homeForm(html);
+  assert.match(form, /^<form class="home-search" id="home-search" action="\.\/deal-search\.html" method="get">/, "폼이 deal-search 로 GET 하지 않는다");
+  assert.ok(!/\son[a-z]+=/.test(form), "폼에 인라인 이벤트가 있다 - JS 없이 돌아야 한다");
+  assert.ok(!html.includes('getElementById("home-search")'), "스크립트가 폼을 붙잡는다 - JS 없이 돌아야 한다");
+  assert.match(form, /<button class="c-btn" type="submit">/);
+
+  // 질문 링크 열은 지우지 않고 「더 알아보기」 아래 접힌 <details> 로 남는다(색인·내부 링크).
   const block = /<nav class="question-nav(?: [^"]*)?"[\s\S]*?<\/nav>/.exec(html)?.[0] ?? "";
   const opens = [...block.matchAll(/<details\b([^>]*)>/g)].map((m) => m[1]);
   assert.equal(opens.length, 3, "상황이 셋이 아니다");
@@ -108,6 +127,49 @@ test("첫 화면은 질문 하나와 상황 단추 셋이다 - 질문 열은 접
   const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
   const title = /\.question-situation \{([^}]*)\}/.exec(css)?.[1] ?? "";
   assert.match(title, /min-height: var\(--tap\)/, "상황 단추 높이가 --tap 아래일 수 있다");
+});
+
+test("대표 검색 폼의 칸 이름·값은 deal-search 가 읽는 파라미터와 맞다 (#745 PR4)", async () => {
+  const form = homeForm(await indexHtml());
+  const deal = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
+  const read = new Set([...deal.matchAll(/params\.get\("([a-z]+)"\)/g)].map((m) => m[1]));
+  const names = [...new Set([...form.matchAll(/<(?:input|select)\b[^>]*\bname="([a-z]+)"/g)].map((m) => m[1]))];
+  assert.deepEqual(names.sort(), ["budget", "district", "kind"].sort(), "칸이 유형·지역·예산 셋이 아니다");
+  for (const n of names) assert.ok(read.has(n), `deal-search 가 ${n} 을 읽지 않는다`);
+
+  const kinds = JSON.parse(/const KINDS = (\[[^\]]*\]);/.exec(deal)?.[1] ?? "[]");
+  const radios = [...form.matchAll(/<input type="radio" name="kind" value="([a-z]+)"( checked)?>/g)];
+  assert.deepEqual(radios.map((m) => m[1]), kinds, "거래 유형이 deal-search 의 KINDS 와 다르다");
+  assert.deepEqual(radios.filter((m) => m[2]).map((m) => m[1]), ["sale"], "기본 유형이 매매 하나가 아니다");
+
+  const { DISTRICTS } = await import(path.join(root, "scripts/realestate-districts.ts"));
+  const district = /<select class="c-select" name="district">([\s\S]*?)<\/select>/.exec(form)?.[1] ?? "";
+  assert.match(district, /^<option value="">서울 전체/, "첫 칸이 서울 전체(빈 값 = deal-search 의 ALL)가 아니다");
+  const options = [...district.matchAll(/<option>([^<]+)/g)].map((m) => m[1]);
+  assert.deepEqual([...options].sort(), DISTRICTS.map((d) => d.name).sort(), "자치구가 25개 전부가 아니다");
+
+  const budget = /<select class="c-select" name="budget">([\s\S]*?)<\/select>/.exec(form)?.[1] ?? "";
+  assert.match(budget, /^<option value="">/, "예산 첫 칸이 조건 없음이 아니다");
+  const values = [...budget.matchAll(/<option value="(\d+)">/g)].map((m) => Number(m[1]));
+  assert.ok(values.length >= 5, "예산 선택지가 모자란다");
+  // deal-search 의 budget 은 억 단위 숫자이고 3억~30억 사이에서 1억 구간으로 읽힌다(BAND_MIN·BAND_MAX).
+  for (const v of values) assert.ok(Number.isInteger(v) && v >= 3 && v <= 30, `예산 ${v}억이 deal-search 구간 밖이다`);
+});
+
+test("대표 검색·4목적은 320px 에서 가로로 넘치지 않는다 - 칸은 minmax(0, 1fr), 고정 폭 없음 (#745 PR4)", async () => {
+  const css = await readFile(path.join(root, "src/css/c-home.css"), "utf8");
+  const rule = (sel) => new RegExp(`(?:^|\\n)${sel.replace(/[.*]/g, "\\$&")} \\{([^}]*)\\}`).exec(css)?.[1] ?? "";
+  for (const sel of [".home-search", ".home-goals"]) {
+    assert.match(rule(sel), /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/, `${sel} 칸이 내용 폭만큼 늘 수 있다`);
+  }
+  assert.match(rule(".home-kind"), /min-width: 0/, "fieldset 의 min-content 폭이 320px 을 밀 수 있다");
+  // 고정 폭(px/rem)·nowrap 이 하나도 없다 - 화면 너비 320px(본문 폭 288px)을 미는 것은 이 둘뿐이다.
+  const body = css.replace(/\/\*[\s\S]*?\*\//g, "");
+  assert.doesNotMatch(body, /(?:^|[\s;{])(?:min-)?width:\s*(?:[2-9]\d|\d{3,})(?:px|rem)/, "c-home.css 에 고정 폭이 있다");
+  assert.doesNotMatch(body, /white-space:\s*nowrap/, "c-home.css 에 줄바꿈 금지가 있다");
+  const base = await readFile(path.join(root, "src/css/c-base.css"), "utf8");
+  assert.match(/\.c-input,\n\.c-select \{([^}]*)\}/.exec(base)?.[1] ?? "", /box-sizing: border-box;[\s\S]*width: 100%/, "드롭다운이 칸 폭을 넘을 수 있다");
+  assert.match(/\.c-chips \{([^}]*)\}/.exec(base)?.[1] ?? "", /flex-wrap: wrap/, "유형 칩이 한 줄로 넘칠 수 있다");
 });
 
 test("사는 사람 조건 폼은 닫힌 첫 묶음 안에만 있어 첫 화면 선택지가 늘지 않는다 (#733, #575 안 B)", async () => {
