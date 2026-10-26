@@ -372,3 +372,92 @@ test("#731 실제 단지 카드에 자리가 있고, 외부 JS 는 deal-search �
   assert.ok(!(await readFile(path.join(root, "docs/sw.js"), "utf8")).includes("complex-card.js"), "sw.js 사전캐시에 들어갔다");
   assert.ok(gzipSync(RANK_JS, { level: 9 }).length <= 2048);
 });
+
+// ============================================================================================================
+// #729 X2 비슷한 근처 단지 - 같은 docs/complex-card.js. 새 데이터 0: 카드가 이미 받은 complex-price-* 의 cells·meta 만 쓴다.
+// 규칙: 고른 단지의 n 가장 큰 칸(중앙값 있음)이 기준. 같은 구 다른 단지 중 중앙값·n≥3 칸이 면적 ±10㎡ 안이고 준공 ±10년 안이면 후보.
+// 같은 동 먼저, 그다음 기준 중앙값과 가까운 순으로 셋. 0곳이면 조건을 푼(같은 구, 값 있는 단지) 수만 적는다.
+// ============================================================================================================
+const nearCell = (median, n = 5) => ({ n, median });
+const nearPrices = () => ({
+  reference: "202610",
+  cells: {
+    기준: { "59.9": nearCell(60000, 9), "84.9": nearCell(90000, 4) },
+    같은동먼값: { "59.5": nearCell(80000) },
+    같은동가까움: { "60.1": nearCell(61000) },
+    다른동가까움: { "59.9": nearCell(60500) },
+    다른동중간: { 65: nearCell(64000) },
+    다른동넷째: { 50: nearCell(70000) },
+    면적밖: { "84.9": nearCell(60000) },
+    준공밖: { "59.9": nearCell(60000) },
+    표본얇음: { "59.9": nearCell(60000, 2) },
+  },
+  meta: {
+    기준: { dong: "상계동", buildYear: 1990 },
+    같은동먼값: { dong: "상계동", buildYear: 1995 },
+    같은동가까움: { dong: "상계동", buildYear: 1985 },
+    다른동가까움: { dong: "중계동", buildYear: 1992 },
+    다른동중간: { dong: "중계동", buildYear: 2000 },
+    다른동넷째: { dong: "하계동", buildYear: 1980 },
+    면적밖: { dong: "상계동", buildYear: 1990 },
+    준공밖: { dong: "상계동", buildYear: 2001 },
+    표본얇음: { dong: "상계동", buildYear: 1990 },
+  },
+});
+const OTHERS = ["같은동먼값", "같은동가까움", "다른동가까움", "다른동중간", "다른동넷째"];
+const nearNone = () => {
+  const f = nearPrices();
+  for (const a of OTHERS) delete f.cells[a];
+  return f;
+};
+
+async function nearPage(locale = "ko", prices = nearPrices(), apt = "기준") {
+  const p = await rankPage(locale);
+  new vm.Script(`complexPrices.set("노원구", ${JSON.stringify(prices)}); window.cardApt = ${JSON.stringify(apt)}; window.complexCard();`).runInContext(p.sandbox);
+  return { ...p, html: p.byId("card-near").innerHTML, near: p.sandbox.window.complexCard.near };
+}
+
+test("#729 같은 동 먼저, 값 가까운 순 셋 - 면적 ±10㎡·준공 ±10년·n≥3 밖은 뺀다", async () => {
+  const p = await nearPage();
+  assert.deepEqual(
+    [...p.near(nearPrices(), "기준")].map(([a, [k]]) => `${a} ${k}`),
+    ["같은동가까움 60.1", "같은동먼값 59.5", "다른동가까움 59.9"]
+  );
+  assert.ok(p.html.startsWith(`<h3>비슷한 근처 단지</h3><ul><li><a href="?district=${encodeURIComponent("노원구")}&apt=${encodeURIComponent("같은동가까움")}">`));
+  assert.match(p.html, /같은동가까움<\/a> 60\.1㎡ 6억 1,000만원<\/li>/);
+  for (const out of ["면적밖", "준공밖", "표본얇음", "다른동넷째", "다른동중간"]) assert.ok(!p.html.includes(out), out);
+});
+
+test("#729 후보가 셋보다 적으면 있는 만큼만, 0곳이면 「조건을 풀면 n곳」, 기준 칸이 없으면 비운다", async () => {
+  const two = nearPrices();
+  for (const a of ["같은동먼값", "다른동가까움", "다른동중간"]) delete two.cells[a];
+  assert.equal(((await nearPage("ko", two)).html.match(/<li>/g) ?? []).length, 2);
+
+  // 면적밖·준공밖은 조건을 풀면 들어오고, 표본얇음은 값이 없어 풀어도 못 든다.
+  assert.equal((await nearPage("ko", nearNone())).html, '<h3>비슷한 근처 단지</h3><p class="low-sample">조건을 풀면 2곳</p>');
+
+  const bare = nearPrices();
+  bare.cells.기준 = { "59.9": { n: 2 } };
+  assert.equal((await nearPage("ko", bare)).html, "", "기준 칸 없이 후보를 냈다");
+  const alone = { reference: "202610", cells: { 기준: nearPrices().cells.기준 }, meta: { 기준: nearPrices().meta.기준 } };
+  assert.equal((await nearPage("ko", alone)).html, "", "풀어도 0곳인데 문장을 냈다");
+});
+
+test("#729 영어 화면은 영어 제목·문구, 판정 문구는 없고 floor-gap 링크는 카드에 한 줄뿐", async () => {
+  const p = await nearPage("en");
+  assert.match(p.html, /^<h3>Similar complexes nearby<\/h3><ul>/);
+  assert.match(p.html, /60\.1㎡ ₩610M<\/li>/);
+  assert.equal((await nearPage("en", nearNone())).html, '<h3>Similar complexes nearby</h3><p class="low-sample">2 if loosened</p>');
+  assert.doesNotMatch(p.html, VERDICT);
+  // floor-gap 링크는 가격 표 아래 한 줄(card-links)만 - 근처 단지 칸이 또 달지 않는다.
+  assert.doesNotMatch(p.html, /floor-gap/);
+  assert.ok(p.byId("complex-card").innerHTML.split("floor-gap.html").length <= 2);
+});
+
+test("#729 실데이터 단지 카드에 근처 단지가 그려지고 complex-card.js 합계 gzip ≤2,048B", async () => {
+  const real = JSON.parse(await readFile(path.join(root, "docs/data/complex-price-nowon.json"), "utf8"));
+  const p = await nearPage("ko", real, "상계주공7(고층)");
+  assert.match(p.html, /<li><a href="\?district=/);
+  const size = gzipSync(RANK_JS, { level: 9 }).length;
+  assert.ok(size <= 2048, `${size}B`);
+});
