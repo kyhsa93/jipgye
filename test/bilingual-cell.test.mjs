@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { bilingualCells, cellsOf, enOnly, koOnly } from "../scripts/bilingual-cell.ts";
+import { bilingualCells, cellsOf, enOnly, hangulCount, koOnly } from "../scripts/bilingual-cell.ts";
 import { accessibleTables } from "../scripts/table-a11y.ts";
 import { districtNameEn, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 import { moveInDistrictTableHtml } from "../scripts/move-in.ts";
@@ -89,6 +89,16 @@ test("두 벌 칸이 있어도 표 caption 의 한국어 문안은 한국어 칸
   assert.doesNotMatch(ko, /Gangnam|District|All Seoul/);
   assert.match(en, /Highest row Gangnam-gu \(49\.1%\)/);
   assert.doesNotMatch(en, /[가-힣]/);
+});
+
+test("hangulCount·pick: 한글이 긴 칸만 골라 두 벌로 굽는다 (E1b ①)", () => {
+  assert.equal(hangulCount('<td>거래량 <b>3개월</b> 2.4%p</td>'), 5);
+  assert.equal(hangulCount("<td>12.5%</td>"), 0);
+  const ko = "<tbody><tr><td>짧은칸</td><td>아주아주긴한글칸입니다</td></tr></tbody>";
+  const en = "<tbody><tr><td>Short</td><td>A very long cell</td></tr></tbody>";
+  const out = bilingualCells(ko, en, (c) => hangulCount(c.inner) >= 8);
+  assert.ok(out.includes("<td>짧은칸</td>"), "짧은 칸은 한국어 그대로");
+  assert.ok(out.includes(`<td>${both("아주아주긴한글칸입니다", "A very long cell")}</td>`));
 });
 
 test("districtNameEn: 슬러그에서 만든 로마자 — 25개 구 모두 -gu 로 끝나고 한글이 없다", () => {
