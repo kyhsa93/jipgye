@@ -13,6 +13,7 @@ import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 import { stampSources } from "./source-lines.ts";
 import { requireSite, siteLabel, sitePath } from "./site-dir.ts";
 import { collectStatus } from "./check-data-progress.ts";
+import { digestHtml } from "./week-digest-view.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -171,6 +172,7 @@ async function main() {
       : (m?.districtTable?.ko ?? null);
   // method 「수집 상태」 줄: full 실행 기록(market-history). 없으면 줄을 안 그린다.
   const collect = collectStatus(await readJson("market-history"));
+  const weekDigest = await readJson("week-digest");
 
   const writes = createWriteSet();
   // 넷째 칸(선택)은 틀 경로다. 있으면 path_ 는 나가는 장이고, 틀을 채운 뒤 인라인 스크립트 주석을 떼어 path_ 에 쓴다(#374).
@@ -179,7 +181,8 @@ async function main() {
     [
       label("news.html"),
       at("news.html"),
-      { newsSummary: newsSummaryHtml(summary), newsList: newsListHtml(news) },
+      // 이번 주 새 신고(#703 W1): 데이터가 없으면 키를 넣지 않는다 - 틀의 빈 자리를 그대로 두고, 자리표시 없는 틀(시험 고정 틀)도 던지지 않는다.
+      { newsSummary: newsSummaryHtml(summary), newsList: newsListHtml(news), ...(weekDigest ? { weekDigest: digestHtml(weekDigest) } : {}) },
     ],
     [
       label("realestate.html"),
