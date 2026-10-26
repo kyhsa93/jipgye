@@ -18,7 +18,8 @@ const SP_OUT = `A&amp;B &lt;i&gt; &quot;q&quot; it's`;
 const CARD = (label, value, sub) =>
   `<div class="overall-card"><div class="label">${label}</div><div class="value">${value}</div>${sub === undefined ? "" : `<div class="sub">${sub}</div>`}</div>`;
 
-const COL = { sale: "매매 평당가", jeonse: "전세 평당 보증금", wolse: "월세 보증금 / 월세" };
+const ND = "데이터 없음";
+const COL = { sale: "매매 3.3㎡당 평균", jeonse: "전세 3.3㎡당 평균 보증금", wolse: "월세 평균 보증금 / 월세" };
 
 // ================= 입력 틀 =================
 const sale = (o = {}) => ({ avgPricePerPyeong10k: 6000, transactionCount: 40, change: { value10k: 120 }, baselineDate: "2026-10-04", ...o });
@@ -61,9 +62,9 @@ const add = (id, cond, args, expect, extra = {}) => rows.push({ id, fn: "realest
     add(`ON-3${i}`, `자치구 페이지: district가 비문자열(${JSON.stringify(bad)})이면 이름이 같은 곳이 없어 null`, [{ overall: { sale: sale() }, districts: [{ name: "종로구", sale: sale() }] }, null, bad], null);
   }
   add("ON-40", "자치구 페이지: 이름 특수문자(& < > \" ')가 없는 이름이면 null(입력이 글자로 나오지 않는다)", [{ overall: { sale: sale() }, districts: [{ name: "종로구", sale: sale() }] }, null, SP], null);
-  add("ON-41", "district 빈 문자열(falsy)이면 서울 전체 카드", [{ overall: { sale: sale() } }, "sale", ""], CARD("평당가", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래건수", "40건"));
-  add("ON-42", "district 0·NaN·null·undefined(falsy)도 서울 전체 카드", [{ overall: { sale: sale() } }, "sale", 0], CARD("평당가", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래건수", "40건"));
-  add("ON-43", "district가 참이면 kind·서울 전체는 읽지 않는다(서울 전체가 없어도 자치구 카드)", [{ districts: [{ name: "종로구", sale: sale() }] }, "wolse", "종로구"], CARD("평당가", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래건수", "40건"));
+  add("ON-41", "district 빈 문자열(falsy)이면 서울 전체 카드", [{ overall: { sale: sale() } }, "sale", ""], CARD("3.3㎡당 평균", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래 건수", "40건"));
+  add("ON-42", "district 0·NaN·null·undefined(falsy)도 서울 전체 카드", [{ overall: { sale: sale() } }, "sale", 0], CARD("3.3㎡당 평균", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래 건수", "40건"));
+  add("ON-43", "district가 참이면 kind·서울 전체는 읽지 않는다(서울 전체가 없어도 자치구 카드)", [{ districts: [{ name: "종로구", sale: sale() }] }, "wolse", "종로구"], CARD("3.3㎡당 평균", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래 건수", "40건"));
 }
 
 // ================= 칸 상태 표 =================
@@ -88,7 +89,7 @@ const OK = (v, cnt = "40건") => ({ v, cnt });
 const HELD = (held, low) => (low === undefined ? { held } : { held, low });
 // #264: 신고가 1~4건(정수)이라 값을 비운 카드는 「-」 대신 이유를 적는다(`low-sample` 스팬, title 없음). n=0·지표 없음·정수가 아닌 건수는 「-」 그대로다.
 const LOW = (n) => `<span class="low-sample">신고 ${n}건이라 비움</span>`;
-const dashOf = (shape) => (shape.low === undefined ? "-" : LOW(shape.low));
+const dashOf = (shape) => (shape.low === undefined ? ND : LOW(shape.low));
 
 // -- 값이 있는 칸
 st("v01", "보통 값(평당가 6000·40건)", val(6000), OK(6000));
@@ -159,7 +160,7 @@ const heldOut = (s) => Boolean(s.shape.held);
 for (const kind of ["sale", "jeonse"]) {
   const field = kind === "sale" ? "avgPricePerPyeong10k" : "avgDepositPerPyeong10k";
   const P = kind === "sale" ? "S" : "J";
-  const label = kind === "sale" ? "평당가" : "평당 보증금";
+  const label = kind === "sale" ? "3.3㎡당 평균" : "3.3㎡당 평균 보증금";
   for (const s of STATES) {
     const metric = s.metric === ABSENT ? undefined : s.metric(field);
     const flags = { held: s.shape.held ?? null };
@@ -167,22 +168,22 @@ for (const kind of ["sale", "jeonse"]) {
     // (1) 세 종류를 한 줄에 놓는 서울 전체 카드(kind 없음): 이 종류만 상태, 나머지는 지표 없음("-")
     const entryAll = {};
     if (s.metric !== ABSENT) entryAll[kind] = metric;
-    const mid = (k) => (k === kind ? (heldOut(s) ? CARD(COL[k], dashOf(s.shape)) : CARD(COL[k], price, `84㎡ 환산 ${area} · ${s.shape.cnt}`)) : CARD(COL[k], "-"));
-    add(`OA-${P}-${s.id}`, `서울 전체 세 카드(${kind} 칸): ${s.cond}`, [{ overall: entryAll, districts: [] }], mid("sale") + mid("jeonse") + CARD(COL.wolse, "-"), flags);
+    const mid = (k) => (k === kind ? (heldOut(s) ? CARD(COL[k], dashOf(s.shape)) : CARD(COL[k], price, `84㎡ 환산 ${area} · ${s.shape.cnt}`)) : CARD(COL[k], ND));
+    add(`OA-${P}-${s.id}`, `서울 전체 세 카드(${kind} 칸): ${s.cond}`, [{ overall: entryAll, districts: [] }], mid("sale") + mid("jeonse") + CARD(COL.wolse, ND), flags);
     // (2) 종류 하나의 서울 전체 카드: 전세는 전세가율이 매매에 기대므로 매매 6000(40건)을 같이 둔다
     const kEntry = kind === "jeonse" ? { sale: sale(), ...(s.metric === ABSENT ? {} : { jeonse: metric }) } : entryAll;
     let kExpect;
     if (heldOut(s)) kExpect = CARD("서울 전체", dashOf(s.shape));
-    else if (kind === "sale") kExpect = CARD(label, price) + CARD("84㎡ 환산", area) + CARD("거래건수", s.shape.cnt);
-    else kExpect = CARD(label, price) + CARD("84㎡ 환산", area) + (ratio === "-" ? "" : CARD("전세가율", ratio, `매매 40건 · 전세 ${s.shape.cnt}`)) + CARD("거래건수", s.shape.cnt);
+    else if (kind === "sale") kExpect = CARD(label, price) + CARD("84㎡ 환산", area) + CARD("거래 건수", s.shape.cnt);
+    else kExpect = CARD(label, price) + CARD("84㎡ 환산", area) + (ratio === "-" ? "" : CARD("전세가율", ratio, `매매 40건 · 전세 ${s.shape.cnt}`)) + CARD("거래 건수", s.shape.cnt);
     add(`OK-${P}-${s.id}`, `${kind} 카드: ${s.cond}`, [{ overall: kEntry, districts: [] }, kind], kExpect, flags);
     // (3) 자치구 페이지 카드: sale 상태는 jeonse 없이(전세가율 없음), jeonse 상태는 매매 6000과 함께(전세가율)
     const dEntry = kind === "sale" ? { name: "강남구", ...(s.metric === ABSENT ? {} : { sale: metric }) } : { name: "강남구", sale: sale(), ...(s.metric === ABSENT ? {} : { jeonse: metric }) };
     let dExpect;
     if (kind === "sale") {
-      dExpect = heldOut(s) ? CARD("매매", dashOf(s.shape)) : CARD("평당가", price) + CARD("84㎡ 환산", area) + CARD("거래건수", s.shape.cnt);
+      dExpect = heldOut(s) ? CARD("매매", dashOf(s.shape)) : CARD("3.3㎡당 평균", price) + CARD("84㎡ 환산", area) + CARD("거래 건수", s.shape.cnt);
     } else {
-      dExpect = CARD("평당가", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래건수", "40건") + (heldOut(s) || ratio === "-" ? "" : CARD("전세가율", ratio, `매매 40건 · 전세 ${s.shape.cnt}`));
+      dExpect = CARD("3.3㎡당 평균", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래 건수", "40건") + (heldOut(s) || ratio === "-" ? "" : CARD("전세가율", ratio, `매매 40건 · 전세 ${s.shape.cnt}`));
     }
     add(`OD-${P}-${s.id}`, `자치구 페이지(${kind} 상태): ${s.cond}`, [{ districts: [dEntry] }, null, "강남구"], dExpect, flags);
   }
@@ -225,15 +226,15 @@ for (const s of WSTATES) {
   const flags = { held: s.shape.held ?? null };
   const entry = s.metric === ABSENT ? {} : { wolse: s.metric };
   const held = Boolean(s.shape.held);
-  add(`OA-W-${s.id}`, `서울 전체 세 카드(월세 칸): ${s.cond}`, [{ overall: entry, districts: [] }], CARD(COL.sale, "-") + CARD(COL.jeonse, "-") + (held ? CARD(COL.wolse, dashOf(s.shape)) : CARD(COL.wolse, `${s.shape.dep} / 월 ${s.shape.rent}`, s.shape.cnt)), flags);
+  add(`OA-W-${s.id}`, `서울 전체 세 카드(월세 칸): ${s.cond}`, [{ overall: entry, districts: [] }], CARD(COL.sale, ND) + CARD(COL.jeonse, ND) + (held ? CARD(COL.wolse, dashOf(s.shape)) : CARD(COL.wolse, `${s.shape.dep} / 월 ${s.shape.rent}`, s.shape.cnt)), flags);
   add(
     `OK-W-${s.id}`,
     `월세 카드: ${s.cond}`,
     [{ overall: entry, districts: [] }, "wolse"],
-    held ? CARD("서울 전체", dashOf(s.shape)) : CARD("평균 보증금", s.shape.dep) + CARD("평균 월세", `월 ${s.shape.rent}`) + CARD("거래건수", s.shape.cnt),
+    held ? CARD("서울 전체", dashOf(s.shape)) : CARD("평균 보증금", s.shape.dep) + CARD("평균 월세", `월 ${s.shape.rent}`) + CARD("거래 건수", s.shape.cnt),
     flags
   );
-  add(`OD-W-${s.id}`, `자치구 페이지: 월세 칸은 카드에 나오지 않는다(${s.cond})`, [{ districts: [{ name: "강남구", sale: sale(), ...(s.metric === ABSENT ? {} : { wolse: s.metric }) }] }, null, "강남구"], CARD("평당가", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래건수", "40건"), flags);
+  add(`OD-W-${s.id}`, `자치구 페이지: 월세 칸은 카드에 나오지 않는다(${s.cond})`, [{ districts: [{ name: "강남구", sale: sale(), ...(s.metric === ABSENT ? {} : { wolse: s.metric }) }] }, null, "강남구"], CARD("3.3㎡당 평균", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래 건수", "40건"), flags);
 }
 
 // ================= 세 종류가 함께 있는 서울 전체 카드 =================
@@ -245,22 +246,22 @@ for (const s of WSTATES) {
   add("OM-03", "kind 0·false·NaN(falsy)도 세 종류", [{ overall: full }, 0], ALL3);
   add("OM-04", "세 종류 카드는 spread를 읽지 않는다(spread가 와도 같다)", [{ overall: full }, null, null, { median: 46.7, cells: 13 }], ALL3);
   add("OM-05", "매매만 표본 부족(4건)이면 매매 카드만 이유(신고 4건이라 비움)", [{ overall: { ...full, sale: sale({ transactionCount: 4 }) } }], CARD(COL.sale, LOW(4)) + CARD(COL.jeonse, "3,000만원", "84㎡ 환산 7억 6,230만원 · 30건") + CARD(COL.wolse, "2억 264만원 / 월 128만원", "25건"), { held: "sample" });
-  add("OM-06", "전세만 값 없음이면 전세 카드만 \"-\"", [{ overall: { ...full, jeonse: jeonse({ avgDepositPerPyeong10k: null }) } }], CARD(COL.sale, "6,000만원", "84㎡ 환산 15억 2,459만원 · 40건") + CARD(COL.jeonse, "-") + CARD(COL.wolse, "2억 264만원 / 월 128만원", "25건"), { held: "value" });
+  add("OM-06", "전세만 값 없음이면 전세 카드만 \"-\"", [{ overall: { ...full, jeonse: jeonse({ avgDepositPerPyeong10k: null }) } }], CARD(COL.sale, "6,000만원", "84㎡ 환산 15억 2,459만원 · 40건") + CARD(COL.jeonse, ND) + CARD(COL.wolse, "2억 264만원 / 월 128만원", "25건"), { held: "value" });
   add("OM-07", "월세만 표본 부족이면 월세 카드만 이유", [{ overall: { ...full, wolse: wolse({ transactionCount: 4 }) } }], CARD(COL.sale, "6,000만원", "84㎡ 환산 15억 2,459만원 · 40건") + CARD(COL.jeonse, "3,000만원", "84㎡ 환산 7억 6,230만원 · 30건") + CARD(COL.wolse, LOW(4)), { held: "sample" });
-  add("OM-08", "세 종류 모두 표본 부족이면 이유 세 장(건수마다 자기 글자)", [{ overall: { sale: sale({ transactionCount: 4 }), jeonse: jeonse({ transactionCount: 1 }), wolse: wolse({ transactionCount: 0 }) } }], CARD(COL.sale, LOW(4)) + CARD(COL.jeonse, LOW(1)) + CARD(COL.wolse, "-"), { held: "sample" });
-  add("OM-09", "서울 전체가 빈 객체 {}(truthy)면 \"-\" 세 장", [{ overall: {} }], CARD(COL.sale, "-") + CARD(COL.jeonse, "-") + CARD(COL.wolse, "-"));
-  for (const [i, v] of [5, "x", true, [], [1, 2]].entries()) add(`OM-1${i}`, `서울 전체가 비객체(${JSON.stringify(v)})면 \"-\" 세 장`, [{ overall: v }], CARD(COL.sale, "-") + CARD(COL.jeonse, "-") + CARD(COL.wolse, "-"));
+  add("OM-08", "세 종류 모두 표본 부족이면 이유 세 장(건수마다 자기 글자)", [{ overall: { sale: sale({ transactionCount: 4 }), jeonse: jeonse({ transactionCount: 1 }), wolse: wolse({ transactionCount: 0 }) } }], CARD(COL.sale, LOW(4)) + CARD(COL.jeonse, LOW(1)) + CARD(COL.wolse, ND), { held: "sample" });
+  add("OM-09", "서울 전체가 빈 객체 {}(truthy)면 \"-\" 세 장", [{ overall: {} }], CARD(COL.sale, ND) + CARD(COL.jeonse, ND) + CARD(COL.wolse, ND));
+  for (const [i, v] of [5, "x", true, [], [1, 2]].entries()) add(`OM-1${i}`, `서울 전체가 비객체(${JSON.stringify(v)})면 \"-\" 세 장`, [{ overall: v }], CARD(COL.sale, ND) + CARD(COL.jeonse, ND) + CARD(COL.wolse, ND));
   add("OM-20", "서울 전체가 있고 district가 없으면 자치구 목록은 읽지 않는다(districts가 이상한 값이어도)", [{ overall: full, districts: "ab" }], ALL3);
-  add("OM-21", "district가 참이면 서울 전체는 읽지 않고 그 자치구만(서울 전체와 값이 달라도)", [{ overall: full, districts: [{ name: "종로구", sale: sale({ avgPricePerPyeong10k: 5000 }) }] }, null, "종로구"], CARD("평당가", "5,000만원") + CARD("84㎡ 환산", "12억 7,049만원") + CARD("거래건수", "40건"));
-  add("OM-22", "이름이 같은 자치구가 둘이면 첫째", [{ districts: [{ name: "종로구", sale: sale({ avgPricePerPyeong10k: 5000 }) }, { name: "종로구", sale: sale() }] }, null, "종로구"], CARD("평당가", "5,000만원") + CARD("84㎡ 환산", "12억 7,049만원") + CARD("거래건수", "40건"));
-  add("OM-23", "자치구가 비어 있어도(이름만) 매매 카드 하나만 \"-\"", [{ districts: [{ name: "종로구" }] }, null, "종로구"], CARD("매매", "-"), { held: "absent" });
-  add("OM-24", "자치구 항목이 이름만이고 spread가 있으면 \"-\" 카드 뒤에 단지별 카드", [{ districts: [{ name: "종로구" }] }, null, "종로구", { median: 46.7, cells: 13 }], CARD("매매", "-") + CARD("전세가율 단지별 중앙값", "46.7%", "단지·평형 13칸"), { held: "absent" });
+  add("OM-21", "district가 참이면 서울 전체는 읽지 않고 그 자치구만(서울 전체와 값이 달라도)", [{ overall: full, districts: [{ name: "종로구", sale: sale({ avgPricePerPyeong10k: 5000 }) }] }, null, "종로구"], CARD("3.3㎡당 평균", "5,000만원") + CARD("84㎡ 환산", "12억 7,049만원") + CARD("거래 건수", "40건"));
+  add("OM-22", "이름이 같은 자치구가 둘이면 첫째", [{ districts: [{ name: "종로구", sale: sale({ avgPricePerPyeong10k: 5000 }) }, { name: "종로구", sale: sale() }] }, null, "종로구"], CARD("3.3㎡당 평균", "5,000만원") + CARD("84㎡ 환산", "12억 7,049만원") + CARD("거래 건수", "40건"));
+  add("OM-23", "자치구가 비어 있어도(이름만) 매매 카드 하나만 \"-\"", [{ districts: [{ name: "종로구" }] }, null, "종로구"], CARD("매매", ND), { held: "absent" });
+  add("OM-24", "자치구 항목이 이름만이고 spread가 있으면 \"-\" 카드 뒤에 단지별 카드", [{ districts: [{ name: "종로구" }] }, null, "종로구", { median: 46.7, cells: 13 }], CARD("매매", ND) + CARD("전세가율 단지별 중간값", "46.7%", "단지·평형 13칸"), { held: "absent" });
 }
 
 // ================= 종류 카드의 kind 값 =================
 {
   const o = { overall: { sale: sale(), jeonse: jeonse(), wolse: wolse() } };
-  const DASH = CARD("서울 전체", "-");
+  const DASH = CARD("서울 전체", ND);
   add("OKN-01", "모르는 kind \"foo\"는 지표가 없어 \"서울 전체 -\" 한 장", [o, "foo"], DASH, { held: "absent" });
   add("OKN-02", "kind 특수문자(& < > \" ')는 글자로 나오지 않는다 → \"서울 전체 -\"", [o, SP], DASH, { held: "absent" });
   add("OKN-03", "kind \"constructor\"(객체 기본 키) → \"서울 전체 -\"", [o, "constructor"], DASH, { held: "absent" });
@@ -278,7 +279,7 @@ for (const s of WSTATES) {
 // ================= 전세가율 카드와 그 밑 건수(ratioBasis) =================
 {
   const mkD = (s, j) => [{ districts: [{ name: "종로구", sale: s, jeonse: j }] }, null, "종로구"];
-  const SALE3 = (price, area, cnt) => CARD("평당가", price) + CARD("84㎡ 환산", area) + CARD("거래건수", cnt);
+  const SALE3 = (price, area, cnt) => CARD("3.3㎡당 평균", price) + CARD("84㎡ 환산", area) + CARD("거래 건수", cnt);
   const R = (ratio, sc, jc) => CARD("전세가율", ratio, `매매 ${sc} · 전세 ${jc}`);
   add("OR-01", "자치구: 매매 6000·전세 3000 → 전세가율 50.0%와 두 건수", mkD(sale(), jeonse()), SALE3("6,000만원", "15억 2,459만원", "40건") + R("50.0%", "40건", "30건"));
   add("OR-02", "자치구: 매매 20264·전세 3000 → 14.8%", mkD(sale({ avgPricePerPyeong10k: 20264 }), jeonse()), SALE3("2억 264만원", "51억 4,906만원", "40건") + R("14.8%", "40건", "30건"));
@@ -294,29 +295,29 @@ for (const s of WSTATES) {
   add("OR-12", "자치구: 두 건수 글자 그대로(\"9\"·[7])", mkD(sale({ transactionCount: "9" }), jeonse({ transactionCount: [7] })), SALE3("6,000만원", "15억 2,459만원", "9건") + R("50.0%", "9건", "7건"));
   add("OR-13", "자치구: 두 건수 글자가 특수문자(값은 9)면 둘 다 이스케이프", mkD(sale({ transactionCount: SPECIAL_COUNT }), jeonse({ transactionCount: SPECIAL_COUNT })), SALE3("6,000만원", "15억 2,459만원", `${SP_OUT}건`) + R("50.0%", `${SP_OUT}건`, `${SP_OUT}건`));
   add("OR-14", "자치구: 건수가 큰 수면 천 단위 쉼표(1234567)", mkD(sale({ transactionCount: 1234567 }), jeonse({ transactionCount: 1000 })), SALE3("6,000만원", "15억 2,459만원", "1,234,567건") + R("50.0%", "1,234,567건", "1,000건"));
-  add("OR-15", "자치구: 매매 지표가 없으면 \"매매 -\"뿐(전세가 있어도 비는 없다)", mkD(undefined, jeonse()), CARD("매매", "-"), { held: "absent" });
-  add("OR-16", "자치구: 전세·매매 둘 다 없으면 \"매매 -\"뿐", mkD(undefined, undefined), CARD("매매", "-"), { held: "absent" });
-  add("OR-17", "전세 카드(서울 전체): 매매 표본 부족(4건)이면 전세 카드에 전세가율이 없다", [{ overall: { sale: sale({ transactionCount: 4 }), jeonse: jeonse() } }, "jeonse"], CARD("평당 보증금", "3,000만원") + CARD("84㎡ 환산", "7억 6,230만원") + CARD("거래건수", "30건"), { held: "sample" });
-  add("OR-18", "전세 카드(서울 전체): 매매 없음이면 전세가율이 없다", [{ overall: { jeonse: jeonse() } }, "jeonse"], CARD("평당 보증금", "3,000만원") + CARD("84㎡ 환산", "7억 6,230만원") + CARD("거래건수", "30건"), { held: "absent" });
-  add("OR-19", "전세 카드(서울 전체): 두 건수가 이스케이프되어 전세가율 밑에 붙는다", [{ overall: { sale: sale({ transactionCount: SPECIAL_COUNT }), jeonse: jeonse({ transactionCount: SPECIAL_COUNT }) } }, "jeonse"], CARD("평당 보증금", "3,000만원") + CARD("84㎡ 환산", "7억 6,230만원") + R("50.0%", `${SP_OUT}건`, `${SP_OUT}건`) + CARD("거래건수", `${SP_OUT}건`));
+  add("OR-15", "자치구: 매매 지표가 없으면 \"매매 -\"뿐(전세가 있어도 비는 없다)", mkD(undefined, jeonse()), CARD("매매", ND), { held: "absent" });
+  add("OR-16", "자치구: 전세·매매 둘 다 없으면 \"매매 -\"뿐", mkD(undefined, undefined), CARD("매매", ND), { held: "absent" });
+  add("OR-17", "전세 카드(서울 전체): 매매 표본 부족(4건)이면 전세 카드에 전세가율이 없다", [{ overall: { sale: sale({ transactionCount: 4 }), jeonse: jeonse() } }, "jeonse"], CARD("3.3㎡당 평균 보증금", "3,000만원") + CARD("84㎡ 환산", "7억 6,230만원") + CARD("거래 건수", "30건"), { held: "sample" });
+  add("OR-18", "전세 카드(서울 전체): 매매 없음이면 전세가율이 없다", [{ overall: { jeonse: jeonse() } }, "jeonse"], CARD("3.3㎡당 평균 보증금", "3,000만원") + CARD("84㎡ 환산", "7억 6,230만원") + CARD("거래 건수", "30건"), { held: "absent" });
+  add("OR-19", "전세 카드(서울 전체): 두 건수가 이스케이프되어 전세가율 밑에 붙는다", [{ overall: { sale: sale({ transactionCount: SPECIAL_COUNT }), jeonse: jeonse({ transactionCount: SPECIAL_COUNT }) } }, "jeonse"], CARD("3.3㎡당 평균 보증금", "3,000만원") + CARD("84㎡ 환산", "7억 6,230만원") + R("50.0%", `${SP_OUT}건`, `${SP_OUT}건`) + CARD("거래 건수", `${SP_OUT}건`));
   add("OR-20", "매매 카드(서울 전체)는 전세가율을 내지 않는다(전세가 있어도)", [{ overall: { sale: sale(), jeonse: jeonse() } }, "sale"], SALE3("6,000만원", "15억 2,459만원", "40건"));
-  add("OR-21", "세 종류 카드(kind 없음)는 전세가율 카드가 없다", [{ overall: { sale: sale(), jeonse: jeonse() } }], CARD(COL.sale, "6,000만원", "84㎡ 환산 15억 2,459만원 · 40건") + CARD(COL.jeonse, "3,000만원", "84㎡ 환산 7억 6,230만원 · 30건") + CARD(COL.wolse, "-"));
-  add("OR-22", "kind 월세 카드는 전세가율 카드가 없다(전세·매매가 있어도)", [{ overall: { sale: sale(), jeonse: jeonse(), wolse: wolse() } }, "wolse"], CARD("평균 보증금", "2억 264만원") + CARD("평균 월세", "월 128만원") + CARD("거래건수", "25건"));
+  add("OR-21", "세 종류 카드(kind 없음)는 전세가율 카드가 없다", [{ overall: { sale: sale(), jeonse: jeonse() } }], CARD(COL.sale, "6,000만원", "84㎡ 환산 15억 2,459만원 · 40건") + CARD(COL.jeonse, "3,000만원", "84㎡ 환산 7억 6,230만원 · 30건") + CARD(COL.wolse, ND));
+  add("OR-22", "kind 월세 카드는 전세가율 카드가 없다(전세·매매가 있어도)", [{ overall: { sale: sale(), jeonse: jeonse(), wolse: wolse() } }, "wolse"], CARD("평균 보증금", "2억 264만원") + CARD("평균 월세", "월 128만원") + CARD("거래 건수", "25건"));
 }
 
 // ================= 단지별 중앙값 카드(spread) =================
 {
   const full = { sale: sale(), jeonse: jeonse() };
-  const SALE3 = CARD("평당가", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래건수", "40건");
+  const SALE3 = CARD("3.3㎡당 평균", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래 건수", "40건");
   const RATIO = CARD("전세가율", "50.0%", "매매 40건 · 전세 30건");
-  const JEONSE3 = (ratio) => CARD("평당 보증금", "3,000만원") + CARD("84㎡ 환산", "7억 6,230만원") + ratio;
-  const CX = (pct, cells) => CARD("전세가율 단지별 중앙값", pct, `단지·평형 ${cells}칸`);
+  const JEONSE3 = (ratio) => CARD("3.3㎡당 평균 보증금", "3,000만원") + CARD("84㎡ 환산", "7억 6,230만원") + ratio;
+  const CX = (pct, cells) => CARD("전세가율 단지별 중간값", pct, `단지·평형 ${cells}칸`);
   const dis = (spread) => [{ districts: [{ name: "종로구", ...full }] }, null, "종로구", spread];
   const jeo = (spread) => [{ overall: full }, "jeonse", null, spread];
   // spread가 없는 값(falsy)
   [["null", null], ["undefined", undefined], ["0", 0], ["빈 문자열", ""], ["false", false], ["NaN", NaN]].forEach(([c, v], i) => {
     add(`OS-0${i}d`, `자치구: spread ${c} → 단지별 카드 없음`, dis(v), SALE3 + RATIO);
-    add(`OS-0${i}j`, `전세 카드: spread ${c} → 단지별 카드 없음`, jeo(v), JEONSE3(RATIO + CARD("거래건수", "30건")));
+    add(`OS-0${i}j`, `전세 카드: spread ${c} → 단지별 카드 없음`, jeo(v), JEONSE3(RATIO + CARD("거래 건수", "30건")));
   });
   // 값
   const spreads = [
@@ -352,18 +353,18 @@ for (const s of WSTATES) {
   ];
   for (const [k, cond, spread, pct, cells] of spreads) {
     add(`OS-1${k}d`, `자치구: ${cond}(전세가율 카드 뒤)`, dis(spread), SALE3 + RATIO + CX(pct, cells));
-    add(`OS-1${k}j`, `전세 카드: ${cond}(전세가율 카드와 건수 카드 사이)`, jeo(spread), JEONSE3(RATIO + CX(pct, cells) + CARD("거래건수", "30건")));
+    add(`OS-1${k}j`, `전세 카드: ${cond}(전세가율 카드와 건수 카드 사이)`, jeo(spread), JEONSE3(RATIO + CX(pct, cells) + CARD("거래 건수", "30건")));
   }
   // spread가 와도 안 읽는 곳
   add("OS-20", "매매 카드(kind sale)는 spread를 읽지 않는다", [{ overall: full }, "sale", null, { median: 46.7, cells: 13 }], SALE3);
-  add("OS-21", "월세 카드(kind wolse)는 spread를 읽지 않는다", [{ overall: { wolse: wolse() } }, "wolse", null, { median: 46.7, cells: 13 }], CARD("평균 보증금", "2억 264만원") + CARD("평균 월세", "월 128만원") + CARD("거래건수", "25건"));
+  add("OS-21", "월세 카드(kind wolse)는 spread를 읽지 않는다", [{ overall: { wolse: wolse() } }, "wolse", null, { median: 46.7, cells: 13 }], CARD("평균 보증금", "2억 264만원") + CARD("평균 월세", "월 128만원") + CARD("거래 건수", "25건"));
   add("OS-22", "spread가 이상해도(cells 없음) 읽지 않는 곳은 던지지 않는다(kind sale)", [{ overall: full }, "sale", null, {}], SALE3);
   // 자치구 카드의 순서: 매매 셋 → 전세가율 → 단지별(전세가율이 없어도 단지별은 붙는다)
   add("OS-30", "자치구: 전세가율이 없어도 단지별 카드는 붙는다(전세 지표 없음)", [{ districts: [{ name: "종로구", sale: sale() }] }, null, "종로구", { median: 46.7, cells: 13 }], SALE3 + CX("46.7%", "13"));
   add("OS-31", "자치구: 매매가 표본 부족이어도 단지별 카드는 붙는다(\"매매 -\" 뒤)", [{ districts: [{ name: "종로구", sale: sale({ transactionCount: 4 }) }] }, null, "종로구", { median: 46.7, cells: 13 }], CARD("매매", LOW(4)) + CX("46.7%", "13"), { held: "sample" });
-  add("OS-32", "전세 카드: 전세가율이 없어도(매매 없음) 단지별 카드는 건수 카드 앞에 붙는다", [{ overall: { jeonse: jeonse() } }, "jeonse", null, { median: 46.7, cells: 13 }], JEONSE3(CX("46.7%", "13") + CARD("거래건수", "30건")), { held: "absent" });
+  add("OS-32", "전세 카드: 전세가율이 없어도(매매 없음) 단지별 카드는 건수 카드 앞에 붙는다", [{ overall: { jeonse: jeonse() } }, "jeonse", null, { median: 46.7, cells: 13 }], JEONSE3(CX("46.7%", "13") + CARD("거래 건수", "30건")), { held: "absent" });
   add("OS-33", "전세 카드: 전세가 표본 부족이면 \"서울 전체 -\" 한 장뿐(단지별 카드도 없다)", [{ overall: { sale: sale(), jeonse: jeonse({ transactionCount: 4 }) } }, "jeonse", null, { median: 46.7, cells: 13 }], CARD("서울 전체", LOW(4)), { held: "sample" });
-  add("OS-34", "서울 전체 세 카드(kind 없음)도 spread를 읽지 않는다", [{ overall: full }, null, null, { median: 46.7, cells: 13 }], CARD(COL.sale, "6,000만원", "84㎡ 환산 15억 2,459만원 · 40건") + CARD(COL.jeonse, "3,000만원", "84㎡ 환산 7억 6,230만원 · 30건") + CARD(COL.wolse, "-"));
+  add("OS-34", "서울 전체 세 카드(kind 없음)도 spread를 읽지 않는다", [{ overall: full }, null, null, { median: 46.7, cells: 13 }], CARD(COL.sale, "6,000만원", "84㎡ 환산 15억 2,459만원 · 40건") + CARD(COL.jeonse, "3,000만원", "84㎡ 환산 7억 6,230만원 · 30건") + CARD(COL.wolse, ND));
 }
 
 // ================= 실제 모양 한 벌 =================
@@ -386,13 +387,13 @@ for (const s of WSTATES) {
     "OT-02",
     "실제 모양, 서울 전체 전세 카드(전세가율·단지별 중앙값·건수)",
     [REAL, "jeonse", null, SPREAD],
-    CARD("평당 보증금", "3,000만원") + CARD("84㎡ 환산", "7억 6,230만원") + CARD("전세가율", "50.0%", "매매 40건 · 전세 30건") + CARD("전세가율 단지별 중앙값", "49.3%", "단지·평형 1,173칸") + CARD("거래건수", "30건")
+    CARD("3.3㎡당 평균 보증금", "3,000만원") + CARD("84㎡ 환산", "7억 6,230만원") + CARD("전세가율", "50.0%", "매매 40건 · 전세 30건") + CARD("전세가율 단지별 중간값", "49.3%", "단지·평형 1,173칸") + CARD("거래 건수", "30건")
   );
   add(
     "OT-03",
     "실제 모양, 강남구 페이지(매매 셋·전세가율·단지별 중앙값)",
     [REAL, null, "강남구", SPREAD],
-    CARD("평당가", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래건수", "40건") + CARD("전세가율", "50.0%", "매매 40건 · 전세 30건") + CARD("전세가율 단지별 중앙값", "49.3%", "단지·평형 1,173칸")
+    CARD("3.3㎡당 평균", "6,000만원") + CARD("84㎡ 환산", "15억 2,459만원") + CARD("거래 건수", "40건") + CARD("전세가율", "50.0%", "매매 40건 · 전세 30건") + CARD("전세가율 단지별 중간값", "49.3%", "단지·평형 1,173칸")
   );
   add(
     "OT-04",
@@ -405,7 +406,7 @@ for (const s of WSTATES) {
     "OT-05",
     "실제 모양, 서울 전체 월세 카드",
     [REAL, "wolse"],
-    CARD("평균 보증금", "2억 264만원") + CARD("평균 월세", "월 128만원") + CARD("거래건수", "25건")
+    CARD("평균 보증금", "2억 264만원") + CARD("평균 월세", "월 128만원") + CARD("거래 건수", "25건")
   );
 }
 

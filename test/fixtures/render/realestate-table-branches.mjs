@@ -26,18 +26,19 @@ const PREV = (label) => ` <span class="prev-tag" title="${PREV_TITLE}">${label}<
 
 const tdA = (label, inner) => `<td data-label="${label}">${inner}</td>`;
 const LBL = {
-  all: ["매매 평당가", "전세 평당 보증금", "월세 보증금 / 월세"],
-  sale: ["평당가", "84㎡ 환산", "거래건수"],
-  jeonse: ["평당 보증금", "84㎡ 환산", "전세가율", "거래건수"],
-  wolse: ["평균 보증금", "평균 월세", "거래건수"],
+  all: ["매매 3.3㎡당 평균", "전세 3.3㎡당 평균 보증금", "월세 평균 보증금 / 월세"],
+  sale: ["3.3㎡당 평균", "84㎡ 환산", "거래 건수"],
+  jeonse: ["3.3㎡당 평균 보증금", "84㎡ 환산", "전세가율", "거래 건수"],
+  wolse: ["평균 보증금", "평균 월세", "거래 건수"],
 };
-const DIST_LBL = ["평당가", "84㎡ 환산", "거래건수"];
+const DIST_LBL = ["3.3㎡당 평균", "84㎡ 환산", "거래 건수"];
 const link = (name, slug) => `<a href="./district-${slug}.html">${name}</a>`;
 const rowTr = (nameHtml, cells, { overall = false, stale = "" } = {}) => `<tr class="${overall ? "overall-row" : ""}"><td>${nameHtml}${stale}</td>${cells.join("")}</tr>`;
 const distTr = (label, [price, area, count]) =>
   `<tr><td>${label}</td>${tdA(DIST_LBL[0], price)}${tdA(DIST_LBL[1], area)}${tdA(DIST_LBL[2], count)}</tr>`;
 const distRows = (sale, jeonse, wolse) => distTr("매매", sale) + distTr("전세", jeonse) + distTr("월세", wolse);
-const NONE3 = ["-", "-", "-"];
+const ND = "데이터 없음";
+const NONE3 = [ND, ND, ND];
 
 // 자치구 25곳과 slug(손으로 적었다)
 const SLUGS = [
@@ -64,11 +65,11 @@ const add = (id, fn, cond, args, expect, extra = {}) => rows.push({ id, fn, cond
 {
   const fn = "realestateHeadHtml";
   const th = (labels) => `<tr>${labels.map((l) => `<th scope="col">${l}</th>`).join("")}</tr>`;
-  const ALL = th(["지역", "매매 평당가", "전세 평당 보증금", "월세 보증금 / 월세"]);
-  const SALE = th(["지역", "평당가", "84㎡ 환산", "거래건수"]);
-  const JEONSE = th(["지역", "평당 보증금", "84㎡ 환산", "전세가율", "거래건수"]);
-  const WOLSE = th(["지역", "평균 보증금", "평균 월세", "거래건수"]);
-  const DISTRICT = th(["구분", "평당가", "84㎡ 환산", "거래건수"]);
+  const ALL = th(["지역", "매매 3.3㎡당 평균", "전세 3.3㎡당 평균 보증금", "월세 평균 보증금 / 월세"]);
+  const SALE = th(["지역", "3.3㎡당 평균", "84㎡ 환산", "거래 건수"]);
+  const JEONSE = th(["지역", "3.3㎡당 평균 보증금", "84㎡ 환산", "전세가율", "거래 건수"]);
+  const WOLSE = th(["지역", "평균 보증금", "평균 월세", "거래 건수"]);
+  const DISTRICT = th(["구분", "3.3㎡당 평균", "84㎡ 환산", "거래 건수"]);
   add("H-01", fn, "인자 없음 → 세 종류를 한 줄에 놓는 표", [], ALL);
   add("H-02", fn, "kind null", [null], ALL);
   add("H-03", fn, "kind undefined", [undefined], ALL);
@@ -240,13 +241,13 @@ chg("b12", "기준일 이미 이스케이프된 &amp; → 한 번 더", { value1
 // 값 칸 → 세 보기의 칸 글자. kind는 sale·jeonse.
 function priceCells(kind, shape) {
   // 값 없는 줄의 칸 수: 머리글이 다섯 칸인 전세 표는 값 칸 넷이다(#593 a), 나머지는 셋.
-  const pad = kind === "jeonse" ? ["-"] : [];
-  if (shape.none) return { all: "-", kind: ["-", "-", "-", ...pad], dist: NONE3 };
-  if (shape.low !== undefined) return { all: LOW(shape.low), kind: [LOW(shape.low), "-", "-", ...pad], dist: [LOW(shape.low), "-", "-"] };
+  const pad = kind === "jeonse" ? [ND] : [];
+  if (shape.none) return { all: ND, kind: [ND, ND, ND, ...pad], dist: NONE3 };
+  if (shape.low !== undefined) return { all: LOW(shape.low), kind: [LOW(shape.low), ND, ND, ...pad], dist: [LOW(shape.low), ND, ND] };
   const [price, area, ratio] = V[shape.v];
   const cntAll = shape.cntAll === null ? "" : ` ${COUNT(shape.cntAll)}`;
   const base = [STRONG(price) + shape.chg, STRONG(area)];
-  const kindCells = kind === "jeonse" ? [...base, ratio === "-" ? "-" : RATIO(ratio), COUNT(shape.cnt)] : [...base, COUNT(shape.cnt)];
+  const kindCells = kind === "jeonse" ? [...base, ratio === "-" ? ND : RATIO(ratio), COUNT(shape.cnt)] : [...base, COUNT(shape.cnt)];
   return { all: `${price}${shape.chg}${cntAll}`, kind: kindCells, dist: [...base, COUNT(shape.cnt)] };
 }
 
@@ -262,7 +263,7 @@ for (const kind of ["sale", "jeonse"]) {
     if (s.metric !== ABSENT) entry[kind] = metric;
     const cells = priceCells(kind, s.shape);
     const flags = { moat: Boolean(s.moat), order: Boolean(s.order) };
-    const allCells = ["-", "-", "-"];
+    const allCells = [ND, ND, ND];
     allCells[idx] = cells.all;
     add(`TA-${prefix}-${s.id}`, "realestateTableHtml", `한 줄 표(${kind} 칸): ${s.cond}`, [data([entry])], rowTr(link("강남구", "gangnam"), allCells.map((c, i) => tdA(LBL.all[i], c))), flags);
     // 종류 표: 전세는 전세가율이 매매에 기대므로 매매 6000(40건)을 같이 둔다
@@ -343,19 +344,19 @@ for (const s of WSTATES) {
   let kindCells;
   let distCells;
   if (shape.none) {
-    all = "-";
-    kindCells = ["-", "-", "-"];
+    all = ND;
+    kindCells = [ND, ND, ND];
     distCells = NONE3;
   } else if (shape.low !== undefined) {
     all = LOW(shape.low);
-    kindCells = [LOW(shape.low), "-", "-"];
-    distCells = [LOW(shape.low), "-", "-"];
+    kindCells = [LOW(shape.low), ND, ND];
+    distCells = [LOW(shape.low), ND, ND];
   } else {
     all = `${shape.dep} / 월 ${shape.rent}${shape.cntAll === null ? "" : ` ${COUNT(shape.cntAll)}`}`;
     kindCells = [STRONG(shape.dep), STRONG(`월 ${shape.rent}`) + shape.chg, COUNT(shape.cnt)];
     distCells = [`${STRONG(shape.dep)} / ${STRONG(`월 ${shape.rent}`)}`, "-", COUNT(shape.cnt)];
   }
-  add(`TA-W-${s.id}`, "realestateTableHtml", `한 줄 표(wolse 칸): ${s.cond}`, [data([entry])], rowTr(link("강남구", "gangnam"), ["-", "-", all].map((c, i) => tdA(LBL.all[i], c))), flags);
+  add(`TA-W-${s.id}`, "realestateTableHtml", `한 줄 표(wolse 칸): ${s.cond}`, [data([entry])], rowTr(link("강남구", "gangnam"), [ND, ND, all].map((c, i) => tdA(LBL.all[i], c))), flags);
   add(`TW-${s.id}`, "realestateTableHtml", `wolse 표: ${s.cond}`, [data([entry]), "wolse"], rowTr(link("강남구", "gangnam"), kindCells.map((c, i) => tdA(LBL.wolse[i], c))), flags);
   add(`DR-W-${s.id}`, "realestateTableHtml", `자치구 페이지(wolse 줄): ${s.cond}`, [data([entry]), null, "강남구"], distRows(NONE3, NONE3, distCells), flags);
 }
@@ -369,7 +370,7 @@ for (const s of WSTATES) {
     fn,
     "세 칸이 따로 판정된다: 매매 표본 부족·전세 값 없음·월세 표본 부족(순서: 표본 부족이 값 없음보다 먼저, 한 줄 안에서도)",
     [data([e({ sale: sale({ transactionCount: 4 }), wolse: wolse({ transactionCount: 3 }) })])],
-    rowTr(link("강남구", "gangnam"), [tdA(LBL.all[0], LOW("4")), tdA(LBL.all[1], "-"), tdA(LBL.all[2], LOW("3"))]),
+    rowTr(link("강남구", "gangnam"), [tdA(LBL.all[0], LOW("4")), tdA(LBL.all[1], ND), tdA(LBL.all[2], LOW("3"))]),
     { moat: true, order: true }
   );
   add(
@@ -388,7 +389,7 @@ for (const s of WSTATES) {
     fn,
     "전세 표본 부족인데 매매는 값이면 전세가율·거래건수 칸도 \"-\"(전세 표, 칸 4개 - #593 a)",
     [data([e({ sale: sale(), jeonse: jeonse({ transactionCount: 2 }) })]), "jeonse"],
-    rowTr(link("강남구", "gangnam"), [tdA("평당 보증금", LOW("2")), tdA("84㎡ 환산", "-"), tdA("전세가율", "-"), tdA("거래건수", "-")]),
+    rowTr(link("강남구", "gangnam"), [tdA("3.3㎡당 평균 보증금", LOW("2")), tdA("84㎡ 환산", ND), tdA("전세가율", ND), tdA("거래 건수", ND)]),
     { moat: true }
   );
   add(
@@ -396,7 +397,7 @@ for (const s of WSTATES) {
     fn,
     "전세 값이 있어도 매매 표본이 모자라면 전세가율은 \"-\"(칸은 4개)",
     [data([e({ sale: sale({ transactionCount: 4 }), jeonse: jeonse() })]), "jeonse"],
-    rowTr(link("강남구", "gangnam"), [tdA("평당 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", "-"), tdA("거래건수", COUNT("30건"))]),
+    rowTr(link("강남구", "gangnam"), [tdA("3.3㎡당 평균 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", ND), tdA("거래 건수", COUNT("30건"))]),
     { moat: true }
   );
   add(
@@ -404,7 +405,7 @@ for (const s of WSTATES) {
     fn,
     "전세가율은 전세 ÷ 매매(3000 ÷ 5530 = 54.2%)",
     [data([e({ sale: sale({ avgPricePerPyeong10k: 5530 }), jeonse: jeonse() })]), "jeonse"],
-    rowTr(link("강남구", "gangnam"), [tdA("평당 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", RATIO("54.2%")), tdA("거래건수", COUNT("30건"))])
+    rowTr(link("강남구", "gangnam"), [tdA("3.3㎡당 평균 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", RATIO("54.2%")), tdA("거래 건수", COUNT("30건"))])
   );
 }
 
@@ -427,7 +428,7 @@ for (const s of WSTATES) {
     fn,
     "세 줄이 따로 판정된다: 매매 표본 부족·전세 값 없음·월세 표본 부족",
     [data([{ name: "강남구", sale: sale({ transactionCount: 4 }), wolse: wolse({ transactionCount: 3 }) }]), null, "강남구"],
-    distRows([LOW("4"), "-", "-"], NONE3, [LOW("3"), "-", "-"]),
+    distRows([LOW("4"), ND, ND], NONE3, [LOW("3"), ND, ND]),
     { moat: true, order: true }
   );
   add("DR-M03", fn, "자치구 페이지는 낡음 태그를 내지 않는다(staleAt이 있어도)", [data([dist("강남구", { staleAt: "2026-10-04T15:30:00Z" })]), null, "강남구"], distRows(
@@ -459,21 +460,21 @@ for (const s of WSTATES) {
   add("TO-02", fn, "서울 전체 + 자치구 한 곳", [data([dist("강남구")], dist("서울"))], rowTr("서울 전체", FULL_ALL(), { overall: true }) + rowTr(link("강남구", "gangnam"), FULL_ALL()));
   add("TO-03", fn, "자치구만 있고 서울 전체가 없으면 서울 전체 줄이 없다", [data([dist("강남구")])], rowTr(link("강남구", "gangnam"), FULL_ALL()));
   add("TO-04", fn, "서울 전체의 이름은 자치구 이름이 아니라 \"서울 전체\"(overall에 name이 있어도)", [data([], { ...dist("서울"), name: "종로구" })], rowTr("서울 전체", FULL_ALL(), { overall: true }));
-  add("TO-05", fn, "서울 전체 칸이 표본 부족이면 서울 전체 줄에도 표본 부족 스팬", [data([], { sale: sale({ transactionCount: 4 }) })], rowTr("서울 전체", [tdA(LBL.all[0], LOW("4")), tdA(LBL.all[1], "-"), tdA(LBL.all[2], "-")], { overall: true }), { moat: true });
-  add("TO-06", fn, "서울 전체 빈 객체 {}(truthy)는 줄을 낸다(칸 모두 \"-\")", [data([], {})], rowTr("서울 전체", [tdA(LBL.all[0], "-"), tdA(LBL.all[1], "-"), tdA(LBL.all[2], "-")], { overall: true }));
-  add("TO-07", fn, "서울 전체가 숫자 5(truthy 비객체)면 줄은 나오고 칸은 \"-\"", [data([], 5)], rowTr("서울 전체", [tdA(LBL.all[0], "-"), tdA(LBL.all[1], "-"), tdA(LBL.all[2], "-")], { overall: true }));
-  add("TO-08", fn, "sale 표에서 서울 전체 줄", [data([], dist("서울")), "sale"], rowTr("서울 전체", [tdA("평당가", STRONG("6,000만원") + UP("120만원")), tdA("84㎡ 환산", STRONG("15억 2,459만원")), tdA("거래건수", COUNT("40건"))], { overall: true }));
-  add("TO-09", fn, "jeonse 표에서 서울 전체 줄(전세가율 포함)", [data([], dist("서울")), "jeonse"], rowTr("서울 전체", [tdA("평당 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", RATIO("50.0%")), tdA("거래건수", COUNT("30건"))], { overall: true }));
-  add("TO-10", fn, "wolse 표에서 서울 전체 줄", [data([], dist("서울")), "wolse"], rowTr("서울 전체", [tdA("평균 보증금", STRONG("2억 264만원")), tdA("평균 월세", STRONG("월 128만원") + CHG("up", "▲", "1.8%", WOLSE_TITLE(BASE))), tdA("거래건수", COUNT("25건"))], { overall: true }));
-  add("TO-11", fn, "sale 표에서 서울 전체의 매매가 표본 부족이면 [스팬, -, -]", [data([], { sale: sale({ transactionCount: 4 }) }), "sale"], rowTr("서울 전체", [tdA("평당가", LOW("4")), tdA("84㎡ 환산", "-"), tdA("거래건수", "-")], { overall: true }), { moat: true });
-  add("TO-12", fn, "jeonse 표에서 서울 전체의 전세가 표본 부족이면 값 칸이 넷이다(머리글 다섯 칸에 맞춘다 - #593 a)", [data([], { jeonse: jeonse({ transactionCount: 4 }) }), "jeonse"], rowTr("서울 전체", [tdA("평당 보증금", LOW("4")), tdA("84㎡ 환산", "-"), tdA("전세가율", "-"), tdA("거래건수", "-")], { overall: true }), { moat: true });
+  add("TO-05", fn, "서울 전체 칸이 표본 부족이면 서울 전체 줄에도 표본 부족 스팬", [data([], { sale: sale({ transactionCount: 4 }) })], rowTr("서울 전체", [tdA(LBL.all[0], LOW("4")), tdA(LBL.all[1], ND), tdA(LBL.all[2], ND)], { overall: true }), { moat: true });
+  add("TO-06", fn, "서울 전체 빈 객체 {}(truthy)는 줄을 낸다(칸 모두 \"-\")", [data([], {})], rowTr("서울 전체", [tdA(LBL.all[0], ND), tdA(LBL.all[1], ND), tdA(LBL.all[2], ND)], { overall: true }));
+  add("TO-07", fn, "서울 전체가 숫자 5(truthy 비객체)면 줄은 나오고 칸은 \"-\"", [data([], 5)], rowTr("서울 전체", [tdA(LBL.all[0], ND), tdA(LBL.all[1], ND), tdA(LBL.all[2], ND)], { overall: true }));
+  add("TO-08", fn, "sale 표에서 서울 전체 줄", [data([], dist("서울")), "sale"], rowTr("서울 전체", [tdA("3.3㎡당 평균", STRONG("6,000만원") + UP("120만원")), tdA("84㎡ 환산", STRONG("15억 2,459만원")), tdA("거래 건수", COUNT("40건"))], { overall: true }));
+  add("TO-09", fn, "jeonse 표에서 서울 전체 줄(전세가율 포함)", [data([], dist("서울")), "jeonse"], rowTr("서울 전체", [tdA("3.3㎡당 평균 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", RATIO("50.0%")), tdA("거래 건수", COUNT("30건"))], { overall: true }));
+  add("TO-10", fn, "wolse 표에서 서울 전체 줄", [data([], dist("서울")), "wolse"], rowTr("서울 전체", [tdA("평균 보증금", STRONG("2억 264만원")), tdA("평균 월세", STRONG("월 128만원") + CHG("up", "▲", "1.8%", WOLSE_TITLE(BASE))), tdA("거래 건수", COUNT("25건"))], { overall: true }));
+  add("TO-11", fn, "sale 표에서 서울 전체의 매매가 표본 부족이면 [스팬, -, -]", [data([], { sale: sale({ transactionCount: 4 }) }), "sale"], rowTr("서울 전체", [tdA("3.3㎡당 평균", LOW("4")), tdA("84㎡ 환산", ND), tdA("거래 건수", ND)], { overall: true }), { moat: true });
+  add("TO-12", fn, "jeonse 표에서 서울 전체의 전세가 표본 부족이면 값 칸이 넷이다(머리글 다섯 칸에 맞춘다 - #593 a)", [data([], { jeonse: jeonse({ transactionCount: 4 }) }), "jeonse"], rowTr("서울 전체", [tdA("3.3㎡당 평균 보증금", LOW("4")), tdA("84㎡ 환산", ND), tdA("전세가율", ND), tdA("거래 건수", ND)], { overall: true }), { moat: true });
 }
 
 // ================= 이름 칸 =================
 {
   const fn = "realestateTableHtml";
   const nm = (name) => ({ name, sale: sale() });
-  const SALE_ROW = (nameHtml) => rowTr(nameHtml, [tdA(LBL.all[0], `6,000만원${UP("120만원")} ${COUNT("40건")}`), tdA(LBL.all[1], "-"), tdA(LBL.all[2], "-")]);
+  const SALE_ROW = (nameHtml) => rowTr(nameHtml, [tdA(LBL.all[0], `6,000만원${UP("120만원")} ${COUNT("40건")}`), tdA(LBL.all[1], ND), tdA(LBL.all[2], ND)]);
   SLUGS.forEach(([name, slug], i) => add(`NM-L${String(i + 1).padStart(2, "0")}`, fn, `자치구 ${name}은 ./district-${slug}.html로 링크`, [data([nm(name)])], SALE_ROW(link(name, slug))));
   add("NM-01", fn, "자치구 25곳이 아닌 이름은 링크 없는 글자", [data([nm("없는구")])], SALE_ROW("없는구"));
   add("NM-02", fn, "이름 특수문자 & < > \" '는 이스케이프(' 는 그대로)", [data([nm(SP)])], SALE_ROW(SP_OUT));
@@ -495,7 +496,7 @@ for (const s of WSTATES) {
   add("NM-18", fn, "이름 \"__proto__\"도 링크 없는 글자(#248 c)", [data([nm("__proto__")])], SALE_ROW("__proto__"));
   add("NM-19", fn, "이름 \"toString\"도 링크 없는 글자(#248 c)", [data([nm("toString")])], SALE_ROW("toString"));
   add("NM-20", fn, "이름 개행·한글·이모지는 그대로", [data([nm("a\n한글 😀")])], SALE_ROW("a\n한글 😀"));
-  add("NM-21", fn, "서울 전체 줄의 이름은 입력과 무관하게 고정(overall.name 특수문자)", [data([], { name: SP, sale: sale() }), "sale"], rowTr("서울 전체", [tdA("평당가", STRONG("6,000만원") + UP("120만원")), tdA("84㎡ 환산", STRONG("15억 2,459만원")), tdA("거래건수", COUNT("40건"))], { overall: true }));
+  add("NM-21", fn, "서울 전체 줄의 이름은 입력과 무관하게 고정(overall.name 특수문자)", [data([], { name: SP, sale: sale() }), "sale"], rowTr("서울 전체", [tdA("3.3㎡당 평균", STRONG("6,000만원") + UP("120만원")), tdA("84㎡ 환산", STRONG("15억 2,459만원")), tdA("거래 건수", COUNT("40건"))], { overall: true }));
   add("NM-22", fn, "이름이 toString()으로 자치구 이름을 돌려주는 객체면 링크(글자도 그 이름) - 객체를 React 자식으로 넘기면 던지므로 글자로 바꿔 낸다", [data([nm({ toString: () => "종로구" })])], SALE_ROW(link("종로구", "jongno")));
 }
 
@@ -503,7 +504,7 @@ for (const s of WSTATES) {
 {
   const fn = "realestateTableHtml";
   const SALE_ONLY = (stale, name = link("종로구", "jongno")) =>
-    rowTr(name, [tdA(LBL.all[0], `6,000만원${UP("120만원")} ${COUNT("40건")}`), tdA(LBL.all[1], "-"), tdA(LBL.all[2], "-")], { stale });
+    rowTr(name, [tdA(LBL.all[0], `6,000만원${UP("120만원")} ${COUNT("40건")}`), tdA(LBL.all[1], ND), tdA(LBL.all[2], ND)], { stale });
   const row = (staleAt) => [data([{ name: "종로구", sale: sale(), staleAt }])];
   add("ST-01", fn, "낡음: 받은 날짜가 있으면 이름 뒤에 태그(한국 날짜, 10월 5일 새벽 = UTC 4일 15:30)", row("2026-10-04T15:30:00Z"), SALE_ONLY(PREV("10. 5.")));
   add("ST-02", fn, "낡음: 한국 날짜로 하루 전(UTC 4일 14:59:59 = KST 4일 23:59)", row("2026-10-04T14:59:59Z"), SALE_ONLY(PREV("10. 4.")));
@@ -524,10 +525,10 @@ for (const s of WSTATES) {
   add("ST-17", fn, "낡음: NaN(falsy) → 태그 없음", row(NaN), SALE_ONLY(""));
   add("ST-18", fn, "낡음: [2026]은 날짜로 읽힌다 → 1. 1.", row([2026]), SALE_ONLY(PREV("1. 1.")));
   add("ST-19", fn, "낡음: 링크 없는 이름에도 태그", [data([{ name: "없는구", sale: sale(), staleAt: "2026-10-04T15:30:00Z" }])], SALE_ONLY(PREV("10. 5."), "없는구"));
-  add("ST-20", fn, "낡음: 서울 전체 줄에도 태그(이름 뒤)", [data([], { sale: sale(), staleAt: "2026-10-04T15:30:00Z" })], rowTr("서울 전체", [tdA(LBL.all[0], `6,000만원${UP("120만원")} ${COUNT("40건")}`), tdA(LBL.all[1], "-"), tdA(LBL.all[2], "-")], { overall: true, stale: PREV("10. 5.") }));
-  add("ST-21", fn, "낡음: 값이 없는 줄(표본 부족)에도 태그", [data([{ name: "종로구", sale: sale({ transactionCount: 4 }), staleAt: "2026-10-04T15:30:00Z" }])], rowTr(link("종로구", "jongno"), [tdA(LBL.all[0], LOW("4")), tdA(LBL.all[1], "-"), tdA(LBL.all[2], "-")], { stale: PREV("10. 5.") }), { moat: true });
-  add("ST-22", fn, "낡음: sale 표에서도 이름 칸 안에 붙는다", [data([{ name: "종로구", sale: sale(), staleAt: "2026-10-04T15:30:00Z" }]), "sale"], rowTr(link("종로구", "jongno"), [tdA("평당가", STRONG("6,000만원") + UP("120만원")), tdA("84㎡ 환산", STRONG("15억 2,459만원")), tdA("거래건수", COUNT("40건"))], { stale: PREV("10. 5.") }));
-  add("ST-23", fn, "낡음: 두 곳 중 한 곳만 낡았다", [data([{ name: "종로구", sale: sale(), staleAt: "2026-10-04T15:30:00Z" }, { name: "중구", sale: sale({ avgPricePerPyeong10k: 5000 }) }])], rowTr(link("종로구", "jongno"), [tdA(LBL.all[0], `6,000만원${UP("120만원")} ${COUNT("40건")}`), tdA(LBL.all[1], "-"), tdA(LBL.all[2], "-")], { stale: PREV("10. 5.") }) + rowTr(link("중구", "jung"), [tdA(LBL.all[0], `5,000만원${UP("120만원")} ${COUNT("40건")}`), tdA(LBL.all[1], "-"), tdA(LBL.all[2], "-")]));
+  add("ST-20", fn, "낡음: 서울 전체 줄에도 태그(이름 뒤)", [data([], { sale: sale(), staleAt: "2026-10-04T15:30:00Z" })], rowTr("서울 전체", [tdA(LBL.all[0], `6,000만원${UP("120만원")} ${COUNT("40건")}`), tdA(LBL.all[1], ND), tdA(LBL.all[2], ND)], { overall: true, stale: PREV("10. 5.") }));
+  add("ST-21", fn, "낡음: 값이 없는 줄(표본 부족)에도 태그", [data([{ name: "종로구", sale: sale({ transactionCount: 4 }), staleAt: "2026-10-04T15:30:00Z" }])], rowTr(link("종로구", "jongno"), [tdA(LBL.all[0], LOW("4")), tdA(LBL.all[1], ND), tdA(LBL.all[2], ND)], { stale: PREV("10. 5.") }), { moat: true });
+  add("ST-22", fn, "낡음: sale 표에서도 이름 칸 안에 붙는다", [data([{ name: "종로구", sale: sale(), staleAt: "2026-10-04T15:30:00Z" }]), "sale"], rowTr(link("종로구", "jongno"), [tdA("3.3㎡당 평균", STRONG("6,000만원") + UP("120만원")), tdA("84㎡ 환산", STRONG("15억 2,459만원")), tdA("거래 건수", COUNT("40건"))], { stale: PREV("10. 5.") }));
+  add("ST-23", fn, "낡음: 두 곳 중 한 곳만 낡았다", [data([{ name: "종로구", sale: sale(), staleAt: "2026-10-04T15:30:00Z" }, { name: "중구", sale: sale({ avgPricePerPyeong10k: 5000 }) }])], rowTr(link("종로구", "jongno"), [tdA(LBL.all[0], `6,000만원${UP("120만원")} ${COUNT("40건")}`), tdA(LBL.all[1], ND), tdA(LBL.all[2], ND)], { stale: PREV("10. 5.") }) + rowTr(link("중구", "jung"), [tdA(LBL.all[0], `5,000만원${UP("120만원")} ${COUNT("40건")}`), tdA(LBL.all[1], ND), tdA(LBL.all[2], ND)]));
 }
 
 // ================= 정렬 reSorted =================
@@ -584,10 +585,10 @@ for (const s of WSTATES) {
     fn,
     "실제 모양, 월세 표: 평균 보증금 순(종로 2억 264만원·강남 2억 264만원은 표본 부족이라 뒤·노원 1억원)",
     [REAL, "wolse"],
-    rowTr("서울 전체", [tdA("평균 보증금", STRONG("2억 264만원")), tdA("평균 월세", STRONG("월 128만원") + CHG("up", "▲", "1.8%", WOLSE_TITLE(BASE))), tdA("거래건수", COUNT("25건"))], { overall: true }) +
-      rowTr(link("종로구", "jongno"), [tdA("평균 보증금", STRONG("2억 264만원")), tdA("평균 월세", STRONG("월 128만원") + CHG("up", "▲", "1.8%", WOLSE_TITLE(BASE))), tdA("거래건수", COUNT("25건"))], { stale: PREV("10. 5.") }) +
-      rowTr(link("노원구", "nowon"), [tdA("평균 보증금", STRONG("1억원")), tdA("평균 월세", STRONG("월 128만원") + CHG("up", "▲", "1.8%", WOLSE_TITLE(BASE))), tdA("거래건수", COUNT("25건"))]) +
-      rowTr(link("강남구", "gangnam"), [tdA("평균 보증금", LOW("4")), tdA("평균 월세", "-"), tdA("거래건수", "-")]),
+    rowTr("서울 전체", [tdA("평균 보증금", STRONG("2억 264만원")), tdA("평균 월세", STRONG("월 128만원") + CHG("up", "▲", "1.8%", WOLSE_TITLE(BASE))), tdA("거래 건수", COUNT("25건"))], { overall: true }) +
+      rowTr(link("종로구", "jongno"), [tdA("평균 보증금", STRONG("2억 264만원")), tdA("평균 월세", STRONG("월 128만원") + CHG("up", "▲", "1.8%", WOLSE_TITLE(BASE))), tdA("거래 건수", COUNT("25건"))], { stale: PREV("10. 5.") }) +
+      rowTr(link("노원구", "nowon"), [tdA("평균 보증금", STRONG("1억원")), tdA("평균 월세", STRONG("월 128만원") + CHG("up", "▲", "1.8%", WOLSE_TITLE(BASE))), tdA("거래 건수", COUNT("25건"))]) +
+      rowTr(link("강남구", "gangnam"), [tdA("평균 보증금", LOW("4")), tdA("평균 월세", ND), tdA("거래 건수", ND)]),
     { moat: true }
   );
   add(
@@ -595,10 +596,10 @@ for (const s of WSTATES) {
     fn,
     "실제 모양, 전세 표: 전세 평당 보증금 순(강남 3000 > 노원 2000 > 표본 부족 종로, 종로는 값 칸 넷 - #593 a)",
     [REAL, "jeonse"],
-    rowTr("서울 전체", [tdA("평당 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", RATIO("50.0%")), tdA("거래건수", COUNT("30건"))], { overall: true }) +
-      rowTr(link("강남구", "gangnam"), [tdA("평당 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", RATIO("50.0%")), tdA("거래건수", COUNT("30건"))]) +
-      rowTr(link("노원구", "nowon"), [tdA("평당 보증금", STRONG("2,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("5억 820만원")), tdA("전세가율", RATIO("66.7%")), tdA("거래건수", COUNT("30건"))]) +
-      rowTr(link("종로구", "jongno"), [tdA("평당 보증금", LOW("2")), tdA("84㎡ 환산", "-"), tdA("전세가율", "-"), tdA("거래건수", "-")], { stale: PREV("10. 5.") }),
+    rowTr("서울 전체", [tdA("3.3㎡당 평균 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", RATIO("50.0%")), tdA("거래 건수", COUNT("30건"))], { overall: true }) +
+      rowTr(link("강남구", "gangnam"), [tdA("3.3㎡당 평균 보증금", STRONG("3,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("7억 6,230만원")), tdA("전세가율", RATIO("50.0%")), tdA("거래 건수", COUNT("30건"))]) +
+      rowTr(link("노원구", "nowon"), [tdA("3.3㎡당 평균 보증금", STRONG("2,000만원") + DOWN("50만원")), tdA("84㎡ 환산", STRONG("5억 820만원")), tdA("전세가율", RATIO("66.7%")), tdA("거래 건수", COUNT("30건"))]) +
+      rowTr(link("종로구", "jongno"), [tdA("3.3㎡당 평균 보증금", LOW("2")), tdA("84㎡ 환산", ND), tdA("전세가율", ND), tdA("거래 건수", ND)], { stale: PREV("10. 5.") }),
     { moat: true }
   );
 }

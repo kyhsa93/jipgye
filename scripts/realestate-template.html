@@ -9,19 +9,19 @@
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <meta name="google-adsense-account" content="ca-pub-1195159445218373">
 <title>서울 아파트 시세, 자치구별로 얼마인가 - 25개 자치구 실거래가</title>
-<meta name="description" content="국토교통부 실거래 신고 자료로 서울 25개 자치구의 아파트 매매·전세·월세 시세를 평당가와 84㎡ 환산가로 함께 보여줍니다. 매일 갱신합니다.">
+<meta name="description" content="국토교통부 실거래 신고 자료로 서울 25개 자치구의 아파트 매매·전세·월세 시세를 3.3㎡당 평균 가격과 84㎡ 환산가로 함께 보여줍니다. 매일 갱신합니다.">
 <meta name="site-group" content="digest">
 <link rel="canonical" href="https://kyhsa93.github.io/jipgye/realestate.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="집계">
 <meta property="og:url" content="https://kyhsa93.github.io/jipgye/realestate.html">
 <meta property="og:title" content="서울 아파트 시세, 자치구별로 얼마인가 - 25개 자치구 실거래가">
-<meta property="og:description" content="국토교통부 실거래 신고 자료로 서울 25개 자치구의 아파트 매매·전세·월세 시세를 평당가와 84㎡ 환산가로 함께 보여줍니다. 매일 갱신합니다.">
+<meta property="og:description" content="국토교통부 실거래 신고 자료로 서울 25개 자치구의 아파트 매매·전세·월세 시세를 3.3㎡당 평균 가격과 84㎡ 환산가로 함께 보여줍니다. 매일 갱신합니다.">
 <meta property="og:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="서울 아파트 시세, 자치구별로 얼마인가 - 25개 자치구 실거래가">
-<meta name="twitter:description" content="국토교통부 실거래 신고 자료로 서울 25개 자치구의 아파트 매매·전세·월세 시세를 평당가와 84㎡ 환산가로 함께 보여줍니다. 매일 갱신합니다.">
+<meta name="twitter:description" content="국토교통부 실거래 신고 자료로 서울 25개 자치구의 아파트 매매·전세·월세 시세를 3.3㎡당 평균 가격과 84㎡ 환산가로 함께 보여줍니다. 매일 갱신합니다.">
 <meta name="twitter:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <link rel="stylesheet" href="./style.css">
 </head>
@@ -158,7 +158,7 @@
       <select id="area-select"></select>
     </div>
     <div class="table-wrap">
-      <table class="data-table"><caption class="sr-only" data-auto>서울 아파트 시세, 자치구별로 얼마인가 - 25개 자치구 실거래가 - 자치구별 시세: 26행 4열(지역·매매 평당가·전세 평당 보증금·월세 보증금 / 월세)</caption>
+      <table class="data-table"><caption class="sr-only" data-auto>서울 아파트 시세, 자치구별로 얼마인가 - 25개 자치구 실거래가 - 자치구별 시세: 26행 4열(지역·매매 3.3㎡당 평균·전세 3.3㎡당 평균 보증금·월세 평균 보증금 / 월세)</caption>
         <thead id="district-head"><!--prerender:realestateHead--><!--/prerender:realestateHead--></thead>
         <tbody id="district-grid"><!--prerender:realestateTable--><!--/prerender:realestateTable--></tbody>
       </table>
@@ -228,11 +228,11 @@ const T = {
     thJeonse: "전세",
     thWolse: "월세",
     // 시세 전체 화면의 머리글·카드는 값이 평당가라 그렇게 적는다 - "매매"라 적고 평당가를 실으면 집값으로 읽힌다(UIUX #49).
-    colSale: "매매 평당가",
-    colJeonse: "전세 평당 보증금",
-    colWolse: "월세 보증금 / 월세",
-    thPerPyeong: "평당가",
-    thPerPyeongDeposit: "평당 보증금",
+    colSale: "매매 3.3㎡당 평균",
+    colJeonse: "전세 3.3㎡당 평균 보증금",
+    colWolse: "월세 평균 보증금 / 월세",
+    thPerPyeong: "3.3㎡당 평균",
+    thPerPyeongDeposit: "3.3㎡당 평균 보증금",
     thArea: (m2) => `${m2}㎡ 환산`,
     districtTitle: (name) => `${name} 아파트 시세`,
     thType: "구분",
@@ -240,15 +240,15 @@ const T = {
     backToAll: "서울 전체 시세",
     trendHeading: "최근 추이",
     trendBasis: "계약일 기준 · 실선은 신고 기한(계약 후 30일)이 지난 주까지",
-    trendMetricSale: "매매 평당가",
-    trendMetricJeonse: "전세 평당 보증금",
-    trendMetricWolse: "월세 보증금(평당 아님)",
+    trendMetricSale: "매매 3.3㎡당 평균",
+    trendMetricJeonse: "전세 3.3㎡당 평균 보증금",
+    trendMetricWolse: "월세 평균 보증금(면적 보정 없음)",
     trendMetricWolseRent: "월세(매달 내는 돈)",
-    trendVolumeSale: "매매 거래량",
-    trendVolumeJeonse: "전세 거래량",
-    trendVolumeWolse: "월세 거래량",
+    trendVolumeSale: "매매 거래 건수",
+    trendVolumeJeonse: "전세 거래 건수",
+    trendVolumeWolse: "월세 거래 건수",
     trendCount: (n) => `${n.toLocaleString("ko-KR")}건`,
-    trendRatio: "전세가율(전세 평당 보증금 ÷ 매매 평당가)",
+    trendRatio: "전세가율(전세 3.3㎡당 보증금 ÷ 매매 3.3㎡당 가격)",
     trendRange: (from, to, n) => `${from} ~ ${to} · ${n}주`,
     trendPendingNote: "점선은 기한이 남아 아직 덜 찬 주입니다",
     trendPendingTag: "(잠정)",
@@ -260,9 +260,9 @@ const T = {
     areaUnit: "㎡",
     thDeposit: "평균 보증금",
     thMonthly: "평균 월세",
-    thCount: "거래건수",
+    thCount: "거래 건수",
     thRatio: "전세가율",
-    thRatioByComplex: "전세가율 단지별 중앙값",
+    thRatioByComplex: "전세가율 단지별 중간값",
     weekOf: (d) => `${d} 주`,
     ratioCells: (n) => `단지·평형 ${n.toLocaleString("ko-KR")}칸`,
     overall: "서울 전체",
@@ -275,7 +275,7 @@ const T = {
     prevTagTitle: "이번 달 신고가 아직 적어 지난달 기준으로 보여줍니다.",
     staleTagTitle: "이 지역은 오늘 실거래 조회에 실패해 지난번에 받은 값을 그대로 보여줍니다.",
     monthlyPrefix: "월 ",
-    note: "국토교통부에 신고된 아파트 실거래 기준이며, 전용면적 평당가입니다. 서울 전체는 그 주에 신고된 거래로, 자치구는 최근 4주 신고분을 겹쳐 냅니다 — 한 주에 구당 스무 건 안팎이라 그대로 쓰면 몇 건에 평균이 휘둘립니다. 신고 기록이 모자란 동안에는 신고 기한(계약 후 30일)이 지나 마감된 4주 계약분으로 대신 냅니다. 공급면적으로 환산한 시세보다 높게 보일 수 있습니다. 84㎡ 환산가는 평당가에 25.41평을 곱한 값으로, 같은 구 안에서도 단지·층·연식에 따라 실제 거래가는 크게 다릅니다. 신고 건수가 5건 미만인 지역은 한두 건이 평균을 좌우하므로 값을 내지 않습니다. 전세·월세 시세는 신규 계약만 집계합니다. 갱신계약은 기존 조건을 잇는 것이라 지금 시세와 다르고, 서울 전월세 신고의 절반가량을 차지해 함께 평균 내면 시세가 낮게 나옵니다. 전세가율은 전세 평당 보증금을 매매 평당가로 나눈 값으로, 높을수록 매매가 대비 전세가 비싸다는 뜻입니다. 매매·전세 표본이 모두 충분하고 같은 달 기준일 때만 냅니다.",
+    note: "국토교통부에 신고된 아파트 실거래 기준이며, 전용면적(실제 주거 공간 면적) 기준 3.3㎡당 평균 가격입니다. 서울 전체는 그 주에 신고된 거래로, 자치구는 최근 4주 신고분을 겹쳐 냅니다 — 한 주에 구당 스무 건 안팎이라 그대로 쓰면 몇 건에 평균이 휘둘립니다. 신고 기록이 모자란 동안에는 신고 기한(계약 후 30일)이 지나 마감된 4주 계약분으로 대신 냅니다. 공급면적으로 환산한 시세보다 높게 보일 수 있습니다. 84㎡ 환산가는 3.3㎡당 가격에 25.41평을 곱한 값으로, 같은 구 안에서도 단지·층·연식에 따라 실제 거래가는 크게 다릅니다. 신고 건수가 5건 미만인 지역은 한두 건이 평균을 좌우하므로 값을 내지 않습니다. 전세·월세 시세는 신규 계약만 집계합니다. 갱신계약은 기존 조건을 잇는 것이라 지금 시세와 다르고, 서울 전월세 신고의 절반가량을 차지해 함께 평균 내면 시세가 낮게 나옵니다. 전세가율은 전세 3.3㎡당 보증금을 매매 3.3㎡당 가격으로 나눈 값으로, 높을수록 매매가 대비 전세가 비싸다는 뜻입니다. 매매·전세 표본이 모두 충분하고 같은 달 기준일 때만 냅니다.",
     footerSource: "{{src:realestate.ko}}",
     footerPrivacy: "개인정보처리방침",
     footerMethod: "숫자를 만드는 방법",
@@ -285,6 +285,7 @@ const T = {
     loadError: "실거래가를 불러오지 못했습니다.",
     retry: "다시 시도",
     empty: "표시할 지역이 없습니다.",
+    noData: "데이터 없음",
   },
   en: {
     budgetHeading: "Search by budget",
@@ -327,11 +328,11 @@ const T = {
     thSale: "Sale",
     thJeonse: "Jeonse",
     thWolse: "Monthly rent",
-    colSale: "Sale per pyeong",
-    colJeonse: "Jeonse per pyeong",
-    colWolse: "Rent: deposit / month",
-    thPerPyeong: "Per pyeong",
-    thPerPyeongDeposit: "Deposit per pyeong",
+    colSale: "Sale, avg per 3.3㎡",
+    colJeonse: "Jeonse, avg deposit per 3.3㎡",
+    colWolse: "Rent: avg deposit / month",
+    thPerPyeong: "Avg per 3.3㎡",
+    thPerPyeongDeposit: "Avg deposit per 3.3㎡",
     thArea: (m2) => `For ${m2}m²`,
     districtTitle: (name) => `${name} apartment prices`,
     thType: "Type",
@@ -339,15 +340,15 @@ const T = {
     backToAll: "All Seoul prices",
     trendHeading: "Recent trend",
     trendBasis: "By contract date, solid up to the last week past the 30-day filing deadline",
-    trendMetricSale: "Sale price per pyeong",
-    trendMetricJeonse: "Jeonse deposit per pyeong",
-    trendMetricWolse: "Monthly-rent deposit (not per pyeong)",
+    trendMetricSale: "Sale, avg per 3.3㎡",
+    trendMetricJeonse: "Jeonse, avg deposit per 3.3㎡",
+    trendMetricWolse: "Monthly-rent avg deposit (no area adjustment)",
     trendMetricWolseRent: "Monthly rent itself",
-    trendVolumeSale: "Sale transactions",
-    trendVolumeJeonse: "Jeonse contracts",
-    trendVolumeWolse: "Monthly-rent contracts",
+    trendVolumeSale: "Number of sales",
+    trendVolumeJeonse: "Number of jeonse contracts",
+    trendVolumeWolse: "Number of monthly-rent contracts",
     trendCount: (n) => `${n.toLocaleString("en-US")}`,
-    trendRatio: "Jeonse ratio (jeonse deposit / sale price, per pyeong)",
+    trendRatio: "Jeonse ratio (jeonse deposit / sale price, per 3.3㎡)",
     trendRange: (from, to, n) => `${from} – ${to} · ${n} weeks`,
     trendPendingNote: "Dashed: weeks still inside that window",
     trendPendingTag: "(provisional)",
@@ -359,7 +360,7 @@ const T = {
     areaUnit: "m²",
     thDeposit: "Avg deposit",
     thMonthly: "Avg monthly",
-    thCount: "Transactions",
+    thCount: "Number of deals",
     thRatio: "Jeonse ratio",
     thRatioByComplex: "Jeonse ratio, median by unit type",
     weekOf: (d) => `week of ${d}`,
@@ -374,7 +375,7 @@ const T = {
     prevTagTitle: "Too few filings this month, so last month\u2019s figure is shown.",
     staleTagTitle: "Today\u2019s filing lookup failed for this district, so the previous figures are shown.",
     monthlyPrefix: "",
-    note: "Based on apartment transactions reported to Korea's MOLIT — Seoul-wide figures cover deals filed this week, while each district averages the last four weeks of filings, since a single week leaves only about twenty deals per district. Until enough filing history accumulates, figures fall back to four weeks of contracts past the 30-day filing deadline. Priced per pyeong (3.3m²) of exclusive area — higher than figures quoted per gross area. The 84m² column multiplies the per-pyeong price by 25.41 pyeong; actual prices vary widely by complex, floor and age. Districts with fewer than 5 reported transactions are left blank, since one or two deals would drive the average. Jeonse and monthly rent figures count new contracts only. Renewals carry over the previous terms, so they sit below current market rates and make up about half of all filings. The jeonse ratio divides the jeonse deposit per pyeong by the sale price per pyeong; it is only shown when both have enough transactions from the same month.",
+    note: "Based on apartment transactions reported to Korea's MOLIT — Seoul-wide figures cover deals filed this week, while each district averages the last four weeks of filings, since a single week leaves only about twenty deals per district. Until enough filing history accumulates, figures fall back to four weeks of contracts past the 30-day filing deadline. Average price per 3.3m² of exclusive area (the actual living space) — higher than figures quoted per gross area. The 84m² column multiplies the price per 3.3m² by 25.41 pyeong; actual prices vary widely by complex, floor and age. Districts with fewer than 5 reported transactions are left blank, since one or two deals would drive the average. Jeonse and monthly rent figures count new contracts only. Renewals carry over the previous terms, so they sit below current market rates and make up about half of all filings. The jeonse ratio divides the jeonse deposit per 3.3m² by the sale price per 3.3m²; it is only shown when both have enough transactions from the same month.",
     footerSource: "{{src:realestate.en}}",
     footerPrivacy: "Privacy Policy",
     footerMethod: "How these numbers are made",
@@ -384,6 +385,7 @@ const T = {
     loadError: "Could not load transaction data.",
     retry: "Retry",
     empty: "No districts to show.",
+    noData: "No data",
   },
 };
 
@@ -546,20 +548,21 @@ function lowSampleHtml(metric) {
 // 표 칸(#593 b): 값을 못 낸 칸은 지표가 있고 표본이 모자랄 때만 이유를 적고, 표본은 충분한데 값만 없으면 「-」다. 조건은 scripts/realestate-format.ts 의 isShortSample 과 같다.
 const lowCell = (entry, k) => {
   const raw = entry?.[KIND_FIELDS[k].metric];
-  return raw && !hasEnoughSample(raw) ? lowSampleHtml(raw) : "-";
+  return raw && !hasEnoughSample(raw) ? lowSampleHtml(raw) : NA();
 };
+const NA = () => t("noData");
 
 // 요약 카드(#264): 신고 1~4건이라 비운 카드는 「-」 대신 이유를 적는다. 표의 low-sample 과 같은 클래스, title 은 없다. 조건은 scripts/realestate-format.ts 의 lowSampleCount 와 같다.
 // n 은 정수일 때만 쓰므로(Number.isInteger) 이스케이프할 글자가 없다. 지표가 없으면 m?.transactionCount 가 undefined 라 정수가 아니다(m 검사를 따로 두지 않는다 - 인라인 JS 한도, +400 B/장).
 const lowOr = (entry, k) => {
   const m = entry?.[KIND_FIELDS[k].metric];
   const n = m?.transactionCount;
-  return !hasEnoughSample(m) && Number.isInteger(n) && n >= 1 ? `<span class="low-sample">${t("blank")(n)}</span>` : "-";
+  return !hasEnoughSample(m) && Number.isInteger(n) && n >= 1 ? `<span class="low-sample">${t("blank")(n)}</span>` : NA();
 };
 
 function cellsFor(entry, k) {
   const resolved = resolveMetric(entry, k);
-  if (!resolved) return [lowCell(entry, k), "-", "-", ...(k === "jeonse" ? ["-"] : [])];
+  if (!resolved) return [lowCell(entry, k), NA(), NA(), ...(k === "jeonse" ? [NA()] : [])];
   const { metric, isPrevious } = resolved;
   const tag = prevTagHtml(isPrevious);
   const change = (c, d) => (isPrevious ? "" : changeHtml(c, d));
@@ -579,7 +582,7 @@ function cellsFor(entry, k) {
   ];
   if (k === "jeonse") {
     const ratio = jeonseRatio(entry);
-    out.push(ratio ? `<span class="ratio">${formatPercent(ratio.ratio)}</span>` : "-");
+    out.push(ratio ? `<span class="ratio">${formatPercent(ratio.ratio)}</span>` : NA());
   }
   out.push(`<span class="count">${escapeHtml(t("countUnit")(metric.transactionCount))}</span>`);
   return out;
@@ -668,7 +671,7 @@ function districtRowsHtml(entry) {
     .map((k, i) => {
       const resolved = resolveMetric(entry, k);
       if (!resolved) {
-        return `<tr><td>${escapeHtml(labels[i])}</td><td data-label="${escapeHtml(t("thPerPyeong"))}">${lowCell(entry, k)}</td><td data-label="${escapeHtml(t("thArea")(areaM2))}">-</td><td data-label="${escapeHtml(t("thCount"))}">-</td></tr>`;
+        return `<tr><td>${escapeHtml(labels[i])}</td><td data-label="${escapeHtml(t("thPerPyeong"))}">${lowCell(entry, k)}</td><td data-label="${escapeHtml(t("thArea")(areaM2))}">${NA()}</td><td data-label="${escapeHtml(t("thCount"))}">${NA()}</td></tr>`;
       }
       const { metric, isPrevious } = resolved;
       const tag = prevTagHtml(isPrevious);

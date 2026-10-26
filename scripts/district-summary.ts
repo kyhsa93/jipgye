@@ -184,8 +184,8 @@ export function districtSentences(entry, realestate, locale = "ko", spread = nul
     if (nearest) {
       out.push(
         en
-          ? `The closest district by price is ${nearest.name} at ${formatMan(nearest.value, locale)} per pyeong.`
-          : `평당가가 가장 가까운 지역은 ${nearest.name}(${formatMan(nearest.value, locale)})입니다.`
+          ? `The closest district by price is ${nearest.name} at ${formatMan(nearest.value, locale)} per 3.3m².`
+          : `3.3㎡당 가격이 가장 가까운 지역은 ${nearest.name}(${formatMan(nearest.value, locale)})입니다.`
       );
     }
   } else {

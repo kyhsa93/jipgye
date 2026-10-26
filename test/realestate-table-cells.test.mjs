@@ -35,7 +35,7 @@ const cellsOf = (row) => [...row.matchAll(/<td data-label="([^"]*)">(.*?)<\/td>/
 const textOf = (html) => html.replace(/<[^>]+>/g, "").trim();
 const ths = (head) => [...head.matchAll(/<th scope="col">(.*?)<\/th>/g)].map((m) => m[1]);
 
-const JEONSE_LABELS = ["평당 보증금", "84㎡ 환산", "전세가율", "거래건수"];
+const JEONSE_LABELS = ["3.3㎡당 평균 보증금", "84㎡ 환산", "전세가율", "거래 건수"];
 
 test("(a) 전세 표: 값 없는 줄도 이름 칸 + 값 칸 넷이고 data-label 이 머리글을 따른다(표본 부족·값 null·지표 없음)", () => {
   const head = ths(buildHead("jeonse"));
@@ -52,9 +52,9 @@ test("(a) 전세 표: 값 없는 줄도 이름 칸 + 값 칸 넷이고 data-labe
     const cells = cellsOf(row);
     assert.equal(cells.length, head.length - 1, `${name}: 값 칸 수`);
     assert.deepEqual(cells.map((c) => c.label), JEONSE_LABELS, name);
-    assert.equal(cells[2].html, "-", `${name}: 전세가율 칸`);
-    assert.equal(cells[3].html, "-", `${name}: 거래건수 칸`);
-    assert.ok(row.endsWith('<td data-label="전세가율">-</td><td data-label="거래건수">-</td></tr>'), `${name}: 마지막 두 칸`);
+    assert.equal(cells[2].html, "데이터 없음", `${name}: 전세가율 칸`);
+    assert.equal(cells[3].html, "데이터 없음", `${name}: 거래건수 칸`);
+    assert.ok(row.endsWith('<td data-label="전세가율">데이터 없음</td><td data-label="거래 건수">데이터 없음</td></tr>'), `${name}: 마지막 두 칸`);
     assert.doesNotMatch(row, /colspan/, `${name}: colspan 은 쓰지 않는다`);
   }
 });
@@ -66,7 +66,7 @@ test("(a) 매매·월세·한 줄 표·자치구 표의 값 없는 줄은 그대
   }
   const rows = rowsOf(build(data, null, "종로구"));
   assert.equal(rows.length, 3);
-  for (const row of rows) assert.deepEqual(cellsOf(row).map((c) => c.label), ["평당가", "84㎡ 환산", "거래건수"]);
+  for (const row of rows) assert.deepEqual(cellsOf(row).map((c) => c.label), ["3.3㎡당 평균", "84㎡ 환산", "거래 건수"]);
   // 서울 전체 줄도 같은 규칙이다
   const [overall] = rowsOf(build({ overall: { jeonse: jeonseOf(3) }, districts: [] }, "jeonse"));
   assert.equal(cellsOf(overall).length, 4);
@@ -87,7 +87,7 @@ test("(b) 표본 문턱 경계 0·1·4·5: 값이 없을 때 4건 이하만 「�
       if (n < 5) {
         assert.match(first, new RegExp(`^<span class="low-sample" title="[^"]*">신고 ${n}건</span>$`), `${name} n=${n}`);
       } else {
-        assert.equal(first, "-", `${name} n=${n}`);
+        assert.equal(first, "데이터 없음", `${name} n=${n}`);
       }
     }
   }
@@ -96,12 +96,12 @@ test("(b) 표본 문턱 경계 0·1·4·5: 값이 없을 때 4건 이하만 「�
   for (const none of [undefined, null, 0, "", false]) assert.equal(isShortSample(none), false, `지표 없음 ${String(none)}`);
 });
 
-test("(b) 지표가 없으면 「-」, 표본 부족이면 값이 있는 쪽과 상관없이 문구 - 건수는 n=7·값 비숫자 → 「-」, n=3 → 「신고 3건」", () => {
+test("(b) 지표가 없으면 「데이터 없음」, 표본 부족이면 값이 있는 쪽과 상관없이 문구 - 건수는 n=7·값 비숫자 → 「데이터 없음」, n=3 → 「신고 3건」", () => {
   const one = (entry) => cellsOf(rowsOf(build({ districts: [{ name: "종로구", ...entry }] }, "sale"))[0])[0].html;
-  assert.equal(one({}), "-");
-  assert.equal(one({ sale: null }), "-");
-  assert.equal(one({ sale: { ...saleOf(7), avgPricePerPyeong10k: "비숫자" } }), "-");
-  assert.equal(one({ sale: { ...saleOf(7), avgPricePerPyeong10k: NaN } }), "-");
+  assert.equal(one({}), "데이터 없음");
+  assert.equal(one({ sale: null }), "데이터 없음");
+  assert.equal(one({ sale: { ...saleOf(7), avgPricePerPyeong10k: "비숫자" } }), "데이터 없음");
+  assert.equal(one({ sale: { ...saleOf(7), avgPricePerPyeong10k: NaN } }), "데이터 없음");
   assert.match(one({ sale: saleOf(3, null) }), /신고 3건/);
   assert.match(one({ sale: { ...saleOf(3), avgPricePerPyeong10k: "비숫자" } }), /신고 3건/);
 });
@@ -128,7 +128,7 @@ test("빌드(React)와 브라우저(rowHtml·cellsFor)가 같은 표를 낸다(k
   }
 });
 
-test("브라우저 ko·en: 전세 표 값 없는 줄은 값 칸 넷(라벨이 머리글을 따른다), 4건 이하만 문구·5건부터 「-」", async () => {
+test("브라우저 ko·en: 전세 표 값 없는 줄은 값 칸 넷(라벨이 머리글을 따른다), 4건 이하만 문구·5건부터 「데이터 없음」", async () => {
   const data = {
     overall: {},
     districts: [e("종로구", {}), e("중구", { jeonse: jeonseOf(2) }), e("용산구", { jeonse: jeonseOf(5, null) }), e("성동구", { jeonse: jeonseOf(4, null) })],
@@ -143,12 +143,13 @@ test("브라우저 ko·en: 전세 표 값 없는 줄은 값 칸 넷(라벨이 �
       assert.equal(cells.length, 4, `${locale} ${name}`);
     }
     const low = (n) => (locale === "ko" ? `신고 ${n}건` : `${n} reported`);
+    const nd = locale === "ko" ? "데이터 없음" : "No data";
     const first = (name) => textOf(byName.get(name)[0].html);
-    assert.equal(first("종로구"), "-", locale);
+    assert.equal(first("종로구"), nd, locale);
     assert.equal(first("중구"), low(2), locale);
-    assert.equal(first("용산구"), "-", `${locale}: 5건·값 null`);
+    assert.equal(first("용산구"), nd, `${locale}: 5건·값 null`);
     assert.equal(first("성동구"), low(4), locale);
-    for (const name of ["종로구", "중구", "용산구", "성동구"]) assert.deepEqual(byName.get(name).slice(1).map((c) => c.html), ["-", "-", "-"], `${locale} ${name}`);
+    for (const name of ["종로구", "중구", "용산구", "성동구"]) assert.deepEqual(byName.get(name).slice(1).map((c) => c.html), [nd, nd, nd], `${locale} ${name}`);
   }
 });
 
@@ -157,7 +158,7 @@ test("변이: 틀의 칸 수·문턱 조건을 되돌리면 위 비교가 잡는
   const built = build(data, opts.kind, null);
   const run = async (mutate) => (await inline(data, { ...opts, mutate })).body;
   assert.equal(await run((s) => s), built, "변이 없는 사본은 같다");
-  const noPad = await run((s) => s.replace('...(k === "jeonse" ? ["-"] : [])', ""));
+  const noPad = await run((s) => s.replace('...(k === "jeonse" ? [NA()] : [])', ""));
   assert.notEqual(noPad, built, `${name}: 전세 칸 수 되돌림을 못 잡는다`);
   const always = await run((s) => s.replace("raw && !hasEnoughSample(raw) ? lowSampleHtml(raw)", "raw ? lowSampleHtml(raw)"));
   assert.notEqual(always, built, `${name}: 표본 문턱 되돌림을 못 잡는다`);

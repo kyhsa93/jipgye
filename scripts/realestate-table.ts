@@ -36,17 +36,17 @@ export const RE_LABELS = {
   sale: "매매",
   jeonse: "전세",
   wolse: "월세",
-  colSale: "매매 평당가",
-  colJeonse: "전세 평당 보증금",
-  colWolse: "월세 보증금 / 월세",
-  perPyeong: "평당가",
-  perPyeongDeposit: "평당 보증금",
+  colSale: "매매 3.3㎡당 평균",
+  colJeonse: "전세 3.3㎡당 평균 보증금",
+  colWolse: "월세 평균 보증금 / 월세",
+  perPyeong: "3.3㎡당 평균",
+  perPyeongDeposit: "3.3㎡당 평균 보증금",
   area: "84㎡ 환산",
   deposit: "평균 보증금",
   monthly: "평균 월세",
-  count: "거래건수",
+  count: "거래 건수",
   ratio: "전세가율",
-  ratioByComplex: "전세가율 단지별 중앙값",
+  ratioByComplex: "전세가율 단지별 중간값",
   overall: "서울 전체",
 };
 
@@ -71,7 +71,7 @@ export const headLabels = (kind = null, district = null) =>
 
 // ---- 조각(part) ----
 const part = (type, text, { title = null, dir = null, esc = false } = {}) => ({ type, text, title, dir, esc });
-const NONE = () => [part("text", "-")];
+const NONE = () => [part("text", "데이터 없음")];
 const SPACE = () => part("text", " ");
 const strong = (text) => part("strong", text);
 const countSpan = (n) => part("count", reCount(n), { esc: true });
@@ -227,7 +227,7 @@ export function reDistrictRows(entry) {
         kind === "wolse"
           ? [strong(reMan(metric.avgDeposit10k)), part("text", " / "), strong(`월 ${reMan(metric.avgMonthlyRent10k)}`)]
           : [strong(reMan(valueOf(metric, kind))), ...change];
-      const area = kind === "wolse" ? NONE() : [strong(reEok(areaPrice(valueOf(metric, kind))))];
+      const area = kind === "wolse" ? [part("text", "-")] : [strong(reEok(areaPrice(valueOf(metric, kind))))];
       cells = [price, area, [countSpan(metric.transactionCount)]];
     }
     return { label: labels[i], cells: cells.map((parts, j) => ({ label: colLabels[j], parts })) };

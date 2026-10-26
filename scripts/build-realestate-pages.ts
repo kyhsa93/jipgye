@@ -38,7 +38,7 @@ const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 
 const BASE_TITLE = "서울 아파트 시세, 자치구별로 얼마인가 - 25개 자치구 실거래가";
 const BASE_DESCRIPTION =
-  "국토교통부 실거래 신고 자료로 서울 25개 자치구의 아파트 매매·전세·월세 시세를 평당가와 84㎡ 환산가로 함께 보여줍니다. 매일 갱신합니다.";
+  "국토교통부 실거래 신고 자료로 서울 25개 자치구의 아파트 매매·전세·월세 시세를 3.3㎡당 평균 가격과 84㎡ 환산가로 함께 보여줍니다. 매일 갱신합니다.";
 
 const BASE_TITLE_KEY = 'title: "서울 아파트 시세",';
 const BASE_TITLE_KEY_EN = 'title: "Seoul Apartment Prices",';
@@ -47,9 +47,9 @@ export const REALESTATE_PAGES = [
   {
     kind: "sale",
     file: "apartment-sale.html",
-    title: "서울 아파트 매매 시세 - 자치구별 평당가·84㎡ 환산",
+    title: "서울 아파트 매매 시세 - 자치구별 3.3㎡당 가격·84㎡ 환산",
     description:
-      "서울 25개 자치구 아파트 매매 실거래가를 평당가와 84㎡ 환산가로 비교합니다. 국토교통부 신고 자료를 매일 갱신하며, 신고 건수가 적은 지역은 평균을 내지 않습니다.",
+      "서울 25개 자치구 아파트 매매 실거래가를 3.3㎡당 평균 가격과 84㎡ 환산가로 비교합니다. 국토교통부 신고 자료를 매일 갱신하며, 신고 건수가 적은 지역은 평균을 내지 않습니다.",
     titleEn: "Seoul Apartment Sale Prices by District",
   },
   {
@@ -57,7 +57,7 @@ export const REALESTATE_PAGES = [
     file: "apartment-jeonse.html",
     title: "서울 아파트 전세 시세 - 자치구별 평당 보증금·84㎡ 환산",
     description:
-      "서울 25개 자치구 아파트 전세 실거래 보증금을 평당가와 84㎡ 환산가로 비교합니다. 국토교통부 신고 자료를 매일 갱신하며, 신고 건수가 적은 지역은 평균을 내지 않습니다.",
+      "서울 25개 자치구 아파트 전세 실거래 보증금을 3.3㎡당 평균 가격과 84㎡ 환산가로 비교합니다. 국토교통부 신고 자료를 매일 갱신하며, 신고 건수가 적은 지역은 평균을 내지 않습니다.",
     titleEn: "Seoul Apartment Jeonse Prices by District",
   },
   {
@@ -167,12 +167,12 @@ export function districtDescription(name, realestate) {
   const districts = realestate?.districts ?? [];
   const value = valueOf(resolveMetric(districts.find((d) => d.name === name), "sale")?.metric, "sale");
   const priced = districts.map((d) => valueOf(resolveMetric(d, "sale")?.metric, "sale")).filter((v) => typeof v === "number");
-  if (typeof value !== "number" || priced.length < 2) return `${name} 아파트 매매·전세·월세 실거래가를 평당가와 84㎡ 환산가로 보여줍니다. ${tail}`;
+  if (typeof value !== "number" || priced.length < 2) return `${name} 아파트 매매·전세·월세 실거래가를 3.3㎡당 평균 가격과 84㎡ 환산가로 보여줍니다. ${tail}`;
   const rank = priced.filter((v) => v > value).length + 1;
   // formatEok 은 늘 「…원」으로 끝나 조사는 「으로」다.
   return (
     `${name} 아파트값은 얼마인가 - 매매 84㎡ 환산 ${formatEok(areaPrice(value))}으로 값을 낸 서울 ${priced.length}개 구 가운데 비싼 순 ${rank}번째. ` +
-    `매매·전세·월세 실거래가를 평당가와 84㎡ 환산가로 보여주며, 신고 건수가 적으면 지난달 기준으로 표시합니다.`
+    `매매·전세·월세 실거래가를 3.3㎡당 평균 가격과 84㎡ 환산가로 보여주며, 신고 건수가 적으면 지난달 기준으로 표시합니다.`
   );
 }
 

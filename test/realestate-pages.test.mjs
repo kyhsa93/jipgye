@@ -111,10 +111,10 @@ test("신고 건수가 5건 미만이면 값을 내지 않는다", () => {
 });
 
 test("거래 유형마다 열 구성이 다르다", () => {
-  assert.deepEqual(headCells(realestateHeadHtml("sale")), ["지역", "평당가", "84㎡ 환산", "거래건수"]);
-  assert.deepEqual(headCells(realestateHeadHtml("jeonse")), ["지역", "평당 보증금", "84㎡ 환산", "전세가율", "거래건수"]);
-  assert.deepEqual(headCells(realestateHeadHtml("wolse")), ["지역", "평균 보증금", "평균 월세", "거래건수"]);
-  assert.deepEqual(headCells(realestateHeadHtml()), ["지역", "매매 평당가", "전세 평당 보증금", "월세 보증금 / 월세"]);
+  assert.deepEqual(headCells(realestateHeadHtml("sale")), ["지역", "3.3㎡당 평균", "84㎡ 환산", "거래 건수"]);
+  assert.deepEqual(headCells(realestateHeadHtml("jeonse")), ["지역", "3.3㎡당 평균 보증금", "84㎡ 환산", "전세가율", "거래 건수"]);
+  assert.deepEqual(headCells(realestateHeadHtml("wolse")), ["지역", "평균 보증금", "평균 월세", "거래 건수"]);
+  assert.deepEqual(headCells(realestateHeadHtml()), ["지역", "매매 3.3㎡당 평균", "전세 3.3㎡당 평균 보증금", "월세 평균 보증금 / 월세"]);
 });
 
 test("월세 표에는 84㎡ 환산이 들어가지 않는다", () => {
@@ -240,7 +240,7 @@ test("한쪽 표본이 모자라면 전세가율을 내지 않는다", () => {
   });
   assert.equal(jeonseRatio(entry), null);
   const html = realestateTableHtml({ districts: [entry] }, "jeonse");
-  assert.ok(html.includes("<td data-label=\"전세가율\">-</td>"), "표본이 모자란데 비율이 나왔다");
+  assert.ok(html.includes("<td data-label=\"전세가율\">데이터 없음</td>"), "표본이 모자란데 비율이 나왔다");
 });
 
 test("기준 달이 서로 다르면 전세가율을 내지 않는다", () => {
@@ -368,7 +368,7 @@ test("자치구 페이지는 한 지역의 세 유형을 행으로 보여준다"
   const baked = /<title>([^<]*)<\/title>/.exec(await read(`${SITE}/district-gangnam.html`))[1];
   const page = await loadRealestatePage({ realestate, file: `${SITE}/district-gangnam.html`, district: "강남구", title: baked });
 
-  assert.deepEqual(headCells(page.headHtml()), ["구분", "평당가", "84㎡ 환산", "거래건수"]);
+  assert.deepEqual(headCells(page.headHtml()), ["구분", "3.3㎡당 평균", "84㎡ 환산", "거래 건수"]);
   assert.deepEqual(names(page.tableHtml()), ["매매", "전세", "월세"]);
   assert.match(page.sandbox.document.title, /강남구/);
 });
@@ -535,9 +535,9 @@ test("추이가 어느 지표인지 라벨로 밝힌다", async () => {
   const trend = trendData();
 
   const expected = {
-    sale: "매매 평당가",
-    jeonse: "전세 평당 보증금",
-    wolse: "월세 보증금(평당 아님)",
+    sale: "매매 3.3㎡당 평균",
+    jeonse: "전세 3.3㎡당 평균 보증금",
+    wolse: "월세 평균 보증금(면적 보정 없음)",
   };
 
   for (const [kind, label] of Object.entries(expected)) {
@@ -550,7 +550,7 @@ test("거래량 추이를 함께 그린다", async () => {
   const page = await loadRealestatePage({ realestate: trendRealestate(), trend: trendData(), kind: "sale" });
 
   assert.ok(page.volumeHtml().includes("polyline"), "거래량 그래프가 없다");
-  assert.match(page.cardLabel("volume"), /매매 거래량/, page.cardLabel("volume"));
+  assert.match(page.cardLabel("volume"), /매매 거래 건수/, page.cardLabel("volume"));
   assert.match(page.cardCurrent("volume"), /50건/, page.cardCurrent("volume"));
   assert.match(page.cardMinMax("volume"), /최고 .*건 · 최저 .*건/, page.cardMinMax("volume"));
   assert.equal(page.cardHidden("volume-card"), false);
@@ -561,11 +561,11 @@ test("거래 유형을 바꾸면 거래량도 그 유형을 센다", async () =>
   const trend = trendData();
 
   const jeonse = await loadRealestatePage({ realestate, trend, kind: "jeonse" });
-  assert.match(jeonse.cardLabel("volume"), /전세 거래량/);
+  assert.match(jeonse.cardLabel("volume"), /전세 거래 건수/);
   assert.match(jeonse.cardCurrent("volume"), /40건/, jeonse.cardCurrent("volume"));
 
   const wolse = await loadRealestatePage({ realestate, trend, kind: "wolse" });
-  assert.match(wolse.cardLabel("volume"), /월세 거래량/);
+  assert.match(wolse.cardLabel("volume"), /월세 거래 건수/);
 });
 
 test("전세가율 추이를 그린다", async () => {

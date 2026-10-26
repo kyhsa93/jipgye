@@ -31,7 +31,7 @@ const card = (label, value, sub = null) => ({ label, value, sub });
 export const lowSampleReason = (n) => `신고 ${n}건이라 비움`;
 const dashOrLow = (entry, kind) => {
   const n = lowSampleCount(entry, kind);
-  return n === null ? [raw("-")] : [{ text: lowSampleReason(n), esc: true, low: true }];
+  return n === null ? [raw("데이터 없음")] : [{ text: lowSampleReason(n), esc: true, low: true }];
 };
 
 /**

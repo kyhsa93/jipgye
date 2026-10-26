@@ -13,8 +13,9 @@ const SP = `A&B <i> "q" it's`;
 const SP_OUT = `A&amp;B &lt;i&gt; &quot;q&quot; it's`;
 
 const tr = (name, sale, jeonse, wolse) =>
-  `<tr><td>${name}</td><td data-label="매매">${sale}</td><td data-label="전세">${jeonse}</td><td data-label="월세">${wolse}</td></tr>`;
-const ALL_DASH = (name) => tr(name, "-", "-", "-");
+  `<tr><td>${name}</td><td data-label="매매 3.3㎡당 평균">${sale}</td><td data-label="전세 3.3㎡당 평균">${jeonse}</td><td data-label="월세 평균 보증금/월세">${wolse}</td></tr>`;
+const ND = "데이터 없음";
+const ALL_DASH = (name) => tr(name, ND, ND, ND);
 const OVERALL = "서울 전체";
 
 // 기대 칸(손으로 적은 글자). 값 5,530 / 증감 +361 / 건수 684.
@@ -31,7 +32,7 @@ const KINDS = [
 ];
 // 칸 하나만 채운 데이터: 다른 두 칸은 지표가 없어 "-".
 const cellRow = (kind, expectCell, name = OVERALL) =>
-  tr(name, kind === "sale" ? expectCell : "-", kind === "jeonse" ? expectCell : "-", kind === "wolse" ? expectCell : "-");
+  tr(name, kind === "sale" ? expectCell : ND, kind === "jeonse" ? expectCell : ND, kind === "wolse" ? expectCell : ND);
 const only = (kind, metric) => ({ overall: { [kind]: metric } });
 
 // [id 뒤 번호, 조건, 지표 spec(count·change·value 키만), 종류별 기대 칸]
@@ -183,14 +184,14 @@ const MIXED_ROWS = [
     fn: "realestateHtml",
     cond: "한 줄에 세 칸이 다른 모양: 매매 표본 부족·전세 값·월세 지표 없음",
     args: [{ overall: { sale: { avgPricePerPyeong10k: 9000, transactionCount: 2 }, jeonse: { avgDepositPerPyeong10k: 3031, transactionCount: 547, change: { value10k: -25 } } } }],
-    expect: tr(OVERALL, LOW(2), "3,031만원" + CHANGE("-25만") + COUNT("547건"), "-"),
+    expect: tr(OVERALL, LOW(2), "3,031만원" + CHANGE("-25만") + COUNT("547건"), ND),
   },
   {
     id: "X-02",
     fn: "realestateHtml",
     cond: "한 줄에 세 칸이 다른 모양: 매매 값·전세 없음·월세 표본 부족",
     args: [{ overall: { sale: { avgPricePerPyeong10k: 5530, transactionCount: 684, change: { value10k: 361 } }, jeonse: null, wolse: { avgDeposit10k: 19312, avgMonthlyRent10k: 113, transactionCount: 3 } } }],
-    expect: tr(OVERALL, "5,530만원" + CHANGE("+361만") + COUNT("684건"), "-", LOW(3)),
+    expect: tr(OVERALL, "5,530만원" + CHANGE("+361만") + COUNT("684건"), ND, LOW(3)),
   },
   {
     id: "X-03",
@@ -234,7 +235,7 @@ const NONE_ROWS = [
 // ================= 자치구: 정렬·자름·이름 =================
 // 입력 도우미: 매매 평당가와 건수만 가진 자치구. 기대 칸은 직접 적는다.
 const d = (name, price, count = 10) => ({ name, sale: { avgPricePerPyeong10k: price, transactionCount: count } });
-const dRow = (name, text) => tr(name, text, "-", "-");
+const dRow = (name, text) => tr(name, text, ND, ND);
 const sale10 = (text) => `${text}${COUNT("10건")}`;
 const OV = ALL_DASH(OVERALL);
 const withDistricts = (districts) => [{ overall: {}, districts }];
@@ -284,26 +285,26 @@ const DISTRICT_ROWS = [
       OV +
       dRow("정상", sale10("100만원")) +
       dRow("부족", LOW(4)) +
-      tr("지표없음", "-", "-", "-") +
-      dRow("값없음", "-"),
+      tr("지표없음", ND, ND, ND) +
+      dRow("값없음", ND),
   },
   {
     id: "D-08",
     cond: "값이 없는 곳이 값이 있는 곳 앞에 들어와도 값 있는 곳이 앞으로(x가 null이면 뒤)",
     args: withDistricts([{ name: "없음" }, d("있음", 100)]),
-    expect: OV + dRow("있음", sale10("100만원")) + tr("없음", "-", "-", "-"),
+    expect: OV + dRow("있음", sale10("100만원")) + tr("없음", ND, ND, ND),
   },
   {
     id: "D-09",
     cond: "값이 있는 곳이 값 없는 곳 앞에 들어오면 그대로(y가 null이면 앞)",
     args: withDistricts([d("있음", 100), { name: "없음" }]),
-    expect: OV + dRow("있음", sale10("100만원")) + tr("없음", "-", "-", "-"),
+    expect: OV + dRow("있음", sale10("100만원")) + tr("없음", ND, ND, ND),
   },
   {
     id: "D-10",
     cond: "평당가 0(표본은 충분)은 값은 있는 것으로 쳐 null 앞에 서고, 칸은 \"-\"",
     args: withDistricts([{ name: "없음" }, d("영", 0), d("백", 100)]),
-    expect: OV + dRow("백", sale10("100만원")) + dRow("영", "-") + tr("없음", "-", "-", "-"),
+    expect: OV + dRow("백", sale10("100만원")) + dRow("영", ND) + tr("없음", ND, ND, ND),
   },
   {
     id: "D-11",
@@ -327,7 +328,7 @@ const DISTRICT_ROWS = [
     id: "D-14",
     cond: "매매 지표가 falsy(0·\"\"·null·false)인 곳은 정렬에서 null, 칸은 \"-\"",
     args: withDistricts([{ name: "영", sale: 0 }, { name: "빈", sale: "" }, { name: "널", sale: null }, d("값", 10)]),
-    expect: OV + dRow("값", sale10("10만원")) + tr("영", "-", "-", "-") + tr("빈", "-", "-", "-") + tr("널", "-", "-", "-"),
+    expect: OV + dRow("값", sale10("10만원")) + tr("영", ND, ND, ND) + tr("빈", ND, ND, ND) + tr("널", ND, ND, ND),
   },
   {
     id: "D-15",
