@@ -6,8 +6,10 @@ import path from "node:path";
 import { MIN_CELLS } from "../scripts/district-change.ts";
 import {
   AGES,
+  AREAS,
   SEGMENT_CHANGE_NAME,
   ageKeyOf,
+  areaKeyOf,
   buildSegmentPayload,
   priceKeyOf,
   segmentCells,
@@ -71,6 +73,26 @@ test("연식은 10년 미만·10~29년·30년 이상, 준공 연도가 없으면
   assert.equal(toSegmentDeal(item("가", 84, "202507", 50_000, 0)).buildYear, null);
 });
 
+test("면적대는 4개, 경계는 위쪽 포함(60·85·135㎡는 아래 대) - 면적이 없거나 0 이하면 면적 구간에서만 뺀다", () => {
+  assert.deepEqual(AREAS.map((a) => a.key), ["upTo60", "a60to85", "a85to135", "over135"]);
+  assert.equal(areaKeyOf(59.99), "upTo60");
+  assert.equal(areaKeyOf(60), "upTo60");
+  assert.equal(areaKeyOf(60.01), "a60to85");
+  assert.equal(areaKeyOf(84.97), "a60to85");
+  assert.equal(areaKeyOf(85), "a60to85");
+  assert.equal(areaKeyOf(85.01), "a85to135");
+  assert.equal(areaKeyOf(135), "a85to135");
+  assert.equal(areaKeyOf(135.01), "over135");
+  assert.equal(areaKeyOf(0), null);
+  assert.equal(areaKeyOf(null), null);
+  assert.equal(toSegmentDeal(item("가", "", "202507", 50_000)).area, null);
+  assert.equal(toSegmentDeal(item("가", "84.97", "202507", 50_000)).area, 84.97);
+  const deals = [item("가", "", "202507", 50_000), item("가", "", "202607", 55_000)].map(toSegmentDeal);
+  const [cell] = segmentCells(deals, { base: ["202507"], recent: ["202607"] });
+  assert.equal(areaKeyOf(cell.area), null);
+  assert.equal(priceKeyOf(cell.base), "upTo6"); // 가격대·연식 쪽은 그대로 센다
+});
+
 test("해제·직거래는 district-change 의 toDeal 그대로 뺀다", () => {
   assert.equal(toSegmentDeal(item("가", 84, "202507", 50_000, 2000, { cdealType: "O" })), null);
   assert.equal(toSegmentDeal(item("가", 84, "202507", 50_000, 2000, { dealingGbn: "직거래" })), null);
@@ -103,6 +125,45 @@ test("픽스처 집계: 구간마다 변화 중앙값·90% 구간·칸 수, 문�
   assert.equal(age.y10to29.change, null);
   assert.deepEqual(p.grid.rows.upTo6, [MIN_CELLS, 0, 0]);
   assert.deepEqual(p.grid.rows.over25, [0, 0, MIN_CELLS + 10]);
+});
+
+/** 면적대별로 칸을 달리 둔 픽스처 - 면적마다 칸 수가 다르고, 변화율도 다르다. */
+const AREA_FIXTURE = [
+  ...FILL,
+  ...cellsOf("소", MIN_CELLS, 50_000, 0.3, 2020).map((r) => ({ ...r, excluUseAr: 59 })),
+  ...cellsOf("중", MIN_CELLS + 5, 80_000, 0.15, 2010).map((r) => ({ ...r, excluUseAr: 84.97 })),
+  ...cellsOf("준대", MIN_CELLS, 120_000, 0.1, 2005).map((r) => ({ ...r, excluUseAr: 135 })),
+  ...cellsOf("대", MIN_CELLS - 1, 300_000, 0.02, 1995).map((r) => ({ ...r, excluUseAr: 200 })),
+];
+
+test("면적 집계: 구간마다 칸 수·변화·90% 구간, 문턱(MIN_CELLS) 아래(>135㎡)는 값 없이 칸 수만 - 합치지 않는다", () => {
+  const p = buildSegmentPayload({ items: AREA_FIXTURE, now: NOW });
+  assert.deepEqual(p.area.map((r) => r.key), ["upTo60", "a60to85", "a85to135", "over135"]);
+  const area = Object.fromEntries(p.area.map((r) => [r.key, r]));
+  assert.equal(area.upTo60.cells, MIN_CELLS);
+  assert.equal(area.upTo60.change, 30);
+  assert.ok(area.upTo60.low <= 30 && area.upTo60.high >= 30);
+  assert.equal(area.a60to85.cells, MIN_CELLS + 5);
+  assert.equal(area.a60to85.change, 15);
+  assert.equal(area.a85to135.cells, MIN_CELLS); // 135㎡ 는 아래 대
+  assert.equal(area.a85to135.change, 10);
+  assert.equal(area.over135.cells, MIN_CELLS - 1);
+  assert.equal(area.over135.change, null);
+  assert.equal(area.over135.low, undefined);
+  assert.equal(p.area.reduce((a, r) => a + r.cells, 0), p.cells);
+});
+
+test("price·age·pairs·grid 는 면적과 무관 - 면적을 모두 바꿔도 값·모양이 그대로(#697 이 읽는다), area 만 늘었다", () => {
+  const moved = FIXTURE.map((r) => ({ ...r, excluUseAr: r.excluUseAr === 84 ? 140 : r.excluUseAr }));
+  const a = buildSegmentPayload({ items: FIXTURE, now: NOW });
+  const b = buildSegmentPayload({ items: moved, now: NOW });
+  for (const k of ["price", "age", "pairs", "grid", "cells", "noBuildYear", "periods", "ageRefYear", "minCells"]) {
+    assert.equal(JSON.stringify(a[k]), JSON.stringify(b[k]), k);
+  }
+  assert.notEqual(JSON.stringify(a.area), JSON.stringify(b.area));
+  assert.deepEqual(Object.keys(a.pairs), ["price", "age"]);
+  assert.deepEqual(Object.keys(a.price[0]), ["key", "ko", "en", "cells", "change", "low", "high"]);
+  assert.deepEqual(Object.keys(a.area[1]), Object.keys(a.price[0])); // 값을 낸 행은 price 와 같은 모양
 });
 
 test("구간 쌍 판정은 pairVerdicts 그대로 - 값을 낸 구간끼리만, 구간이 안 겹칠 때만 말할 수 있음", () => {
@@ -177,5 +238,7 @@ test("공개 파일: 10 KB 이하, 집계만(단지명 0), 금지어 0", async (
   const j = JSON.parse(body);
   assert.deepEqual(j.price.map((r) => r.key), ["upTo6", "upTo9", "upTo15", "upTo25", "over25"]);
   assert.deepEqual(j.age.map((r) => r.key), ["under10", "y10to29", "over30"]);
-  assert.deepEqual(Object.keys(j).sort(), ["age", "ageRefYear", "cells", "grid", "minCells", "noBuildYear", "pairs", "periods", "price", "updatedAt"]);
+  assert.deepEqual(j.area.map((r) => r.key), ["upTo60", "a60to85", "a85to135", "over135"]);
+  assert.ok(j.area.reduce((a, r) => a + r.cells, 0) <= j.cells);
+  assert.deepEqual(Object.keys(j).sort(), ["age", "ageRefYear", "area", "cells", "grid", "minCells", "noBuildYear", "pairs", "periods", "price", "updatedAt"]);
 });

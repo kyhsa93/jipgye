@@ -10,6 +10,8 @@
  * 옮겨 가 대마다 변화가 저절로 벌어진다. 가격대는 해제율 화면(cancel-by-price)의 BANDS 5개 키 그대로다.
  * 연식은 기준 시기 가운데 달의 해 - 준공 연도이고, 준공 연도가 없는 칸은 연식 구간에서만 뺀다.
  *
+ * 면적대(#719)는 같은 칸·같은 방법에 구간만 하나 더한 것이다 - area 배열만 늘고 price·age 는 그대로다.
+ *
  * 공개는 집계만이다 - 구간별 칸 수·변화·구간, 가격대×연식 칸 수. 단지·칸 단위 값은 내지 않는다.
  */
 
@@ -26,6 +28,18 @@ export const AGES = [
   { key: "over30", lo: 30, hi: Infinity, ko: "30년 이상", en: "30 years or more" },
 ];
 
+/**
+ * 면적대(S1, #719) - 전용면적 ㎡, 위쪽 포함(가격대와 같은 규칙). 85㎡ 는 국민주택 규모 상한이다.
+ * 경계·MIN_CELLS 는 계산 전에 PR 본문에 고정했고 결과를 보고 바꾸지 않는다. 문턱 미달 칸은 합치지 않고 칸 수만 낸다.
+ * 면적과 가격은 겹친다(큰 면적일수록 비싼 칸이 많다) - 면적대 차이에는 가격 차이가 섞여 있고 면적이 원인이라는 뜻이 아니다.
+ */
+export const AREAS = [
+  { key: "upTo60", lo: -Infinity, hi: 60, ko: "60㎡ 이하", en: "up to 60㎡" },
+  { key: "a60to85", lo: 60, hi: 85, ko: "60~85㎡", en: "60–85㎡" },
+  { key: "a85to135", lo: 85, hi: 135, ko: "85~135㎡", en: "85–135㎡" },
+  { key: "over135", lo: 135, hi: Infinity, ko: "135㎡ 초과", en: "over 135㎡" },
+];
+
 const median = (values) => {
   const s = [...values].sort((a, b) => a - b);
   const m = s.length >> 1;
@@ -37,7 +51,8 @@ export function toSegmentDeal(item) {
   const deal = toDeal(item);
   if (!deal) return null;
   const year = Number(item.buildYear);
-  return { ...deal, buildYear: year > 1900 ? year : null };
+  const area = Number(item.excluUseAr);
+  return { ...deal, buildYear: year > 1900 ? year : null, area: area > 0 ? area : null };
 }
 
 /**
@@ -51,7 +66,7 @@ export function segmentCells(deals, { base, recent }) {
   for (const d of deals) {
     const side = b.has(d.month) ? "base" : r.has(d.month) ? "recent" : null;
     if (!side) continue;
-    if (!cells.has(d.cell)) cells.set(d.cell, { base: [], recent: [], buildYear: null });
+    if (!cells.has(d.cell)) cells.set(d.cell, { base: [], recent: [], buildYear: null, area: d.area });
     const c = cells.get(d.cell);
     c[side].push(d.amount);
     if (c.buildYear === null && d.buildYear) c.buildYear = d.buildYear;
@@ -61,7 +76,7 @@ export function segmentCells(deals, { base, recent }) {
     .filter(([, c]) => c.base.length && c.recent.length)
     .map(([, c]) => {
       const mb = median(c.base);
-      return { base: mb, buildYear: c.buildYear, change: Math.log(median(c.recent) / mb) };
+      return { base: mb, buildYear: c.buildYear, area: c.area, change: Math.log(median(c.recent) / mb) };
     });
 }
 
@@ -72,6 +87,8 @@ export const ageKeyOf = (buildYear, refYear) => {
   return AGES.find((x) => age >= x.lo && age < x.hi)?.key ?? null;
 };
 
+export const areaKeyOf = (area) => (area > 0 ? AREAS.find((x) => area > x.lo && area <= x.hi)?.key ?? null : null);
+
 /** 구간 행 - district-change 의 districtRows(문턱·90% 구간) 그대로. 칸이 모자라면 값 없이 칸 수만. */
 function segmentRows(cells, defs, keyOf) {
   const byKey = new Map<string, number[]>(defs.map((x) => [x.key, []]));
@@ -80,7 +97,7 @@ function segmentRows(cells, defs, keyOf) {
   return rows.map(({ code, name, ...rest }) => ({ key: code, ko: name, en: defs.find((x) => x.key === code).en, ...rest }));
 }
 
-/** 가격대·연식 구간별 1년 변화. 두 시기를 정할 원본이 모자라면 null. */
+/** 가격대·연식·면적대 구간별 1년 변화. 두 시기를 정할 원본이 모자라면 null. */
 export function buildSegmentPayload({ items, now }) {
   const deals = items.map(toSegmentDeal).filter(Boolean);
   const available = [...new Set(deals.map((d) => d.month))].sort();
@@ -93,6 +110,7 @@ export function buildSegmentPayload({ items, now }) {
   const ageOf = (c) => ageKeyOf(c.buildYear, refYear);
   const price = segmentRows(cells, BANDS, priceOf);
   const age = segmentRows(cells, AGES, ageOf);
+  const area = segmentRows(cells, AREAS, (c) => areaKeyOf(c.area));
   const code = (rows) => rows.map((r) => ({ ...r, code: r.key }));
   const grid = Object.fromEntries(BANDS.map((b) => [b.key, AGES.map((a) => cells.filter((c) => priceOf(c) === b.key && ageOf(c) === a.key).length)]));
   return {
@@ -104,6 +122,7 @@ export function buildSegmentPayload({ items, now }) {
     noBuildYear: cells.filter((c) => !c.buildYear).length,
     price,
     age,
+    area,
     pairs: { price: pairVerdicts(code(price)), age: pairVerdicts(code(age)) },
     grid: { ages: AGES.map((a) => a.key), rows: grid },
   };

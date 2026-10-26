@@ -93,6 +93,44 @@
       "high": 20.3
     }
   ],
+  "area": [
+    {
+      "key": "upTo60",
+      "ko": "60㎡ 이하",
+      "en": "up to 60㎡",
+      "cells": 1531,
+      "change": 21.5,
+      "low": 20.6,
+      "high": 22.4
+    },
+    {
+      "key": "a60to85",
+      "ko": "60~85㎡",
+      "en": "60–85㎡",
+      "cells": 1650,
+      "change": 17.7,
+      "low": 17.1,
+      "high": 18.2
+    },
+    {
+      "key": "a85to135",
+      "ko": "85~135㎡",
+      "en": "85–135㎡",
+      "cells": 531,
+      "change": 13,
+      "low": 12.2,
+      "high": 14.3
+    },
+    {
+      "key": "over135",
+      "ko": "135㎡ 초과",
+      "en": "over 135㎡",
+      "cells": 81,
+      "change": 6.5,
+      "low": 4.2,
+      "high": 9.6
+    }
+  ],
   "pairs": {
     "price": {
       "upTo6-upTo9": true,
