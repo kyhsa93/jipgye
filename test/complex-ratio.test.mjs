@@ -130,5 +130,5 @@ test("분포 파일이 없으면 카드 없이 그대로 돈다", async () => {
   }
   const rendered = String(page.byId("overall-cards").innerHTML);
   assert.match(rendered, /전세가율/, "카드가 통째로 안 그려졌다");
-  assert.ok(!rendered.includes("단지별 중앙값"), "없는 데이터로 카드를 그렸다");
+  assert.ok(!rendered.includes("단지별 중간값"), "없는 데이터로 카드를 그렸다");
 });

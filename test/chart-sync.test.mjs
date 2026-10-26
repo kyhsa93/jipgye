@@ -92,14 +92,14 @@ test("말풍선이 그 주의 모든 값을 한 번에 보여준다", async () =
   const tip = page.tipHtml();
   assert.equal(page.tipHidden(), false);
   assert.match(tip, /2026-08-10/);
-  assert.match(tip, /월세 보증금\(평당 아님\)/);
+  assert.match(tip, /월세 평균 보증금\(면적 보정 없음\)/);
   assert.match(tip, /2억 2,500만원/);
   assert.match(tip, /월세\(매달 내는 돈\)/);
   assert.match(tip, /월 96만원/);
-  assert.match(tip, /월세 거래량/);
+  assert.match(tip, /월세 거래 건수/);
   assert.match(tip, /680건/);
   // 손이 올라간 줄은 표시가 다르다. 어느 그래프를 짚었는지는 여전히 알아야 한다.
-  assert.match(tip, /class="tip-row here"><span class="tip-label">월세 보증금/);
+  assert.match(tip, /class="tip-row here"><span class="tip-label">월세 평균 보증금/);
 });
 
 test("점 개수가 다른 그래프에서도 한 주 밀리지 않는다", async () => {

@@ -62,24 +62,24 @@ test("lowSampleReason: ko 글자는 「신고 {n}건이라 비움」", () => {
   assert.equal(lowSampleReason(4), "신고 4건이라 비움");
 });
 
-test("빌드: 1~4건 카드만 low-sample 스팬(title 없음)이고 n=0·지표 없음·충분한 건수는 「-」·값 그대로", () => {
+test("빌드: 1~4건 카드만 low-sample 스팬(title 없음)이고 n=0·지표 없음·충분한 건수는 「데이터 없음」·값 그대로", () => {
   const all = (s, j, w) => ssg({ overall: { sale: s, jeonse: j, wolse: w } });
   const html = all(sale(3), jeonse(1), wolse(0));
-  assert.deepEqual(pairs(html).map(([, v]) => v), [LOW_KO(3), LOW_KO(1), "-"]);
+  assert.deepEqual(pairs(html).map(([, v]) => v), [LOW_KO(3), LOW_KO(1), "데이터 없음"]);
   assert.doesNotMatch(html, /title=/);
-  assert.deepEqual(pairs(all(sale(5), undefined, wolse(4))).map(([, v]) => v), ["6,000만원", "-", LOW_KO(4)]);
+  assert.deepEqual(pairs(all(sale(5), undefined, wolse(4))).map(([, v]) => v), ["6,000만원", "데이터 없음", LOW_KO(4)]);
   assert.deepEqual(pairs(ssg({ overall: { sale: sale(2) } }, "sale")), [["서울 전체", LOW_KO(2)]]);
-  assert.deepEqual(pairs(ssg({ overall: { sale: sale(0) } }, "sale")), [["서울 전체", "-"]]);
-  assert.deepEqual(pairs(ssg({ overall: {} }, "sale")), [["서울 전체", "-"]]);
+  assert.deepEqual(pairs(ssg({ overall: { sale: sale(0) } }, "sale")), [["서울 전체", "데이터 없음"]]);
+  assert.deepEqual(pairs(ssg({ overall: {} }, "sale")), [["서울 전체", "데이터 없음"]]);
   assert.deepEqual(pairs(ssg({ overall: { wolse: wolse(1) } }, "wolse")), [["서울 전체", LOW_KO(1)]]);
   assert.deepEqual(pairs(ssg({ districts: [{ name: "종로구", sale: sale(4) }] }, null, "종로구")), [["매매", LOW_KO(4)]]);
-  assert.deepEqual(pairs(ssg({ districts: [{ name: "종로구", sale: sale(0) }] }, null, "종로구")), [["매매", "-"]]);
-  assert.deepEqual(pairs(ssg({ districts: [{ name: "종로구" }] }, null, "종로구")), [["매매", "-"]]);
+  assert.deepEqual(pairs(ssg({ districts: [{ name: "종로구", sale: sale(0) }] }, null, "종로구")), [["매매", "데이터 없음"]]);
+  assert.deepEqual(pairs(ssg({ districts: [{ name: "종로구" }] }, null, "종로구")), [["매매", "데이터 없음"]]);
 });
 
 test("자치구 보기: 전세가 1~4건이라 사라지는 전세가율 카드는 되살리지 않는다(매매 카드 셋만)", () => {
   const html = ssg({ districts: [{ name: "노원구", sale: sale(40), jeonse: jeonse(3) }] }, null, "노원구");
-  assert.deepEqual(pairs(html).map(([l]) => l), ["평당가", "84㎡ 환산", "거래건수"]);
+  assert.deepEqual(pairs(html).map(([l]) => l), ["3.3㎡당 평균", "84㎡ 환산", "거래 건수"]);
   assert.doesNotMatch(html, /low-sample|전세가율|비움/);
 });
 
@@ -125,9 +125,9 @@ test("변이: 틀의 문구에 오타가 있거나 title 이 붙으면 위 비�
 test("브라우저: ko·en 글자, low-sample 스팬에 title 이 없다", async () => {
   const data = { overall: { sale: sale(3), jeonse: jeonse(1), wolse: wolse(0) }, districts: [] };
   const ko = await inline(data, { locale: "ko" });
-  assert.deepEqual(pairs(ko).map(([, v]) => v), [LOW_KO(3), LOW_KO(1), "-"]);
+  assert.deepEqual(pairs(ko).map(([, v]) => v), [LOW_KO(3), LOW_KO(1), "데이터 없음"]);
   const en = await inline(data, { locale: "en" });
-  assert.deepEqual(pairs(en).map(([, v]) => v), [LOW_EN(3), LOW_EN(1), "-"]);
+  assert.deepEqual(pairs(en).map(([, v]) => v), [LOW_EN(3), LOW_EN(1), "No data"]);
   const enDistrict = await inline({ overall: {}, districts: [{ name: "종로구", sale: sale(4) }] }, { district: "종로구", locale: "en" });
   assert.deepEqual(pairs(enDistrict).map(([, v]) => v), [LOW_EN(4)]);
   for (const html of [ko, en, enDistrict]) assert.doesNotMatch(html, /low-sample[^>]*title=/);

@@ -326,7 +326,7 @@ test("실거래 요약 분기 표: id가 겹치지 않고, 모든 행에 기대�
   assert.ok(outs.some((o) => o.includes('<span class="low-sample" title="신고 4건이라 평균을 내기엔 표본이 부족합니다">표본 4건</span>')), "표본 부족 스팬 행이 없다");
   assert.ok(REALESTATE_BRANCHES.some((b) => b.expect === null && b.args[0] === null), "null 입력 행이 없다");
   assert.ok(REALESTATE_BRANCHES.some((b) => b.expect === null && b.args[0] === undefined), "undefined 입력 행이 없다");
-  assert.ok(has(/>-<\/td><td data-label="전세">-<\/td><td data-label="월세">-<\/td>/), "빈 값(\"-\") 행이 없다");
+  assert.ok(has(/>데이터 없음<\/td><td data-label="전세 3\.3㎡당 평균">데이터 없음<\/td><td data-label="월세 평균 보증금\/월세">데이터 없음<\/td>/), "빈 값(「데이터 없음」) 행이 없다");
   assert.ok(has(/class="change">\+/) && has(/class="change">-/) && has(/class="change">0만/), "증감 부호 셋(+·-·없음) 행이 없다");
   assert.ok(has(/월 NaN만원/) && has(/월 120만원/), "월세 칸 행이 없다");
   assert.ok(has(/<td>false<\/td>/) && has(/\[object Object\]/) && has(/<td>1,2<\/td>/) && has(/<td>0<\/td>/), "이름 비문자열 행(false·{}·[1,2]·0)이 없다");
@@ -351,7 +351,7 @@ test("실거래 요약 조각: 데이터 없음은 null", () => {
 test("실거래 요약 조각: 표본 부족 칸의 건수가 문자열이면 React는 title 속성·본문 모두 이스케이프해서 낸다(고정할 출력 — 실제 입력에는 나오지 않는다)", () => {
   for (const { id, count, react } of RAW_COUNT_DIFF) {
     const input = { overall: { sale: { avgPricePerPyeong10k: 5, transactionCount: count } } };
-    const row = (cell) => `<tr><td>서울 전체</td><td data-label="매매">${cell}</td><td data-label="전세">-</td><td data-label="월세">-</td></tr>`;
+    const row = (cell) => `<tr><td>서울 전체</td><td data-label="매매 3.3㎡당 평균">${cell}</td><td data-label="전세 3.3㎡당 평균">데이터 없음</td><td data-label="월세 평균 보증금/월세">데이터 없음</td></tr>`;
     sameHtml(draw("realestateHtml", input), row(react), id);
   }
 });
@@ -610,11 +610,11 @@ test("시세표 분기 표: 해자 2(표본 부족)가 세 보기(한 줄 표·�
   }
   // 순서: 표본이 모자란 지표는(값이 없어도) 표본 부족이다. 표본이 충분한데 값만 없거나 지표 자체가 없으면 "-"다(#593 b).
   const get = (id) => REALESTATE_TABLE_BRANCHES.find((b) => b.id === id).expect;
-  assert.match(get("TA-S-o01"), /<td data-label="매매 평당가"><span class="low-sample"[^>]*>신고 4건<\/span><\/td>/);
-  assert.match(get("TA-S-o02"), /<td data-label="매매 평당가">-<\/td>/);
+  assert.match(get("TA-S-o01"), /<td data-label="매매 3.3㎡당 평균"><span class="low-sample"[^>]*>신고 4건<\/span><\/td>/);
+  assert.match(get("TA-S-o02"), /<td data-label="매매 3.3㎡당 평균">데이터 없음<\/td>/);
   assert.doesNotMatch(get("TA-S-o02"), /low-sample/);
-  assert.match(get("TA-S-z01"), /<td data-label="매매 평당가">-<\/td>/);
-  assert.match(get("TA-S-z03"), /<td data-label="매매 평당가">-<\/td>/);
+  assert.match(get("TA-S-z01"), /<td data-label="매매 3.3㎡당 평균">데이터 없음<\/td>/);
+  assert.match(get("TA-S-z03"), /<td data-label="매매 3.3㎡당 평균">데이터 없음<\/td>/);
   // 문턱: 5건부터 값이다(4건은 값이 있어도 내지 않는다). 이 표는 건수 문턱을 따로 정하지 않고 resolveMetric이 정한 것을 따른다.
   assert.match(get("TA-S-n01"), /6,000만원/);
   assert.doesNotMatch(get("TA-S-n02"), /6,000만원/);
@@ -654,17 +654,17 @@ test("시세표 조각: 데이터 없음은 null, 머리글은 언제나 한 줄
 test("realestate-table.mjs: JSX가 쓰는 순수 모듈이다 - 라벨·글자 규칙·칸 모양·정렬", () => {
   // 라벨(손으로 적은 값)
   assert.deepEqual(RE_LABELS, {
-    district: "지역", sale: "매매", jeonse: "전세", wolse: "월세", colSale: "매매 평당가", colJeonse: "전세 평당 보증금", colWolse: "월세 보증금 / 월세",
-    perPyeong: "평당가", perPyeongDeposit: "평당 보증금", area: "84㎡ 환산", deposit: "평균 보증금", monthly: "평균 월세", count: "거래건수", ratio: "전세가율",
-    ratioByComplex: "전세가율 단지별 중앙값", overall: "서울 전체",
+    district: "지역", sale: "매매", jeonse: "전세", wolse: "월세", colSale: "매매 3.3㎡당 평균", colJeonse: "전세 3.3㎡당 평균 보증금", colWolse: "월세 평균 보증금 / 월세",
+    perPyeong: "3.3㎡당 평균", perPyeongDeposit: "3.3㎡당 평균 보증금", area: "84㎡ 환산", deposit: "평균 보증금", monthly: "평균 월세", count: "거래 건수", ratio: "전세가율",
+    ratioByComplex: "전세가율 단지별 중간값", overall: "서울 전체",
   });
-  assert.deepEqual(reHeadLabels(null), ["지역", "매매 평당가", "전세 평당 보증금", "월세 보증금 / 월세"]);
-  assert.deepEqual(reHeadLabels("wolse"), ["지역", "평균 보증금", "평균 월세", "거래건수"]);
-  assert.deepEqual(reHeadLabels("jeonse"), ["지역", "평당 보증금", "84㎡ 환산", "전세가율", "거래건수"]);
-  assert.deepEqual(reHeadLabels("sale"), ["지역", "평당가", "84㎡ 환산", "거래건수"]);
+  assert.deepEqual(reHeadLabels(null), ["지역", "매매 3.3㎡당 평균", "전세 3.3㎡당 평균 보증금", "월세 평균 보증금 / 월세"]);
+  assert.deepEqual(reHeadLabels("wolse"), ["지역", "평균 보증금", "평균 월세", "거래 건수"]);
+  assert.deepEqual(reHeadLabels("jeonse"), ["지역", "3.3㎡당 평균 보증금", "84㎡ 환산", "전세가율", "거래 건수"]);
+  assert.deepEqual(reHeadLabels("sale"), ["지역", "3.3㎡당 평균", "84㎡ 환산", "거래 건수"]);
   assert.deepEqual(reHeadLabels("x"), reHeadLabels("sale"));
   assert.deepEqual(headLabels(), reHeadLabels(null));
-  assert.deepEqual(headLabels("jeonse", "종로구"), ["구분", "평당가", "84㎡ 환산", "거래건수"]);
+  assert.deepEqual(headLabels("jeonse", "종로구"), ["구분", "3.3㎡당 평균", "84㎡ 환산", "거래 건수"]);
   // 글자
   assert.equal(reCount(1234), "1,234건");
   assert.equal(reCount("9"), "9건");
@@ -698,7 +698,7 @@ test("realestate-table.mjs: JSX가 쓰는 순수 모듈이다 - 라벨·글자 �
   assert.deepEqual(reLowSample(5), low(0));
   assert.deepEqual(reLowSample({ transactionCount: NaN }), low("NaN"));
   // 칸 모양: 지표 없음 → "-", 지표 있는데 못 낸 값 → 표본 부족, 값 → 값
-  const none = [sp("text", "-")];
+  const none = [sp("text", "데이터 없음")];
   assert.deepEqual(reCells({}, "sale"), [none, none, none]);
   assert.deepEqual(reCells({ sale: { transactionCount: 4 } }, "sale"), [[low(4)], none, none]);
   assert.deepEqual(reCells({ sale: { transactionCount: 40 } }, "sale"), [none, none, none], "표본은 충분한데 값만 없으면 \"-\"(#593 b)");
@@ -715,7 +715,7 @@ test("realestate-table.mjs: JSX가 쓰는 순수 모듈이다 - 라벨·글자 �
   assert.deepEqual(reAllCells({ wolse: { transactionCount: 3 } }), [none, none, [low(3)]]);
   assert.equal(reDistrictRows({}).length, 3);
   assert.deepEqual(reDistrictRows({}).map((r) => r.label), ["매매", "전세", "월세"]);
-  assert.deepEqual(reDistrictRows({}).map((r) => r.cells.map((c) => c.label)), Array(3).fill(["평당가", "84㎡ 환산", "거래건수"]));
+  assert.deepEqual(reDistrictRows({}).map((r) => r.cells.map((c) => c.label)), Array(3).fill(["3.3㎡당 평균", "84㎡ 환산", "거래 건수"]));
   // 낡음 태그
   assert.deepEqual(reStaleTag({}), []);
   assert.deepEqual(reStaleTag({ staleAt: "그날쯤" }), []);
@@ -727,7 +727,7 @@ test("realestate-table.mjs: JSX가 쓰는 순수 모듈이다 - 라벨·글자 �
   assert.deepEqual(reRow({}, "서울 전체", true, null).name, { text: "서울 전체", href: null });
   assert.equal(reRow({}, "서울 전체", true, null).overall, true);
   assert.equal(reRow({}, "종로구", false, null).overall, false);
-  assert.deepEqual(reRow({}, "종로구", false, "wolse").cells.map((c) => c.label), ["평균 보증금", "평균 월세", "거래건수"]);
+  assert.deepEqual(reRow({}, "종로구", false, "wolse").cells.map((c) => c.label), ["평균 보증금", "평균 월세", "거래 건수"]);
   // 정렬: 값이 높은 순·값 없는 곳은 뒤·둘 다 없으면 이름순, 입력은 그대로
   const mk = (name, price) => ({ name, ...(price === undefined ? {} : { sale: { avgPricePerPyeong10k: price, transactionCount: 10 } }) });
   const input = [mk("다"), mk("나", 1), mk("가"), mk("라", 2)];
@@ -849,7 +849,7 @@ test("시세 요약 분기 표: 해자 2(표본이 모자라면 값을 내지 �
   assert.ok(sampleRows.length >= 60, `표본 부족 행 ${sampleRows.length}`);
   for (const b of sampleRows) {
     assert.ok(!b.expect.includes("6,000만원") && !b.expect.includes("2억 264만원"), `${b.id}: 표본 부족인데 값이 나왔다 ${b.cond}`);
-    assert.ok(b.expect.includes(">-</div>") || b.expect.includes('class="low-sample"'), `${b.id}: "-" 이든 이유든 값을 비운 카드가 없다`);
+    assert.ok(b.expect.includes(">데이터 없음</div>") || b.expect.includes('class="low-sample"'), `${b.id}: "-" 이든 이유든 값을 비운 카드가 없다`);
   }
   // 문턱: 5건이 경계(n01은 값, n02는 값 없이 "-"), "5" 문자열도 같다
   assert.match(byId("OK-S-n01").expect, /6,000만원/);
@@ -864,7 +864,7 @@ test("시세 요약 분기 표: 해자 2(표본이 모자라면 값을 내지 �
   // 순서: 표본 부족이든 값 없음이든 지표가 아예 없든 같은 "-"다(이유를 적지 않는다 - 예전 그대로). 순서가 갈리는 곳은 이 조각에 없다.
   assert.equal(byId("OK-S-o01").expect, byId("OK-S-n02").expect);
   assert.equal(byId("OK-S-o02").expect, byId("OK-S-z01").expect);
-  assert.equal(byId("OK-S-z01").expect, '<div class="overall-card"><div class="label">서울 전체</div><div class="value">-</div></div>');
+  assert.equal(byId("OK-S-z01").expect, '<div class="overall-card"><div class="label">서울 전체</div><div class="value">데이터 없음</div></div>');
   // 전세가율 카드는 매매·전세가 모두 값을 낼 때만, 그 밑에 두 건수가 붙는다
   assert.match(byId("OR-05").expect, /<div class="sub">매매 5건 · 전세 5건<\/div>/);
   assert.doesNotMatch(byId("OR-06").expect, /전세가율/);
@@ -928,24 +928,24 @@ test("realestate-overall.mjs: JSX가 쓰는 순수 모듈이다 - 카드 모양�
   assert.equal(overallCards({ overall: {} }, null, "가"), null);
   // 카드 모양: 라벨(상수)·값 조각·부가 조각(없으면 null)
   assert.deepEqual(overallCards({ overall: { sale } }, "sale"), [
-    { label: "평당가", value: [seg("6,000만원", false)], sub: null },
+    { label: "3.3㎡당 평균", value: [seg("6,000만원", false)], sub: null },
     { label: "84㎡ 환산", value: [seg("15억 2,459만원", false)], sub: null },
-    { label: "거래건수", value: [seg("40건", true)], sub: null },
+    { label: "거래 건수", value: [seg("40건", true)], sub: null },
   ]);
   assert.deepEqual(overallCards({ overall: { sale, jeonse } }, null)[0], {
-    label: "매매 평당가",
+    label: "매매 3.3㎡당 평균",
     value: [seg("6,000만원", false)],
     sub: [seg("84㎡ 환산", true), seg(" 15억 2,459만원 · ", false), seg("40건", true)],
   });
   assert.deepEqual(overallCards({ overall: {} }), [
-    { label: "매매 평당가", value: [seg("-", false)], sub: null },
-    { label: "전세 평당 보증금", value: [seg("-", false)], sub: null },
-    { label: "월세 보증금 / 월세", value: [seg("-", false)], sub: null },
+    { label: "매매 3.3㎡당 평균", value: [seg("데이터 없음", false)], sub: null },
+    { label: "전세 3.3㎡당 평균 보증금", value: [seg("데이터 없음", false)], sub: null },
+    { label: "월세 평균 보증금 / 월세", value: [seg("데이터 없음", false)], sub: null },
   ]);
-  assert.deepEqual(overallCards({ overall: { sale, jeonse } }, "jeonse", null, { median: 46.7, cells: 13 }).map((c) => c.label), ["평당 보증금", "84㎡ 환산", "전세가율", "전세가율 단지별 중앙값", "거래건수"]);
+  assert.deepEqual(overallCards({ overall: { sale, jeonse } }, "jeonse", null, { median: 46.7, cells: 13 }).map((c) => c.label), ["3.3㎡당 평균 보증금", "84㎡ 환산", "전세가율", "전세가율 단지별 중간값", "거래 건수"]);
   assert.deepEqual(overallCards({ overall: { sale, jeonse } }, "jeonse")[2], { label: "전세가율", value: [seg("50.0%", false)], sub: [seg("매매 40건 · 전세 30건", true)] });
   assert.deepEqual(overallCards({ districts: [{ name: "가", sale }] }, null, "가", { median: 46.7, cells: 1234 }).at(-1), {
-    label: "전세가율 단지별 중앙값",
+    label: "전세가율 단지별 중간값",
     value: [seg("46.7%", false)],
     sub: [seg("단지·평형 1,234칸", true)],
   });

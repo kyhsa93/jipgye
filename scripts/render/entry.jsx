@@ -202,7 +202,7 @@ function slugLinks(data) {
 // 공백은 {" "}로 낸다 - JSX는 줄 끝 공백을 지운다.
 const MetricCell = ({ kind, metric, overall }) => {
   const cell = metricCell(kind, metric, overall);
-  if (cell.type === "none") return "-";
+  if (cell.type === "none") return "데이터 없음";
   if (cell.type === "low") {
     return (
       <span className="low-sample" title={`신고 ${cell.count}건이라 평균을 내기엔 표본이 부족합니다`}>
@@ -232,13 +232,13 @@ const MetricCell = ({ kind, metric, overall }) => {
 const RealestateRow = ({ name, data, overall }) => (
   <tr>
     <td>{str(name)}</td>
-    <td data-label="매매">
+    <td data-label="매매 3.3㎡당 평균">
       <MetricCell kind="sale" metric={data.sale} overall={overall} />
     </td>
-    <td data-label="전세">
+    <td data-label="전세 3.3㎡당 평균">
       <MetricCell kind="jeonse" metric={data.jeonse} overall={overall} />
     </td>
-    <td data-label="월세">
+    <td data-label="월세 평균 보증금/월세">
       <MetricCell kind="wolse" metric={data.wolse} overall={overall} />
     </td>
   </tr>

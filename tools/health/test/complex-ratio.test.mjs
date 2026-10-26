@@ -22,7 +22,7 @@ test("정적 HTML과 자바스크립트가 같은 카드를 그린다", async ()
 
   // 정적 HTML에 들어 있는 값
   const html = await readFile(path.join(root, `${SITE}/district-nowon.html`), "utf8");
-  assert.match(html, new RegExp(`단지별 중앙값</div><div class="value">${shown}`));
+  assert.match(html, new RegExp(`단지별 중간값</div><div class="value">${shown}`));
 
   // 자바스크립트가 붙은 뒤의 값. 다르면 화면이 한 번 튄다.
   const page = await loadRealestatePage({ realestate, complexRatio, district });
@@ -30,6 +30,6 @@ test("정적 HTML과 자바스크립트가 같은 카드를 그린다", async ()
     await new Promise((r) => setTimeout(r, 5));
   }
   const rendered = String(page.byId("overall-cards").innerHTML);
-  assert.match(rendered, new RegExp(`단지별 중앙값</div><div class="value">${shown}`));
+  assert.match(rendered, new RegExp(`단지별 중간값</div><div class="value">${shown}`));
   assert.match(rendered, new RegExp(`단지·평형 ${spread.cells.toLocaleString("ko-KR")}칸`));
 });

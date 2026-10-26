@@ -22,7 +22,7 @@ const BASE_URL = "https://kyhsa93.github.io/jipgye/";
 
 const BASE_TITLE = "서울 아파트 시세, 자치구별로 얼마인가 - 25개 자치구 실거래가";
 const BASE_DESCRIPTION =
-  "국토교통부 실거래 신고 자료로 서울 25개 자치구의 아파트 매매·전세·월세 시세를 평당가와 84㎡ 환산가로 함께 보여줍니다. 매일 갱신합니다.";
+  "국토교통부 실거래 신고 자료로 서울 25개 자치구의 아파트 매매·전세·월세 시세를 3.3㎡당 평균 가격과 84㎡ 환산가로 함께 보여줍니다. 매일 갱신합니다.";
 const BASE_TITLE_KEY = 'title: "서울 아파트 시세",';
 const BASE_TITLE_KEY_EN = 'title: "Seoul Apartment Prices",';
 
