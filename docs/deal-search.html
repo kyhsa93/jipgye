@@ -140,6 +140,7 @@
 </main>
 <script src="./nav.js" defer></script>
 <script src="./search.js" defer></script>
+<script src="./card-renewal.js" defer></script>
 <script src="./analytics.js"></script>
 <script src="./load-state.js"></script>
 <script>
@@ -1018,9 +1019,11 @@ function renderResult() {
   renderResultBody();
   const card = document.getElementById("complex-card");
   if (card) {
+    window.cardApt = "";
     card.innerHTML = complexCardHtml();
     renderComplexPriceFailure();
     renderComplexRentsFailure();
+    window.cardRenewal?.(); // 갱신 구간(#717, card-renewal.js)
   }
   announceResult();
 }
@@ -1294,12 +1297,14 @@ function complexCardHtml() {
     : "";
 
   const mine = (fullRents.get(district) ?? []).filter((d) => squash(d?.apt) === squash(apt));
+  window.cardApt = apt;
   // 범위를 먼저 둔다. 매물을 앞에 둔 사람이 먼저 묻는 것은 "이 값이 어디쯤인가"다.
   return (
     `<section class="complex-card">` +
     `<h2>${escapeHtml(t("complexHeading")(apt))}</h2>` +
     priceHtml +
     ratioHtml +
+    `<div id="card-renewal"></div>` +
     (mine.length ? `<h3>${t("recentRents")(mine.length)}</h3><ul class="budget-deals">${mine.slice(0, 3).map((d) => rentHtml(d, district)).join("")}</ul>` : "") +
     `</section>`
   );
