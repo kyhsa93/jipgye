@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { candidatesInBand } from "../scripts/complex-price.ts";
-import { budgetCandidatesHtml } from "../scripts/prerender.ts";
+import { budgetBodyHtml, budgetCandidatesHtml } from "../scripts/prerender.ts";
 import { CANDIDATE_LIST } from "../scripts/budget-fragments.ts";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 
@@ -32,13 +32,15 @@ test("예산대 절은 화면이 다시 그려도 남도록 표시하고, 구별
   const html = budgetCandidatesHtml({ min10k: 60000, max10k: 70000 }, FILES);
   assert.match(html, /^<section class="budget-candidates" data-prerendered(="")?>/);
   assert.match(html, /서울에 3곳/);
-  assert.match(html, /자치구별: 노원구 2 · 강서구 1/);
+  // 평형대별·자치구별 줄은 합성 본문의 구별 분포 절에 있다(#745 PR7)
+  const body = budgetBodyHtml({ min10k: 60000, max10k: 70000, count: 3, deals: [] }, [], null, null, FILES);
+  assert.match(body, /<section class="budget-dist" data-prerendered=""><h3>구별 분포<\/h3>[^]*자치구별: 노원구 2 · 강서구 1/);
   assert.match(html, /deal-search\.html\?budget=6&amp;group=1/);
   assert.match(html, /3번 이상/);
 
   const many = [{ district: "노원구", reference: "202608", cells: Object.fromEntries(Array.from({ length: 20 }, (_, i) => [`단지${i}`, { "59.9": cell(65000) }])) }];
   const list = budgetCandidatesHtml({ min10k: 60000, max10k: 70000 }, many);
-  assert.equal((list.match(/<li /g) ?? []).length, CANDIDATE_LIST, "열여덟 장이 긴 목록을 똑같이 싣는다");
+  assert.equal((list.match(/<tr><th scope="row">/g) ?? []).length, CANDIDATE_LIST, "열여덟 장이 긴 목록을 똑같이 싣는다");
 });
 
 test("후보 목록은 평형대를 고루 싣고, 평형대별 개수를 적는다", () => {
@@ -47,8 +49,9 @@ test("후보 목록은 평형대를 고루 싣고, 평형대별 개수를 적는
   for (let i = 0; i < 3; i += 1) cells[`중형${i}`] = { "84.9": cell(65000, 6) };
   cells.대형 = { "114.9": cell(65000, 5) };
   const html = budgetCandidatesHtml({ min10k: 60000, max10k: 70000 }, [{ district: "노원구", reference: "202608", cells }]);
-  assert.match(html, /평형대별: 60㎡ 미만 20 · 60~85㎡ 3 · 85㎡ 초과 1/);
-  assert.equal((html.match(/<li /g) ?? []).length, CANDIDATE_LIST, "모자란 평형대 자리를 채우지 않았다");
+  const body = budgetBodyHtml({ min10k: 60000, max10k: 70000, count: 24, deals: [] }, [], null, null, [{ district: "노원구", reference: "202608", cells }]);
+  assert.match(body, /평형대별: 60㎡ 미만 20 · 60~85㎡ 3 · 85㎡ 초과 1/);
+  assert.equal((html.match(/<tr><th scope="row">/g) ?? []).length, CANDIDATE_LIST, "모자란 평형대 자리를 채우지 않았다");
   assert.match(html, /중형0/, "거래 적은 중형이 소형에 밀려 빠졌다");
   assert.match(html, /대형/, "대형이 빠졌다");
 });

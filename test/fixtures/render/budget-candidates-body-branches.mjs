@@ -1089,7 +1089,8 @@ const bodyChips = (periodList, complexFiles) => {
 const add = (id, fn, cond, args, expect, extra = {}) =>
   rows.push({
     id, fn, cond, args,
-    expect: fn === "budgetBodyHtml" && typeof expect === "string" ? expect.replace('<p class="answer-basis">', () => `<p class="answer-basis">${bodyChips(args[1], args[4])}`) : expect,
+    // 후보 조각 혼자는 표 모양이다(#745 PR7) - 평형대별·자치구별 줄은 합성 본문의 구별 분포 절에만 있다.
+    expect: fn === "budgetCandidatesHtml" && typeof expect === "string" ? candTable(expect).cands : fn === "budgetBodyHtml" && typeof expect === "string" ? expect.replace('<p class="answer-basis">', () => `<p class="answer-basis">${bodyChips(args[1], args[4])}`) : expect,
     ...extra,
   });
 const throwsRows = [];
@@ -1116,6 +1117,39 @@ const leaf = (fn, eok, ...rest) => {
 const leafArg = (id, i) => BUDGET_LEAVES_BRANCHES.find((r) => r.id === id).args[i];
 const POLICY_COUNTS = leafArg("PO-B3", 1);
 const CAP_STATS = leafArg("CP-H16s", 1);
+
+// ----- #745 PR7: 후보 절은 표다 -----
+// 위 CAND_GEN·CAND_FULL 의 독립 계산 글자(옛 목록 모양)를 같은 값의 새 모양으로 옮긴다 - 값은 손대지 않고 자리만 바꾼다(모듈을 부르지 않는다).
+// 칸 글자 「구 · 동 · 면적㎡ · 연도년」은 위치(구 동)·전용·준공연도 열로, 「폭 · N건」은 중간값 칸의 폭과 거래 건수 열로 나뉜다. 평형대별·자치구별 줄은 구별 분포 절로 간다.
+const OLD_H3 = "<h3>이 예산대의 단지 후보</h3>";
+const NEW_H3 = "<h3>조건 맞는 단지 목록</h3>";
+const CAND_THEAD =
+  '<thead><tr><th scope="col">단지명</th><th scope="col">위치</th><th scope="col" class="c-num">중간값</th><th scope="col" class="c-num">전용</th><th scope="col" class="c-num">준공연도</th><th scope="col" class="c-num">거래 건수</th></tr></thead>';
+const candRow = (_, href, apt, facts, amount, meta) => {
+  const parts = facts.split(" · ");
+  const ai = parts.findIndex((x) => x.endsWith("㎡"));
+  const cut = meta.lastIndexOf(" · ");
+  return (
+    `<tr><th scope="row"><a class="apt" href="${href}">${apt}</a></th><td>${parts.slice(0, ai).join(" ")}</td>` +
+    `<td class="c-num"><strong>${amount}</strong><span class="meta">${meta.slice(0, cut)}</span></td><td class="c-num">${parts[ai]}</td>` +
+    `<td class="c-num">${parts[ai + 1] ?? "데이터 없음"}</td><td class="c-num">${meta.slice(cut + 3)}</td></tr>`
+  );
+};
+function candTable(old) {
+  const m = /^(.*?<p>.*?<\/p>)<div class="budget-districts">(.*?)<\/div><div class="budget-districts">(.*?)<\/div><ul class="budget-deals">(.*?)<\/ul>(.*)$/.exec(old);
+  if (!m) return { cands: old.replace(OLD_H3, NEW_H3), dist: "" };
+  // 표 이름: 위 안내 문장의 예산대 이름·후보 수와 적은 줄 수.
+  const [, label, total] = /중간값이 (.*?)인 단지·평형은 서울에 (.*?)곳입니다/.exec(m[1]);
+  const shown = m[4].split('<li class="budget-deal">').length - 1;
+  const rowsHtml = m[4].replace(/<li class="budget-deal"><a class="apt" href="(.*?)">(.*?)<\/a><span class="meta">(.*?)<\/span><span class="amount">(.*?)<\/span><span class="meta">(.*?)<\/span><\/li>/g, candRow);
+  return {
+    cands:
+      m[1].replace(OLD_H3, NEW_H3) +
+      `<div class="c-table-scroll table-scroll"><table class="c-table budget-cand-table"><caption class="sr-only">${label} 단지·평형 ${total}곳 가운데 ${shown}곳: 단지명·위치·중간값·전용·준공연도·거래 건수</caption>${CAND_THEAD}<tbody>${rowsHtml}</tbody></table></div>` +
+      m[5],
+    dist: `<div class="budget-districts">${m[2]}</div><div class="budget-districts">${m[3]}</div>`,
+  };
+}
 
 // ----- 글자 틀(마크업) -----
 const CAND_HEAD = `<section class="budget-candidates" data-prerendered=""><h3>이 예산대의 단지 후보</h3>`;
@@ -1284,11 +1318,20 @@ const MORE =
   `<li><a href="./price-outlook.html">3개월 뒤 아파트값과 그 오차</a></li>` +
   `<li><a href="./cancelled-deals.html#month-section">계약에서 등기(잔금)까지 걸리는 날</a></li>` +
   `</ul></section>`;
-// 합성 순서: 거래 요약 → 한눈에 → 지역 줄 → 어디로 가는가 → 예산으로 찾기(제목+칩, 인자로 받은 마크업) → 후보 단지 → 대출 → 부대비용 → 최소 현금 → 상한 → 정책대출 → 다음 질문 → 거래 목록 (#460)
-const BODY = ({ summary, span = "", districts = "", where = "", answers = "", finder = "", cands = "", loan = "", costs = "", mincash = "", cap = "", policy = "", deals = "" }) =>
-  `<p class="budget-summary">${summary}${span ? ` <span class="when">${span}</span>` : ""}</p>` +
-  answers + (districts ? `<div class="budget-districts">거래가 많은 지역: ${districts}</div>` : "") +
-  where + (finder ? `<div data-prerendered="">${finder}</div>` : "") + cands + loan + costs + mincash + cap + policy + MORE + `<ul class="budget-deals">${deals}</ul>`;
+// 합성 순서(#745 PR7): 거래 요약 → 한눈에 → 어디로 가는가 → 예산으로 찾기(인자로 받은 마크업) → 단지 목록(표) → 구별 분포(지역 줄·후보 평형대별·자치구별) → 구매 비용·대출 제목 → 대출 → 부대비용 → 최소 현금 → 상한 → 정책대출 → 다음 질문 → 상세 거래 목록(접기)
+const BODY = ({ summary, span = "", districts = "", where = "", answers = "", finder = "", cands = "", loan = "", costs = "", mincash = "", cap = "", policy = "", deals = "" }) => {
+  const c = candTable(cands);
+  const dist = (districts ? `<div class="budget-districts budget-top">거래가 많은 지역: ${districts}</div>` : "") + c.dist;
+  const n = deals.split('<li class="budget-deal">').length - 1;
+  return (
+    `<p class="budget-summary">${summary}${span ? ` <span class="when">${span}</span>` : ""}</p>` +
+    answers + where + (finder ? `<div data-prerendered="">${finder}</div>` : "") + c.cands +
+    (dist ? `<section class="budget-dist" data-prerendered=""><h3>구별 분포</h3>${dist}</section>` : "") +
+    (costs ? `<h3 class="budget-money" data-prerendered="">구매 비용·대출</h3>` : "") +
+    loan + costs + mincash + cap + policy + MORE +
+    `<details class="c-fold budget-deals-fold" data-prerendered=""><summary>최근 거래 ${n.toLocaleString("ko-KR")}건 — 상세 목록</summary><div class="c-fold__body"><ul class="budget-deals">${deals}</ul></div></details>`
+  );
+};
 const WHERE_P = (text) => `<p class="budget-where" data-prerendered="">${text}</p>`;
 const DEAL = (place, spec, when, price) =>
   `<li class="budget-deal"><span class="place">${place}</span><span class="spec">${spec}</span><span class="when">${when}</span><span class="price">${price}</span></li>`;
@@ -1510,10 +1553,10 @@ addThrow("BO-T26", BO, "구 이름이 있고 건수가 객체지만 toLocaleStri
 // (옛 legacy는 이 건수를 이스케이프 없이 끼웠다 - `${districts}`의 raw 자리.)
 // 실데이터(docs/data)의 구 건수는 전부 숫자라 닿지 않는다(PR 본문의 직접 센 값).
 export const BUDGET_BODY_KNOWN_DIFFS = [
-  { id: "KD-01", fn: BO, cond: "구 건수가 문자열 '<b>'", args: a3(bb(3, { districts: [{ name: "가구", count: "<b>" }] })), react: `<div class="budget-districts">거래가 많은 지역: 가구 &lt;b&gt;</div>` },
-  { id: "KD-02", fn: BO, cond: "구 건수가 문자열 'A&B'", args: a3(bb(3, { districts: [{ name: "가구", count: "A&B" }] })), react: `<div class="budget-districts">거래가 많은 지역: 가구 A&amp;B</div>` },
-  { id: "KD-03", fn: BO, cond: "구 건수가 문자열 '\"q\"'", args: a3(bb(3, { districts: [{ name: "가구", count: '"q"' }] })), react: `<div class="budget-districts">거래가 많은 지역: 가구 &quot;q&quot;</div>` },
-  { id: "KD-04", fn: BO, cond: "구 건수가 객체이고 toLocaleString이 '<i>'를 돌려줌", args: a3(bb(3, { districts: [{ name: "가구", count: { toLocaleString: () => "<i>" } }] })), react: `<div class="budget-districts">거래가 많은 지역: 가구 &lt;i&gt;</div>` },
+  { id: "KD-01", fn: BO, cond: "구 건수가 문자열 '<b>'", args: a3(bb(3, { districts: [{ name: "가구", count: "<b>" }] })), react: `<div class="budget-districts budget-top">거래가 많은 지역: 가구 &lt;b&gt;</div>` },
+  { id: "KD-02", fn: BO, cond: "구 건수가 문자열 'A&B'", args: a3(bb(3, { districts: [{ name: "가구", count: "A&B" }] })), react: `<div class="budget-districts budget-top">거래가 많은 지역: 가구 A&amp;B</div>` },
+  { id: "KD-03", fn: BO, cond: "구 건수가 문자열 '\"q\"'", args: a3(bb(3, { districts: [{ name: "가구", count: '"q"' }] })), react: `<div class="budget-districts budget-top">거래가 많은 지역: 가구 &quot;q&quot;</div>` },
+  { id: "KD-04", fn: BO, cond: "구 건수가 객체이고 toLocaleString이 '<i>'를 돌려줌", args: a3(bb(3, { districts: [{ name: "가구", count: { toLocaleString: () => "<i>" } }] })), react: `<div class="budget-districts budget-top">거래가 많은 지역: 가구 &lt;i&gt;</div>` },
 ];
 
 // ================= 내보내기 =================

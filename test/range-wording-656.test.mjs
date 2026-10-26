@@ -19,9 +19,10 @@ test("예산대 단지 후보 줄: 새 라벨만 쓰고 옛 라벨(기준 시세
     const html = read(f);
     assert.doesNotMatch(html, /기준 시세/, `${f}: 「기준 시세」`);
     for (const m of html.matchAll(/<span class=["']meta["']>([^<]*)<\/span>/g)) {
-      if (!/ · \d+건$/.test(m[1])) continue;
+      // #745 PR7: 단지 목록이 표가 되며 거래 건수는 제 열로 갔다 - 중간값 칸의 폭 글자만 본다.
+      if (!/^지난 거래/.test(m[1])) continue;
       lines += 1;
-      assert.match(m[1], /^지난 거래 (가운데 절반|최저~최고\(고침\)) [^~]+~[^·]+ · \d+건$/, `${f}: ${m[1]}`);
+      assert.match(m[1], /^지난 거래 (가운데 절반|최저~최고\(고침\)) [^~]+~[^·]+$/, `${f}: ${m[1]}`);
     }
     const bare = html.replace(/지난 거래 가운데 절반/g, "").replace(/지난 거래 최저~최고\(고침\)/g, "");
     assert.doesNotMatch(bare, /가운데 절반|최저~최고/, `${f}: 옛 라벨이 남았다`);

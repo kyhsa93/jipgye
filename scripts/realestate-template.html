@@ -1278,7 +1278,7 @@ const budgetEnabled = isBudgetPage;
 
 // 빌드가 이 예산대에 구워 둔 덩어리(한눈에, 어디로 가는가, 예산으로 찾기 제목·칩, 단지 후보, 월 상환액, 매매가 말고 드는 돈 - data-prerendered).
 // 아래 renderBudget이 목록을 다시 그리면서 이것들을 지워, 사람은 한 번도 못 보고 있었다(#26). 처음 받은 HTML에서 문서 순서대로
-// 떼어 두었다가 다시 그릴 때 붙인다 - 이 페이지는 자기 예산대 하나만 그리므로 그대로 맞는다. 첫 덩어리는 한눈에 절이다(budgetHeadHtml이 그 뒤에 지역 줄을 끼운다).
+// 떼어 두었다가 다시 그릴 때 붙인다 - 이 페이지는 자기 예산대 하나만 그리므로 그대로 맞는다. 첫 덩어리는 한눈에 절이다(지역 줄은 구별 분포 절 안의 budget-top 자리를 budgetHeadHtml이 갈아 끼운다).
 const prerenderedBudgetExtras = (() => {
   try {
     const nodes = document.querySelectorAll("#budget-result [data-prerendered]");
@@ -1346,9 +1346,10 @@ function renderBudget() {
   if (!cache.budget?.bands?.length) return; // #288
   const band = bandFor(budgetEok * EOK);
 
-  // 빌드(scripts/prerender.ts budgetBodyHtml)와 같은 순서: 요약 → 구운 덩어리들(지역 줄은 한눈에 바로 뒤) → 거래 목록.
+  // 빌드(scripts/prerender.ts budgetBodyHtml)와 같은 순서: 요약 → 구운 덩어리들(지역 줄은 구별 분포 절 안, 거래 목록은 맨 뒤 접기 안).
+  // 거래 목록은 구운 접기(상세 목록) 안의 자리에 그 언어 글자로 갈아 끼운다(#745 PR7).
   budgetResultHtml = band
-    ? budgetHeadHtml(band, cache.budget.periods) + budgetDealsHtml(band)
+    ? budgetHeadHtml(band, cache.budget.periods).replace(/<ul class="budget-deals">.*?<\/ul>/, () => budgetDealsHtml(band))
     : `<p class="budget-empty">${escapeHtml(t("budgetEmpty"))}</p>`;
   paintBudgetResult();
 }
@@ -1370,7 +1371,7 @@ function budgetHeadHtml(band, periodList) {
     `<p class="budget-summary">${escapeHtml(t("budgetSummary")(bandLabel(band), band.count, band.direct))}` +
     (periods ? ` <span class="when">${escapeHtml(t("budgetPeriods")(periods))}</span>` : "") +
     `</p>` +
-    prerenderedBudgetExtras.replace("</section>", (end) => end + (districts ? `<div class="budget-districts">${escapeHtml(t("budgetDistricts"))}: ${districts}</div>` : ""))
+    prerenderedBudgetExtras.replace(/<div class="budget-districts budget-top">.*?<\/div>/, () => (districts ? `<div class="budget-districts budget-top">${escapeHtml(t("budgetDistricts"))}: ${districts}</div>` : ""))
   );
 }
 

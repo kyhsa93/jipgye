@@ -225,14 +225,14 @@ export async function loadRealestatePage({ realestate, trend, budget, complexRat
         return byId.get(sel);
       },
       // 예산 페이지는 빌드가 #budget-result에 구워 둔 덩어리(data-prerendered)를 로드 때 떼어 둔다.
-      // 받은 HTML(prerenderedBudget)에서 그 덩어리만 꺼내 준다. 덩어리 안에 같은 태그가 다시 열리지는 않는다(예산으로 찾기 제목+칩은 div 덩어리다, #460).
+      // 받은 HTML(prerenderedBudget)에서 그 덩어리만 꺼내 준다. 덩어리 안에 같은 태그가 다시 열리지는 않는다(예산으로 찾기 제목+칩은 div 덩어리다, #460). #745 PR7: 구매 비용·대출 제목(h3)과 접은 거래 목록(details)도 덩어리다.
       // 시세 요약 카드(#overall-cards)도 같은 부류다(#311) - 거기 구워져 있던 카드를 로드 때 떼어 둔다.
       // 이쪽은 `baked`로 채운 그 요소의 지금 innerHTML에서 꺼낸다. 실제 DOM처럼 스크립트가 다시 쓴 뒤에는 새 내용이 보인다.
       querySelectorAll: (sel) =>
         sel === "#district-grid td:nth-child(3)"
           ? areaCellsOf()
           : sel === "#budget-result [data-prerendered]"
-          ? [...String(prerenderedBudget).matchAll(/<(p|section|div)\b[^>]*data-prerendered[^>]*>[\s\S]*?<\/\1>/g)].map((m) => ({ outerHTML: m[0] }))
+          ? [...String(prerenderedBudget).matchAll(/<(p|section|div|h3|details)\b[^>]*data-prerendered[^>]*>[\s\S]*?<\/\1>/g)].map((m) => ({ outerHTML: m[0] }))
           : sel === "#overall-cards .overall-card"
             ? [...String(sandbox.document.getElementById("overall-cards").innerHTML).matchAll(/<div class="overall-card">[\s\S]*?<\/div><\/div>/g)].map((m) => ({
                 outerHTML: m[0],
