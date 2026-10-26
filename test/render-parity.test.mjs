@@ -66,7 +66,7 @@ test("내용 비교의 정규화는 class·style 둘만 지운다(셋째가 생�
   assert.equal(norm('<p>class="tw:p-2" style="y"</p>'), '<p>class="tw:p-2" style="y"</p>');
 });
 
-test("prerender.ts의 *Html() 조각은 이식 목록(PORTED) 45개와 같은 이름 전부이고 함수 이름이 그대로다", () => {
+test("prerender.ts의 *Html() 조각은 이식 목록(PORTED) 46개와 같은 이름 전부이고 함수 이름이 그대로다", () => {
   const names = Object.keys(prerender).filter((k) => k.endsWith("Html") && k !== "escapeHtml").sort();
   assert.deepEqual(names, PORTED, "prerender.ts의 조각 이름이 이식 목록과 다르다");
   for (const name of names) {
@@ -147,6 +147,7 @@ const PORTED = [
   "renewalWolseDistrictsHtml",
   "renewalWolseLeadHtml",
   "repeatSalesHtml",
+  "segmentChangeHtml",
 ];
 const NEWS_MARKET_FNS = ["marketHtml", "newsContextHtml", "newsHtml", "newsKospiHtml", "newsListHtml", "newsRealestateStatsHtml", "newsSummaryHtml"];
 
@@ -158,8 +159,8 @@ test("react 모드: 이식된 조각 목록이 PORTED와 같고, 그 이름은 �
   }
 });
 
-test("prerender.ts 래퍼(기본값 react): 이식 완료 상태(조각 43개 전부 React - 금리 조각 둘은 #577 B2 로 지웠고 V7 이 districtRentFlowHtml, V8 이 repeatSalesHtml, N5 가 districtMoveInHtml, G1 이 districtResaleHtml 을 더했다)이고, 모든 분기 표에서 래퍼 출력이 기대값과 같고 React 경고가 없다", () => {
-  assert.equal(PORTED.length, 45);
+test("prerender.ts 래퍼(기본값 react): 이식 완료 상태(조각 46개 전부 React - 금리 조각 둘은 #577 B2 로 지웠고 V7 이 districtRentFlowHtml, V8 이 repeatSalesHtml, N5 가 districtMoveInHtml, G1 이 districtResaleHtml, N4 화면이 segmentChangeHtml 을 더했다)이고, 모든 분기 표에서 래퍼 출력이 기대값과 같고 React 경고가 없다", () => {
+  assert.equal(PORTED.length, 46);
   assert.deepEqual(renderer.names(), PORTED, "entry.jsx 의 조각이 이식 목록과 다르다");
   const tables = [
     ["문장·목록", NEWS_MARKET_BRANCHES],

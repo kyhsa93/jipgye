@@ -2637,6 +2637,19 @@ html:not(:lang(en)) #repeat-sales .m-en {
   display: none;
 }
 
+/* 갈아타기 「25개 구」 아래 가격대·연식별 1년 변화(N4 화면, #676)도 두 언어를 구워 두고 html lang 이 가린다(같은 장, S6 여유 없음). */
+html:lang(en) #segment-change .m-ko,
+html:not(:lang(en)) #segment-change .m-en {
+  display: none;
+}
+
+/* 같은 절 둘째 표(앞 거래가 3분의 1, #170 N6)는 제목과 표 위 문단을 보이는 caption 으로 굽는다(렌더 HTML 예산). 가운데 정렬 기본값을 본문처럼 왼쪽으로. */
+#repeat-sales caption:not(.sr-only) {
+  text-align: left;
+  padding-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
 /* 뉴스 화면의 영어 기계번역 안내(#575 PR2)도 구워 둔 채 한국어 화면에서는 가린다. */
 html:not(:lang(en)) #content-notice.m-en {
   display: none;

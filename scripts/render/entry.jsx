@@ -25,7 +25,8 @@ import { metricCell, topDistricts } from "../realestate-rows.ts";
 import { overallCards } from "../realestate-overall.ts";
 import { headLabels, realestateTable } from "../realestate-table.ts";
 import { renewalSentences } from "../renewal-facts.ts";
-import { REPEAT_HEAD, REPEAT_LINK, repeatSalesView } from "../repeat-sales-view.ts";
+import { BANDS_HEAD, REPEAT_HEAD, REPEAT_LINK, repeatSalesView } from "../repeat-sales-view.ts";
+import { SEGMENT_HEAD, segmentChangeView } from "../segment-change-view.ts";
 
 // 옛 문자열 렌더의 `escapeHtml(value)`가 하던 값 변환(`String(value ?? "")`). React는 문자열·숫자만 글자로 내고 false·null·객체·배열은 비우거나 다르게 내거나 던지므로,
 // 옛 문자열 렌더가 `escapeHtml`을 거치던 자리는 전부 이 함수를 거친다(비문자열 값이 "[object Object]"·"false"로 나오는 것까지 같게 맞춘다).
@@ -891,6 +892,136 @@ function repeatSalesJsx(data) {
         <br />
         <Bi ko="{{src:repeatSales.ko}}" en="{{src:repeatSales.en}}" />
       </p>
+      {repeatBandsJsx(v.bands)}
+    </>
+  );
+}
+
+// 같은 절의 둘째 표: 앞 거래가 3분의 1(N6, 판정 #170 6403691545). 글자는 repeat-sales-view.ts 의 repeatBandsView. 출처는 위 절의 출처 줄과 같다(같은 쌍).
+function repeatBandsJsx(b) {
+  if (!b) return null;
+  if (b.fold) {
+    return (
+      <p className="content-notice" id="repeat-bands-fold">
+        <Bi ko={b.fold.ko} en={b.fold.en} />
+      </p>
+    );
+  }
+  // 렌더 HTML 예산(+1.5KB, 두 언어)에 맞춰 표 제목(굵게)과 표 위 문단을 보이는 caption 하나로 굽고(제목 요소·sr-only 이름·문단을 따로 두지 않는다),
+  // 머리글은 언어별 줄 하나씩(셀마다 span 을 두지 않는다) 굽는다.
+  const Head = ({ lang }) => (
+    <span className={`m-${lang}`}>
+      <strong>{b.title[lang]}</strong> {b.lead[lang]}
+    </span>
+  );
+  return (
+    <>
+      <div className="table-scroll">
+        <table className="rate-table outlook-table">
+          <caption>
+            <Head lang="ko" />
+            <Head lang="en" />
+          </caption>
+          <thead>
+            {["ko", "en"].map((lang) => (
+              <tr key={lang} className={`m-${lang}`}>
+                {BANDS_HEAD.map((h, i) => (
+                  <th key={i} scope="col">
+                    {h[lang]}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {b.rows.map((r, i) => (
+              <tr key={i}>
+                <td>
+                  <Bi ko={r.name.ko} en={r.name.en} />
+                  <br />
+                  {r.bound}
+                </td>
+                {r.cells.map((c, k) => (
+                  <td key={k}>{c}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+// 갈아타기 「25개 구」 아래 가격대·연식별 1년 변화(N4 화면, #676). 글자·칸은 segment-change-view.ts, 두 언어를 굽고 html lang 이 가린다(Bi).
+// 두 축(가격대·연식)은 tbody 둘로 나누고 머리 줄(scope=rowgroup)을 단다. 평균 회귀 한계는 표 바로 아래(#685 판정).
+function segmentChangeJsx(data) {
+  const v = segmentChangeView(data);
+  if (!v) return null;
+  return (
+    <>
+      <h3>
+        <Bi ko={v.heading.ko} en={v.heading.en} />
+      </h3>
+      <p className="lead">
+        <Bi ko={v.intro.ko} en={v.intro.en} />
+      </p>
+      <div className="table-scroll">
+        <table className="rate-table outlook-table">
+          <caption className="sr-only">
+            <Bi ko={v.caption.ko} en={v.caption.en} />
+          </caption>
+          <thead>
+            <tr>
+              {SEGMENT_HEAD.map((h, i) => (
+                <th key={i} scope="col">
+                  <Bi ko={h.ko} en={h.en} />
+                </th>
+              ))}
+            </tr>
+          </thead>
+          {v.groups.map((g, gi) => (
+            <tbody key={gi}>
+              <tr>
+                <th scope="rowgroup" colSpan={4}>
+                  <Bi ko={g.label.ko} en={g.label.en} />
+                </th>
+              </tr>
+              {g.rows.map((r, i) => (
+                <tr key={i}>
+                  <td>
+                    <Bi ko={r.name.ko} en={r.name.en} />
+                  </td>
+                  {r.cells ? (
+                    r.cells.map((c, k) => <td key={k}>{c}</td>)
+                  ) : (
+                    <td colSpan={3}>
+                      <LowSample>
+                        <Bi ko={r.blank.ko} en={r.blank.en} />
+                      </LowSample>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          ))}
+        </table>
+      </div>
+      <p className="content-notice">
+        <Bi ko={v.caveat.ko} en={v.caveat.en} />
+        {v.pairs ? (
+          <>
+            <br />
+            <Bi ko={v.pairs.ko} en={v.pairs.en} />
+          </>
+        ) : null}
+        {v.noYear ? (
+          <>
+            <br />
+            <Bi ko={v.noYear.ko} en={v.noYear.en} />
+          </>
+        ) : null}
+      </p>
     </>
   );
 }
@@ -941,4 +1072,5 @@ export const fragments = {
   renewalWolseDistrictsHtml: renewalWolseDistrictsJsx,
   floorDistrictsHtml: floorDistrictsJsx,
   repeatSalesHtml: repeatSalesJsx,
+  segmentChangeHtml: segmentChangeJsx,
 };

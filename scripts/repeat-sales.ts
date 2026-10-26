@@ -168,7 +168,7 @@ export class PyRandom {
 // ---------------------------------------------------------------- 쌍 (count_repeat.py to_trades·build_houses, repeat_index_v0.py pair_units)
 
 type Trade = { sgg: string; umd: string; apt: string; area: number; floor: string; day: number; ym: number; amount: number; order: number };
-type Pair = { log: number; gap: number; ymA: number; ymB: number };
+type Pair = { log: number; gap: number; ymA: number; ymB: number; front: number };
 
 /** 파이썬 문자열 비교(코드 포인트 순). 서로게이트 쌍이 없으면 JS 의 < 와 같다. */
 function cmpStr(a: string, b: string) {
@@ -291,7 +291,7 @@ function housePairs(list: Trade[]): Pair[] {
     const a = list[i];
     const b = list[i + 1];
     const gap = b.day - a.day;
-    if (GAP_MIN <= gap && gap <= GAP_MAX) out.push({ log: Math.log(b.amount / a.amount), gap, ymA: a.ym, ymB: b.ym });
+    if (GAP_MIN <= gap && gap <= GAP_MAX) out.push({ log: Math.log(b.amount / a.amount), gap, ymA: a.ym, ymB: b.ym, front: a.amount });
   }
   return out;
 }
@@ -459,7 +459,8 @@ export function compute(rows: any[], rone: Map<string, Map<number, number>>, win
     }
     seoul = { n: flat(seoulUnits).length, houses: seoulUnits.length, median: logsMedian(seoulUnits), lo, hi, rone: median(all), roneN: all.length, roneDropped: dropped };
   }
-  return { rows: out, seoul };
+  // 가격대 3분위(N6)는 같은 서울 쌍(구 코드순·집 키순)을 쓴다 - repeat_bands_n6.pair_units 의 집 순서와 같다.
+  return { rows: out, seoul, seoulUnits };
 }
 
 export function checks(rows: ReturnType<typeof compute>["rows"]) {
@@ -480,6 +481,130 @@ export function checks(rows: ReturnType<typeof compute>["rows"]) {
     shaky: q.filter((r) => r.shaky).map((r) => r.gu), published, enough,
     manyOutliers: rows.filter((r) => r.manyOutliers).map((r) => r.gu),
     pass: enough && !(killSign || killRho),
+  };
+}
+
+// ---------------------------------------------------------------- 가격대 3분위 (N6, DESIGN 5-2 개정 3, repeat_bands_n6.py)
+//
+// 판정(#170 6403691545): 같은 서울 쌍을 앞 거래가로 3분의 1씩 나눠 둘째 표를 낸다. 경계·대응·판정은 repeat_bands_n6.py 를 한 줄씩 옮겼고,
+// 빌드는 운영 창마다 ②⑤⑥⑦을 다시 판정한다(가운데 중앙값이 9억 근처라 N4 대응이 바뀔 수 있다). 미달이면 표를 접고 차이 문장을 지운다.
+// 난수는 v0 와 같은 PyRandom 이라 고정 입력 39c24811 에서 구간·흔들림까지 repeat_bands_n6.out 과 같다(scripts/dev/verify-repeat-bands-n6.mjs).
+
+/** 5-2 ⑦: N4(segment-change.json) 가격대 5구간, 경계 만원, lo < 앞 거래가 ≤ hi. */
+export const N4_BANDS = [
+  ["upTo6", 0, 60000],
+  ["upTo9", 60000, 90000],
+  ["upTo15", 90000, 150000],
+  ["upTo25", 150000, 250000],
+  ["over25", 250000, Infinity],
+] as const;
+const BAND_MIN_COUNT = 3; // 5-2 ② 공개 최소 가격대 수
+const GAP_SPREAD_MAX = 90; // 5-2 ⑥ E: 간격 중앙값의 최대 - 최소가 90일 이상이면 차이 문장을 지운다
+/** 낮은–가운데, 가운데–높은, 낮은–높은 (repeat_bands_n6.diff_verdicts 순서). */
+export const BAND_PAIRS = [[0, 1], [1, 2], [0, 2]] as const;
+
+/** ① B1 = x(ceil(N/3)), B2 = x(ceil(2N/3)) (1부터 센 오름차순, 보간 없음). */
+export function bandBoundaries(fronts: number[]) {
+  const s = Float64Array.from(fronts).sort();
+  const n = s.length;
+  if (!n) throw new Error("쌍이 없다");
+  return [s[Math.ceil(n / 3) - 1], s[Math.ceil((2 * n) / 3) - 1]];
+}
+
+/** ① 낮은 쪽 ≤ B1 < 가운데 ≤ B2 < 높은 쪽. */
+const bandOf = (front: number, b1: number, b2: number) => (front <= b1 ? 0 : front <= b2 ? 1 : 2);
+
+const n4BandOf = (price: number) => N4_BANDS.findIndex(([, lo, hi]) => lo < price && price <= hi);
+
+type BandStat = {
+  n: number; houses: number; median: number | null; lo: number | null; hi: number | null; width: number | null;
+  gapMedian: number | null; frontMedian: number | null; frontMin: number | null; frontMax: number | null; qualified: boolean; jitter: number | null; shaky: boolean;
+};
+
+/**
+ * repeat_bands_n6.compute + judge. seoulUnits 는 compute() 의 서울 집 목록(이상치 제외 뒤), n4 는 segment-change.json 의 {가격대 키: change}
+ * (없으면 null - ⑦ 을 대조하지 못해 표를 접는다). 쌍이 없으면 null.
+ */
+export function computeBands(seoulUnits: Pair[][], n4: Record<string, number> | null) {
+  const fronts = seoulUnits.flatMap((h) => h.map((p) => p.front));
+  if (!fronts.length) return null;
+  const [b1, b2] = bandBoundaries(fronts);
+  const bands: Pair[][][] = [[], [], []];
+  for (const house of seoulUnits) {
+    const per: Pair[][] = [[], [], []];
+    for (const p of house) per[bandOf(p.front, b1, b2)].push(p);
+    for (let k = 0; k < 3; k++) if (per[k].length) bands[k].push(per[k]);
+  }
+  const rnd = new PyRandom(BOOT_SEED); // 5-2 ③: 가격대 반복 직전에 한 번
+  const stats: BandStat[] = bands.map((u) => {
+    const all = u.flat();
+    // 가격대가 비는 것은 앞 거래가가 한 값에 크게 몰릴 때뿐이다(파이썬은 멈춘다). 빌드는 멈추지 않고 그 가격대를 미달로 둔다 - 표가 접힌다.
+    if (!all.length) return { n: 0, houses: 0, median: null, lo: null, hi: null, width: null, gapMedian: null, frontMedian: null, frontMin: null, frontMax: null, qualified: false, jitter: null, shaky: false };
+    const [lo, hi] = bootInterval(u, rnd);
+    return {
+      n: all.length, houses: u.length, median: logsMedian(u), lo, hi, width: hi - lo,
+      gapMedian: median(all.map((p) => p.gap)), frontMedian: median(all.map((p) => p.front)),
+      frontMin: Math.min(...all.map((p) => p.front)), frontMax: Math.max(...all.map((p) => p.front)),
+      qualified: all.length >= GU_THRESHOLD, jitter: null, shaky: false,
+    };
+  });
+  const rng = new PyRandom(JITTER_SEED); // F: 가격대 순·회차 순
+  stats.forEach((s, k) => {
+    if (!s.qualified) return;
+    s.jitter = jitterRange(bands[k], rng);
+    s.shaky = s.jitter > s.width;
+  });
+  // ② ⑤ ⑥ ⑦ (repeat_bands_n6.judge)
+  const published = stats.filter((s) => s.qualified && !s.shaky).length;
+  const verdicts = BAND_PAIRS.map(([i, j]) => {
+    const a = stats[i];
+    const b = stats[j];
+    const ok = a.n > 0 && b.n > 0 && (a.hi < b.lo || b.hi < a.lo); // ⑤ 끝점이 같으면 겹친 것
+    return { ok, dir: ok ? sign(b.median - a.median) : 0 };
+  });
+  const gaps = stats.filter((s) => s.n).map((s) => s.gapMedian);
+  const gapSpread = Math.max(...gaps) - Math.min(...gaps);
+  const dropDiff = gapSpread >= GAP_SPREAD_MAX;
+  type N4Pair = { i: number; j: number; comparable: boolean; s6: number | null; s4: number | null; hit: boolean };
+  let n4Check: { map: (string | null)[]; pairs: N4Pair[]; comparable: number; agree: number; show: boolean } | null = null;
+  if (n4 && stats.every((s) => s.n)) {
+    const map = stats.map((s) => n4BandOf(s.frontMedian));
+    const changes = map.map((i) => (i >= 0 ? n4[N4_BANDS[i][0]] : undefined));
+    // N4 가격대 값이 비어 있으면 대조하지 못한 것으로 본다(비교 0쌍 → 접음).
+    const known = changes.every((c) => typeof c === "number");
+    const pairs: N4Pair[] = BAND_PAIRS.map(([i, j]) => {
+      if (!known || map[i] === map[j]) return { i, j, comparable: false, s6: null, s4: null, hit: false }; // 같은 N4 가격대에 걸리면 비교하지 않는다
+      const s6 = sign(stats[j].median - stats[i].median);
+      const s4 = sign(changes[j] - changes[i]);
+      return { i, j, comparable: true, s6, s4, hit: s6 !== 0 && s6 === s4 };
+    });
+    const comparable = pairs.filter((p) => p.comparable).length;
+    const agree = pairs.filter((p) => p.hit).length;
+    n4Check = { map: map.map((i) => (i >= 0 ? N4_BANDS[i][0] : null)), pairs, comparable, agree, show: comparable >= 2 && agree >= 2 };
+  }
+  const tablePublic = published >= BAND_MIN_COUNT;
+  const fold = !tablePublic ? "thin" : !n4Check ? "noN4" : !n4Check.show ? "n4" : null;
+  return { b1, b2, n: fronts.length, stats, published, tablePublic, verdicts, gapSpread, dropDiff, n4: n4Check, fold };
+}
+
+/**
+ * repeat-sales.json 의 bands (판정 브리프 2). 값은 로그 소수 6자리 m·lo·hi 와 화면 % p([중앙값, 하한, 상한]), 쌍 수 n, 간격 중앙값 gap,
+ * 앞 거래가 중앙값 f(만원). say 는 BAND_PAIRS 순서로 화면이 차이를 말해도 되는 방향(⑤ 겹치지 않음이고 ⑥ E 로 지우지 않았을 때 ±1, 아니면 0).
+ * fold 가 null 이 아니면 화면은 표를 접는다(thin = ② 미달·흔들림, noN4 = N4 산출 없음, n4 = ⑦ 불일치).
+ */
+export function bandsPayload(b: ReturnType<typeof computeBands>) {
+  if (!b) return null;
+  return {
+    b: [b.b1, b.b2],
+    rows: b.stats.map((s) =>
+      s.qualified && !s.shaky
+        ? { n: s.n, m: r6(s.median), lo: r6(s.lo), hi: r6(s.hi), gap: s.gapMedian, f: s.frontMedian, p: [pct1(s.median), pct1(s.lo), pct1(s.hi)] }
+        : { n: s.n, st: s.qualified ? "shaky" : "thin" }
+    ),
+    say: b.verdicts.map((v) => (v.ok && !b.dropDiff ? v.dir : 0)),
+    spread: b.gapSpread,
+    n4: b.n4 && { map: b.n4.map, cmp: b.n4.comparable, agree: b.n4.agree },
+    fold: b.fold,
   };
 }
 
