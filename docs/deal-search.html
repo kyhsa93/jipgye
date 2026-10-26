@@ -121,6 +121,7 @@
       </div>
     </div>
     <p class="sr-only" role="status" id="search-status"></p>
+    <div id="watch-list"></div>
     <div id="complex-card"></div>
     <div id="search-result"></div>
     <div class="content-notice" id="search-note"></div>
@@ -140,6 +141,7 @@
 </main>
 <script src="./nav.js" defer></script>
 <script src="./search.js" defer></script>
+<script src="./watchlist.js" defer></script>
 <script src="./card-renewal.js" defer></script>
 <script src="./complex-card.js" defer></script>
 <script src="./complex-chart.js" defer></script>
@@ -1027,6 +1029,7 @@ function renderResult() {
     card.innerHTML = complexCardHtml();
     renderComplexPriceFailure();
     renderComplexRentsFailure();
+    window.cardWatch?.(); // 관심 단지(#732, watchlist.js)
     window.cardRenewal?.(); // 갱신 구간(#717, card-renewal.js)
     window.complexCard?.(); // 가격 위치(#731)
     window.complexChart?.();
@@ -1308,6 +1311,7 @@ function complexCardHtml() {
   return (
     `<section class="complex-card">` +
     `<h2>${escapeHtml(t("complexHeading")(apt))}</h2>` +
+    `<div id="card-watch"></div>` +
     priceHtml +
     ratioHtml +
     `<div id="card-chart"></div><p id="card-rank"></p><div id="card-renewal"></div><div id="card-near"></div>` +

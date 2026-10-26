@@ -17,9 +17,9 @@ test("소개에 저장 고지가 한국어·영어 둘 다 있다 - 무엇을·�
   const ko = block("ko");
   const en = block("en");
   assert.match(ko, /<h2>이 브라우저에 저장하는 것<\/h2>/);
-  for (const word of ["구", "면적", "예산", "지금 사는 구", "이 브라우저에만", "보내지 않습니다", "질문 링크"]) assert.ok(ko.includes(word), `한국어 고지에 「${word}」가 없다`);
+  for (const word of ["관심 단지", "구", "면적", "예산", "지금 사는 구", "이 브라우저에만", "보내지 않습니다", "질문 링크"]) assert.ok(ko.includes(word), `한국어 고지에 「${word}」가 없다`);
   assert.match(en, /<h2>What this browser stores<\/h2>/);
-  for (const word of ["district", "unit size", "budget", "current district", "this browser only", "sent nowhere", "question links"]) assert.ok(en.includes(word), `영어 고지에 「${word}」가 없다`);
+  for (const word of ["watch", "district", "unit size", "budget", "current district", "this browser only", "sent nowhere", "question links"]) assert.ok(en.includes(word), `영어 고지에 「${word}」가 없다`);
   assert.equal(buttons("ko").length, 1);
   assert.equal(buttons("en").length, 1);
   assert.match(buttons("ko")[0], />지우기<\/button>$/);
@@ -29,7 +29,7 @@ test("소개에 저장 고지가 한국어·영어 둘 다 있다 - 무엇을·�
 
 /** 인라인 스크립트를 가짜 문서에 올린다. 단추는 소개 장 HTML 에서 읽은 data-done/data-fail 을 그대로 가진다. */
 function run(lang, { throws = false } = {}) {
-  const items = new Map([["myConditions", '{"district":"마포구"}'], ["theme", "dark"], ["lang", lang]]);
+  const items = new Map([["myConditions", '{"district":"마포구"}'], ["watchlist", "[]"], ["theme", "dark"], ["lang", lang]]);
   const storage = {
     getItem: (k) => items.get(k) ?? null,
     setItem: (k, v) => items.set(k, String(v)),
@@ -71,6 +71,7 @@ for (const lang of ["ko", "en"]) {
     assert.equal(page.status.textContent, "", "누르기 전에는 확인 글이 없다");
     page.click();
     assert.equal(page.items.has("myConditions"), false, "myConditions 가 남았다");
+    assert.equal(page.items.has("watchlist"), false, "관심 단지(#732)가 남았다");
     assert.equal(page.items.get("theme"), "dark", "테마까지 지웠다");
     assert.equal(page.items.get("lang"), lang, "언어까지 지웠다");
     assert.equal(page.status.textContent, page.button.dataset.done);
