@@ -37,10 +37,10 @@ test("가격순: 값 큰 구가 먼저, 표본 부족 구는 맨 뒤", () => {
   assert.match(panel("sale"), new RegExp(`width:${Math.round((4882 / 11430) * 1000) / 10}%`));
 });
 
-test("매매/전세/월세 전환: 라디오 셋(매매 기본) + 패널 셋, 스크립트 없음", () => {
+test("매매/전세/월세 전환: fieldset 안 라디오 셋(매매 기본) + 패널 셋, 스크립트 없음", () => {
+  assert.match(html, /<fieldset class="dbars-tabs"><legend class="sr-only">/);
   for (const kind of BAR_KINDS) {
-    assert.match(html, new RegExp(`<input class="sr-only" type="radio" name="dbars-kind" id="dbars-${kind}"`));
-    assert.match(html, new RegExp(`<label class="c-chip" for="dbars-${kind}">`));
+    assert.match(html, new RegExp(`<label class="c-chip"><input class="sr-only" type="radio" name="dbars-kind" id="dbars-${kind}"`));
     assert.match(html, new RegExp(`data-kind="${kind}"`));
   }
   assert.match(html, /id="dbars-sale" value="sale" checked>/);
@@ -49,10 +49,10 @@ test("매매/전세/월세 전환: 라디오 셋(매매 기본) + 패널 셋, �
   assert.match(panel("wolse"), /3억 6,755만원 \/ 월 223만원 · 630건/);
 });
 
-test("CSS 가 형제 선택자로 패널을 바꾼다(JS 0 B)", async () => {
+test("CSS :has 로 패널을 바꾼다(JS 0 B), 모르는 브라우저는 매매만", async () => {
   const css = await readFile(path.join(root, "src/css/c-data.css"), "utf8");
-  for (const kind of BAR_KINDS) assert.ok(css.includes(`#dbars-${kind}:checked ~ .dbars-panels [data-kind="${kind}"]`), kind);
-  assert.match(css, /\.dbars-panel \{\n  display: none;/);
+  assert.ok(css.includes('.dbars-panel:not([data-kind="sale"])'));
+  for (const kind of ["jeonse", "wolse"]) assert.ok(css.includes(`.dbars:has(#dbars-${kind}:checked) [data-kind="${kind}"]`), kind);
 });
 
 test("단위·기준 기간·거래 건수를 적는다(ko/en 쌍)", () => {
@@ -79,27 +79,31 @@ test("막대는 그 구의 장으로 가는 링크", () => {
   assert.match(panel("sale"), /<a href="\.\/district-jung\.html">/);
 });
 
-test("대체 표: 같은 값·건수, 증감은 ▲▼와 부호(색만 아님)", () => {
-  const table = html.match(/<details class="c-fold dbars-alt">.*<\/details>/)[0];
-  assert.match(table, /<table class="data-table dbars-table"><caption/);
-  const rows = [...table.matchAll(/<tr><th scope="row">(.*?)<\/tr>/g)].map((m) => m[1]);
-  assert.equal(rows.length, 4);
-  assert.match(rows[0], /district-gangnam\.html.*1억 1,430만원.*201건.*4,327만원.*465건.*3억 6,755만원 \/ 월 223만원.*630건/);
-  assert.match(rows[0], /▼−119만원/);
-  assert.match(rows[1], /▲\+25만원/);
-  assert.match(rows[2], /변동 없음/);
-  assert.match(rows[3], /중구.*표본 부족.*3건/);
+test("대체 표는 따로 굽지 않고 같은 장의 시세 표로 잇는다", () => {
+  assert.doesNotMatch(html, /<table/);
+  assert.match(html, /<a href="#district-section">/);
+});
+
+test("메인: 매매 막대 한 벌만(라디오 없음) + 시세 장 전체 보기 링크", () => {
+  const home = districtBarsHtml(DATA, { variant: "home" });
+  assert.match(home, /<h3 id="dbars-heading">/);
+  assert.doesNotMatch(home, /type="radio"|<table|<fieldset/);
+  assert.deepEqual([...home.matchAll(/data-kind="(\w+)"/g)].map((m) => m[1]), ["sale"]);
+  assert.deepEqual(namesIn(home), ["강남구", "종로구", "노원구", "중구"]);
+  assert.match(home, /<a href="\.\/realestate\.html#district-bars">/);
+  assert.doesNotMatch(home, /id="district-bars"/);
 });
 
 test("데이터가 없으면 빈 문자열(자리표시가 빈 채로)", () => {
   assert.equal(districtBarsHtml(null), "");
   assert.equal(districtBarsHtml({ districts: [] }), "");
-  assert.match(districtBarsHtml(DATA, { heading: "h3" }), /<h3 id="dbars-heading">/);
 });
 
-test("시세 틀과 메인에 자리표시가 하나씩", async () => {
+test("시세 틀과 메인에 자리표시가 하나씩, 메인은 시세 구역 끝", async () => {
   for (const rel of ["scripts/realestate-template.html", "docs/index.html"]) {
     const page = await readFile(path.join(root, rel), "utf8");
     assert.equal(page.split("<!--prerender:districtBars-->").length, 2, rel);
   }
+  const index = await readFile(path.join(root, "docs/index.html"), "utf8");
+  assert.match(index, /id="realestate-history-note"><\/div>\s*<!--prerender:districtBars--><!--\/prerender:districtBars-->\s*<\/section>/);
 });

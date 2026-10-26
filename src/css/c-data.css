@@ -1,6 +1,7 @@
 /* data 화면 전용 규칙 자리 (#745). 공통 모양은 c-base.css에서 가져다 쓰고, 이 화면에만 필요한 규칙만 여기에 더한다. */
 
-/* 자치구 가격 막대(#745 PR8, scripts/district-bars.ts). 전환은 숨긴 라디오 + 형제 선택자라 스크립트가 없다(:has 없이도 돈다). */
+/* 자치구 가격 막대(#745 PR8, scripts/district-bars.ts). 전환은 fieldset 안 라디오 + :has 라 스크립트가 없다.
+   :has 를 모르는 브라우저는 매매 막대만 보인다(전환만 빠지고 값은 그대로). */
 html:lang(en) .dbars [lang="ko"],
 html:not(:lang(en)) .dbars [lang="en"] {
   display: none;
@@ -12,28 +13,27 @@ html:not(:lang(en)) .dbars [lang="en"] {
   font-size: var(--c-fs-meta);
 }
 .dbars-tabs {
-  margin-bottom: var(--c-space-3);
+  margin: 0 0 var(--c-space-3);
+  padding: 0;
+  border: 0;
 }
-#dbars-sale:checked ~ .dbars-tabs [for="dbars-sale"],
-#dbars-jeonse:checked ~ .dbars-tabs [for="dbars-jeonse"],
-#dbars-wolse:checked ~ .dbars-tabs [for="dbars-wolse"] {
+.dbars-tabs .c-chip:has(:checked) {
   background: var(--c-action);
   border-color: var(--c-action);
   color: var(--c-action-on);
   font-weight: 600;
 }
-#dbars-sale:focus-visible ~ .dbars-tabs [for="dbars-sale"],
-#dbars-jeonse:focus-visible ~ .dbars-tabs [for="dbars-jeonse"],
-#dbars-wolse:focus-visible ~ .dbars-tabs [for="dbars-wolse"] {
+.dbars-tabs .c-chip:has(:focus-visible) {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
-.dbars-panel {
+.dbars-panel:not([data-kind="sale"]),
+.dbars:has(#dbars-jeonse:checked) [data-kind="sale"],
+.dbars:has(#dbars-wolse:checked) [data-kind="sale"] {
   display: none;
 }
-#dbars-sale:checked ~ .dbars-panels [data-kind="sale"],
-#dbars-jeonse:checked ~ .dbars-panels [data-kind="jeonse"],
-#dbars-wolse:checked ~ .dbars-panels [data-kind="wolse"] {
+.dbars:has(#dbars-jeonse:checked) [data-kind="jeonse"],
+.dbars:has(#dbars-wolse:checked) [data-kind="wolse"] {
   display: block;
 }
 .dbars-list {
@@ -72,4 +72,8 @@ html:not(:lang(en)) .dbars [lang="en"] {
 }
 .dbars-thin {
   color: var(--muted);
+}
+.dbars-more {
+  margin: 0;
+  font-size: var(--c-fs-meta);
 }

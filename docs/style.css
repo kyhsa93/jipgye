@@ -2868,22 +2868,24 @@
     font-size: var(--c-fs-meta);
   }
   .dbars-tabs {
-    margin-bottom: var(--c-space-3);
+    margin: 0 0 var(--c-space-3);
+    padding: 0;
+    border: 0;
   }
-  #dbars-sale:checked ~ .dbars-tabs [for="dbars-sale"], #dbars-jeonse:checked ~ .dbars-tabs [for="dbars-jeonse"], #dbars-wolse:checked ~ .dbars-tabs [for="dbars-wolse"] {
+  .dbars-tabs .c-chip:has(:checked) {
     background: var(--c-action);
     border-color: var(--c-action);
     color: var(--c-action-on);
     font-weight: 600;
   }
-  #dbars-sale:focus-visible ~ .dbars-tabs [for="dbars-sale"], #dbars-jeonse:focus-visible ~ .dbars-tabs [for="dbars-jeonse"], #dbars-wolse:focus-visible ~ .dbars-tabs [for="dbars-wolse"] {
+  .dbars-tabs .c-chip:has(:focus-visible) {
     outline: 2px solid var(--focus);
     outline-offset: 2px;
   }
-  .dbars-panel {
+  .dbars-panel:not([data-kind="sale"]), .dbars:has(#dbars-jeonse:checked) [data-kind="sale"], .dbars:has(#dbars-wolse:checked) [data-kind="sale"] {
     display: none;
   }
-  #dbars-sale:checked ~ .dbars-panels [data-kind="sale"], #dbars-jeonse:checked ~ .dbars-panels [data-kind="jeonse"], #dbars-wolse:checked ~ .dbars-panels [data-kind="wolse"] {
+  .dbars:has(#dbars-jeonse:checked) [data-kind="jeonse"], .dbars:has(#dbars-wolse:checked) [data-kind="wolse"] {
     display: block;
   }
   .dbars-list {
@@ -2921,6 +2923,10 @@
   }
   .dbars-thin {
     color: var(--muted);
+  }
+  .dbars-more {
+    margin: 0;
+    font-size: var(--c-fs-meta);
   }
 }
 @layer utilities {

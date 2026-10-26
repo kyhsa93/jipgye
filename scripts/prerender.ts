@@ -140,8 +140,8 @@ async function main() {
     market: marketHtml(market),
     realestate: realestateHtml(realestate),
     news: newsHtml(news),
-    // 자치구 가격 막대(#745 PR8): 메인 시세 구역에도 같은 막대를 굽는다(제목만 한 단계 아래).
-    districtBars: districtBarsHtml(realestate, { heading: "h3" }),
+    // 자치구 가격 막대(#745 PR8): 메인 시세 구역 끝에는 매매 막대 한 벌과 시세 장 전체 보기 링크만 굽는다.
+    districtBars: districtBarsHtml(realestate, { variant: "home" }),
   };
 
   const conversion = await readJson("conversion");

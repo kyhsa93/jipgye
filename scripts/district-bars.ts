@@ -1,6 +1,6 @@
 // 자치구 가격 막대(#745 PR8). 25개 구를 값 순서로 세운 가로 막대를 빌드 때 HTML 로 굽는다 — 화면 스크립트 0 B.
-// 매매/전세/월세 전환은 숨긴 라디오 + 형제 선택자(CSS, src/css/c-data.css)다. 막대 하나가 그 구의 장(district-*.html) 링크이고,
-// 같은 값은 접힌 표로 한 번 더 낸다(차트 대체 표). 값은 docs/data/realestate.json 의 4주 평균 그대로 — 여기서 새로 세지 않는다.
+// 매매/전세/월세 전환은 fieldset 안 라디오 + CSS :has(src/css/c-data.css)다. 막대 하나가 그 구의 장(district-*.html) 링크이고 값을 글자로 적으므로
+// 막대 목록 자체가 텍스트 대안이다(같은 값의 표는 시세 장의 자치구별 시세 표 — 링크로 잇는다). 값은 docs/data/realestate.json 의 4주 평균 그대로 — 여기서 새로 세지 않는다.
 // 표본이 MIN_SAMPLE 건 미만인 구는 막대를 그리지 않고 「표본 부족」으로 적는다. 증감은 색이 아니라 ▲▼ 와 부호 글자로 낸다.
 import { escapeHtml } from "./html-escape.ts";
 import { districtFile, districtNameEn, DISTRICT_SLUGS } from "./district-slugs.ts";
@@ -55,9 +55,6 @@ const valueText = (row: BarRow, locale: "ko" | "en") =>
     ? `${formatMan(row.value, locale)} / ${locale === "en" ? "mo" : "월"} ${formatMan(row.monthly, locale)}`
     : formatMan(row.value, locale);
 
-const changeText = (v: number | null, locale: "ko" | "en") =>
-  v == null || v === 0 ? (v === 0 ? (locale === "en" ? "no change" : "변동 없음") : "–") : `${v > 0 ? "▲+" : "▼−"}${formatMan(Math.abs(v), locale)}`;
-
 function barList(rows: BarRow[]) {
   const max = Math.max(0, ...rows.map((r) => r.value ?? 0));
   const items = rows.map((r) => {
@@ -71,47 +68,43 @@ function barList(rows: BarRow[]) {
   return `<ol class="dbars-list">${items.join("")}</ol>`;
 }
 
-function altTable(byKind: Record<Kind, BarRow[]>, home: boolean) {
-  const head = BAR_KINDS.map((k) => `<th scope="col">${both(`${KIND_LABEL[k][0]} ${KIND_UNIT[k][0]}`, `${KIND_LABEL[k][1]}, ${KIND_UNIT[k][1]}`)}</th><th scope="col">${both(`${KIND_LABEL[k][0]} 거래 건수`, `${KIND_LABEL[k][1]} deals`)}</th>`).join("");
-  const change = BAR_KINDS.filter((k) => k !== "wolse");
-  const changeHead = change.map((k) => `<th scope="col">${both(`${KIND_LABEL[k][0]} 증감(직전 기준일 대비)`, `${KIND_LABEL[k][1]} change vs previous date`)}</th>`).join("");
-  const lookup = Object.fromEntries(BAR_KINDS.map((k) => [k, new Map(byKind[k].map((r) => [r.name, r]))]));
-  const body = byKind.sale.map(({ name, slug }) => {
-    const cells = BAR_KINDS.map((k) => {
-      const r = lookup[k].get(name);
-      const v = r?.value == null ? both("표본 부족", "Too few") : both(valueText(r, "ko"), valueText(r, "en"));
-      return `<td>${v}</td><td>${both(countKo(r?.count ?? 0), countEn(r?.count ?? 0))}</td>`;
-    }).join("");
-    const ch = change.map((k) => `<td>${both(changeText(lookup[k].get(name)?.change ?? null, "ko"), changeText(lookup[k].get(name)?.change ?? null, "en"))}</td>`).join("");
-    return `<tr><th scope="row"><a href="./${districtFile(slug)}">${both(name, districtNameEn(name))}</a></th>${cells}${ch}</tr>`;
-  });
-  return `<div class="table-wrap"><table class="data-table dbars-table"><caption class="sr-only">${both(`${home ? "메인 " : ""}자치구 ${body.length}곳의 매매·전세·월세 값과 거래 건수(매매 가격순)`, `${home ? "Home: s" : "S"}ale, jeonse and rent for ${body.length} districts with deal counts (by sale price)`)}</caption><thead><tr><th scope="col">${both("자치구", "District")}</th>${head}${changeHead}</tr></thead><tbody>${body.join("")}</tbody></table></div>`;
-}
-
 /**
- * 막대 구역 전체(제목·기준·전환·막대·대체 표). 데이터가 없으면 빈 문자열이라 자리표시가 빈 채로 남는다.
- * heading 은 놓이는 장의 제목 계층(시세 장 h2, 메인 h3). 라디오 name·id 는 장 안에서 한 벌뿐이라 고정이다.
+ * 막대 구역. 데이터가 없으면 빈 문자열이라 자리표시가 빈 채로 남는다.
+ * - 시세 장(page): 제목 h2, 매매/전세/월세 전환(라디오 fieldset, CSS :has — 스크립트 0 B), 같은 장의 시세 표로 가는 링크.
+ *   막대 ol 이 링크 + 값 글자라 그 자체가 텍스트 대안이고, 같은 값은 바로 아래 시세 표에 있어 대체 표를 따로 굽지 않는다.
+ * - 메인(home): 제목 h3, 매매 막대 한 벌만(전환 없음) + 시세 장의 전체 막대로 가는 링크.
  */
-export function districtBarsHtml(data, { heading = "h2" }: { heading?: "h2" | "h3" } = {}) {
+export function districtBarsHtml(data, { variant = "page" }: { variant?: "page" | "home" } = {}) {
   if (!data?.districts?.length) return "";
-  const byKind = Object.fromEntries(BAR_KINDS.map((k) => [k, barRows(data, k)])) as Record<Kind, BarRow[]>;
-  if (BAR_KINDS.every((k) => byKind[k].every((r) => r.value == null))) return "";
+  const home = variant === "home";
+  const kinds: readonly Kind[] = home ? ["sale"] : BAR_KINDS;
+  const byKind = Object.fromEntries(kinds.map((k) => [k, barRows(data, k)])) as Record<Kind, BarRow[]>;
+  if (kinds.every((k) => byKind[k].every((r) => r.value == null))) return "";
   const w = data.window ?? {};
   const from = w.districtFrom ?? w.from;
   const weeks = w.districtWeeks ?? w.weeks;
   const period = from && w.to ? both(`기준: 계약일 ${from} ~ ${w.to}(최근 ${weeks}주) 신고분`, `Basis: contracts ${from} to ${w.to} (last ${weeks} weeks)`) : "";
-  const radios = BAR_KINDS.map((k, i) => `<input class="sr-only" type="radio" name="dbars-kind" id="dbars-${k}" value="${k}"${i === 0 ? " checked" : ""}>`).join("");
-  const labels = BAR_KINDS.map((k) => `<label class="c-chip" for="dbars-${k}">${both(KIND_LABEL[k][0], KIND_LABEL[k][1])}</label>`).join("");
-  const panels = BAR_KINDS.map(
-    (k) =>
-      `<div class="dbars-panel" data-kind="${k}"><p class="dbars-unit">${both(`${KIND_LABEL[k][0]} ${KIND_UNIT[k][0]} · 높은 순 · 막대를 누르면 그 구의 장으로 갑니다`, `${KIND_LABEL[k][1]}, ${KIND_UNIT[k][1]} · highest first · tap a bar for that district`)}</p>${barList(byKind[k])}</div>`
+  const panels = kinds
+    .map(
+      (k) =>
+        `<div class="dbars-panel" data-kind="${k}"><p class="dbars-unit">${both(`${KIND_LABEL[k][0]} ${KIND_UNIT[k][0]} · 높은 순 · 막대를 누르면 그 구의 장으로`, `${KIND_LABEL[k][1]}, ${KIND_UNIT[k][1]} · highest first · tap a bar for that district`)}</p>${barList(byKind[k])}</div>`
+    )
+    .join("");
+  if (home) {
+    return (
+      `<section class="dbars dbars--home" aria-labelledby="dbars-heading"><h3 id="dbars-heading">${both("자치구별 매매 가격", "Sale prices by district")}</h3>` +
+      `<p class="dbars-meta">${period}</p>${panels}` +
+      `<p class="dbars-more"><a href="./realestate.html#district-bars">${both("전세·월세까지 전체 보기 →", "See jeonse and rent too →")}</a></p></section>`
+    );
+  }
+  const chips = BAR_KINDS.map(
+    (k, i) => `<label class="c-chip"><input class="sr-only" type="radio" name="dbars-kind" id="dbars-${k}" value="${k}"${i === 0 ? " checked" : ""}>${both(KIND_LABEL[k][0], KIND_LABEL[k][1])}</label>`
   ).join("");
-  const h = heading === "h3" ? "h3" : "h2";
   return (
-    `<section class="dbars" id="district-bars" aria-labelledby="dbars-heading"><${h} id="dbars-heading">${both("자치구별 가격 한눈에", "Prices by district at a glance")}</${h}>` +
-    `<p class="dbars-meta">${period}</p>${radios}` +
-    `<div class="dbars-tabs c-chips" role="group" aria-label="거래 유형 / Deal type">${labels}</div>` +
+    `<section class="dbars" id="district-bars" aria-labelledby="dbars-heading"><h2 id="dbars-heading">${both("자치구별 가격 한눈에", "Prices by district at a glance")}</h2>` +
+    `<p class="dbars-meta">${period}</p>` +
+    `<fieldset class="dbars-tabs"><legend class="sr-only">${both("거래 유형", "Deal type")}</legend><div class="c-chips">${chips}</div></fieldset>` +
     `<div class="dbars-panels">${panels}</div>` +
-    `<details class="c-fold dbars-alt"><summary>${both("같은 값을 표로 보기", "See the same figures as a table")}</summary>${altTable(byKind, h === "h3")}</details></section>`
+    `<p class="dbars-more"><a href="#district-section">${both("같은 값을 표로 보기(자치구별 시세 표) →", "See the same figures in the table →")}</a></p></section>`
   );
 }
