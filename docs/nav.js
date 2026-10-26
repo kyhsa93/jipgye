@@ -274,10 +274,9 @@
     const district = (name) => own(SLUGS, name);
     const area = (key) => own(M2, key);
     const areaOf = (key) => AREA_OF[own(AREA_OF, key)];
-    const store = window.localStorage;
     let saved = {};
     try {
-      const parsed = JSON.parse(store.getItem(KEY));
+      const parsed = JSON.parse(window.localStorage.getItem(KEY));
       if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) saved = parsed;
     } catch (e) {}
 
@@ -300,7 +299,7 @@
       let changed = false;
       for (const [k, v] of Object.entries(read(chose))) if (v !== undefined && saved[k] !== v) (saved[k] = v), (changed = true);
       try {
-        if (changed) store.setItem(KEY, JSON.stringify(saved));
+        if (changed) window.localStorage.setItem(KEY, JSON.stringify(saved));
       } catch (e) {}
     };
     // 들어온 주소는 바로, 기본값·장 이름(예산대·자치구)은 고른 뒤에만 적는다.

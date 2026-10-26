@@ -198,7 +198,8 @@
   document.getElementById("archive-date-input").value = date ?? "";
 
   let locale = (() => {
-    const saved = window.localStorage.getItem("lang");
+    let saved;
+    try { saved = window.localStorage.getItem("lang"); } catch {}
     return saved === "en" || saved === "ko" ? saved : "ko";
   })();
 
@@ -206,13 +207,14 @@
 
   const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
   let theme = (() => {
-    const saved = window.localStorage.getItem("theme");
+    let saved;
+    try { saved = window.localStorage.getItem("theme"); } catch {}
     return saved === "light" || saved === "dark" ? saved : "auto";
   })();
 
   function applyTheme(next) {
     theme = next;
-    window.localStorage.setItem("theme", theme);
+    try { window.localStorage.setItem("theme", theme); } catch {}
     if (theme === "auto") document.documentElement.removeAttribute("data-theme");
     else document.documentElement.setAttribute("data-theme", theme);
     document.querySelector("#theme-toggle span").textContent = THEME_ICONS[theme];
@@ -385,7 +387,7 @@
 
   function applyLocale(next) {
     locale = next;
-    window.localStorage.setItem("lang", locale);
+    try { window.localStorage.setItem("lang", locale); } catch {}
     document.documentElement.setAttribute("lang", locale);
     document.title = t("title");
     document.querySelector('meta[name="description"]')?.setAttribute("content", t("description"));
