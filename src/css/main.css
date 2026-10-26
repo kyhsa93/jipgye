@@ -1,4 +1,4 @@
-/*! 이 파일(docs/style.css)은 빌드 산출물이다. 손으로 고치지 않는다 - 규칙은 src/css/legacy.css에서 고치고
+/*! 이 파일(docs/style.css)은 빌드 산출물이다. 손으로 고치지 않는다 - 규칙은 src/css/legacy.css·c-*.css에서 고치고
  * `node scripts/build-css.mjs`로 다시 만들어 함께 커밋한다(test.yml이 다시 만든 결과와 바이트를 대조한다). */
 
 /* 스타일시트의 진입 파일(#276). 여기서 `docs/style.css`가 나온다 - `node scripts/build-css.mjs`.
@@ -59,12 +59,19 @@
  *    --prose는 --container-read로 묶는다. --container-prose로 두면 Tailwind가 미리 들고 있는
  *    tw:max-w-prose(65ch 고정)가 이겨서 var(--prose)가 나오지 않는다(실측).
  *
+ * 6. c-*.css(#745 PR1)는 공통 컴포넌트(c-base)와 화면별 자리(c-home·c-search·c-data)다. legacy 뒤, 같은 components 층에
+ *    둔다 - 유틸리티가 여전히 이기고, c- 이름은 legacy에 없어 순서·명시도로 부딪히지 않는다.
+ *
  * 한계: 층(@layer)을 모르는 브라우저(Chrome 99·Safari 15.4·Firefox 97·Samsung Internet 18 미만)는
  * `@layer components { … }` 안을 통째로 무시하므로 스타일 없는 화면이 된다(#276 본문 "한계").
  */
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme) prefix(tw);
 @import "./legacy.css" layer(components);
+@import "./c-base.css" layer(components);
+@import "./c-home.css" layer(components);
+@import "./c-search.css" layer(components);
+@import "./c-data.css" layer(components);
 @import "tailwindcss/utilities.css" layer(utilities) prefix(tw) source(none);
 @theme inline {
   /* 색 13. legacy.css :root의 색 변수 전부. --focus는 지금 var(--accent)지만 뜻이 다른 자리라 따로 묶는다.

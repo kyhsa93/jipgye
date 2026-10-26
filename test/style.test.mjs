@@ -430,3 +430,51 @@ test("머리 버튼 셋의 차례가 장마다 같다 (#306)", async () => {
   assert.deepEqual(bad, []);
   assert.ok(seen > 60, `머리를 읽은 장이 ${seen}장뿐이다 - 검사가 헛돈다`);
 });
+
+// 공통 컴포넌트(#745 PR1). c-base.css는 색을 새로 정하지 않고 legacy.css의 네 갈래 변수만 가리킨다.
+const cBase = () => readFile(path.join(root, "src/css/c-base.css"), "utf8");
+// 컴포넌트 변수 → legacy 변수. 아래 대비 계산이 이 표로 c-* 변수를 푼다.
+const C_ALIAS = { "--c-action": "--accent", "--c-action-on": "--accent-on" };
+
+test("c-base.css: 색은 legacy 팔레트 변수로만, 글자 크기는 축척으로만 정한다", async () => {
+  const text = (await cBase()).replace(/\/\*[\s\S]*?\*\//g, "");
+  assert.deepEqual(text.match(/#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(/gi) ?? [], [], "c-base.css에 색 값이 직접 들어왔다 - 네 갈래 팔레트를 비켜 간다");
+  const sizes = [...text.matchAll(/font-size:\s*([^;]+);/g)].map((m) => m[1].trim());
+  assert.ok(sizes.length > 5);
+  assert.deepEqual(sizes.filter((s) => !/^var\(--(fs-|c-fs-)/.test(s)), [], "축척 밖 글자 크기");
+  const cfs = Object.fromEntries([...text.matchAll(/(--c-fs-[a-z]+):\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
+  for (const [k, v] of Object.entries(cfs)) assert.match(v, /^var\(--fs-[a-z0-9]+\)$/, `${k}가 --fs-* 축척을 가리키지 않는다`);
+});
+
+test("c-base.css: 글자/바탕 짝이 네 갈래 모두에서 4.5:1 이상이다", async () => {
+  const text = (await cBase()).replace(/\/\*[\s\S]*?\*\//g, "");
+  const v = (s) => { const n = /^var\((--[a-z-]+)\)$/.exec(s?.trim() ?? "")?.[1]; return n ? (C_ALIAS[n] ?? n) : null; };
+  const pairs = [];
+  for (const { sel, body } of rules(text)) {
+    const fg = body.match(/(?:^|;)\s*color:\s*([^;]+)/)?.[1];
+    const bg = body.match(/background(?:-color)?:\s*([^;]+)/)?.[1];
+    if (fg && bg && v(fg) && v(bg)) pairs.push({ sel, fg: v(fg), bg: v(bg) });
+  }
+  assert.ok(pairs.length >= 8, `짝을 ${pairs.length}개밖에 못 읽었다`);
+  const legacy = palettes(await css()).filter((p) => p.vars["--accent"]);
+  assert.equal(legacy.length, 4);
+  for (const { sel, vars } of legacy) for (const p of pairs) {
+    const ratio = contrast(vars[p.fg], vars[p.bg]);
+    assert.ok(ratio >= 4.5, `${sel} / ${p.sel}: ${p.fg} on ${p.bg} = ${ratio.toFixed(2)}:1`);
+  }
+});
+
+test("c-base.css: 누르는 컴포넌트는 44px(--tap) 이상이고 초점 표시를 갖는다", async () => {
+  const text = await cBase();
+  const all = rules(text.replace(/\/\*[\s\S]*?\*\//g, ""));
+  const tapped = (cls) => all.some((r) => r.sel.split(",").map((s) => s.trim()).includes(cls) && /min-height:\s*var\(--tap\)/.test(r.body));
+  const focus = all.find((r) => r.sel.includes(":focus-visible"));
+  assert.ok(focus && /outline:\s*2px solid var\(--focus\)/.test(focus.body), "c-* 초점 규칙이 없다");
+  for (const cls of [".c-btn", ".c-input", ".c-select", ".c-chip", ".c-filter-chip", ".c-filter-chip__x", ".c-fold > summary"]) {
+    assert.ok(tapped(cls), `${cls}: min-height: var(--tap)이 없다`);
+  }
+  for (const cls of [".c-btn", ".c-input", ".c-select", ".c-chip", ".c-filter-chip__x", ".c-fold > summary"]) {
+    assert.ok(focus.sel.split(",").map((s) => s.trim()).includes(`${cls}:focus-visible`), `${cls}: 초점 표시가 없다`);
+  }
+  assert.doesNotMatch(text, /outline:\s*(none|0)\b/, "초점 표시를 지우는 규칙");
+});
