@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-25T17:50:38.494Z",
+  "updatedAt": "2026-10-26T01:07:33.141Z",
   "window": {
     "basis": "contract",
     "from": "2026-08-24",
@@ -11,12 +11,12 @@
   },
   "overall": {
     "sale": {
-      "avgPricePerM2": 15581351.988108676,
-      "avgPricePerPyeong10k": 5151,
-      "transactionCount": 3421,
+      "avgPricePerM2": 15590160.786427367,
+      "avgPricePerPyeong10k": 5154,
+      "transactionCount": 3423,
       "change": {
-        "value10k": 237,
-        "percent": 4.822954822954824
+        "value10k": 240,
+        "percent": 4.884004884004884
       },
       "baselineDate": "2026-10-19"
     },
@@ -147,12 +147,12 @@
       "code": "11170",
       "name": "용산구",
       "sale": {
-        "avgPricePerM2": 34031216.86558135,
-        "avgPricePerPyeong10k": 11250,
-        "transactionCount": 40,
+        "avgPricePerM2": 33870568.93438935,
+        "avgPricePerPyeong10k": 11197,
+        "transactionCount": 42,
         "change": {
-          "value10k": 264,
-          "percent": 2.4030584380120152
+          "value10k": 211,
+          "percent": 1.9206262515929364
         },
         "baselineDate": "2026-10-19"
       },

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-25T17:50:42.490Z",
+  "updatedAt": "2026-10-26T01:07:37.247Z",
   "periods": [
     "202608",
     "202609",
@@ -205,7 +205,7 @@
     {
       "min10k": 30000,
       "max10k": 40000,
-      "count": 376,
+      "count": 378,
       "districts": [
         {
           "name": "도봉구",
@@ -213,7 +213,7 @@
         },
         {
           "name": "강서구",
-          "count": 103
+          "count": 105
         },
         {
           "name": "노원구",
@@ -329,6 +329,17 @@
           "direct": false
         },
         {
+          "district": "강서구",
+          "dong": "방화동",
+          "apt": "방화그린",
+          "area": 33.6,
+          "floor": 1,
+          "amount10k": 38800,
+          "date": "2026-10-16",
+          "buildYear": 1993,
+          "direct": false
+        },
+        {
           "district": "은평구",
           "dong": "불광동",
           "apt": "연신내역트리플라101동",
@@ -349,21 +360,10 @@
           "date": "2026-10-15",
           "buildYear": 1988,
           "direct": false
-        },
-        {
-          "district": "강동구",
-          "dong": "길동",
-          "apt": "다성이즈빌",
-          "area": 22.82,
-          "floor": 13,
-          "amount10k": 31800,
-          "date": "2026-10-15",
-          "buildYear": 2018,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 376,
+        "total": 378,
         "span": {
           "min": {
             "district": "영등포구",
@@ -386,14 +386,14 @@
           "max": 90
         },
         "smallHeavy": {
-          "share": 0.949468085106383
+          "share": 0.9497354497354498
         },
         "old": {
-          "share": 0.4122340425531915,
+          "share": 0.4126984126984127,
           "years": 30
         },
         "directHeavy": {
-          "share": 0.2898936170212766
+          "share": 0.28835978835978837
         }
       },
       "direct": 109
@@ -616,7 +616,7 @@
     {
       "min10k": 50000,
       "max10k": 60000,
-      "count": 698,
+      "count": 699,
       "districts": [
         {
           "name": "노원구",
@@ -627,12 +627,12 @@
           "count": 172
         },
         {
-          "name": "구로구",
-          "count": 93
+          "name": "강서구",
+          "count": 94
         },
         {
-          "name": "강서구",
-          "count": 92
+          "name": "구로구",
+          "count": 93
         },
         {
           "name": "은평구",
@@ -774,7 +774,7 @@
         }
       ],
       "facts": {
-        "total": 698,
+        "total": 699,
         "span": {
           "min": {
             "district": "서초구",
@@ -816,10 +816,10 @@
           "districtCount": 15
         },
         "smallHeavy": {
-          "share": 0.5988538681948424
+          "share": 0.5994277539341917
         },
         "old": {
-          "share": 0.4785100286532951,
+          "share": 0.4792560801144492,
           "years": 30
         }
       },
@@ -1043,7 +1043,7 @@
     {
       "min10k": 70000,
       "max10k": 80000,
-      "count": 738,
+      "count": 739,
       "districts": [
         {
           "name": "노원구",
@@ -1059,7 +1059,7 @@
         },
         {
           "name": "강서구",
-          "count": 91
+          "count": 93
         },
         {
           "name": "성북구",
@@ -1201,7 +1201,7 @@
         }
       ],
       "facts": {
-        "total": 738,
+        "total": 739,
         "span": {
           "min": {
             "district": "송파구",
@@ -1243,7 +1243,7 @@
           "districtCount": 19
         },
         "old": {
-          "share": 0.3509485094850949,
+          "share": 0.35182679296346414,
           "years": 30
         }
       },
@@ -1662,8 +1662,12 @@
     {
       "min10k": 100000,
       "max10k": 110000,
-      "count": 463,
+      "count": 465,
       "districts": [
+        {
+          "name": "강서구",
+          "count": 77
+        },
         {
           "name": "노원구",
           "count": 76
@@ -1671,10 +1675,6 @@
         {
           "name": "은평구",
           "count": 76
-        },
-        {
-          "name": "강서구",
-          "count": 73
         },
         {
           "name": "성북구",
@@ -1820,7 +1820,7 @@
         }
       ],
       "facts": {
-        "total": 463,
+        "total": 465,
         "span": {
           "min": {
             "district": "송파구",
@@ -3302,7 +3302,7 @@
     {
       "min10k": 180000,
       "max10k": 190000,
-      "count": 154,
+      "count": 155,
       "districts": [
         {
           "name": "강동구",
@@ -3326,6 +3326,17 @@
         }
       ],
       "deals": [
+        {
+          "district": "용산구",
+          "dong": "문배동",
+          "apt": "아크로타워",
+          "area": 126.3,
+          "floor": 17,
+          "amount10k": 189000,
+          "date": "2026-10-20",
+          "buildYear": 2007,
+          "direct": false
+        },
         {
           "district": "동작구",
           "dong": "동작동",
@@ -3446,21 +3457,10 @@
           "date": "2026-10-07",
           "buildYear": 1999,
           "direct": false
-        },
-        {
-          "district": "송파구",
-          "dong": "문정동",
-          "apt": "파크하비오",
-          "area": 84.91,
-          "floor": 15,
-          "amount10k": 180000,
-          "date": "2026-10-07",
-          "buildYear": 2016,
-          "direct": true
         }
       ],
       "facts": {
-        "total": 154,
+        "total": 155,
         "span": {
           "min": {
             "district": "양천구",
@@ -3917,7 +3917,7 @@
     {
       "min10k": 210000,
       "max10k": 220000,
-      "count": 70,
+      "count": 71,
       "districts": [
         {
           "name": "송파구",
@@ -4075,7 +4075,7 @@
         }
       ],
       "facts": {
-        "total": 70,
+        "total": 71,
         "span": {
           "min": {
             "district": "강남구",
@@ -4093,7 +4093,7 @@
           }
         },
         "standard": {
-          "count": 40,
+          "count": 41,
           "min": 80,
           "max": 90,
           "districts": [
@@ -5629,7 +5629,7 @@
     {
       "min10k": 300000,
       "max10k": null,
-      "count": 306,
+      "count": 307,
       "districts": [
         {
           "name": "강남구",
@@ -5645,7 +5645,7 @@
         },
         {
           "name": "용산구",
-          "count": 30
+          "count": 32
         },
         {
           "name": "영등포구",
@@ -5787,7 +5787,7 @@
         }
       ],
       "facts": {
-        "total": 306,
+        "total": 307,
         "span": {
           "min": {
             "district": "강남구",
@@ -5829,10 +5829,10 @@
           "districtCount": 6
         },
         "largeHeavy": {
-          "share": 0.5065359477124183
+          "share": 0.50814332247557
         },
         "old": {
-          "share": 0.4869281045751634,
+          "share": 0.48534201954397393,
           "years": 30
         }
       },

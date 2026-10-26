@@ -7,8 +7,11 @@
       "direction": "RISING"
     },
     "usdKrw": {
-      "value": 1409.640365,
-      "asOf": "Mon, 10 Aug 2026 00:02:31 +0000"
+      "value": 1420.1,
+      "asOf": "8/10",
+      "prevValue": 1418.8,
+      "change": "1.30",
+      "direction": "RISING"
     },
     "baseRate": {
       "value": "2.75",
@@ -23,8 +26,11 @@
       "direction": "UNCHANGED"
     },
     "usdKrw": {
-      "value": 1409.640365,
-      "asOf": "Mon, 10 Aug 2026 00:02:31 +0000"
+      "value": 1415.3,
+      "asOf": "8/11",
+      "prevValue": 1420.1,
+      "change": "-4.80",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "2.75",
@@ -39,8 +45,11 @@
       "direction": "UNCHANGED"
     },
     "usdKrw": {
-      "value": 1417.000347,
-      "asOf": "Tue, 11 Aug 2026 00:02:31 +0000"
+      "value": 1415,
+      "asOf": "8/12",
+      "prevValue": 1415.3,
+      "change": "-0.30",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "2.75",
@@ -55,8 +64,11 @@
       "direction": "RISING"
     },
     "usdKrw": {
-      "value": 1416.765449,
-      "asOf": "Thu, 13 Aug 2026 00:02:31 +0000"
+      "value": 1415,
+      "asOf": "8/13",
+      "prevValue": 1415,
+      "change": "0.00",
+      "direction": "UNCHANGED"
     },
     "baseRate": {
       "value": "2.75",
@@ -71,8 +83,11 @@
       "direction": "RISING"
     },
     "usdKrw": {
-      "value": 1416.765449,
-      "asOf": "Thu, 13 Aug 2026 00:02:31 +0000"
+      "value": 1414.9,
+      "asOf": "8/14",
+      "prevValue": 1415,
+      "change": "-0.10",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "2.75",
@@ -86,10 +101,6 @@
       "change": "164.60",
       "direction": "RISING"
     },
-    "usdKrw": {
-      "value": 1418.412787,
-      "asOf": "Fri, 14 Aug 2026 00:02:32 +0000"
-    },
     "baseRate": {
       "value": "2.75",
       "effectiveFrom": "2026년 07월 16일"
@@ -102,10 +113,6 @@
       "change": "164.60",
       "direction": "RISING"
     },
-    "usdKrw": {
-      "value": 1415.43407,
-      "asOf": "Sat, 15 Aug 2026 00:02:31 +0000"
-    },
     "baseRate": {
       "value": "2.75",
       "effectiveFrom": "2026년 07월 16일"
@@ -117,10 +124,6 @@
       "value": "6,977.94",
       "change": "164.60",
       "direction": "RISING"
-    },
-    "usdKrw": {
-      "value": 1415.099364,
-      "asOf": "Mon, 17 Aug 2026 00:02:31 +0000"
     },
     "baseRate": {
       "value": "2.75",
@@ -135,8 +138,11 @@
       "direction": "RISING"
     },
     "usdKrw": {
-      "value": 1414.423042,
-      "asOf": "Tue, 18 Aug 2026 00:02:31 +0000"
+      "value": 1415.2,
+      "asOf": "8/18",
+      "prevValue": 1414.9,
+      "change": "0.30",
+      "direction": "RISING"
     },
     "baseRate": {
       "value": "2.75",
@@ -151,8 +157,11 @@
       "direction": "UNCHANGED"
     },
     "usdKrw": {
-      "value": 1414.423042,
-      "asOf": "Tue, 18 Aug 2026 00:02:31 +0000"
+      "value": 1411,
+      "asOf": "8/19",
+      "prevValue": 1415.2,
+      "change": "-4.20",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "2.75",
@@ -167,8 +176,11 @@
       "direction": "UNCHANGED"
     },
     "usdKrw": {
-      "value": 1411.930856,
-      "asOf": "Wed, 19 Aug 2026 00:02:31 +0000"
+      "value": 1402.5,
+      "asOf": "8/20",
+      "prevValue": 1411,
+      "change": "-8.50",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "2.75",
@@ -183,8 +195,11 @@
       "direction": "UNCHANGED"
     },
     "usdKrw": {
-      "value": 1391.031569,
-      "asOf": "Thu, 20 Aug 2026 00:02:31 +0000"
+      "value": 1393,
+      "asOf": "8/21",
+      "prevValue": 1402.5,
+      "change": "-9.50",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "2.75",
@@ -198,10 +213,6 @@
       "change": "60.37",
       "direction": "RISING"
     },
-    "usdKrw": {
-      "value": 1394.706577,
-      "asOf": "Fri, 21 Aug 2026 00:02:31 +0000"
-    },
     "baseRate": {
       "value": "2.75",
       "effectiveFrom": "2026년 07월 16일"
@@ -213,10 +224,6 @@
       "value": "6,912.95",
       "change": "60.37",
       "direction": "RISING"
-    },
-    "usdKrw": {
-      "value": 1385.741836,
-      "asOf": "Sat, 22 Aug 2026 00:02:31 +0000"
     },
     "baseRate": {
       "value": "2.75",
@@ -231,8 +238,11 @@
       "direction": "UNCHANGED"
     },
     "usdKrw": {
-      "value": 1384.513166,
-      "asOf": "Sun, 23 Aug 2026 00:02:31 +0000"
+      "value": 1383.6,
+      "asOf": "8/24",
+      "prevValue": 1393,
+      "change": "-9.40",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "2.75",
@@ -247,8 +257,11 @@
       "direction": "UNCHANGED"
     },
     "usdKrw": {
-      "value": 1385.479002,
-      "asOf": "Mon, 24 Aug 2026 00:02:31 +0000"
+      "value": 1380.6,
+      "asOf": "8/25",
+      "prevValue": 1383.6,
+      "change": "-3.00",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "2.75",
@@ -263,8 +276,11 @@
       "direction": "UNCHANGED"
     },
     "usdKrw": {
-      "value": 1383.118493,
-      "asOf": "Tue, 25 Aug 2026 00:02:31 +0000"
+      "value": 1383.1,
+      "asOf": "8/26",
+      "prevValue": 1380.6,
+      "change": "2.50",
+      "direction": "RISING"
     },
     "baseRate": {
       "value": "2.75",
@@ -279,8 +295,11 @@
       "direction": "RISING"
     },
     "usdKrw": {
-      "value": 1384.607983,
-      "asOf": "Thu, 27 Aug 2026 00:02:31 +0000"
+      "value": 1384.6,
+      "asOf": "8/27",
+      "prevValue": 1383.1,
+      "change": "1.50",
+      "direction": "RISING"
     },
     "baseRate": {
       "value": "3.00",
@@ -295,8 +314,11 @@
       "direction": "FALLING"
     },
     "usdKrw": {
-      "value": 1381.567326,
-      "asOf": "Fri, 28 Aug 2026 00:02:31 +0000"
+      "value": 1380.3,
+      "asOf": "8/28",
+      "prevValue": 1384.6,
+      "change": "-4.30",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "3.00",
@@ -311,13 +333,6 @@
       "direction": "FALLING",
       "asOf": "8/28"
     },
-    "usdKrw": {
-      "value": 1377.942221,
-      "asOf": "Sat, 29 Aug 2026 00:02:31 +0000",
-      "prevValue": 1381.567326,
-      "change": "-3.63",
-      "direction": "FALLING"
-    },
     "baseRate": {
       "value": "3.00",
       "effectiveFrom": "2026년 08월 27일"
@@ -330,13 +345,6 @@
       "change": "-123.49",
       "direction": "FALLING",
       "asOf": "8/28"
-    },
-    "usdKrw": {
-      "value": 1377.900275,
-      "asOf": "Sun, 30 Aug 2026 00:02:31 +0000",
-      "prevValue": 1377.942221,
-      "change": "-0.04",
-      "direction": "FALLING"
     },
     "baseRate": {
       "value": "3.00",
@@ -352,10 +360,10 @@
       "asOf": "8/28"
     },
     "usdKrw": {
-      "value": 1376.596684,
-      "asOf": "Mon, 31 Aug 2026 00:02:31 +0000",
-      "prevValue": 1377.900275,
-      "change": "-1.30",
+      "value": 1376.5,
+      "asOf": "8/31",
+      "prevValue": 1380.3,
+      "change": "-3.80",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -372,10 +380,10 @@
       "asOf": "8/31"
     },
     "usdKrw": {
-      "value": 1368.522936,
-      "asOf": "Tue, 01 Sep 2026 00:02:31 +0000",
-      "prevValue": 1376.596684,
-      "change": "-8.07",
+      "value": 1373.6,
+      "asOf": "9/1",
+      "prevValue": 1376.5,
+      "change": "-2.90",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -392,11 +400,11 @@
       "asOf": "9/1"
     },
     "usdKrw": {
-      "value": 1373.777338,
-      "asOf": "Wed, 02 Sep 2026 00:02:31 +0000",
-      "prevValue": 1368.522936,
-      "change": "5.25",
-      "direction": "RISING"
+      "value": 1370.3,
+      "asOf": "9/2",
+      "prevValue": 1373.6,
+      "change": "-3.30",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "3.00",
@@ -412,10 +420,10 @@
       "asOf": "9/30"
     },
     "usdKrw": {
-      "value": 1355.838011,
-      "asOf": "Thu, 01 Oct 2026 00:02:31 +0000",
-      "prevValue": 1373.777338,
-      "change": "-17.94",
+      "value": 1355.7,
+      "asOf": "10/1",
+      "prevValue": 1358.4,
+      "change": "-2.70",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -432,10 +440,10 @@
       "asOf": "10/1"
     },
     "usdKrw": {
-      "value": 1360.202164,
-      "asOf": "Fri, 02 Oct 2026 00:02:31 +0000",
-      "prevValue": 1355.838011,
-      "change": "4.36",
+      "value": 1359.6,
+      "asOf": "10/2",
+      "prevValue": 1355.7,
+      "change": "3.90",
       "direction": "RISING"
     },
     "baseRate": {
@@ -451,13 +459,6 @@
       "direction": "RISING",
       "asOf": "10/2"
     },
-    "usdKrw": {
-      "value": 1348.606131,
-      "asOf": "Sun, 04 Oct 2026 00:02:32 +0000",
-      "prevValue": 1360.202164,
-      "change": "-11.60",
-      "direction": "FALLING"
-    },
     "baseRate": {
       "value": "3.00",
       "effectiveFrom": "2026년 08월 27일"
@@ -470,13 +471,6 @@
       "change": "32.39",
       "direction": "RISING",
       "asOf": "10/2"
-    },
-    "usdKrw": {
-      "value": 1344.607498,
-      "asOf": "Mon, 05 Oct 2026 00:02:31 +0000",
-      "prevValue": 1348.606131,
-      "change": "-4.00",
-      "direction": "FALLING"
     },
     "baseRate": {
       "value": "3.00",
@@ -492,10 +486,10 @@
       "asOf": "10/2"
     },
     "usdKrw": {
-      "value": 1342.774629,
-      "asOf": "Tue, 06 Oct 2026 00:02:31 +0000",
-      "prevValue": 1344.607498,
-      "change": "-1.83",
+      "value": 1358.5,
+      "asOf": "10/6",
+      "prevValue": 1359.6,
+      "change": "-1.10",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -512,10 +506,10 @@
       "asOf": "10/6"
     },
     "usdKrw": {
-      "value": 1338.924224,
-      "asOf": "Wed, 07 Oct 2026 00:02:32 +0000",
-      "prevValue": 1342.774629,
-      "change": "-3.85",
+      "value": 1343.4,
+      "asOf": "10/7",
+      "prevValue": 1358.5,
+      "change": "-15.10",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -532,11 +526,11 @@
       "asOf": "10/7"
     },
     "usdKrw": {
-      "value": 1339.092519,
-      "asOf": "Thu, 08 Oct 2026 00:02:31 +0000",
-      "prevValue": 1338.924224,
-      "change": "0.17",
-      "direction": "RISING"
+      "value": 1339.2,
+      "asOf": "10/8",
+      "prevValue": 1343.4,
+      "change": "-4.20",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "3.00",
@@ -551,13 +545,6 @@
       "direction": "FALLING",
       "asOf": "10/8"
     },
-    "usdKrw": {
-      "value": 1341.594383,
-      "asOf": "Sat, 10 Oct 2026 00:02:31 +0000",
-      "prevValue": 1339.092519,
-      "change": "2.50",
-      "direction": "RISING"
-    },
     "baseRate": {
       "value": "3.00",
       "effectiveFrom": "2026년 08월 27일"
@@ -570,13 +557,6 @@
       "change": "-177.97",
       "direction": "FALLING",
       "asOf": "10/8"
-    },
-    "usdKrw": {
-      "value": 1341.69027,
-      "asOf": "Sun, 11 Oct 2026 00:02:31 +0000",
-      "prevValue": 1341.594383,
-      "change": "0.10",
-      "direction": "RISING"
     },
     "baseRate": {
       "value": "3.00",
@@ -592,10 +572,10 @@
       "asOf": "10/8"
     },
     "usdKrw": {
-      "value": 1340.705374,
-      "asOf": "Mon, 12 Oct 2026 00:02:32 +0000",
-      "prevValue": 1341.69027,
-      "change": "-0.98",
+      "value": 1338,
+      "asOf": "10/12",
+      "prevValue": 1339.2,
+      "change": "-1.20",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -612,10 +592,10 @@
       "asOf": "10/12"
     },
     "usdKrw": {
-      "value": 1333.744079,
-      "asOf": "Mon, 12 Oct 2026 23:57:31 +0000",
-      "prevValue": 1340.705374,
-      "change": "-6.96",
+      "value": 1335.8,
+      "asOf": "10/13",
+      "prevValue": 1338,
+      "change": "-2.20",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -632,10 +612,10 @@
       "asOf": "10/13"
     },
     "usdKrw": {
-      "value": 1340.880416,
-      "asOf": "Wed, 14 Oct 2026 00:02:32 +0000",
-      "prevValue": 1333.744079,
-      "change": "7.14",
+      "value": 1340.5,
+      "asOf": "10/14",
+      "prevValue": 1335.8,
+      "change": "4.70",
       "direction": "RISING"
     },
     "baseRate": {
@@ -652,10 +632,10 @@
       "asOf": "10/14"
     },
     "usdKrw": {
-      "value": 1339.811585,
-      "asOf": "Thu, 15 Oct 2026 00:02:31 +0000",
-      "prevValue": 1340.880416,
-      "change": "-1.07",
+      "value": 1338.6,
+      "asOf": "10/15",
+      "prevValue": 1340.5,
+      "change": "-1.90",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -672,10 +652,10 @@
       "asOf": "10/15"
     },
     "usdKrw": {
-      "value": 1342.741111,
-      "asOf": "Fri, 16 Oct 2026 00:02:31 +0000",
-      "prevValue": 1339.811585,
-      "change": "2.93",
+      "value": 1348.5,
+      "asOf": "10/16",
+      "prevValue": 1338.6,
+      "change": "9.90",
       "direction": "RISING"
     },
     "baseRate": {
@@ -691,13 +671,6 @@
       "direction": "RISING",
       "asOf": "10/16"
     },
-    "usdKrw": {
-      "value": 1334.892169,
-      "asOf": "Sat, 17 Oct 2026 00:02:32 +0000",
-      "prevValue": 1342.741111,
-      "change": "-7.85",
-      "direction": "FALLING"
-    },
     "baseRate": {
       "value": "3.00",
       "effectiveFrom": "2026년 08월 27일"
@@ -710,13 +683,6 @@
       "change": "113.83",
       "direction": "RISING",
       "asOf": "10/16"
-    },
-    "usdKrw": {
-      "value": 1334.772994,
-      "asOf": "Sun, 18 Oct 2026 00:02:31 +0000",
-      "prevValue": 1334.892169,
-      "change": "-0.12",
-      "direction": "FALLING"
     },
     "baseRate": {
       "value": "3.00",
@@ -732,10 +698,10 @@
       "asOf": "10/16"
     },
     "usdKrw": {
-      "value": 1333.598991,
-      "asOf": "Mon, 19 Oct 2026 00:02:32 +0000",
-      "prevValue": 1334.772994,
-      "change": "-1.17",
+      "value": 1342.4,
+      "asOf": "10/19",
+      "prevValue": 1348.5,
+      "change": "-6.10",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -752,10 +718,10 @@
       "asOf": "10/19"
     },
     "usdKrw": {
-      "value": 1330.794448,
-      "asOf": "Tue, 20 Oct 2026 00:02:32 +0000",
-      "prevValue": 1333.598991,
-      "change": "-2.80",
+      "value": 1332.1,
+      "asOf": "10/20",
+      "prevValue": 1342.4,
+      "change": "-10.30",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -772,10 +738,10 @@
       "asOf": "10/20"
     },
     "usdKrw": {
-      "value": 1327.17027,
-      "asOf": "Wed, 21 Oct 2026 00:02:32 +0000",
-      "prevValue": 1330.794448,
-      "change": "-3.62",
+      "value": 1328,
+      "asOf": "10/21",
+      "prevValue": 1332.1,
+      "change": "-4.10",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -792,10 +758,10 @@
       "asOf": "10/21"
     },
     "usdKrw": {
-      "value": 1326.143133,
-      "asOf": "Thu, 22 Oct 2026 00:02:31 +0000",
-      "prevValue": 1327.17027,
-      "change": "-1.03",
+      "value": 1325.5,
+      "asOf": "10/22",
+      "prevValue": 1328,
+      "change": "-2.50",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -812,10 +778,10 @@
       "asOf": "10/21"
     },
     "usdKrw": {
-      "value": 1324.953768,
-      "asOf": "Fri, 23 Oct 2026 00:02:31 +0000",
-      "prevValue": 1326.143133,
-      "change": "-1.19",
+      "value": 1324.6,
+      "asOf": "10/23",
+      "prevValue": 1325.5,
+      "change": "-0.90",
       "direction": "FALLING"
     },
     "baseRate": {
@@ -831,13 +797,6 @@
       "direction": "RISING",
       "asOf": "10/23"
     },
-    "usdKrw": {
-      "value": 1324.702169,
-      "asOf": "Sat, 24 Oct 2026 00:02:31 +0000",
-      "prevValue": 1324.953768,
-      "change": "-0.25",
-      "direction": "FALLING"
-    },
     "baseRate": {
       "value": "3.00",
       "effectiveFrom": "2026년 08월 27일"
@@ -850,13 +809,6 @@
       "change": "16.53",
       "direction": "RISING",
       "asOf": "10/23"
-    },
-    "usdKrw": {
-      "value": 1324.821047,
-      "asOf": "Sun, 25 Oct 2026 00:02:31 +0000",
-      "prevValue": 1324.702169,
-      "change": "0.12",
-      "direction": "RISING"
     },
     "baseRate": {
       "value": "3.00",
@@ -872,11 +824,11 @@
       "asOf": "10/23"
     },
     "usdKrw": {
-      "value": 1324.821047,
-      "asOf": "Sun, 25 Oct 2026 00:02:31 +0000",
-      "prevValue": 1324.821047,
-      "change": "0.00",
-      "direction": "UNCHANGED"
+      "value": 1324.3,
+      "asOf": "10/26",
+      "prevValue": 1324.6,
+      "change": "-0.30",
+      "direction": "FALLING"
     },
     "baseRate": {
       "value": "3.00",
