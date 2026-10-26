@@ -11,6 +11,7 @@ import { DISTRICTS } from "../scripts/realestate-districts.ts";
 import { DISTRICT_PAGES } from "../scripts/district-slugs.ts";
 import { RESALE_LINK, districtResaleSentence } from "../scripts/district-facts.ts";
 import { FORBIDDEN } from "../scripts/repeat-sales.ts";
+import { SOURCES } from "../scripts/source-lines.ts";
 import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -106,6 +107,10 @@ test("한계 문구가 갈아타기 V8 절과 같다: 시장 지수 아님·연�
   };
   assert.ok(texts.ko.includes("시장 지수·구 시세 상승률이 아니며 연율화하지 않았습니다"));
   assert.ok(texts.ko.includes("차이의 원인은 재지 않았습니다"));
+  // R-ONE 값은 쌍 기간에 맞춰 가공한 값이라 같은 문장에 가공 표시가 붙고, 기관 이름은 source-lines 의 SOURCES.reb 에서 온다(글자로 쓰지 않는다, legal #723). ko·en 짝.
+  assert.ok(texts.ko.includes(`가공한 ${SOURCES.reb.ko} R-ONE 값은`) && /가공/.test(texts.ko));
+  assert.ok(texts.en.includes(`${SOURCES.reb.en} R-ONE data, processed to the same pair periods`) && /processed/.test(texts.en));
+  assert.doesNotMatch(texts.ko + texts.en, /바꿨|수정|corrected|adjusted/);
   assert.ok(texts.en.includes("Not a market index or district price growth, not annualised"));
   assert.ok(texts.en.includes("the cause of the gap was not measured"));
   for (const row of j.rows) {
@@ -141,7 +146,7 @@ test("rows 필드 불변: 줄은 gu·n·st·out·gap·p 와 window·checks 만 �
   assert.equal(typeof j.checks.enough, "boolean");
 });
 
-test("바이트: 나가는 25장에서 줄(두 문단)을 빼 보면 늘어난 것이 gzip 으로 장당 ≤ 400 B, 인라인 스크립트는 줄과 무관하다 (#716)", async () => {
+test("바이트: 나가는 25장에서 줄(두 문단)을 빼 보면 늘어난 것이 gzip 으로 장당 ≤ 450 B, 인라인 스크립트는 줄과 무관하다 (#716)", async () => {
   const [tpl, realestate, j] = await Promise.all([
     readFile(path.join(root, "scripts/realestate-template.html"), "utf8"),
     readFile(path.join(root, "docs/data/realestate.json"), "utf8").then(JSON.parse),
@@ -154,7 +159,7 @@ test("바이트: 나가는 25장에서 줄(두 문단)을 빼 보면 늘어난 �
     const without = html.replace(block, "");
     assert.equal(html.match(block)?.length, 2, `${district.file}: 줄 문단이 ko·en 두 개가 아니다`);
     const delta = gzipSync(html).length - gzipSync(without).length;
-    assert.ok(delta <= 400, `${district.file}: gzip +${delta} B`);
+    assert.ok(delta <= 450, `${district.file}: gzip +${delta} B`);
     // 줄은 빌드 때 구운 글자다 - 줄을 넣고 빼도 인라인 스크립트·script 요소가 같다.
     const built = buildDistrictPage(tpl, district, realestate, null, null, null, null, null, j);
     const bare = buildDistrictPage(tpl, district, realestate);

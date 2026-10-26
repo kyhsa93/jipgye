@@ -638,8 +638,8 @@ const SUM_EN = "Apartments in 종로구 trade at ₩50M per pyeong. For an 84m²
   const OK = { gu: "11170", n: 119, st: "ok", gap: 378, p: [19.5, 15.2, 23.3, 13.6] };
   const LINK_KO = '<a href="./switch-house.html#repeat-sales">같은 집 쌍 표 →</a>';
   const LINK_EN = '<a href="./switch-house.html#repeat-sales">Pairs table →</a>';
-  const KO_OK = "같은 집이 다시 팔렸을 때(2024년 11월~2026년 8월 계약 쌍) 가격 변화 중앙값 +19.5%(90% 구간 +15.2% ~ +23.3%, 119쌍, 보유 중앙 378일). 같은 쌍 기간의 한국부동산원 R-ONE은 +13.6%, 차이의 원인은 재지 않았습니다. 시장 지수·구 시세 상승률이 아니며 연율화하지 않았습니다.";
-  const EN_OK = "When the same home sold again (pairs contracted Nov 2024–Aug 2026): median price change +19.5% (90% range +15.2% to +23.3%, 119 pairs, median hold 378 days). Korea Real Estate Board R-ONE, same pairs: +13.6%; the cause of the gap was not measured. Not a market index or district price growth, not annualised.";
+  const KO_OK = "같은 집이 다시 팔렸을 때(2024년 11월~2026년 8월 계약 쌍) 가격 변화 중앙값 +19.5%(90% 구간 +15.2% ~ +23.3%, 119쌍, 보유 중앙 378일). 같은 쌍 기간에 맞춰 가공한 한국부동산원 R-ONE 값은 +13.6%, 차이의 원인은 재지 않았습니다. 시장 지수·구 시세 상승률이 아니며 연율화하지 않았습니다.";
+  const EN_OK = "When the same home sold again (pairs contracted Nov 2024–Aug 2026): median price change +19.5% (90% range +15.2% to +23.3%, 119 pairs, median hold 378 days). Korea Real Estate Board R-ONE data, processed to the same pair periods: +13.6%; the cause of the gap was not measured. Not a market index or district price growth, not annualised.";
   add("RS-01", fn, "이름이 null → 빈 문자열", [null, D([OK])], "");
   add("RS-02", fn, "집계가 없으면(null) 빈 문자열", ["용산구", null], "");
   add("RS-03", fn, "표에 없는 구 → 빈 문자열", ["강남구", D([OK])], "");

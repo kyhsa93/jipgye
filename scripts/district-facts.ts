@@ -18,6 +18,8 @@
  * 그 문장을 아예 갖지 않는다.
  */
 
+import { SOURCES } from "./source-lines.ts";
+
 /**
  * 비중을 말하려면 얼마나 있어야 하는가.
  *
@@ -282,7 +284,7 @@ export function districtResaleSentence(code, data, locale = "ko") {
   const many = row.out === 1;
   return en
     ? `${head} (pairs contracted ${span}): median price change ${resalePct(m)} (90% range ${resalePct(lo)} to ${resalePct(hi)}, ${row.n} pairs, median hold ${row.gap} days${many ? ", many outliers" : ""}). ` +
-        `Korea Real Estate Board R-ONE, same pairs: ${resalePct(r)}; the cause of the gap was not measured. Not a market index or district price growth, not annualised.`
+        `${SOURCES.reb.en} R-ONE data, processed to the same pair periods: ${resalePct(r)}; the cause of the gap was not measured. Not a market index or district price growth, not annualised.`
     : `${head}(${span} 계약 쌍) 가격 변화 중앙값 ${resalePct(m)}(90% 구간 ${resalePct(lo)} ~ ${resalePct(hi)}, ${row.n}쌍, 보유 중앙 ${row.gap}일${many ? ", 이상치 많음" : ""}). ` +
-        `같은 쌍 기간의 한국부동산원 R-ONE은 ${resalePct(r)}, 차이의 원인은 재지 않았습니다. 시장 지수·구 시세 상승률이 아니며 연율화하지 않았습니다.`;
+        `같은 쌍 기간에 맞춰 가공한 ${SOURCES.reb.ko} R-ONE 값은 ${resalePct(r)}, 차이의 원인은 재지 않았습니다. 시장 지수·구 시세 상승률이 아니며 연율화하지 않았습니다.`;
 }
