@@ -489,3 +489,13 @@ test("c-base.css: 누르는 컴포넌트는 44px(--tap) 이상이고 초점 표�
   }
   assert.doesNotMatch(text, /outline:\s*(none|0)\b/, "초점 표시를 지우는 규칙");
 });
+
+test("c-base.css: .c-select 는 WebKit 기본 모양을 끄고(min-height 가 먹게) 화살표를 다시 그린다 (#745 PR9b)", async () => {
+  const all = rules(await cBase());
+  const sel = all.filter((r) => r.sel.split(",").map((x) => x.trim()).includes(".c-select")).map((r) => r.body).join("\n");
+  assert.match(sel, /-webkit-appearance:\s*none/, "WebKit 기본 select 모양이 남아 높이가 23px 로 줄어든다");
+  assert.match(sel, /(^|[\s;])appearance:\s*none/);
+  assert.match(sel, /min-height:\s*var\(--tap\)/);
+  assert.match(sel, /background-image:[^;]*currentColor/, "모양을 끈 뒤 화살표가 없다");
+  assert.match(sel, /background-repeat:\s*no-repeat/);
+});

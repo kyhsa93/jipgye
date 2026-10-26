@@ -133,15 +133,18 @@ test("CSS: 초점 받은 .table-scroll의 최종 outline-offset이 음수다(뒤
 });
 
 // #745 PR9: 560px 이하에서 넓은 표를 카드로. nav.js 가 머리글 한 줄짜리 표의 본문 칸마다 열 이름을 data-label 로 붙인다.
-function fakeCell(text = "", colSpan = 1) {
+function fakeNode(extra = {}) {
   const attrs = {};
-  return { textContent: text, colSpan, attrs, getAttribute: (k) => attrs[k] ?? null, setAttribute: (k, v) => (attrs[k] = v) };
+  return { attrs, getAttribute: (k) => attrs[k] ?? null, setAttribute: (k, v) => (attrs[k] = v), ...extra };
+}
+function fakeCell(text = "", colSpan = 1, tagName = "TD") {
+  return fakeNode({ textContent: text, colSpan, tagName });
 }
 function fakeGrid({ heads, rows, headRows = 1, cls = "rate-table" }) {
   const classes = new Set([cls]);
-  const head = { rows: Array.from({ length: headRows }, () => ({ cells: heads.map((h) => fakeCell(h)) })) };
-  const body = { rows: rows.map((r) => ({ cells: r.map((v) => fakeCell(v)) })) };
-  return { tHead: head, tBodies: [body], classes, classList: { add: (n) => classes.add(n), contains: (n) => classes.has(n) } };
+  const head = fakeNode({ rows: Array.from({ length: headRows }, () => fakeNode({ cells: heads.map((h) => fakeCell(h, 1, "TH")) })) });
+  const body = fakeNode({ rows: rows.map((r) => fakeNode({ cells: r.map((v, i) => fakeCell(v, 1, i === 0 && cls === "th-row" ? "TH" : "TD")) })) });
+  return fakeNode({ tagName: "TABLE", tHead: head, tBodies: [body], classes, classList: { add: (n) => classes.add(n), contains: (n) => classes.has(n) } });
 }
 function scrollWith(table) {
   const t = fakeTable({ scrollWidth: 300, clientWidth: 358 });
@@ -154,10 +157,10 @@ test("카드 표: 머리글 한 줄 표는 본문 칸마다 열 이름 data-labe
   await run([scrollWith(grid)]);
   assert.ok(grid.classes.has("cards"), "표에 .cards 가 없다");
   assert.deepEqual(grid.tBodies[0].rows[0].cells.map((c) => c.attrs["data-label"]), ["자치구", "1층", "3층 이상", "차이"]);
-  assert.deepEqual(grid.tBodies[0].rows[1].cells[0].attrs, {}, "한 칸짜리 안내 줄에 라벨이 붙었다");
+  assert.deepEqual(grid.tBodies[0].rows[1].cells[0].attrs, { role: "cell" }, "한 칸짜리 안내 줄에 라벨이 붙었다");
 });
 
-test("카드 표: 머리글이 두 줄이거나 colspan 이 있거나 .data-table(자체 라벨) 이면 건드리지 않는다 (#745 PR9)", async () => {
+test("카드 표: 머리글이 두 줄이거나 colspan 이 있거나 .data-table(자체 라벨) 이면 라벨·.cards 를 달지 않는다 (#745 PR9)", async () => {
   const two = fakeGrid({ heads: ["a", "b", "c"], rows: [["1", "2", "3"]], headRows: 2 });
   const own = fakeGrid({ heads: ["a", "b", "c"], rows: [["1", "2", "3"]], cls: "data-table" });
   const span = fakeGrid({ heads: ["a", "b", "c"], rows: [["1", "2", "3"]] });
@@ -165,15 +168,58 @@ test("카드 표: 머리글이 두 줄이거나 colspan 이 있거나 .data-tabl
   await run([scrollWith(two), scrollWith(own), scrollWith(span)]);
   for (const g of [two, own, span]) {
     assert.ok(!g.classes.has("cards"));
-    assert.deepEqual(g.tBodies[0].rows[0].cells[0].attrs, {});
+    assert.equal(g.tBodies[0].rows[0].cells[0].attrs["data-label"], undefined);
   }
+  // 카드가 안 되는 표는 표 그대로라 역할을 붙이지 않는다.
+  assert.deepEqual(two.attrs, {});
+  assert.deepEqual(span.attrs, {});
+});
+
+test("카드 표 낭독기: 카드가 되는 표와 .data-table 은 table/rowgroup/row/columnheader/rowheader/cell 역할을 받는다 (#745 PR9b)", async () => {
+  const grid = fakeGrid({ heads: ["자치구", "1층", "차이"], rows: [["강남구", "1", "2"]], cls: "th-row" });
+  const own = fakeGrid({ heads: ["지역", "매매", "전세"], rows: [["강남구", "1", "2"]], cls: "data-table" });
+  // .data-table 은 .table-scroll 밖(.table-wrap)에 있어 표 자체가 넘어온다 - 내비 고리가 건드릴 메서드만 흉내 낸다.
+  Object.assign(own, { scrollWidth: 0, clientWidth: 0, matches: () => false, querySelector: () => null, addEventListener() {}, classList: { ...own.classList, toggle() {} } });
+  await run([scrollWith(grid), own]);
+  for (const g of [grid, own]) {
+    assert.equal(g.attrs.role, "table");
+    assert.equal(g.tHead.attrs.role, "rowgroup");
+    assert.equal(g.tBodies[0].attrs.role, "rowgroup");
+    assert.equal(g.tHead.rows[0].attrs.role, "row");
+    assert.deepEqual(g.tHead.rows[0].cells.map((c) => c.attrs.role), ["columnheader", "columnheader", "columnheader"]);
+    assert.equal(g.tBodies[0].rows[0].attrs.role, "row");
+  }
+  assert.deepEqual(grid.tBodies[0].rows[0].cells.map((c) => c.attrs.role), ["rowheader", "cell", "cell"]);
+  assert.deepEqual(own.tBodies[0].rows[0].cells.map((c) => c.attrs.role), ["cell", "cell", "cell"]);
+  assert.equal(own.tBodies[0].rows[0].cells[1].attrs["data-label"], undefined, ".data-table 은 자체 라벨을 쓴다");
+});
+
+test("카드 라벨·역할은 관찰 하나(main)로 다시 붙인다 - 표 단위 관찰은 페이드만 센다 (#745 PR9b)", async () => {
+  const source = await readFile(path.join(docs, "nav.js"), "utf8");
+  const observers = source.match(/new MutationObserver\(([^)]*\)?)/g) ?? [];
+  const cards = observers.filter((o) => /toCards|cardAll/.test(o));
+  assert.equal(cards.length, 1, `카드 갱신 관찰이 ${cards.length}개다`);
+  assert.doesNotMatch(source, /MutationObserver\(\(\) => \(toCards/, "표 단위 관찰이 아직 toCards 를 부른다");
 });
 
 test("CSS: 560px 이하에서 .cards 표는 머리글을 숨기고 칸마다 라벨을 앞에 적는다, 시세 표 카드도 560px 까지 (#745 PR9)", async () => {
   const css = (await readFile(path.join(root, "src/css/legacy.css"), "utf8")).replace(/\/\*[\s\S]*?\*\//g, "");
   const block = css.slice(css.indexOf("@media (max-width: 560px) {\n  .table-scroll > table.cards"));
   assert.ok(block.length < css.length, "카드 표 미디어 블록이 없다");
-  assert.match(block, /table\.cards > thead \{\s*display: none;/);
+  // 머리글은 눈에서만 숨긴다(#745 PR9b) - display:none 이면 낭독기가 열 이름을 잃는다.
+  assert.match(block, /table\.cards > thead \{\s*position: absolute;[^}]*clip-path: inset\(50%\);/);
+  assert.doesNotMatch(block.slice(0, block.indexOf("}\n}")), /thead \{\s*display: none;/);
   assert.match(block, /table\.cards tr > \[data-label\]::before \{\s*content: attr\(data-label\);/);
   assert.match(css, /@media \(max-width: 560px\) \{\s*\.data-table \{\s*white-space: normal;/, "시세 표 카드 분기점이 560px 가 아니다");
+});
+
+test("CSS: 560px 이하 시세 표는 머리글을 눈에서만 숨기되 정렬 단추 줄은 보인다(44px) (#745 PR9b)", async () => {
+  const css = (await readFile(path.join(root, "src/css/legacy.css"), "utf8")).replace(/\/\*[\s\S]*?\*\//g, "");
+  const start = css.search(/@media \(max-width: 560px\) \{\s*\.data-table \{/);
+  assert.ok(start > 0);
+  const block = css.slice(start, css.indexOf("\n}\n", start));
+  assert.match(block, /\.data-table thead \{\s*position: absolute;[^}]*clip-path: inset\(50%\);/);
+  assert.match(block, /\.realestate-table > thead \{\s*position: static;\s*display: block;[^}]*clip-path: none;/, "시세 표 정렬 단추가 숨는다");
+  assert.match(block, /\.realestate-table > thead tr \{\s*display: flex;/);
+  assert.match(block, /\.realestate-table th\.sortable button \{[^}]*min-height: var\(--tap\);/);
 });

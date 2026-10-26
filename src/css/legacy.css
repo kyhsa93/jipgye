@@ -2359,8 +2359,14 @@ html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-catego
     white-space: normal;
   }
 
+  /* 머리글은 눈에서만 숨긴다(#745 PR9b). display:none 이면 낭독기가 열 이름을 잃는다. */
   table.cards > thead {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   table.cards tr {
@@ -3423,8 +3429,47 @@ main:has(> #question-nav) .content-notice.page-notice { min-height: 4lh; }
     white-space: normal;
   }
 
+  /* 머리글은 눈에서만 숨긴다(#745 PR9b). */
   .data-table thead {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* 시세 표는 카드가 되면 정렬 단추를 잃었다(#745 PR9b). 숨기는 대신 머리글 줄을 표 위 작은 정렬 단추 줄로 보인다 -
+   * 같은 단추라 정렬 로직·aria-sort·▲▼ 표기를 그대로 쓴다(인라인 0). */
+  .realestate-table > thead {
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+
+  .realestate-table > thead tr {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0 0 8px;
+  }
+
+  .realestate-table th.sortable {
+    border: 0;
+  }
+
+  .realestate-table th.sortable button {
+    width: auto;
+    min-height: var(--tap);
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: var(--fs-xs);
+    text-align: left;
   }
 
   .data-table tr {
