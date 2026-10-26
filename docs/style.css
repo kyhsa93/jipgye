@@ -543,6 +543,11 @@
     font-size: var(--fs-sm);
     padding: 6px 0;
     list-style: none;
+    min-height: var(--tap);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
   }
   .history-more summary::-webkit-details-marker {
     display: none;
@@ -1691,6 +1696,42 @@
   .table-scroll {
     overflow-x: auto;
   }
+  @media (max-width: 560px) {
+    .table-scroll > table.cards, table.cards > tbody, table.cards tr {
+      display: block;
+      width: 100%;
+    }
+    table.cards {
+      white-space: normal;
+    }
+    table.cards > thead {
+      display: none;
+    }
+    table.cards tr {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    table.cards tr > [data-label] {
+      display: block;
+      padding: 3px 0;
+      border: 0;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+    table.cards tr > [data-label]::before {
+      content: attr(data-label);
+      float: left;
+      max-width: 55%;
+      margin-right: 12px;
+      color: var(--muted);
+      font-size: var(--fs-xs);
+      font-weight: 400;
+      text-align: left;
+    }
+    table.cards tr > :first-child {
+      font-weight: 600;
+    }
+  }
   .lead {
     font-size: var(--fs-lg);
     line-height: 1.55;
@@ -2348,7 +2389,7 @@
       grid-template-columns: 1fr;
     }
   }
-  @media (max-width: 480px) {
+  @media (max-width: 560px) {
     .data-table {
       white-space: normal;
     }

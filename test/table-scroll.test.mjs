@@ -131,3 +131,49 @@ test("CSS: 초점 받은 .table-scroll의 최종 outline-offset이 음수다(뒤
   const v = finalFocusOffset(css);
   assert.ok(v !== undefined && v < 0, `최종 outline-offset=${v}px - mask(border-box)에 테두리가 잘린다`);
 });
+
+// #745 PR9: 560px 이하에서 넓은 표를 카드로. nav.js 가 머리글 한 줄짜리 표의 본문 칸마다 열 이름을 data-label 로 붙인다.
+function fakeCell(text = "", colSpan = 1) {
+  const attrs = {};
+  return { textContent: text, colSpan, attrs, getAttribute: (k) => attrs[k] ?? null, setAttribute: (k, v) => (attrs[k] = v) };
+}
+function fakeGrid({ heads, rows, headRows = 1, cls = "rate-table" }) {
+  const classes = new Set([cls]);
+  const head = { rows: Array.from({ length: headRows }, () => ({ cells: heads.map((h) => fakeCell(h)) })) };
+  const body = { rows: rows.map((r) => ({ cells: r.map((v) => fakeCell(v)) })) };
+  return { tHead: head, tBodies: [body], classes, classList: { add: (n) => classes.add(n), contains: (n) => classes.has(n) } };
+}
+function scrollWith(table) {
+  const t = fakeTable({ scrollWidth: 300, clientWidth: 358 });
+  t.querySelector = (sel) => (sel === "table" ? table : null);
+  return t;
+}
+
+test("카드 표: 머리글 한 줄 표는 본문 칸마다 열 이름 data-label 과 .cards 를 받고, 칸 수가 다른 줄은 그대로다 (#745 PR9)", async () => {
+  const grid = fakeGrid({ heads: ["자치구", "1층", "3층 이상", "차이"], rows: [["강남구", "1", "2", "3"], ["데이터 없음"]] });
+  await run([scrollWith(grid)]);
+  assert.ok(grid.classes.has("cards"), "표에 .cards 가 없다");
+  assert.deepEqual(grid.tBodies[0].rows[0].cells.map((c) => c.attrs["data-label"]), ["자치구", "1층", "3층 이상", "차이"]);
+  assert.deepEqual(grid.tBodies[0].rows[1].cells[0].attrs, {}, "한 칸짜리 안내 줄에 라벨이 붙었다");
+});
+
+test("카드 표: 머리글이 두 줄이거나 colspan 이 있거나 .data-table(자체 라벨) 이면 건드리지 않는다 (#745 PR9)", async () => {
+  const two = fakeGrid({ heads: ["a", "b", "c"], rows: [["1", "2", "3"]], headRows: 2 });
+  const own = fakeGrid({ heads: ["a", "b", "c"], rows: [["1", "2", "3"]], cls: "data-table" });
+  const span = fakeGrid({ heads: ["a", "b", "c"], rows: [["1", "2", "3"]] });
+  span.tHead.rows[0].cells[1].colSpan = 2;
+  await run([scrollWith(two), scrollWith(own), scrollWith(span)]);
+  for (const g of [two, own, span]) {
+    assert.ok(!g.classes.has("cards"));
+    assert.deepEqual(g.tBodies[0].rows[0].cells[0].attrs, {});
+  }
+});
+
+test("CSS: 560px 이하에서 .cards 표는 머리글을 숨기고 칸마다 라벨을 앞에 적는다, 시세 표 카드도 560px 까지 (#745 PR9)", async () => {
+  const css = (await readFile(path.join(root, "src/css/legacy.css"), "utf8")).replace(/\/\*[\s\S]*?\*\//g, "");
+  const block = css.slice(css.indexOf("@media (max-width: 560px) {\n  .table-scroll > table.cards"));
+  assert.ok(block.length < css.length, "카드 표 미디어 블록이 없다");
+  assert.match(block, /table\.cards > thead \{\s*display: none;/);
+  assert.match(block, /table\.cards tr > \[data-label\]::before \{\s*content: attr\(data-label\);/);
+  assert.match(css, /@media \(max-width: 560px\) \{\s*\.data-table \{\s*white-space: normal;/, "시세 표 카드 분기점이 560px 가 아니다");
+});
