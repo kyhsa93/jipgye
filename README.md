@@ -289,6 +289,7 @@ main은 **생성 HTML을 들고 있지 않다.** `docs/`에는 손으로 쓰는 
   게이트는 렌더 폴백 없음 + `npm run test:site`(build/site를 읽는 시험만) 둘이고, 실패하면 사이트는 직전 배포에 머문다.
 - `daily-update.yml`·`summarize.yml`은 `docs/data`·`raw`만 커밋하고 렌더·시험·배포를 하지 않는다(뉴스·요약은 하루 1회). 그래서 수집은 렌더·시험 실패에
   막히지 않고, 기능 병합은 수집이 커밋하는 파일과 겹치지 않는다.
+  그래서 병합에 시계 기준 조건(병합 창·수집 중 병합 금지)은 없다(#511). `scripts/dev/merge.sh`는 `docs/data`·`raw`·워크플로·수집기 경로를 건드리는 PR만 진행 중 실행이 끝나길 기다린다.
 - `npm run health`(`tools/health`)는 데이터와 build/site가 맞는지 보는 **비차단** 점검이다. 기능 시험(틀·스크립트·워크플로 글자)은 PR의 `test.yml`이 맡는다.
 - 배포본이 같은 HEAD로 만든 build/site와 같은지는 `scripts/deploy-check.ts`, 두 시점의 배포본끼리는 `scripts/site-snapshot.ts`로 읽기 전용 대조한다.
 
