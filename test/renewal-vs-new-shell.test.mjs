@@ -37,9 +37,9 @@ test("재계약 장의 껍데기는 같은 유틸리티를 갖고 훅 class는 �
     assert.deepEqual(have.filter((t) => !t.startsWith("tw:")), hooks, `${FILE}: ${name}의 훅 class가 바뀌었다`);
     assert.deepEqual(have.filter((t) => t.startsWith("tw:")).sort(), [...utilities].sort(), `${FILE}: ${name}의 유틸리티가 다르다 - 높이 예산(첫 h2 ≤ merge-base)을 다시 재야 한다`);
   }
-  // 구획 id 가 바뀌어도 이 시험이 눈먼 채 통과하지 않게: 구획 다섯은 이 순서로 한 번씩(맨 앞 재계약 확인기는 #652 V3, 그 아래 전환 계산기 #convert 는 #673 N1 - 유틸리티는 test/renewal-convert.test.mjs), 여섯째(질문 입구)는 스크립트가 채우므로 유틸리티가 없다.
+  // 구획 id 가 바뀌어도 이 시험이 눈먼 채 통과하지 않게: 구획 다섯은 이 순서로 한 번씩(맨 앞 재계약 확인기는 #652 V3, 그 아래 전환 계산기 #convert 는 #673 N1 - 유틸리티는 test/renewal-convert.test.mjs, 그 아래 만기 달력 #expiry 는 #674 N2 - test/lease-expiry-section.test.mjs), 여섯째(질문 입구)는 스크립트가 채우므로 유틸리티가 없다.
   const ids = [...html.matchAll(/<section id="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(ids, ["check-section", "convert", "lead-section", "district-section", "wolse-section", "cap-section", "other-questions"], `${FILE}: 구획이 달라졌다`);
+  assert.deepEqual(ids, ["check-section", "convert", "expiry", "lead-section", "district-section", "wolse-section", "cap-section", "other-questions"], `${FILE}: 구획이 달라졌다`);
   // 첫 구획 위의 안내(방법 안내 aside)는 스크립트가 글자만 바꾸는 곳이고 모양은 #283 이 53장 한 번에 정했다(test/realestate-shell.test.mjs).
   const callout = html.match(/<aside\b[^>]*>/)?.[0];
   assert.equal(callout, '<aside class="method-callout tw:-ml-2.75 tw:pl-2 tw:border-l-3 tw:border-border-strong">', `${FILE}: 안내 aside 의 모양 유틸리티가 달라졌다(#283 이 53장 한 번에 정했다): ${callout}`);
@@ -81,5 +81,5 @@ test("이 장은 색인 대상으로 남는다 - 캐노니컬은 자기 자신, 
   assert.equal(levels.filter((n) => n === 1).length, 1, `${FILE}: h1이 하나가 아니다`);
   assert.equal(levels[0], 1, `${FILE}: 첫 제목이 h1이 아니다`);
   for (let i = 1; i < levels.length; i += 1) assert.ok(levels[i] - levels[i - 1] <= 1, `${FILE}: 제목 단계를 건너뛴다(h${levels[i - 1]} → h${levels[i]})`);
-  assert.equal(levels.filter((n) => n === 2).length, 6, `${FILE}: h2가 여섯이 아니다(재계약 확인기 #652 V3·전환 계산기 #673 N1 포함) - 본문 제목이 지워졌거나 늘었다`);
+  assert.equal(levels.filter((n) => n === 2).length, 7, `${FILE}: h2가 일곱이 아니다(재계약 확인기 #652 V3·전환 계산기 #673 N1·만기 달력 #674 N2 포함) - 본문 제목이 지워졌거나 늘었다`);
 });
