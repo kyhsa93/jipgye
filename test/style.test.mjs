@@ -456,6 +456,17 @@ test("c-base.css: 글자/바탕 짝이 네 갈래 모두에서 4.5:1 이상이�
     if (fg && bg && v(fg) && v(bg)) pairs.push({ sel, fg: v(fg), bg: v(bg) });
   }
   assert.ok(pairs.length >= 8, `짝을 ${pairs.length}개밖에 못 읽었다`);
+  // 상속 짝(#746 후속, #745 PR3): 한 규칙에 color·background 가 함께 없어 위 읽기로는 안 잡히는 짝.
+  // 필터 칩은 .c-chip 묶음의 color(--fg)를 받고 바탕만 --accent-weak 로 바꾼다. 상태 상자 본문(--muted)은 .c-state 바탕(--card, 오류는 --bg) 위에 앉는다.
+  const ruleOf = (sel) => rules(text).filter((r) => r.sel.split(",").map((x) => x.trim()).includes(sel)).map((r) => r.body).join(";");
+  assert.match(ruleOf(".c-filter-chip"), /background: var\(--accent-weak\)/, "필터 칩 바탕이 바뀌었다 - 상속 짝을 고친다");
+  assert.match(ruleOf(".c-state__body"), /color: var\(--muted\)/, "상태 본문 글자색이 바뀌었다 - 상속 짝을 고친다");
+  pairs.push(
+    { sel: ".c-filter-chip(상속)", fg: "--fg", bg: "--accent-weak" },
+    { sel: ".c-filter-chip__x(상속)", fg: "--fg", bg: "--accent-weak" },
+    { sel: ".c-state > .c-state__body(상속)", fg: "--muted", bg: "--card" },
+    { sel: ".c-state--error > .c-state__body(상속)", fg: "--muted", bg: "--bg" },
+  );
   const legacy = palettes(await css()).filter((p) => p.vars["--accent"]);
   assert.equal(legacy.length, 4);
   for (const { sel, vars } of legacy) for (const p of pairs) {

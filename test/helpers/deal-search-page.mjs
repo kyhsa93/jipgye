@@ -142,10 +142,12 @@ export async function loadDealSearchPage({
   vm.createContext(sandbox);
   const loadState = await readFile(path.join(root, "docs/load-state.js"), "utf8");
   new vm.Script(loadState, { filename: "docs/load-state.js" }).runInContext(sandbox);
+  // 브라우저 순서 그대로: defer 인 쪽 전용 docs/deal-filters.js·deal-results.js(#745)는 인라인 다음, 데이터가 오기 전에 돈다.
+  // 파일을 미리 읽어 둔다 - 사이에 await 이 끼면 인라인의 fetch 가 먼저 끝나 「데이터가 먼저 온」 드문 순서만 시험하게 된다.
+  const [filters, results] = await Promise.all(["deal-filters", "deal-results"].map((f) => readFile(path.join(root, `docs/${f}.js`), "utf8")));
   new vm.Script(script, { filename: "docs/deal-search.html:inline" }).runInContext(sandbox);
-  // 브라우저 순서 그대로: defer 인 쪽 전용 docs/deal-filters.js(#745)는 인라인 다음, 데이터가 오기 전에 돈다.
-  const filters = await readFile(path.join(root, "docs/deal-filters.js"), "utf8");
   new vm.Script(filters, { filename: "docs/deal-filters.js" }).runInContext(sandbox);
+  new vm.Script(results, { filename: "docs/deal-results.js" }).runInContext(sandbox);
 
   await settle();
 

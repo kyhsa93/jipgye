@@ -1,1 +1,36 @@
 /* search 화면 전용 규칙 자리 (#745). 공통 모양은 c-base.css에서 가져다 쓰고, 이 화면에만 필요한 규칙만 여기에 더한다. */
+
+/* 결과 위 줄(#745 PR3): 적용 조건 칩·전체 초기화·정렬. */
+#result-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--c-space-2);
+  margin: var(--c-space-3) 0;
+}
+#result-bar:empty {
+  display: none;
+}
+.result-sort {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--c-space-2);
+  margin: 0;
+}
+.result-note {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+/* 결과 줄 계층: 단지명(굵게) → 위치 → 가격 → 전용·층·거래일(둘째 줄). */
+.budget-deal > strong.apt {
+  font-weight: 700;
+}
+.budget-deal > strong.apt ~ .place {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  font-weight: 400;
+}
+.budget-deal > strong.apt ~ .spec {
+  flex-basis: 100%;
+}

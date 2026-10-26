@@ -2784,6 +2784,37 @@
   .home-search:has(input[name="kind"]:not([value="sale"]):checked) .home-budget {
     display: none;
   }
+  #result-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--c-space-2);
+    margin: var(--c-space-3) 0;
+  }
+  #result-bar:empty {
+    display: none;
+  }
+  .result-sort {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--c-space-2);
+    margin: 0;
+  }
+  .result-note {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+  }
+  .budget-deal > strong.apt {
+    font-weight: 700;
+  }
+  .budget-deal > strong.apt ~ .place {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+    font-weight: 400;
+  }
+  .budget-deal > strong.apt ~ .spec {
+    flex-basis: 100%;
+  }
 }
 @layer components;
 @layer utilities {
