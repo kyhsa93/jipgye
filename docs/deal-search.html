@@ -1308,7 +1308,7 @@ function complexCardHtml() {
     `<h2>${escapeHtml(t("complexHeading")(apt))}</h2>` +
     priceHtml +
     ratioHtml +
-    `<p id="card-rank"></p><div id="card-renewal"></div>` +
+    `<p id="card-rank"></p><div id="card-renewal"></div><div id="card-near"></div>` +
     (mine.length ? `<h3>${t("recentRents")(mine.length)}</h3><ul class="budget-deals">${mine.slice(0, 3).map((d) => rentHtml(d, district)).join("")}</ul>` : "") +
     `</section>`
   );
