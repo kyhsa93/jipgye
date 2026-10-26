@@ -6283,99 +6283,40 @@
     "date": "2026-10-26",
     "model": "qwen3:14b",
     "summary": {
-      "ko": "- 부동산: 부동산 전문가들은 서울과 경기 지역에서 집을 구매할 때 반드시 확인해야 할 핵심 기준을 강조했다. 이준기는 건대입구 랜드마크 아파트에서 14년간 거주하며 15억 원의 시세차익을 얻었다. 중국은 부동산 자금을 증시에 투입했지만 결국 집값만 오르는 결과를 냈다. 지방 부동산 시장에서는 주식과 암호화폐를 팔아 부동산을 구매한 사례가 늘고 있다. 서울 재건축 사업의 공사비는 계약 당시보다 40% 상승해 계약금으로는 현재 공사가 어렵다.\n- 증시·환율: 골드만은 코스피 목표를 1만2000에서 9000으로 낮췄지만 상승 여력은 60%라고 했다.\n- 기타 경제 소식: 정부는 경제현안간담회를 열어 생산세액공제와 3대 사회정책을 논의했다. 이형일은 간담회에서 국내생산세액공제의 보완 방안을 제시했다. 경기 화성 병점의 집값 상승률이 1위를 차지하며 반도체 호황이 영향을 미친 것으로 나타났다. 대통령은 대규모 경상수지 흑자에 대해 한국이 세계경제 선도국가가 됐다고 밝혔다. GDP 대비 가계빚 비율은 내년 80%로 하락할 것으로 전망된다.\n- 금리·예금·투자상품: 금리·예금·투자상품: 뉴욕·상하이 증시, 美 기준금리 발표…워시 입에 쏠린 눈, \"전세도 매매도 쉽지 않다\"…금리 6％에 흔들리는 부동산 시장",
-      "en": "- Real Estate: Real estate experts emphasized the key criteria that must be checked when purchasing homes in Seoul and Gyeonggi. Lee Joon-gi lived in the Landmark Apartment at Gwangwoomun for 14 years and earned 1,500,000,000 won in capital gains. China injected real estate funds into the stock market, but in the end, only housing prices rose. In the local real estate market, cases of selling stocks and cryptocurrencies to purchase real estate are increasing. Construction costs for Seoul's reconstruction projects have increased by 40% compared to the time of the contract, making it difficult to proceed with construction using the deposit alone.\n- Stocks & FX: Goldman lowered the KOSPI target from 10,0002000 to 9000 but said there is still 60% upside potential.\n- Other Economic News: The government held a meeting to discuss tax deductions for domestic production and the three major social policies. Lee Hyung-il proposed measures to improve the domestic production tax deduction at the meeting. The housing price increase rate in Pyeongjeong, Hwaseong, Gyeonggi was the highest, indicating that the semiconductor boom has had an impact. The president stated that South Korea has become a leading country in the global economy due to the large current account surplus. The ratio of household debt to GDP is expected to decrease to 80% next year.\n- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: 뉴욕·상하이 증시, 美 기준금리 발표…워시 입에 쏠린 눈, \"전세도 매매도 쉽지 않다\"…금리 6％에 흔들리는 부동산 시장"
+      "ko": "- 기타 경제 소식: 인천시장 박찬대는 임기 중 평균 경제성장률 5% 달성 목표를 밝혔다. KCC는 폐안전모를 기부하고 새 안전모로 교체해 순환경제 구축에 나섰다. 이란은 육로까지 막히면서 경제가 고사 위기에 놓였다. 부산과 칭다오 간 비즈니스위크가 열려 지역 기업 간 경제협력이 확대되고 있다. 각 기사는 서로 다른 주제로, 별개의 사건을 보여준다.\n- 금리·예금·투자상품: 10월 미국 금리와 빅테크 실적 발표가 주목받은 주간 뉴욕증시가 주목받았다. 경기도는 불법사금융 피해를 입은 도민에게 1% 저금리 대출을 지원한다. 프랑스 국채금리가 5%를 돌파하며 우량 회사채 금리보다 높아졌다. 미국 금리 동향과 빅테크 기업의 실적 발표가 주요 관심사였다. 경기도의 지원 대출 금리는 1%로 정해졌다.\n- 증시·환율: 증시·환율: 코스피, 하락 출발 후 낙폭 줄여 보합권…장중 상승전환도(종합), 日닛케이, 美증시 약세에 하락 출발…닛케이 0.39%↓, 한투운용, '中 운용사와 개발' 반도체 ETF 홍콩 증시 첫 상장 +2\n- 부동산: 주택금융공사는 '스마트 주택금융 앱'을 새롭게 단장했다. 대보건설은 대전 가오동1구역 재건축 사업을 수주하며 올해 누적 수주 금액이 1조원을 돌파했다. 영등포구 대림현대3차의 43.92㎡ 주택이 9억 3700만원에 거래되며 최근 3년간 최고가를 기록했다. 삼성물산은 창원 용호1구역 재건축 사업을 7381억원 규모로 수주했다. 창원 용지호수 인근에 46층 규모의 아파트가 건설될 예정이다.",
+      "en": "- Other Economic News: Incheon Mayor Park Chan-dae announced the goal of achieving an average economic growth rate of 5% during his term. KCC donated old safety helmets and replaced them with new ones, taking steps to build a circular economy. Iran's economy is in a crisis of collapse as roads are also blocked. A business week between Busan and Qingdao has started, expanding economic cooperation between local companies. Each article covers a different topic, showing separate events.\n- Rates, Deposits & Investment Products: The New York stock market was the focus of attention during the week when U.S. interest rates and big tech company earnings were highlighted. Gyeonggi Province will provide low-interest loans at 1% to residents who suffered losses from illegal financial activities. French government bond yields surpassed 5%, becoming higher than those of high-quality corporate bonds. U.S. interest rate trends and big tech company earnings were the main points of interest. The supported loan interest rate by Gyeonggi Province was set at 1%.\n- Stocks & FX: Stocks & FX: 코스피, 하락 출발 후 낙폭 줄여 보합권…장중 상승전환도(종합), 日닛케이, 美증시 약세에 하락 출발…닛케이 0.39%↓, 한투운용, '中 운용사와 개발' 반도체 ETF 홍콩 증시 첫 상장 +2\n- Real Estate: Housing Finance Corporation has revamped its \"Smart Housing Finance App.\" Daebot Construction has secured the Gao-dong 1st Area reconstruction project in Daejeon, surpassing 1,000,000,000,000 won in cumulative contract value this year. A 43.92㎡ apartment in Daelim Hyundai 3rd Complex in Yeongdeungpo-gu was traded for 937,000,000 won, setting a record for the highest price in the past three years. Samsung C&T has secured the Yongho 1st Area reconstruction project in Changwon with a contract value of 738,100,000,000 won. A 46-story apartment complex is planned to be built near Yongji Lake in Changwon."
     },
     "highlights": [],
     "categories": [
       {
-        "key": "realestate",
-        "name": "부동산",
-        "nameEn": "Real Estate",
-        "lineKo": "부동산 전문가들은 서울과 경기 지역에서 집을 구매할 때 반드시 확인해야 할 핵심 기준을 강조했다. 이준기는 건대입구 랜드마크 아파트에서 14년간 거주하며 15억 원의 시세차익을 얻었다. 중국은 부동산 자금을 증시에 투입했지만 결국 집값만 오르는 결과를 냈다. 지방 부동산 시장에서는 주식과 암호화폐를 팔아 부동산을 구매한 사례가 늘고 있다. 서울 재건축 사업의 공사비는 계약 당시보다 40% 상승해 계약금으로는 현재 공사가 어렵다.",
-        "lineEn": "Real estate experts emphasized the key criteria that must be checked when purchasing homes in Seoul and Gyeonggi. Lee Joon-gi lived in the Landmark Apartment at Gwangwoomun for 14 years and earned 1,500,000,000 won in capital gains. China injected real estate funds into the stock market, but in the end, only housing prices rose. In the local real estate market, cases of selling stocks and cryptocurrencies to purchase real estate are increasing. Construction costs for Seoul's reconstruction projects have increased by 40% compared to the time of the contract, making it difficult to proceed with construction using the deposit alone.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": false,
-        "items": [
-          {
-            "title": "\"서울·경기 집 살 때 꼭 보세요\"…부동산 전문가가 짚은 '핵심' 기준",
-            "link": "https://www.newsis.com/view/NISX20261025_0003839900",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "이준기, 건대입구 랜드마크 아파트 14년째 거주…'15억' 시세차익",
-            "link": "https://www.newsis.com/view/NISX20261025_0003840211",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "中, 부동산 자금으로 증시 띄웠지만…집값만 올랐다",
-            "link": "https://www.hankyung.com/article/2026102535511",
-            "source": "한국경제 경제"
-          },
-          {
-            "title": "지방 부동산도 주식·코인 팔아 샀다",
-            "link": "https://www.hankyung.com/article/2026102535101",
-            "source": "한국경제 부동산"
-          },
-          {
-            "title": "“계약했던 금액으론 이제 어림 없습니다”...공사비 40%씩 오른 서울 재건축",
-            "link": "https://www.mk.co.kr/news/realestate/12185267",
-            "source": "매일경제 부동산"
-          }
-        ]
-      },
-      {
-        "key": "stocks",
-        "name": "증시·환율",
-        "nameEn": "Stocks & FX",
-        "lineKo": "골드만은 코스피 목표를 1만2000에서 9000으로 낮췄지만 상승 여력은 60%라고 했다.",
-        "lineEn": "Goldman lowered the KOSPI target from 10,0002000 to 9000 but said there is still 60% upside potential.",
-        "isFallback": false,
-        "fallbackReason": null,
-        "degraded": true,
-        "items": [
-          {
-            "title": "골드만, 코스피 목표 1만2000→9000으로 낮췄지만…\"상승 여력 60%\"",
-            "link": "https://www.newsis.com/view/NISX20261025_0003840248",
-            "source": "뉴시스 경제"
-          }
-        ]
-      },
-      {
         "key": "other",
         "name": "기타 경제 소식",
         "nameEn": "Other Economic News",
-        "lineKo": "정부는 경제현안간담회를 열어 생산세액공제와 3대 사회정책을 논의했다. 이형일은 간담회에서 국내생산세액공제의 보완 방안을 제시했다. 경기 화성 병점의 집값 상승률이 1위를 차지하며 반도체 호황이 영향을 미친 것으로 나타났다. 대통령은 대규모 경상수지 흑자에 대해 한국이 세계경제 선도국가가 됐다고 밝혔다. GDP 대비 가계빚 비율은 내년 80%로 하락할 것으로 전망된다.",
-        "lineEn": "The government held a meeting to discuss tax deductions for domestic production and the three major social policies. Lee Hyung-il proposed measures to improve the domestic production tax deduction at the meeting. The housing price increase rate in Pyeongjeong, Hwaseong, Gyeonggi was the highest, indicating that the semiconductor boom has had an impact. The president stated that South Korea has become a leading country in the global economy due to the large current account surplus. The ratio of household debt to GDP is expected to decrease to 80% next year.",
+        "lineKo": "인천시장 박찬대는 임기 중 평균 경제성장률 5% 달성 목표를 밝혔다. KCC는 폐안전모를 기부하고 새 안전모로 교체해 순환경제 구축에 나섰다. 이란은 육로까지 막히면서 경제가 고사 위기에 놓였다. 부산과 칭다오 간 비즈니스위크가 열려 지역 기업 간 경제협력이 확대되고 있다. 각 기사는 서로 다른 주제로, 별개의 사건을 보여준다.",
+        "lineEn": "Incheon Mayor Park Chan-dae announced the goal of achieving an average economic growth rate of 5% during his term. KCC donated old safety helmets and replaced them with new ones, taking steps to build a circular economy. Iran's economy is in a crisis of collapse as roads are also blocked. A business week between Busan and Qingdao has started, expanding economic cooperation between local companies. Each article covers a different topic, showing separate events.",
         "isFallback": false,
         "fallbackReason": null,
         "degraded": false,
         "items": [
           {
-            "title": "정부, 경제현안간담회 개최…생산세액공제·3대 사회정책 논의",
-            "link": "https://www.newsis.com/view/NISX20261025_0003840214",
-            "source": "뉴시스 경제"
-          },
-          {
-            "title": "이형일, 경제현안간담회서 국내생산세액공제 보완방안 등 논의",
-            "link": "https://www.yna.co.kr/view/AKR20261025047700002",
+            "title": "박찬대 인천시장 \"임기 중  평균 경제성장률 5% 달성 목표\"",
+            "link": "https://www.yna.co.kr/view/AKR20261026028400065",
             "source": "연합뉴스 경제"
           },
           {
-            "title": "반도체 호황에…경기 화성 병점 집값 상승률 1위",
-            "link": "https://www.hankyung.com/article/2026102535351",
-            "source": "한국경제 부동산"
+            "title": "KCC, 전 사업장 폐안전모 기부해 새 안전모로… 순환경제 구축",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/26/ZT5UED2DKRH43FZARXVQXIFVSQ/",
+            "source": "조선비즈 부동산"
           },
           {
-            "title": "李대통령, 대규모 경상수지 흑자에 \"韓 이제 세계경제 선도국가\"",
-            "link": "https://www.yna.co.kr/view/AKR20261025040300001",
+            "title": "바닷길·하늘길 이어 육로까지 막혔다…이란 경제 '고사 위기'",
+            "link": "https://www.hankyung.com/article/202610264200i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "'부산·칭다오 비즈니스위크'…지역 기업 경제협력 확대",
+            "link": "https://www.yna.co.kr/view/AKR20261026015300051",
             "source": "연합뉴스 경제"
-          },
-          {
-            "title": "GDP대비 가계빚 내년 80%로 하락 … 대출규제 풀릴까",
-            "link": "https://www.mk.co.kr/news/realestate/12185265",
-            "source": "매일경제 부동산"
           }
         ]
       },
@@ -6383,21 +6324,100 @@
         "key": "rates",
         "name": "금리·예금·투자상품",
         "nameEn": "Rates, Deposits & Investment Products",
-        "lineKo": "금리·예금·투자상품: 뉴욕·상하이 증시, 美 기준금리 발표…워시 입에 쏠린 눈, \"전세도 매매도 쉽지 않다\"…금리 6％에 흔들리는 부동산 시장",
-        "lineEn": "Rates, Deposits & Investment Products: 뉴욕·상하이 증시, 美 기준금리 발표…워시 입에 쏠린 눈, \"전세도 매매도 쉽지 않다\"…금리 6％에 흔들리는 부동산 시장",
+        "lineKo": "10월 미국 금리와 빅테크 실적 발표가 주목받은 주간 뉴욕증시가 주목받았다. 경기도는 불법사금융 피해를 입은 도민에게 1% 저금리 대출을 지원한다. 프랑스 국채금리가 5%를 돌파하며 우량 회사채 금리보다 높아졌다. 미국 금리 동향과 빅테크 기업의 실적 발표가 주요 관심사였다. 경기도의 지원 대출 금리는 1%로 정해졌다.",
+        "lineEn": "The New York stock market was the focus of attention during the week when U.S. interest rates and big tech company earnings were highlighted. Gyeonggi Province will provide low-interest loans at 1% to residents who suffered losses from illegal financial activities. French government bond yields surpassed 5%, becoming higher than those of high-quality corporate bonds. U.S. interest rate trends and big tech company earnings were the main points of interest. The supported loan interest rate by Gyeonggi Province was set at 1%.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[주간 뉴욕증시] 10월 美 금리·빅테크 실적 발표 '슈퍼 위크'",
+            "link": "https://www.newsis.com/view/NISX20261026_0003840464",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "경기도, 불법사금융 피해 도민에 1% 저금리 대출 지원",
+            "link": "https://www.yna.co.kr/view/AKR20261026035900061",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "프랑스 국채금리 5% 돌파…우량 회사채보다 높아졌다",
+            "link": "https://www.hankyung.com/article/202610264055i",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "증시·환율: 코스피, 하락 출발 후 낙폭 줄여 보합권…장중 상승전환도(종합), 日닛케이, 美증시 약세에 하락 출발…닛케이 0.39%↓, 한투운용, '中 운용사와 개발' 반도체 ETF 홍콩 증시 첫 상장 +2",
+        "lineEn": "Stocks & FX: 코스피, 하락 출발 후 낙폭 줄여 보합권…장중 상승전환도(종합), 日닛케이, 美증시 약세에 하락 출발…닛케이 0.39%↓, 한투운용, '中 운용사와 개발' 반도체 ETF 홍콩 증시 첫 상장 +2",
         "isFallback": true,
         "fallbackReason": "unverified-entity",
         "degraded": false,
         "items": [
           {
-            "title": "뉴욕·상하이 증시, 美 기준금리 발표…워시 입에 쏠린 눈",
-            "link": "https://www.hankyung.com/article/2026102535311",
-            "source": "한국경제 경제"
+            "title": "코스피, 하락 출발 후 낙폭 줄여 보합권…장중 상승전환도(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261026032651008",
+            "source": "연합뉴스 경제"
           },
           {
-            "title": "\"전세도 매매도 쉽지 않다\"…금리 6％에 흔들리는 부동산 시장",
-            "link": "https://www.newsis.com/view/NISX20261025_0003839844",
+            "title": "日닛케이, 美증시 약세에 하락 출발…닛케이 0.39%↓",
+            "link": "https://www.newsis.com/view/NISX20261026_0003840510",
             "source": "뉴시스 경제"
+          },
+          {
+            "title": "한투운용, '中 운용사와 개발' 반도체 ETF 홍콩 증시 첫 상장",
+            "link": "https://www.yna.co.kr/view/AKR20261026031300008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 1% 안팎 하락 출발…코스닥도 내려",
+            "link": "https://www.yna.co.kr/view/AKR20261026032600008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[마켓뷰] 코스피 출렁임 계속되나…삼전닉스 추가 주주환원 여부 주시",
+            "link": "https://www.yna.co.kr/view/AKR20261026018000008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "주택금융공사는 '스마트 주택금융 앱'을 새롭게 단장했다. 대보건설은 대전 가오동1구역 재건축 사업을 수주하며 올해 누적 수주 금액이 1조원을 돌파했다. 영등포구 대림현대3차의 43.92㎡ 주택이 9억 3700만원에 거래되며 최근 3년간 최고가를 기록했다. 삼성물산은 창원 용호1구역 재건축 사업을 7381억원 규모로 수주했다. 창원 용지호수 인근에 46층 규모의 아파트가 건설될 예정이다.",
+        "lineEn": "Housing Finance Corporation has revamped its \"Smart Housing Finance App.\" Daebot Construction has secured the Gao-dong 1st Area reconstruction project in Daejeon, surpassing 1,000,000,000,000 won in cumulative contract value this year. A 43.92㎡ apartment in Daelim Hyundai 3rd Complex in Yeongdeungpo-gu was traded for 937,000,000 won, setting a record for the highest price in the past three years. Samsung C&T has secured the Yongho 1st Area reconstruction project in Changwon with a contract value of 738,100,000,000 won. A 46-story apartment complex is planned to be built near Yongji Lake in Changwon.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "주택금융공사, '스마트 주택금융 앱' 새 단장",
+            "link": "https://www.yna.co.kr/view/AKR20261026042900051",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "대보건설, 대전 가오동1구역 재건축 수주…올해 누적 1조원 돌파",
+            "link": "https://www.newsis.com/view/NISX20261026_0003840595",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "영등포구 대림현대3차 43.92㎡ 9억 3700만원… 최근 3년 신고가 [MAI부동산]",
+            "link": "https://www.mk.co.kr/news/realestate/12185390",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "삼성물산, 7381억원 규모 '창원 용호1구역 재건축' 수주",
+            "link": "https://www.newsis.com/view/NISX20261026_0003840479",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "창원 용지호수 앞에 46층 아파트…삼성물산, 7381억 재건축 수주",
+            "link": "https://www.hankyung.com/article/2026102642156",
+            "source": "한국경제 부동산"
           }
         ]
       }
