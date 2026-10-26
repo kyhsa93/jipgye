@@ -2,6 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import vm from "node:vm";
+import { gzipSync } from "node:zlib";
 import { MIN_DEALS_PER_SIDE, cellRatios } from "../scripts/complex-ratio.ts";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 
@@ -280,4 +282,93 @@ test("V4 카드: 전월세 파일을 못 받으면 최근 전월세 칸 없이 �
   const html = await v4Page("ko", { failComplexPrice: false, failDeals: false, failRents: true });
   assert.doesNotMatch(html, /최근 전월세/, "받지 못한 파일로 목록을 그렸다");
   assert.match(html, /id="complex-rents-status"/);
+});
+
+// ============================================================================================================
+// #731 X4 가격 위치 한 줄 - docs/complex-card.js(페이지 전용 외부 JS, deal-search 만 defer, #729 X2 가 이어 쓴다).
+// 인라인 S6 여유(기준선 대비 +243B)로는 문구 두 벌과 입력 처리가 안 들어가 판정의 「넘으면 X2 의 페이지 전용 파일로」를 따랐다.
+// 바이트 한도 때문에 설명을 여기 둔다:
+// - 인라인 카드가 #card-rank 자리와 window.cardApt 를 두고 window.complexCard() 를 부른다. 인라인 전역(complexAreas·fullDeals·
+//   complexPrices·district·locale·escapeHtml·EOK)을 그대로 쓴다. 새 데이터 0 - 카드가 이미 쥔 두 달 매매(deals-*)만 센다.
+// - 평형은 매매가 가장 많은 한 칸(complexAreas 에 전세를 비워 넘기면 매매 건수순). 값을 억으로 넣으면 「지난 거래 n건 중 l건이
+//   이 값보다 낮고 e건이 같음」. 같은 값은 낮은 쪽에 넣지 않고 따로 센다.
+// - n<3 은 입력칸 없이 #637 틀 이유(「신고 n건이라 비움」), 0건은 줄을 비운다. 판정 문구(비싸다·싸다·적정)·백분위·색 경고는 없다.
+// ============================================================================================================
+const RANK_JS = await readFile(path.join(root, "docs/complex-card.js"), "utf8");
+const VERDICT = /비싸|싸다|싼 |저렴|적정|고평가|저평가|합리|바가지|expensive|cheap|fair|overpriced|underpriced|bargain|reasonable/i;
+
+async function rankPage(locale = "ko") {
+  const [budget, search, deals, rents] = await Promise.all([readJson("budget-deals"), readJson("deal-search"), readJson("deals-nowon"), readJson("rents-nowon")]);
+  const p = await loadDealSearchPage({ budget, search, deals: { 노원구: deals }, rents: { 노원구: rents }, locale, query: "?district=노원구&apt=상계주공7(고층)" });
+  await settle(40);
+  new vm.Script(RANK_JS, { filename: "docs/complex-card.js" }).runInContext(p.sandbox);
+  const run = (code) => new vm.Script(code).runInContext(p.sandbox);
+  // 가상 단지의 매매만 바꿔 카드 한 줄을 다시 그린다.
+  const drawWith = (amounts) => {
+    run(`fullDeals.set("노원구", ${JSON.stringify(amounts.map((a) => ({ apt: "가상X4", area: 59.9, amount10k: a })))}); window.cardApt = "가상X4"; window.complexCard();`);
+    return p.byId("card-rank").innerHTML;
+  };
+  const type = (value) => {
+    p.byId("complex-card").dispatch("input", { target: { id: "rank-in", value } });
+    return p.byId("rank-out").textContent;
+  };
+  return { ...p, rank: p.sandbox.window.complexCard.rank, drawWith, type };
+}
+
+test("#731 같은 값은 낮은 쪽에 넣지 않고 따로 센다", async () => {
+  const p = await rankPage();
+  assert.equal(p.rank([40000, 50000, 50000, 60000], 50000), "지난 거래 4건 중 1건이 이 값보다 낮고 2건이 같음");
+  assert.equal(p.rank([50000, 50000, 50000], 50000), "지난 거래 3건 중 0건이 이 값보다 낮고 3건이 같음");
+  assert.equal(p.rank([50000, 50000, 50000], 90000), "지난 거래 3건 중 3건이 이 값보다 낮고 0건이 같음");
+  assert.equal(p.rank([50000, 60000, 70000]), "", "값을 넣기 전에 문장을 냈다");
+});
+
+test("#731 입력칸에 억으로 넣으면 그 평형 거래 사이 위치 문장이 뜬다(소수 억도 같은 값으로 센다)", async () => {
+  const p = await rankPage();
+  const html = p.drawWith([81500, 81500, 90000, 70000]);
+  assert.match(html, /^59\.9㎡ <label>가격\(억\) <input id="rank-in"/);
+  assert.equal(p.type("8.15"), "지난 거래 4건 중 1건이 이 값보다 낮고 2건이 같음");
+  assert.equal(p.type(""), "", "빈칸에 문장이 남았다");
+  assert.equal(p.type("-1"), "");
+});
+
+test("#731 0건이면 줄을 비우고, n<3 이면 입력칸 없이 #637 틀 이유를 적는다", async () => {
+  const p = await rankPage();
+  assert.equal(p.drawWith([]), "");
+  for (const n of [1, 2]) {
+    const html = p.drawWith(Array.from({ length: n }, () => 50000));
+    assert.equal(html, `59.9㎡ <span class="low-sample">신고 ${n}건이라 비움</span>`);
+    assert.doesNotMatch(html, /<input/);
+  }
+  assert.match(p.drawWith([10000, 20000, 30000]), /<input/, "3건인데 입력칸이 없다");
+});
+
+test("#731 판정 문구(비싸다·싸다·적정 등)가 문구 원본에도 화면에도 없다", async () => {
+  assert.doesNotMatch(RANK_JS, VERDICT);
+  for (const locale of ["ko", "en"]) {
+    const p = await rankPage(locale);
+    const s = [30000, 40000, 50000, 50000, 60000];
+    for (const v of [0, 10000, 30000, 50000, 55000, 99000]) assert.doesNotMatch(p.rank(s, v), VERDICT, `${locale} ${v}`);
+    assert.doesNotMatch(p.drawWith(s) + p.drawWith([10000]), VERDICT);
+    assert.doesNotMatch(p.rank(s, 50000), /%|백분위|percentile/i, "백분위로 바꿔 말했다");
+  }
+});
+
+test("#731 영어 화면은 영어 문장·이유·입력칸 이름을 쓴다", async () => {
+  const p = await rankPage("en");
+  assert.equal(p.rank([40000, 50000, 50000, 60000], 50000), "Of 4 past deals, 1 below this and 2 equal");
+  assert.equal(p.drawWith([50000, 50000]), '59.9㎡ <span class="low-sample">Blank: only 2 reported</span>');
+  assert.match(p.drawWith([10000, 20000, 30000]), /<label>Price \(₩100M\) <input/);
+  assert.equal(p.type("2"), "Of 3 past deals, 1 below this and 1 equal");
+});
+
+test("#731 실제 단지 카드에 자리가 있고, 외부 JS 는 deal-search 만 defer 로 읽으며 sw.js 사전캐시 밖, gzip ≤2,048B(X2 와 합계)", async () => {
+  const p = await rankPage();
+  assert.match(p.byId("complex-card").innerHTML, /<p id="card-rank"><\/p><div id="card-renewal">/);
+  p.sandbox.window.complexCard();
+  assert.match(p.byId("card-rank").innerHTML, /^\d+(\.\d+)?㎡ /, "실제 단지에서 줄이 안 그려졌다");
+  const html = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
+  assert.equal(html.split('<script src="./complex-card.js" defer></script>').length, 2);
+  assert.ok(!(await readFile(path.join(root, "docs/sw.js"), "utf8")).includes("complex-card.js"), "sw.js 사전캐시에 들어갔다");
+  assert.ok(gzipSync(RANK_JS, { level: 9 }).length <= 2048);
 });
