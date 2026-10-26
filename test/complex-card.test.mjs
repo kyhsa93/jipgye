@@ -256,7 +256,7 @@ test("V4 카드: 표본이 모자란 평형은 범위 대신 n 을 적는다(ko/
 test("범위 말은 지난 거래의 폭이고 다음 거래 범위가 아니라고 표 바로 아래(접지 않고) 적는다 (#656 판정)", async () => {
   const ko = await v4Page();
   assert.doesNotMatch(ko, /기준 시세/);
-  assert.match(ko, /<th scope="col">2026년 10월 값으로 고친 중앙값<\/th>/);
+  assert.match(ko, /<th scope="col">2026년 10월 값으로 고친 중간값<\/th>/);
   assert.match(ko, /<h3>지난 6개월 거래의 폭 — 2026년 10월 값으로 고침<\/h3>/);
   assert.match(ko, /<caption class="sr-only">가상V4단지 - 지난 6개월 거래의 폭 — 2026년 10월 값으로 고침 \(2\)<\/caption>/);
   assert.match(ko, /지난 거래 가운데 절반 6억원 ~ /);

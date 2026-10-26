@@ -603,7 +603,7 @@ test("시세표 분기 표: 해자 2(표본 부족)가 세 보기(한 줄 표·�
   };
   for (const [name, pick] of Object.entries(views)) {
     const moat = table.filter((b) => b.moat && pick(b));
-    assert.ok(moat.some((b) => /<span class="low-sample" title="이번 달 신고가 \d+건뿐이라 평균을 내지 않았습니다\.">신고 \d+건<\/span>/.test(b.expect)), `${name}: 표본 부족 스팬 행이 없다`);
+    assert.ok(moat.some((b) => /<span class="low-sample" title="최근 4주 신고가 \d+건뿐이라 평균을 내지 않았습니다\.">신고 \d+건<\/span>/.test(b.expect)), `${name}: 표본 부족 스팬 행이 없다`);
     assert.ok(moat.some((b) => b.order), `${name}: 순서 행(표본 부족이 값 없음보다 먼저)이 없다`);
     assert.ok(table.some((b) => pick(b) && !b.moat && !b.expect.includes("low-sample") && /6,000만원/.test(b.expect)), `${name}: 표본 부족이 아닌 값 행이 없다`);
     assert.ok(table.some((b) => pick(b) && !b.expect.includes("low-sample") && !/만원|억/.test(b.expect.replace(/만원 ?\//g, ""))), `${name}: 값 없음("-") 행이 없다`);
@@ -688,7 +688,7 @@ test("realestate-table.mjs: JSX가 쓰는 순수 모듈이다 - 라벨·글자 �
   assert.deepEqual(reCountSpan({ transactionCount: 1234 }), [SPACE, sp("count", "1,234건", { esc: true })]);
   for (const none of [{ transactionCount: "5" }, { transactionCount: null }, {}, undefined]) assert.deepEqual(reCountSpan(none), [], String(none));
   // 표본 부족: n은 transactionCount 그대로, 없으면(null·undefined) 0 - 0은 0이다. 문턱은 여기서 정하지 않는다(100건이어도 이 함수는 표본 부족 글자를 낸다).
-  const low = (n, txt = n) => sp("low", `신고 ${txt}건`, { title: `이번 달 신고가 ${txt}건뿐이라 평균을 내지 않았습니다.`, esc: true });
+  const low = (n, txt = n) => sp("low", `신고 ${txt}건`, { title: `최근 4주 신고가 ${txt}건뿐이라 평균을 내지 않았습니다.`, esc: true });
   assert.deepEqual(reLowSample({ transactionCount: 4 }), low(4));
   assert.deepEqual(reLowSample({ transactionCount: 100 }), low(100));
   assert.deepEqual(reLowSample({ transactionCount: 0 }), low(0));

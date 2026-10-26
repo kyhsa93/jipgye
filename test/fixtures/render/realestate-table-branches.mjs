@@ -19,7 +19,7 @@ const STRONG = (t) => `<span class="price-strong">${t}</span>`;
 const COUNT = (t) => `<span class="count">${t}</span>`;
 const RATIO = (t) => `<span class="ratio">${t}</span>`;
 const CHG = (dir, arrow, t, title) => ` <span class="change ${dir}"${title === undefined ? "" : ` title="${title}"`}>${arrow}${t}</span>`;
-const LOW = (n) => `<span class="low-sample" title="이번 달 신고가 ${n}건뿐이라 평균을 내지 않았습니다.">신고 ${n}건</span>`;
+const LOW = (n) => `<span class="low-sample" title="최근 4주 신고가 ${n}건뿐이라 평균을 내지 않았습니다.">신고 ${n}건</span>`;
 const WOLSE_TITLE = (base) => `${base} 대비 · 보증금과 월세를 묶은 ㎡당 값(보증금 + 월세×12÷4.8%)의 증감 — 그 주에 신고된 방 크기가 달라서 생기는 흔들림을 덜어 낸 값입니다`;
 const PREV_TITLE = "이 지역은 오늘 실거래 조회에 실패해 지난번에 받은 값을 그대로 보여줍니다.";
 const PREV = (label) => ` <span class="prev-tag" title="${PREV_TITLE}">${label}</span>`;

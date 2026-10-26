@@ -803,6 +803,12 @@ ul.news-list {
   font-size: var(--fs-sm);
   padding: 6px 0;
   list-style: none;
+  /* 누르는 자리 44px(#745 PR9). 6px 여백만으로는 35px 이었다. */
+  min-height: var(--tap);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
 }
 
 .history-more summary::-webkit-details-marker {
@@ -2338,6 +2344,54 @@ html:has(meta[name="rates-category"][content="deposit"], meta[name="rates-catego
   overflow-x: auto;
 }
 
+/* 폰(560px 이하)에서 넓은 표는 줄마다 카드 한 장이다(#745 PR9). nav.js 가 머리글 한 줄짜리 표의 칸마다 열 이름을
+ * data-label 로 붙이고 .cards 를 단 표만 바뀐다 - 칸은 「라벨(왼쪽) 값(오른쪽)」 한 줄이고 값은 하나도 빠지지 않는다.
+ * 라벨을 float 로 두어 값 칸 안의 보조 줄(.sub)·링크가 그대로 오른쪽에 쌓인다. 스크립트가 없으면 전처럼 가로로 밀린다. */
+@media (max-width: 560px) {
+  .table-scroll > table.cards,
+  table.cards > tbody,
+  table.cards tr {
+    display: block;
+    width: 100%;
+  }
+
+  table.cards {
+    white-space: normal;
+  }
+
+  table.cards > thead {
+    display: none;
+  }
+
+  table.cards tr {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  table.cards tr > [data-label] {
+    display: block;
+    padding: 3px 0;
+    border: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  table.cards tr > [data-label]::before {
+    content: attr(data-label);
+    float: left;
+    max-width: 55%;
+    margin-right: 12px;
+    color: var(--muted);
+    font-size: var(--fs-xs);
+    font-weight: 400;
+    text-align: left;
+  }
+
+  table.cards tr > :first-child {
+    font-weight: 600;
+  }
+}
+
 /* 17px로 커진 만큼 줄 간격 비율을 1.65 -> 1.55로 내려 한 줄의 높이를 병합 기준(16px × 1.65 = 26.4px)과
  * 거의 같게(17px × 1.55 = 26.35px) 둔다. 글자가 커져 소개 문단이 한 줄 더 접히는 장에서 첫 h2·답 시작이
  * 병합 기준보다 아래로 가는 것을 막는 자리다(po 기준 1: jeonse-vs-wolse 답 시작 +6.5px, 1.65에서). */
@@ -3363,7 +3417,8 @@ main:has(> #question-nav) .content-notice.page-notice { min-height: 4lh; }
   }
 }
 
-@media (max-width: 480px) {
+/* 시세 표 카드 모양. 480px 까지였는데 481~560px(가로로 든 작은 폰·접는 폰)에서도 6열 표가 화면 밖으로 밀려 560px 로 넓혔다(#745 PR9). */
+@media (max-width: 560px) {
   .data-table {
     white-space: normal;
   }

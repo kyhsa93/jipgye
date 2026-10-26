@@ -29,6 +29,25 @@
     }
   }
 
+  // 좁은 폭(560px 이하)에서 넓은 표를 카드로 읽게 한다(#745 PR9). 머리글이 한 줄이고 colspan 이 없는 표만, 본문 칸마다
+  // 그 열의 머리글 글자를 data-label 로 붙이고 표에 .cards 를 단다 - 모양은 legacy.css 가 그린다(데이터는 그대로, 라벨만 붙는다).
+  // 칸 수가 머리글과 다른 줄(빈 결과·오류 한 칸)은 건드리지 않는다. 이 파일이 없으면 표는 전처럼 가로로 밀린다.
+  function toCards(el) {
+    const table = typeof el.querySelector === "function" ? el.querySelector("table") : null;
+    const head = table && table.tHead;
+    if (!head || head.rows.length !== 1 || table.classList.contains("data-table")) return;
+    const cols = [...head.rows[0].cells];
+    if (cols.length < 3 || cols.some((c) => c.colSpan > 1)) return;
+    const labels = cols.map((c) => c.textContent.trim());
+    for (const body of table.tBodies) {
+      for (const row of body.rows) {
+        if (row.cells.length !== labels.length) continue;
+        [...row.cells].forEach((c, i) => c.getAttribute("data-label") !== labels[i] && c.setAttribute("data-label", labels[i]));
+      }
+    }
+    table.classList.add("cards");
+  }
+
   // 표 칸은 페이지 스크립트가 나중에 다시 채우고(prerender 뒤 innerHTML 교체) 글꼴·언어 전환으로도
   // 폭이 바뀐다. 스크롤 이벤트만으로는 이걸 못 따라가므로 크기·내용이 바뀔 때 다시 센다.
   function watchTable(el) {
@@ -38,7 +57,7 @@
       if (el.firstElementChild) ro.observe(el.firstElementChild);
     }
     if (typeof MutationObserver === "function") {
-      new MutationObserver(() => markEdges(el)).observe(el, { childList: true, subtree: true, characterData: true });
+      new MutationObserver(() => (toCards(el), markEdges(el))).observe(el, { childList: true, subtree: true, characterData: true });
     }
   }
 
@@ -54,9 +73,17 @@
     const isTable = typeof nav.matches === "function" && nav.matches(".table-scroll");
     // 표는 처음 위치(첫 열=이름이 보이는 자리)에서 시작해야 한다 - 현재 항목 맞추기는 내비 전용.
     if (!isTable) revealCurrent(nav);
+    else toCards(nav);
     markEdges(nav);
     nav.addEventListener("scroll", () => markEdges(nav), { passive: true });
     if (isTable) watchTable(nav);
+  }
+
+  // 장 스크립트가 표 상자째 다시 그리는 장(예산 장 #budget-result)도 있어, 카드 라벨은 본문 전체의 바뀜을 따라 다시 붙인다.
+  // 라벨은 속성이라 이 관찰(childList)을 다시 깨우지 않는다.
+  const body = document.querySelector("main");
+  if (body && typeof MutationObserver === "function") {
+    new MutationObserver(() => document.querySelectorAll(".table-scroll").forEach(toCards)).observe(body, { childList: true, subtree: true });
   }
 
   window.addEventListener("resize", () => {
