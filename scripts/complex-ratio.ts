@@ -75,6 +75,11 @@ const newJeonse = (item) =>
 
 /** 자치구 하나의 신고들에서 칸별 전세가율을 뽑는다. */
 export function cellRatios(sales, rents) {
+  return cellRatioEntries(sales, rents).map((cell) => cell.ratio);
+}
+
+/** cellRatios 와 같은 칸·같은 규칙인데 칸 이름(단지·전용면적)을 함께 낸다. 다른 칸 자료(1년 전 매매 등)와 맞물릴 때 쓴다(#690). */
+export function cellRatioEntries(sales, rents) {
   const sale = new Map();
   const jeonse = new Map();
 
@@ -91,7 +96,7 @@ export function cellRatios(sales, rents) {
     jeonse.get(key).push(number(item.deposit));
   }
 
-  const ratios = [];
+  const cells = [];
   for (const [key, sales10k] of sale) {
     const deposits = jeonse.get(key);
     if (!deposits || sales10k.length < MIN_DEALS_PER_SIDE || deposits.length < MIN_DEALS_PER_SIDE) continue;
@@ -99,9 +104,9 @@ export function cellRatios(sales, rents) {
     if (price <= 0) continue;
     const ratio = (median(deposits) / price) * 100;
     if (ratio <= RATIO_FLOOR || ratio >= RATIO_CEILING) continue;
-    ratios.push(ratio);
+    cells.push({ key, ratio });
   }
-  return ratios;
+  return cells;
 }
 
 const round = (value) => Math.round(value * 10) / 10;
