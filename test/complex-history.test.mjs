@@ -65,6 +65,15 @@ test("districtHistory: 1㎡ 안쪽 면적은 complex-price 와 같은 한 칸(�
   assert.deepEqual(cells.가단지["84.98"], [["202606", 100000, 3]]);
 });
 
+test("districtHistory: 칸 이름은 위치 칸 이름 가운데 1㎡ 안쪽 가장 가까운 것, 남는 거래만 따로 묶음", () => {
+  // 24개월로 묶으면 84.95가 많아 묶음 이름이 84.95지만, 위치(183일) 칸은 84.98이다.
+  const deals = [84.95, 84.95, 84.95, 84.98, 59.9].map((a) => deal({ excluUseAr: a }));
+  assert.deepEqual(Object.keys(districtHistory(deals, ["202606"]).가단지).sort(), ["59.9", "84.95"]);
+  const cells = districtHistory(deals, ["202606"], new Map([["가단지", [84.98]]]));
+  assert.deepEqual(Object.keys(cells.가단지).sort(), ["59.9", "84.98"]);
+  assert.equal(cells.가단지["84.98"][0][2], 4);
+});
+
 test("buildHistoryFiles: 해제·직거래는 빼고 창은 이번 달 포함 24개월", () => {
   const files = buildHistoryFiles({
     itemsByDistrict: {
@@ -130,6 +139,27 @@ test("build-complex-price 진입점: 추이를 soft-fail 로 이어 부른다", 
   const src = await readFile(path.join(root, "scripts/build-complex-price.ts"), "utf8");
   assert.match(src, /import \{ buildComplexHistorySoft \} from "\.\/build-complex-history\.ts"/);
   assert.match(src, /finally \{\s*await history\(\{ dataDir \}\);/);
+});
+
+test("커밋된 파일: 중앙값이 있는 complex-price 칸은 모두 같은 이름의 추이 칸이 있다", async () => {
+  const dataDir = path.join(root, "docs/data");
+  const names = (await readdir(dataDir)).filter((f) => /^complex-price-[a-z]+\.json$/.test(f));
+  assert.ok(names.length > 0);
+  const missing = [];
+  let total = 0;
+  for (const name of names) {
+    const price = JSON.parse(await readFile(path.join(dataDir, name), "utf8"));
+    const history = JSON.parse(await readFile(path.join(dataDir, name.replace("complex-price-", "complex-history-")), "utf8"));
+    for (const [apt, areas] of Object.entries(price.cells)) {
+      for (const [area, cell] of Object.entries(areas)) {
+        if (!cell.median) continue;
+        total += 1;
+        if (!history.cells[apt]?.[area]) missing.push(`${name} ${apt} ${area}`);
+      }
+    }
+  }
+  assert.ok(total > 0);
+  assert.deepEqual(missing, []);
 });
 
 test("커밋된 complex-history-*.json: 구당 gzip 40 KB 안, 달마다 건수", async () => {

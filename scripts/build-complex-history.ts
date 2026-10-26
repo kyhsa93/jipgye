@@ -9,10 +9,10 @@
  * (PR2 규칙: n≥3 달만 선). 24개월 n≥6 칸은 37.6%, 구당 gzip 중앙값 17 KB·최대 26.7 KB였다(이슈 #728 0단계).
  * 그래도 구 하나가 예산(gzip 40 KB)을 넘으면 거래가 가장 적은 칸부터 덜어 내고 덜어 낸 칸 수를 적는다.
  */
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { gzipSync } from "node:zlib";
-import { areaGroups, marketDeal, quantile } from "./complex-price.ts";
+import { AREA_GROUP, areaGroups, marketDeal, quantile } from "./complex-price.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { readSlotFile } from "./realestate-raw.ts";
@@ -29,6 +29,9 @@ export const GZIP_BUDGET = 40 * 1024;
 
 export const complexHistoryFileName = (slug) => `complex-history-${slug}.json`;
 
+/** build-complex-price.ts 의 complexPriceFileName 과 같다(그쪽이 이 파일을 불러 서로 import 하지 않게 둔다). */
+const complexPriceFileName = (slug) => `complex-price-${slug}.json`;
+
 /** 중앙값(원 단위 반올림). 짝수 개면 가운데 둘의 평균 - complex-price 와 같은 정의. */
 export const median = (values) => Math.round(quantile([...values].sort((a, b) => a - b), 0.5));
 
@@ -39,8 +42,13 @@ type Series = [string, number, number][];
 /**
  * 한 구의 칸별 달 계열: { 단지명: { 평형: [[YYYYMM, 중앙값, 건수], ...] } }. 거래 없는 달은 싣지 않는다.
  * deals 는 marketDeal 을 거친 것. months 밖의 거래는 버린다.
+ *
+ * 칸 이름은 단지 가격 위치(complex-price, 183일 창)의 칸 이름을 따른다 - 24개월로 묶음을 다시 짜면 묶음 이름이
+ * 달라져 위치 칸 6.6%가 같은 이름의 추이 칸을 못 찾았다(#735 검토). 거래마다 그 단지 위치 칸 이름 가운데 1㎡ 안쪽의
+ * 가장 가까운 것에 붙이고(yearAgoCells 와 같은 방식), 붙일 곳이 없는 거래끼리만 areaGroups 로 묶는다.
+ * cellNames: Map<단지명, 위치 칸 이름(숫자)[]>.
  */
-export function districtHistory(deals, months) {
+export function districtHistory(deals, months, cellNames = new Map()) {
   const first = months[0];
   const last = months.at(-1);
   const byApt = new Map();
@@ -51,10 +59,17 @@ export function districtHistory(deals, months) {
   }
   const out = {};
   for (const [apt, aptDeals] of [...byApt].sort(byName)) {
-    const label = areaGroups(aptDeals);
+    const names = cellNames.get(apt) ?? [];
+    const nearest = (area) => {
+      let best = null;
+      for (const n of names) if (Math.abs(n - area) < AREA_GROUP && (best === null || Math.abs(n - area) < Math.abs(best - area))) best = n;
+      return best;
+    };
+    const named = new Map(aptDeals.map((d) => [d.area, nearest(d.area)]));
+    const label = areaGroups(aptDeals.filter((d) => named.get(d.area) === null));
     const cells = new Map();
     for (const d of aptDeals) {
-      const name = label.get(d.area);
+      const name = named.get(d.area) ?? label.get(d.area);
       if (!cells.has(name)) cells.set(name, new Map());
       const byMonth = cells.get(name);
       if (!byMonth.has(d.month)) byMonth.set(d.month, []);
@@ -103,15 +118,16 @@ export function fitBudget(file, budget = GZIP_BUDGET) {
   return without(lo);
 }
 
-/** 구마다 한 파일. itemsByDistrict: { 구 코드: 원본 줄[] }. */
-export function buildHistoryFiles({ itemsByDistrict, now, budget = GZIP_BUDGET }) {
+/** 구마다 한 파일. itemsByDistrict: { 구 코드: 원본 줄[] }. priceCells: { slug: complex-price 파일의 cells } - 칸 이름을 맞춘다. */
+export function buildHistoryFiles({ itemsByDistrict, now, priceCells = {}, budget = GZIP_BUDGET }) {
   const months = recentMonths(now, HISTORY_MONTHS);
   const files = {};
   for (const { code, name } of DISTRICTS) {
     const slug = DISTRICT_SLUGS[name];
     if (!slug) continue;
     const deals = (itemsByDistrict[code] ?? []).map(marketDeal).filter(Boolean);
-    const cells = districtHistory(deals, months);
+    const names = new Map(Object.entries(priceCells[slug] ?? {}).map(([apt, areas]) => [apt, Object.keys(areas).map(Number)]));
+    const cells = districtHistory(deals, months, names);
     if (!Object.keys(cells).length) continue;
     files[slug] = fitBudget(
       { district: name, updatedAt: now.toISOString(), from: months[0], to: months.at(-1), trimmed: 0, cells },
@@ -131,7 +147,14 @@ export async function writeComplexHistory({ dataDir = path.join(root, "docs/data
       itemsByDistrict[code] = files.filter((f) => f?.ok !== false && Array.isArray(f?.items)).flatMap((f) => f.items);
     })
   );
-  const files = buildHistoryFiles({ itemsByDistrict, now });
+  // 같은 Daily 에서 방금 쓴 단지 가격 위치 파일. 없으면(지수가 없어 건너뛴 날) 칸 이름은 24개월 묶음 그대로.
+  const priceCells = {};
+  for (const slug of Object.values<string>(DISTRICT_SLUGS)) {
+    try {
+      priceCells[slug] = JSON.parse(await readFile(path.join(dataDir, complexPriceFileName(slug)), "utf8")).cells;
+    } catch {}
+  }
+  const files = buildHistoryFiles({ itemsByDistrict, now, priceCells });
   await mkdir(dataDir, { recursive: true });
   const sizes = {};
   for (const [slug, file] of Object.entries(files)) {
