@@ -32,10 +32,27 @@
   // 좁은 폭(560px 이하)에서 넓은 표를 카드로 읽게 한다(#745 PR9). 머리글이 한 줄이고 colspan 이 없는 표만, 본문 칸마다
   // 그 열의 머리글 글자를 data-label 로 붙이고 표에 .cards 를 단다 - 모양은 legacy.css 가 그린다(데이터는 그대로, 라벨만 붙는다).
   // 칸 수가 머리글과 다른 줄(빈 결과·오류 한 칸)은 건드리지 않는다. 이 파일이 없으면 표는 전처럼 가로로 밀린다.
+  // 카드 CSS 의 display:block 은 WebKit(VoiceOver)에서 표 의미를 지운다. 카드가 되는 표(자체 라벨을 가진 .data-table 포함)에
+  // 표 역할을 명시해 「n행 n열」·열 이름 낭독을 지킨다(#745 PR9b). 속성만 바꾸므로 관찰(childList)을 다시 깨우지 않는다.
+  function setRole(n, r) {
+    if (n && n.getAttribute("role") !== r) n.setAttribute("role", r);
+  }
+  function addRoles(table) {
+    setRole(table, "table");
+    for (const g of [table.tHead, ...table.tBodies]) {
+      if (!g) continue;
+      setRole(g, "rowgroup");
+      for (const row of g.rows) {
+        setRole(row, "row");
+        for (const c of row.cells) setRole(c, c.tagName !== "TH" ? "cell" : g === table.tHead ? "columnheader" : "rowheader");
+      }
+    }
+  }
   function toCards(el) {
-    const table = typeof el.querySelector === "function" ? el.querySelector("table") : null;
+    const table = el.tagName === "TABLE" ? el : typeof el.querySelector === "function" ? el.querySelector("table") : null;
     const head = table && table.tHead;
-    if (!head || head.rows.length !== 1 || table.classList.contains("data-table")) return;
+    if (!head || head.rows.length !== 1) return;
+    if (table.classList.contains("data-table")) return addRoles(table);
     const cols = [...head.rows[0].cells];
     if (cols.length < 3 || cols.some((c) => c.colSpan > 1)) return;
     const labels = cols.map((c) => c.textContent.trim());
@@ -46,7 +63,9 @@
       }
     }
     table.classList.add("cards");
+    addRoles(table);
   }
+  const cardAll = () => document.querySelectorAll(".table-scroll, table.data-table").forEach(toCards);
 
   // 표 칸은 페이지 스크립트가 나중에 다시 채우고(prerender 뒤 innerHTML 교체) 글꼴·언어 전환으로도
   // 폭이 바뀐다. 스크롤 이벤트만으로는 이걸 못 따라가므로 크기·내용이 바뀔 때 다시 센다.
@@ -57,7 +76,7 @@
       if (el.firstElementChild) ro.observe(el.firstElementChild);
     }
     if (typeof MutationObserver === "function") {
-      new MutationObserver(() => (toCards(el), markEdges(el))).observe(el, { childList: true, subtree: true, characterData: true });
+      new MutationObserver(() => markEdges(el)).observe(el, { childList: true, subtree: true, characterData: true });
     }
   }
 
@@ -69,21 +88,22 @@
     nav.scrollLeft = Math.max(0, centered);
   }
 
+  cardAll();
   for (const nav of navs) {
     const isTable = typeof nav.matches === "function" && nav.matches(".table-scroll");
     // 표는 처음 위치(첫 열=이름이 보이는 자리)에서 시작해야 한다 - 현재 항목 맞추기는 내비 전용.
     if (!isTable) revealCurrent(nav);
-    else toCards(nav);
     markEdges(nav);
     nav.addEventListener("scroll", () => markEdges(nav), { passive: true });
     if (isTable) watchTable(nav);
   }
 
-  // 장 스크립트가 표 상자째 다시 그리는 장(예산 장 #budget-result)도 있어, 카드 라벨은 본문 전체의 바뀜을 따라 다시 붙인다.
-  // 라벨은 속성이라 이 관찰(childList)을 다시 깨우지 않는다.
-  const body = document.querySelector("main");
+  // 카드 라벨·역할은 본문 전체의 바뀜 하나로 다시 붙인다(#745 PR9b - 표 단위 관찰과 겹쳐 두 번 부르던 것을 합쳤다).
+  // 장 스크립트가 표 상자째 다시 그리는 장(예산 장 #budget-result)도, 머리글 글자만 바뀌는 언어 전환도 여기서 따라간다.
+  // 라벨·역할은 속성이라 이 관찰을 다시 깨우지 않는다.
+  const body = document.querySelector("main") || document.body;
   if (body && typeof MutationObserver === "function") {
-    new MutationObserver(() => document.querySelectorAll(".table-scroll").forEach(toCards)).observe(body, { childList: true, subtree: true });
+    new MutationObserver(cardAll).observe(body, { childList: true, subtree: true, characterData: true });
   }
 
   window.addEventListener("resize", () => {

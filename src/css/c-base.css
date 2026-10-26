@@ -90,6 +90,17 @@
   font: inherit;
   font-size: var(--fs-field);
 }
+/* WebKit 은 기본 select 모양이면 min-height 를 무시해 320px 에서 23px 로 그렸다(#745 PR9b, Chrome 44px).
+ * 기본 모양을 끄고 화살표는 글자색 그라디언트 두 조각으로 다시 그린다 - 다크 모드도 currentColor 를 따른다. */
+.c-select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: calc(var(--c-space-3) + 1.25em);
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: right calc(var(--c-space-3) + 5px) center, right var(--c-space-3) center;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
 .c-input[aria-invalid="true"] {
   border-width: 2px;
   border-color: var(--fg);
