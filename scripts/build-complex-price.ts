@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { districtCells, districtMeta, indexLevels, marketDeal, referenceMonth, windowStart, WINDOW_DAYS } from "./complex-price.ts";
+import { buildComplexHistorySoft } from "./build-complex-history.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { INDEX_FILE } from "./fetch-price-index.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
@@ -117,6 +118,18 @@ async function main() {
   );
 }
 
+/**
+ * Daily 진입점. 단지 가격 추이(#728)는 같은 원본을 읽는 곁가지라 여기서 이어 부른다 - 지수가 없어 위치를
+ * 건너뛰어도 추이는 쓰고, 추이가 실패해도 위치와 그 뒤 단계는 막지 않는다(soft-fail).
+ */
+export async function run({ history = buildComplexHistorySoft } = {}) {
+  try {
+    await main();
+  } finally {
+    await history({ dataDir });
+  }
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
-  main();
+  run();
 }
