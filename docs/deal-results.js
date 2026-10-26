@@ -1,4 +1,4 @@
-// 실거래 검색 결과(#745): 조건 칩·정렬 칸·빈 결과 풀기 링크·오류 상자(role=alert)·줄 계층(단지명→위치→가격→전용·층·일). 규칙과 시험: test/deal-search.test.mjs
+// 실거래 검색 결과(#745): 조건 칩·정렬·빈 결과 풀기 링크·오류 상자·줄 계층. 규칙과 시험: test/deal-search.test.mjs
 (() => {
   const E = escapeHtml;
   const L = (ko, en) => (locale === "en" ? en : ko);
@@ -22,7 +22,7 @@
   };
 
   const decorate = () => {
-    const c = self.conds();
+    const c = self.conds?.() ?? [];
     const html = box.innerHTML;
     bar.innerHTML =
       (c.length
@@ -30,7 +30,7 @@
           c.map(([k, n]) => `<li class="c-filter-chip">${E(n)}<button type="button" class="c-filter-chip__x" data-drop="${k}" aria-label="${E(L(`${n} 해제`, `Remove ${n}`))}">×</button></li>`).join("") +
           `<li><button type="button" class="c-btn c-btn--secondary" data-drop="all">${L("전체 초기화", "Reset all")}</button></li></ul>`
         : "") +
-      (!groupView && html.includes('<ul class="budget-deals">')
+      (self.sorts && !groupView && html.includes('<ul class="budget-deals">')
         ? `<p class="result-sort"><label for="sort-select">${L("정렬", "Sort")}</label> <select id="sort-select" class="c-select">` +
           self.sorts().map(([k, n]) => `<option value="${k}"${k === self.sortOn() ? " selected" : ""}${k && !self.sortOk() ? " disabled" : ""}>${n}</option>`).join("") +
           `</select>${self.sortOk() ? "" : ` <span class="result-note">${L("가격순은 자치구를 고르면 켜집니다(서울 전체 목록은 일부 표본).", "Pick a district to sort by price.")}</span>`}</p>`
@@ -46,7 +46,7 @@
         "</div>";
   };
   const sf = loadState.showFailure;
-  loadState.showFailure = (el, o) => sf(el, { ...o, wrap: (i) => `<div class="c-state c-state--error" role="alert"><p class="c-state__title">${L("오류", "Error")}</p>${(o.wrap || String)(i)}</div>` });
+  loadState.showFailure = (el, o) => sf(el, { ...o, wrap: (i) => `<div class="c-state c-state--error" role="alert"><p class="c-state__title">${L("오류", "Error")}</p>${(o.wrap || String)(i.replace("<button", '<button class="c-btn c-btn--secondary"'))}</div>` });
   const rr = renderResult;
   renderResult = () => (rr(), decorate());
 
@@ -68,5 +68,6 @@
     if (e.target?.id === "sort-select") self.sortOn(e.target.value), syncUrl(), renderResult();
   });
   if (/budget-deal|load-retry-/.test(box.innerHTML)) renderResultBody();
+  if (/"load-retry"/.test(box.innerHTML)) loadState.showFailure(box, { message: t("loadError"), retryLabel: t("retry"), wrap: (i) => `<p class="empty">${i}</p>`, onRetry: main });
   decorate();
 })();

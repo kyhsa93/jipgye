@@ -658,7 +658,7 @@ test("빈 결과는 상태 상자 안에 조건마다 「그것만 뺀 주소」
 test("오류 상자는 「오류」 낱말 + role=\"alert\" + 다시 시도 단추다 (#745 PR3)", async () => {
   const failed = await open({ query: "?district=%EB%85%B8%EC%9B%90%EA%B5%AC", network: { failDeals: true } });
   await failed.settle();
-  assert.match(failed.resultHtml(), /^<div class="c-state c-state--error" role="alert"><p class="c-state__title">오류<\/p><p class="empty">실거래를 불러오지 못했습니다\. <button type="button" id="load-retry-deals">다시 시도<\/button><\/p><\/div>$/);
+  assert.match(failed.resultHtml(), /^<div class="c-state c-state--error" role="alert"><p class="c-state__title">오류<\/p><p class="empty">실거래를 불러오지 못했습니다\. <button class="c-btn c-btn--secondary" type="button" id="load-retry-deals">다시 시도<\/button><\/p><\/div>$/);
   const boot = await loadDealSearchPage({ status: 500, locale: "en" });
   assert.match(boot.resultHtml(), /^<div class="c-state c-state--error" role="alert"><p class="c-state__title">Error<\/p>.*id="load-retry">Retry<\/button>/);
 });
@@ -706,4 +706,30 @@ test("deal-results.js 는 gzip ≤2,048B, deal-search 만 deal-filters.js 다음
     if ((await readFile(at(`${SITE}/${f}`), "utf8")).includes("deal-results.js")) users.push(f);
   }
   assert.deepEqual(users, ["deal-search.html"]);
+});
+
+test("#749 후속: 첫 로드가 defer 파일보다 먼저 실패해도 오류 상자(role=alert)로 다시 그리고, 다시 시도는 첫 로드를 다시 부른다 (#745 PR3b)", async () => {
+  const boot = await loadDealSearchPage({ status: 500, lateDefer: true });
+  assert.match(boot.resultHtml(), /^<div class="c-state c-state--error" role="alert"><p class="c-state__title">오류<\/p><p class="empty">실거래를 불러오지 못했습니다\. <button class="c-btn c-btn--secondary" type="button" id="load-retry">다시 시도<\/button><\/p><\/div>$/);
+  // 다시 그린 단추에도 첫 로드(main)가 걸려 있다 - 누르면 다시 받고 또 실패하면 같은 상자.
+  boot.byId("load-retry").dispatch("click", { currentTarget: {} });
+  await boot.settle();
+  assert.match(boot.resultHtml(), /role="alert".*id="load-retry"/);
+});
+
+test("#749 후속: 재시도 단추는 c-btn(보조, 누르는 자리 44px)이다 (#745 PR3b)", async () => {
+  const failed = await open({ query: "?district=%EB%85%B8%EC%9B%90%EA%B5%AC", network: { failDeals: true } });
+  await failed.settle();
+  assert.match(failed.resultHtml(), /<button class="c-btn c-btn--secondary" type="button" id="load-retry-deals">/);
+  const { readFile } = await import("node:fs/promises");
+  const css = await readFile(new URL("../src/css/c-base.css", import.meta.url), "utf8");
+  assert.match(css, /\.c-btn \{[^}]*min-height: var\(--tap\);/);
+});
+
+test("#749 후속: deal-filters.js 만 못 읽어도 결과는 예외 없이 기본(최근 거래순, 칩·정렬 칸 없음)으로 그린다 (#745 PR3b)", async () => {
+  const page = await open({ query: `?${new URLSearchParams({ district: "노원구", area: "60-85" })}`, skip: ["deal-filters"] });
+  assert.match(page.resultHtml(), /<li class="budget-deal">/, "목록이 안 그려졌다");
+  assert.equal(barHtml(page), "");
+  await page.chooseDistrict("all");
+  assert.equal(barHtml(page), "");
 });

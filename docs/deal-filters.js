@@ -42,7 +42,7 @@
   let sort = ["low", "high"].includes(params.get("sort")) ? params.get("sort") : "";
   self.sortOk = () => district !== ALL && !groupView;
   self.sortOn = (v) => ((sort = v ?? sort), self.sortOk() ? sort : "");
-  self.sorts = () => [["", ko() ? "최근 거래순" : "Most recent"], ["low", ko() ? "가격 낮은 순" : "Lowest price"], ["high", ko() ? "가격 높은 순" : "Highest price"]];
+  self.sorts = (w = isRent() ? (ko() ? "보증금" : "deposit") : ko() ? "가격" : "price") => [["", ko() ? "최근 거래순" : "Most recent"], ["low", ko() ? `${w} 낮은 순` : `Lowest ${w}`], ["high", ko() ? `${w} 높은 순` : `Highest ${w}`]];
   self.sortDeals = (rows) => {
     const s = { low: 1, high: -1 }[self.sortOn()];
     const p = (d) => d.amount10k ?? d.deposit10k * 1e4 + d.monthlyRent10k;

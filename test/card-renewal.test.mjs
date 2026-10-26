@@ -155,7 +155,7 @@ test("파일이 없으면(404) 자리를 비우고, 받다 실패하면 카드 �
   const network = { failRenewal: true };
   const p = await page({ network });
   const failed = p.byId("card-renewal");
-  assert.match(failed.innerHTML, /<p class="empty">갱신 구간을 불러오지 못했습니다\. <button type="button" id="load-retry-renewal-card">다시 시도<\/button><\/p>/);
+  assert.match(failed.innerHTML, /<p class="empty">갱신 구간을 불러오지 못했습니다\. <button class="c-btn c-btn--secondary" type="button" id="load-retry-renewal-card">다시 시도<\/button><\/p>/);
   // 카드의 가격·전세가율은 그대로 그려져 있다
   assert.match(p.byId("complex-card").innerHTML, /전세가율/);
   network.failRenewal = false;
