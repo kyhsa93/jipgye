@@ -646,12 +646,22 @@ const budgetNote = (className, note) =>
   );
 
 // "한눈에": 줄마다 라벨·값(글자 값이면 answer-text)·부가 글자(비면 줄 없음). 예산대가 없으면 legacy처럼 빈 문자열이다.
-function budgetAnswersJsx(band, loanBasis = null) {
-  const answers = budgetAnswers(band, loanBasis);
+// 제목 아래 기준 칩(#411 확장, 모듈 basisChips). 금리 칩의 data-rate-month 는 머리 도장(updated-stamp.ts crossStampHtml)이 읽어 「금리(8월분)」을 만든다 - 칩과 도장이 한 값이다.
+function budgetAnswersJsx(band, loanBasis = null, context = {}) {
+  const answers = budgetAnswers(band, loanBasis, context);
   if (!answers) return blank;
   return (
     <section className="budget-answers" data-prerendered="">
       <h2>{answers.heading}</h2>
+      <p className="answer-basis">
+        {/* 칩 사이 공백 한 칸: 화면은 flex gap 이 띄우고, 복사·읽기 모드 글자가 「신고분보정」처럼 붙지 않게 한다 */}
+        {answers.chips.flatMap((chip, i) => [
+          i ? " " : null,
+          <span key={chip.kind} data-rate-month={chip.month}>
+            {chip.text}
+          </span>,
+        ])}
+      </p>
       <ul>
         {answers.lines.map((line, i) => (
           <li key={i}>
@@ -775,7 +785,7 @@ function budgetBodyJsx(band, periodList, loanBasis = null, mortgageSeries = null
           </>
         ) : null}
       </p>
-      {budgetAnswersJsx(band, loanBasis)}
+      {budgetAnswersJsx(band, loanBasis, { periodList, complexFiles })}
       {shape.districts.length ? (
         <div className="budget-districts">
           거래가 많은 지역: {shape.districts.flatMap((d, i) => [i ? " · " : "", str(d.name), " ", d.count])}

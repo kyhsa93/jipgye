@@ -116,10 +116,14 @@ const L = {
 const P = (cls, sentence, link = "") => `<p class="${cls}" data-prerendered="">${sentence}${link}</p>`;
 const LI = (label, value, note = "", text = false) =>
   `<li><span class="answer-label">${label}</span><strong class="answer-value${text ? " answer-text" : ""}">${value}</strong>${note ? `<span class="answer-note">${note}</span>` : ""}</li>`;
-const ANSWER = (e, line2 = "") => {
+// 기준 칩 줄(#411 확장): 거래·보정 칩은 셋째 인자(periodList·complexFiles)가 있을 때만 - 잎 조각을 두 인자로 부르면 금리(둘째 줄이 있을 때)·규정 칩뿐이다.
+const CHIP = (text, rateMonth = "") => `<span${rateMonth ? ` data-rate-month="${rateMonth}"` : ""}>${text}</span>`;
+const CHIPS = (...chips) => `<p class="answer-basis">${chips.join(" ")}</p>`;
+const RULES_CHIP = CHIP("규정 10-01 확인");
+const ANSWER = (e, line2 = "", chips = CHIPS(...(line2.includes("(2026년 8월)") ? [CHIP("금리 8월분", "202608")] : []), RULES_CHIP)) => {
   const a = ANSWERS_T[e];
   return (
-    `<section class="budget-answers" data-prerendered=""><h2>${a.heading}</h2><ul>` +
+    `<section class="budget-answers" data-prerendered=""><h2>${a.heading}</h2>${chips}<ul>` +
     LI("자기 돈이 적어도", a.cash, a.first) +
     line2 +
     LI("매매가 위에 더 드는 돈", a.costs, "취득세·지방교육세·중개보수 상한") +

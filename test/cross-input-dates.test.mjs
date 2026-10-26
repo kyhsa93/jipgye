@@ -24,7 +24,10 @@ const BUDGET_FILES = Array.from({ length: 18 }, (_, i) => `budget-${i + 3}eok.ht
 const EXPECTED = ["jeonse-vs-wolse.html", ...BUDGET_FILES].sort();
 
 const frame = (inner = "") => `<main><section id="budget-section"><div id="budget-result">${inner}</div></section></main>`;
-const stampedBudget = (deals, rates) => crossStampHtml(frame(), "budget-10eok.html", deals, rates);
+// 예산대 장은 한눈에 금리 칩(data-rate-month)을 굽는다 - 머리 도장이 그 달을 읽어 「금리(8월분) MM-DD 갱신」으로 적는다(#411 확장).
+const RATE_CHIP = '<section class="budget-answers"><p class="answer-basis"><span data-rate-month="202608">금리 8월분</span></p></section>';
+const stampedBudget = (deals, rates, inner = RATE_CHIP) => crossStampHtml(frame(inner), "budget-10eok.html", deals, rates);
+const stampedConversion = (deals, rates) => crossStampHtml('<main><p class="lead" id="lead">리드</p></main>', "jeonse-vs-wolse.html", deals, rates);
 
 /** nav.js를 가짜 문서에서 돌린다. nowIso는 주입하는 '지금'. 경고·기준일 줄의 최종 상태를 돌려준다. */
 async function runNav(html, nowIso, lang = "ko") {
@@ -71,9 +74,9 @@ async function runNav(html, nowIso, lang = "ko") {
   return { basis, warn, setLang };
 }
 
-test("정적 HTML: 입력별 기준일이 '실거래 MM-DD x 금리 MM-DD' 한 줄로 찍히고 경고 자리는 숨겨져 있다", () => {
+test("정적 HTML: 입력별 기준일이 '실거래 MM-DD x 금리(N월분) MM-DD 갱신' 한 줄로 찍히고 경고 자리는 숨겨져 있다", () => {
   const html = stampedBudget("2026-10-10", "2026-10-08");
-  assert.match(html, /<p class="updated cross-basis" id="cross-basis" data-deals="2026-10-10" data-rates="2026-10-08">실거래 10-10 x 금리 10-08<\/p>/);
+  assert.match(html, /<p class="updated cross-basis" id="cross-basis" data-deals="2026-10-10" data-rates="2026-10-08">실거래 10-10 x 금리\(8월분\) 10-08 갱신<\/p>/);
   assert.match(html, /id="cross-warn"[^>]*hidden/);
   assert.equal([...html.matchAll(/id="cross-basis"/g)].length, 1);
 });
@@ -82,7 +85,7 @@ test("다시 찍어도 같고 (멱등), 날짜가 바뀌면 한 줄만 바뀐다
   const once = stampedBudget("2026-10-10", "2026-10-08");
   assert.equal(crossStampHtml(once, "budget-10eok.html", "2026-10-10", "2026-10-08"), once);
   const next = crossStampHtml(once, "budget-10eok.html", "2026-10-11", "2026-10-11");
-  assert.match(next, /실거래 10-11 x 금리 10-11</);
+  assert.match(next, /실거래 10-11 x 금리\(8월분\) 10-11 갱신</);
   assert.equal([...next.matchAll(/id="cross-basis"/g)].length, 1);
   assert.equal([...next.matchAll(/id="cross-warn"/g)].length, 1);
 });
@@ -98,7 +101,7 @@ test("경계: 입력 하나가 1일 낡으면 경고가 없고 2일이면 그 �
   const two = await runNav(stampedBudget("2026-10-10", "2026-10-08"), now);
   assert.equal(two.warn.hidden, false);
   assert.equal(two.warn.textContent, "금리 2일 전 자료");
-  assert.equal(two.basis.textContent, "실거래 10-10 x 금리 10-08", "경고가 떠도 기준일 줄은 그대로다");
+  assert.equal(two.basis.textContent, "실거래 10-10 x 금리(8월분) 10-08 갱신", "경고가 떠도 기준일 줄은 그대로다");
 });
 
 test("실거래만 낡아도, 둘 다 낡아도 경고가 맞게 나온다", async () => {
@@ -126,8 +129,8 @@ test("날짜 경계는 KST다 (UTC 15시에 하루가 넘어간다)", async () =
   assert.equal((await runNav(html, "2026-10-09T15:00:00Z")).warn.textContent, "금리 2일 전 자료");
 });
 
-test("영어 화면: 줄과 경고가 영어로 바뀌고, 언어를 바꾸면 따라간다", async () => {
-  const html = stampedBudget("2026-10-10", "2026-10-08");
+test("영어 화면: 줄과 경고가 영어로 바뀌고, 언어를 바꾸면 따라간다 (전환율 장 - 줄 틀이 그대로인 장)", async () => {
+  const html = stampedConversion("2026-10-10", "2026-10-08");
   const en = await runNav(html, "2026-10-10T03:00:00Z", "en");
   assert.equal(en.basis.textContent, "Deals 10-10 x Rates 10-08");
   assert.equal(en.warn.textContent, "Rates data from 2 days ago");
@@ -136,10 +139,22 @@ test("영어 화면: 줄과 경고가 영어로 바뀌고, 언어를 바꾸면 �
   assert.equal(en.warn.textContent, "금리 2일 전 자료");
 });
 
+test("예산대 장 영어 화면: 경고는 영어로 바뀌고, 「금리(8월분) … 갱신」 줄은 JS 0 판정(#411 확장)이라 한국어 그대로다", async () => {
+  const en = await runNav(stampedBudget("2026-10-10", "2026-10-08"), "2026-10-10T03:00:00Z", "en");
+  assert.equal(en.warn.textContent, "Rates data from 2 days ago");
+  assert.equal(en.basis.textContent, "실거래 10-10 x 금리(8월분) 10-08 갱신", "nav.js 를 고치지 않았으면 줄 글자를 건드리지 않아야 한다");
+});
+
+test("예산대 장 도장의 달은 장에 구운 금리 칩에서 읽는다 - 칩이 없으면 달 없이 「금리 MM-DD 갱신」, 달을 지어내지 않는다 (#411 확장)", () => {
+  assert.match(stampedBudget("2026-10-10", "2026-10-08", RATE_CHIP.replace("202608", "202611")), />실거래 10-10 x 금리\(11월분\) 10-08 갱신</);
+  assert.match(stampedBudget("2026-10-10", "2026-10-08", ""), />실거래 10-10 x 금리 10-08 갱신</);
+  assert.match(stampedConversion("2026-10-10", "2026-10-08"), />실거래 10-10 x 금리 10-08</, "전환율 장의 줄 틀은 그대로다");
+});
+
 test("JS가 안 돌면 기준일 줄은 정적으로 보이고 경고만 없다", () => {
   const html = stampedBudget("2026-10-10", "2026-10-08");
   // nav.js를 돌리지 않은 상태 = 받은 HTML 그대로.
-  assert.match(html, /<p class="updated cross-basis"[^>]*>실거래 10-10 x 금리 10-08<\/p>/);
+  assert.match(html, /<p class="updated cross-basis"[^>]*>실거래 10-10 x 금리\(8월분\) 10-08 갱신<\/p>/);
   assert.match(html, /<p class="updated updated-warn" id="cross-warn" role="status" hidden><\/p>/, "경고 문장이 정적으로 박히면 빌드가 멈출 때 같이 얼어붙는다");
 });
 
@@ -190,9 +205,10 @@ test("반복 문구 점검 (#66): 화면 간 공통 한 줄 틀의 길이 상한
   const basis = html.match(/id="cross-basis"[^>]*>([^<]*)</)[1];
   // 숫자를 가리면 모든 화면에서 똑같은 틀이다. 길어지면 열여덟 장이 같은 문장을 더 나눠 갖는다.
   const frameKo = words(`<p>${basis}</p>`, { maskNumbers: true }).join(" ");
-  assert.equal(frameKo, "실거래 # x 금리 #");
-  assert.ok(frameKo.length <= 20, `기준일 줄 틀이 ${frameKo.length}자 - 상한 20자`);
-  assert.ok(words(`<p>${basis}</p>`, { maskNumbers: true }).length <= 5, "기준일 줄 틀은 5단어 이내");
+  // #411 확장: 갱신일과 값의 기준월을 가르려고 「(N월분)」과 「갱신」이 붙었다 - 상한을 그만큼(1단어·6자) 올린다.
+  assert.equal(frameKo, "실거래 # x # # 갱신", "「금리(8월분)」은 숫자를 품은 한 낱말이라 통째로 가려진다");
+  assert.ok(frameKo.length <= 26, `기준일 줄 틀이 ${frameKo.length}자 - 상한 26자`);
+  assert.ok(words(`<p>${basis}</p>`, { maskNumbers: true }).length <= 6, "기준일 줄 틀은 6단어 이내");
   // 경고 문장은 정적 HTML에 없고(위 시험) nav.js가 만든다 - 그 틀도 한 줄: '<입력> n일 전 자료'(두 입력이면 ' · '로 이은 두 줄).
   assert.ok("실거래 99일 전 자료".length <= 20, "경고 한 입력 최대 길이");
   assert.ok("실거래 99일 전 자료 · 금리 99일 전 자료".length <= 30, "경고 두 입력 최대 길이");

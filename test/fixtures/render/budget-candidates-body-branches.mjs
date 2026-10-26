@@ -1075,7 +1075,23 @@ const BIG_FILES = [{ district: "노원구", reference: "202609", cells: Object.f
 
 // ===== 입력 틀 =====
 const rows = [];
-const add = (id, fn, cond, args, expect, extra = {}) => rows.push({ id, fn, cond, args, expect, ...extra });
+// 본문의 한눈에는 기준 칩 넷 가운데 거래 기간·보정 기준월 칩을 더 낸다(#411 확장) - 잎 표(두 인자)에는 없는 칩이라 본문 행에서 그 행의 periodList(둘째 인자)·
+// complexFiles(다섯째 인자)로 끼운다(칩 사이는 공백 한 칸 - 규정 칩이 늘 뒤에 있다). 규칙은 모듈을 부르지 않고 여기 따로 적는다: YYYYMM(1~12월)만, 거래 기간은 겹침 없이 오름차순, 보정은 첫 단지 파일의 reference.
+const YM_OK = (v) => /^\d{6}$/.test(v) && Number(v.slice(4)) >= 1 && Number(v.slice(4)) <= 12;
+const bodyChips = (periodList, complexFiles) => {
+  const months = [...new Set((Array.isArray(periodList) ? periodList : []).map(String).filter(YM_OK))].sort();
+  const ref = String(complexFiles?.[0]?.reference ?? "");
+  return (
+    (months.length ? `<span>거래 ${months.map((m) => Number(m.slice(4))).join("·")}월 신고분</span> ` : "") +
+    (YM_OK(ref) ? `<span>보정 ${Number(ref.slice(4))}월 값 기준</span> ` : "")
+  );
+};
+const add = (id, fn, cond, args, expect, extra = {}) =>
+  rows.push({
+    id, fn, cond, args,
+    expect: fn === "budgetBodyHtml" && typeof expect === "string" ? expect.replace('<p class="answer-basis">', () => `<p class="answer-basis">${bodyChips(args[1], args[4])}`) : expect,
+    ...extra,
+  });
 const throwsRows = [];
 const addThrow = (id, fn, cond, args, error = "TypeError") => throwsRows.push({ id, fn, cond, args, error });
 const CA = "budgetCandidatesHtml";
