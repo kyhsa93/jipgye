@@ -77,11 +77,20 @@ test("빌드 결과에 legacy 규칙이 전부, 같은 순서로 있다 (#276 �
   // 컷오버를 revert해 legacy 조각이 돌아와도 읽히게 그려지려면(#246 롤백 경로) 옛 class의 규칙이 산출물에 남아 있어야 한다.
   assert.ok(legacy.rules.length > 400, `legacy.css에서 규칙을 ${legacy.rules.length}개밖에 못 읽었다`);
   assert.deepEqual(legacy.statements, [], "legacy.css에 @import 같은 문장이 생겼다 - 층 안으로 들어가면 뜻이 달라진다");
-  const want = legacy.rules.map(ruleLine);
+  // legacy 뒤에 main.css가 같은 components 층으로 부르는 c-*.css(#745 PR1)가 부른 순서대로 붙는다.
+  const compFiles = flattenCss(await read(INPUT)).statements.map((s) => /^@import "\.\/(c-[a-z-]+\.css)" layer\(components\)$/.exec(s)?.[1]).filter(Boolean);
+  assert.deepEqual(compFiles, ["c-base.css", "c-home.css", "c-search.css", "c-data.css"], "main.css가 부르는 c-*.css 목록이 바뀌었다");
+  const comps = [];
+  for (const f of compFiles) {
+    const flat = flattenCss(await read(`src/css/${f}`));
+    assert.deepEqual(flat.statements, [], `${f}에 @import 같은 문장이 생겼다`);
+    comps.push(...flat.rules);
+  }
+  const want = [...legacy.rules, ...comps].map(ruleLine);
   const got = built.map(ruleLine);
   const at = want.findIndex((line, i) => line !== got[i]);
   assert.equal(at, -1, `${at + 1}번째 규칙부터 다르다. node scripts/build-css.mjs를 돌렸는가\n  원문: ${want[at]}\n  산출: ${got[at]}`);
-  assert.equal(got.length, want.length, "산출물의 components 층에 원문에 없는 규칙이 있다");
+  assert.equal(got.length, want.length, "산출물의 components 층에 원문(legacy.css·c-*.css)에 없는 규칙이 있다");
 
   // 이 비교가 실제로 잡는지: 산출물에서 규칙 하나를 지우거나, 값 하나를 바꾸거나, 두 규칙의 순서를 바꾼다.
   const mutants = {
