@@ -16,6 +16,7 @@ import {
   districtRenewalHtml,
   districtRentFlowHtml,
   districtMoveInHtml,
+  districtResaleHtml,
   districtLinksHtml,
   districtSummaryHtml,
   realestateHeadHtml,
@@ -134,6 +135,8 @@ export function buildRealestatePage(baseHtml, page, realestate, spread = null) {
     districtRentFlowEn: "",
     districtMoveInKo: "",
     districtMoveInEn: "",
+    districtResaleKo: "",
+    districtResaleEn: "",
   }));
 }
 
@@ -173,7 +176,7 @@ export function districtDescription(name, realestate) {
   );
 }
 
-export function buildDistrictPage(baseHtml, district, realestate, deals = null, renewal = null, spread = null, rentFlow = null, moveIn = null) {
+export function buildDistrictPage(baseHtml, district, realestate, deals = null, renewal = null, spread = null, rentFlow = null, moveIn = null, repeatSales = null) {
   const title = `${district.name} 아파트 시세 - 매매·전세·월세 실거래가`;
   const description = districtDescription(district.name, realestate);
   const titleEn = `${district.name} Apartment Prices - Sale, Jeonse & Rent`;
@@ -197,8 +200,8 @@ export function buildDistrictPage(baseHtml, district, realestate, deals = null, 
   );
   html = replaceOnce(
     html,
-    '<!--/prerender:districtMoveInEn--></p>\n  </section>',
-    `<!--/prerender:districtMoveInEn--></p>\n    ${districtHereHtml(district.name, realestate)}\n  </section>`,
+    '<!--/prerender:districtResaleEn--></p>\n  </section>',
+    `<!--/prerender:districtResaleEn--></p>\n    ${districtHereHtml(district.name, realestate)}\n  </section>`,
     "자치구 요약 절 끝"
   );
   // 시세 템플릿의 제목은 서울 전체를 말한다. 자치구 장은 그 구의 숫자를 싣는다(UIUX #42).
@@ -232,12 +235,15 @@ export function buildDistrictPage(baseHtml, district, realestate, deals = null, 
     // 앞으로 2년 입주 예정 한 줄(#677) - docs/data/move-in.json 의 byDistrict(build-move-in 이 만든다). 없으면 이 줄만 빈다.
     districtMoveInKo: districtMoveInHtml(district.name, moveIn, "ko"),
     districtMoveInEn: districtMoveInHtml(district.name, moveIn, "en"),
+    // 같은 집이 다시 팔렸을 때 한 줄(#716) - docs/data/repeat-sales.json 의 그 구 칸(build-repeat-sales 가 만든다). 없거나 접혔으면 이 줄만 빈다.
+    districtResaleKo: districtResaleHtml(district.name, repeatSales, "ko"),
+    districtResaleEn: districtResaleHtml(district.name, repeatSales, "en"),
   }));
 }
 
 async function main() {
   requireSite(); // 출력 디렉터리가 docs/ 가 아니면 docs/ 복사본이 먼저 있어야 한다(#508)
-  const [baseHtml, realestate, renewalFacts, complexRatio, rentFlow, moveIn] = await Promise.all([
+  const [baseHtml, realestate, renewalFacts, complexRatio, rentFlow, moveIn, repeatSales] = await Promise.all([
     readFile(SOURCE_PATH, "utf8"),
     readFile(path.join(root, "docs/data/realestate.json"), "utf8").then(JSON.parse),
     // 재계약 관찰은 없을 수 있다 - 그러면 그 문단만 비고 나머지는 그대로 나간다.
@@ -252,6 +258,9 @@ async function main() {
       .then(JSON.parse)
       .catch(() => null),
     readFile(path.join(root, "docs/data/move-in.json"), "utf8")
+      .then(JSON.parse)
+      .catch(() => null),
+    readFile(path.join(root, "docs/data/repeat-sales.json"), "utf8")
       .then(JSON.parse)
       .catch(() => null),
   ]);
@@ -283,7 +292,8 @@ async function main() {
         renewalFacts?.districts?.[district.name] ?? null,
         complexRatio?.districts?.[district.name] ?? null,
         rentFlow,
-        moveIn
+        moveIn,
+        repeatSales
       ),
       true
     );

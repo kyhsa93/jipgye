@@ -248,3 +248,41 @@ export function factSentences(facts, locale = "ko") {
 
   return out;
 }
+
+/**
+ * 「같은 집이 다시 팔렸을 때」 한 줄(#716 G1) - docs/data/repeat-sales.json 의 그 구 칸(rows)을 읽어 구 장에 싣는 한 문장.
+ *
+ * 글자와 한계는 갈아타기 V8 절(repeat-sales-view.ts, #684)과 같다: 시장 지수·구 시세 상승률이 아니고, 보유 기간이 섞인 값이라 연율화하지
+ * 않았고, 순위·「더 올랐다」 비교가 없다. 부동산원(R-ONE) 값과의 차이는 「원인은 재지 않았습니다」로만 밝힌다(편향이라 부르지 않는다).
+ * 숫자는 빌더가 낸 p(%, 소수 1자리)를 그대로 쓴다 - 로그 값에서 다시 내면 반올림 경계가 갈린다(V8 과 같은 이유).
+ * thin(쌍 부족)·shaky(흔들림)는 숫자를 싣지 않는다. 킬 스위치가 걸렸거나 값을 낼 수 있는 구가 13곳 미만이면(갈아타기 절이 접히는 경우) 줄 자체가 없다.
+ * rows 에서 읽는 필드는 gu·n·st·out·gap·p 뿐이다(#697 이 json 에 칸을 더해도 이 줄은 안 바뀐다 - test/repeat-sales-district-line.test.mjs 가 지킨다).
+ */
+export const RESALE_LINK = { href: "./switch-house.html#repeat-sales", ko: "같은 집 쌍 표 →", en: "Pairs table →" } as const;
+
+const RESALE_MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const resalePct = (v) => `${v > 0 ? "+" : ""}${Number(v).toFixed(1)}%`;
+
+export function districtResaleSentence(code, data, locale = "ko") {
+  const row = code == null ? null : data?.rows?.find((r) => r.gu === code);
+  const c = data?.checks ?? {};
+  if (!row || !data.window || c.kill || !c.enough) return null;
+  const en = locale === "en";
+  const { from, to } = data.window;
+  const span = en
+    ? `${RESALE_MONTHS_EN[Number(from.slice(4)) - 1]} ${from.slice(0, 4)}–${RESALE_MONTHS_EN[Number(to.slice(4)) - 1]} ${to.slice(0, 4)}`
+    : `${from.slice(0, 4)}년 ${Number(from.slice(4))}월~${to.slice(0, 4)}년 ${Number(to.slice(4))}월`;
+  const head = en ? "When the same home sold again" : "같은 집이 다시 팔렸을 때";
+  if (row.st !== "ok" || !Array.isArray(row.p) || row.p.length < 4) {
+    const n = row.n;
+    if (row.st === "shaky") return en ? `${head}: no figure shown, the value is too unstable (${n} pairs).` : `${head}: 값이 흔들려 싣지 않습니다(${n}쌍).`;
+    return en ? `${head}: not enough sample (n=${n} pairs), so no figure is shown.` : `${head}: 표본 부족(n=${n}쌍)이라 값을 싣지 않습니다.`;
+  }
+  const [m, lo, hi, r] = row.p;
+  const many = row.out === 1;
+  return en
+    ? `${head} (pairs contracted ${span}): median price change ${resalePct(m)} (90% range ${resalePct(lo)} to ${resalePct(hi)}, ${row.n} pairs, median hold ${row.gap} days${many ? ", many outliers" : ""}). ` +
+        `Korea Real Estate Board R-ONE, same pairs: ${resalePct(r)}; the cause of the gap was not measured. Not a market index or district price growth, not annualised.`
+    : `${head}(${span} 계약 쌍) 가격 변화 중앙값 ${resalePct(m)}(90% 구간 ${resalePct(lo)} ~ ${resalePct(hi)}, ${row.n}쌍, 보유 중앙 ${row.gap}일${many ? ", 이상치 많음" : ""}). ` +
+        `같은 쌍 기간의 한국부동산원 R-ONE은 ${resalePct(r)}, 차이의 원인은 재지 않았습니다. 시장 지수·구 시세 상승률이 아니며 연율화하지 않았습니다.`;
+}

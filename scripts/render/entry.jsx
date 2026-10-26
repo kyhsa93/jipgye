@@ -14,7 +14,8 @@ import { DISTRICT_PAGES } from "../district-slugs.ts";
 import { BUDGET_MORE_LINKS, areaLine, areasShape, bodyShape,budgetAnswers, budgetRuleHref, candidatesShape, capNote, costsNote, dealShape, loanNote, minCashNote, policyNote, whereText } from "../budget-fragments.ts";
 import { budgetFactSentences } from "../budget-facts.ts";
 import { districtSentences } from "../district-summary.ts";
-import { factSentences } from "../district-facts.ts";
+import { RESALE_LINK, districtResaleSentence, factSentences } from "../district-facts.ts";
+import { DISTRICTS } from "../realestate-districts.ts";
 import { rentFlowSentences } from "../rent-flow.ts";
 import { MOVE_IN_DISTRICT_LINK, districtMoveInSentence } from "../move-in.ts";
 import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-links.ts";
@@ -277,6 +278,18 @@ const districtMoveIn = (name, moveIn, locale = "ko") => {
   return (
     <>
       {text} <a href={MOVE_IN_DISTRICT_LINK.href}>{MOVE_IN_DISTRICT_LINK[locale === "en" ? "en" : "ko"]}</a>
+    </>
+  );
+};
+// 같은 집 재거래 한 줄(#716 G1): 인자는 (자치구 이름, repeat-sales.json 전체, locale). 문장은 district-facts.ts, 끝에 갈아타기 쌍 표 링크 하나.
+// 구 이름이 없거나 집계가 접혔으면 빈 조각.
+const districtResale = (name, data, locale = "ko") => {
+  const code = DISTRICTS.find((d) => d.name === name)?.code;
+  const text = districtResaleSentence(code, data, locale);
+  if (!text) return <></>;
+  return (
+    <>
+      {text} <a href={RESALE_LINK.href}>{RESALE_LINK[locale === "en" ? "en" : "ko"]}</a>
     </>
   );
 };
@@ -909,6 +922,7 @@ export const fragments = {
   districtFactsHtml: districtFacts,
   districtRentFlowHtml: districtRentFlow,
   districtMoveInHtml: districtMoveIn,
+  districtResaleHtml: districtResale,
   districtLinksHtml: districtLinks,
   conversionTableHtml: conversionTableJsx,
   cancelDistrictsHtml: cancelDistrictsJsx,

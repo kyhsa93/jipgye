@@ -66,7 +66,7 @@ test("내용 비교의 정규화는 class·style 둘만 지운다(셋째가 생�
   assert.equal(norm('<p>class="tw:p-2" style="y"</p>'), '<p>class="tw:p-2" style="y"</p>');
 });
 
-test("prerender.ts의 *Html() 조각은 이식 목록(PORTED) 44개와 같은 이름 전부이고 함수 이름이 그대로다", () => {
+test("prerender.ts의 *Html() 조각은 이식 목록(PORTED) 45개와 같은 이름 전부이고 함수 이름이 그대로다", () => {
   const names = Object.keys(prerender).filter((k) => k.endsWith("Html") && k !== "escapeHtml").sort();
   assert.deepEqual(names, PORTED, "prerender.ts의 조각 이름이 이식 목록과 다르다");
   for (const name of names) {
@@ -125,6 +125,7 @@ const PORTED = [
   "districtMoveInHtml",
   "districtRenewalHtml",
   "districtRentFlowHtml",
+  "districtResaleHtml",
   "districtSummaryHtml",
   "floorDistrictLinksHtml",
   "floorDistrictsHtml",
@@ -157,8 +158,8 @@ test("react 모드: 이식된 조각 목록이 PORTED와 같고, 그 이름은 �
   }
 });
 
-test("prerender.ts 래퍼(기본값 react): 이식 완료 상태(조각 43개 전부 React - 금리 조각 둘은 #577 B2 로 지웠고 V7 이 districtRentFlowHtml, V8 이 repeatSalesHtml, N5 가 districtMoveInHtml 을 더했다)이고, 모든 분기 표에서 래퍼 출력이 기대값과 같고 React 경고가 없다", () => {
-  assert.equal(PORTED.length, 44);
+test("prerender.ts 래퍼(기본값 react): 이식 완료 상태(조각 43개 전부 React - 금리 조각 둘은 #577 B2 로 지웠고 V7 이 districtRentFlowHtml, V8 이 repeatSalesHtml, N5 가 districtMoveInHtml, G1 이 districtResaleHtml 을 더했다)이고, 모든 분기 표에서 래퍼 출력이 기대값과 같고 React 경고가 없다", () => {
+  assert.equal(PORTED.length, 45);
   assert.deepEqual(renderer.names(), PORTED, "entry.jsx 의 조각이 이식 목록과 다르다");
   const tables = [
     ["문장·목록", NEWS_MARKET_BRANCHES],
@@ -405,7 +406,7 @@ test("자치구 분기 표: id가 겹치지 않고, 열 조각을 모두 덮고,
   const ids = DISTRICT_TABLES_BRANCHES.map((b) => b.id);
   assert.equal(new Set(ids).size, ids.length, "분기 id가 겹친다");
   assert.deepEqual([...new Set(DISTRICT_TABLES_BRANCHES.map((b) => b.fn))].sort(), DISTRICT_TABLES_FNS);
-  assert.equal(DISTRICT_TABLES_FNS.length, 12);
+  assert.equal(DISTRICT_TABLES_FNS.length, 13);
   for (const b of DISTRICT_TABLES_BRANCHES) {
     assert.ok("expect" in b, `${b.id}: 기대값(expect)이 없다`);
     assert.ok(PORTED.includes(b.fn), `${b.id}: 이식 목록에 없는 조각(${b.fn})`);
@@ -480,6 +481,7 @@ test("자치구 조각: 데이터 없음은 null, 문장·링크는 빈 문자�
   assert.equal(draw("districtFactsHtml", undefined), "");
   assert.equal(draw("districtRentFlowHtml", null, null), "");
   assert.equal(draw("districtMoveInHtml", null, null), "");
+  assert.equal(draw("districtResaleHtml", null, null), "");
   assert.ok(draw("districtLinksHtml").startsWith('<h3 class="district-links-heading"'));
 });
 

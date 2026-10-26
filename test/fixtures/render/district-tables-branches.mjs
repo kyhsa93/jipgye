@@ -626,6 +626,39 @@ const SUM_EN = "Apartments in 종로구 trade at ₩50M per pyeong. For an 84m²
   add("MI-14", fn, "기준일이 없으면 그 칸만 빠진다", ["종로구", { byDistrict: MI([R("종로구", [0, 0, 0, 0])]).byDistrict }], `입주 예정(추정): 예정 없음 · 예정월 기준(실제 입주 아님). ${KO_SRC} ${LINK_KO}`);
 }
 
+{
+  // 같은 집이 다시 팔렸을 때 한 줄(#716 G1). 문장은 scripts/district-facts.ts 가 만들고 조각은 끝에 갈아타기 쌍 표 링크 하나를 붙인다. 인자는 (자치구 이름, repeat-sales.json 전체, locale).
+  const fn = "districtResaleHtml";
+  const D = (rows, patch = {}) => ({
+    window: { from: "202411", to: "202608", gap: [300, 730] },
+    checks: { kill: false, enough: true },
+    rows,
+    ...patch,
+  });
+  const OK = { gu: "11170", n: 119, st: "ok", gap: 378, p: [19.5, 15.2, 23.3, 13.6] };
+  const LINK_KO = '<a href="./switch-house.html#repeat-sales">같은 집 쌍 표 →</a>';
+  const LINK_EN = '<a href="./switch-house.html#repeat-sales">Pairs table →</a>';
+  const KO_OK = "같은 집이 다시 팔렸을 때(2024년 11월~2026년 8월 계약 쌍) 가격 변화 중앙값 +19.5%(90% 구간 +15.2% ~ +23.3%, 119쌍, 보유 중앙 378일). 같은 쌍 기간의 한국부동산원 R-ONE은 +13.6%, 차이의 원인은 재지 않았습니다. 시장 지수·구 시세 상승률이 아니며 연율화하지 않았습니다.";
+  const EN_OK = "When the same home sold again (pairs contracted Nov 2024–Aug 2026): median price change +19.5% (90% range +15.2% to +23.3%, 119 pairs, median hold 378 days). Korea Real Estate Board R-ONE, same pairs: +13.6%; the cause of the gap was not measured. Not a market index or district price growth, not annualised.";
+  add("RS-01", fn, "이름이 null → 빈 문자열", [null, D([OK])], "");
+  add("RS-02", fn, "집계가 없으면(null) 빈 문자열", ["용산구", null], "");
+  add("RS-03", fn, "표에 없는 구 → 빈 문자열", ["강남구", D([OK])], "");
+  add("RS-04", fn, "킬 스위치가 걸렸으면(갈아타기 절이 접힐 때) 줄이 없다", ["용산구", D([OK], { checks: { kill: true, enough: true } })], "");
+  add("RS-05", fn, "값을 낼 수 있는 구가 모자라면(enough 거짓) 줄이 없다", ["용산구", D([OK], { checks: { kill: false, enough: false } })], "");
+  add("RS-06", fn, "ok 구(ko): 중앙값·90% 구간·쌍·보유 중앙·같은 쌍 R-ONE, 차이 원인 미측정, 시장 지수 아님·연율화 안 함, 끝에 쌍 표 링크", ["용산구", D([OK])], `${KO_OK} ${LINK_KO}`);
+  add("RS-07", fn, "ok 구(en)", ["용산구", D([OK]), "en"], `${EN_OK} ${LINK_EN}`);
+  add("RS-08", fn, "이상치 많은 구는 칸 안에 그 말을 더한다", ["용산구", D([{ ...OK, out: 1 }])], `${KO_OK.replace("보유 중앙 378일", "보유 중앙 378일, 이상치 많음")} ${LINK_KO}`);
+  add("RS-09", fn, "thin 구(ko): 숫자 없이 표본 부족", ["종로구", D([{ gu: "11110", n: 53, st: "thin" }])], `같은 집이 다시 팔렸을 때: 표본 부족(n=53쌍)이라 값을 싣지 않습니다. ${LINK_KO}`);
+  add("RS-10", fn, "thin 구(en)", ["종로구", D([{ gu: "11110", n: 53, st: "thin" }]), "en"], `When the same home sold again: not enough sample (n=53 pairs), so no figure is shown. ${LINK_EN}`);
+  add("RS-11", fn, "흔들려 비운 구(shaky)도 숫자 없이", ["용산구", D([{ gu: "11170", n: 119, st: "shaky" }])], `같은 집이 다시 팔렸을 때: 값이 흔들려 싣지 않습니다(119쌍). ${LINK_KO}`);
+  add("RS-16", fn, "이름이 undefined → 빈 문자열", [undefined, D([OK])], "");
+  // 쌍 수(n)·보유 중앙(gap)은 json 에서 온 칸을 그대로 끼운다(실제 입력은 숫자 - 빌더가 센 값). 특수문자는 이스케이프되고 비문자열은 String() 으로 나온다.
+  add("RS-13", fn, "쌍 수의 특수문자 & < > \" ' 는 이스케이프(thin 칸)", ["종로구", D([{ gu: "11110", n: SP, st: "thin" }])], `같은 집이 다시 팔렸을 때: 표본 부족(n=${SP_OUT}쌍)이라 값을 싣지 않습니다. ${LINK_KO}`);
+  add("RS-14", fn, "쌍 수가 비문자열 true → \"true\"", ["종로구", D([{ gu: "11110", n: true, st: "thin" }])], `같은 집이 다시 팔렸을 때: 표본 부족(n=true쌍)이라 값을 싣지 않습니다. ${LINK_KO}`);
+  add("RS-15", fn, "쌍 수가 {} → \"[object Object]\"", ["종로구", D([{ gu: "11110", n: {}, st: "thin" }])], `같은 집이 다시 팔렸을 때: 표본 부족(n=[object Object]쌍)이라 값을 싣지 않습니다. ${LINK_KO}`);
+  add("RS-12", fn, "음수는 - 부호, 0 은 부호 없이 0.0%", ["용산구", D([{ ...OK, p: [-2.5, -4, 0, 0] }])], `${KO_OK.replace("+19.5%", "-2.5%").replace("+15.2% ~ +23.3%", "-4.0% ~ 0.0%").replace("+13.6%", "0.0%")} ${LINK_KO}`);
+}
+
 // 이스케이프 없이 문자열에 끼우던 칸(raw)에 `& < > "`가 든 문자열이 오면 React는 이스케이프해서 낸다(고정할 출력; 옛 legacy는 그대로 냈다).
 // React가 내는 글자를 적는다. 실제 입력에는 없다 - 빌더가 숫자로만 만든다(PR 본문의 칸별 근거).
 // `site`는 옛 legacy 코드에서 이스케이프 없이 끼우던 자리의 이름(참고용), `react`는 그 칸이 낸 전체 출력이다.
@@ -684,7 +717,7 @@ export const DISTRICT_TABLES_THROWS = [];
 
 export const DISTRICT_TABLES_BRANCHES = rows;
 
-// 이 표가 덮는 조각 열두 개의 이름(시험이 표가 열두 개를 다 덮는지 본다). 열한째(districtRentFlowHtml)는 V7 이, 열두째(districtMoveInHtml)는 N5(#677)가 더했다.
+// 이 표가 덮는 조각 열세 개의 이름(시험이 표가 열세 개를 다 덮는지 본다). 열한째(districtRentFlowHtml)는 V7 이, 열두째(districtMoveInHtml)는 N5(#677)가, 열셋째(districtResaleHtml)는 G1(#716)이 더했다.
 export const DISTRICT_TABLES_FNS = [
   "cancelDistrictsHtml",
   "cancelMonthsHtml",
@@ -694,6 +727,7 @@ export const DISTRICT_TABLES_FNS = [
   "districtMoveInHtml",
   "districtRenewalHtml",
   "districtRentFlowHtml",
+  "districtResaleHtml",
   "districtSummaryHtml",
   "floorDistrictsHtml",
   "renewalDistrictsHtml",
