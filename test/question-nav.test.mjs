@@ -111,7 +111,9 @@ test("대표 검색이 첫 화면에 보이고 JS 없이 GET 으로 deal-search 
   const form = homeForm(html);
   assert.match(form, /^<form class="home-search" id="home-search" action="\.\/deal-search\.html" method="get">/, "폼이 deal-search 로 GET 하지 않는다");
   assert.ok(!/\son[a-z]+=/.test(form), "폼에 인라인 이벤트가 있다 - JS 없이 돌아야 한다");
-  assert.ok(!html.includes('getElementById("home-search")'), "스크립트가 폼을 붙잡는다 - JS 없이 돌아야 한다");
+  // 스크립트는 보내는 것을 막지 않는다 - 전월세일 때 매매 예산(max)을 비우는 일 하나만 한다(JS 가 없어도 폼은 그대로 간다).
+  const submit = /addEventListener\("submit", \(e\) => \{([\s\S]*?)\}\);/.exec(html)?.[1] ?? "";
+  assert.ok(!/preventDefault|location|fetch/.test(submit), "스크립트가 폼 제출을 가로챈다 - JS 없이도 같은 GET 이어야 한다");
   assert.match(form, /<button class="c-btn" type="submit">/);
 
   // 질문 링크 열은 지우지 않고 「더 알아보기」 아래 접힌 <details> 로 남는다(색인·내부 링크).
@@ -134,7 +136,9 @@ test("대표 검색 폼의 칸 이름·값은 deal-search 가 읽는 파라미�
   const deal = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
   const read = new Set([...deal.matchAll(/params\.get\("([a-z]+)"\)/g)].map((m) => m[1]));
   const names = [...new Set([...form.matchAll(/<(?:input|select)\b[^>]*\bname="([a-z]+)"/g)].map((m) => m[1]))];
-  assert.deepEqual(names.sort(), ["budget", "district", "kind"].sort(), "칸이 유형·지역·예산 셋이 아니다");
+  assert.deepEqual(names.sort(), ["district", "kind", "max"].sort(), "칸이 유형·지역·예산(max) 셋이 아니다");
+  const filters = await readFile(path.join(root, "docs/deal-filters.js"), "utf8");
+  for (const n of filters.matchAll(/params\.get\("([a-z]+)"\)/g)) read.add(n[1]);
   for (const n of names) assert.ok(read.has(n), `deal-search 가 ${n} 을 읽지 않는다`);
 
   const kinds = JSON.parse(/const KINDS = (\[[^\]]*\]);/.exec(deal)?.[1] ?? "[]");
@@ -148,12 +152,20 @@ test("대표 검색 폼의 칸 이름·값은 deal-search 가 읽는 파라미�
   const options = [...district.matchAll(/<option>([^<]+)/g)].map((m) => m[1]);
   assert.deepEqual([...options].sort(), DISTRICTS.map((d) => d.name).sort(), "자치구가 25개 전부가 아니다");
 
-  const budget = /<select class="c-select" name="budget">([\s\S]*?)<\/select>/.exec(form)?.[1] ?? "";
+  // 예산은 deal-search 의 max(억, 이하, deal-filters.js 의 선택지 M)와 같은 값·같은 「N억 이하」 라벨이다(시나리오 B 「서울 8억 이하 매매」).
+  const budget = /<select class="c-select" name="max">([\s\S]*?)<\/select>/.exec(form)?.[1] ?? "";
   assert.match(budget, /^<option value="">/, "예산 첫 칸이 조건 없음이 아니다");
-  const values = [...budget.matchAll(/<option value="(\d+)">/g)].map((m) => Number(m[1]));
-  assert.ok(values.length >= 5, "예산 선택지가 모자란다");
-  // deal-search 의 budget 은 억 단위 숫자이고 3억~30억 사이에서 1억 구간으로 읽힌다(BAND_MIN·BAND_MAX).
-  for (const v of values) assert.ok(Number.isInteger(v) && v >= 3 && v <= 30, `예산 ${v}억이 deal-search 구간 밖이다`);
+  const opts = [...budget.matchAll(/<option value="(\d+)">([^<]+)/g)];
+  const M = JSON.parse(/const M = (\[[^\]]*\]);/.exec(filters)?.[1] ?? "[]");
+  assert.deepEqual(opts.map((m) => Number(m[1])), M, "예산 선택지가 deal-search 의 max 선택지와 다르다");
+  for (const [, v, text] of opts) assert.equal(text, `${v}억 이하`, `예산 라벨이 「N억 이하」가 아니다: ${text}`);
+
+  // 전세·월세: deal-search 는 예산 칸 대신 보증금·월세를 쓴다. 메인은 예산 칸을 감추고(CSS) 보낼 때 비운다(인라인 스크립트).
+  const css = await readFile(path.join(root, "src/css/c-home.css"), "utf8");
+  assert.ok(css.includes('.home-search:has(input[name="kind"]:not([value="sale"]):checked) .home-budget {\n  display: none;'), "전월세에서 예산 칸이 보인다");
+  assert.match(form, /<label class="c-field home-budget">[\s\S]*?name="max"/, "감출 예산 칸 묶음이 없다");
+  const html = await indexHtml();
+  assert.match(html, /getElementById\("home-search"\)\.addEventListener\("submit", \(e\) => \{\s*const f = e\.currentTarget;\s*if \(f\.kind\.value !== "sale"\) f\.max\.value = "";\s*\}\);/, "전월세로 보낼 때 max 를 비우지 않는다");
 });
 
 test("대표 검색·4목적은 320px 에서 가로로 넘치지 않는다 - 칸은 minmax(0, 1fr), 고정 폭 없음 (#745 PR4)", async () => {

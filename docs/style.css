@@ -2781,6 +2781,9 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
+  .home-search:has(input[name="kind"]:not([value="sale"]):checked) .home-budget {
+    display: none;
+  }
 }
 @layer components;
 @layer utilities {

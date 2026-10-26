@@ -71,7 +71,7 @@
   </div>
 
   <!-- 첫 화면 = 가치 제안 + 대표 검색(#745 PR4, 소유자 지시 2026-10-26 - #575 안 B 를 대체). 폼은 JS 없이 GET 으로 deal-search 에 조건을 넘긴다.
-       예산 칸 이름은 지금 deal-search 가 읽는 budget(억, 1억 구간)이다. PR2 의 max(억, 이하)가 병합되면 name 한 곳만 max 로 바꾼다. -->
+       예산은 deal-search 의 max(억, 이하)다. 전세·월세에는 deal-search 가 보증금·월세 칸을 쓰므로 예산 칸을 CSS 로 감추고, 보낼 때 비운다(스크립트 끝). -->
   <div class="home-hero" id="home-hero">
     <h1 class="home-title"><span lang="ko">내 예산에 맞는 서울 아파트를 찾아보세요</span><span lang="en">Find a Seoul apartment that fits your budget</span></h1>
     <p class="home-value"><span lang="ko">실제 거래된 가격을 기준으로 원하는 지역의 아파트를 비교해 보세요.</span><span lang="en">Compare apartments in the area you want, based on prices actually paid.</span></p>
@@ -87,8 +87,8 @@
       </fieldset>
       <label class="c-field"><span class="c-label"><span lang="ko">지역</span><span lang="en">District</span></span>
         <select class="c-select" name="district"><option value="">서울 전체<option>강남구<option>강동구<option>강북구<option>강서구<option>관악구<option>광진구<option>구로구<option>금천구<option>노원구<option>도봉구<option>동대문구<option>동작구<option>마포구<option>서대문구<option>서초구<option>성동구<option>성북구<option>송파구<option>양천구<option>영등포구<option>용산구<option>은평구<option>종로구<option>중구<option>중랑구</select></label>
-      <label class="c-field"><span class="c-label"><span lang="ko">예산</span><span lang="en">Budget (₩100M)</span></span>
-        <select class="c-select" name="budget"><option value="">전체<option value="3">3억<option value="5">5억<option value="7">7억<option value="8">8억<option value="10">10억<option value="12">12억<option value="15">15억<option value="20">20억<option value="30">30억</select></label>
+      <label class="c-field home-budget"><span class="c-label"><span lang="ko">매매 예산</span><span lang="en">Sale budget (₩100M)</span></span>
+        <select class="c-select" name="max"><option value="">전체<option value="3">3억 이하<option value="5">5억 이하<option value="8">8억 이하<option value="10">10억 이하<option value="15">15억 이하<option value="20">20억 이하</select></label>
       <button class="c-btn" type="submit"><span lang="ko">실거래 검색</span><span lang="en">Search deals</span></button>
     </form>
   </div>
@@ -1302,6 +1302,11 @@
         .catch(() => {});
     });
   }
+  // 전세·월세에는 매매 예산(max)을 넘기지 않는다(#745 PR4).
+  document.getElementById("home-search").addEventListener("submit", (e) => {
+    const f = e.currentTarget;
+    if (f.kind.value !== "sale") f.max.value = "";
+  });
 </script>
 </body>
 </html>

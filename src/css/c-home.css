@@ -91,3 +91,8 @@ p.wordmark {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+
+/* 전세·월세를 고르면 매매 예산 칸을 감춘다 - deal-search 는 전월세에서 예산 대신 보증금·월세를 쓴다. 보낼 때 값은 인라인 스크립트가 비운다. */
+.home-search:has(input[name="kind"]:not([value="sale"]):checked) .home-budget {
+  display: none;
+}
