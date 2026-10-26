@@ -327,12 +327,9 @@ test("두 페이지와 서비스워커가 모두 analytics.js를 물고 있다",
 // AI 요약은 뉴스 화면에만 있다(#575 PR2) - 폴백 안내도 그 화면이 지킨다.
 test("요약이 폴백된 날은 뉴스 화면에 그 사실을 표시한다", async () => {
   const html = await readFile(path.join(root, `${SITE}/news.html`), "utf8");
-  assert.ok(html.includes("fallbackNote"), "안내 문구 사전 항목이 없다");
-  assert.ok(
-    html.includes("shown.some((c) => c.fallbackReason)"),
-    "fallbackReason을 화면 표시에 쓰지 않는다"
-  );
-  for (const dict of ["일부 항목은 검증에서", "Some summaries failed verification"]) {
+  // #745 PR6: 상자 끝 안내 줄 대신 폴백 분야의 줄을 「요약 검증 실패: 제목만 표시(이유)」로 바꾼다.
+  assert.ok(html.includes("c.fallbackReason ? `${t(\"failed\")}("), "fallbackReason을 화면 표시에 쓰지 않는다");
+  for (const dict of ["요약 검증 실패: 제목만 표시", "Unverified: headlines only"]) {
     assert.ok(html.includes(dict), `안내 문구가 한쪽 언어에만 있다: ${dict}`);
   }
 });

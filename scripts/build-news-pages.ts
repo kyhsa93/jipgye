@@ -1,6 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { applyPrerender, newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "./prerender.ts";
+import { applyPrerender, escapeHtml, newsKospiHtml, newsListHtml, newsRealestateStatsHtml, newsSummaryHtml } from "./prerender.ts";
+import { categorizeTitle } from "./categories.ts";
+import { sourcesMarkup } from "./summary-note.ts";
 import { createWriteSet } from "./render-writes.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 import { requireSite, siteLabel, sitePath } from "./site-dir.ts";
@@ -66,8 +68,22 @@ function replaceOnce(html, needle, replacement, what) {
   return html.replace(needle, replacement);
 }
 
-export function buildNewsPage(baseHtml, page, { news, summary, market = null }) {
+// 빌드 때 분류를 다시 매긴다(#745 PR6). news.json 의 category 는 수집 때 규칙이라, 규칙(categories.ts)을 고친 뒤에도 이미 모은 기사는 옛 분류다.
+// 수집기·수집 워크플로는 건드리지 않고(수집 분리 원칙) 여기서 제목으로 다시 매긴 값이 다른 기사만 { 링크: 새 분류 } 로 모은다.
+// 구운 목록은 이 값으로 거르고, 화면 스크립트는 같은 표를 <meta name="news-category"> 의 data-recat 에서 읽어 받은 news.json 을 같은 분류로 거른다.
+export function recategorize(news) {
+  const recat = {};
+  for (const item of news?.items ?? []) {
+    const key = categorizeTitle(item.title).key;
+    if (key !== item.category && item.link) recat[item.link] = key;
+  }
+  return recat;
+}
+
+export function buildNewsPage(baseHtml, page, { news: rawNews, summary, market = null }) {
   let html = baseHtml;
+  const recat = recategorize(rawNews);
+  const news = rawNews?.items ? { ...rawNews, items: rawNews.items.map((i) => (recat[i.link] ? { ...i, category: recat[i.link] } : i)) } : rawNews;
 
   html = html.replaceAll(BASE_TITLE, page.title);
   html = html.replaceAll(BASE_DESCRIPTION, page.description);
@@ -78,7 +94,7 @@ export function buildNewsPage(baseHtml, page, { news, summary, market = null }) 
   html = replaceOnce(
     html,
     '<link rel="canonical"',
-    `<meta name="news-category" content="${page.category}">\n<link rel="canonical"`,
+    `<meta name="news-category" content="${page.category}"${Object.keys(recat).length ? ` data-recat="${escapeHtml(JSON.stringify(recat))}"` : ""}>\n<link rel="canonical"`,
     "정규 URL 링크"
   );
 
@@ -120,6 +136,7 @@ export function buildNewsPage(baseHtml, page, { news, summary, market = null }) 
   // 문자열 패치(replaceOnce)가 전부 끝난 뒤에, 나가는 장의 인라인 스크립트에서 주석만 뗀다(#313). 틀에는 주석이 그대로 있다.
   return stripInlineScriptComments(applyPrerender(html, {
     newsSummary: newsSummaryHtml(summary, page.category),
+    newsSources: sourcesMarkup(summary, page.category, news),
     newsList: newsListHtml(news, page.category),
     ...(stats ? { realestateStats: stats } : {}),
     newsKospi: kospi ?? "",

@@ -16,6 +16,7 @@ function stubElement(attrs = {}) {
       for (const fn of listeners[type] ?? []) fn({ target: this, currentTarget: this, ...extra });
     },
     textContent: "",
+    value: "",
     innerHTML: "",
     hidden: false,
     style: {},

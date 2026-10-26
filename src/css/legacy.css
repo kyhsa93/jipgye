@@ -1068,10 +1068,66 @@ ul.news-list {
   margin-bottom: 0;
 }
 
-.summary-note {
-  color: var(--muted);
+/* 요약 아래 근거 기사(#745 PR6): 분야 줄 바로 아래 접힌 목록. 검증에서 걸러진 분야는 펼친 채 굽는다. */
+.summary-src {
+  margin: -6px 0 12px;
   font-size: var(--fs-xs);
-  margin-top: 10px;
+}
+
+.summary-src summary {
+  color: var(--muted);
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.summary-src ul {
+  margin: 4px 0 0;
+  padding-left: 1.2em;
+}
+
+.summary-src li {
+  margin-bottom: 6px;
+  overflow-wrap: anywhere;
+}
+
+/* 뉴스 화면 안의 제목 거르기(#745 PR6). 글은 두 언어를 구워 두고 html lang 이 가린다 - 인라인 스크립트에 번역 표를 더하지 않는다. */
+.news-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: var(--fs-md);
+}
+
+.news-filter input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  font: inherit;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: inherit;
+}
+
+html:lang(en) #news-filter .m-ko,
+html:not(:lang(en)) #news-filter .m-en {
+  display: none;
+}
+
+/* 거른 결과가 없을 때의 안내(스크립트 없이 CSS 로). */
+#news-list:has(> .news-item):not(:has(> .news-item:not([hidden])))::after {
+  content: "제목이 맞는 기사가 없습니다. 검색어를 줄여 보세요.";
+  color: var(--muted);
+  font-size: var(--fs-md);
+}
+
+html:lang(en) #news-list:has(> .news-item):not(:has(> .news-item:not([hidden])))::after {
+  content: "No headlines match. Try a shorter word.";
 }
 
 .empty {

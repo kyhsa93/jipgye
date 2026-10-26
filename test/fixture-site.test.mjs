@@ -10,7 +10,7 @@ import { formatPercent } from "../scripts/realestate-format.ts";
 import { readDataSources } from "../scripts/source-age.ts";
 import { stampSources } from "../scripts/source-lines.ts";
 import { stripInlineScriptComments, stripJsComments } from "../scripts/strip-inline-comments.ts";
-import { FALLBACK_NOTE_KO, hasFallback } from "../scripts/summary-note.ts";
+import { failedLineKo } from "../scripts/summary-note.ts";
 import { CROSS_PAGES, PAGE_SOURCES, baselineFor, stampHtml } from "../scripts/updated-stamp.ts";
 import { rateStampText } from "../scripts/budget-pages.ts";
 import {
@@ -78,11 +78,10 @@ test("[prerender] 고정 데이터로 찍은 news.html 에 첫 기사 제목·�
   assert.ok(!html.includes("<b>\"따옴표\"</b>"), "제목의 마크업이 이스케이프되지 않았다");
 });
 
-test("[summary-note] 고정 요약의 검증 폴백 유무가 구운 장 다섯의 안내 줄 유무와 맞는다 (#350)", async () => {
+test("[summary-note] 고정 요약의 검증 폴백 분야는 구운 장 다섯에서 실패 줄로 나오고, 헤드라인 목록을 요약처럼 싣지 않는다 (#745 PR6)", async () => {
   const summary = await fixtureRead("summary");
-  assert.ok(hasFallback(summary.categories), "고정 요약에 폴백이 하나는 있어야 '있는 날' 갈래를 본다");
-  assert.ok(!hasFallback(summary.categories.filter((c) => c.key === "realestate")), "폴백이 없는 분야가 하나는 있어야 '없는 날' 갈래를 본다");
-  const noteOf = (html, cls) => html.includes(`<div class="${cls}">${FALLBACK_NOTE_KO}</div>`);
+  const fallen = summary.categories.filter((c) => c.lineKo && c.fallbackReason);
+  assert.ok(fallen.length, "고정 요약에 폴백이 하나는 있어야 '있는 날' 갈래를 본다");
   const boxOf = (html, marker) => {
     const open = `<!--prerender:${marker}-->`;
     const a = html.indexOf(open);
@@ -90,14 +89,15 @@ test("[summary-note] 고정 요약의 검증 폴백 유무가 구운 장 다섯�
     assert.ok(a > 0 && b > a, `${marker} 자리표시를 찾지 못했다`);
     return html.slice(a + open.length, b);
   };
-  // 메인 요약 상자는 #575 PR2 에서 뉴스 화면으로 옮겼다 - 안내 줄은 뉴스 장 다섯만 본다.
-
-  const hub = boxOf(site.read("docs/news.html"), "newsSummary");
-  assert.equal(noteOf(hub, "summary-note"), hasFallback(summary.categories.filter((c) => c.lineKo)), "docs/news.html 의 안내 줄이 고정 summary.json 과 어긋난다.");
+  const check = (box, shown, where) => {
+    for (const c of shown) {
+      assert.equal(box.includes(failedLineKo(c.fallbackReason)), Boolean(c.fallbackReason), `${where}: ${c.key} 의 실패 줄 유무가 고정 summary.json 과 어긋난다`);
+      if (c.fallbackReason) assert.ok(!box.includes(escapeHtml(c.lineKo)), `${where}: ${c.key} 의 검증 실패 헤드라인 목록이 요약처럼 구워졌다`);
+    }
+  };
+  check(boxOf(site.read("docs/news.html"), "newsSummary"), summary.categories.filter((c) => c.lineKo), "docs/news.html");
   for (const page of NEWS_PAGES) {
-    const box = boxOf(site.read(`docs/${page.file}`), "newsSummary");
-    const shown = summary.categories.filter((c) => c.key === page.category && c.lineKo);
-    assert.equal(noteOf(box, "summary-note"), hasFallback(shown), `docs/${page.file} 의 안내 줄이 고정 summary.json 과 어긋난다. node scripts/build-news-pages.ts 를 실행하세요.`);
+    check(boxOf(site.read(`docs/${page.file}`), "newsSummary"), summary.categories.filter((c) => c.key === page.category && c.lineKo), `docs/${page.file}`);
   }
 });
 

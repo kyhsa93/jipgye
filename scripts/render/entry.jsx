@@ -20,7 +20,7 @@ import { rentFlowSentences } from "../rent-flow.ts";
 import { MOVE_IN_DISTRICT_LINK, districtMoveInSentence } from "../move-in.ts";
 import { linksBlockShape, slugLinkEntries, slugLinkHref } from "../district-links.ts";
 import { cancelDistricts, cancelMonths, conversionTable, floorDistricts, renewalDistricts, renewalWolseDistricts } from "../district-tables.ts";
-import { FALLBACK_NOTE_KO, hasFallback } from "../summary-note.ts";
+import { failedLineKo, summaryShown } from "../summary-note.ts";
 import { metricCell, topDistricts } from "../realestate-rows.ts";
 import { overallCards } from "../realestate-overall.ts";
 import { headLabels, realestateTable } from "../realestate-table.ts";
@@ -87,18 +87,18 @@ function newsIndex(news) {
   );
 }
 
+// 분야마다 한 줄(#745 PR6). 검증에서 걸러진 분야(fallbackReason)는 헤드라인 목록을 요약처럼 싣지 않고 「요약 검증 실패: 제목만 표시(이유)」를 낸다.
+// 글자는 뉴스 틀 renderSummary 와 같다(scripts/summary-note.ts). 옛 상자 끝 안내 줄(#350)은 이 줄이 대신한다.
 function newsSummary(data, category = null) {
-  const all = (data?.categories ?? []).filter((c) => c.lineKo);
-  const shown = category ? all.filter((c) => c.key === category) : all;
+  const shown = summaryShown(data, category);
   if (!shown.length) return null;
   return (
     <>
       {shown.map((c, i) => (
         <p key={i}>
-          <strong>{str(c.name)}</strong> {str(c.lineKo)}
+          <strong>{str(c.name)}</strong> {str(c.fallbackReason ? failedLineKo(c.fallbackReason) : c.lineKo)}
         </p>
       ))}
-      {hasFallback(shown) ? <div className="summary-note">{FALLBACK_NOTE_KO}</div> : null}
     </>
   );
 }

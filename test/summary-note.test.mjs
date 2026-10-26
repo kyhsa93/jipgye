@@ -1,23 +1,28 @@
-// 검증 폴백 안내 줄은 구운 HTML 이 싣는다 (#350). 안 싣던 때는 요약 JSON 이 오는 순간 화면 스크립트가 줄을 붙여
-// #summary-box 아래 구획이 한 줄(28.7px, 375폭)만큼 밀렸다 - 폴백이 있는 날에만(summary.json 의 categories[].fallbackReason).
-// 이 파일의 시험은 데이터 값에 좌우되지 않는다: 고정 fixture 로 구운 결과를 본다. 저장소 docs/ 가 "원본·데이터로 다시 찍은 것과 같은가"는 tools/health 가 비차단으로 보고(#507), 고정 데이터로 찍은 출력은 test/fixture-site.test.mjs 가 본다.
+// AI 요약 상자의 검증 폴백 줄과 요약 아래 근거 기사(#745 PR6, 옛 상자 끝 안내 줄 #350 을 대신한다).
+// 폴백 분야(summary.json 의 categories[].fallbackReason)는 헤드라인 목록을 요약처럼 싣지 않고 「요약 검증 실패: 제목만 표시(이유)」를 낸다.
+// 구운 쪽(entry.jsx newsSummary)과 화면 스크립트(뉴스 틀 renderSummary)가 같은 글자를 내는지, 근거 기사(제목·언론사·발행일·원문 링크)가 구워지는지 본다.
+// 이 파일의 시험은 데이터 값에 좌우되지 않는다: 고정 fixture 로 구운 결과를 본다.
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { newsSummaryHtml } from "../scripts/prerender.ts";
-import { FALLBACK_NOTE_KO, hasFallback } from "../scripts/summary-note.ts";
+import { FAILED_KO, REASONS_KO, failedLineKo, kstDate, sourcesMarkup } from "../scripts/summary-note.ts";
+import { loadNewsPage } from "./helpers/news-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
 const readJson = (name) => read(`docs/data/${name}.json`).then(JSON.parse);
 
-const cat = (key, extra = {}) => ({ key, name: key, nameEn: key, lineKo: `${key} 줄`, lineEn: `${key} line`, fallbackReason: null, ...extra });
-const WITH = { updatedAt: "2026-10-17T00:00:00Z", model: "stub", highlights: [], categories: [cat("realestate"), cat("rates"), cat("stocks", { fallbackReason: "unverified-entity" }), cat("other")] };
-const WITHOUT = { ...WITH, categories: WITH.categories.map((c) => ({ ...c, fallbackReason: null })) };
+const items = (key) => [
+  { title: `${key} 기사 & "따옴표"`, link: `https://e.com/${key}?a=1&b=2`, source: "연합뉴스 경제" },
+  { title: `${key} 둘째`, link: `https://e.com/${key}/2`, source: "뉴시스 경제" },
+];
+const cat = (key, extra = {}) => ({ key, name: key, nameEn: key, lineKo: `${key} 줄`, lineEn: `${key} line`, fallbackReason: null, items: items(key), ...extra });
+const WITH = { updatedAt: "2026-10-17T00:00:00Z", model: "stub", highlights: [], categories: [cat("realestate"), cat("rates"), cat("stocks", { fallbackReason: "unverified-entity", lineKo: "증시·환율: 제목1, 제목2" }), cat("other")] };
+const NEWS = { updatedAt: "2026-10-17T00:00:00Z", items: [{ title: "x", link: "https://e.com/stocks?a=1&b=2", publishedAt: "2026-10-16T16:30:00.000Z", source: "연합뉴스 경제", category: "stocks" }] };
 
-/** 구운 HTML 에서 #summary-box 안쪽(자리표시 주석 사이)만 꺼낸다. */
 const boxOf = (html, marker) => {
   const open = `<!--prerender:${marker}-->`;
   const a = html.indexOf(open);
@@ -26,39 +31,48 @@ const boxOf = (html, marker) => {
   return html.slice(a + open.length, b);
 };
 
-// 메인(index.html)의 요약 상자·summaryFallbackNote 는 #575 PR2 에서 뉴스 화면으로 옮기며 지웠다 - 틀은 뉴스 틀 하나다.
-test("안내 줄의 한국어 글자는 뉴스 틀 fallbackNote 의 한국어 표와 글자까지 같다 (#350)", async () => {
+test("폴백 줄의 한국어 글자는 뉴스 틀 문자열 표(T.ko.failed·reasons)와 글자까지 같고, 옛 안내 줄은 없다 (#745 PR6)", async () => {
   const news = await read("docs/news.html");
-  // 표는 한국어(ko) 다음 영어(en) 순서다 - 첫 번째가 한국어.
-  const ko = (html, key) => html.match(new RegExp(`${key}: "([^"]+)"`))?.[1];
-  assert.equal(ko(news, "fallbackNote"), FALLBACK_NOTE_KO, "뉴스 틀의 한국어 안내 문구가 구운 문구와 다르다");
-  // 마크업(class)도 화면 스크립트와 같아야 한다 - 스타일이 class 로 붙는다.
-  assert.ok(news.includes('<div class="summary-note">${escapeHtml(t("fallbackNote"))}</div>'), "뉴스 틀 renderSummary 의 안내 마크업이 바뀌었다");
-  assert.ok(!(await read("docs/index.html")).includes("summaryFallbackNote"), "메인에 요약 안내 문구가 다시 생겼다");
+  assert.ok(news.includes(`failed: "${FAILED_KO}",`), "뉴스 틀의 failed 문구가 summary-note.ts 와 다르다");
+  for (const [code, label] of Object.entries(REASONS_KO)) assert.ok(news.includes(`"${code}": "${label}"`), `뉴스 틀 reasons 에 ${code} → ${label} 이 없다`);
+  assert.ok(!news.includes("fallbackNote"), "옛 상자 끝 안내 줄(fallbackNote)이 남아 있다");
+  assert.equal(failedLineKo("unverified-number"), "요약 검증 실패: 제목만 표시(원문에 없는 숫자)");
+  assert.equal(failedLineKo("새-코드"), "요약 검증 실패: 제목만 표시(새-코드)");
 });
 
-test("폴백이 있는 날 뉴스 장의 구운 #summary-box 에 안내 줄이 있고, 없는 날엔 없다 (#350)", async () => {
-  const [baseHtml, news, market] = await Promise.all([read("docs/news.html"), readJson("news"), readJson("market")]);
-  const note = `<div class="summary-note">${FALLBACK_NOTE_KO}</div>`;
-
+test("구운 요약: 폴백 분야는 헤드라인 목록 대신 실패 줄, 아래 근거 기사는 펼친 채 - 다른 분야는 접힌 채 (#745 PR6)", async () => {
+  const [baseHtml, market] = await Promise.all([read("docs/news.html"), readJson("market")]);
   for (const page of NEWS_PAGES) {
-    const withNote = boxOf(buildNewsPage(baseHtml, page, { news, summary: WITH, market }), "newsSummary");
-    const without = boxOf(buildNewsPage(baseHtml, page, { news, summary: WITHOUT, market }), "newsSummary");
-    // 증시 장만 폴백 분류를 보여 준다. 다른 분야 장은 자기 분야에 폴백이 없으니 줄이 없어야 한다(shown.some).
-    assert.equal(withNote.includes(note), page.category === "stocks", `${page.file}: 폴백 있는 날의 안내 줄이 기대와 다르다`);
-    assert.ok(!without.includes("summary-note"), `${page.file}: 폴백 없는 날에 안내 줄이 구워졌다`);
-    if (page.category === "stocks") assert.ok(withNote.endsWith(note), "안내 줄은 분류 줄 뒤(상자 끝)에 있어야 한다 - 화면 스크립트와 같은 자리");
+    const html = buildNewsPage(baseHtml, page, { news: NEWS, summary: WITH, market });
+    const box = boxOf(html, "newsSummary");
+    const src = boxOf(html, "newsSources");
+    assert.ok(!box.includes("제목1, 제목2"), `${page.file}: 검증 실패한 헤드라인 목록이 요약처럼 구워졌다`);
+    assert.equal(box.includes(failedLineKo("unverified-entity")), page.category === "stocks", `${page.file}: 실패 줄 유무`);
+    assert.equal((src.match(/<details /g) ?? []).length, 1, `${page.file}: 분야 장의 근거 묶음은 하나`);
+    assert.equal(src.includes('<details class="summary-src" open>'), page.category === "stocks", `${page.file}: 폴백 분야만 펼친다`);
   }
-  // 분야 필터 없는 허브(news.html)는 보이는 분류 전부를 보므로 하나라도 폴백이면 줄이 있다.
-  assert.ok(newsSummaryHtml(WITH).endsWith(note));
-  assert.ok(!newsSummaryHtml(WITHOUT).includes("summary-note"));
+  const src = sourcesMarkup(WITH, null, NEWS);
+  assert.equal((src.match(/<details /g) ?? []).length, 4);
+  // 제목·원문 링크(새 탭)·언론사·발행일(한국 시각 날짜). 16:30Z 는 한국 시각 다음 날 01:30.
+  assert.ok(src.includes('<li><a href="https://e.com/stocks?a=1&amp;b=2" target="_blank" rel="noopener">stocks 기사 &amp; &quot;따옴표&quot;</a> <span class="news-meta">연합뉴스 경제 · 2026-10-17</span></li>'), src.slice(0, 400));
+  assert.ok(src.includes('<span class="news-meta">뉴시스 경제</span>'), "발행일을 못 찾은 기사는 언론사만");
+  assert.ok(src.includes('<span class="m-ko">stocks 근거 기사 2건</span><span class="m-en">stocks: 2 source articles</span>'));
+  assert.equal(sourcesMarkup({ categories: [cat("a", { items: [] }), cat("b", { items: null })] }), "");
+  assert.equal(kstDate("엉터리"), "");
+  assert.equal(kstDate(undefined), "");
 });
 
-test("hasFallback 은 화면 스크립트와 같은 truthy 검사다 (#350)", () => {
-  assert.equal(hasFallback([cat("a"), cat("b", { fallbackReason: "x" })]), true);
-  for (const falsy of [null, undefined, "", 0, false]) assert.equal(hasFallback([cat("a", { fallbackReason: falsy })]), false);
-  assert.equal(hasFallback(null), false);
-  assert.equal(hasFallback([]), false);
+test("화면 스크립트도 같은 실패 줄을 그리고(한국어는 구운 것과 글자까지 같다), 영어는 영어 문구다 (#745 PR6)", async () => {
+  const baked = newsSummaryHtml(WITH, "stocks");
+  const ko = await loadNewsPage({ news: NEWS, summary: WITH, category: "stocks" });
+  assert.equal(ko.byId("summary-box").innerHTML, baked);
+  const en = await loadNewsPage({ news: NEWS, summary: WITH, category: "stocks", locale: "en" });
+  assert.equal(en.byId("summary-box").innerHTML, "<p><strong>stocks</strong> Unverified: headlines only(unverified-entity)</p>");
+  // 지난 기록(?date=)에서는 오늘 구운 근거 기사를 가린다.
+  assert.equal(ko.byId("summary-src").hidden, false);
+  const past = await loadNewsPage({ news: NEWS, summary: WITH, category: "stocks", search: "?date=2026-10-01", history: { news: [], summary: [] } });
+  assert.equal(past.byId("summary-src").hidden, true);
 });
 
-// (#507) "커밋된 구운 장 다섯의 안내 줄 유무가 summary.json 과 맞는다 - 데이터가 바뀌면 다시 구워야 한다 (#350)" 는 커밋된 데이터와 커밋된 생성물을 맞대는 검사라 tools/health/test/summary-note.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
+// (#507) 커밋된 데이터(docs/data/summary.json)로 찍은 장의 실패 줄 유무를 맞대는 검사는 데이터 하나로 결과가 갈려 tools/health/test/summary-note.test.mjs 로 옮겼다(비차단).
+// 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
