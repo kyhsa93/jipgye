@@ -424,7 +424,7 @@ test("#729 같은 동 먼저, 값 가까운 순 셋 - 면적 ±10㎡·준공 ±1
     ["같은동가까움 60.1", "같은동먼값 59.5", "다른동가까움 59.9"]
   );
   assert.ok(p.html.startsWith(`<h3>비슷한 근처 단지</h3><ul><li><a href="?district=${encodeURIComponent("노원구")}&apt=${encodeURIComponent("같은동가까움")}">`));
-  assert.match(p.html, /같은동가까움<\/a> 60\.1㎡ 6억 1,000만원<\/li>/);
+  assert.match(p.html, /같은동가까움<\/a> 60\.1㎡ 6억 1,000만원 <a href="[^"]+">비교<\/a><\/li>/);
   for (const out of ["면적밖", "준공밖", "표본얇음", "다른동넷째", "다른동중간"]) assert.ok(!p.html.includes(out), out);
 });
 
@@ -446,7 +446,7 @@ test("#729 후보가 셋보다 적으면 있는 만큼만, 0곳이면 「조건�
 test("#729 영어 화면은 영어 제목·문구, 판정 문구는 없고 floor-gap 링크는 카드에 한 줄뿐", async () => {
   const p = await nearPage("en");
   assert.match(p.html, /^<h3>Similar complexes nearby<\/h3><ul>/);
-  assert.match(p.html, /60\.1㎡ ₩610M<\/li>/);
+  assert.match(p.html, /60\.1㎡ ₩610M <a href="[^"]+">Compare<\/a><\/li>/);
   assert.equal((await nearPage("en", nearNone())).html, '<h3>Similar complexes nearby</h3><p class="low-sample">2 if loosened</p>');
   assert.doesNotMatch(p.html, VERDICT);
   // floor-gap 링크는 가격 표 아래 한 줄(card-links)만 - 근처 단지 칸이 또 달지 않는다.
@@ -458,6 +458,77 @@ test("#729 실데이터 단지 카드에 근처 단지가 그려지고 complex-c
   const real = JSON.parse(await readFile(path.join(root, "docs/data/complex-price-nowon.json"), "utf8"));
   const p = await nearPage("ko", real, "상계주공7(고층)");
   assert.match(p.html, /<li><a href="\?district=/);
+  const size = gzipSync(RANK_JS, { level: 9 }).length;
+  assert.ok(size <= 2048, `${size}B`);
+});
+
+// ============================================================================================================
+// #730 X3 나란히 보기 - 같은 docs/complex-card.js. ?compare=B 또는 B,C 로 고른 단지 옆에 둘까지(합 셋) 한 표로 놓는다.
+// 칸은 고른 단지의 기준 칸(n 가장 큼)과 면적이 가장 가까운 칸(중앙값·n≥3). 한 줄에 면적·중앙값·가운데 절반(또는 최저~최고)·n,
+// 기준 기간은 표 제목(priceHeading) 한 곳. 넷 이상(compare 셋 이상)은 통째로 안 그리고, 모르는/값 없는 이름은 조용히 뺀다.
+// 근처 단지 줄마다 「비교」 링크가 그 단지 하나를 compare 에 담는다. 순위·판정 문구 없음. compare 는 syncUrl 이 지우지 않는다.
+// ============================================================================================================
+const cmpPrices = () => {
+  const f = nearPrices();
+  for (const a of Object.values(f.cells)) for (const c of Object.values(a)) Object.assign(c, { low: c.median - 5000, high: c.median + 5000, quartile: true });
+  return f;
+};
+
+async function cmpPage(search, locale = "ko") {
+  const p = await rankPage(locale);
+  const run = (code) => new vm.Script(code).runInContext(p.sandbox);
+  const draw = (s) => {
+    run(`location.search = ${JSON.stringify(s)}; complexPrices.set("노원구", ${JSON.stringify(cmpPrices())}); window.cardApt = "기준"; window.complexCard();`);
+    return p.byId("card-near").innerHTML;
+  };
+  return { ...p, run, draw, html: draw(search) };
+}
+const base = `?district=${encodeURIComponent("노원구")}&apt=${encodeURIComponent("기준")}`;
+const cmp = (...a) => `${base}&compare=${encodeURIComponent(a.join(","))}`;
+const rows = (html) => [...html.matchAll(/<tr><th scope="row">([^<]+)<\/th><td>([^<]+)<\/td>/g)].map((m) => `${m[1]} ${m[2]}`);
+
+test("#730 근처 단지 「비교」 링크 → URL → 같은 표로 복원, syncUrl 이 compare 를 남긴다", async () => {
+  const p = await cmpPage(base);
+  assert.doesNotMatch(p.html, /<table/, "compare 없이 표를 그렸다");
+  const href = p.html.match(/<a href="([^"]+compare=[^"]+)">비교<\/a>/)[1];
+  assert.equal(href, cmp("같은동가까움"));
+  const html = p.draw(href);
+  assert.match(html, /<h3>지난 6개월 거래의 폭 — 2026년 10월 값으로 고침<\/h3><table class="data-table">/);
+  assert.deepEqual(rows(html), ["기준 59.9㎡", "같은동가까움 60.1㎡"]);
+  assert.match(html, /6억 1,000만원 · 지난 거래 가운데 절반 5억 6,000만원 ~ 6억 6,000만원 · 5건<\/td>/);
+  // 셋(compare 둘)까지, 면적은 기준 칸과 가장 가까운 칸.
+  assert.deepEqual(rows(p.draw(cmp("다른동중간", "면적밖"))), ["기준 59.9㎡", "다른동중간 65㎡", "면적밖 84.9㎡"]);
+  p.run(`location.search = ${JSON.stringify(cmp("같은동가까움"))}; syncUrl();`);
+  assert.match(p.sandbox.location.search, /compare=/, "syncUrl 이 compare 를 지웠다");
+});
+
+test("#730 모르는·값 없는·자기 자신·중복 이름은 조용히 빼고, 넷 이상은 그리지 않는다", async () => {
+  const p = await cmpPage(base);
+  const two = ["기준 59.9㎡", "같은동먼값 59.5㎡"];
+  assert.deepEqual(rows(p.draw(cmp("없는단지", "같은동먼값"))), two);
+  assert.deepEqual(rows(p.draw(cmp("표본얇음", "같은동먼값"))), two);
+  assert.deepEqual(rows(p.draw(cmp("기준", "같은동먼값"))), two);
+  assert.deepEqual(rows(p.draw(cmp("같은동먼값", "같은동먼값"))), two);
+  for (const s of [cmp("없는단지"), cmp("없는단지", "표본얇음"), `${base}&compare=`, `${base}&compare=,,`, `${base}&compare=%E0%A4%A`, cmp("같은동먼값", "같은동가까움", "다른동가까움")]) {
+    const html = p.draw(s);
+    assert.doesNotMatch(html, /<table/, s);
+    assert.match(html, /^<h3>비슷한 근처 단지<\/h3><ul>/, `근처 단지가 깨졌다 ${s}`);
+  }
+  // 가격 파일이 없어도 던지지 않는다.
+  p.run(`complexPrices.delete("노원구"); location.search = ${JSON.stringify(cmp("같은동먼값"))}; window.complexCard();`);
+  assert.equal(p.byId("card-near").innerHTML, "");
+});
+
+test("#730 영어 화면은 영어 제목·링크·n, 판정·순위 문구는 원본에도 화면에도 없다", async () => {
+  const p = await cmpPage(cmp("같은동가까움", "다른동가까움"), "en");
+  assert.match(p.html, /<a href="[^"]+compare=[^"]+">Compare<\/a>/);
+  assert.match(p.html, /<h3>Spread of the last 6 months' deals — adjusted to [^<]+<\/h3>/);
+  assert.match(p.html, /₩610M · middle half of past deals ₩560M ~ ₩660M · 5 deals<\/td>/);
+  for (const locale of ["ko", "en"]) assert.doesNotMatch((await cmpPage(cmp("같은동가까움", "다른동가까움"), locale)).html, VERDICT);
+  assert.doesNotMatch(RANK_JS, /순위|더 싸|더 비싸|cheaper|winner|1위/);
+});
+
+test("#730 X3 를 더해도 complex-card.js 합계 gzip ≤2,048B", () => {
   const size = gzipSync(RANK_JS, { level: 9 }).length;
   assert.ok(size <= 2048, `${size}B`);
 });
