@@ -122,6 +122,8 @@ const T = {
     thGap: "1층 − 3층 이상",
     thCells: "맞물린 칸",
     thVerdict: "서울과 다른가",
+    thJeonse: "전세 (n, 서울 구간)",
+    thin: "표본 부족",
     verdictDistinct: "다르다",
     verdictSame: "갈라 볼 수 없음",
     verdictThin: "칸이 모자람",
@@ -162,6 +164,8 @@ const T = {
     thGap: "First floor − upper",
     thCells: "Matched",
     thVerdict: "Different from Seoul?",
+    thJeonse: "Jeonse (n, Seoul range)",
+    thin: "too few ",
     verdictDistinct: "yes",
     verdictSame: "cannot tell",
     verdictThin: "too few cells",
@@ -243,20 +247,21 @@ function renderDistrictTable() {
     return;
   }
 
-  const head =
-    `<thead><tr><th scope="col">${escapeHtml(t("thDistrict"))}</th><th scope="col">${escapeHtml(t("thGap"))}</th>` +
-    `<th scope="col">${escapeHtml(t("thCells"))}</th><th scope="col">${escapeHtml(t("thVerdict"))}</th></tr></thead>`;
+  const head = `<thead><tr>${["thDistrict", "thGap", "thCells", "thVerdict", "thJeonse"]
+    .map((key) => `<th scope="col">${escapeHtml(t(key))}</th>`)
+    .join("")}</tr></thead>`;
 
   // 갈라 볼 수 없는 구도 빼지 않는다. 목록에서 빼면 "우리가 못 가른 것"과
   // "자료가 없는 것"이 화면에서 구별되지 않는다.
   const body = rows
     .map((row) => {
+      const j = row.jeonse, n = `(n=${num(j?.cells)}`;
       const verdict = row.distinct
         ? escapeHtml(t("verdictDistinct"))
         : `<span class="low-sample">${escapeHtml(t(row.band ? "verdictSame" : "verdictThin"))}</span>`;
       return (
         `<tr><td>${escapeHtml(row.district)}</td><td>${row.median === null ? "-" : `${row.median}%`}</td>` +
-        `<td>${num(row.cells)}</td><td>${verdict}</td></tr>`
+        `<td>${num(row.cells)}</td><td>${verdict}</td><td>${!j ? "-" : j.band ? `${j.median}% ${n}, ${j.band.low}~${j.band.high}%)` : `<span class="low-sample">${t("thin")}${n})</span>`}</td></tr>`
       );
     })
     .join("");

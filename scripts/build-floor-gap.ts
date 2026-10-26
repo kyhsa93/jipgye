@@ -3,10 +3,12 @@ import path from "node:path";
 import {
   districtRows,
   districtSentence,
+  jeonseDistrictSentence,
   leadSentence,
   tally,
   toCells,
   topSentence,
+  withJeonse,
 } from "./floor-gap.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
@@ -69,7 +71,20 @@ export function buildPayload({ sale, jeonse, now }) {
 
   // 우연히 나올 수 있는 폭은 서울 칸 전체에서 뽑는다 - 자치구 값을 그 안에 넣어 본다.
   const pool = [...saleTally.byDistrict.values()].flat();
-  const rows = districtRows(saleTally.byDistrict, pool);
+  const saleRows = districtRows(saleTally.byDistrict, pool);
+
+  // 전세 열은 덧붙이는 값이다(#705). 여기서 무엇이 깨져도 매매 표·문장은 그대로 낸다.
+  let rows = saleRows;
+  try {
+    rows = withJeonse(saleRows, jeonseTally.byDistrict);
+  } catch (error) {
+    console.warn(`  층 격차: 전세 열을 건너뜀 (${error?.message ?? error})`);
+  }
+  const lead = (locale) => {
+    const sale = districtSentence(saleRows, saleTally.low.median, locale);
+    if (rows === saleRows) return sale;
+    return [sale, jeonseDistrictSentence(rows, jeonseTally.low.median, locale)].filter(Boolean).join(" ") || null;
+  };
 
   const slugs = {};
   for (const { name } of DISTRICTS) {
@@ -85,10 +100,7 @@ export function buildPayload({ sale, jeonse, now }) {
     slugs,
     lead: { ko: leadSentence(saleTally, jeonseTally, "ko"), en: leadSentence(saleTally, jeonseTally, "en") },
     topLead: { ko: topSentence(saleTally, "ko"), en: topSentence(saleTally, "en") },
-    districtLead: {
-      ko: districtSentence(rows, saleTally.low.median, "ko"),
-      en: districtSentence(rows, saleTally.low.median, "en"),
-    },
+    districtLead: { ko: lead("ko"), en: lead("en") },
   };
 }
 

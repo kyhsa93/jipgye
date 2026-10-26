@@ -499,6 +499,7 @@ function floorDistrictsJsx(floor) {
           <th scope="col">1층 − 3층 이상</th>
           <th scope="col">맞물린 칸</th>
           <th scope="col">서울과 다른가</th>
+          <th scope="col">전세 (n, 서울 구간)</th>
         </tr>
       </thead>
       <tbody>
@@ -508,6 +509,7 @@ function floorDistrictsJsx(floor) {
             <td>{row.median}</td>
             <td>{row.cells}</td>
             <td>{row.lowText === null ? "다르다" : <LowSample>{row.lowText}</LowSample>}</td>
+            <td>{row.jeonseLow === null ? row.jeonse : <LowSample>{row.jeonseLow}</LowSample>}</td>
           </tr>
         ))}
       </tbody>
