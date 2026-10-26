@@ -1,1 +1,79 @@
 /* data 화면 전용 규칙 자리 (#745). 공통 모양은 c-base.css에서 가져다 쓰고, 이 화면에만 필요한 규칙만 여기에 더한다. */
+
+/* 자치구 가격 막대(#745 PR8, scripts/district-bars.ts). 전환은 fieldset 안 라디오 + :has 라 스크립트가 없다.
+   :has 를 모르는 브라우저는 매매 막대만 보인다(전환만 빠지고 값은 그대로). */
+html:lang(en) .dbars [lang="ko"],
+html:not(:lang(en)) .dbars [lang="en"] {
+  display: none;
+}
+.dbars-meta,
+.dbars-unit {
+  margin: 0 0 var(--c-space-2);
+  color: var(--muted);
+  font-size: var(--c-fs-meta);
+}
+.dbars-tabs {
+  margin: 0 0 var(--c-space-3);
+  padding: 0;
+  border: 0;
+}
+.dbars-tabs .c-chip:has(:checked) {
+  background: var(--c-action);
+  border-color: var(--c-action);
+  color: var(--c-action-on);
+  font-weight: 600;
+}
+.dbars-tabs .c-chip:has(:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.dbars-panel:not([data-kind="sale"]),
+.dbars:has(#dbars-jeonse:checked) [data-kind="sale"],
+.dbars:has(#dbars-wolse:checked) [data-kind="sale"] {
+  display: none;
+}
+.dbars:has(#dbars-jeonse:checked) [data-kind="jeonse"],
+.dbars:has(#dbars-wolse:checked) [data-kind="wolse"] {
+  display: block;
+}
+.dbars-list {
+  margin: 0 0 var(--c-space-3);
+  padding: 0;
+  list-style: none;
+}
+.dbars-row a {
+  display: grid;
+  grid-template-columns: 5.5em minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--c-space-2);
+  min-height: var(--tap);
+  color: var(--fg);
+  text-decoration: none;
+  font-size: var(--c-fs-meta);
+}
+.dbars-row a:hover .dbars-name,
+.dbars-row a:focus-visible .dbars-name {
+  text-decoration: underline;
+}
+.dbars-track {
+  display: block;
+  height: 0.875rem;
+}
+.dbars-bar {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--accent);
+}
+.dbars-val {
+  grid-column: 2;
+  font-variant-numeric: tabular-nums;
+}
+.dbars-thin {
+  color: var(--muted);
+}
+.dbars-more {
+  margin: 0;
+  font-size: var(--c-fs-meta);
+}
