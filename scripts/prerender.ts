@@ -15,6 +15,7 @@ import { stampSources } from "./source-lines.ts";
 import { requireSite, siteLabel, sitePath } from "./site-dir.ts";
 import { collectStatus } from "./check-data-progress.ts";
 import { digestHtml } from "./week-digest-view.ts";
+import { districtBarsHtml } from "./district-bars.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -139,6 +140,8 @@ async function main() {
     market: marketHtml(market),
     realestate: realestateHtml(realestate),
     news: newsHtml(news),
+    // 자치구 가격 막대(#745 PR8): 메인 시세 구역에도 같은 막대를 굽는다(제목만 한 단계 아래).
+    districtBars: districtBarsHtml(realestate, { heading: "h3" }),
   };
 
   const conversion = await readJson("conversion");
@@ -194,6 +197,7 @@ async function main() {
         realestateOverall: realestateOverallHtml(realestate),
         realestateHead: realestateHeadHtml(),
         realestateTable: realestateTableHtml(realestate),
+        districtBars: districtBarsHtml(realestate),
         districtLinks: "",
         districtSummaryKo: "",
         districtSummaryEn: "",

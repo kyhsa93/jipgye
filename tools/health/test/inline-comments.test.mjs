@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { stripJsComments, stripInlineScriptComments } from "../../../scripts/strip-inline-comments.ts";
+import { districtBarsHtml } from "../../../scripts/district-bars.ts";
 import { REALESTATE_TEMPLATE_PATH, applyPrerender, realestateHeadHtml, realestateOverallHtml, realestateTableHtml } from "../../../scripts/prerender.ts";
 import { jsInlineScripts, proveCommentsOnly } from "../../../test/helpers/comment-proof.mjs";
 import { stampSources } from "../../../scripts/source-lines.ts";
@@ -48,6 +49,7 @@ test("나가는 docs/realestate.html 은 틀을 채우고 훑개를 건 것뿐�
       realestateOverall: realestateOverallHtml(realestate),
       realestateHead: realestateHeadHtml(),
       realestateTable: realestateTableHtml(realestate),
+      districtBars: districtBarsHtml(realestate),
     })
   );
   assert.equal(stamp(baked), stamp(rebuilt), "커밋된 docs/realestate.html 이 지금 틀·데이터로 찍은 결과와 다르다 - 재굽기를 빠뜨렸거나 생성물을 손으로 고쳤다");

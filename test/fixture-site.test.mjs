@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { koOnly } from "../scripts/bilingual-cell.ts";
+import { districtBarsHtml } from "../scripts/district-bars.ts";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../scripts/build-realestate-pages.ts";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
@@ -190,6 +191,7 @@ test("[inline-comments] 고정 데이터로 나가는 docs/realestate.html 은 �
       realestateOverall: realestateOverallHtml(realestate),
       realestateHead: realestateHeadHtml(),
       realestateTable: realestateTableHtml(realestate),
+      districtBars: districtBarsHtml(realestate),
     })
   );
   assert.equal(stamp(baked), stamp(rebuilt), "고정 데이터로 찍은 docs/realestate.html 이 틀·데이터로 다시 찍은 결과와 다르다");

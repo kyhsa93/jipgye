@@ -1,1 +1,75 @@
 /* data 화면 전용 규칙 자리 (#745). 공통 모양은 c-base.css에서 가져다 쓰고, 이 화면에만 필요한 규칙만 여기에 더한다. */
+
+/* 자치구 가격 막대(#745 PR8, scripts/district-bars.ts). 전환은 숨긴 라디오 + 형제 선택자라 스크립트가 없다(:has 없이도 돈다). */
+html:lang(en) .dbars [lang="ko"],
+html:not(:lang(en)) .dbars [lang="en"] {
+  display: none;
+}
+.dbars-meta,
+.dbars-unit {
+  margin: 0 0 var(--c-space-2);
+  color: var(--muted);
+  font-size: var(--c-fs-meta);
+}
+.dbars-tabs {
+  margin-bottom: var(--c-space-3);
+}
+#dbars-sale:checked ~ .dbars-tabs [for="dbars-sale"],
+#dbars-jeonse:checked ~ .dbars-tabs [for="dbars-jeonse"],
+#dbars-wolse:checked ~ .dbars-tabs [for="dbars-wolse"] {
+  background: var(--c-action);
+  border-color: var(--c-action);
+  color: var(--c-action-on);
+  font-weight: 600;
+}
+#dbars-sale:focus-visible ~ .dbars-tabs [for="dbars-sale"],
+#dbars-jeonse:focus-visible ~ .dbars-tabs [for="dbars-jeonse"],
+#dbars-wolse:focus-visible ~ .dbars-tabs [for="dbars-wolse"] {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.dbars-panel {
+  display: none;
+}
+#dbars-sale:checked ~ .dbars-panels [data-kind="sale"],
+#dbars-jeonse:checked ~ .dbars-panels [data-kind="jeonse"],
+#dbars-wolse:checked ~ .dbars-panels [data-kind="wolse"] {
+  display: block;
+}
+.dbars-list {
+  margin: 0 0 var(--c-space-3);
+  padding: 0;
+  list-style: none;
+}
+.dbars-row a {
+  display: grid;
+  grid-template-columns: 5.5em minmax(0, 1fr);
+  align-items: center;
+  column-gap: var(--c-space-2);
+  min-height: var(--tap);
+  color: var(--fg);
+  text-decoration: none;
+  font-size: var(--c-fs-meta);
+}
+.dbars-row a:hover .dbars-name,
+.dbars-row a:focus-visible .dbars-name {
+  text-decoration: underline;
+}
+.dbars-track {
+  display: block;
+  height: 0.875rem;
+}
+.dbars-bar {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--accent);
+}
+.dbars-val {
+  grid-column: 2;
+  font-variant-numeric: tabular-nums;
+}
+.dbars-thin {
+  color: var(--muted);
+}

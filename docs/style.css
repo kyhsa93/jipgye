@@ -2859,8 +2859,70 @@
   .budget-deal > strong.apt ~ .spec {
     flex-basis: 100%;
   }
+  html:lang(en) .dbars [lang="ko"], html:not(:lang(en)) .dbars [lang="en"] {
+    display: none;
+  }
+  .dbars-meta, .dbars-unit {
+    margin: 0 0 var(--c-space-2);
+    color: var(--muted);
+    font-size: var(--c-fs-meta);
+  }
+  .dbars-tabs {
+    margin-bottom: var(--c-space-3);
+  }
+  #dbars-sale:checked ~ .dbars-tabs [for="dbars-sale"], #dbars-jeonse:checked ~ .dbars-tabs [for="dbars-jeonse"], #dbars-wolse:checked ~ .dbars-tabs [for="dbars-wolse"] {
+    background: var(--c-action);
+    border-color: var(--c-action);
+    color: var(--c-action-on);
+    font-weight: 600;
+  }
+  #dbars-sale:focus-visible ~ .dbars-tabs [for="dbars-sale"], #dbars-jeonse:focus-visible ~ .dbars-tabs [for="dbars-jeonse"], #dbars-wolse:focus-visible ~ .dbars-tabs [for="dbars-wolse"] {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .dbars-panel {
+    display: none;
+  }
+  #dbars-sale:checked ~ .dbars-panels [data-kind="sale"], #dbars-jeonse:checked ~ .dbars-panels [data-kind="jeonse"], #dbars-wolse:checked ~ .dbars-panels [data-kind="wolse"] {
+    display: block;
+  }
+  .dbars-list {
+    margin: 0 0 var(--c-space-3);
+    padding: 0;
+    list-style: none;
+  }
+  .dbars-row a {
+    display: grid;
+    grid-template-columns: 5.5em minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--c-space-2);
+    min-height: var(--tap);
+    color: var(--fg);
+    text-decoration: none;
+    font-size: var(--c-fs-meta);
+  }
+  .dbars-row a:hover .dbars-name, .dbars-row a:focus-visible .dbars-name {
+    text-decoration: underline;
+  }
+  .dbars-track {
+    display: block;
+    height: 0.875rem;
+  }
+  .dbars-bar {
+    display: block;
+    height: 100%;
+    min-width: 2px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--accent);
+  }
+  .dbars-val {
+    grid-column: 2;
+    font-variant-numeric: tabular-nums;
+  }
+  .dbars-thin {
+    color: var(--muted);
+  }
 }
-@layer components;
 @layer utilities {
   .tw\:mt-0 {
     margin-top: 0px;
