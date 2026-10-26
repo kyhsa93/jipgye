@@ -547,7 +547,7 @@ const complexLoaded = (name) => complexPrices.has(name) && !complexFailed(name);
 
 const params = new URLSearchParams(location.search);
 let kind = KINDS.includes(params.get("kind")) ? params.get("kind") : "sale";
-let district = params.get("district") || ALL;
+let district = params.get("district")?.trim() || ALL;
 let band10k = (() => {
   const raw = params.get("budget");
   if (raw === null || raw.trim() === "") return null;
@@ -1662,7 +1662,9 @@ async function main() {
     cache.search = search;
     cache.rentPreview = rentPreview;
 
-    if (district !== ALL && !districtNames().includes(district)) district = ALL;
+    // 메인 폼(#733) 자유 입력: "강남" -> 강남구, 모르면 서울 전체.
+    const names = districtNames();
+    if (district !== ALL && !names.includes(district)) district = (names.includes(`${district}구`) ? `${district}구` : ALL);
     syncUrl();
     renderAll();
   } catch (error) {

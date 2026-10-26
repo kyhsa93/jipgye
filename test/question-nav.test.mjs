@@ -110,6 +110,25 @@ test("첫 화면은 질문 하나와 상황 단추 셋이다 - 질문 열은 접
   assert.match(title, /min-height: var\(--tap\)/, "상황 단추 높이가 --tap 아래일 수 있다");
 });
 
+test("사는 사람 조건 폼은 닫힌 첫 묶음 안에만 있어 첫 화면 선택지가 늘지 않는다 (#733, #575 안 B)", async () => {
+  const html = await indexHtml();
+  const block = /<nav class="question-nav(?: [^"]*)?"[\s\S]*?<\/nav>/.exec(html)?.[0] ?? "";
+  const groups = [...block.matchAll(/<details\b([^>]*)>([\s\S]*?)<\/details>/g)];
+  assert.equal(groups.length, 3);
+  assert.doesNotMatch(groups[0][1], /\bopen\b/, "폼이 든 묶음이 처음부터 열려 있다");
+  assert.match(groups[0][2], /<\/summary>[\s\S]*<form class="question-form"[^>]*action="\.\/deal-search\.html"[\s\S]*<\/form>/, "폼이 사는 사람 묶음 안에 없다");
+  assert.equal((html.match(/<form class="question-form"/g) ?? []).length, 1);
+  // 묶음 밖(첫 화면)에 남는 것은 상황 단추 셋뿐이다 - 폼 칸·단추가 details 밖으로 새면 선택지가 는다.
+  const outside = block.replace(/<details\b[\s\S]*?<\/details>/g, (d) => (/<summary[\s\S]*?<\/summary>/.exec(d)?.[0] ?? ""));
+  assert.equal((outside.match(/<(?:a|input|select|button|textarea)\b/g) ?? []).length, 0, "질문 입구에서 접히지 않은 선택지가 늘었다");
+  assert.equal((outside.match(/<summary\b/g) ?? []).length, 3);
+
+  const css = await readFile(path.join(root, "src/css/legacy.css"), "utf8");
+  assert.ok(css.includes('html:lang(en) .question-form [lang="ko"],\nhtml:not(:lang(en)) .question-form [lang="en"] {\n  display: none;'), "폼 글자가 화면 언어 하나만 보이지 않는다");
+  const control = /\.question-form input,\n\.question-form select,\n\.question-form button \{([^}]*)\}/.exec(css)?.[1] ?? "";
+  assert.match(control, /min-height: var\(--tap\)/, "폼 칸 높이가 --tap 아래일 수 있다");
+});
+
 test("묶음 제목도 영어로 바뀐다", async () => {
   const en = await loadIndexPage({ storage: { lang: "en" }, fetch: async () => ({ ok: false, json: async () => ({}) }) });
   assert.equal(en.byId("qg-buy").textContent, "Buying");
