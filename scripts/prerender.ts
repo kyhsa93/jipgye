@@ -248,9 +248,10 @@ async function main() {
         recordLead: recordText("lead"),
         recordControl: recordText("control"),
         recordSurvival: recordText("survival"),
-        recordRobust: both(record?.tables?.robust, (c) => c.section === "thead" || c.col === 8),
+        // 비교 기간 열(「90일」「180일」, 칸 12개)만 한국어로 둔다 — 예산(+2 KB) 안에서 가장 값이 낮은 열(칸당 한글 1자 / 약 56 B).
+        recordRobust: both(record?.tables?.robust, (c) => c.section !== "tbody" || c.col !== 1),
         recordDistricts: both(record?.tables?.districts),
-        recordBands: both(record?.tables?.bands, (c) => c.section !== "thead"),
+        recordBands: both(record?.tables?.bands),
         recordBreakdownNote: recordText("breakdownNote"),
       },
     ],
