@@ -7,6 +7,8 @@
 // - 칸 = packLines: [사용 표시 down·frozen·low·near·over, 표시 없음 같은 다섯, nw.n, nw.median] - 화면은 1 동결·3 상한 근처·4 초과를 두 줄 합으로.
 // - 문턱은 파일의 min(show 3·ratio 5 = 빌드가 싣는 기존 상수). n < ratio 는 비율 없이 「표본 부족(n=…)」.
 // - 확인기 링크는 gu·apt·area 만(이 장의 예산·동 등 조건은 싣지 않는다).
+// - 평형 줄이 셋 이상이면 위 두 줄만 펼치고 나머지는 <details class="fold"> 로 접는다(#724). 기간·법무 주석 줄은 접지 않는다.
+// - 받다 실패하면 카드 안 이 자리만 실패·재시도(#199 틀), 404 는 비운다.
 // - 판단(위반·돌려받기 등) 없이 건수·비율만, 요구권은 「사용 표시가 있는 계약」·「한 번만 쓸 수 있습니다」까지(#696 법무).
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -86,6 +88,25 @@ test("면적마다 갱신 n건·상한 근처·초과·동결 비율, 미달은 
   assert.doesNotMatch(html, /위반|돌려받|불법|English|Some of it/);
   // 카드의 나머지(가격·전세가율)는 그대로
   assert.match(p.byId("complex-card").innerHTML, /<div id="card-renewal"><\/div>/);
+});
+
+test("평형 줄이 셋 이상이면 위 두 줄만 펼치고 나머지는 접는다 - 기간·법무 주석은 접지 않는다 (#724)", async () => {
+  const html = (await page()).box();
+  const [open, rest] = html.split("<details");
+  assert.equal(texts(open).length, 2);
+  assert.deepEqual(texts(open).map((x) => x.split("㎡")[0]), ["59.39", "41.3"]);
+  assert.match(rest, /^ class="fold"><summary>나머지 평형 2개<\/summary><ul>/);
+  const [inside, after] = rest.split("</details>");
+  assert.deepEqual(texts(inside).map((x) => x.split("㎡")[0]), ["79.07", "45.9"]);
+  assert.match(after, /^<p class="content-notice">2024\.11~2026\.10 .*동결 = 보증금 그대로.*한 번만 쓸 수 있습니다/);
+  const en = (await page({ locale: "en" })).box();
+  assert.match(en, /<summary>2 more sizes<\/summary>/);
+  assert.match(en.split("</details>")[1], /frozen = same deposit/);
+  // 두 줄 이하면 접지 않는다
+  const two = { ...FIXTURE, cells: { [APT]: { "59.39": FIXTURE.cells[APT]["59.39"], "41.3": FIXTURE.cells[APT]["41.3"] } } };
+  const h2 = (await page({ files: { "renewal-cells-nowon": two } })).box();
+  assert.equal(texts(h2).length, 2);
+  assert.doesNotMatch(h2, /<details/);
 });
 
 test("영어 화면은 같은 칸을 영어로", async () => {
