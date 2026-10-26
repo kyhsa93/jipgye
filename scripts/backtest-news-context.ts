@@ -16,16 +16,24 @@ function parseArgs(argv) {
   return { days: Number.isFinite(days) ? days : null, showMatched: argv.includes("--matched") };
 }
 
+const argLimit = () => {
+  const at = process.argv.indexOf("--answers");
+  const n = at >= 0 ? Number(process.argv[at + 1]) : NaN;
+  return Number.isFinite(n) && n > 0 ? n : 20;
+};
+
 async function main() {
   const { days, showMatched } = parseArgs(process.argv.slice(2));
-  const [history, realestate] = await Promise.all(["news-history", "realestate"].map(readJson));
+  const [history, realestate, recordHigh, cancellation, moveIn, conversion] = await Promise.all(
+    ["news-history", "realestate", "record-high", "cancellation", "move-in", "conversion"].map(readJson)
+  );
 
   if (!history?.length) {
     console.error("news-history.json이 없습니다. 뉴스를 한 번이라도 수집한 뒤 실행해주세요.");
     process.exit(1);
   }
 
-  const data = { realestate };
+  const data = { realestate, recordHigh, cancellation, moveIn, conversion };
   const target = days ? history.slice(-days) : history;
 
   const byLabel = new Map();
@@ -59,6 +67,19 @@ async function main() {
   console.log("\n=== 붙은 종류 ===");
   for (const [label, n] of [...byLabel].sort((a, b) => b[1] - a[1])) {
     console.log(`  ${String(n).padStart(4)}  ${label}`);
+  }
+
+  // 새 답 칩(#694)은 종류별 붙은 기사 수와, 오탐을 눈으로 보도록 기사 제목·칩을 모두 찍는다(--answers 는 고유 기사만, 처음 N건).
+  const byKind = new Map();
+  for (const u of unique) for (const c of u.context) byKind.set(c.kind, (byKind.get(c.kind) ?? 0) + 1);
+  console.log("\n=== 칩 종류별 고유 기사 수 ===");
+  for (const [kind, n] of [...byKind].sort((a, b) => b[1] - a[1])) console.log(`  ${String(n).padStart(4)}  ${kind}`);
+
+  const answers = unique.filter((u) => u.context.some((c) => c.kind !== "realestate"));
+  console.log(`\n=== 새 답 칩이 붙은 고유 기사 ${answers.length}건 (오탐 표본) ===`);
+  for (const u of answers.slice(0, argLimit())) {
+    console.log(`  ✓ ${u.title}`);
+    for (const c of u.context.filter((c) => c.kind !== "realestate")) console.log(`      [${c.kind}] ${c.label} = ${c.value} -> ${c.href}`);
   }
 
   console.log("\n=== 아무것도 안 붙은 기사 ===");
