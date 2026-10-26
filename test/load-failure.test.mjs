@@ -47,7 +47,7 @@ test("단지로 묶어 보기: 단지 가격 파일 fetch가 거부되면 찾는
       const label = `${query} ${locale}`;
       assert.ok(!/찾는 중|Searching/.test(html), `${label}: 찾는 중이 영구히 남았다`);
       assert.ok(html.includes(error), `${label}: 실패 문구가 없다`);
-      assert.match(html, new RegExp(`<button type="button" id="load-retry">${retry}</button>`), `${label}: 재시도 단추가 없다`);
+      assert.match(html, new RegExp(`<button class="c-btn c-btn--secondary" type="button" id="load-retry">${retry}</button>`), `${label}: 재시도 단추가 없다`);
     }
   }
 });
@@ -95,7 +95,7 @@ test("단지 카드: 단지 가격 fetch가 거부되면 가격 블록 자리에
     await page.settle();
     const label = `${APT_QUERY} ${locale}`;
     assert.ok(slotHtml(page).includes(error), `${label}: 가격 블록 자리에 실패 문구가 없다`);
-    assert.match(slotHtml(page), new RegExp(`<button type="button" id="load-retry-price">${retry}</button>`), `${label}: 재시도 단추가 없다`);
+    assert.match(slotHtml(page), new RegExp(`<button class="c-btn c-btn--secondary" type="button" id="load-retry-price">${retry}</button>`), `${label}: 재시도 단추가 없다`);
     assert.ok(page.byId("complex-card").innerHTML.includes('id="complex-price-status"'), `${label}: 실패 자리가 카드 안에 없다`);
     assert.match(page.byId("complex-card").innerHTML, /전세가율|Jeonse ratio|\d+\.\d%/, `${label}: 거래 목록 쪽 표가 같이 사라졌다`);
   }
@@ -145,7 +145,7 @@ test("단지 카드(이름 미해결): 가격 파일이 거부되면 카드 자�
     // 가짜 DOM은 없는 id도 빈 요소로 돌려주므로 카드 HTML에 자리가 실제로 있는지를 따로 본다.
     assert.ok(page.byId("complex-card").innerHTML.includes('id="complex-price-status"'), `${locale}: 카드가 안 그려져 실패 자리가 없다`);
     assert.ok(slotHtml(page).includes(error), `${locale}: 이름 미해결 경로에 실패 문구가 없다`);
-    assert.match(slotHtml(page), new RegExp(`<button type="button" id="load-retry-price">${retry}</button>`), `${locale}: 재시도 단추가 없다`);
+    assert.match(slotHtml(page), new RegExp(`<button class="c-btn c-btn--secondary" type="button" id="load-retry-price">${retry}</button>`), `${locale}: 재시도 단추가 없다`);
   }
 });
 
@@ -202,7 +202,7 @@ test("거래 목록: deals-*/rents-* fetch가 거부되면 결과 자리에 실�
       const html = page.resultHtml();
       const label = `${c.name} ${locale}`;
       assert.ok(html.includes(error), `${label}: 실패 문구가 없다`);
-      assert.match(html, new RegExp(`<button type="button" id="${c.retryId}">${retry}</button>`), `${label}: 재시도 단추가 없다`);
+      assert.match(html, new RegExp(`<button class="c-btn c-btn--secondary" type="button" id="${c.retryId}">${retry}</button>`), `${label}: 재시도 단추가 없다`);
       assert.ok(!/불러오는 중|Loading|준비 중|not ready/i.test(html), `${label}: 로드 중/준비 중 문구가 남았다`);
       assert.ok((page.byId(c.retryId).listeners.click ?? []).length > 0, `${label}: 단추에 누름 처리가 없다`);
     }
@@ -285,7 +285,7 @@ test("단지 카드(전세 쪽): rents-* fetch가 거부되면 카드 안에 실
     const label = `${APT_QUERY} ${locale}`;
     assert.ok(card.includes('id="complex-rents-status"'), `${label}: 실패 자리가 카드 안에 없다`);
     assert.ok(rentsSlot(page).includes(error), `${label}: 카드 안에 실패 문구가 없다`);
-    assert.match(rentsSlot(page), new RegExp(`<button type="button" id="load-retry-rents-card">${retry}</button>`), `${label}: 카드 안에 재시도 단추가 없다`);
+    assert.match(rentsSlot(page), new RegExp(`<button class="c-btn c-btn--secondary" type="button" id="load-retry-rents-card">${retry}</button>`), `${label}: 카드 안에 재시도 단추가 없다`);
     // 전세·전세가율 두 칸이 모두 불러오지 못함이어야 한다 - 행마다 2칸.
     const rowCount = (card.match(/<tr><td>/g) ?? []).length;
     assert.ok(rowCount > 0, `${label}: 매매 쪽 행이 사라졌다`);

@@ -53,6 +53,9 @@ export async function loadDealSearchPage({
   locale = "ko",
   query = "",
   analytics,
+  // lateDefer: defer 파일이 데이터(또는 첫 로드 실패) 다음에 돈다(#745 PR3b). skip: 읽지 못한 defer 파일 이름.
+  lateDefer = false,
+  skip = [],
 } = {}) {
   const html = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
   const script = [...html.matchAll(/<script>\n([\s\S]*?)\n<\/script>/g)].map((m) => m[1]).pop();
@@ -146,7 +149,8 @@ export async function loadDealSearchPage({
   // 파일을 미리 읽어 둔다 - 사이에 await 이 끼면 인라인의 fetch 가 먼저 끝나 「데이터가 먼저 온」 드문 순서만 시험하게 된다.
   const [filters, results] = await Promise.all(["deal-filters", "deal-results"].map((f) => readFile(path.join(root, `docs/${f}.js`), "utf8")));
   new vm.Script(script, { filename: "docs/deal-search.html:inline" }).runInContext(sandbox);
-  new vm.Script(filters, { filename: "docs/deal-filters.js" }).runInContext(sandbox);
+  if (lateDefer) await settle();
+  if (!skip.includes("deal-filters")) new vm.Script(filters, { filename: "docs/deal-filters.js" }).runInContext(sandbox);
   new vm.Script(results, { filename: "docs/deal-results.js" }).runInContext(sandbox);
 
   await settle();

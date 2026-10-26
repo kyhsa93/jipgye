@@ -191,3 +191,16 @@ test("전월세를 보면 안내 문구도 전월세 쪽으로 바뀐다", async
   await page.chooseKind("jeonse");
   assert.match(page.byId("search-note").textContent, /아파트 전월세 계약/);
 });
+
+test("#749 후속: 전월세 가격순은 보증금 기준이라 정렬 이름에 「보증금」을 적는다 (#745 PR3b)", async () => {
+  const page = await open();
+  await page.chooseKind("wolse");
+  await page.chooseDistrict("노원구");
+  const bar = page.byId("result-bar").innerHTML;
+  assert.match(bar, /<option value="low">보증금 낮은 순<\/option><option value="high">보증금 높은 순<\/option>/);
+  assert.ok(!bar.includes("가격 낮은 순"));
+  const en = await open({ locale: "en" });
+  await en.chooseKind("wolse");
+  await en.chooseDistrict("노원구");
+  assert.match(en.byId("result-bar").innerHTML, />Lowest deposit<\/option>/);
+});
