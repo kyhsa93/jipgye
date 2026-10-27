@@ -39,7 +39,7 @@ test("해제·등기 장의 껍데기는 같은 유틸리티를 갖고 훅 class
   }
   // 구획 id 가 바뀌어도 이 시험이 눈먼 채 통과하지 않게: 구획 다섯(직거래 #691 포함)은 이 순서로 한 번씩, 여섯째(질문 입구)는 스크립트가 채우므로 유틸리티가 없다.
   const ids = [...html.matchAll(/<section id="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(ids, ["lead-section", "district-section", "month-section", "price-section", "direct-section", "other-questions"], `${FILE}: 구획이 달라졌다`);
+  assert.deepEqual(ids, ["lead-section", "district-section", "month-section", "price-section", "reg-section", "direct-section", "other-questions"], `${FILE}: 구획이 달라졌다`);
   const entry = html.match(/<section id="other-questions"[^>]*>/)?.[0];
   assert.ok(entry && !entry.includes("tw:"), `${FILE}: 질문 입구 구획에 유틸리티가 붙었다: ${entry}`);
 });
@@ -78,5 +78,5 @@ test("이 장은 색인 대상으로 남는다 - 캐노니컬은 자기 자신, 
   assert.equal(levels.filter((n) => n === 1).length, 1, `${FILE}: h1이 하나가 아니다`);
   assert.equal(levels[0], 1, `${FILE}: 첫 제목이 h1이 아니다`);
   for (let i = 1; i < levels.length; i += 1) assert.ok(levels[i] - levels[i - 1] <= 1, `${FILE}: 제목 단계를 건너뛴다(h${levels[i - 1]} → h${levels[i]})`);
-  assert.equal(levels.filter((n) => n === 2).length, 5, `${FILE}: h2가 다섯이 아니다(직거래 절 #691 포함) - 본문 제목이 지워졌거나 늘었다`);
+  assert.equal(levels.filter((n) => n === 2).length, 6, `${FILE}: h2가 여섯이 아니다(직거래 절 #691·신고가 절 #715 포함) - 본문 제목이 지워졌거나 늘었다`);
 });
