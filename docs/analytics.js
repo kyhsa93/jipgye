@@ -5,7 +5,19 @@
   const SEARCH_DEBOUNCE_MS = 800;
   // 사용자가 직접 치는 칸이 URL에 실리는 키. GA 약관 7조는 개인을 알아볼 수 있는 정보를 보내지 말라고 하고,
   // 자유 입력에는 주소·이름·전화번호가 섞여 들어올 수 있다. 그래서 원문은 GA에 보내지 않는다.
-  const FREE_TEXT_PARAMS = ["q", "apt", "dong"];
+  const FREE_TEXT_PARAMS = ["q", "apt", "dong", "cash", "ga_internal", "ga_debug"];
+
+  // 본인 브라우저만 표시한다. IP를 추측하거나 다른 이용자를 제외하지 않는다.
+  // ?ga_internal=1 로 켜고 ?ga_internal=0 으로 끈다. 저장소가 막혀도 현재 페이지에서는 적용한다.
+  let internal = false;
+  try { internal = localStorage.getItem("jipgye_ga_internal") === "1"; } catch {}
+  const internalChoice = new URLSearchParams(location.search ?? "").get("ga_internal");
+  if (internalChoice === "1" || internalChoice === "0") {
+    internal = internalChoice === "1";
+    try {
+      localStorage.setItem("jipgye_ga_internal", internal ? "1" : "0");
+    } catch {}
+  }
 
   window.dataLayer = window.dataLayer || [];
   function gtag() {
@@ -41,6 +53,7 @@
   gtag("config", GA_MEASUREMENT_ID, {
     page_location: safeLocation(),
     send_page_view: false,
+    ...(internal ? { traffic_type: "internal" } : {}),
     ...(siteGroup ? { content_group: siteGroup } : {}),
     ...(debugMode ? { debug_mode: true } : {}),
   });
@@ -67,7 +80,23 @@
     debounceTimers[name] = setTimeout(() => event(name, params), delay ?? SEARCH_DEBOUNCE_MS);
   }
 
-  window.analytics = { pageView, event, debouncedEvent, termShape };
+  // 결과가 실제 표시된 뒤 안정된 입력 한 벌당 한 번. signature는 메모리에만 두고 GA로 보내지 않는다.
+  const results = {};
+  function result(type, signature, params) {
+    const state = results[type] ??= {};
+    clearTimeout(state.timer);
+    if (signature === null) {
+      state.last = undefined;
+      return;
+    }
+    if (state.last === signature) return;
+    state.timer = setTimeout(() => {
+      state.last = signature;
+      event("calculator_result", { ...params, calculator_type: type, result_status: "success" });
+    }, SEARCH_DEBOUNCE_MS);
+  }
+
+  window.analytics = { pageView, event, debouncedEvent, termShape, result };
 
   setTimeout(() => pageView(), PAGE_VIEW_FALLBACK_MS);
 
@@ -85,3 +114,4 @@
   adScript.crossOrigin = "anonymous";
   document.head.appendChild(adScript);
 })();
+
