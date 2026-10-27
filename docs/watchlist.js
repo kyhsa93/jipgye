@@ -83,6 +83,7 @@
     else if (put(next)) {
       L = next;
       N[id(district, apt)] = 0;
+      window.analytics?.event(on ? "watchlist_remove" : "watchlist_add", { watchlist_count: L.length });
     } else msg = m().fail;
     draw();
   }
@@ -117,3 +118,4 @@
   window.cardWatch = draw;
   draw();
 })();
+

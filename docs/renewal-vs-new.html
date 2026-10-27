@@ -482,7 +482,10 @@ function renderCheck(full) {
   setTable("check-table", "");
   setText("check-answer", "");
   setText("check-new", "");
-  if (!row) return;
+  if (!row) {
+    window.analytics?.result?.("renewal_vs_new", null);
+    return;
+  }
   const { show, ratio } = f.min;
   const rr = row.slice(0, 5);
   const ot = row.slice(5, 10);
@@ -503,6 +506,10 @@ function renderCheck(full) {
   };
   setTable("check-table", `<thead><tr><td></td>${t("ckCols").map((h) => `<th scope="col">${escapeHtml(h)}</th>`).join("")}</tr></thead><tbody>${tr(t("ckRows")[0], rr)}${tr(t("ckRows")[1], ot)}</tbody>`);
   if (row.length > 10) setText("check-new", t("ckNew")(row[11] === null ? null : num(row[11]), num(row[10])));
+  const measured = Number.isFinite(old) && Number.isFinite(ask) && old > 0 && ask > 0 && ckSum(rr) + ckSum(ot) >= show;
+  window.analytics?.result?.("renewal_vs_new", measured ? JSON.stringify([ck.slug, apt, area, old, ask]) : null, {
+    result_scope: area.startsWith("b:") ? "district_band" : "matched_complex",
+  });
 }
 
 function renderUpdated() {
@@ -640,3 +647,4 @@ main();
 </script>
 </body>
 </html>
+

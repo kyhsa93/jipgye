@@ -394,6 +394,7 @@ function renderResult() {
   box.style.minHeight = "";
   if (!cell) {
     showEmpty(escapeHtml(t("notReady")));
+    window.analytics?.result?.("jeonse_vs_wolse", null);
     return;
   }
 
@@ -424,6 +425,10 @@ function renderResult() {
     optionHtml("jeonse", cell, result.jeonse, result.cheaper === "jeonse") +
     optionHtml("wolse", cell, result.wolse, result.cheaper === "wolse") +
     `</div>`;
+  window.analytics?.result?.("jeonse_vs_wolse", result.comparable ? JSON.stringify([district, bandKey, cash10k]) : null, {
+    result_scope: "district_budget",
+    result_outcome: result.cheaper,
+  });
 }
 
 function renderControls() {
@@ -610,7 +615,7 @@ function onControlChange(e) {
   window.analytics?.event("jeonse_vs_wolse", {
     conversion_district: district,
     conversion_band: bandKey,
-    conversion_cash_eok: String(Math.round((cash10k / EOK) * 100) / 100),
+    conversion_cash_band: cash10k < EOK ? "under_1" : cash10k < 3 * EOK ? "1_to_3" : cash10k < 5 * EOK ? "3_to_5" : "5_plus",
   });
 }
 
@@ -636,3 +641,4 @@ main();
 </script>
 </body>
 </html>
+
