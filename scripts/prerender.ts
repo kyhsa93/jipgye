@@ -16,6 +16,7 @@ import { requireSite, siteLabel, sitePath } from "./site-dir.ts";
 import { collectStatus } from "./check-data-progress.ts";
 import { digestHtml } from "./week-digest-view.ts";
 import { districtBarsHtml } from "./district-bars.ts";
+import { registrationEnHtml, registrationView } from "./registration-view.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -147,6 +148,7 @@ async function main() {
   const conversion = await readJson("conversion");
   const cancellation = await readJson("cancellation");
   const direct = await readJson("direct-deals");
+  const registration = registrationView(await readJson("registration"));
   const renewal = await readJson("renewal-facts");
   const floor = await readJson("floor-gap");
   const moveIn = await readJson("move-in");
@@ -311,6 +313,12 @@ async function main() {
         directTable: direct?.table?.ko ?? null,
         directMonths: direct?.monthTable?.ko ?? null,
         directNote: direct?.note?.ko ? escapeHtml(direct.note.ko) : null,
+        // 신고가 vs 나머지 등기·해제 절(#715 PR2). registration.json 숫자로 registration-view.ts 가 두 언어 글자를 만든다.
+        regLead: registration?.lead?.ko ? escapeHtml(registration.lead.ko) : null,
+        regTable: registration?.table?.ko ?? null,
+        regNote: registration?.note?.ko ? escapeHtml(registration.note.ko) : null,
+        // 영어는 같은 장 <template> 에 굽는다 - 언어 전환은 거기서 고르기만 한다(새 fetch·json 칸 0).
+        regEn: registrationEnHtml(registration),
       },
     ],
   ]) {
