@@ -15,8 +15,7 @@
   if (internalChoice === "1" || internalChoice === "0") {
     internal = internalChoice === "1";
     try {
-      if (internal) localStorage.setItem("jipgye_ga_internal", "1");
-      else localStorage.removeItem("jipgye_ga_internal");
+      localStorage.setItem("jipgye_ga_internal", internal ? "1" : "0");
     } catch {}
   }
 
