@@ -203,8 +203,11 @@ const langBlock = (html, lang) => {
   const next = html.indexOf('<div data-lang="', start + 10);
   return html.slice(start, next === -1 ? undefined : next);
 };
+// #771: 월간 리포트 Release 링크(releases/tag/monthly-report-YYYY-MM)가 출처 절에 따로 한 줄 있다. 호마다 Release 가 따로이고 이전 호를 대체하지
+// 않으므로 날짜 태그를 가리키는 것이 맞다(correction-twins 와 다르다). 여기서는 해제 Release(/releases/latest) 링크만 센다 - test/monthly-report.test.mjs 가 그 줄을 본다.
+const MONTHLY_REPORT_URL = /^https:\/\/github\.com\/kyhsa93\/jipgye\/releases\/tag\/monthly-report-\d{4}-\d{2}$/;
 const releasePara = (block) => {
-  const links = [...block.matchAll(/<a [^>]*href="https:\/\/github\.com\/kyhsa93\/jipgye\/releases[^"]*"[^>]*>/g)];
+  const links = [...block.matchAll(/<a [^>]*href="https:\/\/github\.com\/kyhsa93\/jipgye\/releases[^"]*"[^>]*>/g)].filter((m) => !MONTHLY_REPORT_URL.test(m[0].match(/href="([^"]*)"/)[1]));
   assert.equal(links.length, 1, `Release 링크가 ${links.length}개다`);
   const at = links[0].index;
   const from = block.lastIndexOf("<p>", at);
@@ -227,9 +230,10 @@ test("method.html 전체에 utm 파라미터와 날짜 태그가 없다(고친 �
   const html = await method();
   assert.doesNotMatch(html, /utm_/i);
   assert.ok(!html.includes("correction-twins-"), "날짜가 박힌 태그(correction-twins-)를 가리키면 다음 갱신부터 대체된 Release를 가리킨다");
-  // 링크 대상은 Release 하나뿐이다: /releases/latest 밖의 releases 링크가 없다.
+  // 링크 대상은 해제 Release(/releases/latest)와 월간 리포트 Release(#771, 호 태그) 둘뿐이다 - 각각 한·영 한 번씩.
   const all = [...html.matchAll(/https:\/\/github\.com\/kyhsa93\/jipgye\/releases[^"'\s<)]*/g)].map((m) => m[0]);
-  assert.deepEqual(all, [RELEASE_URL, RELEASE_URL], "한·영 한 번씩만");
+  assert.deepEqual(all.filter((u) => !MONTHLY_REPORT_URL.test(u)), [RELEASE_URL, RELEASE_URL], "한·영 한 번씩만");
+  assert.equal(all.filter((u) => MONTHLY_REPORT_URL.test(u)).length, 2, "월간 리포트 링크는 한·영 한 번씩");
 });
 
 test("Release 링크는 독립된 한 문장 문단이고 정정 재신고 해제 문단 바로 뒤에 있다 - 한·영", async () => {

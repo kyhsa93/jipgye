@@ -32,6 +32,8 @@ export const ATTRIBUTION = {
     en: (collected: string) =>
       `Source: ${SOURCES.molit.en} apartment sale transaction data (data.go.kr ${SOURCES.molitSale.dataset}), ${collected}. These are aggregated and processed values derived from the source and are not endorsed or guaranteed by the Ministry.`,
   },
+  // 월간 집계 리포트(#771, scripts/monthly-report.ts)의 모든 표 하단 문구. 이슈 본문(ceo 라운드 2026-10-27)의 글자 그대로 - 바꾸려면 clo 판정이 먼저다.
+  monthlyReport: { ko: `출처: ${SOURCES.molit.ko} 실거래가(공공데이터포털 API), 가공·집계: 집계` },
   ecos: { ko: `출처: ${SOURCES.ecos.ko}. 이 값은 원자료를 집계·가공한 것입니다.` },
   rone: { ko: `출처: ${SOURCES.reb.ko} R-ONE 부동산통계정보시스템. 이 값은 원자료를 집계·가공한 것이며 원자료 값을 바꾸지 않았습니다.` },
 } as const;
