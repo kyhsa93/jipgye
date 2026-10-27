@@ -5,6 +5,8 @@
 // - 차이는 「구별된다」로만 말한다: 빌더의 pairs(district-change pairVerdicts, 90% 구간이 겹치지 않으면 true)가 true 인 쌍만 「구별된다」고 적는다.
 //   순위·「더 움직였다」 같은 말은 쓰지 않는다.
 // - 평균 회귀 한계: 칸을 기준 시기 중앙값으로 가격대에 넣으므로 기준값이 우연히 높거나 낮았던 칸이 양 끝 가격대에 모인다 - 표 바로 아래에 적는다(보정하지 않음).
+// - 면적대(#719 PR2): area 배열이 있을 때만 셋째 묶음. 면적과 가격은 겹친다는 한 줄을 붙이고, 면적이 원인이라고 쓰지 않는다.
+//   pairs.area 가 없으면 면적 「구별된다」 문장은 내지 않는다(없는 판정을 지어내지 않음).
 // - 금지어(`오를`·`내릴`·`전망`) 0건. 두 언어를 다 굽고 html lang 이 가린다(m-ko·m-en) - 이 장의 인라인 스크립트는 S6 여유가 없다.
 
 type Both = { ko: string; en: string };
@@ -60,10 +62,12 @@ function pairLine(dim: Both, rows: Row[], verdicts: Record<string, boolean> | un
 }
 
 // 375px 에서 영어 표가 상자를 넘지 않게 줄 이름을 줄여 쓴다(json 의 en 은 문장 속 이름으로 그대로 쓴다). 키가 없으면 json 의 en.
-const EN_SHORT: Record<string, string> = { upTo6: "≤₩600M", over25: ">₩2.5B", under10: "<10 yrs", y10to29: "10–29 yrs", over30: "30+ yrs" };
+const EN_SHORT: Record<string, string> = { upTo6: "≤₩600M", over25: ">₩2.5B", under10: "<10 yrs", y10to29: "10–29 yrs", over30: "30+ yrs", upTo60: "≤60㎡", over135: ">135㎡" };
 
 const PRICE_DIM: Both = { ko: "가격대", en: "Price bands" };
 const AGE_DIM: Both = { ko: "연식", en: "Building age" };
+const AREA_DIM: Both = { ko: "면적대", en: "Area" };
+export const SEGMENT_HEADING_AREA: Both = { ko: "가격대·연식·면적대별 1년 변화", en: "1-year change by price band, building age and area" };
 
 export function segmentChangeView(data) {
   if (!Array.isArray(data?.price) || !Array.isArray(data?.age) || !data.periods?.base?.length) return null;
@@ -76,15 +80,21 @@ export function segmentChangeView(data) {
   const base = span(data.periods.base);
   const recent = span(data.periods.recent);
   const ref = data.ageRefYear;
+  const area: Row[] | null = Array.isArray(data.area) && data.area.length ? data.area : null;
   const intro: Both = {
-    ko: `같은 칸(구·단지·전용면적)이 ${base.ko}${wa(base.ko)} ${recent.ko}에 모두 거래된 ${num(data.cells)}칸을 기준 시기 중간값의 가격대와 ${ref}년 기준 연식으로 나눠, 칸마다 잰 변화의 중간값입니다.`,
-    en: `Units (same district, complex and exclusive area) traded in both ${base.en} and ${recent.en}, ${num(data.cells)} in all, grouped by the price band of their base-period median and by building age as of ${ref}: the median of each unit's change.`,
+    ko: `같은 칸(구·단지·전용면적)이 ${base.ko}${wa(base.ko)} ${recent.ko}에 모두 거래된 ${num(data.cells)}칸을 기준 시기 중간값의 가격대${area ? `, ${ref}년 기준 연식, 전용면적대로` : `와 ${ref}년 기준 연식으로`} 나눠, 칸마다 잰 변화의 중간값입니다.`,
+    en: `Units (same district, complex and exclusive area) traded in both ${base.en} and ${recent.en}, ${num(data.cells)} in all, grouped by the price band of their base-period median${area ? `, by building age as of ${ref} and by exclusive area` : ` and by building age as of ${ref}`}: the median of each unit's change.`,
   };
   const groups = [
     { label: { ko: "가격대(기준 시기 중간값)", en: "Price band (base-period median)" }, rows: rowsOf(data.price) },
     { label: { ko: `연식(${ref}년 기준)`, en: `Building age (as of ${ref})` }, rows: rowsOf(data.age) },
   ];
-  const lines = [pairLine(PRICE_DIM, data.price, data.pairs?.price), pairLine(AGE_DIM, data.age, data.pairs?.age)].filter(Boolean);
+  if (area) groups.push({ label: { ko: "전용면적대", en: "Exclusive area" }, rows: rowsOf(area) });
+  const lines = [
+    pairLine(PRICE_DIM, data.price, data.pairs?.price),
+    pairLine(AGE_DIM, data.age, data.pairs?.age),
+    area && data.pairs?.area ? pairLine(AREA_DIM, area, data.pairs.area) : null,
+  ].filter(Boolean);
   const pairs: Both | null = lines.length
     ? {
         ko: `90% 구간이 겹치지 않을 때만 구별된다고 적습니다. ${lines.map((l) => l.ko).join(" ")}`,
@@ -99,7 +109,15 @@ export function segmentChangeView(data) {
   const noYear: Both | null = data.noBuildYear
     ? { ko: `준공 연도가 없는 ${num(data.noBuildYear)}칸은 연식에서만 뺐습니다.`, en: `${num(data.noBuildYear)} units without a completion year are left out of the age rows only.` }
     : null;
+  // #719 판정: 면적↔가격 겹침 한 줄, 인과 0. 면적 없는 칸은 면적 줄에서만 빠진다(그 수가 있을 때만 적는다).
+  const noArea = area ? data.cells - area.reduce((a, r) => a + r.cells, 0) : 0;
+  const areaNote: Both | null = area
+    ? {
+        ko: `넓은 칸일수록 가격대도 높아 면적대와 가격대는 겹칩니다.${noArea > 0 ? ` 면적이 없는 ${num(noArea)}칸은 면적대에서만 뺐습니다.` : ""}`,
+        en: `Larger units tend to sit in higher price bands, so area and price bands overlap.${noArea > 0 ? ` ${num(noArea)} units without an area are left out of the area rows only.` : ""}`,
+      }
+    : null;
   // 표 이름에는 숫자를 넣는다(장마다 다른 caption, accessibility 시험).
   const caption: Both = { ko: `가격대 ${data.price.length}줄·연식 ${data.age.length}줄`, en: `${data.price.length} price bands, ${data.age.length} age groups` };
-  return { heading: SEGMENT_HEADING, intro, groups, pairs, caveat, noYear, caption };
+  return { heading: area ? SEGMENT_HEADING_AREA : SEGMENT_HEADING, intro, groups, pairs, caveat, noYear, areaNote, caption };
 }
