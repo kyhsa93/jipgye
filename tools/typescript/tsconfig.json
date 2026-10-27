@@ -119,6 +119,7 @@
     "../../scripts/interest.ts",
     "../../scripts/loan-cap.ts",
     "../../scripts/min-cash.ts",
+    "../../scripts/monthly-report.ts",
     "../../scripts/mortgage.ts",
     "../../scripts/move-in.ts",
     "../../scripts/news-context.ts",

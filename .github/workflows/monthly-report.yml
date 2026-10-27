@@ -1,0 +1,76 @@
+# 월간 집계 리포트 Release (#771, ceo 라운드 2026-10-27). 「집계 월간: 서울 아파트 실거래 YYYY-MM」 Markdown 1부와 표별 CSV 를
+# GitHub Release 한 건(monthly-report-YYYY-MM)으로 올린다. 새 수집은 없고 저장소의 docs/data/*.json(사이트가 그날 낸 집계값)을 읽는다.
+# 집계만 낸다 - 행·단지 단위 값은 없고(scripts/monthly-report.ts, test/monthly-report.test.mjs), kyhsa93.github.io 에는 아무것도 만들지 않는다.
+#
+# correction-release.yml 을 본으로 했다. 다른 점: 호마다 태그가 다르므로(YYYY-MM) 숫자 비교(--same)와 이전 Release 표시(supersede)가 없다 -
+# 같은 호의 Release 가 이미 있으면 올리지 않고 끝난다(dispatch 를 다시 돌려도 중복이 없다). 호 번호는 week-digest.json 의 asOf 가 든 달이다.
+# 첫 Release: 병합 뒤 Actions 에서 Monthly report 를 dispatch 로 올린다(10월호). 그 뒤는 매월 28일 18:23 UTC cron 이 그달 호를 올린다.
+#
+# 실패는 크게 실패한다: Release 가 있는지 못 읽으면(gh 일시 실패 포함) 새 Release 를 올리지 않고 단계를 실패시킨다 -
+# `gh release view` 의 「없다」와 「못 읽었다」를 구분하지 않으면 같은 호가 두 번 생기거나 조용히 건너뛴다.
+#
+# 권한은 contents: write 하나뿐이고 GITHUB_TOKEN 만 쓴다(시크릿 없음). 입력·출력 경로는 env 로 받아 run 에 직접 박지 않는다.
+# 일일 파이프라인(daily-update·summarize·deploy)에 넣지 않으므로 concurrency 그룹을 digest-pipeline 과 공유하지 않는다(커밋·푸시가 없다) -
+# 이 워크플로가 실패해도 수집·배포에 영향이 없다. 일일 수집(UTC 23:07)·공시가격 API(14:17)·정정 Release(12일 17:43)·감시(05:29·17:29)와 겹치지 않게 매월 28일 18:23 UTC 에 돈다.
+name: Monthly report
+
+on:
+  schedule:
+    - cron: "23 18 28 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: monthly-report
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # raw/(원본)는 필요 없다 - 스크립트와 docs/data 만 받는다.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: |
+            scripts
+            docs/data
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: 리포트 산출 (임시 폴더, 커밋하지 않음)
+        env:
+          MONTHLY_REPORT_DATA_DIR: docs/data
+          MONTHLY_REPORT_OUT_DIR: ${{ runner.temp }}/monthly-report
+        run: node scripts/monthly-report.ts
+
+      - name: Release 올리기 (같은 호가 있으면 건너뜀)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          MONTHLY_REPORT_OUT_DIR: ${{ runner.temp }}/monthly-report
+        run: |
+          set -euo pipefail
+          out="$MONTHLY_REPORT_OUT_DIR"
+          tag="$(cat "$out/tag.txt")"
+          # 「있다」(0)·「없다」(release not found)·「못 읽었다」(그 밖의 오류)를 가른다. 못 읽었으면 올리지 않고 실패한다.
+          rc=0
+          gh release view "$tag" >/dev/null 2>"$RUNNER_TEMP/view.err" || rc=$?
+          if [ "$rc" -eq 0 ]; then
+            echo "$tag 가 이미 있다 - 새로 올리지 않는다"
+            exit 0
+          fi
+          if ! grep -qi "release not found" "$RUNNER_TEMP/view.err"; then
+            echo "$tag 가 있는지 읽지 못했다(종료 코드 $rc) - 새 Release 를 올리지 않는다" >&2
+            cat "$RUNNER_TEMP/view.err" >&2
+            exit 1
+          fi
+          # --target: 태그가 이 실행이 받은 커밋(입력 docs/data 의 판)을 정확히 가리키게 한다.
+          # --latest=false: method.html 의 해제 집계 링크가 /releases/latest 다(#226) - 월간호가 「latest」를 가로채면 그 링크가 다른 Release 로 간다.
+          gh release create "$tag" --target "$GITHUB_SHA" --latest=false --title "$(cat "$out/title.txt")" --notes-file "$out/$tag.md" \
+            "$out/$tag.md" "$out"/"$tag"-table-*.csv
