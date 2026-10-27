@@ -1,67 +1,82 @@
 {
-  "updatedAt": "2026-10-26T01:10:29.618Z",
+  "updatedAt": "2026-10-27T02:05:19.737Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 기타 경제 소식: 인천시장 박찬대는 임기 중 평균 경제성장률 5% 달성 목표를 밝혔다. KCC는 폐안전모를 기부하고 새 안전모로 교체해 순환경제 구축에 나섰다. 이란은 육로까지 막히면서 경제가 고사 위기에 놓였다. 부산과 칭다오 간 비즈니스위크가 열려 지역 기업 간 경제협력이 확대되고 있다. 각 기사는 서로 다른 주제로, 별개의 사건을 보여준다.\n- 금리·예금·투자상품: 10월 미국 금리와 빅테크 실적 발표가 주목받은 주간 뉴욕증시가 주목받았다. 경기도는 불법사금융 피해를 입은 도민에게 1% 저금리 대출을 지원한다. 프랑스 국채금리가 5%를 돌파하며 우량 회사채 금리보다 높아졌다. 미국 금리 동향과 빅테크 기업의 실적 발표가 주요 관심사였다. 경기도의 지원 대출 금리는 1%로 정해졌다.\n- 증시·환율: 증시·환율: 코스피, 하락 출발 후 낙폭 줄여 보합권…장중 상승전환도(종합), 日닛케이, 美증시 약세에 하락 출발…닛케이 0.39%↓, 한투운용, '中 운용사와 개발' 반도체 ETF 홍콩 증시 첫 상장 +2\n- 부동산: 주택금융공사는 '스마트 주택금융 앱'을 새롭게 단장했다. 대보건설은 대전 가오동1구역 재건축 사업을 수주하며 올해 누적 수주 금액이 1조원을 돌파했다. 영등포구 대림현대3차의 43.92㎡ 주택이 9억 3700만원에 거래되며 최근 3년간 최고가를 기록했다. 삼성물산은 창원 용호1구역 재건축 사업을 7381억원 규모로 수주했다. 창원 용지호수 인근에 46층 규모의 아파트가 건설될 예정이다.",
-    "en": "- Other Economic News: Incheon Mayor Park Chan-dae announced the goal of achieving an average economic growth rate of 5% during his term. KCC donated old safety helmets and replaced them with new ones, taking steps to build a circular economy. Iran's economy is in a crisis of collapse as roads are also blocked. A business week between Busan and Qingdao has started, expanding economic cooperation between local companies. Each article covers a different topic, showing separate events.\n- Rates, Deposits & Investment Products: The New York stock market was the focus of attention during the week when U.S. interest rates and big tech company earnings were highlighted. Gyeonggi Province will provide low-interest loans at 1% to residents who suffered losses from illegal financial activities. French government bond yields surpassed 5%, becoming higher than those of high-quality corporate bonds. U.S. interest rate trends and big tech company earnings were the main points of interest. The supported loan interest rate by Gyeonggi Province was set at 1%.\n- Stocks & FX: Stocks & FX: 코스피, 하락 출발 후 낙폭 줄여 보합권…장중 상승전환도(종합), 日닛케이, 美증시 약세에 하락 출발…닛케이 0.39%↓, 한투운용, '中 운용사와 개발' 반도체 ETF 홍콩 증시 첫 상장 +2\n- Real Estate: Housing Finance Corporation has revamped its \"Smart Housing Finance App.\" Daebot Construction has secured the Gao-dong 1st Area reconstruction project in Daejeon, surpassing 1,000,000,000,000 won in cumulative contract value this year. A 43.92㎡ apartment in Daelim Hyundai 3rd Complex in Yeongdeungpo-gu was traded for 937,000,000 won, setting a record for the highest price in the past three years. Samsung C&T has secured the Yongho 1st Area reconstruction project in Changwon with a contract value of 738,100,000,000 won. A 46-story apartment complex is planned to be built near Yongji Lake in Changwon."
+    "ko": "- 부동산: 한국 부동산 시장에서 강북 지역 아파트 평균 매매가가 12억 원을 넘어서며 주택 거래에 영향을 미치고 있다. 대통령은 유럽의 경험을 반면교사로 삼아 지속성장과 주택 착공에 대한 재정 지원을 강조했다. 오피스텔 분양가가 11억 원에 달하는 등 아파트 가격 상승으로 인해 부동산 시장의 불안감이 커지고 있다. LH는 4분기 과천지식정보타운 등에서 건설형 임대주택 4663호를 공급할 계획이다. 전월세 가격이 상승했지만, 내후년이 전세난의 피크가 될 것으로 전망되고 있다.\n- 기타 경제 소식: 토스뱅크와 광주은행은 기업 공동대출 서비스 개발을 위한 업무협약을 체결했다. 3분기 한국 경제는 1.0% 성장하며 ‘깜짝 성장’을 기록했다. 경기도는 김동연표 ‘극저신용대출 2.0’을 내년에 폐지하기로 했다. 3분기 한국경제 성장률은 1%로, 연간 3% 달성 가능성이 유력하다는 분석이 나왔다. 반도체 산업의 성장이 두자릿수 경제성장에 기여했다는 평가가 이어지고 있다.\n- 증시·환율: 코스피는 장중 4%대 급등하며 매수 사이드카가 발동됐다. 코스닥도 같은 날 3% 상승하며 반등했다. 일본 닛케이 지수는 앤트로픽 상장 기대에 0.61% 상승 출발했다. 브라질 증시는 룰라 재선으로 인해 15% 폭락하며 재정 불안이 고조되고 있다. 미 증시 폭등 뒤에 숨겨진 AI 거품 경고가 해외 뉴스에서 보도됐다.\n- 금리·예금·투자상품: NH농협은행은 최고 연 3.9% 금리를 제공하는 예금 상품을 2차 특판에 나섰다. 유가 하락으로 인해 금값이 4000달러 수준으로 회복했다. Fed의 다음 금리 결정에 시장의 주목이 집중되고 있다. NH농협은행의 특판 예금 상품은 기존 고객을 대상으로 한다. 금값 회복은 유가 하락과 동시에 발생한 현상이다.",
+    "en": "- Real Estate: In the Korean real estate market, the average apartment selling price in the Gangbuk area has exceeded 1,200,000,000 won, affecting housing transactions. The president emphasized financial support for sustained growth and housing construction, drawing lessons from Europe's experience. Due to rising apartment prices, with office hotel sales prices reaching 1,100,000,000 won, concerns in the real estate market are increasing. LH plans to supply 4,663 units of construction-type rental housing in areas such as Gwacheon Knowledge Information Town in the fourth quarter. Although monthly and annual rent prices have increased, it is expected that the peak of the rental shortage will occur in the year after next.\n- Other Economic News: Toss Bank and Gwangju Bank signed a memorandum of understanding to develop a corporate joint loan service. Korea's economy grew by 1.0% in the third quarter, recording a \"surprise growth.\" Gyeonggi Province decided to abolish the Kim Dong-yeon-backed \"Ultra-Low Credit Loan 2.0\" next year. Korea's economic growth rate in the third quarter was 1%, and analysis suggests that achieving 3% annually is likely. Evaluations continue to state that the semiconductor industry's growth has contributed to double-digit economic growth.\n- Stocks & FX: The KOSPI surged more than 4% during the session, triggering a buy-side rally. The KOSDAQ also rebounded by 3% on the same day. The Japanese Nikkei index opened up 0.61% amid expectations of Antroptic's listing. The Brazilian market plunged 15% due to Lula's re-election, intensifying fiscal concerns. A warning about an AI bubble hidden behind the surge in the U.S. market was reported in overseas news.\n- Rates, Deposits & Investment Products: NH Nonghyup Bank has launched a second special sale of a deposit product offering a maximum annual interest rate of 3.9%. Gold prices have recovered to the 4,000-dollar level due to falling oil prices. The market is closely watching the Fed's next interest rate decision. NH Nonghyup Bank's special sale deposit product is targeted at existing customers. The recovery in gold prices occurred simultaneously with the drop in oil prices."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "인천시장 박찬대는 임기 중 평균 경제성장률 5% 달성 목표를 밝혔다. KCC는 폐안전모를 기부하고 새 안전모로 교체해 순환경제 구축에 나섰다. 이란은 육로까지 막히면서 경제가 고사 위기에 놓였다. 부산과 칭다오 간 비즈니스위크가 열려 지역 기업 간 경제협력이 확대되고 있다. 각 기사는 서로 다른 주제로, 별개의 사건을 보여준다.",
-      "lineEn": "Incheon Mayor Park Chan-dae announced the goal of achieving an average economic growth rate of 5% during his term. KCC donated old safety helmets and replaced them with new ones, taking steps to build a circular economy. Iran's economy is in a crisis of collapse as roads are also blocked. A business week between Busan and Qingdao has started, expanding economic cooperation between local companies. Each article covers a different topic, showing separate events.",
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "한국 부동산 시장에서 강북 지역 아파트 평균 매매가가 12억 원을 넘어서며 주택 거래에 영향을 미치고 있다. 대통령은 유럽의 경험을 반면교사로 삼아 지속성장과 주택 착공에 대한 재정 지원을 강조했다. 오피스텔 분양가가 11억 원에 달하는 등 아파트 가격 상승으로 인해 부동산 시장의 불안감이 커지고 있다. LH는 4분기 과천지식정보타운 등에서 건설형 임대주택 4663호를 공급할 계획이다. 전월세 가격이 상승했지만, 내후년이 전세난의 피크가 될 것으로 전망되고 있다.",
+      "lineEn": "In the Korean real estate market, the average apartment selling price in the Gangbuk area has exceeded 1,200,000,000 won, affecting housing transactions. The president emphasized financial support for sustained growth and housing construction, drawing lessons from Europe's experience. Due to rising apartment prices, with office hotel sales prices reaching 1,100,000,000 won, concerns in the real estate market are increasing. LH plans to supply 4,663 units of construction-type rental housing in areas such as Gwacheon Knowledge Information Town in the fourth quarter. Although monthly and annual rent prices have increased, it is expected that the peak of the rental shortage will occur in the year after next.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "박찬대 인천시장 \"임기 중  평균 경제성장률 5% 달성 목표\"",
-          "link": "https://www.yna.co.kr/view/AKR20261026028400065",
+          "title": "“이제는 강북 임장 다니기 겁나요”…아파트 평균 매매가 12억 넘어서",
+          "link": "https://www.mk.co.kr/news/realestate/12186757",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "李대통령 \"유럽 반면교사로, 지속성장 중요…주택착공 재정지원\"",
+          "link": "https://www.yna.co.kr/view/AKR20261027068300001",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "KCC, 전 사업장 폐안전모 기부해 새 안전모로… 순환경제 구축",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/26/ZT5UED2DKRH43FZARXVQXIFVSQ/",
+          "title": "\"오피스텔 분양가가 11억이라고?\"…아파트값 뛰자 벌어진 일",
+          "link": "https://www.hankyung.com/article/202610276978i",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "LH, 4분기 과천지식정보타운 등 건설형 임대주택 4663호 공급",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/27/HT3DH4BQ4BGXZGZQU2BA4ERW3I/",
           "source": "조선비즈 부동산"
         },
         {
-          "title": "바닷길·하늘길 이어 육로까지 막혔다…이란 경제 '고사 위기'",
-          "link": "https://www.hankyung.com/article/202610264200i",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "'부산·칭다오 비즈니스위크'…지역 기업 경제협력 확대",
-          "link": "https://www.yna.co.kr/view/AKR20261026015300051",
-          "source": "연합뉴스 경제"
+          "title": "지금 전월셋값 확 올랐는데 “아직 지옥이 아니다”…내후년이 전세난 피크",
+          "link": "https://www.mk.co.kr/news/realestate/12186603",
+          "source": "매일경제 부동산"
         }
       ]
     },
     {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "10월 미국 금리와 빅테크 실적 발표가 주목받은 주간 뉴욕증시가 주목받았다. 경기도는 불법사금융 피해를 입은 도민에게 1% 저금리 대출을 지원한다. 프랑스 국채금리가 5%를 돌파하며 우량 회사채 금리보다 높아졌다. 미국 금리 동향과 빅테크 기업의 실적 발표가 주요 관심사였다. 경기도의 지원 대출 금리는 1%로 정해졌다.",
-      "lineEn": "The New York stock market was the focus of attention during the week when U.S. interest rates and big tech company earnings were highlighted. Gyeonggi Province will provide low-interest loans at 1% to residents who suffered losses from illegal financial activities. French government bond yields surpassed 5%, becoming higher than those of high-quality corporate bonds. U.S. interest rate trends and big tech company earnings were the main points of interest. The supported loan interest rate by Gyeonggi Province was set at 1%.",
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "토스뱅크와 광주은행은 기업 공동대출 서비스 개발을 위한 업무협약을 체결했다. 3분기 한국 경제는 1.0% 성장하며 ‘깜짝 성장’을 기록했다. 경기도는 김동연표 ‘극저신용대출 2.0’을 내년에 폐지하기로 했다. 3분기 한국경제 성장률은 1%로, 연간 3% 달성 가능성이 유력하다는 분석이 나왔다. 반도체 산업의 성장이 두자릿수 경제성장에 기여했다는 평가가 이어지고 있다.",
+      "lineEn": "Toss Bank and Gwangju Bank signed a memorandum of understanding to develop a corporate joint loan service. Korea's economy grew by 1.0% in the third quarter, recording a \"surprise growth.\" Gyeonggi Province decided to abolish the Kim Dong-yeon-backed \"Ultra-Low Credit Loan 2.0\" next year. Korea's economic growth rate in the third quarter was 1%, and analysis suggests that achieving 3% annually is likely. Evaluations continue to state that the semiconductor industry's growth has contributed to double-digit economic growth.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "[주간 뉴욕증시] 10월 美 금리·빅테크 실적 발표 '슈퍼 위크'",
-          "link": "https://www.newsis.com/view/NISX20261026_0003840464",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "경기도, 불법사금융 피해 도민에 1% 저금리 대출 지원",
-          "link": "https://www.yna.co.kr/view/AKR20261026035900061",
+          "title": "토스뱅크·광주은행, '기업 공동대출 서비스' 개발 업무협약",
+          "link": "https://www.yna.co.kr/view/AKR20261027066900002",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "프랑스 국채금리 5% 돌파…우량 회사채보다 높아졌다",
-          "link": "https://www.hankyung.com/article/202610264055i",
+          "title": "3분기 한국 경제 1.0% '깜짝 성장'…\"4분기 0%여도 연간 3.6%\"(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261027018151002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "경기도, 김동연표 '극저신용대출 2.0' 내년 폐지",
+          "link": "https://www.yna.co.kr/view/AKR20261027049400061",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "3분기 한국경제 1% '깜짝 성장'…연간 3% 달성 유력",
+          "link": "https://www.hankyung.com/article/2026102766677",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "\"반도체가 다 먹여살리네\"…후진국도 아닌데 '두자릿수 경제성장'",
+          "link": "https://www.hankyung.com/article/202610276371g",
           "source": "한국경제 경제"
         }
       ]
@@ -70,73 +85,58 @@
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
-      "lineKo": "증시·환율: 코스피, 하락 출발 후 낙폭 줄여 보합권…장중 상승전환도(종합), 日닛케이, 美증시 약세에 하락 출발…닛케이 0.39%↓, 한투운용, '中 운용사와 개발' 반도체 ETF 홍콩 증시 첫 상장 +2",
-      "lineEn": "Stocks & FX: 코스피, 하락 출발 후 낙폭 줄여 보합권…장중 상승전환도(종합), 日닛케이, 美증시 약세에 하락 출발…닛케이 0.39%↓, 한투운용, '中 운용사와 개발' 반도체 ETF 홍콩 증시 첫 상장 +2",
-      "isFallback": true,
-      "fallbackReason": "unverified-entity",
-      "degraded": false,
-      "items": [
-        {
-          "title": "코스피, 하락 출발 후 낙폭 줄여 보합권…장중 상승전환도(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261026032651008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "日닛케이, 美증시 약세에 하락 출발…닛케이 0.39%↓",
-          "link": "https://www.newsis.com/view/NISX20261026_0003840510",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "한투운용, '中 운용사와 개발' 반도체 ETF 홍콩 증시 첫 상장",
-          "link": "https://www.yna.co.kr/view/AKR20261026031300008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "코스피, 1% 안팎 하락 출발…코스닥도 내려",
-          "link": "https://www.yna.co.kr/view/AKR20261026032600008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "[마켓뷰] 코스피 출렁임 계속되나…삼전닉스 추가 주주환원 여부 주시",
-          "link": "https://www.yna.co.kr/view/AKR20261026018000008",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "주택금융공사는 '스마트 주택금융 앱'을 새롭게 단장했다. 대보건설은 대전 가오동1구역 재건축 사업을 수주하며 올해 누적 수주 금액이 1조원을 돌파했다. 영등포구 대림현대3차의 43.92㎡ 주택이 9억 3700만원에 거래되며 최근 3년간 최고가를 기록했다. 삼성물산은 창원 용호1구역 재건축 사업을 7381억원 규모로 수주했다. 창원 용지호수 인근에 46층 규모의 아파트가 건설될 예정이다.",
-      "lineEn": "Housing Finance Corporation has revamped its \"Smart Housing Finance App.\" Daebot Construction has secured the Gao-dong 1st Area reconstruction project in Daejeon, surpassing 1,000,000,000,000 won in cumulative contract value this year. A 43.92㎡ apartment in Daelim Hyundai 3rd Complex in Yeongdeungpo-gu was traded for 937,000,000 won, setting a record for the highest price in the past three years. Samsung C&T has secured the Yongho 1st Area reconstruction project in Changwon with a contract value of 738,100,000,000 won. A 46-story apartment complex is planned to be built near Yongji Lake in Changwon.",
+      "lineKo": "코스피는 장중 4%대 급등하며 매수 사이드카가 발동됐다. 코스닥도 같은 날 3% 상승하며 반등했다. 일본 닛케이 지수는 앤트로픽 상장 기대에 0.61% 상승 출발했다. 브라질 증시는 룰라 재선으로 인해 15% 폭락하며 재정 불안이 고조되고 있다. 미 증시 폭등 뒤에 숨겨진 AI 거품 경고가 해외 뉴스에서 보도됐다.",
+      "lineEn": "The KOSPI surged more than 4% during the session, triggering a buy-side rally. The KOSDAQ also rebounded by 3% on the same day. The Japanese Nikkei index opened up 0.61% amid expectations of Antroptic's listing. The Brazilian market plunged 15% due to Lula's re-election, intensifying fiscal concerns. A warning about an AI bubble hidden behind the surge in the U.S. market was reported in overseas news.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "주택금융공사, '스마트 주택금융 앱' 새 단장",
-          "link": "https://www.yna.co.kr/view/AKR20261026042900051",
+          "title": "코스피, 장중 4%대 급등에 매수 사이드카 발동",
+          "link": "https://www.yna.co.kr/view/AKR20261027068400008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "대보건설, 대전 가오동1구역 재건축 수주…올해 누적 1조원 돌파",
-          "link": "https://www.newsis.com/view/NISX20261026_0003840595",
+          "title": "日증시, 앤트로픽 상장 기대에 상승 출발…닛케이 0.61%↑",
+          "link": "https://www.newsis.com/view/NISX20261027_0003842243",
           "source": "뉴시스 경제"
         },
         {
-          "title": "영등포구 대림현대3차 43.92㎡ 9억 3700만원… 최근 3년 신고가 [MAI부동산]",
-          "link": "https://www.mk.co.kr/news/realestate/12185390",
-          "source": "매일경제 부동산"
+          "title": "코스피, '앤트로픽 IPO' 훈풍에 4%대 급반등…코스닥도 3%↑(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261027046800008",
+          "source": "연합뉴스 경제"
         },
         {
-          "title": "삼성물산, 7381억원 규모 '창원 용호1구역 재건축' 수주",
-          "link": "https://www.newsis.com/view/NISX20261026_0003840479",
-          "source": "뉴시스 경제"
+          "title": "룰라 재선에 브라질 증시 15% 폭락…재정불안 고조",
+          "link": "https://www.hankyung.com/article/202610276776i",
+          "source": "한국경제 경제"
         },
         {
-          "title": "창원 용지호수 앞에 46층 아파트…삼성물산, 7381억 재건축 수주",
-          "link": "https://www.hankyung.com/article/2026102642156",
-          "source": "한국경제 부동산"
+          "title": "[밤 사이 해외뉴스] 엔비디아·마이크론이 다 먹었다? 미 증시 폭등 뒤에 숨겨진 AI 거품 경고",
+          "link": "https://www.hankyung.com/article/202610276589i",
+          "source": "한국경제 경제"
+        }
+      ]
+    },
+    {
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "NH농협은행은 최고 연 3.9% 금리를 제공하는 예금 상품을 2차 특판에 나섰다. 유가 하락으로 인해 금값이 4000달러 수준으로 회복했다. Fed의 다음 금리 결정에 시장의 주목이 집중되고 있다. NH농협은행의 특판 예금 상품은 기존 고객을 대상으로 한다. 금값 회복은 유가 하락과 동시에 발생한 현상이다.",
+      "lineEn": "NH Nonghyup Bank has launched a second special sale of a deposit product offering a maximum annual interest rate of 3.9%. Gold prices have recovered to the 4,000-dollar level due to falling oil prices. The market is closely watching the Fed's next interest rate decision. NH Nonghyup Bank's special sale deposit product is targeted at existing customers. The recovery in gold prices occurred simultaneously with the drop in oil prices.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "[게시판] NH농협은행, 최고금리 연 3.9% 예금 2차 특판",
+          "link": "https://www.yna.co.kr/view/AKR20261027053100002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "유가 하락에 금값 4000달러 회복…Fed 금리 결정 주목",
+          "link": "https://www.hankyung.com/article/202610276551i",
+          "source": "한국경제 경제"
         }
       ]
     }

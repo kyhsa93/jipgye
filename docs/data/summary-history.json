@@ -6422,5 +6422,149 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-10-27",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: 한국 부동산 시장에서 강북 지역 아파트 평균 매매가가 12억 원을 넘어서며 주택 거래에 영향을 미치고 있다. 대통령은 유럽의 경험을 반면교사로 삼아 지속성장과 주택 착공에 대한 재정 지원을 강조했다. 오피스텔 분양가가 11억 원에 달하는 등 아파트 가격 상승으로 인해 부동산 시장의 불안감이 커지고 있다. LH는 4분기 과천지식정보타운 등에서 건설형 임대주택 4663호를 공급할 계획이다. 전월세 가격이 상승했지만, 내후년이 전세난의 피크가 될 것으로 전망되고 있다.\n- 기타 경제 소식: 토스뱅크와 광주은행은 기업 공동대출 서비스 개발을 위한 업무협약을 체결했다. 3분기 한국 경제는 1.0% 성장하며 ‘깜짝 성장’을 기록했다. 경기도는 김동연표 ‘극저신용대출 2.0’을 내년에 폐지하기로 했다. 3분기 한국경제 성장률은 1%로, 연간 3% 달성 가능성이 유력하다는 분석이 나왔다. 반도체 산업의 성장이 두자릿수 경제성장에 기여했다는 평가가 이어지고 있다.\n- 증시·환율: 코스피는 장중 4%대 급등하며 매수 사이드카가 발동됐다. 코스닥도 같은 날 3% 상승하며 반등했다. 일본 닛케이 지수는 앤트로픽 상장 기대에 0.61% 상승 출발했다. 브라질 증시는 룰라 재선으로 인해 15% 폭락하며 재정 불안이 고조되고 있다. 미 증시 폭등 뒤에 숨겨진 AI 거품 경고가 해외 뉴스에서 보도됐다.\n- 금리·예금·투자상품: NH농협은행은 최고 연 3.9% 금리를 제공하는 예금 상품을 2차 특판에 나섰다. 유가 하락으로 인해 금값이 4000달러 수준으로 회복했다. Fed의 다음 금리 결정에 시장의 주목이 집중되고 있다. NH농협은행의 특판 예금 상품은 기존 고객을 대상으로 한다. 금값 회복은 유가 하락과 동시에 발생한 현상이다.",
+      "en": "- Real Estate: In the Korean real estate market, the average apartment selling price in the Gangbuk area has exceeded 1,200,000,000 won, affecting housing transactions. The president emphasized financial support for sustained growth and housing construction, drawing lessons from Europe's experience. Due to rising apartment prices, with office hotel sales prices reaching 1,100,000,000 won, concerns in the real estate market are increasing. LH plans to supply 4,663 units of construction-type rental housing in areas such as Gwacheon Knowledge Information Town in the fourth quarter. Although monthly and annual rent prices have increased, it is expected that the peak of the rental shortage will occur in the year after next.\n- Other Economic News: Toss Bank and Gwangju Bank signed a memorandum of understanding to develop a corporate joint loan service. Korea's economy grew by 1.0% in the third quarter, recording a \"surprise growth.\" Gyeonggi Province decided to abolish the Kim Dong-yeon-backed \"Ultra-Low Credit Loan 2.0\" next year. Korea's economic growth rate in the third quarter was 1%, and analysis suggests that achieving 3% annually is likely. Evaluations continue to state that the semiconductor industry's growth has contributed to double-digit economic growth.\n- Stocks & FX: The KOSPI surged more than 4% during the session, triggering a buy-side rally. The KOSDAQ also rebounded by 3% on the same day. The Japanese Nikkei index opened up 0.61% amid expectations of Antroptic's listing. The Brazilian market plunged 15% due to Lula's re-election, intensifying fiscal concerns. A warning about an AI bubble hidden behind the surge in the U.S. market was reported in overseas news.\n- Rates, Deposits & Investment Products: NH Nonghyup Bank has launched a second special sale of a deposit product offering a maximum annual interest rate of 3.9%. Gold prices have recovered to the 4,000-dollar level due to falling oil prices. The market is closely watching the Fed's next interest rate decision. NH Nonghyup Bank's special sale deposit product is targeted at existing customers. The recovery in gold prices occurred simultaneously with the drop in oil prices."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "한국 부동산 시장에서 강북 지역 아파트 평균 매매가가 12억 원을 넘어서며 주택 거래에 영향을 미치고 있다. 대통령은 유럽의 경험을 반면교사로 삼아 지속성장과 주택 착공에 대한 재정 지원을 강조했다. 오피스텔 분양가가 11억 원에 달하는 등 아파트 가격 상승으로 인해 부동산 시장의 불안감이 커지고 있다. LH는 4분기 과천지식정보타운 등에서 건설형 임대주택 4663호를 공급할 계획이다. 전월세 가격이 상승했지만, 내후년이 전세난의 피크가 될 것으로 전망되고 있다.",
+        "lineEn": "In the Korean real estate market, the average apartment selling price in the Gangbuk area has exceeded 1,200,000,000 won, affecting housing transactions. The president emphasized financial support for sustained growth and housing construction, drawing lessons from Europe's experience. Due to rising apartment prices, with office hotel sales prices reaching 1,100,000,000 won, concerns in the real estate market are increasing. LH plans to supply 4,663 units of construction-type rental housing in areas such as Gwacheon Knowledge Information Town in the fourth quarter. Although monthly and annual rent prices have increased, it is expected that the peak of the rental shortage will occur in the year after next.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "“이제는 강북 임장 다니기 겁나요”…아파트 평균 매매가 12억 넘어서",
+            "link": "https://www.mk.co.kr/news/realestate/12186757",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "李대통령 \"유럽 반면교사로, 지속성장 중요…주택착공 재정지원\"",
+            "link": "https://www.yna.co.kr/view/AKR20261027068300001",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "\"오피스텔 분양가가 11억이라고?\"…아파트값 뛰자 벌어진 일",
+            "link": "https://www.hankyung.com/article/202610276978i",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "LH, 4분기 과천지식정보타운 등 건설형 임대주택 4663호 공급",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/27/HT3DH4BQ4BGXZGZQU2BA4ERW3I/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "지금 전월셋값 확 올랐는데 “아직 지옥이 아니다”…내후년이 전세난 피크",
+            "link": "https://www.mk.co.kr/news/realestate/12186603",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "토스뱅크와 광주은행은 기업 공동대출 서비스 개발을 위한 업무협약을 체결했다. 3분기 한국 경제는 1.0% 성장하며 ‘깜짝 성장’을 기록했다. 경기도는 김동연표 ‘극저신용대출 2.0’을 내년에 폐지하기로 했다. 3분기 한국경제 성장률은 1%로, 연간 3% 달성 가능성이 유력하다는 분석이 나왔다. 반도체 산업의 성장이 두자릿수 경제성장에 기여했다는 평가가 이어지고 있다.",
+        "lineEn": "Toss Bank and Gwangju Bank signed a memorandum of understanding to develop a corporate joint loan service. Korea's economy grew by 1.0% in the third quarter, recording a \"surprise growth.\" Gyeonggi Province decided to abolish the Kim Dong-yeon-backed \"Ultra-Low Credit Loan 2.0\" next year. Korea's economic growth rate in the third quarter was 1%, and analysis suggests that achieving 3% annually is likely. Evaluations continue to state that the semiconductor industry's growth has contributed to double-digit economic growth.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "토스뱅크·광주은행, '기업 공동대출 서비스' 개발 업무협약",
+            "link": "https://www.yna.co.kr/view/AKR20261027066900002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "3분기 한국 경제 1.0% '깜짝 성장'…\"4분기 0%여도 연간 3.6%\"(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261027018151002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "경기도, 김동연표 '극저신용대출 2.0' 내년 폐지",
+            "link": "https://www.yna.co.kr/view/AKR20261027049400061",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "3분기 한국경제 1% '깜짝 성장'…연간 3% 달성 유력",
+            "link": "https://www.hankyung.com/article/2026102766677",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "\"반도체가 다 먹여살리네\"…후진국도 아닌데 '두자릿수 경제성장'",
+            "link": "https://www.hankyung.com/article/202610276371g",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "코스피는 장중 4%대 급등하며 매수 사이드카가 발동됐다. 코스닥도 같은 날 3% 상승하며 반등했다. 일본 닛케이 지수는 앤트로픽 상장 기대에 0.61% 상승 출발했다. 브라질 증시는 룰라 재선으로 인해 15% 폭락하며 재정 불안이 고조되고 있다. 미 증시 폭등 뒤에 숨겨진 AI 거품 경고가 해외 뉴스에서 보도됐다.",
+        "lineEn": "The KOSPI surged more than 4% during the session, triggering a buy-side rally. The KOSDAQ also rebounded by 3% on the same day. The Japanese Nikkei index opened up 0.61% amid expectations of Antroptic's listing. The Brazilian market plunged 15% due to Lula's re-election, intensifying fiscal concerns. A warning about an AI bubble hidden behind the surge in the U.S. market was reported in overseas news.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "코스피, 장중 4%대 급등에 매수 사이드카 발동",
+            "link": "https://www.yna.co.kr/view/AKR20261027068400008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "日증시, 앤트로픽 상장 기대에 상승 출발…닛케이 0.61%↑",
+            "link": "https://www.newsis.com/view/NISX20261027_0003842243",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "코스피, '앤트로픽 IPO' 훈풍에 4%대 급반등…코스닥도 3%↑(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261027046800008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "룰라 재선에 브라질 증시 15% 폭락…재정불안 고조",
+            "link": "https://www.hankyung.com/article/202610276776i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "[밤 사이 해외뉴스] 엔비디아·마이크론이 다 먹었다? 미 증시 폭등 뒤에 숨겨진 AI 거품 경고",
+            "link": "https://www.hankyung.com/article/202610276589i",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "NH농협은행은 최고 연 3.9% 금리를 제공하는 예금 상품을 2차 특판에 나섰다. 유가 하락으로 인해 금값이 4000달러 수준으로 회복했다. Fed의 다음 금리 결정에 시장의 주목이 집중되고 있다. NH농협은행의 특판 예금 상품은 기존 고객을 대상으로 한다. 금값 회복은 유가 하락과 동시에 발생한 현상이다.",
+        "lineEn": "NH Nonghyup Bank has launched a second special sale of a deposit product offering a maximum annual interest rate of 3.9%. Gold prices have recovered to the 4,000-dollar level due to falling oil prices. The market is closely watching the Fed's next interest rate decision. NH Nonghyup Bank's special sale deposit product is targeted at existing customers. The recovery in gold prices occurred simultaneously with the drop in oil prices.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[게시판] NH농협은행, 최고금리 연 3.9% 예금 2차 특판",
+            "link": "https://www.yna.co.kr/view/AKR20261027053100002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "유가 하락에 금값 4000달러 회복…Fed 금리 결정 주목",
+            "link": "https://www.hankyung.com/article/202610276551i",
+            "source": "한국경제 경제"
+          }
+        ]
+      }
+    ]
   }
 ]

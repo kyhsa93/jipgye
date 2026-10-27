@@ -13668,7 +13668,7 @@
         "category": "realestate",
         "preview": null,
         "dupes": [],
-        "titleEn": "\"살던 아파트서 돌봄까지\"…삼성물산, 시니어 사업 확대"
+        "titleEn": "From Living in Apartments to Providing Care\"…Samsung C&T Expands Senior Services"
       }
     ]
   },
@@ -14700,7 +14700,7 @@
         "category": "realestate",
         "preview": "삼성물산 건설부문(이하 삼성물산)이 경남 창원 용호1구역 재건축 사업의 시공사로 선정됐다. 삼성물산은 창원 용호1구역 재건축 조합이 25일 개최한 총회에서 삼성물산을 시공사로 선정하는 안건을 가결했다고 26일 밝혔다…",
         "dupes": [],
-        "titleEn": "삼성물산, 7381억 규모 경남 창원 용호1구역 재건축 시공사 선정"
+        "titleEn": "Samsung C&T selected as construction company for 738,100,000,000 won scale reconstruction project in Yongho 1 district, Changwon, Gyeongsangnam-do"
       },
       {
         "title": "기막힌 부동산 양극화…상·하위 20% 집값 격차 300배 육박",
@@ -14818,7 +14818,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "성북 장위 9개월 만에 국평 2.7억 올라 상급지 강남 하락세 불구 강북권 급등서울 강북권 아파트 평균 매매가격이 통계 작성 이래 처음으로 12억원을 넘어섰다. 강남권에 이어 강북..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seongbuk.html",
+            "label": "성북구 아파트 84㎡ 매매",
+            "labelEn": "성북구 apartment 84㎡ sale",
+            "value": "11억 4,192만원",
+            "valueEn": "₩1,142M",
+            "note": "최근 1주 계약 148건 · 10/20 대비 +6.3%",
+            "noteEn": "148 deals in the last 1 weeks · +6.3% vs Oct 20"
+          }
+        ],
+        "titleEn": "Now, it's scary to visit Gangbuk for apartment viewings\"… apartment average selling price exceeds 1,200,000,000"
       },
       {
         "title": "李대통령 \"유럽 반면교사로, 지속성장 중요…주택착공 재정지원\"",
@@ -14827,7 +14840,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 임형섭 황윤기 기자 = 이재명 대통령은 27일 \"최근 여러 유럽 국가에서 대규모 시위가 발생하면서 사회적 혼란과 갈등이 빚어지...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "President Says \"Europe as a Lesson, Sustainable Growth Important... Housing Starts to Receive Financial Support"
       },
       {
         "title": "토스뱅크·광주은행, '기업 공동대출 서비스' 개발 업무협약",
@@ -14836,7 +14850,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 이도흔 기자 = 토스뱅크는 26일 여의도 JB금융지주[175330] 사옥에서 광주은행과 함께 '기업 공동대출' 상품 개발·운영...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Toss Bank, Gwangju Bank Sign MOU to Develop Corporate Joint Loan Service"
       },
       {
         "title": "코스피, 장중 4%대 급등에 매수 사이드카 발동",
@@ -14845,7 +14860,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 27일 코스피가 반도체 투심 회복에 4%대 반등세를 보이며 유가증권시장에 프로그램매수호가 일시효력정지(매수 사...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi Surges Over 4% in Midday Trading, Triggering Buy Sidecar"
       },
       {
         "title": "3분기 한국 경제 1.0% '깜짝 성장'…\"4분기 0%여도 연간 3.6%\"(종합)",
@@ -14854,7 +14870,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 한지훈 기자 = 올해 3분기 한국 경제는 반도체 수출과 설비투자 증가세 덕분에 '깜짝 성장'을 이뤘다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "3rd Quarter South Korean Economy Surpasses Expectations with 1.0% Growth...\"Even if 4th Quarter is 0%, Annual Growth Would Be 3.6%\"(Comprehensive)"
       },
       {
         "title": "경기도, 김동연표 '극저신용대출 2.0' 내년 폐지",
@@ -14863,7 +14880,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(수원=연합뉴스) 최찬흥 기자 = 경기도는 전임 김동연 지사 때 시행한 '극저신용대출 2.0' 사업을 내년에 폐지한다고 27일 밝혔다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Gyeonggi Province to Scrap Kim Dong-yeon's \"Ultra-Low Credit Loan 2.0\" Next Year"
       },
       {
         "title": "[게시판] NH농협은행, 최고금리 연 3.9% 예금 2차 특판",
@@ -14872,7 +14890,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "▲ NH농협은행은 최고 연 3.9% 금리를 제공하는 특판예금 'NH올원뱅크 10주년 기념 예금'을 2차 판매한다고 27일 밝혔다. 13일 시작한...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Board] NH Rural Credit Bank Offers Second Special Sale of Deposit with Highest Interest Rate of 3.9% Annually"
       },
       {
         "title": "\"오피스텔 분양가가 11억이라고?\"…아파트값 뛰자 벌어진 일",
@@ -14881,7 +14900,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Office-tel sales price is 1,100,000,000?\"...Rising apartment prices lead to this situation"
       },
       {
         "title": "日증시, 앤트로픽 상장 기대에 상승 출발…닛케이 0.61%↑",
@@ -14890,7 +14910,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 신효령 기자 = 27일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)가 상승 출발했다. 인공지능(AI) 모델 '클로드'를 개발한 앤트로픽(Anthropic)의 상장 기대에 미국 기술주가 오른 영향…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Tokyo Stocks Rise on Antroptic Listing Expectations... Nikkei Up 0.61%"
       },
       {
         "title": "LH, 4분기 과천지식정보타운 등 건설형 임대주택 4663호 공급",
@@ -14899,7 +14920,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "한국토지주택공사(LH)가 연내 과천지식정보타운 등 건설형 임대주택 16개 단지, 4663호에 대한 입주자모집공고를 시행한다. 이 중 76%에 해당하는 3554호가 수도권에 공급된다. 27일 LH에 따르면 4분기 입주…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "LH to supply 4,663 construction-type rental housing units, including Gwacheon Knowledge Information Town, in the fourth quarter"
       },
       {
         "title": "코스피, '앤트로픽 IPO' 훈풍에 4%대 급반등…코스닥도 3%↑(종합)",
@@ -14908,7 +14930,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 27일 코스피와 코스닥이 동반 급등세를 나타내고 있다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi Surges Over 4% on 'Antropic IPO' Windfall... Kosdaq Rises 3% (Comprehensive)"
       },
       {
         "title": "지금 전월셋값 확 올랐는데 “아직 지옥이 아니다”…내후년이 전세난 피크",
@@ -14917,7 +14940,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "서울 24개구 월세 계약 우세 임대차계약서 월세비중 57% 전셋값도 작년 상승률比 4배 정비사업 이주 예정물량 늘며 전세난 2028년까지 이어질듯서울 임대차 시장에서 전세의 월세 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-jeonse.html",
+            "label": "서울 전체 아파트 84㎡ 전세",
+            "labelEn": "Seoul apartment 84㎡ jeonse",
+            "value": "8억 1,337만원",
+            "valueEn": "₩813M",
+            "note": "최근 1주 계약 297건 · 10/20 대비 +1.3%",
+            "noteEn": "297 deals in the last 1 weeks · +1.3% vs Oct 20"
+          }
+        ],
+        "titleEn": "Rents Have Gone Up, But \"It's Not Hell Yet\"... Peak in Rental Crisis Expected in Two Years"
       },
       {
         "title": "LH, 4분기 건설형 임대주택 4천663가구 입주자 모집",
@@ -14926,7 +14962,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(세종=연합뉴스) 오진송 기자 = 한국토지주택공사(LH)는 올해 4분기 전국 16개 단지에서 건설형 임대주택 4천663가구의 입주자를 모집한다고...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "LH to Recruit Residents for 4,663 Construction-Type Rental Housing Units in Q4"
       },
       {
         "title": "\"내 전세금부터 지키자\"…등기부에 권리 새긴 도봉 세입자들",
@@ -14935,7 +14972,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-dobong.html",
+            "label": "도봉구 아파트 84㎡ 전세",
+            "labelEn": "도봉구 apartment 84㎡ jeonse",
+            "value": "4억 7,821만원",
+            "valueEn": "₩478M",
+            "note": "최근 1주 계약 79건 · 10/20 대비 +2.4%",
+            "noteEn": "79 deals in the last 1 weeks · +2.4% vs Oct 20"
+          }
+        ],
+        "titleEn": "Protect My Deposit First\"… Dobong Tenants Engrave Rights on Land Registry"
       },
       {
         "title": "룰라 재선에 브라질 증시 15% 폭락…재정불안 고조",
@@ -14944,7 +14994,8 @@
         "source": "한국경제 경제",
         "category": "stocks",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Brazil's stock market plunges 15% on Lula's re-election... fiscal anxiety rises"
       },
       {
         "title": "3분기 한국경제 1% '깜짝 성장'…연간 3% 달성 유력",
@@ -14953,7 +15004,8 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "3rd Quarter Korean Economy Surpasses Expectations with 1% Growth... Strong Chance of Achieving 3% Annually"
       },
       {
         "title": "\"반도체가 다 먹여살리네\"…후진국도 아닌데 '두자릿수 경제성장'",
@@ -14962,7 +15014,8 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Semiconductors are feeding us\"… Not a developing country, yet 'double-digit economic growth"
       },
       {
         "title": "[밤 사이 해외뉴스] 엔비디아·마이크론이 다 먹었다? 미 증시 폭등 뒤에 숨겨진 AI 거품 경고",
@@ -14971,7 +15024,8 @@
         "source": "한국경제 경제",
         "category": "stocks",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Nighttime Overseas News] Did NVIDIA and Micron Eat It All? AI Bubble Warning Behind US Market Surge"
       },
       {
         "title": "재건축·재개발 ‘물딱지’ 막는다…황희, 실수요자 조합원 지위 허용법 발의",
@@ -14980,7 +15034,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "무주택 실거주자 조합원 자격 예외 신설 근무·결혼·출산 등 불가피한 이주도 인정재건축·재개발 주택을 샀다가 조합원 자격을 인정받지 못해 현금청산 대상이 되는 이른바 ‘물딱지’ 피해..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Hwang Hee to propose law allowing real demanders to join redevelopment projects"
       },
       {
         "title": "유가 하락에 금값 4000달러 회복…Fed 금리 결정 주목",
@@ -14989,7 +15044,8 @@
         "source": "한국경제 경제",
         "category": "rates",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Gold price recovers to $4000 amid falling oil prices...Focus on Fed interest rate decision"
       },
       {
         "title": "\"올해 전월세 시장이 화양연화\"…2027년 전세 매물 기근 가속화 전망",
@@ -14998,7 +15054,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]전민영 인턴 기자 = 서울 지역 아파트 입주 물량 급감과 전세 매물 부족 현상이 맞물리면서 오는 2027년 전월세난이 한층 심화하고 집값 상승세가 수도권 전반으로 확산할 수 있다는 전망이 나왔다. 구독…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-jeonse.html",
+            "label": "서울 전체 아파트 84㎡ 전세",
+            "labelEn": "Seoul apartment 84㎡ jeonse",
+            "value": "8억 1,337만원",
+            "valueEn": "₩813M",
+            "note": "최근 1주 계약 297건 · 10/20 대비 +1.3%",
+            "noteEn": "297 deals in the last 1 weeks · +1.3% vs Oct 20"
+          }
+        ],
+        "titleEn": "Rental Market Blooming This Year\"... Forecasts of Accelerated Short-Term Lease Supply Shortage by 2027"
       },
       {
         "title": "정부는 “하루라도 빨리”… 공공주택 현장은 보상·철거에 발목",
@@ -15007,7 +15076,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "정부가 수도권 주택 공급을 앞당기기 위한 ‘최단기 착공’을 추진하고 있지만, 공공주택 건설사업 기간은 잇따라 연장되고 있다. 토지보상과 지장물 철거, 연약지반 처리 등에 시간이 걸리면서 중소 공공택지와 3기 신도시…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Government urges \"as soon as possible,\" but public housing sites are held back by compensation and demolition"
       },
       {
         "title": "\"5억 대출 월 이자 270~300만원…주담대 8%대 오면 영끌족 비명\"",
@@ -15016,7 +15086,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스]이지우 인턴 기자 = 주택담보대출 금리 상승으로 '영끌족'의 이자 부담이 커지는 가운데, 고금리가 부동산 시장의 하방 압력으로 작용할 수 있다는 전망이 나왔다. 26일 구독자 55만명 유튜브 채널 '경…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "500,000,000 Loan Monthly Interest 270~3,000,000 Won... If Housing Loan Rates Hit 8%, Borrowers in Debt Will Scream"
       },
       {
         "title": "전셋집 못 구해 난리인데…정부 공적 주택 10만호 공급은 언제",
@@ -15025,7 +15096,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 박성환 기자 = 서울 양천구 목동의 한 아파트에 전세로 사는 이모(50)씨는 재계약을 앞두고 집주인으로부터 보증금을 3억원 올려달라는 연락을 받았다. 집주인은 직접 들어와 살 가능성도 내비쳤다. 자녀…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yangcheon.html",
+            "label": "양천구 아파트 84㎡ 전세",
+            "labelEn": "양천구 apartment 84㎡ jeonse",
+            "value": "7억 5,645만원",
+            "valueEn": "₩756M",
+            "note": "최근 1주 계약 153건 · 10/20 대비 +1.3%",
+            "noteEn": "153 deals in the last 1 weeks · +1.3% vs Oct 20"
+          }
+        ],
+        "titleEn": "Rental housing shortage causes chaos... When will the government supply 100,000 public housing units?"
       }
     ]
   }
