@@ -1008,7 +1008,7 @@ function repeatBandsJsx(b) {
 }
 
 // 갈아타기 「25개 구」 아래 가격대·연식별 1년 변화(N4 화면, #676). 글자·칸은 segment-change-view.ts, 두 언어를 굽고 html lang 이 가린다(Bi).
-// 두 축(가격대·연식)은 tbody 둘로 나누고 머리 줄(scope=rowgroup)을 단다. 평균 회귀 한계는 표 바로 아래(#685 판정).
+// 축(가격대·연식, area 가 있으면 면적대 #719)마다 tbody 로 나누고 머리 줄(scope=rowgroup)을 단다. 평균 회귀 한계는 표 바로 아래(#685 판정).
 function segmentChangeJsx(data) {
   const v = segmentChangeView(data);
   if (!v) return null;
@@ -1073,6 +1073,12 @@ function segmentChangeJsx(data) {
           <>
             <br />
             <Bi ko={v.noYear.ko} en={v.noYear.en} />
+          </>
+        ) : null}
+        {v.areaNote ? (
+          <>
+            <br />
+            <Bi ko={v.areaNote.ko} en={v.areaNote.en} />
           </>
         ) : null}
       </p>
