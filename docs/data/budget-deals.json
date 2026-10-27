@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-26T01:07:37.247Z",
+  "updatedAt": "2026-10-27T02:01:35.541Z",
   "periods": [
     "202608",
     "202609",
@@ -9,7 +9,7 @@
     {
       "min10k": 0,
       "max10k": 30000,
-      "count": 618,
+      "count": 631,
       "districts": [
         {
           "name": "동대문구",
@@ -17,22 +17,66 @@
         },
         {
           "name": "구로구",
-          "count": 64
+          "count": 66
         },
         {
           "name": "도봉구",
-          "count": 59
+          "count": 61
         },
         {
           "name": "중랑구",
-          "count": 50
+          "count": 52
         },
         {
           "name": "강동구",
-          "count": 30
+          "count": 32
         }
       ],
       "deals": [
+        {
+          "district": "노원구",
+          "dong": "하계동",
+          "apt": "한신1",
+          "area": 27,
+          "floor": 15,
+          "amount10k": 22500,
+          "date": "2026-10-24",
+          "buildYear": 1988,
+          "direct": true
+        },
+        {
+          "district": "강동구",
+          "dong": "천호동",
+          "apt": "집앤사스윗사이드아파트",
+          "area": 14.02,
+          "floor": 4,
+          "amount10k": 18700,
+          "date": "2026-10-23",
+          "buildYear": 2019,
+          "direct": false
+        },
+        {
+          "district": "은평구",
+          "dong": "대조동",
+          "apt": "주주베에이",
+          "area": 12.77,
+          "floor": 7,
+          "amount10k": 13000,
+          "date": "2026-10-23",
+          "buildYear": 2014,
+          "direct": false
+        },
+        {
+          "district": "금천구",
+          "dong": "가산동",
+          "apt": "가산지웰에스테이트2차",
+          "area": 14.12,
+          "floor": 11,
+          "amount10k": 9500,
+          "date": "2026-10-23",
+          "buildYear": 2018,
+          "direct": false
+        },
         {
           "district": "강동구",
           "dong": "천호동",
@@ -78,12 +122,12 @@
           "direct": false
         },
         {
-          "district": "강동구",
-          "dong": "길동",
-          "apt": "강동큐브(2차)",
-          "area": 15.12,
-          "floor": 6,
-          "amount10k": 9500,
+          "district": "관악구",
+          "dong": "봉천동",
+          "apt": "프라비다2",
+          "area": 24.11,
+          "floor": 10,
+          "amount10k": 18700,
           "date": "2026-10-21",
           "buildYear": 2013,
           "direct": false
@@ -111,63 +155,19 @@
           "direct": false
         },
         {
-          "district": "동대문구",
-          "dong": "답십리동",
-          "apt": "보광타워",
-          "area": 16.13,
-          "floor": 11,
-          "amount10k": 14500,
-          "date": "2026-10-19",
-          "buildYear": 2019,
-          "direct": false
-        },
-        {
-          "district": "영등포구",
-          "dong": "대림동",
-          "apt": "G밸리소홈",
-          "area": 16.1,
-          "floor": 16,
-          "amount10k": 13000,
-          "date": "2026-10-19",
-          "buildYear": 2018,
-          "direct": false
-        },
-        {
-          "district": "양천구",
-          "dong": "신정동",
-          "apt": "목동경동미르웰",
-          "area": 14.02,
-          "floor": 8,
-          "amount10k": 12900,
-          "date": "2026-10-19",
-          "buildYear": 2017,
-          "direct": false
-        },
-        {
-          "district": "도봉구",
-          "dong": "방학동",
-          "apt": "방학지음재힐스",
-          "area": 14.86,
-          "floor": 7,
-          "amount10k": 11600,
-          "date": "2026-10-19",
-          "buildYear": 2018,
-          "direct": false
-        },
-        {
-          "district": "종로구",
-          "dong": "숭인동",
-          "apt": "버넷하임1",
-          "area": 17.93,
-          "floor": 13,
-          "amount10k": 11000,
-          "date": "2026-10-19",
-          "buildYear": 2013,
+          "district": "구로구",
+          "dong": "구로동",
+          "apt": "로제리움2차",
+          "area": 14.91,
+          "floor": 18,
+          "amount10k": 8400,
+          "date": "2026-10-20",
+          "buildYear": 2014,
           "direct": false
         }
       ],
       "facts": {
-        "total": 618,
+        "total": 631,
         "span": {
           "min": {
             "district": "영등포구",
@@ -190,38 +190,38 @@
           "max": 90
         },
         "smallHeavy": {
-          "share": 0.9951456310679612
+          "share": 0.9952456418383518
         },
         "fresh": {
-          "share": 0.5355987055016181,
+          "share": 0.5245641838351822,
           "years": 5
         },
         "directHeavy": {
-          "share": 0.5711974110032363
+          "share": 0.561014263074485
         }
       },
-      "direct": 353
+      "direct": 354
     },
     {
       "min10k": 30000,
       "max10k": 40000,
-      "count": 378,
+      "count": 387,
       "districts": [
         {
           "name": "도봉구",
-          "count": 165
+          "count": 169
         },
         {
           "name": "강서구",
-          "count": 105
+          "count": 107
         },
         {
           "name": "노원구",
-          "count": 84
+          "count": 88
         },
         {
           "name": "중랑구",
-          "count": 51
+          "count": 53
         },
         {
           "name": "구로구",
@@ -229,6 +229,39 @@
         }
       ],
       "deals": [
+        {
+          "district": "중랑구",
+          "dong": "신내동",
+          "apt": "신내9진흥",
+          "area": 33.18,
+          "floor": 9,
+          "amount10k": 34700,
+          "date": "2026-10-24",
+          "buildYear": 1996,
+          "direct": false
+        },
+        {
+          "district": "도봉구",
+          "dong": "도봉동",
+          "apt": "유원도봉",
+          "area": 84.93,
+          "floor": 2,
+          "amount10k": 36000,
+          "date": "2026-10-23",
+          "buildYear": 1990,
+          "direct": false
+        },
+        {
+          "district": "관악구",
+          "dong": "봉천동",
+          "apt": "서울대역마에스트로",
+          "area": 41.16,
+          "floor": 20,
+          "amount10k": 31500,
+          "date": "2026-10-21",
+          "buildYear": 2012,
+          "direct": false
+        },
         {
           "district": "도봉구",
           "dong": "쌍문동",
@@ -252,17 +285,6 @@
           "direct": false
         },
         {
-          "district": "중랑구",
-          "dong": "신내동",
-          "apt": "신내9진흥",
-          "area": 33.18,
-          "floor": 3,
-          "amount10k": 30000,
-          "date": "2026-10-21",
-          "buildYear": 1996,
-          "direct": false
-        },
-        {
           "district": "관악구",
           "dong": "신림동",
           "apt": "초원",
@@ -275,13 +297,13 @@
         },
         {
           "district": "도봉구",
-          "dong": "창동",
-          "apt": "신창",
-          "area": 49.77,
-          "floor": 14,
-          "amount10k": 39000,
-          "date": "2026-10-19",
-          "buildYear": 1998,
+          "dong": "방학동",
+          "apt": "삼익세라믹아파트",
+          "area": 58.77,
+          "floor": 2,
+          "amount10k": 36000,
+          "date": "2026-10-20",
+          "buildYear": 1988,
           "direct": false
         },
         {
@@ -329,41 +351,19 @@
           "direct": false
         },
         {
-          "district": "강서구",
-          "dong": "방화동",
-          "apt": "방화그린",
-          "area": 33.6,
-          "floor": 1,
-          "amount10k": 38800,
-          "date": "2026-10-16",
-          "buildYear": 1993,
-          "direct": false
-        },
-        {
-          "district": "은평구",
-          "dong": "불광동",
-          "apt": "연신내역트리플라101동",
-          "area": 29.84,
-          "floor": 5,
-          "amount10k": 36800,
-          "date": "2026-10-16",
-          "buildYear": 2021,
-          "direct": true
-        },
-        {
-          "district": "도봉구",
-          "dong": "쌍문동",
-          "apt": "삼익세라믹",
-          "area": 42.93,
-          "floor": 4,
-          "amount10k": 36800,
-          "date": "2026-10-15",
-          "buildYear": 1988,
+          "district": "마포구",
+          "dong": "노고산동",
+          "apt": "현대벤처빌",
+          "area": 41.96,
+          "floor": 9,
+          "amount10k": 31500,
+          "date": "2026-10-17",
+          "buildYear": 2002,
           "direct": false
         }
       ],
       "facts": {
-        "total": 378,
+        "total": 387,
         "span": {
           "min": {
             "district": "영등포구",
@@ -373,27 +373,27 @@
             "amount10k": 32000
           },
           "max": {
-            "district": "성북구",
-            "dong": "정릉동",
-            "apt": "스카이아파트",
-            "area": 84.66,
-            "amount10k": 32000
+            "district": "도봉구",
+            "dong": "도봉동",
+            "apt": "유원도봉",
+            "area": 84.93,
+            "amount10k": 36000
           }
         },
         "standard": {
-          "count": 5,
+          "count": 6,
           "min": 80,
           "max": 90
         },
         "smallHeavy": {
-          "share": 0.9497354497354498
+          "share": 0.9483204134366925
         },
         "old": {
-          "share": 0.4126984126984127,
+          "share": 0.4134366925064599,
           "years": 30
         },
         "directHeavy": {
-          "share": 0.28835978835978837
+          "share": 0.28165374677002586
         }
       },
       "direct": 109
@@ -401,7 +401,7 @@
     {
       "min10k": 40000,
       "max10k": 50000,
-      "count": 720,
+      "count": 735,
       "districts": [
         {
           "name": "송파구",
@@ -409,22 +409,66 @@
         },
         {
           "name": "도봉구",
-          "count": 192
+          "count": 198
         },
         {
           "name": "노원구",
-          "count": 153
+          "count": 157
         },
         {
           "name": "동대문구",
           "count": 73
         },
         {
-          "name": "은평구",
-          "count": 60
+          "name": "금천구",
+          "count": 65
         }
       ],
       "deals": [
+        {
+          "district": "도봉구",
+          "dong": "도봉동",
+          "apt": "서원",
+          "area": 49.77,
+          "floor": 17,
+          "amount10k": 43000,
+          "date": "2026-10-25",
+          "buildYear": 1996,
+          "direct": false
+        },
+        {
+          "district": "중랑구",
+          "dong": "중화동",
+          "apt": "중화동건영아파트",
+          "area": 59.85,
+          "floor": 9,
+          "amount10k": 47000,
+          "date": "2026-10-24",
+          "buildYear": 1998,
+          "direct": false
+        },
+        {
+          "district": "양천구",
+          "dong": "신정동",
+          "apt": "푸른마을3",
+          "area": 59.91,
+          "floor": 15,
+          "amount10k": 44000,
+          "date": "2026-10-24",
+          "buildYear": 2001,
+          "direct": true
+        },
+        {
+          "district": "중랑구",
+          "dong": "신내동",
+          "apt": "신내9진흥",
+          "area": 39.84,
+          "floor": 1,
+          "amount10k": 40000,
+          "date": "2026-10-24",
+          "buildYear": 1996,
+          "direct": false
+        },
         {
           "district": "중랑구",
           "dong": "신내동",
@@ -437,6 +481,17 @@
           "direct": true
         },
         {
+          "district": "도봉구",
+          "dong": "방학동",
+          "apt": "벽산아파트1",
+          "area": 63.38,
+          "floor": 5,
+          "amount10k": 46700,
+          "date": "2026-10-22",
+          "buildYear": 1991,
+          "direct": false
+        },
+        {
           "district": "영등포구",
           "dong": "영등포동2가",
           "apt": "현대팰리스",
@@ -445,17 +500,6 @@
           "amount10k": 47000,
           "date": "2026-10-21",
           "buildYear": 2016,
-          "direct": false
-        },
-        {
-          "district": "중랑구",
-          "dong": "망우동",
-          "apt": "백림금호",
-          "area": 59.99,
-          "floor": 20,
-          "amount10k": 49500,
-          "date": "2026-10-20",
-          "buildYear": 2000,
           "direct": false
         },
         {
@@ -481,6 +525,17 @@
           "direct": false
         },
         {
+          "district": "금천구",
+          "dong": "시흥동",
+          "apt": "시흥목련",
+          "area": 59.21,
+          "floor": 1,
+          "amount10k": 47800,
+          "date": "2026-10-19",
+          "buildYear": 1996,
+          "direct": false
+        },
+        {
           "district": "도봉구",
           "dong": "방학동",
           "apt": "성원아파트",
@@ -501,65 +556,10 @@
           "date": "2026-10-19",
           "buildYear": 1999,
           "direct": true
-        },
-        {
-          "district": "양천구",
-          "dong": "신월동",
-          "apt": "청송그린힐",
-          "area": 69.26,
-          "floor": 2,
-          "amount10k": 41000,
-          "date": "2026-10-19",
-          "buildYear": 2003,
-          "direct": false
-        },
-        {
-          "district": "도봉구",
-          "dong": "도봉동",
-          "apt": "서원",
-          "area": 59.76,
-          "floor": 4,
-          "amount10k": 49500,
-          "date": "2026-10-18",
-          "buildYear": 1996,
-          "direct": false
-        },
-        {
-          "district": "관악구",
-          "dong": "신림동",
-          "apt": "CLOUDAPT",
-          "area": 46.7,
-          "floor": 7,
-          "amount10k": 46500,
-          "date": "2026-10-17",
-          "buildYear": 2017,
-          "direct": false
-        },
-        {
-          "district": "관악구",
-          "dong": "신림동",
-          "apt": "건영1",
-          "area": 41.04,
-          "floor": 4,
-          "amount10k": 44500,
-          "date": "2026-10-17",
-          "buildYear": 1984,
-          "direct": false
-        },
-        {
-          "district": "노원구",
-          "dong": "상계동",
-          "apt": "북부현대",
-          "area": 59.24,
-          "floor": 9,
-          "amount10k": 42000,
-          "date": "2026-10-17",
-          "buildYear": 1996,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 720,
+        "total": 735,
         "span": {
           "min": {
             "district": "송파구",
@@ -601,26 +601,26 @@
           "districtCount": 13
         },
         "smallHeavy": {
-          "share": 0.8138888888888889
+          "share": 0.8122448979591836
         },
         "old": {
-          "share": 0.4041666666666667,
+          "share": 0.4054421768707483,
           "years": 30
         },
         "directHeavy": {
-          "share": 0.30833333333333335
+          "share": 0.3047619047619048
         }
       },
-      "direct": 222
+      "direct": 224
     },
     {
       "min10k": 50000,
       "max10k": 60000,
-      "count": 699,
+      "count": 715,
       "districts": [
         {
           "name": "노원구",
-          "count": 242
+          "count": 254
         },
         {
           "name": "도봉구",
@@ -628,7 +628,7 @@
         },
         {
           "name": "강서구",
-          "count": 94
+          "count": 96
         },
         {
           "name": "구로구",
@@ -636,10 +636,54 @@
         },
         {
           "name": "은평구",
-          "count": 69
+          "count": 73
         }
       ],
       "deals": [
+        {
+          "district": "노원구",
+          "dong": "상계동",
+          "apt": "상계주공4(고층)",
+          "area": 41.3,
+          "floor": 11,
+          "amount10k": 57700,
+          "date": "2026-10-24",
+          "buildYear": 1988,
+          "direct": false
+        },
+        {
+          "district": "관악구",
+          "dong": "신림동",
+          "apt": "금호(1차)",
+          "area": 84.96,
+          "floor": 7,
+          "amount10k": 54000,
+          "date": "2026-10-24",
+          "buildYear": 1997,
+          "direct": false
+        },
+        {
+          "district": "중랑구",
+          "dong": "묵동",
+          "apt": "신내",
+          "area": 39.84,
+          "floor": 10,
+          "amount10k": 52000,
+          "date": "2026-10-24",
+          "buildYear": 1996,
+          "direct": false
+        },
+        {
+          "district": "강서구",
+          "dong": "방화동",
+          "apt": "방화그린",
+          "area": 39.76,
+          "floor": 10,
+          "amount10k": 59700,
+          "date": "2026-10-21",
+          "buildYear": 1993,
+          "direct": false
+        },
         {
           "district": "서대문구",
           "dong": "홍은동",
@@ -718,63 +762,19 @@
           "direct": false
         },
         {
-          "district": "구로구",
-          "dong": "오류동",
-          "apt": "금강",
-          "area": 84.96,
-          "floor": 15,
-          "amount10k": 57700,
-          "date": "2026-10-17",
-          "buildYear": 1996,
-          "direct": false
-        },
-        {
-          "district": "강서구",
-          "dong": "방화동",
-          "apt": "방화그린",
-          "area": 49.77,
-          "floor": 1,
-          "amount10k": 56300,
-          "date": "2026-10-17",
-          "buildYear": 1993,
-          "direct": false
-        },
-        {
           "district": "금천구",
           "dong": "시흥동",
-          "apt": "백운한비치",
-          "area": 73.92,
-          "floor": 13,
-          "amount10k": 54000,
+          "apt": "벽산",
+          "area": 84.99,
+          "floor": 19,
+          "amount10k": 58000,
           "date": "2026-10-17",
-          "buildYear": 2003,
+          "buildYear": 2000,
           "direct": false
-        },
-        {
-          "district": "송파구",
-          "dong": "방이동",
-          "apt": "몽촌(아)",
-          "area": 56.64,
-          "floor": 2,
-          "amount10k": 52500,
-          "date": "2026-10-17",
-          "buildYear": 2007,
-          "direct": false
-        },
-        {
-          "district": "은평구",
-          "dong": "진관동",
-          "apt": "힐데스하임",
-          "area": 40.63,
-          "floor": 8,
-          "amount10k": 51000,
-          "date": "2026-10-17",
-          "buildYear": 2017,
-          "direct": true
         }
       ],
       "facts": {
-        "total": 699,
+        "total": 715,
         "span": {
           "min": {
             "district": "서초구",
@@ -792,7 +792,7 @@
           }
         },
         "standard": {
-          "count": 189,
+          "count": 194,
           "min": 80,
           "max": 90,
           "districts": [
@@ -802,24 +802,24 @@
             },
             {
               "name": "금천구",
-              "count": 20
-            },
-            {
-              "name": "구로구",
-              "count": 16
+              "count": 23
             },
             {
               "name": "은평구",
+              "count": 17
+            },
+            {
+              "name": "구로구",
               "count": 16
             }
           ],
           "districtCount": 15
         },
         "smallHeavy": {
-          "share": 0.5994277539341917
+          "share": 0.6
         },
         "old": {
-          "share": 0.4792560801144492,
+          "share": 0.4783216783216783,
           "years": 30
         }
       },
@@ -828,50 +828,138 @@
     {
       "min10k": 60000,
       "max10k": 70000,
-      "count": 819,
+      "count": 849,
       "districts": [
         {
           "name": "노원구",
-          "count": 274
+          "count": 286
         },
         {
           "name": "은평구",
-          "count": 179
+          "count": 181
         },
         {
           "name": "도봉구",
-          "count": 131
+          "count": 135
         },
         {
           "name": "구로구",
-          "count": 115
+          "count": 119
         },
         {
-          "name": "강서구",
-          "count": 97
+          "name": "중랑구",
+          "count": 107
         }
       ],
       "deals": [
         {
           "district": "중랑구",
-          "dong": "면목동",
-          "apt": "면목한신",
-          "area": 58.46,
-          "floor": 15,
-          "amount10k": 65500,
-          "date": "2026-10-20",
-          "buildYear": 1987,
+          "dong": "신내동",
+          "apt": "신내11대명",
+          "area": 49.77,
+          "floor": 11,
+          "amount10k": 65000,
+          "date": "2026-10-25",
+          "buildYear": 1996,
+          "direct": false
+        },
+        {
+          "district": "중랑구",
+          "dong": "묵동",
+          "apt": "신안1",
+          "area": 59.96,
+          "floor": 16,
+          "amount10k": 62000,
+          "date": "2026-10-24",
+          "buildYear": 1999,
+          "direct": false
+        },
+        {
+          "district": "강서구",
+          "dong": "공항동",
+          "apt": "더트루엘마곡HQ",
+          "area": 48.33,
+          "floor": 14,
+          "amount10k": 69900,
+          "date": "2026-10-23",
+          "buildYear": 2024,
+          "direct": true
+        },
+        {
+          "district": "관악구",
+          "dong": "신림동",
+          "apt": "서초",
+          "area": 77.2,
+          "floor": 4,
+          "amount10k": 62000,
+          "date": "2026-10-23",
+          "buildYear": 2003,
           "direct": false
         },
         {
           "district": "중랑구",
           "dong": "묵동",
           "apt": "신내",
-          "area": 59.76,
-          "floor": 1,
-          "amount10k": 65000,
-          "date": "2026-10-20",
+          "area": 49.77,
+          "floor": 7,
+          "amount10k": 61700,
+          "date": "2026-10-23",
           "buildYear": 1996,
+          "direct": false
+        },
+        {
+          "district": "구로구",
+          "dong": "오류동",
+          "apt": "한신플러스타운",
+          "area": 114.78,
+          "floor": 5,
+          "amount10k": 69000,
+          "date": "2026-10-22",
+          "buildYear": 2002,
+          "direct": false
+        },
+        {
+          "district": "구로구",
+          "dong": "고척동",
+          "apt": "청구",
+          "area": 59.94,
+          "floor": 10,
+          "amount10k": 63000,
+          "date": "2026-10-22",
+          "buildYear": 1999,
+          "direct": false
+        },
+        {
+          "district": "노원구",
+          "dong": "상계동",
+          "apt": "상계주공14(고층)",
+          "area": 49.94,
+          "floor": 15,
+          "amount10k": 60600,
+          "date": "2026-10-22",
+          "buildYear": 1989,
+          "direct": false
+        },
+        {
+          "district": "양천구",
+          "dong": "신월동",
+          "apt": "양천벽산블루밍2단지",
+          "area": 59.99,
+          "floor": 2,
+          "amount10k": 63000,
+          "date": "2026-10-21",
+          "buildYear": 2006,
+          "direct": false
+        },
+        {
+          "district": "강서구",
+          "dong": "방화동",
+          "apt": "방화5",
+          "area": 39.6,
+          "floor": 4,
+          "amount10k": 60000,
+          "date": "2026-10-21",
+          "buildYear": 1994,
           "direct": false
         },
         {
@@ -895,98 +983,10 @@
           "date": "2026-10-19",
           "buildYear": 1993,
           "direct": true
-        },
-        {
-          "district": "강서구",
-          "dong": "화곡동",
-          "apt": "유림노르웨이숲(919-1)",
-          "area": 76.23,
-          "floor": 8,
-          "amount10k": 61000,
-          "date": "2026-10-19",
-          "buildYear": 2004,
-          "direct": false
-        },
-        {
-          "district": "강서구",
-          "dong": "공항동",
-          "apt": "더트루엘마곡HQ",
-          "area": 48.33,
-          "floor": 6,
-          "amount10k": 65000,
-          "date": "2026-10-18",
-          "buildYear": 2024,
-          "direct": true
-        },
-        {
-          "district": "관악구",
-          "dong": "신림동",
-          "apt": "웰피아",
-          "area": 84.78,
-          "floor": 5,
-          "amount10k": 64500,
-          "date": "2026-10-18",
-          "buildYear": 2004,
-          "direct": false
-        },
-        {
-          "district": "성북구",
-          "dong": "정릉동",
-          "apt": "정릉풍림아이원",
-          "area": 59.88,
-          "floor": 12,
-          "amount10k": 68000,
-          "date": "2026-10-17",
-          "buildYear": 2005,
-          "direct": false
-        },
-        {
-          "district": "관악구",
-          "dong": "신림동",
-          "apt": "금호2",
-          "area": 59.96,
-          "floor": 7,
-          "amount10k": 66500,
-          "date": "2026-10-17",
-          "buildYear": 1998,
-          "direct": false
-        },
-        {
-          "district": "중랑구",
-          "dong": "면목동",
-          "apt": "용마한신",
-          "area": 59.22,
-          "floor": 12,
-          "amount10k": 65500,
-          "date": "2026-10-17",
-          "buildYear": 1990,
-          "direct": false
-        },
-        {
-          "district": "양천구",
-          "dong": "신월동",
-          "apt": "삼익플라주",
-          "area": 84.74,
-          "floor": 10,
-          "amount10k": 64000,
-          "date": "2026-10-17",
-          "buildYear": 2006,
-          "direct": false
-        },
-        {
-          "district": "강동구",
-          "dong": "성내동",
-          "apt": "늘조은",
-          "area": 63,
-          "floor": 8,
-          "amount10k": 68700,
-          "date": "2026-10-16",
-          "buildYear": 2003,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 819,
+        "total": 849,
         "span": {
           "min": {
             "district": "송파구",
@@ -1004,7 +1004,7 @@
           }
         },
         "standard": {
-          "count": 233,
+          "count": 238,
           "min": 80,
           "max": 90,
           "districts": [
@@ -1014,52 +1014,52 @@
             },
             {
               "name": "노원구",
-              "count": 41
-            },
-            {
-              "name": "강북구",
-              "count": 18
+              "count": 44
             },
             {
               "name": "은평구",
+              "count": 19
+            },
+            {
+              "name": "강북구",
               "count": 18
             }
           ],
           "districtCount": 18
         },
         "smallHeavy": {
-          "share": 0.5921855921855922
+          "share": 0.5936395759717314
         },
         "old": {
-          "share": 0.35775335775335776,
+          "share": 0.35924617196702,
           "years": 30
         },
         "directHeavy": {
-          "share": 0.1221001221001221
+          "share": 0.11896348645465253
         }
       },
-      "direct": 100
+      "direct": 101
     },
     {
       "min10k": 70000,
       "max10k": 80000,
-      "count": 739,
+      "count": 760,
       "districts": [
         {
           "name": "노원구",
-          "count": 226
+          "count": 236
         },
         {
           "name": "구로구",
-          "count": 146
+          "count": 150
         },
         {
           "name": "중랑구",
-          "count": 104
+          "count": 110
         },
         {
           "name": "강서구",
-          "count": 93
+          "count": 95
         },
         {
           "name": "성북구",
@@ -1067,6 +1067,28 @@
         }
       ],
       "deals": [
+        {
+          "district": "관악구",
+          "dong": "신림동",
+          "apt": "신림현대",
+          "area": 59.85,
+          "floor": 9,
+          "amount10k": 75000,
+          "date": "2026-10-24",
+          "buildYear": 1993,
+          "direct": false
+        },
+        {
+          "district": "관악구",
+          "dong": "신림동",
+          "apt": "관악산휴먼시아2단지",
+          "area": 59.99,
+          "floor": 17,
+          "amount10k": 73500,
+          "date": "2026-10-24",
+          "buildYear": 2008,
+          "direct": false
+        },
         {
           "district": "금천구",
           "dong": "가산동",
@@ -1076,6 +1098,28 @@
           "amount10k": 79500,
           "date": "2026-10-22",
           "buildYear": 1998,
+          "direct": false
+        },
+        {
+          "district": "금천구",
+          "dong": "독산동",
+          "apt": "독산동한양수자인",
+          "area": 68.16,
+          "floor": 5,
+          "amount10k": 75000,
+          "date": "2026-10-22",
+          "buildYear": 2011,
+          "direct": false
+        },
+        {
+          "district": "은평구",
+          "dong": "불광동",
+          "apt": "대호프라자아파트",
+          "area": 84.64,
+          "floor": 6,
+          "amount10k": 74300,
+          "date": "2026-10-22",
+          "buildYear": 2000,
           "direct": false
         },
         {
@@ -1154,54 +1198,10 @@
           "date": "2026-10-20",
           "buildYear": 2001,
           "direct": false
-        },
-        {
-          "district": "영등포구",
-          "dong": "신길동",
-          "apt": "신길AK푸르지오",
-          "area": 49.47,
-          "floor": 24,
-          "amount10k": 78000,
-          "date": "2026-10-19",
-          "buildYear": 2024,
-          "direct": false
-        },
-        {
-          "district": "노원구",
-          "dong": "공릉동",
-          "apt": "테라파크뷰",
-          "area": 54,
-          "floor": 11,
-          "amount10k": 77000,
-          "date": "2026-10-19",
-          "buildYear": 2022,
-          "direct": true
-        },
-        {
-          "district": "노원구",
-          "dong": "상계동",
-          "apt": "수락산벨리체",
-          "area": 114.92,
-          "floor": 3,
-          "amount10k": 76000,
-          "date": "2026-10-19",
-          "buildYear": 2000,
-          "direct": true
-        },
-        {
-          "district": "영등포구",
-          "dong": "대림동",
-          "apt": "영등포자이르네",
-          "area": 49.01,
-          "floor": 6,
-          "amount10k": 75000,
-          "date": "2026-10-19",
-          "buildYear": 2022,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 739,
+        "total": 760,
         "span": {
           "min": {
             "district": "송파구",
@@ -1219,17 +1219,17 @@
           }
         },
         "standard": {
-          "count": 290,
+          "count": 295,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "노원구",
-              "count": 39
+              "count": 41
             },
             {
               "name": "중랑구",
-              "count": 38
+              "count": 39
             },
             {
               "name": "구로구",
@@ -1243,7 +1243,7 @@
           "districtCount": 19
         },
         "old": {
-          "share": 0.35182679296346414,
+          "share": 0.35,
           "years": 30
         }
       },
@@ -1252,30 +1252,41 @@
     {
       "min10k": 80000,
       "max10k": 90000,
-      "count": 672,
+      "count": 689,
       "districts": [
         {
           "name": "노원구",
-          "count": 175
+          "count": 181
         },
         {
           "name": "강서구",
-          "count": 102
+          "count": 104
         },
         {
           "name": "성북구",
-          "count": 93
-        },
-        {
-          "name": "중랑구",
-          "count": 88
+          "count": 95
         },
         {
           "name": "구로구",
-          "count": 87
+          "count": 91
+        },
+        {
+          "name": "중랑구",
+          "count": 90
         }
       ],
       "deals": [
+        {
+          "district": "은평구",
+          "dong": "수색동",
+          "apt": "DMC 진흥",
+          "area": 57.5,
+          "floor": 10,
+          "amount10k": 80000,
+          "date": "2026-10-23",
+          "buildYear": 2003,
+          "direct": false
+        },
         {
           "district": "강북구",
           "dong": "미아동",
@@ -1296,6 +1307,28 @@
           "amount10k": 87500,
           "date": "2026-10-22",
           "buildYear": 2003,
+          "direct": false
+        },
+        {
+          "district": "은평구",
+          "dong": "역촌동",
+          "apt": "역촌센트레빌",
+          "area": 84.89,
+          "floor": 14,
+          "amount10k": 85000,
+          "date": "2026-10-22",
+          "buildYear": 2011,
+          "direct": false
+        },
+        {
+          "district": "동대문구",
+          "dong": "용두동",
+          "apt": "신동아",
+          "area": 49.68,
+          "floor": 13,
+          "amount10k": 82000,
+          "date": "2026-10-22",
+          "buildYear": 1994,
           "direct": false
         },
         {
@@ -1354,6 +1387,17 @@
           "direct": false
         },
         {
+          "district": "구로구",
+          "dong": "개봉동",
+          "apt": "삼호",
+          "area": 84.88,
+          "floor": 16,
+          "amount10k": 84000,
+          "date": "2026-10-17",
+          "buildYear": 1996,
+          "direct": false
+        },
+        {
           "district": "도봉구",
           "dong": "창동",
           "apt": "쌍용",
@@ -1363,54 +1407,10 @@
           "date": "2026-10-17",
           "buildYear": 1997,
           "direct": false
-        },
-        {
-          "district": "강서구",
-          "dong": "가양동",
-          "apt": "강변",
-          "area": 34.44,
-          "floor": 5,
-          "amount10k": 82000,
-          "date": "2026-10-17",
-          "buildYear": 1992,
-          "direct": false
-        },
-        {
-          "district": "관악구",
-          "dong": "봉천동",
-          "apt": "서희스타힐스",
-          "area": 59.92,
-          "floor": 8,
-          "amount10k": 82500,
-          "date": "2026-10-16",
-          "buildYear": 2015,
-          "direct": false
-        },
-        {
-          "district": "강서구",
-          "dong": "염창동",
-          "apt": "삼현팰리채",
-          "area": 84.62,
-          "floor": 3,
-          "amount10k": 81000,
-          "date": "2026-10-16",
-          "buildYear": 2008,
-          "direct": false
-        },
-        {
-          "district": "마포구",
-          "dong": "연남동",
-          "apt": "대명",
-          "area": 59.99,
-          "floor": 4,
-          "amount10k": 89500,
-          "date": "2026-10-15",
-          "buildYear": 1995,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 672,
+        "total": 689,
         "span": {
           "min": {
             "district": "송파구",
@@ -1428,13 +1428,13 @@
           }
         },
         "standard": {
-          "count": 271,
+          "count": 279,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "노원구",
-              "count": 43
+              "count": 45
             },
             {
               "name": "중랑구",
@@ -1442,7 +1442,7 @@
             },
             {
               "name": "구로구",
-              "count": 32
+              "count": 34
             },
             {
               "name": "성북구",
@@ -1457,19 +1457,19 @@
     {
       "min10k": 90000,
       "max10k": 100000,
-      "count": 469,
+      "count": 490,
       "districts": [
+        {
+          "name": "노원구",
+          "count": 96
+        },
         {
           "name": "은평구",
           "count": 93
         },
         {
-          "name": "노원구",
-          "count": 86
-        },
-        {
           "name": "성북구",
-          "count": 71
+          "count": 73
         },
         {
           "name": "도봉구",
@@ -1482,6 +1482,28 @@
       ],
       "deals": [
         {
+          "district": "중랑구",
+          "dong": "면목동",
+          "apt": "경남아너스빌",
+          "area": 59.98,
+          "floor": 12,
+          "amount10k": 92000,
+          "date": "2026-10-26",
+          "buildYear": 2006,
+          "direct": false
+        },
+        {
+          "district": "강북구",
+          "dong": "수유동",
+          "apt": "래미안수유",
+          "area": 114.78,
+          "floor": 7,
+          "amount10k": 91500,
+          "date": "2026-10-26",
+          "buildYear": 2001,
+          "direct": false
+        },
+        {
           "district": "동대문구",
           "dong": "휘경동",
           "apt": "동일스위트리버",
@@ -1491,6 +1513,17 @@
           "date": "2026-10-23",
           "buildYear": 2007,
           "direct": true
+        },
+        {
+          "district": "중랑구",
+          "dong": "면목동",
+          "apt": "두산4",
+          "area": 84.87,
+          "floor": 6,
+          "amount10k": 90000,
+          "date": "2026-10-23",
+          "buildYear": 2000,
+          "direct": false
         },
         {
           "district": "강동구",
@@ -1504,6 +1537,17 @@
           "direct": false
         },
         {
+          "district": "동작구",
+          "dong": "신대방동",
+          "apt": "벽산",
+          "area": 59.76,
+          "floor": 9,
+          "amount10k": 95800,
+          "date": "2026-10-22",
+          "buildYear": 1997,
+          "direct": false
+        },
+        {
           "district": "노원구",
           "dong": "중계동",
           "apt": "삼성",
@@ -1512,6 +1556,17 @@
           "amount10k": 93000,
           "date": "2026-10-22",
           "buildYear": 1999,
+          "direct": false
+        },
+        {
+          "district": "동대문구",
+          "dong": "답십리동",
+          "apt": "동답한신",
+          "area": 96.4,
+          "floor": 8,
+          "amount10k": 90000,
+          "date": "2026-10-22",
+          "buildYear": 1992,
           "direct": false
         },
         {
@@ -1557,65 +1612,10 @@
           "date": "2026-10-17",
           "buildYear": 2001,
           "direct": false
-        },
-        {
-          "district": "도봉구",
-          "dong": "창동",
-          "apt": "금호어울림",
-          "area": 84.99,
-          "floor": 4,
-          "amount10k": 93500,
-          "date": "2026-10-17",
-          "buildYear": 2004,
-          "direct": false
-        },
-        {
-          "district": "도봉구",
-          "dong": "창동",
-          "apt": "창동현대4차",
-          "area": 102,
-          "floor": 1,
-          "amount10k": 92900,
-          "date": "2026-10-17",
-          "buildYear": 2003,
-          "direct": false
-        },
-        {
-          "district": "동작구",
-          "dong": "신대방동",
-          "apt": "벽산",
-          "area": 59.76,
-          "floor": 7,
-          "amount10k": 90000,
-          "date": "2026-10-16",
-          "buildYear": 1997,
-          "direct": false
-        },
-        {
-          "district": "서대문구",
-          "dong": "북가좌동",
-          "apt": "월드컵현대",
-          "area": 59.76,
-          "floor": 9,
-          "amount10k": 95000,
-          "date": "2026-10-15",
-          "buildYear": 1998,
-          "direct": false
-        },
-        {
-          "district": "동대문구",
-          "dong": "이문동",
-          "apt": "삼익",
-          "area": 84.95,
-          "floor": 4,
-          "amount10k": 94000,
-          "date": "2026-10-15",
-          "buildYear": 1997,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 469,
+        "total": 490,
         "span": {
           "min": {
             "district": "종로구",
@@ -1633,13 +1633,13 @@
           }
         },
         "standard": {
-          "count": 211,
+          "count": 222,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "노원구",
-              "count": 31
+              "count": 33
             },
             {
               "name": "은평구",
@@ -1650,8 +1650,8 @@
               "count": 17
             },
             {
-              "name": "구로구",
-              "count": 15
+              "name": "중랑구",
+              "count": 16
             }
           ],
           "districtCount": 24
@@ -1662,15 +1662,15 @@
     {
       "min10k": 100000,
       "max10k": 110000,
-      "count": 465,
+      "count": 481,
       "districts": [
         {
           "name": "강서구",
-          "count": 77
+          "count": 81
         },
         {
           "name": "노원구",
-          "count": 76
+          "count": 78
         },
         {
           "name": "은평구",
@@ -1678,14 +1678,102 @@
         },
         {
           "name": "성북구",
-          "count": 60
+          "count": 62
         },
         {
           "name": "동대문구",
-          "count": 50
+          "count": 52
         }
       ],
       "deals": [
+        {
+          "district": "종로구",
+          "dong": "충신동",
+          "apt": "힐스테이트창경궁",
+          "area": 63.09,
+          "floor": 6,
+          "amount10k": 100000,
+          "date": "2026-10-26",
+          "buildYear": 2022,
+          "direct": true
+        },
+        {
+          "district": "강서구",
+          "dong": "염창동",
+          "apt": "월드메르디앙",
+          "area": 59.81,
+          "floor": 6,
+          "amount10k": 109500,
+          "date": "2026-10-24",
+          "buildYear": 2004,
+          "direct": false
+        },
+        {
+          "district": "중랑구",
+          "dong": "면목동",
+          "apt": "두산5",
+          "area": 134.7,
+          "floor": 7,
+          "amount10k": 104000,
+          "date": "2026-10-24",
+          "buildYear": 2000,
+          "direct": false
+        },
+        {
+          "district": "노원구",
+          "dong": "중계동",
+          "apt": "삼성",
+          "area": 114.49,
+          "floor": 16,
+          "amount10k": 102000,
+          "date": "2026-10-24",
+          "buildYear": 1999,
+          "direct": false
+        },
+        {
+          "district": "금천구",
+          "dong": "독산동",
+          "apt": "금천롯데캐슬골드파크3차",
+          "area": 59.97,
+          "floor": 5,
+          "amount10k": 105000,
+          "date": "2026-10-23",
+          "buildYear": 2018,
+          "direct": false
+        },
+        {
+          "district": "구로구",
+          "dong": "개봉동",
+          "apt": "개봉푸르지오",
+          "area": 84.83,
+          "floor": 7,
+          "amount10k": 109000,
+          "date": "2026-10-22",
+          "buildYear": 2014,
+          "direct": false
+        },
+        {
+          "district": "서대문구",
+          "dong": "남가좌동",
+          "apt": "DMC래미안클라시스",
+          "area": 59.93,
+          "floor": 8,
+          "amount10k": 109000,
+          "date": "2026-10-22",
+          "buildYear": 2000,
+          "direct": false
+        },
+        {
+          "district": "마포구",
+          "dong": "망원동",
+          "apt": "삼성화원",
+          "area": 89.55,
+          "floor": 6,
+          "amount10k": 107000,
+          "date": "2026-10-22",
+          "buildYear": 2002,
+          "direct": false
+        },
         {
           "district": "은평구",
           "dong": "불광동",
@@ -1709,6 +1797,17 @@
           "direct": false
         },
         {
+          "district": "강북구",
+          "dong": "미아동",
+          "apt": "래미안트리베라1단지",
+          "area": 59.6,
+          "floor": 9,
+          "amount10k": 106000,
+          "date": "2026-10-20",
+          "buildYear": 2010,
+          "direct": false
+        },
+        {
           "district": "동대문구",
           "dong": "답십리동",
           "apt": "답십리청솔우성",
@@ -1718,109 +1817,10 @@
           "date": "2026-10-19",
           "buildYear": 2000,
           "direct": false
-        },
-        {
-          "district": "구로구",
-          "dong": "고척동",
-          "apt": "고척파크푸르지오",
-          "area": 59.89,
-          "floor": 7,
-          "amount10k": 107000,
-          "date": "2026-10-19",
-          "buildYear": 2009,
-          "direct": false
-        },
-        {
-          "district": "영등포구",
-          "dong": "신길동",
-          "apt": "삼환",
-          "area": 59.53,
-          "floor": 20,
-          "amount10k": 102000,
-          "date": "2026-10-19",
-          "buildYear": 1997,
-          "direct": true
-        },
-        {
-          "district": "서대문구",
-          "dong": "홍제동",
-          "apt": "홍제삼성래미안",
-          "area": 60,
-          "floor": 4,
-          "amount10k": 105000,
-          "date": "2026-10-18",
-          "buildYear": 2001,
-          "direct": false
-        },
-        {
-          "district": "서대문구",
-          "dong": "홍은동",
-          "apt": "힐스테이트홍은포레스트",
-          "area": 59.84,
-          "floor": 11,
-          "amount10k": 105000,
-          "date": "2026-10-18",
-          "buildYear": 2023,
-          "direct": false
-        },
-        {
-          "district": "양천구",
-          "dong": "목동",
-          "apt": "목동효성",
-          "area": 84.8,
-          "floor": 2,
-          "amount10k": 107500,
-          "date": "2026-10-17",
-          "buildYear": 2003,
-          "direct": false
-        },
-        {
-          "district": "은평구",
-          "dong": "진관동",
-          "apt": "구파발9단지래미안(916~928동)BL3-2",
-          "area": 84.83,
-          "floor": 6,
-          "amount10k": 102700,
-          "date": "2026-10-17",
-          "buildYear": 2010,
-          "direct": false
-        },
-        {
-          "district": "강서구",
-          "dong": "염창동",
-          "apt": "신동아",
-          "area": 59.82,
-          "floor": 9,
-          "amount10k": 102400,
-          "date": "2026-10-17",
-          "buildYear": 1995,
-          "direct": false
-        },
-        {
-          "district": "관악구",
-          "dong": "신림동",
-          "apt": "신림현대",
-          "area": 119.49,
-          "floor": 15,
-          "amount10k": 100000,
-          "date": "2026-10-17",
-          "buildYear": 1993,
-          "direct": false
-        },
-        {
-          "district": "은평구",
-          "dong": "불광동",
-          "apt": "라이프미성",
-          "area": 84.65,
-          "floor": 7,
-          "amount10k": 106000,
-          "date": "2026-10-16",
-          "buildYear": 1988,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 465,
+        "total": 481,
         "span": {
           "min": {
             "district": "송파구",
@@ -1838,7 +1838,7 @@
           }
         },
         "standard": {
-          "count": 172,
+          "count": 175,
           "min": 80,
           "max": 90,
           "districts": [
@@ -1862,16 +1862,16 @@
           "districtCount": 21
         }
       },
-      "direct": 11
+      "direct": 12
     },
     {
       "min10k": 110000,
       "max10k": 120000,
-      "count": 357,
+      "count": 362,
       "districts": [
         {
           "name": "성북구",
-          "count": 70
+          "count": 72
         },
         {
           "name": "강서구",
@@ -1887,10 +1887,43 @@
         },
         {
           "name": "관악구",
-          "count": 41
+          "count": 43
         }
       ],
       "deals": [
+        {
+          "district": "성북구",
+          "dong": "하월곡동",
+          "apt": "월곡두산위브",
+          "area": 84.84,
+          "floor": 18,
+          "amount10k": 115000,
+          "date": "2026-10-24",
+          "buildYear": 2003,
+          "direct": false
+        },
+        {
+          "district": "서대문구",
+          "dong": "홍제동",
+          "apt": "홍제삼성래미안",
+          "area": 84.33,
+          "floor": 7,
+          "amount10k": 119000,
+          "date": "2026-10-23",
+          "buildYear": 2001,
+          "direct": false
+        },
+        {
+          "district": "서대문구",
+          "dong": "홍은동",
+          "apt": "홍은동벽산",
+          "area": 142.98,
+          "floor": 12,
+          "amount10k": 115000,
+          "date": "2026-10-23",
+          "buildYear": 1997,
+          "direct": false
+        },
         {
           "district": "노원구",
           "dong": "상계동",
@@ -1989,43 +2022,10 @@
           "date": "2026-10-18",
           "buildYear": 2018,
           "direct": false
-        },
-        {
-          "district": "관악구",
-          "dong": "봉천동",
-          "apt": "봉천동아",
-          "area": 59.76,
-          "floor": 18,
-          "amount10k": 116500,
-          "date": "2026-10-17",
-          "buildYear": 2000,
-          "direct": false
-        },
-        {
-          "district": "성북구",
-          "dong": "길음동",
-          "apt": "길음뉴타운4단지(e편한세상)",
-          "area": 59.97,
-          "floor": 5,
-          "amount10k": 115000,
-          "date": "2026-10-17",
-          "buildYear": 2005,
-          "direct": false
-        },
-        {
-          "district": "강북구",
-          "dong": "미아동",
-          "apt": "삼성래미안트리베라2단지",
-          "area": 84.29,
-          "floor": 7,
-          "amount10k": 117500,
-          "date": "2026-10-16",
-          "buildYear": 2010,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 357,
+        "total": 362,
         "span": {
           "min": {
             "district": "강남구",
@@ -2043,13 +2043,13 @@
           }
         },
         "standard": {
-          "count": 135,
+          "count": 137,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "성북구",
-              "count": 21
+              "count": 22
             },
             {
               "name": "구로구",
@@ -2072,23 +2072,23 @@
     {
       "min10k": 120000,
       "max10k": 130000,
-      "count": 321,
+      "count": 331,
       "districts": [
         {
-          "name": "관악구",
-          "count": 57
+          "name": "은평구",
+          "count": 62
         },
         {
-          "name": "은평구",
-          "count": 56
+          "name": "관악구",
+          "count": 61
         },
         {
           "name": "성북구",
-          "count": 51
+          "count": 53
         },
         {
           "name": "서대문구",
-          "count": 48
+          "count": 50
         },
         {
           "name": "강서구",
@@ -2096,6 +2096,28 @@
         }
       ],
       "deals": [
+        {
+          "district": "관악구",
+          "dong": "봉천동",
+          "apt": "봉천동아",
+          "area": 84.87,
+          "floor": 13,
+          "amount10k": 125000,
+          "date": "2026-10-24",
+          "buildYear": 2000,
+          "direct": false
+        },
+        {
+          "district": "동대문구",
+          "dong": "장안동",
+          "apt": "장안현대홈타운(336)",
+          "area": 59.54,
+          "floor": 17,
+          "amount10k": 127000,
+          "date": "2026-10-23",
+          "buildYear": 2003,
+          "direct": false
+        },
         {
           "district": "양천구",
           "dong": "신정동",
@@ -2105,6 +2127,17 @@
           "amount10k": 125000,
           "date": "2026-10-22",
           "buildYear": 2006,
+          "direct": false
+        },
+        {
+          "district": "성북구",
+          "dong": "길음동",
+          "apt": "길음뉴타운2단지푸르지오",
+          "area": 84.97,
+          "floor": 9,
+          "amount10k": 124000,
+          "date": "2026-10-22",
+          "buildYear": 2005,
           "direct": false
         },
         {
@@ -2141,6 +2174,28 @@
           "direct": false
         },
         {
+          "district": "중랑구",
+          "dong": "면목동",
+          "apt": "쌍용더플래티넘용마산",
+          "area": 84.97,
+          "floor": 11,
+          "amount10k": 125000,
+          "date": "2026-10-21",
+          "buildYear": 2020,
+          "direct": false
+        },
+        {
+          "district": "은평구",
+          "dong": "수색동",
+          "apt": "DMC롯데캐슬더퍼스트",
+          "area": 84.87,
+          "floor": 2,
+          "amount10k": 129000,
+          "date": "2026-10-19",
+          "buildYear": 2021,
+          "direct": false
+        },
+        {
           "district": "서대문구",
           "dong": "홍제동",
           "apt": "홍제삼성래미안",
@@ -2172,65 +2227,10 @@
           "date": "2026-10-17",
           "buildYear": 2000,
           "direct": false
-        },
-        {
-          "district": "관악구",
-          "dong": "봉천동",
-          "apt": "관악푸르지오",
-          "area": 59.58,
-          "floor": 8,
-          "amount10k": 122500,
-          "date": "2026-10-17",
-          "buildYear": 2004,
-          "direct": false
-        },
-        {
-          "district": "관악구",
-          "dong": "봉천동",
-          "apt": "두산",
-          "area": 59.92,
-          "floor": 8,
-          "amount10k": 127000,
-          "date": "2026-10-16",
-          "buildYear": 2000,
-          "direct": false
-        },
-        {
-          "district": "은평구",
-          "dong": "수색동",
-          "apt": "DMCSK뷰아이파크포레",
-          "area": 59.96,
-          "floor": 6,
-          "amount10k": 120500,
-          "date": "2026-10-16",
-          "buildYear": 2025,
-          "direct": false
-        },
-        {
-          "district": "관악구",
-          "dong": "봉천동",
-          "apt": "봉천우성",
-          "area": 114.78,
-          "floor": 22,
-          "amount10k": 120000,
-          "date": "2026-10-15",
-          "buildYear": 2000,
-          "direct": false
-        },
-        {
-          "district": "성동구",
-          "dong": "옥수동",
-          "apt": "극동그린",
-          "area": 84.92,
-          "floor": 17,
-          "amount10k": 120000,
-          "date": "2026-10-15",
-          "buildYear": 1997,
-          "direct": true
         }
       ],
       "facts": {
-        "total": 321,
+        "total": 331,
         "span": {
           "min": {
             "district": "송파구",
@@ -2248,13 +2248,13 @@
           }
         },
         "standard": {
-          "count": 144,
+          "count": 150,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "은평구",
-              "count": 21
+              "count": 23
             },
             {
               "name": "강서구",
@@ -2266,7 +2266,7 @@
             },
             {
               "name": "성북구",
-              "count": 14
+              "count": 15
             }
           ],
           "districtCount": 21
@@ -2277,7 +2277,7 @@
     {
       "min10k": 130000,
       "max10k": 140000,
-      "count": 272,
+      "count": 277,
       "districts": [
         {
           "name": "강서구",
@@ -2297,7 +2297,7 @@
         },
         {
           "name": "관악구",
-          "count": 30
+          "count": 32
         }
       ],
       "deals": [
@@ -2310,6 +2310,17 @@
           "amount10k": 138000,
           "date": "2026-10-22",
           "buildYear": 1997,
+          "direct": false
+        },
+        {
+          "district": "관악구",
+          "dong": "신림동",
+          "apt": "힐스테이트뉴포레",
+          "area": 59.99,
+          "floor": 13,
+          "amount10k": 135000,
+          "date": "2026-10-22",
+          "buildYear": 2022,
           "direct": false
         },
         {
@@ -2421,21 +2432,10 @@
           "date": "2026-10-14",
           "buildYear": 1983,
           "direct": false
-        },
-        {
-          "district": "강서구",
-          "dong": "염창동",
-          "apt": "강변한솔솔파크",
-          "area": 84.97,
-          "floor": 7,
-          "amount10k": 139000,
-          "date": "2026-10-14",
-          "buildYear": 2005,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 272,
+        "total": 277,
         "span": {
           "min": {
             "district": "송파구",
@@ -2453,7 +2453,7 @@
           }
         },
         "standard": {
-          "count": 113,
+          "count": 116,
           "min": 80,
           "max": 90,
           "districts": [
@@ -2466,46 +2466,68 @@
               "count": 9
             },
             {
-              "name": "동대문구",
+              "name": "금천구",
               "count": 8
             },
             {
-              "name": "마포구",
+              "name": "동대문구",
               "count": 8
             }
           ],
           "districtCount": 22
         }
       },
-      "direct": 5
+      "direct": 6
     },
     {
       "min10k": 140000,
       "max10k": 150000,
-      "count": 268,
+      "count": 278,
       "districts": [
         {
           "name": "강서구",
           "count": 54
         },
         {
+          "name": "성북구",
+          "count": 37
+        },
+        {
+          "name": "영등포구",
+          "count": 36
+        },
+        {
           "name": "동작구",
           "count": 35
         },
         {
-          "name": "성북구",
-          "count": 35
-        },
-        {
-          "name": "영등포구",
-          "count": 32
-        },
-        {
           "name": "마포구",
-          "count": 29
+          "count": 33
         }
       ],
       "deals": [
+        {
+          "district": "동대문구",
+          "dong": "장안동",
+          "apt": "장안현대홈타운(336)",
+          "area": 112.78,
+          "floor": 11,
+          "amount10k": 140000,
+          "date": "2026-10-23",
+          "buildYear": 2003,
+          "direct": false
+        },
+        {
+          "district": "영등포구",
+          "dong": "영등포동8가",
+          "apt": "삼환",
+          "area": 59.91,
+          "floor": 15,
+          "amount10k": 145000,
+          "date": "2026-10-22",
+          "buildYear": 1999,
+          "direct": false
+        },
         {
           "district": "동작구",
           "dong": "사당동",
@@ -2551,6 +2573,17 @@
           "direct": false
         },
         {
+          "district": "성북구",
+          "dong": "장위동",
+          "apt": "래미안장위퍼스트하이",
+          "area": 84.94,
+          "floor": 15,
+          "amount10k": 145000,
+          "date": "2026-10-16",
+          "buildYear": 2020,
+          "direct": false
+        },
+        {
           "district": "양천구",
           "dong": "신월동",
           "apt": "목동센트럴아이파크위브1단지",
@@ -2584,6 +2617,17 @@
           "direct": false
         },
         {
+          "district": "마포구",
+          "dong": "상암동",
+          "apt": "상암월드컵파크3단지",
+          "area": 84.94,
+          "floor": 7,
+          "amount10k": 142000,
+          "date": "2026-10-15",
+          "buildYear": 2003,
+          "direct": false
+        },
+        {
           "district": "강남구",
           "dong": "개포동",
           "apt": "성원대치2단지아파트",
@@ -2593,54 +2637,10 @@
           "date": "2026-10-14",
           "buildYear": 1992,
           "direct": false
-        },
-        {
-          "district": "성북구",
-          "dong": "길음동",
-          "apt": "길음뉴타운1단지(래미안길음1차)",
-          "area": 114.98,
-          "floor": 3,
-          "amount10k": 142500,
-          "date": "2026-10-14",
-          "buildYear": 2003,
-          "direct": false
-        },
-        {
-          "district": "중구",
-          "dong": "신당동",
-          "apt": "남산타운",
-          "area": 59.94,
-          "floor": 1,
-          "amount10k": 148500,
-          "date": "2026-10-13",
-          "buildYear": 2002,
-          "direct": true
-        },
-        {
-          "district": "강서구",
-          "dong": "화곡동",
-          "apt": "강서힐스테이트",
-          "area": 59.99,
-          "floor": 14,
-          "amount10k": 143000,
-          "date": "2026-10-13",
-          "buildYear": 2015,
-          "direct": false
-        },
-        {
-          "district": "영등포구",
-          "dong": "문래동3가",
-          "apt": "태영데시앙",
-          "area": 84.93,
-          "floor": 13,
-          "amount10k": 140000,
-          "date": "2026-10-12",
-          "buildYear": 2005,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 268,
+        "total": 278,
         "span": {
           "min": {
             "district": "서초구",
@@ -2658,13 +2658,13 @@
           }
         },
         "standard": {
-          "count": 109,
+          "count": 114,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "성북구",
-              "count": 12
+              "count": 13
             },
             {
               "name": "양천구",
@@ -2672,14 +2672,14 @@
             },
             {
               "name": "영등포구",
-              "count": 10
+              "count": 11
             },
             {
               "name": "강서구",
               "count": 9
             }
           ],
-          "districtCount": 21
+          "districtCount": 22
         }
       },
       "direct": 10
@@ -2687,30 +2687,74 @@
     {
       "min10k": 150000,
       "max10k": 160000,
-      "count": 218,
+      "count": 226,
       "districts": [
         {
           "name": "강동구",
-          "count": 44
+          "count": 46
         },
         {
           "name": "성북구",
+          "count": 32
+        },
+        {
+          "name": "동작구",
+          "count": 31
+        },
+        {
+          "name": "서대문구",
           "count": 30
         },
         {
           "name": "마포구",
           "count": 29
-        },
-        {
-          "name": "서대문구",
-          "count": 28
-        },
-        {
-          "name": "동작구",
-          "count": 27
         }
       ],
       "deals": [
+        {
+          "district": "성북구",
+          "dong": "길음동",
+          "apt": "길음뉴타운9단지(래미안)",
+          "area": 84.78,
+          "floor": 14,
+          "amount10k": 158000,
+          "date": "2026-10-24",
+          "buildYear": 2010,
+          "direct": false
+        },
+        {
+          "district": "동대문구",
+          "dong": "장안동",
+          "apt": "장안현대홈타운(336)",
+          "area": 112.78,
+          "floor": 7,
+          "amount10k": 153500,
+          "date": "2026-10-24",
+          "buildYear": 2003,
+          "direct": false
+        },
+        {
+          "district": "중랑구",
+          "dong": "면목동",
+          "apt": "사가정센트럴아이파크",
+          "area": 84.87,
+          "floor": 7,
+          "amount10k": 153400,
+          "date": "2026-10-24",
+          "buildYear": 2020,
+          "direct": false
+        },
+        {
+          "district": "서대문구",
+          "dong": "합동",
+          "apt": "에스케이뷰",
+          "area": 84.98,
+          "floor": 16,
+          "amount10k": 152500,
+          "date": "2026-10-24",
+          "buildYear": 2008,
+          "direct": false
+        },
         {
           "district": "서대문구",
           "dong": "남가좌동",
@@ -2789,63 +2833,19 @@
           "direct": false
         },
         {
-          "district": "성북구",
-          "dong": "장위동",
-          "apt": "래미안장위퍼스트하이",
-          "area": 84.94,
-          "floor": 27,
-          "amount10k": 155000,
-          "date": "2026-10-10",
-          "buildYear": 2020,
-          "direct": false
-        },
-        {
-          "district": "강동구",
-          "dong": "고덕동",
-          "apt": "아남1",
-          "area": 84.91,
-          "floor": 6,
-          "amount10k": 151500,
-          "date": "2026-10-10",
-          "buildYear": 1996,
-          "direct": false
-        },
-        {
-          "district": "서대문구",
-          "dong": "영천동",
-          "apt": "독립문삼호",
-          "area": 108.63,
-          "floor": 15,
-          "amount10k": 156500,
-          "date": "2026-10-09",
-          "buildYear": 1995,
-          "direct": false
-        },
-        {
-          "district": "마포구",
-          "dong": "창전동",
-          "apt": "창전래미안",
-          "area": 59.94,
-          "floor": 13,
-          "amount10k": 152000,
-          "date": "2026-10-09",
-          "buildYear": 1998,
-          "direct": false
-        },
-        {
-          "district": "송파구",
-          "dong": "잠실동",
-          "apt": "잠실포스코더샵",
-          "area": 84.95,
-          "floor": 13,
+          "district": "동대문구",
+          "dong": "전농동",
+          "apt": "래미안아름숲",
+          "area": 84.92,
+          "floor": 12,
           "amount10k": 150000,
-          "date": "2026-10-09",
-          "buildYear": 2004,
+          "date": "2026-10-12",
+          "buildYear": 2012,
           "direct": false
         }
       ],
       "facts": {
-        "total": 218,
+        "total": 226,
         "span": {
           "min": {
             "district": "송파구",
@@ -2863,7 +2863,7 @@
           }
         },
         "standard": {
-          "count": 96,
+          "count": 100,
           "min": 80,
           "max": 90,
           "districts": [
@@ -2877,7 +2877,7 @@
             },
             {
               "name": "서대문구",
-              "count": 13
+              "count": 14
             },
             {
               "name": "강서구",
@@ -2892,7 +2892,7 @@
     {
       "min10k": 160000,
       "max10k": 170000,
-      "count": 206,
+      "count": 211,
       "districts": [
         {
           "name": "동작구",
@@ -2904,15 +2904,15 @@
         },
         {
           "name": "강동구",
+          "count": 32
+        },
+        {
+          "name": "서대문구",
           "count": 28
         },
         {
           "name": "성동구",
           "count": 26
-        },
-        {
-          "name": "서대문구",
-          "count": 24
         }
       ],
       "deals": [
@@ -2936,6 +2936,17 @@
           "amount10k": 165000,
           "date": "2026-10-20",
           "buildYear": 2015,
+          "direct": false
+        },
+        {
+          "district": "서대문구",
+          "dong": "북가좌동",
+          "apt": "DMC래미안e편한세상",
+          "area": 84.95,
+          "floor": 15,
+          "amount10k": 164000,
+          "date": "2026-10-20",
+          "buildYear": 2012,
           "direct": false
         },
         {
@@ -2969,6 +2980,17 @@
           "amount10k": 164500,
           "date": "2026-10-17",
           "buildYear": 2007,
+          "direct": false
+        },
+        {
+          "district": "영등포구",
+          "dong": "영등포동",
+          "apt": "영등포푸르지오",
+          "area": 79.78,
+          "floor": 6,
+          "amount10k": 160000,
+          "date": "2026-10-16",
+          "buildYear": 2002,
           "direct": false
         },
         {
@@ -3025,32 +3047,10 @@
           "date": "2026-10-10",
           "buildYear": 1993,
           "direct": false
-        },
-        {
-          "district": "강남구",
-          "dong": "수서동",
-          "apt": "신동아",
-          "area": 39.51,
-          "floor": 4,
-          "amount10k": 167000,
-          "date": "2026-10-09",
-          "buildYear": 1992,
-          "direct": false
-        },
-        {
-          "district": "강서구",
-          "dong": "내발산동",
-          "apt": "우장산힐스테이트",
-          "area": 84.98,
-          "floor": 6,
-          "amount10k": 165000,
-          "date": "2026-10-09",
-          "buildYear": 2005,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 206,
+        "total": 211,
         "span": {
           "min": {
             "district": "송파구",
@@ -3068,7 +3068,7 @@
           }
         },
         "standard": {
-          "count": 103,
+          "count": 105,
           "min": 80,
           "max": 90,
           "districts": [
@@ -3082,7 +3082,7 @@
             },
             {
               "name": "서대문구",
-              "count": 12
+              "count": 13
             },
             {
               "name": "영등포구",
@@ -3097,11 +3097,11 @@
     {
       "min10k": 170000,
       "max10k": 180000,
-      "count": 185,
+      "count": 188,
       "districts": [
         {
           "name": "강동구",
-          "count": 37
+          "count": 41
         },
         {
           "name": "동작구",
@@ -3113,7 +3113,7 @@
         },
         {
           "name": "강서구",
-          "count": 29
+          "count": 31
         },
         {
           "name": "동대문구",
@@ -3152,6 +3152,17 @@
           "amount10k": 179000,
           "date": "2026-10-17",
           "buildYear": 2021,
+          "direct": false
+        },
+        {
+          "district": "강동구",
+          "dong": "암사동",
+          "apt": "프라이어팰리스",
+          "area": 84.95,
+          "floor": 28,
+          "amount10k": 176000,
+          "date": "2026-10-17",
+          "buildYear": 2007,
           "direct": false
         },
         {
@@ -3241,21 +3252,10 @@
           "date": "2026-10-12",
           "buildYear": 2008,
           "direct": false
-        },
-        {
-          "district": "송파구",
-          "dong": "오금동",
-          "apt": "우창",
-          "area": 109.72,
-          "floor": 1,
-          "amount10k": 176000,
-          "date": "2026-10-10",
-          "buildYear": 1985,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 185,
+        "total": 188,
         "span": {
           "min": {
             "district": "송파구",
@@ -3273,17 +3273,17 @@
           }
         },
         "standard": {
-          "count": 93,
+          "count": 96,
           "min": 80,
           "max": 90,
           "districts": [
             {
-              "name": "동대문구",
+              "name": "강동구",
               "count": 15
             },
             {
-              "name": "강동구",
-              "count": 13
+              "name": "동대문구",
+              "count": 15
             },
             {
               "name": "동작구",
@@ -3291,7 +3291,7 @@
             },
             {
               "name": "강서구",
-              "count": 9
+              "count": 10
             }
           ],
           "districtCount": 16
@@ -3302,7 +3302,7 @@
     {
       "min10k": 180000,
       "max10k": 190000,
-      "count": 155,
+      "count": 157,
       "districts": [
         {
           "name": "강동구",
@@ -3317,15 +3317,37 @@
           "count": 19
         },
         {
-          "name": "서대문구",
+          "name": "동작구",
           "count": 16
         },
         {
-          "name": "중구",
+          "name": "서대문구",
           "count": 16
         }
       ],
       "deals": [
+        {
+          "district": "동작구",
+          "dong": "본동",
+          "apt": "삼성래미안",
+          "area": 114.99,
+          "floor": 8,
+          "amount10k": 180000,
+          "date": "2026-10-24",
+          "buildYear": 2004,
+          "direct": false
+        },
+        {
+          "district": "강서구",
+          "dong": "화곡동",
+          "apt": "강서힐스테이트",
+          "area": 152.1,
+          "floor": 13,
+          "amount10k": 185000,
+          "date": "2026-10-21",
+          "buildYear": 2015,
+          "direct": false
+        },
         {
           "district": "용산구",
           "dong": "문배동",
@@ -3368,17 +3390,6 @@
           "amount10k": 185000,
           "date": "2026-10-16",
           "buildYear": 2005,
-          "direct": false
-        },
-        {
-          "district": "강서구",
-          "dong": "화곡동",
-          "apt": "강서힐스테이트",
-          "area": 128.81,
-          "floor": 15,
-          "amount10k": 180000,
-          "date": "2026-10-15",
-          "buildYear": 2015,
           "direct": false
         },
         {
@@ -3446,21 +3457,10 @@
           "date": "2026-10-07",
           "buildYear": 2004,
           "direct": false
-        },
-        {
-          "district": "중구",
-          "dong": "신당동",
-          "apt": "삼성",
-          "area": 114.91,
-          "floor": 8,
-          "amount10k": 185000,
-          "date": "2026-10-07",
-          "buildYear": 1999,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 155,
+        "total": 157,
         "span": {
           "min": {
             "district": "양천구",
@@ -3507,7 +3507,7 @@
     {
       "min10k": 190000,
       "max10k": 200000,
-      "count": 126,
+      "count": 127,
       "districts": [
         {
           "name": "송파구",
@@ -3531,6 +3531,17 @@
         }
       ],
       "deals": [
+        {
+          "district": "중구",
+          "dong": "충무로4가",
+          "apt": "남산센트럴자이",
+          "area": 114.84,
+          "floor": 21,
+          "amount10k": 193000,
+          "date": "2026-10-22",
+          "buildYear": 2009,
+          "direct": false
+        },
         {
           "district": "동작구",
           "dong": "상도동",
@@ -3651,21 +3662,10 @@
           "date": "2026-10-02",
           "buildYear": 2019,
           "direct": false
-        },
-        {
-          "district": "용산구",
-          "dong": "이촌동",
-          "apt": "동아그린",
-          "area": 114.96,
-          "floor": 17,
-          "amount10k": 190000,
-          "date": "2026-10-02",
-          "buildYear": 1999,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 126,
+        "total": 127,
         "span": {
           "min": {
             "district": "송파구",
@@ -3712,7 +3712,7 @@
     {
       "min10k": 200000,
       "max10k": 210000,
-      "count": 95,
+      "count": 96,
       "districts": [
         {
           "name": "마포구",
@@ -3723,11 +3723,11 @@
           "count": 18
         },
         {
-          "name": "강남구",
-          "count": 15
+          "name": "서초구",
+          "count": 17
         },
         {
-          "name": "서초구",
+          "name": "강남구",
           "count": 15
         },
         {
@@ -3870,7 +3870,7 @@
         }
       ],
       "facts": {
-        "total": 95,
+        "total": 96,
         "span": {
           "min": {
             "district": "송파구",
@@ -3917,7 +3917,7 @@
     {
       "min10k": 210000,
       "max10k": 220000,
-      "count": 71,
+      "count": 72,
       "districts": [
         {
           "name": "송파구",
@@ -3941,6 +3941,17 @@
         }
       ],
       "deals": [
+        {
+          "district": "성동구",
+          "dong": "금호동1가",
+          "apt": "이편한세상금호파크힐스",
+          "area": 59.98,
+          "floor": 17,
+          "amount10k": 217000,
+          "date": "2026-10-21",
+          "buildYear": 2019,
+          "direct": false
+        },
         {
           "district": "양천구",
           "dong": "신정동",
@@ -4061,21 +4072,10 @@
           "date": "2026-10-02",
           "buildYear": 1995,
           "direct": false
-        },
-        {
-          "district": "강동구",
-          "dong": "상일동",
-          "apt": "고덕자이",
-          "area": 84.97,
-          "floor": 7,
-          "amount10k": 212000,
-          "date": "2026-10-01",
-          "buildYear": 2021,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 71,
+        "total": 72,
         "span": {
           "min": {
             "district": "강남구",
@@ -4122,7 +4122,7 @@
     {
       "min10k": 220000,
       "max10k": 230000,
-      "count": 74,
+      "count": 75,
       "districts": [
         {
           "name": "송파구",
@@ -4224,6 +4224,17 @@
           "direct": false
         },
         {
+          "district": "강남구",
+          "dong": "자곡동",
+          "apt": "강남한양수자인(4단지)",
+          "area": 84.99,
+          "floor": 4,
+          "amount10k": 221500,
+          "date": "2026-10-05",
+          "buildYear": 2014,
+          "direct": false
+        },
+        {
           "district": "서초구",
           "dong": "양재동",
           "apt": "우성",
@@ -4266,21 +4277,10 @@
           "date": "2026-09-30",
           "buildYear": 2001,
           "direct": false
-        },
-        {
-          "district": "양천구",
-          "dong": "목동",
-          "apt": "목동청구한신아파트",
-          "area": 84.76,
-          "floor": 14,
-          "amount10k": 220000,
-          "date": "2026-09-30",
-          "buildYear": 1997,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 74,
+        "total": 75,
         "span": {
           "min": {
             "district": "양천구",
@@ -4298,7 +4298,7 @@
           }
         },
         "standard": {
-          "count": 34,
+          "count": 35,
           "min": 80,
           "max": 90,
           "districts": [
@@ -4327,7 +4327,7 @@
     {
       "min10k": 230000,
       "max10k": 240000,
-      "count": 57,
+      "count": 58,
       "districts": [
         {
           "name": "송파구",
@@ -4346,8 +4346,8 @@
           "count": 9
         },
         {
-          "name": "동작구",
-          "count": 7
+          "name": "성동구",
+          "count": 9
         }
       ],
       "deals": [
@@ -4473,19 +4473,19 @@
           "direct": true
         },
         {
-          "district": "송파구",
-          "dong": "장지동",
-          "apt": "송파와이즈더샵",
-          "area": 96.78,
-          "floor": 22,
+          "district": "성동구",
+          "dong": "성수동1가",
+          "apt": "쌍용",
+          "area": 84.78,
+          "floor": 14,
           "amount10k": 230000,
-          "date": "2026-09-23",
-          "buildYear": 2016,
+          "date": "2026-09-28",
+          "buildYear": 1997,
           "direct": false
         }
       ],
       "facts": {
-        "total": 57,
+        "total": 58,
         "span": {
           "min": {
             "district": "종로구",
@@ -4503,7 +4503,7 @@
           }
         },
         "standard": {
-          "count": 21,
+          "count": 22,
           "min": 80,
           "max": 90
         }
@@ -4513,7 +4513,7 @@
     {
       "min10k": 240000,
       "max10k": 250000,
-      "count": 59,
+      "count": 61,
       "districts": [
         {
           "name": "성동구",
@@ -4521,7 +4521,7 @@
         },
         {
           "name": "서초구",
-          "count": 11
+          "count": 13
         },
         {
           "name": "강남구",
@@ -4546,6 +4546,28 @@
           "amount10k": 240000,
           "date": "2026-10-21",
           "buildYear": 2022,
+          "direct": false
+        },
+        {
+          "district": "양천구",
+          "dong": "신정동",
+          "apt": "목동신시가지14",
+          "area": 84.87,
+          "floor": 11,
+          "amount10k": 248000,
+          "date": "2026-10-17",
+          "buildYear": 1987,
+          "direct": false
+        },
+        {
+          "district": "서초구",
+          "dong": "방배동",
+          "apt": "삼성래미안1",
+          "area": 114.94,
+          "floor": 7,
+          "amount10k": 244000,
+          "date": "2026-10-17",
+          "buildYear": 2003,
           "direct": false
         },
         {
@@ -4646,32 +4668,10 @@
           "date": "2026-09-22",
           "buildYear": 2017,
           "direct": false
-        },
-        {
-          "district": "마포구",
-          "dong": "서교동",
-          "apt": "메세나폴리스",
-          "area": 122.87,
-          "floor": 5,
-          "amount10k": 246000,
-          "date": "2026-09-22",
-          "buildYear": 2012,
-          "direct": false
-        },
-        {
-          "district": "서초구",
-          "dong": "서초동",
-          "apt": "서초극동스타클래스",
-          "area": 124.09,
-          "floor": 2,
-          "amount10k": 243000,
-          "date": "2026-09-22",
-          "buildYear": 2003,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 59,
+        "total": 61,
         "span": {
           "min": {
             "district": "강남구",
@@ -4689,7 +4689,7 @@
           }
         },
         "standard": {
-          "count": 27,
+          "count": 28,
           "min": 80,
           "max": 90
         }
@@ -4699,7 +4699,7 @@
     {
       "min10k": 250000,
       "max10k": 260000,
-      "count": 34,
+      "count": 35,
       "districts": [
         {
           "name": "마포구",
@@ -4765,6 +4765,17 @@
           "amount10k": 250000,
           "date": "2026-09-22",
           "buildYear": 2019,
+          "direct": false
+        },
+        {
+          "district": "종로구",
+          "dong": "홍파동",
+          "apt": "경희궁자이(2단지)",
+          "area": 77.97,
+          "floor": 4,
+          "amount10k": 250000,
+          "date": "2026-09-22",
+          "buildYear": 2017,
           "direct": false
         },
         {
@@ -4843,21 +4854,10 @@
           "date": "2026-09-05",
           "buildYear": 1999,
           "direct": false
-        },
-        {
-          "district": "성동구",
-          "dong": "옥수동",
-          "apt": "옥수파크힐스101동~116동",
-          "area": 84.64,
-          "floor": 8,
-          "amount10k": 250000,
-          "date": "2026-09-05",
-          "buildYear": 2016,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 34,
+        "total": 35,
         "span": {
           "min": {
             "district": "양천구",
@@ -4885,7 +4885,7 @@
     {
       "min10k": 260000,
       "max10k": 270000,
-      "count": 39,
+      "count": 41,
       "districts": [
         {
           "name": "송파구",
@@ -4897,14 +4897,14 @@
         },
         {
           "name": "마포구",
-          "count": 8
+          "count": 10
         },
         {
           "name": "영등포구",
           "count": 4
         },
         {
-          "name": "서초구",
+          "name": "동작구",
           "count": 3
         }
       ],
@@ -4929,6 +4929,17 @@
           "amount10k": 260000,
           "date": "2026-10-07",
           "buildYear": 2021,
+          "direct": false
+        },
+        {
+          "district": "동작구",
+          "dong": "흑석동",
+          "apt": "흑석리버파크자이",
+          "area": 84.94,
+          "floor": 9,
+          "amount10k": 262500,
+          "date": "2026-10-03",
+          "buildYear": 2025,
           "direct": false
         },
         {
@@ -4976,6 +4987,17 @@
           "direct": false
         },
         {
+          "district": "마포구",
+          "dong": "아현동",
+          "apt": "마포래미안푸르지오2단지",
+          "area": 84.6,
+          "floor": 20,
+          "amount10k": 266500,
+          "date": "2026-09-29",
+          "buildYear": 2014,
+          "direct": false
+        },
+        {
           "district": "종로구",
           "dong": "내수동",
           "apt": "킹스매너",
@@ -5018,32 +5040,10 @@
           "date": "2026-09-22",
           "buildYear": 2008,
           "direct": false
-        },
-        {
-          "district": "용산구",
-          "dong": "원효로4가",
-          "apt": "산호",
-          "area": 86.12,
-          "floor": 5,
-          "amount10k": 267000,
-          "date": "2026-09-21",
-          "buildYear": 1977,
-          "direct": false
-        },
-        {
-          "district": "강남구",
-          "dong": "일원동",
-          "apt": "푸른마을아파트101동~111동",
-          "area": 84.93,
-          "floor": 14,
-          "amount10k": 260000,
-          "date": "2026-09-17",
-          "buildYear": 1994,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 39,
+        "total": 41,
         "span": {
           "min": {
             "district": "강남구",
@@ -5061,7 +5061,7 @@
           }
         },
         "standard": {
-          "count": 13,
+          "count": 15,
           "min": 80,
           "max": 90
         }
@@ -5443,7 +5443,7 @@
     {
       "min10k": 290000,
       "max10k": 300000,
-      "count": 34,
+      "count": 35,
       "districts": [
         {
           "name": "송파구",
@@ -5451,7 +5451,7 @@
         },
         {
           "name": "강남구",
-          "count": 5
+          "count": 7
         },
         {
           "name": "광진구",
@@ -5487,6 +5487,17 @@
           "amount10k": 290000,
           "date": "2026-10-14",
           "buildYear": 1983,
+          "direct": false
+        },
+        {
+          "district": "강남구",
+          "dong": "역삼동",
+          "apt": "상지리츠빌(1호라인)",
+          "area": 153.65,
+          "floor": 13,
+          "amount10k": 292000,
+          "date": "2026-10-08",
+          "buildYear": 2004,
           "direct": false
         },
         {
@@ -5587,21 +5598,10 @@
           "date": "2026-09-11",
           "buildYear": 1974,
           "direct": false
-        },
-        {
-          "district": "서초구",
-          "dong": "방배동",
-          "apt": "방배1차현대홈타운",
-          "area": 84.96,
-          "floor": 15,
-          "amount10k": 295500,
-          "date": "2026-09-04",
-          "buildYear": 1999,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 34,
+        "total": 35,
         "span": {
           "min": {
             "district": "성동구",
@@ -5629,15 +5629,15 @@
     {
       "min10k": 300000,
       "max10k": null,
-      "count": 307,
+      "count": 316,
       "districts": [
         {
           "name": "강남구",
-          "count": 187
+          "count": 197
         },
         {
           "name": "서초구",
-          "count": 120
+          "count": 128
         },
         {
           "name": "송파구",
@@ -5653,6 +5653,17 @@
         }
       ],
       "deals": [
+        {
+          "district": "강남구",
+          "dong": "개포동",
+          "apt": "개포자이프레지던스",
+          "area": 84.6,
+          "floor": 32,
+          "amount10k": 355000,
+          "date": "2026-10-23",
+          "buildYear": 2023,
+          "direct": false
+        },
         {
           "district": "강남구",
           "dong": "압구정동",
@@ -5676,14 +5687,14 @@
           "direct": false
         },
         {
-          "district": "강남구",
-          "dong": "압구정동",
-          "apt": "현대2차(10,11,20,23,24,25동)",
-          "area": 160.28,
-          "floor": 11,
-          "amount10k": 900000,
-          "date": "2026-10-16",
-          "buildYear": 1976,
+          "district": "서초구",
+          "dong": "반포동",
+          "apt": "반포자이",
+          "area": 165.45,
+          "floor": 23,
+          "amount10k": 600000,
+          "date": "2026-10-18",
+          "buildYear": 2009,
           "direct": false
         },
         {
@@ -5773,21 +5784,10 @@
           "date": "2026-10-03",
           "buildYear": 2019,
           "direct": false
-        },
-        {
-          "district": "송파구",
-          "dong": "신천동",
-          "apt": "장미2",
-          "area": 82.45,
-          "floor": 14,
-          "amount10k": 340000,
-          "date": "2026-10-02",
-          "buildYear": 1979,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 307,
+        "total": 316,
         "span": {
           "min": {
             "district": "강남구",
@@ -5805,7 +5805,7 @@
           }
         },
         "standard": {
-          "count": 91,
+          "count": 95,
           "min": 80,
           "max": 90,
           "districts": [
@@ -5815,11 +5815,11 @@
             },
             {
               "name": "강남구",
-              "count": 26
+              "count": 28
             },
             {
               "name": "서초구",
-              "count": 24
+              "count": 26
             },
             {
               "name": "강동구",
@@ -5829,10 +5829,10 @@
           "districtCount": 6
         },
         "largeHeavy": {
-          "share": 0.50814332247557
+          "share": 0.509493670886076
         },
         "old": {
-          "share": 0.48534201954397393,
+          "share": 0.4810126582278481,
           "years": 30
         }
       },
