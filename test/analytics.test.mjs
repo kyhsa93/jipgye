@@ -123,7 +123,7 @@ test("로컬 호스트에서는 GA·AdSense script를 안 붙이되 analytics AP
     assert.deepEqual(a.scriptSrcs(), [], `${hostname}에서 script가 붙었다`);
     assert.deepEqual(
       Object.keys(a.window.analytics).sort(),
-      ["debouncedEvent", "event", "pageView", "termShape"],
+      ["debouncedEvent", "event", "pageView", "result", "termShape"],
       `${hostname}에서 analytics 네 함수가 없다`
     );
     assert.doesNotThrow(() => {
@@ -344,3 +344,4 @@ test("로드가 실패하면 다시 시도할 수단을 준다", async () => {
     assert.ok(html.includes('event("load_retry"'), `${file}에서 재시도를 계측하지 않는다`);
   }
 });
+
