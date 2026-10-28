@@ -24,6 +24,7 @@ async function loadAnalytics({
   search = "",
   siteGroup = "digest",
   hostname = new URL(href).hostname,
+  referrer = "",
   transform = (text) => text,
 } = {}) {
   const source = transform(await readFile(path.join(root, "docs/analytics.js"), "utf8"));
@@ -35,6 +36,7 @@ async function loadAnalytics({
     window: {},
     document: {
       title,
+      referrer,
       head: { appendChild: (el) => appended.push(el) },
       createElement: () => ({}),
       querySelector: (sel) =>
@@ -212,6 +214,27 @@ test("사용자가 친 글자는 주소에서도 이벤트에서도 GA로 나가
   assert.equal(search.search_term, undefined);
   assert.equal(search.search_term_length, "6");
   assert.equal(search.search_term_has_digit, "yes");
+});
+
+test("앞 장 주소(page_referrer)도 같은 규칙으로 지우고, 바깥 사이트는 출처만 남긴다 (#779)", async () => {
+  const inside = await loadAnalytics({
+    href: "https://example.test/news.html",
+    referrer: "https://example.test/renewal-vs-new.html?gu=songpa&apt=%ED%97%AC%EB%A6%AC%EC%98%A4%EC%8B%9C%ED%8B%B0&area=84.98&q=x",
+  });
+  inside.analytics.pageView();
+  inside.analytics.event("calculator_result", { calculator_type: "renewal_vs_new" });
+  inside.runTimers();
+  const config = inside.calls().find(([kind]) => kind === "config");
+  for (const params of [config[2], ...inside.events().map(([, , p]) => p)]) {
+    assert.equal(params.page_referrer, "https://example.test/renewal-vs-new.html?gu=songpa&area=84.98");
+  }
+  assert.ok(!JSON.stringify(inside.calls()).includes("%ED%97%AC"), "단지명이 dataLayer 에 남았다");
+
+  const outside = await loadAnalytics({ referrer: "https://search.example/results?q=%EC%A7%91" });
+  assert.equal(outside.calls().find(([kind]) => kind === "config")[2].page_referrer, "https://search.example/");
+
+  const direct = await loadAnalytics({ referrer: "" });
+  assert.ok(!("page_referrer" in direct.calls().find(([kind]) => kind === "config")[2]), "referrer 가 없으면 덮어쓰지 않는다");
 });
 
 test("검색 이벤트는 마지막 입력 한 번으로 합쳐진다", async () => {
