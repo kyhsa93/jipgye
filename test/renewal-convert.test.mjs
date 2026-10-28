@@ -80,7 +80,7 @@ test("문턱은 빌더와 같다: 화면 MIN = scripts/conversion.ts MIN_PAIRS",
 
 test("자리·보이는 label·aria-live·출처 줄(ECOS 가공 꼬리)", () => {
   const ids = [...HTML.matchAll(/<section id="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(ids.slice(0, 4), ["check-section", "convert", "expiry", "lead-section"]);
+  assert.deepEqual(ids.slice(0, 5), ["check-section", "move", "convert", "expiry", "lead-section"]);
   assert.match(SECTION, /^<section id="convert" class="tw:mb-10 tw:1024:mb-16">/);
   for (const [id, text] of [["cv-gu", "자치구(선택)"], ["cv-band", "전용면적(선택)"], ["cv-dep", "현재 보증금(만원, 선택)"], ["cv-amt", "월세로 돌릴 보증금(만원)"]]) {
     assert.ok(SECTION.includes(`<label for="${id}" id="${id}-label" data-en="`) && SECTION.includes(`">${text}</label>`), `${id} label`);

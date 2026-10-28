@@ -74,7 +74,7 @@ const PARTIAL_KO =
 
 test("자리: 전환 계산기 바로 아래·#lead-section 앞, 보이는 label·aria-live·출처 줄", () => {
   const ids = [...HTML.matchAll(/<section id="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(ids.slice(0, 4), ["check-section", "convert", "expiry", "lead-section"]);
+  assert.deepEqual(ids.slice(0, 5), ["check-section", "move", "convert", "expiry", "lead-section"]);
   assert.match(SECTION, /^<section id="expiry" class="tw:mb-10 tw:1024:mb-16">/);
   assert.ok(SECTION.includes('<label for="ex-gu" id="ex-gu-label" data-en="District">자치구</label><select id="ex-gu"></select>'));
   assert.match(SECTION, /<p class="lead" id="ex-answer" aria-live="polite" data-msg="[^"]+" data-msg-en="[^"]+"><\/p>/);
