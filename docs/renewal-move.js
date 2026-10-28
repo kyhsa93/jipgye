@@ -51,18 +51,19 @@
     $("mv-cash-fill").hidden = !(old > 0);
     $("mv-cash-fill").textContent = f(45, fmt(old));
     const opp = !!$("mv-opp").checked;
+    const split = !!$("mv-split").checked; // 선택지별 금리(#792 5): 켜면 공통 금리 칸 대신 두 칸
+    $("mv-rate-field").hidden = split;
+    $("mv-rr-field").hidden = $("mv-rm-field").hidden = !split;
     const c = st.c;
     const C = jipgyeMoveCost;
-    const r = ask !== "" && C.compare({ renew: ask, kind, deposit: v("mv-dep"), rent: v("mv-rent"), cash: v("mv-cash"), loanRate: v("mv-rate"), depositRate: v("mv-drate"), months: v("mv-months"), opportunity: opp, oneRenew: v("mv-once-renew"), oneMove: v("mv-once-move") });
+    const r = ask !== "" && C.compare({ renew: ask, kind, deposit: v("mv-dep"), rent: v("mv-rent"), cash: v("mv-cash"), loanRate: v("mv-rate"), depositRate: v("mv-drate"), months: v("mv-months"), opportunity: opp, oneRenew: v("mv-once-renew"), oneMove: v("mv-once-move"), split, renewRate: v("mv-rate-renew"), moveRate: v("mv-rate-move") });
     const d = r && C.describe(r, M, fmt, kind);
     // 칸 옆 안내(잘못된 값·금리 줄)·참고값 단추·근거 줄은 renewal-move-basis.js 가 같은 문맥으로 그린다 - 계산 결과(r·d)도 넘긴다.
-    window.renewalMoveBasis?.({ M, f, fmt, ym, v, kind, c, st, render, start, opp, r, d });
+    window.renewalMoveBasis?.({ M, f, fmt, ym, v, kind, c, st, render, start, opp, r, d, split });
     if (!r) return out(M[2]), measure(null), ($("mv-what-if").textContent = "");
-    measure(r, JSON.stringify([ask, kind, v("mv-dep"), v("mv-rent"), v("mv-cash"), v("mv-rate"), v("mv-drate"), v("mv-months"), opp, v("mv-once-renew"), v("mv-once-move")]));
+    measure(r, JSON.stringify([ask, kind, v("mv-dep"), v("mv-rent"), v("mv-cash"), v("mv-rate"), v("mv-drate"), v("mv-months"), opp, v("mv-once-renew"), v("mv-once-move"), split, v("mv-rate-renew"), v("mv-rate-move")]));
     $("mv-what-if").textContent = d.whatIf || "";
-    const cell = (x, h) => (h ? `<th scope="${h}">${x}</th>` : `<td>${x}</td>`);
-    out(d.text, d.rows && `<thead><tr><td>${d.head[0]}</td>${cell(d.head[1], "col")}${cell(d.head[2], "col")}</tr></thead><tbody>` +
-      d.rows.map(([l, a, b]) => `<tr>${cell(l, "row")}${cell(a)}${cell(b)}</tr>`).join("") + "</tbody>");
+    out(d.text, d.html);
   }
 
   fetch(`./data/conversion.json?_=${Date.now()}`).then((x) => (x.ok ? x.json() : null)).catch(() => null).then((c) => {
@@ -72,11 +73,13 @@
     if (st.c && !v("mv-drate")) $("mv-drate").value = c.deposit.rate;
     render();
   });
-  ["check-old", "check-ask", "mv-dep", "mv-rent", "mv-cash", "mv-months", "mv-rate", "mv-drate", "mv-once-move", "mv-once-renew"].forEach((id) => $(id).addEventListener("input", () => (/mv-(dep|rent)/.test(id) && (st.src = ""), /^mv/.test(id) && start(), render())));
+  ["check-old", "check-ask", "mv-dep", "mv-rent", "mv-cash", "mv-months", "mv-rate", "mv-drate", "mv-once-move", "mv-once-renew", "mv-rate-renew", "mv-rate-move"].forEach((id) => $(id).addEventListener("input", () => (/mv-(dep|rent)/.test(id) && (st.src = ""), /^mv/.test(id) && start(), render())));
   window.renewalMove = render;
   // ① 칸에 넣으면 확인기 칸에 옮겨 적고 확인기를 다시 그린다(확인기가 이 절을 다시 그린다).
   $("mv-ask").addEventListener("input", () => (bad("mv-ask") || ($("check-ask").value = v("mv-ask")), start(), window.renderCheck ? renderCheck() : render()));
-  ["mv-kind", "mv-opp", "lang-toggle"].forEach((id) => $(id).addEventListener(id == "lang-toggle" ? "click" : "change", () => (id != "lang-toggle" && start(), render())));
+  // 켤 때 두 칸이 비어 있으면 지금 금리를 옮겨 넣는다. 끌 때는 두 칸 값을 지우지 않는다(다시 켤 때 그대로).
+  $("mv-split").addEventListener("change", () => $("mv-split").checked && ["mv-rate-renew", "mv-rate-move"].forEach((id) => v(id) || ($(id).value = v("mv-rate"))));
+  ["mv-kind", "mv-opp", "mv-split", "lang-toggle"].forEach((id) => $(id).addEventListener(id == "lang-toggle" ? "click" : "change", () => (id != "lang-toggle" && start(), render())));
   $("mv-cash-fill").addEventListener("click", () => (($("mv-cash").value = Math.round(+v("check-old"))), start(), render()));
   render();
 })();

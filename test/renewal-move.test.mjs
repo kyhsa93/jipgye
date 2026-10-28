@@ -19,6 +19,7 @@ import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const CALC = await readFile(path.join(root, "docs/move-cost.js"), "utf8");
+const TEXT = await readFile(path.join(root, "docs/move-text.js"), "utf8");
 const JS = await readFile(path.join(root, "docs/renewal-move.js"), "utf8");
 const BASIS = await readFile(path.join(root, "docs/renewal-move-basis.js"), "utf8");
 const ANALYTICS = await readFile(path.join(root, "docs/analytics.js"), "utf8");
@@ -26,6 +27,7 @@ const HTML = await readFile(path.join(root, SITE, "renewal-vs-new.html"), "utf8"
 const SECTION = HTML.slice(HTML.indexOf('<section id="move"'), HTML.indexOf('<section id="convert"'));
 
 await import("../docs/move-cost.js");
+await import("../docs/move-text.js");
 const { compare, describe, LTV, TAX } = globalThis.jipgyeMoveCost;
 const MSG = (lang) => SECTION.match(new RegExp(`${lang === "en" ? "data-msg-en" : "data-msg"}="([^"]*)"`))[1].split("|");
 
@@ -83,6 +85,7 @@ async function open({ conversion = CONVERSION, locale = "ko", query = "", cells 
   // ga: 실제 docs/analytics.js 를 같은 자리에 올린다(전송 대신 window.dataLayer 에 쌓인다 - 그 안에 개인 입력이 없는지 본다).
   if (ga) new vm.Script(ANALYTICS, { filename: "docs/analytics.js" }).runInContext(page.sandbox);
   new vm.Script(CALC, { filename: "docs/move-cost.js" }).runInContext(page.sandbox);
+  new vm.Script(TEXT, { filename: "docs/move-text.js" }).runInContext(page.sandbox);
   new vm.Script(JS, { filename: "docs/renewal-move.js" }).runInContext(page.sandbox);
   new vm.Script(BASIS, { filename: "docs/renewal-move-basis.js" }).runInContext(page.sandbox);
   await page.settle();
@@ -198,8 +201,8 @@ test("자리: 확인기 → 방법 안내 → #move → #convert, 보이는 labe
     assert.ok(SECTION.includes(`<label for="${id}" id="${id}-label" data-en="`), `${id} label`);
   }
   assert.match(SECTION, /<p class="lead" id="mv-answer" aria-live="polite" data-msg="[^"]+" data-msg-en="[^"]+"><\/p>/);
-  assert.equal(MSG("ko").length, 89);
-  assert.equal(MSG("en").length, 89);
+  assert.equal(MSG("ko").length, 93);
+  assert.equal(MSG("en").length, 93);
   assert.ok(SECTION.includes(`data-en="${FOOTERS.renewalMove.en}">${FOOTERS.renewalMove.ko}</p>`), "출처 줄이 source-lines 로 찍히지 않았다");
   assert.match(FOOTERS.renewalMove.ko, /전세자금대출·정기예금 평균금리\. 이 값은 원자료를 가공한 것입니다\.$/);
 });
@@ -213,25 +216,25 @@ test("판정·추천으로 읽히는 낱말이 절 안에 없다(legal #777)", (
 });
 
 test("외부 JS 셋은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B, renewal-vs-new 만 defer 로 한 번씩(계산이 먼저) 읽고 서비스워커 사전캐시에 없다 (#681)", async () => {
-  for (const [name, src] of [["move-cost.js", CALC], ["renewal-move.js", JS], ["renewal-move-basis.js", BASIS]]) {
+  for (const [name, src] of [["move-cost.js", CALC], ["move-text.js", TEXT], ["renewal-move.js", JS], ["renewal-move-basis.js", BASIS]]) {
     const size = gzipSync(stripJsComments(src), { level: 9 }).length;
     assert.ok(size <= 2048, `docs/${name} gzip ${size}B`);
     assert.equal(HTML.split(`<script src="./${name}" defer></script>`).length, 2, name);
     assert.ok(!(await readFile(path.join(root, "docs/sw.js"), "utf8")).includes(name), `${name} 가 sw.js 사전캐시에 들어갔다`);
   }
-  assert.ok(HTML.indexOf("./move-cost.js") < HTML.indexOf("./renewal-move.js") && HTML.indexOf("./renewal-move.js") < HTML.indexOf("./renewal-move-basis.js"), "defer 실행 순서(계산 → 화면 → 참고값)에 기댄다");
-  // 이 장의 장 전용 JS 는 다섯(group-cto 조건부 승인 #777) - 여섯째를 두려면 group-ceo 안건이다. 합계도 적어 둔다.
+  assert.ok(HTML.indexOf("./move-cost.js") < HTML.indexOf("./move-text.js") && HTML.indexOf("./move-text.js") < HTML.indexOf("./renewal-move.js") && HTML.indexOf("./renewal-move.js") < HTML.indexOf("./renewal-move-basis.js"), "defer 실행 순서(계산 → 문장 → 화면 → 근거)에 기댄다");
+  // 이 장의 장 전용 JS 는 여섯(group-cto 조건부 승인 #777 다섯 + group-ceo 판정 A #792 여섯째) - 일곱째나 파일당 한도 올리기는 다시 group-ceo 안건이다.
   const { pageScripts } = await import("../scripts/page-assets.ts");
   const own = pageScripts(path.join(root, "docs")).filter((f) => HTML.includes(`<script src="./${f}" defer></script>`));
-  assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
+  assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "move-text.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
   const total = (await Promise.all(own.map((f) => readFile(path.join(root, "docs", f), "utf8")))).reduce((n, src) => n + gzipSync(stripJsComments(src), { level: 9 }).length, 0);
-  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 7,795B → P5 8,264B → #792 입력 흐름·칸 옆 오류·계산에 쓴 금리 뒤 8,662B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
+  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 7,795B → P5 8,264B → #792 입력 흐름·칸 옆 오류·계산에 쓴 금리 뒤 8,662B → #792 5 계산·문장 분리(여섯째 파일, group-ceo A)·선택지별 금리 뒤 9,151B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
   // 늘리는 PR 은 이 숫자를 사유와 함께 고친다.
-  assert.ok(total <= 8670, `이 장 장 전용 JS 합계 ${total}B > 8,670B`);
+  assert.ok(total <= 9200, `이 장 장 전용 JS 합계 ${total}B > 9,200B`); // group-ceo 조건 ②: 병합 때 잰 값을 100B 단위로 올림, 그 뒤 +400B 넘게 늘면 group-cto 재판정
   const users = [];
   for (const f of (await readdir(path.join(root, SITE))).filter((x) => x.endsWith(".html")).sort()) {
     const page = await readFile(path.join(root, SITE, f), "utf8");
-    if (/move-cost\.js|renewal-move(-basis)?\.js/.test(page)) users.push(f);
+    if (/move-(cost|text)\.js|renewal-move(-basis)?\.js/.test(page)) users.push(f);
   }
   assert.deepEqual(users, ["renewal-vs-new.html"]);
 });
@@ -673,7 +676,7 @@ test("화면: 일회성 비용을 넣으면 「조건을 바꾸면」 줄이 손
 });
 
 test("세 스크립트가 찾는 id 는 모두 구운 장에 있다 - 가짜 DOM 은 없는 id 도 만들어 주므로 이 시험이 대신 본다", () => {
-  const ids = new Set([...[CALC, JS, BASIS].join("\n").matchAll(/\$\("([\w-]+)"\)/g)].map((m) => m[1]));
+  const ids = new Set([...[CALC, TEXT, JS, BASIS].join("\n").matchAll(/\$\("([\w-]+)"\)/g)].map((m) => m[1]));
   for (const id of SECTION.match(/data-i18n="([^"]+)"/)[1].split(" ")) ids.add(id);
   assert.ok(ids.size > 25, `id 를 ${ids.size}개밖에 못 찾았다`);
   const missing = [...ids].filter((id) => !HTML.includes(`id="${id}"`) && id !== "check-retry"); // check-retry 는 실패 때 basis 가 만든다
@@ -843,4 +846,72 @@ test("#792-3 근거 줄의 금리는 실제 계산에 쓴 값 - 4.234 를 넣으
   await set(page, { ...CASE1, "mv-rate": "4.234", "mv-drate": "3.2049" });
   assert.equal(RATES(page), " 계산에 쓴 금리: 대출 4.23%(한국은행 평균, 2026-08) · 예금 3.2%(직접 넣은 값). 참고 평균금리(한국은행): 대출 4.23%(2026-08) · 예금 3.14%(2026-08).");
   assert.equal(compare({ ...input1(), loanRate: 4.234 }).gapK, compare(input1()).gapK, "계산이 4.23 을 쓰지 않는다");
+});
+
+// ---- #792 5: 선택지별 대출 금리 ----
+const SPLIT = { renew: 126000, kind: "jeonse", deposit: 100000, cash: 60000, loanRate: 4.23, depositRate: 3.14, months: 24, opportunity: true };
+test("#792-5 계산: 두 금리가 같으면 공통 금리와 결과가 같고, 금리 차이로 순위가 바뀐다, 대출 없는 선택지는 그 금리와 무관", () => {
+  const common = compare(SPLIT);
+  const same = compare({ ...SPLIT, split: true, renewRate: 4.23, moveRate: 4.23 });
+  assert.deepEqual(same, common, "같은 금리인데 결과가 다르다");
+  assert.equal(common.cheaper, "move");
+  assert.equal(common.gapK, -22008);
+  const diff = compare({ ...SPLIT, split: true, renewRate: 2.5, moveRate: 6 }); // 기존 대출 2.5% 를 두는 재계약 vs 6% 새 대출
+  assert.equal(diff.cheaper, "renew", "금리 차이로 순위가 바뀌지 않았다");
+  assert.equal(diff.gapK, 15000);
+  assert.equal(diff.renew.interestK, 1375); // 66,000 × 2.5% ÷ 12
+  assert.equal(diff.move.interestK, 2000); // 40,000 × 6% ÷ 12
+  const noLoan = { ...SPLIT, cash: 130000 };
+  assert.equal(compare({ ...noLoan, split: true, renewRate: 1, moveRate: 19 }).gapK, compare({ ...noLoan, split: true, renewRate: 9, moveRate: 2 }).gapK, "대출 없는 쪽 금리가 결과를 바꿨다");
+  assert.deepEqual(compare({ ...SPLIT, split: true, renewRate: "", moveRate: 30, loanRate: "" }).errors, [{ field: "renewRate", code: "required" }, { field: "moveRate", code: "range" }], "켜면 공통 금리는 묻지 않는다");
+});
+
+test("#792-5 화면: 켜면 지금 금리를 두 칸에 옮기고, 끄면 공통 금리로, 다시 켜면 두 칸 값이 그대로 - 결과·표·손익분기가 같은 금리를 쓴다", async () => {
+  const page = await open();
+  await set(page, { "mv-ask": "126000", "mv-dep": "100000", "mv-cash": "60000", "mv-once-move": "300" });
+  assert.equal(page.byId("mv-rr-field").hidden, true);
+  const commonText = answer(page);
+  page.byId("mv-split").checked = true;
+  page.byId("mv-split").dispatch("change");
+  await page.settle();
+  assert.equal(page.byId("mv-rate-renew").value, "4.23");
+  assert.equal(page.byId("mv-rate-move").value, "4.23");
+  assert.equal(page.byId("mv-rate-field").hidden, true);
+  assert.equal(page.byId("mv-rr-field").hidden, false);
+  assert.equal(answer(page), commonText, "같은 금리를 옮겨 넣었는데 결과가 바뀌었다");
+  await set(page, { "mv-rate-renew": "2.5", "mv-rate-move": "6" });
+  const input = { ...SPLIT, split: true, renewRate: "2.5", moveRate: "6", oneMove: "300" };
+  const want = describe(compare(input), MSG("ko"), KO, "jeonse");
+  assert.equal(answer(page), want.text);
+  assert.equal(page.text("mv-what-if"), want.whatIf);
+  assert.ok(page.html("mv-table").includes(`<tr><th scope="row">월 이자</th><td>137.5</td><td>200</td></tr>`), page.html("mv-table"));
+  assert.match(page.text("mv-basis-line"), / 계산에 쓴 금리: 재계약 대출 2\.5%\(직접 넣은 값\) · 이사 대출 6%\(직접 넣은 값\) · 예금 3\.14%\(한국은행 평균, 2026-08\)\. 참고 평균금리/);
+  assert.equal(page.text("mv-rate-note").startsWith("대출 금리: 재계약·이사를 따로 넣었습니다."), true);
+  page.byId("mv-split").checked = false;
+  page.byId("mv-split").dispatch("change");
+  await page.settle();
+  assert.equal(answer(page), commonText, "끄면 공통 금리로 돌아가야 한다");
+  assert.equal(page.byId("mv-rate-renew").value, "2.5", "끄면서 두 칸 값을 지웠다");
+  page.byId("mv-split").checked = true;
+  page.byId("mv-split").dispatch("change");
+  await page.settle();
+  assert.equal(answer(page), want.text, "다시 켰는데 두 칸 값이 그대로가 아니다");
+});
+
+test("#792-5 잘못된 선택지별 금리는 금리 칸 아래 오류, 빈칸은 넣을 칸 - 금리는 GA 로 나가지 않는다", async () => {
+  const page = await open({ ga: true });
+  await set(page, { "mv-ask": "126000", "mv-dep": "100000", "mv-cash": "60000" });
+  page.byId("mv-split").checked = true;
+  page.byId("mv-split").dispatch("change");
+  await page.settle();
+  await set(page, { "mv-rate-renew": "25" });
+  assert.equal(page.text("mv-err-loan"), "재계약 쪽 대출 금리: 0~20% 사이여야 합니다.");
+  assert.equal(page.html("mv-table"), "");
+  await set(page, { "mv-rate-renew": "", "mv-rate-move": "6.17" });
+  assert.equal(answer(page), "넣을 칸: 재계약 쪽 대출 금리");
+  await set(page, { "mv-rate-renew": "2.57" });
+  await wait();
+  const sent = JSON.stringify(page.sandbox.dataLayer);
+  for (const secret of ["2.57", "6.17", "126000"]) assert.ok(!sent.includes(secret), `GA 로 ${secret} 가 나갔다`);
+  assert.ok(events(page, "calculator_result").length >= 1);
 });
