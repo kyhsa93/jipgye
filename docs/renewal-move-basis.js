@@ -8,9 +8,9 @@
   let x; // 마지막으로 그린 문맥
   window.renewalMoveBasis = (ctx) => {
     x = ctx;
-    const { M, f, fmt, ym, v, kind, c, st, opp, r, d } = ctx;
+    const { M, f, fmt, ym, v, kind, c, st, opp, r, d, split } = ctx;
     // 잘못된 값은 그 칸 묶음 바로 아래에(#792). 빈칸은 오류가 아니다 - 답 자리가 남은 칸을 적는다.
-    const G = { renew: "ask", deposit: "dep", rent: "dep", cash: "cash", loanRate: "loan", months: "loan", depositRate: "opp", oneRenew: "once", oneMove: "once" };
+    const G = { renew: "ask", deposit: "dep", rent: "dep", cash: "cash", loanRate: "loan", months: "loan", renewRate: "loan", moveRate: "loan", depositRate: "opp", oneRenew: "once", oneMove: "once" };
     for (const g of ["ask", "dep", "cash", "loan", "once", "opp"]) $("mv-err-" + g).textContent = (d?.err || []).filter(([k]) => G[k] == g).map((e) => e[1]).join(" ");
     // 금리의 출처는 칸 값으로 정한다 - 평균금리와 같으면 참고값, 아니면 직접 넣은 값(고쳤다가 평균값으로 되돌려도 맞게, #792).
     // 입력 쪽 금리 줄과 결과 아래 근거 줄이 같은 판단을 쓴다. 기회비용을 끄면 예금 금리는 계산에 쓰지 않는다고 적는다.
@@ -18,11 +18,15 @@
     const dr = v("mv-drate");
     // 계산은 금리를 bp(0.01%p)로 반올림해 쓴다(move-cost.js) - 출처 판정과 근거 줄도 그 값으로(4.234 를 넣으면 4.23 으로 계산·표시).
     const bp = (x) => Math.round(x * 100) / 100;
-    const refL = c && lr !== "" && bp(lr) == c.loan.rate;
+    const isRef = (x) => c && x !== "" && bp(x) == c.loan.rate; // 대출 금리 칸 하나가 평균과 같은가
+    const [rr, rm] = [v("mv-rate-renew"), v("mv-rate-move")];
+    const refL = split ? isRef(rr) && isRef(rm) : isRef(lr);
+    const src = (x) => (isRef(x) ? f(85, ym(c.loan.month)) : M[86]); // 칸 하나의 출처 이름
+    // 선택지별 금리: 칸마다 출처를 적고, 평균으로 둔 칸이 있으면 「개인이 새로 받는 금리가 아니다」를 남긴다(po·legal #792 5).
     const refD = c && dr !== "" && bp(dr) == c.deposit.rate;
     let note = st.err ? M[44] : "";
     if (c) {
-      note = (refL ? f(39, ym(c.loan.month)) : M[40]) + (opp ? (refD ? f(41, ym(c.deposit.month)) : M[42]) : M[88]);
+      note = (split ? f(92, src(rr), src(rm)) + (isRef(rr) || isRef(rm) ? M[93] : "") : refL ? f(39, ym(c.loan.month)) : M[40]) + (opp ? (refD ? f(41, ym(c.deposit.month)) : M[42]) : M[88]);
       const at = new Date(Date.parse(c.updatedAt) + 324e5).toISOString();
       const seen = [c.loan.month, c.deposit.month].sort()[0];
       if (mon(at.slice(0, 4), at.slice(5, 7)) - mon(seen.slice(0, 4), seen.slice(4)) > LAG) note += f(43, ym(seen));
@@ -66,7 +70,7 @@
       (row && rc.window ? " " + f(60, ym(rc.window[0]), ym(rc.window[1]), fmt(sum(row.slice(0, 10)))) + (row.length > 11 ? f(61, fmt(row[10])) : "") + (lo < rc.min?.ratio ? f(62, fmt(lo)) : "") : "") +
       (v("mv-dep") && st.src == "d" && cd ? f(70, rc.gu, bn, fmt(cd.pairs)) : v("mv-dep") && st.src == "c" && med ? f(71, fmt(row[10])) : "") +
       // 계산에 쓴 금리와 그 출처(결과가 있을 때만). 직접 넣은 금리가 있으면 한국은행 평균은 따로 「참고」로 적는다.
-      (r?.ok ? f(82, bp(lr), refL ? f(85, ym(c.loan.month)) : M[86]) + (opp ? f(83, bp(dr), refD ? f(85, ym(c.deposit.month)) : M[86]) : M[84]) +
+      (r?.ok ? (split ? f(91, bp(rr), src(rr), bp(rm), src(rm)) : f(82, bp(lr), src(lr))) + (opp ? f(83, bp(dr), refD ? f(85, ym(c.deposit.month)) : M[86]) : M[84]) +
         (c && (!refL || (opp && !refD)) ? f(87, c.loan.rate, ym(c.loan.month), c.deposit.rate, ym(c.deposit.month)) : "") : "") + M[67];
   };
   const pick = (src) => ((x.st.src = src), (x.st.key = x.key), x.start(), x.render());
