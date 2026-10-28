@@ -36,3 +36,34 @@ test("배포되는 모든 페이지가 현재 CSS 버전과 기능별 계측 분
     }
   }
 });
+
+// 장 전용 외부 JS 주석 떼기(#784): 나가는 사본(build/site)에서만, 주석만 뗀다. 소스(docs/)와 공용 셸 JS·sw.js 는 그대로다.
+test("장 전용 JS 는 나가는 사본에서 주석만 떼고, 셸 JS·sw.js·docs/ 는 건드리지 않는다 (#784)", async () => {
+  const { readFile, readdir } = await import("node:fs/promises");
+  const path = await import("node:path");
+  const { pageScripts, stripPageScripts } = await import("../scripts/page-assets.ts");
+  const { findJsComments } = await import("../scripts/strip-inline-comments.ts");
+  const { proveCommentsOnly } = await import("./helpers/comment-proof.mjs");
+  const { SITE } = await import("./helpers/site-root.mjs");
+  const root = path.resolve(import.meta.dirname, "..");
+  const docs = path.join(root, "docs");
+  const site = path.join(root, SITE);
+  const sw = await readFile(path.join(docs, "sw.js"), "utf8");
+  const shell = [...sw.matchAll(/"\.\/([\w-]+\.js)"/g)].map((m) => m[1]);
+  assert.ok(shell.includes("nav.js") && shell.includes("analytics.js"), "sw.js 사전캐시 목록을 못 읽었다");
+  const page = pageScripts(docs);
+  assert.ok(page.includes("renewal-convert.js") && page.includes("lease-expiry.js"), `장 전용 목록: ${page}`);
+  assert.deepEqual(page.filter((f) => shell.includes(f) || f === "sw.js"), []);
+  assert.deepEqual((await readdir(docs)).filter((f) => f.endsWith(".js")).sort(), [...page, ...shell, "sw.js"].sort(), "docs/*.js 가 장 전용·셸·sw 셋으로 다 나뉘어야 한다");
+  assert.equal(stripPageScripts({ siteRoot: docs, io: { read: () => { throw new Error("docs/ 를 읽었다"); }, write: () => { throw new Error("docs/ 를 고쳤다"); } } }), 0);
+  if (SITE === "docs") return; // 소스 틀로 돌릴 때는 나가는 사본이 없다
+  for (const name of page) {
+    const before = await readFile(path.join(docs, name), "utf8");
+    const after = await readFile(path.join(site, name), "utf8");
+    assert.deepEqual(findJsComments(after), [], `${name}: 나가는 사본에 주석이 남았다`);
+    if (before !== after) assert.ok(proveCommentsOnly(before, after).ok, `${name}: 주석 말고 다른 것이 바뀌었다`);
+  }
+  for (const name of [...shell, "sw.js"]) {
+    assert.equal(await readFile(path.join(site, name), "utf8"), await readFile(path.join(docs, name), "utf8"), `${name}: 셸 JS 가 바뀌었다`);
+  }
+});

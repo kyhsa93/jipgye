@@ -5,7 +5,7 @@ import path from "node:path";
 import { createWriteSet } from "./render-writes.ts";
 import { crossStampAll, stampAll } from "./updated-stamp.ts";
 import { requireSite, siteDir } from "./site-dir.ts";
-import { stampPageAssets } from "./page-assets.ts";
+import { stampPageAssets, stripPageScripts } from "./page-assets.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -25,4 +25,8 @@ console.log(`  교차값 입력별 기준일 ${crossDone.length}장`);
 
 const assetsDone = stampPageAssets({ siteRoot, io });
 console.log(`  스타일 버전·기능 분류 ${assetsDone}장`);
+
+// 장 전용 외부 JS 는 나가는 사본에서 주석을 뗀다(#784). docs/ 자신에 찍을 때는 건너뛴다.
+const scriptsDone = stripPageScripts({ siteRoot, io });
+console.log(`  장 전용 JS 주석 떼기 ${scriptsDone}개`);
 writes.commit();
