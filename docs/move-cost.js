@@ -7,16 +7,17 @@
 
   function check(x) {
     const errors = [];
-    const need = (field, v, ok) => Number.isFinite(v) ? ok(v) || errors.push({ field, code: "range" }) : errors.push({ field, code: "required" });
+    // 빈칸은 「아직 안 넣음」(required), 숫자가 아니거나 범위 밖이면 잘못된 값(range) - 둘을 다르게 알리고 다르게 센다(#792).
+    const need = (field, raw, ok, v = n(raw)) => Number.isFinite(v) ? ok(v) || errors.push({ field, code: "range" }) : errors.push({ field, code: raw == null || raw === "" ? "required" : "range" });
     const rate = (v) => v >= 0 && v <= 20;
-    const wolse = x.kind === "wolse";
-    need("renew", n(x.renew), (v) => v > 0);
-    need("deposit", n(x.deposit), (v) => (wolse ? v >= 0 : v > 0));
-    if (wolse) need("rent", n(x.rent), (v) => v > 0);
-    need("cash", n(x.cash), (v) => v >= 0);
-    need("loanRate", n(x.loanRate), rate);
-    if (x.opportunity) need("depositRate", n(x.depositRate), rate);
-    need("months", n(x.months), (v) => Number.isInteger(v) && v >= 1 && v <= 120);
+    const wolse = x.kind == "wolse";
+    need("renew", x.renew, (v) => v > 0);
+    need("deposit", x.deposit, (v) => (wolse ? v >= 0 : v > 0));
+    if (wolse) need("rent", x.rent, (v) => v > 0);
+    need("cash", x.cash, (v) => v >= 0);
+    need("loanRate", x.loanRate, rate);
+    if (x.opportunity) need("depositRate", x.depositRate, rate);
+    need("months", x.months, (v) => Number.isInteger(v) && v >= 1 && v <= 120);
     // 일회성 비용(P5: 이사비·중개보수 등, 사용자가 넣는 값). 비우면 0, 넣으면 0 이상.
     for (const field of ["oneRenew", "oneMove"]) if (x[field] !== "" && x[field] != null && !(n(x[field]) >= 0)) errors.push({ field, code: "range" });
     return errors;
@@ -35,7 +36,7 @@
     const cashK = interestK + rentK;
     const oneK = Math.round((n(once) || 0) * 10);
     // 일회성 비용은 내 돈(C) 밖에서 낸다고 본다 - C 에서 빼면 대출과 기회비용이 같이 움직인다(data-analyst #777).
-    return { deposit, own, loan, short, feasible: short === 0, interestK, rentK, cashK, oppK, oneK, monthK: cashK + oppK, totalK: (cashK + oppK) * x.months + oneK, cashTotalK: cashK * x.months, cashAllK: cashK * x.months + oneK };
+    return { deposit, own, loan, short, feasible: !short, interestK, rentK, cashK, oppK, oneK, monthK: cashK + oppK, totalK: (cashK + oppK) * x.months + oneK, cashTotalK: cashK * x.months, cashAllK: cashK * x.months + oneK };
   }
 
   function compare(input) {
@@ -44,10 +45,10 @@
     const bp = (v) => Math.round((n(v) || 0) * 100);
     const x = { cash: Math.round(n(input.cash)), loanBp: bp(input.loanRate), depositBp: bp(input.depositRate), months: n(input.months), opportunity: !!input.opportunity };
     const renew = side(Math.round(n(input.renew)), 0, x, input.oneRenew);
-    const move = side(Math.round(n(input.deposit)), input.kind === "wolse" ? n(input.rent) : 0, x, input.oneMove);
+    const move = side(Math.round(n(input.deposit)), input.kind == "wolse" ? n(input.rent) : 0, x, input.oneMove);
     const ok = renew.feasible && move.feasible;
     const gap = (k) => (ok ? move[k] - renew[k] : null);
-    const who = (g) => (g === null || g === 0 ? null : g > 0 ? "renew" : "move");
+    const who = (g) => (!g ? null : g > 0 ? "renew" : "move");
     return { ok: true, kind: input.kind, comparable: ok, months: x.months, opportunity: x.opportunity, renew, move, gapK: gap("totalK"), cashGapK: gap("cashAllK"), cheaper: who(gap("totalK")), cashCheaper: who(gap("cashAllK")) };
   }
 
@@ -62,7 +63,10 @@
     const k = (x) => fmt(x / 10);
     if (!r.ok) {
       const miss = r.errors.filter((e) => e.code == "required");
-      return { text: miss.length ? f(3, miss.map((e) => M[NAME[e.field]]).join(", ")) : r.errors.map((e) => f(11, M[NAME[e.field]], M[WHY[e.field] + (e.field == "deposit" && kind == "wolse")])).join(" ") };
+      const line = (e) => f(11, M[NAME[e.field]], M[WHY[e.field] + (e.field == "deposit" && kind == "wolse")]);
+      const bad = r.errors.filter((e) => e.code == "range");
+      // err: 잘못된 값마다 그 칸 가까이 둘 문장(화면이 칸 묶음 아래에 놓는다).
+      return { text: miss.length ? f(3, miss.map((e) => M[NAME[e.field]]).join(", ")) : bad.map(line).join(" "), err: bad.map((e) => [e.field, line(e)]) };
     }
     const N = r.months;
     const basis = M[r.opportunity ? 19 : 20];

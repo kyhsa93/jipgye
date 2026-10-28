@@ -78,7 +78,7 @@ test("자리: 입력·답이 방법 안내보다 먼저, #lead-section 앞이며
   assert.ok(html.indexOf('id="check-section"') < html.indexOf("</aside>"));
   assert.ok(html.indexOf('id="check-optional"') < html.indexOf('id="check-answer"'), "선택 입력도 답보다 앞이어야 한다");
   assert.ok(html.indexOf("</aside>") < html.indexOf('id="convert"'), "계산 근거 안내가 비교 도구 바로 뒤에 남아야 한다");
-  for (const [id, text] of [["check-gu", "자치구"], ["check-apt", "단지"], ["check-area", "전용면적"], ["check-old", "종전 보증금(만원, 선택)"], ["check-ask", "요구 보증금(만원, 선택)"]]) {
+  for (const [id, text] of [["check-gu", "자치구"], ["check-apt", "단지"], ["check-area", "전용면적"], ["check-old", "종전 보증금(만원, 선택)"], ["check-ask", "요구 보증금(만원)"]]) {
     assert.match(html, new RegExp(`<label for="${id}" id="${id}-label">${text.replace(/[()]/g, "\\$&")}</label>`), `${id} 의 보이는 label`);
   }
   assert.match(html, /<p class="lead" id="check-answer" aria-live="polite"><\/p>/);
