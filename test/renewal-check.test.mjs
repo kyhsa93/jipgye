@@ -198,8 +198,8 @@ test("드리프트: 화면의 구간 판정(ckBand)이 빌더의 bandOf 와 모�
 
 test("금지어: 확인기 문구(ko/en)에 평균·전망·권유 표현이 없다", async () => {
   const html = await readFile(path.join(root, "docs/renewal-vs-new.html"), "utf8");
-  // 확인기 절만 본다 - 바로 아래 방법 안내(aside) 뒤의 #move 절(#777)은 평균금리를 참고값으로 쓴다.
-  const section = html.slice(html.indexOf('<section id="check-section"'), html.indexOf("<aside"));
+  // 확인기 절과 방법 안내(aside)까지 본다 - 그 아래 #move 절(#777)은 평균금리를 참고값으로 쓴다.
+  const section = html.slice(html.indexOf('<section id="check-section"'), html.indexOf('<section id="move"'));
   const dict = [...html.matchAll(/^\s+ck[A-Z]\w*:[\s\S]*?(?=^\s+ck[A-Z]\w*:|^\s+},?$)/gm)].map((m) => m[0]).join("\n");
   assert.ok(dict.includes("ckLegal") && dict.includes("Check your renewal"), "사전 조각을 못 읽었다");
   for (const text of [section, dict]) {

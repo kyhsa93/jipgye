@@ -142,10 +142,12 @@ test("계산: 80%까지 빌려도 모자라면 견주지 않고 모자란 돈을
   assert.equal(none.cheaper, null);
 });
 
-test("계산: 금리는 bp 정수로 바꿔 반올림한다 - 6,000 × 4.23% ÷ 12 = 21.15 → 21.2만원(부동소수 21.149… 로 내려가지 않는다)", () => {
-  const r = compare({ renew: 66000, kind: "jeonse", deposit: 66000, cash: 60000, loanRate: 4.23, months: 24 });
-  assert.equal(r.renew.interestK, 212);
-  assert.equal(r.renew.cashTotalK, 212 * 24);
+test("계산: 금리는 bp 정수로 바꿔 반올림한다 - 78,000 × 3.01% ÷ 12 = 195.65 → 195.7만원(부동소수로 바로 셈하면 195.6499… 로 내려간다)", () => {
+  assert.equal(Math.round(((78000 * 3.01) / 100 / 12) * 10), 1956, "대조: 전세 vs 월세 화면식(금액 × 금리 ÷ 100 ÷ 12)의 부동소수는 내려간다 - 이 사례가 정수화를 실제로 본다");
+  const r = compare({ renew: 138000, kind: "jeonse", deposit: 138000, cash: 60000, loanRate: 3.01, months: 24 });
+  assert.equal(r.renew.loan, 78000);
+  assert.equal(r.renew.interestK, 1957);
+  assert.equal(r.renew.cashTotalK, 1957 * 24);
 });
 
 test("계산: 잘못된 입력은 칸과 사유로 돌려주고 결과를 내지 않는다", () => {
@@ -223,7 +225,7 @@ test("화면: 요구 보증금이 없으면 확인기 칸으로 안내, 그다�
   assert.equal(answer(page), "넣을 칸: 비교할 집 월세");
   assert.equal(page.byId("mv-rent-field").hidden, false);
   await set(page, { "mv-rent": "-3", "mv-months": "200" });
-  assert.equal(answer(page), "비교할 집 월세: 0보다 커야 합니다 거주 기간: 1~120개월이어야 합니다");
+  assert.equal(answer(page), "비교할 집 월세: 0보다 커야 합니다. 거주 기간: 1~120개월이어야 합니다.");
 });
 
 test("화면 = 계산 모듈: 사례 ① 의 제목·부제·역전 줄·표 금액이 compare() 결과와 같다", async () => {
