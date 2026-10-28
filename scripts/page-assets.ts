@@ -1,6 +1,8 @@
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { DOCS_DIR } from "./site-dir.ts";
+import { stripJsComments } from "./strip-inline-comments.ts";
 
 /** Functional content groups; regional and budget variants belong to their parent feature. */
 export function groupForPage(file: string) {
@@ -37,6 +39,28 @@ export function stampPageAssets({ siteRoot, io = diskIo }: { siteRoot: string; i
     version ??= stylesheetVersion(readFileSync(path.join(siteRoot, "style.css")));
     const after = pageAssetHtml(before, file, version);
     if (before !== after) { io.write(full, after); changed++; }
+  }
+  return changed;
+}
+
+/**
+ * 장 전용 외부 JS(sw.js 사전캐시 SHELL_ASSETS 에 없는 docs/*.js)의 주석을 나가는 사본에서만 뗀다(#784).
+ * 틀의 인라인 스크립트(#313)와 같은 이유다 - 소스에는 "왜"를 그대로 적고, 브라우저로 나가는 바이트(S6, #681 의 gzip ≤2KB 는 전송 크기)는
+ * 주석만큼 줄인다. 공용 셸 JS(nav·search·analytics·load-state)와 sw.js 는 건드리지 않는다. 출력이 docs/ 자신이면 소스를 고치게 되므로 아무것도 안 한다.
+ */
+export function pageScripts(siteRoot: string, read = diskIo.read) {
+  const shell = new Set([...read(path.join(siteRoot, "sw.js")).matchAll(/"\.\/([\w-]+\.js)"/g)].map((m) => m[1]));
+  return readdirSync(siteRoot).filter((name) => name.endsWith(".js") && name !== "sw.js" && !shell.has(name)).sort();
+}
+
+export function stripPageScripts({ siteRoot, io = diskIo }: { siteRoot: string; io?: typeof diskIo }) {
+  if (path.resolve(siteRoot) === DOCS_DIR) return 0;
+  let changed = 0;
+  for (const name of pageScripts(siteRoot, io.read)) {
+    const full = path.join(siteRoot, name);
+    const before = io.read(full);
+    const after = stripJsComments(before);
+    if (after !== before) { io.write(full, after); changed++; }
   }
   return changed;
 }

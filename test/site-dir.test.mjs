@@ -8,6 +8,8 @@ import path from "node:path";
 import { promisify } from "node:util";
 import { RENDER_STEPS } from "../scripts/render-pipeline.ts";
 import { buildFixtureSite } from "./helpers/fixture-site.mjs";
+import { pageScripts } from "../scripts/page-assets.ts";
+import { stripJsComments } from "../scripts/strip-inline-comments.ts";
 import { DOCS_DIR, REPO_ROOT, SITE_DIR_ENV, requireSite, siteDir, siteLabel, sitePath, stageSite } from "../scripts/site-dir.ts";
 
 // 출력 디렉터리 (#508, 구조 B-2). 렌더 여섯 스크립트가 docs/ 대신 다른 디렉터리의 복사본을 읽고 쓰게 하는 길이다.
@@ -141,10 +143,14 @@ test("render-pipeline --out: docs/ 는 한 바이트도 안 바뀌고 출력 디
   assert.deepEqual([...before.keys()].filter((f) => DAY_FILES.test(f)), [], "main 의 docs/ 에 날짜별 뉴스 파일이 있다 - 산출물은 build/site 에만 생긴다");
   const htmls = [...rendered.keys()].filter((f) => f.endsWith(".html"));
   assert.equal(htmls.length, 67);
-  // 렌더가 만지지 않는 것(스타일시트·스크립트·SW·매니페스트·아이콘·데이터)은 복사 그대로 - 배포 산출물에 정적 자산이 들어 있다는 뜻이다.
+  // 렌더가 만지지 않는 것(스타일시트·셸 스크립트·SW·매니페스트·아이콘·데이터)은 복사 그대로 - 배포 산출물에 정적 자산이 들어 있다는 뜻이다.
+  // 장 전용 외부 JS 만 주석을 뗀 사본이다(#784) - 그 바이트는 소스에 훑개를 건 것과 같다.
+  const page = new Set(pageScripts(DOCS_DIR));
+  assert.ok(page.size > 0, "장 전용 JS 목록이 비었다");
   for (const f of rendered.keys()) {
     if (f.endsWith(".html") || DAY_FILES.test(f)) continue;
-    assert.equal(rendered.get(f), before.get(f), `${f} 바이트`);
+    const want = page.has(f) ? createHash("sha256").update(stripJsComments(readFileSync(path.join(DOCS_DIR, f), "utf8"))).digest("hex") : before.get(f);
+    assert.equal(rendered.get(f), want, `${f} 바이트`);
   }
   // docs/ 의 소스 18장(손으로 고치는 틀 13장 + 금리 종료 안내 5장, #577 B2)은 docs/ 에도 있다 - 생성 장만 출력 디렉터리에만 있다.
   assert.equal(htmls.filter((f) => !GENERATED.test(f)).length, 18);
