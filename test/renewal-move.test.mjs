@@ -9,7 +9,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
 import { gzipSync } from "node:zlib";
-import { LOAN_LTV, monthlyCost } from "../scripts/conversion.ts";
+import { AREA_BANDS, LOAN_LTV, monthlyCost } from "../scripts/conversion.ts";
 import { TAX_RATE } from "../scripts/interest.ts";
 import { MONTHLY_LAG } from "../scripts/check-data-progress.ts";
 import { FOOTERS } from "../scripts/source-lines.ts";
@@ -34,12 +34,13 @@ const CONVERSION = {
   cells: [
     { district: "송파구", band: "60to85", rate: 4.8, jeonse10k: 80000, deposit10k: 40000, monthly10k: 140, pairs: 75 },
     { district: "송파구", band: "under60", rate: 4.6, jeonse10k: 52000, deposit10k: 10000, monthly10k: 160, pairs: 40 },
+    { district: "송파구", band: "over85", rate: 4.5, jeonse10k: 150000, deposit10k: 60000, monthly10k: 300, pairs: 30 },
   ],
 };
 // 확인기 칸 파일(renewal-cells-songpa) - #777 P1 대표 사례 A·B′ 의 칸 값 모양 그대로(실데이터 파일은 읽지 않는다).
 const CELLS = {
   updatedAt: "2026-10-28T02:11:14Z", window: ["202411", "202610"], min: { show: 3, ratio: 5 },
-  cells: { 헬리오시티: { "84.98": [2, 13, 25, 290, 0, 3, 24, 8, 31, 162, 54, 128500], "130.06": [1, 0, 0, 3, 0, 0, 0, 0, 0, 4, 0, null] } },
+  cells: { 헬리오시티: { "59.96": [0, 6, 6, 65, 0, 0, 1, 0, 0, 1, 16, 108000], "60": [0, 1, 1, 3, 0, 0, 1, 1, 1, 2, 3, 90000], "85": [0, 1, 1, 3, 0, 0, 1, 1, 1, 2, 3, 130000], "84.98": [2, 13, 25, 290, 0, 3, 24, 8, 31, 162, 54, 128500], "130.06": [1, 0, 0, 3, 0, 0, 0, 0, 0, 4, 0, null] } },
   fallback: { under60: [6, 18, 23, 74, 4, 5, 23, 10, 20, 32], "60to85": [5, 30, 53, 169, 0, 1, 18, 12, 21, 75] },
 };
 const Q = (apt, area) => `?${new URLSearchParams({ gu: "songpa", apt, area })}`;
@@ -77,6 +78,7 @@ async function open({ conversion = CONVERSION, locale = "ko", query = "", cells 
   if (conversion) data.conversion = conversion;
   if (cells) data["renewal-cells-songpa"] = cells;
   const page = await loadPage({ file: "renewal-vs-new.html", data, locale, query, status, seed: seedFromHtml() });
+  page.data = data; // 시험이 나중에 응답을 바꿀 수 있게(다시 시도)
   new vm.Script(CALC, { filename: "docs/move-cost.js" }).runInContext(page.sandbox);
   new vm.Script(JS, { filename: "docs/renewal-move.js" }).runInContext(page.sandbox);
   new vm.Script(BASIS, { filename: "docs/renewal-move-basis.js" }).runInContext(page.sandbox);
@@ -193,8 +195,8 @@ test("자리: 확인기 → 방법 안내 → #move → #convert, 보이는 labe
     assert.ok(SECTION.includes(`<label for="${id}" id="${id}-label" data-en="`), `${id} label`);
   }
   assert.match(SECTION, /<p class="lead" id="mv-answer" aria-live="polite" data-msg="[^"]+" data-msg-en="[^"]+"><\/p>/);
-  assert.equal(MSG("ko").length, 70);
-  assert.equal(MSG("en").length, 70);
+  assert.equal(MSG("ko").length, 72);
+  assert.equal(MSG("en").length, 72);
   assert.ok(SECTION.includes(`data-en="${FOOTERS.renewalMove.en}">${FOOTERS.renewalMove.ko}</p>`), "출처 줄이 source-lines 로 찍히지 않았다");
   assert.match(FOOTERS.renewalMove.ko, /전세자금대출·정기예금 평균금리\. 이 값은 원자료를 가공한 것입니다\.$/);
 });
@@ -220,7 +222,9 @@ test("외부 JS 셋은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B
   const own = pageScripts(path.join(root, "docs")).filter((f) => HTML.includes(`<script src="./${f}" defer></script>`));
   assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
   const total = (await Promise.all(own.map((f) => readFile(path.join(root, "docs", f), "utf8")))).reduce((n, src) => n + gzipSync(stripJsComments(src), { level: 9 }).length, 0);
-  assert.ok(total <= 5 * 2048, `이 장 장 전용 JS 합계 ${total}B`);
+  // 합계 상한은 이 PR 의 실측(7,065B)에 맞춰 고정한다 - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
+  // 늘리는 PR 은 이 숫자를 사유와 함께 고친다.
+  assert.ok(total <= 7100, `이 장 장 전용 JS 합계 ${total}B > 7,100B`);
   const users = [];
   for (const f of (await readdir(path.join(root, SITE))).filter((x) => x.endsWith(".html")).sort()) {
     const page = await readFile(path.join(root, SITE, f), "utf8");
@@ -432,4 +436,48 @@ test("확인기에서 칸을 바꾸면 비교 절이 따라 바뀐다(같은 장
   area.dispatch("change");
   await page.settle();
   assert.equal(page.byId("mv-ref-a").hidden, true);
+});
+
+test("근거 줄: 비교할 집 금액이 참고값이면 그 출처를 결과 옆에 적는다 - 자치구 값을 같은 단지 기준처럼 보이지 않게(po·legal #777 P3)", async () => {
+  const page = await open({ query: Q("헬리오시티", "84.98") });
+  await page.click("mv-ref-b");
+  assert.match(page.text("mv-basis-line"), /^기준: 송파구 헬리오시티 84\.98㎡ — .* 비교할 집 금액: 송파구 60~85㎡ 자치구 참고값\(최근 6개월, 단지 75곳\) — 이 단지 값이 아닙니다\. 금리 관측월/);
+  await page.click("mv-ref-a");
+  assert.match(page.text("mv-basis-line"), / 비교할 집 금액: 같은 단지·같은 평형 신규 전세 중간값\(최근 6개월 54건\)\. 금리/);
+  await set(page, { "mv-dep": "100000" });
+  assert.doesNotMatch(page.text("mv-basis-line"), /비교할 집 금액/, "직접 넣은 값에 참고값 출처를 붙였다");
+});
+
+test("받기 실패: 근거 줄도 「고른 단지 없음」이 아니라 자료를 못 받았다고 하고, 다시 시도를 누르면 다시 받아 칸을 잇는다", async () => {
+  const page = await open({ query: Q("헬리오시티", "84.98"), cells: null, status: 500 });
+  assert.match(page.text("mv-basis-line"), /^단지 자료를 불러오지 못했습니다\./);
+  page.data["renewal-cells-songpa"] = CELLS;
+  page.byId("check-retry").onclick(); // 단추는 그릴 때마다 새로 만들어지므로 onclick 하나로 묶는다(가짜 DOM 의 click 은 리스너만 부른다)
+  await page.settle();
+  assert.equal(page.text("mv-ref-note"), "");
+  assert.match(page.text("mv-ref-a"), /128,500만원/);
+  assert.match(page.text("mv-basis-line"), /^기준: 송파구 헬리오시티 84\.98㎡/);
+});
+
+test("「단지 값이 없습니다」는 넘겨받은 단지가 목록에 없을 때만 - 자료 있는 단지에서 면적대를 손으로 골라도 나오지 않는다(legal)", async () => {
+  const page = await open({ query: Q("헬리오시티", "b:60to85") });
+  assert.equal(page.text("mv-ref-note"), "");
+  assert.match(page.text("mv-basis-line"), /^기준: 송파구 60~85㎡ — 자치구 전체 값/);
+});
+
+test("면적대 경계는 AREA_BANDS 와 같다 - 60㎡ 는 60~85㎡, 85㎡ 는 85㎡ 이상, 59.96㎡ 는 60㎡ 미만(화면 두 곳: 확인기 내리기·자치구 참고 칸)", async () => {
+  for (const [area, band, ref, pairs] of [["59.96", "60㎡ 미만", "52,000", 40], ["60", "60~85㎡", "80,000", 75], ["85", "85㎡ 이상", "150,000", 30]]) {
+    const page = await open({ query: Q("헬리오시티", area) });
+    assert.equal(page.text("mv-ref-b"), `송파구 ${band} 대표 전세 넣기 ${ref}만원 — 자치구 참고·단지 ${pairs}곳, 이 단지 값이 아닙니다`, area);
+    const down = await open({ query: Q("없는단지", area) });
+    assert.equal(down.text("mv-ref-note"), `이 단지·평형은 단지 값이 없습니다. 아래는 송파구 ${band} 전체 값입니다.`, `내리기 ${area}`);
+  }
+  assert.deepEqual(AREA_BANDS.map((b) => [b.min, b.max]), [[0, 60], [60, 85], [85, Infinity]]);
+});
+
+test("표본 부족은 두 줄 중 작은 쪽이 min.ratio 미만일 때 - 한 줄만 적어도 적는다", async () => {
+  const page = await open({ query: Q("헬리오시티", "59.96") }); // 요구권 77건 · 표시 없음 2건
+  assert.match(page.text("mv-basis-line"), / 표본 부족: 한 줄이 갱신 2건뿐이라 그 줄은 비율 대신 건수만 냅니다\./);
+  const fine = await open({ query: Q("헬리오시티", "84.98") }); // 330 · 228
+  assert.doesNotMatch(fine.text("mv-basis-line"), /표본 부족/);
 });
