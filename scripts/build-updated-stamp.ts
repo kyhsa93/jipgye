@@ -5,6 +5,7 @@ import path from "node:path";
 import { createWriteSet } from "./render-writes.ts";
 import { crossStampAll, stampAll } from "./updated-stamp.ts";
 import { requireSite, siteDir } from "./site-dir.ts";
+import { stampPageAssets } from "./page-assets.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -22,4 +23,6 @@ console.log(`  기준일 표기 ${done.length}장`);
 const crossDone = crossStampAll({ docsDir: siteRoot, dataDir: path.join(root, "docs/data"), io });
 console.log(`  교차값 입력별 기준일 ${crossDone.length}장`);
 
+const assetsDone = stampPageAssets({ siteRoot, io });
+console.log(`  스타일 버전·기능 분류 ${assetsDone}장`);
 writes.commit();

@@ -1316,6 +1316,7 @@
   document.getElementById("home-search").addEventListener("submit", (e) => {
     const f = e.currentTarget;
     if (f.kind.value !== "sale") f.max.value = "";
+    window.analytics?.event("home_search", { realestate_kind: f.kind.value, district: f.district.value, budget: f.max.value || "all" });
   });
 </script>
 </body>

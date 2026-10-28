@@ -10,6 +10,7 @@ import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 import { formatPercent } from "../scripts/realestate-format.ts";
 import { readDataSources } from "../scripts/source-age.ts";
 import { stampSources } from "../scripts/source-lines.ts";
+import { pageAssetHtml, stylesheetVersion } from "../scripts/page-assets.ts";
 import { stripInlineScriptComments, stripJsComments } from "../scripts/strip-inline-comments.ts";
 import { failedLineKo } from "../scripts/summary-note.ts";
 import { CROSS_PAGES, PAGE_SOURCES, baselineFor, stampHtml } from "../scripts/updated-stamp.ts";
@@ -43,6 +44,7 @@ import { loadRealestatePage } from "./helpers/realestate-page.mjs";
 
 const repo = path.resolve(import.meta.dirname, "..");
 const site = buildFixtureSite();
+const finishPage = (html, file) => pageAssetHtml(html, file, stylesheetVersion(site.read("docs/style.css")));
 after(() => site.cleanup());
 
 const fixtureRead = (name) => readFile(path.join(import.meta.dirname, "fixtures/site/data", `${name}.json`), "utf8").then(JSON.parse);
@@ -124,7 +126,7 @@ test("[realestate-pages] 고정 데이터로 찍은 거래 유형별 페이지�
     assert.ok(ymd, `docs/${page.file}에 기준일이 없다`);
     assert.equal(
       committed,
-      stampHtml(buildRealestatePage(baseHtml, page, realestate, complexRatio?.seoul ?? null), ymd),
+      finishPage(stampHtml(buildRealestatePage(baseHtml, page, realestate, complexRatio?.seoul ?? null), ymd), page.file),
       `docs/${page.file}이 고정 데이터와 어긋납니다. node scripts/build-realestate-pages.ts를 실행하세요.`
     );
   }
@@ -148,10 +150,10 @@ test("[realestate-pages] 고정 데이터로 찍은 자치구 페이지 25개가
     assert.ok(ymd, `docs/${district.file}에 기준일이 없다`);
     assert.equal(
       committed,
-      stampHtml(
+      finishPage(stampHtml(
         buildDistrictPage(baseHtml, district, realestate, deals, renewal?.districts?.[district.name] ?? null, complexRatio?.districts?.[district.name] ?? null),
         ymd
-      ),
+      ), district.file),
       `docs/${district.file}이 고정 데이터와 어긋납니다. node scripts/build-realestate-pages.ts를 실행하세요.`
     );
   }
@@ -159,7 +161,7 @@ test("[realestate-pages] 고정 데이터로 찍은 자치구 페이지 25개가
 
 test("[inline-comments] 고정 데이터로 나가는 docs/realestate.html 은 틀을 채우고 훑개를 건 것뿐이다 (#374)", async () => {
   // 출처 줄 자리표시({{src:…}}, #588)는 틀 채우기와 같은 길(applyPrerender)에서 꽂히므로 틀을 꽂은 글자로 견준다.
-  const template = stampSources(await repoRead("scripts/realestate-template.html"));
+  const template = finishPage(stampSources(await repoRead("scripts/realestate-template.html")), "realestate.html");
   const baked = site.read("docs/realestate.html");
 
   // 스크립트: 나가는 장의 인라인 스크립트는 틀의 것에서 훑개가 주석을 뗀 글자와 같고, 증명기(구문 + 지운 글자)도 통과한다.

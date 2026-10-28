@@ -279,7 +279,7 @@ const T = {
     groupLoadError: "단지 가격을 불러오지 못했습니다.",
     detailNotReady:
       "면적·연식·단지명 조건은 지역별 실거래 자료가 있어야 걸 수 있는데, 아직 받지 못했습니다. 지역과 예산으로 먼저 찾아보세요.",
-    periods: (periods) => `${periods} 신고분 기준`,
+    periods: (periods) => `${periods} 계약분 기준`,
     topDistricts: "거래가 많은 지역",
     floor: (floor) => `${floor}층`,
     shown: (n) => `최근 ${n}건`,
@@ -290,7 +290,7 @@ const T = {
     notReady: "아직 검색할 실거래 자료가 없습니다. 국토교통부 신고분을 받는 대로 채워집니다.",
     note:
       "국토교통부에 신고된 아파트 매매 실거래 기록입니다. 지금 살 수 있는 매물이 아니며, 같은 단지라도 층·향·동에 따라 값이 크게 다릅니다. 계약 후 30일인 신고 기한 때문에 최근 거래는 나중에 반영됩니다. 목록은 최근 거래부터 일부만 보여주며, 건수는 조건에 맞는 신고 거래를 전부 셉니다. 연식은 준공연도가 신고된 거래에만, 직거래 표시는 거래 형태가 신고된 거래에만 걸립니다.",
-    dataThrough: (m) => `${m} 신고분까지`,
+    dataThrough: (m) => `${m} 계약분까지`,
     updatedWord: "갱신",
     footerSource: "{{src:dealSearch.ko}}",
     footerPrivacy: "개인정보처리방침",
@@ -428,7 +428,7 @@ const T = {
     groupLoadError: "Could not load complex prices.",
     detailNotReady:
       "Size, age and complex-name conditions need the per-district transaction files, which have not arrived yet. Try district and budget first.",
-    periods: (periods) => `Filings for ${periods}`,
+    periods: (periods) => `Contracts in ${periods}`,
     topDistricts: "Most deals in",
     floor: (floor) => `${floor}F`,
     shown: (n) => `${n} most recent`,
@@ -439,7 +439,7 @@ const T = {
     notReady: "No transaction data to search yet. It fills in as MOLIT filings come through.",
     note:
       "Apartment sale transactions reported to Korea's MOLIT. These are filed deals, not listings for sale, and prices vary widely by floor, aspect and building within the same complex. Filings can lag up to 30 days after contract. The list shows the most recent matches only; the count covers every filing that matches. Age filters apply only where a build year was filed, and the direct-deal tag only where a deal type was filed.",
-    dataThrough: (m) => `Filings through ${m}`,
+    dataThrough: (m) => `Contracts through ${m}`,
     updatedWord: "updated",
     footerSource: "{{src:dealSearch.en}}",
     footerPrivacy: "Privacy Policy",

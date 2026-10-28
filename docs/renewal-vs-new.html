@@ -352,7 +352,6 @@ function setText(id, text) {
   if (el) el.textContent = text;
 }
 
-// 다시 그려도 구운 caption은 남긴다 (#300).
 function setTable(id, html) {
   const el = document.getElementById(id);
   const cap = el.querySelector("caption");
@@ -435,12 +434,11 @@ function renderDistrictLinks() {
     .join("");
 }
 
-// 재계약 확인기(#652 V3): 고른 구의 renewal-cells-{slug}.json 칸을 그린다. 문턱(min.show·min.ratio)은 빌드가 싣는 기존 상수다.
 const ck = { files: {}, slug: "", want: "", q: new URLSearchParams(location.search) };
 const $ = (id) => document.getElementById(id);
 const ckSum = (a) => a.reduce((x, y) => x + y, 0);
 const ckPct = (k, m) => Math.round((k / m) * 1000) / 10;
-// 구간 경계(정수 비교) - scripts/renewal-cells.ts 의 bandOf 와 같다(test/renewal-check.test.mjs 가 대조).
+// Band parity: test/renewal-check.test.mjs.
 const ckBand = (d, p) => (d < p ? 0 : d === p ? 1 : d * 1000 <= p * 1045 ? 2 : d * 1000 <= p * 1050 ? 3 : 4);
 
 function ckFill(id, opts, prev) {
@@ -484,6 +482,7 @@ function renderCheck(full) {
   setText("check-answer", "");
   setText("check-new", "");
   if (!row) {
+    if (!ck.slug || f) setText("check-answer", locale === "en" ? "Choose a district, then a complex and area. If unavailable, choose a district-wide area band." : "자치구를 고른 뒤 단지와 면적을 선택하세요. 단지가 없으면 구 전체 면적대를 고를 수 있습니다.");
     window.analytics?.result?.("renewal_vs_new", null);
     return;
   }

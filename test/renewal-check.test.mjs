@@ -114,7 +114,7 @@ test("목록에 없는 단지·평형은 자치구×면적대로 내리고 답 �
   const page = await open("?gu=nowon");
   await setValue(page, "check-apt", "얇은단지");
   assert.equal(page.byId("check-area").value, "", "목록에 없는 단지인데 평형을 골라 버렸다");
-  assert.equal(answer(page), "");
+  assert.match(answer(page), /단지가 없으면 구 전체 면적대/);
   assert.match(page.html("check-area"), /<option value="b:60to85">60~85㎡ — 목록에 없는 평형\(구 전체\)<\/option>/);
   await setValue(page, "check-area", "b:60to85", "change");
   // 60~85㎡ 짝: 상계주공 11 + 얇은단지 2 = 13 (요구권 6 · 표시 없음 7). 작은단지(59.9)는 60㎡ 미만.
@@ -171,7 +171,7 @@ test("영어: 판정 5 영어 문구, 표·라벨·법무 문구에 한국어가
 test("자치구를 바꾸면 그 구 파일을 받고, 없는 구(404)는 아무 답도 내지 않는다", async () => {
   const page = await open();
   assert.match(page.html("check-gu"), /<option value="">고르기<\/option><option value="nowon">노원구<\/option>/);
-  assert.equal(answer(page), "");
+  assert.match(answer(page), /자치구를 고른 뒤 단지와 면적을 선택/);
   await setValue(page, "check-gu", "nowon", "change");
   assert.match(page.html("check-apt-list"), /<option value="상계주공"><option value="작은단지">/);
   assert.equal(page.byId("check-area").value, "");

@@ -754,7 +754,7 @@ test("페이지가 스타일을 따로 품지 않는다", async () => {
   for (const page of pages) {
     const html = await readFile(path.join(root, SITE, page), "utf8");
     assert.ok(!html.includes("<style>"), `${SITE}/${page}에 <style>이 다시 생겼다`);
-    assert.ok(html.includes('href="./style.css"'), `${SITE}/${page}이 스타일시트를 부르지 않는다`);
+    assert.match(html, /href="\.\/style\.css\?v=[a-f0-9]{16}"/, `${SITE}/${page}이 버전 지정 스타일시트를 부르지 않는다`);
   }
 });
 

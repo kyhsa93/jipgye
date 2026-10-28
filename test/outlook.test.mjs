@@ -237,7 +237,8 @@ test("얼리기를 뺀 사본은 위 검사에서 빨갛게 된다 (낙제 시�
   const copy = path.join(scripts, `.mutant-build-outlook-${process.pid}.mjs`);
   await writeFile(copy, source.replace(guard, ""));
   try {
-    const mutant = await import(copy);
+    const { pathToFileURL } = await import("node:url");
+    const mutant = await import(pathToFileURL(copy).href);
     const first = mutant.freezeScores(withDrift(), FIRST, "2026-12-15");
     const second = mutant.freezeScores(first, REVISED, "2027-01-20");
     assert.notEqual(second.entries[0].actual, 9.53, "얼리기를 빼도 통과한다 - 이 검사가 얼리기를 지키지 못한다");

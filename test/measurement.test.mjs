@@ -137,7 +137,7 @@ function conversionPage() {
     currentCell() { return a.context.cell; }, compare() { return a.context.outcome; },
     cache: { conversion: { loan: {}, deposit: {} } }, cash10k: 30000, district: "서울", bandKey: "84", locale: "ko",
     t: () => () => "결과", man: () => "1", escapeHtml: String, optionHtml: () => "<p>option</p>",
-    showEmpty: () => { box.innerHTML = "empty"; },
+    showEmpty: () => { box.innerHTML = "empty"; }, setText() {},
   });
   const fn = conversion.slice(conversion.indexOf("function renderResult()"), conversion.indexOf("function renderControls()"));
   vm.runInContext(fn, a.context);
