@@ -222,9 +222,9 @@ test("외부 JS 셋은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B
   const own = pageScripts(path.join(root, "docs")).filter((f) => HTML.includes(`<script src="./${f}" defer></script>`));
   assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
   const total = (await Promise.all(own.map((f) => readFile(path.join(root, "docs", f), "utf8")))).reduce((n, src) => n + gzipSync(stripJsComments(src), { level: 9 }).length, 0);
-  // 합계 상한은 이 PR 의 실측(7,065B)에 맞춰 고정한다 - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
+  // 합계 상한은 이 PR 의 실측(7,130B)에 맞춰 고정한다 - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
   // 늘리는 PR 은 이 숫자를 사유와 함께 고친다.
-  assert.ok(total <= 7100, `이 장 장 전용 JS 합계 ${total}B > 7,100B`);
+  assert.ok(total <= 7150, `이 장 장 전용 JS 합계 ${total}B > 7,150B`);
   const users = [];
   for (const f of (await readdir(path.join(root, SITE))).filter((x) => x.endsWith(".html")).sort()) {
     const page = await readFile(path.join(root, SITE, f), "utf8");
@@ -480,4 +480,21 @@ test("표본 부족은 두 줄 중 작은 쪽이 min.ratio 미만일 때 - 한 �
   assert.match(page.text("mv-basis-line"), / 표본 부족: 한 줄이 갱신 2건뿐이라 그 줄은 비율 대신 건수만 냅니다\./);
   const fine = await open({ query: Q("헬리오시티", "84.98") }); // 330 · 228
   assert.doesNotMatch(fine.text("mv-basis-line"), /표본 부족/);
+});
+
+test("참고값을 넣은 뒤 확인기 칸이나 종류를 바꾸면 그 금액의 출처를 지우고 직접 넣은 값으로 돌린다(po·legal #777 P3 재판정)", async () => {
+  const page = await open({ query: Q("헬리오시티", "84.98") });
+  await page.click("mv-ref-b"); // 60~85㎡ 자치구 참고 80,000
+  assert.match(page.text("mv-basis-line"), /자치구 참고값\(최근 6개월, 단지 75곳\)/);
+  const area = page.byId("check-area");
+  area.value = "59.96";
+  area.dispatch("change");
+  await page.settle();
+  assert.equal(page.byId("mv-dep").value, 80000, "금액은 그대로다");
+  assert.doesNotMatch(page.text("mv-basis-line"), /비교할 집 금액/, "다른 칸의 단지 수를 그 금액의 출처로 적었다");
+  assert.equal(page.text("mv-ref-note").endsWith("비교할 집: 직접 넣은 값입니다."), true);
+  const again = await open({ query: Q("헬리오시티", "84.98") });
+  await again.click("mv-ref-a"); // 전세 중간값
+  await set(again, { "mv-kind": "wolse" });
+  assert.doesNotMatch(again.text("mv-basis-line"), /비교할 집 금액/, "전세 참고값을 월세 비교의 출처로 남겼다");
 });

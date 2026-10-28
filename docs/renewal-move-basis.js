@@ -24,6 +24,10 @@
     const bn = M[64 + ["under60", "60to85", "over85"].indexOf(bk)];
     const cd = c?.cells?.find((e) => e.district == rc.gu && e.band == bk);
     const med = !rc.band && row?.length > 11 ? row[11] : null;
+    // 참고값을 넣은 뒤 칸(자치구·단지·면적)이나 종류가 바뀌면 그 금액은 더는 지금 칸의 참고값이 아니다 - 직접 넣은 값으로 돌린다(po·legal #777 P3).
+    const key = [rc.gu, rc.apt, rc.area, kind].join("|");
+    if (st.src && st.key != key) st.src = "";
+    x.key = key;
     st.ref = { med, cd };
     $("mv-ref-a").hidden = !(med && kind == "jeonse");
     $("mv-ref-a").textContent = med ? f(47, fmt(med), fmt(row[10])) : "";
@@ -39,14 +43,14 @@
       (v("mv-dep") && st.src == "d" && cd ? f(70, rc.gu, bn, fmt(cd.pairs)) : v("mv-dep") && st.src == "c" && med ? f(71, fmt(row[10])) : "") +
       (c ? " " + f(63, ym(c.loan.month), ym(c.deposit.month)) : "") + M[67];
   };
-  $("mv-ref-a").addEventListener("click", () => (($("mv-dep").value = x.st.ref.med), (x.st.src = "c"), x.render()));
+  const pick = (src) => ((x.st.src = src), (x.st.key = x.key), x.render());
+  $("mv-ref-a").addEventListener("click", () => (($("mv-dep").value = x.st.ref.med), pick("c")));
   $("mv-ref-b").addEventListener("click", () => {
     const { cd } = x.st.ref;
     const w = x.v("mv-kind") == "wolse";
     $("mv-dep").value = w ? cd.deposit10k : cd.jeonse10k;
     if (w) $("mv-rent").value = cd.monthly10k;
-    x.st.src = "d";
-    x.render();
+    pick("d");
   });
   window.renewalMove?.();
 })();
