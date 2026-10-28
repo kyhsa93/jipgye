@@ -1,10 +1,11 @@
-// 자치구 가격 막대(#745 PR8). 25개 구를 값 순서로 세운 가로 막대를 빌드 때 HTML 로 굽는다 — 화면 스크립트 0 B.
-// 매매/전세/월세 전환은 fieldset 안 라디오 + CSS :has(src/css/c-data.css)다. 막대 하나가 그 구의 장(district-*.html) 링크이고 값을 글자로 적으므로
-// 막대 목록 자체가 텍스트 대안이다(같은 값의 표는 시세 장의 자치구별 시세 표 — 링크로 잇는다). 값은 docs/data/realestate.json 의 4주 평균 그대로 — 여기서 새로 세지 않는다.
-// 표본이 MIN_SAMPLE 건 미만인 구는 막대를 그리지 않고 「표본 부족」으로 적는다. 증감은 색이 아니라 ▲▼ 와 부호 글자로 낸다.
+// District price presentation, prerendered from the same source as the district table.
+// Home uses an SVG district map; detailed pages use a sorted list and two-district comparison.
+// Values remain the reported-period averages from realestate.json, not estimates or medians.
+// Fewer than MIN_SAMPLE deals: no price or price color, only the count and a sample notice.
 import { escapeHtml } from "./html-escape.ts";
 import { districtFile, districtNameEn, DISTRICT_SLUGS } from "./district-slugs.ts";
 import { formatMan, hasEnoughSample, MIN_SAMPLE } from "./realestate-format.ts";
+import { SEOUL_MAP_PATHS, SEOUL_MAP_VIEWBOX } from "./seoul-map-paths.ts";
 
 export const BAR_KINDS = ["sale", "jeonse", "wolse"] as const;
 type Kind = (typeof BAR_KINDS)[number];
@@ -56,24 +57,45 @@ const valueText = (row: BarRow, locale: "ko" | "en") =>
     : formatMan(row.value, locale);
 
 function barList(rows: BarRow[]) {
-  const max = Math.max(0, ...rows.map((r) => r.value ?? 0));
   const items = rows.map((r) => {
     const name = both(r.name, districtNameEn(r.name));
     if (r.value == null) {
-      return `<li class="dbars-row is-thin"><a href="./${districtFile(r.slug)}"><span class="dbars-name">${name}</span><span class="dbars-thin">${both(`표본 부족 (${countKo(r.count)}, ${MIN_SAMPLE}건 미만)`, `Too few deals (${countEn(r.count)}, under ${MIN_SAMPLE})`)}</span></a></li>`;
+      return `<li class="dbars-row is-thin" data-district="${r.slug}"><a href="./${districtFile(r.slug)}"><span class="dbars-name">${name}</span><span class="dbars-thin">${both(`표본 부족 (${countKo(r.count)}, ${MIN_SAMPLE}건 미만)`, `Too few deals (${countEn(r.count)}, under ${MIN_SAMPLE})`)}</span></a></li>`;
     }
-    const width = max > 0 ? Math.max(1, Math.round((r.value / max) * 1000) / 10) : 0;
-    return `<li class="dbars-row"><a href="./${districtFile(r.slug)}"><span class="dbars-name">${name}</span><span class="dbars-track" aria-hidden="true"><span class="dbars-bar" style="width:${width}%"></span></span><span class="dbars-val">${both(`${valueText(r, "ko")} · ${countKo(r.count)}`, `${valueText(r, "en")} · ${countEn(r.count)}`)}</span></a></li>`;
+    return `<li class="dbars-row" data-district="${r.slug}"><a href="./${districtFile(r.slug)}"><span class="dbars-name">${name}</span><span class="dbars-val">${both(`${valueText(r, "ko")} · ${countKo(r.count)}`, `${valueText(r, "en")} · ${countEn(r.count)}`)}</span></a></li>`;
   });
   return `<ol class="dbars-list">${items.join("")}</ol>`;
 }
 
-/**
- * 막대 구역. 데이터가 없으면 빈 문자열이라 자리표시가 빈 채로 남는다.
- * - 시세 장(page): 제목 h2, 매매/전세/월세 전환(라디오 fieldset, CSS :has — 스크립트 0 B), 같은 장의 시세 표로 가는 링크.
- *   막대 ol 이 링크 + 값 글자라 그 자체가 텍스트 대안이고, 같은 값은 바로 아래 시세 표에 있어 대체 표를 따로 굽지 않는다.
- * - 메인(home): 제목 h3, 매매 막대 한 벌만(전환 없음) + 시세 장의 전체 막대로 가는 링크.
- */
+function districtSelect(rows: BarRow[], id: string, ko: string, en: string, selected: string) {
+  const sorted = [...rows].sort((a, b) => a.name.localeCompare(b.name, "ko"));
+  return (["ko", "en"] as const).map((lang) => `<label class="dprice-select" lang="${lang}" for="${id}-${lang}" hidden>${escapeHtml(lang === "ko" ? ko : en)}<select class="c-select" id="${id}-${lang}" data-district-select>${sorted.map((r) => `<option value="${r.slug}"${r.slug === selected ? " selected" : ""}>${escapeHtml(lang === "ko" ? r.name : districtNameEn(r.name))}</option>`).join("")}</select></label>`).join("");
+}
+
+export function priceBand(value: number | null) {
+  return value == null ? "thin" : String([3000, 5000, 7000, 10000].filter((n) => value >= n).length);
+}
+
+function districtMap(rows: BarRow[]) {
+  const available = new Map(rows.map((r) => [r.name, r]));
+  const first = [...rows].sort((a, b) => a.name.localeCompare(b.name, "ko")).find((r) => r.value != null) ?? rows[0];
+  const shapes = SEOUL_MAP_PATHS.map((shape) => {
+    const row = available.get(shape.name);
+    if (!row) return "";
+    const title = `${row.name} / ${districtNameEn(row.name)} · ${row.value == null ? "표본 부족 / Too few deals" : `${formatMan(row.value, "ko")} / ${formatMan(row.value, "en")} per 3.3㎡`}`;
+    return `<a href="./${districtFile(row.slug)}" data-map-district="${row.slug}" aria-label="${escapeHtml(title)}"><title>${escapeHtml(title)}</title><path d="${shape.path}" data-band="${priceBand(row.value)}"/><text x="${shape.x}" y="${shape.y}" text-anchor="middle" dominant-baseline="central" aria-hidden="true">${both(row.name.replace(/구$/, ""), districtNameEn(row.name).replace(/-gu$/, "" )).replaceAll("span", "tspan")}</text></a>`;
+  }).join("");
+  const cards = rows.map((row) => `<article class="dprice-card" data-map-card="${row.slug}"${row.slug === first.slug ? "" : " hidden"}><p class="dprice-eyebrow">${both("선택한 지역", "Selected district")}</p><h4>${both(row.name, districtNameEn(row.name))}</h4><p class="dprice-number">${row.value == null ? both("표본 부족", "Too few deals") : both(formatMan(row.value, "ko"), formatMan(row.value, "en"))}</p><p class="dbars-unit">${both("3.3㎡당 평균 매매 가격", "Average sale price per 3.3㎡")}</p><p>${both(`최근 신고 거래 ${countKo(row.count)}`, `${countEn(row.count)} reported in this period`)}</p>${row.value == null ? `<p class="dbars-unit">${both(`${MIN_SAMPLE}건 미만으로 가격을 표시하지 않습니다.`, `Price withheld for fewer than ${MIN_SAMPLE} deals.`)}</p>` : ""}<a class="c-btn c-btn--secondary" href="./${districtFile(row.slug)}">${both("이 지역 자세히 보기 →", "Explore this district →")}</a></article>`).join("");
+  const legend = [["0", "3천 미만", "< ₩30M"], ["1", "3천–5천", "₩30–50M"], ["2", "5천–7천", "₩50–70M"], ["3", "7천–1억", "₩70–100M"], ["4", "1억 이상", "≥ ₩100M"], ["thin", "표본 부족", "Too few deals"]];
+  return `<p class="dbars-unit">${both("궁금한 구를 선택해 가격을 확인하세요. 색상별 가격대는 아래 범례를 확인하세요.", "Select a district. See the legend below for each price band.")}</p><div class="dprice-layout"><div class="dprice-map-wrap"><svg class="dprice-map" viewBox="${SEOUL_MAP_VIEWBOX}" role="group" aria-label="${escapeHtml("서울 자치구 매매 가격 · Seoul district sale prices")}">${shapes}</svg><ul class="dprice-legend" aria-label="가격 범례 / Price legend">${legend.map(([band, ko, en]) => `<li><i data-band="${band}" aria-hidden="true"></i>${both(ko, en)}</li>`).join("")}</ul><p class="dprice-credit">${both("3.3㎡당 · 단위: 만원 · 지도: ", "Per 3.3㎡ · Map: ")}<a href="./licenses/seoul-map-NOTICE.txt">KOSTAT / Lucy Park</a></p></div><div>${districtSelect(rows, "dprice-home-select", "지역 선택", "Choose a district", first.slug)}<div data-map-cards aria-live="polite" aria-atomic="true">${cards}</div></div></div>`;
+}
+
+function comparison(rows: BarRow[], kind: Kind) {
+  const sorted = [...rows].sort((a, b) => a.name.localeCompare(b.name, "ko"));
+  return `<div class="dprice-compare" hidden><p class="dprice-eyebrow">${both("관심 지역 비교", "Compare districts")}</p><div class="dprice-compare-grid">${[0, 1].map((i) => `<div>${districtSelect(rows, `dprice-${kind}-${i}`, `지역 ${i + 1}`, `District ${i + 1}`, sorted[Math.min(i, sorted.length - 1)].slug)}<div class="dprice-card" data-compare-slot="${i}" aria-live="polite"></div></div>`).join("")}</div></div>`;
+}
+
+/** Keep the existing export and anchors so links and both render paths remain compatible. */
 export function districtBarsHtml(data, { variant = "page" }: { variant?: "page" | "home" } = {}) {
   if (!data?.districts?.length) return "";
   const home = variant === "home";
@@ -87,14 +109,14 @@ export function districtBarsHtml(data, { variant = "page" }: { variant?: "page" 
   const panels = kinds
     .map(
       (k) =>
-        `<div class="dbars-panel" data-kind="${k}"><p class="dbars-unit">${both(`${KIND_LABEL[k][0]} ${KIND_UNIT[k][0]} · 높은 순 · 막대를 누르면 그 구의 장으로`, `${KIND_LABEL[k][1]}, ${KIND_UNIT[k][1]} · highest first · tap a bar for that district`)}</p>${barList(byKind[k])}</div>`
+        `<div class="dbars-panel" data-kind="${k}"><p class="dbars-unit">${both(`${KIND_LABEL[k][0]} ${KIND_UNIT[k][0]} · 높은 순 · 지역을 누르면 상세 보기`, `${KIND_LABEL[k][1]}, ${KIND_UNIT[k][1]} · highest first · select a district for details`)}</p>${comparison(byKind[k], k)}${barList(byKind[k])}</div>`
     )
     .join("");
   if (home) {
     return (
       `<section class="dbars dbars--home" aria-labelledby="dbars-heading"><h3 id="dbars-heading">${both("자치구별 매매 가격", "Sale prices by district")}</h3>` +
-      `<p class="dbars-meta">${period}</p>${panels}` +
-      `<p class="dbars-more"><a href="./realestate.html#district-bars">${both("전세·월세까지 전체 보기 →", "See jeonse and rent too →")}</a></p></section>`
+      `<p class="dbars-meta">${period}</p>${districtMap(byKind.sale)}` +
+      `<p class="dbars-more"><a href="./realestate.html#district-bars">${both("전체 가격 목록·관심 지역 비교 →", "All prices and district comparison →")}</a></p><script src="./district-prices.js" defer></script></section>`
     );
   }
   const chips = BAR_KINDS.map(
@@ -105,6 +127,6 @@ export function districtBarsHtml(data, { variant = "page" }: { variant?: "page" 
     `<p class="dbars-meta">${period}</p>` +
     `<fieldset class="dbars-tabs"><legend class="sr-only">${both("거래 유형", "Deal type")}</legend><div class="c-chips">${chips}</div></fieldset>` +
     `<div class="dbars-panels">${panels}</div>` +
-    `<p class="dbars-more"><a href="#district-section">${both("같은 값을 표로 보기(자치구별 시세 표) →", "See the same figures in the table →")}</a></p></section>`
+    `<p class="dbars-more"><a href="#district-section">${both("같은 값을 표로 보기(자치구별 시세 표) →", "See the same figures in the table →")}</a></p><script src="./district-prices.js" defer></script></section>`
   );
 }
