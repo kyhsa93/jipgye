@@ -50,11 +50,12 @@
     const c = st.c;
     // 참고값 단추·근거 줄은 renewal-move-basis.js(#777 P3)가 같은 문맥으로 그린다.
     window.renewalMoveBasis?.({ M, f, fmt, ym, v, kind, c, st, render, start, opp });
-    if (!(+ask > 0)) return out(M[2]), measure(null);
+    if (!(+ask > 0)) return out(M[2]), measure(null), ($("mv-what-if").textContent = "");
     const C = jipgyeMoveCost;
-    const r = C.compare({ renew: ask, kind, deposit: v("mv-dep"), rent: v("mv-rent"), cash: v("mv-cash"), loanRate: v("mv-rate"), depositRate: v("mv-drate"), months: v("mv-months"), opportunity: opp });
+    const r = C.compare({ renew: ask, kind, deposit: v("mv-dep"), rent: v("mv-rent"), cash: v("mv-cash"), loanRate: v("mv-rate"), depositRate: v("mv-drate"), months: v("mv-months"), opportunity: opp, oneRenew: v("mv-once-renew"), oneMove: v("mv-once-move") });
     const d = C.describe(r, M, fmt, kind);
-    measure(r, JSON.stringify([ask, kind, v("mv-dep"), v("mv-rent"), v("mv-cash"), v("mv-rate"), v("mv-drate"), v("mv-months"), opp]));
+    measure(r, JSON.stringify([ask, kind, v("mv-dep"), v("mv-rent"), v("mv-cash"), v("mv-rate"), v("mv-drate"), v("mv-months"), opp, v("mv-once-renew"), v("mv-once-move")]));
+    $("mv-what-if").textContent = d.whatIf || "";
     const cell = (x, h) => (h ? `<th scope="${h}">${x}</th>` : `<td>${x}</td>`);
     out(d.text, d.rows && `<thead><tr><td>${d.head[0]}</td>${cell(d.head[1], "col")}${cell(d.head[2], "col")}</tr></thead><tbody>` +
       d.rows.map(([l, a, b]) => `<tr>${cell(l, "row")}${cell(a)}${cell(b)}</tr>`).join("") + "</tbody>");
@@ -67,7 +68,7 @@
     if (st.c && !v("mv-drate")) $("mv-drate").value = c.deposit.rate;
     render();
   });
-  ["check-old", "check-ask", "mv-dep", "mv-rent", "mv-cash", "mv-months", "mv-rate", "mv-drate"].forEach((id) => $(id).addEventListener("input", () => (id == "mv-rate" && (st.r = 0), id == "mv-drate" && (st.d = 0), /mv-(dep|rent)/.test(id) && (st.src = ""), /^mv/.test(id) && start(), render())));
+  ["check-old", "check-ask", "mv-dep", "mv-rent", "mv-cash", "mv-months", "mv-rate", "mv-drate", "mv-once-move", "mv-once-renew"].forEach((id) => $(id).addEventListener("input", () => (id == "mv-rate" && (st.r = 0), id == "mv-drate" && (st.d = 0), /mv-(dep|rent)/.test(id) && (st.src = ""), /^mv/.test(id) && start(), render())));
   window.renewalMove = render;
   ["mv-kind", "mv-opp", "lang-toggle"].forEach((id) => $(id).addEventListener(id == "lang-toggle" ? "click" : "change", () => (id != "lang-toggle" && start(), render())));
   $("mv-cash-fill").addEventListener("click", () => (($("mv-cash").value = Math.round(+v("check-old"))), start(), render()));

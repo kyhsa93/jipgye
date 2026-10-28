@@ -198,8 +198,8 @@ test("자리: 확인기 → 방법 안내 → #move → #convert, 보이는 labe
     assert.ok(SECTION.includes(`<label for="${id}" id="${id}-label" data-en="`), `${id} label`);
   }
   assert.match(SECTION, /<p class="lead" id="mv-answer" aria-live="polite" data-msg="[^"]+" data-msg-en="[^"]+"><\/p>/);
-  assert.equal(MSG("ko").length, 72);
-  assert.equal(MSG("en").length, 72);
+  assert.equal(MSG("ko").length, 82);
+  assert.equal(MSG("en").length, 82);
   assert.ok(SECTION.includes(`data-en="${FOOTERS.renewalMove.en}">${FOOTERS.renewalMove.ko}</p>`), "출처 줄이 source-lines 로 찍히지 않았다");
   assert.match(FOOTERS.renewalMove.ko, /전세자금대출·정기예금 평균금리\. 이 값은 원자료를 가공한 것입니다\.$/);
 });
@@ -225,9 +225,9 @@ test("외부 JS 셋은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B
   const own = pageScripts(path.join(root, "docs")).filter((f) => HTML.includes(`<script src="./${f}" defer></script>`));
   assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
   const total = (await Promise.all(own.map((f) => readFile(path.join(root, "docs", f), "utf8")))).reduce((n, src) => n + gzipSync(stripJsComments(src), { level: 9 }).length, 0);
-  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 계측과 금리 줄 이동 뒤 7,795B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
+  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 계측과 금리 줄 이동 뒤 7,795B → P5 일회성 비용·손익분기 뒤 8,251B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
   // 늘리는 PR 은 이 숫자를 사유와 함께 고친다.
-  assert.ok(total <= 7800, `이 장 장 전용 JS 합계 ${total}B > 7,800B`);
+  assert.ok(total <= 8260, `이 장 장 전용 JS 합계 ${total}B > 8,260B`);
   const users = [];
   for (const f of (await readdir(path.join(root, SITE))).filter((x) => x.endsWith(".html")).sort()) {
     const page = await readFile(path.join(root, SITE, f), "utf8");
@@ -617,4 +617,65 @@ test("계측: 참고값 단추 하나만 눌러도 비교 시작이다", async (
   const page = await open({ ga: true, query: Q("헬리오시티", "84.98") });
   await page.click("mv-ref-b");
   assert.equal(events(page, "compare_start").length, 1);
+});
+
+// ---- P5: 일회성 비용과 손익분기 (#777 P5) ----
+// data-analyst 사례 ③(#777): 재계약 126,000 vs 송파구 대표 전세 80,000, 내 돈 60,000, 4.23%·3.14%, 이사 쪽 일회성 620(이사비 300 + 중개보수 320 가정).
+const input3 = (extra = {}) => ({ renew: 126000, kind: "jeonse", deposit: 80000, cash: 60000, loanRate: 4.23, depositRate: 3.14, months: 24, opportunity: true, oneMove: 620, ...extra });
+const KO = (x) => Number(x).toLocaleString("ko-KR", { maximumFractionDigits: 1 });
+
+test("손익분기: 월 비용은 이사가 162.2만원 덜, 일회성은 620만원 더 → 3개월은 재계약이 133.4 덜, 4개월째부터 이사가 덜(사례 ③)", () => {
+  const at = (months) => compare(input3({ months }));
+  assert.equal(at(3).renew.monthK - at(3).move.monthK, 1622);
+  assert.equal(at(3).gapK, 1334);
+  assert.equal(at(3).cheaper, "renew");
+  assert.equal(at(4).gapK, -288);
+  assert.equal(at(4).cheaper, "move", "기간에 따라 순위가 뒤집힌다");
+  const d = describe(at(24), MSG("ko"), KO, "jeonse");
+  assert.match(d.whatIf, /^일회성 비용까지 넣으면 4개월째부터 이사가 덜 듭니다\(그 전에는 재계약이 덜 듭니다\)\. 기간별: 12개월 이사가 1,326\.4만원 덜 · 24개월 이사가 3,272\.8만원 덜 · 36개월 /);
+  assert.ok(d.rows.some(([l, a, b]) => l === "일회성 비용" && a === "0" && b === "620"), "일회성 비용 줄");
+  const total = d.rows.find(([l]) => l === "합계");
+  assert.equal(total[2], KO(at(24).move.totalK / 10));
+  assert.equal(at(24).move.totalK, at(24).move.cashTotalK + at(24).move.oppK * 24 + 6200, "합계 = 기간 현금 + 기회비용 + 일회성");
+});
+
+test("손익분기: 나누어떨어지면 그 달에 같아지고, 엇갈리지 않거나 10년 밖이면 날짜를 만들지 않는다, 일회성이 없으면 기간별만", () => {
+  const M = MSG("ko");
+  const base = { renew: 100000, kind: "wolse", deposit: 100000, cash: 100000, loanRate: 4, depositRate: 0, months: 24, opportunity: false };
+  const w = (extra) => describe(compare({ ...base, ...extra }), M, KO, "wolse").whatIf;
+  // 이사 쪽 월세 100 이 매달 더 들고, 재계약 쪽 일회성 300 이 처음에 더 든다 → 3개월째 같아진다
+  assert.match(w({ rent: 100, oneRenew: 300 }), /^3개월째에 두 선택지의 비용이 같아지고, 그 뒤로는 재계약이 덜 듭니다\./);
+  // 이사가 월세도 더, 일회성도 더 → 엇갈리지 않는다
+  assert.match(w({ rent: 100, oneMove: 300 }), /^일회성 비용을 넣어도 기간과 상관없이 같은 쪽이 덜 듭니다\./);
+  // 월 차이 0.1만원, 일회성 차이 50만원 → 500개월 = 10년 밖
+  assert.match(w({ rent: 0.1, oneRenew: 50 }), /^일회성 비용을 넣어도 10년\(120개월\) 안에는 덜 드는 쪽이 바뀌지 않습니다\./);
+  assert.match(w({ rent: 100 }), /^기간별: 12개월 재계약이 1,200만원 덜 · /, "일회성 없이 손익분기 문장을 만들었다");
+  assert.equal(describe(compare({ ...base, rent: 100 }), M, KO, "wolse").rows.some(([l]) => l === "일회성 비용"), false);
+});
+
+test("일회성 비용 입력: 비우면 0, 음수는 칸 이름과 사유", () => {
+  assert.equal(compare(input3({ oneMove: "" })).move.oneK, 0);
+  const bad = compare(input3({ oneMove: -1 }));
+  assert.deepEqual(bad.errors, [{ field: "oneMove", code: "range" }]);
+  assert.equal(describe(bad, MSG("ko"), KO, "jeonse").text, "이사 쪽 일회성 비용: 0 이상이어야 합니다.");
+});
+
+test("화면: 일회성 비용을 넣으면 「조건을 바꾸면」 줄이 손익분기와 기간별 차이를 보이고, 표에 일회성 줄이 생긴다", async () => {
+  const page = await open();
+  await set(page, { "check-ask": "126000", "mv-dep": "80000", "mv-cash": "60000" });
+  assert.match(page.text("mv-what-if"), /^기간별: 12개월 이사가/);
+  await set(page, { "mv-once-move": "620" });
+  assert.equal(page.text("mv-what-if"), describe(compare(input3()), MSG("ko"), KO, "jeonse").whatIf);
+  assert.match(page.html("mv-table"), /<tr><th scope="row">일회성 비용<\/th><td>0<\/td><td>620<\/td><\/tr>/);
+  assert.match(page.text("mv-once-help"), /법정 요율은 상한이며 이 화면은 계산하지 않습니다/);
+  await set(page, { "mv-cash": "1000" });
+  assert.equal(page.text("mv-what-if"), "", "견줄 수 없는데 손익분기를 만들었다");
+});
+
+test("세 스크립트가 찾는 id 는 모두 구운 장에 있다 - 가짜 DOM 은 없는 id 도 만들어 주므로 이 시험이 대신 본다", () => {
+  const ids = new Set([...[CALC, JS, BASIS].join("\n").matchAll(/\$\("([\w-]+)"\)/g)].map((m) => m[1]));
+  for (const id of SECTION.match(/data-i18n="([^"]+)"/)[1].split(" ")) ids.add(id);
+  assert.ok(ids.size > 25, `id 를 ${ids.size}개밖에 못 찾았다`);
+  const missing = [...ids].filter((id) => !HTML.includes(`id="${id}"`) && id !== "check-retry"); // check-retry 는 실패 때 basis 가 만든다
+  assert.deepEqual(missing, []);
 });
