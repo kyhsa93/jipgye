@@ -10,15 +10,15 @@
 
 :root {
   color-scheme: light dark;
-  --bg: #fcfbf8;
-  --fg: #1c1b19;
-  --muted: #5c5a55;
-  --card: #f3f1ea;
-  --border: #dedbd2;
+  --bg: #fafbf8;
+  --fg: #172b36;
+  --muted: #53636d;
+  --card: #ffffff;
+  --border: #dbe4e3;
   /* 빗금 칸처럼 "비었다"를 그림으로 말하는 자리는 --border로는 안 보인다 - 카드 위에서 라이트
    * 1.19:1 · 다크 1.22:1이었다(실측). 글자가 아니라 도형이라 4.5:1이 아니라 WCAG 2.2 1.4.11
    * (비텍스트 3:1)이 재는 자리다. 이 값으로 라이트 3.43:1 · 다크 3.42:1이 된다(#278 PR C, po 기준 6). */
-  --border-strong: #85817a;
+  --border-strong: #718782;
   /* 오르내림. 이 사이트에서 가장 많이 읽히는 색인데(+18.4% 같은 작은 글씨가 전부
    * 이 색이다), 오래도록 흰 바탕에서 고른 값 하나를 카드 위에서도 다크에서도
    * 그대로 썼다. 재어 보니 카드 배경 위에서 라이트 4.02:1 · 다크 3.85:1로 둘 다
@@ -33,13 +33,13 @@
    * 갖고 있어서, 같은 자리에 다른 뜻의 파랑을 놓으면 둘 다 못 읽는다.
    * 지금 어디에 있고 무엇을 골랐는지를 말하는 자리(1층·2층 탭, 칩, 초점,
    * 섹션 제목 밑줄)에만 쓴다. */
-  --accent: #253e81;
+  --accent: #087568;
   --accent-on: #ffffff;
-  --accent-weak: #e9edf6;
+  --accent-weak: #e9f4ef;
   /* 링크. 지금은 액센트와 같은 값이다 - 뜻이 다른 자리라 이름을 갈라 둔다("여기를 누르면 간다"와
    * "지금 여기에 있다"는 같은 색이어야 할 이유가 없다). 갈라지는 것은 뒤 이슈 몫이고, 네 갈래를
    * 다시 손대지 않으려고 토큰을 먼저 세운다(#278 PR C). */
-  --link: #253e81;
+  --link: #087568;
 
   /* 글자 크기 축척. 전에는 0.65rem부터 1.4rem까지 스물두 단계가 섞여 있었다.
    * 열 살짜리 계단은 계층이 아니라 우연이라, 여덟 단으로 줄이고 바닥을 올렸다.
@@ -64,7 +64,8 @@
    * 하나(전세 vs 월세의 월 실부담)도 같은 크기를 쓸 자격이 있어 이름을 일반화했다.
    * 단을 새로 만들지는 않았다 - 열 살짜리 계단으로 되돌아가는 길이 그것이다.
    * 지금은 --fs-h1과 같은 값(30px)이다. */
-  --fs-3xl: 1.875rem;
+  --fs-3xl: 2.5rem;
+  --fs-hero: 3rem;
   --fs-field: 1rem;
 
   /* 손가락이 닿아야 하는 최소 크기. 알약 탭 30px, 아이콘 버튼 36px,
@@ -78,40 +79,40 @@
 
   /* 모서리. 8px과 10px이 서른두 곳에 섞여 있었고 6·12px이 한 곳씩 더 있었다 - 둘을 가를 규칙이
    * 아무 데도 없었다. 한 값으로 묶는다. 알약(999px)은 반경이 아니라 모양이라 그대로 둔다. */
-  --radius: 4px;
-  --radius-sm: 2px;
+  --radius: 12px;
+  --radius-sm: 6px;
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0f1115;
-  --fg: #eaeaea;
-  --muted: #9a9a9a;
-  --card: #1a1d24;
-  --border: #2a2d35;
-  --border-strong: #6b7080;
-  --link: #8aa9f0;
-  --accent: #8aa9f0;
-  --accent-on: #0f1115;
-  --accent-weak: #191f2c;
+  --bg: #111e24;
+  --fg: #e8f0f2;
+  --muted: #a6b6bd;
+  --card: #192b32;
+  --border: #30464d;
+  --border-strong: #7c969e;
+  --link: #6cddc3;
+  --accent: #6cddc3;
+  --accent-on: #111e24;
+  --accent-weak: #203c3b;
   --up: #f98b84;
-  /* 액센트(#8aa9f0)와 같은 파랑 계열이면 "지금 어디에 있나"와 "내렸다"가 한 화면에서
+  /* 액센트(#6cddc3)와 같은 파랑 계열이면 "지금 어디에 있나"와 "내렸다"가 한 화면에서
    * 섞인다. 하늘색 쪽으로 밀어 두 파랑이 서로 다른 색으로 읽히게 했다. */
   --down: #62b8ff;
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #fcfbf8;
-  --fg: #1c1b19;
-  --muted: #5c5a55;
-  --card: #f3f1ea;
-  --border: #dedbd2;
-  --border-strong: #85817a;
-  --link: #253e81;
-  --accent: #253e81;
+  --bg: #fafbf8;
+  --fg: #172b36;
+  --muted: #53636d;
+  --card: #ffffff;
+  --border: #dbe4e3;
+  --border-strong: #718782;
+  --link: #087568;
+  --accent: #087568;
   --accent-on: #ffffff;
-  --accent-weak: #e9edf6;
+  --accent-weak: #e9f4ef;
   --up: #b3261e;
   --down: #1d4ed8;
 }
@@ -3402,16 +3403,16 @@ main:has(> #question-nav) .content-notice.page-notice { min-height: 4lh; }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0f1115;
-    --fg: #eaeaea;
-    --muted: #9a9a9a;
-    --card: #1a1d24;
-    --border: #2a2d35;
-    --border-strong: #6b7080;
-    --link: #8aa9f0;
-    --accent: #8aa9f0;
-    --accent-on: #0f1115;
-    --accent-weak: #191f2c;
+    --bg: #111e24;
+    --fg: #e8f0f2;
+    --muted: #a6b6bd;
+    --card: #192b32;
+    --border: #30464d;
+    --border-strong: #7c969e;
+    --link: #6cddc3;
+    --accent: #6cddc3;
+    --accent-on: #111e24;
+    --accent-weak: #203c3b;
     --up: #f98b84;
     --down: #62b8ff;
   }

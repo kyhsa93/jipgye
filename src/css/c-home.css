@@ -96,3 +96,50 @@ p.wordmark {
 .home-search:has(input[name="kind"]:not([value="sale"]):checked) .home-budget {
   display: none;
 }
+
+/* Homepage: one visible search; named-place search is progressively disclosed. */
+.home-hero { position: relative; margin: 40px 0 32px; padding: 40px; border-radius: 24px; background: var(--accent-weak); }
+.home-eyebrow { margin: 0 0 16px; color: var(--accent); font-size: var(--fs-sm); font-weight: 700; letter-spacing: 0.04em; }
+.home-title { max-width: 18em; font-size: var(--fs-hero); font-weight: 750; line-height: 1.2; letter-spacing: -0.055em; text-wrap: balance; }
+.home-value { margin-top: 20px; color: var(--fg); }
+.home-hero .tagline { margin: 8px 0 0; color: var(--muted); font-size: var(--fs-sm); }
+.home-search { padding: 24px; background: var(--card); border-radius: 16px; margin-top: 32px; gap: 16px; }
+.home-kind .c-chips { gap: 4px; }
+.home-kind .c-chip { border-color: transparent; border-radius: var(--radius-sm); background: var(--bg); padding: 8px 24px; }
+.home-kind .c-label { margin-bottom: 8px; }
+.home-search .c-select { background-color: var(--card); }
+.home-search .c-btn { align-self: end; }
+.home-discovery { margin-top: 12px; font-size: var(--fs-sm); }
+.home-discovery > summary { min-height: var(--tap); align-content: center; cursor: pointer; color: var(--fg); }
+.home-discovery .site-search { margin: 12px 0 0; }
+.home-hero .site-search input { box-sizing: border-box; width: 100%; }
+.home-goals { gap: 16px; margin-bottom: 40px; }
+.home-goals .c-card { position: relative; padding: 24px; border: 1px solid var(--border); border-radius: 16px; }
+.home-goals .c-card:hover { border-color: var(--accent); }
+.home-goal-number { display: block; margin-bottom: 16px; color: var(--muted); font-size: var(--fs-xs); font-variant-numeric: tabular-nums; }
+.home-goals .c-card__title { margin: 0; font-size: var(--fs-md); }
+.home-goals .c-card__title a { color: var(--fg); text-decoration: none; font-weight: 700; }
+.home-goals .c-card__title a::after { content: ""; position: absolute; inset: 0; border-radius: 16px; }
+.home-goals .c-card:has(a:focus-visible) { outline: 2px solid var(--focus); outline-offset: 3px; }
+.home-goals .c-hint { margin: 8px 0 0; font-size: var(--fs-sm); line-height: 1.65; }
+.home-goal-arrow { position: absolute; right: 24px; top: 24px; color: var(--accent); }
+.home-eyebrow [lang="en"], .home-discovery [lang="en"] { display: none; }
+html:lang(en) .home-eyebrow [lang="en"], html:lang(en) .home-discovery [lang="en"] { display: inline; }
+html:lang(en) .home-eyebrow [lang="ko"], html:lang(en) .home-discovery [lang="ko"] { display: none; }
+@media (min-width: 1024px) {
+  .home-search { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.65fr); }
+  .home-search .c-btn { grid-column: auto; }
+  .home-search:has(input[name="kind"]:not([value="sale"]):checked) { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  :root { --fs-hero: 2rem; }
+  .home-hero { margin-top: 24px; padding: 24px 16px; border-radius: 16px; }
+  .home-title { max-width: none; }
+  .home-value { font-size: var(--fs-sm); }
+  .home-search { margin-top: 24px; padding: 16px; gap: 12px; }
+  .home-kind .c-chip { padding: 8px 16px; }
+  .home-goals { gap: 12px; }
+  .home-goals .c-card { padding: 16px; }
+  .home-goal-arrow { top: 16px; right: 16px; }
+  .home-goals .c-hint { font-size: var(--fs-xs); }
+}

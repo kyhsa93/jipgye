@@ -10,7 +10,7 @@ import { deflateSync } from "node:zlib";
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 
-const BG = [0x25, 0x3e, 0x81];
+const BG = [0x08, 0x75, 0x68];
 const FG = [0xff, 0xff, 0xff];
 const SS = 4; // 계단을 없애려고 네 배로 그린 뒤 줄인다.
 

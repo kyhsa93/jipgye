@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#253e81">
+<meta name="theme-color" content="#087568">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
@@ -167,7 +167,7 @@
   let theme = (function () {
     let saved;
     try { saved = window.localStorage.getItem("theme"); } catch {}
-    return saved === "light" || saved === "dark" ? saved : "auto";
+    return /^(light|dark|auto)$/.test(saved) ? saved : "light";
   })();
 
   function applyTheme(next) {

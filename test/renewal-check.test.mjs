@@ -71,11 +71,13 @@ test("픽스처 칸 모양 확인(빌더가 만든 그대로)", () => {
   assert.equal(CELLS.cells["얇은단지"], undefined);
 });
 
-test("자리: 방법 안내 바로 아래·#lead-section 앞, 입력 다섯은 보이는 label 이 있고 답은 aria-live", async () => {
+test("자리: 입력·답이 방법 안내보다 먼저, #lead-section 앞이며 입력 다섯은 보이는 label 이 있고 답은 aria-live", async () => {
   const html = await readFile(path.join(root, SITE, "renewal-vs-new.html"), "utf8");
   const ids = [...html.matchAll(/<section id="([^"]+)"/g)].map((m) => m[1]);
   assert.deepEqual(ids.slice(0, 4), ["check-section", "convert", "expiry", "lead-section"]); // #convert 는 #673 N1, #expiry 는 #674 N2
-  assert.ok(html.indexOf("</aside>") < html.indexOf('id="check-section"'));
+  assert.ok(html.indexOf('id="check-section"') < html.indexOf("</aside>"));
+  assert.ok(html.indexOf('id="check-optional"') < html.indexOf('id="check-answer"'), "선택 입력도 답보다 앞이어야 한다");
+  assert.ok(html.indexOf("</aside>") < html.indexOf('id="convert"'), "계산 근거 안내가 비교 도구 바로 뒤에 남아야 한다");
   for (const [id, text] of [["check-gu", "자치구"], ["check-apt", "단지"], ["check-area", "전용면적"], ["check-old", "종전 보증금(만원, 선택)"], ["check-ask", "요구 보증금(만원, 선택)"]]) {
     assert.match(html, new RegExp(`<label for="${id}" id="${id}-label">${text.replace(/[()]/g, "\\$&")}</label>`), `${id} 의 보이는 label`);
   }

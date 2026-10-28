@@ -46,9 +46,11 @@ test("메인 목적 카드 묶음의 aria-label 은 영어 쌍이 있고, 시장
   assert.match(index, /homeGoals: "무엇을 할까요"/);
   assert.match(index, /homeGoals: "What to do"/);
   assert.match(index, /getElementById\("home-goals"\)\.ariaLabel = t\("homeGoals"\)/);
-  const at = index.indexOf("시장 동향");
-  const card = index.slice(index.lastIndexOf("<div", at), index.indexOf("</p></div>", at));
-  assert.equal(card.match(/price-outlook\.html/g).length, 1, card);
+  const goals = /<nav class="home-goals"[^>]*>([\s\S]*?)<\/nav>/.exec(index)?.[1] ?? "";
+  const card = [...goals.matchAll(/<div class="c-card">[\s\S]*?<\/div>/g)]
+    .map((m) => m[0]).find((c) => c.includes("price-outlook.html"));
+  assert.ok(card, "시장 흐름 카드가 없다");
+  assert.equal((card.match(/price-outlook\.html/g) ?? []).length, 1, card);
 });
 
 // ---- PR5b(#745 뒤쪽): 다른 장·생성 문장의 「중앙값」→「중간값」, 인용·영어 문구, 용어 설명, 거래량 ----
