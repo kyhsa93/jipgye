@@ -225,9 +225,9 @@ test("외부 JS 셋은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B
   const own = pageScripts(path.join(root, "docs")).filter((f) => HTML.includes(`<script src="./${f}" defer></script>`));
   assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
   const total = (await Promise.all(own.map((f) => readFile(path.join(root, "docs", f), "utf8")))).reduce((n, src) => n + gzipSync(stripJsComments(src), { level: 9 }).length, 0);
-  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 7,795B → P5 8,264B → #792 입력 흐름·칸 옆 오류·계산에 쓴 금리 뒤 8,642B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
+  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 7,795B → P5 8,264B → #792 입력 흐름·칸 옆 오류·계산에 쓴 금리 뒤 8,662B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
   // 늘리는 PR 은 이 숫자를 사유와 함께 고친다.
-  assert.ok(total <= 8650, `이 장 장 전용 JS 합계 ${total}B > 8,650B`);
+  assert.ok(total <= 8670, `이 장 장 전용 JS 합계 ${total}B > 8,670B`);
   const users = [];
   for (const f of (await readdir(path.join(root, SITE))).filter((x) => x.endsWith(".html")).sort()) {
     const page = await readFile(path.join(root, SITE, f), "utf8");
@@ -252,7 +252,7 @@ test("화면: 요구 보증금이 없으면 확인기 칸으로 안내, 그다�
   assert.equal(page.html("mv-table"), "");
   await set(page, { "check-ask": "126000" });
   assert.equal(answer(page), "넣을 칸: 비교할 집 보증금, 보증금에 넣을 내 돈");
-  assert.equal(page.text("mv-renew"), "재계약: 요구 126,000만원 (위 「우리 단지 재계약 확인」 칸)");
+  assert.equal(page.text("mv-renew"), "재계약: 요구 126,000만원");
   await set(page, { "mv-kind": "wolse", "mv-dep": "40000", "mv-cash": "10" });
   assert.equal(answer(page), "넣을 칸: 비교할 집 월세");
   assert.equal(page.byId("mv-rent-field").hidden, false);
@@ -727,11 +727,11 @@ test("계측: 일회성 비용만 바꿔도 새 결과(repeat)로 센다 - 서�
 test("#792-1 요구 보증금: 통계에는 선택, 비용 비교에는 필요 - ① 칸과 확인기 칸은 같은 값 하나(어느 쪽에 넣어도 같이 바뀐다)", async () => {
   const page = await open({ query: Q("헬리오시티", "84.98") });
   assert.match(HTML, /<label for="check-ask" id="check-ask-label">요구 보증금\(만원\)<\/label><input[^>]*><\/div>\s*<\/div>\s*<p class="updated" id="check-ask-hint"[^>]*>두 보증금은 통계를 보는 데는 넣지 않아도 됩니다\. 요구 보증금은 아래 「다른 집으로 옮기면」 비용 비교에 필요합니다\.<\/p>/);
-  assert.match(SECTION, /<h3 id="mv-s1"[^>]*>① 재계약 조건<\/h3>[\s\S]*<label for="mv-ask" id="mv-ask-label"[^>]*>재계약 요구 보증금\(만원, 필요\)<\/label>[\s\S]*<h3 id="mv-s2"[^>]*>② 다른 집 조건<\/h3>[\s\S]*id="mv-dep"[\s\S]*<h3 id="mv-s3"[^>]*>③ 내 자금·금리<\/h3>[\s\S]*id="mv-cash"[\s\S]*id="mv-rate"[\s\S]*<h3 id="mv-s4"[^>]*>결과<\/h3>[\s\S]*id="mv-answer"/, "입력 순서가 ① → ② → ③ → 결과가 아니다");
+  assert.match(SECTION, /<h3 id="mv-s1"[^>]*>① 재계약 조건<\/h3>[\s\S]*<label for="mv-ask" id="mv-ask-label"[^>]*>재계약 요구 보증금\(만원, 필요\)<\/label>[\s\S]*<h3 id="mv-s2"[^>]*>② 다른 집 조건<\/h3>[\s\S]*id="mv-dep"[\s\S]*<h3 id="mv-s3"[^>]*>③ 내 자금과 나머지 조건<\/h3>[\s\S]*id="mv-cash"[\s\S]*id="mv-rate"[\s\S]*<h3 id="mv-s4"[^>]*>결과<\/h3>[\s\S]*id="mv-answer"/, "입력 순서가 ① → ② → ③ → 결과가 아니다");
   assert.match(page.text("check-answer"), /^이 평형 전세 재계약 558건/, "요구 보증금 없이 통계가 보여야 한다");
-  await set(page, { "mv-ask": "126000" });
+  await set(page, { "check-old": "120000", "mv-ask": "126000" });
   assert.equal(page.byId("check-ask").value, "126000", "① 칸 값이 확인기 칸으로 가지 않았다");
-  assert.match(page.text("check-answer"), / 요구액은 종전보다|^이 평형/, "확인기가 다시 그려지지 않았다");
+  assert.match(page.text("check-answer"), / 요구액은 종전보다 5% — /, "① 칸에 넣었는데 확인기가 다시 그려지지 않았다");
   await set(page, { "check-ask": "130000" });
   assert.equal(page.byId("mv-ask").value, "130000", "확인기 칸 값이 ① 칸에 비치지 않았다");
   await set(page, { "mv-dep": "128500", "mv-cash": "126000" });
@@ -757,6 +757,8 @@ test("#792-2 빈칸은 넣으라는 안내, 0·음수·숫자가 아닌 값은 �
     assert.equal(page.text("mv-what-if"), "", `${bad}: 이전 손익분기가 남았다`);
   }
   // 숫자로 읽히지 않는 글자(브라우저는 value 를 비우고 validity.badInput 을 켠다)는 빈칸이 아니라 잘못된 값이다.
+  await set(page, { "mv-ask": "126000" });
+  assert.equal(page.text("mv-err-ask"), "");
   page.byId("mv-ask").validity = { badInput: true };
   await set(page, { "mv-ask": "" });
   assert.equal(page.text("mv-err-ask"), "요구 보증금: 0보다 커야 합니다.");
@@ -796,7 +798,7 @@ test("#792-3 근거 줄은 실제 계산에 쓴 금리와 출처를 적는다 - 
   assert.match(page.text("mv-rate-note"), /^대출 금리: 직접 넣은 값입니다\. 예금 금리: 한국은행/);
   await set(page, { "mv-rate": "4.23", "mv-drate": "2.9" });
   assert.equal(RATES(page), " 계산에 쓴 금리: 대출 4.23%(한국은행 평균, 2026-08) · 예금 2.9%(직접 넣은 값). 참고 평균금리(한국은행): 대출 4.23%(2026-08) · 예금 3.14%(2026-08).");
-  assert.match(page.text("mv-rate-note"), /^대출 금리: 한국은행 .* 예금 금리: 직접 넣은 값입니다\.$/);
+  assert.match(page.text("mv-rate-note"), /^대출 금리: 한국은행 .* 예금 금리: 직접 넣은 값입니다\(세후로 셉니다\)\.$/);
   await set(page, { "mv-rate": "5", "mv-drate": "3" });
   assert.match(RATES(page), /^ 계산에 쓴 금리: 대출 5%\(직접 넣은 값\) · 예금 3%\(직접 넣은 값\)\. 참고 평균금리/);
   await set(page, { "mv-rate": "4.23", "mv-drate": "3.14" });
@@ -816,4 +818,29 @@ test("#792-3 기회비용을 끄면 예금 금리는 계산에 쓰지 않았다�
   assert.equal(RATES(failed), " 계산에 쓴 금리: 대출 4%(직접 넣은 값) · 예금 3%(직접 넣은 값).", "자료가 없는데 한국은행 평균을 적었다");
   const blank = await open();
   assert.equal(RATES(blank), "", "결과가 없는데 계산에 쓴 금리를 적었다");
+});
+
+test("#792-2 빈칸은 칸 옆 오류에 섞지 않고, 숫자가 아닌 글자는 어느 칸이든 잘못된 값이다", async () => {
+  const page = await open();
+  await set(page, { ...CASE1, "mv-dep": "", "mv-months": "200" });
+  assert.equal(page.text("mv-err-dep"), "", "빈칸을 오류로 보였다");
+  assert.equal(page.text("mv-err-loan"), "거주 기간: 1~120개월이어야 합니다.");
+  assert.equal(answer(page), "넣을 칸: 비교할 집 보증금");
+  await set(page, { "mv-dep": "40000", "mv-months": "24" });
+  for (const [id, group, name] of [["mv-dep", "dep", "비교할 집 보증금"], ["mv-cash", "cash", "보증금에 넣을 내 돈"], ["mv-rate", "loan", "대출 금리"], ["mv-months", "loan", "거주 기간"]]) {
+    page.byId(id).validity = { badInput: true };
+    await set(page, { [id]: "" });
+    assert.match(page.text(`mv-err-${group}`), new RegExp(`^${name}: `), `${id}: 숫자가 아닌 글자를 빈칸으로 봤다`);
+    assert.doesNotMatch(answer(page), /^넣을 칸/, id);
+    page.byId(id).validity = { badInput: false };
+    await set(page, { [id]: CASE1[id] ?? (id === "mv-rate" ? "4.23" : id === "mv-months" ? "24" : "40000") });
+  }
+  assert.match(answer(page), /^입력한 조건으로 24개월 동안/);
+});
+
+test("#792-3 근거 줄의 금리는 실제 계산에 쓴 값 - 4.234 를 넣으면 bp 로 반올림한 4.23(평균과 같으면 평균으로 적는다)", async () => {
+  const page = await open();
+  await set(page, { ...CASE1, "mv-rate": "4.234", "mv-drate": "3.2049" });
+  assert.equal(RATES(page), " 계산에 쓴 금리: 대출 4.23%(한국은행 평균, 2026-08) · 예금 3.2%(직접 넣은 값). 참고 평균금리(한국은행): 대출 4.23%(2026-08) · 예금 3.14%(2026-08).");
+  assert.equal(compare({ ...input1(), loanRate: 4.234 }).gapK, compare(input1()).gapK, "계산이 4.23 을 쓰지 않는다");
 });

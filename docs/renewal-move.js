@@ -1,4 +1,4 @@
-// 재계약 vs 이사 비교 절(#777). 장 전용 외부 JS, gzip ≤2KB(#681) - 문구는 #mv-answer 의 data-msg(ko)·data-msg-en, "|" 로 나눈 47개.
+// 재계약 vs 이사 비교 절(#777). 장 전용 외부 JS, gzip ≤2KB(#681) - 문구는 #mv-answer 의 data-msg(ko)·data-msg-en, "|" 로 나눈 89개.
 // 계산은 move-cost.js 한 벌. 재계약 보증금은 위 확인기 칸(#check-old·#check-ask)을 그대로 읽는다. 입력은 URL에 싣지 않는다.
 (() => {
   const $ = (id) => document.getElementById(id);
@@ -8,7 +8,8 @@
   const st = { src: "" }; // src: 비교할 집 금액이 참고값이면 "c"(단지 기준)·"d"(자치구 참고)
   const en = () => document.documentElement.getAttribute("lang") == "en";
   const fmt = (x) => Number(x).toLocaleString(en() ? "en-US" : "ko-KR", { maximumFractionDigits: 1 });
-  const v = (id) => String($(id).value ?? "").trim();
+  // 숫자로 읽히지 않는 글자(badInput)는 브라우저가 value 를 비운다 - 빈칸이 아니라 잘못된 값("?")으로 읽는다(#792, 모든 칸).
+  const v = (id) => ($(id).validity?.badInput ? "?" : String($(id).value ?? "").trim());
   const ym = (m) => `${m.slice(0, 4)}-${m.slice(4)}`;
   const bad = (id) => $(id).validity?.badInput;
   // 계측(#777 P4, audit/ga4-setup.md). 보내는 값은 정해진 낱말뿐이고 금액·금리·단지명은 서명(메모리)에만 둔다.
@@ -44,8 +45,7 @@
     $("mv-rent-field").hidden = kind != "wolse";
     const old = Math.round(+v("check-old"));
     // 요구 보증금은 확인기 칸(#check-ask) 하나가 원본이고 ① 칸(#mv-ask)은 그 거울이다 - 같은 값을 두 번 넣게 하지 않는다(#792).
-    // 숫자로 읽히지 않는 글자(badInput)는 빈칸이 아니라 잘못된 값으로 넘긴다.
-    const ask = bad("check-ask") || bad("mv-ask") ? "?" : v("check-ask");
+    const ask = bad("mv-ask") ? "?" : v("check-ask");
     if (!bad("mv-ask") && v("mv-ask") != v("check-ask")) $("mv-ask").value = v("check-ask");
     $("mv-renew").textContent = +ask > 0 ? (old > 0 ? f(0, fmt(old), fmt(+ask)) : f(1, fmt(+ask))) : "";
     $("mv-cash-fill").hidden = !(old > 0);

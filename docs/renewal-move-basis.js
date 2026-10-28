@@ -16,8 +16,10 @@
     // 입력 쪽 금리 줄과 결과 아래 근거 줄이 같은 판단을 쓴다. 기회비용을 끄면 예금 금리는 계산에 쓰지 않는다고 적는다.
     const lr = v("mv-rate");
     const dr = v("mv-drate");
-    const refL = c && lr !== "" && +lr === c.loan.rate;
-    const refD = c && dr !== "" && +dr === c.deposit.rate;
+    // 계산은 금리를 bp(0.01%p)로 반올림해 쓴다(move-cost.js) - 출처 판정과 근거 줄도 그 값으로(4.234 를 넣으면 4.23 으로 계산·표시).
+    const bp = (x) => Math.round(x * 100) / 100;
+    const refL = c && lr !== "" && bp(lr) == c.loan.rate;
+    const refD = c && dr !== "" && bp(dr) == c.deposit.rate;
     let note = st.err ? M[44] : "";
     if (c) {
       note = (refL ? f(39, ym(c.loan.month)) : M[40]) + (opp ? (refD ? f(41, ym(c.deposit.month)) : M[42]) : M[88]);
@@ -64,7 +66,7 @@
       (row && rc.window ? " " + f(60, ym(rc.window[0]), ym(rc.window[1]), fmt(sum(row.slice(0, 10)))) + (row.length > 11 ? f(61, fmt(row[10])) : "") + (lo < rc.min?.ratio ? f(62, fmt(lo)) : "") : "") +
       (v("mv-dep") && st.src == "d" && cd ? f(70, rc.gu, bn, fmt(cd.pairs)) : v("mv-dep") && st.src == "c" && med ? f(71, fmt(row[10])) : "") +
       // 계산에 쓴 금리와 그 출처(결과가 있을 때만). 직접 넣은 금리가 있으면 한국은행 평균은 따로 「참고」로 적는다.
-      (r?.ok ? f(82, +lr, refL ? f(85, ym(c.loan.month)) : M[86]) + (opp ? f(83, +dr, refD ? f(85, ym(c.deposit.month)) : M[86]) : M[84]) +
+      (r?.ok ? f(82, bp(lr), refL ? f(85, ym(c.loan.month)) : M[86]) + (opp ? f(83, bp(dr), refD ? f(85, ym(c.deposit.month)) : M[86]) : M[84]) +
         (c && (!refL || (opp && !refD)) ? f(87, c.loan.rate, ym(c.loan.month), c.deposit.rate, ym(c.deposit.month)) : "") : "") + M[67];
   };
   const pick = (src) => ((x.st.src = src), (x.st.key = x.key), x.start(), x.render());

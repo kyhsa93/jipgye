@@ -52,7 +52,7 @@
     return { ok: true, kind: input.kind, comparable: ok, months: x.months, opportunity: x.opportunity, renew, move, gapK: gap("totalK"), cashGapK: gap("cashAllK"), cheaper: who(gap("totalK")), cashCheaper: who(gap("cashAllK")) };
   }
 
-  // 문구 M 은 장의 #mv-answer data-msg(ko)·data-msg-en 을 "|" 로 나눈 82개. 칸 이름은 4~10, 범위 사유는 12~15 -
+  // 문구 M 은 장의 #mv-answer data-msg(ko)·data-msg-en 을 "|" 로 나눈 89개. 칸 이름은 4~10, 범위 사유는 12~15 -
   // 월세 집 보증금·내 돈은 0 이상(13), 금리는 0~20%(14), 기간은 1~120개월(15), 나머지는 0 초과(12).
   const NAME = { renew: 4, deposit: 5, rent: 6, cash: 7, loanRate: 8, depositRate: 9, months: 10, oneRenew: 80, oneMove: 81 };
   const WHY = { renew: 12, deposit: 12, rent: 12, cash: 13, loanRate: 14, depositRate: 14, months: 15, oneRenew: 13, oneMove: 13 };
