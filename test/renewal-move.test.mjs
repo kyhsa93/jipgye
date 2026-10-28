@@ -225,9 +225,9 @@ test("외부 JS 셋은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B
   const own = pageScripts(path.join(root, "docs")).filter((f) => HTML.includes(`<script src="./${f}" defer></script>`));
   assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
   const total = (await Promise.all(own.map((f) => readFile(path.join(root, "docs", f), "utf8")))).reduce((n, src) => n + gzipSync(stripJsComments(src), { level: 9 }).length, 0);
-  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 계측과 금리 줄 이동 뒤 7,795B → P5 일회성 비용·손익분기 뒤 8,251B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
+  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 계측과 금리 줄 이동 뒤 7,795B → P5 일회성 비용·손익분기 뒤 8,251B → P5 판정 조건(기준 표기·1개월 미만) 뒤 8,263B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
   // 늘리는 PR 은 이 숫자를 사유와 함께 고친다.
-  assert.ok(total <= 8260, `이 장 장 전용 JS 합계 ${total}B > 8,260B`);
+  assert.ok(total <= 8270, `이 장 장 전용 JS 합계 ${total}B > 8,270B`);
   const users = [];
   for (const f of (await readdir(path.join(root, SITE))).filter((x) => x.endsWith(".html")).sort()) {
     const page = await readFile(path.join(root, SITE, f), "utf8");
@@ -678,4 +678,45 @@ test("세 스크립트가 찾는 id 는 모두 구운 장에 있다 - 가짜 DOM
   assert.ok(ids.size > 25, `id 를 ${ids.size}개밖에 못 찾았다`);
   const missing = [...ids].filter((id) => !HTML.includes(`id="${id}"`) && id !== "check-retry"); // check-retry 는 실패 때 basis 가 만든다
   assert.deepEqual(missing, []);
+});
+
+test("손익분기 경계: 정확히 120개월이면 그 달에 같아지고, 121개월이면 10년 안에 안 바뀐다, 1개월 미만이면 「그 전」이 없으니 기간과 상관없음(data-analyst #777 P5)", () => {
+  const M = MSG("ko");
+  const base = { renew: 100000, kind: "wolse", deposit: 100000, cash: 100000, loanRate: 4, depositRate: 0, months: 24, opportunity: false };
+  const w = (extra) => describe(compare({ ...base, ...extra }), M, KO, "wolse").whatIf;
+  assert.match(w({ rent: 0.1, oneRenew: 12 }), /^120개월째에 두 선택지의 비용이 같아지고/); // 월 0.1만원 × 120 = 12만원
+  assert.match(w({ rent: 0.1, oneRenew: 12.1 }), /^일회성 비용을 넣어도 10년\(120개월\) 안에는/);
+  assert.match(w({ rent: 100, oneRenew: 50 }), /^일회성 비용을 넣어도 기간과 상관없이 같은 쪽이 덜 듭니다\./, "0.5개월에 「그 전에는」을 만들었다");
+  assert.match(w({ rent: 100, oneRenew: 100 }), /^1개월째에 두 선택지의 비용이 같아지고/);
+});
+
+test("현금 기준 비교에도 일회성 비용을 넣고, 「조건을 바꾸면」 줄에는 제목과 같은 기준을 붙인다(po #777 P5 재현 사례)", () => {
+  // 재계약 50,000 vs 월세 10,000·60, 내 돈 50,000, 4%·3.5%, 이사 쪽 일회성 300 - 기회비용을 켜면 이사가, 현금만 보면 재계약이 덜 든다
+  const input = { renew: 50000, kind: "wolse", deposit: 10000, rent: 60, cash: 50000, loanRate: 4, depositRate: 3.5, months: 24, opportunity: true, oneMove: 300 };
+  const r = compare(input);
+  assert.equal(r.cashGapK, 600 * 24 + 3000, "현금 기준 차이에 일회성 300만원이 빠졌다");
+  assert.equal(r.cashCheaper, "renew");
+  const d = describe(r, MSG("ko"), KO, "wolse");
+  assert.match(d.text, / 현금 지출만 보면 재계약이 1,740만원 덜 듭니다\.$/);
+  assert.match(d.whatIf, /\(현금 지출 \+ 묶인 내 돈의 세후 예금이자 기준\)\.$/);
+  assert.match(describe(compare({ ...input, opportunity: false }), MSG("ko"), KO, "wolse").whatIf, /\(현금 지출 기준\)\.$/);
+  assert.deepEqual(compare({ ...input, oneRenew: -1 }).errors, [{ field: "oneRenew", code: "range" }]);
+});
+
+test("화면: 재계약 쪽 일회성 칸도 계산에 들어가고, 요구 보증금을 지우면 「조건을 바꾸면」 줄도 지운다", async () => {
+  const page = await open();
+  await set(page, { "check-ask": "126000", "mv-dep": "80000", "mv-cash": "60000", "mv-once-renew": "50" });
+  assert.match(page.html("mv-table"), /<tr><th scope="row">일회성 비용<\/th><td>50<\/td><td>0<\/td><\/tr>/);
+  assert.equal(page.text("mv-what-if"), describe(compare(input3({ oneMove: "", oneRenew: 50 })), MSG("ko"), KO, "jeonse").whatIf);
+  await set(page, { "check-ask": "" });
+  assert.equal(page.text("mv-what-if"), "");
+});
+
+test("계측: 일회성 비용만 바꿔도 새 결과(repeat)로 센다 - 서명에 일회성 칸이 들어 있다", async () => {
+  const page = await open({ ga: true, query: Q("헬리오시티", "84.98") });
+  await set(page, CASE1);
+  await wait();
+  await set(page, { "mv-once-move": "300" });
+  await wait();
+  assert.deepEqual(events(page, "calculator_result").filter((p) => p.calculator_type === "renewal_move").map((p) => p.result_round), ["first", "repeat"]);
 });

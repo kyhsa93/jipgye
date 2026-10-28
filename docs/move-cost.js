@@ -51,7 +51,7 @@
     return { ok: true, kind: input.kind, comparable: ok, months: x.months, opportunity: x.opportunity, renew, move, gapK: gap("totalK"), cashGapK: gap("cashAllK"), cheaper: who(gap("totalK")), cashCheaper: who(gap("cashAllK")) };
   }
 
-  // 문구 M 은 장의 #mv-answer data-msg(ko)·data-msg-en 을 "|" 로 나눈 47개. 칸 이름은 4~10, 범위 사유는 12~15 -
+  // 문구 M 은 장의 #mv-answer data-msg(ko)·data-msg-en 을 "|" 로 나눈 82개. 칸 이름은 4~10, 범위 사유는 12~15 -
   // 월세 집 보증금·내 돈은 0 이상(13), 금리는 0~20%(14), 기간은 1~120개월(15), 나머지는 0 초과(12).
   const NAME = { renew: 4, deposit: 5, rent: 6, cash: 7, loanRate: 8, depositRate: 9, months: 10, oneRenew: 80, oneMove: 81 };
   const WHY = { renew: 12, deposit: 12, rent: 12, cash: 13, loanRate: 14, depositRate: 14, months: 15, oneRenew: 13, oneMove: 13 };
@@ -76,19 +76,20 @@
     const once = r.renew.oneK || r.move.oneK;
     const lines = [[28, (s) => fmt(s.deposit)], [29, (s) => fmt(s.own)], [30, (s) => fmt(s.loan)], [31, (s) => k(s.interestK)], [32, (s) => k(s.rentK)], [33, (s) => k(s.cashK)], [34, (s) => k(s.cashTotalK)], [76, (s) => k(s.oneK)], [35, (s) => k(s.oppK * N)], [36, (s) => k(s.totalK)]];
     const rows = lines.filter(([i]) => (i != 35 || r.opportunity) && (i != 76 || once)).map(([i, g], j) => [f(i, N), ...sides.map((s) => (j < 2 || s.feasible ? g(s) : "-"))]);
-    return { text, head: ["", M[26] + M[46], M[27] + M[46]], rows, ...(r.comparable && { whatIf: whatIf(r, f, k, who) }) };
+    return { text, head: ["", M[26] + M[46], M[27] + M[46]], rows, ...(r.comparable && { whatIf: whatIf(r, f, k, who, basis) }) };
   }
 
   // 조건을 바꾸면(P5): 손익분기(월 비용이 낮은 쪽이 일회성 비용은 높을 때만 순위가 바뀐다)와 기간별 차이. 금리는 칸을 고쳐 다시 본다.
   // 합계는 월 합계 × t + 일회성이라 기간별 차이는 정수 식 그대로다. 손익분기가 없거나 10년(120개월) 밖이면 날짜를 만들지 않는다.
-  function whatIf(r, f, k, who) {
+  function whatIf(r, f, k, who, basis) {
     const dm = r.renew.monthK - r.move.monthK; // > 0: 이사 쪽이 매달 덜 든다
     const dk = r.move.oneK - r.renew.oneK; // > 0: 이사 쪽이 처음에 더 든다
     const at = dk / dm;
     const line = (t, g = dk - dm * t) => (g ? f(78, t, who(g > 0 ? "renew" : "move"), k(Math.abs(g))) : f(79, t));
     const [a, b] = dk > 0 ? ["move", "renew"] : ["renew", "move"]; // 나중에 덜 드는 쪽, 처음에 덜 드는 쪽
-    const be = !dm || !dk ? "" : Math.sign(dm) != Math.sign(dk) ? f(75) : at > 120 ? f(74) : at % 1 ? f(73, Math.ceil(at), who(a), who(b)) : f(72, at, who(a));
-    return (be + f(77) + [12, 24, 36, 48].map((t) => line(t)).join(" · ") + ".").trim();
+    const be = !dm || !dk ? "" : Math.sign(dm) != Math.sign(dk) || at < 1 ? f(75) : at > 120 ? f(74) : at % 1 ? f(73, Math.ceil(at), who(a), who(b)) : f(72, at, who(a));
+    // 끝에 제목과 같은 기준(현금 지출 + 예금이자 / 현금 지출)을 붙인다 - 바로 위 「현금 지출만 보면」 줄과 엇갈려 읽히지 않게(po #777 P5).
+    return (be + f(77) + [12, 24, 36, 48].map((t) => line(t)).join(" · ") + `(${basis}).`).trim();
   }
 
   globalThis.jipgyeMoveCost = { compare, describe, LTV, TAX };
