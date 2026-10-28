@@ -1,0 +1,7 @@
+Seoul administrative division outlines
+Copyright Lucy Park (http://lucypark.kr)
+Source: https://github.com/southkorea/seoul-maps
+Data: kostat/2013/json/seoul_municipalities_geo_simple.json
+License: Apache License, Version 2.0 (see Apache-2.0.txt)
+Modifications: projected to SVG coordinates, rounded to 0.1 units; centroids added.
+Boundaries are for regional exploration, not surveying.

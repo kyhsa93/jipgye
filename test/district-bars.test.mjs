@@ -2,7 +2,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { barRows, districtBarsHtml, BAR_KINDS } from "../scripts/district-bars.ts";
+import { barRows, districtBarsHtml, BAR_KINDS, priceBand } from "../scripts/district-bars.ts";
+import { SEOUL_MAP_PATHS } from "../scripts/seoul-map-paths.ts";
+import { DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -32,19 +34,19 @@ test("가격순: 값 큰 구가 먼저, 표본 부족 구는 맨 뒤", () => {
   assert.deepEqual(namesIn(panel("sale")), ["강남구", "종로구", "노원구", "중구"]);
   // 전세는 중구 표본이 넉넉하므로 값 순서에 들어간다.
   assert.deepEqual(namesIn(panel("jeonse")), ["강남구", "중구", "종로구", "노원구"]);
-  // 가장 큰 막대가 100%, 나머지는 비례.
-  assert.match(panel("sale"), /width:100%/);
-  assert.match(panel("sale"), new RegExp(`width:${Math.round((4882 / 11430) * 1000) / 10}%`));
+  assert.doesNotMatch(html, /dbars-track|dbars-bar|width:/);
 });
 
-test("매매/전세/월세 전환: fieldset 안 라디오 셋(매매 기본) + 패널 셋, 스크립트 없음", () => {
+test("매매/전세/월세 전환: CSS 라디오 셋과 각 유형의 두 지역 비교", () => {
   assert.match(html, /<fieldset class="dbars-tabs"><legend class="sr-only">/);
   for (const kind of BAR_KINDS) {
     assert.match(html, new RegExp(`<label class="c-chip"><input class="sr-only" type="radio" name="dbars-kind" id="dbars-${kind}"`));
     assert.match(html, new RegExp(`data-kind="${kind}"`));
   }
   assert.match(html, /id="dbars-sale" value="sale" checked>/);
-  assert.doesNotMatch(html, /<script|onclick|onchange/);
+  assert.doesNotMatch(html, /onclick|onchange/);
+  assert.match(html, /src="\.\/district-prices.js" defer/);
+  assert.equal((html.match(/data-compare-slot=/g) ?? []).length, 6);
   // 월세 막대는 보증금과 월세를 함께 적는다.
   assert.match(panel("wolse"), /3억 6,755만원 \/ 월 223만원 · 630건/);
 });
@@ -65,13 +67,13 @@ test("단위·기준 기간·거래 건수를 적는다(ko/en 쌍)", () => {
   assert.match(html, /<span lang="en">Gangnam-gu<\/span>/);
 });
 
-test("표본 부족 구는 막대 대신 「표본 부족」", () => {
-  const thin = panel("sale").match(/<li class="dbars-row is-thin">.*?<\/li>/)[0];
+test("표본 부족 구는 가격 대신 「표본 부족」", () => {
+  const thin = panel("sale").match(/<li class="dbars-row is-thin"[^>]*>.*?<\/li>/)[0];
   assert.match(thin, /중구/);
   assert.match(thin, /표본 부족 \(3건, 5건 미만\)/);
   assert.match(thin, /Too few deals \(3 deals, under 5\)/);
   assert.doesNotMatch(thin, /dbars-bar/);
-  assert.equal((panel("sale").match(/class="dbars-bar"/g) ?? []).length, 3);
+  assert.doesNotMatch(thin, /5,783만원/);
 });
 
 test("막대는 그 구의 장으로 가는 링크", () => {
@@ -84,14 +86,29 @@ test("대체 표는 따로 굽지 않고 같은 장의 시세 표로 잇는다",
   assert.match(html, /<a href="#district-section">/);
 });
 
-test("메인: 매매 막대 한 벌만(라디오 없음) + 시세 장 전체 보기 링크", () => {
+test("메인: 지도와 지역 카드, 작은 구도 고를 수 있는 한영 선택 목록", () => {
   const home = districtBarsHtml(DATA, { variant: "home" });
   assert.match(home, /<h3 id="dbars-heading">/);
   assert.doesNotMatch(home, /type="radio"|<table|<fieldset/);
-  assert.deepEqual([...home.matchAll(/data-kind="(\w+)"/g)].map((m) => m[1]), ["sale"]);
-  assert.deepEqual(namesIn(home), ["강남구", "종로구", "노원구", "중구"]);
+  assert.equal((home.match(/data-map-district=/g) ?? []).length, 4);
+  assert.equal((home.match(/data-map-card=/g) ?? []).length, 4);
+  assert.equal((home.match(/data-district-select/g) ?? []).length, 2);
+  assert.equal((home.match(/data-map-card="[^"]+" hidden/g) ?? []).length, 3);
+  assert.match(home, /data-band="thin"/);
+  assert.match(home, /표본 부족/);
+  assert.match(home, /<svg[^>]*role="group"/);
+  assert.doesNotMatch(home, /dbars-list|dbars-track|dbars-bar/);
   assert.match(home, /<a href="\.\/realestate\.html#district-bars">/);
   assert.doesNotMatch(home, /id="district-bars"/);
+});
+
+test("지도는 25개 구의 실제 경계를 한 번씩 포함하고 가격 구간은 고정 기준", () => {
+  assert.deepEqual(SEOUL_MAP_PATHS.map((r) => r.name).sort(), Object.keys(DISTRICT_SLUGS).sort());
+  for (const row of SEOUL_MAP_PATHS) {
+    assert.match(row.path, /^M[\d.,LZM]+$/);
+    assert.ok(Number.isFinite(row.x) && Number.isFinite(row.y));
+  }
+  assert.deepEqual([null, 2999, 3000, 4999, 5000, 7000, 10000].map(priceBand), ["thin", "0", "1", "1", "2", "3", "4"]);
 });
 
 test("데이터가 없으면 빈 문자열(자리표시가 빈 채로)", () => {
