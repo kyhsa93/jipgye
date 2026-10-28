@@ -233,6 +233,9 @@ test("앞 장 주소(page_referrer)도 같은 규칙으로 지우고, 바깥 사
   const outside = await loadAnalytics({ referrer: "https://search.example/results?q=%EC%A7%91" });
   assert.equal(outside.calls().find(([kind]) => kind === "config")[2].page_referrer, "https://search.example/");
 
+  const app = await loadAnalytics({ referrer: "android-app://com.example.app/" });
+  assert.ok(!("page_referrer" in app.calls().find(([kind]) => kind === "config")[2]), "origin 이 \"null\" 인 referrer 는 \"null/\" 로 보내지 않는다");
+
   const direct = await loadAnalytics({ referrer: "" });
   assert.ok(!("page_referrer" in direct.calls().find(([kind]) => kind === "config")[2]), "referrer 가 없으면 덮어쓰지 않는다");
 });

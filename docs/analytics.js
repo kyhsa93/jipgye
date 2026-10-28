@@ -45,7 +45,8 @@
   const referrer = (() => {
     try {
       const ref = new URL(document.referrer);
-      return ref.origin === new URL(location.href).origin ? scrub(ref.href) : `${ref.origin}/`;
+      if (ref.origin === new URL(location.href).origin) return scrub(ref.href);
+      return ref.origin === "null" ? "" : `${ref.origin}/`;
     } catch {
       return "";
     }
