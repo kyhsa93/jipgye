@@ -21,10 +21,12 @@
     const isRef = (x) => c && x !== "" && bp(x) == c.loan.rate; // 대출 금리 칸 하나가 평균과 같은가
     const [rr, rm] = [v("mv-rate-renew"), v("mv-rate-move")];
     const refL = split ? isRef(rr) && isRef(rm) : isRef(lr);
+    const src = (x) => (isRef(x) ? f(85, ym(c.loan.month)) : M[86]); // 칸 하나의 출처 이름
+    // 선택지별 금리: 칸마다 출처를 적고, 평균으로 둔 칸이 있으면 「개인이 새로 받는 금리가 아니다」를 남긴다(po·legal #792 5).
     const refD = c && dr !== "" && bp(dr) == c.deposit.rate;
     let note = st.err ? M[44] : "";
     if (c) {
-      note = (split ? M[92] : refL ? f(39, ym(c.loan.month)) : M[40]) + (opp ? (refD ? f(41, ym(c.deposit.month)) : M[42]) : M[88]);
+      note = (split ? f(92, src(rr), src(rm)) + (isRef(rr) || isRef(rm) ? M[93] : "") : refL ? f(39, ym(c.loan.month)) : M[40]) + (opp ? (refD ? f(41, ym(c.deposit.month)) : M[42]) : M[88]);
       const at = new Date(Date.parse(c.updatedAt) + 324e5).toISOString();
       const seen = [c.loan.month, c.deposit.month].sort()[0];
       if (mon(at.slice(0, 4), at.slice(5, 7)) - mon(seen.slice(0, 4), seen.slice(4)) > LAG) note += f(43, ym(seen));
@@ -68,7 +70,7 @@
       (row && rc.window ? " " + f(60, ym(rc.window[0]), ym(rc.window[1]), fmt(sum(row.slice(0, 10)))) + (row.length > 11 ? f(61, fmt(row[10])) : "") + (lo < rc.min?.ratio ? f(62, fmt(lo)) : "") : "") +
       (v("mv-dep") && st.src == "d" && cd ? f(70, rc.gu, bn, fmt(cd.pairs)) : v("mv-dep") && st.src == "c" && med ? f(71, fmt(row[10])) : "") +
       // 계산에 쓴 금리와 그 출처(결과가 있을 때만). 직접 넣은 금리가 있으면 한국은행 평균은 따로 「참고」로 적는다.
-      (r?.ok ? (split ? f(91, bp(rr), isRef(rr) ? f(85, ym(c.loan.month)) : M[86], bp(rm), isRef(rm) ? f(85, ym(c.loan.month)) : M[86]) : f(82, bp(lr), refL ? f(85, ym(c.loan.month)) : M[86])) + (opp ? f(83, bp(dr), refD ? f(85, ym(c.deposit.month)) : M[86]) : M[84]) +
+      (r?.ok ? (split ? f(91, bp(rr), src(rr), bp(rm), src(rm)) : f(82, bp(lr), src(lr))) + (opp ? f(83, bp(dr), refD ? f(85, ym(c.deposit.month)) : M[86]) : M[84]) +
         (c && (!refL || (opp && !refD)) ? f(87, c.loan.rate, ym(c.loan.month), c.deposit.rate, ym(c.deposit.month)) : "") : "") + M[67];
   };
   const pick = (src) => ((x.st.src = src), (x.st.key = x.key), x.start(), x.render());

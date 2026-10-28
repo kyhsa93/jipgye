@@ -201,8 +201,8 @@ test("자리: 확인기 → 방법 안내 → #move → #convert, 보이는 labe
     assert.ok(SECTION.includes(`<label for="${id}" id="${id}-label" data-en="`), `${id} label`);
   }
   assert.match(SECTION, /<p class="lead" id="mv-answer" aria-live="polite" data-msg="[^"]+" data-msg-en="[^"]+"><\/p>/);
-  assert.equal(MSG("ko").length, 93);
-  assert.equal(MSG("en").length, 93);
+  assert.equal(MSG("ko").length, 94);
+  assert.equal(MSG("en").length, 94);
   assert.ok(SECTION.includes(`data-en="${FOOTERS.renewalMove.en}">${FOOTERS.renewalMove.ko}</p>`), "출처 줄이 source-lines 로 찍히지 않았다");
   assert.match(FOOTERS.renewalMove.ko, /전세자금대출·정기예금 평균금리\. 이 값은 원자료를 가공한 것입니다\.$/);
 });
@@ -215,7 +215,7 @@ test("판정·추천으로 읽히는 낱말이 절 안에 없다(legal #777)", (
   assert.doesNotMatch(en, /recommend|fair price|better deal|\bguaranteed\b|\bguarantee(?! fees)|\bshould\b/i); // 「guarantee fees」(보증료, 넣지 않은 비용)는 약속이 아니다
 });
 
-test("외부 JS 셋은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B, renewal-vs-new 만 defer 로 한 번씩(계산이 먼저) 읽고 서비스워커 사전캐시에 없다 (#681)", async () => {
+test("외부 JS 넷은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B, renewal-vs-new 만 defer 로 한 번씩(계산이 먼저) 읽고 서비스워커 사전캐시에 없다 (#681)", async () => {
   for (const [name, src] of [["move-cost.js", CALC], ["move-text.js", TEXT], ["renewal-move.js", JS], ["renewal-move-basis.js", BASIS]]) {
     const size = gzipSync(stripJsComments(src), { level: 9 }).length;
     assert.ok(size <= 2048, `docs/${name} gzip ${size}B`);
@@ -225,10 +225,13 @@ test("외부 JS 셋은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B
   assert.ok(HTML.indexOf("./move-cost.js") < HTML.indexOf("./move-text.js") && HTML.indexOf("./move-text.js") < HTML.indexOf("./renewal-move.js") && HTML.indexOf("./renewal-move.js") < HTML.indexOf("./renewal-move-basis.js"), "defer 실행 순서(계산 → 문장 → 화면 → 근거)에 기댄다");
   // 이 장의 장 전용 JS 는 여섯(group-cto 조건부 승인 #777 다섯 + group-ceo 판정 A #792 여섯째) - 일곱째나 파일당 한도 올리기는 다시 group-ceo 안건이다.
   const { pageScripts } = await import("../scripts/page-assets.ts");
-  const own = pageScripts(path.join(root, "docs")).filter((f) => HTML.includes(`<script src="./${f}" defer></script>`));
+  // 장에 붙은 장 전용 JS 를 속성과 무관하게 모은다 - defer 없이 붙인 파일도 목록·합계에서 빠지지 않게(group-cto #792 5 지적).
+  const page = new Set(pageScripts(path.join(root, "docs")));
+  const own = [...HTML.matchAll(/<script\b[^>]*\bsrc="\.\/([\w-]+\.js)"[^>]*>/g)].map((m) => m[1]).filter((f) => page.has(f)).sort();
+  for (const f of own) assert.ok(HTML.includes(`<script src="./${f}" defer></script>`), `${f}: defer 로 붙지 않았다`);
   assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "move-text.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
   const total = (await Promise.all(own.map((f) => readFile(path.join(root, "docs", f), "utf8")))).reduce((n, src) => n + gzipSync(stripJsComments(src), { level: 9 }).length, 0);
-  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 7,795B → P5 8,264B → #792 입력 흐름·칸 옆 오류·계산에 쓴 금리 뒤 8,662B → #792 5 계산·문장 분리(여섯째 파일, group-ceo A)·선택지별 금리 뒤 9,151B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
+  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 7,795B → P5 8,264B → #792 입력 흐름·칸 옆 오류·계산에 쓴 금리 뒤 8,662B → #792 5 계산·문장 분리(여섯째 파일, group-ceo A)·선택지별 금리 뒤 9,174B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
   // 늘리는 PR 은 이 숫자를 사유와 함께 고친다.
   assert.ok(total <= 9200, `이 장 장 전용 JS 합계 ${total}B > 9,200B`); // group-ceo 조건 ②: 병합 때 잰 값을 100B 단위로 올림, 그 뒤 +400B 넘게 늘면 group-cto 재판정
   const users = [];
@@ -675,7 +678,7 @@ test("화면: 일회성 비용을 넣으면 「조건을 바꾸면」 줄이 손
   assert.equal(page.text("mv-what-if"), "", "견줄 수 없는데 손익분기를 만들었다");
 });
 
-test("세 스크립트가 찾는 id 는 모두 구운 장에 있다 - 가짜 DOM 은 없는 id 도 만들어 주므로 이 시험이 대신 본다", () => {
+test("네 스크립트가 찾는 id 는 모두 구운 장에 있다 - 가짜 DOM 은 없는 id 도 만들어 주므로 이 시험이 대신 본다", () => {
   const ids = new Set([...[CALC, TEXT, JS, BASIS].join("\n").matchAll(/\$\("([\w-]+)"\)/g)].map((m) => m[1]));
   for (const id of SECTION.match(/data-i18n="([^"]+)"/)[1].split(" ")) ids.add(id);
   assert.ok(ids.size > 25, `id 를 ${ids.size}개밖에 못 찾았다`);
@@ -886,7 +889,8 @@ test("#792-5 화면: 켜면 지금 금리를 두 칸에 옮기고, 끄면 공통
   assert.equal(page.text("mv-what-if"), want.whatIf);
   assert.ok(page.html("mv-table").includes(`<tr><th scope="row">월 이자</th><td>137.5</td><td>200</td></tr>`), page.html("mv-table"));
   assert.match(page.text("mv-basis-line"), / 계산에 쓴 금리: 재계약 대출 2\.5%\(직접 넣은 값\) · 이사 대출 6%\(직접 넣은 값\) · 예금 3\.14%\(한국은행 평균, 2026-08\)\. 참고 평균금리/);
-  assert.equal(page.text("mv-rate-note").startsWith("대출 금리: 재계약·이사를 따로 넣었습니다."), true);
+  assert.equal(page.byId("mv-rm-field").hidden, false, "이사 쪽 금리 칸이 숨겨져 있다");
+  assert.equal(page.text("mv-rate-note").startsWith("대출 금리: 재계약 직접 넣은 값 · 이사 직접 넣은 값."), true, page.text("mv-rate-note"));
   page.byId("mv-split").checked = false;
   page.byId("mv-split").dispatch("change");
   await page.settle();
@@ -914,4 +918,32 @@ test("#792-5 잘못된 선택지별 금리는 금리 칸 아래 오류, 빈칸�
   const sent = JSON.stringify(page.sandbox.dataLayer);
   for (const secret of ["2.57", "6.17", "126000"]) assert.ok(!sent.includes(secret), `GA 로 ${secret} 가 나갔다`);
   assert.ok(events(page, "calculator_result").length >= 1);
+});
+
+test("#792-5 한쪽만 평균이면 그 칸만 「한국은행 평균」, 평균으로 둔 칸이 있으면 「새로 받는 금리가 아님」을 남긴다 - 재계약만 기존 금리로 고치는 흔한 경우", async () => {
+  const page = await open();
+  await set(page, { "mv-ask": "126000", "mv-dep": "100000", "mv-cash": "60000" });
+  page.byId("mv-split").checked = true;
+  page.byId("mv-split").dispatch("change");
+  await page.settle();
+  assert.match(page.text("mv-rate-note"), /^대출 금리: 재계약 한국은행 평균, 2026-08 · 이사 한국은행 평균, 2026-08\. 평균으로 둔 칸은 .*개인이 새로 받는 금리가 아닙니다\./);
+  await set(page, { "mv-rate-renew": "2.5" });
+  assert.match(page.text("mv-rate-note"), /^대출 금리: 재계약 직접 넣은 값 · 이사 한국은행 평균, 2026-08\. 평균으로 둔 칸은/);
+  assert.match(page.text("mv-basis-line"), / 계산에 쓴 금리: 재계약 대출 2\.5%\(직접 넣은 값\) · 이사 대출 4\.23%\(한국은행 평균, 2026-08\) · /);
+  await set(page, { "mv-rate-renew": "4.23", "mv-rate-move": "6" });
+  assert.match(page.text("mv-basis-line"), / 재계약 대출 4\.23%\(한국은행 평균, 2026-08\) · 이사 대출 6%\(직접 넣은 값\) · /, "이사 쪽 출처를 재계약 칸으로 판정했다");
+  await set(page, { "mv-rate-renew": "3", "mv-rate-move": "6" });
+  assert.doesNotMatch(page.text("mv-rate-note"), /평균으로 둔 칸은/, "평균으로 둔 칸이 없는데 경고를 남겼다");
+});
+
+test("#792-5 계측: 선택지별 금리만 바꿔도 새 결과(repeat)로 센다 - 서명에 켬/끔과 두 금리가 들어 있다", async () => {
+  const page = await open({ ga: true });
+  await set(page, { "mv-ask": "126000", "mv-dep": "100000", "mv-cash": "60000" });
+  page.byId("mv-split").checked = true;
+  page.byId("mv-split").dispatch("change");
+  await page.settle();
+  await wait();
+  await set(page, { "mv-rate-move": "6" });
+  await wait();
+  assert.deepEqual(events(page, "calculator_result").filter((p) => p.calculator_type === "renewal_move").map((p) => p.result_round), ["first", "repeat"]);
 });

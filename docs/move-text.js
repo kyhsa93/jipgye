@@ -1,7 +1,7 @@
 // 재계약 vs 이사 비교 결과의 문장·표 줄(#777, #792 에서 move-cost.js 의 계산과 나눔 — 이 장 여섯째 장 전용 JS, group-ceo 판정 A).
 // 순수 함수만 둔다. move-cost.js 뒤에 읽혀 jipgyeMoveCost 에 describe 를 붙인다 - 화면과 시험이 같은 한 벌을 부른다.
 (() => {
-  // 문구 M 은 장의 #mv-answer data-msg(ko)·data-msg-en 을 "|" 로 나눈 89개. 칸 이름은 4~10, 범위 사유는 12~15 -
+  // 문구 M 은 장의 #mv-answer data-msg(ko)·data-msg-en 을 "|" 로 나눈 94개. 칸 이름은 4~10, 범위 사유는 12~15 -
   // 월세 집 보증금·내 돈은 0 이상(13), 금리는 0~20%(14), 기간은 1~120개월(15), 나머지는 0 초과(12).
   const NAME = { renew: 4, deposit: 5, rent: 6, cash: 7, loanRate: 8, depositRate: 9, months: 10, oneRenew: 80, oneMove: 81, renewRate: 89, moveRate: 90 };
   const WHY = { renew: 12, deposit: 12, rent: 12, cash: 13, loanRate: 14, depositRate: 14, months: 15, oneRenew: 13, oneMove: 13, renewRate: 14, moveRate: 14 };
