@@ -1,12 +1,24 @@
-// 「다른 집으로 옮기면」 절의 참고값 단추·근거 줄(#777 P3). 이 장의 다섯째 장 전용 JS(group-cto 조건부 승인, #777) - renewal-move.js 가
+// 「다른 집으로 옮기면」 절의 근거 — 금리 줄·참고값 단추·근거 줄(#777 P3)과 근거 상자 계측(P4). 이 장의 다섯째 장 전용 JS(group-cto 조건부 승인, #777) - renewal-move.js 가
 // 그릴 때마다 같은 문맥(문구 M·숫자 표기·고른 종류·금리 자료·상태)으로 부른다. 위 확인기가 고른 칸(window.renewalCheck)을 이어받는다.
 // 참고값은 누를 때만 칸에 넣고, 단지 기준(같은 단지·같은 평형 신규 전세 중간값)과 자치구 참고(conversion.json 칸)를 섞지 않는다.
 (() => {
   const $ = (id) => document.getElementById(id);
+  const LAG = 4; // = scripts/check-data-progress.ts MONTHLY_LAG.jeonse_loan_rate + 1 (시험이 대조): 이보다 오래된 금리는 알린다
+  const mon = (y, m) => y * 12 + +m;
   let x; // 마지막으로 그린 문맥
   window.renewalMoveBasis = (ctx) => {
     x = ctx;
-    const { M, f, fmt, ym, v, kind, c, st } = ctx;
+    const { M, f, fmt, ym, v, kind, c, st, opp } = ctx;
+    // 금리 줄: 평균금리를 참고값으로 넣었는지·관측월·오래됐는지(#777 P2).
+    let note = st.err ? M[44] : "";
+    if (c) {
+      note = st.r ? f(39, ym(c.loan.month)) : M[40];
+      if (opp) note += st.d ? f(41, ym(c.deposit.month)) : M[42];
+      const at = new Date(Date.parse(c.updatedAt) + 324e5).toISOString();
+      const seen = [c.loan.month, c.deposit.month].sort()[0];
+      if (mon(at.slice(0, 4), at.slice(5, 7)) - mon(seen.slice(0, 4), seen.slice(4)) > LAG) note += f(43, ym(seen));
+    }
+    $("mv-rate-note").textContent = note;
     // 확인기가 넘기는 것: 자치구 이름·단지·칸 이름·그 칸 줄·칸 파일(f: 받는 중 undefined, 없음 null, 받기 실패 0)·다시 받기. 금액은 없다.
     const rc = window.renewalCheck || {};
     const { row, f: file } = rc;
@@ -35,6 +47,9 @@
     $("mv-ref-b").textContent = cd ? (kind == "wolse" ? f(50, rc.gu, bn, fmt(cd.deposit10k), fmt(cd.monthly10k), fmt(cd.pairs)) : f(49, rc.gu, bn, fmt(cd.jeonse10k), fmt(cd.pairs))) : "";
     const sum = (a) => a.reduce((p, q) => p + q, 0);
     const lo = row ? Math.min(sum(row.slice(0, 5)), sum(row.slice(5, 10))) : 0;
+    // 계측(#777 P4): 고른 칸의 한 줄이 표본 부족(min.show 미만)이면 칸마다 한 번 - 칸 이름은 메모리에만.
+    const k = rc.gu + rc.apt + rc.area;
+    if (row && lo < rc.min?.show && !(st.low ||= {})[k]) (st.low[k] = 1), window.analytics?.event?.("calculator_unavailable", { calculator_type: "renewal_vs_new", unavailable_reason: "low_sample" });
     // 「단지 값이 없습니다」는 넘겨받은 단지가 목록에 없어 면적대로 내린 때만 - 자료 있는 단지에서 손으로 면적대를 고른 때는 아니다(legal).
     $("mv-ref-note").textContent = [rc.file == "failed" ? M[56] : rc.band && rc.gu && !file?.cells?.[rc.apt] ? f(51, rc.gu, bn) : "", !rc.band && row?.length > 11 && med === null ? f(48, fmt(row[10])) : "", v("mv-dep") ? (st.src ? f(53, M[st.src == "c" ? 54 : 55]) : M[52]) : ""].filter(Boolean).join(" ");
     // 결과 옆 근거 줄: 기준(단지/자치구/없음)·기간·건수·표본 부족·금리 관측월, 그리고 비교할 집 금액이 참고값이면 그 출처(자치구 값을 같은 단지처럼 보이지 않게).
@@ -43,7 +58,7 @@
       (v("mv-dep") && st.src == "d" && cd ? f(70, rc.gu, bn, fmt(cd.pairs)) : v("mv-dep") && st.src == "c" && med ? f(71, fmt(row[10])) : "") +
       (c ? " " + f(63, ym(c.loan.month), ym(c.deposit.month)) : "") + M[67];
   };
-  const pick = (src) => ((x.st.src = src), (x.st.key = x.key), x.render());
+  const pick = (src) => ((x.st.src = src), (x.st.key = x.key), x.start(), x.render());
   $("mv-ref-a").addEventListener("click", () => (($("mv-dep").value = x.st.ref.med), pick("c")));
   $("mv-ref-b").addEventListener("click", () => {
     const { cd } = x.st.ref;
@@ -52,5 +67,7 @@
     if (w) $("mv-rent").value = cd.monthly10k;
     pick("d");
   });
+  // 계측(#777 P4): 근거 상자를 처음 펼칠 때 한 번. 정해진 낱말만 보낸다.
+  $("mv-basis").addEventListener("toggle", () => $("mv-basis").open && !x?.st.e && ((x.st.e = 1), window.analytics?.event?.("evidence_open", { calculator_type: "renewal_move" })));
   window.renewalMove?.();
 })();
