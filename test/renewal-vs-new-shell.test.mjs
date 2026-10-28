@@ -27,7 +27,7 @@ const SHELL = [
     utilities: ["tw:mb-10", "tw:1024:mb-16"],
   })),
   // 재계약 vs 이사 비교 절(#777)은 짧은 id(#convert·#expiry 와 같은 꼴)다.
-  { name: "move 구획", pattern: /<section id="move"(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-10", "tw:1024:mb-16"] },
+  { name: "move 구획", pattern: /<section id="move"(?: class="([^"]*)")?(?: data-i18n="[a-z -]+")?>/, hooks: [], utilities: ["tw:mb-10", "tw:1024:mb-16"] },
 ];
 
 test("재계약 장의 껍데기는 같은 유틸리티를 갖고 훅 class는 그대로다 (#281)", async () => {
