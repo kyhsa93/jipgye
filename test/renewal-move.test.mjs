@@ -20,6 +20,7 @@ import { SITE } from "./helpers/site-root.mjs";
 const root = path.resolve(import.meta.dirname, "..");
 const CALC = await readFile(path.join(root, "docs/move-cost.js"), "utf8");
 const JS = await readFile(path.join(root, "docs/renewal-move.js"), "utf8");
+const BASIS = await readFile(path.join(root, "docs/renewal-move-basis.js"), "utf8");
 const HTML = await readFile(path.join(root, SITE, "renewal-vs-new.html"), "utf8");
 const SECTION = HTML.slice(HTML.indexOf('<section id="move"'), HTML.indexOf('<section id="convert"'));
 
@@ -28,7 +29,20 @@ const { compare, describe, LTV, TAX } = globalThis.jipgyeMoveCost;
 const MSG = (lang) => SECTION.match(new RegExp(`${lang === "en" ? "data-msg-en" : "data-msg"}="([^"]*)"`))[1].split("|");
 
 const FACTS = { updatedAt: "2026-10-24T00:00:00Z", slugs: { 송파구: "songpa" }, table: [{ district: "송파구", gapMedian: null, gapMatched: 1, rightUsed: 1 }] };
-const CONVERSION = { updatedAt: "2026-10-28T02:09:29Z", loan: { rate: 4.23, month: "202608", basis: "balance" }, deposit: { rate: 3.14, month: "202608" }, cells: [], slugs: {} };
+const CONVERSION = {
+  updatedAt: "2026-10-28T02:09:29Z", loan: { rate: 4.23, month: "202608", basis: "balance" }, deposit: { rate: 3.14, month: "202608" }, slugs: {},
+  cells: [
+    { district: "송파구", band: "60to85", rate: 4.8, jeonse10k: 80000, deposit10k: 40000, monthly10k: 140, pairs: 75 },
+    { district: "송파구", band: "under60", rate: 4.6, jeonse10k: 52000, deposit10k: 10000, monthly10k: 160, pairs: 40 },
+  ],
+};
+// 확인기 칸 파일(renewal-cells-songpa) - #777 P1 대표 사례 A·B′ 의 칸 값 모양 그대로(실데이터 파일은 읽지 않는다).
+const CELLS = {
+  updatedAt: "2026-10-28T02:11:14Z", window: ["202411", "202610"], min: { show: 3, ratio: 5 },
+  cells: { 헬리오시티: { "84.98": [2, 13, 25, 290, 0, 3, 24, 8, 31, 162, 54, 128500], "130.06": [1, 0, 0, 3, 0, 0, 0, 0, 0, 4, 0, null] } },
+  fallback: { under60: [6, 18, 23, 74, 4, 5, 23, 10, 20, 32], "60to85": [5, 30, 53, 169, 0, 1, 18, 12, 21, 75] },
+};
+const Q = (apt, area) => `?${new URLSearchParams({ gu: "songpa", apt, area })}`;
 
 // 구운 장의 #move 요소를 그 글자·data-*·value·checked·hidden 그대로 세운다. 확인기의 두 보증금 칸도 같이.
 function seedFromHtml() {
@@ -44,6 +58,8 @@ function seedFromHtml() {
     el.hidden = /\bhidden\b/.test(tag);
     seed[m[3]] = el;
   }
+  const section = SECTION.match(/^<section id="move"[^>]*>/)[0];
+  seed.move = stubElement({ "data-i18n": section.match(/data-i18n="([^"]*)"/)[1] }, "move");
   // 가짜 DOM 은 없는 id 도 만들어 주므로, 표를 innerHTML 로 갈 때 caption 이 떨어져 나가는 것을 따로 흉내 낸다 -
   // 떨어진 caption 에 글자를 쓰면 실제 브라우저에서 null 이 되는 자리다(2026-10-28 실측 결함).
   const table = seed["mv-table"];
@@ -56,12 +72,14 @@ function seedFromHtml() {
   return seed;
 }
 
-async function open({ conversion = CONVERSION, locale = "ko" } = {}) {
+async function open({ conversion = CONVERSION, locale = "ko", query = "", cells = CELLS, status } = {}) {
   const data = { "renewal-facts": FACTS };
   if (conversion) data.conversion = conversion;
-  const page = await loadPage({ file: "renewal-vs-new.html", data, locale, seed: seedFromHtml() });
+  if (cells) data["renewal-cells-songpa"] = cells;
+  const page = await loadPage({ file: "renewal-vs-new.html", data, locale, query, status, seed: seedFromHtml() });
   new vm.Script(CALC, { filename: "docs/move-cost.js" }).runInContext(page.sandbox);
   new vm.Script(JS, { filename: "docs/renewal-move.js" }).runInContext(page.sandbox);
+  new vm.Script(BASIS, { filename: "docs/renewal-move-basis.js" }).runInContext(page.sandbox);
   await page.settle();
   return page;
 }
@@ -170,13 +188,13 @@ test("자리: 확인기 → 방법 안내 → #move → #convert, 보이는 labe
   const ids = [...HTML.matchAll(/<section id="([^"]+)"/g)].map((m) => m[1]);
   assert.deepEqual(ids.slice(0, 5), ["check-section", "move", "convert", "expiry", "lead-section"]);
   assert.ok(HTML.indexOf("</aside>") < HTML.indexOf('<section id="move"'), "방법 안내가 확인기에 붙어 있어야 한다");
-  assert.match(SECTION, /^<section id="move" class="tw:mb-10 tw:1024:mb-16">/);
+  assert.match(SECTION, /^<section id="move" class="tw:mb-10 tw:1024:mb-16" data-i18n="[a-z -]+">/);
   for (const id of ["mv-kind", "mv-dep", "mv-rent", "mv-cash", "mv-rate", "mv-months", "mv-opp", "mv-drate"]) {
     assert.ok(SECTION.includes(`<label for="${id}" id="${id}-label" data-en="`), `${id} label`);
   }
   assert.match(SECTION, /<p class="lead" id="mv-answer" aria-live="polite" data-msg="[^"]+" data-msg-en="[^"]+"><\/p>/);
-  assert.equal(MSG("ko").length, 47);
-  assert.equal(MSG("en").length, 47);
+  assert.equal(MSG("ko").length, 70);
+  assert.equal(MSG("en").length, 70);
   assert.ok(SECTION.includes(`data-en="${FOOTERS.renewalMove.en}">${FOOTERS.renewalMove.ko}</p>`), "출처 줄이 source-lines 로 찍히지 않았다");
   assert.match(FOOTERS.renewalMove.ko, /전세자금대출·정기예금 평균금리\. 이 값은 원자료를 가공한 것입니다\.$/);
 });
@@ -186,21 +204,27 @@ test("판정·추천으로 읽히는 낱말이 절 안에 없다(legal #777)", (
   assert.doesNotMatch(text, /유리|불리|적정|안전한 계약|무조건|반드시|추천|권합니다|이득|손해|최선|보장/);
   // 고지의 부정문(「판정하거나 권하는 것이 아니며」 / "does not judge or recommend")은 legal 확정 문구라 뺀 뒤 본다.
   const en = (MSG("en").join(" ") + SECTION).replace("does not judge or recommend either option", "");
-  assert.doesNotMatch(en, /recommend|fair price|better deal|guarantee|\bshould\b/i);
+  assert.doesNotMatch(en, /recommend|fair price|better deal|\bguaranteed\b|\bguarantee(?! fees)|\bshould\b/i); // 「guarantee fees」(보증료, 넣지 않은 비용)는 약속이 아니다
 });
 
-test("외부 JS 둘은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B, renewal-vs-new 만 defer 로 한 번씩(계산이 먼저) 읽고 서비스워커 사전캐시에 없다 (#681)", async () => {
-  for (const [name, src] of [["move-cost.js", CALC], ["renewal-move.js", JS]]) {
+test("외부 JS 셋은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B, renewal-vs-new 만 defer 로 한 번씩(계산이 먼저) 읽고 서비스워커 사전캐시에 없다 (#681)", async () => {
+  for (const [name, src] of [["move-cost.js", CALC], ["renewal-move.js", JS], ["renewal-move-basis.js", BASIS]]) {
     const size = gzipSync(stripJsComments(src), { level: 9 }).length;
     assert.ok(size <= 2048, `docs/${name} gzip ${size}B`);
     assert.equal(HTML.split(`<script src="./${name}" defer></script>`).length, 2, name);
     assert.ok(!(await readFile(path.join(root, "docs/sw.js"), "utf8")).includes(name), `${name} 가 sw.js 사전캐시에 들어갔다`);
   }
-  assert.ok(HTML.indexOf("./move-cost.js") < HTML.indexOf("./renewal-move.js"));
+  assert.ok(HTML.indexOf("./move-cost.js") < HTML.indexOf("./renewal-move.js") && HTML.indexOf("./renewal-move.js") < HTML.indexOf("./renewal-move-basis.js"), "defer 실행 순서(계산 → 화면 → 참고값)에 기댄다");
+  // 이 장의 장 전용 JS 는 다섯(group-cto 조건부 승인 #777) - 여섯째를 두려면 group-ceo 안건이다. 합계도 적어 둔다.
+  const { pageScripts } = await import("../scripts/page-assets.ts");
+  const own = pageScripts(path.join(root, "docs")).filter((f) => HTML.includes(`<script src="./${f}" defer></script>`));
+  assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
+  const total = (await Promise.all(own.map((f) => readFile(path.join(root, "docs", f), "utf8")))).reduce((n, src) => n + gzipSync(stripJsComments(src), { level: 9 }).length, 0);
+  assert.ok(total <= 5 * 2048, `이 장 장 전용 JS 합계 ${total}B`);
   const users = [];
   for (const f of (await readdir(path.join(root, SITE))).filter((x) => x.endsWith(".html")).sort()) {
     const page = await readFile(path.join(root, SITE, f), "utf8");
-    if (page.includes("move-cost.js") || page.includes("renewal-move.js")) users.push(f);
+    if (/move-cost\.js|renewal-move(-basis)?\.js/.test(page)) users.push(f);
   }
   assert.deepEqual(users, ["renewal-vs-new.html"]);
 });
@@ -210,7 +234,8 @@ test("고지 세 문단은 접지 않고 늘 보인다(legal) - details 안에 �
   assert.ok(legal, "고지 문단이 없다");
   assert.match(legal[2], /판정하거나 권하는 것이 아니며.*한도는 판정하지 않습니다.*계약의 안전성은 판단하지 않습니다/);
   assert.match(legal[1], /does not judge or recommend.*do not assess whether you can borrow.*contract safety/);
-  assert.ok(!/<details[^>]*>[\s\S]*id="mv-legal"/.test(SECTION));
+  const details = SECTION.slice(SECTION.indexOf("<details"), SECTION.indexOf("</details>"));
+  assert.ok(details && !details.includes('id="mv-legal"'), "고지가 접히는 상자 안에 있다");
 });
 
 test("화면: 요구 보증금이 없으면 확인기 칸으로 안내, 그다음엔 남은 칸 이름 - 결과를 만들어 내지 않는다", async () => {
@@ -343,4 +368,68 @@ test("화면 = 계산 모듈: 답 문장과 표는 describe(compare(입력)) 그
       for (const row of d.rows ?? []) assert.ok(page.html("mv-table").includes(`<tr><th scope="row">${row[0]}</th><td>${row[1]}</td><td>${row[2]}</td></tr>`), row[0]);
     }
   }
+});
+
+// ---- P3: 확인기가 고른 칸을 이어받는다 (#777 P3) ----
+
+test("단지 기준: 같은 평형 신규 전세 중간값 단추와 자치구 참고 단추를 따로, 꼬리표를 달고 낸다 - 누르기 전에는 칸을 채우지 않는다", async () => {
+  const page = await open({ query: Q("헬리오시티", "84.98") });
+  assert.equal(page.byId("mv-dep").value, "", "참고값을 먼저 채웠다");
+  assert.equal(page.byId("mv-ref-a").hidden, false);
+  assert.equal(page.text("mv-ref-a"), "같은 평형 신규 전세 중간값 넣기 128,500만원 — 단지 기준·최근 6개월 54건");
+  assert.equal(page.text("mv-ref-b"), "송파구 60~85㎡ 대표 전세 넣기 80,000만원 — 자치구 참고·단지 75곳, 이 단지 값이 아닙니다");
+  assert.match(page.text("mv-basis-line"), /^기준: 송파구 헬리오시티 84\.98㎡ — 같은 단지·같은 평형\(단지 기준\)\. 갱신 통계: 2024-11~2026-10 순수 전세 갱신 558건\. 같은 평형 신규 전세: 최근 6개월 54건\. 금리 관측월: 대출 2026-08 · 예금 2026-08\(한국은행 평균\)\. 층·향·동·집 상태/);
+  await page.click("mv-ref-a");
+  assert.equal(page.byId("mv-dep").value, 128500);
+  assert.equal(page.text("mv-ref-note"), "비교할 집: 참고값(단지 기준)입니다 — 실제로 제시받은 조건이 있으면 그 값으로 고쳐 넣으세요.");
+  await set(page, { "mv-dep": "120000" });
+  assert.equal(page.text("mv-ref-note"), "비교할 집: 직접 넣은 값입니다.");
+});
+
+test("월세로 바꾸면 단지 중간값 단추는 숨고 자치구 대표 월세 단추가 보증금·월세를 함께 넣는다", async () => {
+  const page = await open({ query: Q("헬리오시티", "84.98") });
+  await set(page, { "mv-kind": "wolse" });
+  assert.equal(page.byId("mv-ref-a").hidden, true);
+  assert.equal(page.text("mv-ref-b"), "송파구 60~85㎡ 대표 월세 넣기 보증금 40,000·월세 140만원 — 자치구 참고·단지 75곳, 이 단지 값이 아닙니다");
+  await page.click("mv-ref-b");
+  assert.equal(page.byId("mv-dep").value, 40000);
+  assert.equal(page.byId("mv-rent").value, 140);
+  assert.match(page.text("mv-ref-note"), /^비교할 집: 참고값\(자치구 참고\)입니다/);
+});
+
+test("표본 부족: 신규 전세 중간값이 없으면 단추 대신 건수를 적고, 갱신 줄이 5건 미만이면 근거 줄에 표본 부족", async () => {
+  const page = await open({ query: Q("헬리오시티", "130.06") });
+  assert.equal(page.byId("mv-ref-a").hidden, true);
+  assert.equal(page.text("mv-ref-note"), "같은 평형 신규 전세가 최근 6개월 0건이라 중간값을 내지 않았습니다.");
+  assert.match(page.text("mv-basis-line"), / 같은 평형 신규 전세: 최근 6개월 0건\. 표본 부족: 한 줄이 갱신 4건뿐이라 그 줄은 비율 대신 건수만 냅니다\./);
+});
+
+test("자치구만: 넘겨받은 단지가 목록에 없으면 넘겨받은 면적의 구 전체 면적대로 내리고, 그 사실을 먼저 적는다", async () => {
+  const page = await open({ query: Q("이문아이파크자이", "59.95") });
+  assert.equal(page.search(), `?${new URLSearchParams({ gu: "songpa", apt: "이문아이파크자이", area: "b:under60" })}`);
+  assert.equal(page.text("mv-ref-note"), "이 단지·평형은 단지 값이 없습니다. 아래는 송파구 60㎡ 미만 전체 값입니다.");
+  assert.equal(page.byId("mv-ref-a").hidden, true, "구 전체 값에 단지 중간값 단추를 붙였다");
+  assert.equal(page.text("mv-ref-b"), "송파구 60㎡ 미만 대표 전세 넣기 52,000만원 — 자치구 참고·단지 40곳, 이 단지 값이 아닙니다");
+  assert.match(page.text("mv-basis-line"), /^기준: 송파구 60㎡ 미만 — 자치구 전체 값\(자치구 참고\)이며 같은 단지 거래가 아닙니다\. 갱신 통계: 2024-11~2026-10 순수 전세 갱신 215건\. 금리/);
+  assert.doesNotMatch(page.text("mv-basis-line"), /같은 평형 신규 전세/);
+});
+
+test("단지를 안 골랐으면 금액만으로 계산한다고 적고, 단지 자료를 못 받으면 확인기는 다시 시도를, 비교 절은 직접 넣으라고 한다", async () => {
+  const none = await open();
+  assert.match(none.text("mv-basis-line"), /^기준: 고른 단지 없음 — 넣은 금액만으로 계산했습니다\./);
+  await set(none, CASE1);
+  assert.match(answer(none), /^입력한 조건으로 24개월 동안 이사가/);
+  const failed = await open({ query: Q("헬리오시티", "84.98"), cells: null, status: 500 });
+  assert.match(failed.html("check-answer"), /^이 자치구의 단지 자료를 불러오지 못했습니다\. <button type="button" id="check-retry">다시 시도<\/button>$/);
+  assert.equal(failed.text("mv-ref-note"), "단지 자료를 불러오지 못했습니다. 금액과 금리를 직접 넣으면 계산합니다.");
+});
+
+test("확인기에서 칸을 바꾸면 비교 절이 따라 바뀐다(같은 장, 다시 넣지 않는다)", async () => {
+  const page = await open({ query: Q("헬리오시티", "84.98") });
+  assert.match(page.text("mv-ref-a"), /128,500만원/);
+  const area = page.byId("check-area");
+  area.value = "130.06";
+  area.dispatch("change");
+  await page.settle();
+  assert.equal(page.byId("mv-ref-a").hidden, true);
 });
