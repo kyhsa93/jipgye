@@ -225,7 +225,7 @@ test("외부 JS 셋은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B
   const own = pageScripts(path.join(root, "docs")).filter((f) => HTML.includes(`<script src="./${f}" defer></script>`));
   assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
   const total = (await Promise.all(own.map((f) => readFile(path.join(root, "docs", f), "utf8")))).reduce((n, src) => n + gzipSync(stripJsComments(src), { level: 9 }).length, 0);
-  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 계측과 금리 줄 이동 뒤 7,784B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
+  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 계측과 금리 줄 이동 뒤 7,795B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
   // 늘리는 PR 은 이 숫자를 사유와 함께 고친다.
   assert.ok(total <= 7800, `이 장 장 전용 JS 합계 ${total}B > 7,800B`);
   const users = [];
@@ -583,4 +583,38 @@ test("참고값을 넣은 뒤 확인기 칸이나 종류를 바꾸면 그 금액
   await again.click("mv-ref-a"); // 전세 중간값
   await set(again, { "mv-kind": "wolse" });
   assert.doesNotMatch(again.text("mv-basis-line"), /비교할 집 금액/, "전세 참고값을 월세 비교의 출처로 남겼다");
+});
+
+test("계측: 칸을 비웠다가 같은 값을 다시 넣어도 같은 입력은 한 번만 센다(engineer #777 P4 결함)", async () => {
+  const page = await open({ ga: true, query: Q("헬리오시티", "84.98") });
+  await set(page, CASE1);
+  await wait();
+  await set(page, { "mv-cash": "" });
+  await wait();
+  await set(page, { "mv-cash": "126000" });
+  await wait();
+  assert.deepEqual(events(page, "calculator_result").filter((p) => p.calculator_type === "renewal_move").map((p) => p.result_round), ["first"]);
+});
+
+test("계측: 첫 결과 전에 여러 번 고쳐도 첫 결과는 first, 비교 불가가 800ms 안에 풀리면 세지 않는다, 잘못된 입력을 잠깐만 둬도 세지 않는다", async () => {
+  const page = await open({ ga: true, query: Q("헬리오시티", "84.98") });
+  await set(page, { ...CASE1, "mv-months": "1" });
+  await set(page, { "mv-months": "12" });
+  await set(page, { "mv-months": "24" });
+  await wait();
+  assert.deepEqual(events(page, "calculator_result").filter((p) => p.calculator_type === "renewal_move").map((p) => p.result_round), ["first"]);
+  await set(page, { "mv-cash": "1000" }); // 80% 초과
+  await wait(300);
+  await set(page, { "mv-cash": "126000" });
+  await set(page, { "mv-months": "500" }); // 잘못된 입력
+  await wait(300);
+  await set(page, { "mv-months": "24" });
+  await wait();
+  assert.equal(events(page, "calculator_unavailable").length, 0, "잠깐 지나간 상태를 비교 불가로 셌다");
+});
+
+test("계측: 참고값 단추 하나만 눌러도 비교 시작이다", async () => {
+  const page = await open({ ga: true, query: Q("헬리오시티", "84.98") });
+  await page.click("mv-ref-b");
+  assert.equal(events(page, "compare_start").length, 1);
 });

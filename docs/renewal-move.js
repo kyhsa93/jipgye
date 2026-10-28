@@ -20,8 +20,9 @@
     const rc = window.renewalCheck || {};
     const ok = r?.ok && r.comparable;
     const scope = !rc.row ? "inputs_only" : /^b:/.test(rc.area) ? "district_band" : "matched_complex";
-    A()?.result?.("renewal_move", ok ? sig + scope : null, ok && { result_scope: scope, result_outcome: r.cheaper ?? "even", result_round: st.n ? "repeat" : "first" });
-    if (ok) st.rt = setTimeout(() => (st.n = 1), WAIT);
+    // 결과가 아니면 null 대신 마지막으로 센 서명을 넘긴다 - null 은 analytics.js 의 「마지막 서명」을 지워, 칸을 비웠다 같은 값을 다시 넣으면 또 센다.
+    A()?.result?.("renewal_move", ok ? sig + scope : st.ls ?? null, ok && { result_scope: scope, result_outcome: r.cheaper ?? "even", result_round: st.n ? "repeat" : "first" });
+    if (ok) st.rt = setTimeout(() => ((st.n = 1), (st.ls = sig + scope)), WAIT);
     // 비교 불가: 잘못된 입력·80% 가정 초과. 칸이 비어 있는 것(입력 중)은 세지 않고, 같은 사유는 장 하나에 한 번.
     const why = r && (r.ok ? !r.comparable && "cash_short" : r.errors.some((e) => e.code == "range") && "invalid_input");
     if (why && !st.u?.[why]) st.ut = setTimeout(() => (((st.u ||= {})[why] = 1), A()?.event?.("calculator_unavailable", { calculator_type: "renewal_move", unavailable_reason: why })), WAIT);
