@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { loadIndexPage } from "./helpers/index-page.mjs";
 import { SITE } from "./helpers/site-root.mjs";
 
@@ -98,10 +99,12 @@ test("대표 검색이 첫 화면에 보이고 JS 없이 GET 으로 deal-search 
   // 소유자 지시(2026-10-26, O-A=예): 메인은 질문 입구가 아니라 대표 검색이 먼저다. #575 안 B 의 「첫 화면 선택지 ≤9」 대신
   // 헤드라인 h1 → 가치 문구 → 출처 한 줄(태그라인, 지우지 않는다) → 폼(유형·지역·예산·검색)이 질문 입구·데이터 구획보다 앞에 있는지 본다.
   const html = await indexHtml();
-  const hero = /<div class="home-hero"[\s\S]*?<\/form>\n {2}<\/div>/.exec(html)?.[0] ?? "";
+  const hero = /<div class="home-hero"[\s\S]*?<\/details>\n {2}<\/div>/.exec(html)?.[0] ?? "";
   assert.ok(hero, "대표 검색 블록이 없다");
-  assert.match(hero, /<h1 class="home-title"><span lang="ko">내 예산에 맞는 서울 아파트를 찾아보세요<\/span><span lang="en">[\x20-\x7E]+<\/span><\/h1>/, "헤드라인 h1 이 한·영 두 벌이 아니다");
-  assert.match(hero, /<p class="home-value"><span lang="ko">실제 거래된 가격을 기준으로[^<]+<\/span><span lang="en">[\x20-\x7E]+<\/span><\/p>/);
+  assert.match(hero, /<h1 class="home-title"><span lang="ko">서울 아파트, 계약 전에 숫자로 확인하세요\.<\/span><span lang="en">[\x20-\x7E]+<\/span><\/h1>/, "계약 전 비교를 안내하는 헤드라인이 한·영 두 벌이 아니다");
+  assert.match(hero, /<p class="home-value"><span lang="ko">원하는 동네의 실거래를 찾고[^<]+<\/span><span lang="en">[\x20-\x7E]+<\/span><\/p>/);
+  assert.match(hero, /<details class="home-discovery">\s*<summary>/, "단지명 검색이 보조 검색으로 접혀 있지 않다");
+  assert.equal((hero.match(/class="site-search"/g) ?? []).length, 1, "통합 검색이 중복되거나 사라졌다");
   assert.ok(hero.indexOf('class="home-value"') < hero.indexOf('id="tagline"'), "태그라인(출처 한 줄)이 가치 문구 아래가 아니다");
   assert.ok(hero.includes("신고된 거래만 세어서 말합니다"), "태그라인이 지워졌다(소유자 결정 2026-10-26: 유지)");
   const at = html.indexOf('class="home-hero"');
@@ -146,7 +149,7 @@ test("대표 검색 폼의 칸 이름·값은 deal-search 가 읽는 파라미�
   assert.deepEqual(radios.map((m) => m[1]), kinds, "거래 유형이 deal-search 의 KINDS 와 다르다");
   assert.deepEqual(radios.filter((m) => m[2]).map((m) => m[1]), ["sale"], "기본 유형이 매매 하나가 아니다");
 
-  const { DISTRICTS } = await import(path.join(root, "scripts/realestate-districts.ts"));
+  const { DISTRICTS } = await import(pathToFileURL(path.join(root, "scripts/realestate-districts.ts")).href);
   const district = /<select class="c-select" name="district">([\s\S]*?)<\/select>/.exec(form)?.[1] ?? "";
   assert.match(district, /^<option value="">서울 전체/, "첫 칸이 서울 전체(빈 값 = deal-search 의 ALL)가 아니다");
   const options = [...district.matchAll(/<option>([^<]+)/g)].map((m) => m[1]);

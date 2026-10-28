@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#253e81">
+<meta name="theme-color" content="#087568">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
@@ -53,14 +53,6 @@
     <a id="nav-news" href="./news.html">뉴스</a>
   </nav>
 
-  <form class="site-search" role="search">
-    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
-    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
-           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off" enterkeyhint="search"
-           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
-    <div class="site-search-results" id="site-search-results" role="listbox"
-         aria-labelledby="site-search-label" hidden></div>
-  </form>
   <div id="content" tabindex="-1"></div>
 
   <div class="content-notice page-notice" id="content-notice" hidden></div>
@@ -73,8 +65,9 @@
   <!-- 첫 화면 = 가치 제안 + 대표 검색(#745 PR4, 소유자 지시 2026-10-26 - #575 안 B 를 대체). 폼은 JS 없이 GET 으로 deal-search 에 조건을 넘긴다.
        예산은 deal-search 의 max(억, 이하)다. 전세·월세에는 deal-search 가 보증금·월세 칸을 쓰므로 예산 칸을 CSS 로 감추고, 보낼 때 비운다(스크립트 끝). -->
   <div class="home-hero" id="home-hero">
-    <h1 class="home-title"><span lang="ko">내 예산에 맞는 서울 아파트를 찾아보세요</span><span lang="en">Find a Seoul apartment that fits your budget</span></h1>
-    <p class="home-value"><span lang="ko">실제 거래된 가격을 기준으로 원하는 지역의 아파트를 비교해 보세요.</span><span lang="en">Compare apartments in the area you want, based on prices actually paid.</span></p>
+    <p class="home-eyebrow"><span lang="ko">실거래로 확인하는 나의 다음 집</span><span lang="en">Real transactions. Clearer decisions.</span></p>
+    <h1 class="home-title"><span lang="ko">서울 아파트, 계약 전에 숫자로 확인하세요.</span><span lang="en">Know the numbers before you sign.</span></h1>
+    <p class="home-value"><span lang="ko">원하는 동네의 실거래를 찾고, 내 조건으로 비교해 보세요.</span><span lang="en">Find actual deals in your area and compare your options.</span></p>
     <p class="tagline" id="tagline">서울 아파트, 신고된 거래만 세어서 말합니다</p>
     <form class="home-search" id="home-search" action="./deal-search.html" method="get">
       <fieldset class="home-kind">
@@ -91,13 +84,24 @@
         <select class="c-select" name="max"><option value="">전체<option value="3">3억 이하<option value="5">5억 이하<option value="8">8억 이하<option value="10">10억 이하<option value="15">15억 이하<option value="20">20억 이하</select></label>
       <button class="c-btn" type="submit"><span lang="ko">실거래 검색</span><span lang="en">Search deals</span></button>
     </form>
+    <details class="home-discovery">
+      <summary><span lang="ko">단지명이나 동네 이름으로 바로 찾기</span><span lang="en">Search by apartment or neighborhood</span></summary>
+  <form class="site-search" role="search">
+    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
+    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off" enterkeyhint="search"
+           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
+    <div class="site-search-results" id="site-search-results" role="listbox"
+         aria-labelledby="site-search-label" hidden></div>
+  </form>
+    </details>
   </div>
 
   <nav class="home-goals" id="home-goals" aria-label="무엇을 할까요">
-    <div class="c-card"><p class="c-card__title"><a href="./deal-search.html"><span lang="ko">아파트 찾기</span><span lang="en">Find an apartment</span></a></p><p class="c-hint"><span lang="ko">지역·예산·면적으로 실거래 찾기</span><span lang="en">Search deals by district, budget and size</span></p></div>
-    <div class="c-card"><p class="c-card__title"><a href="./realestate.html"><span lang="ko">지역 시세 확인</span><span lang="en">Check local prices</span></a></p><p class="c-hint"><span lang="ko">자치구별 이번 주 신고된 값</span><span lang="en">This week's reported prices by district</span></p></div>
-    <div class="c-card"><p class="c-card__title"><a href="./switch-house.html"><span lang="ko">아파트·지역 비교</span><span lang="en">Compare areas</span></a></p><p class="c-hint"><span lang="ko">갈 동네와 지금 동네 오른 폭</span><span lang="en">How much your next area rose vs. yours</span></p></div>
-    <div class="c-card"><p class="c-card__title"><a href="./price-outlook.html"><span lang="ko">시장 동향</span><span lang="en">Market trends</span></a></p><p class="c-hint"><span lang="ko">3개월 뒤 값</span><span lang="en">3-month outlook</span> · <a href="./news.html"><span lang="ko">뉴스</span><span lang="en">News</span></a></p></div>
+    <div class="c-card"><span class="home-goal-number" aria-hidden="true">01</span><p class="c-card__title"><a href="./jeonse-vs-wolse.html"><span lang="ko">전세 vs 월세</span><span lang="en">Jeonse vs monthly rent</span></a></p><p class="c-hint"><span lang="ko">내 자금으로 매달 얼마가 드는지</span><span lang="en">Compare monthly costs with your budget</span></p><span class="home-goal-arrow" aria-hidden="true">↗</span></div>
+    <div class="c-card"><span class="home-goal-number" aria-hidden="true">02</span><p class="c-card__title"><a href="./renewal-vs-new.html"><span lang="ko">재계약 vs 새로 구하기</span><span lang="en">Renew or move</span></a></p><p class="c-hint"><span lang="ko">요구 보증금을 같은 단지 실거래와 비교</span><span lang="en">Check the deposit against actual leases</span></p><span class="home-goal-arrow" aria-hidden="true">↗</span></div>
+    <div class="c-card"><span class="home-goal-number" aria-hidden="true">03</span><p class="c-card__title"><a href="./realestate.html"><span lang="ko">동네 시세 확인</span><span lang="en">Explore local prices</span></a></p><p class="c-hint"><span lang="ko">서울 25개 자치구의 실제 거래가격</span><span lang="en">Actual prices across Seoul districts</span></p><span class="home-goal-arrow" aria-hidden="true">↗</span></div>
+    <div class="c-card"><span class="home-goal-number" aria-hidden="true">04</span><p class="c-card__title"><a href="./price-outlook.html"><span lang="ko">시장 흐름 살펴보기</span><span lang="en">Explore market trends</span></a></p><p class="c-hint"><span lang="ko">가격 추이와 전망의 근거까지</span><span lang="en">Price trends and the evidence behind them</span></p><span class="home-goal-arrow" aria-hidden="true">↗</span></div>
   </nav>
 
   <h2 class="question-heading" id="question-heading">더 알아보기</h2>
@@ -376,7 +380,7 @@
   function getInitialTheme() {
     let saved;
     try { saved = window.localStorage.getItem("theme"); } catch {}
-    return saved === "light" || saved === "dark" ? saved : "auto";
+    return saved === "light" || saved === "dark" || saved === "auto" ? saved : "light";
   }
 
   function applyTheme(next) {

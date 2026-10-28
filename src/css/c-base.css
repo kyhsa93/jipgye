@@ -297,3 +297,60 @@
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
+
+/* Contract-first visual system: one accent, clear decisions, quiet supporting data. */
+body { line-height: 1.65; }
+main { padding-top: 24px; }
+header { align-items: center; }
+.wordmark { margin: 0; letter-spacing: -0.04em; }
+.brand { font-weight: 700; }
+.header-actions { gap: 4px; }
+.header-actions button { background: transparent; border-color: transparent; border-radius: 999px; }
+.header-actions button:hover { background: var(--accent-weak); }
+.page-nav { padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.page-nav a { background: transparent; border-color: transparent; color: var(--muted); padding: 8px 16px; font-weight: 600; }
+.page-nav a.active, .page-nav a[aria-current="page"] { background: var(--accent-weak); color: var(--accent); border-color: transparent; }
+.sub-nav a { background: transparent; }
+h1, h2, h3 { letter-spacing: -0.035em; }
+h2 { margin-top: 32px; border-bottom: 0; padding-bottom: 12px; }
+.site-search input { background: var(--card); border-radius: var(--radius); }
+.c-btn { min-height: 52px; border-radius: var(--radius); }
+.c-input, .c-select { min-height: 48px; background-color: var(--card); }
+.c-card { background: var(--card); }
+.data-table, .rate-table { background: var(--card); }
+.data-table th, .rate-table th { padding: 14px 12px; color: var(--muted); background: var(--bg); }
+.data-table td, .rate-table td { padding: 16px 12px; }
+.history-card, .overall-card { background: var(--card); }
+.site-footer { border-top: 1px solid var(--border); padding-top: 24px; line-height: 1.8; }
+/* Inputs lead directly to a conclusion; methodology remains one disclosure away. */
+#calc-section, #check-section { margin-top: 32px; }
+#calc-section > h2, #check-section > h2 { margin-top: 0; }
+#calc-controls, #check-controls, #check-optional { padding: 20px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+.search-field input, .search-field select { min-height: 48px; border-radius: var(--radius-sm); }
+.verdict { background: var(--accent-weak); border: 0; border-radius: var(--radius); padding: 24px; margin-top: 24px; }
+.verdict strong { display: block; font-size: var(--fs-h1); line-height: 1.35; letter-spacing: -0.035em; }
+.verdict .sub { margin-top: 12px; }
+.option { padding: 24px; background: var(--card); }
+.option.win { border: 2px solid var(--accent); background: var(--card); }
+.option .cost { margin-top: 16px; letter-spacing: -0.04em; }
+.option .rows { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 20px; }
+.option .rows li { padding: 6px 0; }
+.calc-explainer { margin: 24px 0; padding: 16px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.calc-explainer summary { display: list-item; cursor: pointer; min-height: var(--tap); align-content: center; font-weight: 600; }
+.calc-explainer .lead { font-size: var(--fs-sm); color: var(--muted); margin-top: 16px; }
+html:lang(en) .calc-explainer [lang="ko"], html:not(:lang(en)) .calc-explainer [lang="en"] { display: none; }
+#check-answer:not(:empty) { max-width: none; padding: 24px; background: var(--accent-weak); border-radius: var(--radius); font-size: var(--fs-xl); font-weight: 600; }
+@media (max-width: 560px) {
+  main { padding-top: 16px; }
+  .verdict, .option, #check-answer:not(:empty) { padding: 20px; }
+  #calc-controls, #check-controls, #check-optional { padding: 16px; }
+  .data-table td { padding: 12px; }
+}
+
+/* Consistent interface icons; accessible button names remain in the HTML. */
+.header-actions button span { display: none; }
+.header-actions button::before { content: ""; display: block; width: 20px; height: 20px; background: currentColor; mask-size: contain; mask-position: center; mask-repeat: no-repeat; }
+#share-button::before { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2016V3m-4%204%204-4%204%204M5%2013v7h14v-7%22%2F%3E%3C%2Fsvg%3E"); }
+#theme-toggle::before { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%224%22%2F%3E%3Cpath%20d%3D%22M12%202v2m0%2016v2M2%2012h2m16%200h2M5%205l1.5%201.5m11%2011L19%2019M5%2019l1.5-1.5m11-11L19%205%22%2F%3E%3C%2Fsvg%3E"); }
+#lang-toggle::before { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%2F%3E%3Cellipse%20cx%3D%2212%22%20cy%3D%2212%22%20rx%3D%224%22%20ry%3D%229%22%2F%3E%3Cpath%20d%3D%22M3%2012h18%22%2F%3E%3C%2Fsvg%3E"); }
+:root[data-theme="dark"] #theme-toggle::before { mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M20.8%2013.2A9%209%200%200%201%2010.8%203.2a9%209%200%201%200%2010%2010Z%22%2F%3E%3C%2Fsvg%3E"); }

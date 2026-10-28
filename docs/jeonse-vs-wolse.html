@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#253e81">
+<meta name="theme-color" content="#087568">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
@@ -70,9 +70,6 @@
 
   <section id="calc-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="calc-heading">가진 돈을 넣고 견줘 보기</h2>
-    <p class="lead" id="lead"><!--prerender:conversionLead-->같은 단지에서 전세와 월세가 함께 신고된 3,366개 조합으로 낸 서울의 전월세전환율은 4.8%입니다. 전세자금대출 평균금리는 4.23%입니다. 전환율이 대출금리보다 0.57%p 높으니, 보증금을 빌려 전세로 가는 쪽이 평균적으로 쌉니다. 2026.05~2026.10 신규 계약 기준입니다. 전세대출 금리: 한국은행 집계 은행 전세자금대출 평균금리(기존 대출 잔액 기준, 2026년 8월) — 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. 예금 금리: 정기예금 신규취급 평균금리(같은 달).<!--/prerender:conversionLead--></p>
-    <p class="updated cross-basis" id="cross-basis" data-deals="2026-10-24" data-rates="2026-10-24">실거래 10-24 x 금리 10-24</p>
-    <p class="updated updated-warn" id="cross-warn" role="status" hidden></p>
     <div class="search-controls" id="calc-controls">
       <div class="search-field">
         <label for="district-select" id="district-label">지역</label>
@@ -88,8 +85,14 @@
         <span class="updated" id="cash-unit">억</span>
       </div>
     </div>
+    <p class="updated cross-basis" id="cross-basis" data-deals="2026-10-24" data-rates="2026-10-24">실거래 10-24 x 금리 10-24</p>
+    <p class="updated updated-warn" id="cross-warn" role="status" hidden></p>
     <div id="calc-result"></div>
     <div class="content-notice" id="calc-note"></div>
+    <details class="calc-explainer">
+      <summary><span lang="ko">계산 기준과 사용한 금리 보기</span><span lang="en">Calculation basis and interest rates</span></summary>
+    <p class="lead" id="lead"><!--prerender:conversionLead-->같은 단지에서 전세와 월세가 함께 신고된 3,366개 조합으로 낸 서울의 전월세전환율은 4.8%입니다. 전세자금대출 평균금리는 4.23%입니다. 전환율이 대출금리보다 0.57%p 높으니, 보증금을 빌려 전세로 가는 쪽이 평균적으로 쌉니다. 2026.05~2026.10 신규 계약 기준입니다. 전세대출 금리: 한국은행 집계 은행 전세자금대출 평균금리(기존 대출 잔액 기준, 2026년 8월) — 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. 예금 금리: 정기예금 신규취급 평균금리(같은 달).<!--/prerender:conversionLead--></p>
+    </details>
   </section>
 
   <section id="rate-section" class="tw:mb-10 tw:1024:mb-16">
@@ -254,7 +257,7 @@ const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
 let theme = (() => {
   let saved;
   try { saved = window.localStorage.getItem("theme"); } catch {}
-  return saved === "light" || saved === "dark" ? saved : "auto";
+  return saved === "light" || saved === "dark" || saved === "auto" ? saved : "light";
 })();
 
 function applyTheme(next) {

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#253e81">
+<meta name="theme-color" content="#087568">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
@@ -68,10 +68,6 @@
   </form>
   <div id="content" tabindex="-1"></div>
 
-  <aside class="method-callout tw:-ml-2.75 tw:pl-2 tw:border-l-3 tw:border-border-strong">
-    <p id="method-callout-text" class="tw:text-fg">시세표는 신규 계약만 셉니다. 갱신은 지금 시세가 아니라서인데, 그렇게 빠지는 것이 서울 전월세 신고의 절반입니다. 이 화면은 그 절반을 봅니다 — 전세는 전세끼리, 월세는 월세끼리.</p>
-    <a href="./method.html" id="method-callout-link">숫자를 만드는 방법 →</a>
-  </aside>
 
   <section id="check-section" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="check-heading">우리 단지 재계약 확인</h2>
@@ -80,17 +76,22 @@
       <div class="search-field"><label for="check-apt" id="check-apt-label">단지</label><input type="text" id="check-apt" list="check-apt-list" autocomplete="off" spellcheck="false"><datalist id="check-apt-list"></datalist></div>
       <div class="search-field"><label for="check-area" id="check-area-label">전용면적</label><select id="check-area"></select></div>
     </div>
-    <p class="lead" id="check-answer" aria-live="polite"></p>
     <div class="search-controls" id="check-optional">
       <div class="search-field"><label for="check-old" id="check-old-label">종전 보증금(만원, 선택)</label><input type="number" id="check-old" min="1" inputmode="numeric"></div>
       <div class="search-field"><label for="check-ask" id="check-ask-label">요구 보증금(만원, 선택)</label><input type="number" id="check-ask" min="1" inputmode="numeric"></div>
     </div>
+    <p class="lead" id="check-answer" aria-live="polite"></p>
     <div class="table-scroll"><table class="rate-table" id="check-table"><caption class="sr-only">갱신 인상률 5구간별 건수 - 갱신요구권 사용과 표시 없음 두 줄</caption></table></div>
     <p class="content-notice" id="check-new"></p>
     <p class="content-notice" id="check-scope">전세 갱신만 셉니다(반전세·월세 섞인 갱신, 갱신 여부 미기재 제외).</p>
     <p class="content-notice" id="check-legal">5% 상한은 세입자가 계약갱신요구권을 쓴 갱신에 적용됩니다(주택임대차보호법 제6조의3·제7조). 요구권은 한 번 쓸 수 있고, 집주인이 거절할 수 있는 사유가 법에 따로 있습니다. '표시 없음'은 신고에 사용 표시가 없다는 뜻이지 요구권을 못 쓴다는 뜻이 아닙니다. 이 화면은 신고된 계약을 센 것이며 법률 판단이 아닙니다 — 대한법률구조공단·주택임대차분쟁조정위원회에서 상담하세요.</p>
     <p class="updated" id="check-source">{{src:renewalCheck.ko}}</p>
   </section>
+
+  <aside class="method-callout tw:-ml-2.75 tw:pl-2 tw:border-l-3 tw:border-border-strong">
+    <p id="method-callout-text" class="tw:text-fg">시세표는 신규 계약만 셉니다. 갱신은 지금 시세가 아니라서인데, 그렇게 빠지는 것이 서울 전월세 신고의 절반입니다. 이 화면은 그 절반을 봅니다 — 전세는 전세끼리, 월세는 월세끼리.</p>
+    <a href="./method.html" id="method-callout-link">숫자를 만드는 방법 →</a>
+  </aside>
 
   <section id="convert" class="tw:mb-10 tw:1024:mb-16">
     <h2 id="cv-heading" data-en="Converting part of the deposit to monthly rent">보증금 일부를 월세로 돌리면</h2>
@@ -327,7 +328,7 @@ const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
 let theme = (() => {
   let saved;
   try { saved = window.localStorage.getItem("theme"); } catch {}
-  return saved === "light" || saved === "dark" ? saved : "auto";
+  return saved === "light" || saved === "dark" || saved === "auto" ? saved : "light";
 })();
 
 function applyTheme(next) {
