@@ -1,46 +1,78 @@
 {
-  "updatedAt": "2026-10-27T02:05:19.737Z",
+  "updatedAt": "2026-10-28T02:13:03.182Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 부동산: 한국 부동산 시장에서 강북 지역 아파트 평균 매매가가 12억 원을 넘어서며 주택 거래에 영향을 미치고 있다. 대통령은 유럽의 경험을 반면교사로 삼아 지속성장과 주택 착공에 대한 재정 지원을 강조했다. 오피스텔 분양가가 11억 원에 달하는 등 아파트 가격 상승으로 인해 부동산 시장의 불안감이 커지고 있다. LH는 4분기 과천지식정보타운 등에서 건설형 임대주택 4663호를 공급할 계획이다. 전월세 가격이 상승했지만, 내후년이 전세난의 피크가 될 것으로 전망되고 있다.\n- 기타 경제 소식: 토스뱅크와 광주은행은 기업 공동대출 서비스 개발을 위한 업무협약을 체결했다. 3분기 한국 경제는 1.0% 성장하며 ‘깜짝 성장’을 기록했다. 경기도는 김동연표 ‘극저신용대출 2.0’을 내년에 폐지하기로 했다. 3분기 한국경제 성장률은 1%로, 연간 3% 달성 가능성이 유력하다는 분석이 나왔다. 반도체 산업의 성장이 두자릿수 경제성장에 기여했다는 평가가 이어지고 있다.\n- 증시·환율: 코스피는 장중 4%대 급등하며 매수 사이드카가 발동됐다. 코스닥도 같은 날 3% 상승하며 반등했다. 일본 닛케이 지수는 앤트로픽 상장 기대에 0.61% 상승 출발했다. 브라질 증시는 룰라 재선으로 인해 15% 폭락하며 재정 불안이 고조되고 있다. 미 증시 폭등 뒤에 숨겨진 AI 거품 경고가 해외 뉴스에서 보도됐다.\n- 금리·예금·투자상품: NH농협은행은 최고 연 3.9% 금리를 제공하는 예금 상품을 2차 특판에 나섰다. 유가 하락으로 인해 금값이 4000달러 수준으로 회복했다. Fed의 다음 금리 결정에 시장의 주목이 집중되고 있다. NH농협은행의 특판 예금 상품은 기존 고객을 대상으로 한다. 금값 회복은 유가 하락과 동시에 발생한 현상이다.",
-    "en": "- Real Estate: In the Korean real estate market, the average apartment selling price in the Gangbuk area has exceeded 1,200,000,000 won, affecting housing transactions. The president emphasized financial support for sustained growth and housing construction, drawing lessons from Europe's experience. Due to rising apartment prices, with office hotel sales prices reaching 1,100,000,000 won, concerns in the real estate market are increasing. LH plans to supply 4,663 units of construction-type rental housing in areas such as Gwacheon Knowledge Information Town in the fourth quarter. Although monthly and annual rent prices have increased, it is expected that the peak of the rental shortage will occur in the year after next.\n- Other Economic News: Toss Bank and Gwangju Bank signed a memorandum of understanding to develop a corporate joint loan service. Korea's economy grew by 1.0% in the third quarter, recording a \"surprise growth.\" Gyeonggi Province decided to abolish the Kim Dong-yeon-backed \"Ultra-Low Credit Loan 2.0\" next year. Korea's economic growth rate in the third quarter was 1%, and analysis suggests that achieving 3% annually is likely. Evaluations continue to state that the semiconductor industry's growth has contributed to double-digit economic growth.\n- Stocks & FX: The KOSPI surged more than 4% during the session, triggering a buy-side rally. The KOSDAQ also rebounded by 3% on the same day. The Japanese Nikkei index opened up 0.61% amid expectations of Antroptic's listing. The Brazilian market plunged 15% due to Lula's re-election, intensifying fiscal concerns. A warning about an AI bubble hidden behind the surge in the U.S. market was reported in overseas news.\n- Rates, Deposits & Investment Products: NH Nonghyup Bank has launched a second special sale of a deposit product offering a maximum annual interest rate of 3.9%. Gold prices have recovered to the 4,000-dollar level due to falling oil prices. The market is closely watching the Fed's next interest rate decision. NH Nonghyup Bank's special sale deposit product is targeted at existing customers. The recovery in gold prices occurred simultaneously with the drop in oil prices."
+    "ko": "- 증시·환율: 코스피는 오늘 장중 6,000선을 회복하며 10거래일만에 해당 수준을 탈환했다. 코스피는 이틀 연속으로 4%대 급등하며 매수 사이드카 발동 조건을 충족시켰다. 또 다른 보도에 따르면 코스피는 4%대 급등을 기록하며 매수 사이드카가 발동됐다. 일본 증시는 미국 기술주 강세에 힘입어 상승 출발했으며 닛케이 지수는 0.74% 상승했다. 각 기사는 별개의 사실을 보고하고 있으며, 서로 다른 시장 동향을 반영하고 있다.\n- 부동산: 태안에서 귀농·귀촌인을 위한 공공임대주택 20채가 12월 착공되며 내년 말 입주할 예정이다. 평창동의 37년 된 금강하이츠빌라가 재건축을 추진 중이다. 지방 10곳 중 7곳은 21개월간 아파트 분양 물량이 500가구 미만이었다. 주택도시보증공사와 강원랜드는 AI·빅데이터를 활용한 감사 업무협약을 체결했다. LH는 경기 구리갈매역세권에 신혼희망타운 행복주택 609호를 공급한다.\n- 기타 경제 소식: 대출 희망 1천500명 정보가 넘겨진 220억대 불법대출 중개 일당이 검거되었으며, 과학기술과 경제정책이 첫 공동 논의를 통해 7대 SEED·AI 전환에 대한 범정부 협력이 이루어졌다.\n- 금리·예금·투자상품: 고금리와 AI 위험으로 인해 사모펀드가 인수기업의 빚 갚기에서 어려움을 겪고 있다. 사모펀드는 최근 고금리 환경에서 자금 조달에 어려움을 겪고 있다. AI 기술 발전으로 인해 투자 수요가 변화하면서 기존 펀드의 수익성에 영향을 미치고 있다. 일부 사모펀드는 자산 매각을 통해 유동성을 확보하려는 움직임을 보이고 있다. 그러나 이 과정에서 기업의 부채 상환에 대한 부담이 커지고 있다.",
+    "en": "- Stocks & FX: The KOSPI recovered to the 6,000 level during today's trading session, reclaiming that level within 10 trading days. The KOSPI surged more than 4% for two consecutive days, meeting the conditions for a buy-side card activation. According to another report, the KOSPI recorded a surge of more than 4%, triggering the buy-side card. The Japanese market opened higher, driven by the strength of U.S. technology stocks, with the Nikkei index rising 0.74%. Each report covers separate facts and reflects different market trends.\n- Real Estate: In Taean, 20 public rental housing units for returnees to rural areas will start construction in December and are expected to be occupied by the end of next year. In Pyeongchang-dong, the 37-year-old Gyeonggang Hayeotseoul Villa is proceeding with reconstruction. Of 10 local areas, 7 had apartment sales volumes of less than 500 units over a period of 21 months. The Housing and Urban Development Corporation and Gangwon Land have signed a memorandum of agreement for audit services using AI and big data. LH will supply 609 units of Happy Housing for newlyweds in the Guri Galmae Station Area of Gyeonggi.\n- Other Economic News: A gang involved in illegal loan brokering was arrested in connection with 22,000,000,000 won in illegal loans, after information on 1,500 borrowers was leaked. A government-wide cooperation on the seven major SEED·AI transitions was achieved through the first joint discussion between science and technology and economic policy.\n- Rates, Deposits & Investment Products: Private equity funds are experiencing difficulties in helping acquired companies repay their debts due to high interest rates and AI risks. Private equity funds are recently facing difficulties in raising funds in the high interest rate environment. As investment demand has changed due to the development of AI technology, the profitability of existing funds is being affected. Some private equity funds are showing moves to secure liquidity by selling assets. However, this process is increasing the burden on corporate debt repayment."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "한국 부동산 시장에서 강북 지역 아파트 평균 매매가가 12억 원을 넘어서며 주택 거래에 영향을 미치고 있다. 대통령은 유럽의 경험을 반면교사로 삼아 지속성장과 주택 착공에 대한 재정 지원을 강조했다. 오피스텔 분양가가 11억 원에 달하는 등 아파트 가격 상승으로 인해 부동산 시장의 불안감이 커지고 있다. LH는 4분기 과천지식정보타운 등에서 건설형 임대주택 4663호를 공급할 계획이다. 전월세 가격이 상승했지만, 내후년이 전세난의 피크가 될 것으로 전망되고 있다.",
-      "lineEn": "In the Korean real estate market, the average apartment selling price in the Gangbuk area has exceeded 1,200,000,000 won, affecting housing transactions. The president emphasized financial support for sustained growth and housing construction, drawing lessons from Europe's experience. Due to rising apartment prices, with office hotel sales prices reaching 1,100,000,000 won, concerns in the real estate market are increasing. LH plans to supply 4,663 units of construction-type rental housing in areas such as Gwacheon Knowledge Information Town in the fourth quarter. Although monthly and annual rent prices have increased, it is expected that the peak of the rental shortage will occur in the year after next.",
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "코스피는 오늘 장중 6,000선을 회복하며 10거래일만에 해당 수준을 탈환했다. 코스피는 이틀 연속으로 4%대 급등하며 매수 사이드카 발동 조건을 충족시켰다. 또 다른 보도에 따르면 코스피는 4%대 급등을 기록하며 매수 사이드카가 발동됐다. 일본 증시는 미국 기술주 강세에 힘입어 상승 출발했으며 닛케이 지수는 0.74% 상승했다. 각 기사는 별개의 사실을 보고하고 있으며, 서로 다른 시장 동향을 반영하고 있다.",
+      "lineEn": "The KOSPI recovered to the 6,000 level during today's trading session, reclaiming that level within 10 trading days. The KOSPI surged more than 4% for two consecutive days, meeting the conditions for a buy-side card activation. According to another report, the KOSPI recorded a surge of more than 4%, triggering the buy-side card. The Japanese market opened higher, driven by the strength of U.S. technology stocks, with the Nikkei index rising 0.74%. Each report covers separate facts and reflects different market trends.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "“이제는 강북 임장 다니기 겁나요”…아파트 평균 매매가 12억 넘어서",
-          "link": "https://www.mk.co.kr/news/realestate/12186757",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "李대통령 \"유럽 반면교사로, 지속성장 중요…주택착공 재정지원\"",
-          "link": "https://www.yna.co.kr/view/AKR20261027068300001",
+          "title": "[속보] 코스피, 장중 6,000선 회복…10거래일만에 탈환",
+          "link": "https://www.yna.co.kr/view/AKR20261028083000008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "\"오피스텔 분양가가 11억이라고?\"…아파트값 뛰자 벌어진 일",
-          "link": "https://www.hankyung.com/article/202610276978i",
+          "title": "코스피 장중 4%대 급등…이틀 연속 매수 사이드카 발동",
+          "link": "https://www.yna.co.kr/view/AKR20261028064600008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "[속보] '4%대 급등' 코스피, 매수 사이드카 발동",
+          "link": "https://www.yna.co.kr/view/AKR20261028061000008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "日증시, 美 기술주 강세에 상승 출발…닛케이 0.74%↑",
+          "link": "https://www.newsis.com/view/NISX20261028_0003844041",
+          "source": "뉴시스 경제"
+        }
+      ]
+    },
+    {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "태안에서 귀농·귀촌인을 위한 공공임대주택 20채가 12월 착공되며 내년 말 입주할 예정이다. 평창동의 37년 된 금강하이츠빌라가 재건축을 추진 중이다. 지방 10곳 중 7곳은 21개월간 아파트 분양 물량이 500가구 미만이었다. 주택도시보증공사와 강원랜드는 AI·빅데이터를 활용한 감사 업무협약을 체결했다. LH는 경기 구리갈매역세권에 신혼희망타운 행복주택 609호를 공급한다.",
+      "lineEn": "In Taean, 20 public rental housing units for returnees to rural areas will start construction in December and are expected to be occupied by the end of next year. In Pyeongchang-dong, the 37-year-old Gyeonggang Hayeotseoul Villa is proceeding with reconstruction. Of 10 local areas, 7 had apartment sales volumes of less than 500 units over a period of 21 months. The Housing and Urban Development Corporation and Gangwon Land have signed a memorandum of agreement for audit services using AI and big data. LH will supply 609 units of Happy Housing for newlyweds in the Guri Galmae Station Area of Gyeonggi.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "태안 귀농·귀촌인 공공임대주택 20채 12월 착공…내년 말 입주",
+          "link": "https://www.yna.co.kr/view/AKR20261028082000063",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "37년 된 평창동 금강하이츠빌라 재건축 추진",
+          "link": "https://www.yna.co.kr/view/AKR20261028081500004",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "지방 10곳 중 7곳, 21개월간 아파트 분양 '500가구 미만'",
+          "link": "https://www.hankyung.com/article/202610289975i",
           "source": "한국경제 부동산"
         },
         {
-          "title": "LH, 4분기 과천지식정보타운 등 건설형 임대주택 4663호 공급",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/27/HT3DH4BQ4BGXZGZQU2BA4ERW3I/",
+          "title": "주택도시보증공사-강원랜드, 감사 업무협약… AI·빅데이터 활용 내부통제 강화",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/28/733MGB363VAJXK3FL3HAQ3775M/",
           "source": "조선비즈 부동산"
         },
         {
-          "title": "지금 전월셋값 확 올랐는데 “아직 지옥이 아니다”…내후년이 전세난 피크",
-          "link": "https://www.mk.co.kr/news/realestate/12186603",
-          "source": "매일경제 부동산"
+          "title": "LH, 경기 구리갈매역세권 신혼희망타운 행복주택 609호 공급",
+          "link": "https://www.newsis.com/view/NISX20261028_0003844360",
+          "source": "뉴시스 경제"
         }
       ]
     },
@@ -48,73 +80,21 @@
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "토스뱅크와 광주은행은 기업 공동대출 서비스 개발을 위한 업무협약을 체결했다. 3분기 한국 경제는 1.0% 성장하며 ‘깜짝 성장’을 기록했다. 경기도는 김동연표 ‘극저신용대출 2.0’을 내년에 폐지하기로 했다. 3분기 한국경제 성장률은 1%로, 연간 3% 달성 가능성이 유력하다는 분석이 나왔다. 반도체 산업의 성장이 두자릿수 경제성장에 기여했다는 평가가 이어지고 있다.",
-      "lineEn": "Toss Bank and Gwangju Bank signed a memorandum of understanding to develop a corporate joint loan service. Korea's economy grew by 1.0% in the third quarter, recording a \"surprise growth.\" Gyeonggi Province decided to abolish the Kim Dong-yeon-backed \"Ultra-Low Credit Loan 2.0\" next year. Korea's economic growth rate in the third quarter was 1%, and analysis suggests that achieving 3% annually is likely. Evaluations continue to state that the semiconductor industry's growth has contributed to double-digit economic growth.",
+      "lineKo": "대출 희망 1천500명 정보가 넘겨진 220억대 불법대출 중개 일당이 검거되었으며, 과학기술과 경제정책이 첫 공동 논의를 통해 7대 SEED·AI 전환에 대한 범정부 협력이 이루어졌다.",
+      "lineEn": "A gang involved in illegal loan brokering was arrested in connection with 22,000,000,000 won in illegal loans, after information on 1,500 borrowers was leaked. A government-wide cooperation on the seven major SEED·AI transitions was achieved through the first joint discussion between science and technology and economic policy.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": false,
+      "degraded": true,
       "items": [
         {
-          "title": "토스뱅크·광주은행, '기업 공동대출 서비스' 개발 업무협약",
-          "link": "https://www.yna.co.kr/view/AKR20261027066900002",
+          "title": "대출 희망 1천500명 정보 넘겨 220억대 불법대출 중개 일당 검거",
+          "link": "https://www.yna.co.kr/view/AKR20261028053600062",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "3분기 한국 경제 1.0% '깜짝 성장'…\"4분기 0%여도 연간 3.6%\"(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261027018151002",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "경기도, 김동연표 '극저신용대출 2.0' 내년 폐지",
-          "link": "https://www.yna.co.kr/view/AKR20261027049400061",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "3분기 한국경제 1% '깜짝 성장'…연간 3% 달성 유력",
-          "link": "https://www.hankyung.com/article/2026102766677",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "\"반도체가 다 먹여살리네\"…후진국도 아닌데 '두자릿수 경제성장'",
-          "link": "https://www.hankyung.com/article/202610276371g",
-          "source": "한국경제 경제"
-        }
-      ]
-    },
-    {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "코스피는 장중 4%대 급등하며 매수 사이드카가 발동됐다. 코스닥도 같은 날 3% 상승하며 반등했다. 일본 닛케이 지수는 앤트로픽 상장 기대에 0.61% 상승 출발했다. 브라질 증시는 룰라 재선으로 인해 15% 폭락하며 재정 불안이 고조되고 있다. 미 증시 폭등 뒤에 숨겨진 AI 거품 경고가 해외 뉴스에서 보도됐다.",
-      "lineEn": "The KOSPI surged more than 4% during the session, triggering a buy-side rally. The KOSDAQ also rebounded by 3% on the same day. The Japanese Nikkei index opened up 0.61% amid expectations of Antroptic's listing. The Brazilian market plunged 15% due to Lula's re-election, intensifying fiscal concerns. A warning about an AI bubble hidden behind the surge in the U.S. market was reported in overseas news.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "코스피, 장중 4%대 급등에 매수 사이드카 발동",
-          "link": "https://www.yna.co.kr/view/AKR20261027068400008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "日증시, 앤트로픽 상장 기대에 상승 출발…닛케이 0.61%↑",
-          "link": "https://www.newsis.com/view/NISX20261027_0003842243",
+          "title": "과학기술·경제정책 첫 공동 논의…7대 SEED·AI 전환 범정부 협력",
+          "link": "https://www.newsis.com/view/NISX20261028_0003844177",
           "source": "뉴시스 경제"
-        },
-        {
-          "title": "코스피, '앤트로픽 IPO' 훈풍에 4%대 급반등…코스닥도 3%↑(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261027046800008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "룰라 재선에 브라질 증시 15% 폭락…재정불안 고조",
-          "link": "https://www.hankyung.com/article/202610276776i",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "[밤 사이 해외뉴스] 엔비디아·마이크론이 다 먹었다? 미 증시 폭등 뒤에 숨겨진 AI 거품 경고",
-          "link": "https://www.hankyung.com/article/202610276589i",
-          "source": "한국경제 경제"
         }
       ]
     },
@@ -122,20 +102,15 @@
       "key": "rates",
       "name": "금리·예금·투자상품",
       "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "NH농협은행은 최고 연 3.9% 금리를 제공하는 예금 상품을 2차 특판에 나섰다. 유가 하락으로 인해 금값이 4000달러 수준으로 회복했다. Fed의 다음 금리 결정에 시장의 주목이 집중되고 있다. NH농협은행의 특판 예금 상품은 기존 고객을 대상으로 한다. 금값 회복은 유가 하락과 동시에 발생한 현상이다.",
-      "lineEn": "NH Nonghyup Bank has launched a second special sale of a deposit product offering a maximum annual interest rate of 3.9%. Gold prices have recovered to the 4,000-dollar level due to falling oil prices. The market is closely watching the Fed's next interest rate decision. NH Nonghyup Bank's special sale deposit product is targeted at existing customers. The recovery in gold prices occurred simultaneously with the drop in oil prices.",
+      "lineKo": "고금리와 AI 위험으로 인해 사모펀드가 인수기업의 빚 갚기에서 어려움을 겪고 있다. 사모펀드는 최근 고금리 환경에서 자금 조달에 어려움을 겪고 있다. AI 기술 발전으로 인해 투자 수요가 변화하면서 기존 펀드의 수익성에 영향을 미치고 있다. 일부 사모펀드는 자산 매각을 통해 유동성을 확보하려는 움직임을 보이고 있다. 그러나 이 과정에서 기업의 부채 상환에 대한 부담이 커지고 있다.",
+      "lineEn": "Private equity funds are experiencing difficulties in helping acquired companies repay their debts due to high interest rates and AI risks. Private equity funds are recently facing difficulties in raising funds in the high interest rate environment. As investment demand has changed due to the development of AI technology, the profitability of existing funds is being affected. Some private equity funds are showing moves to secure liquidity by selling assets. However, this process is increasing the burden on corporate debt repayment.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "[게시판] NH농협은행, 최고금리 연 3.9% 예금 2차 특판",
-          "link": "https://www.yna.co.kr/view/AKR20261027053100002",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "유가 하락에 금값 4000달러 회복…Fed 금리 결정 주목",
-          "link": "https://www.hankyung.com/article/202610276551i",
+          "title": "고금리·AI 위험에…인수기업 빚 갚기 막막한 사모펀드",
+          "link": "https://www.hankyung.com/article/202610289621i",
           "source": "한국경제 경제"
         }
       ]
