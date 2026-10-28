@@ -97,7 +97,7 @@ test("뉴스 페이지에도 GA 로더와 사이트 구분이 붙어 있다", as
   for (const file of [`${SITE}/news.html`, ...NEWS_PAGES.map((p) => `${SITE}/${p.file}`)]) {
     const html = await read(file);
     assert.ok(html.includes('<script src="./analytics.js"></script>'), `${file}에 로더가 없다`);
-    assert.ok(html.includes('<meta name="site-group" content="digest">'), `${file}에 사이트 구분이 없다`);
+    assert.ok(html.includes('<meta name="site-group" content="news">'), `${file}에 뉴스 기능 구분이 없다`);
     assert.ok(html.includes("privacy-policy"), `${file}에 개인정보처리방침 링크가 없다`);
   }
 });

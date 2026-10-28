@@ -168,7 +168,7 @@ test("대표 검색 폼의 칸 이름·값은 deal-search 가 읽는 파라미�
   assert.ok(css.includes('.home-search:has(input[name="kind"]:not([value="sale"]):checked) .home-budget {\n  display: none;'), "전월세에서 예산 칸이 보인다");
   assert.match(form, /<label class="c-field home-budget">[\s\S]*?name="max"/, "감출 예산 칸 묶음이 없다");
   const html = await indexHtml();
-  assert.match(html, /getElementById\("home-search"\)\.addEventListener\("submit", \(e\) => \{\s*const f = e\.currentTarget;\s*if \(f\.kind\.value !== "sale"\) f\.max\.value = "";\s*\}\);/, "전월세로 보낼 때 max 를 비우지 않는다");
+  assert.match(html, /getElementById\("home-search"\)\.addEventListener\("submit", \(e\) => \{\s*const f = e\.currentTarget;\s*if \(f\.kind\.value !== "sale"\) f\.max\.value = "";/, "전월세로 보낼 때 max 를 비우지 않는다");
 });
 
 test("대표 검색·4목적은 320px 에서 가로로 넘치지 않는다 - 칸은 minmax(0, 1fr), 고정 폭 없음 (#745 PR4)", async () => {
