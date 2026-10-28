@@ -21,6 +21,7 @@ const root = path.resolve(import.meta.dirname, "..");
 const CALC = await readFile(path.join(root, "docs/move-cost.js"), "utf8");
 const JS = await readFile(path.join(root, "docs/renewal-move.js"), "utf8");
 const BASIS = await readFile(path.join(root, "docs/renewal-move-basis.js"), "utf8");
+const ANALYTICS = await readFile(path.join(root, "docs/analytics.js"), "utf8");
 const HTML = await readFile(path.join(root, SITE, "renewal-vs-new.html"), "utf8");
 const SECTION = HTML.slice(HTML.indexOf('<section id="move"'), HTML.indexOf('<section id="convert"'));
 
@@ -73,12 +74,14 @@ function seedFromHtml() {
   return seed;
 }
 
-async function open({ conversion = CONVERSION, locale = "ko", query = "", cells = CELLS, status } = {}) {
+async function open({ conversion = CONVERSION, locale = "ko", query = "", cells = CELLS, status, ga = false } = {}) {
   const data = { "renewal-facts": FACTS };
   if (conversion) data.conversion = conversion;
   if (cells) data["renewal-cells-songpa"] = cells;
   const page = await loadPage({ file: "renewal-vs-new.html", data, locale, query, status, seed: seedFromHtml() });
   page.data = data; // 시험이 나중에 응답을 바꿀 수 있게(다시 시도)
+  // ga: 실제 docs/analytics.js 를 같은 자리에 올린다(전송 대신 window.dataLayer 에 쌓인다 - 그 안에 개인 입력이 없는지 본다).
+  if (ga) new vm.Script(ANALYTICS, { filename: "docs/analytics.js" }).runInContext(page.sandbox);
   new vm.Script(CALC, { filename: "docs/move-cost.js" }).runInContext(page.sandbox);
   new vm.Script(JS, { filename: "docs/renewal-move.js" }).runInContext(page.sandbox);
   new vm.Script(BASIS, { filename: "docs/renewal-move-basis.js" }).runInContext(page.sandbox);
@@ -104,7 +107,7 @@ const input1 = (extra = {}) => ({ renew: 126000, kind: "wolse", deposit: 40000, 
 test("가정은 원래 모듈과 같다: 대출 80% = LOAN_LTV, 세율 = TAX_RATE, 오래된 금리 = MONTHLY_LAG.jeonse_loan_rate + 1", () => {
   assert.equal(LTV, LOAN_LTV);
   assert.equal(TAX, TAX_RATE);
-  assert.equal(Number(JS.match(/const LAG = (\d+);/)?.[1]), MONTHLY_LAG.jeonse_loan_rate + 1);
+  assert.equal(Number(BASIS.match(/const LAG = (\d+);/)?.[1]), MONTHLY_LAG.jeonse_loan_rate + 1);
 });
 
 test("계산: 기회비용을 켜고 끄면 순위가 뒤집힌다(사례 ①) - 원금·돌려받는 보증금은 비용이 아니다", () => {
@@ -222,9 +225,9 @@ test("외부 JS 셋은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B
   const own = pageScripts(path.join(root, "docs")).filter((f) => HTML.includes(`<script src="./${f}" defer></script>`));
   assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
   const total = (await Promise.all(own.map((f) => readFile(path.join(root, "docs", f), "utf8")))).reduce((n, src) => n + gzipSync(stripJsComments(src), { level: 9 }).length, 0);
-  // 합계 상한은 이 PR 의 실측(7,130B)에 맞춰 고정한다 - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
+  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 계측과 금리 줄 이동 뒤 7,795B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
   // 늘리는 PR 은 이 숫자를 사유와 함께 고친다.
-  assert.ok(total <= 7150, `이 장 장 전용 JS 합계 ${total}B > 7,150B`);
+  assert.ok(total <= 7800, `이 장 장 전용 JS 합계 ${total}B > 7,800B`);
   const users = [];
   for (const f of (await readdir(path.join(root, SITE))).filter((x) => x.endsWith(".html")).sort()) {
     const page = await readFile(path.join(root, SITE, f), "utf8");
@@ -482,6 +485,89 @@ test("표본 부족은 두 줄 중 작은 쪽이 min.ratio 미만일 때 - 한 �
   assert.doesNotMatch(fine.text("mv-basis-line"), /표본 부족/);
 });
 
+// ---- P4: 계측 (#777 P4, audit/ga4-setup.md) ----
+const wait = (ms = 900) => new Promise((r) => setTimeout(r, ms)); // 화면·analytics.js 의 800ms 안정 대기보다 길게
+const events = (page, name) => JSON.parse(JSON.stringify((page.sandbox.dataLayer ?? []).map((a) => Array.from(a)))).filter(([k, n]) => k === "event" && n === name).map(([, , p]) => p);
+
+test("계측: 화면의 안정 대기 = analytics.js SEARCH_DEBOUNCE_MS", () => {
+  assert.equal(Number(JS.match(/const WAIT = (\d+);/)?.[1]), Number(ANALYTICS.match(/const SEARCH_DEBOUNCE_MS = (\d+);/)?.[1]));
+});
+
+test("계측: 비교 시작은 비교 절의 첫 조작에 한 번 - 장을 여는 것·확인기 입력·언어 전환은 시작이 아니다", async () => {
+  const page = await open({ ga: true, query: Q("헬리오시티", "84.98") });
+  await set(page, { "check-old": "120000", "check-ask": "126000" });
+  await page.click("lang-toggle");
+  assert.equal(events(page, "compare_start").length, 0);
+  await page.click("mv-ref-a");
+  await set(page, { "mv-cash": "126000", "mv-months": "36" });
+  assert.equal(events(page, "compare_start").length, 1);
+  assert.equal(events(page, "compare_start")[0].calculator_type, "renewal_move");
+});
+
+test("계측: 결과는 안정된 입력 한 벌당 한 번(calculator_result 재사용) - 첫 결과 first, 조건을 바꾼 뒤 repeat, 다시 그리기·언어 전환은 세지 않는다", async () => {
+  const page = await open({ ga: true, query: Q("헬리오시티", "84.98") });
+  await set(page, CASE1);
+  await wait();
+  let got = events(page, "calculator_result").filter((p) => p.calculator_type === "renewal_move");
+  assert.equal(got.length, 1);
+  assert.deepEqual([got[0].result_status, got[0].result_scope, got[0].result_outcome, got[0].result_round], ["success", "matched_complex", "move", "first"]);
+  await page.click("lang-toggle");
+  await page.click("lang-toggle");
+  await wait();
+  assert.equal(events(page, "calculator_result").filter((p) => p.calculator_type === "renewal_move").length, 1, "언어 전환을 새 결과로 셌다");
+  await set(page, { "mv-months": "12" });
+  await set(page, { "mv-months": "1" });
+  await set(page, { "mv-months": "12" });
+  await wait();
+  got = events(page, "calculator_result").filter((p) => p.calculator_type === "renewal_move");
+  assert.equal(got.length, 2, "입력 중간값까지 셌다");
+  assert.equal(got[1].result_round, "repeat");
+});
+
+test("계측: 비교 불가는 사유와 함께(잘못된 입력·80% 가정 초과), 빈 칸(입력 중)·자료 실패는 세지 않고 성공으로도 세지 않는다", async () => {
+  const page = await open({ ga: true, conversion: null });
+  await set(page, { "check-ask": "126000", "mv-dep": "80000" });
+  await wait();
+  assert.equal(events(page, "calculator_unavailable").length, 0, "빈 칸을 비교 불가로 셌다");
+  await set(page, { "mv-cash": "20000", "mv-rate": "4", "mv-drate": "3" });
+  await wait();
+  assert.deepEqual(events(page, "calculator_unavailable").map((p) => p.unavailable_reason), ["cash_short"]);
+  await set(page, { "mv-months": "200" });
+  await wait();
+  assert.deepEqual(events(page, "calculator_unavailable").map((p) => p.unavailable_reason), ["cash_short", "invalid_input"]);
+  assert.equal(events(page, "calculator_result").filter((p) => p.calculator_type === "renewal_move").length, 0, "비교 불가를 성공으로 셌다");
+});
+
+test("계측: 확인기 칸의 한 줄이 표본 부족(min.show 미만)이면 renewal_vs_new 비교 불가(low_sample)를 칸마다 한 번", async () => {
+  const thin = await open({ ga: true, query: Q("헬리오시티", "130.06") }); // 두 줄 다 4건 - 비율 대신 건수지만 표본 부족은 아니다
+  assert.equal(events(thin, "calculator_unavailable").length, 0);
+  const page = await open({ ga: true, query: Q("헬리오시티", "59.96") }); // 표시 없음 줄 2건 < 3
+  await page.click("lang-toggle");
+  const low = events(page, "calculator_unavailable");
+  assert.equal(low.length, 1);
+  assert.deepEqual([low[0].calculator_type, low[0].unavailable_reason], ["renewal_vs_new", "low_sample"]);
+});
+
+test("계측: 근거 상자를 처음 펼칠 때 한 번", async () => {
+  const page = await open({ ga: true });
+  const box = page.byId("mv-basis");
+  for (const open of [true, false, true]) {
+    box.open = open;
+    box.dispatch("toggle");
+  }
+  assert.equal(events(page, "evidence_open").length, 1);
+});
+
+test("개인정보: 금액·금리·단지명은 GA 로 나가는 어떤 값에도 없다(page_location 포함)", async () => {
+  const page = await open({ ga: true, query: Q("헬리오시티", "84.98") });
+  await set(page, { ...CASE1, "mv-dep": "40123", "mv-rent": "141.7", "mv-cash": "126543", "mv-rate": "4.37", "mv-drate": "3.21", "mv-months": "27" });
+  await page.click("mv-basis") ;
+  await wait();
+  const sent = JSON.stringify(page.sandbox.dataLayer);
+  for (const secret of ["40123", "141.7", "126543", "4.37", "3.21", "126000", "120000", "헬리오시티", encodeURIComponent("헬리오시티")]) assert.ok(!sent.includes(secret), `GA 로 ${secret} 가 나갔다`);
+  assert.ok(events(page, "calculator_result").length >= 1, "결과 이벤트가 없다 - 이 시험이 아무것도 안 봤다");
+});
+
 test("참고값을 넣은 뒤 확인기 칸이나 종류를 바꾸면 그 금액의 출처를 지우고 직접 넣은 값으로 돌린다(po·legal #777 P3 재판정)", async () => {
   const page = await open({ query: Q("헬리오시티", "84.98") });
   await page.click("mv-ref-b"); // 60~85㎡ 자치구 참고 80,000
@@ -497,4 +583,38 @@ test("참고값을 넣은 뒤 확인기 칸이나 종류를 바꾸면 그 금액
   await again.click("mv-ref-a"); // 전세 중간값
   await set(again, { "mv-kind": "wolse" });
   assert.doesNotMatch(again.text("mv-basis-line"), /비교할 집 금액/, "전세 참고값을 월세 비교의 출처로 남겼다");
+});
+
+test("계측: 칸을 비웠다가 같은 값을 다시 넣어도 같은 입력은 한 번만 센다(engineer #777 P4 결함)", async () => {
+  const page = await open({ ga: true, query: Q("헬리오시티", "84.98") });
+  await set(page, CASE1);
+  await wait();
+  await set(page, { "mv-cash": "" });
+  await wait();
+  await set(page, { "mv-cash": "126000" });
+  await wait();
+  assert.deepEqual(events(page, "calculator_result").filter((p) => p.calculator_type === "renewal_move").map((p) => p.result_round), ["first"]);
+});
+
+test("계측: 첫 결과 전에 여러 번 고쳐도 첫 결과는 first, 비교 불가가 800ms 안에 풀리면 세지 않는다, 잘못된 입력을 잠깐만 둬도 세지 않는다", async () => {
+  const page = await open({ ga: true, query: Q("헬리오시티", "84.98") });
+  await set(page, { ...CASE1, "mv-months": "1" });
+  await set(page, { "mv-months": "12" });
+  await set(page, { "mv-months": "24" });
+  await wait();
+  assert.deepEqual(events(page, "calculator_result").filter((p) => p.calculator_type === "renewal_move").map((p) => p.result_round), ["first"]);
+  await set(page, { "mv-cash": "1000" }); // 80% 초과
+  await wait(300);
+  await set(page, { "mv-cash": "126000" });
+  await set(page, { "mv-months": "500" }); // 잘못된 입력
+  await wait(300);
+  await set(page, { "mv-months": "24" });
+  await wait();
+  assert.equal(events(page, "calculator_unavailable").length, 0, "잠깐 지나간 상태를 비교 불가로 셌다");
+});
+
+test("계측: 참고값 단추 하나만 눌러도 비교 시작이다", async () => {
+  const page = await open({ ga: true, query: Q("헬리오시티", "84.98") });
+  await page.click("mv-ref-b");
+  assert.equal(events(page, "compare_start").length, 1);
 });
