@@ -31,15 +31,27 @@
   const siteGroup = document.querySelector('meta[name="site-group"]')?.getAttribute("content");
 
   // gtag는 이벤트마다 현재 주소를 같이 보낸다. 검색어가 쿼리스트링에 있으면 그것도 원문 전송이다.
-  function safeLocation() {
+  function scrub(href) {
     try {
-      const url = new URL(location.href);
+      const url = new URL(href);
       for (const key of FREE_TEXT_PARAMS) url.searchParams.delete(key);
       return url.toString();
     } catch {
-      return location.href.split("?")[0];
+      return String(href).split("?")[0];
     }
   }
+  const safeLocation = () => scrub(location.href);
+  // 앞 장의 주소도 page_referrer 로 따로 나간다(#779). 같은 사이트면 같은 규칙으로 지우고, 바깥이면 출처(origin)만 남긴다.
+  const referrer = (() => {
+    try {
+      const ref = new URL(document.referrer);
+      if (ref.origin === new URL(location.href).origin) return scrub(ref.href);
+      return ref.origin === "null" ? "" : `${ref.origin}/`;
+    } catch {
+      return "";
+    }
+  })();
+  const refParam = referrer ? { page_referrer: referrer } : {};
 
   // 검색어 대신 보내는 모양: 몇 글자였는지, 숫자(예산·면적)가 들어 있었는지.
   function termShape(term) {
@@ -52,6 +64,7 @@
 
   gtag("config", GA_MEASUREMENT_ID, {
     page_location: safeLocation(),
+    ...refParam,
     send_page_view: false,
     ...(internal ? { traffic_type: "internal" } : {}),
     ...(siteGroup ? { content_group: siteGroup } : {}),
@@ -66,12 +79,13 @@
     gtag("event", "page_view", {
       page_title: document.title,
       page_location: safeLocation(),
+      ...refParam,
       ...params,
     });
   }
 
   function event(name, params) {
-    gtag("event", name, { page_location: safeLocation(), ...(params ?? {}) });
+    gtag("event", name, { page_location: safeLocation(), ...refParam, ...(params ?? {}) });
   }
 
   const debounceTimers = {};
