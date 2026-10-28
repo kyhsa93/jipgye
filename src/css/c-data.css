@@ -72,12 +72,13 @@ html:not(:lang(en)) .dbars [lang="en"] {
 .dprice-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--c-space-5); margin: var(--c-space-4) 0; align-items: center; }
 .dprice-map-wrap { min-width: 0; }
 .dprice-map { display: block; width: 100%; height: auto; overflow: visible; }
-.dprice-map [data-band], .dprice-legend i { fill: var(--map-fill); background: var(--map-fill); }
-.dbars [data-band="0"] { --map-fill: color-mix(in srgb, var(--accent) 12%, var(--card)); }
-.dbars [data-band="1"] { --map-fill: color-mix(in srgb, var(--accent) 25%, var(--card)); }
-.dbars [data-band="2"] { --map-fill: color-mix(in srgb, var(--accent) 42%, var(--card)); }
-.dbars [data-band="3"] { --map-fill: color-mix(in srgb, var(--accent) 65%, var(--card)); }
-.dbars [data-band="4"] { --map-fill: var(--accent); }
+.dbars [data-band] { --map-fill: var(--accent); --map-opacity: 1; }
+.dprice-map [data-band] { fill: var(--map-fill); fill-opacity: var(--map-opacity); }
+.dprice-legend i { background: var(--map-fill); opacity: var(--map-opacity); }
+.dbars [data-band="0"] { --map-opacity: 0.12; }
+.dbars [data-band="1"] { --map-opacity: 0.25; }
+.dbars [data-band="2"] { --map-opacity: 0.42; }
+.dbars [data-band="3"] { --map-opacity: 0.65; }
 .dbars [data-band="thin"] { --map-fill: var(--border); }
 .dprice-map path { stroke: var(--card); stroke-width: 2; stroke-linejoin: round; }
 .dprice-map a { cursor: pointer; }

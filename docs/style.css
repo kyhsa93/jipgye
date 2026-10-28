@@ -3412,36 +3412,29 @@
     height: auto;
     overflow: visible;
   }
-  .dprice-map [data-band], .dprice-legend i {
+  .dbars [data-band] {
+    --map-fill: var(--accent);
+    --map-opacity: 1;
+  }
+  .dprice-map [data-band] {
     fill: var(--map-fill);
+    fill-opacity: var(--map-opacity);
+  }
+  .dprice-legend i {
     background: var(--map-fill);
+    opacity: var(--map-opacity);
   }
   .dbars [data-band="0"] {
-    --map-fill: var(--accent);
-    @supports (color: color-mix(in lab, red, red)) {
-      --map-fill: color-mix(in srgb, var(--accent) 12%, var(--card));
-    }
+    --map-opacity: 0.12;
   }
   .dbars [data-band="1"] {
-    --map-fill: var(--accent);
-    @supports (color: color-mix(in lab, red, red)) {
-      --map-fill: color-mix(in srgb, var(--accent) 25%, var(--card));
-    }
+    --map-opacity: 0.25;
   }
   .dbars [data-band="2"] {
-    --map-fill: var(--accent);
-    @supports (color: color-mix(in lab, red, red)) {
-      --map-fill: color-mix(in srgb, var(--accent) 42%, var(--card));
-    }
+    --map-opacity: 0.42;
   }
   .dbars [data-band="3"] {
-    --map-fill: var(--accent);
-    @supports (color: color-mix(in lab, red, red)) {
-      --map-fill: color-mix(in srgb, var(--accent) 65%, var(--card));
-    }
-  }
-  .dbars [data-band="4"] {
-    --map-fill: var(--accent);
+    --map-opacity: 0.65;
   }
   .dbars [data-band="thin"] {
     --map-fill: var(--border);
