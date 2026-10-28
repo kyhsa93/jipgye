@@ -8,19 +8,19 @@
 <link rel="icon" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <meta name="google-adsense-account" content="ca-pub-1195159445218373">
-<title>서울 아파트값 3개월 뒤 얼마일까 - 예측과 그 예측이 틀린 만큼</title>
+<title>서울 아파트값 전망 - 공식 지수 기준월과 예측 오차</title>
 <meta name="description" content="한국부동산원 실거래가격지수로 서울과 5개 권역 아파트값의 3·6·12개월 뒤를 짐작하고, 같은 방식의 지난 예측이 얼마나 빗나갔는지를 같이 적습니다. 기준선을 못 이기는 칸은 비워 둡니다.">
 <meta name="site-group" content="digest">
 <link rel="canonical" href="https://kyhsa93.github.io/jipgye/price-outlook.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="집계">
 <meta property="og:url" content="https://kyhsa93.github.io/jipgye/price-outlook.html">
-<meta property="og:title" content="서울 아파트값 3개월 뒤 얼마일까 - 예측과 그 예측이 틀린 만큼">
+<meta property="og:title" content="서울 아파트값 전망 - 공식 지수 기준월과 예측 오차">
 <meta property="og:description" content="서울 아파트값의 몇 달 뒤를 짐작하고, 같은 방식의 지난 예측이 얼마나 빗나갔는지를 같이 적습니다.">
 <meta property="og:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="서울 아파트값 3개월 뒤 얼마일까 - 예측과 그 예측이 틀린 만큼">
+<meta name="twitter:title" content="서울 아파트값 전망 - 공식 지수 기준월과 예측 오차">
 <meta name="twitter:description" content="서울 아파트값의 몇 달 뒤를 짐작하고, 지난 예측이 얼마나 빗나갔는지를 같이 적습니다.">
 <meta name="twitter:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
 <link rel="stylesheet" href="./style.css">
@@ -31,7 +31,7 @@
   <header class="tw:mb-2 tw:1024:mb-6">
     <div>
       <a class="brand" id="site-brand" href="./index.html" data-brand-en="Jipgye">집계</a>
-      <h1 id="page-title">서울 아파트값, 3개월 뒤</h1>
+      <h1 id="page-title">서울 아파트값 전망과 오차</h1>
       <div class="updated updated-warn" id="updated-warn" role="status" hidden></div>
     </div>
     <div class="header-actions">
@@ -64,7 +64,8 @@
   </aside>
 
   <section id="lead-section" class="tw:mb-10 tw:1024:mb-16">
-    <h2 id="lead-heading">서울, 3개월 뒤</h2>
+    <h2 id="lead-heading">공식 지수 기준월에서 3개월 뒤</h2>
+    <p class="updated" id="outlook-period"></p>
     <p class="lead" id="lead"><!--prerender:outlookLead-->공식 지수 2026년 7월까지로 짐작하면 2026년 10월 서울 아파트값은 +2.6%입니다. 지난 예측 오차의 가운데 80%를 얹으면 -0.3%에서 +6.3% 사이입니다 — 2026년 7월에 10억이던 집이면 9.97억~10.63억입니다(오늘 값이 아니라 2026년 7월 값에서 잰 것입니다). 2012년 1월부터 매달 같은 방식으로 예측해 보면 평균 2.43%p 빗나갔고, &quot;그대로다&quot;라고 찍으면 3.13%p 빗나갔습니다.<!--/prerender:outlookLead--></p>
   </section>
 
@@ -139,7 +140,7 @@
 <script>
 const T = {
   ko: {
-    title: "서울 아파트값, 3개월 뒤",
+    title: "서울 아파트값 전망과 오차",
     nextSearch: "단지를 골라 매매가 범위·1년 전 값 보기 →",
     nextBudget: "예산으로 후보 단지 찾기 →",
     navDigest: "오늘",
@@ -148,7 +149,7 @@ const T = {
     methodCallout:
       "예측보다 오차를 먼저 봐 주세요. 같은 방식의 예측을 2012년부터 매달 다시 해 보고 실제와 벌어진 만큼을 같이 적습니다. \"그대로다\"나 \"늘 오른다\"고 찍는 것을 이기지 못하는 칸은 비웁니다.",
     methodCalloutLink: "숫자를 만드는 방법 →",
-    leadHeading: "서울, 3개월 뒤",
+    leadHeading: "공식 지수 기준월에서 3개월 뒤",
     regionHeading: "권역별, 거리별",
     nowcastHeading: "공식 지수가 아직 없는 달",
     scoreHeading: "성적표",
@@ -157,7 +158,7 @@ const T = {
     indicatorToggle: "지표별 오차 표 보기",
     indicatorNote:
       "거래 건수·전세가율·금리·미분양·소비자심리·매매수급지수·계절을 위 모델(지난 가격 변화만 쓰는 것)에 하나씩 더 넣고, 2012년부터 매달 그 시점에 서서 다시 예측했습니다. 칸의 큰 숫자는 그 지표를 넣었을 때의 평균 오차, 작은 글씨는 넣지 않은 기준 모델의 오차와 '넣은 쪽이 이긴' 비율(12개월 덩어리 1,000번 재추출)입니다. " +
-      "'앞섬'은 그 비율이 90% 이상이고 5개 권역 중 4곳 이상에서도 그럴 때만 씁니다. 지표 17개를 여러 방식으로 재면 하나쯤은 우연히 넘습니다 — 서울에서만 넘은 주담대 금리는 화면에 넣지 않고 따로 쌓아 채점합니다. " +
+      "'앞섬'은 그 비율이 90% 이상이고 5개 권역 중 4곳 이상에서도 그럴 때만 씁니다. 여러 지표를 여러 방식으로 재면 하나쯤은 우연히 넘습니다 — 서울에서만 넘은 주담대 금리는 화면에 넣지 않고 따로 쌓아 채점합니다. " +
       "'(+n개월)'은 가격지수보다 빨리 나오는 지표를 그 시점에 이미 볼 수 있는 만큼 뒤 값까지 쓴 것입니다. KB 지수의 두 달 뒤 값은 같은 달을 먼저 공표한 것이라 앞섬이 아니라 답을 일찍 본 것입니다. " +
       "그 '일찍 본 답'을 예측에 넣을지도 따로 재 봤습니다(2026-10-01). 공표일대로 — 공식 지수는 매월 15일께 두 달 전 달을, KB는 그 달 말에 낸다 — 매달 5일·20일에 서서 그날 볼 수 있던 것만 쓰면 3개월 오차가 2.41%p에서 2.23%p로 줄지만 그 이득은 KB가 두 달 앞서는 매달 1~14일에만 있고, " +
       "공식 지수가 없는 달 하나를 메우는 데는 우리 원본(공식과 평균 0.44%p 차)이 KB(0.79%p)보다 정확해 넣지 않았습니다(research/kb-vintage/). 매일 다시 셉니다.",
@@ -185,7 +186,7 @@ const T = {
     retry: "다시 시도",
   },
   en: {
-    title: "Seoul apartment prices, three months out",
+    title: "Seoul apartment price outlook and errors",
     nextSearch: "Pick a complex: price range and a year ago →",
     nextBudget: "Find candidate complexes by budget →",
     navDigest: "Today",
@@ -194,7 +195,7 @@ const T = {
     methodCallout:
       "Read the error before the forecast. The same forecast is re-run for every month since 2012 and the gap to what happened is shown alongside. Cells that cannot beat guessing \"no change\" or \"up as usual\" are left blank.",
     methodCalloutLink: "How these numbers are made →",
-    leadHeading: "Seoul, three months out",
+    leadHeading: "Three months after the official base month",
     regionHeading: "By region and horizon",
     nowcastHeading: "Months the official index has not reached",
     scoreHeading: "Track record",
@@ -203,7 +204,7 @@ const T = {
     indicatorToggle: "Show the error table by indicator",
     indicatorNote:
       "Volume, jeonse ratio, rates, unsold homes, consumer sentiment, the buyer-seller index and the calendar month were each added to the model above (which uses past prices only), and the forecast re-run for every month since 2012. The large figure is the average error with the indicator; the small text is the error without it and the share of 1,000 twelve-month block resamples in which adding it won. " +
-      "'Leads' requires 90% or more in Seoul and in at least four of the five regions. Testing 17 indicators several ways will pass one by chance — the mortgage rate passed in Seoul only, so it is not used and is scored separately instead. " +
+      "'Leads' requires 90% or more in Seoul and in at least four of the five regions. Testing many indicators several ways will pass one by chance — the mortgage rate passed in Seoul only, so it is not used and is scored separately instead. " +
       "'(+n m)' uses values that are published sooner than the price index, up to what would already be visible. KB's value two months ahead is the same month published earlier, which is seeing the answer early rather than leading. " +
       "Whether to use that early answer anyway was tested separately (2026-10-01): following the release calendar — the official index lands around the 15th for two months earlier, KB at month-end — and standing on the 5th and 20th of each month with only what was visible then, the three-month error falls from 2.41pp to 2.23pp, but the gain sits entirely in days 1–14 when KB is two months ahead, " +
       "and for filling the one month the official index has not reached, our own filings (0.44pp from the official figure) beat KB (0.79pp), so it is not used. Re-counted daily.",
@@ -338,6 +339,7 @@ function renderAll() {
   renderLoadNotice();
   if (!cache.data) return;
   const data = cache.data;
+  setText("outlook-period", (locale === "en" ? "Base → target: " : "공식 기준월 → 전망 목표월: ") + [data.lastOfficial, data.regions?.[0]?.cards?.find(c => c.h === 3)?.forecast?.target].map(m => m ? String(m).replace(/(..)$/, "-$1") : "—").join(" → "));
   const ind = cache.indicators;
   // 입주 예정: 빌드가 두 언어로 굽고 화면은 고르기만 한다(#60, #677).
   const mi = cache.moveIn;

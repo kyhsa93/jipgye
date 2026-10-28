@@ -311,12 +311,12 @@ test("두 페이지와 서비스워커가 모두 analytics.js를 물고 있다",
     )
   );
 
-  for (const [name, html] of [
-    ["index.html", index],
-    ["about.html", about],
+  for (const [name, html, group] of [
+    ["index.html", index, "overview"],
+    ["about.html", about, "info"],
   ]) {
     assert.ok(html.includes('<script src="./analytics.js"></script>'), `${name}에 로더가 없다`);
-    assert.ok(html.includes('<meta name="site-group" content="digest">'), `${name}에 사이트 구분이 없다`);
+    assert.ok(html.includes(`<meta name="site-group" content="${group}">`), `${name}에 기능 구분이 없다`);
     assert.ok(!html.includes("googletagmanager.com"), `${name}에 인라인 GA가 남아 있다`);
     assert.ok(html.includes("privacy-policy"), `${name}에 개인정보처리방침 링크가 없다`);
   }

@@ -58,13 +58,20 @@ test("CSS :has 로 패널을 바꾼다(JS 0 B), 모르는 브라우저는 매매
 });
 
 test("단위·기준 기간·거래 건수를 적는다(ko/en 쌍)", () => {
-  assert.match(html, /기준: 계약일 2026-08-24 ~ 2026-09-20\(최근 4주\) 신고분/);
+  assert.match(html, /기준: 계약일 2026-08-24 ~ 2026-09-20\(최근 4주\)/);
   assert.match(html, /Basis: contracts 2026-08-24 to 2026-09-20 \(last 4 weeks\)/);
   assert.match(panel("sale"), /매매 3\.3㎡당 평균 가격/);
   assert.match(panel("sale"), /average price per 3\.3㎡/);
   assert.match(panel("sale"), /1억 1,430만원 · 201건/);
   assert.match(panel("sale"), /₩114\.3M · 201 deals/);
   assert.match(html, /<span lang="en">Gangnam-gu<\/span>/);
+});
+
+test("신고 관측 기준과 계약 기준의 창을 혼동하지 않는다", () => {
+  const arrival = districtBarsHtml({ ...DATA, window: { ...DATA.window, basis: "arrival" } }, { variant: "home" });
+  assert.match(arrival, /기준: 신고 관측일 2026-08-24 ~ 2026-09-20/);
+  assert.match(arrival, /Basis: filings observed 2026-08-24 to 2026-09-20/);
+  assert.doesNotMatch(arrival, /기준: 계약일|Basis: contracts/);
 });
 
 test("표본 부족 구는 가격 대신 「표본 부족」", () => {

@@ -54,6 +54,25 @@ function lines(decls, id) {
 
 const open = (extra = {}) => loadConversionPage({ conversion: CONVERSION, ...extra });
 
+test("실제 비용 비교 설명은 캐시된 전환율 권고를 따르지 않고 금리 관측월을 표시한다", async () => {
+  const conversion = structuredClone(CONVERSION);
+  Object.assign(conversion.loan, { rate: 4.23, month: "202608" });
+  Object.assign(conversion.deposit, { rate: 3.14, month: "202608" });
+  const cell = conversion.cells.find(c => c.district === "강남구");
+  Object.assign(cell, { jeonse10k: 65000, deposit10k: 10440, monthly10k: 147.5,
+    noteKo: "잘못된 과거 설명: 전세 유리", noteEn: "Stale advice: jeonse wins" });
+  const page = await open({ conversion, query: `?district=강남구&band=${cell.band}&cash=3` });
+  assert.match(page.resultHtml(), /월세가 월에 19만원/);
+  assert.match(page.resultHtml(), /입력한 자기자금/);
+  assert.doesNotMatch(page.resultHtml(), /잘못된 과거 설명/);
+  assert.match(page.text("rate-observation"), /2026-08/);
+  await page.toggleLang();
+  assert.match(page.resultHtml(), /your cash/);
+  assert.doesNotMatch(page.resultHtml(), /Stale advice/);
+  await page.typeCash(10);
+  assert.match(page.resultHtml(), /Jeonse/i);
+});
+
 test("아무것도 고르지 않아도 첫 자치구의 비교가 나온다", async () => {
   const page = await open();
   const html = page.resultHtml();

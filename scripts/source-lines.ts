@@ -95,7 +95,7 @@ export const FOOTERS: Record<string, Record<Lang, string>> = {
     en: en([molitEn("apartment sale filings")], LAG_EN_FILED("transactions", "deals")),
   },
   dealSearch: {
-    ko: ko([molitKo("매매 실거래가 공개시스템")], LAG_KO("거래", "거래는")),
+    ko: ko([molitKo("매매·전월세 실거래가 공개시스템")], LAG_KO("거래", "거래는")),
     en: en([molitEn("real transaction price disclosure")], LAG_EN_REPORTED),
   },
   realestate: {

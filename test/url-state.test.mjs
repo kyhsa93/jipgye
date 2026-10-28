@@ -149,7 +149,7 @@ test("감춰야 할 요소가 CSS 때문에 계속 보이지 않는다", async (
 
   for (const file of files) {
     assert.ok(
-      (await read(file)).includes('href="./style.css"'),
+      /href="\.\/style\.css\?v=[a-f0-9]{16}"/.test(await read(file)),
       `${file}이 스타일시트를 부르지 않아 감춤 규칙이 닿지 않는다`
     );
   }

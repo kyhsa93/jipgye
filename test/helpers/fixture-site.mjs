@@ -54,7 +54,13 @@ export function buildFixtureSite({ steps = SITE_STEPS, env = {} } = {}) {
   cpSync(path.join(repo, "docs"), path.join(root, "docs"), { recursive: true, filter: (src) => src !== path.join(repo, "docs/data") });
   mkdirSync(path.join(root, "docs/data"), { recursive: true });
   cpSync(FIXTURE_DATA, path.join(root, "docs/data"), { recursive: true });
-  symlinkSync(path.join(repo, "node_modules"), path.join(root, "node_modules"), "dir");
+  try {
+    symlinkSync(path.join(repo, "node_modules"), path.join(root, "node_modules"), "dir");
+  } catch (error) {
+    if (process.platform !== "win32" || error.code !== "EPERM") throw error;
+    // Windows may disallow links; copying preserves the same isolated test inputs.
+    cpSync(path.join(repo, "node_modules"), path.join(root, "node_modules"), { recursive: true });
+  }
   for (const step of steps) {
     const r = spawnSync(process.execPath, [path.join(root, step)], { cwd: root, env: { ...process.env, BUILD_NOW: FIXTURE_NOW, ...env }, encoding: "utf8" });
     if (r.status !== 0) {

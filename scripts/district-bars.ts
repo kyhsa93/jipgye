@@ -105,7 +105,10 @@ export function districtBarsHtml(data, { variant = "page" }: { variant?: "page" 
   const w = data.window ?? {};
   const from = w.districtFrom ?? w.from;
   const weeks = w.districtWeeks ?? w.weeks;
-  const period = from && w.to ? both(`기준: 계약일 ${from} ~ ${w.to}(최근 ${weeks}주) 신고분`, `Basis: contracts ${from} to ${w.to} (last ${weeks} weeks)`) : "";
+  const period = from && w.to ? both(
+    `기준: ${w.basis === "arrival" ? "신고 관측일" : "계약일"} ${from} ~ ${w.to}(최근 ${weeks}주)`,
+    `Basis: ${w.basis === "arrival" ? "filings observed" : "contracts"} ${from} to ${w.to} (last ${weeks} weeks)`
+  ) : "";
   const panels = kinds
     .map(
       (k) =>
