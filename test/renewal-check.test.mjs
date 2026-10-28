@@ -74,7 +74,7 @@ test("픽스처 칸 모양 확인(빌더가 만든 그대로)", () => {
 test("자리: 입력·답이 방법 안내보다 먼저, #lead-section 앞이며 입력 다섯은 보이는 label 이 있고 답은 aria-live", async () => {
   const html = await readFile(path.join(root, SITE, "renewal-vs-new.html"), "utf8");
   const ids = [...html.matchAll(/<section id="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(ids.slice(0, 4), ["check-section", "convert", "expiry", "lead-section"]); // #convert 는 #673 N1, #expiry 는 #674 N2
+  assert.deepEqual(ids.slice(0, 5), ["check-section", "move", "convert", "expiry", "lead-section"]); // #move 는 #777, #convert 는 #673 N1, #expiry 는 #674 N2
   assert.ok(html.indexOf('id="check-section"') < html.indexOf("</aside>"));
   assert.ok(html.indexOf('id="check-optional"') < html.indexOf('id="check-answer"'), "선택 입력도 답보다 앞이어야 한다");
   assert.ok(html.indexOf("</aside>") < html.indexOf('id="convert"'), "계산 근거 안내가 비교 도구 바로 뒤에 남아야 한다");
@@ -198,7 +198,8 @@ test("드리프트: 화면의 구간 판정(ckBand)이 빌더의 bandOf 와 모�
 
 test("금지어: 확인기 문구(ko/en)에 평균·전망·권유 표현이 없다", async () => {
   const html = await readFile(path.join(root, "docs/renewal-vs-new.html"), "utf8");
-  const section = html.slice(html.indexOf('<section id="check-section"'), html.indexOf('<section id="convert"'));
+  // 확인기 절과 방법 안내(aside)까지 본다 - 그 아래 #move 절(#777)은 평균금리를 참고값으로 쓴다.
+  const section = html.slice(html.indexOf('<section id="check-section"'), html.indexOf('<section id="move"'));
   const dict = [...html.matchAll(/^\s+ck[A-Z]\w*:[\s\S]*?(?=^\s+ck[A-Z]\w*:|^\s+},?$)/gm)].map((m) => m[0]).join("\n");
   assert.ok(dict.includes("ckLegal") && dict.includes("Check your renewal"), "사전 조각을 못 읽었다");
   for (const text of [section, dict]) {

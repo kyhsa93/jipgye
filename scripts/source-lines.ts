@@ -133,6 +133,11 @@ export const FOOTERS: Record<string, Record<Lang, string>> = {
     ko: ko([molitKo("전월세 실거래가 공개시스템"), `${SOURCES.ecos.ko} 기준금리`], DERIVED.ko),
     en: en([molitEn("apartment jeonse and monthly rent filings"), `${SOURCES.ecos.en} (base rate)`], DERIVED.en),
   },
+  // 재계약 vs 이사 비교 절(#777): 참고값은 국토부 전월세, 미리 넣는 금리는 ECOS 전세자금대출(121Y015)·정기예금(121Y002) 평균금리 - ECOS 제7조②·가공 꼬리.
+  renewalMove: {
+    ko: ko([molitKo("전월세 실거래가 공개시스템"), `${SOURCES.ecos.ko} 전세자금대출·정기예금 평균금리`], DERIVED.ko),
+    en: en([molitEn("apartment jeonse and monthly rent filings"), `${SOURCES.ecos.en} (average jeonse-loan and time-deposit rates)`], DERIVED.en),
+  },
   // 전월세 만기 달력 절(#674 N2): 국토부 전월세 신고 24개월의 계약기간 끝 달을 센다 - 창과 범위를 꼬리에.
   leaseExpiry: {
     ko: ko([molitKo("전월세 실거래가 공개시스템")], "최근 24개월 전월세 신고의 계약기간 끝 달을 자치구·달별로 셉니다. 이 값은 원자료를 집계·가공한 것입니다."),
