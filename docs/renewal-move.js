@@ -1,15 +1,17 @@
-// 재계약 vs 이사 비교 절(#777). 장 전용 외부 JS, gzip ≤2KB(#681) - 문구는 #mv-answer 의 data-msg(ko)·data-msg-en, "|" 로 나눈 47개.
+// 재계약 vs 이사 비교 절(#777). 장 전용 외부 JS, gzip ≤2KB(#681) - 문구는 #mv-answer 의 data-msg(ko)·data-msg-en, "|" 로 나눈 89개.
 // 계산은 move-cost.js 한 벌. 재계약 보증금은 위 확인기 칸(#check-old·#check-ask)을 그대로 읽는다. 입력은 URL에 싣지 않는다.
 (() => {
   const $ = (id) => document.getElementById(id);
   const ids = $("move").getAttribute("data-i18n").split(" "); // 언어를 따라 글자를 바꾸는 요소(ko 는 구운 글자, en 은 data-en)
   const ko = ids.map((id) => $(id).textContent);
   const cap = $("mv-caption");
-  const st = { r: 1, d: 1, src: "" }; // r·d: 금리가 참고값인가, src: 비교할 집 금액이 참고값이면 "c"(단지 기준)·"d"(자치구 참고)
+  const st = { src: "" }; // src: 비교할 집 금액이 참고값이면 "c"(단지 기준)·"d"(자치구 참고)
   const en = () => document.documentElement.getAttribute("lang") == "en";
   const fmt = (x) => Number(x).toLocaleString(en() ? "en-US" : "ko-KR", { maximumFractionDigits: 1 });
-  const v = (id) => String($(id).value ?? "").trim();
+  // 숫자로 읽히지 않는 글자(badInput)는 브라우저가 value 를 비운다 - 빈칸이 아니라 잘못된 값("?")으로 읽는다(#792, 모든 칸).
+  const v = (id) => ($(id).validity?.badInput ? "?" : String($(id).value ?? "").trim());
   const ym = (m) => `${m.slice(0, 4)}-${m.slice(4)}`;
+  const bad = (id) => $(id).validity?.badInput;
   // 계측(#777 P4, audit/ga4-setup.md). 보내는 값은 정해진 낱말뿐이고 금액·금리·단지명은 서명(메모리)에만 둔다.
   const WAIT = 800; // = analytics.js SEARCH_DEBOUNCE_MS(시험이 대조): 같은 입력이 이만큼 머물러야 한 번으로 센다
   const A = () => window.analytics;
@@ -42,18 +44,20 @@
     }
     $("mv-rent-field").hidden = kind != "wolse";
     const old = Math.round(+v("check-old"));
-    const ask = v("check-ask");
+    // 요구 보증금은 확인기 칸(#check-ask) 하나가 원본이고 ① 칸(#mv-ask)은 그 거울이다 - 같은 값을 두 번 넣게 하지 않는다(#792).
+    const ask = bad("mv-ask") ? "?" : v("check-ask");
+    if (!bad("mv-ask") && v("mv-ask") != v("check-ask")) $("mv-ask").value = v("check-ask");
     $("mv-renew").textContent = +ask > 0 ? (old > 0 ? f(0, fmt(old), fmt(+ask)) : f(1, fmt(+ask))) : "";
     $("mv-cash-fill").hidden = !(old > 0);
     $("mv-cash-fill").textContent = f(45, fmt(old));
     const opp = !!$("mv-opp").checked;
     const c = st.c;
-    // 참고값 단추·근거 줄은 renewal-move-basis.js(#777 P3)가 같은 문맥으로 그린다.
-    window.renewalMoveBasis?.({ M, f, fmt, ym, v, kind, c, st, render, start, opp });
-    if (!(+ask > 0)) return out(M[2]), measure(null), ($("mv-what-if").textContent = "");
     const C = jipgyeMoveCost;
-    const r = C.compare({ renew: ask, kind, deposit: v("mv-dep"), rent: v("mv-rent"), cash: v("mv-cash"), loanRate: v("mv-rate"), depositRate: v("mv-drate"), months: v("mv-months"), opportunity: opp, oneRenew: v("mv-once-renew"), oneMove: v("mv-once-move") });
-    const d = C.describe(r, M, fmt, kind);
+    const r = ask !== "" && C.compare({ renew: ask, kind, deposit: v("mv-dep"), rent: v("mv-rent"), cash: v("mv-cash"), loanRate: v("mv-rate"), depositRate: v("mv-drate"), months: v("mv-months"), opportunity: opp, oneRenew: v("mv-once-renew"), oneMove: v("mv-once-move") });
+    const d = r && C.describe(r, M, fmt, kind);
+    // 칸 옆 안내(잘못된 값·금리 줄)·참고값 단추·근거 줄은 renewal-move-basis.js 가 같은 문맥으로 그린다 - 계산 결과(r·d)도 넘긴다.
+    window.renewalMoveBasis?.({ M, f, fmt, ym, v, kind, c, st, render, start, opp, r, d });
+    if (!r) return out(M[2]), measure(null), ($("mv-what-if").textContent = "");
     measure(r, JSON.stringify([ask, kind, v("mv-dep"), v("mv-rent"), v("mv-cash"), v("mv-rate"), v("mv-drate"), v("mv-months"), opp, v("mv-once-renew"), v("mv-once-move")]));
     $("mv-what-if").textContent = d.whatIf || "";
     const cell = (x, h) => (h ? `<th scope="${h}">${x}</th>` : `<td>${x}</td>`);
@@ -68,8 +72,10 @@
     if (st.c && !v("mv-drate")) $("mv-drate").value = c.deposit.rate;
     render();
   });
-  ["check-old", "check-ask", "mv-dep", "mv-rent", "mv-cash", "mv-months", "mv-rate", "mv-drate", "mv-once-move", "mv-once-renew"].forEach((id) => $(id).addEventListener("input", () => (id == "mv-rate" && (st.r = 0), id == "mv-drate" && (st.d = 0), /mv-(dep|rent)/.test(id) && (st.src = ""), /^mv/.test(id) && start(), render())));
+  ["check-old", "check-ask", "mv-dep", "mv-rent", "mv-cash", "mv-months", "mv-rate", "mv-drate", "mv-once-move", "mv-once-renew"].forEach((id) => $(id).addEventListener("input", () => (/mv-(dep|rent)/.test(id) && (st.src = ""), /^mv/.test(id) && start(), render())));
   window.renewalMove = render;
+  // ① 칸에 넣으면 확인기 칸에 옮겨 적고 확인기를 다시 그린다(확인기가 이 절을 다시 그린다).
+  $("mv-ask").addEventListener("input", () => (bad("mv-ask") || ($("check-ask").value = v("mv-ask")), start(), window.renderCheck ? renderCheck() : render()));
   ["mv-kind", "mv-opp", "lang-toggle"].forEach((id) => $(id).addEventListener(id == "lang-toggle" ? "click" : "change", () => (id != "lang-toggle" && start(), render())));
   $("mv-cash-fill").addEventListener("click", () => (($("mv-cash").value = Math.round(+v("check-old"))), start(), render()));
   render();
