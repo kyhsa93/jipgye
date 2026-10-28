@@ -7,11 +7,15 @@ import path from "node:path";
 import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../../../scripts/build-realestate-pages.ts";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../../../scripts/district-slugs.ts";
 import { stampHtml } from "../../../scripts/updated-stamp.ts";
+import { pageAssetHtml, stylesheetVersion } from "../../../scripts/page-assets.ts";
 import { SITE } from "../../../test/helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
 const readJson = (name) => read(`docs/data/${name}.json`).then(JSON.parse);
+// 생성물의 메타나 URL을 정규화해 지우지 않고, 최종 렌더와 같은 예상값을 만들어 대조한다.
+const version = stylesheetVersion(await read(`${SITE}/style.css`));
+const finishPage = (html, file) => pageAssetHtml(html, file, version);
 
 test("커밋된 거래 유형별 페이지가 지금 원본·데이터로 찍은 결과와 같다", async () => {
   const [baseHtml, realestate, complexRatio] = await Promise.all([
@@ -27,7 +31,7 @@ test("커밋된 거래 유형별 페이지가 지금 원본·데이터로 찍은
     assert.ok(ymd, `${SITE}/${page.file}에 기준일이 없다`);
     assert.equal(
       committed,
-      stampHtml(buildRealestatePage(baseHtml, page, realestate, complexRatio?.seoul ?? null), ymd),
+      finishPage(stampHtml(buildRealestatePage(baseHtml, page, realestate, complexRatio?.seoul ?? null), ymd), page.file),
       `${SITE}/${page.file}이 원본과 어긋납니다. node scripts/build-realestate-pages.ts를 실행하세요.`
     );
   }
@@ -55,7 +59,7 @@ test("커밋된 자치구 페이지 25개가 지금 원본·데이터로 찍은 
     assert.ok(ymd, `${SITE}/${district.file}에 기준일이 없다`);
     assert.equal(
       committed,
-      stampHtml(
+      finishPage(stampHtml(
         buildDistrictPage(
           baseHtml,
           district,
@@ -68,7 +72,7 @@ test("커밋된 자치구 페이지 25개가 지금 원본·데이터로 찍은 
           repeatSales
         ),
         ymd
-      ),
+      ), district.file),
       `${SITE}/${district.file}이 원본과 어긋납니다. node scripts/build-realestate-pages.ts를 실행하세요.`
     );
   }
