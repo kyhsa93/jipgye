@@ -100,7 +100,7 @@
   <nav class="home-goals" id="home-goals" aria-label="무엇을 할까요">
     <div class="c-card"><span class="home-goal-number" aria-hidden="true">01</span><p class="c-card__title"><a href="./jeonse-vs-wolse.html"><span lang="ko">전세 vs 월세</span><span lang="en">Jeonse vs monthly rent</span></a></p><p class="c-hint"><span lang="ko">내 자금으로 매달 얼마가 드는지</span><span lang="en">Compare monthly costs with your budget</span></p><span class="home-goal-arrow" aria-hidden="true">↗</span></div>
     <div class="c-card"><span class="home-goal-number" aria-hidden="true">02</span><p class="c-card__title"><a href="./renewal-vs-new.html"><span lang="ko">재계약 vs 새로 구하기</span><span lang="en">Renew or move</span></a></p><p class="c-hint"><span lang="ko">요구 보증금을 같은 단지 실거래와 비교</span><span lang="en">Check the deposit against actual leases</span></p><span class="home-goal-arrow" aria-hidden="true">↗</span></div>
-    <div class="c-card"><span class="home-goal-number" aria-hidden="true">03</span><p class="c-card__title"><a href="./realestate.html"><span lang="ko">동네 시세 확인</span><span lang="en">Explore local prices</span></a></p><p class="c-hint"><span lang="ko">서울 25개 자치구의 실제 거래가격</span><span lang="en">Actual prices across Seoul districts</span></p><span class="home-goal-arrow" aria-hidden="true">↗</span></div>
+    <div class="c-card"><span class="home-goal-number" aria-hidden="true">03</span><p class="c-card__title"><a href="./switch-house.html"><span lang="ko">아파트·지역 비교</span><span lang="en">Compare areas</span></a></p><p class="c-hint"><span lang="ko">지금 동네와 옮길 동네의 가격 변화</span><span lang="en">Compare price changes before you move</span></p><span class="home-goal-arrow" aria-hidden="true">↗</span></div>
     <div class="c-card"><span class="home-goal-number" aria-hidden="true">04</span><p class="c-card__title"><a href="./price-outlook.html"><span lang="ko">시장 흐름 살펴보기</span><span lang="en">Explore market trends</span></a></p><p class="c-hint"><span lang="ko">가격 추이와 전망의 근거까지</span><span lang="en">Price trends and the evidence behind them</span></p><span class="home-goal-arrow" aria-hidden="true">↗</span></div>
   </nav>
 
@@ -380,7 +380,7 @@
   function getInitialTheme() {
     let saved;
     try { saved = window.localStorage.getItem("theme"); } catch {}
-    return saved === "light" || saved === "dark" || saved === "auto" ? saved : "light";
+    return /^(light|dark|auto)$/.test(saved) ? saved : "light";
   }
 
   function applyTheme(next) {

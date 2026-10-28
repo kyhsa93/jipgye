@@ -167,7 +167,7 @@
   let theme = (function () {
     let saved;
     try { saved = window.localStorage.getItem("theme"); } catch {}
-    return saved === "light" || saved === "dark" || saved === "auto" ? saved : "light";
+    return /^(light|dark|auto)$/.test(saved) ? saved : "light";
   })();
 
   function applyTheme(next) {
