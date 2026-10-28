@@ -34,7 +34,7 @@ unavailable_reason: invalid_input(범위를 벗어난 입력 — 빈 칸은 입�
 calculator_result와 watchlist_add를 주요 이벤트로 등록한다. 기본 금액은 지정하지 않는다.
 이벤트 범위 맞춤 측정기준: calculator_type(집계 계산 종류), result_scope(집계 결과 범위).
 
-계산 결과 이벤트는 단지명·정확한 입력 금액을 보내지 않는다. 중복 방지용 입력 서명은 페이지 메모리에만 보관한다.
+계산 결과 이벤트는 단지명·정확한 입력 금액을 보내지 않는다. 중복 방지용 입력 서명은 페이지 메모리에만 보관한다. 그래서 같은 장 안에서는 같은 입력을 다시 보내지 않지만, 뒤로 가기 등으로 장이 새로 로드되면(bfcache 복원 제외) page_view와 함께 결과 이벤트도 새 장 보기로 1회 다시 센다.
 renewal_move 의 보증금·월세·내 돈·금리·기간 입력은 URL 에도 싣지 않는다(test/renewal-move.test.mjs 가 dataLayer 전체에 그 값과 단지명이 없음을 본다). page_referrer 도 page_location 과 같은 규칙으로 정리한다(#779).
 
 전세·월세의 기존 조건 변경 이벤트 jeonse_vs_wolse는 계산 완료 횟수가 아니다. 현금은 conversion_cash_band의 구간으로만 전송한다.
