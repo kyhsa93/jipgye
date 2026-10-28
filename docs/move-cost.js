@@ -89,7 +89,7 @@
     const [a, b] = dk > 0 ? ["move", "renew"] : ["renew", "move"]; // 나중에 덜 드는 쪽, 처음에 덜 드는 쪽
     const be = !dm || !dk ? "" : Math.sign(dm) != Math.sign(dk) || at < 1 ? f(75) : at > 120 ? f(74) : at % 1 ? f(73, Math.ceil(at), who(a), who(b)) : f(72, at, who(a));
     // 끝에 제목과 같은 기준(현금 지출 + 예금이자 / 현금 지출)을 붙인다 - 바로 위 「현금 지출만 보면」 줄과 엇갈려 읽히지 않게(po #777 P5).
-    return (be + f(77) + [12, 24, 36, 48].map((t) => line(t)).join(" · ") + `(${basis}).`).trim();
+    return (be + f(77) + [12, 24, 36, 48].map((t) => line(t)).join(" · ") + ` (${basis}).`).trim();
   }
 
   globalThis.jipgyeMoveCost = { compare, describe, LTV, TAX };

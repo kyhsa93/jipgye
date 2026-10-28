@@ -225,7 +225,7 @@ test("외부 JS 셋은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B
   const own = pageScripts(path.join(root, "docs")).filter((f) => HTML.includes(`<script src="./${f}" defer></script>`));
   assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
   const total = (await Promise.all(own.map((f) => readFile(path.join(root, "docs", f), "utf8")))).reduce((n, src) => n + gzipSync(stripJsComments(src), { level: 9 }).length, 0);
-  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 계측과 금리 줄 이동 뒤 7,795B → P5 일회성 비용·손익분기 뒤 8,251B → P5 판정 조건(기준 표기·1개월 미만) 뒤 8,263B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
+  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 계측과 금리 줄 이동 뒤 7,795B → P5 일회성 비용·손익분기 뒤 8,251B → P5 판정 조건(기준 표기·1개월 미만) 뒤 8,264B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
   // 늘리는 PR 은 이 숫자를 사유와 함께 고친다.
   assert.ok(total <= 8270, `이 장 장 전용 JS 합계 ${total}B > 8,270B`);
   const users = [];
@@ -698,8 +698,10 @@ test("현금 기준 비교에도 일회성 비용을 넣고, 「조건을 바꾸
   assert.equal(r.cashCheaper, "renew");
   const d = describe(r, MSG("ko"), KO, "wolse");
   assert.match(d.text, / 현금 지출만 보면 재계약이 1,740만원 덜 듭니다\.$/);
-  assert.match(d.whatIf, /\(현금 지출 \+ 묶인 내 돈의 세후 예금이자 기준\)\.$/);
-  assert.match(describe(compare({ ...input, opportunity: false }), MSG("ko"), KO, "wolse").whatIf, /\(현금 지출 기준\)\.$/);
+  assert.match(d.whatIf, / \(현금 지출 \+ 묶인 내 돈의 세후 예금이자 기준\)\.$/);
+  assert.match(describe(compare({ ...input, opportunity: false }), MSG("ko"), KO, "wolse").whatIf, / \(현금 지출 기준\)\.$/);
+  const EN = (x) => Number(x).toLocaleString("en-US", { maximumFractionDigits: 1 });
+  assert.match(describe(r, MSG("en"), EN, "wolse").whatIf, / less \(cash spent plus after-tax deposit interest forgone\)\.$/, "괄호 앞을 띄운다(영어 띄어쓰기, po #777 P5)");
   assert.deepEqual(compare({ ...input, oneRenew: -1 }).errors, [{ field: "oneRenew", code: "range" }]);
 });
 
