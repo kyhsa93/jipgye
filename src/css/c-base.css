@@ -340,6 +340,25 @@ h2 { margin-top: 32px; border-bottom: 0; padding-bottom: 12px; }
 .calc-explainer .lead { font-size: var(--fs-sm); color: var(--muted); margin-top: 16px; }
 html:lang(en) .calc-explainer [lang="ko"], html:not(:lang(en)) .calc-explainer [lang="en"] { display: none; }
 #check-answer:not(:empty) { max-width: none; padding: 24px; background: var(--accent-weak); border-radius: var(--radius); font-size: var(--fs-xl); font-weight: 600; }
+/* 재계약 장(#797): 위의 두 입구, 결과의 핵심 숫자, 금액 읽기. 색·글꼴은 기존 토큰만 쓴다. */
+.page-jump { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 12px; margin: 16px 0 8px; }
+.page-jump a { display: block; padding: 14px 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); color: var(--fg); text-decoration: none; min-height: var(--tap); }
+.page-jump strong { display: block; font-size: var(--fs-md); }
+.page-jump span { display: block; margin-top: 4px; font-size: var(--fs-sm); color: var(--muted); }
+.mv-key { margin: 12px 0; padding: 20px; background: var(--accent-weak); border-radius: var(--radius); }
+.mv-key p { margin: 0; }
+.mv-key p + p { margin-top: 12px; }
+.mv-key span { display: block; font-size: var(--fs-sm); color: var(--muted); }
+.mv-key strong { display: block; font-size: var(--fs-xl); line-height: 1.35; }
+.mv-key p:first-child strong { font-size: var(--fs-h2); }
+.mv-key p:nth-child(n + 3) { font-size: var(--fs-sm); color: var(--muted); }
+.mv-jump:empty, .mv-key p:empty { display: none; }
+/* 금액 읽기는 제 칸 안: 넓은 화면은 칸 오른쪽, 좁은 화면은 칸 바로 아래(#797 5). 넓은 화면은 비어 있어도 자리를 잡아 둔다 -
+ * 치는 도중 읽기가 생기며 옆 칸이 다음 줄로 밀리던 것(640~768px). 좁은 화면은 아래로 쌓이니 빈 동안 숨긴다. */
+.search-field .mv-won { margin: 0; min-width: 9em; }
+#mv-more > summary, #mv-table-box > summary, #mv-basis-sum { cursor: pointer; min-height: var(--tap); align-content: center; font-weight: 600; }
+#mv-more { margin: 16px 0; padding: 12px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+#mv-more-now { display: block; font-weight: 400; }
 @media (max-width: 560px) {
   main { padding-top: 16px; }
   .verdict, .option, #check-answer:not(:empty) { padding: 20px; }
@@ -347,9 +366,10 @@ html:lang(en) .calc-explainer [lang="ko"], html:not(:lang(en)) .calc-explainer [
   .data-table td { padding: 12px; }
   /* 좁은 화면(#797): 확인기·비교 절의 칸은 라벨 위, 입력 아래로 쌓고 입력은 폭을 채운다 - 라벨과 칸이 한 줄이면
    * 긴 라벨(「재계약 요구 보증금(만원, 필요)」·일회성 비용)이 320px 에서 칸을 화면 밖으로 밀었다(349px). 체크 칸(.toggle)은 그대로 한 줄. */
-  #check-section .search-field, #move .search-field:not(.toggle) { flex: 1 1 100%; flex-direction: column; align-items: stretch; gap: 6px; }
-  #check-section .search-field label, #move .search-field:not(.toggle) label { white-space: normal; }
-  #check-section .search-field :is(input, select), #move .search-field:not(.toggle) :is(input, select) { width: 100%; max-width: none; }
+  :is(#check-section, #move, #convert, #expiry) .search-field:not(.toggle) { flex: 1 1 100%; flex-direction: column; align-items: stretch; gap: 6px; }
+  :is(#check-section, #move, #convert, #expiry) .search-field:not(.toggle) label { white-space: normal; }
+  :is(#check-section, #move, #convert, #expiry) .search-field:not(.toggle) :is(input, select) { width: 100%; max-width: none; }
+  .mv-won:empty { display: none; }
 }
 
 /* Consistent interface icons; accessible button names remain in the HTML. */

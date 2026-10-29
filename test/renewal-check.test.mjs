@@ -156,7 +156,7 @@ test("영어: 판정 5 영어 문구, 표·라벨·법무 문구에 한국어가
   for (const id of ["check-heading", "check-gu-label", "check-apt-label", "check-area-label", "check-old-label", "check-ask-label", "check-scope", "check-legal", "check-source", "check-new"]) {
     assert.doesNotMatch(page.text(id), /[가-힣]/, `${id}: ${page.text(id)}`);
   }
-  assert.equal(page.text("check-heading"), "Check your renewal");
+  assert.equal(page.text("check-heading"), "Renewal prices in your complex");
   assert.doesNotMatch(table(page), /[가-힣]/);
   assert.doesNotMatch(page.html("check-area").replace(/value="[^"]*"/g, ""), /[가-힣]/);
   await setValue(page, "check-apt", "작은단지");
@@ -165,7 +165,7 @@ test("영어: 판정 5 영어 문구, 표·라벨·법무 문구에 한국어가
   await setValue(page, "check-area", "b:under60", "change");
   assert.match(answer(page), /^Unit types with fewer than 3 renewals are not listed — figures below are district-wide, in 노원구 under 60m²\. Of 6 jeonse renewals in 노원구 under 60m² \(last 24 months\), /);
   await page.click("lang-toggle");
-  assert.equal(page.text("check-heading"), "우리 단지 재계약 확인", "한국어로 돌아오지 않았다");
+  assert.equal(page.text("check-heading"), "우리 단지 재계약 시세 확인", "한국어로 돌아오지 않았다");
 });
 
 test("자치구를 바꾸면 그 구 파일을 받고, 없는 구(404)는 아무 답도 내지 않는다", async () => {
@@ -201,7 +201,7 @@ test("금지어: 확인기 문구(ko/en)에 평균·전망·권유 표현이 없
   // 확인기 절과 방법 안내(aside)까지 본다 - 그 아래 #move 절(#777)은 평균금리를 참고값으로 쓴다.
   const section = html.slice(html.indexOf('<section id="check-section"'), html.indexOf('<section id="move"'));
   const dict = [...html.matchAll(/^\s+ck[A-Z]\w*:[\s\S]*?(?=^\s+ck[A-Z]\w*:|^\s+},?$)/gm)].map((m) => m[0]).join("\n");
-  assert.ok(dict.includes("ckLegal") && dict.includes("Check your renewal"), "사전 조각을 못 읽었다");
+  assert.ok(dict.includes("ckLegal") && dict.includes("Renewal prices in your complex"), "사전 조각을 못 읽었다");
   for (const text of [section, dict]) {
     assert.doesNotMatch(text, /평균|전망|average|forecast|outlook/i);
     assert.doesNotMatch(text, /받아들이세요|받아들여|쓸 수 있습니다|요구하세요|should accept|you can use/);
