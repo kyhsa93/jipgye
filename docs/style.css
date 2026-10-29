@@ -3061,6 +3061,17 @@
   .mv-jump:empty, .mv-key p:empty {
     display: none;
   }
+  #mv-jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 12px;
+  }
+  .mv-key:empty {
+    margin: 0;
+    padding: 0;
+    background: none;
+  }
   .search-field .mv-won {
     margin: 0;
     min-width: 9em;

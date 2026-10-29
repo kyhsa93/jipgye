@@ -1,4 +1,4 @@
-// 재계약 vs 이사 비교 절(#777). 장 전용 외부 JS, gzip ≤2KB(#681) - 문구는 #mv-answer 의 data-msg(ko)·data-msg-en, "|" 로 나눈 107개.
+// 재계약 vs 이사 비교 절(#777). 장 전용 외부 JS, gzip ≤2KB(#681) - 문구는 #mv-answer 의 data-msg(ko)·data-msg-en, "|" 로 나눈 109개.
 // 계산은 move-cost.js 한 벌. 재계약 보증금은 위 확인기 칸(#check-old·#check-ask)을 그대로 읽는다. 입력은 URL에 싣지 않는다.
 (() => {
   const $ = (id) => document.getElementById(id);
@@ -54,12 +54,14 @@
     $("mv-why-c2").hidden = !split;
     // 「선택 조건」을 접어도 제목 줄에 지금 가정을 요약한다. 그 안의 칸이 비었거나 잘못되면 펼친다(#797 3).
     const once = +v("mv-once-move") || +v("mv-once-renew");
-    $("mv-more-now").textContent = f(106, split ? `${v("mv-rate-renew") || "-"}% / ${v("mv-rate-move") || "-"}%` : `${v("mv-rate") || "-"}%`, v("mv-months") || "-", once ? f(99, fmt(+v("mv-once-renew") || 0), fmt(+v("mv-once-move") || 0)) : M[100], M[opp ? 101 : 102]);
+    // 금리는 칸마다 이름을 붙이고(재계약 3% · 이사 5%, #799), 비었거나 0~20% 밖이면 적용 금리처럼 보이지 않게 「확인 필요」.
+    const rv = (id, x = v(id)) => (x !== "" && x >= 0 && x <= 20 ? x + "%" : M[108]);
+    $("mv-more-now").textContent = f(106, split ? f(107, M[26], rv("mv-rate-renew"), M[27], rv("mv-rate-move")) : rv("mv-rate"), v("mv-months") || "-", once ? f(99, fmt(+v("mv-once-renew") || 0), fmt(+v("mv-once-move") || 0)) : M[100], M[opp ? 101 : 102]);
     if (r && !r.ok && r.errors.some((e) => /Rate|months|one/.test(e.field))) $("mv-more").open = true;
     // 핵심 숫자(#797 4): 기간 비용 차이와 두 선택지의 월 현금 지출을 먼저. 견줄 수 없으면 숨기고, 같으면 어느 쪽도 덜 든다고 하지 않는다.
     const key = r?.ok && r.comparable;
-    $("mv-key").hidden = !key;
-    if (key) $("mv-key").innerHTML = d.key;
+    // 숨기지 않고 비운다(#799): 알림 영역(aria-live)이 늘 접근성 트리에 있어야 첫 결과도 읽힌다. 빈 카드는 CSS 가 납작하게 한다.
+    $("mv-key").innerHTML = key ? d.key : "";
     if (!r) return out(M[2]), window.renewalMoveMeasure?.(null), ($("mv-what-if").textContent = "");
     window.renewalMoveMeasure?.(r, JSON.stringify([ask, kind, v("mv-dep"), v("mv-rent"), v("mv-cash"), v("mv-rate"), v("mv-drate"), v("mv-months"), opp, v("mv-once-renew"), v("mv-once-move"), split, v("mv-rate-renew"), v("mv-rate-move")]));
     $("mv-what-if").textContent = d.whatIf || "";

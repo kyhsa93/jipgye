@@ -103,6 +103,8 @@ const set = async (page, values) => {
   await page.settle();
 };
 const answer = (page) => page.text("mv-answer");
+// 견줄 수 있을 때 차이·월 현금 지출·기준은 핵심 숫자 카드가 말하고 답 문장은 카드에 없는 가정만 남는다(#799).
+const key = (page) => page.html("mv-key").replace(/<[^>]+>/g, ""); // 가짜 DOM 은 innerHTML 의 글자를 세지 않는다
 
 // data-analyst 사례 ① (#777): 헬리오시티 84.98㎡ 재계약 126,000 vs 송파구 60~85㎡ 대표 월세 40,000/140, 내 돈 126,000, 4.23%·3.14%·24개월.
 const CASE1 = { "check-old": "120000", "check-ask": "126000", "mv-kind": "wolse", "mv-dep": "40000", "mv-rent": "140", "mv-cash": "126000" };
@@ -202,8 +204,8 @@ test("자리: 확인기 → 방법 안내 → #move → #convert, 보이는 labe
     assert.ok(SECTION.includes(`<label for="${id}" id="${id}-label" data-en="`), `${id} label`);
   }
   assert.match(SECTION, /<p class="lead" id="mv-answer" aria-live="polite" data-msg="[^"]+" data-msg-en="[^"]+"><\/p>/);
-  assert.equal(MSG("ko").length, 107);
-  assert.equal(MSG("en").length, 107);
+  assert.equal(MSG("ko").length, 109);
+  assert.equal(MSG("en").length, 109);
   assert.ok(SECTION.includes(`data-en="${FOOTERS.renewalMove.en}">${FOOTERS.renewalMove.ko}</p>`), "출처 줄이 source-lines 로 찍히지 않았다");
   assert.match(FOOTERS.renewalMove.ko, /전세자금대출·정기예금 평균금리\. 이 값은 원자료를 가공한 것입니다\.$/);
 });
@@ -232,7 +234,7 @@ test("외부 JS 넷은 각각 배포 사본(주석 뗀 것, #784) gzip ≤2,048B
   for (const f of own) assert.ok(HTML.includes(`<script src="./${f}" defer></script>`), `${f}: defer 로 붙지 않았다`);
   assert.deepEqual(own, ["lease-expiry.js", "move-cost.js", "move-text.js", "renewal-convert.js", "renewal-move-basis.js", "renewal-move.js"]);
   const total = (await Promise.all(own.map((f) => readFile(path.join(root, "docs", f), "utf8")))).reduce((n, src) => n + gzipSync(stripJsComments(src), { level: 9 }).length, 0);
-  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 7,795B → P5 8,264B → #792 입력 흐름·칸 옆 오류·계산에 쓴 금리 뒤 8,662B → #792 5 계산·문장 분리(여섯째 파일, group-ceo A)·선택지별 금리 뒤 9,174B → #797 모바일 핵심 숫자 카드·금액 읽기·선택 조건 요약 뒤 9,738B, +564B 라 group-cto 재판정 조건부 승인) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
+  // 합계 상한은 실측에 맞춰 고정한다(P3 7,130B → P4 7,795B → P5 8,264B → #792 입력 흐름·칸 옆 오류·계산에 쓴 금리 뒤 8,662B → #792 5 계산·문장 분리(여섯째 파일, group-ceo A)·선택지별 금리 뒤 9,174B → #797 모바일 핵심 숫자 카드·금액 읽기·선택 조건 요약 뒤 9,738B, +564B 라 group-cto 재판정 조건부 승인 → #799 결과 아래 단추·금리 이름 뒤 9,737B, -1B) - 파일당 한도에서 저절로 나오는 5×2,048 은 아무것도 지키지 않는다(engineer #777 P3).
   // 늘리는 PR 은 이 숫자를 사유와 함께 고친다.
   assert.ok(total <= 9800, `이 장 장 전용 JS 합계 ${total}B > 9,800B`); // group-ceo 조건 ②: 병합 때 잰 값을 100B 단위로 올림, 그 뒤 +400B 넘게 늘면 group-cto 재판정
   const users = [];
@@ -273,12 +275,13 @@ test("화면 = 계산 모듈: 사례 ① 의 제목·부제·역전 줄·표 금
   const r = compare(input1());
   const man = (k) => (k / 10).toLocaleString("ko-KR", { maximumFractionDigits: 1 });
   assert.equal(
-    answer(page),
-    `입력한 조건으로 24개월 동안 이사가 ${man(-r.gapK)}만원 덜 듭니다(현금 지출 + 묶인 내 돈의 세후 예금이자 기준).` +
-      ` 월 현금 지출은 재계약 ${man(r.renew.cashK)}만원 · 이사 ${man(r.move.cashK)}만원입니다. 돌려받는 보증금과 대출 원금은 비용이 아닙니다. 금리·월세가 24개월 내내 같다고 본 계산입니다.` +
-      ` 현금 지출만 보면 재계약이 ${man(r.cashGapK)}만원 덜 듭니다.`
+    key(page),
+    `입력한 조건으로 24개월 비용 차이(현금 지출 + 묶인 내 돈의 세후 예금이자 기준)이사가 ${man(-r.gapK)}만원 덜 듭니다` +
+      `재계약 월 현금 지출${man(r.renew.cashK)}만원이사 월 현금 지출${man(r.move.cashK)}만원` +
+      `일회성 비용 넣지 않음(0으로 계산) · 묶인 내 돈의 세후 예금이자 포함 현금 지출만 보면 재계약이 ${man(r.cashGapK)}만원 덜 듭니다.`
   );
-  assert.match(answer(page), /이사가 1,209\.6만원 덜 듭니다/);
+  assert.match(key(page), /이사가 1,209\.6만원 덜 듭니다/);
+  assert.equal(answer(page), "돌려받는 보증금과 대출 원금은 비용이 아닙니다. 금리·월세가 24개월 내내 같다고 본 계산입니다.", "답 문장에서 카드와 다른 가정이 빠졌다");
   const table = page.html("mv-table");
   assert.equal(page.text("mv-caption"), "재계약과 이사 - 두 선택지(2개)의 보증금·대출·월 비용·합계", "표를 갈아 끼워도 caption 요소가 남는다(#300)");
   for (const [label, a, b] of [
@@ -298,15 +301,15 @@ test("화면 = 계산 모듈: 사례 ① 의 제목·부제·역전 줄·표 금
 test("화면: 기회비용을 끄면 제목 기준이 바뀌고 표에서 그 줄이 빠지며 역전 줄이 없다", async () => {
   const page = await open();
   await set(page, { ...CASE1, "mv-opp": false });
-  assert.match(answer(page), /^입력한 조건으로 24개월 동안 재계약이 3,360만원 덜 듭니다\(현금 지출 기준\)\./);
-  assert.doesNotMatch(answer(page), /현금 지출만 보면/);
+  assert.match(key(page), /^입력한 조건으로 24개월 비용 차이\(현금 지출 기준\)재계약이 3,360만원 덜 듭니다/);
+  assert.doesNotMatch(key(page) + answer(page), /현금 지출만 보면/);
   assert.doesNotMatch(page.html("mv-table"), /예금이자/);
 });
 
 test("화면: 같은 비용이면 같다고 말하고, 80% 가정을 넘는 쪽이 있으면 승자 문장 없이 모자란 돈만", async () => {
   const page = await open();
   await set(page, { "check-ask": "50000", "mv-dep": "40000", "mv-cash": "60000", "mv-opp": false });
-  assert.match(answer(page), /^입력한 조건으로 24개월 동안 두 선택지의 비용이 같습니다\(현금 지출 기준\)\./);
+  assert.match(key(page), /^입력한 조건으로 24개월 비용 차이\(현금 지출 기준\)두 선택지의 비용이 같습니다/);
   await set(page, { "check-ask": "126000", "mv-dep": "80000", "mv-cash": "20000" });
   assert.equal(answer(page), "재계약: 보증금의 80%까지 빌린다고 가정해도 5,200만원 모자라 견주지 않았습니다. 80%는 계산 가정이며 실제 대출 가능 여부와는 다릅니다.");
   assert.match(page.html("mv-table"), /<tr><th scope="row">합계<\/th><td>-<\/td><td>[\d,.]+<\/td><\/tr>/);
@@ -338,7 +341,7 @@ test("금리: 관측월이 기준일보다 LAG 개월 넘게 앞서면 알리고
   assert.equal(failed.text("mv-rate-note"), "평균금리를 불러오지 못했습니다. 금리를 직접 넣으면 계산합니다.");
   assert.equal(failed.byId("mv-rate").value, "");
   await set(failed, { ...CASE1, "mv-rate": "4", "mv-drate": "3" });
-  assert.match(answer(failed), /^입력한 조건으로 24개월 동안/);
+  assert.match(key(failed), /^입력한 조건으로 24개월 비용 차이/);
 });
 
 test("내 돈 칸: 종전 보증금이 있으면 「대출 없이 지금 보증금뿐이면」 단추가 그 값을 넣는다", async () => {
@@ -356,8 +359,9 @@ test("언어: 영어로 바꾸면 라벨·답·표·고지가 영어로, 다시 
   await set(page, CASE1);
   await page.click("lang-toggle");
   assert.equal(page.text("mv-heading"), "Renew or move: cost comparison");
-  assert.match(answer(page), /^Under these inputs, moving costs 1,209\.6 \(10k won\) less over 24 months \(cash spent plus after-tax deposit interest forgone\)\./);
-  assert.match(answer(page), / On cash alone, renewing costs 3,360 less\.$/);
+  assert.match(key(page), /^Cost difference over 24 months under these inputs \(cash spent plus after-tax deposit interest forgone\)moving costs 1,209\.6 \(10k won\) less/);
+  assert.match(key(page), / On cash alone, renewing costs 3,360 less\.$/);
+  assert.equal(answer(page), "Deposits you get back and loan principal are not costs. Rates and rent are held fixed for 24 months.");
   assert.match(page.html("mv-table"), /<th scope="col">Renewal \(10k won\)<\/th><th scope="col">Move \(10k won\)<\/th>/);
   assert.match(page.text("mv-legal"), /^This is a calculation/);
   await page.click("lang-toggle");
@@ -438,7 +442,7 @@ test("단지를 안 골랐으면 금액만으로 계산한다고 적고, 단지 
   const none = await open();
   assert.match(none.text("mv-basis-line"), /^기준: 고른 단지 없음 — 넣은 금액만으로 계산했습니다\./);
   await set(none, CASE1);
-  assert.match(answer(none), /^입력한 조건으로 24개월 동안 이사가/);
+  assert.match(key(none), /^입력한 조건으로 24개월 비용 차이[^)]*\)이사가/);
   const failed = await open({ query: Q("헬리오시티", "84.98"), cells: null, status: 500 });
   assert.match(failed.html("check-answer"), /^이 자치구의 단지 자료를 불러오지 못했습니다\. <button type="button" id="check-retry">다시 시도<\/button>$/);
   assert.equal(failed.text("mv-ref-note"), "단지 자료를 불러오지 못했습니다. 금액과 금리를 직접 넣으면 계산합니다.");
@@ -710,7 +714,7 @@ test("현금 기준 비교에도 일회성 비용을 넣고, 「조건을 바꾸
   assert.equal(r.cashGapK, 600 * 24 + 3000, "현금 기준 차이에 일회성 300만원이 빠졌다");
   assert.equal(r.cashCheaper, "renew");
   const d = describe(r, MSG("ko"), KO, "wolse");
-  assert.match(d.text, / 현금 지출만 보면 재계약이 1,740만원 덜 듭니다\.$/);
+  assert.match(d.key, /<p> 현금 지출만 보면 재계약이 1,740만원 덜 듭니다\.<\/p>$/);
   assert.match(d.whatIf, / \(현금 지출 \+ 묶인 내 돈의 세후 예금이자 기준\)\.$/);
   assert.match(describe(compare({ ...input, opportunity: false }), MSG("ko"), KO, "wolse").whatIf, / \(현금 지출 기준\)\.$/);
   const EN = (x) => Number(x).toLocaleString("en-US", { maximumFractionDigits: 1 });
@@ -749,7 +753,7 @@ test("#792-1 요구 보증금: 통계에는 선택, 비용 비교에는 필요 -
   await set(page, { "check-ask": "130000" });
   assert.equal(page.byId("mv-ask").value, "130000", "확인기 칸 값이 ① 칸에 비치지 않았다");
   await set(page, { "mv-dep": "128500", "mv-cash": "126000" });
-  assert.match(answer(page), /^입력한 조건으로 24개월 동안/);
+  assert.match(key(page), /^입력한 조건으로 24개월 비용 차이/);
   await page.click("lang-toggle");
   assert.equal(page.text("mv-s1"), "1. Renewal terms");
   assert.equal(page.text("mv-ask-label"), "Asked deposit (10k won, needed)");
@@ -781,7 +785,7 @@ test("#792-2 빈칸은 넣으라는 안내, 0·음수·숫자가 아닌 값은 �
   assert.deepEqual(events(page, "calculator_unavailable").map((p) => p.unavailable_reason), ["invalid_input"]);
   await set(page, { "mv-ask": "126000" });
   assert.equal(page.text("mv-err-ask"), "");
-  assert.match(answer(page), /^입력한 조건으로 24개월 동안 이사가/);
+  assert.match(key(page), /^입력한 조건으로 24개월 비용 차이[^)]*\)이사가/);
   assert.match(page.text("mv-what-if"), /4개월째부터 이사가 덜/);
   await wait();
   assert.equal(events(page, "calculator_result").filter((p) => p.calculator_type === "renewal_move").length, 1, "고친 뒤 결과를 세지 않았다");
@@ -849,7 +853,7 @@ test("#792-2 빈칸은 칸 옆 오류에 섞지 않고, 숫자가 아닌 글자�
     page.byId(id).validity = { badInput: false };
     await set(page, { [id]: CASE1[id] ?? (id === "mv-rate" ? "4.23" : id === "mv-months" ? "24" : "40000") });
   }
-  assert.match(answer(page), /^입력한 조건으로 24개월 동안/);
+  assert.match(key(page), /^입력한 조건으로 24개월 비용 차이/);
 });
 
 test("#792-3 근거 줄의 금리는 실제 계산에 쓴 값 - 4.234 를 넣으면 bp 로 반올림한 4.23(평균과 같으면 평균으로 적는다)", async () => {
@@ -991,10 +995,10 @@ test("#797-5 금액 읽기: 만원 칸 바로 아래 「= 5억원」·「= 12억
 
 test("#797-4 핵심 숫자: 기간 비용 차이·두 월 현금 지출·일회성·예금이자 포함 여부 - 같으면 덜 든다고 하지 않고, 견줄 수 없거나 오류면 숨기며 이전 값이 남지 않는다", async () => {
   const page = await open();
-  assert.equal(page.byId("mv-key").hidden, true, "입력 전에 핵심 숫자를 보였다");
+  assert.equal(page.html("mv-key"), "", "입력 전에 핵심 숫자를 보였다");
+  assert.equal(page.byId("mv-key").hidden, false, "알림 영역은 숨기지 않고 비운다(#799)");
   await set(page, CASE1);
   const r = compare(input1());
-  assert.equal(page.byId("mv-key").hidden, false);
   assert.equal(page.html("mv-key"), describe(r, MSG("ko"), KO, "wolse").key, "화면 = 문장 모듈");
   assert.match(page.html("mv-key"), /^<p><span>입력한 조건으로 24개월 비용 차이\(현금 지출 \+ 묶인 내 돈의 세후 예금이자 기준\)<\/span><strong>이사가 1,209\.6만원 덜 듭니다<\/strong><\/p><p><span>재계약 월 현금 지출<\/span><strong>0만원<\/strong><span>이사 월 현금 지출<\/span><strong>140만원<\/strong><\/p><p>일회성 비용 넣지 않음\(0으로 계산\) · 묶인 내 돈의 세후 예금이자 포함<\/p><p> 현금 지출만 보면 재계약이 3,360만원 덜 듭니다\.<\/p>$/);
   assert.doesNotMatch(page.html("mv-key"), /보증금|대출/, "핵심 숫자에 보증금·원금을 섞었다");
@@ -1004,11 +1008,11 @@ test("#797-4 핵심 숫자: 기간 비용 차이·두 월 현금 지출·일회�
   assert.match(page.html("mv-key"), /<strong>두 선택지의 비용이 같습니다<\/strong>/);
   assert.doesNotMatch(page.html("mv-key"), /덜 듭니다/, "같은데 덜 든다고 했다");
   await set(page, { "check-ask": "126000", "mv-dep": "80000", "mv-cash": "1000" });
-  assert.equal(page.byId("mv-key").hidden, true, "80% 가정을 넘었는데 핵심 숫자를 보였다");
+  assert.equal(page.html("mv-key"), "", "80% 가정을 넘었는데 핵심 숫자를 보였다");
   await set(page, { "mv-cash": "60000" });
-  assert.equal(page.byId("mv-key").hidden, false);
+  assert.notEqual(page.html("mv-key"), "");
   await set(page, { "mv-ask": "-100" });
-  assert.equal(page.byId("mv-key").hidden, true, "잘못된 입력인데 이전 핵심 숫자가 남았다");
+  assert.equal(page.html("mv-key"), "", "잘못된 입력인데 이전 핵심 숫자가 남았다");
 });
 
 test("#797-3 「선택 조건」 제목 줄은 접어도 지금 가정을 요약하고, 그 안의 칸이 비었거나 잘못되면 펼친다", async () => {
@@ -1019,7 +1023,7 @@ test("#797-3 「선택 조건」 제목 줄은 접어도 지금 가정을 요약
   page.byId("mv-split").checked = true;
   page.byId("mv-split").dispatch("change");
   await page.settle();
-  assert.match(page.text("mv-more-now"), /^ 대출 4\.23% \/ 4\.23% · /);
+  assert.match(page.text("mv-more-now"), /^ 대출 재계약 4\.23% · 이사 4\.23% · 24개월 · /);
   page.byId("mv-more").open = false;
   await set(page, { ...CASE1, "mv-months": "200" });
   assert.equal(page.byId("mv-more").open, true, "선택 조건 칸이 잘못됐는데 접힌 채로 뒀다");
@@ -1031,7 +1035,7 @@ test("#797-3 「선택 조건」 제목 줄은 접어도 지금 가정을 요약
 test("#797-3 위의 두 입구·결과↔조건 이동 링크는 이 장 안 조각으로 가고, 고정 위치 단추를 두지 않는다(키보드가 칸을 가리지 않게)", () => {
   assert.match(HTML, /<nav class="page-jump" id="page-jump"[^>]*>\s*<a href="#check-section"><strong id="jump-check"[^>]*>우리 단지 재계약 시세 확인<\/strong>[\s\S]*<a href="#move"><strong id="jump-move"[^>]*>재계약·이사 비용 비교<\/strong>/);
   assert.ok(HTML.indexOf('id="page-jump"') < HTML.indexOf('<section id="check-section"'), "두 입구가 확인기보다 위에 있어야 한다");
-  for (const [id, href] of [["mv-edit", "#mv-s1"], ["mv-to-more", "#mv-more"], ["mv-to-result", "#mv-s4"]]) assert.match(SECTION, new RegExp(`<a href="${href}" id="${id}"`), id);
+  for (const [id, href] of [["mv-edit", "#mv-s1"], ["mv-to-more", "#mv-more"], ["mv-to-result", "#mv-s4"]]) assert.match(SECTION, new RegExp(`<a [^>]*href="${href}" id="${id}"`), id);
   assert.match(HTML, /<h2 id="check-heading">우리 단지 재계약 시세 확인<\/h2>/);
   assert.match(SECTION, /<h2 id="mv-heading"[^>]*>재계약·이사 비용 비교<\/h2>/);
   for (const css of [CSS_BASE]) assert.doesNotMatch(css.slice(css.indexOf("재계약 장(#797)")), /position:\s*(fixed|sticky)/, "고정 위치 요소를 더했다");
@@ -1069,4 +1073,63 @@ test("#797-6 장 제목(h1)은 홈 카드·질문 링크·nav 와 같은 「재�
   const page = await open();
   await page.click("lang-toggle");
   assert.equal(page.text("page-title"), "Renew or move?");
+});
+
+// ---- #799 결과 바로 아래 조건 수정, 선택지별 금리 요약 ----
+test("#799 P2 결과 카드 바로 아래 「조건 고치기」·「선택 조건」 단추(52px 단추 모양), 그 뒤 짧은 가정 문장 → 접힌 기간별 차이·상세 표 → 근거 줄 → 고지", () => {
+  assert.match(
+    SECTION,
+    /<h3 id="mv-s4"[^>]*>결과<\/h3>\s*<div class="mv-key" id="mv-key" aria-live="polite"><\/div>\s*<p class="mv-jump" id="mv-jump"><a class="c-btn c-btn--secondary" href="#mv-s1" id="mv-edit"[^>]*>조건 고치기 ↑<\/a> <a class="c-btn c-btn--secondary" href="#mv-more" id="mv-to-more"[^>]*>선택 조건 ↓<\/a><\/p>\s*<p class="lead" id="mv-answer"[^>]*><\/p>\s*<details id="mv-table-box"><summary id="mv-table-sum"[^>]*>기간별 차이와 상세 계산 표 — [^<]*<\/summary>\s*<p class="content-notice" id="mv-what-if"><\/p>\s*<div class="table-scroll"><table[^>]*id="mv-table"[\s\S]*?<\/details>\s*<p class="updated" id="mv-basis-line"><\/p>\s*<p class="content-notice" id="mv-legal"/
+  );
+  assert.match(CSS_BASE, /\n#mv-jump \{ display: flex; flex-wrap: wrap; gap: 8px;/);
+  assert.doesNotMatch(CSS_BASE, /\n\.mv-jump \{/, "단추 줄 규칙이 「결과 보기 ↑」 문단(.mv-jump)에도 번진다");
+  assert.match(CSS_BASE, /\.mv-key:empty \{ margin: 0; padding: 0; background: none; \}/);
+  assert.doesNotMatch(SECTION, /id="mv-key"[^>]*hidden/, "알림 영역을 숨기면 첫 결과가 읽히지 않을 수 있다");
+});
+
+test("#799 P2 견줄 수 있으면 답 문장은 카드에 없는 가정(원금은 비용 아님·기간 내내 같음)만, 견줄 수 없거나 입력 중이면 이유 문장 - 단추는 어느 상태에서나 있다", async () => {
+  const page = await open();
+  assert.equal(answer(page), "① 재계약 요구 보증금을 넣으면 견줍니다.");
+  await set(page, { ...CASE1, "mv-months": "36" });
+  assert.equal(answer(page), "돌려받는 보증금과 대출 원금은 비용이 아닙니다. 금리·월세가 36개월 내내 같다고 본 계산입니다.");
+  assert.doesNotMatch(answer(page), /덜 듭니다|월 현금 지출/, "카드와 같은 문장이 답에 남았다");
+  assert.match(key(page), /^입력한 조건으로 36개월 비용 차이/);
+  assert.match(page.text("mv-what-if"), /^기간별: 12개월 /, "기간별 차이를 지웠다(접기만 해야 한다)");
+  for (const [o, want] of [[{ "mv-dep": "" }, /^넣을 칸: 비교할 집 보증금$/], [{ "mv-dep": "-1" }, /^비교할 집 보증금: 0 이상이어야 합니다\.$/], [{ "mv-dep": "80000", "mv-cash": "1000" }, /모자라 견주지 않았습니다/]]) {
+    await set(page, o);
+    assert.match(answer(page), want);
+    assert.equal(key(page), "", "이전 결과 카드가 남았다");
+    assert.equal(page.text("mv-what-if"), "", "이전 기간별 차이가 남았다");
+  }
+  assert.equal(MSG("ko")[16] + MSG("ko")[21] + MSG("en")[16] + MSG("en")[21], "", "쓰지 않는 옛 답 첫 문장 자리");
+});
+
+test("#799 P3 접힌 요약의 금리: 공통은 「대출 4.23%」, 나누면 「대출 재계약 3% · 이사 5%」, 비었거나 0~20% 밖이면 「확인 필요」(영어 같은 뜻), 껐다 켜도 칸 값 보존", async () => {
+  const page = await open();
+  const now = () => page.text("mv-more-now").split(" · 24개월")[0];
+  const split = async (on) => ((page.byId("mv-split").checked = on), page.byId("mv-split").dispatch("change"), await page.settle());
+  assert.equal(now(), " 대출 4.23%");
+  await set(page, { "mv-rate": "" });
+  assert.equal(now(), " 대출 확인 필요", "빈 공통 금리를 적용 금리처럼 보였다");
+  await set(page, { "mv-rate": "25" });
+  assert.equal(now(), " 대출 확인 필요");
+  await set(page, { "mv-rate": "4.23" });
+  await split(true);
+  await set(page, { "mv-rate-renew": "3", "mv-rate-move": "5" });
+  assert.equal(now(), " 대출 재계약 3% · 이사 5%");
+  await set(page, { "mv-rate-move": "" });
+  assert.equal(now(), " 대출 재계약 3% · 이사 확인 필요");
+  await set(page, { "mv-rate-move": "30" });
+  assert.equal(now(), " 대출 재계약 3% · 이사 확인 필요", "범위 밖 금리를 적용 금리처럼 보였다");
+  await set(page, { "mv-rate-move": "0" });
+  assert.equal(now(), " 대출 재계약 3% · 이사 0%", "0% 는 정상 값이다");
+  await set(page, { "mv-rate-move": "5" });
+  await split(false);
+  assert.equal(now(), " 대출 4.23%");
+  await split(true);
+  assert.equal(now(), " 대출 재계약 3% · 이사 5%", "껐다 켜면 두 칸 값이 사라졌다");
+  await page.click("lang-toggle");
+  assert.match(page.text("mv-more-now"), /^ Loan \(Renewal 3% · Move 5%\) · 24 months · /, "영어에서 「Loan Renewal」(대출 갱신)로 읽히지 않게 괄호");
+  await set(page, { "mv-rate-renew": "" });
+  assert.match(page.text("mv-more-now"), /^ Loan \(Renewal check entry · Move 5%\) · /);
 });
