@@ -227,7 +227,7 @@
       en: "Renting",
       items: [
         ["./jeonse-vs-wolse.html", "전세가 쌀까, 월세가 쌀까", "Is jeonse or monthly rent cheaper?"],
-        ["./renewal-vs-new.html", "재계약이 새로 구하는 것보다 싼가", "Is renewing cheaper than moving?"],
+        ["./renewal-vs-new.html", "재계약할까, 이사할까", "Renew or move?"],
       ],
     },
     {

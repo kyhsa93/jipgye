@@ -3,8 +3,6 @@
 // 참고값은 누를 때만 칸에 넣고, 단지 기준(같은 단지·같은 평형 신규 전세 중간값)과 자치구 참고(conversion.json 칸)를 섞지 않는다.
 (() => {
   const $ = (id) => document.getElementById(id);
-  const LAG = 4; // = scripts/check-data-progress.ts MONTHLY_LAG.jeonse_loan_rate + 1 (시험이 대조): 이보다 오래된 금리는 알린다
-  const mon = (y, m) => y * 12 + +m;
   let x; // 마지막으로 그린 문맥
   window.renewalMoveBasis = (ctx) => {
     x = ctx;
@@ -12,26 +10,9 @@
     // 잘못된 값은 그 칸 묶음 바로 아래에(#792). 빈칸은 오류가 아니다 - 답 자리가 남은 칸을 적는다.
     const G = { renew: "ask", deposit: "dep", rent: "dep", cash: "cash", loanRate: "loan", months: "loan", renewRate: "loan", moveRate: "loan", depositRate: "opp", oneRenew: "once", oneMove: "once" };
     for (const g of ["ask", "dep", "cash", "loan", "once", "opp"]) $("mv-err-" + g).textContent = (d?.err || []).filter(([k]) => G[k] == g).map((e) => e[1]).join(" ");
-    // 금리의 출처는 칸 값으로 정한다 - 평균금리와 같으면 참고값, 아니면 직접 넣은 값(고쳤다가 평균값으로 되돌려도 맞게, #792).
-    // 입력 쪽 금리 줄과 결과 아래 근거 줄이 같은 판단을 쓴다. 기회비용을 끄면 예금 금리는 계산에 쓰지 않는다고 적는다.
-    const lr = v("mv-rate");
-    const dr = v("mv-drate");
-    // 계산은 금리를 bp(0.01%p)로 반올림해 쓴다(move-cost.js) - 출처 판정과 근거 줄도 그 값으로(4.234 를 넣으면 4.23 으로 계산·표시).
-    const bp = (x) => Math.round(x * 100) / 100;
-    const isRef = (x) => c && x !== "" && bp(x) == c.loan.rate; // 대출 금리 칸 하나가 평균과 같은가
-    const [rr, rm] = [v("mv-rate-renew"), v("mv-rate-move")];
-    const refL = split ? isRef(rr) && isRef(rm) : isRef(lr);
-    const src = (x) => (isRef(x) ? f(85, ym(c.loan.month)) : M[86]); // 칸 하나의 출처 이름
-    // 선택지별 금리: 칸마다 출처를 적고, 평균으로 둔 칸이 있으면 「개인이 새로 받는 금리가 아니다」를 남긴다(po·legal #792 5).
-    const refD = c && dr !== "" && bp(dr) == c.deposit.rate;
-    let note = st.err ? M[44] : "";
-    if (c) {
-      note = (split ? f(92, src(rr), src(rm)) + (isRef(rr) || isRef(rm) ? M[93] : "") : refL ? f(39, ym(c.loan.month)) : M[40]) + (opp ? (refD ? f(41, ym(c.deposit.month)) : M[42]) : M[88]);
-      const at = new Date(Date.parse(c.updatedAt) + 324e5).toISOString();
-      const seen = [c.loan.month, c.deposit.month].sort()[0];
-      if (mon(at.slice(0, 4), at.slice(5, 7)) - mon(seen.slice(0, 4), seen.slice(4)) > LAG) note += f(43, ym(seen));
-    }
-    $("mv-rate-note").textContent = note;
+    // 금리 줄·「계산에 쓴 금리」 문장은 move-text.js 의 rates() 가 만든다(순수, 같은 판단 한 벌).
+    const R = jipgyeMoveCost.rates({ M, f, ym, c, st, opp, split, ok: r?.ok, lr: v("mv-rate"), dr: v("mv-drate"), rr: v("mv-rate-renew"), rm: v("mv-rate-move") });
+    $("mv-rate-note").textContent = R.note;
     // 확인기가 넘기는 것: 자치구 이름·단지·칸 이름·그 칸 줄·칸 파일(f: 받는 중 undefined, 없음 null, 받기 실패 0)·다시 받기. 금액은 없다.
     const rc = window.renewalCheck || {};
     const { row, f: file } = rc;
@@ -69,9 +50,7 @@
     $("mv-basis-line").textContent = (!row ? (rc.file == "failed" ? M[56] : M[59]) : rc.band ? f(58, rc.gu, bn) : f(57, rc.gu, rc.apt, rc.area)) +
       (row && rc.window ? " " + f(60, ym(rc.window[0]), ym(rc.window[1]), fmt(sum(row.slice(0, 10)))) + (row.length > 11 ? f(61, fmt(row[10])) : "") + (lo < rc.min?.ratio ? f(62, fmt(lo)) : "") : "") +
       (v("mv-dep") && st.src == "d" && cd ? f(70, rc.gu, bn, fmt(cd.pairs)) : v("mv-dep") && st.src == "c" && med ? f(71, fmt(row[10])) : "") +
-      // 계산에 쓴 금리와 그 출처(결과가 있을 때만). 직접 넣은 금리가 있으면 한국은행 평균은 따로 「참고」로 적는다.
-      (r?.ok ? (split ? f(91, bp(rr), src(rr), bp(rm), src(rm)) : f(82, bp(lr), src(lr))) + (opp ? f(83, bp(dr), refD ? f(85, ym(c.deposit.month)) : M[86]) : M[84]) +
-        (c && (!refL || (opp && !refD)) ? f(87, c.loan.rate, ym(c.loan.month), c.deposit.rate, ym(c.deposit.month)) : "") : "") + M[67];
+      R.used + M[67];
   };
   const pick = (src) => ((x.st.src = src), (x.st.key = x.key), x.start(), x.render());
   $("mv-ref-a").addEventListener("click", () => (($("mv-dep").value = x.st.ref.med), pick("c")));
@@ -84,5 +63,22 @@
   });
   // 계측(#777 P4): 근거 상자를 처음 펼칠 때 한 번. 정해진 낱말만 보낸다.
   $("mv-basis").addEventListener("toggle", () => $("mv-basis").open && !x?.st.e && ((x.st.e = 1), window.analytics?.event?.("evidence_open", { calculator_type: "renewal_move" })));
+  // 계측(#777 P4, audit/ga4-setup.md). 보내는 값은 정해진 낱말뿐이고 금액·금리·단지명은 서명(메모리)에만 둔다.
+  const WAIT = 800; // = analytics.js SEARCH_DEBOUNCE_MS(시험이 대조): 같은 입력이 이만큼 머물러야 한 번으로 센다
+  window.renewalMoveMeasure = (r, sig) => {
+    const st = x.st;
+    clearTimeout(st.ut);
+    clearTimeout(st.rt);
+    const rc = window.renewalCheck || {};
+    const ok = r?.ok && r.comparable;
+    const scope = !rc.row ? "inputs_only" : /^b:/.test(rc.area) ? "district_band" : "matched_complex";
+    // 결과가 아니면 null 대신 마지막으로 센 서명을 넘긴다 - null 은 analytics.js 의 「마지막 서명」을 지워, 칸을 비웠다 같은 값을 다시 넣으면 또 센다.
+    window.analytics?.result?.("renewal_move", ok ? sig + scope : st.ls ?? null, ok && { result_scope: scope, result_outcome: r.cheaper ?? "even", result_round: st.n ? "repeat" : "first" });
+    if (ok) st.rt = setTimeout(() => ((st.n = 1), (st.ls = sig + scope)), WAIT);
+    // 비교 불가: 잘못된 입력·80% 가정 초과. 칸이 비어 있는 것(입력 중)은 세지 않고, 같은 사유는 장 하나에 한 번.
+    const why = r && (r.ok ? !r.comparable && "cash_short" : r.errors.some((e) => e.code == "range") && "invalid_input");
+    if (why && !st.u?.[why]) st.ut = setTimeout(() => (((st.u ||= {})[why] = 1), window.analytics?.event?.("calculator_unavailable", { calculator_type: "renewal_move", unavailable_reason: why })), WAIT);
+  };
+
   window.renewalMove?.();
 })();

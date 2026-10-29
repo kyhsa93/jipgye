@@ -1,4 +1,4 @@
-// 재계약 vs 이사 비교 절(#777). 장 전용 외부 JS, gzip ≤2KB(#681) - 문구는 #mv-answer 의 data-msg(ko)·data-msg-en, "|" 로 나눈 94개.
+// 재계약 vs 이사 비교 절(#777). 장 전용 외부 JS, gzip ≤2KB(#681) - 문구는 #mv-answer 의 data-msg(ko)·data-msg-en, "|" 로 나눈 107개.
 // 계산은 move-cost.js 한 벌. 재계약 보증금은 위 확인기 칸(#check-old·#check-ask)을 그대로 읽는다. 입력은 URL에 싣지 않는다.
 (() => {
   const $ = (id) => document.getElementById(id);
@@ -12,23 +12,9 @@
   const v = (id) => ($(id).validity?.badInput ? "?" : String($(id).value ?? "").trim());
   const ym = (m) => `${m.slice(0, 4)}-${m.slice(4)}`;
   const bad = (id) => $(id).validity?.badInput;
-  // 계측(#777 P4, audit/ga4-setup.md). 보내는 값은 정해진 낱말뿐이고 금액·금리·단지명은 서명(메모리)에만 둔다.
-  const WAIT = 800; // = analytics.js SEARCH_DEBOUNCE_MS(시험이 대조): 같은 입력이 이만큼 머물러야 한 번으로 센다
+  // 비교 시작(#777 P4): 비교 절의 첫 조작에 한 번. 나머지 계측(결과·비교 불가)은 renewal-move-basis.js 의 window.renewalMoveMeasure.
   const A = () => window.analytics;
   const start = () => st.s || ((st.s = 1), A()?.event?.("compare_start", { calculator_type: "renewal_move" }));
-  function measure(r, sig) {
-    clearTimeout(st.ut);
-    clearTimeout(st.rt);
-    const rc = window.renewalCheck || {};
-    const ok = r?.ok && r.comparable;
-    const scope = !rc.row ? "inputs_only" : /^b:/.test(rc.area) ? "district_band" : "matched_complex";
-    // 결과가 아니면 null 대신 마지막으로 센 서명을 넘긴다 - null 은 analytics.js 의 「마지막 서명」을 지워, 칸을 비웠다 같은 값을 다시 넣으면 또 센다.
-    A()?.result?.("renewal_move", ok ? sig + scope : st.ls ?? null, ok && { result_scope: scope, result_outcome: r.cheaper ?? "even", result_round: st.n ? "repeat" : "first" });
-    if (ok) st.rt = setTimeout(() => ((st.n = 1), (st.ls = sig + scope)), WAIT);
-    // 비교 불가: 잘못된 입력·80% 가정 초과. 칸이 비어 있는 것(입력 중)은 세지 않고, 같은 사유는 장 하나에 한 번.
-    const why = r && (r.ok ? !r.comparable && "cash_short" : r.errors.some((e) => e.code == "range") && "invalid_input");
-    if (why && !st.u?.[why]) st.ut = setTimeout(() => (((st.u ||= {})[why] = 1), A()?.event?.("calculator_unavailable", { calculator_type: "renewal_move", unavailable_reason: why })), WAIT);
-  }
 
   function render() {
     const M = $("mv-answer").getAttribute(en() ? "data-msg-en" : "data-msg").split("|");
@@ -60,8 +46,22 @@
     const d = r && C.describe(r, M, fmt, kind);
     // 칸 옆 안내(잘못된 값·금리 줄)·참고값 단추·근거 줄은 renewal-move-basis.js 가 같은 문맥으로 그린다 - 계산 결과(r·d)도 넘긴다.
     window.renewalMoveBasis?.({ M, f, fmt, ym, v, kind, c, st, render, start, opp, r, d, split });
-    if (!r) return out(M[2]), measure(null), ($("mv-what-if").textContent = "");
-    measure(r, JSON.stringify([ask, kind, v("mv-dep"), v("mv-rent"), v("mv-cash"), v("mv-rate"), v("mv-drate"), v("mv-months"), opp, v("mv-once-renew"), v("mv-once-move"), split, v("mv-rate-renew"), v("mv-rate-move")]));
+    // 금액 읽기(#797 5): 만원 칸 바로 아래 「= 12억 6,000만원」(영어는 원 단위). 1억 미만·빈 값·잘못된 값은 비운다 - 오해할 숫자를 만들지 않는다.
+    const won = (x) => (x >= 1e4 && x % 1 == 0 ? f(103, en() ? (x * 1e4).toLocaleString("en-US") : x % 1e4 ? f(105, (x / 1e4) | 0, fmt(x % 1e4)) : f(104, x / 1e4)) : "");
+    for (const id of ["check-old", "check-ask", "mv-ask", "mv-dep", "mv-cash", "mv-once-move", "mv-once-renew"]) $(id + "-won").textContent = won(+v(id));
+    // 금리를 나눴는지에 맞는 근거 문구 하나만(#797 2).
+    $("mv-why-c").hidden = split;
+    $("mv-why-c2").hidden = !split;
+    // 「선택 조건」을 접어도 제목 줄에 지금 가정을 요약한다. 그 안의 칸이 비었거나 잘못되면 펼친다(#797 3).
+    const once = +v("mv-once-move") || +v("mv-once-renew");
+    $("mv-more-now").textContent = f(106, split ? `${v("mv-rate-renew") || "-"}% / ${v("mv-rate-move") || "-"}%` : `${v("mv-rate") || "-"}%`, v("mv-months") || "-", once ? f(99, fmt(+v("mv-once-renew") || 0), fmt(+v("mv-once-move") || 0)) : M[100], M[opp ? 101 : 102]);
+    if (r && !r.ok && r.errors.some((e) => /Rate|months|one/.test(e.field))) $("mv-more").open = true;
+    // 핵심 숫자(#797 4): 기간 비용 차이와 두 선택지의 월 현금 지출을 먼저. 견줄 수 없으면 숨기고, 같으면 어느 쪽도 덜 든다고 하지 않는다.
+    const key = r?.ok && r.comparable;
+    $("mv-key").hidden = !key;
+    if (key) $("mv-key").innerHTML = d.key;
+    if (!r) return out(M[2]), window.renewalMoveMeasure?.(null), ($("mv-what-if").textContent = "");
+    window.renewalMoveMeasure?.(r, JSON.stringify([ask, kind, v("mv-dep"), v("mv-rent"), v("mv-cash"), v("mv-rate"), v("mv-drate"), v("mv-months"), opp, v("mv-once-renew"), v("mv-once-move"), split, v("mv-rate-renew"), v("mv-rate-move")]));
     $("mv-what-if").textContent = d.whatIf || "";
     out(d.text, d.html);
   }
@@ -80,6 +80,8 @@
   // 켤 때 두 칸이 비어 있으면 지금 금리를 옮겨 넣는다. 끌 때는 두 칸 값을 지우지 않는다(다시 켤 때 그대로).
   $("mv-split").addEventListener("change", () => $("mv-split").checked && ["mv-rate-renew", "mv-rate-move"].forEach((id) => v(id) || ($(id).value = v("mv-rate"))));
   ["mv-kind", "mv-opp", "mv-split", "lang-toggle"].forEach((id) => $(id).addEventListener(id == "lang-toggle" ? "click" : "change", () => (id != "lang-toggle" && start(), render())));
+  // 「선택 조건 ↓」은 접힌 상자로 옮겨 가기만 하면 다시 눌러 열어야 한다(#797) - 옮겨 가며 연다.
+  $("mv-to-more").addEventListener("click", () => ($("mv-more").open = true));
   $("mv-cash-fill").addEventListener("click", () => (($("mv-cash").value = Math.round(+v("check-old"))), start(), render()));
   render();
 })();
