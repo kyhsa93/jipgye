@@ -1,13 +1,14 @@
 {
-  "lastRunAt": "2026-10-28T22:51:17.291Z",
-  "lastProgressAt": "2026-10-28T22:51:17.291Z",
+  "lastRunAt": "2026-10-29T19:41:42.533Z",
+  "lastProgressAt": "2026-10-29T19:41:42.533Z",
   "zeroProgressRuns": 0,
-  "doneParcels": 2765,
+  "doneParcels": 2766,
   "targetParcels": 6764,
-  "lastFinishedNow": 339,
-  "lastCalls": 8995,
-  "lastStopReason": "호출 예산 소진(이 지번을 끝낼 예산이 모자라 다음 실행으로)",
+  "lastFinishedNow": 1,
+  "lastCalls": 77,
+  "lastStopReason": "연속 호출 실패 5회",
   "lastErrCodes": {
-    "TypeError/UND_ERR_CONNECT_TIMEOUT": 5
+    "HTTP 503": 6,
+    "결과코드 ?": 9
   }
 }
