@@ -49,5 +49,30 @@
     return (be + f(77) + [12, 24, 36, 48].map((t) => line(t)).join(" · ") + ` (${basis}).`).trim();
   }
 
-  Object.assign(globalThis.jipgyeMoveCost, { describe });
+  // 금리의 출처(#792): 칸 값이 평균금리와 같으면 참고값(「한국은행 평균」), 아니면 직접 넣은 값 - 고쳤다 되돌려도 맞게. 계산과 같이 bp(0.01%p)로
+  // 반올림한 값으로 판정·표시한다. 입력 쪽 금리 줄(note)과 결과 아래 「계산에 쓴 금리」(used, 결과가 있을 때만)가 같은 판단을 쓴다.
+  // 기회비용을 끄면 예금 금리는 계산에 쓰지 않는다고 적고, 선택지별 금리면 칸마다 출처와 평균으로 둔 칸의 경고를 적는다.
+  const LAG = 4; // = scripts/check-data-progress.ts MONTHLY_LAG.jeonse_loan_rate + 1 (시험이 대조): 이보다 오래된 금리는 알린다
+  const mon = (y, m) => y * 12 + +m;
+  function rates({ M, f, ym, c, st, opp, split, ok, lr, dr, rr, rm }) {
+    const bp = (x) => Math.round(x * 100) / 100;
+    const isRef = (x) => c && x !== "" && bp(x) == c.loan.rate;
+    const refL = split ? isRef(rr) && isRef(rm) : isRef(lr);
+    const src = (x) => (isRef(x) ? f(85, ym(c.loan.month)) : M[86]);
+    const refD = c && dr !== "" && bp(dr) == c.deposit.rate;
+    let note = st.err ? M[44] : "";
+    if (c) {
+      note = (split ? f(92, src(rr), src(rm)) + (isRef(rr) || isRef(rm) ? M[93] : "") : refL ? f(39, ym(c.loan.month)) : M[40]) + (opp ? (refD ? f(41, ym(c.deposit.month)) : M[42]) : M[88]);
+      const at = new Date(Date.parse(c.updatedAt) + 324e5).toISOString();
+      const seen = [c.loan.month, c.deposit.month].sort()[0];
+      if (mon(at.slice(0, 4), at.slice(5, 7)) - mon(seen.slice(0, 4), seen.slice(4)) > LAG) note += f(43, ym(seen));
+    }
+    const used = ok
+      ? (split ? f(91, bp(rr), src(rr), bp(rm), src(rm)) : f(82, bp(lr), src(lr))) + (opp ? f(83, bp(dr), refD ? f(85, ym(c.deposit.month)) : M[86]) : M[84]) +
+        (c && (!refL || (opp && !refD)) ? f(87, c.loan.rate, ym(c.loan.month), c.deposit.rate, ym(c.deposit.month)) : "")
+      : "";
+    return { note, used };
+  }
+
+  Object.assign(globalThis.jipgyeMoveCost, { describe, rates });
 })();

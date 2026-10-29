@@ -110,7 +110,7 @@ const input1 = (extra = {}) => ({ renew: 126000, kind: "wolse", deposit: 40000, 
 test("가정은 원래 모듈과 같다: 대출 80% = LOAN_LTV, 세율 = TAX_RATE, 오래된 금리 = MONTHLY_LAG.jeonse_loan_rate + 1", () => {
   assert.equal(LTV, LOAN_LTV);
   assert.equal(TAX, TAX_RATE);
-  assert.equal(Number(BASIS.match(/const LAG = (\d+);/)?.[1]), MONTHLY_LAG.jeonse_loan_rate + 1);
+  assert.equal(Number(TEXT.match(/const LAG = (\d+);/)?.[1]), MONTHLY_LAG.jeonse_loan_rate + 1);
 });
 
 test("계산: 기회비용을 켜고 끄면 순위가 뒤집힌다(사례 ①) - 원금·돌려받는 보증금은 비용이 아니다", () => {
@@ -496,7 +496,7 @@ const wait = (ms = 900) => new Promise((r) => setTimeout(r, ms)); // 화면·ana
 const events = (page, name) => JSON.parse(JSON.stringify((page.sandbox.dataLayer ?? []).map((a) => Array.from(a)))).filter(([k, n]) => k === "event" && n === name).map(([, , p]) => p);
 
 test("계측: 화면의 안정 대기 = analytics.js SEARCH_DEBOUNCE_MS", () => {
-  assert.equal(Number(JS.match(/const WAIT = (\d+);/)?.[1]), Number(ANALYTICS.match(/const SEARCH_DEBOUNCE_MS = (\d+);/)?.[1]));
+  assert.equal(Number(BASIS.match(/const WAIT = (\d+);/)?.[1]), Number(ANALYTICS.match(/const SEARCH_DEBOUNCE_MS = (\d+);/)?.[1]));
 });
 
 test("계측: 비교 시작은 비교 절의 첫 조작에 한 번 - 장을 여는 것·확인기 입력·언어 전환은 시작이 아니다", async () => {

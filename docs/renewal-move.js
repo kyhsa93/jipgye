@@ -12,23 +12,9 @@
   const v = (id) => ($(id).validity?.badInput ? "?" : String($(id).value ?? "").trim());
   const ym = (m) => `${m.slice(0, 4)}-${m.slice(4)}`;
   const bad = (id) => $(id).validity?.badInput;
-  // 계측(#777 P4, audit/ga4-setup.md). 보내는 값은 정해진 낱말뿐이고 금액·금리·단지명은 서명(메모리)에만 둔다.
-  const WAIT = 800; // = analytics.js SEARCH_DEBOUNCE_MS(시험이 대조): 같은 입력이 이만큼 머물러야 한 번으로 센다
+  // 비교 시작(#777 P4): 비교 절의 첫 조작에 한 번. 나머지 계측(결과·비교 불가)은 renewal-move-basis.js 의 measure().
   const A = () => window.analytics;
   const start = () => st.s || ((st.s = 1), A()?.event?.("compare_start", { calculator_type: "renewal_move" }));
-  function measure(r, sig) {
-    clearTimeout(st.ut);
-    clearTimeout(st.rt);
-    const rc = window.renewalCheck || {};
-    const ok = r?.ok && r.comparable;
-    const scope = !rc.row ? "inputs_only" : /^b:/.test(rc.area) ? "district_band" : "matched_complex";
-    // 결과가 아니면 null 대신 마지막으로 센 서명을 넘긴다 - null 은 analytics.js 의 「마지막 서명」을 지워, 칸을 비웠다 같은 값을 다시 넣으면 또 센다.
-    A()?.result?.("renewal_move", ok ? sig + scope : st.ls ?? null, ok && { result_scope: scope, result_outcome: r.cheaper ?? "even", result_round: st.n ? "repeat" : "first" });
-    if (ok) st.rt = setTimeout(() => ((st.n = 1), (st.ls = sig + scope)), WAIT);
-    // 비교 불가: 잘못된 입력·80% 가정 초과. 칸이 비어 있는 것(입력 중)은 세지 않고, 같은 사유는 장 하나에 한 번.
-    const why = r && (r.ok ? !r.comparable && "cash_short" : r.errors.some((e) => e.code == "range") && "invalid_input");
-    if (why && !st.u?.[why]) st.ut = setTimeout(() => (((st.u ||= {})[why] = 1), A()?.event?.("calculator_unavailable", { calculator_type: "renewal_move", unavailable_reason: why })), WAIT);
-  }
 
   function render() {
     const M = $("mv-answer").getAttribute(en() ? "data-msg-en" : "data-msg").split("|");
@@ -60,8 +46,8 @@
     const d = r && C.describe(r, M, fmt, kind);
     // 칸 옆 안내(잘못된 값·금리 줄)·참고값 단추·근거 줄은 renewal-move-basis.js 가 같은 문맥으로 그린다 - 계산 결과(r·d)도 넘긴다.
     window.renewalMoveBasis?.({ M, f, fmt, ym, v, kind, c, st, render, start, opp, r, d, split });
-    if (!r) return out(M[2]), measure(null), ($("mv-what-if").textContent = "");
-    measure(r, JSON.stringify([ask, kind, v("mv-dep"), v("mv-rent"), v("mv-cash"), v("mv-rate"), v("mv-drate"), v("mv-months"), opp, v("mv-once-renew"), v("mv-once-move"), split, v("mv-rate-renew"), v("mv-rate-move")]));
+    if (!r) return out(M[2]), window.renewalMoveMeasure?.(null), ($("mv-what-if").textContent = "");
+    window.renewalMoveMeasure?.(r, JSON.stringify([ask, kind, v("mv-dep"), v("mv-rent"), v("mv-cash"), v("mv-rate"), v("mv-drate"), v("mv-months"), opp, v("mv-once-renew"), v("mv-once-move"), split, v("mv-rate-renew"), v("mv-rate-move")]));
     $("mv-what-if").textContent = d.whatIf || "";
     out(d.text, d.html);
   }

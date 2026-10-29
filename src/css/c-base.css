@@ -345,6 +345,11 @@ html:lang(en) .calc-explainer [lang="ko"], html:not(:lang(en)) .calc-explainer [
   .verdict, .option, #check-answer:not(:empty) { padding: 20px; }
   #calc-controls, #check-controls, #check-optional { padding: 16px; }
   .data-table td { padding: 12px; }
+  /* 좁은 화면(#797): 확인기·비교 절의 칸은 라벨 위, 입력 아래로 쌓고 입력은 폭을 채운다 - 라벨과 칸이 한 줄이면
+   * 긴 라벨(「재계약 요구 보증금(만원, 필요)」·일회성 비용)이 320px 에서 칸을 화면 밖으로 밀었다(349px). 체크 칸(.toggle)은 그대로 한 줄. */
+  #check-section .search-field, #move .search-field:not(.toggle) { flex: 1 1 100%; flex-direction: column; align-items: stretch; gap: 6px; }
+  #check-section .search-field label, #move .search-field:not(.toggle) label { white-space: normal; }
+  #check-section .search-field :is(input, select), #move .search-field:not(.toggle) :is(input, select) { width: 100%; max-width: none; }
 }
 
 /* Consistent interface icons; accessible button names remain in the HTML. */
