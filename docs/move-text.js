@@ -1,7 +1,7 @@
 // 재계약 vs 이사 비교 결과의 문장·표 줄(#777, #792 에서 move-cost.js 의 계산과 나눔 — 이 장 여섯째 장 전용 JS, group-ceo 판정 A).
 // 순수 함수만 둔다. move-cost.js 뒤에 읽혀 jipgyeMoveCost 에 describe 를 붙인다 - 화면과 시험이 같은 한 벌을 부른다.
 (() => {
-  // 문구 M 은 장의 #mv-answer data-msg(ko)·data-msg-en 을 "|" 로 나눈 107개. 칸 이름은 4~10, 범위 사유는 12~15 -
+  // 문구 M 은 장의 #mv-answer data-msg(ko)·data-msg-en 을 "|" 로 나눈 109개. 칸 이름은 4~10, 범위 사유는 12~15 -
   // 월세 집 보증금·내 돈은 0 이상(13), 금리는 0~20%(14), 기간은 1~120개월(15), 나머지는 0 초과(12).
   const NAME = { renew: 4, deposit: 5, rent: 6, cash: 7, loanRate: 8, depositRate: 9, months: 10, oneRenew: 80, oneMove: 81, renewRate: 89, moveRate: 90 };
   const WHY = { renew: 12, deposit: 12, rent: 12, cash: 13, loanRate: 14, depositRate: 14, months: 15, oneRenew: 13, oneMove: 13, renewRate: 14, moveRate: 14 };
@@ -21,10 +21,12 @@
     const basis = M[r.opportunity ? 19 : 20];
     const who = (x) => M[x == "renew" ? 17 : 18];
     const sides = [r.renew, r.move];
-    // 「현금 지출만 보면」: 예금이자를 넣어 순위가 바뀔 때만. 답 문장과 핵심 숫자가 같이 쓴다(#797 - 월 현금 지출이 같은데 한쪽이 덜 든다고만 보이지 않게).
+    // 「현금 지출만 보면」: 예금이자를 넣어 순위가 바뀔 때만 핵심 숫자 카드에 붙인다(#797 - 월 현금 지출이 같은데 한쪽이 덜 든다고만 보이지 않게).
     const cash = r.opportunity && r.cashCheaper != r.cheaper ? (r.cashCheaper ? f(23, who(r.cashCheaper), k(Math.abs(r.cashGapK))) : M[24]) : "";
+    // 견줄 수 있으면 답 문장은 카드에 없는 가정만(원금은 비용이 아님·기간 내내 같다고 봄) - 차이·월 현금 지출·기준은 카드가 말한다(#799).
+    // 문구 16·21(예전 답 첫 문장)은 번호를 밀지 않으려 빈 자리로 둔다.
     const text = r.comparable
-      ? (r.gapK ? f(16, N, who(r.cheaper), k(Math.abs(r.gapK)), basis) : f(21, N, basis)) + f(22, k(r.renew.cashK), k(r.move.cashK), N) + cash
+      ? f(22, N)
       : sides.map((s, i) => (s.feasible ? "" : f(25, M[26 + i], fmt(s.short)))).filter(Boolean).join(" ");
     const once = r.renew.oneK || r.move.oneK;
     const lines = [[28, (s) => fmt(s.deposit)], [29, (s) => fmt(s.own)], [30, (s) => fmt(s.loan)], [31, (s) => k(s.interestK)], [32, (s) => k(s.rentK)], [33, (s) => k(s.cashK)], [34, (s) => k(s.cashTotalK)], [76, (s) => k(s.oneK)], [35, (s) => k(s.oppK * N)], [36, (s) => k(s.totalK)]];
