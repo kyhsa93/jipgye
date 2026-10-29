@@ -6685,5 +6685,134 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-10-29",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: 흑석동 재개발 사업이 규제를 넘어서 23층 규모의 숲세권 아파트 개발로 이어졌다. 현대건설은 반포124 단지 견본주택에 ‘디에이치 하우스’를 선보이며 분양에 나섰다. 경남도는 재개발·재건축 조합원 피해를 예방하기 위해 전문관리업체를 조사 중이다. 전국 아파트 직거래 위법 적발 10건 중 6건은 서울에서 발생했다. 그 중 강남3구에 집중된 위법 의심 주택 직거래는 전체의 40%를 차지했다.\n- 증시·환율: 중국 증시는 오늘 상하이지수가 0.13% 하락하며 출발했다. 코스피는 삼성전자의 세부실적 발표로 인해 2%대 하락세를 보이고 있다. 환율이 1% 상승하면 7개월 뒤 암소 도축률이 0.3% 증가하는 것으로 나타났다. 대신증권은 30일에 국내 증시 대응전략 온라인 세미나를 진행한다. 일본 증시는 AI와 반도체주 강세로 닛케이가 0.27% 상승하며 출발했다.\n- 기타 경제 소식: 경기경제청이 중국 상하이에서 첨단산업 투자유치 활동을 벌이고 있다. 중국이 발표한 경제성장률에 대해 신뢰성 논란이 일고 있다. 경기경제청은 해외 시장에서 기술 중심의 투자 기회를 모색하고 있다. 중국의 성장률 발표에 대해 의문을 제기하는 목소리가 나오고 있다. 두 소식은 서로 다른 주제로, 별개의 상황을 반영하고 있다.\n- 금리·예금·투자상품: 엔화는 일본은행의 정책금리 발표 전 지분조정으로 1달러=157엔대 후반에서 출발했다. 일본은행은 오늘 금융정책결정회의를 시작했으며, 내일 금리 동결이 예상된다. 일본은행의 결정은 외환시장에 영향을 미칠 것으로 보인다. 엔화 가치는 발표 전후로 변동성이 커질 수 있다. 현재 환율 수치는 1달러=157엔대 후반에서 시작했다.",
+      "en": "- Real Estate: The Heukseok-dong redevelopment project exceeded regulations and led to the development of a 23-story forest zone apartment complex. Hyundai Engineering & Construction introduced the \"DHC House\" at the Bannpo 124 site model house and began sales. Gyeongnam Province is investigating specialized management companies to prevent damage to redevelopment and reconstruction housing cooperative members. Out of 10 illegal cases of direct apartment transactions nationwide, 6 occurred in Seoul. Of these, illegal direct housing transactions suspected in the three southern districts of Gangnam accounted for 40% of the total.\n- Stocks & FX: China's stock market opened with the Shanghai index down 0.13%. The KOSPI is falling by more than 2% due to Samsung Electronics' detailed earnings announcement. It was found that a 1% increase in the exchange rate leads to a 0.3% increase in beef cattle slaughter rate after seven months. Daeshin Securities will hold an online seminar on domestic stock market response strategies on the 30th. Japan's stock market opened with the Nikkei up 0.27% due to strong performance in AI and semiconductor stocks.\n- Other Economic News: Gyeonggi Economic Development Agency is conducting activities to attract investments in advanced industries in Shanghai, China. There is controversy over the credibility of China's announced economic growth rate. Gyeonggi Economic Development Agency is seeking investment opportunities centered on technology in overseas markets. There are voices raising doubts about China's growth rate announcement. The two pieces of news are on different topics and reflect separate situations.\n- Rates, Deposits & Investment Products: The yen started from the latter part of the 157 yen per dollar range due to share adjustments before the Bank of Japan's policy interest rate announcement. The Bank of Japan has started today's monetary policy decision meeting, and a rate freeze is expected tomorrow. The Bank of Japan's decision is expected to affect the foreign exchange market. The yen's value may become more volatile before and after the announcement. The current exchange rate started from the latter part of the 157 yen per dollar range."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "흑석동 재개발 사업이 규제를 넘어서 23층 규모의 숲세권 아파트 개발로 이어졌다. 현대건설은 반포124 단지 견본주택에 ‘디에이치 하우스’를 선보이며 분양에 나섰다. 경남도는 재개발·재건축 조합원 피해를 예방하기 위해 전문관리업체를 조사 중이다. 전국 아파트 직거래 위법 적발 10건 중 6건은 서울에서 발생했다. 그 중 강남3구에 집중된 위법 의심 주택 직거래는 전체의 40%를 차지했다.",
+        "lineEn": "The Heukseok-dong redevelopment project exceeded regulations and led to the development of a 23-story forest zone apartment complex. Hyundai Engineering & Construction introduced the \"DHC House\" at the Bannpo 124 site model house and began sales. Gyeongnam Province is investigating specialized management companies to prevent damage to redevelopment and reconstruction housing cooperative members. Out of 10 illegal cases of direct apartment transactions nationwide, 6 occurred in Seoul. Of these, illegal direct housing transactions suspected in the three southern districts of Gangnam accounted for 40% of the total.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "높이 규제 막혔던 흑석동 재개발…23층 숲세권 아파트길 열려",
+            "link": "https://www.mk.co.kr/news/realestate/12189683",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "현대건설, ‘분양 최대어’ 반포124 견본주택에 ‘디에이치 하우스’ 선보여",
+            "link": "https://www.mk.co.kr/news/realestate/12189677",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "경남도, 재개발·재건축 조합원 피해 예방…전문관리업체 조사",
+            "link": "https://www.yna.co.kr/view/AKR20261029087400052",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "편법 증여 등 위법 의심 주택 직거래 40%는 강남3구",
+            "link": "https://www.yna.co.kr/view/AKR20261029054500003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "전국 아파트 직거래 위법 적발 10건 中 6건이 서울… 강남 3구만 40%",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/29/GHHKTX5LMVDV7MQTW5GPL2K5CM/",
+            "source": "조선비즈 부동산"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "중국 증시는 오늘 상하이지수가 0.13% 하락하며 출발했다. 코스피는 삼성전자의 세부실적 발표로 인해 2%대 하락세를 보이고 있다. 환율이 1% 상승하면 7개월 뒤 암소 도축률이 0.3% 증가하는 것으로 나타났다. 대신증권은 30일에 국내 증시 대응전략 온라인 세미나를 진행한다. 일본 증시는 AI와 반도체주 강세로 닛케이가 0.27% 상승하며 출발했다.",
+        "lineEn": "China's stock market opened with the Shanghai index down 0.13%. The KOSPI is falling by more than 2% due to Samsung Electronics' detailed earnings announcement. It was found that a 1% increase in the exchange rate leads to a 0.3% increase in beef cattle slaughter rate after seven months. Daeshin Securities will hold an online seminar on domestic stock market response strategies on the 30th. Japan's stock market opened with the Nikkei up 0.27% due to strong performance in AI and semiconductor stocks.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.13%↓",
+            "link": "https://www.newsis.com/view/NISX20261029_0003846279",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "코스피, '세부실적' 삼성전자 급락에 하락전환…2%대 하락세",
+            "link": "https://www.yna.co.kr/view/AKR20261029091100008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "환율 1% 오르면 7개월 뒤 암소 도축률 0.3%↑…한우 수급도 흔든다",
+            "link": "https://www.newsis.com/view/NISX20261029_0003845589",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[게시판] 대신증권, 30일 국내 증시 대응전략 온라인 세미나",
+            "link": "https://www.yna.co.kr/view/AKR20261029061900008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "日증시, AI·반도체주 강세에 상승 출발…닛케이 0.27%↑",
+            "link": "https://www.newsis.com/view/NISX20261029_0003845827",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "경기경제청이 중국 상하이에서 첨단산업 투자유치 활동을 벌이고 있다. 중국이 발표한 경제성장률에 대해 신뢰성 논란이 일고 있다. 경기경제청은 해외 시장에서 기술 중심의 투자 기회를 모색하고 있다. 중국의 성장률 발표에 대해 의문을 제기하는 목소리가 나오고 있다. 두 소식은 서로 다른 주제로, 별개의 상황을 반영하고 있다.",
+        "lineEn": "Gyeonggi Economic Development Agency is conducting activities to attract investments in advanced industries in Shanghai, China. There is controversy over the credibility of China's announced economic growth rate. Gyeonggi Economic Development Agency is seeking investment opportunities centered on technology in overseas markets. There are voices raising doubts about China's growth rate announcement. The two pieces of news are on different topics and reflect separate situations.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "경기경제청, 중국 상하이서 첨단산업 투자유치 나서",
+            "link": "https://www.yna.co.kr/view/AKR20261029057500061",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "中 발표 믿을 수가 있어야지…경제성장률 뻥튀기 논란",
+            "link": "https://www.hankyung.com/article/202610292470i",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "엔화는 일본은행의 정책금리 발표 전 지분조정으로 1달러=157엔대 후반에서 출발했다. 일본은행은 오늘 금융정책결정회의를 시작했으며, 내일 금리 동결이 예상된다. 일본은행의 결정은 외환시장에 영향을 미칠 것으로 보인다. 엔화 가치는 발표 전후로 변동성이 커질 수 있다. 현재 환율 수치는 1달러=157엔대 후반에서 시작했다.",
+        "lineEn": "The yen started from the latter part of the 157 yen per dollar range due to share adjustments before the Bank of Japan's policy interest rate announcement. The Bank of Japan has started today's monetary policy decision meeting, and a rate freeze is expected tomorrow. The Bank of Japan's decision is expected to affect the foreign exchange market. The yen's value may become more volatile before and after the announcement. The current exchange rate started from the latter part of the 157 yen per dollar range.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "엔화, 日 정책금리 발표 전 지분조정에 1달러=157엔대 후반 출발",
+            "link": "https://www.newsis.com/view/NISX20261029_0003846057",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "일본은행, 오늘부터 금융정책결정회의…내일 금리 동결할 듯",
+            "link": "https://www.newsis.com/view/NISX20261029_0003845825",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]

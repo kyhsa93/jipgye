@@ -15514,7 +15514,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "서울 동작구 흑석동에 재개발을 통해 23층 높이 숲세권 아파트가 들어선다. 서울시는 동작구 흑석동 204-104번지 일대(면적 4만8693㎡) 주택정비형 재개발사업의 신속통합기획 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-dongjak.html",
+            "label": "동작구 아파트 84㎡ 매매",
+            "labelEn": "동작구 apartment 84㎡ sale",
+            "value": "16억 5,927만원",
+            "valueEn": "₩1,659M",
+            "note": "최근 1주 계약 79건 · 10/22 대비 +4.9%",
+            "noteEn": "79 deals in the last 1 weeks · +4.9% vs Oct 22"
+          }
+        ],
+        "titleEn": "Blackseokdong redevelopment, previously blocked by height regulations, opens 23-story forest zone apartment road"
       },
       {
         "title": "현대건설, ‘분양 최대어’ 반포124 견본주택에 ‘디에이치 하우스’ 선보여",
@@ -15523,7 +15536,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "현대건설이 다음달 일반분양 예정인 ‘디에이치 반포124’ 견본주택에 브랜드 체험 공간을 마련한다. 현대건설은 하이엔드 브랜드 ‘디에이치(THE H)’가 추구하는 주거 철학과 라이프..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Hyundai Engineering & Construction unveils 'DHC House' at Banpo 124 model home, the largest sales project"
       },
       {
         "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.13%↓",
@@ -15532,7 +15546,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 29일 하락 출발했다. 이날 상하이종합지수는 전날보다 0.13% 하락한 3676.77로 장을 시작했다. 선전성분지수는 전장 대비 0.82% 내린 1만1379로, 중국판 나…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] China's stock market drops at the start... Shanghai index down 0.13%"
       },
       {
         "title": "코스피, '세부실적' 삼성전자 급락에 하락전환…2%대 하락세",
@@ -15541,7 +15556,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유향 기자 = 코스피가 29일 삼성전자[005930]의 세부 3분기 실적 발표 후 장중 하락세로 접어들었다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KOSPI turns down as Samsung Electronics plunges on 'detailed results'; drops over 2%"
       },
       {
         "title": "경남도, 재개발·재건축 조합원 피해 예방…전문관리업체 조사",
@@ -15550,7 +15566,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(창원=연합뉴스) 김선경 기자 = 경남도는 재개발·재건축 등 정비사업 조합원 피해를 예방하기 위해 11월 30일까지 등록 정비사업 전문관리업체 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Gyeongnam Province to Prevent Damage to Redevelopment and Reconstruction Cooperative Members by Surveying Professional Management Companies"
       },
       {
         "title": "편법 증여 등 위법 의심 주택 직거래 40%는 강남3구",
@@ -15559,7 +15576,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(세종=연합뉴스) 오진송 기자 = 편법 증여 등 위법 거래가 의심되는 주택 직거래 10건 중 4건이 서울 강남 3구(강남·서초·송파)에 집중된 ...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 84㎡ 매매",
+            "labelEn": "서초구 apartment 84㎡ sale",
+            "value": "25억 5,420만원",
+            "valueEn": "₩2,554M",
+            "note": "최근 1주 계약 114건 · 10/22 대비 -2.9%",
+            "noteEn": "114 deals in the last 1 weeks · -2.9% vs Oct 22"
+          }
+        ],
+        "titleEn": "Suspected Illegal Real Estate Transactions, Including Improper Gifts, 40% in Gangnam 3 Districts"
       },
       {
         "title": "전국 아파트 직거래 위법 적발 10건 中 6건이 서울… 강남 3구만 40%",
@@ -15568,7 +15598,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "정부가 주택 시장의 공정성을 해치는 불법 거래 행위에 대해 전방위적인 단속을 펼친 결과 600건이 넘는 위법 의심 건수를 잡아냈다. 특히 서울 주요 도심과 강남권 일대를 중심으로 한 주택 시장에서 편법 증여와 대출금…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 5,988만원",
+            "valueEn": "₩2,860M",
+            "note": "최근 1주 계약 122건 · 10/22 대비 -0.9%",
+            "noteEn": "122 deals in the last 1 weeks · -0.9% vs Oct 22"
+          }
+        ],
+        "titleEn": "Nationwide illegal direct apartment transactions caught in 10 cases, 6 in Seoul... Gangnam 3 districts account for 40%"
       },
       {
         "title": "법인 돈으로 집 사고, 가족 돈 빌리고…주택 이상거래 678건 적발",
@@ -15577,7 +15620,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 변해정 기자 = 전국 주택 직거래와 서울·경기 아파트 거래 가운데 678건의 위법 의심거래가 적발됐다. 국토교통부는 29일 이같은 내용의 전국 주택 직거래 및 서울·경기 아파트 거래 기획조사 실시 결…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 1,547만원",
+            "valueEn": "₩1,315M",
+            "note": "최근 1주 계약 618건 · 10/22 대비 +0.8%",
+            "noteEn": "618 deals in the last 1 weeks · +0.8% vs Oct 22"
+          }
+        ],
+        "titleEn": "Corporation funds used to buy homes, family borrows money... 678 cases of irregular real estate transactions detected"
       },
       {
         "title": "환율 1% 오르면 7개월 뒤 암소 도축률 0.3%↑…한우 수급도 흔든다",
@@ -15586,7 +15642,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[세종=뉴시스]임소현 기자 = 원·달러 환율이 1% 상승하면 7개월 뒤 한우 암소 도축률이 약 0.3% 높아진다는 연구 결과가 나왔다. 환율 상승이 수입 사료 원료 등의 가격을 끌어올려 농가의 번식·사육 의향을 낮추…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Exchange rate rises 1% lead to 0.3% increase in beef cattle slaughter rate after 7 months... also disrupts Hanwoo supply"
       },
       {
         "title": "경기경제청, 중국 상하이서 첨단산업 투자유치 나서",
@@ -15595,7 +15652,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(수원=연합뉴스) 최종호 기자 = 경기경제자유구역청은 중국 상하이에 투자유치 실무단을 파견해 첨단제조·로봇·청정에너지 분야 유망기업을 대상으로 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Gyeonggi Economic Affairs Agency to Pursue Advanced Industry Investment in Shanghai, China"
       },
       {
         "title": "강북도 6억 넘었다…서울 아파트 평균 전셋값 사상 최고",
@@ -15604,7 +15662,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "서울 아파트 전셋값 39개월 연속 상승 올해 들어 9.5% 올라 7.3억원 역대 최고 강북 14개구 평균 전셋값 6억281만원 “실거주 집주인 늘면 전세물량 더 감소할 것”서울 강..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangbuk.html",
+            "label": "강북구 아파트 84㎡ 전세",
+            "labelEn": "강북구 apartment 84㎡ jeonse",
+            "value": "6억 4,922만원",
+            "valueEn": "₩649M",
+            "note": "최근 1주 계약 41건 · 10/22 대비 +8.2%",
+            "noteEn": "41 deals in the last 1 weeks · +8.2% vs Oct 22"
+          }
+        ],
+        "titleEn": "Gangbuk's 600,000,000 Exceeded... Seoul Apartment Average Deposit Price Hits All-Time High"
       },
       {
         "title": "엔화, 日 정책금리 발표 전 지분조정에 1달러=157엔대 후반 출발",
@@ -15613,7 +15684,8 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스]이재준 기자 = 엔화 환율은 29일 일본은행의 정책금리 발표를 하루 앞두고 포지션 조정 목적의 엔 매수, 달러 매도가 선행하면서 1달러=157엔대 후반으로 시작했다. 도쿄 외환시장에서 엔화 환율은 이날…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Yen starts at 157 yen to the dollar in the latter half of the range ahead of Japan's policy rate announcement and share adjustment"
       },
       {
         "title": "고양시, 노후주택 유지·보수 지원해 시민 주거환경 개선",
@@ -15622,7 +15694,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(고양=연합뉴스) 노승혁 기자 = 경기 고양시는 노후 주택 유지관리, 안전시설 설치, 에너지 효율 개선 등을 위한 리모델링을 지원하는 '2026...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Goyang City improves residents' housing environment by supporting maintenance of aging housing units"
       },
       {
         "title": "[게시판] 대신증권, 30일 국내 증시 대응전략 온라인 세미나",
@@ -15631,7 +15704,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "▲ 대신증권[003540]은 30일 오후 4시 유튜브 채널 '대신TV'에서 가을학기 릴레이 세미나 4회차를 연다. 이경민 FICC리서치부장이 '...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Board] Daesin Securities to Hold Online Seminar on Domestic Market Response Strategy for 30 Days"
       },
       {
         "title": "日증시, AI·반도체주 강세에 상승 출발…닛케이 0.27%↑",
@@ -15640,7 +15714,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 신효령 기자 = 29일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)가 상승 출발했다. 미국 증시 상승과 일본 반도체 검사장비 업체 어드반테스트의 실적 전망 상향이 투자심리를 끌어올렸다. 니혼게이…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Tokyo Stock Exchange Rises on AI, Semiconductor Stocks… Nikkei Up 0.27%"
       },
       {
         "title": "현대건설, 디에이치 반포124 견본주택에 '디에이치 하우스' 조성",
@@ -15649,7 +15724,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 서미숙 기자 = 현대건설은 다음달 일반분양에 들어가는 서울 서초구 '디에이치 반포124'의 견본주택에 자사의 하이엔드 브랜드 ...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 84㎡ 매매",
+            "labelEn": "서초구 apartment 84㎡ sale",
+            "value": "25억 5,420만원",
+            "valueEn": "₩2,554M",
+            "note": "최근 1주 계약 114건 · 10/22 대비 -2.9%",
+            "noteEn": "114 deals in the last 1 weeks · -2.9% vs Oct 22"
+          }
+        ],
+        "titleEn": "Hyundai Engineering & Construction to build 'DCH House' at DCH Banpo 124 Model House"
       },
       {
         "title": "부산 3분기 제조업 생산 소폭 증가 추정…부동산 거래 감소",
@@ -15658,7 +15746,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(부산=연합뉴스) 오수희 기자 = 부산 3분기 제조업 생산실적이 2분기 실적과 비교해 소폭 증가할 것이란 분석이 나왔다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Busan Estimated to See Slight Increase in Manufacturing Production in Third Quarter...Real Estate Transactions Decline"
       },
       {
         "title": "일본은행, 오늘부터 금융정책결정회의…내일 금리 동결할 듯",
@@ -15667,7 +15756,8 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스] 신효령 기자 = 일본 중앙은행인 일본은행(BOJ)이 30일 금융정책결정회의에서 기준금리를 동결할 전망이다. 지난달 금리를 연 1.25%로 올린 만큼 현재의 통화정책을 유지할 가능성이 큰 것으로 관측된…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Bank of Japan holds monetary policy meeting today... likely to maintain interest rates tomorrow"
       },
       {
         "title": "中 발표 믿을 수가 있어야지…경제성장률 뻥튀기 논란",
@@ -15676,7 +15766,8 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "China's economic growth rate controversy: inflation of figures is not credible..."
       },
       {
         "title": "서울 국평 집값 전년比 2.5%↓…전셋값은 나홀로 뜀박질",
@@ -15685,7 +15776,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-jeonse.html",
+            "label": "서울 전체 아파트 84㎡ 전세",
+            "labelEn": "Seoul apartment 84㎡ jeonse",
+            "value": "8억 1,210만원",
+            "valueEn": "₩812M",
+            "note": "최근 1주 계약 644건 · 10/22 대비 -0.4%",
+            "noteEn": "644 deals in the last 1 weeks · -0.4% vs Oct 22"
+          }
+        ],
+        "titleEn": "Seoul apartment prices down 2.5% year-on-year... rental prices jump alone"
       },
       {
         "title": "은평구 백련산힐스테이트2차 84.59㎡ 10억 6800만원… 최근 3년 신고가 [MAI부동산]",
@@ -15694,7 +15798,30 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 28일 국토부 실거래가 시스템에 신규 등록된 서울 은평구 응암동 백련산힐스테이트2차 전용 84.59㎡가 10억 6,800만 원에 거래되며 최근 3년..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-eunpyeong.html",
+            "label": "은평구 아파트 84㎡ 매매",
+            "labelEn": "은평구 apartment 84㎡ sale",
+            "value": "9억 7,981만원",
+            "valueEn": "₩980M",
+            "note": "최근 1주 계약 176건 · 10/22 대비 +1.9%",
+            "noteEn": "176 deals in the last 1 weeks · +1.9% vs Oct 22"
+          },
+          {
+            "kind": "record-high",
+            "href": "./record-high.html#breakdown-section",
+            "label": "은평구 아파트 신고가 다음 거래",
+            "labelEn": "Eunpyeong-gu apartments: next sale after a record high",
+            "value": "그 값 이상 40.2%",
+            "valueEn": "40.2% matched or beat it",
+            "note": "신고가 595건 중 · 아무 거래 뒤는 60.1% · 관련 숫자 →",
+            "noteEn": "of 595 record highs · 60.1% after any sale · Related numbers →"
+          }
+        ],
+        "titleEn": "Eunpyeong-gu Baekryeonsan Hillsate 2nd 84.59㎡ 1,068,000,000 won... new high price in 3 years [MAI Real Estate]"
       },
       {
         "title": "강동구 둔촌동 신성둔촌미소지움2차 59.88㎡ 14억 2850만원… 최근 3년 신고가 [MAI부동산]",
@@ -15703,7 +15830,30 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 28일 국토부 실거래가 시스템에 신규 등록된 서울 강동구 둔촌동 신성둔촌미소지움2차 전용 59.88㎡ 거래가 14억 2,850만 원으로 해당 단지·..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangdong.html",
+            "label": "강동구 아파트 84㎡ 매매",
+            "labelEn": "강동구 apartment 84㎡ sale",
+            "value": "14억 8,368만원",
+            "valueEn": "₩1,484M",
+            "note": "최근 1주 계약 150건 · 10/22 대비 +0.7%",
+            "noteEn": "150 deals in the last 1 weeks · +0.7% vs Oct 22"
+          },
+          {
+            "kind": "record-high",
+            "href": "./record-high.html#breakdown-section",
+            "label": "강동구 아파트 신고가 다음 거래",
+            "labelEn": "Gangdong-gu apartments: next sale after a record high",
+            "value": "그 값 이상 46.8%",
+            "valueEn": "46.8% matched or beat it",
+            "note": "신고가 1,083건 중 · 아무 거래 뒤는 62% · 관련 숫자 →",
+            "noteEn": "of 1,083 record highs · 62% after any sale · Related numbers →"
+          }
+        ],
+        "titleEn": "Gangdong-gu Dunchon-dong Shinseong Dunchon Misogim 2nd 59.88㎡ 1,428,500,000 won... Recent 3-year high price [MAI Real Estate]"
       },
       {
         "title": "송파구 상아2차아파트 60㎡ 17억 3500만원… 최근 3년 신고가 [MAI부동산]",
@@ -15712,7 +15862,30 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 28일 국토부 실거래가 시스템에 신규 등록된 서울 송파구 오금동 상아2차아파트 전용 60㎡가 17억 3500만원에 거래되며 최근 3년 신고가를 기록..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-songpa.html",
+            "label": "송파구 아파트 84㎡ 매매",
+            "labelEn": "송파구 apartment 84㎡ sale",
+            "value": "21억 7,127만원",
+            "valueEn": "₩2,171M",
+            "note": "최근 1주 계약 336건 · 10/22 대비 +1.1%",
+            "noteEn": "336 deals in the last 1 weeks · +1.1% vs Oct 22"
+          },
+          {
+            "kind": "record-high",
+            "href": "./record-high.html#breakdown-section",
+            "label": "송파구 아파트 신고가 다음 거래",
+            "labelEn": "Songpa-gu apartments: next sale after a record high",
+            "value": "그 값 이상 50.7%",
+            "valueEn": "50.7% matched or beat it",
+            "note": "신고가 1,229건 중 · 아무 거래 뒤는 62% · 관련 숫자 →",
+            "noteEn": "of 1,229 record highs · 62% after any sale · Related numbers →"
+          }
+        ],
+        "titleEn": "Songpa-gu Sangha 2cha Apartment 60㎡ 1,735,000,000 won... New High Price in 3 Years [MAI Real Estate]"
       },
       {
         "title": "강남구 수서동 강남데시앙포레 59.97㎡ 22억 8700만원… 최근 3년 신고가 [MAI부동산]",
@@ -15721,7 +15894,30 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 10월 28일 국토부 실거래가 시스템에 신규 등록된 서울 강남구 수서동 강남데시앙포레 전용 59.97㎡가 22억 8700만원에 거래됐다. 이번 거래는 20..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 5,988만원",
+            "valueEn": "₩2,860M",
+            "note": "최근 1주 계약 122건 · 10/22 대비 -0.9%",
+            "noteEn": "122 deals in the last 1 weeks · -0.9% vs Oct 22"
+          },
+          {
+            "kind": "record-high",
+            "href": "./record-high.html#breakdown-section",
+            "label": "강남구 아파트 신고가 다음 거래",
+            "labelEn": "Gangnam-gu apartments: next sale after a record high",
+            "value": "그 값 이상 49.1%",
+            "valueEn": "49.1% matched or beat it",
+            "note": "신고가 515건 중 · 아무 거래 뒤는 57.8% · 관련 숫자 →",
+            "noteEn": "of 515 record highs · 57.8% after any sale · Related numbers →"
+          }
+        ],
+        "titleEn": "Gangnam-gu Suseo-dong Gangnam Desiangeul Fore 59.97㎡ 2,287,000,000 won... Recent 3-year new high [MAI Real Estate]"
       }
     ]
   }
