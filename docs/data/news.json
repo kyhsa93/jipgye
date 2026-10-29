@@ -1,392 +1,394 @@
 {
-  "updatedAt": "2026-10-28T02:07:44.886Z",
-  "date": "2026-10-28",
+  "updatedAt": "2026-10-29T02:21:21.598Z",
+  "date": "2026-10-29",
   "items": [
     {
-      "title": "[속보] 코스피, 장중 6,000선 회복…10거래일만에 탈환",
-      "link": "https://www.yna.co.kr/view/AKR20261028083000008",
-      "publishedAt": "2026-10-28T01:58:01.000Z",
-      "source": "연합뉴스 경제",
-      "category": "stocks",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "[Breaking News] Kospi recovers to 6,000 level during trading hours... regains lost ground within 10 trading days"
-    },
-    {
-      "title": "태안 귀농·귀촌인 공공임대주택 20채 12월 착공…내년 말 입주",
-      "link": "https://www.yna.co.kr/view/AKR20261028082000063",
-      "publishedAt": "2026-10-28T01:54:30.000Z",
-      "source": "연합뉴스 경제",
+      "title": "높이 규제 막혔던 흑석동 재개발…23층 숲세권 아파트길 열려",
+      "link": "https://www.mk.co.kr/news/realestate/12189683",
+      "publishedAt": "2026-10-29T02:20:31.000Z",
+      "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": "(태안=연합뉴스) 정윤덕 기자 = 충남 태안군은 귀농·귀촌인과 청년가구 등을 위한 공공임대주택 20채를 12월 착공한다고 28일 밝혔다.",
+      "preview": "서울 동작구 흑석동에 재개발을 통해 23층 높이 숲세권 아파트가 들어선다. 서울시는 동작구 흑석동 204-104번지 일대(면적 4만8693㎡) 주택정비형 재개발사업의 신속통합기획 ..",
       "dupes": [],
-      "titleEn": "Taean Public Rental Housing for Returnees to Rural Areas to Start Construction in December with 20 Units, Completion by End of Next Year"
-    },
-    {
-      "title": "37년 된 평창동 금강하이츠빌라 재건축 추진",
-      "link": "https://www.yna.co.kr/view/AKR20261028081500004",
-      "publishedAt": "2026-10-28T01:53:40.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(서울=연합뉴스) 정준영 기자 = 서울 종로구(구청장 유찬종)는 지은지 37년 된 평창동 금강하이츠빌라 재건축사업의 정비계획 결정과 구역 지정을...",
-      "dupes": [],
-      "titleEn": "Push for reconstruction of 37-year-old Pyeongchang-dong Geumgang Haeytse Villas",
       "context": [
         {
           "kind": "realestate",
-          "href": "./district-jongno.html",
-          "label": "종로구 아파트 84㎡ 매매",
-          "labelEn": "종로구 apartment 84㎡ sale",
-          "value": "13억 8,458만원",
-          "valueEn": "₩1,385M",
-          "note": "최근 1주 계약 32건 · 10/21 대비 +10.0%",
-          "noteEn": "32 deals in the last 1 weeks · +10.0% vs Oct 21"
+          "href": "./district-dongjak.html",
+          "label": "동작구 아파트 84㎡ 매매",
+          "labelEn": "동작구 apartment 84㎡ sale",
+          "value": "16억 5,927만원",
+          "valueEn": "₩1,659M",
+          "note": "최근 1주 계약 79건 · 10/22 대비 +4.9%",
+          "noteEn": "79 deals in the last 1 weeks · +4.9% vs Oct 22"
         }
       ]
     },
     {
-      "title": "지방 10곳 중 7곳, 21개월간 아파트 분양 '500가구 미만'",
-      "link": "https://www.hankyung.com/article/202610289975i",
-      "publishedAt": "2026-10-28T01:45:27.000Z",
-      "source": "한국경제 부동산",
+      "title": "현대건설, ‘분양 최대어’ 반포124 견본주택에 ‘디에이치 하우스’ 선보여",
+      "link": "https://www.mk.co.kr/news/realestate/12189677",
+      "publishedAt": "2026-10-29T02:17:45.000Z",
+      "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "7 out of 10 local areas had apartment sales of less than 500 units over 21 months"
+      "preview": "현대건설이 다음달 일반분양 예정인 ‘디에이치 반포124’ 견본주택에 브랜드 체험 공간을 마련한다. 현대건설은 하이엔드 브랜드 ‘디에이치(THE H)’가 추구하는 주거 철학과 라이프..",
+      "dupes": []
     },
     {
-      "title": "주택도시보증공사-강원랜드, 감사 업무협약… AI·빅데이터 활용 내부통제 강화",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/28/733MGB363VAJXK3FL3HAQ3775M/",
-      "publishedAt": "2026-10-28T01:38:36.000Z",
+      "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.13%↓",
+      "link": "https://www.newsis.com/view/NISX20261029_0003846279",
+      "publishedAt": "2026-10-29T02:14:03.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 29일 하락 출발했다. 이날 상하이종합지수는 전날보다 0.13% 하락한 3676.77로 장을 시작했다. 선전성분지수는 전장 대비 0.82% 내린 1만1379로, 중국판 나…",
+      "dupes": []
+    },
+    {
+      "title": "코스피, '세부실적' 삼성전자 급락에 하락전환…2%대 하락세",
+      "link": "https://www.yna.co.kr/view/AKR20261029091100008",
+      "publishedAt": "2026-10-29T02:08:24.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": "(서울=연합뉴스) 김유향 기자 = 코스피가 29일 삼성전자[005930]의 세부 3분기 실적 발표 후 장중 하락세로 접어들었다.",
+      "dupes": []
+    },
+    {
+      "title": "경남도, 재개발·재건축 조합원 피해 예방…전문관리업체 조사",
+      "link": "https://www.yna.co.kr/view/AKR20261029087400052",
+      "publishedAt": "2026-10-29T02:02:30.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(창원=연합뉴스) 김선경 기자 = 경남도는 재개발·재건축 등 정비사업 조합원 피해를 예방하기 위해 11월 30일까지 등록 정비사업 전문관리업체 ...",
+      "dupes": []
+    },
+    {
+      "title": "편법 증여 등 위법 의심 주택 직거래 40%는 강남3구",
+      "link": "https://www.yna.co.kr/view/AKR20261029054500003",
+      "publishedAt": "2026-10-29T02:00:02.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(세종=연합뉴스) 오진송 기자 = 편법 증여 등 위법 거래가 의심되는 주택 직거래 10건 중 4건이 서울 강남 3구(강남·서초·송파)에 집중된 ...",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-seocho.html",
+          "label": "서초구 아파트 84㎡ 매매",
+          "labelEn": "서초구 apartment 84㎡ sale",
+          "value": "25억 5,420만원",
+          "valueEn": "₩2,554M",
+          "note": "최근 1주 계약 114건 · 10/22 대비 -2.9%",
+          "noteEn": "114 deals in the last 1 weeks · -2.9% vs Oct 22"
+        }
+      ]
+    },
+    {
+      "title": "전국 아파트 직거래 위법 적발 10건 中 6건이 서울… 강남 3구만 40%",
+      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/29/GHHKTX5LMVDV7MQTW5GPL2K5CM/",
+      "publishedAt": "2026-10-29T02:00:00.000Z",
       "source": "조선비즈 부동산",
       "category": "realestate",
-      "preview": "주택도시보증공사(이하 HUG)는 강원랜드와 지난 27일 ‘AI 감사 역량 제고 및 내부통제 강화를 위한 업무협약’을 체결했다고 28일 밝혔다. 업무협약은 양 기관의 협력을 통해 AI 중심으로 변화하는 미래 감사 환경…",
+      "preview": "정부가 주택 시장의 공정성을 해치는 불법 거래 행위에 대해 전방위적인 단속을 펼친 결과 600건이 넘는 위법 의심 건수를 잡아냈다. 특히 서울 주요 도심과 강남권 일대를 중심으로 한 주택 시장에서 편법 증여와 대출금…",
       "dupes": [],
-      "titleEn": "Housing & Urban Development Corporation and Gangwonland Sign Audit Cooperation Agreement to Strengthen Internal Controls Using AI and Big Data"
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-gangnam.html",
+          "label": "강남구 아파트 84㎡ 매매",
+          "labelEn": "강남구 apartment 84㎡ sale",
+          "value": "28억 5,988만원",
+          "valueEn": "₩2,860M",
+          "note": "최근 1주 계약 122건 · 10/22 대비 -0.9%",
+          "noteEn": "122 deals in the last 1 weeks · -0.9% vs Oct 22"
+        }
+      ]
     },
     {
-      "title": "LH, 경기 구리갈매역세권 신혼희망타운 행복주택 609호 공급",
-      "link": "https://www.newsis.com/view/NISX20261028_0003844360",
-      "publishedAt": "2026-10-28T01:34:40.000Z",
+      "title": "법인 돈으로 집 사고, 가족 돈 빌리고…주택 이상거래 678건 적발",
+      "link": "https://www.newsis.com/view/NISX20261028_0003844858",
+      "publishedAt": "2026-10-29T02:00:00.000Z",
       "source": "뉴시스 경제",
       "category": "realestate",
-      "preview": "[의정부=뉴시스] 홍찬선 기자 = 경기 구리갈매역세권에 신혼부부와 한부모가족 등을 위한 행복주택 609호가 공급된다. 한국토지주택공사(LH) 경기북부지역본부는 내달 10일부터 구리갈매역세권 공공주택지구 A-1블록 신…",
+      "preview": "[서울=뉴시스] 변해정 기자 = 전국 주택 직거래와 서울·경기 아파트 거래 가운데 678건의 위법 의심거래가 적발됐다. 국토교통부는 29일 이같은 내용의 전국 주택 직거래 및 서울·경기 아파트 거래 기획조사 실시 결…",
       "dupes": [],
-      "titleEn": "LH to supply 609 units of Happy Housing at Gyeonggi Guri Galmae Station Area New Bride Hope Town"
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./apartment-sale.html",
+          "label": "서울 전체 아파트 84㎡ 매매",
+          "labelEn": "Seoul apartment 84㎡ sale",
+          "value": "13억 1,547만원",
+          "valueEn": "₩1,315M",
+          "note": "최근 1주 계약 618건 · 10/22 대비 +0.8%",
+          "noteEn": "618 deals in the last 1 weeks · +0.8% vs Oct 22"
+        }
+      ]
     },
     {
-      "title": "대출 희망 1천500명 정보 넘겨 220억대 불법대출 중개 일당 검거",
-      "link": "https://www.yna.co.kr/view/AKR20261028053600062",
-      "publishedAt": "2026-10-28T01:18:29.000Z",
+      "title": "환율 1% 오르면 7개월 뒤 암소 도축률 0.3%↑…한우 수급도 흔든다",
+      "link": "https://www.newsis.com/view/NISX20261029_0003845589",
+      "publishedAt": "2026-10-29T01:45:13.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "[세종=뉴시스]임소현 기자 = 원·달러 환율이 1% 상승하면 7개월 뒤 한우 암소 도축률이 약 0.3% 높아진다는 연구 결과가 나왔다. 환율 상승이 수입 사료 원료 등의 가격을 끌어올려 농가의 번식·사육 의향을 낮추…",
+      "dupes": []
+    },
+    {
+      "title": "경기경제청, 중국 상하이서 첨단산업 투자유치 나서",
+      "link": "https://www.yna.co.kr/view/AKR20261029057500061",
+      "publishedAt": "2026-10-29T01:22:28.000Z",
       "source": "연합뉴스 경제",
       "category": "other",
-      "preview": "(강릉=연합뉴스) 류호준 기자 = 정식 등록된 대부 중개업체를 운영하면서 대출 희망자 1천500여명의 개인정보를 불법 사금융업자들에게 넘기고 2...",
-      "dupes": [],
-      "titleEn": "1,500 loan applicants' information leaked, 22,000,000,000-won illegal loan brokerage gang arrested"
+      "preview": "(수원=연합뉴스) 최종호 기자 = 경기경제자유구역청은 중국 상하이에 투자유치 실무단을 파견해 첨단제조·로봇·청정에너지 분야 유망기업을 대상으로 ...",
+      "dupes": []
     },
     {
-      "title": "수원 옛 부촌 우만현대, 재건축 추진 14년 만에 철거",
-      "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/10/28/USEEI4MJKRAKXLFQAQTB63YCJ4/",
-      "publishedAt": "2026-10-28T01:16:15.000Z",
-      "source": "조선비즈 부동산",
+      "title": "강북도 6억 넘었다…서울 아파트 평균 전셋값 사상 최고",
+      "link": "https://www.mk.co.kr/news/economy/12189591",
+      "publishedAt": "2026-10-29T01:20:41.000Z",
+      "source": "매일경제 부동산",
       "category": "realestate",
-      "preview": "한때 경기 수원을 대표하는 부촌으로 꼽혔던 우만동 현대아파트가 준공 41년 만에 철거에 들어갔다. 2012년 재건축을 추진한 지 14년 만이다. 사업이 늦어지는 사이 공사비는 두 배 수준인 4700억원으로 불었다.…",
+      "preview": "서울 아파트 전셋값 39개월 연속 상승 올해 들어 9.5% 올라 7.3억원 역대 최고 강북 14개구 평균 전셋값 6억281만원 “실거주 집주인 늘면 전세물량 더 감소할 것”서울 강..",
       "dupes": [],
-      "titleEn": "Suwon's old affluent neighborhood Uman Hyundai to be demolished after 14 years of reconstruction efforts"
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-gangbuk.html",
+          "label": "강북구 아파트 84㎡ 전세",
+          "labelEn": "강북구 apartment 84㎡ jeonse",
+          "value": "6억 4,922만원",
+          "valueEn": "₩649M",
+          "note": "최근 1주 계약 41건 · 10/22 대비 +8.2%",
+          "noteEn": "41 deals in the last 1 weeks · +8.2% vs Oct 22"
+        }
+      ]
     },
     {
-      "title": "코스피 장중 4%대 급등…이틀 연속 매수 사이드카 발동",
-      "link": "https://www.yna.co.kr/view/AKR20261028064600008",
-      "publishedAt": "2026-10-28T01:02:54.000Z",
-      "source": "연합뉴스 경제",
-      "category": "stocks",
-      "preview": "(서울=연합뉴스) 곽윤아 기자 = 28일 코스피 지수가 반도체주 투자심리 회복에 4%대 급등세를 보이자 유가증권시장에 프로그램매수호가 일시효력정...",
-      "dupes": [],
-      "titleEn": "Kospi surges over 4% during trading... buy-side card activated for two consecutive days"
-    },
-    {
-      "title": "과학기술·경제정책 첫 공동 논의…7대 SEED·AI 전환 범정부 협력",
-      "link": "https://www.newsis.com/view/NISX20261028_0003844177",
-      "publishedAt": "2026-10-28T01:00:00.000Z",
+      "title": "엔화, 日 정책금리 발표 전 지분조정에 1달러=157엔대 후반 출발",
+      "link": "https://www.newsis.com/view/NISX20261029_0003846057",
+      "publishedAt": "2026-10-29T01:08:14.000Z",
       "source": "뉴시스 경제",
-      "category": "other",
-      "preview": "[서울=뉴시스]심지혜 기자 = 정부가 미래 성장동력 확보를 위해 과학기술과 경제·산업 정책의 협력을 강화한다. 7대 SEED 프로젝트를 중심으로 핵심기술 개발부터 실증·산업화까지 부처별 사업과 투자를 연계하고 해양수…",
-      "dupes": [],
-      "titleEn": "First joint discussion on science and technology and economic policy... 7 major SEED and AI transition government-wide cooperation"
-    },
-    {
-      "title": "LH, 갈매역세권 신혼부부 임대주택 609가구 공급",
-      "link": "https://www.yna.co.kr/view/AKR20261028061100060",
-      "publishedAt": "2026-10-28T00:59:10.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(의정부=연합뉴스) 김도윤 기자 = 한국토지주택공사(LH) 경기북부지역본부는 다음 달 10∼12일 구리 갈매역세권 공공주택지구 내 A-1 블록 ...",
-      "dupes": [],
-      "titleEn": "LH to supply 609 units of rental housing for newlywed couples in Galmae Station area"
-    },
-    {
-      "title": "[속보] '4%대 급등' 코스피, 매수 사이드카 발동",
-      "link": "https://www.yna.co.kr/view/AKR20261028061000008",
-      "publishedAt": "2026-10-28T00:55:21.000Z",
-      "source": "연합뉴스 경제",
-      "category": "stocks",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "[Breaking News] Kospi Surges into the 4% Range as Buy Side Card Activated"
-    },
-    {
-      "title": "월세만 1000만원, ‘찐부자’ 거주지 보니…강남 아닌 여기",
-      "link": "https://www.mk.co.kr/news/realestate/12188148",
-      "publishedAt": "2026-10-28T00:55:04.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "서울 월세거래 9.3만건 중 263건 한강변 3곳 53.6%·강남 39.2%1000만원 이상 아파트 월세 계약 체결 가운데 절반 이상이 용산·성동·광진구 등 한강변 3개 자치구에 ..",
-      "dupes": [],
-      "titleEn": "Monthly rent alone 10,000,000 won, 'real rich' residence turns out to be here, not Gangnam",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-yongsan.html",
-          "label": "용산구 아파트 월세",
-          "labelEn": "용산구 apartment rent",
-          "value": "보증금 28,884만원 / 월 167만원",
-          "valueEn": "₩288.8M + ₩1.67M/mo",
-          "note": "최근 1주 계약 97건 · 10/21 대비 -15.8%",
-          "noteEn": "97 deals in the last 1 weeks · -15.8% vs Oct 21"
-        }
-      ]
-    },
-    {
-      "title": "부산 10월 소비자심리지수·주택가격전망지수 소폭 하락",
-      "link": "https://www.yna.co.kr/view/AKR20261028054500051",
-      "publishedAt": "2026-10-28T00:40:44.000Z",
-      "source": "연합뉴스 경제",
-      "category": "realestate",
-      "preview": "(부산=연합뉴스) 오수희 기자 = 부산지역 10월 소비자심리지수(CCSI)가 전달에 비해 소폭 하락했다.",
-      "dupes": [],
-      "titleEn": "Busan October Consumer Confidence Index and Housing Price Outlook Index Slight Decline"
-    },
-    {
-      "title": "日증시, 美 기술주 강세에 상승 출발…닛케이 0.74%↑",
-      "link": "https://www.newsis.com/view/NISX20261028_0003844041",
-      "publishedAt": "2026-10-28T00:30:15.000Z",
-      "source": "뉴시스 경제",
-      "category": "stocks",
-      "preview": "[서울=뉴시스] 신효령 기자 = 28일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)가 상승 출발했다. 미국 증시에서 반도체 등 인공지능(AI) 관련주가 오른 영향이다. 니혼게이자이신문에 따르면 이날 닛케이지수는…",
-      "dupes": [],
-      "titleEn": "Tokyo Stock Exchange rises on strong U.S. tech stocks... Nikkei up 0.74%"
-    },
-    {
-      "title": "[10/28, 매경부동산 추천매물] 오산 세교신도시 12.5%대 직영 슈퍼 20억5000만원 등",
-      "link": "https://www.mk.co.kr/news/realestate/12188086",
-      "publishedAt": "2026-10-28T00:24:48.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "[사진]◇원주시 다용도 토지·주택 3회차 ‘경매’ 최저가 3억8000만원 ‘계획관리지역 임야 등 1만3625㎡와 신축 단독주택 전용 77㎡를 감정가 7억7551만원에서 최저가 3억..",
-      "dupes": [],
-      "titleEn": "[10/28, Maeil Economic Real Estate Recommended Property] Osan Seogyo New Town 12.5% Directly Operated Super 2,050,000,000 won etc."
-    },
-    {
-      "title": "동대문구 장안현대홈타운 112.78㎡ 15억 3500만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12188066",
-      "publishedAt": "2026-10-28T00:11:21.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 27일 국토부 실거래가 시스템에 신규 등록된 서울 동대문구 장안현대홈타운(336) 전용 112.78㎡ 거래가 15억 3,500만 원으로 확인되며 최..",
-      "dupes": [],
-      "titleEn": "Dongdaemun-gu Jang'an Hyundai Home Town 112.78㎡ 1,535,000,000won... Recent 3-Year High Price [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-dongdaemun.html",
-          "label": "동대문구 아파트 84㎡ 매매",
-          "labelEn": "동대문구 apartment 84㎡ sale",
-          "value": "11억 9,299만원",
-          "valueEn": "₩1,193M",
-          "note": "최근 1주 계약 412건 · 10/21 대비 -0.1%",
-          "noteEn": "412 deals in the last 1 weeks · -0.1% vs Oct 21"
-        },
-        {
-          "kind": "record-high",
-          "href": "./record-high.html#breakdown-section",
-          "label": "동대문구 아파트 신고가 다음 거래",
-          "labelEn": "Dongdaemun-gu apartments: next sale after a record high",
-          "value": "그 값 이상 45%",
-          "valueEn": "45% matched or beat it",
-          "note": "신고가 1,028건 중 · 아무 거래 뒤는 61.1% · 관련 숫자 →",
-          "noteEn": "of 1,028 record highs · 61.1% after any sale · Related numbers →"
-        }
-      ]
-    },
-    {
-      "title": "동대문구 전농동 래미안아름숲 84.92㎡ 15억원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12188067",
-      "publishedAt": "2026-10-28T00:11:21.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 27일 국토부 실거래가 시스템에 신규 등록된 서울 동대문구 전농동 래미안아름숲 전용 84.92㎡ 거래가 15억원에 체결돼 동일 단지·동일 전용면적 ..",
-      "dupes": [],
-      "titleEn": "Dongdaemun-gu Jeonnam-dong Laimian Arem-Sup 84.92㎡ 1,500,000,000 won... Recent 3-year high price [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-dongdaemun.html",
-          "label": "동대문구 아파트 84㎡ 매매",
-          "labelEn": "동대문구 apartment 84㎡ sale",
-          "value": "11억 9,299만원",
-          "valueEn": "₩1,193M",
-          "note": "최근 1주 계약 412건 · 10/21 대비 -0.1%",
-          "noteEn": "412 deals in the last 1 weeks · -0.1% vs Oct 21"
-        },
-        {
-          "kind": "record-high",
-          "href": "./record-high.html#breakdown-section",
-          "label": "동대문구 아파트 신고가 다음 거래",
-          "labelEn": "Dongdaemun-gu apartments: next sale after a record high",
-          "value": "그 값 이상 45%",
-          "valueEn": "45% matched or beat it",
-          "note": "신고가 1,028건 중 · 아무 거래 뒤는 61.1% · 관련 숫자 →",
-          "noteEn": "of 1,028 record highs · 61.1% after any sale · Related numbers →"
-        }
-      ]
-    },
-    {
-      "title": "중랑구 면목동 경남아너스빌 59.981㎡ 9억 2천만원 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12188068",
-      "publishedAt": "2026-10-28T00:11:21.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 27일 국토부 실거래가 시스템에 신규 등록된 서울 중랑구 면목동 경남아너스빌 전용 59.981㎡가 9억 2,000만 원에 거래되며 최근 3년 내 신..",
-      "dupes": [],
-      "titleEn": "Jungnang-gu Myeongmok-dong Gyeongnam Honersville 59.981㎡ 920,000,000won recent 3-year new high [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-jungnang.html",
-          "label": "중랑구 아파트 84㎡ 매매",
-          "labelEn": "중랑구 apartment 84㎡ sale",
-          "value": "8억 8,630만원",
-          "valueEn": "₩886M",
-          "note": "최근 1주 계약 121건 · 10/21 대비 +0.7%",
-          "noteEn": "121 deals in the last 1 weeks · +0.7% vs Oct 21"
-        }
-      ]
-    },
-    {
-      "title": "중랑구 쌍용더플래티넘용마산 84.97㎡ 12억 5천만원 거래… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12188069",
-      "publishedAt": "2026-10-28T00:11:21.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 27일 국토부 실거래가 시스템에 신규 등록된 서울 중랑구 면목동 쌍용더플래티넘용마산 전용 84.9731㎡가 12억 5,000만 원에 거래되며 최근 ..",
-      "dupes": [],
-      "titleEn": "Jungnang-gu Sungsong Deoplaitenum Yongmasan 84.97㎡ traded for 1,250,000,000 won... new high in 3 years [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-jungnang.html",
-          "label": "중랑구 아파트 84㎡ 매매",
-          "labelEn": "중랑구 apartment 84㎡ sale",
-          "value": "8억 8,630만원",
-          "valueEn": "₩886M",
-          "note": "최근 1주 계약 121건 · 10/21 대비 +0.7%",
-          "noteEn": "121 deals in the last 1 weeks · +0.7% vs Oct 21"
-        },
-        {
-          "kind": "record-high",
-          "href": "./record-high.html#breakdown-section",
-          "label": "중랑구 아파트 신고가 다음 거래",
-          "labelEn": "Jungnang-gu apartments: next sale after a record high",
-          "value": "그 값 이상 32.5%",
-          "valueEn": "32.5% matched or beat it",
-          "note": "신고가 425건 중 · 아무 거래 뒤는 57.8% · 관련 숫자 →",
-          "noteEn": "of 425 record highs · 57.8% after any sale · Related numbers →"
-        }
-      ]
-    },
-    {
-      "title": "중랑구 묵동 신내4단지 39.84㎡ 5억 2천만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12188070",
-      "publishedAt": "2026-10-28T00:11:21.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 27일 국토부 실거래가 시스템에 신규 등록된 서울 중랑구 묵동 신내4단지 전용 39.84㎡ 거래가 5억 2천만원에 체결되며 최근 3년 내 신고가를 ..",
-      "dupes": [],
-      "titleEn": "Jungnang-gu Mokdong Shinne 4-danji 39.84㎡ 520,000,000won... Recent 3-Year High Price [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-jungnang.html",
-          "label": "중랑구 아파트 84㎡ 매매",
-          "labelEn": "중랑구 apartment 84㎡ sale",
-          "value": "8억 8,630만원",
-          "valueEn": "₩886M",
-          "note": "최근 1주 계약 121건 · 10/21 대비 +0.7%",
-          "noteEn": "121 deals in the last 1 weeks · +0.7% vs Oct 21"
-        },
-        {
-          "kind": "record-high",
-          "href": "./record-high.html#breakdown-section",
-          "label": "중랑구 아파트 신고가 다음 거래",
-          "labelEn": "Jungnang-gu apartments: next sale after a record high",
-          "value": "그 값 이상 32.5%",
-          "valueEn": "32.5% matched or beat it",
-          "note": "신고가 425건 중 · 아무 거래 뒤는 57.8% · 관련 숫자 →",
-          "noteEn": "of 425 record highs · 57.8% after any sale · Related numbers →"
-        }
-      ]
-    },
-    {
-      "title": "동대문구 장안현대홈타운 59.54㎡ 12억 7천만원… 최근 3년 신고가 [MAI부동산]",
-      "link": "https://www.mk.co.kr/news/realestate/12188065",
-      "publishedAt": "2026-10-28T00:11:21.000Z",
-      "source": "매일경제 부동산",
-      "category": "realestate",
-      "preview": "MAI 부동산 2026년 10월 27일 국토부 실거래가 시스템에 신규 등록된 서울 동대문구 장안현대홈타운(336) 전용 59.54㎡ 거래가 12억 7천만원에 체결돼 최근 3년 신고..",
-      "dupes": [],
-      "titleEn": "Jang'an Hyundai Home Town, Dongdaemun-gu, 59.54㎡ for 1,270,000,000 won... new high in 3 years [MAI Real Estate]",
-      "context": [
-        {
-          "kind": "realestate",
-          "href": "./district-dongdaemun.html",
-          "label": "동대문구 아파트 84㎡ 매매",
-          "labelEn": "동대문구 apartment 84㎡ sale",
-          "value": "11억 9,299만원",
-          "valueEn": "₩1,193M",
-          "note": "최근 1주 계약 412건 · 10/21 대비 -0.1%",
-          "noteEn": "412 deals in the last 1 weeks · -0.1% vs Oct 21"
-        },
-        {
-          "kind": "record-high",
-          "href": "./record-high.html#breakdown-section",
-          "label": "동대문구 아파트 신고가 다음 거래",
-          "labelEn": "Dongdaemun-gu apartments: next sale after a record high",
-          "value": "그 값 이상 45%",
-          "valueEn": "45% matched or beat it",
-          "note": "신고가 1,028건 중 · 아무 거래 뒤는 61.1% · 관련 숫자 →",
-          "noteEn": "of 1,028 record highs · 61.1% after any sale · Related numbers →"
-        }
-      ]
-    },
-    {
-      "title": "고금리·AI 위험에…인수기업 빚 갚기 막막한 사모펀드",
-      "link": "https://www.hankyung.com/article/202610289621i",
-      "publishedAt": "2026-10-28T00:05:53.000Z",
-      "source": "한국경제 경제",
       "category": "rates",
-      "preview": null,
-      "dupes": [],
-      "titleEn": "High interest rates and AI risks leave private equity funds struggling to repay debts"
+      "preview": "[서울=뉴시스]이재준 기자 = 엔화 환율은 29일 일본은행의 정책금리 발표를 하루 앞두고 포지션 조정 목적의 엔 매수, 달러 매도가 선행하면서 1달러=157엔대 후반으로 시작했다. 도쿄 외환시장에서 엔화 환율은 이날…",
+      "dupes": []
     },
     {
-      "title": "\"새 아파트 구경도 못했다\"…지방 70곳, 21개월간 분양 '0'",
-      "link": "https://www.hankyung.com/article/2026102894906",
-      "publishedAt": "2026-10-27T23:37:28.000Z",
+      "title": "고양시, 노후주택 유지·보수 지원해 시민 주거환경 개선",
+      "link": "https://www.yna.co.kr/view/AKR20261029061800060",
+      "publishedAt": "2026-10-29T00:56:46.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(고양=연합뉴스) 노승혁 기자 = 경기 고양시는 노후 주택 유지관리, 안전시설 설치, 에너지 효율 개선 등을 위한 리모델링을 지원하는 '2026...",
+      "dupes": []
+    },
+    {
+      "title": "[게시판] 대신증권, 30일 국내 증시 대응전략 온라인 세미나",
+      "link": "https://www.yna.co.kr/view/AKR20261029061900008",
+      "publishedAt": "2026-10-29T00:47:05.000Z",
+      "source": "연합뉴스 경제",
+      "category": "stocks",
+      "preview": "▲ 대신증권[003540]은 30일 오후 4시 유튜브 채널 '대신TV'에서 가을학기 릴레이 세미나 4회차를 연다. 이경민 FICC리서치부장이 '...",
+      "dupes": []
+    },
+    {
+      "title": "日증시, AI·반도체주 강세에 상승 출발…닛케이 0.27%↑",
+      "link": "https://www.newsis.com/view/NISX20261029_0003845827",
+      "publishedAt": "2026-10-29T00:46:32.000Z",
+      "source": "뉴시스 경제",
+      "category": "stocks",
+      "preview": "[서울=뉴시스] 신효령 기자 = 29일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)가 상승 출발했다. 미국 증시 상승과 일본 반도체 검사장비 업체 어드반테스트의 실적 전망 상향이 투자심리를 끌어올렸다. 니혼게이…",
+      "dupes": []
+    },
+    {
+      "title": "현대건설, 디에이치 반포124 견본주택에 '디에이치 하우스' 조성",
+      "link": "https://www.yna.co.kr/view/AKR20261029058300003",
+      "publishedAt": "2026-10-29T00:42:24.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(서울=연합뉴스) 서미숙 기자 = 현대건설은 다음달 일반분양에 들어가는 서울 서초구 '디에이치 반포124'의 견본주택에 자사의 하이엔드 브랜드 ...",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-seocho.html",
+          "label": "서초구 아파트 84㎡ 매매",
+          "labelEn": "서초구 apartment 84㎡ sale",
+          "value": "25억 5,420만원",
+          "valueEn": "₩2,554M",
+          "note": "최근 1주 계약 114건 · 10/22 대비 -2.9%",
+          "noteEn": "114 deals in the last 1 weeks · -2.9% vs Oct 22"
+        }
+      ]
+    },
+    {
+      "title": "부산 3분기 제조업 생산 소폭 증가 추정…부동산 거래 감소",
+      "link": "https://www.yna.co.kr/view/AKR20261029057900051",
+      "publishedAt": "2026-10-29T00:41:44.000Z",
+      "source": "연합뉴스 경제",
+      "category": "realestate",
+      "preview": "(부산=연합뉴스) 오수희 기자 = 부산 3분기 제조업 생산실적이 2분기 실적과 비교해 소폭 증가할 것이란 분석이 나왔다.",
+      "dupes": []
+    },
+    {
+      "title": "일본은행, 오늘부터 금융정책결정회의…내일 금리 동결할 듯",
+      "link": "https://www.newsis.com/view/NISX20261029_0003845825",
+      "publishedAt": "2026-10-29T00:35:20.000Z",
+      "source": "뉴시스 경제",
+      "category": "rates",
+      "preview": "[서울=뉴시스] 신효령 기자 = 일본 중앙은행인 일본은행(BOJ)이 30일 금융정책결정회의에서 기준금리를 동결할 전망이다. 지난달 금리를 연 1.25%로 올린 만큼 현재의 통화정책을 유지할 가능성이 큰 것으로 관측된…",
+      "dupes": []
+    },
+    {
+      "title": "中 발표 믿을 수가 있어야지…경제성장률 뻥튀기 논란",
+      "link": "https://www.hankyung.com/article/202610292470i",
+      "publishedAt": "2026-10-29T00:29:27.000Z",
+      "source": "한국경제 경제",
+      "category": "other",
+      "preview": null,
+      "dupes": []
+    },
+    {
+      "title": "서울 국평 집값 전년比 2.5%↓…전셋값은 나홀로 뜀박질",
+      "link": "https://www.hankyung.com/article/202610292320H",
+      "publishedAt": "2026-10-29T00:12:20.000Z",
       "source": "한국경제 부동산",
       "category": "realestate",
       "preview": null,
       "dupes": [],
-      "titleEn": "Couldn't even see the new apartment\"…70 local areas, 0 sales in 21 months"
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./apartment-jeonse.html",
+          "label": "서울 전체 아파트 84㎡ 전세",
+          "labelEn": "Seoul apartment 84㎡ jeonse",
+          "value": "8억 1,210만원",
+          "valueEn": "₩812M",
+          "note": "최근 1주 계약 644건 · 10/22 대비 -0.4%",
+          "noteEn": "644 deals in the last 1 weeks · -0.4% vs Oct 22"
+        }
+      ]
+    },
+    {
+      "title": "은평구 백련산힐스테이트2차 84.59㎡ 10억 6800만원… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12189506",
+      "publishedAt": "2026-10-29T00:07:19.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "MAI 부동산 2026년 10월 28일 국토부 실거래가 시스템에 신규 등록된 서울 은평구 응암동 백련산힐스테이트2차 전용 84.59㎡가 10억 6,800만 원에 거래되며 최근 3년..",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-eunpyeong.html",
+          "label": "은평구 아파트 84㎡ 매매",
+          "labelEn": "은평구 apartment 84㎡ sale",
+          "value": "9억 7,981만원",
+          "valueEn": "₩980M",
+          "note": "최근 1주 계약 176건 · 10/22 대비 +1.9%",
+          "noteEn": "176 deals in the last 1 weeks · +1.9% vs Oct 22"
+        },
+        {
+          "kind": "record-high",
+          "href": "./record-high.html#breakdown-section",
+          "label": "은평구 아파트 신고가 다음 거래",
+          "labelEn": "Eunpyeong-gu apartments: next sale after a record high",
+          "value": "그 값 이상 40.2%",
+          "valueEn": "40.2% matched or beat it",
+          "note": "신고가 595건 중 · 아무 거래 뒤는 60.1% · 관련 숫자 →",
+          "noteEn": "of 595 record highs · 60.1% after any sale · Related numbers →"
+        }
+      ]
+    },
+    {
+      "title": "강동구 둔촌동 신성둔촌미소지움2차 59.88㎡ 14억 2850만원… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12189512",
+      "publishedAt": "2026-10-29T00:07:19.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "MAI 부동산 2026년 10월 28일 국토부 실거래가 시스템에 신규 등록된 서울 강동구 둔촌동 신성둔촌미소지움2차 전용 59.88㎡ 거래가 14억 2,850만 원으로 해당 단지·..",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-gangdong.html",
+          "label": "강동구 아파트 84㎡ 매매",
+          "labelEn": "강동구 apartment 84㎡ sale",
+          "value": "14억 8,368만원",
+          "valueEn": "₩1,484M",
+          "note": "최근 1주 계약 150건 · 10/22 대비 +0.7%",
+          "noteEn": "150 deals in the last 1 weeks · +0.7% vs Oct 22"
+        },
+        {
+          "kind": "record-high",
+          "href": "./record-high.html#breakdown-section",
+          "label": "강동구 아파트 신고가 다음 거래",
+          "labelEn": "Gangdong-gu apartments: next sale after a record high",
+          "value": "그 값 이상 46.8%",
+          "valueEn": "46.8% matched or beat it",
+          "note": "신고가 1,083건 중 · 아무 거래 뒤는 62% · 관련 숫자 →",
+          "noteEn": "of 1,083 record highs · 62% after any sale · Related numbers →"
+        }
+      ]
+    },
+    {
+      "title": "송파구 상아2차아파트 60㎡ 17억 3500만원… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12189511",
+      "publishedAt": "2026-10-29T00:07:19.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "MAI 부동산 2026년 10월 28일 국토부 실거래가 시스템에 신규 등록된 서울 송파구 오금동 상아2차아파트 전용 60㎡가 17억 3500만원에 거래되며 최근 3년 신고가를 기록..",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-songpa.html",
+          "label": "송파구 아파트 84㎡ 매매",
+          "labelEn": "송파구 apartment 84㎡ sale",
+          "value": "21억 7,127만원",
+          "valueEn": "₩2,171M",
+          "note": "최근 1주 계약 336건 · 10/22 대비 +1.1%",
+          "noteEn": "336 deals in the last 1 weeks · +1.1% vs Oct 22"
+        },
+        {
+          "kind": "record-high",
+          "href": "./record-high.html#breakdown-section",
+          "label": "송파구 아파트 신고가 다음 거래",
+          "labelEn": "Songpa-gu apartments: next sale after a record high",
+          "value": "그 값 이상 50.7%",
+          "valueEn": "50.7% matched or beat it",
+          "note": "신고가 1,229건 중 · 아무 거래 뒤는 62% · 관련 숫자 →",
+          "noteEn": "of 1,229 record highs · 62% after any sale · Related numbers →"
+        }
+      ]
+    },
+    {
+      "title": "강남구 수서동 강남데시앙포레 59.97㎡ 22억 8700만원… 최근 3년 신고가 [MAI부동산]",
+      "link": "https://www.mk.co.kr/news/realestate/12189510",
+      "publishedAt": "2026-10-29T00:07:19.000Z",
+      "source": "매일경제 부동산",
+      "category": "realestate",
+      "preview": "MAI 부동산 2026년 10월 28일 국토부 실거래가 시스템에 신규 등록된 서울 강남구 수서동 강남데시앙포레 전용 59.97㎡가 22억 8700만원에 거래됐다. 이번 거래는 20..",
+      "dupes": [],
+      "context": [
+        {
+          "kind": "realestate",
+          "href": "./district-gangnam.html",
+          "label": "강남구 아파트 84㎡ 매매",
+          "labelEn": "강남구 apartment 84㎡ sale",
+          "value": "28억 5,988만원",
+          "valueEn": "₩2,860M",
+          "note": "최근 1주 계약 122건 · 10/22 대비 -0.9%",
+          "noteEn": "122 deals in the last 1 weeks · -0.9% vs Oct 22"
+        },
+        {
+          "kind": "record-high",
+          "href": "./record-high.html#breakdown-section",
+          "label": "강남구 아파트 신고가 다음 거래",
+          "labelEn": "Gangnam-gu apartments: next sale after a record high",
+          "value": "그 값 이상 49.1%",
+          "valueEn": "49.1% matched or beat it",
+          "note": "신고가 515건 중 · 아무 거래 뒤는 57.8% · 관련 숫자 →",
+          "noteEn": "of 515 record highs · 57.8% after any sale · Related numbers →"
+        }
+      ]
     }
   ],
   "realestateStats": [
@@ -395,30 +397,30 @@
       "href": "./apartment-sale.html",
       "label": "서울 아파트 84㎡ 매매",
       "labelEn": "Seoul apartment 84㎡ sale",
-      "value": "13억 4,367만원",
-      "valueEn": "₩1,344M",
-      "note": "최근 1주 계약 435건 · 10/21 대비 +5.5%",
-      "noteEn": "435 deals in the last 1 weeks · +5.5% vs Oct 21"
+      "value": "13억 1,547만원",
+      "valueEn": "₩1,315M",
+      "note": "최근 1주 계약 618건 · 10/22 대비 +0.8%",
+      "noteEn": "618 deals in the last 1 weeks · +0.8% vs Oct 22"
     },
     {
       "kind": "realestate",
       "href": "./apartment-jeonse.html",
       "label": "서울 아파트 84㎡ 전세",
       "labelEn": "Seoul apartment 84㎡ jeonse",
-      "value": "8억 1,235만원",
+      "value": "8억 1,210만원",
       "valueEn": "₩812M",
-      "note": "최근 1주 계약 508건 · 10/21 대비 -1.0%",
-      "noteEn": "508 deals in the last 1 weeks · -1.0% vs Oct 21"
+      "note": "최근 1주 계약 644건 · 10/22 대비 -0.4%",
+      "noteEn": "644 deals in the last 1 weeks · -0.4% vs Oct 22"
     },
     {
       "kind": "realestate",
       "href": "./apartment-rent.html",
       "label": "서울 아파트 월세",
       "labelEn": "Seoul apartment rent",
-      "value": "보증금 24,838만원 / 월 134만원",
-      "valueEn": "₩248.4M + ₩1.34M/mo",
-      "note": "최근 1주 계약 625건 · 10/21 대비 -0.8%",
-      "noteEn": "625 deals in the last 1 weeks · -0.8% vs Oct 21"
+      "value": "보증금 23,519만원 / 월 131만원",
+      "valueEn": "₩235.2M + ₩1.31M/mo",
+      "note": "최근 1주 계약 867건 · 10/22 대비 -2.5%",
+      "noteEn": "867 deals in the last 1 weeks · -2.5% vs Oct 22"
     }
   ]
 }
