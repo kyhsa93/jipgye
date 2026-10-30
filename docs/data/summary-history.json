@@ -6814,5 +6814,122 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-10-30",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 증시·환율: 증시·환율: 코스피, 장중 낙폭 커져 5%대 급락…코스닥 4%대↓, [올댓차이나] 중국 증시 하락 출발…상하이지수 1.25%↓, 코스피 4%대 급락…11거래일만에 '매도 사이드카' 발동 +5\n- 기타 경제 소식: 하나은행이 서금원에 1천억원을 출연하며 저소득직장인을 위한 신용대출을 출시했다. 한·독 양국은 경제와 하이테크 분야에서 전략적 협력 강화를 위한 파트너십 프레임워크를 체결했다. 포천시는 평화경제특구 예정지의 개발행위허가 제한에 대해 주민공람을 진행 중이다. 오늘은 경제 관련 주요일정이 발표되었다. 각 기사는 서로 다른 주제로 진행되었다.\n- 부동산: 서울 하이엔드 아파트 청약 경쟁률이 119대 1로 나타나며 일반 브랜드의 3.8배에 달했다. 무주택자들은 2030년 착공이라는 전망에 대해 실망감을 드러내며 당장의 주거 문제를 호소하고 있다. 서울 아파트값은 90주 연속 상승세를 보이며 연내 분양에 대한 관심이 높아지고 있다. 서울 1∼9월 인허가 건수는 33.3% 증가했으나 주택공급은 여전히 부족한 것으로 나타났다. 서울 새 아파트는 분양에 들어서기 전부터 이미 귀해진 것으로 보인다.",
+      "en": "- Stocks & FX: Stocks & FX: 코스피, 장중 낙폭 커져 5%대 급락…코스닥 4%대↓, [올댓차이나] 중국 증시 하락 출발…상하이지수 1.25%↓, 코스피 4%대 급락…11거래일만에 '매도 사이드카' 발동 +5\n- Other Economic News: Hana Bank contributed 100,000,000,000 won to Seogumwon and launched a credit loan for low-income workers. South Korea and Germany concluded a partnership framework to strengthen strategic cooperation in the economic and high-tech sectors. Pochon City is currently conducting a public notice regarding restrictions on development permits for the planned Peace Economic Special Zone. Today, major economic schedules were announced. Each news report covered different topics.\n- Real Estate: The subscription competition rate for high-end apartments in Seoul reached 119 to 1, which is 3.8 times higher than that of general brands. Homeless people are expressing disappointment over the expectation of construction starting in 2030 and are appealing about their immediate housing problems. Seoul apartment prices have continued to rise for 90 consecutive weeks, increasing interest in sales within the year. The number of permits issued in Seoul from January to September increased by 33.3%, but housing supply is still found to be insufficient. New apartments in Seoul appear to be already scarce even before sales begin."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "증시·환율: 코스피, 장중 낙폭 커져 5%대 급락…코스닥 4%대↓, [올댓차이나] 중국 증시 하락 출발…상하이지수 1.25%↓, 코스피 4%대 급락…11거래일만에 '매도 사이드카' 발동 +5",
+        "lineEn": "Stocks & FX: 코스피, 장중 낙폭 커져 5%대 급락…코스닥 4%대↓, [올댓차이나] 중국 증시 하락 출발…상하이지수 1.25%↓, 코스피 4%대 급락…11거래일만에 '매도 사이드카' 발동 +5",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
+        "degraded": false,
+        "items": [
+          {
+            "title": "코스피, 장중 낙폭 커져 5%대 급락…코스닥 4%대↓",
+            "link": "https://www.yna.co.kr/view/AKR20261030080000008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 1.25%↓",
+            "link": "https://www.newsis.com/view/NISX20261030_0003848096",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "코스피 4%대 급락…11거래일만에 '매도 사이드카' 발동",
+            "link": "https://www.yna.co.kr/view/AKR20261030061500008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[속보] 코스피 4%대 급락…매도 사이드카 발동",
+            "link": "https://www.yna.co.kr/view/AKR20261030058900008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 美기술주 삭풍에 3%대 급락…삼전닉스 3~6%↓(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261030037351008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "하나은행이 서금원에 1천억원을 출연하며 저소득직장인을 위한 신용대출을 출시했다. 한·독 양국은 경제와 하이테크 분야에서 전략적 협력 강화를 위한 파트너십 프레임워크를 체결했다. 포천시는 평화경제특구 예정지의 개발행위허가 제한에 대해 주민공람을 진행 중이다. 오늘은 경제 관련 주요일정이 발표되었다. 각 기사는 서로 다른 주제로 진행되었다.",
+        "lineEn": "Hana Bank contributed 100,000,000,000 won to Seogumwon and launched a credit loan for low-income workers. South Korea and Germany concluded a partnership framework to strengthen strategic cooperation in the economic and high-tech sectors. Pochon City is currently conducting a public notice regarding restrictions on development permits for the planned Peace Economic Special Zone. Today, major economic schedules were announced. Each news report covered different topics.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "하나은행, 서금원에 1천억원 출연…저소득직장인 신용대출 출시",
+            "link": "https://www.yna.co.kr/view/AKR20261030073200002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "한·독, 경제·하이테크 파트너십 프레임워크 체결…전략적 협력 기반 강화",
+            "link": "https://www.newsis.com/view/NISX20261030_0003847603",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "포천시, 평화경제특구 예정지 개발행위허가 제한 주민공람",
+            "link": "https://www.yna.co.kr/view/AKR20261030057400060",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[오늘의 주요일정]경제(10월30일금요일)",
+            "link": "https://www.newsis.com/view/NISX20261029_0003845574",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "서울 하이엔드 아파트 청약 경쟁률이 119대 1로 나타나며 일반 브랜드의 3.8배에 달했다. 무주택자들은 2030년 착공이라는 전망에 대해 실망감을 드러내며 당장의 주거 문제를 호소하고 있다. 서울 아파트값은 90주 연속 상승세를 보이며 연내 분양에 대한 관심이 높아지고 있다. 서울 1∼9월 인허가 건수는 33.3% 증가했으나 주택공급은 여전히 부족한 것으로 나타났다. 서울 새 아파트는 분양에 들어서기 전부터 이미 귀해진 것으로 보인다.",
+        "lineEn": "The subscription competition rate for high-end apartments in Seoul reached 119 to 1, which is 3.8 times higher than that of general brands. Homeless people are expressing disappointment over the expectation of construction starting in 2030 and are appealing about their immediate housing problems. Seoul apartment prices have continued to rise for 90 consecutive weeks, increasing interest in sales within the year. The number of permits issued in Seoul from January to September increased by 33.3%, but housing supply is still found to be insufficient. New apartments in Seoul appear to be already scarce even before sales begin.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "서울 하이엔드 아파트 청약 경쟁률 119대 1…일반 브랜드의 3.8배",
+            "link": "https://www.mk.co.kr/news/realestate/12191336",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "“2030년 착공? 먼나라 이야기”…당장 갈 곳도 못 찾은 무주택자들 ‘한숨’",
+            "link": "https://www.mk.co.kr/news/realestate/12191302",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "“서울 새 아파트 더 귀해진다”…90주 연속 상승세 속 연내 분양에 ‘눈길’",
+            "link": "https://www.mk.co.kr/news/realestate/12191289",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "90주 연속 오른 서울 아파트값... 연내 분양 단지는",
+            "link": "https://www.mk.co.kr/news/realestate/12191275",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "‘주택공급 선행지표’ 서울 1∼9월 인허가 33.3% 증가…경기는 ‘뚝’",
+            "link": "https://www.mk.co.kr/news/realestate/12191267",
+            "source": "매일경제 부동산"
+          }
+        ]
+      }
+    ]
   }
 ]
