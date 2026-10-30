@@ -1,31 +1,31 @@
 {
-  "updatedAt": "2026-10-29T02:23:59.720Z",
+  "updatedAt": "2026-10-30T02:35:46.872Z",
   "months": 6,
   "sale": {
     "low": {
-      "cells": 594,
+      "cells": 601,
       "median": -7.3,
       "cheaperShare": 89.2,
-      "deals": 811
+      "deals": 820
     },
     "top": {
-      "cells": 1799,
+      "cells": 1807,
       "median": 0.6,
-      "cheaperShare": 42.6,
+      "cheaperShare": 42.5,
       "deals": null
     }
   },
   "jeonse": {
     "low": {
-      "cells": 1027,
+      "cells": 1033,
       "median": -5,
       "cheaperShare": 65.1,
-      "deals": 1577
+      "deals": 1587
     },
     "top": {
-      "cells": 2914,
+      "cells": 2933,
       "median": 0,
-      "cheaperShare": 42.9,
+      "cheaperShare": 43.2,
       "deals": null
     }
   },
@@ -35,16 +35,16 @@
       "cells": 28,
       "median": -9.4,
       "band": {
-        "low": -9.4,
-        "high": -5.2
+        "low": -9.2,
+        "high": -5
       },
-      "distinct": false,
+      "distinct": true,
       "jeonse": {
         "cells": 30,
-        "median": -4.2,
+        "median": -6.5,
         "band": {
-          "low": -8.9,
-          "high": 0
+          "low": -9.1,
+          "high": -0.1
         }
       }
     },
@@ -54,15 +54,15 @@
       "median": -8.9,
       "band": {
         "low": -8.9,
-        "high": -5.4
+        "high": -5.6
       },
       "distinct": false,
       "jeonse": {
-        "cells": 65,
+        "cells": 66,
         "median": -4.5,
         "band": {
-          "low": -7.7,
-          "high": -1.6
+          "low": -7.9,
+          "high": -1.4
         }
       }
     },
@@ -80,7 +80,7 @@
         "median": -9.1,
         "band": {
           "low": -8.5,
-          "high": -0.5
+          "high": -0.4
         },
         "distinct": true
       }
@@ -90,25 +90,25 @@
       "cells": 26,
       "median": -8.5,
       "band": {
-        "low": -9.4,
-        "high": -4.9
+        "low": -9.1,
+        "high": -5.1
       },
       "distinct": false,
       "jeonse": {
         "cells": 28,
-        "median": -5.7,
+        "median": -6.5,
         "band": {
-          "low": -9,
+          "low": -9.4,
           "high": 0
         }
       }
     },
     {
       "district": "노원구",
-      "cells": 116,
-      "median": -8.4,
+      "cells": 118,
+      "median": -8.1,
       "band": {
-        "low": -8.5,
+        "low": -8.4,
         "high": -6.1
       },
       "distinct": false,
@@ -116,27 +116,27 @@
         "cells": 123,
         "median": -9.1,
         "band": {
-          "low": -6.7,
-          "high": -2.4
+          "low": -7.1,
+          "high": -2.2
         },
         "distinct": true
       }
     },
     {
       "district": "도봉구",
-      "cells": 43,
-      "median": -7.3,
+      "cells": 44,
+      "median": -7.1,
       "band": {
-        "low": -8.9,
-        "high": -5.5
+        "low": -8.8,
+        "high": -5.6
       },
       "distinct": false,
       "jeonse": {
-        "cells": 37,
-        "median": -1.1,
+        "cells": 38,
+        "median": -1.7,
         "band": {
-          "low": -8.7,
-          "high": -0.3
+          "low": -8.5,
+          "high": -0.4
         }
       }
     },
@@ -146,15 +146,15 @@
       "median": -7.1,
       "band": {
         "low": -8.9,
-        "high": -5.3
+        "high": -5.5
       },
       "distinct": false,
       "jeonse": {
-        "cells": 35,
-        "median": -5.3,
+        "cells": 36,
+        "median": -5,
         "band": {
-          "low": -8.9,
-          "high": 0
+          "low": -8.7,
+          "high": -0.4
         }
       }
     },
@@ -164,57 +164,58 @@
       "median": -6.4,
       "band": {
         "low": -9.5,
-        "high": -4.7
+        "high": -4.6
       },
       "distinct": false,
       "jeonse": {
-        "cells": 23,
-        "median": 0,
+        "cells": 24,
+        "median": -2.3,
         "band": {
-          "low": -9.7,
+          "low": -9.5,
           "high": 0
         }
       }
     },
     {
       "district": "송파구",
-      "cells": 28,
-      "median": -5.8,
+      "cells": 29,
+      "median": -5.6,
       "band": {
-        "low": -9.4,
+        "low": -9.3,
         "high": -5.2
       },
       "distinct": false,
       "jeonse": {
         "cells": 83,
-        "median": -4.9,
+        "median": -3.9,
         "band": {
-          "low": -7.2,
+          "low": -7.8,
           "high": -1.6
         }
       }
     },
     {
       "district": "은평구",
-      "cells": 33,
-      "median": -5.1,
+      "cells": 34,
+      "median": -5.3,
       "band": {
-        "low": -9.1,
-        "high": -5.2
+        "low": -8.9,
+        "high": -5.4
       },
       "distinct": true,
       "jeonse": {
         "cells": 41,
         "median": -0.9,
         "band": {
-          "low": -8.4,
-          "high": -0.5
-        }
+          "low": -8.5,
+          "high": -1
+        },
+        "distinct": true
       }
     },
     {
       "district": "강남구",
-      "cells": 13,
+      "cells": 14,
       "median": null,
       "band": null,
       "distinct": false,
@@ -222,8 +223,8 @@
         "cells": 84,
         "median": -3.4,
         "band": {
-          "low": -7.3,
-          "high": -1.8
+          "low": -7.5,
+          "high": -1.7
         }
       }
     },
@@ -234,10 +235,10 @@
       "band": null,
       "distinct": false,
       "jeonse": {
-        "cells": 47,
-        "median": -8,
+        "cells": 48,
+        "median": -8.2,
         "band": {
-          "low": -8.4,
+          "low": -8.3,
           "high": -0.8
         }
       }
@@ -264,7 +265,7 @@
         "cells": 21,
         "median": -7.2,
         "band": {
-          "low": -9.7,
+          "low": -9.8,
           "high": 0
         }
       }
@@ -279,19 +280,19 @@
         "cells": 23,
         "median": -6.4,
         "band": {
-          "low": -9.7,
+          "low": -9.8,
           "high": 0
         }
       }
     },
     {
       "district": "금천구",
-      "cells": 14,
+      "cells": 15,
       "median": null,
       "band": null,
       "distinct": false,
       "jeonse": {
-        "cells": 10,
+        "cells": 11,
         "median": null,
         "band": null
       }
@@ -304,10 +305,10 @@
       "distinct": false,
       "jeonse": {
         "cells": 47,
-        "median": -5.7,
+        "median": -6.3,
         "band": {
-          "low": -8.4,
-          "high": -0.8
+          "low": -8.5,
+          "high": -1
         }
       }
     },
@@ -319,10 +320,10 @@
       "distinct": false,
       "jeonse": {
         "cells": 39,
-        "median": -7.4,
+        "median": -6.5,
         "band": {
-          "low": -8.8,
-          "high": -0.1
+          "low": -8.5,
+          "high": -0.2
         }
       }
     },
@@ -336,8 +337,8 @@
         "cells": 39,
         "median": 0,
         "band": {
-          "low": -8.8,
-          "high": -0.1
+          "low": -8.5,
+          "high": -0.2
         },
         "distinct": true
       }
@@ -352,7 +353,7 @@
         "cells": 46,
         "median": -6.4,
         "band": {
-          "low": -8.3,
+          "low": -8.2,
           "high": -0.9
         }
       }
@@ -367,8 +368,8 @@
         "cells": 75,
         "median": -2.2,
         "band": {
-          "low": -7.3,
-          "high": -1.6
+          "low": -7.5,
+          "high": -1.4
         }
       }
     },
@@ -380,10 +381,10 @@
       "distinct": false,
       "jeonse": {
         "cells": 43,
-        "median": -1.6,
+        "median": -2,
         "band": {
-          "low": -8.5,
-          "high": -0.7
+          "low": -8.6,
+          "high": -0.9
         }
       }
     },
@@ -452,15 +453,15 @@
     "강동구": "gangdong"
   },
   "lead": {
-    "ko": "같은 단지 같은 평형에서 1층은 3층 이상보다 7.3% 싸게 팔립니다. 맞물린 594칸의 중간값이고, 그 가운데 89.2%에서 1층이 더 쌌습니다. 전세는 같은 1층을 5.0%만 깎습니다 — 1층의 불리함은 사는 것보다 되파는 데 더 크게 얹힙니다.",
-    "en": "In the same complex and the same unit type, a first-floor apartment sells for 7.3% less than the third floor and up — the median across 594 matched unit types, and it comes out cheaper in 89.2% of them. Jeonse discounts the same floor by only 5.0% — the disadvantage of a first floor shows up more in reselling than in living there."
+    "ko": "같은 단지 같은 평형에서 1층은 3층 이상보다 7.3% 싸게 팔립니다. 맞물린 601칸의 중간값이고, 그 가운데 89.2%에서 1층이 더 쌌습니다. 전세는 같은 1층을 5.0%만 깎습니다 — 1층의 불리함은 사는 것보다 되파는 데 더 크게 얹힙니다.",
+    "en": "In the same complex and the same unit type, a first-floor apartment sells for 7.3% less than the third floor and up — the median across 601 matched unit types, and it comes out cheaper in 89.2% of them. Jeonse discounts the same floor by only 5.0% — the disadvantage of a first floor shows up more in reselling than in living there."
   },
   "topLead": {
-    "ko": "최상층에는 웃돈이 붙지 않습니다. 같은 평형의 아래층들과 견주면 최상층은 중간값 +0.6% 차이입니다. 맞물린 1,799칸이고, 그 가운데 42.6%는 오히려 더 쌌습니다. 최상층에 값어치가 있든 없든 신고된 가격에는 그것이 더 비싼 값으로 나타나지 않습니다 — 1층은 나타나는데 말입니다.",
-    "en": "The top floor carries no premium. Against the floors below it in the same unit type, the top floor differs by a median +0.6% across 1,799 matched unit types, and 42.6% of them came in cheaper. Whatever a top floor is worth, the filings do not show it as a higher price — unlike the first floor, which they do show."
+    "ko": "최상층에는 웃돈이 붙지 않습니다. 같은 평형의 아래층들과 견주면 최상층은 중간값 +0.6% 차이입니다. 맞물린 1,807칸이고, 그 가운데 42.5%는 오히려 더 쌌습니다. 최상층에 값어치가 있든 없든 신고된 가격에는 그것이 더 비싼 값으로 나타나지 않습니다 — 1층은 나타나는데 말입니다.",
+    "en": "The top floor carries no premium. Against the floors below it in the same unit type, the top floor differs by a median +0.6% across 1,807 matched unit types, and 42.5% of them came in cheaper. Whatever a top floor is worth, the filings do not show it as a higher price — unlike the first floor, which they do show."
   },
   "districtLead": {
-    "ko": "자치구 25곳 가운데 2곳만 서울(7.3%)과 다르다고 말할 수 있습니다 — 구로구 8.9%는 더 크게 깎이고, 은평구 5.1%는 덜 깎입니다. 나머지는 서울과 갈라 볼 수 없습니다. 이 화면이 스물다섯 줄을 순위로 적지 않는 것은 그래서입니다. 전세는 값을 낸 20곳 가운데 3곳만 서울(5.0%)과 다릅니다 — 구로구 9.1%, 노원구 9.1%는 더 크게 깎이고, 서초구 0.0%는 덜 깎입니다.",
-    "en": "Of 25 districts, 2 sit outside the range a district identical to Seoul could produce at their sample size — 구로구 8.9% discount it more, while 은평구 5.1% discount it less. The rest cannot be told apart from Seoul, and this page says so instead of ranking them. For jeonse, 3 of the 20 districts with a figure differ from Seoul (5.0%) — 구로구 9.1%, 노원구 9.1% discount it more, while 서초구 0.0% discounts it less."
+    "ko": "자치구 25곳 가운데 3곳만 서울(7.3%)과 다르다고 말할 수 있습니다 — 중랑구 9.4%, 구로구 8.9%는 더 크게 깎이고, 은평구 5.3%는 덜 깎입니다. 나머지는 서울과 갈라 볼 수 없습니다. 이 화면이 스물다섯 줄을 순위로 적지 않는 것은 그래서입니다. 전세는 값을 낸 20곳 가운데 4곳만 서울(5.0%)과 다릅니다 — 구로구 9.1%, 노원구 9.1%는 더 크게 깎이고, 은평구 0.9%, 서초구 0.0%는 덜 깎입니다.",
+    "en": "Of 25 districts, 3 sit outside the range a district identical to Seoul could produce at their sample size — 중랑구 9.4%, 구로구 8.9% discount it more, while 은평구 5.3% discount it less. The rest cannot be told apart from Seoul, and this page says so instead of ranking them. For jeonse, 4 of the 20 districts with a figure differ from Seoul (5.0%) — 구로구 9.1%, 노원구 9.1% discount it more, while 은평구 0.9%, 서초구 0.0% discount it less."
   }
 }

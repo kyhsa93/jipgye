@@ -1,24 +1,24 @@
 {
-  "updatedAt": "2026-10-29T02:24:01.225Z",
-  "priceLast": "202607",
+  "updatedAt": "2026-10-30T02:35:48.491Z",
+  "priceLast": "202608",
   "lastMonths": {
     "kb_sale": "202610",
     "kb_jeonse": "202610",
     "base_rate": "202609",
-    "mortgage_rate": "202608",
+    "mortgage_rate": "202609",
     "ktb3": "202609",
     "unsold_seoul": "202608",
     "csi_house_seoul": "202610",
-    "vol_seoul": "202608",
+    "vol_seoul": "202609",
     "jratio_seoul": "202609",
     "supply_demand_seoul": "202609",
-    "buyer_total_seoul": "202608",
-    "buyer_outside_seoul": "202608",
+    "buyer_total_seoul": "202609",
+    "buyer_outside_seoul": "202609",
     "mort_bal": "202608",
     "mort_bal_seoul": "202608",
     "permits_seoul": "202608",
-    "jeonse_loan_rate": "202608",
-    "deposit_rate": "202608"
+    "jeonse_loan_rate": "202609",
+    "deposit_rate": "202609"
   },
   "rows": [
     {
@@ -29,17 +29,17 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.73,
-          "gain": -0.3,
+          "gain": -0.31,
           "win": 0,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 5.63,
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.61,
           "gain": -0.92,
           "win": 0,
           "passes": false
@@ -55,17 +55,17 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
-          "with": 2.85,
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.84,
           "gain": -0.42,
           "win": 0,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 5.56,
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.54,
           "gain": -0.85,
           "win": 0,
           "passes": false
@@ -81,17 +81,17 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.69,
-          "gain": -0.26,
+          "gain": -0.27,
           "win": 0,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 5.56,
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.54,
           "gain": -0.85,
           "win": 0,
           "passes": false
@@ -107,17 +107,17 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.57,
-          "gain": -0.14,
+          "gain": -0.15,
           "win": 0,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 5.42,
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.4,
           "gain": -0.71,
           "win": 0,
           "passes": false
@@ -133,17 +133,17 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.46,
-          "gain": -0.03,
+          "gain": -0.04,
           "win": 0.16,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 5.13,
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.11,
           "gain": -0.42,
           "win": 0.08,
           "passes": false
@@ -159,17 +159,17 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.47,
-          "gain": -0.04,
+          "gain": -0.05,
           "win": 0.11,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 5.16,
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.14,
           "gain": -0.45,
           "win": 0.07,
           "passes": false
@@ -185,19 +185,19 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.33,
-          "gain": 0.1,
+          "gain": 0.09,
           "win": 0.81,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.64,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.62,
           "gain": 0.07,
-          "win": 0.48,
+          "win": 0.5,
           "passes": false
         }
       },
@@ -211,19 +211,19 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
-          "with": 2.35,
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.34,
           "gain": 0.08,
-          "win": 0.76,
+          "win": 0.77,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.65,
-          "gain": 0.06,
-          "win": 0.49,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.62,
+          "gain": 0.07,
+          "win": 0.51,
           "passes": false
         }
       },
@@ -237,17 +237,17 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.42,
-          "gain": 0.01,
-          "win": 0.62,
+          "gain": 0,
+          "win": 0.61,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.74,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.72,
           "gain": -0.03,
           "win": 0.5,
           "passes": false
@@ -263,19 +263,19 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.41,
-          "gain": 0.02,
-          "win": 0.65,
+          "gain": 0.01,
+          "win": 0.64,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.65,
-          "gain": 0.06,
-          "win": 0.63,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.64,
+          "gain": 0.05,
+          "win": 0.64,
           "passes": false
         }
       },
@@ -289,7 +289,7 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 146,
+          "origins": 147,
           "base": 2.55,
           "with": 2.89,
           "gain": -0.34,
@@ -297,11 +297,11 @@
           "passes": false
         },
         "6": {
-          "origins": 140,
-          "base": 5.14,
-          "with": 5.49,
-          "gain": -0.35,
-          "win": 0.2,
+          "origins": 141,
+          "base": 5.12,
+          "with": 5.46,
+          "gain": -0.34,
+          "win": 0.19,
           "passes": false
         }
       },
@@ -315,7 +315,7 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 147,
+          "origins": 148,
           "base": 2.54,
           "with": 2.88,
           "gain": -0.34,
@@ -323,11 +323,11 @@
           "passes": false
         },
         "6": {
-          "origins": 141,
-          "base": 5.12,
-          "with": 5.49,
-          "gain": -0.37,
-          "win": 0.17,
+          "origins": 142,
+          "base": 5.1,
+          "with": 5.46,
+          "gain": -0.36,
+          "win": 0.16,
           "passes": false
         }
       },
@@ -341,19 +341,19 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.43,
-          "gain": 0,
+          "gain": -0.01,
           "win": 0.5,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.59,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.57,
           "gain": 0.12,
-          "win": 0.72,
+          "win": 0.73,
           "passes": false
         }
       },
@@ -367,19 +367,19 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.43,
-          "gain": 0,
-          "win": 0.51,
+          "gain": -0.01,
+          "win": 0.52,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.56,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.54,
           "gain": 0.15,
-          "win": 0.73,
+          "win": 0.74,
           "passes": false
         }
       },
@@ -393,17 +393,17 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.47,
-          "gain": -0.04,
+          "gain": -0.05,
           "win": 0.12,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.86,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.84,
           "gain": -0.15,
           "win": 0.03,
           "passes": false
@@ -419,18 +419,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.46,
-          "gain": -0.03,
+          "gain": -0.04,
           "win": 0.31,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.82,
-          "gain": -0.11,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.81,
+          "gain": -0.12,
           "win": 0.21,
           "passes": false
         }
@@ -445,19 +445,19 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.35,
-          "gain": 0.08,
-          "win": 0.92,
+          "gain": 0.07,
+          "win": 0.91,
           "passes": true,
           "regionWins": 3,
           "regions": 5
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.69,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.67,
           "gain": 0.02,
           "win": 0.53,
           "passes": false
@@ -473,20 +473,20 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.31,
-          "gain": 0.12,
+          "gain": 0.11,
           "win": 1,
           "passes": true,
           "regionWins": 3,
           "regions": 5
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.53,
-          "gain": 0.18,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.52,
+          "gain": 0.17,
           "win": 0.78,
           "passes": false
         }
@@ -501,19 +501,19 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
-          "with": 2.45,
-          "gain": -0.02,
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.46,
+          "gain": -0.04,
           "win": 0.4,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.8,
-          "gain": -0.09,
-          "win": 0.36,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.79,
+          "gain": -0.1,
+          "win": 0.37,
           "passes": false
         }
       },
@@ -527,18 +527,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
-          "with": 2.45,
-          "gain": -0.02,
-          "win": 0.43,
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.46,
+          "gain": -0.04,
+          "win": 0.42,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
+          "origins": 170,
+          "base": 4.69,
           "with": 4.74,
-          "gain": -0.03,
+          "gain": -0.05,
           "win": 0.46,
           "passes": false
         }
@@ -553,18 +553,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
-          "with": 2.45,
-          "gain": -0.02,
-          "win": 0.43,
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.46,
+          "gain": -0.04,
+          "win": 0.42,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
+          "origins": 170,
+          "base": 4.69,
           "with": 4.65,
-          "gain": 0.06,
+          "gain": 0.04,
           "win": 0.58,
           "passes": false
         }
@@ -579,18 +579,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
-          "with": 2.71,
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.7,
           "gain": -0.28,
           "win": 0,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 5.93,
-          "gain": -1.22,
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.92,
+          "gain": -1.23,
           "win": 0,
           "passes": false
         }
@@ -605,18 +605,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 134,
-          "base": 2.67,
+          "origins": 135,
+          "base": 2.66,
           "with": 2.92,
-          "gain": -0.25,
-          "win": 0.05,
+          "gain": -0.26,
+          "win": 0.04,
           "passes": false
         },
         "6": {
-          "origins": 128,
-          "base": 5.33,
-          "with": 5.42,
-          "gain": -0.09,
+          "origins": 129,
+          "base": 5.3,
+          "with": 5.38,
+          "gain": -0.08,
           "win": 0.45,
           "passes": false
         }
@@ -631,18 +631,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 135,
+          "origins": 136,
           "base": 2.66,
-          "with": 2.96,
-          "gain": -0.3,
+          "with": 2.94,
+          "gain": -0.28,
           "win": 0.07,
           "passes": false
         },
         "6": {
-          "origins": 129,
-          "base": 5.32,
-          "with": 5.52,
-          "gain": -0.2,
+          "origins": 130,
+          "base": 5.29,
+          "with": 5.48,
+          "gain": -0.19,
           "win": 0.01,
           "passes": false
         }
@@ -657,18 +657,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 140,
-          "base": 2.62,
-          "with": 2.91,
+          "origins": 141,
+          "base": 2.61,
+          "with": 2.9,
           "gain": -0.29,
           "win": 0.01,
           "passes": false
         },
         "6": {
-          "origins": 134,
-          "base": 5.28,
-          "with": 5.25,
-          "gain": 0.03,
+          "origins": 135,
+          "base": 5.25,
+          "with": 5.21,
+          "gain": 0.04,
           "win": 0.3,
           "passes": false
         }
@@ -683,19 +683,19 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 141,
+          "origins": 142,
           "base": 2.6,
-          "with": 2.77,
-          "gain": -0.17,
-          "win": 0.17,
+          "with": 2.76,
+          "gain": -0.16,
+          "win": 0.19,
           "passes": false
         },
         "6": {
-          "origins": 135,
-          "base": 5.27,
-          "with": 5.1,
-          "gain": 0.17,
-          "win": 0.54,
+          "origins": 136,
+          "base": 5.25,
+          "with": 5.07,
+          "gain": 0.18,
+          "win": 0.55,
           "passes": false
         }
       },
@@ -709,17 +709,17 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.43,
-          "gain": 0,
-          "win": 0.42,
+          "gain": -0.01,
+          "win": 0.38,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.78,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.76,
           "gain": -0.07,
           "win": 0,
           "passes": false
@@ -735,19 +735,19 @@
       "published": true,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.43,
-          "gain": 0,
+          "gain": -0.01,
           "win": 0.38,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.78,
-          "gain": -0.07,
-          "win": 0.03,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.77,
+          "gain": -0.08,
+          "win": 0.02,
           "passes": false
         }
       },
@@ -761,19 +761,19 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.41,
-          "gain": 0.02,
-          "win": 0.84,
+          "gain": 0.01,
+          "win": 0.81,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.74,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.72,
           "gain": -0.03,
-          "win": 0.36,
+          "win": 0.34,
           "passes": false
         }
       },
@@ -787,19 +787,19 @@
       "published": true,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.44,
-          "gain": -0.01,
-          "win": 0.36,
+          "gain": -0.02,
+          "win": 0.35,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.75,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.73,
           "gain": -0.04,
-          "win": 0.17,
+          "win": 0.16,
           "passes": false
         }
       },
@@ -813,9 +813,9 @@
       "published": true,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
-          "with": 2.05,
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.04,
           "gain": 0.38,
           "win": 0.99,
           "passes": true,
@@ -823,12 +823,14 @@
           "regions": 5
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.43,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.41,
           "gain": 0.28,
-          "win": 0.9,
-          "passes": false
+          "win": 0.91,
+          "passes": true,
+          "regionWins": 4,
+          "regions": 5
         }
       },
       "verdict": "published"
@@ -841,19 +843,19 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
-          "with": 2.3,
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.29,
           "gain": 0.13,
-          "win": 0.86,
+          "win": 0.87,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.63,
-          "gain": 0.08,
-          "win": 0.67,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.6,
+          "gain": 0.09,
+          "win": 0.66,
           "passes": false
         }
       },
@@ -867,18 +869,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.41,
-          "gain": 0.02,
+          "gain": 0.01,
           "win": 0.56,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.57,
-          "gain": 0.14,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.56,
+          "gain": 0.13,
           "win": 0.6,
           "passes": false
         }
@@ -893,19 +895,19 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.39,
-          "gain": 0.04,
+          "gain": 0.03,
           "win": 0.6,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.61,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.59,
           "gain": 0.1,
-          "win": 0.57,
+          "win": 0.58,
           "passes": false
         }
       },
@@ -919,18 +921,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.53,
-          "gain": -0.1,
+          "gain": -0.11,
           "win": 0.03,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
+          "origins": 170,
+          "base": 4.69,
           "with": 5.19,
-          "gain": -0.48,
+          "gain": -0.5,
           "win": 0.02,
           "passes": false
         }
@@ -945,18 +947,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.51,
-          "gain": -0.08,
+          "gain": -0.09,
           "win": 0.01,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 5.12,
-          "gain": -0.41,
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.11,
+          "gain": -0.42,
           "win": 0.04,
           "passes": false
         }
@@ -971,18 +973,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
-          "with": 2.46,
-          "gain": -0.03,
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.47,
+          "gain": -0.05,
           "win": 0.22,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 4.83,
-          "gain": -0.12,
+          "origins": 170,
+          "base": 4.69,
+          "with": 4.82,
+          "gain": -0.13,
           "win": 0.3,
           "passes": false
         }
@@ -997,18 +999,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
+          "origins": 173,
+          "base": 2.42,
           "with": 2.5,
-          "gain": -0.07,
+          "gain": -0.08,
           "win": 0.16,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 5.04,
-          "gain": -0.33,
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.03,
+          "gain": -0.34,
           "win": 0.12,
           "passes": false
         }
@@ -1023,18 +1025,18 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 172,
-          "base": 2.43,
-          "with": 2.65,
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.64,
           "gain": -0.22,
           "win": 0,
           "passes": false
         },
         "6": {
-          "origins": 169,
-          "base": 4.71,
-          "with": 5.19,
-          "gain": -0.48,
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.16,
+          "gain": -0.47,
           "win": 0,
           "passes": false
         }
@@ -1049,7 +1051,7 @@
       "published": false,
       "h": {
         "3": {
-          "origins": 147,
+          "origins": 148,
           "base": 2.54,
           "with": 2.78,
           "gain": -0.24,
@@ -1057,11 +1059,11 @@
           "passes": false
         },
         "6": {
-          "origins": 141,
-          "base": 5.12,
-          "with": 5.21,
+          "origins": 142,
+          "base": 5.1,
+          "with": 5.19,
           "gain": -0.09,
-          "win": 0.06,
+          "win": 0.05,
           "passes": false
         }
       },
@@ -1069,11 +1071,11 @@
     }
   ],
   "lead": {
-    "ko": "넣어 본 지표 23개 가운데 3개월·6개월 뒤를 지난 가격 변화만 쓰는 모델보다 꾸준히 더 잘 맞힌 것은 없었습니다(서울과 5개 권역 중 4곳 이상 기준). 흔히 먼저 움직인다고 하는 거래 건수는 넣으면 3개월 오차가 오히려 2.43%p에서 2.69%p로 커졌습니다.",
-    "en": "Of the 23 indicators tried, none consistently beat the price-only model three or six months out — in Seoul and in at least four of the five regions. Volume, the usual suspect, made the three-month forecast worse (2.43pp → 2.69pp)."
+    "ko": "넣어 본 지표 23개 가운데 3개월·6개월 뒤를 지난 가격 변화만 쓰는 모델보다 꾸준히 더 잘 맞힌 것은 없었습니다(서울과 5개 권역 중 4곳 이상 기준). 흔히 먼저 움직인다고 하는 거래 건수는 넣으면 3개월 오차가 오히려 2.42%p에서 2.69%p로 커졌습니다.",
+    "en": "Of the 23 indicators tried, none consistently beat the price-only model three or six months out — in Seoul and in at least four of the five regions. Volume, the usual suspect, made the three-month forecast worse (2.42pp → 2.69pp)."
   },
   "table": {
-    "ko": "<thead><tr><th scope=\"col\">넣은 지표</th><th scope=\"col\">3개월 뒤 오차</th><th scope=\"col\">6개월 뒤 오차</th><th scope=\"col\">판정</th></tr></thead><tbody><tr><td>거래 건수: 최근 3개월 / 그 전 24개월</td><td>2.73%p<div class=\"sub\">기준 2.43%p · 0%</div></td><td>5.63%p<div class=\"sub\">기준 4.71%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>거래 건수: 최근 3개월 / 그 전 24개월 (+1개월)</td><td>2.85%p<div class=\"sub\">기준 2.43%p · 0%</div></td><td>5.56%p<div class=\"sub\">기준 4.71%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>거래 건수: 3개월 전년 대비</td><td>2.69%p<div class=\"sub\">기준 2.43%p · 0%</div></td><td>5.56%p<div class=\"sub\">기준 4.71%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>거래 건수: 3개월 전년 대비 (+1개월)</td><td>2.57%p<div class=\"sub\">기준 2.43%p · 0%</div></td><td>5.42%p<div class=\"sub\">기준 4.71%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>전세가율(KB 지수비) 수준</td><td>2.46%p<div class=\"sub\">기준 2.43%p · 16%</div></td><td>5.13%p<div class=\"sub\">기준 4.71%p · 8%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>전세가율(KB 지수비) 수준 (+1개월)</td><td>2.47%p<div class=\"sub\">기준 2.43%p · 11%</div></td><td>5.16%p<div class=\"sub\">기준 4.71%p · 7%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>전세가율(KB 지수비) 12개월 변화</td><td>2.33%p<div class=\"sub\">기준 2.43%p · 81%</div></td><td>4.64%p<div class=\"sub\">기준 4.71%p · 48%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>전세가율(KB 지수비) 12개월 변화 (+1개월)</td><td>2.35%p<div class=\"sub\">기준 2.43%p · 76%</div></td><td>4.65%p<div class=\"sub\">기준 4.71%p · 49%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 전세 3개월 상승률</td><td>2.42%p<div class=\"sub\">기준 2.43%p · 62%</div></td><td>4.74%p<div class=\"sub\">기준 4.71%p · 50%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 전세 3개월 상승률 (+1개월)</td><td>2.41%p<div class=\"sub\">기준 2.43%p · 65%</div></td><td>4.65%p<div class=\"sub\">기준 4.71%p · 63%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>전세가율(부동산원) 수준</td><td>2.89%p<div class=\"sub\">기준 2.55%p · 4%</div></td><td>5.49%p<div class=\"sub\">기준 5.14%p · 20%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>전세가율(부동산원) 수준 (+1개월)</td><td>2.88%p<div class=\"sub\">기준 2.54%p · 4%</div></td><td>5.49%p<div class=\"sub\">기준 5.12%p · 17%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>기준금리 12개월 변화</td><td>2.43%p<div class=\"sub\">기준 2.43%p · 50%</div></td><td>4.59%p<div class=\"sub\">기준 4.71%p · 72%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>기준금리 12개월 변화 (+1개월)</td><td>2.43%p<div class=\"sub\">기준 2.43%p · 51%</div></td><td>4.56%p<div class=\"sub\">기준 4.71%p · 73%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주담대 금리 12개월 변화</td><td>2.47%p<div class=\"sub\">기준 2.43%p · 12%</div></td><td>4.86%p<div class=\"sub\">기준 4.71%p · 3%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주담대 금리 12개월 변화 (+1개월)</td><td>2.46%p<div class=\"sub\">기준 2.43%p · 31%</div></td><td>4.82%p<div class=\"sub\">기준 4.71%p · 21%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주담대 금리 수준</td><td>2.35%p<div class=\"sub\">기준 2.43%p · 92%</div></td><td>4.69%p<div class=\"sub\">기준 4.71%p · 53%</div></td><td><span class=\"low-sample\">서울에서만, 권역 재현 안 됨</span></td></tr><tr><td>주담대 금리 수준 (+1개월)</td><td>2.31%p<div class=\"sub\">기준 2.43%p · 100%</div></td><td>4.53%p<div class=\"sub\">기준 4.71%p · 78%</div></td><td><span class=\"low-sample\">서울에서만, 권역 재현 안 됨</span></td></tr><tr><td>국고채 3년 12개월 변화</td><td>2.45%p<div class=\"sub\">기준 2.43%p · 40%</div></td><td>4.8%p<div class=\"sub\">기준 4.71%p · 36%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>국고채 3년 12개월 변화 (+1개월)</td><td>2.45%p<div class=\"sub\">기준 2.43%p · 43%</div></td><td>4.74%p<div class=\"sub\">기준 4.71%p · 46%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>서울 미분양 수준</td><td>2.45%p<div class=\"sub\">기준 2.43%p · 43%</div></td><td>4.65%p<div class=\"sub\">기준 4.71%p · 58%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>서울 미분양 전년 대비</td><td>2.71%p<div class=\"sub\">기준 2.43%p · 0%</div></td><td>5.93%p<div class=\"sub\">기준 4.71%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주택가격전망 소비자심리(서울)</td><td>2.92%p<div class=\"sub\">기준 2.67%p · 5%</div></td><td>5.42%p<div class=\"sub\">기준 5.33%p · 45%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주택가격전망 소비자심리(서울) (+1개월)</td><td>2.96%p<div class=\"sub\">기준 2.66%p · 7%</div></td><td>5.52%p<div class=\"sub\">기준 5.32%p · 1%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>매매수급지수(서울)</td><td>2.91%p<div class=\"sub\">기준 2.62%p · 1%</div></td><td>5.25%p<div class=\"sub\">기준 5.28%p · 30%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>매매수급지수(서울) (+1개월)</td><td>2.77%p<div class=\"sub\">기준 2.6%p · 17%</div></td><td>5.1%p<div class=\"sub\">기준 5.27%p · 54%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 매매 3개월 상승률</td><td>2.43%p<div class=\"sub\">기준 2.43%p · 42%</div></td><td>4.78%p<div class=\"sub\">기준 4.71%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 매매 3개월 상승률 (+1개월)</td><td>2.43%p<div class=\"sub\">기준 2.43%p · 38%</div></td><td>4.78%p<div class=\"sub\">기준 4.71%p · 3%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 매매 1개월 상승률</td><td>2.41%p<div class=\"sub\">기준 2.43%p · 84%</div></td><td>4.74%p<div class=\"sub\">기준 4.71%p · 36%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 매매 1개월 상승률 (+1개월)</td><td>2.44%p<div class=\"sub\">기준 2.43%p · 36%</div></td><td>4.75%p<div class=\"sub\">기준 4.71%p · 17%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 매매 1개월 상승률 (+2개월)</td><td>2.05%p<div class=\"sub\">기준 2.43%p · 99%</div></td><td>4.43%p<div class=\"sub\">기준 4.71%p · 90%</div></td><td><span class=\"low-sample\">먼저 공표된 효과(앞섬 아님)</span></td></tr><tr><td>계절(달)</td><td>2.3%p<div class=\"sub\">기준 2.43%p · 86%</div></td><td>4.63%p<div class=\"sub\">기준 4.71%p · 67%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>서울 아파트 외지인 매입 비중</td><td>2.41%p<div class=\"sub\">기준 2.43%p · 56%</div></td><td>4.57%p<div class=\"sub\">기준 4.71%p · 60%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>서울 아파트 외지인 매입 비중 (+1개월)</td><td>2.39%p<div class=\"sub\">기준 2.43%p · 60%</div></td><td>4.61%p<div class=\"sub\">기준 4.71%p · 57%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>외지인 매입 비중 12개월 변화</td><td>2.53%p<div class=\"sub\">기준 2.43%p · 3%</div></td><td>5.19%p<div class=\"sub\">기준 4.71%p · 2%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>외지인 매입 비중 12개월 변화 (+1개월)</td><td>2.51%p<div class=\"sub\">기준 2.43%p · 1%</div></td><td>5.12%p<div class=\"sub\">기준 4.71%p · 4%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주택관련대출 잔액(전국 은행) 12개월 증가율</td><td>2.46%p<div class=\"sub\">기준 2.43%p · 22%</div></td><td>4.83%p<div class=\"sub\">기준 4.71%p · 30%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주택관련대출 잔액(서울 은행) 12개월 증가율</td><td>2.5%p<div class=\"sub\">기준 2.43%p · 16%</div></td><td>5.04%p<div class=\"sub\">기준 4.71%p · 12%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>서울 주택 인허가 12개월 합 전년 대비</td><td>2.65%p<div class=\"sub\">기준 2.43%p · 0%</div></td><td>5.19%p<div class=\"sub\">기준 4.71%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>3년 전 서울 주택 인허가(지금 들어오는 공급) 전년 대비</td><td>2.78%p<div class=\"sub\">기준 2.54%p · 2%</div></td><td>5.21%p<div class=\"sub\">기준 5.12%p · 6%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>건축HUB 주택인허가</td><td>-</td><td>-</td><td><span class=\"low-sample\">백테스트에 못 들어감: 집계 호수 대조 불합격(괴리 40.8%, 호수 0이 95.8%) - 사업 단위 목록에 호수가 거의 채워지지 않음</span><div class=\"sub\">확인일 2026-10-10</div></td></tr></tbody>",
-    "en": "<thead><tr><th scope=\"col\">Indicator added</th><th scope=\"col\">3 months</th><th scope=\"col\">6 months</th><th scope=\"col\">Verdict</th></tr></thead><tbody><tr><td>Volume: last 3 months vs prior 24</td><td>2.73pp<div class=\"sub\">base 2.43pp · 0%</div></td><td>5.63pp<div class=\"sub\">base 4.71pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Volume: last 3 months vs prior 24 (+1m)</td><td>2.85pp<div class=\"sub\">base 2.43pp · 0%</div></td><td>5.56pp<div class=\"sub\">base 4.71pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Volume: 3-month, year on year</td><td>2.69pp<div class=\"sub\">base 2.43pp · 0%</div></td><td>5.56pp<div class=\"sub\">base 4.71pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Volume: 3-month, year on year (+1m)</td><td>2.57pp<div class=\"sub\">base 2.43pp · 0%</div></td><td>5.42pp<div class=\"sub\">base 4.71pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Jeonse ratio (KB index ratio), level</td><td>2.46pp<div class=\"sub\">base 2.43pp · 16%</div></td><td>5.13pp<div class=\"sub\">base 4.71pp · 8%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Jeonse ratio (KB index ratio), level (+1m)</td><td>2.47pp<div class=\"sub\">base 2.43pp · 11%</div></td><td>5.16pp<div class=\"sub\">base 4.71pp · 7%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Jeonse ratio (KB), 12-month change</td><td>2.33pp<div class=\"sub\">base 2.43pp · 81%</div></td><td>4.64pp<div class=\"sub\">base 4.71pp · 48%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Jeonse ratio (KB), 12-month change (+1m)</td><td>2.35pp<div class=\"sub\">base 2.43pp · 76%</div></td><td>4.65pp<div class=\"sub\">base 4.71pp · 49%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB jeonse, 3-month change</td><td>2.42pp<div class=\"sub\">base 2.43pp · 62%</div></td><td>4.74pp<div class=\"sub\">base 4.71pp · 50%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB jeonse, 3-month change (+1m)</td><td>2.41pp<div class=\"sub\">base 2.43pp · 65%</div></td><td>4.65pp<div class=\"sub\">base 4.71pp · 63%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Jeonse ratio (REB), level</td><td>2.89pp<div class=\"sub\">base 2.55pp · 4%</div></td><td>5.49pp<div class=\"sub\">base 5.14pp · 20%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Jeonse ratio (REB), level (+1m)</td><td>2.88pp<div class=\"sub\">base 2.54pp · 4%</div></td><td>5.49pp<div class=\"sub\">base 5.12pp · 17%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Base rate, 12-month change</td><td>2.43pp<div class=\"sub\">base 2.43pp · 50%</div></td><td>4.59pp<div class=\"sub\">base 4.71pp · 72%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Base rate, 12-month change (+1m)</td><td>2.43pp<div class=\"sub\">base 2.43pp · 51%</div></td><td>4.56pp<div class=\"sub\">base 4.71pp · 73%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Mortgage rate, 12-month change</td><td>2.47pp<div class=\"sub\">base 2.43pp · 12%</div></td><td>4.86pp<div class=\"sub\">base 4.71pp · 3%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Mortgage rate, 12-month change (+1m)</td><td>2.46pp<div class=\"sub\">base 2.43pp · 31%</div></td><td>4.82pp<div class=\"sub\">base 4.71pp · 21%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Mortgage rate, level</td><td>2.35pp<div class=\"sub\">base 2.43pp · 92%</div></td><td>4.69pp<div class=\"sub\">base 4.71pp · 53%</div></td><td><span class=\"low-sample\">Seoul only, not in regions</span></td></tr><tr><td>Mortgage rate, level (+1m)</td><td>2.31pp<div class=\"sub\">base 2.43pp · 100%</div></td><td>4.53pp<div class=\"sub\">base 4.71pp · 78%</div></td><td><span class=\"low-sample\">Seoul only, not in regions</span></td></tr><tr><td>3-year treasury, 12-month change</td><td>2.45pp<div class=\"sub\">base 2.43pp · 40%</div></td><td>4.8pp<div class=\"sub\">base 4.71pp · 36%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>3-year treasury, 12-month change (+1m)</td><td>2.45pp<div class=\"sub\">base 2.43pp · 43%</div></td><td>4.74pp<div class=\"sub\">base 4.71pp · 46%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Seoul unsold homes, level</td><td>2.45pp<div class=\"sub\">base 2.43pp · 43%</div></td><td>4.65pp<div class=\"sub\">base 4.71pp · 58%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Seoul unsold homes, year on year</td><td>2.71pp<div class=\"sub\">base 2.43pp · 0%</div></td><td>5.93pp<div class=\"sub\">base 4.71pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Consumer house-price outlook (Seoul)</td><td>2.92pp<div class=\"sub\">base 2.67pp · 5%</div></td><td>5.42pp<div class=\"sub\">base 5.33pp · 45%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Consumer house-price outlook (Seoul) (+1m)</td><td>2.96pp<div class=\"sub\">base 2.66pp · 7%</div></td><td>5.52pp<div class=\"sub\">base 5.32pp · 1%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Buyer-seller balance index (Seoul)</td><td>2.91pp<div class=\"sub\">base 2.62pp · 1%</div></td><td>5.25pp<div class=\"sub\">base 5.28pp · 30%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Buyer-seller balance index (Seoul) (+1m)</td><td>2.77pp<div class=\"sub\">base 2.6pp · 17%</div></td><td>5.1pp<div class=\"sub\">base 5.27pp · 54%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB sale index, 3-month change</td><td>2.43pp<div class=\"sub\">base 2.43pp · 42%</div></td><td>4.78pp<div class=\"sub\">base 4.71pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB sale index, 3-month change (+1m)</td><td>2.43pp<div class=\"sub\">base 2.43pp · 38%</div></td><td>4.78pp<div class=\"sub\">base 4.71pp · 3%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB sale index, 1-month change</td><td>2.41pp<div class=\"sub\">base 2.43pp · 84%</div></td><td>4.74pp<div class=\"sub\">base 4.71pp · 36%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB sale index, 1-month change (+1m)</td><td>2.44pp<div class=\"sub\">base 2.43pp · 36%</div></td><td>4.75pp<div class=\"sub\">base 4.71pp · 17%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB sale index, 1-month change (+2m)</td><td>2.05pp<div class=\"sub\">base 2.43pp · 99%</div></td><td>4.43pp<div class=\"sub\">base 4.71pp · 90%</div></td><td><span class=\"low-sample\">earlier publication, not leading</span></td></tr><tr><td>Season (calendar month)</td><td>2.3pp<div class=\"sub\">base 2.43pp · 86%</div></td><td>4.63pp<div class=\"sub\">base 4.71pp · 67%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Share of Seoul apartments bought by non-Seoul residents</td><td>2.41pp<div class=\"sub\">base 2.43pp · 56%</div></td><td>4.57pp<div class=\"sub\">base 4.71pp · 60%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Share of Seoul apartments bought by non-Seoul residents (+1m)</td><td>2.39pp<div class=\"sub\">base 2.43pp · 60%</div></td><td>4.61pp<div class=\"sub\">base 4.71pp · 57%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Non-resident buyer share, 12-month change</td><td>2.53pp<div class=\"sub\">base 2.43pp · 3%</div></td><td>5.19pp<div class=\"sub\">base 4.71pp · 2%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Non-resident buyer share, 12-month change (+1m)</td><td>2.51pp<div class=\"sub\">base 2.43pp · 1%</div></td><td>5.12pp<div class=\"sub\">base 4.71pp · 4%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Bank housing-loan balance (Korea), 12-month growth</td><td>2.46pp<div class=\"sub\">base 2.43pp · 22%</div></td><td>4.83pp<div class=\"sub\">base 4.71pp · 30%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Bank housing-loan balance (Seoul), 12-month growth</td><td>2.5pp<div class=\"sub\">base 2.43pp · 16%</div></td><td>5.04pp<div class=\"sub\">base 4.71pp · 12%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Seoul housing permits, 12-month sum year on year</td><td>2.65pp<div class=\"sub\">base 2.43pp · 0%</div></td><td>5.19pp<div class=\"sub\">base 4.71pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Seoul housing permits 3 years earlier (supply arriving now), year on year</td><td>2.78pp<div class=\"sub\">base 2.54pp · 2%</div></td><td>5.21pp<div class=\"sub\">base 5.12pp · 6%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Building HUB housing permits</td><td>-</td><td>-</td><td><span class=\"low-sample\">Not backtested: failed the household count check (gap 40.8%, 95.8% of entries have 0 households) - the project-level list leaves household counts almost empty</span><div class=\"sub\">checked 2026-10-10</div></td></tr></tbody>"
+    "ko": "<thead><tr><th scope=\"col\">넣은 지표</th><th scope=\"col\">3개월 뒤 오차</th><th scope=\"col\">6개월 뒤 오차</th><th scope=\"col\">판정</th></tr></thead><tbody><tr><td>거래 건수: 최근 3개월 / 그 전 24개월</td><td>2.73%p<div class=\"sub\">기준 2.42%p · 0%</div></td><td>5.61%p<div class=\"sub\">기준 4.69%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>거래 건수: 최근 3개월 / 그 전 24개월 (+1개월)</td><td>2.84%p<div class=\"sub\">기준 2.42%p · 0%</div></td><td>5.54%p<div class=\"sub\">기준 4.69%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>거래 건수: 3개월 전년 대비</td><td>2.69%p<div class=\"sub\">기준 2.42%p · 0%</div></td><td>5.54%p<div class=\"sub\">기준 4.69%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>거래 건수: 3개월 전년 대비 (+1개월)</td><td>2.57%p<div class=\"sub\">기준 2.42%p · 0%</div></td><td>5.4%p<div class=\"sub\">기준 4.69%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>전세가율(KB 지수비) 수준</td><td>2.46%p<div class=\"sub\">기준 2.42%p · 16%</div></td><td>5.11%p<div class=\"sub\">기준 4.69%p · 8%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>전세가율(KB 지수비) 수준 (+1개월)</td><td>2.47%p<div class=\"sub\">기준 2.42%p · 11%</div></td><td>5.14%p<div class=\"sub\">기준 4.69%p · 7%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>전세가율(KB 지수비) 12개월 변화</td><td>2.33%p<div class=\"sub\">기준 2.42%p · 81%</div></td><td>4.62%p<div class=\"sub\">기준 4.69%p · 50%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>전세가율(KB 지수비) 12개월 변화 (+1개월)</td><td>2.34%p<div class=\"sub\">기준 2.42%p · 77%</div></td><td>4.62%p<div class=\"sub\">기준 4.69%p · 51%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 전세 3개월 상승률</td><td>2.42%p<div class=\"sub\">기준 2.42%p · 61%</div></td><td>4.72%p<div class=\"sub\">기준 4.69%p · 50%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 전세 3개월 상승률 (+1개월)</td><td>2.41%p<div class=\"sub\">기준 2.42%p · 64%</div></td><td>4.64%p<div class=\"sub\">기준 4.69%p · 64%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>전세가율(부동산원) 수준</td><td>2.89%p<div class=\"sub\">기준 2.55%p · 4%</div></td><td>5.46%p<div class=\"sub\">기준 5.12%p · 19%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>전세가율(부동산원) 수준 (+1개월)</td><td>2.88%p<div class=\"sub\">기준 2.54%p · 4%</div></td><td>5.46%p<div class=\"sub\">기준 5.1%p · 16%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>기준금리 12개월 변화</td><td>2.43%p<div class=\"sub\">기준 2.42%p · 50%</div></td><td>4.57%p<div class=\"sub\">기준 4.69%p · 73%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>기준금리 12개월 변화 (+1개월)</td><td>2.43%p<div class=\"sub\">기준 2.42%p · 52%</div></td><td>4.54%p<div class=\"sub\">기준 4.69%p · 74%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주담대 금리 12개월 변화</td><td>2.47%p<div class=\"sub\">기준 2.42%p · 12%</div></td><td>4.84%p<div class=\"sub\">기준 4.69%p · 3%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주담대 금리 12개월 변화 (+1개월)</td><td>2.46%p<div class=\"sub\">기준 2.42%p · 31%</div></td><td>4.81%p<div class=\"sub\">기준 4.69%p · 21%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주담대 금리 수준</td><td>2.35%p<div class=\"sub\">기준 2.42%p · 91%</div></td><td>4.67%p<div class=\"sub\">기준 4.69%p · 53%</div></td><td><span class=\"low-sample\">서울에서만, 권역 재현 안 됨</span></td></tr><tr><td>주담대 금리 수준 (+1개월)</td><td>2.31%p<div class=\"sub\">기준 2.42%p · 100%</div></td><td>4.52%p<div class=\"sub\">기준 4.69%p · 78%</div></td><td><span class=\"low-sample\">서울에서만, 권역 재현 안 됨</span></td></tr><tr><td>국고채 3년 12개월 변화</td><td>2.46%p<div class=\"sub\">기준 2.42%p · 40%</div></td><td>4.79%p<div class=\"sub\">기준 4.69%p · 37%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>국고채 3년 12개월 변화 (+1개월)</td><td>2.46%p<div class=\"sub\">기준 2.42%p · 42%</div></td><td>4.74%p<div class=\"sub\">기준 4.69%p · 46%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>서울 미분양 수준</td><td>2.46%p<div class=\"sub\">기준 2.42%p · 42%</div></td><td>4.65%p<div class=\"sub\">기준 4.69%p · 58%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>서울 미분양 전년 대비</td><td>2.7%p<div class=\"sub\">기준 2.42%p · 0%</div></td><td>5.92%p<div class=\"sub\">기준 4.69%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주택가격전망 소비자심리(서울)</td><td>2.92%p<div class=\"sub\">기준 2.66%p · 4%</div></td><td>5.38%p<div class=\"sub\">기준 5.3%p · 45%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주택가격전망 소비자심리(서울) (+1개월)</td><td>2.94%p<div class=\"sub\">기준 2.66%p · 7%</div></td><td>5.48%p<div class=\"sub\">기준 5.29%p · 1%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>매매수급지수(서울)</td><td>2.9%p<div class=\"sub\">기준 2.61%p · 1%</div></td><td>5.21%p<div class=\"sub\">기준 5.25%p · 30%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>매매수급지수(서울) (+1개월)</td><td>2.76%p<div class=\"sub\">기준 2.6%p · 19%</div></td><td>5.07%p<div class=\"sub\">기준 5.25%p · 55%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 매매 3개월 상승률</td><td>2.43%p<div class=\"sub\">기준 2.42%p · 38%</div></td><td>4.76%p<div class=\"sub\">기준 4.69%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 매매 3개월 상승률 (+1개월)</td><td>2.43%p<div class=\"sub\">기준 2.42%p · 38%</div></td><td>4.77%p<div class=\"sub\">기준 4.69%p · 2%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 매매 1개월 상승률</td><td>2.41%p<div class=\"sub\">기준 2.42%p · 81%</div></td><td>4.72%p<div class=\"sub\">기준 4.69%p · 34%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 매매 1개월 상승률 (+1개월)</td><td>2.44%p<div class=\"sub\">기준 2.42%p · 35%</div></td><td>4.73%p<div class=\"sub\">기준 4.69%p · 16%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>KB 매매 1개월 상승률 (+2개월)</td><td>2.04%p<div class=\"sub\">기준 2.42%p · 99%</div></td><td>4.41%p<div class=\"sub\">기준 4.69%p · 91%</div></td><td><span class=\"low-sample\">먼저 공표된 효과(앞섬 아님)</span></td></tr><tr><td>계절(달)</td><td>2.29%p<div class=\"sub\">기준 2.42%p · 87%</div></td><td>4.6%p<div class=\"sub\">기준 4.69%p · 66%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>서울 아파트 외지인 매입 비중</td><td>2.41%p<div class=\"sub\">기준 2.42%p · 56%</div></td><td>4.56%p<div class=\"sub\">기준 4.69%p · 60%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>서울 아파트 외지인 매입 비중 (+1개월)</td><td>2.39%p<div class=\"sub\">기준 2.42%p · 60%</div></td><td>4.59%p<div class=\"sub\">기준 4.69%p · 58%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>외지인 매입 비중 12개월 변화</td><td>2.53%p<div class=\"sub\">기준 2.42%p · 3%</div></td><td>5.19%p<div class=\"sub\">기준 4.69%p · 2%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>외지인 매입 비중 12개월 변화 (+1개월)</td><td>2.51%p<div class=\"sub\">기준 2.42%p · 1%</div></td><td>5.11%p<div class=\"sub\">기준 4.69%p · 4%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주택관련대출 잔액(전국 은행) 12개월 증가율</td><td>2.47%p<div class=\"sub\">기준 2.42%p · 22%</div></td><td>4.82%p<div class=\"sub\">기준 4.69%p · 30%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>주택관련대출 잔액(서울 은행) 12개월 증가율</td><td>2.5%p<div class=\"sub\">기준 2.42%p · 16%</div></td><td>5.03%p<div class=\"sub\">기준 4.69%p · 12%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>서울 주택 인허가 12개월 합 전년 대비</td><td>2.64%p<div class=\"sub\">기준 2.42%p · 0%</div></td><td>5.16%p<div class=\"sub\">기준 4.69%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>3년 전 서울 주택 인허가(지금 들어오는 공급) 전년 대비</td><td>2.78%p<div class=\"sub\">기준 2.54%p · 2%</div></td><td>5.19%p<div class=\"sub\">기준 5.1%p · 5%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>건축HUB 주택인허가</td><td>-</td><td>-</td><td><span class=\"low-sample\">백테스트에 못 들어감: 집계 호수 대조 불합격(괴리 40.8%, 호수 0이 95.8%) - 사업 단위 목록에 호수가 거의 채워지지 않음</span><div class=\"sub\">확인일 2026-10-10</div></td></tr></tbody>",
+    "en": "<thead><tr><th scope=\"col\">Indicator added</th><th scope=\"col\">3 months</th><th scope=\"col\">6 months</th><th scope=\"col\">Verdict</th></tr></thead><tbody><tr><td>Volume: last 3 months vs prior 24</td><td>2.73pp<div class=\"sub\">base 2.42pp · 0%</div></td><td>5.61pp<div class=\"sub\">base 4.69pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Volume: last 3 months vs prior 24 (+1m)</td><td>2.84pp<div class=\"sub\">base 2.42pp · 0%</div></td><td>5.54pp<div class=\"sub\">base 4.69pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Volume: 3-month, year on year</td><td>2.69pp<div class=\"sub\">base 2.42pp · 0%</div></td><td>5.54pp<div class=\"sub\">base 4.69pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Volume: 3-month, year on year (+1m)</td><td>2.57pp<div class=\"sub\">base 2.42pp · 0%</div></td><td>5.4pp<div class=\"sub\">base 4.69pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Jeonse ratio (KB index ratio), level</td><td>2.46pp<div class=\"sub\">base 2.42pp · 16%</div></td><td>5.11pp<div class=\"sub\">base 4.69pp · 8%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Jeonse ratio (KB index ratio), level (+1m)</td><td>2.47pp<div class=\"sub\">base 2.42pp · 11%</div></td><td>5.14pp<div class=\"sub\">base 4.69pp · 7%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Jeonse ratio (KB), 12-month change</td><td>2.33pp<div class=\"sub\">base 2.42pp · 81%</div></td><td>4.62pp<div class=\"sub\">base 4.69pp · 50%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Jeonse ratio (KB), 12-month change (+1m)</td><td>2.34pp<div class=\"sub\">base 2.42pp · 77%</div></td><td>4.62pp<div class=\"sub\">base 4.69pp · 51%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB jeonse, 3-month change</td><td>2.42pp<div class=\"sub\">base 2.42pp · 61%</div></td><td>4.72pp<div class=\"sub\">base 4.69pp · 50%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB jeonse, 3-month change (+1m)</td><td>2.41pp<div class=\"sub\">base 2.42pp · 64%</div></td><td>4.64pp<div class=\"sub\">base 4.69pp · 64%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Jeonse ratio (REB), level</td><td>2.89pp<div class=\"sub\">base 2.55pp · 4%</div></td><td>5.46pp<div class=\"sub\">base 5.12pp · 19%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Jeonse ratio (REB), level (+1m)</td><td>2.88pp<div class=\"sub\">base 2.54pp · 4%</div></td><td>5.46pp<div class=\"sub\">base 5.1pp · 16%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Base rate, 12-month change</td><td>2.43pp<div class=\"sub\">base 2.42pp · 50%</div></td><td>4.57pp<div class=\"sub\">base 4.69pp · 73%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Base rate, 12-month change (+1m)</td><td>2.43pp<div class=\"sub\">base 2.42pp · 52%</div></td><td>4.54pp<div class=\"sub\">base 4.69pp · 74%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Mortgage rate, 12-month change</td><td>2.47pp<div class=\"sub\">base 2.42pp · 12%</div></td><td>4.84pp<div class=\"sub\">base 4.69pp · 3%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Mortgage rate, 12-month change (+1m)</td><td>2.46pp<div class=\"sub\">base 2.42pp · 31%</div></td><td>4.81pp<div class=\"sub\">base 4.69pp · 21%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Mortgage rate, level</td><td>2.35pp<div class=\"sub\">base 2.42pp · 91%</div></td><td>4.67pp<div class=\"sub\">base 4.69pp · 53%</div></td><td><span class=\"low-sample\">Seoul only, not in regions</span></td></tr><tr><td>Mortgage rate, level (+1m)</td><td>2.31pp<div class=\"sub\">base 2.42pp · 100%</div></td><td>4.52pp<div class=\"sub\">base 4.69pp · 78%</div></td><td><span class=\"low-sample\">Seoul only, not in regions</span></td></tr><tr><td>3-year treasury, 12-month change</td><td>2.46pp<div class=\"sub\">base 2.42pp · 40%</div></td><td>4.79pp<div class=\"sub\">base 4.69pp · 37%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>3-year treasury, 12-month change (+1m)</td><td>2.46pp<div class=\"sub\">base 2.42pp · 42%</div></td><td>4.74pp<div class=\"sub\">base 4.69pp · 46%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Seoul unsold homes, level</td><td>2.46pp<div class=\"sub\">base 2.42pp · 42%</div></td><td>4.65pp<div class=\"sub\">base 4.69pp · 58%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Seoul unsold homes, year on year</td><td>2.7pp<div class=\"sub\">base 2.42pp · 0%</div></td><td>5.92pp<div class=\"sub\">base 4.69pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Consumer house-price outlook (Seoul)</td><td>2.92pp<div class=\"sub\">base 2.66pp · 4%</div></td><td>5.38pp<div class=\"sub\">base 5.3pp · 45%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Consumer house-price outlook (Seoul) (+1m)</td><td>2.94pp<div class=\"sub\">base 2.66pp · 7%</div></td><td>5.48pp<div class=\"sub\">base 5.29pp · 1%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Buyer-seller balance index (Seoul)</td><td>2.9pp<div class=\"sub\">base 2.61pp · 1%</div></td><td>5.21pp<div class=\"sub\">base 5.25pp · 30%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Buyer-seller balance index (Seoul) (+1m)</td><td>2.76pp<div class=\"sub\">base 2.6pp · 19%</div></td><td>5.07pp<div class=\"sub\">base 5.25pp · 55%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB sale index, 3-month change</td><td>2.43pp<div class=\"sub\">base 2.42pp · 38%</div></td><td>4.76pp<div class=\"sub\">base 4.69pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB sale index, 3-month change (+1m)</td><td>2.43pp<div class=\"sub\">base 2.42pp · 38%</div></td><td>4.77pp<div class=\"sub\">base 4.69pp · 2%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB sale index, 1-month change</td><td>2.41pp<div class=\"sub\">base 2.42pp · 81%</div></td><td>4.72pp<div class=\"sub\">base 4.69pp · 34%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB sale index, 1-month change (+1m)</td><td>2.44pp<div class=\"sub\">base 2.42pp · 35%</div></td><td>4.73pp<div class=\"sub\">base 4.69pp · 16%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>KB sale index, 1-month change (+2m)</td><td>2.04pp<div class=\"sub\">base 2.42pp · 99%</div></td><td>4.41pp<div class=\"sub\">base 4.69pp · 91%</div></td><td><span class=\"low-sample\">earlier publication, not leading</span></td></tr><tr><td>Season (calendar month)</td><td>2.29pp<div class=\"sub\">base 2.42pp · 87%</div></td><td>4.6pp<div class=\"sub\">base 4.69pp · 66%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Share of Seoul apartments bought by non-Seoul residents</td><td>2.41pp<div class=\"sub\">base 2.42pp · 56%</div></td><td>4.56pp<div class=\"sub\">base 4.69pp · 60%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Share of Seoul apartments bought by non-Seoul residents (+1m)</td><td>2.39pp<div class=\"sub\">base 2.42pp · 60%</div></td><td>4.59pp<div class=\"sub\">base 4.69pp · 58%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Non-resident buyer share, 12-month change</td><td>2.53pp<div class=\"sub\">base 2.42pp · 3%</div></td><td>5.19pp<div class=\"sub\">base 4.69pp · 2%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Non-resident buyer share, 12-month change (+1m)</td><td>2.51pp<div class=\"sub\">base 2.42pp · 1%</div></td><td>5.11pp<div class=\"sub\">base 4.69pp · 4%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Bank housing-loan balance (Korea), 12-month growth</td><td>2.47pp<div class=\"sub\">base 2.42pp · 22%</div></td><td>4.82pp<div class=\"sub\">base 4.69pp · 30%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Bank housing-loan balance (Seoul), 12-month growth</td><td>2.5pp<div class=\"sub\">base 2.42pp · 16%</div></td><td>5.03pp<div class=\"sub\">base 4.69pp · 12%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Seoul housing permits, 12-month sum year on year</td><td>2.64pp<div class=\"sub\">base 2.42pp · 0%</div></td><td>5.16pp<div class=\"sub\">base 4.69pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Seoul housing permits 3 years earlier (supply arriving now), year on year</td><td>2.78pp<div class=\"sub\">base 2.54pp · 2%</div></td><td>5.19pp<div class=\"sub\">base 5.1pp · 5%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Building HUB housing permits</td><td>-</td><td>-</td><td><span class=\"low-sample\">Not backtested: failed the household count check (gap 40.8%, 95.8% of entries have 0 households) - the project-level list leaves household counts almost empty</span><div class=\"sub\">checked 2026-10-10</div></td></tr></tbody>"
   }
 }
