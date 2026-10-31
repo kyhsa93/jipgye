@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { SITE } from "./helpers/site-root.mjs";
 import { cellsOf, enOnly, koOnly } from "../scripts/bilingual-cell.ts";
+import { nowcastTableHtml } from "../scripts/outlook.ts";
 
 /**
  * record-high·price-outlook 의 구운 표(#708): 영어 화면에서 데이터를 받기 전·못 받았을 때 보이는 글자에서 한글을 줄였다.
@@ -119,7 +120,8 @@ test("한국어 쪽은 그대로다 — 영어 스팬을 걷은 칸의 글자가
     ["record-high", "band-table", record.tables.bands.ko],
     ["record-high", "robust-table", record.tables.robust.ko],
     ["price-outlook", "region-table", outlook.tables.regions.ko],
-    ["price-outlook", "nowcast-table", outlook.tables.nowcast.ko],
+    // 메울 달 0개(#801)면 json 의 nowcast 표는 null 이고 prerender 가 regions 로 자리표시를 굽는다 - 그때는 같은 함수의 출력과 견준다.
+    ["price-outlook", "nowcast-table", outlook.tables.nowcast.ko ?? nowcastTableHtml(outlook.regions, "ko")],
     ["price-outlook", "score-table", outlook.tables.score.ko],
     ["price-outlook", "move-in-table", JSON.parse(await read("docs/data/move-in.json")).table.ko],
     ["price-outlook", "indicator-table", JSON.parse(await read("docs/data/outlook-indicators.json")).table.ko],

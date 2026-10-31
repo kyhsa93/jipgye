@@ -3,6 +3,7 @@ import path from "node:path";
 import { accessibleTables } from "./table-a11y.ts";
 import { bilingualCells, hangulCount } from "./bilingual-cell.ts";
 import { moveInDistrictTableHtml } from "./move-in.ts";
+import { nowcastSentence, nowcastTableHtml } from "./outlook.ts";
 import { createReactRenderer } from "./render/react.ts";
 import { createWriteSet } from "./render-writes.ts";
 import { escapeHtml } from "./html-escape.ts";
@@ -156,6 +157,13 @@ async function main() {
   const indicators = await readJson("outlook-indicators");
   // 전망의 문장과 표는 빌더가 두 언어로 다 만들어 둔다. 여기서는 한국어를 꽂기만 한다.
   const outlookText = (key) => (outlook?.[key]?.ko ? escapeHtml(outlook[key].ko) : null);
+  // 메울 달 0개(#801): 이 코드 전에 구운 json 은 nowcast 표·문장이 null 이다. 데이터를 다시 굽지 않아도 json 의 regions 로 자리표시를 지금 만든다
+  // (빌더와 같은 함수 - 다음 데일리가 json 에 같은 것을 넣는다).
+  const nowcastTable = outlook?.tables?.nowcast?.ko
+    ? outlook.tables.nowcast
+    : { ko: nowcastTableHtml(outlook?.regions ?? [], "ko"), en: nowcastTableHtml(outlook?.regions ?? [], "en") };
+  const nowcastFallback = nowcastSentence(outlook?.regions?.find((r) => r.code === "200"), "ko");
+  const nowcastLead = outlookText("nowcastLead") ?? (nowcastFallback ? escapeHtml(nowcastFallback) : null);
   const record = await readJson("record-high");
   const change = await readJson("district-change");
   const repeat = await readJson("repeat-sales");
@@ -282,8 +290,8 @@ async function main() {
         outlookLead: outlookText("lead"),
         outlookRegions: both(outlook?.tables?.regions, (c) => c.section === "thead" || c.col === 0),
         outlookLongLead: outlookText("longLead"),
-        outlookNowcastLead: outlookText("nowcastLead"),
-        outlookNowcast: both(outlook?.tables?.nowcast),
+        outlookNowcastLead: nowcastLead,
+        outlookNowcast: both(nowcastTable),
         outlookScore: both(outlook?.tables?.score, headOnly),
         outlookRecordLead: outlookText("recordLead"),
         indicatorLead: indicators?.lead?.ko ? escapeHtml(indicators.lead.ko) : null,
