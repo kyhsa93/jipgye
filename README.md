@@ -292,6 +292,8 @@ main은 **생성 HTML을 들고 있지 않다.** `docs/`에는 손으로 쓰는 
   그래서 병합에 시계 기준 조건(병합 창·수집 중 병합 금지)은 없다(#511). `scripts/dev/merge.sh`는 `docs/data`·`raw`·워크플로·수집기 경로를 건드리는 PR만 진행 중 실행이 끝나길 기다린다.
 - `npm run health`(`tools/health`)는 데이터와 build/site가 맞는지 보는 **비차단** 점검이다. 기능 시험(틀·스크립트·워크플로 글자)은 PR의 `test.yml`이 맡는다.
 - 배포본이 같은 HEAD로 만든 build/site와 같은지는 `scripts/deploy-check.ts`, 두 시점의 배포본끼리는 `scripts/site-snapshot.ts`로 읽기 전용 대조한다.
+- 집계 전용 사이트맵 `build/site/sitemap.xml`(#769)은 렌더 마지막 단계(`build-updated-stamp`, `scripts/sitemap.ts`)가 noindex 가 아닌 장의 canonical 로 만든다 — 커밋 파일이 아니다.
+  `lastmod`는 장에 찍힌 데이터 기준일뿐이고(소개·방법은 없음) 배포일을 쓰지 않는다. 호스트 루트 `/sitemap.xml`·`robots.txt`는 블로그 저장소 소유라 건드리지 않는다.
 
 ### 렌더러 스위치 (React 빌드타임 SSG 이행 중)
 

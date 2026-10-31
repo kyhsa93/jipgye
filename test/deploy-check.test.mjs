@@ -194,14 +194,67 @@ test("sitemap index 는 같은 출처 하위 sitemap 을 따라가고 제3자 �
     "https://example.test/s1.xml": urlset(`${BASE}a.html`, `${BASE}a.html`, "https://example.test/else/"),
   };
   const r = await resolveSitemap(fakeFetch(site, requests), BASE, 1000);
-  assert.deepEqual(r, { status: 200, url: ROOT_SITEMAP, locs: [`${BASE}a.html`] });
+  assert.deepEqual(r, { status: 200, url: ROOT_SITEMAP, locs: [`${BASE}a.html`], found: [{ url: ROOT_SITEMAP, locs: [`${BASE}a.html`] }] });
   assert.ok(!requests.some((q) => q.url.includes("evil.test")));
 });
 
-test("루트에 없으면 base 아래 sitemap 으로 되돌아가고, 둘 다 없으면 루트의 404 를 적는다", async () => {
+test("루트에 없으면 base 아래 sitemap 만 읽고, 둘 다 없으면 루트의 404 를 적는다", async () => {
   assert.equal((await resolveSitemap(fakeFetch({ [`${BASE}sitemap.xml`]: urlset(`${BASE}a.html`) }), BASE, 1000)).url, `${BASE}sitemap.xml`);
   const none = await resolveSitemap(fakeFetch({}), BASE, 1000);
-  assert.deepEqual(none, { status: 404, error: undefined, url: ROOT_SITEMAP, locs: [] });
+  assert.deepEqual(none, { status: 404, error: undefined, url: ROOT_SITEMAP, locs: [], found: [] });
+});
+
+// (#769) base 아래 /jipgye/sitemap.xml 은 이 저장소의 렌더가 만드는 집계 전용 사이트맵이다 - 루트(블로그 소유)가 있어도 함께 읽는다. 전에는 처음 200 인 루트만 썼다.
+test("루트와 base 아래 sitemap 둘 다 있으면 둘 다 읽어 loc 합집합을 대조하고, 한쪽에만 있는 loc 을 적는다", async () => {
+  const { root, docs, files } = fixture({ "a.html": PAGE_A.replace('<a href="missing.html">없음</a>', "") });
+  try {
+    const requests = [];
+    // 루트에는 index·a, 집계 전용에는 index·a·b. b 는 루트에 없고(블로그 목록이 낡았다), 루트의 other 프로젝트 URL 은 base 밖이라 세지 않는다.
+    const site = deployedFrom(files, {
+      [ROOT_SITEMAP]: urlset("https://example.test/other/x.html", BASE, `${BASE}a.html`),
+      [`${BASE}sitemap.xml`]: urlset(BASE, `${BASE}a.html`, `${BASE}b.html`),
+    });
+    const r = await run(docs, site, requests);
+    assert.equal(r.counts.sitemapStatus, 200);
+    assert.equal(r.counts.sitemapUrl, `${ROOT_SITEMAP} + ${BASE}sitemap.xml`);
+    assert.equal(r.counts.locs, 3);
+    assert.deepEqual(r.counts.htmlNotInSitemapList, []);
+    assert.deepEqual(r.problems, []);
+    assert.deepEqual(r.counts.sitemapOnlyIn, [
+      { url: ROOT_SITEMAP, locs: [] },
+      { url: `${BASE}sitemap.xml`, locs: [`${BASE}b.html`] },
+    ]);
+    assert.ok(requests.some((q) => q.url === `${BASE}sitemap.xml`), "base 아래 sitemap 을 받지 않았다");
+    assert.ok(!requests.some((q) => q.url.includes("/other/")));
+    const out = render(r, { base: BASE, today: "2026-10-31", seconds: 0 }).join("\n");
+    assert.match(out, /sitemap\(https:\/\/example\.test\/sitemap\.xml \+ https:\/\/example\.test\/site\/sitemap\.xml\) loc 3 대 html 파일 3/);
+    assert.match(out, /site\/sitemap\.xml 에만 있는 loc 1: https:\/\/example\.test\/site\/b\.html/);
+    assert.doesNotMatch(out, /example\.test\/sitemap\.xml 에만 있는 loc/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("base 아래 sitemap 의 loc 도 200·canonical·noindex 혼입을 본다 (#769)", async () => {
+  const noidx = `<meta name="robots" content="noindex,follow"><link rel="canonical" href="${BASE}n.html">`;
+  const { root, docs, files } = fixture({ "a.html": PAGE_A.replace('<a href="missing.html">없음</a>', ""), "n.html": noidx });
+  try {
+    const site = deployedFrom(files, {
+      [`${BASE}n.html`]: noidx,
+      [`${BASE}sitemap.xml`]: urlset(BASE, `${BASE}a.html`, `${BASE}b.html`, `${BASE}n.html`, `${BASE}gone.html`),
+      [`${BASE}b.html`]: PAGE_B.replace(`${BASE}b.html`, `${BASE}other.html`),
+    });
+    const r = await run(docs, site);
+    const by = (k) => r.problems.filter((p) => p.kind === k).map((p) => [p.target, p.detail]);
+    assert.deepEqual(by("canonical"), [[`${BASE}b.html`, `canonical ${BASE}other.html`]]);
+    assert.deepEqual(by("sitemap").sort((a, b) => `${a}`.localeCompare(`${b}`)), [
+      [`${BASE}gone.html`, "대조 디렉터리에 대응 파일 없음"],
+      [`${BASE}gone.html`, "상태 404"],
+      [`${BASE}n.html`, "noindex 페이지가 sitemap 에 있음"],
+    ]);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test("noindex 페이지는 sitemap 에 없어도 이상이 아니고, sitemap 에 있으면 이상이다", async () => {

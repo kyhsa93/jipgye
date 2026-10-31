@@ -12,12 +12,13 @@
  *
  * 하는 일 (모두 GET):
  * - 대조 디렉터리(기본 build/site) 전 파일을 배포본에서 받아 상태 코드(200)와 SHA-256을 대조한다. index.html 은 루트 URL로 받는다.
- * - 배포본 sitemap.xml(출처 루트 먼저, 없으면 base 아래; index 면 하위까지)의 base 아래 <loc> 전수: 200인가, 그 페이지의 canonical 이 loc 과 같은가, 대응 파일이 대조 디렉터리에 있는가.
- *   sitemap 이 없으면(404 등) 없다고 적고 loc 0으로 센다. 있는 척하지 않는다.
+ * - 배포본 sitemap 둘(출처 루트 /sitemap.xml 은 블로그 저장소 소유, base 아래 /jipgye/sitemap.xml 은 이 저장소의 렌더 산출물 #769; index 면 하위까지)의 base 아래 <loc> 전수(합집합):
+ *   200인가, 그 페이지의 canonical 이 loc 과 같은가, noindex 장이 섞였는가, 대응 파일이 대조 디렉터리에 있는가. 둘 다 있으면 한쪽에만 있는 loc 도 적는다(두 사이트맵이 어긋나면 안 된다).
+ *   sitemap 이 둘 다 없으면(404 등) 없다고 적고 loc 0으로 센다. 있는 척하지 않는다.
  * - 대조 디렉터리 *.html 의 내부 링크(href·src) 대상이 배포본에서 200인가. 파일 대조에서 이미 받은 URL은 다시 받지 않는다.
  *
  * 요청 대상은 --base 와 같은 출처이고 그 경로 아래인 URL뿐이다(소유자 사이트 외 제3자 요청 금지). 예외는 sitemap 뿐으로,
- * 같은 출처의 루트(/sitemap.xml)와 그 index 가 가리키는 같은 출처 하위 sitemap 도 받는다.
+ * 같은 출처의 루트(/sitemap.xml)와 두 sitemap 의 index 가 가리키는 같은 출처 하위 sitemap 도 받는다.
  * 리다이렉트는 따라가지 않는다(3xx 는 상태 이상으로 적힌다) - 따라가면 다른 출처로 나갈 수 있다.
  *
  * 2회 재현: 첫 대조에서 이상이 나온 URL만 --gap 초 뒤 한 번 더 받아 다시 판정한다. 출력의 "재현"은 두 번 다
@@ -38,6 +39,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, dirname, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { todayKst } from "./source-age.ts";
+import { canonicalOf, isNoindex } from "./sitemap.ts";
 
 export const DEFAULT_BASE = "https://kyhsa93.github.io/jipgye/";
 
@@ -62,16 +64,8 @@ export function urlOf(base, rel) {
   return rel === "index.html" ? base : base + rel.split("/").map(encodeURIComponent).join("/");
 }
 
-/** HTML에서 <link rel="canonical"> 의 href. 없으면 null. */
-export function canonicalOf(html) {
-  for (const tag of html.match(/<link\b[^>]*>/gi) ?? []) {
-    if (/\brel=["']?canonical["']?/i.test(tag)) return tag.match(/\bhref=["']([^"']*)["']/i)?.[1] ?? null;
-  }
-  return null;
-}
-
-/** robots 메타에 noindex 가 있는 HTML 인가. */
-export const isNoindex = (html) => (html.match(/<meta\b[^>]*>/gi) ?? []).some((t) => /\bname=["']?robots["']?/i.test(t) && /noindex/i.test(t));
+// canonical·noindex 읽기는 사이트맵을 만드는 쪽(scripts/sitemap.ts, #769)과 한 벌이다 - 만드는 눈과 점검하는 눈이 갈리면 한쪽만 통과한다.
+export { canonicalOf, isNoindex } from "./sitemap.ts";
 
 /** sitemap.xml 의 <loc> 목록. */
 export function locsOf(xml) {
@@ -225,6 +219,8 @@ export async function checkDeploy({ base = DEFAULT_BASE, docsDir, fetchImpl = fe
       noindexNotInSitemap: htmlFiles.filter((f) => noindexHtml.has(f) && !locSet.has(urlOf(base, f))).length,
       locNoFileList,
       sitemapUrl: sitemapRes.url,
+      // 두 sitemap 이 다 읽혔을 때 한쪽에만 있는 base 아래 loc(#769 「관계」: 루트 sitemap 의 집계 URL 과 집계 전용 sitemap 이 어긋나면 안 된다). 하나만 읽혔으면 빈 목록.
+      sitemapOnlyIn: sitemapRes.found.length === 2 ? sitemapRes.found.map((f, i) => ({ url: f.url, locs: f.locs.filter((l) => !sitemapRes.found[1 - i].locs.includes(l)) })) : [],
     },
   };
 }
@@ -242,14 +238,15 @@ async function fetchWithBody(fetchImpl, url, timeoutMs) {
 export const isSitemapIndex = (xml) => /<sitemapindex[\s>]/i.test(xml);
 
 /**
- * sitemap 을 찾아 base(/jipgye/) 아래 loc 만 돌려준다. 이 사이트의 sitemap 은 프로젝트 경로가 아니라 소유자 사이트
- * 루트(https://kyhsa93.github.io/sitemap.xml)에 있고 다른 프로젝트 URL도 섞여 있다(2026-10-11 GET 200 확인).
- * 후보는 출처 루트 -> base 아래 순이고 처음 200인 것을 쓴다. index 면 같은 출처의 하위 sitemap 을 한 단계 따라간다
- * (제3자 출처는 받지 않는다). 못 찾으면 첫 후보의 상태를 돌려준다. locs 는 중복 제거.
+ * sitemap 둘을 받아 base(/jipgye/) 아래 loc 의 합집합을 돌려준다. 하나는 소유자 사이트 루트(https://kyhsa93.github.io/sitemap.xml) - 블로그 저장소가 만들고
+ * 다른 프로젝트 URL도 섞여 있다(2026-10-11 GET 200 확인). 다른 하나는 base 아래(/jipgye/sitemap.xml) - 이 저장소의 렌더가 만드는 집계 전용 사이트맵(#769, 전에는 404 였다).
+ * 200 인 것은 전부 읽는다(전에는 처음 200 인 것 하나만 썼다). index 면 같은 출처의 하위 sitemap 을 한 단계 따라간다(제3자 출처는 받지 않는다).
+ * 둘 다 못 찾으면 첫 후보의 상태를 돌려준다. locs 는 중복 제거이고 found 는 읽힌 sitemap 별 loc 이다(한쪽에만 있는 loc 을 적는 데 쓴다).
  */
 export async function resolveSitemap(fetchImpl, base, timeoutMs) {
   const origin = new URL(base).origin;
   const candidates = [...new Set([`${origin}/sitemap.xml`, `${base}sitemap.xml`])];
+  const found = [];
   let firstFail = null;
   for (const url of candidates) {
     const res = await fetchWithBody(fetchImpl, url, timeoutMs);
@@ -265,9 +262,10 @@ export async function resolveSitemap(fetchImpl, base, timeoutMs) {
         if (c.status === 200) all.push(...locsOf(c.text));
       }
     } else all = locsOf(res.text);
-    return { status: 200, url, locs: [...new Set(all.filter((l) => l.startsWith(base)))] };
+    found.push({ url, locs: [...new Set(all.filter((l) => l.startsWith(base)))] });
   }
-  return { status: firstFail?.status, error: firstFail?.error, url: firstFail?.url ?? candidates[0], locs: [] };
+  if (found.length === 0) return { status: firstFail?.status, error: firstFail?.error, url: firstFail?.url ?? candidates[0], locs: [], found };
+  return { status: 200, url: found.map((f) => f.url).join(" + "), locs: [...new Set(found.flatMap((f) => f.locs))], found };
 }
 
 const KIND_LABEL = { hash: "해시 불일치", status: "상태 이상", sitemap: "sitemap 이상", canonical: "canonical 불일치", link: "깨진 링크" };
@@ -286,6 +284,7 @@ export function render({ problems, counts, unchecked }, { base, today, seconds }
   if (counts.sitemapStatus === 200) {
     if (counts.locNoFileList.length) lines.push(`sitemap 에만 있음(대조 디렉터리에 파일 없음) ${counts.locNoFileList.length}: ${counts.locNoFileList.join(", ")}`);
     if (counts.htmlNotInSitemapList.length) lines.push(`대조 디렉터리 html 인데 sitemap loc 에 없음 ${counts.htmlNotInSitemapList.length}: ${counts.htmlNotInSitemapList.join(", ")}`);
+    for (const { url, locs } of counts.sitemapOnlyIn ?? []) if (locs.length) lines.push(`${url} 에만 있는 loc ${locs.length}: ${locs.join(", ")}`);
   }
   lines.push(bad || unchecked ? `재현된 이상 ${bad}건, 미확인 ${unchecked}건` : "이상 없음");
   return lines;
