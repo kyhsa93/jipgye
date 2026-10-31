@@ -35,11 +35,11 @@ import { loadRealestatePage } from "./helpers/realestate-page.mjs";
  *
  * 이 파일의 시험은 저장소의 docs/data·raw 도, 오늘 날짜도 읽지 않는다. test/fixtures/site/data 의 얼린 데이터로 임시 폴더에서
  * prerender·build-news-pages·build-realestate-pages·build-updated-stamp 를 돌리고(test/helpers/fixture-site.mjs),
- * 그 출력을 본다. 아래 열세 시험은(금리 장 짝 하나는 #577 B2 로 지웠다) 예전에 각 시험 파일에 있던 "커밋된 docs/*.html 이 지금 docs/data 와 맞다" 시험의 짝이다 -
+ * 그 출력을 본다. 아래 열일곱 시험은(금리 장 짝 하나는 #577 B2 로 지웠고, #805 로 전망·지표·갈아타기 짝 넷을 더했다) 예전에 각 시험 파일에 있던 "커밋된 docs/*.html 이 지금 docs/data 와 맞다" 시험의 짝이다 -
  * 같은 단언을, 커밋된 생성물·데이터 대신 고정 데이터와 그 출력에 대고 한다. 원래 시험(커밋된 짝 검사)은 tools/health 로 옮겼다.
  * 이름 앞 꼬리표는 옮겨 간 곳이다: [파일 이름] 원래 시험 이름.
  *
- * 빌드는 한 번(약 2초)이고 열세 시험이 나눠 쓴다. 틀(docs/*.html 중 손으로 쓰는 것, scripts/*-template.html)은 저장소 것을 그대로 쓴다.
+ * 빌드는 한 번(약 2초)이고 열일곱 시험이 나눠 쓴다. 틀(docs/*.html 중 손으로 쓰는 것, scripts/*-template.html)은 저장소 것을 그대로 쓴다.
  */
 
 const repo = path.resolve(import.meta.dirname, "..");
@@ -291,6 +291,51 @@ test("[cross-input-dates] 고정 소스로 찍은 교차값 화면 전부에 입
     assert.equal([...html.matchAll(/id="cross-basis"/g)].length, 1, `docs/${file}: 기준일 줄이 한 번이어야 한다`);
     assert.match(html, /<p class="updated updated-warn" id="cross-warn" role="status" hidden><\/p>/, `docs/${file}: 경고 자리`);
   }
+});
+
+// (#805) 아래 넷은 test/outlook·indicator-backtest·district-change.test.mjs 에서 옮겨 온 짝이다. 원래는 손으로 고치는 틀 docs/price-outlook.html·
+// docs/switch-house.html 에 남아 있던 옛 구운 조각을 오늘 docs/data 와 맞댔다 - 공식 지수 달이 바뀐 10-30 데일리에 넷이 함께 빨개졌다(#8 의 모양).
+// 고정 데이터(outlook·outlook-indicators 의 문장·표는 2026-10-31 origin/main 371cc421 의 docs/data 에서 얼렸고, 지표 판정 행은 앞 4개만 두고 표는
+// 같은 tableHtml 로 다시 구웠다. district-change 의 문장·표·쌍 3개도 같은 커밋에서 얼렸고 권역 5줄은 #520 의 합성 그대로다)로 prerender 가 꽂는지를 본다.
+// 표 칸은 두 언어로 구워지므로(#708) 영어 스팬을 걷고 한국어 스팬을 벗기면 json 의 한국어 조각이다 - [record-high] 짝과 같은 길.
+const koBlock = (html, name) => koOnly(block(html, name)).replace(/<span class="m-ko">([\s\S]*?)<\/span>/g, "$1");
+
+test("[outlook] 고정 데이터로 찍은 price-outlook.html 이 그 데이터의 문장과 표를 싣는다", async () => {
+  const [html, data] = await Promise.all([Promise.resolve(site.read("docs/price-outlook.html")), fixtureRead("outlook")]);
+  assert.equal(koBlock(html, "outlookRegions"), data.tables.regions.ko);
+  assert.equal(koBlock(html, "outlookScore"), data.tables.score.ko);
+  assert.ok(block(html, "outlookLead")?.length > 20, "첫 문장이 비어 있다");
+  // 화면은 빌드가 만든 두 언어를 고르기만 한다. 영어 표도 같이 와야 한다.
+  assert.ok(data.tables.regions.en && data.lead.en && data.recordLead.en);
+});
+
+test("[indicator-backtest] 고정 데이터로 찍은 price-outlook.html 이 그 데이터의 판정 표를 싣는다", async () => {
+  const [html, data] = await Promise.all([Promise.resolve(site.read("docs/price-outlook.html")), fixtureRead("outlook-indicators")]);
+  assert.equal(koBlock(html, "indicatorTable"), data.table.ko);
+  assert.ok(data.lead.en && data.table.en);
+});
+
+test("[indicator-backtest] 고정 데이터로 찍은 표 끝에 백테스트에 못 들어간 건축HUB 주택인허가 한 행이 정적으로 붙고, 판정 행 수는 그대로다 (#153)", async () => {
+  const { NOT_TESTED } = await import("../scripts/indicator-backtest.ts");
+  const [html, payload] = await Promise.all([Promise.resolve(site.read("docs/price-outlook.html")), fixtureRead("outlook-indicators")]);
+  assert.equal(NOT_TESTED.length, 1);
+  // 판정 행(payload.rows)에는 정적 행이 섞이지 않는다 - 판정식·합격선은 건드리지 않았다.
+  assert.ok(payload.rows.every((r) => r.id && r.verdict), "정적 행이 판정 행에 섞였다");
+  const bodyRows = (h) => (h.match(/<tr>/g) ?? []).length - 1; // 머리 한 줄 제외
+  assert.equal(bodyRows(payload.table.ko), payload.rows.length + NOT_TESTED.length);
+  assert.equal(bodyRows(payload.table.en), payload.rows.length + NOT_TESTED.length);
+  // 찍은 HTML(ko)은 JSON 표 그대로이고, 접근성 caption 행 수도 맞다.
+  assert.equal(koBlock(html, "indicatorTable"), payload.table.ko, "찍은 HTML 표가 JSON과 다르다");
+  assert.ok(html.includes(`${bodyRows(payload.table.ko)}행 4열`), "caption 행 수가 표와 다르다");
+  assert.equal(html.split("건축HUB 주택인허가</td>").length - 1, 1);
+  assert.equal(payload.table.en.split("Building HUB housing permits</td>").length - 1, 1);
+});
+
+test("[district-change] 고정 데이터로 찍은 switch-house.html 이 그 데이터의 문장과 표를 싣는다", async () => {
+  const [html, data] = await Promise.all([Promise.resolve(site.read("docs/switch-house.html")), fixtureRead("district-change")]);
+  assert.equal(block(html, "switchTable"), data.table.ko);
+  assert.equal(block(html, "switchRegions"), data.regionTable.ko);
+  assert.ok(data.lead.en && Object.keys(data.pairs).length > 0);
 });
 
 // --- 이 파일이 저장소의 데이터를 안 읽는다는 것 -----------------------------------------------------------------------------

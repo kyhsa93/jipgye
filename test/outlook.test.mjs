@@ -282,19 +282,7 @@ test("백테스트를 시작하기에 지수가 모자라면 아무것도 내지
   assert.ok(built.payload.regions[0].cards.every((card) => card === null || card.forecast === null));
 });
 
-test("정적 HTML이 오늘 데이터의 문장과 표를 싣는다", async () => {
-  const [html, data] = await Promise.all([
-    readFile(path.join(root, "docs/price-outlook.html"), "utf8"),
-    readFile(path.join(root, "docs/data/outlook.json"), "utf8").then(JSON.parse),
-  ]);
-  const block = (name) => html.match(new RegExp(`<!--prerender:${name}-->([\\s\\S]*?)<!--/prerender:${name}-->`))?.[1];
-
-  assert.equal(block("outlookRegions"), data.tables.regions.ko);
-  assert.equal(block("outlookScore"), data.tables.score.ko);
-  assert.ok(block("outlookLead")?.length > 20, "첫 문장이 비어 있다");
-  // 화면은 빌드가 만든 두 언어를 고르기만 한다. 영어 표도 같이 와야 한다.
-  assert.ok(data.tables.regions.en && data.lead.en && data.recordLead.en);
-});
+// (#805) "정적 HTML이 오늘 데이터의 문장과 표를 싣는다" 는 손으로 고치는 틀 docs/price-outlook.html 에 남은 옛 구운 조각을 오늘 docs/data 와 맞대는 검사라 공식 지수 달이 바뀌면 빨개진다(#8) - #507 과 같은 길로 tools/health/test/outlook.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 test("'10억이면'은 오늘 값이 아니라 공식 지수 마지막 달 값에서 잰 것이라고 적는다 (#34)", async () => {
   const { leadSentence } = await import("../scripts/outlook.ts");
