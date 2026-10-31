@@ -497,7 +497,13 @@ export function longSentence(seoul, locale = "ko") {
 
 export function nowcastSentence(seoul, locale = "ko") {
   const now = seoul?.nowcast;
-  if (!now || !now.months.length) return null;
+  if (!now) return null;
+  // 메울 달 0개(#801) - 표와 같은 창. 비우면 장의 옛 문장이 남으므로 "없다"고 적는다.
+  if (!now.months.length) {
+    return locale === "en"
+      ? `Nothing to fill right now — the official index already covers every month whose filing window (30 days after contract) has closed. The next month is filled from our own filings once its window closes, usually on the 1st.`
+      : `지금은 메울 달이 없습니다 — 신고 기한(계약 후 30일)이 닫힌 달까지 공식 지수가 다 나와 있습니다. 다음 달의 기한이 닫히면(대개 1일) 우리가 받는 신고로 다시 메웁니다.`;
+  }
   const filled = now.months.filter((row) => row.change !== null);
   if (!now.usable || !filled.length) {
     return locale === "en"
@@ -548,6 +554,8 @@ const TABLE_TEXT = {
     pairs: "맞물린 칸",
     change: "변화",
     officialGap: "공식과 평균 차이",
+    toFill: "메울 달",
+    noneToFill: "없음 — 공식 지수가 최신",
     thin: "칸이 모자람",
     notUsed: "메우지 않음",
     horizon: "거리",
@@ -569,6 +577,8 @@ const TABLE_TEXT = {
     pairs: "Matched",
     change: "Change",
     officialGap: "Avg gap to official",
+    toFill: "Month to fill",
+    noneToFill: "none — official index is current",
     thin: "too few cells",
     notUsed: "not filled",
     horizon: "Horizon",
@@ -606,8 +616,22 @@ export function regionTableHtml(regions, locale = "ko") {
 /** 공식 지수가 아직 없는 달. 권역마다 맞물린 칸 수와 그 권역에서 잰 성적을 같이 싣는다. */
 export function nowcastTableHtml(regions, locale = "ko") {
   const months = [...new Set(regions.flatMap((r) => r.nowcast?.months.map((m) => m.month) ?? []))].sort();
-  if (!months.length) return null;
   const t = TABLE_TEXT[locale];
+  // 메울 달이 0개인 창(#801): 공식 지수 M월이 도착한 뒤 M+1월의 신고 기한이 닫히는 1일까지(매달 말 1~2일). null 을 돌려주면
+  // 장의 틀에 남은 옛 한국어 표가 그대로 구워져 영어 화면 검사가 빨개진다 - 표 틀(머리글·권역 줄)을 지키며 두 언어 자리표시를 돌려준다.
+  if (!months.length) {
+    const rows = regions.filter((r) => r.nowcast);
+    if (!rows.length) return null;
+    const head = `<thead><tr><th scope="col">${t.region}</th><th scope="col">${t.toFill}</th><th scope="col">${t.officialGap}</th></tr></thead>`;
+    const body = rows
+      .map((region) => {
+        const now = region.nowcast;
+        const gap = now.mae === null ? "-" : `${now.mae}${locale === "en" ? "pp" : "%p"} (${now.overlap})`;
+        return `<tr><td>${esc(region.name[locale])}</td><td><span class="low-sample">${t.noneToFill}</span></td><td>${gap}</td></tr>`;
+      })
+      .join("");
+    return `${head}<tbody>${body}</tbody>`;
+  }
   const head =
     `<thead><tr><th scope="col">${t.region}</th>` +
     months.map((m) => `<th scope="col">${esc(ym(m, locale))}</th>`).join("") +

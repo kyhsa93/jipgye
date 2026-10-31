@@ -15,7 +15,8 @@ import {
   toSeries,
 } from "../scripts/outlook.ts";
 import { backfillDrift, buildPayload, closedBefore, freezeScores, scoreLog, updateLog } from "../scripts/build-outlook.ts";
-import { coverageSummary, realtimeCoverage, recordSentence } from "../scripts/outlook.ts";
+import { coverageSummary, nowcastSentence, nowcastTableHtml, realtimeCoverage, recordSentence } from "../scripts/outlook.ts";
+import { bilingualCells, enOnly } from "../scripts/bilingual-cell.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -300,4 +301,29 @@ test("'10억이면'은 오늘 값이 아니라 공식 지수 마지막 달 값�
   const { leadSentence } = await import("../scripts/outlook.ts");
   const seoul = { cards: [{ h: 3, origins: 170, from: "201201", mae: { model: 2.4, naive: 3.1 }, forecast: { target: "202610", change: 2.6, low: -0.3, high: 6.3 } }] };
   assert.match(leadSentence(seoul, "202607", "ko"), /2026년 7월에 10억이던 집이면 [0-9.]+억~[0-9.]+억입니다\(오늘 값이 아니라 2026년 7월 값에서 잰 것입니다\)/);
+});
+
+test("메울 달이 0개면 nowcast 표·문장은 null 이 아니라 두 언어 자리표시다 — 표 틀(머리글·권역 줄)을 지켜 두 벌로 구워진다 (#801)", () => {
+  const regions = ["200", "210"].map((code, k) => ({
+    code,
+    name: { ko: k ? "도심권" : "서울", en: k ? "Central" : "Seoul" },
+    nowcast: { overlap: 21, mae: 0.47, bias: 0.42, oneMonthMae: 0.7, usable: true, months: [] },
+  }));
+  const ko = nowcastTableHtml(regions, "ko");
+  const en = nowcastTableHtml(regions, "en");
+  assert.ok(ko && en);
+  assert.match(ko, /^<thead>.*<\/thead><tbody>.*<\/tbody>$/);
+  assert.equal((en.match(/[가-힣]/g) ?? []).length, 0, en);
+  assert.ok(/메울 달 없음|없음 — 공식 지수가 최신/.test(ko), ko);
+  // 두 벌이 칸 단위로 합쳐지고, 영어 보기에는 한글이 0자다.
+  const merged = bilingualCells(ko, en);
+  assert.notEqual(merged, ko, "두 벌의 칸 틀이 어긋나 합쳐지지 않았다");
+  assert.equal((enOnly(merged).match(/[가-힣]/g) ?? []).length, 0);
+  // 문장도 같은 창에서 비지 않는다.
+  const sentence = { ko: nowcastSentence(regions[0], "ko"), en: nowcastSentence(regions[0], "en") };
+  assert.ok(sentence.ko && sentence.en);
+  assert.equal((sentence.en.match(/[가-힣]/g) ?? []).length, 0);
+  // 권역 자체가 없으면 예전처럼 null(장의 틀 자리를 둔다).
+  assert.equal(nowcastTableHtml([], "ko"), null);
+  assert.equal(nowcastSentence(undefined, "ko"), null);
 });
