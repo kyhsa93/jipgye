@@ -6931,5 +6931,129 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-10-31",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 금리·예금·투자상품: 중국인민은행은 11월2일부터 익일물 역레포를 매일 실시하기로 했다. 이는 정책금리 전환을 위한 조치로, 시장 유동성을 관리하기 위한 것이다. 기존에는 특정 날짜에만 거래가 이루어졌지만, 앞으로는 매일 거래가 가능해졌다. 중국인민은행은 이 조치를 통해 금리 통제를 더욱 유연하게 운영할 계획이다. 해당 결정은 중국의 금융시장에 대한 정책적 영향을 강화하는 데 기여할 것으로 보인다.\n- 부동산: 강남 재건축 소식으로 인해 분당 주민들이 강남 아파트에 관심을 보이고 있다. 재건축 아파트값은 몸테크 열풍이 끝나면서 수억 원 규모로 하락했다. 3기신도시 입주가 코앞이지만 교통망은 여전히 미비한 상태로 신규택지에서도 교통난 우려가 커지고 있다. 중국 부동산주가 침체 속에서 반등 신호를 보이고 있다. 내주에는 고덕강일3단지 등 전국 4천928가구에 대해 청약 접수가 진행된다.\n- 기타 경제 소식: 다음주 경제 동향에 주목하는 가운데 9월 국제수지도 발표될 예정이다. 소득 상위 10%는 대출과 소득이 증가하는 반면, 하위층은 경제적 어려움을 겪고 있는 것으로 나타났다. 케이뱅크는 3분기 순익이 421억 원을 기록하며 개인사업자 대출이 두 배 이상 증가했다. 경제 지표 발표와 함께 소비자물가 동향도 관심을 끌고 있다. 양극화 심화 현상은 사회적 문제로 대두되고 있다.\n- 증시·환율: 뉴욕 증시는 기술주 매도에 하락 마감하며 다우지수는 1.09% 하락했다. 나스닥은 2.86% 떨어졌고, 인텔은 일시적으로 29% 급락하는 등 기술주가 큰 타격을 받았다. 유럽 증시도 기술주 매도세로 대체로 하락 마감했으나, 영국 시장은 0.07% 상승했다. 뉴욕 증시는 기술주 실적 부진으로 하락 출발하며 다우지수는 0.27% 내렸다. 나스닥은 같은 날 2.42% 하락했다.",
+      "en": "- Rates, Deposits & Investment Products: The People's Bank of China will implement daily reverse repurchase operations for overnight reverse repos starting from November 2nd. This measure is aimed at managing market liquidity as part of the transition to policy rates. Previously, transactions were only conducted on specific dates, but now they will be possible every day. The People's Bank of China plans to operate interest rate control more flexibly through this measure. This decision is expected to contribute to strengthening the policy influence over China's financial market.\n- Real Estate: Due to news about Gangnam redevelopment, residents in Bundang are showing interest in Gangnam apartments. Redevelopment apartment prices have fallen by hundreds of millions of won since the end of the bodytech trend. Although the third phase of the Sinseongdong city development is about to begin, the transportation network is still inadequate, and concerns about traffic congestion are increasing even in new residential areas. Chinese real estate stocks are showing signs of recovery amid a slump. Next week, applications for purchase will be accepted for 4,928 units nationwide, including Godeokgangil 3-dong.\n- Other Economic News: The international trade balance for September is expected to be released next week amid attention on economic trends. The top 10% of income earners are experiencing increases in both loans and income, while the lower-income group is facing economic difficulties. KBank recorded a net profit of 42,100,000,000 won for the third quarter, with personal business loans increasing more than doubling. Along with the release of economic indicators, consumer price trends are also drawing attention. The deepening polarization phenomenon is emerging as a social issue.\n- Stocks & FX: The New York stock market closed lower due to selling in technology stocks, with the Dow index falling 1.09%. The Nasdaq dropped 2.86%, and technology stocks suffered a major blow, with Intel temporarily plunging 29%. European stock markets also closed lower overall due to selling in technology stocks, although the UK market rose 0.07%. The New York stock market opened lower due to poor performance by technology stocks, with the Dow index dropping 0.27%. The Nasdaq fell 2.42% on the same day."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "중국인민은행은 11월2일부터 익일물 역레포를 매일 실시하기로 했다. 이는 정책금리 전환을 위한 조치로, 시장 유동성을 관리하기 위한 것이다. 기존에는 특정 날짜에만 거래가 이루어졌지만, 앞으로는 매일 거래가 가능해졌다. 중국인민은행은 이 조치를 통해 금리 통제를 더욱 유연하게 운영할 계획이다. 해당 결정은 중국의 금융시장에 대한 정책적 영향을 강화하는 데 기여할 것으로 보인다.",
+        "lineEn": "The People's Bank of China will implement daily reverse repurchase operations for overnight reverse repos starting from November 2nd. This measure is aimed at managing market liquidity as part of the transition to policy rates. Previously, transactions were only conducted on specific dates, but now they will be possible every day. The People's Bank of China plans to operate interest rate control more flexibly through this measure. This decision is expected to contribute to strengthening the policy influence over China's financial market.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 중국인민은행, 11월2일부터 익일물 역레포 매일 실시…\"정책금리 전환\"",
+            "link": "https://www.newsis.com/view/NISX20261031_0003849229",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "강남 재건축 소식으로 인해 분당 주민들이 강남 아파트에 관심을 보이고 있다. 재건축 아파트값은 몸테크 열풍이 끝나면서 수억 원 규모로 하락했다. 3기신도시 입주가 코앞이지만 교통망은 여전히 미비한 상태로 신규택지에서도 교통난 우려가 커지고 있다. 중국 부동산주가 침체 속에서 반등 신호를 보이고 있다. 내주에는 고덕강일3단지 등 전국 4천928가구에 대해 청약 접수가 진행된다.",
+        "lineEn": "Due to news about Gangnam redevelopment, residents in Bundang are showing interest in Gangnam apartments. Redevelopment apartment prices have fallen by hundreds of millions of won since the end of the bodytech trend. Although the third phase of the Sinseongdong city development is about to begin, the transportation network is still inadequate, and concerns about traffic congestion are increasing even in new residential areas. Chinese real estate stocks are showing signs of recovery amid a slump. Next week, applications for purchase will be accepted for 4,928 units nationwide, including Godeokgangil 3-dong.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "“재건축 소식에 집값 좀 뛰었거든요”…강남 아파트로 눈돌리는 분당 주민들",
+            "link": "https://www.mk.co.kr/news/realestate/12192394",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "재건축 아파트값 '억' 소리나게 떨어져…몸테크 열풍 끝? [이슬기의 새집다오]",
+            "link": "https://www.hankyung.com/article/2026102938986",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "3기신도시 입주 코앞인데 교통망은 '감감'…신규택지도 교통난 우려[주택공급의 조건②]",
+            "link": "https://www.newsis.com/view/NISX20261030_0003848978",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "침체 길어졌지만 꿈틀대는 주가…中 부동산주 반등 신호",
+            "link": "https://www.hankyung.com/article/202610020522i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "[부동산캘린더] 내주 고덕강일3단지 등 전국 4천928가구 청약 접수",
+            "link": "https://www.yna.co.kr/view/AKR20261030169300003",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "다음주 경제 동향에 주목하는 가운데 9월 국제수지도 발표될 예정이다. 소득 상위 10%는 대출과 소득이 증가하는 반면, 하위층은 경제적 어려움을 겪고 있는 것으로 나타났다. 케이뱅크는 3분기 순익이 421억 원을 기록하며 개인사업자 대출이 두 배 이상 증가했다. 경제 지표 발표와 함께 소비자물가 동향도 관심을 끌고 있다. 양극화 심화 현상은 사회적 문제로 대두되고 있다.",
+        "lineEn": "The international trade balance for September is expected to be released next week amid attention on economic trends. The top 10% of income earners are experiencing increases in both loans and income, while the lower-income group is facing economic difficulties. KBank recorded a net profit of 42,100,000,000 won for the third quarter, with personal business loans increasing more than doubling. Along with the release of economic indicators, consumer price trends are also drawing attention. The deepening polarization phenomenon is emerging as a social issue.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[다음주 경제] 소비자물가 얼마나 올랐을까…9월 국제수지도 발표",
+            "link": "https://www.yna.co.kr/view/AKR20261031012200002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "\"소득 상위 10%는 대출·소득 상승, 하위층은 고사\"…심화하는 양극화 실태",
+            "link": "https://www.newsis.com/view/NISX20261030_0003847646",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "케이뱅크, 3분기 순익 421억…개인사업자 대출로 두 배 이상 늘어",
+            "link": "https://www.hankyung.com/article/202610306981i",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "뉴욕 증시는 기술주 매도에 하락 마감하며 다우지수는 1.09% 하락했다. 나스닥은 2.86% 떨어졌고, 인텔은 일시적으로 29% 급락하는 등 기술주가 큰 타격을 받았다. 유럽 증시도 기술주 매도세로 대체로 하락 마감했으나, 영국 시장은 0.07% 상승했다. 뉴욕 증시는 기술주 실적 부진으로 하락 출발하며 다우지수는 0.27% 내렸다. 나스닥은 같은 날 2.42% 하락했다.",
+        "lineEn": "The New York stock market closed lower due to selling in technology stocks, with the Dow index falling 1.09%. The Nasdaq dropped 2.86%, and technology stocks suffered a major blow, with Intel temporarily plunging 29%. European stock markets also closed lower overall due to selling in technology stocks, although the UK market rose 0.07%. The New York stock market opened lower due to poor performance by technology stocks, with the Dow index dropping 0.27%. The Nasdaq fell 2.42% on the same day.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "뉴욕 증시, 기술주 매도에 하락 마감···다우 1.09%↓ 나스닥 2.86%↓",
+            "link": "https://www.newsis.com/view/NISX20261031_0003849136",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "유럽 증시, 기술주 매도세에 대체로 하락 마감…英은 0.07% 상승",
+            "link": "https://www.newsis.com/view/NISX20261031_0003849130",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "뉴욕 증시, 기술주 매도에 하락세…인텔 일시 29% 급락",
+            "link": "https://www.newsis.com/view/NISX20261030_0003849114",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[속보] 뉴욕 증시, 기술주 실적 부진에 하락 출발···다우 0.27%↓ 나스닥 2.42%↓",
+            "link": "https://www.newsis.com/view/NISX20261030_0003849101",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
