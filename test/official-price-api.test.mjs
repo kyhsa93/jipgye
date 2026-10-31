@@ -140,8 +140,43 @@ const failCase = async (name, { uni, opts = {}, run = {}, rx }) => {
   } finally { await mock.close(); await rm(out, { recursive: true, force: true }); }
 };
 
-test("낙제: 응답 stdDay 연도가 요청 범위 밖이면 쓰기 없이 실패", async () => {
-  await failCase("stdDay", { opts: { mutate: (op, list) => (op === "getBrHsprcInfo" ? list.map((x, i) => (i === 0 ? { ...x, stdDay: "20240101" } : x)) : list) }, rx: /stdDay 연도가 요청 범위 밖/ });
+test("접기: 범위 밖 stdDay 항목은 issues 에 세고 건너뛰며 나머지는 정상으로 접힌다, issues 없이는 던진다 (#802)", () => {
+  const p = buildParcel(hogs(3, "R"));
+  const price = p.hsprc.map((x) => projectItem("price", x));
+  price.push({ ...price[0], stdDay: "20240101" }); // 요청 범위(2025~2026) 밖 응답 1건
+  const area = p.area.map((x) => projectItem("area", x));
+  const issues = {};
+  const r = foldParcel(price, area, [2025, 2026], issues);
+  assert.equal(issues["std-out-of-range"], 1);
+  assert.equal(issues["std-out-of-range:2024"], 1);
+  assert.equal(r[2025].households, 3);
+  assert.equal(r[2026].households, 3);
+  assert.equal(r[2026].cells[0].n, 3, "범위 안 항목은 그대로 접힌다");
+  assert.throws(() => foldParcel(price, area, [2025, 2026]), /stdDay 연도가 요청 범위 밖/, "issues 를 안 주면 예전처럼 던진다");
+});
+
+test("범위 밖 stdDay(#802): 수집은 던지지 않고 그 항목만 건너뛴 채 지번을 끝내고 요약·로그에 지번·연도·건수를 남긴다", async () => {
+  const { targets, uni } = world();
+  // hsprc 첫 항목(지번 1·2의 2025 항목 하나씩)을 범위 밖으로 - 10-30 실행이 1건에 전체를 버린 모양
+  const mock = await startMock(uni, { mutate: (op, list) => (op === "getBrHsprcInfo" ? list.map((x, i) => (i === 0 ? { ...x, stdDay: "20240101" } : x)) : list) });
+  const out = await tmp();
+  const logged = [];
+  try {
+    const r = await runCollector(base({ targets, outDir: out, baseUrl: mock.base, log: (l) => logged.push(l) }));
+    assert.equal(r.finishedNow, 3, "범위 밖 항목이 섞인 지번도 끝난다");
+    assert.equal(r.status, "merged");
+    assert.equal(r.stdOutOfRange.items, 2);
+    assert.equal(r.stdOutOfRange.parcels, 2);
+    assert.deepEqual([...r.stdOutOfRange.sample].sort(), ["11110|가상동|1 stdDay 2024 1건", "11110|가상동|2 stdDay 2024 1건"]);
+    const d25 = JSON.parse(await readFile(path.join(out, "2025.json"), "utf8"));
+    assert.equal(d25.meta.households, 5, "지번 1의 2025 호 6 중 1건이 빠지고(5), 지번 2의 2025 호 1건은 빠져 0");
+    assert.equal(JSON.parse(await readFile(path.join(out, "2026.json"), "utf8")).meta.households, 7, "2026 항목은 그대로");
+    const text = summaryLines(r, 1000).join("\n");
+    assert.match(text, /요청 범위 밖 stdDay 건너뜀 2건\(지번 2개/);
+    assert.match(text, /11110\|가상동\|1 stdDay 2024 1건/);
+    assert.equal(logged.filter((l) => /^지번 11110\|가상동\|[12]: 요청 범위 밖 stdDay\(연도 2024\) 1건 건너뜀/.test(l)).length, 2);
+    for (const l of [text, ...logged]) { assert.ok(!l.includes(FAKE_KEY)); assert.ok(!l.includes("FAKEPK")); }
+  } finally { await mock.close(); await rm(out, { recursive: true, force: true }); }
 });
 
 test("낙제: 쪽 합계가 totalCount와 다르면 쓰기 없이 실패", async () => {

@@ -263,7 +263,8 @@ export async function fetchParcelOp(client, op, kind, t, extra, { issues, onPlan
  * 한 지번을 칸으로 접는다(순수 함수, 호 단위 값은 이 함수 안에서만 산다).
  * priceItems: 허용 필드만 남긴 hsprc 항목, areaItems: 같은 전유공용면적 항목, years: [2025, 2026]
  * 반환: years별 { cells:[{a,n,m,f?}] (n>=3만), cellsBelow, households, mismatch, unjoined, invalid }
- * stdDay 연도가 years 밖이면 던진다(요청 범위 밖 응답).
+ * stdDay 연도가 years 밖인 항목(요청 범위 밖 응답): issues 를 주면 세고(`std-out-of-range`·`std-out-of-range:<연도>`) 그 항목만 건너뛴다,
+ * 안 주면 던진다. 수집은 issues 를 준다(#802: 10-30 실행이 1건에 40분치 결과를 버렸다).
  */
 export function foldParcel(priceItems, areaItems, years, issues?) {
   // 호별 전용면적(전유·주건축물 면적 합)과 지상 층
@@ -285,7 +286,7 @@ export function foldParcel(priceItems, areaItems, years, issues?) {
   for (const it of priceItems) {
     const y = yearOf(it.stdDay);
     if (!years.includes(y)) {
-      if (issues) { bump(issues, "std-out-of-range"); continue; }
+      if (issues) { bump(issues, "std-out-of-range"); bump(issues, `std-out-of-range:${y ?? "?"}`); continue; }
       throw new ApiValidationError("응답 stdDay 연도가 요청 범위 밖이다", "std-out-of-range");
     }
     const v = Number(String(it.hsprc).replace(/,/g, ""));
@@ -455,7 +456,10 @@ export async function runCollector(opts) {
   const y1 = Number(endDate.slice(0, 4));
   const years = [];
   for (let y = y0; y <= y1; y += 1) years.push(y);
-  const summary: Record<string, any> = { status: "", years, maxPages, calls: 0, finishedNow: 0, cappedParcels: 0, abandoned: 0, stopReason: null, wrote: [], merged: false };
+  const summary: Record<string, any> = {
+    status: "", years, maxPages, calls: 0, finishedNow: 0, cappedParcels: 0, abandoned: 0, stopReason: null, wrote: [], merged: false,
+    stdOutOfRange: { items: 0, parcels: 0, sample: [] }, // 범위 밖 stdDay 로 건너뛴 항목 수·지번 수·표본(지번 키와 연도만, #802)
+  };
 
   if (await isComplete(outDir, years)) {
     summary.status = "complete";
@@ -497,7 +501,9 @@ export async function runCollector(opts) {
         price = await fetchParcelOp(client, OP_PRICE, "price", t, { startDate, endDate }, { first: priceFirst, maxPages });
         areaItems = (await fetchParcelOp(client, OP_AREA, "area", t, {}, { first: areaFirst, maxPages })).items;
       }
-      finished.push({ k, t, byYear: foldParcel(price.items, areaItems, years) }); // 호 단위 값은 여기서 버려진다
+      const issues = {}; // 범위 밖 stdDay 는 그 항목만 건너뛰고 지번은 접는다(#802) - 던지면 이 실행의 결과가 통째로 버려진다
+      finished.push({ k, t, byYear: foldParcel(price.items, areaItems, years, issues) }); // 호 단위 값은 여기서 버려진다
+      noteStdOutOfRange(summary, k, issues, log);
     } catch (e) {
       if (e instanceof StopRun) { stopped = e.reason; break; } // 이 지번은 통째로 버리고 다음 실행에 처음부터
       if (e instanceof ParcelFailed) {
@@ -547,7 +553,19 @@ export async function runCollector(opts) {
   return summary;
 }
 
-/** 요약을 줄로. 호 단위 값·지번 키·응답 원문은 없다(C1). */
+/** 범위 밖 stdDay(#802): 건수·지번 수·표본(지번 키와 연도, 호 값 없음)을 요약에 더하고 한 줄 적는다. 표본은 5개까지. */
+function noteStdOutOfRange(summary, k, issues, log) {
+  const n = issues["std-out-of-range"] ?? 0;
+  if (!n) return;
+  const prefix = "std-out-of-range:";
+  const years = Object.keys(issues).filter((c) => c.startsWith(prefix)).map((c) => c.slice(prefix.length)).sort().join("·");
+  summary.stdOutOfRange.items += n;
+  summary.stdOutOfRange.parcels += 1;
+  if (summary.stdOutOfRange.sample.length < 5) summary.stdOutOfRange.sample.push(`${k} stdDay ${years} ${n}건`);
+  log(`지번 ${k}: 요청 범위 밖 stdDay(연도 ${years}) ${n}건 건너뜀, 나머지 항목은 접었다`);
+}
+
+/** 요약을 줄로. 호 단위 값·응답 원문은 없다(C1). 지번 키는 범위 밖 stdDay 표본에만 적는다(#802). */
 export function summaryLines(s, budget) {
   const L = [];
   L.push("## 공시가격 API 수집(#68) - 집계만");
@@ -560,6 +578,7 @@ export function summaryLines(s, budget) {
   L.push(`- 이번 호출 ${s.calls}회(예산 ${budget}), 지금까지 ${s.callsSoFar}회. 버린 지번(일시 오류) ${s.abandoned}, 쪽 상한(${s.maxPages ?? MAX_PAGES_PER_PARCEL}쪽) 지번 ${s.cappedParcels}(지번 수만 적는다)`);
   if (s.errCodes && Object.keys(s.errCodes).length) L.push(`- 오류 분류: ${JSON.stringify(s.errCodes)}`);
   if (s.errSamples && Object.keys(s.errSamples).length) L.push(`- 오류 표본(분류별 첫 건): ${Object.entries(s.errSamples).map(([k, v]) => `${k} = ${v}`).join(" / ")}`);
+  if (s.stdOutOfRange?.items) L.push(`- 요청 범위 밖 stdDay 건너뜀 ${s.stdOutOfRange.items}건(지번 ${s.stdOutOfRange.parcels}개, 그 지번의 나머지 항목은 접었다): ${s.stdOutOfRange.sample.join(" / ")}`);
   L.push(`- 중단: ${s.stopReason ?? "없음(남은 지번을 끝까지 돌았다)"}`);
   if (s.projection) L.push(`- 투영: 지번당 평균 ${s.projection.perParcel.toFixed(1)}회 -> 총 ${s.projection.total}회, 남은 ${s.projection.left}회 = 약 ${s.projection.days}일(하루 ${budget}회 기준)`);
   else L.push("- 투영: 끝난 지번이 없어 계산하지 못했다.");

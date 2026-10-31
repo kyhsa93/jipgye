@@ -78,6 +78,7 @@ async function main() {
     key, baseUrl: base, targets, outDir: v["out-dir"], rawCommit: v["raw-commit"], startDate: v["start-date"], endDate: v["end-date"],
     budget, gapMs,
     softDeadlineMs: startedAt + runtimeMin * 60000, deadlineMs: startedAt + (runtimeMin + 15) * 60000,
+    log: (line) => console.log(line), // 지번 단위 한 줄(범위 밖 stdDay 등, #802) - 키·호 값은 runCollector 가 넣지 않는다
   });
   const lines = summaryLines(summary, budget);
   if (summary.status === "complete") { emit(lines); return; }
