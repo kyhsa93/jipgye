@@ -157,6 +157,7 @@
     "../../scripts/site-dir.ts",
     "../../scripts/site-hashes.ts",
     "../../scripts/site-snapshot.ts",
+    "../../scripts/sitemap.ts",
     "../../scripts/source-age.ts",
     "../../scripts/source-lines.ts",
     "../../scripts/stage-site.ts",

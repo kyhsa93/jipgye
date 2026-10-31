@@ -1,11 +1,13 @@
 // 모든 장의 #updated에 데이터 기준일(YYYY-MM-DD)을 정적으로 찍는다 (#111). 페이지 빌더가 전부 끝난 뒤에 돈다 -
 // 틀에서 장을 다시 쓰는 빌더보다 앞서면 날짜가 덮인다.
+// 마지막 단계라서 나가는 장 전부를 보는 마무리도 여기서 한다: 스타일 버전·장 전용 JS 주석 떼기(#784)와 사이트맵(#769) - 사이트맵은 찍힌 기준일과 noindex 를 읽으므로 기준일 찍기 뒤여야 한다.
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { createWriteSet } from "./render-writes.ts";
 import { crossStampAll, stampAll } from "./updated-stamp.ts";
 import { requireSite, siteDir } from "./site-dir.ts";
 import { stampPageAssets, stripPageScripts } from "./page-assets.ts";
+import { writeSitemap } from "./sitemap.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -29,4 +31,8 @@ console.log(`  스타일 버전·기능 분류 ${assetsDone}장`);
 // 장 전용 외부 JS 는 나가는 사본에서 주석을 뗀다(#784). docs/ 자신에 찍을 때는 건너뛴다.
 const scriptsDone = stripPageScripts({ siteRoot, io });
 console.log(`  장 전용 JS 주석 떼기 ${scriptsDone}개`);
+
+// 집계 전용 사이트맵(#769): noindex 가 아닌 장의 canonical 을 <loc> 으로, 찍힌 기준일을 <lastmod> 로. docs/ 자신에 찍을 때는 만들지 않는다(산출물은 build/site 에만).
+const locs = writeSitemap({ siteRoot, io });
+console.log(`  사이트맵 loc ${locs}개`);
 writes.commit();
