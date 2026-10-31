@@ -61,16 +61,7 @@ test("조사 지수는 두 시기 평균 사이 변화", () => {
   assert.equal(surveyChange(s.slice(0, 5), p), null, "한 달이 빠졌는데 평균을 냈다");
 });
 
-test("정적 HTML이 오늘 데이터의 문장과 표를 싣는다", async () => {
-  const [html, data] = await Promise.all([
-    readFile(path.join(root, "docs/switch-house.html"), "utf8"),
-    readFile(path.join(root, "docs/data/district-change.json"), "utf8").then(JSON.parse),
-  ]);
-  const block = (name) => html.match(new RegExp(`<!--prerender:${name}-->([\\s\\S]*?)<!--/prerender:${name}-->`))?.[1];
-  assert.equal(block("switchTable"), data.table.ko);
-  assert.equal(block("switchRegions"), data.regionTable.ko);
-  assert.ok(data.lead.en && Object.keys(data.pairs).length > 0);
-});
+// (#805) "정적 HTML이 오늘 데이터의 문장과 표를 싣는다" 는 손으로 고치는 틀 docs/switch-house.html 에 남은 옛 구운 조각을 오늘 docs/data 와 맞대는 검사라 공식 지수 달이 바뀌면 빨개진다(#8) - #507 과 같은 길로 tools/health/test/district-change.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 test("두 구 견주기는 금액 간격의 변화를 옮겨 갈 구 기준 부호로 적는다", async () => {
   const { loadPage } = await import("./helpers/digest-page.mjs");

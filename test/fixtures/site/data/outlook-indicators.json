@@ -1,1 +1,118 @@
-{"updatedAt":"2026-10-10T03:00:00.000Z"}
+{
+  "updatedAt": "2026-10-10T03:00:00.000Z",
+  "priceLast": "202608",
+  "rows": [
+    {
+      "id": "vol_norm",
+      "ko": "거래 건수: 최근 3개월 / 그 전 24개월",
+      "en": "Volume: last 3 months vs prior 24",
+      "lag": 0,
+      "published": false,
+      "h": {
+        "3": {
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.73,
+          "gain": -0.31,
+          "win": 0,
+          "passes": false
+        },
+        "6": {
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.61,
+          "gain": -0.92,
+          "win": 0,
+          "passes": false
+        }
+      },
+      "verdict": "no"
+    },
+    {
+      "id": "vol_norm",
+      "ko": "거래 건수: 최근 3개월 / 그 전 24개월",
+      "en": "Volume: last 3 months vs prior 24",
+      "lag": 1,
+      "published": false,
+      "h": {
+        "3": {
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.84,
+          "gain": -0.42,
+          "win": 0,
+          "passes": false
+        },
+        "6": {
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.54,
+          "gain": -0.85,
+          "win": 0,
+          "passes": false
+        }
+      },
+      "verdict": "no"
+    },
+    {
+      "id": "vol_yoy",
+      "ko": "거래 건수: 3개월 전년 대비",
+      "en": "Volume: 3-month, year on year",
+      "lag": 0,
+      "published": false,
+      "h": {
+        "3": {
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.69,
+          "gain": -0.27,
+          "win": 0,
+          "passes": false
+        },
+        "6": {
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.54,
+          "gain": -0.85,
+          "win": 0,
+          "passes": false
+        }
+      },
+      "verdict": "no"
+    },
+    {
+      "id": "vol_yoy",
+      "ko": "거래 건수: 3개월 전년 대비",
+      "en": "Volume: 3-month, year on year",
+      "lag": 1,
+      "published": false,
+      "h": {
+        "3": {
+          "origins": 173,
+          "base": 2.42,
+          "with": 2.57,
+          "gain": -0.15,
+          "win": 0,
+          "passes": false
+        },
+        "6": {
+          "origins": 170,
+          "base": 4.69,
+          "with": 5.4,
+          "gain": -0.71,
+          "win": 0,
+          "passes": false
+        }
+      },
+      "verdict": "no"
+    }
+  ],
+  "lead": {
+    "ko": "넣어 본 지표 23개 가운데 3개월·6개월 뒤를 지난 가격 변화만 쓰는 모델보다 꾸준히 더 잘 맞힌 것은 없었습니다(서울과 5개 권역 중 4곳 이상 기준). 흔히 먼저 움직인다고 하는 거래 건수는 넣으면 3개월 오차가 오히려 2.42%p에서 2.69%p로 커졌습니다.",
+    "en": "Of the 23 indicators tried, none consistently beat the price-only model three or six months out — in Seoul and in at least four of the five regions. Volume, the usual suspect, made the three-month forecast worse (2.42pp → 2.69pp)."
+  },
+  "table": {
+    "ko": "<thead><tr><th scope=\"col\">넣은 지표</th><th scope=\"col\">3개월 뒤 오차</th><th scope=\"col\">6개월 뒤 오차</th><th scope=\"col\">판정</th></tr></thead><tbody><tr><td>거래 건수: 최근 3개월 / 그 전 24개월</td><td>2.73%p<div class=\"sub\">기준 2.42%p · 0%</div></td><td>5.61%p<div class=\"sub\">기준 4.69%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>거래 건수: 최근 3개월 / 그 전 24개월 (+1개월)</td><td>2.84%p<div class=\"sub\">기준 2.42%p · 0%</div></td><td>5.54%p<div class=\"sub\">기준 4.69%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>거래 건수: 3개월 전년 대비</td><td>2.69%p<div class=\"sub\">기준 2.42%p · 0%</div></td><td>5.54%p<div class=\"sub\">기준 4.69%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>거래 건수: 3개월 전년 대비 (+1개월)</td><td>2.57%p<div class=\"sub\">기준 2.42%p · 0%</div></td><td>5.4%p<div class=\"sub\">기준 4.69%p · 0%</div></td><td><span class=\"low-sample\">앞서지 않음</span></td></tr><tr><td>건축HUB 주택인허가</td><td>-</td><td>-</td><td><span class=\"low-sample\">백테스트에 못 들어감: 집계 호수 대조 불합격(괴리 40.8%, 호수 0이 95.8%) - 사업 단위 목록에 호수가 거의 채워지지 않음</span><div class=\"sub\">확인일 2026-10-10</div></td></tr></tbody>",
+    "en": "<thead><tr><th scope=\"col\">Indicator added</th><th scope=\"col\">3 months</th><th scope=\"col\">6 months</th><th scope=\"col\">Verdict</th></tr></thead><tbody><tr><td>Volume: last 3 months vs prior 24</td><td>2.73pp<div class=\"sub\">base 2.42pp · 0%</div></td><td>5.61pp<div class=\"sub\">base 4.69pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Volume: last 3 months vs prior 24 (+1m)</td><td>2.84pp<div class=\"sub\">base 2.42pp · 0%</div></td><td>5.54pp<div class=\"sub\">base 4.69pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Volume: 3-month, year on year</td><td>2.69pp<div class=\"sub\">base 2.42pp · 0%</div></td><td>5.54pp<div class=\"sub\">base 4.69pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Volume: 3-month, year on year (+1m)</td><td>2.57pp<div class=\"sub\">base 2.42pp · 0%</div></td><td>5.4pp<div class=\"sub\">base 4.69pp · 0%</div></td><td><span class=\"low-sample\">does not lead</span></td></tr><tr><td>Building HUB housing permits</td><td>-</td><td>-</td><td><span class=\"low-sample\">Not backtested: failed the household count check (gap 40.8%, 95.8% of entries have 0 households) - the project-level list leaves household counts almost empty</span><div class=\"sub\">checked 2026-10-10</div></td></tr></tbody>"
+  }
+}

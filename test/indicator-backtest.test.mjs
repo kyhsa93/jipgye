@@ -139,15 +139,7 @@ test("전세자금대출·정기예금 평균금리를 ECOS에서 같은 방식�
   assert.match(asked[0], /\/StatisticSearch\/k\/json\/kr\/1\/1000\/121Y015\/M\/202607\/202609\/BECBLB020210$/);
 });
 
-test("정적 HTML이 오늘 판정 표를 싣는다", async () => {
-  const [html, data] = await Promise.all([
-    readFile(path.join(root, "docs/price-outlook.html"), "utf8"),
-    readFile(path.join(root, "docs/data/outlook-indicators.json"), "utf8").then(JSON.parse),
-  ]);
-  const block = html.match(/<!--prerender:indicatorTable-->([\s\S]*?)<!--\/prerender:indicatorTable-->/)?.[1];
-  assert.equal(block, data.table.ko);
-  assert.ok(data.lead.en && data.table.en);
-});
+// (#805) "정적 HTML이 오늘 판정 표를 싣는다" 는 손으로 고치는 틀 docs/price-outlook.html 에 남은 옛 구운 조각을 오늘 docs/data 와 맞대는 검사라 공식 지수 달이 바뀌면 빨개진다(#8) - #507 과 같은 길로 tools/health/test/indicator-backtest.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 test("3차 후보(#57): 인허가는 연중 누계를 달 값으로 풀고, 외지인 비중은 3개월 합으로 낸다", async () => {
   const { monthlyFromYtd, candidates3 } = await import("../scripts/indicator-candidates-3.ts");
@@ -182,24 +174,7 @@ test("매일 판정에 3차 후보가 들어간다", async () => {
   for (const id of ["out_share", "out_share12", "mort_bal12", "mort_bal_seoul12", "permits12", "permits_lag36"]) assert.ok(ids.includes(id), id);
 });
 
-test("표 끝에 백테스트에 못 들어간 건축HUB 주택인허가 한 행이 정적으로 붙고, 매일 판정 행 수는 그대로다 (#153)", async () => {
-  const { NOT_TESTED, tableHtml } = await import("../scripts/indicator-backtest.ts");
-  const [html, payload] = await Promise.all([
-    readFile(path.join(root, "docs/price-outlook.html"), "utf8"),
-    readFile(path.join(root, "docs/data/outlook-indicators.json"), "utf8").then(JSON.parse),
-  ]);
-  assert.equal(NOT_TESTED.length, 1);
-  // 판정 행(payload.rows)에는 정적 행이 섞이지 않는다 - 판정식·합격선은 건드리지 않았다.
-  assert.ok(payload.rows.every((r) => r.id && r.verdict), "정적 행이 판정 행에 섞였다");
-  const bodyRows = (h) => (h.match(/<tr>/g) ?? []).length - 1; // 머리 한 줄 제외
-  assert.equal(bodyRows(payload.table.ko), payload.rows.length + NOT_TESTED.length);
-  assert.equal(bodyRows(payload.table.en), payload.rows.length + NOT_TESTED.length);
-  // 정적 HTML(ko)은 JSON 표 그대로이고, 접근성 caption 행 수도 맞다.
-  assert.ok(html.includes(payload.table.ko), "정적 HTML 표가 JSON과 다르다");
-  assert.ok(html.includes(`${bodyRows(payload.table.ko)}행 4열`), "caption 행 수가 표와 다르다");
-  assert.equal(html.split("건축HUB 주택인허가</td>").length - 1, 1);
-  assert.equal(payload.table.en.split("Building HUB housing permits</td>").length - 1, 1);
-});
+// (#805) "표 끝에 백테스트에 못 들어간 건축HUB 주택인허가 한 행이 정적으로 붙고, 매일 판정 행 수는 그대로다 (#153)" 는 손으로 고치는 틀 docs/price-outlook.html 에 남은 옛 구운 조각을 오늘 docs/data 와 맞대는 검사라 공식 지수 달이 바뀌면 빨개진다(#8) - #507 과 같은 길로 tools/health/test/indicator-backtest.test.mjs 로 옮겼다(비차단). 같은 단언의 고정 데이터 짝은 test/fixture-site.test.mjs 에 있다.
 
 test("건축HUB 정적 행의 수치는 #133 기록(measure.json B2)과 같고, 사업명·사업주체명·지번·관리번호를 담지 않는다 (#153)", async () => {
   const { NOT_TESTED } = await import("../scripts/indicator-backtest.ts");
