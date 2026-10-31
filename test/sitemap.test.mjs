@@ -12,7 +12,7 @@ import { SITEMAP_FILE, canonicalOf, isNoindex, lastmodOf, sitemapEntries, sitema
 const BASE = "https://example.test/site/";
 const page = ({ canonical, noindex = false, updated = null }) =>
   `<!doctype html><html><head>${noindex ? '<meta name="robots" content="noindex, follow">' : ""}${canonical ? `<link rel="canonical" href="${canonical}">` : ""}</head><body>${
-    updated ? `<div class="updated" id="updated" data-updated="${updated}">기준일 ${updated}</div>` : '<p class="tagline" id="tagline">꼬리표</p>'
+    updated ? `<div class="updated" id="updated" data-updated="${updated}">기준일 ${updated}</div>` : "<p>꼬리표</p>"
   }</body></html>`;
 
 const made = [];
