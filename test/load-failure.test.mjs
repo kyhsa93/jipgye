@@ -17,6 +17,8 @@ import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readJson = (name) => readFile(path.join(root, `docs/data/${name}.json`), "utf8").then(JSON.parse);
+// 고정 데이터(test/fixtures/site/data). 실거래 검색·단지 카드 시험은 저장소 docs/data 를 읽지 않는다(#809).
+const fixtureRead = (name) => readFile(path.join(import.meta.dirname, `fixtures/site/data/${name}.json`), "utf8").then(JSON.parse);
 const settle = async (n = 20) => {
   for (let i = 0; i < n; i += 1) await new Promise((r) => setTimeout(r, 0));
 };
@@ -30,9 +32,15 @@ test("공용 규칙 파일을 쓰는 페이지는 인라인 스크립트보다 �
   }
 });
 
+// 실거래 검색 화면의 데이터는 전부 고정이다(#809). 전에는 deals-nowon·rents-nowon 오늘치로 상계주공7(고층) 카드를 그렸는데,
+// 카드의 전세가율은 그 파일의 두 달 창에서 매매·전세 각 3건 이상인 평형에만 나와서 11-01 처럼 창이 얇아진 날 배포가 막혔다.
+// complex-card-nowon.json: 상계주공7(고층) 45.9 형은 매매 4·전세 3(갱신·반전세 하나씩 더 있다 - 전세가율에서 빠진다)이라 값이 나오고,
+// 79.07 형은 매매 1 이라 표본 부족 행이다. 창은 파일의 periods 가 정하고 화면은 날짜로 거르지 않으므로 오늘과 무관하다.
+const cardFixture = () => fixtureRead("complex-card-nowon");
+
 async function dealSearch(query, extra = {}) {
-  const [budget, search, deals, rents] = await Promise.all([readJson("budget-deals"), readJson("deal-search"), readJson("deals-nowon"), readJson("rents-nowon")]);
-  return loadDealSearchPage({ budget, search, deals: { 노원구: deals }, rents: { 노원구: rents }, query, ...extra });
+  const [budget, card] = await Promise.all([fixtureRead("budget-deals"), cardFixture()]);
+  return loadDealSearchPage({ budget, search: card.search, deals: { 노원구: card.deals }, rents: { 노원구: card.rents }, query, ...extra });
 }
 
 test("단지로 묶어 보기: 단지 가격 파일 fetch가 거부되면 찾는 중이 멈추고 실패 문구 + 재시도 단추가 나온다", async () => {
@@ -103,7 +111,7 @@ test("단지 카드: 단지 가격 fetch가 거부되면 가격 블록 자리에
 
 test("단지 카드: 재시도가 성공하면 가격 블록이 그려지고 실패 문구가 사라진다", async () => {
   const net = { failComplexPrice: true };
-  const price = await readJson("complex-price-nowon");
+  const price = (await cardFixture()).complexPrice;
   const page = await dealSearch(APT_QUERY, { network: net, complexPrices: { 노원구: price } });
   await page.settle();
   assert.ok(slotHtml(page).includes("load-retry-price"));
@@ -151,7 +159,7 @@ test("단지 카드(이름 미해결): 가격 파일이 거부되면 카드 자�
 
 test("단지 카드(이름 미해결): 재시도가 성공하면 실패 문구가 사라지고 없는 단지로 끝난다", async () => {
   const net = { failComplexPrice: true };
-  const price = await readJson("complex-price-nowon");
+  const price = (await cardFixture()).complexPrice;
   const page = await dealSearch(UNKNOWN_QUERY, { network: net, complexPrices: { 노원구: price } });
   await page.settle();
   assert.ok(page.byId("complex-card").innerHTML.includes('id="complex-price-status"'), "카드가 안 그려져 실패 자리가 없다");
@@ -166,7 +174,7 @@ test("단지 카드(이름 미해결): 재시도가 성공하면 실패 문구�
 });
 
 test("단지 카드(이름 미해결): 없는 단지는 실패로 보이지 않는다 - 가격 파일 404, 받았는데 이름 없음 모두", async () => {
-  const price = await readJson("complex-price-nowon");
+  const price = (await cardFixture()).complexPrice;
   for (const [label, extra] of [["404", {}], ["받았는데 이름 없음", { complexPrices: { 노원구: price } }]]) {
     const page = await dealSearch(UNKNOWN_QUERY, extra);
     await page.settle();
@@ -230,8 +238,8 @@ test("거래 목록: 재시도가 성공하면 실패 표시가 사라지고 정
 test("거래 목록: 파일이 없는 구(404)는 실패로 보이지 않는다 - 실패와 없음이 갈린다", async () => {
   for (const c of LIST_CASES) {
     const page = await loadDealSearchPage({
-      budget: await readJson("budget-deals"),
-      search: await readJson("deal-search"),
+      budget: await fixtureRead("budget-deals"),
+      search: (await cardFixture()).search,
       query: c.query,
     });
     await page.settle();
@@ -316,8 +324,8 @@ test("단지 카드(전세 쪽): 재시도가 성공하면 실패 문구가 사�
 });
 
 test("단지 카드(전세 쪽): rents-* 파일이 없는 날(404)은 실패로 보이지 않는다", async () => {
-  const [budget, search, deals] = await Promise.all([readJson("budget-deals"), readJson("deal-search"), readJson("deals-nowon")]);
-  const page = await loadDealSearchPage({ budget, search, deals: { 노원구: deals }, query: APT_QUERY });
+  const [budget, fixture] = await Promise.all([fixtureRead("budget-deals"), cardFixture()]);
+  const page = await loadDealSearchPage({ budget, search: fixture.search, deals: { 노원구: fixture.deals }, query: APT_QUERY });
   await page.settle();
   const card = cardHtml(page);
   assert.ok(/전세가율/.test(card) && card.includes("<table"), "카드가 그려지지 않았다 - 404 시험이 비어 있다");
