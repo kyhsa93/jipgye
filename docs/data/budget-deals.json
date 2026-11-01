@@ -1,7 +1,6 @@
 {
-  "updatedAt": "2026-10-31T02:17:51.026Z",
+  "updatedAt": "2026-11-01T02:10:01.986Z",
   "periods": [
-    "202608",
     "202609",
     "202610"
   ],
@@ -9,27 +8,27 @@
     {
       "min10k": 0,
       "max10k": 30000,
-      "count": 650,
+      "count": 215,
       "districts": [
         {
-          "name": "동대문구",
-          "count": 627
-        },
-        {
           "name": "구로구",
-          "count": 72
+          "count": 39
         },
         {
           "name": "도봉구",
-          "count": 61
+          "count": 38
         },
         {
-          "name": "중랑구",
-          "count": 52
+          "name": "동대문구",
+          "count": 25
         },
         {
           "name": "강동구",
-          "count": 34
+          "count": 19
+        },
+        {
+          "name": "금천구",
+          "count": 18
         }
       ],
       "deals": [
@@ -167,65 +166,61 @@
         }
       ],
       "facts": {
-        "total": 650,
+        "total": 215,
         "span": {
           "min": {
-            "district": "영등포구",
-            "dong": "신길동",
-            "apt": "루나플라체",
-            "area": 10.78,
-            "amount10k": 15000
+            "district": "강동구",
+            "dong": "천호동",
+            "apt": "아스하임",
+            "area": 11.33,
+            "amount10k": 19000
           },
           "max": {
-            "district": "동작구",
-            "dong": "상도동",
-            "apt": "강남(488)",
-            "area": 88.69,
-            "amount10k": 16000
+            "district": "도봉구",
+            "dong": "쌍문동",
+            "apt": "청화",
+            "area": 71.76,
+            "amount10k": 28500
           }
         },
         "standard": {
-          "count": 1,
+          "count": 0,
           "min": 80,
           "max": 90
         },
         "smallHeavy": {
-          "share": 0.9953846153846154
-        },
-        "fresh": {
-          "share": 0.5138461538461538,
-          "years": 5
+          "share": 0.9906976744186047
         },
         "directHeavy": {
-          "share": 0.5461538461538461
+          "share": 0.10697674418604651
         }
       },
-      "direct": 355
+      "direct": 23
     },
     {
       "min10k": 30000,
       "max10k": 40000,
-      "count": 410,
+      "count": 255,
       "districts": [
         {
           "name": "도봉구",
-          "count": 175
+          "count": 121
         },
         {
           "name": "강서구",
-          "count": 109
+          "count": 55
         },
         {
           "name": "노원구",
-          "count": 100
+          "count": 40
         },
         {
           "name": "중랑구",
-          "count": 59
+          "count": 20
         },
         {
-          "name": "강동구",
-          "count": 21
+          "name": "관악구",
+          "count": 12
         }
       ],
       "deals": [
@@ -329,17 +324,6 @@
           "direct": false
         },
         {
-          "district": "강서구",
-          "dong": "화곡동",
-          "apt": "강서타워",
-          "area": 94.06,
-          "floor": 2,
-          "amount10k": 38000,
-          "date": "2026-10-23",
-          "buildYear": 2009,
-          "direct": true
-        },
-        {
           "district": "도봉구",
           "dong": "도봉동",
           "apt": "유원도봉",
@@ -360,68 +344,79 @@
           "date": "2026-10-21",
           "buildYear": 2012,
           "direct": false
+        },
+        {
+          "district": "관악구",
+          "dong": "봉천동",
+          "apt": "복권",
+          "area": 47.61,
+          "floor": 3,
+          "amount10k": 30000,
+          "date": "2026-10-21",
+          "buildYear": 1971,
+          "direct": false
         }
       ],
       "facts": {
-        "total": 410,
+        "total": 255,
         "span": {
           "min": {
-            "district": "영등포구",
-            "dong": "영등포동1가",
-            "apt": "여의도이튼브라운",
-            "area": 18.89,
-            "amount10k": 32000
+            "district": "강남구",
+            "dong": "역삼동",
+            "apt": "강남웅진베어스빌",
+            "area": 20.63,
+            "amount10k": 30000
           },
           "max": {
-            "district": "강서구",
-            "dong": "화곡동",
-            "apt": "강서타워",
-            "area": 94.06,
-            "amount10k": 38000
+            "district": "도봉구",
+            "dong": "도봉동",
+            "apt": "유원도봉",
+            "area": 84.93,
+            "amount10k": 36000
           }
         },
         "standard": {
-          "count": 6,
+          "count": 5,
           "min": 80,
           "max": 90
         },
         "smallHeavy": {
-          "share": 0.9463414634146341
+          "share": 0.9529411764705882
         },
         "old": {
-          "share": 0.4073170731707317,
+          "share": 0.3764705882352941,
           "years": 30
         },
         "directHeavy": {
-          "share": 0.2707317073170732
+          "share": 0.3137254901960784
         }
       },
-      "direct": 111
+      "direct": 80
     },
     {
       "min10k": 40000,
       "max10k": 50000,
-      "count": 770,
+      "count": 512,
       "districts": [
         {
           "name": "송파구",
-          "count": 347
+          "count": 174
         },
         {
           "name": "도봉구",
-          "count": 216
+          "count": 122
         },
         {
           "name": "노원구",
-          "count": 167
-        },
-        {
-          "name": "동대문구",
-          "count": 77
+          "count": 66
         },
         {
           "name": "금천구",
-          "count": 73
+          "count": 37
+        },
+        {
+          "name": "은평구",
+          "count": 36
         }
       ],
       "deals": [
@@ -559,7 +554,7 @@
         }
       ],
       "facts": {
-        "total": 770,
+        "total": 512,
         "span": {
           "min": {
             "district": "송파구",
@@ -569,74 +564,74 @@
             "amount10k": 40700
           },
           "max": {
-            "district": "은평구",
-            "dong": "구산동",
-            "apt": "한성산장",
-            "area": 120,
-            "amount10k": 48000
+            "district": "도봉구",
+            "dong": "방학동",
+            "apt": "선덕빌라트아파트",
+            "area": 112.55,
+            "amount10k": 44400
           }
         },
         "standard": {
-          "count": 50,
+          "count": 35,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "도봉구",
-              "count": 16
+              "count": 12
             },
             {
               "name": "은평구",
-              "count": 10
+              "count": 6
             },
             {
               "name": "구로구",
-              "count": 7
+              "count": 5
             },
             {
               "name": "금천구",
-              "count": 4
+              "count": 3
             }
           ],
-          "districtCount": 13
+          "districtCount": 9
         },
         "smallHeavy": {
-          "share": 0.8012987012987013
+          "share": 0.798828125
         },
         "old": {
-          "share": 0.412987012987013,
+          "share": 0.3671875,
           "years": 30
         },
         "directHeavy": {
-          "share": 0.2935064935064935
+          "share": 0.376953125
         }
       },
-      "direct": 226
+      "direct": 193
     },
     {
       "min10k": 50000,
       "max10k": 60000,
-      "count": 764,
+      "count": 447,
       "districts": [
         {
           "name": "노원구",
-          "count": 290
+          "count": 137
         },
         {
           "name": "도봉구",
-          "count": 190
-        },
-        {
-          "name": "강서구",
-          "count": 104
+          "count": 99
         },
         {
           "name": "구로구",
-          "count": 101
+          "count": 52
+        },
+        {
+          "name": "강서구",
+          "count": 50
         },
         {
           "name": "은평구",
-          "count": 77
+          "count": 42
         }
       ],
       "deals": [
@@ -774,7 +769,7 @@
         }
       ],
       "facts": {
-        "total": 764,
+        "total": 447,
         "span": {
           "min": {
             "district": "서초구",
@@ -784,71 +779,71 @@
             "amount10k": 54650
           },
           "max": {
-            "district": "구로구",
-            "dong": "개봉동",
-            "apt": "거성푸르뫼",
-            "area": 132.68,
-            "amount10k": 52000
+            "district": "강동구",
+            "dong": "천호동",
+            "apt": "아크로파크",
+            "area": 114.96,
+            "amount10k": 51000
           }
         },
         "standard": {
-          "count": 200,
+          "count": 116,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "도봉구",
-              "count": 75
-            },
-            {
-              "name": "금천구",
-              "count": 23
+              "count": 45
             },
             {
               "name": "은평구",
-              "count": 18
+              "count": 15
             },
             {
               "name": "구로구",
-              "count": 16
+              "count": 11
+            },
+            {
+              "name": "서대문구",
+              "count": 8
             }
           ],
-          "districtCount": 15
+          "districtCount": 13
         },
         "smallHeavy": {
-          "share": 0.6099476439790575
+          "share": 0.6129753914988815
         },
         "old": {
-          "share": 0.4829842931937173,
+          "share": 0.5011185682326622,
           "years": 30
         }
       },
-      "direct": 65
+      "direct": 44
     },
     {
       "min10k": 60000,
       "max10k": 70000,
-      "count": 901,
+      "count": 554,
       "districts": [
         {
           "name": "노원구",
-          "count": 314
-        },
-        {
-          "name": "은평구",
-          "count": 185
-        },
-        {
-          "name": "도봉구",
           "count": 143
         },
         {
+          "name": "은평구",
+          "count": 89
+        },
+        {
+          "name": "도봉구",
+          "count": 76
+        },
+        {
           "name": "구로구",
-          "count": 133
+          "count": 71
         },
         {
           "name": "중랑구",
-          "count": 115
+          "count": 67
         }
       ],
       "deals": [
@@ -986,7 +981,7 @@
         }
       ],
       "facts": {
-        "total": 901,
+        "total": 554,
         "span": {
           "min": {
             "district": "송파구",
@@ -997,73 +992,73 @@
           },
           "max": {
             "district": "구로구",
-            "dong": "개봉동",
-            "apt": "거성푸르뫼",
-            "area": 132.68,
-            "amount10k": 61500
+            "dong": "구로동",
+            "apt": "희훈타워빌",
+            "area": 127.05,
+            "amount10k": 67700
           }
         },
         "standard": {
-          "count": 258,
+          "count": 150,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "도봉구",
-              "count": 51
+              "count": 32
             },
             {
               "name": "노원구",
-              "count": 49
+              "count": 29
             },
             {
               "name": "은평구",
-              "count": 20
+              "count": 11
             },
             {
-              "name": "강북구",
-              "count": 19
+              "name": "중랑구",
+              "count": 11
             }
           ],
-          "districtCount": 18
+          "districtCount": 15
         },
         "smallHeavy": {
-          "share": 0.5837957824639289
+          "share": 0.6137184115523465
         },
         "old": {
-          "share": 0.3607103218645949,
+          "share": 0.37364620938628157,
           "years": 30
         },
         "directHeavy": {
-          "share": 0.11320754716981132
+          "share": 0.14981949458483754
         }
       },
-      "direct": 102
+      "direct": 83
     },
     {
       "min10k": 70000,
       "max10k": 80000,
-      "count": 816,
+      "count": 481,
       "districts": [
         {
           "name": "노원구",
-          "count": 256
+          "count": 122
         },
         {
           "name": "구로구",
-          "count": 166
+          "count": 94
         },
         {
           "name": "중랑구",
-          "count": 118
+          "count": 57
         },
         {
           "name": "성북구",
-          "count": 97
+          "count": 44
         },
         {
-          "name": "강서구",
-          "count": 95
+          "name": "관악구",
+          "count": 42
         }
       ],
       "deals": [
@@ -1201,78 +1196,74 @@
         }
       ],
       "facts": {
-        "total": 816,
+        "total": 481,
         "span": {
           "min": {
             "district": "송파구",
             "dong": "문정동",
             "apt": "문정시영",
             "area": 25.65,
-            "amount10k": 70000
+            "amount10k": 75500
           },
           "max": {
-            "district": "은평구",
-            "dong": "역촌동",
-            "apt": "뉴캐슬",
-            "area": 147.27,
-            "amount10k": 74000
+            "district": "노원구",
+            "dong": "상계동",
+            "apt": "노원IPARK",
+            "area": 137.63,
+            "amount10k": 79200
           }
         },
         "standard": {
-          "count": 316,
+          "count": 177,
           "min": 80,
           "max": 90,
           "districts": [
             {
-              "name": "노원구",
-              "count": 45
+              "name": "구로구",
+              "count": 23
             },
             {
               "name": "중랑구",
-              "count": 40
+              "count": 22
             },
             {
-              "name": "구로구",
-              "count": 34
+              "name": "노원구",
+              "count": 20
             },
             {
               "name": "성북구",
-              "count": 32
+              "count": 19
             }
           ],
-          "districtCount": 19
-        },
-        "old": {
-          "share": 0.35294117647058826,
-          "years": 30
+          "districtCount": 17
         }
       },
-      "direct": 19
+      "direct": 12
     },
     {
       "min10k": 80000,
       "max10k": 90000,
-      "count": 739,
+      "count": 433,
       "districts": [
         {
           "name": "노원구",
-          "count": 203
+          "count": 87
         },
         {
           "name": "구로구",
-          "count": 115
+          "count": 72
         },
         {
           "name": "강서구",
-          "count": 108
-        },
-        {
-          "name": "성북구",
-          "count": 99
+          "count": 52
         },
         {
           "name": "중랑구",
-          "count": 96
+          "count": 51
+        },
+        {
+          "name": "은평구",
+          "count": 46
         }
       ],
       "deals": [
@@ -1410,7 +1401,7 @@
         }
       ],
       "facts": {
-        "total": 739,
+        "total": 433,
         "span": {
           "min": {
             "district": "송파구",
@@ -1420,64 +1411,68 @@
             "amount10k": 83000
           },
           "max": {
-            "district": "은평구",
-            "dong": "응암동",
-            "apt": "서강스카이빌2",
-            "area": 156.39,
-            "amount10k": 86500
+            "district": "노원구",
+            "dong": "상계동",
+            "apt": "노원IPARK",
+            "area": 145.58,
+            "amount10k": 87000
           }
         },
         "standard": {
-          "count": 302,
+          "count": 183,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "노원구",
-              "count": 49
+              "count": 31
             },
             {
               "name": "구로구",
-              "count": 40
+              "count": 29
             },
             {
               "name": "중랑구",
-              "count": 35
+              "count": 20
             },
             {
               "name": "성북구",
-              "count": 24
+              "count": 17
             }
           ],
-          "districtCount": 21
+          "districtCount": 20
+        },
+        "old": {
+          "share": 0.371824480369515,
+          "years": 30
         }
       },
-      "direct": 15
+      "direct": 8
     },
     {
       "min10k": 90000,
       "max10k": 100000,
-      "count": 533,
+      "count": 318,
       "districts": [
         {
-          "name": "노원구",
-          "count": 104
+          "name": "은평구",
+          "count": 53
         },
         {
-          "name": "은평구",
-          "count": 103
+          "name": "노원구",
+          "count": 44
         },
         {
           "name": "성북구",
-          "count": 77
+          "count": 40
         },
         {
-          "name": "도봉구",
-          "count": 60
+          "name": "동대문구",
+          "count": 35
         },
         {
           "name": "구로구",
-          "count": 59
+          "count": 34
         }
       ],
       "deals": [
@@ -1615,74 +1610,74 @@
         }
       ],
       "facts": {
-        "total": 533,
+        "total": 318,
         "span": {
           "min": {
-            "district": "종로구",
-            "dong": "교북동",
-            "apt": "경희궁자이(4단지)",
-            "area": 33.98,
-            "amount10k": 98000
+            "district": "서대문구",
+            "dong": "북아현동",
+            "apt": "신촌푸르지오",
+            "area": 34.75,
+            "amount10k": 90000
           },
           "max": {
             "district": "노원구",
-            "dong": "상계동",
-            "apt": "노원IPARK",
-            "area": 178.33,
-            "amount10k": 93000
+            "dong": "중계동",
+            "apt": "염광",
+            "area": 131.25,
+            "amount10k": 90000
           }
         },
         "standard": {
-          "count": 242,
+          "count": 142,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "노원구",
-              "count": 36
+              "count": 19
             },
             {
               "name": "은평구",
-              "count": 33
-            },
-            {
-              "name": "도봉구",
-              "count": 18
-            },
-            {
-              "name": "중랑구",
               "count": 17
+            },
+            {
+              "name": "강북구",
+              "count": 11
+            },
+            {
+              "name": "구로구",
+              "count": 11
             }
           ],
-          "districtCount": 24
+          "districtCount": 20
         }
       },
-      "direct": 17
+      "direct": 15
     },
     {
       "min10k": 100000,
       "max10k": 110000,
-      "count": 513,
+      "count": 320,
       "districts": [
         {
           "name": "강서구",
-          "count": 95
+          "count": 58
         },
         {
           "name": "노원구",
-          "count": 92
+          "count": 43
         },
         {
           "name": "은평구",
-          "count": 80
+          "count": 40
         },
         {
           "name": "성북구",
-          "count": 64
+          "count": 34
         },
         {
           "name": "서대문구",
-          "count": 55
+          "count": 30
         }
       ],
       "deals": [
@@ -1820,7 +1815,7 @@
         }
       ],
       "facts": {
-        "total": 513,
+        "total": 320,
         "span": {
           "min": {
             "district": "송파구",
@@ -1838,56 +1833,56 @@
           }
         },
         "standard": {
-          "count": 191,
+          "count": 120,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "은평구",
-              "count": 29
-            },
-            {
-              "name": "강서구",
-              "count": 20
-            },
-            {
-              "name": "노원구",
-              "count": 20
+              "count": 16
             },
             {
               "name": "성북구",
-              "count": 18
+              "count": 14
+            },
+            {
+              "name": "강서구",
+              "count": 13
+            },
+            {
+              "name": "노원구",
+              "count": 13
             }
           ],
-          "districtCount": 21
+          "districtCount": 20
         }
       },
-      "direct": 12
+      "direct": 8
     },
     {
       "min10k": 110000,
       "max10k": 120000,
-      "count": 390,
+      "count": 211,
       "districts": [
         {
           "name": "성북구",
-          "count": 80
+          "count": 40
         },
         {
           "name": "강서구",
-          "count": 74
-        },
-        {
-          "name": "노원구",
-          "count": 51
+          "count": 39
         },
         {
           "name": "은평구",
-          "count": 50
+          "count": 36
         },
         {
           "name": "관악구",
-          "count": 49
+          "count": 26
+        },
+        {
+          "name": "동대문구",
+          "count": 21
         }
       ],
       "deals": [
@@ -2025,14 +2020,14 @@
         }
       ],
       "facts": {
-        "total": 390,
+        "total": 211,
         "span": {
           "min": {
-            "district": "강남구",
-            "dong": "역삼동",
-            "apt": "역삼I'PARK",
-            "area": 28.25,
-            "amount10k": 115000
+            "district": "송파구",
+            "dong": "문정동",
+            "apt": "문정시영",
+            "area": 39.69,
+            "amount10k": 119000
           },
           "max": {
             "district": "중랑구",
@@ -2043,56 +2038,56 @@
           }
         },
         "standard": {
-          "count": 149,
+          "count": 77,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "성북구",
-              "count": 24
-            },
-            {
-              "name": "구로구",
-              "count": 18
-            },
-            {
-              "name": "노원구",
               "count": 14
             },
             {
               "name": "은평구",
-              "count": 14
+              "count": 12
+            },
+            {
+              "name": "강북구",
+              "count": 9
+            },
+            {
+              "name": "구로구",
+              "count": 9
             }
           ],
-          "districtCount": 21
+          "districtCount": 16
         }
       },
-      "direct": 7
+      "direct": 4
     },
     {
       "min10k": 120000,
       "max10k": 130000,
-      "count": 368,
+      "count": 238,
       "districts": [
         {
           "name": "은평구",
-          "count": 70
+          "count": 42
         },
         {
           "name": "성북구",
-          "count": 65
+          "count": 41
         },
         {
           "name": "관악구",
-          "count": 63
+          "count": 38
         },
         {
           "name": "서대문구",
-          "count": 56
+          "count": 38
         },
         {
           "name": "강서구",
-          "count": 48
+          "count": 24
         }
       ],
       "deals": [
@@ -2105,6 +2100,17 @@
           "amount10k": 126000,
           "date": "2026-10-29",
           "buildYear": 2011,
+          "direct": false
+        },
+        {
+          "district": "영등포구",
+          "dong": "양평동3가",
+          "apt": "우림루미아트",
+          "area": 84.87,
+          "floor": 13,
+          "amount10k": 125000,
+          "date": "2026-10-29",
+          "buildYear": 2004,
           "direct": false
         },
         {
@@ -2216,28 +2222,17 @@
           "date": "2026-10-24",
           "buildYear": 2016,
           "direct": false
-        },
-        {
-          "district": "동대문구",
-          "dong": "장안동",
-          "apt": "장안현대홈타운(336)",
-          "area": 59.54,
-          "floor": 17,
-          "amount10k": 127000,
-          "date": "2026-10-23",
-          "buildYear": 2003,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 368,
+        "total": 238,
         "span": {
           "min": {
             "district": "송파구",
             "dong": "문정동",
             "apt": "문정시영",
             "area": 39.69,
-            "amount10k": 120000
+            "amount10k": 124500
           },
           "max": {
             "district": "은평구",
@@ -2248,56 +2243,56 @@
           }
         },
         "standard": {
-          "count": 166,
+          "count": 120,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "은평구",
-              "count": 25
-            },
-            {
-              "name": "강서구",
               "count": 18
             },
             {
               "name": "성북구",
-              "count": 18
+              "count": 15
             },
             {
               "name": "노원구",
-              "count": 17
+              "count": 12
+            },
+            {
+              "name": "강서구",
+              "count": 9
             }
           ],
-          "districtCount": 21
+          "districtCount": 20
         }
       },
-      "direct": 7
+      "direct": 4
     },
     {
       "min10k": 130000,
       "max10k": 140000,
-      "count": 303,
+      "count": 178,
       "districts": [
         {
           "name": "강서구",
-          "count": 46
-        },
-        {
-          "name": "강동구",
-          "count": 41
-        },
-        {
-          "name": "성북구",
-          "count": 40
+          "count": 27
         },
         {
           "name": "영등포구",
-          "count": 37
+          "count": 21
+        },
+        {
+          "name": "성북구",
+          "count": 19
+        },
+        {
+          "name": "강동구",
+          "count": 18
         },
         {
           "name": "관악구",
-          "count": 34
+          "count": 18
         }
       ],
       "deals": [
@@ -2435,7 +2430,7 @@
         }
       ],
       "facts": {
-        "total": 303,
+        "total": 178,
         "span": {
           "min": {
             "district": "송파구",
@@ -2453,56 +2448,56 @@
           }
         },
         "standard": {
-          "count": 130,
+          "count": 79,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "강서구",
-              "count": 18
+              "count": 12
             },
             {
-              "name": "강동구",
-              "count": 10
+              "name": "양천구",
+              "count": 7
             },
             {
               "name": "금천구",
-              "count": 10
+              "count": 6
             },
             {
               "name": "동대문구",
-              "count": 10
+              "count": 6
             }
           ],
-          "districtCount": 23
+          "districtCount": 20
         }
       },
-      "direct": 7
+      "direct": 6
     },
     {
       "min10k": 140000,
       "max10k": 150000,
-      "count": 312,
+      "count": 193,
       "districts": [
         {
-          "name": "강서구",
-          "count": 56
+          "name": "마포구",
+          "count": 30
         },
         {
-          "name": "마포구",
-          "count": 43
+          "name": "강서구",
+          "count": 25
         },
         {
           "name": "영등포구",
-          "count": 42
+          "count": 25
         },
         {
           "name": "성북구",
-          "count": 41
+          "count": 22
         },
         {
           "name": "동작구",
-          "count": 37
+          "count": 17
         }
       ],
       "deals": [
@@ -2640,7 +2635,7 @@
         }
       ],
       "facts": {
-        "total": 312,
+        "total": 193,
         "span": {
           "min": {
             "district": "서초구",
@@ -2658,56 +2653,56 @@
           }
         },
         "standard": {
-          "count": 130,
+          "count": 81,
           "min": 80,
           "max": 90,
           "districts": [
-            {
-              "name": "성북구",
-              "count": 14
-            },
             {
               "name": "마포구",
               "count": 12
             },
             {
-              "name": "양천구",
-              "count": 12
+              "name": "성북구",
+              "count": 8
             },
             {
-              "name": "영등포구",
-              "count": 12
+              "name": "구로구",
+              "count": 6
+            },
+            {
+              "name": "양천구",
+              "count": 6
             }
           ],
-          "districtCount": 22
+          "districtCount": 21
         }
       },
-      "direct": 11
+      "direct": 7
     },
     {
       "min10k": 150000,
       "max10k": 160000,
-      "count": 243,
+      "count": 146,
       "districts": [
         {
           "name": "강동구",
-          "count": 48
-        },
-        {
-          "name": "동작구",
-          "count": 41
+          "count": 29
         },
         {
           "name": "서대문구",
-          "count": 36
+          "count": 24
+        },
+        {
+          "name": "동작구",
+          "count": 22
         },
         {
           "name": "마포구",
-          "count": 33
+          "count": 18
         },
         {
           "name": "성북구",
-          "count": 32
+          "count": 16
         }
       ],
       "deals": [
@@ -2845,7 +2840,7 @@
         }
       ],
       "facts": {
-        "total": 243,
+        "total": 146,
         "span": {
           "min": {
             "district": "송파구",
@@ -2855,64 +2850,64 @@
             "amount10k": 150000
           },
           "max": {
-            "district": "종로구",
-            "dong": "평창동",
-            "apt": "노블레스빌",
-            "area": 243.09,
-            "amount10k": 157000
+            "district": "마포구",
+            "dong": "도화동",
+            "apt": "정우상가맨션",
+            "area": 142.41,
+            "amount10k": 159500
           }
         },
         "standard": {
-          "count": 107,
+          "count": 62,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "서대문구",
-              "count": 17
-            },
-            {
-              "name": "동작구",
-              "count": 15
-            },
-            {
-              "name": "강동구",
               "count": 14
             },
             {
-              "name": "영등포구",
+              "name": "강동구",
               "count": 9
+            },
+            {
+              "name": "동작구",
+              "count": 7
+            },
+            {
+              "name": "영등포구",
+              "count": 6
             }
           ],
-          "districtCount": 20
+          "districtCount": 18
         }
       },
-      "direct": 7
+      "direct": 4
     },
     {
       "min10k": 160000,
       "max10k": 170000,
-      "count": 225,
+      "count": 130,
       "districts": [
         {
-          "name": "동작구",
-          "count": 40
+          "name": "강서구",
+          "count": 23
         },
         {
-          "name": "강서구",
-          "count": 38
+          "name": "동작구",
+          "count": 21
         },
         {
           "name": "강동구",
-          "count": 34
+          "count": 18
         },
         {
           "name": "서대문구",
-          "count": 28
+          "count": 18
         },
         {
           "name": "성동구",
-          "count": 28
+          "count": 16
         }
       ],
       "deals": [
@@ -3050,14 +3045,14 @@
         }
       ],
       "facts": {
-        "total": 225,
+        "total": 130,
         "span": {
           "min": {
-            "district": "송파구",
-            "dong": "잠실동",
-            "apt": "리센츠",
-            "area": 27.68,
-            "amount10k": 160800
+            "district": "강남구",
+            "dong": "수서동",
+            "apt": "신동아",
+            "area": 39.51,
+            "amount10k": 167000
           },
           "max": {
             "district": "구로구",
@@ -3068,56 +3063,56 @@
           }
         },
         "standard": {
-          "count": 112,
+          "count": 64,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "강서구",
-              "count": 16
+              "count": 11
             },
             {
               "name": "동작구",
-              "count": 15
+              "count": 9
             },
             {
               "name": "서대문구",
-              "count": 13
+              "count": 8
             },
             {
               "name": "강동구",
-              "count": 10
+              "count": 7
             }
           ],
-          "districtCount": 18
+          "districtCount": 16
         }
       },
-      "direct": 7
+      "direct": 4
     },
     {
       "min10k": 170000,
       "max10k": 180000,
-      "count": 195,
+      "count": 116,
       "districts": [
         {
-          "name": "강동구",
-          "count": 41
+          "name": "송파구",
+          "count": 22
         },
         {
-          "name": "송파구",
-          "count": 39
+          "name": "강동구",
+          "count": 21
         },
         {
           "name": "강서구",
-          "count": 35
+          "count": 20
         },
         {
           "name": "동작구",
-          "count": 34
+          "count": 12
         },
         {
-          "name": "동대문구",
-          "count": 24
+          "name": "마포구",
+          "count": 11
         }
       ],
       "deals": [
@@ -3255,7 +3250,7 @@
         }
       ],
       "facts": {
-        "total": 195,
+        "total": 116,
         "span": {
           "min": {
             "district": "송파구",
@@ -3273,28 +3268,28 @@
           }
         },
         "standard": {
-          "count": 98,
+          "count": 58,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "강동구",
-              "count": 15
-            },
-            {
-              "name": "동대문구",
-              "count": 15
+              "count": 9
             },
             {
               "name": "강서구",
-              "count": 11
+              "count": 9
+            },
+            {
+              "name": "동대문구",
+              "count": 7
             },
             {
               "name": "동작구",
-              "count": 11
+              "count": 4
             }
           ],
-          "districtCount": 16
+          "districtCount": 15
         }
       },
       "direct": 1
@@ -3302,27 +3297,27 @@
     {
       "min10k": 180000,
       "max10k": 190000,
-      "count": 167,
+      "count": 95,
       "districts": [
         {
           "name": "강동구",
-          "count": 43
+          "count": 24
         },
         {
           "name": "송파구",
-          "count": 40
-        },
-        {
-          "name": "마포구",
           "count": 19
         },
         {
-          "name": "동작구",
-          "count": 18
+          "name": "중구",
+          "count": 11
         },
         {
-          "name": "중구",
-          "count": 18
+          "name": "강서구",
+          "count": 10
+        },
+        {
+          "name": "동작구",
+          "count": 9
         }
       ],
       "deals": [
@@ -3460,14 +3455,14 @@
         }
       ],
       "facts": {
-        "total": 167,
+        "total": 95,
         "span": {
           "min": {
             "district": "양천구",
             "dong": "신정동",
             "apt": "목동신시가지11",
             "area": 51.48,
-            "amount10k": 180000
+            "amount10k": 183000
           },
           "max": {
             "district": "서대문구",
@@ -3478,56 +3473,56 @@
           }
         },
         "standard": {
-          "count": 69,
+          "count": 35,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "강동구",
-              "count": 12
+              "count": 8
             },
             {
               "name": "송파구",
-              "count": 10
+              "count": 6
             },
             {
               "name": "동작구",
-              "count": 7
+              "count": 4
             },
             {
-              "name": "마포구",
-              "count": 6
+              "name": "중구",
+              "count": 3
             }
           ],
-          "districtCount": 16
+          "districtCount": 14
         }
       },
-      "direct": 7
+      "direct": 5
     },
     {
       "min10k": 190000,
       "max10k": 200000,
-      "count": 137,
+      "count": 79,
       "districts": [
         {
           "name": "송파구",
-          "count": 36
+          "count": 19
         },
         {
           "name": "강동구",
-          "count": 28
+          "count": 14
         },
         {
           "name": "마포구",
-          "count": 22
+          "count": 13
         },
         {
           "name": "동작구",
-          "count": 20
+          "count": 9
         },
         {
-          "name": "성동구",
-          "count": 20
+          "name": "서대문구",
+          "count": 9
         }
       ],
       "deals": [
@@ -3665,7 +3660,7 @@
         }
       ],
       "facts": {
-        "total": 137,
+        "total": 79,
         "span": {
           "min": {
             "district": "송파구",
@@ -3683,56 +3678,56 @@
           }
         },
         "standard": {
-          "count": 62,
+          "count": 30,
           "min": 80,
           "max": 90,
           "districts": [
             {
-              "name": "동작구",
-              "count": 11
-            },
-            {
               "name": "강동구",
-              "count": 8
+              "count": 5
             },
             {
-              "name": "송파구",
-              "count": 6
+              "name": "동작구",
+              "count": 5
             },
             {
-              "name": "양천구",
-              "count": 6
+              "name": "성동구",
+              "count": 4
+            },
+            {
+              "name": "마포구",
+              "count": 3
             }
           ],
-          "districtCount": 16
+          "districtCount": 12
         }
       },
-      "direct": 1
+      "direct": 0
     },
     {
       "min10k": 200000,
       "max10k": 210000,
-      "count": 104,
+      "count": 64,
       "districts": [
         {
-          "name": "마포구",
-          "count": 18
-        },
-        {
           "name": "영등포구",
-          "count": 18
+          "count": 12
         },
         {
           "name": "서초구",
-          "count": 17
+          "count": 11
+        },
+        {
+          "name": "마포구",
+          "count": 9
         },
         {
           "name": "성동구",
-          "count": 16
+          "count": 9
         },
         {
-          "name": "송파구",
-          "count": 16
+          "name": "강남구",
+          "count": 7
         }
       ],
       "deals": [
@@ -3870,14 +3865,14 @@
         }
       ],
       "facts": {
-        "total": 104,
+        "total": 64,
         "span": {
           "min": {
-            "district": "송파구",
-            "dong": "가락동",
-            "apt": "헬리오시티",
-            "area": 39.12,
-            "amount10k": 203000
+            "district": "강남구",
+            "dong": "개포동",
+            "apt": "성원대치2단지아파트",
+            "area": 49.86,
+            "amount10k": 207000
           },
           "max": {
             "district": "양천구",
@@ -3888,28 +3883,28 @@
           }
         },
         "standard": {
-          "count": 54,
+          "count": 37,
           "min": 80,
           "max": 90,
           "districts": [
             {
-              "name": "광진구",
-              "count": 7
+              "name": "마포구",
+              "count": 5
             },
             {
-              "name": "마포구",
-              "count": 7
+              "name": "영등포구",
+              "count": 5
             },
             {
               "name": "강남구",
-              "count": 6
+              "count": 4
             },
             {
-              "name": "서초구",
-              "count": 6
+              "name": "광진구",
+              "count": 4
             }
           ],
-          "districtCount": 13
+          "districtCount": 12
         }
       },
       "direct": 2
@@ -3917,27 +3912,27 @@
     {
       "min10k": 210000,
       "max10k": 220000,
-      "count": 86,
+      "count": 59,
       "districts": [
         {
           "name": "송파구",
-          "count": 30
+          "count": 16
         },
         {
           "name": "강동구",
-          "count": 14
+          "count": 10
         },
         {
           "name": "성동구",
-          "count": 13
+          "count": 10
+        },
+        {
+          "name": "용산구",
+          "count": 8
         },
         {
           "name": "강남구",
-          "count": 11
-        },
-        {
-          "name": "마포구",
-          "count": 11
+          "count": 6
         }
       ],
       "deals": [
@@ -4075,14 +4070,14 @@
         }
       ],
       "facts": {
-        "total": 86,
+        "total": 59,
         "span": {
           "min": {
             "district": "강남구",
-            "dong": "수서동",
-            "apt": "삼익",
-            "area": 49.2,
-            "amount10k": 212000
+            "dong": "개포동",
+            "apt": "삼익대청아파트",
+            "area": 51.12,
+            "amount10k": 210000
           },
           "max": {
             "district": "송파구",
@@ -4093,28 +4088,9 @@
           }
         },
         "standard": {
-          "count": 49,
+          "count": 29,
           "min": 80,
-          "max": 90,
-          "districts": [
-            {
-              "name": "송파구",
-              "count": 16
-            },
-            {
-              "name": "서초구",
-              "count": 5
-            },
-            {
-              "name": "강동구",
-              "count": 4
-            },
-            {
-              "name": "양천구",
-              "count": 4
-            }
-          ],
-          "districtCount": 12
+          "max": 90
         }
       },
       "direct": 1
@@ -4122,27 +4098,27 @@
     {
       "min10k": 220000,
       "max10k": 230000,
-      "count": 82,
+      "count": 55,
       "districts": [
         {
           "name": "송파구",
-          "count": 27
+          "count": 14
         },
         {
           "name": "서초구",
-          "count": 19
-        },
-        {
-          "name": "성동구",
-          "count": 19
-        },
-        {
-          "name": "강동구",
           "count": 12
         },
         {
-          "name": "양천구",
+          "name": "성동구",
           "count": 9
+        },
+        {
+          "name": "강남구",
+          "count": 8
+        },
+        {
+          "name": "강동구",
+          "count": 8
         }
       ],
       "deals": [
@@ -4280,14 +4256,14 @@
         }
       ],
       "facts": {
-        "total": 82,
+        "total": 55,
         "span": {
           "min": {
-            "district": "양천구",
-            "dong": "목동",
-            "apt": "목동신시가지6",
-            "area": 47.94,
-            "amount10k": 228000
+            "district": "성동구",
+            "dong": "옥수동",
+            "apt": "옥수파크힐스117동~125동",
+            "area": 59.59,
+            "amount10k": 227000
           },
           "max": {
             "district": "송파구",
@@ -4298,28 +4274,9 @@
           }
         },
         "standard": {
-          "count": 36,
+          "count": 25,
           "min": 80,
-          "max": 90,
-          "districts": [
-            {
-              "name": "서초구",
-              "count": 7
-            },
-            {
-              "name": "성동구",
-              "count": 7
-            },
-            {
-              "name": "송파구",
-              "count": 4
-            },
-            {
-              "name": "양천구",
-              "count": 4
-            }
-          ],
-          "districtCount": 12
+          "max": 90
         }
       },
       "direct": 0
@@ -4327,27 +4284,27 @@
     {
       "min10k": 230000,
       "max10k": 240000,
-      "count": 62,
+      "count": 40,
       "districts": [
         {
           "name": "송파구",
-          "count": 19
+          "count": 12
         },
         {
           "name": "영등포구",
-          "count": 13
+          "count": 10
         },
         {
           "name": "강남구",
-          "count": 9
+          "count": 5
         },
         {
-          "name": "강동구",
-          "count": 9
+          "name": "양천구",
+          "count": 5
         },
         {
-          "name": "성동구",
-          "count": 9
+          "name": "동작구",
+          "count": 4
         }
       ],
       "deals": [
@@ -4485,7 +4442,7 @@
         }
       ],
       "facts": {
-        "total": 62,
+        "total": 40,
         "span": {
           "min": {
             "district": "양천구",
@@ -4503,37 +4460,37 @@
           }
         },
         "standard": {
-          "count": 22,
+          "count": 16,
           "min": 80,
           "max": 90
         }
       },
-      "direct": 3
+      "direct": 2
     },
     {
       "min10k": 240000,
       "max10k": 250000,
-      "count": 67,
+      "count": 40,
       "districts": [
         {
-          "name": "성동구",
-          "count": 16
-        },
-        {
           "name": "강남구",
-          "count": 14
-        },
-        {
-          "name": "서초구",
-          "count": 13
+          "count": 10
         },
         {
           "name": "마포구",
-          "count": 12
+          "count": 7
+        },
+        {
+          "name": "성동구",
+          "count": 7
         },
         {
           "name": "송파구",
-          "count": 12
+          "count": 7
+        },
+        {
+          "name": "서초구",
+          "count": 5
         }
       ],
       "deals": [
@@ -4671,14 +4628,14 @@
         }
       ],
       "facts": {
-        "total": 67,
+        "total": 40,
         "span": {
           "min": {
             "district": "강남구",
             "dong": "개포동",
             "apt": "래미안블레스티지",
             "area": 49.91,
-            "amount10k": 240000
+            "amount10k": 245000
           },
           "max": {
             "district": "영등포구",
@@ -4689,28 +4646,9 @@
           }
         },
         "standard": {
-          "count": 31,
+          "count": 21,
           "min": 80,
-          "max": 90,
-          "districts": [
-            {
-              "name": "성동구",
-              "count": 7
-            },
-            {
-              "name": "마포구",
-              "count": 6
-            },
-            {
-              "name": "서초구",
-              "count": 5
-            },
-            {
-              "name": "광진구",
-              "count": 3
-            }
-          ],
-          "districtCount": 11
+          "max": 90
         }
       },
       "direct": 1
@@ -4718,27 +4656,27 @@
     {
       "min10k": 250000,
       "max10k": 260000,
-      "count": 39,
+      "count": 23,
       "districts": [
         {
           "name": "강남구",
-          "count": 11
-        },
-        {
-          "name": "마포구",
-          "count": 11
+          "count": 6
         },
         {
           "name": "서초구",
-          "count": 11
+          "count": 6
         },
         {
           "name": "성동구",
-          "count": 9
+          "count": 5
+        },
+        {
+          "name": "마포구",
+          "count": 3
         },
         {
           "name": "송파구",
-          "count": 6
+          "count": 2
         }
       ],
       "deals": [
@@ -4876,7 +4814,7 @@
         }
       ],
       "facts": {
-        "total": 39,
+        "total": 23,
         "span": {
           "min": {
             "district": "서초구",
@@ -4886,15 +4824,15 @@
             "amount10k": 250000
           },
           "max": {
-            "district": "강남구",
-            "dong": "도곡동",
-            "apt": "월드메르디앙102동",
-            "area": 159.43,
-            "amount10k": 255000
+            "district": "서초구",
+            "dong": "서초동",
+            "apt": "서초4현대",
+            "area": 140.03,
+            "amount10k": 254500
           }
         },
         "standard": {
-          "count": 19,
+          "count": 11,
           "min": 80,
           "max": 90
         }
@@ -4904,27 +4842,27 @@
     {
       "min10k": 260000,
       "max10k": 270000,
-      "count": 49,
+      "count": 29,
       "districts": [
         {
-          "name": "송파구",
-          "count": 21
-        },
-        {
           "name": "강남구",
-          "count": 19
+          "count": 13
         },
         {
-          "name": "마포구",
+          "name": "송파구",
           "count": 10
         },
         {
+          "name": "마포구",
+          "count": 4
+        },
+        {
           "name": "서초구",
-          "count": 5
+          "count": 3
         },
         {
           "name": "종로구",
-          "count": 5
+          "count": 3
         }
       ],
       "deals": [
@@ -5062,7 +5000,7 @@
         }
       ],
       "facts": {
-        "total": 49,
+        "total": 29,
         "span": {
           "min": {
             "district": "강남구",
@@ -5080,37 +5018,37 @@
           }
         },
         "standard": {
-          "count": 18,
+          "count": 12,
           "min": 80,
           "max": 90
         }
       },
-      "direct": 1
+      "direct": 0
     },
     {
       "min10k": 270000,
       "max10k": 280000,
-      "count": 29,
+      "count": 19,
       "districts": [
         {
           "name": "송파구",
-          "count": 12
+          "count": 6
         },
         {
           "name": "강남구",
-          "count": 9
-        },
-        {
-          "name": "양천구",
-          "count": 6
+          "count": 4
         },
         {
           "name": "서초구",
           "count": 4
         },
         {
+          "name": "양천구",
+          "count": 2
+        },
+        {
           "name": "강동구",
-          "count": 3
+          "count": 1
         }
       ],
       "deals": [
@@ -5248,7 +5186,7 @@
         }
       ],
       "facts": {
-        "total": 29,
+        "total": 19,
         "span": {
           "min": {
             "district": "강남구",
@@ -5266,29 +5204,25 @@
           }
         },
         "standard": {
-          "count": 5,
+          "count": 3,
           "min": 80,
           "max": 90
         }
       },
-      "direct": 1
+      "direct": 0
     },
     {
       "min10k": 280000,
       "max10k": 290000,
-      "count": 22,
+      "count": 12,
       "districts": [
-        {
-          "name": "강남구",
-          "count": 9
-        },
         {
           "name": "서초구",
           "count": 5
         },
         {
-          "name": "송파구",
-          "count": 4
+          "name": "강남구",
+          "count": 2
         },
         {
           "name": "강동구",
@@ -5297,6 +5231,10 @@
         {
           "name": "영등포구",
           "count": 2
+        },
+        {
+          "name": "광진구",
+          "count": 1
         }
       ],
       "deals": [
@@ -5434,14 +5372,14 @@
         }
       ],
       "facts": {
-        "total": 22,
+        "total": 12,
         "span": {
           "min": {
-            "district": "강남구",
-            "dong": "역삼동",
-            "apt": "e-편한세상",
-            "area": 59.61,
-            "amount10k": 288000
+            "district": "서초구",
+            "dong": "서초동",
+            "apt": "서초푸르지오써밋",
+            "area": 59.92,
+            "amount10k": 282000
           },
           "max": {
             "district": "영등포구",
@@ -5452,7 +5390,7 @@
           }
         },
         "standard": {
-          "count": 8,
+          "count": 5,
           "min": 80,
           "max": 90
         }
@@ -5462,15 +5400,15 @@
     {
       "min10k": 290000,
       "max10k": 300000,
-      "count": 39,
+      "count": 21,
       "districts": [
         {
           "name": "송파구",
-          "count": 29
+          "count": 16
         },
         {
           "name": "강남구",
-          "count": 9
+          "count": 7
         },
         {
           "name": "광진구",
@@ -5478,11 +5416,11 @@
         },
         {
           "name": "서초구",
-          "count": 4
+          "count": 1
         },
         {
-          "name": "영등포구",
-          "count": 4
+          "name": "성동구",
+          "count": 1
         }
       ],
       "deals": [
@@ -5620,25 +5558,25 @@
         }
       ],
       "facts": {
-        "total": 39,
+        "total": 21,
         "span": {
           "min": {
-            "district": "성동구",
-            "dong": "성수동2가",
-            "apt": "강변임광",
-            "area": 59.67,
-            "amount10k": 298000
+            "district": "송파구",
+            "dong": "잠실동",
+            "apt": "트리지움",
+            "area": 59.88,
+            "amount10k": 290000
           },
           "max": {
-            "district": "양천구",
-            "dong": "신정동",
-            "apt": "삼성쉐르빌",
-            "area": 221.44,
-            "amount10k": 292000
+            "district": "송파구",
+            "dong": "신천동",
+            "apt": "잠실더샵스타파크",
+            "area": 186.46,
+            "amount10k": 294000
           }
         },
         "standard": {
-          "count": 11,
+          "count": 5,
           "min": 80,
           "max": 90
         }
@@ -5648,27 +5586,27 @@
     {
       "min10k": 300000,
       "max10k": null,
-      "count": 353,
+      "count": 228,
       "districts": [
         {
           "name": "강남구",
-          "count": 215
+          "count": 111
         },
         {
           "name": "서초구",
-          "count": 150
+          "count": 78
         },
         {
           "name": "송파구",
-          "count": 126
+          "count": 66
         },
         {
           "name": "용산구",
-          "count": 36
+          "count": 19
         },
         {
           "name": "영등포구",
-          "count": 26
+          "count": 10
         }
       ],
       "deals": [
@@ -5806,14 +5744,14 @@
         }
       ],
       "facts": {
-        "total": 353,
+        "total": 228,
         "span": {
           "min": {
             "district": "강남구",
-            "dong": "압구정동",
-            "apt": "한양1차(영동한양)",
-            "area": 49.98,
-            "amount10k": 405000
+            "dong": "개포동",
+            "apt": "개포주공7단지",
+            "area": 53.46,
+            "amount10k": 300000
           },
           "max": {
             "district": "용산구",
@@ -5824,38 +5762,38 @@
           }
         },
         "standard": {
-          "count": 105,
+          "count": 76,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "송파구",
-              "count": 40
-            },
-            {
-              "name": "서초구",
-              "count": 30
-            },
-            {
-              "name": "강남구",
               "count": 28
             },
             {
+              "name": "강남구",
+              "count": 24
+            },
+            {
+              "name": "서초구",
+              "count": 21
+            },
+            {
               "name": "강동구",
-              "count": 5
+              "count": 1
             }
           ],
           "districtCount": 6
         },
         "largeHeavy": {
-          "share": 0.5212464589235127
+          "share": 0.5
         },
         "old": {
-          "share": 0.46742209631728043,
+          "share": 0.4473684210526316,
           "years": 30
         }
       },
-      "direct": 11
+      "direct": 5
     }
   ]
 }
