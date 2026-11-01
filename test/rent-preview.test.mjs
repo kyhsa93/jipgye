@@ -61,6 +61,14 @@ test("전월세 신고가 없으면 만들지 않는다", () => {
 
 // --- 화면 ------------------------------------------------------------------
 
+// 화면 시험의 맛보기 파일은 빌더(buildPayload)로 만든 고정 값이다 - 실데이터 rent-preview.json 은 전세·월세 어느 쪽이 0건인 날
+// 「빈 화면이 아니다」「월 n만원」이 깨진다(#811). 월세 23만원은 예전 「월 23만원만원」 결함 그대로.
+const PREVIEW = () =>
+  buildPayload({
+    now: NOW,
+    byDistrict: { 노원구: { periods: ["202608"], deals: [deal(), deal({ apt: "가상월세", monthlyRent10k: 23, deposit10k: 1000 })] } },
+  });
+
 const load = async (extra) => {
   const page = await loadDealSearchPage({
     budget: await readJson("budget-deals"),
@@ -75,7 +83,7 @@ const settle = async () => {
 };
 
 test("전세로 바꿔도 빈 화면이 아니다", async () => {
-  const page = await load({ rentPreview: await readJson("rent-preview") });
+  const page = await load({ rentPreview: PREVIEW() });
   page.chooseKind("jeonse");
   await settle();
   const html = page.resultHtml();
@@ -86,7 +94,7 @@ test("전세로 바꿔도 빈 화면이 아니다", async () => {
 test("조건을 걸면 맛보기로 세지 않는다", async () => {
   // 최근 서른 건 위에서 "60㎡ 미만"을 세면 서울에서 그 조건에 맞는 거래 수가
   // 아니라 이 목록 안의 수가 나온다. 화면에서는 구별되지 않는다.
-  const page = await load({ rentPreview: await readJson("rent-preview") });
+  const page = await load({ rentPreview: PREVIEW() });
   page.chooseKind("jeonse");
   page.chooseArea("under60");
   await settle();
@@ -103,7 +111,7 @@ test("맛보기 파일이 없으면 전과 똑같이 돈다", async () => {
 });
 
 test("월세 값에 단위를 두 번 붙이지 않는다", async () => {
-  const page = await load({ rentPreview: await readJson("rent-preview") });
+  const page = await load({ rentPreview: PREVIEW() });
   page.chooseKind("wolse");
   await settle();
   assert.ok(!/만원만원/.test(page.resultHtml()), "월 23만원만원 - 단위가 겹쳤다");

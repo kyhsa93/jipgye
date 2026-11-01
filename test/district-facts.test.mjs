@@ -11,8 +11,6 @@ const dealsOf = (name) =>
     .then(JSON.parse)
     .catch(() => null);
 
-const sentencesFor = async (name) => factSentences(districtFacts(await dealsOf(name)), "ko");
-
 /**
  * 문턱을 하나도 넘지 않는 거래 200건.
  *
@@ -137,14 +135,19 @@ test("직거래가 많으면 시세를 그대로 읽지 말라고 적는다", as
 });
 
 test("영문 문단도 같은 관찰을 말한다", async () => {
-  const ko = await sentencesFor("노원구");
-  const en = factSentences(districtFacts(await dealsOf("노원구")), "en");
-  assert.equal(ko.length, en.length, "한쪽에만 있는 문장이 있으면 안 됩니다");
-  // 한글이 남아 있는 것은 정상이다 — 상계동과 중계동 동진신안에는 영어 이름이 없고,
-  // 기존 시세 문장도 "Apartments in 강남구"라고 쓴다. 없어야 하는 것은 한국어 *문장*이라
-  // 종결어미로 잡는다.
-  assert.doesNotMatch(en.join(" "), /입니다|습니다|합니다/, "영문 문단에 한국어 문장이 섞였습니다");
-  assert.match(en.join(" "), /reported/, "영문 문단이 영어로 쓰여 있어야 합니다");
+  // 실데이터 노원구 대신 합성 표본 넷(튀는 데 없음·소형 몰림·직거래·한 단지)으로 - 실데이터는 그날 어느 관찰이 걸리는지 데이터가 정하고
+  // 신고가 없는 달은 문단 자체가 비어 깨진다(#811). 합성 표본은 관찰 종류를 골고루 밟는다.
+  const samples = [plainDeals(), plainDeals((deal) => ({ ...deal, area: 40 })), plainDeals((deal, i) => (i < 30 ? { ...deal, direct: true } : deal)), plainDeals((deal, i) => (i < 20 ? { ...deal, dong: "몰린동", apt: "대표단지" } : deal))];
+  for (const sample of samples) {
+    const ko = factSentences(districtFacts(sample), "ko");
+    const en = factSentences(districtFacts(sample), "en");
+    assert.equal(ko.length, en.length, "한쪽에만 있는 문장이 있으면 안 됩니다");
+    // 한글이 남아 있는 것은 정상이다 — 상계동과 중계동 동진신안에는 영어 이름이 없고,
+    // 기존 시세 문장도 "Apartments in 강남구"라고 쓴다. 없어야 하는 것은 한국어 *문장*이라
+    // 종결어미로 잡는다.
+    assert.doesNotMatch(en.join(" "), /입니다|습니다|합니다/, "영문 문단에 한국어 문장이 섞였습니다");
+    assert.match(en.join(" "), /reported/, "영문 문단이 영어로 쓰여 있어야 합니다");
+  }
 });
 
 test("영문 최고가는 소수점 없이 M 단위로 쓰고 한국어와 같은 반올림을 따른다", () => {
@@ -174,7 +177,8 @@ test("영문 최고가는 소수점 없이 M 단위로 쓰고 한국어와 같�
 test("창을 밝히고 시작한다", async () => {
   // 위 시세표는 최근 네 주 계약분이고 여기 숫자는 석 달 신고분이라, 두 숫자가 어긋나
   // 보일 때 어느 쪽이 무엇인지 읽는 사람이 알 수 있어야 한다.
-  const lines = await sentencesFor("노원구");
+  // 합성 표본(석 달 창) - 실데이터 노원구는 신고가 없는 달 문단이 비어 lines[0] 이 없다(#811).
+  const lines = factSentences(districtFacts(plainDeals()), "ko");
   assert.match(lines[0], /최근 네 주가 아니라/);
   assert.match(lines[0], /개월 동안 신고된/);
 });

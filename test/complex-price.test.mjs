@@ -14,8 +14,8 @@ import {
 } from "../scripts/complex-price.ts";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 
-const root = path.resolve(import.meta.dirname, "..");
-const readJson = (name) => readFile(path.join(root, `docs/data/${name}.json`), "utf8").then(JSON.parse);
+// 고정 데이터(test/fixtures/site/data/complex-card-nowon.json, #809·#811): 상계주공7(고층) 45.9 형 매매 4(사분위 칸)·79.07 형 1(표본 부족).
+const fixtureRead = (name) => readFile(path.join(import.meta.dirname, `fixtures/site/data/${name}.json`), "utf8").then(JSON.parse);
 
 const item = (over = {}) => ({
   sggCd: 11350,
@@ -119,17 +119,12 @@ const settle = async (n = 300) => {
 };
 
 async function page(query, complexPrice) {
-  const [budget, search, deals, rents] = await Promise.all([
-    readJson("budget-deals"),
-    readJson("deal-search"),
-    readJson("deals-nowon"),
-    readJson("rents-nowon"),
-  ]);
+  const [budget, card] = await Promise.all(["budget-deals", "complex-card-nowon"].map(fixtureRead));
   const p = await loadDealSearchPage({
     budget,
-    search,
-    deals: { 노원구: deals },
-    rents: { 노원구: rents },
+    search: card.search,
+    deals: { 노원구: card.deals },
+    rents: { 노원구: card.rents },
     complexPrices: { 노원구: complexPrice },
     query,
   });
@@ -144,7 +139,8 @@ const eok = (n) => {
 };
 
 test("카드가 빌드가 낸 범위를 그대로 그린다", async () => {
-  const file = await readJson("complex-price-nowon");
+  // 실데이터 complex-price-nowon 은 사분위(n≥5) 칸이 하나도 없는 날 find 가 undefined 라 깨진다 - 고정 파일의 빌더 출력 모양 그대로(#811).
+  const file = (await fixtureRead("complex-card-nowon")).complexPrice;
   const [apt, areas] = Object.entries(file.cells).find(([, a]) => Object.values(a).some((c) => c.quartile));
   const [, cell] = Object.entries(areas).find(([, c]) => c.quartile);
 
