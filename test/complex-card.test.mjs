@@ -32,8 +32,19 @@ async function page(query) {
   return p;
 }
 
+// 전세가율 값·표본 부족 행의 유무는 그날 두 달 창의 건수에 달려 있어(11-01 에 매매·전세 각 3건 이상인 평형이 없어 배포가 막혔다, #809)
+// 이 둘은 고정 데이터로 그린다 - 45.9 형은 매매 4·전세 3, 79.07 형은 매매 1(test/load-failure.test.mjs 와 같은 파일).
+async function fixturePage(query) {
+  const [budget, card] = await Promise.all(
+    ["budget-deals", "complex-card-nowon"].map((name) => readFile(path.join(import.meta.dirname, `fixtures/site/data/${name}.json`), "utf8").then(JSON.parse))
+  );
+  const p = await loadDealSearchPage({ budget, search: card.search, deals: { 노원구: card.deals }, rents: { 노원구: card.rents }, query });
+  await settle();
+  return p;
+}
+
 test("고른 단지의 평형별 값이 뜬다", async () => {
-  const p = await page("?district=노원구&apt=상계주공7(고층)");
+  const p = await fixturePage("?district=노원구&apt=상계주공7(고층)");
   const html = p.byId("complex-card").innerHTML;
 
   assert.match(html, /상계주공7\(고층\) 평형별/);
@@ -43,7 +54,7 @@ test("고른 단지의 평형별 값이 뜬다", async () => {
 
 test("표본이 모자란 평형은 값 대신 몇 건인지 적는다", async () => {
   // 이 화면의 값어치는 숫자가 아니라 그 숫자를 낼 수 있었는지까지 보이는 데 있다.
-  const p = await page("?district=노원구&apt=상계주공7(고층)");
+  const p = await fixturePage("?district=노원구&apt=상계주공7(고층)");
   const html = p.byId("complex-card").innerHTML;
   assert.match(html, /신고 \d건/, "표본이 모자란 평형을 그냥 비워 뒀다");
   assert.match(html, /low-sample/);

@@ -15,6 +15,9 @@ import { stampSources } from "../scripts/source-lines.ts";
 const root = path.resolve(import.meta.dirname, "..");
 const V0 = JSON.parse(await readFile(new URL("./fixtures/repeat-sales/v0.json", import.meta.url), "utf8"));
 const N6 = JSON.parse(await readFile(new URL("./fixtures/repeat-sales/n6-bands.json", import.meta.url), "utf8"));
+/** 값은 빼고 구조만: 객체는 키별 모양, 배열은 원소별 모양, 그 밖은 typeof(null 은 "null"). */
+const shape = (v) =>
+  Array.isArray(v) ? v.map(shape) : v === null ? "null" : typeof v === "object" ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, shape(v[k])])) : typeof v;
 const OUT = await readFile(path.join(root, "research/repeat-sales-2026-10/repeat_bands_n6.out"), "utf8");
 
 const textOf = (h, lang) => {
@@ -81,7 +84,8 @@ test("docs/data/repeat-sales.json 의 bands·출처 추가는 0.8 KB 이하다 (
   const data = JSON.parse(await readFile(path.join(root, "docs/data/repeat-sales.json"), "utf8"));
   const added = Buffer.byteLength(`,"bands":${JSON.stringify(data.bands)}`) + Buffer.byteLength(`,"bands":${JSON.stringify(data.provenance.bands)},"n4Blob":${JSON.stringify(data.provenance.n4Blob)}`);
   assert.ok(added <= 800, `${added}B`);
-  assert.equal(Buffer.byteLength(JSON.stringify(N6)), Buffer.byteLength(JSON.stringify(data.bands)), "얼린 출력과 같은 모양");
+  // 모양만 견준다 - 바이트 수 비교는 11-01 데이터에서 402≠404 로 깨졌다(#809; 값·날짜에 기대는 시험 금지, #8).
+  assert.deepEqual(shape(data.bands), shape(N6), "얼린 출력과 같은 모양");
 });
 
 // ---------------------------------------------------------------- 합성 입력: 경계·판정 분기 (브리프 5)
