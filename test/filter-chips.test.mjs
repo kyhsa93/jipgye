@@ -4,16 +4,13 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 
-const root = path.resolve(import.meta.dirname, "..");
-const readJson = (name) => readFile(path.join(root, `docs/data/${name}.json`), "utf8").then(JSON.parse);
+// 고정 데이터(test/fixtures/site/data, #811). 「칩을 누르면 건수가 준다」「동 조건」은 그날 노원구 두 달 창에 60㎡ 양쪽·상계동 안팎 거래가
+// 다 있어야 하는 건수 단언이라 저장소 docs/data 를 읽지 않는다. complex-card-nowon: 상계동 6건(45.9·79.07·38.4)·중계동 1건(59.26).
+const fixtureRead = (name) => readFile(path.join(import.meta.dirname, `fixtures/site/data/${name}.json`), "utf8").then(JSON.parse);
 
 async function page(query = "") {
-  const [budget, search, deals] = await Promise.all([
-    readJson("budget-deals"),
-    readJson("deal-search"),
-    readJson("deals-nowon"),
-  ]);
-  const p = await loadDealSearchPage({ budget, search, deals: { 노원구: deals }, query });
+  const [budget, card] = await Promise.all(["budget-deals", "complex-card-nowon"].map(fixtureRead));
+  const p = await loadDealSearchPage({ budget, search: card.search, deals: { 노원구: card.deals }, query });
   for (let i = 0; i < 300 && !p.resultHtml(); i += 1) await new Promise((r) => setTimeout(r, 5));
   return p;
 }

@@ -16,7 +16,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { gzipSync } from "node:zlib";
 import path from "node:path";
 import vm from "node:vm";
-import { HISTORY_MONTHS } from "../scripts/build-complex-history.ts";
+import { HISTORY_MONTHS, districtHistory } from "../scripts/build-complex-history.ts";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -120,10 +120,15 @@ test("파일이 없거나(404) 받다 실패하거나 구가 없으면 자리만
   assert.deepEqual(noGu.asked(), []);
 });
 
-test("실데이터: 노원구 파일로 실제 단지 추이가 그려진다", async () => {
-  const p = await page({ files: { "complex-history-nowon": await readJson("complex-history-nowon") } });
+test("빌더가 낸 노원구 모양의 파일로 단지 추이가 그려진다", async () => {
+  // 실데이터 complex-history-nowon 대신 빌더(districtHistory)가 고정 거래로 낸 파일 - 실데이터는 상계주공7(고층)의 n≥3 달이 둘 미만인
+  // 창에서 선이 없어 깨진다(#811). 빌더 출력 모양(칸 이름·[달, 중앙값, 건수])을 그대로 거치는 것은 전과 같다.
+  const months = Array.from({ length: HISTORY_MONTHS }, (_, i) => `${2024 + Math.floor((10 + i) / 12)}${String(((10 + i) % 12) + 1).padStart(2, "0")}`);
+  const deals = ["202411", "202505", "202610"].flatMap((month) => [50000, 51000, 52000].map((amount) => ({ apt: APT, area: 45.9, month, amount })));
+  const file = { district: "노원구", from: months[0], to: months.at(-1), trimmed: 0, cells: districtHistory(deals, months) };
+  const p = await page({ files: { "complex-history-nowon": file } });
   const pts = points(p.box());
-  assert.ok(pts.length >= 2, "실데이터 단지에서 선이 안 그려졌다");
+  assert.ok(pts.length >= 2, "빌더 파일 단지에서 선이 안 그려졌다");
   assert.ok(pts.every(([x, y]) => x >= 2 && x <= 232 && y >= 2 && y <= 58));
   assert.match(p.box(), /㎡ 월 중간값, n≥3 달 \d+: \d{4}\.\d{2} /);
 });

@@ -9,6 +9,8 @@ import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readJson = (name) => readFile(path.join(root, `docs/data/${name}.json`), "utf8").then(JSON.parse);
+// 고정 데이터(test/fixtures/site/data, #809·#811). 값·건수에 기대는 시험은 저장소 docs/data 를 읽지 않는다.
+const fixtureRead = (name) => readFile(path.join(import.meta.dirname, `fixtures/site/data/${name}.json`), "utf8").then(JSON.parse);
 
 const settle = async (n = 300) => {
   for (let i = 0; i < n; i += 1) await new Promise((r) => setTimeout(r, 5));
@@ -34,11 +36,11 @@ async function page(query) {
 
 // 전세가율 값·표본 부족 행의 유무는 그날 두 달 창의 건수에 달려 있어(11-01 에 매매·전세 각 3건 이상인 평형이 없어 배포가 막혔다, #809)
 // 이 둘은 고정 데이터로 그린다 - 45.9 형은 매매 4·전세 3, 79.07 형은 매매 1(test/load-failure.test.mjs 와 같은 파일).
-async function fixturePage(query) {
-  const [budget, card] = await Promise.all(
-    ["budget-deals", "complex-card-nowon"].map((name) => readFile(path.join(import.meta.dirname, `fixtures/site/data/${name}.json`), "utf8").then(JSON.parse))
-  );
-  const p = await loadDealSearchPage({ budget, search: card.search, deals: { 노원구: card.deals }, rents: { 노원구: card.rents }, query });
+// 이름 해석 시험도 같은 파일: 중계무지개(한 단지) 1건, 상계주공4(고층)·상계주공7(고층)("상계주공" 이 둘에 걸린다) - 실데이터에서는 두 달 창에
+// 그 이름이 없는 달 카드가 비어 깨진다(#811).
+async function fixturePage(query, extra = {}) {
+  const [budget, card] = await Promise.all(["budget-deals", "complex-card-nowon"].map(fixtureRead));
+  const p = await loadDealSearchPage({ budget, search: card.search, deals: { 노원구: card.deals }, rents: { 노원구: card.rents }, query, ...extra });
   await settle();
   return p;
 }
@@ -138,13 +140,13 @@ test("화면이 낸 전세가율이 빌드 쪽 계산과 같다", async () => {
 });
 
 test("손으로 친 글자도 단지가 하나로 좁혀지면 받는다", async () => {
-  const p = await page("?district=노원구&apt=중계무지개");
+  const p = await fixturePage("?district=노원구&apt=중계무지개");
   assert.match(p.byId("complex-card").innerHTML, /중계무지개 평형별/);
 });
 
 test("여러 단지에 걸리는 글자에는 카드를 그리지 않는다", async () => {
   // "상계주공"은 4단지와 7단지에 다 걸린다. 묶어 그리면 다른 단지를 한 단지로 만든다.
-  const p = await page("?district=노원구&apt=상계주공");
+  const p = await fixturePage("?district=노원구&apt=상계주공");
   assert.equal(p.byId("complex-card").innerHTML, "", "여러 단지를 한 카드로 묶었다");
   // 목록은 그대로 걸러진다 - 카드만 없다.
   assert.match(p.resultHtml(), /상계주공/);
@@ -168,20 +170,13 @@ test("최근 두 달 표도 빌드가 묶은 평형으로 묶는다 - 소수점 
 });
 
 test("카드의 최근 두 달 표가 묶인 면적 폭을 적는다", async () => {
-  const [deals, rents] = await Promise.all([readJson("deals-nowon"), readJson("rents-nowon")]);
+  // 고정 데이터의 첫 거래(상계주공7(고층) 45.9)에 0.03㎡ 쌍둥이를 더한다 - 실데이터 첫 줄은 그날 거래가 없으면 없다(#811).
+  const { deals, rents } = await fixtureRead("complex-card-nowon");
   const target = deals.deals[0];
   const twin = Math.round((target.area + 0.03) * 100) / 100;
   deals.deals.push({ ...target, area: twin });
   const complexPrice = { reference: "202608", cells: { [target.apt]: { [String(target.area)]: { n: 2, areas: [target.area, twin] } } } };
-  const p = await loadDealSearchPage({
-    budget: await readJson("budget-deals"),
-    search: await readJson("deal-search"),
-    deals: { 노원구: deals },
-    rents: { 노원구: rents },
-    complexPrices: { 노원구: complexPrice },
-    query: `?district=노원구&apt=${encodeURIComponent(target.apt)}`,
-  });
-  await settle();
+  const p = await fixturePage(`?district=노원구&apt=${encodeURIComponent(target.apt)}`, { deals: { 노원구: deals }, rents: { 노원구: rents }, complexPrices: { 노원구: complexPrice } });
   const html = p.byId("complex-card").innerHTML;
   const ratioTable = html.slice(html.indexOf("최근 두 달"));
   assert.ok(ratioTable.includes(`${target.area}~${twin}`), "묶인 면적 폭이 없다");
@@ -308,9 +303,11 @@ test("V4 카드: 전월세 파일을 못 받으면 최근 전월세 칸 없이 �
 const RANK_JS = await readFile(path.join(root, "docs/complex-card.js"), "utf8");
 const VERDICT = /비싸|싸다|싼 |저렴|적정|고평가|저평가|합리|바가지|expensive|cheap|fair|overpriced|underpriced|bargain|reasonable/i;
 
+// 고정 데이터(complex-card-nowon.json)로 연다 - 「실제 단지 카드」 시험의 줄은 상계주공7(고층) 매매가 두 달 창에 1건도 없는 달 비어 깨진다(#811).
+// 그 밖의 #731·#729·#730 시험은 가상 단지로 다시 그리므로 바탕 데이터 값에 기대지 않는다.
 async function rankPage(locale = "ko") {
-  const [budget, search, deals, rents] = await Promise.all([readJson("budget-deals"), readJson("deal-search"), readJson("deals-nowon"), readJson("rents-nowon")]);
-  const p = await loadDealSearchPage({ budget, search, deals: { 노원구: deals }, rents: { 노원구: rents }, locale, query: "?district=노원구&apt=상계주공7(고층)" });
+  const [budget, card] = await Promise.all(["budget-deals", "complex-card-nowon"].map(fixtureRead));
+  const p = await loadDealSearchPage({ budget, search: card.search, deals: { 노원구: card.deals }, rents: { 노원구: card.rents }, locale, query: "?district=노원구&apt=상계주공7(고층)" });
   await settle(40);
   new vm.Script(RANK_JS, { filename: "docs/complex-card.js" }).runInContext(p.sandbox);
   const run = (code) => new vm.Script(code).runInContext(p.sandbox);
@@ -374,7 +371,7 @@ test("#731 영어 화면은 영어 문장·이유·입력칸 이름을 쓴다", 
 });
 
 test("#731 실제 단지 카드에 자리가 있고, 외부 JS 는 deal-search 만 defer 로 읽으며 sw.js 사전캐시 밖, gzip ≤2,048B(X2 와 합계)", async () => {
-  const p = await rankPage();
+  const p = await rankPage(); // 고정 데이터: 상계주공7(고층) 45.9 형 매매 4건(#811)
   assert.match(p.byId("complex-card").innerHTML, /<p id="card-rank"><\/p><div id="card-renewal">/);
   p.sandbox.window.complexCard();
   assert.match(p.byId("card-rank").innerHTML, /^\d+(\.\d+)?㎡ /, "실제 단지에서 줄이 안 그려졌다");

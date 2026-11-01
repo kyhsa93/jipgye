@@ -18,12 +18,15 @@ import vm from "node:vm";
 import { loadDealSearchPage } from "./helpers/deal-search-page.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
-const readJson = (name) => readFile(path.join(root, `docs/data/${name}.json`), "utf8").then(JSON.parse);
+// 고정 데이터(test/fixtures/site/data, #811): 새 신고 수는 「적어 둔 키에 없는 줄 수」라 APT 에 3건 이상·OTHER 에 1건 이상이 있어야 한다 -
+// 실데이터 deals-nowon 은 그 단지 신고가 없는 달 깨진다. complex-card-nowon: 상계주공7(고층) 5건, 중계무지개 1건.
+const fixtureRead = (name) => readFile(path.join(import.meta.dirname, `fixtures/site/data/${name}.json`), "utf8").then(JSON.parse);
 const JS = await readFile(path.join(root, "docs/watchlist.js"), "utf8");
 const HTML = await readFile(path.join(root, "docs/deal-search.html"), "utf8");
 const APT = "상계주공7(고층)";
-const OTHER = "동신";
-const DEALS = await readJson("deals-nowon");
+const OTHER = "중계무지개";
+const CARD = await fixtureRead("complex-card-nowon");
+const DEALS = CARD.deals;
 const keysOf = (apt) => DEALS.deals.filter((d) => d.apt === apt).map((d) => `${d.date}|${d.area}|${d.floor}|${d.amount10k}`);
 
 const settle = async (n = 40) => {
@@ -32,8 +35,8 @@ const settle = async (n = 40) => {
 
 /** saved: 저장소 값(문자열 그대로 또는 객체), storage: "read"(읽기부터 막힘)·"write"(쓰기만 막힘). */
 async function page({ locale = "ko", query = `?district=노원구&apt=${APT}`, saved, storage } = {}) {
-  const [budget, search, rents] = await Promise.all([readJson("budget-deals"), readJson("deal-search"), readJson("rents-nowon")]);
-  const p = await loadDealSearchPage({ budget, search, deals: { 노원구: DEALS }, rents: { 노원구: rents }, locale, query });
+  const budget = await fixtureRead("budget-deals");
+  const p = await loadDealSearchPage({ budget, search: CARD.search, deals: { 노원구: DEALS }, rents: { 노원구: CARD.rents }, locale, query });
   await settle();
   const items = new Map([["lang", locale]]);
   if (saved !== undefined) items.set("watchlist", typeof saved === "string" ? saved : JSON.stringify(saved));

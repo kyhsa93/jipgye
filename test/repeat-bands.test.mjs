@@ -85,8 +85,31 @@ test("docs/data/repeat-sales.json 의 bands·출처 추가는 0.8 KB 이하다 (
   const added = Buffer.byteLength(`,"bands":${JSON.stringify(data.bands)}`) + Buffer.byteLength(`,"bands":${JSON.stringify(data.provenance.bands)},"n4Blob":${JSON.stringify(data.provenance.n4Blob)}`);
   assert.ok(added <= 800, `${added}B`);
   // 모양만 견준다 - 바이트 수 비교는 11-01 데이터에서 402≠404 로 깨졌다(#809; 값·날짜에 기대는 시험 금지, #8).
-  assert.deepEqual(shape(data.bands), shape(N6), "얼린 출력과 같은 모양");
+  assertBandsShape(data.bands);
 });
+
+/**
+ * bands 의 모양 검사. shape() 로 N6 와 통째로 견주면 데이터에 따라 타입이 바뀌는 칸에서 표가 접히는 날 다시 빨개진다(#811):
+ * scripts/repeat-sales.ts bandsPayload 에서 fold 는 null | "thin" | "noN4" | "n4", n4 는 null | {map, cmp, agree}(N4 산출이 없거나 ② 미달이면 null),
+ * n4.map 의 원소는 가격대 키 | null(앞 거래가 중앙값이 N4 구간 밖), rows[k] 는 ②·흔들림을 통과하면 {n,m,lo,hi,gap,f,p} 아니면 {n,st}.
+ * 얼린 N6 는 셋 다 통과·n4 있음·fold null 이라, 그 칸은 N6 의 타입이 아니라 빌더가 낼 수 있는 타입 집합으로 견준다. 나머지 칸(b·say·spread)은 N6 와 같은 모양.
+ */
+function assertBandsShape(bands) {
+  assert.deepEqual(Object.keys(bands).sort(), Object.keys(N6).sort(), "최상위 키");
+  for (const k of ["b", "say", "spread"]) assert.deepEqual(shape(bands[k]), shape(N6[k]), k);
+  assert.equal(bands.rows.length, 3);
+  for (const r of bands.rows) {
+    assert.equal(typeof r.n, "number");
+    if ("st" in r) assert.deepEqual(shape(r), { n: "number", st: "string" });
+    else assert.deepEqual(shape(r), { f: "number", gap: "number", hi: "number", lo: "number", m: "number", n: "number", p: ["number", "number", "number"] });
+  }
+  assert.ok(bands.fold === null || ["thin", "noN4", "n4"].includes(bands.fold), `fold=${bands.fold}`);
+  if (bands.n4 !== null) {
+    assert.deepEqual(Object.keys(bands.n4).sort(), ["agree", "cmp", "map"]);
+    assert.deepEqual([typeof bands.n4.cmp, typeof bands.n4.agree], ["number", "number"]);
+    assert.ok(bands.n4.map.length === 3 && bands.n4.map.every((m) => m === null || typeof m === "string"), "n4.map 은 가격대 키 또는 null 셋");
+  }
+}
 
 // ---------------------------------------------------------------- 합성 입력: 경계·판정 분기 (브리프 5)
 
