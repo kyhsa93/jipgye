@@ -7055,5 +7055,134 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-01",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 금리·예금·투자상품: 고금리 시대에 현금 확보가 중요한 투자 생존 전략으로 주목받고 있다. 연 4%대 예금 비중이 2년 9개월 만에 최고 수준을 기록했다. 이는 고금리 상품에 대한 수요가 늘어난 결과이다. 반면 3%대 대출은 금리 인하로 인해 씨름하는 상황이다. 예금과 대출 금리 차이가 투자자들의 선택에 큰 영향을 미치고 있다.\n- 기타 경제 소식: 일본 경제가 30년 만에 반등했다는 소식이 전해졌다. 3분기 은행 중기 대출 등 연체율이 9년 반 만에 최고 수준을 기록했다. 김동현이 압구정 신현대를 100억 원에 매입했으며, 그 중 50억 원은 집주인 대출로 처리됐다. 반도체 호황 속에서도 청년 일자리는 여전히 어려운 상황이다. 다음주에는 소비자물가와 9월 국제수지도 발표될 예정이다.\n- 부동산: GTX가 수도권 부동산 입지 변화에 영향을 미칠 것으로 예상되며, 선반영 끝났다? 천만에라는 제목의 기사가 보도되었다. 노후 준비가 72% 미흡한 것으로 나타나며, 집값 하락보다 안 팔리는 집이 더 큰 문제로 대두되고 있다. 3기신도시는 택지 부족으로 인해 용적률 조정을 검토 중이며, 기반시설 확충이 주요 조건으로 꼽혔다. 서울 중하위권 전세와 월세가 오르며, 노원구의 전세가 올해 12.9% 상승했다.\n- 증시·환율: 코스피는 지난달 16% 하락하며 역대 일곱 번째로 큰 하락을 기록했다. 증시의 변동성은 다시 커지며 투자자들의 우려를 자아내고 있다. AI 수익성에 대한 회의론이 증시에 영향을 미치고 있는 것으로 보인다. 미국 중간선거에 대한 기대와 우려가 증시에 영향을 주고 있다. 각 기사는 서로 다른 주제를 다루고 있으며, 구체적인 인과관계는 명시되지 않았다.",
+      "en": "- Rates, Deposits & Investment Products: In the era of high interest rates, securing cash is gaining attention as a crucial investment survival strategy. The proportion of deposits with annual interest rates of 4% or higher has reached its highest level in 2 years and 9 months. This is a result of increased demand for high-interest products. Meanwhile, loans with interest rates in the 3% range are struggling due to rate cuts. The difference between deposit and loan interest rates is significantly influencing investors' choices.\n- Other Economic News: News emerged that Japan's economy has rebounded for the first time in 30 years. The delinquency rate for medium-term loans by banks in the third quarter reached its highest level in 9.5 years. Kim Dong-hyun purchased Apgujeong Shinhyundai for 10,000,000,000 won, of which 5,000,000,000 won was processed as a loan from the property owner. Even amid the semiconductor boom, youth employment remains difficult. Next week, consumer prices and the September international balance of payments will be announced.\n- Real Estate: GTX is expected to influence changes in real estate locations in the capital area, and a report titled \"A Million Won\" has been published, stating that the preparation is 72% insufficient. It is emerging as a bigger problem that houses are not selling rather than prices falling. The third phase new city is considering adjusting the floor area ratio due to a shortage of land, with infrastructure expansion cited as a main condition. Monthly and deposit rents in the lower and middle tiers of Seoul have risen, with deposit rents in Nowon-gu increasing by 12.9% this year.\n- Stocks & FX: The KOSPI fell 16% last month, recording its seventh-largest decline in history. Market volatility is increasing again, raising investor concerns. It appears that skepticism regarding AI profitability is affecting the stock market. Expectations and concerns about the U.S. midterm elections are influencing the market. Each article covers different topics, and specific causal relationships are not explicitly stated."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "고금리 시대에 현금 확보가 중요한 투자 생존 전략으로 주목받고 있다. 연 4%대 예금 비중이 2년 9개월 만에 최고 수준을 기록했다. 이는 고금리 상품에 대한 수요가 늘어난 결과이다. 반면 3%대 대출은 금리 인하로 인해 씨름하는 상황이다. 예금과 대출 금리 차이가 투자자들의 선택에 큰 영향을 미치고 있다.",
+        "lineEn": "In the era of high interest rates, securing cash is gaining attention as a crucial investment survival strategy. The proportion of deposits with annual interest rates of 4% or higher has reached its highest level in 2 years and 9 months. This is a result of increased demand for high-interest products. Meanwhile, loans with interest rates in the 3% range are struggling due to rate cuts. The difference between deposit and loan interest rates is significantly influencing investors' choices.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "\"현금 없으면 기회 와도 못 산다\"…고금리 시대, 살아남는 투자 생존 전략",
+            "link": "https://www.newsis.com/view/NISX20261101_0003849604",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "연 4%대 예금 비중 2년 9개월 만에 최고…3%대 대출은 씨말라",
+            "link": "https://www.yna.co.kr/view/AKR20261031024600002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "일본 경제가 30년 만에 반등했다는 소식이 전해졌다. 3분기 은행 중기 대출 등 연체율이 9년 반 만에 최고 수준을 기록했다. 김동현이 압구정 신현대를 100억 원에 매입했으며, 그 중 50억 원은 집주인 대출로 처리됐다. 반도체 호황 속에서도 청년 일자리는 여전히 어려운 상황이다. 다음주에는 소비자물가와 9월 국제수지도 발표될 예정이다.",
+        "lineEn": "News emerged that Japan's economy has rebounded for the first time in 30 years. The delinquency rate for medium-term loans by banks in the third quarter reached its highest level in 9.5 years. Kim Dong-hyun purchased Apgujeong Shinhyundai for 10,000,000,000 won, of which 5,000,000,000 won was processed as a loan from the property owner. Even amid the semiconductor boom, youth employment remains difficult. Next week, consumer prices and the September international balance of payments will be announced.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "30년 만에 깨어난 日 경제…구조적 반등인가 반짝 불꽃놀이인가",
+            "link": "https://www.newsis.com/view/NISX20261101_0003849539",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "3분기 은행 중기 대출 등 연체율 '빨간불'…9년 반만에 최고",
+            "link": "https://www.yna.co.kr/view/AKR20261031045300002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "김동현, 압구정 신현대 100억에 매입…50억은 집주인 대출",
+            "link": "https://www.newsis.com/view/NISX20261031_0003849409",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[그래픽 경제] 반도체 호황에도 청년 일자리 '한파'",
+            "link": "https://www.newsis.com/view/NISX20261029_0003847064",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[다음주 경제] 소비자물가 얼마나 올랐을까…9월 국제수지도 발표",
+            "link": "https://www.yna.co.kr/view/AKR20261031012200002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "GTX가 수도권 부동산 입지 변화에 영향을 미칠 것으로 예상되며, 선반영 끝났다? 천만에라는 제목의 기사가 보도되었다. 노후 준비가 72% 미흡한 것으로 나타나며, 집값 하락보다 안 팔리는 집이 더 큰 문제로 대두되고 있다. 3기신도시는 택지 부족으로 인해 용적률 조정을 검토 중이며, 기반시설 확충이 주요 조건으로 꼽혔다. 서울 중하위권 전세와 월세가 오르며, 노원구의 전세가 올해 12.9% 상승했다.",
+        "lineEn": "GTX is expected to influence changes in real estate locations in the capital area, and a report titled \"A Million Won\" has been published, stating that the preparation is 72% insufficient. It is emerging as a bigger problem that houses are not selling rather than prices falling. The third phase new city is considering adjusting the floor area ratio due to a shortage of land, with infrastructure expansion cited as a main condition. Monthly and deposit rents in the lower and middle tiers of Seoul have risen, with deposit rents in Nowon-gu increasing by 12.9% this year.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "\"선반영 끝났다? 천만에\"…GTX가 가져올 수도권 부동산 입지 역전",
+            "link": "https://www.newsis.com/view/NISX20261028_0003843974",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "집값 하락보다 무서운 '안 팔리는 집'…\"노후 준비 72% 미흡한 이유\"",
+            "link": "https://www.newsis.com/view/NISX20261028_0003843935",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "택지 부족에 꺼낸 3기신도시 '용적률 카드'…기반시설 확충이 관건[주택공급의 조건③]",
+            "link": "https://www.newsis.com/view/NISX20261030_0003848967",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "전세에 월세까지 오르는 서울 중하위권…노원구 올해 12.9%↑",
+            "link": "https://www.yna.co.kr/view/AKR20261101006000003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "건설사 해킹에 부각된 입주민 정보보안…아파트 첨단화의 그늘",
+            "link": "https://www.yna.co.kr/view/AKR20261031047400003",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "코스피는 지난달 16% 하락하며 역대 일곱 번째로 큰 하락을 기록했다. 증시의 변동성은 다시 커지며 투자자들의 우려를 자아내고 있다. AI 수익성에 대한 회의론이 증시에 영향을 미치고 있는 것으로 보인다. 미국 중간선거에 대한 기대와 우려가 증시에 영향을 주고 있다. 각 기사는 서로 다른 주제를 다루고 있으며, 구체적인 인과관계는 명시되지 않았다.",
+        "lineEn": "The KOSPI fell 16% last month, recording its seventh-largest decline in history. Market volatility is increasing again, raising investor concerns. It appears that skepticism regarding AI profitability is affecting the stock market. Expectations and concerns about the U.S. midterm elections are influencing the market. Each article covers different topics, and specific causal relationships are not explicitly stated.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "다시 변동성 커지는 증시…코스피 지난달 -16%, 역대 일곱번째",
+            "link": "https://www.yna.co.kr/view/AKR20261031026200008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "'AI 수익성 회의론', 증시 계속 짓누르나…美중간선거에 촉각",
+            "link": "https://www.yna.co.kr/view/AKR20261031026300008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]

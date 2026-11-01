@@ -16687,7 +16687,8 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스]허준희 인턴 기자 = 고금리 기조가 이어지면서 기업과 개인의 자금 조달 부담이 커질 수 있다는 전문가의 전망이 나왔다. 투자자들은 무리하게 수익을 좇기보다 현금을 확보하고 우량 자산을 장기적으로 살펴야…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "No Cash, No Chance\"… High-Interest Rate Era, Survival Investment Strategies"
       },
       {
         "title": "30년 만에 깨어난 日 경제…구조적 반등인가 반짝 불꽃놀이인가",
@@ -16696,7 +16697,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스]이준형 인턴 기자 = 일본 경제가 명목 GDP 성장과 주가 반등 등 뚜렷한 변화의 신호를 보이고 있으나, 이러한 체질 개선이 구조적 회복으로 안착할지 일시적 현상에 그칠지에 대한 전문가의 분석이 나왔다…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Japan's economy awakens after 30 years: structural rebound or a flash in the pan?"
       },
       {
         "title": "\"선반영 끝났다? 천만에\"…GTX가 가져올 수도권 부동산 입지 역전",
@@ -16705,7 +16707,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]허준희 인턴 기자 = 수도권광역급행철도(GTX) 개통으로 수도권 주거지의 강남 접근성이 달라지면서 지역 간 부동산 가치에도 변화가 나타날 수 있다는 부동산 전문가의 전망이 나왔다. 지난 27일 구독자…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Shinbundang construction ends? A million won\"…GTX to bring about a shift in Seoul's real estate location advantage"
       },
       {
         "title": "집값 하락보다 무서운 '안 팔리는 집'…\"노후 준비 72% 미흡한 이유\"",
@@ -16714,7 +16717,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]전민영 인턴 기자 = 부동산 가격이 떨어지는 것보다 가격을 낮춰도 거래가 체결되지 않는 집이 되는 현상이 노후 자산 관리의 최대 위험 요소라는 지적이 나왔다. 유튜브 채널 '김지호의 공간문해력'을 운영…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "More Terrifying Than Falling Home Prices: 'Homes That Can't Be Sold'... \"Why 72% of Elderly Care Preparation Is Inadequate"
       },
       {
         "title": "택지 부족에 꺼낸 3기신도시 '용적률 카드'…기반시설 확충이 관건[주택공급의 조건③]",
@@ -16723,7 +16727,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]이종성 기자 = 정부가 수도권 주택 공급 확대를 위해 3기 신도시 '용적률 상향' 카드를 꺼내 들었다. 신규 택지 확보와 함께 기존 공공택지의 개발 밀도를 높여 2030년까지 수도권 150만가구 이상…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Third New City Project Unveils 'Floor Area Ratio Card' Amid Land Shortage... Infrastructure Expansion Is Key[Conditions of Housing Supply③]"
       },
       {
         "title": "전세에 월세까지 오르는 서울 중하위권…노원구 올해 12.9%↑",
@@ -16732,7 +16737,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 임기창 기자 = 올해 서울 아파트 가격 상승을 견인해 온 중위권 이하 지역에서 매매·전세와 더불어 월세도 강한 상승세가 나타나...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-nowon.html",
+            "label": "노원구 아파트 84㎡ 전세",
+            "labelEn": "노원구 apartment 84㎡ jeonse",
+            "value": "5억 4,911만원",
+            "valueEn": "₩549M",
+            "note": "최근 1주 계약 249건 · 10/25 대비 +0.9%",
+            "noteEn": "249 deals in the last 1 weeks · +0.9% vs Oct 25"
+          }
+        ],
+        "titleEn": "Rising rents and monthly rents in Seoul's mid-to-lower tier areas... Nowon-gu up 12.9% this year"
       },
       {
         "title": "다시 변동성 커지는 증시…코스피 지난달 -16%, 역대 일곱번째",
@@ -16741,7 +16759,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 곽윤아 기자 = 지난 7월부터 시작된 급락장 이후 한동안 박스권에 갇혀 잠잠했던 국내 증시의 변동성이 다시 커지는 흐름을 보이...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Market Volatility Increases Again... Kospi Down 16% Last Month, Seventh Worst in History"
       },
       {
         "title": "건설사 해킹에 부각된 입주민 정보보안…아파트 첨단화의 그늘",
@@ -16750,7 +16769,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(세종=연합뉴스) 오진송 기자 = GS건설의 아파트 커뮤니티 시설 예약관리 시스템이 해킹 피해를 보면서 건설업계의 입주민 개인정보 보안 문제가 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Residents' Information Security Highlighted After Construction Company Hacking... Shadows of Apartment Modernization"
       },
       {
         "title": "'AI 수익성 회의론', 증시 계속 짓누르나…美중간선거에 촉각",
@@ -16759,7 +16779,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 황철환 기자 = 글로벌 빅테크의 인공지능(AI) 투자 출혈경쟁의 지속가능성에 대한 시장의 의구심이 여전한 가운데 국내 주식시장...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "AI Profitability Skepticism\" Continues to Press on Markets... Sensing U.S. Midterm Elections"
       },
       {
         "title": "이주 앞둔 은마 전세 석 달 새 3억 뚝… 대치우성은 1억5000 올라",
@@ -16768,7 +16789,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "재건축 이주를 앞둔 서울 강남구 대치동 은마아파트의 전월세 가격이 내리고 있다. 석 달이 채 안 돼 전세 보증금이 3억원 빠진 거래가 나왔고, 계약기간 1년 미만 단기 전세도 등장했다. 반면 대치우성·대치현대 등 인…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 전세",
+            "labelEn": "강남구 apartment 84㎡ jeonse",
+            "value": "11억 2,058만원",
+            "valueEn": "₩1,121M",
+            "note": "최근 1주 계약 301건 · 10/25 대비 +1.9%",
+            "noteEn": "301 deals in the last 1 weeks · +1.9% vs Oct 25"
+          }
+        ],
+        "titleEn": "Eunma's rental prices drop 300,000,000 won in three months as migration looms; Daechi Useong rises 100,000,0005000 won"
       },
       {
         "title": "조합 인가 취소에 재건축 전환까지… 서울 아파트 리모델링 흔들",
@@ -16777,7 +16811,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "공동주택 리모델링 사업을 접는 단지가 서울에서 잇따라 나오고 있다. 공사비가 뛰면서 조합원 분담금이 불어난 데다, 재건축 규제가 풀리면서 리모델링의 이점이 줄어든 탓이다. 정부와 서울시가 지원책을 내놓겠다고 했지만,…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 327만원",
+            "valueEn": "₩1,303M",
+            "note": "최근 1주 계약 1,019건 · 10/25 대비 -1.1%",
+            "noteEn": "1,019 deals in the last 1 weeks · -1.1% vs Oct 25"
+          }
+        ],
+        "titleEn": "Cancellation of joint venture approval sparks concerns over redevelopment conversion in Seoul apartment remodeling"
       },
       {
         "title": "3분기 은행 중기 대출 등 연체율 '빨간불'…9년 반만에 최고",
@@ -16786,7 +16833,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 이도흔 기자 = 5대 은행의 중소기업 등 대출 연체율이 9년 반만에 최고 수준으로 오르는 등 금리 상승기 부실 우려가 커지고 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Q3 bank medium- to long-term loan delinquency rate hits 'red light'…highest in 9 years 6 months"
       },
       {
         "title": "연 4%대 예금 비중 2년 9개월 만에 최고…3%대 대출은 씨말라",
@@ -16795,7 +16843,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 한지훈 채새롬 이도흔 기자 = 최근 국내 은행에서 신규 취급한 정기예금 가운데 연 4% 이상 금리가 적용된 예금 비중이 2년 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Annual 4% Deposit Ratio Reaches Highest in 2 Years and 9 Months... 3% Loan Rates Disappear"
       },
       {
         "title": "\"서울 부동산 분위기 달라졌다?\" 30% 늘어난 매물…수도권 집값 향방은",
@@ -16804,7 +16853,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]김성은 인턴 기자 = 서울 아파트 매물이 크게 늘어난 가운데, 앞으로 수도권 집값은 지역에 따라 엇갈린 흐름을 보일 가능성이 있다는 전망이 나왔다. 30일 구독자 212만명을 보유한 유튜브 채널 '월급…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 327만원",
+            "valueEn": "₩1,303M",
+            "note": "최근 1주 계약 1,019건 · 10/25 대비 -1.1%",
+            "noteEn": "1,019 deals in the last 1 weeks · -1.1% vs Oct 25"
+          }
+        ],
+        "titleEn": "Has the Seoul real estate atmosphere changed?\" 30% increase in listings... direction of capital region housing prices"
       },
       {
         "title": "김동현, 압구정 신현대 100억에 매입…50억은 집주인 대출",
@@ -16813,7 +16875,20 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스] 강세훈 기자 = 종합격투기 선수 출신 방송인 김동현이 서울 강남구 압구정동 아파트를 100억원에 매입한 것으로 알려졌다. 매매대금의 절반가량은 기존 집주인들에게 빌리는 이른바 '셀러 파이낸싱' 방식으…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 4,235만원",
+            "valueEn": "₩2,842M",
+            "note": "최근 1주 계약 140건 · 10/25 대비 -2.1%",
+            "noteEn": "140 deals in the last 1 weeks · -2.1% vs Oct 25"
+          }
+        ],
+        "titleEn": "Kim Dong-hyun buys Apgujeong Shinhyundai for 10,000,000,000 won; 5,000,000,000 won is owner's loan"
       },
       {
         "title": "[그래픽 경제] 반도체 호황에도 청년 일자리 '한파'",
@@ -16822,7 +16897,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스]안지혜 전진우 기자 = 그래픽으로 보는 한주간의 경제 뉴스. ◆ 반도체 호황에도 청년 일자리 '한파'…AI 확산에 취업문 더 좁아져 ◆ 3분기 경제성장률 1% …민간소비는 0.2% 감소 ◆ 소비자심리…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Graphic Economy] Semiconductor Boom Brings Cold Snap to Youth Employment"
       },
       {
         "title": "\"집 내놔도 안 팔려요\"…서울 아파트 매물 8만건 쌓였다",
@@ -16831,7 +16907,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 327만원",
+            "valueEn": "₩1,303M",
+            "note": "최근 1주 계약 1,019건 · 10/25 대비 -1.1%",
+            "noteEn": "1,019 deals in the last 1 weeks · -1.1% vs Oct 25"
+          }
+        ],
+        "titleEn": "Even if you put it up for sale, it won't sell\"…80,000 Seoul apartment listings pile up"
       },
       {
         "title": "“재건축 소식에 집값 좀 뛰었거든요”…강남 아파트로 눈돌리는 분당 주민들",
@@ -16840,7 +16929,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "성남 분당구 아파트값 1년 새 22.3%↑ 서울 주택매수 분당주민 1/3 강남 매수올해 서울 집합건물(아파트·연립·오피스텔 등)을 매입한 경기·인천 거주자 가운데 가장 많은 수는..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 4,235만원",
+            "valueEn": "₩2,842M",
+            "note": "최근 1주 계약 140건 · 10/25 대비 -2.1%",
+            "noteEn": "140 deals in the last 1 weeks · -2.1% vs Oct 25"
+          }
+        ],
+        "titleEn": "Because house prices went up a bit with the reconstruction news\"...Residents in Bundang turning their eyes to Gangnam apartments"
       },
       {
         "title": "재건축 아파트값 '억' 소리나게 떨어져…몸테크 열풍 끝? [이슬기의 새집다오]",
@@ -16849,7 +16951,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Rebuilding apartment prices drop dramatically in the billions... end of the bodytech trend? [Eisugi's New Home]"
       },
       {
         "title": "침체 길어졌지만 꿈틀대는 주가…中 부동산주 반등 신호",
@@ -16858,7 +16961,8 @@
         "source": "한국경제 경제",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Prolonged Slump but Trembling Stock Prices... Chinese Real Estate Stocks Signal Recovery"
       },
       {
         "title": "[다음주 경제] 소비자물가 얼마나 올랐을까…9월 국제수지도 발표",
@@ -16867,7 +16971,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울·세종=연합뉴스) 이세원 한지훈 강수련 김수현 기자 = 다음 주(11월 2∼6일)에는 국내 물가 동향과 수출입 현황을 보여주는 지표가 공개...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Next Week's Economy] How much have consumer prices risen... International trade balance for September to be released"
       },
       {
         "title": "[부동산캘린더] 내주 고덕강일3단지 등 전국 4천928가구 청약 접수",
@@ -16876,7 +16981,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(세종=연합뉴스) 오진송 기자 = 다음 주 전국에서 약 5천가구가 청약 신청을 받는다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Real Estate Calendar: Next week's housing applications to open for 4,928 units nationwide, including Godeokgangil 3-danji"
       },
       {
         "title": "김동현, 압구정 100억 아파트 샀는데…50억 빌려준 사람 누구? [집코노미-핫!부동산]",
@@ -16885,7 +16991,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kim Dong-hyun buys 10,000,000,000 won apartment in Apgujeong, but who lent him 5,000,000,000 won? [Jikkonomi- Hot Real Estate]"
       },
       {
         "title": "3개월 만에 1억 넘게 뛰었다…서울서 주목 받는 아파트",
@@ -16894,7 +17001,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 327만원",
+            "valueEn": "₩1,303M",
+            "note": "최근 1주 계약 1,019건 · 10/25 대비 -1.1%",
+            "noteEn": "1,019 deals in the last 1 weeks · -1.1% vs Oct 25"
+          }
+        ],
+        "titleEn": "After 3 months, the apartment in Seoul has risen over 100,000,000… drawing attention"
       }
     ]
   }
