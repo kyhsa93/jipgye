@@ -73,7 +73,7 @@ test("--json: 7일 안 병합 PR 만 세고 판정 수 근사·Test 빨강·주�
     assert.deepEqual(m.ciRedPrs, [2]);
     assert.equal(m.medianCycleHours, 2); // 1·2·3 시간의 중앙값
     assert.match(m.note, /토큰/);
-    assert.deepEqual(m.targets, { verdictsPerPr: 1.2, ciRedAfterMerge: 0 });
+    assert.deepEqual(m.targets, { verdictsPerPr: 1.5, ciRedAfterMerge: 0 });
   } finally { f.done(); }
 });
 
