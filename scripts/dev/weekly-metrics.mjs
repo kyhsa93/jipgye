@@ -9,7 +9,7 @@
 import { execFileSync } from "node:child_process";
 
 const USAGE = "사용법: node scripts/dev/weekly-metrics.mjs [--json] [--days 7] [--repo 소유자/저장소] [--now ISO시각]";
-const TARGETS = { verdictsPerPr: 1.2, ciRedAfterMerge: 0 }; // #583 11-4 의 11-08 목표(판정/PR ≤1.2, main Test 빨강 0)
+const TARGETS = { verdictsPerPr: 1.5, ciRedAfterMerge: 0 }; // #583 11-4 의 11-08 목표(판정/PR ≤1.5 역할당 독립 판정 #814, main Test 빨강 0)
 
 function parseArgs(argv) {
   const o = { json: false, days: 7, repo: process.env.WEEKLY_REPO || "kyhsa93/jipgye", now: new Date() };

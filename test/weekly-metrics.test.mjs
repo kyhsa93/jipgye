@@ -73,7 +73,7 @@ test("--json: 7일 안 병합 PR 만 세고 판정 수 근사·Test 빨강·주�
     assert.deepEqual(m.ciRedPrs, [2]);
     assert.equal(m.medianCycleHours, 2); // 1·2·3 시간의 중앙값
     assert.match(m.note, /토큰/);
-    assert.deepEqual(m.targets, { verdictsPerPr: 1.2, ciRedAfterMerge: 0 });
+    assert.deepEqual(m.targets, { verdictsPerPr: 1.5, ciRedAfterMerge: 0 });
   } finally { f.done(); }
 });
 
@@ -85,7 +85,7 @@ test("사람이 읽는 출력: 머리에 에이전트 토큰이 없다는 말, �
     const lines = r.stdout.trim().split("\n");
     assert.match(lines[1], /GitHub 데이터만.*토큰.*GitHub 에 없/);
     assert.match(r.stdout, /병합 PR: 3건/);
-    assert.match(r.stdout, /\/PR: 2 \(목표 ≤1\.2, 목표 밖\)/);
+    assert.match(r.stdout, /\/PR: 2 \(목표 ≤1\.5, 목표 밖\)/);
     assert.match(r.stdout, /main Test 빨강: 1건 \(PR #2\) \(목표 0, 목표 밖\)/);
     assert.match(r.stdout, /중앙값\(만듦→병합\): 2시간/);
   } finally { f.done(); }
