@@ -85,7 +85,7 @@ test("사람이 읽는 출력: 머리에 에이전트 토큰이 없다는 말, �
     const lines = r.stdout.trim().split("\n");
     assert.match(lines[1], /GitHub 데이터만.*토큰.*GitHub 에 없/);
     assert.match(r.stdout, /병합 PR: 3건/);
-    assert.match(r.stdout, /\/PR: 2 \(목표 ≤1\.2, 목표 밖\)/);
+    assert.match(r.stdout, /\/PR: 2 \(목표 ≤1\.5, 목표 밖\)/);
     assert.match(r.stdout, /main Test 빨강: 1건 \(PR #2\) \(목표 0, 목표 밖\)/);
     assert.match(r.stdout, /중앙값\(만듦→병합\): 2시간/);
   } finally { f.done(); }
