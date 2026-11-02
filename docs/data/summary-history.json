@@ -7184,5 +7184,129 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-02",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 증시·환율: 중국 증시는 오늘 상승 출발하며 상하이지수가 0.42% 상승했다. 한투증권은 내년 코스피 목표치를 8,300으로 제시하며 올해 4분기 저점 통과를 전망했다. 미국 증시는 중간선거와 고용보고서 발표를 앞두고 주목받고 있으며, 애플과 AMD의 실적도 변수로 작용할 것으로 보인다. 일본 증시는 반도체주 약세로 인해 하락 출발했으며 닛케이 지수가 0.5% 하락했다. 각국 증시는 다양한 요인에 따라 움직이며 주간 흐름을 주목받고 있다.\n- 부동산: 다가구주택에서 유령호실을 이용한 전세대출 사기로 27억원을 가로챈 일당이 적발되었으며, 공무원 대이동으로 인해 세종의 집값과 전셋값이 상승하고 내년 입주 물량은 없고, JLL은 한국 부동산 시장의 투명성을 세계 88개국 중 24위로 평가했고, 광주 토종 건설사는 전국 아파트 브랜드 순위 12∼20위에 진입했다.\n- 금리·예금·투자상품: 한국 금리 인상 사이클 속에서 국채금리가 급격히 하락한 것으로 나타났다. 이에 따라 주가 조정이 과잉 반영되고 있다는 분석이 나왔다. 국채금리 하락은 시장의 예상보다 빠르게 진행됐다. 주가 조정은 경제 전망에 대한 우려가 반영된 것으로 보인다. 다만 구체적인 수치나 원인에 대해서는 명확히 밝혀지지 않았다.\n- 기타 경제 소식: 재정경제부에서 인사가 있었으며, NH농협은행이 신보와 함께 중소기업·소상공인을 위한 비대면 보증대출을 지원하고, LH·HUG가 민참사업 금융지원 1호로 금호건설 컨소에 연 4.7% 대출을 제공했다.",
+      "en": "- Stocks & FX: China's stock market opened higher today, with the Shanghai index rising 0.42%. Han Invest Securities set its 2024 Kospi target at 8,300, forecasting a bottom passed in the fourth quarter of this year. The U.S. stock market is drawing attention ahead of the midterm elections and the employment report release, with Apple and AMD's earnings also expected to play a role. Japan's stock market opened lower due to weakness in semiconductor stocks, with the Nikkei index falling 0.5%. Stock markets around the world are moving under various factors, drawing attention to the weekly trend.\n- Real Estate: A gang was caught stealing 2,700,000,000 won by using ghost rooms in multi-family housing for leasehold loans. Due to the large-scale transfer of public officials, housing prices and lease prices in Sejong have risen, and there will be no new housing units available for occupancy next year. JLL evaluated the transparency of the Korean real estate market as 24th out of 88 countries worldwide. Gwangju native construction companies have entered the 12th to 20th ranks in the national apartment brand rankings.\n- Rates, Deposits & Investment Products: In the midst of South Korea's interest rate hiking cycle, government bond yields were found to have sharply declined. As a result, analysis suggests that stock price adjustments have been overly reflected. The decline in government bond yields occurred more rapidly than expected by the market. The stock price adjustments appear to reflect concerns over economic outlooks. However, specific figures or causes have not been clearly identified.\n- Other Economic News: There was a personnel change at the Ministry of Finance and Economy, NH Nonghyup Bank, together with KOSME, is supporting non-face-to-face guarantee loans for SMEs and small businesses, and LH and HUG provided a 4.7% annual loan to Geumho Construction Consortium as the first financial support for public-private partnership projects."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "중국 증시는 오늘 상승 출발하며 상하이지수가 0.42% 상승했다. 한투증권은 내년 코스피 목표치를 8,300으로 제시하며 올해 4분기 저점 통과를 전망했다. 미국 증시는 중간선거와 고용보고서 발표를 앞두고 주목받고 있으며, 애플과 AMD의 실적도 변수로 작용할 것으로 보인다. 일본 증시는 반도체주 약세로 인해 하락 출발했으며 닛케이 지수가 0.5% 하락했다. 각국 증시는 다양한 요인에 따라 움직이며 주간 흐름을 주목받고 있다.",
+        "lineEn": "China's stock market opened higher today, with the Shanghai index rising 0.42%. Han Invest Securities set its 2024 Kospi target at 8,300, forecasting a bottom passed in the fourth quarter of this year. The U.S. stock market is drawing attention ahead of the midterm elections and the employment report release, with Apple and AMD's earnings also expected to play a role. Japan's stock market opened lower due to weakness in semiconductor stocks, with the Nikkei index falling 0.5%. Stock markets around the world are moving under various factors, drawing attention to the weekly trend.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 중국 증시 상승 출발…상하이지수 0.42%↑",
+            "link": "https://www.newsis.com/view/NISX20261102_0003850776",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "한투증권 \"내년 코스피 목표치 8,300…올해 4분기 저점 통과\"",
+            "link": "https://www.yna.co.kr/view/AKR20261102048300008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[주간 뉴욕증시] 美중간선거·고용보고서 주목…애플·AMD 실적도 변수",
+            "link": "https://www.newsis.com/view/NISX20261102_0003850224",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "日증시, 반도체주 약세에 하락 출발…닛케이 0.5%↓",
+            "link": "https://www.newsis.com/view/NISX20261102_0003850283",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "다가구주택에서 유령호실을 이용한 전세대출 사기로 27억원을 가로챈 일당이 적발되었으며, 공무원 대이동으로 인해 세종의 집값과 전셋값이 상승하고 내년 입주 물량은 없고, JLL은 한국 부동산 시장의 투명성을 세계 88개국 중 24위로 평가했고, 광주 토종 건설사는 전국 아파트 브랜드 순위 12∼20위에 진입했다.",
+        "lineEn": "A gang was caught stealing 2,700,000,000 won by using ghost rooms in multi-family housing for leasehold loans. Due to the large-scale transfer of public officials, housing prices and lease prices in Sejong have risen, and there will be no new housing units available for occupancy next year. JLL evaluated the transparency of the Korean real estate market as 24th out of 88 countries worldwide. Gwangju native construction companies have entered the 12th to 20th ranks in the national apartment brand rankings.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "다가구주택에 '유령호실'로 전세대출 사기 등…27억원 가로챈 일당",
+            "link": "https://www.yna.co.kr/view/AKR20261102030300004",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "공무원 대이동 앞둔 세종 집값·전셋값 '꿈틀'…내년 입주 물량 '0'",
+            "link": "https://www.newsis.com/view/NISX20261102_0003850131",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "JLL “한국 부동산 시장 투명성 세계 88개국 中 24위”",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/02/N5NQFK2Q4FG6TBAE76EKPYMQZ4/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "한국 부동산 투명성 88개국 중 24위…3계단 상승",
+            "link": "https://www.newsis.com/view/NISX20261102_0003850640",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "'광주 토종 건설사' 전국 아파트 브랜드 12∼20위",
+            "link": "https://www.yna.co.kr/view/AKR20261102054300054",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "한국 금리 인상 사이클 속에서 국채금리가 급격히 하락한 것으로 나타났다. 이에 따라 주가 조정이 과잉 반영되고 있다는 분석이 나왔다. 국채금리 하락은 시장의 예상보다 빠르게 진행됐다. 주가 조정은 경제 전망에 대한 우려가 반영된 것으로 보인다. 다만 구체적인 수치나 원인에 대해서는 명확히 밝혀지지 않았다.",
+        "lineEn": "In the midst of South Korea's interest rate hiking cycle, government bond yields were found to have sharply declined. As a result, analysis suggests that stock price adjustments have been overly reflected. The decline in government bond yields occurred more rapidly than expected by the market. The stock price adjustments appear to reflect concerns over economic outlooks. However, specific figures or causes have not been clearly identified.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "인상 사이클인데 국채금리 너무 내렸나…\"주가조정 과잉반영\"",
+            "link": "https://www.yna.co.kr/view/AKR20261102053800008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "재정경제부에서 인사가 있었으며, NH농협은행이 신보와 함께 중소기업·소상공인을 위한 비대면 보증대출을 지원하고, LH·HUG가 민참사업 금융지원 1호로 금호건설 컨소에 연 4.7% 대출을 제공했다.",
+        "lineEn": "There was a personnel change at the Ministry of Finance and Economy, NH Nonghyup Bank, together with KOSME, is supporting non-face-to-face guarantee loans for SMEs and small businesses, and LH and HUG provided a 4.7% annual loan to Geumho Construction Consortium as the first financial support for public-private partnership projects.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "[인사] 재정경제부",
+            "link": "https://www.yna.co.kr/view/AKR20261102054700002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "NH농협은행, 신보와 중소기업·소상공인 비대면 보증대출 지원",
+            "link": "https://www.yna.co.kr/view/AKR20261102051400002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "LH·HUG 민참사업 금융지원 1호…금호건설 컨소 연 4.7% 대출",
+            "link": "https://www.newsis.com/view/NISX20261102_0003850366",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]

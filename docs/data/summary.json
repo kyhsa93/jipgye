@@ -1,30 +1,94 @@
 {
-  "updatedAt": "2026-11-01T02:13:08.988Z",
+  "updatedAt": "2026-11-02T02:28:07.674Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 금리·예금·투자상품: 고금리 시대에 현금 확보가 중요한 투자 생존 전략으로 주목받고 있다. 연 4%대 예금 비중이 2년 9개월 만에 최고 수준을 기록했다. 이는 고금리 상품에 대한 수요가 늘어난 결과이다. 반면 3%대 대출은 금리 인하로 인해 씨름하는 상황이다. 예금과 대출 금리 차이가 투자자들의 선택에 큰 영향을 미치고 있다.\n- 기타 경제 소식: 일본 경제가 30년 만에 반등했다는 소식이 전해졌다. 3분기 은행 중기 대출 등 연체율이 9년 반 만에 최고 수준을 기록했다. 김동현이 압구정 신현대를 100억 원에 매입했으며, 그 중 50억 원은 집주인 대출로 처리됐다. 반도체 호황 속에서도 청년 일자리는 여전히 어려운 상황이다. 다음주에는 소비자물가와 9월 국제수지도 발표될 예정이다.\n- 부동산: GTX가 수도권 부동산 입지 변화에 영향을 미칠 것으로 예상되며, 선반영 끝났다? 천만에라는 제목의 기사가 보도되었다. 노후 준비가 72% 미흡한 것으로 나타나며, 집값 하락보다 안 팔리는 집이 더 큰 문제로 대두되고 있다. 3기신도시는 택지 부족으로 인해 용적률 조정을 검토 중이며, 기반시설 확충이 주요 조건으로 꼽혔다. 서울 중하위권 전세와 월세가 오르며, 노원구의 전세가 올해 12.9% 상승했다.\n- 증시·환율: 코스피는 지난달 16% 하락하며 역대 일곱 번째로 큰 하락을 기록했다. 증시의 변동성은 다시 커지며 투자자들의 우려를 자아내고 있다. AI 수익성에 대한 회의론이 증시에 영향을 미치고 있는 것으로 보인다. 미국 중간선거에 대한 기대와 우려가 증시에 영향을 주고 있다. 각 기사는 서로 다른 주제를 다루고 있으며, 구체적인 인과관계는 명시되지 않았다.",
-    "en": "- Rates, Deposits & Investment Products: In the era of high interest rates, securing cash is gaining attention as a crucial investment survival strategy. The proportion of deposits with annual interest rates of 4% or higher has reached its highest level in 2 years and 9 months. This is a result of increased demand for high-interest products. Meanwhile, loans with interest rates in the 3% range are struggling due to rate cuts. The difference between deposit and loan interest rates is significantly influencing investors' choices.\n- Other Economic News: News emerged that Japan's economy has rebounded for the first time in 30 years. The delinquency rate for medium-term loans by banks in the third quarter reached its highest level in 9.5 years. Kim Dong-hyun purchased Apgujeong Shinhyundai for 10,000,000,000 won, of which 5,000,000,000 won was processed as a loan from the property owner. Even amid the semiconductor boom, youth employment remains difficult. Next week, consumer prices and the September international balance of payments will be announced.\n- Real Estate: GTX is expected to influence changes in real estate locations in the capital area, and a report titled \"A Million Won\" has been published, stating that the preparation is 72% insufficient. It is emerging as a bigger problem that houses are not selling rather than prices falling. The third phase new city is considering adjusting the floor area ratio due to a shortage of land, with infrastructure expansion cited as a main condition. Monthly and deposit rents in the lower and middle tiers of Seoul have risen, with deposit rents in Nowon-gu increasing by 12.9% this year.\n- Stocks & FX: The KOSPI fell 16% last month, recording its seventh-largest decline in history. Market volatility is increasing again, raising investor concerns. It appears that skepticism regarding AI profitability is affecting the stock market. Expectations and concerns about the U.S. midterm elections are influencing the market. Each article covers different topics, and specific causal relationships are not explicitly stated."
+    "ko": "- 증시·환율: 중국 증시는 오늘 상승 출발하며 상하이지수가 0.42% 상승했다. 한투증권은 내년 코스피 목표치를 8,300으로 제시하며 올해 4분기 저점 통과를 전망했다. 미국 증시는 중간선거와 고용보고서 발표를 앞두고 주목받고 있으며, 애플과 AMD의 실적도 변수로 작용할 것으로 보인다. 일본 증시는 반도체주 약세로 인해 하락 출발했으며 닛케이 지수가 0.5% 하락했다. 각국 증시는 다양한 요인에 따라 움직이며 주간 흐름을 주목받고 있다.\n- 부동산: 다가구주택에서 유령호실을 이용한 전세대출 사기로 27억원을 가로챈 일당이 적발되었으며, 공무원 대이동으로 인해 세종의 집값과 전셋값이 상승하고 내년 입주 물량은 없고, JLL은 한국 부동산 시장의 투명성을 세계 88개국 중 24위로 평가했고, 광주 토종 건설사는 전국 아파트 브랜드 순위 12∼20위에 진입했다.\n- 금리·예금·투자상품: 한국 금리 인상 사이클 속에서 국채금리가 급격히 하락한 것으로 나타났다. 이에 따라 주가 조정이 과잉 반영되고 있다는 분석이 나왔다. 국채금리 하락은 시장의 예상보다 빠르게 진행됐다. 주가 조정은 경제 전망에 대한 우려가 반영된 것으로 보인다. 다만 구체적인 수치나 원인에 대해서는 명확히 밝혀지지 않았다.\n- 기타 경제 소식: 재정경제부에서 인사가 있었으며, NH농협은행이 신보와 함께 중소기업·소상공인을 위한 비대면 보증대출을 지원하고, LH·HUG가 민참사업 금융지원 1호로 금호건설 컨소에 연 4.7% 대출을 제공했다.",
+    "en": "- Stocks & FX: China's stock market opened higher today, with the Shanghai index rising 0.42%. Han Invest Securities set its 2024 Kospi target at 8,300, forecasting a bottom passed in the fourth quarter of this year. The U.S. stock market is drawing attention ahead of the midterm elections and the employment report release, with Apple and AMD's earnings also expected to play a role. Japan's stock market opened lower due to weakness in semiconductor stocks, with the Nikkei index falling 0.5%. Stock markets around the world are moving under various factors, drawing attention to the weekly trend.\n- Real Estate: A gang was caught stealing 2,700,000,000 won by using ghost rooms in multi-family housing for leasehold loans. Due to the large-scale transfer of public officials, housing prices and lease prices in Sejong have risen, and there will be no new housing units available for occupancy next year. JLL evaluated the transparency of the Korean real estate market as 24th out of 88 countries worldwide. Gwangju native construction companies have entered the 12th to 20th ranks in the national apartment brand rankings.\n- Rates, Deposits & Investment Products: In the midst of South Korea's interest rate hiking cycle, government bond yields were found to have sharply declined. As a result, analysis suggests that stock price adjustments have been overly reflected. The decline in government bond yields occurred more rapidly than expected by the market. The stock price adjustments appear to reflect concerns over economic outlooks. However, specific figures or causes have not been clearly identified.\n- Other Economic News: There was a personnel change at the Ministry of Finance and Economy, NH Nonghyup Bank, together with KOSME, is supporting non-face-to-face guarantee loans for SMEs and small businesses, and LH and HUG provided a 4.7% annual loan to Geumho Construction Consortium as the first financial support for public-private partnership projects."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "고금리 시대에 현금 확보가 중요한 투자 생존 전략으로 주목받고 있다. 연 4%대 예금 비중이 2년 9개월 만에 최고 수준을 기록했다. 이는 고금리 상품에 대한 수요가 늘어난 결과이다. 반면 3%대 대출은 금리 인하로 인해 씨름하는 상황이다. 예금과 대출 금리 차이가 투자자들의 선택에 큰 영향을 미치고 있다.",
-      "lineEn": "In the era of high interest rates, securing cash is gaining attention as a crucial investment survival strategy. The proportion of deposits with annual interest rates of 4% or higher has reached its highest level in 2 years and 9 months. This is a result of increased demand for high-interest products. Meanwhile, loans with interest rates in the 3% range are struggling due to rate cuts. The difference between deposit and loan interest rates is significantly influencing investors' choices.",
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "중국 증시는 오늘 상승 출발하며 상하이지수가 0.42% 상승했다. 한투증권은 내년 코스피 목표치를 8,300으로 제시하며 올해 4분기 저점 통과를 전망했다. 미국 증시는 중간선거와 고용보고서 발표를 앞두고 주목받고 있으며, 애플과 AMD의 실적도 변수로 작용할 것으로 보인다. 일본 증시는 반도체주 약세로 인해 하락 출발했으며 닛케이 지수가 0.5% 하락했다. 각국 증시는 다양한 요인에 따라 움직이며 주간 흐름을 주목받고 있다.",
+      "lineEn": "China's stock market opened higher today, with the Shanghai index rising 0.42%. Han Invest Securities set its 2024 Kospi target at 8,300, forecasting a bottom passed in the fourth quarter of this year. The U.S. stock market is drawing attention ahead of the midterm elections and the employment report release, with Apple and AMD's earnings also expected to play a role. Japan's stock market opened lower due to weakness in semiconductor stocks, with the Nikkei index falling 0.5%. Stock markets around the world are moving under various factors, drawing attention to the weekly trend.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "\"현금 없으면 기회 와도 못 산다\"…고금리 시대, 살아남는 투자 생존 전략",
-          "link": "https://www.newsis.com/view/NISX20261101_0003849604",
+          "title": "[올댓차이나] 중국 증시 상승 출발…상하이지수 0.42%↑",
+          "link": "https://www.newsis.com/view/NISX20261102_0003850776",
           "source": "뉴시스 경제"
         },
         {
-          "title": "연 4%대 예금 비중 2년 9개월 만에 최고…3%대 대출은 씨말라",
-          "link": "https://www.yna.co.kr/view/AKR20261031024600002",
+          "title": "한투증권 \"내년 코스피 목표치 8,300…올해 4분기 저점 통과\"",
+          "link": "https://www.yna.co.kr/view/AKR20261102048300008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "[주간 뉴욕증시] 美중간선거·고용보고서 주목…애플·AMD 실적도 변수",
+          "link": "https://www.newsis.com/view/NISX20261102_0003850224",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "日증시, 반도체주 약세에 하락 출발…닛케이 0.5%↓",
+          "link": "https://www.newsis.com/view/NISX20261102_0003850283",
+          "source": "뉴시스 경제"
+        }
+      ]
+    },
+    {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "다가구주택에서 유령호실을 이용한 전세대출 사기로 27억원을 가로챈 일당이 적발되었으며, 공무원 대이동으로 인해 세종의 집값과 전셋값이 상승하고 내년 입주 물량은 없고, JLL은 한국 부동산 시장의 투명성을 세계 88개국 중 24위로 평가했고, 광주 토종 건설사는 전국 아파트 브랜드 순위 12∼20위에 진입했다.",
+      "lineEn": "A gang was caught stealing 2,700,000,000 won by using ghost rooms in multi-family housing for leasehold loans. Due to the large-scale transfer of public officials, housing prices and lease prices in Sejong have risen, and there will be no new housing units available for occupancy next year. JLL evaluated the transparency of the Korean real estate market as 24th out of 88 countries worldwide. Gwangju native construction companies have entered the 12th to 20th ranks in the national apartment brand rankings.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
+      "items": [
+        {
+          "title": "다가구주택에 '유령호실'로 전세대출 사기 등…27억원 가로챈 일당",
+          "link": "https://www.yna.co.kr/view/AKR20261102030300004",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "공무원 대이동 앞둔 세종 집값·전셋값 '꿈틀'…내년 입주 물량 '0'",
+          "link": "https://www.newsis.com/view/NISX20261102_0003850131",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "JLL “한국 부동산 시장 투명성 세계 88개국 中 24위”",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/02/N5NQFK2Q4FG6TBAE76EKPYMQZ4/",
+          "source": "조선비즈 부동산"
+        },
+        {
+          "title": "한국 부동산 투명성 88개국 중 24위…3계단 상승",
+          "link": "https://www.newsis.com/view/NISX20261102_0003850640",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "'광주 토종 건설사' 전국 아파트 브랜드 12∼20위",
+          "link": "https://www.yna.co.kr/view/AKR20261102054300054",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "한국 금리 인상 사이클 속에서 국채금리가 급격히 하락한 것으로 나타났다. 이에 따라 주가 조정이 과잉 반영되고 있다는 분석이 나왔다. 국채금리 하락은 시장의 예상보다 빠르게 진행됐다. 주가 조정은 경제 전망에 대한 우려가 반영된 것으로 보인다. 다만 구체적인 수치나 원인에 대해서는 명확히 밝혀지지 않았다.",
+      "lineEn": "In the midst of South Korea's interest rate hiking cycle, government bond yields were found to have sharply declined. As a result, analysis suggests that stock price adjustments have been overly reflected. The decline in government bond yields occurred more rapidly than expected by the market. The stock price adjustments appear to reflect concerns over economic outlooks. However, specific figures or causes have not been clearly identified.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "인상 사이클인데 국채금리 너무 내렸나…\"주가조정 과잉반영\"",
+          "link": "https://www.yna.co.kr/view/AKR20261102053800008",
           "source": "연합뉴스 경제"
         }
       ]
@@ -33,95 +97,26 @@
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "일본 경제가 30년 만에 반등했다는 소식이 전해졌다. 3분기 은행 중기 대출 등 연체율이 9년 반 만에 최고 수준을 기록했다. 김동현이 압구정 신현대를 100억 원에 매입했으며, 그 중 50억 원은 집주인 대출로 처리됐다. 반도체 호황 속에서도 청년 일자리는 여전히 어려운 상황이다. 다음주에는 소비자물가와 9월 국제수지도 발표될 예정이다.",
-      "lineEn": "News emerged that Japan's economy has rebounded for the first time in 30 years. The delinquency rate for medium-term loans by banks in the third quarter reached its highest level in 9.5 years. Kim Dong-hyun purchased Apgujeong Shinhyundai for 10,000,000,000 won, of which 5,000,000,000 won was processed as a loan from the property owner. Even amid the semiconductor boom, youth employment remains difficult. Next week, consumer prices and the September international balance of payments will be announced.",
+      "lineKo": "재정경제부에서 인사가 있었으며, NH농협은행이 신보와 함께 중소기업·소상공인을 위한 비대면 보증대출을 지원하고, LH·HUG가 민참사업 금융지원 1호로 금호건설 컨소에 연 4.7% 대출을 제공했다.",
+      "lineEn": "There was a personnel change at the Ministry of Finance and Economy, NH Nonghyup Bank, together with KOSME, is supporting non-face-to-face guarantee loans for SMEs and small businesses, and LH and HUG provided a 4.7% annual loan to Geumho Construction Consortium as the first financial support for public-private partnership projects.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": false,
+      "degraded": true,
       "items": [
         {
-          "title": "30년 만에 깨어난 日 경제…구조적 반등인가 반짝 불꽃놀이인가",
-          "link": "https://www.newsis.com/view/NISX20261101_0003849539",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "3분기 은행 중기 대출 등 연체율 '빨간불'…9년 반만에 최고",
-          "link": "https://www.yna.co.kr/view/AKR20261031045300002",
+          "title": "[인사] 재정경제부",
+          "link": "https://www.yna.co.kr/view/AKR20261102054700002",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "김동현, 압구정 신현대 100억에 매입…50억은 집주인 대출",
-          "link": "https://www.newsis.com/view/NISX20261031_0003849409",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "[그래픽 경제] 반도체 호황에도 청년 일자리 '한파'",
-          "link": "https://www.newsis.com/view/NISX20261029_0003847064",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "[다음주 경제] 소비자물가 얼마나 올랐을까…9월 국제수지도 발표",
-          "link": "https://www.yna.co.kr/view/AKR20261031012200002",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "GTX가 수도권 부동산 입지 변화에 영향을 미칠 것으로 예상되며, 선반영 끝났다? 천만에라는 제목의 기사가 보도되었다. 노후 준비가 72% 미흡한 것으로 나타나며, 집값 하락보다 안 팔리는 집이 더 큰 문제로 대두되고 있다. 3기신도시는 택지 부족으로 인해 용적률 조정을 검토 중이며, 기반시설 확충이 주요 조건으로 꼽혔다. 서울 중하위권 전세와 월세가 오르며, 노원구의 전세가 올해 12.9% 상승했다.",
-      "lineEn": "GTX is expected to influence changes in real estate locations in the capital area, and a report titled \"A Million Won\" has been published, stating that the preparation is 72% insufficient. It is emerging as a bigger problem that houses are not selling rather than prices falling. The third phase new city is considering adjusting the floor area ratio due to a shortage of land, with infrastructure expansion cited as a main condition. Monthly and deposit rents in the lower and middle tiers of Seoul have risen, with deposit rents in Nowon-gu increasing by 12.9% this year.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "\"선반영 끝났다? 천만에\"…GTX가 가져올 수도권 부동산 입지 역전",
-          "link": "https://www.newsis.com/view/NISX20261028_0003843974",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "집값 하락보다 무서운 '안 팔리는 집'…\"노후 준비 72% 미흡한 이유\"",
-          "link": "https://www.newsis.com/view/NISX20261028_0003843935",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "택지 부족에 꺼낸 3기신도시 '용적률 카드'…기반시설 확충이 관건[주택공급의 조건③]",
-          "link": "https://www.newsis.com/view/NISX20261030_0003848967",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "전세에 월세까지 오르는 서울 중하위권…노원구 올해 12.9%↑",
-          "link": "https://www.yna.co.kr/view/AKR20261101006000003",
+          "title": "NH농협은행, 신보와 중소기업·소상공인 비대면 보증대출 지원",
+          "link": "https://www.yna.co.kr/view/AKR20261102051400002",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "건설사 해킹에 부각된 입주민 정보보안…아파트 첨단화의 그늘",
-          "link": "https://www.yna.co.kr/view/AKR20261031047400003",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "코스피는 지난달 16% 하락하며 역대 일곱 번째로 큰 하락을 기록했다. 증시의 변동성은 다시 커지며 투자자들의 우려를 자아내고 있다. AI 수익성에 대한 회의론이 증시에 영향을 미치고 있는 것으로 보인다. 미국 중간선거에 대한 기대와 우려가 증시에 영향을 주고 있다. 각 기사는 서로 다른 주제를 다루고 있으며, 구체적인 인과관계는 명시되지 않았다.",
-      "lineEn": "The KOSPI fell 16% last month, recording its seventh-largest decline in history. Market volatility is increasing again, raising investor concerns. It appears that skepticism regarding AI profitability is affecting the stock market. Expectations and concerns about the U.S. midterm elections are influencing the market. Each article covers different topics, and specific causal relationships are not explicitly stated.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "다시 변동성 커지는 증시…코스피 지난달 -16%, 역대 일곱번째",
-          "link": "https://www.yna.co.kr/view/AKR20261031026200008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "'AI 수익성 회의론', 증시 계속 짓누르나…美중간선거에 촉각",
-          "link": "https://www.yna.co.kr/view/AKR20261031026300008",
-          "source": "연합뉴스 경제"
+          "title": "LH·HUG 민참사업 금융지원 1호…금호건설 컨소 연 4.7% 대출",
+          "link": "https://www.newsis.com/view/NISX20261102_0003850366",
+          "source": "뉴시스 경제"
         }
       ]
     }
