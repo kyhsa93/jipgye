@@ -1,1 +1,3 @@
-{"kind":"rent","district":"11350","yearMonth":"202611","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-11-01T02:09:31.442Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"rent","district":"11350","yearMonth":"202611","ok":true,"resultCode":0,"count":1,"totalCount":1,"observedAt":"2026-11-02T02:24:09.093Z","previousObservedAt":"2026-11-01T02:09:31.442Z","arrivals":{"742139862a20":"2026-11-02"},"items":[
+{"aptNm":"삼호3","aptSeq":"11350-197","buildYear":1986,"contractTerm":"26.12~28.12","contractType":"갱신","dealDay":1,"dealMonth":11,"dealYear":2026,"deposit":"24,000","excluUseAr":59.22,"floor":7,"jibun":13,"monthlyRent":0,"preDeposit":"23,000","preMonthlyRent":"","roadnm":"마들로 111","roadnmbcd":0,"roadnmbonbun":111,"roadnmbubun":0,"roadnmcd":3109006,"roadnmseq":1,"roadnmsggcd":11350,"sggCd":11350,"umdNm":"월계동","useRRRight":"사용"}
+]}
