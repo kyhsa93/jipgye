@@ -434,10 +434,13 @@ test("P1-2 retro PREREG 에 R1~R8·공개 단위·노출 문장이 있고 대조
   for (const value of Object.values(PINS)) assert.ok(doc.includes(value), value);
 });
 
-test("P1-3 원장 PREREG 는 v4 이고 0절 2항·7절 문장은 그대로다", () => {
+test("P1-3 원장 PREREG 는 v5 이고 v4 줄·0절 2항·7절 문장은 그대로다", () => {
   const doc = readFileSync(path.join(ROOT, "research/ledger-prereg-2026-10/PREREG.md"), "utf8");
-  assert.match(doc, /^- 버전: v4 /m);
+  assert.match(doc, /^- 버전: v5 /m);
   assert.match(doc, /^- 변경 이력: v4\(\d{4}-\d{2}-\d{2}\) — 0절 2항 「2026-12 첫 Release 는 방법·건수 예고만」은 사전 등록 적중률에 그대로 적용한다\. 소유자 결정\(O1, 2026-11-03\)에 따라 같은 Release·method에 「소급」 표기 숫자를 따로 더하고, 3절 끝 줄대로 섞지 않는다\. v1~v3 의 모든 값은 그대로다\. 출처: https:\/\/github\.com\/kyhsa93\/jipgye\/issues\/656#issuecomment-6592343606$/m);
+  // v5(#821, 칸 키). 12월 스냅샷 전에 들어가고 이전 값을 지우지 않는다. 「재지 않았다」는 문장은 사실이어야 하는 약속이라 그대로 고정한다.
+  assert.ok(doc.includes("- 변경 이력: v5(2026-11-03) — 2026-12 스냅샷(meta.v 2)부터 칸의 단지 구분은 scripts/complex-id.ts 키다"));
+  assert.ok(doc.includes("이 변경의 적중률 효과는 재지 않았다. 이전 스냅샷은 v1 정의로 채점한다. 공칭·문턱·창은 그대로다."));
   assert.ok(doc.includes("2. 「스냅샷 3회 이상」 규칙을 유지한다(A안). 원장이 11월에 시작하면 2026-12 첫 Release 는 방법·건수 예고만 싣고, 적중률 숫자는 스냅샷 3회가 쌓인 뒤에 나온다(빨라도 2027-01)."));
   assert.ok(doc.includes("> 결과가 나빠도 공개하고, 공칭에서 벗어난 칸은 범위를 비운다"));
 });
