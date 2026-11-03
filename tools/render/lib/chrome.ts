@@ -3,7 +3,7 @@
 // 쓰는 쪽: lib/style-equal.ts(화면 동일 증빙). #278 PR A의 렌더 검사 도구가 이 파일과 serve.ts를 이어받는다.
 //
 // 바깥 요청은 기본으로 막는다(allowOrigin 밖은 전부 실패 처리). 이유가 둘이다.
-//   1. 페이지의 analytics.js가 GA·애드센스 로더를 부른다 — 측정이 실제 속성에 조회수를 쌓으면 안 된다(#247 관찰 중).
+//   1. 페이지의 analytics.js가 GA 로더를 부른다 — 측정이 실제 속성에 조회수를 쌓으면 안 된다(#247 관찰 중).
 //   2. 환율 API 같은 바깥 응답이 화면을 흔들면 같은 입력에서도 결과가 갈린다.
 import { spawn } from "node:child_process";
 import { createWriteStream, existsSync } from "node:fs";

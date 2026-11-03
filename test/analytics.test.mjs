@@ -79,7 +79,7 @@ async function loadAnalytics({
   };
 }
 
-test("페이지뷰 자동 전송은 꺼두고 로더가 gtag/adsense를 붙인다", async () => {
+test("페이지뷰 자동 전송은 꺼두고 로더가 gtag만 붙인다 - 광고 로더 없음", async () => {
   const a = await loadAnalytics();
 
   const config = a.calls().find(([kind]) => kind === "config");
@@ -95,11 +95,11 @@ test("페이지뷰 자동 전송은 꺼두고 로더가 gtag/adsense를 붙인�
 
   const srcs = a.scriptSrcs();
   assert.ok(srcs.some((s) => s.includes("googletagmanager.com/gtag/js?id=G-")));
-  assert.ok(srcs.some((s) => s.includes("adsbygoogle.js?client=ca-pub-")));
+  assert.ok(!srcs.some((s) => /adsbygoogle|pagead2|googlesyndication/.test(s)), "광고 로더가 붙었다");
 });
 
-// 로컬 가드(#466): 호스트가 정확히 이 셋일 때만 GA·AdSense script를 안 붙인다. location.hostname 은
-// 브라우저에서 IPv6 를 대괄호째 준다. 근접 오탐(접두·접미·부분 일치)은 운영처럼 두 개가 붙어야 한다.
+// 로컬 가드(#466): 호스트가 정확히 이 셋일 때만 GA script를 안 붙인다. location.hostname 은
+// 브라우저에서 IPv6 를 대괄호째 준다. 근접 오탐(접두·접미·부분 일치)은 운영처럼 GA 하나가 붙어야 한다.
 const LOCAL_HOSTS = ["localhost", "127.0.0.1", "[::1]"];
 const NOT_LOCAL_HOSTS = [
   "kyhsa93.github.io",
@@ -119,7 +119,7 @@ function hostHref(host) {
   return `http://${host}/rates.html`;
 }
 
-test("로컬 호스트에서는 GA·AdSense script를 안 붙이되 analytics API는 no-op으로 남는다", async () => {
+test("로컬 호스트에서는 GA script를 안 붙이되 analytics API는 no-op으로 남는다", async () => {
   for (const hostname of LOCAL_HOSTS) {
     const a = await loadAnalytics({ href: hostHref(hostname), hostname });
     assert.deepEqual(a.scriptSrcs(), [], `${hostname}에서 script가 붙었다`);
@@ -138,16 +138,15 @@ test("로컬 호스트에서는 GA·AdSense script를 안 붙이되 analytics AP
   }
 });
 
-test("운영·근접 오탐 호스트는 script 둘을 그대로 붙인다", async () => {
+test("운영·근접 오탐 호스트는 GA script 하나만 붙인다 - 광고 로더 없음", async () => {
   for (const hostname of NOT_LOCAL_HOSTS) {
     const a = await loadAnalytics({ href: hostHref(hostname || "x.test"), hostname });
     assert.deepEqual(
       a.scriptSrcs(),
       [
         "https://www.googletagmanager.com/gtag/js?id=G-Z1LH7S1ZE5",
-        "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1195159445218373",
       ],
-      `${JSON.stringify(hostname)}에서 script 둘이 정확히 붙어야 한다`
+      `${JSON.stringify(hostname)}에서 GA script 하나만 붙어야 한다`
     );
   }
 });
@@ -159,7 +158,7 @@ test("양성 대조: 가드 줄을 빼면 로컬 호스트에서도 script가 �
   };
   for (const hostname of LOCAL_HOSTS) {
     const a = await loadAnalytics({ href: hostHref(hostname), hostname, transform: stripped });
-    assert.equal(a.scriptSrcs().length, 2, `${hostname}: 가드를 빼도 안 붙으면 로컬 시험이 아무것도 안 잡는다`);
+    assert.equal(a.scriptSrcs().length, 1, `${hostname}: 가드를 빼도 안 붙으면 로컬 시험이 아무것도 안 잡는다`);
   }
 });
 

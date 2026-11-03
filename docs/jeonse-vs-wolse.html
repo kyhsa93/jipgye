@@ -115,7 +115,7 @@
       <span aria-hidden="true"> · </span>
       <a href="./method.html" id="footer-method">숫자를 만드는 방법</a>
       <span aria-hidden="true"> · </span>
-      <a href="https://kyhsa93.github.io/privacy-policy" id="footer-privacy" target="_blank" rel="noopener">개인정보처리방침</a>
+      <a href="https://kyhsa93.github.io/privacy-policy" id="footer-privacy" target="_blank" rel="noopener noreferrer">개인정보처리방침</a>
     </div>
   </footer>
 </main>
@@ -508,7 +508,7 @@ function syncUrl() {
   const next = new URLSearchParams(location.search);
   next.set("district", district);
   next.set("band", bandKey);
-  next.set("cash", String(Math.round((cash10k / EOK) * 100) / 100));
+  next.delete("cash"); // 주소·공유에 안 남긴다(#818)
 
   const url = `${location.pathname}?${next.toString()}`;
   if (url !== `${location.pathname}${location.search}`) history.replaceState(null, "", url);

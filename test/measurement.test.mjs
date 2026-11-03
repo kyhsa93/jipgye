@@ -10,12 +10,13 @@ const watch = await read("docs/watchlist.js");
 const conversion = await read("docs/jeonse-vs-wolse.html");
 const renewal = await read("docs/renewal-vs-new.html");
 
-function runtime({ query = "", items = new Map(), blocked = false, hostname = "kyhsa93.github.io" } = {}) {
+function runtime({ query = "", items = new Map(), blocked = false, hostname = "kyhsa93.github.io", history } = {}) {
   const timers = new Map();
   let next = 0;
   const scripts = [];
   const context = vm.createContext({
     window: {}, URL, URLSearchParams,
+    ...(history ? { history } : {}),
     location: { href: `https://${hostname}/jipgye/${query}`, search: query, hostname },
     document: { title: "집계", querySelector: () => null, createElement: () => ({}), head: { appendChild: (s) => scripts.push(s) } },
     localStorage: {
@@ -59,6 +60,65 @@ test("제어 플래그와 자유 입력을 전송 URL에서 제거한다", () =>
   assert.equal(a.events("watchlist_add")[0].page_location, a.config().page_location);
 });
 
+/** replaceState 를 적어 두는 history. */
+function recordingHistory(state) {
+  const calls = [];
+  return { calls, history: { state, replaceState: (s, _, url) => calls.push({ state: s, url: String(url) }) } };
+}
+
+function runtimeWithReferrer(referrer) {
+  const context = vm.createContext({
+    window: {}, URL, URLSearchParams,
+    location: { href: "https://kyhsa93.github.io/jipgye/", search: "", hostname: "localhost" },
+    document: { title: "집계", referrer, querySelector: () => null, createElement: () => ({}), head: { appendChild() {} } },
+    localStorage: { getItem: () => null, setItem() {} },
+    setTimeout() {}, clearTimeout() {},
+  });
+  vm.runInContext(source, context);
+  const layer = JSON.parse(JSON.stringify(context.window.dataLayer.map((a) => Array.from(a))));
+  return { config: () => layer.find(([n]) => n === "config")[2] };
+}
+
+test("사이트 검색 키 다섯은 gtag 보다 먼저 주소에서 지우고 history.state 는 그대로 둔다 (#818)", () => {
+  const state = { keep: 1 };
+  const h = recordingHistory(state);
+  const a = runtime({ query: "?q=a&s=b&search=c&query=d&keyword=e&district=nowon&apt=x", history: h.history });
+  assert.equal(h.calls.length, 1);
+  assert.equal(h.calls[0].state, state);
+  assert.equal(h.calls[0].url, "https://kyhsa93.github.io/jipgye/?district=nowon&apt=x");
+  assert.equal(a.config().page_location, "https://kyhsa93.github.io/jipgye/?district=nowon");
+});
+
+test("gtag 를 시작하기 전에 주소를 지운다 - 첫 hit 부터 검색어가 없다 (#818)", () => {
+  const order = [];
+  const history = { state: null, replaceState: () => order.push("replaceState") };
+  const context = vm.createContext({
+    window: {
+      set dataLayer(value) { order.push("dataLayer"); this._layer = value; },
+      get dataLayer() { return this._layer; },
+    },
+    URL, URLSearchParams, history,
+    location: { href: "https://kyhsa93.github.io/jipgye/?s=a", search: "?s=a", hostname: "localhost" },
+    document: { title: "집계", querySelector: () => null, createElement: () => ({}), head: { appendChild() {} } },
+    localStorage: { getItem: () => null, setItem() {} },
+    setTimeout() {}, clearTimeout() {},
+  });
+  vm.runInContext(source, context);
+  assert.deepEqual(order, ["replaceState", "dataLayer"]);
+});
+
+test("검색 키가 없으면 주소를 건드리지 않는다 - GA 목록의 값은 전송 주소에서만 지운다 (#818)", () => {
+  const h = recordingHistory(null);
+  const a = runtime({ query: "?compare=x&from=y&budget=1&max=2&deposit=3&rent=4&apt=z&dong=w&cash=5&district=nowon", history: h.history });
+  assert.deepEqual(h.calls, []);
+  assert.equal(a.config().page_location, "https://kyhsa93.github.io/jipgye/?district=nowon");
+});
+
+test("앞 장 주소도 같은 규칙으로 지운다 - 검색 키와 금액·비교 단지 (#818)", () => {
+  const context = runtimeWithReferrer("https://kyhsa93.github.io/jipgye/a.html?s=a&keyword=b&compare=x&from=y&budget=1&max=2&deposit=3&rent=4&district=nowon");
+  assert.equal(context.config().page_referrer, "https://kyhsa93.github.io/jipgye/a.html?district=nowon");
+});
+
 test("입력 연속 변경은 마지막 표시 결과만 세고 재렌더는 중복 계산하지 않는다", () => {
   const a = runtime();
   a.api.result("renewal_vs_new", "private signature 1", { result_scope: "matched_complex" });
@@ -84,7 +144,7 @@ test("결과가 무효해지면 예약 이벤트를 취소하고 이후 유효�
   assert.equal(a.events("calculator_result")[0].result_status, "success");
 });
 
-test("로컬에서 외부 분석·광고 스크립트를 붙이지 않는다", () => {
+test("로컬에서 외부 분석 스크립트를 붙이지 않는다", () => {
   assert.deepEqual(runtime({ hostname: "localhost" }).scripts, []);
 });
 

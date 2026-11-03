@@ -133,14 +133,25 @@ test("자치구를 바꾸면 그 자치구에 있는 면적대만 고를 수 있
   assert.ok(!page.bandOptions().includes("under60"), "강남구에 없는 면적대가 남아 있다");
 });
 
-test("고른 조건이 주소에 남아 새로고침해도 그대로다", async () => {
+test("고른 구·면적은 주소에 남고 가진 돈은 남지 않는다 (#818)", async () => {
   const page = await open();
   await page.chooseDistrict("강남구");
   await page.typeCash(7.5);
 
   const search = page.search();
   assert.match(search, /district=%EA%B0%95%EB%82%A8%EA%B5%AC|district=강남구/);
-  assert.match(search, /cash=7\.5/);
+  assert.match(search, /band=/);
+  assert.ok(!/cash=/.test(search), `가진 돈이 주소에 남았다: ${search}`);
+});
+
+test("옛 링크의 cash 는 칸에 먼저 채우고 주소에서 지운다 - 다른 값은 그대로 (#818)", async () => {
+  const page = await open({ query: "?district=강남구&band=60to85&cash=7.5&compare=x" });
+
+  assert.equal(Number(page.byId("cash-input").value), 7.5);
+  const search = page.search();
+  assert.ok(!/cash=/.test(search), `옛 링크의 가진 돈이 주소에 남았다: ${search}`);
+  assert.match(search, /band=60to85/);
+  assert.match(search, /compare=x/);
 });
 
 test("첫 문단은 빌드가 만든 문장을 그대로 쓴다", async () => {
