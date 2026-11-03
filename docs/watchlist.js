@@ -48,7 +48,8 @@
   let msg = "";
   const same = (e, gu, apt) => e[0] === gu && squash(e[1]) === squash(apt);
   const id = (gu, apt) => `${gu}|${squash(apt)}`;
-  const keys = (list, apt) => list.filter((d) => squash(d?.apt) === squash(apt)).map((d) => `${d.date}|${d.area}|${d.floor}|${d.amount10k}`);
+  const under = (d, apt) => String(d?.apt).startsWith(`${apt} (`);
+  const keys = (list, apt) => list.filter((d) => squash(d?.apt) === squash(apt) || under(d, apt)).map((d) => `${d.date}|${d.area}|${d.floor}|${d.amount10k}`);
 
   function deals(gu) {
     const f = fullDeals.get(gu);
@@ -77,7 +78,7 @@
   function toggle() {
     const apt = window.cardApt;
     const on = L.some((e) => same(e, district, apt));
-    const next = on ? L.filter((e) => !same(e, district, apt)) : [...L, [district, apt, keys(fullDeals.get(district) || [], apt)]];
+    const next = on ? L.filter((e) => !same(e, district, apt)) : [...L.filter((e) => e[0] !== district || !under({ apt }, e[1])), [district, apt, keys(fullDeals.get(district) || [], apt)]];
     msg = "";
     if (!on && L.length >= CAP) msg = m().cap;
     else if (put(next)) {

@@ -9,6 +9,7 @@ import {
 import { budgetFacts } from "./budget-facts.ts";
 import { buildDealFiles, dealFileName, periodOf } from "./deal-files.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
+import { readSameNames } from "./realestate-raw.ts";
 import { readDealSource } from "./realestate-source.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -97,7 +98,7 @@ function withFacts(bands, deals, now) {
 }
 
 async function writeDealFiles(source, now) {
-  const files = buildDealFiles(source, now);
+  const files = buildDealFiles(source, now, undefined, undefined, await readSameNames());
   if (!files) return;
 
   await mkdir(dealFilesDir, { recursive: true });

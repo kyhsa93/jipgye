@@ -15,7 +15,7 @@ import {
   summarizeSaleItems,
 } from "./realestate-metrics.ts";
 import { MIN_SAMPLE, hasEnoughSample } from "./realestate-format.ts";
-import { itemKey, readSlotFile } from "./realestate-raw.ts";
+import { itemKey, readSameNames, readSlotFile } from "./realestate-raw.ts";
 import { TREND_MONTHS, windowMonths } from "./realestate-slots.ts";
 import {
   FILING_GRACE_DAYS,
@@ -236,7 +236,7 @@ async function writeTrend(now) {
 
 async function writeRentFiles(now) {
   const source = await readRentSource(now);
-  const files = buildRentFiles(source, now);
+  const files = buildRentFiles(source, now, undefined, await readSameNames());
   if (!files || !Object.keys(files).length) return;
 
   await mkdir(rentFilesDir, { recursive: true });

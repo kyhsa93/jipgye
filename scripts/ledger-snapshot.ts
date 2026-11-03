@@ -7,7 +7,7 @@
  * 무엇을 싣나(허용 키는 ALLOWED 뿐 - 밖의 키가 하나라도 있으면 쓰기 전에 실패한다):
  *  - meta: v·s·sourceCommit·prereg·license{sale,rent,checkedOn}·counts
  *  - c6(지난 범위 얼림, PREREG 3절): 소스 커밋의 docs/data/complex-price-*.json 이 낸 칸 가운데 n≥3 만, 값을 그대로 옮긴다(재계산 금지).
- *    단지명은 `구코드|단지명` sha256 앞 16자(h)로만 남고, 동·층·일자·top·yearAgo·raw·median 은 싣지 않는다. band 는 칸 median 의 가격대(1~5).
+ *    단지는 `구코드|칸 키` sha256 앞 16자(h)로만 남고(칸 키는 소스 파일의 cells 이름 - 메타 v2 부터 동명 단지는 「단지명 (동)」, complex-id.ts), 동·층·일자·top·yearAgo·raw·median 은 싣지 않는다. band 는 칸 median 의 가격대(1~5).
  *  - c1(신고 도착 삼각표, PREREG 5절): 같은 커밋 raw 의 arrivals 로 계약월(≥202610) × 구 × 종류 × 경과일 구간의 행 수와, 그 구간에서 해제·등기를
  *    처음 관측한 행 수. 행이 바뀌면(해제·등기가 붙으면) 수집기가 그 행을 새 키로 다시 도장 찍으므로(realestate-raw.ts trackArrivals) 지금 행의 도착일이
  *    곧 해제·등기를 처음 본 날이다. 전월세 원본에는 해제·등기 열이 없어 rent 줄에는 cancel·rgst 를 싣지 않는다(셀 수 없는 열은 빼고 보고 - 판정 ④).
@@ -30,6 +30,10 @@ import { DISTRICTS } from "./realestate-districts.ts";
 import { itemKey } from "./realestate-raw.ts";
 
 export const VERSION = 1;
+// #821: 2026-12 소스부터 complex-price 가 동명 단지를 동으로 가른다. 칸 정의가 달라지므로 그 달부터 meta.v 를 올린다 - 값을 고치지 않고 표시만 한다.
+// 달로 가르는 것은 이미 쓴 달을 다시 계산했을 때 정본 해시가 그대로여야 해서다(같은 달 재실행은 해시가 다르면 실패한다). 이름이 유일한 칸의 h 는 두 버전에서 같다.
+export const KEY_V2_FROM = "2026-12";
+export const versionFor = (month) => (month >= KEY_V2_FROM ? 2 : VERSION);
 export const LICENSE_OK = "제한 없음";
 // PREREG v1 병합 커밋(#584). 소스 커밋의 조상이어야 한다 - 사전 등록이 얼림보다 먼저다.
 export const PREREG_COMMIT = "d1dcaaf73e441e88c2813e580f09839eabb65c46";
@@ -152,7 +156,7 @@ export function buildLedger({ month, sourceCommit, license, complexFiles, rawSlo
   const c1 = c1Lines(s, rawSlots);
   const meta = {
     meta: {
-      v: VERSION,
+      v: versionFor(month),
       s,
       sourceCommit,
       prereg,

@@ -18,6 +18,7 @@
  * 그 문장을 아예 갖지 않는다.
  */
 
+import { complexName } from "./complex-id.ts";
 import { SOURCES } from "./source-lines.ts";
 
 /**
@@ -74,7 +75,8 @@ export function districtFacts(dealFile) {
   // 가장 비싸게 팔린 것. 이건 문턱이 없다 — 구마다 다른 단지가 나오고, 비중과 달리
   // 표본이 얇아도 거짓말을 하지 않는다. 실제로 그 값에 팔린 한 건이다.
   const top = deals.reduce((a, b) => (b.amount10k > a.amount10k ? b : a));
-  facts.top = { dong: top.dong, apt: top.apt, area: top.area, amount10k: top.amount10k };
+  // 문장이 동을 바로 앞에 따로 적으므로 단지 키(#821)의 동은 뗀다 - 「사근동 벽산 (사근동)」이 되지 않게.
+  facts.top = { dong: top.dong, apt: complexName(top.apt, top.dong), area: top.area, amount10k: top.amount10k };
 
   if (deals.length < MIN_DEALS) return facts;
 
@@ -113,7 +115,7 @@ export function districtFacts(dealFile) {
   const topAptShare = share(topAptCount, deals.length);
   if (topAptShare >= 0.05) {
     const [dong, apt] = topAptKey.split("|");
-    facts.oneComplex = { dong, apt, count: topAptCount, share: topAptShare };
+    facts.oneComplex = { dong, apt: complexName(apt, dong), count: topAptCount, share: topAptShare };
   }
 
   const direct = share(deals.filter((d) => d.direct).length, deals.length);

@@ -10,6 +10,7 @@
  * 공개 단위는 칸 집계다. 건별 값·보증금 금액은 싣지 않는다(판정 7). 신규 쪽만 같은 평형 신규 전세의 중앙값과 건수를 싣는다(판정 3).
  */
 
+import { complexKey } from "./complex-id.ts";
 import { areaGroups, MIN_DEALS } from "./complex-price.ts";
 import { bandOf as areaBandOf } from "./conversion.ts";
 import { MIN_DEALS_PER_SIDE, median } from "./complex-ratio.ts";
@@ -41,7 +42,7 @@ export function bandOf(deposit: number, preDeposit: number) {
  * 원본 한 줄을 갱신 짝으로. 순수 전세 갱신만이다(판정 3, v0): 갱신이라고 적혔고, 종전 보증금이 있고, 지금·종전 월세가 모두 0.
  * 반전세 짝은 보증금과 월세를 한 값으로 묶는 배수(전환율)를 가정해야 해서 뺀다(#652 계수: 82,170짝 v0 제외).
  */
-export function renewalPair(item) {
+export function renewalPair(item, same = undefined) {
   if (String(item?.contractType ?? "").trim() !== "갱신") return null;
   const apt = String(item?.aptNm ?? "").trim();
   const area = Number(item?.excluUseAr);
@@ -50,7 +51,7 @@ export function renewalPair(item) {
   if (!apt || !(area > 0) || !(deposit > 0) || !(preDeposit > 0)) return null;
   if (number(item?.monthlyRent) !== 0 || number(item?.preMonthlyRent) !== 0) return null;
   return {
-    apt,
+    apt: complexKey(apt, item?.umdNm, same),
     // complex-price.ts marketDeal 과 같은 자리수 - 같은 묶음 함수(areaGroups)에 넣는다.
     area: Math.round(area * 100) / 100,
     rr: String(item?.useRRRight ?? "").trim() === "사용",
@@ -59,13 +60,13 @@ export function renewalPair(item) {
 }
 
 /** complex-ratio.ts 의 신규 전세 규칙(갱신 아님·월세 0·보증금 있음)과 같은 줄. 금액은 칸 중앙값으로만 나간다. */
-export function newJeonse(item) {
+export function newJeonse(item, same = undefined) {
   if (String(item?.contractType ?? "").trim() === "갱신") return null;
   const apt = String(item?.aptNm ?? "").trim();
   const area = Number(item?.excluUseAr);
   const deposit = number(item?.deposit);
   if (!apt || !(area > 0) || !(deposit > 0) || number(item?.monthlyRent) !== 0) return null;
-  return { apt, area: Math.round(area * 100) / 100, deposit };
+  return { apt: complexKey(apt, item?.umdNm, same), area: Math.round(area * 100) / 100, deposit };
 }
 
 const emptyLine = () => ({ n: 0, down: 0, frozen: 0, low: 0, near: 0, over: 0 });
@@ -95,20 +96,20 @@ export const packLines = ({ rr, other }) => [...BANDS.map((b) => rr[b]), ...BAND
  *   칸 n < 3 은 cells 에 싣지 않는다(판정 9 ④) - 그 짝들은 fallback 에만 든다. 건수만이라도 남기면 강남구 gzip 이 12.3KB 로
  *   한도 10KB 를 넘었다(남긴 칸 487개·그 칸만 가진 단지 224곳의 이름 값). 화면은 목록에 없는 단지·평형을 자치구×면적대로 본다.
  *   fallback[면적대] = 앞 열 칸(두 줄) — 자치구×면적대(conversion.ts AREA_BANDS, 기존 상수).
- * 칸 = 단지명×면적 묶음(complex-price.ts areaGroups 를 그대로 - 1㎡ 첫 면적 규칙, 판정 2). 평형 이름은 묶음 이름(거래가 가장 많은 면적).
+ * 칸 = 단지 키(complex-id.ts, same: 그 구의 동명 단지)×면적 묶음(complex-price.ts areaGroups 를 그대로 - 1㎡ 첫 면적 규칙, 판정 2). 평형 이름은 묶음 이름(거래가 가장 많은 면적).
  * nw = 같은 칸 면적들의 신규 전세 건수와 중앙값(만원, n ≥ MIN_DEALS_PER_SIDE 일 때만 - complex-ratio 와 같은 문턱, 아니면 null).
  */
-export function districtCells(rentItems, newItems = []) {
+export function districtCells(rentItems, newItems = [], same = undefined) {
   const byApt = new Map();
   for (const item of rentItems ?? []) {
-    const pair = renewalPair(item);
+    const pair = renewalPair(item, same);
     if (!pair) continue;
     if (!byApt.has(pair.apt)) byApt.set(pair.apt, []);
     byApt.get(pair.apt).push(pair);
   }
   const newByApt = new Map();
   for (const item of newItems ?? []) {
-    const deal = newJeonse(item);
+    const deal = newJeonse(item, same);
     if (!deal) continue;
     if (!newByApt.has(deal.apt)) newByApt.set(deal.apt, []);
     newByApt.get(deal.apt).push(deal);

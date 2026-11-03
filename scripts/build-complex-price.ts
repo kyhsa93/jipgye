@@ -2,10 +2,11 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { districtCells, districtMeta, indexLevels, marketDeal, referenceMonth, windowStart, WINDOW_DAYS } from "./complex-price.ts";
 import { buildComplexHistorySoft } from "./build-complex-history.ts";
+import { keyedDeal } from "./complex-id.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { INDEX_FILE } from "./fetch-price-index.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
-import { readSlotFile } from "./realestate-raw.ts";
+import { readSameNames, readSlotFile } from "./realestate-raw.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { periods } from "./district-change.ts";
 import { shiftMonth } from "./outlook.ts";
@@ -28,7 +29,7 @@ async function readJson(file) {
  * 자치구마다 한 파일. 검색 화면은 고른 자치구의 것만 읽는다 - 서울 전체를 한 파일로 두면
  * 단지 하나를 보려고 수백 KB를 받는다.
  */
-export function buildFiles({ itemsByDistrict, yearAgoByDistrict = {}, yearAgoMonths = null, index, outlook, now }) {
+export function buildFiles({ itemsByDistrict, yearAgoByDistrict = {}, yearAgoMonths = null, index, outlook, now, sameNames = {} }) {
   const { levels, filled } = indexLevels(index, outlook);
   const reference = referenceMonth(levels);
   if (!reference) return null;
@@ -38,7 +39,9 @@ export function buildFiles({ itemsByDistrict, yearAgoByDistrict = {}, yearAgoMon
   for (const { code, name } of DISTRICTS) {
     const slug = DISTRICT_SLUGS[name];
     if (!slug) continue;
-    const deals = (itemsByDistrict[code] ?? []).map(marketDeal).filter((d) => d && d.date >= since);
+    // 칸은 complexKey 로 묶는다(#821). 아래 칸·메타·1년 전은 키가 든 apt 만 보고, 동명 단지가 없는 구는 입력이 그대로다.
+    const keyed = (d) => keyedDeal(d, sameNames[code]);
+    const deals = (itemsByDistrict[code] ?? []).map(marketDeal).filter((d) => d && d.date >= since).map(keyed);
     if (!deals.length) continue;
     files[slug] = {
       district: name,
@@ -51,7 +54,7 @@ export function buildFiles({ itemsByDistrict, yearAgoByDistrict = {}, yearAgoMon
       // 메운 달이 공식 지수보다 평균 얼마나 높게 나와 왔나(서울, %p). 화면 각주에 그대로 적는다.
       referenceBias: outlook?.regions?.find((r) => r.code === "200")?.nowcast?.bias ?? null,
       cells: districtCells(deals, levels, reference, {
-        yearAgo: (yearAgoByDistrict[code] ?? []).map(marketDeal).filter(Boolean),
+        yearAgo: (yearAgoByDistrict[code] ?? []).map(marketDeal).filter(Boolean).map(keyed),
         yearAgoMonths,
       }),
       meta: districtMeta(deals),
@@ -93,7 +96,7 @@ async function main() {
       })
     );
   }
-  const built = buildFiles({ itemsByDistrict, yearAgoByDistrict, yearAgoMonths: p?.base ?? null, index, outlook, now });
+  const built = buildFiles({ itemsByDistrict, yearAgoByDistrict, yearAgoMonths: p?.base ?? null, index, outlook, now, sameNames: await readSameNames() });
   if (!built) {
     console.log("  단지 가격 위치: 기준 달을 정하지 못해 건너뜀");
     return;

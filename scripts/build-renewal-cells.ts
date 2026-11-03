@@ -3,7 +3,7 @@ import path from "node:path";
 import { gzipSync } from "node:zlib";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
-import { readSlotFile } from "./realestate-raw.ts";
+import { readSameNames, readSlotFile } from "./realestate-raw.ts";
 import { RETENTION_MONTHS, WINDOW_MONTHS as NEW_MONTHS } from "./realestate-slots.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { districtCells, THRESHOLDS } from "./renewal-cells.ts";
@@ -36,13 +36,13 @@ export const ALLOWED_FILES = new Set(Object.values(DISTRICT_SLUGS).map(renewalCe
 const itemsOf = (files) => files.filter((f) => f?.ok !== false && Array.isArray(f?.items)).flatMap((f) => f.items);
 
 /** 자치구별 파일 본문. DISTRICTS 순서 - 완료 순서가 출력 순서가 되지 않게. */
-export function buildFiles({ rentsByDistrict, newByDistrict = {}, months, now }) {
+export function buildFiles({ rentsByDistrict, newByDistrict = {}, months, now, sameNames = {} }) {
   const files = {};
   for (const { code, name } of DISTRICTS) {
     const slug = DISTRICT_SLUGS[name];
     const rents = rentsByDistrict[code];
     if (!slug || !rents?.length) continue;
-    const { cells, fallback } = districtCells(rents, newByDistrict[code] ?? []);
+    const { cells, fallback } = districtCells(rents, newByDistrict[code] ?? [], sameNames[code]);
     if (!Object.keys(cells).length) continue;
     files[slug] = { updatedAt: now.toISOString(), window: [months[0], months.at(-1)], min: THRESHOLDS, cells, fallback };
   }
@@ -103,7 +103,7 @@ export async function runRenewalCells({ now = new Date(), dir = dataDir, rawDir 
         return newMonths.includes(ym);
       });
     }
-    const files = buildFiles({ rentsByDistrict, newByDistrict, months, now });
+    const files = buildFiles({ rentsByDistrict, newByDistrict, months, now, sameNames: await readSameNames(rawDir) });
     if (!Object.keys(files).length) {
       warn("갱신 짝이 하나도 없음");
       return { written, warnings };
