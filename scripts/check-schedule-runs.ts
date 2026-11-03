@@ -69,10 +69,27 @@
  *   - ⚠️ 허용된 잔여 위험: 배포가 완전히 멈춰도 경보는 마지막 성공 뒤 54h + 워치독 틱 간격(최대 12h) ≈ 54~66h 에야 온다. 그 사이 사이트는 낡은 채다.
  *     그리고 워치독 자신의 cron 이 버려지면 눈이 없다(워치독 머리 주석의 한계 그대로).
  *
+ * 같은 `--check=deploy` 의 둘째 규칙 — **「Deploy site 연속 2회 실패」** (#822):
+ *   10-30 사고: 첫 실패 10-30 02:36Z 부터 복구 10-31 05:40Z 까지 빨간 run 이 4번 났고 사이트는 49.1h 멈췄는데, 위 54h 창 아래라 워치독은 한 번도 안 울었다. #530 의 전제
+ *   「하루 실패(단발)는 이미 빨간 run 이 운다」는 그 run 을 보는 사람이 있을 때만 맞다 - 그래서 창을 줄이지 않고(#530 재개가 아니다) 규칙을 하나 더한다.
+ *   **「연속 2회」의 뜻 - 달력 이틀도, 같은 커밋 두 번도 아니다:**
+ *   - 단위: run 하나(`id`)가 한 회다. 재실행(attempt)은 같은 회이고 **그 run 의 지금 결론**을 쓴다. 재실행이 성공하면 그 실패는 없어지고, 재실행이 실패해도 한 회다 - 재실행을 눌렀다면
+ *     이미 누가 보고 있는 것이고 이 규칙이 메우는 자리는 「아무도 안 보는 빨간 run」이다. API 는 run 목록에 마지막 attempt 만 준다(실측 41562029140: attempt 2 success, created_at 그대로).
+ *   - 순서: `created_at`(트리거 순). 재실행해도 안 바뀌어 옛 run 을 다시 돌려도 순서가 뒤집히지 않는다. 같은 초면 id 로 가른다.
+ *   - 무엇을 세는가: `DEPLOY_EVENTS` 의 run 을 최근 것부터 보며 성공을 만날 때까지의 실패 수. 취소·건너뜀·진행 중은 **끊지도 더하지도 않는다**(취소는 정상 운영의 일부고, 진행 중인 재실행은 결론이 없다).
+ *     dispatch 는 54h 규칙과 같은 이유로 안 센다.
+ *   - 시간 창이 없다: 28분 간격 두 번(10-30 02:36Z·03:04Z)도 2회다. Daily·Summarize 가 끝날 때마다 배포가 돌아 같은 원인이면 그날 안에 둘이 찬다. 달력 이틀로 읽으면 재생에서 한 번도 안 운다(아래).
+ *   - 실패로 치는 결론: `DEPLOY_FAILURE_CONCLUSIONS`. run 결론만 본다 - 「데이터 건강 점검 실패 반영」만 빨간 run 은 사이트가 나갔어도 실패로 센다(deploy.yml 비차단 단계, 실례 40692163551).
+ *     그래서 문구가 「멈췄다」가 아니라 「연속 실패」이고, 실패 단계를 먼저 보라고 적는다. 빨간 run 이 사람 없이 이어지는 것 자체가 이 규칙이 잡으려는 모양이다.
+ *   재생(test/fixtures/watchdog/deploy-history-2026-11-03.json, Deploy 208 run·실제 워치독 틱 20개, 10-23~11-03): 실제 틱에서 10-30 11:32Z·21:37Z 둘만 운다(첫 실패 뒤 8h55m44s). 조건이 참인 구간은
+ *   10-30 03:06Z~10-31 05:40Z 와 11-01 02:40Z~03:02Z(22.5분, 지나간 틱 없음) 둘뿐이고, 단발 실패 구간 넷(10-24 둘·10-28·11-03 41562029140)은 안 든다. 달력 이틀 규칙은 실제 틱 0회다.
+ *   ⚠️ 실제 틱만 보면 1회 규칙도 같은 둘만 운다 - 틱이 단발 구간을 우연히 비껴갔다. 2회를 고른 근거는 틱 결과가 아니라 구간 수(1회 6구간·2회 2구간)다. 표본 11일이다.
+ *   ⚠️ 허용된 잔여 위험: 실제 틱 간격이 9.3~16.5h(같은 고정본 19간격)라 그보다 짧은 2회 구간은 틱이 비껴가면 안 운다 - 그런 구간은 이미 복구된 것이다. 틱 자체가 버려지면 눈이 없는 것은 위와 같다.
+ *
  * 사용:
  *   node scripts/check-schedule-runs.ts                       # GitHub API 조회, 지금 기준
  *   node scripts/check-schedule-runs.ts --check=success       # 「뜨지만 매번 실패」 - 지난 54시간에 성공이 0이면 실패
- *   node scripts/check-schedule-runs.ts --check=deploy        # 「배포가 조용히 멈춤」 - 지난 54시간 Deploy site 성공이 0이면 실패
+ *   node scripts/check-schedule-runs.ts --check=deploy        # 「배포가 조용히 멈춤」 - 지난 54시간 Deploy site 성공이 0이거나 연속 2회 실패면 실패
  *   node scripts/check-schedule-runs.ts --runs-file runs.json --now 2026-08-27T04:00:00Z
  *   node scripts/check-schedule-runs.ts --count=success --window-hours=24
  *
@@ -216,6 +233,30 @@ export const DEPLOY_EVENTS = ["push", "workflow_run"];
 /** 배포 워크플로 파일. 이름(`name:`)은 `Deploy site` 다. */
 export const DEPLOY_WORKFLOW = ".github/workflows/deploy.yml";
 
+/** 이 수만큼 연이어 실패하면 운다(#822, 뜻은 머리 주석). 값을 바꾸면 재생 시험이 소리 난다 - cto 재판정. */
+export const DEPLOY_FAILURE_STREAK = 2;
+
+/** 배포가 안 나간 결론. 이력 208 run 에는 failure 만 있었고(나머지 둘은 0건), timed_out·startup_failure 도 같은 뜻이라 함께 센다. 그 밖(cancelled·skipped·neutral 등)은 실패가 아니다. */
+export const DEPLOY_FAILURE_CONCLUSIONS = ["failure", "timed_out", "startup_failure"];
+
+/**
+ * 가장 최근 성공 뒤로 이어진 실패 수(#822). `(.., now]` 안의 `DEPLOY_EVENTS` run 을 `created_at` 내림차순으로 보며 성공에서 멈춘다.
+ * 취소·건너뜀·진행 중(conclusion 없음)은 끊지도 더하지도 않는다. 받은 목록(API 100건)보다 더 뒤는 보지 않는다 - 문턱 2 에는 넘친다.
+ */
+export function deployFailureStreak(runs, { now, events = DEPLOY_EVENTS }: { now: number | string; events?: string[] }) {
+  const end = typeof now === "number" ? now : Date.parse(now);
+  if (!Number.isFinite(end)) throw new Error(`--now 를 못 읽었다 (${JSON.stringify(now)})`);
+  const newest = runs
+    .filter((r) => (!r.event || events.includes(r.event)) && at(r) <= end)
+    .sort((a, b) => at(b) - at(a) || Number(b.id) - Number(a.id));
+  const failures = [];
+  for (const r of newest) {
+    if (r.conclusion === "success") break;
+    if (DEPLOY_FAILURE_CONCLUSIONS.includes(r.conclusion)) failures.push(r);
+  }
+  return { count: failures.length, runs: failures };
+}
+
 export function parseArgs(argv) {
   const opts = {
     workflow: ".github/workflows/daily-update.yml",
@@ -274,21 +315,34 @@ export async function main(
         });
 
   if (opts.check === "deploy") {
-    // 「배포가 조용히 멈춤」(#530): 창 안 Deploy site 성공이 0이냐만 본다. cron 수·--count 는 무관하다.
-    const w = countInWindow(await loadRuns(), { now: opts.now ?? Date.now(), windowHours: opts.windowHours, events: DEPLOY_EVENTS });
+    // 규칙 둘: 「배포가 조용히 멈춤」(#530, 창 안 성공 0)과 「연속 2회 실패」(#822). 한쪽이 울어도 다른 쪽을 마저 본다 - 서로를 가리지 않는다. cron 수·--count 는 무관하다.
+    const runs = await loadRuns();
+    const now = opts.now ?? Date.now();
+    const w = countInWindow(runs, { now, windowHours: opts.windowHours, events: DEPLOY_EVENTS });
     const sv = successVerdict({ success: w.success });
+    const streak = deployFailureStreak(runs, { now });
     log(`창: ${w.start} ~ ${w.end} (${opts.windowHours}시간, created_at 축, 끝만 포함, 이벤트 ${DEPLOY_EVENTS.join("·")})`);
     log(`창 안 Deploy site 실행 ${w.fired} · 그중 성공 ${w.success} · 문턱: 성공 ${sv.expected}회 이상`);
     for (const r of w.runs) log(`  - ${r.created_at} ${r.event ?? "?"} ${r.conclusion ?? r.status ?? "?"} ${r.id ?? ""}`);
+    log(`마지막 성공 뒤 이어진 실패 ${streak.count}회 · 문턱: ${DEPLOY_FAILURE_STREAK}회(run 단위, 재실행은 같은 회)`);
     if (!sv.ok) {
       error(
         `::error::Deploy site 가 멈춘 것 같다 - 지난 ${opts.windowHours}시간의 push·workflow_run 실행 중 성공이 0회다(실행 ${w.fired}회). ` +
           `Daily 가 초록이어도 사이트는 낡아 간다. Actions 에서 Deploy site 의 최근 run 과 트리거(push·Daily/Summarize 완료)를 확인한다. ` +
           `수동 dispatch 는 롤백 전용이라 경보를 덮지 못한다(#530)`,
       );
-      return 1;
     }
-    log("합격 - 창 안에 성공한 배포가 있다");
+    const streakRang = streak.count >= DEPLOY_FAILURE_STREAK;
+    if (streakRang) {
+      const first = streak.runs.at(-1);
+      error(
+        `::error::Deploy site 연속 ${streak.count}회 실패 - 마지막 성공 뒤 첫 실패 ${first.created_at}(run ${first.id ?? "?"}), 최근 실패 run ${streak.runs[0].id ?? "?"}. ` +
+          `실패 단계를 본다: 「사이트 생성」·「테스트」·「Pages에 배포」면 사이트는 직전 배포에 머물러 있고, 「데이터 건강 점검 실패 반영」만이면 사이트는 나갔다. ` +
+          `절차는 audit/갱신-사고-대응.md 의 Deploy red(#822)`,
+      );
+    }
+    if (!sv.ok || streakRang) return 1;
+    log("합격 - 창 안에 성공한 배포가 있고 연속 실패가 문턱 아래다");
     return 0;
   }
 

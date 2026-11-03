@@ -12,7 +12,7 @@ const script = path.join(root, "scripts/check-schedule-runs.ts");
 
 /**
  * 이 파일은 **고정 입력만 읽는다** - 네트워크도, 오늘 날짜도 보지 않는다(#8: 데이터·날짜에 따라
- * 갈리는 검사는 `npm test` 에 넣지 않는다). 실제 실행 이력에 대고 도는 대조군은 PR 증빙 쪽이다.
+ * 갈리는 검사는 `npm test` 에 넣지 않는다). 실제 실행 이력에 대고 도는 대조군은 PR 증빙 쪽이고, #822 재생만 동결한 이력을 고정 입력으로 읽는다.
  */
 
 // ── cron 수 세기 (문턱의 출처) ──────────────────────────────────────────────
@@ -491,4 +491,165 @@ test("deploy 검사 - main 이 API 경로에서 deploy.yml 을 이벤트 필터 
     assert.match(u, /\/workflows\/deploy\.yml\/runs\?per_page=100/);
     assert.doesNotMatch(u, /event=/, "event=schedule 을 걸면 Deploy site 는 늘 0 이라 영구 거짓 경보가 된다");
   }
+});
+
+// ── 「Deploy site 연속 2회 실패」: 같은 `--check=deploy` 의 둘째 규칙 (#822) ─────
+// 10-30 사고: 빨간 run 4번·사이트 49.1h 정지인데 54h 창 아래라 안 울었다. 합성 입력 + 동결한 실제 이력만 읽는다(네트워크·오늘 날짜 없음).
+
+import { DEPLOY_FAILURE_CONCLUSIONS, DEPLOY_FAILURE_STREAK, deployFailureStreak } from "../scripts/check-schedule-runs.ts";
+
+const streakOf = (runs, now = NOW) => deployFailureStreak(runs, { now }).count;
+
+test("연속 2회 - 창 안에 성공이 있어도 성공 뒤 실패가 둘이면 운다. 54h 경보와 문구가 다르다", async () => {
+  const r = await callDeploy([dep(5, "success"), dep(3, "failure", "workflow_run"), dep(2.5, "failure", "workflow_run")]);
+  assert.equal(r.status, 1, r.stdout + r.stderr);
+  assert.match(r.stderr, /::error::Deploy site 연속 2회 실패/);
+  assert.doesNotMatch(r.stderr, /멈춘 것 같다/);
+  assert.match(r.stdout, /이어진 실패 2회 · 문턱: 2회/);
+  assert.equal(DEPLOY_FAILURE_STREAK, 2);
+});
+
+test("연속 2회 - 단발 실패는 안 운다, 실패 뒤 성공이 오면 앞의 실패가 몇 번이든 안 운다", async () => {
+  const single = await callDeploy([dep(5, "success"), dep(1, "failure")]);
+  assert.equal(single.status, 0, single.stdout + single.stderr);
+  assert.equal(single.stderr, "");
+  const recovered = await callDeploy([dep(9, "success"), dep(8, "failure"), dep(7, "failure"), dep(6, "failure"), dep(1, "success")]);
+  assert.equal(recovered.status, 0, recovered.stdout + recovered.stderr);
+  // 복구 뒤 새 단발 실패 하나: 복구 전 실패와 합치지 않는다.
+  assert.equal(streakOf([dep(8, "failure"), dep(7, "failure"), dep(6, "success"), dep(1, "failure")]), 1);
+});
+
+test("연속 2회 - 입력 순서가 아니라 created_at 순이다, 같은 초면 id 로 가른다", () => {
+  assert.equal(streakOf([dep(1, "failure"), dep(5, "success"), dep(3, "failure")]), 2);
+  assert.equal(streakOf([dep(1, "success"), dep(5, "failure"), dep(3, "failure")]), 0);
+  const t = ago(1);
+  const same = [run(t, "failure", { id: 12, event: "push" }), run(t, "success", { id: 11, event: "push" }), run(ago(2), "failure", { id: 10, event: "push" })];
+  assert.equal(streakOf(same), 1, "같은 초의 성공(id 11)이 실패(id 12)보다 앞이라 실패 하나만 이어진다");
+});
+
+test("연속 2회 - 취소·건너뜀·진행 중은 연속을 끊지도 더하지도 않는다", async () => {
+  const between = await callDeploy([dep(5, "success"), dep(3, "failure"), dep(2.5, "cancelled"), dep(2.2, "skipped", "workflow_run"), dep(2, "failure", "workflow_run"), dep(0.1, null, "push", { status: "in_progress" })]);
+  assert.equal(between.status, 1, "실패 사이의 취소·건너뜀, 끝의 진행 중이 연속을 끊지 않는다");
+  assert.match(between.stderr, /연속 2회 실패/);
+  const added = await callDeploy([dep(5, "success"), dep(3, "failure"), dep(2, "cancelled"), dep(1, "skipped", "workflow_run"), dep(0.1, null, "push", { status: "queued" })]);
+  assert.equal(added.status, 0, "실패 하나에 취소·건너뜀·대기가 붙어도 2회가 아니다");
+});
+
+test("연속 2회 - 재실행은 같은 회다: 성공하면 실패가 없어지고, 재실행도 실패하면 한 회, 재실행 중이면 그 회는 결론이 없다", () => {
+  const before = dep(9, "success");
+  const failed = dep(3, "failure");
+  assert.equal(streakOf([before, failed, dep(2, "success", "push", { run_attempt: 2 })]), 0, "앞 run 이 재실행으로 성공: 뒤에 이어질 실패가 없다");
+  assert.equal(streakOf([before, dep(2, "failure", "push", { run_attempt: 3 })]), 1, "같은 run 을 세 번 돌려 다 실패해도 한 회다");
+  assert.equal(streakOf([before, failed, dep(2, null, "push", { run_attempt: 2, status: "in_progress" })]), 1);
+  // created_at 은 재실행해도 그대로라, 옛 run 을 다시 돌려 성공해도 그보다 뒤의 실패 수는 그대로다.
+  assert.equal(streakOf([dep(3, "success", "push", { run_attempt: 2 }), dep(2, "failure"), dep(1, "failure")]), 2);
+});
+
+test("연속 2회 - dispatch 는 연속을 끊지도 더하지도 않고, schedule 도 안 센다", () => {
+  assert.equal(streakOf([dep(3, "failure"), dep(2, "success", "workflow_dispatch"), dep(1, "failure", "workflow_run")]), 2, "손으로 돌린 성공이 자연 경로의 연속 실패를 덮지 못한다(#530 과 같은 이유)");
+  assert.equal(streakOf([dep(9, "success"), dep(2, "failure"), dep(1, "failure", "workflow_dispatch")]), 1);
+  assert.equal(streakOf([dep(9, "success"), dep(2, "failure"), dep(1, "failure", "schedule")]), 1);
+});
+
+test("연속 2회 - 실패로 치는 결론은 셋이고, 그 밖의 결론은 실패가 아니다", () => {
+  assert.deepEqual(DEPLOY_FAILURE_CONCLUSIONS, ["failure", "timed_out", "startup_failure"]);
+  assert.equal(streakOf([dep(9, "success"), dep(3, "timed_out"), dep(2, "startup_failure"), dep(1, "failure")]), 3);
+  assert.equal(streakOf([dep(9, "success"), dep(3, "neutral"), dep(2, "stale"), dep(1, "action_required")]), 0);
+});
+
+test("연속 2회 - 시간 창이 없다: 28분 간격도, 40시간 간격도 2회다. now 뒤의 run 은 안 본다", () => {
+  assert.equal(streakOf([dep(9, "success"), dep(3, "failure"), dep(3 - 28 / 60, "failure")]), 2);
+  assert.equal(streakOf([dep(50, "success"), dep(41, "failure"), dep(1, "failure")]), 2);
+  assert.equal(streakOf([dep(9, "success"), dep(3, "failure"), dep(-1, "failure")]), 1, "--now 재생에서 그 뒤에 만들어진 run 이 끼면 안 된다");
+  assert.throws(() => deployFailureStreak([], { now: "아무말" }), /--now/);
+  assert.throws(() => deployFailureStreak([{ id: 1, event: "push", created_at: "?", conclusion: "failure" }], { now: NOW }), /created_at/);
+});
+
+test("연속 2회 - 두 규칙은 서로를 가리지 않는다: 54h 도 넘고 연속 실패도 차면 경보가 둘 다 나온다", async () => {
+  const r = await callDeploy([dep(60, "success"), dep(3, "failure"), dep(2, "failure")]);
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /멈춘 것 같다/);
+  assert.match(r.stderr, /연속 2회 실패/);
+  assert.match(r.stderr, /run 2026-/, "마지막 성공 뒤 첫 실패 run 을 적는다");
+});
+
+// 실제 이력 재생. 어느 시각 t 의 API 가 보여 주었을 모양을 동결본에서 다시 만든다: t 에 시작한 마지막 attempt 의 결론, 그 attempt 가 안 끝났으면 진행 중(conclusion 없음).
+const history = JSON.parse(await readFile(path.join(root, "test/fixtures/watchdog/deploy-history-2026-11-03.json"), "utf8"));
+const snapshotAt = (t) => {
+  const ms = Date.parse(t);
+  return history.runs
+    .filter((r) => Date.parse(r.created_at) <= ms)
+    .map((r) => {
+      const started = r.attempts.filter(([, s]) => Date.parse(s) <= ms);
+      const [conclusion, , finished] = started.at(-1) ?? r.attempts[0];
+      const done = Date.parse(finished) <= ms;
+      return { id: r.id, event: r.event, created_at: r.created_at, status: done ? "completed" : "in_progress", conclusion: done ? conclusion : null };
+    });
+};
+const rings = (t) => deployFailureStreak(snapshotAt(t), { now: t }).count >= DEPLOY_FAILURE_STREAK;
+const iso = (ms) => new Date(ms).toISOString().replace(".000Z", "Z");
+
+test("재생(실제 틱) - 워치독 틱 20개 중 10-30 사고의 둘만 운다, 첫 실패 뒤 8시간 55분 44초 (#822 완료 조건 2)", () => {
+  assert.equal(history.runs.length, 208);
+  assert.equal(history.ticks.length, 20);
+  assert.deepEqual(history.ticks.filter(rings), ["2026-10-30T11:32:00Z", "2026-10-30T21:37:06Z"]);
+  assert.equal(Date.parse("2026-10-30T11:32:00Z") - Date.parse("2026-10-30T02:36:16Z"), (8 * 3600 + 55 * 60 + 44) * 1000);
+  // 옛 규칙(#530, 54h)은 같은 틱들에서 한 번도 안 운다 - 이 규칙을 더한 이유다.
+  const stale = history.ticks.filter((t) => successVerdict({ success: countInWindow(snapshotAt(t), { now: t, windowHours: DEPLOY_CHECK_WINDOW_HOURS, events: DEPLOY_EVENTS }).success }).ok === false);
+  assert.deepEqual(stale, []);
+});
+
+test("재생(모든 상태 변화) - 조건이 참인 구간은 10-30 사고와 11-01 의 22.5분 둘뿐이고, 단발 실패 구간에서는 어느 순간에도 안 운다", () => {
+  const instants = [...new Set(history.runs.flatMap((r) => [r.created_at, ...r.attempts.flatMap(([, s, f]) => [s, f])]).map(Date.parse))].sort((a, b) => a - b);
+  const intervals = (threshold) => {
+    const out = [];
+    let on = null;
+    for (const ms of instants) {
+      const hit = deployFailureStreak(snapshotAt(iso(ms)), { now: ms }).count >= threshold;
+      if (hit && on === null) on = ms;
+      if (!hit && on !== null) {
+        out.push([iso(on), iso(ms)]);
+        on = null;
+      }
+    }
+    assert.equal(on, null, "동결본 끝에서 조건이 켜진 채면 안 된다");
+    return out;
+  };
+  assert.deepEqual(intervals(DEPLOY_FAILURE_STREAK), [
+    ["2026-10-30T03:06:02Z", "2026-10-31T05:40:39Z"],
+    ["2026-11-01T02:40:22Z", "2026-11-01T03:02:54Z"],
+  ]);
+  // 1회 규칙이면 여섯 구간이다. 실제 틱은 단발 구간 넷을 우연히 비껴갔을 뿐이라 틱 결과로는 1·2 가 안 갈린다.
+  assert.deepEqual(intervals(1), [
+    ["2026-10-24T00:16:04Z", "2026-10-24T01:36:10Z"],
+    ["2026-10-24T04:14:21Z", "2026-10-24T04:21:28Z"],
+    ["2026-10-28T12:59:09Z", "2026-10-28T13:11:38Z"],
+    ["2026-10-30T02:37:38Z", "2026-10-31T05:40:39Z"],
+    ["2026-11-01T02:13:13Z", "2026-11-01T03:02:54Z"],
+    ["2026-11-03T01:48:56Z", "2026-11-03T01:53:11Z"],
+  ]);
+  assert.deepEqual(history.ticks.filter((t) => deployFailureStreak(snapshotAt(t), { now: t }).count >= 1), history.ticks.filter(rings));
+});
+
+test("재생(11-03 단발) - 41562029140: 1차 실패 뒤 재실행 전에 틱이 왔어도 안 운다, 재실행이 성공하면 실패가 사라진다", async () => {
+  const r = history.runs.find((x) => x.id === 41562029140);
+  assert.deepEqual(r.attempts, [
+    ["failure", "2026-11-03T01:47:36Z", "2026-11-03T01:48:56Z"],
+    ["success", "2026-11-03T01:53:11Z", "2026-11-03T01:54:48Z"],
+  ]);
+  assert.equal(history.runs.filter((x) => x.attempts.length > 1).length, 1, "동결본의 재실행은 이것 하나다");
+  for (const [t, expected] of [["2026-11-03T01:48:56Z", 1], ["2026-11-03T01:50:00Z", 1], ["2026-11-03T01:53:11Z", 0], ["2026-11-03T01:54:48Z", 0]]) {
+    assert.equal(deployFailureStreak(snapshotAt(t), { now: t }).count, expected, t);
+    const cli = await callDeploy(snapshotAt(t), [`--now=${t}`]);
+    assert.equal(cli.status, 0, `${t}: ${cli.stdout}${cli.stderr}`);
+  }
+});
+
+test("재생(CLI) - 사고 틱은 종료 1, 복구 뒤 첫 틱은 종료 0 (파일 → main → 종료 코드까지)", async () => {
+  const hit = await callDeploy(snapshotAt("2026-10-30T11:32:00Z"), ["--now=2026-10-30T11:32:00Z"]);
+  assert.equal(hit.status, 1, hit.stdout + hit.stderr);
+  assert.match(hit.stderr, /연속 2회 실패 - 마지막 성공 뒤 첫 실패 2026-10-30T02:36:16Z\(run 40992653615\), 최근 실패 run 40995314958/);
+  assert.doesNotMatch(hit.stderr, /멈춘 것 같다/, "54h 규칙은 이 틱에 안 운다");
+  const after = await callDeploy(snapshotAt("2026-10-31T11:04:53Z"), ["--now=2026-10-31T11:04:53Z"]);
+  assert.equal(after.status, 0, after.stdout + after.stderr);
 });
