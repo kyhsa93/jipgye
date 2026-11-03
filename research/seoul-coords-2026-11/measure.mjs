@@ -398,7 +398,7 @@ export function resolver(index, rent) {
   return base;
 }
 
-/** 여러 코드가 걸린 곳의 좌표 폭. 같은 지번의 코드들이 사실상 같은 자리면 역 거리는 어느 코드로 재도 같다. #823은 여러 코드 지번이 겹침을 6%p 깎았다. */
+/** 여러 코드가 걸린 곳의 좌표 폭. 같은 지번의 코드들이 사실상 같은 자리면 역 거리는 어느 코드로 재도 같다. #823은 여러 코드 지번이 겹침을 3.59%p(78.17−74.57) 깎았다. */
 export function spreadBucket(codes, apts) {
   const coords = [...codes].map((c) => apts.get(c)?.coord);
   if (coords.some((c) => !c?.inSeoul)) return "missingCoord";
