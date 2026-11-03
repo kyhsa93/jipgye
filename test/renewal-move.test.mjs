@@ -7,6 +7,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
+import { types } from "node:util";
 import vm from "node:vm";
 import { gzipSync } from "node:zlib";
 import { AREA_BANDS, LOAN_LTV, monthlyCost } from "../scripts/conversion.ts";
@@ -77,14 +78,14 @@ function seedFromHtml() {
   return seed;
 }
 
-async function open({ conversion = CONVERSION, locale = "ko", query = "", cells = CELLS, status, ga = false } = {}) {
+async function open({ conversion = CONVERSION, locale = "ko", query = "", cells = CELLS, status, ga = false, analyticsSource = ANALYTICS } = {}) {
   const data = { "renewal-facts": FACTS };
   if (conversion) data.conversion = conversion;
   if (cells) data["renewal-cells-songpa"] = cells;
   const page = await loadPage({ file: "renewal-vs-new.html", data, locale, query, status, seed: seedFromHtml() });
   page.data = data; // 시험이 나중에 응답을 바꿀 수 있게(다시 시도)
   // ga: 실제 docs/analytics.js 를 같은 자리에 올린다(전송 대신 window.dataLayer 에 쌓인다 - 그 안에 개인 입력이 없는지 본다).
-  if (ga) new vm.Script(ANALYTICS, { filename: "docs/analytics.js" }).runInContext(page.sandbox);
+  if (ga) new vm.Script(analyticsSource, { filename: "docs/analytics.js" }).runInContext(page.sandbox);
   new vm.Script(CALC, { filename: "docs/move-cost.js" }).runInContext(page.sandbox);
   new vm.Script(TEXT, { filename: "docs/move-text.js" }).runInContext(page.sandbox);
   new vm.Script(JS, { filename: "docs/renewal-move.js" }).runInContext(page.sandbox);
@@ -504,6 +505,15 @@ test("표본 부족은 두 줄 중 작은 쪽이 min.ratio 미만일 때 - 한 �
 
 // ---- P4: 계측 (#777 P4, audit/ga4-setup.md) ----
 const wait = (ms = 900) => new Promise((r) => setTimeout(r, ms)); // 화면·analytics.js 의 800ms 안정 대기보다 길게
+// docs/analytics.js 의 gtag("js", new Date()) 한 칸만 시각으로 친다. 칸이 더 붙었거나 글자로 바뀌었거나 다른 항목 안에 있으면 시각이 아니라 값이다.
+const isGaClock = (entry) => entry.length === 2 && entry[0] === "js" && types.isDate(entry[1]);
+// GA 로 나가는 값 전부의 글자에서 그 시각 한 칸만 뺀다(#831). 시각을 넣은 채 부분 문자열을 찾으면 `:44.37x` 같은 순간에 금리 4.37 로 잡힌다 -
+// 2026-11-03 Deploy site 가 이것으로 멈췄고, 찾는 값 넷이 겹치는 순간은 시험마다 60,000ms 중 120ms 다(초·밀리초 전수로 센 값). 다른 항목은 그대로 둔다.
+const gaSent = (page) => JSON.stringify(page.sandbox.dataLayer.filter((entry) => !isGaClock(entry)));
+const assertNotSent = (page, secrets) => {
+  const sent = gaSent(page);
+  for (const secret of secrets) assert.ok(!sent.includes(secret), `GA 로 ${secret} 가 나갔다`);
+};
 const events = (page, name) => JSON.parse(JSON.stringify((page.sandbox.dataLayer ?? []).map((a) => Array.from(a)))).filter(([k, n]) => k === "event" && n === name).map(([, , p]) => p);
 
 test("계측: 화면의 안정 대기 = analytics.js SEARCH_DEBOUNCE_MS", () => {
@@ -575,13 +585,18 @@ test("계측: 근거 상자를 처음 펼칠 때 한 번", async () => {
   assert.equal(events(page, "evidence_open").length, 1);
 });
 
-test("개인정보: 금액·금리·단지명은 GA 로 나가는 어떤 값에도 없다(page_location 포함)", async () => {
+const MONEY_SECRETS = ["40123", "141.7", "126543", "4.37", "3.21", "126000", "120000", "헬리오시티", encodeURIComponent("헬리오시티")];
+const moneyPage = async () => {
   const page = await open({ ga: true, query: Q("헬리오시티", "84.98") });
   await set(page, { ...CASE1, "mv-dep": "40123", "mv-rent": "141.7", "mv-cash": "126543", "mv-rate": "4.37", "mv-drate": "3.21", "mv-months": "27" });
   await page.click("mv-basis") ;
   await wait();
-  const sent = JSON.stringify(page.sandbox.dataLayer);
-  for (const secret of ["40123", "141.7", "126543", "4.37", "3.21", "126000", "120000", "헬리오시티", encodeURIComponent("헬리오시티")]) assert.ok(!sent.includes(secret), `GA 로 ${secret} 가 나갔다`);
+  return page;
+};
+
+test("개인정보: 금액·금리·단지명은 GA 로 나가는 어떤 값에도 없다(page_location 포함)", async () => {
+  const page = await moneyPage();
+  assertNotSent(page, MONEY_SECRETS);
   assert.ok(events(page, "calculator_result").length >= 1, "결과 이벤트가 없다 - 이 시험이 아무것도 안 봤다");
 });
 
@@ -914,7 +929,8 @@ test("#792-5 화면: 켜면 지금 금리를 두 칸에 옮기고, 끄면 공통
   assert.equal(answer(page), want.text, "다시 켰는데 두 칸 값이 그대로가 아니다");
 });
 
-test("#792-5 잘못된 선택지별 금리는 금리 칸 아래 오류, 빈칸은 넣을 칸 - 금리는 GA 로 나가지 않는다", async () => {
+const SPLIT_RATE_SECRETS = ["2.57", "6.17", "126000"];
+const splitRatePage = async () => {
   const page = await open({ ga: true });
   await set(page, { "mv-ask": "126000", "mv-dep": "100000", "mv-cash": "60000" });
   page.byId("mv-split").checked = true;
@@ -927,10 +943,49 @@ test("#792-5 잘못된 선택지별 금리는 금리 칸 아래 오류, 빈칸�
   assert.equal(answer(page), "넣을 칸: 재계약 쪽 대출 금리");
   await set(page, { "mv-rate-renew": "2.57" });
   await wait();
-  const sent = JSON.stringify(page.sandbox.dataLayer);
-  for (const secret of ["2.57", "6.17", "126000"]) assert.ok(!sent.includes(secret), `GA 로 ${secret} 가 나갔다`);
+  return page;
+};
+
+test("#792-5 잘못된 선택지별 금리는 금리 칸 아래 오류, 빈칸은 넣을 칸 - 금리는 GA 로 나가지 않는다", async () => {
+  const page = await splitRatePage();
+  assertNotSent(page, SPLIT_RATE_SECRETS);
   assert.ok(events(page, "calculator_result").length >= 1);
 });
+
+// #831 재발 방지: 시계를 찾는 값과 겹치는 순간에 고정한다. 고치기 전 네 시각 모두 해당 값으로 실패했다(재현 기록은 이슈).
+// 시각 칸이 다른 모양으로 바뀌면 값으로 남아 이 네 시험이 매번 빨개진다 - 드물게 깨지는 대신 그 커밋에서 깨진다.
+for (const [at, secret, makePage, secrets] of [
+  ["2026-11-03T01:48:44.370Z", "4.37", moneyPage, MONEY_SECRETS],
+  ["2026-11-03T01:48:13.215Z", "3.21", moneyPage, MONEY_SECRETS],
+  ["2026-11-03T01:48:12.570Z", "2.57", splitRatePage, SPLIT_RATE_SECRETS],
+  ["2026-11-03T01:48:16.170Z", "6.17", splitRatePage, SPLIT_RATE_SECRETS],
+]) {
+  test(`#831 GA 시각이 찾는 값 ${secret} 과 겹치는 ${at} 에 돌아도 개인정보 검사는 그대로 통과한다`, async (t) => {
+    t.mock.timers.enable({ apis: ["Date"], now: Date.parse(at) });
+    const page = await makePage();
+    assert.ok(JSON.stringify(page.sandbox.dataLayer).includes(secret), "겹치는 순간이 아니다 - 이 시험이 아무것도 안 봤다");
+    const clocks = Array.from(page.sandbox.dataLayer.filter(isGaClock), (c) => c[1].toISOString()); // dataLayer 는 샌드박스 쪽 배열이라 이쪽 배열로 옮겨 맞댄다
+    assert.deepEqual(clocks, [at], "시각 칸은 지금 시각 하나뿐이어야 한다");
+    assertNotSent(page, secrets);
+  });
+}
+
+// 시각을 빼는 일이 값을 숨기면 안 된다. 겹치지 않는 시각에 고정해 찾는 값의 출처를 변이 하나로 좁히고, 실제 analytics.js 에 넣어 돌린다.
+for (const [name, line] of [
+  ["시각 칸 뒤에 붙은 인자", 'gtag("js", new Date(), "4.37");'],
+  ["시각 칸 뒤에 붙은 객체", 'gtag("js", new Date(), { rate: "4.37" });'],
+  ["시각 문자열에 이어 붙인 값", 'gtag("js", new Date().toISOString() + "4.37");'],
+  ["시각을 낀 이벤트의 값", 'gtag("js", new Date()); gtag("event", "x", { at: new Date(), rate: "4.37" });'],
+  ["인자 목록이 아닌 항목의 값", 'gtag("js", new Date()); window.dataLayer.push({ rate: "4.37" });'],
+]) {
+  test(`#831 시각만 뺀다 - GA 로 나간 값으로 잡는 변이: ${name}`, async (t) => {
+    t.mock.timers.enable({ apis: ["Date"], now: Date.parse("2026-11-03T01:48:12.120Z") });
+    const analyticsSource = ANALYTICS.replace('gtag("js", new Date());', line);
+    assert.notEqual(analyticsSource, ANALYTICS, "변이를 넣을 줄이 없다");
+    const page = await open({ ga: true, analyticsSource });
+    assert.throws(() => assertNotSent(page, ["4.37"]), /GA 로 4\.37 가 나갔다/);
+  });
+}
 
 test("#792-5 한쪽만 평균이면 그 칸만 「한국은행 평균」, 평균으로 둔 칸이 있으면 「새로 받는 금리가 아님」을 남긴다 - 재계약만 기존 금리로 고치는 흔한 경우", async () => {
   const page = await open();
