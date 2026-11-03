@@ -1,0 +1,121 @@
+# 서울 열린데이터 단지 좌표·역 위치 측정 (#847).
+# 사람이 dispatch 로 한 번만 돌린다. cron 없음. 저장소에 쓰지 않는다(contents: read, 커밋·푸시 스텝 없음, 출력은 $RUNNER_TEMP 아래).
+# 호출 상한은 스크립트가 지킨다(OpenAptInfo 5회, subwayStationMaster 2회, 재시도 없음, 한 번에 1,000건 이하). 리다이렉트를 따라가지 않는다.
+# 서울 API는 평문 HTTP이고 키가 URL 경로에 들어간다. 시크릿은 호출 스텝 env 에만 둔다. SEOUL_OPENDATA_API_KEY 하나뿐이고 다른 키로 넘어가지 않는다.
+# clo 통과는 측정 dispatch 1회다. 조기 중단 뒤 다시 돌리려면 원인을 고치고 clo 댓글을 새로 받아 resume_clo_comment 에 적는다.
+name: Seoul coords measure
+
+on:
+  workflow_dispatch:
+    inputs:
+      clo_comment:
+        description: "clo 약관 대조 기록 댓글 주소 (이슈 #847)"
+        type: string
+        required: true
+      lock_comment:
+        description: "pm 문턱 잠금 댓글 주소 (이슈 #847)"
+        type: string
+        required: true
+      resume_after_early_stop:
+        description: "조기 중단의 원인을 고친 뒤 다시 돌릴 때만 yes"
+        type: choice
+        options: ["no", "yes"]
+        default: "no"
+      resume_clo_comment:
+        description: "다시 돌릴 때만: 재실행을 허락한 clo 새 댓글 주소 (이슈 #847)"
+        type: string
+        required: false
+
+# actions: read 는 「재실행 거부」가 아티팩트 목록을 읽는 데만 쓴다.
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: seoul-coords-measure
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # 스크립트는 외부 패키지를 쓰지 않는다. 키가 있는 스텝에 제3자 코드를 올리지 않으려고 npm ci 를 하지 않는다.
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: 입력 확인
+        env:
+          CLO_COMMENT: ${{ inputs.clo_comment }}
+          LOCK_COMMENT: ${{ inputs.lock_comment }}
+          RESUME: ${{ inputs.resume_after_early_stop }}
+          RESUME_CLO: ${{ inputs.resume_clo_comment }}
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main" || { echo "main 에서만 돌린다(받은 ref: $GITHUB_REF)" >&2; exit 1; }
+          pattern='^https://github\.com/kyhsa93/jipgye/issues/847#issuecomment-[0-9]+$'
+          [[ "$CLO_COMMENT" =~ $pattern ]] || { echo "clo_comment 는 이슈 #847 댓글 주소여야 한다" >&2; exit 1; }
+          [[ "$LOCK_COMMENT" =~ $pattern ]] || { echo "lock_comment 는 이슈 #847 댓글 주소여야 한다" >&2; exit 1; }
+          test "$CLO_COMMENT" != "$LOCK_COMMENT" || { echo "clo 기록과 pm 잠금은 다른 댓글이어야 한다" >&2; exit 1; }
+          if [ "$RESUME" = "yes" ]; then
+            [[ "$RESUME_CLO" =~ $pattern ]] || { echo "resume_clo_comment 는 이슈 #847 댓글 주소여야 한다" >&2; exit 1; }
+            test "$RESUME_CLO" != "$CLO_COMMENT" || { echo "재실행은 clo 새 댓글이 있어야 한다" >&2; exit 1; }
+          fi
+          {
+            echo "clo 기록: $CLO_COMMENT"
+            echo "pm 잠금: $LOCK_COMMENT"
+            if [ "$RESUME" = "yes" ]; then echo "재실행 clo 기록: $RESUME_CLO"; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # 어느 하나라도 확인하지 못하면 호출하지 않는다.
+      - name: 재실행 거부
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESUME: ${{ inputs.resume_after_early_stop }}
+        run: |
+          done_count="$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=seoul-coords" --jq .total_count)"
+          early_count="$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=seoul-coords-early-stop" --jq .total_count)"
+          node research/seoul-coords-2026-11/measure.mjs guard --attempt "$GITHUB_RUN_ATTEMPT" --done "$done_count" --early-stops "$early_count" --resume "$RESUME"
+
+      - name: 측정 (호출 상한 5 + 2)
+        env:
+          SEOUL_OPENDATA_API_KEY: ${{ secrets.SEOUL_OPENDATA_API_KEY }}
+        run: |
+          set -o pipefail
+          node research/seoul-coords-2026-11/measure.mjs fetch --out "$RUNNER_TEMP/seoul-coords" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: 쓰기 0 확인
+        if: ${{ !cancelled() }}
+        run: |
+          test -z "$(git status --porcelain)" || { git status --porcelain >&2; echo "작업 트리가 바뀌었다" >&2; exit 1; }
+
+      # 스크립트가 이름을 남기지 못하고 죽었으면 막는 쪽 이름을 쓴다.
+      - name: 아티팩트 이름
+        id: artifact
+        if: ${{ !cancelled() }}
+        run: |
+          name="$(cat "$RUNNER_TEMP/seoul-coords/artifact-name" 2>/dev/null || true)"
+          test "$name" = "seoul-coords-early-stop" || name="seoul-coords"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      # 집계뿐이다. 스크립트가 쓰기 전에 키를 찾아, 나오면 값을 하나도 쓰지 않는다. 단지별 행·좌표·거리는 쓰지 않는다.
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: ${{ !cancelled() }}
+        with:
+          name: ${{ steps.artifact.outputs.name }}
+          path: ${{ runner.temp }}/seoul-coords
+          retention-days: 30
+          if-no-files-found: ignore
+
+      # 취소·시간 초과면 시작 표시만 남긴다. 그래도 다음 dispatch는 막힌다.
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: ${{ cancelled() }}
+        with:
+          name: seoul-coords
+          path: ${{ runner.temp }}/seoul-coords/fetch-started.json
+          retention-days: 30
+          if-no-files-found: ignore
