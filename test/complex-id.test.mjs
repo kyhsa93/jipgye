@@ -216,7 +216,7 @@ test("관심 단지: 동을 고른 칸은 그 동만 세고, 옛 항목(동 없�
   new vm.Script(JS, { filename: "docs/watchlist.js" }).runInContext(p.sandbox);
   p.sandbox.window.cardWatch();
   await settle();
-  assert.match(p.byId("watch-list").innerHTML, /벽산<\/a> <span class="count">지난 방문 뒤 새 신고 5건/, "옛 항목의 수가 0 이 됐다");
+  assert.match(p.byId("watch-list").innerHTML, /벽산<\/a> <span class="count">여러 동 합산<\/span> .*<span class="count">지난 방문 뒤 새 신고 5건/, "옛 항목의 수가 0 이 됐다");
   p.byId("watch-toggle").onclick();
   await settle();
   const saved = JSON.parse(items.get("watchlist"));
