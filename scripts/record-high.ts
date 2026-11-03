@@ -19,6 +19,8 @@
  * 유지되는지 매번 다시 센다(research/record-high/). 365일은 원본이 2년이 안 돼 아직 셀 수 없다.
  */
 
+import { itemComplexKey } from "./complex-id.ts";
+
 export const MIN_PRIOR = 3;
 export const MIN_SPAN_DAYS = 180;
 export const WAIT_DAYS = 90;
@@ -33,8 +35,11 @@ export const MIN_RECORDS = 100;
 const DAY = 86400000;
 const round1 = (value) => Math.round(value * 1000) / 10;
 
-/** 원본 한 줄을 { cell, time, amount, floor }로. 해제·직거래는 뺀다(단지 가격 범위와 같은 규칙). */
-export function toDeal(item) {
+/**
+ * 원본 한 줄을 { cell, time, amount, floor }로. 해제·직거래는 뺀다(단지 가격 범위와 같은 규칙).
+ * 칸의 단지는 complex-id.ts 키다(#843) - 다른 동의 같은 이름 단지 거래가 이 칸의 「그 전 최고가」가 되지 않게. sameNames: readSameNames 결과.
+ */
+export function toDeal(item, sameNames = undefined) {
   if (String(item?.cdealType ?? "").trim()) return null;
   if (String(item?.dealingGbn ?? "").trim() !== "중개거래") return null;
   const amount = Number(String(item?.dealAmount ?? "").replace(/,/g, ""));
@@ -43,7 +48,7 @@ export function toDeal(item) {
   const d = Number(item?.dealDay);
   if (!(amount > 0) || !y || !m || !d) return null;
   return {
-    cell: `${item.sggCd}|${item.aptNm}|${item.excluUseAr}`,
+    cell: `${item.sggCd}|${itemComplexKey(item, sameNames)}|${item.excluUseAr}`,
     time: Date.UTC(y, m - 1, d),
     amount,
     floor: Number(item?.floor) || 0,

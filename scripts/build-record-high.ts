@@ -16,7 +16,7 @@ import {
   survivalSentence,
   toDeal,
 } from "./record-high.ts";
-import { RAW_DIR } from "./realestate-raw.ts";
+import { RAW_DIR, readSameNames } from "./realestate-raw.ts";
 import { buildWeekDigest } from "./build-week-digest.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -24,8 +24,8 @@ const outFile = process.env.RECORD_HIGH_FILE
   ? path.resolve(process.env.RECORD_HIGH_FILE)
   : path.join(root, "docs/data/record-high.json");
 
-export function buildPayload({ items, now }) {
-  const deals = items.map(toDeal).filter(Boolean);
+export function buildPayload({ items, now, sameNames = {} }) {
+  const deals = items.map((item) => toDeal(item, sameNames)).filter(Boolean);
   if (!deals.length) return null;
   const cells = byCell(deals);
   // 끝은 원본에 있는 마지막 계약일이다. 오늘로 잡으면 아직 신고가 덜 들어온 며칠이 "다음 거래 없음"으로 읽힌다.
@@ -76,7 +76,7 @@ async function readAll() {
 
 async function main() {
   await weekDigestSoft();
-  const payload = buildPayload({ items: await readAll(), now: new Date() });
+  const payload = buildPayload({ items: await readAll(), now: new Date(), sameNames: await readSameNames() });
   if (!payload) {
     console.log("  신고가 다음 거래: 원본이 없어 건너뜀");
     return;

@@ -112,18 +112,18 @@ export function diffInterval(xa, na, xb, nb, z = Z90) {
  * 세는 거래는 해제 여부와 상관없이 중개거래면 toDeal 을 해제 표시만 지우고 불러 같은 칸·값·날로 바꾼다.
  * 반환: Map(item → "record" | "rest"). 이력이 모자라 가를 수 없는 거래(중개거래 아님·선행 부족)는 넣지 않는다.
  */
-export function recordClasses(items) {
-  const cells = byCell(items.map(toDeal).filter(Boolean));
+export function recordClasses(items, sameNames = {}) {
+  const cells = byCell(items.map((item) => toDeal(item, sameNames)).filter(Boolean));
   const out = new Map();
   for (const item of items) {
-    const deal = toDeal({ ...item, cdealType: "" });
+    const deal = toDeal({ ...item, cdealType: "" }, sameNames);
     if (!deal) continue;
     const before = (cells.get(deal.cell) ?? []).filter((x) => x.time < deal.time);
     if (before.length < MIN_PRIOR || deal.time - before[0].time < MIN_SPAN_DAYS * DAY) continue;
     out.set(item, deal.amount > Math.max(...before.map((x) => x.amount)) ? "record" : "rest");
   }
   // 정의 대조: 해제 안 된 거래 가운데 신고가 수는 record-high.ts measure()(기다린 날 0)의 신고가 수와 같아야 한다.
-  const live = [...out].filter(([item, c]) => c === "record" && toDeal(item)).length;
+  const live = [...out].filter(([item, c]) => c === "record" && toDeal(item, sameNames)).length;
   const expected = measure(cells, Infinity, { wait: 0 }).records;
   if (live !== expected) throw new Error(`신고가 정의 불일치: ${live} ≠ record-high ${expected}`);
   return out;
@@ -147,7 +147,7 @@ export function recordComparison(record, rest, minN = MIN_RECORDS) {
 }
 
 /** items: 원본 매매 전체(서울). now: 만든 때. 익은 달이 없으면 null. */
-export function buildRegistrationPayload({ items, now }) {
+export function buildRegistrationPayload({ items, now, sameNames = {} }) {
   const all = items ?? [];
   const reportedCancellations = all.filter(isCancelled).length;
   const cleaned = withoutCorrections(all);
@@ -166,7 +166,7 @@ export function buildRegistrationPayload({ items, now }) {
   const byCode = new Map(DISTRICTS.map((d) => [String(d.code), []]));
   for (const item of matured) byCode.get(String(item.sggCd))?.push(item);
 
-  const classes = recordClasses(kept);
+  const classes = recordClasses(kept, sameNames);
   const record = [];
   const rest = [];
   for (const item of matured) {
@@ -202,11 +202,11 @@ export const registrationFile = process.env.REGISTRATION_FILE
   : path.join(root, "docs/data", REGISTRATION_NAME);
 
 /** Daily(build-district-change) 안 soft-fail 호출. 던지지 않는다 - 실패하면 ::warning 만 남기고 이전 파일을 그대로 둔다. */
-export async function writeRegistrationSoft({ items, now, file = registrationFile, log = console.log, build = buildRegistrationPayload }) {
+export async function writeRegistrationSoft({ items, now, sameNames = {}, file = registrationFile, log = console.log, build = buildRegistrationPayload }) {
   const tmp = path.join(path.dirname(file), `.${path.basename(file)}.${process.pid}.tmp`);
   try {
     if (path.basename(file) !== REGISTRATION_NAME) throw new Error(`허용되지 않은 출력 경로 ${file}`);
-    const payload = build({ items, now });
+    const payload = build({ items, now, sameNames });
     if (!payload) {
       log("  등기·해제: 익은 달이 없어 건너뜀(어제 파일 유지)");
       return false;

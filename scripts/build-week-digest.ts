@@ -4,7 +4,7 @@
 // update-all.mjs·daily-update.yml 무수정, #644 와 등록 경로가 겹치지 않게). 여기서 던져도 신고가 산출물과 수집 커밋은 그대로 나간다.
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { KINDS, RAW_DIR, itemKey } from "./realestate-raw.ts";
+import { KINDS, RAW_DIR, itemKey, readSameNames } from "./realestate-raw.ts";
 import { buildDigest, uniqueArrivals } from "./week-digest.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -29,7 +29,7 @@ export async function buildWeekDigest({ now = new Date(), dir = RAW_DIR, out = o
   const slots = await readSlots(dir);
   const rows = uniqueArrivals(slots, itemKey);
   const saleItems = slots.filter((s) => s.kind === "sale").flatMap((s) => s.items);
-  const digest = buildDigest({ rows, saleItems, now });
+  const digest = buildDigest({ rows, saleItems, now, sameNames: await readSameNames(dir) });
   if (!digest) {
     console.log("  이번 주 새 신고: 도착 기록이 없어 건너뜀");
     return null;

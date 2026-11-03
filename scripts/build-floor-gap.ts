@@ -12,7 +12,7 @@ import {
 } from "./floor-gap.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
-import { readSlotFile } from "./realestate-raw.ts";
+import { readSameNames, readSlotFile } from "./realestate-raw.ts";
 import { recentMonths } from "./realestate-source.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -62,12 +62,12 @@ export const jeonseRow = (item) => {
   return price > 0 ? { ...item, price } : null;
 };
 
-export function buildPayload({ sale, jeonse, now }) {
-  const saleCells = toCells(sale);
+export function buildPayload({ sale, jeonse, now, sameNames = {} }) {
+  const saleCells = toCells(sale, sameNames);
   const saleTally = tally(saleCells);
   if (!saleTally.low.cells) return null;
 
-  const jeonseTally = tally(toCells(jeonse));
+  const jeonseTally = tally(toCells(jeonse, sameNames));
 
   // 우연히 나올 수 있는 폭은 서울 칸 전체에서 뽑는다 - 자치구 값을 그 안에 넣어 본다.
   const pool = [...saleTally.byDistrict.values()].flat();
@@ -112,7 +112,7 @@ async function main() {
     readRaw("rent", months, undefined, jeonseRow),
   ]);
 
-  const payload = buildPayload({ sale, jeonse, now });
+  const payload = buildPayload({ sale, jeonse, now, sameNames: await readSameNames() });
   if (!payload) {
     console.log("  층 격차: 견줄 칸이 없어 건너뜀");
     return;

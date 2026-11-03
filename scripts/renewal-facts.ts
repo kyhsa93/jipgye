@@ -15,6 +15,8 @@
  * 다 받아 주지 않았다는 뜻이고, 그건 상한이 있기 때문에 오히려 읽을 수 있는 신호다.
  */
 
+import { itemComplexKey } from "./complex-id.ts";
+
 /** 상한(5%)에 닿지 못했다고 볼 선. 신고 값의 반올림을 감안해 조금 아래에 둔다. */
 export const CAP_MISS_BELOW = 4.5;
 
@@ -150,9 +152,11 @@ const pureJeonse = (item) => number(item?.monthlyRent) === 0 && number(item?.dep
  * 면적을 구간으로 묶지 않는 것은 같은 단지라도 평형이 다르면 값이 다르기 때문이다.
  * 묶으면 표본은 늘지만(마감월 기준 4,176 -> 6,118건) 59㎡ 갱신을 63㎡ 신규와
  * 견주게 된다. 늘어난 표본이 그 값을 하지 않는다.
+ *
+ * 단지는 complex-id.ts 키다(#843) - 다른 동의 같은 이름 단지 신규를 이 단지의 시세로 쓰지 않는다. sameNames: readSameNames 결과.
  */
-const marketKey = (item) =>
-  `${item?.sggCd}|${item?.aptNm}|${item?.excluUseAr}|${item?.dealYear}-${item?.dealMonth}`;
+const marketKey = (item, sameNames) =>
+  `${item?.sggCd}|${itemComplexKey(item, sameNames)}|${item?.excluUseAr}|${item?.dealYear}-${item?.dealMonth}`;
 
 /**
  * 갱신 보증금이 "지금 새로 구하면 얼마"보다 얼마나 싼가.
@@ -168,7 +172,7 @@ const marketKey = (item) =>
  * 맞물리려면 같은 칸에 신규가 세 건 있어야 하므로, 거래가 도는 큰 단지 쪽으로
  * 기운다. 화면에 그렇게 적는다.
  */
-export function renewalGap(items, now) {
+export function renewalGap(items, now, sameNames = undefined) {
   const rows = (items ?? []).filter((item) => {
     const year = Number(item?.dealYear);
     const month = Number(item?.dealMonth);
@@ -180,7 +184,7 @@ export function renewalGap(items, now) {
   const market = new Map();
   for (const item of rows) {
     if (String(item?.contractType ?? "").trim() !== "신규") continue;
-    const key = marketKey(item);
+    const key = marketKey(item, sameNames);
     if (!market.has(key)) market.set(key, []);
     market.get(key).push(number(item.deposit));
   }
@@ -188,7 +192,7 @@ export function renewalGap(items, now) {
   const gaps = [];
   for (const item of rows) {
     if (String(item?.contractType ?? "").trim() !== "갱신") continue;
-    const pool = market.get(marketKey(item));
+    const pool = market.get(marketKey(item, sameNames));
     if (!pool || pool.length < MIN_MARKET_DEALS) continue;
     const asking = median(pool);
     if (asking <= 0) continue;
@@ -219,7 +223,7 @@ const pureWolse = (item) => number(item?.monthlyRent) > 0;
  * 견주는 칸·문턱·이상치는 전세 격차(renewalGap)와 같다. 같은 계약이 갱신과 신규 양쪽 칸에
  * 들어가지 않도록 신규는 월세 신규만, 갱신은 전에도 월세였던 것만 센다.
  */
-export function wolseRenewalGaps(items, now, rate) {
+export function wolseRenewalGaps(items, now, rate, sameNames = undefined) {
   const value = (deposit, rent) => deposit + (rent * 12) / (rate / 100);
   const rows = (items ?? []).filter((item) => {
     const year = Number(item?.dealYear);
@@ -232,7 +236,7 @@ export function wolseRenewalGaps(items, now, rate) {
   const market = new Map();
   for (const item of rows) {
     if (String(item?.contractType ?? "").trim() !== "신규") continue;
-    const key = marketKey(item);
+    const key = marketKey(item, sameNames);
     if (!market.has(key)) market.set(key, []);
     market.get(key).push(value(number(item.deposit), number(item.monthlyRent)));
   }
@@ -240,7 +244,7 @@ export function wolseRenewalGaps(items, now, rate) {
   const gaps = [];
   for (const item of rows) {
     if (!isRenewal(item) || number(item?.preMonthlyRent) <= 0) continue;
-    const pool = market.get(marketKey(item));
+    const pool = market.get(marketKey(item, sameNames));
     if (!pool || pool.length < MIN_MARKET_DEALS) continue;
     const asking = median(pool);
     if (asking <= 0) continue;
@@ -255,10 +259,10 @@ const round1 = (value) => Math.round(value * 10) / 10;
 const cheaperShareOf = (gaps) => round1((gaps.filter((g) => g < 0).length / gaps.length) * 100);
 
 /** 실측 전환율로 낸 대표값과, 양 끝 전환율로 다시 낸 값. rate가 없으면 내지 않는다. */
-export function wolseGap(items, now, rate) {
+export function wolseGap(items, now, rate, sameNames = undefined) {
   if (!(rate > 0)) return null;
   const at = (r) => {
-    const gaps = wolseRenewalGaps(items, now, r);
+    const gaps = wolseRenewalGaps(items, now, r, sameNames);
     return gaps.length ? { rate: r, matched: gaps.length, median: round1(median(gaps)), cheaperShare: cheaperShareOf(gaps) } : null;
   };
   const main = at(rate);
@@ -267,7 +271,7 @@ export function wolseGap(items, now, rate) {
 }
 
 /** 자치구 하나의 갱신 신고들을 세어 정리한다. */
-export function tally(items, now, { wolseRate = null } = {}) {
+export function tally(items, now, { wolseRate = null, sameNames = undefined } = {}) {
   const counts = { renewals: 0, rightUsed: 0, capMissed: 0, fromJeonse: 0, toWolse: 0, wolseKept: 0 };
 
   for (const item of items ?? []) {
@@ -297,8 +301,8 @@ export function tally(items, now, { wolseRate = null } = {}) {
     ...counts,
     capMissShare: counts.rightUsed ? Math.round((counts.capMissed / counts.rightUsed) * 1000) / 10 : null,
     toWolseShare: counts.fromJeonse ? Math.round((counts.toWolse / counts.fromJeonse) * 1000) / 10 : null,
-    ...renewalGap(items, now),
-    ...(wolseRate ? { wolse: wolseGap(items, now, wolseRate) } : {}),
+    ...renewalGap(items, now, sameNames),
+    ...(wolseRate ? { wolse: wolseGap(items, now, wolseRate, sameNames) } : {}),
   };
 }
 

@@ -47,8 +47,8 @@ const median = (values) => {
 };
 
 /** 원본 한 줄 → district-change 의 거래에 준공 연도를 더한 것. 해제·직거래는 toDeal 이 뺀다. */
-export function toSegmentDeal(item) {
-  const deal = toDeal(item);
+export function toSegmentDeal(item, sameNames = undefined) {
+  const deal = toDeal(item, sameNames);
   if (!deal) return null;
   const year = Number(item.buildYear);
   const area = Number(item.excluUseAr);
@@ -98,8 +98,8 @@ function segmentRows(cells, defs, keyOf) {
 }
 
 /** 가격대·연식·면적대 구간별 1년 변화. 두 시기를 정할 원본이 모자라면 null. */
-export function buildSegmentPayload({ items, now }) {
-  const deals = items.map(toSegmentDeal).filter(Boolean);
+export function buildSegmentPayload({ items, now, sameNames = {} }) {
+  const deals = items.map((item) => toSegmentDeal(item, sameNames)).filter(Boolean);
   const available = [...new Set(deals.map((d) => d.month))].sort();
   // 신고 기한(30일)이 닫힌 마지막 달 - build-district-change 와 같은 두 시기.
   const p = periods(shiftMonth(yearMonthOf(now), -2), available);
@@ -139,12 +139,12 @@ export const segmentChangeFile = process.env.SEGMENT_CHANGE_FILE
   ? path.resolve(process.env.SEGMENT_CHANGE_FILE)
   : path.join(root, "docs/data", SEGMENT_CHANGE_NAME);
 
-export async function writeSegmentChangeSoft({ items, now, file = segmentChangeFile, log = console.log, build = buildSegmentPayload }) {
+export async function writeSegmentChangeSoft({ items, now, sameNames = {}, file = segmentChangeFile, log = console.log, build = buildSegmentPayload }) {
   const tmp = path.join(path.dirname(file), `.${path.basename(file)}.${process.pid}.tmp`);
   try {
     // 쓸 수 있는 이름은 하나다 - 다른 파일을 덮지 않는다.
     if (path.basename(file) !== SEGMENT_CHANGE_NAME) throw new Error(`허용되지 않은 출력 경로 ${file}`);
-    const payload = build({ items, now });
+    const payload = build({ items, now, sameNames });
     if (!payload) {
       log("  가격대·연식 변화: 두 시기를 정할 원본이 모자라 건너뜀(어제 파일 유지)");
       return false;

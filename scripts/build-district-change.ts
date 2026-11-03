@@ -18,7 +18,7 @@ import { runRepeatSales } from "./build-repeat-sales.ts";
 import { INDEX_FILE } from "./fetch-price-index.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { shiftMonth } from "./outlook.ts";
-import { RAW_DIR } from "./realestate-raw.ts";
+import { RAW_DIR, readSameNames } from "./realestate-raw.ts";
 import { writeRegistrationSoft } from "./registration.ts";
 import { writeSegmentChangeSoft } from "./segment-change.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
@@ -76,8 +76,8 @@ export function regionTableHtml(regions, locale = "ko") {
   return `<thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${body}</tbody>`;
 }
 
-export function buildPayload({ items, now, official, survey }) {
-  const deals = items.map(toDeal).filter(Boolean);
+export function buildPayload({ items, now, official, survey, sameNames = {} }) {
+  const deals = items.map((item) => toDeal(item, sameNames)).filter(Boolean);
   const available = [...new Set(deals.map((d) => d.month))].sort();
   // 신고 기한(30일)이 닫힌 마지막 달. 10월 1일이면 8월이다.
   const p = periods(shiftMonth(yearMonthOf(now), -2), available);
@@ -118,11 +118,11 @@ async function readAll() {
 }
 
 async function main() {
-  const [items, official, survey] = await Promise.all([readAll(), readJson(INDEX_FILE), readJson(DISTRICT_INDEX_FILE)]);
+  const [items, official, survey, sameNames] = await Promise.all([readAll(), readJson(INDEX_FILE), readJson(DISTRICT_INDEX_FILE), readSameNames()]);
   const now = new Date();
   // 등기·해제 비율(R1, #715). 같은 원본. soft-fail 이라 던지지 않고, 갈아타기 결과와 상관없이 먼저 부른다.
-  await writeRegistrationSoft({ items, now });
-  const payload = buildPayload({ items, now, official, survey });
+  await writeRegistrationSoft({ items, now, sameNames });
+  const payload = buildPayload({ items, now, official, survey, sameNames });
   if (!payload) {
     console.log("  갈아타기: 두 시기를 정할 원본이 모자라 건너뜀");
     return;
@@ -137,7 +137,7 @@ async function main() {
       `권역 대조 ${payload.regions.map((r) => `${r.name.ko} ${r.ours}/${r.official}`).join(" ")}`
   );
   // 가격대·연식 구간 변화(N4, #676). 같은 원본·같은 두 시기. soft-fail - 위 갈아타기 파일은 이미 다 썼다.
-  await writeSegmentChangeSoft({ items, now });
+  await writeSegmentChangeSoft({ items, now, sameNames });
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {

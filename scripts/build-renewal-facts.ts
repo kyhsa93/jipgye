@@ -3,7 +3,7 @@ import path from "node:path";
 import { capLead, districtRow, renewalFacts, seoulLead, seoulTally, sortRows, sortWolseRows, tally, wolseLead } from "./renewal-facts.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
-import { readSlotFile } from "./realestate-raw.ts";
+import { readSameNames, readSlotFile } from "./realestate-raw.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { RENT_FLOW_MONTHS, buildRentFlow, writeRentFlowFile } from "./rent-flow.ts";
 import { buildLeaseExpiry, writeLeaseExpiryFile } from "./lease-expiry.ts";
@@ -105,8 +105,8 @@ export async function readWolseRate(file = path.join(root, "docs/data/conversion
   }
 }
 
-export function buildPayload({ byDistrict, now, wolseRate = null }) {
-  const options = { wolseRate };
+export function buildPayload({ byDistrict, now, wolseRate = null, sameNames = {} }) {
+  const options = { wolseRate, sameNames };
   const seoul = seoulTally(byDistrict, now, options);
   if (!seoul.renewals) return null;
 
@@ -145,7 +145,7 @@ async function main() {
   await writeRentFlowSoft(now);
   await writeLeaseExpirySoft(now);
   const byDistrict = await readRawRents(recentMonths(now, MONTHS));
-  const payload = buildPayload({ byDistrict, now, wolseRate: await readWolseRate() });
+  const payload = buildPayload({ byDistrict, now, wolseRate: await readWolseRate(), sameNames: await readSameNames() });
 
   if (!payload) {
     console.log("  갱신 신고가 없습니다 - 기존 재계약 관찰을 그대로 둡니다");
