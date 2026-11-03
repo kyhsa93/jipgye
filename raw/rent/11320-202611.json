@@ -1,1 +1,3 @@
-{"kind":"rent","district":"11320","yearMonth":"202611","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-11-01T02:09:31.442Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"rent","district":"11320","yearMonth":"202611","ok":true,"resultCode":0,"count":1,"totalCount":1,"observedAt":"2026-11-03T03:55:31.883Z","previousObservedAt":"2026-11-01T02:09:31.442Z","arrivals":{"e7dc88062e03":"2026-11-03"},"items":[
+{"aptNm":"한양2","aptSeq":"11320-21","buildYear":1988,"contractTerm":"26.11~28.11","contractType":"갱신","dealDay":2,"dealMonth":11,"dealYear":2026,"deposit":"20,000","excluUseAr":48.96,"floor":5,"jibun":59,"monthlyRent":20,"preDeposit":"20,000","preMonthlyRent":"","roadnm":"해등로 231","roadnmbcd":0,"roadnmbonbun":231,"roadnmbubun":0,"roadnmcd":3109003,"roadnmseq":1,"roadnmsggcd":11320,"sggCd":11320,"umdNm":"쌍문동","useRRRight":""}
+]}

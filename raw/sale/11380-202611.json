@@ -1,1 +1,3 @@
-{"kind":"sale","district":"11380","yearMonth":"202611","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-11-01T02:09:31.442Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11380","yearMonth":"202611","ok":true,"resultCode":0,"count":1,"totalCount":1,"observedAt":"2026-11-03T03:55:31.883Z","previousObservedAt":"2026-11-01T02:09:31.442Z","arrivals":{"6d16bbeb2a40":"2026-11-03"},"items":[
+{"aptDong":"","aptNm":"송학","buildYear":2004,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"45,000","dealDay":1,"dealMonth":11,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 은평구","excluUseAr":77.92,"floor":2,"jibun":"24-59","landLeaseholdGbn":"N","rgstDate":"","sggCd":11380,"slerGbn":"개인","umdNm":"구산동"}
+]}

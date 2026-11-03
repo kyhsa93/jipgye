@@ -1,1 +1,3 @@
-{"kind":"rent","district":"11305","yearMonth":"202611","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-11-01T02:09:31.442Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"rent","district":"11305","yearMonth":"202611","ok":true,"resultCode":0,"count":1,"totalCount":1,"observedAt":"2026-11-03T03:55:31.883Z","previousObservedAt":"2026-11-01T02:09:31.442Z","arrivals":{"04036595dabe":"2026-11-03"},"items":[
+{"aptNm":"엘리프미아역2단지","aptSeq":"11305-6612","buildYear":2026,"contractTerm":"26.11~28.11","contractType":"신규","dealDay":2,"dealMonth":11,"dealYear":2026,"deposit":"65,000","excluUseAr":74.829,"floor":12,"jibun":195,"monthlyRent":0,"preDeposit":"","preMonthlyRent":"","roadnm":"도봉로 228","roadnmbcd":0,"roadnmbonbun":228,"roadnmbubun":0,"roadnmcd":3005039,"roadnmseq":0,"roadnmsggcd":11305,"sggCd":11305,"umdNm":"미아동","useRRRight":""}
+]}
