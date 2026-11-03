@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { GRADE as PREREG_GRADE, gradeOf as preregGrade } from "../research/sample-grade-2026-11/grade.mjs";
 import { minCash } from "../scripts/min-cash.ts";
 import { purchaseCosts } from "../scripts/purchase-costs.ts";
-import { addPeers, REG_LINES, risksOf } from "../scripts/recommendation-reasons.ts";
+import { addPeers, checksOf, REG_LINES } from "../scripts/recommendation-reasons.ts";
 import { APARTMENT_FIELDS, areaBand, CELL_FIELDS, cellField, costFields, GRADE, gradeOf, LIMITS, priceBand, TYPES } from "../scripts/recommendation.ts";
 
 test("표본 등급: 경계값 n=5·90일은 충분, n<3 은 값을 내지 않는다", () => {
@@ -28,12 +28,12 @@ test("표본 등급은 사전 등록 계산(grade.mjs)과 같다 - 문턱을 이
   }
 });
 
-test("유형: 셋 다 꺼져 있다", () => {
-  assert.deepEqual(Object.keys(TYPES), ["living", "future", "balanced"]);
-  for (const type of Object.values(TYPES)) {
-    assert.equal(type.status, "off");
-    assert.ok(type.reasons.length > 0);
-  }
+test("유형: 실거주는 꺼져 있고, 미래가치·균형은 낼 계획이 없다(시험에 기대는 사유 코드가 없다)", () => {
+  assert.deepEqual(TYPES, {
+    living: { status: "off", reasons: ["no_transit", "no_households"] },
+    future: { status: "none", reasons: ["not_planned"] },
+    balanced: { status: "none", reasons: ["not_planned"] },
+  });
   assert.ok(Object.isFrozen(TYPES));
 });
 
@@ -68,13 +68,13 @@ test("비용: 생애최초 감면은 12억 이하 현금에만 들어간다", ()
 });
 
 test("확인할 것: 코드 + 측정값. 표본·경과·규제선 ±0.5억, 없으면 빈 목록", () => {
-  assert.deepEqual(risksOf({ n: 5, age: 90, median: 100_000 }), []);
-  assert.deepEqual(risksOf({ n: 4, age: 91, median: 100_000 }), [["few_deals", 4], ["stale_deal", 91]]);
+  assert.deepEqual(checksOf({ n: 5, age: 90, median: 100_000 }), []);
+  assert.deepEqual(checksOf({ n: 4, age: 91, median: 100_000 }), [["few_deals", 4], ["stale_deal", 91]]);
   assert.deepEqual(REG_LINES, [15, 25]);
-  assert.deepEqual(risksOf({ n: 5, age: 0, median: 145_000 }), [["reg_line", 15]]);
-  assert.deepEqual(risksOf({ n: 5, age: 0, median: 155_000 }), [["reg_line", 15]]);
-  assert.deepEqual(risksOf({ n: 5, age: 0, median: 155_001 }), []);
-  assert.deepEqual(risksOf({ n: 5, age: 0, median: 250_000 }), [["reg_line", 25]]);
+  assert.deepEqual(checksOf({ n: 5, age: 0, median: 145_000 }), [["reg_line", 15]]);
+  assert.deepEqual(checksOf({ n: 5, age: 0, median: 155_000 }), [["reg_line", 15]]);
+  assert.deepEqual(checksOf({ n: 5, age: 0, median: 155_001 }), []);
+  assert.deepEqual(checksOf({ n: 5, age: 0, median: 250_000 }), [["reg_line", 25]]);
 });
 
 const cell = (area, n, median) => {
@@ -82,29 +82,28 @@ const cell = (area, n, median) => {
   out[cellField("areaSqm")] = area;
   out[cellField("n")] = n;
   out[cellField("median")] = median;
-  out[cellField("reasons")] = [];
+  out[cellField("position")] = [];
   return out;
 };
-const row = (id, year, cells) => {
+const row = (cells) => {
   const out = new Array(APARTMENT_FIELDS.length).fill(null);
-  out[APARTMENT_FIELDS.indexOf("id")] = id;
-  out[APARTMENT_FIELDS.indexOf("buildYear")] = year;
   out[APARTMENT_FIELDS.indexOf("cells")] = cells;
   return out;
 };
 
-test("같은 값대의 위치: 값대×면적대로만 묶고 서울 전체를 보며, 동률은 같은 자리, 준공을 모르면 그 코드가 없다", () => {
-  const [a, b, c, d, other] = [cell(84, 10, 100_000), cell(84, 10, 105_000), cell(84, 3, 109_999), cell(84, 7, 101_000), cell(59, 9, 100_000)];
-  addPeers([{ apartments: [row("a", 2000, [a]), row("b", 2010, [b])] }, { apartments: [row("c", 2010, [c]), row("d", null, [d]), row("e", 1990, [other])] }]);
-  const reasons = (x) => Object.fromEntries(x[cellField("reasons")]);
-  assert.deepEqual(reasons(a), { peers_n: 4, build_rank: 3, deals_rank: 1 });
-  assert.deepEqual(reasons(b), { peers_n: 4, build_rank: 1, deals_rank: 1 });
-  assert.deepEqual(reasons(c), { peers_n: 4, build_rank: 1, deals_rank: 4 });
-  assert.deepEqual(reasons(d), { peers_n: 4, deals_rank: 3 });
-  assert.deepEqual(reasons(other), { peers_n: 1, build_rank: 1, deals_rank: 1 });
+test("같은 값대의 위치: 값대×면적대로만 묶고 서울 전체를 본다. 칸 수만 싣고 몇 번째인지는 싣지 않는다", () => {
+  const [a, b, c, other] = [cell(84, 10, 100_000), cell(84, 10, 109_999), cell(84, 3, 110_000), cell(59, 9, 100_000)];
+  addPeers([{ apartments: [row([a]), row([b])] }, { apartments: [row([c, other])] }]);
+  const position = (x) => x[cellField("position")];
+  assert.deepEqual(position(a), [["peers_n", 2]]);
+  assert.deepEqual(position(b), [["peers_n", 2]]);
+  assert.deepEqual(position(c), [["peers_n", 1]]);
+  assert.deepEqual(position(other), [["peers_n", 1]]);
 });
 
 test("필드 목록과 한도: 파일 머리가 칸 모양을 말한다, 한도는 40KiB·500,000B·25개", () => {
   assert.equal(new Set(CELL_FIELDS).size, CELL_FIELDS.length);
+  assert.deepEqual(CELL_FIELDS.slice(-4), ["sampleGrade", "scores", "position", "checks"]);
+  assert.deepEqual(CELL_FIELDS.filter((name) => /confidence|reasons|risks|rank/i.test(name)), [], "판정으로 읽히는 필드 이름을 다시 쓰지 않는다(clo, #856)");
   assert.deepEqual(LIMITS, { fileGzip: 40_960, totalGzip: 500_000, files: 25 });
 });

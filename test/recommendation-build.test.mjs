@@ -54,15 +54,16 @@ test("날짜를 나눠 싣는다: 빌드 시각·구별 도착일·창 시작·�
   assert.deepEqual(nowon.asOf, { deals: "2026-08-14", windowStart: "2026-02-13", indexRef: "202608", indexFilled: false, rules: "2026-10-01" });
 });
 
-test("꺼진 유형: 점수는 null 이고 0 이 아니다. 세대수도 null, 어느 파일에도 판정 글자가 없다", () => {
+test("점수는 null 이고 0 이 아니다. 세대수도 null, 어느 파일에도 판정·순위·시험 글자가 없다", () => {
   const files = build({ [NOWON]: many(5) });
   const [row] = files.nowon.apartments;
   assert.equal(row[A.households], null);
   assert.equal(row[A.cells][0][C("scores")], null);
-  for (const type of Object.values(files.nowon.types)) assert.equal(type.status, "off");
+  assert.deepEqual(Object.values(files.nowon.types).map((type) => type.status), ["off", "none", "none"]);
   const text = JSON.stringify(files);
   assert.doesNotMatch(text, /추천|유리|불리|저평가|유망|투자|TOP/);
-  assert.doesNotMatch(text, /"score"|"rank"|"living":[^{]/);
+  assert.doesNotMatch(text, /"score"|"living":[^{]/);
+  assert.doesNotMatch(text, /rank|prereg/i, "순위 값·시험 사유 코드를 싣지 않는다(pm·clo, #856)");
 });
 
 test("n<3 은 값을 내지 않고 K 로만 센다: 평균 대입 0, 값대는 값을 낸 칸과 같은 지수 보정", () => {
@@ -114,10 +115,10 @@ test("표본 등급은 기준일에서 칸 마지막 계약일까지로 잰다(�
   };
   // 2026-08-15 에서 90일 전은 05-17, 91일 전은 05-16.
   const grade = (date) => rowsOf(build({ [NOWON]: at(date) }).nowon)[0].cells[0];
-  assert.equal(grade("2026-05-17")[C("confidence")], "enough");
-  assert.deepEqual(grade("2026-05-17")[C("risks")], []);
-  assert.equal(grade("2026-05-16")[C("confidence")], "partial");
-  assert.deepEqual(grade("2026-05-16")[C("risks")], [["stale_deal", 91]]);
+  assert.equal(grade("2026-05-17")[C("sampleGrade")], "enough");
+  assert.deepEqual(grade("2026-05-17")[C("checks")], []);
+  assert.equal(grade("2026-05-16")[C("sampleGrade")], "partial");
+  assert.deepEqual(grade("2026-05-16")[C("checks")], [["stale_deal", 91]]);
 });
 
 test("거래 규칙: 해제·직거래는 빼고, 창 밖 거래는 값에 안 든다", () => {
@@ -197,8 +198,8 @@ test("결정성: 입력 순서가 달라도 같은 바이트이고, 파일 안 �
 
 test("같은 값대의 위치는 구를 가로질러 잰다", () => {
   const files = build({ [NOWON]: many(3), [SEONGDONG]: many(4, { sggCd: SEONGDONG, umdNm: "옥수동", buildYear: 2010 }) });
-  assert.deepEqual(rowsOf(files.nowon)[0].cells[0][C("reasons")], [["peers_n", 2], ["build_rank", 2], ["deals_rank", 2]]);
-  assert.deepEqual(rowsOf(files.seongdong)[0].cells[0][C("reasons")], [["peers_n", 2], ["build_rank", 1], ["deals_rank", 1]]);
+  assert.deepEqual(rowsOf(files.nowon)[0].cells[0][C("position")], [["peers_n", 2]]);
+  assert.deepEqual(rowsOf(files.seongdong)[0].cells[0][C("position")], [["peers_n", 2]]);
 });
 
 test("기준 달을 못 정하면 던진다(빌더가 어제 판을 둔다)", () => {

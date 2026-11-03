@@ -26,7 +26,7 @@ import { BASIS_DATE as COST_BASIS } from "./purchase-costs.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { RAW_DIR, readSameNames, readSlotFile } from "./realestate-raw.ts";
 import { recentMonths } from "./realestate-source.ts";
-import { addPeers, risksOf } from "./recommendation-reasons.ts";
+import { addPeers, checksOf } from "./recommendation-reasons.ts";
 import { ALGORITHM_VERSION, APARTMENT_FIELDS, areaBand, CELL_FIELDS, costFields, gradeOf, LIMITS, priceBand, SCHEMA_VERSION, TYPES } from "./recommendation.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -65,7 +65,7 @@ const lastOf = (deals) => [...deals].sort((a, b) => (a.date < b.date ? 1 : a.dat
 const thinValue = (deals, levels, reference) => quantile(deals.map((d) => adjust(d, levels, reference).value).sort((a, b) => a - b), 0.5);
 
 /**
- * 구 하나의 단지 줄과 뺀 곳(reasons 는 서울 전체를 본 뒤 addPeers 가 채운다).
+ * 구 하나의 단지 줄과 뺀 곳(position 은 서울 전체를 본 뒤 addPeers 가 채운다).
  * items: 창을 덮는 매매 원본, older: 그보다 이전 12개월 안 매매 원본(건수만), rents: 창을 덮는 전월세 원본, same: 그 구의 동명 이름(화면 이름용).
  */
 export function districtRows({ items, older = [], rents = [], levels, reference, now, same = undefined }) {
@@ -96,8 +96,8 @@ export function districtRows({ items, older = [], rents = [], levels, reference,
       const last = lastOf(cellDeals);
       const n = cellDeals.length;
       const age = today - dayOf(last.date);
-      const confidence = gradeOf({ n, age });
-      if (!confidence) {
+      const sampleGrade = gradeOf({ n, age });
+      if (!sampleGrade) {
         const key = `${priceBand(thinValue(cellDeals, levels, reference))}|${areaBand(name)}`;
         thin.set(key, (thin.get(key) ?? 0) + 1);
         continue;
@@ -109,7 +109,7 @@ export function districtRows({ items, older = [], rents = [], levels, reference,
         name, n, s.median, s.low, s.high, s.raw, s.unadjusted,
         cost.extra, cost.total, cost.loanGeneral, cost.loanFirstTime, cost.cashGeneral, cost.cashFirstTime,
         last.amount, last.date, last.floor, n + (olderCount.get(name) ?? 0), jeonseCount.get(name) ?? 0,
-        confidence, null, [], risksOf({ n, age, median: s.median }),
+        sampleGrade, null, [], checksOf({ n, age, median: s.median }),
       ]);
     }
     if (!cells.length) continue;

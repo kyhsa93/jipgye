@@ -1,7 +1,7 @@
 /**
  * 예산으로 보는 서울 아파트 근거표의 값 규칙 (#816 P1-1). 빌더가 쓰고(build-recommendation.ts), 브라우저는 구워진 파일만 받아 거른다.
  *
- * 이 표에는 점수도 순위도 없다. 칸마다 값·표본·비용 사실만 싣고, 어느 칸이 낫다는 값은 어디에도 없다. 세 유형은 전부 꺼져 있고 꺼진 값은 0 이 아니라 null 이다.
+ * 이 표에는 점수도 순위도 없다. 칸마다 값·표본·비용 사실만 싣고, 어느 칸이 낫다는 값은 어디에도 없다. 칸의 scores 는 0 이 아니라 null 이다.
  * 사용자 입력(예산·면적·구)은 화면에서 거르기만 하고, 자기자금·대출액은 이 파일들에 들어오지 않는다.
  */
 
@@ -31,13 +31,14 @@ export function gradeOf({ n, age }) {
 }
 
 /**
- * 유형 상태. 코드만 싣고 문장은 화면이 두 언어로 받는다. 켜는 일은 이 파일의 범위가 아니다 - 실거주는 PREREG 6절 조건을 모두 넘고 소유자가 확인해야 하고, 미래가치·균형은 내지 않는다.
+ * 유형 상태. 코드만 싣고 문장은 화면이 두 언어로 받는다. 실거주는 꺼져 있고(off), 켜는 일은 이 파일의 범위가 아니다 - PREREG 6절 조건을 모두 넘고 소유자가 확인해야 한다.
+ * 미래가치·균형은 꺼진 것이 아니라 낼 계획이 없다(none). 「시험을 못 넘어서」로 적으면 넘으면 낸다는 말로 읽힌다(clo, #856).
  * K-apt·서울 값은 쓰지 않는다(#823 미달, #847 대조 전). 세대수(households)도 #24 전까지 null 이다.
  */
 export const TYPES = Object.freeze({
   living: { status: "off", reasons: ["no_transit", "no_households"] },
-  future: { status: "off", reasons: ["failed_prereg", "one_regime_only"] },
-  balanced: { status: "off", reasons: ["needs_both"] },
+  future: { status: "none", reasons: ["not_planned"] },
+  balanced: { status: "none", reasons: ["not_planned"] },
 });
 
 /** 면적대. 칸 이름(거래가 가장 많은 면적)으로 가른다. */
@@ -51,14 +52,14 @@ export const priceBand = (value10k) => Math.floor(value10k / 10_000);
 
 /**
  * 파일이 배열로 싣는 필드의 이름. 칸마다 키를 되풀이하면 뜨거운 창에서 합 한도에 닿아(#816 PR 본문의 측정) 배열로 싣고, 위치가 코드에만 있지 않게 파일 머리에 이 목록을 같이 싣는다.
- * reasons·risks 는 [코드, 측정값] 쌍의 목록이다(recommendation-reasons.ts).
+ * position·checks 는 [코드, 측정값] 쌍의 목록이다(recommendation-reasons.ts). scores 는 칸마다 null 이다 - 뺄지는 cto 판단 대기(#856).
  */
 export const APARTMENT_FIELDS = ["id", "name", "dong", "buildYear", "households", "aliases", "cells"];
 export const CELL_FIELDS = [
   "areaSqm", "n", "median", "low", "high", "rawMedian", "unadjustedDeals",
   "extraCost", "totalCost", "loanCapGeneral", "loanCapFirstTime", "cashGeneral", "cashFirstTime",
   "lastAmount", "lastDate", "lastFloor", "deals12m", "jeonseN",
-  "confidence", "scores", "reasons", "risks",
+  "sampleGrade", "scores", "position", "checks",
 ];
 export const apartmentField = (name) => APARTMENT_FIELDS.indexOf(name);
 export const cellField = (name) => CELL_FIELDS.indexOf(name);

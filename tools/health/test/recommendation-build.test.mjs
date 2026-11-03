@@ -17,7 +17,7 @@ const ARRIVAL_DAYS = 7;
 /** 한도의 90% 를 넘으면 한도가 터지기 전에 다시 판정한다. */
 const NEAR = 0.9;
 
-test("파일이 25개이고 유형은 전부 꺼져 있다", { skip }, () => {
+test("파일이 25개이고 유형 상태가 코드와 같다", { skip }, () => {
   assert.equal(names.length, LIMITS.files);
   for (const name of names) assert.deepEqual(JSON.parse(read(name)).types, JSON.parse(JSON.stringify(TYPES)), name);
 });
