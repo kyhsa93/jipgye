@@ -55,6 +55,9 @@ const DELAY_MS = 200;
 const TIMEOUT_MS = 15_000;
 const RETRY_WAIT_MS = 3_000;
 const STOP_AFTER_FAILED_SLOTS = 5;
+export const STARTED_MARKER = "fetch-started.json";
+/** 이 행 수 이상인 슬롯이 절반 아래로 줄면 출력에 따로 적는다. 판정에는 안 쓴다(PREREG 6절). */
+const SHRUNK_MIN_ROWS = 20;
 /** 이 시각 안에는 호출을 시작하지 않는다. 수집·요약·배포가 겹치는 시간이다(PREREG 5절). */
 const QUIET = { from: 8 * 60, to: 12 * 60 + 30 };
 
@@ -332,6 +335,9 @@ async function cmdFetch({ root, out, now, noPin, delayMs, retryWaitMs }) {
   const slots = plannedSlots();
   mkdirSync(path.join(outDir, "sale"), { recursive: true });
   const observedAt = now.toISOString();
+  // 호출을 시작한 실행은 어떻게 끝나도 이 파일이 아티팩트로 남아 다음 dispatch를 막는다. 호출 전에 멈춘 실행에는 없다(PREREG 5절).
+  const started = `${JSON.stringify({ startedAt: observedAt, commit: process.env.GITHUB_SHA ?? null })}\n`;
+  writeFileSync(path.join(outDir, STARTED_MARKER), started);
   const log = [];
   let calls = 0;
   let failedInARow = 0;
@@ -380,6 +386,8 @@ async function cmdFetch({ root, out, now, noPin, delayMs, retryWaitMs }) {
   });
   if (leaked.length) {
     rmSync(outDir, { recursive: true, force: true });
+    mkdirSync(outDir, { recursive: true });
+    writeFileSync(path.join(outDir, STARTED_MARKER), started);
     return fail(5, `출력 ${leaked.length}개에 비밀값이 있어 출력 폴더를 지웠다`);
   }
   const okSlots = log.filter((s) => s.ok).length;
@@ -412,7 +420,6 @@ async function loadRefetched(dir, log, root) {
     else if (!fetched) problem = entry?.error ?? "호출 안 됨";
     else if (fetched.totalCount !== fetched.count) problem = `totalCount ${fetched.totalCount} ≠ 행 ${fetched.count}`;
     else if (stored.items.length > 0 && fetched.count === 0) problem = `행 ${stored.items.length} → 0, 빈 응답`;
-    else if (stored.items.length >= 20 && fetched.count < stored.items.length * 0.5) problem = `행 ${stored.items.length} → ${fetched.count}, 절반 아래`;
     out.push({ ...slot, stored, fetched, problem });
   }
   return out;
@@ -444,6 +451,11 @@ async function cmdCompare({ root, refetched, out, now: nowArg }) {
     for (const c of d.changes) changesFile.push(JSON.stringify({ code: s.code, yearMonth: s.yearMonth, group: s.group, ...c }));
   }
   writeFileSync(path.join(out, "changed-rows.jsonl"), changesFile.length ? `${changesFile.join("\n")}\n` : "");
+
+  // 절반 아래로 줄어도 totalCount가 맞으면 원본의 답이므로 변화로 센다. 판정에 손대지 않고 눈에 띄게 적기만 한다.
+  const shrunk = diffs
+    .filter((s) => s.d.rows >= SHRUNK_MIN_ROWS && s.d.fetchedRows < s.d.rows * 0.5)
+    .map((s) => ({ code: s.code, yearMonth: s.yearMonth, group: s.group, stored: s.d.rows, fetched: s.d.fetchedRows, gone: s.d.counts.gone, gonePublic: s.d.counts.gonePublic, valueOut: s.d.valueOut }));
 
   // 대조: 해석이 어긋나면 다섯 슬롯이 다 망가진다. 한 슬롯의 일괄 삭제는 중앙값을 안 움직인다.
   const control = diffs.filter((s) => s.group === "control");
@@ -528,6 +540,7 @@ async function cmdCompare({ root, refetched, out, now: nowArg }) {
     coverage: { core: coverageCore, rowTest: coverageRow },
     extraFields,
     failed,
+    shrunk,
   };
   writeFileSync(path.join(out, "summary.json"), `${JSON.stringify(summary, null, 1)}\n`);
 
@@ -536,6 +549,7 @@ async function cmdCompare({ root, refetched, out, now: nowArg }) {
   if (result.invalid) for (const why of result.invalid) console.log(`  무효 사유: ${why}`);
   if (result.triggers) console.log(`  문턱: ${Object.entries(result.triggers).map(([k, v]) => `${k}=${v ? "넘음" : "안 넘음"}`).join(" ")}`);
   console.log(`호출 ${log.calls}/${MAX_CALLS}, 실패 슬롯 ${failed.length}, 대조 중앙 ${pct(controlMedian)}, 수신 본 ${pct(coverageCore)} · 07~08 ${pct(coverageRow)}, 새 필드 ${extraFields.join(",") || "없음"}`);
+  for (const s of shrunk) console.log(`절반 아래(변화로 셈) ${s.code}-${s.yearMonth} ${s.group}: 행 ${s.stored} → ${s.fetched}, 사라짐 ${s.gone}(시장 ${s.gonePublic}), 값 나감 ${s.valueOut}`);
   console.log(`A1 값 행 ${rows.value} / 시장 행 ${rows.market} = ${pct(summary.rowTest.share)} (문턱 ${pct(THRESHOLDS.rowShare)}, ${summary.rowTest.threshold}행)`);
   console.log(`A2 칸 변화 ${cells.changed} / ${cells.base} = ${pct(cells.base ? cells.changed / cells.base : null)} (문턱 ${pct(THRESHOLDS.cellShare)}): |Δ|≥1% ${cells.moved}, 탈락 ${cells.lost}, 진입 ${cells.gained}. 값이 조금이라도 바뀐 칸 ${cells.anyShift}, |Δ| P50 ${cells.shiftP50}% P90 ${cells.shiftP90}% 최대 ${cells.shiftMax}%`);
   console.log(`A3 억 구간 ${cells.band} / ${cells.base} = ${pct(cells.base ? cells.band / cells.base : null)} (문턱 ${pct(THRESHOLDS.bandShare)})`);
