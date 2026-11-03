@@ -1,0 +1,312 @@
+// 슬롯 동결 측정 스크립트 시험(#820). 실제 API를 부르지 않는다. 호출은 전부 이 파일 안의 스텁 서버로 간다.
+//   node --test research/slot-freeze-2026-11/measure.test.mjs
+import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { createServer } from "node:http";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import test from "node:test";
+import { promisify } from "node:util";
+import { CONTROL_CODES, CONTROL_MONTH, CORE_MONTHS, MAX_CALLS, PIN_DIGEST, THRESHOLDS, compareCells, diffSlot, inQuietHours, judge, plannedSlots } from "./measure.mjs";
+
+const run = promisify(execFile);
+const SCRIPT = path.join(import.meta.dirname, "measure.mjs");
+const REPO = path.resolve(import.meta.dirname, "../..");
+const KEY = "TESTKEY%2Bsecret%3D%3D";
+const NOW = "2026-11-04T05:00:00.000Z"; // 14:00 KST
+
+function row(over = {}) {
+  return {
+    aptDong: "", aptNm: "시험단지", buildYear: 2010, buyerGbn: "개인", cdealDay: "", cdealType: "", dealAmount: "100,000", dealDay: 5, dealMonth: 7, dealYear: 2026,
+    dealingGbn: "중개거래", estateAgentSggNm: "서울 강남구", excluUseAr: 84.5, floor: 3, jibun: 10, landLeaseholdGbn: "N", rgstDate: "", sggCd: 11680, slerGbn: "개인", umdNm: "수서동",
+    ...over,
+  };
+}
+const REGISTERED = { rgstDate: "26.09.01", aptDong: 108 };
+const CANCELLED = { cdealType: "O", cdealDay: "26.10.01" };
+
+test("diffSlot: 같으면 변화 0", () => {
+  const d = diffSlot([row(), row({ floor: 9 })], [row({ floor: 9 }), row()]);
+  assert.deepEqual([d.changes.length, d.hashGone, d.valueOut, d.valueIn, d.marketRows], [0, 0, 0, 0, 2]);
+});
+
+test("diffSlot: 등기만 붙으면 등기 행이고 값 행이 아니다(aptDong이 같이 와도)", () => {
+  const d = diffSlot([row()], [row(REGISTERED)]);
+  assert.equal(d.counts.registered, 1);
+  assert.deepEqual([d.valueOut, d.valueIn], [0, 0]);
+});
+
+test("diffSlot: 짝 없는 해제는 값이 나간다", () => {
+  const d = diffSlot([row()], [row(CANCELLED)]);
+  assert.deepEqual([d.counts.cancelMarked, d.counts.cancelNoTwin, d.counts.cancelWithTwin], [1, 1, 0]);
+  assert.deepEqual([d.valueOut, d.valueIn], [1, 0]);
+});
+
+test("diffSlot: 해제 행이 새로 붙고 같은 키 정상 행이 남으면 짝 있는 해제이고 값이 안 바뀐다", () => {
+  const d = diffSlot([row()], [row(), row(CANCELLED)]);
+  assert.deepEqual([d.counts.appearedCancelled, d.counts.cancelWithTwin, d.counts.cancelNoTwin], [1, 1, 0]);
+  assert.deepEqual([d.valueOut, d.valueIn], [0, 0]);
+});
+
+test("diffSlot: 금액 정정은 계약 키가 달라 사라짐 + 새 행, 값 행 2", () => {
+  const d = diffSlot([row()], [row({ dealAmount: "90,000" })]);
+  assert.deepEqual([d.counts.gone, d.counts.appeared], [1, 1]);
+  assert.deepEqual([d.valueOut, d.valueIn], [1, 1]);
+});
+
+test("diffSlot: 직거래가 사라지면 사라짐이지만 값 행이 아니다", () => {
+  const d = diffSlot([row({ dealingGbn: "직거래" })], []);
+  assert.deepEqual([d.counts.gone, d.counts.gonePublic, d.valueOut, d.marketRows], [1, 0, 0, 0]);
+});
+
+test("diffSlot: 같은 키 행은 건수로 뺀다", () => {
+  const d = diffSlot([row(), row()], [row()]);
+  assert.deepEqual([d.counts.gone, d.valueOut], [1, 1]);
+});
+
+test("diffSlot: 기타 필드 변화는 등기로 세지 않는다", () => {
+  const d = diffSlot([row()], [row({ estateAgentSggNm: "서울 서초구" })]);
+  assert.equal(d.counts.other, 1);
+  const already = diffSlot([row({ rgstDate: "26.09.01" })], [row({ rgstDate: "26.09.02" })]);
+  assert.equal(already.counts.other, 1);
+});
+
+test("judge: 문턱 경계는 넘은 것으로 본다", () => {
+  const quiet = { rows: { value: 0, market: 8671 }, cells: { changed: 0, band: 0, base: 3038 }, cancelShare: { before: 1.4, after: 1.4 }, mature: { before: ["a"], after: ["a"] } };
+  assert.equal(judge(quiet).verdict, "재수집 불필요");
+  assert.equal(judge({ ...quiet, rows: { value: 86, market: 8671 } }).triggers.a1, false);
+  assert.equal(judge({ ...quiet, rows: { value: 87, market: 8671 } }).triggers.a1, true);
+  assert.equal(judge({ ...quiet, rows: { value: 100, market: 10000 } }).triggers.a1, true);
+  assert.equal(judge({ ...quiet, cells: { changed: 60, band: 0, base: 3038 } }).triggers.a2, false);
+  assert.equal(judge({ ...quiet, cells: { changed: 61, band: 0, base: 3038 } }).triggers.a2, true);
+  assert.equal(judge({ ...quiet, cells: { changed: 0, band: 30, base: 3038 } }).triggers.a3, false);
+  assert.equal(judge({ ...quiet, cells: { changed: 0, band: 31, base: 3038 } }).verdict, "재수집 필요: 시세 칸");
+  assert.equal(judge({ ...quiet, cancelShare: { before: 1.4, after: 1.5 } }).triggers.b2, false);
+  assert.equal(judge({ ...quiet, cancelShare: { before: 1.4, after: 1.6 } }).triggers.b2, true);
+  assert.equal(judge({ ...quiet, mature: { before: ["a"], after: ["a", "b"] } }).verdict, "재수집 필요: 해제·등기 화면만");
+  assert.deepEqual(judge({ ...quiet, rows: { value: 9999, market: 1 }, invalid: ["대조"] }), { verdict: "무효", invalid: ["대조"] });
+});
+
+test("compareCells: 움직임·탈락·진입·억 구간을 나눠 센다", () => {
+  const before = new Map([["a", 100000], ["b", 100000], ["c", 199999], ["d", 50000]]);
+  const after = new Map([["a", 100000], ["b", 101000], ["c", 200000], ["e", 70000]]);
+  const c = compareCells(before, after);
+  assert.deepEqual([c.base, c.moved, c.lost, c.gained, c.changed, c.band], [4, 1, 1, 1, 3, 1]);
+});
+
+test("계획: 140슬롯, 겹침 없음, 상한 150 안에 다시 시도 몫 10", () => {
+  const slots = plannedSlots();
+  assert.equal(slots.length, 140);
+  assert.equal(new Set(slots.map((s) => `${s.code}-${s.yearMonth}`)).size, 140);
+  assert.equal(MAX_CALLS, 150);
+  assert.ok(slots.every((s) => s.yearMonth !== "202611"));
+});
+
+test("조용한 시간: 08:00 이상 12:30 미만 KST", () => {
+  const at = (hhmm) => new Date(`2026-11-04T${hhmm}:00+09:00`);
+  assert.deepEqual(["07:59", "08:00", "12:29", "12:30"].map((t) => inQuietHours(at(t))), [false, true, true, false]);
+});
+
+test("PREREG에 문턱·고정값이 코드와 같게 적혀 있다", () => {
+  const doc = readFileSync(path.join(import.meta.dirname, "PREREG.md"), "utf8");
+  assert.ok(doc.includes(PIN_DIGEST));
+  assert.deepEqual(THRESHOLDS, { rowShare: 0.01, cellShare: 0.02, cellMove: 0.01, bandShare: 0.01, cancelPp: 0.2 });
+  for (const text of ["값 행 ÷ 시장 행 ≥ 1%", "칸 변화 ÷ n≥3 칸 ≥ 2%", "억 구간이 바뀐 칸 ÷ n≥3 칸 ≥ 1%", "0.2%p", "87행"]) assert.ok(doc.includes(text), text);
+});
+
+// ── 스텁 서버 끝에서 끝까지 ──
+const esc = (v) => String(v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const toXml = (items) =>
+  `<?xml version="1.0"?><response><header><resultCode>000</resultCode><resultMsg>OK</resultMsg></header><body><items>${items
+    .map((it) => `<item>${Object.entries(it).map(([k, v]) => `<${k}>${v === "" ? " " : esc(v)}</${k}>`).join("")}</item>`)
+    .join("")}</items><numOfRows>9999</numOfRows><pageNo>1</pageNo><totalCount>${items.length}</totalCount></body></response>`;
+
+/** 합성 원본. 본 슬롯마다 단지 하나·넉 건. 11680-202606만 실제 원본을 그대로 넣어 해석이 저장 형식을 되돌리는지 본다. */
+function makeRoot() {
+  const root = mkdtempSync(path.join(tmpdir(), "slot-freeze-root-"));
+  mkdirSync(path.join(root, "raw/sale"), { recursive: true });
+  mkdirSync(path.join(root, "raw/ecos"), { recursive: true });
+  mkdirSync(path.join(root, "docs/data"), { recursive: true });
+  cpSync(path.join(REPO, "raw/ecos/apt-price-index.json"), path.join(root, "raw/ecos/apt-price-index.json"));
+  cpSync(path.join(REPO, "docs/data/outlook.json"), path.join(root, "docs/data/outlook.json"));
+  for (const { code, yearMonth } of plannedSlots()) {
+    const items = code === "11680" && yearMonth === "202606"
+      ? JSON.parse(readFileSync(path.join(REPO, "raw/sale/11680-202606.json"), "utf8")).items
+      : [0, 1, 2, 3].map((i) =>
+          row({
+            sggCd: Number(code), aptNm: `단지${yearMonth}`, dealYear: Number(yearMonth.slice(0, 4)), dealMonth: Number(yearMonth.slice(4)), dealDay: 10 + i,
+            dealAmount: (100000 + i * 10000).toLocaleString("en-US"), floor: i + 1,
+          })
+        );
+    const file = { kind: "sale", district: code, yearMonth, ok: true, resultCode: 0, count: items.length, totalCount: items.length, observedAt: "2026-08-17T00:00:00.000Z", previousObservedAt: null, arrivals: {}, items };
+    writeFileSync(path.join(root, "raw/sale", `${code}-${yearMonth}.json`), `${JSON.stringify(file)}\n`);
+  }
+  return root;
+}
+
+async function withStub(root, respond, body) {
+  const log = [];
+  const server = createServer((req, res) => {
+    const url = new URL(req.url, "http://stub");
+    const code = url.searchParams.get("LAWD_CD");
+    const ym = url.searchParams.get("DEAL_YMD");
+    log.push({ code, ym, key: url.searchParams.get("serviceKey") });
+    const stored = JSON.parse(readFileSync(path.join(root, "raw/sale", `${code}-${ym}.json`), "utf8")).items;
+    const answer = respond({ code, ym, stored, calls: log.filter((c) => c.code === code && c.ym === ym).length });
+    res.statusCode = answer.status ?? 200;
+    res.end(answer.raw ?? toXml(answer.items ?? stored));
+  });
+  await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  try {
+    return await body(`http://127.0.0.1:${server.address().port}/getRTMSDataSvcAptTradeDev`, log);
+  } finally {
+    await new Promise((r) => server.close(r));
+  }
+}
+
+async function cli(args, env = {}) {
+  try {
+    const r = await run(process.execPath, [SCRIPT, ...args], { env: { PATH: process.env.PATH, ...env }, maxBuffer: 1 << 26 });
+    return { code: 0, out: r.stdout + r.stderr };
+  } catch (err) {
+    return { code: err.code, out: `${err.stdout}${err.stderr}` };
+  }
+}
+
+const walk = (dir) => readdirSync(dir).flatMap((n) => (statSync(path.join(dir, n)).isDirectory() ? walk(path.join(dir, n)) : [path.join(dir, n)]));
+const snapshot = (dir) => new Map(walk(dir).map((f) => [f, readFileSync(f, "utf8")]));
+const fetchArgs = (root, out, extra = []) => ["fetch", "--root", root, "--out", out, "--now", NOW, "--no-pin", "--delay-ms", "0", "--retry-wait-ms", "0", ...extra];
+
+async function e2e(respond) {
+  const root = makeRoot();
+  const work = mkdtempSync(path.join(tmpdir(), "slot-freeze-out-"));
+  const before = snapshot(root);
+  try {
+    return await withStub(root, respond, async (endpoint, log) => {
+      const fetched = await cli(fetchArgs(root, path.join(work, "got")), { MOLIT_API_KEY: KEY, MOLIT_API_ENDPOINT: endpoint });
+      const compared = await cli(["compare", "--root", root, "--refetched", path.join(work, "got"), "--out", path.join(work, "res")]);
+      const summary = existsSync(path.join(work, "res/summary.json")) ? JSON.parse(readFileSync(path.join(work, "res/summary.json"), "utf8")) : null;
+      const outputs = [fetched.out, compared.out, ...[...snapshot(work).values()]].join("\n");
+      assert.deepEqual(snapshot(root), before, "원본이 바뀌었다(쓰기 0 위반)");
+      for (const needle of [KEY, encodeURIComponent(KEY), decodeURIComponent(KEY), endpoint]) assert.ok(!outputs.includes(needle), `출력에 비밀값: ${needle}`);
+      return { fetched, compared, summary, log, outputs };
+    });
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(work, { recursive: true, force: true });
+  }
+}
+
+test("끝에서 끝까지: 그대로 돌려주면 변화 0, 호출 140, 재수집 불필요, 실제 행도 해석을 지나 같다", async () => {
+  const { fetched, summary, log } = await e2e(() => ({}));
+  assert.equal(fetched.code, 0, fetched.out);
+  assert.equal(log.length, 140);
+  assert.ok(log.every((c) => c.key === decodeURIComponent(KEY)), "키가 운영 수집과 같은 모양으로 가지 않는다");
+  assert.equal(summary.result.verdict, "재수집 불필요");
+  assert.equal(summary.rowTest.value, 0);
+  assert.equal(summary.cells.changed, 0);
+  const real = summary.byMonth["202606"];
+  assert.deepEqual([real.hashGone, real.gone, real.appeared, real.valueOut, real.valueIn], [0, 0, 0, 0, 0]);
+  assert.ok(real.rows > 200, "실제 원본 슬롯이 안 들어갔다");
+  assert.equal(summary.extraFields.length, 0);
+});
+
+test("끝에서 끝까지: 해제가 넉넉하면 값 문턱을 넘는다", async () => {
+  const { summary } = await e2e(({ ym, stored }) => (ym === "202608" ? { items: stored.map((r, i) => (i === 0 ? { ...r, ...CANCELLED } : r)) } : {}));
+  assert.equal(summary.rowTest.value, 25);
+  assert.equal(summary.result.verdict, "재수집 필요: 시세 칸");
+  assert.equal(summary.result.triggers.a1, true);
+  assert.equal(summary.byMonth["202608"].cancelNoTwin, 25);
+});
+
+test("끝에서 끝까지: 등기만 잔뜩 붙으면 값은 그대로이고 해제·등기 화면만 판정된다", async () => {
+  const { summary } = await e2e(({ ym, stored }) => (ym === "202604" ? { items: stored.map((r) => ({ ...r, ...REGISTERED })) } : {}));
+  assert.equal(summary.result.verdict, "재수집 필요: 해제·등기 화면만");
+  assert.equal(summary.rowTest.value, 0);
+  assert.equal(summary.cells.changed, 0);
+  assert.ok(summary.byMonth["202604"].registered > 0);
+  assert.deepEqual([summary.result.triggers.a1, summary.result.triggers.b1], [false, true]);
+});
+
+test("끝에서 끝까지: 대조 슬롯 다수가 다 달라지면 무효이고 값은 판정하지 않는다", async () => {
+  const { summary } = await e2e(({ ym, stored }) => (ym === CONTROL_MONTH ? { items: stored.map((r) => ({ ...r, jibun: `${r.jibun}-x` })) } : {}));
+  assert.equal(summary.result.verdict, "무효");
+});
+
+test("끝에서 끝까지: 대조 슬롯 하나의 일괄 변화로는 무효가 되지 않는다", async () => {
+  const one = CONTROL_CODES[1];
+  const { summary } = await e2e(({ code, ym, stored }) => (ym === CONTROL_MONTH && code === one ? { items: stored.map((r) => ({ ...r, jibun: `${r.jibun}-x` })) } : {}));
+  assert.equal(summary.control.shares.at(-1), 1);
+  assert.notEqual(summary.result.verdict, "무효");
+});
+
+test("끝에서 끝까지: 새 필드는 빼고 비교하고 적는다, 없어진 필드는 무효", async () => {
+  const extra = await e2e(({ stored }) => ({ items: stored.map((r) => ({ ...r, newField: "x" })) }));
+  assert.equal(extra.summary.result.verdict, "재수집 불필요");
+  assert.deepEqual(extra.summary.extraFields, ["newField"]);
+  const gone = await e2e(({ stored }) => ({ items: stored.map(({ slerGbn, ...r }) => r) }));
+  assert.equal(gone.summary.result.verdict, "무효");
+});
+
+test("끝에서 끝까지: 빈 응답 슬롯은 변화가 아니라 실패로 세고 많으면 무효", async () => {
+  const { summary } = await e2e(({ ym, code }) => (ym === "202606" && code === "11680" ? { items: [] } : {}));
+  assert.equal(summary.failed.length, 1);
+  assert.equal(summary.byMonth["202606"].gone, 0);
+  const many = await e2e(({ ym }) => (ym === "202607" ? { items: [] } : {}));
+  assert.equal(many.summary.result.verdict, "무효");
+  assert.equal(many.summary.rowTest.value, 0);
+  const totals = await e2e(({ ym, stored }) => (ym === "202607" ? { raw: toXml(stored).replace("<totalCount>4<", "<totalCount>5<") } : {}));
+  assert.equal(totals.summary.result.verdict, "무효");
+});
+
+test("상한: 첫 시도가 늘 실패해도 150회를 넘지 않는다", async () => {
+  const { log, fetched } = await e2e(({ calls }) => (calls === 1 ? { status: 500 } : {}));
+  assert.ok(log.length <= MAX_CALLS, `호출 ${log.length}`);
+  assert.equal(fetched.code, 0);
+});
+
+test("상한: 드문 실패는 다시 시도하되 모든 슬롯이 첫 시도를 받는다", async () => {
+  const { log } = await e2e(({ code, calls }) => (code === "11110" && calls === 1 ? { status: 500 } : {}));
+  assert.equal(log.length, 140 + 7);
+  assert.equal(new Set(log.map((c) => `${c.code}-${c.ym}`)).size, 140);
+});
+
+test("연속 실패: 다섯 슬롯이 내리 실패하면 멈춘다", async () => {
+  const { log, summary } = await e2e(() => ({ status: 500 }));
+  assert.equal(log.length, 10);
+  assert.equal(summary.result.verdict, "무효");
+});
+
+test("비밀값: 응답이 키를 되돌려도 어디에도 남지 않는다", async () => {
+  const raw = `<OpenAPI_ServiceResponse><cmmMsgHeader><errMsg>bad key ${KEY} / ${decodeURIComponent(KEY)}</errMsg></cmmMsgHeader></OpenAPI_ServiceResponse>`;
+  const { outputs, log } = await e2e(() => ({ raw }));
+  assert.equal(log.length, 10);
+  assert.ok(outputs.includes("***"));
+});
+
+test("거부: 호출 전에 멈춘다(키 없음, 저장소 안 출력, 조용한 시간, 고정값 불일치)", async () => {
+  const root = makeRoot();
+  const work = mkdtempSync(path.join(tmpdir(), "slot-freeze-out-"));
+  const out = path.join(work, "got");
+  try {
+    await withStub(root, () => ({}), async (endpoint, log) => {
+      const env = { MOLIT_API_KEY: KEY, MOLIT_API_ENDPOINT: endpoint };
+      assert.equal((await cli(fetchArgs(root, out))).code, 2);
+      assert.equal((await cli(fetchArgs(root, path.join(REPO, "research/x")), env)).code, 2);
+      assert.equal((await cli(fetchArgs(root, path.join(root, "x")), env)).code, 2);
+      assert.equal((await cli(["fetch", "--root", root, "--out", out, "--now", "2026-11-04T00:30:00.000Z", "--no-pin"], env)).code, 3);
+      assert.equal((await cli(["fetch", "--root", root, "--out", out, "--now", NOW], env)).code, 4);
+      assert.equal(log.length, 0);
+      assert.ok(!existsSync(out));
+      assert.ok(!existsSync(path.join(REPO, "research/x")));
+    });
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+    rmSync(work, { recursive: true, force: true });
+  }
+});
+
+test("본 달 목록은 등록한 다섯 달이다", () => {
+  assert.deepEqual(CORE_MONTHS, ["202604", "202605", "202606", "202607", "202608"]);
+});
