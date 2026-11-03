@@ -79,6 +79,8 @@ jobs:
           node scripts/build-district-change.ts
           node scripts/build-complex-ratio.ts
           node scripts/build-rent-preview.ts
+          # 근거표 25개(#816). --soft-fail 은 프로그램 안의 예외를, `|| echo` 는 모듈 로드 실패를 막는다 - 실패하면 어제 파일을 두고 그날 다른 산출물은 커밋된다(#97).
+          node scripts/build-recommendation.ts --soft-fail || echo "::warning::근거표 빌더를 실행하지 못했습니다 - 어제 reco-*.json 을 그대로 둡니다"
           node scripts/build-search-index.ts
         env:
           MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}

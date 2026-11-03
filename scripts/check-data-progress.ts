@@ -97,7 +97,7 @@ export const UPDATED_AT_EXCLUDED = ["market-history", "news-history", "realestat
 export const BUILDER_OUTPUTS = [
   "budget-deals", "budget-months", "cancellation", "complex-history", "complex-price", "complex-ratio", "conversion", "deal-search", "deals", "direct-deals",
   "district-change", "floor-gap", "jeonse-risk", "lease-expiry", "market", "monthly-cost", "move-in", "news", "outlook", "outlook-indicators",
-  "realestate", "realestate-trend", "record-high", "registration", "renewal-cells", "renewal-facts", "rent-flow", "rent-preview", "rents", "repeat-sales",
+  "realestate", "realestate-trend", "reco", "record-high", "registration", "renewal-cells", "renewal-facts", "rent-flow", "rent-preview", "rents", "repeat-sales",
   "search-index", "segment-change", "summary", "summary-source", "week-digest",
 ];
 /** F2 코드 목록 어느 쪽에도 없는 파일 이름(시험용). */

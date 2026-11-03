@@ -70,7 +70,7 @@ export const cellKey = (item, same = undefined) => `${complexKey(item?.aptNm, it
 const liveSale = (item) => !String(item?.cdealType ?? "").trim() && number(item?.dealAmount) > 0;
 
 /** 갱신은 이전 조건을 잇는 것이라 지금 값이 아니고, 반전세는 한 값으로 묶을 수 없다. */
-const newJeonse = (item) =>
+export const newJeonse = (item) =>
   String(item?.contractType ?? "").trim() !== "갱신" &&
   number(item?.monthlyRent) === 0 &&
   number(item?.deposit) > 0;

@@ -50,6 +50,8 @@ async function main() {
   run("node scripts/build-district-change.ts");
   run("node scripts/build-complex-ratio.ts");
   run("node scripts/build-rent-preview.ts");
+  // 근거표(#816). --soft-fail 은 프로그램 안의 예외를, `|| echo` 는 모듈 로드 실패를 막는다 - 이 빌더 하나로 그날 산출물이 버려지지 않게(머리 주석).
+  run('node scripts/build-recommendation.ts --soft-fail || echo "::warning::근거표 빌더를 실행하지 못했습니다 - 어제 reco-*.json 을 그대로 둡니다"');
   run("node scripts/build-search-index.ts");
   run("node scripts/news-context.ts");
 
