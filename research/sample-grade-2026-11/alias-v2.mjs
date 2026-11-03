@@ -1,5 +1,6 @@
 // PREREG v2 의 재현(#816 PR #856). 근거표 칸(별칭 합침)과 판정 칸(grade.mjs, 합치지 않음)의 차이를 센다. 결과는 alias-v2.out.
 //
+//   git fetch origin pull/856/head
 //   git archive f1bea675 scripts raw/sale raw/rent raw/ecos docs/data | tar -x -C <트리>
 //   git archive cef5ab55 raw/sale raw/ecos | tar -x -C <고정 입력>
 //   node research/sample-grade-2026-11/alias-v2.mjs --tree <트리> --seen <고정 입력> --now 2026-11-03T12:00:00Z
@@ -170,6 +171,17 @@ for (const window of SEEN.windows) {
   console.log(`  합치지 않음  ${gapOf(targetsOf(seenDeals, seenIndex, window).rows)}`);
   console.log(`  별칭 합침    ${gapOf(targetsOf(aliased, seenIndex, window).rows)}`);
 }
+
+console.log(`\n== 같은 비교를 1~2개월 창으로 (참고. 이미 본 달만) ==`);
+const seenMonths = SEEN.windows.flat().sort();
+const moved = [];
+for (const window of [...seenMonths.map((m) => [m]), ...seenMonths.slice(0, -1).map((m, i) => [m, seenMonths[i + 1]])]) {
+  const gap = (rows) => stats(rows.filter((r) => gradeOf(r) === "충분")).p80 - stats(rows.filter((r) => gradeOf(r) === "일부 부족")).p80;
+  const [x, y] = [gap(targetsOf(seenDeals, seenIndex, window).rows), gap(targetsOf(aliased, seenIndex, window).rows)];
+  moved.push(Math.abs(y - x));
+  console.log(`  ${window.join("+")}  차이 ${x.toFixed(4)} → ${y.toFixed(4)}  움직임 ${(y - x).toFixed(4)}${Math.sign(x) === Math.sign(y) ? "" : "  부호 다름"}`);
+}
+console.log(`  최대 움직임 ${Math.max(...moved).toFixed(4)}`);
 
 console.log(`\n== 검증 구간의 별칭 키 거래 수 (건수만. 오차·등급을 계산하지 않는다) ==`);
 const all = rawRows(tree, "sale").flatMap((item) => {

@@ -125,6 +125,24 @@ test("judge: 합성 트리에서 끝까지 돌고 대상이 모자라면 판정 
   assert.match(out.stdout, /판정: 판정 불가/);
 });
 
+test("alias-judge: 표대로 칸을 합쳐 나란히 찍고, 판정은 하지 않으며, 표가 없으면 멈춘다", () => {
+  const root = tree({ indexEnd: "202611", slots: ["202608", "202609", "202610", "202611", "202701"] });
+  const script = path.join(import.meta.dirname, "alias-judge.mjs");
+  const call = () => spawnSync(process.execPath, ["--no-warnings", script, "--root", root], { encoding: "utf8" });
+  assert.equal(call().status, 2);
+  // 지번 2 의 거래 둘은 혼자면 앞 거래가 모자라 근거 부족이고, 합치면 지번 1 칸의 뒤 거래가 된다.
+  const moved = [20, 25].map((day) => item({ jibun: "2", dealMonth: 9, dealDay: day }));
+  writeFileSync(path.join(root, "raw/sale/11680-moved.json"), JSON.stringify({ items: moved }));
+  mkdirSync(path.join(root, "scripts"));
+  writeFileSync(path.join(root, "scripts/complex-id.ts"), 'export const COMPLEX_ALIASES = { "11680|역삼동|2|가": "11680|역삼동|1|가" };\n');
+  const out = call();
+  assert.equal(out.status, 0, out.stderr);
+  const enough = [...out.stdout.matchAll(/충분 대상 (\d+)/g)].map((m) => Number(m[1]));
+  assert.equal(enough.length, 2);
+  assert.equal(enough[1], enough[0] + 2);
+  assert.doesNotMatch(out.stdout, /판정:/);
+});
+
 test("seen: 고정 입력이 아니면 멈춘다", () => {
   const root = tree({ indexEnd: "202611", slots: ["202611"] });
   const out = spawnSync(process.execPath, [SCRIPT, "seen", "--root", root], { encoding: "utf8" });
