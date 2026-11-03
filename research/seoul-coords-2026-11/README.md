@@ -1,9 +1,10 @@
 # 서울 좌표·역 위치 측정 (#847)
 
-주인 data-engineer, 검토 cto, 약관 clo, 판정 pm. 아직 호출하지 않았다(샘플·실키 모두 0회).
+주인 data-engineer, 검토 cto, 약관 clo, 판정 pm. 2026-11-03 한 번 호출했다(run 41619321705, commit `1eea5c82`, 호출 3+1). 판정은 #847 댓글이다: 판정값 2,621/3,058 = 85.71%로 통과. 실거주 점수를 켜는 것이 아니고 근거표에도 아직 쓰지 않는다.
 
 서울특별시 공공데이터를 사용한 결과. 수치는 집계가 계산. 출처: [서울시 공동주택 아파트 정보(OA-15818)](https://data.seoul.go.kr/dataList/OA-15818/S/1/datasetView.do), [서울시 역사마스터 정보(OA-21232)](https://data.seoul.go.kr/dataList/OA-21232/S/1/datasetView.do). 제공 서울특별시. [공공누리 1유형 : 출처표시 (상업적 이용 및 변경 가능)](https://www.kogl.or.kr/info/licenseType1.do). 조회일은 `summary.json`의 `attribution.retrievedAt`(문서 확인 2026-11-03). 이 표시는 요약이 실리는 곳마다 그대로 싣는다(`summary.json`, `result.out`, 이 파일, 판정 댓글. clo 조건 ②).
 
+- `summary.json`, `result.out`: 측정 결과. 집계만 있다. 역은 노선별 784행(이름 655)이고 `result.out`의 「역 784곳」은 행 수다.
 - `measure.mjs`: `plan`(호출 없음), `guard`(재실행 거부), `fetch`(호출, 집계만 저장)
 - `.github/workflows/seoul-coords-measure.yml`: dispatch 전용 워크플로
 - `measure.test.mjs`: 스텁 서버 시험. `node --test research/seoul-coords-2026-11/measure.test.mjs` (CI 글롭 밖이라 손으로 돌린다. kapt-fill과 같다)
@@ -31,7 +32,7 @@
 | `OpenAptInfo` | 위키 2,893행(샘플 키로 2줄만 봄) | 3회 | 5회(5,000행까지) |
 | `subwayStationMaster` | 위키 784행(샘플 키로 2줄만 봄) | 1회 | 2회(2,000행까지) |
 
-- 기대 4회, 실행 상한 7회. 조기 중단 재실행까지 합쳐 최대 21회.
+- 기대 4회, 실행 상한 7회. 조기 중단 재실행까지 합쳐 지금 코드로 최대 14회(2실행).
 - **전수다. 표본·자르기가 없다.** 첫 응답의 `list_total_count`가 상한을 넘으면 더 부르지 않고 멈춘다(`over-budget`). 하한을 내지 않는다.
 - 페이지 한도: `ERROR-336` 「데이터요청은 한번에 최대 1000건을 넘을 수 없습니다」(두 서비스 메시지 표), 이용안내 「한번에 최대 1,000건」(2026-11-03).
 - **일 한도: 일반 키의 값은 공개 문서에 없다.** 이용안내·FAQ에 적힌 일 1,000건은 실시간 지하철 키 얘기다. 그 안내에 「이용 제약 없이 계속 사용하시려면 활용사례(갤러리)에」도 있어, 제약이 있다는 것만 읽힌다. 이번 4~7회가 어떤 값에도 닿을 가능성은 작지만 확인은 아니다. 이 측정으로도 값을 알 수는 없고, 받은 코드(`outcomes`)와 한도 꼴 응답 헤더(`unverified.limitHeaders`)만 남긴다.
