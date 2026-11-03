@@ -1,5 +1,5 @@
 # 정기 실행 누락 탐지 (#322). `daily-update` 의 `schedule` 실행이 **통째로 빠져도** 아무도 모르던 자리를 막는다.
-# (#530 으로 Deploy site 의 마지막 성공을 보는 셋째 검사, #657 로 데이터 진척을 보는 넷째 검사가 아래 스텝에 붙었다. 아래 서술은 첫 검사 것이다.)
+# (#530 으로 Deploy site 의 마지막 성공을 보는 셋째 검사, #657 로 데이터 진척을 보는 넷째 검사와 경고를 이슈로 올리는 report job 이 붙었다. 아래 서술은 첫 검사 것이다.)
 # 재는 것 하나: **지난 36시간(미끄러지는 창) 안에 `daily-update` 의 schedule run 이 cron 수만큼 떴는가.**
 # 모자라면 이 워크플로가 실패로 끝난다 - 빨간 run 과 GitHub 의 실패 알림이 저장소 안에서 우는 자리다(새 서비스·계정·비용 0, #322 범위 3).
 #
@@ -44,8 +44,17 @@ on:
     - cron: "29 5 * * *"
     - cron: "29 17 * * *"
   workflow_dispatch:
+    inputs:
+      # 시험 표지(#657 완료 조건 12): 판정과 무관하게 표지 이슈 한 건으로 쓰기 경로를 잰다. 자유 문자열을 안 받고, 정기 실행에서는 비어 있다.
+      issue_test:
+        description: "이슈 쓰기 경로 시험"
+        type: choice
+        options:
+          - none
+          - dispatch-test
+        default: none
 
-# 읽기만 한다. 다른 워크플로의 run 목록을 보려면 actions: read 가 필요하다.
+# 기본은 읽기만 한다. 다른 워크플로의 run 목록을 보려면 actions: read 가 필요하다. 쓰기 권한은 아래 report job 에만 있다(#657 D2).
 permissions:
   contents: read
   actions: read
@@ -58,6 +67,9 @@ jobs:
   watch:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    outputs:
+      # 넷째 검사의 판정(ok 가 아닌 소스, JSON 한 줄). 스텝이 돌지 못하면 비고, report 가 그것을 실패로 친다.
+      progress_report: ${{ steps.progress.outputs.report }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -91,7 +103,34 @@ jobs:
         run: node scripts/check-schedule-runs.ts --check=deploy
       # 넷째 검사 (#657 V11): 「run 은 초록, 진척은 0」. 위 셋은 실행을 보고, 이것은 체크아웃한 main 의 데이터를 본다(수집기는 못 받으면 어제 값으로 간다).
       # 소스마다 주기(하루·영업일·월·반기·수동 월간)에 맞춘 문턱 - 확인 단계는 ::warning:: 만(run 초록), 알림 단계를 넘은 소스가 있으면 실패한다. 문턱과 근거는 그 스크립트 머리 주석.
-      # API·토큰이 필요 없다(파일만 읽는다). `!cancelled()` 인 이유는 위와 같다.
+      # API·토큰이 필요 없다(파일만 읽는다). `!cancelled()` 인 이유는 위와 같다. 같은 스크립트가 빌더 산출물 나이(F2: updatedAt 30h 경고·54h 실패)도 본다.
       - name: 데이터가 소스 주기대로 앞으로 나가는지 본다
+        id: progress
         if: ${{ !cancelled() }}
         run: node scripts/check-data-progress.ts
+
+  # 경고의 출구 (#657 D1·D2): `::warning::` 은 run 이 초록이고 메일도 없다. watch 의 판정으로 묶음당 이슈 1건을 연다(틱당 새 이슈 3건 상한, 자동 닫기·댓글 없음). 규칙은 그 스크립트 머리 주석.
+  # `!cancelled()` 인 이유: watch 가 실패해도 경고는 이슈로 올라가야 한다. watch 의 결과가 비었거나 못 읽으면 조용히 넘어가지 않고 이 job 이 실패한다.
+  # job 권한이 최상위를 대신한다: issues 쓰기와 스크립트 체크아웃용 contents 읽기뿐이다(actions 없음). 새 시크릿·cron·외부 호출 없음, npm ci 없음(의존 0).
+  # 체크아웃에 토큰을 남기지 않는다(persist-credentials: false). 표지 입력은 run 에 끼워 넣지 않고 env 로 넘긴다.
+  report:
+    needs: watch
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+      - name: 데이터 진척 경고를 이슈로 올린다
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROGRESS_REPORT: ${{ needs.watch.outputs.progress_report }}
+          ISSUE_TEST: ${{ inputs.issue_test }}
+        run: node scripts/report-data-progress.ts

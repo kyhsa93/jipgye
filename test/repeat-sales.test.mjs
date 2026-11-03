@@ -255,6 +255,14 @@ test("runRepeatSales: 실패는 ::warning 한 줄로 바꾸고 던지지 않으�
     assert.equal(good.ok, true);
     assert.equal(JSON.parse(await readFile(file, "utf8")).rows[0].n, 5);
     assert.deepEqual(await readdir(path.dirname(file)), ["repeat-sales.json"], "임시 파일이 남지 않는다");
+    // updatedAt(#657 D6): 맨 앞에 그 실행의 시각. 워치독 F2 가 소프트 실패(어제 파일 유지)를 이것으로 본다. 같은 입력·같은 시각이면 같은 바이트다.
+    const now = new Date("2026-10-15T00:00:00Z");
+    await runRepeatSales({ rawDir: raw, roneFile: rone, now, window: ["202411", "202608"], file, log: () => {} });
+    const first = await readFile(file, "utf8");
+    assert.equal(JSON.parse(first).updatedAt, now.toISOString());
+    assert.equal(Object.keys(JSON.parse(first))[0], "updatedAt");
+    await runRepeatSales({ rawDir: raw, roneFile: rone, now, window: ["202411", "202608"], file, log: () => {} });
+    assert.equal(await readFile(file, "utf8"), first);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }

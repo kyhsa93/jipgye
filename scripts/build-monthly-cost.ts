@@ -367,7 +367,8 @@ export async function generate({ now = new Date(), outFile: out = outFile, serie
     return null;
   }
 
-  await write(out, JSON.stringify(payload.seoul));
+  // updatedAt: 워치독 F2(#657 D6)가 이 값으로 소프트 실패를 본다. 시계는 `now` 하나라 같은 입력·같은 시각이면 같은 바이트다.
+  await write(out, JSON.stringify({ updatedAt: now.toISOString(), ...payload.seoul }));
   for (const p of payload.seoul.points) {
     console.log(
       `  ${p.base}→${p.month} 전세안 ${p.jeonse.baseCost10k}→${p.jeonse.cost10k} (${p.jeonse.yoy}%, 95% ${p.jeonse.ci?.join("~")}, 금리 몫 ${p.jeonse.rateShare}%)` +
