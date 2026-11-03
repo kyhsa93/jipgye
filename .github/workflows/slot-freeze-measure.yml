@@ -1,0 +1,106 @@
+# 슬롯 동결 측정 (#820).
+# 사람이 dispatch 로 한 번만 돌린다. cron 없음. 저장소에 쓰지 않는다(contents: read, 커밋·푸시 스텝 없음, 출력은 $RUNNER_TEMP 아래).
+# 규칙은 research/slot-freeze-2026-11/PREREG.md. 호출 상한 150회는 스크립트가 실행 1회 안에서 지키고, 두 번째 실행은 소유자 승인 범위를 넘으므로 「재실행 거부」 스텝이 호출 전에 막는다(PREREG 5절).
+# 시크릿은 호출 스텝 env 에만 둔다. 08:00~12:30 KST 에는 스크립트가 호출 없이 멈춘다.
+name: Slot freeze measure
+
+on:
+  workflow_dispatch:
+    inputs:
+      prereg_commit:
+        description: "PREREG.md 가 main 에 들어간 커밋 (40자리)"
+        type: string
+        required: true
+
+# actions: read 는 「재실행 거부」가 아티팩트 목록을 읽는 데만 쓴다.
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: slot-freeze-measure
+  cancel-in-progress: false
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PREREG_COMMIT: ${{ inputs.prereg_commit }}
+    steps:
+      # 사전 등록 순서를 git 이력으로 확인하므로 전체 이력이 필요하다. blob 은 필요할 때만 받는다(ledger-snapshot.yml 과 같다).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          filter: blob:none
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+
+      - name: 입력 확인
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main" || { echo "main 에서만 돌린다(받은 ref: $GITHUB_REF)" >&2; exit 1; }
+
+      - name: 사전 등록 순서 확인
+        run: |
+          for output in summary.json result.out; do
+            node scripts/check-prereg-order.ts --prereg "$PREREG_COMMIT" \
+              --prereg-path research/slot-freeze-2026-11/PREREG.md \
+              --output "research/slot-freeze-2026-11/$output"
+          done
+
+      # 어느 하나라도 확인하지 못하면 호출하지 않는다. 호출 전에 멈춘 실행(0회)은 아티팩트가 없어 새 dispatch로 다시 돌릴 수 있다(PREREG 5절).
+      - name: 재실행 거부
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          dir=research/slot-freeze-2026-11
+          test "$GITHUB_RUN_ATTEMPT" = "1" || { echo "재실행이다(시도 $GITHUB_RUN_ATTEMPT). 호출 예산 밖이라 거부한다" >&2; exit 1; }
+          artifacts="$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=slot-freeze" --jq .total_count)"
+          test "$artifacts" = "0" || { echo "아티팩트 slot-freeze 수가 0이 아니다(받은 값: $artifacts). 이미 호출한 실행이 있어 거부한다" >&2; exit 1; }
+          for output in summary.json result.out; do
+            test ! -e "$dir/$output" || { echo "$dir/$output 이 이미 있다. 측정이 끝나 거부한다" >&2; exit 1; }
+          done
+          git diff --quiet "$PREREG_COMMIT" HEAD -- "$dir/PREREG.md" "$dir/measure.mjs" || { echo "등록 뒤 PREREG.md·measure.mjs 가 바뀌었다. 새 버전으로 등록하기 전에는 거부한다" >&2; exit 1; }
+          { echo "등록 뒤 바뀐 scripts/ 파일(거부하지 않음, 판정문에 적는다):"; git diff --name-only --no-renames "$PREREG_COMMIT" HEAD -- scripts/; } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: 다시 받기 (호출 상한 150)
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+          MOLIT_API_ENDPOINT: ${{ secrets.MOLIT_API_ENDPOINT }}
+        run: |
+          node research/slot-freeze-2026-11/measure.mjs fetch --out "$RUNNER_TEMP/slot-freeze/got"
+
+      - name: 비교와 판정 (호출 없음)
+        run: |
+          set -o pipefail
+          node research/slot-freeze-2026-11/measure.mjs compare \
+            --refetched "$RUNNER_TEMP/slot-freeze/got" --out "$RUNNER_TEMP/slot-freeze/result" \
+            | tee "$RUNNER_TEMP/slot-freeze/result.out" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: 쓰기 0 확인
+        run: |
+          test -z "$(git status --porcelain)" || { git status --porcelain >&2; echo "작업 트리가 바뀌었다" >&2; exit 1; }
+
+      # 원본 행은 raw/sale 과 같은 공개 필드뿐이고 키·주소는 스크립트가 걸러 낸다. 숫자를 다시 세려면 필요하다(PREREG 5절).
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: ${{ !cancelled() }}
+        with:
+          name: slot-freeze
+          path: ${{ runner.temp }}/slot-freeze
+          retention-days: 30
+          if-no-files-found: error
+
+      # 취소·시간 초과면 끝의 비밀값 검사를 못 지난 행이 있으므로 시작 표시만 남긴다. 그래도 다음 dispatch는 막힌다(PREREG 5절).
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: ${{ cancelled() }}
+        with:
+          name: slot-freeze
+          path: ${{ runner.temp }}/slot-freeze/got/fetch-started.json
+          retention-days: 30
+          if-no-files-found: ignore
