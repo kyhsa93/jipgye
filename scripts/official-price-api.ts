@@ -43,6 +43,16 @@ export const MIN_GAP_MS = 1100;
 /** 한도(22)·키 오류(30~33): 끝난 지번까지 저장하고 정상 종료한다. */
 export const STOP_CODES = new Set(["22", "30", "31", "32", "33"]);
 export const LICENSE_MAX_AGE_DAYS = 365;
+/** 연속 실패 중단의 stopReason. 실행기가 이 값을 보고 경고로 올린다(#650). */
+export const STOP_CONSECUTIVE_FAIL = "연속 호출 실패 5회";
+/**
+ * 연속 실패 5회 뒤 쉬는 간격(#650). 초당 1회라 5회는 약 5초 장애여서, 10-11~11-02 수집 24회 중 15회가 이것으로 하루 예산을 버렸다.
+ * 지번 하나가 끝나면 회복으로 보고 처음 간격으로 돌아가므로 실행 하나의 쉼은 RETRY_REST_TOTAL_MS 로 따로 막는다.
+ * 시간 근거: 예산을 다 쓴 실행 중 가장 긴 것이 204분(10-18)이고 +60분 = 264분 < MAX_RUNTIME_MIN 270 < job timeout 300.
+ * 쉬어도 호출을 쓰지 않고, 오류 뒤 호출도 같은 예산(st.calls)에서 나간다.
+ */
+export const RETRY_RESTS_MS = [2, 5, 10, 10, 10].map((m) => m * 60000);
+export const RETRY_REST_TOTAL_MS = 60 * 60000;
 
 /** 응답 항목에서 꺼내 쓰는 필드의 전부(C7). 나머지 키는 읽자마자 버린다. */
 export const PRICE_FIELDS = ["hsprc", "stdDay", "crtnDay", "mgmBldrgstPk"];
@@ -150,8 +160,14 @@ export function checkLicense({ license = OFFICIAL_PRICE_LICENSE, checked = OFFIC
   return { license: license.trim(), checked: checked.trim() };
 }
 
+/** 쉬는 간격 목록. 실제 서버는 고정이고, 시험(로컬 모의 서버)만 쉼표로 준 ms 로 바꾼다(주지 않으면 쉬지 않는다). CALL_GAP_MS 와 같은 규칙. */
+export function retryRests({ local, raw }: { local: boolean; raw?: string }) {
+  if (!local) return RETRY_RESTS_MS;
+  return String(raw ?? "").split(",").map((x) => x.trim()).filter(Boolean).map(Number).filter((n) => Number.isFinite(n) && n >= 0);
+}
+
 /**
- * 호출기. 시작 간격·호출 수 예산·마감 시각을 지킨다. 재시도 없음.
+ * 호출기. 시작 간격·호출 수 예산·마감 시각을 지킨다. 호출기 자체는 재시도하지 않는다(연속 실패 뒤 쉼은 runCollector, #650).
  * 반환 객체의 page(op, target, pageNo, extra)는 {total, items(원본)}을 돌려주거나 던진다:
  *  - StopRun: 한도·키 코드(22,30~33)·HTTP 429·예산·마감
  *  - ApiFatalError: HTTP 401/403
@@ -443,7 +459,8 @@ export function project({ callsSoFar, doneParcels, totalParcels, dailyBudget }) 
 /**
  * 실행 한 번. 쓰기는 맨 끝이다. opts:
  *  baseUrl, key, rawDir(대상 지번을 정한 raw/ 체크아웃), names, loadTargets 결과 대신 targets(Map) 주입 가능, outDir, rawCommit,
- *  startDate, endDate, budget, gapMs, deadlineMs, softDeadlineMs, license·licenseChecked(비우면 official-price-license.mjs 상수), now(Date), fetchImpl, log(line)
+ *  startDate, endDate, budget, gapMs, deadlineMs, softDeadlineMs, license·licenseChecked(비우면 official-price-license.mjs 상수), now(Date), fetchImpl, log(line),
+ *  restsMs(연속 실패 뒤 쉬는 간격, 비우면 쉬지 않고 멈춘다 - 실행기가 retryRests 값을 준다), restTotalMs(실행 하나의 쉼 합 상한), rest(ms)(시험이 실제로 안 쉬게 바꾼다)
  * 반환: 요약 객체(값 없음). 던지면 아무것도 쓰지 않은 것이다.
  */
 export async function runCollector(opts) {
@@ -451,13 +468,14 @@ export async function runCollector(opts) {
     key, targets, outDir, rawCommit, startDate = DEFAULT_START_DATE, endDate = DEFAULT_END_DATE, budget = DEFAULT_DAILY_BUDGET,
     gapMs = MIN_GAP_MS, deadlineMs = Infinity, softDeadlineMs = Infinity, license = OFFICIAL_PRICE_LICENSE, licenseChecked = OFFICIAL_PRICE_LICENSE_CHECKED, now = new Date(), fetchImpl, baseUrl, log = () => {},
     maxPages = MAX_PAGES_PER_PARCEL, // 시험용으로만 줄인다
+    restsMs = [], restTotalMs = RETRY_REST_TOTAL_MS, rest = sleep,
   } = opts;
   const y0 = Number(startDate.slice(0, 4));
   const y1 = Number(endDate.slice(0, 4));
   const years = [];
   for (let y = y0; y <= y1; y += 1) years.push(y);
   const summary: Record<string, any> = {
-    status: "", years, maxPages, calls: 0, finishedNow: 0, cappedParcels: 0, abandoned: 0, stopReason: null, wrote: [], merged: false,
+    status: "", years, maxPages, calls: 0, finishedNow: 0, cappedParcels: 0, abandoned: 0, stopReason: null, wrote: [], merged: false, rests: { count: 0, ms: 0 },
     stdOutOfRange: { items: 0, parcels: 0, sample: [] }, // 범위 밖 stdDay 로 건너뛴 항목 수·지번 수·표본(지번 키와 연도만, #802)
   };
 
@@ -478,6 +496,7 @@ export async function runCollector(opts) {
   const client = makeClient({ baseUrl, key, budget, gapMs, deadlineMs, fetchImpl });
   const finished = [];
   let stopped = null;
+  let restStep = 0; // 이번 장애에서 쉰 횟수
 
   for (const [k, t] of pending) {
     if (Date.now() >= softDeadlineMs) { stopped = "실행 시간 상한(새 지번 시작 안 함)"; break; }
@@ -504,11 +523,23 @@ export async function runCollector(opts) {
       const issues = {}; // 범위 밖 stdDay 는 그 항목만 건너뛰고 지번은 접는다(#802) - 던지면 이 실행의 결과가 통째로 버려진다
       finished.push({ k, t, byYear: foldParcel(price.items, areaItems, years, issues) }); // 호 단위 값은 여기서 버려진다
       noteStdOutOfRange(summary, k, issues, log);
+      restStep = 0; // 지번이 끝났으면 회복이다. 응답 하나로는 보지 않는다 - 503 과 200 이 번갈아 오는 날(11-02: 306회 호출에 4지번)은 아직 장애다
     } catch (e) {
       if (e instanceof StopRun) { stopped = e.reason; break; } // 이 지번은 통째로 버리고 다음 실행에 처음부터
       if (e instanceof ParcelFailed) {
         summary.abandoned += 1;
-        if (client.st.consecutiveFail >= 5) { stopped = "연속 호출 실패 5회"; break; }
+        if (client.st.consecutiveFail >= 5) {
+          // 키·한도(StopRun)·권한(ApiFatalError)은 위와 아래에서 이미 갈렸고 여기로 오지 않는다 - 쉬어서 풀리는 오류만 쉰다.
+          // 버려진 지번은 pending 에 남아 다음 실행이 처음부터 받는다(이번 실행에 되돌아가지 않는다).
+          const ms = restsMs[restStep];
+          if (ms === undefined || summary.rests.ms + ms > restTotalMs || Date.now() + ms >= softDeadlineMs) { stopped = STOP_CONSECUTIVE_FAIL; break; }
+          restStep += 1;
+          summary.rests.count += 1;
+          summary.rests.ms += ms;
+          log(`${STOP_CONSECUTIVE_FAIL}: ${toMin(ms)}분 쉬고 이어 간다(이번 장애 ${restStep}번째, 이번 실행 쉼 합 ${toMin(summary.rests.ms)}분)`);
+          await rest(ms);
+          client.st.consecutiveFail = 0;
+        }
         continue;
       }
       throw e; // 검증 실패·권한 오류: 쓰기 없이 실패
@@ -553,6 +584,8 @@ export async function runCollector(opts) {
   return summary;
 }
 
+const toMin = (ms) => Math.round(ms / 6000) / 10;
+
 /** 범위 밖 stdDay(#802): 건수·지번 수·표본(지번 키와 연도, 호 값 없음)을 요약에 더하고 한 줄 적는다. 표본은 5개까지. */
 function noteStdOutOfRange(summary, k, issues, log) {
   const n = issues["std-out-of-range"] ?? 0;
@@ -579,6 +612,7 @@ export function summaryLines(s, budget) {
   if (s.errCodes && Object.keys(s.errCodes).length) L.push(`- 오류 분류: ${JSON.stringify(s.errCodes)}`);
   if (s.errSamples && Object.keys(s.errSamples).length) L.push(`- 오류 표본(분류별 첫 건): ${Object.entries(s.errSamples).map(([k, v]) => `${k} = ${v}`).join(" / ")}`);
   if (s.stdOutOfRange?.items) L.push(`- 요청 범위 밖 stdDay 건너뜀 ${s.stdOutOfRange.items}건(지번 ${s.stdOutOfRange.parcels}개, 그 지번의 나머지 항목은 접었다): ${s.stdOutOfRange.sample.join(" / ")}`);
+  if (s.rests?.count) L.push(`- 쉼: 연속 실패 뒤 ${s.rests.count}번, 합 ${toMin(s.rests.ms)}분(호출은 쓰지 않는다)`);
   L.push(`- 중단: ${s.stopReason ?? "없음(남은 지번을 끝까지 돌았다)"}`);
   if (s.projection) L.push(`- 투영: 지번당 평균 ${s.projection.perParcel.toFixed(1)}회 -> 총 ${s.projection.total}회, 남은 ${s.projection.left}회 = 약 ${s.projection.days}일(하루 ${budget}회 기준)`);
   else L.push("- 투영: 끝난 지번이 없어 계산하지 못했다.");
