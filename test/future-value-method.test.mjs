@@ -66,6 +66,8 @@ test("결과 문단에 「상승기 한 구간·단지를 고르는 기준이 �
   assert.ok(paragraphs(ko()).find((p) => /낮은 가격대에 몰립니다/.test(p))?.match(ruleKo));
   assert.ok(paragraphs(en()).find((p) => /concentrated in the lower ones/.test(p))?.match(ruleEn));
   assert.doesNotMatch(ko() + en(), /\+0\.386|\+0\.121|\+0\.089/);
+  assert.ok(paragraphs(ko()).find((p) => /2025년 9월까지 알 수 있는 값/.test(p))?.includes("아래 표의 값도 상승기 한 구간의 것이고, 단지를 고르는 기준이 아닙니다."));
+  assert.ok(paragraphs(en()).find((p) => /known by September 2025/.test(p))?.includes("The figures in the table below also come from a single rising period and are not a basis for choosing a complex."));
   assert.match(ko(), /거래 수는 나누지 않았고/);
   assert.match(en(), /Deal count was not split/);
 });
