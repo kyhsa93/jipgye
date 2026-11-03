@@ -109,7 +109,7 @@ export function districtRows({ items, older = [], rents = [], levels, reference,
         name, n, s.median, s.low, s.high, s.raw, s.unadjusted,
         cost.extra, cost.total, cost.loanGeneral, cost.loanFirstTime, cost.cashGeneral, cost.cashFirstTime,
         last.amount, last.date, last.floor, n + (olderCount.get(name) ?? 0), jeonseCount.get(name) ?? 0,
-        sampleGrade, null, [], checksOf({ n, age, median: s.median }),
+        sampleGrade, [], checksOf({ n, age, median: s.median }),
       ]);
     }
     if (!cells.length) continue;

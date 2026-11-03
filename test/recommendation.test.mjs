@@ -103,7 +103,7 @@ test("같은 값대의 위치: 값대×면적대로만 묶고 서울 전체를 �
 
 test("필드 목록과 한도: 파일 머리가 칸 모양을 말한다, 한도는 40KiB·500,000B·25개", () => {
   assert.equal(new Set(CELL_FIELDS).size, CELL_FIELDS.length);
-  assert.deepEqual(CELL_FIELDS.slice(-4), ["sampleGrade", "scores", "position", "checks"]);
-  assert.deepEqual(CELL_FIELDS.filter((name) => /confidence|reasons|risks|rank/i.test(name)), [], "판정으로 읽히는 필드 이름을 다시 쓰지 않는다(clo, #856)");
+  assert.deepEqual(CELL_FIELDS.slice(-3), ["sampleGrade", "position", "checks"]);
+  assert.deepEqual(CELL_FIELDS.filter((name) => /confidence|reasons|risks|rank|score/i.test(name)), [], "판정으로 읽히는 필드 이름을 다시 쓰지 않는다(clo, #856)");
   assert.deepEqual(LIMITS, { fileGzip: 40_960, totalGzip: 500_000, files: 25 });
 });

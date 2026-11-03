@@ -54,15 +54,15 @@ test("날짜를 나눠 싣는다: 빌드 시각·구별 도착일·창 시작·�
   assert.deepEqual(nowon.asOf, { deals: "2026-08-14", windowStart: "2026-02-13", indexRef: "202608", indexFilled: false, rules: "2026-10-01" });
 });
 
-test("점수는 null 이고 0 이 아니다. 세대수도 null, 어느 파일에도 판정·순위·시험 글자가 없다", () => {
+test("점수 칸이 없다. 세대수는 null, 어느 파일에도 판정·순위·시험 글자가 없다", () => {
   const files = build({ [NOWON]: many(5) });
   const [row] = files.nowon.apartments;
   assert.equal(row[A.households], null);
-  assert.equal(row[A.cells][0][C("scores")], null);
+  assert.equal(CELL_FIELDS.includes("scores"), false);
   assert.deepEqual(Object.values(files.nowon.types).map((type) => type.status), ["off", "none", "none"]);
   const text = JSON.stringify(files);
   assert.doesNotMatch(text, /추천|유리|불리|저평가|유망|투자|TOP/);
-  assert.doesNotMatch(text, /"score"|"living":[^{]/);
+  assert.doesNotMatch(text, /score|"living":[^{]/i);
   assert.doesNotMatch(text, /rank|prereg/i, "순위 값·시험 사유 코드를 싣지 않는다(pm·clo, #856)");
 });
 

@@ -1,7 +1,7 @@
 /**
  * 예산으로 보는 서울 아파트 근거표의 값 규칙 (#816 P1-1). 빌더가 쓰고(build-recommendation.ts), 브라우저는 구워진 파일만 받아 거른다.
  *
- * 이 표에는 점수도 순위도 없다. 칸마다 값·표본·비용 사실만 싣고, 어느 칸이 낫다는 값은 어디에도 없다. 칸의 scores 는 0 이 아니라 null 이다.
+ * 이 표에는 점수도 순위도 없다. 칸마다 값·표본·비용 사실만 싣고, 어느 칸이 낫다는 값은 어디에도 없다.
  * 사용자 입력(예산·면적·구)은 화면에서 거르기만 하고, 자기자금·대출액은 이 파일들에 들어오지 않는다.
  */
 
@@ -51,15 +51,15 @@ export function areaBand(area) {
 export const priceBand = (value10k) => Math.floor(value10k / 10_000);
 
 /**
- * 파일이 배열로 싣는 필드의 이름. 칸마다 키를 되풀이하면 뜨거운 창에서 합 한도에 닿아(#816 PR 본문의 측정) 배열로 싣고, 위치가 코드에만 있지 않게 파일 머리에 이 목록을 같이 싣는다.
- * position·checks 는 [코드, 측정값] 쌍의 목록이다(recommendation-reasons.ts). scores 는 칸마다 null 이다 - 뺄지는 cto 판단 대기(#856).
+ * 파일이 배열로 싣는 필드의 이름. 칸마다 키를 되풀이하면 gzip 합이 1.24배가 되어(183일 창 2025-08-02: 배열 271,984B, 객체 338,139B. 둘 다 합 한도 안이다) 배열로 싣고, 위치가 코드에만 있지 않게 파일 머리에 이 목록을 같이 싣는다.
+ * position·checks 는 [코드, 측정값] 쌍의 목록이다(recommendation-reasons.ts).
  */
 export const APARTMENT_FIELDS = ["id", "name", "dong", "buildYear", "households", "aliases", "cells"];
 export const CELL_FIELDS = [
   "areaSqm", "n", "median", "low", "high", "rawMedian", "unadjustedDeals",
   "extraCost", "totalCost", "loanCapGeneral", "loanCapFirstTime", "cashGeneral", "cashFirstTime",
   "lastAmount", "lastDate", "lastFloor", "deals12m", "jeonseN",
-  "sampleGrade", "scores", "position", "checks",
+  "sampleGrade", "position", "checks",
 ];
 export const apartmentField = (name) => APARTMENT_FIELDS.indexOf(name);
 export const cellField = (name) => CELL_FIELDS.indexOf(name);
