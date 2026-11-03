@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-11-02T02:26:03.875Z",
-  "asOf": "2026-11-02",
+  "updatedAt": "2026-11-03T03:57:04.871Z",
+  "asOf": "2026-11-03",
   "trackedFrom": "2026-08-18",
   "basis": "unique-arrival-key",
   "comparable": false,
@@ -8,59 +8,60 @@
     "2026-10-23"
   ],
   "current": {
-    "from": "2026-10-27",
-    "to": "2026-11-02",
-    "sale": 1029,
-    "jeonse": 1933,
-    "wolse": 2098,
-    "cancelArrived": 18,
-    "cancelDated": 14,
-    "direct": 66,
-    "directShare": 6.4,
-    "records": 290,
-    "judged": 801,
+    "from": "2026-10-28",
+    "to": "2026-11-03",
+    "sale": 1064,
+    "jeonse": 1923,
+    "wolse": 2121,
+    "cancelArrived": 20,
+    "cancelDated": 15,
+    "direct": 118,
+    "directShare": 11.1,
+    "records": 271,
+    "judged": 778,
     "districts": [
       "11350",
-      "11320",
-      "11500"
+      "11230",
+      "11710"
     ],
     "months": {
       "sale": {
-        "202609": 162,
-        "202610": 867
+        "202609": 133,
+        "202610": 928,
+        "202611": 3
       },
       "rent": {
         "202609": 388,
-        "202610": 3642,
-        "202611": 1
+        "202610": 3491,
+        "202611": 165
       }
     }
   },
   "previous": {
-    "from": "2026-10-20",
-    "to": "2026-10-26",
-    "sale": 908,
-    "jeonse": 2076,
-    "wolse": 1954,
-    "cancelArrived": 24,
+    "from": "2026-10-21",
+    "to": "2026-10-27",
+    "sale": 871,
+    "jeonse": 1976,
+    "wolse": 1925,
+    "cancelArrived": 19,
     "cancelDated": 14,
-    "direct": 35,
-    "directShare": 3.9,
-    "records": 274,
-    "judged": 736,
+    "direct": 28,
+    "directShare": 3.2,
+    "records": 281,
+    "judged": 714,
     "districts": [
       "11350",
       "11500",
-      "11380"
+      "11320"
     ],
     "months": {
       "sale": {
-        "202609": 277,
-        "202610": 631
+        "202609": 231,
+        "202610": 640
       },
       "rent": {
-        "202609": 413,
-        "202610": 3617
+        "202609": 359,
+        "202610": 3542
       }
     }
   }

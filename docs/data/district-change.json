@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-02T02:26:10.491Z",
+  "updatedAt": "2026-11-03T03:57:09.573Z",
   "periods": {
     "base": [
       "202507",
@@ -25,27 +25,27 @@
     {
       "code": "11140",
       "name": "중구",
-      "cells": 40,
-      "change": 19.3,
-      "low": 16.9,
+      "cells": 41,
+      "change": 18.7,
+      "low": 16.8,
       "high": 21.9,
       "survey": 14.5,
       "level84": {
-        "base": 132233,
-        "recent": 157762
+        "base": 132577,
+        "recent": 157358
       }
     },
     {
       "code": "11170",
       "name": "용산구",
-      "cells": 50,
-      "change": 11.7,
+      "cells": 51,
+      "change": 11.2,
       "low": 7.3,
-      "high": 16.1,
+      "high": 15.2,
       "survey": 9.7,
       "level84": {
-        "base": 184037,
-        "recent": 205624
+        "base": 186251,
+        "recent": 207134
       }
     },
     {
@@ -345,7 +345,7 @@
     "11140-11305": false,
     "11140-11320": true,
     "11140-11350": false,
-    "11140-11380": true,
+    "11140-11380": false,
     "11140-11410": false,
     "11140-11440": false,
     "11140-11470": false,
@@ -615,229 +615,229 @@
   },
   "money": {
     "11140-11170": {
-      "change": -3942,
-      "low": -13149,
-      "high": 4053
+      "change": -3898,
+      "low": -12833,
+      "high": 5653
     },
     "11140-11200": {
-      "change": 10083,
-      "low": 4417,
-      "high": 15277
+      "change": 10832,
+      "low": 5404,
+      "high": 16050
     },
     "11140-11215": {
-      "change": 6052,
-      "low": -1455,
-      "high": 13059
+      "change": 6801,
+      "low": 737,
+      "high": 14207
     },
     "11140-11230": {
-      "change": -957,
-      "low": -5336,
-      "high": 4219
+      "change": -209,
+      "low": -4735,
+      "high": 5446
     },
     "11140-11260": {
-      "change": -13930,
-      "low": -18319,
-      "high": -9574
+      "change": -13182,
+      "low": -17706,
+      "high": -8828
     },
     "11140-11290": {
-      "change": -4154,
-      "low": -7892,
-      "high": 577
+      "change": -3406,
+      "low": -7308,
+      "high": 825
     },
     "11140-11305": {
-      "change": -12708,
-      "low": -17179,
-      "high": -7041
+      "change": -11959,
+      "low": -17214,
+      "high": -6681
     },
     "11140-11320": {
-      "change": -19968,
-      "low": -24258,
-      "high": -15688
+      "change": -19220,
+      "low": -23327,
+      "high": -14461
     },
     "11140-11350": {
-      "change": -11940,
-      "low": -15667,
-      "high": -7082
+      "change": -11191,
+      "low": -14998,
+      "high": -7257
     },
     "11140-11380": {
-      "change": -11201,
-      "low": -15406,
-      "high": -6626
+      "change": -10452,
+      "low": -15159,
+      "high": -5908
     },
     "11140-11410": {
-      "change": -4644,
-      "low": -8783,
-      "high": 571
+      "change": -3896,
+      "low": -8199,
+      "high": 1369
     },
     "11140-11440": {
-      "change": -4883,
-      "low": -9380,
-      "high": 2482
+      "change": -4135,
+      "low": -8917,
+      "high": 3592
     },
     "11140-11470": {
-      "change": -4548,
-      "low": -10619,
-      "high": 40
+      "change": -3800,
+      "low": -10226,
+      "high": 1189
     },
     "11140-11500": {
-      "change": -2332,
-      "low": -7163,
-      "high": 1600
+      "change": -1584,
+      "low": -6729,
+      "high": 2501
     },
     "11140-11530": {
-      "change": -11101,
-      "low": -15514,
-      "high": -6448
+      "change": -10352,
+      "low": -15757,
+      "high": -5866
     },
     "11140-11545": {
-      "change": -19711,
-      "low": -23963,
-      "high": -15007
+      "change": -18962,
+      "low": -23425,
+      "high": -15089
     },
     "11140-11560": {
-      "change": 1713,
-      "low": -2864,
-      "high": 7042
+      "change": 2462,
+      "low": -2879,
+      "high": 7486
     },
     "11140-11590": {
-      "change": 4439,
-      "low": -701,
-      "high": 9993
+      "change": 5187,
+      "low": 278,
+      "high": 10535
     },
     "11140-11620": {
-      "change": -10788,
-      "low": -15128,
-      "high": -5390
+      "change": -10040,
+      "low": -15669,
+      "high": -4424
     },
     "11140-11650": {
-      "change": -14927,
-      "low": -25630,
-      "high": -4874
+      "change": -14179,
+      "low": -25074,
+      "high": -3845
     },
     "11140-11680": {
-      "change": -10651,
-      "low": -21278,
-      "high": 1831
+      "change": -9902,
+      "low": -21756,
+      "high": 3329
     },
     "11140-11710": {
-      "change": 12186,
-      "low": 5251,
-      "high": 18636
+      "change": 12934,
+      "low": 6054,
+      "high": 18156
     },
     "11140-11740": {
-      "change": -366,
-      "low": -4795,
-      "high": 4279
+      "change": 383,
+      "low": -4207,
+      "high": 4935
     },
     "11170-11200": {
-      "change": 14025,
-      "low": 7131,
-      "high": 22933
+      "change": 14730,
+      "low": 6028,
+      "high": 23457
     },
     "11170-11215": {
-      "change": 9995,
-      "low": 729,
-      "high": 20679
+      "change": 10699,
+      "low": -1145,
+      "high": 19115
     },
     "11170-11230": {
-      "change": 2985,
-      "low": -4192,
-      "high": 11885
+      "change": 3689,
+      "low": -3869,
+      "high": 11864
     },
     "11170-11260": {
-      "change": -9988,
-      "low": -17474,
-      "high": -2269
+      "change": -9284,
+      "low": -18600,
+      "high": -1265
     },
     "11170-11290": {
-      "change": -212,
-      "low": -8352,
-      "high": 8767
+      "change": 493,
+      "low": -7704,
+      "high": 9307
     },
     "11170-11305": {
-      "change": -8766,
-      "low": -17743,
-      "high": 462
+      "change": -8061,
+      "low": -17287,
+      "high": 678
     },
     "11170-11320": {
-      "change": -16026,
-      "low": -23257,
-      "high": -7472
+      "change": -15322,
+      "low": -24932,
+      "high": -7866
     },
     "11170-11350": {
-      "change": -7998,
-      "low": -15325,
-      "high": -135
+      "change": -7293,
+      "low": -15872,
+      "high": 936
     },
     "11170-11380": {
-      "change": -7259,
-      "low": -14132,
-      "high": 1751
+      "change": -6554,
+      "low": -15325,
+      "high": 2685
     },
     "11170-11410": {
-      "change": -702,
-      "low": -7770,
-      "high": 8129
+      "change": 3,
+      "low": -7575,
+      "high": 8326
     },
     "11170-11440": {
-      "change": -941,
-      "low": -8583,
-      "high": 9689
+      "change": -237,
+      "low": -8014,
+      "high": 10333
     },
     "11170-11470": {
-      "change": -606,
-      "low": -7755,
-      "high": 8114
+      "change": 98,
+      "low": -8941,
+      "high": 8623
     },
     "11170-11500": {
-      "change": 1610,
-      "low": -6492,
-      "high": 9747
+      "change": 2315,
+      "low": -5684,
+      "high": 9764
     },
     "11170-11530": {
-      "change": -7159,
-      "low": -15216,
-      "high": 1177
+      "change": -6454,
+      "low": -15054,
+      "high": 1207
     },
     "11170-11545": {
-      "change": -15769,
-      "low": -23188,
-      "high": -7576
+      "change": -15064,
+      "low": -22944,
+      "high": -6792
     },
     "11170-11560": {
-      "change": 5655,
-      "low": -2478,
-      "high": 15055
+      "change": 6360,
+      "low": -1610,
+      "high": 14661
     },
     "11170-11590": {
-      "change": 8381,
-      "low": 526,
-      "high": 17841
+      "change": 9086,
+      "low": 1033,
+      "high": 17649
     },
     "11170-11620": {
-      "change": -6846,
-      "low": -15468,
-      "high": 2532
+      "change": -6142,
+      "low": -14037,
+      "high": 2345
     },
     "11170-11650": {
-      "change": -10985,
-      "low": -24333,
-      "high": 2352
+      "change": -10281,
+      "low": -22353,
+      "high": 1484
     },
     "11170-11680": {
-      "change": -6709,
-      "low": -17774,
-      "high": 8371
+      "change": -6004,
+      "low": -19486,
+      "high": 6692
     },
     "11170-11710": {
-      "change": 16128,
-      "low": 7060,
-      "high": 25412
+      "change": 16832,
+      "low": 6222,
+      "high": 26273
     },
     "11170-11740": {
-      "change": 3577,
-      "low": -4151,
-      "high": 12288
+      "change": 4281,
+      "low": -3928,
+      "high": 12109
     },
     "11200-11215": {
       "change": -4031,
@@ -1637,7 +1637,7 @@
     "11410-11590": {
       "change": 9083,
       "low": 5522,
-      "high": 12615
+      "high": 12622
     },
     "11410-11620": {
       "change": -6144,
@@ -2002,10 +2002,10 @@
         "ko": "도심권",
         "en": "Central"
       },
-      "cells": 114,
-      "ours": 16.2,
+      "cells": 116,
+      "ours": 16,
       "official": 15.6,
-      "gap": 0.6
+      "gap": 0.4
     },
     {
       "code": "220",
@@ -2080,15 +2080,15 @@
     "강동구": "gangdong"
   },
   "lead": {
-    "ko": "같은 단지 같은 평형을 2025년 7~9월과 2026년 7~9월(12개월 간격)에 견주면 동대문구는 +24.8%, 서초구는 +4.4% 움직였습니다. 두 구씩 짝지은 276쌍 가운데 142쌍만 차이를 말할 수 있습니다 — 나머지는 그 차이가 표본이 만드는 흔들림 안에 있습니다.",
-    "en": "Comparing the same complexes and unit types in Jul 2025–Sep 2025 and Jul 2026–Sep 2026 (12 months apart), 동대문구 moved +24.8% and 서초구 +4.4%. Of 276 district pairs, 142 can be told apart — for the rest the gap sits inside the noise."
+    "ko": "같은 단지 같은 평형을 2025년 7~9월과 2026년 7~9월(12개월 간격)에 견주면 동대문구는 +24.8%, 서초구는 +4.4% 움직였습니다. 두 구씩 짝지은 276쌍 가운데 141쌍만 차이를 말할 수 있습니다 — 나머지는 그 차이가 표본이 만드는 흔들림 안에 있습니다.",
+    "en": "Comparing the same complexes and unit types in Jul 2025–Sep 2025 and Jul 2026–Sep 2026 (12 months apart), 동대문구 moved +24.8% and 서초구 +4.4%. Of 276 district pairs, 141 can be told apart — for the rest the gap sits inside the noise."
   },
   "table": {
-    "ko": "<thead><tr><th scope=\"col\">자치구</th><th scope=\"col\">변화</th><th scope=\"col\">90% 구간</th><th scope=\"col\">맞물린 칸</th><th scope=\"col\">부동산원 조사</th></tr></thead><tbody><tr><td>동대문구</td><td>+24.8%</td><td>+23.3% ~ +26.7%</td><td>152</td><td>+12.9%</td></tr><tr><td>성북구</td><td>+24.3%</td><td>+23.2% ~ +25.7%</td><td>190</td><td>+14.5%</td></tr><tr><td>강서구</td><td>+23.4%</td><td>+21.3% ~ +24.8%</td><td>212</td><td>+14.0%</td></tr><tr><td>동작구</td><td>+23.2%</td><td>+20.7% ~ +25.4%</td><td>135</td><td>+12.9%</td></tr><tr><td>송파구</td><td>+21.7%</td><td>+17.8% ~ +24.7%</td><td>173</td><td>+13.6%</td></tr><tr><td>성동구</td><td>+20.3%</td><td>+18.5% ~ +23.0%</td><td>99</td><td>+16.6%</td></tr><tr><td>영등포구</td><td>+20.3%</td><td>+18.6% ~ +23.6%</td><td>169</td><td>+15.3%</td></tr><tr><td>광진구</td><td>+19.6%</td><td>+16.6% ~ +24.2%</td><td>57</td><td>+14.2%</td></tr><tr><td>중구</td><td>+19.3%</td><td>+16.9% ~ +21.9%</td><td>40</td><td>+14.5%</td></tr><tr><td>서대문구</td><td>+18.7%</td><td>+17.7% ~ +20.6%</td><td>136</td><td>+12.7%</td></tr><tr><td>구로구</td><td>+18.3%</td><td>+14.9% ~ +20.4%</td><td>179</td><td>+12.8%</td></tr><tr><td>강동구</td><td>+18.2%</td><td>+16.7% ~ +19.7%</td><td>170</td><td>+12.1%</td></tr><tr><td>강북구</td><td>+18.1%</td><td>+12.7% ~ +21.7%</td><td>69</td><td>+8.8%</td></tr><tr><td>양천구</td><td>+17.8%</td><td>+14.4% ~ +20.3%</td><td>126</td><td>+12.4%</td></tr><tr><td>관악구</td><td>+17.0%</td><td>+14.2% ~ +21.4%</td><td>103</td><td>+12.6%</td></tr><tr><td>노원구</td><td>+16.7%</td><td>+15.1% ~ +17.9%</td><td>339</td><td>+10.8%</td></tr><tr><td>중랑구</td><td>+15.1%</td><td>+12.2% ~ +16.9%</td><td>111</td><td>+8.9%</td></tr><tr><td>은평구</td><td>+15.0%</td><td>+13.4% ~ +16.8%</td><td>150</td><td>+9.3%</td></tr><tr><td>마포구</td><td>+13.9%</td><td>+12.4% ~ +17.3%</td><td>135</td><td>+13.4%</td></tr><tr><td>용산구</td><td>+11.7%</td><td>+7.3% ~ +16.1%</td><td>50</td><td>+9.7%</td></tr><tr><td>도봉구</td><td>+9.2%</td><td>+7.2% ~ +10.4%</td><td>139</td><td>+7.8%</td></tr><tr><td>금천구</td><td>+8.0%</td><td>+6.1% ~ +10.7%</td><td>59</td><td>+6.4%</td></tr><tr><td>강남구</td><td>+4.7%</td><td>+1.5% ~ +9.2%</td><td>106</td><td>+4.8%</td></tr><tr><td>서초구</td><td>+4.4%</td><td>0.0% ~ +10.6%</td><td>75</td><td>+6.3%</td></tr><tr><td>종로구</td><td colspan=\"2\"><span class=\"low-sample\">칸이 모자람</span></td><td>24</td><td>+10.5%</td></tr></tbody>",
-    "en": "<thead><tr><th scope=\"col\">District</th><th scope=\"col\">Change</th><th scope=\"col\">90% range</th><th scope=\"col\">Matched</th><th scope=\"col\">REB survey</th></tr></thead><tbody><tr><td>동대문구</td><td>+24.8%</td><td>+23.3% ~ +26.7%</td><td>152</td><td>+12.9%</td></tr><tr><td>성북구</td><td>+24.3%</td><td>+23.2% ~ +25.7%</td><td>190</td><td>+14.5%</td></tr><tr><td>강서구</td><td>+23.4%</td><td>+21.3% ~ +24.8%</td><td>212</td><td>+14.0%</td></tr><tr><td>동작구</td><td>+23.2%</td><td>+20.7% ~ +25.4%</td><td>135</td><td>+12.9%</td></tr><tr><td>송파구</td><td>+21.7%</td><td>+17.8% ~ +24.7%</td><td>173</td><td>+13.6%</td></tr><tr><td>성동구</td><td>+20.3%</td><td>+18.5% ~ +23.0%</td><td>99</td><td>+16.6%</td></tr><tr><td>영등포구</td><td>+20.3%</td><td>+18.6% ~ +23.6%</td><td>169</td><td>+15.3%</td></tr><tr><td>광진구</td><td>+19.6%</td><td>+16.6% ~ +24.2%</td><td>57</td><td>+14.2%</td></tr><tr><td>중구</td><td>+19.3%</td><td>+16.9% ~ +21.9%</td><td>40</td><td>+14.5%</td></tr><tr><td>서대문구</td><td>+18.7%</td><td>+17.7% ~ +20.6%</td><td>136</td><td>+12.7%</td></tr><tr><td>구로구</td><td>+18.3%</td><td>+14.9% ~ +20.4%</td><td>179</td><td>+12.8%</td></tr><tr><td>강동구</td><td>+18.2%</td><td>+16.7% ~ +19.7%</td><td>170</td><td>+12.1%</td></tr><tr><td>강북구</td><td>+18.1%</td><td>+12.7% ~ +21.7%</td><td>69</td><td>+8.8%</td></tr><tr><td>양천구</td><td>+17.8%</td><td>+14.4% ~ +20.3%</td><td>126</td><td>+12.4%</td></tr><tr><td>관악구</td><td>+17.0%</td><td>+14.2% ~ +21.4%</td><td>103</td><td>+12.6%</td></tr><tr><td>노원구</td><td>+16.7%</td><td>+15.1% ~ +17.9%</td><td>339</td><td>+10.8%</td></tr><tr><td>중랑구</td><td>+15.1%</td><td>+12.2% ~ +16.9%</td><td>111</td><td>+8.9%</td></tr><tr><td>은평구</td><td>+15.0%</td><td>+13.4% ~ +16.8%</td><td>150</td><td>+9.3%</td></tr><tr><td>마포구</td><td>+13.9%</td><td>+12.4% ~ +17.3%</td><td>135</td><td>+13.4%</td></tr><tr><td>용산구</td><td>+11.7%</td><td>+7.3% ~ +16.1%</td><td>50</td><td>+9.7%</td></tr><tr><td>도봉구</td><td>+9.2%</td><td>+7.2% ~ +10.4%</td><td>139</td><td>+7.8%</td></tr><tr><td>금천구</td><td>+8.0%</td><td>+6.1% ~ +10.7%</td><td>59</td><td>+6.4%</td></tr><tr><td>강남구</td><td>+4.7%</td><td>+1.5% ~ +9.2%</td><td>106</td><td>+4.8%</td></tr><tr><td>서초구</td><td>+4.4%</td><td>0.0% ~ +10.6%</td><td>75</td><td>+6.3%</td></tr><tr><td>종로구</td><td colspan=\"2\"><span class=\"low-sample\">too few cells</span></td><td>24</td><td>+10.5%</td></tr></tbody>"
+    "ko": "<thead><tr><th scope=\"col\">자치구</th><th scope=\"col\">변화</th><th scope=\"col\">90% 구간</th><th scope=\"col\">맞물린 칸</th><th scope=\"col\">부동산원 조사</th></tr></thead><tbody><tr><td>동대문구</td><td>+24.8%</td><td>+23.3% ~ +26.7%</td><td>152</td><td>+12.9%</td></tr><tr><td>성북구</td><td>+24.3%</td><td>+23.2% ~ +25.7%</td><td>190</td><td>+14.5%</td></tr><tr><td>강서구</td><td>+23.4%</td><td>+21.3% ~ +24.8%</td><td>212</td><td>+14.0%</td></tr><tr><td>동작구</td><td>+23.2%</td><td>+20.7% ~ +25.4%</td><td>135</td><td>+12.9%</td></tr><tr><td>송파구</td><td>+21.7%</td><td>+17.8% ~ +24.7%</td><td>173</td><td>+13.6%</td></tr><tr><td>성동구</td><td>+20.3%</td><td>+18.5% ~ +23.0%</td><td>99</td><td>+16.6%</td></tr><tr><td>영등포구</td><td>+20.3%</td><td>+18.6% ~ +23.6%</td><td>169</td><td>+15.3%</td></tr><tr><td>광진구</td><td>+19.6%</td><td>+16.6% ~ +24.2%</td><td>57</td><td>+14.2%</td></tr><tr><td>서대문구</td><td>+18.7%</td><td>+17.7% ~ +20.6%</td><td>136</td><td>+12.7%</td></tr><tr><td>중구</td><td>+18.7%</td><td>+16.8% ~ +21.9%</td><td>41</td><td>+14.5%</td></tr><tr><td>구로구</td><td>+18.3%</td><td>+14.9% ~ +20.4%</td><td>179</td><td>+12.8%</td></tr><tr><td>강동구</td><td>+18.2%</td><td>+16.7% ~ +19.7%</td><td>170</td><td>+12.1%</td></tr><tr><td>강북구</td><td>+18.1%</td><td>+12.7% ~ +21.7%</td><td>69</td><td>+8.8%</td></tr><tr><td>양천구</td><td>+17.8%</td><td>+14.4% ~ +20.3%</td><td>126</td><td>+12.4%</td></tr><tr><td>관악구</td><td>+17.0%</td><td>+14.2% ~ +21.4%</td><td>103</td><td>+12.6%</td></tr><tr><td>노원구</td><td>+16.7%</td><td>+15.1% ~ +17.9%</td><td>339</td><td>+10.8%</td></tr><tr><td>중랑구</td><td>+15.1%</td><td>+12.2% ~ +16.9%</td><td>111</td><td>+8.9%</td></tr><tr><td>은평구</td><td>+15.0%</td><td>+13.4% ~ +16.8%</td><td>150</td><td>+9.3%</td></tr><tr><td>마포구</td><td>+13.9%</td><td>+12.4% ~ +17.3%</td><td>135</td><td>+13.4%</td></tr><tr><td>용산구</td><td>+11.2%</td><td>+7.3% ~ +15.2%</td><td>51</td><td>+9.7%</td></tr><tr><td>도봉구</td><td>+9.2%</td><td>+7.2% ~ +10.4%</td><td>139</td><td>+7.8%</td></tr><tr><td>금천구</td><td>+8.0%</td><td>+6.1% ~ +10.7%</td><td>59</td><td>+6.4%</td></tr><tr><td>강남구</td><td>+4.7%</td><td>+1.5% ~ +9.2%</td><td>106</td><td>+4.8%</td></tr><tr><td>서초구</td><td>+4.4%</td><td>0.0% ~ +10.6%</td><td>75</td><td>+6.3%</td></tr><tr><td>종로구</td><td colspan=\"2\"><span class=\"low-sample\">칸이 모자람</span></td><td>24</td><td>+10.5%</td></tr></tbody>",
+    "en": "<thead><tr><th scope=\"col\">District</th><th scope=\"col\">Change</th><th scope=\"col\">90% range</th><th scope=\"col\">Matched</th><th scope=\"col\">REB survey</th></tr></thead><tbody><tr><td>동대문구</td><td>+24.8%</td><td>+23.3% ~ +26.7%</td><td>152</td><td>+12.9%</td></tr><tr><td>성북구</td><td>+24.3%</td><td>+23.2% ~ +25.7%</td><td>190</td><td>+14.5%</td></tr><tr><td>강서구</td><td>+23.4%</td><td>+21.3% ~ +24.8%</td><td>212</td><td>+14.0%</td></tr><tr><td>동작구</td><td>+23.2%</td><td>+20.7% ~ +25.4%</td><td>135</td><td>+12.9%</td></tr><tr><td>송파구</td><td>+21.7%</td><td>+17.8% ~ +24.7%</td><td>173</td><td>+13.6%</td></tr><tr><td>성동구</td><td>+20.3%</td><td>+18.5% ~ +23.0%</td><td>99</td><td>+16.6%</td></tr><tr><td>영등포구</td><td>+20.3%</td><td>+18.6% ~ +23.6%</td><td>169</td><td>+15.3%</td></tr><tr><td>광진구</td><td>+19.6%</td><td>+16.6% ~ +24.2%</td><td>57</td><td>+14.2%</td></tr><tr><td>서대문구</td><td>+18.7%</td><td>+17.7% ~ +20.6%</td><td>136</td><td>+12.7%</td></tr><tr><td>중구</td><td>+18.7%</td><td>+16.8% ~ +21.9%</td><td>41</td><td>+14.5%</td></tr><tr><td>구로구</td><td>+18.3%</td><td>+14.9% ~ +20.4%</td><td>179</td><td>+12.8%</td></tr><tr><td>강동구</td><td>+18.2%</td><td>+16.7% ~ +19.7%</td><td>170</td><td>+12.1%</td></tr><tr><td>강북구</td><td>+18.1%</td><td>+12.7% ~ +21.7%</td><td>69</td><td>+8.8%</td></tr><tr><td>양천구</td><td>+17.8%</td><td>+14.4% ~ +20.3%</td><td>126</td><td>+12.4%</td></tr><tr><td>관악구</td><td>+17.0%</td><td>+14.2% ~ +21.4%</td><td>103</td><td>+12.6%</td></tr><tr><td>노원구</td><td>+16.7%</td><td>+15.1% ~ +17.9%</td><td>339</td><td>+10.8%</td></tr><tr><td>중랑구</td><td>+15.1%</td><td>+12.2% ~ +16.9%</td><td>111</td><td>+8.9%</td></tr><tr><td>은평구</td><td>+15.0%</td><td>+13.4% ~ +16.8%</td><td>150</td><td>+9.3%</td></tr><tr><td>마포구</td><td>+13.9%</td><td>+12.4% ~ +17.3%</td><td>135</td><td>+13.4%</td></tr><tr><td>용산구</td><td>+11.2%</td><td>+7.3% ~ +15.2%</td><td>51</td><td>+9.7%</td></tr><tr><td>도봉구</td><td>+9.2%</td><td>+7.2% ~ +10.4%</td><td>139</td><td>+7.8%</td></tr><tr><td>금천구</td><td>+8.0%</td><td>+6.1% ~ +10.7%</td><td>59</td><td>+6.4%</td></tr><tr><td>강남구</td><td>+4.7%</td><td>+1.5% ~ +9.2%</td><td>106</td><td>+4.8%</td></tr><tr><td>서초구</td><td>+4.4%</td><td>0.0% ~ +10.6%</td><td>75</td><td>+6.3%</td></tr><tr><td>종로구</td><td colspan=\"2\"><span class=\"low-sample\">too few cells</span></td><td>24</td><td>+10.5%</td></tr></tbody>"
   },
   "regionTable": {
-    "ko": "<thead><tr><th scope=\"col\">권역</th><th scope=\"col\">같은 칸(우리)</th><th scope=\"col\">공식 실거래가격지수</th><th scope=\"col\">차이</th></tr></thead><tbody><tr><td>도심권</td><td>+16.2% (114칸)</td><td>+15.6%</td><td>+0.6%p</td></tr><tr><td>동북권</td><td>+18.7% (1,156칸)</td><td>+16.8%</td><td>+1.9%p</td></tr><tr><td>서북권</td><td>+16.7% (421칸)</td><td>+13.3%</td><td>+3.4%p</td></tr><tr><td>서남권</td><td>+19.6% (983칸)</td><td>+16.2%</td><td>+3.4%p</td></tr><tr><td>동남권</td><td>+15.6% (524칸)</td><td>+13.8%</td><td>+1.8%p</td></tr></tbody>",
-    "en": "<thead><tr><th scope=\"col\">Region</th><th scope=\"col\">Same units (ours)</th><th scope=\"col\">Official transaction index</th><th scope=\"col\">Gap</th></tr></thead><tbody><tr><td>Central</td><td>+16.2% (114 cells)</td><td>+15.6%</td><td>+0.6pp</td></tr><tr><td>Northeast</td><td>+18.7% (1,156 cells)</td><td>+16.8%</td><td>+1.9pp</td></tr><tr><td>Northwest</td><td>+16.7% (421 cells)</td><td>+13.3%</td><td>+3.4pp</td></tr><tr><td>Southwest</td><td>+19.6% (983 cells)</td><td>+16.2%</td><td>+3.4pp</td></tr><tr><td>Southeast</td><td>+15.6% (524 cells)</td><td>+13.8%</td><td>+1.8pp</td></tr></tbody>"
+    "ko": "<thead><tr><th scope=\"col\">권역</th><th scope=\"col\">같은 칸(우리)</th><th scope=\"col\">공식 실거래가격지수</th><th scope=\"col\">차이</th></tr></thead><tbody><tr><td>도심권</td><td>+16.0% (116칸)</td><td>+15.6%</td><td>+0.4%p</td></tr><tr><td>동북권</td><td>+18.7% (1,156칸)</td><td>+16.8%</td><td>+1.9%p</td></tr><tr><td>서북권</td><td>+16.7% (421칸)</td><td>+13.3%</td><td>+3.4%p</td></tr><tr><td>서남권</td><td>+19.6% (983칸)</td><td>+16.2%</td><td>+3.4%p</td></tr><tr><td>동남권</td><td>+15.6% (524칸)</td><td>+13.8%</td><td>+1.8%p</td></tr></tbody>",
+    "en": "<thead><tr><th scope=\"col\">Region</th><th scope=\"col\">Same units (ours)</th><th scope=\"col\">Official transaction index</th><th scope=\"col\">Gap</th></tr></thead><tbody><tr><td>Central</td><td>+16.0% (116 cells)</td><td>+15.6%</td><td>+0.4pp</td></tr><tr><td>Northeast</td><td>+18.7% (1,156 cells)</td><td>+16.8%</td><td>+1.9pp</td></tr><tr><td>Northwest</td><td>+16.7% (421 cells)</td><td>+13.3%</td><td>+3.4pp</td></tr><tr><td>Southwest</td><td>+19.6% (983 cells)</td><td>+16.2%</td><td>+3.4pp</td></tr><tr><td>Southeast</td><td>+15.6% (524 cells)</td><td>+13.8%</td><td>+1.8pp</td></tr></tbody>"
   }
 }

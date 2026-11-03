@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-02T02:26:10.491Z",
+  "updatedAt": "2026-11-03T03:57:09.573Z",
   "periods": {
     "base": [
       "202507",
@@ -15,17 +15,17 @@
   },
   "minCells": 30,
   "ageRefYear": 2025,
-  "cells": 3198,
+  "cells": 3200,
   "noBuildYear": 0,
   "price": [
     {
       "key": "upTo6",
       "ko": "6억 이하",
       "en": "up to ₩600M",
-      "cells": 675,
-      "change": 12.1,
-      "low": 11,
-      "high": 14.1
+      "cells": 676,
+      "change": 12,
+      "low": 10.9,
+      "high": 14.2
     },
     {
       "key": "upTo9",
@@ -58,7 +58,7 @@
       "key": "over25",
       "ko": "25억 초과",
       "en": "above ₩2.5B",
-      "cells": 177,
+      "cells": 178,
       "change": 1.5,
       "low": 0,
       "high": 2.6
@@ -69,16 +69,16 @@
       "key": "under10",
       "ko": "10년 미만",
       "en": "under 10 years",
-      "cells": 499,
+      "cells": 500,
       "change": 16,
-      "low": 14.9,
+      "low": 14.8,
       "high": 16.8
     },
     {
       "key": "y10to29",
       "ko": "10~29년",
       "en": "10–29 years",
-      "cells": 1829,
+      "cells": 1830,
       "change": 18.1,
       "low": 17.4,
       "high": 18.7
@@ -98,16 +98,16 @@
       "key": "upTo60",
       "ko": "60㎡ 이하",
       "en": "up to 60㎡",
-      "cells": 1346,
+      "cells": 1347,
       "change": 21.2,
-      "low": 20.5,
-      "high": 21.9
+      "low": 20.6,
+      "high": 22
     },
     {
       "key": "a60to85",
       "ko": "60~85㎡",
       "en": "60–85㎡",
-      "cells": 1411,
+      "cells": 1412,
       "change": 17.1,
       "low": 16.7,
       "high": 17.8
@@ -158,7 +158,7 @@
     ],
     "rows": {
       "upTo6": [
-        48,
+        49,
         293,
         334
       ],
@@ -179,7 +179,7 @@
       ],
       "over25": [
         34,
-        74,
+        75,
         69
       ]
     }
