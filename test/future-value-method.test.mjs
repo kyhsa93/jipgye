@@ -63,8 +63,11 @@ test("결과 문단에 「상승기 한 구간·단지를 고르는 기준이 �
   const ruleEn = /single rising period[\s\S]*not a basis for choosing a complex/;
   assert.ok(paragraphs(ko()).find((p) => /5개 항목 중 4개가 기준 미달/.test(p))?.match(ruleKo));
   assert.ok(paragraphs(en()).find((p) => /Four of the five items/.test(p))?.match(ruleEn));
-  assert.ok(paragraphs(ko()).find((p) => /\+0\.386/.test(p))?.match(ruleKo));
-  assert.ok(paragraphs(en()).find((p) => /\+0\.386/.test(p))?.match(ruleEn));
+  assert.ok(paragraphs(ko()).find((p) => /낮은 가격대에 몰립니다/.test(p))?.match(ruleKo));
+  assert.ok(paragraphs(en()).find((p) => /concentrated in the lower ones/.test(p))?.match(ruleEn));
+  assert.doesNotMatch(ko() + en(), /\+0\.386|\+0\.121|\+0\.089/);
+  assert.match(ko(), /거래 수는 나누지 않았고/);
+  assert.match(en(), /Deal count was not split/);
 });
 
 test("계획 없음을 적고, 사전 등록이라 부르지 않는다는 사실을 적는다", () => {
