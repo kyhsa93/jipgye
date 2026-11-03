@@ -63,7 +63,7 @@
 
     <nav class="method-toc" aria-label="차례">
       <details class="fold">
-        <summary>차례 (24)</summary>
+        <summary>차례 (25)</summary>
         <ol>
           <li><a href="#real-deals">여기 나오는 것은 매물이 아니라 신고된 실거래입니다</a></li>
           <li><a href="#reporting-lag">신고 기한 30일이 만드는 착시</a></li>
@@ -84,6 +84,7 @@
           <li><a href="#budget-payment">예산을 월 상환액으로 옮길 때 한도는 가정하지 않습니다</a></li>
           <li><a href="#outlook">몇 달 뒤를 짐작할 때는 오차를 먼저 적습니다</a></li>
           <li><a href="#outlook-prereg">첫 채점 규칙은 결과를 보기 전에 적어 둡니다</a></li>
+          <li><a href="#future-value-test">미래가치 점수는 내지 않습니다: 한 번 잰 시험 결과</a></li>
           <li><a href="#budget-rules">예산대 장에 똑같이 실리던 규칙 문단</a></li>
           <li><a href="#sources">출처와 갱신</a></li>
           <li><a href="#not-doing">하지 않는 것</a></li>
@@ -230,6 +231,28 @@
     <p>그래서 적중률(%)은 서로 겹치지 않는 시점이 열두 개 쌓일 때까지 싣지 않습니다. 3개월 앞이면 빨라야 2029년이고, 실을 때는 이항 구간을 함께 싣습니다.</p>
     <p><strong>범위 방식에 대한 사전 기준.</strong> 위의 실시간 적중(2014년 이후, 네 권역, 3개월 앞)이 70% 미만이면 범위를 실시간 80%가 되는 분위로 넓힙니다. 지금 64%라 넓히게 될 공산이 큽니다. 판정은 2026년 11월 9~15일 주에 하고, 넓힌 범위는 <strong>새 시점부터</strong> 적용합니다. 2026년 7~9월 시점의 예측은 낸 범위 그대로 채점합니다. 12월 채점 결과는 이 판정의 입력이 아닙니다. 판정한 날짜와 결과는 이 문단에 덧붙입니다.</p>
 
+    <h2 id="future-value-test">미래가치 점수는 내지 않습니다: 한 번 잰 시험 결과</h2>
+    <p>이 사이트는 단지별 미래가치 점수를 내지 않고, 낼 계획도 없습니다. 미래가치가 재료인 균형 점수도 같습니다. 이 사이트는 투자 정보를 찾는 분을 위한 곳이 아니고, 아래 시험 결과는 이 판단의 근거 가운데 하나입니다. 2026년 11월 3일에 한 번 잰 그대로 적습니다. 이 시험은 점수를 켜는 관문이 아니고, 같은 시험을 다른 구간이나 새 데이터로 다시 돌려 공개할 계획도 없습니다.</p>
+    <p><strong>시험한 5개 항목 중 4개가 기준 미달입니다. 거래 수 하나만 조건을 모두 넘었습니다. 이 결과는 상승기 한 구간의 것이고, 단지를 고르는 기준이 아닙니다.</strong> 전세가율과 가격 경쟁력은 미리 적은 방향과 부호가 반대였습니다. 반대 방향은 미리 적은 가설이 아니어서 이 시험이 검증한 것이 아니고, 그쪽으로 고르라는 뜻도 아닙니다. 방향은 다섯 항목 모두 +로 미리 적었습니다.</p>
+    <p>같은 단지 같은 평형(칸)을 앞 창 2025년 4~9월과 뒤 창 2026년 4~9월에 견주어, 2025년 9월까지 알 수 있는 값의 순서가 뒤 창까지의 변화 순서와 맞는지 순위상관으로 쟀습니다. 거래 수는 2024년 12월~2025년 9월 열 달의 건수이고, 앞 구간 변화는 2024년 12월~2025년 3월과 앞 창을 견준 값입니다. 대상은 두 창 모두 해제&middot;직거래를 뺀 신고가 3건 이상인 2,475칸(1,536단지, 25구)이고, 항목에 따라 값이 있는 칸만 셉니다. 창 안의 시점은 구별 지수로 고쳤고, 구 전체의 흐름이 섞이지 않게 같은 구 안에서의 상관을 봅니다. 아래 표의 값도 상승기 한 구간의 것이고, 단지를 고르는 기준이 아닙니다.</p>
+    <div class="table-scroll">
+      <table class="rate-table"><caption class="sr-only" data-auto>숫자를 만드는 방법 - 실거래 집계 기준과 출처 - 미래가치 점수는 내지 않습니다: 한 번 잰 시험 결과: 5행 5열(항목·칸 수·구 안 순위상관(95% 구간)·보조 구간의 구 안 순위상관·넘은 조건)</caption>
+        <thead><tr><th scope="col">항목</th><th scope="col">칸 수</th><th scope="col">구 안 순위상관(95% 구간)</th><th scope="col">보조 구간의 구 안 순위상관</th><th scope="col">넘은 조건</th></tr></thead>
+        <tbody>
+          <tr><td>전세가율</td><td>2,248</td><td>&minus;0.145 (&minus;0.208 ~ &minus;0.090)</td><td>&minus;0.189</td><td>0/5, 미달</td></tr>
+          <tr><td>거래 수(2024-12~2025-09)</td><td>2,475</td><td>+0.246 (+0.202 ~ +0.290)</td><td>+0.235</td><td>5/5, 한 구간 통과</td></tr>
+          <tr><td>앞 구간 변화</td><td>1,526</td><td>&minus;0.123 (&minus;0.184 ~ &minus;0.061)</td><td>&minus;0.142</td><td>0/5, 미달</td></tr>
+          <tr><td>가격 경쟁력(같은 구&middot;면적대&middot;연식대보다 싼 정도)</td><td>2,475</td><td>&minus;0.118 (&minus;0.180 ~ &minus;0.064)</td><td>&minus;0.171</td><td>0/5, 미달</td></tr>
+          <tr><td>합성(가격 경쟁력&middot;구 앞 구간 변화&middot;전세가율&middot;거래 수)</td><td>2,248</td><td>+0.011 (&minus;0.043 ~ +0.062)</td><td>&minus;0.049</td><td>0/5, 미달</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>통과 기준은 다섯 조건 전부입니다. ① 구 지수의 앞 구간 변화를 기준선으로, 그보다 순위상관이 높은 경우가 단지를 다시 뽑아도 구를 다시 뽑아도 1,000번 중 97.5% 이상. ② 구 안 순위상관 0.10 이상이고 95% 구간의 아래쪽이 0보다 큼. ③ 칸이 20개 이상인 구의 70% 이상에서 구 안 상관이 미리 적은 방향. ④ 보조 구간(앞 창 2025년 3~6월, 뒤 창 2026년 3~6월)에서 구 안 순위상관이 0보다 큼. 이 구간은 주 구간과 겹쳐 독립된 재현이 아닙니다. ⑤ 구 안 상위 20%와 하위 20%의 뒤 창까지 변화 차이가 +1%p 이상.</p>
+    <p><strong>기준을 언제 적었는지.</strong> 항목&middot;방향&middot;문턱은 측정 스크립트를 쓰기 전에 파일로 적고 해시와 시각을 남겼습니다(2026-11-03 01:25). 그러나 측정 전에 저장소에 커밋하지 못했고, 이 저장소에 올라온 것은 결과가 나온 뒤입니다. 그래서 기준이 먼저였다는 것을 공개 기록으로 입증할 수 없고, 이 시험을 사전 등록이라고 부르지 않습니다. 기준을 적기 전에 이미 본 자료는 그 파일 첫머리에 적혀 있습니다. 처음 실행에서는 구를 다시 뽑는 횟수가 적어 둔 1,000번이 아닌 500번이어서 1,000번으로 고쳐 다시 돌렸습니다. 당시 기록으로는 판정이 같았지만 첫 실행의 출력은 남아 있지 않습니다.</p>
+    <p><strong>왜 한 구간인지.</strong> 2024년 12월부터 2026년 8월까지 서울 실거래가격지수의 달 변화 스무 번 중 열여섯 번이 상승이고, 가장 큰 하락도 &minus;0.22%입니다. 두 창 모두 거래가 있는 대상 칸의 95.2%에서 뒤 창 값이 앞 창보다 높았고(시험 구간이 상승기였다는 표시이며 앞으로의 방향을 말하지 않습니다), 2025년 10&middot;15 대책이 두 창 사이에 있습니다. 내리거나 보합인 시기에는 재지 못했습니다. 실거래 원본이 스물네 달뿐이기 때문입니다.</p>
+    <p><strong>결과를 본 뒤의 점검(판정을 바꾸지 않습니다).</strong> 거래 수의 값은 앞 창 가격대별로 고르지 않고 낮은 가격대에 몰립니다(수치는 research). 이 쏠림은 10&middot;15 대책의 대출 상한 구간과 겹쳐, 이 시험으로는 대책의 효과인지 가르지 못합니다. 열 달 거래 수(2024년 12월~2025년 9월) 하위 5분의 1 칸은 59.7%, 상위 5분의 1 칸은 6.0%가 뒤 창 표본에서 빠졌습니다. 그래서 거래 수의 값은 두 창 모두 거래가 있는 칸끼리의 비교입니다. 뒤 창 문턱을 1·2·3·5건으로 바꿔도 거래 수의 값은 +0.243~+0.247입니다. 항목과 변화 계산이 앞 창의 같은 거래를 함께 쓰지 않게 앞 창을 둘로 나누면(앞 창 6건 이상 1,574칸, 항목에 따라 더 적음, 40회 평균) 전세가율 &minus;0.154, 앞 구간 변화 &minus;0.037, 가격 경쟁력 &minus;0.085입니다. 앞 구간 변화의 음수는 대부분 이 공유 잡음으로 보입니다. 거래 수는 나누지 않았고, 같은 1,574칸에서 표본과 변화 기준만 바뀐 값이 +0.128입니다. 이 값들도 상승기 한 구간의 것이고, 단지를 고르는 기준이 아닙니다.</p>
+    <p>입력은 국토교통부 아파트 매매&middot;전월세 실거래와 한국부동산원 지수입니다. 칸의 시점 보정과 기준선에는 주택가격동향조사 월간 아파트 매매가격지수(자치구, R-ONE A_2024_00045)를, 시장 배경에는 아파트 매매 실거래가격지수(ECOS)를 썼습니다. 이 지수들은 부동산원의 전망이 아닙니다. 입력은 커밋 cef5ab55로 고정했고, 기준 파일&middot;스크립트&middot;출력은 <a href="https://github.com/kyhsa93/jipgye/tree/main/research/future-value-test-2026-11" target="_blank" rel="noopener">research/future-value-test-2026-11</a>에 있어 같은 값을 다시 만들 수 있습니다.</p>
+
     <h2 id="budget-rules">예산대 장에 똑같이 실리던 규칙 문단</h2>
     <!--prerender:budgetRules--><p>예산대 장(3억대~20억대)이 공통으로 링크하는 근거와 예외입니다. 각 장에는 그 예산대의 숫자와 짧은 단서만 있고, 세율·대출 규제의 예외와 원문 확인일은 여기에 한 번만 적습니다.</p>
     <h3 id="budget-rules-loan">월 상환액: 1억당 값과 금리 근거</h3>
@@ -280,7 +303,7 @@
 
     <nav class="method-toc" aria-label="Contents">
       <details class="fold">
-        <summary>Contents (23)</summary>
+        <summary>Contents (24)</summary>
         <ol>
           <li><a href="#real-deals-en">These are reported transactions, not listings</a></li>
           <li><a href="#reporting-lag-en">The 30-day reporting window, and the illusion it creates</a></li>
@@ -301,6 +324,7 @@
           <li><a href="#budget-payment-en">Turning a budget into a monthly payment without assuming a limit</a></li>
           <li><a href="#outlook-en">Forecasts come with their error first</a></li>
           <li><a href="#outlook-prereg-en">The first scoring rule is written down before the result</a></li>
+          <li><a href="#future-value-test-en">No future-value score: the result of one test</a></li>
           <li><a href="#sources-en">Sources and update cadence</a></li>
           <li><a href="#not-doing-en">What this site does not do</a></li>
           <li><a href="#corrections-en">Corrections</a></li>
@@ -444,6 +468,28 @@
     <p>The reason one scoring cannot decide is in the numbers (2026-10-07, same computation). First, the four regions' three-month errors move together, with pairwise correlations of 0.84 to 0.95: four forecasts from the same index are roughly one observation. Second, over the 148 months since 2014, the number of the four regions inside their range was 0, 1, 2, 3 or 4 on 28, 12, 20, 24 and 64 occasions (18.9%, 8.1%, 13.5%, 16.2%, 43.2%). All four inside is the most common, yet 56% fall elsewhere and zero inside happened about one time in five. Whatever count appears is already ordinary, so it is not used to judge the model or the range.</p>
     <p>So no hit rate (%) is published until twelve non-overlapping origins have been scored &mdash; for three months ahead, 2029 at the earliest &mdash; and then only with a binomial interval.</p>
     <p><strong>A prior criterion for the range method.</strong> If the real-time coverage above (since 2014, four regions, three months ahead) is below 70%, the range is widened to the quantiles that would have given 80% in real time. It is 64% now, so widening is likely. The decision is made in the week of 9&ndash;15 November 2026 and the wider range applies <strong>from new origins only</strong>; forecasts from July to September 2026 are scored with the range as published. The December result is not an input. The date and outcome of the decision will be appended here.</p>
+
+    <h2 id="future-value-test-en">No future-value score: the result of one test</h2>
+    <p>This site does not publish a future-value score for complexes and has no plan to. The same goes for the balanced score, which is built on it. This site is not built for people looking for investment information, and the test below is one of the grounds for that decision, set out as it came out from a single run on 3 November 2026. This test is not a gate for switching a score on, and there is no plan to re-run it on another period or newer data for publication.</p>
+    <p><strong>Four of the five items tested fall short of the criteria. Only deal count cleared all the conditions. This is the result of a single rising period, and it is not a basis for choosing a complex.</strong> The jeonse ratio and price competitiveness came out with the opposite sign to the direction written down. The opposite direction was never a written hypothesis, so this test did not validate it, and it is no reason to choose that way either. The direction written down for all five items was positive.</p>
+    <p>For each complex and unit type (a cell), the test compared a first window, April&ndash;September 2025, with a second window, April&ndash;September 2026, and used rank correlation to ask whether values known by September 2025 ordered cells the way the later change did. Deal count covers the ten months from December 2024 to September 2025, and earlier change compares December 2024&ndash;March 2025 with the first window. It covers the 2,475 cells (1,536 complexes, 25 districts) with at least three filings in both windows, leaving out cancelled and direct deals, counting only cells that have the item in question. Dates inside a window are adjusted with the district index, and the correlation is read within districts so that district-wide movement does not leak in. The figures in the table below also come from a single rising period and are not a basis for choosing a complex.</p>
+    <div class="table-scroll">
+      <table class="rate-table" lang="en"><caption class="sr-only" data-auto>숫자를 만드는 방법 - 실거래 집계 기준과 출처 - No future-value score: the result of one test: 5행 5열(Item·Cells·Within-district rank correlation (95% interval)·Within-district rank correlation, secondary period·Conditions cleared)</caption>
+        <thead><tr><th scope="col">Item</th><th scope="col">Cells</th><th scope="col">Within-district rank correlation (95% interval)</th><th scope="col">Within-district rank correlation, secondary period</th><th scope="col">Conditions cleared</th></tr></thead>
+        <tbody>
+          <tr><td>Jeonse ratio</td><td>2,248</td><td>&minus;0.145 (&minus;0.208 to &minus;0.090)</td><td>&minus;0.189</td><td>0/5, short</td></tr>
+          <tr><td>Deal count (Dec 2024&ndash;Sep 2025)</td><td>2,475</td><td>+0.246 (+0.202 to +0.290)</td><td>+0.235</td><td>5/5, passed in one period</td></tr>
+          <tr><td>Earlier change</td><td>1,526</td><td>&minus;0.123 (&minus;0.184 to &minus;0.061)</td><td>&minus;0.142</td><td>0/5, short</td></tr>
+          <tr><td>Price competitiveness (how far below the same district, size band and age band)</td><td>2,475</td><td>&minus;0.118 (&minus;0.180 to &minus;0.064)</td><td>&minus;0.171</td><td>0/5, short</td></tr>
+          <tr><td>Composite (price competitiveness, district earlier change, jeonse ratio, deal count)</td><td>2,248</td><td>+0.011 (&minus;0.043 to +0.062)</td><td>&minus;0.049</td><td>0/5, short</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Passing takes all five conditions. (1) Taking the district index's earlier change as the baseline, a higher rank correlation in at least 97.5% of 1,000 resamples, both of complexes and of districts. (2) A within-district rank correlation of at least 0.10, with the lower end of the 95% interval above zero. (3) The direction written down in at least 70% of districts with 20 or more cells. (4) A within-district rank correlation above zero in a secondary period (first window March&ndash;June 2025, second window March&ndash;June 2026). That period overlaps the main one, so it is not an independent replication. (5) A gap in the later change of at least +1 percentage point between the top and bottom 20% within districts.</p>
+    <p><strong>When the criteria were written.</strong> The items, directions and thresholds were written to a file, with a hash and a timestamp, before the measurement scripts were written (2026-11-03 01:25). But they were not committed to the repository before the measurement; they reached this repository after the result. So the public record cannot prove the criteria came first, and this test is not called a pre-registration. What had already been seen before the criteria were written is listed at the top of that file. The first run resampled districts 500 times rather than the 1,000 written down, so it was corrected and run again. Notes from the time say the verdicts were the same, but the first run's output was not kept.</p>
+    <p><strong>Why it is one period.</strong> From December 2024 to August 2026, sixteen of the twenty monthly changes in the Seoul sale price index were rises, and the largest fall was &minus;0.22%. In 95.2% of the cells, all with deals in both windows, the second window stood above the first (this marks a rising test period and says nothing about direction ahead), and the 15 October 2025 measures fall between the two windows. Falling or flat periods could not be measured, because the transaction source covers only twenty-four months.</p>
+    <p><strong>Checks made after seeing the result (they do not change the verdicts).</strong> The deal-count figure is uneven across first-window price bands and concentrated in the lower ones (figures in research). That concentration coincides with a loan-cap band in the 15 October measures, and the test cannot separate the two. Of the cells in the lowest fifth by ten-month deal count (December 2024 to September 2025), 59.7% dropped out of the second-window sample, against 6.0% in the highest fifth. So the deal-count figure compares only cells with deals in both windows. Changing the second-window threshold to one, two, three or five filings leaves the deal-count figure at +0.243 to +0.247. Splitting the first window in two, so that an item and the change do not share the same deals (1,574 cells with six or more first-window deals, fewer for some items, averaged over 40 splits), gives jeonse ratio &minus;0.154, earlier change &minus;0.037 and price competitiveness &minus;0.085. Most of the earlier change's negative figure looks like this shared noise. Deal count was not split; with only the sample and the basis of the change altered, on the same 1,574 cells, its figure is +0.128. These figures too come from a single rising period and are not a basis for choosing a complex.</p>
+    <p>The inputs are the Ministry of Land, Infrastructure and Transport apartment sale and rent filings and Korea Real Estate Board indexes: the monthly apartment sale price index from the housing price survey (by district, R-ONE A_2024_00045) for adjusting dates and for the baseline, and the apartment sale price index (ECOS) for market background. These indexes are not forecasts by the Board. The inputs are fixed at commit cef5ab55, and the criteria file, scripts and output are in <a href="https://github.com/kyhsa93/jipgye/tree/main/research/future-value-test-2026-11" target="_blank" rel="noopener">research/future-value-test-2026-11</a>, so the same figures can be produced again.</p>
 
     <h2 id="sources-en">Sources and update cadence</h2>
     <ul>
