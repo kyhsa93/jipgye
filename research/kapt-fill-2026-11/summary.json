@@ -1,0 +1,887 @@
+{
+ "issue": 823,
+ "startedAt": "2026-11-03T05:24:37.842Z",
+ "finishedAt": "2026-11-03T06:43:03.950Z",
+ "commit": "13b867876ee38b7865ef8d052d946a2ed9047f65",
+ "calls": {
+  "15057332": 4,
+  "15058453": 4700
+ },
+ "maxCalls": {
+  "15057332": 60,
+  "15058453": 4800
+ },
+ "stop": null,
+ "probed": true,
+ "outcomes": {
+  "distinct": 3,
+  "top": [
+   [
+    "basis:ok:0",
+    3300
+   ],
+   [
+    "detail:ok:0",
+    1400
+   ],
+   [
+    "list:ok:0",
+    4
+   ]
+  ],
+  "otherCount": 0
+ },
+ "responseFormats": {
+  "distinct": 1,
+  "top": [
+   [
+    "json",
+    4704
+   ]
+  ],
+  "otherCount": 0
+ },
+ "result": {
+  "frame": {
+   "listed": 3414,
+   "basisPlanned": 3300,
+   "detailPlanned": 1400,
+   "sampleSeed": "kapt-823-v1"
+  },
+  "basis": {
+   "asked": 3300,
+   "ok": 3300,
+   "noItem": 0,
+   "failed": 0,
+   "kaptdaCnt": {
+    "filled": 3297,
+    "zero": 151,
+    "nonNumeric": 0,
+    "quantiles": {
+     "min": 19,
+     "p01": 65,
+     "p50": 312,
+     "p99": 3064,
+     "max": 12032
+    }
+   },
+   "hoCnt": {
+    "filled": 3297,
+    "zero": 41,
+    "nonNumeric": 0,
+    "quantiles": {
+     "min": 2,
+     "p01": 66,
+     "p50": 313,
+     "p99": 3100,
+     "max": 12032
+    }
+   },
+   "hhldCntFilled": 0,
+   "kaptUsedate": {
+    "filled": 3276,
+    "yyyymmdd": 3276,
+    "shapes": {
+     "distinct": 1,
+     "top": [
+      [
+       "9",
+       3276
+      ]
+     ],
+     "otherCount": 0
+    }
+   },
+   "kaptAddr": {
+    "filled": 3297,
+    "shapes": {
+     "distinct": 166,
+     "top": [
+      [
+       "가 9 가",
+       1157
+      ],
+      [
+       "가 9-9 가",
+       578
+      ],
+      [
+       "가 9 가9가",
+       501
+      ],
+      [
+       "가 9-9 가9가",
+       150
+      ],
+      [
+       "가 9 가 가",
+       102
+      ],
+      [
+       "가 9- 가",
+       99
+      ],
+      [
+       "가 가9가 9 가",
+       93
+      ],
+      [
+       "가 9-9 가 가",
+       72
+      ],
+      [
+       "가 가9가 9-9 가",
+       43
+      ],
+      [
+       "가 9- 가 가",
+       25
+      ]
+     ],
+     "otherCount": 477
+    }
+   },
+   "responseKeys": {
+    "distinct": 31,
+    "top": [
+     [
+      "bjdCode",
+      3300
+     ],
+     [
+      "codeAptNm",
+      3300
+     ],
+     [
+      "codeHallNm",
+      3300
+     ],
+     [
+      "codeHeatNm",
+      3300
+     ],
+     [
+      "codeMgrNm",
+      3300
+     ],
+     [
+      "codeSaleNm",
+      3300
+     ],
+     [
+      "doroJuso",
+      3300
+     ],
+     [
+      "hoCnt",
+      3300
+     ],
+     [
+      "kaptAcompany",
+      3300
+     ],
+     [
+      "kaptAddr",
+      3300
+     ],
+     [
+      "kaptBaseFloor",
+      3300
+     ],
+     [
+      "kaptBcompany",
+      3300
+     ],
+     [
+      "kaptCode",
+      3300
+     ],
+     [
+      "kaptDongCnt",
+      3300
+     ],
+     [
+      "kaptFax",
+      3300
+     ],
+     [
+      "kaptMarea",
+      3300
+     ],
+     [
+      "kaptMparea135",
+      3300
+     ],
+     [
+      "kaptMparea136",
+      3300
+     ],
+     [
+      "kaptMparea60",
+      3300
+     ],
+     [
+      "kaptMparea85",
+      3300
+     ],
+     [
+      "kaptName",
+      3300
+     ],
+     [
+      "kaptTarea",
+      3300
+     ],
+     [
+      "kaptTel",
+      3300
+     ],
+     [
+      "kaptTopFloor",
+      3300
+     ],
+     [
+      "kaptUrl",
+      3300
+     ],
+     [
+      "kaptUsedate",
+      3300
+     ],
+     [
+      "kaptdEcntp",
+      3300
+     ],
+     [
+      "kaptdaCnt",
+      3300
+     ],
+     [
+      "ktownFlrNo",
+      3300
+     ],
+     [
+      "privArea",
+      3300
+     ],
+     [
+      "zipcode",
+      3300
+     ]
+    ],
+    "otherCount": 0
+   }
+  },
+  "detail": {
+   "asked": 1400,
+   "ok": 1400,
+   "noItem": 0,
+   "failed": 0,
+   "filled": {
+    "time": 1241,
+    "line": 1217,
+    "station": 686,
+    "all": 670
+   },
+   "marginPp": {
+    "time": 1.28
+   },
+   "kaptdWtimesub": {
+    "distinct": 5,
+    "top": [
+     [
+      "5~10분이내",
+      479
+     ],
+     [
+      "5분이내",
+      346
+     ],
+     [
+      "10~15분이내",
+      255
+     ],
+     [
+      "15~20분이내",
+      109
+     ],
+     [
+      "20분초과",
+      52
+     ]
+    ],
+    "otherCount": 0
+   },
+   "subwayLine": {
+    "distinct": 145,
+    "top": [
+     [
+      "5호선",
+      127
+     ],
+     [
+      "7호선",
+      93
+     ],
+     [
+      "3호선",
+      83
+     ],
+     [
+      "2호선",
+      79
+     ],
+     [
+      "4호선",
+      66
+     ],
+     [
+      "1호선",
+      59
+     ],
+     [
+      "9호선",
+      58
+     ],
+     [
+      "6호선",
+      36
+     ],
+     [
+      "2호선, 5호선",
+      31
+     ],
+     [
+      "2호선, 7호선",
+      31
+     ],
+     [
+      "1호선, 4호선",
+      28
+     ],
+     [
+      "4호선, 7호선",
+      28
+     ],
+     [
+      "1호선, 7호선",
+      24
+     ],
+     [
+      "1호선, 2호선",
+      23
+     ],
+     [
+      "8호선",
+      19
+     ],
+     [
+      "경의중앙선",
+      19
+     ],
+     [
+      "5호선, 9호선",
+      17
+     ],
+     [
+      "3호선, 6호선",
+      15
+     ],
+     [
+      "1호선, 6호선",
+      13
+     ],
+     [
+      "3호선, 분당선",
+      13
+     ],
+     [
+      "5호선, 8호선",
+      13
+     ],
+     [
+      "3호선, 7호선, 9호선",
+      12
+     ],
+     [
+      "4호선, 우이신설선",
+      11
+     ],
+     [
+      "6호선, 7호선",
+      11
+     ],
+     [
+      "6호선, 경의중앙선, 공항철도",
+      10
+     ],
+     [
+      "2호선, 3호선",
+      9
+     ],
+     [
+      "1호선, 2호선, 7호선",
+      8
+     ],
+     [
+      "1호선, 5호선",
+      8
+     ],
+     [
+      "2호선, 9호선",
+      8
+     ],
+     [
+      "3호선, 5호선",
+      7
+     ],
+     [
+      "4호선, 6호선",
+      7
+     ],
+     [
+      "5호선, 6호선, 경의중앙선, 공항철도",
+      7
+     ],
+     [
+      "6호선, 경의중앙선",
+      7
+     ],
+     [
+      "7호선, 9호선",
+      7
+     ],
+     [
+      "1호선, 9호선",
+      6
+     ],
+     [
+      "2호선, 6호선",
+      6
+     ],
+     [
+      "2호선, 분당선",
+      6
+     ],
+     [
+      "1호선, 5호선, 7호선",
+      5
+     ],
+     [
+      "2호선, 8호선",
+      5
+     ],
+     [
+      "2호선, 신분당선",
+      5
+     ]
+    ],
+    "otherCount": 197
+   },
+   "subwayStation": {
+    "distinct": 401,
+    "shapes": {
+     "distinct": 36,
+     "top": [
+      [
+       "가",
+       562
+      ],
+      [
+       "가, 가",
+       49
+      ],
+      [
+       "가,가",
+       21
+      ],
+      [
+       "가(가)",
+       6
+      ],
+      [
+       "9가 가, 9가 가",
+       5
+      ],
+      [
+       "가 9가",
+       5
+      ],
+      [
+       "9가 가",
+       4
+      ],
+      [
+       "가, 가, 가",
+       3
+      ],
+      [
+       "가,가,가",
+       3
+      ],
+      [
+       "가,",
+       2
+      ],
+      [
+       ",",
+       1
+      ],
+      [
+       ", ,",
+       1
+      ],
+      [
+       ", , , ,",
+       1
+      ],
+      [
+       "9가 가, 9가 가 가, 9가 가 가",
+       1
+      ],
+      [
+       "9가 가, 가 가",
+       1
+      ]
+     ],
+     "otherCount": 21
+    }
+   },
+   "patterns": {
+    "distinct": 6,
+    "top": [
+     [
+      "시간O 호선O 역O",
+      670
+     ],
+     [
+      "시간O 호선O 역X",
+      480
+     ],
+     [
+      "시간X 호선X 역X",
+      92
+     ],
+     [
+      "시간O 호선X 역X",
+      91
+     ],
+     [
+      "시간X 호선O 역X",
+      51
+     ],
+     [
+      "시간X 호선O 역O",
+      16
+     ]
+    ],
+    "otherCount": 0
+   },
+   "timeByDistrict": [
+    {
+     "code": "11110",
+     "n": 16,
+     "time": 12
+    },
+    {
+     "code": "11140",
+     "n": 20,
+     "time": 20
+    },
+    {
+     "code": "11170",
+     "n": 35,
+     "time": 30
+    },
+    {
+     "code": "11200",
+     "n": 54,
+     "time": 52
+    },
+    {
+     "code": "11215",
+     "n": 40,
+     "time": 34
+    },
+    {
+     "code": "11230",
+     "n": 56,
+     "time": 43
+    },
+    {
+     "code": "11260",
+     "n": 56,
+     "time": 47
+    },
+    {
+     "code": "11290",
+     "n": 61,
+     "time": 55
+    },
+    {
+     "code": "11305",
+     "n": 24,
+     "time": 21
+    },
+    {
+     "code": "11320",
+     "n": 49,
+     "time": 49
+    },
+    {
+     "code": "11350",
+     "n": 95,
+     "time": 86
+    },
+    {
+     "code": "11380",
+     "n": 67,
+     "time": 61
+    },
+    {
+     "code": "11410",
+     "n": 40,
+     "time": 37
+    },
+    {
+     "code": "11440",
+     "n": 59,
+     "time": 56
+    },
+    {
+     "code": "11470",
+     "n": 62,
+     "time": 55
+    },
+    {
+     "code": "11500",
+     "n": 87,
+     "time": 78
+    },
+    {
+     "code": "11530",
+     "n": 74,
+     "time": 67
+    },
+    {
+     "code": "11545",
+     "n": 23,
+     "time": 19
+    },
+    {
+     "code": "11560",
+     "n": 74,
+     "time": 70
+    },
+    {
+     "code": "11590",
+     "n": 56,
+     "time": 55
+    },
+    {
+     "code": "11620",
+     "n": 38,
+     "time": 32
+    },
+    {
+     "code": "11650",
+     "n": 83,
+     "time": 65
+    },
+    {
+     "code": "11680",
+     "n": 96,
+     "time": 85
+    },
+    {
+     "code": "11710",
+     "n": 73,
+     "time": 62
+    },
+    {
+     "code": "11740",
+     "n": 62,
+     "time": 50
+    }
+   ],
+   "dealWeighted": {
+    "dealsInSample": 43241,
+    "dealsFilled": 41468
+   },
+   "responseKeys": {
+    "distinct": 36,
+    "top": [
+     [
+      "codeClean",
+      1400
+     ],
+     [
+      "codeDisinf",
+      1400
+     ],
+     [
+      "codeEcon",
+      1400
+     ],
+     [
+      "codeElev",
+      1400
+     ],
+     [
+      "codeEmgr",
+      1400
+     ],
+     [
+      "codeFalarm",
+      1400
+     ],
+     [
+      "codeGarbage",
+      1400
+     ],
+     [
+      "codeMgr",
+      1400
+     ],
+     [
+      "codeNet",
+      1400
+     ],
+     [
+      "codeSec",
+      1400
+     ],
+     [
+      "codeStr",
+      1400
+     ],
+     [
+      "codeWsupply",
+      1400
+     ],
+     [
+      "convenientFacility",
+      1400
+     ],
+     [
+      "disposalType",
+      1400
+     ],
+     [
+      "educationFacility",
+      1400
+     ],
+     [
+      "groundElChargerCnt",
+      1400
+     ],
+     [
+      "kaptCcompany",
+      1400
+     ],
+     [
+      "kaptCode",
+      1400
+     ],
+     [
+      "kaptMgrCnt",
+      1400
+     ],
+     [
+      "kaptName",
+      1400
+     ],
+     [
+      "kaptdCccnt",
+      1400
+     ],
+     [
+      "kaptdClcnt",
+      1400
+     ],
+     [
+      "kaptdDcnt",
+      1400
+     ],
+     [
+      "kaptdEcapa",
+      1400
+     ],
+     [
+      "kaptdEcnt",
+      1400
+     ],
+     [
+      "kaptdPcnt",
+      1400
+     ],
+     [
+      "kaptdPcntu",
+      1400
+     ],
+     [
+      "kaptdScnt",
+      1400
+     ],
+     [
+      "kaptdSecCom",
+      1400
+     ],
+     [
+      "kaptdWtimebus",
+      1400
+     ],
+     [
+      "kaptdWtimesub",
+      1400
+     ],
+     [
+      "subwayLine",
+      1400
+     ],
+     [
+      "subwayStation",
+      1400
+     ],
+     [
+      "undergroundElChargerCnt",
+      1400
+     ],
+     [
+      "useYn",
+      1400
+     ],
+     [
+      "welfareFacility",
+      1400
+     ]
+    ],
+    "otherCount": 0
+   }
+  },
+  "overlap": {
+   "denominators": {
+    "rows": 143552,
+    "live": 135428,
+    "market": 128624,
+    "keys": 6837,
+    "cells": 14053,
+    "unparsedJibun": 40
+   },
+   "hit": {
+    "keys": 2748,
+    "cells": 7652,
+    "live": 105861,
+    "market": 102086,
+    "parcels": 2705,
+    "ambiguousParcels": 43,
+    "ambiguousLive": 4868
+   },
+   "kapt": {
+    "complexes": 3300,
+    "addressParsed": 3289,
+    "matchedAnyDeal": 2751
+   }
+  }
+ }
+}
