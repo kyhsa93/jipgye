@@ -340,12 +340,12 @@ function judge(root, prereg, windowArg) {
   const index = loadIndex(root);
   const end = window.at(-1);
   for (const code of Object.keys(REGIONS)) {
-    if (!index[code]?.has(end)) throw new Error(`권역 ${code} 지수에 ${end} 이 없다. 값 없는 보정을 1로 메우지 않는다(PREREG 5절).`);
+    if (!index[code]?.has(end)) throw new Error(`권역 ${code} 지수에 ${end} 이 없다. 값 없는 보정을 1로 메우지 않는다(PREREG 4절).`);
   }
   const [y, m] = [Number(end.slice(0, 4)), Number(end.slice(4))];
   const frozen = `${y + Math.floor(m / 12)}${String((m % 12) + 1).padStart(2, "0")}`;
   const months = readdirSync(path.join(root, "raw/sale")).map((f) => f.slice(6, 12));
-  if (!months.some((month) => month > frozen)) throw new Error(`${end} 슬롯이 아직 얼지 않았다(PREREG 5절).`);
+  if (!months.some((month) => month > frozen)) throw new Error(`${end} 슬롯이 아직 얼지 않았다(PREREG 4절).`);
   const deals = loadDeals(root);
   const { rows, noPrior, unadjusted } = targetsOf(deals, index, window);
   console.log(`입력 raw/sale sha256 ${rawSaleHash(root)}  등록 커밋 ${prereg}  계약 ${window[0]}~${end}`);
