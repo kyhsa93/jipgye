@@ -107,6 +107,16 @@ test("같은 입력으로 다시 돌리면 같은 바이트다(멱등)", async (
   assert.deepEqual(readdirSync(dir).sort(), ["monthly-cost.json", "series.json"]);
 });
 
+test("쓰는 파일의 맨 앞에 updatedAt 이 있고 값은 그 실행의 시각이다 - 워치독 F2(#657 D6)가 소프트 실패를 이것으로 본다", async () => {
+  const dir = tmp();
+  const out = path.join(dir, "monthly-cost.json");
+  const seoul = await generate({ now: NOW, outFile: out, seriesFile: seriesFile(dir), readDeals });
+  const written = JSON.parse(readFileSync(out, "utf8"));
+  assert.equal(written.updatedAt, NOW.toISOString());
+  assert.equal(Object.keys(written)[0], "updatedAt");
+  assert.deepEqual({ ...written, updatedAt: undefined }, { ...seoul, updatedAt: undefined }, "그 밖의 값은 그대로다");
+});
+
 test("실패하면 기존 파일을 그대로 둔다 - 원본 읽기 오류·쓰기 도중 오류·쓸 값 없음", async () => {
   const dir = tmp();
   const out = path.join(dir, "monthly-cost.json");

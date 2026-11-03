@@ -50,7 +50,7 @@ function treeId(entries: { name: string; data: Buffer }[]) {
   return sha1(Buffer.concat([Buffer.from(`tree ${body.length}\0`), body])).toString("hex");
 }
 
-export async function build({ rawDir = RAW_DIR, roneFile = DISTRICT_INDEX_FILE, n4File = N4_FILE, window = windowFor(yearMonthOf(new Date())) } = {}) {
+export async function build({ rawDir = RAW_DIR, roneFile = DISTRICT_INDEX_FILE, n4File = N4_FILE, now = new Date(), window = windowFor(yearMonthOf(now)) } = {}) {
   const dir = path.join(rawDir, "sale");
   const names = (await readdir(dir)).filter((f) => f.endsWith(".json")).sort();
   const files = await Promise.all(names.map(async (name) => ({ name, data: await readFile(path.join(dir, name)) })));
@@ -74,7 +74,8 @@ export async function build({ rawDir = RAW_DIR, roneFile = DISTRICT_INDEX_FILE, 
   // 가격대 3분위(N6, 판정 #170 6403691545): 같은 쌍으로 운영 창마다 5-2 ②⑤⑥⑦ 을 다시 판정한다. 대조 상대 N4 출처는 blob 으로 남긴다.
   const n4 = await readN4(n4File);
   const n4Blob = n4 ? blobId(await readFile(n4File)).toString("hex") : null;
-  return { ...base, provenance: { ...base.provenance, bands: "DESIGN.md 5-2 (개정 3), repeat_bands_n6.py", n4Blob }, bands: bandsPayload(computeBands(result.seoulUnits, n4)) };
+  // updatedAt: 워치독 F2(#657 D6)가 이 값으로 소프트 실패(어제 파일 유지)를 본다. 쓰는 곳은 그 검사와 source-age 뿐이고 화면에 안 나간다.
+  return { updatedAt: now.toISOString(), ...base, provenance: { ...base.provenance, bands: "DESIGN.md 5-2 (개정 3), repeat_bands_n6.py", n4Blob }, bands: bandsPayload(computeBands(result.seoulUnits, n4)) };
 }
 
 function parseWindow(argv: string[]) {
@@ -111,7 +112,7 @@ async function writeOnce({ window = undefined, file = outFile, ...opts } = {}) {
  * 소프트 실패 진입점(build-district-change.ts 가 부른다). 던지지 않는다 - 무엇이 잘못돼도 ::warning 을 찍고 어제 파일을 둔다.
  * 돌려주는 값: { ok, warning } (시험·로그용).
  */
-export async function runRepeatSales({ log = console.log, ...opts }: { log?: (m: string) => void; rawDir?: string; roneFile?: string; n4File?: string; window?: [string, string]; file?: string } = {}) {
+export async function runRepeatSales({ log = console.log, ...opts }: { log?: (m: string) => void; rawDir?: string; roneFile?: string; n4File?: string; now?: Date; window?: [string, string]; file?: string } = {}) {
   try {
     log(await writeOnce(opts));
     return { ok: true, warning: null };

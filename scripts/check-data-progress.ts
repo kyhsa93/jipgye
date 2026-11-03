@@ -19,6 +19,15 @@
  *   - 그 밖(반기 파일·사람이 dispatch 하는 월간 작업): 각 줄의 주석.
  * 실패를 다시 울리지 않는 것: 공시가격 진척(official-price-api.yml 이 마지막 진척 3일 뒤 스스로 실패한다, #660) - 여기서는 경고만 한다.
  *
+ * 빌더 산출물 나이 (F2, #657 D5): docs/data/*.json 의 최상위 `updatedAt` 을 일반 규칙으로 본다. 30h 초과 경고(로그만, 이슈 없음), 54h 초과 실패, 없거나 읽을 수 없으면 실패(제외 목록 밖).
+ *   묶음(`rents-*` 등, 이름 규칙은 source-age 의 groupNames)은 가장 오래된 값으로 본다. 재생: 실제 워치독 틱 20개에서 54h 초과 0, 30h 초과 1(10-25 rates.json 32.5h, 그 파일은 #577 로 없어졌다).
+ *   `monthly-cost`·`repeat-sales` 는 #657 에서 처음 `updatedAt` 을 받아 재생 밖이다 - 이 둘의 54h 에는 재생 근거가 없다(둘 다 Daily 수집 단계가 매 실행 부른다는 코드 사실뿐이다).
+ *   잡는 것은 빌더가 안 돌거나 소프트 실패해 어제 파일을 둔 경우뿐이다. `updatedAt` 은 계산한 날이라 입력이 멈춘 채 다시 계산하면 못 잡는다. 재현율 근거는 없다(재생 기간에 빌더 동결 사고가 없어 합성 시험만 가능하다).
+ *   수집이 전면 정지하면 소스 수십 개가 함께 늙으므로 `::error::`·`::warning::` 는 소스 수와 상위 5개만 1줄로 낸다.
+ *
+ * 경고의 출구 (#657 D1·D3·D4): 러너에서 돌면 끝에 ok 가 아닌 소스를 JSON 한 줄로 `GITHUB_OUTPUT`(report=)에 쓴다. 같은 워크플로의 `report` job 이 그것으로 이슈를 연다(scripts/report-data-progress.ts).
+ *   이슈를 여느냐는 아래 코드 목록(ISSUE_GROUPS·NO_ISSUE_GROUPS)으로 정한다. 어느 쪽에도 없는 소스는 시험이 실패하고, 실행 중에는 report job 이 실패한다.
+ *
  * `npm test` 에 넣지 않는다(#8: 날짜에 따라 갈리는 검사는 그날 배포를 멈춘다). 시험은 고정 입력·고정 시각으로만 돈다.
  *
  * 사용:
@@ -26,10 +35,10 @@
  *   node scripts/check-data-progress.ts --now=2026-10-26T05:29:00Z --root=<폴더>   (시험·재현용)
  */
 
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { appendFileSync, existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { MONTHLY_STALE_DAYS } from "./source-age.ts";
+import { MONTHLY_STALE_DAYS, groupNames } from "./source-age.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { RETENTION_MONTHS, shiftMonth } from "./realestate-slots.ts";
 
@@ -68,8 +77,37 @@ export const LEDGER_DUE_DAY = 3;
 /** 공시가격 진척 0 이 이만큼(일) 이어지면 경고한다. 실패는 그 워크플로가 3일에 스스로 낸다(#660). */
 export const OFFICIAL_PRICE_WARN_DAYS = 2;
 
+/**
+ * 묶음 = 소스 이름의 첫 조각(`series/base_rate` -> `series`). **이슈를 여는 묶음의 코드 목록이고, 순서가 곧 틱당 상한에서 먼저 열리는 순서다**(#657 D4). 값을 바꾸는 것은 판정자 몫이다(사전 위임표).
+ * 어느 시점에 경고가 나는지는 그 소스의 판정을 따른다: `official-price` 는 마지막 진척 2일, 슬롯 누락·빈 달·progress.json 없음은 즉시다. 상태 파일이 없어 연속을 세지 않는다.
+ */
+export const ISSUE_GROUPS = ["official-price", "raw", "series", "market", "rone-districts", "apt-price-index", "move-in", "housing-permits"];
+/** 이슈를 열지 않는 묶음: news(60h 에 실패 메일), ledger(54h 에 실패 메일), docs(F2. 54h 에 실패 메일 - 10-25 `rates.json` 32.5h 같은 단발이 이슈로 남지 않게 한다). */
+export const NO_ISSUE_GROUPS = ["news", "ledger", "docs"];
+export const groupOf = (source: string) => source.split("/")[0];
+
+/** F2 소스 이름 앞붙이. 묶음은 `docs`, 이슈 없음. */
+const BUILDER_AGE_PREFIX = "docs/data/";
+/** `updatedAt` 이 없어도 되는 파일(최상위가 배열인 이력과 원장 로그, #657 D6). 이 파일들은 나이를 재지 않는다. */
+export const UPDATED_AT_EXCLUDED = ["market-history", "news-history", "realestate-history", "summary-history", "outlook-log"];
+/**
+ * F2 대상의 코드 목록(groupNames 이름). 판정에는 안 쓴다(목록 밖 파일도 `updatedAt` 을 본다, 일반 규칙).
+ * 쓰임은 시험 하나다: docs/data 에 어느 쪽에도 없는 파일이 생기면 시험이 실패해 `updatedAt` 을 낼지 제외할지 그 PR 이 정하게 한다. 이름만 보고 값·날짜는 안 본다(#8).
+ */
+export const BUILDER_OUTPUTS = [
+  "budget-deals", "budget-months", "cancellation", "complex-history", "complex-price", "complex-ratio", "conversion", "deal-search", "deals", "direct-deals",
+  "district-change", "floor-gap", "jeonse-risk", "lease-expiry", "market", "monthly-cost", "move-in", "news", "outlook", "outlook-indicators",
+  "realestate", "realestate-trend", "record-high", "registration", "renewal-cells", "renewal-facts", "rent-flow", "rent-preview", "rents", "repeat-sales",
+  "search-index", "segment-change", "summary", "summary-source", "week-digest",
+];
+/** F2 코드 목록 어느 쪽에도 없는 파일 이름(시험용). */
+export function unregisteredDataFiles(files: string[]) {
+  const known = new Set([...BUILDER_OUTPUTS, ...UPDATED_AT_EXCLUDED]);
+  return [...new Set(groupNames(files).filter((name) => !known.has(name)))];
+}
+
 type Level = "ok" | "warn" | "fail";
-export type Check = { source: string; cadence: string; level: Level; last: string | null; detail: string };
+export type Check = { source: string; cadence: string; level: Level; last: string | null; detail: string; hours?: number | null };
 
 const kstYmd = (ms: number) => new Date(ms + KST_MS).toISOString().slice(0, 10);
 const ymNum = (ym: string) => Number(ym.slice(0, 4)) * 12 + Number(ym.slice(4, 6)) - 1;
@@ -177,6 +215,40 @@ export function rawChecks(rawDir: string, today: string): Check[] {
   return out;
 }
 
+/** 시간대가 적힌 ISO 시각만 받는다. 시간대 없는 값은 러너 시간대에 따라 값이 달라진다. */
+const ISO_WITH_ZONE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/;
+
+/** F2: docs/data/*.json 의 최상위 updatedAt 나이. 묶음은 가장 오래된 값, 하나라도 못 읽으면 그 묶음이 실패다. */
+export function builderAgeChecks(dataDir: string, nowMs: number): Check[] {
+  const files = existsSync(dataDir) ? readdirSync(dataDir).filter((f) => f.endsWith(".json")).sort() : [];
+  const names = groupNames(files);
+  const sources = new Map<string, { source: string; members: number; unreadable: string[]; oldest: number | null; oldestFile: string | null }>();
+  files.forEach((f, i) => {
+    if (UPDATED_AT_EXCLUDED.includes(names[i])) return;
+    const isBundle = names[i] !== f.replace(/\.json$/, "");
+    const cur = sources.get(names[i]) ?? { source: `${BUILDER_AGE_PREFIX}${names[i]}${isBundle ? "-*" : ""}`, members: 0, unreadable: [], oldest: null, oldestFile: null };
+    sources.set(names[i], cur);
+    cur.members += 1;
+    const value = readJson(path.join(dataDir, f))?.updatedAt;
+    const t = typeof value === "string" && ISO_WITH_ZONE.test(value) ? Date.parse(value) : NaN;
+    if (!Number.isFinite(t)) cur.unreadable.push(f);
+    else if (cur.oldest === null || t < cur.oldest) {
+      cur.oldest = t;
+      cur.oldestFile = f;
+    }
+  });
+  const cadence = "빌더 산출물";
+  return [...sources.values()].map((s) => {
+    const bundle = s.members > 1 ? `(묶음 ${s.members}개 중 ${s.oldestFile ?? "?"})` : "";
+    if (s.unreadable.length) {
+      return { source: s.source, cadence, level: "fail" as Level, last: null, hours: null, detail: `updatedAt 이 없거나 읽을 수 없다: ${s.unreadable[0]}${s.unreadable.length > 1 ? ` 외 ${s.unreadable.length - 1}개` : ""}` };
+    }
+    const hours = (nowMs - s.oldest) / HOUR_MS;
+    const level: Level = hours > ALERT_HOURS ? "fail" : hours > CHECK_HOURS ? "warn" : "ok";
+    return { source: s.source, cadence, level, last: new Date(s.oldest).toISOString(), hours, detail: `마지막 빌드 ${hours.toFixed(1)}시간 전${bundle}(경고 ${CHECK_HOURS}h·실패 ${ALERT_HOURS}h)` };
+  });
+}
+
 export function collectChecks({ root, now }: { root: string; now: Date }): Check[] {
   const nowMs = now.getTime();
   const today = kstYmd(nowMs);
@@ -231,7 +303,7 @@ export function collectChecks({ root, now }: { root: string; now: Date }): Check
     const stalled = !complete && (days === null ? Number(p.zeroProgressRuns) >= OFFICIAL_PRICE_WARN_DAYS : days >= OFFICIAL_PRICE_WARN_DAYS);
     checks.push({
       source: "official-price", cadence: "하루(진척)", level: stalled ? "warn" : "ok", last: p.lastProgressAt ?? null,
-      detail: `끝난 지번 ${done}/${target}, 마지막 진척 ${days === null ? "모름" : `${days}일 전`}, 진척 0 실행 ${p.zeroProgressRuns ?? "?"}회(실패는 official-price-api.yml 이 3일에 낸다)`,
+      detail: `끝난 지번 ${done}/${target}, 마지막 진척 ${days === null ? "모름" : `${days}일 전`}, 진척 0 실행 ${p.zeroProgressRuns ?? "?"}회(경고 ${OFFICIAL_PRICE_WARN_DAYS}일, 실패는 official-price-api.yml 이 3일에 낸다)`,
     });
   } else checks.push({ source: "official-price", cadence: "하루(진척)", level: "warn", last: null, detail: "progress.json 이 없다(#660 상태 파일)" });
 
@@ -244,21 +316,49 @@ export function collectChecks({ root, now }: { root: string; now: Date }): Check
     const level: Level = existsSync(file) || late < 0 ? "ok" : late > ALERT_HOURS ? "fail" : "warn";
     checks.push({ source: "ledger", cadence: "월(수동)", level, last: existsSync(file) ? ym : null, detail: existsSync(file) ? `ledger/${ym}.jsonl.gz 있음` : late < 0 ? `기한(${ym}-0${LEDGER_DUE_DAY}) 전` : `ledger/${ym}.jsonl.gz 없음, 기한 뒤 ${late.toFixed(0)}h(실패 ${ALERT_HOURS}h)` });
   }
+
+  // 빌더 산출물 나이(F2, #657 D5).
+  checks.push(...builderAgeChecks(path.join(root, "docs/data"), nowMs));
   return checks;
 }
 
-export function main(argv: string[], { log = console.log }: { log?: (m: string) => void } = {}) {
+/** F2 소스들을 한 줄로: 소스 수와 가장 오래된 상위 5개(못 읽은 것이 맨 앞). 수집 전면 정지 때 소스마다 한 줄씩 나오면 안 된다. */
+export function builderAgeLine(checks: Check[], limit = 5) {
+  const age = (c: Check) => c.hours ?? Infinity;
+  const top = [...checks].sort((a, b) => age(b) - age(a) || a.source.localeCompare(b.source)).slice(0, limit);
+  const names = top.map((c) => `${c.source.slice(BUILDER_AGE_PREFIX.length)}(${c.hours == null ? "updatedAt 못 읽음" : `${c.hours.toFixed(1)}h`})`).join(", ");
+  return `소스 ${checks.length}개 - ${names}${checks.length > limit ? ` 외 ${checks.length - limit}개` : ""}`;
+}
+
+/** report job 에 넘기는 한 줄(ok 가 아닌 소스만). 모양은 scripts/report-data-progress.ts 의 parseReport 가 본다. 값은 우리 산출물뿐이고 비밀값이 없다. */
+export function reportPayload(checks: Check[], now: Date) {
+  const rows = checks.filter((c) => c.level !== "ok").map(({ source, cadence, level, last, detail }) => ({ source, cadence, level, last, detail }));
+  return JSON.stringify({ version: 1, now: now.toISOString(), checks: rows });
+}
+
+export function main(argv: string[], { log = console.log, writeReport = () => {} }: { log?: (m: string) => void; writeReport?: (json: string) => void } = {}) {
   const arg = (k: string) => argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3);
   const root = arg("root") ?? path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
   const now = arg("now") ? new Date(arg("now")) : new Date();
   if (Number.isNaN(now.getTime())) throw new Error(`--now 를 못 읽었다: ${arg("now")}`);
   const checks = collectChecks({ root, now });
   log(`데이터 진척 (KST ${kstYmd(now.getTime())}, ${now.toISOString()})`);
-  for (const c of checks) log(`  ${c.level.padEnd(4)} ${c.source.padEnd(28)} ${c.cadence.padEnd(12)} ${c.detail}`);
-  for (const c of checks) {
+  // F2 는 소스가 수십 개라 ok 는 합계 한 줄로 줄이고, 경고·실패만 소스별로 찍는다.
+  const isBuilderAge = (c: Check) => c.source.startsWith(BUILDER_AGE_PREFIX);
+  const sourceChecks = checks.filter((c) => !isBuilderAge(c));
+  const builderChecks = checks.filter(isBuilderAge);
+  for (const c of [...sourceChecks, ...builderChecks.filter((b) => b.level !== "ok")]) log(`  ${c.level.padEnd(4)} ${c.source.padEnd(28)} ${c.cadence.padEnd(12)} ${c.detail}`);
+  log(`  빌더 산출물 ${builderChecks.length}개 소스 중 ok ${builderChecks.filter((c) => c.level === "ok").length}`);
+  for (const c of sourceChecks) {
     if (c.level === "warn") log(`::warning::데이터 진척 확인: ${c.source} - ${c.detail}`);
     if (c.level === "fail") log(`::error::데이터가 멈췄다: ${c.source} - ${c.detail}. run 은 초록이어도 수집기가 어제 값으로 가고 있다 - 그 수집 단계 로그를 본다(audit/갱신-사고-대응.md)`);
   }
+  const builderWarn = builderChecks.filter((c) => c.level === "warn");
+  const builderFail = builderChecks.filter((c) => c.level === "fail");
+  if (builderWarn.length) log(`::warning::빌더 산출물 ${CHECK_HOURS}h 초과: ${builderAgeLine(builderWarn)}`);
+  if (builderFail.length) log(`::error::빌더 산출물이 멈췄다(${ALERT_HOURS}h 초과 또는 updatedAt 못 읽음): ${builderAgeLine(builderFail)}. 빌더가 안 돌았거나 소프트 실패해 어제 파일을 두고 있다 - 수집 단계 로그를 본다(audit/갱신-사고-대응.md)`);
+  // 종료 코드와 무관하게 쓴다: 실패가 있어도 경고는 이슈로 올라가야 한다(#657 report job).
+  writeReport(reportPayload(checks, now));
   const fails = checks.filter((c) => c.level === "fail").length;
   log(fails ? `실패 ${fails}건` : `합격 - 경고 ${checks.filter((c) => c.level === "warn").length}건`);
   return fails ? 1 : 0;
@@ -290,7 +390,8 @@ export function collectStatus(history: unknown) {
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   try {
-    process.exitCode = main(process.argv.slice(2));
+    const output = process.env.GITHUB_OUTPUT;
+    process.exitCode = main(process.argv.slice(2), output ? { writeReport: (json) => appendFileSync(output, `report=${json}\n`) } : {});
   } catch (e) {
     console.log(`::error::데이터 진척 검사가 돌지 못했다 - ${e.message}`);
     process.exitCode = 2;

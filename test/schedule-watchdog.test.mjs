@@ -653,3 +653,36 @@ test("재생(CLI) - 사고 틱은 종료 1, 복구 뒤 첫 틱은 종료 0 (파�
   const after = await callDeploy(snapshotAt("2026-10-31T11:04:53Z"), ["--now=2026-10-31T11:04:53Z"]);
   assert.equal(after.status, 0, after.stdout + after.stderr);
 });
+
+// ── #657 report job (경고를 이슈로) ───────────────────────────────────────────
+
+test("report job: 권한은 issues 쓰기와 contents 읽기뿐이고 watch 와 최상위는 읽기 둘 그대로다, npm ci·새 cron·표지 자유 문자열이 없다 (#657 완료 조건 9)", async () => {
+  const text = await readFile(path.join(root, ".github/workflows/schedule-watchdog.yml"), "utf8");
+  const code = text.split("\n").filter((l) => !l.trimStart().startsWith("#")).join("\n");
+  const top = code.slice(0, code.indexOf("\njobs:\n"));
+  const watch = code.slice(code.indexOf("\n  watch:\n"), code.indexOf("\n  report:\n"));
+  const report = code.slice(code.indexOf("\n  report:\n"));
+  const permissions = (part) => /\n *permissions:\n((?: +\w+: \w+\n)+)/.exec(part)?.[1].trim().split(/\n\s*/).sort();
+  assert.deepEqual(permissions(top), ["actions: read", "contents: read"]);
+  assert.equal(permissions(watch), undefined, "watch 는 최상위(읽기 둘)를 그대로 쓴다");
+  assert.doesNotMatch(watch, /: write/);
+  assert.deepEqual(permissions(report), ["contents: read", "issues: write"]);
+  assert.equal((code.match(/: write/g) ?? []).length, 1, "쓰기 권한은 report 의 issues 하나뿐이다");
+  assert.match(report, /\n    needs: watch\n/);
+  assert.match(report, /\n    if: \$\{\{ !cancelled\(\) \}\}\n/, "watch 가 실패해도 돈다");
+  assert.doesNotMatch(code, /npm (ci|install)/);
+  assert.match(report, /persist-credentials: false/);
+  assert.match(report, /GITHUB_TOKEN: \$\{\{ secrets\.GITHUB_TOKEN \}\}/);
+  assert.equal((code.match(/secrets\.\w+/g) ?? []).filter((s) => s !== "secrets.GITHUB_TOKEN").length, 0, "새 시크릿 없음");
+  assert.equal(countCrons(text), 2, "새 cron 없음");
+  // 결과 전달: watch 의 출력 -> report 의 env.
+  assert.match(watch, /progress_report: \$\{\{ steps\.progress\.outputs\.report \}\}/);
+  assert.match(watch, /id: progress\n\s+if: \$\{\{ !cancelled\(\) \}\}\n\s+run: node scripts\/check-data-progress\.ts\n/);
+  assert.match(report, /PROGRESS_REPORT: \$\{\{ needs\.watch\.outputs\.progress_report \}\}/);
+  assert.match(report, /run: node scripts\/report-data-progress\.ts\n/);
+  // 표지: choice 입력, env 로만 넘긴다.
+  assert.match(top, /issue_test:\n\s+description: .*\n\s+type: choice\n\s+options:\n\s+- none\n\s+- dispatch-test\n\s+default: none\n/);
+  assert.match(report, /ISSUE_TEST: \$\{\{ inputs\.issue_test \}\}/);
+  assert.equal((code.match(/inputs\.issue_test/g) ?? []).length, 1, "입력은 env 한 자리에서만 읽는다");
+  assert.doesNotMatch(code, /run:.*inputs\./, "입력을 run 에 끼워 넣지 않는다");
+});

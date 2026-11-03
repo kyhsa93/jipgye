@@ -57,7 +57,7 @@ export function todayKst(now = new Date()) {
 }
 
 /** 파일명에서 구 접미사를 뗀 소스 이름. 같은 접두어 파일이 5개 이상일 때만 묶음으로 본다. */
-function groupNames(files) {
+export function groupNames(files) {
   const base = files.map((f) => f.replace(/\.json$/, ""));
   const count = new Map();
   for (const b of base) {
