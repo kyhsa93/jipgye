@@ -16,6 +16,8 @@
  * 그 하나짜리 비율들을 모아 분포로 본다. 자치구 값 하나로는 안 보이는 것을 본다.
  */
 
+import { complexKey } from "./complex-id.ts";
+
 /** 한쪽이라도 이만큼 안 되면 그 칸의 중앙값은 시세라고 할 것이 못 된다. */
 export const MIN_DEALS_PER_SIDE = 3;
 
@@ -61,8 +63,8 @@ export const quantile = (values, p) => {
   return sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * p))];
 };
 
-/** 같은 단지의 같은 전용면적. 평형이 다르면 같은 단지라도 다른 값이다. */
-export const cellKey = (item) => `${item?.aptNm}|${item?.excluUseAr}`;
+/** 같은 단지의 같은 전용면적. 평형이 다르면 같은 단지라도 다른 값이다. 단지는 complex-id.ts 키라 동명 단지는 동으로 갈린다(#821). */
+export const cellKey = (item, same = undefined) => `${complexKey(item?.aptNm, item?.umdNm, same)}|${item?.excluUseAr}`;
 
 /** 해제된 거래는 시세가 아니다. */
 const liveSale = (item) => !String(item?.cdealType ?? "").trim() && number(item?.dealAmount) > 0;
@@ -74,24 +76,24 @@ const newJeonse = (item) =>
   number(item?.deposit) > 0;
 
 /** 자치구 하나의 신고들에서 칸별 전세가율을 뽑는다. */
-export function cellRatios(sales, rents) {
-  return cellRatioEntries(sales, rents).map((cell) => cell.ratio);
+export function cellRatios(sales, rents, same = undefined) {
+  return cellRatioEntries(sales, rents, same).map((cell) => cell.ratio);
 }
 
 /** cellRatios 와 같은 칸·같은 규칙인데 칸 이름(단지·전용면적)을 함께 낸다. 다른 칸 자료(1년 전 매매 등)와 맞물릴 때 쓴다(#690). */
-export function cellRatioEntries(sales, rents) {
+export function cellRatioEntries(sales, rents, same = undefined) {
   const sale = new Map();
   const jeonse = new Map();
 
   for (const item of sales ?? []) {
     if (!String(item?.aptNm ?? "").trim() || !liveSale(item)) continue;
-    const key = cellKey(item);
+    const key = cellKey(item, same);
     if (!sale.has(key)) sale.set(key, []);
     sale.get(key).push(number(item.dealAmount));
   }
   for (const item of rents ?? []) {
     if (!String(item?.aptNm ?? "").trim() || !newJeonse(item)) continue;
-    const key = cellKey(item);
+    const key = cellKey(item, same);
     if (!jeonse.has(key)) jeonse.set(key, []);
     jeonse.get(key).push(number(item.deposit));
   }

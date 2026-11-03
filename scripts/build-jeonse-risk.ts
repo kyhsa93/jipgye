@@ -30,14 +30,14 @@ const readJson = async (file) => {
   }
 };
 
-/** 구별 셈. byDistrict 는 build-complex-ratio 의 readRaw 결과({ 구 이름: { sales, rents } }). */
+/** 구별 셈. byDistrict 는 build-complex-ratio 의 readRaw 결과({ 구 이름: { sales, rents, same } }). 가격 파일과 같은 칸 키로 찾는다. */
 export async function countDistricts(byDistrict, dir = dataDir) {
   const out = {};
-  for (const [name, { sales, rents }] of Object.entries<{ sales: unknown[]; rents: unknown[] }>(byDistrict ?? {})) {
+  for (const [name, { sales, rents, same }] of Object.entries<{ sales: unknown[]; rents: unknown[]; same?: Set<string> }>(byDistrict ?? {})) {
     const slug = DISTRICT_SLUGS[name];
     if (!slug) continue;
     const price = await readJson(path.join(dir, complexPriceFileName(slug)));
-    out[name] = districtCounts(cellRatioEntries(sales, rents), price?.cells);
+    out[name] = districtCounts(cellRatioEntries(sales, rents, same), price?.cells);
   }
   return out;
 }

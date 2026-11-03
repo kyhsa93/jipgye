@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { DISTRICTS } from "./realestate-districts.ts";
-import { readSlotFile } from "./realestate-raw.ts";
+import { readSameNames, readSlotFile } from "./realestate-raw.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { cellRatios, spreadOf } from "./complex-ratio.ts";
 import { runRenewalCells } from "./build-renewal-cells.ts";
@@ -21,13 +21,14 @@ const itemsOf = (files) =>
 
 /** DISTRICTS 순서로 담는다 - 끝나는 대로 담으면 출력 순서가 그날그날 달라진다. */
 export async function readRaw(months, dir?) {
+  const sameNames = await readSameNames(dir);
   const perDistrict = await Promise.all(
     DISTRICTS.map(async ({ code, name }) => {
       const [sales, rents] = await Promise.all([
         Promise.all(months.map((ym) => readSlotFile("sale", code, ym, dir))).then(itemsOf),
         Promise.all(months.map((ym) => readSlotFile("rent", code, ym, dir))).then(itemsOf),
       ]);
-      return [name, { sales, rents }];
+      return [name, { sales, rents, same: sameNames[code] }];
     })
   );
   return Object.fromEntries(perDistrict);
@@ -37,8 +38,8 @@ export function buildPayload({ byDistrict, now }) {
   const districts = {};
   const all = [];
 
-  for (const [name, { sales, rents }] of Object.entries<{ sales: unknown[]; rents: unknown[] }>(byDistrict ?? {})) {
-    const ratios = cellRatios(sales, rents);
+  for (const [name, { sales, rents, same }] of Object.entries<{ sales: unknown[]; rents: unknown[]; same?: Set<string> }>(byDistrict ?? {})) {
+    const ratios = cellRatios(sales, rents, same);
     all.push(...ratios);
     const spread = spreadOf(ratios);
     if (spread) districts[name] = spread;

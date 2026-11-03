@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { sameNames } from "./complex-id.ts";
 import { slotKey } from "./realestate-slots.ts";
 
 export const RAW_DIR = process.env.REALESTATE_RAW_DIR
@@ -142,4 +143,26 @@ export async function readSlots(dir = RAW_DIR) {
   }
 
   return slots;
+}
+
+/**
+ * 구별로 둘 이상의 동에 나타나는 단지명: { 구 코드: Set }. 보관 중인 슬롯 전부(매매+전월세)를 본다 - 어떤 빌더가 언제 불러도 같은 원본이면
+ * 같은 답이어야 파일끼리 키가 맞으므로 시각을 받지 않는다(이유는 complex-id.ts 머리 주석). 받다가 실패한 슬롯은 줄이 없어 세지 않는다.
+ */
+export async function readSameNames(dir = RAW_DIR) {
+  const seen = new Map();
+  const out = {};
+  for (const kind of KINDS) {
+    const names = await readdir(path.join(dir, kind)).catch(() => []);
+    for (const name of names.sort()) {
+      const matched = FILE_PATTERN.exec(name);
+      if (!matched) continue;
+      const file = await readSlotFile(kind, matched[1], matched[2], dir);
+      if (file?.ok === false || !Array.isArray(file?.items)) continue;
+      if (!seen.has(matched[1])) seen.set(matched[1], new Map());
+      out[matched[1]] ??= new Set();
+      sameNames(file.items, seen.get(matched[1]), out[matched[1]]);
+    }
+  }
+  return out;
 }

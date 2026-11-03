@@ -12,10 +12,11 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { gzipSync } from "node:zlib";
+import { keyedDeal } from "./complex-id.ts";
 import { AREA_GROUP, areaGroups, marketDeal, quantile } from "./complex-price.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
-import { readSlotFile } from "./realestate-raw.ts";
+import { readSameNames, readSlotFile } from "./realestate-raw.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { RETENTION_MONTHS } from "./realestate-slots.ts";
 
@@ -119,13 +120,14 @@ export function fitBudget(file, budget = GZIP_BUDGET) {
 }
 
 /** 구마다 한 파일. itemsByDistrict: { 구 코드: 원본 줄[] }. priceCells: { slug: complex-price 파일의 cells } - 칸 이름을 맞춘다. */
-export function buildHistoryFiles({ itemsByDistrict, now, priceCells = {}, budget = GZIP_BUDGET }) {
+export function buildHistoryFiles({ itemsByDistrict, now, priceCells = {}, budget = GZIP_BUDGET, sameNames = {} }) {
   const months = recentMonths(now, HISTORY_MONTHS);
   const files = {};
   for (const { code, name } of DISTRICTS) {
     const slug = DISTRICT_SLUGS[name];
     if (!slug) continue;
-    const deals = (itemsByDistrict[code] ?? []).map(marketDeal).filter(Boolean);
+    // 칸 키는 위치 파일과 같아야 카드가 칸을 찾는다(#821).
+    const deals = (itemsByDistrict[code] ?? []).map(marketDeal).filter(Boolean).map((d) => keyedDeal(d, sameNames[code]));
     const names = new Map(Object.entries(priceCells[slug] ?? {}).map(([apt, areas]) => [apt, Object.keys(areas).map(Number)]));
     const cells = districtHistory(deals, months, names);
     if (!Object.keys(cells).length) continue;
@@ -154,7 +156,7 @@ export async function writeComplexHistory({ dataDir = path.join(root, "docs/data
       priceCells[slug] = JSON.parse(await readFile(path.join(dataDir, complexPriceFileName(slug)), "utf8")).cells;
     } catch {}
   }
-  const files = buildHistoryFiles({ itemsByDistrict, now, priceCells });
+  const files = buildHistoryFiles({ itemsByDistrict, now, priceCells, sameNames: await readSameNames(rawDir) });
   await mkdir(dataDir, { recursive: true });
   const sizes = {};
   for (const [slug, file] of Object.entries(files)) {

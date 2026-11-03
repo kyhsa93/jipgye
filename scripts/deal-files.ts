@@ -1,4 +1,6 @@
+import { keyedDeal } from "./complex-id.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
+import { DISTRICTS } from "./realestate-districts.ts";
 
 export const MAX_MONTHS = 3;
 
@@ -28,7 +30,13 @@ export function collectDeals(freshDeals, maxMonths = MAX_MONTHS, valueOf = byAmo
   return { periods, deals };
 }
 
-export function buildDealFiles(source, now, maxMonths = MAX_MONTHS, valueOf = byAmount) {
+const CODE_OF = new Map(DISTRICTS.map(({ code, name }) => [name, code]));
+
+/**
+ * 구별 전수 파일. apt 는 칸과 같은 단지 키(#821)다 - 카드·관심 단지·검색 색인이 이 글자로 칸을 찾고 줄을 거른다.
+ * sameNames: readSameNames 결과(구 코드 → 동명 단지). 이름이 유일한 줄은 그대로다.
+ */
+export function buildDealFiles(source, now, maxMonths = MAX_MONTHS, valueOf = byAmount, sameNames = {}) {
   if (!source?.period) return null;
 
   const byDistrict = new Map();
@@ -36,7 +44,7 @@ export function buildDealFiles(source, now, maxMonths = MAX_MONTHS, valueOf = by
     const name = String(deal?.district ?? "").trim();
     if (!name || !DISTRICT_SLUGS[name]) continue;
     if (!byDistrict.has(name)) byDistrict.set(name, []);
-    byDistrict.get(name).push(deal);
+    byDistrict.get(name).push(keyedDeal(deal, sameNames[CODE_OF.get(name)]));
   }
 
   const updatedAt = now.toISOString();
@@ -56,6 +64,6 @@ export const dealFileName = (slug) => `deals-${slug}.json`;
 
 export const rentFileName = (slug) => `rents-${slug}.json`;
 
-export function buildRentFiles(source, now, maxMonths = MAX_MONTHS) {
-  return buildDealFiles(source, now, maxMonths, byDeposit);
+export function buildRentFiles(source, now, maxMonths = MAX_MONTHS, sameNames = {}) {
+  return buildDealFiles(source, now, maxMonths, byDeposit, sameNames);
 }
