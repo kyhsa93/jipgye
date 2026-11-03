@@ -14,8 +14,8 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import {
-  ApiFatalError, ApiValidationError, DEFAULT_BASE, DEFAULT_DAILY_BUDGET, DEFAULT_END_DATE, DEFAULT_START_DATE, MIN_GAP_MS, PROGRESS_FILE, STALL_FAIL_DAYS,
-  nextProgress, normalizeKey, progressLines, readProgress, runCollector, stallVerdict, summaryLines,
+  ApiFatalError, ApiValidationError, DEFAULT_BASE, DEFAULT_DAILY_BUDGET, DEFAULT_END_DATE, DEFAULT_START_DATE, MIN_GAP_MS, PROGRESS_FILE, STALL_FAIL_DAYS, STOP_CONSECUTIVE_FAIL,
+  nextProgress, normalizeKey, progressLines, readProgress, retryRests, runCollector, stallVerdict, summaryLines,
 } from "./official-price-api.ts";
 import { runExplore } from "./official-price-explore.ts";
 import { loadTargets } from "./official-price-targets.ts";
@@ -76,7 +76,7 @@ async function main() {
 
   const summary = await runCollector({
     key, baseUrl: base, targets, outDir: v["out-dir"], rawCommit: v["raw-commit"], startDate: v["start-date"], endDate: v["end-date"],
-    budget, gapMs,
+    budget, gapMs, restsMs: retryRests({ local, raw: env.RETRY_RESTS_MS }),
     softDeadlineMs: startedAt + runtimeMin * 60000, deadlineMs: startedAt + (runtimeMin + 15) * 60000,
     log: (line) => console.log(line), // 지번 단위 한 줄(범위 밖 stdDay 등, #802) - 키·호 값은 runCollector 가 넣지 않는다
   });
@@ -94,7 +94,9 @@ async function main() {
   emit([...lines, ...progressLines(progress, verdict)]);
   const errs = Object.keys(summary.errCodes ?? {}).join(", ") || "없음";
   if (verdict.level === "ok") {
-    if (summary.stopReason) console.log(`::notice::공시가격 수집 중단(정상 종료): ${summary.stopReason}`);
+    // 끝난 지번이 있어도 쉼을 다 쓰고 멈췄으면 그날 예산을 못 쓴 것이다 - notice 면 초록에 묻혀 안 보인다(#650, 10-11~11-02 15회 중 11회가 이 모양).
+    if (summary.stopReason === STOP_CONSECUTIVE_FAIL) console.log(`::warning::공시가격 수집 연속 실패로 중단(이번 끝난 지번 ${summary.finishedNow}, 호출 ${summary.calls}/${budget}, 쉼 ${summary.rests.count}번): 오류 분류 ${errs}`);
+    else if (summary.stopReason) console.log(`::notice::공시가격 수집 중단(정상 종료): ${summary.stopReason}`);
   } else {
     const since = progress.lastProgressAt ? `마지막 진척 ${verdict.days}일 전` : `진척 0 실행 ${progress.zeroProgressRuns}회`;
     console.log(`::warning::공시가격 수집 진척 0(${since}): 중단 ${summary.stopReason ?? "없음"}, 오류 분류 ${errs}`);

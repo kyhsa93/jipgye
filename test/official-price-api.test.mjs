@@ -7,8 +7,8 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { OFFICIAL_PRICE_LICENSE, OFFICIAL_PRICE_LICENSE_CHECKED } from "../scripts/official-price-license.ts";
 import {
-  ApiFatalError, ApiValidationError, MAX_PAGES_PER_PARCEL, OWNER_KEY_RE, PROGRESS_FILE, STALL_FAIL_DAYS, buildPart, checkLicense, foldParcel, loadState, mergeParts, nextProgress,
-  progressLines, projectItem, readProgress, runCollector, safeMsg, stallVerdict, summaryLines,
+  ApiFatalError, ApiValidationError, MAX_PAGES_PER_PARCEL, OWNER_KEY_RE, PROGRESS_FILE, RETRY_RESTS_MS, RETRY_REST_TOTAL_MS, STALL_FAIL_DAYS, STOP_CONSECUTIVE_FAIL, buildPart, checkLicense, foldParcel, loadState, mergeParts, nextProgress,
+  progressLines, projectItem, readProgress, retryRests, runCollector, safeMsg, stallVerdict, summaryLines,
 } from "../scripts/official-price-api.ts";
 import { assertDerived } from "../scripts/official-price-fold.ts";
 import { loadTargets, orderTargets } from "../scripts/official-price-targets.ts";
@@ -896,4 +896,222 @@ test("커밋된 진척 상태 파일(있으면)은 집계 필드만 가진다", 
   const allowed = new Set(["lastRunAt", "lastProgressAt", "zeroProgressRuns", "doneParcels", "targetParcels", "lastFinishedNow", "lastCalls", "lastStopReason", "lastErrCodes"]);
   for (const k of Object.keys(p)) assert.ok(allowed.has(k), k);
   assert.ok(p.lastProgressAt === null || !Number.isNaN(Date.parse(p.lastProgressAt)));
+});
+
+// ---- 일시 오류 재시도(#650): 연속 실패 5회면 쉬고 이어 간다. 쉼은 시험이 기록만 하고 실제로 쉬지 않는다 ----
+
+const MIN = 60000;
+/** 지번 n개(호 3개씩) 세계. 지번 하나 = 호출 2회(hsprc 1쪽 + 면적 1쪽). */
+function restWorld(n) {
+  const ts = Array.from({ length: n }, (_, i) => target(i + 1));
+  const uni = new Map(ts.map((t, i) => [pkey(t), buildParcel(hogs(3, `R${i}`))]));
+  return { targets: targetsOf(ts), uni };
+}
+/** 호출 순번 -> 장애. spans: [[시작(1부터), 끝, 종류]] */
+const outageOf = (spans) => (n) => spans.find(([a, b]) => n >= a && n <= b)?.[2] ?? null;
+const FAULTS = ["503", "empty", "reset"];
+const faultAt = (n) => FAULTS[n % FAULTS.length];
+
+test("#650 간격: 2->5->10->10->10분, 쉼 합 60분 이하, 워크플로 시간 상한 안에 든다(예산 소진 최장 204분 + 60분)", async () => {
+  assert.deepEqual(RETRY_RESTS_MS.map((x) => x / MIN), [2, 5, 10, 10, 10]);
+  assert.equal(RETRY_REST_TOTAL_MS, 60 * MIN);
+  assert.ok(RETRY_RESTS_MS.reduce((a, b) => a + b, 0) <= RETRY_REST_TOTAL_MS);
+  const yml = await readFile(path.join(root, ".github/workflows/official-price-api.yml"), "utf8");
+  const runtime = Number(/MAX_RUNTIME_MIN: "(\d+)"/.exec(yml)[1]);
+  const job = Number(/timeout-minutes: (\d+)/.exec(yml)[1]);
+  assert.ok(204 + RETRY_REST_TOTAL_MS / MIN <= runtime, "예산을 다 쓰는 날도 쉼이 마감 안에 든다");
+  assert.ok(runtime + 15 < job, "마감(부드러운 + 15분) 뒤 커밋할 시간이 남는다");
+  assert.doesNotMatch(yml, /RETRY_RESTS_MS/);
+});
+
+test("#650 간격: 실제 서버는 고정이고 시험(로컬 주소)만 환경변수로 바꾼다, 로컬에서 안 주면 쉬지 않는다", () => {
+  assert.deepEqual(retryRests({ local: false, raw: "1,1" }), RETRY_RESTS_MS);
+  assert.deepEqual(retryRests({ local: false }), RETRY_RESTS_MS);
+  assert.deepEqual(retryRests({ local: true }), []);
+  assert.deepEqual(retryRests({ local: true, raw: "1, 2,x" }), [1, 2]);
+});
+
+test("#650 회복: 5연속 실패(503·빈 본문·연결 끊김) 뒤 2분 쉬고 남은 지번을 받고, 버린 지번은 다음 실행이 받아 병합된다", async () => {
+  const { targets, uni } = restWorld(12);
+  const mock = await startMock(uni, { outage: (n) => (n >= 3 && n <= 7 ? faultAt(n) : null) });
+  const out = await tmp();
+  try {
+    const rests = [];
+    const logged = [];
+    const r = await runCollector(base({ targets, outDir: out, baseUrl: mock.base, restsMs: RETRY_RESTS_MS, rest: async (ms) => { rests.push(ms); }, log: (l) => logged.push(l) }));
+    assert.deepEqual(rests, [2 * MIN]);
+    assert.equal(r.stopReason, null);
+    assert.equal(r.abandoned, 5);
+    assert.equal(r.finishedNow, 7);
+    assert.deepEqual(r.rests, { count: 1, ms: 2 * MIN });
+    assert.equal(r.status, "pass-done");
+    assert.ok(logged.some((l) => l === "연속 호출 실패 5회: 2분 쉬고 이어 간다(이번 장애 1번째, 이번 실행 쉼 합 2분)"));
+    assert.ok(summaryLines(r, 1000).includes("- 쉼: 연속 실패 뒤 1번, 합 2분(호출은 쓰지 않는다)"));
+    const again = await runCollector(base({ targets, outDir: out, baseUrl: mock.base, restsMs: RETRY_RESTS_MS, rest: async () => assert.fail("장애 없는 실행은 쉬지 않는다") }));
+    assert.equal(again.finishedNow, 5);
+    assert.equal(again.status, "merged");
+  } finally { await mock.close(); await rm(out, { recursive: true, force: true }); }
+});
+
+test("#650 장애 지속: 2->5->10->10->10분을 다 쉬고 멈춘다, 호출은 5회씩 6묶음 30회, 쉼 합 37분, 끝난 지번 없으면 쓰기 없음", async () => {
+  const { targets, uni } = restWorld(60);
+  const mock = await startMock(uni, { outage: faultAt });
+  const out = await tmp();
+  try {
+    const rests = [];
+    const r = await runCollector(base({ targets, outDir: out, baseUrl: mock.base, restsMs: RETRY_RESTS_MS, rest: async (ms) => { rests.push(ms); } }));
+    assert.deepEqual(rests, RETRY_RESTS_MS);
+    assert.equal(r.stopReason, STOP_CONSECUTIVE_FAIL);
+    assert.equal(r.calls, 30);
+    assert.equal(r.rests.ms, 37 * MIN);
+    assert.deepEqual(await listFiles(out), []);
+  } finally { await mock.close(); await rm(out, { recursive: true, force: true }); }
+});
+
+test("#650 쉼 합 상한: 지번이 끝나면 2분부터 다시지만 실행 하나의 합은 60분을 넘지 않는다", async () => {
+  const { targets, uni } = restWorld(90);
+  let up = 0; // 세 번째 쉼 뒤에만 호출 2회(지번 하나)가 통한다
+  const rests = [];
+  const mock = await startMock(uni, { outage: () => { if (up > 0) { up -= 1; return null; } return "503"; } });
+  const out = await tmp();
+  try {
+    const rest = async (ms) => { rests.push(ms); if (rests.length % 3 === 0) up = 2; };
+    const r = await runCollector(base({ targets, outDir: out, baseUrl: mock.base, restsMs: RETRY_RESTS_MS, rest }));
+    assert.deepEqual(rests.map((x) => x / MIN), [2, 5, 10, 2, 5, 10, 2, 5, 10, 2, 5]); // 다음 10분이면 68분
+    assert.equal(r.rests.ms, 58 * MIN);
+    assert.equal(r.stopReason, STOP_CONSECUTIVE_FAIL);
+    assert.equal(r.finishedNow, 3);
+  } finally { await mock.close(); await rm(out, { recursive: true, force: true }); }
+});
+
+test("#650 응답 하나로는 회복으로 보지 않는다: 지번을 못 끝내면 쉼 간격이 처음으로 돌아가지 않는다", async () => {
+  const { targets, uni } = restWorld(60);
+  const seq = []; // 쉼 뒤 첫 호출(hsprc 1쪽)만 통하고 면적부터 다시 실패 - 지번이 끝나지 않는다
+  let up = 0;
+  const mock = await startMock(uni, { outage: () => { if (up > 0) { up -= 1; return null; } return "503"; } });
+  const out = await tmp();
+  try {
+    const r = await runCollector(base({ targets, outDir: out, baseUrl: mock.base, restsMs: RETRY_RESTS_MS, rest: async (ms) => { seq.push(ms); up = 1; } }));
+    assert.deepEqual(seq, RETRY_RESTS_MS);
+    assert.equal(r.finishedNow, 0);
+    assert.equal(r.stopReason, STOP_CONSECUTIVE_FAIL);
+  } finally { await mock.close(); await rm(out, { recursive: true, force: true }); }
+});
+
+for (const code of ["22", "30", "31", "32", "33", "429"]) {
+  test(`#650 키·한도 오류 ${code}: 처음이든 쉼 뒤든 더 쉬지 않고 멈추고, 끝난 지번은 저장한다`, async () => {
+    const { targets, uni } = restWorld(20);
+    const reason = code === "429" ? "HTTP 429" : `결과코드 ${code}`;
+    const first = await startMock(uni, { outage: () => code });
+    const after = await startMock(uni, { outage: outageOf([[3, 7, "503"], [8, 9999, code]]) });
+    const out1 = await tmp();
+    const out2 = await tmp();
+    try {
+      const r1 = await runCollector(base({ targets, outDir: out1, baseUrl: first.base, restsMs: RETRY_RESTS_MS, rest: async () => assert.fail("키 오류는 쉬지 않는다") }));
+      assert.deepEqual([r1.stopReason, r1.calls, r1.rests.count], [reason, 1, 0]);
+      const rests = [];
+      const r2 = await runCollector(base({ targets, outDir: out2, baseUrl: after.base, restsMs: RETRY_RESTS_MS, rest: async (ms) => { rests.push(ms); } }));
+      assert.deepEqual(rests, [2 * MIN]);
+      assert.deepEqual([r2.stopReason, r2.calls, r2.finishedNow], [reason, 8, 1]);
+      assert.ok((await listFiles(out2)).some((f) => /part-001/.test(f)));
+    } finally { await first.close(); await after.close(); await rm(out1, { recursive: true, force: true }); await rm(out2, { recursive: true, force: true }); }
+  });
+}
+
+for (const status of ["401", "403"]) {
+  test(`#650 HTTP ${status}: 쉼 뒤에 나와도 더 쉬지 않고 쓰기 없이 실패하고, 문구에 키가 없다`, async () => {
+    const { targets, uni } = restWorld(20);
+    const mock = await startMock(uni, { outage: outageOf([[3, 7, "503"], [8, 9999, status]]) });
+    const out = await tmp();
+    try {
+      const rests = [];
+      await assert.rejects(() => runCollector(base({ targets, outDir: out, baseUrl: mock.base, restsMs: RETRY_RESTS_MS, rest: async (ms) => { rests.push(ms); } })), (e) => e instanceof ApiFatalError && !e.message.includes(FAKE_KEY));
+      assert.deepEqual(rests, [2 * MIN]);
+      assert.deepEqual(await listFiles(out), []);
+    } finally { await mock.close(); await rm(out, { recursive: true, force: true }); }
+  });
+}
+
+test("#650 호출 한도: 쉬고 이어 가도 호출은 예산을 넘지 않고, 쉼은 호출을 쓰지 않는다", async () => {
+  const { targets, uni } = restWorld(60);
+  const mock = await startMock(uni, { outage: faultAt });
+  const out = await tmp();
+  try {
+    const rests = [];
+    const r = await runCollector(base({ targets, outDir: out, baseUrl: mock.base, budget: 12, restsMs: RETRY_RESTS_MS, rest: async (ms) => { rests.push(ms); } }));
+    assert.equal(r.stopReason, "호출 예산 소진");
+    assert.equal(r.calls, 12);
+    assert.equal(mock.log.length, 12);
+    assert.deepEqual(rests, [2 * MIN, 5 * MIN]);
+  } finally { await mock.close(); await rm(out, { recursive: true, force: true }); }
+});
+
+test("#650 실행 시간: 쉬면 부드러운 마감을 넘는 때는 쉬지 않고 멈춘다", async () => {
+  const { targets, uni } = restWorld(20);
+  const mock = await startMock(uni, { outage: faultAt });
+  const out = await tmp();
+  try {
+    const r = await runCollector(base({ targets, outDir: out, baseUrl: mock.base, softDeadlineMs: Date.now() + 1 * MIN, restsMs: [2 * MIN], rest: async () => assert.fail("마감을 넘겨 쉬면 안 된다") }));
+    assert.equal(r.stopReason, STOP_CONSECUTIVE_FAIL);
+    assert.equal(r.calls, 5);
+  } finally { await mock.close(); await rm(out, { recursive: true, force: true }); }
+});
+
+/** CLI 세계: 지번 n개(호 5개씩). 지번 하나 = 호출 2회. */
+async function cliRestWorld(n) {
+  const dir = await tmp();
+  await mkdir(path.join(dir, "raw", "sale"), { recursive: true });
+  await writeFile(path.join(dir, "names.json"), JSON.stringify({ "서울특별시 종로구 청운동": "1111010100" }));
+  const items = [];
+  const uni = new Map();
+  for (let i = 0; i < n; i += 1) {
+    const jibun = String(10 + i);
+    items.push({ sggCd: 11110, umdNm: "청운동", jibun, excluUseAr: 59, floor: 1 });
+    uni.set(`11110-10100-${jibun.padStart(4, "0")}-0000`, buildParcel(hogs(5, `Y${i}`)));
+  }
+  await writeFile(path.join(dir, "raw", "sale", "11110-202501.json"), JSON.stringify({ items }));
+  return { dir, uni };
+}
+const ENV_NOW = { OFFICIAL_PRICE_NOW: "2026-10-26T12:00:00Z" };
+
+test("CLI #650: 끝난 지번이 있어도 연속 실패로 중단하면 ::warning 이고 notice 가 아니다, 종료 코드 0, stall 없음, 키 비출력", async () => {
+  const { dir, uni } = await cliRestWorld(8);
+  const mock = await startMock(uni, { outage: (n) => (n > 2 ? faultAt(n) : null) });
+  const ghOut = path.join(dir, "gh-output");
+  try {
+    const r = await runCli(dir, mock.base, [], { GITHUB_OUTPUT: ghOut, ...ENV_NOW });
+    assert.equal(r.code, 0, r.stderr);
+    assert.match(r.stdout, /::warning::공시가격 수집 연속 실패로 중단\(이번 끝난 지번 1, 호출 7\/9000, 쉼 0번\): 오류 분류 /);
+    assert.doesNotMatch(r.stdout, /::notice::/);
+    assert.equal(await readFile(ghOut, "utf8").catch(() => ""), "");
+    const p = await readProgress(path.join(dir, "out"));
+    assert.deepEqual([p.zeroProgressRuns, p.lastFinishedNow, p.lastStopReason], [0, 1, STOP_CONSECUTIVE_FAIL]);
+    assert.ok(![r.stdout, r.stderr, r.summary].join("\n").includes(FAKE_KEY));
+  } finally { await mock.close(); await rm(dir, { recursive: true, force: true }); }
+});
+
+test("CLI #650: 쉼을 다 쓰고 멈추면 쉼 횟수가 경고·요약에 나온다", async () => {
+  const { dir, uni } = await cliRestWorld(20);
+  const mock = await startMock(uni, { outage: (n) => (n > 2 ? "503" : null) });
+  try {
+    const r = await runCli(dir, mock.base, [], { RETRY_RESTS_MS: "1,1", ...ENV_NOW });
+    assert.equal(r.code, 0, r.stderr);
+    assert.equal(mock.log.length, 17); // 성공 2 + 5회씩 3묶음
+    assert.match(r.stdout, /::warning::공시가격 수집 연속 실패로 중단\(이번 끝난 지번 1, 호출 17\/9000, 쉼 2번\)/);
+    assert.match(r.summary, /- 쉼: 연속 실패 뒤 2번/);
+    assert.equal((r.stdout.match(/쉬고 이어 간다/g) ?? []).length, 2);
+  } finally { await mock.close(); await rm(dir, { recursive: true, force: true }); }
+});
+
+test("CLI #650: 쉰 뒤 회복해 끝까지 돌면 경고가 없고 요약에 쉼이 남는다", async () => {
+  const { dir, uni } = await cliRestWorld(10);
+  const mock = await startMock(uni, { outage: outageOf([[3, 7, "empty"]]) });
+  try {
+    const r = await runCli(dir, mock.base, [], { RETRY_RESTS_MS: "1", ...ENV_NOW });
+    assert.equal(r.code, 0, r.stderr);
+    assert.doesNotMatch(r.stdout, /::warning::/);
+    assert.match(r.summary, /- 쉼: 연속 실패 뒤 1번/);
+    assert.match(r.summary, /- 중단: 없음/);
+    assert.equal((await readProgress(path.join(dir, "out"))).lastFinishedNow, 5);
+  } finally { await mock.close(); await rm(dir, { recursive: true, force: true }); }
 });
