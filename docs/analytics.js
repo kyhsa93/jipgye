@@ -1,11 +1,11 @@
 (function () {
   const GA_MEASUREMENT_ID = "G-Z1LH7S1ZE5";
-  const ADSENSE_CLIENT_ID = "ca-pub-1195159445218373";
   const PAGE_VIEW_FALLBACK_MS = 4000;
   const SEARCH_DEBOUNCE_MS = 800;
-  // 사용자가 직접 치는 칸이 URL에 실리는 키. GA 약관 7조는 개인을 알아볼 수 있는 정보를 보내지 말라고 하고,
-  // 자유 입력에는 주소·이름·전화번호가 섞여 들어올 수 있다. 그래서 원문은 GA에 보내지 않는다.
-  const FREE_TEXT_PARAMS = ["q", "apt", "dong", "cash", "ga_internal", "ga_debug"];
+  // GA4 사이트 검색 키. 읽는 코드가 없어 주소에서 지운다(#818).
+  const SEARCH_PARAMS = ["q", "s", "search", "query", "keyword"];
+  // GA 약관 7조(개인 식별 정보 금지): 자유 입력·금액·단지 값은 GA로 보내는 주소에서만 지운다.
+  const FREE_TEXT_PARAMS = [...SEARCH_PARAMS, "apt", "dong", "cash", "compare", "from", "budget", "max", "deposit", "rent", "ga_internal", "ga_debug"];
 
   // 본인 브라우저만 표시한다. IP를 추측하거나 다른 이용자를 제외하지 않는다.
   // ?ga_internal=1 로 켜고 ?ga_internal=0 으로 끈다. 저장소가 막혀도 현재 페이지에서는 적용한다.
@@ -18,6 +18,13 @@
       localStorage.setItem("jipgye_ga_internal", internal ? "1" : "0");
     } catch {}
   }
+
+  try {
+    const u = new URL(location.href);
+    const had = SEARCH_PARAMS.filter((k) => u.searchParams.has(k));
+    for (const k of had) u.searchParams.delete(k);
+    if (had.length) history.replaceState(history.state, "", u);
+  } catch {}
 
   window.dataLayer = window.dataLayer || [];
   function gtag() {
@@ -114,18 +121,12 @@
 
   setTimeout(() => pageView(), PAGE_VIEW_FALLBACK_MS);
 
-  // 로컬엔 GA·AdSense를 안 붙인다(#466). LAN IP·*.local은 안 막는다.
+  // 로컬엔 GA를 안 붙인다(#466). LAN IP·*.local은 안 막는다.
   if (["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)) return;
 
   const gaScript = document.createElement("script");
   gaScript.async = true;
   gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
   document.head.appendChild(gaScript);
-
-  const adScript = document.createElement("script");
-  adScript.async = true;
-  adScript.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`;
-  adScript.crossOrigin = "anonymous";
-  document.head.appendChild(adScript);
 })();
 

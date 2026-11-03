@@ -17,9 +17,12 @@ test("소개에 저장 고지가 한국어·영어 둘 다 있다 - 무엇을·�
   const ko = block("ko");
   const en = block("en");
   assert.match(ko, /<h2>이 브라우저에 저장하는 것<\/h2>/);
-  for (const word of ["관심 단지", "구", "면적", "예산", "지금 사는 구", "이 브라우저에만", "보내지 않습니다", "질문 링크"]) assert.ok(ko.includes(word), `한국어 고지에 「${word}」가 없다`);
+  for (const word of ["관심 단지", "구", "면적", "예산", "지금 사는 구", "이 브라우저에 적어", "일부는 Google로 갑니다", "광고 스크립트를 싣지 않습니다", "질문 링크"]) assert.ok(ko.includes(word), `한국어 고지에 「${word}」가 없다`);
   assert.match(en, /<h2>What this browser stores<\/h2>/);
-  for (const word of ["watch", "district", "unit size", "budget", "current district", "this browser only", "sent nowhere", "question links"]) assert.ok(en.includes(word), `영어 고지에 「${word}」가 없다`);
+  for (const word of ["watch", "district", "unit size", "budget", "current district", "written to this browser", "some of this reaches Google", "load no ad script", "question links"]) assert.ok(en.includes(word), `영어 고지에 「${word}」가 없다`);
+  // 옛 문장이 돌아오면 실제 동작과 어긋난다 - 고른 조건 일부는 GA로 간다(#818).
+  assert.ok(!ko.includes("어디로도 보내지 않습니다"), "한국어 고지에 옛 문장이 남았다");
+  assert.ok(!en.includes("sent nowhere"), "영어 고지에 옛 문장이 남았다");
   assert.equal(buttons("ko").length, 1);
   assert.equal(buttons("en").length, 1);
   assert.match(buttons("ko")[0], />지우기<\/button>$/);
