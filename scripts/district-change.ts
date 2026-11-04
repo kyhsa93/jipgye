@@ -14,6 +14,7 @@
  * 적지 않는다.
  */
 
+import { itemComplexKey } from "./complex-id.ts";
 import { REGIONS, shiftMonth } from "./outlook.ts";
 
 export const PERIOD = 3;
@@ -27,8 +28,11 @@ const median = (values) => {
 };
 const pct = (logChange) => Math.round(Math.expm1(logChange) * 1000) / 10;
 
-/** 원본 한 줄 → { district, cell, month, amount }. 해제·직거래는 뺀다. */
-export function toDeal(item) {
+/**
+ * 원본 한 줄 → { district, cell, month, amount }. 해제·직거래는 뺀다.
+ * 칸의 단지는 complex-id.ts 키다(#843) - 두 시기의 거래가 서로 다른 동이면 동 차이가 변화로 잡힌다. sameNames: readSameNames 결과.
+ */
+export function toDeal(item, sameNames = undefined) {
   if (String(item?.cdealType ?? "").trim()) return null;
   if (String(item?.dealingGbn ?? "").trim() === "직거래") return null;
   const amount = Number(String(item?.dealAmount ?? "").replace(/,/g, ""));
@@ -36,7 +40,7 @@ export function toDeal(item) {
   const area = Number(item.excluUseAr);
   return {
     district: String(item.sggCd),
-    cell: `${item.sggCd}|${item.aptNm}|${item.excluUseAr}`,
+    cell: `${item.sggCd}|${itemComplexKey(item, sameNames)}|${item.excluUseAr}`,
     month: `${item.dealYear}${String(item.dealMonth).padStart(2, "0")}`,
     amount,
     perM2: area > 0 ? amount / area : null,

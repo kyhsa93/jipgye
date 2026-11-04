@@ -75,10 +75,10 @@ export function gapDays(days, end) {
 }
 
 /** 매매 원본 전체로 칸별 거래 목록(계약일 순). 신고가 판정의 「그 전 거래」다. */
-export function saleCells(items) {
+export function saleCells(items, sameNames = {}) {
   const cells = new Map();
   for (const item of items) {
-    const deal = toDeal(item);
+    const deal = toDeal(item, sameNames);
     if (!deal) continue;
     if (!cells.has(deal.cell)) cells.set(deal.cell, []);
     cells.get(deal.cell).push(deal);
@@ -87,8 +87,8 @@ export function saleCells(items) {
 }
 
 /** 한 건이 신고가인가: null(판정 불가) · true · false. record-high.ts measure 의 선행 조건과 같다. */
-export function recordVerdict(item, cells) {
-  const deal = toDeal(item);
+export function recordVerdict(item, cells, sameNames = {}) {
+  const deal = toDeal(item, sameNames);
   if (!deal) return null;
   const before = (cells.get(deal.cell) ?? []).filter((x) => x.time < deal.time);
   if (before.length < MIN_PRIOR) return null;
@@ -100,7 +100,7 @@ export function recordVerdict(item, cells) {
 const inWindow = (day, w) => day != null && day >= w.from && day <= w.to;
 
 /** 한 창의 수. */
-export function summarizeWindow(rows, w, cells, allSaleCancels) {
+export function summarizeWindow(rows, w, cells, allSaleCancels, sameNames = {}) {
   const sale = [];
   const rent = { jeonse: 0, wolse: 0 };
   let cancelArrived = 0;
@@ -128,7 +128,7 @@ export function summarizeWindow(rows, w, cells, allSaleCancels) {
   let records = 0;
   for (const item of sale) {
     if (String(item.dealingGbn ?? "").trim() === "직거래") direct += 1;
-    const v = recordVerdict(item, cells);
+    const v = recordVerdict(item, cells, sameNames);
     if (v === null) continue;
     judged += 1;
     if (v) records += 1;
@@ -159,7 +159,7 @@ export function summarizeWindow(rows, w, cells, allSaleCancels) {
  * 묶음 전체. rows 는 uniqueArrivals 의 결과, saleItems 는 매매 원본 전부(신고가 판정용), now 는 Date.
  * 도착이 하나도 없으면 null.
  */
-export function buildDigest({ rows, saleItems, now }) {
+export function buildDigest({ rows, saleItems, now, sameNames = {} }) {
   if (!rows.length) return null;
   const days = collectionDays(rows);
   const sorted = [...days].sort();
@@ -167,7 +167,7 @@ export function buildDigest({ rows, saleItems, now }) {
   const end = sorted.at(-1);
   const { current, previous } = windows(end);
   const gaps = gapDays(days, end);
-  const cells = saleCells(saleItems);
+  const cells = saleCells(saleItems, sameNames);
   // 해제행은 고유 키로, 도착 창과 상관없이 해제일로 다시 고른다(해제일이 이번 주인데 다음 날 도착한 줄도 센다).
   const saleCancels = rows.filter((r) => r.kind === "sale" && isCancel(r.item));
   return {
@@ -177,7 +177,7 @@ export function buildDigest({ rows, saleItems, now }) {
     basis: "unique-arrival-key",
     comparable: gaps.length === 0,
     gaps,
-    current: summarizeWindow(rows, current, cells, saleCancels),
-    previous: summarizeWindow(rows, previous, cells, saleCancels),
+    current: summarizeWindow(rows, current, cells, saleCancels, sameNames),
+    previous: summarizeWindow(rows, previous, cells, saleCancels, sameNames),
   };
 }

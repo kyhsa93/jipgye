@@ -74,7 +74,7 @@ export function cellGap(direct, brokered) {
 }
 
 /** 자치구별 칸 격차 목록. 칸 키는 여기서만 쓰고 밖으로 내지 않는다. 출력 순서는 입력(자치구) 순서다. */
-export function districtGaps(byDistrict) {
+export function districtGaps(byDistrict, sameNames = {}) {
   const out = new Map();
   for (const [district, items] of Object.entries(byDistrict ?? {}) as [string, any[]][]) {
     const cells = new Map();
@@ -82,7 +82,7 @@ export function districtGaps(byDistrict) {
       const kind = dealKind(item);
       const price = amountOf(item);
       if (!kind || !(price > 0)) continue;
-      const key = cellKey(item);
+      const key = cellKey(item, sameNames);
       if (!cells.has(key)) cells.set(key, { direct: [], brokered: [] });
       cells.get(key)[kind].push(price);
     }
@@ -131,10 +131,10 @@ export function closedShare(series, partial) {
  * 서울 + 자치구. byDistrict: { 구이름: 원본 매매 배열 }(24개월), months: 오래된 달 → 최근 달(YYYYMM).
  * districts: [{ name }] - 원본이 없는 구도 빈 줄로 남긴다(칸이 사라지지 않는다). 키는 가나다순.
  */
-export function directDealStats(byDistrict, months, districts) {
+export function directDealStats(byDistrict, months, districts, sameNames = {}) {
   const partial = months.map((_, i) => i >= months.length - PARTIAL_MONTHS);
   const names = districts.map((d) => d.name).sort((a, b) => a.localeCompare(b, "ko"));
-  const gaps = districtGaps(byDistrict);
+  const gaps = districtGaps(byDistrict, sameNames);
 
   const seoulSeries = monthlyShare(Object.values(byDistrict ?? {}).flat(), months);
   const allGaps = [...gaps.values()].flatMap((g) => g.gaps);

@@ -13,6 +13,8 @@
  * 중앙값 0.00개월이었다. 저층 거래가 유독 앞이나 뒤에 몰려서 생긴 착시가 아니다.
  */
 
+import { itemComplexKey } from "./complex-id.ts";
+
 /** 저층으로 보는 층. 2층도 저층 취급을 받으므로 대조군에서는 뺀다. */
 export const LOW_FLOOR = 1;
 export const REST_FLOOR_FROM = 3;
@@ -51,8 +53,11 @@ export const median = (values) => {
 
 const round1 = (value) => Math.round(value * 10) / 10;
 
-/** 같은 자치구·단지·전용면적이면 한 칸이다. */
-export const cellKey = (item) => `${item?.sggCd}|${item?.aptNm}|${item?.excluUseAr}`;
+/**
+ * 같은 자치구·단지·전용면적이면 한 칸이다. 단지는 complex-id.ts 키다(#843) - 다른 동의 같은 이름 단지가 한 칸이면 동 차이가 층 차이로 잡힌다.
+ * sameNames: readSameNames 결과.
+ */
+export const cellKey = (item, sameNames = undefined) => `${item?.sggCd}|${itemComplexKey(item, sameNames)}|${item?.excluUseAr}`;
 
 /**
  * 칸 하나에서 저층이 나머지보다 얼마나 싼가. 견줄 수 없으면 null이다.
@@ -92,14 +97,14 @@ export function topRatio(rows) {
 }
 
 /** 거래 목록을 칸으로 묶는다. 자치구 이름은 칸마다 하나뿐이다. */
-export function toCells(byDistrict: Record<string, any>) {
+export function toCells(byDistrict: Record<string, any>, sameNames = undefined) {
   const cells = new Map();
   for (const [district, items] of Object.entries(byDistrict ?? {})) {
     for (const item of items ?? []) {
       const floor = Number(item?.floor);
       const price = Number(item?.price);
       if (!Number.isFinite(floor) || !(price > 0)) continue;
-      const key = `${district}|${cellKey(item)}`;
+      const key = `${district}|${cellKey(item, sameNames)}`;
       if (!cells.has(key)) cells.set(key, { district, rows: [] });
       cells.get(key).rows.push({ floor, price });
     }

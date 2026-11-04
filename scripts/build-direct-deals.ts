@@ -9,9 +9,9 @@ const outFile = () =>
   process.env.DIRECT_DEALS_FILE ? path.resolve(process.env.DIRECT_DEALS_FILE) : path.join(root, "docs/data/direct-deals.json");
 
 /** 서울 거래가 한 건도 없으면 null - 호출자는 기존 파일을 그대로 둔다. */
-export function buildPayload({ byDistrict, months, now }) {
+export function buildPayload({ byDistrict, months, now, sameNames = {} }) {
   if (!Object.values(byDistrict ?? {}).flat().length) return null;
-  const stats = directDealStats(byDistrict, months, DISTRICTS);
+  const stats = directDealStats(byDistrict, months, DISTRICTS, sameNames);
   // 문장과 표는 두 언어로 여기서 만든다 - 화면은 고르기만 한다(체크리스트 10, 해제 빌더의 priceBands 와 같은 방식).
   const both = (fn) => ({ ko: fn(stats, "ko"), en: fn(stats, "en") });
   return {
@@ -29,8 +29,8 @@ export function buildPayload({ byDistrict, months, now }) {
  * 해제 빌더(build-cancellation.ts)가 이미 읽은 24개월 원본으로 부른다 - 원본을 두 번 읽지 않고, 빌더 등록 줄
  * (update-all.mjs·daily-update.yml)을 늘리지 않는다(#691 판정). 던지면 호출자가 삼킨다.
  */
-export async function writeDirectDeals({ byDistrict, months, now }) {
-  const payload = buildPayload({ byDistrict, months, now });
+export async function writeDirectDeals({ byDistrict, months, now, sameNames = {} }) {
+  const payload = buildPayload({ byDistrict, months, now, sameNames });
   if (!payload) {
     console.log("  직거래: 매매 원본이 없어 기존 파일을 그대로 둡니다");
     return null;
@@ -58,9 +58,10 @@ export async function tryWriteDirectDeals(input) {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
   const { readRawSales } = await import("./build-cancellation.ts");
+  const { readSameNames } = await import("./realestate-raw.ts");
   const { recentMonths } = await import("./realestate-source.ts");
   const { RETENTION_MONTHS } = await import("./realestate-slots.ts");
   const now = new Date();
   const months = recentMonths(now, RETENTION_MONTHS);
-  await writeDirectDeals({ byDistrict: await readRawSales(months), months, now });
+  await writeDirectDeals({ byDistrict: await readRawSales(months), months, now, sameNames: await readSameNames() });
 }

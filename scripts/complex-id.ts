@@ -33,6 +33,14 @@ export function complexKey(apt, dong, same) {
   return place && same?.has(name) ? `${name} (${place})` : apt;
 }
 
+/**
+ * 원본 한 줄의 단지 키. 구를 가로질러 한 줄씩 칸을 묶는 통계 빌더(#843)가 쓴다 - 줄의 sggCd 로 그 구의 동명 단지를 찾는다.
+ * sameByCode: readSameNames 결과(구 코드 → 동명 단지). 없으면 aptNm 그대로라 칸 키가 #843 전과 같다.
+ */
+export function itemComplexKey(item, sameByCode) {
+  return complexKey(item?.aptNm, item?.umdNm, sameByCode?.[item?.sggCd]);
+}
+
 /** 키에서 동을 뗀 이름. 동을 바로 앞에 따로 적는 문장(자치구 해설)에서 쓴다. */
 export function complexName(key, dong) {
   const tail = ` (${dong})`;

@@ -16,7 +16,7 @@ import {
 import { priceBandSentence, priceBandStats, priceBandTableHtml, settledMonths } from "./cancel-by-price.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
-import { readSlotFile } from "./realestate-raw.ts";
+import { readSameNames, readSlotFile } from "./realestate-raw.ts";
 import { RETENTION_MONTHS } from "./realestate-slots.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { tryWriteDirectDeals } from "./build-direct-deals.ts";
@@ -132,7 +132,7 @@ async function main() {
   const retentionMonths = recentMonths(now, RETENTION_MONTHS);
   const registrationByDistrict = await readRawSales(retentionMonths);
   // 직거래 통계(#691)는 같은 24개월 원본으로 만든다. 소프트 실패라 던져도 아래 해제 산출물은 그대로 나간다.
-  await tryWriteDirectDeals({ byDistrict: registrationByDistrict, months: retentionMonths, now });
+  await tryWriteDirectDeals({ byDistrict: registrationByDistrict, months: retentionMonths, now, sameNames: await readSameNames() });
 
   const payload = buildPayload({ byDistrict, months, now, registrationByDistrict });
   if (!payload) {
