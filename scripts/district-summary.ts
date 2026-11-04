@@ -1,4 +1,5 @@
 import { spreadSentence } from "./complex-ratio.ts";
+import { concentrationSentence } from "./realestate-concentration.ts";
 import {
   areaPrice,
   formatEok,
@@ -155,6 +156,8 @@ export function districtSentences(entry, realestate, locale = "ko", spread = nul
       first += comparison;
     }
     out.push(`${first}.`);
+    // 위 비교는 서울 대표값을 그대로 쓴다. 그 표본이 쏠린 날은 서울 줄과 같은 단서를 바로 뒤에 둔다(#862 pm 판정). 구 값 자체의 쏠림은 2단계다.
+    if (ratio && overall?.sale?.concentration) out.push(concentrationSentence(overall.sale, realestate?.window, locale));
 
     const rank = saleRank(entry, districts);
     if (rank) {

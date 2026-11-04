@@ -7,6 +7,7 @@ import {
   computeOverall,
   fetchSummary,
   findBaseline,
+  inSaleSample,
   kstDateString,
   dropCancelled,
   normalizeDeal,
@@ -15,6 +16,7 @@ import {
   summarizeSaleItems,
 } from "./realestate-metrics.ts";
 import { MIN_SAMPLE, hasEnoughSample } from "./realestate-format.ts";
+import { concentrationKey, isConcentrated } from "./realestate-concentration.ts";
 import { itemKey, readSameNames, readSlotFile } from "./realestate-raw.ts";
 import { TREND_MONTHS, windowMonths } from "./realestate-slots.ts";
 import {
@@ -141,6 +143,46 @@ export function districtEntries(months) {
 
     return entry.sale || entry.jeonse || entry.wolse ? entry : null;
   }).filter(Boolean);
+}
+
+/**
+ * 서울 매매 표본에서 가장 큰 한 단지·한 계약일 묶음이 문턱을 넘었는지(#862 조건 3). 기준(도착·계약)을 가리지 않는다 - 계약 기준 월요일에 물러나면 같은 행이 그 창에 들어오기 때문이다(pm 판정).
+ * 넘었으면 { rows, share, without }. 뺀 값은 대표값과 같은 경로(computeOverall, 구 건수 가중)로 내고, 뺀 쪽이 MIN_SAMPLE 아래면 값을 남기지 않는다.
+ * 돌려주는 값에 단지명·동·묶음 키가 없다 - realestate.json 과 history 가 공개 파일이다.
+ * 같은 크기의 묶음은 슬롯을 읽는 고정 순서의 앞쪽을 택한다(`readWindowItems` 와 같은 이유로 결정적이어야 한다).
+ */
+function concentrationOf(items, total) {
+  const bundles = new Map();
+  for (const { code } of DISTRICTS) {
+    for (const row of items.get(`sale:${code}`) ?? []) {
+      if (!inSaleSample(row.item)) continue;
+      const key = concentrationKey(code, row.item, contractDate(row.item));
+      if (key) bundles.set(key, (bundles.get(key) ?? 0) + 1);
+    }
+  }
+  let largest = null;
+  for (const [key, rows] of bundles) if (!largest || rows > largest.rows) largest = { key, rows };
+  if (!largest || !isConcentrated(largest.rows, total)) return null;
+
+  const rest = new Map();
+  for (const { code } of DISTRICTS) {
+    const kept = (items.get(`sale:${code}`) ?? []).filter((row) => concentrationKey(code, row.item, contractDate(row.item)) !== largest.key);
+    if (kept.length) rest.set(`sale:${code}`, kept);
+  }
+  const without = computeOverall(districtEntries(rest)).sale;
+  const left = without?.transactionCount ?? 0;
+  return {
+    rows: largest.rows,
+    share: Math.round((largest.rows / total) * 10_000) / 10_000,
+    without: { avgPricePerPyeong10k: left >= MIN_SAMPLE ? without.avgPricePerPyeong10k : null, transactionCount: left },
+  };
+}
+
+/** 서울 전체 값. 대표값은 그대로이고, 쏠림이 발동한 날만 `sale.concentration` 이 붙어 history 까지 같이 남는다 - 7일 뒤 비교가 이 기록을 보고 같은 규칙을 따른다. */
+export function representativeOverall(items) {
+  const overall = computeOverall(districtEntries(items));
+  const concentration = overall.sale ? concentrationOf(items, overall.sale.transactionCount) : null;
+  return concentration ? { ...overall, sale: { ...overall.sale, concentration } } : overall;
 }
 
 function appendHistory(history, now, entry) {
@@ -353,7 +395,7 @@ async function writeRepresentative(now) {
     );
   }
 
-  const overall = computeOverall(districtEntries(overallItems));
+  const overall = representativeOverall(overallItems);
   const history = await readJson(historyFile, []);
 
   await writeFile(

@@ -561,6 +561,8 @@ function wolseChangeHtml(change, baselineDate) {
 // #862: 서울 매매를 표본 구성 때문에 보류한 칸은 건수 자리에 빌드가 구운 문구를 고른다(scripts/realestate-concentration.ts, 구운 표는 realestate-table.ts countOrHeld).
 const countText = (m) => (m.changeWithheld?.reason ? m.changeWithheld.text[locale].cell : t("countUnit")(m.transactionCount));
 
+const heldDetail = (m) => m.changeWithheld?.text?.[locale].detail;
+
 const countHtml = (metric) =>
   typeof metric?.transactionCount === "number"
     ? ` <span class="count">${escapeHtml(countText(metric))}</span>`
@@ -794,7 +796,7 @@ function renderOverall(realestate) {
         return card(
           label,
           formatMan(valueOf(metric, k)),
-          `${escapeHtml(t("thArea")(areaM2))} ${formatEok(areaPrice(valueOf(metric, k)))} · ${escapeHtml(t("countUnit")(metric.transactionCount))}`
+          `${escapeHtml(t("thArea")(areaM2))} ${formatEok(areaPrice(valueOf(metric, k)))} · ${escapeHtml(heldDetail(metric) ? countText(metric) : t("countUnit")(metric.transactionCount))}`
         );
       })
       .join("");
@@ -830,7 +832,7 @@ function renderOverall(realestate) {
         )
       : "") +
     (kind === "jeonse" ? complexCard() : "") +
-    card(t("thCount"), escapeHtml(t("countUnit")(metric.transactionCount)), "");
+    card(t("thCount"), escapeHtml(t("countUnit")(metric.transactionCount)), escapeHtml(heldDetail(metric) ?? ""));
 }
 
 /** 자치구 화면이면 그 구, 거래 유형 화면이면 서울 전체. 파일이 없으면 카드가 없다. */
