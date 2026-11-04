@@ -67,6 +67,7 @@
         <ol>
           <li><a href="#real-deals">여기 나오는 것은 매물이 아니라 신고된 실거래입니다</a></li>
           <li><a href="#reporting-lag">신고 기한 30일이 만드는 착시</a></li>
+          <li><a href="#arrival-concentration">한 단지 일괄 신고가 표본을 차지하면 증감을 내지 않습니다</a></li>
           <li><a href="#four-weeks">자치구는 네 주를 겹쳐 셉니다</a></li>
           <li><a href="#wolse-change">월세 증감은 보증금과 월세를 묶은 ㎡당 값으로 잽니다</a></li>
           <li><a href="#trend-lines">추이 그래프의 실선과 점선</a></li>
@@ -102,11 +103,15 @@
     <p>이걸 그냥 두면 "최근 거래 건수 급감" 같은 잘못된 결론이 나옵니다. 그래서 시세를 두 가지 기준 중 하나로 냅니다.</p>
     <dl>
       <dt>신고 기준</dt>
-      <dd>그 주에 <em>새로 신고된</em> 거래를 셉니다. 신고 시점으로 세니 지연이 없고, 한 번 집계한 주는 나중에 바뀌지 않습니다. 대신 계약이 언제였는지는 흐려집니다.</dd>
+      <dd>그 주에 <em>우리 수집에 새로 보인</em> 신고를 셉니다. 신고를 기다리지 않아 지연이 없지만 계약이 언제였는지는 흐려집니다. 이미 잡힌 행도 등기일이 붙거나 응답에서 빠졌다 돌아오면 새 행으로 보여 다른 주에 다시 들어갈 수 있습니다. 하루 값은 그날 모습대로 남기고 나중에 고치지 않습니다.</dd>
       <dt>계약 기준</dt>
       <dd>신고 기한 30일이 이미 지나 <em>마감된</em> 최근 네 주의 계약분을 셉니다. 계약 시점이 정확한 대신, 최근 한 달은 아직 마감되지 않아 쓸 수 없습니다.</dd>
     </dl>
     <p>어느 쪽으로 냈는지는 화면에 적히고, 데이터 파일에도 <code class="tw:text-sm">window.basis</code>로 남습니다. 기본은 신고 기준이고, 신고 기록이 모자랄 때만 계약 기준으로 물러납니다. 화면 위쪽의 기준일은 자료를 집계한 날이지 거래가 신고된 날이 아닙니다.</p>
+
+    <h2 id="arrival-concentration">한 단지 일괄 신고가 표본을 차지하면 증감을 내지 않습니다</h2>
+    <p>서울 매매 값은 신고 기준이면 그 주에 들어온 행을, 계약 기준이면 마감된 네 주에 계약한 행을 모두 셉니다. 한 단지를 한 계약일에 일괄로 거래한 행이 수십~수백 건 들어오면 평균과 건수가 함께 움직입니다. 그래서 한 단지&middot;한 계약일 행이 표본의 5% 이상이면서 10행 이상이면 7일 증감을 내지 않고, 그 건수와 그 행을 뺀 값을 표본과 함께 적습니다. 대표값은 바꾸지 않습니다. 어느 값이 시장에 더 가까운지는 이 자료로 가를 수 없기 때문입니다. 견줄 날의 표본이 그랬을 때도 증감을 내지 않습니다.</p>
+    <p>5%는 한 단지 313건 사건을 본 뒤에 정한 값 판단입니다. 2026-08-18~11-04의 기록을 다시 세면 신고 기준 44일 중 11일, 계약 기준 5일 중 2일 걸립니다. 자치구 값, 전세&middot;월세, 여러 단지나 여러 계약일로 나뉜 신고, 5% 아래에서 비싼 단지가 평균을 움직이는 경우(22행 4.6%에 값 차이 5.3%)는 이 규칙으로 잡히지 않습니다. 자치구 매매 줄에는 문턱을 따로 정할 때까지(늦어도 2026-11-20) 이 단서가 없습니다.</p>
 
     <h2 id="four-weeks">자치구는 네 주를 겹쳐 셉니다</h2>
     <p>서울 전체는 한 주 표본이 충분하지만 자치구 하나는 그렇지 않습니다. 어떤 구는 석 달 신고가 백 건에 못 미치는데, 그 위에서 주간 평균을 내면 큰 거래 한 건에 3.3㎡당 가격이 출렁입니다. 그래서 자치구 시세는 네 주를 겹쳐 셉니다. 반응이 한 주 느려지는 대신 한 건에 흔들리지 않습니다.</p>
@@ -285,8 +290,9 @@
     <p>특정 단지나 지역을 권하지 않고, 광고비를 받고 매물을 올리지 않습니다. 몇 달 뒤를 짐작하는 화면이 하나 있지만 <a href="#outlook">그 짐작이 지난 14년 동안 얼마나 틀렸는지</a>와 같이 싣고, 기준선을 못 이기는 칸은 비웁니다. 사고팔 때를 정해 드리지 않습니다. 그 숫자로 무엇을 할지는 읽는 분의 몫입니다.</p>
 
     <h2 id="corrections">고친 오류</h2>
-    <p>이 사이트는 정부 원본을 가공해 보여 주며, 집계 방식이나 문장에서 틀린 곳을 알게 되면 고쳐 적습니다. 모든 오류를 여기에 적는 것은 아닙니다. 숫자를 판단의 근거로 쓰기 전에 원본을 확인해 주세요. 아래는 고친 것 가운데 여섯 건을 최근 것부터 적은 것입니다.</p>
+    <p>이 사이트는 정부 원본을 가공해 보여 주며, 집계 방식이나 문장에서 틀린 곳을 알게 되면 고쳐 적습니다. 모든 오류를 여기에 적는 것은 아닙니다. 숫자를 판단의 근거로 쓰기 전에 원본을 확인해 주세요. 아래는 고친 것 가운데 일곱 건을 최근 것부터 적은 것입니다.</p>
     <ul class="corrections-list">
+      <li><strong>2026-11-04</strong> &mdash; 서울 매매 &lsquo;이번 주 신고&rsquo; 값은 수집에 새로 보인 행을 세는데, 등기일이 붙거나 응답에서 빠졌다 돌아온 행도 새 행으로 세어 한 단지 313건이 10월 21일과 11월 3일에 두 번 들어갔고, 170건 묶음은 10월 1일과 17일, 50건 묶음은 9월 1일과 10월 1일, 29건 묶음은 10월 16일과 11월 1일에 같은 모양이었습니다. 지난 값은 그대로 두고, 한 단지&middot;한 계약일 행이 표본의 5% 이상이면 증감을 내지 않고 그 행을 뺀 값을 함께 적으며, 뉴스 칩의 &lsquo;최근 1주 계약&rsquo;과 &lsquo;84㎡ 매매&rsquo;도 실제 기간과 전 면적 환산으로 고쳤습니다. (<a href="https://github.com/kyhsa93/jipgye/pull/864" target="_blank" rel="noopener">#864</a>)</li>
       <li><strong>2026-10-11</strong> &mdash; 이 사이트의 정기예금&middot;적금 금리 화면이 안내 문구에 예금자보호 한도를 &lsquo;1인당 5천만원&rsquo;으로 적고 있었는데, 2025년 9월 1일부터 한도는 금융회사별 1억원(원금과 이자 합산)이어서 현행 값으로 고쳤습니다. 영향은 이 두 화면의 안내 문장 한 줄이고 금리 수치와 집계는 그대로이며, 대출 두 화면에는 이 문구가 표시되지 않았습니다. (<a href="https://github.com/kyhsa93/jipgye/issues/229" target="_blank" rel="noopener">#229</a>)</li>
       <li><strong>2026-10-10</strong> &mdash; <a href="./jeonse-vs-wolse.html">전세 대 월세 화면</a>이 전세자금대출 &lsquo;평균 금리&rsquo;라고 적은 값은 평균이 아니라 옵션별 평균 금리의 중간값이었고, 기준 개수도 상품 수만 적혀 있었습니다. 이 사이트의 집계 방식에 맞게 문장을 &lsquo;중간값&rsquo;으로 고치고 상품 수와 옵션 수를 함께 밝혔으며, 4.5%라는 값은 그대로입니다. (<a href="https://github.com/kyhsa93/jipgye/issues/183" target="_blank" rel="noopener">#183</a>, <a href="https://github.com/kyhsa93/jipgye/pull/189" target="_blank" rel="noopener">PR #189</a>)</li>
       <li><strong>2026-10-04</strong> &mdash; <a href="./about.html">소개 화면</a>에 &lsquo;앞으로의 가격을 예측하지 않는다&rsquo;와 원본을 &lsquo;여섯 달치&rsquo; 보관한다는 문장이 남아 있었는데, 전망 화면이 열린 뒤였고 보관 기간은 최대 스물네 달이었습니다. 두 문장만 실제에 맞췄고 숫자 계산은 건드리지 않았습니다. (<a href="https://github.com/kyhsa93/jipgye/issues/65" target="_blank" rel="noopener">#65</a>)</li>
@@ -307,6 +313,7 @@
         <ol>
           <li><a href="#real-deals-en">These are reported transactions, not listings</a></li>
           <li><a href="#reporting-lag-en">The 30-day reporting window, and the illusion it creates</a></li>
+          <li><a href="#arrival-concentration-en">When one complex's bulk filings fill the sample, the change is withheld</a></li>
           <li><a href="#four-weeks-en">Districts are counted over four overlapping weeks</a></li>
           <li><a href="#wolse-change-en">Monthly-rent change is measured on deposit and rent combined, per ㎡</a></li>
           <li><a href="#trend-lines-en">Solid and dotted lines on the trend charts</a></li>
@@ -341,11 +348,15 @@
     <p>Left alone that produces conclusions like "transaction volume is collapsing" that are simply artefacts. So prices are stated on one of two bases.</p>
     <dl>
       <dt>Reported basis</dt>
-      <dd>Counts transactions <em>newly reported</em> in that week. There is no lag and a week once counted never changes afterwards. The trade-off is that the contract date is blurred.</dd>
+      <dd>Counts filings <em>first seen in this site's collection</em> that week. There is no lag, but the contract date is blurred. A row already counted can look new again when a registration date is added or when it drops out of the response and returns, so it can enter a later week as well. Each day's figure is kept as published and is not revised afterwards.</dd>
       <dt>Contract basis</dt>
       <dd>Counts contracts from the last four <em>closed</em> weeks — those whose 30-day window has already passed. The contract date is exact, but the most recent month cannot be used.</dd>
     </dl>
     <p>Which one is in use is printed on the page and recorded as <code class="tw:text-sm">window.basis</code> in the data file. Reported basis is the default; contract basis is the fallback when there are not enough reports. The date shown at the top of the page is the day the data was compiled, not the day a deal was reported.</p>
+
+    <h2 id="arrival-concentration-en">When one complex's bulk filings fill the sample, the change is withheld</h2>
+    <p>The Seoul sale figure counts every row that arrived that week on the reported basis, and every row contracted in the four closed weeks on the contract basis. When dozens or hundreds of rows from one complex and one contract date arrive together, both the average and the count move. So when rows from one complex on one contract date reach 5% of the sample and at least 10 rows, the 7-day change is withheld, and that count and the figure without those rows are shown with their samples. The headline figure is not replaced, because this data cannot say which figure is closer to the market. The change is also withheld when the comparison date's sample was like this.</p>
+    <p>The 5% is a judgment made after seeing a 313-row case from one complex. Recounting the records from 2026-08-18 to 11-04, it applies on 11 of 44 reported-basis days and 2 of 5 contract-basis days. District figures, jeonse and rent, filings split across complexes or contract dates, and an expensive complex moving the average below 5% (22 rows at 4.6% with a 5.3% gap) are not caught by this rule. District sale rows carry no such note until a separate threshold is set (by 2026-11-20 at the latest).</p>
 
     <h2 id="four-weeks-en">Districts are counted over four overlapping weeks</h2>
     <p>Seoul as a whole has enough transactions in any given week. A single district does not. Some districts have fewer than a hundred reports in three months, and a weekly average on that base swings on one large sale. So district prices are counted over four overlapping weeks: a week slower to react, but not moved by a single transaction.</p>
@@ -507,8 +518,9 @@
     <p>It does not recommend a particular complex or district, and does not take money to list anything. One page does guess a few months ahead, but always next to <a href="#outlook-en">how wrong that guess has been over fourteen years</a>, and cells that cannot beat a naive baseline stay blank. It does not tell anyone when to buy or sell. What to do with the numbers is yours.</p>
 
     <h2 id="corrections-en">Corrections</h2>
-    <p>This site reshapes government source data for display, and when this site's counting method or a sentence here turns out to be wrong, it is corrected in the open. This list does not cover every correction. Please check the original source before relying on a figure for a decision. Below are six corrections, newest first.</p>
+    <p>This site reshapes government source data for display, and when this site's counting method or a sentence here turns out to be wrong, it is corrected in the open. This list does not cover every correction. Please check the original source before relying on a figure for a decision. Below are seven corrections, newest first.</p>
     <ul class="corrections-list">
+      <li><strong>2026-11-04</strong> &mdash; The Seoul sale figure for &ldquo;this week&rsquo;s filings&rdquo; counts rows newly seen in collection, and rows that gained a registration date or dropped out of the response and returned were counted as new, so 313 filings from one complex entered on 21 October and again on 3 November, with the same pattern for 170 (1 and 17 October), 50 (1 September and 1 October) and 29 (16 October and 1 November). Past figures are left as published; once a single complex and contract date make up 5% of the sample the change is withheld and the figure without them is shown alongside, and the news chips&rsquo; &ldquo;last 1 week, contracts&rdquo; and &ldquo;84㎡ sale&rdquo; wording now states the actual period and that the value is an all-size average scaled to 84㎡. (<a href="https://github.com/kyhsa93/jipgye/pull/864" target="_blank" rel="noopener">#864</a>)</li>
       <li><strong>2026-10-11</strong> &mdash; This site&rsquo;s deposit and savings rate pages gave the deposit-protection limit as KRW 50 million per person in a note, but since 1 September 2025 the limit has been KRW 100 million per financial institution (principal and interest combined), so the note now states the current limit. Only that one line on those two pages was affected; the rate figures and counts are unchanged, and the mortgage and jeonse loan pages did not display it. (<a href="https://github.com/kyhsa93/jipgye/issues/229" target="_blank" rel="noopener">#229</a>)</li>
       <li><strong>2026-10-10</strong> &mdash; The &ldquo;average rate&rdquo; on the <a href="./jeonse-vs-wolse.html">jeonse vs monthly rent page</a> was in fact the median of per-option average rates, and only a product count was given as the base. The sentence now says &ldquo;median&rdquo; and names both product and option counts, while the 4.5% itself is unchanged. (<a href="https://github.com/kyhsa93/jipgye/issues/183" target="_blank" rel="noopener">#183</a>, <a href="https://github.com/kyhsa93/jipgye/pull/189" target="_blank" rel="noopener">PR #189</a>)</li>
       <li><strong>2026-10-04</strong> &mdash; The <a href="./about.html">About page</a> still said the site does not forecast prices and keeps six months of raw responses, though the outlook page had opened and retention is up to twenty-four months. Only those two sentences were changed; no calculation was touched. (<a href="https://github.com/kyhsa93/jipgye/issues/65" target="_blank" rel="noopener">#65</a>)</li>
