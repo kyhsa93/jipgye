@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { buildContext, buildRealestateStats, metricEntry } from "../scripts/news-context.ts";
+import { SITE } from "./helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -95,4 +96,19 @@ test("뉴스 장의 안내는 전 면적 환산임을 말하고 제목은 「오
   }
   assert.equal(html.split("서울 아파트 신고 평균").length - 1, 2, "제목 정적 줄과 사전");
   assert.ok(html.includes("Seoul apartment filings: averages"));
+});
+
+// #862 pm 판정: 첫 화면 제목은 기준에 따라 갈리지 않는 말로 쓴다. 계약 기준 날에 「이번 주 신고된 값」은 틀린 말이고, 기준과 기간은 바로 아래 기간 줄이 말한다. 분기 없이 문자열만이다.
+test("첫 화면 실거래 제목과 표 캡션에 「이번 주」가 없다 - 틀·사전·나가는 장, 국·영", async () => {
+  const template = await readFile(path.join(root, "docs/index.html"), "utf8");
+  const built = await readFile(path.join(root, SITE, "index.html"), "utf8");
+  assert.match(template, /<h2 id="realestate-heading">서울 아파트 신고 평균<\/h2>/);
+  assert.match(template, /realestateHeading: "서울 아파트 신고 평균"/);
+  assert.match(template, /realestateHeading: "Seoul apartment filings: averages"/);
+  assert.match(template, /data-caption-en="Seoul apartment filings: averages"/);
+  assert.match(built, /<h2 id="realestate-heading">서울 아파트 신고 평균<\/h2>/);
+  assert.match(built, /Seoul apartment filings: averages/, "구운 캡션의 영어 쪽");
+  for (const html of [template, built]) {
+    for (const old of ["이번 주 신고된 값", "reported this week", "Seoul apartments this week"]) assert.ok(!html.includes(old), old);
+  }
 });
