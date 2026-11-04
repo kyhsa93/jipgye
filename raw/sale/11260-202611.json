@@ -1,1 +1,3 @@
-{"kind":"sale","district":"11260","yearMonth":"202611","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-11-01T02:09:31.442Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11260","yearMonth":"202611","ok":true,"resultCode":0,"count":1,"totalCount":1,"observedAt":"2026-11-04T03:01:09.623Z","previousObservedAt":"2026-11-01T02:09:31.442Z","arrivals":{"2553b33bb9fa":"2026-11-04"},"items":[
+{"aptDong":"","aptNm":"금호어울림(580)","buildYear":2006,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"74,000","dealDay":1,"dealMonth":11,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 중랑구","excluUseAr":84.93,"floor":1,"jibun":580,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11260,"slerGbn":"개인","umdNm":"망우동"}
+]}
