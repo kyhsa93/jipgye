@@ -113,3 +113,14 @@ export function monthLabel(period, locale = "ko") {
   }
   return `${month}월`;
 }
+
+// 날짜 "2026-11-03"을 칸·칩의 짧은 글자로. ko "11/3", en "Nov 3". 날짜가 아니면 null.
+export const baselineKo = (date) => {
+  const [, month, day] = String(date ?? "").split("-");
+  return month && day ? `${Number(month)}/${Number(day)}` : null;
+};
+export const baselineEn = (date) => {
+  const label = monthLabel(`0000${String(date ?? "").slice(5, 7)}`, "en");
+  const day = Number(String(date ?? "").slice(8, 10));
+  return label && day ? `${label} ${day}` : null;
+};
