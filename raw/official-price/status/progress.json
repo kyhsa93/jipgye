@@ -1,15 +1,15 @@
 {
-  "lastRunAt": "2026-11-03T21:28:00.573Z",
-  "lastProgressAt": "2026-11-02T23:00:51.859Z",
-  "zeroProgressRuns": 1,
-  "doneParcels": 3391,
+  "lastRunAt": "2026-11-04T23:51:18.687Z",
+  "lastProgressAt": "2026-11-04T23:51:18.687Z",
+  "zeroProgressRuns": 0,
+  "doneParcels": 3538,
   "targetParcels": 6764,
-  "lastFinishedNow": 0,
-  "lastCalls": 230,
+  "lastFinishedNow": 147,
+  "lastCalls": 3626,
   "lastStopReason": "연속 호출 실패 5회",
   "lastErrCodes": {
-    "결과코드 ?": 72,
-    "HTTP 503": 34,
+    "결과코드 ?": 409,
+    "HTTP 503": 271,
     "TypeError/UND_ERR_CONNECT_TIMEOUT": 1
   }
 }
