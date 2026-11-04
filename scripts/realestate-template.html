@@ -559,9 +559,8 @@ function wolseChangeHtml(change, baselineDate) {
 }
 
 // #862: 서울 매매를 표본 구성 때문에 보류한 칸은 건수 자리에 빌드가 구운 문구를 고른다(scripts/realestate-concentration.ts, 구운 표는 realestate-table.ts countOrHeld).
-const countText = (m) => (m.changeWithheld?.reason ? m.changeWithheld.text[locale].cell : t("countUnit")(m.transactionCount));
-
-const heldDetail = (m) => m.changeWithheld?.text?.[locale].detail;
+const held = (m, k) => m.changeWithheld?.text?.[locale][k];
+const countText = (m) => held(m, "cell") ?? t("countUnit")(m.transactionCount);
 
 const countHtml = (metric) =>
   typeof metric?.transactionCount === "number"
@@ -796,7 +795,7 @@ function renderOverall(realestate) {
         return card(
           label,
           formatMan(valueOf(metric, k)),
-          `${escapeHtml(t("thArea")(areaM2))} ${formatEok(areaPrice(valueOf(metric, k)))} · ${escapeHtml(heldDetail(metric) ? countText(metric) : t("countUnit")(metric.transactionCount))}`
+          `${escapeHtml(t("thArea")(areaM2))} ${formatEok(areaPrice(valueOf(metric, k)))} · ${escapeHtml(held(metric, "detail") ? countText(metric) : t("countUnit")(metric.transactionCount))}`
         );
       })
       .join("");
@@ -827,12 +826,14 @@ function renderOverall(realestate) {
           // 서울 전체 카드도 구 카드와 같은 표기로 값을 낸 건수를 적는다(#182). 위 구 분기와 같은 문자열이다.
           escapeHtml(
             `${t("thSale")} ${t("countUnit")(resolveMetric(overall, "sale").metric.transactionCount)} · ` +
-              `${t("thJeonse")} ${t("countUnit")(resolveMetric(overall, "jeonse").metric.transactionCount)}`
+              `${t("thJeonse")} ${t("countUnit")(resolveMetric(overall, "jeonse").metric.transactionCount)}` +
+              // #862: 서울 매매가 쏠린 날의 단서. 빌드가 구운 문구를 고르기만 한다(scripts/realestate-concentration.ts).
+              (held(overall.sale, "ratio") ? ` · ${held(overall.sale, "ratio")}` : "")
           )
         )
       : "") +
     (kind === "jeonse" ? complexCard() : "") +
-    card(t("thCount"), escapeHtml(t("countUnit")(metric.transactionCount)), escapeHtml(heldDetail(metric) ?? ""));
+    card(t("thCount"), escapeHtml(t("countUnit")(metric.transactionCount)), escapeHtml(held(metric, "detail") ?? ""));
 }
 
 /** 자치구 화면이면 그 구, 거래 유형 화면이면 서울 전체. 파일이 없으면 카드가 없다. */

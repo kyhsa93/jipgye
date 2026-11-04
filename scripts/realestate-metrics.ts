@@ -336,7 +336,7 @@ function withChange(valueKey, metric, baselineMetric, baselineDate, min) {
 // 서울 매매만의 보류(#862). 지금 표본이 걸렸으면(`concentration`, 빌드가 판정) 비교할 값이 없어도 단서를 낸다 - 값과 함께 읽어야 할 말이기 때문이다.
 // 견줄 날의 표본이 걸렸으면 그 값과의 차이만 내지 않는다 - 비교할 값이 없으면 증감이 원래 없어 할 말도 없다. 둘 다면 지금 표본의 문구다.
 // 84㎡·전세·월세·자치구는 막지 않는다(313행은 16~36㎡라 84㎡ 부근 표본에 없고, 전세·월세·구 문턱은 #862 판정으로 규칙 밖이다). 이유를 먼저 보는 쪽은 withheldOf 와 화면 JS 다.
-function heldOverallSale(metric, baseline, min, window) {
+function heldOverallSale(metric, baseline, min, window, jeonse) {
   if (!metric) return null;
   const base = baseline?.overall?.sale;
   const comparable = Boolean(computeChange(metric.avgPricePerPyeong10k, base?.avgPricePerPyeong10k));
@@ -347,7 +347,7 @@ function heldOverallSale(metric, baseline, min, window) {
   return {
     ...rest,
     changeWithheld: current
-      ? { reason: REASON_CURRENT, ...counts, text: concentrationText(metric, window) }
+      ? { reason: REASON_CURRENT, ...counts, text: concentrationText(metric, window, jeonse) }
       : { reason: REASON_BASELINE, ...counts, baselineDate: baseline.date, text: baselineHeldText(metric, baseline.date, window) },
   };
 }
@@ -363,7 +363,7 @@ export function attachChanges(overall, districts, baseline, window = null) {
 
   return {
     overall: {
-      sale: heldOverallSale(overall.sale, baseline, seoul, window) ?? sale(overall.sale, o?.sale, seoul),
+      sale: heldOverallSale(overall.sale, baseline, seoul, window, overall.jeonse) ?? sale(overall.sale, o?.sale, seoul),
       saleNational84: sale(overall.saleNational84, o?.saleNational84, seoul),
       jeonse: jeonse(overall.jeonse, o?.jeonse, seoul),
       wolse: wolse(overall.wolse, o?.wolse, seoul),

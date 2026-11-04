@@ -2,7 +2,7 @@
 // 화면 JS(docs/index.html, realestate-template.html)는 이 판정을 다시 하지 않고 빌드가 `changeWithheld.text` 에 구워 둔 두 언어 문구를 고르기만 한다 - DIRECTION 체크리스트 10(드리프트). 틀은 47장에 실려 인라인 한도(S6)도 빠듯하다.
 //
 // 이 규칙은 표시만 한다: 대표값을 바꾸지 않고, 어느 값이 맞다고 말하지 않으며, 다시 찍힌 행을 막지도 않는다(그것은 2단계). 그래서 문구에 재도장을 말하지 않는다 - 계약 기준 날에는 같은 행이 실제 그 창의 계약이다.
-import { baselineEn, baselineKo, formatMan, hasEnoughSample } from "./realestate-format.ts";
+import { baselineEn, baselineKo, formatMan, formatPercent, hasEnoughSample } from "./realestate-format.ts";
 
 // 11-03 일 수집 도장으로 한 단지 313행이 다시 들어간 주의 기록들. 이 날짜의 기록은 규칙이 생기기 전에 얼렸고 지난 값은 고치지 않으므로(조건 5) 발동 정보가 없어 날짜로 막는다.
 // 판정은 오늘이 아니라 findBaseline 이 고른 기준일로 한다 - 기록이 하루 빠지면 11-16 도 11-08 을 기준으로 삼기 때문이다.
@@ -57,14 +57,31 @@ export function concentrationClause(concentration, window, locale, format = form
     : `${head} ${countKo(left)}이라 값을 내지 않습니다`;
 }
 
-/** 지금 표본이 걸린 칸의 글자(국·영). cell 은 건수까지, detail 은 건수가 따로 있는 카드용이다. 화면 JS 는 이것을 고르기만 한다. */
-export function concentrationText(metric, window) {
+/**
+ * 전세 장 전세가율 카드의 건수 줄에 더하는 단서(#862 pm 최종 판정). 값 하나를 보여 주는 칸이라 대표값으로 낸 값은 그대로 두고, 그 행을 뺀 매매 값으로 나눈 값을 함께 밝힌다.
+ * 뺀 쪽 값이나 전세 값이 없으면 숫자 없이 단서만 적는다. 나누는 식은 realestate-format.ts jeonseRatio 와 같다.
+ */
+function ratioNote(concentration, jeonse) {
+  const { rows, without } = concentration;
+  const deposit = hasEnoughSample(jeonse) ? jeonse.avgDepositPerPyeong10k : null;
+  const ratio = canShowWithout(without) && typeof deposit === "number" ? formatPercent((deposit / without.avgPricePerPyeong10k) * 100) : null;
+  return {
+    ko: ratio
+      ? `매매 표본에 한 단지·한 계약일 ${countKo(rows)}이 들어 있어, 빼면 ${ratio}`
+      : `매매 표본에 한 단지·한 계약일 ${countKo(rows)}이 들어 있습니다`,
+    en: `the sale sample includes ${rows.toLocaleString("en-US")} from one complex on one contract date${ratio ? `; without them ${ratio}` : ""}`,
+  };
+}
+
+/** 지금 표본이 걸린 칸의 글자(국·영). cell 은 건수까지, detail 은 건수가 따로 있는 카드용, ratio 는 전세가율 카드용이다. 화면 JS 는 이것을 고르기만 한다. */
+export function concentrationText(metric, window, jeonse = null) {
   const count = metric.transactionCount;
+  const ratio = ratioNote(metric.concentration, jeonse);
   const detailKo = `증감 보류 · ${concentrationClause(metric.concentration, window, "ko")}`;
   const detailEn = `change withheld · ${concentrationClause(metric.concentration, window, "en")}`;
   return {
-    ko: { cell: `${countKo(count)} · ${detailKo}`, detail: detailKo },
-    en: { cell: `${countEn(count, window)} · ${detailEn}`, detail: detailEn },
+    ko: { cell: `${countKo(count)} · ${detailKo}`, detail: detailKo, ratio: ratio.ko },
+    en: { cell: `${countEn(count, window)} · ${detailEn}`, detail: detailEn, ratio: ratio.en },
   };
 }
 

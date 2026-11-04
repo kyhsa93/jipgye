@@ -334,6 +334,50 @@ test("쏠림이 아닌 날의 전세가율 문장은 전과 같다 - 쏠림 없�
   assert.equal(ratioLine(held, "en"), RATIO_PLAIN_EN);
 });
 
+// #862 pm 최종 판정: 전세 장 요약 카드는 값 하나를 보여 주는 칸이라 62.3%를 유지하고 건수 줄에 두 값을 함께 밝힌다. 표 서울 줄은 칸 모양을 바꾸지 않는다.
+const ratioCard = (cards) => cards.find((c) => c.label === "전세가율");
+const flatSegs = (segs) => (segs ?? []).map((s) => s.text).join("");
+const RATIO_NOTE_KO = "매매 754건 · 전세 427건 · 매매 표본에 한 단지·한 계약일 313건이 들어 있어, 빼면 58.9%";
+const RATIO_NOTE_EN = "the sale sample includes 313 from one complex on one contract date; without them 58.9%";
+
+test("전세 장 요약 카드: 값은 그대로이고 건수 줄에 뺀 값을 더한다 - 구운 쪽과 화면 쪽, 국·영", async () => {
+  const data = dashboard();
+  const card = ratioCard(overallCards(data, "jeonse"));
+  assert.equal(flatSegs(card.value), "62.3%", "값은 유지한다");
+  assert.equal(flatSegs(card.sub), RATIO_NOTE_KO);
+  assert.ok(realestateOverallHtml(data, "jeonse").includes(RATIO_NOTE_KO));
+  for (const [locale, text] of [["ko", RATIO_NOTE_KO], ["en", RATIO_NOTE_EN]]) {
+    const page = await loadRealestatePage({ realestate: data, locale, kind: "jeonse", file: `${SITE}/realestate.html` });
+    const html = String(page.byId("overall-cards").innerHTML);
+    assert.ok(html.includes(text), `${locale}: ${html}`);
+    assert.ok(html.includes(">62.3%<"), `${locale}: 값`);
+  }
+});
+
+test("전세 장 요약 카드: 뺀 쪽 값이 없으면 숫자 없이 단서만 적는다", async () => {
+  const data = dashboard();
+  const thinSale = { avgPricePerPyeong10k: 5126, transactionCount: 12, concentration: { rows: 10, share: 10 / 12, without: { avgPricePerPyeong10k: null, transactionCount: 2 } } };
+  const thin = { ...data, overall: { ...data.overall, sale: attach(thinSale, ARRIVAL).sale } };
+  const sub = flatSegs(ratioCard(overallCards(thin, "jeonse")).sub);
+  assert.equal(sub, "매매 12건 · 전세 427건 · 매매 표본에 한 단지·한 계약일 10건이 들어 있습니다");
+  const page = await loadRealestatePage({ realestate: thin, locale: "en", kind: "jeonse", file: `${SITE}/realestate.html` });
+  const html = String(page.byId("overall-cards").innerHTML);
+  assert.ok(html.includes("the sale sample includes 10 from one complex on one contract date<"), html);
+  assert.doesNotMatch(html, /without them/);
+});
+
+test("전세 장 요약 카드: 쏠림이 아닌 날과 기준일에만 걸린 날은 전과 같고, 표 서울 줄은 쏠림 날에도 칸 모양이 같다", async () => {
+  const data = dashboard();
+  const plain = { ...data, overall: { ...data.overall, sale: { avgPricePerPyeong10k: 5126, transactionCount: 754 } } };
+  const held = { ...data, overall: { ...data.overall, sale: attach({ avgPricePerPyeong10k: 5126, transactionCount: 754 }, ARRIVAL, baselineWith("2026-11-03")).sale } };
+  for (const day of [plain, held]) {
+    assert.equal(flatSegs(ratioCard(overallCards(day, "jeonse")).sub), "매매 754건 · 전세 427건");
+    const page = await loadRealestatePage({ realestate: day, kind: "jeonse", file: `${SITE}/realestate.html` });
+    assert.ok(String(page.byId("overall-cards").innerHTML).includes(">매매 754건 · 전세 427건<"));
+  }
+  assert.equal(realestateTableHtml(data, "jeonse"), realestateTableHtml(plain, "jeonse"), "표 서울 줄은 그대로다");
+});
+
 test("문구에 값 단정·단지명·권유로 읽히는 말이 없다 - 칸·칩·문장, 국·영", () => {
   const banned = [APT, "오염", "왜곡", "정상", "진짜", "correct", "distort", "real price", "상승", "오를", "매수", "보장", "저평가", "기회", "rise", "undervalued", "buy now", "guarantee"];
   for (const window of [ARRIVAL, CONTRACT]) {
