@@ -306,6 +306,34 @@ test("구 장 문장: 서울 평균을 말하는 문장 뒤에 단서가 온다,
   assert.match(districtSentences(entry, thin, "ko").join(" "), /서울 평균 표본 12건에는 한 단지·한 계약일 10건이 들어 있어, 빼면 2건이라 값을 내지 않습니다\./);
 });
 
+// #862 pm 판정: 11-04 값으로 서울 전세가율은 62.3%이고 313행을 빼면 58.9%라 구 비교 문장의 방향이 갈린다. 어느 쪽이 맞는지 모르므로 쏠림 날에는 서울 비교를 내지 않는다.
+const RATIO_PLAIN_KO = "전세가율은 53.7%로 서울 평균 62.3%보다 낮은 편이고, 2개 구를 전세가율 순으로 세우면 가장 높고 바로 아래는 강남구입니다(이 구 매매 435건·전세 200건, 서울 전체 매매 754건·전세 427건 기준).";
+const RATIO_PLAIN_EN = "The jeonse ratio is 53.7%, below the Seoul average of 62.3%, the highest of 2 districts with the next one down being 강남구 (based on 435 sales and 200 jeonse here, 754 and 427 citywide).";
+const ratioLine = (data, locale) => districtSentences(data.districts[0], data, locale).find((s) => s.startsWith(locale === "en" ? "The jeonse ratio" : "전세가율은"));
+
+test("쏠림 날 구 장 전세가율 문장: 서울 비교와 서울 건수가 빠지고 구 값·구 순서는 남는다 - 국·영, 도착·계약", () => {
+  for (const [window, unit] of [[ARRIVAL, "filings"], [CONTRACT, "deals"]]) {
+    const data = dashboard(window);
+    assert.equal(ratioLine(data, "ko"), "전세가율은 53.7%로, 2개 구를 전세가율 순으로 세우면 가장 높고 바로 아래는 강남구입니다(이 구 매매 435건·전세 200건 기준).");
+    assert.equal(ratioLine(data, "en"), "The jeonse ratio is 53.7%, the highest of 2 districts with the next one down being 강남구 (based on 435 sales and 200 jeonse).");
+    // 첫 문장의 비교와 단서는 그대로다 - 빠지는 것은 전세가율 비교뿐이다.
+    const all = districtSentences(data.districts[0], data, "en").join(" ");
+    assert.match(all, /0\.9× the Seoul average/);
+    assert.match(all, new RegExp(`The Seoul sample of 754 ${unit} includes 313`));
+  }
+});
+
+test("쏠림이 아닌 날의 전세가율 문장은 전과 같다 - 쏠림 없음, 기준일에만 걸린 날", () => {
+  const data = dashboard();
+  const plain = { ...data, overall: { ...data.overall, sale: { avgPricePerPyeong10k: 5126, transactionCount: 754 } } };
+  assert.equal(ratioLine(plain, "ko"), RATIO_PLAIN_KO);
+  assert.equal(ratioLine(plain, "en"), RATIO_PLAIN_EN);
+  const held = { ...data, overall: { ...data.overall, sale: attach({ avgPricePerPyeong10k: 5126, transactionCount: 754 }, ARRIVAL, baselineWith("2026-11-03")).sale } };
+  assert.equal(held.overall.sale.changeWithheld.reason, "baseline-concentration", "전제: 기준일에만 걸렸다");
+  assert.equal(ratioLine(held, "ko"), RATIO_PLAIN_KO);
+  assert.equal(ratioLine(held, "en"), RATIO_PLAIN_EN);
+});
+
 test("문구에 값 단정·단지명·권유로 읽히는 말이 없다 - 칸·칩·문장, 국·영", () => {
   const banned = [APT, "오염", "왜곡", "정상", "진짜", "correct", "distort", "real price", "상승", "오를", "매수", "보장", "저평가", "기회", "rise", "undervalued", "buy now", "guarantee"];
   for (const window of [ARRIVAL, CONTRACT]) {
