@@ -4,7 +4,7 @@
 // 이 규칙은 표시만 한다: 대표값을 바꾸지 않고, 어느 값이 맞다고 말하지 않으며, 다시 찍힌 행을 막지도 않는다(그것은 2단계). 그래서 문구에 재도장을 말하지 않는다 - 계약 기준 날에는 같은 행이 실제 그 창의 계약이다.
 import { baselineEn, baselineKo, formatMan, hasEnoughSample } from "./realestate-format.ts";
 
-// 11-03 재수집 도장으로 한 단지 313행이 다시 들어간 주의 기록들. 이 날짜의 기록은 규칙이 생기기 전에 얼렸고 지난 값은 고치지 않으므로(조건 5) 발동 정보가 없어 날짜로 막는다.
+// 11-03 일 수집 도장으로 한 단지 313행이 다시 들어간 주의 기록들. 이 날짜의 기록은 규칙이 생기기 전에 얼렸고 지난 값은 고치지 않으므로(조건 5) 발동 정보가 없어 날짜로 막는다.
 // 판정은 오늘이 아니라 findBaseline 이 고른 기준일로 한다 - 기록이 하루 빠지면 11-16 도 11-08 을 기준으로 삼기 때문이다.
 export const CONCENTRATED_BASELINE_DATES = Object.freeze(["2026-11-03", "2026-11-04", "2026-11-05", "2026-11-06", "2026-11-07", "2026-11-08"]);
 
@@ -73,7 +73,7 @@ export function concentrationSentence(metric, window, locale) {
   const { rows, without } = metric.concentration;
   if (locale === "en") {
     const tail = canShowWithout(without)
-      ? `without them it is ${formatMan(without.avgPricePerPyeong10k, "en")} (${countEn(without.transactionCount, window)})`
+      ? `the average without them is ${formatMan(without.avgPricePerPyeong10k, "en")} (${countEn(without.transactionCount, window)})`
       : `without them only ${countEn(without.transactionCount, window)} ${without.transactionCount === 1 ? "remains" : "remain"}, too few to average`;
     return `The Seoul sample of ${countEn(metric.transactionCount, window)} includes ${rows.toLocaleString("en-US")} from one complex on one contract date; ${tail}.`;
   }

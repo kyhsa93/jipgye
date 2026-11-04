@@ -296,7 +296,7 @@ test("구 장 문장: 서울 평균을 말하는 문장 뒤에 단서가 온다,
   assert.ok(at >= 0, ko.join("\n"));
   assert.equal(ko[at + 1], "서울 평균 표본 754건에는 한 단지·한 계약일 313건이 들어 있어, 빼면 5,422만원(441건)입니다.");
   const en = districtSentences(entry, data, "en");
-  assert.equal(en[en.findIndex((s) => s.includes("the Seoul average of")) + 1], "The Seoul sample of 754 filings includes 313 from one complex on one contract date; without them it is ₩54.2M (441 filings).");
+  assert.equal(en[en.findIndex((s) => s.includes("the Seoul average of")) + 1], "The Seoul sample of 754 filings includes 313 from one complex on one contract date; the average without them is ₩54.2M (441 filings).");
   const contract = districtSentences(entry, dashboard(CONTRACT), "en").join(" ");
   assert.match(contract, /The Seoul sample of 754 deals includes 313/);
 
