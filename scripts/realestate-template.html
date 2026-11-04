@@ -1431,8 +1431,9 @@ function renderUpdated(realestate) {
   const window = realestate?.window;
   const updatedAt = realestate?.updatedAt;
   const basis = window?.basis === "arrival" ? t("basisArrival") : t("basisContract");
+  // 구 장의 값은 구 창(4주)이다. 서울 창을 적으면 값과 다른 기간을 말한다(#862 조건 1).
   const text = window?.from
-    ? `${basis} ${window.from} ~ ${window.to}` +
+    ? `${basis} ${(districtName && window.districtFrom) || window.from} ~ ${window.to}` +
       (updatedAt
         ? ` · ${t("updatedWord")} ${new Date(updatedAt).toLocaleDateString(locale === "en" ? "en-US" : "ko-KR", { timeZone: "Asia/Seoul", dateStyle: "medium" })}`
         : "")
