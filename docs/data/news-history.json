@@ -17654,7 +17654,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 4일 그간 상승에 대한 반동으로 단기이익을 실현하려는 매물이 폭넓게 출회하면서 4거래일 만에 하락하고 있다. 항셍지수는 이날 전일 대비 74.18 포인트, 0.31% 떨어진…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] Hong Kong Market Falls for the Fourth Consecutive Day as Profit-Taking Sells Off… H-Share Down 0.29%"
       },
       {
         "title": "국내 최대 아파트 관리회사 'KES' 출범…\"아파트 관리 새 표준 제시\"",
@@ -17663,7 +17664,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]오영주 기자 = 전국 1500여개 아파트 단지를 운영하는 국내 최대 아파트 관리회사 'KES'(Korea Estate Service)가 출범했다. KES는 지난 3일 서울 서초구 본사에서 공식 출범식을…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 84㎡ 매매",
+            "labelEn": "서초구 apartment 84㎡ sale",
+            "value": "24억 8,839만원",
+            "valueEn": "₩2,488M",
+            "note": "최근 1주 계약 98건 · 10/28 대비 -7.1%",
+            "noteEn": "98 deals in the last 1 weeks · -7.1% vs Oct 28"
+          }
+        ],
+        "titleEn": "Largest Apartment Management Company in South Korea, 'KES,' Launches…\"Introducing a New Standard for Apartment Management"
       },
       {
         "title": "국고채 금리 일제히 하락…3년물 장중 연 3.703%",
@@ -17672,7 +17686,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 4일 국고채 금리가 일제히 하락하고 있다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "South Korea's government bond yields fall across the board...3-year bonds trade at 3.703% annually"
       },
       {
         "title": "대기업 사업장 있는 화성·천안아산 아파트 거래 증가…지방 분양 이어져",
@@ -17681,7 +17696,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "화성 아파트 거래량 상반기 26% 증가 동탄·청주 일부 단지 실거래가 상승 지방 아파트·오피스텔 분양 중…구미 이달 1355가구 공급삼성전자와 SK하이닉스 등 대기업 사업장이 있는..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Housing transactions rise in Hwasung and Cheonan-Asan, where large companies have business sites…local sales continue"
       },
       {
         "title": "국내 최대 아파트 관리회사 'KES' 출범…1천500개 단지 운영",
@@ -17690,7 +17706,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 서미숙 기자 = 약 1천500개 아파트를 담당하는 국내 최대 관리회사가 출범했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Largest apartment management company in South Korea, 'KES,' launches…operates 1,500 complexes"
       },
       {
         "title": "[올댓차이나] 중국 증시 혼조 출발…상하이지수 0.08%↓",
@@ -17699,7 +17716,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 4일 혼조 출발했다. 이날 상하이종합지수는 전날보다 0.08% 내린 3605.39로 장을 시작했다. 선전성분지수는 전장 대비 0.17% 오른 1만895.8로, 중국판 나스…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] China's stock market opens mixed… Shanghai Composite down 0.08%"
       },
       {
         "title": "연일 출렁이는 코스피…VI 발동·지수 변동성도 '쑥'",
@@ -17708,7 +17726,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 곽윤아 기자 = 인공지능(AI) 수익성 우려 등으로 최근 코스피 지수의 변동성이 다시 커지자 변동성완화장치(VI) 발동 건수가...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KOSPI Volatility Rises as VI Triggered, Index Fluctuations Surge"
       },
       {
         "title": "강남 꺾이고 매물 쌓이는데, 강북은 오르고…엇갈리는 서울 집값 전망",
@@ -17717,7 +17736,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "주요 지역의 실거래가가 빠르게 떨어지고 있다는 대통령 발언이 나오면서 장기간 오른 서울 집값의 향방에 시장의 관심이 쏠리고 있다. 강남권을 중심으로 가격이 내리고 매물이 쌓이는 등..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangbuk.html",
+            "label": "강북구 아파트 84㎡ 매매",
+            "labelEn": "강북구 apartment 84㎡ sale",
+            "value": "8억 4,844만원",
+            "valueEn": "₩848M",
+            "note": "최근 1주 계약 85건 · 10/28 대비 -2.8%",
+            "noteEn": "85 deals in the last 1 weeks · -2.8% vs Oct 28"
+          }
+        ],
+        "titleEn": "Gangnam Prices Fall and Inventory Piles Up, While Gangbuk Rises... Diverging Outlook for Seoul Housing Prices"
       },
       {
         "title": "해수부, 세계해양포럼서 해양경제 진단 국제 세미나",
@@ -17726,7 +17758,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(부산=연합뉴스) 박성제 기자 = 해양수산부는 경제협력개발기구, 한국해양수산개발원과 오는 5일 부산항국제전시컨벤션센터에서 '세계와 한국의 해양 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "MOEA to Hold International Seminar on Ocean Economy Diagnosis at World Ocean Forum"
       },
       {
         "title": "'전세사기 걱정 더는' 전월세 안심신탁 임대인 오늘부터 모집",
@@ -17735,7 +17768,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(세종=연합뉴스) 오진송 기자 = 주택도시보증공사(HUG)가 임차인의 보증금 맡아 운용하고 임대인에게 매달 수익을 지급하는 '전월세 안심신탁' ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "End of worries about rental fraud\" - Monthly rent assurance trust for landlords to recruit today"
       },
       {
         "title": "집값 25%만 내도 입주됩니다…LH ‘반의반값 분양’ 첫 실험",
@@ -17744,7 +17778,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "고양창릉 S-2블록 284가구 12월 분양 나머지 지분 20년간 취득…4년마다 15%씩 ‘이익공유형Ⅱ’도 추진…법 개정 후 공급분양가의 25%만 먼저 내고 입주하는 공공분양주택이 ..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Home prices require only 25% down payment...LH launches first 'half-price sales' experiment"
       },
       {
         "title": "“연체 걱정 없이 세 놓으세요”…전월세 안심신탁 첫 임대인 모집 공고",
@@ -17753,7 +17788,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "보증금 상당액 HUG 예치·만기 직접 반환 임대인엔 연 4.35% 수익…20억 이하 주택 대상 4일부터 상시 신청…내년 1월부터 순차 입주임차인이 보증금 상당액을 주택도시보증공사(..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Rent without worry of late payments\"…First tenant recruitment notice for monthly rent guarantee trust service"
       },
       {
         "title": "“임차인은 안전하게, 임대인은 연체 없이”… ‘전월세 안심신탁’ 첫 임대인 모집",
@@ -17762,7 +17798,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "임차인의 보증금 떼일 걱정과 임대인의 임대료 체납 우려를 동시에 해결하기 위한 새로운 형태의 주택 임대 사업이 본격적으로 추진된다. 국토교통부는 주택도시보증공사(HUG)와 시중의 월세 주택을 전세 형태로 변환해 세입…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Tenants safely, landlords without arrears\"… 'Monthly Rent Assurance Trust' begins recruiting first landlords"
       },
       {
         "title": "전월세 안심신탁 첫 임대인 오늘부터 모집…年4.35% 약정수익",
@@ -17771,7 +17808,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 변해정 기자 = 민간의 월세 물건을 공공 전세로 바꿔 공급하는 '전월세 안심신탁사업'의 첫 임대인을 모집한다. 참여 임대인이 받게 될 약정 수익률은 연 세전 4.35%이며 계약 기간 동안 주택도시보증…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Rental Guarantee Trust for Previous Month's Rent Begins Recruiting First Landlords Today... 4.35% Agreed Profit"
       },
       {
         "title": "울주군 \"민간임대주택사업 허위·과장광고 주의하세요\"",
@@ -17780,7 +17818,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(울산=연합뉴스) 장영은 기자 = 울산 울주군은 민간임대주택사업 관련 허위·과장광고에 대한 주의를 당부한다고 4일 밝혔다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Uljoo-gun warns against false and exaggerated advertising in private rental housing projects"
       },
       {
         "title": "엔화, 美 장기금리 상승에 1달러=158엔대 중반 하락 출발",
@@ -17789,7 +17828,8 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스]이재준 기자 = 엔화 환율은 4일 시장 예상을 웃도는 미국 고용지표로 장기금리가 올라 미일 금리차가 확대하면서 엔 매도, 달러 매수 선행에 1달러=158엔대 중반으로 내려 시작했다. 도쿄 외환시장에서…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Yen falls to mid-158 yen per dollar as U.S. long-term interest rates rise"
       },
       {
         "title": "KB증권, 코스피200·삼성전자 연계 '수익 참조 상승형' ELB 모집",
@@ -17798,7 +17838,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 고은지 기자 = KB증권은 코스피200과 삼성전자[005930]를 기초자산으로 하는 만기 1년의 '수익 참조 상승형 주가연계파...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KB Securities Offers \"Profit Reference Increasing\" ELB Linked to KOSPI200 and Samsung Electronics"
       },
       {
         "title": "홈즈컴퍼니 “시니어 임대주택 ‘코빌리지 고성’, 보미건설·채비 LOC 확보”",
@@ -17807,7 +17848,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "강원 고성군에 들어서는 중장년층 대상의 장기 임대형 건강 주거단지 사업이 민간 자본 유치를 마치고 정부 정책펀드 신청을 위한 막바지 행정 절차에 들어갔다. 개발 주체인 코빌리지컴퍼니(홈즈컴퍼니·간삼건축 합작회사)는…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Holmes Company \"Senior Rental Housing 'Cobility GoSeong' Secures Bomi Construction, Chaebi LOC"
       },
       {
         "title": "삼성물산 '홈닉', 금성백조 아파트에도…협력 건설사 21곳으로",
@@ -17816,7 +17858,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Samsung C&T's 'HomeNick' expands to Geumseongbaekjo apartments... 21 construction companies collaborate"
       },
       {
         "title": "李대통령, '대통령 집값 발언 강남만 맞았다' 보도에 \"가짜뉴스\"",
@@ -17825,7 +17868,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 임형섭 기자 = 이재명 대통령은 4일 자신의 부동산 관련 발언을 소개하며 \"'집값 폭락 중' 대통령 발언, 강남만 맞았다\"라는...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 4,642만원",
+            "valueEn": "₩2,846M",
+            "note": "최근 1주 계약 127건 · 10/28 대비 -1.6%",
+            "noteEn": "127 deals in the last 1 weeks · -1.6% vs Oct 28"
+          }
+        ],
+        "titleEn": "President calls \"President's real estate comment only correct in Gangnam\" report \"fake news"
       },
       {
         "title": "김동현, 100억 주고 아파트 샀는데…한 달 만에 벌어진 일",
@@ -17834,7 +17890,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kim Dong-hyun buys apartment for 10,000,000,000 won but... what happened in just a month"
       },
       {
         "title": "“강남만 맞았다는 건 가짜뉴스”…李 대통령, ‘집값 폭락’ 보도에 반박",
@@ -17843,7 +17900,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "이재명 대통령이 4일 서울 집값 하락 발언을 둘러싼 언론 보도에 직접 반박하고 나섰다. 자신의 발언을 ‘집값 폭락 중’이라고 표현한 것은 사실과 다르고, 하락세가 강남권에만 국한됐..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 4,642만원",
+            "valueEn": "₩2,846M",
+            "note": "최근 1주 계약 127건 · 10/28 대비 -1.6%",
+            "noteEn": "127 deals in the last 1 weeks · -1.6% vs Oct 28"
+          }
+        ],
+        "titleEn": "Claim that Gangnam was the only area affected is fake news,\" Lee President refutes reports of \"skyrocketing housing prices"
       },
       {
         "title": "LH, 2030년까지 모듈러주택 1.8만호 발주…4.8조 투입",
@@ -17852,7 +17922,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 변해정 기자 = 한국토지주택공사(LH)가 오는 2030년까지 모듈러주택 1만8000호를 발주한다. 모듈러 공법을 늘려 주택공급 속도를 높이고 대량생산을 통한 공사비 절감을 유도한다는 복안이다. LH는…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "LH to Order 18,000 Modular Homes by 2030... Invest 4,800,000,000,000 Won"
       },
       {
         "title": "'반세권' 한화포레나 지제역 6일 견본주택 개관…분양 돌입",
@@ -17861,7 +17932,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]이연희 기자 = 한화 건설부문이 오는 6일 경기도 평택시 세교동 일원에 '한화포레나 지제역' 견본주택을 열고 본격적인 분양에 나선다고 4일 밝혔다. 단지가 들어서는 평택지제역 생활권은 고덕국제신도시와…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Hanwha Forena Jije Station 'Half-Sewon' Model House Opens on 6th, Starts Sales"
       }
     ]
   }

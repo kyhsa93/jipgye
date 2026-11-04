@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-11-03T03:58:54.999Z",
+  "updatedAt": "2026-11-04T03:04:43.236Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 증시·환율: 홍콩 증시는 중국 경기부양 기대에 따라 사흘째 상승세를 보이고 있다. 홍콩 증시의 H주 지수는 0.10% 상승했다. 반면 중국 증시는 AI 수익성 우려로 인해 하락 출발했다. 상하이 지수는 0.37% 하락했다. 미국 중간선거에 따른 시나리오별 증시 영향에 대한 분석도 이어지고 있다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 하락하며 3년물이 장중 연 3.726%를 기록했고, 국채 금리이 하락하는 반면 CP 금리가 상승하며 연말 단기자금 경색 신호가 될 수 있다는 분석이 나오고 있으며, 보금자리론의 10년 만기 금리가 5%대에 진입하며 아낌e보금자리론 출시 이후 처음으로 기록되었고, 미국과 유럽 증시에서는 AI, 금리, 전쟁 등에 대한 불안이 증가하고 있다.\n- 부동산: 경기 지역 집값 상승률 상위 10곳 중 6곳은 첨단산업 거점으로, 반도체 배후지 분양이 계속되고 있다. 이 대통령은 서울 주요지역 아파트값이 놀라울 정도로 떨어졌다고 밝혔다. 한 달 만에 미분양 아파트 비율이 10.9% 증가하며 ‘서울 아파트 완판’ 시대가 끝났다는 분석이 나왔다. 대통령은 주요지역 아파트 실거래가 하락 현상에 대해 통계가 제대로 알려야 한다고 강조했다. 부동산원은 하반기 건축행정시스템 교육을 통해 맞춤형 건축행정 역량을 강화할 계획이다.\n- 기타 경제 소식: 경기도는 '극저신용대출 2.0'에 이어 '재도전론'도 올해말 종료한다. 우리은행은 납품 전 생산단계부터 지원하는 공급망금융 대출을 출시했다. 영원무역과 한경협은 방글라데시 경제협력 간담회를 공동 개최했다. 고양시는 산업부에 경제자유구역 지정 사전 자문 신청을 했다. 중기중앙회는 경제총조사 업무 유공으로 대통령 표창을 수상했다.",
-    "en": "- Stocks & FX: The Hong Kong stock market is rising for the third consecutive day amid expectations of a Chinese economic stimulus. The Hang Seng index on the Hong Kong stock market rose 0.10%. In contrast, the Chinese stock market started lower due to concerns over AI profitability. The Shanghai index fell 0.37%. Analysis of the impact of different scenarios related to the U.S. midterm elections on the stock market is continuing.\n- Rates, Deposits & Investment Products: Government bond rates fell across the board, with the 3-year rate reaching 3.726% during the day. While government bond rates are falling, CP rates are rising, leading to analysis suggesting this could be a signal of short-term funding difficulties at year-end. The 10-year mortgage rate for the \"Bogunjari\" loan entered the 5% range, marking the first time since the launch of the \"Bogunjari\" loan that this has occurred. In U.S. and European stock markets, anxiety is increasing regarding AI, interest rates, and wars.\n- Real Estate: Of the top 10 areas with the highest housing price growth in the Gyeonggi region, six are hubs for advanced industries, and land sales in semiconductor backend areas continue. The president stated that apartment prices in major areas of Seoul have dropped surprisingly. Analysis suggests that the era of \"completely selling out Seoul apartments\" has ended, as the proportion of unsold apartments increased by 10.9% within a month. The president emphasized that statistics should accurately reflect the decline in actual transaction prices of apartments in major areas. The Real Estate Agency plans to enhance customized real estate administrative capabilities through training on the construction administration system in the second half of the year.\n- Other Economic News: Gyeonggi Province will end \"Rebuilding Theory\" this year, following the conclusion of \"Ultra Low Credit Loan 2.0.\" Our Bank has launched a supply chain finance loan that supports production stages prior to delivery. Youngwon Trading and Han-Kyung Cooperation jointly held a Bangladesh Economic Cooperation Consultation Meeting. Goyang City has submitted a pre-consultation application for the designation of an economic free zone to the Ministry of Trade, Industry and Energy. The Korea Chamber of Commerce and Industry received a presidential citation for outstanding performance in the Economic Census."
+    "ko": "- 증시·환율: 홍콩 증시는 차익 실현 매도로 인해 나흘 만에 하락세를 기록했다. H주는 0.29% 하락했다. 중국 증시는 혼조 출발했으며, 상하이지수는 0.08% 내렸다. 코스피는 연일 변동성이 커지며 VI 발동을 기록했다. KB증권은 코스피200과 삼성전자와 연계한 ELB를 모집 중이다.\n- 부동산: 국내 최대 아파트 관리회사 'KES'가 출범하며 아파트 관리의 새 표준을 제시했다. KES는 1천500개 단지를 운영할 계획이다. 화성과 천안아산 등 대기업 사업장이 있는 지역의 아파트 거래가 증가하고 있다. 강남에서는 매물이 쌓이면서 가격이 하락했지만, 강북에서는 가격이 상승하고 있다. 오늘부터 전월세 안심신탁 임대인 모집이 시작되며 전세사기 걱정을 줄이려는 노력이 이어지고 있다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 하락하며 3년물은 장중 연 3.703%를 기록했고, 엔화는 미국 장기금리 상승으로 인해 1달러=158엔대 중반으로 하락 출발했다.\n- 기타 경제 소식: 해수부가 세계해양포럼에서 해양경제 진단 국제 세미나를 진행했다. 해당 세미나는 해양경제 관련 국제적 협력과 전략을 논의하는 자리였다. 오늘 발표된 내용은 해양산업의 미래 방향성을 제시하는 데 초점을 맞췄다. 해수부는 이번 세미나를 통해 해양경제 활성화를 위한 다양한 의견을 수렴했다. 이는 해양 분야의 글로벌 협력 강화에 기여할 것으로 기대된다.",
+    "en": "- Stocks & FX: The Hong Kong stock market fell for the first time in four days due to profit-taking selling. H shares dropped 0.29%. The Chinese stock market opened mixed, with the Shanghai index down 0.08%. The KOSPI recorded a VI trigger as volatility continued to increase. KB Securities is currently raising an ELB linked to the KOSPI 200 and Samsung Electronics.\n- Real Estate: South Korea's largest apartment management company, 'KES,' has launched, introducing a new standard for apartment management. KES plans to operate 1,500 sites. Apartment transactions are increasing in areas such as Hwasung and Cheonan-Asan, where large companies have business sites. In Gangnam, prices have fallen as inventory has accumulated, but prices are rising in Gangbuk. Starting today, the recruitment of tenants for the monthly rent and deposit trust has begun, continuing efforts to reduce concerns about deposit fraud.\n- Rates, Deposits & Investment Products: Government bond yields fell across the board, with the 3-year bond hitting an intraday low of 3.703% annually, and the yen fell to the mid-158 yen per dollar range due to rising U.S. long-term interest rates.\n- Other Economic News: The Ministry of Oceans and Fisheries held an international seminar on diagnosing the marine economy at the World Ocean Forum. The seminar was a venue for discussing international cooperation and strategies related to the marine economy. The content presented today focused on suggesting the future direction of the marine industry. Through this seminar, the Ministry of Oceans and Fisheries collected various opinions for promoting the marine economy. This is expected to contribute to strengthening global cooperation in the marine sector."
   },
   "highlights": [],
   "categories": [
@@ -11,58 +11,31 @@
       "key": "stocks",
       "name": "증시·환율",
       "nameEn": "Stocks & FX",
-      "lineKo": "홍콩 증시는 중국 경기부양 기대에 따라 사흘째 상승세를 보이고 있다. 홍콩 증시의 H주 지수는 0.10% 상승했다. 반면 중국 증시는 AI 수익성 우려로 인해 하락 출발했다. 상하이 지수는 0.37% 하락했다. 미국 중간선거에 따른 시나리오별 증시 영향에 대한 분석도 이어지고 있다.",
-      "lineEn": "The Hong Kong stock market is rising for the third consecutive day amid expectations of a Chinese economic stimulus. The Hang Seng index on the Hong Kong stock market rose 0.10%. In contrast, the Chinese stock market started lower due to concerns over AI profitability. The Shanghai index fell 0.37%. Analysis of the impact of different scenarios related to the U.S. midterm elections on the stock market is continuing.",
+      "lineKo": "홍콩 증시는 차익 실현 매도로 인해 나흘 만에 하락세를 기록했다. H주는 0.29% 하락했다. 중국 증시는 혼조 출발했으며, 상하이지수는 0.08% 내렸다. 코스피는 연일 변동성이 커지며 VI 발동을 기록했다. KB증권은 코스피200과 삼성전자와 연계한 ELB를 모집 중이다.",
+      "lineEn": "The Hong Kong stock market fell for the first time in four days due to profit-taking selling. H shares dropped 0.29%. The Chinese stock market opened mixed, with the Shanghai index down 0.08%. The KOSPI recorded a VI trigger as volatility continued to increase. KB Securities is currently raising an ELB linked to the KOSPI 200 and Samsung Electronics.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "[올댓차이나] 홍콩 증시, 中 경기부양 기대에 사흘째 상승세… H주 0.10%↑",
-          "link": "https://www.newsis.com/view/NISX20261103_0003852666",
+          "title": "[올댓차이나] 홍콩 증시, 차익 실현 매도로 나흘 만에 하락세… H주 0.29%↓",
+          "link": "https://www.newsis.com/view/NISX20261104_0003854382",
           "source": "뉴시스 경제"
         },
         {
-          "title": "AI 수익성 우려에 짓눌린 증시, 美중간선거 시나리오별 영향은?",
-          "link": "https://www.yna.co.kr/view/AKR20261103085100008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.37%↓",
-          "link": "https://www.newsis.com/view/NISX20261103_0003852526",
+          "title": "[올댓차이나] 중국 증시 혼조 출발…상하이지수 0.08%↓",
+          "link": "https://www.newsis.com/view/NISX20261104_0003854279",
           "source": "뉴시스 경제"
-        }
-      ]
-    },
-    {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "국고채 금리가 일제히 하락하며 3년물이 장중 연 3.726%를 기록했고, 국채 금리이 하락하는 반면 CP 금리가 상승하며 연말 단기자금 경색 신호가 될 수 있다는 분석이 나오고 있으며, 보금자리론의 10년 만기 금리가 5%대에 진입하며 아낌e보금자리론 출시 이후 처음으로 기록되었고, 미국과 유럽 증시에서는 AI, 금리, 전쟁 등에 대한 불안이 증가하고 있다.",
-      "lineEn": "Government bond rates fell across the board, with the 3-year rate reaching 3.726% during the day. While government bond rates are falling, CP rates are rising, leading to analysis suggesting this could be a signal of short-term funding difficulties at year-end. The 10-year mortgage rate for the \"Bogunjari\" loan entered the 5% range, marking the first time since the launch of the \"Bogunjari\" loan that this has occurred. In U.S. and European stock markets, anxiety is increasing regarding AI, interest rates, and wars.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": true,
-      "items": [
+        },
         {
-          "title": "국고채 금리 일제히 하락…3년물 장중 연 3.726%",
-          "link": "https://www.yna.co.kr/view/AKR20261103093200008",
+          "title": "연일 출렁이는 코스피…VI 발동·지수 변동성도 '쑥'",
+          "link": "https://www.yna.co.kr/view/AKR20261104076600008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "국채 금리 내릴 때 CP 금리 상승…연말 단기자금 경색 신호일까",
-          "link": "https://www.yna.co.kr/view/AKR20261103053600008",
+          "title": "KB증권, 코스피200·삼성전자 연계 '수익 참조 상승형' ELB 모집",
+          "link": "https://www.yna.co.kr/view/AKR20261104059300008",
           "source": "연합뉴스 경제"
-        },
-        {
-          "title": "보금자리론 너 마저…10년 만기 금리 5%대 진입, 아낌e보금자리론 출시 후 처음",
-          "link": "https://www.mk.co.kr/news/realestate/12194333",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "美·유럽 증시 숨은 위험 증가…AI·금리·전쟁 불안 겹쳐",
-          "link": "https://www.hankyung.com/article/202611031770i",
-          "source": "한국경제 경제"
         }
       ]
     },
@@ -70,36 +43,58 @@
       "key": "realestate",
       "name": "부동산",
       "nameEn": "Real Estate",
-      "lineKo": "경기 지역 집값 상승률 상위 10곳 중 6곳은 첨단산업 거점으로, 반도체 배후지 분양이 계속되고 있다. 이 대통령은 서울 주요지역 아파트값이 놀라울 정도로 떨어졌다고 밝혔다. 한 달 만에 미분양 아파트 비율이 10.9% 증가하며 ‘서울 아파트 완판’ 시대가 끝났다는 분석이 나왔다. 대통령은 주요지역 아파트 실거래가 하락 현상에 대해 통계가 제대로 알려야 한다고 강조했다. 부동산원은 하반기 건축행정시스템 교육을 통해 맞춤형 건축행정 역량을 강화할 계획이다.",
-      "lineEn": "Of the top 10 areas with the highest housing price growth in the Gyeonggi region, six are hubs for advanced industries, and land sales in semiconductor backend areas continue. The president stated that apartment prices in major areas of Seoul have dropped surprisingly. Analysis suggests that the era of \"completely selling out Seoul apartments\" has ended, as the proportion of unsold apartments increased by 10.9% within a month. The president emphasized that statistics should accurately reflect the decline in actual transaction prices of apartments in major areas. The Real Estate Agency plans to enhance customized real estate administrative capabilities through training on the construction administration system in the second half of the year.",
+      "lineKo": "국내 최대 아파트 관리회사 'KES'가 출범하며 아파트 관리의 새 표준을 제시했다. KES는 1천500개 단지를 운영할 계획이다. 화성과 천안아산 등 대기업 사업장이 있는 지역의 아파트 거래가 증가하고 있다. 강남에서는 매물이 쌓이면서 가격이 하락했지만, 강북에서는 가격이 상승하고 있다. 오늘부터 전월세 안심신탁 임대인 모집이 시작되며 전세사기 걱정을 줄이려는 노력이 이어지고 있다.",
+      "lineEn": "South Korea's largest apartment management company, 'KES,' has launched, introducing a new standard for apartment management. KES plans to operate 1,500 sites. Apartment transactions are increasing in areas such as Hwasung and Cheonan-Asan, where large companies have business sites. In Gangnam, prices have fallen as inventory has accumulated, but prices are rising in Gangbuk. Starting today, the recruitment of tenants for the monthly rent and deposit trust has begun, continuing efforts to reduce concerns about deposit fraud.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "경기 집값 상승 상위 10곳 중 6곳 첨단산업 거점…반도체 배후지 분양 잇따라",
-          "link": "https://www.hankyung.com/article/202611032579i",
-          "source": "한국경제 부동산"
+          "title": "국내 최대 아파트 관리회사 'KES' 출범…\"아파트 관리 새 표준 제시\"",
+          "link": "https://www.newsis.com/view/NISX20261104_0003854332",
+          "source": "뉴시스 경제"
         },
         {
-          "title": "이 대통령 “서울 주요지역 아파트값 놀라울 정도로 떨어져…폭락 걱정하는 쪽도 생겨”",
-          "link": "https://www.mk.co.kr/news/realestate/12194492",
+          "title": "대기업 사업장 있는 화성·천안아산 아파트 거래 증가…지방 분양 이어져",
+          "link": "https://www.mk.co.kr/news/realestate/12196215",
           "source": "매일경제 부동산"
         },
         {
-          "title": "‘서울 아파트 완판’은 옛말?…미분양 아파트 한 달 새 10.9% 껑충",
-          "link": "https://www.mk.co.kr/news/realestate/12194477",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "李대통령 \"주요지역 아파트 실거래가 하락…통계 제대로 알려야\"",
-          "link": "https://www.yna.co.kr/view/AKR20261103073400001",
+          "title": "국내 최대 아파트 관리회사 'KES' 출범…1천500개 단지 운영",
+          "link": "https://www.yna.co.kr/view/AKR20261104079000003",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "“맞춤형 건축행정 역량 강화”…부동산원, 하반기 건축행정시스템 교육",
-          "link": "https://www.mk.co.kr/news/realestate/12194437",
+          "title": "강남 꺾이고 매물 쌓이는데, 강북은 오르고…엇갈리는 서울 집값 전망",
+          "link": "https://www.mk.co.kr/news/realestate/12196194",
           "source": "매일경제 부동산"
+        },
+        {
+          "title": "'전세사기 걱정 더는' 전월세 안심신탁 임대인 오늘부터 모집",
+          "link": "https://www.yna.co.kr/view/AKR20261104070700003",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "국고채 금리가 일제히 하락하며 3년물은 장중 연 3.703%를 기록했고, 엔화는 미국 장기금리 상승으로 인해 1달러=158엔대 중반으로 하락 출발했다.",
+      "lineEn": "Government bond yields fell across the board, with the 3-year bond hitting an intraday low of 3.703% annually, and the yen fell to the mid-158 yen per dollar range due to rising U.S. long-term interest rates.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
+      "items": [
+        {
+          "title": "국고채 금리 일제히 하락…3년물 장중 연 3.703%",
+          "link": "https://www.yna.co.kr/view/AKR20261104087000008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "엔화, 美 장기금리 상승에 1달러=158엔대 중반 하락 출발",
+          "link": "https://www.newsis.com/view/NISX20261104_0003854134",
+          "source": "뉴시스 경제"
         }
       ]
     },
@@ -107,36 +102,16 @@
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "경기도는 '극저신용대출 2.0'에 이어 '재도전론'도 올해말 종료한다. 우리은행은 납품 전 생산단계부터 지원하는 공급망금융 대출을 출시했다. 영원무역과 한경협은 방글라데시 경제협력 간담회를 공동 개최했다. 고양시는 산업부에 경제자유구역 지정 사전 자문 신청을 했다. 중기중앙회는 경제총조사 업무 유공으로 대통령 표창을 수상했다.",
-      "lineEn": "Gyeonggi Province will end \"Rebuilding Theory\" this year, following the conclusion of \"Ultra Low Credit Loan 2.0.\" Our Bank has launched a supply chain finance loan that supports production stages prior to delivery. Youngwon Trading and Han-Kyung Cooperation jointly held a Bangladesh Economic Cooperation Consultation Meeting. Goyang City has submitted a pre-consultation application for the designation of an economic free zone to the Ministry of Trade, Industry and Energy. The Korea Chamber of Commerce and Industry received a presidential citation for outstanding performance in the Economic Census.",
+      "lineKo": "해수부가 세계해양포럼에서 해양경제 진단 국제 세미나를 진행했다. 해당 세미나는 해양경제 관련 국제적 협력과 전략을 논의하는 자리였다. 오늘 발표된 내용은 해양산업의 미래 방향성을 제시하는 데 초점을 맞췄다. 해수부는 이번 세미나를 통해 해양경제 활성화를 위한 다양한 의견을 수렴했다. 이는 해양 분야의 글로벌 협력 강화에 기여할 것으로 기대된다.",
+      "lineEn": "The Ministry of Oceans and Fisheries held an international seminar on diagnosing the marine economy at the World Ocean Forum. The seminar was a venue for discussing international cooperation and strategies related to the marine economy. The content presented today focused on suggesting the future direction of the marine industry. Through this seminar, the Ministry of Oceans and Fisheries collected various opinions for promoting the marine economy. This is expected to contribute to strengthening global cooperation in the marine sector.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "경기도, '극저신용대출 2.0' 이어 '재도전론'도 올해말 종료",
-          "link": "https://www.yna.co.kr/view/AKR20261103089400061",
+          "title": "해수부, 세계해양포럼서 해양경제 진단 국제 세미나",
+          "link": "https://www.yna.co.kr/view/AKR20261104053100051",
           "source": "연합뉴스 경제"
-        },
-        {
-          "title": "우리은행, 납품 전 생산단계부터 지원하는 공급망금융 대출 출시",
-          "link": "https://www.yna.co.kr/view/AKR20261103053100002",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "영원무역-한경협, 방글라데시 경제협력 간담회 공동 개최",
-          "link": "https://www.hankyung.com/article/202611032075i",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "고양시, 산업부에 경제자유구역 지정 사전 자문 신청",
-          "link": "https://www.yna.co.kr/view/AKR20261103046500060",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "중기중앙회, 경제총조사 업무 유공 '대통령 표창' 수상",
-          "link": "https://www.hankyung.com/article/202611031946i",
-          "source": "한국경제 경제"
         }
       ]
     }

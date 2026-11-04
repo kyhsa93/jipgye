@@ -7452,5 +7452,124 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-04",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 증시·환율: 홍콩 증시는 차익 실현 매도로 인해 나흘 만에 하락세를 기록했다. H주는 0.29% 하락했다. 중국 증시는 혼조 출발했으며, 상하이지수는 0.08% 내렸다. 코스피는 연일 변동성이 커지며 VI 발동을 기록했다. KB증권은 코스피200과 삼성전자와 연계한 ELB를 모집 중이다.\n- 부동산: 국내 최대 아파트 관리회사 'KES'가 출범하며 아파트 관리의 새 표준을 제시했다. KES는 1천500개 단지를 운영할 계획이다. 화성과 천안아산 등 대기업 사업장이 있는 지역의 아파트 거래가 증가하고 있다. 강남에서는 매물이 쌓이면서 가격이 하락했지만, 강북에서는 가격이 상승하고 있다. 오늘부터 전월세 안심신탁 임대인 모집이 시작되며 전세사기 걱정을 줄이려는 노력이 이어지고 있다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 하락하며 3년물은 장중 연 3.703%를 기록했고, 엔화는 미국 장기금리 상승으로 인해 1달러=158엔대 중반으로 하락 출발했다.\n- 기타 경제 소식: 해수부가 세계해양포럼에서 해양경제 진단 국제 세미나를 진행했다. 해당 세미나는 해양경제 관련 국제적 협력과 전략을 논의하는 자리였다. 오늘 발표된 내용은 해양산업의 미래 방향성을 제시하는 데 초점을 맞췄다. 해수부는 이번 세미나를 통해 해양경제 활성화를 위한 다양한 의견을 수렴했다. 이는 해양 분야의 글로벌 협력 강화에 기여할 것으로 기대된다.",
+      "en": "- Stocks & FX: The Hong Kong stock market fell for the first time in four days due to profit-taking selling. H shares dropped 0.29%. The Chinese stock market opened mixed, with the Shanghai index down 0.08%. The KOSPI recorded a VI trigger as volatility continued to increase. KB Securities is currently raising an ELB linked to the KOSPI 200 and Samsung Electronics.\n- Real Estate: South Korea's largest apartment management company, 'KES,' has launched, introducing a new standard for apartment management. KES plans to operate 1,500 sites. Apartment transactions are increasing in areas such as Hwasung and Cheonan-Asan, where large companies have business sites. In Gangnam, prices have fallen as inventory has accumulated, but prices are rising in Gangbuk. Starting today, the recruitment of tenants for the monthly rent and deposit trust has begun, continuing efforts to reduce concerns about deposit fraud.\n- Rates, Deposits & Investment Products: Government bond yields fell across the board, with the 3-year bond hitting an intraday low of 3.703% annually, and the yen fell to the mid-158 yen per dollar range due to rising U.S. long-term interest rates.\n- Other Economic News: The Ministry of Oceans and Fisheries held an international seminar on diagnosing the marine economy at the World Ocean Forum. The seminar was a venue for discussing international cooperation and strategies related to the marine economy. The content presented today focused on suggesting the future direction of the marine industry. Through this seminar, the Ministry of Oceans and Fisheries collected various opinions for promoting the marine economy. This is expected to contribute to strengthening global cooperation in the marine sector."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "홍콩 증시는 차익 실현 매도로 인해 나흘 만에 하락세를 기록했다. H주는 0.29% 하락했다. 중국 증시는 혼조 출발했으며, 상하이지수는 0.08% 내렸다. 코스피는 연일 변동성이 커지며 VI 발동을 기록했다. KB증권은 코스피200과 삼성전자와 연계한 ELB를 모집 중이다.",
+        "lineEn": "The Hong Kong stock market fell for the first time in four days due to profit-taking selling. H shares dropped 0.29%. The Chinese stock market opened mixed, with the Shanghai index down 0.08%. The KOSPI recorded a VI trigger as volatility continued to increase. KB Securities is currently raising an ELB linked to the KOSPI 200 and Samsung Electronics.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 홍콩 증시, 차익 실현 매도로 나흘 만에 하락세… H주 0.29%↓",
+            "link": "https://www.newsis.com/view/NISX20261104_0003854382",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 혼조 출발…상하이지수 0.08%↓",
+            "link": "https://www.newsis.com/view/NISX20261104_0003854279",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "연일 출렁이는 코스피…VI 발동·지수 변동성도 '쑥'",
+            "link": "https://www.yna.co.kr/view/AKR20261104076600008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "KB증권, 코스피200·삼성전자 연계 '수익 참조 상승형' ELB 모집",
+            "link": "https://www.yna.co.kr/view/AKR20261104059300008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "국내 최대 아파트 관리회사 'KES'가 출범하며 아파트 관리의 새 표준을 제시했다. KES는 1천500개 단지를 운영할 계획이다. 화성과 천안아산 등 대기업 사업장이 있는 지역의 아파트 거래가 증가하고 있다. 강남에서는 매물이 쌓이면서 가격이 하락했지만, 강북에서는 가격이 상승하고 있다. 오늘부터 전월세 안심신탁 임대인 모집이 시작되며 전세사기 걱정을 줄이려는 노력이 이어지고 있다.",
+        "lineEn": "South Korea's largest apartment management company, 'KES,' has launched, introducing a new standard for apartment management. KES plans to operate 1,500 sites. Apartment transactions are increasing in areas such as Hwasung and Cheonan-Asan, where large companies have business sites. In Gangnam, prices have fallen as inventory has accumulated, but prices are rising in Gangbuk. Starting today, the recruitment of tenants for the monthly rent and deposit trust has begun, continuing efforts to reduce concerns about deposit fraud.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "국내 최대 아파트 관리회사 'KES' 출범…\"아파트 관리 새 표준 제시\"",
+            "link": "https://www.newsis.com/view/NISX20261104_0003854332",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "대기업 사업장 있는 화성·천안아산 아파트 거래 증가…지방 분양 이어져",
+            "link": "https://www.mk.co.kr/news/realestate/12196215",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "국내 최대 아파트 관리회사 'KES' 출범…1천500개 단지 운영",
+            "link": "https://www.yna.co.kr/view/AKR20261104079000003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "강남 꺾이고 매물 쌓이는데, 강북은 오르고…엇갈리는 서울 집값 전망",
+            "link": "https://www.mk.co.kr/news/realestate/12196194",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "'전세사기 걱정 더는' 전월세 안심신탁 임대인 오늘부터 모집",
+            "link": "https://www.yna.co.kr/view/AKR20261104070700003",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 일제히 하락하며 3년물은 장중 연 3.703%를 기록했고, 엔화는 미국 장기금리 상승으로 인해 1달러=158엔대 중반으로 하락 출발했다.",
+        "lineEn": "Government bond yields fell across the board, with the 3-year bond hitting an intraday low of 3.703% annually, and the yen fell to the mid-158 yen per dollar range due to rising U.S. long-term interest rates.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "국고채 금리 일제히 하락…3년물 장중 연 3.703%",
+            "link": "https://www.yna.co.kr/view/AKR20261104087000008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "엔화, 美 장기금리 상승에 1달러=158엔대 중반 하락 출발",
+            "link": "https://www.newsis.com/view/NISX20261104_0003854134",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "해수부가 세계해양포럼에서 해양경제 진단 국제 세미나를 진행했다. 해당 세미나는 해양경제 관련 국제적 협력과 전략을 논의하는 자리였다. 오늘 발표된 내용은 해양산업의 미래 방향성을 제시하는 데 초점을 맞췄다. 해수부는 이번 세미나를 통해 해양경제 활성화를 위한 다양한 의견을 수렴했다. 이는 해양 분야의 글로벌 협력 강화에 기여할 것으로 기대된다.",
+        "lineEn": "The Ministry of Oceans and Fisheries held an international seminar on diagnosing the marine economy at the World Ocean Forum. The seminar was a venue for discussing international cooperation and strategies related to the marine economy. The content presented today focused on suggesting the future direction of the marine industry. Through this seminar, the Ministry of Oceans and Fisheries collected various opinions for promoting the marine economy. This is expected to contribute to strengthening global cooperation in the marine sector.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "해수부, 세계해양포럼서 해양경제 진단 국제 세미나",
+            "link": "https://www.yna.co.kr/view/AKR20261104053100051",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
