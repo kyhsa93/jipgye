@@ -82,6 +82,8 @@ function noteOf(metric, change, window, locale, { allSizes = false, district = f
       locale === "en" ? `${signed(change.percent)} vs ${baseline}` : `${baseline} 대비 ${signed(change.percent)}`
     );
   }
+  // 표본 구성 때문에 보류한 값(#862)은 빠졌다는 사실을 적는다. 건수 때문에 보류한 값(#290)은 예전처럼 조각만 뺀다.
+  if (metric.changeWithheld?.reason) parts.push(locale === "en" ? "change withheld" : "증감 보류");
   return parts.join(" · ");
 }
 

@@ -1,4 +1,5 @@
 import { CHANGE_MIN_COUNT, canShowChange } from "./realestate-format.ts";
+import { REASON_BASELINE, baselineHeldText, isConcentratedBaseline } from "./realestate-concentration.ts";
 
 const PYEONG_M2 = 3.3058;
 
@@ -324,7 +325,26 @@ function withChange(valueKey, metric, baselineMetric, baselineDate, min) {
   return { ...metric, change, baselineDate };
 }
 
-export function attachChanges(overall, districts, baseline) {
+// 서울 매매만의 보류(#862). 견줄 날의 표본이 한 단지·한 계약일 행으로 차 있으면 그 값과의 차이는 내지 않는다. 비교할 값이 있을 때만 보류다 - 없으면 증감이 원래 없어 할 말도 없다.
+// 84㎡·전세·월세·자치구는 막지 않는다(그 행은 16~36㎡라 84㎡ 부근 표본에 없고, 전세·월세·구 문턱은 #862 판정으로 규칙 밖이다). 이유를 먼저 보는 쪽은 withheldOf 와 화면 JS 다.
+function heldOverallSale(metric, baseline, min, window) {
+  const base = baseline?.overall?.sale;
+  if (!metric || !isConcentratedBaseline(baseline) || !computeChange(metric.avgPricePerPyeong10k, base?.avgPricePerPyeong10k)) return null;
+  const { change: _old, baselineDate: _oldDate, ...rest } = metric;
+  return {
+    ...rest,
+    changeWithheld: {
+      reason: REASON_BASELINE,
+      current: metric.transactionCount ?? 0,
+      baseline: base.transactionCount ?? 0,
+      min,
+      baselineDate: baseline.date,
+      text: baselineHeldText(metric, baseline.date, window),
+    },
+  };
+}
+
+export function attachChanges(overall, districts, baseline, window = null) {
   const baselineDate = baseline?.date;
   const findBaselineDistrict = (code) => baseline?.districts?.find((d) => d.code === code);
   const sale = (m, b, min) => withChange("avgPricePerPyeong10k", m, b, baselineDate, min);
@@ -335,7 +355,7 @@ export function attachChanges(overall, districts, baseline) {
 
   return {
     overall: {
-      sale: sale(overall.sale, o?.sale, seoul),
+      sale: heldOverallSale(overall.sale, baseline, seoul, window) ?? sale(overall.sale, o?.sale, seoul),
       saleNational84: sale(overall.saleNational84, o?.saleNational84, seoul),
       jeonse: jeonse(overall.jeonse, o?.jeonse, seoul),
       wolse: wolse(overall.wolse, o?.wolse, seoul),

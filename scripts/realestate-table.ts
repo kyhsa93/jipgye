@@ -99,9 +99,14 @@ export function reWolseChange(change, baselineDate) {
   return [SPACE(), part("change", `${arrow}${Math.abs(change.percent).toFixed(1)}%`, { dir, title })];
 }
 
+// 서울 매매를 표본 구성 때문에 보류한 칸(#862 `reason`)은 건수 자리에 빌드가 구운 문구를 낸다(문구가 건수를 품는다). 그 외에는 건수 그대로다.
+// #290 보류는 이 표에 글자를 내지 않는 오래된 차이가 있고(증감만 빠진다) 여기서 바꾸지 않는다. 첫 화면 칸(realestate-rows)이 그 문구를 맡는다.
+const countOrHeld = (metric) =>
+  metric.changeWithheld?.reason ? part("count", metric.changeWithheld.text.ko.cell, { esc: true }) : countSpan(metric.transactionCount);
+
 /** 건수 칸 뒤에 붙이는 작은 건수(한 칸에 값과 건수를 같이 낼 때). 건수가 숫자가 아니면 조각 없음. */
 export const reCountSpan = (metric) =>
-  typeof metric?.transactionCount === "number" ? [SPACE(), countSpan(metric.transactionCount)] : [];
+  typeof metric?.transactionCount === "number" ? [SPACE(), countOrHeld(metric)] : [];
 
 /**
  * 표본 부족 칸: 값을 내지 않고 모자란다고 적는다(해자 2). n은 `transactionCount` 그대로이고 없으면 0이다 - 건수 문턱은 resolveMetric이 이미 적용했다.
@@ -143,7 +148,7 @@ export function reCells(entry, kind) {
     const ratio = jeonseRatio(entry);
     cells.push(ratio ? [part("ratio", formatPercent(ratio.ratio))] : NONE());
   }
-  cells.push([countSpan(metric.transactionCount)]);
+  cells.push([countOrHeld(metric)]);
   return cells;
 }
 

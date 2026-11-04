@@ -358,7 +358,7 @@ async function writeRepresentative(now) {
 
   await writeFile(
     outFile,
-    JSON.stringify({ updatedAt: now.toISOString(), window, ...attachChanges(overall, districts, findBaseline(history, now)) }, null, 2)
+    JSON.stringify({ updatedAt: now.toISOString(), window, ...attachChanges(overall, districts, findBaseline(history, now), window) }, null, 2)
   );
 
   const nextHistory = appendHistory(history, now, { window, overall, districts: newlyFetched });
