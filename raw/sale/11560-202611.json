@@ -1,1 +1,3 @@
-{"kind":"sale","district":"11560","yearMonth":"202611","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-11-01T02:09:31.442Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11560","yearMonth":"202611","ok":true,"resultCode":0,"count":1,"totalCount":1,"observedAt":"2026-11-05T03:27:42.715Z","previousObservedAt":"2026-11-01T02:09:31.442Z","arrivals":{"96ead2b7804b":"2026-11-05"},"items":[
+{"aptDong":"","aptNm":"삼호","buildYear":1998,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"105,000","dealDay":2,"dealMonth":11,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 강남구, 서울 마포구","excluUseAr":84.92,"floor":15,"jibun":66,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11560,"slerGbn":"개인","umdNm":"양평동3가"}
+]}

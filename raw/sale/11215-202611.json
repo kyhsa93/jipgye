@@ -1,1 +1,3 @@
-{"kind":"sale","district":"11215","yearMonth":"202611","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-11-01T02:09:31.442Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11215","yearMonth":"202611","ok":true,"resultCode":0,"count":1,"totalCount":1,"observedAt":"2026-11-05T03:27:42.715Z","previousObservedAt":"2026-11-01T02:09:31.442Z","arrivals":{"61af9149400a":"2026-11-05"},"items":[
+{"aptDong":"","aptNm":"한강아남","buildYear":1995,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"150,000","dealDay":2,"dealMonth":11,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 광진구","excluUseAr":59.87,"floor":3,"jibun":830,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11215,"slerGbn":"개인","umdNm":"자양동"}
+]}
