@@ -145,14 +145,14 @@
   </aside>
 
   <section id="realestate-section" class="tw:mb-10 tw:1024:mb-16">
-    <h2 id="realestate-heading">서울 아파트, 이번 주 신고된 값</h2>
+    <h2 id="realestate-heading">서울 아파트 신고 평균</h2>
     <div class="content-notice" id="realestate-unit-caption" style="margin-top: -8px;">매매·전세는 전용면적(실제 주거 공간 면적) 기준 3.3㎡당 평균 가격, 월세는 거래 1건당 단순평균 보증금 / 월세(면적 보정 없음)입니다. 국토교통부 아파트매매·전월세 실거래가 (서울 25개 자치구 전체). 공급면적(공용면적 포함) 기준 시세보다 높게 나올 수 있습니다. 신고 5건 미만인 구는 한두 건에 좌우돼 값을 내지 않습니다(월초에 잦음).</div>
     <p class="sr-only" role="status" id="realestate-status"></p>
     <!-- 표 날짜(서울 전체 창·자치구 창, renderRealestate). 구운 HTML 에서는 비어 있다가 JS 가 채우므로
          한 줄 높이를 미리 잡는다: 13px(--fs-xs) x line-height 1.5 = 19.5px = 1.5em (#461 PR-2, 측정). -->
     <div class="summary-meta" id="realestate-meta" style="min-height: 1.5em;"></div>
     <div class="table-wrap">
-      <table class="data-table realestate-table" data-caption-en="Seoul apartments this week"><caption class="sr-only" data-auto>집계 — 서울 아파트, 계약 전에 실거래로 무엇을 확인할까 - 서울 아파트, 이번 주 신고된 값: 5행 4열(지역·매매·전세·월세)</caption>
+      <table class="data-table realestate-table" data-caption-en="Seoul apartment filings: averages"><caption class="sr-only" data-auto>집계 — 서울 아파트, 계약 전에 실거래로 무엇을 확인할까 - 서울 아파트 신고 평균: 5행 4열(지역·매매·전세·월세)</caption>
         <thead>
           <tr>
             <th scope="col" class="sortable"><button type="button" data-re-sort="name" id="re-th-district">지역</button></th>
@@ -233,7 +233,7 @@
       historyPendingNote: "점선은 신고 기한(계약 후 30일)이 남아 아직 덜 찬 주입니다. 실선까지가 확정치입니다",
       historyPendingTag: "(잠정)",
       historyMoreToggle: (n) => `그 외 지표 ${n}개`,
-      realestateHeading: "서울 아파트, 이번 주 신고된 값",
+      realestateHeading: "서울 아파트 신고 평균",
       realestateError: "데이터를 불러오지 못했습니다.",
       realestateOverallLabel: "서울 전체",
       realestateStatus: (n) => `지역 ${n}개`,
@@ -310,7 +310,7 @@
       historyPendingNote: "Dashed: weeks still inside the 30-day filing window",
       historyPendingTag: "(provisional)",
       historyMoreToggle: (n) => `${n} more indicator${n === 1 ? "" : "s"}`,
-      realestateHeading: "Seoul apartments, reported this week",
+      realestateHeading: "Seoul apartment filings: averages",
       realestateError: "Failed to load data.",
       realestateOverallLabel: "Seoul total",
       realestateStatus: (n) => `${n} district${n === 1 ? "" : "s"}`,
@@ -821,6 +821,8 @@
   function realestateTailHtml(m, isOverall) {
     const w = isOverall && m.changeWithheld;
     if (!w) return `${realestateChangeHtml(m.change)} ${realestateCountHtml(m)}`;
+    // #862: 표본 구성 때문에 보류한 칸은 빌드가 구운 두 언어 문구를 고르기만 한다(scripts/realestate-concentration.ts). 건수 비교보다 먼저 본다.
+    if (w.reason) return `<span class="tx-count">${w.text[locale].cell}</span>`;
     const now = w.current < w.min;
     return `<span class="tx-count">${t("realestateWithheld")(now ? w.current : w.baseline, now)}</span>`;
   }

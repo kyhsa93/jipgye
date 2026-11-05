@@ -33,26 +33,54 @@ test("한·영 두 절이 있고 항목 수가 같으며 10건 이하다", async
   const en = items(sectionOf(html, "corrections-en").text);
   assert.ok(ko.length >= 1 && ko.length <= 10, `한국어 ${ko.length}건`);
   assert.equal(en.length, ko.length);
-  assert.equal(ko.length, 6, "여섯 건(#28·#183·#65·#6·#29·#229)");
+  assert.equal(ko.length, 7, "일곱 건(#28·#183·#65·#6·#29·#229·#862 1단계 PR)");
 });
 
 // #229: 예금자보호 한도 정정 항목. 항목 수·날짜 형식·근거 링크·문장 수·금지어는 위의 일반 시험이 모든 항목에 건다.
-// 여기서는 이 항목이 있고 맨 앞(최근 것)이며 정정된 값을 말하는지, 서두의 건수 표기가 항목 수와 맞는지만 본다.
+// 여기서는 이 항목이 있고 정정된 값을 말하는지, 서두의 건수 표기가 항목 수와 맞는지만 본다. #862 항목이 더 최근이라 맨 앞은 그쪽이다.
 // 날짜 값 자체는 머지일에 따라 달라지므로 검사하지 않는다(#8).
-test("예금자보호 한도 정정 항목(#229)이 한·영 맨 앞에 있고 서두 건수가 항목 수와 맞다", async () => {
+test("예금자보호 한도 정정 항목(#229)이 한·영에 있고 서두 건수가 항목 수와 맞다", async () => {
   const html = await method();
   const ko = sectionOf(html, "corrections").text;
   const en = sectionOf(html, "corrections-en").text;
-  const koFirst = items(ko)[0];
-  const enFirst = items(en)[0];
-  assert.match(koFirst, /jipgye\/issues\/229"/);
-  assert.match(enFirst, /jipgye\/issues\/229"/);
+  const koFirst = items(ko).find((li) => /jipgye\/issues\/229"/.test(li));
+  const enFirst = items(en).find((li) => /jipgye\/issues\/229"/.test(li));
+  assert.ok(koFirst && enFirst);
   for (const w of ["예금자보호", "금융회사별 1억원", "금리 수치와 집계는 그대로"]) assert.ok(koFirst.includes(w), `한국어 항목에 ${w}`);
   for (const w of ["deposit-protection", "KRW 100 million per financial institution", "rate figures and counts are unchanged"]) {
     assert.ok(enFirst.includes(w), `영어 항목에 ${w}`);
   }
-  assert.match(ko.slice(0, ko.indexOf("<ul")), /여섯 건/);
-  assert.match(en.slice(0, en.indexOf("<ul")), /six corrections/);
+  assert.match(ko.slice(0, ko.indexOf("<ul")), /일곱 건/);
+  assert.match(en.slice(0, en.indexOf("<ul")), /seven corrections/);
+});
+
+// #862 1단계: 맨 앞 항목이 이번 정정이고, 근거는 PR 이다(#862 는 2단계까지 열려 있다). 지난 값을 그대로 둔다고 적는다.
+test("서울 매매 표본 정정 항목이 한·영 맨 앞에 있고 지난 값을 그대로 둔다고 적는다", async () => {
+  const html = await method();
+  const ko = items(sectionOf(html, "corrections").text)[0];
+  const en = items(sectionOf(html, "corrections-en").text)[0];
+  for (const w of ["313건", "지난 값은 그대로", "5% 이상", "전 면적 환산"]) assert.ok(ko.includes(w), `한국어 항목에 ${w}`);
+  for (const w of ["313 filings", "Past figures are left as published", "5% of the sample", "all-size average"]) assert.ok(en.includes(w), `영어 항목에 ${w}`);
+  for (const li of [ko, en]) assert.match(li, /jipgye\/pull\/\d+"/);
+});
+
+// #862 조건 5: 「신고 기준」 정의가 이번 사실과 맞고, 새 절이 문턱·사후 판단·재계산·못 잡는 것·구 줄의 공백을 적는다. 단정(어느 값이 맞다)과 단지 이름은 없다.
+test("method: 신고 기준 정의와 쏠림 절이 한·영에 있다", async () => {
+  const html = await method();
+  assert.ok(!html.includes("한 번 집계한 주는 나중에 바뀌지 않습니다"));
+  assert.ok(!html.includes("a week once counted never changes"));
+  assert.match(html, /등기일이 붙거나 응답에서 빠졌다 돌아오면 새 행으로 보여/);
+  assert.match(html, /when a registration date is added or when it drops out of the response and returns/);
+  const ko = sectionOf(html, "arrival-concentration").text;
+  const en = sectionOf(html, "arrival-concentration-en").text;
+  for (const w of ["신고 기준이면", "계약 기준이면", "5% 이상이면서 10행 이상", "대표값은 바꾸지 않습니다", "본 뒤에 정한 값 판단", "신고 기준 44일 중 11일", "계약 기준 5일 중 2일", "자치구 매매 줄", "2026-11-20"]) {
+    assert.ok(ko.includes(w), `한국어 절에 ${w}`);
+  }
+  for (const w of ["on the reported basis", "on the contract basis", "at least 10 rows", "headline figure is not replaced", "judgment made after seeing", "11 of 44 reported-basis days", "2 of 5 contract-basis days", "District sale rows", "2026-11-20"]) {
+    assert.ok(en.includes(w), `영어 절에 ${w}`);
+  }
+  for (const w of ["오염", "왜곡", "진짜", "corrupt", "distort", "real price"]) assert.ok(!ko.includes(w) && !en.includes(w), w);
+  assert.ok(html.includes('href="#arrival-concentration"') && html.includes('href="#arrival-concentration-en"'), "목차");
 });
 
 test("절 머리는 면책 문단 하나이고 목록 앞에 있다", async () => {

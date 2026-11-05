@@ -1,13 +1,15 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { DISTRICT_SLUGS, districtFile } from "./district-slugs.ts";
+import { concentrationClause } from "./realestate-concentration.ts";
 import {
   BASE_AREA_M2,
   CHANGE_MIN_COUNT,
   areaPrice,
+  baselineEn,
+  baselineKo,
   formatEok,
   hasEnoughSample,
-  monthLabel,
 } from "./realestate-format.ts";
 
 const MAX_CONTEXT = 2;
@@ -37,27 +39,41 @@ const hasAny = (text, words) => words.some((word) => text.includes(word));
 const areaKo = (perPyeong10k) => formatEok(areaPrice(perPyeong10k, BASE_AREA_M2), "ko");
 const areaEn = (perPyeong10k) => formatEok(areaPrice(perPyeong10k, BASE_AREA_M2), "en");
 
-const baselineKo = (date) => {
-  const [, month, day] = String(date ?? "").split("-");
-  return month && day ? `${Number(month)}/${Number(day)}` : null;
-};
-const baselineEn = (date) => {
-  const label = monthLabel(`0000${String(date ?? "").slice(5, 7)}`, "en");
-  const day = Number(String(date ?? "").slice(8, 10));
-  return label && day ? `${label} ${day}` : null;
-};
-
 const signed = (value) => `${value > 0 ? "+" : value < 0 ? "-" : ""}${Math.abs(value).toFixed(1)}%`;
 
-function noteOf(metric, change, window, locale) {
+const spanKo = (from, to) => (from === to ? baselineKo(from) : `${baselineKo(from)}~${baselineKo(to)}`);
+const spanEn = (from, to) => {
+  if (from === to) return baselineEn(from);
+  // 같은 달이면 「Nov 2–4」, 달이 넘어가면 「Oct 12–Nov 4」.
+  const end = from.slice(0, 7) === to.slice(0, 7) ? Number(to.slice(8, 10)) : baselineEn(to);
+  return `${baselineEn(from)}–${end}`;
+};
+
+/**
+ * 칩의 표본 한 조각(#862 조건 2). 신고 기준(`window.basis === "arrival"`)이면 이 값은 계약이 아니라 그 기간에 수집에 들어온 신고라 기간과 함께 그대로 적는다.
+ * 서울 값은 1주, 구 값은 4주를 세므로(build-realestate pickWindow) 구 칩은 `districtFrom~to` 를 적는다 - 예전에는 구 칩에도 서울의 「최근 1주」가 붙었다.
+ * basis 가 없는 옛 모양과 계약 기준은 그대로 「최근 N주 계약」이다.
+ */
+function sampleOf(count, window, district, locale) {
+  const en = locale === "en";
+  const n = count.toLocaleString(en ? "en-US" : "ko-KR");
+  if (window?.basis === "arrival") {
+    const from = (district ? window.districtFrom : null) ?? window.from;
+    return en ? `${n} filings arrived ${spanEn(from, window.to)}` : `${spanKo(from, window.to)} 들어온 신고 ${n}건`;
+  }
+  const weeks = window?.weeks;
+  if (en) return `${n} deals${weeks ? ` in the last ${weeks === 1 ? "week" : `${weeks} weeks`}` : ""}`;
+  return `${weeks ? `최근 ${weeks}주 ` : ""}계약 ${n}건`;
+}
+
+function noteOf(metric, change, window, locale, { allSizes = false, district = false } = {}) {
   const count = metric?.transactionCount;
   if (typeof count !== "number") return null;
 
-  const span = window?.weeks ? (locale === "en" ? `last ${window.weeks} weeks` : `최근 ${window.weeks}주`) : "";
   const parts = [
-    locale === "en"
-      ? `${count.toLocaleString("en-US")} deals${span ? ` in the ${span}` : ""}`
-      : `${span ? `${span} ` : ""}계약 ${count.toLocaleString("ko-KR")}건`,
+    // 매매·전세 칩의 값은 전 면적 평균(3.3㎡당)을 84㎡로 곱한 것이라 84㎡ 거래만의 값으로 읽히면 안 된다(#862 조건 2).
+    ...(allSizes ? [locale === "en" ? "All-size average" : "전 면적 평균"] : []),
+    sampleOf(count, window, district, locale),
   ];
 
   const baseline = locale === "en" ? baselineEn(metric.baselineDate) : baselineKo(metric.baselineDate);
@@ -66,6 +82,12 @@ function noteOf(metric, change, window, locale) {
     parts.push(
       locale === "en" ? `${signed(change.percent)} vs ${baseline}` : `${baseline} 대비 ${signed(change.percent)}`
     );
+  }
+  // 표본 구성 때문에 보류한 값(#862)은 빠졌다는 사실을 적는다. 건수 때문에 보류한 값(#290)은 예전처럼 조각만 뺀다.
+  if (metric.changeWithheld?.reason) parts.push(locale === "en" ? "change withheld" : "증감 보류");
+  // 뺀 값도 칩의 다른 값과 같은 자(84㎡ 환산)로 적는다.
+  if (metric.changeWithheld?.reason && metric.concentration) {
+    parts.push(concentrationClause(metric.concentration, window, locale, (value, loc) => formatEok(areaPrice(value, BASE_AREA_M2), loc)));
   }
   return parts.join(" · ");
 }
@@ -89,9 +111,10 @@ export function findDistrict(text, districts = []) {
 
 // 옵션 객체의 모양만 적는다(타입 표기 전용 - 런타임 코드는 그대로). window 는 noteOf 가 weeks 만 읽는
 // 실거래 집계 창이라 여기서는 모양을 고정하지 않는다.
-type MetricOptions = { name?: string; nameEn?: string; slug?: string | null; window?: unknown };
+// district 가 참이면 값의 창이 구 창이다(칩 기간, sampleOf).
+type MetricOptions = { name?: string; nameEn?: string; slug?: string | null; window?: unknown; district?: boolean };
 
-export function metricEntry(entry, kind, { name, nameEn, slug = null, window }: MetricOptions = {}) {
+export function metricEntry(entry, kind, { name, nameEn, slug = null, window, district = false }: MetricOptions = {}) {
   const metric = entry?.[kind];
   if (!hasEnoughSample(metric)) return null;
 
@@ -100,23 +123,23 @@ export function metricEntry(entry, kind, { name, nameEn, slug = null, window }: 
   if (kind === "sale" && metric.avgPricePerPyeong10k) {
     return {
       ...common,
-      label: `${name} 아파트 ${BASE_AREA_M2}㎡ 매매`,
-      labelEn: `${nameEn} apartment ${BASE_AREA_M2}㎡ sale`,
+      label: `${name} 아파트 매매 (${BASE_AREA_M2}㎡ 환산)`,
+      labelEn: `${nameEn} apartment sale (scaled to ${BASE_AREA_M2}㎡)`,
       value: areaKo(metric.avgPricePerPyeong10k),
       valueEn: areaEn(metric.avgPricePerPyeong10k),
-      note: noteOf(metric, metric.change, window, "ko"),
-      noteEn: noteOf(metric, metric.change, window, "en"),
+      note: noteOf(metric, metric.change, window, "ko", { allSizes: true, district }),
+      noteEn: noteOf(metric, metric.change, window, "en", { allSizes: true, district }),
     };
   }
   if (kind === "jeonse" && metric.avgDepositPerPyeong10k) {
     return {
       ...common,
-      label: `${name} 아파트 ${BASE_AREA_M2}㎡ 전세`,
-      labelEn: `${nameEn} apartment ${BASE_AREA_M2}㎡ jeonse`,
+      label: `${name} 아파트 전세 (${BASE_AREA_M2}㎡ 환산)`,
+      labelEn: `${nameEn} apartment jeonse (scaled to ${BASE_AREA_M2}㎡)`,
       value: areaKo(metric.avgDepositPerPyeong10k),
       valueEn: areaEn(metric.avgDepositPerPyeong10k),
-      note: noteOf(metric, metric.change, window, "ko"),
-      noteEn: noteOf(metric, metric.change, window, "en"),
+      note: noteOf(metric, metric.change, window, "ko", { allSizes: true, district }),
+      noteEn: noteOf(metric, metric.change, window, "en", { allSizes: true, district }),
     };
   }
   if (kind === "wolse" && metric.avgMonthlyRent10k) {
@@ -128,14 +151,14 @@ export function metricEntry(entry, kind, { name, nameEn, slug = null, window }: 
       labelEn: `${nameEn} apartment rent`,
       value: `보증금 ${deposit}만원 / 월 ${rent}만원`,
       valueEn: `₩${((metric.avgDeposit10k ?? 0) / 100).toLocaleString("en-US", { maximumFractionDigits: 1 })}M + ₩${(metric.avgMonthlyRent10k / 100).toLocaleString("en-US", { maximumFractionDigits: 2 })}M/mo`,
-      note: noteOf(metric, metric.change, window, "ko"),
-      noteEn: noteOf(metric, metric.change, window, "en"),
+      note: noteOf(metric, metric.change, window, "ko", { district }),
+      noteEn: noteOf(metric, metric.change, window, "en", { district }),
     };
   }
   return null;
 }
 
-function realestateEntry(entry, name, nameEn, text, slug, window) {
+function realestateEntry(entry, name, nameEn, text, slug, window, district = false) {
   const wantsJeonse = text.includes("전세") || text.includes("전셋값");
   const wantsWolse = text.includes("월세") || text.includes("임대료");
 
@@ -145,7 +168,7 @@ function realestateEntry(entry, name, nameEn, text, slug, window) {
   candidates.push("sale", "jeonse");
 
   for (const kind of candidates) {
-    const entryOf = metricEntry(entry, kind, { name, nameEn, slug, window });
+    const entryOf = metricEntry(entry, kind, { name, nameEn, slug, window, district });
     if (entryOf) return entryOf;
   }
   return null;
@@ -158,7 +181,7 @@ function realestateContext(text, realestate) {
   const district = findDistrict(text, realestate?.districts);
   if (district) {
     const slug = DISTRICT_SLUGS[district.name] ?? null;
-    return realestateEntry(district, district.name, district.name, text, slug, window);
+    return realestateEntry(district, district.name, district.name, text, slug, window, true);
   }
   if (text.includes("서울")) {
     return realestateEntry(realestate?.overall, "서울 전체", "Seoul", text, null, window);

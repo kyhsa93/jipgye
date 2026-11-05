@@ -1,4 +1,5 @@
 import { spreadSentence } from "./complex-ratio.ts";
+import { concentrationSentence } from "./realestate-concentration.ts";
 import {
   areaPrice,
   formatEok,
@@ -155,6 +156,8 @@ export function districtSentences(entry, realestate, locale = "ko", spread = nul
       first += comparison;
     }
     out.push(`${first}.`);
+    // 위 비교는 서울 대표값을 그대로 쓴다. 그 표본이 쏠린 날은 서울 줄과 같은 단서를 바로 뒤에 둔다(#862 pm 판정). 구 값 자체의 쏠림은 2단계다.
+    if (ratio && overall?.sale?.concentration) out.push(concentrationSentence(overall.sale, realestate?.window, locale));
 
     const rank = saleRank(entry, districts);
     if (rank) {
@@ -208,7 +211,9 @@ export function districtSentences(entry, realestate, locale = "ko", spread = nul
   }
 
   const ratio = jeonseRatio(entry);
-  const overallRatio = overall ? jeonseRatio(overall) : null;
+  // 서울 매매 표본이 쏠린 날은 서울 전세가율과 견주지 않는다. 11-04 값으로 62.3%, 313행을 빼면 58.9%라 25구 중 8구의 비교 문장이 달라지고 두 구는 높고 낮음이 뒤집히는데, 어느 쪽이 맞는지 이 자료로 가를 수 없다(#862 pm 판정).
+  // 서울 값이 없을 때의 경로를 그대로 쓴다 - 구 값·구 순서·구 건수는 남고 서울 비교와 서울 건수만 빠진다.
+  const overallRatio = overall && !overall.sale?.concentration ? jeonseRatio(overall) : null;
   if (ratio) {
     out.push(ratioSentence({ entry, ratio, overall, overallRatio, districts, locale }));
 

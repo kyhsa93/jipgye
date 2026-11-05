@@ -48,12 +48,12 @@ test("서울 매매·전세·월세 세 장이 각자 제 페이지로 간다", 
   assert.deepEqual(
     stats.map((s) => [s.label, s.value, s.href]),
     [
-      ["서울 아파트 84㎡ 매매", "11억 3,049만원", "./apartment-sale.html"],
-      ["서울 아파트 84㎡ 전세", "6억 5,329만원", "./apartment-jeonse.html"],
+      ["서울 아파트 매매 (84㎡ 환산)", "11억 3,049만원", "./apartment-sale.html"],
+      ["서울 아파트 전세 (84㎡ 환산)", "6억 5,329만원", "./apartment-jeonse.html"],
       ["서울 아파트 월세", "보증금 22,166만원 / 월 96만원", "./apartment-rent.html"],
     ]
   );
-  assert.equal(stats[0].note, "최근 4주 계약 575건 · 8/10 대비 +8.3%");
+  assert.equal(stats[0].note, "전 면적 평균 · 최근 4주 계약 575건 · 8/10 대비 +8.3%");
 });
 
 test("세 지표가 다 서지 않으면 지표 줄 자체를 만들지 않는다", () => {
@@ -92,7 +92,7 @@ test("영어 화면은 카드도 영어로 그린다", async () => {
   });
 
   const html = page.byId("realestate-stats").innerHTML;
-  assert.ok(html.includes("Seoul apartment 84㎡ sale"), "영어 라벨이 안 보인다");
+  assert.ok(html.includes("Seoul apartment sale (scaled to 84㎡)"), "영어 라벨이 안 보인다");
   assert.ok(html.includes("575 deals in the last 4 weeks"), "영어 보조 설명이 안 보인다");
   assert.ok(!html.includes("11억 3,049만원"), "영어 화면에 한국어 표기가 남아 있다");
 });

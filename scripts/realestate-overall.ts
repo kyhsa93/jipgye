@@ -84,7 +84,9 @@ export function overallCards(realestate, kind = null, district = null, spread = 
       if (k === "wolse") {
         return card(label, [raw(`${reMan(metric.avgDeposit10k)} / 월 ${reMan(metric.avgMonthlyRent10k)}`)], [esc(reCount(metric.transactionCount))]);
       }
-      return card(label, [raw(reMan(valueOf(metric, k)))], [esc(RE_LABELS.area), raw(` ${reEok(areaPrice(valueOf(metric, k)))} · `), esc(reCount(metric.transactionCount))]);
+      // 서울 매매 쏠림(#862): 건수 자리가 건수를 품은 단서가 된다. 기준일에 걸린 날은 detail 이 없어 그대로다 - 카드에는 증감이 원래 없다.
+      const held = metric.changeWithheld?.text?.ko.detail ? metric.changeWithheld.text.ko.cell : reCount(metric.transactionCount);
+      return card(label, [raw(reMan(valueOf(metric, k)))], [esc(RE_LABELS.area), raw(` ${reEok(areaPrice(valueOf(metric, k)))} · `), esc(held)]);
     });
   }
 
@@ -99,11 +101,13 @@ export function overallCards(realestate, kind = null, district = null, spread = 
   }
   const perPyeong = valueOf(metric, kind);
   const ratio = kind === "jeonse" ? jeonseRatio(overall) : null;
+  // 서울 매매 쏠림(#862 pm 최종 판정): 값은 그대로 두고 건수 줄에 단서를 더한다. 표 서울 줄은 칸 모양을 바꾸지 않는다.
+  const ratioHeld = overall.sale?.changeWithheld?.text?.ko.ratio;
   return [
     card(kind === "jeonse" ? RE_LABELS.perPyeongDeposit : RE_LABELS.perPyeong, [raw(reMan(perPyeong))]),
     card(RE_LABELS.area, [raw(reEok(areaPrice(perPyeong)))]),
-    ...(ratio ? [card(RE_LABELS.ratio, [raw(formatPercent(ratio.ratio))], [esc(ratioBasis(overall))])] : []),
+    ...(ratio ? [card(RE_LABELS.ratio, [raw(formatPercent(ratio.ratio))], [esc(ratioBasis(overall) + (ratioHeld ? ` · ${ratioHeld}` : ""))])] : []),
     ...(kind === "jeonse" ? complexCard() : []),
-    card(RE_LABELS.count, [esc(reCount(metric.transactionCount))]),
+    card(RE_LABELS.count, [esc(reCount(metric.transactionCount))], metric.changeWithheld?.text?.ko.detail ? [esc(metric.changeWithheld.text.ko.detail)] : null),
   ];
 }

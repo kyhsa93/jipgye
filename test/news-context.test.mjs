@@ -51,7 +51,7 @@ const context = (title, preview = null) => buildContext({ title, preview }, DATA
 test("자치구를 짚은 부동산 기사에 그 구의 평당가가 붙는다", () => {
   const [first] = context("송파 9억대 아파트, 하나 남았습니다");
   assert.equal(first.kind, "realestate");
-  assert.equal(first.label, "송파구 아파트 84㎡ 매매");
+  assert.equal(first.label, "송파구 아파트 매매 (84㎡ 환산)");
   assert.equal(first.value, "17억 5,633만원");
   assert.equal(first.href, "./district-songpa.html");
 });
@@ -91,7 +91,7 @@ test("한 글자로 줄어드는 자치구 이름은 짧은 형태로 찾지 않
 });
 
 test("기사가 전세·월세를 다루면 그 지표를 붙인다", () => {
-  assert.equal(context("송파 전세 매물 급감")[0].label, "송파구 아파트 84㎡ 전세");
+  assert.equal(context("송파 전세 매물 급감")[0].label, "송파구 아파트 전세 (84㎡ 환산)");
 
   const [wolse] = context('"서울 월세 1000만원 흔해질 것"…종부세 개편에 세입자 불똥');
   assert.equal(wolse.label, "서울 전체 아파트 월세");
@@ -99,13 +99,13 @@ test("기사가 전세·월세를 다루면 그 지표를 붙인다", () => {
 });
 
 test("칩에 신고 건수를 같이 적는다", () => {
-  assert.equal(context("송파 9억대 아파트")[0].note, "최근 4주 계약 16건");
-  assert.equal(context("송파 9억대 아파트")[0].noteEn, "16 deals in the last 4 weeks");
+  assert.equal(context("송파 9억대 아파트")[0].note, "전 면적 평균 · 최근 4주 계약 16건");
+  assert.equal(context("송파 9억대 아파트")[0].noteEn, "All-size average · 16 deals in the last 4 weeks");
 });
 
 test("변화율은 표본이 넉넉할 때만 적는다", () => {
-  assert.equal(context("서울 빌라값 들썩")[0].note, "최근 4주 계약 575건 · 8/10 대비 +8.3%");
-  assert.equal(context("서울 빌라값 들썩")[0].noteEn, "575 deals in the last 4 weeks · +8.3% vs Aug 10");
+  assert.equal(context("서울 빌라값 들썩")[0].note, "전 면적 평균 · 최근 4주 계약 575건 · 8/10 대비 +8.3%");
+  assert.equal(context("서울 빌라값 들썩")[0].noteEn, "All-size average · 575 deals in the last 4 weeks · +8.3% vs Aug 10");
 
   assert.ok(!context("송파 9억대 아파트")[0].note.includes("대비"));
 });
@@ -119,7 +119,7 @@ test("신고 건수가 적은 지표는 붙이지 않는다", () => {
 });
 
 test("자치구가 없으면 서울 기사에 서울 전체 평균을 붙인다", () => {
-  assert.equal(context("서울 빌라값 들썩")[0].label, "서울 전체 아파트 84㎡ 매매");
+  assert.equal(context("서울 빌라값 들썩")[0].label, "서울 전체 아파트 매매 (84㎡ 환산)");
   assert.deepEqual(context("수도권 아파트를 1억대로 입주?"), []);
 });
 
@@ -233,7 +233,7 @@ test("영어 화면은 칩도 영어로 그린다", async () => {
 
   const page = await loadNewsPage({ news, summary: { categories: [] }, locale: "en" });
   const rendered = page.newsListHtml();
-  assert.ok(rendered.includes("송파구 apartment 84㎡ sale"), "영어 라벨이 안 보인다");
+  assert.ok(rendered.includes("송파구 apartment sale (scaled to 84㎡)"), "영어 라벨이 안 보인다");
   assert.ok(rendered.includes("₩1,756M"), "영어 표기 금액이 안 보인다");
   assert.ok(rendered.includes("16 deals in the last 4 weeks"), "영어 보조 설명이 안 보인다");
   assert.ok(!rendered.includes("17억 5,633만원"), "영어 화면에 한국어 표기가 남아 있다");

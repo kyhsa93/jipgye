@@ -28,11 +28,12 @@ export const countOf = (metric) =>
 
 /**
  * 증감을 보류한 칸의 흐린 글자(#290). 현재 주 쪽이 얇으면 현재 건수, 아니면 기준 주 건수를 적는다. 브라우저(docs/index.html)의 realestateWithheld* 와 같은 문장이다.
- * `changeWithheld` 가 없으면 null.
+ * `changeWithheld` 가 없으면 null. 건수가 아니라 표본 구성 때문에 보류한 칸(#862 `reason`)은 빌드가 구운 문구를 먼저 본다 - 건수 비교로 내려가면 이유가 다른 말이 된다.
  */
 export function withheldOf(metric) {
   const w = metric?.changeWithheld;
   if (!w) return null;
+  if (w.reason) return w.text.ko.cell;
   return w.current < w.min
     ? `증감 보류 — 이번 주 집계 중(${w.current.toLocaleString("ko-KR")}건)`
     : `증감 보류 — 비교 주 표본 부족(${w.baseline.toLocaleString("ko-KR")}건)`;

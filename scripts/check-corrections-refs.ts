@@ -8,7 +8,8 @@ import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 export const CLOSED_ISSUES = [6, 28, 29, 65, 183, 229];
-export const MERGED_PRS = [189];
+// #862 는 2단계까지 열려 있어 CLOSED_ISSUES 에 넣을 수 없다 - 그 정정 항목의 근거는 1단계 PR 이다. 화면 순서(최근 것부터)와 같다.
+export const MERGED_PRS = [864, 189];
 // 싣지 않기로 한 것: #80(개인정보 건, 소유자 확인 선행), 이용허락·출처 건(공시가격·건축HUB)은 정정이 아니다.
 export const EXCLUDED = [80];
 

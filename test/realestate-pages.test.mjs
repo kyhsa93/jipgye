@@ -156,7 +156,8 @@ test("정적 HTML의 표가 실제 화면과 같다", async () => {
   const realestate = await readJson("realestate");
 
   for (const kind of [null, "sale", "jeonse", "wolse"]) {
-    const page = await loadRealestatePage({ realestate, kind });
+    // 나가는 장(build/site)의 화면 JS 로 그린다. 저장소에 남은 docs/realestate.html 은 틀보다 낡은 사본이라(#510 뒤 생성되지 않는다) 새 칸 모양(#862)을 모른 채 이 시험을 데이터에 따라 깨뜨린다.
+    const page = await loadRealestatePage({ realestate, kind, file: `${SITE}/realestate.html` });
     assert.deepEqual(
       cells(page.tableHtml()),
       cells(realestateTableHtml(realestate, kind)),

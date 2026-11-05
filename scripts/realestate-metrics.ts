@@ -1,4 +1,5 @@
 import { CHANGE_MIN_COUNT, canShowChange } from "./realestate-format.ts";
+import { REASON_BASELINE, REASON_CURRENT, baselineHeldText, concentrationText, isConcentratedBaseline } from "./realestate-concentration.ts";
 
 const PYEONG_M2 = 3.3058;
 
@@ -134,15 +135,23 @@ export function normalizeRentDeal(item, districtName) {
   };
 }
 
+// 대표값이 세는 행(해제 아님 + 금액·면적이 0 초과). 쏠림 판정의 표본이 이 값과 어긋나면 분모가 다른 비중이 되므로 판정을 여기 한 곳에 둔다(#862).
+const hasSaleAmounts = (item) => {
+  const amount10k = parseWon10k(item.dealAmount);
+  const area = Number(item.excluUseAr);
+  return amount10k != null && amount10k > 0 && Number.isFinite(area) && area > 0;
+};
+export const inSaleSample = (item) => !isCancelledDeal(item) && hasSaleAmounts(item);
+
 function summarizeSale(items) {
   let totalAmountWon = 0;
   let totalArea = 0;
   let count = 0;
 
   for (const item of items) {
+    if (!hasSaleAmounts(item)) continue;
     const amount10k = parseWon10k(item.dealAmount);
     const area = Number(item.excluUseAr);
-    if (amount10k == null || amount10k <= 0 || !Number.isFinite(area) || area <= 0) continue;
     totalAmountWon += amount10k * 10_000;
     totalArea += area;
     count += 1;
@@ -324,7 +333,26 @@ function withChange(valueKey, metric, baselineMetric, baselineDate, min) {
   return { ...metric, change, baselineDate };
 }
 
-export function attachChanges(overall, districts, baseline) {
+// 서울 매매만의 보류(#862). 지금 표본이 걸렸으면(`concentration`, 빌드가 판정) 비교할 값이 없어도 단서를 낸다 - 값과 함께 읽어야 할 말이기 때문이다.
+// 견줄 날의 표본이 걸렸으면 그 값과의 차이만 내지 않는다 - 비교할 값이 없으면 증감이 원래 없어 할 말도 없다. 둘 다면 지금 표본의 문구다.
+// 84㎡·전세·월세·자치구는 막지 않는다(313행은 16~36㎡라 84㎡ 부근 표본에 없고, 전세·월세·구 문턱은 #862 판정으로 규칙 밖이다). 이유를 먼저 보는 쪽은 withheldOf 와 화면 JS 다.
+function heldOverallSale(metric, baseline, min, window, jeonse) {
+  if (!metric) return null;
+  const base = baseline?.overall?.sale;
+  const comparable = Boolean(computeChange(metric.avgPricePerPyeong10k, base?.avgPricePerPyeong10k));
+  const current = Boolean(metric.concentration);
+  if (!current && !(comparable && isConcentratedBaseline(baseline))) return null;
+  const { change: _old, baselineDate: _oldDate, ...rest } = metric;
+  const counts = { current: metric.transactionCount ?? 0, baseline: base?.transactionCount ?? 0, min };
+  return {
+    ...rest,
+    changeWithheld: current
+      ? { reason: REASON_CURRENT, ...counts, text: concentrationText(metric, window, jeonse) }
+      : { reason: REASON_BASELINE, ...counts, baselineDate: baseline.date, text: baselineHeldText(metric, baseline.date, window) },
+  };
+}
+
+export function attachChanges(overall, districts, baseline, window = null) {
   const baselineDate = baseline?.date;
   const findBaselineDistrict = (code) => baseline?.districts?.find((d) => d.code === code);
   const sale = (m, b, min) => withChange("avgPricePerPyeong10k", m, b, baselineDate, min);
@@ -335,7 +363,7 @@ export function attachChanges(overall, districts, baseline) {
 
   return {
     overall: {
-      sale: sale(overall.sale, o?.sale, seoul),
+      sale: heldOverallSale(overall.sale, baseline, seoul, window, overall.jeonse) ?? sale(overall.sale, o?.sale, seoul),
       saleNational84: sale(overall.saleNational84, o?.saleNational84, seoul),
       jeonse: jeonse(overall.jeonse, o?.jeonse, seoul),
       wolse: wolse(overall.wolse, o?.wolse, seoul),
