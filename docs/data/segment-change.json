@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-04T03:02:30.686Z",
+  "updatedAt": "2026-11-05T03:29:21.108Z",
   "periods": {
     "base": [
       "202507",
@@ -15,7 +15,7 @@
   },
   "minCells": 30,
   "ageRefYear": 2025,
-  "cells": 3200,
+  "cells": 3203,
   "noBuildYear": 0,
   "price": [
     {
@@ -23,27 +23,27 @@
       "ko": "6억 이하",
       "en": "up to ₩600M",
       "cells": 676,
-      "change": 12,
+      "change": 11.9,
       "low": 10.9,
-      "high": 14.2
+      "high": 13.8
     },
     {
       "key": "upTo9",
       "ko": "6억~9억",
       "en": "₩600–900M",
-      "cells": 939,
+      "cells": 941,
       "change": 19.7,
-      "low": 18.4,
+      "low": 18.5,
       "high": 20.7
     },
     {
       "key": "upTo15",
       "ko": "9억~15억",
       "en": "₩0.9–1.5B",
-      "cells": 981,
+      "cells": 982,
       "change": 22.9,
-      "low": 22.2,
-      "high": 23.7
+      "low": 22.4,
+      "high": 23.6
     },
     {
       "key": "upTo25",
@@ -52,7 +52,7 @@
       "cells": 426,
       "change": 14.6,
       "low": 13.7,
-      "high": 15.4
+      "high": 15.3
     },
     {
       "key": "over25",
@@ -78,7 +78,7 @@
       "key": "y10to29",
       "ko": "10~29년",
       "en": "10–29 years",
-      "cells": 1830,
+      "cells": 1833,
       "change": 18.1,
       "low": 17.4,
       "high": 18.7
@@ -88,9 +88,9 @@
       "ko": "30년 이상",
       "en": "30 years or more",
       "cells": 870,
-      "change": 20.4,
-      "low": 19.1,
-      "high": 21.5
+      "change": 20.3,
+      "low": 19,
+      "high": 21.4
     }
   ],
   "area": [
@@ -98,19 +98,19 @@
       "key": "upTo60",
       "ko": "60㎡ 이하",
       "en": "up to 60㎡",
-      "cells": 1347,
+      "cells": 1351,
       "change": 21.2,
       "low": 20.6,
-      "high": 22
+      "high": 21.9
     },
     {
       "key": "a60to85",
       "ko": "60~85㎡",
       "en": "60–85㎡",
-      "cells": 1412,
-      "change": 17.1,
+      "cells": 1411,
+      "change": 17,
       "low": 16.7,
-      "high": 17.8
+      "high": 17.7
     },
     {
       "key": "a85to135",
@@ -164,12 +164,12 @@
       ],
       "upTo9": [
         71,
-        647,
+        649,
         221
       ],
       "upTo15": [
         211,
-        608,
+        609,
         162
       ],
       "upTo25": [
