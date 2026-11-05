@@ -11,7 +11,7 @@ import { buildHistoryFiles } from "../scripts/build-complex-history.ts";
 import { buildFiles } from "../scripts/build-complex-price.ts";
 import { buildFiles as buildRenewalFiles } from "../scripts/build-renewal-cells.ts";
 import { complexesByDistrict } from "../scripts/build-search-index.ts";
-import { complexKey, complexName, keyedDeal, sameNames } from "../scripts/complex-id.ts";
+import { aliasCandidates, aliasesOf, COMPLEX_ALIASES, complexKey, complexName, keyedDeal, locationKey, sameNames, stableId } from "../scripts/complex-id.ts";
 import { cellRatioEntries, cellRatios } from "../scripts/complex-ratio.ts";
 import { buildDealFiles, buildRentFiles } from "../scripts/deal-files.ts";
 import { districtFacts, factSentences } from "../scripts/district-facts.ts";
@@ -222,4 +222,53 @@ test("관심 단지: 동을 고른 칸은 그 동만 세고, 옛 항목(동 없�
   const saved = JSON.parse(items.get("watchlist"));
   assert.deepEqual(saved.map((e) => e[1]), ["벽산 (사근동)"]);
   assert.equal(saved[0][2].length, 3, "다른 동 거래까지 적어 뒀다");
+});
+
+// ── 저장 ID (#816 충돌 A). 관심 단지·주소에 남는 값이라 창이 굴러도, 다른 데이터가 들어와도 바뀌면 안 된다. 값은 지어낸 고정 데이터이고 별칭표의 실제 줄만 표 자체를 지키려고 적었다. ──
+test("위치 키: 구코드|법정동|정규화 지번|단지명. 벽산 3곳이 갈리고, 같은 동의 다른 지번도 갈린다", () => {
+  const key = (umdNm, jibun, aptNm = "벽산") => locationKey({ sggCd: 11200, umdNm, jibun, aptNm });
+  assert.equal(key("사근동", "0062-02"), "11200|사근동|62-2|벽산");
+  assert.equal(key("사근동", "62-0"), "11200|사근동|62|벽산");
+  assert.equal(new Set([key("금호동1가", "1"), key("사근동", "1"), key("하왕십리동", "1")]).size, 3);
+  assert.notEqual(key("옥수동", "1"), key("옥수동", "2"));
+  assert.equal(key("옥수동", "블록"), "11200|옥수동|블록|벽산", "못 읽는 지번은 받은 글자 그대로 - 칸이 사라지면 뺀 곳에도 안 잡힌다");
+});
+
+test("별칭: 표에 있는 위치 키만 저장 ID 로 합치고, 없으면 그대로다", () => {
+  const aliases = { "1|가|2|옛이름": "1|가|1|새이름", "1|가|3|옛이름": "1|가|1|새이름" };
+  assert.equal(stableId("1|가|2|옛이름", aliases), "1|가|1|새이름");
+  assert.equal(stableId("1|가|9|다른곳", aliases), "1|가|9|다른곳");
+  assert.deepEqual(aliasesOf("1|가|1|새이름", aliases), ["1|가|2|옛이름", "1|가|3|옛이름"]);
+  assert.deepEqual(aliasesOf("1|가|9|다른곳", aliases), []);
+});
+
+test("별칭표: 추가 전용 - 이미 적은 줄은 지우거나 바꾸지 않고, 오른쪽은 다른 줄의 왼쪽이 아니다(한 번에 끝난다)", () => {
+  const pinned = {
+    "11440|신수동|462|신촌숲아이파크": "11440|신수동|462|마포아이파크포레",
+    "11740|강일동|742|강동리버스트4단지": "11740|강일동|114|강동리버스트4단지",
+    "11740|강일동|66|강동리버스트8단지": "11740|강일동|746|강동리버스트8단지",
+  };
+  for (const [from, to] of Object.entries(pinned)) assert.equal(COMPLEX_ALIASES[from], to, from);
+  for (const to of Object.values(COMPLEX_ALIASES)) assert.equal(COMPLEX_ALIASES[to], undefined, `${to} 가 다시 별칭이다`);
+  assert.ok(Object.isFrozen(COMPLEX_ALIASES));
+});
+
+test("전월세 창이 줄어도 ID 가 그대로다: aptSeq 는 후보를 찾을 때만 쓰고 ID 계산은 전월세를 받지 않는다", () => {
+  const row = (jibun, aptSeq) => ({ sggCd: 1, umdNm: "가", jibun, aptNm: "단지", aptSeq });
+  const longWindow = [row("1", "S"), row("2", "S"), row("3", "T")];
+  const shortWindow = [row("3", "T")];
+  const aliases = { "1|가|2|단지": "1|가|1|단지" };
+  assert.deepEqual(aliasCandidates(longWindow, {}), [{ seq: "S", ids: ["1|가|1|단지", "1|가|2|단지"] }]);
+  assert.deepEqual(aliasCandidates(longWindow, aliases), [], "표에 옮긴 묶음은 후보가 아니다");
+  assert.deepEqual(aliasCandidates(shortWindow, {}), []);
+  // 창이 길든 짧든 같은 거래의 ID 는 같다 - 함수가 받는 것이 위치 키와 표뿐이므로.
+  assert.equal(stableId(locationKey(row("2", "다른 값")), aliases), stableId(locationKey({ ...row("2"), aptSeq: undefined }), aliases));
+  assert.equal(stableId(locationKey(row("2", "S")), aliases), "1|가|1|단지");
+});
+
+test("별칭 후보: aptSeq 나 이름이 없는 줄은 세지 않고, 한 위치 키에 aptSeq 가 둘인 것은 후보가 아니다", () => {
+  const row = (over) => ({ sggCd: 1, umdNm: "가", jibun: "1", aptNm: "단지", aptSeq: "S", ...over });
+  assert.deepEqual(aliasCandidates([row({ aptSeq: "" }), row({ jibun: "2", aptSeq: "" }), row({ aptNm: " ", jibun: "3" }), row({})], {}), []);
+  assert.deepEqual(aliasCandidates([row({ aptSeq: "A" }), row({ aptSeq: "B" })], {}), []);
+  assert.deepEqual(aliasCandidates(null), []);
 });

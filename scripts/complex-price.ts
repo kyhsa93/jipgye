@@ -242,7 +242,7 @@ export function districtCells(deals, levels, reference, { yearAgo = [], yearAgoM
 }
 
 /** 가장 흔한 값. 같은 단지명이 여러 동에 걸치는 일은 드물지만, 있으면 거래가 많은 쪽을 쓴다. */
-function mode(values) {
+export function mode(values) {
   const counts = new Map();
   for (const v of values) if (v !== null && v !== "") counts.set(v, (counts.get(v) ?? 0) + 1);
   let best = null;
