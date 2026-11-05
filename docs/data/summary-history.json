@@ -7571,5 +7571,144 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-05",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 증시·환율: 증시·환율: [올댓차이나] 홍콩 증시, 美 정치 불확실성 완화에 닷새째 상승… H주 3.01%↑, [올댓차이나] 中 증시, 반락 개장 후 매수 유입으로 상승세…창업판 2.57%↑, 증시 덮친 '블루웨이브' 쇼크…데이터센터 규제 우려에 급락 +2\n- 금리·예금·투자상품: 미국 증시와 채권값, 비트코인은 상승했으나 한국 증시와 유가는 하락했다. 국고채 금리는 일제히 하락하며 3년물이 장중 연 3.671%를 기록했다. 서울 아파트 분양 전망은 대출 규제와 금리 상승 영향으로 악화되고 있다. 광주은행은 창립 58주년을 맞아 예금 특판을 진행하며 우대 금리를 적용한다. 각 기사는 서로 다른 경제 현상과 관련된 내용을 담고 있다.\n- 부동산: 김재식·장종필은 부동산 관련 법을 설명하며 추가분담금 문제를 다루었다. 서초구는 국토부에 재초환 폐지 건의를 하며 재건축 지연 우려를 나타냈다. 10월 아파트 경매는 12년 7개월 만에 최다를 기록했으며 서울 낙찰가율은 100%로 회복했다. 11월 아파트 분양전망은 하락했고 서울 강남권이 약세를 보였다. 빌라·오피스텔의 층간소음 기준은 아파트 수준으로 강화될 예정이다.\n- 기타 경제 소식: 정부는 그린경제협정 협상에서 진전을 보이며 탄소무역 규범 마련을 추진하고 있다. 안산시 경제사절단은 스페인의 '팔 로보틱스'를 방문해 투자유치 간담회를 진행했다. 이번 협상은 환경 관련 국제 규범 수립에 초점을 맞추고 있다. 안산시는 해외 기업과의 협력 강화를 위해 이번 방문을 기획했다. 두 소식은 각각 경제 협력과 국제 투자 관련 주제를 다루고 있다.",
+      "en": "- Stocks & FX: Stocks & FX: [올댓차이나] 홍콩 증시, 美 정치 불확실성 완화에 닷새째 상승… H주 3.01%↑, [올댓차이나] 中 증시, 반락 개장 후 매수 유입으로 상승세…창업판 2.57%↑, 증시 덮친 '블루웨이브' 쇼크…데이터센터 규제 우려에 급락 +2\n- Rates, Deposits & Investment Products: The U.S. stock market and bond prices, as well as Bitcoin, rose, but the Korean stock market and crude oil prices fell. The government bond yield fell across the board, with the 3-year bond reaching an annual rate of 3.671% during the day. The outlook for apartment sales in Seoul is deteriorating due to the impact of loan regulations and rising interest rates. Gwangju Bank is offering a special deposit promotion with preferential interest rates to commemorate its 58th anniversary. Each article contains information related to different economic phenomena.\n- Real Estate: Kim Jae-sik and Jang Jong-pil discussed the additional burden charges while explaining real estate-related laws. Seocho District expressed concerns about delayed reconstruction by suggesting the cancellation of the re-approval system to the Ministry of Land, Infrastructure and Transport. The October apartment auction reached the highest level in 12 years and 7 months, and the winning bid rate in Seoul recovered to 100%. The November apartment sales outlook declined, and the Gangnam area in Seoul showed a weak performance. The floor-to-floor noise standards for villas and office hotels are expected to be strengthened to the same level as apartments.\n- Other Economic News: The government is making progress in the negotiation of the Green Economy Agreement, advancing efforts to establish carbon trade regulations. The Ansan Economic Delegation visited Spain's 'Pal Robotics' and held an investment promotion meeting. This negotiation focuses on establishing international regulations related to the environment. Ansan planned this visit to strengthen cooperation with overseas companies. The two news items each address topics related to economic cooperation and international investment."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "증시·환율: [올댓차이나] 홍콩 증시, 美 정치 불확실성 완화에 닷새째 상승… H주 3.01%↑, [올댓차이나] 中 증시, 반락 개장 후 매수 유입으로 상승세…창업판 2.57%↑, 증시 덮친 '블루웨이브' 쇼크…데이터센터 규제 우려에 급락 +2",
+        "lineEn": "Stocks & FX: [올댓차이나] 홍콩 증시, 美 정치 불확실성 완화에 닷새째 상승… H주 3.01%↑, [올댓차이나] 中 증시, 반락 개장 후 매수 유입으로 상승세…창업판 2.57%↑, 증시 덮친 '블루웨이브' 쇼크…데이터센터 규제 우려에 급락 +2",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 홍콩 증시, 美 정치 불확실성 완화에 닷새째 상승… H주 3.01%↑",
+            "link": "https://www.newsis.com/view/NISX20261105_0003856205",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 中 증시, 반락 개장 후 매수 유입으로 상승세…창업판 2.57%↑",
+            "link": "https://www.newsis.com/view/NISX20261105_0003856158",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "증시 덮친 '블루웨이브' 쇼크…데이터센터 규제 우려에 급락",
+            "link": "https://www.yna.co.kr/view/AKR20261105086700008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "증시 급락에 \"오늘이 바닥이길\"…레버리지에 대거 베팅 개미들 한숨",
+            "link": "https://www.yna.co.kr/view/AKR20261105078600008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "반도체주 급락에 코스피 4%대↓…매도 사이드카 발동",
+            "link": "https://www.yna.co.kr/view/AKR20261105070000008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "미국 증시와 채권값, 비트코인은 상승했으나 한국 증시와 유가는 하락했다. 국고채 금리는 일제히 하락하며 3년물이 장중 연 3.671%를 기록했다. 서울 아파트 분양 전망은 대출 규제와 금리 상승 영향으로 악화되고 있다. 광주은행은 창립 58주년을 맞아 예금 특판을 진행하며 우대 금리를 적용한다. 각 기사는 서로 다른 경제 현상과 관련된 내용을 담고 있다.",
+        "lineEn": "The U.S. stock market and bond prices, as well as Bitcoin, rose, but the Korean stock market and crude oil prices fell. The government bond yield fell across the board, with the 3-year bond reaching an annual rate of 3.671% during the day. The outlook for apartment sales in Seoul is deteriorating due to the impact of loan regulations and rising interest rates. Gwangju Bank is offering a special deposit promotion with preferential interest rates to commemorate its 58th anniversary. Each article contains information related to different economic phenomena.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "'블루 쓰나미'에 시장 희비…美증시·채권값·비트코인↑ 韓증시·유가↓",
+            "link": "https://www.newsis.com/view/NISX20261105_0003855963",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "국고채 금리 일제히 하락…3년물 장중 연 3.671%",
+            "link": "https://www.yna.co.kr/view/AKR20261105089700008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "서울 아파트 분양전망 악화…대출규제·금리 영향",
+            "link": "https://www.newsis.com/view/NISX20261105_0003855769",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "광주은행 창립 58주년 예금 특판…우대 금리 적용",
+            "link": "https://www.yna.co.kr/view/AKR20261105071800054",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "김재식·장종필은 부동산 관련 법을 설명하며 추가분담금 문제를 다루었다. 서초구는 국토부에 재초환 폐지 건의를 하며 재건축 지연 우려를 나타냈다. 10월 아파트 경매는 12년 7개월 만에 최다를 기록했으며 서울 낙찰가율은 100%로 회복했다. 11월 아파트 분양전망은 하락했고 서울 강남권이 약세를 보였다. 빌라·오피스텔의 층간소음 기준은 아파트 수준으로 강화될 예정이다.",
+        "lineEn": "Kim Jae-sik and Jang Jong-pil discussed the additional burden charges while explaining real estate-related laws. Seocho District expressed concerns about delayed reconstruction by suggesting the cancellation of the re-approval system to the Ministry of Land, Infrastructure and Transport. The October apartment auction reached the highest level in 12 years and 7 months, and the winning bid rate in Seoul recovered to 100%. The November apartment sales outlook declined, and the Gangnam area in Seoul showed a weak performance. The floor-to-floor noise standards for villas and office hotels are expected to be strengthened to the same level as apartments.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "김재식·장종필의 법을 알면 부동산이 보인다  - 억 소리 나는 추가분담금, 총회를 뒤엎으면 내 돈이 지켜질까?",
+            "link": "https://www.mk.co.kr/news/sports/12198188",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "서초구, 국토부에 재초환 폐지 건의…재건축 지연 우려",
+            "link": "https://www.newsis.com/view/NISX20261105_0003856001",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "10월 아파트 경매 12년7개월만에 최다…서울 낙찰가율 100% 회복",
+            "link": "https://www.yna.co.kr/view/AKR20261105073200003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "11월 아파트 분양전망 하락…서울 강남권 약세 등 영향",
+            "link": "https://www.yna.co.kr/view/AKR20261105028600003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "빌라·오피스텔 층간소음 기준, 아파트 수준으로 강화한다",
+            "link": "https://www.hankyung.com/article/202611057471i",
+            "source": "한국경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "정부는 그린경제협정 협상에서 진전을 보이며 탄소무역 규범 마련을 추진하고 있다. 안산시 경제사절단은 스페인의 '팔 로보틱스'를 방문해 투자유치 간담회를 진행했다. 이번 협상은 환경 관련 국제 규범 수립에 초점을 맞추고 있다. 안산시는 해외 기업과의 협력 강화를 위해 이번 방문을 기획했다. 두 소식은 각각 경제 협력과 국제 투자 관련 주제를 다루고 있다.",
+        "lineEn": "The government is making progress in the negotiation of the Green Economy Agreement, advancing efforts to establish carbon trade regulations. The Ansan Economic Delegation visited Spain's 'Pal Robotics' and held an investment promotion meeting. This negotiation focuses on establishing international regulations related to the environment. Ansan planned this visit to strengthen cooperation with overseas companies. The two news items each address topics related to economic cooperation and international investment.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "정부, 그린경제협정 협상 진전…탄소무역 규범 마련 추진",
+            "link": "https://www.newsis.com/view/NISX20261105_0003855704",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "안산시 경제사절단, 스페인 '팔 로보틱스' 방문 투자유치 간담회",
+            "link": "https://www.yna.co.kr/view/AKR20261105075800061",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]

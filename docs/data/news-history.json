@@ -17947,7 +17947,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 5일 미국 중간선거를 둘러싼 정치 불확실성이 풀리고 뉴욕 증시가 상승하면서 기술주와 금융주를 중심으로 매수 선행, 5거래일 연속 오름세를 이어가고 있다. 항셍지수는 이날 전…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Olleh China] Hong Kong Market Rises for Fifth Consecutive Day as U.S. Political Uncertainty Eases... H-Share Up 3.01%"
       },
       {
         "title": "'블루 쓰나미'에 시장 희비…美증시·채권값·비트코인↑ 韓증시·유가↓",
@@ -17956,7 +17957,8 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스] 최홍 기자 = 미국 중간선거에서 민주당이 상원과 하원을 모두 장악한 가운데, 정치적 불확실성 해소로 글로벌 금융시장이 큰 변동성을 나타내고 있다. 미 국채 금리와 뉴욕증시, 금, 비트코인이 일제히 강…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Blue Tsunami\" brings mixed market reactions... U.S. stock market, bond prices, and Bitcoin rise; Korean stock market and oil prices fall"
       },
       {
         "title": "국고채 금리 일제히 하락…3년물 장중 연 3.671%",
@@ -17965,7 +17967,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 5일 국고채 금리가 일제히 하락하고 있다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "South Korea's government bond yields fall across the board...3-year bond hits 3.671% during trading"
       },
       {
         "title": "[올댓차이나] 中 증시, 반락 개장 후 매수 유입으로 상승세…창업판 2.57%↑",
@@ -17974,7 +17977,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 중국 증시는 5일 미국 반도체주 약세와 국제 유가 급락에 반락 개장했다가 비철금속주와 약품주에 매수가 들어오면서 오르고 있다. 당국의 정책에 대한 기대감도 관련 종목에 매수를 유인하고…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] China's stock market rises as buying flows in after opening decline... Startup Board up 2.57%"
       },
       {
         "title": "증시 덮친 '블루웨이브' 쇼크…데이터센터 규제 우려에 급락",
@@ -17983,7 +17987,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 곽윤아 기자 = 5일 국내 증시가 급락세를 보이는 것은 미국 중간선거에서 민주당이 압승을 거두며 인공지능(AI) 산업 관련 규...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Stocks hit by 'blue wave' shock... sharp drop due to concerns over data center regulations"
       },
       {
         "title": "김재식·장종필의 법을 알면 부동산이 보인다  - 억 소리 나는 추가분담금, 총회를 뒤엎으면 내 돈이 지켜질까?",
@@ -17992,7 +17997,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "재건축·재개발 사업에서 공사비 상승에 따른 추가분담금은 조합원들의 가장 큰 고민 중 하나다. 분담금 증액에 반발해 소송에서 승소하더라도 사업 지연으로 오히려 부담이 커질 수 있어 ..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "If You Know the Law, Kim Jae-sik and Jang Jong-pil Say, Real Estate Will Reveal Itself - Will My Money Be Protected If We Overturn the Meeting and the Additional Charges That Sound Like Billions?"
       },
       {
         "title": "서초구, 국토부에 재초환 폐지 건의…재건축 지연 우려",
@@ -18001,7 +18007,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 권혜인 기자 = 서울 서초구가 정부에 재건축초과이익환수제(재초환) 폐지를 촉구했다. 재건축 사업이 지연되고 도심 주택 공급이 위축될 수 있다는 이유에서다. 서초구는 지난 4일 재건축 업무를 담당하는…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 84㎡ 매매",
+            "labelEn": "서초구 apartment 84㎡ sale",
+            "value": "24억 7,645만원",
+            "valueEn": "₩2,476M",
+            "note": "최근 1주 계약 106건 · 10/29 대비 -3.0%",
+            "noteEn": "106 deals in the last 1 weeks · -3.0% vs Oct 29"
+          }
+        ],
+        "titleEn": "Seocho District Proposes to Scrap Reassessment to Land Ministry, Fearing Delay in Reconstruction"
       },
       {
         "title": "증시 급락에 \"오늘이 바닥이길\"…레버리지에 대거 베팅 개미들 한숨",
@@ -18010,7 +18029,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 고은지 기자 = 개인 투자자들이 최근 한 달간 코스피와 코스닥 레버리지 상장지수펀드(ETF)를 대거 사들였지만, 지수가 좀처럼...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Stocks Plunge as Retail Investors Bet Heavily on Leverage, Hoping \"Today is the Bottom"
       },
       {
         "title": "10월 아파트 경매 12년7개월만에 최다…서울 낙찰가율 100% 회복",
@@ -18019,7 +18039,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 오예진 기자 = 지난달 전국 아파트 경매가 12년 7개월 만에 가장 많았던 것으로 나타났다.",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 2,462만원",
+            "valueEn": "₩1,325M",
+            "note": "최근 1주 계약 940건 · 10/29 대비 +0.7%",
+            "noteEn": "940 deals in the last 1 weeks · +0.7% vs Oct 29"
+          }
+        ],
+        "titleEn": "October Apartment Auctions Reach Highest Level in 12 Years 7 Months... Seoul's Bid Success Rate Returns to 100%"
       },
       {
         "title": "11월 아파트 분양전망 하락…서울 강남권 약세 등 영향",
@@ -18028,7 +18061,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 임기창 기자 = 서울 강남권 아파트값 약세가 이어지는 가운데 주택사업자들의 분양 전망도 하락했다.",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 84㎡ 매매",
+            "labelEn": "강남구 apartment 84㎡ sale",
+            "value": "28억 6,624만원",
+            "valueEn": "₩2,866M",
+            "note": "최근 1주 계약 136건 · 10/29 대비 +0.2%",
+            "noteEn": "136 deals in the last 1 weeks · +0.2% vs Oct 29"
+          }
+        ],
+        "titleEn": "November apartment sales outlook declines... impact of weak performance in Seoul's Gangnam area"
       },
       {
         "title": "빌라·오피스텔 층간소음 기준, 아파트 수준으로 강화한다",
@@ -18037,7 +18083,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Strengthening Floor Noise Standards for Villas and Office Hotels to Apartment Level"
       },
       {
         "title": "서울 아파트 분양전망 악화…대출규제·금리 영향",
@@ -18046,7 +18093,20 @@
         "source": "뉴시스 경제",
         "category": "rates",
         "preview": "[서울=뉴시스]이연희 기자 = 서울 아파트 분양전망이 한 달 만에 다시 악화되며 기준치 아래로 떨어졌다. 지방을 중심으로 전국 미분양물량 전망지수는 상승했다. 주택산업연구원(주산연)이 5일 공개한 '11월 아파트분양…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 84㎡ 매매",
+            "labelEn": "Seoul apartment 84㎡ sale",
+            "value": "13억 2,462만원",
+            "valueEn": "₩1,325M",
+            "note": "최근 1주 계약 940건 · 10/29 대비 +0.7%",
+            "noteEn": "940 deals in the last 1 weeks · +0.7% vs Oct 29"
+          }
+        ],
+        "titleEn": "Seoul Apartment Sales Outlook Deteriorates Due to Loan Regulations and Interest Rates"
       },
       {
         "title": "정부, 그린경제협정 협상 진전…탄소무역 규범 마련 추진",
@@ -18055,7 +18115,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[세종=뉴시스]이수정 기자 = 한국과 싱가포르, 뉴질랜드가 유럽연합(EU)의 탄소국경조정제도(CBAM) 등 무역 관련 기후조치에 공동 대응하기 위한 새로운 통상규범 마련에 속도를 낸다. 산업통상부는 5일 싱가포르,…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Government advances negotiations on Green Economy Agreement, pushes to establish carbon trade regulations"
       },
       {
         "title": "안산시 경제사절단, 스페인 '팔 로보틱스' 방문 투자유치 간담회",
@@ -18064,7 +18125,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(안산=연합뉴스) 최해민 기자 = 경기 안산시는 스페인을 방문 중인 시 경제사절단이 휴머노이드 로봇 전문기업 '팔 로보틱스'를 방문해 투자유치 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Ansanshi Economic Delegation Holds Investment Promotion Meeting with Spain's 'Pal Robotics"
       },
       {
         "title": "광주은행 창립 58주년 예금 특판…우대 금리 적용",
@@ -18073,7 +18135,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(전남광주=연합뉴스) 전승현 기자 = 광주은행은 창립 58주년(11월20일)을 맞아 고객들의 성원에 보답하기 위해 '58년 동행' 더드림 예금 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Gwangju Bank's 58th Anniversary Deposit Promotion... Preferred Interest Rate Applied"
       },
       {
         "title": "반도체주 급락에 코스피 4%대↓…매도 사이드카 발동",
@@ -18082,7 +18145,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유향 기자 = 5일 코스피가 반도체 '투톱'의 하락에 4% 넘게 하락하며 유가증권시장에서 '매도 사이드카'가 발동됐다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KOSPI falls over 4% as semiconductor stocks plunge, triggering sell-side cars"
       },
       {
         "title": "“갱신권 썼는데도 3천만 원 올랐다”…서울 빌라 전세 시장에 무슨 일이",
@@ -18091,7 +18155,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "서울 아파트 전셋값이 껑충 뛰고 매물 부족 현상이 지속되면서 그 여파가 빌라(연립·다세대) 전세 시장으로 옮겨붙고 있다. 아파트 진입 문턱을 넘지 못한 세입자들이 상대적으로 저렴한..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-jeonse.html",
+            "label": "서울 전체 아파트 84㎡ 전세",
+            "labelEn": "Seoul apartment 84㎡ jeonse",
+            "value": "8억 1,515만원",
+            "valueEn": "₩815M",
+            "note": "최근 1주 계약 577건 · 10/29 대비 +0.4%",
+            "noteEn": "577 deals in the last 1 weeks · +0.4% vs Oct 29"
+          }
+        ],
+        "titleEn": "Used the renewal right but still rose 30,000,000 won\"... What's happening in Seoul villa lease market"
       },
       {
         "title": "서울 아파트 70% 이상 '월세 100만원' 넘어…대안 찾는 수요자들",
@@ -18100,7 +18177,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-rent.html",
+            "label": "서울 전체 아파트 월세",
+            "labelEn": "Seoul apartment rent",
+            "value": "보증금 24,469만원 / 월 145만원",
+            "valueEn": "₩244.7M + ₩1.45M/mo",
+            "note": "최근 1주 계약 703건 · 10/29 대비 +5.6%",
+            "noteEn": "703 deals in the last 1 weeks · +5.6% vs Oct 29"
+          }
+        ],
+        "titleEn": "Seoul apartments with monthly rent over 1,000,000 won account for more than 70%…home seekers look for alternatives"
       },
       {
         "title": "쌍용건설, 두바이 최대 부동산 기업 와슬과 신규 사업 MOU… 3.6조 규모",
@@ -18109,7 +18199,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "쌍용건설이 중동 핵심 거점인 두바이에서 대형 수주를 위한 결정적인 발판을 놓았다. 쌍용건설은 최근 두바이 대형 부동산 개발사인 와슬 그룹(Wasl Group)과 향후 3년에 걸쳐 추진되는 총 3조6000억원(100억…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Sungwon Construction Signs New Business MOU with Dubai's Largest Real Estate Company Wasl, 3,600,000,000,000 Scale"
       },
       {
         "title": "성북구 종암에스케이 114.75㎡ 13억원… 최근 3년 신고가 [MAI부동산]",
@@ -18118,7 +18209,30 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 11월 4일 국토부 실거래가 시스템에 신규 등록된 서울 성북구 종암동 종암에스케이 전용 114.75㎡가 13억원에 거래되며 해당 단지·면적 기준 최근 3년..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seongbuk.html",
+            "label": "성북구 아파트 84㎡ 매매",
+            "labelEn": "성북구 apartment 84㎡ sale",
+            "value": "11억 2,998만원",
+            "valueEn": "₩1,130M",
+            "note": "최근 1주 계약 198건 · 10/29 대비 -0.9%",
+            "noteEn": "198 deals in the last 1 weeks · -0.9% vs Oct 29"
+          },
+          {
+            "kind": "record-high",
+            "href": "./record-high.html#breakdown-section",
+            "label": "성북구 아파트 신고가 다음 거래",
+            "labelEn": "Seongbuk-gu apartments: next sale after a record high",
+            "value": "그 값 이상 46%",
+            "valueEn": "46% matched or beat it",
+            "note": "신고가 1,240건 중 · 아무 거래 뒤는 62% · 관련 숫자 →",
+            "noteEn": "of 1,240 record highs · 62% after any sale · Related numbers →"
+          }
+        ],
+        "titleEn": "Jongam SK in Seongbuk-gu, 114.75㎡ for 1,300,000,000 won... new high in 3 years [MAI Real Estate]"
       },
       {
         "title": "강북구 미아동 성북프라자 68.675㎡, 5억 7천만원에 거래… 최근 3년 신고가 [MAI부동산]",
@@ -18127,7 +18241,30 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 11월 4일 국토부 실거래가 시스템에 신규 등록된 서울 강북구 미아동 성북프라자 전용 68.675㎡가 5억 7천만원에 거래돼 최근 3년 내 신고가를 기록했..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seongbuk.html",
+            "label": "성북구 아파트 84㎡ 매매",
+            "labelEn": "성북구 apartment 84㎡ sale",
+            "value": "11억 2,998만원",
+            "valueEn": "₩1,130M",
+            "note": "최근 1주 계약 198건 · 10/29 대비 -0.9%",
+            "noteEn": "198 deals in the last 1 weeks · -0.9% vs Oct 29"
+          },
+          {
+            "kind": "record-high",
+            "href": "./record-high.html#breakdown-section",
+            "label": "서울 아파트 신고가 다음 거래",
+            "labelEn": "Seoul apartments: next sale after a record high",
+            "value": "그 값 이상 44.4%",
+            "valueEn": "44.4% matched or beat it",
+            "note": "신고가 16,111건 중 · 아무 거래 뒤는 60.3% · 관련 숫자 →",
+            "noteEn": "of 16,111 record highs · 60.3% after any sale · Related numbers →"
+          }
+        ],
+        "titleEn": "Gangbuk-gu, Mia-dong, Seongbuk Plaza 68.675㎡ traded for 570,000,000 won... new high in 3 years [MAI Real Estate]"
       },
       {
         "title": "성북구 길음동 롯데캐슬골든힐스 84.93㎡ 12억 9천만원… 최근 3년 신고가 [MAI부동산]",
@@ -18136,7 +18273,30 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 11월 4일 국토부 실거래가 시스템에 신규 등록된 서울 성북구 길음동 롯데캐슬골든힐스 전용 84.93㎡가 12억 9,000만 원에 거래되며 해당 단지·면적..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seongbuk.html",
+            "label": "성북구 아파트 84㎡ 매매",
+            "labelEn": "성북구 apartment 84㎡ sale",
+            "value": "11억 2,998만원",
+            "valueEn": "₩1,130M",
+            "note": "최근 1주 계약 198건 · 10/29 대비 -0.9%",
+            "noteEn": "198 deals in the last 1 weeks · -0.9% vs Oct 29"
+          },
+          {
+            "kind": "record-high",
+            "href": "./record-high.html#breakdown-section",
+            "label": "성북구 아파트 신고가 다음 거래",
+            "labelEn": "Seongbuk-gu apartments: next sale after a record high",
+            "value": "그 값 이상 46%",
+            "valueEn": "46% matched or beat it",
+            "note": "신고가 1,240건 중 · 아무 거래 뒤는 62% · 관련 숫자 →",
+            "noteEn": "of 1,240 record highs · 62% after any sale · Related numbers →"
+          }
+        ],
+        "titleEn": "Songpa-gu Gilleum-dong Lotte Castle Golden Hills 84.93㎡ 1,290,000,000 won... new high price in 3 years [MAI Real Estate]"
       },
       {
         "title": "중랑구 신내동 새한 59.77㎡ 6억 6천만원… 최근 3년 신고가 [MAI부동산]",
@@ -18145,7 +18305,30 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 11월 4일 국토부 실거래가 시스템에 신규 등록된 서울 중랑구 신내동 새한아파트 전용 59.77㎡가 6억 6,000만 원에 거래되며 최근 3년 내 신고가를..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-jungnang.html",
+            "label": "중랑구 아파트 84㎡ 매매",
+            "labelEn": "중랑구 apartment 84㎡ sale",
+            "value": "8억 8,782만원",
+            "valueEn": "₩888M",
+            "note": "최근 1주 계약 137건 · 10/29 대비 +0.2%",
+            "noteEn": "137 deals in the last 1 weeks · +0.2% vs Oct 29"
+          },
+          {
+            "kind": "record-high",
+            "href": "./record-high.html#breakdown-section",
+            "label": "중랑구 아파트 신고가 다음 거래",
+            "labelEn": "Jungnang-gu apartments: next sale after a record high",
+            "value": "그 값 이상 34%",
+            "valueEn": "34% matched or beat it",
+            "note": "신고가 415건 중 · 아무 거래 뒤는 58.2% · 관련 숫자 →",
+            "noteEn": "of 415 record highs · 58.2% after any sale · Related numbers →"
+          }
+        ],
+        "titleEn": "Jungnang-gu Sinneung-dong Saham 59.77㎡ 660,000,000won... Recent 3-Year High Price [MAI Real Estate]"
       },
       {
         "title": "동대문구 휘경베스트빌현대 59.92㎡ 7억 9천만원… 최근 3년 신고가 [MAI부동산]",
@@ -18154,7 +18337,30 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "MAI 부동산 2026년 11월 4일 국토부 실거래가 시스템에 신규 등록된 서울 동대문구 휘경베스트빌현대 전용 59.92㎡ 거래가 7억 9천만원에 체결돼 최근 3년 신고가를 기록했..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-dongdaemun.html",
+            "label": "동대문구 아파트 84㎡ 매매",
+            "labelEn": "동대문구 apartment 84㎡ sale",
+            "value": "11억 9,020만원",
+            "valueEn": "₩1,190M",
+            "note": "최근 1주 계약 446건 · 10/29 대비 -0.6%",
+            "noteEn": "446 deals in the last 1 weeks · -0.6% vs Oct 29"
+          },
+          {
+            "kind": "record-high",
+            "href": "./record-high.html#breakdown-section",
+            "label": "동대문구 아파트 신고가 다음 거래",
+            "labelEn": "Dongdaemun-gu apartments: next sale after a record high",
+            "value": "그 값 이상 45.8%",
+            "valueEn": "45.8% matched or beat it",
+            "note": "신고가 983건 중 · 아무 거래 뒤는 61.5% · 관련 숫자 →",
+            "noteEn": "of 983 record highs · 61.5% after any sale · Related numbers →"
+          }
+        ],
+        "titleEn": "Dongdaemun-gu Hwijeong Bestville Hyundai 59.92㎡ 790,000,000won... Recent 3-Year High Price [MAI Real Estate]"
       }
     ]
   }
