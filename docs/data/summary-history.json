@@ -7710,5 +7710,134 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-06",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 증시·환율: 홍콩 증시는 미국과 아시아 증시의 약세로 인해 하락했으며, H주 지수는 0.25% 내렸다. 중국 증시는 한미일 증시의 급락으로 대폭 하락세를 보였고, 창업판 지수는 2.46% 떨어졌다. F4는 증시 급락에 따라 신용융자 담보비율 의무를 3개월간 면제하기로 했다. F4는 증시 변동성이 확대될 경우 추가 시장안정 조치를 검토할 계획이라고 밝혔다. 전문가들은 AI 붕괴가 아니라 수급 불안으로 인해 증시 낙폭이 확대되고 있다고 진단했다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 하락했고, 한 달 만에 1.1조가 몰린 예금 상품의 금리도 올랐다.\n- 부동산: 강남 소형 아파트 시장에서도 가격 하락이 지속되고 있다. HS화성은 부산 범천동에서 2345억원 규모의 민간임대주택사업을 수주했다. 국토부와 서울시는 공공과 민간 주택공급 주도권을 놓고 갈등을 빚고 있다. LH는 의정부 우정지구에서 단독주택용지 68필지를 공급하기로 했다. 은마도 재건축 단지에서는 1인당 4.6억원의 재초환 부담금이 통지되며 초비상 상황이 발생했다.\n- 기타 경제 소식: 포천시는 시민과 기업을 대상으로 평화경제특구에 대한 열린제안 설문을 진행하고 있다. 한·중 양국은 실버경제 분야에서 협력을 확대하기로 했으며, 기업과 연구기관 간의 상시 교류를 논의하고 있다. 포천시의 설문은 지역 경제 발전 방향을 모색하기 위한 것으로 보인다. 한·중 협력 논의는 노인 관련 산업 활성화를 위한 것이다. 두 소식은 각각 다른 분야에서 진행되고 있는 활동이다.",
+      "en": "- Stocks & FX: The Hong Kong stock market fell due to weakness in U.S. and Asian markets, with the H-Share index dropping 0.25%. The Chinese stock market showed a sharp decline due to the sharp falls in U.S., Japanese, and South Korean markets, with the Star Market index falling 2.46%. F4 decided to exempt the credit financing collateral ratio requirement for three months due to the stock market plunge. F4 stated that it plans to review additional market stabilization measures if market volatility increases. Experts diagnosed that the stock market decline is expanding due to supply and demand instability, not AI collapse.\n- Rates, Deposits & Investment Products: Government bond rates fell universally, and the interest rates on deposit products that received 1,100,000,000,000 won in a month also rose.\n- Real Estate: Price declines are continuing in the small apartment market in Gangnam. HS Hwasung has secured a private rental housing project worth 234,500,000,000 won in Bokcheon-dong, Busan. The Ministry of Land, Infrastructure and Transport and Seoul are locked in a conflict over who should lead public and private housing supply. LH has decided to supply 68 plots of land for single-family homes in Ujeong-dong, Uijeong. In Eunma-dong redevelopment area, an emergency situation has arisen as residents have been notified of a per-person reconstruction burden fee of 460,000,000 won.\n- Other Economic News: Pocheon City is conducting an open proposal survey targeting citizens and businesses regarding the Peace Economic Special Zone. South Korea and China have agreed to expand cooperation in the silver economy sector and are discussing ongoing exchanges between companies and research institutions. Pocheon City's survey appears to be aimed at exploring directions for regional economic development. The South Korea-China cooperation discussions are intended to promote the activation of elderly-related industries. The two pieces of news are activities being carried out in different fields."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "홍콩 증시는 미국과 아시아 증시의 약세로 인해 하락했으며, H주 지수는 0.25% 내렸다. 중국 증시는 한미일 증시의 급락으로 대폭 하락세를 보였고, 창업판 지수는 2.46% 떨어졌다. F4는 증시 급락에 따라 신용융자 담보비율 의무를 3개월간 면제하기로 했다. F4는 증시 변동성이 확대될 경우 추가 시장안정 조치를 검토할 계획이라고 밝혔다. 전문가들은 AI 붕괴가 아니라 수급 불안으로 인해 증시 낙폭이 확대되고 있다고 진단했다.",
+        "lineEn": "The Hong Kong stock market fell due to weakness in U.S. and Asian markets, with the H-Share index dropping 0.25%. The Chinese stock market showed a sharp decline due to the sharp falls in U.S., Japanese, and South Korean markets, with the Star Market index falling 2.46%. F4 decided to exempt the credit financing collateral ratio requirement for three months due to the stock market plunge. F4 stated that it plans to review additional market stabilization measures if market volatility increases. Experts diagnosed that the stock market decline is expanding due to supply and demand instability, not AI collapse.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 홍콩 증시, 美·아시아 증시 약세에 반락 … H주 0.25%↓",
+            "link": "https://www.newsis.com/view/NISX20261106_0003857833",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[속보]F4, 증시 급락에 신용융자 담보비율 의무 3개월 면제",
+            "link": "https://www.newsis.com/view/NISX20261106_0003857805",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[속보] F4 \"증시 변동성 확대하면 시장안정 추가 조치\"",
+            "link": "https://www.yna.co.kr/view/AKR20261106089800002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 中 증시, 한미일 증시 급락에 대폭 하락세…창업판 2.46%↓",
+            "link": "https://www.newsis.com/view/NISX20261106_0003857800",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "\"AI붕괴 아니다…수급 불안에 낙폭 확대\"…증시급락 전문가 긴급진단",
+            "link": "https://www.yna.co.kr/view/AKR20261106085200008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 일제히 하락했고, 한 달 만에 1.1조가 몰린 예금 상품의 금리도 올랐다.",
+        "lineEn": "Government bond rates fell universally, and the interest rates on deposit products that received 1,100,000,000,000 won in a month also rose.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "국고채 금리 일제히 하락…주가 급락 속 위험회피 심리",
+            "link": "https://www.yna.co.kr/view/AKR20261106090400008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "한달만에 1.1조 몰린 이 예금, 금리도 올랐다",
+            "link": "https://www.hankyung.com/article/202611060198i",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "강남 소형 아파트 시장에서도 가격 하락이 지속되고 있다. HS화성은 부산 범천동에서 2345억원 규모의 민간임대주택사업을 수주했다. 국토부와 서울시는 공공과 민간 주택공급 주도권을 놓고 갈등을 빚고 있다. LH는 의정부 우정지구에서 단독주택용지 68필지를 공급하기로 했다. 은마도 재건축 단지에서는 1인당 4.6억원의 재초환 부담금이 통지되며 초비상 상황이 발생했다.",
+        "lineEn": "Price declines are continuing in the small apartment market in Gangnam. HS Hwasung has secured a private rental housing project worth 234,500,000,000 won in Bokcheon-dong, Busan. The Ministry of Land, Infrastructure and Transport and Seoul are locked in a conflict over who should lead public and private housing supply. LH has decided to supply 68 plots of land for single-family homes in Ujeong-dong, Uijeong. In Eunma-dong redevelopment area, an emergency situation has arisen as residents have been notified of a per-person reconstruction burden fee of 460,000,000 won.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "\"강남 소형 아파트도 하락 거래…가격 조정 압력 양상\"",
+            "link": "https://www.yna.co.kr/view/AKR20261106082600003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "HS화성, 부산 범천동 민간임대주택사업 수주… 2345억원 규모",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/06/ATAWGD367NEGXONRKSQ6HFUV2Q/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "“손뼉 맞추자”더니…‘공공 vs 민간’ 주택공급 주도권 싸움하는 국토부·서울시",
+            "link": "https://www.mk.co.kr/news/realestate/12200338",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "LH, 의정부 우정지구 단독주택용지 등 68필지 공급",
+            "link": "https://www.yna.co.kr/view/AKR20261106083500060",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[단독] 은마도 1인당 4.6억 재초환 부담금 통지…재건축 단지 초비상",
+            "link": "https://www.mk.co.kr/news/realestate/12200292",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "포천시는 시민과 기업을 대상으로 평화경제특구에 대한 열린제안 설문을 진행하고 있다. 한·중 양국은 실버경제 분야에서 협력을 확대하기로 했으며, 기업과 연구기관 간의 상시 교류를 논의하고 있다. 포천시의 설문은 지역 경제 발전 방향을 모색하기 위한 것으로 보인다. 한·중 협력 논의는 노인 관련 산업 활성화를 위한 것이다. 두 소식은 각각 다른 분야에서 진행되고 있는 활동이다.",
+        "lineEn": "Pocheon City is conducting an open proposal survey targeting citizens and businesses regarding the Peace Economic Special Zone. South Korea and China have agreed to expand cooperation in the silver economy sector and are discussing ongoing exchanges between companies and research institutions. Pocheon City's survey appears to be aimed at exploring directions for regional economic development. The South Korea-China cooperation discussions are intended to promote the activation of elderly-related industries. The two pieces of news are activities being carried out in different fields.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "포천시, 시민·기업 대상 평화경제특구 열린제안 설문",
+            "link": "https://www.yna.co.kr/view/AKR20261106079400060",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "한·중, 실버경제 협력 확대…기업·연구기관 상시교류 논의",
+            "link": "https://www.newsis.com/view/NISX20261106_0003857366",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]

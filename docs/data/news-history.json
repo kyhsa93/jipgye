@@ -18374,7 +18374,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 6일 미국 반도체주 급락과 한국, 일본 증시 대폭 하락 여파로 반락 출발했다. 미국 중간선거 이후 인공지능(AI) 인프라 투자가 위축된다는 우려가 확산하면서 투자심리가 악화…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Olleh China] Hong Kong Market Falls on Weakness in U.S. and Asian Markets ... H-Share Down 0.25%"
       },
       {
         "title": "국고채 금리 일제히 하락…주가 급락 속 위험회피 심리",
@@ -18383,7 +18384,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 강수지 기자 = 6일 국고채 금리는 위험회피 심리가 고조되며 일제히 하락했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Korean government bond rates fall across the board... risk-avoidance sentiment amid sharp stock price drop"
       },
       {
         "title": "[속보]F4, 증시 급락에 신용융자 담보비율 의무 3개월 면제",
@@ -18392,7 +18394,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[세종=뉴시스]임하은 기자 = ◎공감언론 뉴시스 rainy71@newsis.com",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Breaking News] F4 to exempt credit loan collateral ratio obligation for 3 months amid market plunge"
       },
       {
         "title": "[속보] F4 \"증시 변동성 확대하면 시장안정 추가 조치\"",
@@ -18401,7 +18404,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Breaking News] F4 \"If Market Volatility Increases, Additional Market Stabilization Measures"
       },
       {
         "title": "\"강남 소형 아파트도 하락 거래…가격 조정 압력 양상\"",
@@ -18410,7 +18414,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 오예진 기자 = 서울 강남권 아파트 가격 하락세가 지속되는 가운데 중대형뿐 아니라 소형 평형에도 하락 거래가 이어지는 것으로 ...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "강남구 apartment sale (scaled to 84㎡)",
+            "value": "28억 6,064만원",
+            "valueEn": "₩2,861M",
+            "note": "전 면적 평균 · 10/12~11/6 들어온 신고 139건 · 10/30 대비 -0.3%",
+            "noteEn": "All-size average · 139 filings arrived Oct 12–Nov 6 · -0.3% vs Oct 30"
+          }
+        ],
+        "titleEn": "Transactions of small apartments in Gangnam also decline, showing price adjustment pressures"
       },
       {
         "title": "[올댓차이나] 中 증시, 한미일 증시 급락에 대폭 하락세…창업판 2.46%↓",
@@ -18419,7 +18436,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 중국 증시는 6일 전날 뉴욕 증시에 이어 한국과 일본 증시까지 급락세를 보이면서 투자 리스크를 회피하려는 매도가 쏟아져 크게 하락하고 있다. 상하이 종합지수는 이날 전일 대비 77.76…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] China's stock market plunges sharply amid steep declines in U.S., Japan, and South Korea markets... Startup Board drops 2.46%"
       },
       {
         "title": "\"AI붕괴 아니다…수급 불안에 낙폭 확대\"…증시급락 전문가 긴급진단",
@@ -18428,7 +18446,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 고은지 정회인 기자 = 코스피가 6일 장중 5,000선 아래로 급락한 가운데 국내 주요 증권사들은 미국 중간선거 이후 불거진 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "AI Collapse Not the Cause… Price Volatility Widens Due to Supply-Demand Concerns\"… Experts Urgently Diagnose Market Plunge"
       },
       {
         "title": "노무라 \"코스피 3개월 목표치 7,500∼8,000…단기 변동성 반영\"",
@@ -18437,7 +18456,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 강수지 기자 = 글로벌 투자은행(IB) 노무라가 코스피의 향후 3개월 목표치를 7,500∼8,000으로 제시했다. 기존 코스피...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Nomura \"KOSPI 3-Month Target 7,500-8,000... Reflects Short-Term Volatility"
       },
       {
         "title": "'블루웨이브 쇼크' 파랗게 질린 증시…장중 5천피 무너지며 폭락장세",
@@ -18446,7 +18466,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 곽윤아 기자 = 코스피가 연이틀 급락하며 장중 9개월 만에 '5천피'(코스피 5,000)로 추락한 것은 미국 민주당의 중간선거...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Bluewave Shock' Turns Market Pale as Index Plummets 5,000 Points in a Plunge"
       },
       {
         "title": "HS화성, 부산 범천동 민간임대주택사업 수주… 2345억원 규모",
@@ -18455,7 +18476,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "HS화성이 부산 범천동 공공지원 민간임대주택 개발사업에 시공사이자 출자자로 참여한다. HS화성은 부산 부산진구 범천동 858-6번지 일원에서 추진되는 공공지원 민간임대주택 개발사업을 수주했다고 6일 밝혔다. 사업지는…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "HS Hwaseong wins Busan Bangeumcheon-dong private rental housing project worth 234,500,000,000 won"
       },
       {
         "title": "“손뼉 맞추자”더니…‘공공 vs 민간’ 주택공급 주도권 싸움하는 국토부·서울시",
@@ -18464,7 +18486,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "국토교통부와 서울시가 주택 공급 확대를 위한 공조를 강조하면서도 공급 방식을 둘러싸고 팽팽한 신경전을 벌이고 있다. 국토부는 서울시에 정책 협조를 요구한 반면 서울시는 공공 주도 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 매매 (84㎡ 환산)",
+            "labelEn": "Seoul apartment sale (scaled to 84㎡)",
+            "value": "12억 9,921만원",
+            "valueEn": "₩1,299M",
+            "note": "전 면적 평균 · 11/2~11/6 들어온 신고 1,125건 · 증감 보류 · 한 단지·한 계약일 313건을 빼면 13억 3,529만원(812건)",
+            "noteEn": "All-size average · 1,125 filings arrived Nov 2–6 · change withheld · excluding 313 from one complex on one contract date: ₩1,335M (812 filings)"
+          }
+        ],
+        "titleEn": "Clap along,\" says the government, but the Ministry of Land, Infrastructure and Transport and Seoul are fighting over who leads housing supply: public or private."
       },
       {
         "title": "LH, 의정부 우정지구 단독주택용지 등 68필지 공급",
@@ -18473,7 +18508,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(의정부=연합뉴스) 김도윤 기자 = 한국토지주택공사(LH)는 경기 의정부시 우정지구 내 단독주택용지, 근린생활시설용지, 준주거용지 등 68필지를...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "LH to supply 68 plots, including single-family housing land in Uijeonggu's Ojeong area"
       },
       {
         "title": "포천시, 시민·기업 대상 평화경제특구 열린제안 설문",
@@ -18482,7 +18518,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(포천=연합뉴스) 노승혁 기자 = 경기 포천시는 평화경제특구 지정 추진에 대한 시민과 기업의 관심을 높이고 공감대를 확산하기 위해 홍보 슬로건을...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Pocheon City Launches Open Proposal Survey for Peace Economy Special Zone Targeting Citizens and Businesses"
       },
       {
         "title": "[단독] 은마도 1인당 4.6억 재초환 부담금 통지…재건축 단지 초비상",
@@ -18491,7 +18528,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "반포현대도 9일 통지, 재초환 부과 현실화 분담금에 재초환 겹쳐 조합원 부담 가중 서울 주택 공급 핵심인 재건축 사업 변수서울 강남 대치동 은마아파트에 조합원 1인당 약 4억600..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-gangnam.html",
+            "label": "강남구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "강남구 apartment sale (scaled to 84㎡)",
+            "value": "28억 6,064만원",
+            "valueEn": "₩2,861M",
+            "note": "전 면적 평균 · 10/12~11/6 들어온 신고 139건 · 10/30 대비 -0.3%",
+            "noteEn": "All-size average · 139 filings arrived Oct 12–Nov 6 · -0.3% vs Oct 30"
+          }
+        ],
+        "titleEn": "[Exclusive] Eunma-do Residents Notified of 460,000,000 Won Per Person Reconstruction Surcharge...Reconstruction Complex in Crisis"
       },
       {
         "title": "집 안가보고 잡던 원베일리도 14.5억 ‘뚝’, 강남 아파트 시련의 계절 왔다",
@@ -18500,7 +18550,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "강남3구 일주일 새 하락거래 16건 반포 원베일리 14억5000만원 ‘뚝’ 송파 8건 최다…강남 6건·서초 2건 대출규제·자금 부담에 관망세 확산서울 강남3구 아파트 시장에서 직전..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "서초구 apartment sale (scaled to 84㎡)",
+            "value": "24억 6,374만원",
+            "valueEn": "₩2,464M",
+            "note": "전 면적 평균 · 10/12~11/6 들어온 신고 112건 · 10/30 대비 -3.5%",
+            "noteEn": "All-size average · 112 filings arrived Oct 12–Nov 6 · -3.5% vs Oct 30"
+          }
+        ],
+        "titleEn": "집 안가보고 잡던 원베일리도 14.5억 ‘뚝’, 강남 아파트 시련의 계절 왔다"
       },
       {
         "title": "여의도 목화아파트, 최고 49층 416가구 복합단지로 탈바꿈",
@@ -18509,7 +18572,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "서울 영등포구 여의도 목화아파트가 416가구 복합단지로 재건축된다. 서울시는 5일 제22차 정비사업 통합심의위원회를 열고 여의도 목화아파트 재건축사업 통합심의안을 조건부 의결했다고 6일 밝혔다. 1977년 준공된 여…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yeongdeungpo.html",
+            "label": "영등포구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "영등포구 apartment sale (scaled to 84㎡)",
+            "value": "15억 1,646만원",
+            "valueEn": "₩1,516M",
+            "note": "전 면적 평균 · 10/12~11/6 들어온 신고 134건 · 10/30 대비 -2.2%",
+            "noteEn": "All-size average · 134 filings arrived Oct 12–Nov 6 · -2.2% vs Oct 30"
+          }
+        ],
+        "titleEn": "Yeouido Mokhwa Apartment to Transform into Mixed-Use Complex with Up to 49 Floors and 416 Units"
       },
       {
         "title": "“그 많은 정비사업 이주수요 어떡해”…서울 아파트 전셋값 전고점 눈앞",
@@ -18518,7 +18594,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "아파트 전세가격지수 103.5 직전 최고 0.3p 격차 근접 물량품귀·실거주의무 등 원인 향후 6년간 서울 22.2만 가구 이주 “경기도·비아파트로 이주수요 확산 우려”서울 아파트..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-jeonse.html",
+            "label": "서울 전체 아파트 전세 (84㎡ 환산)",
+            "labelEn": "Seoul apartment jeonse (scaled to 84㎡)",
+            "value": "8억 1,540만원",
+            "valueEn": "₩815M",
+            "note": "전 면적 평균 · 11/2~11/6 들어온 신고 677건 · 10/30 대비 +0.5%",
+            "noteEn": "All-size average · 677 filings arrived Nov 2–6 · +0.5% vs Oct 30"
+          }
+        ],
+        "titleEn": "Where to go with all those relocation demands from renovation projects?\"... Seoul's apartment rental prices nearing all-time high"
       },
       {
         "title": "美증시 하룻새 4300조원 증발…기술주 3300조원·M7 1300조원 사라져",
@@ -18527,7 +18616,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]신정원 기자 = 미국 중간선거 민주당 압승 여파로 뉴욕증시가 5일(현지 시간) 시가총액(시총)이 하룻새 3조2000억 달러(약 4300조원)가 증발하는 등 직격탄을 맞았다. 특히 폭락세를 주도한 기술주…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "美증시 하룻새 4300조원 증발…기술주 3300조원·M7 1300조원 사라져"
       },
       {
         "title": "여의도 목화아파트 재건축…여의나루·한강 잇는 416가구 공급",
@@ -18536,7 +18626,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 박대로 기자 = 건립된 지 50여년 된 여의도 목화아파트가 49층 416가구 신규 복합 단지로 재건축된다. 서울시는 지난 5일 제22차 정비사업 통합심의위원회에서 영등포구 여의도동 30번지 일대 '여…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yeongdeungpo.html",
+            "label": "영등포구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "영등포구 apartment sale (scaled to 84㎡)",
+            "value": "15억 1,646만원",
+            "valueEn": "₩1,516M",
+            "note": "전 면적 평균 · 10/12~11/6 들어온 신고 134건 · 10/30 대비 -2.2%",
+            "noteEn": "All-size average · 134 filings arrived Oct 12–Nov 6 · -2.2% vs Oct 30"
+          }
+        ],
+        "titleEn": "Yeouido Mokhwa Apartment Reconstruction... Supply of 416 Units Connecting Yeouinaru and Han River"
       },
       {
         "title": "한달만에 1.1조 몰린 이 예금, 금리도 올랐다",
@@ -18545,7 +18648,8 @@
         "source": "한국경제 경제",
         "category": "rates",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Deposits of 1,100,000,000,000 won lost in a month as interest rates also rose"
       },
       {
         "title": "반포 래미안원베일리 14억 '뚝'…집값 흔들린 단지들 특징은",
@@ -18554,7 +18658,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Bannpo Leemianwonveilly 1,400,000,000 'plummet'... Features of complexes with shaken housing prices"
       },
       {
         "title": "트럼프 \"증시 폭락, 멍청한 민주당 승리 때문…여러분 스스로 탓해야\"",
@@ -18563,7 +18668,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 김승민 기자 = 미국 중간선거 직후인 5일(현지 시간) 뉴욕증시 3대 지수가 일제히 폭락한 가운데, 도널드 트럼프 대통령이 민주당을 지지한 유권자들에게 책임을 돌렸다. 트럼프 대통령은 이날 소셜미디어…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Trump: \"Stock Market Crash Due to Stupid Democratic Victory... You All Should Blame Yourselves"
       },
       {
         "title": "[단독]코스피 폭락·서킷브레이커 발동에 F4 긴급 회동…이틀 연속 시장 점검",
@@ -18572,7 +18678,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[세종=뉴시스]임하은 기자 = 경제·금융 정책 수장 4명, 이른바 'F4'가 코스피 급락과 서킷브레이커 발동에 대응해 이틀 연속 시장상황 점검에 나선다. 6일 관계당국에 따르면 이형일 경제부총리 겸 재정경제부 장관과…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Korea] Kospi Plunge Triggers Circuit Breaker, F4 Holds Emergency Meeting... Two-Day Consecutive Market Inspection"
       },
       {
         "title": "한·중, 실버경제 협력 확대…기업·연구기관 상시교류 논의",
@@ -18581,7 +18688,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[세종=뉴시스]여동준 기자 = 한국과 중국이 고령화에 대응한 실버경제 협력을 확대하기 위해 국장급 회의 정례화와 기업·연구기관 간 상시 교류 채널 구축 방안을 논의했다. 양국 기업 13개사는 별도 교류회에서 기술과…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Korea, China to Expand Silver Economy Cooperation... Discuss Continuous Exchange Between Companies and Research Institutions"
       }
     ]
   }
