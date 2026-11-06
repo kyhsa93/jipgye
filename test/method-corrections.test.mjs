@@ -33,11 +33,11 @@ test("한·영 두 절이 있고 항목 수가 같으며 10건 이하다", async
   const en = items(sectionOf(html, "corrections-en").text);
   assert.ok(ko.length >= 1 && ko.length <= 10, `한국어 ${ko.length}건`);
   assert.equal(en.length, ko.length);
-  assert.equal(ko.length, 7, "일곱 건(#28·#183·#65·#6·#29·#229·#862 1단계 PR)");
+  assert.equal(ko.length, 8, "여덟 건(#28·#183·#65·#6·#29·#229·#862 1단계 PR·#821+#843)");
 });
 
 // #229: 예금자보호 한도 정정 항목. 항목 수·날짜 형식·근거 링크·문장 수·금지어는 위의 일반 시험이 모든 항목에 건다.
-// 여기서는 이 항목이 있고 정정된 값을 말하는지, 서두의 건수 표기가 항목 수와 맞는지만 본다. #862 항목이 더 최근이라 맨 앞은 그쪽이다.
+// 여기서는 이 항목이 있고 정정된 값을 말하는지, 서두의 건수 표기가 항목 수와 맞는지만 본다. 더 최근 항목이 있어 맨 앞은 검사하지 않는다.
 // 날짜 값 자체는 머지일에 따라 달라지므로 검사하지 않는다(#8).
 test("예금자보호 한도 정정 항목(#229)이 한·영에 있고 서두 건수가 항목 수와 맞다", async () => {
   const html = await method();
@@ -50,15 +50,36 @@ test("예금자보호 한도 정정 항목(#229)이 한·영에 있고 서두 �
   for (const w of ["deposit-protection", "KRW 100 million per financial institution", "rate figures and counts are unchanged"]) {
     assert.ok(enFirst.includes(w), `영어 항목에 ${w}`);
   }
-  assert.match(ko.slice(0, ko.indexOf("<ul")), /일곱 건/);
-  assert.match(en.slice(0, en.indexOf("<ul")), /seven corrections/);
+  assert.match(ko.slice(0, ko.indexOf("<ul")), /여덟 건/);
+  assert.match(en.slice(0, en.indexOf("<ul")), /eight corrections/);
 });
 
-// #862 1단계: 맨 앞 항목이 이번 정정이고, 근거는 PR 이다(#862 는 2단계까지 열려 있다). 지난 값을 그대로 둔다고 적는다.
-test("서울 매매 표본 정정 항목이 한·영 맨 앞에 있고 지난 값을 그대로 둔다고 적는다", async () => {
+// #821·#843: 맨 앞 항목이 이번 정정이다. 수치는 11-03 공개 파일 기준(since 05-04)이라 그날 칸 수·벽산 금호동1가 범위를 못 박는다.
+// 화면 데이터가 아니라 method.html 의 고정 문장만 보므로 데일리 값에 따라 갈리지 않는다(#8).
+test("동명 단지 정정 항목(#821·#843)이 한·영 맨 앞에 있고 #switch-house 가 같은 기준을 적는다", async () => {
   const html = await method();
   const ko = items(sectionOf(html, "corrections").text)[0];
   const en = items(sectionOf(html, "corrections-en").text)[0];
+  for (const li of [ko, en]) {
+    assert.match(li, /jipgye\/issues\/821"/);
+    assert.match(li, /jipgye\/issues\/843"/);
+  }
+  for (const w of ["벽산", "84㎡", "18.0~20.0억", "10.2~10.8억", "3,049개 중 64개", "44.3%&rarr;44.4%", "11.1%&rarr;11.0%", "276쌍 중 3쌍", "나눈 효과로 보지 않습니다"]) {
+    assert.ok(ko.includes(w), `한국어 항목에 ${w}`);
+  }
+  for (const w of ["Byeoksan 84㎡", "KRW 1.80&ndash;2.00 billion", "KRW 1.02&ndash;1.08 billion", "64 of 3,049 cells", "from 44.3% to 44.4%", "from 11.1% to 11.0%", "3 of 276", "not read as an effect of the split"]) {
+    assert.ok(en.includes(w), `영어 항목에 ${w}`);
+  }
+  assert.ok(sectionOf(html, "switch-house").text.includes("이름이 같아도 둘 이상의 동에 있으면 동별로 다른 단지로 셉니다."));
+  assert.ok(sectionOf(html, "switch-house-en").text.includes("Complexes sharing a name across more than one dong are counted separately per dong."));
+});
+
+// #862 1단계: 근거는 PR 이다(#862 는 2단계까지 열려 있다). 지난 값을 그대로 둔다고 적는다.
+test("서울 매매 표본 정정 항목이 한·영에 있고 지난 값을 그대로 둔다고 적는다", async () => {
+  const html = await method();
+  const ko = items(sectionOf(html, "corrections").text).find((li) => /jipgye\/pull\/864"/.test(li));
+  const en = items(sectionOf(html, "corrections-en").text).find((li) => /jipgye\/pull\/864"/.test(li));
+  assert.ok(ko && en);
   for (const w of ["313건", "지난 값은 그대로", "5% 이상", "전 면적 환산"]) assert.ok(ko.includes(w), `한국어 항목에 ${w}`);
   for (const w of ["313 filings", "Past figures are left as published", "5% of the sample", "all-size average"]) assert.ok(en.includes(w), `영어 항목에 ${w}`);
   for (const li of [ko, en]) assert.match(li, /jipgye\/pull\/\d+"/);
