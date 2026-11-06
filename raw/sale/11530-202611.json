@@ -1,1 +1,4 @@
-{"kind":"sale","district":"11530","yearMonth":"202611","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-11-01T02:09:31.442Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11530","yearMonth":"202611","ok":true,"resultCode":0,"count":2,"totalCount":2,"observedAt":"2026-11-06T03:23:10.616Z","previousObservedAt":"2026-11-01T02:09:31.442Z","arrivals":{"7cd0cd7cb616":"2026-11-06","151450085a7e":"2026-11-06"},"items":[
+{"aptDong":"","aptNm":"청구","buildYear":1999,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"65,000","dealDay":3,"dealMonth":11,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 구로구","excluUseAr":59.94,"floor":4,"jibun":326,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11530,"slerGbn":"개인","umdNm":"고척동"},
+{"aptDong":"","aptNm":"한마을","buildYear":1999,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"129,500","dealDay":2,"dealMonth":11,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 구로구","excluUseAr":149.97,"floor":11,"jibun":476,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11530,"slerGbn":"개인","umdNm":"개봉동"}
+]}
