@@ -1,24 +1,22 @@
 {
-  "updatedAt": "2026-11-06T03:25:12.542Z",
-  "asOf": "2026-11-06",
+  "updatedAt": "2026-11-07T02:46:54.076Z",
+  "asOf": "2026-11-07",
   "trackedFrom": "2026-08-18",
   "basis": "unique-arrival-key",
-  "comparable": false,
-  "gaps": [
-    "2026-10-23"
-  ],
+  "comparable": true,
+  "gaps": [],
   "current": {
-    "from": "2026-10-31",
-    "to": "2026-11-06",
-    "sale": 1100,
-    "jeonse": 1790,
-    "wolse": 1807,
-    "cancelArrived": 20,
-    "cancelDated": 12,
-    "direct": 138,
-    "directShare": 12.5,
-    "records": 286,
-    "judged": 778,
+    "from": "2026-11-01",
+    "to": "2026-11-07",
+    "sale": 1114,
+    "jeonse": 1778,
+    "wolse": 1763,
+    "cancelArrived": 21,
+    "cancelDated": 17,
+    "direct": 137,
+    "directShare": 12.3,
+    "records": 306,
+    "judged": 799,
     "districts": [
       "11350",
       "11230",
@@ -26,42 +24,42 @@
     ],
     "months": {
       "sale": {
-        "202609": 67,
-        "202610": 945,
-        "202611": 88
+        "202609": 46,
+        "202610": 942,
+        "202611": 126
       },
       "rent": {
-        "202609": 186,
-        "202610": 2482,
-        "202611": 929
+        "202609": 81,
+        "202610": 2072,
+        "202611": 1388
       }
     }
   },
   "previous": {
-    "from": "2026-10-24",
-    "to": "2026-10-30",
-    "sale": 1063,
-    "jeonse": 2185,
-    "wolse": 2295,
-    "cancelArrived": 15,
-    "cancelDated": 18,
-    "direct": 33,
-    "directShare": 3.1,
-    "records": 338,
-    "judged": 876,
+    "from": "2026-10-25",
+    "to": "2026-10-31",
+    "sale": 938,
+    "jeonse": 1922,
+    "wolse": 2077,
+    "cancelArrived": 18,
+    "cancelDated": 19,
+    "direct": 25,
+    "directShare": 2.7,
+    "records": 284,
+    "judged": 768,
     "districts": [
       "11350",
       "11500",
-      "11710"
+      "11530"
     ],
     "months": {
       "sale": {
-        "202609": 209,
-        "202610": 854
+        "202609": 146,
+        "202610": 792
       },
       "rent": {
-        "202609": 407,
-        "202610": 4073
+        "202609": 383,
+        "202610": 3616
       }
     }
   }
