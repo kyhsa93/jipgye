@@ -56,12 +56,13 @@ export async function tryWriteDirectDeals(input) {
   }
 }
 
+// 이 빌더는 build-cancellation.ts에서 원본을 공유받아 실행한다.
+// 단독 실행에서 build-cancellation.ts를 다시 import하면 순환 의존으로 멈출 수 있다.
+export function directDealsCliError() {
+  return "직거래 빌더는 단독 실행을 지원하지 않습니다. scripts/build-cancellation.ts를 실행하세요.";
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
-  const { readRawSales } = await import("./build-cancellation.ts");
-  const { readSameNames } = await import("./realestate-raw.ts");
-  const { recentMonths } = await import("./realestate-source.ts");
-  const { RETENTION_MONTHS } = await import("./realestate-slots.ts");
-  const now = new Date();
-  const months = recentMonths(now, RETENTION_MONTHS);
-  await writeDirectDeals({ byDistrict: await readRawSales(months), months, now, sameNames: await readSameNames() });
+  console.error(directDealsCliError());
+  process.exitCode = 1;
 }
