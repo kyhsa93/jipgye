@@ -1053,5 +1053,18 @@
       "value": "3.00",
       "effectiveFrom": "2026년 08월 27일"
     }
+  },
+  {
+    "date": "2026-11-08",
+    "kospi": {
+      "value": "5,059.69",
+      "change": "-324.11",
+      "direction": "FALLING",
+      "asOf": "11/6"
+    },
+    "baseRate": {
+      "value": "3.00",
+      "effectiveFrom": "2026년 08월 27일"
+    }
   }
 ]
