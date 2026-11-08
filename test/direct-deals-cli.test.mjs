@@ -7,7 +7,7 @@ import test from "node:test";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 test("direct-deals standalone exits promptly with actionable error", () => {
-  const result = spawnSync(process.execPath, ["--experimental-strip-types", "scripts/build-direct-deals.ts"], {
+  const result = spawnSync(process.execPath, ["scripts/build-direct-deals.ts"], {
     cwd: root,
     encoding: "utf8",
     timeout: 10_000,
