@@ -7943,5 +7943,124 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-08",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: 강남 부동산 시장에서 10명 중 7명이 집주인에게 돈을 빌리는 등 이상한 현상이 나타났다. 집값 상승세는 강남에 이어 분당, 광명, 동탄 등 경기 외곽 지역으로 확산되고 있다. 8·3 세제 개편 이후 3개월 만에 서울 아파트 매물 수가 33% 증가했다. 백화점이나 마트가 폐점한 부지에 아파트가 들어서는 사례가 늘고 있다. 평택캠 인접 지역인 한화포레나 지제역 견본주택은 방문객이 많아 북적이고 있다.\n- 기타 경제 소식: 농협은 농지 대출 부실 증가로 어려움을 겪고 있으며, 쌀값 방어에 따른 부채가 5669억 원에 달했다. 한편, 집에서 시간을 보내는 소파 경제는 예상보다 더 많은 비용을 발생시키는 것으로 나타났다. 농협의 재정 상황은 농업 분야의 어려움을 반영하고 있다. 소파 경제는 가정 내 소비 패턴 변화를 보여주는 사례로 주목받고 있다. 두 소식은 각각 다른 분야에서 발생한 사건이다.\n- 금리·예금·투자상품: 채권금리는 급격히 하락했으나 투자자들은 추격 매수냐 관망이냐에 대해 신중한 태도를 보이고 있다. 당첨 소식에 기쁨을 느낀 사람들이 대출 금리 상승으로 인해 오히려 한숨을 쉬고 있다. 3억 원 대출 시 이자가 차이 나는 이유와 금리 낮추는 전략이 주목받고 있다. 채권시장에서는 추세를 예측하기 어려운 상황 속에서 투자자들이 주춤하고 있다. 대출 금리 상승은 당첨자들에게 기쁨보다는 부담으로 다가오고 있다.\n- 증시·환율: 코스피는 '블루 쓰나미'로 인해 급격히 하락했다. 미국 증시의 반등으로 인해 코스피가 충격에서 벗어날 수 있을지 주목된다. 한 투자자는 \"본전만 오면 팔 텐데\"라고 말하며 시장 회복에 대한 불안을 드러냈다. 코스피가 급락한 후 회복까지 걸린 시간은 아직 명확히 밝혀지지 않았다. 관련 기사는 시장의 변동성과 투자자 심리에 대한 분석을 계속 진행하고 있다.",
+      "en": "- Real Estate: In the Gangnam real estate market, seven out of ten people are borrowing money from landlords, an unusual phenomenon. The rising housing prices have spread from Gangnam to areas such as Bundang, Gwangmyeong, and Dongtan in the outskirts of Gyeonggi Province. Three months after the August 3 tax reform, the number of apartment listings in Seoul increased by 33 percent. There are more cases of apartments being built on sites where department stores or supermarkets have closed down. The Hanaforena Jinje Station model house in Hanwha Poerena, which is near Pyeongtaek Cam, is crowded with many visitors.\n- Other Economic News: The agricultural cooperative is experiencing difficulties due to an increase in bad loans for farmland, and its debt reached 566,900,000,000 won as a result of defending rice prices. Meanwhile, the sofa economy, which involves spending time at home, has been found to generate more costs than expected. The financial situation of the agricultural cooperative reflects the difficulties in the agricultural sector. The sofa economy is receiving attention as an example showing changes in household consumption patterns. The two pieces of news are events that occurred in different fields.\n- Rates, Deposits & Investment Products: Bond yields have sharply declined, but investors are showing cautious attitudes regarding whether to chase buying or wait and see. People who felt joy upon winning the lottery are instead sighing due to rising loan interest rates. The reason for the interest difference when taking out a 300,000,000 won loan and strategies to lower interest rates are receiving attention. In the bond market, investors are hesitating amid a situation where predicting the trend is difficult. Rising loan interest rates are approaching winners as a burden rather than a joy.\n- Stocks & FX: The KOSPI sharply declined due to the \"blue tsunami.\" Attention is focused on whether the KOSPI can recover from the shock as the U.S. stock market rebounds. An investor said, \"I'll sell if I just break even,\" revealing anxiety about market recovery. The time it will take for the KOSPI to recover after the sharp decline has not yet been clearly determined. Related articles continue to analyze market volatility and investor sentiment."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "강남 부동산 시장에서 10명 중 7명이 집주인에게 돈을 빌리는 등 이상한 현상이 나타났다. 집값 상승세는 강남에 이어 분당, 광명, 동탄 등 경기 외곽 지역으로 확산되고 있다. 8·3 세제 개편 이후 3개월 만에 서울 아파트 매물 수가 33% 증가했다. 백화점이나 마트가 폐점한 부지에 아파트가 들어서는 사례가 늘고 있다. 평택캠 인접 지역인 한화포레나 지제역 견본주택은 방문객이 많아 북적이고 있다.",
+        "lineEn": "In the Gangnam real estate market, seven out of ten people are borrowing money from landlords, an unusual phenomenon. The rising housing prices have spread from Gangnam to areas such as Bundang, Gwangmyeong, and Dongtan in the outskirts of Gyeonggi Province. Three months after the August 3 tax reform, the number of apartment listings in Seoul increased by 33 percent. There are more cases of apartments being built on sites where department stores or supermarkets have closed down. The Hanaforena Jinje Station model house in Hanwha Poerena, which is near Pyeongtaek Cam, is crowded with many visitors.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "\"10명 중 7명이 집주인한테 돈 빌려\"…강남 부동산서 벌어진 이상 현상",
+            "link": "https://www.newsis.com/view/NISX20261106_0003857572",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "\"강남 다음은 분당·광명·동탄\"…집값 상승 온기, 경기 외곽까지",
+            "link": "https://www.newsis.com/view/NISX20261108_0003859194",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "8·3 세제 개편 이후… 석 달 만에 서울 아파트 매물 33% 늘었다",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/08/EHJ24ODO7ZH6XMQZOGU4CIKCCA/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "백화점·마트 폐점한 부지, 아파트 들어선다",
+            "link": "https://www.newsis.com/view/NISX20261106_0003858151",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "평택캠 인접…한화포레나 지제역 견본주택 인파 '북적'",
+            "link": "https://www.newsis.com/view/NISX20261108_0003859184",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "농협은 농지 대출 부실 증가로 어려움을 겪고 있으며, 쌀값 방어에 따른 부채가 5669억 원에 달했다. 한편, 집에서 시간을 보내는 소파 경제는 예상보다 더 많은 비용을 발생시키는 것으로 나타났다. 농협의 재정 상황은 농업 분야의 어려움을 반영하고 있다. 소파 경제는 가정 내 소비 패턴 변화를 보여주는 사례로 주목받고 있다. 두 소식은 각각 다른 분야에서 발생한 사건이다.",
+        "lineEn": "The agricultural cooperative is experiencing difficulties due to an increase in bad loans for farmland, and its debt reached 566,900,000,000 won as a result of defending rice prices. Meanwhile, the sofa economy, which involves spending time at home, has been found to generate more costs than expected. The financial situation of the agricultural cooperative reflects the difficulties in the agricultural sector. The sofa economy is receiving attention as an example showing changes in household consumption patterns. The two pieces of news are events that occurred in different fields.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[정책 청구서②] 농지 대출 부실 늘고 쌀값 방어엔 '외상' 5669억…농협 이중고",
+            "link": "https://www.newsis.com/view/NISX20261105_0003856077",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "\"집에 있으면 돈 아끼는 줄 알았는데\"…'소파 경제'의 함정",
+            "link": "https://www.hankyung.com/article/202611072412H",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "채권금리는 급격히 하락했으나 투자자들은 추격 매수냐 관망이냐에 대해 신중한 태도를 보이고 있다. 당첨 소식에 기쁨을 느낀 사람들이 대출 금리 상승으로 인해 오히려 한숨을 쉬고 있다. 3억 원 대출 시 이자가 차이 나는 이유와 금리 낮추는 전략이 주목받고 있다. 채권시장에서는 추세를 예측하기 어려운 상황 속에서 투자자들이 주춤하고 있다. 대출 금리 상승은 당첨자들에게 기쁨보다는 부담으로 다가오고 있다.",
+        "lineEn": "Bond yields have sharply declined, but investors are showing cautious attitudes regarding whether to chase buying or wait and see. People who felt joy upon winning the lottery are instead sighing due to rising loan interest rates. The reason for the interest difference when taking out a 300,000,000 won loan and strategies to lower interest rates are receiving attention. In the bond market, investors are hesitating amid a situation where predicting the trend is difficult. Rising loan interest rates are approaching winners as a burden rather than a joy.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "채권금리 빠르게 내렸지만…'추격 매수냐 관망이냐' 채권시장 신중",
+            "link": "https://www.yna.co.kr/view/AKR20261106190600008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "“앞날이 캄캄”…당첨 기쁨은 잠깐, 대출 금리에 한숨만",
+            "link": "https://www.mk.co.kr/news/realestate/12201523",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "같은 3억 대출인데 이자는 왜 다를까…대출금리 낮추는 5가지 전략",
+            "link": "https://www.hankyung.com/article/202611045024i",
+            "source": "한국경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "코스피는 '블루 쓰나미'로 인해 급격히 하락했다. 미국 증시의 반등으로 인해 코스피가 충격에서 벗어날 수 있을지 주목된다. 한 투자자는 \"본전만 오면 팔 텐데\"라고 말하며 시장 회복에 대한 불안을 드러냈다. 코스피가 급락한 후 회복까지 걸린 시간은 아직 명확히 밝혀지지 않았다. 관련 기사는 시장의 변동성과 투자자 심리에 대한 분석을 계속 진행하고 있다.",
+        "lineEn": "The KOSPI sharply declined due to the \"blue tsunami.\" Attention is focused on whether the KOSPI can recover from the shock as the U.S. stock market rebounds. An investor said, \"I'll sell if I just break even,\" revealing anxiety about market recovery. The time it will take for the KOSPI to recover after the sharp decline has not yet been clearly determined. Related articles continue to analyze market volatility and investor sentiment.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "'블루 쓰나미'에 휘청 코스피, 美증시 반등에 충격 벗어날까",
+            "link": "https://www.yna.co.kr/view/AKR20261107025700008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "\"본전만 오면 팔 텐데\"…코스피 급락 후 회복까지 얼마나 걸렸나 [세쓸통]",
+            "link": "https://www.newsis.com/view/NISX20261106_0003858348",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
