@@ -19539,7 +19539,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유향 기자 = 지난주 연일 급락한 코스피가 9일 장중 5천선을 중심으로 등락을 거듭한 뒤 상승세로 방향을 튼 모습이다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi rises over 1% after '5,000 won' battle…Kosdaq also turns up"
       },
       {
         "title": "서초구, 신반포 재건축 3개 단지 착공 '밀착 지원'",
@@ -19548,7 +19549,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "서초구 apartment sale (scaled to 84㎡)",
+            "value": "28억 1,669만원",
+            "valueEn": "₩2,817M",
+            "note": "전 면적 평균 · 최근 4주 계약 115건 · 11/2 대비 +13.2%",
+            "noteEn": "All-size average · 115 deals in the last 4 weeks · +13.2% vs Nov 2"
+          }
+        ],
+        "titleEn": "Seocho District Intensifies Support for Start of Construction on 3 New Banpo Redevelopment Sites"
       },
       {
         "title": "“실무자 적극 지원”…부동산원, 공공건축 설계공모 제도 개정 설명회",
@@ -19557,7 +19571,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "한국부동산원이 공공건축 설계공모 제도 개정에 맞춰 발주기관 실무자 지원에 나섰다. 한국부동산원은 지난 6일 서울 강남구 건설회관에서 전국 공공건축 설계공모 발주기관 실무자를 대상으..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Active Support from Professionals\"…Real Estate Agency Holds Explanation Meeting on Revision of Public Building Design Competition System"
       },
       {
         "title": "[올댓차이나] 중국 증시 상승 출발…상하이지수 0.27%↑",
@@ -19566,7 +19581,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 9일 상승 출발했다. 이날 상하이종합지수는 전거래일보다 0.27% 오른 3659.02로 장을 시작했다. 선전성분지수는 전장 대비 0.87% 상승한 1만1273.28로, 중…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] China's stock market rises on opening... Shanghai Index up 0.27%"
       },
       {
         "title": "보증금 3분의 1을 나라가 책임진다… 전세사기 피해 최소보장제, 10일부터 신청",
@@ -19575,7 +19591,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "전세 사기로 보증금을 잃을 위기에 처한 세입자들을 위해 국가가 잃어버린 돈의 일부를 직접 메워주는 제도가 본격 가동된다. 국토교통부는 오는 13일부터 전세사기 피해자의 최소한의 피해 회복을 지원하는 ‘최소보장제’를…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "The government will cover one-third of the deposit... Security deposit fraud victim minimum guarantee system to be applied starting October 10th"
       },
       {
         "title": "안산시 경제사절단, '우호도시' 독일 아헨특구 대표단과 간담회",
@@ -19584,7 +19601,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(안산=연합뉴스) 최해민 기자 = 경기 안산시는 독일을 방문 중인 시 경제사절단이 아헨특구 및 소속 도시들과 우호 협력 강화를 위한 간담회를 열...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Ansanshi Economic Delegation Holds Meeting with Aachen Special Economic Zone Delegation from Germany, Friendly City"
       },
       {
         "title": "전세사기 피해자 보증금 3분의 1 보장…10일부터 사전 신청",
@@ -19593,7 +19611,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(세종=연합뉴스) 오진송 기자 = 전세사기 피해자가 경매 등을 통해 돌려받은 보증금이 전체 보증금의 3분의 1에 미치지 못하면 정부가 부족분을 ...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Security deposit of 1/3 guaranteed for tenants affected by rental fraud…pre-application starts on 10th"
       },
       {
         "title": "'보증금 3분의1 보장'…전세사기 최소지원금 10일부터 접수",
@@ -19602,7 +19621,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]정유선 기자 = 국토교통부는 오는 13일부터 전세사기피해자의 피해 회복을 지원하는 '최소보장제'를 시행하고 이에 앞서 10일부터 최소지원금·선지급금 사전 신청을 받는다고 9일 밝혔다. 최소보장제는 전세…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Guarantee deposit one-third guarantee\"… minimum support fund for lease fraud applications open October 10th"
       },
       {
         "title": "서초구, 신반포 재건축단지 지원 논의…\"일정 지연 막는다\"",
@@ -19611,7 +19631,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]권혜인 기자 = 서울 서초구는 지난 5일 잠원동 주민센터에서 네 번째 '찾아가는 재건축 신속지원단' 회의를 열고 2027년 상반기 착공을 앞둔 신반포12차·16차·27차 재건축 조합과 사업 추진 현안을…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seocho.html",
+            "label": "서초구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "서초구 apartment sale (scaled to 84㎡)",
+            "value": "28억 1,669만원",
+            "valueEn": "₩2,817M",
+            "note": "전 면적 평균 · 최근 4주 계약 115건 · 11/2 대비 +13.2%",
+            "noteEn": "All-size average · 115 deals in the last 4 weeks · +13.2% vs Nov 2"
+          }
+        ],
+        "titleEn": "Seocho District to Discuss Support for Shin Banpo Redevelopment Project...\"Prevent Schedule Delays"
       },
       {
         "title": "[속보] 코스피, 1%대 오름세로 상승탄력 강화…삼전닉스 3∼5%↑",
@@ -19620,7 +19653,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Breaking News] Kospi Rises with Strong Uptrend in 1% Range... Samsung Electronics Up 3∼5%"
       },
       {
         "title": "\"철책 너머 세계로\"…김포시, 2차 평화경제특구 도전",
@@ -19629,7 +19663,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(김포=연합뉴스) 천정인 기자 = 경기도 김포시는 평화경제특구 2차 후보지 공모에 도전한다고 9일 밝혔다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Beyond the Iron Curtain to the World\"... Gimpo City Challenges for Second Peace Economy Special Zone"
       },
       {
         "title": "금호건설, '시흥 거모 아테라' 견본주택 개관…분양 돌입",
@@ -19638,7 +19673,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]이연희 기자 = 금호건설은 지난 6일 경기도 시흥시 거모공공주택지구 A6블록에 공급하는 '시흥 거모 아테라' 견본주택 문을 열고 분양 일정에 돌입했다고 9일 밝혔다. 민간참여 신혼희망타운으로 조성되는…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kyoungbo Construction opens model house for 'Sihung Geommo Atera' and starts sales"
       },
       {
         "title": "日증시, 美기술주 반등에 상승 출발…닛케이 0.92%↑",
@@ -19647,7 +19683,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]문은주 기자 = 9일 일본 도쿄증시에서 닛케이225지수(닛케이평균주가)는 상승 출발했다. 니혼게이자이신문에 따르면 이날 닛케이지수는 직전 거래일 종가 대비 525.93포인트(0.92%) 오른 5만796…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Tokyo Stock Exchange Rises on U.S. Tech Stocks Recovery... Nikkei Up 0.92%"
       },
       {
         "title": "“서울보다 경기가 더 뜨겁다”…수도권 집값 상승 주도권 바뀌나",
@@ -19656,7 +19693,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "경기 아파트값 8주째 서울 추월 서울 0.07%·경기 0.20% 격차 확대 전국 상승률 상위 10곳 모두 경기 서울·경기 집값 탈동조화 ‘뚜렷’서울 아파트값 상승세가 주춤하는 사이..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 매매 (84㎡ 환산)",
+            "labelEn": "Seoul apartment sale (scaled to 84㎡)",
+            "value": "13억 8,484만원",
+            "valueEn": "₩1,385M",
+            "note": "전 면적 평균 · 최근 4주 계약 3,216건 · 증감 보류 · 한 단지·한 계약일 170건을 빼면 13억 4,317만원(3,046건)",
+            "noteEn": "All-size average · 3,216 deals in the last 4 weeks · change withheld · excluding 170 from one complex on one contract date: ₩1,343M (3,046 deals)"
+          }
+        ],
+        "titleEn": "Busan is hotter than Seoul\"… Could the capital region's rising housing prices shift leadership?"
       },
       {
         "title": "서울 아파트 중·소형 가격 차 1년 새 30% 뚝… 1억7000만원까지 좁혀져",
@@ -19665,7 +19715,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "국민 평형으로 불리는 전용면적 84㎡와 59㎡의 아파트 값 차이가 1억7000만원 수준으로 줄어든 것으로 나타났다. 대출 규제 강화로 서울 아파트 소형 평수 수요가 늘어난 영향이다. 9일 부동산 전문 리서치업체 리얼…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 매매 (84㎡ 환산)",
+            "labelEn": "Seoul apartment sale (scaled to 84㎡)",
+            "value": "13억 8,484만원",
+            "valueEn": "₩1,385M",
+            "note": "전 면적 평균 · 최근 4주 계약 3,216건 · 증감 보류 · 한 단지·한 계약일 170건을 빼면 13억 4,317만원(3,046건)",
+            "noteEn": "All-size average · 3,216 deals in the last 4 weeks · change withheld · excluding 170 from one complex on one contract date: ₩1,343M (3,046 deals)"
+          }
+        ],
+        "titleEn": "Price gap between mid-sized and small apartments in Seoul narrows by 30% in a year, down to 170,000,000 won"
       },
       {
         "title": "서울시, 직원 아이디어로 야간경제·AI행정 혁신…정책 8건 발표",
@@ -19674,7 +19737,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 김동규 기자 = 서울시가 공무원들의 현장 아이디어를 정책으로 발전시켜 야간경제 활성화와 인공지능(AI) 행정혁신 등 시민 삶의...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Seoul Announces 8 Policies to Innovate Nighttime Economy and AI Administration Through Employee Ideas"
       },
       {
         "title": "“목동 첫 래미안 브랜드 아파트”…삼성물산, 목동13단지 재건축 수주",
@@ -19683,7 +19747,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "21개동 3757가구·단지명 ‘래미안 모브13’ 공사비 2조3763억원 규모 남향 배치·조합원 100% 4베이 이상 적용 대규모 센트럴 파크·공중 산책로 조성 101개 프로그램 커..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Samsung Engineering & Construction secures contract for reconstruction of Muldong 13th Site"
       },
       {
         "title": "“우리도 재건축 간다”…일산 백송마을 첫 특별정비구역 지정 기대감",
@@ -19692,7 +19757,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "백송마을 연내 지정 가시권 최고 49층·3686가구로 재탄생 후속지구 3곳도 자문 절차 착수경기 고양시가 일산신도시 선도지구에 이어 후속 지구의 특별정비구역 지정에도 속도를 내고 ..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-guro.html",
+            "label": "구로구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "구로구 apartment sale (scaled to 84㎡)",
+            "value": "9억 5,871만원",
+            "valueEn": "₩959M",
+            "note": "전 면적 평균 · 최근 4주 계약 199건 · 11/2 대비 +4.8%",
+            "noteEn": "All-size average · 199 deals in the last 4 weeks · +4.8% vs Nov 2"
+          }
+        ],
+        "titleEn": "Even we are rebuilding\"…Expectations rise as Ilsan Baeksong Neighborhood's first special redevelopment zone is designated"
       },
       {
         "title": "코스피, 장초반 보합세로 '5천선' 사수전…코스닥 하락(종합)",
@@ -19701,7 +19779,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유향 기자 = 최근 연일 급락한 코스피가 9일 장 초반 보합권에서 등락하고 있다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi holds above 5,000 in early trading as market remains flat; Kosdaq declines (comprehensive)"
       },
       {
         "title": "[주간 뉴욕증시] AI株 급락 후 반등 이어질까…물가·실적에 촉각",
@@ -19710,7 +19789,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]박미선 기자 = 미국 뉴욕증시가 인공지능(AI) 관련주 급락 이후 반등을 시도하는 가운데 이번 주 발표되는 주요 물가지표와 AI 인프라 기업들의 실적이 증시 향방을 좌우할 전망이다. 예상보다 강한 고용…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Weekly New York Stock Market: Will AI Stocks Continue to Recover After Sharp Drop... Watching Inflation and Earnings"
       },
       {
         "title": "삼성물산, 2.4조 목동13단지 재건축 수주…목동에 첫 '래미안'",
@@ -19719,7 +19799,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 박성환 기자 = 삼성물산 건설부문이 서울 양천구 목동13단지 재건축 사업의 시공권을 확보했다. 목동에 '래미안' 브랜드가 들어서는 것은 이번이 처음이다. 삼성물산은 지난 7일 열린 목동13단지 재건축…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yangcheon.html",
+            "label": "양천구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "양천구 apartment sale (scaled to 84㎡)",
+            "value": "12억 3,924만원",
+            "valueEn": "₩1,239M",
+            "note": "전 면적 평균 · 최근 4주 계약 102건 · 11/2 대비 +6.3%",
+            "noteEn": "All-size average · 102 deals in the last 4 weeks · +6.3% vs Nov 2"
+          }
+        ],
+        "titleEn": "Samsung C&T wins 2,400,000,000,000 won Mugdong 13th Phase reconstruction project... first 'Lemian' in Mugdong"
       },
       {
         "title": "씨티 \"반도체 꺾이면 금리인상 조기종료…내년 하반기 인하\"",
@@ -19728,7 +19821,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 이도흔 기자 = 반도체 수출이 예상과 달리 꺾일 경우 한국은행이 금리 인상 사이클을 조기에 종료하고 내년 하반기부터 인하에 나...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "City \"If Semiconductor Slump, Early End to Rate Hikes... Rate Cuts in Second Half of Next Year"
       },
       {
         "title": "‘1기 신도시’ 산본, 아파트 거래량 108% 늘었는데… 정작 가격 오른 곳은 이곳",
@@ -19737,7 +19831,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "지난 1년 동안 수도권 1기 신도시 부동산 시장이 지역별 규제 여부 등에 따라 엇갈린 행보를 보인 것으로 파악됐다. 규제를 피한 산본과 중동 등에 거래가 몰렸지만, 가격은 분당과 평촌이 더 큰 폭으로 오른 것으로 나…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "First-Generation New Town Sanbon Sees 108% Increase in Apartment Transactions, Yet Prices Have Risen Here"
       },
       {
         "title": "삼성물산, 목동 13단지 재건축 시공사 선정… 목동 첫 ‘래미안’",
@@ -19746,7 +19841,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "삼성물산 건설부문(이하 삼성물산)이 서울 양천구 목동13단지 재건축 사업의 시공사로 최종 선정됐다. 목동에 래미안이 들어서는 첫 사례다. 삼성물산은 목동13단지 재건축 사업시행자인 대신자산신탁이 7일 개최한 토지등소…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yangcheon.html",
+            "label": "양천구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "양천구 apartment sale (scaled to 84㎡)",
+            "value": "12억 3,924만원",
+            "valueEn": "₩1,239M",
+            "note": "전 면적 평균 · 최근 4주 계약 102건 · 11/2 대비 +6.3%",
+            "noteEn": "All-size average · 102 deals in the last 4 weeks · +6.3% vs Nov 2"
+          }
+        ],
+        "titleEn": "Samsung C&T selected as construction company for Muldong 13th District redevelopment... first 'Lemian' in Muldong"
       }
     ]
   }
