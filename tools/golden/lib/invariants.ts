@@ -178,7 +178,7 @@ export function jsClassRefs(js) {
 
 /**
  * 소스가 문자열로 쓰는 마크업의 class를 뽑는다: `class="a b"`, `class=\"a b\"`, `class='a'`.
- * 루트 test/*.mjs(구운 HTML을 정규식으로 읽는 시험)와 scripts/build-*-pages.mjs(틀을 문자열로 패치)가 기대는 이름이다.
+ * 루트 test/*.mjs(구운 HTML을 정규식으로 읽는 시험)와 scripts/build-*-pages.ts(틀을 문자열로 패치)가 기대는 이름이다.
  * 이름 모양이 아닌 조각(`${x}`, 정규식 `[^"]*`)은 버린다.
  */
 export function markupClassRefs(source) {
@@ -557,7 +557,7 @@ export function formatHookList({ js, markup }) {
       "//": "기계로 뽑은 훅 클래스 목록(#274). 손으로 고치지 않는다 — 소스가 는 경우에만 `node bin/invariants.ts --hooks-write --repo ../..`. 줄어서 어긋났으면 다시 만들지 말고 왜 줄었는지부터 본다.",
       sources: {
         js: "docs/ 아래 .js와 docs/*.html 인라인 script의 querySelector(All)·closest·matches·getElementsByClassName·classList·className",
-        markup: 'test/*.mjs와 scripts/build-*-pages.mjs가 문자열로 쓰는 class="…"',
+        markup: 'test/*.mjs와 scripts/build-*-pages.ts가 문자열로 쓰는 class="…"',
       },
       js,
       markup,
