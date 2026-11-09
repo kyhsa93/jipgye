@@ -13,7 +13,7 @@ import { shiftMonth, yearMonthOf } from "./realestate-slots.ts";
 /**
  * 환산 월 비용(평균금리 가정) — #587 PR2(#620). 판정: https://github.com/kyhsa93/jipgye/issues/587#issuecomment-6397183813
  *
- * 정의(80/20 금융비 환산): 보증금의 80%(LOAN_LTV)는 전세자금대출 평균금리(ECOS 121Y015, 잔액 기준)로 빌리고, 나머지 20%는
+ * 정의(80/20 금융비 환산): 실제 대출 한도가 아닌 계산 가정으로 보증금의 80%(LOAN_LTV)는 전세자금대출 평균금리(ECOS 121Y015, 잔액 기준)로 빌리고, 나머지 20%는
  * 자기 돈이라 정기예금 신규취급 평균금리(121Y002) 세후(15.4%)만큼 기회비용을 붙인다. 월세안은 월세 + 같은 금융비다.
  * 식은 전세vs월세 화면과 같은 conversion.ts 의 monthlyCost 한 벌만 부른다(사본 없음):
  *   - 집에 드는 쪽: monthlyCost(보증금, 월세, 가진 돈 = 보증금의 20%) → 80% 대출이자 + 월세(남는 돈 0).
