@@ -1,76 +1,65 @@
 {
-  "updatedAt": "2026-11-09T02:36:40.769Z",
+  "updatedAt": "2026-11-10T04:36:17.252Z",
   "window": {
-    "basis": "contract",
-    "from": "2026-09-07",
-    "to": "2026-10-04",
-    "until": "2026-10-05",
-    "weeks": 4,
-    "districtFrom": "2026-09-07",
+    "basis": "arrival",
+    "from": "2026-11-09",
+    "to": "2026-11-10",
+    "until": "2026-11-16",
+    "weeks": 1,
+    "districtFrom": "2026-10-19",
     "districtWeeks": 4
   },
   "overall": {
     "sale": {
-      "avgPricePerM2": 16485685.671696365,
-      "avgPricePerPyeong10k": 5450,
-      "transactionCount": 3216,
-      "concentration": {
-        "rows": 170,
-        "share": 0.0529,
-        "without": {
-          "avgPricePerPyeong10k": 5286,
-          "transactionCount": 3046
-        }
-      },
+      "avgPricePerM2": 15008415.99747445,
+      "avgPricePerPyeong10k": 4961,
+      "transactionCount": 269,
       "changeWithheld": {
-        "reason": "concentration",
-        "current": 3216,
-        "baseline": 36,
+        "reason": "baseline-concentration",
+        "current": 269,
+        "baseline": 549,
         "min": 100,
+        "baselineDate": "2026-11-03",
         "text": {
           "ko": {
-            "cell": "3,216건 · 증감 보류 · 한 단지·한 계약일 170건을 빼면 5,286만원(3,046건)",
-            "detail": "증감 보류 · 한 단지·한 계약일 170건을 빼면 5,286만원(3,046건)",
-            "ratio": "매매 표본에 한 단지·한 계약일 170건이 들어 있어, 빼면 58.3%"
+            "cell": "269건 · 증감 보류 — 11/3 표본에 한 단지·한 계약일 행이 5% 이상"
           },
           "en": {
-            "cell": "3,216 deals · change withheld · excluding 170 from one complex on one contract date: ₩52.9M (3,046 deals)",
-            "detail": "change withheld · excluding 170 from one complex on one contract date: ₩52.9M (3,046 deals)",
-            "ratio": "the sale sample includes 170 from one complex on one contract date; without them 58.3%"
+            "cell": "269 filings · change withheld — 5%+ of the Nov 3 sample was one complex on one contract date"
           }
         }
       }
     },
     "saleNational84": {
-      "avgPricePerM2": 15561908.618149657,
-      "avgPricePerPyeong10k": 5144,
-      "transactionCount": 990,
+      "avgPricePerM2": 14527589.742096951,
+      "avgPricePerPyeong10k": 4803,
+      "transactionCount": 84,
       "changeWithheld": {
-        "current": 990,
-        "baseline": 11,
+        "current": 84,
+        "baseline": 83,
         "min": 100
       }
     },
     "jeonse": {
-      "avgDepositPerM2": 9329696.208906738,
-      "avgDepositPerPyeong10k": 3084,
-      "transactionCount": 2740,
-      "changeWithheld": {
-        "current": 2740,
-        "baseline": 7,
-        "min": 100
-      }
+      "avgDepositPerM2": 8779789.296604222,
+      "avgDepositPerPyeong10k": 2902,
+      "transactionCount": 429,
+      "change": {
+        "value10k": -311,
+        "percent": -9.679427326486149
+      },
+      "baselineDate": "2026-11-03"
     },
     "wolse": {
-      "avgConvertedPerPyeong10k": 3155,
-      "avgDeposit10k": 21783,
-      "avgMonthlyRent10k": 133,
-      "transactionCount": 3987,
-      "changeWithheld": {
-        "current": 3987,
-        "baseline": 6,
-        "min": 100
-      }
+      "avgConvertedPerPyeong10k": 3265,
+      "avgDeposit10k": 25397,
+      "avgMonthlyRent10k": 143,
+      "transactionCount": 334,
+      "change": {
+        "value10k": 3,
+        "percent": 0.09196811771919068
+      },
+      "baselineDate": "2026-11-03"
     }
   },
   "districts": [
@@ -78,1125 +67,1125 @@
       "code": "11110",
       "name": "종로구",
       "sale": {
-        "avgPricePerM2": 16063308.10331604,
-        "avgPricePerPyeong10k": 5310,
-        "transactionCount": 25,
+        "avgPricePerM2": 17288490.395102713,
+        "avgPricePerPyeong10k": 5715,
+        "transactionCount": 23,
         "change": {
-          "value10k": -361,
-          "percent": -6.365720331511198
+          "value10k": 5,
+          "percent": 0.08756567425569177
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 15450167.412841756,
-        "avgPricePerPyeong10k": 5108,
-        "transactionCount": 6,
+        "avgPricePerM2": 18894511.146195732,
+        "avgPricePerPyeong10k": 6246,
+        "transactionCount": 7,
         "changeWithheld": {
-          "current": 6,
+          "current": 7,
           "baseline": 9,
           "min": 20
         }
       },
       "jeonse": {
-        "avgDepositPerM2": 8052767.982913923,
-        "avgDepositPerPyeong10k": 2662,
-        "transactionCount": 20,
+        "avgDepositPerM2": 9402259.419064276,
+        "avgDepositPerPyeong10k": 3108,
+        "transactionCount": 27,
         "change": {
-          "value10k": -654,
-          "percent": -19.722557297949336
+          "value10k": -234,
+          "percent": -7.001795332136446
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 3368,
-        "avgDeposit10k": 9532,
-        "avgMonthlyRent10k": 119,
-        "transactionCount": 65,
+        "avgConvertedPerPyeong10k": 3590,
+        "avgDeposit10k": 22421,
+        "avgMonthlyRent10k": 142,
+        "transactionCount": 54,
         "change": {
-          "value10k": -409,
-          "percent": -10.828700026476039
+          "value10k": -209,
+          "percent": -5.501447749407739
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11140",
       "name": "중구",
       "sale": {
-        "avgPricePerM2": 16298707.522839619,
-        "avgPricePerPyeong10k": 5388,
-        "transactionCount": 33,
+        "avgPricePerM2": 17563466.90532024,
+        "avgPricePerPyeong10k": 5806,
+        "transactionCount": 41,
         "change": {
-          "value10k": -84,
-          "percent": -1.5350877192982455
+          "value10k": 355,
+          "percent": 6.512566501559347
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 18604805.05525509,
-        "avgPricePerPyeong10k": 6150,
-        "transactionCount": 9,
+        "avgPricePerM2": 19095203.755757995,
+        "avgPricePerPyeong10k": 6312,
+        "transactionCount": 8,
         "changeWithheld": {
-          "current": 9,
+          "current": 8,
           "baseline": 11,
           "min": 20
         }
       },
       "jeonse": {
-        "avgDepositPerM2": 9883731.505226031,
-        "avgDepositPerPyeong10k": 3267,
-        "transactionCount": 38,
+        "avgDepositPerM2": 10445108.720009947,
+        "avgDepositPerPyeong10k": 3453,
+        "transactionCount": 36,
         "change": {
-          "value10k": 101,
-          "percent": 3.1901452937460517
+          "value10k": 294,
+          "percent": 9.306742640075974
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 3718,
-        "avgDeposit10k": 17430,
-        "avgMonthlyRent10k": 196,
+        "avgConvertedPerPyeong10k": 3335,
+        "avgDeposit10k": 14815,
+        "avgMonthlyRent10k": 146,
         "transactionCount": 86,
         "change": {
-          "value10k": 369,
-          "percent": 11.018214392355926
+          "value10k": -22,
+          "percent": -0.655347036044087
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11170",
       "name": "용산구",
       "sale": {
-        "avgPricePerM2": 32211537.362946786,
-        "avgPricePerPyeong10k": 10648,
-        "transactionCount": 36,
+        "avgPricePerM2": 30117959.85311587,
+        "avgPricePerPyeong10k": 9956,
+        "transactionCount": 46,
         "change": {
-          "value10k": 75,
-          "percent": 0.7093540149437246
+          "value10k": -366,
+          "percent": -3.5458244526254603
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 26429269.278711718,
-        "avgPricePerPyeong10k": 8737,
-        "transactionCount": 7,
+        "avgPricePerM2": 25705507.327195615,
+        "avgPricePerPyeong10k": 8498,
+        "transactionCount": 11,
         "changeWithheld": {
-          "current": 7,
-          "baseline": 7,
+          "current": 11,
+          "baseline": 10,
           "min": 20
         }
       },
       "jeonse": {
-        "avgDepositPerM2": 10790591.939479752,
-        "avgDepositPerPyeong10k": 3567,
-        "transactionCount": 86,
+        "avgDepositPerM2": 10287465.08449859,
+        "avgDepositPerPyeong10k": 3401,
+        "transactionCount": 80,
         "change": {
-          "value10k": -96,
-          "percent": -2.620802620802621
+          "value10k": -221,
+          "percent": -6.101601325234677
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 4123,
-        "avgDeposit10k": 31080,
-        "avgMonthlyRent10k": 262,
-        "transactionCount": 93,
+        "avgConvertedPerPyeong10k": 3762,
+        "avgDeposit10k": 27192,
+        "avgMonthlyRent10k": 266,
+        "transactionCount": 82,
         "change": {
-          "value10k": 789,
-          "percent": 23.66526694661068
+          "value10k": 226,
+          "percent": 6.391402714932126
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11200",
       "name": "성동구",
       "sale": {
-        "avgPricePerM2": 25392661.74770821,
-        "avgPricePerPyeong10k": 8394,
-        "transactionCount": 65,
+        "avgPricePerM2": 23926969.577021983,
+        "avgPricePerPyeong10k": 7910,
+        "transactionCount": 62,
         "change": {
-          "value10k": 370,
-          "percent": 4.611166500498505
+          "value10k": 115,
+          "percent": 1.475304682488775
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 24176058.510734834,
-        "avgPricePerPyeong10k": 7992,
+        "avgPricePerM2": 21944888.10193385,
+        "avgPricePerPyeong10k": 7255,
         "transactionCount": 26,
         "change": {
-          "value10k": 756,
-          "percent": 10.44776119402985
+          "value10k": 9,
+          "percent": 0.12420645873585426
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 10790283.627268357,
-        "avgDepositPerPyeong10k": 3567,
-        "transactionCount": 102,
+        "avgDepositPerM2": 10838312.920788784,
+        "avgDepositPerPyeong10k": 3583,
+        "transactionCount": 125,
         "change": {
-          "value10k": -135,
-          "percent": -3.6466774716369525
+          "value10k": 2,
+          "percent": 0.05585032113934655
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 4236,
-        "avgDeposit10k": 27153,
-        "avgMonthlyRent10k": 226,
-        "transactionCount": 140,
+        "avgConvertedPerPyeong10k": 4120,
+        "avgDeposit10k": 30498,
+        "avgMonthlyRent10k": 242,
+        "transactionCount": 123,
         "change": {
-          "value10k": 119,
-          "percent": 2.890454214233665
+          "value10k": 25,
+          "percent": 0.6105006105006106
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11215",
       "name": "광진구",
       "sale": {
-        "avgPricePerM2": 20079277.142573565,
-        "avgPricePerPyeong10k": 6638,
-        "transactionCount": 46,
+        "avgPricePerM2": 21845529.923594926,
+        "avgPricePerPyeong10k": 7222,
+        "transactionCount": 39,
         "change": {
-          "value10k": -379,
-          "percent": -5.401168590565769
+          "value10k": 75,
+          "percent": 1.049391353015251
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 21352622.808181804,
-        "avgPricePerPyeong10k": 7059,
-        "transactionCount": 16,
+        "avgPricePerM2": 24039939.558520567,
+        "avgPricePerPyeong10k": 7947,
+        "transactionCount": 15,
         "changeWithheld": {
-          "current": 16,
-          "baseline": 15,
+          "current": 15,
+          "baseline": 17,
           "min": 20
         }
       },
       "jeonse": {
-        "avgDepositPerM2": 9149520.566024411,
-        "avgDepositPerPyeong10k": 3025,
-        "transactionCount": 46,
+        "avgDepositPerM2": 10505570.505397564,
+        "avgDepositPerPyeong10k": 3473,
+        "transactionCount": 63,
         "change": {
-          "value10k": -424,
-          "percent": -12.29341838213975
+          "value10k": -1,
+          "percent": -0.02878526194588371
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 3561,
-        "avgDeposit10k": 25766,
-        "avgMonthlyRent10k": 116,
-        "transactionCount": 98,
+        "avgConvertedPerPyeong10k": 3646,
+        "avgDeposit10k": 30103,
+        "avgMonthlyRent10k": 141,
+        "transactionCount": 92,
         "change": {
-          "value10k": -104,
-          "percent": -2.8376534788540244
+          "value10k": -34,
+          "percent": -0.9239130434782609
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11230",
       "name": "동대문구",
       "sale": {
-        "avgPricePerM2": 14272277.173076563,
-        "avgPricePerPyeong10k": 4718,
-        "transactionCount": 106,
+        "avgPricePerM2": 14186897.620496426,
+        "avgPricePerPyeong10k": 4690,
+        "transactionCount": 439,
         "change": {
-          "value10k": 119,
-          "percent": 2.5875190258751903
+          "value10k": -9,
+          "percent": -0.1915301127899553
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 14492900.333078884,
-        "avgPricePerPyeong10k": 4791,
-        "transactionCount": 36,
+        "avgPricePerM2": 14578067.342463685,
+        "avgPricePerPyeong10k": 4819,
+        "transactionCount": 47,
         "change": {
-          "value10k": 36,
-          "percent": 0.7570977917981072
+          "value10k": 102,
+          "percent": 2.162391350434598
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 8729354.04938797,
-        "avgDepositPerPyeong10k": 2886,
-        "transactionCount": 66,
+        "avgDepositPerM2": 8547849.124739736,
+        "avgDepositPerPyeong10k": 2826,
+        "transactionCount": 142,
         "change": {
-          "value10k": 38,
-          "percent": 1.3342696629213482
+          "value10k": -46,
+          "percent": -1.6016713091922006
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 2745,
-        "avgDeposit10k": 14852,
-        "avgMonthlyRent10k": 109,
-        "transactionCount": 158,
+        "avgConvertedPerPyeong10k": 3075,
+        "avgDeposit10k": 15634,
+        "avgMonthlyRent10k": 138,
+        "transactionCount": 132,
         "change": {
-          "value10k": -257,
-          "percent": -8.560959360426383
+          "value10k": 73,
+          "percent": 2.4317121918720854
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11260",
       "name": "중랑구",
       "sale": {
-        "avgPricePerM2": 10090452.135097355,
-        "avgPricePerPyeong10k": 3336,
-        "transactionCount": 137,
+        "avgPricePerM2": 10246071.60453069,
+        "avgPricePerPyeong10k": 3387,
+        "transactionCount": 114,
         "change": {
-          "value10k": -201,
-          "percent": -5.682782018659881
+          "value10k": -78,
+          "percent": -2.2510822510822512
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 10293792.607086701,
-        "avgPricePerPyeong10k": 3403,
-        "transactionCount": 49,
+        "avgPricePerM2": 11050988.951451546,
+        "avgPricePerPyeong10k": 3653,
+        "transactionCount": 29,
         "change": {
-          "value10k": -482,
-          "percent": -12.406692406692407
+          "value10k": -196,
+          "percent": -5.092231748506106
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 6301587.725921656,
-        "avgDepositPerPyeong10k": 2083,
-        "transactionCount": 44,
+        "avgDepositPerM2": 6906118.975298108,
+        "avgDepositPerPyeong10k": 2283,
+        "transactionCount": 55,
         "change": {
-          "value10k": -189,
-          "percent": -8.318661971830986
+          "value10k": 52,
+          "percent": 2.3307933662034963
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 2527,
-        "avgDeposit10k": 13950,
-        "avgMonthlyRent10k": 66,
-        "transactionCount": 171,
+        "avgConvertedPerPyeong10k": 2016,
+        "avgDeposit10k": 9113,
+        "avgMonthlyRent10k": 44,
+        "transactionCount": 227,
         "change": {
-          "value10k": 624,
-          "percent": 32.79033105622701
+          "value10k": 101,
+          "percent": 5.274151436031332
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11290",
       "name": "성북구",
       "sale": {
-        "avgPricePerM2": 13403646.532900045,
-        "avgPricePerPyeong10k": 4431,
-        "transactionCount": 151,
+        "avgPricePerM2": 13398122.064592686,
+        "avgPricePerPyeong10k": 4429,
+        "transactionCount": 165,
         "change": {
-          "value10k": -66,
-          "percent": -1.467645096731154
+          "value10k": -69,
+          "percent": -1.5340151178301467
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 11651750.488035977,
-        "avgPricePerPyeong10k": 3852,
-        "transactionCount": 52,
+        "avgPricePerM2": 13062851.90773988,
+        "avgPricePerPyeong10k": 4318,
+        "transactionCount": 49,
         "change": {
-          "value10k": -311,
-          "percent": -7.470574105212586
+          "value10k": 161,
+          "percent": 3.8729853259562184
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 7869183.593043589,
-        "avgDepositPerPyeong10k": 2601,
-        "transactionCount": 78,
+        "avgDepositPerM2": 8495715.273116436,
+        "avgDepositPerPyeong10k": 2809,
+        "transactionCount": 107,
         "change": {
-          "value10k": -170,
-          "percent": -6.134969325153374
+          "value10k": 13,
+          "percent": 0.46494992846924177
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 2704,
-        "avgDeposit10k": 20032,
-        "avgMonthlyRent10k": 118,
-        "transactionCount": 108,
+        "avgConvertedPerPyeong10k": 2805,
+        "avgDeposit10k": 21581,
+        "avgMonthlyRent10k": 125,
+        "transactionCount": 123,
         "change": {
-          "value10k": -78,
-          "percent": -2.803738317757009
+          "value10k": 53,
+          "percent": 1.9258720930232558
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11305",
       "name": "강북구",
       "sale": {
-        "avgPricePerM2": 10203552.048883943,
-        "avgPricePerPyeong10k": 3373,
-        "transactionCount": 69,
+        "avgPricePerM2": 9919862.52551202,
+        "avgPricePerPyeong10k": 3279,
+        "transactionCount": 83,
         "change": {
-          "value10k": 28,
-          "percent": 0.837070254110613
+          "value10k": -67,
+          "percent": -2.0023909145248058
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 10191380.845037514,
-        "avgPricePerPyeong10k": 3369,
-        "transactionCount": 24,
-        "change": {
-          "value10k": 48,
-          "percent": 1.4453477868112015
-        },
-        "baselineDate": "2026-11-02"
-      },
-      "jeonse": {
-        "avgDepositPerM2": 6838951.467882522,
-        "avgDepositPerPyeong10k": 2261,
-        "transactionCount": 48,
-        "change": {
-          "value10k": -337,
-          "percent": -12.971516551193227
-        },
-        "baselineDate": "2026-11-02"
-      },
-      "wolse": {
-        "avgConvertedPerPyeong10k": 2567,
-        "avgDeposit10k": 8677,
-        "avgMonthlyRent10k": 105,
-        "transactionCount": 57,
+        "avgPricePerM2": 9732672.869719736,
+        "avgPricePerPyeong10k": 3217,
+        "transactionCount": 33,
         "change": {
           "value10k": -78,
-          "percent": -2.9489603024574667
+          "percent": -2.3672230652503794
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
+      },
+      "jeonse": {
+        "avgDepositPerM2": 7678004.934819019,
+        "avgDepositPerPyeong10k": 2538,
+        "transactionCount": 47,
+        "change": {
+          "value10k": -79,
+          "percent": -3.0187237294612155
+        },
+        "baselineDate": "2026-11-03"
+      },
+      "wolse": {
+        "avgConvertedPerPyeong10k": 2398,
+        "avgDeposit10k": 12936,
+        "avgMonthlyRent10k": 119,
+        "transactionCount": 44,
+        "change": {
+          "value10k": -207,
+          "percent": -7.946257197696736
+        },
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11320",
       "name": "도봉구",
       "sale": {
-        "avgPricePerM2": 8741344.347352924,
-        "avgPricePerPyeong10k": 2890,
-        "transactionCount": 209,
+        "avgPricePerM2": 8490299.814008964,
+        "avgPricePerPyeong10k": 2807,
+        "transactionCount": 196,
         "change": {
-          "value10k": 128,
-          "percent": 4.634322954380883
+          "value10k": 44,
+          "percent": 1.5924719507781397
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 7703738.510725401,
-        "avgPricePerPyeong10k": 2547,
-        "transactionCount": 74,
+        "avgPricePerM2": 8074699.14792304,
+        "avgPricePerPyeong10k": 2669,
+        "transactionCount": 47,
         "change": {
-          "value10k": -80,
-          "percent": -3.0452988199467073
+          "value10k": 41,
+          "percent": 1.5601217656012176
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 5543202.999915677,
-        "avgDepositPerPyeong10k": 1832,
-        "transactionCount": 90,
+        "avgDepositPerM2": 5774202.792050793,
+        "avgDepositPerPyeong10k": 1909,
+        "transactionCount": 62,
         "change": {
-          "value10k": -71,
-          "percent": -3.7309511297950606
+          "value10k": 34,
+          "percent": 1.8133333333333335
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 1905,
-        "avgDeposit10k": 8127,
-        "avgMonthlyRent10k": 94,
-        "transactionCount": 87,
+        "avgConvertedPerPyeong10k": 1919,
+        "avgDeposit10k": 9245,
+        "avgMonthlyRent10k": 86,
+        "transactionCount": 82,
         "change": {
-          "value10k": 13,
-          "percent": 0.6871035940803383
+          "value10k": 26,
+          "percent": 1.3734812466983624
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11350",
       "name": "노원구",
       "sale": {
-        "avgPricePerM2": 11113098.06907754,
-        "avgPricePerPyeong10k": 3674,
-        "transactionCount": 380,
+        "avgPricePerM2": 11142726.912942767,
+        "avgPricePerPyeong10k": 3684,
+        "transactionCount": 402,
         "change": {
-          "value10k": 34,
-          "percent": 0.9340659340659341
+          "value10k": 44,
+          "percent": 1.208791208791209
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 10301580.67491889,
-        "avgPricePerPyeong10k": 3405,
-        "transactionCount": 87,
+        "avgPricePerM2": 10466765.860337457,
+        "avgPricePerPyeong10k": 3460,
+        "transactionCount": 91,
         "change": {
-          "value10k": 35,
-          "percent": 1.0385756676557862
+          "value10k": 102,
+          "percent": 3.0375223347230493
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 6559034.720432373,
-        "avgDepositPerPyeong10k": 2168,
-        "transactionCount": 239,
+        "avgDepositPerM2": 6596467.204704526,
+        "avgDepositPerPyeong10k": 2181,
+        "transactionCount": 207,
         "change": {
-          "value10k": 14,
-          "percent": 0.6499535747446611
+          "value10k": 22,
+          "percent": 1.0189902732746643
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 2038,
-        "avgDeposit10k": 9294,
-        "avgMonthlyRent10k": 91,
-        "transactionCount": 218,
+        "avgConvertedPerPyeong10k": 2211,
+        "avgDeposit10k": 9493,
+        "avgMonthlyRent10k": 94,
+        "transactionCount": 258,
         "change": {
-          "value10k": -158,
-          "percent": -7.194899817850637
+          "value10k": 18,
+          "percent": 0.8207934336525308
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11380",
       "name": "은평구",
       "sale": {
-        "avgPricePerM2": 11680556.099400235,
-        "avgPricePerPyeong10k": 3861,
-        "transactionCount": 128,
+        "avgPricePerM2": 11529033.955589047,
+        "avgPricePerPyeong10k": 3811,
+        "transactionCount": 198,
         "change": {
-          "value10k": 19,
-          "percent": 0.4945340968245705
+          "value10k": -25,
+          "percent": -0.6517205422314911
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 10882997.406754456,
-        "avgPricePerPyeong10k": 3598,
-        "transactionCount": 61,
+        "avgPricePerM2": 11594358.058813276,
+        "avgPricePerPyeong10k": 3833,
+        "transactionCount": 92,
         "change": {
-          "value10k": -233,
-          "percent": -6.081962933959802
+          "value10k": 41,
+          "percent": 1.0812236286919832
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 7707990.370843785,
-        "avgDepositPerPyeong10k": 2548,
-        "transactionCount": 94,
+        "avgDepositPerM2": 7015850.516375568,
+        "avgDepositPerPyeong10k": 2319,
+        "transactionCount": 160,
         "change": {
-          "value10k": 47,
-          "percent": 1.879248300679728
+          "value10k": -182,
+          "percent": -7.277089164334266
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 2482,
-        "avgDeposit10k": 15403,
-        "avgMonthlyRent10k": 102,
-        "transactionCount": 97,
+        "avgConvertedPerPyeong10k": 2586,
+        "avgDeposit10k": 18631,
+        "avgMonthlyRent10k": 109,
+        "transactionCount": 113,
         "change": {
-          "value10k": -52,
-          "percent": -2.0520915548539858
+          "value10k": 44,
+          "percent": 1.730920535011802
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11410",
       "name": "서대문구",
       "sale": {
-        "avgPricePerM2": 14747891.489928918,
-        "avgPricePerPyeong10k": 4875,
-        "transactionCount": 104,
+        "avgPricePerM2": 14884819.12395313,
+        "avgPricePerPyeong10k": 4921,
+        "transactionCount": 105,
         "change": {
-          "value10k": -25,
-          "percent": -0.5102040816326531
+          "value10k": 28,
+          "percent": 0.5722460658082975
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 14449480.121457437,
-        "avgPricePerPyeong10k": 4777,
-        "transactionCount": 44,
+        "avgPricePerM2": 14647804.119026585,
+        "avgPricePerPyeong10k": 4842,
+        "transactionCount": 47,
         "change": {
-          "value10k": -42,
-          "percent": -0.8715501141315627
+          "value10k": 38,
+          "percent": 0.7910074937552041
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 8588953.609736623,
-        "avgDepositPerPyeong10k": 2839,
-        "transactionCount": 96,
+        "avgDepositPerM2": 8691905.33606665,
+        "avgDepositPerPyeong10k": 2873,
+        "transactionCount": 103,
         "change": {
-          "value10k": -51,
-          "percent": -1.7647058823529411
+          "value10k": -23,
+          "percent": -0.7941988950276244
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 3083,
-        "avgDeposit10k": 22267,
-        "avgMonthlyRent10k": 145,
-        "transactionCount": 93,
+        "avgConvertedPerPyeong10k": 3096,
+        "avgDeposit10k": 24249,
+        "avgMonthlyRent10k": 139,
+        "transactionCount": 94,
         "change": {
-          "value10k": -98,
-          "percent": -3.080792203709525
+          "value10k": -48,
+          "percent": -1.5267175572519083
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11440",
       "name": "마포구",
       "sale": {
-        "avgPricePerM2": 19938453.011156462,
-        "avgPricePerPyeong10k": 6591,
-        "transactionCount": 79,
+        "avgPricePerM2": 19525122.55869061,
+        "avgPricePerPyeong10k": 6455,
+        "transactionCount": 88,
         "change": {
-          "value10k": 245,
-          "percent": 3.860699653324929
+          "value10k": 118,
+          "percent": 1.8620798485087582
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 20348813.400600273,
-        "avgPricePerPyeong10k": 6727,
-        "transactionCount": 34,
+        "avgPricePerM2": 19607823.27807397,
+        "avgPricePerPyeong10k": 6482,
+        "transactionCount": 35,
         "change": {
-          "value10k": 185,
-          "percent": 2.827881381840416
+          "value10k": -60,
+          "percent": -0.9171507184347295
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 10319526.411094304,
-        "avgDepositPerPyeong10k": 3411,
-        "transactionCount": 130,
+        "avgDepositPerM2": 10435514.4769225,
+        "avgDepositPerPyeong10k": 3450,
+        "transactionCount": 187,
         "change": {
-          "value10k": -114,
-          "percent": -3.234042553191489
+          "value10k": -85,
+          "percent": -2.4045261669024045
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 3210,
-        "avgDeposit10k": 22646,
-        "avgMonthlyRent10k": 137,
-        "transactionCount": 198,
+        "avgConvertedPerPyeong10k": 3401,
+        "avgDeposit10k": 18509,
+        "avgMonthlyRent10k": 110,
+        "transactionCount": 381,
         "change": {
-          "value10k": -205,
-          "percent": -6.002928257686676
+          "value10k": -45,
+          "percent": -1.30586186883343
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11470",
       "name": "양천구",
       "sale": {
-        "avgPricePerM2": 14751440.85797406,
-        "avgPricePerPyeong10k": 4877,
-        "transactionCount": 102,
+        "avgPricePerM2": 14531669.388874216,
+        "avgPricePerPyeong10k": 4804,
+        "transactionCount": 92,
         "change": {
-          "value10k": 290,
-          "percent": 6.32221495530848
+          "value10k": 164,
+          "percent": 3.53448275862069
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 13868133.032909809,
-        "avgPricePerPyeong10k": 4585,
-        "transactionCount": 45,
+        "avgPricePerM2": 13903810.16287152,
+        "avgPricePerPyeong10k": 4596,
+        "transactionCount": 40,
         "change": {
-          "value10k": -104,
-          "percent": -2.217956920452122
+          "value10k": -120,
+          "percent": -2.5445292620865136
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 8535936.891899014,
-        "avgDepositPerPyeong10k": 2822,
-        "transactionCount": 161,
+        "avgDepositPerM2": 8453157.444488088,
+        "avgDepositPerPyeong10k": 2794,
+        "transactionCount": 193,
         "change": {
-          "value10k": -95,
-          "percent": -3.256770654782311
+          "value10k": -136,
+          "percent": -4.6416382252559725
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 2653,
-        "avgDeposit10k": 27319,
-        "avgMonthlyRent10k": 97,
-        "transactionCount": 173,
+        "avgConvertedPerPyeong10k": 2869,
+        "avgDeposit10k": 29951,
+        "avgMonthlyRent10k": 123,
+        "transactionCount": 145,
         "change": {
-          "value10k": -213,
-          "percent": -7.431960921144452
+          "value10k": -3,
+          "percent": -0.10445682451253482
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11500",
       "name": "강서구",
       "sale": {
-        "avgPricePerM2": 15080448.167202637,
-        "avgPricePerPyeong10k": 4985,
-        "transactionCount": 254,
+        "avgPricePerM2": 14289721.631054604,
+        "avgPricePerPyeong10k": 4724,
+        "transactionCount": 214,
         "change": {
-          "value10k": 24,
-          "percent": 0.48377343277565005
+          "value10k": -163,
+          "percent": -3.335379578473501
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 14865975.691168997,
-        "avgPricePerPyeong10k": 4914,
-        "transactionCount": 53,
+        "avgPricePerM2": 14076029.688167391,
+        "avgPricePerPyeong10k": 4653,
+        "transactionCount": 65,
         "change": {
-          "value10k": 99,
-          "percent": 2.0560747663551404
+          "value10k": -148,
+          "percent": -3.082691106019579
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 8137046.307832095,
-        "avgDepositPerPyeong10k": 2690,
-        "transactionCount": 164,
+        "avgDepositPerM2": 7980770.328499053,
+        "avgDepositPerPyeong10k": 2638,
+        "transactionCount": 257,
         "change": {
-          "value10k": 91,
-          "percent": 3.5013466717968447
+          "value10k": 1,
+          "percent": 0.037921880925293895
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 2470,
-        "avgDeposit10k": 13603,
-        "avgMonthlyRent10k": 97,
-        "transactionCount": 200,
+        "avgConvertedPerPyeong10k": 2563,
+        "avgDeposit10k": 16726,
+        "avgMonthlyRent10k": 102,
+        "transactionCount": 186,
         "change": {
-          "value10k": -35,
-          "percent": -1.3972055888223553
+          "value10k": 46,
+          "percent": 1.8275725069527213
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11530",
       "name": "구로구",
       "sale": {
-        "avgPricePerM2": 11413091.667967636,
-        "avgPricePerPyeong10k": 3773,
-        "transactionCount": 199,
+        "avgPricePerM2": 11067328.825716099,
+        "avgPricePerPyeong10k": 3659,
+        "transactionCount": 164,
         "change": {
-          "value10k": 173,
-          "percent": 4.805555555555555
+          "value10k": -4,
+          "percent": -0.10920010920010921
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 10687407.161255946,
-        "avgPricePerPyeong10k": 3533,
-        "transactionCount": 70,
+        "avgPricePerM2": 10957139.49193071,
+        "avgPricePerPyeong10k": 3622,
+        "transactionCount": 54,
         "change": {
-          "value10k": 55,
-          "percent": 1.5813686026451983
+          "value10k": 64,
+          "percent": 1.7987633501967397
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 6585490.450190912,
-        "avgDepositPerPyeong10k": 2177,
-        "transactionCount": 99,
+        "avgDepositPerM2": 6443068.113638219,
+        "avgDepositPerPyeong10k": 2130,
+        "transactionCount": 121,
         "change": {
-          "value10k": 92,
-          "percent": 4.4124700239808154
+          "value10k": 31,
+          "percent": 1.4768937589328253
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 1986,
-        "avgDeposit10k": 10844,
-        "avgMonthlyRent10k": 70,
-        "transactionCount": 205,
+        "avgConvertedPerPyeong10k": 2213,
+        "avgDeposit10k": 12878,
+        "avgMonthlyRent10k": 76,
+        "transactionCount": 209,
         "change": {
-          "value10k": -225,
-          "percent": -10.176390773405698
+          "value10k": 7,
+          "percent": 0.3173164097914778
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11545",
       "name": "금천구",
       "sale": {
-        "avgPricePerM2": 9490600.181748658,
-        "avgPricePerPyeong10k": 3137,
-        "transactionCount": 91,
+        "avgPricePerM2": 9770422.36886119,
+        "avgPricePerPyeong10k": 3230,
+        "transactionCount": 111,
         "change": {
-          "value10k": -179,
-          "percent": -5.398069963811822
+          "value10k": -106,
+          "percent": -3.1774580335731413
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 9909077.227337902,
-        "avgPricePerPyeong10k": 3276,
-        "transactionCount": 31,
+        "avgPricePerM2": 9731506.93510169,
+        "avgPricePerPyeong10k": 3217,
+        "transactionCount": 41,
         "change": {
-          "value10k": -39,
-          "percent": -1.1764705882352942
+          "value10k": -98,
+          "percent": -2.956259426847662
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 5983693.78160125,
-        "avgDepositPerPyeong10k": 1978,
-        "transactionCount": 29,
+        "avgDepositPerM2": 6143997.568480181,
+        "avgDepositPerPyeong10k": 2031,
+        "transactionCount": 41,
         "change": {
-          "value10k": 78,
-          "percent": 4.105263157894737
+          "value10k": 146,
+          "percent": 7.745358090185676
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 2407,
-        "avgDeposit10k": 9755,
-        "avgMonthlyRent10k": 65,
-        "transactionCount": 159,
+        "avgConvertedPerPyeong10k": 2130,
+        "avgDeposit10k": 8747,
+        "avgMonthlyRent10k": 82,
+        "transactionCount": 47,
         "change": {
-          "value10k": 229,
-          "percent": 10.514233241505968
+          "value10k": -74,
+          "percent": -3.3575317604355717
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11560",
       "name": "영등포구",
       "sale": {
-        "avgPricePerM2": 18388919.64244856,
-        "avgPricePerPyeong10k": 6079,
-        "transactionCount": 116,
+        "avgPricePerM2": 17890348.41843731,
+        "avgPricePerPyeong10k": 5914,
+        "transactionCount": 121,
         "change": {
-          "value10k": 75,
-          "percent": 1.2491672218520986
+          "value10k": -98,
+          "percent": -1.6300731869594145
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 16897981.984764554,
-        "avgPricePerPyeong10k": 5586,
-        "transactionCount": 31,
+        "avgPricePerM2": 16574778.943725504,
+        "avgPricePerPyeong10k": 5479,
+        "transactionCount": 39,
         "change": {
-          "value10k": -161,
-          "percent": -2.8014616321559074
+          "value10k": -220,
+          "percent": -3.860326373047903
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 9293775.988021404,
-        "avgDepositPerPyeong10k": 3072,
-        "transactionCount": 155,
+        "avgDepositPerM2": 9612109.508814083,
+        "avgDepositPerPyeong10k": 3178,
+        "transactionCount": 144,
         "change": {
-          "value10k": -111,
-          "percent": -3.4872761545711595
+          "value10k": 9,
+          "percent": 0.2840012622278321
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 3010,
-        "avgDeposit10k": 18829,
-        "avgMonthlyRent10k": 100,
-        "transactionCount": 186,
+        "avgConvertedPerPyeong10k": 2874,
+        "avgDeposit10k": 21742,
+        "avgMonthlyRent10k": 105,
+        "transactionCount": 162,
         "change": {
-          "value10k": 13,
-          "percent": 0.43376710043376715
+          "value10k": -149,
+          "percent": -4.928878597419781
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11590",
       "name": "동작구",
       "sale": {
-        "avgPricePerM2": 19372788.95707565,
-        "avgPricePerPyeong10k": 6404,
-        "transactionCount": 72,
+        "avgPricePerM2": 19326896.69360515,
+        "avgPricePerPyeong10k": 6389,
+        "transactionCount": 86,
         "change": {
-          "value10k": 1,
-          "percent": 0.015617679212868968
+          "value10k": -101,
+          "percent": -1.5562403697996918
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 19427655.56741873,
-        "avgPricePerPyeong10k": 6422,
-        "transactionCount": 36,
+        "avgPricePerM2": 19848304.030236274,
+        "avgPricePerPyeong10k": 6561,
+        "transactionCount": 35,
         "change": {
-          "value10k": 181,
-          "percent": 2.90017625380548
+          "value10k": 184,
+          "percent": 2.885369295907166
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 9272034.071360784,
-        "avgDepositPerPyeong10k": 3065,
-        "transactionCount": 144,
+        "avgDepositPerM2": 9589208.636817614,
+        "avgDepositPerPyeong10k": 3170,
+        "transactionCount": 136,
         "change": {
-          "value10k": -128,
-          "percent": -4.008769182586909
+          "value10k": -77,
+          "percent": -2.3714197720973207
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 3196,
-        "avgDeposit10k": 19077,
-        "avgMonthlyRent10k": 100,
-        "transactionCount": 239,
+        "avgConvertedPerPyeong10k": 3243,
+        "avgDeposit10k": 22392,
+        "avgMonthlyRent10k": 124,
+        "transactionCount": 177,
         "change": {
-          "value10k": -63,
-          "percent": -1.9331083154341824
+          "value10k": -11,
+          "percent": -0.33804548248309774
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11620",
       "name": "관악구",
       "sale": {
-        "avgPricePerM2": 11539552.609710576,
-        "avgPricePerPyeong10k": 3815,
-        "transactionCount": 121,
+        "avgPricePerM2": 11779928.651404114,
+        "avgPricePerPyeong10k": 3894,
+        "transactionCount": 130,
         "change": {
-          "value10k": -169,
-          "percent": -4.241967871485944
+          "value10k": -97,
+          "percent": -2.4304685542470557
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 11586689.370397568,
-        "avgPricePerPyeong10k": 3830,
-        "transactionCount": 36,
+        "avgPricePerM2": 11002646.856395964,
+        "avgPricePerPyeong10k": 3637,
+        "transactionCount": 38,
         "change": {
-          "value10k": 184,
-          "percent": 5.046626439934174
+          "value10k": -60,
+          "percent": -1.6229375169055993
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 7769247.5837556,
-        "avgDepositPerPyeong10k": 2568,
-        "transactionCount": 68,
+        "avgDepositPerM2": 7764051.595169689,
+        "avgDepositPerPyeong10k": 2567,
+        "transactionCount": 55,
         "change": {
-          "value10k": 209,
-          "percent": 8.859686307757524
+          "value10k": 124,
+          "percent": 5.075726565697913
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 2507,
-        "avgDeposit10k": 14656,
-        "avgMonthlyRent10k": 98,
-        "transactionCount": 113,
+        "avgConvertedPerPyeong10k": 2647,
+        "avgDeposit10k": 16002,
+        "avgMonthlyRent10k": 97,
+        "transactionCount": 107,
         "change": {
-          "value10k": -63,
-          "percent": -2.4513618677042803
+          "value10k": 51,
+          "percent": 1.9645608628659477
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11650",
       "name": "서초구",
       "sale": {
-        "avgPricePerM2": 33531336.392737336,
-        "avgPricePerPyeong10k": 11085,
-        "transactionCount": 115,
+        "avgPricePerM2": 29423906.196229238,
+        "avgPricePerPyeong10k": 9727,
+        "transactionCount": 100,
         "change": {
-          "value10k": 1294,
-          "percent": 13.216218976611174
+          "value10k": -63,
+          "percent": -0.6435137895812053
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 40567044.852337554,
-        "avgPricePerPyeong10k": 13411,
-        "transactionCount": 30,
+        "avgPricePerM2": 36445710.32793325,
+        "avgPricePerPyeong10k": 12048,
+        "transactionCount": 27,
         "change": {
-          "value10k": 1436,
-          "percent": 11.991649269311065
+          "value10k": 205,
+          "percent": 1.7309803259309298
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 13787678.28301009,
-        "avgDepositPerPyeong10k": 4558,
-        "transactionCount": 170,
+        "avgDepositPerM2": 13328557.0431031,
+        "avgDepositPerPyeong10k": 4406,
+        "transactionCount": 267,
         "change": {
-          "value10k": 17,
-          "percent": 0.3743668795419511
+          "value10k": -91,
+          "percent": -2.0235712697353794
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 4469,
-        "avgDeposit10k": 43807,
-        "avgMonthlyRent10k": 218,
-        "transactionCount": 214,
+        "avgConvertedPerPyeong10k": 4444,
+        "avgDeposit10k": 41905,
+        "avgMonthlyRent10k": 225,
+        "transactionCount": 232,
         "change": {
-          "value10k": 104,
-          "percent": 2.3825887743413516
+          "value10k": 74,
+          "percent": 1.6933638443935928
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11680",
       "name": "강남구",
       "sale": {
-        "avgPricePerM2": 33640110.750926405,
-        "avgPricePerPyeong10k": 11121,
-        "transactionCount": 118,
+        "avgPricePerM2": 34611278.45899518,
+        "avgPricePerPyeong10k": 11442,
+        "transactionCount": 124,
         "change": {
-          "value10k": -142,
-          "percent": -1.2607653378318386
+          "value10k": 231,
+          "percent": 2.0604763179020607
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 35521373.89417044,
-        "avgPricePerPyeong10k": 11743,
-        "transactionCount": 26,
-        "changeWithheld": {
-          "current": 26,
-          "baseline": 19,
-          "min": 20
-        }
+        "avgPricePerM2": 35895528.42836112,
+        "avgPricePerPyeong10k": 11866,
+        "transactionCount": 27,
+        "change": {
+          "value10k": 829,
+          "percent": 7.511099030533659
+        },
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 13239210.96835996,
-        "avgDepositPerPyeong10k": 4377,
-        "transactionCount": 205,
+        "avgDepositPerM2": 12663335.165611722,
+        "avgDepositPerPyeong10k": 4186,
+        "transactionCount": 281,
         "change": {
-          "value10k": -51,
-          "percent": -1.151761517615176
+          "value10k": -204,
+          "percent": -4.646924829157175
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 4407,
-        "avgDeposit10k": 34764,
-        "avgMonthlyRent10k": 208,
-        "transactionCount": 354,
+        "avgConvertedPerPyeong10k": 4554,
+        "avgDeposit10k": 38732,
+        "avgMonthlyRent10k": 227,
+        "transactionCount": 311,
         "change": {
-          "value10k": -200,
-          "percent": -4.341219882787064
+          "value10k": -58,
+          "percent": -1.2575888985255854
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11710",
       "name": "송파구",
       "sale": {
-        "avgPricePerM2": 26098232.04320027,
-        "avgPricePerPyeong10k": 8628,
-        "transactionCount": 315,
+        "avgPricePerM2": 26381651.578380663,
+        "avgPricePerPyeong10k": 8721,
+        "transactionCount": 164,
         "change": {
-          "value10k": 180,
-          "percent": 2.130681818181818
+          "value10k": 311,
+          "percent": 3.6979785969084427
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 28551123.343675494,
-        "avgPricePerPyeong10k": 9438,
-        "transactionCount": 47,
+        "avgPricePerM2": 27800493.76508035,
+        "avgPricePerPyeong10k": 9190,
+        "transactionCount": 55,
         "change": {
-          "value10k": -456,
-          "percent": -4.6088538508186785
+          "value10k": -42,
+          "percent": -0.45493934142114384
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 10963057.588490512,
-        "avgDepositPerPyeong10k": 3624,
-        "transactionCount": 223,
+        "avgDepositPerM2": 11610074.029910482,
+        "avgDepositPerPyeong10k": 3838,
+        "transactionCount": 228,
         "change": {
-          "value10k": -254,
-          "percent": -6.549767921609077
+          "value10k": -46,
+          "percent": -1.184346035015448
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 3859,
-        "avgDeposit10k": 33546,
-        "avgMonthlyRent10k": 191,
-        "transactionCount": 271,
+        "avgConvertedPerPyeong10k": 4125,
+        "avgDeposit10k": 40687,
+        "avgMonthlyRent10k": 202,
+        "transactionCount": 242,
         "change": {
-          "value10k": -219,
-          "percent": -5.370279548798431
+          "value10k": 60,
+          "percent": 1.4760147601476015
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     },
     {
       "code": "11740",
       "name": "강동구",
       "sale": {
-        "avgPricePerM2": 18115801.006734163,
-        "avgPricePerPyeong10k": 5989,
-        "transactionCount": 145,
+        "avgPricePerM2": 18098377.722773764,
+        "avgPricePerPyeong10k": 5983,
+        "transactionCount": 142,
         "change": {
-          "value10k": 107,
-          "percent": 1.819109146548793
+          "value10k": 60,
+          "percent": 1.0130001688333616
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "saleNational84": {
-        "avgPricePerM2": 17773273.123984873,
-        "avgPricePerPyeong10k": 5875,
-        "transactionCount": 60,
+        "avgPricePerM2": 17141243.2232173,
+        "avgPricePerPyeong10k": 5667,
+        "transactionCount": 51,
         "change": {
-          "value10k": -102,
-          "percent": -1.7065417433495065
+          "value10k": -355,
+          "percent": -5.895051477914314
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "jeonse": {
-        "avgDepositPerM2": 10232264.031150311,
-        "avgDepositPerPyeong10k": 3383,
-        "transactionCount": 145,
+        "avgDepositPerM2": 10514853.249661332,
+        "avgDepositPerPyeong10k": 3476,
+        "transactionCount": 221,
         "change": {
-          "value10k": -88,
-          "percent": -2.5352924229328724
+          "value10k": -51,
+          "percent": -1.445988091862773
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       },
       "wolse": {
-        "avgConvertedPerPyeong10k": 3555,
-        "avgDeposit10k": 27599,
-        "avgMonthlyRent10k": 127,
-        "transactionCount": 204,
+        "avgConvertedPerPyeong10k": 3600,
+        "avgDeposit10k": 31181,
+        "avgMonthlyRent10k": 140,
+        "transactionCount": 206,
         "change": {
-          "value10k": -171,
-          "percent": -4.5893719806763285
+          "value10k": -115,
+          "percent": -3.095558546433378
         },
-        "baselineDate": "2026-11-02"
+        "baselineDate": "2026-11-03"
       }
     }
   ]
