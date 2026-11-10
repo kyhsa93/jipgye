@@ -169,7 +169,7 @@ test("빌더가 원본 전체의 동명 명단을 칸 계산까지 넘긴다", a
     ["build-renewal-facts.ts", /buildPayload\(\{[^}]*sameNames: await readSameNames\(\)/],
     ["build-week-digest.ts", /buildDigest\(\{[^}]*sameNames: await readSameNames\(dir\)/],
     ["build-cancellation.ts", /tryWriteDirectDeals\(\{[^}]*sameNames: await readSameNames\(\)/],
-    ["build-direct-deals.ts", /writeDirectDeals\(\{[^}]*sameNames: await readSameNames\(\)/],
+    // 직거래 단독 CLI는 #855에서 비활성화. 정상 호출자는 위 build-cancellation.ts에서 명단을 넘긴다.
     ["build-district-change.ts", /readSameNames\(\)\]\)/],
     ["build-district-change.ts", /writeRegistrationSoft\(\{[^}]*sameNames/],
     ["build-district-change.ts", /= buildPayload\(\{[^}]*sameNames/],
