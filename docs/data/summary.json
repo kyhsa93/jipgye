@@ -1,45 +1,57 @@
 {
-  "updatedAt": "2026-11-09T02:40:05.613Z",
+  "updatedAt": "2026-11-10T04:39:34.551Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 증시·환율: 코스피는 '5천피' 공방 후 1%대 상승세를 보였다. 코스닥도 상승전환하며 긍정적인 흐름을 이어갔다. 중국 증시는 상하이지수가 0.27% 상승하며 출발했다. 일본 닛케이 지수는 미국 기술주 반등에 힘입어 0.92% 상승했다. 코스피는 장초반 보합세로 5천선을 지키려 했으나, 코스닥은 하락했다.\n- 부동산: 서초구는 신반포 재건축 3개 단지의 착공을 위해 밀착 지원을 진행하고 있다. 부동산원은 공공건축 설계공모 제도 개정에 대해 실무자들의 적극적인 지원을 강조하며 설명회를 열었다. 전세사기 피해자 보호를 위해 보증금의 3분의 1을 국가가 책임지는 최소보장제가 10일부터 신청이 가능해졌다. 해당 제도는 피해자가 보증금을 회수하는 데 최소한의 보장을 제공하기 위한 것이다. 보증금 3분의 1 보장에 대한 사전 신청도 10일부터 시작된다.\n- 기타 경제 소식: 안산시 경제사절단이 독일 아헨특구 대표단과 간담회를 열었다. 김포시는 2차 평화경제특구 지정을 위한 도전에 나섰다. 서울시는 직원들의 아이디어를 바탕으로 야간경제와 AI행정 혁신 정책 8건을 발표했다. 각 시는 지역 경제 발전을 위한 다양한 방안을 모색하고 있다. 이번 활동들은 지자체 간 협력과 혁신을 강조하는 계기가 되고 있다.\n- 금리·예금·투자상품: 씨티는 반도체 산업의 부진이 금리 인상 조기 종료로 이어질 수 있다고 전망했다. 해당 기관은 내년 하반기에는 금리 인하가 시작될 수 있다고 분석했다. 이는 경제 성장률과 물가 동향에 따라 결정될 수 있다고 설명했다. 씨티의 이번 전망은 글로벌 경기 둔화 우려를 반영한 것이다. 이 같은 전망은 향후 금융시장에 중요한 영향을 미칠 것으로 보인다.",
-    "en": "- Stocks & FX: The KOSPI showed a rise of over 1% following the \"5,000 won\" debate. The KOSDAQ also turned upward, continuing a positive trend. The Chinese market opened with the Shanghai index rising 0.27%. The Nikkei index in Japan rose 0.92% driven by a rebound in U.S. technology stocks. The KOSPI was flat at the beginning of the session, trying to hold the 5,000 level, but the KOSDAQ fell.\n- Real Estate: Seocho District is providing close support to proceed with the groundbreaking of three reconstruction sites in Sinbanpo. The Real Estate Agency emphasized the need for active support from professionals and held a briefing on the revision of the public architecture design competition system. Starting on the 10th, the minimum guarantee system, which ensures the state covers one-third of the deposit, is now available for application to protect tenants who have been victims of lease fraud. This system provides victims with at least some guarantee to recover their deposits. Applications for the guarantee of one-third of the deposit can also be submitted starting on the 10th.\n- Other Economic News: Ansanshi's Economic Delegation held a meeting with the Aachen Special Economic Zone delegation from Germany. Gimpo City has launched efforts to secure the designation of the second Peace Economic Special Zone. Seoul City announced eight policies based on employees' ideas, focusing on nighttime economy and AI administrative innovation. Each city is exploring various ways to promote regional economic development. These activities are serving as an opportunity to emphasize cooperation and innovation among local governments.\n- Rates, Deposits & Investment Products: Citigroup expects the weakness in the semiconductor industry could lead to an early end to interest rate hikes. The institution analyzed that interest rate cuts could begin in the second half of next year. It explained that this could be determined by economic growth and inflation trends. Citigroup's forecast reflects concerns about a global economic slowdown. Such a forecast is expected to have a significant impact on financial markets in the future."
+    "ko": "- 기타 경제 소식: 인천경제구역 확장 용역이 수십억 원의 예산 낭비를 초래한 것으로 드러났다. 해당 용역은 뒤늦게 중단됐다. 11월 수도권 입주 전망이 다시 악화될 것으로 보인다. 이는 대출 이자 부담이 커지면서 나타난 현상이다. 두 소식은 서로 다른 주제로, 각각의 경제 이슈를 반영하고 있다.\n- 금리·예금·투자상품: 국고채 금리가 하락하고, 온투업 신용대출의 중금리 대출 비중이 높으며, 금리 인상 우려로 수도권 아파트 입주전망지수가 하락했다.\n- 부동산: 강남 재건축조합들이 재초환 부담금 현실화 문제로 시끌을 일으키고 있다. 위장미혼 청약 사례가 18건 적발되며 부동산 시장의 투명성 문제가 부상하고 있다. 영통에 첫 지분적립형 주택인 '광교 자연앤 센트레빌'이 10일 청약을 시작한다. 서울 아파트 매물은 8만건 쌓였지만 거래는 감소하는 것으로 나타났다. 아파트 관리의 브랜드화가 집값 차이를 만들 수 있다는 분석이 제기되고 있다.\n- 증시·환율: 홍콩 증시는 미국 증시 강세로 사흘 만에 상승하며 항셍 0.13% 상승했고, 중국 증시도 상승 출발하며 상하이지수 0.58% 상승했으며, 코스피는 장중 4%대 상승세를 유지하며 외인과 기관이 매수했고, AI 시즌오프 공포가 진정되나 여전한 우려 속에 코스피가 급반등했으며, 엔화는 미국 증시에서 AI주 강세에 1달러=157엔대 후반 출발했다.",
+    "en": "- Other Economic News: The expansion project for the Incheon Economic Zone has been revealed to have caused waste of hundreds of millions of won. The project was suspended late. Prospects for residential development in the Seoul metropolitan area are expected to worsen again in November. This is a result of increased loan interest burdens. The two pieces of news are on different topics, each reflecting separate economic issues.\n- Rates, Deposits & Investment Products: The government bond rate fell, the proportion of medium-interest loans in ONTUP credit loans is high, and the apartment occupancy outlook index in the Seoul area dropped due to concerns over interest rate hikes.\n- Real Estate: Gangnam reconstruction cooperatives are causing a stir over the issue of realizing the burden of the revaluation of the land. 18 cases of fake unmarried applicants have been detected, raising concerns about the transparency of the real estate market. The first share accumulation type housing, \"Gwanggyo Nature & Centreville,\" in Youngtong will start its application process on the 10th. Although 80,000 apartment listings have accumulated in Seoul, transactions are showing a decreasing trend. Analysis is emerging that brandification of apartment management can create differences in housing prices.\n- Stocks & FX: The Hong Kong stock market rose for the first time in three days due to a strong U.S. stock market, with the Hang Seng index rising 0.13%. The Chinese stock market also started with a rise, with the Shanghai index up 0.58%. The KOSPI maintained a 4% increase during the day, with foreigners and institutions buying shares. The KOSPI sharply rose amid concerns that the AI season-off panic had eased but worries remained. The yen started at around 157 yen to the dollar due to a strong performance of AI stocks in the U.S. market."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "코스피는 '5천피' 공방 후 1%대 상승세를 보였다. 코스닥도 상승전환하며 긍정적인 흐름을 이어갔다. 중국 증시는 상하이지수가 0.27% 상승하며 출발했다. 일본 닛케이 지수는 미국 기술주 반등에 힘입어 0.92% 상승했다. 코스피는 장초반 보합세로 5천선을 지키려 했으나, 코스닥은 하락했다.",
-      "lineEn": "The KOSPI showed a rise of over 1% following the \"5,000 won\" debate. The KOSDAQ also turned upward, continuing a positive trend. The Chinese market opened with the Shanghai index rising 0.27%. The Nikkei index in Japan rose 0.92% driven by a rebound in U.S. technology stocks. The KOSPI was flat at the beginning of the session, trying to hold the 5,000 level, but the KOSDAQ fell.",
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "인천경제구역 확장 용역이 수십억 원의 예산 낭비를 초래한 것으로 드러났다. 해당 용역은 뒤늦게 중단됐다. 11월 수도권 입주 전망이 다시 악화될 것으로 보인다. 이는 대출 이자 부담이 커지면서 나타난 현상이다. 두 소식은 서로 다른 주제로, 각각의 경제 이슈를 반영하고 있다.",
+      "lineEn": "The expansion project for the Incheon Economic Zone has been revealed to have caused waste of hundreds of millions of won. The project was suspended late. Prospects for residential development in the Seoul metropolitan area are expected to worsen again in November. This is a result of increased loan interest burdens. The two pieces of news are on different topics, each reflecting separate economic issues.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "코스피, '5천피' 공방 후 1%대 상승세…코스닥도 상승전환",
-          "link": "https://www.yna.co.kr/view/AKR20261109066300008",
+          "title": "'인천경제구역 확장' 용역 남발에 수십억 낭비…뒤늦게 중단",
+          "link": "https://www.yna.co.kr/view/AKR20261110096600065",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "[올댓차이나] 중국 증시 상승 출발…상하이지수 0.27%↑",
-          "link": "https://www.newsis.com/view/NISX20261109_0003860210",
+          "title": "11월 수도권 입주전망 다시 악화…\"대출이자 부담 커져\"",
+          "link": "https://www.newsis.com/view/NISX20261110_0003861604",
           "source": "뉴시스 경제"
-        },
+        }
+      ]
+    },
+    {
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "국고채 금리가 하락하고, 온투업 신용대출의 중금리 대출 비중이 높으며, 금리 인상 우려로 수도권 아파트 입주전망지수가 하락했다.",
+      "lineEn": "The government bond rate fell, the proportion of medium-interest loans in ONTUP credit loans is high, and the apartment occupancy outlook index in the Seoul area dropped due to concerns over interest rate hikes.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
+      "items": [
         {
-          "title": "[속보] 코스피, 1%대 오름세로 상승탄력 강화…삼전닉스 3∼5%↑",
-          "link": "https://www.yna.co.kr/view/AKR20261109061800008",
+          "title": "국고채 금리 대체로 하락…3년물 장중 연 3.639%",
+          "link": "https://www.yna.co.kr/view/AKR20261110087400008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "日증시, 美기술주 반등에 상승 출발…닛케이 0.92%↑",
-          "link": "https://www.newsis.com/view/NISX20261109_0003859827",
-          "source": "뉴시스 경제"
+          "title": "\"온투업 신용대출 95%가 중금리대출…저신용자 비중도 45%\"",
+          "link": "https://www.yna.co.kr/view/AKR20261110088600002",
+          "source": "연합뉴스 경제"
         },
         {
-          "title": "코스피, 장초반 보합세로 '5천선' 사수전…코스닥 하락(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261109029651008",
+          "title": "금리 인상 우려에 11월 수도권 아파트 입주전망지수 하락",
+          "link": "https://www.yna.co.kr/view/AKR20261110040800003",
           "source": "연합뉴스 경제"
         }
       ]
@@ -48,80 +60,73 @@
       "key": "realestate",
       "name": "부동산",
       "nameEn": "Real Estate",
-      "lineKo": "서초구는 신반포 재건축 3개 단지의 착공을 위해 밀착 지원을 진행하고 있다. 부동산원은 공공건축 설계공모 제도 개정에 대해 실무자들의 적극적인 지원을 강조하며 설명회를 열었다. 전세사기 피해자 보호를 위해 보증금의 3분의 1을 국가가 책임지는 최소보장제가 10일부터 신청이 가능해졌다. 해당 제도는 피해자가 보증금을 회수하는 데 최소한의 보장을 제공하기 위한 것이다. 보증금 3분의 1 보장에 대한 사전 신청도 10일부터 시작된다.",
-      "lineEn": "Seocho District is providing close support to proceed with the groundbreaking of three reconstruction sites in Sinbanpo. The Real Estate Agency emphasized the need for active support from professionals and held a briefing on the revision of the public architecture design competition system. Starting on the 10th, the minimum guarantee system, which ensures the state covers one-third of the deposit, is now available for application to protect tenants who have been victims of lease fraud. This system provides victims with at least some guarantee to recover their deposits. Applications for the guarantee of one-third of the deposit can also be submitted starting on the 10th.",
+      "lineKo": "강남 재건축조합들이 재초환 부담금 현실화 문제로 시끌을 일으키고 있다. 위장미혼 청약 사례가 18건 적발되며 부동산 시장의 투명성 문제가 부상하고 있다. 영통에 첫 지분적립형 주택인 '광교 자연앤 센트레빌'이 10일 청약을 시작한다. 서울 아파트 매물은 8만건 쌓였지만 거래는 감소하는 것으로 나타났다. 아파트 관리의 브랜드화가 집값 차이를 만들 수 있다는 분석이 제기되고 있다.",
+      "lineEn": "Gangnam reconstruction cooperatives are causing a stir over the issue of realizing the burden of the revaluation of the land. 18 cases of fake unmarried applicants have been detected, raising concerns about the transparency of the real estate market. The first share accumulation type housing, \"Gwanggyo Nature & Centreville,\" in Youngtong will start its application process on the 10th. Although 80,000 apartment listings have accumulated in Seoul, transactions are showing a decreasing trend. Analysis is emerging that brandification of apartment management can create differences in housing prices.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "서초구, 신반포 재건축 3개 단지 착공 '밀착 지원'",
-          "link": "https://www.hankyung.com/article/202611094347i",
-          "source": "한국경제 부동산"
-        },
-        {
-          "title": "“실무자 적극 지원”…부동산원, 공공건축 설계공모 제도 개정 설명회",
-          "link": "https://www.mk.co.kr/news/realestate/12202166",
+          "title": "“강남 재건축조합들 뭉쳤다”…재초환 부담금 현실화에 ‘시끌’",
+          "link": "https://www.mk.co.kr/news/realestate/12203785",
           "source": "매일경제 부동산"
         },
         {
-          "title": "보증금 3분의 1을 나라가 책임진다… 전세사기 피해 최소보장제, 10일부터 신청",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/09/R4IRD43XFRAWDP7M7RVZNXYX5U/",
-          "source": "조선비즈 부동산"
-        },
-        {
-          "title": "전세사기 피해자 보증금 3분의 1 보장…10일부터 사전 신청",
-          "link": "https://www.yna.co.kr/view/AKR20261109055800003",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "'보증금 3분의1 보장'…전세사기 최소지원금 10일부터 접수",
-          "link": "https://www.newsis.com/view/NISX20261109_0003859831",
+          "title": "아파트 당첨되려 서류상 미혼…위장미혼 청약 18건 적발",
+          "link": "https://www.newsis.com/view/NISX20261110_0003861971",
           "source": "뉴시스 경제"
+        },
+        {
+          "title": "첫 지분적립형 주택…영통 '광교 자연앤 센트레빌' 10일 청약",
+          "link": "https://www.newsis.com/view/NISX20261110_0003861593",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "매물은 8만건 쌓이는데 거래는 '뚝'…서울 집값 향방은",
+          "link": "https://www.newsis.com/view/NISX20261110_0003861918",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "“아파트 관리도 브랜드 시대…집값 차이 만들 것”",
+          "link": "https://www.mk.co.kr/news/realestate/12203726",
+          "source": "매일경제 부동산"
         }
       ]
     },
     {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "안산시 경제사절단이 독일 아헨특구 대표단과 간담회를 열었다. 김포시는 2차 평화경제특구 지정을 위한 도전에 나섰다. 서울시는 직원들의 아이디어를 바탕으로 야간경제와 AI행정 혁신 정책 8건을 발표했다. 각 시는 지역 경제 발전을 위한 다양한 방안을 모색하고 있다. 이번 활동들은 지자체 간 협력과 혁신을 강조하는 계기가 되고 있다.",
-      "lineEn": "Ansanshi's Economic Delegation held a meeting with the Aachen Special Economic Zone delegation from Germany. Gimpo City has launched efforts to secure the designation of the second Peace Economic Special Zone. Seoul City announced eight policies based on employees' ideas, focusing on nighttime economy and AI administrative innovation. Each city is exploring various ways to promote regional economic development. These activities are serving as an opportunity to emphasize cooperation and innovation among local governments.",
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "홍콩 증시는 미국 증시 강세로 사흘 만에 상승하며 항셍 0.13% 상승했고, 중국 증시도 상승 출발하며 상하이지수 0.58% 상승했으며, 코스피는 장중 4%대 상승세를 유지하며 외인과 기관이 매수했고, AI 시즌오프 공포가 진정되나 여전한 우려 속에 코스피가 급반등했으며, 엔화는 미국 증시에서 AI주 강세에 1달러=157엔대 후반 출발했다.",
+      "lineEn": "The Hong Kong stock market rose for the first time in three days due to a strong U.S. stock market, with the Hang Seng index rising 0.13%. The Chinese stock market also started with a rise, with the Shanghai index up 0.58%. The KOSPI maintained a 4% increase during the day, with foreigners and institutions buying shares. The KOSPI sharply rose amid concerns that the AI season-off panic had eased but worries remained. The yen started at around 157 yen to the dollar due to a strong performance of AI stocks in the U.S. market.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": false,
+      "degraded": true,
       "items": [
         {
-          "title": "안산시 경제사절단, '우호도시' 독일 아헨특구 대표단과 간담회",
-          "link": "https://www.yna.co.kr/view/AKR20261109063800061",
+          "title": "[올댓차이나] 홍콩 증시, 美 증시 강세로 사흘 만에 상승… 항셍 0.13%↑",
+          "link": "https://www.newsis.com/view/NISX20261110_0003861904",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "[올댓차이나] 중국 증시 상승 출발…상하이지수 0.58%↑",
+          "link": "https://www.newsis.com/view/NISX20261110_0003861844",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "코스피, 장중 4%대 상승세 유지…외인·기관 '사자'",
+          "link": "https://www.yna.co.kr/view/AKR20261110077600008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "\"철책 너머 세계로\"…김포시, 2차 평화경제특구 도전",
-          "link": "https://www.yna.co.kr/view/AKR20261109053500065",
+          "title": "'AI 시즌오프' 공포 진정되나…여전한 우려 속 코스피 급반등",
+          "link": "https://www.yna.co.kr/view/AKR20261110070800008",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "서울시, 직원 아이디어로 야간경제·AI행정 혁신…정책 8건 발표",
-          "link": "https://www.yna.co.kr/view/AKR20261108041900004",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "씨티는 반도체 산업의 부진이 금리 인상 조기 종료로 이어질 수 있다고 전망했다. 해당 기관은 내년 하반기에는 금리 인하가 시작될 수 있다고 분석했다. 이는 경제 성장률과 물가 동향에 따라 결정될 수 있다고 설명했다. 씨티의 이번 전망은 글로벌 경기 둔화 우려를 반영한 것이다. 이 같은 전망은 향후 금융시장에 중요한 영향을 미칠 것으로 보인다.",
-      "lineEn": "Citigroup expects the weakness in the semiconductor industry could lead to an early end to interest rate hikes. The institution analyzed that interest rate cuts could begin in the second half of next year. It explained that this could be determined by economic growth and inflation trends. Citigroup's forecast reflects concerns about a global economic slowdown. Such a forecast is expected to have a significant impact on financial markets in the future.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "씨티 \"반도체 꺾이면 금리인상 조기종료…내년 하반기 인하\"",
-          "link": "https://www.yna.co.kr/view/AKR20261109036600002",
-          "source": "연합뉴스 경제"
+          "title": "엔화, 美 증시서 AI주 강세에 1달러=157엔대 후반 출발",
+          "link": "https://www.newsis.com/view/NISX20261110_0003861660",
+          "source": "뉴시스 경제"
         }
       ]
     }

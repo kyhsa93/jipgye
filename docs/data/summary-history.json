@@ -8191,5 +8191,139 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-10",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 기타 경제 소식: 인천경제구역 확장 용역이 수십억 원의 예산 낭비를 초래한 것으로 드러났다. 해당 용역은 뒤늦게 중단됐다. 11월 수도권 입주 전망이 다시 악화될 것으로 보인다. 이는 대출 이자 부담이 커지면서 나타난 현상이다. 두 소식은 서로 다른 주제로, 각각의 경제 이슈를 반영하고 있다.\n- 금리·예금·투자상품: 국고채 금리가 하락하고, 온투업 신용대출의 중금리 대출 비중이 높으며, 금리 인상 우려로 수도권 아파트 입주전망지수가 하락했다.\n- 부동산: 강남 재건축조합들이 재초환 부담금 현실화 문제로 시끌을 일으키고 있다. 위장미혼 청약 사례가 18건 적발되며 부동산 시장의 투명성 문제가 부상하고 있다. 영통에 첫 지분적립형 주택인 '광교 자연앤 센트레빌'이 10일 청약을 시작한다. 서울 아파트 매물은 8만건 쌓였지만 거래는 감소하는 것으로 나타났다. 아파트 관리의 브랜드화가 집값 차이를 만들 수 있다는 분석이 제기되고 있다.\n- 증시·환율: 홍콩 증시는 미국 증시 강세로 사흘 만에 상승하며 항셍 0.13% 상승했고, 중국 증시도 상승 출발하며 상하이지수 0.58% 상승했으며, 코스피는 장중 4%대 상승세를 유지하며 외인과 기관이 매수했고, AI 시즌오프 공포가 진정되나 여전한 우려 속에 코스피가 급반등했으며, 엔화는 미국 증시에서 AI주 강세에 1달러=157엔대 후반 출발했다.",
+      "en": "- Other Economic News: The expansion project for the Incheon Economic Zone has been revealed to have caused waste of hundreds of millions of won. The project was suspended late. Prospects for residential development in the Seoul metropolitan area are expected to worsen again in November. This is a result of increased loan interest burdens. The two pieces of news are on different topics, each reflecting separate economic issues.\n- Rates, Deposits & Investment Products: The government bond rate fell, the proportion of medium-interest loans in ONTUP credit loans is high, and the apartment occupancy outlook index in the Seoul area dropped due to concerns over interest rate hikes.\n- Real Estate: Gangnam reconstruction cooperatives are causing a stir over the issue of realizing the burden of the revaluation of the land. 18 cases of fake unmarried applicants have been detected, raising concerns about the transparency of the real estate market. The first share accumulation type housing, \"Gwanggyo Nature & Centreville,\" in Youngtong will start its application process on the 10th. Although 80,000 apartment listings have accumulated in Seoul, transactions are showing a decreasing trend. Analysis is emerging that brandification of apartment management can create differences in housing prices.\n- Stocks & FX: The Hong Kong stock market rose for the first time in three days due to a strong U.S. stock market, with the Hang Seng index rising 0.13%. The Chinese stock market also started with a rise, with the Shanghai index up 0.58%. The KOSPI maintained a 4% increase during the day, with foreigners and institutions buying shares. The KOSPI sharply rose amid concerns that the AI season-off panic had eased but worries remained. The yen started at around 157 yen to the dollar due to a strong performance of AI stocks in the U.S. market."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "인천경제구역 확장 용역이 수십억 원의 예산 낭비를 초래한 것으로 드러났다. 해당 용역은 뒤늦게 중단됐다. 11월 수도권 입주 전망이 다시 악화될 것으로 보인다. 이는 대출 이자 부담이 커지면서 나타난 현상이다. 두 소식은 서로 다른 주제로, 각각의 경제 이슈를 반영하고 있다.",
+        "lineEn": "The expansion project for the Incheon Economic Zone has been revealed to have caused waste of hundreds of millions of won. The project was suspended late. Prospects for residential development in the Seoul metropolitan area are expected to worsen again in November. This is a result of increased loan interest burdens. The two pieces of news are on different topics, each reflecting separate economic issues.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "'인천경제구역 확장' 용역 남발에 수십억 낭비…뒤늦게 중단",
+            "link": "https://www.yna.co.kr/view/AKR20261110096600065",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "11월 수도권 입주전망 다시 악화…\"대출이자 부담 커져\"",
+            "link": "https://www.newsis.com/view/NISX20261110_0003861604",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 하락하고, 온투업 신용대출의 중금리 대출 비중이 높으며, 금리 인상 우려로 수도권 아파트 입주전망지수가 하락했다.",
+        "lineEn": "The government bond rate fell, the proportion of medium-interest loans in ONTUP credit loans is high, and the apartment occupancy outlook index in the Seoul area dropped due to concerns over interest rate hikes.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "국고채 금리 대체로 하락…3년물 장중 연 3.639%",
+            "link": "https://www.yna.co.kr/view/AKR20261110087400008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "\"온투업 신용대출 95%가 중금리대출…저신용자 비중도 45%\"",
+            "link": "https://www.yna.co.kr/view/AKR20261110088600002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "금리 인상 우려에 11월 수도권 아파트 입주전망지수 하락",
+            "link": "https://www.yna.co.kr/view/AKR20261110040800003",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "강남 재건축조합들이 재초환 부담금 현실화 문제로 시끌을 일으키고 있다. 위장미혼 청약 사례가 18건 적발되며 부동산 시장의 투명성 문제가 부상하고 있다. 영통에 첫 지분적립형 주택인 '광교 자연앤 센트레빌'이 10일 청약을 시작한다. 서울 아파트 매물은 8만건 쌓였지만 거래는 감소하는 것으로 나타났다. 아파트 관리의 브랜드화가 집값 차이를 만들 수 있다는 분석이 제기되고 있다.",
+        "lineEn": "Gangnam reconstruction cooperatives are causing a stir over the issue of realizing the burden of the revaluation of the land. 18 cases of fake unmarried applicants have been detected, raising concerns about the transparency of the real estate market. The first share accumulation type housing, \"Gwanggyo Nature & Centreville,\" in Youngtong will start its application process on the 10th. Although 80,000 apartment listings have accumulated in Seoul, transactions are showing a decreasing trend. Analysis is emerging that brandification of apartment management can create differences in housing prices.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "“강남 재건축조합들 뭉쳤다”…재초환 부담금 현실화에 ‘시끌’",
+            "link": "https://www.mk.co.kr/news/realestate/12203785",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "아파트 당첨되려 서류상 미혼…위장미혼 청약 18건 적발",
+            "link": "https://www.newsis.com/view/NISX20261110_0003861971",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "첫 지분적립형 주택…영통 '광교 자연앤 센트레빌' 10일 청약",
+            "link": "https://www.newsis.com/view/NISX20261110_0003861593",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "매물은 8만건 쌓이는데 거래는 '뚝'…서울 집값 향방은",
+            "link": "https://www.newsis.com/view/NISX20261110_0003861918",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "“아파트 관리도 브랜드 시대…집값 차이 만들 것”",
+            "link": "https://www.mk.co.kr/news/realestate/12203726",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "홍콩 증시는 미국 증시 강세로 사흘 만에 상승하며 항셍 0.13% 상승했고, 중국 증시도 상승 출발하며 상하이지수 0.58% 상승했으며, 코스피는 장중 4%대 상승세를 유지하며 외인과 기관이 매수했고, AI 시즌오프 공포가 진정되나 여전한 우려 속에 코스피가 급반등했으며, 엔화는 미국 증시에서 AI주 강세에 1달러=157엔대 후반 출발했다.",
+        "lineEn": "The Hong Kong stock market rose for the first time in three days due to a strong U.S. stock market, with the Hang Seng index rising 0.13%. The Chinese stock market also started with a rise, with the Shanghai index up 0.58%. The KOSPI maintained a 4% increase during the day, with foreigners and institutions buying shares. The KOSPI sharply rose amid concerns that the AI season-off panic had eased but worries remained. The yen started at around 157 yen to the dollar due to a strong performance of AI stocks in the U.S. market.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "[올댓차이나] 홍콩 증시, 美 증시 강세로 사흘 만에 상승… 항셍 0.13%↑",
+            "link": "https://www.newsis.com/view/NISX20261110_0003861904",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 상승 출발…상하이지수 0.58%↑",
+            "link": "https://www.newsis.com/view/NISX20261110_0003861844",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "코스피, 장중 4%대 상승세 유지…외인·기관 '사자'",
+            "link": "https://www.yna.co.kr/view/AKR20261110077600008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "'AI 시즌오프' 공포 진정되나…여전한 우려 속 코스피 급반등",
+            "link": "https://www.yna.co.kr/view/AKR20261110070800008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "엔화, 美 증시서 AI주 강세에 1달러=157엔대 후반 출발",
+            "link": "https://www.newsis.com/view/NISX20261110_0003861660",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
