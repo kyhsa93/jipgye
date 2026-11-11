@@ -1,65 +1,65 @@
 {
-  "updatedAt": "2026-11-10T04:37:23.102Z",
-  "asOf": "2026-11-10",
+  "updatedAt": "2026-11-11T02:46:23.298Z",
+  "asOf": "2026-11-11",
   "trackedFrom": "2026-08-18",
   "basis": "unique-arrival-key",
   "comparable": true,
   "gaps": [],
   "current": {
-    "from": "2026-11-04",
-    "to": "2026-11-10",
-    "sale": 1031,
-    "jeonse": 1887,
-    "wolse": 1826,
-    "cancelArrived": 21,
-    "cancelDated": 14,
-    "direct": 57,
-    "directShare": 5.5,
-    "records": 303,
-    "judged": 812,
+    "from": "2026-11-05",
+    "to": "2026-11-11",
+    "sale": 1026,
+    "jeonse": 1979,
+    "wolse": 1940,
+    "cancelArrived": 23,
+    "cancelDated": 17,
+    "direct": 55,
+    "directShare": 5.4,
+    "records": 299,
+    "judged": 815,
     "districts": [
       "11350",
-      "11290",
-      "11500"
+      "11500",
+      "11290"
     ],
     "months": {
       "sale": {
-        "202610": 845,
-        "202611": 186
+        "202610": 776,
+        "202611": 250
       },
       "rent": {
-        "202610": 1460,
-        "202611": 2253
+        "202610": 1300,
+        "202611": 2619
       }
     }
   },
   "previous": {
-    "from": "2026-10-28",
-    "to": "2026-11-03",
-    "sale": 1036,
-    "jeonse": 1922,
-    "wolse": 2118,
-    "cancelArrived": 20,
-    "cancelDated": 22,
-    "direct": 109,
-    "directShare": 10.5,
-    "records": 268,
-    "judged": 763,
+    "from": "2026-10-29",
+    "to": "2026-11-04",
+    "sale": 1059,
+    "jeonse": 1839,
+    "wolse": 1954,
+    "cancelArrived": 21,
+    "cancelDated": 23,
+    "direct": 113,
+    "directShare": 10.7,
+    "records": 277,
+    "judged": 769,
     "districts": [
       "11350",
       "11230",
-      "11710"
+      "11320"
     ],
     "months": {
       "sale": {
-        "202609": 133,
-        "202610": 900,
-        "202611": 3
+        "202609": 116,
+        "202610": 927,
+        "202611": 16
       },
       "rent": {
-        "202609": 388,
-        "202610": 3488,
-        "202611": 164
+        "202609": 272,
+        "202610": 3113,
+        "202611": 408
       }
     }
   }
