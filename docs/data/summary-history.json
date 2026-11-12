@@ -8454,5 +8454,134 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-12",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: 부동산: 노원구, 재건축·재개발 사업성 위해 국토부에 3개 과제 건의, GS건설, 안산 '아르뮤제자이' 견본주택 개관…중대형 984가구 공급, 국토장관 \"매물 쌓이고 거래 감소…주택가격 하락기 시그널\" +12\n- 증시·환율: 홍콩 증시는 지분조정 매도로 인해 하락했으며, H주 지수는 1.33% 내렸다. 코스피는 '젠슨황 해임 위기' 여파로 보합권 등락하다가 1%대 강세를 기록했다. 중국 증시는 하락 출발했고, 상하이지수는 0.21% 떨어졌다. 각 증시는 서로 다른 요인에 따라 움직였으며, 구체적인 원인은 명시되지 않았다. 이날 발표된 주요 경제 뉴스는 주요 증시 동향을 반영하고 있다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 하락하며 3년물은 장중 연 3.713%를 기록했다. 증시 부진과 금리 상승으로 인해 증권사들의 3분기 실적은 줄줄이 악화되고 있다. 11월 서울과 경기의 주택사업자 경기 전망은 금리 상승으로 인해 큰 폭으로 하락했다. 수도권 주택사업 경기 전망도 악화되며 고금리에 따른 부담이 커지고 있다. 각 기사는 서로 다른 상황을 보여주며 경제 전반에 영향을 미치고 있다.\n- 기타 경제 소식: 경찰은 5천억원대 정책자금대출 불법알선 의혹으로 59명을 검거했다. 검거된 인물들은 250억원을 챙겨낸 것으로 조사됐다. 강진에서는 반값여행 프로모션이 진행되고 있다. 이 프로모션은 소비 증대와 관광객 유입에 기여하고 있다. 경제 효과를 높이기 위한 방안으로 주목받고 있다.",
+      "en": "- Real Estate: Real Estate: 노원구, 재건축·재개발 사업성 위해 국토부에 3개 과제 건의, GS건설, 안산 '아르뮤제자이' 견본주택 개관…중대형 984가구 공급, 국토장관 \"매물 쌓이고 거래 감소…주택가격 하락기 시그널\" +12\n- Stocks & FX: The Hong Kong stock market fell due to share adjustment selling, and the H-share index dropped 1.33%. The Kospi fluctuated around the flat line due to the impact of the \"Jenson Huang removal crisis\" before recording a strong performance in the 1% range. The Chinese stock market started with a decline, and the Shanghai index fell 0.21%. Each stock market moved due to different factors, and specific causes were not mentioned. Major economic news released today reflects the trends of major stock markets.\n- Rates, Deposits & Investment Products: Government bond rates fell sharply, with the 3-year rate reaching 3.713% during the day. Due to poor stock market performance and rising interest rates, securities companies' third-quarter results are deteriorating one after another. The housing business outlook for Seoul and Gyeonggi in November fell sharply due to rising interest rates. The housing business outlook in the capital area has also worsened, increasing the burden caused by high interest rates. Each report shows different situations, affecting the overall economy.\n- Other Economic News: The police arrested 59 people in connection with suspicions of illegally facilitating a policy loan of over 500,000,000,000 won. The arrested individuals are found to have secured 25,000,000,000 won. A half-price travel promotion is underway in Gwangjin. This promotion is contributing to increased consumption and the inflow of tourists. It is receiving attention as a measure to enhance economic effects."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "부동산: 노원구, 재건축·재개발 사업성 위해 국토부에 3개 과제 건의, GS건설, 안산 '아르뮤제자이' 견본주택 개관…중대형 984가구 공급, 국토장관 \"매물 쌓이고 거래 감소…주택가격 하락기 시그널\" +12",
+        "lineEn": "Real Estate: 노원구, 재건축·재개발 사업성 위해 국토부에 3개 과제 건의, GS건설, 안산 '아르뮤제자이' 견본주택 개관…중대형 984가구 공급, 국토장관 \"매물 쌓이고 거래 감소…주택가격 하락기 시그널\" +12",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
+        "degraded": false,
+        "items": [
+          {
+            "title": "노원구, 재건축·재개발 사업성 위해 국토부에 3개 과제 건의",
+            "link": "https://www.newsis.com/view/NISX20261112_0003865440",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "GS건설, 안산 '아르뮤제자이' 견본주택 개관…중대형 984가구 공급",
+            "link": "https://www.newsis.com/view/NISX20261112_0003865291",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "국토장관 \"매물 쌓이고 거래 감소…주택가격 하락기 시그널\"",
+            "link": "https://www.yna.co.kr/view/AKR20261112091200003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "세금 부담에 집 팔았다…다주택자 연간 첫 감소, 1.9만명 줄어",
+            "link": "https://www.newsis.com/view/NISX20261112_0003865051",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "세종 입주·이전기업 종사자 아파트 특별공급…44세대 분양",
+            "link": "https://www.yna.co.kr/view/AKR20261112065600063",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "홍콩 증시는 지분조정 매도로 인해 하락했으며, H주 지수는 1.33% 내렸다. 코스피는 '젠슨황 해임 위기' 여파로 보합권 등락하다가 1%대 강세를 기록했다. 중국 증시는 하락 출발했고, 상하이지수는 0.21% 떨어졌다. 각 증시는 서로 다른 요인에 따라 움직였으며, 구체적인 원인은 명시되지 않았다. 이날 발표된 주요 경제 뉴스는 주요 증시 동향을 반영하고 있다.",
+        "lineEn": "The Hong Kong stock market fell due to share adjustment selling, and the H-share index dropped 1.33%. The Kospi fluctuated around the flat line due to the impact of the \"Jenson Huang removal crisis\" before recording a strong performance in the 1% range. The Chinese stock market started with a decline, and the Shanghai index fell 0.21%. Each stock market moved due to different factors, and specific causes were not mentioned. Major economic news released today reflects the trends of major stock markets.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 홍콩 증시, 지분조정 매도에 속락… H주 1.33%↓",
+            "link": "https://www.newsis.com/view/NISX20261112_0003865395",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "'젠슨황 해임 위기' 여파?…코스피, 보합권 등락하다 1%대 강세",
+            "link": "https://www.yna.co.kr/view/AKR20261112084900008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.21%↓",
+            "link": "https://www.newsis.com/view/NISX20261112_0003865239",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 일제히 하락하며 3년물은 장중 연 3.713%를 기록했다. 증시 부진과 금리 상승으로 인해 증권사들의 3분기 실적은 줄줄이 악화되고 있다. 11월 서울과 경기의 주택사업자 경기 전망은 금리 상승으로 인해 큰 폭으로 하락했다. 수도권 주택사업 경기 전망도 악화되며 고금리에 따른 부담이 커지고 있다. 각 기사는 서로 다른 상황을 보여주며 경제 전반에 영향을 미치고 있다.",
+        "lineEn": "Government bond rates fell sharply, with the 3-year rate reaching 3.713% during the day. Due to poor stock market performance and rising interest rates, securities companies' third-quarter results are deteriorating one after another. The housing business outlook for Seoul and Gyeonggi in November fell sharply due to rising interest rates. The housing business outlook in the capital area has also worsened, increasing the burden caused by high interest rates. Each report shows different situations, affecting the overall economy.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "국고채 금리 일제히 하락…3년물 장중 연 3.713%",
+            "link": "https://www.yna.co.kr/view/AKR20261112092300008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "증시부진·금리상승에 '직격탄'…증권사 3분기 실적 줄줄이 악화",
+            "link": "https://www.yna.co.kr/view/AKR20261112087000008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "금리 상승에…11월 서울·경기 주택사업자 경기 전망 큰폭 하락",
+            "link": "https://www.yna.co.kr/view/AKR20261112031500003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "수도권 주택사업경기 전망 악화…\"고금리에 부담 커져\"",
+            "link": "https://www.newsis.com/view/NISX20261112_0003864806",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "경찰은 5천억원대 정책자금대출 불법알선 의혹으로 59명을 검거했다. 검거된 인물들은 250억원을 챙겨낸 것으로 조사됐다. 강진에서는 반값여행 프로모션이 진행되고 있다. 이 프로모션은 소비 증대와 관광객 유입에 기여하고 있다. 경제 효과를 높이기 위한 방안으로 주목받고 있다.",
+        "lineEn": "The police arrested 59 people in connection with suspicions of illegally facilitating a policy loan of over 500,000,000,000 won. The arrested individuals are found to have secured 25,000,000,000 won. A half-price travel promotion is underway in Gwangjin. This promotion is contributing to increased consumption and the inflow of tourists. It is receiving attention as a measure to enhance economic effects.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "경찰, 5천억원대 정책자금대출 불법알선 59명 검거…250억 챙겨",
+            "link": "https://www.yna.co.kr/view/AKR20261112087200004",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "강진 반값여행으로 소비 증대·관광객 유입 경제 효과",
+            "link": "https://www.yna.co.kr/view/AKR20261112070300054",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
