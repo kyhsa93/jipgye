@@ -1,65 +1,65 @@
 {
-  "updatedAt": "2026-11-11T02:46:23.298Z",
-  "asOf": "2026-11-11",
+  "updatedAt": "2026-11-12T03:48:38.336Z",
+  "asOf": "2026-11-12",
   "trackedFrom": "2026-08-18",
   "basis": "unique-arrival-key",
   "comparable": true,
   "gaps": [],
   "current": {
-    "from": "2026-11-05",
-    "to": "2026-11-11",
-    "sale": 1026,
-    "jeonse": 1979,
-    "wolse": 1940,
-    "cancelArrived": 23,
-    "cancelDated": 17,
-    "direct": 55,
-    "directShare": 5.4,
-    "records": 299,
-    "judged": 815,
+    "from": "2026-11-06",
+    "to": "2026-11-12",
+    "sale": 1085,
+    "jeonse": 2047,
+    "wolse": 2056,
+    "cancelArrived": 26,
+    "cancelDated": 22,
+    "direct": 42,
+    "directShare": 3.9,
+    "records": 330,
+    "judged": 889,
     "districts": [
       "11350",
       "11500",
-      "11290"
-    ],
-    "months": {
-      "sale": {
-        "202610": 776,
-        "202611": 250
-      },
-      "rent": {
-        "202610": 1300,
-        "202611": 2619
-      }
-    }
-  },
-  "previous": {
-    "from": "2026-10-29",
-    "to": "2026-11-04",
-    "sale": 1059,
-    "jeonse": 1839,
-    "wolse": 1954,
-    "cancelArrived": 21,
-    "cancelDated": 23,
-    "direct": 113,
-    "directShare": 10.7,
-    "records": 277,
-    "judged": 769,
-    "districts": [
-      "11350",
-      "11230",
       "11320"
     ],
     "months": {
       "sale": {
-        "202609": 116,
-        "202610": 927,
-        "202611": 16
+        "202610": 780,
+        "202611": 305
       },
       "rent": {
-        "202609": 272,
-        "202610": 3113,
-        "202611": 408
+        "202610": 1136,
+        "202611": 2967
+      }
+    }
+  },
+  "previous": {
+    "from": "2026-10-30",
+    "to": "2026-11-05",
+    "sale": 1051,
+    "jeonse": 1852,
+    "wolse": 1864,
+    "cancelArrived": 24,
+    "cancelDated": 20,
+    "direct": 130,
+    "directShare": 12.4,
+    "records": 267,
+    "judged": 743,
+    "districts": [
+      "11230",
+      "11350",
+      "11500"
+    ],
+    "months": {
+      "sale": {
+        "202609": 91,
+        "202610": 907,
+        "202611": 53
+      },
+      "rent": {
+        "202609": 228,
+        "202610": 2827,
+        "202611": 661
       }
     }
   }
