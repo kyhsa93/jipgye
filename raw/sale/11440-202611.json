@@ -1,1 +1,3 @@
-{"kind":"sale","district":"11440","yearMonth":"202611","ok":true,"resultCode":0,"count":0,"totalCount":0,"observedAt":"2026-11-01T02:09:31.442Z","previousObservedAt":null,"arrivals":{},"items":[]}
+{"kind":"sale","district":"11440","yearMonth":"202611","ok":true,"resultCode":0,"count":1,"totalCount":1,"observedAt":"2026-11-12T03:46:42.525Z","previousObservedAt":"2026-11-01T02:09:31.442Z","arrivals":{"0b58cd826ea0":"2026-11-12"},"items":[
+{"aptDong":"","aptNm":"성산시영(유원)","buildYear":1986,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"167,000","dealDay":2,"dealMonth":11,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"경기 고양시 덕양구, 서울 마포구","excluUseAr":59.43,"floor":10,"jibun":446,"landLeaseholdGbn":"N","rgstDate":"","sggCd":11440,"slerGbn":"개인","umdNm":"성산동"}
+]}
