@@ -8583,5 +8583,112 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-13",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: 내년 1분기까지 수도권 아파트에 4만4천 가구가 입주할 예정이다. 공인중개사협회는 전세사기 방지를 위해 등기부 관련 수수료 인상에 반대하며 국회에서 결의대회를 열었다. 정부는 수도권 아파트 입주 물량 증가를 통해 시장 안정을 자평하고 있다. 국무조정실은 서울 아파트값 상승폭이 둔화되고 매물이 증가하며 하향 안정 지표가 확대되고 있다고 밝혔다. BTS 진은 한남동의 빌딩을 구입하며 주목받고 있다.\n- 증시·환율: 증시·환율: [올댓차이나] 홍콩 증시, 미중 AI 갈등 우려에 사흘째 속락… H주 0.67%↓, [올댓차이나] 中 증시, 반도체주 강세에 반등 개장…상하이 0.2%↑, '젠슨 황 퇴임'에도 코스피, 장중 2%대 상승…외국인 '사자' +1\n- 금리·예금·투자상품: 국고채 금리가 일제히 상승하며 3년물이 장중 연 3.756%를 기록했고, 미국 연준이 2027년 FOMC 일정을 공개해 기준금리 결정 회의 횟수를 8번에서 7번으로 줄였으며, 엔화는 미국 금리인상 확실성에 따라 1달러=159엔대 후반으로 하락 출발했다.",
+      "en": "- Real Estate: By the first quarter of next year, 40,0004 households are expected to move into apartments in the Seoul metropolitan area. The Real Estate Brokers Association opposed the increase in registration-related fees to prevent lease fraud and held a rally in the National Assembly. The government is self-assessing market stability through the increase in the number of apartments available for occupancy in the Seoul metropolitan area. The Prime Minister's Office stated that the rate of increase in Seoul apartment prices has slowed down and the number of available properties has increased, leading to an expansion of downward stabilization indicators. BTS Jimin is receiving attention for purchasing a building in Hanam-dong.\n- Stocks & FX: Stocks & FX: [올댓차이나] 홍콩 증시, 미중 AI 갈등 우려에 사흘째 속락… H주 0.67%↓, [올댓차이나] 中 증시, 반도체주 강세에 반등 개장…상하이 0.2%↑, '젠슨 황 퇴임'에도 코스피, 장중 2%대 상승…외국인 '사자' +1\n- Rates, Deposits & Investment Products: Korean government bond rates rose uniformly, with the 3-year bond reaching 3.756% annually during trading. The U.S. Federal Reserve disclosed its 2027 FOMC schedule, reducing the number of meetings for setting benchmark interest rates from eight to seven. The yen started to fall to the low 159 yen per dollar range due to certainty about U.S. interest rate hikes."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "내년 1분기까지 수도권 아파트에 4만4천 가구가 입주할 예정이다. 공인중개사협회는 전세사기 방지를 위해 등기부 관련 수수료 인상에 반대하며 국회에서 결의대회를 열었다. 정부는 수도권 아파트 입주 물량 증가를 통해 시장 안정을 자평하고 있다. 국무조정실은 서울 아파트값 상승폭이 둔화되고 매물이 증가하며 하향 안정 지표가 확대되고 있다고 밝혔다. BTS 진은 한남동의 빌딩을 구입하며 주목받고 있다.",
+        "lineEn": "By the first quarter of next year, 40,0004 households are expected to move into apartments in the Seoul metropolitan area. The Real Estate Brokers Association opposed the increase in registration-related fees to prevent lease fraud and held a rally in the National Assembly. The government is self-assessing market stability through the increase in the number of apartments available for occupancy in the Seoul metropolitan area. The Prime Minister's Office stated that the rate of increase in Seoul apartment prices has slowed down and the number of available properties has increased, leading to an expansion of downward stabilization indicators. BTS Jimin is receiving attention for purchasing a building in Hanam-dong.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "수도권 아파트에 내년 1분기까지 4만4천 가구 입주(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261113072051003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "“전세사기 막으려 등기부 떼는데 수수료 인상 웬 말”… 공인중개사협회, 국회서 결의대회",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/13/73ITORNBEVDAXPOPULZKAL64CA/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "내년 1분기까지 수도권 아파트 4만4000가구 입주… 정부 ‘시장 안정’ 자평",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/13/FGHURBUCTJGZVI3JQOLIONO2SI/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "국무조정실 \"서울 아파트값 상승폭 둔화·매물 증가…시장 하향 안정 지표 확대\"",
+            "link": "https://www.newsis.com/view/NISX20261113_0003866914",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "\"80억 벌고 또 한남동으로\"…BTS 진, 이번엔 빌딩 샀다 [집코노미-핫!부동산]",
+            "link": "https://www.hankyung.com/article/202611134765H",
+            "source": "한국경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "증시·환율: [올댓차이나] 홍콩 증시, 미중 AI 갈등 우려에 사흘째 속락… H주 0.67%↓, [올댓차이나] 中 증시, 반도체주 강세에 반등 개장…상하이 0.2%↑, '젠슨 황 퇴임'에도 코스피, 장중 2%대 상승…외국인 '사자' +1",
+        "lineEn": "Stocks & FX: [올댓차이나] 홍콩 증시, 미중 AI 갈등 우려에 사흘째 속락… H주 0.67%↓, [올댓차이나] 中 증시, 반도체주 강세에 반등 개장…상하이 0.2%↑, '젠슨 황 퇴임'에도 코스피, 장중 2%대 상승…외국인 '사자' +1",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 홍콩 증시, 미중 AI 갈등 우려에 사흘째 속락… H주 0.67%↓",
+            "link": "https://www.newsis.com/view/NISX20261113_0003867026",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 中 증시, 반도체주 강세에 반등 개장…상하이 0.2%↑",
+            "link": "https://www.newsis.com/view/NISX20261113_0003866973",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "'젠슨 황 퇴임'에도 코스피, 장중 2%대 상승…외국인 '사자'",
+            "link": "https://www.yna.co.kr/view/AKR20261113071900008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "'젠슨황 퇴임'에도 증시 선방…코스피·코스닥, 2%대 상승세(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261113036451008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 일제히 상승하며 3년물이 장중 연 3.756%를 기록했고, 미국 연준이 2027년 FOMC 일정을 공개해 기준금리 결정 회의 횟수를 8번에서 7번으로 줄였으며, 엔화는 미국 금리인상 확실성에 따라 1달러=159엔대 후반으로 하락 출발했다.",
+        "lineEn": "Korean government bond rates rose uniformly, with the 3-year bond reaching 3.756% annually during trading. The U.S. Federal Reserve disclosed its 2027 FOMC schedule, reducing the number of meetings for setting benchmark interest rates from eight to seven. The yen started to fall to the low 159 yen per dollar range due to certainty about U.S. interest rate hikes.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "국고채 금리 일제히 상승…3년물 장중 연 3.756%",
+            "link": "https://www.yna.co.kr/view/AKR20261113084400008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "美연준, 2027년 FOMC 일정 공개…기준금리 결정 8번→7번",
+            "link": "https://www.newsis.com/view/NISX20261113_0003866679",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "엔화, 美 금리인상 확실에 1달러=159엔대 후반 하락 출발",
+            "link": "https://www.newsis.com/view/NISX20261113_0003866769",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
