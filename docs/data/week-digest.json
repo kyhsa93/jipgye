@@ -1,22 +1,22 @@
 {
-  "updatedAt": "2026-11-12T03:48:38.336Z",
-  "asOf": "2026-11-12",
+  "updatedAt": "2026-11-13T03:24:08.115Z",
+  "asOf": "2026-11-13",
   "trackedFrom": "2026-08-18",
   "basis": "unique-arrival-key",
   "comparable": true,
   "gaps": [],
   "current": {
-    "from": "2026-11-06",
-    "to": "2026-11-12",
-    "sale": 1085,
-    "jeonse": 2047,
-    "wolse": 2056,
-    "cancelArrived": 26,
-    "cancelDated": 22,
-    "direct": 42,
-    "directShare": 3.9,
-    "records": 330,
-    "judged": 889,
+    "from": "2026-11-07",
+    "to": "2026-11-13",
+    "sale": 1107,
+    "jeonse": 2130,
+    "wolse": 2123,
+    "cancelArrived": 28,
+    "cancelDated": 21,
+    "direct": 46,
+    "directShare": 4.2,
+    "records": 320,
+    "judged": 903,
     "districts": [
       "11350",
       "11500",
@@ -24,42 +24,42 @@
     ],
     "months": {
       "sale": {
-        "202610": 780,
-        "202611": 305
+        "202610": 746,
+        "202611": 361
       },
       "rent": {
-        "202610": 1136,
-        "202611": 2967
+        "202610": 1073,
+        "202611": 3180
       }
     }
   },
   "previous": {
-    "from": "2026-10-30",
-    "to": "2026-11-05",
-    "sale": 1051,
-    "jeonse": 1852,
-    "wolse": 1864,
-    "cancelArrived": 24,
-    "cancelDated": 20,
-    "direct": 130,
-    "directShare": 12.4,
-    "records": 267,
-    "judged": 743,
+    "from": "2026-10-31",
+    "to": "2026-11-06",
+    "sale": 1070,
+    "jeonse": 1790,
+    "wolse": 1803,
+    "cancelArrived": 20,
+    "cancelDated": 18,
+    "direct": 128,
+    "directShare": 12,
+    "records": 282,
+    "judged": 764,
     "districts": [
-      "11230",
       "11350",
-      "11500"
+      "11230",
+      "11320"
     ],
     "months": {
       "sale": {
-        "202609": 91,
-        "202610": 907,
-        "202611": 53
+        "202609": 67,
+        "202610": 925,
+        "202611": 78
       },
       "rent": {
-        "202609": 228,
-        "202610": 2827,
-        "202611": 661
+        "202609": 186,
+        "202610": 2480,
+        "202611": 927
       }
     }
   }
