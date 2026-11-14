@@ -1,50 +1,50 @@
 {
-  "updatedAt": "2026-11-13T03:24:08.115Z",
-  "asOf": "2026-11-13",
+  "updatedAt": "2026-11-14T03:15:34.594Z",
+  "asOf": "2026-11-14",
   "trackedFrom": "2026-08-18",
   "basis": "unique-arrival-key",
   "comparable": true,
   "gaps": [],
   "current": {
-    "from": "2026-11-07",
-    "to": "2026-11-13",
-    "sale": 1107,
-    "jeonse": 2130,
-    "wolse": 2123,
-    "cancelArrived": 28,
-    "cancelDated": 21,
-    "direct": 46,
-    "directShare": 4.2,
-    "records": 320,
-    "judged": 903,
+    "from": "2026-11-08",
+    "to": "2026-11-14",
+    "sale": 1080,
+    "jeonse": 2086,
+    "wolse": 2077,
+    "cancelArrived": 26,
+    "cancelDated": 25,
+    "direct": 47,
+    "directShare": 4.4,
+    "records": 314,
+    "judged": 882,
     "districts": [
       "11350",
       "11500",
-      "11320"
+      "11470"
     ],
     "months": {
       "sale": {
-        "202610": 746,
-        "202611": 361
+        "202610": 680,
+        "202611": 400
       },
       "rent": {
-        "202610": 1073,
-        "202611": 3180
+        "202610": 974,
+        "202611": 3189
       }
     }
   },
   "previous": {
-    "from": "2026-10-31",
-    "to": "2026-11-06",
-    "sale": 1070,
-    "jeonse": 1790,
-    "wolse": 1803,
-    "cancelArrived": 20,
+    "from": "2026-11-01",
+    "to": "2026-11-07",
+    "sale": 1085,
+    "jeonse": 1776,
+    "wolse": 1762,
+    "cancelArrived": 21,
     "cancelDated": 18,
     "direct": 128,
-    "directShare": 12,
-    "records": 282,
-    "judged": 764,
+    "directShare": 11.8,
+    "records": 301,
+    "judged": 785,
     "districts": [
       "11350",
       "11230",
@@ -52,14 +52,14 @@
     ],
     "months": {
       "sale": {
-        "202609": 67,
-        "202610": 925,
-        "202611": 78
+        "202609": 46,
+        "202610": 924,
+        "202611": 115
       },
       "rent": {
-        "202609": 186,
-        "202610": 2480,
-        "202611": 927
+        "202609": 81,
+        "202610": 2070,
+        "202611": 1387
       }
     }
   }
