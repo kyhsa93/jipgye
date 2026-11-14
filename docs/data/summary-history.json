@@ -8690,5 +8690,119 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-14",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: 무주택자들이 내 집 마련에 어려움을 겪고 있는 가운데, 전세난에 이어 월세난까지 심화되고 있다. 도봉구 쌍문동 한양1차 50.58㎡ 아파트는 6억 5천만원에 거래되며 최근 3년간 최고가를 기록했다. 도봉구 창동주공3단지 79.07㎡ 아파트는 10억 6천만원에 거래되며 신고가를 나타냈다. 노원구 공릉동 풍림아파트B 31.32㎡는 3억 7천만원에 거래되며 최근 3년간 최고가를 기록했다. 서대문구 동부센트레빌 59.86㎡ 아파트는 10억 9천만원에 거래되며 신고가를 기록했다.\n- 기타 경제 소식: 다음주 경제 관련 소식에서 가계부채가 2천조원을 넘어서는 것으로 보인다. 해당 소식은 경제 전망에 대한 관심을 높이고 있다. 다른 소식에서는 주요 경제 지표에 대한 분석이 이어지고 있다. 각 기사는 서로 다른 주제로 진행되고 있다. 오늘 경제 뉴스는 다양한 주제를 다루며 관심을 끌고 있다.\n- 증시·환율: 뉴욕 증시에서 엔비디아의 영향으로 나스닥 지수가 하락 마감했다. 코스피는 젠슨황의 퇴임 소식에도 장중 3%까지 올랐으나, 결국 0.98% 하락하며 마감했다. 환율은 달러 강세로 인해 6.0원 상승해 1,336.7원으로 닷새 만에 반등했다. 엔비디아의 실적과 관련된 움직임이 글로벌 시장에 영향을 미쳤다. 각 시장은 서로 다른 요인에 따라 움직임을 보였다.\n- 금리·예금·투자상품: 국고채 금리가 상승하며 10년물은 열흘 만에 다시 4%대에 진입했고, 3년물은 연 3.759%를 기록했다.",
+      "en": "- Real Estate: As homebuyers struggle to afford housing, the problem has worsened from a shortage of rental properties to a shortage of monthly rental properties. In Dobong-gu, Syang 1st, a 50.58㎡ apartment in Ssangmoon-dong was traded for 650,000,000 won, setting a new record for the highest price in the past three years. In Dobong-gu, Changdongjuong 3-dong, a 79.07㎡ apartment in the Changdongjuong 3-dong was traded for 1,060,000,000 won, showing a new high price. In Nowon-gu, Gongneung-dong, a 31.32㎡ apartment in the Bonglim Apartment was traded for 370,000,000 won, setting a new record for the highest price in the past three years. In Seodaemun-gu, Dongbu Centreville, a 59.86㎡ apartment was traded for 1,090,000,000 won, setting a new high price.\n- Other Economic News: Next week's economic news suggests that household debt will exceed 2,000,000,000,000,000 won. This news has increased interest in economic outlooks. Another report continues the analysis of major economic indicators. Each article is proceeding with different topics. Today's economic news covers various topics and is attracting attention.\n- Stocks & FX: The Nasdaq index closed lower due to NVIDIA's impact on the New York stock market. The KOSPI rose as much as 3% during the day despite news of Jensen Huang's resignation, but ultimately closed down 0.98%. The exchange rate rose 6.0 won to 1,336.7 won, rebounding for the first time in five days due to a strong dollar. Movements related to NVIDIA's performance affected the global market. Each market showed movements due to different factors.\n- Rates, Deposits & Investment Products: With the rise in government bond yields, the 10-year bond entered the 4% range again within ten days, and the 3-year bond recorded an annual rate of 3.759%."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "무주택자들이 내 집 마련에 어려움을 겪고 있는 가운데, 전세난에 이어 월세난까지 심화되고 있다. 도봉구 쌍문동 한양1차 50.58㎡ 아파트는 6억 5천만원에 거래되며 최근 3년간 최고가를 기록했다. 도봉구 창동주공3단지 79.07㎡ 아파트는 10억 6천만원에 거래되며 신고가를 나타냈다. 노원구 공릉동 풍림아파트B 31.32㎡는 3억 7천만원에 거래되며 최근 3년간 최고가를 기록했다. 서대문구 동부센트레빌 59.86㎡ 아파트는 10억 9천만원에 거래되며 신고가를 기록했다.",
+        "lineEn": "As homebuyers struggle to afford housing, the problem has worsened from a shortage of rental properties to a shortage of monthly rental properties. In Dobong-gu, Syang 1st, a 50.58㎡ apartment in Ssangmoon-dong was traded for 650,000,000 won, setting a new record for the highest price in the past three years. In Dobong-gu, Changdongjuong 3-dong, a 79.07㎡ apartment in the Changdongjuong 3-dong was traded for 1,060,000,000 won, showing a new high price. In Nowon-gu, Gongneung-dong, a 31.32㎡ apartment in the Bonglim Apartment was traded for 370,000,000 won, setting a new record for the highest price in the past three years. In Seodaemun-gu, Dongbu Centreville, a 59.86㎡ apartment was traded for 1,090,000,000 won, setting a new high price.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "전세난에 월세난까지…무주택자 내 집 마련 압박 커진다[전월세 쇼크②]",
+            "link": "https://www.newsis.com/view/NISX20261113_0003867651",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "도봉구 쌍문동 한양1차 50.58㎡ 6억 5천만원… 최근 3년 신고가 [MAI부동산]",
+            "link": "https://www.mk.co.kr/news/realestate/12208827",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "도봉구 창동주공3단지 79.07㎡ 10억 6천만원… 최근 3년 신고가 [MAI부동산]",
+            "link": "https://www.mk.co.kr/news/realestate/12208828",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "노원구 공릉동 풍림아파트B 31.32㎡, 3억 7천만원에 거래… 최근 3년 신고가 [MAI부동산]",
+            "link": "https://www.mk.co.kr/news/realestate/12208829",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "서대문구 동부센트레빌 59.86㎡ 10억 9천만원 거래… 최근 3년 신고가 [MAI부동산]",
+            "link": "https://www.mk.co.kr/news/realestate/12208830",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "다음주 경제 관련 소식에서 가계부채가 2천조원을 넘어서는 것으로 보인다. 해당 소식은 경제 전망에 대한 관심을 높이고 있다. 다른 소식에서는 주요 경제 지표에 대한 분석이 이어지고 있다. 각 기사는 서로 다른 주제로 진행되고 있다. 오늘 경제 뉴스는 다양한 주제를 다루며 관심을 끌고 있다.",
+        "lineEn": "Next week's economic news suggests that household debt will exceed 2,000,000,000,000,000 won. This news has increased interest in economic outlooks. Another report continues the analysis of major economic indicators. Each article is proceeding with different topics. Today's economic news covers various topics and is attracting attention.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[다음주 경제] 2천조원 넘긴 가계부채, 얼마나 더 늘었을까",
+            "link": "https://www.yna.co.kr/view/AKR20261114014500002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "뉴욕 증시에서 엔비디아의 영향으로 나스닥 지수가 하락 마감했다. 코스피는 젠슨황의 퇴임 소식에도 장중 3%까지 올랐으나, 결국 0.98% 하락하며 마감했다. 환율은 달러 강세로 인해 6.0원 상승해 1,336.7원으로 닷새 만에 반등했다. 엔비디아의 실적과 관련된 움직임이 글로벌 시장에 영향을 미쳤다. 각 시장은 서로 다른 요인에 따라 움직임을 보였다.",
+        "lineEn": "The Nasdaq index closed lower due to NVIDIA's impact on the New York stock market. The KOSPI rose as much as 3% during the day despite news of Jensen Huang's resignation, but ultimately closed down 0.98%. The exchange rate rose 6.0 won to 1,336.7 won, rebounding for the first time in five days due to a strong dollar. Movements related to NVIDIA's performance affected the global market. Each market showed movements due to different factors.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "뉴욕 증시 엔비디아 영향 나스닥 지수 하락 마감",
+            "link": "https://www.newsis.com/view/NISX20261114_0003867937",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "'젠슨황 퇴임'에도 장중 3%까지 올랐던 코스피, 0.98% 하락 마감(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261113129251008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "환율, 달러 강세에 닷새 만에 반등…6.0원 오른 1,336.7원",
+            "link": "https://www.yna.co.kr/view/AKR20261113137600002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 상승하며 10년물은 열흘 만에 다시 4%대에 진입했고, 3년물은 연 3.759%를 기록했다.",
+        "lineEn": "With the rise in government bond yields, the 10-year bond entered the 4% range again within ten days, and the 3-year bond recorded an annual rate of 3.759%.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "국고채 금리 상승…10년물, 열흘만에 다시 4%대로(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261113146751008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "국고채 금리 일제히 상승…3년물 연 3.759%",
+            "link": "https://www.yna.co.kr/view/AKR20261113146700008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
