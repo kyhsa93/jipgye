@@ -116,6 +116,7 @@ CFO는 두지 않았다. 드는 돈이 없고(GitHub 무료, 요약은 자체 Ol
 
 뉴스 네 장과 실거래 검색, 금리 비교 종료 안내 다섯 장(`rates`·`deposit-rates`·`saving-rates`·`mortgage-rates`·`rent-loan-rates`)은 `noindex`다. 남의 기사 제목과 그 요약, 그리고 조건을
 넣기 전에는 아무것도 없는 검색 화면은 우리가 만든 것이 아니라서 검색에 내보내지 않는다.
+근거표 장(`buy-by-budget`, #871)도 색인 해제 조건(N1~N6)을 채울 때까지 `noindex`다.
 링크는 따라가게 두었으니(`follow`) 자치구·예산대 페이지로 가는 길은 그대로다.
 
 자치구 페이지는 시세 문장 아래에 그 구에서만 눈에 띄는 것을 덧붙인다 — 한 동에 몰렸는지
@@ -281,7 +282,7 @@ AI 요약은 로컬에 Ollama가 있어야 한다(`OLLAMA_THINK=false` 필요).
 
 ### 사이트를 만들고 배포하는 길 (구조 B, #505)
 
-main은 **생성 HTML을 들고 있지 않다.** `docs/`에는 손으로 쓰는 틀 13장·금리 비교 종료 안내 5장·정적 자산·`docs/data`뿐이고, 생성 49장을 포함한 67장은 배포 때
+main은 **생성 HTML을 들고 있지 않다.** `docs/`에는 손으로 쓰는 틀 14장·금리 비교 종료 안내 5장·정적 자산·`docs/data`뿐이고, 생성 49장을 포함한 68장은 배포 때
 `node scripts/render-pipeline.ts --out=build/site`가 main HEAD(코드+데이터)로 새로 만든다(`build/`는 `.gitignore`다). 로컬에서 사이트를
 보거나 `build/site`를 읽는 시험을 돌리려면 그 명령을 먼저 돌린다 — `npm test`는 `pretest`로 자동으로 한다.
 
@@ -311,11 +312,11 @@ react 쪽 오류는 삼키지 않고 예외로 올라오며, 렌더 파이프라
 
 ### 화면
 
-67장 HTML이 전부 `docs/style.css` 한 장을 본다. 손으로 고치는 틀은 열세 장이고
+68장 HTML이 전부 `docs/style.css` 한 장을 본다. 손으로 고치는 틀은 열네 장이고
 (`index` `news` `realestate` `deal-search` `jeonse-vs-wolse` `cancelled-deals`
-`renewal-vs-new` `floor-gap` `record-high` `switch-house` `price-outlook` `about` `method`)
+`renewal-vs-new` `floor-gap` `record-high` `switch-house` `price-outlook` `buy-by-budget` `about` `method`)
 금리 비교 종료 안내 다섯 장(`rates`·`deposit-rates`·`saving-rates`·`mortgage-rates`·`rent-loan-rates`, `noindex`)도 `docs/`에 있다.
-색인 대상은 57장, `noindex`는 10장(뉴스 4·실거래 검색 1·종료 안내 5)이다.
+색인 대상은 57장, `noindex`는 11장(뉴스 4·실거래 검색 1·근거표 1·종료 안내 5)이다.
 나머지 생성 49장은 이 중 몇 장을 틀로 삼아 `scripts/build-*-pages.ts`가 배포 때 찍어낸다(main에는 없다). 그러니 **생성된 페이지를 직접 고치지 말고 틀과 스타일시트를 고친다.**
 
 전에는 62장이 각자 `<style>`을 품고 있었고 그 사이에 일곱 갈래로 갈라져 있었다.
@@ -327,7 +328,7 @@ react 쪽 오류는 삼키지 않고 예외로 올라오며, 렌더 파이프라
 (`docs/icons/*.png`)은 같은 모양을 `scripts/build-icons.ts`가 그린다 — 손으로 갈아
 끼우면 둘이 조용히 갈라지므로 `test/icons.test.mjs`가 스크립트 출력과 대조한다.
 자치구·예산대 페이지에는 사이트 이름이 한 번도 안 나왔었다. 검색으로 그 페이지에 떨어진
-사람은 자기가 어디에 있는지 모른 채 표부터 보게 되므로, 워드마크를 예순일곱 장 머리에 둔다.
+사람은 자기가 어디에 있는지 모른 채 표부터 보게 되므로, 워드마크를 예순여덟 장 머리에 둔다.
 
 **넓은 화면에서는 껍데기만 넓어지고 글은 안 넓어진다.** 오래도록 미디어쿼리가
 560·520·480 셋뿐이었다 — 전부 아래쪽이라 모바일에서 좁아지는 규칙만 있고 넓어지는 규칙이

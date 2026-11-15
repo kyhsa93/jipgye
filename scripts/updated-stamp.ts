@@ -52,6 +52,8 @@ export const PAGE_SOURCES = {
   "record-high.html": ["record-high"],
   "switch-house.html": ["district-change"],
   "deal-search.html": ["deal-search", "budget-deals", "rent-preview", "complex-price", "deals", "rents"],
+  // 근거표 장(#871): 빌드가 reco-<구>.json 25개로 숫자를 굽는다(브라우저는 PR-A 에서 아무것도 받지 않는다). 기준일은 그 묶음의 가장 오래된 updatedAt 이다.
+  "buy-by-budget.html": ["reco"],
   "realestate.html": REALESTATE,
   "apartment-sale.html": REALESTATE,
   "apartment-jeonse.html": REALESTATE,

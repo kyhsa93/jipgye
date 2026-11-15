@@ -146,7 +146,7 @@ test("render-pipeline --out: docs/ 는 한 바이트도 안 바뀌고 출력 디
   assert.deepEqual([...before.keys()].filter((f) => DAY_FILES.test(f) || f === SITEMAP), [], "main 의 docs/ 에 날짜별 뉴스 파일이나 sitemap.xml 이 있다 - 산출물은 build/site 에만 생긴다");
   assert.ok(rendered.has(SITEMAP), "sitemap.xml 이 출력 디렉터리에 없다(#769)");
   const htmls = [...rendered.keys()].filter((f) => f.endsWith(".html"));
-  assert.equal(htmls.length, 67);
+  assert.equal(htmls.length, 68);
   // 렌더가 만지지 않는 것(스타일시트·셸 스크립트·SW·매니페스트·아이콘·데이터)은 복사 그대로 - 배포 산출물에 정적 자산이 들어 있다는 뜻이다.
   // 장 전용 외부 JS 만 주석을 뗀 사본이다(#784) - 그 바이트는 소스에 훑개를 건 것과 같다.
   const page = new Set(pageScripts(DOCS_DIR));
@@ -156,8 +156,8 @@ test("render-pipeline --out: docs/ 는 한 바이트도 안 바뀌고 출력 디
     const want = page.has(f) ? createHash("sha256").update(stripJsComments(readFileSync(path.join(DOCS_DIR, f), "utf8"))).digest("hex") : before.get(f);
     assert.equal(rendered.get(f), want, `${f} 바이트`);
   }
-  // docs/ 의 소스 18장(손으로 고치는 틀 13장 + 금리 종료 안내 5장, #577 B2)은 docs/ 에도 있다 - 생성 장만 출력 디렉터리에만 있다.
-  assert.equal(htmls.filter((f) => !GENERATED.test(f)).length, 18);
+  // docs/ 의 소스 19장(손으로 고치는 틀 14장 + 금리 종료 안내 5장, #577 B2·#871)은 docs/ 에도 있다 - 생성 장만 출력 디렉터리에만 있다.
+  assert.equal(htmls.filter((f) => !GENERATED.test(f)).length, 19);
   for (const f of ["style.css", "nav.js", "sw.js", "manifest.webmanifest"]) assert.ok(rendered.has(f), `${f} 가 출력 디렉터리에 있다`);
 });
 
