@@ -8804,5 +8804,104 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-15",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: 송파 풍납극동아파트 재건축이 40층·598세대로 심의 통과되었고, 응암동엔 1천세대 주거단지가 조성되며, 전월세 물가가 1.4% 상승해 3년10개월 만에 최대폭을 기록했고, LH는 건설업계와 주택협회와 만나 공공주택 신속 공급 방안을 논의했다.\n- 기타 경제 소식: 오늘 한국 경제 뉴스에서 AI 투자 붐이 2028년 전후에 조정될 가능성에 대해 언급했다. 해당 소식은 경제 전반에 영향을 줄 수 있다는 점에서 주목받고 있다. 다른 소식에서는 관련된 구체적인 수치나 전망은 제시되지 않았다. 경제 분야의 변화에 대한 대비가 필요하다는 의견이 제기되고 있다. 오늘의 뉴스는 AI 투자와 관련된 전망에 초점을 맞추고 있다.\n- 증시·환율: '젠슨황 스캔들'로 인해 하락한 증시 상황 속에서 엔비디아의 실적과 앤트로픽의 상장 상황에 주목이 집중되고 있다.\n- 금리·예금·투자상품: 저축은행의 예금금리가 다시 4%에 근접하며 주목받고 있다. 상호금융은 반대로 예금금리 상승을 주춤하고 있다. 이는 최근 금융시장의 변동에 따른 것으로 나타났다. 저축은행은 경쟁력 있는 금리로 고객을 유치하려는 움직임을 보이고 있다. 상호금융은 금리 인상에 대한 속도 조절을 선택한 것으로 보인다.",
+      "en": "- Real Estate: The reconstruction of the Songo-pyeongnap Geumdong Apartment in Songpa has passed review with 40 floors and 598 units, a residential complex with 1,000 units will be built in Eungam-dong, the rent and deposit prices rose by 1.4%, reaching the highest increase in 3 years and 10 months, and LH met with the construction industry and the housing association to discuss ways to quickly supply public housing.\n- Other Economic News: Today's Korean economic news mentioned the possibility that the AI investment boom may be adjusted around 2028. This news is receiving attention as it could affect the overall economy. Other reports did not provide specific figures or forecasts related to this. There is an opinion that preparations are needed for changes in the economic sector. Today's news focuses on forecasts related to AI investment.\n- Stocks & FX: Attention is focused on NVIDIA's performance and Anthropic's IPO situation amid the declining stock market situation caused by the 'Jensen Huang scandal'.\n- Rates, Deposits & Investment Products: The deposit rates of savings banks are again approaching 4%, drawing attention. In contrast, mutual financial institutions are pausing their increase in deposit rates. This appears to be due to recent fluctuations in the financial market. Savings banks are showing moves to attract customers with competitive rates. Mutual financial institutions seem to have chosen to moderate the pace of rate increases."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "송파 풍납극동아파트 재건축이 40층·598세대로 심의 통과되었고, 응암동엔 1천세대 주거단지가 조성되며, 전월세 물가가 1.4% 상승해 3년10개월 만에 최대폭을 기록했고, LH는 건설업계와 주택협회와 만나 공공주택 신속 공급 방안을 논의했다.",
+        "lineEn": "The reconstruction of the Songo-pyeongnap Geumdong Apartment in Songpa has passed review with 40 floors and 598 units, a residential complex with 1,000 units will be built in Eungam-dong, the rent and deposit prices rose by 1.4%, reaching the highest increase in 3 years and 10 months, and LH met with the construction industry and the housing association to discuss ways to quickly supply public housing.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "송파 풍납극동아파트 598세대로…응암동엔 1천세대 주거단지",
+            "link": "https://www.yna.co.kr/view/AKR20261114027800004",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "서울 풍납극동아파트 재건축 심의 통과…40층·598세대",
+            "link": "https://www.newsis.com/view/NISX20261113_0003867820",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "전월세 물가 1.4%↑, 3년10개월 만에 최대폭…월세는 12년10개월 만",
+            "link": "https://www.newsis.com/view/NISX20261115_0003868443",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "LH, 건설업계 만나 공공주택 신속 공급 방안 논의",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/15/E4I7S53MEJE73DXMS76DJBOKJA/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "LH, 주택협회와 '공공주택 신속공급' 간담회 개최",
+            "link": "https://www.newsis.com/view/NISX20261115_0003868415",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "오늘 한국 경제 뉴스에서 AI 투자 붐이 2028년 전후에 조정될 가능성에 대해 언급했다. 해당 소식은 경제 전반에 영향을 줄 수 있다는 점에서 주목받고 있다. 다른 소식에서는 관련된 구체적인 수치나 전망은 제시되지 않았다. 경제 분야의 변화에 대한 대비가 필요하다는 의견이 제기되고 있다. 오늘의 뉴스는 AI 투자와 관련된 전망에 초점을 맞추고 있다.",
+        "lineEn": "Today's Korean economic news mentioned the possibility that the AI investment boom may be adjusted around 2028. This news is receiving attention as it could affect the overall economy. Other reports did not provide specific figures or forecasts related to this. There is an opinion that preparations are needed for changes in the economic sector. Today's news focuses on forecasts related to AI investment.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "\"AI 투자붐, 2028년 전후 조정 가능성…韓 경제도 대비해야\"",
+            "link": "https://www.yna.co.kr/view/AKR20261114043600002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "'젠슨황 스캔들'로 인해 하락한 증시 상황 속에서 엔비디아의 실적과 앤트로픽의 상장 상황에 주목이 집중되고 있다.",
+        "lineEn": "Attention is focused on NVIDIA's performance and Anthropic's IPO situation amid the declining stock market situation caused by the 'Jensen Huang scandal'.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "'젠슨황 스캔들'에 짓눌린 증시…엔비디아 실적·앤트로픽 상장 주시",
+            "link": "https://www.yna.co.kr/view/AKR20261113177200008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "저축은행의 예금금리가 다시 4%에 근접하며 주목받고 있다. 상호금융은 반대로 예금금리 상승을 주춤하고 있다. 이는 최근 금융시장의 변동에 따른 것으로 나타났다. 저축은행은 경쟁력 있는 금리로 고객을 유치하려는 움직임을 보이고 있다. 상호금융은 금리 인상에 대한 속도 조절을 선택한 것으로 보인다.",
+        "lineEn": "The deposit rates of savings banks are again approaching 4%, drawing attention. In contrast, mutual financial institutions are pausing their increase in deposit rates. This appears to be due to recent fluctuations in the financial market. Savings banks are showing moves to attract customers with competitive rates. Mutual financial institutions seem to have chosen to moderate the pace of rate increases.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "저축은행 예금금리 4% 다시 눈 앞…상호금융은 주춤",
+            "link": "https://www.yna.co.kr/view/AKR20261114042800002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
