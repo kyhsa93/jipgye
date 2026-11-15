@@ -1,0 +1,104 @@
+# 얼린 매매 슬롯 재수집 회차 (#861, cto PR #890 판정). 사람이 dispatch로만 돌린다 - cron 없음, daily-update.yml 에는 넣지 않는다.
+# scripts/recollect-sale.ts --run 이 거부 조건(달 초·조용한 시간·회차 중복·소유자 답·daily-update 실행 중)을 호출 전에 전부 보고,
+# 쓰는 곳은 raw/recollect 뿐이다(덧씌움 raw/recollect/sale 와 회차 기록 raw/recollect/round-<달>.json). 커밋은 이 워크플로의 push-docs.sh 가 한다.
+#
+# 종료 코드(스크립트 머리 주석과 같다): 0 완료, 3 호출 전 거부(호출 0), 4 받지 못한 슬롯이 있음(반영분 덧씌움과 complete:false 기록은 씀), 1 그 밖의 실패.
+#  - 0·4 만 커밋한다. 4 는 커밋한 뒤 job 을 실패시킨다 - 그 달 누적 호출이 기록에 남아야 같은 달 재실행이 상한(승인 − 누적)을 지킨다.
+#  - 3·1 은 커밋하지 않고 실패한다.
+# 이어 받기(종료 4 뒤 받지 못한 슬롯)는 같은 입력의 새 dispatch로만 한다(cto #890 머지 승인). 실패한 run 의 「Re-run」은 아래 run_attempt 가드가 막는다 -
+# 재실행은 옛 커밋을 체크아웃해 방금 커밋한 회차 기록을 못 보고 돈다.
+#
+# 실행 시각과 호출 간격은 진짜 시계·스크립트 기본값으로만 정한다: 시각을 고정하는 인자·환경변수와 쉬는 시간을 줄이는 환경변수를 두지 않는다
+# (시험이 고정하는 자리일 뿐이다 - test/recollect-sale-workflow.test.mjs 가 이름으로 확인한다).
+#
+# concurrency: daily-update·summarize·ledger-snapshot 과 같은 digest-pipeline 그룹이다. 모두 main 에 push 하고, 같은 그룹이면 줄을 서서
+# push-docs.sh 의 「원격이 앞섬」 실패(#92)가 생기지 않는다. 단 대기 중 run 은 그룹당 하나만 남는다(새 대기가 옛 대기를 대체) -
+# 이 워크플로를 dispatch 하면 대기 중인 daily-update·summarize 가 취소될 수 있다. 그룹에 진행·대기 중인 run 이 없을 때만 dispatch 한다
+# (일일 파이프라인은 13:40 KST 무렵까지 돈다).
+name: Recollect sale
+
+on:
+  workflow_dispatch:
+    inputs:
+      approved_calls:
+        description: "소유자가 답한 호출 수 (회차 상한 이상이어야 함, 예 160)"
+        type: string
+        required: true
+      owner_notice:
+        description: "소유자 답 이슈 댓글 URL (https://github.com/kyhsa93/jipgye/issues/N#issuecomment-…)"
+        type: string
+        required: true
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: digest-pipeline
+  cancel-in-progress: false
+
+jobs:
+  recollect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      APPROVED_CALLS: ${{ inputs.approved_calls }}
+      OWNER_NOTICE: ${{ inputs.owner_notice }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      # 호출 전 가드: main 에서만, 첫 시도에서만(재실행은 낡은 커밋 위에서 돈다 - 위 머리 주석).
+      - name: 가드 (main·첫 시도)
+        run: |
+          test "$GITHUB_REF" = refs/heads/main || { echo "::error::main 에서만 돌린다(받은 ref: $GITHUB_REF)"; exit 1; }
+          test "$GITHUB_RUN_ATTEMPT" = 1 || { echo "::error::재실행(run_attempt $GITHUB_RUN_ATTEMPT)은 돌지 않는다 - 같은 입력으로 새 dispatch 한다"; exit 1; }
+
+      # fetch-realestate 의 XML 해석기가 필요해 의존성은 받되 설치 스크립트는 돌리지 않는다. npm test 는 돌리지 않는다(ledger-snapshot 선례 -
+      # 수집 데이터 값에 따라 갈리는 시험이 회차를 막지 않게, #449). 시험은 PR CI(test.yml)가 본다.
+      - run: npm ci --ignore-scripts
+
+      # 종료 코드를 출력으로 남기고 이 스텝은 성공으로 끝낸다 - 뒤의 경로 확인·커밋·판정 스텝이 그 값으로 갈린다.
+      # 회차 달은 스크립트와 같은 KST 달을 호출 직전에 읽는다(달 초 3일은 스크립트가 거부하고 job 은 20분 안에 끝나므로 달이 바뀌지 않는다).
+      - name: 재수집 (시크릿은 이 스텝에서만)
+        id: recollect
+        env:
+          MOLIT_API_KEY: ${{ secrets.MOLIT_API_KEY }}
+          MOLIT_API_ENDPOINT: ${{ secrets.MOLIT_API_ENDPOINT }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "round=$(TZ=Asia/Seoul date +%Y%m)" >> "$GITHUB_OUTPUT"
+          set +e
+          node scripts/recollect-sale.ts --run --approved-calls "$APPROVED_CALLS" --owner-notice "$OWNER_NOTICE"
+          code=$?
+          set -e
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "recollect-sale 종료 코드 $code"
+
+      # 스크립트가 쓰는 곳은 raw/recollect 뿐이다. 그 밖이 바뀌었으면 버그이므로 아무것도 커밋하지 않고 실패한다.
+      - name: 바뀐 경로 확인 (raw/recollect 밖이면 실패)
+        run: |
+          outside="$(git status --porcelain --untracked-files=all | grep -v -E '^.. raw/recollect/' || true)"
+          if [ -n "$outside" ]; then
+            echo "::error::raw/recollect 밖이 바뀌었다 - 커밋하지 않는다"
+            printf '%s\n' "$outside"
+            exit 1
+          fi
+
+      - name: 커밋 (raw/recollect 만, 종료 0·4)
+        if: ${{ steps.recollect.outputs.code == '0' || steps.recollect.outputs.code == '4' }}
+        env:
+          ROUND: ${{ steps.recollect.outputs.round }}
+        run: |
+          ./scripts/push-docs.sh "chore: 매매 재수집 ${ROUND}" raw/recollect
+
+      - name: 판정 (종료 0 이 아니면 실패)
+        env:
+          CODE: ${{ steps.recollect.outputs.code }}
+        run: |
+          test "$CODE" = 0 || { echo "::error::recollect-sale 종료 코드 ${CODE:-없음} - 4 는 커밋 뒤 실패(같은 입력의 새 dispatch 로 이어 받기), 3·1 은 커밋 없음"; exit 1; }
