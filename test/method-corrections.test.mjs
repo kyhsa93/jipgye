@@ -90,8 +90,9 @@ test("method: 신고 기준 정의와 쏠림 절이 한·영에 있다", async (
   const html = await method();
   assert.ok(!html.includes("한 번 집계한 주는 나중에 바뀌지 않습니다"));
   assert.ok(!html.includes("a week once counted never changes"));
-  assert.match(html, /등기일이 붙거나 응답에서 빠졌다 돌아오면 새 행으로 보여/);
-  assert.match(html, /when a registration date is added or when it drops out of the response and returns/);
+  // 2단계(조건 6): 그런 행은 이제 처음 본 날의 신고로 센다.
+  assert.match(html, /등기일&middot;해제&middot;동만 붙거나 행이 응답에서 빠졌다 돌아오면, 새 신고로 세지 않고 처음 본 날의 신고로 셉니다/);
+  assert.match(html, /is not counted as a new filing but as a filing from the day it was first seen/);
   const ko = sectionOf(html, "arrival-concentration").text;
   const en = sectionOf(html, "arrival-concentration-en").text;
   for (const w of ["신고 기준이면", "계약 기준이면", "5% 이상이면서 10행 이상", "대표값은 바꾸지 않습니다", "본 뒤에 정한 값 판단", "신고 기준 44일 중 11일", "계약 기준 5일 중 2일", "자치구 매매 줄에도", "195 구-일"]) {

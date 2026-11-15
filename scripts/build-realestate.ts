@@ -17,7 +17,8 @@ import {
 } from "./realestate-metrics.ts";
 import { MIN_SAMPLE, hasEnoughSample } from "./realestate-format.ts";
 import { concentrationKey, isConcentrated } from "./realestate-concentration.ts";
-import { itemKey, readSameNames, readSlotFile } from "./realestate-raw.ts";
+import { RAW_DIR, readSameNames, readSlotFile } from "./realestate-raw.ts";
+import { effectiveArrivals, readFirstSeen, refreshFirstSeen } from "./realestate-first-seen.ts";
 import { TREND_MONTHS, windowMonths } from "./realestate-slots.ts";
 import {
   FILING_GRACE_DAYS,
@@ -85,7 +86,11 @@ function monthsBetween(from, until) {
 // Promise.all 은 완료 순서가 아니라 넘긴 순서대로 결과를 돌려준다. 읽는 쪽 콜백에서 바로 Map 에 넣으면
 // 항목 배열이 완료 순서로 쌓이고, summarizeSaleItems 의 부동소수 합산 순서가 실행마다 달라져 말단 자리가 갈린다(#477).
 // `read` 는 시험이 완료 순서를 뒤집어 보려고 갈아 끼우는 자리다.
-export async function readWindowItems(now, window, read = readSlotFile) {
+// 신고 기준이면 도착일은 행 신원이 처음 보인 날로 앞당겨 읽는다(#862 조건 6, realestate-first-seen.ts) - 등기·해제만 붙은 행과 빠졌다 돌아온 행이 새 신고로 다시 세이지 않게.
+// `readSeen` 은 그 기억을 읽는 자리다. 기본은 디스크의 상태 파일이고, `read` 를 갈아 끼운 호출(시험·git 이력 재생)은 기억 없이 도장 그대로 읽는다 - 지난 판을 재생하는데
+// 오늘의 기억이 섞이면 안 되기 때문이다. 재생에 기억이 필요하면 `readSeen` 을 함께 넘긴다.
+const NO_SEEN = async () => null;
+export async function readWindowItems(now, window, read = readSlotFile, readSeen = read === readSlotFile ? readFirstSeen : NO_SEEN) {
   const months = window.basis === "arrival" ? windowMonths(now) : monthsBetween(window.from, window.until);
   const items = new Map();
   let earliestArrival = null;
@@ -93,12 +98,17 @@ export async function readWindowItems(now, window, read = readSlotFile) {
   const slots = await Promise.all(
     months.flatMap((yearMonth) =>
       DISTRICTS.flatMap(({ code }) =>
-        ["sale", "rent"].map(async (kind) => ({ kind, code, file: await read(kind, code, yearMonth) }))
+        ["sale", "rent"].map(async (kind) => ({
+          kind,
+          code,
+          file: await read(kind, code, yearMonth),
+          seen: window.basis === "arrival" ? await readSeen(kind, code, yearMonth) : null,
+        }))
       )
     )
   );
 
-  for (const { kind, code, file } of slots) {
+  for (const { kind, code, file, seen } of slots) {
     if (file?.ok === false || !Array.isArray(file?.items)) continue;
 
     const arrivals = file.arrivals ?? {};
@@ -106,12 +116,12 @@ export async function readWindowItems(now, window, read = readSlotFile) {
       if (!earliestArrival || day < earliestArrival) earliestArrival = day;
     }
 
-    const dateOf = window.basis === "arrival" ? (item) => arrivals[itemKey(item)] : contractDate;
+    const days = window.basis === "arrival" ? effectiveArrivals(file, seen) : null;
     const picked = [];
-    for (const item of file.items) {
-      const date = dateOf(item);
+    file.items.forEach((item, i) => {
+      const date = days ? days[i] : contractDate(item);
       if (date && date >= window.from && date < window.until) picked.push({ item, date });
-    }
+    });
     if (!picked.length) continue;
 
     const key = `${kind}:${code}`;
@@ -446,6 +456,11 @@ async function main() {
   const now = collectionNow("REALESTATE_NOW");
 
   await mkdir(dataDir, { recursive: true });
+
+  // 행 신원의 첫 관측일을 오늘 판으로 갱신한다(#862 조건 6). 신고 기준 창이 읽는 달(windowMonths)만 들고, 창 밖 달의 상태는 지운다.
+  // 슬롯·arrivals 는 읽기만 한다. Daily 의 마지막 커밋(push-docs.sh, 데이터 경로 raw)이 바뀐 상태 파일을 싣는다.
+  const seen = await refreshFirstSeen(windowMonths(now), DISTRICTS.map(({ code }) => code), { dir: RAW_DIR, readSlot: readSlotFile });
+  console.log(`[build-realestate] 행 첫 관측일 상태 ${seen.written}개 갱신 · ${seen.removed}개 정리`);
 
   await writeRepresentative(now);
   await writeRentFiles(now);

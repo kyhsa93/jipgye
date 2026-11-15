@@ -13,6 +13,9 @@
  *   문턱은 「수집 공백 0일」 하나로 미리 고정했다 - 수집일 수(<5)로 재면 10-19~25(6/7) 같은 기운 쌍이 통과한다.
  * - 신고가: record-high.ts 와 같은 규칙(중개·해제 아님, 같은 칸 선행 ≥3건·기간 ≥180일, 그 전 최고가 초과). 판정 못 하는 건은 따로 센다.
  * - 해제: 매매 해제행(cdealType/cdealDay)은 원행이 사라지고 새로 도착한다. 「해제일이 이 7일 안」인 고유 키를 센다(도착 기준 수도 함께 싣는다).
+ * - 다시 찍힌 행(#862 조건 6): 등기·해제·동만 붙어 키가 바뀐 행과 응답에서 빠졌다 돌아온 행은 새 신고가 아니다. 신고 건수(매매·전세·월세와 그에 딸린 직거래·신고가·구·계약월)는
+ *   행 신원이 처음 보인 날(`first`, realestate-first-seen.ts)로 창을 고른다. 해제 도착 수(cancelArrived)와 수집일(공백 가드)은 도장 그대로다 - 해제는 그날 새로 안 사실이고,
+ *   수집이 돌았는지는 도장이 말한다.
  * - 단지명은 싣지 않는다. 구는 이름만, 순위가 아니라 「많은 곳」이다.
  */
 import { MIN_PRIOR, MIN_SPAN_DAYS, toDeal } from "./record-high.ts";
@@ -37,11 +40,12 @@ const contractMonth = (item) => `${item.dealYear}${String(item.dealMonth).padSta
 
 /**
  * 원본 파일들을 고유 키 단위로 편다. 파일 안 같은 키의 줄은 하나로 친다(도착일이 하나뿐이다).
- * slots: [{ kind, district, items, arrivals }] - ok:false 나 items 없는 파일은 부르는 쪽이 뺀다. keyOf 는 realestate-raw.ts 의 itemKey(주입 - 이 모듈은 fs 를 안 읽는다).
+ * slots: [{ kind, district, items, arrivals, first? }] - ok:false 나 items 없는 파일은 부르는 쪽이 뺀다. keyOf 는 realestate-raw.ts 의 itemKey(주입 - 이 모듈은 fs 를 안 읽는다).
+ * first 는 키 → 첫 관측일 Map 이고 없으면 도장(day) 그대로다.
  */
 export function uniqueArrivals(slots, keyOf) {
   const rows = [];
-  for (const { kind, district, items, arrivals } of slots) {
+  for (const { kind, district, items, arrivals, first = null } of slots) {
     if (!arrivals) continue;
     const byKey = new Map();
     for (const item of items ?? []) {
@@ -50,7 +54,7 @@ export function uniqueArrivals(slots, keyOf) {
     }
     for (const [key, day] of Object.entries(arrivals)) {
       const item = byKey.get(key);
-      if (item) rows.push({ kind, district: String(district), key, day, item });
+      if (item) rows.push({ kind, district: String(district), key, day, first: first?.get(key) ?? day, item });
     }
   }
   return rows;
@@ -107,9 +111,10 @@ export function summarizeWindow(rows, w, cells, allSaleCancels, sameNames = {}) 
   const months = { sale: {}, rent: {} };
   const perDistrict = new Map();
   for (const r of rows) {
-    if (!inWindow(r.day, w)) continue;
+    const cancel = r.kind === "sale" && isCancel(r.item);
+    if (!inWindow(cancel ? r.day : r.first ?? r.day, w)) continue;
     if (r.kind === "sale") {
-      if (isCancel(r.item)) {
+      if (cancel) {
         cancelArrived += 1;
         continue;
       }
