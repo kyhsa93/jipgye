@@ -156,9 +156,9 @@ export function headText(model, lang) {
   const { band, area, M, K, windowDays, asOf } = model;
   const min = GRADE.minDeals;
   if (lang === "en") {
-    return `${bandLabel(band, "en")}, ${AREA_LABEL.en[area]}: ${num(M + K)} complex-size pairs match — ${num(M)} priced, ${num(K)} left out (fewer than ${min} deals in ${windowDays} days). Deals ${asOf.start}–${asOf.end}, adjusted to today with the ${monthLabel(asOf.indexRef, "en")} regional index.`;
+    return `${bandLabel(band, "en")}, ${AREA_LABEL.en[area]}: ${num(M + K)} complex-size pairs match — ${num(M)} priced, ${num(K)} left out (fewer than ${min} deals in ${windowDays} days). Deals ${asOf.start}–${asOf.end}, adjusted to the ${monthLabel(asOf.indexRef, "en")} regional index level.`;
   }
-  return `${bandLabel(band, "ko")}·${AREA_LABEL.ko[area]}: 조건에 드는 단지·평형 ${num(M + K)}곳 — 값을 낸 곳 ${num(M)}, 뺀 곳 ${num(K)}(최근 ${windowDays}일 거래 ${min}건 미만). 거래 ${asOf.start}~${asOf.end}, 값은 ${monthLabel(asOf.indexRef, "ko")} 권역 지수로 오늘 값으로 고쳤습니다.`;
+  return `${bandLabel(band, "ko")}·${AREA_LABEL.ko[area]}: 조건에 드는 단지·평형 ${num(M + K)}곳 — 값을 낸 곳 ${num(M)}, 뺀 곳 ${num(K)}(최근 ${windowDays}일 거래 ${min}건 미만). 거래 ${asOf.start}~${asOf.end}, 값은 ${monthLabel(asOf.indexRef, "ko")} 권역 지수 수준으로 고쳤습니다.`;
 }
 
 export const relaxText = (n, lang) => (lang === "en" ? `Nothing matches. Without the size filter, ${num(n)} match.` : `이 조건에 드는 곳이 없습니다. 면적대를 풀면 ${num(n)}곳입니다.`);
@@ -180,7 +180,7 @@ const WORDS = {
     // 표 이름에는 값대를 앞에 붙인다 - 나가는 장의 caption 은 숫자를 품어야 한다(test/accessibility.test.mjs, 반복 문장 방지).
     gridCaption: (band) => `${bandLabel(band, "ko")} 전용면적별 건수`,
     districtCaption: (band) => `${bandLabel(band, "ko")} · 자치구별 건수(거르는 조건이 아닙니다)`,
-    exampleCaption: (band, d) => `${bandLabel(band, "ko")} · 예시(가나다순 첫 줄): ${d}`,
+    exampleCaption: (band, d) => `${bandLabel(band, "ko")} · 예시(값을 낸 곳이 가장 많은 구의 가나다순 첫 줄): ${d}`,
     cols: ["단지(동)·준공", "전용", "값(지난 거래 범위, 건수)", "마지막 거래", "매매가 위에 드는 돈", "대출 상한(규정 추정)", "필요 현금(이 가정)", "표본", "확인할 것"],
     built: (y) => `${y}년`,
     range: (lo, hi, n) => `지난 거래 ${lo}~${hi}, ${n}건`,
@@ -202,9 +202,9 @@ const WORDS = {
     priced: "Priced",
     left: "Left out",
     area: "Floor area",
-    gridCaption: (band) => `${bandLabel(band, "en")} by floor area`,
+    gridCaption: (band) => `${bandLabel(band, "en")} · Counts by floor area`,
     districtCaption: (band) => `${bandLabel(band, "en")} · Counts by district (not a filter)`,
-    exampleCaption: (band, d) => `${bandLabel(band, "en")} · Examples (first rows, alphabetical): ${d}`,
+    exampleCaption: (band, d) => `${bandLabel(band, "en")} · Examples (first rows, alphabetical, from the district with the most priced pairs): ${d}`,
     cols: ["Complex (dong), built", "Area", "Value (past range, deals)", "Last deal", "Costs on top of price", "Loan cap (rule estimate)", "Cash needed (these assumptions)", "Sample", "Check"],
     built: (y) => `${y}`,
     range: (lo, hi, n) => `past ${lo}–${hi}, ${n} deals`,

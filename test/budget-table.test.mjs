@@ -79,15 +79,15 @@ const textOf = (html) => html.replace(/<[^>]+>/g, " ");
 const shown = (html) =>
   `${textOf(html.replace(/<head>[\s\S]*?<\/head>/, "").replace(/<script[\s\S]*?<\/script>/g, ""))} ${[...html.matchAll(/\s(?:data-[\w-]*en|aria-label|title|placeholder)="([^"]*)"/g)].map((m) => m[1]).join(" ")}`;
 
-// 금지어(po 명세 ③ 「금지어(시험, clo 확정)」). 영어 "top" 은 순위 뜻(top 10·TOP)만 막는다 - ③ 의 열 머리 "Costs on top of price" 는 같은 명세가 정한 문구라
-// 「on top of」 만 뺀다(clo 확인 대상으로 PR 본문에 적는다).
-const BANNED_KO = ["점수", "순위", "추천", "1위", "베스트", "TOP", "유망", "오를", "상승", "여력", "수익", "투자", "저평가", "기회", "지금 사야", "후보"];
-const BANNED_EN = [/\bscore/i, /\brank/i, /\brecommend/i, /\bbest\b/i, /\btop\b(?! of)/i, /\bupside/i, /\bundervalued/i, /\binvest/i, /\breturns?\b/i, /\bopportunit/i];
+// 금지어(po 명세 ③ 「금지어(시험, clo 확정)」 + clo PR #878 판정이 더한 것). 영어 "top" 은 ③ 의 열 머리 "Costs on top of price" 만 걷어 낸 뒤 검사한다(clo 판정).
+const BANNED_KO = ["점수", "순위", "추천", "1위", "베스트", "TOP", "유망", "오를", "상승", "여력", "수익", "투자", "저평가", "기회", "지금 사야", "후보", "보장", "적기", "저렴", "급매", "가성비"];
+const BANNED_EN = [/\bscore/i, /\brank/i, /\brecommend/i, /\bbest\b/i, /\btop\b/i, /\bupside/i, /\bundervalued/i, /\binvest/i, /\breturns?\b/i, /\bopportunit/i, /\bguarantee/i, /\bbargain/i, /\bcheap/i];
 function assertNoBanned(text, where) {
   for (const w of BANNED_KO) assert.ok(!text.includes(w), `${where}: 「${w}」`);
   assert.doesNotMatch(text, /\d+\s*위(?![가-힣])/, `${where}: N위`);
   assert.doesNotMatch(text, /번째/, `${where}: 순번`);
-  for (const re of BANNED_EN) assert.doesNotMatch(text, re, `${where}: ${re}`);
+  const en = text.replace(/\bon top of\b/gi, "");
+  for (const re of BANNED_EN) assert.doesNotMatch(en, re, `${where}: ${re}`);
 }
 
 // ---- (1) 계산 --------------------------------------------------------------------------------------------------------------
@@ -129,11 +129,11 @@ test("머리: 조건에 드는 수 = 값을 낸 수 + 뺀 수, 뺀 이유·거�
   assert.equal(m.K, 12, "노원 5+2 + 마포 1 + 강남 4 (노원 9억대 3은 안 든다)");
   assert.equal(
     headText(m, "ko"),
-    "7억대·전체 면적: 조건에 드는 단지·평형 18곳 — 값을 낸 곳 6, 뺀 곳 12(최근 183일 거래 3건 미만). 거래 2026-05-15~2026-11-14, 값은 2026년 8월 권역 지수로 오늘 값으로 고쳤습니다."
+    "7억대·전체 면적: 조건에 드는 단지·평형 18곳 — 값을 낸 곳 6, 뺀 곳 12(최근 183일 거래 3건 미만). 거래 2026-05-15~2026-11-14, 값은 2026년 8월 권역 지수 수준으로 고쳤습니다."
   );
   assert.equal(
     headText(m, "en"),
-    "₩0.7B band, all sizes: 18 complex-size pairs match — 6 priced, 12 left out (fewer than 3 deals in 183 days). Deals 2026-05-15–2026-11-14, adjusted to today with the Aug 2026 regional index."
+    "₩0.7B band, all sizes: 18 complex-size pairs match — 6 priced, 12 left out (fewer than 3 deals in 183 days). Deals 2026-05-15–2026-11-14, adjusted to the Aug 2026 regional index level."
   );
   // 계약 기준 창의 시작일을 함께 적는다(#872 결과 주의) - 「자료 기준」 끝날만 따로 쓰지 않는다.
   assert.ok(headText(m, "ko").includes("2026-05-15~"));
@@ -222,9 +222,9 @@ test("실거주는 데이터 status 가 바뀌어도 「검증 전」 한 줄 �
 test("구운 예시 줄은 ≤3이고, 일반 값(생애최초 꺼짐)을 쓴다 (N6, cpo 답 3)", () => {
   const html = budgetTableHtml(model());
   const ko = html.slice(0, html.indexOf('<div data-lang="en"'));
-  const table = ko.slice(ko.indexOf("예시(가나다순 첫 줄)"));
+  const table = ko.slice(ko.indexOf("예시(값을 낸 곳이 가장 많은 구의 가나다순 첫 줄)"));
   assert.equal((table.match(/<tr><td>/g) ?? []).length, 3);
-  assert.ok(ko.includes("7억대 · 예시(가나다순 첫 줄): 노원구"));
+  assert.ok(ko.includes("7억대 · 예시(값을 낸 곳이 가장 많은 구의 가나다순 첫 줄): 노원구"));
   assert.ok(ko.includes("7억대 · 자치구별 건수(거르는 조건이 아닙니다)"));
   assert.ok(ko.includes("2억 9,000만원"), "loanCapGeneral");
   assert.ok(!ko.includes("4억원"), "loanCapFirstTime(4억)이 실렸다");
@@ -291,7 +291,8 @@ test("틀: 화면 글자에 금지어·「후보」 0, 문구는 po ③ 그대�
     '<h1 id="page-title">예산대로 보는 단지 근거표</h1>',
     'title: "Complex evidence table by price band"',
     "값대와 면적대를 고르면 최근 183일 실거래로 값을 낸 단지·평형과, 거래가 모자라 뺀 곳을 자치구별로 셉니다. 줄은 가나다순이며 어느 곳을 고르라는 뜻이 아닙니다.",
-    "이 표는 어느 단지가 더 낫다거나 값이 오른다고 말하지 않습니다. 국토교통부에 신고된 실거래로 센 값이며 매물이 아닙니다. 대출 상한과 필요 현금은 규정으로 셈한 추정이고, 실제 한도는 소득과 금융회사 심사에 따라 다릅니다.",
+    "이 표는 어느 단지가 더 낫다거나 값이 오른다고 말하지 않습니다. 국토교통부에 신고된 실거래로 센 값이며 매물이 아닙니다. 대출 상한과 필요 현금은 집이 없는 사람이 한 채를 산다고 가정해 규정으로 셈한 추정입니다. 기본은 생애최초가 아닌 일반 조건입니다. 실제로 빌릴 수 있는 돈은 소득(DSR)과 금융회사 심사에 따라 이보다 적을 수 있습니다.",
+    "What you can actually borrow depends on income (DSR) and lender review and may be lower.",
     "This table does not say which complex is better or that prices will rise.",
   ]) assert.ok(template.includes(s), s);
 });
