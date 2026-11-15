@@ -432,3 +432,28 @@ test("JS 가 그리는 글자(두 언어·0곳·줄·실패)와 틀의 data-msg 
   assert.equal(page.els["bt-band"].options[4].textContent, "7억대(7억~8억)");
   assert.equal(page.els["bt-area"].options[0].textContent, "전체 면적");
 });
+
+// ---- 좁은 화면 (cto PR #879 수정 요청) -------------------------------------------------------------------------------------
+// 320px 한·영에서 근거표 폼이 359/459px 로 넘쳤다(라벨이 줄바꿈 없이 select 와 한 줄). 브라우저 측정은 판정에서 하고, 여기서는 그 측정이 기대는
+// CSS 구조를 정적으로 지킨다: (1) 560px 이하 세로 쌓기 규칙 셋(칸·라벨·입력)이 #bt-form 을 품는다 (2) 값대 select 의 상한 풀기는 561px 이상에서만이고
+// 그 분기점이 세로 쌓기의 560px 와 맞붙는다(사이에 잘리는 폭이 없다) (3) 폼의 칸이 전부 #bt-form 안의 .search-field 이고 체크 칸만 .toggle 이다.
+test("좁은 화면: 560px 이하 세로 쌓기 규칙 셋이 #bt-form 을 품고, 값대 상한 풀기는 561px 부터다 (320px 넘침 0, cto PR #879)", () => {
+  const css = read("docs/style.css");
+  const narrow = [...css.matchAll(/@media \(max-width: 560px\) \{/g)].map((m) => css.slice(m.index, css.indexOf("\n  }\n", m.index)));
+  const stack = narrow.find((b) => b.includes(".search-field:not(.toggle) {"));
+  assert.ok(stack, "560px 세로 쌓기 블록이 없다");
+  for (const tail of [".search-field:not(.toggle) {", ".search-field:not(.toggle) label {", ".search-field:not(.toggle) :is(input, select) {"]) {
+    const line = stack.split("\n").find((l) => l.trim().endsWith(tail));
+    assert.ok(line, tail);
+    assert.match(line, /^\s*:is\([^)]*#bt-form[^)]*\) /, `${tail} 의 :is() 목록에 #bt-form 이 없다`);
+  }
+  assert.match(stack, /:is\(input, select\) \{\s*width: 100%;\s*max-width: none;/);
+  // #bt-band 는 min-width 561px 블록 안에서만 상한을 푼다.
+  const free = [...css.matchAll(/#bt-band \{\s*max-width: none;/g)];
+  assert.equal(free.length, 1);
+  assert.match(css.slice(0, free[0].index), /@media \(min-width: 561px\) \{\s*$/, "#bt-band 상한 풀기가 561px 블록 밖이다");
+  // 폼의 칸: select 둘·버튼은 .search-field(세로 쌓기 대상), 체크 칸만 .toggle 이다.
+  const form = TEMPLATE.slice(TEMPLATE.indexOf('<section id="bt-form"'), TEMPLATE.indexOf("</section>", TEMPLATE.indexOf('<section id="bt-form"')));
+  const fields = [...form.matchAll(/<div class="(search-field[^"]*)">([\s\S]*?)<\/div>/g)];
+  assert.deepEqual(fields.map((f) => [f[1], f[2].match(/id="(bt-[\w-]+)"/)[1]]), [["search-field", "bt-band"], ["search-field", "bt-area"], ["search-field toggle", "bt-first"], ["search-field", "bt-go"]]);
+});
