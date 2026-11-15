@@ -53,7 +53,7 @@ const LINE = {
     `금리 몫 ${signed(p.jeonse.rateShare)}%, 보증금 몫 ${signed(p.jeonse.depositShare)}%). ` +
     `월세안 월 ${p.wolse.baseCost10k}만원 → ${p.wolse.cost10k}만원, ${signed(p.wolse.yoy)}%(95% 구간 ${signed(p.wolse.ci[0])}~${signed(p.wolse.ci[1])}%; ` +
     `금리 몫 ${signed(p.wolse.rateShare)}%, 보증금·월세 몫 ${signed(p.wolse.levelShare)}%). ` +
-    `6개월 신규 계약 중앙값에 보증금 80% 대출·20% 자기 돈을 가정한 환산입니다. ` +
+    `6개월 신규 계약 중간값에 보증금 80% 대출·20% 자기 돈을 가정한 환산입니다. ` +
     `대출·예금 금리는 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. ` +
     `1년 변화 점 ${count}개 가운데 마지막 점이며${count < SERIES_POINTS ? " 아직 계열이 아니고" : ""}, 전망이 아닙니다.`,
   en: ({ point: p, count }) =>

@@ -16,7 +16,7 @@ const REF = "202610";
 const KO =
   "환산 월 비용(평균금리 가정) · 서울 전체, 2025.08→2026.08: 전세안 월 165.2만원 → 208.8만원, +26.39%(95% 구간 +22.21~+28.43%; 금리 몫 +8.65%, 보증금 몫 +16.33%). " +
   "월세안 월 175만원 → 205.3만원, +17.31%(95% 구간 +14.02~+20.64%; 금리 몫 +4.68%, 보증금·월세 몫 +12.06%). " +
-  "6개월 신규 계약 중앙값에 보증금 80% 대출·20% 자기 돈을 가정한 환산입니다. " +
+  "6개월 신규 계약 중간값에 보증금 80% 대출·20% 자기 돈을 가정한 환산입니다. " +
   "대출·예금 금리는 시장 평균이며, 개인이 지금 새로 받는 금리와 다릅니다. 1년 변화 점 5개 가운데 마지막 점이며 아직 계열이 아니고, 전망이 아닙니다.";
 const EN =
   "Estimated monthly cost (at average rates), all of Seoul, 2025.08→2026.08: jeonse 165.2 → 208.8 (10k KRW a month), +26.39% (95% interval +22.21~+28.43%; rate share +8.65%, deposit share +16.33%). " +
@@ -119,9 +119,11 @@ test("고정 데이터 렌더: 파일이 없으면 줄이 없고, 있으면 ko/e
     assert.equal(r.status, 0, r.stderr);
     const html = present.read("docs/jeonse-vs-wolse.html");
     assert.ok(html.includes(`<p class="updated" data-mc="ko">${KO}</p><p class="updated" data-mc="en" hidden>${EN}</p>`));
-    // 줄은 첫 문단 바로 뒤에 놓인다.
-    assert.ok(html.indexOf('data-mc="ko"') > html.indexOf("<!--/prerender:conversionLead-->"));
-    assert.ok(html.indexOf('data-mc="ko"') < html.indexOf('id="cross-basis"'));
+    // 줄은 첫 문단 바로 뒤, 계산기 아래 「계산 기준」 접힌 설명 안에 놓인다(#773 이 첫 문단을 그 안으로 옮겼다).
+    const lead = html.indexOf("<!--/prerender:conversionLead-->");
+    assert.ok(html.indexOf('data-mc="ko"') > lead);
+    assert.ok(html.indexOf('data-mc="ko"') < html.indexOf("</details>", lead));
+    assert.ok(html.lastIndexOf("<details", lead) > html.indexOf('id="cross-basis"'));
   } finally {
     present.cleanup();
   }
