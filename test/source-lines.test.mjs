@@ -121,7 +121,7 @@ test("Release 출처 문장은 legal 표 원문 상수(ATTRIBUTION.molitSale)와
 
 test("Release 본문 산출 코드는 출처·기관·데이터셋 번호를 글자로 적지 않고 상수를 import 한다 (#588 PR2)", async () => {
   const src = await read("scripts/build-correction-release.ts");
-  assert.match(src, /import \{ ATTRIBUTION, SOURCES \} from "\.\/source-lines\.ts"/);
+  assert.match(src, /import \{ ATTRIBUTION, RAW_COPY_NOTE, SOURCES \} from "\.\/source-lines\.ts"/);
   assert.doesNotMatch(src, /15126469|15126474|국토교통부|Ministry of Land|공공데이터포털|data\.go\.kr/);
   const body = renderBody(buildFigures(await readSales(path.join(root, "test/fixtures/correction-twins/raw"))));
   const [ko, en] = body.split("\n---\n");

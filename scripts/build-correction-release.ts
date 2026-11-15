@@ -35,7 +35,7 @@ import {
 import { DISTRICTS } from "./realestate-districts.ts";
 import { RAW_DIR, readSlotFile } from "./realestate-raw.ts";
 // 출처 문구는 scripts/source-lines.ts 한 곳이다(#588 PR2) - 이 파일에 출처·기관 이름을 글자로 적지 않는다(test/source-lines.test.mjs 가 막는다).
-import { ATTRIBUTION, SOURCES } from "./source-lines.ts";
+import { ATTRIBUTION, RAW_COPY_NOTE, SOURCES } from "./source-lines.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -276,6 +276,8 @@ export function renderTitle(figures) {
  *   겹친 기록 자체의 건수를 곁들인다. 등기율은 '짝에 등기일이 있는 비율' 하나만 정의한다(사이트 익은 달 기준).
  * - 수집 시각은 파일마다 다르므로 범위로 적는다(같은 날이면 하루만). 이용허락 문장·확인일은 두지 않는다 - 코드에 박힌 날짜가
  *   확인 없이 매달 찍히기 때문이다(재확인은 legal이 분기마다 따로 한다).
+ * - 「집계 단위와 비운 칸」 절의 원천 사본 안내(raw/ 에 행 단위 사본이 있다)는 source-lines.ts RAW_COPY_NOTE 를 읽는다(legal #882, #175 제한 2).
+ *   이용허락은 그 안내가 가리키는 raw/README.md 에만 적고 본문에는 날짜·「제한 없음」을 두지 않는다 - 위 규칙 그대로다.
  * - 투자·구매 권유, 특정 단지·중개사 거론 없음. 금지어는 test/correction-release.test.mjs가 막는다.
  * 사이트 lead(correctionSentence)와 같은 '해제 표시 없이 다시 있다'는 구조이되, Release용으로 따로 쓴 문장이다.
  */
@@ -311,10 +313,11 @@ export function renderBody(figures, { tag }: { tag?: string } = {}) {
 - 이 정의의 값은 ${reg.withRegDatePct === null ? "분모가 없어 비어 있습니다" : `${reg.withRegDatePct}%`}입니다.
 - 첨부한 \`check.out\`의 마지막 줄은 계약월 2026년 3월까지만 센 일회성 값이라 위 정의와 기준이 다릅니다. 두 값을 같은 지표로 견주지 마십시오. \`check.out\`의 둘째·셋째 줄은 이 본문의 해제 기록 수·짝 비율·비교군과 같은 값입니다.
 
-## 집계 단위와 비공개
+## 집계 단위와 비운 칸
 
 - 단위는 서울 전체, 25개 구, 서울 계약월별입니다. 구×계약월 칸은 만들지 않았습니다.
-- 칸의 해제 기록이 ${MIN_CELL}건 미만이면 숫자를 비웠습니다(이 Release에서 ${hidden}칸). 서울 전체 값에서 다른 칸을 빼면 계산할 수 있는 칸이 있으며, 이는 작은 표본의 비율이 눈에 띄지 않게 하려는 기준입니다. 행 단위 기록·단지·지번·법정동·층·금액은 담지 않았습니다.
+- 칸의 해제 기록이 ${MIN_CELL}건 미만이면 숫자를 비웠습니다(이 Release에서 ${hidden}칸). 서울 전체 값에서 다른 칸을 빼면 계산할 수 있는 칸이 있으며, 이는 작은 표본의 비율이 눈에 띄지 않게 하려는 기준입니다.
+- ${RAW_COPY_NOTE.ko}
 - 최근 계약월은 신고가 아직 덜 쌓여 건수가 적을 수 있어, 월별 건수를 앞선 달과 곧바로 견주지 마십시오.
 - 구별 비율은 신고 관행과 집계 시점에 따라 달라질 수 있어 구 사이의 순위나 우열을 보이려는 것이 아닙니다.
 
@@ -351,7 +354,8 @@ These figures count records that match each other. The reason for a filing is no
 ## Units and withheld cells
 
 - Units are Seoul as a whole, the 25 districts, and Seoul by contract month. District-by-month cells were not produced.
-- Where a cell has fewer than ${MIN_CELL} cancellation records the numbers are left empty (cells withheld in this release: ${hidden}). Some of those figures can be worked out by subtracting other cells from the Seoul total; the rule only keeps ratios from very small samples from standing out. No record-level data, complex names, lot numbers, neighbourhoods, floors or amounts are included.
+- Where a cell has fewer than ${MIN_CELL} cancellation records the numbers are left empty (cells withheld in this release: ${hidden}). Some of those figures can be worked out by subtracting other cells from the Seoul total; the rule only keeps ratios from very small samples from standing out.
+- ${RAW_COPY_NOTE.en}
 - Recent contract months may still be incomplete because filings keep arriving, so do not compare monthly counts directly with earlier months.
 - District figures can vary with filing practice and timing and are not meant to rank districts.
 

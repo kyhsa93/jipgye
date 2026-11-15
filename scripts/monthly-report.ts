@@ -7,6 +7,7 @@
  * - 숫자는 JSON 값 그대로다. 창·문턱을 리포트용으로 다시 계산하지 않는다(E5 pm·cdo 결정, #771) - 다시 계산하면 사이트와 리포트의
  *   같은 달 같은 지표가 두 숫자가 된다(DIRECTION 체크리스트 10). 그래서 표마다 창이 다르고, 표 머리에 「비교 구간 …(n·문턱)」을 JSON 필드로 찍는다.
  * - 단위는 서울 전체·자치구·가격대·연식·면적대·권역이다. 행·단지 단위 값은 없다(입력 JSON 자체가 집계값이고, 단지 카드 JSON 은 읽지 않는다).
+ *   본문 「읽는 법」의 원천 사본 안내(raw/ 에 행 단위 사본이 있다)는 source-lines.ts RAW_COPY_NOTE.koPlain 을 읽는다(legal #882, #175 제한 2).
  * - n<3 인 칸은 비운다(MIN_CELL). 사이트 문턱(minCells 30·minDeals 100 등)에 걸려 JSON 이 null 로 낸 칸도 그대로 비운다.
  * - 표5 월 실부담(monthly-cost.json)은 ECOS 이용허락 확인 전까지 싣지 않는다(#771 본문) - 이 파일은 그 JSON 을 읽지 않고 번호만 비워 둔다.
  *   conversion.json 의 대출·예금 금리(ECOS) 필드도 같은 이유로 싣지 않는다.
@@ -25,7 +26,7 @@ import { MIN_CELLS as FLOOR_MIN_CELLS } from "./floor-gap.ts";
 import { REGIONS } from "./outlook.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { TREND_MIN_SAMPLE } from "./realestate-weekly.ts";
-import { ATTRIBUTION } from "./source-lines.ts";
+import { ATTRIBUTION, RAW_COPY_NOTE } from "./source-lines.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 export const DEFAULT_DATA_DIR = path.join(root, "docs/data");
@@ -494,7 +495,8 @@ ${CONTACT_LINE}
 ## 읽는 법
 
 - 모든 숫자는 집계 사이트가 그날 낸 \`docs/data/*.json\` 값 그대로이고, 이 리포트를 위해 창·문턱을 다시 계산하지 않았다. 그래서 표마다 비교 구간이 다르며 각 표 머리에 「비교 구간 …(n·문턱)」을 적었다. 사이트의 같은 지표와 같은 값이다.
-- 단위는 서울 전체·자치구·가격대·연식·면적대·권역이다. 행·단지 단위 값은 없다. 표본이 ${MIN_CELL}건 미만인 칸과 사이트 문턱에 못 미친 칸은 비웠다(이 호에서 ${blank}칸).
+- 단위는 서울 전체·자치구·가격대·연식·면적대·권역이다. 표본이 ${MIN_CELL}건 미만인 칸과 사이트 문턱에 못 미친 칸은 비웠다(이 호에서 ${blank}칸).
+- ${RAW_COPY_NOTE.koPlain}
 - 입력: ${updated}. 괄호는 그 파일의 갱신일이다.
 - 표5(월 실부담)는 한국은행 ECOS 값을 쓰는 표라 이용허락 확인 전까지 싣지 않는다. 번호는 비워 둔다.
 - 이 숫자는 신고된 것을 센 것이지 전망이나 권유가 아니다. 자치구 줄은 순위가 아니다.
