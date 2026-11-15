@@ -38,7 +38,7 @@ test("기준값이 없으면 증감을 붙이지 않는다", () => {
   const overall = { sale: { avgPricePerPyeong10k: 3200, transactionCount: 45 }, saleNational84: null, jeonse: null, wolse: null };
   const districts = [{ code: "11110", name: "종로구", sale: { avgPricePerPyeong10k: 3200, transactionCount: 45 } }];
 
-  const withChanges = attachChanges(overall, districts, null);
+  const withChanges = attachChanges(overall, districts);
 
   assert.equal(withChanges.overall.sale.change, undefined, "기준 없이 증감을 만들어냈다");
   assert.equal(withChanges.overall.sale.baselineDate, undefined);
@@ -67,13 +67,10 @@ test("월세 증감은 방 크기 구성이 바뀌어도 시세가 그대로면 
   assert.notEqual(lastWeek.avgDeposit10k, thisWeek.avgDeposit10k, "전제: 단순평균은 달라야 한다");
   assert.equal(lastWeek.avgConvertedPerPyeong10k, thisWeek.avgConvertedPerPyeong10k);
 
-  const { districts } = attachChanges(
-    { sale: null, saleNational84: null, jeonse: null, wolse: null },
-    [{ code: "11110", wolse: thisWeek }],
-    { date: "2026-09-24", districts: [{ code: "11110", wolse: lastWeek }] }
-  );
-  assert.equal(districts[0].wolse.change.percent, 0, "방 크기 구성 변화가 증감으로 나왔다");
-  assert.equal(districts[0].wolse.depositChange, undefined, "단순평균 증감이 남아 있다");
+  // 바꾼 단언(#862 3단계): 예전에는 빌드가 붙인 wolse.change.percent 가 0인지 봤다. 이제 빌드는 증감을 싣지 않아 환산값 자체가 같은지(위)와 증감 필드가 없는지만 본다.
+  const { districts } = attachChanges({ sale: null, saleNational84: null, jeonse: null, wolse: null }, [{ code: "11110", wolse: thisWeek }]);
+  assert.equal(districts[0].wolse.avgConvertedPerPyeong10k, lastWeek.avgConvertedPerPyeong10k, "방 크기 구성 변화가 환산값 차이로 나왔다");
+  assert.deepEqual([districts[0].wolse.change, districts[0].wolse.depositChange], [undefined, undefined], "증감이 남아 있다");
 });
 
 test("보증금을 월세로 바꿔 받은 같은 값의 계약은 같은 환산값이다", () => {

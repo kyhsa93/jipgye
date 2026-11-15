@@ -1,5 +1,4 @@
-import { CHANGE_MIN_COUNT, canShowChange } from "./realestate-format.ts";
-import { REASON_BASELINE, REASON_CURRENT, REASON_NOTE, baselineHeldText, concentrationText, isConcentratedBaseline } from "./realestate-concentration.ts";
+import { REASON_NOTE, concentrationText } from "./realestate-concentration.ts";
 
 const PYEONG_M2 = 3.3058;
 
@@ -13,7 +12,7 @@ const PYEONG_M2 = 3.3058;
  */
 export const WOLSE_CONVERSION_RATE = 0.048;
 
-/** 증감의 기준은 이레 전 값이다. 수집이 멈춰 그보다 훨씬 낡은 값밖에 없으면 '전주 대비'라 부를 수 없어 붙이지 않는다. */
+/** 증감의 기준은 이레 전 값이다. 수집이 멈춰 그보다 훨씬 낡은 값밖에 없으면 '전주 대비'라 부를 수 없어 붙이지 않는다(findBaseline). */
 export const BASELINE_MAX_DAYS = 14;
 const NATIONAL_PYEONG_MIN_M2 = 82;
 const NATIONAL_PYEONG_MAX_M2 = 86;
@@ -297,6 +296,8 @@ export function computeOverall(districts) {
   return { sale: overallSale, saleNational84: overallSaleNational84, jeonse: overallJeonse, wolse: overallWolse };
 }
 
+// 7일 증감의 기준 기록 고르기. 지금 빌드는 어느 날에도 증감을 싣지 않아 이 함수를 부르지 않는다(#862 3단계, attachChanges).
+// research/arrival-change-2026-11 재현 스크립트(overall2·district7)가 이 규칙으로 기준을 고르고, 계약 대 계약 증감을 다시 재는 새 이슈(pm 11-15)도 쓸 것이라 남긴다.
 export function findBaseline(history, now) {
   const target = new Date(now);
   target.setDate(target.getDate() - 7);
@@ -312,47 +313,7 @@ export function findBaseline(history, now) {
   return baseline.date < kstDateString(oldest) ? null : baseline;
 }
 
-function computeChange(currentValue, baselineValue) {
-  if (currentValue == null || baselineValue == null) return null;
-  const value10kDiff = currentValue - baselineValue;
-  const percent = baselineValue !== 0 ? (value10kDiff / baselineValue) * 100 : null;
-  return { value10k: value10kDiff, percent };
-}
-
-// 두 건수가 문턱(min) 아래면 증감을 내지 않고 이유만 남긴다(`changeWithheld`, #290) - 값 자체는 그대로다.
-function withChange(valueKey, metric, baselineMetric, baselineDate, min) {
-  if (!metric) return metric;
-  const change = computeChange(metric[valueKey], baselineMetric?.[valueKey]);
-  if (!change) return metric;
-  const [current, baseline] = [metric.transactionCount, baselineMetric.transactionCount];
-  // 지난번 값으로 채운 구(carryForward)는 옛 증감을 들고 오므로 보류할 때는 그것도 걷는다.
-  if (!canShowChange(current, baseline, min)) {
-    const { change: _old, baselineDate: _oldDate, ...rest } = metric;
-    return { ...rest, changeWithheld: { current: current ?? 0, baseline: baseline ?? 0, min } };
-  }
-  return { ...metric, change, baselineDate };
-}
-
-// 매매 쏠림 보류(#862). 계약 기준 날에만 온다 - 신고 기준 날은 증감 자체가 없다(arrivalChanges). 지금 표본이 걸렸으면(`concentration`, 빌드가 판정) 비교할 값이 없어도 단서를 낸다 - 값과 함께 읽어야 할 말이기 때문이다.
-// 견줄 날의 표본이 걸렸으면(baselineHeld) 그 값과의 차이만 내지 않는다 - 비교할 값이 없으면 증감이 원래 없어 할 말도 없다. 둘 다면 지금 표본의 문구다.
-// 서울은 기준 기록의 발동 정보와 날짜 목록(isConcentratedBaseline), 자치구는 기준 기록의 그 구 발동 정보만 본다(구 날짜 목록은 만들지 않는다 - #862 data-analyst 11-17).
-// 84㎡·전세·월세는 막지 않는다(313행은 16~36㎡라 84㎡ 부근 표본에 없고, 전세·월세는 #862 판정으로 규칙 밖이다). 이유를 먼저 보는 쪽은 withheldOf 와 화면 JS 다.
-function heldSale(metric, base, baselineHeld, baselineDate, min, window, jeonse) {
-  if (!metric) return null;
-  const comparable = Boolean(computeChange(metric.avgPricePerPyeong10k, base?.avgPricePerPyeong10k));
-  const current = Boolean(metric.concentration);
-  if (!current && !(comparable && baselineHeld)) return null;
-  const { change: _old, baselineDate: _oldDate, ...rest } = metric;
-  const counts = { current: metric.transactionCount ?? 0, baseline: base?.transactionCount ?? 0, min };
-  return {
-    ...rest,
-    changeWithheld: current
-      ? { reason: REASON_CURRENT, ...counts, text: concentrationText(metric, window, jeonse) }
-      : { reason: REASON_BASELINE, ...counts, baselineDate, text: baselineHeldText(metric, baselineDate, window) },
-  };
-}
-
-// 증감 필드를 걷는다. 지난번 값으로 채운 구(carryForward)는 옛 증감·보류를 들고 오므로 신고 기준 날에도 걷어야 한다.
+// 증감 필드를 걷는다. 지난번 값으로 채운 구(carryForward)는 옛 증감·보류를 들고 오므로 걷어야 한다.
 const withoutChange = (metric) => {
   if (!metric) return metric;
   const { change: _c, baselineDate: _d, changeWithheld: _w, ...rest } = metric;
@@ -360,17 +321,21 @@ const withoutChange = (metric) => {
 };
 
 // 쏠림이 걸린 매매 칸: 증감이 없는 자리라 「증감 보류」 없이 단서(건수·뺀 값)만 남긴다(REASON_NOTE). 문턱은 서울·구 같은 isConcentrated 다(빌드가 판정해 `concentration` 을 붙인다).
+// 단서 문구(concentrationClause)는 계약 기준 날에도 재도장을 말하지 않는다 - 그날 같은 행은 실제 그 창의 계약이다.
 const noted = (sale, window, jeonse) =>
-  sale?.concentration ? { ...sale, changeWithheld: { reason: REASON_NOTE, text: concentrationText(sale, window, jeonse, false) } } : sale;
+  sale?.concentration ? { ...sale, changeWithheld: { reason: REASON_NOTE, text: concentrationText(sale, window, jeonse) } } : sale;
 
 /**
- * 신고 기준 날은 서울·자치구 어느 값에도 7일 증감을 싣지 않는다(#862 2단계). 자리에는 기간과 건수만 남고, 건수 문턱 보류(#290) 문구도 낼 증감이 없어 함께 사라진다.
- * 규칙: 잰 날들의 |Δ| 중앙값이 행 재추출 90% 구간 반폭 중앙값보다 커야 싣는다. 서울(2026-08-25~11-15 신고 기준 40일)은 매매 2.49% 대 ±5.62%, 전세 1.84% 대 ±3.62%,
+ * 서울·자치구 어느 값에도 7일 증감을 싣지 않는다 - 신고 기준 날(#862 2단계)도, 계약 기준으로 물러난 날(#862 3단계, pm 11-15)도 같다.
+ * 자리에는 기간과 건수만 남고, 건수 문턱 보류(#290) 문구도 낼 증감이 없어 함께 사라진다.
+ * 신고 기준 규칙: 잰 날들의 |Δ| 중앙값이 행 재추출 90% 구간 반폭 중앙값보다 커야 싣는다. 서울(2026-08-25~11-15 신고 기준 40일)은 매매 2.49% 대 ±5.62%, 전세 1.84% 대 ±3.62%,
  * 월세 2.76% 대 ±4.22% 였다(data-analyst 11-15 - 11-04 값을 본 뒤 정한 규칙이라 사전 등록이 아니다, pm 11-15 판정). 자치구(같은 기간 44일, 구-일 1,008~1,070개, 짝 재추출)는
  * 매매 1.55% 대 ±3.65%, 전세 1.49% 대 ±2.89%, 월세 1.64% 대 ±3.29% 였다(재기 전에 등록한 규칙, data-analyst 11-17). 여섯 값 모두 못 넘었다. 재현은 research/arrival-change-2026-11.
- * 84㎡ 부근(saleNational84)은 화면에 실리지 않지만 공개 JSON 이 같은 뜻이 되게 같이 걷는다. 계약 기준으로 물러난 날은 이 판정 밖이라 예전 그대로 증감을 붙인다.
+ * 계약 기준 날: 2026-08-18~11-15 기록 60일 중 6일이고, 서울 매매 증감이 실린 4일 중 3일은 정의가 다른 기록(기간 정보 없는 옛 정의·신고 기준)과 견준 것이었다.
+ * 계약 기준끼리 견준 날은 10-26 하루뿐이라 같은 규칙으로 잴 표본이 없다(pm 11-15 판정, #862 issuecomment-6890869728).
+ * 84㎡ 부근(saleNational84)은 화면에 실리지 않지만 공개 JSON 이 같은 뜻이 되게 같이 걷는다.
  */
-function arrivalChanges(overall, districts, window) {
+export function attachChanges(overall, districts, window = null) {
   const strip = (entry) => ({
     ...entry,
     sale: noted(withoutChange(entry.sale), window, entry.jeonse),
@@ -379,36 +344,6 @@ function arrivalChanges(overall, districts, window) {
     wolse: withoutChange(entry.wolse),
   });
   return { overall: strip(overall), districts: districts.map(strip) };
-}
-
-export function attachChanges(overall, districts, baseline, window = null) {
-  if (window?.basis === "arrival") return arrivalChanges(overall, districts, window);
-  const baselineDate = baseline?.date;
-  const findBaselineDistrict = (code) => baseline?.districts?.find((d) => d.code === code);
-  const sale = (m, b, min) => withChange("avgPricePerPyeong10k", m, b, baselineDate, min);
-  const jeonse = (m, b, min) => withChange("avgDepositPerPyeong10k", m, b, baselineDate, min);
-  const wolse = (m, b, min) => withChange("avgConvertedPerPyeong10k", m, b, baselineDate, min);
-  const { seoul, district } = CHANGE_MIN_COUNT;
-  const o = baseline?.overall;
-
-  return {
-    overall: {
-      sale: heldSale(overall.sale, o?.sale, isConcentratedBaseline(baseline), baselineDate, seoul, window, overall.jeonse) ?? sale(overall.sale, o?.sale, seoul),
-      saleNational84: sale(overall.saleNational84, o?.saleNational84, seoul),
-      jeonse: jeonse(overall.jeonse, o?.jeonse, seoul),
-      wolse: wolse(overall.wolse, o?.wolse, seoul),
-    },
-    districts: districts.map((d) => {
-      const b = findBaselineDistrict(d.code);
-      return {
-        ...d,
-        sale: heldSale(d.sale, b?.sale, Boolean(b?.sale?.concentration), baselineDate, district, window, d.jeonse) ?? sale(d.sale, b?.sale, district),
-        saleNational84: sale(d.saleNational84, b?.saleNational84, district),
-        jeonse: jeonse(d.jeonse, b?.jeonse, district),
-        wolse: wolse(d.wolse, b?.wolse, district),
-      };
-    }),
-  };
 }
 
 export function carryForward(allDistricts, fetched, existing, existingIsToday) {

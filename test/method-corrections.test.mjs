@@ -101,6 +101,10 @@ test("method: 신고 기준 정의와 쏠림 절이 한·영에 있다", async (
   for (const w of ["on the reported basis", "on the contract basis", "at least 10 rows", "headline figure is not replaced", "judgment made after seeing", "11 of 44 reported-basis days", "2 of 5 contract-basis days", "District sale rows use the same threshold", "195 district-days"]) {
     assert.ok(en.includes(w), `영어 절에 ${w}`);
   }
+  // 3단계(pm 11-15): 쏠림 절은 「증감을 내지 않는다」가 아니라 「건수와 뺀 값을 함께 적는다」이고, 증감은 어느 기준 날에도 없다.
+  assert.ok(ko.includes("몰리면 그 건수와 뺀 값을 함께 적습니다") && ko.includes("7일 증감은 신고 기준&middot;계약 기준 어느 날에도 싣지 않습니다"), "한국어 쏠림 절 3단계");
+  assert.ok(en.includes("their count and the figure without them are shown") && en.includes("No 7-day change is shown on reported-basis or contract-basis days"), "영어 쏠림 절 3단계");
+  for (const w of ["몰리면 증감을 내지 않습니다", "견줄 날의 표본이 그랬을 때도", "the change is withheld</h2>", "comparison date's sample"]) assert.ok(!ko.includes(w) && !en.includes(w), w);
   // 1단계의 「구 줄에는 단서가 없다(늦어도 11-20)」는 2단계에서 사실이 아니다.
   for (const w of ["2026-11-20", "단서가 없습니다", "carry no such note"]) assert.ok(!ko.includes(w) && !en.includes(w), w);
   for (const w of ["오염", "왜곡", "진짜", "corrupt", "distort", "real price"]) assert.ok(!ko.includes(w) && !en.includes(w), w);
@@ -108,18 +112,23 @@ test("method: 신고 기준 정의와 쏠림 절이 한·영에 있다", async (
 });
 
 // #862 2단계(조건 8): 7일 증감을 내린 정의와 이유 - 규칙, 서울 40일·구 44일 값, 서울은 값을 본 뒤 정한 규칙이고 구는 재기 전에 적은 규칙이라는 점.
+// 3단계(pm 11-15): 계약 기준으로 물러난 날도 내린다 - 60일 중 6일, 실린 4일 중 3일은 정의가 다른 기록과 견줬고 계약 대 계약은 10-26 하루. 「이 판단 밖」 문장은 없어야 한다.
 test("method: 신고 기준 7일 증감을 내린 절이 한·영에 있다", async () => {
   const html = await method();
   const ko = sectionOf(html, "arrival-change").text;
   const en = sectionOf(html, "arrival-change-en").text;
   for (const w of ["서울 전체와 자치구", "90% 구간 반폭의 중간값보다 크다", "40일", "2.49% 대 &plusmn;5.62%", "1.84% 대 &plusmn;3.62%", "2.76% 대 &plusmn;4.22%", "본 뒤 정한 것이라 미리 정해 둔 규칙이 아닙니다",
-    "재기 전에 적어 두고", "1.55% 대 &plusmn;3.65%", "1.49% 대 &plusmn;2.89%", "1.64% 대 &plusmn;3.29%", "계약 기준으로 물러난 날", "지난 기록은 고치지 않습니다"]) {
+    "재기 전에 적어 두고", "1.55% 대 &plusmn;3.65%", "1.49% 대 &plusmn;2.89%", "1.64% 대 &plusmn;3.29%", "계약 기준으로 물러난 날", "지난 기록은 고치지 않습니다",
+    "60일 중 6일", "4일 중 3일은 정의가 다른 기록과 견준 것", "10-26 하루뿐", "그 사실을 본 뒤 정했습니다"]) {
     assert.ok(ko.includes(w), `한국어 절에 ${w}`);
   }
   for (const w of ["Seoul-wide or district", "median half-width of a 90% interval", "40 reported-basis days", "2.49% against &plusmn;5.62%", "not fixed in advance",
-    "written down before measuring", "1.55% against &plusmn;3.65%", "fall back to the contract basis", "Past records are not revised"]) {
+    "written down before measuring", "1.55% against &plusmn;3.65%", "fallen back to the contract basis", "Past records are not revised",
+    "6 of the 60 recorded days", "3 compared against a record with a different definition", "only one, 10-26", "made after seeing those facts"]) {
     assert.ok(en.includes(w), `영어 절에 ${w}`);
   }
+  // 바꾼 단언(#862 3단계): 예전에는 「계약 기준으로 물러난 날은 이 판단 밖이라 증감을 그대로 적습니다」가 있어야 했다.
+  for (const w of ["이 판단 밖", "outside this judgment", "keep their change"]) assert.ok(!ko.includes(w) && !en.includes(w), w);
   assert.ok(html.includes('href="#arrival-change"') && html.includes('href="#arrival-change-en"'), "목차");
 });
 
