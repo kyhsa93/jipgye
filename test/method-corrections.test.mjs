@@ -3,12 +3,15 @@ import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { words, windows } from "../scripts/prose-share.ts";
-import { CLOSED_ISSUES, MERGED_PRS, EXCLUDED } from "../scripts/check-corrections-refs.ts";
+import { CLOSED_ISSUES, MERGED_PRS, EXCLUDED, RETIRED } from "../scripts/check-corrections-refs.ts";
 import { SITE } from "./helpers/site-root.mjs";
 
 // #159: method.html의 「고친 오류」 한 절. 법무 조건(이슈 댓글 7개)을 구조·금지어로 못 박는다.
-// 이슈·PR이 실제로 닫혔고 병합됐는지는 네트워크가 필요해 scripts/check-corrections-refs.mjs(수동)가 본다.
+// 이슈·PR이 실제로 닫혔고 병합됐는지는 네트워크가 필요해 scripts/check-corrections-refs.ts(수동)가 본다.
 // 여기서는 값에 따라 갈리는 검사를 두지 않는다(#8).
+// #913: 상한은 열 건이다. 새 항목이 들어오면 내용과 상관없이 날짜가 가장 오래된 항목부터 내리고, 같은 날짜는 목록 아래부터 내린다.
+// 그래서 새 항목은 그 날짜 묶음의 맨 위에 넣는다. 내린 항목의 번호는 CLOSED_ISSUES·MERGED_PRS 에서 빼서 RETIRED 로 옮긴다(EXCLUDED 아님).
+// 날짜 규칙은 「내린 항목 규칙」 시험이 보고, 같은 날짜 안의 순서는 정적 시험으로 강제할 수 없어 정정 PR마다 diff 로 확인한다.
 
 const root = path.resolve(import.meta.dirname, "..");
 const method = () => readFile(path.join(root, "docs/method.html"), "utf8");
@@ -21,6 +24,18 @@ const sectionOf = (html, id) => {
   return { start, end, text: html.slice(start, end) };
 };
 const items = (sec) => [...sec.matchAll(/<li>([\s\S]*?)<\/li>/g)].map((m) => m[1]);
+const dateOf = (li) => li.match(/<strong>(\d{4}-\d{2}-\d{2})<\/strong>/)?.[1];
+const linksTo = (kind, n) => new RegExp(`jipgye/${kind === "issues" ? "issues" : "pull"}/${n}"`);
+
+// #913 (e): 특정 항목 시험의 갈래. 그 항목이 한·영 모두 화면에 있으면 내용 검사로 넘기고, 둘 다 없으면 번호가 RETIRED 에 있어야 한다.
+// 한쪽에만 있으면 실패다. 어느 갈래든 단언 없이 지나가지 않는다.
+const pickOrRetired = (html, kind, n) => {
+  const ko = items(sectionOf(html, "corrections").text).find((li) => linksTo(kind, n).test(li));
+  const en = items(sectionOf(html, "corrections-en").text).find((li) => linksTo(kind, n).test(li));
+  assert.equal(Boolean(ko), Boolean(en), `#${n} 항목이 한·영 한쪽에만 있다`);
+  if (!ko) assert.ok(RETIRED.some((r) => r[kind].includes(n)), `#${n} 항목이 화면에 없으면 RETIRED 의 ${kind} 에 있어야 한다`);
+  return ko ? { ko, en } : null;
+};
 
 const KO_BANNED = ["사고", "유출", "부풀려", "잘못된 정보를 제공", "피해", "책임", "항상", "절대", "완전", "오류 0건"];
 const EN_BANNED = ["always", "never", "complete", "leak", "breach", "damage", "liab", "fault", "blame", "zero errors", "inflat"];
@@ -33,33 +48,37 @@ test("한·영 두 절이 있고 항목 수가 같으며 10건 이하다", async
   const en = items(sectionOf(html, "corrections-en").text);
   assert.ok(ko.length >= 1 && ko.length <= 10, `한국어 ${ko.length}건`);
   assert.equal(en.length, ko.length);
-  assert.equal(ko.length, 10, "열 건(#28·#183·#65·#6·#29·#229·#862 1단계 PR·#821+#843·#862 2단계 PR·#781)");
 });
 
 // #229: 예금자보호 한도 정정 항목. 항목 수·날짜 형식·근거 링크·문장 수·금지어는 위의 일반 시험이 모든 항목에 건다.
-// 여기서는 이 항목이 있고 정정된 값을 말하는지, 서두의 건수 표기가 항목 수와 맞는지만 본다. 더 최근 항목이 있어 맨 앞은 검사하지 않는다.
+// 여기서는 이 항목이 있으면 정정된 값을 말하는지(없으면 RETIRED 에 있는지, #913), 서두의 건수 표기가 항목 수와 맞는지만 본다.
 // 날짜 값 자체는 머지일에 따라 달라지므로 검사하지 않는다(#8).
-test("예금자보호 한도 정정 항목(#229)이 한·영에 있고 서두 건수가 항목 수와 맞다", async () => {
+test("예금자보호 한도 정정 항목(#229)이 한·영에 있거나 내렸고 서두 건수가 항목 수와 맞다", async () => {
   const html = await method();
   const ko = sectionOf(html, "corrections").text;
   const en = sectionOf(html, "corrections-en").text;
-  const koFirst = items(ko).find((li) => /jipgye\/issues\/229"/.test(li));
-  const enFirst = items(en).find((li) => /jipgye\/issues\/229"/.test(li));
-  assert.ok(koFirst && enFirst);
-  for (const w of ["예금자보호", "금융회사별 1억원", "금리 수치와 집계는 그대로"]) assert.ok(koFirst.includes(w), `한국어 항목에 ${w}`);
-  for (const w of ["deposit-protection", "KRW 100 million per financial institution", "rate figures and counts are unchanged"]) {
-    assert.ok(enFirst.includes(w), `영어 항목에 ${w}`);
+  const hit = pickOrRetired(html, "issues", 229);
+  if (hit) {
+    for (const w of ["예금자보호", "금융회사별 1억원", "금리 수치와 집계는 그대로"]) assert.ok(hit.ko.includes(w), `한국어 항목에 ${w}`);
+    for (const w of ["deposit-protection", "KRW 100 million per financial institution", "rate figures and counts are unchanged"]) {
+      assert.ok(hit.en.includes(w), `영어 항목에 ${w}`);
+    }
   }
-  assert.match(ko.slice(0, ko.indexOf("<ul")), /열 건/);
-  assert.match(en.slice(0, en.indexOf("<ul")), /ten corrections/);
+  // #913 (b): 서두는 「열 건」이라 말하고 상한에 닿아 있으므로 항목 수가 정확히 10이어야 서두와 맞다.
+  assert.match(ko.slice(0, ko.indexOf("<ul")), /열 건을 최근 것부터/);
+  assert.match(en.slice(0, en.indexOf("<ul")), /ten corrections, newest first/);
+  assert.equal(items(ko).length, 10, "서두 「열 건」과 한국어 항목 수");
+  assert.equal(items(en).length, 10, "서두 「ten corrections」와 영어 항목 수");
 });
 
-// #862 2단계(PR #885): 맨 앞 항목이다. 세는 방법을 고친 정정이라 11-05 항목(표시 쪽 조치)을 고쳐 쓰지 않고 새 항목으로 둔다(pm 11-15).
+// #862 2단계(PR #885): 세는 방법을 고친 정정이라 11-05 항목(표시 쪽 조치)을 고쳐 쓰지 않고 새 항목으로 둔다(pm 11-15).
 // 수치는 PR #885 의 11-15 재생 값이다(cpo 교차검증) - method.html 의 고정 문장만 보므로 데일리 값에 따라 갈리지 않는다(#8).
-test("신고 건수 정정 항목(PR #885)이 한·영 맨 앞에 있고 화면 이름·수치·지난 기록을 적는다", async () => {
+// #913: 더 최근 항목이 들어오면 맨 앞이 아니게 되므로 자리 대신 링크로 찾고, 내려가면 RETIRED 에 있어야 한다.
+test("신고 건수 정정 항목(PR #885)이 한·영에 있으면 화면 이름·수치·지난 기록을 적고, 없으면 내린 목록에 있다", async () => {
   const html = await method();
-  const ko = items(sectionOf(html, "corrections").text)[0];
-  const en = items(sectionOf(html, "corrections-en").text)[0];
+  const hit = pickOrRetired(html, "prs", 885);
+  if (!hit) return;
+  const { ko, en } = hit;
   for (const li of [ko, en]) assert.match(li, /jipgye\/pull\/885"/);
   for (const w of ["2026-11-15", "&lsquo;이번 주 새로 신고된 거래&rsquo;", "4,309행 중 766행(17.8%)", "1,079건(3.3㎡당 5,379만원)에서 1,022건(5,387만원)", "1,024건에서 913건", "지난 기록은 고치지 않았습니다"]) {
     assert.ok(ko.includes(w), `한국어 항목에 ${w}`);
@@ -72,30 +91,35 @@ test("신고 건수 정정 항목(PR #885)이 한·영 맨 앞에 있고 화면 
 
 // #821·#843: 동명 단지 정정 항목. 수치는 11-03 공개 파일 기준(since 05-04)이라 그날 칸 수·벽산 금호동1가 범위를 못 박는다.
 // 화면 데이터가 아니라 method.html 의 고정 문장만 보므로 데일리 값에 따라 갈리지 않는다(#8).
-test("동명 단지 정정 항목(#821·#843)이 한·영에 있고 #switch-house 가 같은 기준을 적는다", async () => {
+// #913: 항목이 내려가도 #switch-house 두 문장은 절 밖이라 조건 없이 본다.
+test("동명 단지 정정 항목(#821·#843)이 한·영에 있거나 내렸고 #switch-house 가 같은 기준을 적는다", async () => {
   const html = await method();
-  const ko = items(sectionOf(html, "corrections").text).find((li) => /jipgye\/issues\/821"/.test(li));
-  const en = items(sectionOf(html, "corrections-en").text).find((li) => /jipgye\/issues\/821"/.test(li));
-  for (const li of [ko, en]) {
-    assert.match(li, /jipgye\/issues\/821"/);
-    assert.match(li, /jipgye\/issues\/843"/);
-  }
-  for (const w of ["벽산", "84㎡", "18.0~20.0억", "10.2~10.8억", "3,049개 중 64개", "44.3%&rarr;44.4%", "11.1%&rarr;11.0%", "276쌍 중 3쌍", "나눈 효과로 보지 않습니다"]) {
-    assert.ok(ko.includes(w), `한국어 항목에 ${w}`);
-  }
-  for (const w of ["Byeoksan 84㎡", "KRW 1.80&ndash;2.00 billion", "KRW 1.02&ndash;1.08 billion", "64 of 3,049 cells", "from 44.3% to 44.4%", "from 11.1% to 11.0%", "3 of 276", "not read as an effect of the split"]) {
-    assert.ok(en.includes(w), `영어 항목에 ${w}`);
+  const hit = pickOrRetired(html, "issues", 821);
+  if (hit) {
+    const { ko, en } = hit;
+    for (const li of [ko, en]) {
+      assert.match(li, /jipgye\/issues\/821"/);
+      assert.match(li, /jipgye\/issues\/843"/);
+    }
+    for (const w of ["벽산", "84㎡", "18.0~20.0억", "10.2~10.8억", "3,049개 중 64개", "44.3%&rarr;44.4%", "11.1%&rarr;11.0%", "276쌍 중 3쌍", "나눈 효과로 보지 않습니다"]) {
+      assert.ok(ko.includes(w), `한국어 항목에 ${w}`);
+    }
+    for (const w of ["Byeoksan 84㎡", "KRW 1.80&ndash;2.00 billion", "KRW 1.02&ndash;1.08 billion", "64 of 3,049 cells", "from 44.3% to 44.4%", "from 11.1% to 11.0%", "3 of 276", "not read as an effect of the split"]) {
+      assert.ok(en.includes(w), `영어 항목에 ${w}`);
+    }
+  } else {
+    assert.ok(RETIRED.some((r) => r.issues.includes(843)), "#821 항목을 내렸으면 #843 도 RETIRED 에 있어야 한다");
   }
   assert.ok(sectionOf(html, "switch-house").text.includes("이름이 같아도 둘 이상의 동에 있으면 동별로 다른 단지로 셉니다."));
   assert.ok(sectionOf(html, "switch-house-en").text.includes("Complexes sharing a name across more than one dong are counted separately per dong."));
 });
 
 // #862 1단계: 근거는 PR 이다(#862 는 2단계까지 열려 있다). 지난 값을 그대로 둔다고 적는다.
-test("서울 매매 표본 정정 항목이 한·영에 있고 지난 값을 그대로 둔다고 적는다", async () => {
+test("서울 매매 표본 정정 항목이 한·영에 있으면 지난 값을 그대로 둔다고 적고, 없으면 내린 목록에 있다", async () => {
   const html = await method();
-  const ko = items(sectionOf(html, "corrections").text).find((li) => /jipgye\/pull\/864"/.test(li));
-  const en = items(sectionOf(html, "corrections-en").text).find((li) => /jipgye\/pull\/864"/.test(li));
-  assert.ok(ko && en);
+  const hit = pickOrRetired(html, "prs", 864);
+  if (!hit) return;
+  const { ko, en } = hit;
   for (const w of ["313건", "지난 값은 그대로", "5% 이상", "전 면적 환산"]) assert.ok(ko.includes(w), `한국어 항목에 ${w}`);
   for (const w of ["313 filings", "Past figures are left as published", "5% of the sample", "all-size average"]) assert.ok(en.includes(w), `영어 항목에 ${w}`);
   for (const li of [ko, en]) assert.match(li, /jipgye\/pull\/\d+"/);
@@ -160,9 +184,14 @@ test("절 머리는 면책 문단 하나이고 목록 앞에 있다", async () =
   assert.match(ko, /모든 오류를 여기에 적는 것은 아닙니다/);
   assert.match(ko, /원본을 확인해/);
   assert.match(ko, /최근 것부터/);
+  // #913: 내림 규칙과 근거의 보존을 같은 문단 안에서 말한다(legal 확정 문안).
+  assert.match(ko, /내용과 상관없이 날짜가 가장 오래된 항목부터 내리며/);
+  assert.match(ko, /저장소에 그대로 남습니다/);
   assert.doesNotMatch(ko, /날짜 순/);
   const en = sectionOf(html, "corrections-en").text;
   assert.match(en, /this site's counting method/);
+  assert.match(en, /the entry with the oldest date comes off the list whatever its content/);
+  assert.match(en, /stay in this site's repository/);
   assert.doesNotMatch(en, /\bwe\b|mistake/i, "영어 면책 주어는 사이트이고 we·mistake를 쓰지 않는다");
 });
 
@@ -199,6 +228,40 @@ test("근거 링크는 번호 목록(닫힌 이슈·병합된 PR)과 정확히 �
   }
 });
 
+// #913 (c): 내린 항목(RETIRED)이 서두의 날짜 규칙대로인지. 목록 자체의 모양과 화면 항목과의 관계만 보고 값에 따라 갈리지 않는다(#8).
+test("내린 항목 규칙: RETIRED 는 날짜가 가장 오래된 것부터 내린 기록이고 EXCLUDED 와 섞이지 않는다", async () => {
+  const html = await method();
+  assert.ok(Array.isArray(RETIRED), "RETIRED 는 배열이다");
+  const nums = (r) => [...r.issues, ...r.prs];
+  for (const r of RETIRED) {
+    assert.match(String(r.date), /^\d{4}-\d{2}-\d{2}$/, `RETIRED 날짜 형식: ${r.date}`);
+    assert.ok(Array.isArray(r.issues) && Array.isArray(r.prs), `${r.date}: issues·prs 는 배열이다`);
+    assert.ok(nums(r).length >= 1 && nums(r).every(Number.isInteger), `${r.date}: 번호가 1개 이상이고 정수다`);
+    for (const n of nums(r)) assert.ok(!EXCLUDED.includes(n), `#${n}: RETIRED 와 EXCLUDED 에 함께 있다`);
+  }
+  const retiredDates = RETIRED.map((r) => r.date);
+  assert.deepEqual([...retiredDates].sort(), retiredDates, "RETIRED 는 내린 차례대로 날짜 오름차순이다");
+  for (const id of ["corrections", "corrections-en"]) {
+    const list = items(sectionOf(html, id).text);
+    const dates = list.map(dateOf);
+    assert.ok(dates.length >= 1 && dates.every(Boolean), `${id}: 화면 항목 날짜`);
+    const oldest = [...dates].sort()[0];
+    for (const d of retiredDates) assert.ok(d <= oldest, `${id}: RETIRED ${d} 가 화면에 남은 가장 오래된 날짜 ${oldest} 보다 늦다`);
+    if (RETIRED.length) assert.equal(list.length, 10, `${id}: 내린 항목이 있으면 화면은 상한 열 건이 차 있어야 한다`);
+    // 보강(clo 수용, issuecomment-6895037364): 내린 번호가 화면 링크에 남아 있다면 그것은 내린 뒤에 들어온 새 정정뿐이라 날짜가 더 늦다.
+    // 같은 날짜 묶음 안에서 다른 항목을 내리고 이 번호를 적은 경우(기록이 실제와 다름)를 잡는다.
+    for (const r of RETIRED) {
+      for (const [kind, ns] of [["issues", r.issues], ["prs", r.prs]]) {
+        for (const n of ns) {
+          for (const li of list.filter((x) => linksTo(kind, n).test(x))) {
+            assert.ok(dateOf(li) > r.date, `${id}: RETIRED #${n}(${r.date}) 이 화면 항목(${dateOf(li)})에 남아 있다`);
+          }
+        }
+      }
+    }
+  }
+});
+
 test("쓰지 않을 말과 개인정보 건의 구체어가 없다", async () => {
   const html = await method();
   const ko = sectionOf(html, "corrections").text.replace(/<[^>]+>/g, " ");
@@ -210,10 +273,12 @@ test("쓰지 않을 말과 개인정보 건의 구체어가 없다", async () =>
   }
 });
 
+// #913: 항목을 숫자(2.1%) 대신 근거 링크로 찾는다. 내려가면 RETIRED 에 있어야 한다.
 test("해제율 옛 값은 '당시 표본'으로 표시되고 지금 값과 섞이지 않는다", async () => {
   const html = await method();
-  const ko = items(sectionOf(html, "corrections").text).find((li) => li.includes("2.1%"));
-  const en = items(sectionOf(html, "corrections-en").text).find((li) => li.includes("2.1%"));
+  const hit = pickOrRetired(html, "issues", 28);
+  if (!hit) return;
+  const { ko, en } = hit;
   assert.match(ko, /당시 표본/);
   assert.match(ko, /전체 거래 대비 해제 비율/);
   assert.match(en, /share of all transactions/);

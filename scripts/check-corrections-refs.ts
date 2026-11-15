@@ -12,6 +12,10 @@ export const CLOSED_ISSUES = [6, 28, 29, 65, 183, 229, 781, 821, 843];
 export const MERGED_PRS = [885, 864, 189];
 // 싣지 않기로 한 것: #80(개인정보 건, 소유자 확인 선행), 이용허락·출처 건(공시가격·건축HUB)은 정정이 아니다.
 export const EXCLUDED = [80];
+// #913 날짜 규칙으로 내린 항목, 내용으로 싣지 않기로 한 EXCLUDED와 다르다. 원소는 { date: "YYYY-MM-DD", issues: [..], prs: [..] }, 내린 차례대로.
+// 항목을 내릴 때 그 번호를 CLOSED_ISSUES·MERGED_PRS 에서 빼서 여기로 옮긴다(화면의 다른 항목이 같은 번호를 쓰면 남긴다).
+// 서두가 「내린 항목의 근거 이슈와 PR은 저장소에 그대로 남습니다」라고 말하므로 아래 루프가 이 번호들도 닫힘·병합을 계속 확인한다(clo Q5).
+export const RETIRED = [];
 
 const gh = (args) => JSON.parse(execFileSync("gh", args, { encoding: "utf8" }));
 
@@ -28,6 +32,20 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const ok = r.state === "MERGED";
     if (!ok) bad += 1;
     console.log(`${ok ? "ok " : "BAD"} pr #${n} ${r.state} ${r.title}`);
+  }
+  for (const { issues, prs } of RETIRED) {
+    for (const n of issues) {
+      const r = gh(["issue", "view", String(n), "--json", "number,state,title"]);
+      const ok = r.state === "CLOSED";
+      if (!ok) bad += 1;
+      console.log(`${ok ? "ok " : "BAD"} issue #${n} ${r.state} ${r.title}`);
+    }
+    for (const n of prs) {
+      const r = gh(["pr", "view", String(n), "--json", "number,state,title"]);
+      const ok = r.state === "MERGED";
+      if (!ok) bad += 1;
+      console.log(`${ok ? "ok " : "BAD"} pr #${n} ${r.state} ${r.title}`);
+    }
   }
   process.exitCode = bad ? 1 : 0;
 }
