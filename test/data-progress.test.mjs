@@ -6,13 +6,15 @@ import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
-  ALERT_HOURS, BUSINESS_FAIL_DAYS, BUSINESS_WARN_DAYS, CHECK_HOURS, ISSUE_GROUPS, MONTHLY_LAG, NO_ISSUE_GROUPS, UPDATED_AT_EXCLUDED, builderAgeChecks, collectChecks, collectStatus, dateOf, groupOf, main, monthlyCheck,
-  reportPayload, unregisteredDataFiles, weekdaysBetween,
+  ALERT_HOURS, BUSINESS_FAIL_DAYS, BUSINESS_WARN_DAYS, CHECK_HOURS, DISTRICT_SHAPE_KEYS, ISSUE_GROUPS, MONTHLY_LAG, NO_ISSUE_GROUPS, UPDATED_AT_EXCLUDED, builderAgeChecks, collectChecks, collectStatus, dateOf,
+  districtShapesCheck, groupOf, main, monthlyCheck, reportPayload, unregisteredDataFiles, weekdaysBetween,
 } from "../scripts/check-data-progress.ts";
 import { MAX_NEW_ISSUES, TITLE_PREFIX, listOpenIssueTitles, parseReport, planIssues, readMarker, runReport } from "../scripts/report-data-progress.ts";
 import { ECOS_SERIES, RONE_SERIES } from "../scripts/fetch-indicators.ts";
 import { DISTRICTS } from "../scripts/realestate-districts.ts";
 import { shiftMonth } from "../scripts/realestate-slots.ts";
+import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
+import { shapeDeals } from "./helpers/district-shape-deals.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const months = (last, n) => Array.from({ length: n }, (_, i) => [shiftMonth(last, i - n + 1), 1]);
@@ -27,6 +29,13 @@ const NOV = {
   month: "202611", newest: "2026-11-05T01:00:00Z", older: "2026-11-05T00:00:00Z", asOf: "2026-11-02", fx: "2026-11-02", observedAt: "2026-11-05T01:00:00Z", updatedAt: "2026-11-05T01:00:00Z",
   progress: { lastProgressAt: "2026-10-25T21:00:00Z", zeroProgressRuns: 0, doneParcels: 6764, targetParcels: 6764 },
 };
+/**
+ * 자치구 거래 파일 25개(#813 district-shapes 입력). 관찰 키 아홉 개 하나씩 + 한 조합을 차례로 돌려 10가지·최다 3구 = ok.
+ * updatedAt 은 사본 시각이라 F2(docs/data/deals-*)도 조용하다. shapes 를 주면 그 조합 목록으로 만든다.
+ */
+const SHAPES_OK = [...DISTRICT_SHAPE_KEYS.map((k) => (k === "typical" ? [] : [k])), ["concentrated", "oneComplex"]];
+const dealFiles = (updatedAt, shapes = SHAPES_OK) =>
+  Object.fromEntries(DISTRICT_PAGES.map(({ name }, i) => [`docs/data/deals-${DISTRICT_SLUGS[name]}.json`, shapeDeals(shapes[i % shapes.length], { updatedAt })]));
 const seriesOf = (month, over = {}) => ({ series: { ...Object.fromEntries(Object.entries(MONTHLY_LAG).map(([k, lag]) => [k, months(shiftMonth(month, -lag), 30)])), ...over } });
 
 /** 모두 정상인 저장소 사본. over 로 파일 하나씩 바꾼다. */
@@ -44,6 +53,7 @@ function fixture(over = {}, base = OCT) {
     "raw/ecos/apt-price-index.json": { series: { 200: months(shiftMonth(base.month, -3), 30) } },
     "raw/move-in/meta.json": { basis: "2026-06-30" },
     "raw/official-price/status/progress.json": base.progress,
+    ...dealFiles(base.updatedAt),
     ...over,
   };
   for (const [rel, obj] of Object.entries(files)) if (obj !== null) put(rel, obj);
@@ -395,7 +405,7 @@ test("코드 목록: 코드 목록에 없는 소스가 나오면 report 가 멈�
   const gh = stubGitHub();
   await assert.rejects(runStub(report(warn("new-source/x")), gh), /코드 목록에 없는 소스다: new-source\/x/);
   assert.equal(gh.posts.length, 0);
-  assert.deepEqual(ISSUE_GROUPS, ["official-price", "raw", "series", "market", "rone-districts", "apt-price-index", "move-in", "housing-permits"]);
+  assert.deepEqual(ISSUE_GROUPS, ["official-price", "raw", "series", "market", "rone-districts", "apt-price-index", "move-in", "housing-permits", "district-shapes"]);
   assert.deepEqual(NO_ISSUE_GROUPS, ["news", "ledger", "docs"]);
   assert.equal(ISSUE_GROUPS.filter((g) => NO_ISSUE_GROUPS.includes(g)).length, 0);
   // 조건부로 나오는 둘(housing-permits, ledger)까지 다 나오는 사본.
@@ -403,9 +413,77 @@ test("코드 목록: 코드 목록에 없는 소스가 나오면 report 가 멈�
   try {
     const checks = collectChecks({ root: dir, now: at("2026-11-03T05:29:00Z") });
     const sources = checks.map((c) => c.source).filter((s) => !s.startsWith("docs/"));
-    assert.equal(sources.length, 26, "소스 26개");
+    assert.equal(sources.length, 27, "소스 27개(#813 district-shapes 포함)");
     for (const c of checks) assert.ok([...ISSUE_GROUPS, ...NO_ISSUE_GROUPS].includes(groupOf(c.source)), `코드 목록에 없다: ${c.source}`);
     assert.deepEqual([...new Set(sources.map(groupOf))].sort(), [...ISSUE_GROUPS, "news", "ledger"].sort());
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+const HEAD_813 = "데이터 멈춤 아님 — 자치구 페이지 관찰 조합 ";
+const allTypical = (updatedAt = OCT.updatedAt) => dealFiles(updatedAt, [[]]);
+
+test("district-shapes(#813): 조합 10가지·최다 3구면 ok, 한 조합이 25구를 덮으면 warn 이고 fail 은 없다(종료 0, 경고 줄 1)", () => {
+  const good = fixture();
+  const flat = fixture(allTypical());
+  try {
+    const ok = by(collectChecks({ root: good, now: at(NOW) }), "district-shapes");
+    assert.deepEqual([ok.level, ok.cadence, ok.detail], ["ok", "하루", `${HEAD_813}10가지, 최다 3구(문턱 ≥8·≤8, #813)`]);
+    const checks = collectChecks({ root: flat, now: at(NOW) });
+    const w = by(checks, "district-shapes");
+    assert.deepEqual([w.level, w.detail], ["warn", `${HEAD_813}1가지, 최다 25구(문턱 ≥8·≤8, #813)`]);
+    assert.deepEqual(checks.filter((c) => c.level !== "ok").map((c) => c.source), ["district-shapes"], "다른 소스 판정은 그대로");
+    const { code, text } = run(flat, NOW);
+    assert.equal(code, 0, "비차단: 워치독 run 이 빨개지지 않는다");
+    assert.match(text, /^::warning::데이터 진척 확인: district-shapes - 데이터 멈춤 아님 — /m);
+    assert.doesNotMatch(text, /::error::/);
+  } finally {
+    rmSync(good, { recursive: true, force: true });
+    rmSync(flat, { recursive: true, force: true });
+  }
+});
+
+test("district-shapes(#813): 구 파일 없음·거래 없음은 「못 읽음 N구」 warn, districtFacts 예외는 이 판정 안에서 잡아 warn 행이다", () => {
+  const [a, b, c] = DISTRICT_PAGES.map(({ name }) => `docs/data/deals-${DISTRICT_SLUGS[name]}.json`);
+  const missing = fixture({ [a]: null, [b]: { updatedAt: OCT.updatedAt, deals: [] } });
+  const broken = fixture({ [c]: { updatedAt: OCT.updatedAt, deals: "모양 다름" } });
+  try {
+    // 남은 23구는 여전히 문턱을 넘지만, 못 읽은 구가 있으면 조용히 넘기지 않는다.
+    const m = by(collectChecks({ root: missing, now: at(NOW) }), "district-shapes");
+    assert.equal(m.level, "warn");
+    assert.ok(m.detail.startsWith(HEAD_813), m.detail);
+    assert.match(m.detail, /, 못 읽음 2구\(/);
+    // 거래가 배열이 아니면 districtFacts 가 던진다 - 판정이 죽지 않고 그 구를 예외로 센다.
+    const checks = collectChecks({ root: broken, now: at(NOW) });
+    const e = by(checks, "district-shapes");
+    assert.equal(e.level, "warn");
+    assert.match(e.detail, /, 예외 1구\([^:]+: /);
+    assert.equal(checks.filter((x) => x.level !== "ok").length, 1);
+    // 함수가 매번 던져도 행 하나, warn 이다. fail 은 어느 경우에도 없다.
+    const thrown = districtShapesCheck(path.join(broken, "docs/data"), () => { throw new Error("터짐"); });
+    assert.deepEqual([thrown.level, thrown.source], ["warn", "district-shapes"]);
+    assert.match(thrown.detail, new RegExp(`^${HEAD_813}0가지, 최다 0구\\(문턱 ≥8·≤8, #813\\), 예외 25구\\(`));
+    const none = districtShapesCheck(path.join(broken, "없는 폴더"));
+    assert.deepEqual([none.level, /못 읽음 25구/.test(none.detail)], ["warn", true]);
+  } finally {
+    rmSync(missing, { recursive: true, force: true });
+    rmSync(broken, { recursive: true, force: true });
+  }
+});
+
+test("이슈(district-shapes, #813): 경고면 1건(코드 목록 맨 끝, #844 출구 그대로), 열려 있으면 다음 틱 0건이고 댓글도 없다", async () => {
+  const dir = fixture(allTypical());
+  try {
+    const gh = stubGitHub();
+    const one = await tick(dir, NOW, gh);
+    assert.equal(one.code, 0);
+    assert.deepEqual(one.created, ["district-shapes"]);
+    assert.equal(gh.posts.length, 1);
+    assert.equal(gh.posts[0].title, `${TITLE_PREFIX}district-shapes`);
+    assert.match(gh.posts[0].body, /데이터 멈춤 아님/);
+    const two = await tick(dir, NOW, gh);
+    assert.deepEqual([two.created, two.open], [[], ["district-shapes"]]);
+    assert.equal(gh.posts.length, 1, "같은 제목이 열려 있으면 아무것도 안 한다(새 이슈·댓글 0)");
+    assert.equal(ISSUE_GROUPS.at(-1), "district-shapes");
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 

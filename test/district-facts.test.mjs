@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { districtFacts, factSentences } from "../scripts/district-facts.ts";
+import { DISTRICT_SHAPE_KEYS, DISTRICT_SHAPE_MAX_COVER, DISTRICT_SHAPE_MIN_KINDS, districtShape, judgeDistrictShapes } from "../scripts/check-data-progress.ts";
+import { shapeDeals } from "./helpers/district-shape-deals.mjs";
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -45,29 +47,51 @@ function plainDeals(over = (deal) => deal) {
 
 const NOTABLE = ["concentrated", "spreadOut", "smallHeavy", "largeHeavy", "old", "fresh", "oneComplex", "directHeavy"];
 
-test("자치구 페이지가 서로 다른 이야기를 한다", async () => {
-  // 이 검사가 있는 이유. 애드센스가 "가치가 별로 없는 콘텐츠"로 반려했을 때, 스물다섯
-  // 개 자치구 페이지는 한 문장 틀에 숫자만 바꿔 넣은 것이었다 — 평당 얼마, 평균의 몇
-  // 배, 몇 번째. 심사자가 다섯 장을 넘겨보면 같은 페이지를 다섯 번 본다.
-  //
-  // 그래서 여기서 재는 것은 분량이 아니라 **말하는 종류**다. 같은 문장을 길게 늘여도
-  // 통과하지 못하게.
-  const shapes = new Map();
-  for (const { name } of DISTRICT_PAGES) {
-    const facts = districtFacts(await dealsOf(name));
-    if (!facts) continue;
-    const shape = ["concentrated", "spreadOut", "smallHeavy", "largeHeavy", "old", "fresh", "oneComplex", "directHeavy", "typical"]
-      .filter((k) => facts[k])
-      .join("+");
-    shapes.set(shape, (shapes.get(shape) ?? 0) + 1);
-  }
+// 「자치구 페이지가 서로 다른 이야기를 한다」(조합 ≥ 8, 최다 ≤ 자치구 수/3)는 실데이터 판정이라 여기서 뺐다(#813 pm 결정 2).
+// 시장이 움직이면 코드와 무관하게 깨져 그날 배포 데이터를 막는다(#8·#811). 실데이터 판정은 워치독의 비차단 경고로 옮겼다
+// (scripts/check-data-progress.ts 의 district-shapes - 애드센스 사유 주석도 거기 있다). 여기서는 같은 함수·같은 문턱을 합성 입력으로만 본다.
 
-  assert.ok(shapes.size >= 8, `관찰 조합이 ${shapes.size}가지뿐입니다: ${[...shapes.keys()].join(" / ")}`);
-  const biggest = Math.max(...shapes.values());
-  assert.ok(
-    biggest <= DISTRICT_PAGES.length / 3,
-    `한 조합이 ${biggest}개 구를 덮습니다 — 문턱이 느슨해 다시 하나의 틀이 되었습니다`
-  );
+test("관찰 키 아홉 개는 각각 켜질 수 있다 - 합성 거래, 날짜 고정 (#813)", () => {
+  assert.equal(DISTRICT_SHAPE_KEYS.length, 9);
+  assert.deepEqual(DISTRICT_SHAPE_KEYS.slice(0, -1), NOTABLE, "문턱 키 여덟 + typical");
+  for (const key of DISTRICT_SHAPE_KEYS) {
+    const file = shapeDeals(key === "typical" ? [] : [key]);
+    assert.equal(districtShape(file), key, `${key} 하나만 켜져야 합니다`);
+    assert.ok(districtFacts(file)[key], key);
+  }
+  // 축이 다른 키는 같이 켜진다. 조합 문자열은 키 순서대로 + 로 잇는다.
+  assert.equal(districtShape(shapeDeals(["concentrated", "oneComplex", "directHeavy"])), "concentrated+oneComplex+directHeavy");
+  assert.equal(districtShape(shapeDeals(["spreadOut", "largeHeavy", "fresh"])), "spreadOut+largeHeavy+fresh");
+  // 얇은 구(120건 미만)는 빈 조합, 거래가 없거나 파일이 없으면 null(못 읽음으로 센다).
+  assert.equal(districtShape(shapeDeals(["old"], { n: 100 })), "");
+  assert.equal(districtShape({ deals: [] }), null);
+  assert.equal(districtShape(null), null);
+});
+
+/** 합성 구 25개: 조합 목록을 차례로 돌려 쓴다. */
+const districtsOf = (shapes, total = DISTRICT_PAGES.length) =>
+  Array.from({ length: total }, (_, i) => districtShape(shapeDeals(shapes[i % shapes.length])));
+
+test("합성 구 25개로 문턱을 넘는 경우와 못 넘는 경우를 각각 낸다 (#813, 문턱 pm 결정 1)", () => {
+  assert.equal(DISTRICT_SHAPE_MIN_KINDS, 8);
+  assert.equal(DISTRICT_SHAPE_MAX_COVER, 25 / 3);
+  const singles = DISTRICT_SHAPE_KEYS.map((k) => (k === "typical" ? [] : [k]));
+  // 통과: 아홉 조합 + 한 조합 = 10가지, 최다 3구.
+  const pass = judgeDistrictShapes(districtsOf([...singles, ["concentrated", "oneComplex"]]));
+  assert.deepEqual([pass.kinds, pass.biggest, pass.ok], [10, 3, true]);
+  // 경계 통과: 정확히 8가지, 최다 8구(≤ 25/3). 구 수 = 8+3+3+3+2+2+2+2 = 25.
+  const counts = [8, 3, 3, 3, 2, 2, 2, 2];
+  const edge = judgeDistrictShapes(counts.flatMap((c, i) => Array(c).fill(districtShape(shapeDeals(singles[i])))));
+  assert.deepEqual([edge.kinds, edge.biggest, edge.ok], [8, 8, true]);
+  // 불통과(최다 9구): 같은 여덟 가지에서 한 구만 첫 조합으로 옮긴다.
+  const over = judgeDistrictShapes([9, 2, 3, 3, 2, 2, 2, 2].flatMap((c, i) => Array(c).fill(districtShape(shapeDeals(singles[i])))));
+  assert.deepEqual([over.kinds, over.biggest, over.ok], [8, 9, false]);
+  // 불통과(조합 수): 일곱 가지뿐.
+  const few = judgeDistrictShapes(districtsOf(singles.slice(0, 7)));
+  assert.deepEqual([few.kinds, few.ok], [7, false]);
+  // 불통과(한 조합이 덮음): 아홉 가지지만 typical 이 9구.
+  const one = judgeDistrictShapes(districtsOf([...Array(9).fill([]), ...singles.slice(0, 8).flatMap((s) => [s, s])]));
+  assert.deepEqual([one.kinds, one.biggest, one.ok], [9, 9, false]);
 });
 
 test("표본이 얇은 구에서는 비중을 말하지 않는다", async () => {

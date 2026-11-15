@@ -17,6 +17,7 @@
  *   - 월 주기 계열(ECOS·R-ONE, 수집기 코드의 cycle "M"·DTACYCLE_CD "MM"): 마지막 달과 이번 달(KST)의 차이(달 수)를 계열의 정상 최대 지연 L 에 견준다.
  *     L 이하 조용, L+1 경고(한 번 늦음 = 확인), L+2 이상 실패(두 번 연속 = 알림). L 은 git 이력(2026-10-01~26, 10커밋)에서 달 초에 본 최대 지연이다 - 아래 표.
  *   - 그 밖(반기 파일·사람이 dispatch 하는 월간 작업): 각 줄의 주석.
+ *   - 자치구 페이지 관찰 조합(`district-shapes`, #813): 데이터 멈춤이 아니라 시장 분포를 본다. docs/data/deals-<구>.json 25개의 관찰 조합 수·최다 조합 구 수. warn·ok 만 낸다.
  * 실패를 다시 울리지 않는 것: 공시가격 진척(official-price-api.yml 이 마지막 진척 3일 뒤 스스로 실패한다, #660) - 여기서는 경고만 한다.
  *
  * 빌더 산출물 나이 (F2, #657 D5): docs/data/*.json 의 최상위 `updatedAt` 을 일반 규칙으로 본다. 30h 초과 경고(로그만, 이슈 없음), 54h 초과 실패, 없거나 읽을 수 없으면 실패(제외 목록 밖).
@@ -39,6 +40,8 @@ import { appendFileSync, existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { MONTHLY_STALE_DAYS, groupNames } from "./source-age.ts";
+import { districtFacts } from "./district-facts.ts";
+import { DISTRICT_PAGES, DISTRICT_SLUGS } from "./district-slugs.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { RETENTION_MONTHS, shiftMonth } from "./realestate-slots.ts";
 
@@ -78,10 +81,70 @@ export const LEDGER_DUE_DAY = 3;
 export const OFFICIAL_PRICE_WARN_DAYS = 2;
 
 /**
+ * 자치구 페이지 관찰 조합(#813). 키 9개는 scripts/district-facts.ts 의 districtFacts 가 켜는 관찰 키다(typical = 아무 문턱도 못 넘음).
+ * 문턱은 pm 결정 1(#813)대로 옛 실데이터 시험의 것 그대로다: 조합 ≥ 8가지, 최다 조합 ≤ 자치구 수/3.
+ *
+ * 이 판정이 있는 이유(옛 test/district-facts.test.mjs 「자치구 페이지가 서로 다른 이야기를 한다」에서 옮김). 애드센스가 "가치가 별로 없는 콘텐츠"로
+ * 반려했을 때, 스물다섯 개 자치구 페이지는 한 문장 틀에 숫자만 바꿔 넣은 것이었다 — 평당 얼마, 평균의 몇 배, 몇 번째. 심사자가 다섯 장을 넘겨보면
+ * 같은 페이지를 다섯 번 본다. 그래서 재는 것은 분량이 아니라 **말하는 종류**다. 같은 문장을 길게 늘여도 통과하지 못하게.
+ *
+ * `npm test` 에서 뺀 이유(#811·#813): 코드는 그대로인데 시장이 움직이면 깨지는 실데이터 판정이라, 시험에 두면 그날 배포 데이터를 통째로 막는다(#8).
+ * 여기서는 warn·ok 만 내고 fail 은 없다 - 워치독 run 이 빨개지지 않는다. 동작(키 9개가 켜지는가·문턱 계산)은 합성 입력 시험이 본다(test/district-facts.test.mjs).
+ */
+export const DISTRICT_SHAPE_KEYS = ["concentrated", "spreadOut", "smallHeavy", "largeHeavy", "old", "fresh", "oneComplex", "directHeavy", "typical"];
+export const DISTRICT_SHAPE_MIN_KINDS = 8;
+/** 최다 조합이 덮어도 되는 구 수의 상한(자치구 수/3 = 25/3). 표시는 정수 구 수로 내린다(≤8). */
+export const DISTRICT_SHAPE_MAX_COVER = DISTRICT_PAGES.length / 3;
+
+/** 거래 파일 하나 -> 관찰 조합 문자열(켜진 키를 위 순서로 `+` 로 이은 것). districtFacts 가 null(거래 없음·파일 없음)이면 null. 얇은 구(표본 미달)는 빈 문자열이다. */
+export function districtShape(dealFile: unknown): string | null {
+  const facts = districtFacts(dealFile);
+  if (!facts) return null;
+  return DISTRICT_SHAPE_KEYS.filter((k) => facts[k]).join("+");
+}
+
+/** 조합 문자열 목록 -> 조합 수·최다 조합 구 수·문턱 통과 여부. */
+export function judgeDistrictShapes(shapes: string[]) {
+  const count = new Map<string, number>();
+  for (const s of shapes) count.set(s, (count.get(s) ?? 0) + 1);
+  const kinds = count.size;
+  const biggest = count.size ? Math.max(...count.values()) : 0;
+  return { kinds, biggest, ok: kinds >= DISTRICT_SHAPE_MIN_KINDS && biggest <= DISTRICT_SHAPE_MAX_COVER, count };
+}
+
+/**
+ * 판정 한 행. 구 파일을 못 읽거나 districtFacts 가 null 이면 조용히 넘기지 않고 「못 읽음 N구」로 경고한다.
+ * districtFacts 가 던지면 여기서 잡아 그 구를 「예외」로 세고 경고한다 - 이 판정 하나가 다른 소스의 판정과 report 출력을 막지 않게.
+ */
+export function districtShapesCheck(dataDir: string, shapeOf: (dealFile: unknown) => string | null = districtShape): Check {
+  const shapes: string[] = [];
+  const unreadable: string[] = [];
+  const errors: string[] = [];
+  for (const { name } of DISTRICT_PAGES) {
+    try {
+      const shape = shapeOf(readJson(path.join(dataDir, `deals-${DISTRICT_SLUGS[name]}.json`)));
+      if (shape === null) unreadable.push(name);
+      else shapes.push(shape);
+    } catch (e) {
+      errors.push(`${name}: ${e?.message ?? e}`);
+    }
+  }
+  const { kinds, biggest, ok } = judgeDistrictShapes(shapes);
+  const trouble = [
+    ...(unreadable.length ? [`못 읽음 ${unreadable.length}구(${unreadable.slice(0, 3).join("·")}${unreadable.length > 3 ? " 외" : ""})`] : []),
+    ...(errors.length ? [`예외 ${errors.length}구(${errors[0]}${errors.length > 1 ? " 외" : ""})`] : []),
+  ];
+  const level: Level = ok && !trouble.length ? "ok" : "warn";
+  const detail = `데이터 멈춤 아님 — 자치구 페이지 관찰 조합 ${kinds}가지, 최다 ${biggest}구(문턱 ≥${DISTRICT_SHAPE_MIN_KINDS}·≤${Math.floor(DISTRICT_SHAPE_MAX_COVER)}, #813)${trouble.length ? `, ${trouble.join(", ")}` : ""}`;
+  return { source: "district-shapes", cadence: "하루", level, last: null, detail };
+}
+
+/**
  * 묶음 = 소스 이름의 첫 조각(`series/base_rate` -> `series`). **이슈를 여는 묶음의 코드 목록이고, 순서가 곧 틱당 상한에서 먼저 열리는 순서다**(#657 D4). 값을 바꾸는 것은 판정자 몫이다(사전 위임표).
  * 어느 시점에 경고가 나는지는 그 소스의 판정을 따른다: `official-price` 는 마지막 진척 2일, 슬롯 누락·빈 달·progress.json 없음은 즉시다. 상태 파일이 없어 연속을 세지 않는다.
+ * `district-shapes` 는 맨 끝이다(#813): 데이터 멈춤이 아니라 시장 변화라, 상한에 걸리면 멈춤 묶음이 먼저 열린다. 14일 연속은 워치독 run 로그로 센다(audit/갱신-사고-대응.md).
  */
-export const ISSUE_GROUPS = ["official-price", "raw", "series", "market", "rone-districts", "apt-price-index", "move-in", "housing-permits"];
+export const ISSUE_GROUPS = ["official-price", "raw", "series", "market", "rone-districts", "apt-price-index", "move-in", "housing-permits", "district-shapes"];
 /** 이슈를 열지 않는 묶음: news(60h 에 실패 메일), ledger(54h 에 실패 메일), docs(F2. 54h 에 실패 메일 - 10-25 `rates.json` 32.5h 같은 단발이 이슈로 남지 않게 한다). */
 export const NO_ISSUE_GROUPS = ["news", "ledger", "docs"];
 export const groupOf = (source: string) => source.split("/")[0];
@@ -316,6 +379,9 @@ export function collectChecks({ root, now }: { root: string; now: Date }): Check
     const level: Level = existsSync(file) || late < 0 ? "ok" : late > ALERT_HOURS ? "fail" : "warn";
     checks.push({ source: "ledger", cadence: "월(수동)", level, last: existsSync(file) ? ym : null, detail: existsSync(file) ? `ledger/${ym}.jsonl.gz 있음` : late < 0 ? `기한(${ym}-0${LEDGER_DUE_DAY}) 전` : `ledger/${ym}.jsonl.gz 없음, 기한 뒤 ${late.toFixed(0)}h(실패 ${ALERT_HOURS}h)` });
   }
+
+  // 자치구 페이지 관찰 조합(#813): 시장 분포 경고, 멈춤 판정이 아니다.
+  checks.push(districtShapesCheck(path.join(root, "docs/data")));
 
   // 빌더 산출물 나이(F2, #657 D5).
   checks.push(...builderAgeChecks(path.join(root, "docs/data"), nowMs));
