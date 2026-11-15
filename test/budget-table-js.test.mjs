@@ -269,21 +269,35 @@ test("드리프트: 줄 보기 - 구운 예시 줄의 <tr> 이 JS 줄에 글자 
     assert.equal(examples.length, 3);
     for (const tr of examples) assert.ok(js.includes(tr), `${lang}: ${tr.slice(0, 80)}`);
   }
-  // 값대마다: JS 줄 = 그 구에서 값대·면적대에 드는 칸을 rowOrder 로 늘어놓은 것, over_band 는 overBand 식 그대로.
+  // 구·값대마다: JS 줄 = 그 구에서 값대·면적대에 드는 칸을 rowOrder 로 늘어놓은 것, over_band 는 overBand 식 그대로.
+  // 은평구 8억대에는 over_band 경계 칸(high = 9억)과 이름이 같고 동만 다른 단지 쌍이 있다(고정 데이터 주석) - 비교식·정렬 키 변이를 잡는다.
   await page.lang("ko");
-  const nowon = recoView(files(FIXTURE).find((f) => f.district === "노원구"));
-  for (const band of [7]) {
+  let checked = { over: 0, sameName: 0 };
+  for (const [district, band] of [["노원구", 7], ["은평구", 8]]) {
+    await page.set("bt-band", band);
+    await page.set("bt-area", "all");
+    await page.showRows(district);
+    const view = recoView(files(FIXTURE).find((f) => f.district === district));
     for (const area of ["all", ...AREAS]) {
       await page.set("bt-area", area);
-      const want = nowon.apartments.flatMap((apt) => apt.cells.map((cell) => ({ apt, cell }))).filter(({ cell }) => priceBand(cell.median) === band && (area === "all" || areaBand(cell.areaSqm) === area)).sort(rowOrder);
+      const want = view.apartments.flatMap((apt) => apt.cells.map((cell) => ({ apt, cell }))).filter(({ cell }) => priceBand(cell.median) === band && (area === "all" || areaBand(cell.areaSqm) === area)).sort(rowOrder);
       const trs = page.els["bt-rows"].innerHTML.match(/<tr><td>[\s\S]*?<\/tr>/g) ?? [];
-      assert.equal(trs.length, want.length, area);
+      assert.equal(trs.length, want.length, `${district} ${area}`);
       want.forEach(({ apt, cell }, i) => {
-        assert.ok(trs[i].includes(`<td>${cell.areaSqm}㎡</td>`), `${area} ${i} 순서`);
-        assert.equal(trs[i].includes("지난 거래 범위가 이 값대 위로 걸침"), overBand(cell, band), `${area} ${apt.name} over_band`);
+        const named = apt.name.endsWith(`(${apt.dong})`) || !apt.dong ? apt.name : `${apt.name} (${apt.dong})`;
+        assert.ok(trs[i].startsWith(`<tr><td>${named} · `) && trs[i].includes(`<td>${cell.areaSqm}㎡</td>`), `${district} ${area} ${i} 순서: ${named} ${cell.areaSqm}`);
+        assert.equal(trs[i].includes("지난 거래 범위가 이 값대 위로 걸침"), overBand(cell, band), `${district} ${area} ${named} ${cell.areaSqm} over_band`);
+        if (cell.high === (band + 1) * 10_000) checked.over++;
       });
+      if (new Set(want.map((r) => r.apt.name)).size < new Set(want.map((r) => r.apt.id)).size) checked.sameName++;
     }
   }
+  assert.ok(checked.over > 0 && checked.sameName > 0, `경계 칸·같은 이름 쌍을 한 번도 안 봤다 ${JSON.stringify(checked)}`);
+  // 경계 칸은 걸침이다(>=). 갈현동이 불광동보다 앞이다(동 비교) - 위 순서 단언과 같은 것을 글자로 한 번 더.
+  await page.set("bt-area", "all");
+  const ep = page.els["bt-rows"].innerHTML.match(/<tr><td>[\s\S]*?<\/tr>/g);
+  assert.deepEqual(ep.map((tr) => tr.match(/^<tr><td>([^<·]+) · /)[1] + " " + tr.match(/<td>([\d.]+)㎡<\/td>/)[1]), ["북한산 (갈현동) 85", "북한산 (불광동) 59", "북한산 (불광동) 84"]);
+  assert.ok(ep[1].includes("지난 거래 범위가 이 값대 위로 걸침"), "high = 9억 경계 칸이 걸침이 아니다");
 });
 
 test("생애최초 체크는 대출 상한·필요 현금 두 열만 바꾸고 기본은 꺼짐(일반 값)이다 (cpo 답 3)", async () => {
