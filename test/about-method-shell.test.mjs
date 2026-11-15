@@ -35,11 +35,11 @@ test("소개·방법 두 장의 껍데기는 같은 유틸리티를 갖고 훅 c
   }
 });
 
-test("method의 인라인 <code>는 열두 개 전부 글자 크기 유틸리티를 달고, 소개에는 <code>가 없다 (#281)", async () => {
+test("method의 인라인 <code>는 열네 개 전부 글자 크기 유틸리티를 달고, 소개에는 <code>가 없다 (#281)", async () => {
   // <code>의 0.85em은 monospace 글꼴에서 13px 기준이라 375폭에서 11.05px가 된다(렌더 검사 ③ 글자 크기 하한 12px 미만). 문장 속 글자는 15px 이상이다(po 기준 5).
   const method = await read("docs/method.html");
   const codes = [...method.matchAll(/<code\b[^>]*>/g)].map((m) => m[0]);
-  assert.equal(codes.length, 12, `method의 <code>가 ${codes.length}개다 - 한국어 6 + 영어 6이어야 한다. 늘렸다면 이 시험의 수와 PR 본문을 같이 고친다`);
+  assert.equal(codes.length, 14, `method의 <code>가 ${codes.length}개다 - 한국어 7 + 영어 7이어야 한다. 늘렸다면 이 시험의 수와 PR 본문을 같이 고친다`);
   for (const tag of codes) assert.equal(tag, '<code class="tw:text-sm">', `<code>에 글자 크기 유틸리티가 없다: ${tag}`);
   assert.ok(!/<code\b/.test(await read("docs/about.html")), "소개에 <code>가 생겼다 - 같은 유틸리티를 달아야 하는지 본다");
 });
