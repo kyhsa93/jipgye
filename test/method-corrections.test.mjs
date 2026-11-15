@@ -33,7 +33,7 @@ test("한·영 두 절이 있고 항목 수가 같으며 10건 이하다", async
   const en = items(sectionOf(html, "corrections-en").text);
   assert.ok(ko.length >= 1 && ko.length <= 10, `한국어 ${ko.length}건`);
   assert.equal(en.length, ko.length);
-  assert.equal(ko.length, 8, "여덟 건(#28·#183·#65·#6·#29·#229·#862 1단계 PR·#821+#843)");
+  assert.equal(ko.length, 9, "아홉 건(#28·#183·#65·#6·#29·#229·#862 1단계 PR·#821+#843·#862 2단계 PR)");
 });
 
 // #229: 예금자보호 한도 정정 항목. 항목 수·날짜 형식·근거 링크·문장 수·금지어는 위의 일반 시험이 모든 항목에 건다.
@@ -50,16 +50,32 @@ test("예금자보호 한도 정정 항목(#229)이 한·영에 있고 서두 �
   for (const w of ["deposit-protection", "KRW 100 million per financial institution", "rate figures and counts are unchanged"]) {
     assert.ok(enFirst.includes(w), `영어 항목에 ${w}`);
   }
-  assert.match(ko.slice(0, ko.indexOf("<ul")), /여덟 건/);
-  assert.match(en.slice(0, en.indexOf("<ul")), /eight corrections/);
+  assert.match(ko.slice(0, ko.indexOf("<ul")), /아홉 건/);
+  assert.match(en.slice(0, en.indexOf("<ul")), /nine corrections/);
 });
 
-// #821·#843: 맨 앞 항목이 이번 정정이다. 수치는 11-03 공개 파일 기준(since 05-04)이라 그날 칸 수·벽산 금호동1가 범위를 못 박는다.
-// 화면 데이터가 아니라 method.html 의 고정 문장만 보므로 데일리 값에 따라 갈리지 않는다(#8).
-test("동명 단지 정정 항목(#821·#843)이 한·영 맨 앞에 있고 #switch-house 가 같은 기준을 적는다", async () => {
+// #862 2단계(PR #885): 맨 앞 항목이다. 세는 방법을 고친 정정이라 11-05 항목(표시 쪽 조치)을 고쳐 쓰지 않고 새 항목으로 둔다(pm 11-15).
+// 수치는 PR #885 의 11-15 재생 값이다(cpo 교차검증) - method.html 의 고정 문장만 보므로 데일리 값에 따라 갈리지 않는다(#8).
+test("신고 건수 정정 항목(PR #885)이 한·영 맨 앞에 있고 화면 이름·수치·지난 기록을 적는다", async () => {
   const html = await method();
   const ko = items(sectionOf(html, "corrections").text)[0];
   const en = items(sectionOf(html, "corrections-en").text)[0];
+  for (const li of [ko, en]) assert.match(li, /jipgye\/pull\/885"/);
+  for (const w of ["2026-11-15", "&lsquo;이번 주 새로 신고된 거래&rsquo;", "4,309행 중 766행(17.8%)", "1,079건(3.3㎡당 5,379만원)에서 1,022건(5,387만원)", "1,024건에서 913건", "지난 기록은 고치지 않았습니다"]) {
+    assert.ok(ko.includes(w), `한국어 항목에 ${w}`);
+  }
+  for (const w of ["&ldquo;New filings this week&rdquo;", "766 of the 4,309 sale rows", "(17.8%)", "from 1,079 filings", "to 1,022", "from 1,024 to 913", "past records were not revised"]) {
+    assert.ok(en.includes(w), `영어 항목에 ${w}`);
+  }
+  for (const w of ["주간 정리", "오염", "왜곡", "진짜", "corrupt", "distort", "real "]) assert.ok(!ko.includes(w) && !en.includes(w), w);
+});
+
+// #821·#843: 동명 단지 정정 항목. 수치는 11-03 공개 파일 기준(since 05-04)이라 그날 칸 수·벽산 금호동1가 범위를 못 박는다.
+// 화면 데이터가 아니라 method.html 의 고정 문장만 보므로 데일리 값에 따라 갈리지 않는다(#8).
+test("동명 단지 정정 항목(#821·#843)이 한·영에 있고 #switch-house 가 같은 기준을 적는다", async () => {
+  const html = await method();
+  const ko = items(sectionOf(html, "corrections").text).find((li) => /jipgye\/issues\/821"/.test(li));
+  const en = items(sectionOf(html, "corrections-en").text).find((li) => /jipgye\/issues\/821"/.test(li));
   for (const li of [ko, en]) {
     assert.match(li, /jipgye\/issues\/821"/);
     assert.match(li, /jipgye\/issues\/843"/);
