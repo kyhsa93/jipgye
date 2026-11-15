@@ -6,6 +6,8 @@
  * - 숫자는 사이트와 같은 함수(withoutCorrections·correctionStats·registrationStats)에서 낸다. 산식을 여기서 다시 쓰지 않는다
  *   (DIRECTION 체크리스트 10). 비교군만 사이트에 없던 셈이라 cancellation.ts의 repeatedLiveStats로 한 곳에 둔다.
  * - 입력은 raw/sale/*.json이고 경로는 환경변수 REALESTATE_RAW_DIR로 받는다(#175 결론이 나면 이 경로만 맞춘다).
+ *   얼린 달은 재수집 덧씌움(raw/recollect)을 사이트와 같은 함수(readRecollectedSlot → mergeRecollect)로 합친 사본을 임시 폴더에 쓰고,
+ *   readSales와 check.py가 둘 다 그 폴더를 읽는다(#892). 덧씌움이 없으면 그 폴더는 raw/sale의 바이트 사본이라 산출이 전과 같다.
  *   읽는 필드는 최소 집합뿐이다: sggCd·umdNm·jibun·aptNm·excluUseAr·floor·dealYear·dealMonth·dealDay·dealAmount(계약 키),
  *   cdealType·cdealDay(해제 여부), rgstDate(짝의 등기일). 값은 집계에만 쓰고 출력에는 어떤 행 필드도 싣지 않는다.
  * - 출력 필드는 허용 목록(ALLOWED_*)으로 고정하고, 빌드가 끝나기 전에 assertAllowedShape가 모양을 검사한다.
@@ -22,7 +24,8 @@
  */
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { copyFile, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import {
   correctionStats,
@@ -32,6 +35,7 @@ import {
   repeatedLiveStats,
   withoutCorrections,
 } from "./cancellation.ts";
+import { readRecollectedSlot } from "./realestate-recollect.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { RAW_DIR, readSlotFile } from "./realestate-raw.ts";
 // 출처 문구는 scripts/source-lines.ts 한 곳이다(#588 PR2) - 이 파일에 출처·기관 이름을 글자로 적지 않는다(test/source-lines.test.mjs 가 막는다).
@@ -86,7 +90,36 @@ const kstDay = (iso) =>
   new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(iso));
 
 /**
- * raw/sale의 파일 전부를 읽는다(check.py와 같은 입력). 자치구는 DISTRICTS 순서로 담아 출력 순서가 디스크 순서에
+ * 매매 원본 폴더(rawDir)의 sale/*.json을 outDir/sale에 옮겨 쓴다. 덧씌움(raw/recollect/sale)이 맞는 슬롯은 사이트 해제·등기 화면과 같은
+ * readRecollectedSlot(→ realestate-recollect.ts mergeRecollect, 합치기는 그 한 곳)으로 합친 값을, 나머지는 원본을 바이트 그대로 복사한다 -
+ * 덧씌움이 없거나 낡았으면 outDir/sale은 rawDir/sale과 바이트까지 같다(#892 완료 조건 3). 파일 이름은 그대로라 check.py 첫 줄(파일 수·최신 파일
+ * 이름)도 같다. 합친 슬롯의 [{ name, recollectedAt }]를 이름 순으로 돌려준다.
+ */
+export async function writeRecollectedSales(rawDir, outDir) {
+  let names = [];
+  try {
+    names = (await readdir(path.join(rawDir, "sale"))).filter((n) => n.endsWith(".json")).sort();
+  } catch {
+    throw new Error(`매매 원본 폴더를 읽지 못했다: ${path.join(rawDir, "sale")} (REALESTATE_RAW_DIR 확인)`);
+  }
+  await mkdir(path.join(outDir, "sale"), { recursive: true });
+  const recollected = [];
+  for (const name of names) {
+    const matched = FILE_PATTERN.exec(name);
+    const slot = matched ? await readRecollectedSlot("sale", matched[1], matched[2], rawDir) : null;
+    // recollectedAt은 mergeRecollect가 덧씌움을 실제로 합쳤을 때만 붙인다(없거나 낡았으면 슬롯 객체를 그대로 돌려준다).
+    if (slot?.recollectedAt) {
+      await writeFile(path.join(outDir, "sale", name), JSON.stringify(slot));
+      recollected.push({ name, recollectedAt: slot.recollectedAt });
+    } else {
+      await copyFile(path.join(rawDir, "sale", name), path.join(outDir, "sale", name));
+    }
+  }
+  return recollected;
+}
+
+/**
+ * 매매 폴더의 파일 전부를 읽는다(check.py와 같은 입력 - buildRelease는 writeRecollectedSales가 쓴 폴더를 넘긴다). 자치구는 DISTRICTS 순서로 담아 출력 순서가 디스크 순서에
  * 기대지 않게 한다. 기준일·수집 시각은 파일의 observedAt 중 가장 늦은 것이고, 가장 이른 것(firstObservedAt)도 같이 돌려준다.
  */
 export async function readSales(dir = RAW_DIR) {
@@ -393,7 +426,18 @@ export function supersede(prevBody, newTag) {
 // ---- 산출 ----------------------------------------------------------------------------------------------------------
 
 export async function buildRelease({ rawDir = RAW_DIR, outDir, python = "python3" }) {
-  const figures = buildFigures(await readSales(rawDir));
+  // 입력: 덧씌움을 합친 사본(#892). 노드 셈과 check.py가 같은 폴더를 읽어야 check.out 둘째·셋째 줄이 본문과 같다 - check.py는 합치지 않는다.
+  const inputDir = await mkdtemp(path.join(tmpdir(), "jipgye-correction-input-"));
+  try {
+    const recollected = await writeRecollectedSales(rawDir, inputDir);
+    return { ...(await writeRelease({ inputDir, outDir, python })), recollected };
+  } finally {
+    await rm(inputDir, { recursive: true, force: true });
+  }
+}
+
+async function writeRelease({ inputDir, outDir, python }) {
+  const figures = buildFigures(await readSales(inputDir));
   const tag = `${TAG_PREFIX}${figures.asOf}`;
   await mkdir(outDir, { recursive: true });
 
@@ -406,7 +450,7 @@ export async function buildRelease({ rawDir = RAW_DIR, outDir, python = "python3
   // check.py는 저장소 파일 그대로 복사하고, 그 출력은 같은 입력 경로로 지금 돌려 받는다(python3 표준 라이브러리만).
   const checkPy = path.join(root, "research/correction-twins/check.py");
   await copyFile(checkPy, path.join(outDir, "check.py"));
-  const out = execFileSync(python, ["-I", checkPy], { env: { ...process.env, REALESTATE_RAW_DIR: path.resolve(rawDir) }, encoding: "utf8" });
+  const out = execFileSync(python, ["-I", checkPy], { env: { ...process.env, REALESTATE_RAW_DIR: path.resolve(inputDir) }, encoding: "utf8" });
   await writeFile(path.join(outDir, "check.out"), out);
 
   return { figures, tag };
@@ -438,7 +482,10 @@ async function main() {
 
   const outDir = process.env.CORRECTION_OUT_DIR;
   if (!outDir) throw new Error("CORRECTION_OUT_DIR(산출 폴더)가 필요하다");
-  const { figures, tag } = await buildRelease({ rawDir: RAW_DIR, outDir: path.resolve(outDir) });
+  const { figures, tag, recollected } = await buildRelease({ rawDir: RAW_DIR, outDir: path.resolve(outDir) });
+  // 12-12 실행 뒤 덧씌움 반영 슬롯 수를 이슈에 적는다(#892) - 워크플로 로그에서 읽는다. sparse-checkout에 raw/recollect가 없으면 0이다.
+  const days = [...new Set(recollected.map((r) => kstDay(r.recollectedAt)))].sort();
+  console.log(`재수집 덧씌움 반영 슬롯 ${recollected.length}개${days.length ? ` (재수집일 ${days.join(", ")})` : ""}`);
   console.log(`${tag}: 해제 기록 ${figures.seoul.cancelRecords}건 중 짝 있음 ${figures.seoul.withTwin}건 (${figures.seoul.sharePct}%), 비교군 ${figures.seoul.comparison.sharePct}%, 구 ${figures.districts.length}개, 월 ${figures.months.length}개, 비공개 칸 ${figures.districts.filter((d) => d.suppressed).length + figures.months.filter((m) => m.suppressed).length}`);
 }
 
