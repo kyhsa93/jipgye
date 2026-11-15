@@ -9,6 +9,7 @@ import path from "node:path";
 import { buildFigures, readSales, renderBody as renderCorrection } from "../scripts/build-correction-release.ts";
 import { TAG_PREFIX, loadInputs, renderBody as renderMonthly, reportMonth } from "../scripts/monthly-report.ts";
 import { readSameNames, readSlots } from "../scripts/realestate-raw.ts";
+import { HOLDS_FILE, writeHolds } from "../scripts/realestate-guard.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const FIXTURE_RAW = path.join(root, "test/fixtures/correction-twins/raw");
@@ -47,6 +48,23 @@ test("raw/ 맨 위의 README.md 는 슬롯 읽기(readSlots·readSameNames·read
     await cp(FIXTURE_RAW, dir, { recursive: true });
     const before = [await readSlots(dir), await readSameNames(dir), buildFigures(await readSales(dir))];
     await writeFile(path.join(dir, "README.md"), await readFile(path.join(root, "raw/README.md"), "utf8"));
+    const after = [await readSlots(dir), await readSameNames(dir), buildFigures(await readSales(dir))];
+    assert.deepEqual(after, before);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test("raw/ 맨 위의 realestate-holds.json(보류 상태)도 슬롯 읽기(readSlots·readSameNames·readSales)에 잡히지 않는다 (#894 할 일 3)", async () => {
+  // README.md 와 달리 이 파일은 수집기가 raw/ 맨 위에 쓰고(scripts/realestate-guard.ts writeHolds) 다시 읽는다. 슬롯 읽기만 raw/<종류>/ 를 돈다.
+  // 보류 키는 픽스처에 있는 슬롯이다 - 보류 중에도 슬롯 파일은 이전 판 그대로 읽힌다(raw/README.md #894 단락).
+  const dir = await mkdtemp(path.join(tmpdir(), "raw-holds-"));
+  try {
+    await cp(FIXTURE_RAW, dir, { recursive: true });
+    const before = [await readSlots(dir), await readSameNames(dir), buildFigures(await readSales(dir))];
+    const entry = { days: ["2026-11-01"], reason: "half", saved: 390, received: 77 };
+    assert.equal(await writeHolds({ "sale:11110:202604": entry }, dir), true);
+    assert.match(await readFile(path.join(dir, HOLDS_FILE), "utf8"), /"sale:11110:202604"/, "보류 파일이 raw/ 맨 위에 있다");
     const after = [await readSlots(dir), await readSameNames(dir), buildFigures(await readSales(dir))];
     assert.deepEqual(after, before);
   } finally {
