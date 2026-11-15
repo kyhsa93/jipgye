@@ -62,4 +62,4 @@
 
 ## 판정 에이전트가 읽는 순서
 
-PR 본문 → `gh pr diff --stat` → 일탈 목록의 파일 diff 만. stat 에 `.claude/patterns.md` 의 허용 목록 밖 파일이 보이면 패턴 위임을 접고 **전체 판정**으로 간다. CI 가 초록이고 엔지니어의 골든 원문이 첨부돼 있으면 CI·골든을 다시 돌리지 않는다 — cto 는 표본 한 장만 직접 재현한다. 재검토는 마지막 판정 SHA 이후 바뀐 줄만 본다. 판정 댓글은 역할당 하나, 정식 문구 한 줄이다(해당 패턴·일탈 판정은 `근거:` 안에 적는다).
+PR 본문 → 파일 목록 `gh api --paginate "repos/kyhsa93/jipgye/pulls/<n>/files?per_page=100" --jq '.[] | "\(.additions)+ \(.deletions)- \(.filename)\(if .previous_filename then " ← \(.previous_filename)" else "" end)"'`(파일마다 `추가+ 삭제- 경로`, 이름 바뀐 파일은 `← 옛 경로`. `gh pr diff` 에는 `--stat` 이 없고 `--name-only` 는 300파일을 넘으면 실패해 파일 API 를 페이지마다 읽는다, #899) → 일탈 목록의 파일 diff 만. 이 목록(옛 경로 포함)에 `.claude/patterns.md` 의 허용 목록 밖 파일이 보이면 패턴 위임을 접고 **전체 판정**으로 간다. CI 가 초록이고 엔지니어의 골든 원문이 첨부돼 있으면 CI·골든을 다시 돌리지 않는다 — cto 는 표본 한 장만 직접 재현한다. 재검토는 마지막 판정 SHA 이후 바뀐 줄만 본다. 판정 댓글은 역할당 하나, 정식 문구 한 줄이다(해당 패턴·일탈 판정은 `근거:` 안에 적는다).
