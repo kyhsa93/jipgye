@@ -31,7 +31,7 @@ const sortKey = (item) => JSON.stringify(item);
 
 export const itemKey = (item) => createHash("sha1").update(sortKey(item)).digest("hex").slice(0, 12);
 
-const kstDay = (iso) =>
+export const kstDay = (iso) =>
   new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date(iso));
 
 function serialize({ items, arrivals, ...meta }) {

@@ -1,8 +1,10 @@
 import { XMLParser } from "fast-xml-parser";
+import { appendFileSync } from "node:fs";
 import path from "node:path";
 import { DISTRICTS, districtNames } from "./realestate-districts.ts";
-import { buildSlotFile, readSlots, removeSlotFile, writeSlotFile } from "./realestate-raw.ts";
-import { planFetch, planSummary } from "./realestate-slots.ts";
+import { readSlots, removeSlotFile } from "./realestate-raw.ts";
+import { HOLD_DAYS, pruneHolds, readHolds, reasonText, receiveSlot, writeHolds } from "./realestate-guard.ts";
+import { planFetch, planSummary, slotKey } from "./realestate-slots.ts";
 import { collectionNow } from "./collection-now.ts";
 
 const SALE_API_URL = process.env.MOLIT_API_ENDPOINT;
@@ -97,6 +99,32 @@ async function fetchApi(apiUrl, serviceKey, districtCode, yearMonth) {
   throw lastErr;
 }
 
+/**
+ * 줄어든 응답을 쓰지 않은 슬롯을 실행 요약에 남긴다(#863). `::warning::` 는 Actions 실행 화면의 경고로, GITHUB_STEP_SUMMARY 는 그 실행의 요약 표로 간다.
+ * 구 이름·달·종류·건수만 적는다 - 응답 원문·키·URL 은 없다.
+ */
+export function guardLines(notes) {
+  const ordered = [...notes].sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0));
+  const actionOf = ({ result }) =>
+    result.released
+      ? `${HOLD_DAYS} 수집일 보류 뒤에도 같아 반영`
+      : result.hold
+        ? `보류 ${result.hold.days.length}/${HOLD_DAYS} 수집일째 - 슬롯을 쓰지 않음`
+        : "반영하지 않음";
+  const warnings = ordered.map(
+    (note) => `::warning::실거래 원본 ${note.name} ${note.yearMonth} ${note.label}: ${reasonText(note.result.verdict)} - ${actionOf(note)}`
+  );
+  const summary = [
+    "### 실거래 수집: 줄어든 응답 (#863)",
+    "",
+    "| 슬롯 | 이유 | 처리 |",
+    "|---|---|---|",
+    ...ordered.map((note) => `| ${note.name} ${note.yearMonth} ${note.label} (\`${note.key}\`) | ${reasonText(note.result.verdict)} | ${actionOf(note)} |`),
+    "",
+  ];
+  return { warnings, summary };
+}
+
 async function main() {
   const endpoints = {
     sale: { url: SALE_API_URL, key: SALE_SERVICE_KEY, label: "매매" },
@@ -121,6 +149,8 @@ async function main() {
   });
   console.log(`[fetch-realestate] 원본 슬롯 ${planSummary(plan)}`);
 
+  const holds = await readHolds();
+  const guardNotes = new Map();
   let changedSlots = 0;
   let arrived = 0;
   let failedInARow = 0;
@@ -132,16 +162,14 @@ async function main() {
     const { url, key, label } = endpoints[slot.kind];
     try {
       const response = await fetchApi(url, key, slot.code, slot.yearMonth);
-      const written = await writeSlotFile(
-        buildSlotFile({
-          kind: slot.kind,
-          code: slot.code,
-          yearMonth: slot.yearMonth,
-          items: response.items,
-          totalCount: response.totalCount,
-          observedAt,
-        })
-      );
+      // 줄어든 응답은 판정(realestate-guard.ts)이 막거나 보류한다. 반영할 때만 지금까지와 같은 buildSlotFile → writeSlotFile 로 쓴다.
+      const written = await receiveSlot({ ...slot, response, observedAt, holds });
+      const noteKey = slotKey(slot.kind, slot.code, slot.yearMonth);
+      if (written.verdict.reason) {
+        guardNotes.set(noteKey, { key: noteKey, name: districtNames.get(slot.code) ?? slot.code, yearMonth: slot.yearMonth, label, result: written });
+      } else {
+        guardNotes.delete(noteKey);
+      }
       if (written.changed) {
         changedSlots += 1;
         arrived += written.added;
@@ -187,6 +215,15 @@ async function main() {
 
   for (const slot of plan.expired) {
     await removeSlotFile(slot.kind, slot.code, slot.yearMonth);
+  }
+
+  // 보류 상태는 회차 끝에 한 번 쓴다(raw/realestate-holds.json, 보류가 없으면 파일이 없다). 이번에 받을 차례가 아니었던 슬롯의 보류는 지운다.
+  pruneHolds(holds, new Set(plan.fetch.map((slot) => slotKey(slot.kind, slot.code, slot.yearMonth))));
+  await writeHolds(holds);
+  if (guardNotes.size > 0) {
+    const { warnings, summary } = guardLines([...guardNotes.values()]);
+    for (const line of warnings) console.log(line);
+    if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${summary.join("\n")}\n`);
   }
 
   console.log(
