@@ -9,7 +9,7 @@
 - GA4 측정 ID를 사용하며, 페이지 조회를 별도 이벤트로 보낸다.
 - URL의 `apt`, `dong`, `cash`, `compare`, `from`, `budget`, `max`, `deposit`, `rent` 및 검색어 계열 매개변수를 전송 주소에서 제거한다.
 - 동일 사이트 referrer는 동일 규칙으로 정리하고 외부 referrer는 origin만 전송한다.
-- `calculator_result`는 입력 signature를 메모리에만 유지하고 GA 이벤트에는 보내지 않는다.
+- `calculator_result`는 입력 signature를 메모리에만 유지하고 GA 이벤트에는 보내지 않는다. 현재 `window.analytics.result()` 경유 호출부 3곳(`renewal-move-basis.js`·`jeonse-vs-wolse.html`·`renewal-vs-new.html`). 근거표 장이 쓸 때는 params에 예산·면적·구 값을 넣지 않는다.
 - 관심 단지 추가/삭제는 `watchlist_add`/`watchlist_remove`와 **개수**만 전송한다. 단지명은 이벤트 매개변수로 넘기지 않는다.
 - 관심 단지 원본은 브라우저 localStorage에 저장된다. 10곳 제한·읽기/쓰기 차단·동명 단지 회귀 테스트가 있다.
 
