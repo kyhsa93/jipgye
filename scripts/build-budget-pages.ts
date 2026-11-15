@@ -1,7 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetDescription, budgetPageFile } from "./budget-pages.ts";
-import { areaLine, areasShape, budgetLeadText, districtOrder } from "./budget-fragments.ts";
+import { areaLine, areasShape, budgetLeadText, districtOrder, evidenceLink } from "./budget-fragments.ts";
 import { withYearOn } from "./budget-facts.ts";
 import { candidatesInBand } from "./complex-price.ts";
 import { REALESTATE_TEMPLATE_PATH, applyPrerender, budgetBodyHtml, budgetFactsHtml, districtLinksHtml, realestateOverallHtml } from "./prerender.ts";
@@ -90,6 +90,15 @@ export function budgetNoteKo(baseHtml) {
   return JSON.parse(`"${m[1]}"`);
 }
 
+/**
+ * 근거표 장으로 가는 한 줄(#871 PR-C): 예산 선택 컨트롤(+접은 칩) 바로 뒤, 단지 목록 앞. 같은 「예산으로 찾기」 자리에서 이 예산대를 단지·평형 줄로 더 본다.
+ * 주소와 글자는 evidenceLink(budget-fragments.ts)가 정하고 여기는 마크업만 입힌다. class 는 단지 목록 아래 「더 보기」 줄과 같은 budget-more(새 CSS 없음)에 시험이 찾는 budget-evidence.
+ */
+export function evidenceLinkHtml(page) {
+  const link = evidenceLink(page.eok);
+  return link ? `<p class="budget-more budget-evidence"><a href="${link.href}">${escapeHtml(link.text)}</a></p>` : "";
+}
+
 function navHtml(page) {
   const links = [];
   if (BUDGET_PAGE_EOK.includes(page.eok - 1)) {
@@ -104,10 +113,10 @@ function navHtml(page) {
 
 export function buildBudgetPage(baseHtml, page, budget, loanBasis = null, mortgageSeries = null, complexFiles = null, capStats = null, policyCounts = null, realestate = null) {
   const band = (budget?.bands ?? []).find((b) => b.min10k === page.min10k) ?? null;
-  // 제목과 예산 선택 컨트롤(+접은 칩 줄)은 본문 칸 안, 어디로 가는가 문장 뒤 단지 목록 앞에 놓인다(#460, #745 PR7) - 틀의 제목 자리는 비우고 본문이 들고 간다.
+  // 제목과 예산 선택 컨트롤(+접은 칩 줄, 근거표로 가는 한 줄 #871)은 본문 칸 안, 어디로 가는가 문장 뒤 단지 목록 앞에 놓인다(#460, #745 PR7) - 틀의 제목 자리는 비우고 본문이 들고 간다.
   // 단지 후보가 많은 구마다 한 줄(동·연식·평형, V12 #658) - 18장이 같은 틀 문장을 싣던 자리에 그 예산대의 데이터를 놓는다.
   const areaLines = areasShape(band, complexFiles).map(areaLine);
-  const body = budgetBodyHtml(band, budget?.periods, loanBasis, mortgageSeries, complexFiles, capStats, policyCounts, `${BUDGET_HEADING_HTML}${budgetGoHtml(page)}`, areaLines);
+  const body = budgetBodyHtml(band, budget?.periods, loanBasis, mortgageSeries, complexFiles, capStats, policyCounts, `${BUDGET_HEADING_HTML}${budgetGoHtml(page)}${evidenceLinkHtml(page)}`, areaLines);
   if (!body) return null;
 
   let html = baseHtml;

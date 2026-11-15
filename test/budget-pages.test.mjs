@@ -2,8 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { BUDGET_PAGES, budgetPageFile } from "../scripts/budget-pages.ts";
-import { budgetGoHtml, buildBudgetPage } from "../scripts/build-budget-pages.ts";
+import { BUDGET_PAGES, BUDGET_PAGE_EOK, budgetPageFile } from "../scripts/budget-pages.ts";
+import { budgetGoHtml, buildBudgetPage, evidenceLinkHtml } from "../scripts/build-budget-pages.ts";
+import { EVIDENCE_BAND_EOK, evidenceLink } from "../scripts/budget-fragments.ts";
 import { budgetBodyHtml, realestateOverallHtml } from "../scripts/prerender.ts";
 import { buildBands, mergeBands } from "../scripts/budget-bands.ts";
 import { loadRealestatePage } from "./helpers/realestate-page.mjs";
@@ -381,11 +382,11 @@ test("예산 선택 컨트롤: nav.js 가 있으면 고른 예산대의 장 주�
 });
 
 // 틀 밖에서 만들어 본문 칸 안에 놓는 제목+칩 마크업(build-budget-pages 가 장마다 만든다). 순서 시험은 이 모양만 본다.
-const FINDER = '<h2 id="budget-heading">예산으로 찾기</h2><form class="budget-go" action="./deal-search.html" method="get" data-budget-go=""><select name="budget"><option value="8" selected>8억대</option></select><button type="submit">이동</button></form><details class="c-fold budget-chips-fold"><summary>예산대</summary><nav class="budget-chips c-fold__body" aria-label="예산대"><a href="./budget-8eok.html" aria-current="page">8억</a></nav></details>';
-// 장 안 요소의 출현 순서(#460, po 판정 6361525534 → #745 PR7): 날짜 줄 → 거래 요약 → (영어 안내문) → 한눈에 → 어디로 가는가 → 예산으로 찾기 제목 → 선택 컨트롤 → 칩(접기) → 단지 목록 → 구별 분포 → 비용·대출 → 접은 거래 목록.
+const FINDER = '<h2 id="budget-heading">예산으로 찾기</h2><form class="budget-go" action="./deal-search.html" method="get" data-budget-go=""><select name="budget"><option value="8" selected>8억대</option></select><button type="submit">이동</button></form><details class="c-fold budget-chips-fold"><summary>예산대</summary><nav class="budget-chips c-fold__body" aria-label="예산대"><a href="./budget-8eok.html" aria-current="page">8억</a></nav></details>' + evidenceLinkHtml(page8);
+// 장 안 요소의 출현 순서(#460, po 판정 6361525534 → #745 PR7): 날짜 줄 → 거래 요약 → (영어 안내문) → 한눈에 → 어디로 가는가 → 예산으로 찾기 제목 → 선택 컨트롤 → 칩(접기) → 근거표로 가는 한 줄(#871 PR-C) → 단지 목록 → 구별 분포 → 비용·대출 → 접은 거래 목록.
 // 지역 줄·어디로 가는가·후보는 그날 데이터에 따라 없을 수 있어 있을 때만 순서를 본다(데이터 값에 기대는 검사를 넣지 않는다).
-const ORDER = ['id="cross-basis"', 'class="budget-summary"', 'class="budget-answers"', 'class="budget-where"', 'id="budget-heading"', 'class="budget-go"', 'class="budget-chips', 'class="budget-candidates"', 'class="budget-dist"', 'class="budget-money"', 'class="c-fold budget-deals-fold"'];
-const ORDER_REQUIRED = new Set(['id="cross-basis"', 'class="budget-summary"', 'class="budget-answers"', 'id="budget-heading"', 'class="budget-go"', 'class="budget-chips', 'class="budget-money"', 'class="c-fold budget-deals-fold"']);
+const ORDER = ['id="cross-basis"', 'class="budget-summary"', 'class="budget-answers"', 'class="budget-where"', 'id="budget-heading"', 'class="budget-go"', 'class="budget-chips', 'class="budget-more budget-evidence"', 'class="budget-candidates"', 'class="budget-dist"', 'class="budget-money"', 'class="c-fold budget-deals-fold"'];
+const ORDER_REQUIRED = new Set(['id="cross-basis"', 'class="budget-summary"', 'class="budget-answers"', 'id="budget-heading"', 'class="budget-go"', 'class="budget-chips', 'class="budget-more budget-evidence"', 'class="budget-money"', 'class="c-fold budget-deals-fold"']);
 function assertOrder(html, label) {
   let prev = -1;
   let prevKey = "";
@@ -427,6 +428,32 @@ test("예산대 화면이 다시 그려도(한국어·영어) 같은 순서이�
         assert.match(view.budgetHtml(), /<h2 id="budget-heading">예산으로 찾기<\/h2>/);
       }
     }
+  }
+});
+
+test("예산대 18장 → 근거표: 장마다 `./buy-by-budget.html#bN` 한 줄, N 은 그 장의 예산대이고 근거표 장이 처음 열 때 읽는 범위 안이다 (#871 PR-C)", async () => {
+  // 근거표 장이 해시를 읽는 정규식을 장 전용 JS 에서 그대로 떠 온다 - 한쪽 범위만 바뀌면 링크가 조용히 기본값(7억대)으로 열린다.
+  const src = await readFile(path.join(root, "docs/budget-table.js"), "utf8");
+  const pattern = /\/(\^#b[^/]+\$)\/\.exec\(location\.hash\)/.exec(src)?.[1];
+  assert.ok(pattern, "docs/budget-table.js 에서 해시 정규식을 찾지 못했다");
+  const reads = new RegExp(pattern);
+  assert.deepEqual(EVIDENCE_BAND_EOK, [BUDGET_PAGE_EOK[0], BUDGET_PAGE_EOK.at(-1)], "링크 범위가 18장 예산대와 다르다");
+  for (const eok of [EVIDENCE_BAND_EOK[0] - 1, EVIDENCE_BAND_EOK[1] + 1, 7.5]) {
+    assert.equal(evidenceLink(eok), null, `${eok}억대: 근거표가 읽지 않는 해시로 링크했다`);
+    assert.doesNotMatch(`#b${eok}`, reads, `${eok}: 전제 - 근거표도 이 해시를 읽지 않는다`);
+  }
+  await readFile(path.join(root, SITE, "buy-by-budget.html"), "utf8"); // 링크 대상 장이 build/site 에 있다
+  for (const page of BUDGET_PAGES) {
+    const html = await readFile(path.join(root, SITE, page.file), "utf8");
+    const hashes = [...html.matchAll(/href="\.\/buy-by-budget\.html([^"]*)"/g)].map((m) => m[1]);
+    assert.deepEqual(hashes, [`#b${page.eok}`], `${page.file}: 근거표 링크가 한 줄이 아니거나 해시가 이 장의 예산대가 아니다`);
+    assert.match(hashes[0], reads, `${page.file}: 근거표 장이 읽지 못하는 해시다`);
+    assert.ok(
+      html.includes(`<p class="budget-more budget-evidence"><a href="./buy-by-budget.html#b${page.eok}">이 값대의 단지·평형별 비용과 뺀 곳 건수 → 근거표</a></p>`),
+      `${page.file}: 근거표 줄의 글자나 마크업이 명세(po ③)와 다르다`
+    );
+    const at = html.indexOf('class="budget-more budget-evidence"');
+    assert.ok(html.indexOf('id="budget-result"') < at && html.indexOf("budget-chips-fold") < at, `${page.file}: 근거표 줄이 본문 칸의 예산 선택 컨트롤 뒤가 아니다`);
   }
 });
 

@@ -316,6 +316,22 @@ export function budgetLeadText(band, complexFiles) {
   return `${budgetBandLabel(band)}로 살 수 있는 단지·평형은 ${places}에 가장 많습니다. 매물 호가가 아니라 국토교통부에 신고된 실거래입니다.`;
 }
 
+// ---- 근거표 장으로 가는 한 줄 (#871 PR-C) ----
+
+/** 근거표 장(buy-by-budget.html)이 처음 열 때 한 번만 읽는 값대 해시의 범위(`#b3`~`#b20`, docs/budget-table.js). 18장의 예산대와 같은 단위다. */
+export const EVIDENCE_BAND_EOK = Object.freeze([3, 20]);
+
+/**
+ * 예산대 장에서 근거표 장으로 가는 한 줄의 { href, text }. 범위 밖 예산대면 null(줄을 내지 않는다 - 근거표가 그 해시를 무시하고 기본값을 연다).
+ * 해시는 근거표 장이 처음 열 때 한 번만 읽고(#871 PR-B), 분석 도구에 가기 전에 analytics.js scrub 이 page_location 에서 지운다.
+ * 글자는 po 명세 ③ 「(PR-C) 18장 한 줄」 그대로다. 숫자가 없는 고정 글자라 18장 공통 산문(scripts/prose-share.ts)이 는다 - 잰 값은 PR 본문(cmo N4).
+ * 영어 문장은 굽지 않는다: 예산대 본문(#budget-result)은 한국어로만 굽고 영어 화면은 그 앞에 budgetKoOnly 고지를 단다(budgetNoteKo 와 같은 cmo 판정 6147877878).
+ */
+export function evidenceLink(eok) {
+  if (!Number.isInteger(eok) || eok < EVIDENCE_BAND_EOK[0] || eok > EVIDENCE_BAND_EOK[1]) return null;
+  return { href: `./buy-by-budget.html#b${eok}`, text: "이 값대의 단지·평형별 비용과 뺀 곳 건수 → 근거표" };
+}
+
 /** 자치구 링크 순서: 이 예산대 거래가 많은 구부터(band.districts 순서), 거래가 없는 구는 원래 순서대로 뒤에. 이름 배열이다. */
 export const districtOrder = (band) => (band?.districts ?? []).map((d) => d.name);
 
