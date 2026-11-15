@@ -384,3 +384,89 @@ test("저장소가 막혀도 표는 그대로 그려지고, 메인은 저장값�
   same.p.fire("window", "pagehide");
   assert.deepEqual(JSON.parse(same.p.app.localStorage.getItem("myConditions")), { district: "중랑구", area: "60" }, "메인이 저장값을 바꿨다");
 });
+
+/**
+ * 「다른 질문」이 있는 장에서 nav.js 를 돌려 그 자리(holder)의 innerHTML 을 돌려준다 (#679).
+ * querySelector 는 nav.js 가 쓰는 `#other-questions [href^="…"]` 꼴만 알고, 브라우저처럼 문서 순서로 첫 링크를 주며
+ * 빈 접두는 아무것도 맞지 않는다(CSS Selectors 3, [att^=""]). rewrite: false 면 다시 쓰기 없이 그린 그대로다.
+ */
+function drawOther(nav, file, { saved, storage, rewrite = true } = {}) {
+  const holder = { innerHTML: "" };
+  const items = new Map(saved === undefined ? [] : [["myConditions", JSON.stringify(saved)]]);
+  const localStorage = storage ?? { getItem: (k) => items.get(k) ?? null, setItem: (k, v) => items.set(k, String(v)) };
+  const querySelector = (sel) => {
+    const prefix = /^#other-questions \[href\^="([^"]*)"\]$/.exec(sel)?.[1];
+    if (!rewrite || !prefix) return null;
+    const m = [...holder.innerHTML.matchAll(/<a href="([^"]*)"/g)].find((x) => x[1].replaceAll("&amp;", "&").startsWith(prefix));
+    if (!m) return null;
+    return {
+      setAttribute: (name, value) => {
+        if (name !== "href") return;
+        const h = holder.innerHTML;
+        holder.innerHTML = h.slice(0, m.index) + `<a href="${value.replaceAll("&", "&amp;")}"` + h.slice(m.index + m[0].length);
+      },
+    };
+  };
+  const document = { referrer: "", querySelector, querySelectorAll: () => [], getElementById: (id) => (id === "other-questions" ? holder : null), documentElement: { getAttribute: () => "ko" }, addEventListener() {} };
+  vm.runInNewContext(nav, { window: { localStorage, addEventListener() {} }, document, location: { origin: "https://kyhsa93.github.io", pathname: `/jipgye/${file}`, search: "" }, URLSearchParams });
+  return holder.innerHTML;
+}
+const otherHrefs = (html) => [...html.matchAll(/<a href="([^"]*)"/g)].map((m) => m[1].replaceAll("&amp;", "&"));
+async function otherQuestionPages() {
+  const files = (await readdir(path.join(root, SITE))).filter((f) => f.endsWith(".html"));
+  const pages = [];
+  for (const f of files) if (/<section id="other-questions"/.test(await readFile(path.join(root, SITE, f), "utf8"))) pages.push(f);
+  return pages;
+}
+const SAVED_SETS = [
+  { district: "마포구", area: "60", budget: 12, home: "노원구", cash: 3 }, // 전부(현금은 어디에도 싣지 않는다)
+  { area: "60-85", budget: 25 }, // 일부 + 범위 밖 예산
+  { district: "강남구", home: "강남구", area: "135" },
+  { budget: 2 }, // 범위 밖 예산만
+  { district: "노원구" }, // 구만 - 재계약은 구운 #lead-section 그대로
+  { home: "노원구" },
+  {},
+  undefined,
+];
+
+test("「다른 질문」 링크도 같은 저장값의 메인 링크와 같은 주소로 간다 - 일곱 장 모두, 조건 묶음마다 (#679)", async () => {
+  const nav = await source();
+  const pages = await otherQuestionPages();
+  assert.ok(pages.length >= 7, `전제: 다른 질문 자리가 있는 장이 ${pages.length}장뿐이다`);
+  const baked = await bakedHrefs();
+  const idOf = Object.fromEntries(Object.entries(baked).map(([id, href]) => [href, id]));
+  for (const saved of SAVED_SETS) {
+    const main = { ...baked, ...(await run({ saved })).hrefs };
+    let changed = 0;
+    for (const file of pages) {
+      const before = otherHrefs(drawOther(nav, file, { rewrite: false }));
+      const after = otherHrefs(drawOther(nav, file, { saved }));
+      assert.equal(after.length, before.length, `${file} ${JSON.stringify(saved)}: 링크 수가 바뀌었다`);
+      before.forEach((href, i) => {
+        assert.ok(idOf[href], `${file}: 메인에 없는 다른 질문 ${href}`);
+        assert.equal(after[i], main[idOf[href]], `${file} ${JSON.stringify(saved)}: ${idOf[href]} 가 메인과 다르다`);
+        if (after[i] !== href) changed++;
+        assert.ok(!/[?&]cash=/.test(after[i]), `${file}: 현금을 넘겼다 - ${after[i]}`);
+      });
+    }
+    if (saved?.district || saved?.area) assert.ok(changed > 0, `${JSON.stringify(saved)}: 다른 질문 링크가 하나도 바뀌지 않았다`);
+  }
+  // 조건을 받지 않는 넷은 어느 묶음에서도 구운 그대로다.
+  for (const href of ["./floor-gap.html", "./record-high.html", "./price-outlook.html", "./cancelled-deals.html"]) {
+    const after = otherHrefs(drawOther(nav, "renewal-vs-new.html", { saved: SAVED_SETS[0] }));
+    assert.ok(after.includes(href), `${href} 가 바뀌었다`);
+  }
+});
+
+test("저장값이 없거나 저장소가 막히면 「다른 질문」은 조건 없이 그린 것과 바이트까지 같다 (#679)", async () => {
+  const nav = await source();
+  const blocked = { getItem: () => { throw new Error("blocked"); }, setItem: () => { throw new Error("blocked"); } };
+  const broken = { getItem: () => "{not json", setItem() {} };
+  for (const file of await otherQuestionPages()) {
+    const plain = drawOther(nav, file, { rewrite: false });
+    assert.match(plain, /^<h2>다른 질문<\/h2><nav class="question-nav"/, `${file}: 다른 질문을 그리지 않았다`);
+    for (const opts of [{}, { saved: {} }, { storage: blocked }, { storage: broken }, { saved: { district: "성남시", budget: "열" } }]) {
+      assert.equal(drawOther(nav, file, opts), plain, `${file} ${JSON.stringify(opts.saved ?? "저장소")}: 조건 없이 그린 것과 다르다`);
+    }
+  }
+});

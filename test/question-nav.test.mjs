@@ -255,3 +255,34 @@ test("'다른 질문'은 해시 도착 주소(#654 q-renewal)여도 지금 화�
   assert.ok(!draw("renewal-vs-new.html").includes("renewal-vs-new.html"), "재계약 장의 다른 질문에 자기 자신이 있다");
   assert.ok(draw("floor-gap.html").includes('href="./renewal-vs-new.html#lead-section"'), "다른 장에서 재계약 질문이 #lead-section 으로 가지 않는다");
 });
+
+test("'다른 질문'은 조건을 넘겨도 지금 화면을 빼고, 순서·글은 첫 화면 목록 그대로다 (#679)", async () => {
+  const nav = await readFile(path.join(root, "docs/nav.js"), "utf8");
+  // 조건 묶음(nav.js 끝)이 쓰는 `#other-questions [href^="…"]` 만 흉내 낸다 - 문서 순서로 첫 링크, 빈 접두는 안 맞는다.
+  const draw = (file, saved) => {
+    const holder = { innerHTML: "" };
+    const querySelector = (sel) => {
+      const prefix = /^#other-questions \[href\^="([^"]*)"\]$/.exec(sel)?.[1];
+      const m = prefix && [...holder.innerHTML.matchAll(/<a href="([^"]*)"/g)].find((x) => x[1].replaceAll("&amp;", "&").startsWith(prefix));
+      if (!m) return null;
+      return { setAttribute: (n, v) => n === "href" && (holder.innerHTML = holder.innerHTML.slice(0, m.index) + `<a href="${v.replaceAll("&", "&amp;")}"` + holder.innerHTML.slice(m.index + m[0].length)) };
+    };
+    const document = { referrer: "", querySelector, querySelectorAll: () => [], getElementById: (id) => (id === "other-questions" ? holder : null), documentElement: { getAttribute: () => "ko" }, addEventListener() {} };
+    const localStorage = { getItem: (k) => (k === "myConditions" ? JSON.stringify(saved) : null), setItem() {} };
+    vm.runInNewContext(nav, { window: { localStorage, addEventListener() {} }, document, location: { pathname: `/jipgye/${file}`, search: "", origin: "https://kyhsa93.github.io" }, URLSearchParams });
+    return [...holder.innerHTML.matchAll(/<a href="([^"]*)">([^<]*)<\/a>/g)].map((m) => ({ href: m[1].replaceAll("&amp;", "&"), text: m[2] }));
+  };
+  const saved = { district: "마포구", area: "60", budget: 12, home: "노원구" };
+  const main = await links();
+  const pages = ["floor-gap", "record-high", "switch-house", "price-outlook", "jeonse-vs-wolse", "renewal-vs-new", "cancelled-deals"];
+  let carried = 0;
+  for (const f of pages) {
+    const got = draw(`${f}.html`, saved);
+    const file = (href) => href.replace("./", "").split(/[?#]/)[0];
+    assert.ok(!got.some((l) => file(l.href) === `${f}.html`), `${f}의 다른 질문에 조건을 넘긴 자기 자신이 있다`);
+    // 글과 순서는 첫 화면 목록에서 지금 장만 뺀 그대로다 - 주소만 조건을 받는다.
+    assert.deepEqual(got.map((l) => l.text), main.filter((l) => file(l.href) !== `${f}.html`).map((l) => l.text), `${f}: 다른 질문 목록이 첫 화면과 다르다`);
+    carried += got.filter((l) => l.href.includes("?")).length;
+  }
+  assert.ok(carried > 0, "조건을 넘긴 다른 질문 링크가 하나도 없다");
+});
