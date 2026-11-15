@@ -558,7 +558,7 @@ function wolseChangeHtml(change, baselineDate) {
   return ` <span class="change ${dir}"${title}>${arrow}${Math.abs(change.percent).toFixed(1)}%</span>`;
 }
 
-// #862: 서울 매매를 표본 구성 때문에 보류한 칸은 건수 자리에 빌드가 구운 문구를 고른다(scripts/realestate-concentration.ts, 구운 표는 realestate-table.ts countOrHeld).
+// #862: 매매 표본이 쏠린 칸(서울·구)은 건수 자리에 빌드가 구운 문구를 고른다(scripts/realestate-concentration.ts, 구운 표는 realestate-table.ts countOrHeld).
 const held = (m, k) => m.changeWithheld?.text?.[locale][k];
 const countText = (m) => held(m, "cell") ?? t("countUnit")(m.transactionCount);
 
@@ -709,7 +709,7 @@ function districtRowsHtml(entry) {
           : `<span class="price-strong">${formatMan(valueOf(metric, k))}</span>${change}${tag}`;
       const area =
         k === "wolse" ? "-" : `<span class="price-strong">${formatEok(areaPrice(valueOf(metric, k)))}</span>`;
-      return `<tr><td>${escapeHtml(labels[i])}</td><td data-label="${escapeHtml(t("thPerPyeong"))}">${price}</td><td data-label="${escapeHtml(t("thArea")(areaM2))}">${area}</td><td data-label="${escapeHtml(t("thCount"))}"><span class="count">${escapeHtml(t("countUnit")(metric.transactionCount))}</span></td></tr>`;
+      return `<tr><td>${escapeHtml(labels[i])}</td><td data-label="${escapeHtml(t("thPerPyeong"))}">${price}</td><td data-label="${escapeHtml(t("thArea")(areaM2))}">${area}</td><td data-label="${escapeHtml(t("thCount"))}"><span class="count">${escapeHtml(countText(metric))}</span></td></tr>`;
     })
     .join("");
 }
@@ -762,7 +762,7 @@ function renderOverall(realestate) {
       (sale
         ? card(t("thPerPyeong"), formatMan(valueOf(sale, "sale")), "") +
           card(t("thArea")(areaM2), formatEok(areaPrice(valueOf(sale, "sale"))), "") +
-          card(t("thCount"), escapeHtml(t("countUnit")(sale.transactionCount)), "")
+          card(t("thCount"), escapeHtml(t("countUnit")(sale.transactionCount)), escapeHtml(held(sale, "detail") ?? ""))
         : card(t("thSale"), lowOr(overall, "sale"), "")) +
       (ratio
         ? card(

@@ -53,7 +53,8 @@ export function metricCell(kind, metric, overall = false) {
   const value = metric[kindField(kind).value];
   if (!value) return { type: "none" };
   if (kind === "wolse") return { type: "value", text: `${man(value)} / 월 ${man(metric.avgMonthlyRent10k)}`, change: null, count: countOf(metric) };
-  const withheld = overall ? withheldOf(metric) : null;
+  // 구 줄은 #290 건수 보류 문구를 내지 않는 오래된 차이가 있다. 쏠림 단서(reason, #862 2단계)만 서울 줄과 같이 낸다 - 화면 JS(docs/index.html realestateTailHtml)와 같은 조건이다.
+  const withheld = overall || metric.changeWithheld?.reason ? withheldOf(metric) : null;
   return { type: "value", text: man(value), change: changeOf(metric.change), count: withheld ?? countOf(metric) };
 }
 

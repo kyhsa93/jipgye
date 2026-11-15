@@ -5,13 +5,17 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { KINDS, RAW_DIR, itemKey, readSameNames } from "./realestate-raw.ts";
+import { effectiveArrivals, readFirstSeen } from "./realestate-first-seen.ts";
 import { buildDigest, uniqueArrivals } from "./week-digest.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const outFile = () =>
   process.env.WEEK_DIGEST_FILE ? path.resolve(process.env.WEEK_DIGEST_FILE) : path.join(root, "docs/data/week-digest.json");
 
-/** 원본 전부를 파일 단위로. 파일 이름 순으로 읽어 같은 입력이면 같은 출력이다. */
+/**
+ * 원본 전부를 파일 단위로. 파일 이름 순으로 읽어 같은 입력이면 같은 출력이다.
+ * `first` 는 고유 키마다 행 신원이 처음 보인 날이다(#862 조건 6, realestate-first-seen.ts) - 상태 파일이 없는 달은 null 이라 도장 그대로 센다.
+ */
 async function readSlots(dir = RAW_DIR) {
   const slots = [];
   for (const kind of KINDS) {
@@ -19,10 +23,24 @@ async function readSlots(dir = RAW_DIR) {
     for (const name of names) {
       const file = JSON.parse(await readFile(path.join(dir, kind, name), "utf8"));
       if (file?.ok === false || !Array.isArray(file?.items)) continue;
-      slots.push({ kind, district: file.district ?? name.slice(0, 5), items: file.items, arrivals: file.arrivals ?? null });
+      const yearMonth = name.slice(6, 12);
+      const seen = await readFirstSeen(kind, file.district ?? name.slice(0, 5), yearMonth, dir);
+      const first = seen ? firstByKey(file, seen) : null;
+      slots.push({ kind, district: file.district ?? name.slice(0, 5), items: file.items, arrivals: file.arrivals ?? null, first });
     }
   }
   return slots;
+}
+
+// 같은 키의 줄은 도장이 하나라(trackArrivals) 첫 관측일도 그 줄들 중 이른 날 하나로 친다.
+function firstByKey(file, seen) {
+  const days = effectiveArrivals(file, seen);
+  const first = new Map();
+  file.items.forEach((item, i) => {
+    const key = itemKey(item);
+    if (days[i] && (!first.has(key) || days[i] < first.get(key))) first.set(key, days[i]);
+  });
+  return first;
 }
 
 export async function buildWeekDigest({ now = new Date(), dir = RAW_DIR, out = outFile() } = {}) {
