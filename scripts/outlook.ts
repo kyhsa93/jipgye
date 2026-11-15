@@ -40,8 +40,26 @@ export const WIN_SHARE = 0.9;
 export const BLOCK = 12;
 export const ROUNDS = 1000;
 
-/** 화면에 싣는 범위. 지난 예측 오차의 가운데 80%. */
+/**
+ * 화면에 싣는 범위. 지난 예측 오차의 두 분위를 예측에 더한다. 옛 범위는 가운데 80%(10~90번째 백분위)다.
+ * 실시간 적중(realtimeCoverage·rangeCoverage)은 계속 옛 범위로 잰다 - #819 판정의 입력(384/596)이 그 값이다.
+ */
 export const BAND = [0.1, 0.9];
+
+/**
+ * 넓힌 범위(#819). 옛 범위의 실시간 적중이 method 사전 기준 70% 미만(384/596)이라, 사전 등록한 규칙
+ * (research/forecast-band-2026-11/PREREG.md 3절)으로 pm 이 2026-11-15 에 q=0.040 을 판정했다
+ * (https://github.com/kyhsa93/jipgye/issues/819#issuecomment-6887315679). 같은 역사에서 고른 값이라
+ * 그 역사의 적중(482/596)은 표본 밖 성적이 아니다 - 화면·문서에 앞날의 적중률로 적지 않는다(PREREG 7절).
+ *
+ * 적용은 공식 지수 기준월(origin)이 WIDE_FROM 이후인 예측부터다. 2026년 7~9월 시점은 낸 범위 그대로
+ * 채점한다는 method 문언 때문이다(PREREG 4절) - 이미 찍힌 outlook-log.json 줄은 다시 계산하지 않는다.
+ */
+export const WIDE_BAND = [0.04, 0.96];
+export const WIDE_FROM = "202610";
+
+/** 그 시점(origin, "YYYYMM")의 예측에 쓰는 범위. */
+export const bandFor = (origin) => (origin >= WIDE_FROM ? WIDE_BAND : BAND);
 
 export const REGIONS = [
   { code: "200", name: { ko: "서울", en: "Seoul" } },
@@ -242,15 +260,17 @@ export function forecastCell(series, h) {
   if (!guess) return card;
 
   // 범위는 지난 오차를 오늘 예측에 더한 것이다. 오차 = 실제 - 예측이므로 그대로 더한다.
+  // 분위는 그 시점(공식 지수 마지막 달)으로 고른다(#819) - 202609 까지는 옛 범위, 202610 부터 넓힌 범위.
   const point = guess.model * 100;
+  const band = bandFor(series.months[last]);
   card.forecast = {
     target: shiftMonth(series.months[last], h),
     change: round2(point),
     // 두 기준선 가운데 "늘 오른다"의 값. "그대로다"는 늘 0이라 적지 않는다. 채점 때 모델이
     // 기준선을 이겼는지 보려면 그날 낸 값이 남아 있어야 한다 - 나중에 다시 계산하면 고쳐진 지수가 섞인다(#64).
     drift: round2(guess.drift * 100),
-    low: round2(point + quantile(errors, BAND[0])),
-    high: round2(point + quantile(errors, BAND[1])),
+    low: round2(point + quantile(errors, band[0])),
+    high: round2(point + quantile(errors, band[1])),
   };
   return card;
 }
@@ -259,8 +279,9 @@ export function forecastCell(series, h) {
  * 범위가 실시간으로 얼마나 들었나. 매달 그 시점에 서서, 그때까지 결과가 나와 있던 오차
  * (j + h <= i)만으로 범위를 만들었다면 그 달의 오차가 범위 안이었나를 센다.
  *
- * 화면에 싣는 범위는 14년치 오차 전체의 가운데 80%라 그 14년에는 80%가 든다(순환). 실제로는
- * 앞선 오차만 볼 수 있었으므로 이쪽이 "그때 냈다면"에 가깝다. 시작은 2014-01 - 2012-01부터
+ * 화면에 싣는 범위는 14년치 오차 전체에서 잡은 분위라 그 14년에는 그 분위만큼 든다(순환). 실제로는
+ * 앞선 오차만 볼 수 있었으므로 이쪽이 "그때 냈다면"에 가깝다. 분위는 옛 범위(BAND)로 고정한다 -
+ * #819 판정의 입력이 이 값이고, 넓힌 범위로 다시 재면 같은 역사에서 고른 분위를 그 역사로 채점하게 된다. 시작은 2014-01 - 2012-01부터
  * 쌓은 오차가 한 해 가까이는 있어야 분위가 흔들리지 않는다.
  */
 export const COVERAGE_FROM = "201401";
@@ -460,6 +481,16 @@ const onTenEok = (pct, locale) => {
   return locale === "en" ? `₩${Math.round(won * 100).toLocaleString("en-US")}M` : `${won.toFixed(2)}억`;
 };
 
+/** 문장 속 범위 이름. 옛 범위와 넓힌 범위를 시점으로 가른다(#819). */
+const bandName = (origin, locale) =>
+  bandFor(origin) === WIDE_BAND
+    ? locale === "en"
+      ? "the 4th–96th percentile of past errors"
+      : "지난 예측 오차의 4~96번째 백분위"
+    : locale === "en"
+      ? "the middle 80% of past errors"
+      : "지난 예측 오차의 가운데 80%";
+
 export function leadSentence(seoul, last, locale = "ko") {
   const card = seoul?.cards?.find((c) => c.h === 3);
   if (!card) return null;
@@ -471,11 +502,11 @@ export function leadSentence(seoul, last, locale = "ko") {
   }
   return locale === "en"
     ? `Using the official index up to ${ym(last, "en")}, Seoul apartments in ${ym(f.target, "en")} come out at ${signed(f.change)}, ` +
-        `with the middle 80% of past errors putting it between ${signed(f.low)} and ${signed(f.high)}. ` +
+        `with ${bandName(last, "en")} putting it between ${signed(f.low)} and ${signed(f.high)}. ` +
         `A flat worth ₩1bn in ${ym(last, "en")} would be ${onTenEok(f.low, "en")} to ${onTenEok(f.high, "en")} — measured from ${ym(last, "en")}, not from today's price. ` +
         `The same forecast made every month since ${ym(card.from, "en")} missed by ${card.mae.model}pp on average; guessing "no change" missed by ${card.mae.naive}pp.`
     : `공식 지수 ${ym(last, "ko")}까지로 짐작하면 ${ym(f.target, "ko")} 서울 아파트값은 ${signed(f.change)}입니다. ` +
-        `지난 예측 오차의 가운데 80%를 얹으면 ${signed(f.low)}에서 ${signed(f.high)} 사이입니다 — ${ym(last, "ko")}에 10억이던 집이면 ${onTenEok(f.low, "ko")}~${onTenEok(f.high, "ko")}입니다(오늘 값이 아니라 ${ym(last, "ko")} 값에서 잰 것입니다). ` +
+        `${bandName(last, "ko")}를 얹으면 ${signed(f.low)}에서 ${signed(f.high)} 사이입니다 — ${ym(last, "ko")}에 10억이던 집이면 ${onTenEok(f.low, "ko")}~${onTenEok(f.high, "ko")}입니다(오늘 값이 아니라 ${ym(last, "ko")} 값에서 잰 것입니다). ` +
         `${ym(card.from, "ko")}부터 매달 같은 방식으로 예측해 보면 평균 ${card.mae.model}%p 빗나갔고, "그대로다"라고 찍으면 ${card.mae.naive}%p 빗나갔습니다.`;
 }
 
