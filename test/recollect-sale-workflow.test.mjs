@@ -200,6 +200,16 @@ test("push-docs.sh 는 메시지 뒤 경로 인자를 받으면 그 경로만 �
   assert.match(sh, /if \[ \$# -gt 0 \]; then\n\s+if \[ -z "\$\(git status --porcelain -- "\$@"\)" \]; then/);
 });
 
+test("머리 주석: 호출 뒤 기록 없이 끝난 run 절차가 스크립트 시작 줄 글자로 적혀 있고, 종료 4 이어 받기와 구분된다 (cpo 보완)", async () => {
+  const script = await read("scripts/recollect-sale.ts");
+  // 주석이 가리키는 시작 줄이 스크립트에 실제로 있는지(글자가 어긋나면 로그에서 못 찾는다).
+  assert.match(script, /`\[recollect\] \$\{plan\.round\} 회차\$\{[^\n]*\n\s+`\$\{plan\.months\.join\("·"\)\} · 계획 \$\{plan\.planned\}회 · 상한 \$\{plan\.cap\}회`/);
+  assert.match(text, /^# 호출 뒤 기록 없이 끝난 run[^\n]*종료 4 의 이어 받기와 다르다/m);
+  assert.match(text, /^# {3}\[recollect\] <달> 회차: <달들> · 계획 N회 · 상한 M회/m);
+  assert.match(text, /있으면: 새 dispatch 를 하지 않는다\. #861 에 run ID[\s\S]*cto 판정[\s\S]*남은 승인\(승인 − 이미 쓴 호출\)[\s\S]*소유자 답 전에는 호출 0/);
+  assert.match(text, /없으면: 호출 전에 끝났으므로\(호출 0\) 같은 입력으로 다시 dispatch 해도 된다/);
+});
+
 test("daily-update.yml 에는 재수집이 섞이지 않는다", () => {
   assert.doesNotMatch(daily, /recollect/i);
 });
