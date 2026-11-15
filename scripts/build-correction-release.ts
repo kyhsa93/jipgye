@@ -55,7 +55,7 @@ export const SUPERSEDED_PREFIX = `> **${SUPERSEDED_MARK}**`;
 
 // ---- 출력 필드 허용 목록 ------------------------------------------------------------------------------------------
 // 새 필드는 여기 먼저 적어야 나간다. 행 단위 이름(단지·지번·동·층·금액·면적·등기일 등)은 이 목록에도 없다.
-export const ALLOWED_TOP = ["schema", "asOf", "collectedAt", "collectedFrom", "collectedTo", "source", "sample", "seoul", "districts", "months", "figuresDigest"];
+export const ALLOWED_TOP = ["schema", "asOf", "collectedAt", "collectedFrom", "collectedTo", "recollectedOn", "source", "sample", "seoul", "districts", "months", "figuresDigest"];
 export const ALLOWED_SOURCE = ["datasetId"];
 export const ALLOWED_SAMPLE = ["firstContractMonth", "lastContractMonth", "contractMonths", "districtFiles"];
 export const ALLOWED_SEOUL = ["cancelRecords", "withTwin", "sharePct", "comparison", "registration"];
@@ -73,6 +73,13 @@ function assertKeys(label, obj, allowed) {
 /** 출력 모양이 허용 목록 안인지 본다. 값이 아니라 키만 본다 - 데이터에 기대지 않는 구조 검사다. */
 export function assertAllowedShape(figures) {
   assertKeys("최상위", figures, ALLOWED_TOP);
+  // 재수집일 칸은 한국 날짜 목록만 싣는다(legal #892 2절) - 반영한 덧씌움이 없으면 칸 자체가 없다.
+  if ("recollectedOn" in figures) {
+    const days = figures.recollectedOn;
+    if (!Array.isArray(days) || !days.length || !days.every((d) => typeof d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d))) {
+      throw new Error("recollectedOn은 비어 있지 않은 날짜(YYYY-MM-DD) 목록이어야 한다");
+    }
+  }
   assertKeys("source", figures.source, ALLOWED_SOURCE);
   assertKeys("sample", figures.sample, ALLOWED_SAMPLE);
   assertKeys("seoul", figures.seoul, ALLOWED_SEOUL);
@@ -121,6 +128,7 @@ export async function writeRecollectedSales(rawDir, outDir) {
 /**
  * 매매 폴더의 파일 전부를 읽는다(check.py와 같은 입력 - buildRelease는 writeRecollectedSales가 쓴 폴더를 넘긴다). 자치구는 DISTRICTS 순서로 담아 출력 순서가 디스크 순서에
  * 기대지 않게 한다. 기준일·수집 시각은 파일의 observedAt 중 가장 늦은 것이고, 가장 이른 것(firstObservedAt)도 같이 돌려준다.
+ * 덧씌움을 합친 파일(writeRecollectedSales가 쓴 것)에는 mergeRecollect가 붙인 recollectedAt이 있어 그것을 모아 돌려준다(본문 입력 줄의 재수집일).
  */
 export async function readSales(dir = RAW_DIR) {
   let names = [];
@@ -136,6 +144,7 @@ export async function readSales(dir = RAW_DIR) {
   let observedAt = "";
   let firstObservedAt = "";
   let files = 0;
+  const recollectedAt = [];
   for (const { code, name } of DISTRICTS) {
     const items = [];
     for (const fileName of names.filter((n) => n.startsWith(`${code}-`)).sort()) {
@@ -145,13 +154,14 @@ export async function readSales(dir = RAW_DIR) {
       files += 1;
       if (file.observedAt && file.observedAt > observedAt) observedAt = file.observedAt;
       if (file.observedAt && (!firstObservedAt || file.observedAt < firstObservedAt)) firstObservedAt = file.observedAt;
+      if (typeof file.recollectedAt === "string" && file.recollectedAt) recollectedAt.push(file.recollectedAt);
       items.push(...file.items);
     }
     if (items.length) byDistrict[name] = items;
   }
   const unknown = names.filter((n) => !wanted.has(FILE_PATTERN.exec(n)[1]));
   if (unknown.length) throw new Error(`서울 25개 구 밖의 파일이 있다: ${unknown.length}개`);
-  return { byDistrict, observedAt, firstObservedAt, files };
+  return { byDistrict, observedAt, firstObservedAt, files, recollectedAt };
 }
 
 // ---- 셈 ------------------------------------------------------------------------------------------------------------
@@ -246,12 +256,13 @@ type Figures = Pick<Computed, "seoul" | "districts" | "months"> & {
   collectedAt: string;
   collectedFrom: string;
   collectedTo: string;
+  recollectedOn?: string[];
   source: { datasetId: string };
   sample: Computed["sample"] & { districtFiles: number };
   figuresDigest?: string;
 };
 
-export function buildFigures({ byDistrict, observedAt, firstObservedAt = observedAt, files }) {
+export function buildFigures({ byDistrict, observedAt, firstObservedAt = observedAt, files, recollectedAt = [] }) {
   const computed = computeFigures(byDistrict);
   if (!observedAt) throw new Error("원본 파일에 수집 시각(observedAt)이 없어 기준일을 정할 수 없다");
   // 수집일은 파일마다 다르다. asOf·collectedAt·collectedTo는 가장 늦은 날(KST), collectedFrom은 가장 이른 날이다.
@@ -262,6 +273,9 @@ export function buildFigures({ byDistrict, observedAt, firstObservedAt = observe
     collectedAt,
     collectedFrom: kstDay(firstObservedAt),
     collectedTo: collectedAt,
+    // 반영한 덧씌움의 재수집일(KST, 중복 없이 오름차순). 반영이 없으면 칸을 두지 않는다 - 덧씌움이 없을 때 JSON이 전과 바이트까지 같다(#892 조건 3).
+    // figuresDigest(digestOf)는 sample·seoul·districts·months만 보므로 이 칸은 지문에 들어가지 않는다 - asOf·collectedAt과 같다.
+    ...(recollectedAt.length ? { recollectedOn: [...new Set(recollectedAt.map(kstDay))].sort() } : {}),
     source: { datasetId: SOURCES.molitSale.dataset },
     sample: { ...computed.sample, districtFiles: files },
     seoul: computed.seoul,
@@ -303,6 +317,17 @@ export function renderTitle(figures) {
 }
 
 /**
+ * 재수집 덧씌움을 합쳤을 때 「첨부」 절 check.py·check.out 글머리 다음에 넣는 입력 줄(legal #892 판정 1절 원문 그대로 - 바꾸려면 legal 판정이
+ * 먼저다). days는 재수집일(KST) 오름차순이고 ko는 「·」, en은 「, 」로 잇는다. 반영한 덧씌움이 없으면 renderBody가 이 줄을 통째로 뺀다.
+ */
+export function recollectLine(days: string[]) {
+  return {
+    ko: `- 입력: 매일 다시 받지 않는 지난 계약월 가운데 원천에서 한 달에 한 번 다시 받은 달의 매매 기록에는, 저장 파일과 다른 행만 둔 재수집 덧씌움(\`raw/recollect\`)을 합쳤습니다. 바뀐 행과 새 행은 다시 받은 값으로 넣고, 원천이 더는 내지 않는 행은 뺐습니다(재수집일 ${days.join("·")}). 합치는 방식은 사이트 해제·등기 화면과 같은 함수(\`scripts/realestate-recollect.ts\`)이고, 합친 사본은 산출할 때만 만들어 저장소에 두지 않습니다. 이 Release의 태그가 가리키는 커밋의 저장소 루트에서 \`REALESTATE_RAW_DIR=raw CORRECTION_OUT_DIR=<폴더> node scripts/build-correction-release.ts\`로 다시 만들 수 있습니다. \`check.out\` 첫 줄 「입력 raw/sale」의 파일 수·건수는 그 합친 사본의 값이라, 저장소의 \`raw/sale\`을 \`check.py\`로 바로 읽은 값과 다를 수 있습니다.`,
+    en: `- Input: for past contract months that are no longer refreshed daily but are re-fetched from the source once a month, the sale records include the re-collection overlay (\`raw/recollect\`), which keeps only the rows that differ from the stored files: changed and new rows take the re-fetched values, and rows the source no longer returns are left out (re-collected ${days.join(", ")}). The merge uses the same function as the site's cancellation and registration page (\`scripts/realestate-recollect.ts\`); the merged copy is made only during the build and is not kept in the repository. To reproduce, run \`REALESTATE_RAW_DIR=raw CORRECTION_OUT_DIR=<dir> node scripts/build-correction-release.ts\` from the repository root at the commit this release's tag points to. The file and row counts after "입력 raw/sale" on the first line of \`check.out\` are those of the merged copy, so they can differ from running \`check.py\` directly on the repository's \`raw/sale\`.`,
+  };
+}
+
+/**
  * Release 본문(한·영). 문장 규칙(#76 clo 조건 4~6, pm 판정, legal 2026-10-11 M1~M6·R1~R8):
  * - 짝이 있다는 것은 키가 같다는 것을 센 것이다. 신고 사유는 이 원천 자료에 없어 확인하지 않았으므로 단정하지 않는다.
  * - 비교군 비율과 표본 기간을 같이 둔다. 비교군의 분자(계약 기록의 개수)와 분모(기록의 건수)는 단위가 다르다고 밝히고,
@@ -325,6 +350,8 @@ export function renderBody(figures, { tag }: { tag?: string } = {}) {
   const matureRange = reg.matureMonths.length ? monthRange(matureFirst, matureLast) : "-";
   const hidden = figures.districts.filter((d) => d.suppressed).length + figures.months.filter((m) => m.suppressed).length;
   const name = tag ?? `${TAG_PREFIX}${figures.asOf}`;
+  // 덧씌움을 합친 입력이면 「첨부」에 입력 줄 하나(legal #892). 합친 것이 없으면 줄도 줄바꿈도 없다(조건 3 바이트 동일).
+  const recollect = figures.recollectedOn?.length ? recollectLine(figures.recollectedOn) : null;
   const ranged = figures.collectedFrom !== figures.collectedTo;
   const collectedKo = ranged
     ? `수집 시각 ${figures.collectedFrom}~${figures.collectedTo}(파일마다 수집일이 달라, 가장 늦은 날을 기준일로 했습니다)`
@@ -357,7 +384,7 @@ export function renderBody(figures, { tag }: { tag?: string } = {}) {
 ## 첨부
 
 - \`${TAG_PREFIX}${figures.asOf}.json\`·\`.csv\`: 위 집계(같은 값).
-- \`check.py\`·\`check.out\`: 저장소의 \`research/correction-twins/check.py\`와 이 기준일 입력에서의 출력입니다. 파이썬 표준 라이브러리만 씁니다.
+- \`check.py\`·\`check.out\`: 저장소의 \`research/correction-twins/check.py\`와 이 기준일 입력에서의 출력입니다. 파이썬 표준 라이브러리만 씁니다.${recollect ? `\n${recollect.ko}` : ""}
 - 숫자는 사이트와 같은 함수(\`scripts/cancellation.ts\`의 \`withoutCorrections\`·\`correctionStats\`)에서 냈습니다. 산출 스크립트는 \`scripts/build-correction-release.ts\`입니다.
 
 ## 갱신
@@ -395,7 +422,7 @@ These figures count records that match each other. The reason for a filing is no
 ## Attachments
 
 - \`${TAG_PREFIX}${figures.asOf}.json\` and \`.csv\`: the aggregates above (same values).
-- \`check.py\` and \`check.out\`: \`research/correction-twins/check.py\` from the repository and its output on this as-of input. It uses only the Python standard library.
+- \`check.py\` and \`check.out\`: \`research/correction-twins/check.py\` from the repository and its output on this as-of input. It uses only the Python standard library.${recollect ? `\n${recollect.en}` : ""}
 - The numbers come from the same functions the site uses (\`withoutCorrections\` and \`correctionStats\` in \`scripts/cancellation.ts\`). The build script is \`scripts/build-correction-release.ts\`.
 
 ## Updates
@@ -484,8 +511,7 @@ async function main() {
   if (!outDir) throw new Error("CORRECTION_OUT_DIR(산출 폴더)가 필요하다");
   const { figures, tag, recollected } = await buildRelease({ rawDir: RAW_DIR, outDir: path.resolve(outDir) });
   // 12-12 실행 뒤 덧씌움 반영 슬롯 수를 이슈에 적는다(#892) - 워크플로 로그에서 읽는다. sparse-checkout에 raw/recollect가 없으면 0이다.
-  const days = [...new Set(recollected.map((r) => kstDay(r.recollectedAt)))].sort();
-  console.log(`재수집 덧씌움 반영 슬롯 ${recollected.length}개${days.length ? ` (재수집일 ${days.join(", ")})` : ""}`);
+  console.log(`재수집 덧씌움 반영 슬롯 ${recollected.length}개${figures.recollectedOn ? ` (재수집일 ${figures.recollectedOn.join(", ")})` : ""}`);
   console.log(`${tag}: 해제 기록 ${figures.seoul.cancelRecords}건 중 짝 있음 ${figures.seoul.withTwin}건 (${figures.seoul.sharePct}%), 비교군 ${figures.seoul.comparison.sharePct}%, 구 ${figures.districts.length}개, 월 ${figures.months.length}개, 비공개 칸 ${figures.districts.filter((d) => d.suppressed).length + figures.months.filter((m) => m.suppressed).length}`);
 }
 

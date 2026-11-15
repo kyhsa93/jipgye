@@ -88,7 +88,8 @@ test("JSON·CSV·본문에 행 단위 필드 이름도, 입력에 있던 단지�
 
 test("출력은 서울 전체·구·계약월 세 단위뿐이고 구×계약월 칸이 없다", async () => {
   const figures = await fixtureFigures();
-  assert.deepEqual(Object.keys(figures).sort(), [...ALLOWED_TOP].sort());
+  // recollectedOn은 재수집 덧씌움을 합쳤을 때만 있는 칸이다(#892) - 시험 입력에는 덧씌움이 없다.
+  assert.deepEqual(Object.keys(figures).sort(), ALLOWED_TOP.filter((k) => k !== "recollectedOn").sort());
   for (const row of figures.months) assert.deepEqual(Object.keys(row).sort(), [...ALLOWED_MONTH].sort());
   for (const row of figures.months) assert.ok(!("name" in row) && !("district" in row), "월 칸에 구가 들어 있다");
   assert.deepEqual(new Set(toCsv(figures).trim().split("\n").slice(1).map((l) => l.split(",")[0])), new Set(["seoul", "district", "month"]));
