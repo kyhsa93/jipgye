@@ -10,33 +10,39 @@ export function recentMonths(now, count = SEARCH_MONTHS) {
   return Array.from({ length: count }, (_, i) => shiftMonth(current, -(count - 1 - i)));
 }
 
-async function collect(kind, months, normalize) {
+// 읽기는 동시에 하되 합치는 건 고정 순서로 한다: months -> DISTRICTS 인덱스 순(값 정렬 아님).
+// Promise.all 은 완료 순서가 아니라 넘긴 순서대로 결과를 돌려준다. 읽는 쪽 콜백에서 바로 Map 에 넣으면 구별 거래 배열과
+// Map 키 순서가 슬롯 완료 순서를 따르고(내보내는 객체의 구 키는 정수 꼴이라 오름차순으로 다시 선다), budget-facts 의 면적 동률 안정 정렬이 그 순서를 그대로 남겨 budget-deals.json 의
+// bands[*].facts.span.min 이 실행마다 갈렸다(#572, cto 11-15 실험: 0~30ms 지연을 섞은 23회 중 15회 다름·6종). #477 readWindowItems 와 같은 모양이다.
+// `read` 는 시험이 완료 순서를 뒤집어 보려고 갈아 끼우는 자리다. 서명은 readSlotFile 과 같은 (kind, code, yearMonth).
+async function collect(kind, months, normalize, read = readSlotFile) {
+  const slots = await Promise.all(
+    months.flatMap((yearMonth) =>
+      DISTRICTS.map(async ({ code, name }) => ({ code, name, file: await read(kind, code, yearMonth) }))
+    )
+  );
+
   const byDistrict = new Map();
   let cancelled = 0;
 
-  await Promise.all(
-    months.flatMap((yearMonth) =>
-      DISTRICTS.map(async ({ code, name }) => {
-        const file = await readSlotFile(kind, code, yearMonth);
-        if (file?.ok === false || !Array.isArray(file?.items)) return;
+  for (const { code, name, file } of slots) {
+    if (file?.ok === false || !Array.isArray(file?.items)) continue;
 
-        const items = kind === "sale" ? dropCancelled(file.items) : file.items;
-        cancelled += file.items.length - items.length;
+    const items = kind === "sale" ? dropCancelled(file.items) : file.items;
+    cancelled += file.items.length - items.length;
 
-        const deals = items.map((item) => normalize(item, name)).filter(Boolean);
-        if (!deals.length) return;
+    const deals = items.map((item) => normalize(item, name)).filter(Boolean);
+    if (!deals.length) continue;
 
-        if (!byDistrict.has(code)) byDistrict.set(code, []);
-        byDistrict.get(code).push(...deals);
-      })
-    )
-  );
+    if (!byDistrict.has(code)) byDistrict.set(code, []);
+    byDistrict.get(code).push(...deals);
+  }
 
   return { byDistrict, cancelled };
 }
 
-export async function readDealSource(now, months = recentMonths(now)) {
-  const { byDistrict, cancelled } = await collect("sale", months, normalizeDeal);
+export async function readDealSource(now, months = recentMonths(now), read = readSlotFile) {
+  const { byDistrict, cancelled } = await collect("sale", months, normalizeDeal, read);
   return {
     period: months[months.length - 1],
     months,
@@ -45,8 +51,8 @@ export async function readDealSource(now, months = recentMonths(now)) {
   };
 }
 
-export async function readRentSource(now, months = recentMonths(now)) {
-  const { byDistrict } = await collect("rent", months, normalizeRentDeal);
+export async function readRentSource(now, months = recentMonths(now), read = readSlotFile) {
+  const { byDistrict } = await collect("rent", months, normalizeRentDeal, read);
   return {
     period: months[months.length - 1],
     months,
