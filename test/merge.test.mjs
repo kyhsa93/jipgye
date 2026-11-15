@@ -8,9 +8,13 @@ import path from "node:path";
 // scripts/dev/merge.sh (#602): 병합 큐 스크립트. PATH 앞의 가짜 `gh` 로만 돈다 - 네트워크·실제 PR·저장소 상태를 쓰지 않는다.
 // 가짜 gh 는 상태 파일(STUB_STATE)이 시키는 대로 답하고, 부른 인자를 STUB_LOG 에 한 줄(JSON)씩 남긴다.
 // 응답 목록(views·merges·...)은 하나씩 꺼내 쓰고 마지막 하나는 계속 쓴다.
+// 파일 목록(#887)은 `gh api --paginate repos/o/r/pulls/601/files?per_page=100 --jq <JQ>` 로만 답한다(`pr diff` 는 모르는 호출 - 300파일 초과에서 406 이던 길).
+// 가짜는 jq 를 돌리지 못하므로 JQ 글자가 같을 때만 그 출력(F 새 경로, 이름 바뀐 파일은 다음 줄 P 옛 경로)을 흉내 낸다 - 식이 바뀌면 이 시험부터 깨진다.
+// 실제 출력 형태는 PR #496(이름 변경 1건)으로 확인했다(2026-11-15).
 const MERGE = path.resolve(import.meta.dirname, "..", "scripts", "dev", "merge.sh");
 const HEAD = "a".repeat(40);
 const MSHA = "b".repeat(40);
+const JQ = '.[] | "F " + .filename, (.previous_filename // empty | "P " + .)';
 
 const SHIM = (nodeBin) => `#!${nodeBin}
 const fs = require("node:fs");
@@ -21,7 +25,16 @@ const save = () => fs.writeFileSync(process.env.STUB_STATE, JSON.stringify(st));
 const next = (arr) => (arr.length > 1 ? arr.shift() : arr[0]);
 const has = (x) => a.includes(x);
 const [g, sub] = a;
-if (g === "pr" && sub === "diff") { console.log(st.files.join("\\n")); }
+const files = () => st.files.map((f) => (typeof f === "string" ? { filename: f } : f));
+if (g === "api") {
+  const ok = has("--paginate") && has("repos/o/r/pulls/601/files?per_page=100") && a[a.indexOf("--jq") + 1] === ${JSON.stringify(JQ)};
+  if (!ok) { console.error("가짜 gh: 기대와 다른 api 호출 " + a.join(" ")); process.exit(9); }
+  if (st.apiFail) { console.error(st.apiFail); process.exit(1); }
+  // --paginate 는 페이지(100개)마다 jq 를 돌려 출력을 이어 붙인다 - 이어 붙인 결과를 그대로 낸다.
+  const out = files().flatMap((f) => (f.previous_filename ? ["F " + f.filename, "P " + f.previous_filename] : ["F " + f.filename]));
+  if (out.length) console.log(out.join("\\n"));
+}
+else if (g === "pr" && sub === "view" && has("changedFiles")) { console.log(String(st.changedFiles ?? files().length)); }
 else if (g === "pr" && sub === "view" && a.join(" ").includes("statusCheckRollup")) { const v = next(st.views); save(); console.log(JSON.stringify(v)); }
 else if (g === "pr" && sub === "view") { console.log(JSON.stringify({ state: "MERGED", mergeCommit: { oid: st.mergeSha } })); }
 else if (g === "pr" && sub === "comment") { /* 기록만 */ }
@@ -86,7 +99,7 @@ test("검사가 FAILURE 면(이름이 test·render 가 아니어도) 즉시 중�
       assert.match(r.stderr, /실패한 검사가 있다/);
       assert.equal(f.of("pr", "merge").length, 0);
       assert.equal(f.of("pr", "comment").length, 0);
-      assert.equal(f.of("pr", "view").length, 1, "기다리지 않고 한 번 읽고 끝");
+      assert.equal(f.of("pr", "view").filter((c) => c.join(" ").includes("statusCheckRollup")).length, 1, "기다리지 않고 한 번 읽고 끝");
     } finally { f.done(); }
   }
 });
@@ -215,6 +228,71 @@ test("scripts/ 아래 데이터와 무관한 파일(예: scripts/dev/·scripts/r
     const r = f.run(ARGS(["--dry-run"]));
     assert.equal(r.status, 0, r.stdout + r.stderr);
     assert.match(r.stdout, /부류=안전/);
+  } finally { f.done(); }
+});
+
+// #887: 300파일을 넘는 PR(실제 #885 329파일)도 파일 API 로 부류를 정한다.
+const MANY = (n) => Array.from({ length: n }, (_, i) => `test/case-${String(i).padStart(3, "0")}.test.mjs`);
+
+test("300파일을 넘는 PR 도 파일 API(--paginate)로 부류를 정한다 - `gh pr diff` 를 부르지 않는다", () => {
+  const f = fixture({ files: MANY(329) });
+  try {
+    const r = f.run(ARGS(["--dry-run"]));
+    assert.equal(r.status, 0, r.stdout + r.stderr);
+    assert.match(r.stdout, /부류=안전\(busy 규칙 생략\) 파일 329개/);
+    assert.equal(f.of("pr", "diff").length, 0);
+    assert.equal(f.calls().filter((c) => c[0] === "api").length, 1, "목록은 한 번 읽는다");
+  } finally { f.done(); }
+});
+
+test("데이터 경로가 2페이지(101번째 뒤)에만 있어도 데이터 부류다", () => {
+  const files = MANY(329); files[250] = "docs/data/series.json";
+  const f = fixture({ files, runs: [[{ status: "in_progress", event: "schedule" }]] });
+  try {
+    const r = f.run(ARGS());
+    assert.equal(r.status, 1, r.stdout + r.stderr);
+    assert.match(r.stdout, /부류=데이터\(busy 규칙 적용; 닿은 경로: docs\/data\/series\.json\) 파일 329개/);
+    assert.match(r.stderr, /busy 규칙/);
+    assert.equal(f.of("pr", "merge").length, 0);
+  } finally { f.done(); }
+});
+
+test("이름 변경은 옛 경로도 본다: 옛 경로만 raw/ 여도 데이터 부류이고, 옛 경로 줄은 파일 수에 넣지 않는다", () => {
+  const f = fixture({ files: ["test/a.test.mjs", { filename: "archive/old.json", previous_filename: "raw/indicators/old.json" }], changedFiles: 2 });
+  try {
+    const r = f.run(ARGS(["--dry-run"]));
+    assert.equal(r.status, 0, r.stdout + r.stderr);
+    assert.match(r.stdout, /부류=데이터\(busy 규칙 적용; 닿은 경로: raw\/indicators\/old\.json\) 파일 2개/);
+  } finally { f.done(); }
+  const g = fixture({ files: [{ filename: "src/b.ts", previous_filename: "src/a.ts" }], changedFiles: 1 });
+  try {
+    const r = g.run(ARGS(["--dry-run"]));
+    assert.equal(r.status, 0, r.stdout + r.stderr);
+    assert.match(r.stdout, /부류=안전\(busy 규칙 생략\) 파일 1개/);
+  } finally { g.done(); }
+});
+
+test("목록 수가 changedFiles 와 다르면(3000파일 잘림 등) 댓글·병합 없이 종료 1", () => {
+  for (const dry of [[], ["--dry-run"]]) {
+    const f = fixture({ files: MANY(329), changedFiles: 3500 });
+    try {
+      const r = f.run(ARGS(dry));
+      assert.equal(r.status, 1, r.stdout + r.stderr);
+      assert.match(r.stderr, /파일 목록 329개가 changedFiles 3500개와 다르다/);
+      assert.doesNotMatch(r.stdout, /부류=/);
+      assert.equal(f.of("pr", "merge").length, 0);
+      assert.equal(f.of("pr", "comment").length, 0);
+    } finally { f.done(); }
+  }
+});
+
+test("파일 목록을 못 읽으면(API 오류) 종료 1 이고 병합하지 않는다", () => {
+  const f = fixture({ apiFail: "HTTP 502: Bad Gateway" });
+  try {
+    const r = f.run(ARGS());
+    assert.equal(r.status, 1);
+    assert.match(r.stderr, /파일 목록을 못 읽었다: HTTP 502/);
+    assert.equal(f.of("pr", "merge").length, 0);
   } finally { f.done(); }
 });
 

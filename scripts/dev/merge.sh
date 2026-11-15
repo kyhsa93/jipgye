@@ -7,7 +7,8 @@
 #
 # 하는 일, 순서대로(하나라도 어기면 멈추고 종료 1 - 병합하지 않는다):
 #   1. 입력 점검: PR 번호·40자 SHA·제목이 있어야 한다. 제목·본문·메모에 Co-Authored-By / Claude-Session / "Generated with ... Claude" 줄이 있으면 거부한다(이 도구는 그런 줄을 쓰지 않는다).
-#   2. 부류 판정: `gh pr diff --name-only` 의 파일 경로로 정한다. 데이터·워크플로·수집기 경로를 하나라도 건드리면 「데이터 부류」, 아니면 「안전 부류」(틀·CSS·시험·문서).
+#   2. 부류 판정: `gh api --paginate repos/<저장소>/pulls/<pr>/files` 의 파일 경로(이름 바뀐 파일은 옛 경로도)로 정한다. 데이터·워크플로·수집기 경로를 하나라도 건드리면 「데이터 부류」, 아니면 「안전 부류」(틀·CSS·시험·문서).
+#      목록의 파일 수가 `gh pr view --json changedFiles` 와 다르면 중단한다(이 엔드포인트는 3000파일에서 잘린다 - 다 못 읽은 목록으로 안전 부류를 내지 않는다).
 #      데이터 부류 경로: scripts/fetch-*·scripts/build-*·scripts/news-context*·scripts/push-docs.sh·scripts/update-all.mjs·.github/workflows/·.gitignore·package.json·docs/data/·raw/
 #   3. 검사 대기: 검사 이름 `test` 와 `render` 가 둘 다 SUCCESS 가 될 때까지 기다린다. **어떤 검사든 FAILURE(ERROR·TIMED_OUT 포함)면 즉시 중단**한다. 기다리는 동안에도 head 가 기대한 SHA 에서 움직이면 즉시 중단한다.
 #   4. 진행 중 실행 대기(busy 규칙): **데이터 부류에만** 적용한다 - PR 이벤트가 아닌 실행(수집·요약·배포)이 모두 끝나길 기다린다. 안전 부류는 기다리지 않는다(무관한 Daily·Summarize 를 기다리는 낭비 제거).
@@ -78,11 +79,19 @@ say() { echo "merge: $*"; }
 
 # ── 부류 ────────────────────────────────────────────────────────────────────────────
 DATA_RE='^(scripts/(fetch-[^/]*|build-[^/]*|news-context[^/]*|push-docs\.sh|update-all\.mjs)|\.github/workflows/.*|\.gitignore|package\.json|docs/data/.*|raw/.*)$'
-FILES="$(gh pr diff "$PR" -R "$REPO" --name-only 2>&1)" || die "PR #$PR 의 파일 목록을 못 읽었다: $(printf '%s' "$FILES" | tail -1)"
+# `gh pr diff --name-only` 는 diff 미디어 타입으로 받아 300파일을 넘으면 406(too_large)으로 거절된다(#887, PR #885 329파일).
+# 그래서 파일 API 를 페이지마다 읽는다. 이름 바뀐 파일의 옛 경로(previous_filename)도 판정에 넣는다 - raw/ 에서 나가는 이동도 데이터 부류다.
+# 줄마다 꼬리표를 붙인다(F 새 경로, P 옛 경로): 옛 경로 줄을 빼고 세야 changedFiles 와 맞는다(PR #496 이름 변경 1건 - 7줄, changedFiles 6).
+LISTED="$(gh api --paginate "repos/$REPO/pulls/$PR/files?per_page=100" --jq '.[] | "F " + .filename, (.previous_filename // empty | "P " + .)' 2>&1)" \
+  || die "PR #$PR 의 파일 목록을 못 읽었다: $(printf '%s' "$LISTED" | tail -1)"
+FILES="$(printf '%s\n' "$LISTED" | sed -n 's/^[FP] //p')"
 [ -n "$FILES" ] || die "PR #$PR 의 파일 목록이 비었다."
+NLISTED="$(printf '%s\n' "$LISTED" | grep -c '^F ')"
+CHANGED="$(gh pr view "$PR" -R "$REPO" --json changedFiles --jq .changedFiles 2>&1)" || die "PR #$PR 의 changedFiles 를 못 읽었다: $(printf '%s' "$CHANGED" | tail -1)"
+[ "$NLISTED" = "$CHANGED" ] || die "PR #$PR 파일 목록 $NLISTED개가 changedFiles $CHANGED개와 다르다(목록이 잘렸을 수 있다) - 부류를 정할 수 없어 병합하지 않는다."
 DATA_HITS="$(printf '%s\n' "$FILES" | grep -E "$DATA_RE" | head -3 | tr '\n' ' ')"
 if [ -n "$DATA_HITS" ]; then CLASS=data; else CLASS=safe; fi
-say "PR #$PR 부류=$([ $CLASS = data ] && echo "데이터(busy 규칙 적용; 닿은 경로: ${DATA_HITS% })" || echo "안전(busy 규칙 생략)") 파일 $(printf '%s\n' "$FILES" | wc -l | tr -d ' ')개"
+say "PR #$PR 부류=$([ $CLASS = data ] && echo "데이터(busy 규칙 적용; 닿은 경로: ${DATA_HITS% })" || echo "안전(busy 규칙 생략)") 파일 ${NLISTED}개"
 
 # ── 검사 상태 ────────────────────────────────────────────────────────────────────────
 # 한 번 읽어 「<판정> <head>」 한 줄로 낸다. 판정: OK(test·render 둘 다 SUCCESS) | PENDING | FAIL:<이름들>(FAILURE·ERROR·TIMED_OUT·STARTUP_FAILURE 가 하나라도).
