@@ -33,7 +33,7 @@ test("한·영 두 절이 있고 항목 수가 같으며 10건 이하다", async
   const en = items(sectionOf(html, "corrections-en").text);
   assert.ok(ko.length >= 1 && ko.length <= 10, `한국어 ${ko.length}건`);
   assert.equal(en.length, ko.length);
-  assert.equal(ko.length, 9, "아홉 건(#28·#183·#65·#6·#29·#229·#862 1단계 PR·#821+#843·#862 2단계 PR)");
+  assert.equal(ko.length, 10, "열 건(#28·#183·#65·#6·#29·#229·#862 1단계 PR·#821+#843·#862 2단계 PR·#781)");
 });
 
 // #229: 예금자보호 한도 정정 항목. 항목 수·날짜 형식·근거 링크·문장 수·금지어는 위의 일반 시험이 모든 항목에 건다.
@@ -50,8 +50,8 @@ test("예금자보호 한도 정정 항목(#229)이 한·영에 있고 서두 �
   for (const w of ["deposit-protection", "KRW 100 million per financial institution", "rate figures and counts are unchanged"]) {
     assert.ok(enFirst.includes(w), `영어 항목에 ${w}`);
   }
-  assert.match(ko.slice(0, ko.indexOf("<ul")), /아홉 건/);
-  assert.match(en.slice(0, en.indexOf("<ul")), /nine corrections/);
+  assert.match(ko.slice(0, ko.indexOf("<ul")), /열 건/);
+  assert.match(en.slice(0, en.indexOf("<ul")), /ten corrections/);
 });
 
 // #862 2단계(PR #885): 맨 앞 항목이다. 세는 방법을 고친 정정이라 11-05 항목(표시 쪽 조치)을 고쳐 쓰지 않고 새 항목으로 둔다(pm 11-15).

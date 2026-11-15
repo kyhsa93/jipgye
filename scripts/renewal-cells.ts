@@ -59,9 +59,13 @@ export function renewalPair(item, same = undefined) {
   };
 }
 
-/** complex-ratio.ts 의 신규 전세 규칙(갱신 아님·월세 0·보증금 있음)과 같은 줄. 금액은 칸 중앙값으로만 나간다. */
+/**
+ * conversion·rent-flow·renewal-facts 와 같은 「신규」만(#781). complex-ratio·summarizeRent 는 미표기 포함 — #910에서 정한다.
+ * 계약구분이 비어 있는 줄은 같은 칸에서 신규 중앙값보다 −6.3~−9.0%, 갱신 중앙값보다 +1.0~+1.9%라(#781 data-analyst, 세 창)
+ * 「신규」로 세면 갱신 대 새로 구하기 차이가 줄어 보인다. 나머지 조건(월세 0·보증금 있음)은 그대로. 금액은 칸 중앙값으로만 나간다.
+ */
 export function newJeonse(item, same = undefined) {
-  if (String(item?.contractType ?? "").trim() === "갱신") return null;
+  if (String(item?.contractType ?? "").trim() !== "신규") return null;
   const apt = String(item?.aptNm ?? "").trim();
   const area = Number(item?.excluUseAr);
   const deposit = number(item?.deposit);

@@ -7,7 +7,8 @@ import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promis
 import { gzipSync } from "node:zlib";
 import os from "node:os";
 import path from "node:path";
-import { BANDS, THRESHOLDS, bandOf, countLines, districtCells, packLines, renewalPair } from "../scripts/renewal-cells.ts";
+import { BANDS, THRESHOLDS, bandOf, countLines, districtCells, newJeonse, packLines, renewalPair } from "../scripts/renewal-cells.ts";
+import { renewalGap } from "../scripts/renewal-facts.ts";
 import {
   ALLOWED_FILES,
   MAX_FILE_BYTES,
@@ -119,6 +120,52 @@ test("신규 쪽은 같은 칸 면적의 신규 전세 건수와 중앙값(3건 
   assert.deepEqual(two.slice(10), [2, null], "두 건으로 중앙값을 냈다");
   const three = districtCells(renewals, [fresh("60,000"), fresh("62,000"), fresh("70,000"), fresh("99,000", { excluUseAr: 59.9 }), fresh("99,000", { monthlyRent: 10 }), fresh("99,000", { contractType: "갱신" })]).cells["가상단지"]["84.97"];
   assert.deepEqual(three.slice(10), [3, 62000], "다른 평형·반전세·갱신이 신규에 섞였다");
+});
+
+// #781: 계약구분이 비어 있는 신고는 같은 칸에서 갱신 수준 값이라(data-analyst 계수) 「신규」로 세지 않는다.
+const CONTRACT_TYPES = [
+  ["신규", true],
+  [" 신규 ", true],
+  ["갱신", false],
+  ["", false],
+  ["   ", false],
+  [undefined, false],
+  [null, false],
+  ["기타", false],
+];
+const freshAs = (contractType, deposit) => lease({ contractType, deposit, preDeposit: "", useRRRight: "" });
+
+test("신규 전세는 계약구분이 「신규」인 줄만 - 빈 값·공백·undefined·null·「기타」·「갱신」은 뺀다 (#781)", () => {
+  for (const [type, want] of CONTRACT_TYPES) {
+    const deal = newJeonse(freshAs(type, "60,000"));
+    assert.equal(deal !== null, want, `계약구분 ${JSON.stringify(type)}`);
+    if (want) assert.deepEqual(deal, { apt: "가상단지", area: 84.97, deposit: 60000 });
+  }
+  // 나머지 조건은 그대로: 반전세·보증금 없음·단지명 없음·면적 없음은 「신규」여도 뺀다.
+  assert.equal(newJeonse(lease({ contractType: "신규", monthlyRent: 10 })), null, "반전세");
+  assert.equal(newJeonse(lease({ contractType: "신규", deposit: "0" })), null, "보증금 없음");
+  assert.equal(newJeonse(lease({ contractType: "신규", aptNm: " " })), null, "단지명 없음");
+  assert.equal(newJeonse(lease({ contractType: "신규", excluUseAr: 0 })), null, "면적 없음");
+});
+
+test("칸의 신규 중앙값은 renewal-facts 의 renewalGap 이 「신규」로 고르는 줄과 같은 줄에서 나온다 (#781)", () => {
+  // 갱신 세 건(49,600 - 종전 48,000 이라 0~4.5% 구간)과 계약구분 여덟 가지 신규 후보. 「신규」 쪽 세 건은 60,000·62,000·70,000(중앙값 62,000),
+  // 나머지 다섯 건은 40,000 이라 하나라도 섞이면 중앙값이 내려간다.
+  const rows = [
+    ...many(3, { deposit: "49,600" }),
+    ...CONTRACT_TYPES.map(([type, want]) => freshAs(type, want ? (type === "신규" ? "60,000" : "62,000") : "40,000")),
+    freshAs("신규", "70,000"),
+  ];
+  const cell = districtCells(rows, rows).cells["가상단지"]["84.97"];
+  assert.deepEqual(cell.slice(10), [3, 62000], "「신규」가 아닌 줄이 신규 중앙값에 섞였다");
+  // 같은 줄 집합을 renewalGap 에 넣고, 갱신 보증금과 격차 중앙값에서 renewal-facts 가 쓴 신규 중앙값(asking)을 거꾸로 낸다.
+  // 2026-09 는 2026-11-15 에 신고 기한이 지난 달이다(renewal-facts isClosedMonth).
+  // 「갱신」 후보 한 줄(40,000, −35.5%)도 renewalGap 에선 갱신으로 견줘져 넷이고, 넷의 중앙값은 그대로 −20.0% 다.
+  const gap = renewalGap(rows, new Date("2026-11-15T00:00:00Z"));
+  assert.equal(gap.gapMatched, 4);
+  assert.equal(gap.gapMedian, -20);
+  const asking = Math.round(49600 / (1 + gap.gapMedian / 100));
+  assert.equal(asking, cell[11], `renewal-facts 의 신규 중앙값 ${asking} ≠ 재계약 확인기 칸 ${cell[11]}`);
 });
 
 test("파일 모양: updatedAt·window·min(기존 문턱 둘)·cells·fallback 만, 건별 값·보증금이 없다", () => {
