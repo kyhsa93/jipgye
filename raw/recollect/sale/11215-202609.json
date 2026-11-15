@@ -1,0 +1,4 @@
+{"kind":"sale","district":"11215","yearMonth":"202609","observedAt":"2026-11-15T11:35:08.653Z","count":48,"totalCount":48,"base":{"observedAt":"2026-11-03T03:55:31.883Z","count":48},"changed":[
+{"from":"d32bbe150d70","item":{"aptDong":"","aptNm":"솔렌시아","buildYear":2015,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"32,000","dealDay":19,"dealMonth":9,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 광진구","excluUseAr":31.29,"floor":9,"jibun":"251-177","landLeaseholdGbn":"N","rgstDate":"26.11.02","sggCd":11215,"slerGbn":"개인","umdNm":"구의동"}},
+{"from":"fcff91add9e4","item":{"aptDong":101,"aptNm":"한라아파트","buildYear":1996,"buyerGbn":"개인","cdealDay":"","cdealType":"","dealAmount":"162,500","dealDay":6,"dealMonth":9,"dealYear":2026,"dealingGbn":"중개거래","estateAgentSggNm":"서울 광진구","excluUseAr":84.6,"floor":10,"jibun":762,"landLeaseholdGbn":"N","rgstDate":"26.11.02","sggCd":11215,"slerGbn":"개인","umdNm":"자양동"}}
+],"appeared":[],"gone":[]}

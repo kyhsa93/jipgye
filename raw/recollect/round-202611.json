@@ -1,0 +1,2827 @@
+{
+ "round": "202611",
+ "observedAt": "2026-11-15T11:35:08.653Z",
+ "months": [
+  "202604",
+  "202605",
+  "202606",
+  "202607",
+  "202608",
+  "202609"
+ ],
+ "first": true,
+ "planned": 150,
+ "cap": 160,
+ "calls": 150,
+ "complete": true,
+ "runs": [
+  {
+   "observedAt": "2026-11-15T11:35:08.653Z",
+   "calls": 150,
+   "slots": 150
+  }
+ ],
+ "approvedCalls": 160,
+ "ownerNotice": "https://github.com/kyhsa93/jipgye/issues/861#issuecomment-6893703906",
+ "identitySkip": [
+  "rgstDate",
+  "cdealType",
+  "cdealDay",
+  "aptDong"
+ ],
+ "table": [
+  {
+   "month": "202604",
+   "slots": 25,
+   "applied": 25,
+   "rejected": 0,
+   "missing": 0,
+   "rows": 8901,
+   "market": 8332,
+   "valueOut": 10,
+   "valueIn": 21,
+   "changed": 1498,
+   "appeared": 33,
+   "gone": 9,
+   "gonePublic": 9
+  },
+  {
+   "month": "202605",
+   "slots": 25,
+   "applied": 25,
+   "rejected": 0,
+   "missing": 0,
+   "rows": 9167,
+   "market": 8300,
+   "valueOut": 28,
+   "valueIn": 69,
+   "changed": 4846,
+   "appeared": 134,
+   "gone": 18,
+   "gonePublic": 16
+  },
+  {
+   "month": "202606",
+   "slots": 25,
+   "applied": 25,
+   "rejected": 0,
+   "missing": 0,
+   "rows": 5384,
+   "market": 5087,
+   "valueOut": 14,
+   "valueIn": 76,
+   "changed": 4231,
+   "appeared": 128,
+   "gone": 21,
+   "gonePublic": 15
+  },
+  {
+   "month": "202607",
+   "slots": 25,
+   "applied": 25,
+   "rejected": 0,
+   "missing": 0,
+   "rows": 5905,
+   "market": 5300,
+   "valueOut": 20,
+   "valueIn": 93,
+   "changed": 4520,
+   "appeared": 141,
+   "gone": 3,
+   "gonePublic": 2
+  },
+  {
+   "month": "202608",
+   "slots": 25,
+   "applied": 25,
+   "rejected": 0,
+   "missing": 0,
+   "rows": 3622,
+   "market": 3371,
+   "valueOut": 14,
+   "valueIn": 63,
+   "changed": 1792,
+   "appeared": 132,
+   "gone": 4,
+   "gonePublic": 2
+  },
+  {
+   "month": "202609",
+   "slots": 25,
+   "applied": 25,
+   "rejected": 0,
+   "missing": 0,
+   "rows": 3507,
+   "market": 3030,
+   "valueOut": 8,
+   "valueIn": 26,
+   "changed": 335,
+   "appeared": 35,
+   "gone": 9,
+   "gonePublic": 8
+  }
+ ],
+ "outOfWindow": [],
+ "slots": {
+  "11110-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 89,
+   "received": 89,
+   "identity": "53b61c5974226b09",
+   "diff": {
+    "rows": 89,
+    "received": 89,
+    "market": 82,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 14,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11140-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 128,
+   "received": 128,
+   "identity": "e5fed05375e9b672",
+   "diff": {
+    "rows": 128,
+    "received": 128,
+    "market": 117,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 18,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11170-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 143,
+   "received": 144,
+   "identity": "43507b642c7a4f64",
+   "diff": {
+    "rows": 143,
+    "received": 144,
+    "market": 138,
+    "valueOut": 2,
+    "valueIn": 1,
+    "changed": 30,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11200-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 225,
+   "received": 226,
+   "identity": "a31422a3c435ec7a",
+   "diff": {
+    "rows": 225,
+    "received": 226,
+    "market": 213,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 60,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11215-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 132,
+   "received": 133,
+   "identity": "df1365493be1cf08",
+   "diff": {
+    "rows": 132,
+    "received": 133,
+    "market": 114,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 26,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11230-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 389,
+   "received": 392,
+   "identity": "3ed27aee8d977114",
+   "diff": {
+    "rows": 389,
+    "received": 392,
+    "market": 354,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 73,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11260-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 395,
+   "received": 395,
+   "identity": "0e4fd4a5d73ca9b3",
+   "diff": {
+    "rows": 395,
+    "received": 395,
+    "market": 367,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 51,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11290-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 500,
+   "received": 501,
+   "identity": "59f2a4361735285b",
+   "diff": {
+    "rows": 500,
+    "received": 501,
+    "market": 478,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 88,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11305-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 205,
+   "received": 205,
+   "identity": "b320f2d32a402e95",
+   "diff": {
+    "rows": 205,
+    "received": 205,
+    "market": 192,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 28,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11320-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 401,
+   "received": 401,
+   "identity": "9a57c3cca6796870",
+   "diff": {
+    "rows": 401,
+    "received": 401,
+    "market": 378,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 51,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11350-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 1038,
+   "received": 1042,
+   "identity": "b2856197159f18e1",
+   "diff": {
+    "rows": 1038,
+    "received": 1042,
+    "market": 993,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 138,
+    "appeared": 4,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11380-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 348,
+   "received": 348,
+   "identity": "b5556059e9245291",
+   "diff": {
+    "rows": 348,
+    "received": 348,
+    "market": 318,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 68,
+    "appeared": 1,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11410-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 328,
+   "received": 328,
+   "identity": "045ed618f4e7bbf4",
+   "diff": {
+    "rows": 328,
+    "received": 328,
+    "market": 304,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 65,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11440-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 231,
+   "received": 232,
+   "identity": "0ee24a7eebafc4d5",
+   "diff": {
+    "rows": 231,
+    "received": 232,
+    "market": 216,
+    "valueOut": 5,
+    "valueIn": 6,
+    "changed": 62,
+    "appeared": 6,
+    "gone": 5,
+    "gonePublic": 5
+   }
+  },
+  "11470-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 281,
+   "received": 281,
+   "identity": "555357cd9b21074b",
+   "diff": {
+    "rows": 281,
+    "received": 281,
+    "market": 260,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 52,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11500-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 617,
+   "received": 617,
+   "identity": "c1a22ffdc280e170",
+   "diff": {
+    "rows": 617,
+    "received": 617,
+    "market": 568,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 86,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11530-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 482,
+   "received": 482,
+   "identity": "7d2231c8be97c70e",
+   "diff": {
+    "rows": 482,
+    "received": 482,
+    "market": 461,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 59,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11545-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 159,
+   "received": 159,
+   "identity": "07d0724e71f5a1ba",
+   "diff": {
+    "rows": 159,
+    "received": 159,
+    "market": 149,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 18,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11560-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 404,
+   "received": 404,
+   "identity": "ccb2ed52f4909634",
+   "diff": {
+    "rows": 404,
+    "received": 404,
+    "market": 380,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 71,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11590-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 317,
+   "received": 318,
+   "identity": "389366cd6ff3f6fc",
+   "diff": {
+    "rows": 317,
+    "received": 318,
+    "market": 301,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 77,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11620-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 305,
+   "received": 306,
+   "identity": "de63c87122554bd7",
+   "diff": {
+    "rows": 305,
+    "received": 306,
+    "market": 273,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 42,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11650-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 308,
+   "received": 309,
+   "identity": "d8118d302eee129c",
+   "diff": {
+    "rows": 308,
+    "received": 309,
+    "market": 289,
+    "valueOut": 2,
+    "valueIn": 1,
+    "changed": 45,
+    "appeared": 2,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11680-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 427,
+   "received": 429,
+   "identity": "77883cb21707912d",
+   "diff": {
+    "rows": 427,
+    "received": 429,
+    "market": 388,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 66,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11710-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 622,
+   "received": 624,
+   "identity": "fda6e638b1b155c6",
+   "diff": {
+    "rows": 622,
+    "received": 624,
+    "market": 585,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 92,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11740-202604": {
+   "status": "applied",
+   "reason": null,
+   "saved": 427,
+   "received": 432,
+   "identity": "780c3c0926502574",
+   "diff": {
+    "rows": 427,
+    "received": 432,
+    "market": 414,
+    "valueOut": 0,
+    "valueIn": 4,
+    "changed": 118,
+    "appeared": 7,
+    "gone": 2,
+    "gonePublic": 2
+   }
+  },
+  "11110-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 88,
+   "received": 89,
+   "identity": "53570a249d138416",
+   "diff": {
+    "rows": 88,
+    "received": 89,
+    "market": 59,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 37,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11140-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 129,
+   "received": 132,
+   "identity": "777c711bfbda7c17",
+   "diff": {
+    "rows": 129,
+    "received": 132,
+    "market": 118,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 61,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11170-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 163,
+   "received": 165,
+   "identity": "fc530c122be70bf4",
+   "diff": {
+    "rows": 163,
+    "received": 165,
+    "market": 158,
+    "valueOut": 1,
+    "valueIn": 3,
+    "changed": 82,
+    "appeared": 3,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11200-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 224,
+   "received": 231,
+   "identity": "c592e99dfa72a26c",
+   "diff": {
+    "rows": 224,
+    "received": 231,
+    "market": 218,
+    "valueOut": 1,
+    "valueIn": 4,
+    "changed": 159,
+    "appeared": 7,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11215-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 202,
+   "received": 204,
+   "identity": "2659cbda41f6bfdc",
+   "diff": {
+    "rows": 202,
+    "received": 204,
+    "market": 139,
+    "valueOut": 1,
+    "valueIn": 0,
+    "changed": 87,
+    "appeared": 3,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11230-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 352,
+   "received": 361,
+   "identity": "10272db98a35b138",
+   "diff": {
+    "rows": 352,
+    "received": 361,
+    "market": 330,
+    "valueOut": 1,
+    "valueIn": 8,
+    "changed": 183,
+    "appeared": 9,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11260-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 321,
+   "received": 323,
+   "identity": "57dc0f6c3f2a75c4",
+   "diff": {
+    "rows": 321,
+    "received": 323,
+    "market": 300,
+    "valueOut": 1,
+    "valueIn": 0,
+    "changed": 151,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11290-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 499,
+   "received": 502,
+   "identity": "7d9cc510924df41a",
+   "diff": {
+    "rows": 499,
+    "received": 502,
+    "market": 475,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 274,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11305-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 195,
+   "received": 196,
+   "identity": "f089dee49ecc4936",
+   "diff": {
+    "rows": 195,
+    "received": 196,
+    "market": 190,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 105,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11320-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 339,
+   "received": 339,
+   "identity": "2406730c590f895e",
+   "diff": {
+    "rows": 339,
+    "received": 339,
+    "market": 322,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 180,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11350-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 897,
+   "received": 906,
+   "identity": "2229850f794b256a",
+   "diff": {
+    "rows": 897,
+    "received": 906,
+    "market": 851,
+    "valueOut": 3,
+    "valueIn": 4,
+    "changed": 420,
+    "appeared": 9,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11380-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 388,
+   "received": 391,
+   "identity": "f0f6b9b18c0ca858",
+   "diff": {
+    "rows": 388,
+    "received": 391,
+    "market": 361,
+    "valueOut": 1,
+    "valueIn": 2,
+    "changed": 220,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11410-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 311,
+   "received": 314,
+   "identity": "758da17055e2ee4b",
+   "diff": {
+    "rows": 311,
+    "received": 314,
+    "market": 289,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 180,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11440-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 277,
+   "received": 284,
+   "identity": "52c86da267d0d8a5",
+   "diff": {
+    "rows": 277,
+    "received": 284,
+    "market": 264,
+    "valueOut": 6,
+    "valueIn": 7,
+    "changed": 151,
+    "appeared": 11,
+    "gone": 4,
+    "gonePublic": 4
+   }
+  },
+  "11470-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 305,
+   "received": 307,
+   "identity": "c352ee9c73b1f00a",
+   "diff": {
+    "rows": 305,
+    "received": 307,
+    "market": 277,
+    "valueOut": 1,
+    "valueIn": 0,
+    "changed": 132,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11500-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 585,
+   "received": 590,
+   "identity": "22f9d3dc9f175040",
+   "diff": {
+    "rows": 585,
+    "received": 590,
+    "market": 544,
+    "valueOut": 3,
+    "valueIn": 2,
+    "changed": 290,
+    "appeared": 6,
+    "gone": 1,
+    "gonePublic": 0
+   }
+  },
+  "11530-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 697,
+   "received": 701,
+   "identity": "77dc86bc4c1e3084",
+   "diff": {
+    "rows": 697,
+    "received": 701,
+    "market": 464,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 250,
+    "appeared": 4,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11545-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 172,
+   "received": 174,
+   "identity": "f6a0a989da90e649",
+   "diff": {
+    "rows": 172,
+    "received": 174,
+    "market": 156,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 80,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11560-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 319,
+   "received": 323,
+   "identity": "26b1f32481579925",
+   "diff": {
+    "rows": 319,
+    "received": 323,
+    "market": 298,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 184,
+    "appeared": 4,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11590-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 354,
+   "received": 358,
+   "identity": "0989ce66c730ce10",
+   "diff": {
+    "rows": 354,
+    "received": 358,
+    "market": 312,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 212,
+    "appeared": 5,
+    "gone": 1,
+    "gonePublic": 0
+   }
+  },
+  "11620-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 376,
+   "received": 379,
+   "identity": "277de049d7f8b108",
+   "diff": {
+    "rows": 376,
+    "received": 379,
+    "market": 305,
+    "valueOut": 2,
+    "valueIn": 3,
+    "changed": 192,
+    "appeared": 4,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11650-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 399,
+   "received": 407,
+   "identity": "f52cded7072013bd",
+   "diff": {
+    "rows": 399,
+    "received": 407,
+    "market": 374,
+    "valueOut": 2,
+    "valueIn": 7,
+    "changed": 258,
+    "appeared": 10,
+    "gone": 2,
+    "gonePublic": 2
+   }
+  },
+  "11680-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 462,
+   "received": 474,
+   "identity": "23b402ccba4a9252",
+   "diff": {
+    "rows": 462,
+    "received": 474,
+    "market": 429,
+    "valueOut": 3,
+    "valueIn": 9,
+    "changed": 258,
+    "appeared": 12,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11710-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 612,
+   "received": 619,
+   "identity": "336767045201dd9f",
+   "diff": {
+    "rows": 612,
+    "received": 619,
+    "market": 584,
+    "valueOut": 1,
+    "valueIn": 4,
+    "changed": 373,
+    "appeared": 7,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11740-202605": {
+   "status": "applied",
+   "reason": null,
+   "saved": 501,
+   "received": 514,
+   "identity": "808512379cb3bd9d",
+   "diff": {
+    "rows": 501,
+    "received": 514,
+    "market": 483,
+    "valueOut": 0,
+    "valueIn": 7,
+    "changed": 327,
+    "appeared": 20,
+    "gone": 7,
+    "gonePublic": 7
+   }
+  },
+  "11110-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 33,
+   "received": 34,
+   "identity": "7d1eb06c172977a6",
+   "diff": {
+    "rows": 33,
+    "received": 34,
+    "market": 29,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 26,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11140-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 60,
+   "received": 60,
+   "identity": "cafe503b200add46",
+   "diff": {
+    "rows": 60,
+    "received": 60,
+    "market": 57,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 39,
+    "appeared": 1,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11170-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 65,
+   "received": 68,
+   "identity": "3b7875e4fa6bf1ea",
+   "diff": {
+    "rows": 65,
+    "received": 68,
+    "market": 61,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 50,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11200-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 131,
+   "received": 134,
+   "identity": "de3af9f8b50e3ac1",
+   "diff": {
+    "rows": 131,
+    "received": 134,
+    "market": 126,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 107,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11215-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 75,
+   "received": 78,
+   "identity": "7aeeeacec6bb2124",
+   "diff": {
+    "rows": 75,
+    "received": 78,
+    "market": 70,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 55,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11230-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 244,
+   "received": 251,
+   "identity": "9416f6dd7a906e7d",
+   "diff": {
+    "rows": 244,
+    "received": 251,
+    "market": 230,
+    "valueOut": 0,
+    "valueIn": 5,
+    "changed": 183,
+    "appeared": 10,
+    "gone": 3,
+    "gonePublic": 0
+   }
+  },
+  "11260-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 216,
+   "received": 217,
+   "identity": "476963d018c1f84a",
+   "diff": {
+    "rows": 216,
+    "received": 217,
+    "market": 206,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 175,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11290-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 321,
+   "received": 322,
+   "identity": "7aa275886268ef88",
+   "diff": {
+    "rows": 321,
+    "received": 322,
+    "market": 312,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 271,
+    "appeared": 2,
+    "gone": 1,
+    "gonePublic": 0
+   }
+  },
+  "11305-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 107,
+   "received": 109,
+   "identity": "8c375247a9bc849e",
+   "diff": {
+    "rows": 107,
+    "received": 109,
+    "market": 103,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 86,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11320-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 285,
+   "received": 288,
+   "identity": "eb61b10ad44766e2",
+   "diff": {
+    "rows": 285,
+    "received": 288,
+    "market": 251,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 204,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11350-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 685,
+   "received": 693,
+   "identity": "889503b202571eaa",
+   "diff": {
+    "rows": 685,
+    "received": 693,
+    "market": 665,
+    "valueOut": 0,
+    "valueIn": 5,
+    "changed": 531,
+    "appeared": 8,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11380-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 262,
+   "received": 266,
+   "identity": "5b081bc788a4f623",
+   "diff": {
+    "rows": 262,
+    "received": 266,
+    "market": 247,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 202,
+    "appeared": 4,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11410-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 220,
+   "received": 221,
+   "identity": "4dd3731ad5abb05a",
+   "diff": {
+    "rows": 220,
+    "received": 221,
+    "market": 212,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 186,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11440-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 155,
+   "received": 158,
+   "identity": "391b05703199478e",
+   "diff": {
+    "rows": 155,
+    "received": 158,
+    "market": 143,
+    "valueOut": 3,
+    "valueIn": 4,
+    "changed": 119,
+    "appeared": 5,
+    "gone": 2,
+    "gonePublic": 2
+   }
+  },
+  "11470-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 216,
+   "received": 216,
+   "identity": "1292babb1c39db74",
+   "diff": {
+    "rows": 216,
+    "received": 216,
+    "market": 204,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 163,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11500-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 379,
+   "received": 388,
+   "identity": "0bb66268313cbf59",
+   "diff": {
+    "rows": 379,
+    "received": 388,
+    "market": 343,
+    "valueOut": 0,
+    "valueIn": 3,
+    "changed": 301,
+    "appeared": 9,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11530-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 301,
+   "received": 302,
+   "identity": "4558008ad3a8568f",
+   "diff": {
+    "rows": 301,
+    "received": 302,
+    "market": 290,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 240,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11545-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 103,
+   "received": 105,
+   "identity": "1aa23991525bdb9c",
+   "diff": {
+    "rows": 103,
+    "received": 105,
+    "market": 101,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 72,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11560-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 261,
+   "received": 263,
+   "identity": "25b86bb5e2c3b5c9",
+   "diff": {
+    "rows": 261,
+    "received": 263,
+    "market": 248,
+    "valueOut": 1,
+    "valueIn": 3,
+    "changed": 212,
+    "appeared": 3,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11590-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 154,
+   "received": 157,
+   "identity": "4632efa63942fa9f",
+   "diff": {
+    "rows": 154,
+    "received": 157,
+    "market": 147,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 134,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11620-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 166,
+   "received": 168,
+   "identity": "250c427abdf51d2d",
+   "diff": {
+    "rows": 166,
+    "received": 168,
+    "market": 155,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 126,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11650-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 185,
+   "received": 202,
+   "identity": "e770a0bb31e159be",
+   "diff": {
+    "rows": 185,
+    "received": 202,
+    "market": 167,
+    "valueOut": 3,
+    "valueIn": 15,
+    "changed": 140,
+    "appeared": 18,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11680-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 223,
+   "received": 231,
+   "identity": "19cd4c64bf24a1c8",
+   "diff": {
+    "rows": 223,
+    "received": 231,
+    "market": 205,
+    "valueOut": 3,
+    "valueIn": 6,
+    "changed": 175,
+    "appeared": 8,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11710-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 275,
+   "received": 289,
+   "identity": "93cc77d772ddfb6e",
+   "diff": {
+    "rows": 275,
+    "received": 289,
+    "market": 261,
+    "valueOut": 1,
+    "valueIn": 11,
+    "changed": 224,
+    "appeared": 14,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11740-202606": {
+   "status": "applied",
+   "reason": null,
+   "saved": 262,
+   "received": 271,
+   "identity": "8b1aabc12afaa800",
+   "diff": {
+    "rows": 262,
+    "received": 271,
+    "market": 254,
+    "valueOut": 1,
+    "valueIn": 9,
+    "changed": 210,
+    "appeared": 21,
+    "gone": 12,
+    "gonePublic": 10
+   }
+  },
+  "11110-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 42,
+   "received": 42,
+   "identity": "830275083ae1caac",
+   "diff": {
+    "rows": 42,
+    "received": 42,
+    "market": 39,
+    "valueOut": 2,
+    "valueIn": 0,
+    "changed": 32,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11140-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 80,
+   "received": 82,
+   "identity": "a5411b8dab559014",
+   "diff": {
+    "rows": 80,
+    "received": 82,
+    "market": 73,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 55,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11170-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 70,
+   "received": 71,
+   "identity": "15d29a1ca0c7e000",
+   "diff": {
+    "rows": 70,
+    "received": 71,
+    "market": 67,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 58,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11200-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 101,
+   "received": 105,
+   "identity": "ef36da922e7e8e0c",
+   "diff": {
+    "rows": 101,
+    "received": 105,
+    "market": 96,
+    "valueOut": 2,
+    "valueIn": 1,
+    "changed": 89,
+    "appeared": 4,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11215-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 78,
+   "received": 79,
+   "identity": "c1ba8c30dec9ae72",
+   "diff": {
+    "rows": 78,
+    "received": 79,
+    "market": 71,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 58,
+    "appeared": 2,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11230-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 227,
+   "received": 232,
+   "identity": "f4b7dec51ea13e81",
+   "diff": {
+    "rows": 227,
+    "received": 232,
+    "market": 220,
+    "valueOut": 2,
+    "valueIn": 2,
+    "changed": 183,
+    "appeared": 5,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11260-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 506,
+   "received": 508,
+   "identity": "df9522b7ce91ec82",
+   "diff": {
+    "rows": 506,
+    "received": 508,
+    "market": 203,
+    "valueOut": 1,
+    "valueIn": 0,
+    "changed": 174,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11290-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 323,
+   "received": 330,
+   "identity": "a22c4f92a349b77f",
+   "diff": {
+    "rows": 323,
+    "received": 330,
+    "market": 317,
+    "valueOut": 1,
+    "valueIn": 5,
+    "changed": 268,
+    "appeared": 7,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11305-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 131,
+   "received": 132,
+   "identity": "afc00704c7fdd888",
+   "diff": {
+    "rows": 131,
+    "received": 132,
+    "market": 125,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 109,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11320-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 272,
+   "received": 274,
+   "identity": "29635e313ab35c02",
+   "diff": {
+    "rows": 272,
+    "received": 274,
+    "market": 264,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 231,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11350-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 724,
+   "received": 748,
+   "identity": "9b9b6c9115b30ac5",
+   "diff": {
+    "rows": 724,
+    "received": 748,
+    "market": 710,
+    "valueOut": 2,
+    "valueIn": 21,
+    "changed": 627,
+    "appeared": 24,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11380-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 289,
+   "received": 291,
+   "identity": "8aac9743334ffa30",
+   "diff": {
+    "rows": 289,
+    "received": 291,
+    "market": 277,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 240,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11410-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 236,
+   "received": 243,
+   "identity": "e0dd59fb4e724e06",
+   "diff": {
+    "rows": 236,
+    "received": 243,
+    "market": 231,
+    "valueOut": 0,
+    "valueIn": 3,
+    "changed": 197,
+    "appeared": 7,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11440-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 144,
+   "received": 150,
+   "identity": "8adae290df31bc89",
+   "diff": {
+    "rows": 144,
+    "received": 150,
+    "market": 134,
+    "valueOut": 0,
+    "valueIn": 5,
+    "changed": 118,
+    "appeared": 6,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11470-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 232,
+   "received": 233,
+   "identity": "225fc38973cc4842",
+   "diff": {
+    "rows": 232,
+    "received": 233,
+    "market": 219,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 181,
+    "appeared": 2,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11500-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 395,
+   "received": 404,
+   "identity": "0cbf09bab3e212fc",
+   "diff": {
+    "rows": 395,
+    "received": 404,
+    "market": 369,
+    "valueOut": 0,
+    "valueIn": 5,
+    "changed": 319,
+    "appeared": 9,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11530-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 363,
+   "received": 367,
+   "identity": "fcd0693a6acef8e3",
+   "diff": {
+    "rows": 363,
+    "received": 367,
+    "market": 355,
+    "valueOut": 1,
+    "valueIn": 0,
+    "changed": 325,
+    "appeared": 4,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11545-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 124,
+   "received": 125,
+   "identity": "16e8d06e68b69071",
+   "diff": {
+    "rows": 124,
+    "received": 125,
+    "market": 122,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 104,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11560-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 260,
+   "received": 264,
+   "identity": "997d182fa09c0c74",
+   "diff": {
+    "rows": 260,
+    "received": 264,
+    "market": 249,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 200,
+    "appeared": 4,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11590-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 238,
+   "received": 244,
+   "identity": "4ad30dac4cd45a97",
+   "diff": {
+    "rows": 238,
+    "received": 244,
+    "market": 168,
+    "valueOut": 0,
+    "valueIn": 4,
+    "changed": 144,
+    "appeared": 6,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11620-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 204,
+   "received": 206,
+   "identity": "6d54e9455dda91ec",
+   "diff": {
+    "rows": 204,
+    "received": 206,
+    "market": 191,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 162,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11650-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 133,
+   "received": 141,
+   "identity": "05cb9fad10bd8dd5",
+   "diff": {
+    "rows": 133,
+    "received": 141,
+    "market": 103,
+    "valueOut": 3,
+    "valueIn": 7,
+    "changed": 81,
+    "appeared": 9,
+    "gone": 1,
+    "gonePublic": 0
+   }
+  },
+  "11680-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 161,
+   "received": 172,
+   "identity": "be95ae6322b1110a",
+   "diff": {
+    "rows": 161,
+    "received": 172,
+    "market": 149,
+    "valueOut": 2,
+    "valueIn": 9,
+    "changed": 125,
+    "appeared": 11,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11710-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 310,
+   "received": 320,
+   "identity": "a9ac764ae94ef4c3",
+   "diff": {
+    "rows": 310,
+    "received": 320,
+    "market": 300,
+    "valueOut": 0,
+    "valueIn": 8,
+    "changed": 234,
+    "appeared": 10,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11740-202607": {
+   "status": "applied",
+   "reason": null,
+   "saved": 262,
+   "received": 280,
+   "identity": "5363667c3f3c324a",
+   "diff": {
+    "rows": 262,
+    "received": 280,
+    "market": 248,
+    "valueOut": 1,
+    "valueIn": 13,
+    "changed": 206,
+    "appeared": 18,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11110-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 23,
+   "received": 24,
+   "identity": "f467e0de992a044d",
+   "diff": {
+    "rows": 23,
+    "received": 24,
+    "market": 22,
+    "valueOut": 1,
+    "valueIn": 0,
+    "changed": 14,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11140-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 33,
+   "received": 34,
+   "identity": "4301eb22ef3e5a94",
+   "diff": {
+    "rows": 33,
+    "received": 34,
+    "market": 30,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 12,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11170-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 43,
+   "received": 49,
+   "identity": "b08e2528bc9b50b7",
+   "diff": {
+    "rows": 43,
+    "received": 49,
+    "market": 39,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 14,
+    "appeared": 6,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11200-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 55,
+   "received": 57,
+   "identity": "13621fb43802ab35",
+   "diff": {
+    "rows": 55,
+    "received": 57,
+    "market": 54,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 28,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11215-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 49,
+   "received": 54,
+   "identity": "aef257680b7a188a",
+   "diff": {
+    "rows": 49,
+    "received": 54,
+    "market": 44,
+    "valueOut": 0,
+    "valueIn": 3,
+    "changed": 15,
+    "appeared": 5,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11230-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 138,
+   "received": 142,
+   "identity": "c908db7879c4fda6",
+   "diff": {
+    "rows": 138,
+    "received": 142,
+    "market": 127,
+    "valueOut": 2,
+    "valueIn": 4,
+    "changed": 69,
+    "appeared": 6,
+    "gone": 2,
+    "gonePublic": 1
+   }
+  },
+  "11260-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 197,
+   "received": 203,
+   "identity": "19d5748fc724ceb9",
+   "diff": {
+    "rows": 197,
+    "received": 203,
+    "market": 140,
+    "valueOut": 0,
+    "valueIn": 5,
+    "changed": 91,
+    "appeared": 6,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11290-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 179,
+   "received": 181,
+   "identity": "65112d3025f85fe3",
+   "diff": {
+    "rows": 179,
+    "received": 181,
+    "market": 173,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 101,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11305-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 75,
+   "received": 75,
+   "identity": "252cdc91cd113e32",
+   "diff": {
+    "rows": 75,
+    "received": 75,
+    "market": 73,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 42,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11320-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 223,
+   "received": 226,
+   "identity": "d9a41559292e2836",
+   "diff": {
+    "rows": 223,
+    "received": 226,
+    "market": 212,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 123,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11350-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 529,
+   "received": 548,
+   "identity": "b3744a6287082ee4",
+   "diff": {
+    "rows": 529,
+    "received": 548,
+    "market": 507,
+    "valueOut": 1,
+    "valueIn": 17,
+    "changed": 322,
+    "appeared": 19,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11380-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 217,
+   "received": 218,
+   "identity": "27eb8806027569e4",
+   "diff": {
+    "rows": 217,
+    "received": 218,
+    "market": 202,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 124,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11410-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 126,
+   "received": 126,
+   "identity": "5c8c5bde05e59e1a",
+   "diff": {
+    "rows": 126,
+    "received": 126,
+    "market": 120,
+    "valueOut": 1,
+    "valueIn": 0,
+    "changed": 68,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11440-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 117,
+   "received": 122,
+   "identity": "98b3bc4cc9e50401",
+   "diff": {
+    "rows": 117,
+    "received": 122,
+    "market": 107,
+    "valueOut": 0,
+    "valueIn": 4,
+    "changed": 51,
+    "appeared": 5,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11470-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 127,
+   "received": 129,
+   "identity": "52528fdf88ffc4d1",
+   "diff": {
+    "rows": 127,
+    "received": 129,
+    "market": 118,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 58,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11500-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 264,
+   "received": 272,
+   "identity": "86bfbb812b0f30c6",
+   "diff": {
+    "rows": 264,
+    "received": 272,
+    "market": 235,
+    "valueOut": 1,
+    "valueIn": 4,
+    "changed": 139,
+    "appeared": 8,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11530-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 207,
+   "received": 210,
+   "identity": "71a8475e926a82c8",
+   "diff": {
+    "rows": 207,
+    "received": 210,
+    "market": 202,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 101,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11545-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 108,
+   "received": 109,
+   "identity": "219e99c18283fccf",
+   "diff": {
+    "rows": 108,
+    "received": 109,
+    "market": 103,
+    "valueOut": 1,
+    "valueIn": 0,
+    "changed": 50,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11560-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 144,
+   "received": 151,
+   "identity": "cc95283a50de6834",
+   "diff": {
+    "rows": 144,
+    "received": 151,
+    "market": 136,
+    "valueOut": 0,
+    "valueIn": 3,
+    "changed": 61,
+    "appeared": 7,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11590-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 123,
+   "received": 127,
+   "identity": "f2a4d788734e38fc",
+   "diff": {
+    "rows": 123,
+    "received": 127,
+    "market": 122,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 60,
+    "appeared": 4,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11620-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 120,
+   "received": 121,
+   "identity": "664b43d7f8b87f57",
+   "diff": {
+    "rows": 120,
+    "received": 121,
+    "market": 112,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 53,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11650-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 87,
+   "received": 91,
+   "identity": "aa78700782037b2a",
+   "diff": {
+    "rows": 87,
+    "received": 91,
+    "market": 78,
+    "valueOut": 1,
+    "valueIn": 2,
+    "changed": 38,
+    "appeared": 4,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11680-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 96,
+   "received": 100,
+   "identity": "c532edac06571ecd",
+   "diff": {
+    "rows": 96,
+    "received": 100,
+    "market": 87,
+    "valueOut": 0,
+    "valueIn": 3,
+    "changed": 29,
+    "appeared": 4,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11710-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 172,
+   "received": 176,
+   "identity": "9919f6193baffff0",
+   "diff": {
+    "rows": 172,
+    "received": 176,
+    "market": 165,
+    "valueOut": 2,
+    "valueIn": 4,
+    "changed": 59,
+    "appeared": 5,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11740-202608": {
+   "status": "applied",
+   "reason": null,
+   "saved": 170,
+   "received": 205,
+   "identity": "ae727824e05c6de7",
+   "diff": {
+    "rows": 170,
+    "received": 205,
+    "market": 163,
+    "valueOut": 1,
+    "valueIn": 4,
+    "changed": 70,
+    "appeared": 36,
+    "gone": 1,
+    "gonePublic": 0
+   }
+  },
+  "11110-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 34,
+   "received": 36,
+   "identity": "15f997c80d07a8b9",
+   "diff": {
+    "rows": 34,
+    "received": 36,
+    "market": 33,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 6,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11140-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 38,
+   "received": 38,
+   "identity": "e99671b32a763c72",
+   "diff": {
+    "rows": 38,
+    "received": 38,
+    "market": 36,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 4,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11170-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 43,
+   "received": 43,
+   "identity": "e2e2ef3c1de549e4",
+   "diff": {
+    "rows": 43,
+    "received": 43,
+    "market": 42,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 7,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11200-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 62,
+   "received": 63,
+   "identity": "cbab1f82b3bf594e",
+   "diff": {
+    "rows": 62,
+    "received": 63,
+    "market": 62,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 5,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11215-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 48,
+   "received": 48,
+   "identity": "9a697d2da5c05eca",
+   "diff": {
+    "rows": 48,
+    "received": 48,
+    "market": 43,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 2,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11230-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 118,
+   "received": 119,
+   "identity": "99d32a6c0ccee4fd",
+   "diff": {
+    "rows": 118,
+    "received": 119,
+    "market": 111,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 9,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11260-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 145,
+   "received": 147,
+   "identity": "1f59a63165081e4a",
+   "diff": {
+    "rows": 145,
+    "received": 147,
+    "market": 135,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 15,
+    "appeared": 3,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11290-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 182,
+   "received": 182,
+   "identity": "b838fa6ea8dae5df",
+   "diff": {
+    "rows": 182,
+    "received": 182,
+    "market": 156,
+    "valueOut": 2,
+    "valueIn": 1,
+    "changed": 11,
+    "appeared": 2,
+    "gone": 2,
+    "gonePublic": 2
+   }
+  },
+  "11305-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 80,
+   "received": 80,
+   "identity": "9f527b7852a9647b",
+   "diff": {
+    "rows": 80,
+    "received": 80,
+    "market": 76,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 9,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11320-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 220,
+   "received": 218,
+   "identity": "f9b85098c3351f74",
+   "diff": {
+    "rows": 220,
+    "received": 218,
+    "market": 214,
+    "valueOut": 1,
+    "valueIn": 0,
+    "changed": 21,
+    "appeared": 0,
+    "gone": 2,
+    "gonePublic": 1
+   }
+  },
+  "11350-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 421,
+   "received": 427,
+   "identity": "8def3a69d8649004",
+   "diff": {
+    "rows": 421,
+    "received": 427,
+    "market": 403,
+    "valueOut": 0,
+    "valueIn": 5,
+    "changed": 57,
+    "appeared": 6,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11380-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 214,
+   "received": 216,
+   "identity": "2f2ebaa90acd9f32",
+   "diff": {
+    "rows": 214,
+    "received": 216,
+    "market": 142,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 11,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11410-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 108,
+   "received": 108,
+   "identity": "25db61457230bef2",
+   "diff": {
+    "rows": 108,
+    "received": 108,
+    "market": 104,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 14,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11440-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 89,
+   "received": 90,
+   "identity": "f7416f2e65963f99",
+   "diff": {
+    "rows": 89,
+    "received": 90,
+    "market": 84,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 7,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11470-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 100,
+   "received": 101,
+   "identity": "022b473474b65e98",
+   "diff": {
+    "rows": 100,
+    "received": 101,
+    "market": 96,
+    "valueOut": 0,
+    "valueIn": 1,
+    "changed": 13,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11500-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 260,
+   "received": 261,
+   "identity": "d3b01a9f96f449de",
+   "diff": {
+    "rows": 260,
+    "received": 261,
+    "market": 193,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 23,
+    "appeared": 1,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11530-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 208,
+   "received": 208,
+   "identity": "48d840d30038ccf1",
+   "diff": {
+    "rows": 208,
+    "received": 208,
+    "market": 194,
+    "valueOut": 1,
+    "valueIn": 1,
+    "changed": 30,
+    "appeared": 1,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11545-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 86,
+   "received": 86,
+   "identity": "c4a7cd2e66350851",
+   "diff": {
+    "rows": 86,
+    "received": 86,
+    "market": 85,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 7,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11560-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 125,
+   "received": 128,
+   "identity": "0bb94c8dfccb6c22",
+   "diff": {
+    "rows": 125,
+    "received": 128,
+    "market": 123,
+    "valueOut": 0,
+    "valueIn": 3,
+    "changed": 11,
+    "appeared": 3,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11590-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 82,
+   "received": 81,
+   "identity": "81c2697941c8d0cf",
+   "diff": {
+    "rows": 82,
+    "received": 81,
+    "market": 79,
+    "valueOut": 1,
+    "valueIn": 0,
+    "changed": 14,
+    "appeared": 0,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11620-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 120,
+   "received": 121,
+   "identity": "aca4f29cd60e0875",
+   "diff": {
+    "rows": 120,
+    "received": 121,
+    "market": 112,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 14,
+    "appeared": 2,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  },
+  "11650-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 129,
+   "received": 129,
+   "identity": "21edbd36305d062c",
+   "diff": {
+    "rows": 129,
+    "received": 129,
+    "market": 100,
+    "valueOut": 0,
+    "valueIn": 0,
+    "changed": 14,
+    "appeared": 0,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11680-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 125,
+   "received": 127,
+   "identity": "a577ec1d24ef09f5",
+   "diff": {
+    "rows": 125,
+    "received": 127,
+    "market": 117,
+    "valueOut": 0,
+    "valueIn": 2,
+    "changed": 10,
+    "appeared": 2,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11710-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 321,
+   "received": 325,
+   "identity": "27ba8ab76f72818b",
+   "diff": {
+    "rows": 321,
+    "received": 325,
+    "market": 148,
+    "valueOut": 0,
+    "valueIn": 4,
+    "changed": 10,
+    "appeared": 4,
+    "gone": 0,
+    "gonePublic": 0
+   }
+  },
+  "11740-202609": {
+   "status": "applied",
+   "reason": null,
+   "saved": 149,
+   "received": 151,
+   "identity": "7fb076b01d4fbf4b",
+   "diff": {
+    "rows": 149,
+    "received": 151,
+    "market": 142,
+    "valueOut": 1,
+    "valueIn": 3,
+    "changed": 11,
+    "appeared": 3,
+    "gone": 1,
+    "gonePublic": 1
+   }
+  }
+ }
+}
