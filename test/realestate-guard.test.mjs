@@ -1,4 +1,4 @@
-// #863 - 일 수집이 크게 줄어든 응답을 슬롯에 쓰지 않는다. 판정 함수(#861 이 같이 쓴다)·보류 일수·보류 상태 파일·재생·수집기 연결.
+// #863 - 일 수집이 크게 줄어든 응답을 슬롯에 쓰지 않는다. 판정 함수(#861 이 같이 쓴다)·보류 일수·보류 상태 파일·재생·첫 관측일(#885)과의 상호작용·수집기 연결.
 // 입력은 전부 고정이다(#8): 판정은 손으로 만든 슬롯, 재생은 저장 원본 이력에서 떼어 온 픽스처(아래), 수집기는 가짜 국토부 서버.
 //
 // 픽스처 test/fixtures/collection-drop/sale-11230-202610.json.gz 는 raw/sale/11230-202610.json 의 다섯 판을 바이트 그대로 담았다:
@@ -18,7 +18,9 @@ import {
   DROP_ROWS, HOLD_DAYS, MIN_SAVED_ROWS, REASONS, holdsPath, judgeSlotResponse, nextHold, pruneHolds, readHolds, reasonText, receiveSlot, writeHolds,
 } from "../scripts/realestate-guard.ts";
 import { CONCENTRATION } from "../scripts/realestate-concentration.ts";
-import { buildSlotFile, itemKey, writeSlotFile } from "../scripts/realestate-raw.ts";
+import { buildSlotFile, itemKey, readSlotFile, writeSlotFile } from "../scripts/realestate-raw.ts";
+import { IDENTITY_SKIP, firstSeenPath, readFirstSeen, refreshFirstSeen, rowIdentity } from "../scripts/realestate-first-seen.ts";
+import { readWindowItems } from "../scripts/build-realestate.ts";
 import { c1Lines } from "../scripts/ledger-snapshot.ts";
 import { windowMonths } from "../scripts/realestate-slots.ts";
 
@@ -116,18 +118,32 @@ test("보류 상태 파일: raw/realestate-holds.json, 키 순으로 같은 바�
 
 const fixture = JSON.parse(gunzipSync(await readFile(path.join(import.meta.dirname, "fixtures/collection-drop/sale-11230-202610.json.gz"))));
 const DAYS = ["2026-11-01", "2026-11-02", "2026-11-03", "2026-11-04"];
-// 행 신원: data-analyst 판정(#863 11-15)과 같이 등기·해제·동 네 칸을 뺀 나머지. 이 네 칸만 바뀐 행은 같은 거래다.
-const VOLATILE = ["rgstDate", "cdealType", "cdealDay", "aptDong"];
-const identity = (item) => JSON.stringify(Object.entries(item).filter(([k]) => !VOLATILE.includes(k)));
+// 행 신원: 정의 원본은 scripts/realestate-first-seen.ts 의 IDENTITY_SKIP·rowIdentity 하나다(#885 cto 후속 - 이 시험이 따로 두던 정의를 걷었다).
+// data-analyst 판정(#863 11-15)과 같은 네 칸(등기·해제·동)을 뺀 나머지이고, 이 네 칸만 바뀐 행은 같은 거래다.
+const identity = rowIdentity;
+
+test("신원 정의는 한 곳: research 의 Python 사본(drops.py VOLATILE)은 import 할 수 없어 글자로 대조한다", async () => {
+  const py = await readFile(path.join(root, "research/collection-drop-2026-11/drops.py"), "utf8");
+  const tuple = /^VOLATILE = \(([^)]*)\)$/m.exec(py)?.[1];
+  assert.ok(tuple, "drops.py 에 VOLATILE 줄이 없다");
+  assert.deepEqual(tuple.split(",").map((name) => name.trim().replace(/^'|'$/g, "")), [...IDENTITY_SKIP]);
+});
 const rowsStamped = (file, day) => file.items.filter((item) => file.arrivals[itemKey(item)] === day).length;
 
-async function replay() {
+// firstSeen: 빌드(build-realestate main)처럼 그날 수집 뒤 행 첫 관측일 상태(#862 2단계, raw/first-seen)를 갱신하고, 그 파일 글자와 갱신 수를 함께 남긴다.
+// 10-31 판에서 한 번 갱신해 둔다(이 픽스처 이전 이력은 없으므로 도장 없는 행은 추적 전 날이다).
+const SEEN_NOW = new Date("2026-11-04T03:00:00Z");
+const refreshSeen = (dir) => refreshFirstSeen(windowMonths(SEEN_NOW), ["11230"], { dir, readSlot: readSlotFile });
+const seenText = (dir) => readFile(firstSeenPath("sale", "11230", "202610", dir), "utf8");
+
+async function replay({ firstSeen = false, days = DAYS } = {}) {
   const dir = await mkdtemp(path.join(tmpdir(), "drop-replay-"));
   await mkdir(path.join(dir, "sale"));
   const file = path.join(dir, "sale", "11230-202610.json");
   await writeFile(file, fixture.files["2026-10-31"]);
-  const out = {};
-  for (const day of DAYS) {
+  if (firstSeen) await refreshSeen(dir);
+  const out = { dir, base: firstSeen ? await seenText(dir) : null };
+  for (const day of days) {
     const version = JSON.parse(fixture.files[day]);
     const holds = await readHolds(dir);
     const result = await receiveSlot({
@@ -135,8 +151,20 @@ async function replay() {
     });
     await writeHolds(holds, dir);
     out[day] = { result, text: await readFile(file, "utf8"), holds: await readHolds(dir) };
+    if (firstSeen) Object.assign(out[day], { refresh: await refreshSeen(dir), seen: await seenText(dir) });
   }
   return out;
+}
+
+/** 보류 없이 저장된 실제 이력을 같은 방식으로 재생한다: 10-31 부터 days 까지 그날 판을 바이트 그대로 쓰고 첫 관측일을 갱신한다. */
+async function actualHistory(days = DAYS) {
+  const dir = await mkdtemp(path.join(tmpdir(), "drop-actual-"));
+  await mkdir(path.join(dir, "sale"));
+  for (const day of ["2026-10-31", ...days]) {
+    await writeFile(path.join(dir, "sale", "11230-202610.json"), fixture.files[day]);
+    await refreshSeen(dir);
+  }
+  return dir;
 }
 
 test("재생 ①②: 11230-202610 은 11-01·02 응답(77행)을 쓰지 않고 슬롯·arrivals 가 바이트까지 그대로다. 11-03 응답(399행)을 쓰고 보류는 2일로 끝난다", async () => {
@@ -181,6 +209,37 @@ test("재생 ③: 신원 기준 늦어진 새 행 0행. 돌아온 313행 재도�
   const key = itemKey(later[0]);
   assert.notEqual(mine4, fixture.files["2026-11-04"]);
   assert.equal(mine4.replace(`"${key}":"2026-11-03"`, `"${key}":"2026-11-02"`), fixture.files["2026-11-04"]);
+});
+
+test("첫 관측일(#885)과 보류: 보류 중엔 슬롯이 그대로라 first-seen 도 바이트까지 그대로다. 11-03 반영 날 돌아온 행은 새 신고로 세지 않고, 신고 창은 실제 이력(보류 없음)과 같은 행을 든다", async () => {
+  const days = DAYS.slice(0, 3); // 11-01·02 보류, 11-03 반영
+  const out = await replay({ firstSeen: true, days });
+  for (const day of ["2026-11-01", "2026-11-02"]) {
+    assert.equal(out[day].result.applied, false, day);
+    assert.deepEqual(out[day].refresh, { written: 0, removed: 0 }, `${day}: 보류 중에 첫 관측일 상태를 다시 썼다`);
+    assert.equal(out[day].seen, out.base, `${day}: 보류 중 첫 관측일 상태가 바뀌었다`);
+  }
+  assert.equal(out["2026-11-03"].result.applied, true);
+  assert.deepEqual(out["2026-11-03"].refresh, { written: 1, removed: 0 });
+
+  // 11-03 판을 그 주 신고 창(11-02 주)으로 읽는다. 도장만 보면 11-03 에 찍힌 323행(재생 ③)이 새 신고이고, 첫 관측일로 읽으면 진짜 새 신원 9행만 남는다.
+  const WEEK = { basis: "arrival", from: "2026-11-02", to: "2026-11-04", until: "2026-11-09", weeks: 1 };
+  const pick = async (dir, withSeen) => {
+    const read = (kind, code, ym) => readSlotFile(kind, code, ym, dir);
+    const seen = withSeen ? (kind, code, ym) => readFirstSeen(kind, code, ym, dir) : undefined;
+    const { items } = await readWindowItems(SEEN_NOW, WEEK, read, seen);
+    return (items.get("sale:11230") ?? []).map((row) => row.item);
+  };
+  const keys = (rows) => rows.map(itemKey).sort();
+  assert.equal((await pick(out.dir, false)).length, 323);
+  const counted = await pick(out.dir, true);
+  assert.equal(counted.length, 9);
+  const baseIds = new Set(JSON.parse(fixture.files["2026-10-31"]).items.map(identity));
+  assert.equal(counted.filter((item) => baseIds.has(identity(item))).length, 0, "10-31 에 있던 신원이 새 신고로 셌다");
+  // 실제 이력(11-01·02 의 77행 판도 쓰고 첫 관측일을 갱신)과 같은 행을 든다 - 보류가 신고 창을 바꾸지 않는다.
+  const actualDir = await actualHistory(days);
+  assert.deepEqual(keys(counted), keys(await pick(actualDir, true)));
+  assert.equal(out["2026-11-03"].seen, await seenText(actualDir), "11-03 첫 관측일 상태도 실제 이력과 바이트까지 같다");
 });
 
 test("조건 5: 반영하는 응답은 지금까지의 buildSlotFile → writeSlotFile 과 바이트까지 같다(trackArrivals 뜻 불변). 보류 중 C1 입력은 저장 슬롯 그대로다", async () => {

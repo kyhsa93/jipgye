@@ -32,6 +32,8 @@ python3 freshness.py /tmp/drops.pkl          # 보류가 수집 신선도(source
 
 ## 행 신원을 어떻게 셌나
 
+정의 원본은 `scripts/realestate-first-seen.ts`의 `IDENTITY_SKIP`이다. `drops.py`의 `VOLATILE`은 그 사본이고, `test/realestate-guard.test.mjs`가 두 목록이 같은지 대조한다.
+
 `drops.py`는 네 칸(`rgstDate`·`cdealType`·`cdealDay`·`aptDong`)을 빼고 행 신원을 센다. 이 네 칸만 바뀐 행은 같은 거래로 본다.
 세 칸만 빼면(`aptDong` 포함) 등기일과 동이 함께 붙어 돌아온 행이 「돌아오지 않은」 것으로 보인다. 그러면 큰 사건의 복귀가 재현되지 않고, 늦어진 행은 50행(행×일 92)이 된다.
 
