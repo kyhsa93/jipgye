@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-14T03:14:25.383Z",
+  "updatedAt": "2026-11-15T02:42:06.470Z",
   "periods": [
     "202609",
     "202610",
@@ -1666,19 +1666,19 @@
     {
       "min10k": 100000,
       "max10k": 110000,
-      "count": 450,
+      "count": 452,
       "districts": [
         {
           "name": "강서구",
           "count": 88
         },
         {
-          "name": "노원구",
-          "count": 73
+          "name": "은평구",
+          "count": 78
         },
         {
-          "name": "은평구",
-          "count": 72
+          "name": "노원구",
+          "count": 73
         },
         {
           "name": "성북구",
@@ -1824,7 +1824,7 @@
         }
       ],
       "facts": {
-        "total": 450,
+        "total": 452,
         "span": {
           "min": {
             "district": "송파구",
@@ -1842,13 +1842,13 @@
           }
         },
         "standard": {
-          "count": 165,
+          "count": 167,
           "min": 80,
           "max": 90,
           "districts": [
             {
               "name": "은평구",
-              "count": 22
+              "count": 24
             },
             {
               "name": "강서구",
@@ -1871,7 +1871,7 @@
     {
       "min10k": 110000,
       "max10k": 120000,
-      "count": 308,
+      "count": 309,
       "districts": [
         {
           "name": "강서구",
@@ -1883,7 +1883,7 @@
         },
         {
           "name": "은평구",
-          "count": 48
+          "count": 50
         },
         {
           "name": "노원구",
@@ -2029,7 +2029,7 @@
         }
       ],
       "facts": {
-        "total": 308,
+        "total": 309,
         "span": {
           "min": {
             "district": "송파구",
@@ -2076,7 +2076,7 @@
     {
       "min10k": 120000,
       "max10k": 130000,
-      "count": 337,
+      "count": 338,
       "districts": [
         {
           "name": "관악구",
@@ -2084,7 +2084,7 @@
         },
         {
           "name": "은평구",
-          "count": 56
+          "count": 58
         },
         {
           "name": "성북구",
@@ -2109,6 +2109,17 @@
           "amount10k": 125000,
           "date": "2026-11-12",
           "buildYear": 2003,
+          "direct": false
+        },
+        {
+          "district": "은평구",
+          "dong": "수색동",
+          "apt": "DMC아트포레자이",
+          "area": 59.9,
+          "floor": 7,
+          "amount10k": 125000,
+          "date": "2026-11-11",
+          "buildYear": 2026,
           "direct": false
         },
         {
@@ -2220,21 +2231,10 @@
           "date": "2026-11-07",
           "buildYear": 1999,
           "direct": false
-        },
-        {
-          "district": "영등포구",
-          "dong": "신길동",
-          "apt": "건영",
-          "area": 89.16,
-          "floor": 2,
-          "amount10k": 128000,
-          "date": "2026-11-06",
-          "buildYear": 1985,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 337,
+        "total": 338,
         "span": {
           "min": {
             "district": "송파구",
@@ -2486,7 +2486,7 @@
     {
       "min10k": 140000,
       "max10k": 150000,
-      "count": 260,
+      "count": 261,
       "districts": [
         {
           "name": "영등포구",
@@ -2519,6 +2519,17 @@
           "amount10k": 144500,
           "date": "2026-11-07",
           "buildYear": 2008,
+          "direct": false
+        },
+        {
+          "district": "은평구",
+          "dong": "수색동",
+          "apt": "DMCSK뷰아이파크포레",
+          "area": 84.95,
+          "floor": 15,
+          "amount10k": 142500,
+          "date": "2026-11-07",
+          "buildYear": 2025,
           "direct": false
         },
         {
@@ -2630,21 +2641,10 @@
           "date": "2026-10-31",
           "buildYear": 2020,
           "direct": false
-        },
-        {
-          "district": "강동구",
-          "dong": "성내동",
-          "apt": "성내동삼성아파트",
-          "area": 59.88,
-          "floor": 4,
-          "amount10k": 141000,
-          "date": "2026-10-31",
-          "buildYear": 1999,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 260,
+        "total": 261,
         "span": {
           "min": {
             "district": "서초구",
@@ -2662,7 +2662,7 @@
           }
         },
         "standard": {
-          "count": 104,
+          "count": 105,
           "min": 80,
           "max": 90,
           "districts": [
