@@ -31,7 +31,7 @@ test("메인 질문 링크 열 개의 구운 주소는 그대로다 - 조건은 
     "q-record": "./record-high.html",
     "q-outlook": "./price-outlook.html",
     "q-conversion": "./jeonse-vs-wolse.html",
-    "q-renewal": "./renewal-vs-new.html",
+    "q-renewal": "./renewal-vs-new.html#lead-section",
     "q-switch": "./switch-house.html",
     "q-cancelled": "./cancelled-deals.html",
   });
@@ -78,7 +78,7 @@ test("적어 둔 조건이 없으면 메인 질문 링크는 구운 그대로다
   assert.deepEqual((await run({ saved: [1, 2] })).hrefs, {});
 });
 
-test("적어 둔 구·면적·예산이 메인 질문 링크의 매개변수로 넘어간다 - 조건을 받는 다섯만 (#654)", async () => {
+test("적어 둔 구·면적·예산이 메인 질문 링크의 매개변수로 넘어간다 - 조건을 받는 여섯만 (#654)", async () => {
   const { hrefs } = await run({ saved: { district: "마포구", area: "60", budget: 12, home: "노원구" } });
   const enc = encodeURIComponent;
   assert.deepEqual(hrefs, {
@@ -86,6 +86,7 @@ test("적어 둔 구·면적·예산이 메인 질문 링크의 매개변수로 
     "q-realestate": "./district-mapo.html?area=59",
     "q-search": `./deal-search.html?district=${enc("마포구")}&budget=12&area=60`,
     "q-conversion": `./jeonse-vs-wolse.html?district=${enc("마포구")}&band=under60`,
+    "q-renewal": "./renewal-vs-new.html?gu=mapo&area=b%3Aunder60",
     "q-switch": `./switch-house.html?from=${enc("노원구")}&to=${enc("마포구")}`,
   });
 });
@@ -100,9 +101,35 @@ test("일부 조건만 있으면 있는 것만 붙이고, 기본값과 같은 �
     "q-realestate": "./district-gangnam.html?area=114",
     "q-search": `./deal-search.html?district=${enc("강남구")}&area=135`,
     "q-conversion": `./jeonse-vs-wolse.html?district=${enc("강남구")}&band=over85`,
+    "q-renewal": "./renewal-vs-new.html?gu=gangnam&area=b%3Aover85",
     "q-switch": `./switch-house.html?from=${enc("종로구")}&to=${enc("강남구")}`,
   });
   assert.deepEqual((await run({ saved: { home: "노원구" } })).hrefs, { "q-switch": `./switch-house.html?from=${enc("노원구")}` });
+});
+
+test("재계약 링크는 구·면적이 둘 다 있을 때만 구 면적대 답으로, 넘기는 값은 gu·area 둘뿐이다 (#654, #830)", async () => {
+  const renewal = async (saved) => (await run({ saved })).hrefs["q-renewal"];
+  // 구는 적어 둔 구(district)에서만 온다. 사는 구(home)·예산·현금은 싣지 않는다.
+  const href = await renewal({ district: "노원구", area: "60-85", budget: 6, home: "마포구", cash: 3 });
+  const url = new URL(href, "https://kyhsa93.github.io/jipgye/index.html");
+  assert.equal(url.pathname, "/jipgye/renewal-vs-new.html");
+  assert.equal(url.hash, "", "구 면적대 답 경로에 해시가 붙었다");
+  assert.deepEqual([...url.searchParams.keys()].sort(), ["area", "gu"], `넘기는 값이 gu·area 둘이 아니다: ${href}`);
+  assert.equal(url.searchParams.get("gu"), "nowon");
+  assert.equal(url.searchParams.get("area"), "b:60to85");
+  for (const key of ["cash", "budget", "home", "from"]) assert.ok(!url.searchParams.has(key), `${key} 를 넘겼다`);
+  // 하나라도 없으면 구운 #lead-section(서울 전체 답) 링크가 남는다 - 사는 구로 갈 구를 메우지 않는다.
+  for (const saved of [{ home: "마포구", area: "60-85" }, { district: "노원구" }, { area: "60-85" }, { district: "노원구", home: "마포구", budget: 6 }]) {
+    assert.equal(await renewal(saved), undefined, `${JSON.stringify(saved)}: 정적 링크를 바꿨다`);
+  }
+  // 면적 키는 재계약 장의 구 면적대(ckBands) 셋으로 모인다 - 135·85-135 는 85㎡ 이상.
+  for (const [area, band] of [["60", "under60"], ["60-85", "60to85"], ["85-135", "over85"], ["135", "over85"]]) {
+    assert.equal(new URL(await renewal({ district: "노원구", area }), "https://x/").searchParams.get("area"), `b:${band}`, area);
+  }
+  const page = await readFile(path.join(root, "docs/renewal-vs-new.html"), "utf8");
+  const bands = Object.keys(vm.runInNewContext(`(${/ckBands: (\{[^}]+\})/.exec(page)[1]})`));
+  const navBands = vm.runInNewContext(`(${/const BAND = (\{[^}]+\});/.exec(await source())[1]})`);
+  assert.deepEqual([...new Set(Object.values(navBands))].sort(), [...bands].sort(), "nav.js 면적대가 재계약 장 ckBands 키와 다르다");
 });
 
 test("화면에 들어온 주소의 조건을 적는다 - 검색·다른 화면이 넘긴 것 (#654)", async () => {

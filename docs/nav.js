@@ -227,7 +227,7 @@
       en: "Renting",
       items: [
         ["./jeonse-vs-wolse.html", "전세가 쌀까, 월세가 쌀까", "Is jeonse or monthly rent cheaper?"],
-        ["./renewal-vs-new.html", "재계약할까, 이사할까", "Renew or move?"],
+        ["./renewal-vs-new.html#lead-section", "재계약할까, 이사할까", "Renew or move?"],
       ],
     },
     {
@@ -248,7 +248,7 @@
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   const groups = QUESTION_GROUPS.map((g) => {
     const links = g.items
-      .filter(([href]) => href.replace("./", "") !== here)
+      .filter(([href]) => href.replace("./", "").split("#")[0] !== here) // 해시 주소도 지금 장이면 뺀다(#654)
       .map(([href, ko, enText]) => `<a href="${href}">${esc(en ? enText : ko)}</a>`)
       .join("");
     return links ? `<div class="question-group"><h3 class="question-group-title">${esc(en ? g.en : g.ko)}</h3>${links}</div>` : "";
@@ -372,6 +372,8 @@
       "q-realestate": (d ? `./district-${SLUGS[d]}.html` : "./realestate.html") + query([["area", a && M2[a] !== 84 ? M2[a] : undefined]]),
       "q-search": "./deal-search.html" + query([["district", d], ["budget", b], ["area", a]]),
       "q-conversion": "./jeonse-vs-wolse.html" + query([["district", d], ["band", a && BAND[a]]]),
+      // 구·면적 둘 다일 때만(#654)
+      "q-renewal": d && a ? "./renewal-vs-new.html" + query([["gu", SLUGS[d]], ["area", "b:" + BAND[a]]]) : "",
       // 지금 사는 구를 모르면 갈 구와 다른 첫 구(화면 기본값과 같은 순서)를 넘겨 같은 구끼리 견주지 않게 한다.
       "q-switch": "./switch-house.html" + query([["from", home && home !== d ? home : d && Object.keys(SLUGS).find((n) => n !== d)], ["to", d]]),
     };

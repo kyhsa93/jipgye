@@ -722,6 +722,13 @@ $("check-gu").addEventListener("change", (e) => {
 });
 for (const id of ["check-apt", "check-area", "check-old", "check-ask"]) $(id).addEventListener(id === "check-area" ? "change" : "input", renderCheck);
 
+if (location.hash === "#lead-section" && self.ResizeObserver) {
+  const s = $("lead-section"), ro = new ResizeObserver(() => Math.abs(s.getBoundingClientRect().top) > 1 && s.scrollIntoView()), stop = () => ro.disconnect();
+  for (const e of ["wheel", "pointerdown", "keydown"]) addEventListener(e, stop, { passive: true });
+  setTimeout(stop, 15e3);
+  ro.observe($("main"));
+}
+
 main();
 </script>
 </body>
