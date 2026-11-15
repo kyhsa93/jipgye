@@ -307,7 +307,7 @@
   }
 })();
 
-// 내 조건 기억 (#654): 화면에서 고른 구·면적·예산을 적어 두고 메인 질문 링크에 각 화면이 읽는 매개변수로 붙인다.
+// 내 조건 기억 (#654·#679): 화면에서 고른 구·면적·예산을 적어 두고 메인·다른 질문 링크에 각 화면이 읽는 매개변수로 붙인다.
 // 적은 것이 없거나 저장소가 막히면 링크는 구운 그대로. 표는 test/my-conditions.test.mjs 가 사이트 목록과 묶는다.
 (function () {
   try {
@@ -380,6 +380,7 @@
     for (const [id, href] of Object.entries(hrefs)) {
       const link = document.getElementById(id);
       if (link && href && href !== link.getAttribute("href") && link.closest("#question-nav")) link.setAttribute("href", href);
+      document.querySelector(`#other-questions [href^="${href.slice(0, 5).replace("dis", "rea")}"]`)?.setAttribute("href", href);
     }
   } catch (e) {}
 })();
