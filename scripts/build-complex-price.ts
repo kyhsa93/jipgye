@@ -7,6 +7,7 @@ import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { INDEX_FILE } from "./fetch-price-index.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { readSameNames, readSlotFile } from "./realestate-raw.ts";
+import { readRecollectedSlot } from "./realestate-recollect.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { periods } from "./district-change.ts";
 import { shiftMonth } from "./outlook.ts";
@@ -71,12 +72,13 @@ async function main() {
     return;
   }
 
-  // 창(183일)을 다 덮으려면 이번 달 포함 일곱 달.
+  // 창(183일)을 다 덮으려면 이번 달 포함 일곱 달. 얼린 달은 재수집 덧씌움을 합쳐 읽는다(#861 - 시세 칸은 계약일 기준이라 도착일이 필요 없다).
+  // 동명 단지(readSameNames)는 저장 슬롯 그대로다 - 거래 목록·카드와 칸 키가 같아야 한다(#820 측정에서 덧씌움 전후 이름 변화 0).
   const months = recentMonths(now, 7);
   const itemsByDistrict = {};
   await Promise.all(
     DISTRICTS.map(async ({ code }) => {
-      const files = await Promise.all(months.map((m) => readSlotFile("sale", code, m)));
+      const files = await Promise.all(months.map((m) => readRecollectedSlot("sale", code, m)));
       itemsByDistrict[code] = files.filter((f) => f?.ok !== false && Array.isArray(f?.items)).flatMap((f) => f.items);
     })
   );
@@ -91,7 +93,7 @@ async function main() {
   if (p) {
     await Promise.all(
       DISTRICTS.map(async ({ code }) => {
-        const files = await Promise.all(p.base.map((m) => readSlotFile("sale", code, m)));
+        const files = await Promise.all(p.base.map((m) => readRecollectedSlot("sale", code, m)));
         yearAgoByDistrict[code] = files.filter((f) => f?.ok !== false && Array.isArray(f?.items)).flatMap((f) => f.items);
       })
     );

@@ -54,7 +54,8 @@ export function errorDetail(err) {
   return parts.filter(Boolean).join(" ← ");
 }
 
-async function fetchApiOnce(apiUrl, serviceKey, districtCode, yearMonth) {
+// 재수집(#861 recollect-sale.ts)도 같은 호출·해석을 쓴다 - 옮겨 적으면 어긋난다(#820 measure.mjs 는 이것을 옮겨 적어야 했다).
+export async function fetchApiOnce(apiUrl, serviceKey, districtCode, yearMonth) {
   const otherParams = new URLSearchParams({
     LAWD_CD: districtCode,
     DEAL_YMD: yearMonth,

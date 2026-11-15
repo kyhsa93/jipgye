@@ -19,6 +19,7 @@ import { INDEX_FILE } from "./fetch-price-index.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { shiftMonth } from "./outlook.ts";
 import { RAW_DIR, readSameNames } from "./realestate-raw.ts";
+import { mergeRecollect, readOverlay } from "./realestate-recollect.ts";
 import { writeRegistrationSoft } from "./registration.ts";
 import { writeSegmentChangeSoft } from "./segment-change.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
@@ -107,21 +108,29 @@ export function buildPayload({ items, now, official, survey, sameNames = {} }) {
   };
 }
 
-async function readAll() {
-  const dir = path.join(RAW_DIR, "sale");
+/**
+ * 매매 원본 전부. items 는 저장 슬롯 그대로, recollected 는 얼린 슬롯에 재수집 덧씌움을 합친 것이다(#861). 덧씌움은 등기·해제(registration)에만 건다 -
+ * 갈아타기·가격대 변화는 완료 조건 2 의 소비자가 아니다. 한 번 읽어 두 목록을 만든다(덧씌움이 없는 슬롯은 같은 행을 가리킨다).
+ */
+export async function readAll(rawDir = RAW_DIR) {
+  const dir = path.join(rawDir, "sale");
   const items = [];
+  const recollected = [];
   for (const name of (await readdir(dir)).filter((f) => f.endsWith(".json")).sort()) {
     const file = await readJson(path.join(dir, name));
-    if (file?.ok !== false && Array.isArray(file?.items)) items.push(...file.items);
+    if (file?.ok === false || !Array.isArray(file?.items)) continue;
+    items.push(...file.items);
+    const m = /^(\d{5})-(\d{6})\.json$/.exec(name);
+    recollected.push(...(m ? mergeRecollect(file, await readOverlay(m[1], m[2], rawDir)) : file).items);
   }
-  return items;
+  return { items, recollected };
 }
 
 async function main() {
-  const [items, official, survey, sameNames] = await Promise.all([readAll(), readJson(INDEX_FILE), readJson(DISTRICT_INDEX_FILE), readSameNames()]);
+  const [{ items, recollected }, official, survey, sameNames] = await Promise.all([readAll(), readJson(INDEX_FILE), readJson(DISTRICT_INDEX_FILE), readSameNames()]);
   const now = new Date();
-  // 등기·해제 비율(R1, #715). 같은 원본. soft-fail 이라 던지지 않고, 갈아타기 결과와 상관없이 먼저 부른다.
-  await writeRegistrationSoft({ items, now, sameNames });
+  // 등기·해제 비율(R1, #715). 얼린 달은 재수집 덧씌움을 합친 원본(#861). soft-fail 이라 던지지 않고, 갈아타기 결과와 상관없이 먼저 부른다.
+  await writeRegistrationSoft({ items: recollected, now, sameNames });
   const payload = buildPayload({ items, now, official, survey, sameNames });
   if (!payload) {
     console.log("  갈아타기: 두 시기를 정할 원본이 모자라 건너뜀");

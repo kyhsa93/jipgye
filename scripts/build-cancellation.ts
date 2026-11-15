@@ -17,6 +17,7 @@ import { priceBandSentence, priceBandStats, priceBandTableHtml, settledMonths } 
 import { DISTRICTS } from "./realestate-districts.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { readSameNames, readSlotFile } from "./realestate-raw.ts";
+import { readRecollectedSlot } from "./realestate-recollect.ts";
 import { RETENTION_MONTHS } from "./realestate-slots.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { tryWriteDirectDeals } from "./build-direct-deals.ts";
@@ -38,11 +39,13 @@ const outFile = process.env.CANCELLATION_FILE
  * 자치구를 DISTRICTS 순서로 담는 것이 중요하다. 완료되는 대로 담으면 그날 디스크가
  * 어느 파일을 먼저 내주었는지가 그대로 출력 순서가 되고, 자치구 링크 줄이 빌드할
  * 때마다 뒤바뀌어 매일 뜻 없는 변경이 커밋된다.
+ *
+ * 기본은 얼린 슬롯에 재수집 덧씌움을 합쳐 읽는다(#861 - 해제·등기는 계약 뒤 몇 달에 걸쳐 붙어 얼린 슬롯에서 못 본다). read 로 저장 그대로도 읽는다.
  */
-export async function readRawSales(months, dir?) {
+export async function readRawSales(months, dir?, read = readRecollectedSlot) {
   const perDistrict = await Promise.all(
     DISTRICTS.map(async ({ code, name }) => {
-      const files = await Promise.all(months.map((yearMonth) => readSlotFile("sale", code, yearMonth, dir)));
+      const files = await Promise.all(months.map((yearMonth) => read("sale", code, yearMonth, dir)));
       const items = files
         .filter((file) => file?.ok !== false && Array.isArray(file?.items))
         .flatMap((file) => file.items);
@@ -131,8 +134,8 @@ async function main() {
   const byDistrict = await readRawSales(months);
   const retentionMonths = recentMonths(now, RETENTION_MONTHS);
   const registrationByDistrict = await readRawSales(retentionMonths);
-  // 직거래 통계(#691)는 같은 24개월 원본으로 만든다. 소프트 실패라 던져도 아래 해제 산출물은 그대로 나간다.
-  await tryWriteDirectDeals({ byDistrict: registrationByDistrict, months: retentionMonths, now, sameNames: await readSameNames() });
+  // 직거래 통계(#691)는 같은 24개월 저장 원본으로 만든다 - 재수집 덧씌움(#861 완료 조건 2)은 시세 칸·해제·등기에만 건다. 소프트 실패라 던져도 아래 해제 산출물은 그대로 나간다.
+  await tryWriteDirectDeals({ byDistrict: await readRawSales(retentionMonths, undefined, readSlotFile), months: retentionMonths, now, sameNames: await readSameNames() });
 
   const payload = buildPayload({ byDistrict, months, now, registrationByDistrict });
   if (!payload) {
