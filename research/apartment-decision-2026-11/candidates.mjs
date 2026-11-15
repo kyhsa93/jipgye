@@ -72,6 +72,8 @@ const raw = {};
 const byMonth = {};
 const recent = { deals: 0, cells: 0 };
 const frozenDeals = { deals: 0 };
+let cdealDayOnly = 0;
+const contractKeys = new Map();
 for (const { code } of DISTRICTS) {
   const t = Object.fromEntries(reasons.map((k) => [k, 0]));
   const inWindow = [];
@@ -83,6 +85,7 @@ for (const { code } of DISTRICTS) {
     for (const item of slot.items) {
       t.rows++;
       byMonth[m].rows++;
+      if (!String(item?.cdealType ?? "").trim() && String(item?.cdealDay ?? "").trim()) cdealDayOnly++;
       if (String(item?.cdealType ?? "").trim()) { t.cancelled++; continue; }
       if (String(item?.dealingGbn ?? "").trim() === "직거래") { t.direct++; continue; }
       const d = marketDeal(item);
@@ -93,6 +96,9 @@ for (const { code } of DISTRICTS) {
       t.inWindow++;
       byMonth[m].inWindow++;
       if (!refreshed.has(m)) frozenDeals.deals++;
+      // aptDong is not in the key (same as research/correction-twins/check.py).
+      const ck = [item.sggCd, item.umdNm, item.jibun, item.aptNm, item.excluUseAr, item.floor, item.dealYear, item.dealMonth, item.dealDay, item.dealAmount].join("|");
+      contractKeys.set(ck, (contractKeys.get(ck) ?? 0) + 1);
       inWindow.push({ ...d, id: stableId(locationKey(item)) });
     }
   }
@@ -147,6 +153,11 @@ console.log();
 console.log(`in-window market rows from frozen slots: ${frozenDeals.deals} / ${R("inWindow")}`);
 console.log(`deals in n>=3 cells with contract in last 30 days (>= ${recentCut}): ${recent.deals} / ${R("cellDeals")}, cells touched ${recent.cells}`);
 console.log(`missing fields in published cells: buildYear null apartments ${totals.noBuildYear}/${totals.apartments}, households non-null ${totals.households}, jeonseN=0 cells ${totals.noJeonse}/${totals.cells}, lastFloor null cells ${totals.noFloor}, aliased apartments ${totals.aliased}, max peers_n ${totals.peerMax}`);
+const dupGroups = [...contractKeys.values()].filter((c) => c >= 2);
+console.log(`rows with cdealDay but empty cdealType: ${cdealDayOnly}`);
+console.log(`in-window market rows sharing a contract key (gu|dong|jibun|apt|area|floor|date|amount): groups ${dupGroups.length}, extra rows ${dupGroups.reduce((s, c) => s + c - 1, 0)}`);
+const tally = (pick) => [...Map.groupBy(recos, pick)].map(([k, v]) => `${k} x${v.length}`).join(", ");
+console.log(`asOf.indexRef ${tally((r) => r.asOf.indexRef)}; asOf.indexFilled ${tally((r) => r.asOf.indexFilled)}; asOf.deals ${tally((r) => r.asOf.deals)}`);
 console.log();
 const ok = [
   ["sum n == kept rows", totals.n, R("cellDeals")],

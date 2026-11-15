@@ -78,6 +78,9 @@ slot month | refreshed daily | rows | market rows | in-window market | last obse
 in-window market rows from frozen slots: 21304 / 25113
 deals in n>=3 cells with contract in last 30 days (>= 2026-10-15): 1701 / 18504, cells touched 1136
 missing fields in published cells: buildYear null apartments 0/1822, households non-null 0, jeonseN=0 cells 571/2869, lastFloor null cells 0, aliased apartments 3, max peers_n 149
+rows with cdealDay but empty cdealType: 0
+in-window market rows sharing a contract key (gu|dong|jibun|apt|area|floor|date|amount): groups 30, extra rows 30
+asOf.indexRef 202608 x25; asOf.indexFilled false x25; asOf.deals 2026-11-14 x25
 
 check sum n == kept rows: 18504 == 18504
 check cells == n>=3 cells: 2869 == 2869
