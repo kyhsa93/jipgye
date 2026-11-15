@@ -10,7 +10,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { gunzipSync } from "node:zlib";
-import { saleItem, startFakeMolit, successXml } from "./helpers/fake-molit.mjs";
+import { errorXml, rentItem, saleItem, startFakeMolit, successXml } from "./helpers/fake-molit.mjs";
 import {
   SALE_FIELDS, buildOverlay, diffRows, mergeRecollect, overlayPath, readOverlay, readRecollectedSlot, serializeOverlay, unknownFields, writeOverlay,
 } from "../scripts/realestate-recollect.ts";
@@ -306,7 +306,7 @@ test("연속 거부 네 갈래(pm 11-15): 0행·totalCount 는 늘 막고, 같�
   assert.deepEqual(plan2.months, ["202606", "202607", "202608", "202609", "202610"]);
   // 4: 202605 는 12월 창 밖이다 - 연속이 생기지 않고 「거부 후 창 밖」으로 적는다.
   const r2 = await processRound({ plan: plan2, responses: new Map(), observedAt: dec.toISOString(), dir: raw, out: raw });
-  assert.deepEqual(r2.record.outOfWindow, ["11110-202605"]);
+  assert.deepEqual(r2.record.outOfWindow, [{ slot: "11110-202605", why: "거부 후 창 밖" }]);
   assert.ok(roundLines(r2.record).some((line) => line.includes("거부 후 창 밖") && line.includes("11110-202605")));
   assert.equal(await readOverlay("11110", "202605", raw), null, "따로 받지 않고 얼린 값 그대로");
 
@@ -326,7 +326,7 @@ test("연속 거부 네 갈래(pm 11-15): 0행·totalCount 는 늘 막고, 같�
 
 test("창·상한(조건 5): 1회차 202604 + 현재월-6~-2 = 6달 150회·상한 160회, 2회차부터 5달 125회·상한 135회", () => {
   const first = planRound({ now: NOW });
-  assert.deepEqual(first, { ok: true, round: FIRST_ROUND, first: true, months: [FIRST_ROUND_EXTRA, "202605", "202606", "202607", "202608", "202609"], planned: 150, cap: 160 });
+  assert.deepEqual(first, { ok: true, round: FIRST_ROUND, first: true, months: [FIRST_ROUND_EXTRA, "202605", "202606", "202607", "202608", "202609"], retry: false, planned: 150, cap: 160 });
   assert.equal(CALL_MARGIN, 10);
   const second = planRound({ now: new Date("2026-12-10T05:00:00Z"), rounds: ["202611"] });
   assert.deepEqual([second.planned, second.cap, second.months.length], [125, 135, 5]);
@@ -355,6 +355,14 @@ test("호출 전 거부: 달 초 3일·08:00~12:30 KST·12-01 부터 1회차·�
   assert.match(checkApproval(p, { approvedCalls: 135, ownerNotice: url }).reason, /상한 160회/);
   assert.equal(checkApproval(p, { approvedCalls: 160, ownerNotice: "" }).ok, false);
   assert.equal(checkApproval(p, { approvedCalls: undefined, ownerNotice: url }).ok, false);
+  // 다른 호스트·다른 저장소·이슈 본문(댓글 아님)의 URL 은 소유자 답으로 보지 않는다.
+  for (const other of [
+    "https://example.com/kyhsa93/jipgye/issues/861#issuecomment-1",
+    "https://github.com/someone/jipgye/issues/861#issuecomment-1",
+    "https://github.com/kyhsa93/other/issues/861#issuecomment-1",
+    "https://github.com/kyhsa93/jipgye/issues/861",
+    "http://github.com/kyhsa93/jipgye/issues/861#issuecomment-1",
+  ]) assert.equal(checkApproval(p, { approvedCalls: 160, ownerNotice: other }).ok, false, other);
 
   assert.deepEqual(dailyBusy([{ status: "completed" }]), []);
   assert.equal(dailyBusy([{ status: "completed" }, { status: "in_progress", databaseId: 1 }, { status: "queued", databaseId: 2 }]).length, 2);
@@ -398,7 +406,7 @@ async function cli(args, { raw, now, server, bin }) {
         ...process.env,
         PATH: `${bin}:${process.env.PATH}`,
         REALESTATE_RAW_DIR: raw, REALESTATE_NOW: now, GITHUB_STEP_SUMMARY: "",
-        MOLIT_API_ENDPOINT: server?.saleUrl ?? "", MOLIT_API_KEY: server ? "test-key" : "",
+        MOLIT_API_ENDPOINT: server?.saleUrl ?? "", MOLIT_API_KEY: server ? "test-key" : "", MOLIT_DELAY_MS: "0", MOLIT_RETRY_MS: "0",
       },
     });
     return { code: 0, out: stdout + stderr };
@@ -491,4 +499,137 @@ test("diffRows: #820 측정의 값 행 정의(구·단지·면적·계약일·�
   const registered = diffRows(stored, stored.map((item, i) => (i === 0 ? { ...item, rgstDate: "26.09.01" } : item))).counts;
   assert.deepEqual([registered.changed, registered.gone, registered.appeared, registered.valueOut + registered.valueIn], [1, 0, 0, 0], "등기일만 붙은 행은 바뀐 행이고 값 행이 아니다");
   assert.equal(itemKey(stored[0]).length, 12);
+});
+
+// ---- cto #890 F1·F2: 실패한 회차가 그 달을 다 써 버리지 않는다 ----
+
+const URL_OK = "https://github.com/kyhsa93/jipgye/issues/861#issuecomment-1";
+
+test("F2: --run 에 --now 가 오면 호출 전에 거부한다(실행 시각은 진짜 시계)", async (t) => {
+  const server = await startFakeMolit(() => successXml([]));
+  t.after(() => server.close());
+  const { dir, raw } = await fixtureRaw();
+  const res = await cli(["--run", "--approved-calls", "160", "--owner-notice", URL_OK, "--now", "2026-11-10T05:00:00Z"], { raw, server, now: "2026-11-10T05:00:00Z", bin: fakeGh(path.join(dir, "gh"), "completed") });
+  assert.equal(res.code, 3, res.out);
+  assert.match(res.out, /--now 를 줄 수 없다/);
+  assert.equal(server.calls.length, 0);
+});
+
+test("F1: 전면 오류면 종료 4·불완전 기록(complete:false), 같은 달 재실행은 받지 못한 슬롯만 받고 누적 호출이 승인 안이다. 끝나면 그 달은 닫힌다", async (t) => {
+  let broken = true;
+  const response = response0605();
+  const server = await startFakeMolit((kind, { code, yearMonth }) => {
+    if (broken) return errorXml("SERVICE KEY IS NOT REGISTERED ERROR.");
+    return code === "11110" && yearMonth === "202605" ? successXml(response.items) : successXml(rows(yearMonth, 25));
+  });
+  t.after(() => server.close());
+  const { dir, raw } = await fixtureRaw();
+  const before = snapshot(raw);
+  const bin = fakeGh(path.join(dir, "gh"), "completed");
+  const args = ["--run", "--approved-calls", "160", "--owner-notice", URL_OK];
+
+  const first = await cli(args, { raw, server, now: "2026-11-10T05:00:00Z", bin });
+  assert.equal(first.code, 4, first.out);
+  assert.match(first.out, /::error::.*받지 못한 슬롯 2개/);
+  assert.equal(server.calls.length, 10, "5슬롯 연속 실패로 멈춘다(슬롯당 2회)");
+  const r1 = JSON.parse(await readFile(roundPath("202611", raw), "utf8"));
+  assert.equal(r1.complete, false);
+  assert.equal(r1.calls, 10);
+  assert.deepEqual(Object.entries(r1.slots).filter(([, s]) => ["failed", "missing"].includes(s.status)).map(([n]) => n).sort(), ["11110-202605", "11140-202606"]);
+  assert.match(roundLines(r1).join("\n"), /불완전/);
+  assert.deepEqual(snapshot(raw), before);
+
+  // 같은 달 재실행: 받지 못한 두 슬롯만, 누적 12회 ≤ 승인 160회.
+  broken = false;
+  const second = await cli(args, { raw, server, now: "2026-11-11T05:00:00Z", bin });
+  assert.equal(second.code, 0, second.out);
+  assert.equal(server.calls.length, 12);
+  assert.deepEqual(server.calls.slice(10).map((c) => `${c.code}-${c.yearMonth}`).sort(), ["11110-202605", "11140-202606"]);
+  const r2 = JSON.parse(await readFile(roundPath("202611", raw), "utf8"));
+  assert.equal(r2.complete, true);
+  assert.equal(r2.calls, 12);
+  assert.ok(r2.calls <= r2.approvedCalls);
+  assert.deepEqual(r2.runs.map((r) => r.calls), [10, 2]);
+  assert.equal(r2.slots["11110-202605"].status, "applied");
+  assert.equal(r2.slots["11110-202606"].status, "no-slot", "첫 실행의 다른 슬롯 기록은 그대로 이어진다");
+  assert.deepEqual((await readRecollectedSlot("sale", "11110", "202605", raw)).items, canon("202605", response.items));
+  assert.deepEqual(snapshot(raw), before);
+
+  // 완료된 달은 다시 돌지 않는다.
+  const third = await cli(args, { raw, server, now: "2026-11-12T05:00:00Z", bin });
+  assert.equal(third.code, 3, third.out);
+  assert.match(third.out, /이미 있다/);
+  assert.equal(server.calls.length, 12);
+});
+
+test("F1: 같은 달 재실행은 소유자 답이 기록과 같아야 하고, 남은 호출(승인 − 누적)이 모자라면 호출 전에 거부한다", async (t) => {
+  const server = await startFakeMolit(() => successXml([]));
+  t.after(() => server.close());
+  const { dir, raw } = await fixtureRaw();
+  const bin = fakeGh(path.join(dir, "gh"), "completed");
+  const record = (calls) => ({
+    round: "202611", months: plan().months, first: true, planned: 150, cap: 160, calls, complete: false, approvedCalls: 160, ownerNotice: URL_OK,
+    slots: { "11110-202605": { status: "failed", error: "http 500" }, "11140-202606": { status: "missing" } }, outOfWindow: [], table: [],
+  });
+  await mkdir(path.dirname(roundPath("202611", raw)), { recursive: true });
+  await writeFile(roundPath("202611", raw), JSON.stringify(record(159)));
+  const over = await cli(["--run", "--approved-calls", "160", "--owner-notice", URL_OK], { raw, server, now: "2026-11-10T05:00:00Z", bin });
+  assert.equal(over.code, 3, over.out);
+  assert.match(over.out, /남은 호출 1회\(승인 160 − 이번 달 누적 159\)가 받지 못한 슬롯 2개보다 모자라다/);
+  await writeFile(roundPath("202611", raw), JSON.stringify(record(10)));
+  const other = await cli(["--run", "--approved-calls", "160", "--owner-notice", "https://github.com/kyhsa93/jipgye/issues/861#issuecomment-2"], { raw, server, now: "2026-11-10T05:00:00Z", bin });
+  assert.equal(other.code, 3, other.out);
+  assert.match(other.out, /회차 기록.*과 다르다/);
+  const more = await cli(["--run", "--approved-calls", "200", "--owner-notice", URL_OK], { raw, server, now: "2026-11-10T05:00:00Z", bin });
+  assert.equal(more.code, 3, more.out);
+  assert.equal(server.calls.length, 0);
+
+  // 순수 함수: 재실행 계획은 받지 못한 슬롯만, 상한은 승인 − 누적.
+  const p = planRound({ now: NOW, rounds: ["202611"], latest: record(10) });
+  assert.deepEqual([p.ok, p.retry, p.targets, p.planned, p.used], [true, true, ["11110-202605", "11140-202606"], 2, 10]);
+  assert.deepEqual(checkApproval(p, { approvedCalls: 160, ownerNotice: URL_OK }), { ok: true, cap: 150 });
+  assert.equal(planRound({ now: NOW, rounds: ["202611"], latest: { ...record(10), complete: true } }).ok, false);
+});
+
+test("F1: 12-01 에 불완전한 202611 이 있으면 2회차로 계산하고, 받지 못한 202604·202605 는 「미수신 후 창 밖」으로 적는다", async () => {
+  const { raw } = await fixtureRaw();
+  await writeTwice(raw, "11110", "202604", rows("202604", 20), rows("202604", 22));
+  const responses = new Map([["11140-202606", { items: rows("202606", 25), totalCount: 25 }]]);
+  const r1 = await processRound({ plan: plan(), responses, observedAt: NOW.toISOString(), dir: raw, out: raw, calls: 3 });
+  assert.equal(r1.record.complete, false);
+  assert.deepEqual(Object.entries(r1.record.slots).filter(([, s]) => s.status === "missing").map(([n]) => n).sort(), ["11110-202604", "11110-202605"]);
+
+  const dec = new Date("2026-12-01T05:00:00Z");
+  const latest = null; // 12월 기록은 아직 없다 - 11월 기록은 이번 달이 아니다
+  const p2 = planRound({ now: dec, rounds: ["202611"], latest, clock: false });
+  assert.deepEqual([p2.ok, p2.first, p2.retry, p2.months], [true, false, false, ["202606", "202607", "202608", "202609", "202610"]]);
+  assert.equal(planRound({ now: dec, rounds: ["202611"] }).ok, false, "시계로는 12-01 이 달 초라 막힌다");
+  const r2 = await processRound({ plan: p2, responses: new Map(), observedAt: dec.toISOString(), dir: raw, out: raw });
+  assert.deepEqual(r2.record.outOfWindow, [
+    { slot: "11110-202604", why: "미수신 후 창 밖" },
+    { slot: "11110-202605", why: "미수신 후 창 밖" },
+  ]);
+  assert.ok(roundLines(r2.record).some((line) => line.startsWith("미수신 후 창 밖") && line.includes("11110-202604, 11110-202605")));
+});
+
+test("legal 보완 1: 일 수집이 보관 창(24달)을 벗어난 매매 슬롯을 지울 때 같은 달 덧씌움도 지운다", async (t) => {
+  const server = await startFakeMolit((kind) => (kind === "rent" ? successXml([rentItem()]) : successXml([saleItem()])));
+  t.after(() => server.close());
+  const { dir, raw } = await fixtureRaw();
+  await writeTwice(raw, "11110", "202410", rows("202410", 5), rows("202410", 6));
+  const overlay = (ym, n) => buildOverlay({ slot: { district: "11110", yearMonth: ym, observedAt: "2026-08-17T00:00:00.000Z", count: n, items: canon(ym, rows(ym, n)) }, items: canon(ym, rows(ym, n + 1)), totalCount: n + 1, observedAt: NOW.toISOString() });
+  await writeOverlay("11110", "202410", overlay("202410", 6), raw);
+  await writeOverlay("11110", "202605", overlay("202605", 30), raw);
+  await exec(process.execPath, ["scripts/fetch-realestate.ts"], {
+    cwd: root,
+    env: {
+      ...process.env,
+      MOLIT_API_ENDPOINT: server.saleUrl, MOLIT_API_KEY: "test", MOLIT_RENT_API_ENDPOINT: server.rentUrl, MOLIT_RENT_API_KEY: "test",
+      REALESTATE_RAW_DIR: raw, MOLIT_BACKFILL_LIMIT: "0", MOLIT_SWEEP_DELAY_MS: "0", MOLIT_RETRY_MS: "0", REALESTATE_NOW: "2026-11-10T05:00:00Z", GITHUB_STEP_SUMMARY: path.join(dir, "s.md"),
+    },
+  });
+  assert.equal(await readSlotFile("sale", "11110", "202410", raw), null, "만료 슬롯은 지워졌다");
+  assert.equal(await readOverlay("11110", "202410", raw), null, "같은 달 덧씌움도 지워졌다");
+  assert.ok(await readOverlay("11110", "202605", raw), "창 안 덧씌움은 그대로");
+  assert.match(await src("scripts/fetch-realestate.ts"), /removeSlotFile\(slot\.kind, slot\.code, slot\.yearMonth\);\n\s+if \(slot\.kind === "sale"\) await removeOverlay\(slot\.code, slot\.yearMonth\);/);
 });

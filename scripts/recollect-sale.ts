@@ -4,6 +4,8 @@
 //       호출 0회. <폴더>/<구>-<달>.json(슬롯 모양: items·totalCount - #820 아티팩트 got/sale 그대로)을 응답으로 보고 회차를 계산해 --out-dir(기본 build/recollect-dry-run)에만 쓴다.
 //   node scripts/recollect-sale.ts --run --approved-calls <N> --owner-notice <이슈 댓글 URL>
 //       매매 API 호출. 아래 거부 조건을 호출 전에 전부 본다. 쓰는 곳은 raw/recollect 뿐이고 커밋은 부르는 쪽(워크플로의 push-docs.sh)이 한다.
+//       종료 코드: 0 완료, 3 호출 전 거부(호출 0), 4 받지 못한 슬롯이 있음(반영분 덧씌움과 complete:false 기록은 씀 - 같은 달 재실행이 그 슬롯만 받는다), 1 그 밖의 실패.
+//       --now 는 받지 않는다(실행 시각은 진짜 시계).
 //
 // 창(완료 조건 5, pm·cpo 정정): 현재월-6 ~ 동결 직전(현재월-2)의 5달. 1회차에 한해 202604 를 더한다(pm 11-04 판정) - 2026-11 이면 6달 150회, 상한 160회.
 // 호출 상한 = 달 수 × 25 + 10. 2회차부터 202604 가 창에 들면 거부한다.
@@ -11,7 +13,8 @@
 // 호출 전에 거부하는 것(시험: test/recollect-sale.test.mjs):
 //   - 달 초 3일(refreshMonths 가 현재월-2 까지 받는 날 - 창이 일 수집과 겹친다)과 08:00~12:30 KST(수집·요약·배포 시간).
 //   - 1회차가 2026-11 밖(12-01 부터 거부, cpo 11-04 보완 - 12월 공식대로면 202605 가 빠지고, 넣으면 7달 175회로 상한을 넘는다).
-//   - 이번 달 회차가 이미 있음(월 1회), 회차 기록이 지금보다 뒤 달에 있음.
+//   - 이번 달 회차가 이미 있음(월 1회 - 단 그 기록이 불완전하면 받지 못한 슬롯만 다시 받는다), 회차 기록이 지금보다 뒤 달에 있음.
+//   - 같은 달 재실행인데 소유자 답이 기록과 다르거나, 남은 호출(승인 − 그 달 누적)이 받을 슬롯 수보다 모자람.
 //   - 소유자 답이 없거나 답한 호출 수가 이번 상한보다 작음(135회 답으로 160회 회차를 돌리지 않는다).
 //   - daily-update 가 돌고 있거나 줄 서 있음(gh 로 확인하고, 확인하지 못해도 거부). 같은 시각에 원본을 다투면 push-docs.sh 가 실패한다(#92).
 //
@@ -65,33 +68,57 @@ export const recentMonths = (now) => {
   return out;
 };
 
+/** 받지 못한 슬롯의 상태. 저장 슬롯이 있는데 응답이 없으면(호출 실패·상한) 그 회차는 불완전하다. */
+export const UNRECEIVED = Object.freeze(["failed", "missing"]);
+
 /**
  * 이번 회차의 달과 호출 수. 거부면 { ok: false, reason }. rounds: 이미 있는 회차 기록의 달(raw/recollect/round-<달>.json).
+ * latest: 이번 달 회차 기록(있으면). 그 기록이 불완전(complete:false)할 때만 같은 달 재실행을 허용하고, 그때는 받지 못한 슬롯(targets)만 받는다(cto #890 F1) -
+ * 실패한 회차가 그 달을 다 써 버리면 1회차의 202604·202605 를 다시 받을 길이 없다. 재실행의 상한은 checkApproval 이 정한다(승인 − 그 달 누적).
  * clock=false 는 드라이런용 - 시각 거부(달 초·조용한 시간)만 건너뛰고 나머지 규칙은 같다.
  */
-export function planRound({ now, rounds = [], clock = true }): any {
+export function planRound({ now, rounds = [], clock = true, latest = null }): any {
   const round = yearMonthOf(now);
   const refuse = (reason) => ({ ok: false, round, reason });
   if (clock && kstDateParts(now).day <= MONTH_START_GRACE_DAYS) return refuse(`달 초 ${MONTH_START_GRACE_DAYS}일에는 돌지 않는다(일 수집이 현재월-2 까지 받는 날)`);
   if (clock && inQuietHours(now)) return refuse("08:00~12:30 KST 에는 호출을 시작하지 않는다");
   const done = [...rounds].sort();
-  if (done.includes(round)) return refuse(`${round} 회차 기록이 이미 있다 - 월 1회다`);
   if (done.length && done.at(-1) > round) return refuse(`회차 기록(${done.at(-1)})이 지금(${round})보다 뒤다`);
+  if (done.includes(round)) {
+    if (latest?.round !== round || latest.complete !== false) return refuse(`${round} 회차 기록이 이미 있다 - 월 1회다`);
+    const targets = Object.entries<any>(latest.slots ?? {}).filter(([, entry]) => UNRECEIVED.includes(entry?.status)).map(([name]) => name).sort();
+    if (!targets.length) return refuse(`${round} 회차 기록에 받지 못한 슬롯이 없다`);
+    return {
+      ok: true, round, first: latest.first, months: latest.months, retry: true, targets, planned: targets.length,
+      used: latest.calls ?? 0, approvedCalls: latest.approvedCalls, ownerNotice: latest.ownerNotice,
+    };
+  }
   const first = done.length === 0;
   if (first && round !== FIRST_ROUND) return refuse(`1회차는 ${FIRST_ROUND} 안에만 돈다 - 그 밖이면 호출하지 않고 다시 고지한다`);
   const months = first ? [FIRST_ROUND_EXTRA, ...recentMonths(now)] : recentMonths(now);
   if (!first && months.includes(FIRST_ROUND_EXTRA)) return refuse(`${FIRST_ROUND_EXTRA} 는 1회차에만 받는다`);
   const planned = months.length * CALLS_PER_MONTH;
-  return { ok: true, round, first, months, planned, cap: planned + CALL_MARGIN };
+  return { ok: true, round, first, months, retry: false, planned, cap: planned + CALL_MARGIN };
 }
 
-/** 소유자 답 확인. 답한 호출 수가 이번 상한보다 작으면 거부한다. */
+/**
+ * 소유자 답 확인. 결과 { ok, cap } - cap 이 이번 실행의 호출 상한이다.
+ * 첫 실행: 답한 호출 수가 상한(달 수 × 25 + 10)보다 작으면 거부한다.
+ * 같은 달 재실행: 답(댓글 URL·호출 수)이 그 달 기록과 같아야 하고, 상한은 답한 호출 수 − 그 달 누적 호출이다. 받을 슬롯 수보다 모자라면 거부한다.
+ */
 export function checkApproval(plan, { approvedCalls, ownerNotice }) {
   if (!OWNER_NOTICE.test(String(ownerNotice ?? ""))) return { ok: false, reason: "소유자 답(이슈 댓글 URL)이 없다 - 고지 전에는 호출하지 않는다" };
+  if (plan.retry) {
+    if (ownerNotice !== plan.ownerNotice) return { ok: false, reason: `소유자 답이 ${plan.round} 회차 기록(${plan.ownerNotice})과 다르다` };
+    if (approvedCalls !== plan.approvedCalls) return { ok: false, reason: `답한 호출 수(${approvedCalls})가 ${plan.round} 회차 기록(${plan.approvedCalls})과 다르다` };
+    const cap = approvedCalls - plan.used;
+    if (cap < plan.planned) return { ok: false, reason: `남은 호출 ${cap}회(승인 ${approvedCalls} − 이번 달 누적 ${plan.used})가 받지 못한 슬롯 ${plan.planned}개보다 모자라다` };
+    return { ok: true, cap };
+  }
   if (!Number.isInteger(approvedCalls) || approvedCalls < plan.cap) {
     return { ok: false, reason: `소유자가 답한 호출 수(${approvedCalls ?? "없음"})가 이번 회차 상한 ${plan.cap}회(${plan.months.length}달 × ${CALLS_PER_MONTH} + ${CALL_MARGIN})보다 작다` };
   }
-  return { ok: true };
+  return { ok: true, cap: plan.cap };
 }
 
 /** daily-update 실행 목록(gh run list --json status) 가운데 돌거나 줄 선 것. */
@@ -117,7 +144,7 @@ export function identityDigest(items) {
  *  1. 이번 이유가 0행·totalCount 불일치면 몇 회차든 반영하지 않는다(연속이면 [오류] 이슈).
  *  2. 절반 아래·10행 감소가 두 회차 연속이고 응답 신원 집합이 같으면 둘째 회차에 반영한다.
  *  3. 연속인데 신원 집합이 다르면 반영하지 않는다(셋째 회차에도 걸리면 pm 판정).
- *  4. 거부 뒤 창 밖으로 나간 슬롯은 여기 오지 않는다 - outOfWindow 가 따로 적는다.
+ *  4. 거부 뒤 창 밖으로 나간 슬롯은 여기 오지 않는다 - processRound 의 outOfWindow 가 「거부 후 창 밖」으로 따로 적는다.
  */
 export function consecutiveStep(verdict, prev, identity) {
   if (verdict.apply) return { apply: true, status: "applied", note: null };
@@ -145,23 +172,49 @@ export async function readRound(round, dir = RAW_DIR) {
 
 const emptyRow = (month) => ({ month, slots: 0, applied: 0, rejected: 0, missing: 0, rows: 0, market: 0, valueOut: 0, valueIn: 0, changed: 0, appeared: 0, gone: 0, gonePublic: 0 });
 
+const DIFF_KEYS = ["rows", "market", "valueOut", "valueIn", "changed", "appeared", "gone", "gonePublic"];
+
+/** 슬롯 기록 → 달별 회차 표. 값·사라진 행은 반영한 슬롯만 센다(거부한 슬롯은 열에 들지 않는다, cpo 11-15). */
+export function buildTable(months, slots) {
+  return months.map((month) => {
+    const row = emptyRow(month);
+    for (const [name, entry] of Object.entries<any>(slots)) {
+      if (name.slice(6) !== month) continue;
+      if (UNRECEIVED.includes(entry.status)) row.missing += 1;
+      if (!entry.diff) continue;
+      row.slots += 1;
+      if (entry.status.startsWith("rejected")) {
+        row.rejected += 1;
+        continue;
+      }
+      row.applied += 1;
+      for (const key of DIFF_KEYS) row[key] += entry.diff[key];
+    }
+    return row;
+  });
+}
+
 /**
  * 한 회차를 계산하고 out 에 쓴다(덧씌움·회차 기록). 호출은 하지 않는다 - responses 는 이미 받은 것이다.
  * responses: Map(slotName → { items, totalCount } | { error }). 없는 슬롯은 응답 없음으로 센다(드라이런: 아티팩트에 없는 달).
  * dir: 슬롯·지난 덧씌움·지난 회차를 읽는 raw. out: 쓰는 raw(실행이면 dir 와 같다).
+ * 같은 달 재실행(plan.retry)이면 그 달 기록을 이어 쓴다 - plan.targets 슬롯만 새로 계산하고, 호출 수는 그 달 누적이다.
+ * 저장 슬롯이 있는데 받지 못한 슬롯이 하나라도 있으면 기록은 complete:false 다(같은 달 재실행을 허용하는 표시).
  */
 export async function processRound({ plan, responses, observedAt, dir = RAW_DIR, out = dir, calls = 0, meta = {} }) {
   const done = await listRounds(dir);
-  const prevRound = done.length ? await readRound(done.at(-1), dir) : null;
+  const before = done.filter((round) => round < plan.round);
+  const prevRound = before.length ? await readRound(before.at(-1), dir) : null;
   const prevSlots = prevRound?.slots ?? {};
-  const slots = {};
-  const table = [];
+  const base = plan.retry ? await readRound(plan.round, dir) : null;
+  if (plan.retry && !base) throw new Error(`${plan.round} 회차 기록을 읽지 못했다`);
+  const slots = { ...(base?.slots ?? {}) };
   let written = 0;
 
   for (const yearMonth of plan.months) {
-    const row = emptyRow(yearMonth);
     for (const { code } of DISTRICTS) {
       const name = slotName(code, yearMonth);
+      if (plan.retry && !plan.targets.includes(name)) continue;
       const slot = await readSlotFile("sale", code, yearMonth, dir);
       const response = responses.get(name);
       if (!slot || slot.ok === false || !Array.isArray(slot.items)) {
@@ -169,11 +222,9 @@ export async function processRound({ plan, responses, observedAt, dir = RAW_DIR,
         continue;
       }
       if (!response || response.error) {
-        row.missing += 1;
         slots[name] = { status: response?.error ? "failed" : "missing", ...(response?.error ? { error: response.error } : {}) };
         continue;
       }
-      row.slots += 1;
       const fetched = buildSlotFile({ kind: "sale", code, yearMonth, items: response.items, totalCount: response.totalCount, observedAt });
       const current = mergeRecollect(slot, await readOverlay(code, yearMonth, dir));
       const diff = diffRows(current.items, fetched.items).counts;
@@ -193,34 +244,33 @@ export async function processRound({ plan, responses, observedAt, dir = RAW_DIR,
         identity,
         diff,
       };
-      if (!step.apply) {
-        row.rejected += 1;
-        continue;
-      }
-      row.applied += 1;
-      for (const key of ["rows", "market", "valueOut", "valueIn", "changed", "appeared", "gone", "gonePublic"]) row[key] += diff[key];
-      if (await writeOverlay(code, yearMonth, buildOverlay({ slot, items: fetched.items, totalCount: response.totalCount, observedAt }), out)) written += 1;
+      if (step.apply && (await writeOverlay(code, yearMonth, buildOverlay({ slot, items: fetched.items, totalCount: response.totalCount, observedAt }), out))) written += 1;
     }
-    table.push(row);
   }
 
-  // 4번 갈래: 지난 회차에 거부됐는데 이번 창 밖인 슬롯. 따로 받지 않고 얼린 값 그대로 둔다.
+  // 지난 회차 슬롯 가운데 이번 창 밖으로 나간 것. 따로 받지 않고 얼린 값(또는 지난 덧씌움) 그대로 둔다.
+  //   거부 후 창 밖: 연속 거부 4번 갈래(pm 11-15). 미수신 후 창 밖: 지난 회차가 받지 못한 채 달이 바뀐 슬롯(cto #890 F1).
   const outOfWindow = Object.entries<any>(prevSlots)
-    .filter(([name, entry]) => entry?.status?.startsWith("rejected") && !plan.months.includes(name.slice(6)))
-    .map(([name]) => name)
-    .sort();
+    .filter(([name]) => !plan.months.includes(name.slice(6)))
+    .map(([name, entry]) => ({ slot: name, why: entry?.status?.startsWith("rejected") ? "거부 후 창 밖" : UNRECEIVED.includes(entry?.status) ? "미수신 후 창 밖" : null }))
+    .filter((entry) => entry.why)
+    .sort((a, b) => (a.slot < b.slot ? -1 : 1));
 
+  const complete = !Object.entries<any>(slots).some(([name, entry]) => plan.months.includes(name.slice(6)) && UNRECEIVED.includes(entry.status));
   const record = {
     round: plan.round,
     observedAt,
     months: plan.months,
     first: plan.first,
-    planned: plan.planned,
-    cap: plan.cap,
-    calls,
+    planned: base?.planned ?? plan.planned,
+    cap: base?.cap ?? plan.cap,
+    calls: (base?.calls ?? 0) + calls,
+    complete,
+    runs: [...(base?.runs ?? []), { observedAt, calls, slots: plan.retry ? plan.targets.length : plan.planned }],
+    ...(base ? { approvedCalls: base.approvedCalls, ownerNotice: base.ownerNotice } : {}),
     ...meta,
     identitySkip: IDENTITY_SKIP,
-    table,
+    table: buildTable(plan.months, slots),
     outOfWindow,
     slots,
   };
@@ -236,7 +286,8 @@ export function roundLines(record) {
   const lines = [
     `### 매매 재수집 ${record.round} (#861)${record.dryRun ? " - 드라이런, 호출 0" : ""}`,
     "",
-    `달 ${record.months.join("·")} · 호출 ${record.calls}/${record.cap} · 계획 ${record.planned}`,
+    `달 ${record.months.join("·")} · 호출 ${record.calls}/${record.cap}${record.runs?.length > 1 ? `(${record.runs.length}번 실행 누적)` : ""} · 계획 ${record.planned}` +
+      (record.complete === false ? " · **불완전 - 받지 못한 슬롯이 있다(같은 달 재실행은 그 슬롯만)**" : ""),
     "",
     "| 달 | 응답 슬롯 | 반영 | 거부 | 응답 없음 | 저장 행 | 시장 행 | 값 나감 | 값 들어옴 | 값 행 | 값 행% | 바뀐 행 | 새 행 | 사라진 행(시장) |",
     "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
@@ -256,7 +307,10 @@ export function roundLines(record) {
       lines.push(`| ${label} (\`${name}\`) | ${s.status}${s.note ? ` - ${s.note}` : ""} | ${s.text ?? s.error ?? s.reason ?? ""} |`);
     }
   }
-  if (record.outOfWindow.length) lines.push("", `거부 후 창 밖(얼린 값 그대로, 따로 받지 않음): ${record.outOfWindow.join(", ")}`);
+  for (const why of ["거부 후 창 밖", "미수신 후 창 밖"]) {
+    const names = record.outOfWindow.filter((entry) => entry.why === why).map((entry) => entry.slot);
+    if (names.length) lines.push("", `${why}(얼린 값 그대로, 따로 받지 않음): ${names.join(", ")}`);
+  }
   return lines;
 }
 
@@ -269,7 +323,9 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
  * fetchOnce(code, yearMonth) → { items, totalCount }. 오류 글자에서 비밀값(secrets)을 지운다.
  */
 export async function fetchRound({ plan, fetchOnce, secrets = [], delayMs = DELAY_MS, retryWaitMs = RETRY_WAIT_MS }) {
-  const queue = plan.months.flatMap((yearMonth) => DISTRICTS.map(({ code }) => ({ code, yearMonth })));
+  const queue = plan.retry
+    ? plan.targets.map((name) => ({ code: name.slice(0, 5), yearMonth: name.slice(6) }))
+    : plan.months.flatMap((yearMonth) => DISTRICTS.map(({ code }) => ({ code, yearMonth })));
   const clean = (text) => secrets.filter(Boolean).reduce((acc, secret) => acc.split(secret).join("***"), String(text)).slice(0, 200);
   const responses = new Map();
   let calls = 0;
@@ -348,14 +404,17 @@ export async function main(argv = process.argv.slice(2), { readRuns = readDailyR
     },
   });
   if (v["dry-run"] === v.run) refuse("--dry-run 과 --run 중 하나만 준다");
+  // 실행 시각은 진짜 시계로만 정한다(cto #890 F2) - --now 로 달 초·조용한 시간·1회차 기한 거부를 비켜 갈 수 없게.
+  if (v.run && v.now !== undefined) refuse("--run 에는 --now 를 줄 수 없다 - 실행 시각은 진짜 시계다");
   const now = v.now ? collectionNow("now", { now: v.now }) : collectionNow("REALESTATE_NOW");
   const rounds = await listRounds(RAW_DIR);
+  const latest = rounds.includes(yearMonthOf(now)) ? await readRound(yearMonthOf(now), RAW_DIR) : null;
 
   if (v["dry-run"]) {
     if (!v.responses) refuse("--dry-run 에는 --responses <폴더> 가 필요하다");
-    const plan = planRound({ now, rounds, clock: false });
+    const plan = planRound({ now, rounds, latest, clock: false });
     if (!plan.ok) refuse(plan.reason);
-    const clock = planRound({ now, rounds });
+    const clock = planRound({ now, rounds, latest });
     const out = path.resolve(v["out-dir"] ?? path.join(root, "build", "recollect-dry-run"));
     if (path.resolve(out) === path.resolve(RAW_DIR)) refuse("드라이런은 raw 에 쓰지 않는다 - --out-dir 를 따로 준다");
     await rm(path.join(out, RECOLLECT_DIR), { recursive: true, force: true });
@@ -367,10 +426,11 @@ export async function main(argv = process.argv.slice(2), { readRuns = readDailyR
   }
 
   // ---- 실행: 아래 거부를 모두 지나야 첫 호출을 한다 ----
-  const plan = planRound({ now, rounds });
-  if (!plan.ok) refuse(plan.reason);
-  const approval = checkApproval(plan, { approvedCalls: v["approved-calls"] === undefined ? undefined : Number(v["approved-calls"]), ownerNotice: v["owner-notice"] });
+  const planned = planRound({ now, rounds, latest });
+  if (!planned.ok) refuse(planned.reason);
+  const approval = checkApproval(planned, { approvedCalls: v["approved-calls"] === undefined ? undefined : Number(v["approved-calls"]), ownerNotice: v["owner-notice"] });
   if (!approval.ok) refuse(approval.reason);
+  const plan = { ...planned, cap: approval.cap };
   const endpoint = process.env.MOLIT_API_ENDPOINT;
   const key = process.env.MOLIT_API_KEY;
   if (!endpoint || !key) refuse("MOLIT_API_KEY·MOLIT_API_ENDPOINT 가 없다");
@@ -386,8 +446,13 @@ export async function main(argv = process.argv.slice(2), { readRuns = readDailyR
   const { fetchApiOnce } = await import("./fetch-realestate.ts");
   const fetchOnce = (code, yearMonth) => fetchApiOnce(endpoint, key, code, yearMonth);
   const observedAt = now.toISOString();
-  console.log(`[recollect] ${plan.round} 회차: ${plan.months.join("·")} · 계획 ${plan.planned}회 · 상한 ${plan.cap}회`);
-  const { responses, calls } = await fetchRound({ plan, fetchOnce, secrets: [key, endpoint] });
+  console.log(
+    `[recollect] ${plan.round} 회차${plan.retry ? ` 재실행(받지 못한 슬롯 ${plan.targets.length}개, 이번 달 누적 ${plan.used}회)` : ""}: ` +
+      `${plan.months.join("·")} · 계획 ${plan.planned}회 · 상한 ${plan.cap}회`
+  );
+  // 쉬는 시간은 일 수집과 같은 이름의 환경변수로 줄일 수 있다(시험만 쓴다 - 워크플로는 두지 않는다).
+  const wait = (name, fallback) => (/^\d+$/.test(process.env[name] ?? "") ? Number(process.env[name]) : fallback);
+  const { responses, calls } = await fetchRound({ plan, fetchOnce, secrets: [key, endpoint], delayMs: wait("MOLIT_DELAY_MS", DELAY_MS), retryWaitMs: wait("MOLIT_RETRY_MS", RETRY_WAIT_MS) });
   const { record, written } = await processRound({
     plan, responses, observedAt, dir: RAW_DIR, out: RAW_DIR, calls,
     meta: { approvedCalls: Number(v["approved-calls"]), ownerNotice: v["owner-notice"] },
@@ -395,7 +460,14 @@ export async function main(argv = process.argv.slice(2), { readRuns = readDailyR
   const pruned = await pruneOverlays(RAW_DIR);
   report(roundLines(record));
   for (const [name, s] of Object.entries<any>(record.slots)) if (s.note?.includes("[오류]")) console.log(`::warning::매매 재수집 ${name}: ${s.note} - ${s.text}`);
-  console.log(`[recollect] 덧씌움 ${written}개 바뀜${pruned ? ` · 슬롯 없는 덧씌움 ${pruned}개 지움` : ""} · 호출 ${calls}/${plan.cap}`);
+  console.log(`[recollect] 덧씌움 ${written}개 바뀜${pruned ? ` · 슬롯 없는 덧씌움 ${pruned}개 지움` : ""} · 호출 ${calls}/${plan.cap} · 이번 달 누적 ${record.calls}회`);
+  // 받지 못한 슬롯이 있으면 종료 4(cto #890 F1). 반영한 슬롯의 덧씌움과 불완전 기록은 이미 썼다 - 커밋은 하되 실행은 실패로 보이게 하고,
+  // 같은 달 재실행이 그 슬롯만 받는다.
+  if (!record.complete) {
+    const missed = Object.entries<any>(record.slots).filter(([, s]) => UNRECEIVED.includes(s.status)).length;
+    console.log(`::error::매매 재수집 ${record.round}: 받지 못한 슬롯 ${missed}개 - 회차 기록 complete:false, 같은 달 재실행은 그 슬롯만 받는다`);
+    process.exitCode = 4;
+  }
   return record;
 }
 

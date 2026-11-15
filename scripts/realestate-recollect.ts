@@ -165,6 +165,9 @@ export async function writeOverlay(code, yearMonth, overlay, dir = RAW_DIR) {
   return true;
 }
 
+/** 슬롯을 지울 때 같은 달 덧씌움도 지운다(일 수집의 보관 창 만료, legal #861 보완 1 - 슬롯이 없는 덧씌움을 남기지 않는다). 지웠으면 true. */
+export const removeOverlay = (code, yearMonth, dir = RAW_DIR) => writeOverlay(code, yearMonth, null, dir);
+
 /**
  * 합치는 읽기 층(한 곳). 슬롯 + 덧씌움 → 다시 받은 응답과 같은 행 목록. 덧씌움이 없거나 낡았으면 슬롯을 그대로 돌려준다(같은 객체).
  * 돌려주는 값의 arrivals 는 슬롯 것 그대로다 - 덧씌운 행에는 도착일이 없다(도착 기준 소비자는 이 함수를 부르지 않는다).

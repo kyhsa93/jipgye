@@ -3,6 +3,7 @@ import { appendFileSync } from "node:fs";
 import path from "node:path";
 import { DISTRICTS, districtNames } from "./realestate-districts.ts";
 import { readSlots, removeSlotFile } from "./realestate-raw.ts";
+import { removeOverlay } from "./realestate-recollect.ts";
 import { HOLD_DAYS, pruneHolds, readHolds, reasonText, receiveSlot, writeHolds } from "./realestate-guard.ts";
 import { planFetch, planSummary, slotKey } from "./realestate-slots.ts";
 import { collectionNow } from "./collection-now.ts";
@@ -214,8 +215,10 @@ async function main() {
     }
   }
 
+  // 보관 창(24달)을 벗어난 슬롯을 지울 때 같은 달 재수집 덧씌움(raw/recollect/sale, #861)도 지운다 - 재수집이 돌지 않는 달에도 남지 않게(legal 보완 1).
   for (const slot of plan.expired) {
     await removeSlotFile(slot.kind, slot.code, slot.yearMonth);
+    if (slot.kind === "sale") await removeOverlay(slot.code, slot.yearMonth);
   }
 
   // 보류 상태는 회차 끝에 한 번 쓴다(raw/realestate-holds.json, 보류가 없으면 파일이 없다). 이번에 받을 차례가 아니었던 슬롯의 보류는 지운다.
