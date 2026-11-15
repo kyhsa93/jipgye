@@ -60,9 +60,9 @@ export const FIXTURE = {
 export const views = () => recoViews(files(FIXTURE));
 export const model = (o) => budgetModel(views(), o);
 export const textOf = (html) => html.replace(/<[^>]+>/g, " ");
-// 화면에 나오는 글자: 태그 밖 글자 + 화면용 속성(data-*-en·aria-label·title·placeholder). 스크립트·head 는 뺀다(장 안 JS 의 "return" 같은 코드 낱말은 화면 글자가 아니다).
+// 화면에 나오는 글자: 태그 밖 글자 + 화면용 속성(data-*-en·한국어 data-msg·data-cols(장 전용 JS 가 그리는 문구, #871 PR-B clo)·aria-label·title·placeholder). 스크립트·head 는 뺀다(장 안 JS 의 "return" 같은 코드 낱말은 화면 글자가 아니다).
 export const shown = (html) =>
-  `${textOf(html.replace(/<head>[\s\S]*?<\/head>/, "").replace(/<script[\s\S]*?<\/script>/g, ""))} ${[...html.matchAll(/\s(?:data-[\w-]*en|aria-label|title|placeholder)="([^"]*)"/g)].map((m) => m[1]).join(" ")}`;
+  `${textOf(html.replace(/<head>[\s\S]*?<\/head>/, "").replace(/<script[\s\S]*?<\/script>/g, ""))} ${[...html.matchAll(/\s(?:data-(?:[\w-]*en|msg|cols)|aria-label|title|placeholder)="([^"]*)"/g)].map((m) => m[1]).join(" ")}`;
 
 // 금지어(po 명세 ③ 「금지어(시험, clo 확정)」 + clo PR #878 판정이 더한 것). 영어 "top" 은 ③ 의 열 머리 "Costs on top of price" 만 걷어 낸 뒤 검사한다(clo 판정).
 const BANNED_KO = ["점수", "순위", "추천", "1위", "베스트", "TOP", "유망", "오를", "상승", "여력", "수익", "투자", "저평가", "기회", "지금 사야", "후보", "보장", "적기", "저렴", "급매", "가성비"];

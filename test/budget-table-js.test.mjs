@@ -399,8 +399,14 @@ test("JS 가 그리는 글자(두 언어·0곳·줄·실패)와 틀의 data-msg 
     for (const [band, area] of [[7, "all"], [9, "over-85"]]) {
       await page.set("bt-band", band);
       await page.set("bt-area", area);
-      const shown = [page.els["bt-head"].textContent, page.els["bt-range"].textContent, page.els["bt-live"].innerHTML, page.els["bt-rows"].innerHTML].join(" ").replace(/<[^>]+>/g, " ");
-      assertNoBanned(shown, `${lang} ${band} ${area}`);
+      // JS 가 그린 네 자리 각각(완료 조건 4, clo PR #879): innerHTML 은 태그·속성째 본다 - 링크 글자·캡션·버튼까지.
+      const out = { "bt-head": page.els["bt-head"].textContent, "bt-range": page.els["bt-range"].textContent, "bt-live": page.els["bt-live"].innerHTML, "bt-rows": page.els["bt-rows"].innerHTML };
+      for (const [id, v] of Object.entries(out)) {
+        // 9억대·85㎡ 초과는 0곳 조건이라 노원구 줄이 없다(그 경우 줄 자리는 비는 것이 맞다).
+        if (!(id === "bt-rows" && band !== 7)) assert.ok(v.length > 0, `${lang} ${band} ${area} ${id}: 비었다 - 금지어 검사가 허공을 친다`);
+        assertNoBanned(v, `${lang} ${band} ${area} ${id}`);
+      }
+      const shown = Object.values(out).join(" ").replace(/<[^>]+>/g, " ");
       for (const w of ["미래가치", "균형", "Future value", "Balanced", "같은 값대·면적대 칸", "Same-band cells"]) assert.ok(!shown.includes(w), w);
       assert.ok(shown.includes(lang === "ko" ? "실거주 항목: 검증 전" : "Day-to-day living: not yet verified"));
     }
