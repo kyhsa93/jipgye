@@ -5,12 +5,6 @@ import path from "node:path";
 import { SITE } from "./helpers/site-root.mjs";
 import { RATE_NOTICE_PAGES } from "../scripts/updated-stamp.ts";
 
-/**
- * PR-C 전까지만 둔다(#871, cto 착수 판정 조건 A). 근거표 장은 noindex 이고 PR-A·B 동안 들어오는 링크가 없다 - 예산대 18장에서 `#bN` 으로 들어오는 링크는 PR-C 가 단다.
- * PR-C 는 이 상수와 아래 예외를 함께 지운다(그 PR 의 시험이 이 장도 고아가 아님을 다시 본다).
- */
-const ORPHAN_UNTIL_PR_C = ["buy-by-budget.html"];
-
 const root = path.resolve(import.meta.dirname, "..");
 const docs = path.join(root, SITE);
 
@@ -119,8 +113,7 @@ test("어느 페이지도 다른 페이지에서 닿지 않는 채로 있지 않
   }
 
   // 금리 종료 안내 다섯 장(#577 B2)은 지운 주소로 바로 들어오는 사람만 보는 장이라 일부러 아무 데서도 링크하지 않는다(noindex, 2027-01-23 삭제 - #581).
-  const orphans = [...inbound].filter(([f, n]) => n === 0 && !RATE_NOTICE_PAGES.includes(f) && !ORPHAN_UNTIL_PR_C.includes(f)).map(([f]) => f);
-  for (const f of ORPHAN_UNTIL_PR_C) assert.equal(inbound.get(f), 0, `${f}: 들어오는 링크가 생겼다 - PR-C 라면 ORPHAN_UNTIL_PR_C 를 지운다`);
+  const orphans = [...inbound].filter(([f, n]) => n === 0 && !RATE_NOTICE_PAGES.includes(f)).map(([f]) => f);
   assert.deepEqual(orphans, [], `어디서도 링크되지 않는 페이지: ${orphans.join(", ")}`);
 });
 
