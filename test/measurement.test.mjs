@@ -154,7 +154,8 @@ function watchPage({ saved = [], fail = false } = {}) {
   Object.assign(a.context, {
     district: "노원구", locale: "ko", squash: (s) => s.replace(/\s/g, ""), escapeHtml: (s) => String(s),
     fullDeals: new Map([["노원구", []]]), cache: {}, loadJson: async () => ({ deals: [] }),
-    localStorage: { getItem: () => JSON.stringify(saved), setItem: () => { if (fail) throw Error("blocked"); } },
+    // watchlist.js 는 쓰기 직전·그리기마다 저장소를 다시 읽는다(#824) - 쓴 값을 기억해야 두 번째 클릭이 「빼기」가 된다.
+    localStorage: { getItem: () => JSON.stringify(saved), setItem: (k, v) => { if (fail) throw Error("blocked"); saved = JSON.parse(v); } },
   });
   a.context.document.getElementById = (k) => nodes.get(k);
   a.context.window.cardApt = "비공개 단지 이름";
