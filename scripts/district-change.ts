@@ -20,6 +20,12 @@ import { REGIONS, shiftMonth } from "./outlook.ts";
 export const PERIOD = 3;
 export const MIN_CELLS = 30;
 export const ROUNDS = 400;
+/**
+ * 갈아타기 화면의 구간 재추출 횟수(#858). ROUNDS(400)는 segment-change·direct-deals 도 기본값으로 쓰므로 그대로 두고, 갈아타기 빌드만
+ * 이 값을 넘긴다. 2026-11-15 원본에서 씨앗 20개로 재 보니 400번은 276쌍 가운데 기준(100,000번)과 판정이 다른 쌍이 중앙값 2·최댓값 5,
+ * 2,000번은 1·3 - 사전 등록 문턱(중앙값 ≤ 1, 최댓값 ≤ 3)을 넘는 가장 작은 후보다(research/district-change-rounds-2026-11).
+ */
+export const SWITCH_ROUNDS = 2000;
 
 const median = (values) => {
   const s = [...values].sort((a, b) => a - b);
@@ -98,17 +104,22 @@ export function band(values, { rounds = ROUNDS, seed = 20261001 } = {}) {
   return [meds[Math.floor(rounds * 0.05)], meds[Math.floor(rounds * 0.95)]];
 }
 
-/** 자치구 행. 칸이 모자라면 값 없이 칸 수만 남긴다 - 빈칸과 "모자람"은 다르다. */
-export function districtRows(byDistrict, districts) {
+/** 자치구 행. 칸이 모자라면 값 없이 칸 수만 남긴다 - 빈칸과 "모자람"은 다르다. rounds 는 band 의 재추출 횟수(갈아타기는 SWITCH_ROUNDS). */
+export function districtRows(byDistrict, districts, { rounds = ROUNDS } = {}) {
   return districts.map(({ code, name }) => {
     const values = byDistrict.get(code) ?? [];
     if (values.length < MIN_CELLS) return { code, name, cells: values.length, change: null };
-    const [lo, hi] = band(values);
+    const [lo, hi] = band(values, { rounds });
     return { code, name, cells: values.length, change: pct(median(values)), low: pct(lo), high: pct(hi) };
   });
 }
 
-/** 두 구를 갈라 볼 수 있나 - 90% 구간이 겹치지 않을 때만. 300쌍을 빌드에서 다 정해 둔다. */
+/**
+ * 두 구를 갈라 볼 수 있나 - 90% 구간이 겹치지 않을 때만. 300쌍을 빌드에서 다 정해 둔다.
+ * 일부러 표에 적힌 반올림 값(0.1%p)으로, 엄격한 `>` 로 견준다 - 끝이 같으면(17.9 와 17.9) 겹친 것이다. 독자가 표의 두 구간만 보고 판정을
+ * 직접 확인할 수 있어야 한다. 반올림 전 값으로 견주는 쪽도 재 봤으나 모든 횟수에서 덜 안정적이었다(2,000번에서 기준과 다른 쌍 중앙값 2·최댓값 4
+ * 대 반올림 1·3, #858).
+ */
 export function pairVerdicts(rows) {
   const ok = rows.filter((r) => r.change !== null);
   const out = {};
@@ -189,7 +200,11 @@ export function leadSentence(rows, pairs, p, locale = "ko") {
 // 금액은 +0.7%만 움직였고, 25개 구 중 12곳이 2%p 넘게 어긋났다(#36).
 
 export const AREA = 84;
-export const MONEY_ROUNDS = 200;
+/**
+ * 금액 간격의 재추출 횟수(#858). 2026-11-15 원본에서 사전 등록 후보(200~4,000번) 가운데 빌드 시간 예산(+30초) 안에서 가장 큰 값.
+ * 이 횟수에서도 구간 끝이 0에 붙은 몇 쌍은 답(늘었다·줄었다·말할 수 없다)이 씨앗에 따라 갈린다 - method 에 그 수를 적었다(#908).
+ */
+export const MONEY_ROUNDS = 4000;
 
 /** 칸마다 두 시기의 ㎡당 중앙값. 자치구별로 모은다. */
 export function cellLevels(deals, { base, recent }) {
@@ -225,11 +240,28 @@ export function districtLevel(cells) {
   return { base: Math.round(base), recent: Math.round(recent) };
 }
 
+/** 정렬된 배열의 중앙값(median 과 같은 규칙 - 짝수 길이면 가운데 둘의 평균). */
+const sortedMedian = (s) => {
+  const m = s.length >> 1;
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+};
+
 /**
  * 두 구 사이 금액 간격이 두 시기 사이에 얼마나 변했나(b - a 기준, 만원)와 90% 구간.
  * 두 구의 칸을 각자 다시 뽑는다 - 둘은 서로 다른 표본이다.
+ *
+ * 다시 뽑는 판은 levels 와 같은 식을 빠르게 돈다(#858): 칸마다 r 과 log(r/b) 를 한 번만 계산해 두고, 뽑은 값을 Float64Array 에 담아 정렬한다.
+ * 난수·추첨 순서(한 판마다 A 칸 전부 → B 칸 전부)와 식의 연산 순서(median(r)*84, recent / exp(median(log(r/b))), 간격 식)는 옛 구현 그대로라
+ * 결과가 비트까지 같다 - test/district-change.test.mjs 가 옛 구현을 들고 견준다. 옛 구현은 판마다 칸 객체 배열을 새로 만들고 비교 함수로
+ * 정렬해 4,000번 276쌍에 이 머신에서 152.6초 걸렸다(2026-11-15 data-analyst 측정, 새 구현 27.7초).
  */
 export function moneyGap(cellsA, cellsB, { rounds = MONEY_ROUNDS, seed = 20261001 } = {}) {
+  const g = moneyGapRaw(cellsA, cellsB, { rounds, seed });
+  return { change: Math.round(g.change), low: Math.round(g.low), high: Math.round(g.high) };
+}
+
+/** moneyGap 의 반올림 전 값. 시험이 옛 구현과 비트까지 견주려고 따로 둔다. */
+export function moneyGapRaw(cellsA, cellsB, { rounds = MONEY_ROUNDS, seed = 20261001 } = {}) {
   const gap = (a, b) => {
     const [la, lb] = [levels(a), levels(b)];
     return lb.recent - la.recent - (lb.base - la.base);
@@ -239,24 +271,38 @@ export function moneyGap(cellsA, cellsB, { rounds = MONEY_ROUNDS, seed = 2026100
     state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
     return state / 2 ** 32;
   };
-  const draw = (cells) => Array.from({ length: cells.length }, () => cells[Math.floor(next() * cells.length)]);
-  const sims = [];
-  for (let i = 0; i < rounds; i += 1) sims.push(gap(draw(cellsA), draw(cellsB)));
-  sims.sort((x, y) => x - y);
-  return {
-    change: Math.round(gap(cellsA, cellsB)),
-    low: Math.round(sims[Math.floor(rounds * 0.05)]),
-    high: Math.round(sims[Math.floor(rounds * 0.95)]),
+  const side = (cells) => {
+    const n = cells.length;
+    return { n, r: Float64Array.from(cells, (c: { r: number }) => c.r), lr: Float64Array.from(cells, (c: { r: number; b: number }) => Math.log(c.r / c.b)), dr: new Float64Array(n), dl: new Float64Array(n) };
   };
+  // levels 와 같은 식. 뽑은 값을 담은 두 배열을 제자리에서 정렬한다.
+  const drawLevels = (s) => {
+    for (let k = 0; k < s.n; k += 1) {
+      const j = Math.floor(next() * s.n);
+      s.dr[k] = s.r[j];
+      s.dl[k] = s.lr[j];
+    }
+    const recent = sortedMedian(s.dr.sort()) * AREA;
+    return { recent, base: recent / Math.exp(sortedMedian(s.dl.sort())) };
+  };
+  const [A, B] = [side(cellsA), side(cellsB)];
+  const sims = new Float64Array(rounds);
+  for (let i = 0; i < rounds; i += 1) {
+    const la = drawLevels(A);
+    const lb = drawLevels(B);
+    sims[i] = lb.recent - la.recent - (lb.base - la.base);
+  }
+  sims.sort();
+  return { change: gap(cellsA, cellsB), low: sims[Math.floor(rounds * 0.05)], high: sims[Math.floor(rounds * 0.95)] };
 }
 
 /** 값을 낸 구(칸이 충분한 구)끼리 300쌍의 금액 간격 변화. 키는 "작은코드-큰코드", 값은 큰코드 - 작은코드. */
-export function moneyPairs(levelsByDistrict, rows) {
+export function moneyPairs(levelsByDistrict, rows, { rounds = MONEY_ROUNDS } = {}) {
   const ok = rows.filter((r) => r.change !== null).map((r) => r.code).sort();
   const out = {};
   for (let i = 0; i < ok.length; i += 1) {
     for (let j = i + 1; j < ok.length; j += 1) {
-      out[`${ok[i]}-${ok[j]}`] = moneyGap(levelsByDistrict.get(ok[i]), levelsByDistrict.get(ok[j]));
+      out[`${ok[i]}-${ok[j]}`] = moneyGap(levelsByDistrict.get(ok[i]), levelsByDistrict.get(ok[j]), { rounds });
     }
   }
   return out;

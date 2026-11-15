@@ -153,7 +153,8 @@ test("빌더가 낸 갈아타기 자료에서 금액과 %가 25개 구 모두 �
       for (const m of [6, 7, 8]) items.push(row(2026, m, recent));
     }
   });
-  const d = buildPayload({ items, now: new Date("2026-10-01T00:00:00Z"), official: null, survey: null });
+  // 이 시험의 단언(줄의 % 대 84㎡ 환산 두 값)은 금액 구간과 무관하다 - 금액 재추출은 200번으로 줄여 부른다(#858, MONEY_ROUNDS 그대로면 15초).
+  const d = buildPayload({ items, now: new Date("2026-10-01T00:00:00Z"), official: null, survey: null, moneyRounds: 200 });
   const rows = d.rows.filter((r) => r.change !== null && r.level84);
   assert.equal(rows.length, DISTRICTS.length, "값을 낸 구가 25개가 아니다 - 검사가 일부만 본다");
   for (const r of rows) {
@@ -225,4 +226,101 @@ test("갈아타기: 주소의 두 구로 열리고, 답 한 줄이 문단 위에
   await page.settle();
   assert.equal(page.text("compare-answer"), "가구 → 다구: 옮기는 데 드는 돈이 늘었는지 줄었는지 말할 수 없습니다");
   assert.match(decodeURIComponent(page.sandbox.location.search), /from=가구&to=다구/, "고른 구가 주소에 안 남았다");
+});
+
+// ---- #858 재추출 횟수 -------------------------------------------------------------------------------------------------------------
+// 옛 moneyGap(origin/main 89d89aa2 그대로, 반올림만 뺐다). 빠른 구현은 이것과 비트까지 같아야 MONEY_ROUNDS 를 올릴 수 있다(pm 판정 완료 조건 5).
+function oldMoneyGapRaw(cellsA, cellsB, { rounds, seed }) {
+  const median = (values) => {
+    const s = [...values].sort((a, b) => a - b);
+    const m = s.length >> 1;
+    return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+  };
+  const levels = (cells) => {
+    const recent = median(cells.map((c) => c.r)) * 84;
+    return { recent, base: recent / Math.exp(median(cells.map((c) => Math.log(c.r / c.b)))) };
+  };
+  const gap = (a, b) => {
+    const [la, lb] = [levels(a), levels(b)];
+    return lb.recent - la.recent - (lb.base - la.base);
+  };
+  let state = seed >>> 0;
+  const next = () => {
+    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+    return state / 2 ** 32;
+  };
+  const draw = (cells) => Array.from({ length: cells.length }, () => cells[Math.floor(next() * cells.length)]);
+  const sims = [];
+  for (let i = 0; i < rounds; i += 1) sims.push(gap(draw(cellsA), draw(cellsB)));
+  sims.sort((x, y) => x - y);
+  return { change: gap(cellsA, cellsB), low: sims[Math.floor(rounds * 0.05)], high: sims[Math.floor(rounds * 0.95)] };
+}
+
+test("빠른 moneyGap 은 옛 구현과 반올림 전 값까지 같다 — 칸 1개·짝수·홀수 길이·같은 값 반복·r==b·두 구 길이 다름, 씨앗 둘 (#858)", async () => {
+  const { moneyGap, moneyGapRaw, MONEY_ROUNDS } = await import("../scripts/district-change.ts");
+  // 소수점이 붙은 ㎡당 값(만원). 결정적으로 만든다 - 시험이 데이터나 날짜에 따라 갈리면 안 된다.
+  const cellsOf = (n, k) => Array.from({ length: n }, (_, i) => {
+    const b = 900 + ((i * 37 + k * 11) % 23) * 41.37;
+    return { b, r: b * (1 + (((i * 13 + k) % 17) - 5) / 97) };
+  });
+  const sets = {
+    one: [{ b: 1000, r: 1100 }],
+    even: cellsOf(12, 1),
+    odd: cellsOf(13, 2),
+    repeated: Array.from({ length: 9 }, (_, i) => (i % 3 ? { b: 1500, r: 1650 } : { b: 1200.5, r: 1300.25 })),
+    flat: Array.from({ length: 8 }, (_, i) => ({ b: 1000 + i * 3.5, r: 1000 + i * 3.5 })), // r == b → log 0
+    long: cellsOf(41, 3),
+  };
+  const names = Object.keys(sets);
+  let compared = 0;
+  for (const seed of [20261001, 777]) {
+    for (const a of names) {
+      for (const b of names) {
+        if (a === b) continue;
+        // 옛 구현은 느려서(판마다 칸 객체 배열·비교 함수 정렬) 모든 조합을 MONEY_ROUNDS 로 돌리면 시험 하나에 6초다. 짝수·홀수 횟수 둘로 보고,
+        // MONEY_ROUNDS 는 아래 한 쌍으로 본다. 횟수는 백분위 칸 위치만 바꾸고 추첨·식은 같다.
+        for (const rounds of [200, 401]) {
+          const want = oldMoneyGapRaw(sets[a], sets[b], { rounds, seed });
+          const got = moneyGapRaw(sets[a], sets[b], { rounds, seed });
+          for (const key of ["change", "low", "high"]) assert.ok(Object.is(got[key], want[key]), `${a}-${b} 씨앗 ${seed} ${rounds}번 ${key}: ${got[key]} 대 옛 ${want[key]}`);
+          compared += 1;
+        }
+      }
+    }
+  }
+  assert.equal(compared, 2 * names.length * (names.length - 1) * 2, "견준 조합 수가 모자라다 - 검사가 일부만 본다");
+  // 빌드가 쓰는 횟수(MONEY_ROUNDS)와 기본 씨앗에서도 같고, 공개 파일에 쓰는 반올림 값의 바깥 모양도 그대로다.
+  const g = oldMoneyGapRaw(sets.even, sets.long, { rounds: MONEY_ROUNDS, seed: 20261001 });
+  const raw = moneyGapRaw(sets.even, sets.long);
+  for (const key of ["change", "low", "high"]) assert.ok(Object.is(raw[key], g[key]), `MONEY_ROUNDS ${key}: ${raw[key]} 대 옛 ${g[key]}`);
+  assert.deepEqual(moneyGap(sets.even, sets.long), { change: Math.round(g.change), low: Math.round(g.low), high: Math.round(g.high) });
+});
+
+test("두 구 판정은 표에 적힌 반올림 값으로 견주고, 끝이 같으면 겹친 것이다 (#858)", () => {
+  const row = (code, low, high) => ({ code, name: code, cells: 40, change: (low + high) / 2, low, high });
+  const pairs = pairVerdicts([row("A", 17.9, 20.1), row("B", 15.2, 17.9), row("C", 15.0, 17.8)]);
+  assert.equal(pairs["A-B"], false, "표의 두 구간이 17.9 에서 맞닿는데 차이를 말했다");
+  assert.equal(pairs["A-C"], true, "17.8 과 17.9 는 갈라 볼 수 있다");
+});
+
+test("method·갈아타기 화면에 적힌 재추출 횟수가 빌더 상수와 같다 (#858)", async () => {
+  const { SWITCH_ROUNDS, MONEY_ROUNDS, ROUNDS } = await import("../scripts/district-change.ts");
+  const fmt = (n) => n.toLocaleString("en-US");
+  const want = [fmt(SWITCH_ROUNDS), fmt(MONEY_ROUNDS)];
+  const method = await readFile(path.join(root, "docs/method.html"), "utf8");
+  // 갈아타기 절(h2 id) 안만 본다. 같은 절의 같은 집 쌍 문단(repeat-sales)은 다른 자라 그 「집을 400번」은 ROUNDS 와 무관하게 남는다.
+  const section = (id) => {
+    const start = method.indexOf(`<h2 id="${id}">`);
+    assert.ok(start >= 0, `method 에 ${id} 절이 없다`);
+    const end = method.indexOf("<h2", start + 1);
+    return method.slice(start, end).replace(/<p id="repeat-sales(-en)?">[\s\S]*?<\/p>/, "");
+  };
+  const counts = (text, re) => [...text.matchAll(re)].map((m) => m[1]);
+  assert.deepEqual(counts(section("switch-house"), /([\d,]+)번 다시 뽑아/g), want, "method 갈아타기 절(한국어)의 구간·금액 횟수");
+  assert.deepEqual(counts(section("switch-house-en"), /resampled ([\d,]+) times/g), want, "method 갈아타기 절(영어)의 구간·금액 횟수");
+  const page = await readFile(path.join(root, "docs/switch-house.html"), "utf8");
+  assert.deepEqual(counts(page, /칸을 ([\d,]+)번 다시 뽑아/g), [fmt(SWITCH_ROUNDS)], "갈아타기 표 주석(한국어)");
+  assert.deepEqual(counts(page, /resampling units ([\d,]+) times/g), [fmt(SWITCH_ROUNDS)], "갈아타기 표 주석(영어)");
+  // segment-change·direct-deals 가 기본값으로 쓰는 ROUNDS 는 이 이슈에서 바꾸지 않는다(#909 에서 따로 잰다).
+  assert.equal(ROUNDS, 400);
 });
