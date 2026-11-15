@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#087568">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<meta name="google-adsense-account" content="ca-pub-1195159445218373">
+<title>예산대로 보는 단지 근거표</title>
+<meta name="description" content="값대와 면적대를 고르면 최근 183일 실거래로 값을 낸 서울 아파트 단지·평형과, 거래가 모자라 뺀 곳을 자치구별로 셉니다.">
+<meta name="site-group" content="digest">
+<!-- 근거표 장(#871). 색인 해제는 이 이슈 밖이고 N1~N6 을 따른다 - 그때까지 noindex·사이트맵 밖이다(시험이 지킨다). -->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://kyhsa93.github.io/jipgye/buy-by-budget.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="집계">
+<meta property="og:url" content="https://kyhsa93.github.io/jipgye/buy-by-budget.html">
+<meta property="og:title" content="예산대로 보는 단지 근거표">
+<meta property="og:description" content="값대와 면적대를 고르면 최근 183일 실거래로 값을 낸 서울 아파트 단지·평형과, 거래가 모자라 뺀 곳을 자치구별로 셉니다.">
+<meta property="og:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="예산대로 보는 단지 근거표">
+<meta name="twitter:description" content="값대와 면적대로 서울 아파트 단지·평형의 실거래 값과 뺀 곳을 자치구별로 셉니다.">
+<meta name="twitter:image" content="https://kyhsa93.github.io/jipgye/icons/icon-512.png">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<a class="skip-link" href="#content" data-skip-en="Skip to content">본문 바로가기</a>
+<main id="main">
+  <header class="tw:mb-2 tw:1024:mb-6">
+    <div>
+      <a class="brand" id="site-brand" href="./index.html" data-brand-en="Jipgye">집계</a>
+      <h1 id="page-title">예산대로 보는 단지 근거표</h1>
+      <div class="updated updated-warn" id="updated-warn" role="status" hidden></div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-toggle" type="button" id="share-button" aria-label="공유"><span aria-hidden="true">📤</span></button>
+      <button class="icon-toggle" type="button" id="theme-toggle" aria-label="테마 전환"><span aria-hidden="true">🌓</span></button>
+      <button class="icon-toggle" type="button" id="lang-toggle" aria-label="언어 전환"><span aria-hidden="true">🌐</span></button>
+    </div>
+  </header>
+
+  <nav class="page-nav tw:gap-2 tw:mb-2 tw:1024:mb-4 tw:*:rounded" aria-label="섹션">
+    <a href="./index.html" id="nav-digest">오늘</a>
+    <a href="./realestate.html" id="nav-realestate" class="active">아파트 시세</a>
+    <a href="./news.html" id="nav-news">뉴스</a>
+  </nav>
+
+  <form class="site-search" role="search">
+    <label class="sr-only" for="site-search-input" id="site-search-label">무엇이든 찾기</label>
+    <input type="search" id="site-search-input" role="combobox" aria-expanded="false"
+           aria-controls="site-search-results" aria-autocomplete="list" autocomplete="off" enterkeyhint="search"
+           placeholder="자치구·단지·예산으로 찾기 (예: 강남구, 래미안, 10억)">
+    <div class="site-search-results" id="site-search-results" role="listbox"
+         aria-labelledby="site-search-label" hidden></div>
+  </form>
+  <div id="content" tabindex="-1"></div>
+
+  <section id="bt-intro" class="tw:mb-10 tw:1024:mb-16">
+    <p class="lead on" data-lang="ko">값대와 면적대를 고르면 최근 183일 실거래로 값을 낸 단지·평형과, 거래가 모자라 뺀 곳을 자치구별로 셉니다. 줄은 가나다순이며 어느 곳을 고르라는 뜻이 아닙니다.</p>
+    <p class="lead" data-lang="en" lang="en">Pick a price band and a size band. We count, by district, the complex-size pairs priced from the last 183 days of reported deals and those left out for too few deals. Rows are alphabetical and do not suggest any choice.</p>
+  </section>
+
+  <section id="bt-result" class="tw:mb-10 tw:1024:mb-16">
+    <!-- 구운 기본 보기(7억대·전체 면적, N6). prerender 가 reco 25개를 못 읽거나 모양이 다르면 이 빈 자리(안내 + 같은 값대의 예산대 장 링크)가 그대로 나간다(cto 4a). -->
+    <!--prerender:budgetTable--><p class="content-notice on" data-lang="ko">조건을 바꾸려면 자바스크립트가 필요합니다. <a href="./budget-7eok.html">예산대별 장에서도 같은 값대를 볼 수 있습니다 →</a></p><p class="content-notice" data-lang="en" lang="en">Changing conditions needs JavaScript. <a href="./budget-7eok.html">Budget pages show the same bands →</a></p><!--/prerender:budgetTable-->
+  </section>
+
+  <section id="bt-limits" class="tw:mb-10 tw:1024:mb-16">
+    <p class="on" data-lang="ko">이 표는 어느 단지가 더 낫다거나 값이 오른다고 말하지 않습니다. 국토교통부에 신고된 실거래로 센 값이며 매물이 아닙니다. 대출 상한과 필요 현금은 규정으로 셈한 추정이고, 실제 한도는 소득과 금융회사 심사에 따라 다릅니다.</p>
+    <p data-lang="en" lang="en">This table does not say which complex is better or that prices will rise. Figures come from deals reported to MOLIT, not listings. Loan caps and cash needed are rule-based estimates; actual limits depend on income and lender review.</p>
+  </section>
+
+  <footer class="site-footer">
+    <div class="updated" id="updated">기준일</div>
+    <div id="footer-source">{{src:budget.ko}}</div>
+    <div style="margin-top:6px;">
+      <a href="./about.html" id="footer-about">소개</a>
+      <span aria-hidden="true"> · </span>
+      <a href="./method.html" id="footer-method">숫자를 만드는 방법</a>
+      <span aria-hidden="true"> · </span>
+      <a href="https://kyhsa93.github.io/privacy-policy" id="footer-privacy" target="_blank" rel="noopener noreferrer">개인정보처리방침</a>
+    </div>
+  </footer>
+</main>
+<script src="./nav.js" defer></script>
+<script src="./search.js" defer></script>
+<script src="./analytics.js"></script>
+<script>
+// 근거표 장(#871 PR-A). 이 장의 숫자는 빌드가 두 언어로 다 구워 둔다 - 여기서는 테마와 언어를 고르기만 하고, 데이터를 받지 않는다.
+// 조건을 바꾸는 폼과 장 전용 JS 는 PR-B(#681 경로)에서 들어온다. 그 전까지 이 스크립트는 주소(location·history)를 건드리지 않는다.
+(function () {
+  const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
+  let theme = (function () {
+    let saved;
+    try { saved = window.localStorage.getItem("theme"); } catch {}
+    return /^(light|dark|auto)$/.test(saved) ? saved : "light";
+  })();
+
+  function applyTheme(next) {
+    theme = next;
+    try { window.localStorage.setItem("theme", theme); } catch {}
+    if (theme === "auto") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", theme);
+    document.querySelector("#theme-toggle span").textContent = THEME_ICONS[theme];
+  }
+
+  const NAV = {
+    ko: {
+      digest: "오늘",
+      news: "뉴스",
+      realestate: "아파트 시세",
+      title: "예산대로 보는 단지 근거표",
+      about: "소개",
+      method: "숫자를 만드는 방법",
+      privacy: "개인정보처리방침",
+      source: "{{src:budget.ko}}",
+    },
+    en: {
+      digest: "Today",
+      news: "News",
+      realestate: "Apartment prices",
+      title: "Complex evidence table by price band",
+      about: "About",
+      method: "How these numbers are made",
+      privacy: "Privacy policy",
+      source: "{{src:budget.en}}",
+    },
+  };
+
+  let locale = "ko";
+  try { if (window.localStorage.getItem("lang") === "en") locale = "en"; } catch {}
+
+  function applyLocale(next) {
+    locale = next;
+    try { window.localStorage.setItem("lang", locale); } catch {}
+    document.documentElement.setAttribute("lang", locale);
+    for (const block of document.querySelectorAll("[data-lang]")) {
+      block.classList.toggle("on", block.getAttribute("data-lang") === locale);
+    }
+    const words = NAV[locale];
+    document.getElementById("nav-digest").textContent = words.digest;
+    document.getElementById("nav-news").textContent = words.news;
+    document.getElementById("nav-realestate").textContent = words.realestate;
+    document.getElementById("page-title").textContent = words.title;
+    document.getElementById("footer-about").textContent = words.about;
+    document.getElementById("footer-method").textContent = words.method;
+    document.getElementById("footer-privacy").textContent = words.privacy;
+    document.getElementById("footer-source").textContent = words.source;
+  }
+
+  document.getElementById("theme-toggle").addEventListener("click", function () {
+    applyTheme(theme === "auto" ? "light" : theme === "light" ? "dark" : "auto");
+  });
+  document.getElementById("lang-toggle").addEventListener("click", function () {
+    applyLocale(locale === "ko" ? "en" : "ko");
+  });
+
+  applyTheme(theme);
+  applyLocale(locale);
+})();
+</script>
+</body>
+</html>

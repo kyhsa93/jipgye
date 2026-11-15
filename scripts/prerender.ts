@@ -18,6 +18,8 @@ import { collectStatus } from "./check-data-progress.ts";
 import { digestHtml } from "./week-digest-view.ts";
 import { districtBarsHtml } from "./district-bars.ts";
 import { registrationEnHtml, registrationView } from "./registration-view.ts";
+import { budgetTableBlock } from "./budget-table.ts";
+import { DISTRICT_SLUGS } from "./district-slugs.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -99,6 +101,9 @@ export { budgetBandLabel, CONVERSION_BAND };
 
 /** applyPrerender 를 안 지나는 장 중 출처 줄 자리표시가 있는 장(#588). 표를 손대지 않으려고 accessibleTables 길에 넣지 않는다. */
 export const SOURCE_ONLY_PAGES = ["about.html", "deal-search.html"];
+
+/** applyPrerender 길을 지나되 출력에 없으면 건너뛰는 장(#871). 시험의 축소 사본(render-writes 등)은 이 장을 복사하지 않는다. */
+const OPTIONAL_PAGES = ["buy-by-budget.html"];
 
 export function applyPrerender(html, blocks) {
   let out = html;
@@ -187,6 +192,11 @@ async function main() {
   // method 「수집 상태」 줄: full 실행 기록(market-history). 없으면 줄을 안 그린다.
   const collect = collectStatus(await readJson("market-history"));
   const weekDigest = await readJson("week-digest");
+  // 근거표 장(#871 PR-A): reco 25개를 읽어 구운 기본 보기를 만든다. 읽기와 계산 전체를 감싸 어느 단계에서 실패해도 null(틀의 빈 자리 그대로)이다 -
+  // 이 장 하나 때문에 프리렌더가 종료 1로 끝나 배포가 막히지 않게(cto 착수 판정 4a). readJson 은 없는 파일·깨진 JSON 을 이미 null 로 돌린다.
+  const budgetTable = await Promise.all(Object.values(DISTRICT_SLUGS).map((slug) => readJson(`reco-${slug}`)))
+    .then(budgetTableBlock)
+    .catch(() => null);
   const sources = sourcesMarkup(summary, null, news);
 
   const writes = createWriteSet();
@@ -302,6 +312,7 @@ async function main() {
         indicatorTable: both(indicators?.table, indicatorPick),
       },
     ],
+    [label("buy-by-budget.html"), at("buy-by-budget.html"), { budgetTable }],
     // 손으로 쓴 장이다. 채울 자리는 「수집 상태」 줄 하나(#657 V11, 빌드 때 데이터에서)이고, 표의 머리글 방향·이름은 같은 길로 단다.
     [label("method.html"), at("method.html"), { collectKo: collect?.ko ?? null, collectEn: collect?.en ?? null }],
     [
@@ -331,7 +342,12 @@ async function main() {
     ],
   ]) {
     // 틀이 따로 있는 장은 틀을 읽어 채우고 훑개를 건다(훑개는 굽는 단계의 마지막이다). 나가는 장의 지금 내용은 "변경 없음" 비교용이다.
-    const html = await readFile((templatePath ?? path_) as string, "utf8");
+    // 근거표 장(#871)이 없는 출력(시험의 축소 사본)은 건너뛴다 - 진짜 사이트에서 빠지면 기준일 찍기(PAGE_SOURCES)가 그 장이 없다고 던진다.
+    const html = await readFile((templatePath ?? path_) as string, "utf8").catch((err) => {
+      if (OPTIONAL_PAGES.includes(path.basename(path_ as string)) && err.code === "ENOENT") return null;
+      throw err;
+    });
+    if (html == null) continue;
     const current = templatePath ? await readFile(path_ as string, "utf8").catch(() => null) : html;
     const filled = applyPrerender(html, fileBlocks);
     const next = templatePath ? stripInlineScriptComments(filled) : filled;

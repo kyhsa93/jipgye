@@ -249,7 +249,7 @@ test("범위 밖을 숫자로 고정한다: 손으로 쓴 제자리 장은 주�
   }
   assert.deepEqual(
     withComments,
-    ["about.html", "cancelled-deals.html", "deal-search.html", "floor-gap.html", "index.html", "jeonse-vs-wolse.html", "method.html", "price-outlook.html", "record-high.html", "renewal-vs-new.html", "switch-house.html"],
+    ["about.html", "buy-by-budget.html", "cancelled-deals.html", "deal-search.html", "floor-gap.html", "index.html", "jeonse-vs-wolse.html", "method.html", "price-outlook.html", "record-high.html", "renewal-vs-new.html", "switch-house.html"],
     "범위 밖 장의 목록이 바뀌었다 - 틀에서 찍는 장이 늘었거나 줄었다면 BAKED 와 이 목록을 같이 고친다"
   );
 });

@@ -10,7 +10,7 @@ export function groupForPage(file: string) {
   if (/^(news|rate-news|realestate-news|stock-news)\.html$/.test(file)) return "news";
   if (file === "deal-search.html") return "search";
   if (/^(jeonse-vs-wolse|renewal-vs-new)\.html$/.test(file)) return "calculators";
-  if (/^budget-/.test(file)) return "budget";
+  if (/^budget-/.test(file) || file === "buy-by-budget.html") return "budget";
   if (/^(realestate|apartment-|district-)/.test(file)) return "prices";
   if (file === "price-outlook.html") return "outlook";
   if (/^(floor-gap|record-high|switch-house|cancelled-deals)\.html$/.test(file)) return "analysis";
