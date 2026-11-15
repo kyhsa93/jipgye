@@ -7,6 +7,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import vm from "node:vm";
 
 const root = path.resolve(import.meta.dirname, "..");
 const FILE = "renewal-vs-new.html";
@@ -84,4 +85,76 @@ test("이 장은 색인 대상으로 남는다 - 캐노니컬은 자기 자신, 
   assert.equal(levels[0], 1, `${FILE}: 첫 제목이 h1이 아니다`);
   for (let i = 1; i < levels.length; i += 1) assert.ok(levels[i] - levels[i - 1] <= 1, `${FILE}: 제목 단계를 건너뛴다(h${levels[i - 1]} → h${levels[i]})`);
   assert.equal(levels.filter((n) => n === 2).length, 8, `${FILE}: h2가 여덟이 아니다(재계약 확인기 #652 V3·재계약 vs 이사 #777·전환 계산기 #673 N1·만기 달력 #674 N2 포함) - 본문 제목이 지워졌거나 늘었다`);
+});
+
+// #lead-section 도착 고정(#654 ⑦, cto 판정 2026-11-15): 메인 「재계약할까, 이사할까」는 #lead-section 으로 온다. 위 구획(#check-section·#move 등)이
+// 데이터 뒤 약 2,560px 늘어 답이 밀리는 것(스크롤 앵커링이 없는 브라우저)을 ResizeObserver 로 붙든다. 여기서는 설치 조건과 멈춤만 가짜 DOM 으로 본다 - 위치는 PR 측정.
+async function pin({ hash = "#lead-section", ro = true } = {}) {
+  const html = await read();
+  const code = /\n(\/\/ #lead-section 도착 고정[^\n]*\nif \(location\.hash === "#lead-section"[\s\S]*?\n\}\n)\nmain\(\);\n<\/script>/.exec(html)?.[1];
+  assert.ok(code, "도착 고정 코드가 main() 호출 바로 앞에 없다");
+  const observers = [];
+  const listeners = [];
+  const timers = [];
+  const scrolls = [];
+  let top = 0;
+  const section = { getBoundingClientRect: () => ({ top }), scrollIntoView: (o) => scrolls.push(JSON.stringify(o)) };
+  const main = {};
+  class FakeRO {
+    constructor(cb) { this.cb = cb; this.targets = []; this.off = false; observers.push(this); }
+    observe(el) { this.targets.push(el); }
+    disconnect() { this.off = true; }
+  }
+  vm.runInNewContext(code, {
+    location: { hash },
+    $: (id) => ({ "lead-section": section, main })[id],
+    ...(ro ? { ResizeObserver: FakeRO } : {}),
+    AbortController,
+    addEventListener: (type, fn, opts) => listeners.push({ type, fn, opts }),
+    removeEventListener: () => assert.fail("signal 로 지운다 - removeEventListener 를 부르지 않는다"),
+    setTimeout: (fn, ms) => timers.push({ fn, ms }),
+  });
+  const live = () => listeners.filter((l) => !l.opts.signal.aborted);
+  const fire = (type) => live().filter((l) => l.type === type).forEach((l) => l.fn({ type }));
+  const resize = (t) => ((top = t), observers.forEach((o) => !o.off && o.cb([])));
+  return { observers, listeners, live, timers, scrolls, fire, resize, main };
+}
+
+test("#lead-section 도착 고정은 그 해시이고 ResizeObserver 가 있을 때만 선다 - 아니면 관찰자·리스너·타이머 0 (#654)", async () => {
+  for (const args of [{ hash: "" }, { hash: "#check-section" }, { hash: "#lead-section-x" }, { ro: false }]) {
+    const p = await pin(args);
+    assert.deepEqual([p.observers.length, p.listeners.length, p.timers.length], [0, 0, 0], JSON.stringify(args));
+  }
+  const p = await pin();
+  assert.equal(p.observers.length, 1);
+  assert.deepEqual(p.observers[0].targets, [p.main], "관찰 대상이 #main 이 아니다");
+  assert.deepEqual(p.listeners.map((l) => l.type).sort(), ["hashchange", "keydown", "pointerdown", "touchstart", "wheel"]);
+  for (const l of p.listeners) assert.deepEqual([l.opts.capture, l.opts.passive], [true, true], `${l.type}: capture·passive 가 아니다`);
+  assert.ok(!p.listeners.some((l) => l.type === "scroll"), "스크롤 이벤트로 멈추면 고정 자체의 스크롤에 멈춘다");
+  assert.deepEqual(p.timers.map((t) => t.ms), [15000]);
+});
+
+test("#lead-section 이 맨 위에서 1px 넘게 벗어날 때만 block:start 로 되돌린다 (#654)", async () => {
+  const p = await pin();
+  p.resize(0.5);
+  p.resize(-1);
+  assert.deepEqual(p.scrolls, [], "1px 안에서 움직였다");
+  p.resize(2560);
+  p.resize(-40);
+  assert.deepEqual(p.scrolls, [`{"block":"start"}`, `{"block":"start"}`], "smooth 없이 block:start 로만 되돌린다");
+});
+
+test("첫 입력 하나·hashchange·15초 가운데 먼저 오는 것에 관찰을 끊고 리스너를 모두 지운다 (#654)", async () => {
+  for (const type of ["wheel", "touchstart", "pointerdown", "keydown", "hashchange"]) {
+    const p = await pin();
+    p.fire(type);
+    assert.ok(p.observers[0].off, `${type} 뒤에도 관찰한다`);
+    assert.deepEqual(p.live(), [], `${type} 뒤에 리스너가 남았다`);
+    p.resize(2560);
+    assert.deepEqual(p.scrolls, [], `${type} 뒤에 보정했다`);
+  }
+  const p = await pin();
+  p.timers[0].fn();
+  assert.ok(p.observers[0].off, "15초 뒤에도 관찰한다");
+  assert.deepEqual(p.live(), []);
 });

@@ -722,6 +722,15 @@ $("check-gu").addEventListener("change", (e) => {
 });
 for (const id of ["check-apt", "check-area", "check-old", "check-ask"]) $(id).addEventListener(id === "check-area" ? "change" : "input", renderCheck);
 
+// #lead-section 도착 고정(#654): 위 구획이 데이터 뒤 늘어 답이 밀린다. 첫 입력·hashchange·15초까지 맨 위에 붙든다.
+if (location.hash === "#lead-section" && typeof ResizeObserver === "function") {
+  const s = $("lead-section"), ac = new AbortController(), stop = () => (ro.disconnect(), ac.abort());
+  const ro = new ResizeObserver(() => Math.abs(s.getBoundingClientRect().top) > 1 && s.scrollIntoView({ block: "start" }));
+  for (const e of ["wheel", "touchstart", "pointerdown", "keydown", "hashchange"]) addEventListener(e, stop, { capture: true, passive: true, signal: ac.signal });
+  setTimeout(stop, 15000);
+  ro.observe($("main"));
+}
+
 main();
 </script>
 </body>

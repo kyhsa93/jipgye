@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
+import vm from "node:vm";
 import { pathToFileURL } from "node:url";
 import { loadIndexPage } from "./helpers/index-page.mjs";
 import { SITE } from "./helpers/site-root.mjs";
@@ -34,7 +35,7 @@ test("질문은 조건을 넣지 않아도 답이 보이는 화면으로 보낸�
   const items = await links();
 
   for (const item of items) {
-    const file = item.href.replace("./", "");
+    const file = item.href.replace("./", "").split(/[?#]/)[0];
     assert.ok(files.has(file), `${item.id}가 없는 페이지 ${file}로 보낸다`);
     if (file === "deal-search.html") continue;
     const html = await readFile(path.join(root, SITE, file), "utf8");
@@ -42,6 +43,12 @@ test("질문은 조건을 넣지 않아도 답이 보이는 화면으로 보낸�
       /<!--prerender:[a-zA-Z]+-->[\s\S]{40,}?<!--\/prerender/.test(html),
       `${file}이 미리 그려 둔 답 없이 비어 있다`
     );
+    // 해시로 보내면(#654 q-renewal → #lead-section) 그 구획이 있고, 미리 그려 둔 답이 그 구획 안에 있어야 도착한 자리에 답이 보인다.
+    const hash = /#([\w-]+)$/.exec(item.href)?.[1];
+    if (!hash) continue;
+    const section = new RegExp(`<section id="${hash}"[^>]*>([\\s\\S]*?)</section>`).exec(html)?.[1];
+    assert.ok(section, `${item.id}가 ${file}에 없는 구획 #${hash}로 보낸다`);
+    assert.match(section, /<!--prerender:[a-zA-Z]+-->[\s\S]{40,}?<!--\/prerender/, `${file}#${hash} 구획 안에 미리 그려 둔 답이 없다`);
   }
 });
 
@@ -235,4 +242,16 @@ test("'다른 질문' 목록은 첫 화면 질문 입구와 같다 - 두 벌이 
     const html = await readFile(path.join(root, `${SITE}/${f}.html`), "utf8");
     assert.match(html, /<section id="other-questions"/, `${f}에 다른 질문 자리가 없다`);
   }
+});
+
+test("'다른 질문'은 해시 도착 주소(#654 q-renewal)여도 지금 화면을 뺀다", async () => {
+  const nav = await readFile(path.join(root, "docs/nav.js"), "utf8");
+  const draw = (file) => {
+    const holder = { innerHTML: "" };
+    const document = { querySelectorAll: () => [], querySelector: () => null, getElementById: (id) => (id === "other-questions" ? holder : null), documentElement: { getAttribute: () => "ko" } };
+    vm.runInNewContext(nav, { window: {}, document, location: { pathname: `/jipgye/${file}`, search: "", origin: "https://kyhsa93.github.io" } });
+    return holder.innerHTML;
+  };
+  assert.ok(!draw("renewal-vs-new.html").includes("renewal-vs-new.html"), "재계약 장의 다른 질문에 자기 자신이 있다");
+  assert.ok(draw("floor-gap.html").includes('href="./renewal-vs-new.html#lead-section"'), "다른 장에서 재계약 질문이 #lead-section 으로 가지 않는다");
 });
