@@ -1,0 +1,11 @@
+band 400 ms median 506 all 489,506,525
+band 2000 ms median 2174 all 2030,2174,2183
+money 200 ms median 7204 all 7204
+money 4000 ms median 152617 all 152617
+빠른 money 200 ms 1124
+빠른 money 2000 ms 12016
+빠른 money 4000 ms 27655
+빠른 band 400 ms 67
+빠른 band 2000 ms 304
+
+[exited with code 0]

@@ -167,7 +167,7 @@ test("소비자: 시세 칸·해제·등기는 합친 값을, 직거래·갈아�
   assert.match(cancel, /tryWriteDirectDeals\(\{ byDistrict: await readRawSales\(retentionMonths, undefined, readSlotFile\)/);
   const change = await src("scripts/build-district-change.ts");
   assert.match(change, /writeRegistrationSoft\(\{ items: recollected, now, sameNames \}\)/);
-  assert.match(change, /buildPayload\(\{ items, now, official, survey, sameNames \}\)/);
+  assert.match(change, /buildPayload\(\{ items, now, official, survey, sameNames(, timing)? \}\)/); // timing: #858 계산 시간 로그
   for (const file of ["scripts/build-week-digest.ts", "scripts/build-realestate.ts", "scripts/ledger-snapshot.ts", "scripts/realestate-first-seen.ts", "scripts/build-direct-deals.ts", "scripts/realestate-raw.ts"]) {
     assert.doesNotMatch(await src(file), /realestate-recollect/, file);
   }

@@ -1,6 +1,8 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
+  MONEY_ROUNDS,
+  SWITCH_ROUNDS,
   cellChanges,
   cellLevels,
   districtLevel,
@@ -77,7 +79,11 @@ export function regionTableHtml(regions, locale = "ko") {
   return `<thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${body}</tbody>`;
 }
 
-export function buildPayload({ items, now, official, survey, sameNames = {} }) {
+/**
+ * timing: 넘기면 구간(band)·금액(moneyGap) 계산 ms 를 채운다(#858 - 재추출 횟수를 올린 만큼 Daily 가 늘었는지 로그로 본다).
+ * moneyRounds: 금액 구간 재추출 횟수. 빌드는 늘 MONEY_ROUNDS 이고, 금액 구간과 무관한 단언을 하는 시험만 줄여 부른다(25구 300쌍 × 4,000번이면 시험 하나가 이 머신에서 14.7초).
+ */
+export function buildPayload({ items, now, official, survey, sameNames = {}, timing = undefined, moneyRounds = MONEY_ROUNDS }) {
   const deals = items.map((item) => toDeal(item, sameNames)).filter(Boolean);
   const available = [...new Set(deals.map((d) => d.month))].sort();
   // 신고 기한(30일)이 닫힌 마지막 달. 10월 1일이면 8월이다.
@@ -85,13 +91,18 @@ export function buildPayload({ items, now, official, survey, sameNames = {} }) {
   if (!p) return null;
   const byDistrict = cellChanges(deals, p);
   const levels = cellLevels(deals, p);
-  const rows = districtRows(byDistrict, DISTRICTS).map((r) => ({
+  const bandStart = performance.now();
+  const bandRows = districtRows(byDistrict, DISTRICTS, { rounds: SWITCH_ROUNDS });
+  const bandMs = performance.now() - bandStart;
+  const rows = bandRows.map((r) => ({
     ...r,
     survey: surveyChange(survey?.series?.[r.code], p),
     level84: r.change === null ? null : districtLevel(levels.get(r.code)),
   }));
   const pairs = pairVerdicts(rows);
-  const money = moneyPairs(levels, rows);
+  const moneyStart = performance.now();
+  const money = moneyPairs(levels, rows, { rounds: moneyRounds });
+  if (timing) Object.assign(timing, { band: Math.round(bandMs), money: Math.round(performance.now() - moneyStart) });
   const regions = regionCheck(byDistrict, official?.series, p);
   const both = (fn) => ({ ko: fn("ko"), en: fn("en") });
   return {
@@ -131,7 +142,8 @@ async function main() {
   const now = new Date();
   // 등기·해제 비율(R1, #715). 얼린 달은 재수집 덧씌움을 합친 원본(#861). soft-fail 이라 던지지 않고, 갈아타기 결과와 상관없이 먼저 부른다.
   await writeRegistrationSoft({ items: recollected, now, sameNames });
-  const payload = buildPayload({ items, now, official, survey, sameNames });
+  const timing = { band: 0, money: 0 };
+  const payload = buildPayload({ items, now, official, survey, sameNames, timing });
   if (!payload) {
     console.log("  갈아타기: 두 시기를 정할 원본이 모자라 건너뜀");
     return;
@@ -147,6 +159,7 @@ async function main() {
   );
   // 가격대·연식 구간 변화(N4, #676). 같은 원본·같은 두 시기. soft-fail - 위 갈아타기 파일은 이미 다 썼다.
   await writeSegmentChangeSoft({ items, now, sameNames });
+  console.log(`  갈아타기 계산 시간: 구간 ${timing.band}ms (${SWITCH_ROUNDS}번) · 금액 ${timing.money}ms (${MONEY_ROUNDS}번)`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
