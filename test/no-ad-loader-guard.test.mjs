@@ -54,7 +54,8 @@ test("같은 출처 바깥 경로로 가는 링크는 noreferrer 다 - 앞 장 �
 });
 
 // 로더 제거로 줄어든 몫을 다른 코드에 쓰지 않는다. 늘리려면 이 수를 고치는 이유를 PR 에 적는다.
-const ANALYTICS_MAX_BYTES = 4989;
+// #871 PR-B: scrub 의 해시 지우기(url.hash·예외 경로 split)와 그 이유 한 줄 +68B - 광고 로더가 아니다.
+const ANALYTICS_MAX_BYTES = 5057;
 test("analytics.js 크기 상한 - 병합본 크기로 고정 (#818)", () => {
   const size = readFileSync(sitePath("analytics.js")).length;
   assert.ok(size <= ANALYTICS_MAX_BYTES, `analytics.js ${size}B > 상한 ${ANALYTICS_MAX_BYTES}B. 로더가 돌아온 것이라면: ${REINSTATE}`);

@@ -108,6 +108,13 @@ export function stampHtml(html, ymd) {
 // 장 하나를 읽고 쓰는 길. 기본은 디스크이고, 빌드 스크립트는 쓰기를 모아 뒀다가 한꺼번에 내려 쓴다(#237, render-writes.mjs).
 const diskIo = { read: (file) => readFileSync(file, "utf8"), write: (file, text) => writeFileSync(file, text) };
 
+/**
+ * 기준일 소스가 없어도 배포를 막지 않는 장(#871 PR-B, cto PR-A 관찰). 근거표는 reco 25개가 전부 없거나 updatedAt 이 다 빠지면 구운 보기·건수 파일이 이미
+ * 비어 나가는 장이다(cto 착수 판정 4) - 그 장 하나 때문에 기준일 찍기가 종료 1로 배포를 세우지 않게, 이 장만은 기준일 줄을 틀의 자리표시 그대로 두고 경고를 남긴다.
+ * 다른 장은 지금처럼 던진다(조용히 자리표시를 남기지 않는다).
+ */
+export const STAMP_OPTIONAL = ["buy-by-budget.html"];
+
 /** docsDir의 장들에 기준일을 찍는다. 바뀐 파일만 쓰고, 찍은 장 목록을 돌려준다. */
 export function stampAll({ docsDir, dataDir, pages = PAGE_SOURCES, io = diskIo }: { docsDir?: string; dataDir?: string; pages?: typeof PAGE_SOURCES; io?: typeof diskIo } = {}) {
   const sources = readDataSources(dataDir);
@@ -117,7 +124,16 @@ export function stampAll({ docsDir, dataDir, pages = PAGE_SOURCES, io = diskIo }
     if (!names) continue;
     const full = path.join(docsDir, file);
     const before = io.read(full);
-    const after = stampHtml(before, baselineFor(names, sources));
+    let ymd;
+    try {
+      ymd = baselineFor(names, sources);
+    } catch (err) {
+      if (!STAMP_OPTIONAL.includes(file)) throw err;
+      console.log(`::warning::[updated-stamp] ${file}: ${(err as Error).message} - 기준일 줄을 비운 채 계속한다`);
+      done.push(file);
+      continue;
+    }
+    const after = stampHtml(before, ymd);
     if (after !== before) io.write(full, after);
     done.push(file);
   }

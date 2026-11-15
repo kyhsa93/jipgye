@@ -370,3 +370,18 @@ test("로드가 실패하면 다시 시도할 수단을 준다", async () => {
   }
 });
 
+
+// #871 PR-B: 18장에서 근거표로 오는 #bN(값대)이 page_location·page_referrer 에 실리지 않게 scrub 이 해시를 지운다(사이트 전체, cto 착수 판정 2).
+// 예외 경로(URL 을 못 만들 때)도 ? 와 # 앞에서 자른다.
+test("scrub: 해시를 지운다 - page_location·page_view·같은 사이트 page_referrer 에 # 가 없다 (#871)", async () => {
+  const a = await loadAnalytics({ href: "https://example.test/buy-by-budget.html?q=7억#b9", search: "?q=7억", referrer: "https://example.test/budget-9eok.html#top" });
+  a.runTimers();
+  const sent = a.calls().filter(([kind]) => kind === "config" || kind === "event").map((c) => c[2]);
+  assert.ok(sent.length >= 2);
+  for (const p of sent) {
+    assert.equal(p.page_location, "https://example.test/buy-by-budget.html");
+    assert.equal(p.page_referrer, "https://example.test/budget-9eok.html");
+  }
+  const broken = await loadAnalytics({ transform: (src) => src.replace("const url = new URL(href);", "const url = new URL(href); throw 0;"), href: "https://example.test/a.html#b9" });
+  assert.equal(broken.calls().find(([kind]) => kind === "config")[2].page_location, "https://example.test/a.html");
+});

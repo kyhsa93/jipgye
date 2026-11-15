@@ -135,6 +135,56 @@ export function budgetModel(views, { band = DEFAULT_BAND, area = "all" } = {}) {
   };
 }
 
+// ---- 건수 파일 (PR-B) ---------------------------------------------------------------------------------------------------------
+// 렌더 단계(build-reco-counts.ts)가 build/site/data/reco-counts.json 으로 쓴다 - main 에 커밋하지 않는다(#706 방식, cto 착수 판정 1).
+// 브라우저(docs/budget-table.js)는 머리·구 건수·면적대 표를 이 파일에서 읽기만 하고 다시 세지 않는다(cto 조건 E). 그래서 칸마다 budgetModel 을 그대로 부른다 -
+// 구운 기본 보기와 같은 함수라 두 쪽 숫자가 어긋날 길이 없다.
+
+/** 폼이 고를 수 있는 값대(po 명세 ①: 3억대~20억대 18개, 18장 budget-Neok·#bN 과 같은 단위). */
+export const BANDS = Array.from({ length: 18 }, (_, i) => i + 3);
+/** 형식 버전. 키 이름·배열 순서를 바꾸면 올리고 docs/budget-table.js 의 같은 상수도 올린다(시험이 둘을 맞댄다). */
+export const COUNTS_VERSION = 1;
+
+/**
+ * 건수 파일. b[값대][면적] = [M, K, relax(없으면 null), [구1 M, 구1 K, 구2 M, …]] - 구 순서는 d 의 순서(가나다)다.
+ * d = [구 이름, 파일 slug, 영어 이름, 그 구의 asOf.deals] - 구마다 자료 날짜가 다르면 브라우저가 그 구 줄에 날짜를 붙인다.
+ * out = 폼 값대 목록 밖(3억 미만·21억 이상)에 값을 낸 칸 수(cpo 답 1: 폼에 한 줄).
+ */
+export function recoCounts(views) {
+  const head = budgetModel(views);
+  const b = {};
+  for (const band of BANDS) {
+    b[band] = {};
+    for (const area of ["all", ...AREAS]) {
+      const m = budgetModel(views, { band, area });
+      b[band][area] = [m.M, m.K, m.relax, m.districts.flatMap((d) => [d.M, d.K])];
+    }
+  }
+  let out = 0;
+  for (const v of views) for (const apt of v.apartments) for (const cell of apt.cells) if (!BANDS.includes(priceBand(cell.median))) out++;
+  return {
+    v: COUNTS_VERSION,
+    windowDays: head.windowDays,
+    minDeals: GRADE.minDeals,
+    start: head.asOf.start,
+    end: head.asOf.end,
+    month: [monthLabel(head.asOf.indexRef, "ko"), monthLabel(head.asOf.indexRef, "en")],
+    d: head.districts.map((d) => [d.name, DISTRICT_SLUGS[d.name], districtNameEn(d.name), head.deals[d.name]]),
+    b,
+    out,
+  };
+}
+
+/** 렌더 단계의 입구: 25구 파일 → 건수 파일 객체, 모양이 하나라도 다르면 null(던지지 않는다 - 단계가 경고만 남기고 끝난다, cto 4b). */
+export function recoCountsOf(files) {
+  try {
+    const views = recoViews(files);
+    return views ? recoCounts(views) : null;
+  } catch {
+    return null;
+  }
+}
+
 // ---- 글자 -------------------------------------------------------------------------------------------------------------------
 // 문장은 po 명세 ③ 그대로다(clo 대조는 PR 단계). ③ 에 없는 짧은 이름(면적대 영어·표 머리 몇 개)은 PR 본문 「판단 요청」에 적어 clo 에게 넘긴다.
 
@@ -143,7 +193,7 @@ const AREA_LABEL = {
   en: { all: "all sizes", "under-60": "under 60㎡", "60-85": "60–85㎡", "over-85": "over 85㎡" },
 };
 const bandLabel = (band, lang) => (lang === "en" ? `₩${band / 10}B band` : `${band}억대`);
-const monthLabel = (ref, lang) => {
+export const monthLabel = (ref, lang) => {
   const [y, m] = [ref.slice(0, 4), Number(ref.slice(4))];
   return lang === "en" ? `${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][m - 1]} ${y}` : `${y}년 ${m}월`;
 };
@@ -178,7 +228,7 @@ const WORDS = {
     left: "뺀 곳",
     area: "전용면적",
     // 표 이름에는 값대를 앞에 붙인다 - 나가는 장의 caption 은 숫자를 품어야 한다(test/accessibility.test.mjs, 반복 문장 방지).
-    gridCaption: (band) => `${bandLabel(band, "ko")} 전용면적별 건수`,
+    gridCaption: (band) => `${bandLabel(band, "ko")} · 전용면적별 건수`,
     districtCaption: (band) => `${bandLabel(band, "ko")} · 자치구별 건수(거르는 조건이 아닙니다)`,
     exampleCaption: (band, d) => `${bandLabel(band, "ko")} · 예시(값을 낸 곳이 가장 많은 구의 가나다순 첫 줄): ${d}`,
     cols: ["단지(동)·준공", "전용", "값(지난 거래 범위, 건수)", "마지막 거래", "매매가 위에 드는 돈", "대출 상한(규정 추정)", "필요 현금(이 가정)", "표본", "확인할 것"],

@@ -55,7 +55,9 @@ const GENERATED = /^(rate-news|realestate-news|stock-news|apartment-(sale|jeonse
 const DAY_FILES = /^data\/news-day\/\d{4}-\d{2}-\d{2}\.json$/;
 // 집계 전용 사이트맵(#769): build-updated-stamp 가 출력 디렉터리에만 만드는 산출물 - docs/ 에는 없다.
 const SITEMAP = "sitemap.xml";
-const isOutput = (f) => GENERATED.test(f) || DAY_FILES.test(f) || f === SITEMAP;
+// 근거표 건수 파일(#871 PR-B): build-reco-counts 가 출력 디렉터리에만 만드는 산출물. reco 를 못 읽으면 경고만 남기고 안 만든다(cto 4b).
+const COUNTS = "data/reco-counts.json";
+const isOutput = (f) => GENERATED.test(f) || DAY_FILES.test(f) || f === SITEMAP || f === COUNTS;
 
 test("출력 디렉터리 환경변수가 없거나 비어 있으면 docs/ 다 (기본 경로 불변)", () => {
   assert.equal(siteDir({}), DOCS_DIR);
@@ -143,7 +145,7 @@ test("render-pipeline --out: docs/ 는 한 바이트도 안 바뀌고 출력 디
   assert.equal([...rendered.keys()].filter((f) => GENERATED.test(f)).length, 49, "생성 장이 49장이 아니다");
   assert.deepEqual([...rendered.keys()].filter((f) => !isOutput(f)), [...before.keys()], "파일 집합 동일 - docs/ 의 것에 생성 49장·날짜별 뉴스 파일(#706)·사이트맵(#769)만 더해진다");
   assert.ok([...rendered.keys()].some((f) => DAY_FILES.test(f)), "날짜별 뉴스 파일(data/news-day/)이 하나도 없다");
-  assert.deepEqual([...before.keys()].filter((f) => DAY_FILES.test(f) || f === SITEMAP), [], "main 의 docs/ 에 날짜별 뉴스 파일이나 sitemap.xml 이 있다 - 산출물은 build/site 에만 생긴다");
+  assert.deepEqual([...before.keys()].filter((f) => DAY_FILES.test(f) || f === SITEMAP || f === COUNTS), [], "main 의 docs/ 에 날짜별 뉴스 파일·sitemap.xml·근거표 건수 파일이 있다 - 산출물은 build/site 에만 생긴다");
   assert.ok(rendered.has(SITEMAP), "sitemap.xml 이 출력 디렉터리에 없다(#769)");
   const htmls = [...rendered.keys()].filter((f) => f.endsWith(".html"));
   assert.equal(htmls.length, 68);
@@ -152,7 +154,7 @@ test("render-pipeline --out: docs/ 는 한 바이트도 안 바뀌고 출력 디
   const page = new Set(pageScripts(DOCS_DIR));
   assert.ok(page.size > 0, "장 전용 JS 목록이 비었다");
   for (const f of rendered.keys()) {
-    if (f.endsWith(".html") || DAY_FILES.test(f) || f === SITEMAP) continue;
+    if (f.endsWith(".html") || isOutput(f)) continue;
     const want = page.has(f) ? createHash("sha256").update(stripJsComments(readFileSync(path.join(DOCS_DIR, f), "utf8"))).digest("hex") : before.get(f);
     assert.equal(rendered.get(f), want, `${f} 바이트`);
   }
