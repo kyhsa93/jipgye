@@ -1,5 +1,6 @@
 // #862 조건 4 - 비교 기준일의 표본이 한 단지·한 계약일 행으로 차 있으면 서울 매매 증감을 내지 않는다.
 // 판정은 오늘이 아니라 findBaseline 이 고른 기준일로 한다. 기록이 빠지면 기준일이 달라져 결과도 달라지는 것까지 본다.
+// 2단계(pm 11-15)부터 신고 기준 서울 값에는 증감이 아예 없으므로, 이 보류는 계약 기준으로 물러난 날에만 걸린다 - 시험의 기본 창이 계약 기준인 이유다.
 // 입력은 전부 고정이다 - 오늘 data 값에 기대지 않는다(#8).
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -30,7 +31,7 @@ const ARRIVAL = { basis: "arrival", from: "2026-11-09", to: "2026-11-10", until:
 const CONTRACT = { basis: "contract", from: "2026-09-14", to: "2026-10-11", until: "2026-10-12", weeks: 4, districtFrom: "2026-09-14", districtWeeks: 4 };
 
 // now 는 `날짜T03:00:00Z`(KST 정오)다 - 하루 수집 시각과 같은 쪽이고 자정 경계는 따로 본다.
-const run = (now, history = HISTORY, window = ARRIVAL) => {
+const run = (now, history = HISTORY, window = CONTRACT) => {
   const at = new Date(now);
   const baseline = findBaseline(history.filter((h) => h.date < new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(at)), at);
   return { baseline, ...attachChanges(metrics(500, 5100), [], baseline, window) };
@@ -107,21 +108,22 @@ test("목록 밖의 새 날도 기준 기록에 발동 정보가 있으면 보�
   assert.ok(overall.jeonse.change, "전세는 막지 않는다");
 });
 
-test("자치구는 이 규칙으로 막지 않는다", () => {
+test("자치구는 서울 날짜 목록으로 막지 않는다(계약 기준 날 - 신고 기준 날은 구 증감이 원래 없다)", () => {
   const baseline = { date: "2026-11-03", overall: metrics(500, 5000), districts: [{ code: "1", ...metrics(50, 5000) }] };
-  const { districts } = attachChanges(metrics(500, 5100), [{ code: "1", name: "a", ...metrics(50, 5100) }], baseline, ARRIVAL);
+  const { districts } = attachChanges(metrics(500, 5100), [{ code: "1", name: "a", ...metrics(50, 5100) }], baseline, CONTRACT);
   assert.ok(districts[0].sale.change);
   assert.equal(districts[0].sale.changeWithheld, undefined);
 });
 
-test("문구: 칸은 건수와 이유를 국·영으로, 칩은 기간과 증감 보류만 적는다", () => {
-  const { overall } = run(at("2026-11-10"));
-  assert.equal(overall.sale.changeWithheld.text.ko.cell, "500건 · 증감 보류 — 11/3 표본에 한 단지·한 계약일 행이 5% 이상");
-  assert.equal(overall.sale.changeWithheld.text.en.cell, "500 filings · change withheld — 5%+ of the Nov 3 sample was one complex on one contract date");
+test("신고 기준 날은 기준일이 걸려도 보류 문구가 없다 - 증감이 원래 없고 칩은 기간과 건수만 적는다", () => {
+  const { overall } = run(at("2026-11-10"), HISTORY, ARRIVAL);
+  for (const kind of ["sale", "saleNational84", "jeonse", "wolse"]) {
+    assert.deepEqual([overall[kind].change, overall[kind].baselineDate, overall[kind].changeWithheld], [undefined, undefined, undefined], kind);
+  }
   const stats = buildRealestateStats({ window: ARRIVAL, overall });
-  assert.equal(stats[0].note, "전 면적 평균 · 11/9~11/10 들어온 신고 500건 · 증감 보류");
-  assert.equal(stats[0].noteEn, "All-size average · 500 filings arrived Nov 9–10 · change withheld");
-  assert.match(stats[1].note, /대비 \+2\.0%/, "전세 칩의 증감은 그대로다");
+  assert.equal(stats[0].note, "전 면적 평균 · 11/9~11/10 들어온 신고 500건");
+  assert.equal(stats[0].noteEn, "All-size average · 500 filings arrived Nov 9–10");
+  assert.doesNotMatch(stats[1].note, /대비/, "전세 칩에도 증감이 없다");
 });
 
 test("문구: 계약 기준 날은 영어 건수 단위가 deals 이고 칩은 최근 4주 계약이다", () => {
@@ -137,13 +139,13 @@ const held = () => {
   const { overall } = run(at("2026-11-10"));
   return {
     updatedAt: "2026-11-10T03:00:00.000Z",
-    window: ARRIVAL,
+    window: CONTRACT,
     overall,
     districts: [{ code: "11680", name: "강남구", ...metrics(50, 9000) }],
   };
 };
 const CELL = "500건 · 증감 보류 — 11/3 표본에 한 단지·한 계약일 행이 5% 이상";
-const CELL_EN = "500 filings · change withheld — 5%+ of the Nov 3 sample was one complex on one contract date";
+const CELL_EN = "500 deals · change withheld — 5%+ of the Nov 3 sample was one complex on one contract date";
 
 test("구운 첫 화면 칸과 화면 JS 칸이 같은 문구를 reason 먼저 보고 그린다", async () => {
   const data = held();

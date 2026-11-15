@@ -145,15 +145,10 @@ export function districtEntries(months) {
   }).filter(Boolean);
 }
 
-/**
- * 서울 매매 표본에서 가장 큰 한 단지·한 계약일 묶음이 문턱을 넘었는지(#862 조건 3). 기준(도착·계약)을 가리지 않는다 - 계약 기준 월요일에 물러나면 같은 행이 그 창에 들어오기 때문이다(pm 판정).
- * 넘었으면 { rows, share, without }. 뺀 값은 대표값과 같은 경로(computeOverall, 구 건수 가중)로 내고, 뺀 쪽이 MIN_SAMPLE 아래면 값을 남기지 않는다.
- * 돌려주는 값에 단지명·동·묶음 키가 없다 - realestate.json 과 history 가 공개 파일이다.
- * 같은 크기의 묶음은 슬롯을 읽는 고정 순서의 앞쪽을 택한다(`readWindowItems` 와 같은 이유로 결정적이어야 한다).
- */
-function concentrationOf(items, total) {
+// 한 구의 매매 표본(대표값이 세는 행)을 한 단지·한 계약일 묶음으로 센다. 같은 크기의 묶음은 슬롯을 읽는 고정 순서의 앞쪽을 택한다(`readWindowItems` 와 같은 이유로 결정적이어야 한다).
+function largestBundle(items, codes) {
   const bundles = new Map();
-  for (const { code } of DISTRICTS) {
+  for (const code of codes) {
     for (const row of items.get(`sale:${code}`) ?? []) {
       if (!inSaleSample(row.item)) continue;
       const key = concentrationKey(code, row.item, contractDate(row.item));
@@ -162,20 +157,39 @@ function concentrationOf(items, total) {
   }
   let largest = null;
   for (const [key, rows] of bundles) if (!largest || rows > largest.rows) largest = { key, rows };
-  if (!largest || !isConcentrated(largest.rows, total)) return null;
+  return largest;
+}
 
+/** 묶음을 뺀 매매 표본. 행 순서는 그대로다. */
+function withoutBundle(items, codes, key) {
   const rest = new Map();
-  for (const { code } of DISTRICTS) {
-    const kept = (items.get(`sale:${code}`) ?? []).filter((row) => concentrationKey(code, row.item, contractDate(row.item)) !== largest.key);
+  for (const code of codes) {
+    const kept = (items.get(`sale:${code}`) ?? []).filter((row) => concentrationKey(code, row.item, contractDate(row.item)) !== key);
     if (kept.length) rest.set(`sale:${code}`, kept);
   }
-  const without = computeOverall(districtEntries(rest)).sale;
+  return rest;
+}
+
+/** 기록에 남기는 모양: 행 수·비중·뺀 값뿐이다. 단지명·동·묶음 키가 없다 - realestate.json 과 history 가 공개 파일이다. 뺀 쪽이 MIN_SAMPLE 아래면 값을 남기지 않는다. */
+const concentrationRecord = (rows, total, without) => {
   const left = without?.transactionCount ?? 0;
   return {
-    rows: largest.rows,
-    share: Math.round((largest.rows / total) * 10_000) / 10_000,
+    rows,
+    share: Math.round((rows / total) * 10_000) / 10_000,
     without: { avgPricePerPyeong10k: left >= MIN_SAMPLE ? without.avgPricePerPyeong10k : null, transactionCount: left },
   };
+};
+
+const ALL_CODES = DISTRICTS.map(({ code }) => code);
+
+/**
+ * 서울 매매 표본에서 가장 큰 한 단지·한 계약일 묶음이 문턱을 넘었는지(#862 조건 3). 기준(도착·계약)을 가리지 않는다 - 계약 기준 월요일에 물러나면 같은 행이 그 창에 들어오기 때문이다(pm 판정).
+ * 넘었으면 { rows, share, without }. 뺀 값은 대표값과 같은 경로(computeOverall, 구 건수 가중)로 낸다.
+ */
+function concentrationOf(items, total) {
+  const largest = largestBundle(items, ALL_CODES);
+  if (!largest || !isConcentrated(largest.rows, total)) return null;
+  return concentrationRecord(largest.rows, total, computeOverall(districtEntries(withoutBundle(items, ALL_CODES, largest.key))).sale);
 }
 
 /** 서울 전체 값. 대표값은 그대로이고, 쏠림이 발동한 날만 `sale.concentration` 이 붙어 history 까지 같이 남는다 - 7일 뒤 비교가 이 기록을 보고 같은 규칙을 따른다. */
@@ -183,6 +197,22 @@ export function representativeOverall(items) {
   const overall = computeOverall(districtEntries(items));
   const concentration = overall.sale ? concentrationOf(items, overall.sale.transactionCount) : null;
   return concentration ? { ...overall, sale: { ...overall.sale, concentration } } : overall;
+}
+
+/**
+ * 자치구 값. 구 매매 표본(4주 창)에도 서울과 같은 문턱(isConcentrated)을 건다(#862 2단계, data-analyst 11-15: 구-일 1,500개의 가장 큰 묶음은 7행 이하이거나 20행 이상으로 갈려
+ * 비중 2.5~6.7%·행 하한 8~20 어디에 두어도 같은 195 구-일이 걸린다 - 새 숫자를 만들지 않는다). 발동한 구만 `sale.concentration` 이 붙고 history 에도 남는다.
+ * 뺀 값은 그 구의 대표값과 같은 경로(summarizeSaleItems)다.
+ */
+export function representativeDistricts(items) {
+  return districtEntries(items).map((entry) => {
+    if (!entry.sale) return entry;
+    const largest = largestBundle(items, [entry.code]);
+    if (!largest || !isConcentrated(largest.rows, entry.sale.transactionCount)) return entry;
+    const rest = withoutBundle(items, [entry.code], largest.key).get(`sale:${entry.code}`) ?? [];
+    const without = summarizeSaleItems(rawItems(rest)).sale;
+    return { ...entry, sale: { ...entry.sale, concentration: concentrationRecord(largest.rows, entry.sale.transactionCount, without) } };
+  });
 }
 
 function appendHistory(history, now, entry) {
@@ -374,7 +404,7 @@ async function pickWindow(now) {
 
 async function writeRepresentative(now) {
   const { window, districtItems, overallItems } = await pickWindow(now);
-  const newlyFetched = districtEntries(districtItems);
+  const newlyFetched = representativeDistricts(districtItems);
 
   if (newlyFetched.length === 0) {
     console.error(

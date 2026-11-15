@@ -10,6 +10,9 @@ export const CONCENTRATED_BASELINE_DATES = Object.freeze(["2026-11-03", "2026-11
 
 export const REASON_CURRENT = "concentration";
 export const REASON_BASELINE = "baseline-concentration";
+// 증감을 원래 내지 않는 자리(신고 기준 서울 값, #862 2단계)에서 쏠림 단서만 적는 칸. `changeWithheld` 는 「증감 자리에 대신 그릴 글자」라 같은 필드를 쓴다 -
+// 화면 JS(docs/index.html, realestate-template.html)는 reason 이 있으면 구운 글자를 고르기만 하므로 인라인 JS 를 늘리지 않는다. 「증감 보류」라는 말은 이 칸에 없다.
+export const REASON_NOTE = "concentration-note";
 
 // 문턱: 한 단지·한 계약일 행이 표본의 5% 이상이면서 10행 이상. #862 data-analyst 판정의 값 판단이다 - 313행 사건을 본 뒤 정했고 사전 등록이 아니다.
 // 표본 100건 이상 39일에서 5%~10.7% 어디에 놓아도 같은 11일이 발동하고, 주별 묶음 9,641개에 6~21행 묶음이 0개라 행 하한은 6~22 어디든 같다. 4.60~4.76% 날이 바로 아래에 있어 깔끔한 경계는 아니다.
@@ -73,12 +76,15 @@ function ratioNote(concentration, jeonse) {
   };
 }
 
-/** 지금 표본이 걸린 칸의 글자(국·영). cell 은 건수까지, detail 은 건수가 따로 있는 카드용, ratio 는 전세가율 카드용이다. 화면 JS 는 이것을 고르기만 한다. */
-export function concentrationText(metric, window, jeonse = null) {
+/**
+ * 지금 표본이 걸린 칸의 글자(국·영). cell 은 건수까지, detail 은 건수가 따로 있는 카드용, ratio 는 전세가율 카드용이다. 화면 JS 는 이것을 고르기만 한다.
+ * withheld 가 거짓이면(증감을 원래 내지 않는 자리, REASON_NOTE) 「증감 보류」를 빼고 단서만 적는다 - 없는 증감을 보류했다고 말하지 않는다.
+ */
+export function concentrationText(metric, window, jeonse = null, withheld = true) {
   const count = metric.transactionCount;
   const ratio = ratioNote(metric.concentration, jeonse);
-  const detailKo = `증감 보류 · ${concentrationClause(metric.concentration, window, "ko")}`;
-  const detailEn = `change withheld · ${concentrationClause(metric.concentration, window, "en")}`;
+  const detailKo = `${withheld ? "증감 보류 · " : ""}${concentrationClause(metric.concentration, window, "ko")}`;
+  const detailEn = `${withheld ? "change withheld · " : ""}${concentrationClause(metric.concentration, window, "en")}`;
   return {
     ko: { cell: `${countKo(count)} · ${detailKo}`, detail: detailKo, ratio: ratio.ko },
     en: { cell: `${countEn(count, window)} · ${detailEn}`, detail: detailEn, ratio: ratio.en },

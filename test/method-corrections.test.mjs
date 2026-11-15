@@ -94,14 +94,32 @@ test("method: 신고 기준 정의와 쏠림 절이 한·영에 있다", async (
   assert.match(html, /when a registration date is added or when it drops out of the response and returns/);
   const ko = sectionOf(html, "arrival-concentration").text;
   const en = sectionOf(html, "arrival-concentration-en").text;
-  for (const w of ["신고 기준이면", "계약 기준이면", "5% 이상이면서 10행 이상", "대표값은 바꾸지 않습니다", "본 뒤에 정한 값 판단", "신고 기준 44일 중 11일", "계약 기준 5일 중 2일", "자치구 매매 줄", "2026-11-20"]) {
+  for (const w of ["신고 기준이면", "계약 기준이면", "5% 이상이면서 10행 이상", "대표값은 바꾸지 않습니다", "본 뒤에 정한 값 판단", "신고 기준 44일 중 11일", "계약 기준 5일 중 2일", "자치구 매매 줄에도", "195 구-일"]) {
     assert.ok(ko.includes(w), `한국어 절에 ${w}`);
   }
-  for (const w of ["on the reported basis", "on the contract basis", "at least 10 rows", "headline figure is not replaced", "judgment made after seeing", "11 of 44 reported-basis days", "2 of 5 contract-basis days", "District sale rows", "2026-11-20"]) {
+  for (const w of ["on the reported basis", "on the contract basis", "at least 10 rows", "headline figure is not replaced", "judgment made after seeing", "11 of 44 reported-basis days", "2 of 5 contract-basis days", "District sale rows use the same threshold", "195 district-days"]) {
     assert.ok(en.includes(w), `영어 절에 ${w}`);
   }
+  // 1단계의 「구 줄에는 단서가 없다(늦어도 11-20)」는 2단계에서 사실이 아니다.
+  for (const w of ["2026-11-20", "단서가 없습니다", "carry no such note"]) assert.ok(!ko.includes(w) && !en.includes(w), w);
   for (const w of ["오염", "왜곡", "진짜", "corrupt", "distort", "real price"]) assert.ok(!ko.includes(w) && !en.includes(w), w);
   assert.ok(html.includes('href="#arrival-concentration"') && html.includes('href="#arrival-concentration-en"'), "목차");
+});
+
+// #862 2단계(조건 8): 7일 증감을 내린 정의와 이유 - 규칙, 서울 40일·구 44일 값, 서울은 값을 본 뒤 정한 규칙이고 구는 재기 전에 적은 규칙이라는 점.
+test("method: 신고 기준 7일 증감을 내린 절이 한·영에 있다", async () => {
+  const html = await method();
+  const ko = sectionOf(html, "arrival-change").text;
+  const en = sectionOf(html, "arrival-change-en").text;
+  for (const w of ["서울 전체와 자치구", "90% 구간 반폭의 중간값보다 크다", "40일", "2.49% 대 &plusmn;5.62%", "1.84% 대 &plusmn;3.62%", "2.76% 대 &plusmn;4.22%", "본 뒤 정한 것이라 미리 정해 둔 규칙이 아닙니다",
+    "재기 전에 적어 두고", "1.55% 대 &plusmn;3.65%", "1.49% 대 &plusmn;2.89%", "1.64% 대 &plusmn;3.29%", "계약 기준으로 물러난 날", "지난 기록은 고치지 않습니다"]) {
+    assert.ok(ko.includes(w), `한국어 절에 ${w}`);
+  }
+  for (const w of ["Seoul-wide or district", "median half-width of a 90% interval", "40 reported-basis days", "2.49% against &plusmn;5.62%", "not fixed in advance",
+    "written down before measuring", "1.55% against &plusmn;3.65%", "fall back to the contract basis", "Past records are not revised"]) {
+    assert.ok(en.includes(w), `영어 절에 ${w}`);
+  }
+  assert.ok(html.includes('href="#arrival-change"') && html.includes('href="#arrival-change-en"'), "목차");
 });
 
 test("절 머리는 면책 문단 하나이고 목록 앞에 있다", async () => {

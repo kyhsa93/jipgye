@@ -1,4 +1,5 @@
 // #862 조건 3 - 서울 매매 대표값의 표본(도착·계약)에서 한 단지·한 계약일 행이 5% 이상이면서 10행 이상이면 증감을 보류하고 그 건수와 뺀 값을 함께 적는다.
+// 2단계(pm 11-15)부터 신고 기준 서울 값에는 증감이 없으므로 신고 기준 날은 「증감 보류」 없이 단서만(REASON_NOTE), 계약 기준 날은 예전처럼 보류 문구다.
 // 대표값은 바꾸지 않고, 어느 값이 맞다고 말하지 않으며, 단지 이름은 어디에도 남기지 않는다. 문턱은 data-analyst 의 값 판단이다(사건을 본 뒤 정했다, method 에 적는다).
 // 입력은 전부 고정이다 - 오늘 data 값에 기대지 않는다(#8). 저장 원본 재현은 PR 본문의 값 대조가 맡는다.
 import test from "node:test";
@@ -147,8 +148,8 @@ const baselineWith = (date = "2026-10-28") => ({ date, overall: { sale: { avgPri
 const attach = (sale, window, baseline = baselineWith()) =>
   attachChanges({ sale, saleNational84: null, jeonse: { avgDepositPerPyeong10k: 3193, transactionCount: 427 }, wolse: null }, [], baseline, window).overall;
 
-test("발동한 날: 증감을 빼고 이유와 값을 남긴다, 전세 증감은 그대로다", () => {
-  const out = attach(FIRED(), ARRIVAL);
+test("계약 기준 발동한 날: 증감을 빼고 이유와 값을 남긴다, 전세 증감은 그대로다", () => {
+  const out = attach(FIRED(), CONTRACT);
   assert.equal(out.sale.change, undefined);
   assert.equal(out.sale.baselineDate, undefined);
   assert.equal(out.sale.avgPricePerPyeong10k, 5126, "대표값은 바꾸지 않는다");
@@ -157,30 +158,43 @@ test("발동한 날: 증감을 빼고 이유와 값을 남긴다, 전세 증감�
   assert.ok(out.jeonse.change, "전세는 규칙 밖이다");
 });
 
-test("비교할 기록이 없는 날도 발동 문구는 나간다", () => {
-  const out = attach(FIRED(), ARRIVAL, null);
+test("신고 기준 발동한 날: 증감이 원래 없고 단서만 남긴다 - 전세·월세·84㎡ 증감도 없다", () => {
+  const out = attach(FIRED(), ARRIVAL);
+  assert.equal(out.sale.avgPricePerPyeong10k, 5126, "대표값은 바꾸지 않는다");
+  assert.deepEqual([out.sale.change, out.sale.baselineDate], [undefined, undefined]);
+  assert.equal(out.sale.changeWithheld.reason, "concentration-note");
+  assert.deepEqual(Object.keys(out.sale.changeWithheld), ["reason", "text"], "건수 비교 필드는 증감이 없는 자리에 뜻이 없다");
+  assert.deepEqual([out.jeonse.change, out.jeonse.changeWithheld], [undefined, undefined]);
+});
+
+test("비교할 기록이 없는 날도 발동 문구는 나간다 - 계약 기준은 보류, 신고 기준은 단서", () => {
+  const out = attach(FIRED(), CONTRACT, null);
   assert.equal(out.sale.changeWithheld.reason, "concentration");
   assert.equal(out.sale.changeWithheld.baseline, 0);
   assert.match(out.sale.changeWithheld.text.ko.cell, /313건을 빼면/);
+  assert.equal(attach(FIRED(), ARRIVAL, null).sale.changeWithheld.reason, "concentration-note");
 });
 
 test("지금 표본과 기준일 표본이 둘 다 걸리면 지금 표본의 문구다", () => {
-  const out = attach(FIRED(), ARRIVAL, baselineWith("2026-11-03"));
+  const out = attach(FIRED(), CONTRACT, baselineWith("2026-11-03"));
   assert.equal(out.sale.changeWithheld.reason, "concentration");
 });
 
-const CELL_KO = "754건 · 증감 보류 · 한 단지·한 계약일 313건을 빼면 5,422만원(441건)";
-const CELL_EN = "754 filings · change withheld · excluding 313 from one complex on one contract date: ₩54.2M (441 filings)";
+// 신고 기준 날의 칸: 증감이 없으므로 「증감 보류」가 없다(2단계). 계약 기준 날의 보류 문구는 아래 계약 기준 시험이 본다.
+const DETAIL_KO = "한 단지·한 계약일 313건을 빼면 5,422만원(441건)";
+const DETAIL_EN = "excluding 313 from one complex on one contract date: ₩54.2M (441 filings)";
+const CELL_KO = `754건 · ${DETAIL_KO}`;
+const CELL_EN = `754 filings · ${DETAIL_EN}`;
 
-test("도착 기준 문구: 칸·칩 국·영이 표와 같다", () => {
+test("도착 기준 문구: 칸·칩 국·영에 단서만 있고 「증감 보류」가 없다", () => {
   const out = attach(FIRED(), ARRIVAL);
   assert.equal(out.sale.changeWithheld.text.ko.cell, CELL_KO);
   assert.equal(out.sale.changeWithheld.text.en.cell, CELL_EN);
   const realestate = { window: ARRIVAL, overall: { ...out, wolse: { avgDeposit10k: 24368, avgMonthlyRent10k: 143, transactionCount: 521 } } };
   const [chip] = buildRealestateStats(realestate);
   assert.equal(chip.value, "13억 251만원", "칩 값도 대표값 그대로다");
-  assert.equal(chip.note, "전 면적 평균 · 11/2~11/4 들어온 신고 754건 · 증감 보류 · 한 단지·한 계약일 313건을 빼면 13억 7,772만원(441건)");
-  assert.equal(chip.noteEn, "All-size average · 754 filings arrived Nov 2–4 · change withheld · excluding 313 from one complex on one contract date: ₩1,378M (441 filings)");
+  assert.equal(chip.note, "전 면적 평균 · 11/2~11/4 들어온 신고 754건 · 한 단지·한 계약일 313건을 빼면 13억 7,772만원(441건)");
+  assert.equal(chip.noteEn, "All-size average · 754 filings arrived Nov 2–4 · excluding 313 from one complex on one contract date: ₩1,378M (441 filings)");
 });
 
 test("계약 기준 문구: 3,423건 표본에서 172행은 보류, 171행은 유지이고 재도장을 말하지 않는다", () => {
@@ -200,8 +214,8 @@ test("계약 기준 문구: 3,423건 표본에서 172행은 보류, 171행은 �
 test("뺀 쪽이 모자란 날: 값을 내지 않는다고 적는다", () => {
   const thin = { avgPricePerPyeong10k: 5000, transactionCount: 12, concentration: { rows: 10, share: 10 / 12, without: { avgPricePerPyeong10k: null, transactionCount: 2 } } };
   const out = attach(thin, ARRIVAL);
-  assert.equal(out.sale.changeWithheld.text.ko.cell, "12건 · 증감 보류 · 한 단지·한 계약일 10건을 빼면 2건이라 값을 내지 않습니다");
-  assert.equal(out.sale.changeWithheld.text.en.cell, "12 filings · change withheld · excluding 10 from one complex on one contract date: only 2 filings remain, too few to average");
+  assert.equal(out.sale.changeWithheld.text.ko.cell, "12건 · 한 단지·한 계약일 10건을 빼면 2건이라 값을 내지 않습니다");
+  assert.equal(out.sale.changeWithheld.text.en.cell, "12 filings · excluding 10 from one complex on one contract date: only 2 filings remain, too few to average");
   const stats = buildRealestateStats({ window: ARRIVAL, overall: { ...out, wolse: { avgDeposit10k: 24368, avgMonthlyRent10k: 143, transactionCount: 521 } } });
   assert.match(stats[0].note, /10건을 빼면 2건이라 값을 내지 않습니다$/);
   assert.match(stats[0].noteEn, /only 2 filings remain, too few to average$/);
@@ -246,7 +260,7 @@ test("칸 경로: 구운 첫 화면·화면 JS·시세 표·틀이 같은 문구
 
 // 데이터가 새 모양이 되는 날 배포 게이트가 물리지 않는지 고정 입력으로 본다 - 구운 표·카드와 나가는 장의 화면 JS 가 글자까지 같아야 한다.
 test("구운 표·카드와 나가는 장의 화면 JS 가 같다 - 발동한 날과 기준일에 걸린 날", async () => {
-  const held = { ...dashboard(), overall: { ...dashboard().overall, sale: attach({ avgPricePerPyeong10k: 5126, transactionCount: 754 }, ARRIVAL, baselineWith("2026-11-03")).sale } };
+  const held = { ...dashboard(), overall: { ...dashboard().overall, sale: attach({ avgPricePerPyeong10k: 5126, transactionCount: 754 }, CONTRACT, baselineWith("2026-11-03")).sale } };
   for (const data of [dashboard(), held]) {
     for (const kind of [null, "sale", "jeonse", "wolse"]) {
       const page = await loadRealestatePage({ realestate: data, kind, file: `${SITE}/realestate.html` });
@@ -266,12 +280,12 @@ test("요약 카드: 전 종류 카드와 매매 장 카드, 구운 쪽과 틀 �
   const saleCards = overallCards(data, "sale");
   const count = saleCards.find((c) => c.label === "거래 건수");
   assert.equal(flat(count.value), "754건");
-  assert.equal(flat(count.sub), "증감 보류 · 한 단지·한 계약일 313건을 빼면 5,422만원(441건)");
+  assert.equal(flat(count.sub), DETAIL_KO);
   assert.ok(realestateOverallHtml(data).includes(CELL_KO));
-  assert.ok(realestateOverallHtml(data, "sale").includes("증감 보류 · 한 단지·한 계약일 313건을 빼면 5,422만원(441건)"));
+  assert.ok(realestateOverallHtml(data, "sale").includes(DETAIL_KO));
   for (const [lang, whole, detail] of [
-    ["ko", CELL_KO, "증감 보류 · 한 단지·한 계약일 313건을 빼면 5,422만원(441건)"],
-    ["en", CELL_EN, "change withheld · excluding 313 from one complex on one contract date: ₩54.2M (441 filings)"],
+    ["ko", CELL_KO, DETAIL_KO],
+    ["en", CELL_EN, DETAIL_EN],
   ]) {
     const allPage = await loadRealestatePage({ realestate: data, locale: lang, file: "scripts/realestate-template.html" });
     assert.ok(String(allPage.byId("overall-cards").innerHTML).includes(whole), `전 종류 ${lang}`);
@@ -283,7 +297,7 @@ test("요약 카드: 전 종류 카드와 매매 장 카드, 구운 쪽과 틀 �
 });
 
 test("기준일에 걸린 날의 카드는 증감이 원래 없어 이유를 달지 않는다", () => {
-  const out = attach({ avgPricePerPyeong10k: 5100, transactionCount: 500 }, ARRIVAL, baselineWith("2026-11-03"));
+  const out = attach({ avgPricePerPyeong10k: 5100, transactionCount: 500 }, CONTRACT, baselineWith("2026-11-03"));
   const [sale] = overallCards({ overall: { ...out, wolse: null } });
   assert.equal(sale.sub.map((s) => s.text).join("").endsWith("500건"), true);
 });
@@ -328,7 +342,7 @@ test("쏠림이 아닌 날의 전세가율 문장은 전과 같다 - 쏠림 없�
   const plain = { ...data, overall: { ...data.overall, sale: { avgPricePerPyeong10k: 5126, transactionCount: 754 } } };
   assert.equal(ratioLine(plain, "ko"), RATIO_PLAIN_KO);
   assert.equal(ratioLine(plain, "en"), RATIO_PLAIN_EN);
-  const held = { ...data, overall: { ...data.overall, sale: attach({ avgPricePerPyeong10k: 5126, transactionCount: 754 }, ARRIVAL, baselineWith("2026-11-03")).sale } };
+  const held = { ...data, overall: { ...data.overall, sale: attach({ avgPricePerPyeong10k: 5126, transactionCount: 754 }, CONTRACT, baselineWith("2026-11-03")).sale } };
   assert.equal(held.overall.sale.changeWithheld.reason, "baseline-concentration", "전제: 기준일에만 걸렸다");
   assert.equal(ratioLine(held, "ko"), RATIO_PLAIN_KO);
   assert.equal(ratioLine(held, "en"), RATIO_PLAIN_EN);
@@ -369,7 +383,7 @@ test("전세 장 요약 카드: 뺀 쪽 값이 없으면 숫자 없이 단서만
 test("전세 장 요약 카드: 쏠림이 아닌 날과 기준일에만 걸린 날은 전과 같고, 표 서울 줄은 쏠림 날에도 칸 모양이 같다", async () => {
   const data = dashboard();
   const plain = { ...data, overall: { ...data.overall, sale: { avgPricePerPyeong10k: 5126, transactionCount: 754 } } };
-  const held = { ...data, overall: { ...data.overall, sale: attach({ avgPricePerPyeong10k: 5126, transactionCount: 754 }, ARRIVAL, baselineWith("2026-11-03")).sale } };
+  const held = { ...data, overall: { ...data.overall, sale: attach({ avgPricePerPyeong10k: 5126, transactionCount: 754 }, CONTRACT, baselineWith("2026-11-03")).sale } };
   for (const day of [plain, held]) {
     assert.equal(flatSegs(ratioCard(overallCards(day, "jeonse")).sub), "매매 754건 · 전세 427건");
     const page = await loadRealestatePage({ realestate: day, kind: "jeonse", file: `${SITE}/realestate.html` });

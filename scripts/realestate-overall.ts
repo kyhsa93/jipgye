@@ -68,7 +68,8 @@ export function overallCards(realestate, kind = null, district = null, spread = 
         ? [
             card(RE_LABELS.perPyeong, [raw(reMan(valueOf(sale, "sale")))]),
             card(RE_LABELS.area, [raw(reEok(areaPrice(valueOf(sale, "sale"))))]),
-            card(RE_LABELS.count, [esc(reCount(sale.transactionCount))]),
+            // 구 매매 쏠림(#862 2단계): 건수 카드 밑에 단서(건수·뺀 값)를 단다. 틀의 renderOverall 이 같은 글자를 고른다.
+            card(RE_LABELS.count, [esc(reCount(sale.transactionCount))], sale.changeWithheld?.text?.ko.detail ? [esc(sale.changeWithheld.text.ko.detail)] : null),
           ]
         : [card(RE_LABELS.sale, dashOrLow(overall, "sale"))]),
       ...(ratio ? [card(RE_LABELS.ratio, [raw(formatPercent(ratio.ratio))], [esc(ratioBasis(overall))])] : []),

@@ -1,7 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { DISTRICT_SLUGS, districtFile } from "./district-slugs.ts";
-import { concentrationClause } from "./realestate-concentration.ts";
+import { REASON_NOTE, concentrationClause } from "./realestate-concentration.ts";
 import {
   BASE_AREA_M2,
   CHANGE_MIN_COUNT,
@@ -84,9 +84,11 @@ function noteOf(metric, change, window, locale, { allSizes = false, district = f
     );
   }
   // 표본 구성 때문에 보류한 값(#862)은 빠졌다는 사실을 적는다. 건수 때문에 보류한 값(#290)은 예전처럼 조각만 뺀다.
-  if (metric.changeWithheld?.reason) parts.push(locale === "en" ? "change withheld" : "증감 보류");
+  // 증감을 원래 내지 않는 자리(REASON_NOTE - 신고 기준 서울 값, #862 2단계)는 보류라고 하지 않고 단서만 적는다.
+  const reason = metric.changeWithheld?.reason;
+  if (reason && reason !== REASON_NOTE) parts.push(locale === "en" ? "change withheld" : "증감 보류");
   // 뺀 값도 칩의 다른 값과 같은 자(84㎡ 환산)로 적는다.
-  if (metric.changeWithheld?.reason && metric.concentration) {
+  if (reason && metric.concentration) {
     parts.push(concentrationClause(metric.concentration, window, locale, (value, loc) => formatEok(areaPrice(value, BASE_AREA_M2), loc)));
   }
   return parts.join(" · ");

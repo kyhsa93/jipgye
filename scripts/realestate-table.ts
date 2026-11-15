@@ -99,7 +99,7 @@ export function reWolseChange(change, baselineDate) {
   return [SPACE(), part("change", `${arrow}${Math.abs(change.percent).toFixed(1)}%`, { dir, title })];
 }
 
-// 서울 매매를 표본 구성 때문에 보류한 칸(#862 `reason`)은 건수 자리에 빌드가 구운 문구를 낸다(문구가 건수를 품는다). 그 외에는 건수 그대로다.
+// 매매 표본이 한 단지·한 계약일로 쏠린 칸(#862 `reason` - 서울 줄·구 줄·구 장 세 줄 표)은 건수 자리에 빌드가 구운 문구를 낸다(문구가 건수를 품는다). 그 외에는 건수 그대로다.
 // #290 보류는 이 표에 글자를 내지 않는 오래된 차이가 있고(증감만 빠진다) 여기서 바꾸지 않는다. 첫 화면 칸(realestate-rows)이 그 문구를 맡는다.
 const countOrHeld = (metric) =>
   metric.changeWithheld?.reason ? part("count", metric.changeWithheld.text.ko.cell, { esc: true }) : countSpan(metric.transactionCount);
@@ -233,7 +233,7 @@ export function reDistrictRows(entry) {
           ? [strong(reMan(metric.avgDeposit10k)), part("text", " / "), strong(`월 ${reMan(metric.avgMonthlyRent10k)}`)]
           : [strong(reMan(valueOf(metric, kind))), ...change];
       const area = kind === "wolse" ? [part("text", "-")] : [strong(reEok(areaPrice(valueOf(metric, kind))))];
-      cells = [price, area, [countSpan(metric.transactionCount)]];
+      cells = [price, area, [countOrHeld(metric)]];
     }
     return { label: labels[i], cells: cells.map((parts, j) => ({ label: colLabels[j], parts })) };
   });
