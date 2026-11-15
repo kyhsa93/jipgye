@@ -39,7 +39,7 @@
 - `docs/*.html` 중 손으로 고치는 틀(생성 장은 main 에 없다 — 사이트는 배포 때 `build/site` 에 만들어진다).
 - `scripts/*template*.html`(`realestate-template.html`).
 - 시험 파일(`test/*.test.mjs`, `test/helpers/*.mjs`).
-이 밖의 파일이 `gh pr diff --stat` 에 보이면 패턴이 아니라 전체 판정이다. `docs/load-state.js`·`test/COUNT*`(PR 은 하한을 건드리지 않는다, #548)·워크플로·수집기·`scripts/` 의 데이터 생성부는 목록 밖이다.
+이 밖의 파일이 PR 파일 목록 `gh api --paginate "repos/kyhsa93/jipgye/pulls/<n>/files?per_page=100" --jq '.[] | "\(.additions)+ \(.deletions)- \(.filename)\(if .previous_filename then " ← \(.previous_filename)" else "" end)"'` 에 보이면(이름 바뀐 파일은 `←` 뒤 옛 경로도 본다, #899) 패턴이 아니라 전체 판정이다. `docs/load-state.js`·`test/COUNT*`(PR 은 하한을 건드리지 않는다, #548)·워크플로·수집기·`scripts/` 의 데이터 생성부는 목록 밖이다.
 
 ### 예산
 장별 틀 인라인 script 순증 ≤ **+400 B**(골든 `s6-inline-bytes` 의 `added` 끝 `(+N)`). 기준: #546 은 47장 모두 +358 B/장이었다. 넘으면 `golden-expect` 가 「전체 판정」을 찍고 멈춘다.
