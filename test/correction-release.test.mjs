@@ -9,6 +9,7 @@ import {
   assertAllowedShape, buildFigures, buildRelease, readSales, renderBody, renderTitle, supersede, toCsv,
 } from "../scripts/build-correction-release.ts";
 import { repeatedLiveStats } from "../scripts/cancellation.ts";
+import { RAW_COPY_NOTE } from "../scripts/source-lines.ts";
 
 // #218: 정정 재신고 집계 Release 산출. 값에 따라 갈리는 검사는 두지 않는다(#8) - 구조·금지어·두 구현의 일치만 본다.
 const root = path.resolve(import.meta.dirname, "..");
@@ -202,6 +203,9 @@ function assertNoLabels(label, text) {
   for (const w of ["정정", "재신고", "정상 기록", "정정됨"]) assert.ok(!text.includes(w), `${label}: 이름 붙임 ${w}`);
 }
 
+/** 원천 사본 안내(#882, legal 원문 상수) 글머리를 지운 본문. 그 문장에 든 「정정 요청」「이용허락」 낱말만 위 검사에서 빼려는 것이다. */
+const withoutRawCopyNote = (body) => body.replaceAll(RAW_COPY_NOTE.ko, "").replaceAll(RAW_COPY_NOTE.en, "");
+
 const split = (body) => {
   const [ko, en] = body.split("\n---\n");
   assert.ok(ko && en, "한·영 두 구역이 있어야 한다");
@@ -239,8 +243,9 @@ test("산출물 전부(JSON·CSV·본문·제목·check.py·check.out)에 금지
       assertNoLabels(label, text);
     }
     assertNeutral("본문", body);
-    // 본문은 표시 이름 '정정됨 (SUPERSEDED)'(legal이 이름을 유지하라고 했다)만 예외다.
-    assertNoLabels("본문(표시 이름 제외)", body.replaceAll(SUPERSEDED_MARK, ""));
+    // 본문은 표시 이름 '정정됨 (SUPERSEDED)'(legal이 이름을 유지하라고 했다)와 원천 사본 안내(RAW_COPY_NOTE, legal #882 원문 - 「정정 요청 경로」는
+    // 기록에 붙이는 이름이 아니라 raw/README.md 의 요청 창구다)만 예외다. 안내 글자는 test/raw-copy-note.test.mjs 가 legal 원문으로 고정한다.
+    assertNoLabels("본문(표시 이름·원천 사본 안내 제외)", withoutRawCopyNote(body).replaceAll(SUPERSEDED_MARK, ""));
   }
 });
 
@@ -310,8 +315,10 @@ test("본문: 출처 문구(clo 조건 4)·가공값 구분이 한·영에 있�
   assert.match(ko, /가공값이고 원천의 원값이 아닙니다/);
   assert.ok(en.includes("Source: Ministry of Land, Infrastructure and Transport apartment sale transaction data (data.go.kr 15126469), collected 2026-10-10. These are aggregated and processed values derived from the source and are not endorsed or guaranteed by the Ministry."));
   assert.doesNotMatch(body, /공개시스템/);
-  // 이용허락: 코드에 박힌 확인일이 확인 없이 찍히지 않게 문장·JSON 필드·상수를 모두 없앤다.
-  assert.doesNotMatch(body, /이용허락|제한 없음|No restrictions|license|확인\)|checked 20/i);
+  // 이용허락: 코드에 박힌 확인일이 확인 없이 찍히지 않게 문장·JSON 필드·상수를 모두 없앤다. 원천 사본 안내(legal #882)는 이용허락을 말하지 않고
+  // 그것이 적힌 곳(raw/README.md)만 가리키므로 그 글머리만 빼고 본다 - 확인일·「제한 없음」은 본문 어디에도 없다.
+  assert.ok(body.includes(RAW_COPY_NOTE.ko) && body.includes(RAW_COPY_NOTE.en), "원천 사본 안내 ko·en");
+  assert.doesNotMatch(withoutRawCopyNote(body), /이용허락|제한 없음|No restrictions|license|licence|확인\)|checked 20/i);
   const json = JSON.stringify(figures);
   assert.doesNotMatch(json, /license|이용허락|제한 없음|checkedAt/i);
   assert.deepEqual(ALLOWED_SOURCE, ["datasetId"]);

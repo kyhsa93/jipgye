@@ -38,6 +38,16 @@ export const ATTRIBUTION = {
   rone: { ko: `출처: ${SOURCES.reb.ko} R-ONE 부동산통계정보시스템. 이 값은 원자료를 집계·가공한 것이며 원자료 값을 바꾸지 않았습니다.` },
 } as const;
 
+// 아래 상수는 legal #882 판정(issuecomment-6890669399) 2절의 코드 원문을 글자 그대로 옮겼다. ko 는 정정 Release(scripts/build-correction-release.ts)의
+// 「집계 단위와 비운 칸」 절, koPlain 은 월간 리포트(scripts/monthly-report.ts, 평서체 - 그 본문이 「~다」체라서)의 「읽는 법」 절, en 은 정정 Release 영어 절이 읽는다.
+// 월간 리포트는 한국어만 있어 영어 짝이 없다(legal 같은 절). 글자 고정은 test/raw-copy-note.test.mjs 가 본다.
+/** Release 본문의 원천 사본 안내(#175 제한 2, legal #882 2026-11-15). 바꾸려면 legal 판정이 먼저다. */
+export const RAW_COPY_NOTE = {
+  ko: "이 Release의 본문과 첨부는 집계만 담습니다. 행 단위 기록·단지·지번·법정동·층·금액은 이 Release에 없습니다. 원천(국토교통부 실거래 자료)의 행 단위 사본은 저장소 [`raw/`](https://github.com/kyhsa93/jipgye/tree/main/raw)에 수집한 때의 원천 응답 그대로(수집 시각 같은 수집 기록만 더해) 있습니다. 출처·이용허락·정정 요청 경로는 `raw/README.md`에 있습니다.",
+  koPlain: "이 Release 의 본문과 첨부는 집계만 담는다. 행·단지 단위 값은 이 Release 에 없다. 원천(국토교통부 실거래 자료)의 행 단위 사본은 저장소 [`raw/`](https://github.com/kyhsa93/jipgye/tree/main/raw)에 수집한 때의 원천 응답 그대로(수집 시각 같은 수집 기록만 더해) 있다. 출처·이용허락·정정 요청 경로는 `raw/README.md` 에 있다.",
+  en: "This release's text and attachments contain aggregates only; no record-level data, complex names, lot numbers, neighbourhoods, floors or amounts are included in this release. Record-level copies of the source data (MOLIT real transaction filings) are kept in the repository's [`raw/`](https://github.com/kyhsa93/jipgye/tree/main/raw) folder as the source returned them at collection time, with only collection records such as timestamps added. Sources, licence terms and how to request corrections are in `raw/README.md`.",
+} as const;
+
 type Lang = "ko" | "en";
 
 /**
