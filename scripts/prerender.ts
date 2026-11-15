@@ -13,6 +13,7 @@ import { budgetBandLabel } from "./budget-fragments.ts";
 import { MIN_SAMPLE } from "./realestate-format.ts";
 import { stripInlineScriptComments } from "./strip-inline-comments.ts";
 import { stampSources } from "./source-lines.ts";
+import { monthlyCostLineHtml } from "./monthly-cost-line.ts";
 import { requireSite, siteLabel, sitePath } from "./site-dir.ts";
 import { collectStatus } from "./check-data-progress.ts";
 import { digestHtml } from "./week-digest-view.ts";
@@ -152,6 +153,8 @@ async function main() {
   };
 
   const conversion = await readJson("conversion");
+  // 환산 월 비용 서울 전체 한 줄(#621). 파일이 없거나 낡으면 빈 칸이다 - 기준 달은 전환율 창 끝 달.
+  const monthlyCost = await readJson("monthly-cost");
   const cancellation = await readJson("cancellation");
   const direct = await readJson("direct-deals");
   const registration = registrationView(await readJson("registration"));
@@ -239,6 +242,7 @@ async function main() {
       at("jeonse-vs-wolse.html"),
       {
         conversionLead: conversionLeadHtml(conversion),
+        monthlyCostLine: monthlyCostLineHtml(monthlyCost, conversion?.months?.at(-1)),
         conversionTable: conversionTableHtml(conversion),
         conversionDistrictLinks: conversionDistrictLinksHtml(conversion),
       },
