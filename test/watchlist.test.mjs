@@ -6,7 +6,11 @@
 //   complex-card.js·complex-chart.js 는 건드리지 않는다. 목록 자리 #watch-list 는 카드 위.
 // - localStorage "watchlist" = [[자치구, 단지, [본 신고 줄 키...]], ...] 최대 10곳. 줄 키 = date|area|floor|amount10k.
 // - 「새 신고」 = 지금 deals-<gu> 목록에 있는데 지난 방문 때 적어 둔 키에 없던 줄(계약일이 아니라 목록에 새로 나타난 줄 - 늦게 신고된
-//   거래도 센다). 기준은 장을 연 순간 읽은 값이라 같은 방문 안에서 다시 그려도 수가 그대로다. 센 뒤 지금 키를 적어 둔다.
+//   거래도 센다). 기준은 그 단지를 처음 셀 때 저장소에 있던 값이고, 센 수는 장 안에 남겨 같은 방문 안에서 다시 그려도 그대로다. 센 뒤 지금 키를 적어 둔다.
+// - 두 탭(#824): 화면에 들고 있는 목록(L)을 통째로 쓰면 다른 탭이 그 사이 담은 것을 지운다. 그래서 모든 쓰기(담기·빼기·×·센 뒤 키 적기)는
+//   직전에 저장소를 다시 읽어 그 값에 「이 단지를 넣기/빼기」만 적용한다. 뺄 때는 화면의 항목이 아니라 (구, 단지) 로 찾는다.
+//   그리기도 매번 저장소에서 다시 읽고, storage 이벤트(다른 탭이 쓴 때)에 다시 그린다(onstorage - 바이트 한도 때문에 addEventListener 대신).
+//   담기/빼기 판단은 이 탭 화면에 보이던 상태로 한다(사용자가 본 단추가 뜻이다).
 // - 모든 저장소 접근은 try/catch(#726). 읽기가 막히면 아무것도 그리지 않고, 쓰기만 막히면 바꾸지 못했다고 적는다. 깨진 값은 빈 목록.
 // - 알림·서버·쿠키 없음(O-C 소유자 보류). 새 자료 없음 - 이미 받는 deals-<gu>.json 만 쓴다.
 // - 동명 단지(#821): 칸 키가 「이름 (동)」이 되면 #821 전에 담은 「벽산」은 어느 칸과도 맞지 않는다. 그 항목은 지우지 않는다(사용자가 고른 것이고 몇 명인지 못 센다).
@@ -222,6 +226,49 @@ test("옛 항목 표시는 영어로도 낸다", async () => {
   assert.match(p.list(), /<span class="count">dongs combined<\/span>/);
   assert.match(p.list(), /aria-label="Unwatch 벽산">×<\/button>/);
   assert.doesNotMatch(p.list().replace(/벽산|상계동|중계동|%[0-9A-F]{2}/g, ""), /[가-힣]/, "영어 줄에 한글 문구가 남았다");
+});
+
+// 두 탭(#824): 탭 A 를 연 뒤 「다른 탭」이 저장소를 바꾸면 items 를 직접 고친다(브라우저에서 다른 탭이 쓴 것과 같다 - 이 탭에는 알림이 늦거나 없다).
+const outside = (p, list) => p.items.set("watchlist", JSON.stringify(list));
+
+test("두 탭(#824): 다른 탭이 담은 뒤 이 탭에서 담아도 다른 탭 추가분이 남는다", async () => {
+  const p = await page();
+  outside(p, [["노원구", OTHER, keysOf(OTHER)]]);
+  await p.click();
+  assert.deepEqual(p.stored().map((e) => e[1]), [OTHER, APT], "다른 탭이 담은 단지가 지워졌다");
+  assert.match(p.card(), /aria-pressed="true">관심 단지 빼기/);
+  assert.match(p.list(), new RegExp(`${OTHER}</a>`), "쓴 뒤 그린 목록에 다른 탭 추가분이 없다");
+});
+
+test("두 탭(#824): 빼기·× 는 그 단지만 빼고, 다른 탭이 담은 것은 남기며 다른 탭이 뺀 것을 되살리지 않는다", async () => {
+  const p = await page({ saved: [["노원구", APT, keysOf(APT)], ["노원구", OTHER, keysOf(OTHER)]] });
+  outside(p, [["노원구", APT, keysOf(APT)], ["노원구", "단지X", []]]); // 다른 탭: OTHER 를 빼고 단지X 를 담음
+  await p.click(); // 이 탭 카드에서 APT 빼기
+  assert.deepEqual(p.stored().map((e) => e[1]), ["단지X"]);
+  const q = await page({ saved: [["노원구", APT, keysOf(APT)], ["노원구", OTHER, keysOf(OTHER)]] });
+  outside(q, [["노원구", "단지Y", []], ["노원구", APT, keysOf(APT)], ["노원구", OTHER, keysOf(OTHER)]]); // 다른 탭이 앞에 담음 - 화면 순번이 어긋난다
+  await q.drop(1); // 이 탭 화면의 1번 = OTHER
+  assert.deepEqual(q.stored().map((e) => e[1]), ["단지Y", APT], "화면 순번으로 엉뚱한 줄을 지웠거나 다른 탭 추가분을 지웠다");
+});
+
+test("두 탭(#824): 한도는 다시 읽은 목록으로 센다 - 다른 탭이 10곳을 채웠으면 담지 않고 저장소도 그대로", async () => {
+  const p = await page();
+  const ten = Array.from({ length: 10 }, (_, i) => ["노원구", `단지${i}`, []]);
+  outside(p, ten);
+  await p.click();
+  assert.match(p.card(), /10곳까지/);
+  assert.deepEqual(p.stored(), ten);
+});
+
+test("두 탭(#824): 다른 탭이 쓰면 storage 이벤트로 다시 그리고, 새로 보인 단지를 센 뒤 키를 적어도 다른 항목을 지우지 않는다", async () => {
+  const all = keysOf(OTHER);
+  const p = await page({ saved: [["노원구", APT, keysOf(APT)]] });
+  outside(p, [["노원구", APT, keysOf(APT)], ["노원구", OTHER, all.slice(1)]]);
+  p.sandbox.onstorage({ key: "watchlist" });
+  await settle();
+  assert.match(p.list(), new RegExp(`${OTHER}</a> <span class="count">지난 방문 뒤 새 신고 1건</span>`), "다른 탭이 담은 단지를 다시 그리지 않았거나 그 탭이 적어 둔 키로 세지 않았다");
+  assert.deepEqual(p.stored(), [["노원구", APT, keysOf(APT)], ["노원구", OTHER, all]]);
+  assert.match(p.card(), /aria-pressed="true">관심 단지 빼기/);
 });
 
 test("외부 JS 는 gzip ≤2,048B, deal-search 만 defer 로 한 번 읽고 서비스워커 사전캐시에 없다 (#681 예외)", async () => {

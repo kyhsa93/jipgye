@@ -23,9 +23,8 @@ const M = {
 };
 const ok = (e) => Array.isArray(e) && typeof e[0] == "string" && typeof e[1] == "string" && Array.isArray(e[2]);
 function get() {
-  let s;
   try {
-    s = localStorage.getItem("watchlist");
+    var s = localStorage.getItem("watchlist");
   } catch {
     return null;
   }
@@ -36,18 +35,13 @@ function get() {
 }
 const put = (l) => {
   try {
-    localStorage.setItem("watchlist", JSON.stringify(l));
-    return 1;
-  } catch {
-    return 0;
-  }
+    return !localStorage.setItem("watchlist", JSON.stringify(l));
+  } catch {}
 };
-const B = get();
-let L = B && B.map((e) => e.slice());
 const D = {}, N = {};
-let msg = "";
-const same = (e, gu, apt) => e[0] === gu && squash(e[1]) === squash(apt);
+let L, msg = "";
 const id = (gu, apt) => `${gu}|${squash(apt)}`;
+const same = (e, gu, apt) => id(...e) == id(gu, apt);
 const under = (x, apt) => String(x).startsWith(`${apt} (`);
 const keys = (list, apt) => list.filter((d) => squash(d?.apt) === squash(apt) || under(d?.apt, apt)).map((d) => `${d.date}|${d.area}|${d.floor}|${d.amount10k}`);
 
@@ -62,68 +56,58 @@ function deals(gu) {
 }
 
 function count(e) {
-  const k = id(e[0], e[1]);
+  const k = id(...e);
   if (k in N) return N[k];
   const list = deals(e[0]);
   if (!Array.isArray(list)) return;
-  const now = keys(list, e[1]);
-  const old = B.find((b) => same(b, e[0], e[1]));
-  const seen = new Set(old ? old[2] : now);
+  const c = get(), now = keys(list, e[1]), old = c?.find((x) => same(x, ...e)), seen = new Set(old ? old[2] : now);
   N[k] = now.filter((x) => !seen.has(x)).length;
   e[2] = now;
-  put(L);
+  c && put(c.map((x) => (same(x, ...e) ? e : x)));
   return N[k];
 }
 
-function save(next) {
-  msg = "";
-  if (next.length > CAP) msg = m().cap;
-  else if (put(next)) {
-    window.analytics?.event(next.length < L.length ? "watchlist_remove" : "watchlist_add", { watchlist_count: next.length });
-    L = next;
-  } else msg = m().fail;
+function save(f, r) {
+  const c = get(), next = c && f(c);
+  msg = next?.length > CAP ? m().cap : next && put(next) ? "" : m().fail;
+  msg || window.analytics?.event(r ? "watchlist_remove" : "watchlist_add", { watchlist_count: next.length });
   draw();
 }
 
 function toggle() {
-  const apt = window.cardApt;
-  const rest = L.filter((e) => !same(e, district, apt));
-  if (rest.length < L.length) return save(rest);
-  N[id(district, apt)] = 0;
-  save([...L.filter((e) => e[0] !== district || !under(apt, e[1])), [district, apt, keys(fullDeals.get(district) || [], apt)]]);
+  const apt = window.cardApt, n = [district, apt, keys(fullDeals.get(district) || [], apt)], r = L.some((x) => same(x, ...n));
+  r || (N[id(...n)] = 0);
+  save((c) => c.filter((x) => !same(x, ...n) && (r || x[0] !== district || !under(apt, x[1]))).concat(r ? [] : [n]), r);
 }
 
 const m = () => M[locale] || M.ko;
 
 function draw() {
-  if (!L) return;
-  const t = m();
-  const box = document.getElementById("watch-list");
+  if (!(L = get() || L)) return;
+  const t = m(), box = document.getElementById("watch-list");
   const li = L.map((e, i) => {
     const n = count(e);
     const a = (apt) => `<a href="${escapeHtml(`./deal-search.html?${new URLSearchParams({ district: e[0], apt })}`)}">${escapeHtml(apt)}</a>`;
     const u = [...new Set((deals(e[0]) || []).map((d) => d.apt).filter((x) => under(x, e[1])))];
-    return `${a(e[1])}${u.length ? ` <span class="count">${t.s}</span> ${u.map(a).join(", ")}` : ""}${n === undefined ? "" : ` <span class="count">${t.n(n)}</span>`} <button type="button" class="chip" data-w="${i}" aria-label="${t.b[1]} ${escapeHtml(e[1])}">×</button>`;
+    return `${a(e[1])}${u.length ? ` <span class="count">${t.s}</span> ${u.map(a).join(", ")}` : ""}${n == null ? "" : ` <span class="count">${t.n(n)}</span>`} <button type="button" class="chip" data-w="${i}" aria-label="${t.b[1]} ${escapeHtml(e[1])}">×</button>`;
   });
   box.innerHTML = li.length ? `<p class="content-notice"><strong>${t.h}</strong> · ${li.join(" · ")} · ${t.note}${window.cardApt || !msg ? "" : ` <span role="status">${msg}</span>`}</p>` : "";
   box.onclick = (v) => {
     const e = L[v.target.dataset.w];
-    e && save(L.filter((x) => x !== e));
+    e && save((c) => c.filter((x) => !same(x, ...e)), 1);
   };
-  const el = document.getElementById("card-watch");
-  const apt = window.cardApt;
+  const el = document.getElementById("card-watch"), apt = window.cardApt;
   if (!el || !apt) return;
-  const e = L.find((x) => same(x, district, apt));
-  const n = e && count(e);
+  const e = L.find((x) => same(x, district, apt)), n = e && count(e);
   el.innerHTML =
     `<p><button type="button" class="chip" id="watch-toggle" aria-pressed="${!!e}">${t.b[+!!e]}</button>` +
-    (n === undefined ? "" : ` <span class="count">${t.n(n)}</span>`) +
+    (n == null ? "" : ` <span class="count">${t.n(n)}</span>`) +
     (msg ? ` <span role="status">${msg}</span>` : "") +
     `</p>`;
   document.getElementById("watch-toggle").onclick = toggle;
 }
 
-window.cardWatch = draw;
+window.cardWatch = onstorage = draw;
 draw();
 })();
 
