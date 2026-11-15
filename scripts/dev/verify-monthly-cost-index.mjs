@@ -3,7 +3,8 @@
 // 메인 세션이 저장소 루트에서 한 번 돌린다. 저장소 파일을 쓰지 않는다 — 생성기를 임시 폴더로 두 번 돌려 비교한다.
 //
 // 쓰는 법: node scripts/dev/verify-monthly-cost-index.mjs [--expect-months 202604,202605,202606,202607,202608]
-// 환경: REALESTATE_NOW(선택, 마감된 달을 정하는 시각 - 생성기와 같은 이름). 종료 0 = 전부 통과, 1 = 하나라도 실패.
+// 환경: REALESTATE_NOW(선택, 마감된 달을 정하는 시각 - 생성기와 같은 이름). 없으면 지금 시각을 한 번 정해 두 실행에 똑같이 넘긴다.
+// 종료 0 = 전부 통과, 1 = 하나라도 실패.
 //
 // 기대(2026-10-25 기준 원본 202411~202610, data-analyst #587 ① 댓글):
 //   - series.json: jeonse_loan_rate·deposit_rate 가 202411~202608 공백 0
@@ -41,9 +42,13 @@ for (const name of ["jeonse_loan_rate", "deposit_rate"]) {
   ok(missing.length === 0, `${name}: 202411~202608 공백 ${missing.length}${missing.length ? ` (${missing.slice(0, 5).join(",")}…)` : ""} · 첫 달 ${first} · ${(series[name] ?? []).length}개월`);
 }
 
+// #883: 생성기는 updatedAt 에 실행 시각을 쓴다(build-monthly-cost.ts, #657 D6 - 그쪽은 바꾸지 않는다). 두 실행이 각자 시계를 읽으면
+// 그 한 칸 때문에 아래 「같은 바이트」가 늘 실패했다(2026-11-15 main 40a5d5d2, 나머지 항목은 전부 PASS). 시각을 여기서 한 번 정해
+// 두 실행에 같은 REALESTATE_NOW 로 넘긴다. 호출자가 준 값은 그대로 쓴다 - 읽을 수 없는 값이면 생성기(collectionNow)가 멈춘다.
+const now = process.env.REALESTATE_NOW || new Date().toISOString();
 const tmp = mkdtempSync(path.join(os.tmpdir(), "jipgye-monthly-cost-"));
 const runOnce = (tag) => {
-  const env = { ...process.env, MONTHLY_COST_FILE: path.join(tmp, `${tag}.json`), MONTHLY_COST_CELLS_FILE: path.join(tmp, `${tag}-cells.json`) };
+  const env = { ...process.env, REALESTATE_NOW: now, MONTHLY_COST_FILE: path.join(tmp, `${tag}.json`), MONTHLY_COST_CELLS_FILE: path.join(tmp, `${tag}-cells.json`) };
   const log =
     execFileSync(process.execPath, [path.join(root, "scripts/build-monthly-cost.ts")], { cwd: root, env, encoding: "utf8" }) +
     execFileSync(process.execPath, [path.join(root, "scripts/dev/build-monthly-cost-cells.mjs")], { cwd: root, env, encoding: "utf8" });
@@ -54,7 +59,7 @@ const runOnce = (tag) => {
 try {
   const a = runOnce("a");
   const b = runOnce("b");
-  ok(a.docs === b.docs && a.cells === b.cells, `같은 입력 같은 바이트 (docs ${Buffer.byteLength(a.docs)} B · cells ${Buffer.byteLength(a.cells)} B)`);
+  ok(a.docs === b.docs && a.cells === b.cells, `같은 입력 같은 바이트 (docs ${Buffer.byteLength(a.docs)} B · cells ${Buffer.byteLength(a.cells)} B · REALESTATE_NOW ${now})`);
 
   const docs = JSON.parse(a.docs);
   const months = docs.points.map((p) => p.month);
