@@ -1,0 +1,673 @@
+{
+  "label": "소급",
+  "inputCommit": "554320660d420525132b6b17d01605a00c821a19",
+  "inputDate": "2026-11-01",
+  "prereg": "d697b539f7496edfe293a9e9ec9b216a0e6006c9",
+  "command": "node research/retro-band-2026-11/retro.mjs --score --src <R1 워크트리> --prereg d697b539f7496edfe293a9e9ec9b216a0e6006c9 --out research/retro-band-2026-11/retro.json",
+  "nominal": 0.5,
+  "minN": 100,
+  "interval": "clopper-pearson-95",
+  "replay": {
+    "matched": 3066,
+    "total": 3066
+  },
+  "snapshots": {
+    "notClosed": [
+      "2026-10-01"
+    ],
+    "horizons": [
+      {
+        "h": 30,
+        "count": 11,
+        "last": "2026-09-01"
+      },
+      {
+        "h": 60,
+        "count": 10,
+        "last": "2026-08-01"
+      },
+      {
+        "h": 90,
+        "count": 9,
+        "last": "2026-07-01"
+      }
+    ]
+  },
+  "seoulBySnapshot": [
+    {
+      "h": 30,
+      "low": {
+        "s": "2026-02-01",
+        "rate": 0.2234
+      },
+      "high": {
+        "s": "2026-05-01",
+        "rate": 0.3714
+      }
+    },
+    {
+      "h": 60,
+      "low": {
+        "s": "2026-02-01",
+        "rate": 0.2132
+      },
+      "high": {
+        "s": "2026-05-01",
+        "rate": 0.3345
+      }
+    },
+    {
+      "h": 90,
+      "low": {
+        "s": "2026-02-01",
+        "rate": 0.2056
+      },
+      "high": {
+        "s": "2026-05-01",
+        "rate": 0.3036
+      }
+    }
+  ],
+  "rows": [
+    {
+      "unit": "seoul",
+      "segment": "all",
+      "h": 30,
+      "snapshots": 11,
+      "n": 40287,
+      "hits": 11575,
+      "rate": 0.2873,
+      "ciLow": 0.2829,
+      "ciHigh": 0.2918,
+      "above": 23207,
+      "below": 5505,
+      "aboveRate": 0.576,
+      "belowRate": 0.1366,
+      "reference": {
+        "indexOff": {
+          "n": 40287,
+          "rate": 0.2802
+        },
+        "dropLast30": {
+          "n": 37500,
+          "rate": 0.25
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "6eok-or-less",
+      "h": 30,
+      "snapshots": 11,
+      "n": 8082,
+      "hits": 2704,
+      "rate": 0.3346,
+      "ciLow": 0.3243,
+      "ciHigh": 0.345,
+      "above": 4005,
+      "below": 1373,
+      "aboveRate": 0.4955,
+      "belowRate": 0.1699,
+      "reference": {
+        "indexOff": {
+          "n": 8545,
+          "rate": 0.3197
+        },
+        "dropLast30": {
+          "n": 7561,
+          "rate": 0.2969
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "6-9eok",
+      "h": 30,
+      "snapshots": 11,
+      "n": 11530,
+      "hits": 3185,
+      "rate": 0.2762,
+      "ciLow": 0.2681,
+      "ciHigh": 0.2845,
+      "above": 7024,
+      "below": 1321,
+      "aboveRate": 0.6092,
+      "belowRate": 0.1146,
+      "reference": {
+        "indexOff": {
+          "n": 11520,
+          "rate": 0.2595
+        },
+        "dropLast30": {
+          "n": 10746,
+          "rate": 0.2385
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "9-15eok",
+      "h": 30,
+      "snapshots": 11,
+      "n": 13013,
+      "hits": 3019,
+      "rate": 0.232,
+      "ciLow": 0.2248,
+      "ciHigh": 0.2393,
+      "above": 8939,
+      "below": 1055,
+      "aboveRate": 0.6869,
+      "belowRate": 0.0811,
+      "reference": {
+        "indexOff": {
+          "n": 12826,
+          "rate": 0.2277
+        },
+        "dropLast30": {
+          "n": 12336,
+          "rate": 0.2006
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "15-25eok",
+      "h": 30,
+      "snapshots": 11,
+      "n": 5448,
+      "hits": 1842,
+      "rate": 0.3381,
+      "ciLow": 0.3255,
+      "ciHigh": 0.3508,
+      "above": 2678,
+      "below": 928,
+      "aboveRate": 0.4916,
+      "belowRate": 0.1703,
+      "reference": {
+        "indexOff": {
+          "n": 5252,
+          "rate": 0.3414
+        },
+        "dropLast30": {
+          "n": 4906,
+          "rate": 0.3066
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "over-25eok",
+      "h": 30,
+      "snapshots": 11,
+      "n": 2214,
+      "hits": 825,
+      "rate": 0.3726,
+      "ciLow": 0.3524,
+      "ciHigh": 0.3932,
+      "above": 561,
+      "below": 828,
+      "aboveRate": 0.2534,
+      "belowRate": 0.374,
+      "reference": {
+        "indexOff": {
+          "n": 2144,
+          "rate": 0.3988
+        },
+        "dropLast30": {
+          "n": 1951,
+          "rate": 0.3019
+        }
+      }
+    },
+    {
+      "unit": "cellN",
+      "segment": "3-4",
+      "h": 30,
+      "snapshots": 11,
+      "n": 7514,
+      "hits": 3353,
+      "rate": 0.4462,
+      "ciLow": 0.435,
+      "ciHigh": 0.4576,
+      "above": 2992,
+      "below": 1169,
+      "aboveRate": 0.3982,
+      "belowRate": 0.1556,
+      "reference": {
+        "indexOff": {
+          "n": 7514,
+          "rate": 0.4392
+        },
+        "dropLast30": {
+          "n": 8202,
+          "rate": 0.399
+        }
+      }
+    },
+    {
+      "unit": "cellN",
+      "segment": "5+",
+      "h": 30,
+      "snapshots": 11,
+      "n": 32773,
+      "hits": 8222,
+      "rate": 0.2509,
+      "ciLow": 0.2462,
+      "ciHigh": 0.2556,
+      "above": 20215,
+      "below": 4336,
+      "aboveRate": 0.6168,
+      "belowRate": 0.1323,
+      "reference": {
+        "indexOff": {
+          "n": 32773,
+          "rate": 0.2438
+        },
+        "dropLast30": {
+          "n": 29298,
+          "rate": 0.2083
+        }
+      }
+    },
+    {
+      "unit": "seoul",
+      "segment": "all",
+      "h": 60,
+      "snapshots": 10,
+      "n": 75529,
+      "hits": 19713,
+      "rate": 0.261,
+      "ciLow": 0.2579,
+      "ciHigh": 0.2641,
+      "above": 46189,
+      "below": 9627,
+      "aboveRate": 0.6115,
+      "belowRate": 0.1275,
+      "reference": {
+        "indexOff": {
+          "n": 75529,
+          "rate": 0.2554
+        },
+        "dropLast30": {
+          "n": 70283,
+          "rate": 0.2284
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "6eok-or-less",
+      "h": 60,
+      "snapshots": 10,
+      "n": 15319,
+      "hits": 4775,
+      "rate": 0.3117,
+      "ciLow": 0.3044,
+      "ciHigh": 0.3191,
+      "above": 8066,
+      "below": 2478,
+      "aboveRate": 0.5265,
+      "belowRate": 0.1618,
+      "reference": {
+        "indexOff": {
+          "n": 16153,
+          "rate": 0.3007
+        },
+        "dropLast30": {
+          "n": 14322,
+          "rate": 0.2797
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "6-9eok",
+      "h": 60,
+      "snapshots": 10,
+      "n": 21796,
+      "hits": 5414,
+      "rate": 0.2484,
+      "ciLow": 0.2427,
+      "ciHigh": 0.2542,
+      "above": 14152,
+      "below": 2230,
+      "aboveRate": 0.6493,
+      "belowRate": 0.1023,
+      "reference": {
+        "indexOff": {
+          "n": 21770,
+          "rate": 0.2316
+        },
+        "dropLast30": {
+          "n": 20265,
+          "rate": 0.2185
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "9-15eok",
+      "h": 60,
+      "snapshots": 10,
+      "n": 24346,
+      "hits": 4884,
+      "rate": 0.2006,
+      "ciLow": 0.1956,
+      "ciHigh": 0.2057,
+      "above": 17780,
+      "below": 1682,
+      "aboveRate": 0.7303,
+      "belowRate": 0.0691,
+      "reference": {
+        "indexOff": {
+          "n": 24037,
+          "rate": 0.1962
+        },
+        "dropLast30": {
+          "n": 23032,
+          "rate": 0.1701
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "15-25eok",
+      "h": 60,
+      "snapshots": 10,
+      "n": 10000,
+      "hits": 3248,
+      "rate": 0.3248,
+      "ciLow": 0.3156,
+      "ciHigh": 0.3341,
+      "above": 5195,
+      "below": 1557,
+      "aboveRate": 0.5195,
+      "belowRate": 0.1557,
+      "reference": {
+        "indexOff": {
+          "n": 9630,
+          "rate": 0.328
+        },
+        "dropLast30": {
+          "n": 9063,
+          "rate": 0.2947
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "over-25eok",
+      "h": 60,
+      "snapshots": 10,
+      "n": 4068,
+      "hits": 1392,
+      "rate": 0.3422,
+      "ciLow": 0.3276,
+      "ciHigh": 0.357,
+      "above": 996,
+      "below": 1680,
+      "aboveRate": 0.2448,
+      "belowRate": 0.413,
+      "reference": {
+        "indexOff": {
+          "n": 3939,
+          "rate": 0.3846
+        },
+        "dropLast30": {
+          "n": 3601,
+          "rate": 0.2863
+        }
+      }
+    },
+    {
+      "unit": "cellN",
+      "segment": "3-4",
+      "h": 60,
+      "snapshots": 10,
+      "n": 14211,
+      "hits": 6047,
+      "rate": 0.4255,
+      "ciLow": 0.4174,
+      "ciHigh": 0.4337,
+      "above": 6012,
+      "below": 2152,
+      "aboveRate": 0.4231,
+      "belowRate": 0.1514,
+      "reference": {
+        "indexOff": {
+          "n": 14211,
+          "rate": 0.419
+        },
+        "dropLast30": {
+          "n": 15545,
+          "rate": 0.379
+        }
+      }
+    },
+    {
+      "unit": "cellN",
+      "segment": "5+",
+      "h": 60,
+      "snapshots": 10,
+      "n": 61318,
+      "hits": 13666,
+      "rate": 0.2229,
+      "ciLow": 0.2196,
+      "ciHigh": 0.2262,
+      "above": 40177,
+      "below": 7475,
+      "aboveRate": 0.6552,
+      "belowRate": 0.1219,
+      "reference": {
+        "indexOff": {
+          "n": 61318,
+          "rate": 0.2175
+        },
+        "dropLast30": {
+          "n": 54738,
+          "rate": 0.1856
+        }
+      }
+    },
+    {
+      "unit": "seoul",
+      "segment": "all",
+      "h": 90,
+      "snapshots": 9,
+      "n": 105463,
+      "hits": 25426,
+      "rate": 0.2411,
+      "ciLow": 0.2385,
+      "ciHigh": 0.2437,
+      "above": 67105,
+      "below": 12932,
+      "aboveRate": 0.6363,
+      "belowRate": 0.1226,
+      "reference": {
+        "indexOff": {
+          "n": 105463,
+          "rate": 0.2348
+        },
+        "dropLast30": {
+          "n": 98192,
+          "rate": 0.2127
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "6eok-or-less",
+      "h": 90,
+      "snapshots": 9,
+      "n": 21470,
+      "hits": 6309,
+      "rate": 0.2939,
+      "ciLow": 0.2878,
+      "ciHigh": 0.3,
+      "above": 11759,
+      "below": 3402,
+      "aboveRate": 0.5477,
+      "belowRate": 0.1585,
+      "reference": {
+        "indexOff": {
+          "n": 22597,
+          "rate": 0.2818
+        },
+        "dropLast30": {
+          "n": 19981,
+          "rate": 0.2678
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "6-9eok",
+      "h": 90,
+      "snapshots": 9,
+      "n": 30629,
+      "hits": 6972,
+      "rate": 0.2276,
+      "ciLow": 0.2229,
+      "ciHigh": 0.2324,
+      "above": 20743,
+      "below": 2914,
+      "aboveRate": 0.6772,
+      "belowRate": 0.0951,
+      "reference": {
+        "indexOff": {
+          "n": 30653,
+          "rate": 0.2098
+        },
+        "dropLast30": {
+          "n": 28465,
+          "rate": 0.203
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "9-15eok",
+      "h": 90,
+      "snapshots": 9,
+      "n": 33899,
+      "hits": 5918,
+      "rate": 0.1746,
+      "ciLow": 0.1705,
+      "ciHigh": 0.1787,
+      "above": 25880,
+      "below": 2101,
+      "aboveRate": 0.7634,
+      "belowRate": 0.062,
+      "reference": {
+        "indexOff": {
+          "n": 33440,
+          "rate": 0.1703
+        },
+        "dropLast30": {
+          "n": 32131,
+          "rate": 0.1481
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "15-25eok",
+      "h": 90,
+      "snapshots": 9,
+      "n": 13738,
+      "hits": 4335,
+      "rate": 0.3155,
+      "ciLow": 0.3078,
+      "ciHigh": 0.3234,
+      "above": 7447,
+      "below": 1956,
+      "aboveRate": 0.5421,
+      "belowRate": 0.1424,
+      "reference": {
+        "indexOff": {
+          "n": 13234,
+          "rate": 0.3152
+        },
+        "dropLast30": {
+          "n": 12521,
+          "rate": 0.2856
+        }
+      }
+    },
+    {
+      "unit": "price",
+      "segment": "over-25eok",
+      "h": 90,
+      "snapshots": 9,
+      "n": 5727,
+      "hits": 1892,
+      "rate": 0.3304,
+      "ciLow": 0.3182,
+      "ciHigh": 0.3427,
+      "above": 1276,
+      "below": 2559,
+      "aboveRate": 0.2228,
+      "belowRate": 0.4468,
+      "reference": {
+        "indexOff": {
+          "n": 5539,
+          "rate": 0.3786
+        },
+        "dropLast30": {
+          "n": 5094,
+          "rate": 0.2795
+        }
+      }
+    },
+    {
+      "unit": "cellN",
+      "segment": "3-4",
+      "h": 90,
+      "snapshots": 9,
+      "n": 19998,
+      "hits": 8059,
+      "rate": 0.403,
+      "ciLow": 0.3962,
+      "ciHigh": 0.4098,
+      "above": 8941,
+      "below": 2998,
+      "aboveRate": 0.4471,
+      "belowRate": 0.1499,
+      "reference": {
+        "indexOff": {
+          "n": 19998,
+          "rate": 0.3977
+        },
+        "dropLast30": {
+          "n": 21780,
+          "rate": 0.3575
+        }
+      }
+    },
+    {
+      "unit": "cellN",
+      "segment": "5+",
+      "h": 90,
+      "snapshots": 9,
+      "n": 85465,
+      "hits": 17367,
+      "rate": 0.2032,
+      "ciLow": 0.2005,
+      "ciHigh": 0.2059,
+      "above": 58164,
+      "below": 9934,
+      "aboveRate": 0.6806,
+      "belowRate": 0.1162,
+      "reference": {
+        "indexOff": {
+          "n": 85465,
+          "rate": 0.1967
+        },
+        "dropLast30": {
+          "n": 76412,
+          "rate": 0.1714
+        }
+      }
+    }
+  ]
+}
