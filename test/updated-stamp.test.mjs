@@ -214,6 +214,29 @@ test("stampAll: 임시 폴더의 페이지에 그 페이지 소스의 가장 오
   }
 });
 
+// (#871 PR-B, cto PR-A 관찰) reco 25개가 전부 없거나 updatedAt 이 다 빠져도 근거표 한 장 때문에 기준일 찍기가 종료 1로 배포를 세우지 않는다 -
+// 그 장만 줄을 비운 채 계속하고(STAMP_OPTIONAL), 같은 상황의 다른 장은 지금처럼 던진다.
+test("stampAll: 근거표 장은 reco 소스가 없으면 기준일 줄을 비운 채 계속하고, 다른 장은 지금처럼 던진다 (#871 PR-B)", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "stamp-"));
+  try {
+    const docs = path.join(dir, "docs");
+    const data = path.join(docs, "data");
+    await mkdir(data, { recursive: true });
+    await writeFile(path.join(data, "news.json"), JSON.stringify({ updatedAt: "2026-10-10T00:00:00Z" }));
+    await writeFile(path.join(data, "reco-gangnam.json"), JSON.stringify({ schemaVersion: 1 })); // updatedAt 없음: 소스 아님
+    const shell = SHELL("<main>근거표</main>");
+    await writeFile(path.join(docs, "buy-by-budget.html"), shell);
+    await writeFile(path.join(docs, "news.html"), SHELL("<main>뉴스</main>"));
+    const done = await stampAll({ docsDir: docs, dataDir: data, pages: { "buy-by-budget.html": ["reco"], "news.html": ["news"] } });
+    assert.deepEqual(done, ["buy-by-budget.html", "news.html"]);
+    assert.equal(await readFile(path.join(docs, "buy-by-budget.html"), "utf8"), shell, "근거표 장은 틀 그대로");
+    assert.match(await readFile(path.join(docs, "news.html"), "utf8"), /기준일 2026-10-10</);
+    await assert.rejects(async () => stampAll({ docsDir: docs, dataDir: data, pages: { "news.html": ["reco"] } }), /기준일 소스 reco/, "다른 장은 던진다");
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 test("저장소 docs: id=updated가 있는 장은 모두 표에 있고 정적 '불러오는 중'이 0장이다", async () => {
   const files = (await readdir(DOCS)).filter((f) => f.endsWith(".html")).sort();
   const withUpdated = [];

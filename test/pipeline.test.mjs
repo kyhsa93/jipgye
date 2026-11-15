@@ -6,7 +6,7 @@ import { expandRenderPipeline } from "./helpers/workflow-text.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
-// 워크플로는 렌더 여섯을 render-pipeline.ts 한 줄로 부른다(#238) - 순서·포함을 읽는 시험은 그 줄을 펼쳐서 본다.
+// 워크플로는 렌더 일곱을 render-pipeline.ts 한 줄로 부른다(#238) - 순서·포함을 읽는 시험은 그 줄을 펼쳐서 본다.
 const readWorkflow = async (rel) => expandRenderPipeline(await read(rel));
 
 const scriptsIn = (text) =>
@@ -64,22 +64,22 @@ test("파생 데이터를 만드는 빌더가 원본 수집과 같은 단계에 
 
 /**
  * (#510, 구조 B-4) 뒤집었다. summarize.yml 도 정적 HTML 을 틀에서 다시 쓰던 시절에는 기준일 찍기(build-updated-stamp)가 빠져 Summarize 가 4회 연속 실패했다(#212:
- * 시험 228·231 - 기준일 줄이 틀 상태로 돌아감). 렌더가 deploy.yml 한 곳으로 모인 지금은 그 어긋남이 구조적으로 없다: 렌더는 render-pipeline 의 기본 여섯 단계 한 줄이고, 기준일
- * 찍기가 그 맨 끝이다. 이 시험은 (1) 수집 두 워크플로에 렌더가 없고 (2) deploy.yml 이 기본 여섯(인자 없음)을 부르며 (3) 그 순서가 기준일 찍기로 끝난다는 것을 본다.
+ * 시험 228·231 - 기준일 줄이 틀 상태로 돌아감). 렌더가 deploy.yml 한 곳으로 모인 지금은 그 어긋남이 구조적으로 없다: 렌더는 render-pipeline 의 기본 일곱 단계 한 줄이고, 기준일
+ * 찍기가 그 맨 끝이다. 이 시험은 (1) 수집 두 워크플로에 렌더가 없고 (2) deploy.yml 이 기본 일곱(인자 없음)을 부르며 (3) 그 순서가 기준일 찍기로 끝난다는 것을 본다.
  * 「일부러 다섯」(rate 4장 제외)은 커밋된 docs/ 에 rate 4장이 있어서만 성립하던 모양이라 없어졌다.
  */
-test("렌더는 deploy.yml 의 기본 여섯 단계 한 줄이고 기준일 찍기로 끝난다 - summarize.yml·daily-update.yml 에는 렌더가 없다", async () => {
+test("렌더는 deploy.yml 의 기본 일곱 단계 한 줄이고 기준일 찍기로 끝난다 - summarize.yml·daily-update.yml 에는 렌더가 없다", async () => {
   const [daily, summarize, deploy] = await Promise.all([
     readWorkflow(".github/workflows/daily-update.yml"),
     readWorkflow(".github/workflows/summarize.yml"),
     readWorkflow(".github/workflows/deploy.yml"),
   ]);
-  const RENDERERS = /prerender|build-(?:rate|news|budget|realestate)-pages|build-news-days|build-updated-stamp/;
+  const RENDERERS = /prerender|build-(?:rate|news|budget|realestate)-pages|build-news-days|build-reco-counts|build-updated-stamp/;
   for (const [name, text] of [["daily-update.yml", daily], ["summarize.yml", summarize]]) {
     assert.deepEqual(scriptsIn(text).filter((s) => RENDERERS.test(s)), [], `${name}이 렌더 스크립트를 부른다 - 렌더는 deploy.yml 의 일이다`);
   }
   const d = scriptsIn(deploy);
-  assert.deepEqual(d, ["prerender.ts", "build-news-pages.ts", "build-budget-pages.ts", "build-realestate-pages.ts", "build-news-days.ts", "build-updated-stamp.ts"], "deploy.yml 의 렌더 순서가 기본 여섯과 다르다");
+  assert.deepEqual(d, ["prerender.ts", "build-news-pages.ts", "build-budget-pages.ts", "build-realestate-pages.ts", "build-news-days.ts", "build-reco-counts.ts", "build-updated-stamp.ts"], "deploy.yml 의 렌더 순서가 기본 일곱과 다르다");
   assert.equal(d.at(-1), "build-updated-stamp.ts", "deploy.yml 렌더가 build-updated-stamp로 끝나지 않는다");
 });
 

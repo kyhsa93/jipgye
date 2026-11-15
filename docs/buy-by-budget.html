@@ -64,14 +64,37 @@
     <p class="lead" data-lang="en" lang="en">Pick a price band and a size band. We count, by district, the complex-size pairs priced from the last 183 days of reported deals and those left out for too few deals. Rows are alphabetical and do not suggest any choice.</p>
   </section>
 
+  <section id="bt-form" class="tw:mb-10 tw:1024:mb-16">
+    <!-- 근거표 폼(#871 PR-B). form 요소도 name 속성도 두지 않는다(cto 조건 B) - JS 가 꺼져 있거나 defer 전에 Enter 를 눌러도 GET 제출로 고른 값이 주소에 실릴 길이 없다.
+         면적대는 라디오가 아니라 select 다: name 없는 라디오는 한 묶음이 되지 않아 여러 개가 함께 켜진다. 기본값은 상수 7억대·전체 면적(po 명세 ①, cpo 답 2). -->
+    <div class="search-controls" id="bt-controls">
+      <div class="search-field"><label for="bt-band"><span class="on" data-lang="ko">값대(최근 거래 중앙값)</span><span data-lang="en" lang="en">Price band (median of recent deals)</span></label><select id="bt-band"><option value="3">3억대(3억~4억)</option><option value="4">4억대(4억~5억)</option><option value="5">5억대(5억~6억)</option><option value="6">6억대(6억~7억)</option><option value="7" selected>7억대(7억~8억)</option><option value="8">8억대(8억~9억)</option><option value="9">9억대(9억~10억)</option><option value="10">10억대(10억~11억)</option><option value="11">11억대(11억~12억)</option><option value="12">12억대(12억~13억)</option><option value="13">13억대(13억~14억)</option><option value="14">14억대(14억~15억)</option><option value="15">15억대(15억~16억)</option><option value="16">16억대(16억~17억)</option><option value="17">17억대(17억~18억)</option><option value="18">18억대(18억~19억)</option><option value="19">19억대(19억~20억)</option><option value="20">20억대(20억~21억)</option></select></div>
+      <div class="search-field"><label for="bt-area"><span class="on" data-lang="ko">전용면적</span><span data-lang="en" lang="en">Floor area</span></label><select id="bt-area"><option value="all" selected>전체 면적</option><option value="under-60">60㎡ 미만</option><option value="60-85">60~85㎡</option><option value="over-85">85㎡ 초과</option></select></div>
+      <div class="search-field toggle"><input type="checkbox" id="bt-first"><label for="bt-first"><span class="on" data-lang="ko">생애최초로 셈하기</span><span data-lang="en" lang="en">Count as a first-time buyer</span></label></div>
+      <div class="search-field"><button type="button" id="bt-go"><span class="on" data-lang="ko">세기</span><span data-lang="en" lang="en">Count</span></button></div>
+    </div>
+    <p class="updated" id="bt-range"></p>
+    <!-- 이 문장은 analytics.js scrub 의 해시 지우기·「#b9 로 열어도 page_location 에 # 없음」 시험과 같은 PR 에서만 참이다(clo, PR #878 판정). -->
+    <p class="updated on" data-lang="ko">고른 값대·면적은 이 브라우저 안에서만 쓰며, 주소에 붙이거나 분석 도구로 보내지 않습니다.</p>
+    <p class="updated" data-lang="en" lang="en">The band and size you pick are used only in this browser; they are not added to the address or sent to analytics.</p>
+    <div id="bt-nojs"><p class="content-notice on" data-lang="ko">조건을 바꾸려면 자바스크립트가 필요합니다. <a href="./budget-7eok.html">예산대별 장에서도 같은 값대를 볼 수 있습니다 →</a></p><p class="content-notice" data-lang="en" lang="en">Changing conditions needs JavaScript. <a href="./budget-7eok.html">Budget pages show the same bands →</a></p></div>
+  </section>
+
   <section id="bt-result" class="tw:mb-10 tw:1024:mb-16">
     <!-- 구운 기본 보기(7억대·전체 면적, N6). prerender 가 reco 25개를 못 읽거나 모양이 다르면 이 빈 자리(안내 + 같은 값대의 예산대 장 링크)가 그대로 나간다(cto 4a). -->
-    <!--prerender:budgetTable--><p class="content-notice on" data-lang="ko">조건을 바꾸려면 자바스크립트가 필요합니다. <a href="./budget-7eok.html">예산대별 장에서도 같은 값대를 볼 수 있습니다 →</a></p><p class="content-notice" data-lang="en" lang="en">Changing conditions needs JavaScript. <a href="./budget-7eok.html">Budget pages show the same bands →</a></p><!--/prerender:budgetTable-->
+    <p class="lead" id="bt-head" aria-live="polite"></p>
+    <!-- 장 전용 JS 가 건수 파일을 읽으면 아래 구운 보기를 숨기고 #bt-head·#bt-live 에 고른 조건을 그린다. 못 읽으면 구운 보기를 그대로 두고 #bt-live 에 실패 문구다(po 명세 ①).
+         문구는 po 명세 ③·구운 보기(scripts/budget-table.ts)와 같은 글자다 - 시험이 같은 고정 데이터로 두 쪽을 맞댄다. JS 는 고르기만 한다(#681). -->
+    <div id="bt-baked">
+      <!--prerender:budgetTable--><p class="content-notice on" data-lang="ko">조건을 바꾸려면 자바스크립트가 필요합니다. <a href="./budget-7eok.html">예산대별 장에서도 같은 값대를 볼 수 있습니다 →</a></p><p class="content-notice" data-lang="en" lang="en">Changing conditions needs JavaScript. <a href="./budget-7eok.html">Budget pages show the same bands →</a></p><!--/prerender:budgetTable-->
+    </div>
+    <div id="bt-live" data-msg="{0}·{1}: 조건에 드는 단지·평형 {2}곳 — 값을 낸 곳 {3}, 뺀 곳 {4}(최근 {5}일 거래 {6}건 미만). 거래 {7}~{8}, 값은 {9} 권역 지수 수준으로 고쳤습니다.|이 조건에 드는 곳이 없습니다. 면적대를 풀면 {0}곳입니다.|뺀 곳은 최근 {0}일 그 단지·평형 거래가 {1}건 미만이라 값을 내지 않은 곳입니다.|{0} · 전용면적별 건수|{0} · 자치구별 건수(거르는 조건이 아닙니다)|자치구|값을 낸 곳|뺀 곳|전용면적|줄 보기|건수를 불러오지 못했습니다. 위 숫자는 기본 조건(7억대·전체 면적) 기준입니다.|이 구의 줄을 불러오지 못했습니다. 실거래 검색에서 볼 수 있습니다 →|실거주 항목: 검증 전 — 역까지 거리와 세대수 값을 대조하고 있어 비워 둡니다.|고를 수 있는 값대(3억대~20억대) 밖에 값을 낸 곳이 {0}곳 더 있습니다.|전체 면적,60㎡ 미만,60~85㎡,85㎡ 초과|{0}억대|{0}억대({0}억~{2}억)|{0} · {1} · {2}" data-msg-en="{0}, {1}: {2} complex-size pairs match — {3} priced, {4} left out (fewer than {6} deals in {5} days). Deals {7}–{8}, adjusted to the {9} regional index level.|Nothing matches. Without the size filter, {0} match.|Left out: fewer than {1} deals for that complex and size in the last {0} days, so no value is shown.|{0} · Counts by floor area|{0} · Counts by district (not a filter)|District|Priced|Left out|Floor area|Show rows|Could not load counts; the figures above are for the default (₩0.7B band, all sizes).|Could not load this district's rows. See deal search →|Day-to-day living: not yet verified — left blank while station-distance and household data are being checked.|{0} more priced pairs fall outside the bands you can pick (₩0.3B–₩2.0B bands).|all sizes,under 60㎡,60–85㎡,over 85㎡|₩{1}B band|₩{1}B band (₩{1}–{3}B)|{0} · {1} · {2}"></div>
+    <div id="bt-rows" data-msg="{0}년|지난 거래 {0}~{1}, {2}건|보정 전 {0}|{0} · {1} · {2}층|합계 {0}|12개월 {0}건|표본 충분(5건 이상·90일 안)|표본 부분|거래 {0}건뿐|마지막 거래 {0}일 전|{0}억 대출 규제선 근처|지난 거래 범위가 이 값대 위로 걸침|거래 목록·비교·관심 단지 →" data-msg-en="{0}|past {0}–{1}, {2} deals|unadjusted {0}|{0} · {1} · floor {2}|total {0}|{0} deals in 12 months|Enough deals (5+, within 90 days)|Partial sample|Only {0} deals|Last deal {0} days ago|Near the ₩{1}B loan-rule line|Past deals reach above this band|Deals, compare, watchlist →" data-cols="단지(동)·준공|전용|값(지난 거래 범위, 건수)|마지막 거래|매매가 위에 드는 돈|대출 상한(규정 추정)|필요 현금(이 가정)|표본|확인할 것" data-cols-en="Complex (dong), built|Area|Value (past range, deals)|Last deal|Costs on top of price|Loan cap (rule estimate)|Cash needed (these assumptions)|Sample|Check"></div>
   </section>
 
   <section id="bt-limits" class="tw:mb-10 tw:1024:mb-16">
-    <p class="on" data-lang="ko">이 표는 어느 단지가 더 낫다거나 값이 오른다고 말하지 않습니다. 국토교통부에 신고된 실거래로 센 값이며 매물이 아닙니다. 대출 상한과 필요 현금은 집이 없는 사람이 한 채를 산다고 가정해 규정으로 셈한 추정입니다. 기본은 생애최초가 아닌 일반 조건입니다. 실제로 빌릴 수 있는 돈은 소득(DSR)과 금융회사 심사에 따라 이보다 적을 수 있습니다.</p>
-    <p data-lang="en" lang="en">This table does not say which complex is better or that prices will rise. Figures come from deals reported to MOLIT, not listings. Loan caps and cash needed are rule-based estimates assuming a buyer with no home buys one. By default they use the standard rules, not first-time-buyer rules. What you can actually borrow depends on income (DSR) and lender review and may be lower.</p>
+    <p class="on" data-lang="ko">이 표는 어느 단지가 더 낫다거나 값이 오른다고 말하지 않습니다. 국토교통부에 신고된 실거래로 센 값이며 매물이 아닙니다. 대출 상한과 필요 현금은 집이 없는 사람이 한 채를 산다고 가정해 규정으로 셈한 추정입니다. 기본은 생애최초·서민 실수요자가 아닌 일반 조건입니다. 실제로 빌릴 수 있는 돈은 소득(DSR)과 금융회사 심사에 따라 이보다 적을 수 있습니다.</p>
+    <p data-lang="en" lang="en">This table does not say which complex is better or that prices will rise. Figures come from deals reported to MOLIT, not listings. Loan caps and cash needed are rule-based estimates assuming a buyer with no home buys one. By default they use the standard rules, not first-time-buyer or low-income-buyer rules. What you can actually borrow depends on income (DSR) and lender review and may be lower.</p>
   </section>
 
   <footer class="site-footer">
@@ -89,9 +112,11 @@
 <script src="./nav.js" defer></script>
 <script src="./search.js" defer></script>
 <script src="./analytics.js"></script>
+<script src="./budget-rows.js" defer></script>
+<script src="./budget-table.js" defer></script>
 <script>
 // 근거표 장(#871 PR-A). 이 장의 숫자는 빌드가 두 언어로 다 구워 둔다 - 여기서는 테마와 언어를 고르기만 하고, 데이터를 받지 않는다.
-// 조건을 바꾸는 폼과 장 전용 JS 는 PR-B(#681 경로)에서 들어온다. 그 전까지 이 스크립트는 주소(location·history)를 건드리지 않는다.
+// 조건을 바꾸는 폼은 장 전용 JS 둘(budget-rows.js·budget-table.js, #681 경로)이 맡는다. 이 스크립트도 그 둘도 주소(location·history)에 쓰지 않는다.
 (function () {
   const THEME_ICONS = { auto: "🌓", light: "☀️", dark: "🌙" };
   let theme = (function () {

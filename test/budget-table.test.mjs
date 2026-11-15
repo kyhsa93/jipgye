@@ -10,6 +10,7 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { budgetModel, budgetTableBlock, budgetTableHtml, checksOf, DEFAULT_BAND, dealSearchHref, headText, overBand, recoView, recoViews, relaxText, rowOrder } from "../scripts/budget-table.ts";
 import { DISTRICT_SLUGS } from "../scripts/district-slugs.ts";
+import { apt, assertNoBanned, cell, files, FIXTURE, model, shown, views } from "./helpers/budget-fixture.mjs";
 import { groupForPage } from "../scripts/page-assets.ts";
 import { APARTMENT_FIELDS, CELL_FIELDS } from "../scripts/recommendation.ts";
 import { isNoindex } from "../scripts/sitemap.ts";
@@ -21,74 +22,7 @@ const repo = path.resolve(import.meta.dirname, "..");
 const PAGE = "buy-by-budget.html";
 
 // ---- 고정 데이터 ----------------------------------------------------------------------------------------------------------------
-// 칸 하나. 값은 만원. checks 는 빌더가 싣는 [코드, 값] 쌍이다.
-const cell = (areaSqm, median, o = {}) => {
-  const c = {
-    areaSqm, n: 4, median, low: median - 1_000, high: median + 1_500, rawMedian: median - 200, unadjustedDeals: 1,
-    extraCost: 1_700, totalCost: median + 1_700, loanCapGeneral: 29_000, loanCapFirstTime: 40_000, cashGeneral: median - 27_300, cashFirstTime: median - 38_300,
-    lastAmount: median + 300, lastDate: "2026-10-02", lastFloor: 7, deals12m: 9, jeonseN: 2, sampleGrade: "partial", position: [["peers_n", 99]], checks: [["few_deals", 4]],
-    ...o,
-  };
-  return CELL_FIELDS.map((f) => c[f]);
-};
-const apt = (id, name, dong, cells, aliases = []) => APARTMENT_FIELDS.map((f) => ({ id, name, dong, buildYear: 2001, households: null, aliases, cells }[f]));
-
-/** 25구 파일. extra 로 구별 내용을 덮는다. 기본은 칸 0개·뺀 칸 0개다. */
-function files(extra = {}) {
-  return Object.keys(DISTRICT_SLUGS).map((district) => ({
-    schemaVersion: 1,
-    algorithmVersion: "reco-0",
-    updatedAt: "2026-11-14T03:15:56.201Z",
-    district,
-    districtCode: "00000",
-    windowDays: 183,
-    asOf: { deals: "2026-11-14", windowStart: "2026-05-15", indexRef: "202608", indexFilled: false, rules: "2026-10-01" },
-    types: { living: { status: "off", reasons: ["no_transit"] }, future: { status: "none", reasons: ["not_planned"] }, balanced: { status: "none", reasons: ["not_planned"] } },
-    apartmentFields: [...APARTMENT_FIELDS],
-    cellFields: [...CELL_FIELDS],
-    apartments: [],
-    excluded: [],
-    ...extra[district],
-  }));
-}
-
-// 노원구: 값 낸 7억대 칸 4개(면적대 셋 모두) - 예시 줄을 내는 구. 「이름 (동)」 한 곳을 넣었다(cto 5, 시험 고정 데이터 조건).
-// 마포구: 별칭이 있는 단지 하나(마포아이파크포레 ← 신촌숲아이파크, 오늘 데이터와 같은 모양) - 값 낸 칸 2개.
-// 강남구: 값 낸 칸 0·뺀 칸만. 은평구: 7억대 밖 칸만(8억대) - 7억대 건수에 안 든다.
-const FIXTURE = {
-  노원구: {
-    apartments: [
-      apt("11350|하계동|1|건영", "건영 (하계동)", "하계동", [cell(53.14, 72_600)]),
-      apt("11350|상계동|2|건영", "건영 (상계동)", "상계동", [cell(84.9, 71_000, { high: 81_000, checks: [["stale_deal", 120], ["reg_line", 15]] })]),
-      apt("11350|중계동|3|가람", "가람", "중계동", [cell(59.9, 70_500, { sampleGrade: "enough" }), cell(114.9, 76_000)]),
-    ],
-    excluded: [{ band: 7, area: "60-85", thin: 5 }, { band: 7, area: "over-85", thin: 2 }, { band: 9, area: "under-60", thin: 3 }],
-  },
-  마포구: {
-    apartments: [apt("11440|신수동|462|마포아이파크포레", "마포아이파크포레", "신수동", [cell(59.75, 74_000), cell(84.93, 79_000)], ["11440|신수동|462|신촌숲아이파크"])],
-    excluded: [{ band: 7, area: "under-60", thin: 1 }],
-  },
-  강남구: { excluded: [{ band: 7, area: "over-85", thin: 4 }] },
-  은평구: { apartments: [apt("11380|불광동|5|북한산", "북한산", "불광동", [cell(84.0, 82_000)])] },
-};
-
-const views = () => recoViews(files(FIXTURE));
-const model = (o) => budgetModel(views(), o);
-const textOf = (html) => html.replace(/<[^>]+>/g, " ");
-// 화면에 나오는 글자: 태그 밖 글자 + 화면용 속성(data-*-en·aria-label·title·placeholder). 스크립트·head 는 뺀다(장 안 JS 의 "return" 같은 코드 낱말은 화면 글자가 아니다).
-const shown = (html) =>
-  `${textOf(html.replace(/<head>[\s\S]*?<\/head>/, "").replace(/<script[\s\S]*?<\/script>/g, ""))} ${[...html.matchAll(/\s(?:data-[\w-]*en|aria-label|title|placeholder)="([^"]*)"/g)].map((m) => m[1]).join(" ")}`;
-
-// 금지어(po 명세 ③ 「금지어(시험, clo 확정)」 + clo PR #878 판정이 더한 것). 영어 "top" 은 ③ 의 열 머리 "Costs on top of price" 만 걷어 낸 뒤 검사한다(clo 판정).
-const BANNED_KO = ["점수", "순위", "추천", "1위", "베스트", "TOP", "유망", "오를", "상승", "여력", "수익", "투자", "저평가", "기회", "지금 사야", "후보", "보장", "적기", "저렴", "급매", "가성비"];
-const BANNED_EN = [/\bscore/i, /\brank/i, /\brecommend/i, /\bbest\b/i, /\btop\b/i, /\bupside/i, /\bundervalued/i, /\binvest/i, /\breturns?\b/i, /\bopportunit/i, /\bguarantee/i, /\bbargain/i, /\bcheap/i];
-function assertNoBanned(text, where) {
-  for (const w of BANNED_KO) assert.ok(!text.includes(w), `${where}: 「${w}」`);
-  assert.doesNotMatch(text, /\d+\s*위(?![가-힣])/, `${where}: N위`);
-  assert.doesNotMatch(text, /번째/, `${where}: 순번`);
-  const en = text.replace(/\bon top of\b/gi, "");
-  for (const re of BANNED_EN) assert.doesNotMatch(en, re, `${where}: ${re}`);
-}
+// test/helpers/budget-fixture.mjs - 장 전용 JS 시험(test/budget-table-js.test.mjs)과 같은 데이터를 쓴다(cto 조건 E).
 
 // ---- (1) 계산 --------------------------------------------------------------------------------------------------------------
 
@@ -231,7 +165,7 @@ test("구운 예시 줄은 ≤3이고, 일반 값(생애최초 꺼짐)을 쓴다
 });
 
 test("값대×면적대 표는 뺀 곳이 있을 때만 (N6)", () => {
-  assert.ok(budgetTableHtml(model()).includes("7억대 전용면적별 건수"));
+  assert.ok(budgetTableHtml(model()).includes("7억대 · 전용면적별 건수"));
   const none = budgetModel(recoViews(files({ 마포구: { ...FIXTURE.마포구, excluded: [] } })));
   assert.equal(none.K, 0);
   assert.ok(!budgetTableHtml(none).includes("전용면적별 건수"));
@@ -278,10 +212,12 @@ test("틀: 폼 컨트롤에 name 0개, 장 안 해시 앵커는 공통 건너뛰
   assert.equal((b.match(/\sname=/g) ?? []).length, 0, "본문 어디에도 name 속성 0");
   // 사이트 공통 「본문 바로가기」(#content)만 있다 - 모든 장에 같은 것이 있고 이 장이 만든 앵커가 아니다.
   assert.deepEqual([...b.matchAll(/href="(#[^"]*)"/g)].map((m) => m[1]), ["#content"]);
-  assert.equal((b.match(/<form\b/g) ?? []).length, 1, "폼은 사이트 검색 하나뿐(근거표 폼은 PR-B)");
+  // 근거표 폼(PR-B)은 <form> 으로 감싸지 않는다 - Enter 가 GET 제출을 만들 길이 없다(cto 조건 B).
+  assert.equal((b.match(/<form\b/g) ?? []).length, 1, "폼은 사이트 검색 하나뿐");
   for (const b2 of b.match(/<button\b[^>]*>/g) ?? []) assert.match(b2, /type="button"/, b2);
   assert.doesNotMatch(b, /pushState|replaceState|location\s*(?:\.\w+\s*)?=(?!=)|location\.hash/, "주소를 바꾸는 코드");
-  assert.ok(!/<script src="\.\/buy-by-budget|<script src="\.\/budget-table/.test(template), "장 전용 JS 는 PR-B");
+  // 장 전용 JS 는 둘(budget-rows·budget-table)이고 그 시험은 test/budget-table-js.test.mjs 다(#681 경로).
+  assert.deepEqual([...template.matchAll(/<script src="\.\/(budget-[\w-]+\.js)"/g)].map((m) => m[1]), ["budget-rows.js", "budget-table.js"]);
 });
 
 test("틀: 화면 글자에 금지어·「후보」 0, 문구는 po ③ 그대로", () => {
@@ -291,8 +227,9 @@ test("틀: 화면 글자에 금지어·「후보」 0, 문구는 po ③ 그대�
     '<h1 id="page-title">예산대로 보는 단지 근거표</h1>',
     'title: "Complex evidence table by price band"',
     "값대와 면적대를 고르면 최근 183일 실거래로 값을 낸 단지·평형과, 거래가 모자라 뺀 곳을 자치구별로 셉니다. 줄은 가나다순이며 어느 곳을 고르라는 뜻이 아닙니다.",
-    "이 표는 어느 단지가 더 낫다거나 값이 오른다고 말하지 않습니다. 국토교통부에 신고된 실거래로 센 값이며 매물이 아닙니다. 대출 상한과 필요 현금은 집이 없는 사람이 한 채를 산다고 가정해 규정으로 셈한 추정입니다. 기본은 생애최초가 아닌 일반 조건입니다. 실제로 빌릴 수 있는 돈은 소득(DSR)과 금융회사 심사에 따라 이보다 적을 수 있습니다.",
+    "이 표는 어느 단지가 더 낫다거나 값이 오른다고 말하지 않습니다. 국토교통부에 신고된 실거래로 센 값이며 매물이 아닙니다. 대출 상한과 필요 현금은 집이 없는 사람이 한 채를 산다고 가정해 규정으로 셈한 추정입니다. 기본은 생애최초·서민 실수요자가 아닌 일반 조건입니다. 실제로 빌릴 수 있는 돈은 소득(DSR)과 금융회사 심사에 따라 이보다 적을 수 있습니다.",
     "What you can actually borrow depends on income (DSR) and lender review and may be lower.",
+    "By default they use the standard rules, not first-time-buyer or low-income-buyer rules.",
     "This table does not say which complex is better or that prices will rise.",
   ]) assert.ok(template.includes(s), s);
 });

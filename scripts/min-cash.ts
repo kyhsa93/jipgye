@@ -17,6 +17,8 @@ export const BASIS_DATE = "2026-10-01";
 
 export const SOURCES = [
   { name: "주택시장 안정화 대책(10·15 대책) 규제지역 금융규제: 무주택 LTV 40%, 생애최초 70%(6개월 내 전입)", date: "2025-10-15", url: "https://www.korea.kr/briefing/policyBriefingView.do?newsId=156722073" },
+  // 생애최초 70% 는 위 브리핑 본문에 숫자로 나오지 않는다 - 금융위 FAQ 가 근거다(#871 legal 판정).
+  { name: "10·15 대책 FAQ(금융위원회): 규제지역 생애최초 주택구입 LTV 70%", date: "2025-10-17", url: "https://www.fsc.go.kr/po020201/85466" },
   { name: "가계부채 관리 강화 방안: 수도권·규제지역 2주택 이상 보유자 추가 주택구입 주담대 금지, 1주택자는 6개월 이내 기존주택 처분 약정 시 허용", date: "2025-06-27", url: "https://www.fsc.go.kr/no010101/84824" },
   { name: "지방세특례제한법 제36조의3(생애최초 주택 구입 취득세 감면: 12억 이하, 아파트 200만원, 2028-12-31까지)", date: "2026-06-02", url: "https://www.law.go.kr/법령/지방세특례제한법" },
 ];

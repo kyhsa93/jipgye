@@ -38,13 +38,15 @@
   const siteGroup = document.querySelector('meta[name="site-group"]')?.getAttribute("content");
 
   // gtag는 이벤트마다 현재 주소를 같이 보낸다. 검색어가 쿼리스트링에 있으면 그것도 원문 전송이다.
+  // 해시(#bN 값대)도 지운다(#871).
   function scrub(href) {
     try {
       const url = new URL(href);
       for (const key of FREE_TEXT_PARAMS) url.searchParams.delete(key);
+      url.hash = "";
       return url.toString();
     } catch {
-      return String(href).split("?")[0];
+      return String(href).split(/[?#]/)[0];
     }
   }
   const safeLocation = () => scrub(location.href);

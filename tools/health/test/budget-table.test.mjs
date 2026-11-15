@@ -5,7 +5,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { budgetModel, budgetTableHtml, headText, recoViews } from "../../../scripts/budget-table.ts";
+import { gzipSync } from "node:zlib";
+import { budgetModel, budgetTableHtml, headText, recoCounts, recoViews } from "../../../scripts/budget-table.ts";
+import { COUNTS_FILE } from "../../../scripts/build-reco-counts.ts";
 import { DISTRICT_SLUGS } from "../../../scripts/district-slugs.ts";
 import { SITE_DIR } from "../../../test/helpers/site-root.mjs";
 
@@ -44,4 +46,16 @@ test("근거표: reco 단지 이름(별칭 포함)이 같은 구 complex-price �
   }
   assert.ok(names > 0);
   assert.deepEqual(unresolved, [], `카드로 안 풀리는 단지 ${unresolved.length}/${names}곳`);
+});
+
+// PR-B(cto 조건 C): 렌더 단계가 만든 건수 파일이 build/site 에 있고 ≤6KB(gzip)이며, 같은 HEAD 의 reco 로 다시 센 것과 같다.
+// 건수 단계는 reco 를 못 읽으면 경고만 남기고 파일 없이 끝난다(cto 4b) - 배포를 막지 않으니 그 경우를 여기서 잡는다.
+test("근거표 건수 파일: build/site 에 있고 gzip ≤6KB, 오늘 reco 로 다시 센 것과 같다", async () => {
+  const text = await readFile(path.join(SITE_DIR, COUNTS_FILE), "utf8").catch(() => null);
+  assert.ok(text, `${COUNTS_FILE} 가 build/site 에 없다 - 렌더 로그의 build-reco-counts ::warning:: 를 본다(장은 구운 기본 보기만 보인다)`);
+  const size = gzipSync(text, { level: 9 }).length;
+  assert.ok(size <= 6 * 1024, `건수 파일 gzip ${size}B > 6KB(po 명세 ④)`);
+  const views = recoViews(files);
+  assert.ok(views);
+  assert.deepEqual(JSON.parse(text), recoCounts(views));
 });

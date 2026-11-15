@@ -20,3 +20,5 @@ build/
 __pycache__/
 # 날짜별 뉴스 파일(#706): 사이트 빌드(build-news-days)가 만드는 산출물. render-pipeline 을 docs/ 제자리로 돌리면 생기는데 커밋하지 않는다.
 /docs/data/news-day/
+# 근거표 건수 파일(#871 PR-B): 사이트 빌드(build-reco-counts)가 만드는 산출물. 제자리 렌더 때 생기는데 커밋하지 않는다(cto 조건 C).
+/docs/data/reco-counts.json
