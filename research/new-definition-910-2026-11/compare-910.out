@@ -1,0 +1,100 @@
+## 창별 미표기 비율(갱신 아닌 줄 중 계약구분 빈칸)
+- A1·A2 가장 오래된 달 202606(순수 전세·단지명): 263/3,879 = 6.8%
+- A1·A2 창 202606~202611: 989/19,305 = 5.1%
+- A3 가장 오래된 달 202605(창 시작 2026-05-17 이후만): 112/1,950 = 5.7%
+- A3 창 183일(2026-05-17~): 1,101/21,255 = 5.2%
+- B1 창(계약 2026-09-14~10-11) 전세: 134/2,695 = 5.0%
+- B2 같은 창 월세: 107/3,893 = 2.7%
+- B1 창 첫 주(09-14~09-20) 전세: 49/826 = 5.9%
+- B5 가장 오래된 달 202509(전세+월세): 2,225/13,419 = 16.6%
+- B5 창 202509~202611(전세+월세): 10,025/156,284 = 6.4%
+- B6 가장 오래된 달 202609(전세+월세): 284/7,836 = 3.6%
+- B6 창 202609~202611(전세+월세): 605/18,944 = 3.2%
+
+## A1 complex-ratio.json
+- 서울: {'cells': 1015, 'median': 49.2, 'q1': 42.4, 'q3': 56.5} → {'cells': 977, 'median': 49.4, 'q1': 42.4, 'q3': 56.1}
+- 공개 구 23 → 23: 값(칸 수 포함)이 바뀐 구 19, 사라진 구 [], 생긴 구 [], 분위 유무가 바뀐 구 []
+- 공개 중앙값(0.1%p 자리)이 바뀐 구 12: n=12 · 절대값 중앙 0.45 · P90 1.10 · 최대 1.50 · 부호 +9/−3
+- 분위(q1·q3) 값이 바뀐 자리 26: n=26 · 절대값 중앙 0.50 · P90 2.10 · 최대 2.70 · 부호 +18/−8
+- 칸 1,015 → 977: 사라진 칸 38, 생긴 칸 0, 값이 바뀐 칸 138(%p): n=138 · 절대값 중앙 0.91 · P90 3.10 · 최대 19.53 · 부호 +116/−22
+- 칸 비율 0.1%p 자리로 바뀐 칸 138
+- 80% 선을 넘나든 칸 1
+  - 강남구: {'cells': 38, 'median': 36.7, 'q1': 26, 'q3': 42.6} → {'cells': 38, 'median': 36.7, 'q1': 26.8, 'q3': 42.6}
+  - 강동구: {'cells': 50, 'median': 45.8, 'q1': 40.7, 'q3': 50} → {'cells': 50, 'median': 45.8, 'q1': 40.9, 'q3': 50}
+  - 강서구: {'cells': 76, 'median': 48.7, 'q1': 44.1, 'q3': 54.4} → {'cells': 74, 'median': 49.4, 'q1': 41.7, 'q3': 54.9}
+  - 관악구: {'cells': 41, 'median': 54, 'q1': 49.3, 'q3': 64.1} → {'cells': 41, 'median': 54, 'q1': 50.1, 'q3': 64.6}
+  - 구로구: {'cells': 47, 'median': 55.2, 'q1': 47.8, 'q3': 62.8} → {'cells': 43, 'median': 53.7, 'q1': 47.8, 'q3': 62.8}
+  - 노원구: {'cells': 143, 'median': 53.8, 'q1': 48.3, 'q3': 60.5} → {'cells': 134, 'median': 53.9, 'q1': 48.8, 'q3': 60.5}
+  - 도봉구: {'cells': 49, 'median': 61.4, 'q1': 50.3, 'q3': 68.2} → {'cells': 47, 'median': 61.4, 'q1': 49.1, 'q3': 69.1}
+  - 동대문구: {'cells': 33, 'median': 49.3, 'q1': 45.9, 'q3': 52.4} → {'cells': 31, 'median': 49.6, 'q1': 47.2, 'q3': 52.4}
+  - 동작구: {'cells': 49, 'median': 43.1, 'q1': 37.6, 'q3': 47.2} → {'cells': 47, 'median': 43.1, 'q1': 37.9, 'q3': 47.2}
+  - 마포구: {'cells': 34, 'median': 42.3, 'q1': 36.2, 'q3': 44.8} → {'cells': 33, 'median': 42.4, 'q1': 38.3, 'q3': 44.8}
+  - 서대문구: {'cells': 44, 'median': 51.5, 'q1': 47.4, 'q3': 53.9} → {'cells': 43, 'median': 51.5, 'q1': 47.8, 'q3': 53.8}
+  - 성동구: {'cells': 29, 'median': 40.5, 'q1': 38.1, 'q3': 44.1} → {'cells': 27, 'median': 41.1, 'q1': 38.8, 'q3': 44.6}
+  - 성북구: {'cells': 61, 'median': 55.1, 'q1': 51.8, 'q3': 60.5} → {'cells': 58, 'median': 55.1, 'q1': 51.7, 'q3': 60}
+  - 송파구: {'cells': 72, 'median': 40.5, 'q1': 34.6, 'q3': 45.1} → {'cells': 71, 'median': 40.6, 'q1': 34.4, 'q3': 45.6}
+  - 양천구: {'cells': 45, 'median': 44.9, 'q1': 33.2, 'q3': 51.1} → {'cells': 42, 'median': 44.7, 'q1': 30.5, 'q3': 51.5}
+  - 영등포구: {'cells': 41, 'median': 46, 'q1': 42.9, 'q3': 50} → {'cells': 40, 'median': 45.8, 'q1': 42.9, 'q3': 50.2}
+  - 용산구: {'cells': 12, 'median': 37.9} → {'cells': 11, 'median': 39}
+  - 은평구: {'cells': 43, 'median': 52.8, 'q1': 50, 'q3': 59.2} → {'cells': 42, 'median': 53.6, 'q1': 50.2, 'q3': 58.7}
+  - 중랑구: {'cells': 26, 'median': 61.4, 'q1': 54.5, 'q3': 67.4} → {'cells': 24, 'median': 62, 'q1': 54.5, 'q3': 67.6}
+
+## A2 jeonse-risk.json
+- 서울: {'cells': 1015, 'compared': 734, 'high': 13, 'highShare': 1.3, 'highCompared': 3, 'highFell': 0, 'fellShare': None} → {'cells': 977, 'compared': 710, 'high': 13, 'highShare': 1.3, 'highCompared': 3, 'highFell': 0, 'fellShare': None}
+- 구 행 25: 값이 바뀐 구 18, short(칸<20) 상태가 바뀐 구 []
+- highShare 바뀐 구 5: n=5 · 절대값 중앙 0.30 · P90 2.40 · 최대 2.40 · 부호 +4/−1
+- fellShare 바뀐 구 0: 변화 없음
+  - 중구: {'cells': 9, 'short': True} → {'cells': 8, 'short': True}
+  - 용산구: {'cells': 12, 'short': True} → {'cells': 11, 'short': True}
+  - 성동구: {'cells': 29, 'compared': 27, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 27, 'compared': 26, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 동대문구: {'cells': 33, 'compared': 24, 'high': 1, 'highShare': 3, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 31, 'compared': 24, 'high': 1, 'highShare': 3.2, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 중랑구: {'cells': 26, 'compared': 16, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 24, 'compared': 15, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 성북구: {'cells': 61, 'compared': 47, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 58, 'compared': 45, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 도봉구: {'cells': 49, 'compared': 30, 'high': 3, 'highShare': 6.1, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 47, 'compared': 30, 'high': 3, 'highShare': 6.4, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 노원구: {'cells': 143, 'compared': 101, 'high': 1, 'highShare': 0.7, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 134, 'compared': 95, 'high': 1, 'highShare': 0.7, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 은평구: {'cells': 43, 'compared': 30, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 42, 'compared': 29, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 서대문구: {'cells': 44, 'compared': 35, 'high': 1, 'highShare': 2.3, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 43, 'compared': 35, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 마포구: {'cells': 34, 'compared': 24, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 33, 'compared': 23, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 양천구: {'cells': 45, 'compared': 36, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 42, 'compared': 33, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 강서구: {'cells': 76, 'compared': 54, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 74, 'compared': 53, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 구로구: {'cells': 47, 'compared': 34, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 43, 'compared': 31, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 영등포구: {'cells': 41, 'compared': 32, 'high': 2, 'highShare': 4.9, 'highCompared': 1, 'highFell': 0, 'fellShare': None} → {'cells': 40, 'compared': 31, 'high': 2, 'highShare': 5, 'highCompared': 1, 'highFell': 0, 'fellShare': None}
+  - 동작구: {'cells': 49, 'compared': 33, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 47, 'compared': 31, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 관악구: {'cells': 41, 'compared': 32, 'high': 0, 'highShare': 0, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 41, 'compared': 32, 'high': 1, 'highShare': 2.4, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+  - 송파구: {'cells': 72, 'compared': 49, 'high': 1, 'highShare': 1.4, 'highCompared': 0, 'highFell': 0, 'fellShare': None} → {'cells': 71, 'compared': 49, 'high': 1, 'highShare': 1.4, 'highCompared': 0, 'highFell': 0, 'fellShare': None}
+
+## A3 reco-<구>.json jeonseN
+- 값을 낸 칸 2,786 → 2,786, jeonseN 외 필드가 바뀐 칸 0
+- jeonseN>0 칸 2,233 → 2,212; 바뀐 칸 486(단지 403), 그중 0이 된 칸 21
+- 건수 변화: n=486 · 절대값 중앙 1.00 · P90 3.00 · 최대 6.00 · 부호 +0/−486; 상대 변화(%): n=486 · 절대값 중앙 19.05 · P90 50.00 · 최대 100.00 · 부호 +0/−486
+- 서울 jeonseN 합 11,588 → 10,883
+- 다른 최상위 필드 차이 구: []
+
+## B1·B2 realestate.json (계약 기준 창)
+- 창: {'basis': 'contract', 'from': '2026-09-14', 'to': '2026-10-11', 'until': '2026-10-12', 'weeks': 4, 'districtFrom': '2026-09-14', 'districtWeeks': 4} / after True
+- 서울 jeonse: {'avgDepositPerM2': 9395310.429591715, 'avgDepositPerPyeong10k': 3106, 'transactionCount': 2695} → {'avgDepositPerM2': 9411882.16016233, 'avgDepositPerPyeong10k': 3111, 'transactionCount': 2561}
+- 서울 wolse: {'avgConvertedPerPyeong10k': 3181, 'avgDeposit10k': 21847, 'avgMonthlyRent10k': 132, 'transactionCount': 3893} → {'avgConvertedPerPyeong10k': 3193, 'avgDeposit10k': 21656, 'avgMonthlyRent10k': 133, 'transactionCount': 3786}
+- 구 jeonse.avgDepositPerPyeong10k 바뀐 구 19/25: 변화율(%) n=19 · 절대값 중앙 0.27 · P90 0.98 · 최대 1.43 · 부호 +13/−6 · 절대 n=19 · 절대값 중앙 7.00 · P90 21.00 · 최대 32.00 · 부호 +13/−6
+- 구 wolse.avgConvertedPerPyeong10k 바뀐 구 19/25: 변화율(%) n=19 · 절대값 중앙 0.42 · P90 1.78 · 최대 4.58 · 부호 +16/−3 · 절대 n=19 · 절대값 중앙 10.00 · P90 55.00 · 최대 157.00 · 부호 +16/−3
+- 구 wolse.avgDeposit10k 바뀐 구 21/25: 변화율(%) n=21 · 절대값 중앙 0.95 · P90 2.15 · 최대 8.50 · 부호 +6/−15 · 절대 n=21 · 절대값 중앙 187.00 · P90 631.00 · 최대 934.00 · 부호 +6/−15
+- 구 wolse.avgMonthlyRent10k 바뀐 구 12/25: 변화율(%) n=12 · 절대값 중앙 0.78 · P90 1.71 · 최대 10.75 · 부호 +8/−4 · 절대 n=12 · 절대값 중앙 1.00 · P90 2.00 · 최대 10.00 · 부호 +8/−4
+- 구 jeonse 건수: 바뀐 구 21, 감소율(%) n=25 · 절대값 중앙 3.79 · P90 9.09 · 최대 11.19 · 부호 +0/−21, MIN_SAMPLE 5 아래로 떨어진 구 [], 최소 건수 after 18
+- 구 wolse 건수: 바뀐 구 21, 감소율(%) n=25 · 절대값 중앙 2.68 · P90 4.08 · 최대 13.30 · 부호 +0/−21, MIN_SAMPLE 5 아래로 떨어진 구 [], 최소 건수 after 50
+- (참고) 서울 전세가율 57.19% → 57.28% (+0.09%p)
+- (참고) 구 전세가율 변화(%p): n=19 · 절대값 중앙 0.17 · P90 0.62 · 최대 0.84 · 부호 +13/−6
+- 바뀐 공개 경로 123개, 모양 16종: .districts[].jeonse.avgDepositPerPyeong10k; .districts[].jeonse.transactionCount; .districts[].sale.changeWithheld.text.en.ratio; .districts[].sale.changeWithheld.text.ko.ratio; .districts[].wolse.avgConvertedPerPyeong10k; .districts[].wolse.avgDeposit10k; .districts[].wolse.avgMonthlyRent10k; .districts[].wolse.transactionCount; .overall.jeonse.avgDepositPerPyeong10k; .overall.jeonse.transactionCount; .overall.sale.changeWithheld.text.en.ratio; .overall.sale.changeWithheld.text.ko.ratio; .overall.wolse.avgConvertedPerPyeong10k; .overall.wolse.avgDeposit10k; .overall.wolse.avgMonthlyRent10k; .overall.wolse.transactionCount
+- 7일 증감 관련 경로(change·Change) 차이: []
+
+## B4 history: 오늘 레코드만 다름 True (레코드 68, 마지막 2026-11-16)
+
+## B5 realestate-trend.json
+- weeks 같음 True (52주), pending 같음 True
+- jeonse.avgDepositPerPyeong10k: 점 1,482(서울+구×주), 사라진 점 0, 생긴 점 0, 값 바뀐 점 1,290: 변화율(%) n=1290 · 절대값 중앙 0.44 · P90 1.23 · 최대 5.69 · 부호 +934/−356
+  - 서울 주별 전세 변화율(%): 중앙 +0.46, 최소 -0.25(2026-07-20), 최대 +1.68(2025-11-10)
+- wolse.avgDeposit10k: 점 1,482(서울+구×주), 사라진 점 0, 생긴 점 0, 값 바뀐 점 1,308: 변화율(%) n=1308 · 절대값 중앙 1.27 · P90 4.71 · 최대 31.10 · 부호 +405/−903
+- wolse.avgMonthlyRent10k: 점 1,482(서울+구×주), 사라진 점 0, 생긴 점 0, 값 바뀐 점 881: 변화율(%) n=881 · 절대값 중앙 1.16 · P90 6.25 · 최대 47.17 · 부호 +643/−238
+- 매매 점 같음: True
+
+## B6 rent-preview.json
+- jeonse total 8,185 → 7,835 (-4.3%), 최근 30건 중 빠진 줄 1(빠진 줄의 renewal 필드 없음 1)
+- wolse total 10,759 → 10,504 (-2.4%), 최근 30건 중 빠진 줄 0(빠진 줄의 renewal 필드 없음 0)

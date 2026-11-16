@@ -1,0 +1,51 @@
+diff --git a/scripts/build-realestate.ts b/scripts/build-realestate.ts
+index 9badac80..d4073341 100644
+--- a/scripts/build-realestate.ts
++++ b/scripts/build-realestate.ts
+@@ -268,7 +268,7 @@ function weeklyRows(file, districtName, dateOf) {
+     }
+ 
+     const deal = normalizeRentDeal(item, districtName);
+-    if (deal && deal.renewal !== true) rows.push(rentRow(deal, districtName, observedOn));
++    if (deal && deal.renewal === false) rows.push(rentRow(deal, districtName, observedOn));
+   }
+ 
+   return rows;
+diff --git a/scripts/build-rent-preview.ts b/scripts/build-rent-preview.ts
+index a9e358d1..a9f0bfed 100644
+--- a/scripts/build-rent-preview.ts
++++ b/scripts/build-rent-preview.ts
+@@ -43,7 +43,7 @@ export function buildPayload({ byDistrict, now }) {
+ 
+     for (const deal of file.deals) {
+       // 시세와 같은 규칙 - 갱신은 이전 조건을 잇는 것이라 지금 값이 아니다.
+-      if (deal?.renewal === true) continue;
++      if (deal?.renewal !== false) continue;
+       const kind = isWolse(deal) ? "wolse" : "jeonse";
+       counts[kind] += 1;
+       buckets[kind].push({ ...deal, district: district.name });
+diff --git a/scripts/complex-ratio.ts b/scripts/complex-ratio.ts
+index 6ca32998..c98f8807 100644
+--- a/scripts/complex-ratio.ts
++++ b/scripts/complex-ratio.ts
+@@ -71,7 +71,7 @@ const liveSale = (item) => !String(item?.cdealType ?? "").trim() && number(item?
+ 
+ /** 갱신은 이전 조건을 잇는 것이라 지금 값이 아니고, 반전세는 한 값으로 묶을 수 없다. */
+ export const newJeonse = (item) =>
+-  String(item?.contractType ?? "").trim() !== "갱신" &&
++  String(item?.contractType ?? "").trim() === "신규" &&
+   number(item?.monthlyRent) === 0 &&
+   number(item?.deposit) > 0;
+ 
+diff --git a/scripts/realestate-metrics.ts b/scripts/realestate-metrics.ts
+index ae78dfac..f12b03df 100644
+--- a/scripts/realestate-metrics.ts
++++ b/scripts/realestate-metrics.ts
+@@ -180,6 +180,7 @@ export function summarizeRent(items) {
+       renewalCount += 1;
+       continue;
+     }
++    if (String(item?.contractType ?? "").trim() !== "신규") continue;
+ 
+     const deposit10k = parseWon10k(item.deposit);
+     const monthlyRent10k = parseWon10k(item.monthlyRent);
