@@ -11,6 +11,8 @@ import path from "node:path";
 // 파일 목록(#887)은 `gh api --paginate repos/o/r/pulls/601/files?per_page=100 --jq <JQ>` 로만 답한다(`pr diff` 는 모르는 호출 - 300파일 초과에서 406 이던 길).
 // 가짜는 jq 를 돌리지 못하므로 JQ 글자가 같을 때만 그 출력(F 새 경로, 이름 바뀐 파일은 다음 줄 P 옛 경로)을 흉내 낸다 - 식이 바뀌면 이 시험부터 깨진다.
 // 실제 출력 형태는 PR #496(이름 변경 1건)으로 확인했다(2026-11-15).
+// 최신성(#926)은 `gh api repos/o/r/compare/main...<HEAD>?per_page=1 --jq .behind_by` 로만 답한다 - behind 배열을 하나씩 꺼내 그 값을 한 줄로 낸다
+// (실제 gh 도 숫자 하나를 찍는다, #925 head 07931e4b 로 확인 2026-11-16). compareFail 이 있으면 그 글을 찍고 종료 1(실제 404 는 rc 1).
 const MERGE = path.resolve(import.meta.dirname, "..", "scripts", "dev", "merge.sh");
 const HEAD = "a".repeat(40);
 const MSHA = "b".repeat(40);
@@ -26,7 +28,13 @@ const next = (arr) => (arr.length > 1 ? arr.shift() : arr[0]);
 const has = (x) => a.includes(x);
 const [g, sub] = a;
 const files = () => st.files.map((f) => (typeof f === "string" ? { filename: f } : f));
-if (g === "api") {
+if (g === "api" && String(sub).startsWith("repos/o/r/compare/")) {
+  const ok = sub === ${JSON.stringify(`repos/o/r/compare/main...${HEAD}?per_page=1`)} && a[a.indexOf("--jq") + 1] === ".behind_by";
+  if (!ok) { console.error("가짜 gh: 기대와 다른 compare 호출 " + a.join(" ")); process.exit(9); }
+  if (st.compareFail) { console.error(st.compareFail); process.exit(1); }
+  const b = next(st.behind); save(); console.log(String(b));
+}
+else if (g === "api") {
   const ok = has("--paginate") && has("repos/o/r/pulls/601/files?per_page=100") && a[a.indexOf("--jq") + 1] === ${JSON.stringify(JQ)};
   if (!ok) { console.error("가짜 gh: 기대와 다른 api 호출 " + a.join(" ")); process.exit(9); }
   if (st.apiFail) { console.error(st.apiFail); process.exit(1); }
@@ -47,7 +55,8 @@ else { console.error("가짜 gh: 모르는 호출 " + a.join(" ")); process.exit
 const ck = (name, conclusion) => ({ name, conclusion, status: "COMPLETED" });
 const GREEN = [ck("test", "SUCCESS"), ck("render", "SUCCESS")];
 const view = (checks, head = HEAD) => ({ headRefOid: head, statusCheckRollup: checks });
-const POST_OK = [{ workflowName: "Test", status: "completed", conclusion: "success" }, { workflowName: "Deploy site", status: "completed", conclusion: "success" }];
+// 병합 뒤 run 목록은 실제 `gh run list --json workflowName,event,status,conclusion` 모양이다(event 는 #926 부터 읽는다 - 7단계 Test 는 push run 만 본다).
+const POST_OK = [{ workflowName: "Test", event: "push", status: "completed", conclusion: "success" }, { workflowName: "Deploy site", event: "push", status: "completed", conclusion: "success" }];
 const SAFE_FILES = ["docs/index.html", "src/css/a.css", "test/x.test.mjs", "README.md"];
 
 function fixture(state = {}) {
@@ -55,7 +64,7 @@ function fixture(state = {}) {
   const bin = path.join(base, "bin"); mkdirSync(bin);
   writeFileSync(path.join(bin, "gh"), SHIM(process.execPath)); chmodSync(path.join(bin, "gh"), 0o755);
   const stateFile = path.join(base, "state.json"), log = path.join(base, "gh.log");
-  const full = { files: SAFE_FILES, views: [view(GREEN)], merges: [{ rc: 0, out: "" }], runs: [[]], postRuns: [POST_OK], mergeSha: MSHA, ...state };
+  const full = { files: SAFE_FILES, views: [view(GREEN)], merges: [{ rc: 0, out: "" }], runs: [[]], postRuns: [POST_OK], mergeSha: MSHA, behind: [0], ...state };
   writeFileSync(stateFile, JSON.stringify(full));
   const calls = () => { try { return readFileSync(log, "utf8").trim().split("\n").filter(Boolean).map((l) => JSON.parse(l)); } catch { return []; } };
   const of = (g, sub) => calls().filter((c) => c[0] === g && c[1] === sub);
@@ -175,6 +184,7 @@ test("--dry-run 은 읽기만 한다: 댓글·병합 호출 0, 계획을 찍고 
     assert.match(r.stdout, /\[dry-run\] 남길 댓글: .*test·render SUCCESS · 판정 SHA 일치/);
     assert.match(r.stdout, /부류=데이터/);
     assert.match(r.stdout, /busy 규칙: PR 이벤트가 아닌 실행이 0/);
+    assert.match(r.stdout, /\[dry-run\] 최신성: behind_by=0 \(main 기준\)/);
     assert.doesNotMatch(r.stdout, /^MERGED/m);
   } finally { f.done(); }
 });
@@ -241,7 +251,7 @@ test("300파일을 넘는 PR 도 파일 API(--paginate)로 부류를 정한다 -
     assert.equal(r.status, 0, r.stdout + r.stderr);
     assert.match(r.stdout, /부류=안전\(busy 규칙 생략\) 파일 329개/);
     assert.equal(f.of("pr", "diff").length, 0);
-    assert.equal(f.calls().filter((c) => c[0] === "api").length, 1, "목록은 한 번 읽는다");
+    assert.equal(f.calls().filter((c) => c[0] === "api" && c.includes("--paginate")).length, 1, "목록은 한 번 읽는다(최신성 compare 호출은 따로 센다, #926)");
   } finally { f.done(); }
 });
 
@@ -297,8 +307,8 @@ test("파일 목록을 못 읽으면(API 오류) 종료 1 이고 병합하지 �
 });
 
 test("병합 뒤 병합 커밋의 Test·Deploy site 결론을 찍고, 하나라도 success 가 아니면 종료 4", () => {
-  const pending = [{ workflowName: "Test", status: "completed", conclusion: "success" }, { workflowName: "Deploy site", status: "in_progress", conclusion: "" }];
-  const failed = [{ workflowName: "Test", status: "completed", conclusion: "failure" }, { workflowName: "Deploy site", status: "completed", conclusion: "success" }];
+  const pending = [{ workflowName: "Test", event: "push", status: "completed", conclusion: "success" }, { workflowName: "Deploy site", event: "push", status: "in_progress", conclusion: "" }];
+  const failed = [{ workflowName: "Test", event: "push", status: "completed", conclusion: "failure" }, { workflowName: "Deploy site", event: "push", status: "completed", conclusion: "success" }];
   const f = fixture({ postRuns: [pending, POST_OK] });
   try {
     const r = f.run(ARGS());
@@ -359,4 +369,112 @@ test("입력 오류는 종료 2 이고 gh 를 부르지 않는다(PR 번호·짧
     assert.equal(f.run(["601", "--nope"]).status, 2);
     assert.deepEqual(f.calls(), []);
   } finally { f.done(); }
+});
+
+// #926: 최신 main 위에서 시험되지 않은 PR 은 병합 전에 멈춘다. #919·#923 은 파일이 겹치지 않았고 같은 base 위 PR CI 에서 각각 통과했지만
+// 연달아 병합되자 main Test 가 빨개졌다(#924). 그래서 병합 직전(5단계 뒤)과 `Base branch was modified` 재시도마다 compare 의 behind_by 를 읽는다.
+const MODIFIED = { rc: 1, out: "GraphQL: Pull Request is not mergeable: Base branch was modified. Review and try the merge again." };
+const compares = (f) => f.calls().filter((c) => c[0] === "api" && String(c[1]).includes("/compare/"));
+const idx = (f, pred) => f.calls().findIndex(pred);
+
+test("PR 이 main 보다 뒤(behind_by>0)면 댓글·병합 없이 종료 1, 메시지에 커밋 수", () => {
+  const f = fixture({ behind: [3] });
+  try {
+    const r = f.run(ARGS());
+    assert.equal(r.status, 1, r.stdout + r.stderr);
+    assert.match(r.stderr, /main보다 3커밋 뒤/);
+    assert.equal(f.of("pr", "merge").length, 0);
+    assert.equal(f.of("pr", "comment").length, 0);
+    assert.doesNotMatch(r.stdout, /^MERGED/m);
+  } finally { f.done(); }
+});
+
+test("behind_by=0 이면 병합 1회이고, compare 를 병합 직전 댓글·병합 명령보다 먼저 읽는다", () => {
+  const f = fixture({ behind: [0] });
+  try {
+    const r = f.run(ARGS());
+    assert.equal(r.status, 0, r.stdout + r.stderr);
+    assert.equal(f.of("pr", "merge").length, 1);
+    assert.equal(compares(f).length, 1);
+    const c = idx(f, (x) => x[0] === "api" && String(x[1]).includes("/compare/"));
+    const lastView = f.calls().map((x) => x.join(" ").includes("statusCheckRollup")).lastIndexOf(true);
+    assert.ok(lastView < c, "5단계 head 재확인 뒤에 읽는다");
+    assert.ok(c < idx(f, (x) => x[0] === "pr" && x[1] === "comment"), "compare 가 댓글보다 앞");
+    assert.ok(c < idx(f, (x) => x[0] === "pr" && x[1] === "merge"), "compare 가 병합보다 앞");
+  } finally { f.done(); }
+});
+
+test("compare 를 읽지 못하면(rc≠0, 또는 rc 0 인데 숫자가 아닌 출력) 댓글·병합 없이 종료 1", () => {
+  // 여러 줄 출력("0" 다음에 다른 줄)도 숫자 하나가 아니다 - 줄마다 맞추는 grep 이었으면 통과했을 경우다.
+  for (const st of [{ compareFail: "gh: Not Found (HTTP 404)" }, { behind: [""] }, { behind: ["null"] }, { behind: ["0\nwarning: x"] }]) {
+    const f = fixture(st);
+    try {
+      const r = f.run(ARGS());
+      assert.equal(r.status, 1, JSON.stringify(st) + r.stdout + r.stderr);
+      assert.match(r.stderr, /compare 를 읽지 못했다/);
+      assert.equal(f.of("pr", "merge").length, 0);
+      assert.equal(f.of("pr", "comment").length, 0);
+    } finally { f.done(); }
+  }
+});
+
+test("--dry-run 도 behind_by 를 찍고, 뒤졌거나 읽지 못하면 종료 1(쓰기 0)", () => {
+  const f = fixture({ behind: [2] });
+  try {
+    const r = f.run(ARGS(["--dry-run"]));
+    assert.equal(r.status, 1, r.stdout + r.stderr);
+    assert.match(r.stdout, /\[dry-run\] 최신성: behind_by=2 \(main 기준\)/);
+    assert.match(r.stderr, /main보다 2커밋 뒤/);
+    assert.equal(f.of("pr", "merge").length, 0);
+    assert.equal(f.of("pr", "comment").length, 0);
+  } finally { f.done(); }
+  const g = fixture({ compareFail: "HTTP 502: Bad Gateway" });
+  try {
+    const r = g.run(ARGS(["--dry-run"]));
+    assert.equal(r.status, 1, r.stdout + r.stderr);
+    assert.match(r.stderr, /compare 를 읽지 못했다/);
+    assert.equal(g.of("pr", "merge").length, 0);
+    assert.equal(g.of("pr", "comment").length, 0);
+  } finally { g.done(); }
+});
+
+test("`Base branch was modified` 재시도 전에 behind_by 를 다시 읽는다: 그새 main 이 움직였으면 병합 명령 1회뿐, 종료 1, MERGED 없음", () => {
+  const f = fixture({ merges: [MODIFIED, { rc: 0, out: "" }], behind: [0, 3] });
+  try {
+    const r = f.run(ARGS());
+    assert.equal(r.status, 1, r.stdout + r.stderr);
+    assert.equal(f.of("pr", "merge").length, 1);
+    assert.equal(compares(f).length, 2);
+    assert.match(r.stderr, /main보다 3커밋 뒤/);
+    assert.doesNotMatch(r.stdout, /^MERGED/m);
+    // 두 번째 compare 는 첫 병합 명령 뒤에 있다(재시도 직전에 다시 읽었다)
+    const calls = f.calls();
+    const cmp = calls.map((x, i) => (x[0] === "api" && String(x[1]).includes("/compare/") ? i : -1)).filter((i) => i >= 0);
+    assert.ok(cmp[1] > idx(f, (x) => x[0] === "pr" && x[1] === "merge"));
+  } finally { f.done(); }
+});
+
+test("병합 뒤 Test 는 push 이벤트 run 만 본다: 더 새 workflow_dispatch·workflow_run Test 성공이 push Test 실패를 가리지 않는다", () => {
+  const masked = [
+    { workflowName: "Test", event: "workflow_dispatch", status: "completed", conclusion: "success" },
+    { workflowName: "Test", event: "workflow_run", status: "completed", conclusion: "success" },
+    { workflowName: "Test", event: "push", status: "completed", conclusion: "failure" },
+    { workflowName: "Deploy site", event: "push", status: "completed", conclusion: "success" },
+  ];
+  const f = fixture({ postRuns: [masked] });
+  try {
+    const r = f.run(ARGS());
+    assert.equal(r.status, 4, r.stdout + r.stderr);
+    assert.match(r.stdout, /^MERGED /m);
+    assert.match(r.stdout, /^Test: failure$/m);
+    assert.ok(f.of("run", "list").every((c) => c[c.indexOf("--json") + 1].split(",").includes("event")), "--json 에 event 를 받는다");
+    assert.ok(f.of("run", "list").every((c) => !c.includes("-e") && !c.includes("--event")), "목록 전체를 -e push 로 거르지 않는다(Deploy site 까지 걸러진다)");
+  } finally { f.done(); }
+  // push Test 가 아직 없으면(다른 이벤트 성공만 있으면) pending 이다
+  const g = fixture({ postRuns: [[{ workflowName: "Test", event: "workflow_dispatch", status: "completed", conclusion: "success" }, POST_OK[1]]] });
+  try {
+    const r = g.run(ARGS());
+    assert.equal(r.status, 4, r.stdout + r.stderr);
+    assert.match(r.stdout, /^Test: pending$/m);
+  } finally { g.done(); }
 });
