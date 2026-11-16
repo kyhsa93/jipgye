@@ -10,6 +10,7 @@ import { RENDER_STEPS } from "../scripts/render-pipeline.ts";
 import { buildFixtureSite } from "./helpers/fixture-site.mjs";
 import { pageScripts } from "../scripts/page-assets.ts";
 import { stripJsComments } from "../scripts/strip-inline-comments.ts";
+import { dataKeyStamper } from "../scripts/data-keys.ts";
 import { DOCS_DIR, REPO_ROOT, SITE_DIR_ENV, requireSite, siteDir, siteLabel, sitePath, stageSite } from "../scripts/site-dir.ts";
 
 // 출력 디렉터리 (#508, 구조 B-2). 렌더 여섯 스크립트가 docs/ 대신 다른 디렉터리의 복사본을 읽고 쓰게 하는 길이다.
@@ -153,9 +154,10 @@ test("render-pipeline --out: docs/ 는 한 바이트도 안 바뀌고 출력 디
   // 장 전용 외부 JS 만 주석을 뗀 사본이다(#784) - 그 바이트는 소스에 훑개를 건 것과 같다.
   const page = new Set(pageScripts(DOCS_DIR));
   assert.ok(page.size > 0, "장 전용 JS 목록이 비었다");
+  const stamp = dataKeyStamper(out);
   for (const f of rendered.keys()) {
     if (f.endsWith(".html") || isOutput(f)) continue;
-    const want = page.has(f) ? createHash("sha256").update(stripJsComments(readFileSync(path.join(DOCS_DIR, f), "utf8"))).digest("hex") : before.get(f);
+    const want = page.has(f) ? createHash("sha256").update(stamp(f, stripJsComments(readFileSync(path.join(DOCS_DIR, f), "utf8")))).digest("hex") : before.get(f);
     assert.equal(rendered.get(f), want, `${f} 바이트`);
   }
   // docs/ 의 소스 19장(손으로 고치는 틀 14장 + 금리 종료 안내 5장, #577 B2·#871)은 docs/ 에도 있다 - 생성 장만 출력 디렉터리에만 있다.

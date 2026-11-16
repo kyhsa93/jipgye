@@ -48,6 +48,7 @@ test("장 전용 JS 는 나가는 사본에서 주석만 떼고, 셸 JS·sw.js·
   const root = path.resolve(import.meta.dirname, "..");
   const docs = path.join(root, "docs");
   const site = path.join(root, SITE);
+  const stamp = (await import("../scripts/data-keys.ts")).dataKeyStamper(site);
   const sw = await readFile(path.join(docs, "sw.js"), "utf8");
   const shell = [...sw.matchAll(/"\.\/([\w-]+\.js)"/g)].map((m) => m[1]);
   assert.ok(shell.includes("nav.js") && shell.includes("analytics.js"), "sw.js 사전캐시 목록을 못 읽었다");
@@ -61,7 +62,7 @@ test("장 전용 JS 는 나가는 사본에서 주석만 떼고, 셸 JS·sw.js·
     const before = await readFile(path.join(docs, name), "utf8");
     const after = await readFile(path.join(site, name), "utf8");
     assert.deepEqual(findJsComments(after), [], `${name}: 나가는 사본에 주석이 남았다`);
-    if (before !== after) assert.ok(proveCommentsOnly(before, after).ok, `${name}: 주석 말고 다른 것이 바뀌었다`);
+    if (before !== after) assert.ok(proveCommentsOnly(stamp(name, before), after).ok, `${name}: 주석 말고 다른 것이 바뀌었다`);
   }
   for (const name of [...shell, "sw.js"]) {
     assert.equal(await readFile(path.join(site, name), "utf8"), await readFile(path.join(docs, name), "utf8"), `${name}: 셸 JS 가 바뀌었다`);

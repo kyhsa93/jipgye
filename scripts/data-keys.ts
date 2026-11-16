@@ -70,13 +70,16 @@ export function setFiles(dataDir: string, patterns: readonly string[]) {
   return [...files].sort();
 }
 
+type Tally = { keys: number; missing: Set<string> };
+
 /**
- * 나가는 장(.html)과 장 전용 JS 의 데이터 주소에 판 키를 박는다. 바꾼 파일 수와 키 수를 돌려준다.
- * `io.read`·`io.write` 는 build-updated-stamp 의 쓰기 묶음(앞 단계가 올려 둔 것을 이어 받는다)이고, 데이터 바이트는 `io.bytes`(기본 디스크)로 읽는다.
+ * 글자열 하나에 판 키를 박는 순수 함수를 만든다: `(name, text) => string`(name 은 출력 안 파일 이름 - 동적 집합을 고르는 데 쓴다).
+ * 데이터 해시는 만든 함수 안에 한 번씩만 계산해 둔다. siteRoot 가 docs/ 이면 아무것도 읽지 않는 항등 함수다.
+ * stampDataKeys 가 이것으로 치환하고, 「출력 = 소스 + 알려진 변환」을 맞대는 시험이 예상값 쪽에 같은 변환을 재현할 때도 쓴다(#695).
+ * tally 를 주면 박은 곳 수와 출력에 없는 정적 파일을 센다.
  */
-export function stampDataKeys({ siteRoot, io }: { siteRoot: string; io: Io }) {
-  if (path.resolve(siteRoot) === DOCS_DIR) return { files: 0, keys: 0, missing: [] as string[] };
-  const bytes = io.bytes ?? ((file: string) => readFileSync(file));
+export function dataKeyStamper(siteRoot: string, bytes: (file: string) => Buffer = (file) => readFileSync(file), tally: Tally = { keys: 0, missing: new Set() }) {
+  if (path.resolve(siteRoot) === DOCS_DIR) return (_name: string, text: string) => text;
   const dataDir = path.join(siteRoot, "data");
   const fileHash = new Map<string, string | null>();
   const hashOf = (rel: string) => {
@@ -86,7 +89,6 @@ export function stampDataKeys({ siteRoot, io }: { siteRoot: string; io: Io }) {
     }
     return fileHash.get(rel);
   };
-  const missing = new Set<string>();
   const setKey = new Map<string, string>();
   const keyForSet = (source: string, where: string) => {
     if (!setKey.has(source)) {
@@ -98,27 +100,38 @@ export function stampDataKeys({ siteRoot, io }: { siteRoot: string; io: Io }) {
     }
     return setKey.get(source);
   };
+  return (name: string, text: string) =>
+    !text.includes(BUST)
+      ? text
+      : text
+          .replace(STATIC_RE, (_m, rel: string) => {
+            tally.keys++;
+            const hash = hashOf(`${rel}.json`);
+            // 출력에 없는 파일은 브라우저도 404 를 받는다 - 키는 「없음」 판(0 8자)이고, 파일이 생기는 배포에서 바뀐다.
+            if (hash === null) tally.missing.add(`${rel}.json`);
+            return `./data/${rel}.json?v=${hash === null ? "00000000" : hash.slice(0, 8)}`;
+          })
+          .replace(DYNAMIC_RE, (m) => {
+            tally.keys++;
+            return m.replace(BUST, `?v=${keyForSet(DERIVED[name] ?? name, name)}`);
+          });
+}
 
+/**
+ * 나가는 장(.html)과 장 전용 JS 의 데이터 주소에 판 키를 박는다. 바꾼 파일 수와 키 수를 돌려준다.
+ * `io.read`·`io.write` 는 build-updated-stamp 의 쓰기 묶음(앞 단계가 올려 둔 것을 이어 받는다)이고, 데이터 바이트는 `io.bytes`(기본 디스크)로 읽는다.
+ */
+export function stampDataKeys({ siteRoot, io }: { siteRoot: string; io: Io }) {
+  if (path.resolve(siteRoot) === DOCS_DIR) return { files: 0, keys: 0, missing: [] as string[] };
+  const tally: Tally = { keys: 0, missing: new Set() };
+  const stamp = dataKeyStamper(siteRoot, io.bytes, tally);
   const pages = readdirSync(siteRoot).filter((name) => name.endsWith(".html")).sort();
   const scripts = pageScripts(siteRoot, io.read);
   let files = 0;
-  let keys = 0;
   for (const name of [...pages, ...scripts]) {
     const full = path.join(siteRoot, name);
     const before = io.read(full);
-    if (!before.includes(BUST)) continue;
-    const after = before
-      .replace(STATIC_RE, (_m, rel: string) => {
-        keys++;
-        const hash = hashOf(`${rel}.json`);
-        // 출력에 없는 파일은 브라우저도 404 를 받는다 - 키는 「없음」 판(0 8자)이고, 파일이 생기는 배포에서 바뀐다.
-        if (hash === null) missing.add(`${rel}.json`);
-        return `./data/${rel}.json?v=${hash === null ? "00000000" : hash.slice(0, 8)}`;
-      })
-      .replace(DYNAMIC_RE, (m) => {
-        keys++;
-        return m.replace(BUST, `?v=${keyForSet(DERIVED[name] ?? name, name)}`);
-      });
+    const after = stamp(name, before);
     if (after !== before) {
       io.write(full, after);
       files++;
@@ -127,5 +140,5 @@ export function stampDataKeys({ siteRoot, io }: { siteRoot: string; io: Io }) {
   // 모르는 모양(정적·동적 어느 쪽에도 안 맞는 주소)으로 남은 것까지 막는다: 장 전체와 모든 .js(셸 JS 포함)를 다시 훑는다.
   const left = [...pages, ...readdirSync(siteRoot).filter((name) => name.endsWith(".js")).sort()].filter((name) => io.read(path.join(siteRoot, name)).includes(BUST));
   if (left.length) throw new Error(`[data-keys] 치환 뒤에도 ${BUST} 가 남았다: ${left.join(", ")}`);
-  return { files, keys, missing: [...missing].sort() };
+  return { files, keys: tally.keys, missing: [...tally.missing].sort() };
 }

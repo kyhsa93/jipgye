@@ -8,6 +8,7 @@ import { REALESTATE_PAGES, buildDistrictPage, buildRealestatePage } from "../../
 import { DISTRICT_PAGES, DISTRICT_SLUGS } from "../../../scripts/district-slugs.ts";
 import { stampHtml } from "../../../scripts/updated-stamp.ts";
 import { pageAssetHtml, stylesheetVersion } from "../../../scripts/page-assets.ts";
+import { dataKeyStamper } from "../../../scripts/data-keys.ts";
 import { SITE } from "../../../test/helpers/site-root.mjs";
 
 const root = path.resolve(import.meta.dirname, "..", "..", "..");
@@ -15,7 +16,8 @@ const read = (rel) => readFile(path.join(root, rel), "utf8");
 const readJson = (name) => read(`docs/data/${name}.json`).then(JSON.parse);
 // 생성물의 메타나 URL을 정규화해 지우지 않고, 최종 렌더와 같은 예상값을 만들어 대조한다.
 const version = stylesheetVersion(await read(`${SITE}/style.css`));
-const finishPage = (html, file) => pageAssetHtml(html, file, version);
+const stamp = dataKeyStamper(path.join(root, SITE));
+const finishPage = (html, file) => stamp(file, pageAssetHtml(html, file, version));
 
 test("커밋된 거래 유형별 페이지가 지금 원본·데이터로 찍은 결과와 같다", async () => {
   const [baseHtml, realestate, complexRatio] = await Promise.all([
