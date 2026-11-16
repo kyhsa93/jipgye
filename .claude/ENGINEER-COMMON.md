@@ -60,6 +60,22 @@
 7. 건드린 데이터·워크플로·수집기 (없음)
 8. 판단 요청 (없으면 `없음`)
 
+## 병합 (scripts/dev/merge.sh, 메인 세션, #926)
+
+merge.sh 는 병합 직전과 `Base branch was modified` 재시도마다 `compare/main...<head>` 의 behind_by 를 읽고, 0 이 아니거나 읽지 못하면 댓글·병합 없이 종료 1 이다(`--dry-run` 도 `behind_by=N` 을 찍고 같은 기준으로 종료 1). 멈춤은 두 종류다.
+
+1. `main보다 N커밋 뒤` — PR CI 가 지금 main 을 품은 채 돌지 않았다(#919·#923 → main 빨강 #924).
+2. `실패한 검사가 있다` 이면서 같은 head 의 옛 FAILURE run 이 롤업에 남은 경우 — rerun·close/reopen 은 새 run 을 하나 더 붙일 뿐 옛 실패를 지우지 않는다(#918 38dae3ed, 2026-11-16). 먼저 원인(main 쪽 수정)이 이미 병합됐는지 확인한다.
+
+처방은 둘 다 같다.
+
+1. `gh pr update-branch <n>` → 새 head 의 PR CI `test`·`render` SUCCESS.
+2. cto 바뀐 줄 재검증: PR 자체 diff 가 승인 head 와 같은지(파일 API 목록 또는 `git diff <merge-base> <head>` 해시 대조).
+3. cpo 적합이 있던 PR 이면 cpo 재판정(PR 자체 diff 대조만)으로 새 head 승계를 확인한다.
+4. 새 head 로 merge.sh 를 다시 부른다.
+
+데이터 커밋(Daily·Summarize) 때문에 뒤진 경우도 예외가 없다 — 데이터 커밋도 시험이 읽는 docs/data 를 바꾼다(#926 「포기하는 것」).
+
 ## 판정 에이전트가 읽는 순서
 
 PR 본문 → 파일 목록 `gh api --paginate "repos/kyhsa93/jipgye/pulls/<n>/files?per_page=100" --jq '.[] | "\(.additions)+ \(.deletions)- \(.filename)\(if .previous_filename then " ← \(.previous_filename)" else "" end)"'`(파일마다 `추가+ 삭제- 경로`, 이름 바뀐 파일은 `← 옛 경로`. `gh pr diff` 에는 `--stat` 이 없고 `--name-only` 는 300파일을 넘으면 실패해 파일 API 를 페이지마다 읽는다, #899) → 일탈 목록의 파일 diff 만. 이 목록(옛 경로 포함)에 `.claude/patterns.md` 의 허용 목록 밖 파일이 보이면 패턴 위임을 접고 **전체 판정**으로 간다. CI 가 초록이고 엔지니어의 골든 원문이 첨부돼 있으면 CI·골든을 다시 돌리지 않는다 — cto 는 표본 한 장만 직접 재현한다. 재검토는 마지막 판정 SHA 이후 바뀐 줄만 본다. 판정 댓글은 역할당 하나, 정식 문구 한 줄이다(해당 패턴·일탈 판정은 `근거:` 안에 적는다).
