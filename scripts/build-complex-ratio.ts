@@ -6,6 +6,7 @@ import { recentMonths } from "./realestate-source.ts";
 import { cellRatios, spreadOf } from "./complex-ratio.ts";
 import { runRenewalCells } from "./build-renewal-cells.ts";
 import { runJeonseRisk } from "./build-jeonse-risk.ts";
+import { runReverseJeonse } from "./build-reverse-jeonse.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -55,6 +56,9 @@ async function main() {
   // update-all.mjs·daily-update.yml 에 따로 등록하지 않은 이유는 build-renewal-cells.ts 머리 주석. 소프트 실패라 던지지 않는다 -
   // 그 실패가 전세가율 파일을 막지 않게 먼저 돌리고 결과와 무관하게 아래로 간다.
   await runRenewalCells({ now, newMonths: MONTHS });
+  // 2년 전 계약 대비 신규 전세(#693 N11): 같은 원본(raw/rent)을 자기 창(M−23~M−21·M−4~M−2)으로 따로 읽는다(readRaw 를 쓰지 않음).
+  // 소프트 실패라 던지지 않는다(build-reverse-jeonse.ts 머리 주석) - 아래 전세가율 파일과 무관하게 돈다.
+  await runReverseJeonse({ now });
   const months = recentMonths(now, MONTHS);
   const byDistrict = await readRaw(months);
   const payload = buildPayload({ byDistrict, now });
