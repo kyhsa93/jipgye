@@ -54,12 +54,50 @@ for (const f of new Set(Object.values(SCREEN_CODE).flat())) {
 }
 
 /**
- * 잎 경로의 grep 키: 「.」로 나눈 마디를 끝에서부터 보아 처음 나오는 식별자(^[A-Za-z_$][A-Za-z0-9_$]*$).
- * 배열 인덱스(rows.3.p → p)와 데이터 값으로 된 맵 키(구 코드 쌍 11140-11170, 구 이름, 달 202609 등 - 코드에 글자로 적히지 않고 돌며 읽힌다)는
- * 건너뛰고 그 위 마디를 쓴다. 식별자가 하나도 없으면 null - 그 파일을 읽는 코드가 있으므로 「읽음」으로 센다(넓힘 쪽).
+ * 식별자 꼴 데이터 값 맵 키(PREREG 5절 v3, 명시 목록 - 결과 전 고정). 경로가 prefix 로 시작하고 그 아래 마디가 더 있으면 grep 키는 key 다.
+ * cd20a99b 공개 여섯 파일에서 「식별자 꼴 객체 키이면서 같은 파일의 글자 값으로도 나오는 것」은 segment-change grid.rows.<가격대> 한 곳이다(cpo v2 전수).
+ * 키(upTo6·upTo9·upTo15·upTo25·over25)는 price[].key 글자이고 monthly-report.ts 206행이 Object.entries(s.grid?.rows) 로 돈다.
+ */
+const MAP_KEY_PATHS = {
+  "segment-change.json": [{ prefix: ["grid", "rows"], key: "rows" }],
+};
+
+/**
+ * 잎 경로의 grep 키. 1) MAP_KEY_PATHS 에 맞으면 그 key. 2) 아니면 「.」로 나눈 마디를 끝에서부터 보아 처음 나오는 식별자(^[A-Za-z_$][A-Za-z0-9_$]*$).
+ * 배열 인덱스(rows.3.p → p)와 식별자가 아닌 데이터 값 맵 키(구 코드 쌍 11140-11170, 구 이름, 달 202609 등)는 건너뛰고 그 위 마디를 쓴다.
+ * 식별자가 하나도 없으면 null - 그 파일을 읽는 코드가 있으므로 「읽음」으로 센다(넓힘 쪽).
  */
 const IDENT = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
-const keyOf = (p) => p.split(".").reverse().find((seg) => IDENT.test(seg)) ?? null;
+const keyOf = (file, p) => {
+  const segs = p.split(".");
+  for (const { prefix, key } of MAP_KEY_PATHS[file] ?? []) if (segs.length > prefix.length && prefix.every((x, i) => segs[i] === x)) return key;
+  return segs.reverse().find((seg) => IDENT.test(seg)) ?? null;
+};
+
+/**
+ * 목록 완전성 관문(PREREG 7.10): S(= 재현 대조를 통과한 공개 파일, 이미 본 값)에서 「식별자 꼴 객체 키이면서 같은 파일의 글자 값으로도 나오는 것」의
+ * 자리(부모 경로, 배열 인덱스는 #)를 모아 MAP_KEY_PATHS 밖의 자리를 돌려준다. O 는 보지 않는다 - 건너뛸 키가 결과에 따라 움직이지 않게.
+ */
+function unlistedMapKeys(file, value) {
+  const strings = new Set();
+  const collect = (v) => {
+    if (typeof v === "string") strings.add(v);
+    else if (v && typeof v === "object") for (const x of Object.values(v)) collect(x);
+  };
+  collect(value);
+  const found = new Set();
+  const walk = (v, at) => {
+    if (!v || typeof v !== "object") return;
+    if (Array.isArray(v)) return v.forEach((x) => walk(x, [...at, "#"]));
+    for (const [k, x] of Object.entries(v)) {
+      if (IDENT.test(k) && strings.has(k)) found.add(at.join("."));
+      walk(x, [...at, k]);
+    }
+  };
+  walk(value, []);
+  const listed = new Set((MAP_KEY_PATHS[file] ?? []).map(({ prefix }) => prefix.join(".")));
+  return [...found].filter((at) => !listed.has(at));
+}
 
 /** 키를 읽는 화면 코드 자리(파일:줄). `LC_ALL=C grep -nwF -e <키> -- <목록>` 과 같은 규칙(앞뒤가 [A-Za-z0-9_] 가 아닌 자리). */
 function hitsOf(file, key) {
@@ -80,6 +118,15 @@ function hitsOf(file, key) {
  * 3. 남는 차이가 없으면 「같음」 → 「아니오 확정」안, 회차·적용/덧씌움 슬롯 수를 함께 적는다.
  */
 function report(label, before, after, { skip = UPDATED_AT, file = null, slots }) {
+  if (file) {
+    const extra = unlistedMapKeys(file, before);
+    console.log(`[맵 키 목록] ${file}: 목록 밖 식별자 꼴 데이터 값 맵 키 ${extra.length ? extra.map((at) => `${at}.<k>`).join(", ") : "0"}`);
+    if (extra.length) {
+      console.error(`멈춤(7.10): ${label} - MAP_KEY_PATHS 에 없는 식별자 꼴 맵 키. 이 빌더는 판정하지 않는다(스크립트 원인 → 새 등록 sha)`);
+      stopped.push(label);
+      return [];
+    }
+  }
   const d = leafDiff(before, after, skip);
   const text = d.filter((x) => x.kind === "글자");
   const num = d.filter((x) => x.kind === "숫자");
@@ -88,7 +135,7 @@ function report(label, before, after, { skip = UPDATED_AT, file = null, slots })
   const keys = new Map();
   if (file) {
     for (const x of [...num, ...other]) {
-      const k = keyOf(x.path);
+      const k = keyOf(file, x.path);
       const id = k ?? "(식별자 없음)";
       if (!keys.has(id)) keys.set(id, { num: 0, other: 0, hits: hitsOf(file, k) });
       keys.get(id)[x.kind === "숫자" ? "num" : "other"] += 1;
