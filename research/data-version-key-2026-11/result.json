@@ -1,0 +1,523 @@
+{
+  "measuredAt": "2026-11-16T05:43:18.497Z",
+  "rows": [
+    {
+      "page": "realestate",
+      "sw": "차단",
+      "when": "즉시",
+      "base": {
+        "controlled": false,
+        "requests": 3,
+        "ok200": 3,
+        "not304": 0,
+        "bytes": 442214,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/complex-ratio.json?_=:200",
+          "/data/realestate-trend.json?_=:200",
+          "/data/realestate.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": false,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": []
+      },
+      "change": -100
+    },
+    {
+      "page": "realestate",
+      "sw": "차단",
+      "when": "만료 뒤",
+      "base": {
+        "controlled": false,
+        "requests": 3,
+        "ok200": 3,
+        "not304": 0,
+        "bytes": 442214,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/complex-ratio.json?_=:200",
+          "/data/realestate-trend.json?_=:200",
+          "/data/realestate.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": false,
+        "requests": 3,
+        "ok200": 0,
+        "not304": 3,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/complex-ratio.json?v=:304",
+          "/data/realestate-trend.json?v=:304",
+          "/data/realestate.json?v=:304"
+        ]
+      },
+      "change": -100
+    },
+    {
+      "page": "realestate",
+      "sw": "허용",
+      "when": "즉시",
+      "base": {
+        "controlled": true,
+        "requests": 3,
+        "ok200": 3,
+        "not304": 0,
+        "bytes": 442214,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/complex-ratio.json?_=:200",
+          "/data/realestate-trend.json?_=:200",
+          "/data/realestate.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": true,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": []
+      },
+      "change": -100
+    },
+    {
+      "page": "realestate",
+      "sw": "허용",
+      "when": "만료 뒤",
+      "base": {
+        "controlled": true,
+        "requests": 3,
+        "ok200": 3,
+        "not304": 0,
+        "bytes": 442214,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/complex-ratio.json?_=:200",
+          "/data/realestate-trend.json?_=:200",
+          "/data/realestate.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": true,
+        "requests": 3,
+        "ok200": 0,
+        "not304": 3,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/complex-ratio.json?v=:304",
+          "/data/realestate-trend.json?v=:304",
+          "/data/realestate.json?v=:304"
+        ]
+      },
+      "change": -100
+    },
+    {
+      "page": "budget-7eok (틀, 표만)",
+      "sw": "차단",
+      "when": "즉시",
+      "base": {
+        "controlled": false,
+        "requests": 4,
+        "ok200": 4,
+        "not304": 0,
+        "bytes": 586027,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/budget-deals.json?_=:200",
+          "/data/complex-ratio.json?_=:200",
+          "/data/realestate-trend.json?_=:200",
+          "/data/realestate.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": false,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": []
+      },
+      "change": -100
+    },
+    {
+      "page": "budget-7eok (틀, 표만)",
+      "sw": "차단",
+      "when": "만료 뒤",
+      "base": {
+        "controlled": false,
+        "requests": 4,
+        "ok200": 4,
+        "not304": 0,
+        "bytes": 586027,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/budget-deals.json?_=:200",
+          "/data/complex-ratio.json?_=:200",
+          "/data/realestate-trend.json?_=:200",
+          "/data/realestate.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": false,
+        "requests": 4,
+        "ok200": 0,
+        "not304": 4,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/budget-deals.json?v=:304",
+          "/data/complex-ratio.json?v=:304",
+          "/data/realestate-trend.json?v=:304",
+          "/data/realestate.json?v=:304"
+        ]
+      },
+      "change": -100
+    },
+    {
+      "page": "budget-7eok (틀, 표만)",
+      "sw": "허용",
+      "when": "즉시",
+      "base": {
+        "controlled": true,
+        "requests": 4,
+        "ok200": 4,
+        "not304": 0,
+        "bytes": 586027,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/budget-deals.json?_=:200",
+          "/data/complex-ratio.json?_=:200",
+          "/data/realestate-trend.json?_=:200",
+          "/data/realestate.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": true,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": []
+      },
+      "change": -100
+    },
+    {
+      "page": "budget-7eok (틀, 표만)",
+      "sw": "허용",
+      "when": "만료 뒤",
+      "base": {
+        "controlled": true,
+        "requests": 4,
+        "ok200": 4,
+        "not304": 0,
+        "bytes": 586027,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/budget-deals.json?_=:200",
+          "/data/complex-ratio.json?_=:200",
+          "/data/realestate-trend.json?_=:200",
+          "/data/realestate.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": true,
+        "requests": 4,
+        "ok200": 0,
+        "not304": 4,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/budget-deals.json?v=:304",
+          "/data/complex-ratio.json?v=:304",
+          "/data/realestate-trend.json?v=:304",
+          "/data/realestate.json?v=:304"
+        ]
+      },
+      "change": -100
+    },
+    {
+      "page": "deal-search (강남구)",
+      "sw": "차단",
+      "when": "즉시",
+      "base": {
+        "controlled": false,
+        "requests": 4,
+        "ok200": 4,
+        "not304": 0,
+        "bytes": 494968,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/budget-deals.json?_=:200",
+          "/data/deal-search.json?_=:200",
+          "/data/deals-gangnam.json?_=:200",
+          "/data/rent-preview.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": false,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": []
+      },
+      "change": -100
+    },
+    {
+      "page": "deal-search (강남구)",
+      "sw": "차단",
+      "when": "만료 뒤",
+      "base": {
+        "controlled": false,
+        "requests": 4,
+        "ok200": 4,
+        "not304": 0,
+        "bytes": 494968,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/budget-deals.json?_=:200",
+          "/data/deal-search.json?_=:200",
+          "/data/deals-gangnam.json?_=:200",
+          "/data/rent-preview.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": false,
+        "requests": 4,
+        "ok200": 0,
+        "not304": 4,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/budget-deals.json?v=:304",
+          "/data/deal-search.json?v=:304",
+          "/data/deals-gangnam.json?v=:304",
+          "/data/rent-preview.json?v=:304"
+        ]
+      },
+      "change": -100
+    },
+    {
+      "page": "deal-search (강남구)",
+      "sw": "허용",
+      "when": "즉시",
+      "base": {
+        "controlled": true,
+        "requests": 4,
+        "ok200": 4,
+        "not304": 0,
+        "bytes": 494968,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/budget-deals.json?_=:200",
+          "/data/deal-search.json?_=:200",
+          "/data/deals-gangnam.json?_=:200",
+          "/data/rent-preview.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": true,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": []
+      },
+      "change": -100
+    },
+    {
+      "page": "deal-search (강남구)",
+      "sw": "허용",
+      "when": "만료 뒤",
+      "base": {
+        "controlled": true,
+        "requests": 4,
+        "ok200": 4,
+        "not304": 0,
+        "bytes": 494968,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/budget-deals.json?_=:200",
+          "/data/deal-search.json?_=:200",
+          "/data/deals-gangnam.json?_=:200",
+          "/data/rent-preview.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": true,
+        "requests": 4,
+        "ok200": 0,
+        "not304": 4,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/budget-deals.json?v=:304",
+          "/data/deal-search.json?v=:304",
+          "/data/deals-gangnam.json?v=:304",
+          "/data/rent-preview.json?v=:304"
+        ]
+      },
+      "change": -100
+    },
+    {
+      "page": "news",
+      "sw": "차단",
+      "when": "즉시",
+      "base": {
+        "controlled": false,
+        "requests": 2,
+        "ok200": 2,
+        "not304": 0,
+        "bytes": 31104,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/news.json?_=:200",
+          "/data/summary.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": false,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": []
+      },
+      "change": -100
+    },
+    {
+      "page": "news",
+      "sw": "차단",
+      "when": "만료 뒤",
+      "base": {
+        "controlled": false,
+        "requests": 2,
+        "ok200": 2,
+        "not304": 0,
+        "bytes": 31104,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/news.json?_=:200",
+          "/data/summary.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": false,
+        "requests": 2,
+        "ok200": 0,
+        "not304": 2,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/news.json?v=:304",
+          "/data/summary.json?v=:304"
+        ]
+      },
+      "change": -100
+    },
+    {
+      "page": "news",
+      "sw": "허용",
+      "when": "즉시",
+      "base": {
+        "controlled": true,
+        "requests": 2,
+        "ok200": 2,
+        "not304": 0,
+        "bytes": 31104,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/news.json?_=:200",
+          "/data/summary.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": true,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": []
+      },
+      "change": -100
+    },
+    {
+      "page": "news",
+      "sw": "허용",
+      "when": "만료 뒤",
+      "base": {
+        "controlled": true,
+        "requests": 2,
+        "ok200": 2,
+        "not304": 0,
+        "bytes": 31104,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/news.json?_=:200",
+          "/data/summary.json?_=:200"
+        ]
+      },
+      "head": {
+        "controlled": true,
+        "requests": 2,
+        "ok200": 0,
+        "not304": 2,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/news.json?v=:304",
+          "/data/summary.json?v=:304"
+        ]
+      },
+      "change": -100
+    }
+  ]
+}
