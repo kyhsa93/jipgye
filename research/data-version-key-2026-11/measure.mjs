@@ -59,6 +59,17 @@ const PAGES_695 = [
   ["news", "news.html"],
 ];
 
+/**
+ * 검색 입력칸 포커스: 입력칸은 닫힌 <details class="home-discovery"> 안이라 그대로는 포커스가 가지 않는다(첫 실행에서 요청 0건) -
+ * 사람처럼 요약 줄을 눌러 펼친 뒤 포커스하고, 포커스가 실제로 갔는지 확인한다.
+ */
+async function focusSearch(page) {
+  const details = page.locator("details.home-discovery");
+  if (!(await details.evaluate((d) => d.open))) await details.locator("> summary").click();
+  await page.locator("#site-search-input").focus();
+  if ((await page.evaluate(() => document.activeElement?.id)) !== "site-search-input") throw new Error("[measure] index: 검색 입력칸에 포커스가 가지 않았다 - 측정 실패");
+}
+
 /** 노원구 「줄 보기」: 버튼은 reco-counts.json 을 받은 뒤 그려지고 data-d 는 구 이름이 아니라 순번이다 - 「노원구」 행 머리의 버튼을 상한 안에서 기다린다. */
 async function clickNowon(page) {
   const button = page.locator("#bt-live th", { hasText: "노원구" }).locator("button[data-d]");
@@ -72,7 +83,7 @@ async function clickNowon(page) {
 
 // [이름, 주소, 조작, 대상 파일]. 조작은 첫 방문·재방문 둘 다에서 한다 - 첫 방문에서 받아야 재방문의 캐시를 잴 수 있다.
 const PAGES_917 = [
-  ["index (검색 입력칸 포커스)", "index.html", (page) => page.focus("#site-search-input"), ["/data/search-index.json"]],
+  ["index (검색 입력칸 포커스)", "index.html", focusSearch, ["/data/search-index.json"]],
   ["buy-by-budget (노원구 줄 보기)", "buy-by-budget.html", clickNowon, ["/data/reco-counts.json", "/data/reco-nowon.json"]],
 ];
 

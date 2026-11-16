@@ -42,6 +42,7 @@
 - 서버·센 것: 위와 같은 흉내 서버(ETag 동작 그대로)와 같은 정의 — 재방문 동안 `/data/` 에 보낸 본문 바이트 전체. 대상 파일별 값은 따로 적는다.
 - 장과 조작(첫 방문과 재방문에서 똑같이 한다 - 첫 방문에서 받아야 재방문 캐시를 잴 수 있다):
   - (가) `index.html`: 열고 `#site-search-input` 에 포커스 → 대상 `search-index.json`(search.js 의 focus 처리기가 한 번 받는다).
+    정정(첫 실행 뒤): 입력칸은 닫힌 `<details class="home-discovery">`(「단지명이나 동네 이름으로 바로 찾기」) 안에 있어 그대로는 포커스가 가지 않는다 - 첫 실행은 index 여덟 칸(base·head × 네 경우) 모두 첫 방문 search-index.json 200 이 0건으로 조작 실패였다. 그래서 요약 줄을 눌러 펼친 뒤 포커스하고, `document.activeElement` 가 입력칸인지 확인한다. 장·대상 파일·문턱은 그대로다.
   - (나) `buy-by-budget.html`: 열고 **노원구** 행의 「줄 보기」 버튼을 누른다 → 대상 `reco-counts.json`(열 때)·`reco-nowon.json`(누를 때).
     버튼의 `data-d` 는 구 이름이 아니라 건수 파일 `C.d` 의 순번이다(0916d6bf 데이터에서 노원구 = 8). 그래서 순번을 박지 않고 `#bt-live` 표에서 행 머리 글자가 「노원구」인 행의 버튼을 찾는다.
     버튼은 reco-counts.json 을 받은 뒤 그려지므로 15초까지 기다린다. 그래도 없으면 측정 실패로 멈추고, 다른 구로 바꾸지 않는다.
@@ -50,3 +51,27 @@
 - 두 기준: 흉내 서버는 내용 해시 ETag, 실제 Pages 는 배포 시각 ETag 다. 실제 Pages 의 「만료 뒤」 절감은 그 사이 재배포가 없을 때만 생긴다. 「즉시」 절감은 둘 다 같다.
 
 재현: `PLAYWRIGHT=<playwright 패키지 경로> node research/data-version-key-2026-11/measure.mjs --base=<기준 렌더> --head=<후보 렌더> --set=917 --out=research/data-version-key-2026-11/result-917.json`
+
+### 결과 (2026-11-16 KST 21:01, 다른 무거운 계산 없이 단독 실행, `uptime` 부하 0.94 → 0.74)
+
+Chromium(playwright 1.62.1, chromium-1234, 헤드리스). 같은 조건 두 번째 실행이다(첫 실행은 위 정정의 index 조작 실패). 실패·멈춤 0건(`result-917.json` 의 `failures: []`). 첫 방문 대상 파일 200 은 열여섯 칸(두 장 × 네 경우 × base·head) 모두 파일마다 1건이고, SW 허용 행은 모두 SW 제어 아래였다.
+
+| 장 | SW | 재방문 | 기준 /data/ 바이트 (200·304) | 후보 /data/ 바이트 (200·304) | 변화 | 대상 파일별 기준 → 후보 |
+|---|---|---|---|---|---|---|
+| index (검색칸 포커스) | 차단 | 즉시 | 0 (0·0) | 0 (0·0) | 기록만 | search-index 0 → 0 |
+| index | 차단 | 만료 뒤† | 0 (0·4) | 0 (0·4) | 기록만 | search-index 0 (0·1) → 0 (0·1) |
+| index | 허용 | 즉시 | 68,031 (1·0) | 0 (0·0) | −100% | search-index 68,031 (1·0) → 0 (0·0) |
+| index | 허용 | 만료 뒤† | 68,031 (1·3) | 0 (0·4) | −100% | search-index 68,031 (1·0) → 0 (0·1) |
+| buy-by-budget (노원구) | 차단 | 즉시 | 0 (0·0) | 0 (0·0) | 기록만 | reco-counts 0 → 0, reco-nowon 0 → 0 |
+| buy-by-budget | 차단 | 만료 뒤† | 0 (0·2) | 0 (0·2) | 기록만 | reco-counts 0 (0·1) → 0 (0·1), reco-nowon 0 (0·1) → 0 (0·1) |
+| buy-by-budget | 허용 | 즉시 | 77,090 (2·0) | 0 (0·0) | −100% | reco-counts 10,827 (1·0) → 0, reco-nowon 66,263 (1·0) → 0 |
+| buy-by-budget | 허용 | 만료 뒤† | 77,090 (2·0) | 0 (0·2) | −100% | reco-counts 10,827 (1·0) → 0 (0·1), reco-nowon 66,263 (1·0) → 0 (0·1) |
+
+† 위 #695 표와 같은 단서: 후보의 304 는 흉내 서버(내용 해시 ETag) 기준이고, 실제 Pages 에서는 그 사이 재배포가 없을 때만 304 다.
+
+읽는 법: 차이는 SW 허용 행에서만 난다. 키 없는 /data/ 요청은 sw.js 가 늘 `cache: "reload"` 로 다시 받고(기준), `?v=` 가 붙으면 HTTP 캐시를 쓴다(후보). SW 차단 행은 기준도 브라우저 HTTP 캐시가 받아서 두 쪽이 같다(head 가 늘어난 행 0).
+
+search.js 가 데이터 판마다 바뀌는 비용(build/site 기준, search.js 16,568 B, `gzip -9` 6,640 B):
+- 실제 Pages: 추가 0. search.js 도 배포 시각 ETag 라, SW 없는 방문자는 지금도 재배포 뒤 600초가 지나면 내용이 같아도 search.js 전체를 다시 받는다.
+- 흉내 서버(내용 ETag): search-index.json 이 바뀌는 날(Daily, 하루 1회)마다 SW 없는 방문자가 search.js 1회분(`gzip -9` 6,640 B)을 더 받는다.
+- SW 있는 방문자: JS 는 늘 `cache: "reload"` 로 받으므로 두 기준 모두 변화 없다.
