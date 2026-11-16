@@ -24,6 +24,8 @@ export const REVERSE_JEONSE_METHOD = { ko: "./method.html#reverse-jeonse", en: "
 
 const MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const count = (n: number) => n.toLocaleString("en-US");
+/** 문장 가운데에 넣는 문구의 첫 글자를 소문자로(「Seoul gap — fewer than …」). */
+const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 const signed = (v: number) => `${v > 0 ? "+" : ""}${v}`;
 const pct = (v: number) => `${signed(v)}%`;
 /** 만원 → 「-3,316만원」 / 「-₩33.2M」. */
@@ -113,7 +115,7 @@ export function reverseJeonseView(data) {
   const min = data.min.cells;
   const compared: Both = {
     ko: `신고 기한(계약 후 30일)이 닫힌 최근 3개월(${now.ko})의 신규 전세 보증금을, 같은 단지·같은 면적대의 2년 전 계약 보증금(신규·갱신 포함, ${base.ko} 계약)과 견줬습니다.`,
-    en: `New jeonse deposits from the latest three months whose 30-day filing window has closed (${now.en}) are set against deposits signed two years earlier in the same complex and unit size (new and renewed contracts, signed ${base.en}).`,
+    en: `New jeonse deposits from the latest three months whose 30-day filing window has closed (${now.en}) are set against deposits signed two years earlier in the same complex and unit size (including new and renewed contracts, signed ${base.en}).`,
   };
   const share: Both = seoul.short
     ? { ko: `서울 전체에서 견줄 수 있는 칸이 ${count(seoul.cells)}칸뿐이라 ${shortText(min).ko}으로 값을 내지 않습니다.`, en: `Only ${count(seoul.cells)} units in Seoul can be compared, so no figure is given (under ${min}).` }
@@ -125,10 +127,10 @@ export function reverseJeonseView(data) {
     ? null
     : seoul.gap
       ? {
-          ko: `하락 칸에서 보증금이 줄어든 비율의 중간값은 ${pct(seoul.gap.pct)}입니다. 줄어든 금액의 중간값은 ${won.ko(seoul.gap.amount)}입니다.`,
+          ko: `하락 칸에서 보증금 변화율의 중간값은 ${pct(seoul.gap.pct)}입니다. 변화 금액의 중간값은 ${won.ko(seoul.gap.amount)}입니다.`,
           en: `In those units, the median change is ${pct(seoul.gap.pct)}. The median change in money is ${won.en(seoul.gap.amount)}.`,
         }
-      : { ko: `서울 하락 칸 격차 — ${noGapText(min).ko}.`, en: `Seoul gap — ${noGapText(min).en}.` };
+      : { ko: `서울 하락 칸 격차 — ${noGapText(min).ko}.`, en: `Seoul gap — ${lowerFirst(noGapText(min).en)}.` };
   const c = districtCounts(data.districts);
   const districts: Both = { ko: `하락 비율이 나온 구는 ${c.shown}/${c.total}입니다${restText(c).ko}.`, en: `${countsText(c).en}.` };
   const lead: Both = {
@@ -137,12 +139,12 @@ export function reverseJeonseView(data) {
   };
   const note: Both = {
     ko:
-      `구 단위로 모은 값이라 개별 계약의 판정이 아닙니다. 2년 전 쪽에는 갱신 계약(인상 5% 상한)과 계약구분이 비어 있는 계약이 섞여 있고 칸마다 그 비율이 달라, 같은 집의 보증금이 그만큼 바뀌었다는 뜻이 아닙니다. ` +
-      `격차의 비율과 금액은 따로 구한 중간값이라 같은 칸의 값이 아닐 수 있습니다. 칸은 각 시기 ${data.min.perSide}건 이상인 것만 견주고, 견준 칸이 ${min}칸 미만인 구는 값을 비우며, 하락 칸이 ${min}칸 미만이면 격차를 내지 않습니다. ` +
+      `구 단위로 모은 값이라 개별 계약의 판정이 아닙니다. 2년 전 쪽에는 갱신 계약(계약갱신요구권을 쓴 것만 인상 5% 상한)과 계약구분이 비어 있는 계약이 섞여 있고 칸마다 그 비율이 달라, 같은 집의 보증금이 그만큼 바뀌었다는 뜻이 아닙니다. ` +
+      `격차의 비율과 금액은 따로 구한 중간값이라 같은 칸의 값이 아닐 수 있습니다. 칸은 각 시기 ${data.min.perSide}건 이상인 것만 견주고, 견준 칸이 ${min}칸 미만인 구는 견준 칸 수만 적고 「표본 부족」으로 표시하며, 하락 칸이 ${min}칸 미만이면 격차를 내지 않습니다. ` +
       `두 시기는 정확히 24개월 간격이 아닙니다.`,
     en:
-      `These are district aggregates, not a verdict on any single contract. The earlier side mixes renewals (capped at a 5% rise) and contracts with no type given, in shares that differ by unit, so a gap does not mean that one home's deposit moved by that much. ` +
-      `The rate and the money gap are separate medians and need not come from the same unit. A unit is compared only with ${data.min.perSide} or more contracts in each period; districts with fewer than ${min} units are left blank, and no gap is given with fewer than ${min} falling units. ` +
+      `These are district aggregates, not a verdict on any single contract. The earlier side mixes renewals (capped at a 5% rise only where the statutory renewal right was used) and contracts with no type given, in shares that differ by unit, so a gap does not mean that one home's deposit moved by that much. ` +
+      `The rate and the money gap are separate medians and need not come from the same unit. A unit is compared only with ${data.min.perSide} or more contracts in each period; districts with fewer than ${min} units show only that count, marked “Too few units”, and no gap is given with fewer than ${min} falling units. ` +
       `The two periods are not exactly 24 months apart.`,
   };
   const link: Both = { ko: "두 시기를 고른 방법 →", en: "How the two periods are chosen →" };

@@ -67,4 +67,8 @@ test("가공 꼬리 장: 예산 18·jeonse-vs-wolse·switch-house·price-outlook
   const sh = await readFile(sitePath("switch-house.html"), "utf8");
   assert.ok(footer(sh).includes("한국은행 경제통계시스템(ECOS)") && footer(sh).includes("(R-ONE)"));
   assert.ok(sh.includes("Bank of Korea ECOS") && sh.includes("price survey (R-ONE)"));
+  // 전망 장은 전월세에서 만든 절(#693)도 싣는다 - 국토교통부 줄이 매매·전월세다(legal PR #931).
+  const po = await readFile(sitePath("price-outlook.html"), "utf8");
+  assert.ok(footer(po).includes("국토교통부 아파트 매매·전월세 실거래가 공개시스템"));
+  assert.ok(po.includes("MOLIT apartment sale and lease filings"));
 });

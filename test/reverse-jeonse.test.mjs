@@ -469,13 +469,13 @@ test("method: #reverse-jeonse·#reverse-jeonse-en 두 절이 각 언어 구역�
 test("method: 다섯 요소(두 창과 신고 기한, 24개월이 아닌 이유, 줄 정의와 한계, 문턱 셋, 개별 계약 판정 아님)가 ko·en 양쪽에 있다 (완료 조건 5)", () => {
   const want = {
     "reverse-jeonse": [
-      "M−23~M−21", "M−4~M−2", "신고 기한(계약 후 30일)", "가운데 달끼리 19개월", "M−27~M−25",
+      "M−23~M−21", "M−4~M−2", "신고 기한(계약 후 30일)", "가운데 달끼리 19개월", "M−28~M−26",
       "신규·갱신·계약구분 빈칸 줄을 모두 셉니다", "계약구분 빈칸은 뺍니다", "시세 변화로 읽을 수 없습니다",
       `시기마다 ${THRESHOLDS.perSide}건 이상`, `견준 칸이 ${THRESHOLDS.cells}칸 이상일 때만 하락 비율`, `하락 칸이 ${THRESHOLDS.cells}칸 이상인 행에서만`, "서울 행도 같습니다",
       "개별 계약의 판정이 아닙니다",
     ],
     "reverse-jeonse-en": [
-      "M−23 to M−21", "M−4 to M−2", "30-day filing window", "19 months apart", "M−27 to M−25",
+      "M−23 to M−21", "M−4 to M−2", "30-day filing window", "19 months apart", "M−28 to M−26",
       "new, renewed and those with the contract type left blank", "drops blank contract types", "cannot be read as a change in that home&rsquo;s market price",
       `${THRESHOLDS.perSide} or more contracts in each period`, `${THRESHOLDS.cells} or more units compared`, `${THRESHOLDS.cells} or more falling units`, "Seoul included",
       "not a verdict on any single contract",

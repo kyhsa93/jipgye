@@ -84,9 +84,17 @@ test("가공 꼬리 글자와 장별 출처 줄 (#588 단계 C)", () => {
     FOOTERS.switchHouse.en,
     "Source: MOLIT apartment sale filings (brokered, cancelled excluded); Korea Real Estate Board transaction index and price survey (R-ONE); Bank of Korea ECOS. These figures are derived from the original data."
   );
-  // price-outlook 은 같은 상수를 쓰고 출력은 그대로다.
+  // price-outlook 은 같은 상수를 쓴다. 전월세에서 만든 절(#693 「2년 전 계약 보증금과 지금 신규 전세」)이 있어 국토교통부 줄이 매매·전월세다(legal PR #931).
   assert.ok(FOOTERS.priceOutlook.ko.includes(`${DERIVED.ko} 투자 판단을 대신하지 않습니다.`));
   assert.ok(FOOTERS.priceOutlook.en.endsWith(`${DERIVED.en} Not investment advice.`));
+  assert.equal(
+    FOOTERS.priceOutlook.ko,
+    "출처: 한국부동산원 아파트 매매 실거래가격지수(한국은행 ECOS), 국토교통부 아파트 매매·전월세 실거래가 공개시스템, KB국민은행(한국은행 ECOS 경제통계시스템 경유). 이 값은 원자료를 가공한 것입니다. 투자 판단을 대신하지 않습니다."
+  );
+  assert.equal(
+    FOOTERS.priceOutlook.en,
+    "Source: Korea Real Estate Board apartment sale price index (Bank of Korea ECOS), MOLIT apartment sale and lease filings, and KB Kookmin Bank (via Bank of Korea ECOS). These figures are derived from the original data. Not investment advice."
+  );
 });
 
 // ECOS 값을 화면에 싣는 장 종류(출처 줄 id). 새 ECOS 장이 생기면 여기에 더한다 - ECOS 약관 제7조②.
