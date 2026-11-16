@@ -16,7 +16,8 @@ import { keyedDeal } from "./complex-id.ts";
 import { AREA_GROUP, areaGroups, marketDeal, quantile } from "./complex-price.ts";
 import { DISTRICT_SLUGS } from "./district-slugs.ts";
 import { DISTRICTS } from "./realestate-districts.ts";
-import { readSameNames, readSlotFile } from "./realestate-raw.ts";
+import { readSameNames } from "./realestate-raw.ts";
+import { readRecollectedSlot } from "./realestate-recollect.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { RETENTION_MONTHS } from "./realestate-slots.ts";
 
@@ -145,7 +146,8 @@ export async function writeComplexHistory({ dataDir = path.join(root, "docs/data
   const itemsByDistrict = {};
   await Promise.all(
     DISTRICTS.map(async ({ code }) => {
-      const files = await Promise.all(months.map((m) => readSlotFile("sale", code, m, rawDir)));
+      // complex-price 와 같은 읽기 층(재수집 덧씌움, #861)이어야 덧씌움에만 있는 단지도 칸이 생긴다 - 칸 이름이 어긋나면 카드가 칸을 못 찾는다(#920).
+      const files = await Promise.all(months.map((m) => readRecollectedSlot("sale", code, m, rawDir)));
       itemsByDistrict[code] = files.filter((f) => f?.ok !== false && Array.isArray(f?.items)).flatMap((f) => f.items);
     })
   );

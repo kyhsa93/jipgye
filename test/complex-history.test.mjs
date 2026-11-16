@@ -179,3 +179,82 @@ test("커밋된 complex-history-*.json: 구당 gzip 40 KB 안, 달마다 건수"
     }
   }
 });
+
+// #920 - 추이도 complex-price 와 같은 읽기 층(재수집 덧씌움, #861)을 읽는다. 아래 두 시험의 입력은 손으로 만든 슬롯·덧씌움이다(#8).
+const recollectNow = new Date("2026-11-16T02:42:23.254Z");
+
+/** 강남구(11680) 두 달 슬롯, 그 가운데 202606 슬롯에 덧씌움(appeared 에만 있는 나단지 두 줄)을 만든다. writeOverlay 는 부른 쪽이 정한다. */
+async function recollectFixture(dir) {
+  const { buildSlotFile, readSlotFile, writeSlotFile } = await import("../scripts/realestate-raw.ts");
+  const { buildOverlay } = await import("../scripts/realestate-recollect.ts");
+  const raw = path.join(dir, "raw");
+  const stored = {
+    202605: [item({ dealMonth: 5 }), item({ dealMonth: 5, dealDay: 20, dealAmount: "104,000" })],
+    202606: [item(), item({ dealDay: 3, dealAmount: "120,000" }), item({ aptNm: "다단지", excluUseAr: 59.9, dealAmount: "80,000" })],
+  };
+  for (const [yearMonth, items] of Object.entries(stored)) {
+    await writeSlotFile(buildSlotFile({ kind: "sale", code: "11680", yearMonth, items, observedAt: "2026-08-17T00:00:00.000Z" }), raw);
+  }
+  const slot = await readSlotFile("sale", "11680", "202606", raw);
+  const fetched = [...stored[202606], item({ aptNm: "나단지", excluUseAr: 59.97, dealDay: 9, dealAmount: "90,000" }), item({ aptNm: "나단지", excluUseAr: 59.97, dealDay: 21, dealAmount: "94,000" })];
+  const overlay = buildOverlay({ slot, items: buildSlotFile({ kind: "sale", code: "11680", yearMonth: "202606", items: fetched, observedAt: "2026-11-15T11:36:00.000Z" }).items, totalCount: fetched.length, observedAt: "2026-11-15T11:36:00.000Z" });
+  assert.equal(overlay.appeared.length, 2, "픽스처: 나단지 두 줄은 덧씌움 appeared 에만 있다");
+  assert.equal(overlay.changed.length + overlay.gone.length, 0);
+  // 같은 Daily 의 complex-price 가 덧씌움을 읽어 낸 칸(나단지 포함). 칸 이름은 이 파일에서 온다.
+  const data = path.join(dir, "data");
+  await mkdir(data, { recursive: true });
+  const priceCells = { 가단지: { 84.98: { median: 110000, n: 2 } }, 나단지: { 59.97: { median: 92000, n: 2 } }, 다단지: { 59.9: { median: 80000, n: 1 } } };
+  await writeFile(path.join(data, "complex-price-gangnam.json"), `${JSON.stringify({ district: "강남구", cells: priceCells })}\n`);
+  return { raw, data, overlay, priceCells };
+}
+
+test("writeComplexHistory: 덧씌움 appeared 에만 있는 단지도 추이 칸이 생긴다(#920)", async () => {
+  const { writeOverlay } = await import("../scripts/realestate-recollect.ts");
+  const dir = await mkdtemp(path.join(tmpdir(), "complex-history-recollect-"));
+  try {
+    const { raw, data, overlay, priceCells } = await recollectFixture(dir);
+    assert.equal(await writeOverlay("11680", "202606", overlay, raw), true);
+    await writeComplexHistory({ dataDir: data, rawDir: raw, now: recollectNow });
+    const file = JSON.parse(await readFile(path.join(data, "complex-history-gangnam.json"), "utf8"));
+    assert.deepEqual(file.cells.나단지, { 59.97: [["202606", 92000, 2]] });
+    // 144행 시험과 같은 단언: 중앙값이 있는 위치 칸마다 같은 이름의 추이 칸.
+    const missing = Object.entries(priceCells).flatMap(([apt, areas]) => Object.keys(areas).filter((area) => !file.cells[apt]?.[area]).map((area) => `${apt} ${area}`));
+    assert.deepEqual(missing, []);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test("writeComplexHistory: 덧씌움이 없거나 낡았으면 저장 슬롯만 읽은 것과 바이트가 같다(#920, #861 조건 2)", async () => {
+  const { readSameNames, readSlotFile } = await import("../scripts/realestate-raw.ts");
+  const { overlayPath, writeOverlay } = await import("../scripts/realestate-recollect.ts");
+  const { DISTRICTS } = await import("../scripts/realestate-districts.ts");
+  const { recentMonths } = await import("../scripts/realestate-source.ts");
+  const dir = await mkdtemp(path.join(tmpdir(), "complex-history-recollect-"));
+  try {
+    const { raw, data, overlay, priceCells } = await recollectFixture(dir);
+    // 기대 바이트: 고치기 전 경로와 같은 계산(readSlotFile → buildHistoryFiles → JSON 한 줄).
+    const itemsByDistrict = {};
+    for (const { code } of DISTRICTS) {
+      const files = await Promise.all(recentMonths(recollectNow, HISTORY_MONTHS).map((m) => readSlotFile("sale", code, m, raw)));
+      itemsByDistrict[code] = files.filter((f) => f?.ok !== false && Array.isArray(f?.items)).flatMap((f) => f.items);
+    }
+    const expected = buildHistoryFiles({ itemsByDistrict, now: recollectNow, priceCells: { gangnam: priceCells }, sameNames: await readSameNames(raw) });
+    assert.deepEqual(Object.keys(expected), ["gangnam"]);
+    const want = `${JSON.stringify(expected.gangnam)}\n`;
+    assert.equal(JSON.parse(want).cells.나단지, undefined);
+
+    // (i) 덧씌움 폴더가 없다.
+    await writeComplexHistory({ dataDir: data, rawDir: raw, now: recollectNow });
+    assert.equal(await readFile(path.join(data, "complex-history-gangnam.json"), "utf8"), want);
+
+    // (ii) 덧씌움이 낡았다(base.count 불일치 → mergeRecollect 가 슬롯을 그대로 돌려준다).
+    await writeOverlay("11680", "202606", { ...overlay, base: { ...overlay.base, count: overlay.base.count + 1 } }, raw);
+    assert.ok(JSON.parse(await readFile(overlayPath("11680", "202606", raw), "utf8")).appeared.length === 2, "낡은 덧씌움 파일이 실제로 있다");
+    await rm(path.join(data, "complex-history-gangnam.json"));
+    await writeComplexHistory({ dataDir: data, rawDir: raw, now: recollectNow });
+    assert.equal(await readFile(path.join(data, "complex-history-gangnam.json"), "utf8"), want);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
