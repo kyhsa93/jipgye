@@ -1,0 +1,418 @@
+측정 작업 트리 HEAD 05a4469e0f90e5021efee3b436521a7802b86f74 · 코드 05a4469e0f90e5021efee3b436521a7802b86f74 · 데이터 cd20a99bc954797ae12bedeffa48252e8e505a22 · R0 f692748e4c0434557f382470de883e3646234b39
+확인: scripts = 코드 · raw·docs/data = 데이터 커밋 · raw/recollect = 1회차 (git diff --stat f3def1ee5a04531829057018b613323252a9e435 cd20a99bc954797ae12bedeffa48252e8e505a22 -- raw/recollect 0줄)
+입력 신선도(git diff --name-only <이미 본 커밋> cd20a99bc954797ae12bedeffa48252e8e505a22 -- <raw 폴더> | wc -l):
+  8eb314f7 → sale 0 rent 9 recollect 0 ecos 0 indicators 0 first-seen 9
+  f3def1ee → sale 0 rent 9 recollect 0 ecos 0 indicators 0 first-seen 9
+  f692748e → sale 0 rent 0 recollect 0 ecos 0 indicators 0 first-seen 9
+부하:  18:45:50 up 1 day,  8:26,  0 users,  load average: 0.39, 0.40, 0.27
+키 환경변수 0개 (본 이름: MOLIT_API_KEY, MOLIT_RENT_API_KEY, BUILDINGHUB_API_KEY, GITHUB_TOKEN, 그리고 *_KEY·*_TOKEN·*_SECRET)
+
+== (가-1) 거래 검색·예산 ==
+[슬롯] (가-1) 거래 검색·예산 202609~202611(3달): 슬롯 75 · 덧씌움 25 · 적용 25 · 무시 0 (무시 비율 0.0%)
+[재현] budget-deals.json: 공개 파일과 같음(updatedAt 제외)
+[재현] deal-search.json: 공개 파일과 같음(updatedAt 제외)
+[재현] budget-months.json: 공개 파일과 같음(updatedAt 제외)
+[재현] deals-<구>.json: 25/25 같음(updatedAt 제외)
+어긋남 행(나간 줄 + 들어온 줄): 36 — 나간 10 · 들어온 26 (짝지은 값 바뀜 0 · 사라짐 10 · 새 줄 26)
+  종로구: 줄 57→57 · 나간 1 · 들어온 1 (값 바뀜 0 · 사라짐 1 · 새 줄 1)
+  동대문구: 줄 597→598 · 나간 0 · 들어온 1 (값 바뀜 0 · 사라짐 0 · 새 줄 1)
+  중랑구: 줄 318→318 · 나간 1 · 들어온 1 (값 바뀜 0 · 사라짐 1 · 새 줄 1)
+  성북구: 줄 381→380 · 나간 2 · 들어온 1 (값 바뀜 0 · 사라짐 2 · 새 줄 1)
+  도봉구: 줄 499→496 · 나간 3 · 들어온 0 (값 바뀜 0 · 사라짐 3 · 새 줄 0)
+  노원구: 줄 839→844 · 나간 0 · 들어온 5 (값 바뀜 0 · 사라짐 0 · 새 줄 5)
+  은평구: 줄 435→437 · 나간 0 · 들어온 2 (값 바뀜 0 · 사라짐 0 · 새 줄 2)
+  마포구: 줄 195→196 · 나간 0 · 들어온 1 (값 바뀜 0 · 사라짐 0 · 새 줄 1)
+  양천구: 줄 251→252 · 나간 0 · 들어온 1 (값 바뀜 0 · 사라짐 0 · 새 줄 1)
+  구로구: 줄 445→445 · 나간 1 · 들어온 1 (값 바뀜 0 · 사라짐 1 · 새 줄 1)
+  영등포구: 줄 267→270 · 나간 0 · 들어온 3 (값 바뀜 0 · 사라짐 0 · 새 줄 3)
+  동작구: 줄 190→189 · 나간 1 · 들어온 0 (값 바뀜 0 · 사라짐 1 · 새 줄 0)
+  강남구: 줄 269→271 · 나간 0 · 들어온 2 (값 바뀜 0 · 사라짐 0 · 새 줄 2)
+  송파구: 줄 538→542 · 나간 0 · 들어온 4 (값 바뀜 0 · 사라짐 0 · 새 줄 4)
+  강동구: 줄 345→347 · 나간 1 · 들어온 3 (값 바뀜 0 · 사라짐 1 · 새 줄 3)
+판정 입력 (가-1): 어긋남 행 36 ≥ 1 → 전환 (문턱 1행, PREREG) · round 202611 · 적용 25/덧씌움 25 슬롯
+[공개 값] budget-deals.json: 바뀐 잎 82 (글자 5 · 숫자 77 · 기타 0)
+[공개 값] deal-search.json: 바뀐 잎 187 (글자 62 · 숫자 88 · 기타 37)
+[공개 값] budget-months.json: 바뀐 잎 320 (글자 92 · 숫자 201 · 기타 27)
+[공개 값] budget-deals 구간(최소-최대:건수/직거래) 바뀐 칸: 16/29
+  0-30000:586/346 → 0-30000:587/346
+  30000-40000:326/86 → 30000-40000:325/86
+  40000-50000:656/222 → 40000-50000:653/220
+  50000-60000:594/52 → 50000-60000:596/52
+  60000-70000:728/90 → 60000-70000:730/90
+  80000-90000:598/14 → 80000-90000:599/14
+  90000-100000:427/18 → 90000-100000:429/18
+  100000-110000:452/11 → 100000-110000:451/11
+  110000-120000:309/8 → 110000-120000:312/8
+  120000-130000:338/6 → 120000-130000:341/6
+  130000-140000:257/6 → 130000-140000:259/6
+  160000-170000:175/5 → 160000-170000:177/5
+  210000-220000:76/1 → 210000-220000:77/1
+  230000-240000:56/2 → 230000-240000:57/2
+  240000-250000:55/1 → 240000-250000:54/1
+  300000-:318/6 → 300000-:320/6
+[공개 값] 해제 제외 건수 cancelled: 153 → 163
+
+== (가-2) 전세가율·전세 비중 ==
+[슬롯] (가-2) 전세가율·전세 비중 202606~202611(6달): 슬롯 150 · 덧씌움 100 · 적용 100 · 무시 0 (무시 비율 0.0%)
+[재현] 읽기 사본(readRawWith(readSlotFile)) = 빌더 readRaw: 같음
+[재현] #910 계수 after 대조: {"cells":977,"compared":710,"high":13,"median":49.4} (기대 {"cells":977,"compared":710,"high":13,"median":49.4}, jeonse-risk 칸 977) → 같음
+어긋남 칸(합집합): 53 — (a) 들고 난 칸 10(생김 7 · 사라짐 3) · (b) 전세가율이 다른 칸 43 · (c) 맞물림이 달라진 칸 3
+  중구: 합 2 · (a) 0(+0/−0) · (b) 2 · (c) 0
+  용산구: 합 1 · (a) 0(+0/−0) · (b) 1 · (c) 0
+  성동구: 합 1 · (a) 0(+0/−0) · (b) 1 · (c) 0
+  광진구: 합 1 · (a) 0(+0/−0) · (b) 1 · (c) 0
+  동대문구: 합 1 · (a) 1(+0/−1) · (b) 0 · (c) 0
+  성북구: 합 1 · (a) 0(+0/−0) · (b) 1 · (c) 0
+  강북구: 합 2 · (a) 0(+0/−0) · (b) 2 · (c) 0
+  도봉구: 합 2 · (a) 0(+0/−0) · (b) 2 · (c) 0
+  노원구: 합 12 · (a) 1(+1/−0) · (b) 11 · (c) 0
+  은평구: 합 1 · (a) 0(+0/−0) · (b) 1 · (c) 0
+  서대문구: 합 1 · (a) 1(+1/−0) · (b) 0 · (c) 1
+  마포구: 합 3 · (a) 1(+0/−1) · (b) 2 · (c) 0
+  금천구: 합 2 · (a) 0(+0/−0) · (b) 2 · (c) 0
+  동작구: 합 3 · (a) 1(+1/−0) · (b) 2 · (c) 1
+  서초구: 합 2 · (a) 1(+1/−0) · (b) 1 · (c) 1
+  강남구: 합 2 · (a) 2(+1/−1) · (b) 0 · (c) 0
+  송파구: 합 8 · (a) 1(+1/−0) · (b) 7 · (c) 0
+  강동구: 합 8 · (a) 1(+1/−0) · (b) 7 · (c) 0
+판정 입력 (가-2): 어긋남 칸 53 ≥ 1 → 전환 (문턱 1칸, PREREG) · round 202611 · 적용 100/덧씌움 100 슬롯
+[공개 값] complex-ratio 서울 {"cells":977,"median":49.4,"q1":42.4,"q3":56.1} → {"cells":981,"median":49.3,"q1":42.4,"q3":55.9}
+[공개 값] jeonse-risk 서울 {"cells":977,"compared":710,"high":13,"highShare":1.3,"highCompared":3,"highFell":0,"fellShare":null} → {"cells":981,"compared":713,"high":13,"highShare":1.3,"highCompared":3,"highFell":0,"fellShare":null}
+  용산구: 전세가율 {"cells":11,"median":39} → {"cells":11,"median":39.4} · 전세 비중 {"cells":11,"short":true} → {"cells":11,"short":true}
+  동대문구: 전세가율 {"cells":31,"median":49.6,"q1":47.2,"q3":52.4} → {"cells":30,"median":49.6,"q1":47.2,"q3":52.4} · 전세 비중 {"cells":31,"compared":24,"high":1,"highShare":3.2,"highCompared":0,"highFell":0,"fellShare":null} → {"cells":30,"compared":24,"high":1,"highShare":3.3,"highCompared":0,"highFell":0,"fellShare":null}
+  강북구: 전세가율 {"cells":15,"median":65} → {"cells":15,"median":65.1} · 전세 비중 {"cells":15,"short":true} → {"cells":15,"short":true}
+  노원구: 전세가율 {"cells":134,"median":53.9,"q1":48.8,"q3":60.5} → {"cells":135,"median":54,"q1":48.8,"q3":60.6} · 전세 비중 {"cells":134,"compared":95,"high":1,"highShare":0.7,"highCompared":0,"highFell":0,"fellShare":null} → {"cells":135,"compared":95,"high":1,"highShare":0.7,"highCompared":0,"highFell":0,"fellShare":null}
+  서대문구: 전세가율 {"cells":43,"median":51.5,"q1":47.8,"q3":53.8} → {"cells":44,"median":51.2,"q1":47.8,"q3":53.8} · 전세 비중 {"cells":43,"compared":35,"high":0,"highShare":0,"highCompared":0,"highFell":0,"fellShare":null} → {"cells":44,"compared":36,"high":0,"highShare":0,"highCompared":0,"highFell":0,"fellShare":null}
+  마포구: 전세가율 {"cells":33,"median":42.4,"q1":38.3,"q3":44.8} → {"cells":32,"median":42.3,"q1":38.3,"q3":44.8} · 전세 비중 {"cells":33,"compared":23,"high":0,"highShare":0,"highCompared":0,"highFell":0,"fellShare":null} → {"cells":32,"compared":23,"high":0,"highShare":0,"highCompared":0,"highFell":0,"fellShare":null}
+  동작구: 전세가율 {"cells":47,"median":43.1,"q1":37.9,"q3":47.2} → {"cells":48,"median":43.6,"q1":38.4,"q3":47.2} · 전세 비중 {"cells":47,"compared":31,"high":0,"highShare":0,"highCompared":0,"highFell":0,"fellShare":null} → {"cells":48,"compared":32,"high":0,"highShare":0,"highCompared":0,"highFell":0,"fellShare":null}
+  서초구: 전세가율 {"cells":14,"median":30.3} → {"cells":15,"median":33.2} · 전세 비중 {"cells":14,"short":true} → {"cells":15,"short":true}
+  강남구: 전세가율 {"cells":38,"median":36.7,"q1":26.8,"q3":42.6} → {"cells":38,"median":34.8,"q1":26.5,"q3":42.6} · 전세 비중 {"cells":38,"compared":24,"high":1,"highShare":2.6,"highCompared":0,"highFell":0,"fellShare":null} → {"cells":38,"compared":24,"high":1,"highShare":2.6,"highCompared":0,"highFell":0,"fellShare":null}
+  송파구: 전세가율 {"cells":71,"median":40.6,"q1":34.4,"q3":45.6} → {"cells":72,"median":40.6,"q1":34.6,"q3":45.6} · 전세 비중 {"cells":71,"compared":49,"high":1,"highShare":1.4,"highCompared":0,"highFell":0,"fellShare":null} → {"cells":72,"compared":49,"high":1,"highShare":1.4,"highCompared":0,"highFell":0,"fellShare":null}
+  강동구: 전세가율 {"cells":50,"median":45.8,"q1":40.9,"q3":50} → {"cells":51,"median":45.5,"q1":40.5,"q3":49.9} · 전세 비중 {"cells":50,"compared":41,"high":0,"highShare":0,"highCompared":0,"highFell":0,"fellShare":null} → {"cells":51,"compared":41,"high":0,"highShare":0,"highCompared":0,"highFell":0,"fellShare":null}
+[공개 값] complex-ratio.json 바뀐 잎 26 · jeonse-risk.json 바뀐 잎 13
+
+멈춘 경로: 없음
+네트워크 호출 0
+키 환경변수 0개 (본 이름: MOLIT_API_KEY, MOLIT_RENT_API_KEY, BUILDINGHUB_API_KEY, GITHUB_TOKEN, 그리고 *_KEY·*_TOKEN·*_SECRET)
+
+== (나-1) 직거래 direct-deals.json ==
+[슬롯] (나-1) 직거래 202412~202611(24달): 슬롯 600 · 덧씌움 150 · 적용 150 · 무시 0 (무시 비율 0.0%)
+[재현] direct-deals.json: 공개 파일과 같음(updatedAt 제외)
+[맵 키 목록] direct-deals.json: 목록 밖 식별자 꼴 데이터 값 맵 키 0
+[비교] 직거래 direct-deals.json: 바뀐 잎 212 — 글자 6 · 숫자 206(읽힘 206) · 기타 0(읽힘 0) · 화면 밖 0 → 바뀜(글자) · round 202611 · 적용 150/덧씌움 150 슬롯
+  숫자 seoul.deals.16: 8654 → 8663
+  숫자 seoul.deals.17: 8953 → 8988
+  숫자 seoul.deals.18: 5265 → 5325
+  숫자 seoul.deals.19: 5790 → 5862
+  숫자 seoul.deals.20: 3542 → 3602
+  숫자 seoul.deals.21: 3431 → 3447
+  숫자 seoul.direct.16: 322 → 320
+  숫자 seoul.direct.17: 653 → 647
+  숫자 seoul.direct.18: 178 → 176
+  숫자 seoul.direct.19: 490 → 489
+  숫자 seoul.direct.20: 171 → 182
+  숫자 seoul.direct.21: 401 → 399
+  숫자 seoul.share.17: 7.3 → 7.2
+  숫자 seoul.share.18: 3.4 → 3.3
+  숫자 seoul.share.19: 8.5 → 8.3
+  숫자 seoul.share.20: 4.8 → 5.1
+  숫자 seoul.share.21: 11.7 → 11.6
+  숫자 seoul.gap.directDeals: 415 → 413
+  숫자 districts.강남구.deals.16: 404 → 405
+  숫자 districts.강남구.deals.17: 443 → 449
+  숫자 districts.강남구.deals.18: 213 → 216
+  숫자 districts.강남구.deals.19: 159 → 167
+  숫자 districts.강남구.deals.20: 92 → 93
+  숫자 districts.강남구.deals.21: 124 → 126
+  숫자 districts.강남구.direct.19: 10 → 11
+  숫자 districts.강남구.direct.20: 5 → 3
+  숫자 districts.강남구.share.17: 3.2 → 3.1
+  숫자 districts.강남구.share.18: 3.8 → 3.7
+  숫자 districts.강남구.share.19: 6.3 → 6.6
+  숫자 districts.강남구.share.20: 5.4 → 3.2
+  숫자 districts.강동구.deals.16: 423 → 427
+  숫자 districts.강동구.deals.17: 494 → 501
+  숫자 districts.강동구.deals.18: 259 → 267
+  숫자 districts.강동구.deals.19: 255 → 267
+  숫자 districts.강동구.deals.20: 168 → 185
+  숫자 districts.강동구.deals.21: 146 → 148
+  숫자 districts.강동구.direct.20: 5 → 19
+  숫자 districts.강동구.share.19: 2.7 → 2.6
+  숫자 districts.강동구.share.20: 3 → 10.3
+  숫자 districts.강동구.closedShare: 4.2 → 4.3
+  … 172곳 더(out 파일)
+
+== (나-2) 갈아타기·가격대 변화 district-change.json·segment-change.json ==
+[슬롯] (나-2) 갈아타기·가격대 변화(원본 전부) 202412~202611(24달): 슬롯 600 · 덧씌움 150 · 적용 150 · 무시 0 (무시 비율 0.0%)
+[재현] district-change.json: 공개 파일과 같음(updatedAt 제외)
+[재현] segment-change.json: 공개 파일과 같음(updatedAt 제외)
+[맵 키 목록] district-change.json: 목록 밖 식별자 꼴 데이터 값 맵 키 0
+[비교] 갈아타기 district-change.json: 바뀐 잎 834 — 글자 6 · 숫자 823(읽힘 823) · 기타 5(읽힘 5) · 화면 밖 0 → 바뀜(글자) · round 202611 · 적용 150/덧씌움 150 슬롯
+  숫자 rows.0.cells: 24 → 23
+  숫자 rows.1.cells: 41 → 42
+  숫자 rows.1.change: 18.7 → 19
+  숫자 rows.1.low: 16.8 → 15.8
+  숫자 rows.1.high: 21.9 → 21.8
+  숫자 rows.1.level84.base: 132577 → 130654
+  숫자 rows.1.level84.recent: 157358 → 155444
+  숫자 rows.2.cells: 51 → 53
+  숫자 rows.3.change: 20.4 → 20.7
+  숫자 rows.3.low: 18.5 → 18.9
+  숫자 rows.3.level84.base: 175432 → 175578
+  숫자 rows.3.level84.recent: 211144 → 211906
+  숫자 rows.4.cells: 57 → 58
+  숫자 rows.4.change: 19.6 → 19.5
+  숫자 rows.4.low: 16.6 → 16.3
+  숫자 rows.4.level84.base: 160882 → 159896
+  숫자 rows.4.level84.recent: 192464 → 191111
+  숫자 rows.5.cells: 152 → 153
+  숫자 rows.5.low: 23.1 → 23.2
+  숫자 rows.5.high: 26.7 → 27.1
+  숫자 rows.5.level84.base: 99194 → 99245
+  숫자 rows.5.level84.recent: 123766 → 123879
+  숫자 rows.6.cells: 111 → 110
+  숫자 rows.6.change: 15.1 → 14.8
+  숫자 rows.6.low: 12.2 → 11.8
+  숫자 rows.6.high: 17 → 17.5
+  숫자 rows.6.level84.base: 76619 → 76906
+  숫자 rows.6.level84.recent: 88218 → 88276
+  숫자 rows.7.cells: 191 → 193
+  숫자 rows.7.low: 23 → 22.9
+  숫자 rows.7.level84.base: 87883 → 87731
+  숫자 rows.7.level84.recent: 109236 → 109048
+  숫자 rows.10.cells: 340 → 344
+  숫자 rows.10.change: 16.7 → 16.5
+  숫자 rows.10.low: 15 → 14.7
+  숫자 rows.10.high: 17.9 → 17.8
+  숫자 rows.10.level84.base: 81526 → 81559
+  숫자 rows.10.level84.recent: 95114 → 94982
+  숫자 rows.12.cells: 136 → 137
+  숫자 rows.12.change: 18.7 → 18.8
+  … 794곳 더(out 파일)
+[맵 키 목록] segment-change.json: 목록 밖 식별자 꼴 데이터 값 맵 키 0
+[비교] 가격대 변화 segment-change.json: 바뀐 잎 40 — 글자 0 · 숫자 40(읽힘 40) · 기타 0(읽힘 0) · 화면 밖 0 → 숫자 - 화면 서식 판정(손, 읽히는 숫자 잎 40) · round 202611 · 적용 150/덧씌움 150 슬롯
+  2단계 범위 segment-change.json: scripts/segment-change-view.ts scripts/prerender.ts docs/switch-house.html scripts/monthly-report.ts scripts/render/entry.jsx
+  키 cells: 숫자 12 · 기타 0 · 화면 코드 27곳 (scripts/segment-change-view.ts:13, scripts/segment-change-view.ts:77, scripts/segment-change-view.ts:78 …)
+  키 change: 숫자 6 · 기타 0 · 화면 코드 43곳 (scripts/segment-change-view.ts:3, scripts/segment-change-view.ts:5, scripts/segment-change-view.ts:13 …)
+  키 low: 숫자 7 · 기타 0 · 화면 코드 28곳 (scripts/segment-change-view.ts:13, scripts/segment-change-view.ts:77, scripts/segment-change-view.ts:107 …)
+  키 high: 숫자 4 · 기타 0 · 화면 코드 23곳 (scripts/segment-change-view.ts:13, scripts/segment-change-view.ts:77, scripts/segment-change-view.ts:107 …)
+  키 rows: 숫자 11 · 기타 0 · 화면 코드 74곳 (scripts/segment-change-view.ts:46, scripts/segment-change-view.ts:47, scripts/segment-change-view.ts:89 …)
+  숫자 cells: 3203 → 3226
+  숫자 price.0.cells: 676 → 677
+  숫자 price.1.cells: 941 → 945
+  숫자 price.1.change: 19.7 → 19.6
+  숫자 price.1.low: 18.5 → 18.3
+  숫자 price.2.cells: 982 → 994
+  숫자 price.2.change: 22.9 → 23
+  숫자 price.2.low: 22.4 → 22.3
+  숫자 price.3.cells: 426 → 430
+  숫자 price.3.high: 15.3 → 15.5
+  숫자 price.4.cells: 178 → 180
+  숫자 age.0.change: 16 → 15.9
+  숫자 age.0.low: 14.8 → 14.7
+  숫자 age.1.cells: 1833 → 1853
+  숫자 age.1.low: 17.4 → 17.3
+  숫자 age.2.cells: 870 → 873
+  숫자 age.2.change: 20.3 → 20.2
+  숫자 area.0.cells: 1351 → 1360
+  숫자 area.0.low: 20.6 → 20.7
+  숫자 area.0.high: 21.9 → 22
+  숫자 area.1.cells: 1411 → 1417
+  숫자 area.1.high: 17.7 → 17.8
+  숫자 area.2.cells: 371 → 377
+  숫자 area.2.change: 14.2 → 14
+  숫자 area.2.low: 13.3 → 12.3
+  숫자 area.3.cells: 70 → 72
+  숫자 area.3.change: 5.3 → 5.6
+  숫자 area.3.low: 3.6 → 4.3
+  숫자 area.3.high: 8.3 → 9
+  숫자 grid.rows.upTo6.1: 293 → 295
+  숫자 grid.rows.upTo6.2: 334 → 333
+  숫자 grid.rows.upTo9.1: 649 → 651
+  숫자 grid.rows.upTo9.2: 221 → 223
+  숫자 grid.rows.upTo15.0: 211 → 212
+  숫자 grid.rows.upTo15.1: 609 → 620
+  숫자 grid.rows.upTo25.0: 135 → 134
+  숫자 grid.rows.upTo25.1: 207 → 211
+  숫자 grid.rows.upTo25.2: 84 → 85
+  숫자 grid.rows.over25.1: 75 → 76
+  숫자 grid.rows.over25.2: 69 → 70
+
+== (나-3) 신고가 record-high.json ==
+[슬롯] (나-3) 신고가(원본 전부) 202412~202611(24달): 슬롯 600 · 덧씌움 150 · 적용 150 · 무시 0 (무시 비율 0.0%)
+[재현] record-high.json: 공개 파일과 같음(updatedAt 제외)
+[맵 키 목록] record-high.json: 목록 밖 식별자 꼴 데이터 값 맵 키 0
+[비교] 신고가 record-high.json: 바뀐 잎 226 — 글자 12 · 숫자 214(읽힘 178) · 기타 0(읽힘 0) · 화면 밖 36 → 바뀜(글자) · round 202611 · 적용 150/덧씌움 150 슬롯
+  숫자 deals: 130266 → 130520
+  숫자 main.records: 20728 → 20752
+  숫자 main.withNext: 16391 → 16413
+  숫자 main.all: 60.3 → 60.4
+  숫자 main.allCount: 51222 → 51376
+  숫자 main.near: 54.6 → 54.7
+  숫자 main.nearCount: 9618 → 9638
+  숫자 main.recordSameFloor: 55.7 → 55.8
+  숫자 main.recordSameFloorCount: 7253 → 7269
+  숫자 main.allSameFloorCount: 26853 → 26970
+  숫자 robust.0.records: 28364 → 28395
+  숫자 robust.0.withNext: 21972 → 21994
+  숫자 robust.0.allCount: 68298 → 68454
+  숫자 robust.0.near: 54.5 → 54.6
+  숫자 robust.0.nearCount: 13324 → 13344
+  숫자 robust.0.recordSameFloor: 55.7 → 55.8
+  숫자 robust.0.recordSameFloorCount: 9645 → 9661
+  숫자 robust.0.allSameFloor: 72.6 → 72.7
+  숫자 robust.0.allSameFloorCount: 35794 → 35910
+  숫자 robust.1.records: 23184 → 23192
+  숫자 robust.1.withNext: 20901 → 20919
+  숫자 robust.1.allCount: 62714 → 62776
+  숫자 robust.1.near: 55.5 → 55.6
+  숫자 robust.1.nearCount: 12160 → 12171
+  숫자 robust.1.recordSameFloor: 58.3 → 58.2
+  숫자 robust.1.recordSameFloorCount: 9155 → 9167
+  숫자 robust.1.allSameFloorCount: 32895 → 32934
+  숫자 robust.2.records: 22363 → 22394
+  숫자 robust.2.withNext: 17124 → 17147
+  숫자 robust.2.allCount: 52512 → 52670
+  숫자 robust.2.near: 54.8 → 54.9
+  숫자 robust.2.nearCount: 9815 → 9834
+  숫자 robust.2.recordSameFloorCount: 7592 → 7608
+  숫자 robust.2.allSameFloorCount: 27505 → 27622
+  숫자 robust.3.records: 17274 → 17282
+  숫자 robust.3.withNext: 15511 → 15529
+  숫자 robust.3.none: 10.2 → 10.1
+  숫자 robust.3.record: 47 → 46.9
+  숫자 robust.3.allCount: 45714 → 45777
+  숫자 robust.3.near: 55.7 → 55.8
+  … 186곳 더(out 파일)
+
+== (나-4) 층 격차 floor-gap.json ==
+[슬롯] (나-4) 층 격차 202606~202611(6달): 슬롯 150 · 덧씌움 100 · 적용 100 · 무시 0 (무시 비율 0.0%)
+[재현] floor-gap.json: 공개 파일과 같음(updatedAt 제외)
+[맵 키 목록] floor-gap.json: 목록 밖 식별자 꼴 데이터 값 맵 키 0
+[비교] 층 격차 floor-gap.json: 바뀐 잎 43 — 글자 7 · 숫자 34(읽힘 34) · 기타 2(읽힘 2) · 화면 밖 0 → 바뀜(글자) · round 202611 · 적용 100/덧씌움 100 슬롯
+  숫자 sale.low.cells: 426 → 434
+  숫자 sale.low.median: -7.2 → -7.3
+  숫자 sale.low.cheaperShare: 92.5 → 92.2
+  숫자 sale.low.deals: 549 → 562
+  숫자 sale.top.cells: 1294 → 1308
+  숫자 sale.top.median: 0.4 → 0.5
+  숫자 districts.0.band.low: -9.7 → -9.9
+  숫자 districts.0.band.high: -5.3 → -5.1
+  숫자 districts.1.band.low: -9.7 → -9.9
+  숫자 districts.1.band.high: -5.3 → -5.1
+  숫자 districts.2.band.low: -10.2 → -10.1
+  숫자 districts.2.band.high: -5.1 → -5
+  숫자 districts.3.band.low: -9.5 → -9.8
+  숫자 districts.3.band.high: -5.3 → -5.1
+  글자 districts.4.district: 글자3 → 글자3
+  숫자 districts.4.cells: 39 → 99
+  숫자 districts.4.median: -7.6 → -7.7
+  숫자 districts.4.band.low: -9.1 → -8.7
+  숫자 districts.4.band.high: -5.6 → -6
+  숫자 districts.4.jeonse.cells: 34 → 105
+  숫자 districts.4.jeonse.median: -5.7 → -9.4
+  숫자 districts.4.jeonse.band.low: -9.4 → -7.6
+  숫자 districts.4.jeonse.band.high: -1 → -3.3
+  글자 districts.5.district: 글자3 → 글자3
+  숫자 districts.5.cells: 94 → 39
+  숫자 districts.5.median: -7.4 → -7.6
+  숫자 districts.5.band.low: -8.6 → -9.3
+  숫자 districts.5.band.high: -6.1 → -5.3
+  숫자 districts.5.jeonse.cells: 105 → 34
+  숫자 districts.5.jeonse.median: -9.4 → -5.7
+  숫자 districts.5.jeonse.band.low: -7.6 → -9.4
+  숫자 districts.5.jeonse.band.high: -3.3 → -1
+  기타 districts.5.jeonse.distinct: true → undefined
+  숫자 districts.6.band.low: -9.7 → -9.8
+  숫자 districts.6.band.high: -5.2 → -5.1
+  숫자 districts.10.cells: 15 → 17
+  숫자 districts.21.cells: 11 → 12
+  글자 lead.ko: 글자139 → 글자139
+  글자 lead.en: 글자332 → 글자332
+  글자 topLead.ko: 글자162 → 글자162
+  … 3곳 더(out 파일)
+
+== (나-5) 예산 군집 예산대 장·method 규칙 문단 ==
+[슬롯] (나-5) 예산 군집(원본 전부) 202412~202611(24달): 슬롯 600 · 덧씌움 150 · 적용 150 · 무시 0 (무시 비율 0.0%)
+[정적 동등성] (i) 줄 고르기 239~254행 같은 글자 · (ii) raw/sale ok:false 또는 items 배열 아님 0/600 · (iii) clustering·lineCounts 순서 무관
+[재현] 예산대 장: 공개 대조 없음(Daily 가 커밋하지 않고 배포 때 렌더한다). 렌더 장 18/18
+[비교] 예산 군집 capStats·policyCounts(숫자, 기록): 바뀐 잎 8 — 글자 0 · 숫자 8(읽힘 0) · 기타 0(읽힘 0) · 화면 밖 0 → 같음 → 「아니오 확정」안 · round 202611 · 적용 150/덧씌움 150 슬롯
+  숫자 capStats.deals: 67839 → 68091
+  숫자 capStats.ratio: 3.65 → 3.62
+  숫자 capStats.neighbour: 2.11 → 2.1
+  숫자 policyCounts.n: 24378 → 24596
+  숫자 policyCounts.didim: 2971 → 2990
+  숫자 policyCounts.family: 5022 → 5061
+  숫자 policyCounts.bogeum: 5079 → 5118
+  숫자 policyCounts.newborn: 10807 → 10870
+[비교] 예산 군집: 바뀐 예산대 장 0/18 · method 규칙 문단 바뀜 → 바뀜(글자) · round 202611 · 적용 150/덧씌움 150 슬롯
+
+== (나-6) 반복거래 repeat-sales.json ==
+[슬롯] (나-6) 반복거래(원본 전부) 202412~202611(24달): 슬롯 600 · 덧씌움 150 · 적용 150 · 무시 0 (무시 비율 0.0%)
+[재현] repeat-sales.json: 공개 파일과 같음(updatedAt 제외)
+  덧씌움 합친 사본: 합친 슬롯 150
+[맵 키 목록] repeat-sales.json: 목록 밖 식별자 꼴 데이터 값 맵 키 0
+[비교] 반복거래 repeat-sales.json: 바뀐 잎 133 — 글자 0 · 숫자 133(읽힘 131) · 기타 0(읽힘 0) · 화면 밖 2 → 숫자 - 화면 서식 판정(손, 읽히는 숫자 잎 131) · round 202611 · 적용 150/덧씌움 150 슬롯
+  2단계 범위 repeat-sales.json: scripts/repeat-sales-view.ts scripts/prerender.ts scripts/district-facts.ts scripts/build-realestate-pages.ts scripts/render/entry.jsx
+  키 n: 숫자 21 · 기타 0 · 화면 코드 22곳 (scripts/repeat-sales-view.ts:68, scripts/repeat-sales-view.ts:72, scripts/repeat-sales-view.ts:121 …)
+  키 lo: 숫자 19 · 기타 0 · 화면 코드 3곳 (scripts/district-facts.ts:285, scripts/district-facts.ts:288, scripts/district-facts.ts:290)
+  키 gap: 숫자 12 · 기타 0 · 화면 코드 17곳 (scripts/repeat-sales-view.ts:24, scripts/repeat-sales-view.ts:51, scripts/repeat-sales-view.ts:76 …)
+  키 r: 숫자 4 · 기타 0 · 화면 코드 31곳 (scripts/repeat-sales-view.ts:66, scripts/repeat-sales-view.ts:67, scripts/repeat-sales-view.ts:68 …)
+  키 p: 숫자 39 · 기타 0 · 화면 코드 48곳 (scripts/repeat-sales-view.ts:11, scripts/repeat-sales-view.ts:52, scripts/repeat-sales-view.ts:56 …)
+  키 m: 숫자 15 · 기타 0 · 화면 코드 19곳 (scripts/repeat-sales-view.ts:4, scripts/prerender.ts:190, scripts/prerender.ts:191 …)
+  키 hi: 숫자 20 · 기타 0 · 화면 코드 3곳 (scripts/district-facts.ts:285, scripts/district-facts.ts:288, scripts/district-facts.ts:290)
+  키 rho: 숫자 1 · 기타 0 · 화면 코드 0곳 - LC_ALL=C grep -nwF -e rho -- scripts/repeat-sales-view.ts scripts/prerender.ts scripts/district-facts.ts scripts/build-realestate-pages.ts scripts/render/entry.jsx → 0
+  키 gapRho: 숫자 1 · 기타 0 · 화면 코드 0곳 - LC_ALL=C grep -nwF -e gapRho -- scripts/repeat-sales-view.ts scripts/prerender.ts scripts/district-facts.ts scripts/build-realestate-pages.ts scripts/render/entry.jsx → 0
+  키 spread: 숫자 1 · 기타 0 · 화면 코드 11곳 (scripts/district-facts.ts:186, scripts/build-realestate-pages.ts:78, scripts/build-realestate-pages.ts:124 …)
+  숫자 rows.1.n: 85 → 87
+  숫자 rows.2.n: 115 → 117
+  숫자 rows.2.lo: 0.136859 → 0.14143
+  숫자 rows.2.gap: 385 → 391
+  숫자 rows.2.r: 0.127475 → 0.129564
+  숫자 rows.2.p.1: 14.7 → 15.2
+  숫자 rows.2.p.3: 13.6 → 13.8
+  숫자 rows.3.n: 251 → 253
+  숫자 rows.3.m: 0.27321 → 0.270396
+  숫자 rows.3.lo: 0.261841 → 0.261155
+  숫자 rows.3.p.0: 31.4 → 31
+  숫자 rows.3.p.1: 29.9 → 29.8
+  숫자 rows.4.n: 117 → 116
+  숫자 rows.4.m: 0.258661 → 0.260513
+  숫자 rows.4.lo: 0.228259 → 0.229826
+  숫자 rows.4.hi: 0.286265 → 0.287682
+  숫자 rows.4.gap: 374 → 372.5
+  숫자 rows.4.r: 0.133464 → 0.133062
+  숫자 rows.4.p.0: 29.5 → 29.8
+  숫자 rows.4.p.1: 25.6 → 25.8
+  숫자 rows.4.p.2: 33.1 → 33.3
+  숫자 rows.4.p.3: 14.3 → 14.2
+  숫자 rows.5.n: 292 → 293
+  숫자 rows.5.m: 0.199439 → 0.199389
+  숫자 rows.5.lo: 0.18629 → 0.186251
+  숫자 rows.5.hi: 0.213675 → 0.216486
+  숫자 rows.5.gap: 361.5 → 362
+  숫자 rows.5.p.2: 23.8 → 24.2
+  숫자 rows.6.n: 191 → 195
+  숫자 rows.6.m: 0.078472 → 0.079137
+  숫자 rows.6.hi: 0.086421 → 0.090972
+  숫자 rows.6.p.2: 9 → 9.5
+  숫자 rows.8.n: 109 → 110
+  숫자 rows.8.m: 0.089128 → 0.092678
+  숫자 rows.8.lo: 0.06252 → 0.066691
+  숫자 rows.8.hi: 0.118353 → 0.118421
+  숫자 rows.8.gap: 371 → 370.5
+  숫자 rows.8.p.0: 9.3 → 9.7
+  숫자 rows.8.p.1: 6.5 → 6.9
+  숫자 rows.9.lo: 0.050506 → 0.05001
+  … 93곳 더(out 파일)
+
+== (나) 판정 입력 ==
+  직거래 direct-deals.json: 바뀜(글자) (글자 6 · 숫자 206(읽힘 206) · 기타 0(읽힘 0) · 화면 밖 0) · round 202611 · 적용 150/덧씌움 150 슬롯
+  갈아타기 district-change.json: 바뀜(글자) (글자 6 · 숫자 823(읽힘 823) · 기타 5(읽힘 5) · 화면 밖 0) · round 202611 · 적용 150/덧씌움 150 슬롯
+  가격대 변화 segment-change.json: 숫자 - 화면 서식 판정(손, 읽히는 숫자 잎 40) (글자 0 · 숫자 40(읽힘 40) · 기타 0(읽힘 0) · 화면 밖 0) · round 202611 · 적용 150/덧씌움 150 슬롯
+  신고가 record-high.json: 바뀜(글자) (글자 12 · 숫자 214(읽힘 178) · 기타 0(읽힘 0) · 화면 밖 36) · round 202611 · 적용 150/덧씌움 150 슬롯
+  층 격차 floor-gap.json: 바뀜(글자) (글자 7 · 숫자 34(읽힘 34) · 기타 2(읽힘 2) · 화면 밖 0) · round 202611 · 적용 100/덧씌움 100 슬롯
+  예산 군집 예산대 장·method 규칙 문단: 바뀜(글자) (글자 1 · 숫자 0(읽힘 0) · 기타 0(읽힘 0) · 화면 밖 0) · round 202611 · 적용 150/덧씌움 150 슬롯
+  반복거래 repeat-sales.json: 숫자 - 화면 서식 판정(손, 읽히는 숫자 잎 131) (글자 0 · 숫자 133(읽힘 131) · 기타 0(읽힘 0) · 화면 밖 2) · round 202611 · 적용 150/덧씌움 150 슬롯
+멈춘 빌더: 없음
+네트워크 호출 0
