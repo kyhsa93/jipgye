@@ -77,8 +77,10 @@ self.addEventListener("fetch", (event) => {
 
   if (url.pathname.includes("/data/")) {
     const key = dataCacheKey(url);
+    // ?v=(데이터 판 키, #695)는 내용이 바뀌면 주소도 바뀐다 - HTTP 캐시(max-age·ETag)를 허용한다.
+    // 캐시 저장소에서 먼저 꺼내지는 않는다: 새 키에 CDN 이 옛 내용을 주면 다음 키까지 굳는다.
     event.respondWith(
-      fetchFresh(event.request)
+      (url.searchParams.has("v") ? fetch(event.request) : fetchFresh(event.request))
         .then((response) => keepInCache(key, response))
         .catch(() =>
           caches.match(key).then((cached) => cached ?? offlineResponse("offline, no cached data"))

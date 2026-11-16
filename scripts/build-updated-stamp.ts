@@ -7,6 +7,7 @@ import { createWriteSet } from "./render-writes.ts";
 import { crossStampAll, stampAll } from "./updated-stamp.ts";
 import { requireSite, siteDir } from "./site-dir.ts";
 import { stampPageAssets, stripPageScripts } from "./page-assets.ts";
+import { stampDataKeys } from "./data-keys.ts";
 import { writeSitemap } from "./sitemap.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -31,6 +32,9 @@ console.log(`  스타일 버전·기능 분류 ${assetsDone}장`);
 // 장 전용 외부 JS 는 나가는 사본에서 주석을 뗀다(#784). docs/ 자신에 찍을 때는 건너뛴다.
 const scriptsDone = stripPageScripts({ siteRoot, io });
 console.log(`  장 전용 JS 주석 떼기 ${scriptsDone}개`);
+
+const keysDone = stampDataKeys({ siteRoot, io }); // 데이터 주소의 판 키(#695, scripts/data-keys.ts) - 주석을 뗀 JS 사본 위에 박는다. docs/ 자신이면 건너뛴다.
+console.log(`  데이터 판 키 ${keysDone.keys}곳 (${keysDone.files}개 파일${keysDone.missing.length ? `, 출력에 없는 데이터 ${keysDone.missing.join(" ")}` : ""})`);
 
 // 집계 전용 사이트맵(#769): noindex 가 아닌 장의 canonical 을 <loc> 으로, 찍힌 기준일을 <lastmod> 로. docs/ 자신에 찍을 때는 만들지 않는다(산출물은 build/site 에만).
 const locs = writeSitemap({ siteRoot, io });

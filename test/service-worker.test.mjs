@@ -198,3 +198,44 @@ test("스크립트가 안 받아지면 받아둔 것으로 버틴다", async () 
   const cached = await sw.respond(url);
   assert.equal(cached.body, "script", "오프라인에서 스크립트가 통째로 빈다");
 });
+
+// #695: 나가는 장은 데이터를 `?v=<판 키>` 로 받는다(scripts/data-keys.ts). 키는 내용이 바뀌면 바뀌므로 이 주소만 HTTP 캐시를 허용한다.
+test("판 키(?v=) 데이터 요청은 브라우저 캐시를 허용하고, 쿼리를 뗀 키로 저장하며, 오프라인이면 그 저장본으로 답한다", async () => {
+  let online = true;
+  const sw = await loadServiceWorker({
+    network: async () => {
+      if (!online) throw new Error("offline");
+      return new FakeResponse("keyed", { status: 200 });
+    },
+  });
+
+  const res = await sw.respond(`${ORIGIN}/jipgye/data/realestate-trend.json?v=0123abcd`);
+  assert.equal(res.body, "keyed");
+  await new Promise((r) => setTimeout(r, 0));
+  assert.equal(sw.calls.length, 1, "판 키 요청을 가로채지 못했다");
+  assert.notEqual(sw.calls[0].init?.cache, "reload", "판 키 요청이 여전히 브라우저 캐시를 건너뛴다 - 재방문 절감이 0 이다");
+  assert.deepEqual([...sw.store.keys()], [`${ORIGIN}/jipgye/data/realestate-trend.json`], "저장 키에 쿼리가 남았다");
+
+  online = false;
+  const offline = await sw.respond(`${ORIGIN}/jipgye/data/realestate-trend.json?v=89abcdef`);
+  assert.equal(offline.body, "keyed", "오프라인에서 다른 판 키 요청이 저장본을 못 찾는다");
+});
+
+test("판 키 데이터도 네트워크를 먼저 본다 - 저장본을 먼저 주지 않는다(새 키에 옛 내용이 굳지 않게)", async () => {
+  let body = "old";
+  const sw = await loadServiceWorker({ network: async () => new FakeResponse(body, { status: 200 }) });
+  await sw.respond(`${ORIGIN}/jipgye/data/news.json?v=11111111`);
+  await new Promise((r) => setTimeout(r, 0));
+  body = "new";
+  const again = await sw.respond(`${ORIGIN}/jipgye/data/news.json?v=22222222`);
+  assert.equal(again.body, "new", "판 키 요청에 저장본을 먼저 준다");
+  assert.equal(sw.calls.length, 2);
+});
+
+test("키 없는 데이터 요청(?_=·쿼리 없음)은 전처럼 브라우저 캐시를 건너뛴다", async () => {
+  const sw = await loadServiceWorker();
+  await sw.respond(`${ORIGIN}/jipgye/data/news.json?_=1755200000000`);
+  await sw.respond(`${ORIGIN}/jipgye/data/search-index.json`);
+  assert.equal(sw.calls.length, 2);
+  for (const call of sw.calls) assert.equal(call.init?.cache, "reload", `${call.url}: 키 없는 요청에 브라우저 캐시가 끼어든다`);
+});
