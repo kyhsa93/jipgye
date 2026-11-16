@@ -505,7 +505,9 @@ test("(바) 범위 선: complex-ratio·realestate-trend·budget-deals 의 무음
   const BUDGET = "    if (budgetEnabled) {\n      try {\n        const budgetRes = await fetch(`./data/budget-deals.json?_=${Date.now()}`);\n        if (budgetRes.ok) {\n          cache.budget = await budgetRes.json();\n          renderBudget();\n          renderUpdated(cache.realestate);\n        }\n      } catch {\n      }\n    }\n";
   const CALL = "  } catch (error) {\n    reportLoadFailure(error);\n    foldReserve();\n    if (!budgetEnabled && bakedGrid && (!hasAreaColumn || areaM2 === DEFAULT_AREA_M2)) {\n      note = 2;\n      drawNote();\n      return;\n    }\n    showGridFailure();\n  }\n}\n";
   for (const [name, script] of [["template", templateScript], ...PAGES.map((p) => [p.file, p.script])]) {
-    for (const [label, block] of [["complex-ratio", RATIO], ["realestate-trend", TREND], ["budget-deals", BUDGET]]) assert.ok(script.includes(block), `${name}: ${label} 블록의 글자가 바뀌었다 - 이 PR 은 건드리지 않는다`);
+    // #695: 출력 장은 데이터 주소가 `?v=<8자>`(판 키, scripts/data-keys.ts)다 - 그 쿼리만 소스 글자로 되돌려 대조한다. 틀은 원문 그대로다.
+    const body = name === "template" ? script : script.replace(/\?v=[0-9a-f]{8}`/g, "?_=${Date.now()}`");
+    for (const [label, block] of [["complex-ratio", RATIO], ["realestate-trend", TREND], ["budget-deals", BUDGET]]) assert.ok(body.includes(block), `${name}: ${label} 블록의 글자가 바뀌었다 - 이 PR 은 건드리지 않는다`);
     assert.ok(script.includes(CALL), `${name}: 바깥 catch 의 새 코드가 계약한 모양이 아니다`);
     const main = script.slice(script.indexOf("async function main()"));
     assert.equal(main.slice(0, main.indexOf("  } catch (error) {")).match(/notifyBeside|showGridFailure/g), null, `${name}: 정상 경로(try 본문)에 알림 코드가 있다`);
