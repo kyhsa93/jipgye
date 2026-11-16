@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { MIN_CELLS, MIN_DEALS_PER_SIDE, newJeonse as complexRatioNewJeonse } from "../scripts/complex-ratio.ts";
+import { MIN_CELLS, MIN_DEALS_PER_SIDE } from "../scripts/complex-ratio.ts";
 import { newJeonse } from "../scripts/renewal-cells.ts";
 import { shiftMonth as outlookShiftMonth } from "../scripts/outlook.ts";
 import { DISTRICTS } from "../scripts/realestate-districts.ts";
@@ -109,9 +109,14 @@ test("2년 전 창은 신규·갱신·계약구분 빈칸을 모두 센다 (2년
   assert.deepEqual(cells, [{ base: 50000, now: 45000 }]);
 });
 
-test("지금 창은 계약구분 빈칸을 뺀다 (complex-ratio newJeonse 로 바꾸면 실패, cto 조건 9)", () => {
+test("지금 창은 계약구분 빈칸을 뺀다 (지금 창 줄 판정을 빈칸을 받는 정의로 바꾸면 실패, cto 조건 9)", () => {
+  // 빈칸을 받는 판정(「갱신」만 빼는 것 - #923 전 complex-ratio newJeonse 의 정의)을 여기 지역 함수로 둔다. complex-ratio 는 #923 에서
+  // 「신규」만으로 바뀌어 더는 그 차이를 보여 주지 못한다(#924). 이 줄이 두 판정을 가른다는 것을 먼저 고정하고, 아래 rows·cells 가
+  // 돌연변이 가드다 - 지금 창이 빈칸 줄을 받으면 now 가 3이 되고 칸 하나({ base: 50000, now: 45000 })가 생겨 둘 다 실패한다.
+  const blankAllowing = (x) => (String(x?.contractType ?? "").trim() === "갱신" ? null : jeonseRow(x));
   const blank = row(N2, 45000, { type: "" });
-  assert.ok(complexRatioNewJeonse(blank), "complex-ratio 정의는 빈칸을 받는다 - 이 시험이 그 차이를 본다");
+  assert.ok(blankAllowing(blank), "빈칸 허용 판정은 이 줄을 받는다 - 이 시험이 그 차이를 본다");
+  assert.equal(newJeonse(blank), null, "지금 창 판정(renewal-cells newJeonse)은 이 줄을 뺀다");
   const items = [...many(3, () => row(B0, 50000)), row(N0, 45000), row(N1, 45000), blank, row(N2, 45000, { type: "갱신" })];
   const { cells, rows } = cellPairs(items, W);
   assert.deepEqual(rows, { base: 3, now: 2 });
