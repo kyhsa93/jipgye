@@ -19,7 +19,7 @@ const tokens = (cls) => cls.split(/\s+/).filter(Boolean);
 const SHELL = [
   { name: "머리글", pattern: /<header(?: class="([^"]*)")?>/, hooks: [], utilities: ["tw:mb-2", "tw:1024:mb-6"] },
   { name: "1층 내비", pattern: /<nav class="([^"]*)" aria-label="섹션">/, hooks: ["page-nav"], utilities: ["tw:gap-2", "tw:mb-2", "tw:1024:mb-4", "tw:*:rounded"] },
-  ...["lead", "region", "nowcast", "move-in", "score", "indicator"].map((id) => ({
+  ...["lead", "region", "nowcast", "move-in", "reverse-jeonse", "score", "indicator"].map((id) => ({
     name: `${id} 구획`,
     pattern: new RegExp(`<section id="${id}-section"(?: class="([^"]*)")?>`),
     hooks: [],
@@ -38,9 +38,10 @@ test("전망 장의 껍데기는 같은 유틸리티를 갖고 훅 class는 그�
   }
   // 이 장은 내비가 1층 하나뿐이다. 2층 내비가 생기면 위 SHELL 에 2층 줄과 높이 예산(첫 h2 ≤ merge-base)을 같이 더해야 한다.
   assert.equal([...html.matchAll(/<nav\b/g)].length, 1, `${FILE}: 내비가 하나가 아니다 - 2층 내비가 생겼으면 이 시험의 SHELL 에 더한다`);
-  // 구획 id 가 바뀌어도 이 시험이 눈먼 채 통과하지 않게: 구획 여섯은 이 순서로 한 번씩, 다섯째(질문 입구)는 스크립트가 채우므로 유틸리티가 없다.
+  // 구획 id 가 바뀌어도 이 시험이 눈먼 채 통과하지 않게: 구획 일곱은 이 순서로 한 번씩, 마지막(질문 입구)은 스크립트가 채우므로 유틸리티가 없다.
+  // reverse-jeonse 구획은 #693 N11 PR2 가 입주 절 아래에 더했다.
   const ids = [...html.matchAll(/<section id="([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(ids, ["lead-section", "region-section", "nowcast-section", "move-in-section", "score-section", "indicator-section", "other-questions"], `${FILE}: 구획이 달라졌다`);
+  assert.deepEqual(ids, ["lead-section", "region-section", "nowcast-section", "move-in-section", "reverse-jeonse-section", "score-section", "indicator-section", "other-questions"], `${FILE}: 구획이 달라졌다`);
   // 첫 구획 위의 안내(방법 안내 aside)는 스크립트가 글자만 바꾸는 곳이고 모양은 #283 이 53장 한 번에 정했다(test/realestate-shell.test.mjs).
   const callout = html.match(/<aside\b[^>]*>/)?.[0];
   assert.equal(callout, '<aside class="method-callout tw:-ml-2.75 tw:pl-2 tw:border-l-3 tw:border-border-strong">', `${FILE}: 안내 aside 의 모양 유틸리티가 달라졌다(#283 이 53장 한 번에 정했다): ${callout}`);
@@ -67,7 +68,9 @@ test("굽는 조각 열둘·다시 그려지는 링크·인라인 스크립트�
   // 조각은 scripts/prerender.ts 와 scripts/render/entry.jsx 두 렌더러가 같은 글자로 내고, 표·링크는 스크립트가 데이터를 받으면 통째로 다시 그린다.
   // 여기에 모양이 바뀌는 유틸리티를 두면 구운 첫 화면과 다시 그린 화면이 어긋난다.
   const html = await read();
-  const names = ["outlookLead", "outlookRegions", "outlookLongLead", "outlookNowcastLead", "outlookNowcast", "moveInLead", "moveInTable", "moveInDistricts", "outlookScore", "outlookRecordLead", "indicatorLead", "indicatorTable"];
+  const names = ["outlookLead", "outlookRegions", "outlookLongLead", "outlookNowcastLead", "outlookNowcast", "moveInLead", "moveInTable", "moveInDistricts", "outlookScore", "outlookRecordLead", "indicatorLead", "indicatorTable",
+    // #693 N11 PR2: 2년 전 계약 보증금 대 지금 신규 전세 절의 조각 다섯(문장 두 언어·표·단서 두 언어).
+    "reverseJeonseLead", "reverseJeonseLeadEn", "reverseJeonseTable", "reverseJeonseNote", "reverseJeonseNoteEn"];
   for (const name of names) {
     const frag = html.match(new RegExp(`<!--prerender:${name}-->([\\s\\S]*?)<!--/prerender:${name}-->`))?.[1];
     assert.ok(frag && frag.length > 30, `전제: ${name} 조각이 비었다 - 이 시험이 아무것도 안 본 것이다`);
@@ -89,5 +92,6 @@ test("이 장은 색인 대상으로 남는다 - 캐노니컬은 자기 자신, 
   assert.equal(levels.filter((n) => n === 1).length, 1, `${FILE}: h1이 하나가 아니다`);
   assert.equal(levels[0], 1, `${FILE}: 첫 제목이 h1이 아니다`);
   for (let i = 1; i < levels.length; i += 1) assert.ok(levels[i] - levels[i - 1] <= 1, `${FILE}: 제목 단계를 건너뛴다(h${levels[i - 1]} → h${levels[i]})`);
-  assert.equal(levels.filter((n) => n === 2).length, 6, `${FILE}: h2가 여섯이 아니다 - 본문 제목이 지워졌거나 늘었다`);
+  // 여덟 = 구획 제목 여섯 + #693 N11 PR2 절의 한·영 두 벌(한 벌은 hidden - 장의 언어 전환이 옮긴다).
+  assert.equal(levels.filter((n) => n === 2).length, 8, `${FILE}: h2가 여덟이 아니다 - 본문 제목이 지워졌거나 늘었다`);
 });

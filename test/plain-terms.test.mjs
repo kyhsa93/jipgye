@@ -60,6 +60,7 @@ const MEDIAN_PAGES = [
   "scripts/cancellation.ts", "scripts/direct-deals.ts", "scripts/floor-gap.ts", "scripts/renewal-facts.ts", "scripts/budget-facts.ts",
   "scripts/budget-fragments.ts", "scripts/budget-pages.ts", "scripts/complex-ratio.ts", "scripts/district-facts.ts", "scripts/rent-flow.ts",
   "scripts/repeat-sales-view.ts", "scripts/segment-change-view.ts", "scripts/monthly-cost-line.ts",
+  "scripts/reverse-jeonse-view.ts",
 ];
 
 test("다른 장과 생성 문장도 「중앙값」 대신 「중간값」으로 적는다(주석·legal 확인 고지 제외)", () => {

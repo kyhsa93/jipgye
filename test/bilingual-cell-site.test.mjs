@@ -173,3 +173,24 @@ test("E1b ① price-outlook 영어 화면 한글 상한 — 여섯 표 합계(#7
   assert.ok(total <= 1010, `영어 쪽 한글 ${total}자`);
   assert.ok(total >= 700, `하한 점검 — 표 구조가 바뀌었는지 보라: ${total}자`);
 });
+
+test("price-outlook: 2년 전 계약 대비 표(#693 N11 PR2) — 영어 화면에 한글 0자, 한국어 쪽은 빌드 조각과 칸마다 같고, 한국어 caption 에 영어 제목이 없다", async () => {
+  const { reverseJeonseView } = await import("../scripts/reverse-jeonse-view.ts");
+  const view = reverseJeonseView(JSON.parse(await read("docs/data/reverse-jeonse.json")));
+  assert.ok(view, "reverse-jeonse.json 이 화면 모양이 아니다");
+  const table = await tableOf("price-outlook", "reverse-jeonse-table");
+  assert.equal(hangul(enOnly(bodyOf(table))), 0);
+  const texts = (html) => cellsOf(html).map((c) => c.inner.replace(/<[^>]+>/g, ""));
+  assert.deepEqual(texts(koOnly(bodyOf(table))), texts(view.table.ko));
+  const rows = cellsOf(enOnly(bodyOf(table))).filter((c) => c.section === "tbody" && c.col === 0).map((c) => c.inner.replace(/<div[\s\S]*$/, "").replace(/<[^>]+>/g, ""));
+  assert.equal(rows.length, 26);
+  assert.equal(rows[0], "All Seoul");
+  for (const n of rows.slice(1)) assert.match(n, /^[A-Z][a-z]+-gu$/);
+  const koCaption = /<span class="m-ko">([\s\S]*?)<\/span>/.exec(captionOf(table))?.[1] ?? "";
+  assert.ok(koCaption.includes("2년 전 계약 보증금과 지금 신규 전세") && !/Deposits/.test(koCaption), koCaption);
+  // 문장 두 벌: 구운 장의 lang 구역에 빌드 조각 그대로, 영어 구역은 hidden 으로 나간다.
+  const html = await read(`${SITE}/price-outlook.html`);
+  assert.ok(html.includes(`<p class="lead"><!--prerender:reverseJeonseLead-->${view.lead.ko}<!--/prerender:reverseJeonseLead--></p>`));
+  assert.ok(html.includes(`<p class="lead"><!--prerender:reverseJeonseLeadEn-->${view.lead.en}<!--/prerender:reverseJeonseLeadEn--></p>`));
+  assert.ok(html.includes(`<p class="content-notice" lang="en" hidden><!--prerender:reverseJeonseNoteEn-->${view.note.en}<!--/prerender:reverseJeonseNoteEn--></p>`));
+});

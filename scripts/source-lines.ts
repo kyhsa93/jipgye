@@ -166,11 +166,11 @@ export const FOOTERS: Record<string, Record<Lang, string>> = {
   },
   priceOutlook: {
     ko: ko(
-      [`${SOURCES.reb.ko} 아파트 매매 실거래가격지수(한국은행 ECOS)`, molitKo("매매 실거래가 공개시스템"), `${SOURCES.kb.ko}(한국은행 ECOS 경제통계시스템 경유)`],
+      [`${SOURCES.reb.ko} 아파트 매매 실거래가격지수(한국은행 ECOS)`, molitKo("매매·전월세 실거래가 공개시스템"), `${SOURCES.kb.ko}(한국은행 ECOS 경제통계시스템 경유)`],
       `${DERIVED.ko} 투자 판단을 대신하지 않습니다.`
     ),
     en: en(
-      [`${SOURCES.reb.en} apartment sale price index (${SOURCES.ecos.en})`, molitEn("apartment sale filings"), `${SOURCES.kb.en} (via ${SOURCES.ecos.en})`],
+      [`${SOURCES.reb.en} apartment sale price index (${SOURCES.ecos.en})`, molitEn("apartment sale and lease filings"), `${SOURCES.kb.en} (via ${SOURCES.ecos.en})`],
       `${DERIVED.en} Not investment advice.`,
       { and: true }
     ),
