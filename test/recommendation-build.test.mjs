@@ -175,6 +175,12 @@ test("전세 건수: 창 안 신규 순수 전세만, 지금 칸의 1㎡ 안쪽�
   assert.equal(cell[C("jeonseN")], 2);
 });
 
+test("전세 건수: 계약구분이 빈 줄은 신규로 세지 않는다 - 시세·전세가율과 같은 정의 (#910)", () => {
+  const rents = [rent(), rent({ contractType: "" }), rent({ contractType: undefined }), rent({ contractType: " " })];
+  const [cell] = rowsOf(build({ [NOWON]: many(3) }, { rentsByDistrict: { [NOWON]: rents } }).nowon)[0].cells;
+  assert.equal(cell[C("jeonseN")], 1, "계약구분이 빈 줄을 전세 건수에 넣었다");
+});
+
 test("12개월 건수: 창의 n + 그 앞 거래. 값·n·칸 묶음은 창 밖 거래로 바뀌지 않는다", () => {
   const older = [sale({ dealYear: 2025, dealMonth: 12 }), sale({ dealYear: 2025, dealMonth: 12, excluUseAr: 84.2 }), sale({ dealYear: 2025, dealMonth: 12, excluUseAr: 59 }), sale({ dealYear: 2025, dealMonth: 8, dealDay: 14 })];
   const base = rowsOf(build({ [NOWON]: many(3) }).nowon)[0].cells[0];

@@ -110,7 +110,7 @@ test("지역별 전월세 파일을 나누고 석 달만 남긴다", () => {
 
 test("시세 평균에서 갱신계약을 뺀다", () => {
   const { summarizeRent } = summarizeModule;
-  const item = (deposit, extra = {}) => ({ deposit, excluUseAr: "60", monthlyRent: 0, ...extra });
+  const item = (deposit, extra = {}) => ({ deposit, excluUseAr: "60", monthlyRent: 0, contractType: "신규", ...extra });
 
   const mixed = summarizeRent([
     item("60,000"),
@@ -123,21 +123,28 @@ test("시세 평균에서 갱신계약을 뺀다", () => {
   assert.equal(mixed.jeonse.avgDepositPerPyeong10k, summarizeRent([item("60,000")]).jeonse.avgDepositPerPyeong10k);
 });
 
-test("계약 구분이 신고되지 않은 거래는 시세에 넣는다", () => {
+// 7d758668(2026-08-18)은 이 줄들을 넣었다(「옛 신고분이 통째로 사라진다」). #910 pm 판정(issuecomment-6908478380)으로 뒤집는다 -
+// 보관분 202412~202611 에서는 사라지는 달·구 카드·추이 점이 0이라 지금 창에서는 그 근거가 서지 않는다. 빈칸은 갱신 건수에도 세지 않는다.
+test("계약 구분이 신고되지 않은 거래는 시세에서 뺀다", () => {
   const { summarizeRent } = summarizeModule;
   const rows = [
     { deposit: "60,000", excluUseAr: "60", monthlyRent: 0 },
     { deposit: "60,000", excluUseAr: "60", monthlyRent: 0, contractType: "신규" },
+    { deposit: "60,000", excluUseAr: "60", monthlyRent: 0, contractType: "신규" },
     { deposit: "60,000", excluUseAr: "60", monthlyRent: 0, contractType: "" },
+    { deposit: "10,000", excluUseAr: "60", monthlyRent: "50", contractType: " " },
   ];
 
-  assert.equal(summarizeRent(rows).jeonse.transactionCount, 3, "구분이 없다고 빼버렸다");
+  const summary = summarizeRent(rows);
+  assert.equal(summary.jeonse.transactionCount, 2, "구분이 없는 줄을 신규로 세었다");
+  assert.equal(summary.wolse, null, "구분이 없는 월세를 신규로 세었다");
+  assert.equal(summary.renewalCount, 0, "구분이 없는 줄을 갱신으로 세었다");
 });
 
 test("월세 평균에서도 갱신계약을 뺀다", () => {
   const { summarizeRent } = summarizeModule;
   const rows = [
-    { deposit: "10,000", monthlyRent: "100", excluUseAr: "60" },
+    { deposit: "10,000", monthlyRent: "100", excluUseAr: "60", contractType: "신규" },
     { deposit: "10,000", monthlyRent: "40", excluUseAr: "60", contractType: "갱신" },
   ];
 

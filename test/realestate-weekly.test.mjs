@@ -196,6 +196,7 @@ const saleRaw = (extra = {}) => ({
 
 const rentRaw = (extra = {}) => ({
   aptNm: "단지",
+  contractType: "신규",
   deposit: "30,000",
   dealDay: 3,
   dealMonth: 8,
@@ -241,6 +242,18 @@ test("주간 시세에서도 갱신계약을 뺀다", () => {
   const rows = contractRows(rawFile("rent", items), "노원구");
 
   assert.equal(rows.length, 1, "갱신계약이 주간 집계에 들어갔다");
+});
+
+test("주간 시세도 계약구분이 빈 줄은 뺀다 - 시세와 같은 「신규」만 (#910)", () => {
+  const items = [
+    rentRaw({ aptNm: "신규" }),
+    rentRaw({ aptNm: "빈칸", contractType: "" }),
+    rentRaw({ aptNm: "없음", contractType: undefined }),
+    rentRaw({ aptNm: "빈칸월세", contractType: "", monthlyRent: "50" }),
+  ];
+  const rows = contractRows(rawFile("rent", items), "노원구");
+
+  assert.deepEqual(rows.map((row) => row.type), ["jeonse"], "계약구분이 빈 줄이 주간 집계에 들어갔다");
 });
 
 // 이번 주 신고분 Map(`readWindowItems`의 items 모양): 키 `sale:<코드>`·`rent:<코드>`, 값은 { item, date } 배열.

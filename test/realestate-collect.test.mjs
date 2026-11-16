@@ -464,6 +464,7 @@ test("월세만 모자라도 계약일 기준에 머물고, 표본이 차면 신
 
   const history = await readJson(path.join(space.dataDir, "realestate-history.json"));
   assert.equal(history.at(-1).window?.basis, "arrival", "history 의 오늘 항목이 새 기준을 남기지 않았다");
+  assert.equal(history.at(-1).rentContract, "신규", "history 의 오늘 항목에 전세·월세 정의 표식(#910)이 없다");
 });
 
 // ---- #261: 수집 스크립트의 시계는 REALESTATE_NOW 하나이고, KST 월 경계·월 시작 유예 끝을 고정 시각으로 가로지른다 ----

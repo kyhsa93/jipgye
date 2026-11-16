@@ -44,6 +44,13 @@ const rentFilesDir = process.env.DEAL_FILES_DIR
   : dataDir;
 const HISTORY_MAX_DAYS = 180;
 
+/**
+ * history 레코드의 전세·월세 정의 표식(#910). 이 필드가 붙은 레코드부터 시세가 계약구분 「신규」 줄만 세었고(isNewContract),
+ * 필드가 없는 지난 레코드는 「갱신」만 뺀 정의(빈칸 포함)다. 7일 증감을 되살릴 때 이 값이 다른 두 날은 견주지 않는다(findBaseline 주석).
+ * 오늘 레코드만 새로 쓰므로(appendHistory) 지난 레코드는 바이트 그대로다.
+ */
+export const RENT_CONTRACT = "신규";
+
 async function readJson(file, fallback = null) {
   try {
     return JSON.parse(await readFile(file, "utf-8"));
@@ -267,8 +274,9 @@ function weeklyRows(file, districtName, dateOf) {
       continue;
     }
 
+    // 시세(summarizeRent)와 같은 「신규」만(#910). 정규화 줄은 계약구분이 비면 renewal 이 없으므로 false 인 줄만 신규다.
     const deal = normalizeRentDeal(item, districtName);
-    if (deal && deal.renewal !== true) rows.push(rentRow(deal, districtName, observedOn));
+    if (deal && deal.renewal === false) rows.push(rentRow(deal, districtName, observedOn));
   }
 
   return rows;
@@ -442,7 +450,7 @@ async function writeRepresentative(now) {
     JSON.stringify({ updatedAt: now.toISOString(), window, ...attachChanges(overall, districts, window) }, null, 2)
   );
 
-  const nextHistory = appendHistory(history, now, { window, overall, districts: newlyFetched });
+  const nextHistory = appendHistory(history, now, { window, rentContract: RENT_CONTRACT, overall, districts: newlyFetched });
   await writeFile(historyFile, JSON.stringify(nextHistory, null, 2));
 
   console.log(

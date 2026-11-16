@@ -17,6 +17,7 @@
  */
 
 import { complexKey } from "./complex-id.ts";
+import { isNewContract } from "./realestate-metrics.ts";
 
 /** 한쪽이라도 이만큼 안 되면 그 칸의 중앙값은 시세라고 할 것이 못 된다. */
 export const MIN_DEALS_PER_SIDE = 3;
@@ -69,9 +70,13 @@ export const cellKey = (item, same = undefined) => `${complexKey(item?.aptNm, it
 /** 해제된 거래는 시세가 아니다. */
 const liveSale = (item) => !String(item?.cdealType ?? "").trim() && number(item?.dealAmount) > 0;
 
-/** 갱신은 이전 조건을 잇는 것이라 지금 값이 아니고, 반전세는 한 값으로 묶을 수 없다. */
+/**
+ * 갱신은 이전 조건을 잇는 것이라 지금 값이 아니고, 반전세는 한 값으로 묶을 수 없다.
+ * 계약구분이 빈 줄도 뺀다 - 시세와 같은 「신규」 판정(isNewContract, #910). 2026-11-16 원본에서 이 창(6달) 순수 전세의 5.1%였고,
+ * 칸 1,015개 중 38개가 한쪽 3건 미만이 되어 빠졌다(#910 data-analyst 계수).
+ */
 export const newJeonse = (item) =>
-  String(item?.contractType ?? "").trim() !== "갱신" &&
+  isNewContract(item) &&
   number(item?.monthlyRent) === 0 &&
   number(item?.deposit) > 0;
 
