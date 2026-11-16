@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-11-15T02:45:35.714Z",
+  "updatedAt": "2026-11-16T02:47:56.382Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 부동산: 송파 풍납극동아파트 재건축이 40층·598세대로 심의 통과되었고, 응암동엔 1천세대 주거단지가 조성되며, 전월세 물가가 1.4% 상승해 3년10개월 만에 최대폭을 기록했고, LH는 건설업계와 주택협회와 만나 공공주택 신속 공급 방안을 논의했다.\n- 기타 경제 소식: 오늘 한국 경제 뉴스에서 AI 투자 붐이 2028년 전후에 조정될 가능성에 대해 언급했다. 해당 소식은 경제 전반에 영향을 줄 수 있다는 점에서 주목받고 있다. 다른 소식에서는 관련된 구체적인 수치나 전망은 제시되지 않았다. 경제 분야의 변화에 대한 대비가 필요하다는 의견이 제기되고 있다. 오늘의 뉴스는 AI 투자와 관련된 전망에 초점을 맞추고 있다.\n- 증시·환율: '젠슨황 스캔들'로 인해 하락한 증시 상황 속에서 엔비디아의 실적과 앤트로픽의 상장 상황에 주목이 집중되고 있다.\n- 금리·예금·투자상품: 저축은행의 예금금리가 다시 4%에 근접하며 주목받고 있다. 상호금융은 반대로 예금금리 상승을 주춤하고 있다. 이는 최근 금융시장의 변동에 따른 것으로 나타났다. 저축은행은 경쟁력 있는 금리로 고객을 유치하려는 움직임을 보이고 있다. 상호금융은 금리 인상에 대한 속도 조절을 선택한 것으로 보인다.",
-    "en": "- Real Estate: The reconstruction of the Songo-pyeongnap Geumdong Apartment in Songpa has passed review with 40 floors and 598 units, a residential complex with 1,000 units will be built in Eungam-dong, the rent and deposit prices rose by 1.4%, reaching the highest increase in 3 years and 10 months, and LH met with the construction industry and the housing association to discuss ways to quickly supply public housing.\n- Other Economic News: Today's Korean economic news mentioned the possibility that the AI investment boom may be adjusted around 2028. This news is receiving attention as it could affect the overall economy. Other reports did not provide specific figures or forecasts related to this. There is an opinion that preparations are needed for changes in the economic sector. Today's news focuses on forecasts related to AI investment.\n- Stocks & FX: Attention is focused on NVIDIA's performance and Anthropic's IPO situation amid the declining stock market situation caused by the 'Jensen Huang scandal'.\n- Rates, Deposits & Investment Products: The deposit rates of savings banks are again approaching 4%, drawing attention. In contrast, mutual financial institutions are pausing their increase in deposit rates. This appears to be due to recent fluctuations in the financial market. Savings banks are showing moves to attract customers with competitive rates. Mutual financial institutions seem to have chosen to moderate the pace of rate increases."
+    "ko": "- 부동산: 용인 반도체클러스터에서 연말까지 1225세대의 아파트가 공급될 예정이다. 연천군은 12월1일부터 28일까지 공동주택 보조금 지원사업 신청을 받는다. 이도에스테이트는 글로벌 부동산 서비스기업 애비슨영과 전략적 제휴를 맺었다. 서초 서리풀1에서는 10가구 중 8가구가 임대주택으로 공급된다. 전월세 상승률은 46개월 만에 최고 수준을 기록했다.\n- 금리·예금·투자상품: 금리·예금·투자상품: IBK기업은행 '매월 이자주는 통장' 출시…연 3.85% 금리, 美재무 \"유가 하락하는데 과도한 금리 인상 안 돼\"…연준에 신중론\n- 증시·환율: 증시·환율: [올댓차이나] 중국 증시 하락 출발…상하이지수 0.63%↓, 코스피·코스닥, 3%대 하락으로 낙폭 확대…외국인 '팔자', 코스피, 젠슨황 파장속 보합권 등락…코스닥 1%대↓(종합) +2\n- 기타 경제 소식: 군대에서의 '병장론'이 대출 문제로 인해 주목받고 있다.",
+    "en": "- Real Estate: By the end of the year, 1,225 apartment units will be supplied at Yongin Semiconductor Cluster. Yeoncheon County will accept applications for the housing subsidy support program from December 1st to 28th. Idos Estate has formed a strategic partnership with global real estate service company Abson Young. In Seocho Seoripul 1, 8 out of 10 units will be supplied as rental housing. The increase in rent and deposit prices has reached the highest level in 46 months.\n- Rates, Deposits & Investment Products: Rates, Deposits & Investment Products: IBK기업은행 '매월 이자주는 통장' 출시…연 3.85% 금리, 美재무 \"유가 하락하는데 과도한 금리 인상 안 돼\"…연준에 신중론\n- Stocks & FX: Stocks & FX: [올댓차이나] 중국 증시 하락 출발…상하이지수 0.63%↓, 코스피·코스닥, 3%대 하락으로 낙폭 확대…외국인 '팔자', 코스피, 젠슨황 파장속 보합권 등락…코스닥 1%대↓(종합) +2\n- Other Economic News: The \"private soldier theory\" in the military is gaining attention due to loan issues."
   },
   "highlights": [],
   "categories": [
@@ -11,35 +11,94 @@
       "key": "realestate",
       "name": "부동산",
       "nameEn": "Real Estate",
-      "lineKo": "송파 풍납극동아파트 재건축이 40층·598세대로 심의 통과되었고, 응암동엔 1천세대 주거단지가 조성되며, 전월세 물가가 1.4% 상승해 3년10개월 만에 최대폭을 기록했고, LH는 건설업계와 주택협회와 만나 공공주택 신속 공급 방안을 논의했다.",
-      "lineEn": "The reconstruction of the Songo-pyeongnap Geumdong Apartment in Songpa has passed review with 40 floors and 598 units, a residential complex with 1,000 units will be built in Eungam-dong, the rent and deposit prices rose by 1.4%, reaching the highest increase in 3 years and 10 months, and LH met with the construction industry and the housing association to discuss ways to quickly supply public housing.",
+      "lineKo": "용인 반도체클러스터에서 연말까지 1225세대의 아파트가 공급될 예정이다. 연천군은 12월1일부터 28일까지 공동주택 보조금 지원사업 신청을 받는다. 이도에스테이트는 글로벌 부동산 서비스기업 애비슨영과 전략적 제휴를 맺었다. 서초 서리풀1에서는 10가구 중 8가구가 임대주택으로 공급된다. 전월세 상승률은 46개월 만에 최고 수준을 기록했다.",
+      "lineEn": "By the end of the year, 1,225 apartment units will be supplied at Yongin Semiconductor Cluster. Yeoncheon County will accept applications for the housing subsidy support program from December 1st to 28th. Idos Estate has formed a strategic partnership with global real estate service company Abson Young. In Seocho Seoripul 1, 8 out of 10 units will be supplied as rental housing. The increase in rent and deposit prices has reached the highest level in 46 months.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": true,
+      "degraded": false,
       "items": [
         {
-          "title": "송파 풍납극동아파트 598세대로…응암동엔 1천세대 주거단지",
-          "link": "https://www.yna.co.kr/view/AKR20261114027800004",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "서울 풍납극동아파트 재건축 심의 통과…40층·598세대",
-          "link": "https://www.newsis.com/view/NISX20261113_0003867820",
+          "title": "용인 반도체클러스터 연말 아파트 1225세대 공급",
+          "link": "https://www.newsis.com/view/NISX20261116_0003869521",
           "source": "뉴시스 경제"
         },
         {
-          "title": "전월세 물가 1.4%↑, 3년10개월 만에 최대폭…월세는 12년10개월 만",
-          "link": "https://www.newsis.com/view/NISX20261115_0003868443",
+          "title": "연천군, 공동주택 보조금 지원사업…\"12월1~28일 신청\"",
+          "link": "https://www.newsis.com/view/NISX20261116_0003869547",
           "source": "뉴시스 경제"
         },
         {
-          "title": "LH, 건설업계 만나 공공주택 신속 공급 방안 논의",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/15/E4I7S53MEJE73DXMS76DJBOKJA/",
+          "title": "이도에스테이트, 글로벌 부동산 서비스기업 ‘애비슨영’과 전략적 제휴",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/16/S7SGWXGU6JE5VLC6NEUHMPCNPE/",
           "source": "조선비즈 부동산"
         },
         {
-          "title": "LH, 주택협회와 '공공주택 신속공급' 간담회 개최",
-          "link": "https://www.newsis.com/view/NISX20261115_0003868415",
+          "title": "서초 서리풀1, 10가구 중 8가구 ‘임대주택’ 공급",
+          "link": "https://www.mk.co.kr/news/realestate/12209761",
+          "source": "매일경제 부동산"
+        },
+        {
+          "title": "“이런 게 무주택 설움인가요”…전월세 상승률 46개월 만에 최고",
+          "link": "https://www.mk.co.kr/news/economy/12209733",
+          "source": "매일경제 부동산"
+        }
+      ]
+    },
+    {
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "금리·예금·투자상품: IBK기업은행 '매월 이자주는 통장' 출시…연 3.85% 금리, 美재무 \"유가 하락하는데 과도한 금리 인상 안 돼\"…연준에 신중론",
+      "lineEn": "Rates, Deposits & Investment Products: IBK기업은행 '매월 이자주는 통장' 출시…연 3.85% 금리, 美재무 \"유가 하락하는데 과도한 금리 인상 안 돼\"…연준에 신중론",
+      "isFallback": true,
+      "fallbackReason": "unverified-entity",
+      "degraded": false,
+      "items": [
+        {
+          "title": "IBK기업은행 '매월 이자주는 통장' 출시…연 3.85% 금리",
+          "link": "https://www.yna.co.kr/view/AKR20261116072100002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "美재무 \"유가 하락하는데 과도한 금리 인상 안 돼\"…연준에 신중론",
+          "link": "https://www.newsis.com/view/NISX20261116_0003869059",
+          "source": "뉴시스 경제"
+        }
+      ]
+    },
+    {
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "증시·환율: [올댓차이나] 중국 증시 하락 출발…상하이지수 0.63%↓, 코스피·코스닥, 3%대 하락으로 낙폭 확대…외국인 '팔자', 코스피, 젠슨황 파장속 보합권 등락…코스닥 1%대↓(종합) +2",
+      "lineEn": "Stocks & FX: [올댓차이나] 중국 증시 하락 출발…상하이지수 0.63%↓, 코스피·코스닥, 3%대 하락으로 낙폭 확대…외국인 '팔자', 코스피, 젠슨황 파장속 보합권 등락…코스닥 1%대↓(종합) +2",
+      "isFallback": true,
+      "fallbackReason": "unverified-entity",
+      "degraded": false,
+      "items": [
+        {
+          "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.63%↓",
+          "link": "https://www.newsis.com/view/NISX20261116_0003869473",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "코스피·코스닥, 3%대 하락으로 낙폭 확대…외국인 '팔자'",
+          "link": "https://www.yna.co.kr/view/AKR20261116064400008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "코스피, 젠슨황 파장속 보합권 등락…코스닥 1%대↓(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261116038400008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "코스피, 상승 출발 후 보합권에서 등락",
+          "link": "https://www.yna.co.kr/view/AKR20261116029600008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "[주간 뉴욕증시]'젠슨 황' 사임 후 엔비디아 첫 실적…연준 의사록 주목",
+          "link": "https://www.newsis.com/view/NISX20261116_0003868985",
           "source": "뉴시스 경제"
         }
       ]
@@ -48,50 +107,16 @@
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "오늘 한국 경제 뉴스에서 AI 투자 붐이 2028년 전후에 조정될 가능성에 대해 언급했다. 해당 소식은 경제 전반에 영향을 줄 수 있다는 점에서 주목받고 있다. 다른 소식에서는 관련된 구체적인 수치나 전망은 제시되지 않았다. 경제 분야의 변화에 대한 대비가 필요하다는 의견이 제기되고 있다. 오늘의 뉴스는 AI 투자와 관련된 전망에 초점을 맞추고 있다.",
-      "lineEn": "Today's Korean economic news mentioned the possibility that the AI investment boom may be adjusted around 2028. This news is receiving attention as it could affect the overall economy. Other reports did not provide specific figures or forecasts related to this. There is an opinion that preparations are needed for changes in the economic sector. Today's news focuses on forecasts related to AI investment.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "\"AI 투자붐, 2028년 전후 조정 가능성…韓 경제도 대비해야\"",
-          "link": "https://www.yna.co.kr/view/AKR20261114043600002",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "'젠슨황 스캔들'로 인해 하락한 증시 상황 속에서 엔비디아의 실적과 앤트로픽의 상장 상황에 주목이 집중되고 있다.",
-      "lineEn": "Attention is focused on NVIDIA's performance and Anthropic's IPO situation amid the declining stock market situation caused by the 'Jensen Huang scandal'.",
+      "lineKo": "군대에서의 '병장론'이 대출 문제로 인해 주목받고 있다.",
+      "lineEn": "The \"private soldier theory\" in the military is gaining attention due to loan issues.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": true,
       "items": [
         {
-          "title": "'젠슨황 스캔들'에 짓눌린 증시…엔비디아 실적·앤트로픽 상장 주시",
-          "link": "https://www.yna.co.kr/view/AKR20261113177200008",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "저축은행의 예금금리가 다시 4%에 근접하며 주목받고 있다. 상호금융은 반대로 예금금리 상승을 주춤하고 있다. 이는 최근 금융시장의 변동에 따른 것으로 나타났다. 저축은행은 경쟁력 있는 금리로 고객을 유치하려는 움직임을 보이고 있다. 상호금융은 금리 인상에 대한 속도 조절을 선택한 것으로 보인다.",
-      "lineEn": "The deposit rates of savings banks are again approaching 4%, drawing attention. In contrast, mutual financial institutions are pausing their increase in deposit rates. This appears to be due to recent fluctuations in the financial market. Savings banks are showing moves to attract customers with competitive rates. Mutual financial institutions seem to have chosen to moderate the pace of rate increases.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "저축은행 예금금리 4% 다시 눈 앞…상호금융은 주춤",
-          "link": "https://www.yna.co.kr/view/AKR20261114042800002",
-          "source": "연합뉴스 경제"
+          "title": "\"충성! 대출받겠습니다\"…군대 덮친 '병장론' 뭐길래",
+          "link": "https://www.hankyung.com/article/2026111681467",
+          "source": "한국경제 경제"
         }
       ]
     }
