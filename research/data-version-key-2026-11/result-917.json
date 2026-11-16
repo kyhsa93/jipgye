@@ -1,0 +1,472 @@
+{
+  "measuredAt": "2026-11-16T12:02:07.242Z",
+  "set": "917",
+  "failures": [],
+  "rows": [
+    {
+      "page": "index (검색 입력칸 포커스)",
+      "sw": "차단",
+      "when": "즉시",
+      "base": {
+        "controlled": false,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [],
+        "firstOk200": {
+          "/data/search-index.json": 1
+        },
+        "targets": {
+          "/data/search-index.json": {
+            "ok200": 0,
+            "not304": 0,
+            "bytes": 0
+          }
+        }
+      },
+      "head": {
+        "controlled": false,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [],
+        "firstOk200": {
+          "/data/search-index.json": 1
+        },
+        "targets": {
+          "/data/search-index.json": {
+            "ok200": 0,
+            "not304": 0,
+            "bytes": 0
+          }
+        }
+      },
+      "change": null,
+      "recordOnly": true
+    },
+    {
+      "page": "index (검색 입력칸 포커스)",
+      "sw": "차단",
+      "when": "만료 뒤",
+      "base": {
+        "controlled": false,
+        "requests": 4,
+        "ok200": 0,
+        "not304": 4,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/market.json?v=:304",
+          "/data/realestate-trend.json?v=:304",
+          "/data/realestate.json?v=:304",
+          "/data/search-index.json:304"
+        ],
+        "firstOk200": {
+          "/data/search-index.json": 1
+        },
+        "targets": {
+          "/data/search-index.json": {
+            "ok200": 0,
+            "not304": 1,
+            "bytes": 0
+          }
+        }
+      },
+      "head": {
+        "controlled": false,
+        "requests": 4,
+        "ok200": 0,
+        "not304": 4,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/market.json?v=:304",
+          "/data/realestate-trend.json?v=:304",
+          "/data/realestate.json?v=:304",
+          "/data/search-index.json?v=:304"
+        ],
+        "firstOk200": {
+          "/data/search-index.json": 1
+        },
+        "targets": {
+          "/data/search-index.json": {
+            "ok200": 0,
+            "not304": 1,
+            "bytes": 0
+          }
+        }
+      },
+      "change": null,
+      "recordOnly": true
+    },
+    {
+      "page": "index (검색 입력칸 포커스)",
+      "sw": "허용",
+      "when": "즉시",
+      "base": {
+        "controlled": true,
+        "requests": 1,
+        "ok200": 1,
+        "not304": 0,
+        "bytes": 68031,
+        "keyedBytes": 0,
+        "keylessBytes": 68031,
+        "files": [
+          "/data/search-index.json:200"
+        ],
+        "firstOk200": {
+          "/data/search-index.json": 1
+        },
+        "targets": {
+          "/data/search-index.json": {
+            "ok200": 1,
+            "not304": 0,
+            "bytes": 68031
+          }
+        }
+      },
+      "head": {
+        "controlled": true,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [],
+        "firstOk200": {
+          "/data/search-index.json": 1
+        },
+        "targets": {
+          "/data/search-index.json": {
+            "ok200": 0,
+            "not304": 0,
+            "bytes": 0
+          }
+        }
+      },
+      "change": -100,
+      "valid": true,
+      "pass": true
+    },
+    {
+      "page": "index (검색 입력칸 포커스)",
+      "sw": "허용",
+      "when": "만료 뒤",
+      "base": {
+        "controlled": true,
+        "requests": 4,
+        "ok200": 1,
+        "not304": 3,
+        "bytes": 68031,
+        "keyedBytes": 0,
+        "keylessBytes": 68031,
+        "files": [
+          "/data/market.json?v=:304",
+          "/data/realestate-trend.json?v=:304",
+          "/data/realestate.json?v=:304",
+          "/data/search-index.json:200"
+        ],
+        "firstOk200": {
+          "/data/search-index.json": 1
+        },
+        "targets": {
+          "/data/search-index.json": {
+            "ok200": 1,
+            "not304": 0,
+            "bytes": 68031
+          }
+        }
+      },
+      "head": {
+        "controlled": true,
+        "requests": 4,
+        "ok200": 0,
+        "not304": 4,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/market.json?v=:304",
+          "/data/realestate-trend.json?v=:304",
+          "/data/realestate.json?v=:304",
+          "/data/search-index.json?v=:304"
+        ],
+        "firstOk200": {
+          "/data/search-index.json": 1
+        },
+        "targets": {
+          "/data/search-index.json": {
+            "ok200": 0,
+            "not304": 1,
+            "bytes": 0
+          }
+        }
+      },
+      "change": -100,
+      "valid": true,
+      "pass": true
+    },
+    {
+      "page": "buy-by-budget (노원구 줄 보기)",
+      "sw": "차단",
+      "when": "즉시",
+      "base": {
+        "controlled": false,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [],
+        "firstOk200": {
+          "/data/reco-counts.json": 1,
+          "/data/reco-nowon.json": 1
+        },
+        "targets": {
+          "/data/reco-counts.json": {
+            "ok200": 0,
+            "not304": 0,
+            "bytes": 0
+          },
+          "/data/reco-nowon.json": {
+            "ok200": 0,
+            "not304": 0,
+            "bytes": 0
+          }
+        }
+      },
+      "head": {
+        "controlled": false,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [],
+        "firstOk200": {
+          "/data/reco-counts.json": 1,
+          "/data/reco-nowon.json": 1
+        },
+        "targets": {
+          "/data/reco-counts.json": {
+            "ok200": 0,
+            "not304": 0,
+            "bytes": 0
+          },
+          "/data/reco-nowon.json": {
+            "ok200": 0,
+            "not304": 0,
+            "bytes": 0
+          }
+        }
+      },
+      "change": null,
+      "recordOnly": true
+    },
+    {
+      "page": "buy-by-budget (노원구 줄 보기)",
+      "sw": "차단",
+      "when": "만료 뒤",
+      "base": {
+        "controlled": false,
+        "requests": 2,
+        "ok200": 0,
+        "not304": 2,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/reco-counts.json:304",
+          "/data/reco-nowon.json:304"
+        ],
+        "firstOk200": {
+          "/data/reco-counts.json": 1,
+          "/data/reco-nowon.json": 1
+        },
+        "targets": {
+          "/data/reco-counts.json": {
+            "ok200": 0,
+            "not304": 1,
+            "bytes": 0
+          },
+          "/data/reco-nowon.json": {
+            "ok200": 0,
+            "not304": 1,
+            "bytes": 0
+          }
+        }
+      },
+      "head": {
+        "controlled": false,
+        "requests": 2,
+        "ok200": 0,
+        "not304": 2,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/reco-counts.json?v=:304",
+          "/data/reco-nowon.json?v=:304"
+        ],
+        "firstOk200": {
+          "/data/reco-counts.json": 1,
+          "/data/reco-nowon.json": 1
+        },
+        "targets": {
+          "/data/reco-counts.json": {
+            "ok200": 0,
+            "not304": 1,
+            "bytes": 0
+          },
+          "/data/reco-nowon.json": {
+            "ok200": 0,
+            "not304": 1,
+            "bytes": 0
+          }
+        }
+      },
+      "change": null,
+      "recordOnly": true
+    },
+    {
+      "page": "buy-by-budget (노원구 줄 보기)",
+      "sw": "허용",
+      "when": "즉시",
+      "base": {
+        "controlled": true,
+        "requests": 2,
+        "ok200": 2,
+        "not304": 0,
+        "bytes": 77090,
+        "keyedBytes": 0,
+        "keylessBytes": 77090,
+        "files": [
+          "/data/reco-counts.json:200",
+          "/data/reco-nowon.json:200"
+        ],
+        "firstOk200": {
+          "/data/reco-counts.json": 1,
+          "/data/reco-nowon.json": 1
+        },
+        "targets": {
+          "/data/reco-counts.json": {
+            "ok200": 1,
+            "not304": 0,
+            "bytes": 10827
+          },
+          "/data/reco-nowon.json": {
+            "ok200": 1,
+            "not304": 0,
+            "bytes": 66263
+          }
+        }
+      },
+      "head": {
+        "controlled": true,
+        "requests": 0,
+        "ok200": 0,
+        "not304": 0,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [],
+        "firstOk200": {
+          "/data/reco-counts.json": 1,
+          "/data/reco-nowon.json": 1
+        },
+        "targets": {
+          "/data/reco-counts.json": {
+            "ok200": 0,
+            "not304": 0,
+            "bytes": 0
+          },
+          "/data/reco-nowon.json": {
+            "ok200": 0,
+            "not304": 0,
+            "bytes": 0
+          }
+        }
+      },
+      "change": -100,
+      "valid": true,
+      "pass": true
+    },
+    {
+      "page": "buy-by-budget (노원구 줄 보기)",
+      "sw": "허용",
+      "when": "만료 뒤",
+      "base": {
+        "controlled": true,
+        "requests": 2,
+        "ok200": 2,
+        "not304": 0,
+        "bytes": 77090,
+        "keyedBytes": 0,
+        "keylessBytes": 77090,
+        "files": [
+          "/data/reco-counts.json:200",
+          "/data/reco-nowon.json:200"
+        ],
+        "firstOk200": {
+          "/data/reco-counts.json": 1,
+          "/data/reco-nowon.json": 1
+        },
+        "targets": {
+          "/data/reco-counts.json": {
+            "ok200": 1,
+            "not304": 0,
+            "bytes": 10827
+          },
+          "/data/reco-nowon.json": {
+            "ok200": 1,
+            "not304": 0,
+            "bytes": 66263
+          }
+        }
+      },
+      "head": {
+        "controlled": true,
+        "requests": 2,
+        "ok200": 0,
+        "not304": 2,
+        "bytes": 0,
+        "keyedBytes": 0,
+        "keylessBytes": 0,
+        "files": [
+          "/data/reco-counts.json?v=:304",
+          "/data/reco-nowon.json?v=:304"
+        ],
+        "firstOk200": {
+          "/data/reco-counts.json": 1,
+          "/data/reco-nowon.json": 1
+        },
+        "targets": {
+          "/data/reco-counts.json": {
+            "ok200": 0,
+            "not304": 1,
+            "bytes": 0
+          },
+          "/data/reco-nowon.json": {
+            "ok200": 0,
+            "not304": 1,
+            "bytes": 0
+          }
+        }
+      },
+      "change": -100,
+      "valid": true,
+      "pass": true
+    }
+  ]
+}
