@@ -121,10 +121,10 @@ test("미리보기 건수 문장 정정 항목(#929)이 한·영에 있으면 �
   const hit = pickOrRetired(html, "issues", 929);
   if (!hit) return;
   const { ko, en } = hit;
-  for (const w of ["./deal-search.html", "2026-08-29", "8,185건", "10,759건", "17,497건", "18,752건", "수는 그대로", "&lsquo;신규&rsquo;인 신고만", "계약구분이 빈 신고도", "자치구를 고른 목록에만"]) {
+  for (const w of ["./deal-search.html", "2026-08-29", "8,185건", "10,759건", "17,497건", "18,752건", "수는 그대로", "&lsquo;신규&rsquo;인 신고만", "계약구분이 빈 신고는", "자치구를 고른 목록에만"]) {
     assert.ok(ko.includes(w), `한국어 항목에 ${w}`);
   }
-  for (const w of ["./deal-search.html", "2026-08-29", "8,185 jeonse", "10,759 monthly-rent", "17,497 and 18,752", "The number itself is unchanged", "&lsquo;new&rsquo; contract type", "blank types are now left out", "list with a district chosen"]) {
+  for (const w of ["./deal-search.html", "2026-08-29", "8,185 jeonse", "10,759 monthly-rent", "17,497 and 18,752", "The number itself is unchanged", "&lsquo;new&rsquo; contract type", "blank types drop out of it too", "list with a district chosen"]) {
     assert.ok(en.includes(w), `영어 항목에 ${w}`);
   }
 });
