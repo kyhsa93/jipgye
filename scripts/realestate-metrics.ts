@@ -170,6 +170,17 @@ export function isRenewalContract(item) {
   return contractRenewal(item?.contractType) === true;
 }
 
+/**
+ * 원본 줄(raw/rent 의 `contractType`)이 「신규」로 적혔는가 - 시세(summarizeRent)와 단지 전세가율(complex-ratio newJeonse)이 같이 쓴다(#910).
+ * 계약구분이 비어 있는 줄은 신규로 세지 않는다: 같은 칸에서 신규 중앙값보다 −6.3~−9.0%, 갱신보다 +1.0~+1.9%라 갱신 쪽에 가깝다(#781 data-analyst).
+ * 2026-11-16 원본(R0 f692748e)에서 빈칸은 시세 창 전세 5.0%·월세 2.7%, 단지 전세가율 창 5.1%였다(#910 data-analyst 계수).
+ * 7d758668(2026-08-18)은 「옛 신고분이 통째로 사라진다」며 빈칸을 넣었으나, 보관분 202412~202611 에서는 사라지는 달·구 카드·추이 점이 0이라 지금 창에서는 그 근거가 서지 않는다(#910 pm 판정).
+ * 정규화된 줄(normalizeRentDeal)은 빈칸이면 `renewal` 을 싣지 않으므로 같은 판정이 `deal.renewal === false` 다(주간 추이·rent-preview).
+ */
+export function isNewContract(item) {
+  return String(item?.contractType ?? "").trim() === "신규";
+}
+
 export function summarizeRent(items) {
   const jeonseRows = [];
   const wolseRows = [];
@@ -180,6 +191,8 @@ export function summarizeRent(items) {
       renewalCount += 1;
       continue;
     }
+    // 계약구분이 빈 줄은 전세·월세 어느 쪽에도, renewalCount 에도 세지 않는다 - renewalCount 는 「갱신」으로 적힌 건수 그대로다(#910).
+    if (!isNewContract(item)) continue;
 
     const deposit10k = parseWon10k(item.deposit);
     const monthlyRent10k = parseWon10k(item.monthlyRent);
@@ -298,6 +311,7 @@ export function computeOverall(districts) {
 
 // 7일 증감의 기준 기록 고르기. 지금 빌드는 어느 날에도 증감을 싣지 않아 이 함수를 부르지 않는다(#862 3단계, attachChanges).
 // research/arrival-change-2026-11 재현 스크립트(overall2·district7)가 이 규칙으로 기준을 고르고, 계약 대 계약 증감을 다시 재는 새 이슈(pm 11-15)도 쓸 것이라 남긴다.
+// 되살릴 때: 전세·월세 증감은 `rentContract` 가 같은 기록끼리만 견준다 - 필드가 없는 기록은 계약구분 빈칸을 넣은 옛 정의다(#910, build-realestate RENT_CONTRACT).
 export function findBaseline(history, now) {
   const target = new Date(now);
   target.setDate(target.getDate() - 7);

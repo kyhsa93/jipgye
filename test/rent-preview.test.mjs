@@ -9,7 +9,8 @@ const root = path.resolve(import.meta.dirname, "..");
 const readJson = (name) => readFile(path.join(root, `docs/data/${name}.json`), "utf8").then(JSON.parse);
 const NOW = new Date("2026-08-29T00:00:00Z");
 
-const deal = (extra = {}) => ({ dong: "상계동", apt: "가상", area: 59, floor: 3, deposit10k: 40000, date: "2026-08-01", ...extra });
+// renewal: false = 원본 계약구분 「신규」(normalizeRentDeal). 빈칸이면 renewal 이 없다.
+const deal = (extra = {}) => ({ dong: "상계동", apt: "가상", area: 59, floor: 3, deposit10k: 40000, date: "2026-08-01", renewal: false, ...extra });
 
 test("전세와 월세를 갈라 담고 갱신은 뺀다", () => {
   const payload = buildPayload({
@@ -29,6 +30,20 @@ test("전세와 월세를 갈라 담고 갱신은 뺀다", () => {
   assert.equal(payload.jeonse.total, 1);
   assert.equal(payload.wolse.total, 1);
   assert.equal(payload.jeonse.deals[0].district, "노원구", "어느 구 거래인지 안 담겼다");
+});
+
+test("계약구분이 빈 거래(renewal 없음)는 시세처럼 뺀다 (#910)", () => {
+  const blank = (extra = {}) => {
+    const { renewal: _r, ...rest } = deal(extra);
+    return rest;
+  };
+  const payload = buildPayload({
+    now: NOW,
+    byDistrict: { 노원구: { periods: ["202608"], deals: [deal(), blank({ apt: "빈칸" }), blank({ apt: "빈칸월세", monthlyRent10k: 50 }), deal({ monthlyRent10k: 80 })] } },
+  });
+  assert.equal(payload.jeonse.total, 1, "계약구분이 빈 전세를 세었다");
+  assert.equal(payload.wolse.total, 1, "계약구분이 빈 월세를 세었다");
+  assert.ok(!payload.jeonse.deals.some((d) => d.apt === "빈칸"), "계약구분이 빈 전세가 목록에 담겼다");
 });
 
 test("담는 순서가 매일 같다", () => {

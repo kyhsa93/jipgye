@@ -6,6 +6,7 @@ import {
   MIN_CELLS,
   MIN_CELLS_MEDIAN,
   MIN_DEALS_PER_SIDE,
+  cellRatioEntries,
   cellRatios,
   spreadOf,
   spreadSentence,
@@ -44,6 +45,16 @@ test("해제된 매매와 갱신 전세는 시세가 아니다", () => {
 
   const renewals = many(3, () => rent("40,000", { contractType: "갱신" }));
   assert.deepEqual(cellRatios(many(3, () => sale("100,000")), renewals), [], "갱신 보증금으로 전세가율을 냈다");
+});
+
+test("계약구분이 빈 전세는 「신규 전세」로 세지 않는다 - 시세와 같은 정의 (#910)", () => {
+  const sales = many(3, () => sale("100,000"));
+  const blanks = [rent("40,000", { contractType: "" }), rent("40,000", { contractType: undefined }), rent("40,000", { contractType: " " })];
+  // 신규 둘 + 빈칸 셋: 빈칸을 세면 한쪽 3건을 넘어 칸이 서고 값이 끌려 내려간다.
+  assert.deepEqual(cellRatioEntries(sales, [...many(2, () => rent("60,000")), ...blanks]), [], "빈칸 줄로 칸을 세웠다");
+  // 신규 셋 + 빈칸 셋: 칸은 서되 값은 신규 셋의 중앙값 그대로다.
+  const [cell] = cellRatioEntries(sales, [...many(3, () => rent("60,000")), ...blanks]);
+  assert.equal(cell?.ratio, 60, "빈칸 줄 보증금이 중앙값에 섞였다");
 });
 
 test("반전세는 순수 전세와 섞지 않는다", () => {

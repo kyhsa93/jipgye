@@ -42,8 +42,8 @@ export function buildPayload({ byDistrict, now }) {
     periods ??= file.periods ?? null;
 
     for (const deal of file.deals) {
-      // 시세와 같은 규칙 - 갱신은 이전 조건을 잇는 것이라 지금 값이 아니다.
-      if (deal?.renewal === true) continue;
+      // 시세와 같은 규칙 - 갱신은 이전 조건을 잇는 것이라 지금 값이 아니고, 계약구분이 빈 줄(renewal 없음)도 신규로 세지 않는다(#910).
+      if (deal?.renewal !== false) continue;
       const kind = isWolse(deal) ? "wolse" : "jeonse";
       counts[kind] += 1;
       buckets[kind].push({ ...deal, district: district.name });
