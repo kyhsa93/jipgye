@@ -312,14 +312,18 @@ if (pick.includes("budget")) {
   };
   // 공개 대조가 없는 경로라 정적 동등성 세 줄을 결과 앞에 적는다(cto 머지 승인 메모 ②, PREREG 5절 v2).
   //  (i) 줄 고르기 = build-budget-pages.ts 239~254행과 같은 글자(capDealsOf).
-  //  (ii) readAll(ok:false·items 없음 건너뜀)과 readCapDeals(`file?.items ?? []`)의 차이는 ok:false 파일뿐 - 실행 때 다시 세어 0 이 아니면 멈춘다.
+  //  (ii) readAll 은 `ok === false || !Array.isArray(items)` 인 파일을 건너뛰고 readCapDeals 는 `file?.items ?? []` 로 읽는다. 둘이 갈릴 수 있는 파일은
+  //       그 조건에 걸리는 파일뿐이다(cto v2 메모 2로 ok:false 에서 넓힘) - 실행 때 다시 세어 0 이 아니면 멈춘다(items 가 없어 둘 다 0줄인 파일도 넓힘 쪽으로 센다).
   //  (iii) clustering·lineCounts 는 세기뿐이라 파일·행 순서와 무관하다.
   const saleNames = (await readdir(path.join(RAW, "sale"))).filter((f) => f.endsWith(".json"));
-  let okFalse = 0;
-  for (const name of saleNames) if ((await readJson(path.join(RAW, "sale", name)))?.ok === false) okFalse += 1;
-  console.log(`[정적 동등성] (i) 줄 고르기 239~254행 같은 글자 · (ii) raw/sale ok:false ${okFalse}/${saleNames.length} · (iii) clustering·lineCounts 순서 무관`);
-  if (okFalse) {
-    console.error(`멈춤(나-5): raw/sale ok:false ${okFalse}파일 - readAll 과 readCapDeals 가 다른 줄을 읽는다`);
+  let skippedByReadAll = 0;
+  for (const name of saleNames) {
+    const file = await readJson(path.join(RAW, "sale", name));
+    if (file?.ok === false || !Array.isArray(file?.items)) skippedByReadAll += 1;
+  }
+  console.log(`[정적 동등성] (i) 줄 고르기 239~254행 같은 글자 · (ii) raw/sale ok:false 또는 items 배열 아님 ${skippedByReadAll}/${saleNames.length} · (iii) clustering·lineCounts 순서 무관`);
+  if (skippedByReadAll) {
+    console.error(`멈춤(나-5): raw/sale ok:false 또는 items 배열 아님 ${skippedByReadAll}파일 - readAll 과 readCapDeals 가 다른 줄을 읽을 수 있다`);
     stopped.push("예산 군집");
   } else {
     const { items, recollected } = await readAllSale();
