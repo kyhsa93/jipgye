@@ -5,20 +5,22 @@
 // 같은 데이터 판 안의 재방문은 HTTP 캐시(Pages 의 max-age=600 + ETag 재검증)로 끝나고, 내용이 바뀐 배포 뒤에는 주소가 바뀌어 새로 받는다.
 //
 // 소스(docs/*.html·scripts/realestate-template.html·docs/*.js)는 `?_=${Date.now()}` 그대로 둔다 - docs/ 를 바로 띄우면 전처럼 늘 새로 받는다.
+// 키 없이 받는 소스 주소(`fetch("./data/search-index.json")`·`` fetch(`./data/reco-${sl}.json`) ``, #917)도 소스는 그대로 두고 출력에서만 `?v=` 를 붙인다.
 // 치환은 렌더 마지막 단계(build-updated-stamp)가 출력 디렉터리에서만 한다(style.css `?v=` 의 page-assets.ts 와 같은 자리). 출력이 docs/ 자신이면 아무것도 안 한다.
+// 대상은 장(.html)과 sw.js 를 뺀 모든 .js(장 전용 + 셸 JS, #917)다. sw.js 는 바이트가 바뀌면 서비스 워커가 다시 설치되므로 치환하지 않는다.
 //
-// 키 두 가지:
+// 키 두 가지(소스 주소가 `?_=…` 이든 키 없이 닫는 따옴표로 끝나든 같다):
 //  - 정적 이름 `./data/realestate-trend.json?_=…` -> 출력 사본 `<siteRoot>/data/realestate-trend.json` 바이트의 sha256 앞 8자.
 //  - 동적 이름 `./data/${name}.json?_=…` -> 그 장의 로더가 받을 수 있는 파일 집합(아래 PAGE_SETS)의 「정렬한 경로 + 파일별 sha256」 목록의 sha256 앞 8자.
 //    파일별 키를 쓰려면 장마다 이름->해시 표를 인라인으로 실어야 한다(deal-search 는 100개가 넘어 장당 +400 B 를 넘는다). Daily 가 데이터 185개 중
 //    181개를 매일 바꾸므로 파일별과 집합 키가 실제로 갈리는 건 Summarize(뉴스·요약)뿐이다(cto 착수 판정, #695).
 //
-// 렌더를 실패시키는 셋(종료 1, 폴백 없음): 치환 뒤 `?_=${Date.now()}` 가 남은 출력, 동적 로더가 있는데 표에 없는 장, 맞는 파일이 0개인 집합.
+// 렌더를 실패시키는 넷(종료 1, 폴백 없음): 치환 뒤 `?_=${Date.now()}` 가 남은 출력, `./data/…json` 뒤에 `?v=<8자>` 가 없는 출력(sw.js 포함, #917),
+// 동적 로더가 있는데 표에 없는 장, 맞는 파일이 0개인 집합.
 // 집합이 파일 하나를 빠뜨려도 피해는 HTTP 재검증까지(≤600 s)의 묵은 값이다 - 영구 고착은 없다. 표가 소스와 맞는지는 test/data-keys.test.mjs 가 본다.
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { pageScripts } from "./page-assets.ts";
 import { DOCS_DIR } from "./site-dir.ts";
 
 /** 소스의 캐시 무력화 글자(16 B). 나가는 사본에는 1곳도 남지 않는다. */
@@ -26,6 +28,11 @@ export const BUST = "?_=${Date.now()}";
 const BUST_RE = String.raw`\?_=\$\{Date\.now\(\)\}`;
 const STATIC_RE = new RegExp(String.raw`\./data/([\w-]+(?:/[\w-]+)*)\.json` + BUST_RE, "g");
 const DYNAMIC_RE = new RegExp(String.raw`\./data/[^\x60"'\s]*\$\{[^}\x60]*\}[^\x60"'\s]*?\.json` + BUST_RE, "g");
+// 키 없는 주소(#917): `.json` 바로 뒤가 닫는 따옴표인 것만 잡는다. 키를 박은 주소는 `.json?v=…` 라 다시 잡히지 않는다(두 번 돌려도 같은 출력).
+const BARE_STATIC_RE = new RegExp(String.raw`\./data/([\w-]+(?:/[\w-]+)*)\.json(?=["'\x60])`, "g");
+const BARE_DYNAMIC_RE = new RegExp(String.raw`\./data/[^\x60"'\s]*\$\{[^}\x60]*\}[^\x60"'\s]*?\.json(?=\x60)`, "g");
+/** 치환 뒤 검사: `?v=<8자>` 가 붙지 않은 데이터 주소. 전역 플래그가 없어 `test` 가 lastIndex 를 남기지 않는다. */
+const KEYLESS_RE = new RegExp(String.raw`\./data/[^\x60"'\s?]*\.json(?!\?v=[0-9a-f]{8})`);
 
 /**
  * 동적 이름 로더의 파일 집합. 키는 소스 파일 이름, 값은 `<siteRoot>/data/` 기준 경로이고 한 경로 조각 안의 `*` 글롭을 허용한다.
@@ -42,6 +49,8 @@ export const PAGE_SETS: Record<string, readonly string[]> = {
   "record-high.html": ["record-high.json"],
   "renewal-vs-new.html": ["renewal-facts.json", "renewal-cells-*.json"],
   "switch-house.html": ["district-change.json"],
+  // reco-counts.json(렌더가 reco-*.json 에서 만든다)도 이 글롭에 든다 - 같이 바뀌는 파일이라 빼지 않는다(#917).
+  "budget-table.js": ["reco-*.json"],
   "renewal-convert.js": ["conversion.json", "market.json"],
 };
 
@@ -100,25 +109,28 @@ export function dataKeyStamper(siteRoot: string, bytes: (file: string) => Buffer
     }
     return setKey.get(source);
   };
+  const staticUrl = (rel: string) => {
+    tally.keys++;
+    const hash = hashOf(`${rel}.json`);
+    // 출력에 없는 파일은 브라우저도 404 를 받는다 - 키는 「없음」 판(0 8자)이고, 파일이 생기는 배포에서 바뀐다.
+    if (hash === null) tally.missing.add(`${rel}.json`);
+    return `./data/${rel}.json?v=${hash === null ? "00000000" : hash.slice(0, 8)}`;
+  };
+  const setParam = (name: string) => {
+    tally.keys++;
+    return `?v=${keyForSet(DERIVED[name] ?? name, name)}`;
+  };
   return (name: string, text: string) =>
-    !text.includes(BUST)
+    (!text.includes(BUST)
       ? text
-      : text
-          .replace(STATIC_RE, (_m, rel: string) => {
-            tally.keys++;
-            const hash = hashOf(`${rel}.json`);
-            // 출력에 없는 파일은 브라우저도 404 를 받는다 - 키는 「없음」 판(0 8자)이고, 파일이 생기는 배포에서 바뀐다.
-            if (hash === null) tally.missing.add(`${rel}.json`);
-            return `./data/${rel}.json?v=${hash === null ? "00000000" : hash.slice(0, 8)}`;
-          })
-          .replace(DYNAMIC_RE, (m) => {
-            tally.keys++;
-            return m.replace(BUST, `?v=${keyForSet(DERIVED[name] ?? name, name)}`);
-          });
+      : text.replace(STATIC_RE, (_m, rel: string) => staticUrl(rel)).replace(DYNAMIC_RE, (m) => m.replace(BUST, setParam(name)))
+    )
+      .replace(BARE_STATIC_RE, (_m, rel: string) => staticUrl(rel))
+      .replace(BARE_DYNAMIC_RE, (m) => m + setParam(name));
 }
 
 /**
- * 나가는 장(.html)과 장 전용 JS 의 데이터 주소에 판 키를 박는다. 바꾼 파일 수와 키 수를 돌려준다.
+ * 나가는 장(.html)과 sw.js 를 뺀 모든 JS(장 전용 + 셸, #917)의 데이터 주소에 판 키를 박는다. 바꾼 파일 수와 키 수를 돌려준다.
  * `io.read`·`io.write` 는 build-updated-stamp 의 쓰기 묶음(앞 단계가 올려 둔 것을 이어 받는다)이고, 데이터 바이트는 `io.bytes`(기본 디스크)로 읽는다.
  */
 export function stampDataKeys({ siteRoot, io }: { siteRoot: string; io: Io }) {
@@ -126,7 +138,7 @@ export function stampDataKeys({ siteRoot, io }: { siteRoot: string; io: Io }) {
   const tally: Tally = { keys: 0, missing: new Set() };
   const stamp = dataKeyStamper(siteRoot, io.bytes, tally);
   const pages = readdirSync(siteRoot).filter((name) => name.endsWith(".html")).sort();
-  const scripts = pageScripts(siteRoot, io.read);
+  const scripts = readdirSync(siteRoot).filter((name) => name.endsWith(".js") && name !== "sw.js").sort();
   let files = 0;
   for (const name of [...pages, ...scripts]) {
     const full = path.join(siteRoot, name);
@@ -138,7 +150,11 @@ export function stampDataKeys({ siteRoot, io }: { siteRoot: string; io: Io }) {
     }
   }
   // 모르는 모양(정적·동적 어느 쪽에도 안 맞는 주소)으로 남은 것까지 막는다: 장 전체와 모든 .js(셸 JS 포함)를 다시 훑는다.
-  const left = [...pages, ...readdirSync(siteRoot).filter((name) => name.endsWith(".js")).sort()].filter((name) => io.read(path.join(siteRoot, name)).includes(BUST));
+  const every = [...pages, ...readdirSync(siteRoot).filter((name) => name.endsWith(".js")).sort()];
+  const left = every.filter((name) => io.read(path.join(siteRoot, name)).includes(BUST));
   if (left.length) throw new Error(`[data-keys] 치환 뒤에도 ${BUST} 가 남았다: ${left.join(", ")}`);
+  // 키 없는 데이터 주소(#917): 치환한 파일과 sw.js 까지 본다 - 닫는 따옴표로 끝나지 않는 모양이나 sw.js 안의 주소는 여기서 걸린다.
+  const keyless = every.filter((name) => KEYLESS_RE.test(io.read(path.join(siteRoot, name))));
+  if (keyless.length) throw new Error(`[data-keys] 치환 뒤에도 ?v=<8자> 없는 ./data/ 주소가 남았다: ${keyless.join(", ")}`);
   return { files, keys: tally.keys, missing: [...tally.missing].sort() };
 }
