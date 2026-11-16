@@ -46,7 +46,7 @@ const HISTORY_MAX_DAYS = 180;
 
 /**
  * history 레코드의 전세·월세 정의 표식(#910). 이 필드가 붙은 레코드부터 시세가 계약구분 「신규」 줄만 세었고(isNewContract),
- * 필드가 없는 지난 레코드는 「갱신」만 뺀 정의(빈칸 포함)다. 7일 증감을 되살릴 때 이 값이 다른 두 날은 견주지 않는다(findBaseline 주석).
+ * 필드가 없는 지난 레코드는 「갱신」만 뺀 정의(빈칸 포함)다. 7일 증감을 되살릴 때 이 값이 다른 두 날은 견주지 않는다(realestate-metrics.ts 기준 기록 고르기 주석).
  * 오늘 레코드만 새로 쓰므로(appendHistory) 지난 레코드는 바이트 그대로다.
  */
 export const RENT_CONTRACT = "신규";
