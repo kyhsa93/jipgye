@@ -2,7 +2,7 @@
 // 실행: env -i PATH="$PATH" HOME="$HOME" node na-900.mjs <wt> <outdir> [빌더 이름 ...]   (이름: direct switch record floor budget repeat, 없으면 전부)
 // 빌더마다 S 를 먼저 만들어 공개 파일(cd20a99b)과 재현 대조하고, 실패하면 그 빌더의 O 는 만들지 않는다.
 // 동명 단지 판정(sameNames)은 늘 저장 원본으로 한다(#861 정정 ④ 8행 고정 「아니오」).
-import { assertNoKeys, finish, head, leafDiff, readJson, sameAsPublished, slotTable, wtPaths, UPDATED_AT } from "./lib-900.mjs";
+import { assertNoKeys, finish, head, leafDiff, readJson, roundTag, sameAsPublished, slotTable, wtPaths, NO_APPLIED, UPDATED_AT } from "./lib-900.mjs";
 import { copyFile, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -30,23 +30,99 @@ const verdictInput = [];
 const allMonths = [...new Set((await readdir(path.join(RAW, "sale"))).map((f) => /^\d{5}-(\d{6})\.json$/.exec(f)?.[1]).filter(Boolean))].sort();
 
 /**
- * 공개 산출물 견주기와 판정 입력 한 줄. skip 은 화면에 나가지 않는다고 측정 전에 정한 경로(PREREG 「공개 자릿수」).
- * 글자 잎(문장·표 HTML, 두 언어)이 하나라도 다르면 「바뀜」. 글자 0 · 숫자 ≥ 1 이면 「숫자만 - 화면 자릿수 확인」(PREREG 2단계).
+ * 2단계 grep 범위: 공개 파일마다 그 파일을 읽는 화면 코드(PREREG 5절 v2 표, 05a4469e). cpo 목록(PR #934 교차검증 보완 2)에
+ * render/entry.jsx(prerender.ts 조각의 마크업, prerender.ts 41행)를 모든 파일에, monthly-report.ts(GitHub Release 표)를 그것이 읽는 네 파일에 더했다 -
+ * 범위를 넓히는 쪽(「읽음」이 늘어 「바뀜」 쪽)이다. 목록의 어느 파일에서든 키가 나오면 「읽음」이다(다른 JSON 의 같은 키여도 - 넓힘 쪽).
  */
-function report(label, before, after, skip = UPDATED_AT) {
+const SCREEN_CODE = {
+  "direct-deals.json": ["docs/cancelled-deals.html", "scripts/prerender.ts", "docs/method.html", "scripts/monthly-report.ts", "scripts/render/entry.jsx"],
+  "district-change.json": ["docs/switch-house.html", "scripts/prerender.ts", "scripts/render/entry.jsx"],
+  "segment-change.json": ["scripts/segment-change-view.ts", "scripts/prerender.ts", "docs/switch-house.html", "scripts/monthly-report.ts", "scripts/render/entry.jsx"],
+  "record-high.json": ["docs/record-high.html", "scripts/prerender.ts", "scripts/news-context.ts", "scripts/monthly-report.ts", "scripts/render/entry.jsx"],
+  "floor-gap.json": ["docs/floor-gap.html", "scripts/prerender.ts", "scripts/monthly-report.ts", "scripts/render/entry.jsx"],
+  "repeat-sales.json": ["scripts/repeat-sales-view.ts", "scripts/prerender.ts", "scripts/district-facts.ts", "scripts/build-realestate-pages.ts", "scripts/render/entry.jsx"],
+};
+// 측정 작업 트리(05a4469e)의 화면 코드 글자. 목록 파일이 없으면 멈춘다(범위가 비면 「읽지 않음」이 결과를 보고 고르는 자리가 된다).
+const CODE = new Map();
+for (const f of new Set(Object.values(SCREEN_CODE).flat())) {
+  const text = await readFile(path.join(P.wt, f), "utf8").catch(() => null);
+  if (text === null) {
+    console.error(`멈춤: 2단계 grep 범위 파일 ${f} 이 측정 작업 트리에 없다`);
+    process.exit(1);
+  }
+  CODE.set(f, text.split("\n"));
+}
+
+/**
+ * 잎 경로의 grep 키: 「.」로 나눈 마디를 끝에서부터 보아 처음 나오는 식별자(^[A-Za-z_$][A-Za-z0-9_$]*$).
+ * 배열 인덱스(rows.3.p → p)와 데이터 값으로 된 맵 키(구 코드 쌍 11140-11170, 구 이름, 달 202609 등 - 코드에 글자로 적히지 않고 돌며 읽힌다)는
+ * 건너뛰고 그 위 마디를 쓴다. 식별자가 하나도 없으면 null - 그 파일을 읽는 코드가 있으므로 「읽음」으로 센다(넓힘 쪽).
+ */
+const IDENT = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
+const keyOf = (p) => p.split(".").reverse().find((seg) => IDENT.test(seg)) ?? null;
+
+/** 키를 읽는 화면 코드 자리(파일:줄). `LC_ALL=C grep -nwF -e <키> -- <목록>` 과 같은 규칙(앞뒤가 [A-Za-z0-9_] 가 아닌 자리). */
+function hitsOf(file, key) {
+  if (key === null) return ["(식별자 키 없음 - 읽음으로 셈)"];
+  const re = new RegExp(`(?<![A-Za-z0-9_])${key.replace(/\$/g, "\\$")}(?![A-Za-z0-9_])`);
+  const hits = [];
+  for (const f of SCREEN_CODE[file]) CODE.get(f).forEach((line, i) => re.test(line) && hits.push(`${f}:${i + 1}`));
+  return hits;
+}
+
+/**
+ * 공개 산출물 견주기와 판정 입력 한 줄(PREREG 5절 v2). skip 은 화면에 나가지 않는다고 측정 전에 정한 경로.
+ * 0. 덧씌움 적용 슬롯이 0 이면 「이번 회차 판정 불가(적용 0)」(pm 에 올림) - 지표와 상관없다.
+ * 1. 글자 잎(문장·표 HTML, 두 언어, 한쪽에만 있는 글자 잎·빈 배열/객체 표시 포함)이 하나라도 다르면 「바뀜(글자)」.
+ * 2. 글자 0 이면 숫자·기타 잎마다 grep 키를 화면 코드 목록(SCREEN_CODE[file])에서 찾는다.
+ *    - 기타(불·null·한쪽에만 있는 잎, 숫자↔null·없음 포함): 키를 읽으면 「바뀜(기타)」 - 서식 적용 없이. 0곳이면 세지 않는다.
+ *    - 숫자(양쪽 다 숫자): 키를 읽으면 그 코드의 서식을 전후 값에 손으로 적용해 판정한다(결과 표 옆에 줄을 적는다). 0곳이면 세지 않는다.
+ * 3. 남는 차이가 없으면 「같음」 → 「아니오 확정」안, 회차·적용/덧씌움 슬롯 수를 함께 적는다.
+ */
+function report(label, before, after, { skip = UPDATED_AT, file = null, slots }) {
   const d = leafDiff(before, after, skip);
   const text = d.filter((x) => x.kind === "글자");
   const num = d.filter((x) => x.kind === "숫자");
   const other = d.filter((x) => x.kind === "기타");
-  const verdict = text.length ? "바뀜(글자)" : num.length || other.length ? "숫자만 - 화면 자릿수 확인" : "같음";
-  console.log(`[비교] ${label}: 바뀐 잎 ${d.length} — 글자 ${text.length} · 숫자 ${num.length} · 기타 ${other.length} → ${verdict}`);
+  // 2단계 키 표: 키 → 숫자·기타 잎 수, 화면 코드 자리.
+  const keys = new Map();
+  if (file) {
+    for (const x of [...num, ...other]) {
+      const k = keyOf(x.path);
+      const id = k ?? "(식별자 없음)";
+      if (!keys.has(id)) keys.set(id, { num: 0, other: 0, hits: hitsOf(file, k) });
+      keys.get(id)[x.kind === "숫자" ? "num" : "other"] += 1;
+    }
+  }
+  const entries = [...keys.values()];
+  const otherRead = entries.reduce((n, e) => n + (e.hits.length ? e.other : 0), 0);
+  const numRead = entries.reduce((n, e) => n + (e.hits.length ? e.num : 0), 0);
+  const unread = entries.reduce((n, e) => n + (e.hits.length ? 0 : e.num + e.other), 0);
+  const verdict =
+    slots.applied === 0
+      ? NO_APPLIED
+      : text.length
+        ? "바뀜(글자)"
+        : otherRead
+          ? "바뀜(기타 - 화면 코드가 키를 읽음)"
+          : numRead
+            ? `숫자 - 화면 서식 판정(손, 읽히는 숫자 잎 ${numRead})`
+            : "같음 → 「아니오 확정」안";
+  console.log(
+    `[비교] ${label}: 바뀐 잎 ${d.length} — 글자 ${text.length} · 숫자 ${num.length}(읽힘 ${numRead}) · 기타 ${other.length}(읽힘 ${otherRead}) · 화면 밖 ${unread} → ${verdict} · ${roundTag(slots)}`
+  );
+  if (file && !text.length) {
+    console.log(`  2단계 범위 ${file}: ${SCREEN_CODE[file].join(" ")}`);
+    for (const [id, e] of keys)
+      console.log(`  키 ${id}: 숫자 ${e.num} · 기타 ${e.other} · 화면 코드 ${e.hits.length}곳${e.hits.length ? ` (${e.hits.slice(0, 3).join(", ")}${e.hits.length > 3 ? " …" : ""})` : ` - LC_ALL=C grep -nwF -e ${id} -- ${SCREEN_CODE[file].join(" ")} → 0`}`);
+  }
   // 경로만 찍는다(글자 값은 길이만). 앞 40개. 전부는 out/<빌더>.json.
   for (const x of d.slice(0, 40)) {
     const v = (y) => (typeof y === "string" ? `글자${y.length}` : JSON.stringify(y));
     console.log(`  ${x.kind} ${x.path}: ${v(x.before)} → ${v(x.after)}`);
   }
   if (d.length > 40) console.log(`  … ${d.length - 40}곳 더(out 파일)`);
-  verdictInput.push({ label, leaves: d.length, text: text.length, num: num.length, other: other.length, verdict });
+  verdictInput.push({ label, leaves: d.length, text: text.length, num: num.length, other: other.length, numRead, otherRead, unread, verdict, tag: roundTag(slots) });
   return d;
 }
 
@@ -62,13 +138,13 @@ if (pick.includes("direct")) {
   const { readRawSales } = await S("build-cancellation.ts");
   const { buildPayload } = await S("build-direct-deals.ts");
   const months = recentMonths(NOW, RETENTION_MONTHS);
-  await slotTable(P, months, "(나-1) 직거래");
+  const slots = await slotTable(P, months, "(나-1) 직거래");
   const build = async (read) => buildPayload({ byDistrict: await readRawSales(months, RAW, read), months, now: NOW, sameNames });
   const before = await build(readSlotFile);
   if (!sameAsPublished("direct-deals.json", before, await readJson(`${DATA}/direct-deals.json`))) stopped.push("직거래");
   else {
     const after = await build(readRecollectedSlot);
-    const d = report("직거래 direct-deals.json", before, after);
+    const d = report("직거래 direct-deals.json", before, after, { file: "direct-deals.json", slots });
     await writeFile(`${OUT}/na-direct.json`, JSON.stringify(d));
   }
 }
@@ -79,7 +155,7 @@ if (pick.includes("switch")) {
   const NOW = new Date("2026-11-16T02:44:23.771Z");
   const { buildPayload } = await S("build-district-change.ts");
   const { buildSegmentPayload } = await S("segment-change.ts");
-  await slotTable(P, allMonths, "(나-2) 갈아타기·가격대 변화(원본 전부)");
+  const slots = await slotTable(P, allMonths, "(나-2) 갈아타기·가격대 변화(원본 전부)");
   const official = await readJson(`${RAW}/ecos/apt-price-index.json`).catch(() => null);
   const survey = await readJson(`${RAW}/indicators/rone-districts.json`).catch(() => null);
   const { items, recollected } = await readAllSale();
@@ -91,8 +167,8 @@ if (pick.includes("switch")) {
   const ok2 = sameAsPublished("segment-change.json", scB, await readJson(`${DATA}/segment-change.json`));
   if (!ok1 || !ok2) stopped.push("갈아타기·가격대 변화");
   else {
-    const d1 = report("갈아타기 district-change.json", dcB, dc(recollected));
-    const d2 = report("가격대 변화 segment-change.json", scB, sc(recollected));
+    const d1 = report("갈아타기 district-change.json", dcB, dc(recollected), { file: "district-change.json", slots });
+    const d2 = report("가격대 변화 segment-change.json", scB, sc(recollected), { file: "segment-change.json", slots });
     await writeFile(`${OUT}/na-switch.json`, JSON.stringify({ d1, d2 }));
   }
 }
@@ -102,12 +178,12 @@ if (pick.includes("record")) {
   head("(나-3) 신고가 record-high.json");
   const NOW = new Date("2026-11-16T02:44:17.671Z");
   const { buildPayload } = await S("build-record-high.ts");
-  await slotTable(P, allMonths, "(나-3) 신고가(원본 전부)");
+  const slots = await slotTable(P, allMonths, "(나-3) 신고가(원본 전부)");
   const { items, recollected } = await readAllSale();
   const before = buildPayload({ items, now: NOW, sameNames });
   if (!sameAsPublished("record-high.json", before, await readJson(`${DATA}/record-high.json`))) stopped.push("신고가");
   else {
-    const d = report("신고가 record-high.json", before, buildPayload({ items: recollected, now: NOW, sameNames }));
+    const d = report("신고가 record-high.json", before, buildPayload({ items: recollected, now: NOW, sameNames }), { file: "record-high.json", slots });
     await writeFile(`${OUT}/na-record.json`, JSON.stringify(d));
   }
 }
@@ -118,7 +194,7 @@ if (pick.includes("floor")) {
   const NOW = new Date("2026-11-16T02:43:56.886Z");
   const { MONTHS, buildPayload, saleRow, jeonseRow } = await S("build-floor-gap.ts");
   const months = recentMonths(NOW, MONTHS);
-  await slotTable(P, months, "(나-4) 층 격차");
+  const slots = await slotTable(P, months, "(나-4) 층 격차");
   // build-floor-gap.ts 33~47행 readRaw(내보내지 않음)와 같은 읽기. 매매 읽기 함수만 갈아 끼우고 전월세는 늘 저장 그대로.
   const readRaw = async (kind, read, toPrice) => {
     const per = await Promise.all(
@@ -139,7 +215,7 @@ if (pick.includes("floor")) {
   const before = await build(readSlotFile);
   if (!sameAsPublished("floor-gap.json", before, await readJson(`${DATA}/floor-gap.json`))) stopped.push("층 격차");
   else {
-    const d = report("층 격차 floor-gap.json", before, await build(readRecollectedSlot));
+    const d = report("층 격차 floor-gap.json", before, await build(readRecollectedSlot), { file: "floor-gap.json", slots });
     await writeFile(`${OUT}/na-floor.json`, JSON.stringify(d));
   }
 }
@@ -156,7 +232,7 @@ if (pick.includes("budget")) {
   const { lineCounts } = await S("policy-loan.ts");
   const { latestRate } = await S("mortgage.ts");
   const { budgetRulesHtml } = await S("budget-rules.ts");
-  await slotTable(P, allMonths, "(나-5) 예산 군집(원본 전부)");
+  const slots = await slotTable(P, allMonths, "(나-5) 예산 군집(원본 전부)");
   // build-budget-pages.ts 239~254행 readCapDeals(내보내지 않음)와 같은 줄 고르기. 파일 순서는 세는 값(건수)에 영향이 없다.
   const capDealsOf = (items) => {
     const deals = [];
@@ -187,17 +263,31 @@ if (pick.includes("budget")) {
     );
     return { capStats, policyCounts, pages, rules: budgetRulesHtml({ mortgageSeries, policyCounts }) };
   };
-  const { items, recollected } = await readAllSale();
-  const before = render(items);
-  console.log(`[재현] 예산대 장: 공개 대조 없음(Daily 가 커밋하지 않고 배포 때 렌더한다). 렌더 장 ${Object.values(before.pages).filter(Boolean).length}/${BUDGET_PAGES.length}`);
-  const after = render(recollected);
-  report("예산 군집 capStats·policyCounts(숫자, 기록)", { capStats: before.capStats, policyCounts: before.policyCounts }, { capStats: after.capStats, policyCounts: after.policyCounts }, []);
-  verdictInput.pop(); // 위 줄은 기록이다 - 판정은 렌더한 글자로 한다.
-  const changedPages = Object.keys(before.pages).filter((f) => before.pages[f] !== after.pages[f]);
-  const rulesChanged = before.rules !== after.rules;
-  console.log(`[비교] 예산 군집: 바뀐 예산대 장 ${changedPages.length}/${BUDGET_PAGES.length}${changedPages.length ? ` (${changedPages.join(", ")})` : ""} · method 규칙 문단 ${rulesChanged ? "바뀜" : "같음"} → ${changedPages.length || rulesChanged ? "바뀜(글자)" : "같음"}`);
-  verdictInput.push({ label: "예산 군집 예산대 장·method 규칙 문단", text: changedPages.length + Number(rulesChanged), num: 0, other: 0, verdict: changedPages.length || rulesChanged ? "바뀜(글자)" : "같음" });
-  await writeFile(`${OUT}/na-budget.json`, JSON.stringify({ changedPages, rulesChanged, before: { capStats: before.capStats, policyCounts: before.policyCounts }, after: { capStats: after.capStats, policyCounts: after.policyCounts } }));
+  // 공개 대조가 없는 경로라 정적 동등성 세 줄을 결과 앞에 적는다(cto 머지 승인 메모 ②, PREREG 5절 v2).
+  //  (i) 줄 고르기 = build-budget-pages.ts 239~254행과 같은 글자(capDealsOf).
+  //  (ii) readAll(ok:false·items 없음 건너뜀)과 readCapDeals(`file?.items ?? []`)의 차이는 ok:false 파일뿐 - 실행 때 다시 세어 0 이 아니면 멈춘다.
+  //  (iii) clustering·lineCounts 는 세기뿐이라 파일·행 순서와 무관하다.
+  const saleNames = (await readdir(path.join(RAW, "sale"))).filter((f) => f.endsWith(".json"));
+  let okFalse = 0;
+  for (const name of saleNames) if ((await readJson(path.join(RAW, "sale", name)))?.ok === false) okFalse += 1;
+  console.log(`[정적 동등성] (i) 줄 고르기 239~254행 같은 글자 · (ii) raw/sale ok:false ${okFalse}/${saleNames.length} · (iii) clustering·lineCounts 순서 무관`);
+  if (okFalse) {
+    console.error(`멈춤(나-5): raw/sale ok:false ${okFalse}파일 - readAll 과 readCapDeals 가 다른 줄을 읽는다`);
+    stopped.push("예산 군집");
+  } else {
+    const { items, recollected } = await readAllSale();
+    const before = render(items);
+    console.log(`[재현] 예산대 장: 공개 대조 없음(Daily 가 커밋하지 않고 배포 때 렌더한다). 렌더 장 ${Object.values(before.pages).filter(Boolean).length}/${BUDGET_PAGES.length}`);
+    const after = render(recollected);
+    report("예산 군집 capStats·policyCounts(숫자, 기록)", { capStats: before.capStats, policyCounts: before.policyCounts }, { capStats: after.capStats, policyCounts: after.policyCounts }, { skip: [], slots });
+    verdictInput.pop(); // 위 줄은 기록이다 - 판정은 렌더한 글자로 한다.
+    const changedPages = Object.keys(before.pages).filter((f) => before.pages[f] !== after.pages[f]);
+    const rulesChanged = before.rules !== after.rules;
+    const bVerdict = slots.applied === 0 ? NO_APPLIED : changedPages.length || rulesChanged ? "바뀜(글자)" : "같음 → 「아니오 확정」안";
+    console.log(`[비교] 예산 군집: 바뀐 예산대 장 ${changedPages.length}/${BUDGET_PAGES.length}${changedPages.length ? ` (${changedPages.join(", ")})` : ""} · method 규칙 문단 ${rulesChanged ? "바뀜" : "같음"} → ${bVerdict} · ${roundTag(slots)}`);
+    verdictInput.push({ label: "예산 군집 예산대 장·method 규칙 문단", text: changedPages.length + Number(rulesChanged), num: 0, other: 0, numRead: 0, otherRead: 0, unread: 0, verdict: bVerdict, tag: roundTag(slots) });
+    await writeFile(`${OUT}/na-budget.json`, JSON.stringify({ changedPages, rulesChanged, before: { capStats: before.capStats, policyCounts: before.policyCounts }, after: { capStats: after.capStats, policyCounts: after.policyCounts } }));
+  }
 }
 
 // ---- 6. 반복거래(build-repeat-sales.ts build({ rawDir }) → repeat-sales.json) ---------------------------------------------
@@ -205,7 +295,7 @@ if (pick.includes("repeat")) {
   head("(나-6) 반복거래 repeat-sales.json");
   const NOW = new Date("2026-11-16T02:44:59.272Z");
   const { build } = await S("build-repeat-sales.ts");
-  await slotTable(P, allMonths, "(나-6) 반복거래(원본 전부)");
+  const slots = await slotTable(P, allMonths, "(나-6) 반복거래(원본 전부)");
   // 대조 상대 N4(segment-change.json)는 두 실행 모두 cd20a99b 공개 파일로 고정한다 - 가격대 변화의 덧씌움 효과는 (나-2)에서 잰다.
   const opts = { roneFile: `${RAW}/indicators/rone-districts.json`, n4File: `${DATA}/segment-change.json`, now: NOW };
   const before = await build({ rawDir: RAW, ...opts });
@@ -228,13 +318,15 @@ if (pick.includes("repeat")) {
     console.log(`  덧씌움 합친 사본: 합친 슬롯 ${merged}`);
     const after = await build({ rawDir: rawO, ...opts });
     // provenance(입력 트리 해시·파일 수 등)는 화면에 나가지 않는 출처 기록이라 판정에서 뺀다(PREREG 「공개 자릿수」 - 넓힐 때의 provenance 는 후속 이슈의 일).
-    const d = report("반복거래 repeat-sales.json", before, after, [...UPDATED_AT, /^provenance(\.|$)/]);
+    const d = report("반복거래 repeat-sales.json", before, after, { skip: [...UPDATED_AT, /^provenance(\.|$)/], file: "repeat-sales.json", slots });
     await writeFile(`${OUT}/na-repeat.json`, JSON.stringify(d));
     await rm(rawO, { recursive: true, force: true });
   }
 }
 
 head("(나) 판정 입력");
-for (const v of verdictInput) console.log(`  ${v.label}: ${v.verdict} (글자 ${v.text} · 숫자 ${v.num} · 기타 ${v.other})`);
+// 기타 잎은 숫자 잎과 따로 센다(cto 머지 승인 메모 ③). 「아니오 확정」·「판정 불가」 기록에는 회차·적용/덧씌움 슬롯 수가 붙는다.
+for (const v of verdictInput)
+  console.log(`  ${v.label}: ${v.verdict} (글자 ${v.text} · 숫자 ${v.num}(읽힘 ${v.numRead}) · 기타 ${v.other}(읽힘 ${v.otherRead}) · 화면 밖 ${v.unread}) · ${v.tag}`);
 console.log(`멈춘 빌더: ${stopped.length ? stopped.join(", ") : "없음"}`);
 finish();

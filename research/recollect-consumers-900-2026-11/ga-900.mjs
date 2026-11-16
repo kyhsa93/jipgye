@@ -1,7 +1,7 @@
 // #900 (가) 두 경로 측정: 매매 슬롯을 저장 그대로(readSlotFile) 읽을 때와 덧씌움을 합쳐(readRecollectedSlot) 읽을 때의 차이.
 // 실행: env -i PATH="$PATH" HOME="$HOME" node ga-900.mjs <wt> <outdir>   (<wt> = 코드 05a4469e, raw·docs/data = 데이터 커밋 cd20a99b)
 // 순서는 PREREG.md 「실행 순서」. 경로마다 before(저장)를 먼저 만들어 재현 대조를 하고, 대조가 실패하면 그 경로의 after(덧씌움)는 만들지 않는다.
-import { assertNoKeys, finish, head, leafDiff, multisetDiff, readJson, sameAsPublished, slotTable, wtPaths, UPDATED_AT } from "./lib-900.mjs";
+import { assertNoKeys, finish, head, leafDiff, multisetDiff, readJson, roundTag, sameAsPublished, slotTable, wtPaths, NO_APPLIED, UPDATED_AT } from "./lib-900.mjs";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -32,7 +32,7 @@ const stopped = [];
   const months = recentMonths(NOW); // SEARCH_MONTHS 3
   const { buildPayload } = await S("build-budget-deals.ts");
   const { buildDealFiles, dealFileName } = await S("deal-files.ts");
-  await slotTable(P, months, "(가-1) 거래 검색·예산");
+  const slots = await slotTable(P, months, "(가-1) 거래 검색·예산");
 
   const build = async (read) => {
     const source = await readDealSource(NOW, months, read);
@@ -89,7 +89,9 @@ const stopped = [];
     }
     console.log(`어긋남 행(나간 줄 + 들어온 줄): ${total} — 나간 ${sum.out} · 들어온 ${sum.in} (짝지은 값 바뀜 ${sum.changed} · 사라짐 ${sum.gone} · 새 줄 ${sum.appeared})`);
     for (const r of perDistrict) console.log(`  ${r.name}: 줄 ${r.before}→${r.after} · 나간 ${r.out} · 들어온 ${r.in} (값 바뀜 ${r.changed} · 사라짐 ${r.gone} · 새 줄 ${r.appeared})`);
-    console.log(`판정 입력 (가-1): 어긋남 행 ${total} ${total >= 1 ? "≥ 1 → 전환" : "= 0 → 전환하지 않음"} (문턱 1행, PREREG)`);
+    // 적용 0 이면 지표와 상관없이 「판정 불가」(PREREG 6절 v2). 기록에는 회차와 적용/덧씌움 슬롯 수를 붙인다.
+    const v1 = slots.applied === 0 ? NO_APPLIED : total >= 1 ? "≥ 1 → 전환" : "= 0 → 전환하지 않음";
+    console.log(`판정 입력 (가-1): 어긋남 행 ${total} ${v1} (문턱 1행, PREREG) · ${roundTag(slots)}`);
 
     // 공개 값 전후(기록): 화면 파일 세 개의 잎 차이 수. 단지명이 든 잎은 경로·값을 찍지 않고 수만 센다.
     for (const [label, b, a] of [
@@ -122,7 +124,7 @@ const stopped = [];
   const { buildRisk, priceLookup } = await S("jeonse-risk.ts");
   const { complexPriceFileName } = await S("build-complex-price.ts");
   const months = recentMonths(NOW, MONTHS);
-  await slotTable(P, months, "(가-2) 전세가율·전세 비중");
+  const slots = await slotTable(P, months, "(가-2) 전세가율·전세 비중");
 
   // readRaw(build-complex-ratio.ts 24~36행)와 같은 읽기인데 매매 읽기 함수만 갈아 끼운다. 전월세(30행)는 늘 저장 그대로.
   const itemsOf = (files) => files.filter((file) => file?.ok !== false && Array.isArray(file?.items)).flatMap((file) => file.items);
@@ -199,7 +201,8 @@ const stopped = [];
     }
     console.log(`어긋남 칸(합집합): ${tally.union} — (a) 들고 난 칸 ${tally.a}(생김 ${tally.aIn} · 사라짐 ${tally.aOut}) · (b) 전세가율이 다른 칸 ${tally.b} · (c) 맞물림이 달라진 칸 ${tally.c}`);
     for (const r of rows) console.log(`  ${r.name}: 합 ${r.union} · (a) ${r.a}(+${r.aIn}/−${r.aOut}) · (b) ${r.b} · (c) ${r.c}`);
-    console.log(`판정 입력 (가-2): 어긋남 칸 ${tally.union} ${tally.union >= 1 ? "≥ 1 → 전환" : "= 0 → 전환하지 않음"} (문턱 1칸, PREREG)`);
+    const v2 = slots.applied === 0 ? NO_APPLIED : tally.union >= 1 ? "≥ 1 → 전환" : "= 0 → 전환하지 않음";
+    console.log(`판정 입력 (가-2): 어긋남 칸 ${tally.union} ${v2} (문턱 1칸, PREREG) · ${roundTag(slots)}`);
 
     // 공개 값 전후(기록): 서울·구. 칸 이름은 없다(구 집계만).
     const line = (s) => (s ? JSON.stringify(s) : "null");

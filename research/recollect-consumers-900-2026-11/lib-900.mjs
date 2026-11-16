@@ -115,7 +115,9 @@ export function leafDiff(before, after, skip = []) {
     const x = a.has(p) ? a.get(p) : undefined;
     const y = b.has(p) ? b.get(p) : undefined;
     if (Object.is(x, y)) continue;
-    const kind = typeof x === "string" || typeof y === "string" ? "글자" : typeof x === "number" || typeof y === "number" ? "숫자" : "기타";
+    // 글자 = 한쪽이라도 문자열(빈 배열·빈 객체 표시 "[]"·"{}" 포함, 1단계). 숫자 = 양쪽 다 숫자(2단계 서식 판정).
+    // 기타 = 그 밖 전부(불·null, 숫자↔null·없음처럼 한쪽에만 있는 잎 포함) - 2단계에서 화면 코드가 그 키를 읽으면 「바뀜」(PREREG 5절 v2).
+    const kind = typeof x === "string" || typeof y === "string" ? "글자" : typeof x === "number" && typeof y === "number" ? "숫자" : "기타";
     diffs.push({ path: p, kind, before: x, after: y });
   }
   return diffs;
@@ -156,6 +158,19 @@ export function multisetDiff(before, after) {
   }
   return { out, in: inn, outRows, inRows };
 }
+
+// ---- 회차·적용 0 (PREREG 6절 v2, cpo 보완 3) ------------------------------------------------------------------------
+/** 이 측정의 덧씌움 회차(raw/recollect/round-202611.json, PREREG 1절 고정). */
+export const ROUND = "202611";
+
+/** 판정 기록 꼬리: 회차와 적용/덧씌움 슬롯 수. 「아니오 확정」·「전환하지 않음」·「판정 불가」 기록에 늘 붙인다. */
+export const roundTag = (slots) => `round ${ROUND} · 적용 ${slots.applied}/덧씌움 ${slots.overlay} 슬롯`;
+
+/**
+ * 적용 슬롯이 0 이면 잰 것이 없다(무시 슬롯은 두 읽기가 같은 객체라 어긋남이 저절로 0). 그 경로·빌더는 지표와 상관없이
+ * 「이번 회차 판정 불가(적용 0)」로 적고 pm 에 올린다 - 「전환하지 않음」·「아니오 확정」으로 적지 않는다.
+ */
+export const NO_APPLIED = "이번 회차 판정 불가(적용 0) → pm";
 
 /** 측정 단계 표시. 결과 줄은 이 머리 뒤에만 찍는다. */
 export const head = (text) => console.log(`\n== ${text} ==`);
