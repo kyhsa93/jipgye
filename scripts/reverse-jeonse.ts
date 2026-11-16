@@ -19,7 +19,7 @@ import { areaGroups } from "./complex-price.ts";
 import { MIN_CELLS, MIN_DEALS_PER_SIDE, median } from "./complex-ratio.ts";
 import { RETENTION_MONTHS, shiftMonth, yearMonthOf } from "./realestate-slots.ts";
 import { recentMonths } from "./realestate-source.ts";
-// 같은 이름의 complex-ratio.ts newJeonse(「갱신」만 빼서 빈칸이 들어감, #910 판정 대상)와 헷갈리지 않게 별칭으로 받는다(cto 조건 2).
+// 같은 이름의 complex-ratio.ts newJeonse(줄을 고르는 참·거짓 함수 - 이 모듈은 칸 키·면적·보증금을 담은 줄 객체가 필요하다)와 헷갈리지 않게 별칭으로 받는다(cto 조건 2).
 import { newJeonse as newJeonseRow } from "./renewal-cells.ts";
 
 /** 2년 전 창 줄 정의. json 에 그대로 싣고 화면·method 가 이 값을 쓴다. */

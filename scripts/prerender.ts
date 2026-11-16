@@ -4,6 +4,7 @@ import { accessibleTables } from "./table-a11y.ts";
 import { bilingualCells, hangulCount } from "./bilingual-cell.ts";
 import { moveInDistrictTableHtml } from "./move-in.ts";
 import { nowcastSentence, nowcastTableHtml } from "./outlook.ts";
+import { reverseJeonseView } from "./reverse-jeonse-view.ts";
 import { createReactRenderer } from "./render/react.ts";
 import { createWriteSet } from "./render-writes.ts";
 import { escapeHtml } from "./html-escape.ts";
@@ -163,6 +164,8 @@ async function main() {
   const moveIn = await readJson("move-in");
   const outlook = await readJson("outlook");
   const indicators = await readJson("outlook-indicators");
+  // 2년 전 계약 보증금 대 지금 신규 전세(#693 N11 PR2): 빌드 때 두 언어를 다 굽는다(새 fetch 0 - cto 조건 11). json 이 없으면 틀의 빈 자리 그대로.
+  const reverseJeonse = reverseJeonseView(await readJson("reverse-jeonse"));
   // 전망의 문장과 표는 빌더가 두 언어로 다 만들어 둔다. 여기서는 한국어를 꽂기만 한다.
   const outlookText = (key) => (outlook?.[key]?.ko ? escapeHtml(outlook[key].ko) : null);
   // 메울 달 0개(#801): 이 코드 전에 구운 json 은 nowcast 표·문장이 null 이다. 데이터를 다시 굽지 않아도 json 의 regions 로 자리표시를 지금 만든다
@@ -314,6 +317,12 @@ async function main() {
         // 구×반기 표 조각(#677). 예전 자치구별 한 줄(moveIn.districts)은 json 에 남기되 화면은 표를 쓴다.
         moveInDistricts: moveInDistrictsHtml(moveIn),
         indicatorTable: both(indicators?.table, indicatorPick),
+        // 문장은 lang 구역 두 벌(틀의 hidden 을 장의 언어 전환이 옮긴다), 표는 머리글·행 이름·문구 칸을 두 벌로(숫자 칸은 두 벌이 같아 그대로다).
+        reverseJeonseLead: reverseJeonse?.lead.ko ?? null,
+        reverseJeonseLeadEn: reverseJeonse?.lead.en ?? null,
+        reverseJeonseTable: reverseJeonse ? both(reverseJeonse.table) : null,
+        reverseJeonseNote: reverseJeonse?.note.ko ?? null,
+        reverseJeonseNoteEn: reverseJeonse?.note.en ?? null,
       },
     ],
     [label("buy-by-budget.html"), at("buy-by-budget.html"), { budgetTable }],
