@@ -16,7 +16,7 @@ ln -s <repo>/node_modules <wt>/node_modules
 node dist-910.mjs <wt>                 # contractType 값 분포(달별)
 node arrival-910.mjs <wt>              # 도착 주별 미표기 비율
 ./run-910.sh <wt> out/before           # build-realestate(B1·B2·B5·rents) → measure-910(A1·A2·A3·B6)
-git -C <wt> apply after.patch
+git -C <wt> apply "$PWD/after.patch"   # -C 는 패치 경로도 <wt> 기준으로 읽으므로 절대 경로로 준다
 ./run-910.sh <wt> out/after
 python3 -I compare-910.py . <wt>       # → compare-910.out
 node cells-gone-910.mjs <wt> .         # A1 사라진 칸의 원인
