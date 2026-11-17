@@ -22623,7 +22623,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]오영주 기자 = 서울 아파트 매매시장 거래가 위축된 가운데 상대적으로 가격이 저렴한 연립·다세대주택 거래는 지난해보다 늘어난 것으로 나타났다. 17일 부동산 정보 플랫폼 다방이 국토교통부 실거래가 공개…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 매매 (84㎡ 환산)",
+            "labelEn": "Seoul apartment sale (scaled to 84㎡)",
+            "value": "12억 8,218만원",
+            "valueEn": "₩1,282M",
+            "note": "전 면적 평균 · 11/16~11/17 들어온 신고 248건",
+            "noteEn": "All-size average · 248 filings arrived Nov 16–17"
+          }
+        ],
+        "titleEn": "Instead of apartments?...Row houses and multi-family homes in Seoul see 18% increase in transactions compared to last year"
       },
       {
         "title": "지역주택조합원끼리 결혼해도 자격 유지…리모델링 동의율도 70%로 완화",
@@ -22632,7 +22645,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "배우자 조합주택 입주권 주택 수에서 제외 세대주·부부 중복가입 금지 규정도 예외 적용 리모델링 동의율 75%→70%…내년 1월 시행앞으로 지역주택조합 조합원끼리 결혼하더라도 한 사..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Local Housing Cooperative Members Who Marry Each Other Can Maintain Eligibility... Remodeling Consent Rate Also Eased to 70%"
       },
       {
         "title": "아파트 리모델링 동의율 완화…지주택 조합원 결혼 패널티 없애",
@@ -22641,7 +22655,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 변해정 기자 = 앞으로는 공동주택 단지 전체 소유자의 70%만 동의해도 리모델링 추진이 가능해진다. 지역주택조합 조합원 간 혼인 시 1명은 조합원 자격을 포기해야 하는 결혼 패널티를 없애고, 10년…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Apartment Remodeling Approval Rate Eased... No Marriage Penalty for Cooperative Housing Members"
       },
       {
         "title": "공동주택 리모델링 동의율 75→70% 완화…사업 추진 속도↑",
@@ -22650,7 +22665,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(세종=연합뉴스) 오진송 기자 = 내년부터 아파트 등 공동주택의 리모델링 허가에 필요한 주민 동의율이 75%에서 70%로 낮아진다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Apartment Remodeling Approval Rate Eased from 75 to 70%...Project Pace Up"
       },
       {
         "title": "리모델링 동의율 75%→70% 완화… ‘주택법 시행령’ 국무회의 의결",
@@ -22659,7 +22675,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "내년부터 공동주택 리모델링 허가 동의율 요건이 현행 75%에서 70%로 낮아진다. 지역주택조합 조합원끼리 결혼하면 한 명이 조합원 자격을 포기해야 했던 이른바 ‘결혼 페널티’도 폐지된다. 국토교통부는 이 같은 내용을…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Remodeling agreement rate eased from 75% to 70%... 'Housing Act Enforcement Decree' passed at State Council meeting"
       },
       {
         "title": "금융위, '5극3특' 중기 보증부대출 지자체 공모…내년 1월까지",
@@ -22668,7 +22685,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 강수련 기자 = 금융위원회가 '5극 3특'(5개 초광역권·3개 특별자치도) 지역 핵심 중소·중견기업 보증부대출 사업의 지방자치...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Financial Supervisory Commission launches public bidding for mid-sized guaranteed loans under '5P3S' policy for local governments until January next year"
       },
       {
         "title": "국내 10가구 중 4가구 \"소득 대비 집값 비싸다\"",
@@ -22677,7 +22695,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]정유선 기자 = 일반가구 10가구 중 4가구는 지역 소득 수준에 비해 현재 주택 매매가격이 다소 높다고 인식하는 것으로 나타났다. 국토연구원은 17일 계간 '부동산시장 조사분석' 제55호를 발간하고 이…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Out of 10 households in the country, 4 find housing prices too high compared to their income"
       },
       {
         "title": "주택소유율 역대 최고지만…무주택→유주택 전환은 3년 만에 감소",
@@ -22686,7 +22705,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[세종=뉴시스]여동준 기자 = 지난해 가구의 주택 소유율이 역대 최고를 기록했지만, 무주택자에서 유주택자로 전환한 사람은 3년 만에 감소한 것으로 나타났다. 집을 가진 가구는 늘었지만, 무주택자가 새롭게 주택을 소유…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Homeownership Rate Hits All-Time High, But Switch from Homeless to Homeowner Status Decreases After 3 Years"
       },
       {
         "title": "국고채 금리 일제히 상승…3년물 장중 연 3.757%",
@@ -22695,7 +22715,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 17일 국고채 금리가 일제히 상승하고 있다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "South Korea's government bond rates rise uniformly...3-year bonds trade at 3.757% annually"
       },
       {
         "title": "[올댓차이나] 홍콩 증시, 美 반도체주 급락 여파로 내림세… H주 0.95%↓",
@@ -22704,7 +22725,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 17일 전날 뉴욕 증시에서 반도체주가 대폭 하락하면서 주력 기술주를 중심으로 매도 선행, 반락해 내리고 있다. 항셍지수는 이날 전일 대비 232.68 포인트, 0.97% 떨…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] Hong Kong stock market declines due to fall in U.S. semiconductor stocks... H shares down 0.95%"
       },
       {
         "title": "코스피, 1%대 하락 지속…'5천피' 사수 공방전",
@@ -22713,7 +22735,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 김유아 기자 = 코스피가 17일 1%대 하락세를 유지하며 5,000선을 간신히 유지하고 있다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Kospi continues to fall in the 1% range… battle to hold on to '5,000 won"
       },
       {
         "title": "연말연시 이사철 전세사기 걱정된다면…서울시, 청년대상 설명회",
@@ -22722,7 +22745,20 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(서울=연합뉴스) 김준태 기자 = 서울시는 연말연시 이사철을 앞두고 12월 1일 용산구 서울광역청년센터에서 올해 마지막 '청년 전세사기피해예방 ...",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yongsan.html",
+            "label": "용산구 아파트 전세 (84㎡ 환산)",
+            "labelEn": "용산구 apartment jeonse (scaled to 84㎡)",
+            "value": "8억 4,564만원",
+            "valueEn": "₩846M",
+            "note": "전 면적 평균 · 10/26~11/17 들어온 신고 74건",
+            "noteEn": "All-size average · 74 filings arrived Oct 26–Nov 17"
+          }
+        ],
+        "titleEn": "If worried about rental fraud during the year-end and New Year moving season, Seoul holds a youth-targeted explanation meeting"
       },
       {
         "title": "소방시설 차단한 채 아파트 입주…동원개발, 2심도 벌금형",
@@ -22731,7 +22767,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(부산=연합뉴스) 차근호 기자 = 신축 아파트 완공검사를 위해 작동을 정지시킨 소방시설을 정상 상태로 돌려놓지 않은 시공사에 항소심에서도 벌금형...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Apartment residents blocked fire facilities... Dongmyung Development fined again in appeals court"
       },
       {
         "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.47%↓",
@@ -22740,7 +22777,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 문예성 기자 = 중국 증시가 17일 하락 출발했다. 이날 상하이종합지수는 전날보다 0.47% 내린 3585.67로 장을 시작했다. 선전성분지수는 전장 대비 0.8% 하락한 1만605.17로, 중국판…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] China's stock market drops at the start... Shanghai index falls 0.47%"
       },
       {
         "title": "포천시, 내년 공동주택 지원사업 신청 접수",
@@ -22749,7 +22787,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(포천=연합뉴스) 노승혁 기자 = 경기 포천시는 노후 공동주택의 안전성을 확보하고 쾌적한 주거환경을 조성하기 위한 '2027년 공동주택 지원사업...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Pocheon City to Accept Applications for Joint Housing Support Program Next Year"
       },
       {
         "title": "젠슨황·앤트로픽·금리…'삼중고'에 짓눌린 코스피",
@@ -22758,7 +22797,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 임은진 기자 = 젠슨 황 스캔들, 앤트로픽 상장, 미국 국채 금리.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Jensen Huang, Anthropic, interest rates... Kospi crushed by 'triple whammy"
       },
       {
         "title": "대우건설, 美‘저디’와 신월시영 재건축 특화설계 추진",
@@ -22767,7 +22807,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "대우건설이 수주를 추진 중인 서울 양천구 신월시영아파트 재건축사업을 위해 글로벌 도시·건축 디자인 전문기업 미국 저디(JERDE)와 손을 잡았다고 17일 밝혔다. 저디는 일본 도쿄 롯본기힐스와 오사카 남바파크, 미국…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-yangcheon.html",
+            "label": "양천구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "양천구 apartment sale (scaled to 84㎡)",
+            "value": "13억 4,876만원",
+            "valueEn": "₩1,349M",
+            "note": "전 면적 평균 · 10/26~11/17 들어온 신고 102건",
+            "noteEn": "All-size average · 102 filings arrived Oct 26–Nov 17"
+          }
+        ],
+        "titleEn": "Daewoo Engineering & Construction to Push Forward Specialized Design for Shinwol-Siyung Reconstruction with U.S.-based 'Lowy"
       },
       {
         "title": "“프리미엄 주거공간”…대우건설, 신월시영 재건축 위해 JERDE와 맞손",
@@ -22776,7 +22829,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "도쿄 롯본기힐스·오사카 남바파크 설계한 JERDE와 협업 차별화된 건축특화 설계 제안17일 대우건설에 따르면 세계적인 도시·건축 디자인 전문기업 미국의 JERDE(져디)와 협업해..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Premium residential space\"...Daewoo Engineering & Construction partners with JERDE for Shinmyeong Sinyeong reconstruction"
       },
       {
         "title": "한국토지신탁·삼도회계법인, '부동산 자산승계' 업무협약 체결",
@@ -22785,7 +22839,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 박성환 기자 = 한국토지신탁이 부동산 상속·증여 과정에서 발생하는 세무 문제와 자산승계를 함께 지원하기 위해 삼도회계법인과 협력한다. 한국토지신탁은 삼도회계법인과 유언대용신탁 및 세무·회계 자문 업무…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Korea Land Trust and Samdo Accounting Firm Sign Memorandum of Understanding on 'Real Estate Asset Inheritance"
       },
       {
         "title": "알아서 불 켜고 방 구조도 바꾸고…자이 아파트 진화",
@@ -22794,7 +22849,8 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "AI가 생활패턴 파악해 조명·온도 자동 조절 벽체 움직여 거실을 침실·서재로 바꿔 사용 폭우 땐 배수시설 자동 가동…2027년부터 적용사람이 일일이 조작하지 않아도 인공지능(AI)..",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Turn on the lights yourself, change the room layout... Jai Apartment evolves"
       },
       {
         "title": "진화하는 아파트…GS건설 \"내년 자이에 AI홈 LV.3 도입\"",
@@ -22803,7 +22859,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]이연희 기자 = GS건설이 기후변화, 인공지능(AI)에 대응해 주거브랜드 자이(XI)의 중장기 비전 '비욘드 리빙(BEYOND LIVING)'을 공개했다. 내년 하반기 분양하는 자이 아파트에는 모션센서…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Evolving apartments... GS Construction \"to introduce AI Home LV.3 at Jae next year"
       },
       {
         "title": "아파트값 부담에 빌라 시장 ‘꿈틀’…서울 연립·다세대 거래량 18% 증가",
@@ -22812,7 +22869,20 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "아파트 매매 가격 상승과 대출 문턱이 높아지면서 실수요자들의 시선이 상대적으로 자금 부담이 덜한 비(非)아파트 시장으로 향하고 있다. 17일 부동산 정보 플랫폼 다방이 국토교통부의 실거래가 데이터를 바탕으로 올해 1…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 매매 (84㎡ 환산)",
+            "labelEn": "Seoul apartment sale (scaled to 84㎡)",
+            "value": "12억 8,218만원",
+            "valueEn": "₩1,282M",
+            "note": "전 면적 평균 · 11/16~11/17 들어온 신고 248건",
+            "noteEn": "All-size average · 248 filings arrived Nov 16–17"
+          }
+        ],
+        "titleEn": "Apartment price burden makes villa market \"twitch\"… Seoul row houses and multi-family home transactions up 18%"
       },
       {
         "title": "“아파트만 오르는 줄 알았는데”…서울 집값 상승률 1위는 ‘이곳’",
@@ -22821,7 +22891,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "서울 빌라값 0.85% 상승 아파트 상승률 0.54% 그쳐 빌라 상승률 두 달째 우위서울 연립·다세대주택의 매매가격 상승률이 아파트를 웃돈 것으로 나타났다. 올해 누적 상승률도 아..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 매매 (84㎡ 환산)",
+            "labelEn": "Seoul apartment sale (scaled to 84㎡)",
+            "value": "12억 8,218만원",
+            "valueEn": "₩1,282M",
+            "note": "전 면적 평균 · 11/16~11/17 들어온 신고 248건",
+            "noteEn": "All-size average · 248 filings arrived Nov 16–17"
+          }
+        ],
+        "titleEn": "Thought only apartments were rising\"… Seoul's top rising housing price area is 'here"
       },
       {
         "title": "연말까지 영남·호남서 아파트 1만8992가구 분양",
@@ -22830,7 +22913,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "영남과 호남 지역에서 올해 연말까지 1만8992가구의 아파트가 분양된다. 17일 부동산 리서치업체 리얼투데이에 따르면 올해 11~12월 영·호남 민간분양 예정 물량(임대 제외)은 총 1만8992가구다. 권역별로는 영…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "연말까지 영남·호남서 아파트 1만8992가구 분양"
       }
     ]
   }
