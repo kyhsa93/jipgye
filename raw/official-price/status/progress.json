@@ -1,16 +1,16 @@
 {
-  "lastRunAt": "2026-11-16T00:18:09.375Z",
-  "lastProgressAt": "2026-11-16T00:18:09.375Z",
+  "lastRunAt": "2026-11-17T03:54:44.795Z",
+  "lastProgressAt": "2026-11-17T03:54:44.795Z",
   "zeroProgressRuns": 0,
-  "doneParcels": 5985,
+  "doneParcels": 6151,
   "targetParcels": 6764,
-  "lastFinishedNow": 242,
-  "lastCalls": 8106,
+  "lastFinishedNow": 166,
+  "lastCalls": 7015,
   "lastStopReason": "실행 시간 상한(새 지번 시작 안 함)",
   "lastErrCodes": {
-    "TimeoutError/-": 4,
-    "TypeError/UND_ERR_CONNECT_TIMEOUT": 9,
-    "결과코드 ?": 373,
-    "HTTP 503": 187
+    "TimeoutError/-": 5,
+    "TypeError/UND_ERR_CONNECT_TIMEOUT": 5,
+    "HTTP 503": 221,
+    "결과코드 ?": 350
   }
 }
