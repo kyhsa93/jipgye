@@ -1,5 +1,7 @@
 // 원/달러 환율 화면 문구 (#639 PR-2, po·cpo·legal 판정 2026-10-26). 환율은 ECOS 일 계열(731Y001)의 매매기준율이라 값마다 기준일을 붙이고,
-// 「실시간」·LIVE 문구는 사이트 어디에도 없다. 값은 데이터 쪽 약속(수집기 PR #640: usdKrw {value, asOf="10/23", prevValue, change, direction})이고,
+// 「실시간」·LIVE 문구는 우리가 쓰는 글(고정 문구와 생성 요약 ko·en) 어디에도 없다. 출처·링크가 붙은 목록 항목의 인용 기사 제목(title·titleEn)은
+// 우리 주장이 아니라서 「실시간」 낱말 검사에서만 빠지고, 나가는 장의 「실시간 환율/값/시세」·LIVE·exchangerate 검사는 그대로 받는다(#945 H1, 2026-11-18).
+// 값은 데이터 쪽 약속(수집기 PR #640: usdKrw {value, asOf="10/23", prevValue, change, direction})이고,
 // 이 시험은 고정 값으로 구운 장·화면 스크립트가 판정 문구를 그대로 내는지, 값이 없을 때 그 줄·카드만 조용히 빠지는지 본다(저장소의 docs/data 는 읽지 않는다).
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -8,6 +10,7 @@ import path from "node:path";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { marketHtml, newsKospiHtml } from "../scripts/prerender.ts";
 import { FOOTERS } from "../scripts/source-lines.ts";
+import { bannedWordsIn } from "../scripts/summary-banned-words.ts";
 import { loadIndexPage } from "./helpers/index-page.mjs";
 import { readFixture } from "./helpers/fixture-data.mjs";
 import { SITE_DIR, sitePath } from "./helpers/site-root.mjs";
@@ -129,21 +132,89 @@ test("방법 장: 환율은 ECOS 일 계열(매매기준율, 영업일 하루 �
   assert.ok(html.includes("<strong>Market indicators</strong> — KOSPI, KRW/USD (reference rate, one value per business day) and the base rate, all from Bank of Korea ECOS Open API. Daily."));
 });
 
-test("「실시간」 환율·LIVE 배지·exchangerate·er-api 흔적이 나가는 장과 화면 스크립트에 없다 (#639, #96)", async () => {
-  const { readdir } = await import("node:fs/promises");
+// ---- 「실시간」·LIVE 약속(#639)을 세 범위로 나눠 본다 (#945) ----
+// 2026-11-18 금리 요약에 모델이 지어낸 「실시간」 한 문장이 아래 전수 검사에 걸려 그날 데이터 배포 전체가 막혔다(Deploy run 44239714050).
+// 나가는 장의 글은 출처가 셋이라 따로 본다: (a) 고정 문구(틀·화면 스크립트) (b) 생성 요약(요약기가 금지어 문장을 떼므로 늘 성립해야 하는 불변식)
+// (c) 인용 헤드라인(기사 제목 원문, 출처·링크와 함께 나간다). 환율 주장(「실시간 환율/값/시세」)·LIVE·exchangerate 검사는 범위를 나누지 않고 모든 글에 그대로다.
+//
+// (c) 는 cpo·legal 결정 H1(#945, 2026-11-18)을 따른다: 인용 제목은 「실시간」 낱말 검사에서만 빠지고(08-12 「… 확정일자 실시간 확인 …」 같은 기자 제목 하나로
+// 그날 배포 전체가 막히지 않게) 환율 주장·LIVE·exchangerate 검사는 그대로 받는다. 빠지는 범위는 출처·링크 붙은 목록 항목의 제목 글자뿐이다(legal 조건) -
+// 둘레 고정 문구와 요약은 (a)·(b) 가 계속 0 으로 본다. 제목을 고치거나 숨기지 않는다(인용 변경).
+// HEADLINE_SCOPE 는 그 결정의 값이다. "claims-only"(H1) = 인용 제목은 환율 주장·LIVE·exchangerate 검사만, "all-words" = 결정 전 동작(인용 제목도 「실시간」 0).
+const HEADLINE_SCOPE = "claims-only";
+
+// (b) 의 자리: 뉴스 장의 프리렌더 요약 블록(scripts/render/entry.jsx newsSummary - 분야 이름 + lineKo).
+const SUMMARY_BLOCK = /<!--prerender:newsSummary-->[\s\S]*?<!--\/prerender:newsSummary-->/g;
+// (c) 의 자리: 출처·링크 붙은 목록 항목의 제목 글자. 뉴스 목록(entry.jsx NewsItem)과 근거 기사 목록(scripts/summary-note.ts sourcesMarkup) 두 꼴이
+// 모두 `<li…><a href="http…" target="_blank" rel="noopener">제목</a>` 이다. 제목 글자만 잡고 li·a·출처 줄은 남긴다.
+const QUOTED_TITLE = /(<li\b[^>]*><a href="https?:\/\/[^"]*" target="_blank" rel="noopener">)([^<]*)(<\/a>)/g;
+
+const { readdir } = await import("node:fs/promises");
+const shipped = async () => {
   const files = (await readdir(SITE_DIR)).filter((f) => /\.(html|js|css|webmanifest)$/.test(f));
   assert.ok(files.length > 50, "전제: 나가는 장을 못 읽었다");
-  for (const f of files) {
-    const text = await readFile(sitePath(f), "utf8");
+  return Promise.all(files.map(async (f) => [f, await readFile(sitePath(f), "utf8")]));
+};
+
+test("「실시간」 환율·LIVE 배지·exchangerate·er-api 흔적이 나가는 장과 화면 스크립트에 없다 - 요약·인용 제목 포함 모든 글 (#639, #96)", async () => {
+  for (const [f, text] of await shipped()) {
     assert.doesNotMatch(text, /exchangerate|er-api/i, f);
     assert.doesNotMatch(text, /\bLIVE\b/, `${f}: LIVE 문구`);
     assert.doesNotMatch(text, /실시간 (?:환율|값|시세)|실시간 환율/, `${f}: 실시간 환율 문구`);
   }
-  // 「실시간」 글자는 방법 장의 범위 적중(예측 범위가 실제로 맞았는지) 문단에만 있다 - 환율과 무관한 같은 낱말.
-  for (const f of files) {
-    const text = await readFile(sitePath(f), "utf8");
-    if (f !== "method.html") assert.ok(!text.includes("실시간"), `${f}: 「실시간」`);
+});
+
+test("(a) 고정 문구: 요약 블록과 인용 제목을 뺀 글에서 「실시간」은 방법 장의 범위 적중 문단에만 있다 (#945)", async () => {
+  let titles = 0;
+  for (const [f, text] of await shipped()) {
+    titles += [...text.matchAll(QUOTED_TITLE)].length;
+    const fixed = text.replace(SUMMARY_BLOCK, "").replace(QUOTED_TITLE, "$1$3");
+    // 방법 장의 「실시간」은 범위 적중(예측 범위가 실제로 맞았는지) 문단의 낱말이다 - 환율과 무관하다.
+    if (f !== "method.html") assert.ok(!fixed.includes("실시간"), `${f}: 「실시간」`);
   }
+  assert.ok(titles > 0, "전제: 인용 제목 자리를 하나도 못 찾았다 - 목록 마크업이 바뀌었으면 QUOTED_TITLE 을 고친다");
+});
+
+test("(b) 생성 요약: 프리렌더 요약 블록과 data/summary.json 의 요약 글(ko·en)에 금지어가 없다 (#945)", async () => {
+  let blocks = 0;
+  for (const [f, text] of await shipped()) {
+    for (const [block] of text.matchAll(SUMMARY_BLOCK)) {
+      blocks += 1;
+      assert.deepEqual(bannedWordsIn(block), [], `${f}: 요약 블록에 금지어`);
+    }
+  }
+  assert.ok(blocks > 0, "전제: 요약 블록을 하나도 못 찾았다");
+  // 모델이 쓴 글만 본다: 분야 줄(폴백이 아닌 lineKo·lineEn)과 핵심 기사 요약(textKo·textEn). 폴백 줄과 summary.ko·en 묶음에는 기사 제목이 섞여 있어
+  // 그 몫은 (c) 다 - 영문 화면은 이 필드들을 data/summary.json 에서 읽는다.
+  const data = JSON.parse(await readFile(sitePath("data/summary.json"), "utf8"));
+  const generated = [
+    ...(data.categories ?? []).filter((c) => !c.isFallback).flatMap((c) => [[`${c.key}.lineKo`, c.lineKo], [`${c.key}.lineEn`, c.lineEn]]),
+    ...(data.highlights ?? []).flatMap((h, i) => [[`highlights[${i}].textKo`, h.textKo], [`highlights[${i}].textEn`, h.textEn]]),
+  ].filter(([, t]) => typeof t === "string");
+  assert.ok(generated.length > 0, "전제: data/summary.json 에 요약 글이 없다");
+  for (const [where, t] of generated) assert.deepEqual(bannedWordsIn(t), [], `data/summary.json ${where}: ${t}`);
+});
+
+test("(c) 인용 헤드라인: 출처·링크 붙은 목록 제목은 「실시간」 낱말 검사에서만 빠지고 환율 주장·LIVE·exchangerate 검사는 받는다 (#945 H1)", async () => {
+  // 빼는 범위가 제목 글자뿐인지 고정 마크업으로 먼저 본다 - 같은 낱말이 둘레 글·출처 줄에 있으면 (a) 에 남는다.
+  const sample =
+    '<ul><li><a href="https://example.com/a" target="_blank" rel="noopener">안심전세 앱에서 확정일자 실시간 확인 가능해진다</a> <span class="news-meta">실시간 매체</span></li></ul><p>실시간</p>';
+  assert.equal(
+    sample.replace(QUOTED_TITLE, "$1$3"),
+    '<ul><li><a href="https://example.com/a" target="_blank" rel="noopener"></a> <span class="news-meta">실시간 매체</span></li></ul><p>실시간</p>'
+  );
+  assert.equal('<p><a href="https://example.com/a" target="_blank" rel="noopener">실시간</a></p>'.replace(QUOTED_TITLE, "$1$3").includes("실시간"), true, "목록 항목이 아닌 링크도 뺐다");
+  let titles = 0;
+  for (const [f, text] of await shipped()) {
+    for (const [, , title] of text.matchAll(QUOTED_TITLE)) {
+      titles += 1;
+      assert.doesNotMatch(title, /exchangerate|er-api/i, `${f}: ${title}`);
+      assert.doesNotMatch(title, /\bLIVE\b/, `${f}: 인용 제목에 LIVE: ${title}`);
+      assert.doesNotMatch(title, /실시간 (?:환율|값|시세)/, `${f}: 인용 제목에 실시간 환율 주장: ${title}`);
+      if (HEADLINE_SCOPE === "all-words") assert.ok(!title.includes("실시간"), `${f}: 인용 제목에 「실시간」: ${title}`);
+    }
+  }
+  assert.ok(titles > 0, "전제: 인용 제목을 하나도 못 찾았다");
 });
 
 test("증시·환율 장 구획 제목은 「시장 지표」/「Market indicators」다 - 코스피·환율 두 카드를 함께 덮는다", async () => {
