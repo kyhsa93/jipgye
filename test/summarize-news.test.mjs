@@ -438,3 +438,66 @@ test("읽을 수 없는 SUMMARY_NOW로 스크립트를 돌리면 요약을 쓰�
   );
   assert.equal(await exists(path.join(dataDir, "summary.json")), false);
 });
+
+// ---- #945: 금지어 문장은 떼고(다시 생성하지 않는다), 번역에 금지어가 남으면 기존 재시도로 거절한다 ----
+
+const BANNED_KO = "시장 상황은 실시간으로 움직이는 것으로 나타났다.";
+
+test("금지어 문장은 떼고 나머지 문단을 쓴다 - 다시 생성하지 않고, 뗀 문장을 로그에 남긴다", async () => {
+  let paragraphCalls = 0;
+  const { summary, stderr } = await runSummarize(({ kind, prompt }) => {
+    if (kind === "entities") return /코스피/.test(prompt) ? "코스피" : "국토교통부";
+    if (kind === "translate") return EN_OK;
+    if (kind === "paragraph" && /종합해서/.test(prompt)) paragraphCalls += 1;
+    return `${goodKo(prompt)} ${BANNED_KO}`;
+  });
+
+  assert.match(stderr, new RegExp(`금지어 문장 1개를 뗌: ${BANNED_KO}`));
+  assert.equal(paragraphCalls, summary.categories.length, "분야마다 문단 생성은 한 번이어야 한다(다시 뽑지 않는다)");
+  for (const category of summary.categories) {
+    assert.ok(!category.isFallback && !category.degraded, `${category.key}: 폴백·축소로 갔다`);
+    assert.equal(category.lineKo, /코스피/.test(category.items[0].title) ? KO_STOCKS : KO_REALESTATE, "남은 문장이 원문 그대로가 아니다");
+  }
+  for (const highlight of summary.highlights) assert.ok(!highlight.textKo.includes("실시간"), highlight.textKo);
+  assert.ok(!summary.summary.ko.includes("실시간"));
+});
+
+test("문단이 금지어 문장뿐이면 GENERATION_FAILED 길로 가 한 문장 요약을 쓴다", async () => {
+  const { summary, stderr } = await runSummarize(({ kind }) => {
+    if (kind === "entities") return "없음";
+    if (kind === "translate") return "The ministry announced new sites.";
+    if (kind === "single") return "국토교통부가 신규 택지를 발표했다.";
+    return BANNED_KO;
+  });
+
+  assert.match(stderr, /금지어 문장 1개를 뗌/);
+  assert.ok(summary.categories.every((c) => c.degraded && !c.isFallback && c.lineKo === "국토교통부가 신규 택지를 발표했다."));
+});
+
+test("영어 번역에 real-time 이 있으면 거절하고 한 번 더 시도한다 - 재시도 프롬프트에 그 낱말을 짚는다", async () => {
+  const prompts = [];
+  const { summary, stderr } = await runSummarize(({ kind, prompt }) => {
+    if (kind === "entities") return "없음";
+    if (kind === "translate") {
+      prompts.push(prompt);
+      return prompts.length % 2 === 1 ? `Prices move in real-time. ${EN_OK}` : EN_OK;
+    }
+    return goodKo(prompt);
+  });
+
+  assert.doesNotMatch(stderr, /번역 검증 실패/);
+  assert.ok(summary.categories.every((c) => c.lineEn === EN_OK), "real-time 번역이 실렸다");
+  assert.match(prompts[1], /previous attempt used "real-time"/);
+});
+
+test("번역이 두 번 다 real-time 이면 영어 화면은 (이미 걸러진) 한국어를 그대로 쓴다", async () => {
+  const { summary, stderr } = await runSummarize(({ kind, prompt }) => {
+    if (kind === "entities") return "없음";
+    if (kind === "translate") return `Rates move in real time. ${EN_OK}`;
+    return goodKo(prompt);
+  });
+
+  assert.match(stderr, /번역 검증 실패/);
+  assert.ok(summary.categories.every((c) => c.lineEn === c.lineKo));
+  assert.ok(!summary.summary.en.includes("real time"));
+});
