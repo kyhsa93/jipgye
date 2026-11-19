@@ -9265,5 +9265,124 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-19",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 증시·환율: 한국은행은 환율이 10% 하락할 경우 가구당 연간 생활비가 16만5천원 절감될 것으로 분석했다. 중국 증시는 오늘 상하이지수가 0.13% 하락하며 출발했다. 앤트로픽은 오늘밤 나스닥에 상장하며 증시의 수급 불안을 완화시킬 것으로 기대된다. 코스피는 앤트로픽 상장 전에 1%대 하락하며 하락 전환했다. 코스피는 상승 출발 후 보합권에서 등락하는 모습을 보였다.\n- 금리·예금·투자상품: 국고채 금리가 오늘 대체로 하락한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.731%를 기록했다. 이는 전일 대비 소폭 하락한 수준이다. 금리 변동은 시장 상황에 따라 일시적으로 나타난 것으로 보인다. 오늘 발표된 다른 금융 상품 관련 소식도 함께 주목받고 있다.\n- 부동산: 지방 아파트 전셋값이 5년 만에 수요 우위를 보이며 5천만원씩 상승했다. 구미에서 최초로 민간공원 특례 아파트인 ‘구미 파크원 데시앙’이 공급에 들어갔다. 포스코이앤씨는 ‘더샵 천안라크원’ 견본주택을 개관했다. 삼삼엠투는 국토부로부터 ‘우수 부동산서비스사업자’ 인증을 받았다. 중국 부동산 시장에서는 새집 짓는 시대가 저물었다는 대반전이 벌어졌다.\n- 기타 경제 소식: 정부가 지역 경제와 생활여건 격차를 줄이기 위한 과제 발굴에 착수했다. 오늘 경제 관련 소식 중 하나는 지역 간 격차 해소를 위한 정책 방향을 모색하는 내용이었다. 다른 소식에서는 경제 활동에 영향을 줄 수 있는 요소들이 언급되었다. 각 기사는 서로 다른 주제로, 별도의 이슈로 다루어졌다. 오늘 발표된 내용들은 모두 경제 관련 주요 이슈를 다루고 있다.",
+      "en": "- Stocks & FX: The Bank of Korea analyzed that if the exchange rate falls by 10%, the annual living expenses per household would decrease by 160,0005 thousand won. The Chinese stock market started today with the Shanghai index falling by 0.13%. Antroptic is expected to alleviate market supply and demand concerns after listing on Nasdaq tonight. The KOSPI turned downward, falling by more than 1% before Antroptic's listing. The KOSPI showed fluctuating movements within the flat range after starting with an upward move.\n- Rates, Deposits & Investment Products: Today, government bond rates generally fell. The 3-year government bond rate reached 3.731% annually during trading. This is a slight decline compared to the previous day. The rate fluctuation appears to be a temporary occurrence depending on market conditions. Other financial product-related news released today is also receiving attention.\n- Real Estate: Rental prices for apartments in local areas have risen by 50,000,000 won, showing demand superiority for the first time in five years. Gumi's first private park special case apartment, 'Gumi Parkwon Desiang,' has started its supply. POSCO I&C has opened the model house for 'Thehapseo Cheonanrakwon.' SamSam EM2 has received certification as an 'Outstanding Real Estate Service Provider' from the Ministry of Land, Infrastructure and Transport. A major turnaround has occurred in the Chinese real estate market, with the era of building new homes coming to an end.\n- Other Economic News: The government has begun identifying tasks aimed at reducing regional economic and living condition disparities. One of today's economic news items discussed efforts to explore policy directions for addressing regional disparities. Another report mentioned factors that could affect economic activities. Each article covered different topics and was treated as a separate issue. All the content released today addresses major economic issues."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "한국은행은 환율이 10% 하락할 경우 가구당 연간 생활비가 16만5천원 절감될 것으로 분석했다. 중국 증시는 오늘 상하이지수가 0.13% 하락하며 출발했다. 앤트로픽은 오늘밤 나스닥에 상장하며 증시의 수급 불안을 완화시킬 것으로 기대된다. 코스피는 앤트로픽 상장 전에 1%대 하락하며 하락 전환했다. 코스피는 상승 출발 후 보합권에서 등락하는 모습을 보였다.",
+        "lineEn": "The Bank of Korea analyzed that if the exchange rate falls by 10%, the annual living expenses per household would decrease by 160,0005 thousand won. The Chinese stock market started today with the Shanghai index falling by 0.13%. Antroptic is expected to alleviate market supply and demand concerns after listing on Nasdaq tonight. The KOSPI turned downward, falling by more than 1% before Antroptic's listing. The KOSPI showed fluctuating movements within the flat range after starting with an upward move.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "한은 \"환율 10% 하락하면 가구당 생활비 연 16만5천원 절감\"",
+            "link": "https://www.yna.co.kr/view/AKR20261119080000002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.13%↓",
+            "link": "https://www.newsis.com/view/NISX20261119_0003874724",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "앤트로픽 오늘밤 나스닥 입성…증시 짓누르던 수급불안 풀릴까",
+            "link": "https://www.yna.co.kr/view/AKR20261119069900008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 앤트로픽 상장 앞두고 1%대↓…상승출발후 하락전환(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261119063200008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 상승 출발 후 보합권에서 등락",
+            "link": "https://www.yna.co.kr/view/AKR20261119055000008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 오늘 대체로 하락한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.731%를 기록했다. 이는 전일 대비 소폭 하락한 수준이다. 금리 변동은 시장 상황에 따라 일시적으로 나타난 것으로 보인다. 오늘 발표된 다른 금융 상품 관련 소식도 함께 주목받고 있다.",
+        "lineEn": "Today, government bond rates generally fell. The 3-year government bond rate reached 3.731% annually during trading. This is a slight decline compared to the previous day. The rate fluctuation appears to be a temporary occurrence depending on market conditions. Other financial product-related news released today is also receiving attention.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "국고채 금리 대체로 하락…3년물 장중 연 3.731%",
+            "link": "https://www.yna.co.kr/view/AKR20261119083000008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "지방 아파트 전셋값이 5년 만에 수요 우위를 보이며 5천만원씩 상승했다. 구미에서 최초로 민간공원 특례 아파트인 ‘구미 파크원 데시앙’이 공급에 들어갔다. 포스코이앤씨는 ‘더샵 천안라크원’ 견본주택을 개관했다. 삼삼엠투는 국토부로부터 ‘우수 부동산서비스사업자’ 인증을 받았다. 중국 부동산 시장에서는 새집 짓는 시대가 저물었다는 대반전이 벌어졌다.",
+        "lineEn": "Rental prices for apartments in local areas have risen by 50,000,000 won, showing demand superiority for the first time in five years. Gumi's first private park special case apartment, 'Gumi Parkwon Desiang,' has started its supply. POSCO I&C has opened the model house for 'Thehapseo Cheonanrakwon.' SamSam EM2 has received certification as an 'Outstanding Real Estate Service Provider' from the Ministry of Land, Infrastructure and Transport. A major turnaround has occurred in the Chinese real estate market, with the era of building new homes coming to an end.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "지방 아파트 전셋값도 5천만원씩 뛰었다…5년 만에 수요 우위",
+            "link": "https://www.newsis.com/view/NISX20261119_0003874803",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "구미 최초 ‘민간공원 특례 아파트’ 구미 파크원 데시앙 공급",
+            "link": "https://www.mk.co.kr/news/realestate/12213393",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "포스코이앤씨, ‘더샵 천안라크원’ 견본주택 개관",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/19/5KIXGOFBBFDOJNWNEO6LJQDGUQ/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "삼삼엠투, 국토부 ‘우수 부동산서비스사업자’ 인증 획득…단기임대 서비스 우수성 인정",
+            "link": "https://www.mk.co.kr/news/realestate/12213325",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "\"새집 짓는 시대 저문다\"…中 부동산 시장에 벌어진 대반전 [차이나 워치]",
+            "link": "https://www.hankyung.com/article/202611172913i",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "정부가 지역 경제와 생활여건 격차를 줄이기 위한 과제 발굴에 착수했다. 오늘 경제 관련 소식 중 하나는 지역 간 격차 해소를 위한 정책 방향을 모색하는 내용이었다. 다른 소식에서는 경제 활동에 영향을 줄 수 있는 요소들이 언급되었다. 각 기사는 서로 다른 주제로, 별도의 이슈로 다루어졌다. 오늘 발표된 내용들은 모두 경제 관련 주요 이슈를 다루고 있다.",
+        "lineEn": "The government has begun identifying tasks aimed at reducing regional economic and living condition disparities. One of today's economic news items discussed efforts to explore policy directions for addressing regional disparities. Another report mentioned factors that could affect economic activities. Each article covered different topics and was treated as a separate issue. All the content released today addresses major economic issues.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "지역 경제·생활여건 격차 줄인다…정부, 과제 발굴 착수",
+            "link": "https://www.newsis.com/view/NISX20261118_0003873814",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
