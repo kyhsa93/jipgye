@@ -79,7 +79,7 @@ test("갱신계약과 반전세는 전세가율에서 뺀다", async () => {
     "가상",
     Array.from({ length: 3 }, () => ({ apt: "가상", area: 59, amount10k: 100000 })),
     [
-      ...Array.from({ length: 3 }, () => ({ apt: "가상", area: 59, deposit10k: 60000 })),
+      ...Array.from({ length: 3 }, () => ({ apt: "가상", area: 59, deposit10k: 60000, renewal: false })),
       { apt: "가상", area: 59, deposit10k: 90000, renewal: true },
       { apt: "가상", area: 59, deposit10k: 90000, monthlyRent10k: 50 },
     ]
@@ -89,20 +89,37 @@ test("갱신계약과 반전세는 전세가율에서 뺀다", async () => {
   assert.equal(rows[0].ratio, 60);
 });
 
+test("계약구분이 빈 전세 신고는 신규로 세지 않는다 (#929)", async () => {
+  // 정규화된 줄은 계약구분이 비면 renewal 키가 아예 없다(scripts/realestate-metrics.ts contractRenewal).
+  // 빌드(complex-ratio.ts isNewContract, #910)는 그 줄을 뺀다 - 화면도 빼야 두 곳의 전세가율이 같다.
+  const p = await page("?district=노원구&apt=상계주공7(고층)");
+  const rows = p.sandbox.complexAreas(
+    "가상",
+    Array.from({ length: 3 }, () => ({ apt: "가상", area: 59, amount10k: 100000 })),
+    [
+      ...Array.from({ length: 3 }, () => ({ apt: "가상", area: 59, deposit10k: 60000, renewal: false })),
+      ...Array.from({ length: 2 }, () => ({ apt: "가상", area: 59, deposit10k: 90000 })),
+    ]
+  );
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].jeonse.length, 3, "계약구분 빈칸을 신규 전세로 셌다");
+  assert.equal(rows[0].ratio, 60);
+});
+
 test("한쪽이 세 건에 못 미치면 값을 내지 않는다", async () => {
   const p = await page("?district=노원구&apt=상계주공7(고층)");
   assert.equal(MIN_DEALS_PER_SIDE, 3);
   const rows = p.sandbox.complexAreas(
     "가상",
     Array.from({ length: 2 }, () => ({ apt: "가상", area: 59, amount10k: 100000 })),
-    Array.from({ length: 5 }, () => ({ apt: "가상", area: 59, deposit10k: 60000 }))
+    Array.from({ length: 5 }, () => ({ apt: "가상", area: 59, deposit10k: 60000, renewal: false }))
   );
   assert.equal(rows[0].saleMedian, null, "두 건으로 낸 중앙값은 그냥 두 값의 평균이다");
   assert.equal(rows[0].ratio, null);
 });
 
 test("화면이 낸 전세가율이 빌드 쪽 계산과 같다", async () => {
-  // 같은 규칙이 scripts/complex-ratio.mjs와 이 화면 양쪽에 있다. 갈라지면
+  // 같은 규칙이 scripts/complex-ratio.ts와 이 화면 양쪽에 있다. 갈라지면
   // 자치구 페이지의 '단지별 중앙값'과 이 카드가 서로 다른 말을 하게 된다.
   //
   // 한 구만 보면 그날 신고가 얇을 때 견줄 칸이 모자라 검사가 빨개진다 - 노원구가
@@ -129,7 +146,8 @@ test("화면이 낸 전세가율이 빌드 쪽 계산과 같다", async () => {
           excluUseAr: d.area,
           deposit: String(d.deposit10k),
           monthlyRent: d.monthlyRent10k ?? 0,
-          contractType: d.renewal ? "갱신" : "신규",
+          // 빈칸(renewal 키 없음)은 원본처럼 빈 계약구분으로 넘긴다 - 「신규」로 바꾸면 빌드가 빈칸을 신규로 센다(#929).
+          contractType: d.renewal === true ? "갱신" : d.renewal === false ? "신규" : "",
         }))
       ).map((r) => Math.round(r * 100) / 100)
     );
@@ -156,8 +174,8 @@ test("최근 두 달 표도 빌드가 묶은 평형으로 묶는다 - 소수점 
   const p = await page("?district=노원구&apt=상계주공7(고층)");
   // 헬리오시티 84형처럼 84.95/84.98/84.99로 신고됐다. 따로 두면 어느 칸도 세 건이 안 된다.
   const sales = [84.95, 84.98, 84.99].map((area) => ({ apt: "가상", area, amount10k: 300000 }));
-  const rents = [84.95, 84.96, 84.99, 84.98].map((area) => ({ apt: "가상", area, deposit10k: 150000 }));
-  rents.push({ apt: "가상", area: 59.9, deposit10k: 100000 });
+  const rents = [84.95, 84.96, 84.99, 84.98].map((area) => ({ apt: "가상", area, deposit10k: 150000, renewal: false }));
+  rents.push({ apt: "가상", area: 59.9, deposit10k: 100000, renewal: false });
   const cells = { "84.98": { areas: [84.95, 84.96, 84.98, 84.99] } };
 
   const rows = p.sandbox.complexAreas("가상", sales, rents, cells);
