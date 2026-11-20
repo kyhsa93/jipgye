@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { DISTRICTS } from "./realestate-districts.ts";
 import { readSameNames, readSlotFile } from "./realestate-raw.ts";
+import { readRecollectedSlot } from "./realestate-recollect.ts";
 import { recentMonths } from "./realestate-source.ts";
 import { cellRatios, spreadOf } from "./complex-ratio.ts";
 import { runRenewalCells } from "./build-renewal-cells.ts";
@@ -20,13 +21,19 @@ const outFile = process.env.COMPLEX_RATIO_FILE
 const itemsOf = (files) =>
   files.filter((file) => file?.ok !== false && Array.isArray(file?.items)).flatMap((file) => file.items);
 
-/** DISTRICTS 순서로 담는다 - 끝나는 대로 담으면 출력 순서가 그날그날 달라진다. */
+/**
+ * DISTRICTS 순서로 담는다 - 끝나는 대로 담으면 출력 순서가 그날그날 달라진다.
+ * 매매만 재수집 덧씌움을 합쳐 읽는다(#900 (가) 전환). 전세 비중(build-jeonse-risk)이 1년 전 값을 덧씌움을 읽은 complex-price-*.json 에서
+ * 가져오는데 칸 집합·전세가율은 저장 매매로 만들어, 한 숫자 안에 두 기준이 섞였다 - round 202611 측정에서 어긋남 칸 53(18개 구, #900).
+ * 전월세는 재수집 대상이 아니라 저장 그대로다. 덧씌움이 없으면 readRecollectedSlot 이 슬롯을 그대로 돌려줘 출력이 전과 같다.
+ * 동명 단지 판정(readSameNames)은 덧씌움과 무관하게 늘 저장 원본이다(#861 정정 ④ 8행 고정).
+ */
 export async function readRaw(months, dir?) {
   const sameNames = await readSameNames(dir);
   const perDistrict = await Promise.all(
     DISTRICTS.map(async ({ code, name }) => {
       const [sales, rents] = await Promise.all([
-        Promise.all(months.map((ym) => readSlotFile("sale", code, ym, dir))).then(itemsOf),
+        Promise.all(months.map((ym) => readRecollectedSlot("sale", code, ym, dir))).then(itemsOf),
         Promise.all(months.map((ym) => readSlotFile("rent", code, ym, dir))).then(itemsOf),
       ]);
       return [name, { sales, rents, same: sameNames[code] }];

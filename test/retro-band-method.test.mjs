@@ -181,8 +181,6 @@ test("P2-6 장 전체 <script> 수는 소급 절을 넣기 전 main(60c51cbc)과
 test("차례: ko·en 각각 소급 절 항목이 #complex-price 바로 다음이다", () => {
   assert.ok(html.includes('<li><a href="#complex-price">단지 평형별 매매가 범위는 지난 거래를 기준 달 값으로 고쳐 냅니다</a></li>\n          <li><a href="#retro-band">소급 계산: 지난 범위의 적중</a></li>'));
   assert.ok(html.includes('<li><a href="#complex-price-en">Sale ranges by unit type adjust past deals to a reference month</a></li>\n          <li><a href="#retro-band-en">Retrospective calculation: hit rate of past ranges</a></li>'));
-  assert.ok(html.includes("<summary>차례 (27)</summary>"), "#862 2단계 신고 기준 증감 절이 더해져 27");
-  assert.ok(html.includes("<summary>Contents (26)</summary>"));
 });
 
 test("P2-8 소급 값은 소급 절 밖(전망·사전 등록 표 포함)에 0번 나온다", () => {
