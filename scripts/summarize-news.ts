@@ -2,6 +2,7 @@ import { writeFile, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { FALLBACK_CATEGORY, categoryOf } from "./categories.ts";
 import { collectionNow } from "./collection-now.ts";
+import { bannedWordsIn, dropBannedSentences } from "./summary-banned-words.ts";
 
 const dataDir = process.env.SUMMARY_DATA_DIR
   ? path.resolve(process.env.SUMMARY_DATA_DIR)
@@ -404,6 +405,19 @@ async function generateVerified({ label, prompt, sourceText, maxSentences, numPr
       continue;
     }
 
+    // 사이트 약속에 걸리는 낱말(「실시간」 등, scripts/summary-banned-words.ts)이 든 문장은 떼고 나머지를 쓴다(#945). 숫자·고유명사 검사와 달리
+    // 다시 생성하지 않는다: 그 검사는 사실이 오염된 경우라 문단을 버리지만, 이건 떼어 낼 수 있는 군말 한 문장이고 떼는 처리는 결정론적이다.
+    // 떼고 남은 문장이 없으면 「완결된 문장을 못 얻음」과 같은 길(GENERATION_FAILED)로 간다. 남은 글은 아래 검증을 그대로 지난다.
+    const filtered = dropBannedSentences(text);
+    if (filtered.dropped.length > 0) {
+      console.error(`[summarize-news] "${label}" 요약에서 금지어 문장 ${filtered.dropped.length}개를 뗌: ${filtered.dropped.join(" ")}`);
+      if (!filtered.text) {
+        lastReason = FALLBACK_REASONS.GENERATION_FAILED;
+        continue;
+      }
+      text = filtered.text;
+    }
+
     const reason = await verifyKoText(label, text, sourceText);
     if (!reason) return { text, reason: null };
     lastReason = reason;
@@ -492,6 +506,9 @@ function isBadTranslation(text, original, requiredNumbers) {
   if (text.length > Math.max(400, original.length * 4)) return true;
   const textDigits = text.replace(/,/g, "");
   if (requiredNumbers.some((n) => !textDigits.includes(n))) return true;
+  // 한국어 쪽은 금지어 문장을 이미 뗐다(generateVerified). 번역이 real-time·LIVE 를 새로 넣으면 영문 화면(data/summary.json)으로 나가므로 거절하고
+  // 아래 재시도에 맡긴다(#945 - 11-18 영어 줄 "…move in real-time…"). 두 번 다 걸리면 영어 화면은 한국어를 그대로 쓴다.
+  if (bannedWordsIn(text).length > 0) return true;
   return false;
 }
 
@@ -516,6 +533,10 @@ function rejectionHint(rejected) {
   }
   if (/[가-힣]/.test(rejected)) {
     return "IMPORTANT: your previous attempt left Korean words untranslated. Every word must be English.";
+  }
+  const banned = bannedWordsIn(rejected);
+  if (banned.length > 0) {
+    return `IMPORTANT: your previous attempt used "${banned.join(", ")}", which is not in the Korean text. Translate only what the Korean text says.`;
   }
   return "IMPORTANT: your previous attempt was rejected. Keep every number exactly as written and translate the whole text.";
 }

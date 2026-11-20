@@ -1212,5 +1212,85 @@
       "value": "3.00",
       "effectiveFrom": "2026년 08월 27일"
     }
+  },
+  {
+    "date": "2026-11-17",
+    "kospi": {
+      "value": "5,100.50",
+      "change": "-190.03",
+      "direction": "FALLING",
+      "asOf": "11/16"
+    },
+    "usdKrw": {
+      "value": 1335,
+      "asOf": "11/17",
+      "prevValue": 1333.7,
+      "change": "1.30",
+      "direction": "RISING"
+    },
+    "baseRate": {
+      "value": "3.00",
+      "effectiveFrom": "2026년 08월 27일"
+    }
+  },
+  {
+    "date": "2026-11-18",
+    "kospi": {
+      "value": "4,968.48",
+      "change": "-132.02",
+      "direction": "FALLING",
+      "asOf": "11/17"
+    },
+    "usdKrw": {
+      "value": 1338.8,
+      "asOf": "11/18",
+      "prevValue": 1335,
+      "change": "3.80",
+      "direction": "RISING"
+    },
+    "baseRate": {
+      "value": "3.00",
+      "effectiveFrom": "2026년 08월 27일"
+    }
+  },
+  {
+    "date": "2026-11-19",
+    "kospi": {
+      "value": "5,067.44",
+      "change": "98.96",
+      "direction": "RISING",
+      "asOf": "11/18"
+    },
+    "usdKrw": {
+      "value": 1331.1,
+      "asOf": "11/19",
+      "prevValue": 1338.8,
+      "change": "-7.70",
+      "direction": "FALLING"
+    },
+    "baseRate": {
+      "value": "3.00",
+      "effectiveFrom": "2026년 08월 27일"
+    }
+  },
+  {
+    "date": "2026-11-20",
+    "kospi": {
+      "value": "5,137.89",
+      "change": "70.45",
+      "direction": "RISING",
+      "asOf": "11/19"
+    },
+    "usdKrw": {
+      "value": 1330.8,
+      "asOf": "11/20",
+      "prevValue": 1331.1,
+      "change": "-0.30",
+      "direction": "FALLING"
+    },
+    "baseRate": {
+      "value": "3.00",
+      "effectiveFrom": "2026년 08월 27일"
+    }
   }
 ]
