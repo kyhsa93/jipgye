@@ -158,7 +158,8 @@ test("소비자: 시세 칸·해제·등기는 합친 값을, 직거래·갈아�
   assert.deepEqual(after.items, before.items, "갈아타기·가격대 변화는 저장 그대로");
   assert.equal(after.recollected.filter((item) => item.rgstDate === "26.09.01").length, 10);
 
-  // 연결(글자): 세 빌더만 읽기 층을 부른다.
+  // 연결(글자): 사이트 빌더 가운데 읽기 층을 부르는 것은 여섯이다 - 시세 칸·해제·등기(#861), 단지 추이(#920), 거래 검색·예산(realestate-source.ts)과
+  // 전세가율·전세 비중(build-complex-ratio.ts readRaw)의 매매(#900 (가)). 정정 Release(build-correction-release.ts)는 correction-release-recollect 시험이 본다.
   const price = await src("scripts/build-complex-price.ts");
   assert.equal([...price.matchAll(/readRecollectedSlot\("sale", code, m\)/g)].length, 2, "창 일곱 달과 1년 전 석 달");
   assert.match(price, /readSameNames\(\)/);
@@ -168,6 +169,19 @@ test("소비자: 시세 칸·해제·등기는 합친 값을, 직거래·갈아�
   const change = await src("scripts/build-district-change.ts");
   assert.match(change, /writeRegistrationSoft\(\{ items: recollected, now, sameNames \}\)/);
   assert.match(change, /buildPayload\(\{ items, now, official, survey, sameNames(, timing)? \}\)/); // timing: #858 계산 시간 로그
+  const history = await src("scripts/build-complex-history.ts");
+  assert.match(history, /readRecollectedSlot\("sale", code, m, rawDir\)/);
+  // 거래 검색·예산: 매매만 기본값이 합친 값이고, 전월세(대표 시세가 쓰는 readRentSource)와 collect 의 기본값은 저장 그대로다.
+  const source = await src("scripts/realestate-source.ts");
+  assert.match(source, /export async function readDealSource\(now, months = recentMonths\(now\), read = readRecollectedSlot\)/);
+  assert.match(source, /export async function readRentSource\(now, months = recentMonths\(now\), read = readSlotFile\)/);
+  assert.match(source, /async function collect\(kind, months, normalize, read = readSlotFile\)/);
+  assert.match(await src("scripts/build-budget-deals.ts"), /const source = await readDealSource\(now\);/);
+  // 전세가율·전세 비중: readRaw 의 매매 한 줄만 합친 값이고 전월세 줄은 저장 그대로다.
+  const ratio = await src("scripts/build-complex-ratio.ts");
+  assert.match(ratio, /readRecollectedSlot\("sale", code, ym, dir\)/);
+  assert.match(ratio, /readSlotFile\("rent", code, ym, dir\)/);
+  assert.doesNotMatch(ratio, /readSlotFile\("sale"/);
   for (const file of ["scripts/build-week-digest.ts", "scripts/build-realestate.ts", "scripts/ledger-snapshot.ts", "scripts/realestate-first-seen.ts", "scripts/build-direct-deals.ts", "scripts/realestate-raw.ts"]) {
     assert.doesNotMatch(await src(file), /realestate-recollect/, file);
   }
