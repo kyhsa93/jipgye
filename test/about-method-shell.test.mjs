@@ -74,3 +74,26 @@ test("두 장은 색인 대상으로 남는다 - 캐노니컬은 자기 자신, 
     assert.ok(levels.filter((n) => n === 2).length >= 8, `${file}: h2가 너무 적다 - 본문 제목이 지워졌다`);
   }
 });
+
+test("method 차례의 머리 숫자는 그 아래 항목 수와 같고, 항목 링크는 같은 언어 구역의 id를 가리킨다 (#932, #462)", async () => {
+  // 숫자를 리터럴로 고정하면 절을 더하는 PR이 이 파일을 못 고쳐 틀린 숫자가 시험에 묶인다(#862 이후 3씩 어긋남, #932). 그래서 세어서 견준다.
+  const method = await read("docs/method.html");
+  const starts = [...method.matchAll(/<div data-lang="(ko|en)"[ >]/g)];
+  assert.deepEqual(starts.map((m) => m[1]), ["ko", "en"], "전제: 본문 언어 구역이 ko·en 순서로 하나씩이 아니다");
+  const end = method.indexOf("</section>", starts[1].index);
+  assert.ok(end > starts[1].index, "전제: en 구역 끝(</section>)을 못 찾았다");
+  const regions = { ko: method.slice(starts[0].index, starts[1].index), en: method.slice(starts[1].index, end) };
+  for (const [lang, region] of Object.entries(regions)) {
+    const tocs = [...region.matchAll(/<details class="fold">\s*<summary>[^<]*\((\d+)\)<\/summary>\s*<ol>([\s\S]*?)<\/ol>/g)];
+    // 못 찾고 아래 반복이 0번 돌아 초록이 되는 헛통과를 막는다.
+    assert.equal(tocs.length, 1, `${lang}: 접힌 차례가 ${tocs.length}개다 - 정확히 하나여야 한다`);
+    const [, head, list] = tocs[0];
+    const items = (list.match(/<li\b/g) ?? []).length;
+    assert.ok(items > 0, `${lang}: 차례 항목이 0개다`);
+    assert.equal(Number(head), items, `${lang}: 차례 머리 숫자(${head})와 항목 수(${items})가 다르다 - 절을 더하거나 뺐으면 <summary> 숫자도 고친다`);
+    const hrefs = [...list.matchAll(/href="#([^"]+)"/g)].map((m) => m[1]);
+    assert.equal(hrefs.length, items, `${lang}: 링크 수(${hrefs.length})와 항목 수(${items})가 다르다 - 링크 없는 항목이 있다`);
+    const broken = hrefs.filter((id) => !region.includes(`id="${id}"`));
+    assert.deepEqual(broken, [], `${lang}: 같은 언어 구역에 없는 id를 가리키는 차례 링크`);
+  }
+});
