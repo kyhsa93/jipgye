@@ -181,10 +181,11 @@ test("조건 6: method 한·영에 「다시 받은 값을 쓰는 화면과 쓰�
   const method = await src("docs/method.html");
   const ko = method.match(/<p id="recollected">[^\n]*<\/p>/)?.[0] ?? "";
   const en = method.match(/<p id="recollected-en">[^\n]*<\/p>/)?.[0] ?? "";
-  assert.match(ko, /합친 값을 쓰는 화면은 [^.]*단지 추이\(\d{4}-\d{2}-\d{2}부터\), 거래 검색&middot;예산 구간과 전세가율&middot;전세 비중\(\d{4}-\d{2}-\d{2}부터\)입니다\./);
-  assert.match(ko, /직거래, 갈아타기&middot;가격대 변화, 신고가, 층 격차, 예산대 장의 규칙 문단, 반복거래는 아직 처음 받은 값을 씁니다/);
+  // 갈아타기·가격대 변화(#937)는 「쓰는 화면」 끝에 반영 시작일과 함께 붙고 「아직 처음 받은 값」 목록에서 빠졌다.
+  assert.match(ko, /합친 값을 쓰는 화면은 [^.]*단지 추이\(\d{4}-\d{2}-\d{2}부터\), 거래 검색&middot;예산 구간과 전세가율&middot;전세 비중\(\d{4}-\d{2}-\d{2}부터\), 갈아타기&middot;가격대 변화\(\d{4}-\d{2}-\d{2}부터\)입니다\./);
+  assert.match(ko, /직거래, 신고가, 층 격차, 예산대 장의 규칙 문단, 반복거래는 아직 처음 받은 값을 씁니다/);
   assert.match(ko, /이번 주 새 신고와 대표 시세, 전망은 처음 받은 값을 그대로 씁니다/);
-  assert.match(en, /complex trends \(from \d{4}-\d{2}-\d{2}\), and deal search, budget bands, the jeonse ratio and jeonse share \(from \d{4}-\d{2}-\d{2}\)\./);
-  assert.match(en, /Direct deals, district switching and price-band change, record highs, floor gaps, the rule paragraph on budget pages and repeat sales still use the values as first received/);
+  assert.match(en, /complex trends \(from \d{4}-\d{2}-\d{2}\), deal search, budget bands, the jeonse ratio and jeonse share \(from \d{4}-\d{2}-\d{2}\), and district switching and price-band change \(from \d{4}-\d{2}-\d{2}\)\./);
+  assert.match(en, /Direct deals, record highs, floor gaps, the rule paragraph on budget pages and repeat sales still use the values as first received/);
   assert.match(en, /This week's new filings, the representative prices and the outlook keep the values as first received/);
 });

@@ -1,6 +1,6 @@
 // 얼린 매매 슬롯의 재수집 덧씌움(#861). 슬롯(raw/sale/<구>-<달>.json)과 `arrivals` 는 한 바이트도 바꾸지 않고, 다시 받은 응답이 저장과 다른 행만
-// 따로 둔 덧씌움 파일에 담는다. 합치는 읽기 층은 이 파일의 mergeRecollect 한 곳이고, 그것을 부르는 소비자는 시세 칸(build-complex-price)·
-// 해제(build-cancellation)·등기(registration, build-district-change 가 부름) 셋이다(완료 조건 2).
+// 따로 둔 덧씌움 파일에 담는다. 합치는 읽기 층은 이 파일의 mergeRecollect 한 곳이다. 그것을 부르는 소비자 목록은
+// test/recollect-sale.test.mjs 「소비자」 시험의 연결 블록에 있다(소비자가 늘 때마다 여기와 갈리지 않게 한 곳에만 둔다).
 //
 // 왜 슬롯에 쓰지 않나: #820 판정 - 슬롯에 그대로 쓰면 202605~08 에서 13,653행이 오늘 도착으로 찍힌다(trackArrivals 는 행 해시가 처음 보인 날을
 // 도장으로 쓴다). 그러면 신고 기준 주간 집계·week-digest·원장 C1 이 「이번 주 새 신고」를 수십 주치로 잘못 센다(조건 4).
