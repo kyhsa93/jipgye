@@ -1,0 +1,145 @@
+#909 측정 · 등록 0c9c50d097cabe39430f948efab7f08319fa3bea · A 데이터 cd20a99bc954797ae12bedeffa48252e8e505a22 · A 원본 f692748e4c0434557f382470de883e3646234b39 · B 데이터 a0501d2d31470c6aa6aad8dea6fd77c6a72fbf73 · B 원본 fe30c882cf27dbd4e0ce1ebd1f466057c7411d86
+시각 2026-11-20T05:12:24Z · node v24.18.0 · origin/main a92fddadb3064f1a448fb47a55a1310324c9d48f
+디스크 오류 줄(hv_storvsc 0x28): 0
+부하:  14:12:24 up 5 days,  3:53,  0 users,  load average: 0.28, 1.50, 1.49
+무효 검사: git diff --quiet 0c9c50d097cabe39430f948efab7f08319fa3bea origin/main -- <목록 10개> 종료 0
+  f692748e 2026-11-16T02:42:21+00:00 chore: 실거래 원본 2026-11-16
+  cd20a99b 2026-11-16T02:45:11+00:00 chore: 데일리 데이터 갱신 2026-11-16
+  fe30c882 2026-11-17T05:10:38+00:00 chore: 실거래 원본 2026-11-17
+  a0501d2d 2026-11-17T05:12:49+00:00 chore: 데일리 데이터 갱신 2026-11-17
+B 는 등록 뒤 첫 Daily 데이터 커밋이다 (git log --grep='데일리 데이터 갱신' 0c9c50d097cabe39430f948efab7f08319fa3bea..B^ 0개)
+입력 신선도(git diff --name-only <이미 본 커밋> <입력 데이터 커밋> -- <폴더> | wc -l):
+  입력 A cd20a99b ← 8eb314f7: sale 0 first-seen/sale 0 recollect 0 rent 9
+  입력 A cd20a99b ← cd20a99b: sale 0 first-seen/sale 0 recollect 0 rent 0
+  입력 B a0501d2d ← 8eb314f7: sale 45 first-seen/sale 45 recollect 0 rent 49
+  입력 B a0501d2d ← cd20a99b: sale 45 first-seen/sale 45 recollect 0 rent 49
+git diff --stat f692748e4c0434557f382470de883e3646234b39 fe30c882cf27dbd4e0ce1ebd1f466057c7411d86 -- raw/sale: 45파일
+A·B 공개 segment-change.json·direct-deals.json(updatedAt 뺌): 다름
+판정 입력: A·B (raw/sale 45파일 바뀜)
+node_modules: 실제 폴더 ~/workspace/jipgye 에서 npm ls --all 종료 0 · package-lock.json cmp 같음
+작업 트리 ~/workspace/jipgye.worktrees/909-A: HEAD = 등록 sha · scripts·research/segment-direct-rounds-2026-11 = 등록 sha · raw·docs/data = cd20a99b (git restore, no-overlay)
+키 환경변수 0개 (본 이름: MOLIT_API_KEY, MOLIT_RENT_API_KEY, BUILDINGHUB_API_KEY, GITHUB_TOKEN, 그리고 *_KEY·*_TOKEN·*_SECRET)
+[prep A] segment now 2026-11-16T02:44:23.771Z · 원본 행 145319
+  같음 segment-change.json 전체(updatedAt 뺌)
+  같음   segment periods
+  같음   segment cells
+  같음   segment price
+  같음   segment age
+  같음   segment area
+  같음   segment pairs
+  같음   segment grid
+  같음   segment price 다시 짠 값 배열 → districtRows = 공개 행
+  같음   segment age 다시 짠 값 배열 → districtRows = 공개 행
+  같음   segment area 다시 짠 값 배열 → districtRows = 공개 행
+[prep A] direct now 2026-11-16T02:43:39.411Z · 달 202412~202611 (24) · 구 25
+  같음 direct-deals.json 전체(updatedAt 뺌)
+  같음   direct 서울 칸 격차 → summarizeGaps = 공개 seoul.gap
+[prep A] 두 시기 202507,202508,202509 → 202607,202608,202609 (12개월) · 칸 3203 · 구간 칸 수 가격대 676·941·982·426·178 / 연식 500·1833·870 / 면적대 1351·1411·371·70 · 공개 쌍 P = 13 (가격대 10 + 연식 3)
+[prep A] 직거래 판정 구간 1개: 서울 112칸 (칸이 가장 많은 자치구 12칸, 문턱 20)
+[prep A] 재현 일치 · input-909-A.json 씀
+[prep A] 네트워크 호출 0
+[verify A] bandFast = band (Object.is): 불일치 0 / 26 (구간 13개 × {400번·씨앗 20261001, 1,000번·씨앗 777})
+[verify A] 400번·지금 씨앗 끝값·쌍 판정 = 공개 파일: 불일치 0
+[verify A] 네트워크 호출 0
+Preparing worktree (detached HEAD 0c9c50d0)
+HEAD is now at 0c9c50d0 docs: #909 segment-change·direct-deals 재추출 횟수 사전 등록(측정 전) (#943)
+작업 트리 ~/workspace/jipgye.worktrees/909-B: HEAD = 등록 sha · scripts·research/segment-direct-rounds-2026-11 = 등록 sha · raw·docs/data = a0501d2d (git restore, no-overlay)
+키 환경변수 0개 (본 이름: MOLIT_API_KEY, MOLIT_RENT_API_KEY, BUILDINGHUB_API_KEY, GITHUB_TOKEN, 그리고 *_KEY·*_TOKEN·*_SECRET)
+[prep B] segment now 2026-11-17T05:12:10.144Z · 원본 행 145568
+  같음 segment-change.json 전체(updatedAt 뺌)
+  같음   segment periods
+  같음   segment cells
+  같음   segment price
+  같음   segment age
+  같음   segment area
+  같음   segment pairs
+  같음   segment grid
+  같음   segment price 다시 짠 값 배열 → districtRows = 공개 행
+  같음   segment age 다시 짠 값 배열 → districtRows = 공개 행
+  같음   segment area 다시 짠 값 배열 → districtRows = 공개 행
+[prep B] direct now 2026-11-17T05:11:38.771Z · 달 202412~202611 (24) · 구 25
+  같음 direct-deals.json 전체(updatedAt 뺌)
+  같음   direct 서울 칸 격차 → summarizeGaps = 공개 seoul.gap
+[prep B] 두 시기 202507,202508,202509 → 202607,202608,202609 (12개월) · 칸 3203 · 구간 칸 수 가격대 676·941·982·426·178 / 연식 500·1833·870 / 면적대 1351·1411·371·70 · 공개 쌍 P = 13 (가격대 10 + 연식 3)
+[prep B] 직거래 판정 구간 1개: 서울 114칸 (칸이 가장 많은 자치구 13칸, 문턱 20)
+[prep B] 재현 일치 · input-909-B.json 씀
+[prep B] 네트워크 호출 0
+[verify B] bandFast = band (Object.is): 불일치 0 / 26 (구간 13개 × {400번·씨앗 20261001, 1,000번·씨앗 777})
+[verify B] 400번·지금 씨앗 끝값·쌍 판정 = 공개 파일: 불일치 0
+[verify B] 네트워크 호출 0
+입력 sha256 30ed9c0f6fe59bc7c69c926833c50c6b472a174d615690148ddd984dacad08a6 input-909-A.json
+입력 sha256 6ad623f7aebb5fa63d0632e58be360876b5ea3470931e406c11d721265817d56 input-909-B.json
+재추출 입력 A 시작 05:12:46
+재추출 입력 A 끝 05:14:02
+재추출 입력 B 시작 05:14:02
+재추출 입력 B 끝 05:15:19
+부하:  14:15:19 up 5 days,  3:56,  0 users,  load average: 2.04, 1.74, 1.58
+[time A] 시작 부하 2.04 1.75 1.58 (코어 8, 기다림 0회) · node v24.18.0
+[time A] R=400: segment 중앙 800ms (813,791,800) · direct 중앙 7ms (7,7,7)
+[time A] R=1000: segment 중앙 2009ms (2022,1981,2009) · direct 중앙 19ms (19,18,19)
+[time A] R=2000: segment 중앙 3985ms (4145,3985,3982) · direct 중앙 38ms (38,39,37)
+[time A] R=4000: segment 중앙 8056ms (8056,7955,8094) · direct 중앙 73ms (73,72,86)
+[time A] 끝 부하 1.55 1.66 1.56
+[time A] 네트워크 호출 0
+
+== 입력 A: segment now 2026-11-16T02:44:23.771Z · direct now 2026-11-16T02:43:39.411Z · 두 시기 202507,202508,202509 → 202607,202608,202609 · 직거래 달 202412~202611 (24개월)
+기준(100000번, 씨앗 1) segment 쌍 P = 13 (가격대 10 + 연식 3; 공개 파일 13) · 문턱 S1 중앙 ≤ 0, 최대 ≤ 0
+  기준 갈라 볼 수 있는 쌍: 가격대 9/10 · 연식 3/3
+  기준 price: upTo6 10.9~13.8 · upTo9 18.4~20.7 · upTo15 22.4~23.6 · upTo25 13.7~15.4 · over25 0~2.5
+  기준 age: under10 14.9~16.8 · y10to29 17.4~18.7 · over30 19~21.4
+  기준 area: upTo60 20.5~22 · a60to85 16.7~17.8 · a85to135 12.7~15.9 · over135 3.4~8.3
+  기준 직거래: 서울 -16.4~-11.6 · 문턱 S2 구간마다 D ≤ 2/20
+segment R=400 (씨앗 20): F_pair [중앙 0 최대 0 범위 0~0] / 13 → S1 통과 | 가격대 [중앙 0 최대 0 범위 0~0] / 10 · 연식 [중앙 0 최대 0 범위 0~0] / 3
+  뒤집힌 쌍 0개: 없음
+  보조(판정에 안 씀) 12구간 끝값이 기준과 다른 씨앗: 하나라도 다른 씨앗 20/20 · 구간별 price:upTo9 12, price:upTo25 12, price:over25 7, age:under10 13, area:upTo60 15, area:a60to85 8, area:a85to135 11, area:over135 20, price:upTo6 10, price:upTo15 12, age:y10to29 12, age:over30 7
+direct R=400: D 서울 20/20 → S2 미달
+segment R=1000 (씨앗 20): F_pair [중앙 0 최대 0 범위 0~0] / 13 → S1 통과 | 가격대 [중앙 0 최대 0 범위 0~0] / 10 · 연식 [중앙 0 최대 0 범위 0~0] / 3
+  뒤집힌 쌍 0개: 없음
+  보조(판정에 안 씀) 12구간 끝값이 기준과 다른 씨앗: 하나라도 다른 씨앗 20/20 · 구간별 price:upTo9 11, age:under10 8, area:upTo60 11, area:a60to85 6, area:a85to135 11, area:over135 15, price:upTo15 10, price:over25 3, age:y10to29 10, price:upTo25 7, age:over30 2, price:upTo6 3
+direct R=1000: D 서울 20/20 → S2 미달
+segment R=2000 (씨앗 20): F_pair [중앙 0 최대 0 범위 0~0] / 13 → S1 통과 | 가격대 [중앙 0 최대 0 범위 0~0] / 10 · 연식 [중앙 0 최대 0 범위 0~0] / 3
+  뒤집힌 쌍 0개: 없음
+  보조(판정에 안 씀) 12구간 끝값이 기준과 다른 씨앗: 하나라도 다른 씨앗 20/20 · 구간별 price:upTo9 11, price:upTo15 14, age:under10 8, area:a85to135 7, area:over135 13, price:over25 1, area:upTo60 10, area:a60to85 3, price:upTo25 4, age:y10to29 4
+direct R=2000: D 서울 18/20 → S2 미달
+segment R=4000 (씨앗 20): F_pair [중앙 0 최대 0 범위 0~0] / 13 → S1 통과 | 가격대 [중앙 0 최대 0 범위 0~0] / 10 · 연식 [중앙 0 최대 0 범위 0~0] / 3
+  뒤집힌 쌍 0개: 없음
+  보조(판정에 안 씀) 12구간 끝값이 기준과 다른 씨앗: 하나라도 다른 씨앗 19/20 · 구간별 price:upTo9 10, price:upTo15 15, area:over135 11, price:over25 2, area:a60to85 7, area:a85to135 3, area:upTo60 4, price:upTo25 1, age:under10 1
+direct R=4000: D 서울 16/20 → S2 미달
+
+== 입력 B: segment now 2026-11-17T05:12:10.144Z · direct now 2026-11-17T05:11:38.771Z · 두 시기 202507,202508,202509 → 202607,202608,202609 · 직거래 달 202412~202611 (24개월)
+기준(100000번, 씨앗 1) segment 쌍 P = 13 (가격대 10 + 연식 3; 공개 파일 13) · 문턱 S1 중앙 ≤ 0, 최대 ≤ 0
+  기준 갈라 볼 수 있는 쌍: 가격대 9/10 · 연식 3/3
+  기준 price: upTo6 10.9~13.8 · upTo9 18.4~20.7 · upTo15 22.4~23.6 · upTo25 13.7~15.4 · over25 0~2.5
+  기준 age: under10 14.9~16.8 · y10to29 17.4~18.7 · over30 19~21.4
+  기준 area: upTo60 20.5~22 · a60to85 16.7~17.8 · a85to135 12.7~15.9 · over135 3.4~8.3
+  기준 직거래: 서울 -15.8~-11.2 · 문턱 S2 구간마다 D ≤ 2/20
+segment R=400 (씨앗 20): F_pair [중앙 0 최대 0 범위 0~0] / 13 → S1 통과 | 가격대 [중앙 0 최대 0 범위 0~0] / 10 · 연식 [중앙 0 최대 0 범위 0~0] / 3
+  뒤집힌 쌍 0개: 없음
+  보조(판정에 안 씀) 12구간 끝값이 기준과 다른 씨앗: 하나라도 다른 씨앗 20/20 · 구간별 price:upTo9 12, price:upTo25 12, price:over25 7, age:under10 13, area:upTo60 15, area:a60to85 8, area:a85to135 11, area:over135 20, price:upTo6 10, price:upTo15 12, age:y10to29 12, age:over30 7
+direct R=400: D 서울 19/20 → S2 미달
+segment R=1000 (씨앗 20): F_pair [중앙 0 최대 0 범위 0~0] / 13 → S1 통과 | 가격대 [중앙 0 최대 0 범위 0~0] / 10 · 연식 [중앙 0 최대 0 범위 0~0] / 3
+  뒤집힌 쌍 0개: 없음
+  보조(판정에 안 씀) 12구간 끝값이 기준과 다른 씨앗: 하나라도 다른 씨앗 20/20 · 구간별 price:upTo9 11, age:under10 8, area:upTo60 11, area:a60to85 6, area:a85to135 11, area:over135 15, price:upTo15 10, price:over25 3, age:y10to29 10, price:upTo25 7, age:over30 2, price:upTo6 3
+direct R=1000: D 서울 16/20 → S2 미달
+segment R=2000 (씨앗 20): F_pair [중앙 0 최대 0 범위 0~0] / 13 → S1 통과 | 가격대 [중앙 0 최대 0 범위 0~0] / 10 · 연식 [중앙 0 최대 0 범위 0~0] / 3
+  뒤집힌 쌍 0개: 없음
+  보조(판정에 안 씀) 12구간 끝값이 기준과 다른 씨앗: 하나라도 다른 씨앗 20/20 · 구간별 price:upTo9 11, price:upTo15 14, age:under10 8, area:a85to135 7, area:over135 13, price:over25 1, area:upTo60 10, area:a60to85 3, price:upTo25 4, age:y10to29 4
+direct R=2000: D 서울 16/20 → S2 미달
+segment R=4000 (씨앗 20): F_pair [중앙 0 최대 0 범위 0~0] / 13 → S1 통과 | 가격대 [중앙 0 최대 0 범위 0~0] / 10 · 연식 [중앙 0 최대 0 범위 0~0] / 3
+  뒤집힌 쌍 0개: 없음
+  보조(판정에 안 씀) 12구간 끝값이 기준과 다른 씨앗: 하나라도 다른 씨앗 19/20 · 구간별 price:upTo9 10, price:upTo15 15, area:over135 11, price:over25 2, area:a60to85 7, area:a85to135 3, area:upTo60 4, price:upTo25 1, age:under10 1
+direct R=4000: D 서울 12/20 → S2 미달
+
+== 시간 (이 머신, 입력 A, 3회 중앙값, 부하 시작 2.04 1.75 1.58 · 끝 1.55 1.66 1.56, 기다림 0회)
+R=400: segment 800ms (증가 0.00초) · direct 7ms (증가 0.00초) · 합 증가 0.00초 | 기록만: CI 환산 segment 증가 0.00~0.00초(×1.36~1.91), CI segment 추정 1.18초(11-16 Daily 1.18초 × 이 머신 비)
+R=1000: segment 2009ms (증가 1.21초) · direct 19ms (증가 0.01초) · 합 증가 1.22초 | 기록만: CI 환산 segment 증가 1.64~2.31초(×1.36~1.91), CI segment 추정 2.96초(11-16 Daily 1.18초 × 이 머신 비)
+R=2000: segment 3985ms (증가 3.19초) · direct 38ms (증가 0.03초) · 합 증가 3.22초 | 기록만: CI 환산 segment 증가 4.33~6.08초(×1.36~1.91), CI segment 추정 5.88초(11-16 Daily 1.18초 × 이 머신 비)
+R=4000: segment 8056ms (증가 7.26초) · direct 73ms (증가 0.07초) · 합 증가 7.32초 | 기록만: CI 환산 segment 증가 9.87~13.86초(×1.36~1.91), CI segment 추정 11.88초(11-16 Daily 1.18초 × 이 머신 비)
+
+== 선택 (S4, 판정 입력 A·B, 예산 7.7초, direct 먼저)
+direct: R = 4000 → 바꿈 (통과 후보 없음 → 예산 안 가장 큰 R, 남는 값 A: 서울 16/20 / B: 서울 12/20) · 예산 안 후보 400·1000·2000·4000
+segment 예산 = 7.7 − direct 증가 0.07 = 7.63초
+segment: R = 400 → 바꾸지 않음 (문턱 통과 가장 작은 R) · 예산 안 후보 400·1000·2000·4000
+읽은 결과 파일 162개 (기대 162)
+재추출 실행의 네트워크 호출 합 0
+[analyze] 네트워크 호출 0

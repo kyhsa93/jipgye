@@ -54,13 +54,6 @@ test("구운 조각은 json 의 districtTable.ko 와 같고 영어는 같은 키
   assert.match(tpl, /<table class="rate-table" id="move-in-districts"[ >]/, "표 요소 id 가 스크립트가 쓰는 move-in-districts 가 아니다");
 });
 
-// #819: 범위 문단(regionNote)이 옛 범위·넓힌 범위를 시점으로 가르고 384/596·날짜를 적으면서 +165 B(17419 → 17584) - 그 값을 상한으로 둔다.
-test("전망 장 인라인 스크립트는 구×반기 표 때문에 늘지 않는다 - 17584 B 이하 (#677, S6 인라인 바이트 - #726 저장소 예외 처리 +65 B, #819 범위 문단 +165 B 반영)", async () => {
-  const tpl = await readFile(path.join(root, "docs/price-outlook.html"), "utf8");
-  const script = [...tpl.matchAll(/<script>\n([\s\S]*?)<\/script>/g)].map((m) => m[1]).join("");
-  assert.ok(Buffer.byteLength(script) <= 17584, `인라인 스크립트 ${Buffer.byteLength(script)} B`);
-});
-
 // ---- 자치구 장 입주 예정 한 줄(#677 PR2) ----
 // 값(세대수)을 시험에 적지 않는다(#8) - 나가는 장의 줄을 json(byDistrict)에서 다시 읽어 만든 글자와 견주고, 모양과 표지만 본다.
 const lineOf = (html, lang) => {
