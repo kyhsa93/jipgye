@@ -106,6 +106,60 @@ test("전세로 바꿔도 빈 화면이 아니다", async () => {
   assert.match(html, /budget-deal/, "거래 목록이 없다");
 });
 
+// 미리보기 건수 문장이 실제로 센 범위를 말하는지(#929). total 은 전세·월세 모두 계약구분 「신규」만 센 수다
+// (build-rent-preview.ts 가 갱신·빈칸을 kind 를 가르기 전에 뺀다). 전세는 35건(표시 30건)·월세 3건이라
+// 문장의 수가 표시 수나 다른 탭의 수, 갱신·빈칸을 더한 수와 갈린다.
+const NEW_ONLY_PREVIEW = () => {
+  const blank = (extra) => {
+    const { renewal: _r, ...rest } = deal(extra);
+    return rest;
+  };
+  const day = (i) => `2026-08-${String((i % 28) + 1).padStart(2, "0")}`;
+  return buildPayload({
+    now: NOW,
+    byDistrict: {
+      노원구: {
+        periods: ["202608"],
+        deals: [
+          ...Array.from({ length: 35 }, (_, i) => deal({ apt: `전세${i}`, date: day(i) })),
+          deal({ apt: "전세갱신1", renewal: true }),
+          deal({ apt: "전세갱신2", renewal: true }),
+          blank({ apt: "전세빈칸" }),
+          ...Array.from({ length: 3 }, (_, i) => deal({ apt: `월세${i}`, monthlyRent10k: 50, date: day(i) })),
+          deal({ apt: "월세갱신", monthlyRent10k: 50, renewal: true }),
+          blank({ apt: "월세빈칸", monthlyRent10k: 50 }),
+        ],
+      },
+    },
+  });
+};
+
+const NEW_ONLY_CASES = [
+  { locale: "ko", kind: "jeonse", total: 35, line: "서울 전체 전세에서 35건이 거래됐습니다. 계약구분이 「신규」인 신고만 셉니다(갱신·미표기 제외).", note: "자치구를 고르면 건수는 조건에 맞는 전부를 셉니다." },
+  { locale: "ko", kind: "wolse", total: 3, line: "서울 전체 월세에서 3건이 거래됐습니다. 계약구분이 「신규」인 신고만 셉니다(갱신·미표기 제외).", note: "자치구를 고르면 건수는 조건에 맞는 전부를 셉니다." },
+  { locale: "en", kind: "jeonse", total: 35, line: "35 deals filed in All of Seoul, Jeonse. New contracts only (renewals and blank types excluded).", note: "with a district chosen, the count covers every filing that matches." },
+  { locale: "en", kind: "wolse", total: 3, line: "3 deals filed in All of Seoul, Monthly rent. New contracts only (renewals and blank types excluded).", note: "with a district chosen, the count covers every filing that matches." },
+];
+
+for (const c of NEW_ONLY_CASES) {
+  test(`서울 전체 미리보기 건수 문장은 신규만 센다고 말한다 - ${c.locale} ${c.kind} (#929)`, async () => {
+    const preview = NEW_ONLY_PREVIEW();
+    // 전제: 문장의 수가 total 에서만 올 수 있게 갈라 둔 자료다.
+    assert.equal(preview[c.kind].total, c.total);
+    assert.equal(preview.jeonse.deals.length, PREVIEW_ROWS);
+    assert.notEqual(preview.jeonse.total, preview.wolse.total);
+
+    const page = await load({ rentPreview: preview, locale: c.locale });
+    page.chooseKind(c.kind);
+    await settle();
+    const html = page.resultHtml();
+    assert.ok(html.includes(`<p class="budget-summary">${c.line}`), `미리보기 건수 문장이 다르다: ${html.slice(0, 300)}`);
+    // 같은 화면에 「전부를 센다」가 남으면 위 문장과 어긋난다 - rentNote 는 그 구절을 자치구 목록으로 좁혀 말한다.
+    const note = page.byId("search-note").textContent;
+    assert.ok(note.includes(c.note), `rentNote 가 범위를 좁히지 않았다: ${note}`);
+  });
+}
+
 test("조건을 걸면 맛보기로 세지 않는다", async () => {
   // 최근 서른 건 위에서 "60㎡ 미만"을 세면 서울에서 그 조건에 맞는 거래 수가
   // 아니라 이 목록 안의 수가 나온다. 화면에서는 구별되지 않는다.

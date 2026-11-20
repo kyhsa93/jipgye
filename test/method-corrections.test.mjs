@@ -114,6 +114,21 @@ test("동명 단지 정정 항목(#821·#843)이 한·영에 있거나 내렸고
   assert.ok(sectionOf(html, "switch-house-en").text.includes("Complexes sharing a name across more than one dong are counted separately per dong."));
 });
 
+// #929: 실거래 검색 서울 전체 미리보기 건수 문장 정정. 값은 그대로 두고 문장만 고친 꼴(#183 선례)이라 「수는 그대로」와
+// 고친 문장의 범위(신규만·빈칸 제외·「전부」는 자치구 목록만)를 적는지 본다. 수치는 2026-11-16 고정 문장이라 데일리 값에 갈리지 않는다(#8).
+test("미리보기 건수 문장 정정 항목(#929)이 한·영에 있으면 고친 범위와 그대로 둔 값을 적고, 없으면 내린 목록에 있다", async () => {
+  const html = await method();
+  const hit = pickOrRetired(html, "issues", 929);
+  if (!hit) return;
+  const { ko, en } = hit;
+  for (const w of ["./deal-search.html", "2026-08-29", "8,185건", "10,759건", "17,497건", "18,752건", "수는 그대로", "&lsquo;신규&rsquo;인 신고만", "계약구분이 빈 신고는", "자치구를 고른 목록에만"]) {
+    assert.ok(ko.includes(w), `한국어 항목에 ${w}`);
+  }
+  for (const w of ["./deal-search.html", "2026-08-29", "8,185 jeonse", "10,759 monthly-rent", "17,497 and 18,752", "The number itself is unchanged", "&lsquo;new&rsquo; contract type", "blank types drop out of it too", "list with a district chosen"]) {
+    assert.ok(en.includes(w), `영어 항목에 ${w}`);
+  }
+});
+
 // #862 1단계: 근거는 PR 이다(#862 는 2단계까지 열려 있다). 지난 값을 그대로 둔다고 적는다.
 test("서울 매매 표본 정정 항목이 한·영에 있으면 지난 값을 그대로 둔다고 적고, 없으면 내린 목록에 있다", async () => {
   const html = await method();
