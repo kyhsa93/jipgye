@@ -1,65 +1,63 @@
 {
-  "updatedAt": "2026-11-16T02:44:08.175Z",
-  "asOf": "2026-11-16",
+  "updatedAt": "2026-11-20T03:59:49.473Z",
+  "asOf": "2026-11-20",
   "trackedFrom": "2026-08-18",
   "basis": "unique-arrival-key",
   "comparable": true,
   "gaps": [],
   "current": {
-    "from": "2026-11-10",
-    "to": "2026-11-16",
-    "sale": 992,
-    "jeonse": 2090,
-    "wolse": 2082,
-    "cancelArrived": 27,
-    "cancelDated": 19,
-    "direct": 36,
-    "directShare": 3.6,
-    "records": 303,
-    "judged": 819,
+    "from": "2026-11-14",
+    "to": "2026-11-20",
+    "sale": 1017,
+    "jeonse": 1758,
+    "wolse": 1962,
+    "cancelArrived": 20,
+    "cancelDated": 15,
+    "direct": 29,
+    "directShare": 2.9,
+    "records": 310,
+    "judged": 853,
     "districts": [
       "11350",
       "11500",
-      "11470"
-    ],
-    "months": {
-      "sale": {
-        "202610": 600,
-        "202611": 392
-      },
-      "rent": {
-        "202610": 972,
-        "202611": 3200
-      }
-    }
-  },
-  "previous": {
-    "from": "2026-11-03",
-    "to": "2026-11-09",
-    "sale": 930,
-    "jeonse": 1766,
-    "wolse": 1746,
-    "cancelArrived": 21,
-    "cancelDated": 20,
-    "direct": 44,
-    "directShare": 4.7,
-    "records": 286,
-    "judged": 736,
-    "districts": [
-      "11350",
-      "11290",
       "11710"
     ],
     "months": {
       "sale": {
-        "202609": 3,
-        "202610": 801,
-        "202611": 126
+        "202610": 430,
+        "202611": 587
       },
       "rent": {
-        "202609": 75,
-        "202610": 2043,
-        "202611": 1394
+        "202610": 668,
+        "202611": 3052
+      }
+    }
+  },
+  "previous": {
+    "from": "2026-11-07",
+    "to": "2026-11-13",
+    "sale": 1038,
+    "jeonse": 2124,
+    "wolse": 2119,
+    "cancelArrived": 28,
+    "cancelDated": 26,
+    "direct": 34,
+    "directShare": 3.3,
+    "records": 311,
+    "judged": 861,
+    "districts": [
+      "11350",
+      "11500",
+      "11320"
+    ],
+    "months": {
+      "sale": {
+        "202610": 688,
+        "202611": 350
+      },
+      "rent": {
+        "202610": 1068,
+        "202611": 3175
       }
     }
   }

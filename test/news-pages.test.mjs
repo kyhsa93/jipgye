@@ -5,6 +5,7 @@ import path from "node:path";
 import { NEWS_PAGES, buildNewsPage } from "../scripts/build-news-pages.ts";
 import { escapeHtml, newsListHtml, newsSummaryHtml } from "../scripts/prerender.ts";
 import { SITE } from "./helpers/site-root.mjs";
+import { QUOTED_TITLE, withoutQuotedTitles } from "./helpers/quoted-title.mjs";
 import { RATE_NOTICE_PAGES } from "../scripts/updated-stamp.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -65,9 +66,27 @@ test("요약도 그 분야 문장만 싣는다", async () => {
   }
 });
 
-test("정적 목록에 만든 시점에 좌우되는 값을 넣지 않는다", async () => {
+// 막으려는 것은 화면 스크립트가 방문 시점에 그리는 「N분 전」(docs/news.html relativeTime)이 빌드 때 정적 HTML 에 구워져 굳는 것이다(9ac912ba).
+// 기사 제목 원문은 빌드 시각과 무관한 입력이라 뺀다 - 2026-11-20 매일경제 「“선착순 계약 3일 전부터 텐트 등장”…」의 「일 전」이 이 검사에 걸려
+// 그날 배포(run 44671520247)가 막혔다(#950). 빼는 범위는 #945 (c)와 같은 인용 제목 글자뿐이고 출처 줄·맥락 칩은 같은 정규식으로 그대로 본다.
+const RELATIVE_TIME = /분 전|시간 전|일 전/;
+
+test("정적 목록에 만든 시점에 좌우되는 값을 넣지 않는다 - 인용 제목 글자는 빼고 본다 (#950)", async () => {
   const html = newsListHtml(await readJson("news"));
-  assert.ok(!/분 전|시간 전|일 전/.test(html), "상대 시간이 정적 HTML에 실렸다");
+  assert.ok([...html.matchAll(QUOTED_TITLE)].length > 0, "전제: 인용 제목 자리를 하나도 못 찾았다 - 목록 마크업이 바뀌었으면 QUOTED_TITLE 을 고친다");
+  assert.ok(!RELATIVE_TIME.test(withoutQuotedTitles(html)), "상대 시간이 정적 HTML에 실렸다");
+});
+
+test("상대 시간 검사에서 빠지는 것은 인용 제목 글자뿐이다 - 출처 줄·맥락 칩은 잡힌다 (#950)", () => {
+  const item = { title: "“선착순 계약 3일 전부터 텐트 등장”…대구 CR리츠 전세 흥행 부산서 재현하나", link: "https://example.com/a", source: "매일경제 부동산", category: "realestate" };
+  const scan = (items) => {
+    const html = newsListHtml({ items });
+    assert.equal([...html.matchAll(QUOTED_TITLE)].length, items.length, "전제: 고정 항목의 인용 제목 자리를 못 찾았다");
+    return RELATIVE_TIME.test(withoutQuotedTitles(html));
+  };
+  assert.equal(scan([item]), false, "제목 원문의 「3일 전부터」가 잡혔다");
+  assert.equal(scan([{ ...item, source: "매일경제 부동산 · 5분 전" }]), true, "출처 줄의 상대 시간을 놓쳤다");
+  assert.equal(scan([{ ...item, context: [{ href: "./rates.html", label: "기준금리", value: "3일 전 대비" }] }]), true, "맥락 칩 값의 상대 시간을 놓쳤다");
 });
 
 test("허브와 카테고리 페이지가 서로를 진짜 링크로 가리킨다", async () => {

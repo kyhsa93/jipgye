@@ -1,6 +1,7 @@
 import { DISTRICTS } from "./realestate-districts.ts";
 import { dropCancelled, normalizeDeal, normalizeRentDeal } from "./realestate-metrics.ts";
 import { readSlotFile } from "./realestate-raw.ts";
+import { readRecollectedSlot } from "./realestate-recollect.ts";
 import { shiftMonth, yearMonthOf } from "./realestate-slots.ts";
 
 export const SEARCH_MONTHS = 3;
@@ -41,7 +42,12 @@ async function collect(kind, months, normalize, read = readSlotFile) {
   return { byDistrict, cancelled };
 }
 
-export async function readDealSource(now, months = recentMonths(now), read = readSlotFile) {
+// 매매는 재수집 덧씌움을 합쳐 읽는다(#900 (가) 전환). 같은 장(deal-search)의 시세 칸(build-complex-price)이 이미 덧씌움을 읽어, 거래 목록만
+// 저장 그대로면 한 장이 두 기준으로 그려졌다 - round 202611 측정에서 어긋남 행 36(나간 10·들어온 26, 15개 구, #900 issuecomment-6913088769).
+// 바꾸는 곳은 #572 가 넣은 읽기 인자의 기본값 하나다(합치기는 realestate-recollect.ts mergeRecollect 한 곳, 합치는 순서는 collect 그대로).
+// 덧씌움이 없거나 낡았으면 readRecollectedSlot 이 슬롯을 그대로 돌려주므로 출력은 readSlotFile 로 읽을 때와 같다.
+// 전월세(readRentSource)는 재수집 대상이 아니라 readSlotFile 그대로 둔다 - 대표 시세(build-realestate)가 그 함수를 쓴다.
+export async function readDealSource(now, months = recentMonths(now), read = readRecollectedSlot) {
   const { byDistrict, cancelled } = await collect("sale", months, normalizeDeal, read);
   return {
     period: months[months.length - 1],
