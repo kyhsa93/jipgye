@@ -14,6 +14,7 @@ import { bannedWordsIn } from "../scripts/summary-banned-words.ts";
 import { loadIndexPage } from "./helpers/index-page.mjs";
 import { readFixture } from "./helpers/fixture-data.mjs";
 import { SITE_DIR, sitePath } from "./helpers/site-root.mjs";
+import { QUOTED_TITLE } from "./helpers/quoted-title.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const read = (rel) => readFile(path.join(root, rel), "utf8");
@@ -145,9 +146,7 @@ const HEADLINE_SCOPE = "claims-only";
 
 // (b) 의 자리: 뉴스 장의 프리렌더 요약 블록(scripts/render/entry.jsx newsSummary - 분야 이름 + lineKo).
 const SUMMARY_BLOCK = /<!--prerender:newsSummary-->[\s\S]*?<!--\/prerender:newsSummary-->/g;
-// (c) 의 자리: 출처·링크 붙은 목록 항목의 제목 글자. 뉴스 목록(entry.jsx NewsItem)과 근거 기사 목록(scripts/summary-note.ts sourcesMarkup) 두 꼴이
-// 모두 `<li…><a href="http…" target="_blank" rel="noopener">제목</a>` 이다. 제목 글자만 잡고 li·a·출처 줄은 남긴다.
-const QUOTED_TITLE = /(<li\b[^>]*><a href="https?:\/\/[^"]*" target="_blank" rel="noopener">)([^<]*)(<\/a>)/g;
+// (c) 의 자리: 출처·링크 붙은 목록 항목의 제목 글자 - QUOTED_TITLE(test/helpers/quoted-title.mjs, news-pages 의 상대 시간 검사와 같은 한 벌, #950).
 
 const { readdir } = await import("node:fs/promises");
 const shipped = async () => {
