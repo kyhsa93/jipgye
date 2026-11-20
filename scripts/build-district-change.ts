@@ -120,8 +120,9 @@ export function buildPayload({ items, now, official, survey, sameNames = {}, tim
 }
 
 /**
- * 매매 원본 전부. items 는 저장 슬롯 그대로, recollected 는 얼린 슬롯에 재수집 덧씌움을 합친 것이다(#861). 덧씌움은 등기·해제(registration)에만 건다 -
- * 갈아타기·가격대 변화는 완료 조건 2 의 소비자가 아니다. 한 번 읽어 두 목록을 만든다(덧씌움이 없는 슬롯은 같은 행을 가리킨다).
+ * 매매 원본 전부. items 는 저장 슬롯 그대로, recollected 는 얼린 슬롯에 재수집 덧씌움을 합친 것이다(#861). 사이트 빌드(main)는 등기·해제(registration)·
+ * 갈아타기·가격대 변화 모두 recollected 를 읽는다(#937 - 한 빌더 안에서 기준이 갈리던 것을 맞췄다). items 는 연구 재현용으로 남긴다 - 등록된 측정
+ * (prep-858·prep-908·prep-909·na-900)이 저장 그대로를 읽는다. 한 번 읽어 두 목록을 만든다(덧씌움이 없는 슬롯은 같은 행을 가리킨다).
  */
 export async function readAll(rawDir = RAW_DIR) {
   const dir = path.join(rawDir, "sale");
@@ -138,12 +139,13 @@ export async function readAll(rawDir = RAW_DIR) {
 }
 
 async function main() {
-  const [{ items, recollected }, official, survey, sameNames] = await Promise.all([readAll(), readJson(INDEX_FILE), readJson(DISTRICT_INDEX_FILE), readSameNames()]);
+  const [{ recollected }, official, survey, sameNames] = await Promise.all([readAll(), readJson(INDEX_FILE), readJson(DISTRICT_INDEX_FILE), readSameNames()]);
   const now = new Date();
   // 등기·해제 비율(R1, #715). 얼린 달은 재수집 덧씌움을 합친 원본(#861). soft-fail 이라 던지지 않고, 갈아타기 결과와 상관없이 먼저 부른다.
   await writeRegistrationSoft({ items: recollected, now, sameNames });
   const timing = { band: 0, money: 0 };
-  const payload = buildPayload({ items, now, official, survey, sameNames, timing });
+  // 갈아타기도 등기와 같은 합친 원본을 읽는다(#937). 덧씌움이 없으면 items 와 같은 행이라 출력이 바이트까지 같다(recollect-switch 시험).
+  const payload = buildPayload({ items: recollected, now, official, survey, sameNames, timing });
   if (!payload) {
     console.log("  갈아타기: 두 시기를 정할 원본이 모자라 건너뜀");
     return;
@@ -157,8 +159,8 @@ async function main() {
       `값을 낸 구 ${ok}/25, 갈라 볼 수 있는 쌍 ${distinct}/${Object.keys(payload.pairs).length}, ` +
       `권역 대조 ${payload.regions.map((r) => `${r.name.ko} ${r.ours}/${r.official}`).join(" ")}`
   );
-  // 가격대·연식 구간 변화(N4, #676). 같은 원본·같은 두 시기. soft-fail - 위 갈아타기 파일은 이미 다 썼다.
-  await writeSegmentChangeSoft({ items, now, sameNames });
+  // 가격대·연식 구간 변화(N4, #676). 갈아타기와 같은 원본(덧씌움을 합친 것, #937)·같은 두 시기. soft-fail - 위 갈아타기 파일은 이미 다 썼다.
+  await writeSegmentChangeSoft({ items: recollected, now, sameNames });
   console.log(`  갈아타기 계산 시간: 구간 ${timing.band}ms (${SWITCH_ROUNDS}번) · 금액 ${timing.money}ms (${MONEY_ROUNDS}번)`);
 }
 

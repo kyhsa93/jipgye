@@ -140,7 +140,7 @@ test("자리: raw/recollect/sale/<구>-<달>.json - 슬롯 읽기(raw/<kind>/ �
 
 // ---- 소비자 ----
 
-test("소비자: 시세 칸·해제·등기는 합친 값을, 직거래·갈아타기·주간 집계·week-digest·동명 단지는 저장 그대로 읽는다. 덧씌움이 없으면 같다", async () => {
+test("소비자: 시세 칸·해제·등기·갈아타기·가격대 변화는 합친 값을, 직거래·주간 집계·week-digest·동명 단지는 저장 그대로 읽는다. 덧씌움이 없으면 같다", async () => {
   const { raw } = await fixtureRaw();
   const stored = await readRawSales(["202605", "202606"], raw, readSlotFile);
   assert.deepEqual(await readRawSales(["202605", "202606"], raw), stored, "덧씌움 없음 = 저장");
@@ -155,11 +155,12 @@ test("소비자: 시세 칸·해제·등기는 합친 값을, 직거래·갈아�
   assert.equal(merged["종로구"].length, 30);
   assert.deepEqual(await readRawSales(["202605", "202606"], raw, readSlotFile), stored);
   const after = await readAll(raw);
-  assert.deepEqual(after.items, before.items, "갈아타기·가격대 변화는 저장 그대로");
+  assert.deepEqual(after.items, before.items, "readAll items 는 저장 그대로(연구 재현용 - prep-858·908·909·na-900)");
   assert.equal(after.recollected.filter((item) => item.rgstDate === "26.09.01").length, 10);
 
-  // 연결(글자): 사이트 빌더 가운데 읽기 층을 부르는 것은 여섯이다 - 시세 칸·해제·등기(#861), 단지 추이(#920), 거래 검색·예산(realestate-source.ts)과
-  // 전세가율·전세 비중(build-complex-ratio.ts readRaw)의 매매(#900 (가)). 정정 Release(build-correction-release.ts)는 correction-release-recollect 시험이 본다.
+  // 연결(글자): 사이트 빌더 가운데 읽기 층을 부르는 것은 일곱이다 - 시세 칸·해제·등기(#861), 단지 추이(#920), 거래 검색·예산(realestate-source.ts)과
+  // 전세가율·전세 비중(build-complex-ratio.ts readRaw)의 매매(#900 (가)), 갈아타기·가격대 변화(build-district-change.ts - 등기와 같은 readAll recollected, #937). 정정 Release(build-correction-release.ts)는
+  // correction-release-recollect 시험이 본다.
   const price = await src("scripts/build-complex-price.ts");
   assert.equal([...price.matchAll(/readRecollectedSlot\("sale", code, m\)/g)].length, 2, "창 일곱 달과 1년 전 석 달");
   assert.match(price, /readSameNames\(\)/);
@@ -168,7 +169,10 @@ test("소비자: 시세 칸·해제·등기는 합친 값을, 직거래·갈아�
   assert.match(cancel, /tryWriteDirectDeals\(\{ byDistrict: await readRawSales\(retentionMonths, undefined, readSlotFile\)/);
   const change = await src("scripts/build-district-change.ts");
   assert.match(change, /writeRegistrationSoft\(\{ items: recollected, now, sameNames \}\)/);
-  assert.match(change, /buildPayload\(\{ items, now, official, survey, sameNames(, timing)? \}\)/); // timing: #858 계산 시간 로그
+  assert.match(change, /buildPayload\(\{ items: recollected, now, official, survey, sameNames, timing \}\)/); // timing: #858 계산 시간 로그
+  assert.match(change, /writeSegmentChangeSoft\(\{ items: recollected, now, sameNames \}\)/);
+  assert.doesNotMatch(change, /= buildPayload\(\{ items,/); // 「= 」: 정의 줄 export function buildPayload({ items, … 는 빼고 호출만 본다
+  assert.doesNotMatch(change, /writeSegmentChangeSoft\(\{ items,/);
   const history = await src("scripts/build-complex-history.ts");
   assert.match(history, /readRecollectedSlot\("sale", code, m, rawDir\)/);
   // 거래 검색·예산: 매매만 기본값이 합친 값이고, 전월세(대표 시세가 쓰는 readRentSource)와 collect 의 기본값은 저장 그대로다.
