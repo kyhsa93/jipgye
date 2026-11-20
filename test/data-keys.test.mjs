@@ -4,7 +4,7 @@ import { createHash } from "node:crypto";
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { BUST, DERIVED, PAGE_SETS, setFiles, stampDataKeys } from "../scripts/data-keys.ts";
+import { BUST, DERIVED, PAGE_SETS, dataKeyStamper, setFiles, stampDataKeys } from "../scripts/data-keys.ts";
 import { NEWS_PAGES } from "../scripts/build-news-pages.ts";
 import { createWriteSet } from "../scripts/render-writes.ts";
 import { DOCS_DIR } from "../scripts/site-dir.ts";
@@ -107,7 +107,8 @@ test("(b) 출력이 docs/ 자신이면 읽기·쓰기 0 이고 아무것도 바�
 test("(c) 실패 셋: 치환 뒤 남은 Date.now 요청, 표에 없는 동적 장, 맞는 파일 0개 집합 - 던지고 디스크에는 아무것도 안 쓴다", () => {
   const cases = [
     ["남은 요청(모르는 모양)", { "odd.html": `<script>fetch(base + \`${BUST}\`);</script>` }, /남았다: odd\.html/],
-    ["남은 요청(셸 JS)", { "nav.js": `fetch(\`./data/trend.json${BUST}\`);\n` }, /남았다: nav\.js/],
+    ["남은 요청(sw.js)", { "sw.js": `${SW}fetch(\`./data/trend.json${BUST}\`);\n` }, /남았다: sw\.js/],
+    ["키 없는 주소(sw.js, #917)", { "sw.js": `${SW}fetch("./data/trend.json");\n` }, /\?v=<8자> 없는 \.\/data\/ 주소가 남았다: sw\.js/],
     ["표에 없는 동적 장", { "mystery.html": DYNAMIC_PAGE }, /집합 표.*mystery\.html/],
     ["0개 집합", { "floor-gap.html": DYNAMIC_PAGE }, /floor-gap\.html.*0개/],
   ];
@@ -119,7 +120,7 @@ test("(c) 실패 셋: 치환 뒤 남은 Date.now 요청, 표에 없는 동적 �
   }
 });
 
-/** 소스에서 로더가 받는 이름을 훑는다: 글자 이름, 템플릿 이름(`${…}` -> *), news 의 load("…"), renewal-convert 의 get("…"), index 의 todayKeys 배열. */
+/** 소스에서 로더가 받는 이름을 훑는다: 글자 이름, 템플릿 이름(`${…}` -> *), news 의 load("…"), renewal-convert 의 get("…"), index 의 todayKeys 배열, budget-table 의 키 없는 fetch(…)(#917). */
 function scannedNames(file, text) {
   const out = new Set();
   for (const m of text.matchAll(/\bloadJson\("([\w/-]+)"\)/g)) out.add(`${m[1]}.json`);
@@ -128,10 +129,11 @@ function scannedNames(file, text) {
   if (file.endsWith(".js")) for (const m of text.matchAll(/\bget\("([\w-]+)"\)/g)) out.add(`${m[1]}.json`);
   const today = text.match(/const todayKeys = \[([^\]]*)\]/);
   if (today) for (const m of today[1].matchAll(/"([\w-]+)"/g)) out.add(`${m[1]}.json`);
+  for (const m of text.matchAll(/\bfetch\(["`]\.\/data\/([^"`?]+)\.json["`]\)/g)) out.add(`${m[1].replace(/\$\{[^}]*\}/g, "*")}.json`);
   return [...out].sort();
 }
 const glob = (p) => new RegExp(`^${p.split("*").map((s) => s.replace(/[.+?^${}()|[\]\\]/g, "\\$&")).join("[^/]*")}$`);
-const DYNAMIC = /\.\/data\/[^`"'\s]*\$\{[^}`]*\}[^`"'\s]*?\.json\?_=\$\{Date\.now\(\)\}/;
+const DYNAMIC = /\.\/data\/[^`"'\s]*\$\{[^}`]*\}[^`"'\s]*?\.json(?:\?_=\$\{Date\.now\(\)\}|(?=`))/;
 
 test("(d) 집합 표가 소스와 맞는다: 동적 로더가 있는 소스 = 표의 키, 로더가 받는 이름은 모두 표에 있고 표의 항목은 모두 로더가 받는다", () => {
   const sources = [
@@ -177,4 +179,22 @@ test("(e) 나가는 사이트: Date.now 요청 0곳, 정적 키는 출력 사본
     }
   }
   assert.ok(statics > 0 && dynamics > 0, `키를 박은 주소를 못 찾았다(정적 ${statics} · 동적 ${dynamics})`);
+});
+
+test("(f) 키 없는 주소(#917): 정적 이름은 파일 키, 동적 이름은 집합 키를 출력에서 붙이고 sw.js 는 그대로다 - 두 번 돌려도 같은 출력", () => {
+  const SEARCH = 'loading = fetch("./data/trend.json")\n';
+  const TABLE = "fetch(`./data/reco-${sl}.json`)\nfetch(\"./data/reco-counts.json\")\n";
+  const root = fixture({ "search.js": SEARCH, "budget-table.js": TABLE, "data/reco-counts.json": '{"v":1}\n', "data/reco-nowon.json": '{"r":1}\n' });
+  const sw = read(root, "sw.js");
+  stamp(root);
+  const files = setFiles(path.join(root, "data"), PAGE_SETS["budget-table.js"]);
+  assert.deepEqual(files, ["reco-counts.json", "reco-nowon.json"]);
+  const setKey = sha(files.map((f) => `${f} ${sha(read(root, `data/${f}`))}\n`).join("")).slice(0, 8);
+  assert.equal(read(root, "search.js"), `loading = fetch("./data/trend.json?v=${sha('{"a":1}\n').slice(0, 8)}")\n`);
+  assert.equal(read(root, "budget-table.js"), `fetch(\`./data/reco-\${sl}.json?v=${setKey}\`)\nfetch("./data/reco-counts.json?v=${sha('{"v":1}\n').slice(0, 8)}")\n`);
+  assert.equal(read(root, "sw.js"), sw, "sw.js 를 고쳤다");
+  const once = readdirSync(root).filter((f) => /\.(html|js)$/.test(f)).map((f) => [f, read(root, f)]);
+  const again = dataKeyStamper(root);
+  for (const [f, text] of once) assert.equal(again(f, text), text, `${f}: 두 번째 치환이 출력을 바꿨다`);
+  assert.deepEqual(stamp(root), { files: 0, keys: 0, missing: [] }, "두 번째 렌더 단계가 키를 다시 박았다");
 });

@@ -9027,5 +9027,506 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-17",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: 서울에서 연립·다세대 주택 거래가 전년 대비 18% 증가한 것으로 나타났다. 지역주택조합원끼리 결혼해도 자격을 유지할 수 있게 되면서 리모델링 동의율도 70%로 완화됐다. 공동주택 리모델링 동의율은 75%에서 70%로 낮아져 사업 추진이 가속화되고 있다. 리모델링 동의율 완화는 ‘주택법 시행령’ 국무회의 의결을 통해 확정됐다. 이로 인해 주택 리모델링 사업의 진척이 더욱 용이해질 것으로 보인다.\n- 기타 경제 소식: 금융위가 '5극3특' 중기 보증부대출을 위한 지자체 공모를 진행 중이다. 공모 기간은 내년 1월까지로 설정되었다. 해당 사업은 중소기업에 대한 금융 지원을 강화하기 위한 목적이다. 관련 지자체는 신청을 통해 참여할 수 있다. 금융위는 이번 공모를 통해 지역 경제 활성화를 도모하고 있다.\n- 금리·예금·투자상품: 국고채 금리가 일제히 상승한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.757%까지 올랐다. 코스피는 젠슨황, 앤트로픽, 금리 등 여러 요인에 의해 하락했다. 금리 상승은 시장에 부담을 주는 요소로 작용했다. 각 기사는 서로 다른 주제로 진행되었으며, 별개의 상황을 보여준다.\n- 증시·환율: 홍콩 증시는 미국 반도체주 급락 영향으로 하락세를 보이며 H주가 0.95% 내렸다. 코스피는 1%대 하락을 지속하며 5천피 수준을 유지하려는 공방이 이어지고 있다. 중국 상하이지수는 출발부터 하락하며 0.47% 떨어졌다. 각 증시는 외부 요인에 따라 하락세를 보이고 있다. 이처럼 글로벌 시장의 변동성이 국내외 증시에 영향을 미치고 있다.",
+      "en": "- Real Estate: Transactions of multi-family and multi-unit housing in Seoul increased by 18% compared to the previous year. The approval rate for remodeling has eased to 70% as qualifications can be maintained even when co-owners of a housing cooperative marry each other. The approval rate for apartment remodeling has decreased from 75% to 70%, accelerating the progress of the projects. The easing of the remodeling approval rate was confirmed through a cabinet meeting decision on the Enforcement Decree of the Housing Act. As a result, it is expected that progress on housing remodeling projects will become easier.\n- Other Economic News: The Financial Supervisory Service is conducting a public recruitment by local governments for the \"5-pole 3-special\" medium-term guaranteed loan program. The recruitment period is set until January next year. The purpose of this project is to strengthen financial support for small and medium-sized enterprises. Relevant local governments can participate by applying. The Financial Supervisory Service is aiming to promote regional economic activation through this recruitment.\n- Rates, Deposits & Investment Products: The yields on government bonds have risen across the board. The yield on the 3-year government bond rose as high as 3.757% during the session. The KOSPI fell due to various factors, including Jensen Huang, Anthropic, and interest rates. The rise in interest rates acted as a burden on the market. Each article proceeded with different themes and showed separate situations.\n- Stocks & FX: The Hong Kong stock market fell, with H-shares dropping 0.95%, affected by the decline in U.S. semiconductor stocks. The Kospi continues to fall in the 1% range, with ongoing struggles to maintain levels around 5,000 points. The Shanghai Composite Index fell from the start, dropping 0.47%. Each stock market is showing a downward trend due to external factors. In this way, the volatility of the global market is affecting domestic and foreign stock markets."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "서울에서 연립·다세대 주택 거래가 전년 대비 18% 증가한 것으로 나타났다. 지역주택조합원끼리 결혼해도 자격을 유지할 수 있게 되면서 리모델링 동의율도 70%로 완화됐다. 공동주택 리모델링 동의율은 75%에서 70%로 낮아져 사업 추진이 가속화되고 있다. 리모델링 동의율 완화는 ‘주택법 시행령’ 국무회의 의결을 통해 확정됐다. 이로 인해 주택 리모델링 사업의 진척이 더욱 용이해질 것으로 보인다.",
+        "lineEn": "Transactions of multi-family and multi-unit housing in Seoul increased by 18% compared to the previous year. The approval rate for remodeling has eased to 70% as qualifications can be maintained even when co-owners of a housing cooperative marry each other. The approval rate for apartment remodeling has decreased from 75% to 70%, accelerating the progress of the projects. The easing of the remodeling approval rate was confirmed through a cabinet meeting decision on the Enforcement Decree of the Housing Act. As a result, it is expected that progress on housing remodeling projects will become easier.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "아파트 대신?…서울 연립·다세대 거래 전년보다 18% 늘어",
+            "link": "https://www.newsis.com/view/NISX20261117_0003870919",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "지역주택조합원끼리 결혼해도 자격 유지…리모델링 동의율도 70%로 완화",
+            "link": "https://www.mk.co.kr/news/realestate/12211101",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "아파트 리모델링 동의율 완화…지주택 조합원 결혼 패널티 없애",
+            "link": "https://www.newsis.com/view/NISX20261117_0003870725",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "공동주택 리모델링 동의율 75→70% 완화…사업 추진 속도↑",
+            "link": "https://www.yna.co.kr/view/AKR20261117060500003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "리모델링 동의율 75%→70% 완화… ‘주택법 시행령’ 국무회의 의결",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/17/Q33I2R55PZD3TMI2MWVIAUBROM/",
+            "source": "조선비즈 부동산"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "금융위가 '5극3특' 중기 보증부대출을 위한 지자체 공모를 진행 중이다. 공모 기간은 내년 1월까지로 설정되었다. 해당 사업은 중소기업에 대한 금융 지원을 강화하기 위한 목적이다. 관련 지자체는 신청을 통해 참여할 수 있다. 금융위는 이번 공모를 통해 지역 경제 활성화를 도모하고 있다.",
+        "lineEn": "The Financial Supervisory Service is conducting a public recruitment by local governments for the \"5-pole 3-special\" medium-term guaranteed loan program. The recruitment period is set until January next year. The purpose of this project is to strengthen financial support for small and medium-sized enterprises. Relevant local governments can participate by applying. The Financial Supervisory Service is aiming to promote regional economic activation through this recruitment.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "금융위, '5극3특' 중기 보증부대출 지자체 공모…내년 1월까지",
+            "link": "https://www.yna.co.kr/view/AKR20261117086500002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 일제히 상승한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.757%까지 올랐다. 코스피는 젠슨황, 앤트로픽, 금리 등 여러 요인에 의해 하락했다. 금리 상승은 시장에 부담을 주는 요소로 작용했다. 각 기사는 서로 다른 주제로 진행되었으며, 별개의 상황을 보여준다.",
+        "lineEn": "The yields on government bonds have risen across the board. The yield on the 3-year government bond rose as high as 3.757% during the session. The KOSPI fell due to various factors, including Jensen Huang, Anthropic, and interest rates. The rise in interest rates acted as a burden on the market. Each article proceeded with different themes and showed separate situations.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "국고채 금리 일제히 상승…3년물 장중 연 3.757%",
+            "link": "https://www.yna.co.kr/view/AKR20261117085100008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "젠슨황·앤트로픽·금리…'삼중고'에 짓눌린 코스피",
+            "link": "https://www.yna.co.kr/view/AKR20261117065400008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "홍콩 증시는 미국 반도체주 급락 영향으로 하락세를 보이며 H주가 0.95% 내렸다. 코스피는 1%대 하락을 지속하며 5천피 수준을 유지하려는 공방이 이어지고 있다. 중국 상하이지수는 출발부터 하락하며 0.47% 떨어졌다. 각 증시는 외부 요인에 따라 하락세를 보이고 있다. 이처럼 글로벌 시장의 변동성이 국내외 증시에 영향을 미치고 있다.",
+        "lineEn": "The Hong Kong stock market fell, with H-shares dropping 0.95%, affected by the decline in U.S. semiconductor stocks. The Kospi continues to fall in the 1% range, with ongoing struggles to maintain levels around 5,000 points. The Shanghai Composite Index fell from the start, dropping 0.47%. Each stock market is showing a downward trend due to external factors. In this way, the volatility of the global market is affecting domestic and foreign stock markets.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 홍콩 증시, 美 반도체주 급락 여파로 내림세… H주 0.95%↓",
+            "link": "https://www.newsis.com/view/NISX20261117_0003871326",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "코스피, 1%대 하락 지속…'5천피' 사수 공방전",
+            "link": "https://www.yna.co.kr/view/AKR20261117077700008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.47%↓",
+            "link": "https://www.newsis.com/view/NISX20261117_0003871225",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2026-11-18",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 증시·환율: 한국 증시는 3분기 실적 둔화로 인해 부진한 성적을 기록했으며, 코스피는 삼전닉스의 매출 성장에도 불구하고 보합권에서 등락했다. 3분기 가계빚 증가폭은 6개 분기 만에 최소 수준으로 나타났다. 코스피는 일시적으로 3%대 급반등했으나 이후 하락하며 변동성을 보였다. 중국 증시는 상하이지수가 0.33% 상승하며 출발했다. 일본 증시는 엔비디아의 호실적 영향으로 닛케이가 반등했으며, 앤트로픽의 IPO에도 주목받고 있다.\n- 부동산: 공정위는 한신공영에 아파트 자금 조달용 금융사 2곳 보유 의혹으로 시정명령을 내렸다. 분당 이매동 4개 단지는 재건축 구역 선정에 두 번 탈락한 후 재도전에 나섰다. 양천구 목2동 노후 주택가는 22층 아파트로 재개발되며 서울 모아타운 4곳이 심의를 통과했다. 서울시는 구로·양천·강북·성북에 모아주택 6319가구를 건설할 계획이다. LH는 서초양재 가로주택정비에 착공했으며 2030년까지 1.1만가구를 추진한다.\n- 금리·예금·투자상품: 국고채 금리가 오늘 대체로 하락한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.722%를 기록했다. 이는 전일 대비 소폭 하락한 수준이다. 금리 변동은 시장 상황에 따라 일시적으로 나타난 것으로 보인다. 오늘 발표된 관련 데이터는 투자자들의 관심을 끌고 있다.\n- 기타 경제 소식: 경제6단체는 워크아웃 근거법 일몰 연장 법안의 조속한 처리를 촉구했다. 중기부는 21회 장애경제인대회에서 모범 장애경제인 등 42점에 대해 포상했다. 경제6단체는 법안 처리의 필요성을 강조하며 관련 논의를 이어가고 있다. 중기부는 장애인 경제 활동에 대한 성과를 인정하는 자리로 대회를 마련했다. 두 소식은 각각 경제 정책과 사회적 성과에 대한 내용이다.",
+      "en": "- Stocks & FX: South Korea's stock market recorded poor performance due to a slowdown in third-quarter earnings, with the Kospi fluctuating around the flat line despite Samsung Electronics' revenue growth. The increase in household debt in the third quarter was the smallest in six quarters. The Kospi temporarily surged more than 3% but then declined, showing volatility. China's stock market opened with the Shanghai index rising 0.33%. Japan's stock market saw the Nikkei rebound due to Nvidia's strong earnings, and attention is also being drawn to Anthropic's IPO.\n- Real Estate: The Fair Trade Commission issued a corrective order to Hanshin Gyeongyeong over the suspicion that it owns two financial companies for apartment fund raising. The four complexes in Bundang Imae-dong tried to reapply for redevelopment after failing twice to be selected for reconstruction. The old residential area in Mulgol 2-dong, Yangcheon-gu will be redeveloped into a 22-story apartment complex, and four Moa Town sites in Seoul have passed the review. Seoul plans to construct 6,319 units of Moa Housing in Guro, Yangcheon, Gangbuk, and Seongbuk. LH has started construction on the Seocho Yangjae housing redevelopment project and plans to complete 11,000 units by 2030.\n- Rates, Deposits & Investment Products: Today, government bond rates generally fell. The 3-year government bond rate reached 3.722% annually during trading. This is a slight decline compared to the previous day. The rate fluctuation appears to be a temporary occurrence depending on market conditions. Data released today has attracted investors' attention.\n- Other Economic News: The six economic organizations urged the prompt processing of the bill to extend the sunset clause of the workout basis law. The Ministry of SMEs and Startups awarded 42 individuals and entities, including exemplary disabled entrepreneurs, at the 21st Disabled Entrepreneurs Conference. The six economic organizations continue to emphasize the necessity of processing the bill and ongoing related discussions. The Ministry of SMEs and Startups held the conference as an occasion to recognize achievements in the economic activities of people with disabilities. The two pieces of news pertain respectively to economic policy and social achievements."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "한국 증시는 3분기 실적 둔화로 인해 부진한 성적을 기록했으며, 코스피는 삼전닉스의 매출 성장에도 불구하고 보합권에서 등락했다. 3분기 가계빚 증가폭은 6개 분기 만에 최소 수준으로 나타났다. 코스피는 일시적으로 3%대 급반등했으나 이후 하락하며 변동성을 보였다. 중국 증시는 상하이지수가 0.33% 상승하며 출발했다. 일본 증시는 엔비디아의 호실적 영향으로 닛케이가 반등했으며, 앤트로픽의 IPO에도 주목받고 있다.",
+        "lineEn": "South Korea's stock market recorded poor performance due to a slowdown in third-quarter earnings, with the Kospi fluctuating around the flat line despite Samsung Electronics' revenue growth. The increase in household debt in the third quarter was the smallest in six quarters. The Kospi temporarily surged more than 3% but then declined, showing volatility. China's stock market opened with the Shanghai index rising 0.33%. Japan's stock market saw the Nikkei rebound due to Nvidia's strong earnings, and attention is also being drawn to Anthropic's IPO.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "증시 한파에 '빚투·영끌' 주춤… 3분기 가계빚 증가폭 6개 분기만에 최소 기록",
+            "link": "https://www.hankyung.com/article/202611184192i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "코스피, 삼전닉스 독주속 누적 매출 3천조…3분기 실적둔화",
+            "link": "https://www.yna.co.kr/view/AKR20261118092800008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "3%대 급반등하다 '뚝'…코스피, 보합권에서 등락",
+            "link": "https://www.yna.co.kr/view/AKR20261118087600008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 상승 출발…상하이지수 0.33%↑",
+            "link": "https://www.newsis.com/view/NISX20261118_0003872909",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "日증시, 엔비디아 호실적에 닛케이 반등…앤트로픽 IPO 주목",
+            "link": "https://www.newsis.com/view/NISX20261118_0003872564",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "공정위는 한신공영에 아파트 자금 조달용 금융사 2곳 보유 의혹으로 시정명령을 내렸다. 분당 이매동 4개 단지는 재건축 구역 선정에 두 번 탈락한 후 재도전에 나섰다. 양천구 목2동 노후 주택가는 22층 아파트로 재개발되며 서울 모아타운 4곳이 심의를 통과했다. 서울시는 구로·양천·강북·성북에 모아주택 6319가구를 건설할 계획이다. LH는 서초양재 가로주택정비에 착공했으며 2030년까지 1.1만가구를 추진한다.",
+        "lineEn": "The Fair Trade Commission issued a corrective order to Hanshin Gyeongyeong over the suspicion that it owns two financial companies for apartment fund raising. The four complexes in Bundang Imae-dong tried to reapply for redevelopment after failing twice to be selected for reconstruction. The old residential area in Mulgol 2-dong, Yangcheon-gu will be redeveloped into a 22-story apartment complex, and four Moa Town sites in Seoul have passed the review. Seoul plans to construct 6,319 units of Moa Housing in Guro, Yangcheon, Gangbuk, and Seongbuk. LH has started construction on the Seocho Yangjae housing redevelopment project and plans to complete 11,000 units by 2030.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "공정위, '아파트 자금 조달용 금융사 2곳 보유' 한신공영에 시정명령",
+            "link": "https://www.newsis.com/view/NISX20261118_0003872548",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "두 번 탈락한 분당 이매동 4개 단지, 재건축 구역 선정 재도전",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/18/EHROZASVJFEVRGU3GTD4XENPCU/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "양천구 목2동 노후 주택가 22층 아파트로…서울 모아타운 4곳 심의 통과",
+            "link": "https://www.hankyung.com/article/202611183699i",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "서울시, 구로·양천·강북·성북 모아주택 6319가구 짓는다",
+            "link": "https://www.mk.co.kr/news/realestate/12212180",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "LH, 서초양재 가로주택정비 착공…2030년까지 1.1만가구 추진",
+            "link": "https://www.newsis.com/view/NISX20261118_0003872899",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 오늘 대체로 하락한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.722%를 기록했다. 이는 전일 대비 소폭 하락한 수준이다. 금리 변동은 시장 상황에 따라 일시적으로 나타난 것으로 보인다. 오늘 발표된 관련 데이터는 투자자들의 관심을 끌고 있다.",
+        "lineEn": "Today, government bond rates generally fell. The 3-year government bond rate reached 3.722% annually during trading. This is a slight decline compared to the previous day. The rate fluctuation appears to be a temporary occurrence depending on market conditions. Data released today has attracted investors' attention.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "국고채 금리 대체로 하락…3년물 장중 연 3.722%",
+            "link": "https://www.yna.co.kr/view/AKR20261118093300008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "경제6단체는 워크아웃 근거법 일몰 연장 법안의 조속한 처리를 촉구했다. 중기부는 21회 장애경제인대회에서 모범 장애경제인 등 42점에 대해 포상했다. 경제6단체는 법안 처리의 필요성을 강조하며 관련 논의를 이어가고 있다. 중기부는 장애인 경제 활동에 대한 성과를 인정하는 자리로 대회를 마련했다. 두 소식은 각각 경제 정책과 사회적 성과에 대한 내용이다.",
+        "lineEn": "The six economic organizations urged the prompt processing of the bill to extend the sunset clause of the workout basis law. The Ministry of SMEs and Startups awarded 42 individuals and entities, including exemplary disabled entrepreneurs, at the 21st Disabled Entrepreneurs Conference. The six economic organizations continue to emphasize the necessity of processing the bill and ongoing related discussions. The Ministry of SMEs and Startups held the conference as an occasion to recognize achievements in the economic activities of people with disabilities. The two pieces of news pertain respectively to economic policy and social achievements.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "경제6단체 \"워크아웃 근거법 일몰 연장 법안 조속 처리해야\"",
+            "link": "https://www.yna.co.kr/view/AKR20261118076200003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "중기부, '21회 장애경제인대회'서 모범 장애경제인 등 42점 포상",
+            "link": "https://www.yna.co.kr/view/AKR20261117136700030",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2026-11-19",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 증시·환율: 한국은행은 환율이 10% 하락할 경우 가구당 연간 생활비가 16만5천원 절감될 것으로 분석했다. 중국 증시는 오늘 상하이지수가 0.13% 하락하며 출발했다. 앤트로픽은 오늘밤 나스닥에 상장하며 증시의 수급 불안을 완화시킬 것으로 기대된다. 코스피는 앤트로픽 상장 전에 1%대 하락하며 하락 전환했다. 코스피는 상승 출발 후 보합권에서 등락하는 모습을 보였다.\n- 금리·예금·투자상품: 국고채 금리가 오늘 대체로 하락한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.731%를 기록했다. 이는 전일 대비 소폭 하락한 수준이다. 금리 변동은 시장 상황에 따라 일시적으로 나타난 것으로 보인다. 오늘 발표된 다른 금융 상품 관련 소식도 함께 주목받고 있다.\n- 부동산: 지방 아파트 전셋값이 5년 만에 수요 우위를 보이며 5천만원씩 상승했다. 구미에서 최초로 민간공원 특례 아파트인 ‘구미 파크원 데시앙’이 공급에 들어갔다. 포스코이앤씨는 ‘더샵 천안라크원’ 견본주택을 개관했다. 삼삼엠투는 국토부로부터 ‘우수 부동산서비스사업자’ 인증을 받았다. 중국 부동산 시장에서는 새집 짓는 시대가 저물었다는 대반전이 벌어졌다.\n- 기타 경제 소식: 정부가 지역 경제와 생활여건 격차를 줄이기 위한 과제 발굴에 착수했다. 오늘 경제 관련 소식 중 하나는 지역 간 격차 해소를 위한 정책 방향을 모색하는 내용이었다. 다른 소식에서는 경제 활동에 영향을 줄 수 있는 요소들이 언급되었다. 각 기사는 서로 다른 주제로, 별도의 이슈로 다루어졌다. 오늘 발표된 내용들은 모두 경제 관련 주요 이슈를 다루고 있다.",
+      "en": "- Stocks & FX: The Bank of Korea analyzed that if the exchange rate falls by 10%, the annual living expenses per household would decrease by 160,0005 thousand won. The Chinese stock market started today with the Shanghai index falling by 0.13%. Antroptic is expected to alleviate market supply and demand concerns after listing on Nasdaq tonight. The KOSPI turned downward, falling by more than 1% before Antroptic's listing. The KOSPI showed fluctuating movements within the flat range after starting with an upward move.\n- Rates, Deposits & Investment Products: Today, government bond rates generally fell. The 3-year government bond rate reached 3.731% annually during trading. This is a slight decline compared to the previous day. The rate fluctuation appears to be a temporary occurrence depending on market conditions. Other financial product-related news released today is also receiving attention.\n- Real Estate: Rental prices for apartments in local areas have risen by 50,000,000 won, showing demand superiority for the first time in five years. Gumi's first private park special case apartment, 'Gumi Parkwon Desiang,' has started its supply. POSCO I&C has opened the model house for 'Thehapseo Cheonanrakwon.' SamSam EM2 has received certification as an 'Outstanding Real Estate Service Provider' from the Ministry of Land, Infrastructure and Transport. A major turnaround has occurred in the Chinese real estate market, with the era of building new homes coming to an end.\n- Other Economic News: The government has begun identifying tasks aimed at reducing regional economic and living condition disparities. One of today's economic news items discussed efforts to explore policy directions for addressing regional disparities. Another report mentioned factors that could affect economic activities. Each article covered different topics and was treated as a separate issue. All the content released today addresses major economic issues."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "한국은행은 환율이 10% 하락할 경우 가구당 연간 생활비가 16만5천원 절감될 것으로 분석했다. 중국 증시는 오늘 상하이지수가 0.13% 하락하며 출발했다. 앤트로픽은 오늘밤 나스닥에 상장하며 증시의 수급 불안을 완화시킬 것으로 기대된다. 코스피는 앤트로픽 상장 전에 1%대 하락하며 하락 전환했다. 코스피는 상승 출발 후 보합권에서 등락하는 모습을 보였다.",
+        "lineEn": "The Bank of Korea analyzed that if the exchange rate falls by 10%, the annual living expenses per household would decrease by 160,0005 thousand won. The Chinese stock market started today with the Shanghai index falling by 0.13%. Antroptic is expected to alleviate market supply and demand concerns after listing on Nasdaq tonight. The KOSPI turned downward, falling by more than 1% before Antroptic's listing. The KOSPI showed fluctuating movements within the flat range after starting with an upward move.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "한은 \"환율 10% 하락하면 가구당 생활비 연 16만5천원 절감\"",
+            "link": "https://www.yna.co.kr/view/AKR20261119080000002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.13%↓",
+            "link": "https://www.newsis.com/view/NISX20261119_0003874724",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "앤트로픽 오늘밤 나스닥 입성…증시 짓누르던 수급불안 풀릴까",
+            "link": "https://www.yna.co.kr/view/AKR20261119069900008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 앤트로픽 상장 앞두고 1%대↓…상승출발후 하락전환(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261119063200008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 상승 출발 후 보합권에서 등락",
+            "link": "https://www.yna.co.kr/view/AKR20261119055000008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 오늘 대체로 하락한 것으로 나타났다. 3년물 국고채 금리는 장중 연 3.731%를 기록했다. 이는 전일 대비 소폭 하락한 수준이다. 금리 변동은 시장 상황에 따라 일시적으로 나타난 것으로 보인다. 오늘 발표된 다른 금융 상품 관련 소식도 함께 주목받고 있다.",
+        "lineEn": "Today, government bond rates generally fell. The 3-year government bond rate reached 3.731% annually during trading. This is a slight decline compared to the previous day. The rate fluctuation appears to be a temporary occurrence depending on market conditions. Other financial product-related news released today is also receiving attention.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "국고채 금리 대체로 하락…3년물 장중 연 3.731%",
+            "link": "https://www.yna.co.kr/view/AKR20261119083000008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "지방 아파트 전셋값이 5년 만에 수요 우위를 보이며 5천만원씩 상승했다. 구미에서 최초로 민간공원 특례 아파트인 ‘구미 파크원 데시앙’이 공급에 들어갔다. 포스코이앤씨는 ‘더샵 천안라크원’ 견본주택을 개관했다. 삼삼엠투는 국토부로부터 ‘우수 부동산서비스사업자’ 인증을 받았다. 중국 부동산 시장에서는 새집 짓는 시대가 저물었다는 대반전이 벌어졌다.",
+        "lineEn": "Rental prices for apartments in local areas have risen by 50,000,000 won, showing demand superiority for the first time in five years. Gumi's first private park special case apartment, 'Gumi Parkwon Desiang,' has started its supply. POSCO I&C has opened the model house for 'Thehapseo Cheonanrakwon.' SamSam EM2 has received certification as an 'Outstanding Real Estate Service Provider' from the Ministry of Land, Infrastructure and Transport. A major turnaround has occurred in the Chinese real estate market, with the era of building new homes coming to an end.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "지방 아파트 전셋값도 5천만원씩 뛰었다…5년 만에 수요 우위",
+            "link": "https://www.newsis.com/view/NISX20261119_0003874803",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "구미 최초 ‘민간공원 특례 아파트’ 구미 파크원 데시앙 공급",
+            "link": "https://www.mk.co.kr/news/realestate/12213393",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "포스코이앤씨, ‘더샵 천안라크원’ 견본주택 개관",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/19/5KIXGOFBBFDOJNWNEO6LJQDGUQ/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "삼삼엠투, 국토부 ‘우수 부동산서비스사업자’ 인증 획득…단기임대 서비스 우수성 인정",
+            "link": "https://www.mk.co.kr/news/realestate/12213325",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "\"새집 짓는 시대 저문다\"…中 부동산 시장에 벌어진 대반전 [차이나 워치]",
+            "link": "https://www.hankyung.com/article/202611172913i",
+            "source": "한국경제 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "정부가 지역 경제와 생활여건 격차를 줄이기 위한 과제 발굴에 착수했다. 오늘 경제 관련 소식 중 하나는 지역 간 격차 해소를 위한 정책 방향을 모색하는 내용이었다. 다른 소식에서는 경제 활동에 영향을 줄 수 있는 요소들이 언급되었다. 각 기사는 서로 다른 주제로, 별도의 이슈로 다루어졌다. 오늘 발표된 내용들은 모두 경제 관련 주요 이슈를 다루고 있다.",
+        "lineEn": "The government has begun identifying tasks aimed at reducing regional economic and living condition disparities. One of today's economic news items discussed efforts to explore policy directions for addressing regional disparities. Another report mentioned factors that could affect economic activities. Each article covered different topics and was treated as a separate issue. All the content released today addresses major economic issues.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "지역 경제·생활여건 격차 줄인다…정부, 과제 발굴 착수",
+            "link": "https://www.newsis.com/view/NISX20261118_0003873814",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2026-11-20",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 증시·환율: 증시·환율: 검은 금요일 맞은 亞증시…韓·日·대만, 일제히 4∼6%대 급락, 코스피, 4%대 급락…매도 사이드카 발동, [올댓차이나] 홍콩 증시, 美 반도체주 약세에 속락 출발… H주 1.82%↓ +3\n- 기타 경제 소식: 산업장관은 경제6단체와 간담회를 열어 수출의 질적 성장을 위한 협력을 강조했다. 산업장관은 수출 1조을 새 출발선으로 삼아 경제 전반에 온기를 확산할 것이라고 밝혔다. 간담회에서는 수출 관련 전략적 협력 방안이 논의됐다. 산업장관의 발언은 수출 성장에 대한 기대감을 반영하고 있다. 오늘 발표된 소식들은 모두 경제 분야와 관련된 내용이다.\n- 금리·예금·투자상품: JP모건은 미국 연준이 내년 3월까지 3연속 금리 인상할 것으로 전망했다. 국고채 금리는 일제히 하락하며 3년물이 장중 연 3.669%를 기록했다. 엔화는 미국 금리 인상 확실성에 따라 1달러=159엔대 후반으로 출발했다. 중국은 기준금리 1년물 LPR을 3.0%, 5년물을 3.5%로 18개월 연속 동결했다. JP모건은 미국 금리가 12월에 끝날 줄 알았지만 3연속 인상이 예상된다고 밝혔다.\n- 부동산: 국회에서 재초환 폐지와 재건축 부담금 완화 법안이 잇따라 제출되며 관련 규제가 조정될 가능성이 있다. 목동 5·12·14단지 재건축 통합심의가 통과되며 최고 49층, 1만1863가구 규모로 조성될 예정이다. 강남·용산 지역에서는 주택 가격 상승세가 주춤했으나 강북과 동탄에서는 가격이 상승하며 수도권 집값 양극화가 뚜렷하다. HUG는 하나자산신탁과 전월세 안심신탁 양해각서를 체결하며 850가구에 대한 접수를 진행 중이다. 보은군은 청년보금자리 사업으로 28가구를 내달 준공할 예정이며 견본주택을 공개한다.",
+      "en": "- Stocks & FX: Stocks & FX: 검은 금요일 맞은 亞증시…韓·日·대만, 일제히 4∼6%대 급락, 코스피, 4%대 급락…매도 사이드카 발동, [올댓차이나] 홍콩 증시, 美 반도체주 약세에 속락 출발… H주 1.82%↓ +3\n- Other Economic News: The Minister of Industry held a meeting with the six economic organizations and emphasized the need for cooperation to achieve qualitative growth in exports. The Minister of Industry stated that taking exports of 1,000,000,000,000 as a new starting point, warmth will be spread throughout the economy. Strategic cooperation plans related to exports were discussed during the meeting. The Minister's remarks reflect expectations for export growth. All the news announced today is related to the economic field.\n- Rates, Deposits & Investment Products: JPMorgan expects the U.S. Federal Reserve to raise interest rates three times consecutively by March next year. Government bond rates fell across the board, with the three-year rate reaching 3.669% annually during the day. The yen started at around 159 yen to the dollar, due to the certainty of U.S. interest rate hikes. China kept the one-year LPR at 3.0% and the five-year LPR at 3.5%, maintaining the freeze for the 18th consecutive month. JPMorgan stated that while it had expected U.S. interest rates to end in December, it now expects three consecutive rate hikes.\n- Real Estate: In the National Assembly, bills to abolish the re-approval process and ease reconstruction burden fees have been submitted one after another, making it possible that related regulations may be adjusted. The integrated review for the reconstruction of the Muldong 5·12·14 complex has passed, and it is planned to be developed with a maximum of 49 floors and 10,0001863 units. While housing prices in Gangnam and Yongsan have slowed their upward trend, prices in Gangbuk and Dongtan have continued to rise, clearly showing polarization of housing prices in the capital area. HUG has signed a memorandum of understanding with Hanasset Trust for the monthly rent and deposit assurance trust, and is currently accepting applications for 850 units. Boeun County plans to complete 28 units under the Youth Housing Support Project next month and will open a model house."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "증시·환율: 검은 금요일 맞은 亞증시…韓·日·대만, 일제히 4∼6%대 급락, 코스피, 4%대 급락…매도 사이드카 발동, [올댓차이나] 홍콩 증시, 美 반도체주 약세에 속락 출발… H주 1.82%↓ +3",
+        "lineEn": "Stocks & FX: 검은 금요일 맞은 亞증시…韓·日·대만, 일제히 4∼6%대 급락, 코스피, 4%대 급락…매도 사이드카 발동, [올댓차이나] 홍콩 증시, 美 반도체주 약세에 속락 출발… H주 1.82%↓ +3",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
+        "degraded": false,
+        "items": [
+          {
+            "title": "검은 금요일 맞은 亞증시…韓·日·대만, 일제히 4∼6%대 급락",
+            "link": "https://www.yna.co.kr/view/AKR20261120085100008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "코스피, 4%대 급락…매도 사이드카 발동",
+            "link": "https://www.yna.co.kr/view/AKR20261120086300008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 홍콩 증시, 美 반도체주 약세에 속락 출발… H주 1.82%↓",
+            "link": "https://www.newsis.com/view/NISX20261120_0003876638",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "코스피, 4%대 급락에 5,000선 밑으로…삼전닉스, 5~6%↓",
+            "link": "https://www.yna.co.kr/view/AKR20261120075600008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 1.41%↓",
+            "link": "https://www.newsis.com/view/NISX20261120_0003876530",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "산업장관은 경제6단체와 간담회를 열어 수출의 질적 성장을 위한 협력을 강조했다. 산업장관은 수출 1조을 새 출발선으로 삼아 경제 전반에 온기를 확산할 것이라고 밝혔다. 간담회에서는 수출 관련 전략적 협력 방안이 논의됐다. 산업장관의 발언은 수출 성장에 대한 기대감을 반영하고 있다. 오늘 발표된 소식들은 모두 경제 분야와 관련된 내용이다.",
+        "lineEn": "The Minister of Industry held a meeting with the six economic organizations and emphasized the need for cooperation to achieve qualitative growth in exports. The Minister of Industry stated that taking exports of 1,000,000,000,000 as a new starting point, warmth will be spread throughout the economy. Strategic cooperation plans related to exports were discussed during the meeting. The Minister's remarks reflect expectations for export growth. All the news announced today is related to the economic field.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "산업장관, 경제6단체와 간담회…수출 질적성장 위한 협력 강조",
+            "link": "https://www.yna.co.kr/view/AKR20261120077100003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "산업장관 \"수출 1조弗은 새 출발선…경제 전반으로 온기 확산\"",
+            "link": "https://www.newsis.com/view/NISX20261120_0003876384",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "JP모건은 미국 연준이 내년 3월까지 3연속 금리 인상할 것으로 전망했다. 국고채 금리는 일제히 하락하며 3년물이 장중 연 3.669%를 기록했다. 엔화는 미국 금리 인상 확실성에 따라 1달러=159엔대 후반으로 출발했다. 중국은 기준금리 1년물 LPR을 3.0%, 5년물을 3.5%로 18개월 연속 동결했다. JP모건은 미국 금리가 12월에 끝날 줄 알았지만 3연속 인상이 예상된다고 밝혔다.",
+        "lineEn": "JPMorgan expects the U.S. Federal Reserve to raise interest rates three times consecutively by March next year. Government bond rates fell across the board, with the three-year rate reaching 3.669% annually during the day. The yen started at around 159 yen to the dollar, due to the certainty of U.S. interest rate hikes. China kept the one-year LPR at 3.0% and the five-year LPR at 3.5%, maintaining the freeze for the 18th consecutive month. JPMorgan stated that while it had expected U.S. interest rates to end in December, it now expects three consecutive rate hikes.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "\"12월에 끝날 줄 알았는데\"…JP모건, 美 금리 3연속 인상 전망",
+            "link": "https://www.newsis.com/view/NISX20261120_0003876518",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "국고채 금리 일제히 하락…3년물 장중 연 3.669%",
+            "link": "https://www.yna.co.kr/view/AKR20261120082600008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "엔화, 美 금리인상 확실에 1달러=159엔대 후반 출발",
+            "link": "https://www.newsis.com/view/NISX20261120_0003876505",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[속보] 中, 기준금리 1년물 LPR 3.0% 5년물 3.5%…18개월 연속 동결",
+            "link": "https://www.newsis.com/view/NISX20261120_0003876355",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "JP모건 \"美연준, 내년 3월까지 3연속 금리인상할 것\"",
+            "link": "https://www.yna.co.kr/view/AKR20261120049100009",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "국회에서 재초환 폐지와 재건축 부담금 완화 법안이 잇따라 제출되며 관련 규제가 조정될 가능성이 있다. 목동 5·12·14단지 재건축 통합심의가 통과되며 최고 49층, 1만1863가구 규모로 조성될 예정이다. 강남·용산 지역에서는 주택 가격 상승세가 주춤했으나 강북과 동탄에서는 가격이 상승하며 수도권 집값 양극화가 뚜렷하다. HUG는 하나자산신탁과 전월세 안심신탁 양해각서를 체결하며 850가구에 대한 접수를 진행 중이다. 보은군은 청년보금자리 사업으로 28가구를 내달 준공할 예정이며 견본주택을 공개한다.",
+        "lineEn": "In the National Assembly, bills to abolish the re-approval process and ease reconstruction burden fees have been submitted one after another, making it possible that related regulations may be adjusted. The integrated review for the reconstruction of the Muldong 5·12·14 complex has passed, and it is planned to be developed with a maximum of 49 floors and 10,0001863 units. While housing prices in Gangnam and Yongsan have slowed their upward trend, prices in Gangbuk and Dongtan have continued to rise, clearly showing polarization of housing prices in the capital area. HUG has signed a memorandum of understanding with Hanasset Trust for the monthly rent and deposit assurance trust, and is currently accepting applications for 850 units. Boeun County plans to complete 28 units under the Youth Housing Support Project next month and will open a model house.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "재초환 폐지·완화 법안 국회서 잇따라…재건축 부담금 손질하나",
+            "link": "https://www.mk.co.kr/news/realestate/12214428",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "목동 5·12·14단지 재건축 통합심의 통과…최고 49층·1만1863가구 조성",
+            "link": "https://www.hankyung.com/article/202611209634i",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "강남·용산 주춤한데 강북·동탄 ‘불장’…수도권 집값 뚜렷한 양극화",
+            "link": "https://www.mk.co.kr/news/realestate/12214389",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "HUG, 하나자산신탁과 전월세 안심신탁 양해각서…850가구 접수",
+            "link": "https://www.yna.co.kr/view/AKR20261120060500003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "보은군, 청년보금자리 28가구 내달 준공…견본주택 공개",
+            "link": "https://www.yna.co.kr/view/AKR20261120040400064",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
