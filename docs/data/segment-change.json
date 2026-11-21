@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-20T04:00:00.473Z",
+  "updatedAt": "2026-11-21T03:58:11.195Z",
   "periods": {
     "base": [
       "202507",
@@ -15,14 +15,14 @@
   },
   "minCells": 30,
   "ageRefYear": 2025,
-  "cells": 3203,
+  "cells": 3226,
   "noBuildYear": 0,
   "price": [
     {
       "key": "upTo6",
       "ko": "6억 이하",
       "en": "up to ₩600M",
-      "cells": 676,
+      "cells": 677,
       "change": 11.9,
       "low": 10.9,
       "high": 13.8
@@ -31,34 +31,34 @@
       "key": "upTo9",
       "ko": "6억~9억",
       "en": "₩600–900M",
-      "cells": 941,
-      "change": 19.7,
-      "low": 18.5,
+      "cells": 945,
+      "change": 19.6,
+      "low": 18.3,
       "high": 20.7
     },
     {
       "key": "upTo15",
       "ko": "9억~15억",
       "en": "₩0.9–1.5B",
-      "cells": 982,
-      "change": 22.9,
-      "low": 22.4,
+      "cells": 994,
+      "change": 23,
+      "low": 22.3,
       "high": 23.6
     },
     {
       "key": "upTo25",
       "ko": "15억~25억",
       "en": "₩1.5–2.5B",
-      "cells": 426,
+      "cells": 430,
       "change": 14.6,
       "low": 13.7,
-      "high": 15.3
+      "high": 15.5
     },
     {
       "key": "over25",
       "ko": "25억 초과",
       "en": "above ₩2.5B",
-      "cells": 178,
+      "cells": 180,
       "change": 1.5,
       "low": 0,
       "high": 2.6
@@ -70,25 +70,25 @@
       "ko": "10년 미만",
       "en": "under 10 years",
       "cells": 500,
-      "change": 16,
-      "low": 14.8,
+      "change": 15.9,
+      "low": 14.7,
       "high": 16.8
     },
     {
       "key": "y10to29",
       "ko": "10~29년",
       "en": "10–29 years",
-      "cells": 1833,
+      "cells": 1853,
       "change": 18.1,
-      "low": 17.4,
+      "low": 17.3,
       "high": 18.7
     },
     {
       "key": "over30",
       "ko": "30년 이상",
       "en": "30 years or more",
-      "cells": 870,
-      "change": 20.3,
+      "cells": 873,
+      "change": 20.2,
       "low": 19,
       "high": 21.4
     }
@@ -98,37 +98,37 @@
       "key": "upTo60",
       "ko": "60㎡ 이하",
       "en": "up to 60㎡",
-      "cells": 1351,
+      "cells": 1360,
       "change": 21.2,
-      "low": 20.6,
-      "high": 21.9
+      "low": 20.7,
+      "high": 22
     },
     {
       "key": "a60to85",
       "ko": "60~85㎡",
       "en": "60–85㎡",
-      "cells": 1411,
+      "cells": 1417,
       "change": 17,
       "low": 16.7,
-      "high": 17.7
+      "high": 17.8
     },
     {
       "key": "a85to135",
       "ko": "85~135㎡",
       "en": "85–135㎡",
-      "cells": 371,
-      "change": 14.2,
-      "low": 13.3,
+      "cells": 377,
+      "change": 14,
+      "low": 12.3,
       "high": 15.9
     },
     {
       "key": "over135",
       "ko": "135㎡ 초과",
       "en": "over 135㎡",
-      "cells": 70,
-      "change": 5.3,
-      "low": 3.6,
-      "high": 8.3
+      "cells": 72,
+      "change": 5.6,
+      "low": 4.3,
+      "high": 9
     }
   ],
   "pairs": {
@@ -159,28 +159,28 @@
     "rows": {
       "upTo6": [
         49,
-        293,
-        334
+        295,
+        333
       ],
       "upTo9": [
         71,
-        649,
-        221
+        651,
+        223
       ],
       "upTo15": [
-        211,
-        609,
+        212,
+        620,
         162
       ],
       "upTo25": [
-        135,
-        207,
-        84
+        134,
+        211,
+        85
       ],
       "over25": [
         34,
-        75,
-        69
+        76,
+        70
       ]
     }
   }

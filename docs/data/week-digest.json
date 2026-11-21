@@ -1,22 +1,22 @@
 {
-  "updatedAt": "2026-11-20T03:59:49.473Z",
-  "asOf": "2026-11-20",
+  "updatedAt": "2026-11-21T03:57:58.873Z",
+  "asOf": "2026-11-21",
   "trackedFrom": "2026-08-18",
   "basis": "unique-arrival-key",
   "comparable": true,
   "gaps": [],
   "current": {
-    "from": "2026-11-14",
-    "to": "2026-11-20",
-    "sale": 1017,
-    "jeonse": 1758,
-    "wolse": 1962,
-    "cancelArrived": 20,
-    "cancelDated": 15,
-    "direct": 29,
-    "directShare": 2.9,
-    "records": 310,
-    "judged": 853,
+    "from": "2026-11-15",
+    "to": "2026-11-21",
+    "sale": 1050,
+    "jeonse": 1777,
+    "wolse": 2005,
+    "cancelArrived": 19,
+    "cancelDated": 17,
+    "direct": 28,
+    "directShare": 2.7,
+    "records": 316,
+    "judged": 872,
     "districts": [
       "11350",
       "11500",
@@ -24,40 +24,40 @@
     ],
     "months": {
       "sale": {
-        "202610": 430,
-        "202611": 587
+        "202610": 402,
+        "202611": 648
       },
       "rent": {
-        "202610": 668,
-        "202611": 3052
+        "202610": 638,
+        "202611": 3144
       }
     }
   },
   "previous": {
-    "from": "2026-11-07",
-    "to": "2026-11-13",
-    "sale": 1038,
-    "jeonse": 2124,
-    "wolse": 2119,
-    "cancelArrived": 28,
-    "cancelDated": 26,
-    "direct": 34,
-    "directShare": 3.3,
-    "records": 311,
-    "judged": 861,
+    "from": "2026-11-08",
+    "to": "2026-11-14",
+    "sale": 1011,
+    "jeonse": 2080,
+    "wolse": 2074,
+    "cancelArrived": 26,
+    "cancelDated": 27,
+    "direct": 35,
+    "directShare": 3.5,
+    "records": 305,
+    "judged": 840,
     "districts": [
       "11350",
       "11500",
-      "11320"
+      "11470"
     ],
     "months": {
       "sale": {
-        "202610": 688,
-        "202611": 350
+        "202610": 623,
+        "202611": 388
       },
       "rent": {
-        "202610": 1068,
-        "202611": 3175
+        "202610": 970,
+        "202611": 3184
       }
     }
   }
