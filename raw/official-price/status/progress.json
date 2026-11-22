@@ -1,11 +1,11 @@
 {
-  "lastRunAt": "2026-11-21T21:31:00.646Z",
+  "lastRunAt": "2026-11-22T20:44:42.569Z",
   "lastProgressAt": "2026-11-21T21:31:00.646Z",
-  "zeroProgressRuns": 0,
+  "zeroProgressRuns": 1,
   "doneParcels": 6763,
   "targetParcels": 6764,
-  "lastFinishedNow": 57,
-  "lastCalls": 2676,
+  "lastFinishedNow": 0,
+  "lastCalls": 1,
   "lastStopReason": null,
   "lastErrCodes": {
     "TimeoutError/-": 1
