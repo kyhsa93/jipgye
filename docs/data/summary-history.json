@@ -9652,5 +9652,109 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-22",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: 삼성물산은 ‘홈닉’ 주거서비스를 한양건설 아파트에 도입하기로 협약을 맺었다. 서울 옥인동에 공영주차장 등 주택기반시설이 확충되고 있다. 1인가구의 주택 소유 비중이 역대 최대 수준으로 증가했다. 주택을 보유한 가구 중 55%는 1인 또는 2인 가구로 나타났다. 송파구 위례24단지의 84.93㎡ 주택은 22억 7천만원에 최근 3년간 신고가를 기록했다.\n- 기타 경제 소식: iH가 '이주비 대출이자 대납에 95억 과세' 취소소송에서 승소했다.\n- 증시·환율: 코스피 지수가 4,800선을 유지하고 있지만, '1조클럽' 기업 수는 1월보다 11% 감소했다. 한편, '5천피' 지수가 하락하며 미국 증시도 급격히 떨어졌다. AI 관련 주식에 대한 매도가 이어지면서 추가적인 충격이 우려되고 있다. 코스피 지수는 변동이 없었지만, 기업 규모는 감소했다. 미국 증시의 급락은 AI 투자에 대한 불안감이 확대되고 있음을 보여준다.\n- 금리·예금·투자상품: 우대금리 축소 조치에 대한 자체점검이 이달까지 진행될 예정이다. 10년 고정금리 논의는 곧 착수할 계획이라고 밝혔다. 현재 우대금리 축소와 관련된 금융기관의 자체 점검이 진행 중이다. 10년 고정금리 상품 도입을 위한 논의는 금융당국과 금융기관 간 협의가 이어지고 있다. 관련 조치는 금리 구조 개편의 일환으로 추진되고 있다.",
+      "en": "- Real Estate: 삼성물산은 ‘홈닉’ 주거서비스를 한양건설 아파트에 도입하기로 협약을 맺었다. 서울 옥인동에 공영주차장 등 주택기반시설이 확충되고 있다. 1인가구의 주택 소유 비중이 역대 최대 수준으로 증가했다. 주택을 보유한 가구 중 55%는 1인 또는 2인 가구로 나타났다. 송파구 위례24단지의 84.93㎡ 주택은 22억 7천만원에 최근 3년간 신고가를 기록했다.\n- Other Economic News: iH won the cancellation lawsuit over the taxation of 9,500,000,000 won for repaying the interest on a loan used for relocation expenses.\n- Stocks & FX: The KOSPI index is maintaining its level around 4,800, but the number of companies in the \"1,000,000,000,000 club\" has decreased by 11% compared to January. Meanwhile, the \"5,000 pi\" index has fallen, causing the U.S. stock market to sharply decline. Continued selling of AI-related stocks has raised concerns about further shocks. Although the KOSPI index remained unchanged, the size of companies has decreased. The sharp decline in the U.S. stock market shows that anxiety about AI investments is expanding.\n- Rates, Deposits & Investment Products: A self-inspection regarding the reduction of preferential interest rates is scheduled to be conducted by the end of this month. Discussions on a 10-year fixed interest rate product are expected to commence soon. Currently, financial institutions are conducting self-inspections related to the reduction of preferential interest rates. Discussions on introducing a 10-year fixed interest rate product are ongoing between the financial regulatory authority and financial institutions. The related measures are being implemented as part of a restructuring of the interest rate structure."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "삼성물산은 ‘홈닉’ 주거서비스를 한양건설 아파트에 도입하기로 협약을 맺었다. 서울 옥인동에 공영주차장 등 주택기반시설이 확충되고 있다. 1인가구의 주택 소유 비중이 역대 최대 수준으로 증가했다. 주택을 보유한 가구 중 55%는 1인 또는 2인 가구로 나타났다. 송파구 위례24단지의 84.93㎡ 주택은 22억 7천만원에 최근 3년간 신고가를 기록했다.",
+        "lineEn": "삼성물산은 ‘홈닉’ 주거서비스를 한양건설 아파트에 도입하기로 협약을 맺었다. 서울 옥인동에 공영주차장 등 주택기반시설이 확충되고 있다. 1인가구의 주택 소유 비중이 역대 최대 수준으로 증가했다. 주택을 보유한 가구 중 55%는 1인 또는 2인 가구로 나타났다. 송파구 위례24단지의 84.93㎡ 주택은 22억 7천만원에 최근 3년간 신고가를 기록했다.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "삼성물산 '홈닉', 한양건설 아파트에 도입…주거서비스 협약",
+            "link": "https://www.newsis.com/view/NISX20261122_0003878002",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "인왕산 자락 서울 옥인동 공영주차장 등 주택기반시설 확충",
+            "link": "https://www.yna.co.kr/view/AKR20261122014300004",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "“내 집에 혼자 삽니다, 돈은 없습니다”…1인가구 주택 소유 비중 ‘역대 최대’",
+            "link": "https://www.mk.co.kr/news/realestate/12215423",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "1인가구 주택소유율 역대 최고…주택 보유 55%는 1·2인 가구",
+            "link": "https://www.newsis.com/view/NISX20261122_0003877949",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "송파구 위례24단지(꿈에그린) 84.93㎡ 22억 7천만원… 최근 3년 신고가 [MAI부동산]",
+            "link": "https://www.mk.co.kr/news/realestate/12215418",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "iH가 '이주비 대출이자 대납에 95억 과세' 취소소송에서 승소했다.",
+        "lineEn": "iH won the cancellation lawsuit over the taxation of 9,500,000,000 won for repaying the interest on a loan used for relocation expenses.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "iH, '이주비 대출이자 대납에 95억 과세' 취소소송 승소",
+            "link": "https://www.yna.co.kr/view/AKR20261120089300065",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "코스피 지수가 4,800선을 유지하고 있지만, '1조클럽' 기업 수는 1월보다 11% 감소했다. 한편, '5천피' 지수가 하락하며 미국 증시도 급격히 떨어졌다. AI 관련 주식에 대한 매도가 이어지면서 추가적인 충격이 우려되고 있다. 코스피 지수는 변동이 없었지만, 기업 규모는 감소했다. 미국 증시의 급락은 AI 투자에 대한 불안감이 확대되고 있음을 보여준다.",
+        "lineEn": "The KOSPI index is maintaining its level around 4,800, but the number of companies in the \"1,000,000,000,000 club\" has decreased by 11% compared to January. Meanwhile, the \"5,000 pi\" index has fallen, causing the U.S. stock market to sharply decline. Continued selling of AI-related stocks has raised concerns about further shocks. Although the KOSPI index remained unchanged, the size of companies has decreased. The sharp decline in the U.S. stock market shows that anxiety about AI investments is expanding.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "같은 4,800선인데도…코스피 '1조클럽', 1월보다 11% 줄었다",
+            "link": "https://www.yna.co.kr/view/AKR20261121035000008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "'5천피' 무너지고 美증시 급락…'AI 투매' 추가 충격오나",
+            "link": "https://www.yna.co.kr/view/AKR20261121000200008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "우대금리 축소 조치에 대한 자체점검이 이달까지 진행될 예정이다. 10년 고정금리 논의는 곧 착수할 계획이라고 밝혔다. 현재 우대금리 축소와 관련된 금융기관의 자체 점검이 진행 중이다. 10년 고정금리 상품 도입을 위한 논의는 금융당국과 금융기관 간 협의가 이어지고 있다. 관련 조치는 금리 구조 개편의 일환으로 추진되고 있다.",
+        "lineEn": "A self-inspection regarding the reduction of preferential interest rates is scheduled to be conducted by the end of this month. Discussions on a 10-year fixed interest rate product are expected to commence soon. Currently, financial institutions are conducting self-inspections related to the reduction of preferential interest rates. Discussions on introducing a 10-year fixed interest rate product are ongoing between the financial regulatory authority and financial institutions. The related measures are being implemented as part of a restructuring of the interest rate structure.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "우대금리 축소 이달까지 자체점검…10년 고정금리 논의 곧 착수",
+            "link": "https://www.yna.co.kr/view/AKR20261121044800002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
