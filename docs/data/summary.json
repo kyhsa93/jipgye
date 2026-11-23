@@ -1,85 +1,36 @@
 {
-  "updatedAt": "2026-11-22T03:07:23.501Z",
+  "updatedAt": "2026-11-23T03:45:20.964Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 부동산: 삼성물산은 ‘홈닉’ 주거서비스를 한양건설 아파트에 도입하기로 협약을 맺었다. 서울 옥인동에 공영주차장 등 주택기반시설이 확충되고 있다. 1인가구의 주택 소유 비중이 역대 최대 수준으로 증가했다. 주택을 보유한 가구 중 55%는 1인 또는 2인 가구로 나타났다. 송파구 위례24단지의 84.93㎡ 주택은 22억 7천만원에 최근 3년간 신고가를 기록했다.\n- 기타 경제 소식: iH가 '이주비 대출이자 대납에 95억 과세' 취소소송에서 승소했다.\n- 증시·환율: 코스피 지수가 4,800선을 유지하고 있지만, '1조클럽' 기업 수는 1월보다 11% 감소했다. 한편, '5천피' 지수가 하락하며 미국 증시도 급격히 떨어졌다. AI 관련 주식에 대한 매도가 이어지면서 추가적인 충격이 우려되고 있다. 코스피 지수는 변동이 없었지만, 기업 규모는 감소했다. 미국 증시의 급락은 AI 투자에 대한 불안감이 확대되고 있음을 보여준다.\n- 금리·예금·투자상품: 우대금리 축소 조치에 대한 자체점검이 이달까지 진행될 예정이다. 10년 고정금리 논의는 곧 착수할 계획이라고 밝혔다. 현재 우대금리 축소와 관련된 금융기관의 자체 점검이 진행 중이다. 10년 고정금리 상품 도입을 위한 논의는 금융당국과 금융기관 간 협의가 이어지고 있다. 관련 조치는 금리 구조 개편의 일환으로 추진되고 있다.",
-    "en": "- Real Estate: 삼성물산은 ‘홈닉’ 주거서비스를 한양건설 아파트에 도입하기로 협약을 맺었다. 서울 옥인동에 공영주차장 등 주택기반시설이 확충되고 있다. 1인가구의 주택 소유 비중이 역대 최대 수준으로 증가했다. 주택을 보유한 가구 중 55%는 1인 또는 2인 가구로 나타났다. 송파구 위례24단지의 84.93㎡ 주택은 22억 7천만원에 최근 3년간 신고가를 기록했다.\n- Other Economic News: iH won the cancellation lawsuit over the taxation of 9,500,000,000 won for repaying the interest on a loan used for relocation expenses.\n- Stocks & FX: The KOSPI index is maintaining its level around 4,800, but the number of companies in the \"1,000,000,000,000 club\" has decreased by 11% compared to January. Meanwhile, the \"5,000 pi\" index has fallen, causing the U.S. stock market to sharply decline. Continued selling of AI-related stocks has raised concerns about further shocks. Although the KOSPI index remained unchanged, the size of companies has decreased. The sharp decline in the U.S. stock market shows that anxiety about AI investments is expanding.\n- Rates, Deposits & Investment Products: A self-inspection regarding the reduction of preferential interest rates is scheduled to be conducted by the end of this month. Discussions on a 10-year fixed interest rate product are expected to commence soon. Currently, financial institutions are conducting self-inspections related to the reduction of preferential interest rates. Discussions on introducing a 10-year fixed interest rate product are ongoing between the financial regulatory authority and financial institutions. The related measures are being implemented as part of a restructuring of the interest rate structure."
+    "ko": "- 기타 경제 소식: 경제부총리가 전기차 국내생산세액공제 관련 종합 판단을 발표했다. 경제부총리는 올해 성장률이 4% 범위 안에 있을 것으로 예상했다. 이형일은 반도체 변동성이 경제 전체로 증폭될 우려가 있다고 밝혔다. 이형일은 올해 성장률이 3%대 후반일 것으로 전망했다. 경제부총리와 이형일의 발언은 각각 다른 주제에 대한 의견을 담고 있다.\n- 금리·예금·투자상품: 국고채 금리가 위험회피 심리 속에 하락세를 보이며 3년물은 장중 연 3.621%를 기록했다. 경제부총리는 증안펀드를 포함한 비상계획이 존재한다고 밝혔다. 미국 모기지 금리는 2.6%에서 7.3%로 상승하며 미국인들의 주택 구매 꿈을 어렵게 만들고 있다. 경제부총리는 상황을 검토해 투입 여부를 판단할 계획이라고 설명했다. 미국 모기지 금리 상승은 주택 시장에 직접적인 영향을 미치고 있다.\n- 부동산: 대구 재건축·재개발 일조 기준이 100%에서 80%로 완화되었고, 월세 공제한도가 상향 조정되지만 무주택 월세가구 94%는 현행 한도 이내에 있으며, 12월 전국 아파트 1만6486가구가 입주하며 인천 계양에서 3기 신도시 첫 집들이가 진행되고, 정읍수성1 영구임대주택 예비입주자 200가구가 모집 중이며, 쌍용건설이 2381억 원 규모의 부산 거제2구역 재건축 사업을 수주했다.\n- 증시·환율: 코스피는 오늘 5%대 급락하며 4,600선을했다. 매도 사이드카가 발동되며 시장 불안이 확대되고 있다. 리서치센터장은 과매도 구간에 진입했다며 4,200선까지 하락 가능성에 경고했다. 코스닥은 장중 연저점을 깨며 4%대 하락세를 보였다. 중국 증시도 하락 출발하며 상하이지수는 0.86% 내렸다.",
+    "en": "- Other Economic News: The vice minister of economy announced a comprehensive judgment regarding the domestic production tax credit for electric vehicles. The vice minister of economy expects this year's growth rate to fall within the 4% range. Lee Hyung-il stated that fluctuations in the semiconductor industry could amplify across the entire economy. Lee Hyung-il forecasts this year's growth rate to be in the high 3% range. The statements by the vice minister of economy and Lee Hyung-il contain opinions on different topics.\n- Rates, Deposits & Investment Products: The government bond yield fell amid risk-averse sentiment, with the 3-year bond reaching 3.621% annually during the day. The vice finance minister stated that there is an emergency plan including the stabilization fund. U.S. mortgage rates have risen from 2.6% to 7.3%, making it difficult for Americans to realize their dream of buying a home. The vice finance minister explained that they plan to review the situation and decide whether to intervene. The rise in U.S. mortgage rates is directly affecting the housing market.\n- Real Estate: The daylighting standard for reconstruction and redevelopment in Daegu has been relaxed from 100% to 80%, and the limit for rent deduction has been increased, but 94% of rent-paying households without homes are still within the current limit. 10,0006486 apartment units will be occupied nationwide by December, and the first move-in ceremony for the third phase of the Incheon Gye Yang new town is being held. Recruitment is ongoing for 200 prospective residents of the Jeonju Suseong 1 permanent rental housing. Sungsung Construction has won a contract for a Busan Geojedo 2 district reconstruction project worth 238,100,000,000 won.\n- Stocks & FX: The KOSPI fell sharply by over 5% today, hitting the 4,600 level. Market anxiety is expanding as the sell-side circuit breaker was triggered. The research center head stated that the market has entered an oversold zone and warned of the possibility of falling to the 4,200 level. The KOSDAQ broke through its intraday low, showing a decline of over 4%. The Chinese market also started with a decline, with the Shanghai index dropping 0.86%."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "realestate",
-      "name": "부동산",
-      "nameEn": "Real Estate",
-      "lineKo": "삼성물산은 ‘홈닉’ 주거서비스를 한양건설 아파트에 도입하기로 협약을 맺었다. 서울 옥인동에 공영주차장 등 주택기반시설이 확충되고 있다. 1인가구의 주택 소유 비중이 역대 최대 수준으로 증가했다. 주택을 보유한 가구 중 55%는 1인 또는 2인 가구로 나타났다. 송파구 위례24단지의 84.93㎡ 주택은 22억 7천만원에 최근 3년간 신고가를 기록했다.",
-      "lineEn": "삼성물산은 ‘홈닉’ 주거서비스를 한양건설 아파트에 도입하기로 협약을 맺었다. 서울 옥인동에 공영주차장 등 주택기반시설이 확충되고 있다. 1인가구의 주택 소유 비중이 역대 최대 수준으로 증가했다. 주택을 보유한 가구 중 55%는 1인 또는 2인 가구로 나타났다. 송파구 위례24단지의 84.93㎡ 주택은 22억 7천만원에 최근 3년간 신고가를 기록했다.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "삼성물산 '홈닉', 한양건설 아파트에 도입…주거서비스 협약",
-          "link": "https://www.newsis.com/view/NISX20261122_0003878002",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "인왕산 자락 서울 옥인동 공영주차장 등 주택기반시설 확충",
-          "link": "https://www.yna.co.kr/view/AKR20261122014300004",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "“내 집에 혼자 삽니다, 돈은 없습니다”…1인가구 주택 소유 비중 ‘역대 최대’",
-          "link": "https://www.mk.co.kr/news/realestate/12215423",
-          "source": "매일경제 부동산"
-        },
-        {
-          "title": "1인가구 주택소유율 역대 최고…주택 보유 55%는 1·2인 가구",
-          "link": "https://www.newsis.com/view/NISX20261122_0003877949",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "송파구 위례24단지(꿈에그린) 84.93㎡ 22억 7천만원… 최근 3년 신고가 [MAI부동산]",
-          "link": "https://www.mk.co.kr/news/realestate/12215418",
-          "source": "매일경제 부동산"
-        }
-      ]
-    },
-    {
       "key": "other",
       "name": "기타 경제 소식",
       "nameEn": "Other Economic News",
-      "lineKo": "iH가 '이주비 대출이자 대납에 95억 과세' 취소소송에서 승소했다.",
-      "lineEn": "iH won the cancellation lawsuit over the taxation of 9,500,000,000 won for repaying the interest on a loan used for relocation expenses.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": true,
-      "items": [
-        {
-          "title": "iH, '이주비 대출이자 대납에 95억 과세' 취소소송 승소",
-          "link": "https://www.yna.co.kr/view/AKR20261120089300065",
-          "source": "연합뉴스 경제"
-        }
-      ]
-    },
-    {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "코스피 지수가 4,800선을 유지하고 있지만, '1조클럽' 기업 수는 1월보다 11% 감소했다. 한편, '5천피' 지수가 하락하며 미국 증시도 급격히 떨어졌다. AI 관련 주식에 대한 매도가 이어지면서 추가적인 충격이 우려되고 있다. 코스피 지수는 변동이 없었지만, 기업 규모는 감소했다. 미국 증시의 급락은 AI 투자에 대한 불안감이 확대되고 있음을 보여준다.",
-      "lineEn": "The KOSPI index is maintaining its level around 4,800, but the number of companies in the \"1,000,000,000,000 club\" has decreased by 11% compared to January. Meanwhile, the \"5,000 pi\" index has fallen, causing the U.S. stock market to sharply decline. Continued selling of AI-related stocks has raised concerns about further shocks. Although the KOSPI index remained unchanged, the size of companies has decreased. The sharp decline in the U.S. stock market shows that anxiety about AI investments is expanding.",
+      "lineKo": "경제부총리가 전기차 국내생산세액공제 관련 종합 판단을 발표했다. 경제부총리는 올해 성장률이 4% 범위 안에 있을 것으로 예상했다. 이형일은 반도체 변동성이 경제 전체로 증폭될 우려가 있다고 밝혔다. 이형일은 올해 성장률이 3%대 후반일 것으로 전망했다. 경제부총리와 이형일의 발언은 각각 다른 주제에 대한 의견을 담고 있다.",
+      "lineEn": "The vice minister of economy announced a comprehensive judgment regarding the domestic production tax credit for electric vehicles. The vice minister of economy expects this year's growth rate to fall within the 4% range. Lee Hyung-il stated that fluctuations in the semiconductor industry could amplify across the entire economy. Lee Hyung-il forecasts this year's growth rate to be in the high 3% range. The statements by the vice minister of economy and Lee Hyung-il contain opinions on different topics.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "같은 4,800선인데도…코스피 '1조클럽', 1월보다 11% 줄었다",
-          "link": "https://www.yna.co.kr/view/AKR20261121035000008",
-          "source": "연합뉴스 경제"
+          "title": "전기차 국내생산세액공제 포함될까…경제부총리 \"종합 판단\"",
+          "link": "https://www.hankyung.com/article/2026112339637",
+          "source": "한국경제 경제"
         },
         {
-          "title": "'5천피' 무너지고 美증시 급락…'AI 투매' 추가 충격오나",
-          "link": "https://www.yna.co.kr/view/AKR20261121000200008",
-          "source": "연합뉴스 경제"
+          "title": "경제부총리 \"산술적으론 올해 성장률 4% 범위 안에 있다고 생각\"",
+          "link": "https://www.hankyung.com/article/2026112339607",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "이형일 \"반도체 변동성, 경제 전체로 증폭 우려…올해 3%대 후반 성장\"",
+          "link": "https://www.newsis.com/view/NISX20261123_0003878927",
+          "source": "뉴시스 경제"
         }
       ]
     },
@@ -87,16 +38,100 @@
       "key": "rates",
       "name": "금리·예금·투자상품",
       "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "우대금리 축소 조치에 대한 자체점검이 이달까지 진행될 예정이다. 10년 고정금리 논의는 곧 착수할 계획이라고 밝혔다. 현재 우대금리 축소와 관련된 금융기관의 자체 점검이 진행 중이다. 10년 고정금리 상품 도입을 위한 논의는 금융당국과 금융기관 간 협의가 이어지고 있다. 관련 조치는 금리 구조 개편의 일환으로 추진되고 있다.",
-      "lineEn": "A self-inspection regarding the reduction of preferential interest rates is scheduled to be conducted by the end of this month. Discussions on a 10-year fixed interest rate product are expected to commence soon. Currently, financial institutions are conducting self-inspections related to the reduction of preferential interest rates. Discussions on introducing a 10-year fixed interest rate product are ongoing between the financial regulatory authority and financial institutions. The related measures are being implemented as part of a restructuring of the interest rate structure.",
+      "lineKo": "국고채 금리가 위험회피 심리 속에 하락세를 보이며 3년물은 장중 연 3.621%를 기록했다. 경제부총리는 증안펀드를 포함한 비상계획이 존재한다고 밝혔다. 미국 모기지 금리는 2.6%에서 7.3%로 상승하며 미국인들의 주택 구매 꿈을 어렵게 만들고 있다. 경제부총리는 상황을 검토해 투입 여부를 판단할 계획이라고 설명했다. 미국 모기지 금리 상승은 주택 시장에 직접적인 영향을 미치고 있다.",
+      "lineEn": "The government bond yield fell amid risk-averse sentiment, with the 3-year bond reaching 3.621% annually during the day. The vice finance minister stated that there is an emergency plan including the stabilization fund. U.S. mortgage rates have risen from 2.6% to 7.3%, making it difficult for Americans to realize their dream of buying a home. The vice finance minister explained that they plan to review the situation and decide whether to intervene. The rise in U.S. mortgage rates is directly affecting the housing market.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "우대금리 축소 이달까지 자체점검…10년 고정금리 논의 곧 착수",
-          "link": "https://www.yna.co.kr/view/AKR20261121044800002",
+          "title": "국고채 금리, 위험회피 속 하락세…3년물 장중 연 3.621%",
+          "link": "https://www.yna.co.kr/view/AKR20261123085000008",
           "source": "연합뉴스 경제"
+        },
+        {
+          "title": "경제부총리 \"증안펀드 포함 비상계획 있다…상황 검토해 투입 판단\"",
+          "link": "https://www.hankyung.com/article/2026112339537",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "美모기지 금리 2.6%→7.3%…미국인들의 사라지는 '내 집 마련' 꿈",
+          "link": "https://www.newsis.com/view/NISX20261123_0003878999",
+          "source": "뉴시스 경제"
+        }
+      ]
+    },
+    {
+      "key": "realestate",
+      "name": "부동산",
+      "nameEn": "Real Estate",
+      "lineKo": "대구 재건축·재개발 일조 기준이 100%에서 80%로 완화되었고, 월세 공제한도가 상향 조정되지만 무주택 월세가구 94%는 현행 한도 이내에 있으며, 12월 전국 아파트 1만6486가구가 입주하며 인천 계양에서 3기 신도시 첫 집들이가 진행되고, 정읍수성1 영구임대주택 예비입주자 200가구가 모집 중이며, 쌍용건설이 2381억 원 규모의 부산 거제2구역 재건축 사업을 수주했다.",
+      "lineEn": "The daylighting standard for reconstruction and redevelopment in Daegu has been relaxed from 100% to 80%, and the limit for rent deduction has been increased, but 94% of rent-paying households without homes are still within the current limit. 10,0006486 apartment units will be occupied nationwide by December, and the first move-in ceremony for the third phase of the Incheon Gye Yang new town is being held. Recruitment is ongoing for 200 prospective residents of the Jeonju Suseong 1 permanent rental housing. Sungsung Construction has won a contract for a Busan Geojedo 2 district reconstruction project worth 238,100,000,000 won.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": true,
+      "items": [
+        {
+          "title": "대구 재건축·재개발 일조 기준 완화…100%서 80%로",
+          "link": "https://www.yna.co.kr/view/AKR20261123084600053",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "월세 공제한도 올린다지만…무주택 월세가구 94%는 현행 한도 이내",
+          "link": "https://www.newsis.com/view/NISX20261123_0003878700",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "12월 전국 아파트 1만6486가구 입주…인천 계양서 3기 신도시 첫 집들이",
+          "link": "https://www.hankyung.com/article/202611233673i",
+          "source": "한국경제 부동산"
+        },
+        {
+          "title": "[정읍소식] 정읍수성1 영구임대주택 예비입주자 200가구 모집",
+          "link": "https://www.yna.co.kr/view/AKR20261123073200055",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "쌍용건설, 2381억 부산 거제2구역 재건축 수주",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/23/4SFNTUO6HBAAVJH2I7MPL4GSOM/",
+          "source": "조선비즈 부동산"
+        }
+      ]
+    },
+    {
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "코스피는 오늘 5%대 급락하며 4,600선을했다. 매도 사이드카가 발동되며 시장 불안이 확대되고 있다. 리서치센터장은 과매도 구간에 진입했다며 4,200선까지 하락 가능성에 경고했다. 코스닥은 장중 연저점을 깨며 4%대 하락세를 보였다. 중국 증시도 하락 출발하며 상하이지수는 0.86% 내렸다.",
+      "lineEn": "The KOSPI fell sharply by over 5% today, hitting the 4,600 level. Market anxiety is expanding as the sell-side circuit breaker was triggered. The research center head stated that the market has entered an oversold zone and warned of the possibility of falling to the 4,200 level. The KOSDAQ broke through its intraday low, showing a decline of over 4%. The Chinese market also started with a decline, with the Shanghai index dropping 0.86%.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "코스피 5%대 급락, 4,600선도 내줘…매도 사이드카",
+          "link": "https://www.yna.co.kr/view/AKR20261123085400008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "[속보] 코스피 5%대 급락…매도 사이드카 발동",
+          "link": "https://www.yna.co.kr/view/AKR20261123083700008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "\"과매도 구간…코스피 4,200선까지 열어둬야\" 리서치센터장 긴급진단",
+          "link": "https://www.yna.co.kr/view/AKR20261123075900008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "코스피 4%대 하락 4,600대 등락…코스닥 장중 연저점 깨져(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261123078200008",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.86%↓",
+          "link": "https://www.newsis.com/view/NISX20261123_0003878954",
+          "source": "뉴시스 경제"
         }
       ]
     }
