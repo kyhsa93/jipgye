@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-22T03:02:14.025Z",
+  "updatedAt": "2026-11-23T03:41:59.501Z",
   "periods": [
     "202609",
     "202610",
@@ -828,7 +828,7 @@
     {
       "min10k": 60000,
       "max10k": 70000,
-      "count": 813,
+      "count": 812,
       "districts": [
         {
           "name": "노원구",
@@ -986,7 +986,7 @@
         }
       ],
       "facts": {
-        "total": 813,
+        "total": 812,
         "span": {
           "min": {
             "district": "용산구",
@@ -1028,14 +1028,14 @@
           "districtCount": 15
         },
         "smallHeavy": {
-          "share": 0.6113161131611317
+          "share": 0.6108374384236454
         },
         "old": {
-          "share": 0.3800738007380074,
+          "share": 0.3805418719211823,
           "years": 30
         },
         "directHeavy": {
-          "share": 0.11193111931119311
+          "share": 0.11206896551724138
         }
       },
       "direct": 91
@@ -2076,7 +2076,7 @@
     {
       "min10k": 120000,
       "max10k": 130000,
-      "count": 397,
+      "count": 398,
       "districts": [
         {
           "name": "관악구",
@@ -2234,7 +2234,7 @@
         }
       ],
       "facts": {
-        "total": 397,
+        "total": 398,
         "span": {
           "min": {
             "district": "송파구",
@@ -2281,7 +2281,7 @@
     {
       "min10k": 130000,
       "max10k": 140000,
-      "count": 302,
+      "count": 304,
       "districts": [
         {
           "name": "강서구",
@@ -2289,7 +2289,7 @@
         },
         {
           "name": "영등포구",
-          "count": 49
+          "count": 53
         },
         {
           "name": "성북구",
@@ -2305,6 +2305,17 @@
         }
       ],
       "deals": [
+        {
+          "district": "영등포구",
+          "dong": "신길동",
+          "apt": "삼성래미안",
+          "area": 84.91,
+          "floor": 18,
+          "amount10k": 131000,
+          "date": "2026-11-19",
+          "buildYear": 2001,
+          "direct": false
+        },
         {
           "district": "은평구",
           "dong": "진관동",
@@ -2425,21 +2436,10 @@
           "date": "2026-11-13",
           "buildYear": 1988,
           "direct": false
-        },
-        {
-          "district": "구로구",
-          "dong": "신도림동",
-          "apt": "대림e-편한세상6",
-          "area": 84.82,
-          "floor": 3,
-          "amount10k": 135000,
-          "date": "2026-11-12",
-          "buildYear": 2003,
-          "direct": false
         }
       ],
       "facts": {
-        "total": 302,
+        "total": 304,
         "span": {
           "min": {
             "district": "송파구",
@@ -2457,7 +2457,7 @@
           }
         },
         "standard": {
-          "count": 139,
+          "count": 141,
           "min": 80,
           "max": 90,
           "districts": [
@@ -2470,12 +2470,12 @@
               "count": 13
             },
             {
-              "name": "금천구",
-              "count": 11
+              "name": "영등포구",
+              "count": 12
             },
             {
-              "name": "영등포구",
-              "count": 10
+              "name": "금천구",
+              "count": 11
             }
           ],
           "districtCount": 22
@@ -2691,7 +2691,7 @@
     {
       "min10k": 150000,
       "max10k": 160000,
-      "count": 245,
+      "count": 246,
       "districts": [
         {
           "name": "강동구",
@@ -2849,7 +2849,7 @@
         }
       ],
       "facts": {
-        "total": 245,
+        "total": 246,
         "span": {
           "min": {
             "district": "송파구",
@@ -5075,11 +5075,11 @@
     {
       "min10k": 270000,
       "max10k": 280000,
-      "count": 33,
+      "count": 34,
       "districts": [
         {
           "name": "송파구",
-          "count": 18
+          "count": 20
         },
         {
           "name": "서초구",
@@ -5099,6 +5099,17 @@
         }
       ],
       "deals": [
+        {
+          "district": "송파구",
+          "dong": "방이동",
+          "apt": "올림픽선수기자촌1단지",
+          "area": 83.06,
+          "floor": 15,
+          "amount10k": 276000,
+          "date": "2026-11-14",
+          "buildYear": 1988,
+          "direct": false
+        },
         {
           "district": "강남구",
           "dong": "논현동",
@@ -5168,17 +5179,6 @@
         {
           "district": "송파구",
           "dong": "방이동",
-          "apt": "올림픽선수기자촌1단지",
-          "area": 83.06,
-          "floor": 13,
-          "amount10k": 275500,
-          "date": "2026-10-26",
-          "buildYear": 1988,
-          "direct": false
-        },
-        {
-          "district": "송파구",
-          "dong": "방이동",
           "apt": "대림",
           "area": 125.08,
           "floor": 14,
@@ -5233,7 +5233,7 @@
         }
       ],
       "facts": {
-        "total": 33,
+        "total": 34,
         "span": {
           "min": {
             "district": "강남구",
@@ -5251,7 +5251,7 @@
           }
         },
         "standard": {
-          "count": 11,
+          "count": 12,
           "min": 80,
           "max": 90
         }
