@@ -1338,5 +1338,25 @@
       "value": "3.00",
       "effectiveFrom": "2026년 08월 27일"
     }
+  },
+  {
+    "date": "2026-11-24",
+    "kospi": {
+      "value": "4,708.54",
+      "change": "-161.42",
+      "direction": "FALLING",
+      "asOf": "11/23"
+    },
+    "usdKrw": {
+      "value": 1346.6,
+      "asOf": "11/24",
+      "prevValue": 1337.3,
+      "change": "9.30",
+      "direction": "RISING"
+    },
+    "baseRate": {
+      "value": "3.00",
+      "effectiveFrom": "2026년 08월 27일"
+    }
   }
 ]
