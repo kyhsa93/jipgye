@@ -1,62 +1,45 @@
 {
-  "updatedAt": "2026-11-23T03:45:20.964Z",
+  "updatedAt": "2026-11-24T07:01:42.729Z",
   "model": "qwen3:14b",
   "summary": {
-    "ko": "- 기타 경제 소식: 경제부총리가 전기차 국내생산세액공제 관련 종합 판단을 발표했다. 경제부총리는 올해 성장률이 4% 범위 안에 있을 것으로 예상했다. 이형일은 반도체 변동성이 경제 전체로 증폭될 우려가 있다고 밝혔다. 이형일은 올해 성장률이 3%대 후반일 것으로 전망했다. 경제부총리와 이형일의 발언은 각각 다른 주제에 대한 의견을 담고 있다.\n- 금리·예금·투자상품: 국고채 금리가 위험회피 심리 속에 하락세를 보이며 3년물은 장중 연 3.621%를 기록했다. 경제부총리는 증안펀드를 포함한 비상계획이 존재한다고 밝혔다. 미국 모기지 금리는 2.6%에서 7.3%로 상승하며 미국인들의 주택 구매 꿈을 어렵게 만들고 있다. 경제부총리는 상황을 검토해 투입 여부를 판단할 계획이라고 설명했다. 미국 모기지 금리 상승은 주택 시장에 직접적인 영향을 미치고 있다.\n- 부동산: 대구 재건축·재개발 일조 기준이 100%에서 80%로 완화되었고, 월세 공제한도가 상향 조정되지만 무주택 월세가구 94%는 현행 한도 이내에 있으며, 12월 전국 아파트 1만6486가구가 입주하며 인천 계양에서 3기 신도시 첫 집들이가 진행되고, 정읍수성1 영구임대주택 예비입주자 200가구가 모집 중이며, 쌍용건설이 2381억 원 규모의 부산 거제2구역 재건축 사업을 수주했다.\n- 증시·환율: 코스피는 오늘 5%대 급락하며 4,600선을했다. 매도 사이드카가 발동되며 시장 불안이 확대되고 있다. 리서치센터장은 과매도 구간에 진입했다며 4,200선까지 하락 가능성에 경고했다. 코스닥은 장중 연저점을 깨며 4%대 하락세를 보였다. 중국 증시도 하락 출발하며 상하이지수는 0.86% 내렸다.",
-    "en": "- Other Economic News: The vice minister of economy announced a comprehensive judgment regarding the domestic production tax credit for electric vehicles. The vice minister of economy expects this year's growth rate to fall within the 4% range. Lee Hyung-il stated that fluctuations in the semiconductor industry could amplify across the entire economy. Lee Hyung-il forecasts this year's growth rate to be in the high 3% range. The statements by the vice minister of economy and Lee Hyung-il contain opinions on different topics.\n- Rates, Deposits & Investment Products: The government bond yield fell amid risk-averse sentiment, with the 3-year bond reaching 3.621% annually during the day. The vice finance minister stated that there is an emergency plan including the stabilization fund. U.S. mortgage rates have risen from 2.6% to 7.3%, making it difficult for Americans to realize their dream of buying a home. The vice finance minister explained that they plan to review the situation and decide whether to intervene. The rise in U.S. mortgage rates is directly affecting the housing market.\n- Real Estate: The daylighting standard for reconstruction and redevelopment in Daegu has been relaxed from 100% to 80%, and the limit for rent deduction has been increased, but 94% of rent-paying households without homes are still within the current limit. 10,0006486 apartment units will be occupied nationwide by December, and the first move-in ceremony for the third phase of the Incheon Gye Yang new town is being held. Recruitment is ongoing for 200 prospective residents of the Jeonju Suseong 1 permanent rental housing. Sungsung Construction has won a contract for a Busan Geojedo 2 district reconstruction project worth 238,100,000,000 won.\n- Stocks & FX: The KOSPI fell sharply by over 5% today, hitting the 4,600 level. Market anxiety is expanding as the sell-side circuit breaker was triggered. The research center head stated that the market has entered an oversold zone and warned of the possibility of falling to the 4,200 level. The KOSDAQ broke through its intraday low, showing a decline of over 4%. The Chinese market also started with a decline, with the Shanghai index dropping 0.86%."
+    "ko": "- 증시·환율: 환율은 엔비디아발 위험선호 회복에 따라 3.5원 내린 1,342.4원으로 하락했고, 골드만삭스는 내년 한국 성장률을 3.2%로 전망하며 환율이 1280원일 것으로 예측했으며, 젠슨 황의 귀환으로 아시아 증시가 상승세를 보이며 한국·대만·일본의 반도체주가 폭등했으나 홍콩 증시는 반등 후 매도에 따라 H주가 0.68% 하락했다.\n- 부동산: 롯데건설은 상동역 롯데캐슬 시그니처 아파트를 선착순으로 분양하고 있다. 서울 오피스텔 매매 가격은 22개월 만에 하락했으나, 전월세는 계속 오르고 있다. 이 대통령은 부동산시장 조정이 일반적이라고 예측하며, 분양에 대한 불안감을 해소해야 한다고 밝혔다. 월세살이를 하는 가구는 5년 만에 104만 가구 증가했다. 비혼 동거 가구는 17만 가구에 달한다.\n- 기타 경제 소식: 기타 경제 소식: 정부, 내년 경제 양극화 완화에 중점…국민 삶의 질 지표 개발(종합), 부산상의, 루마니아·튀르키예 경제사절단…교역 활성화 모색, 주병기 \"AI·플랫폼 전환기, 경쟁정책 중요…경제분석국 싱크탱크로\" +3\n- 금리·예금·투자상품: 골드만삭스는 한국의 내년 성장률을 3.2%로 전망했다. 이 기관은 기준금리 상단을 3.5%로 예측했다. 해당 전망은 한국 경제의 회복세를 반영한 것이다. 골드만삭스는 금리 전망에 대해 구체적인 근거를 제시했다. 이는 향후 금융정책에 중요한 참고 자료가 될 것으로 보인다.",
+    "en": "- Stocks & FX: The exchange rate fell to 1,342.4 won, down 3.5 won, following a recovery in risk appetite from NVIDIA. Goldman Sachs predicted that the exchange rate would reach 1,280 won, forecasting Korea's growth rate for next year at 3.2 percent. Asian markets rose with Jensen Huang's return, causing semiconductor stocks in Korea, Taiwan, and Japan to surge sharply, but the Hong Kong market fell 0.68 percent as H-shares faced selling pressure after a rebound.\n- Real Estate: Lotte Construction is selling the Lotte Castle Signature apartments at Sangdong Station on a first-come, first-served basis. The selling price of Seoul office hotels has fallen after 22 months, but the rent and lease prices continue to rise. President Lee stated that market adjustments in the real estate sector are general and that it is necessary to alleviate concerns about sales. The number of households living on monthly rent has increased by 1,040,000 households in five years. The number of cohabiting households without marriage has reached 170,000 households.\n- Other Economic News: Other Economic News: 정부, 내년 경제 양극화 완화에 중점…국민 삶의 질 지표 개발(종합), 부산상의, 루마니아·튀르키예 경제사절단…교역 활성화 모색, 주병기 \"AI·플랫폼 전환기, 경쟁정책 중요…경제분석국 싱크탱크로\" +3\n- Rates, Deposits & Investment Products: Goldman Sachs projected Korea's growth rate for next year at 3.2%. The institution predicted the upper bound of the benchmark interest rate at 3.5%. This forecast reflects the recovery of the Korean economy. Goldman Sachs provided specific grounds for its interest rate forecast. This is expected to be an important reference for future financial policy."
   },
   "highlights": [],
   "categories": [
     {
-      "key": "other",
-      "name": "기타 경제 소식",
-      "nameEn": "Other Economic News",
-      "lineKo": "경제부총리가 전기차 국내생산세액공제 관련 종합 판단을 발표했다. 경제부총리는 올해 성장률이 4% 범위 안에 있을 것으로 예상했다. 이형일은 반도체 변동성이 경제 전체로 증폭될 우려가 있다고 밝혔다. 이형일은 올해 성장률이 3%대 후반일 것으로 전망했다. 경제부총리와 이형일의 발언은 각각 다른 주제에 대한 의견을 담고 있다.",
-      "lineEn": "The vice minister of economy announced a comprehensive judgment regarding the domestic production tax credit for electric vehicles. The vice minister of economy expects this year's growth rate to fall within the 4% range. Lee Hyung-il stated that fluctuations in the semiconductor industry could amplify across the entire economy. Lee Hyung-il forecasts this year's growth rate to be in the high 3% range. The statements by the vice minister of economy and Lee Hyung-il contain opinions on different topics.",
+      "key": "stocks",
+      "name": "증시·환율",
+      "nameEn": "Stocks & FX",
+      "lineKo": "환율은 엔비디아발 위험선호 회복에 따라 3.5원 내린 1,342.4원으로 하락했고, 골드만삭스는 내년 한국 성장률을 3.2%로 전망하며 환율이 1280원일 것으로 예측했으며, 젠슨 황의 귀환으로 아시아 증시가 상승세를 보이며 한국·대만·일본의 반도체주가 폭등했으나 홍콩 증시는 반등 후 매도에 따라 H주가 0.68% 하락했다.",
+      "lineEn": "The exchange rate fell to 1,342.4 won, down 3.5 won, following a recovery in risk appetite from NVIDIA. Goldman Sachs predicted that the exchange rate would reach 1,280 won, forecasting Korea's growth rate for next year at 3.2 percent. Asian markets rose with Jensen Huang's return, causing semiconductor stocks in Korea, Taiwan, and Japan to surge sharply, but the Hong Kong market fell 0.68 percent as H-shares faced selling pressure after a rebound.",
       "isFallback": false,
       "fallbackReason": null,
-      "degraded": false,
+      "degraded": true,
       "items": [
         {
-          "title": "전기차 국내생산세액공제 포함될까…경제부총리 \"종합 판단\"",
-          "link": "https://www.hankyung.com/article/2026112339637",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "경제부총리 \"산술적으론 올해 성장률 4% 범위 안에 있다고 생각\"",
-          "link": "https://www.hankyung.com/article/2026112339607",
-          "source": "한국경제 경제"
-        },
-        {
-          "title": "이형일 \"반도체 변동성, 경제 전체로 증폭 우려…올해 3%대 후반 성장\"",
-          "link": "https://www.newsis.com/view/NISX20261123_0003878927",
-          "source": "뉴시스 경제"
-        }
-      ]
-    },
-    {
-      "key": "rates",
-      "name": "금리·예금·투자상품",
-      "nameEn": "Rates, Deposits & Investment Products",
-      "lineKo": "국고채 금리가 위험회피 심리 속에 하락세를 보이며 3년물은 장중 연 3.621%를 기록했다. 경제부총리는 증안펀드를 포함한 비상계획이 존재한다고 밝혔다. 미국 모기지 금리는 2.6%에서 7.3%로 상승하며 미국인들의 주택 구매 꿈을 어렵게 만들고 있다. 경제부총리는 상황을 검토해 투입 여부를 판단할 계획이라고 설명했다. 미국 모기지 금리 상승은 주택 시장에 직접적인 영향을 미치고 있다.",
-      "lineEn": "The government bond yield fell amid risk-averse sentiment, with the 3-year bond reaching 3.621% annually during the day. The vice finance minister stated that there is an emergency plan including the stabilization fund. U.S. mortgage rates have risen from 2.6% to 7.3%, making it difficult for Americans to realize their dream of buying a home. The vice finance minister explained that they plan to review the situation and decide whether to intervene. The rise in U.S. mortgage rates is directly affecting the housing market.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": false,
-      "items": [
-        {
-          "title": "국고채 금리, 위험회피 속 하락세…3년물 장중 연 3.621%",
-          "link": "https://www.yna.co.kr/view/AKR20261123085000008",
+          "title": "환율, 엔비디아발 위험선호 회복에 하락…3.5원 내린 1,342.4원",
+          "link": "https://www.yna.co.kr/view/AKR20261124140400002",
           "source": "연합뉴스 경제"
         },
         {
-          "title": "경제부총리 \"증안펀드 포함 비상계획 있다…상황 검토해 투입 판단\"",
-          "link": "https://www.hankyung.com/article/2026112339537",
-          "source": "한국경제 경제"
+          "title": "[외환] 원/달러 환율 3.5원 내린 1,342.4원(15:30 기준가)",
+          "link": "https://www.yna.co.kr/view/AKR20261124136800002",
+          "source": "연합뉴스 경제"
         },
         {
-          "title": "美모기지 금리 2.6%→7.3%…미국인들의 사라지는 '내 집 마련' 꿈",
-          "link": "https://www.newsis.com/view/NISX20261123_0003878999",
+          "title": "골드만삭스 \"내년 한국 성장률 3.2%…환율 1280원 전망\"",
+          "link": "https://www.newsis.com/view/NISX20261124_0003881111",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "'젠슨 황 귀환'에 亞 증시 '불기둥'…韓·대만·日 반도체주 폭등",
+          "link": "https://www.newsis.com/view/NISX20261124_0003880899",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "[올댓차이나] 홍콩 증시, 젠슨 황 복귀에 반등했다가 매도에 출렁… H주 0.68%↓",
+          "link": "https://www.newsis.com/view/NISX20261124_0003880900",
           "source": "뉴시스 경제"
         }
       ]
@@ -65,73 +48,90 @@
       "key": "realestate",
       "name": "부동산",
       "nameEn": "Real Estate",
-      "lineKo": "대구 재건축·재개발 일조 기준이 100%에서 80%로 완화되었고, 월세 공제한도가 상향 조정되지만 무주택 월세가구 94%는 현행 한도 이내에 있으며, 12월 전국 아파트 1만6486가구가 입주하며 인천 계양에서 3기 신도시 첫 집들이가 진행되고, 정읍수성1 영구임대주택 예비입주자 200가구가 모집 중이며, 쌍용건설이 2381억 원 규모의 부산 거제2구역 재건축 사업을 수주했다.",
-      "lineEn": "The daylighting standard for reconstruction and redevelopment in Daegu has been relaxed from 100% to 80%, and the limit for rent deduction has been increased, but 94% of rent-paying households without homes are still within the current limit. 10,0006486 apartment units will be occupied nationwide by December, and the first move-in ceremony for the third phase of the Incheon Gye Yang new town is being held. Recruitment is ongoing for 200 prospective residents of the Jeonju Suseong 1 permanent rental housing. Sungsung Construction has won a contract for a Busan Geojedo 2 district reconstruction project worth 238,100,000,000 won.",
-      "isFallback": false,
-      "fallbackReason": null,
-      "degraded": true,
-      "items": [
-        {
-          "title": "대구 재건축·재개발 일조 기준 완화…100%서 80%로",
-          "link": "https://www.yna.co.kr/view/AKR20261123084600053",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "월세 공제한도 올린다지만…무주택 월세가구 94%는 현행 한도 이내",
-          "link": "https://www.newsis.com/view/NISX20261123_0003878700",
-          "source": "뉴시스 경제"
-        },
-        {
-          "title": "12월 전국 아파트 1만6486가구 입주…인천 계양서 3기 신도시 첫 집들이",
-          "link": "https://www.hankyung.com/article/202611233673i",
-          "source": "한국경제 부동산"
-        },
-        {
-          "title": "[정읍소식] 정읍수성1 영구임대주택 예비입주자 200가구 모집",
-          "link": "https://www.yna.co.kr/view/AKR20261123073200055",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "쌍용건설, 2381억 부산 거제2구역 재건축 수주",
-          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/23/4SFNTUO6HBAAVJH2I7MPL4GSOM/",
-          "source": "조선비즈 부동산"
-        }
-      ]
-    },
-    {
-      "key": "stocks",
-      "name": "증시·환율",
-      "nameEn": "Stocks & FX",
-      "lineKo": "코스피는 오늘 5%대 급락하며 4,600선을했다. 매도 사이드카가 발동되며 시장 불안이 확대되고 있다. 리서치센터장은 과매도 구간에 진입했다며 4,200선까지 하락 가능성에 경고했다. 코스닥은 장중 연저점을 깨며 4%대 하락세를 보였다. 중국 증시도 하락 출발하며 상하이지수는 0.86% 내렸다.",
-      "lineEn": "The KOSPI fell sharply by over 5% today, hitting the 4,600 level. Market anxiety is expanding as the sell-side circuit breaker was triggered. The research center head stated that the market has entered an oversold zone and warned of the possibility of falling to the 4,200 level. The KOSDAQ broke through its intraday low, showing a decline of over 4%. The Chinese market also started with a decline, with the Shanghai index dropping 0.86%.",
+      "lineKo": "롯데건설은 상동역 롯데캐슬 시그니처 아파트를 선착순으로 분양하고 있다. 서울 오피스텔 매매 가격은 22개월 만에 하락했으나, 전월세는 계속 오르고 있다. 이 대통령은 부동산시장 조정이 일반적이라고 예측하며, 분양에 대한 불안감을 해소해야 한다고 밝혔다. 월세살이를 하는 가구는 5년 만에 104만 가구 증가했다. 비혼 동거 가구는 17만 가구에 달한다.",
+      "lineEn": "Lotte Construction is selling the Lotte Castle Signature apartments at Sangdong Station on a first-come, first-served basis. The selling price of Seoul office hotels has fallen after 22 months, but the rent and lease prices continue to rise. President Lee stated that market adjustments in the real estate sector are general and that it is necessary to alleviate concerns about sales. The number of households living on monthly rent has increased by 1,040,000 households in five years. The number of cohabiting households without marriage has reached 170,000 households.",
       "isFallback": false,
       "fallbackReason": null,
       "degraded": false,
       "items": [
         {
-          "title": "코스피 5%대 급락, 4,600선도 내줘…매도 사이드카",
-          "link": "https://www.yna.co.kr/view/AKR20261123085400008",
-          "source": "연합뉴스 경제"
+          "title": "[아파트, 생활을 분양하다] 롯데건설 ‘상동역 롯데캐슬 시그니처’ 선착순 동·호지정 분양",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/24/OETJTXCAHJBGZOUVK6BSY5BKJQ/",
+          "source": "조선비즈 부동산"
         },
         {
-          "title": "[속보] 코스피 5%대 급락…매도 사이드카 발동",
-          "link": "https://www.yna.co.kr/view/AKR20261123083700008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "\"과매도 구간…코스피 4,200선까지 열어둬야\" 리서치센터장 긴급진단",
-          "link": "https://www.yna.co.kr/view/AKR20261123075900008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "코스피 4%대 하락 4,600대 등락…코스닥 장중 연저점 깨져(종합)",
-          "link": "https://www.yna.co.kr/view/AKR20261123078200008",
-          "source": "연합뉴스 경제"
-        },
-        {
-          "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.86%↓",
-          "link": "https://www.newsis.com/view/NISX20261123_0003878954",
+          "title": "서울 오피스텔 매매 22개월 만에 하락…전월세 오름세는 계속",
+          "link": "https://www.newsis.com/view/NISX20261124_0003881284",
           "source": "뉴시스 경제"
+        },
+        {
+          "title": "이 대통령 \"부동산시장 조정 일반적 예측…'나중에 분양 잘될까' 불안감 해소해줘야\"",
+          "link": "https://www.newsis.com/view/NISX20261124_0003881227",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "'월세살이' 5년새 104만 가구 늘어…'비혼 동거' 17만 가구(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261124092351002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "[아파트, 생활을 분양하다] 집이 답하고 로봇이 배달… 건설사 ‘사는 법’ 승부",
+          "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/24/VL2Y7EF2KNAI5CZVGCZWC2UNJQ/",
+          "source": "조선비즈 부동산"
+        }
+      ]
+    },
+    {
+      "key": "other",
+      "name": "기타 경제 소식",
+      "nameEn": "Other Economic News",
+      "lineKo": "기타 경제 소식: 정부, 내년 경제 양극화 완화에 중점…국민 삶의 질 지표 개발(종합), 부산상의, 루마니아·튀르키예 경제사절단…교역 활성화 모색, 주병기 \"AI·플랫폼 전환기, 경쟁정책 중요…경제분석국 싱크탱크로\" +3",
+      "lineEn": "Other Economic News: 정부, 내년 경제 양극화 완화에 중점…국민 삶의 질 지표 개발(종합), 부산상의, 루마니아·튀르키예 경제사절단…교역 활성화 모색, 주병기 \"AI·플랫폼 전환기, 경쟁정책 중요…경제분석국 싱크탱크로\" +3",
+      "isFallback": true,
+      "fallbackReason": "unverified-entity",
+      "degraded": false,
+      "items": [
+        {
+          "title": "정부, 내년 경제 양극화 완화에 중점…국민 삶의 질 지표 개발(종합)",
+          "link": "https://www.yna.co.kr/view/AKR20261124091951002",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "부산상의, 루마니아·튀르키예 경제사절단…교역 활성화 모색",
+          "link": "https://www.yna.co.kr/view/AKR20261124108800051",
+          "source": "연합뉴스 경제"
+        },
+        {
+          "title": "주병기 \"AI·플랫폼 전환기, 경쟁정책 중요…경제분석국 싱크탱크로\"",
+          "link": "https://www.newsis.com/view/NISX20261124_0003880497",
+          "source": "뉴시스 경제"
+        },
+        {
+          "title": "월드옥타 도쿄지회 45주년·치바지회 20주년…한·중·일 경제협력 강화",
+          "link": "https://www.hankyung.com/article/202611247055i",
+          "source": "한국경제 경제"
+        },
+        {
+          "title": "KB미소금융재단, 청년 배달라이더 전용 대출…최저 연 2.5%",
+          "link": "https://www.yna.co.kr/view/AKR20261124109900002",
+          "source": "연합뉴스 경제"
+        }
+      ]
+    },
+    {
+      "key": "rates",
+      "name": "금리·예금·투자상품",
+      "nameEn": "Rates, Deposits & Investment Products",
+      "lineKo": "골드만삭스는 한국의 내년 성장률을 3.2%로 전망했다. 이 기관은 기준금리 상단을 3.5%로 예측했다. 해당 전망은 한국 경제의 회복세를 반영한 것이다. 골드만삭스는 금리 전망에 대해 구체적인 근거를 제시했다. 이는 향후 금융정책에 중요한 참고 자료가 될 것으로 보인다.",
+      "lineEn": "Goldman Sachs projected Korea's growth rate for next year at 3.2%. The institution predicted the upper bound of the benchmark interest rate at 3.5%. This forecast reflects the recovery of the Korean economy. Goldman Sachs provided specific grounds for its interest rate forecast. This is expected to be an important reference for future financial policy.",
+      "isFallback": false,
+      "fallbackReason": null,
+      "degraded": false,
+      "items": [
+        {
+          "title": "골드만삭스 \"한국, 내년 3.2% 성장 전망…기준금리 상단 3.5%\"",
+          "link": "https://www.yna.co.kr/view/AKR20261124112800008",
+          "source": "연합뉴스 경제"
         }
       ]
     }

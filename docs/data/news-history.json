@@ -25166,7 +25166,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": "(서울=연합뉴스) 이도흔 기자 = 원/달러 환율은 24일 미국 기술주를 중심으로 위험선호 심리가 회복되며 소폭 하락했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Exchange rate falls as risk appetite recovers from NVIDIA, down 3.5 won to 1,342.4 won"
       },
       {
         "title": "[아파트, 생활을 분양하다] 롯데건설 ‘상동역 롯데캐슬 시그니처’ 선착순 동·호지정 분양",
@@ -25175,7 +25176,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "부천 원미구 아파트 시장의 가격 상승세가 두드러지는 가운데, 롯데건설이 공급하는 ‘상동역 롯데캐슬 시그니처’가 선착순 동·호 지정 분양을 진행 중이다. 상동의 완성된 생활 인프라와 지하철 7호선 상동역 역세권 입지를…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Apartment, Life for Sale] Lotte Construction's 'Sangdong Station Lotte Castle Signature' Offers Early Bird Unit and Floor Selection on a First-Come, First-Served Basis"
       },
       {
         "title": "서울 오피스텔 매매 22개월 만에 하락…전월세 오름세는 계속",
@@ -25184,7 +25186,20 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스]정유선 기자 = 서울 오피스텔 매매가격이 22개월 만에 하락 전환한 것으로 나타났다. 반면 전세와 월세는 오름세를 이어가고 있다. 24일 한국부동산원의 10월 오피스텔 가격동향에 따르면 지난달 서울 오…",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-jeonse.html",
+            "label": "서울 전체 아파트 전세 (84㎡ 환산)",
+            "labelEn": "Seoul apartment jeonse (scaled to 84㎡)",
+            "value": "8억 1,337만원",
+            "valueEn": "₩813M",
+            "note": "전 면적 평균 · 11/23~11/24 들어온 신고 261건",
+            "noteEn": "All-size average · 261 filings arrived Nov 23–24"
+          }
+        ],
+        "titleEn": "Seoul Office Hotel Sales Drop After 22 Months; Rent Growth Continues"
       },
       {
         "title": "[외환] 원/달러 환율 3.5원 내린 1,342.4원(15:30 기준가)",
@@ -25193,7 +25208,8 @@
         "source": "연합뉴스 경제",
         "category": "stocks",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[Yen/USD Exchange Rate Falls 3.5 Won to 1,342.4 Won (As of 15:30)]"
       },
       {
         "title": "정부, 내년 경제 양극화 완화에 중점…국민 삶의 질 지표 개발(종합)",
@@ -25202,7 +25218,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(세종=연합뉴스) 김수현 기자 = 정부가 내년 '국민 삶의 질 지표'를 개발해 민생·양극화 개선 상황을 점검하고, 관련 정책과 적극적으로 연계할...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Government to Focus on Alleviating Economic Polarization Next Year…Developing Indicator for Quality of Life of Citizens (Comprehensive)"
       },
       {
         "title": "이 대통령 \"부동산시장 조정 일반적 예측…'나중에 분양 잘될까' 불안감 해소해줘야\"",
@@ -25211,7 +25228,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[서울=뉴시스] 김지은 김경록 기자 = 이재명 대통령은 24일 주택 가격의 하락 가능성을 언급하며 미분양 불안을 해소할 것을 주문했다. 이 대통령은 이날 청와대에서 주재한 국무회의에서 홍지선 국토교통부 장관을 향해…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "President Lee Says Real Estate Market Adjustment Is a General Prediction, Must Alleviate Concerns About Whether Future Sales Will Go Well"
       },
       {
         "title": "'월세살이' 5년새 104만 가구 늘어…'비혼 동거' 17만 가구(종합)",
@@ -25220,7 +25238,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(세종=연합뉴스) 안채원 송정은 기자 = 작년 전체 가구의 4분의 1은 '월세살이'를 한 것으로 나타났다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Monthly Rent Living\" Rises by 1,040,000 Households in 5 Years... \"Unmarried Cohabitation\" Reaches 170,000 Households (Comprehensive)"
       },
       {
         "title": "[아파트, 생활을 분양하다] 집이 답하고 로봇이 배달… 건설사 ‘사는 법’ 승부",
@@ -25229,7 +25248,8 @@
         "source": "조선비즈 부동산",
         "category": "realestate",
         "preview": "“헤이 자이.” 입주민이 부르면 집이 대답한다. 말 한마디로 조명과 냉난방을 바꾸고, 천장 센서가 사람의 움직임을 읽어 환기 시스템을 알아서 돌린다. GS건설이 지난 16일 자이 미래전략발표회에서 공개한 ‘AI 홈’…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Apartment, Living Sold: Home is the Answer and Robots Deliver... Construction Company's 'Way of Living' Battle"
       },
       {
         "title": "부산상의, 루마니아·튀르키예 경제사절단…교역 활성화 모색",
@@ -25238,7 +25258,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(부산=연합뉴스) 오수희 기자 = 부산상공회의소는 지역 기업인으로 구성한 경제사절단이 지난 16일부터 20일까지 루마니아와 튀르키예를 방문, 현...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Busan Chamber of Commerce and Industry Sends Economic Delegation to Romania and Turkey to Explore Ways to Boost Trade"
       },
       {
         "title": "주병기 \"AI·플랫폼 전환기, 경쟁정책 중요…경제분석국 싱크탱크로\"",
@@ -25247,7 +25268,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[세종=뉴시스]임하은 기자 = 주병기 공정거래위원장은 24일 \"AI와 플랫폼 혁신이 경제 전반을 재편하는 거대한 전환기에 직면해 있다\"며 \"공정한 시장질서를 지키는 경쟁정책의 역할이 그 어느 때보다 중요하다\"며 승격…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Chu Byung-gi: \"AI and Platform Transition Period, Competition Policy Important... Economic Analysis Unit as Think Tank"
       },
       {
         "title": "화천군, 농촌유학 가구에 주택 공급 추진…10가구 조성 목표",
@@ -25256,7 +25278,8 @@
         "source": "연합뉴스 경제",
         "category": "realestate",
         "preview": "(화천=연합뉴스) 이상학 기자 = 강원 화천군이 농촌유학 가구의 주거 안정을 위해 주택 공급을 추진한다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Hwacheon County to Supply Housing for Rural Homestay Families... Aim to Create 10 Homes"
       },
       {
         "title": "월드옥타 도쿄지회 45주년·치바지회 20주년…한·중·일 경제협력 강화",
@@ -25265,7 +25288,8 @@
         "source": "한국경제 경제",
         "category": "other",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "World OKTA Tokyo Chapter 45th Anniversary, Chiba Chapter 20th Anniversary... Strengthening Korea-China-Japan Economic Cooperation"
       },
       {
         "title": "골드만삭스 \"내년 한국 성장률 3.2%…환율 1280원 전망\"",
@@ -25274,7 +25298,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스] 박주연 기자 = 골드만삭스가 내년 한국 경제성장률 전망치를 2.8%에서 3.2%로 상향 조정했다. 인공지능(AI) 투자 확대에 따른 반도체 수출 호조가 이어지면서 3%대 성장세를 유지할 것이라는 전망…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Goldman Sachs \"Forecasts 3.2% Growth in South Korea Next Year…Forecasts Exchange Rate at 1280 Won"
       },
       {
         "title": "골드만삭스 \"한국, 내년 3.2% 성장 전망…기준금리 상단 3.5%\"",
@@ -25283,7 +25308,8 @@
         "source": "연합뉴스 경제",
         "category": "rates",
         "preview": "(서울=연합뉴스) 고은지 기자 = 글로벌 투자은행(IB) 골드만삭스는 24일 내년에도 한국이 3%대 견조한 경제성장률을 이어갈 것으로 전망했다.",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Goldman Sachs \"South Korea to Grow 3.2% Next Year... Benchmark Rate Upper Bound 3.5%"
       },
       {
         "title": "평균 3년 이상 걸린다는데... 송파한양1차, 4개월만에 재건축 조합설립한 비결은",
@@ -25292,7 +25318,20 @@
         "source": "매일경제 부동산",
         "category": "realestate",
         "preview": "서울 송파구 송파한양 1차 재건축 조합이 정비구역 지정 후 112일 만에 조합설립인가를 받았다. 과거 다른 사업장에서는 이 기간이 평균 3년 6개월에 달했는데, 서울시가 구역 지정..",
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-songpa.html",
+            "label": "송파구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "송파구 apartment sale (scaled to 84㎡)",
+            "value": "23억 4,432만원",
+            "valueEn": "₩2,344M",
+            "note": "전 면적 평균 · 11/2~11/24 들어온 신고 194건",
+            "noteEn": "All-size average · 194 filings arrived Nov 2–24"
+          }
+        ],
+        "titleEn": "Songpa HanYang 1st, Establishes Reconstruction Committee in 4 Months, Unveiling the Secret Behind It Despite Average 3-Year Duration"
       },
       {
         "title": "KB미소금융재단, 청년 배달라이더 전용 대출…최저 연 2.5%",
@@ -25301,7 +25340,8 @@
         "source": "연합뉴스 경제",
         "category": "other",
         "preview": "(서울=연합뉴스) 이도흔 기자 = KB미소금융재단은 청년 배달라이더 전용 미소금융 상품인 'KB 청년 라이더 희망 대출'을 출시했다고 24일 밝...",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "KB Miso Financial Foundation Offers Youth Delivery Rider-Specific Loan at Minimum Annual Rate of 2.5%"
       },
       {
         "title": "\"30년 다니던 길인데\"…아파트 현수막에 주민들 '부글부글' [시장톡]",
@@ -25310,7 +25350,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "30-year-old road\"… Residents boil over at apartment complex billboard [Market Talk]"
       },
       {
         "title": "'젠슨 황 귀환'에 亞 증시 '불기둥'…韓·대만·日 반도체주 폭등",
@@ -25319,7 +25360,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]박미선 기자 = 젠슨 황 엔비디아 최고경영자(CEO)의 전격 복귀로 미국 뉴욕증시가 폭등한 데 이어 24일 아시아 주요 증시도 일제히 급등했다. 인공지능(AI) 산업에 대한 투자 심리가 회복되면서 한국…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Jensen Huang's Return Sparks Asian Markets 'Flame'... South Korea, Taiwan, Japan Semiconductor Stocks Surge"
       },
       {
         "title": "[올댓차이나] 홍콩 증시, 젠슨 황 복귀에 반등했다가 매도에 출렁… H주 0.68%↓",
@@ -25328,7 +25370,8 @@
         "source": "뉴시스 경제",
         "category": "stocks",
         "preview": "[서울=뉴시스]이재준 기자 = 홍콩 증시는 24일 젠슨 황 엔비디아 CEO 복귀로 전날 뉴욕 증시가 급등한 흐름이 전해지면서 주력 기술주를 중심으로 매수 선행, 반등 개장했다가 단기 차익 실현 매물이 출회해 등락하고…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "[AllChina] Hong Kong market rebounds on Jensen Huang's return, then fluctuates on selling... H shares down 0.68%"
       },
       {
         "title": "보증금 있는 월세' 거주 21.0→24.1%…자가·전세 비중은 하락",
@@ -25337,7 +25380,8 @@
         "source": "뉴시스 경제",
         "category": "realestate",
         "preview": "[세종=뉴시스] 안호균 여동준 기자 = 지난해 국내 가구 4곳 중 1곳은 '보증금 있는 월세'에서 거주하는 것으로 나타났다. 전체 가구에서 자가나 전세로 거주하는 비중은 소폭 하락한 반면 보증금 있는 월세 거주 비중…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Monthly rent with deposit occupancy rises to 24.1% from 21.0%... ownership and full deposit share declines"
       },
       {
         "title": "\"망하게 둘 수 없다\"…젠슨 황 복귀에 드러난 美 경제 'AI 의존증' 민낯",
@@ -25346,7 +25390,8 @@
         "source": "뉴시스 경제",
         "category": "other",
         "preview": "[서울=뉴시스]박미선 기자 = 도널드 트럼프 미국 대통령이 젠슨 황 엔비디아 최고경영자(CEO)의 복귀에 직접 개입한 것을 계기로 미국 경제의 인공지능(AI) 산업 의존도가 지나치게 높아졌다는 우려가 커지고 있다.…",
-        "dupes": []
+        "dupes": [],
+        "titleEn": "Can't leave it to rot\"…Jensen Huang's return exposes U.S. economy's 'AI dependency' reality"
       },
       {
         "title": "서대문구 홍제3구역, 재건축 추진 20년 만 착공…최고 23층·620가구",
@@ -25355,7 +25400,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./district-seodaemun.html",
+            "label": "서대문구 아파트 매매 (84㎡ 환산)",
+            "labelEn": "서대문구 apartment sale (scaled to 84㎡)",
+            "value": "12억 4,966만원",
+            "valueEn": "₩1,250M",
+            "note": "전 면적 평균 · 11/2~11/24 들어온 신고 110건",
+            "noteEn": "All-size average · 110 filings arrived Nov 2–24"
+          }
+        ],
+        "titleEn": "Sodaemun-gu Hongje 3-district starts construction after 20 years of reconstruction efforts...up to 23 floors, 620 units"
       },
       {
         "title": "3년 반 걸리던 재건축 조합설립 4개월 만에…서울시, 정비사업 속도",
@@ -25364,7 +25422,20 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "context": [
+          {
+            "kind": "realestate",
+            "href": "./apartment-sale.html",
+            "label": "서울 전체 아파트 매매 (84㎡ 환산)",
+            "labelEn": "Seoul apartment sale (scaled to 84㎡)",
+            "value": "14억 6,056만원",
+            "valueEn": "₩1,461M",
+            "note": "전 면적 평균 · 11/23~11/24 들어온 신고 235건",
+            "noteEn": "All-size average · 235 filings arrived Nov 23–24"
+          }
+        ],
+        "titleEn": "Three-and-a-half-year reconstruction committee establishment completed in four months... Seoul speeds up redevelopment projects"
       },
       {
         "title": "IPARK현산, 광명 하안주공6·7단지 재건축사업 수주",
@@ -25373,7 +25444,8 @@
         "source": "한국경제 부동산",
         "category": "realestate",
         "preview": null,
-        "dupes": []
+        "dupes": [],
+        "titleEn": "IPARK Hyunsan wins Gwangmyeong Haanjuong 6·7 Complex reconstruction project"
       }
     ]
   }
