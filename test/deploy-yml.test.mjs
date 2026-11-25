@@ -52,7 +52,7 @@ function violations(text) {
   if (/^ {2}workflow_dispatch:\n {4}\S/m.test(on)) out.push("workflow_dispatch 에 inputs 가 있다(롤백 전용 - 모드를 고르는 수동 경로가 아니다)");
   if (/^ {2}schedule:/m.test(on)) out.push("자체 크론이 있다");
 
-  if (!/^permissions:\n {2}contents: read\n {2}pages: write\n {2}id-token: write\n(?! {2}\w)/m.test(c)) out.push("permissions 가 contents: read · pages: write · id-token: write 셋이 아니다");
+  if (!/^permissions:\n {2}actions: read\n {2}contents: read\n {2}pages: write\n {2}id-token: write\n(?! {2}\w)/m.test(c)) out.push("permissions 가 actions: read · contents: read · pages: write · id-token: write 와 다르다");
   if (/secrets\./.test(c)) out.push("시크릿을 쓴다");
   if (!/^ {4}environment:\n {6}name: github-pages\n/m.test(c)) out.push("배포 환경(github-pages)이 없다");
   if (/push-docs|git push|git commit/.test(c)) out.push("커밋·푸시를 한다");
@@ -116,7 +116,7 @@ test("deploy.yml: 렌더는 build/site 로 한 번에, 게이트(build/site 시�
     assert.ok(i >= 0, `스텝 '${n}' 이 없다`);
     return i;
   };
-  const order = ["npm ci", "렌더 시각 고정", "사이트 생성", "테스트 (build/site 기준)", "데이터 건강 점검 (비차단)", "Pages 배포", "Pages 아티팩트 업로드", "Pages에 배포", "데이터 건강 점검 실패 반영"].map(idx);
+  const order = ["npm ci", "렌더 시각 고정", "사이트 생성", "테스트 (build/site 기준)", "데이터 건강 점검 (비차단)", "Pages 배포", "Pages 아티팩트 업로드", "Pages 아티팩트 조회 대기", "Pages에 배포", "데이터 건강 점검 실패 반영"].map(idx);
   assert.deepEqual(order, [...order].sort((a, b) => a - b), "스텝 순서가 계약과 다르다");
   assert.equal(list[idx("사이트 생성")].id, "render");
   assert.equal(list[idx("데이터 건강 점검 (비차단)")].id, "health");
@@ -125,6 +125,10 @@ test("deploy.yml: 렌더는 build/site 로 한 번에, 게이트(build/site 시�
   // 체크아웃은 하나다: 어느 이벤트든 main HEAD. 렌더와 시험과 배포가 같은 체크아웃에서 나온다.
   assert.equal(list.filter((s) => s.uses?.startsWith("actions/checkout@")).length, 1);
   assert.match(deploy, /uses: actions\/checkout@[0-9a-f]{40} # v[\d.]+\n {8}with:\n {10}ref: main\n/);
+  assert.match(deploy, /PAGES_ARTIFACT: github-pages-\$\{\{ github\.run_attempt \}\}/);
+  assert.match(deploy, /^ {10}name: \$\{\{ env\.PAGES_ARTIFACT \}\}$/m);
+  assert.match(deploy, /^ {10}artifact_name: \$\{\{ env\.PAGES_ARTIFACT \}\}$/m);
+  assert.match(list[idx("Pages 아티팩트 조회 대기")].run, /-f name="\$PAGES_ARTIFACT"/);
   // 배포 환경의 url 은 deployment 스텝의 출력이다.
   assert.match(deploy, /url: \$\{\{ steps\.deployment\.outputs\.page_url \}\}/);
 });
