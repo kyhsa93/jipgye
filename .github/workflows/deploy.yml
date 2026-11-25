@@ -27,6 +27,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -42,6 +43,8 @@ jobs:
     # 취소된 상위 실행의 후속은 돌지 않는다. 실패한 Daily/Summarize 도 데이터는 이미 커밋했을 수 있어 돌린다.
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion != 'cancelled'
     runs-on: ubuntu-latest
+    env:
+      PAGES_ARTIFACT: github-pages-${{ github.run_attempt }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -88,10 +91,29 @@ jobs:
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: "./build/site"
+          name: ${{ env.PAGES_ARTIFACT }}
+
+      # 업로드 직후에는 실행의 아티팩트 목록에 반영되지 않을 수 있다.
+      - name: Pages 아티팩트 조회 대기
+        timeout-minutes: 2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for attempt in {1..12}; do
+            if count=$(gh api --method GET "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" \
+              -f name="$PAGES_ARTIFACT" --jq '.artifacts | map(select(.expired == false)) | length'); then
+              if [[ "$count" == 1 ]]; then exit 0; fi
+            fi
+            if [[ "$attempt" != 12 ]]; then sleep 5; fi
+          done
+          echo "::error::Pages 아티팩트 $PAGES_ARTIFACT 하나를 확인하지 못했다"
+          exit 2
 
       - name: Pages에 배포
         id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
+        with:
+          artifact_name: ${{ env.PAGES_ARTIFACT }}
 
       # 데이터 건강 점검이 실패한 날의 표시다. 배포가 끝난 뒤에야 run 을 빨갛게 끝낸다 - 점검은 배포를 막지 않았다. `!cancelled() &&` 로 시작한다(#509).
       - name: 데이터 건강 점검 실패 반영
