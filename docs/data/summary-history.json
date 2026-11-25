@@ -10034,5 +10034,129 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-25",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: GH 전세임대 잔금 1억6천만원을 지불한 당일 임대인과 연락이 두절됐다. 전월세 신청자 수가 급증하며 연봉 5천만원 이하인 경우에도 이자 지원이 가능하다는 소식이 전해졌다. 아파트 매수자 중 54%가 30~40대이며, 전용 84㎡ 오피스텔 거래량은 57% 증가했다. 이재명 정부 부동산 정책 영향으로 강북 지역에서 매물이 쌓이며 집값 상승세가 주춤했다. 울주군은 내년부터 공동주택 지원 대상을 20가구 미만에서 70가구 미만으로 확대한다.\n- 증시·환율: 증시·환율: 부산 소비자심리지수 두 달 내리 하락…증시 조정 등 영향, '젠슨 황 랠리' 하루 천하…亞 증시, AI 거품 공포에 다시 급락, [올댓차이나] 홍콩 증시, 저가 매수로 7일 만에 반등 출발… H주 0.85%↑ +4\n- 기타 경제 소식: AI 거품이 터지면 미국 경제에 미치는 타격이 닷컴버블보다 더 클 수 있다는 분석이 제기되고 있다.\n- 금리·예금·투자상품: 10월 가계대출 금리가 5%를 돌파하며 주담대 금리가 14년 7개월 만에 최고 수준을 기록했다. 국고채 금리는 대체로 하락하며 3년물이 장중 연 3.633%를 기록했다. 가계대출 금리 상승은 주택담보 대출에 큰 영향을 미쳤다. 국고채 금리 하락은 시장의 자금 유동성에 반영된 것으로 보인다. 두 기사는 각각 다른 금융 분야에서 나타난 최근 변화를 보여준다.",
+      "en": "- Real Estate: On the day GH paid the remaining 160,000,000 won for the full lease, contact with the landlord was lost. It was reported that the number of applicants for rent and deposit has surged, and even those with annual incomes below 50,000,000 won can now receive interest support. Among apartment buyers, 54% are in their 30s and 40s, and the transaction volume of 84㎡ office hotels increased by 57%. Due to the impact of the Lee Jae-myung government's real estate policies, property listings have accumulated in the northern part of Seoul, slowing the upward trend in housing prices. Ulju County will expand the support target for multi-family housing from less than 20 units to less than 70 units starting next year.\n- Stocks & FX: Stocks & FX: 부산 소비자심리지수 두 달 내리 하락…증시 조정 등 영향, '젠슨 황 랠리' 하루 천하…亞 증시, AI 거품 공포에 다시 급락, [올댓차이나] 홍콩 증시, 저가 매수로 7일 만에 반등 출발… H주 0.85%↑ +4\n- Other Economic News: Analysts are raising concerns that the impact on the U.S. economy if an AI bubble bursts could be greater than that of the dot-com bubble.\n- Rates, Deposits & Investment Products: The household loan interest rate broke through 5% in October, with the housing loan interest rate reaching its highest level in 14 years and 7 months. The government bond interest rate generally fell, with the 3-year bond reaching 3.633% during the day. The rise in household loan interest rates had a significant impact on housing collateral loans. The decline in government bond interest rates appears to reflect improved market liquidity. The two reports show recent changes in different financial sectors."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "GH 전세임대 잔금 1억6천만원을 지불한 당일 임대인과 연락이 두절됐다. 전월세 신청자 수가 급증하며 연봉 5천만원 이하인 경우에도 이자 지원이 가능하다는 소식이 전해졌다. 아파트 매수자 중 54%가 30~40대이며, 전용 84㎡ 오피스텔 거래량은 57% 증가했다. 이재명 정부 부동산 정책 영향으로 강북 지역에서 매물이 쌓이며 집값 상승세가 주춤했다. 울주군은 내년부터 공동주택 지원 대상을 20가구 미만에서 70가구 미만으로 확대한다.",
+        "lineEn": "On the day GH paid the remaining 160,000,000 won for the full lease, contact with the landlord was lost. It was reported that the number of applicants for rent and deposit has surged, and even those with annual incomes below 50,000,000 won can now receive interest support. Among apartment buyers, 54% are in their 30s and 40s, and the transaction volume of 84㎡ office hotels increased by 57%. Due to the impact of the Lee Jae-myung government's real estate policies, property listings have accumulated in the northern part of Seoul, slowing the upward trend in housing prices. Ulju County will expand the support target for multi-family housing from less than 20 units to less than 70 units starting next year.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "GH 전세임대 잔금 1억6천만원 건넨 당일 임대인과 연락 두절",
+            "link": "https://www.yna.co.kr/view/AKR20261125106400061",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[단독] “연봉 5천인데 이자 지원해준다구요?”…전월세 신청자 폭발",
+            "link": "https://www.mk.co.kr/news/economy/12218000",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "아파트 매수 54%가 3040…전용 84㎡ 오피스텔 거래 57% 증가",
+            "link": "https://www.mk.co.kr/news/realestate/12217918",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "이재명 정부 부동산 정책 영향?…강북도 매물 쌓이며 집값 상승세 ‘주춤’",
+            "link": "https://www.mk.co.kr/news/realestate/12217859",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "울주군, 내년부터 공동주택 지원 20→70가구 미만 확대",
+            "link": "https://www.yna.co.kr/view/AKR20261125060300057",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "증시·환율: 부산 소비자심리지수 두 달 내리 하락…증시 조정 등 영향, '젠슨 황 랠리' 하루 천하…亞 증시, AI 거품 공포에 다시 급락, [올댓차이나] 홍콩 증시, 저가 매수로 7일 만에 반등 출발… H주 0.85%↑ +4",
+        "lineEn": "Stocks & FX: 부산 소비자심리지수 두 달 내리 하락…증시 조정 등 영향, '젠슨 황 랠리' 하루 천하…亞 증시, AI 거품 공포에 다시 급락, [올댓차이나] 홍콩 증시, 저가 매수로 7일 만에 반등 출발… H주 0.85%↑ +4",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
+        "degraded": false,
+        "items": [
+          {
+            "title": "부산 소비자심리지수 두 달 내리 하락…증시 조정 등 영향",
+            "link": "https://www.yna.co.kr/view/AKR20261125102300051",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "'젠슨 황 랠리' 하루 천하…亞 증시, AI 거품 공포에 다시 급락",
+            "link": "https://www.newsis.com/view/NISX20261125_0003882669",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 홍콩 증시, 저가 매수로 7일 만에 반등 출발… H주 0.85%↑",
+            "link": "https://www.newsis.com/view/NISX20261125_0003882623",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 하락 출발…상하이지수 0.73%↓",
+            "link": "https://www.newsis.com/view/NISX20261125_0003882576",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "코스피 장중 5%대 급락세 지속…삼전·닉스 8%대 하락",
+            "link": "https://www.yna.co.kr/view/AKR20261125083800008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "AI 거품이 터지면 미국 경제에 미치는 타격이 닷컴버블보다 더 클 수 있다는 분석이 제기되고 있다.",
+        "lineEn": "Analysts are raising concerns that the impact on the U.S. economy if an AI bubble bursts could be greater than that of the dot-com bubble.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "AI 거품 터지면 美 경제는?…\"닷컴버블보다 타격 클 수도\"",
+            "link": "https://www.newsis.com/view/NISX20261125_0003882619",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "10월 가계대출 금리가 5%를 돌파하며 주담대 금리가 14년 7개월 만에 최고 수준을 기록했다. 국고채 금리는 대체로 하락하며 3년물이 장중 연 3.633%를 기록했다. 가계대출 금리 상승은 주택담보 대출에 큰 영향을 미쳤다. 국고채 금리 하락은 시장의 자금 유동성에 반영된 것으로 보인다. 두 기사는 각각 다른 금융 분야에서 나타난 최근 변화를 보여준다.",
+        "lineEn": "The household loan interest rate broke through 5% in October, with the housing loan interest rate reaching its highest level in 14 years and 7 months. The government bond interest rate generally fell, with the 3-year bond reaching 3.633% during the day. The rise in household loan interest rates had a significant impact on housing collateral loans. The decline in government bond interest rates appears to reflect improved market liquidity. The two reports show recent changes in different financial sectors.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "10월 가계대출 금리 5% 돌파…주담대 14년 7개월만에 최고",
+            "link": "https://www.yna.co.kr/view/AKR20261125080800002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "국고채 금리 대체로 하락…3년물 장중 연 3.633%",
+            "link": "https://www.yna.co.kr/view/AKR20261125090600008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
