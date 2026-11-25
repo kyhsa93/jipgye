@@ -17,7 +17,7 @@ import { SITE } from "./helpers/site-root.mjs";
  * 표본이 모자라면 값을 내지 않는다). 그 둘을 가르는 것까지 여기서 고정한다.
  *
  * 날짜·데이터 값에 기대지 않는다(#8): 어느 장에 카드가 구워져 있는지를 적어 두지 않고 **그 장의 구운 HTML에서
- * 읽어** 판정한다. 종로구처럼 표본이 모자라 카드가 없는 장은 "없는 자리에 무엇이 생기지 않는다"로 뒤집어 본다.
+ * 읽어** 판정한다. 표본 미달 대조군은 구운 카드를 제거한 자치구 fixture로 고정한다.
  */
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -87,8 +87,12 @@ const settle = async () => {
   for (let i = 0; i < 5; i += 1) await new Promise((resolve) => setTimeout(resolve, 0));
 };
 
-async function open(file, extra = {}) {
+async function open(file, { withoutBakedCard = false, ...extra } = {}) {
   const baked = await bakedOverall(file);
+  if (withoutBakedCard && baked.card) {
+    baked.inner = baked.inner.replace(baked.card, "");
+    baked.card = null;
+  }
   const page = await loadRealestatePage({
     file,
     realestate: REALESTATE,
@@ -121,8 +125,8 @@ async function checkPage(file, locale) {
     const where = `${file} · ${locale} · ${state}`;
     const cards = cardsOf(page);
     if (!baked.card) {
-      // 구운 카드가 없던 장(종로구처럼 표본 미달). 없던 자리에 무엇이 생기면 안 된다 - 값이 왔을 때만 생긴다.
-      if (!arrived) assert.equal(cards.filter((c) => c.startsWith(LABEL)).length, 0, `${where}: 없던 카드가 생겼다`);
+      // 구운 카드가 없던 장. 없던 자리에 무엇이 생기면 안 된다 - 값이 왔을 때만 생긴다.
+      if (!arrived) assert.equal(cards.filter((c) => c.startsWith(LABELS[locale])).length, 0, `${where}: 없던 카드가 생겼다`);
       continue;
     }
     // 값이 오기 전이든 뒤든 라벨은 늘 그 화면의 locale이다(한국어 조각을 그대로 되붙이지 않는다).
@@ -145,7 +149,7 @@ test("대표 장: 구운 전세가율 단지별 중앙값 카드가 네 상태 �
 });
 
 test("찍어낸 자치구 스물다섯 장 + 전세 한 장에 실려 나간 스크립트도 같다 (#311)", async () => {
-  // 대상 25장(전세 1 + 자치구 24) 전수 × 네 상태 × 두 언어. 종로구는 구운 카드가 없는 장으로 같은 틀에서 같이 본다.
+  // 자치구 25장과 전세 1장 전수 × 네 상태 × 두 언어.
   for (const locale of ["ko", "en"]) {
     for (const { file } of DISTRICT_PAGES) await checkPage(`${SITE}/${file}`, locale);
     await checkPage(`${SITE}/apartment-jeonse.html`, locale);
@@ -153,15 +157,16 @@ test("찍어낸 자치구 스물다섯 장 + 전세 한 장에 실려 나간 스
 });
 
 test("대조군: 구운 카드가 없는 장은 값이 안 와도 그대로다 (#311 완료 조건 6)", async () => {
-  // apartment-sale·budget-7eok은 전세가율 카드를 그리는 분기를 아예 타지 않고, district-jongno는 그 분기를 타지만
-  // 표본이 모자라 구워진 카드가 없다. 값이 안 온 세 상태에서 카드 장수가 흔들리면 안 된다(없던 자리에 아무것도 안 생긴다).
-  for (const file of [`${SITE}/apartment-sale.html`, `${SITE}/budget-7eok.html`, `${SITE}/district-jongno.html`]) {
-    const { baked } = await open(file);
+  // 매매·예산 장과 표본 미달을 재현한 자치구 장에서 값이 안 온 세 상태를 검사한다.
+  for (const name of ["apartment-sale.html", "budget-7eok.html", "district-jongno.html"]) {
+    const file = `${SITE}/${name}`;
+    const withoutBakedCard = name === "district-jongno.html";
+    const { baked } = await open(file, { withoutBakedCard });
     const bakedCount = (baked.inner.match(CARD_RE) ?? []).length;
     for (const [state, make, arrived] of STATES) {
       if (arrived) continue;
       const { gate, release, ...rest } = make();
-      const { page } = await open(file, { gate, ...rest });
+      const { page } = await open(file, { gate, withoutBakedCard, ...rest });
       if (release) release();
       const cards = cardsOf(page);
       assert.equal(cards.filter((c) => c.startsWith(LABEL)).length, 0, `${file} · ${state}: 전세가율 단지별 중앙값 카드가 생겼다`);
