@@ -10158,5 +10158,139 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-26",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: 부동산플래닛은 AI 상담 플랫폼을 출시해 부동산 정보를 대화 형식으로 제공하게 됐다. 미국의 10월 신축주택 판매량은 70.1만채로 전월 대비 14.2% 증가했다. 수도권에서는 대출이 어려워지면서 소형 아파트가 인기를 끌고 있다. 올해 수도권 소형 아파트 가격은 7% 상승했으며 중대형 아파트 상승폭은 이보다 더 컸다. 국세청장 후보자는 비거주 1주택 보유에 대해 국민 눈높이 미흡하다고 사과했다.\n- 기타 경제 소식: 신현송은 반도체 산업의 올해 영업익이 700조원에 달할 것으로 전망했다. 이는 국민경제에 미치는 영향이 시간 문제라고 밝혔다. 정부는 디딤돌대출과 보금자리론 등 금융공공데이터를 추가로 개방하기로 했다. 해당 데이터 개방은 금융 서비스의 투명성을 높이는 데 기여할 것으로 기대된다. 두 소식은 서로 다른 분야에서 발표된 것으로, 직접적인 연관은 없다.\n- 금리·예금·투자상품: 실질소득이 10분기만에 감소로 전환되며 자영업자가 고금리와 물가 상승에 직격탄을 받았다. 국고채 금리는 기준금리 인상에 따라 일제히 상승했으며 성장률과 점도표도 상향 조정됐다. 원/달러 환율은 금통위의 금리 인상 발표에 따라 1,340원선 아래로 떨어졌다. 미국 경제가 성장과 물가 모두에서 강세를 보이며 12월 추가 금리 인상 가능성이 커졌다. 기준금리는 또다시 인상되며 3.25%로 상승했으나, 부동산 매수세는 위축됐음에도 전월세 시장의 불안은 여전히 이어지고 있다.\n- 증시·환율: 홍콩 증시는 저가 매수로 8일 만에 반등하며 H주가 2.38% 상승했다. 한은 총재는 증시 침체로 민간소비가 주춤했으나 내년에는 2.4% 성장할 것으로 전망했다. 중국 증시는 상승 출발하며 상하이지수가 0.39% 올랐다. 각 기사는 서로 다른 시장에서의 움직임을 보여주고 있다. 이들 수치는 각 지역의 경제 상황을 반영하고 있다.",
+      "en": "- Real Estate: Real Estate Planet has launched an AI consultation platform, providing real estate information in a conversational format. The number of new home sales in the U.S. in October was 701,000, an increase of 14.2% compared to the previous month. In the capital region, small apartments are gaining popularity as loans have become more difficult to obtain. The price of small apartments in the capital region this year has increased by 7%, and the increase in medium and large apartments was even greater. The candidate for the head of the National Tax Service apologized for being insufficient in meeting public expectations regarding the ownership of one non-residential home.\n- Other Economic News: Shin Hyun-song predicted that the semiconductor industry's operating profit this year will reach 700,000,000,000,000 won. He stated that it is only a matter of time before this affects the national economy. The government decided to further open financial public data, including the \"Didingdol Loan\" and \"Bogumjari Loan.\" The opening of this data is expected to contribute to increasing the transparency of financial services. The two pieces of news were announced in different fields and are not directly related.\n- Rates, Deposits & Investment Products: Real income turned negative for the first time in 10 quarters, dealing a direct blow to self-employed business owners who are facing high interest rates and rising prices. Government bond rates rose uniformly due to the benchmark interest rate hike, and growth forecasts and dot plots were also upwardly revised. The won/dollar exchange rate fell below the 1,340 won level following the Bank of Korea's interest rate hike announcement. The U.S. economy showed strength in both growth and inflation, increasing the likelihood of an additional interest rate hike in December. The benchmark interest rate was raised again to 3.25%, yet despite a decline in property purchase demand, uncertainty in the rental market continues.\n- Stocks & FX: The Hong Kong stock market rebounded after eight days of low-price buying, with H-shares rising 2.38%. The Bank of Korea Governor said that private consumption had slowed due to the stock market slump, but expects growth of 2.4% next year. The Chinese stock market started to rise, with the Shanghai index increasing 0.39%. Each report shows different movements in their respective markets. These figures reflect the economic conditions in each region."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "부동산플래닛은 AI 상담 플랫폼을 출시해 부동산 정보를 대화 형식으로 제공하게 됐다. 미국의 10월 신축주택 판매량은 70.1만채로 전월 대비 14.2% 증가했다. 수도권에서는 대출이 어려워지면서 소형 아파트가 인기를 끌고 있다. 올해 수도권 소형 아파트 가격은 7% 상승했으며 중대형 아파트 상승폭은 이보다 더 컸다. 국세청장 후보자는 비거주 1주택 보유에 대해 국민 눈높이 미흡하다고 사과했다.",
+        "lineEn": "Real Estate Planet has launched an AI consultation platform, providing real estate information in a conversational format. The number of new home sales in the U.S. in October was 701,000, an increase of 14.2% compared to the previous month. In the capital region, small apartments are gaining popularity as loans have become more difficult to obtain. The price of small apartments in the capital region this year has increased by 7%, and the increase in medium and large apartments was even greater. The candidate for the head of the National Tax Service apologized for being insufficient in meeting public expectations regarding the ownership of one non-residential home.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "부동산 정보도 AI와 대화로…부동산플래닛, 상담 플랫폼 출시",
+            "link": "https://www.newsis.com/view/NISX20261126_0003884108",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "10월 美 신축주택 판매 70.1만채·14.2%↑…\"가격 인하로 10개월 만에 최고\"",
+            "link": "https://www.newsis.com/view/NISX20261126_0003884484",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "\"대출 막히니 집 줄여야지\"…수도권 휩쓴 소형 아파트",
+            "link": "https://www.hankyung.com/article/2026112620617",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "올해 수도권 소형 아파트 7% 상승…중대형 오름폭 웃돌아",
+            "link": "https://www.yna.co.kr/view/AKR20261126099900003",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "국세청장 후보자, 비거주 1주택에 \"국민 눈높이 미흡…죄송하다\"",
+            "link": "https://www.yna.co.kr/view/AKR20261126099800002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "신현송은 반도체 산업의 올해 영업익이 700조원에 달할 것으로 전망했다. 이는 국민경제에 미치는 영향이 시간 문제라고 밝혔다. 정부는 디딤돌대출과 보금자리론 등 금융공공데이터를 추가로 개방하기로 했다. 해당 데이터 개방은 금융 서비스의 투명성을 높이는 데 기여할 것으로 기대된다. 두 소식은 서로 다른 분야에서 발표된 것으로, 직접적인 연관은 없다.",
+        "lineEn": "Shin Hyun-song predicted that the semiconductor industry's operating profit this year will reach 700,000,000,000,000 won. He stated that it is only a matter of time before this affects the national economy. The government decided to further open financial public data, including the \"Didingdol Loan\" and \"Bogumjari Loan.\" The opening of this data is expected to contribute to increasing the transparency of financial services. The two pieces of news were announced in different fields and are not directly related.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "신현송 \"반도체 올해 영업익 700조원…국민경제 파급 시간문제\"(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261126098451002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "디딤돌대출·보금자리론 등 금융공공데이터 추가 개방",
+            "link": "https://www.yna.co.kr/view/AKR20261126067800002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "실질소득이 10분기만에 감소로 전환되며 자영업자가 고금리와 물가 상승에 직격탄을 받았다. 국고채 금리는 기준금리 인상에 따라 일제히 상승했으며 성장률과 점도표도 상향 조정됐다. 원/달러 환율은 금통위의 금리 인상 발표에 따라 1,340원선 아래로 떨어졌다. 미국 경제가 성장과 물가 모두에서 강세를 보이며 12월 추가 금리 인상 가능성이 커졌다. 기준금리는 또다시 인상되며 3.25%로 상승했으나, 부동산 매수세는 위축됐음에도 전월세 시장의 불안은 여전히 이어지고 있다.",
+        "lineEn": "Real income turned negative for the first time in 10 quarters, dealing a direct blow to self-employed business owners who are facing high interest rates and rising prices. Government bond rates rose uniformly due to the benchmark interest rate hike, and growth forecasts and dot plots were also upwardly revised. The won/dollar exchange rate fell below the 1,340 won level following the Bank of Korea's interest rate hike announcement. The U.S. economy showed strength in both growth and inflation, increasing the likelihood of an additional interest rate hike in December. The benchmark interest rate was raised again to 3.25%, yet despite a decline in property purchase demand, uncertainty in the rental market continues.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "실질소득 10분기만에 감소 전환…자영업자 고금리·물가 타격",
+            "link": "https://www.yna.co.kr/view/AKR20261126073500002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "국고채 금리, 기준금리 인상에 일제히 상승…성장률·점도표 상향(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261126094051008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "원/달러 환율, 금통위 금리 인상에 1,340원선 아래로",
+            "link": "https://www.yna.co.kr/view/AKR20261126095700002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "'성장·물가' 뜨거운 美경제…더욱 힘 실린 12월 금리인상 가능성",
+            "link": "https://www.newsis.com/view/NISX20261126_0003884144",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "기준금리 또 올라 3.25%…부동산 매수세 위축에도 전월세 불안은 ‘여전’",
+            "link": "https://www.mk.co.kr/news/realestate/12219140",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "홍콩 증시는 저가 매수로 8일 만에 반등하며 H주가 2.38% 상승했다. 한은 총재는 증시 침체로 민간소비가 주춤했으나 내년에는 2.4% 성장할 것으로 전망했다. 중국 증시는 상승 출발하며 상하이지수가 0.39% 올랐다. 각 기사는 서로 다른 시장에서의 움직임을 보여주고 있다. 이들 수치는 각 지역의 경제 상황을 반영하고 있다.",
+        "lineEn": "The Hong Kong stock market rebounded after eight days of low-price buying, with H-shares rising 2.38%. The Bank of Korea Governor said that private consumption had slowed due to the stock market slump, but expects growth of 2.4% next year. The Chinese stock market started to rise, with the Shanghai index increasing 0.39%. Each report shows different movements in their respective markets. These figures reflect the economic conditions in each region.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "[올댓차이나] 홍콩 증시, 저가 매수로 8일 만에 반등 … H주 2.38%↑",
+            "link": "https://www.newsis.com/view/NISX20261126_0003884423",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "한은 총재 \"증시 침체로 민간소비 주춤…내년은 2.4%↑\"",
+            "link": "https://www.yna.co.kr/view/AKR20261126094200002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 상승 출발…상하이지수 0.39%↑",
+            "link": "https://www.newsis.com/view/NISX20261126_0003884289",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
