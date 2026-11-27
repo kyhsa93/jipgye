@@ -10292,5 +10292,134 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-27",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: 부동산: 포스코이앤씨, ‘더샵 일산센트로’ 견본주택 개관…임대 229가구 공급, [단독]임대등록 끝난 아파트, 내년 공공에 팔면 양도세 최대 2억 감면, 서울시, 고척동 모아주택 3개 구역 627가구 공급…통합심의 통과 +12\n- 증시·환율: 코스피는 장중 상승폭이 커지며 4,900선 탈환을 시도했다. 코스닥은 6%대 급등하며 강세를 보였다. 엔비디아발 AI 조정으로 코스피와 코스닥이 일제히 급등했다. 홍콩 증시는 기술주 저가 매수 계속에 따라 상승세를 이어갔다. 중국 증시는 상하이지수가 0.16% 상승하며 상승 출발했다.\n- 금리·예금·투자상품: 국고채 금리가 혼조세를 보이며 3년물은 장중 연 3.645%를 기록했다. 한은의 금리 인상 사이클이 사실상 끝났다는 해외 증권사의 전망이 제기됐다. 노무라는 한은의 금리 인상 사이클이 사실상 종료됐다고 분석했다. 이는 금리 동향에 대한 시장의 기대가 변화하고 있음을 나타낸다. 각 기사는 서로 다른 주제를 다루고 있으며, 구체적인 인과관계는 명시되지 않았다.\n- 기타 경제 소식: 산업장관이 베트남과 첨단산업 전략적 경협을 논의했다.",
+      "en": "- Real Estate: Real Estate: 포스코이앤씨, ‘더샵 일산센트로’ 견본주택 개관…임대 229가구 공급, [단독]임대등록 끝난 아파트, 내년 공공에 팔면 양도세 최대 2억 감면, 서울시, 고척동 모아주택 3개 구역 627가구 공급…통합심의 통과 +12\n- Stocks & FX: The KOSPI attempted to reclaim the 4,900 level as its rise widened during the session. The KOSDAQ showed a strong performance with a sharp increase of over 6%. The KOSPI and KOSDAQ both surged sharply due to adjustments in AI from NVIDIA. The Hong Kong stock market continued its upward trend as technology stocks were continuously bought at low prices. The Chinese stock market opened higher as the Shanghai index rose 0.16%.\n- Rates, Deposits & Investment Products: The government bond rate showed a mixed trend, with the 3-year bond reaching 3.645% annually during the session. A foreign securities firm's outlook suggested that the Bank of Korea's interest rate hike cycle has effectively ended. Nomura analyzed that the Bank of Korea's interest rate hike cycle has effectively concluded. This indicates that market expectations regarding interest rate trends are changing. Each article covers different topics, and specific causal relationships are not explicitly stated.\n- Other Economic News: The minister of industry discussed strategic economic cooperation in advanced industries with Vietnam."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "부동산: 포스코이앤씨, ‘더샵 일산센트로’ 견본주택 개관…임대 229가구 공급, [단독]임대등록 끝난 아파트, 내년 공공에 팔면 양도세 최대 2억 감면, 서울시, 고척동 모아주택 3개 구역 627가구 공급…통합심의 통과 +12",
+        "lineEn": "Real Estate: 포스코이앤씨, ‘더샵 일산센트로’ 견본주택 개관…임대 229가구 공급, [단독]임대등록 끝난 아파트, 내년 공공에 팔면 양도세 최대 2억 감면, 서울시, 고척동 모아주택 3개 구역 627가구 공급…통합심의 통과 +12",
+        "isFallback": true,
+        "fallbackReason": "unverified-entity",
+        "degraded": false,
+        "items": [
+          {
+            "title": "포스코이앤씨, ‘더샵 일산센트로’ 견본주택 개관…임대 229가구 공급",
+            "link": "https://www.newsis.com/view/NISX20261127_0003886200",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[단독]임대등록 끝난 아파트, 내년 공공에 팔면 양도세 최대 2억 감면",
+            "link": "https://www.newsis.com/view/NISX20261127_0003886086",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "서울시, 고척동 모아주택 3개 구역 627가구 공급…통합심의 통과",
+            "link": "https://biz.chosun.com/real_estate/real_estate_general/2026/11/27/E4E2NEOMF5GWPNTT5WP2DHMRMA/",
+            "source": "조선비즈 부동산"
+          },
+          {
+            "title": "강남구 \"은마아파트 재건축부담금 4.6억, 확정액 아냐\"",
+            "link": "https://www.newsis.com/view/NISX20261127_0003886038",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "집값 25%만 먼저 낼까 땅 빼고 아파트만 살까 … 현금 적은 2030의 청약법",
+            "link": "https://www.mk.co.kr/news/realestate/12220034",
+            "source": "매일경제 부동산"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "코스피는 장중 상승폭이 커지며 4,900선 탈환을 시도했다. 코스닥은 6%대 급등하며 강세를 보였다. 엔비디아발 AI 조정으로 코스피와 코스닥이 일제히 급등했다. 홍콩 증시는 기술주 저가 매수 계속에 따라 상승세를 이어갔다. 중국 증시는 상하이지수가 0.16% 상승하며 상승 출발했다.",
+        "lineEn": "The KOSPI attempted to reclaim the 4,900 level as its rise widened during the session. The KOSDAQ showed a strong performance with a sharp increase of over 6%. The KOSPI and KOSDAQ both surged sharply due to adjustments in AI from NVIDIA. The Hong Kong stock market continued its upward trend as technology stocks were continuously bought at low prices. The Chinese stock market opened higher as the Shanghai index rose 0.16%.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "코스피 장중 상승폭 커져 4,900선 탈환 시도…코스닥 6%대 급등",
+            "link": "https://www.yna.co.kr/view/AKR20261127090700008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "엔비디아발 'AI 조정' 잦아드나…코스피·코스닥 일제히 급등",
+            "link": "https://www.yna.co.kr/view/AKR20261127078300008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 홍콩 증시, 기술주 저가 매수 계속에 상승세…H주 0.84%↑",
+            "link": "https://www.newsis.com/view/NISX20261127_0003886090",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "코스피 장중 상승폭 커져 2% 안팎 강세…코스닥 6%대 급등",
+            "link": "https://www.yna.co.kr/view/AKR20261127070800008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "[올댓차이나] 중국 증시 상승 출발…상하이지수 0.16%↑",
+            "link": "https://www.newsis.com/view/NISX20261127_0003885939",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "국고채 금리가 혼조세를 보이며 3년물은 장중 연 3.645%를 기록했다. 한은의 금리 인상 사이클이 사실상 끝났다는 해외 증권사의 전망이 제기됐다. 노무라는 한은의 금리 인상 사이클이 사실상 종료됐다고 분석했다. 이는 금리 동향에 대한 시장의 기대가 변화하고 있음을 나타낸다. 각 기사는 서로 다른 주제를 다루고 있으며, 구체적인 인과관계는 명시되지 않았다.",
+        "lineEn": "The government bond rate showed a mixed trend, with the 3-year bond reaching 3.645% annually during the session. A foreign securities firm's outlook suggested that the Bank of Korea's interest rate hike cycle has effectively ended. Nomura analyzed that the Bank of Korea's interest rate hike cycle has effectively concluded. This indicates that market expectations regarding interest rate trends are changing. Each article covers different topics, and specific causal relationships are not explicitly stated.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "국고채 금리 혼조세…3년물 장중 연 3.645%",
+            "link": "https://www.yna.co.kr/view/AKR20261127077500008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "'한은 금리 인상 사이클 사실상 끝'…해외 증권사 '반전' 전망",
+            "link": "https://www.hankyung.com/article/2026112743387",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "노무라 \"한은 금리 인상 사이클 사실상 끝났다\"",
+            "link": "https://www.yna.co.kr/view/AKR20261127061900002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "산업장관이 베트남과 첨단산업 전략적 경협을 논의했다.",
+        "lineEn": "The minister of industry discussed strategic economic cooperation in advanced industries with Vietnam.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "산업장관, 베트남과 첨단산업 전략적 경제 협력 논의",
+            "link": "https://www.newsis.com/view/NISX20261127_0003885506",
+            "source": "뉴시스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
