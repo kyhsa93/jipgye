@@ -10421,5 +10421,139 @@
         ]
       }
     ]
+  },
+  {
+    "date": "2026-11-28",
+    "model": "qwen3:14b",
+    "summary": {
+      "ko": "- 부동산: 아파트 매매 계약금 14.9억 원을 정확히 맞춘 사례에서 주담대는 4억 원만 가능하다는 주장이 나왔다. 새 아파트 분양 시 4억 원을 받는다는 소식에 일부 집주인들이 웃는 것으로 보인다. 직장인이 “부동산이 무너져야 한국이 산다”고 주장했으나, 이에 대한 반응은 엇갈린 것으로 나타났다. 용인반도체클러스터 인근 ‘동일하이빌 파크밸리 2단지’ 견본주택은 다음 달 4일 개관한다. 용인·청주·광주에서는 대단지 브랜드타운이 시리즈로 분양 중이다.\n- 금리·예금·투자상품: 금리 인상 공포로 인해 금값이 고점 대비 33% 급락했다. 다음주 경제 동향에 대해 증안펀드 가동과 한은의 잠재성장률 추정치 발표가 예상된다. 부동산 시장에서는 고금리와 공실 리스크로 인해 자산 분산이 강조되고 있다. 10대 그룹 CEO 중 80%가 유임되며 관세와 금리 상승에 대응해 안정 전략을 택했다. 국고채 금리는 증시 강세로 중단기물이 상승했으나 초장기물은 하락했다.\n- 증시·환율: 뉴욕증시가 기술주 강세에 상승 마감하며 나스닥은 주간 6% 상승했고, 다우는 4년 만 최고 주간상승률을 기록했으며, 엔비디아발 'AI 조정'으로 코스피와 코스닥은 급등 마감했고, 원/달러 환율은 증시 반등과 월말 네고로 1,337.9원으로 하락했다.\n- 기타 경제 소식: 인터넷은행 3사는 3분기 중·저신용자 대출비중 목표치 30%를 넘겼다.",
+      "en": "- Real Estate: In a case where the apartment purchase deposit of 1,490,000,000 won was exactly matched, it was claimed that only 400,000,000 won in housing loans is possible. Some homeowners appeared to be smiling upon hearing the news that 400,000,000 won can be received when purchasing a new apartment. A working person claimed that \"South Korea can only survive if the real estate market collapses,\" but responses to this claim were mixed. The model house for 'Dongil Highhill Park Valley 2nd Phase,' near the Yongin Semiconductor Cluster, will open on the 4th of next month. Large-scale brand town projects are being sold in series in Yongin, Cheongju, and Gwangju.\n- Rates, Deposits & Investment Products: Due to fears of interest rate hikes, gold prices fell 33% from their peak. It is expected that the Economic Stabilization Fund will be activated and the Bank of Korea will release its estimate of potential growth rate next week. In the real estate market, asset diversification is being emphasized due to high interest rates and risks of vacant properties. 80% of the CEOs of the top 10 groups have been retained, choosing a stable strategy in response to tariffs and rising interest rates. Government bond rates rose for short- and medium-term bonds due to a strong stock market, but long-term bonds fell.\n- Stocks & FX: The New York stock market closed higher on the strength of tech stocks, with the Nasdaq rising 6% for the week, and the Dow recording its highest weekly gain in four years. The KOSPI and KOSDAQ closed sharply higher due to the NVIDIA-driven \"AI adjustment,\" and the won/dollar exchange rate fell to 1,337.9 won due to the stock market rebound and end-of-month negotiations.\n- Other Economic News: The three internet banks exceeded their third-quarter target of 30% for medium- and low-credit borrowers' loan share."
+    },
+    "highlights": [],
+    "categories": [
+      {
+        "key": "realestate",
+        "name": "부동산",
+        "nameEn": "Real Estate",
+        "lineKo": "아파트 매매 계약금 14.9억 원을 정확히 맞춘 사례에서 주담대는 4억 원만 가능하다는 주장이 나왔다. 새 아파트 분양 시 4억 원을 받는다는 소식에 일부 집주인들이 웃는 것으로 보인다. 직장인이 “부동산이 무너져야 한국이 산다”고 주장했으나, 이에 대한 반응은 엇갈린 것으로 나타났다. 용인반도체클러스터 인근 ‘동일하이빌 파크밸리 2단지’ 견본주택은 다음 달 4일 개관한다. 용인·청주·광주에서는 대단지 브랜드타운이 시리즈로 분양 중이다.",
+        "lineEn": "In a case where the apartment purchase deposit of 1,490,000,000 won was exactly matched, it was claimed that only 400,000,000 won in housing loans is possible. Some homeowners appeared to be smiling upon hearing the news that 400,000,000 won can be received when purchasing a new apartment. A working person claimed that \"South Korea can only survive if the real estate market collapses,\" but responses to this claim were mixed. The model house for 'Dongil Highhill Park Valley 2nd Phase,' near the Yongin Semiconductor Cluster, will open on the 4th of next month. Large-scale brand town projects are being sold in series in Yongin, Cheongju, and Gwangju.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "아파트 매매 계약 칼같이 딱 14.9억 맞췄는데…“주담대는 왜 4억만?”",
+            "link": "https://www.mk.co.kr/news/realestate/12220683",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "\"새 아파트 받고 4억 받는다고?\"…집주인들 조용히 웃는 동네 [이슬기의 새집다오]",
+            "link": "https://www.hankyung.com/article/2026112738476",
+            "source": "한국경제 부동산"
+          },
+          {
+            "title": "\"부동산이 무너져야 한국이 산다\"…직장인 주장에 엇갈린 시선",
+            "link": "https://www.newsis.com/view/NISX20261128_0003886986",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "“반도체 산단 옆 브랜드타운”…‘용인반도체클러스터 동일하이빌 파크밸리 2단지’ 내달 4일 견본주택 개관",
+            "link": "https://www.mk.co.kr/news/realestate/12220640",
+            "source": "매일경제 부동산"
+          },
+          {
+            "title": "용인·청주·광주서 아파트 '시리즈' 분양…대단지 브랜드타운 활발",
+            "link": "https://www.newsis.com/view/NISX20261127_0003885804",
+            "source": "뉴시스 경제"
+          }
+        ]
+      },
+      {
+        "key": "rates",
+        "name": "금리·예금·투자상품",
+        "nameEn": "Rates, Deposits & Investment Products",
+        "lineKo": "금리 인상 공포로 인해 금값이 고점 대비 33% 급락했다. 다음주 경제 동향에 대해 증안펀드 가동과 한은의 잠재성장률 추정치 발표가 예상된다. 부동산 시장에서는 고금리와 공실 리스크로 인해 자산 분산이 강조되고 있다. 10대 그룹 CEO 중 80%가 유임되며 관세와 금리 상승에 대응해 안정 전략을 택했다. 국고채 금리는 증시 강세로 중단기물이 상승했으나 초장기물은 하락했다.",
+        "lineEn": "Due to fears of interest rate hikes, gold prices fell 33% from their peak. It is expected that the Economic Stabilization Fund will be activated and the Bank of Korea will release its estimate of potential growth rate next week. In the real estate market, asset diversification is being emphasized due to high interest rates and risks of vacant properties. 80% of the CEOs of the top 10 groups have been retained, choosing a stable strategy in response to tariffs and rising interest rates. Government bond rates rose for short- and medium-term bonds due to a strong stock market, but long-term bonds fell.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": false,
+        "items": [
+          {
+            "title": "'안전자산' 금의 배신…금리 인상 공포에 고점 대비 33% 급락",
+            "link": "https://www.hankyung.com/article/202611262188i",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "[다음주 경제] 증안펀드 가동 윤곽…한은 잠재성장률 추정치도",
+            "link": "https://www.yna.co.kr/view/AKR20261128017000002",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "\"부동산 불패는 끝났어요…고금리·공실 리스크에 자산 분산이 답\"",
+            "link": "https://www.newsis.com/view/NISX20261127_0003885708",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "10대 그룹 CEO 80% 유임…관세·금리 파고에 '안정' 택했다",
+            "link": "https://www.hankyung.com/article/2026112754261",
+            "source": "한국경제 경제"
+          },
+          {
+            "title": "국고채 금리, 증시 강세에 중단기물 상승…초장기물은 하락(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261127135151008",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "stocks",
+        "name": "증시·환율",
+        "nameEn": "Stocks & FX",
+        "lineKo": "뉴욕증시가 기술주 강세에 상승 마감하며 나스닥은 주간 6% 상승했고, 다우는 4년 만 최고 주간상승률을 기록했으며, 엔비디아발 'AI 조정'으로 코스피와 코스닥은 급등 마감했고, 원/달러 환율은 증시 반등과 월말 네고로 1,337.9원으로 하락했다.",
+        "lineEn": "The New York stock market closed higher on the strength of tech stocks, with the Nasdaq rising 6% for the week, and the Dow recording its highest weekly gain in four years. The KOSPI and KOSDAQ closed sharply higher due to the NVIDIA-driven \"AI adjustment,\" and the won/dollar exchange rate fell to 1,337.9 won due to the stock market rebound and end-of-month negotiations.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "뉴욕증시, 기술주 강세에 상승 마감…나스닥, 주간 6%↑",
+            "link": "https://www.newsis.com/view/NISX20261128_0003886952",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "[속보]뉴욕증시, 기술주 강세에 상승 마감…다우, 4년 만 최고 주간상승률",
+            "link": "https://www.newsis.com/view/NISX20261128_0003886951",
+            "source": "뉴시스 경제"
+          },
+          {
+            "title": "엔비디아발 'AI 조정' 잦아드나…코스피·코스닥, 급등 마감(종합)",
+            "link": "https://www.yna.co.kr/view/AKR20261127078351008",
+            "source": "연합뉴스 경제"
+          },
+          {
+            "title": "원/달러 환율, 증시 반등·월말 네고에 하락…1,337.9원",
+            "link": "https://www.yna.co.kr/view/AKR20261127127600002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      },
+      {
+        "key": "other",
+        "name": "기타 경제 소식",
+        "nameEn": "Other Economic News",
+        "lineKo": "인터넷은행 3사는 3분기 중·저신용자 대출비중 목표치 30%를 넘겼다.",
+        "lineEn": "The three internet banks exceeded their third-quarter target of 30% for medium- and low-credit borrowers' loan share.",
+        "isFallback": false,
+        "fallbackReason": null,
+        "degraded": true,
+        "items": [
+          {
+            "title": "인터넷은행 3사, 3분기 중·저신용자 대출비중 목표치 30% 넘겨",
+            "link": "https://www.yna.co.kr/view/AKR20261127149500002",
+            "source": "연합뉴스 경제"
+          }
+        ]
+      }
+    ]
   }
 ]
